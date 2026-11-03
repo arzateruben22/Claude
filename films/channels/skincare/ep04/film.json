@@ -30,7 +30,7 @@
    "name": "kerner"
   },
   {
-   "at": 34.5,
+   "at": 36.6,
    "name": "nmj3"
   },
   {
@@ -56,7 +56,7 @@
   "brow2": 16.666666666666668,
   "cut": 19.966666666666665,
   "nmj2": 27.0667,
-  "kerner": 34.5,
+  "kerner": 36.6,
   "nmj3": 39.6667,
   "dose": 51.8,
   "gap": 59.2667,
@@ -128,6 +128,7 @@
   "gap_um": 0.05
  },
  "cue": {
+  "poison": 0.1,
   "frown": 1.0666666666666667,
   "banknote": 2.966666666666667,
   "million": 4.4,
@@ -207,7 +208,7 @@
    26.433333333333334
   ],
   "bump2": [
-   34.9,
+   36.9,
    39.3667
   ],
   "relight": [
@@ -229,8 +230,8 @@
  },
  "brow": {
   "frown": [
-   0.9666666666666667,
-   1.9666666666666668
+   0.1,
+   1.0166666666666666
   ],
   "fold": [
    14.200000000000001,
@@ -254,7 +255,7 @@
  "plates": {
   "kerner": {
    "t0": 29.533333333333335,
-   "t1": 39.3667,
+   "t1": 36.0,
    "sausages": 33.1,
    "guessed": 34.5,
    "name": "Justinus Kerner",
@@ -289,10 +290,10 @@
    "kind": "water",
    "anchor": "gap",
    "t0": 10.25,
-   "t1": 13.4667,
+   "t1": 13.1667,
    "shot": "nmj",
    "side": 1,
-   "v": "below"
+   "v": "above"
   },
   {
    "id": "l-snap",
@@ -300,116 +301,97 @@
    "kind": "water",
    "anchor": "snap",
    "t0": 22.033333333333335,
-   "t1": 26.7667,
+   "t1": 26.4667,
    "shot": "nmj2",
    "side": 1,
-   "v": "below"
+   "v": "above"
   }
  ],
  "badges": [
   {
    "id": "b-model",
    "text": "model, not a photo",
-   "t0": 2.2,
-   "t1": 6.9,
+   "t0": 0.0,
+   "t1": 6.6,
    "slot": "tr"
   },
   {
    "id": "b-gram",
-   "text": "≈ 1 g, inhaled and evenly dispersed",
-   "t0": 2.966666666666667,
-   "t1": 6.9,
-   "slot": "tl"
-  },
-  {
-   "id": "b-jama",
+   "kind": "card",
+   "title": "≈ 1 g, inhaled and evenly dispersed",
    "text": "theoretical (JAMA 2001)",
-   "t0": 3.1166666666666667,
-   "t1": 6.9,
+   "t0": 2.966666666666667,
+   "t1": 6.6,
    "slot": "tl"
   },
   {
    "id": "b-simp",
    "text": "simplified · not to scale",
    "t0": 7.5,
-   "t1": 13.4667,
+   "t1": 13.1667,
    "slot": "tl"
   },
   {
    "id": "b-model2",
    "text": "model, not a photo",
    "t0": 13.966666666666667,
-   "t1": 16.3667,
+   "t1": 16.0667,
    "slot": "tl"
   },
   {
    "id": "b-micro",
    "text": "tissue photo · stained skin",
    "t0": 16.916666666666668,
-   "t1": 19.6667,
+   "t1": 19.3667,
    "slot": "tl"
   },
   {
    "id": "b-illus",
    "text": "illustration",
    "t0": 20.266666666666666,
-   "t1": 26.7667,
+   "t1": 26.4667,
    "slot": "tl"
   },
   {
    "id": "b-model3",
    "text": "model, not a photo",
    "t0": 27.3667,
-   "t1": 34.2,
+   "t1": 36.0,
    "slot": "tl"
   },
   {
    "id": "b-illus2",
    "text": "illustration",
-   "t0": 34.8,
-   "t1": 39.3667,
-   "slot": "tl"
-  },
-  {
-   "id": "b-unit",
-   "text": "1 unit = the dose that kills",
-   "t0": 41.233333333333334,
-   "t1": 51.5,
-   "slot": "tl"
-  },
-  {
-   "id": "b-unit2",
-   "text": "half a group of mice",
-   "t0": 41.38333333333333,
-   "t1": 51.5,
+   "t0": 36.9,
+   "t1": 39.0667,
    "slot": "tl"
   },
   {
    "id": "b-uv",
    "text": "illustration",
    "t0": 46.516666666666666,
-   "t1": 51.5,
-   "slot": "tr"
+   "t1": 51.2,
+   "slot": "tl"
   },
   {
    "id": "b-gap",
    "text": "≈ 50 nm, varies by site · simplified",
    "t0": 52.099999999999994,
-   "t1": 58.9667,
+   "t1": 58.6667,
    "slot": "tl"
   },
   {
    "id": "b-months",
    "text": "≈ 3–4 months, time compressed",
    "t0": 59.5667,
-   "t1": 66.4333,
+   "t1": 66.1333,
    "slot": "tl"
   },
   {
    "id": "b-mice",
    "text": "mouse studies; in people, debated",
    "t0": 63.93333333333334,
-   "t1": 66.4333,
+   "t1": 66.1333,
    "slot": "tl"
   },
   {
@@ -420,20 +402,29 @@
    "slot": "tl"
   }
  ],
- "counters": [
-  {
-   "id": "c-dose",
-   "label": "one frown, of a lethal dose",
-   "fmt": "text",
-   "text": "< 1 %",
-   "t0": 60.1667,
-   "t1": 67.33333333333333,
-   "at": [
-    0.5,
-    0.29
+ "counters": [],
+ "spine": {
+  "id": "c-spine",
+  "t0": 2.3000000000000003,
+  "t1": 67.33333333333333,
+  "kill": 47.766666666666666,
+  "at": [
+   0.5,
+   0.235
+  ],
+  "labels": [
+   [
+    0.0,
+    "one frown's dose"
+   ],
+   [
+    47.766666666666666,
+    "one frown, of a lethal dose"
    ]
-  }
- ],
+  ],
+  "q": "?",
+  "a": "< 1 %"
+ },
  "pills": [],
  "title": {
   "series": "Skin Sense · No. 004",
@@ -496,7 +487,7 @@
       3.912
      ],
      [
-      "kill 1 million.",
+      "kill a million.",
       4.087
      ]
     ]

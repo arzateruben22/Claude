@@ -117,7 +117,7 @@ menMat.userData.envK = 1.6;
 const meniscus = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(menPts), 800, 0.016, 6), menMat); HL.T.group.add(meniscus);
 
 // the morning layer, made visible for the to-scale shot: one continuous satin film on the relief of the screened half
-const filmMat = layer({ color: 0xf4f6ff, opacity: 0, roughness: 0.22, roughnessMap: noiseTex(5, 256, 10), clearcoat: 1, clearcoatRoughness: 0.24, specularIntensity: 0.3 });
+const filmMat = layer({ color: 0xf4f6ff, opacity: 0, roughness: 0.3, roughnessMap: noiseTex(5, 256, 10), clearcoat: 0.8, clearcoatRoughness: 0.32, specularIntensity: 0.25 });
 filmMat.userData.envK = 0.35;
 const filmMesh = onHalf(HL, filmMat, 2);
 
@@ -211,7 +211,7 @@ const hzK = hazeVolume(scene, { at: [XK, 3, -30], size: [90, 30, 20], color: "#b
 const shaftB = createShaft({ from: [-6, 18, -4], to: [1, -6, 1], radius: 2.8, color: "#C9B4FF" }); shaftB.group.position.x = XB; scene.add(shaftB.group);
 const dustB = particles(320, [[XB - 9, -11, 0.5], [XB + 9, 6, 9]], 0.07, "#FFF2F8");
 
-window.SCENE_READY = Promise.all([load(SECTION)]).then(([sec]) => { sec.repeat.set(1, 0.9); faceMat.map = sec; faceMat.needsUpdate = true; });   // the section's cornified top row (a fishnet at this scale) is cropped; the block's own skin is its top
+window.SCENE_READY = Promise.all([load(SECTION)]).then(([sec]) => { sec.repeat.set(1, 0.84); faceMat.map = sec; faceMat.needsUpdate = true; });   // the section's cornified top row (a fishnet at this scale) is cropped; the block's own skin is its top
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
@@ -330,7 +330,8 @@ window.seek = function (t) {
     const dk = shot === "uv" ? u01(t, MC.dmg) : shot === "loop" ? u01(t, [UVW.loop[0] + 0.3, UVW.loop[1] + 0.3]) : 0;
     dmgMat.opacity = 0.85 * dk * (sweeping || uv ? 1 : 0); dmg.visible = dmgMat.opacity > 0.01;
     dmgLMat.opacity = shot === "loop" ? dmgMat.opacity : 0; dmgL.visible = dmgLMat.opacity > 0.01;
-    filmMat.opacity = shot === "film" ? 0.55 * u01(t, MC.film) : 0; filmMesh.visible = filmMat.opacity > 0.005;
+    filmMat.opacity = shot === "film" ? 0.3 * u01(t, MC.film) : 0; filmMesh.visible = filmMat.opacity > 0.005;
+    HL.m.clearcoat = shot === "film" ? 0.35 : 0.85;   // under the film the highlights roll off instead of clipping
     menMat.opacity = uv ? 0.1 : 0.22;
     const mixed = shot === "loop" ? u01(t, MC.mixed) : 0;   // "Both groups missed mornings": gaps in the film, sunscreen on the bare half
     gapMat.opacity = mixed; gapMesh.visible = mixed > 0.005;
@@ -339,8 +340,8 @@ window.seek = function (t) {
     paintPatches(ops); coatMat.opacity = ops.some((o) => o > 0.01) ? 1 : 0; coat.visible = coatMat.opacity > 0;
     coatMat.color.setRGB(...(uv ? [0.07, 0.05, 0.16] : tone.map((v) => v + (0.95 - v) * 0.45)));   // a pale satin sheet by day; dark (it absorbs) under UV
     const lt = sweeping ? sw : uv;
-    const keyK = shot === "pleased" ? 1.0 : shot === "film" ? 0.8 : 1.4;
-    studio.set({ key: keyK * (1 - 0.6 * lt), rim: shot === "film" ? 1.0 : 2.2, fill: 0.3, env: shot === "film" ? 0.25 : 0.4, warm: 0.5 * (1 - lt) + 0.3 * flush });
+    const keyK = shot === "pleased" ? 1.0 : shot === "film" ? 0.6 : 1.4;
+    studio.set({ key: keyK * (1 - 0.6 * lt), rim: shot === "film" ? 0.7 : 2.2, fill: 0.3, env: shot === "film" ? 0.18 : 0.4, warm: 0.5 * (1 - lt) + 0.3 * flush });
   } else { dmg.visible = dmgL.visible = filmMesh.visible = coat.visible = gapMesh.visible = false; WU.uOn.value = 0; }
 
   if (shot === "hook" || shot === "loop") {   // the hook (and its loop): one push you can see, over the seam
@@ -376,7 +377,7 @@ window.seek = function (t) {
     const age = u01(t, MC.age), fq = Math.round((0.5 + 1.0 * age) * 40) / 40;   // quantized: the relief rebuilds only when it visibly changes
     K.set({ tone: CASTC, furrows: fq, spot: 0, sheen: 0 });
     look(mix3([XK - 0.6, 9.0, 7.0], [XK + 0.4, 6.4, 4.6], u), mix3([XK - 0.3, 0, -0.8], [XK + 0.3, -0.2, -1.6], u));   // high enough that both families of lines read as diamonds
-    studio.aim([XK, 0, 0], [-0.55, 0.16, 0.82], [0.6, 0.35, -0.75]); studio.set({ key: 3.4, rim: 0.5, fill: 0.12, env: 0.22, warm: 0.0 });
+    studio.aim([XK, 0, 0], [0.04, 0.09, 1.0], [0.6, 0.35, -0.75]);   // the key rakes from the front, at 45° to both families of lines: diamonds, not grain studio.set({ key: 1.7, rim: 0.4, fill: 0.08, env: 0.12, warm: 0.0 });
     focusPt = mix3([XK - 0.2, 0, 0.2], [XK + 0.3, 0, -1.0], u); fstop = 0.08;
   }
 

@@ -6,19 +6,20 @@ import * as THREE from "three";
 //         the crease setting, Kerner's slack brow, the close (the loop)
 //   nmj   the neuromuscular junction at cell scale (../set/nmj04.js): the nerve ending, its cyan messenger, the
 //         fibre's pull; the toxin slipping in and the docking protein cut; the cleft under the gauge; spare endings
-//   cut   the stained micrograph cut face below the skin (public domain), on "never touches the skin"
-//   dose  the brow; the UV scan sweeps down on "twenty" (the signature switch); the dose plate, 20 against ≈ 3,000
+//   cut   the stained tissue photo's cut face below the skin (public domain), on "never touches the skin"
+//   dose  the brow; the UV scan sweeps down on "twenty" (the signature switch; no point is lit, nothing marks where);
+//         the dose plate, 20 against ≈ 3,000, with the spine readout as its top row
 // The picture is a pure function of t: window.seek(t) sets everything from t and film.json, then renders once.
 import { stage, seg, E, rng } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { toneColor } from "../set/section.js";
 import { createStudio, skinMaterial, createShaft, createGrain } from "../set/studio.js";
-import { createBrow } from "../set/brow04.js";
+import { createBrow, browNormal } from "../set/brow04.js";
 import { createNMJ } from "../set/nmj04.js";
 import { SECTION, DERMIS } from "../set/ref/textures.js";
-import { lookV2, richen } from "../set/prod.js";
-import { unifyHud } from "../set/hudv2.js";
+import { lookV2, richen, hazeVolume } from "../set/prod.js";
+import { unifyHud, stackAsCard } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, FPS = FILM.fps || 30, G = FILM.gauge, J = FILM.j, BW = FILM.brow, P = FILM.plates;
 const S1 = Math.min(W, H) / 1080;
@@ -50,33 +51,43 @@ const particles = (n, box, size, color, k = 0.7) => {
   return { set(t, op = 1, drift = 1) { p.visible = op > 0.002; if (!p.visible) return; m.opacity = k * op; base.forEach(([x, y, z, ph], i) => { pos[3 * i] = x + drift * 0.25 * Math.sin(t * 0.3 + ph); pos[3 * i + 1] = y + drift * 0.3 * Math.sin(t * 0.21 + ph * 2); pos[3 * i + 2] = z + drift * 0.2 * Math.cos(t * 0.27 + ph); }); g.attributes.position.needsUpdate = true; } };
 };
 const haze = (w, h, pos, color, op) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(color), transparent: true, opacity: op, depthWrite: false })); m.position.set(...pos); scene.add(m); return m; };
-const glowSprite = (color, size) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: dotTex, color: new THREE.Color(color), transparent: true, opacity: 0, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending })); s.scale.set(size, size, 1); s.renderOrder = 9; scene.add(s); return s; };
 
-// ── the brow: a frontal skin macro in studio light (light tone) ──
+// ── the brow: the upper face in studio light (light tone) ──
+const hudRoot = document.getElementById("hud");
 const TONE = toneColor("living", 0.12).map((v, i) => v * [1.0, 0.92, 0.86][i]);   // light, a touch warmer under the studio key
-const BR = createBrow({ x: 0, tone: TONE, segs: [560, 480], hairN: 1500, hairW: 0.014 });
+const BR = createBrow({ x: 0, tone: TONE, W: 20, H: 20, yc: 0, segs: [800, 800] });
 const browSkin = skinMaterial({ tone: TONE, oil: 0.3, hydration: 0.45, micro: 0.9, seed: 4, repeat: 5 });
+browSkin.normalMap = browNormal({ seed: 4 }); browSkin.normalMap.repeat.set(5, 5); browSkin.normalScale.set(0.55, 0.55);   // pores and short micro-furrows: no long streaks on the deep relief
 // a gentle mottle (light skin's uneven redness and its paler patches), a colour map made once
 browSkin.map = (() => { const c = document.createElement("canvas"); c.width = c.height = 512; const k = c.getContext("2d"); k.fillStyle = "#fff"; k.fillRect(0, 0, 512, 512);
   for (let i = 0; i < 260; i++) { const x = R() * 512, y = R() * 512, r = 6 + R() * 40, g = k.createRadialGradient(x, y, 0, x, y, r), red = R() > 0.45;
     g.addColorStop(0, red ? "rgba(236,170,160,.22)" : "rgba(255,246,236,.25)"); g.addColorStop(1, "rgba(255,255,255,0)"); k.fillStyle = g; k.fillRect(x - r, y - r, 2 * r, 2 * r); }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 2); return t; })();
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1.5, 1.5); return t; })();
+BR.mesh.material = browSkin;
+const look2 = lookV2({ canvas, hudRoot, skin: browSkin });   // the channel look (stage 1): the skin upgraded, the graded backdrop, one grade
+// then: a second, sharper specular lobe (oil on the crests) over lookV2's broad one, and a red wrap at the terminator
+// (light scattered under the skin; no transmission)
+browSkin.clearcoat = 0.3; browSkin.clearcoatRoughness = 0.28; browSkin.specularIntensity = 0.32;
+const SCAT = { uKeyV: { value: new THREE.Vector3(0, 0, 1) }, uScatter: { value: new THREE.Color(0.95, 0.28, 0.18) }, uKeyI: { value: 1 } };
+{ const prev = browSkin.onBeforeCompile;
+  browSkin.onBeforeCompile = (sh, r) => { prev(sh, r); Object.assign(sh.uniforms, SCAT);
+    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nuniform vec3 uKeyV; uniform vec3 uScatter; uniform float uKeyI;")
+      .replace("#include <lights_fragment_end>", "#include <lights_fragment_end>\n  { float nl = dot(normal, normalize(uKeyV)); float wrap = max(0.0, (nl + 0.5) / 1.5) - max(0.0, nl); reflectedLight.directDiffuse += diffuseColor.rgb * uScatter * wrap * uKeyI; }"); };
+  browSkin.customProgramCacheKey = () => "skinV2scatter"; browSkin.needsUpdate = true; }
 const browBase = browSkin.color.clone();
-BR.group.children[0].material = browSkin;
-const hairMat = new THREE.MeshPhysicalMaterial({ color: 0x4a2f1e, roughness: 0.35, clearcoat: 0.5, clearcoatRoughness: 0.3 });
-BR.group.children[1].material = hairMat;
-BR.group.scale.z = 1.7;   // the relief deepened for the macro (the ridges, the lines and the hairs together)
+BR.group.scale.z = 1.25;
 scene.add(BR.group);
-const shaftBrow = createShaft({ from: [-12, 18, 10], to: [3, -4, 2], radius: 2.4, color: "#FFE6D2" }); scene.add(shaftBrow.group);
-const dustBrow = particles(220, [[-7, -5, 2.5], [7, 6, 14]], 0.035, "#FFF1F8", 0.55);
-const doseGlow = glowSprite("#5FF2E8", 1.5); doseGlow.position.set(0, 0.75, 0.9);      // the dose under UV: one faint cyan glow (an illustration)
-const UVSKIN = new THREE.Color(0.4, 0.3, 0.78), UVHAIR = new THREE.Color(0.06, 0.03, 0.14), HAIR = hairMat.color.clone();
+const shaftBrow = createShaft({ from: [-14, 16, 12], to: [2, -3, 3], radius: 2.6, color: "#FFE2C8" }); scene.add(shaftBrow.group);   // the key's volumetric shaft
+const dustBrow = particles(260, [[-6, -5, 4], [6, 6, 14]], 0.03, "#FFF1F8", 0.6);                                                    // foreground dust, drifting through it
+const UVSKIN = new THREE.Color(0.4, 0.3, 0.78), UVHAIR = new THREE.Color(0.06, 0.03, 0.14), HAIR = BR.hairMat.color.clone();
+const _kd = new THREE.Vector3();
 
 // ── the junction at cell scale ──
 const N = createNMJ({ x: XJ });
 richen(N.group, { seed: 4, jitter: 0.1, hue: 0.05, micro: 0.5 });   // no two parts identical; a micro normal on the membrane and the fibre
 scene.add(N.group);
-const hzJ1 = haze(260, 160, [XJ, 0, -46], "#2C1660", 0.55), hzJ2 = haze(200, 120, [XJ, 0, -22], "#3A2178", 0.22);
+const hzJ1 = haze(260, 160, [XJ, 0, -46], "#2C1660", 0.55), hzJ2 = haze(200, 120, [XJ, 0, -22], "#3A2178", 0.22), hzJ3 = haze(160, 90, [XJ, 0, -6.5], "#3A2178", 0.12);   // haze between the depth layers
+const hvJ = hazeVolume(scene, { at: [XJ, 2, -14], size: [120, 70, 24], color: "#b9a6ff", n: 5, op: 0.05 });
 const shaftJ = createShaft({ from: [XJ - 16, 26, -6], to: [XJ + 3, -3, 1], radius: 4, color: "#B79BFF" }); scene.add(shaftJ.group);
 const dustJ = particles(380, [[XJ - 16, -6, -8], [XJ + 16, 14, 16]], 0.1, "#E9DEFF");
 
@@ -97,7 +108,6 @@ window.SCENE_READY = Promise.all([load(SECTION), load(DERMIS)]).then(([sec, der]
 });
 
 // ── the overlay ─────────────────────────────────────────────────────────────
-const hudRoot = document.getElementById("hud");
 const hud = createHud({ camera, shots: FILM.shots });
 unifyHud(hudRoot);   // one HUD system: one plate, one radius, a bar not a dot; mono sources, sans labels
 const KIND = { cell: { color: "text", glyph: "●", mark: "none" }, water: { color: "water", glyph: "◇", mark: "none" }, uv: { color: "uv", glyph: "◆", mark: "none" } };
@@ -105,7 +115,11 @@ const A = {};
 hud.captions(FILM.captions, { fade: 0.05 });
 const titleEl = hud.title(FILM.title);
 const tBars = titleBars(titleEl, { t0: 0, sig: FILM.title.sig });
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1, slot: b.slot });
+// the spine readout (bible §8): one frown's dose, "?" from the hook, resolved to "< 1 %" on "kill"; on the dose plate it is the plate's top row
+const SP = FILM.spine;
+const spineEl = hud.counter(SP.id, { label: SP.labels, t0: SP.t0, t1: SP.t1, at: SP.at, value: (t) => t, fmt: (v) => (v >= SP.kill ? SP.a : SP.q), lit: () => true });
+Object.assign(spineEl.style, { background: "var(--hud-plate)", padding: "1.1vmin 2.6vmin 1.3vmin", boxShadow: "var(--hud-shadow)" });
 for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, value: () => 0, fmt: () => c.text, lit: () => true });
   Object.assign(el.style, { background: "var(--hud-plate)", padding: "1.1vmin 2.6vmin 1.3vmin", borderRadius: "var(--hud-cap-radius, 2.4vmin)", boxShadow: "var(--hud-shadow)" });
@@ -121,7 +135,6 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";                              // the card sits above the tease's caption plate
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.25, liftAt: [0.47, 0.3] });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
-const look2 = lookV2({ canvas, hudRoot, skin: browSkin });   // the channel look (stage 1): the brow's skin upgraded, the graded backdrop, one grade
 const grain = createGrain(hudRoot, { amount: 0.007 });
 // the UV switch: a cyan line sweeping down the frame (DOM), as in look test 2
 const scan = document.createElement("div");
@@ -144,13 +157,15 @@ const kerner = plate(`<div style="font:700 4.2vmin/1.1 var(--font-mono);letter-s
   { left: "50%", top: `${0.25 * H}px`, transform: "translateX(-50%)", width: "72vmin", padding: "3.4vmin 4vmin", textAlign: "left" });
 const k2 = kerner.querySelector(".k2"), sp = kerner.querySelector(".sp");
 const D = P.dose, frac = D.frown_u / D.lethal_u;
-const dose = plate(`<div style="font:500 2.6vmin/1 var(--font-mono);color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1vmin">units of toxin</div>
-  <div style="font:500 2.7vmin/1.35 var(--font-mono);color:var(--text-2);margin-bottom:1.8vmin">estimate, 70 kg adult · units differ by product<br>side effects can occur far below this</div>
-  <div class="r1" style="display:grid;grid-template-columns:27vmin 1fr;align-items:center;gap:2vmin;font:600 3.1vmin/1.2 var(--font-body, inherit)"><span>one frown</span><span style="display:flex;align-items:center;gap:1.4vmin"><i class="b1" style="display:block;height:3.2vmin;width:0;background:var(--water);border-radius:.4vmin"></i><b style="font:500 3.1vmin var(--font-mono);color:var(--water);white-space:nowrap">${D.frown_u} units</b></span></div>
-  <div class="r2" style="display:grid;grid-template-columns:27vmin 1fr;align-items:center;gap:2vmin;margin-top:1.8vmin;font:600 3.1vmin/1.2 var(--font-body, inherit)"><span>estimated lethal (70 kg)</span><span style="display:flex;align-items:center;gap:1.4vmin"><i class="b2" style="display:block;height:3.2vmin;width:0;background:var(--uv);border-radius:.4vmin"></i><b style="font:500 3.1vmin var(--font-mono);white-space:nowrap">≈ ${D.lethal_u.toLocaleString("en-US")}</b></span></div>`,
-  { left: "50%", top: `${0.42 * H}px`, transform: "translateX(-50%)", width: "84vmin", padding: "2.4vmin 3vmin" });
-const b1 = dose.querySelector(".b1"), b2 = dose.querySelector(".b2"), r1 = dose.querySelector(".r1"), r2 = dose.querySelector(".r2");
-const BAR = 30;   // vmin: the lethal amount's full bar; the frown's is on the same scale (a sliver)
+const row = (cls, name, val, col) => `<div class="${cls}" style="display:flex;justify-content:space-between;align-items:baseline;font:600 3.2vmin/1.2 var(--font-text, inherit);margin-top:1.8vmin"><span>${name}</span><b style="font:500 3.2vmin var(--font-mono);color:${col};white-space:nowrap">${val}</b></div>
+  <div style="height:2.6vmin;margin-top:.8vmin;background:rgba(255,255,255,.06);border-radius:.4vmin"><i class="${cls}b" style="display:block;height:100%;width:0;background:${col};border-radius:.4vmin"></i></div>`;
+const dose = plate(`<div style="font:500 2.6vmin/1 var(--font-mono);color:var(--text-2);letter-spacing:.06em;text-transform:uppercase">units of toxin · estimate, 70 kg adult</div>
+  ${row("r1", "one frown", `${D.frown_u} units`, "var(--water)")}
+  ${row("r2", "estimated lethal dose", `≈ ${D.lethal_u.toLocaleString("en-US")}`, "var(--uv)")}
+  <div style="font:500 2.5vmin/1.4 var(--font-mono);color:var(--text-2);margin-top:2vmin">1 unit = the dose that kills half a group of mice<br>units differ by product<br>side effects can occur far below this</div>`,
+  { left: "50%", top: `${0.42 * H}px`, transform: "translateX(-50%)", width: "84vmin", padding: "2.4vmin 3vmin", boxSizing: "border-box" });
+const b1 = dose.querySelector(".r1b"), b2 = dose.querySelector(".r2b"), r1 = dose.querySelector(".r1"), r2 = dose.querySelector(".r2");
+const card = stackAsCard(spineEl, dose); spineEl.classList.remove("ol-card-top"); dose.classList.remove("ol-card-body");
 const veil = document.createElement("div");
 Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0", background: "var(--slide)" });
 hudRoot.prepend(veil);
@@ -169,7 +184,7 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   const isB = ["brow", "brow2", "kerner", "dose", "close"].includes(shot), isJ = ["nmj", "nmj2", "nmj3", "gap", "regrow"].includes(shot), isC = shot === "cut";
-  BR.group.visible = isB; N.group.visible = isJ; C.visible = isC; backC.visible = isC; hzJ1.visible = hzJ2.visible = isJ;
+  BR.group.visible = isB; N.group.visible = isJ; C.visible = isC; backC.visible = isC; hzJ1.visible = hzJ2.visible = hzJ3.visible = isJ; hvJ.group.visible = isJ; hvJ.set({ op: 0.05, t });
   shaftBrow.set({ op: isB ? 0.35 * (1 - uvNow(t, shot)) : 0 }); shaftJ.set({ op: isJ ? 0.8 : 0 }); shaftC.set({ op: isC ? 1 : 0 });
   dustBrow.set(t, isB ? 1 : 0); dustJ.set(t, isJ ? 1 : 0); dustC.set(t, isC ? 1 : 0);
   let uv = 0;
@@ -178,19 +193,25 @@ window.seek = function (t) {
   if (isB) {
     const u = span(t, shot);
     let frown = 1, pos, tgt, fp;
-    if (shot === "brow") { frown = 0.15 + 0.85 * u01(t, BW.frown); pos = mix3([5.6, -3.6, 17], [1.9, -1.0, 6.6], u); tgt = mix3([0, 1.0, 0], [0, 0.7, 0], u); }   // one slow push, low and from the right, into the "11"
+    let fs = 0.3;
+    if (shot === "brow") { frown = 0.1 + 0.9 * u01(t, BW.frown); pos = mix3([2.4, -1.8, 30], [1.0, -0.6, 19], u); tgt = mix3([0, -0.6, 0], [0, 0.2, 0], u); }   // the upper face, one slow push toward the "11"
     else if (shot === "brow2") { frown = 0.3 + 0.7 * u01(t, BW.fold); pos = mix3([2.4, -0.9, 6.0], [1.6, -0.4, 4.9], u); tgt = [0, 0.75, 0]; }   // the crease setting, close
-    else if (shot === "kerner") { frown = 1 - 0.9 * u01(t, BW.slack); pos = mix3([0, -1.2, 15], [0, -2.0, 23], u); tgt = mix3([0, 0.2, 0], [0, 0.9, 0], u); }   // a slow pull back under the plate; the frown goes slack on "paralysis"
-    else if (shot === "dose") { frown = 0.9; pos = mix3([1.2, -2.6, 21], [0.6, -2.2, 16], u); tgt = mix3([0, -1.9, 0], [0, -1.3, 0], u); uv = uvNow(t, shot); }   // the glabella high in the frame, the plate under it
-    else { frown = 0.15 + 0.85 * u01(t, BW.close); pos = mix3([5.6, -3.6, 17], [6.0, -3.8, 18.5], u); tgt = [0, 1.0, 0]; }   // the close: frame 0's composition (the loop)
+    else if (shot === "kerner") { frown = 1 - 0.9 * u01(t, BW.slack); pos = mix3([0.6, -1.4, 18], [0.2, -2.2, 26], u); tgt = mix3([0, 0.0, 0], [0, 0.6, 0], u); }   // a slow pull back under the plate; the frown goes slack on "paralysis"
+    else if (shot === "dose") {   // wide, then a push to the crease on "twenty", then a rack to the plate on "kill"
+      frown = 0.9; const p1 = u01(t, [SH.dose, D.frown]), p2 = u01(t, [D.frown, D.kill]);
+      pos = mix3(mix3([1.4, -2.0, 30], [1.1, -1.8, 26], p1), [0.5, -1.0, 13], p2); tgt = mix3(mix3([0, -0.9, 0], [0, -0.8, 0], p1), [0, -0.6, 0], p2); uv = uvNow(t, shot);
+      fs = 0.3 + 0.5 * u01(t, [D.kill, D.kill + 0.8]); }
+    else { frown = 0.1 + 0.9 * u01(t, BW.close); pos = mix3([2.4, -1.8, 30], [2.6, -1.9, 31.5], u); tgt = [0, -0.6, 0]; }   // the close: frame 0's composition (the loop)
     BR.set({ frown });
     look(pos, tgt);
-    studio.aim([0, 0.7, 0], [-0.85, 0.42, 0.42], [0.9, 0.15, 0.3]); studio.set({ key: 2.8 * (1 - 0.5 * uv), rim: 1.6, fill: 0.22, env: 0.35, warm: 0.6 * (1 - uv) });   // a raking key from the left: the lines read as grooves
-    browSkin.color.copy(browBase).lerp(UVSKIN, uv); browSkin.emissive.setRGB(0.03 * uv, 0.02 * uv, 0.1 * uv); hairMat.color.copy(HAIR).lerp(UVHAIR, uv);
+    camera.updateMatrixWorld();
+    studio.aim([0, 0.6, 0], [-0.74, 0.5, 0.45], [0.25, 0.85, -0.45]); studio.set({ key: 2.6 * (1 - 0.5 * uv), rim: 2.4, fill: 0.9, env: 0.35, warm: 0.6 * (1 - uv) });   // a warm key grazing from the upper left, a cool fill ≈ 1.5 stops under, a rim from behind and above
+    _kd.copy(studio.key.position).sub(studio.key.target.position).normalize().transformDirection(camera.matrixWorldInverse); SCAT.uKeyV.value.copy(_kd); SCAT.uKeyI.value = 0.55 * studio.key.intensity;
+    browSkin.color.copy(browBase).lerp(UVSKIN, uv); browSkin.emissive.setRGB(0.03 * uv, 0.02 * uv, 0.1 * uv); BR.hairMat.color.copy(HAIR).lerp(UVHAIR, uv);
     browSkin.sheenColor.setRGB(1 - 0.3 * uv, 0.72 - 0.06 * uv, 0.62 + 0.36 * uv);   // from lookV2's warm edge sheen toward UV lilac
-    doseGlow.material.opacity = 0.75 * uv * (0.85 + 0.15 * Math.sin(t * 3));
-    focusPt = [0, 0.75, 0]; fstop = shot === "brow2" ? 0.26 : 0.2;
-  } else doseGlow.material.opacity = 0;
+    focusPt = [0, 0.8, 0.2]; fstop = shot === "brow2" ? 0.3 : fs;   // focus on the crease; the brows fall off
+    if (shot === "dose" && fs > 0.31) { const dv = new THREE.Vector3(); camera.getWorldDirection(dv); focusPt = camera.position.clone().addScaledVector(dv, 13 - 9 * (fs - 0.3) / 0.5).toArray(); }   // the rack to the plate
+  }
   const sw = seg(t, FILM.scan.sweep[0], FILM.scan.sweep[1]); scan.style.top = `${(sw * H).toFixed(1)}px`; scan.style.opacity = shot === "dose" && sw > 0 && sw < 1 ? "1" : "0";
 
   // ── the junction ──
@@ -204,8 +225,8 @@ window.seek = function (t) {
       focusPt = jx([1, 1.5, 0]); fstop = 0.2;
     } else if (shot === "nmj2") {
       st = { ...st, toxin: u01(t, J.toxin), cut: u01(t, J.cut), bump: Math.abs(Math.sin(Math.PI * 2 * seg(t, J.bump[0], J.bump[1]))) * (t < J.bump[1] ? 1 : 0) };
-      pos = mix3([-4, 5.5, 17], [1.6, 3.0, 12], u); tgt = mix3([0, 1.9, 0], [1.2, 1.1, 0], u);   // a slow push down into the ending, to the docking proteins
-      rack = mix3([-2, 4, 2], [1.2, 0.6, 0.3], u01(t, [J.toxin[0], J.cut[0] + 0.3])); focusPt = jx(rack); fstop = 0.26;
+      pos = mix3([-4, 5.0, 16], [1.4, 2.4, 10.5], u); tgt = mix3([0, 1.6, 0], [1.2, 0.9, 0], u);   // a slow push down into the ending, to the docking proteins
+      N.set(st); const rk = u01(t, [J.cut[0] - 0.5, J.cut[0] + 0.2]); focusPt = mix3(N.at.tox(), N.at.snap(), rk); fstop = 0.4;   // the rack: the toxin, then SNAP-25 as it splits
     } else if (shot === "nmj3") {
       st = { ...st, bump: Math.abs(Math.sin(Math.PI * 3 * seg(t, J.bump2[0], J.bump2[1]))) * (t < J.bump2[1] ? 1 : 0) };
       pos = mix3([7, 4.6, 21], [4, 4, 17.5], u); tgt = [1, 1.4, 0];                         // the silenced ending, a slow drift
@@ -239,8 +260,8 @@ window.seek = function (t) {
   k2.style.opacity = fadeIn(t, K.guessed, 0.5).toFixed(3);
   if (sp) sp.style.color = t >= K.sausages ? "var(--water)" : "inherit";
   show(dose, shot === "dose" ? win(t, D.t0, D.t1) : 0);
-  b1.style.width = `${Math.max(0.35, BAR * frac * fadeIn(t, D.frown, 0.4)).toFixed(3)}vmin`;   // a sliver (drawn ≥ 0.35 vmin so it shows at all)
-  b2.style.width = `${(BAR * E.out3(seg(t, D.kill - 0.1, D.kill + 1.2))).toFixed(3)}vmin`;
+  b1.style.width = `max(0.5vmin, ${(100 * frac * fadeIn(t, D.frown, 0.4)).toFixed(3)}%)`;   // on one scale: the frown's dose a sliver of the plate's width
+  b2.style.width = `${(100 * E.out3(seg(t, D.kill - 0.1, D.kill + 1.2))).toFixed(2)}%`;           // the lethal estimate runs the full width
   r1.style.opacity = fadeIn(t, D.frown - 0.2, 0.3).toFixed(3); r2.style.opacity = fadeIn(t, D.kill - 0.2, 0.3).toFixed(3);
 
   // ── the gauge, lifted: the gap a hairline beside the paper ──
@@ -252,11 +273,13 @@ window.seek = function (t) {
   // ── the veil: three frames of the ground on each scale jump; the scene sinks back under the end card ──
   let step = 0;
   for (const c of [SH.nmj, SH.cut, SH.nmj2, SH.gap]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
-  const end = 0.6 * E.inout2(seg(t, FILM.endCard - 0.6, FILM.endCard));
-  veil.style.opacity = Math.max(0.55 * step, end).toFixed(4);
+  veil.style.opacity = (0.55 * step).toFixed(4);   // the end card's own scrim veils the brow (≈ 60 %)
 
   grain.set(t);
   hud.update(t);
+  const stack = shot === "dose" && Number(dose.style.opacity) > 0.5;   // the spine as the dose plate's top row
+  spineEl.classList.toggle("ol-card-top", stack); dose.classList.toggle("ol-card-body", stack);
+  if (stack) card(); else spineEl.style.width = "";
   tBars.update(t);
   eBars.update(t);
   renderer.render(scene, camera);

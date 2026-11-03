@@ -1,4 +1,4 @@
-# Scorecard: Outer Layer No. 004, "The deadliest dose" (the reboot's look)
+# Scorecard: Skin Sense No. 004, "The deadliest dose"
 
 ## Measured gates (final)
 
@@ -121,3 +121,56 @@ The picture was rebuilt in the approved look (look test 2), on the facts-pass-2 
 - **Eyebrow hairs:** they still read as combed slabs in the oblique macro. `upgradeHairs` assumes terrain hairs standing upright, so it does not fit the brow.
 - **End card:** it covers the brow fully, so the loop to frame 0 is only felt through the cut.
 - **(h) production value:** not yet scored on the look-v2 frames.
+
+## Review round 1 (3 Nov): (a) 2, (b) 4, (c) 3, (d) 3, (e) 4, (f) 3, (g) 3, (h) 2
+
+**End-card footnote sources.** The footnote (Scott 1980, strabismus; Carruthers and Carruthers 1992, frown lines) is sourced in `../research.md` (lines 115–116) and in the script header (`../script.md`, the end card line).
+
+**Fixes**
+
+**Ethics**
+- The UV dose shot has no lit point and nothing on the midline. The scan switches the brow to the UV instrument's look, and the plate carries the fact.
+
+**(a) Hook**
+- The frame is the readable upper face: both brows, the nose bridge and a hint of the upper lids, with shallow sockets and no bruise shading.
+- The "11" is modelled as soft folds with a bulge between them, and it is set by "frown" (≈ 1.0 s).
+- Light and lens:
+  - a warm key grazing from the upper left;
+  - a cool fill about 1.5 stops under;
+  - a rim from behind and above;
+  - a volumetric shaft with foreground dust;
+  - focus on the crease.
+- "Model, not a photo" is on screen from frame 0.
+
+**Layout**
+- The hook has one merged card note ("≈ 1 g, inhaled and evenly dispersed" / "theoretical (JAMA 2001)"), and "model, not a photo" sits in the other corner.
+- In the dose shot, "illustration" is the only corner note. The mouse-unit definition moved into the plate's notes.
+- Labels and notes clear 0.6 s before every cut.
+- The Kerner cut moved to "medicine", so the plate fades out before the cut.
+- "acetylcholine" and "SNAP-25" sit above their anchors, clear of the caption.
+
+**(h) Production**
+- The groomed eyebrows (`../../set/brow04.js`) have about 520 tapered, clumped strands per brow:
+  - the heads stand up and the tails flow outward;
+  - an anisotropic sheen, with alpha-to-coverage tips;
+  - they sway with the frown.
+- Skin:
+  - vellus hairs;
+  - its own pore and short-hatch normal map (no long streaks);
+  - a red wrap scatter at the terminator (no transmission);
+  - a second, sharper specular lobe over lookV2's broad one.
+- Junction (`../../set/nmj04.js`):
+  - the vesicles are lit spheres with a fresnel rim and a cyan inner glow, clustered at the docking zones and drifting;
+  - the sarcomeres are geometry;
+  - the ending is a shell with a violet back-rim;
+  - haze sits between the depth layers;
+  - the focus racks from the toxin to SNAP-25;
+  - SNAP-25 is a twisted double strand that splits, with a flash, on "cuts".
+- The fibre's tint moved from magenta toward a warm red, so the junction sits in the same grade as the brow.
+
+**Structure**
+- The spine readout runs from the hook to the end: "one frown's dose: ?" resolves to "< 1 %" on "kill", and it becomes the dose plate's top row.
+- The dose shot goes wide, pushes to the crease on "twenty" and racks to the plate on "kill".
+- The plate reads "estimated lethal dose", says "70 kg adult" once, and the lethal bar runs the plate's full width.
+- The end card veils the brow with its own scrim (≈ 60 %).
+- The caption reads "a million".
