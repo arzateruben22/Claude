@@ -21,7 +21,8 @@ What it does:
     --title-out (A), the ending from the last keyframe at or before --end-in (C);
  2. renders frames 0..A+overlap and C-overlap..end at the final tier with render.mjs (--keep-png, its own
     build folder), from this checkout;
- 3. checks continuity: the overlap frames (where nothing changed) must match the delivered ones (PSNR);
+ 3. checks continuity: the overlap frames (where nothing changed) must match the delivered ones (PSNR 38 dB at
+    full size, or 40 dB at quarter size for very fine textures that the delivery encode alone blurs);
  4. encodes 0..A and C..end from the PNGs with the delivery settings render.mjs uses; cuts A..C out of the
     delivered file at its keyframes without re-encoding; joins the three and muxes the delivered sound (copied);
  5. verifies: the frame count, a clean decode, the middle bit-identical to the delivered file's (framemd5),
@@ -47,6 +48,7 @@ TO_YUV = "scale=in_range=full:out_range=tv:out_color_matrix=bt709"
 DELIVERY = ["-c:v", "libx264", "-preset", "slow", "-crf", "15", "-maxrate", "20M", "-bufsize", "40M",
             "-x264-params", "aq-mode=3:deblock=-1,-1", "-pix_fmt", "yuv420p", "-profile:v", "high"]
 PSNR_MIN = 38.0
+PSNR_QUARTER_MIN = 40.0
 
 
 def log(*a):
@@ -164,26 +166,40 @@ def main(argv):
         return d / "%05d.png"
 
     # 3. continuity: where nothing changed, the new render must match the delivered frames
-    checks = [(a, min(total, a + ov)), (max(0, c - ov), c)]
-    for f0, f1 in checks:
-        if f1 <= f0:
-            continue
-        r = run(["ffmpeg", "-hide_banner", "-nostdin", "-v", "info", "-framerate", str(fps), "-i", seq(f0, f1, f"chk{f0}"),
-                 "-i", old, "-lavfi",
-                 f"[0:v]{TO_YUV},format=yuv420p,setpts=PTS-STARTPTS[x];"
-                 f"[1:v]select='between(n\\,{f0}\\,{f1 - 1})',setpts=PTS-STARTPTS,format=yuv420p[y];[x][y]psnr=stats_file={work / f'psnr{f0}.log'}",
-                 "-frames:v", str(f1 - f0), "-f", "null", "-"])
+    # Full size first. A frame of very fine texture (a crowd of millions, a star field) loses detail to the
+    # delivery encode alone, which can pull full-size PSNR under the bar with nothing changed; so a range that misses
+    # at full size is compared again at quarter size (area-averaged), where codec loss fades and a changed word or
+    # object does not. Calibrated on Possibility Lab No. 002: codec loss on its crowd, 35.7 dB full / 44.3 quarter;
+    # the old series line against the new, 32.0 full / 34.3 quarter.
+    def psnr(f0, f1, tag, quarter):
+        q = ",scale=270:480:flags=area" if quarter else ""
+        log_f = work / f"psnr{f0}{tag}.log"
+        run(["ffmpeg", "-hide_banner", "-nostdin", "-v", "error", "-framerate", str(fps), "-i", seq(f0, f1, f"chk{f0}"),
+             "-i", old, "-lavfi",
+             f"[0:v]{TO_YUV},format=yuv420p{q},setpts=PTS-STARTPTS[x];"
+             f"[1:v]select='between(n\\,{f0}\\,{f1 - 1})',setpts=PTS-STARTPTS,format=yuv420p{q}[y];[x][y]psnr=stats_file={log_f}",
+             "-frames:v", str(f1 - f0), "-f", "null", "-"])
         vals = []
-        for ln in (work / f"psnr{f0}.log").read_text().splitlines():
+        for ln in log_f.read_text().splitlines():
             kv = dict(x.split(":", 1) for x in ln.split() if ":" in x)
             vals.append(float(kv["psnr_avg"]) if kv["psnr_avg"] != "inf" else 99.0)
         if len(vals) != f1 - f0:
             fail(f"continuity check compared {len(vals)} frames, expected {f1 - f0}")
-        lo, mean = min(vals), sum(vals) / len(vals)
+        return min(vals), sum(vals) / len(vals)
+
+    checks = [(a, min(total, a + ov)), (max(0, c - ov), c)]
+    for f0, f1 in checks:
+        if f1 <= f0:
+            continue
+        lo, mean = psnr(f0, f1, "", False)
         log(f"continuity {f0}–{f1 - 1}: PSNR mean {mean:.1f} dB, min {lo:.1f} dB (needs {PSNR_MIN})")
         if lo < PSNR_MIN:
-            fail(f"the new render differs from the delivered frames {f0}–{f1 - 1} where nothing should have changed "
-                 f"(min PSNR {lo:.1f} dB): the code or the film changed since the delivery. Render from the delivered commit.")
+            qlo, qmean = psnr(f0, f1, "q", True)
+            log(f"continuity {f0}–{f1 - 1} at quarter size: PSNR mean {qmean:.1f} dB, min {qlo:.1f} dB (needs {PSNR_QUARTER_MIN})")
+            if qlo < PSNR_QUARTER_MIN:
+                fail(f"the new render differs from the delivered frames {f0}–{f1 - 1} where nothing should have changed "
+                     f"(min PSNR {lo:.1f} dB, {qlo:.1f} dB at quarter size): the code or the film changed since the delivery. "
+                     f"Render from the delivered commit.")
 
     # 4. the new ends, encoded straight from the PNGs with the delivery settings
     seg_a, seg_c, mid = work / "a.mp4", work / "c.mp4", work / "mid.mp4"
