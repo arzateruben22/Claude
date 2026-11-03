@@ -111,18 +111,19 @@ def live(rows, t):
 for i in range(int(f.duration * FPS)):   # at most two small labels at once; honesty notes one at a time, in a corner
     assert live(COUNTERS + TAGS, i / FPS) <= 2 and live(BADGES, i / FPS) <= 1, f"too many labels at {i / FPS:.2f} s"
 
+TITLE_T1 = B["normal"]["t0"] - 0.5
 # ── cameras: per shot, keys {t, pos, look} eased between (scene units, relative to the shot's place) ─────────
 K = lambda t, pos, look: {"t": round(t, 4), "pos": pos, "look": look}   # noqa: E731
 CAM = {
-    "list": {"keys": [K(0.0, [0.9, 0.2, 19.6], [0.25, 0.15, 0]), K(CUE["meat"] + 0.3, [0.5, 0.3, 18.6], [0.05, -0.75, 0]),
-                      K(CUT["bed"], [-0.6, 0.1, 17.4], [-0.1, -0.85, 0])],
+    "list": {"keys": [K(0.0, [1.0, 0.1, 21.6], [0.3, -0.45, 0]), K(TITLE_T1, [0.7, 0.2, 21.0], [0.15, -0.55, 0]),
+                      K(CUE["sure"], [0.0, 0.3, 18.6], [0.0, -0.8, 0]), K(CUT["bed"], [-0.6, 0.1, 17.6], [-0.1, -0.85, 0])],
              "rack": [0.0, CUE["cigs"] - 0.2]},
     "bed": {"keys": [K(CUT["bed"], [-2.0, 3.4, 15.0], [0.0, 2.2, -6.0]), K(CUE["sun"], [0.2, 2.6, 10.5], [0.5, 0.8, -5.0]),
                      K(A("vo04:started"), [0.6, 2.3, 8.6], [0.6, 0.5, -4.0]), K(CUE["pooled"] + 0.6, [0.9, 2.2, 7.6], [0.7, 8.6, -6.5]),
                      K(CUT["uv"], [1.3, 2.2, 6.4], [0.9, 8.8, -8.0])],
             "rack": [CUE["young"], CUE["pooled"]]},
     "uv": {"keys": [K(CUT["uv"], [0.0, 6.2, 12.5], [0.0, 0.0, -1.0]), K(CUT["section"], [0.0, 4.6, 9.0], [0.0, -0.3, -2.5])]},
-    "section": {"keys": [K(CUT["section"], [9.5, 4.6, 15.5], [0.6, -3.3, -1.0]), K(CUT["list2"], [6.8, 3.5, 12.0], [0.2, -3.6, -1.0])]},
+    "section": {"keys": [K(CUT["section"], [12.0, 6.2, 21.0], [0.8, -3.0, -1.5]), K(CUT["list2"], [9.0, 4.8, 16.5], [0.4, -3.2, -1.5])]},
     "list2": {"keys": [K(CUT["list2"], [-0.9, 0.4, 19.2], [-0.15, -0.7, 0]), K(f.duration, [0.2, 0.1, 17.6], [0.0, -0.85, 0])]},
 }
 for name, c in CAM.items():

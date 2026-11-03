@@ -137,7 +137,8 @@ const uvShader = (sh) => {   // the UV camera: one material, a soft seam between
       float sideK = smoothstep(-1.6, 1.6, vWX - uSeam);
       float kk = mix(uL, uR, sideK);
       float lum = clamp(dot(diffuseColor.rgb, vec3(0.3, 0.59, 0.11)) / 0.1, 0.35, 1.5);
-      diffuseColor.rgb = mix(diffuseColor.rgb, uLilac * (0.1 + 0.9 * kk) * lum, uUV);`)
+      diffuseColor.rgb = mix(diffuseColor.rgb, uLilac * lum, uUV);`)
+    .replace("#include <tonemapping_fragment>", "gl_FragColor.rgb *= mix(1.0, 0.13 + 0.87 * kk, uUV);\n#include <tonemapping_fragment>")
     .replace("#include <emissivemap_fragment>", "#include <emissivemap_fragment>\ntotalEmissiveRadiance += uGlow * kk * uUV;");
 };
 T.mesh.material = skinM;
@@ -183,7 +184,7 @@ const faceMat = new THREE.MeshPhysicalMaterial({ roughness: 0.42, clearcoat: 0.3
 const faceG = new THREE.PlaneGeometry(16, FH); { const uv = faceG.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setY(i, uv.getY(i) * (1 - CROP)); }
 const faceC = new THREE.Mesh(faceG, faceMat); faceC.position.set(0, -FH / 2, 0); C.add(faceC);
 const sideMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.55, 0.3, 0.42), roughness: 0.6, sheen: 0.3, sheenColor: new THREE.Color(0.9, 0.6, 0.8) });
-const topMat = skinMaterial({ tone: DEEP, oil: 0.05, repeat: 3, seed: 9, micro: 0.7 }); topMat.sheen = 0.25; topMat.sheenColor.setRGB(0.5, 0.3, 0.2); topMat.roughness = 0.6; topMat.clearcoat = 0.05;
+const topMat = skinMaterial({ tone: DEEP.map((v) => v * 0.6), oil: 0.05, repeat: 3, seed: 9, micro: 0.7 }); topMat.sheen = 0.25; topMat.sheenColor.setRGB(0.5, 0.3, 0.2); topMat.roughness = 0.6; topMat.clearcoat = 0.05;
 const block = new THREE.Mesh(new THREE.BoxGeometry(16, FH, 6), [sideMat, sideMat, topMat, sideMat, sideMat, sideMat]); block.position.set(0, -FH / 2, -3.005); C.add(block);
 // the top layer's lower edge, traced from the photo (px of the 1024 × 672 original), marked with a fine lilac line
 const JPX = [[0, 300], [60, 335], [130, 330], [180, 280], [240, 295], [300, 295], [340, 240], [420, 225], [480, 215], [540, 225], [600, 195], [660, 220], [720, 210], [790, 175], [850, 215], [900, 185], [960, 215], [1024, 215]];
@@ -320,7 +321,7 @@ window.seek = function (t) {
       focusPt = mix3(add([0, 0, 2], XB), add([0, 0, -1.5], XB), E.inout2(seg(t, CUT.uv, CUT.section))); fstop = 0.22;
       rays.forEach((r) => r.set({ op: 0 }));
     }
-    bankL.intensity = 1.4 * kL + (shot === "uv" ? 0.12 : 0); bankR.intensity = 1.4 * kR + (shot === "uv" ? 0.12 : 0);   // each bank rims across the seam; an afterglow stays
+    const bk = shot === "uv" ? 1.4 : 0.8; bankL.intensity = bk * kL + (shot === "uv" ? 0.12 : 0); bankR.intensity = bk * kR + (shot === "uv" ? 0.12 : 0);   // each bank rims across the seam; an afterglow stays
     coreMats[0].color.copy(VIOLET).multiplyScalar(0.06 + 1.6 * kL); coreMats[1].color.copy(VIOLET).multiplyScalar(0.06 + 1.6 * kR);
     glassMats[0].emissive.copy(VIOLET).multiplyScalar(0.12 * kL); glassMats[1].emissive.copy(VIOLET).multiplyScalar(0.12 * kR);
   } else rays.forEach((r) => r.set({ op: 0 }));
