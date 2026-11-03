@@ -8,7 +8,7 @@ Four hero shots in one scene, far apart (review/storyboard.md):
   list     the IARC Group 1 excerpt as an engraved plate in violet haze (x = 0); it returns for the takeaway
   bed      deep-tone skin under a canopy of UVA tubes (x = 500)
   uv       the same skin through the UV camera; its two banks of tubes go dark (x = 500, the UV switch)
-  section  a block of skin cut open, its face the stained micrograph; UVA dashes pass the top layer (x = 1000)
+  section  a block of skin cut open, its face a stained tissue photo; UVA dashes pass the top layer (x = 1000)
 """
 import json
 import sys
@@ -83,7 +83,7 @@ BADGES = [
     {"id": "b-units", "text": "large, powerful units", "t0": CUE["large"] - 0.2, "t1": CUE["when"] - 0.2, "slot": "tl"},
     {"id": "b-pooled", "text": "pooled studies · 2012 (corr.) · 2007", "t0": CUE["pooled"] - 0.1, "t1": SHOT_END["bed"], "slot": "tl"},
     {"id": "b-model", "text": "model, not a photo", "t0": CUT["uv"] + 0.9, "t1": SHOT_END["uv"], "slot": "tl"},
-    {"id": "b-micro", "text": "micrograph · rays simplified", "t0": CUT["section"] + 0.3, "t1": SHOT_END["section"], "slot": "tr"},
+    {"id": "b-micro", "text": "tissue photo · rays simplified", "t0": CUT["section"] + 0.3, "t1": SHOT_END["section"], "slot": "tr"},
     {"id": "b-iarc2", "text": "IARC Group 1 · excerpt", "t0": CUT["list2"] + 0.2, "t1": t_end - 0.4, "slot": "tl"},
 ]
 SPINE = [0.62, 0.2]

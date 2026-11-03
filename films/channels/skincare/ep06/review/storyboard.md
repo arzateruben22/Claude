@@ -35,13 +35,13 @@ lilac in the bed's UV. The left half is lit by one bank of tubes, the right by t
 | 8 | "Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them too." | On "off" the left bank and the skin under it go dark ("Australia · 2015"); on "Brazil" the right bank goes dark ("Brazil · 2009"); note "model, not a photo" | One slow push over the seam |
 
 ## Hero 4: the cut face (toscale, 54–62 s)
-A block of skin cut open: the top is deep-tone skin, the face the real stained micrograph. Violet UVA dashes fall
+A block of skin cut open: the top is deep-tone skin, the face a real stained tissue photo. Violet UVA dashes fall
 from above, pass the thin top layer and carry on into the dermis. A dust shaft. The gauge lifts: the top layer ≈ 100
 µm beside the paper.
 
 | # | Sentence | Image | Camera |
 |---|---|---|---|
-| 9 | "And those long rays reach right through the top layer, on most skin about as thin as paper." | The dashes pass the top layer; the gauge fills "≈ 100 µm" on "layer", the paper on "paper"; note "micrograph · stained skin · rays simplified" | A slow push and drift, kept above the skin's surface |
+| 9 | "And those long rays reach right through the top layer, on most skin about as thin as paper." | The dashes pass the top layer; the gauge fills "≈ 100 µm" on "layer", the paper on "paper"; note "tissue photo · rays simplified" | A slow push and drift, kept above the skin's surface |
 
 ## Back to Hero 1 (takeaway, 62–68 s)
 | # | Sentence | Image | Camera |

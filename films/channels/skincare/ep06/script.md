@@ -42,10 +42,10 @@ Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep0
 ## hook {shot: frame 0, the reveal on the list: an IARC Group 1 excerpt over skin under a bed's light ("model, not a photo"); on "cigarettes" two lines light, on "meat" a third · labels that stay: "IARC Group 1" + "model, not a photo" · title: "Same list as cigarettes" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.3 s)
 vo: Same list as cigarettes? Processed *meat* is on it too. {c1}
 
-## normal {shot: no cut: the list holds, three lines lit; on "sure" one line lands under them · labels that stay: "IARC Group 1" + "strength of evidence, not size of risk" · picture-only 0.5 s · energy: 0.45} (4.3–15.7 s)
+## normal {shot: no cut: the list holds, three lines lit; on "sure" one line lands under them · labels that stay: "IARC Group 1" + "strength of evidence, not size of risk" · picture-only 0.3 s · energy: 0.45} (4.3–15.7 s)
 vo: All three share the top group of the World Health Organization's cancer agency, which says that doesn't make them equally dangerous: it ranks how *sure* the evidence is. {c2,c3}
 
-## change {shot: a scale jump into the bed, its tubes lighting; on "ten to fifteen" they flare · labels that stay: "UVA · ×10–15 midday sun" + "large, powerful units · may be" · picture-only 0.6 s · energy: 0.55} (15.7–27.2 s)
+## change {shot: a scale jump into the bed, its tubes lighting; on "ten to fifteen" they flare · labels that stay: "UVA · ×10–15 midday sun" + "large, powerful units · may be" · picture-only 0.3 s · energy: 0.55} (15.7–27.2 s)
 vo: Into the bed, then: its light is mostly UVA, the long rays. {c4} In large, powerful units, it may be ten to fifteen times as intense as the midday *sun*. {c5}
 
 ## why {shot: no cut; the reveal on the first sessions, sorted by age · labels that stay: "first use before 35 · RR 1.59 (2012, corrected) · 1.75 (2007)" + "pooled studies · relative risk" · picture-only 2.0 s · energy: 0.5} (27.2–41.6 s)
@@ -54,10 +54,10 @@ vo: When the beds joined that group, the sharpest signal came from people who st
 ## whoa {shot: the reveal on the map: on "Brazil" one country goes dark, on "off" a second · labels that stay: "commercial beds banned: Brazil 2009 · Australia 2015" + "model, not a photo" · picture-only 3.0 s · energy: 0.8} (41.6–51.3 s)
 vo: Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them *too*. {c8,c9}
 
-## toscale {segment: toscale · the reveal on the skin's section: long rays pass the top layer; the gauge sets it beside the paper · labels that stay: "≈ 100 µm · paper 100 µm" + "simplified" · picture-only 0.5 s · energy: 0.4} (51.3–58.9 s)
+## toscale {segment: toscale · the reveal on the skin's section: long rays pass the top layer; the gauge sets it beside the paper · labels that stay: "≈ 100 µm · paper 100 µm" + "simplified" · picture-only 0.3 s · energy: 0.4} (51.3–58.9 s)
 vo: And those long rays reach right through the top layer, on most skin about as thin as *paper*. {c10,c11}
 
-## takeaway {shot: back to the hook's list; on "sun" a fourth line lights above the others, dated first · labels that stay: "solar radiation · Group 1 since 1992 · beds 2009" + "strength of evidence, not size of risk" · picture-only 0.5 s · energy: 0.3} (58.9–67.3 s)
+## takeaway {shot: back to the hook's list; on "sun" a fourth line lights above the others, dated first · labels that stay: "solar radiation · Group 1 since 1992 · beds 2009" + "strength of evidence, not size of risk" · picture-only 0.3 s · energy: 0.3} (58.9–67.3 s)
 vo: The sun made that list years before the beds. {c12} Same list as cigarettes: not the same harm, the same *certainty*. {c13}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (67.3–73.3 s)

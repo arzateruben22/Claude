@@ -18,12 +18,12 @@ beds in 2009.
    focus from the tubes to the skin for the why.
 3. **The switch-off (the UV switch):** the cyan scan line on "Whole countries acted"; in the UV camera the skin's
    left half goes dark with its bank of tubes (Australia · 2015), then the right (Brazil · 2009).
-4. **The cut face:** a block of skin cut open, its face the real stained micrograph; violet UVA dashes pass the top
+4. **The cut face:** a block of skin cut open, its face a real stained tissue photo (micrograph); violet UVA dashes pass the top
    layer into the dermis; the gauge sets the top layer ≈ 100 µm beside the paper.
 
 Honesty on screen: "IARC Group 1 · excerpt" and the plate's own line "ranks the strength of evidence, not the size of
 risk"; "large, powerful units" and "UVA vs midday sun · may be"; "pooled studies · 2012 (corr.) · 2007" with
-"relative risk · first use < 35"; "model, not a photo" on the UV switch-off; "micrograph · rays simplified" on the
+"relative risk · first use < 35"; "model, not a photo" on the UV switch-off; "tissue photo · rays simplified" on the
 cut face. Years appear on screen only. No advice.
 
 Files: `script.md`, `claims.json`, `voice.py`/`vo/`, `compile.py` → `film.json`/`sheet.json`, `scene.mjs`

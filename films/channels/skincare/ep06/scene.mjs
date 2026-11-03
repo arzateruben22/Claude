@@ -6,7 +6,7 @@ import * as THREE from "three";
 //   list     the IARC Group 1 excerpt as an engraved slate plate in violet haze; its rows light in cyan (x = 0)
 //   bed      deep-tone skin under a canopy of UVA tubes glowing violet, a shaft of dust (x = 500)
 //   uv       the same skin through the UV camera (the cyan scan line): its two banks of tubes switch off (x = 500)
-//   section  a block of skin cut open, its face the stained micrograph; UVA dashes pass the top layer (x = 1000)
+//   section  a block of skin cut open, its face a stained tissue photo; UVA dashes pass the top layer (x = 1000)
 //   list2    the plate again: the sun's row lights, dated first
 import { stage, seg, E, rng } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
@@ -122,7 +122,7 @@ const shaftBed = createShaft({ from: [XB - 2, 6.4, -6], to: [XB + 1, -0.5, -1], 
 const dustBed = particles(320, [[XB - 7, 0.3, -12], [XB + 7, 6.2, 9]], 0.06, "#F3E9FF");
 const FOGB = new THREE.Fog(0x2c1660, 24, 62);
 
-// ── 4: the cut face: a block of deep-tone skin, its face the stained micrograph; UVA dashes ──
+// ── 4: the cut face: a block of deep-tone skin, its face a stained tissue photo; UVA dashes ──
 const C = new THREE.Group(); C.position.x = XC; scene.add(C);
 const faceMat = new THREE.MeshPhysicalMaterial({ roughness: 0.42, clearcoat: 0.35, clearcoatRoughness: 0.3, sheen: 0.2, sheenColor: new THREE.Color(1, 0.85, 0.9) });
 const face = new THREE.Mesh(new THREE.PlaneGeometry(16, 10.5), faceMat); face.position.set(0, -5.25, 0); C.add(face);
@@ -173,7 +173,7 @@ window.SCENE_READY = (async () => {
   await Promise.all(["700 76px 'Red Hat Mono'", "500 52px 'Red Hat Mono'", "600 78px 'Red Hat Text'"].map((f) => document.fonts.load(f).catch(() => null)));
   drawPlate();
   const sec = await new Promise((res) => { const img = new Image(); img.onload = () => { const t = new THREE.Texture(img); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.needsUpdate = true; res(t); }; img.src = SECTION; });
-  sec.center.set(0.5, 0.5); sec.rotation = -0.075; sec.repeat.set(0.9, 0.86); sec.offset.set(0, -0.06);   // level the skin's surface along the face's top edge
+  sec.repeat.set(1, 1);   // the whole photo once: no tile seams
   faceMat.map = sec; faceMat.needsUpdate = true;
   HL.T.set({ tone: DEEP, furrows: 0.35 }); HR.T.set({ tone: DEEP, furrows: 0.35 });
 })();

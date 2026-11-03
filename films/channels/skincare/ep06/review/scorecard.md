@@ -18,7 +18,7 @@ UVA dashes and the gauge. Channel renamed to Skin Sense (ID `skin-sense-006`, se
 **Honesty on screen:** "IARC Group 1 · excerpt"; the plate's line "ranks the strength of evidence, not the size of
 risk" (lit on "sure", relit for the takeaway); "large, powerful units" + "UVA vs midday sun · may be ×10–15";
 "pooled studies · 2012 (corr.) · 2007" + "relative risk · first use < 35: 1.59 · 1.75"; "model, not a photo" on the
-switch-off; "micrograph · rays simplified" on the cut face; years on screen only; no advice.
+switch-off; "tissue photo · rays simplified" on the cut face; years on screen only; no advice.
 
 **Open:**
 - The stained micrograph is the public-domain H&E section used by the look test; a person confirms its licence on
