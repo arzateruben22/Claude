@@ -1,5 +1,5 @@
 {
- "duration": 76.5334,
+ "duration": 75.0,
  "fps": 30,
  "preset": "outerlayer-slide",
  "sections": [
@@ -48,7 +48,7 @@
   {
    "id": "tease",
    "t0": 70.0,
-   "t1": 76.5334,
+   "t1": 75.0,
    "energy": 0.35
   }
  ],
@@ -393,7 +393,7 @@
    "t": 70.0,
    "kind": "section",
    "id": "tease",
-   "t1": 76.5334
+   "t1": 75.0
   },
   {
    "t": 70.36666666666666,

@@ -23,6 +23,11 @@ ID = "skin-sense-001"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
+MAXDUR = 75.0   # the delivery window is 60–75 s: trim the end card's tail (the card keeps its start; the voice ends ≈ 74.6 s)
+CAM_END = f.duration   # the camera's last key stays where the untrimmed film ended, so the motion (and every frame before the cut) is unchanged
+if f.duration > MAXDUR:
+    cut = f.duration - MAXDUR
+    BEATS = f.layout(plan, end_hold=end_hold - cut, total=MAXDUR)
 A = f.at
 B = {b["id"]: b for b in BEATS}
 
@@ -82,7 +87,7 @@ CAM = {
               {"t": B["takeaway"]["t0"], "target": [FX + 100, -520, 0], "el": 6, "fov": 30, "fx": 0.7, "fy": 0.46, "dist": 1500, "az": -3, "ease": "inout2"}],
     "rise": [{"t": B["takeaway"]["t0"], "target": [TX + 1.5, -0.3, 0.4], "el": 60, "fov": 34, "fx": 0.5, "fy": 0.5, "dist": 6, "az": -1},   # up out of the pore...
              {"t": t_uv2, "target": [TX + 0.5, 0, 2], "el": 30, "fov": 34, "fx": 0.5, "fy": 0.48, "dist": 24, "az": -6, "ease": "out3"}],   # ...over the clear skin
-    "uv2": [{"t": t_uv2, **SPOTK, "dist": 9, "az": 1}, {"t": CUE["no"] + 0.4, **UVK, "dist": 18, "az": 0, "ease": "out3"}, {"t": B["tease"]["t1"], **UVK, "dist": 20, "az": -2, "ease": "sine"}],   # out of the spot, back to the cheek
+    "uv2": [{"t": t_uv2, **SPOTK, "dist": 9, "az": 1}, {"t": CUE["no"] + 0.4, **UVK, "dist": 18, "az": 0, "ease": "out3"}, {"t": CAM_END, **UVK, "dist": 20, "az": -2, "ease": "sine"}],   # out of the spot, back to the cheek
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
