@@ -69,7 +69,11 @@
   {
    "t": 2.4833,
    "kind": "label",
-   "tag": "ghost0"
+   "tag": "ghost0",
+   "pos": [
+    0.683,
+    0.583
+   ]
   },
   {
    "t": 4.8,
@@ -110,7 +114,7 @@
    "tag": "nts-tree",
    "text": "not to scale",
    "pos": [
-    0.659,
+    0.681,
     0.191
    ]
   },
@@ -232,7 +236,7 @@
    "tag": "ill-sickle",
    "text": "illustration · not to scale",
    "pos": [
-    0.476,
+    0.528,
     0.191
    ]
   },
@@ -277,7 +281,7 @@
    "tag": "nts-o2",
    "text": "not to scale",
    "pos": [
-    0.659,
+    0.681,
     0.191
    ]
   },
@@ -337,7 +341,7 @@
    "tag": "nts-in",
    "text": "not to scale",
    "pos": [
-    0.659,
+    0.681,
     0.191
    ]
   },
@@ -400,6 +404,7 @@
   "nonuc": 11.3,
   "capillary": 20.7667,
   "dimple": 31.4333,
+  "ghost0": 2.5,
   "ghostw": 41.0333,
   "sickle": 53.7667,
   "o2": 55.3333,
