@@ -1,0 +1,23 @@
+{
+ "chunk": 5,
+ "first": 1500,
+ "end": 1800,
+ "versions": [
+  {
+   "codeSha256": "79a982ead98c955f78a13f3daf1f2d8c326563b681ab4ff05cc0498edc022759",
+   "pageSha256": "58c06e5b2d7bf6b3eec700164c0c7081c029e92c65e5e4f3f122f385277bbac1",
+   "chromium": "153.0.8010.12",
+   "at": "2026-11-03T15:16:31.977Z"
+  }
+ ],
+ "encoded": {
+  "file": "chunks/005.mp4",
+  "first": 1500,
+  "frames": 300,
+  "fps": 30,
+  "bytes": 52647230,
+  "sha256": "1f995f062ee3ea9de363a17506ade54f50b33cdd0161ace449e2f28fdcd2546a",
+  "verifiedFrames": 300,
+  "at": "2026-11-03T15:58:16.931Z"
+ }
+}
