@@ -174,3 +174,16 @@ The picture was rebuilt in the approved look (look test 2), on the facts-pass-2 
 - The plate reads "estimated lethal dose", says "70 kg adult" once, and the lethal bar runs the plate's full width.
 - The end card veils the brow with its own scrim (≈ 60 %).
 - The caption reads "a million".
+- The channel look moved to v3 (`look3.js`):
+  - `skinV3` with this film's upper-left key and a gentler terminator (`scatterK` 0.22);
+  - grainV3.
+- A bug is fixed in brow04: a mid-line `//` comment had hidden the hair placement, so the brows did not render.
+
+**Draft after round 1** (`skin-sense-004-9x16-draft-preview.mp4`, `draft-contact-sheet.jpg`)
+- **Sync:** PASS. label 0.0/5.0 ms, reveal 12.0/12.0, swell 51.0/51.0, signature 11.0/11.0; all others 0–5 ms.
+  - The spine's appearance sound was masked by the title's signature tail (37 ms). The spine now arrives silently, and the picture is unchanged.
+- **Mix:** music −28.9 LUFS under dialog −13.5 LUFS, a 15.4 LU gap (pass).
+- **Length and render:** 74.67 s; 4.46 s/frame at draft.
+- **Open:**
+  - the spine sits close to the gauge's top edge (54–58 s) and to the second takeaway note (64–66 s);
+  - the hook's merged note wraps onto three lines.
