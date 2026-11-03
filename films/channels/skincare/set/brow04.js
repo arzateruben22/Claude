@@ -63,13 +63,13 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H
   };
 
   // ── the groom: per brow, clumps of tapered strands; the head (medial) hairs stand up, the body and tail flow outward ──
-  const hairGeo = new THREE.CylinderGeometry(0.004, 0.018, 1, 6, 8, false).rotateZ(-Math.PI / 2).translate(0.5, 0, 0);   // root at the origin, tip along +x
-  { const p = hairGeo.attributes.position, col = []; for (let i = 0; i < p.count; i++) { const u = p.getX(i); p.setY(i, p.getY(i) - 0.07 * u * u); const k = Math.pow(u, 1.5);   // a slight bend; dark at the root, paler at the tip (linear colours)
-      col.push(0.02 + 0.1 * k, 0.011 + 0.06 * k, 0.007 + 0.035 * k); } hairGeo.setAttribute("color", new THREE.Float32BufferAttribute(col, 3)); hairGeo.computeVertexNormals(); }
+  // root at the origin, tip along +x, a slight bend (down for the right brow, mirrored for the left: two geometries)
+  const hairGeo = (bend) => { const g2 = new THREE.CylinderGeometry(0.004, 0.018, 1, 6, 8, false).rotateZ(-Math.PI / 2).translate(0.5, 0, 0), p = g2.attributes.position;
+    for (let i = 0; i < p.count; i++) { const u = p.getX(i); p.setY(i, p.getY(i) + bend * u * u); } g2.computeVertexNormals(); return g2; };
   const alpha = (() => { const c = document.createElement("canvas"); c.width = 4; c.height = 64; const k = c.getContext("2d"); const gr = k.createLinearGradient(0, 64, 0, 0);
     gr.addColorStop(0, "#fff"); gr.addColorStop(0.7, "#ddd"); gr.addColorStop(1, "#333"); k.fillStyle = gr; k.fillRect(0, 0, 4, 64); return new THREE.CanvasTexture(c); })();
-  const hairMat = new THREE.MeshPhysicalMaterial({ vertexColors: true, color: 0xffffff, roughness: 0.55, metalness: 0, sheen: 0.25, sheenRoughness: 0.5, sheenColor: new THREE.Color(0.7, 0.52, 0.36), specularIntensity: 0.25,
-    alphaMap: alpha, alphaToCoverage: true, transparent: false, side: THREE.DoubleSide });
+  const hairMat = new THREE.MeshPhysicalMaterial({ color: 0x2e1d12, roughness: 0.55, metalness: 0, sheen: 0.25, sheenRoughness: 0.5, sheenColor: new THREE.Color(0.7, 0.52, 0.36), specularIntensity: 0.25,
+    alphaMap: alpha, alphaToCoverage: true, transparent: false });
   const HAIRS = [];
   for (const s of [-1, 1]) {
     const clumps = Math.round(hairN / 7);
@@ -79,30 +79,33 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H
       for (let j = 0; j < 7; j++) HAIRS.push({ s, x: cx + (R() - 0.5) * 0.12, y: cy + (R() - 0.5) * 0.08, th: th0 + (R() - 0.5) * 0.22, l: (0.24 + R() * 0.18) * (1 - 0.25 * u), lift: 0.08 + R() * 0.12, ph: R() * 6.28 });
     }
   }
-  const hm = new THREE.InstancedMesh(hairGeo, hairMat, HAIRS.length); g.add(hm);
-  { const c = new THREE.Color(); HAIRS.forEach((h, i) => { const v = 0.6 + 0.8 * R(); c.setRGB(v, v * (0.9 + 0.1 * R()), v * (0.82 + 0.15 * R())); hm.setColorAt(i, c); }); hm.instanceColor.needsUpdate = true; }
+  const SIDE = [-1, 1].map((s) => { const list = HAIRS.filter((h) => h.s === s), m = new THREE.InstancedMesh(hairGeo(s > 0 ? -0.07 : 0.07), hairMat, list.length); m.frustumCulled = false; g.add(m);
+    const c = new THREE.Color(); list.forEach((h, i) => { const v = 0.6 + 0.8 * R(); c.setRGB(v, v * (0.9 + 0.1 * R()), v * (0.82 + 0.15 * R())); m.setColorAt(i, c); }); m.instanceColor.needsUpdate = true; return { m, list }; });
 
   // ── vellus: fine pale hair lying on the skin ──
   const vellusMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(0.93, 0.84, 0.74), roughness: 0.45, transparent: true, opacity: 0.55, depthWrite: false });
   const VEL = Array.from({ length: vellusN }, () => ({ x: (R() - 0.5) * W * 0.9, y: yc + (R() - 0.5) * H * 0.9, a: (R() - 0.5) * 1.2 + (R() > 0.5 ? 0.6 : 2.5), l: 0.05 + R() * 0.07 }));
-  const vm = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.0012, 0.0035, 1, 4, 1).rotateZ(-Math.PI / 2).translate(0.5, 0, 0), vellusMat, VEL.length); g.add(vm);
+  const vm = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.0012, 0.0035, 1, 4, 1).rotateZ(-Math.PI / 2).translate(0.5, 0, 0), vellusMat, VEL.length); vm.frustumCulled = false; g.add(vm);
 
   const dm = new THREE.Object3D(); dm.rotation.order = "ZYX";
   let last = -1;
   return {
     group: g, mesh, hairMat, vellusMat, surf,
+    // set: the inner brows draw in and down with the frown, and the hairs sway with it
     set({ frown = 1 } = {}) {
       if (Math.abs(frown - last) < 1e-3) return; last = frown;
       for (let i = 0; i < pos.count; i++) pos.setZ(i, surf(base[3 * i], base[3 * i + 1], frown));
       pos.needsUpdate = true; geo.computeVertexNormals();
-      HAIRS.forEach((h, i) => {
-        const k = Math.exp(-(h.x * h.x) / 5), pull = frown * 0.22 * Math.sign(h.x) * k;   // the inner brows draw in and down
-        const X = h.x - pull, Y = h.y - 0.18 * frown * k;
-        const th = h.th + h.s * 0.0 + 0.16 * frown * k + 0.02 * Math.sin(h.ph + 5 * frown);   // the hairs sway with the frown
-        dm.position.set(X, Y, surf(X, Y, frown) + 0.004);
-        dm.rotation.set(0, -h.lift, h.s > 0 ? th : Math.PI - th); dm.scale.set(h.l, h.s, 1);   // the left brow mirrored, so both bend outward-down dm.updateMatrix(); hm.setMatrixAt(i, dm.matrix);
-      });
-      hm.instanceMatrix.needsUpdate = true;
+      for (const { m, list } of SIDE) {
+        list.forEach((h, i) => {
+          const k = Math.exp(-(h.x * h.x) / 5), pull = frown * 0.22 * Math.sign(h.x) * k;
+          const X = h.x - pull, Y = h.y - 0.18 * frown * k;
+          const th = h.th + 0.16 * frown * k + 0.02 * Math.sin(h.ph + 5 * frown);
+          dm.position.set(X, Y, surf(X, Y, frown) + 0.004);
+          dm.rotation.set(0, -h.lift, h.s > 0 ? th : Math.PI - th); dm.scale.set(h.l, 1, 1); dm.updateMatrix(); m.setMatrixAt(i, dm.matrix);
+        });
+        m.instanceMatrix.needsUpdate = true;
+      }
       VEL.forEach((v, i) => { dm.position.set(v.x, v.y, surf(v.x, v.y, frown) + 0.003); dm.rotation.set(0, -0.15, v.a); dm.scale.set(v.l, 1, 1); dm.updateMatrix(); vm.setMatrixAt(i, dm.matrix); });
       vm.instanceMatrix.needsUpdate = true;
     },

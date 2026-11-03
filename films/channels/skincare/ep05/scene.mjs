@@ -31,7 +31,7 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true,
 renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
 renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
 renderer.localClippingEnabled = true;
-if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 3, threshold: 0.9, bloom: 0.3, exposure: 1.0, maxCoc: 0.035 });
+if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 3, shutter: 0.8, threshold: 0.9, bloom: 0.3, exposure: 1.0, maxCoc: 0.045 });   // a longer shutter: the camera moves read
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(30, W / H, 0.05, 20000);
 const studio = createStudio(renderer, scene, {});
@@ -92,8 +92,37 @@ const wipe = (m, mode, { uv = [0, 0, 0], day = [1, 1, 1], em = [0, 0, 0] } = {})
 };
 
 // ── A: the sunscreen macro (x = 0) ──────────────────────────────────────────
+// the relief's finer life (episode-local, on top of set/terrain.js): every time the terrain rebuilds its heights, the
+// creases are rounded (one smoothing pass) and a second, finer family of furrows, small rounded bumps and deeper,
+// bowl-shaped pores are added; the detail field is computed once
+const detail = (T, seed) => {
+  const geo = T.mesh.geometry, pos = geo.attributes.position, n = Math.round(Math.sqrt(pos.count)), N = n - 1, step = 80 / N;
+  const h2 = (x, y) => { const v = Math.sin(x * 127.1 + y * 311.7 + seed) * 43758.5453; return v - Math.floor(v); };
+  const vn = (x, y) => { const i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy); return (h2(i, j) * (1 - u) + h2(i + 1, j) * u) * (1 - v) + (h2(i, j + 1) * (1 - u) + h2(i + 1, j + 1) * u) * v; };
+  const D = new Float32Array(pos.count);
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), z = pos.getZ(i);
+    const w = 0.5 * vn(x * 0.7, z * 0.7);
+    const f1 = Math.abs(Math.sin((x * 0.83 + z * 0.31) * 2.1 + 2.0 * w)), f2 = Math.abs(Math.sin((x * 0.27 - z * 0.92) * 1.9 + 2.2 * w));
+    const fine = Math.pow(1 - Math.min(f1, f2), 3);   // a finer crossing family, rounded in profile
+    D[i] = -0.07 * fine + 0.07 * (vn(x * 1.3, z * 1.3) - 0.5) + 0.03 * (vn(x * 3.1 + 7, z * 3.1) - 0.5);
+    for (const [px, pz] of T.pores) { const r2 = (x - px) ** 2 + (z - pz) ** 2; if (r2 < 0.5) D[i] -= 0.22 * Math.max(0, 1 - r2 / 0.5) ** 2; }   // a deeper, rounded bowl
+  }
+  const Y = new Float32Array(pos.count), orig = T.set.bind(T);
+  T.set = (o) => {
+    const v0 = pos.version; orig(o); if (pos.version === v0) return;
+    for (let i = 0; i < pos.count; i++) Y[i] = pos.getY(i);
+    for (let iz = 0; iz <= N; iz++) for (let ix = 0; ix <= N; ix++) {
+      const i = iz * n + ix, a = Math.max(0, ix - 1), b = Math.min(N, ix + 1), c = Math.max(0, iz - 1), d = Math.min(N, iz + 1);
+      const sm = (Y[iz * n + a] + Y[iz * n + b] + Y[c * n + ix] + Y[d * n + ix] + 2 * Y[i]) / 6;   // a rounded crease, not a knife edge
+      pos.setY(i, sm + D[i]);
+    }
+    pos.needsUpdate = true; geo.computeVertexNormals();
+  };
+  return T;
+};
 const mkHalf = (keepLeft) => {
-  const T = createTerrain({ seed: 21, spots: 90, half: "right", segs: 400 });
+  const T = detail(createTerrain({ seed: 21, spots: 90, half: "right", segs: 400 }), 3);
   const clip = [new THREE.Plane(new THREE.Vector3(keepLeft ? -1 : 1, 0, 0), 0)];
   const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: keepLeft ? 0.7 : 0.05, hydration: keepLeft ? 0.8 : 0.25, repeat: 14, seed: 6, micro: 0.35 });
   m.roughness = keepLeft ? 0.3 : 0.6; m.clippingPlanes = clip; T.mesh.material = m;
@@ -102,6 +131,15 @@ const mkHalf = (keepLeft) => {
   scene.add(T.group); return { T, m, clip };
 };
 const HL = mkHalf(true), HR = mkHalf(false);
+// sebum: a tiny glossy bead in about a third of the pores, catching the key
+const sebum = (H2, keepLeft) => {
+  const P = H2.T.pores.filter(([x]) => (keepLeft ? x < 0 : x > 0) && Math.abs(x) < 20), Rs = rng(keepLeft ? 61 : 62), pick = P.filter(() => Rs() < 0.35);
+  const mat = new THREE.MeshPhysicalMaterial({ color: 0xfff1e0, roughness: 0.05, clearcoat: 1, clearcoatRoughness: 0.03, transparent: true, opacity: 0.85, clippingPlanes: H2.clip });
+  const im = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 12, 8), mat, pick.length), dm = new THREE.Object3D(), gp = H2.T.mesh.geometry.attributes.position, n = 401;
+  pick.forEach(([x, z], i) => { const ix = Math.round((x + 40) / 0.2), iz = Math.round((z + 40) / 0.2), y = gp.getY(iz * n + ix); const r = 0.05 + 0.05 * Rs(); dm.position.set(x, y + r * 0.2, z); dm.scale.set(r, r * 0.45, r); dm.updateMatrix(); im.setMatrixAt(i, dm.matrix); });
+  H2.T.group.add(im); return { im, mat };
+};
+const SEB = [sebum(HL, true), sebum(HR, false)];
 const onHalf = (H2, mat, order) => { mat.clippingPlanes = H2.clip; const m = new THREE.Mesh(H2.T.mesh.geometry, mat); m.renderOrder = order; H2.T.group.add(m); return m; };
 const layer = (o) => Object.assign(new THREE.MeshPhysicalMaterial({ transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2, ...o }));
 
@@ -118,7 +156,7 @@ menMat.userData.envK = 1.6;
 const meniscus = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(menPts), 800, 0.016, 6), menMat); HL.T.group.add(meniscus);
 
 // the morning layer, made visible for the to-scale shot: one continuous satin film on the relief of the screened half
-const filmMat = layer({ color: 0xf4f6ff, opacity: 0, roughness: 0.3, roughnessMap: noiseTex(5, 256, 10), clearcoat: 0.8, clearcoatRoughness: 0.32, specularIntensity: 0.25 });
+const filmMat = layer({ color: 0xf2efff, opacity: 0, roughness: 0.45, clearcoat: 1, clearcoatRoughness: 0.38, specularIntensity: 0.2, sheen: 0.6, sheenRoughness: 0.5, sheenColor: new THREE.Color(0.9, 0.88, 1) });   // one broad satin sheen, its highlight rolled off
 filmMat.userData.envK = 0.35;
 const filmMesh = onHalf(HL, filmMat, 2);
 
@@ -168,13 +206,15 @@ const dmgLMat = dmgMat.clone(); dmgLMat.alphaMap = regionTex(dmgLCv);
 const dmg = onHalf(HR, dmgMat, 2), dmgL = onHalf(HL, dmgLMat, 4);
 
 // light: a soft shaft far behind the seam, with dust you can see inside it
-const shaftA = createShaft({ from: [7, 24, -32], to: [1.5, -1, -12], radius: 2.2, color: "#C9B4FF" }); scene.add(shaftA.group);
+const SHA = [[-7, 20, -12], [0.8, -0.5, -1.5]];   // in front of the far skin, crossing the seam's middle distance
+const shaftA = createShaft({ from: SHA[0], to: SHA[1], radius: 1.8, color: "#E6D6FF" }); scene.add(shaftA.group);
+shaftA.group.traverse((o) => { if (o.material) o.material.fog = false; });
 const dustA = particles(200, [[-14, 0.3, -12], [14, 9, 8]], 0.08, "#F3E9FF");
 const dustShaft = (() => {   // motes inside the shaft's volume, brighter than the room's dust
-  const n = 150, pos = new Float32Array(n * 3), base = [], a = new THREE.Vector3(7, 24, -32), b = new THREE.Vector3(1.5, -1, -12);
-  for (let i = 0; i < n; i++) { const u = 0.25 + 0.7 * R(), p = a.clone().lerp(b, u), r = 1.6 * Math.sqrt(R()), th = R() * 6.28; base.push([p.x + r * Math.cos(th), p.y, p.z + r * Math.sin(th), R() * 6.28]); }
+  const n = 220, pos = new Float32Array(n * 3), base = [], a = new THREE.Vector3(...SHA[0]), b = new THREE.Vector3(...SHA[1]);
+  for (let i = 0; i < n; i++) { const u = 0.2 + 0.75 * R(), p = a.clone().lerp(b, u), r = 1.3 * Math.sqrt(R()), th = R() * 6.28; base.push([p.x + r * Math.cos(th), p.y, p.z + r * Math.sin(th), R() * 6.28]); }
   const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  const m = new THREE.PointsMaterial({ map: dotTex, size: 0.09, color: 0xfff1e6, transparent: true, opacity: 0.9, depthWrite: false, blending: THREE.AdditiveBlending });
+  const m = new THREE.PointsMaterial({ map: dotTex, size: 0.07, color: 0xfff1e6, transparent: true, opacity: 0.9, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
   const p = new THREE.Points(g, m); scene.add(p);
   return { set(t, op) { p.visible = op > 0.002; m.opacity = 0.9 * op; base.forEach(([x, y, z, ph], i) => { pos[3 * i] = x + 0.3 * Math.sin(t * 0.25 + ph); pos[3 * i + 1] = y + 0.35 * Math.sin(t * 0.18 + ph * 2); pos[3 * i + 2] = z + 0.3 * Math.cos(t * 0.22 + ph); }); g.attributes.position.needsUpdate = true; } };
 })();
@@ -183,7 +223,7 @@ const FOGA = new THREE.Fog(0x2c1660, 22, 60);
 
 // ── K: the silicone cast of the skin's lines (x = 500) ───────────────────────
 const XK = 500;
-const K = createTerrain({ seed: 21, spots: 0, hair: false, segs: 360 });
+const K = detail(createTerrain({ seed: 21, spots: 0, hair: false, segs: 360 }), 5);
 K.group.position.x = XK; scene.add(K.group);
 { const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.05, hydration: 0.1, micro: 1.3, repeat: 11, seed: 4 });   // the fine crosshatch of skin lines (two crossing families), caught by the raking light
   K.mesh.material = m; }
@@ -205,6 +245,10 @@ blockSide.position.set(0, -5.25, -3.01); Bk.add(blockSide);
 const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.1, roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0.01, metalness: 0, depthWrite: false, specularIntensity: 1 });
 glassMat.userData.envK = 2.2;
 const glass = new THREE.Mesh(new THREE.BoxGeometry(15.2, 9.8, 0.08), glassMat); glass.position.set(0.2, -5.4, 0.12); Bk.add(glass);
+// the glint: a soft streak of light across the cover glass that slides as the camera moves
+const glintTex = (() => { const c = document.createElement("canvas"); c.width = 256; c.height = 16; const k = c.getContext("2d"), g = k.createLinearGradient(0, 0, 256, 0); g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.5, "rgba(255,255,255,1)"); g.addColorStop(1, "rgba(255,255,255,0)"); k.fillStyle = g; k.fillRect(0, 0, 256, 16); return new THREE.CanvasTexture(c); })();
+const glint = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 14), new THREE.MeshBasicMaterial({ map: glintTex, transparent: true, opacity: 0.16, depthWrite: false, blending: THREE.AdditiveBlending }));
+glint.rotation.z = -0.5; glint.position.set(0, -5.4, 0.18); Bk.add(glint);
 // the blocks sit in a lit volume (prod.js): haze the key reads through, far bokeh behind
 const hzB = hazeVolume(scene, { at: [XB, -4, -10], size: [60, 40, 14], color: "#c9b6ff", n: 5, op: 0.05 });
 const bkB = bokeh(scene, { n: 120, box: [[XB - 40, XB + 40], [-30, 20], [-60, -25]], size: 1.6, color: "#d9ccff", op: 0.3 });
@@ -283,10 +327,11 @@ const dots = (n, c) => Array.from({ length: n }, () => `<i style="display:inline
 const mel = plate(`<div style="font:500 2.6vmin/1 var(--font-mono);color:var(--text-2);letter-spacing:.06em;text-transform:uppercase;margin:0 0 1.4vmin">melanomas, ten years on</div>
   <div style="display:grid;grid-template-columns:21vmin 1fr;white-space:nowrap;align-items:center;gap:1.4vmin;font:600 3vmin/1.2 var(--font-body, inherit)"><span>daily</span><span class="d1">${dots(M.n[0], "var(--water)")}</span>
   <span>as they pleased</span><span class="d2">${dots(M.n[1], "var(--uv)")}</span></div>
-  <div class="sub" style="opacity:0"><div style="font:650 4.4vmin/1.2 var(--font-body, inherit);color:var(--text);margin-top:1.8vmin">${M.note}</div>
+  <div class="sub" style="opacity:0"><div style="font:650 5vmin/1.2 var(--font-body, inherit);color:var(--text);margin-top:1.8vmin">${M.note}</div>
   <div style="font:500 2.7vmin/1.35 var(--font-mono);color:var(--text-2);margin-top:0.8vmin">${M.sub}</div></div>`,
   { left: "45.8%", top: `${0.3 * H}px`, transform: "translateX(-50%)", width: "64vmin", padding: "2.4vmin 3vmin" });
 const cards = [stackAsCard(CTR["c-age"], odds), stackAsCard(CTR["c-follow"], mel)];   // the spines as the plates' header rows
+const melRows = mel.children[1], melHead = mel.children[0];
 const msub = mel.querySelector(".sub"), d1 = [...mel.querySelectorAll(".d1 i")], d2 = [...mel.querySelectorAll(".d2 i")];
 const veil = document.createElement("div");
 Object.assign(veil.style, { position: "absolute", inset: "0", zIndex: "1", pointerEvents: "none", opacity: "0", background: "var(--slide)" });
@@ -309,8 +354,9 @@ window.seek = function (t) {
   const isA = MACRO.includes(shot), isK = shot === "cast", isB = shot === "micro";
   HL.T.group.visible = HR.T.group.visible = isA; K.group.visible = isK; Bk.visible = isB;
   const day = isA && !(shot === "uv" && t > UVW.uv[0]) && !(shot === "loop" && t > UVW.loop[0]);
-  shaftA.set({ op: isA ? (day ? 0.5 : 0.3) : 0 }); shaftK.set({ op: isK ? 0.6 : 0 }); shaftB.set({ op: isB ? 0.8 : 0 });
-  dustA.set(t, isA ? 0.8 : 0); dustShaft.set(t, isA ? 1 : 0); dustNear.set(t, shot === "hook" || shot === "loop" ? 1 : 0); dustK.set(t, isK ? 0.7 : 0); dustB.set(t, isB ? 1 : 0);
+  const shaftOn = ["hook", "seam", "loop"].includes(shot);
+  shaftA.set({ op: isA ? (shaftOn ? (day ? 1.0 : 0.45) : 0.35) : 0 }); shaftK.set({ op: isK ? 0.6 : 0 }); shaftB.set({ op: isB ? 0.8 : 0 });
+  dustA.set(t, isA && shot !== "film" ? 0.6 : 0); dustShaft.set(t, isA ? (shaftOn ? 1 : 0.4) * (shot === "film" ? 0 : 1) : 0); SEB.forEach((b) => (b.im.visible = isA && shot !== "film")); dustNear.set(t, shot === "hook" || shot === "loop" ? 1 : 0); dustK.set(t, isK ? 0.7 : 0); dustB.set(t, isB ? 1 : 0);
   hzB.group.visible = bkB.points.visible = isB; hzK.group.visible = isK; hzB.set({ t }); hzK.set({ t }); bkB.set({ t });
   scene.fog = isA ? FOGA : isK ? FOGK : null;
   bounce.intensity = isK ? 0.55 : 0;
@@ -332,8 +378,8 @@ window.seek = function (t) {
     const dk = shot === "uv" ? u01(t, MC.dmg) : shot === "loop" ? u01(t, [UVW.loop[0] + 0.3, UVW.loop[1] + 0.3]) : 0;
     dmgMat.opacity = 0.85 * dk * (sweeping || uv ? 1 : 0); dmg.visible = dmgMat.opacity > 0.01;
     dmgLMat.opacity = shot === "loop" ? dmgMat.opacity : 0; dmgL.visible = dmgLMat.opacity > 0.01;
-    filmMat.opacity = shot === "film" ? 0.3 * u01(t, MC.film) : 0; filmMesh.visible = filmMat.opacity > 0.005;
-    HL.m.clearcoat = shot === "film" ? 0.35 : 0.85;   // under the film the highlights roll off instead of clipping
+    filmMat.opacity = shot === "film" ? 0.42 * u01(t, MC.film) : 0; filmMesh.visible = filmMat.opacity > 0.005;
+    HL.m.clearcoat = shot === "film" ? 0.1 : 0.85; HL.m.normalScale.setScalar(shot === "film" ? 0.05 : 0.19);   // under the film: no glitter from the micro relief   // under the film the highlights roll off instead of clipping
     menMat.opacity = uv ? 0.1 : 0.22;
     const mixed = shot === "loop" ? u01(t, MC.mixed) : 0;   // "Both groups missed mornings": gaps in the film, sunscreen on the bare half
     gapMat.opacity = mixed; gapMesh.visible = mixed > 0.005;
@@ -352,22 +398,22 @@ window.seek = function (t) {
     studio.aim([0, 0, 0], [-0.5, 0.75, 0.6], [0.5, 0.3, -0.85]);
     const rk = shot === "hook" ? u01(t, RK.hook) : 1;   // frame 0: the near dust sharp, the skin still reading; on "aged", the rack to the seam
     const near = camera.position.toArray().map((v, i) => v + [0.1, -1.4, -5.5][i]);
-    focusPt = mix3(near, mix3([0, 0, 2], [0.3, 0, -0.5], uu), rk); fstop = 0.08 + 0.1 * rk;
+    focusPt = mix3(near, mix3([0, 0, 2], [0.3, 0, -0.5], uu), rk); fstop = 0.08 + 0.2 * rk;
     labelAt.L = [-2.4, 0.4, -1.0]; labelAt.R = [2.4, 0.4, -1.0];
   } else if (shot === "seam") {   // a long crane down and along the seam, into the light
     look(mix3([-5.5, 9.5, 17], [1.8, 3.6, 8.5], u), mix3([-0.5, 0, 0], [0.3, -0.2, -1], u));
     labelAt.L = [-2.6, 0.4, -2]; labelAt.R = [2.6, 0.4, -2];
     studio.aim([0, 0, 0], [-0.5, 0.75, 0.6], [0.5, 0.3, -0.85]);
-    focusPt = mix3([0, 0, 2], [0.3, 0, 0], u); fstop = 0.18;
+    focusPt = mix3([0, 0, 2], [0.3, 0, 0], u); fstop = 0.28;
   } else if (shot === "pleased") {   // close over the bare half, the seam at the left third
     look(mix3([1.6, 4.2, 9.4], [1.2, 3.2, 6.4], u), mix3([0.6, 0, 0.5], [0.7, -0.1, -1], u));
     labelAt.L = [-1.3, 0.4, -1.5]; labelAt.R = [2.6, 0.4, -1.5];
     studio.aim([2, 0, 0], [-0.5, 0.75, 0.6], [0.5, 0.3, -0.85]);
-    focusPt = mix3([1.4, 0.2, 2.0], [1.2, 0.2, 0], u); fstop = 0.14;
+    focusPt = mix3([1.4, 0.2, 2.0], [1.2, 0.2, 0], u); fstop = 0.26;
   } else if (shot === "uv") {   // one slow push over the seam; the switch on "But"
     look(mix3([0.6, 6.2, 16], [0.2, 3.4, 7.5], u), mix3([0, 0, 1], [0.4, -0.2, -0.5], u));
     studio.aim([0, 0, 0], [-0.5, 0.75, 0.6], [0.5, 0.3, -0.85]);
-    focusPt = mix3([0, 0, 2], [0.4, 0, -0.5], u); fstop = 0.2;
+    focusPt = mix3([0, 0, 2], [0.4, 0, -0.5], u); fstop = 0.28;
   } else if (shot === "film") {   // low over the screened half: the film reads as one satin layer, its highlights rolled off
     look(mix3([-6.0, 4.2, 9.5], [-4.4, 3.0, 6.4], u), mix3([-1.6, -0.2, 0.5], [-1.2, -0.2, -0.5], u));
     studio.aim([-2, 0, -2], [-0.6, 0.7, 0.4], [0.5, 0.3, -0.85]);
@@ -385,8 +431,9 @@ window.seek = function (t) {
 
   // ── the micrograph: a slow push and drift across the cut face (parallax on the block's edge, a glint on the glass) ──
   if (isB) {
-    look(mix3([XB - 3.4, 1.2, 17.5], [XB + 2.4, -2.2, 8.8], u), mix3([XB - 0.8, -4.4, 0], [XB + 2.4, -4.6, 0], u));   // the naevus nest (lower left of the section) stays off centre
+    look(mix3([XB - 13, 2.6, 15], [XB + 2.4, -2.0, 8.8], u), mix3([XB - 3.5, -4.0, 0], [XB + 2.4, -4.6, 0], u));   // from an oblique view of the block's edge and top round to the face   // the naevus nest (lower left of the section) stays off centre
     studio.aim([XB, -4, 0], [-0.45, 0.8, 0.55], [0.55, 0.35, -0.85]); studio.set({ key: 1.6, rim: 2.6, fill: 0.45, env: 0.5, warm: 0.2 });
+    glint.position.x = -9 + 16 * u; glint.material.opacity = 0.16 * Math.sin(Math.PI * Math.min(1, Math.max(0, u)));
     const rk = u01(t, RK.micro);   // rack on "Melanoma": the dust in front, then the cut face
     focusPt = mix3([XB - 0.6, -2.2, 7.5], [XB + 1.8, -4.4, 0], rk); fstop = 0.1;
   }
@@ -397,6 +444,7 @@ window.seek = function (t) {
   d1.forEach((e, i) => { e.style.opacity = fadeIn(t, M.mel + (i / d1.length) * (M.half - M.mel), 0.15).toFixed(3); });
   d2.forEach((e, i) => { e.style.opacity = fadeIn(t, M.mel + (i / d2.length) * (M.half - M.mel), 0.15).toFixed(3); });
   msub.style.opacity = fadeIn(t, M.small - 0.2, 0.4).toFixed(3);
+  msub.style.display = t >= M.small - 0.2 ? "" : "none"; melRows.style.display = melHead.style.display = t >= M.mel - 0.3 ? "" : "none";   // the plate grows as its rows arrive
 
   // ── to scale: the test dose's film beside the paper ──
   const lift = shot === "film" ? Math.min(u01(t, G.rise), 1 - u01(t, G.back)) : 0;
