@@ -81,7 +81,7 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
   const sculpt = () => {
     const Rs = rng(seed * 31 + 7), nz = (x, y, z) => Math.sin(x * 0.07 + 1.3) * Math.cos(y * 0.05 + 0.4) + 0.6 * Math.sin(z * 0.09 + x * 0.03) + 0.4 * Math.sin(y * 0.13 + z * 0.05);
     const lump = (geo, k) => { const q = geo.attributes.position, v = new THREE.Vector3(); for (let i = 0; i < q.count; i++) { v.fromBufferAttribute(q, i); const r = Math.hypot(v.x, v.z); if (r < 1e-3) continue; const s = 1 + k * nz(v.x, v.y, v.z) / Math.max(20, r); q.setX(i, v.x * s); q.setZ(i, v.z * s); } geo.computeVertexNormals(); };
-    [wall, plug].forEach((m, i) => { const g2 = new THREE.LatheGeometry(prof.map((v) => new THREE.Vector2(i ? Math.max(2, v.x - 12) : v.x, v.y)), 96, 0, Math.PI * 2); const q = g2.attributes.position; void q; lump(g2, i ? 6 : 9); m.geometry.dispose(); m.geometry = g2; });
+    [wall, plug].forEach((m, i) => { const g2 = new THREE.LatheGeometry(prof.map((v) => new THREE.Vector2(i ? Math.max(2, v.x - 12) : v.x, v.y)), 96, 0, Math.PI * 2); const q = g2.attributes.position; void q; lump(g2, i ? 16 : 26); m.geometry.dispose(); m.geometry = g2; });
     glands.forEach((m) => { const g2 = new THREE.SphereGeometry(62, 48, 32), q = g2.attributes.position, v = new THREE.Vector3(); for (let i = 0; i < q.count; i++) { v.fromBufferAttribute(q, i); const n = v.clone().normalize(); const lobes = 0.16 * Math.max(0, Math.sin(n.x * 5 + 1) * Math.sin(n.y * 4) * Math.cos(n.z * 5)) + 0.05 * Math.sin(n.y * 13); v.multiplyScalar(1 + lobes); q.setXYZ(i, v.x, v.y, v.z); } g2.computeVertexNormals(); m.geometry.dispose(); m.geometry = g2; });
     const shapes = [0, 1, 2, 3].map((j) => { const g2 = new THREE.IcosahedronGeometry(20, 4), q = g2.attributes.position, v = new THREE.Vector3(); for (let i = 0; i < q.count; i++) { v.fromBufferAttribute(q, i); const n = v.clone().normalize(); v.multiplyScalar(1 + 0.12 * Math.sin(n.x * (3 + j) + j) * Math.cos(n.y * (2 + j)) + 0.05 * Math.sin(n.z * 9 + j * 2)); q.setXYZ(i, v.x, v.y, v.z); } g2.computeVertexNormals(); return g2; });
     [...ringC, ...floodC].forEach((m) => { m.geometry = shapes[Math.floor(Rs() * 4)]; m.scale.setScalar(0.8 + 0.45 * Rs()); m.rotation.set(Rs() * 6, Rs() * 6, Rs() * 6); });
@@ -89,6 +89,8 @@ export const createAcneFollicle = ({ x = 0, seed = 11, width = 1000, depth = 900
     const cv = document.createElement("canvas"); cv.width = 8; cv.height = 256; const x = cv.getContext("2d");
     for (let y = 0; y < 256; y++) { const horny = y < 70, v = horny ? 0.92 + 0.08 * Math.sin(y * 1.9) : 0.78 + 0.1 * Math.sin(y * 0.35) + 0.05 * Math.sin(y * 1.7); const r = Math.round(255 * Math.min(1, v * (horny ? 1.05 : 1))), gg = Math.round(255 * v * (horny ? 0.96 : 0.86)), b = Math.round(255 * v * (horny ? 0.88 : 0.84)); x.fillStyle = `rgb(${r},${gg},${b})`; x.fillRect(0, y, 8, 1); }
     const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; M.epi.map = tx; M.epi.needsUpdate = true;
+    M.wall.roughness = 0.85; M.plug.roughness = 0.8; M.gland.roughness = 0.75; if (M.wall.isMeshPhysicalMaterial) M.wall.sheen = 0.5;   // matte, soft tissue (not glossy plastic)
+    spill.forEach((m) => { const s = (0.35 + 0.35 * Rs()); m.geometry = shapes[Math.floor(Rs() * 4)]; m.scale.setScalar(s); m.rotation.set(Rs() * 6, Rs() * 6, Rs() * 6); });
   };
   return {
     group: g, dims: { width, depth, epi, breachY }, look, sculpt,

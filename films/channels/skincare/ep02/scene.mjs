@@ -13,7 +13,7 @@ import { createUVSkin, createViewfinder, createDaylight } from "../set/uvcam.js"
 import { createTerrain, goldenHour } from "../set/terrain.js";
 import { createSection, createVessels, toneColor } from "../set/section.js";
 import { createBeam, createGlint, createPaths } from "../set/light02.js";
-import { createStudio, skinMaterial, strandMaterial, createGrain } from "../set/studio.js";
+import { createStudio, skinMaterial, strandMaterial, createGrain, createShaft } from "../set/studio.js";
 import { DERMIS } from "../set/ref/textures.js";
 import { hazeVolume, richen, bokeh } from "../set/prod.js";
 import { lookV3 } from "../set/look3.js";
@@ -57,10 +57,24 @@ const bloom = glowAt([PL.tx, 0.2, 0], 5.5);   // the beam's foot: the light sink
 
 const S = createSection({ width: 180, depth: 60, sc: 17, gran: 10, spin: 48, basal: 10, seed: 23, x: PL.sx, backing: true });
 S.group.position.x = PL.sx; scene.add(S.group);
-richen(S.group, { seed: 23, jitter: 0.14, hue: 0.07, micro: 0.5 });   // no two cells alike; a micro surface on every one
+richen(S.group, { seed: 23, jitter: 0.14, hue: 0.07, micro: 0.5, skip: (o) => o.geometry && o.geometry.type === "CylinderGeometry" });   // the horny-layer plates stay flat (tilted, they striped into dashes)   // no two cells alike; a micro surface on every one
 const V = createVessels({ x: [-80, 80], ys: [-118, -132], z: 30.4, r: 4.2, ox: PL.sx, dz: 0 }); scene.add(V.group);
 const paths = createPaths({ n: 18, origin: [0, 0, 32], width: 170, depth: 150, seed: 6 }); paths.group.position.x = PL.sx; scene.add(paths.group);
+// light paths as glowing threads (not 1-px wire): a thin tube with a soft halo along each path, revealed with the path
+const glowTubes = paths.group.children.filter((o) => o.isLine).map((l) => {
+  const a = l.geometry.attributes.position, pts = []; for (let i = 0; i < a.count; i++) pts.push(new THREE.Vector3(a.getX(i), a.getY(i), a.getZ(i)));
+  const curve = new THREE.CatmullRomCurve3(pts), seg = (a.count - 1) * 6;
+  const core = new THREE.Mesh(new THREE.TubeGeometry(curve, seg, 0.32, 6), new THREE.MeshBasicMaterial({ transparent: true, depthTest: false, blending: THREE.AdditiveBlending }));
+  const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, seg, 1.1, 8), new THREE.MeshBasicMaterial({ transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending }));
+  core.renderOrder = halo.renderOrder = 21; l.parent.add(core, halo); l.visible = false;
+  return { l, core, halo };
+});
+const syncTubes = () => glowTubes.forEach(({ l, core, halo }) => {
+  const np = l.userData.np, f = Math.min(1, (l.geometry.drawRange.count - 1) / (np - 1)), op = l.material.opacity;
+  for (const [m, k] of [[core, 0.8], [halo, 0.12]]) { m.geometry.setDrawRange(0, Math.round(m.geometry.index.count * f / 6) * 6); m.material.color.copy(l.material.color); m.material.opacity = op * k; m.visible = op > 0.002; }
+});
 const beamS = createBeam({ from: [PL.sx - 70, 230, 32], to: [PL.sx, 1, 32], radius: 2.2 }); scene.add(beamS.group);
+const shaftS = createShaft({ from: [PL.sx - 80, 260, 20], to: [PL.sx, -60, 26], radius: 26, color: "#fff1e2" }); scene.add(shaftS.group);   // the light as a volume in the tissue, not just a rod
 // the wrong idea (why): a glow sitting on the skin, a warm film on its top, shown and then let go
 const sheen = new THREE.Mesh(new THREE.BoxGeometry(200, 5, 2), new THREE.MeshBasicMaterial({ color: 0xffc48a, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
 sheen.position.set(PL.sx, 3, 32); scene.add(sheen);
@@ -237,7 +251,9 @@ window.seek = function (t) {
     const warm = shot === "inside" ? E.inout2(seg(t, K.warm[0], K.warm[0] + 1.0)) : 1;   // amber on "melanin", then blood red on "rush"
     paths.set({ grow: shot === "inside" ? E.inout2(seg(t, K.paths[0], K.paths[1])) : 1, out: shot === "inside" ? E.inout2(seg(t, K.out[0], K.out[1])) * (0.6 + 0.4 * warm) : 1,
       red: shot === "inside" ? 0.4 * warm + 0.6 * widen : 1, op: 1 - dim });
+    syncTubes();
   }
+  shaftS.set({ op: shot === "inside" ? 0.8 : 0 });
   beamS.set({ op: isS ? 1 - (shot === "depth" ? 0.6 * fadeIn(t, SH.depth, 0.6) : 0) : 0 });
   const sh = shot === "inside" ? E.inout2(seg(t, K.sheen[0], K.sheen[1])) * (1 - E.inout2(seg(t, K.sheen[2], K.sheen[3]))) : 0;
   sheen.material.opacity = 0.55 * sh; sheen.visible = sh > 0.002;
