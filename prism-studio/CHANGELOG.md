@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.8.0 — 2026-11-03 (launch from a phone)
+- Railway hosting (`railway.json`, `docs/LAUNCH-CHECKLIST.md`): one service runs the web app and the worker together
+  (`deploy/entrypoint.sh all` → `deploy/run-both.mjs`; if either stops, both restart), with Postgres and a disk at
+  `/data` for the films. Its free https address is `PUBLIC_ORIGIN`, so no domain is needed.
+- `/setup`, open only while `OWNER_PASSWORD_HASH` is unset: the owner types a passphrase in their own studio and gets
+  the hash plus fresh `SESSION_SECRET`, `INTEGRATIONS_KEY` and `MEDIA_PUSH_TOKEN` to paste into the host. Nothing is
+  stored, and it closes (404) once the hash is set. Sign-in links to it until then.
+- Media push: `npm run media:push` sends the finished films (each episode's script, claims, film timings, QA report,
+  finals and covers, and the lesson compilations) to a hosted studio over https with `MEDIA_PUSH_TOKEN`. It sends
+  only what's new or changed, keeps modified times (the import compares them), then queues the import
+  (`/api/media-push`, allow-listed paths only, streamed to disk, outside the proxy so large files aren't buffered).
+- `deploy/sync-media.sh` also copies what the import reads beside the finals (script, claims, film timings, QA), so a
+  self-hosted import gets titles, captions, sources and QA too.
+
 ## 0.7.0 — 2026-11-02 (layout round 2)
 - Review, phone-first: on a phone, Review is a full-screen vertical player, one episode per screen. Swipe sideways
   (scroll snap) or tap ‹ ›; the top line gives the channel, number, title and "3 / 18". A thumb bar at the bottom holds

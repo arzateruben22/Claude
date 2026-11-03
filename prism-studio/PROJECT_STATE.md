@@ -7,6 +7,21 @@ server, developer apps at Google, TikTok and Meta, the 11 accounts, and a first 
 when asked: `LESSON_E2E=1`). The screens were checked in Chromium at 390 px and 1440 px: no sideways scroll,
 no page errors, no failed requests. `npm run preview` retakes the gallery in `docs/preview-gallery/`.
 
+## Launch from a phone (ready for the owner)
+- Railway: `railway.json` (Dockerfile build, `deploy/entrypoint.sh all`: web and worker in one container on a disk at
+  `/data`, health check `/api/health`), Railway Postgres, the free `*.up.railway.app` address as `PUBLIC_ORIGIN`.
+- `/setup` makes the passphrase hash and the secrets with no terminal; `npm run media:push` sends the films and
+  queues the import. The owner's steps: `docs/LAUNCH-CHECKLIST.md`.
+- Verified here: the production image built and run as Railway runs it (the `all` start command, a root-owned disk,
+  running as root as `RAILWAY_RUN_UID=0` does), with migrate and seed on start, web and worker both up, `/setup`
+  through a browser, a passphrase too short refused, then the hash and key applied on a second start: `/setup` 404,
+  sign-in works, Review streams video with byte ranges, the signed Instagram link serves the file (a tampered one
+  404s), and a stop exits cleanly. A push of two channels (583 and 492 MB: byte-identical, modified times kept, a
+  second run sends nothing) and the import by the in-container worker (6 episodes with versions, 92 sources).
+- Not verifiable here: Railway itself (its dashboard, volume, domain and variable references), Railway's request size
+  limits for large uploads, the platforms' consoles and audits, and the Claude environment's network policy reaching
+  `*.up.railway.app`.
+
 ## Layout round 2 (done, `docs/LAYOUT-BRIEF.md`)
 - Goal 1, phone-first Review (done): Review and the episode page are a full-screen vertical player on a phone (swipe or
   ‹ ›, switches, Hold and Approve at the thumb, text and sources below); desktop keeps the cards. Works without

@@ -4,6 +4,11 @@ Prism runs on your laptop today. To connect real accounts it needs a public **ht
 and Meta send you back to it after you approve access, and Instagram downloads each Reel from it. This folder
 puts the studio on one small server with automatic HTTPS.
 
+**From a phone, with no server to look after:** `../docs/LAUNCH-CHECKLIST.md` puts the studio on Railway instead (one
+service running the web app and the worker, Postgres, a disk), with a free https address. Films reach it with
+`npm run media:push` (`scripts/push-media.mjs`) from any machine with the films repo, a cloud session included.
+This guide stays the self-hosted path.
+
 **What runs where**
 
 | Machine | Runs | Why |

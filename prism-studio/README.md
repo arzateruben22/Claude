@@ -17,6 +17,8 @@ retakes them). The five creations: [`docs/creations.png`](docs/creations.png).
 
 ## Run it
 
+To put it online from a phone (Railway, no server to manage): [`docs/LAUNCH-CHECKLIST.md`](docs/LAUNCH-CHECKLIST.md).
+
 ```bash
 service postgresql start                       # local Postgres 16
 cp .env.example .env.local                     # then fill in the values below
@@ -45,6 +47,7 @@ Checks: `npm run typecheck`, `npm test` (needs `TEST_DATABASE_URL`; it wipes tha
 | `npm run preview` | Retake the screenshots in `docs/preview-gallery/` from a production build on the dev database |
 | `npm run wallpaper` | Re-render the skyline wallpaper (`public/wallpaper/README.md`) |
 | `npm run owner:password` | Print an `OWNER_PASSWORD_HASH` for a passphrase |
+| `npm run media:push` | Send the finished films to a hosted studio and queue the import (`STUDIO_URL`, `MEDIA_PUSH_TOKEN`; `docs/LAUNCH-CHECKLIST.md`) |
 | `npm run db:reset -- --yes` | Empty the dev database, seed it and import again (refuses unless the database is on localhost) |
 
 ## Where things are
