@@ -14,7 +14,9 @@ import { createWeave } from "../set/weave03.js";
 import { toneColor } from "../set/section.js";
 import { createStudio, skinMaterial, strandMaterial, cellMaterial, createGrain } from "../set/studio.js";
 import { DERMIS } from "../set/ref/textures.js";
-import { lookV2, hazeVolume, richen, bokeh } from "../set/prod.js";
+import { hazeVolume, richen, bokeh } from "../set/prod.js";
+import { lookV3 } from "../set/look3.js";
+import { unifyHud } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, G = FILM.gauge, PL = FILM.place, FPS = FILM.fps || 30;
 const S1 = Math.min(W, H) / 1080;
@@ -87,11 +89,11 @@ const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.up
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
-const look = lookV2({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material });   // the channel look: skin, hairs, fog, grade
+const look = lookV3({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material }); unifyHud(hudRoot);   // the channel look: skin, hairs, fog, grade
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.285, w: 0.8, h: 0.3 });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
 const day = createDaylight({ root: hudRoot, W, H, y: 0.7, label: "daylight" }); day.el.style.fontSize = "2.6vmin";
-const grain = createGrain(hudRoot, { amount: 0.007 });
+const grain = look.grain;
 // atmosphere: dust the depth of field turns to bokeh
 const SR = (() => { let s = 7; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
 const dotTex = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 64; const x = cv.getContext("2d"), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(cv); })();
