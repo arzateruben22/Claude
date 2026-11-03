@@ -1,13 +1,13 @@
-# Posting sheet: Back of the Envelope No. 004, "Count to a billion"
+# Posting sheet: Possibility Lab No. 004, "Count to a billion"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `envelope-004-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `envelope-004-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `possibility-lab-004-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `possibility-lab-004-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-Count to a billion | Back of the Envelope No. 004
+Count to a billion | Possibility Lab No. 004
 
 **Description**
 
@@ -27,12 +27,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Back of the Envelope: Impossible questions, honest assumptions, real calculations.
+Possibility Lab: Impossible questions, honest assumptions, real calculations.
 
 #Shorts #whatif #science
 ```
 
-**Tags**: Back of the Envelope, whatif, science, count, billion, explainer, education
+**Tags**: Possibility Lab, whatif, science, count, billion, explainer, education
 
 **Captions**: upload the .srt (English).
 
