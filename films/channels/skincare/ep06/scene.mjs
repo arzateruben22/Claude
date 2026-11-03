@@ -148,7 +148,8 @@ T.group.traverse((o) => { if (o.isInstancedMesh) hairs = o; else if (o.isMesh &&
 // hair thickness and material come from the shared terrain (the production pass); this episode only adds a slow drift
 const hairBase = Array.from({ length: hairs.count }, (_, i) => { const m = new THREE.Matrix4(); hairs.getMatrixAt(i, m); return m; });
 const hairPh = hairBase.map(() => R() * 6.28), hm = new THREE.Matrix4(), hr = new THREE.Matrix4();
-const driftHairs = (t) => { hairBase.forEach((m, i) => { hr.makeRotationFromEuler(new THREE.Euler(0.05 * Math.sin(t * 0.5 + hairPh[i]), 0, 0.05 * Math.cos(t * 0.37 + hairPh[i]))); hm.multiplyMatrices(m, hr); hairs.setMatrixAt(i, hm); }); hairs.instanceMatrix.needsUpdate = true; };
+const HIDE = new THREE.Matrix4().makeScale(0, 0, 0), hairFar = hairBase.map((m) => m.elements[14] < -16);   // far strands would silhouette on the fog as spikes: the near field only
+const driftHairs = (t) => { hairBase.forEach((m, i) => { hr.makeRotationFromEuler(new THREE.Euler(0.05 * Math.sin(t * 0.5 + hairPh[i]), 0, 0.05 * Math.cos(t * 0.37 + hairPh[i]))); hm.multiplyMatrices(m, hr); hairs.setMatrixAt(i, hairFar[i] ? HIDE : hm); }); hairs.instanceMatrix.needsUpdate = true; };
 const occlude = () => {   // ambient occlusion baked into the vertex colours: furrows, pores and hair roots sit in shadow
   const p = T.mesh.geometry.attributes.position, c = T.mesh.geometry.attributes.color;
   for (let i = 0; i < p.count; i++) { const y = p.getY(i), k = 0.45 + 0.55 * THREE.MathUtils.smoothstep(y, -0.55, 0.15); c.setXYZ(i, c.getX(i) * k, c.getY(i) * k, c.getZ(i) * k); }
@@ -176,7 +177,7 @@ const coolFill = new THREE.HemisphereLight(0x8fa8ff, 0x140c24, 0);
 scene.add(coolFill);
 const rays = [[-3.5, -6, 2.2], [1.2, -3, 2.6], [3.8, -9, 2.0]].map(([x, z, r]) => { const s = createShaft({ from: [XB + x - 1.2, TUBE_Y - 0.3, z - 2], to: [XB + x + 0.6, -0.4, z + 2.5], radius: r, color: "#B79BFF" }); scene.add(s.group); return s; });
 const dustBed = particles(380, [[XB - 7, 0.3, -14], [XB + 7, 6.2, 9]], 0.055, "#F3E9FF");
-const FOGB = new THREE.FogExp2(0x2c1660, 0.034);
+const FOGB = new THREE.FogExp2(0x2c1660, 0.045);
 
 // ── 4: the cut face: a block of deep-tone skin seen three-quarters, its face the stained tissue photo ──
 const C = new THREE.Group(); C.position.x = XC; scene.add(C);
@@ -185,7 +186,7 @@ const faceMat = new THREE.MeshPhysicalMaterial({ roughness: 0.42, clearcoat: 0.3
 const faceG = new THREE.PlaneGeometry(16, FH); { const uv = faceG.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setY(i, uv.getY(i) * (1 - CROP)); }
 const faceC = new THREE.Mesh(faceG, faceMat); faceC.position.set(0, -FH / 2, 0); C.add(faceC);
 const sideMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.55, 0.3, 0.42), roughness: 0.6, sheen: 0.3, sheenColor: new THREE.Color(0.9, 0.6, 0.8) });
-const topMat = skinMaterial({ tone: DEEP.map((v) => v * 0.6), oil: 0.05, repeat: 3, seed: 9, micro: 0.7 }); topMat.sheen = 0.25; topMat.sheenColor.setRGB(0.5, 0.3, 0.2); topMat.roughness = 0.6; topMat.clearcoat = 0.05;
+const topMat = skinMaterial({ tone: DEEP.map((v) => v * 0.6), oil: 0.05, repeat: 3, seed: 9, micro: 0.7 }); topMat.sheen = 0.05; topMat.roughness = 0.7; topMat.clearcoat = 0.03; topMat.specularIntensity = 0.2;
 const block = new THREE.Mesh(new THREE.BoxGeometry(16, FH, 6), [sideMat, sideMat, topMat, sideMat, sideMat, sideMat]); block.position.set(0, -FH / 2, -3.005); C.add(block);
 // the top layer's lower edge, traced from the photo (px of the 1024 × 672 original), marked with a fine lilac line
 const JPX = [[0, 300], [60, 335], [130, 330], [180, 280], [240, 295], [300, 295], [340, 240], [420, 225], [480, 215], [540, 225], [600, 195], [660, 220], [720, 210], [790, 175], [850, 215], [900, 185], [960, 215], [1024, 215]];
@@ -227,6 +228,7 @@ for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, value: () => 0, fmt: () => c.text, lit: () => true }); CTR[c.id] = el;
   Object.assign(el.style, { background: "var(--hud-plate)", padding: "1.1vmin 2.6vmin 1.3vmin", borderRadius: "var(--hud-cap-radius, 2.4vmin)", boxShadow: "var(--hud-shadow)" });
   if (c.small) el.querySelector(".v").style.fontSize = c.small;
+  if (c.minW) el.style.minWidth = c.minW;
 }
 // each spine and the note that qualifies it as one card: the note is the card's header row, the spine its body
 const cards = [stackAsCard(BADGE["b-units"], CTR["c-uva"]), stackAsCard(BADGE["b-pooled"], CTR["c-rr"])];

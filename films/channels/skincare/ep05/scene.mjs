@@ -114,7 +114,7 @@ const ixOf = (x) => Math.round((x + 40) / STEP), izOf = (z) => Math.round((z + 4
 const menPts = []; for (let iz = 0; iz <= SEG; iz += 2) menPts.push(new THREE.Vector3(-0.02, gy(ixOf(0), iz) + 0.018, -40 + iz * STEP));
 const menMat = new THREE.MeshPhysicalMaterial({ color: 0xfff6ee, transparent: true, opacity: 0.5, roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.02, depthWrite: false });
 menMat.userData.envK = 1.6;
-const meniscus = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(menPts), 800, 0.026, 6), menMat); HL.T.group.add(meniscus);
+const meniscus = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(menPts), 800, 0.016, 6), menMat); HL.T.group.add(meniscus);
 
 // the morning layer, made visible for the to-scale shot: one continuous satin film on the relief of the screened half
 const filmMat = layer({ color: 0xf4f6ff, opacity: 0, roughness: 0.22, roughnessMap: noiseTex(5, 256, 10), clearcoat: 1, clearcoatRoughness: 0.24, specularIntensity: 0.3 });
@@ -123,20 +123,20 @@ const filmMesh = onHalf(HL, filmMat, 2);
 
 // "whenever they pleased, or not at all" (and the loop's sunscreen mornings on the bare half): thin satin films with
 // organic edges and a broken highlight, painted into one alpha canvas
-const PATCH = Array.from({ length: 9 }, (_, i) => ({ x: 1.2 + R() * 6.6, z: -11 + R() * 14, r: 1.3 + R() * 1.3, seed: 40 + i, ph: i / 9 }));
+const PATCH = Array.from({ length: 9 }, (_, i) => ({ x: 0.9 + R() * 1.6, z: -10 + i * 1.6 + R() * 0.8, r: 0.55 + R() * 0.5, seed: 40 + i, ph: ((i * 4) % 9) / 9 }));   // near the seam: the portrait frame is narrow
 const [patchCv, patchK] = newCanvas(), patchTex = regionTex(patchCv);
 let patchKey = "";
 const paintPatches = (ops) => {
   const key = ops.map((o) => Math.round(o * 20)).join(","); if (key === patchKey) return; patchKey = key;
   patchK.fillStyle = "#000"; patchK.fillRect(0, 0, CS, CS);
-  PATCH.forEach((p, i) => { if (ops[i] > 0.01) { blob(patchK, p.x, p.z, p.r, p.seed, { a: ops[i] }); blob(patchK, p.x + 0.5, p.z - 0.3, p.r * 0.55, p.seed + 100, { a: ops[i] * 0.6 }); } });
+  PATCH.forEach((p, i) => { if (ops[i] > 0.01) { blob(patchK, p.x, p.z, p.r, p.seed, { a: ops[i] }); blob(patchK, p.x + 0.35 * p.r, p.z - 0.25 * p.r, p.r * 0.55, p.seed + 100, { a: ops[i] * 0.6 }); } });
   patchTex.needsUpdate = true;
 };
 const coatMat = layer({ color: new THREE.Color(...tone.map((v) => v * 1.06)), alphaMap: patchTex, opacity: 0, roughness: 0.3, roughnessMap: noiseTex(9, 256, 12), clearcoat: 1, clearcoatRoughness: 0.12 });
 coatMat.userData.envK = 1.2;
 const coat = onHalf(HR, coatMat, 3);
 // the loop: mornings missed on the screened half: bare, matte gaps in the film
-const GAPS = [[-2.4, -1.2, 1.3], [-4.6, -5.5, 1.5], [-1.6, -8.5, 1.2], [-5.6, 0.8, 1.1]];
+const GAPS = [[-1.1, 0.6, 0.6], [-1.4, -3.2, 0.75], [-0.9, -6.6, 0.55], [-1.6, -9.8, 0.7]];
 const [gapCv, gapK] = newCanvas(); GAPS.forEach(([x, z, r], i) => blob(gapK, x, z, r, 70 + i));
 const gapMat = layer({ color: new THREE.Color(...tone), alphaMap: regionTex(gapCv), opacity: 0, roughness: 0.85, clearcoat: 0, sheen: 0.3, sheenColor: new THREE.Color(1, 0.75, 0.62) });
 const gapMesh = onHalf(HL, gapMat, 3);
@@ -150,7 +150,7 @@ const freckles = (k, xr, zr, n, seed, near = null) => {
     const c = centres[Math.floor(Rf() * centres.length)], a = Rf() * 6.28, d = Math.sqrt(Rf()) * c[2];
     const x = c[0] + d * Math.cos(a), z = c[1] + d * Math.sin(a);
     if (x < xr[0] || x > xr[1] || z < zr[0] || z > zr[1]) continue;
-    if (crease(ixOf(x), izOf(z)) < 0.012) continue;   // only in a furrow
+    if (crease(ixOf(x), izOf(z)) < 0.006 || gy(ixOf(x), izOf(z)) < -0.35) continue;   // in a furrow, not down a pore
     const r = 0.06 + Rf() * Rf() * 0.3, [px, py] = toPx(x, z), rp = (r / REG.size) * CS;
     for (let j = 0; j < 3; j++) {   // three offset soft dots: an irregular stain, not a stamped ellipse
       const ox = (Rf() - 0.5) * rp, oy = (Rf() - 0.5) * rp, rr = rp * (0.6 + 0.5 * Rf()), g = k.createRadialGradient(px + ox, py + oy, 0, px + ox, py + oy, rr);
@@ -160,8 +160,8 @@ const freckles = (k, xr, zr, n, seed, near = null) => {
     placed++;
   }
 };
-const [dmgRCv, dmgRK] = newCanvas(); freckles(dmgRK, [0.25, 15.5], [-23, 7.5], 260, 3);
-const [dmgLCv, dmgLK] = newCanvas(); freckles(dmgLK, [-15.5, -0.25], [-23, 7.5], 46, 4, GAPS.map(([x, z, r]) => [x, z, r * 0.9]).concat([[-8, -3, 3]]));
+const [dmgRCv, dmgRK] = newCanvas(); freckles(dmgRK, [0.25, 15.5], [-23, 7.5], 520, 3);
+const [dmgLCv, dmgLK] = newCanvas(); freckles(dmgLK, [-15.5, -0.25], [-23, 7.5], 70, 4, GAPS.map(([x, z, r]) => [x, z, r * 0.9]).concat([[-8, -3, 3]]));
 const dmgMat = new THREE.MeshBasicMaterial({ color: 0x1e0c4a, alphaMap: regionTex(dmgRCv), transparent: true, opacity: 0, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -3 });
 const dmgLMat = dmgMat.clone(); dmgLMat.alphaMap = regionTex(dmgLCv);
 const dmg = onHalf(HR, dmgMat, 2), dmgL = onHalf(HL, dmgLMat, 4);
@@ -226,8 +226,9 @@ FOGA.color.set(0x24124c); FOGA.near = 12; FOGA.far = 40;
 // the screened half differs in sheen, not colour: a glossier clearcoat
 Object.assign(HL.m, { clearcoat: 0.85, clearcoatRoughness: 0.1, roughness: 0.38 });
 // the UV wipe on every macro material
+wipe(gapMat, "col", { uv: [0.71, 0.55, 1.15], em: [0.05, 0.03, 0.14] });
 const wHL = wipe(HL.m, "ratio", { uv: [0.12, 0.08, 0.26], day: tone }), wHR = wipe(HR.m, "ratio", { uv: [0.62, 0.48, 1.0], day: tone, em: [0.03, 0.02, 0.09] });
-wipe(coatMat, "col", { uv: [0.1, 0.07, 0.22] }); wipe(gapMat, "col", { uv: [0.62, 0.48, 1.0], em: [0.03, 0.02, 0.09] });
+wipe(coatMat, "col", { uv: [0.07, 0.05, 0.16] });
 wipe(dmgMat, "alpha"); wipe(dmgLMat, "alpha");
 const grain = createGrain(hudRoot, { amount: 0.006 });
 const hud = createHud({ camera, shots: FILM.shots });
@@ -330,13 +331,13 @@ window.seek = function (t) {
     dmgMat.opacity = 0.85 * dk * (sweeping || uv ? 1 : 0); dmg.visible = dmgMat.opacity > 0.01;
     dmgLMat.opacity = shot === "loop" ? dmgMat.opacity : 0; dmgL.visible = dmgLMat.opacity > 0.01;
     filmMat.opacity = shot === "film" ? 0.55 * u01(t, MC.film) : 0; filmMesh.visible = filmMat.opacity > 0.005;
-    menMat.opacity = uv ? 0.18 : 0.5;
+    menMat.opacity = uv ? 0.1 : 0.22;
     const mixed = shot === "loop" ? u01(t, MC.mixed) : 0;   // "Both groups missed mornings": gaps in the film, sunscreen on the bare half
     gapMat.opacity = mixed; gapMesh.visible = mixed > 0.005;
-    gapMat.color.setRGB(...(uv ? UVBARE : tone)); gapMat.emissive.setRGB(0.03 * uv, 0.02 * uv, 0.09 * uv);
+    gapMat.color.setRGB(...(uv ? UVBARE.map((v) => v * 1.15) : tone.map((v) => v * 0.82)));   // bare, matte and a shade deeper by day; glowing under UV gapMat.emissive.setRGB(0.05 * uv, 0.03 * uv, 0.14 * uv);
     const ops = PATCH.map((p) => { const [a, b] = MC.patches, s0 = a + p.ph * (b - a) * 0.8; return shot === "pleased" ? win(t, s0, s0 + 1.6 + 0.8 * ((p.ph * 7) % 1), 0.4) : mixed; });
     paintPatches(ops); coatMat.opacity = ops.some((o) => o > 0.01) ? 1 : 0; coat.visible = coatMat.opacity > 0;
-    coatMat.color.setRGB(...(uv ? [0.1, 0.07, 0.22] : tone.map((v) => v * 1.06)));
+    coatMat.color.setRGB(...(uv ? [0.07, 0.05, 0.16] : tone.map((v) => v + (0.95 - v) * 0.45)));   // a pale satin sheet by day; dark (it absorbs) under UV
     const lt = sweeping ? sw : uv;
     const keyK = shot === "pleased" ? 1.0 : shot === "film" ? 0.8 : 1.4;
     studio.set({ key: keyK * (1 - 0.6 * lt), rim: shot === "film" ? 1.0 : 2.2, fill: 0.3, env: shot === "film" ? 0.25 : 0.4, warm: 0.5 * (1 - lt) + 0.3 * flush });
@@ -404,6 +405,7 @@ window.seek = function (t) {
   grain.set(t);
   hud.update(t);
   cards.forEach((c) => c());
+  if (window.DBG) { gapMat.color.setRGB(0, 1, 0); gapMat.emissive.setRGB(0, 1, 0); gapMat.opacity = 1; gapMesh.visible = true; dmgMat.opacity = 1; dmg.visible = true; dmgMat.color.setRGB(1, 0, 0); }
   tBars.update(t);
   eBars.update(t);
   renderer.render(scene, camera);

@@ -84,17 +84,17 @@ BADGES = [
     {"id": "b-iarc", "text": "IARC Group 1 · excerpt", "t0": B["normal"]["t0"] - 0.2, "t1": SHOT_END["list"], "slot": "tl"},
     {"id": "b-model-bed", "text": "model, not a photo", "t0": CUT["bed"] + 0.3, "t1": CUE["large"] - 0.3, "slot": "tl"},
     {"id": "b-units", "text": "large, powerful units", "t0": CUE["large"] - 0.2, "t1": CUE["when"] - 0.2, "slot": "tl"},
-    {"id": "b-pooled", "text": "pooled studies · 2012 (corr.) · 2007", "t0": CUE["pooled"] - 0.1, "t1": SHOT_END["bed"], "slot": "tl"},
+    {"id": "b-pooled", "text": "pooled studies · 2012 corr., 2007", "t0": CUE["pooled"] - 0.1, "t1": SHOT_END["bed"], "slot": "tl"},
     {"id": "b-model", "text": "model, not a photo", "t0": CUT["uv"] + 0.9, "t1": SHOT_END["uv"], "slot": "tl"},
     {"id": "b-micro", "text": "tissue photo · rays simplified", "t0": CUT["section"] + 0.3, "t1": SHOT_END["section"], "slot": "tr"},
     {"id": "b-iarc2", "text": "IARC Group 1 · excerpt", "t0": CUT["list2"] + 0.2, "t1": CUE["certainty"] - 0.7, "slot": "tl"},
 ]
 SPINE = [0.56, 0.265]     # below the corner notes' row, clear of their width
 COUNTERS = [
-    {"id": "c-uva", "label": "UVA vs midday sun · may be", "text": f"×{UVA_X[0]}–{UVA_X[1]}", "t0": CUE["ten"] - 0.2, "t1": CUE["when"] - 0.2, "at": SPINE},
+    {"id": "c-uva", "label": "UVA vs midday sun · may be", "text": f"×{UVA_X[0]}–{UVA_X[1]}", "t0": CUE["ten"] - 0.2, "t1": CUE["when"] - 0.2, "at": SPINE, "minW": "44vmin"},
     {"id": "c-rr", "label": "melanoma · relative risk · first use < 35", "text": f"{RR['2012']:.2f} · {RR['2007']:.2f}", "t0": CUE["half"] - 0.4, "t1": SHOT_END["bed"],
-     "at": [0.5, 0.265], "small": "7.4vmin"},
-    {"id": "c-end", "label": "Group 1 ranks", "text": "certainty", "t0": CUE["certainty"] - 0.2, "t1": t_end - 0.5, "at": [0.5, 0.19]},
+     "at": [0.48, 0.265], "small": "7.4vmin", "minW": "70vmin"},
+    {"id": "c-end", "label": "Group 1 ranks", "text": "certainty", "t0": CUE["certainty"] - 0.2, "t1": t_end - 0.5, "at": [0.5, 0.175]},
 ]
 TAGS = [   # the switch-off's two halves, named once each (Australia: most states 2015, Western Australia 2016; c9)
     {"id": "t-au", "text": f"Australia · {BANS['Australia']}–16", "t0": CUE["off"] + 0.1, "t1": SHOT_END["uv"], "side": "left"},
@@ -124,7 +124,7 @@ CAM = {
             "rack": [CUE["young"], CUE["pooled"]]},
     "uv": {"keys": [K(CUT["uv"], [0.0, 6.2, 12.5], [0.0, 0.0, -1.0]), K(CUT["section"], [0.0, 4.6, 9.0], [0.0, -0.3, -2.5])]},
     "section": {"keys": [K(CUT["section"], [12.0, 6.2, 21.0], [0.8, -3.0, -1.5]), K(CUT["list2"], [9.0, 4.8, 16.5], [0.4, -3.2, -1.5])]},
-    "list2": {"keys": [K(CUT["list2"], [-0.9, 0.4, 19.2], [-0.15, -0.7, 0]), K(f.duration, [0.2, 0.1, 17.6], [0.0, -0.85, 0])]},
+    "list2": {"keys": [K(CUT["list2"], [-0.9, 0.4, 19.2], [-0.15, -0.7, 0]), K(f.duration, [0.2, 0.1, 17.8], [0.0, -0.62, 0])]},
 }
 for name, c in CAM.items():
     ts = [k["t"] for k in c["keys"]]
