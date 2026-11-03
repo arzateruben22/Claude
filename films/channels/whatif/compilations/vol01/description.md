@@ -47,5 +47,5 @@ Sources (every number in these episodes is checked against a source)
 - Earth Fact Sheet (NASA Goddard, NSSDC): https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
 - Bohr radius, CODATA 2022 (NIST): https://physics.nist.gov/cgi-bin/cuu/Value?bohrrada0
 
-Narration is a synthetic voice (AI-generated). Music and sound design are original, made for Back of the Envelope. Type: Bricolage Grotesque, Figtree, JetBrains Mono, Caveat (SIL Open Font License).
+Narration is a synthetic voice (AI-generated). Music and sound design are original, made for Possibility Lab. Type: Bricolage Grotesque, Figtree, JetBrains Mono, Caveat (SIL Open Font License).
 TODO before posting: the channel handle and links, the expert sign-offs listed in each episode's review/HUMAN-REVIEW.md, and YouTube's altered/synthetic content setting.
