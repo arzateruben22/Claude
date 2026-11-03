@@ -85,10 +85,10 @@ CAM = {
         {"t": A("vo04:electricity"), "pos": [-10.0, 1.0, 110.0], "look": [0.0, -3.5, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo04:jump", 0.35), "pos": [-9.0, 1.2, 106.0], "look": [0.0, -3.5, 0.0], "fov": 34, "ease": "sine"},   # hold wide: the glow reaches the wall and stops there, on the words
         # the tip, close, a little lower and wider so the receptors and the drift clear the caption plate
-        {"t": A("vo04:floods", 0.0), "pos": [2.5, 5.2, 66.0], "look": [6.0, -2.4, 0.0], "fov": 34, "ease": "p2"},
-        {"t": REL["drift"][1], "pos": [5.5, 3.5, 62.0], "look": [9.0, -2.6, 0.0], "fov": 34, "ease": "sine"},
-        {"t": B["whoa"]["t0"], "pos": [6.5, 2.6, 70.0], "look": [10.0, -2.3, 0.0], "fov": 34, "ease": "sine"},
-        {"t": REPLAY[1], "pos": [6.5, 2.6, 72.0], "look": [10.0, -2.3, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo04:floods", 0.0), "pos": [21.0, -10.0, 40.0], "look": [9.5, -1.0, 0.0], "fov": 34, "ease": "p2"},   # live scan: grazing across the receptor field into the cut terminal (owner, 3 Nov)
+        {"t": REL["drift"][1], "pos": [19.5, -9.0, 37.0], "look": [10.0, -1.2, 0.0], "fov": 34, "ease": "sine"},
+        {"t": B["whoa"]["t0"], "pos": [20.0, -8.5, 43.0], "look": [10.5, -1.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": REPLAY[1], "pos": [20.5, -8.0, 46.0], "look": [10.5, -1.0, 0.0], "fov": 34, "ease": "sine"},
         # the field: a cell with five junctions on it; the one used again and again pulses and grows
         {"t": A("vo05:junction", 0.3), "pos": [150.0, -205.0, 260.0], "look": [90.0, -290.0, -232.0], "fov": 34, "ease": "p2"},   # on the junction as it is named
         {"t": B["takeaway"]["t0"], "pos": [140.0, -200.0, 240.0], "look": [88.0, -288.0, -232.0], "fov": 34, "ease": "sine"},
