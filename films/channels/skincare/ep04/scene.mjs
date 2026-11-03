@@ -18,7 +18,8 @@ import { createStudio, skinMaterial, createShaft, createGrain } from "../set/stu
 import { createBrow, browNormal } from "../set/brow04.js";
 import { createNMJ } from "../set/nmj04.js";
 import { SECTION, DERMIS } from "../set/ref/textures.js";
-import { lookV2, richen, hazeVolume } from "../set/prod.js";
+import { richen, hazeVolume } from "../set/prod.js";
+import { lookV3, skinV3 } from "../set/look3.js";
 import { unifyHud, stackAsCard } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, FPS = FILM.fps || 30, G = FILM.gauge, J = FILM.j, BW = FILM.brow, P = FILM.plates;
@@ -64,16 +65,9 @@ browSkin.map = (() => { const c = document.createElement("canvas"); c.width = c.
     g.addColorStop(0, red ? "rgba(236,170,160,.22)" : "rgba(255,246,236,.25)"); g.addColorStop(1, "rgba(255,255,255,0)"); k.fillStyle = g; k.fillRect(x - r, y - r, 2 * r, 2 * r); }
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1.5, 1.5); return t; })();
 BR.mesh.material = browSkin;
-const look2 = lookV2({ canvas, hudRoot, skin: browSkin });   // the channel look (stage 1): the skin upgraded, the graded backdrop, one grade
-// then: a second, sharper specular lobe (oil on the crests) over lookV2's broad one, and a red wrap at the terminator
-// (light scattered under the skin; no transmission)
-browSkin.clearcoat = 0.3; browSkin.clearcoatRoughness = 0.28; browSkin.specularIntensity = 0.32;
-const SCAT = { uKeyV: { value: new THREE.Vector3(0, 0, 1) }, uScatter: { value: new THREE.Color(0.9, 0.32, 0.22) }, uKeyI: { value: 1 } };
-{ const prev = browSkin.onBeforeCompile;
-  browSkin.onBeforeCompile = (sh, r) => { prev(sh, r); Object.assign(sh.uniforms, SCAT);
-    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nuniform vec3 uKeyV; uniform vec3 uScatter; uniform float uKeyI;")
-      .replace("#include <lights_fragment_end>", "#include <lights_fragment_end>\n  { float nl = dot(normal, normalize(uKeyV)); float wrap = max(0.0, (nl + 0.5) / 1.5) - max(0.0, nl); reflectedLight.directDiffuse += diffuseColor.rgb * uScatter * wrap * uKeyI; }"); };
-  browSkin.customProgramCacheKey = () => "skinV2scatter"; browSkin.needsUpdate = true; }
+skinV3(browSkin, { keyDir: [-0.74, 0.5, 0.45] });   // the warm terminator matched to this film's upper-left key
+const look3 = lookV3({ canvas, hudRoot, skin: browSkin });   // the channel look v3: skinV3 (a warm terminator, oily micro-speculars), the backdrop, one grade, grainV3
+browSkin.clearcoat = 0.18; browSkin.clearcoatRoughness = 0.3;   // a second, sharper lobe over skinV3's broad matte one (oil on the crests)
 const browBase = browSkin.color.clone();
 BR.group.scale.z = 1.25;
 scene.add(BR.group);
@@ -135,7 +129,7 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";                              // the card sits above the tease's caption plate
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.25, liftAt: [0.47, 0.3] });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
-const grain = createGrain(hudRoot, { amount: 0.007 });
+const grain = look3.grain;   // grainV3
 // the UV switch: a cyan line sweeping down the frame (DOM), as in look test 2
 const scan = document.createElement("div");
 Object.assign(scan.style, { position: "absolute", left: 0, right: 0, height: `${0.004 * H}px`, background: "#5FF2E8", boxShadow: "0 0 18px 4px rgba(95,242,232,.55)", opacity: "0", zIndex: 2, pointerEvents: "none" });
@@ -206,9 +200,8 @@ window.seek = function (t) {
     look(pos, tgt);
     camera.updateMatrixWorld();
     studio.aim([0, 0.6, 0], [-0.74, 0.5, 0.45], [0.25, 0.85, -0.45]); studio.set({ key: 2.6 * (1 - 0.5 * uv), rim: 2.4, fill: 0.9, env: 0.35, warm: 0.6 * (1 - uv) });   // a warm key grazing from the upper left, a cool fill ≈ 1.5 stops under, a rim from behind and above
-    _kd.copy(studio.key.position).sub(studio.key.target.position).normalize().transformDirection(camera.matrixWorldInverse); SCAT.uKeyV.value.copy(_kd); SCAT.uKeyI.value = 0.12 * studio.key.intensity;
     browSkin.color.copy(browBase).lerp(UVSKIN, uv); browSkin.emissive.setRGB(0.03 * uv, 0.02 * uv, 0.1 * uv); BR.hairMat.color.copy(HAIR).lerp(UVHAIR, uv);
-    browSkin.sheenColor.setRGB(1 - 0.3 * uv, 0.72 - 0.06 * uv, 0.62 + 0.36 * uv);   // from lookV2's warm edge sheen toward UV lilac
+    browSkin.sheenColor.setRGB(1 - 0.3 * uv, 0.72 - 0.06 * uv, 0.62 + 0.36 * uv);   // the warm edge sheen toward UV lilac
     focusPt = [0, 0.8, 0.2]; fstop = shot === "brow2" ? 0.22 : fs;   // focus on the crease; the brows fall off
     if (shot === "dose" && fs > 0.15) { const dv = new THREE.Vector3(); camera.getWorldDirection(dv); focusPt = camera.position.clone().addScaledVector(dv, 13 - 9 * (fs - 0.14) / 0.5).toArray(); }   // the rack to the plate
   }

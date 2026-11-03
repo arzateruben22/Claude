@@ -95,7 +95,7 @@ LABELS = [
 ]
 BADGES = [
     {"id": "b-model", "text": "model, not a photo", "t0": 0.0, "t1": CUE["nerve"], "slot": "bl"},   # out of the top stack, clear of the title
-    {"id": "b-gram", "kind": "card", "title": "≈ 1 g, inhaled and evenly dispersed", "text": "theoretical (JAMA 2001)", "t0": CUE["banknote"], "t1": CUE["nerve"], "slot": "tl"},
+    {"id": "b-gram", "kind": "card", "title": "≈ 1 g, inhaled and evenly dispersed", "text": "theoretical (JAMA 2001)", "t0": CUE["banknote"], "t1": CUE["nerve"], "slot": "bl"},   # bottom left with the model note: the top holds the title, then the spine
     {"id": "b-simp", "text": "simplified · not to scale", "t0": CUE["nerve"] + 0.3, "t1": CUE["skin"], "slot": "tl"},
     {"id": "b-model2", "text": "model, not a photo", "t0": CUE["skin"] + 0.2, "t1": CUE["botulinum"], "slot": "tl"},
     {"id": "b-micro", "text": "tissue photo · stained skin", "t0": CUE["botulinum"] + 0.25, "t1": CUE["slips"], "slot": "tl"},
@@ -109,7 +109,7 @@ BADGES = [
     {"id": "b-model4", "text": "model, not a photo", "t0": SH["close"] + 0.3, "t1": t_end, "slot": "tl"},
 ]
 # the spine readout: the payoff's number, held lit from the takeaway to the end card (after the gauge, which owns the top)
-SPINE = {"id": "c-spine", "t0": TITLE["t1"] + 0.2, "t1": t_end - 0.4, "kill": CUE["kill"], "at": [[0.0, [0.74, 0.235]], [CUE["nerve"], [0.5, 0.235]]],   # right of the hook's note, then centred
+SPINE = {"id": "c-spine", "t0": TITLE["t1"] + 0.2, "t1": t_end - 0.4, "kill": CUE["kill"], "at": [0.5, 0.235],
          "labels": [[0.0, "one frown's dose"], [CUE["kill"], "one frown, of a lethal dose"]], "q": "?", "a": "< 1 %"}
 COUNTERS = []
 PLATES = {
