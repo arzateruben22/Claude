@@ -1,0 +1,4 @@
+{"id": "body-backstage-looktest", "fps": 30, "dur": 6.0, "poster": 1.0,
+ "theme": "theme.json",
+ "shots": [{"at": 0.0, "name": "lungs"}, {"at": 2.0, "name": "capillary"}, {"at": 4.0, "name": "synapse"}],
+ "captions": []}

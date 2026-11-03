@@ -1,0 +1,16 @@
+{
+  "_doc": "Body Backstage season 1 reboot, look test only ('live scan'). The channel's theme.json is untouched until the owner approves this look. Abyss teal-black ground (the surgical green taken darker and filmic), photoreal tissue, blood red, and the channel's chartreuse kept as the instrument (scan line, reticles, readouts). Type: Atkinson Hyperlegible Next (titles 800, captions 700) and Atkinson Hyperlegible Mono (the instrument's readouts); Fraunces retires with the old look.",
+  "id": "body-backstage-livescan",
+  "name": "Body Backstage",
+  "channel": "body",
+  "tokens": {
+    "bg": "#040E10", "bg-hi": "#0B2A2B", "plate": "#030C0E", "text": "#F2F7F5", "text-2": "#A6C4BE",
+    "signal": "#D6F25F", "pulse": "#FF5A6E", "o2": "#FFFFFF", "line": "#D6F25F"
+  },
+  "fonts": [
+    {"family": "Atkinson Hyperlegible Next", "file": "../fonts/AtkinsonHyperlegibleNext-VF.woff2", "weight": "200 800", "style": "normal"},
+    {"family": "Atkinson Hyperlegible Mono", "file": "../fonts/AtkinsonHyperlegibleMono-VF.ttf", "weight": "200 800", "style": "normal"}
+  ],
+  "type": {"display": "Atkinson Hyperlegible Next", "text": "Atkinson Hyperlegible Next", "mono": "Atkinson Hyperlegible Mono", "glyph": "Atkinson Hyperlegible Next"},
+  "safe": {"9x16": {"x": [90, 900], "y": [250, 1420], "frame": [1080, 1920]}}
+}
