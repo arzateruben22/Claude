@@ -68,7 +68,7 @@ const look2 = lookV2({ canvas, hudRoot, skin: browSkin });   // the channel look
 // then: a second, sharper specular lobe (oil on the crests) over lookV2's broad one, and a red wrap at the terminator
 // (light scattered under the skin; no transmission)
 browSkin.clearcoat = 0.3; browSkin.clearcoatRoughness = 0.28; browSkin.specularIntensity = 0.32;
-const SCAT = { uKeyV: { value: new THREE.Vector3(0, 0, 1) }, uScatter: { value: new THREE.Color(0.95, 0.28, 0.18) }, uKeyI: { value: 1 } };
+const SCAT = { uKeyV: { value: new THREE.Vector3(0, 0, 1) }, uScatter: { value: new THREE.Color(0.9, 0.32, 0.22) }, uKeyI: { value: 1 } };
 { const prev = browSkin.onBeforeCompile;
   browSkin.onBeforeCompile = (sh, r) => { prev(sh, r); Object.assign(sh.uniforms, SCAT);
     sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nuniform vec3 uKeyV; uniform vec3 uScatter; uniform float uKeyI;")
@@ -154,7 +154,7 @@ const kerner = plate(`<div style="font:700 4.2vmin/1.1 var(--font-mono);letter-s
   <div style="font:500 3vmin/1.3 var(--font-mono);color:var(--text-2);margin-top:.8vmin">${K.role}</div>
   <div style="font:600 3.9vmin/1.3 var(--font-body, inherit);margin-top:2.2vmin">${K.line1.replace("“sausage poison”", "<span class=\"sp\">“sausage poison”</span>")}</div>
   <div class="k2" style="font:600 3.9vmin/1.3 var(--font-body, inherit);margin-top:1.2vmin;color:var(--water)">${K.line2}</div>`,
-  { left: "50%", top: `${0.25 * H}px`, transform: "translateX(-50%)", width: "72vmin", padding: "3.4vmin 4vmin", textAlign: "left" });
+  { left: "50%", top: `${0.3 * H}px`, transform: "translateX(-50%)", width: "72vmin", padding: "3.4vmin 4vmin", textAlign: "left" });
 const k2 = kerner.querySelector(".k2"), sp = kerner.querySelector(".sp");
 const D = P.dose, frac = D.frown_u / D.lethal_u;
 const row = (cls, name, val, col) => `<div class="${cls}" style="display:flex;justify-content:space-between;align-items:baseline;font:600 3.2vmin/1.2 var(--font-text, inherit);margin-top:1.8vmin"><span>${name}</span><b style="font:500 3.2vmin var(--font-mono);color:${col};white-space:nowrap">${val}</b></div>
@@ -163,7 +163,7 @@ const dose = plate(`<div style="font:500 2.6vmin/1 var(--font-mono);color:var(--
   ${row("r1", "one frown", `${D.frown_u} units`, "var(--water)")}
   ${row("r2", "estimated lethal dose", `≈ ${D.lethal_u.toLocaleString("en-US")}`, "var(--uv)")}
   <div style="font:500 2.5vmin/1.4 var(--font-mono);color:var(--text-2);margin-top:2vmin">1 unit = the dose that kills half a group of mice<br>units differ by product<br>side effects can occur far below this</div>`,
-  { left: "50%", top: `${0.42 * H}px`, transform: "translateX(-50%)", width: "84vmin", padding: "2.4vmin 3vmin", boxSizing: "border-box" });
+  { left: "50%", top: `${0.33 * H}px`, transform: "translateX(-50%)", width: "84vmin", padding: "2.4vmin 3vmin", boxSizing: "border-box" });
 const b1 = dose.querySelector(".r1b"), b2 = dose.querySelector(".r2b"), r1 = dose.querySelector(".r1"), r2 = dose.querySelector(".r2");
 const card = stackAsCard(spineEl, dose); spineEl.classList.remove("ol-card-top"); dose.classList.remove("ol-card-body");
 const veil = document.createElement("div");
@@ -193,24 +193,24 @@ window.seek = function (t) {
   if (isB) {
     const u = span(t, shot);
     let frown = 1, pos, tgt, fp;
-    let fs = 0.3;
+    let fs = 0.14;
     if (shot === "brow") { frown = 0.1 + 0.9 * u01(t, BW.frown); pos = mix3([2.4, -1.8, 30], [1.0, -0.6, 19], u); tgt = mix3([0, -0.6, 0], [0, 0.2, 0], u); }   // the upper face, one slow push toward the "11"
     else if (shot === "brow2") { frown = 0.3 + 0.7 * u01(t, BW.fold); pos = mix3([2.4, -0.9, 6.0], [1.6, -0.4, 4.9], u); tgt = [0, 0.75, 0]; }   // the crease setting, close
     else if (shot === "kerner") { frown = 1 - 0.9 * u01(t, BW.slack); pos = mix3([0.6, -1.4, 18], [0.2, -2.2, 26], u); tgt = mix3([0, 0.0, 0], [0, 0.6, 0], u); }   // a slow pull back under the plate; the frown goes slack on "paralysis"
     else if (shot === "dose") {   // wide, then a push to the crease on "twenty", then a rack to the plate on "kill"
       frown = 0.9; const p1 = u01(t, [SH.dose, D.frown]), p2 = u01(t, [D.frown, D.kill]);
       pos = mix3(mix3([1.4, -2.0, 30], [1.1, -1.8, 26], p1), [0.5, -1.0, 13], p2); tgt = mix3(mix3([0, -0.9, 0], [0, -0.8, 0], p1), [0, -0.6, 0], p2); uv = uvNow(t, shot);
-      fs = 0.3 + 0.5 * u01(t, [D.kill, D.kill + 0.8]); }
+      fs = 0.14 + 0.5 * u01(t, [D.kill, D.kill + 0.8]); }
     else { frown = 0.1 + 0.9 * u01(t, BW.close); pos = mix3([2.4, -1.8, 30], [2.6, -1.9, 31.5], u); tgt = [0, -0.6, 0]; }   // the close: frame 0's composition (the loop)
     BR.set({ frown });
     look(pos, tgt);
     camera.updateMatrixWorld();
     studio.aim([0, 0.6, 0], [-0.74, 0.5, 0.45], [0.25, 0.85, -0.45]); studio.set({ key: 2.6 * (1 - 0.5 * uv), rim: 2.4, fill: 0.9, env: 0.35, warm: 0.6 * (1 - uv) });   // a warm key grazing from the upper left, a cool fill ≈ 1.5 stops under, a rim from behind and above
-    _kd.copy(studio.key.position).sub(studio.key.target.position).normalize().transformDirection(camera.matrixWorldInverse); SCAT.uKeyV.value.copy(_kd); SCAT.uKeyI.value = 0.55 * studio.key.intensity;
+    _kd.copy(studio.key.position).sub(studio.key.target.position).normalize().transformDirection(camera.matrixWorldInverse); SCAT.uKeyV.value.copy(_kd); SCAT.uKeyI.value = 0.12 * studio.key.intensity;
     browSkin.color.copy(browBase).lerp(UVSKIN, uv); browSkin.emissive.setRGB(0.03 * uv, 0.02 * uv, 0.1 * uv); BR.hairMat.color.copy(HAIR).lerp(UVHAIR, uv);
     browSkin.sheenColor.setRGB(1 - 0.3 * uv, 0.72 - 0.06 * uv, 0.62 + 0.36 * uv);   // from lookV2's warm edge sheen toward UV lilac
-    focusPt = [0, 0.8, 0.2]; fstop = shot === "brow2" ? 0.3 : fs;   // focus on the crease; the brows fall off
-    if (shot === "dose" && fs > 0.31) { const dv = new THREE.Vector3(); camera.getWorldDirection(dv); focusPt = camera.position.clone().addScaledVector(dv, 13 - 9 * (fs - 0.3) / 0.5).toArray(); }   // the rack to the plate
+    focusPt = [0, 0.8, 0.2]; fstop = shot === "brow2" ? 0.22 : fs;   // focus on the crease; the brows fall off
+    if (shot === "dose" && fs > 0.15) { const dv = new THREE.Vector3(); camera.getWorldDirection(dv); focusPt = camera.position.clone().addScaledVector(dv, 13 - 9 * (fs - 0.14) / 0.5).toArray(); }   // the rack to the plate
   }
   const sw = seg(t, FILM.scan.sweep[0], FILM.scan.sweep[1]); scan.style.top = `${(sw * H).toFixed(1)}px`; scan.style.opacity = shot === "dose" && sw > 0 && sw < 1 ? "1" : "0";
 

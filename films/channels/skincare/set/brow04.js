@@ -40,7 +40,7 @@ export const browNormal = ({ seed = 4, size = 1024, pores = 900, hatch = 2600 } 
   const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8; return t;
 };
 
-export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H = 14, yc = 0.2, segs = [720, 560], hairN = 520, vellusN = 5000 } = {}) => {
+export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H = 14, yc = 0.2, segs = [720, 560], hairN = 900, vellusN = 5000 } = {}) => {
   const R = rng(seed), g = new THREE.Group();
   g.position.x = x;
   const geo = new THREE.PlaneGeometry(W, H, segs[0], segs[1]); geo.translate(0, yc, 0);
@@ -55,19 +55,19 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H
     const socket = -0.32 * Math.exp(-(((ax - 3.1) ** 2) / 2.4 + ((Y + 1.9) ** 2) / 1.2));                    // shallow: no bruise
     const lid = 0.2 * Math.exp(-(((ax - 3.1) ** 2) / 1.5 + ((Y + 2.45) ** 2) / 0.16)) - 0.07 * Math.exp(-(((ax - 3.1) ** 2) / 1.8 + ((Y + 2.0) ** 2) / 0.015));   // the upper lids and their crease
     const env = Math.exp(-((Y - 0.8) ** 2) / 0.45);
-    const folds = f * env * (-0.2 * (Math.exp(-((X - 0.36) ** 2) / 0.006) + Math.exp(-((X + 0.36) ** 2) / 0.006))   // the two valleys of the "11"
-      + 0.13 * Math.exp(-(X * X) / 0.045)                                                                       // the bulge between them
-      + 0.09 * (Math.exp(-((X - 0.78) ** 2) / 0.09) + Math.exp(-((X + 0.78) ** 2) / 0.09)));                    // the corrugators bunching outside
+    const folds = f * env * (-0.13 * (Math.exp(-((X - 0.36) ** 2) / 0.018) + Math.exp(-((X + 0.36) ** 2) / 0.018))   // the two valleys of the "11" (soft)
+      + 0.11 * Math.exp(-(X * X) / 0.06)                                                                       // the bulge between them
+      + 0.07 * (Math.exp(-((X - 0.78) ** 2) / 0.09) + Math.exp(-((X + 0.78) ** 2) / 0.09)));                    // the corrugators bunching outside
     const draw = -0.06 * f * Math.exp(-(X * X) / 1.6) * Math.exp(-((Y - 0.6) ** 2) / 1.5);
     return ridge + nose + socket + lid + folds + draw;
   };
 
   // ── the groom: per brow, clumps of tapered strands; the head (medial) hairs stand up, the body and tail flow outward ──
-  const hairGeo = new THREE.CylinderGeometry(0.0035, 0.012, 1, 6, 4, false).rotateZ(-Math.PI / 2).translate(0.5, 0, 0);   // root at the origin, tip along +x
+  const hairGeo = new THREE.CylinderGeometry(0.005, 0.02, 1, 6, 4, false).rotateZ(-Math.PI / 2).translate(0.5, 0, 0);   // root at the origin, tip along +x
   const alpha = (() => { const c = document.createElement("canvas"); c.width = 4; c.height = 64; const k = c.getContext("2d"); const gr = k.createLinearGradient(0, 64, 0, 0);
     gr.addColorStop(0, "#fff"); gr.addColorStop(0.7, "#ddd"); gr.addColorStop(1, "#333"); k.fillStyle = gr; k.fillRect(0, 0, 4, 64); return new THREE.CanvasTexture(c); })();
-  const hairMat = new THREE.MeshPhysicalMaterial({ color: 0x3b2618, roughness: 0.38, metalness: 0, sheen: 0.5, sheenRoughness: 0.35, sheenColor: new THREE.Color(0.85, 0.66, 0.5),
-    anisotropy: 0.7, alphaMap: alpha, alphaToCoverage: true, transparent: false });
+  const hairMat = new THREE.MeshPhysicalMaterial({ color: 0x2e1d12, roughness: 0.5, metalness: 0, sheen: 0.2, sheenRoughness: 0.5, sheenColor: new THREE.Color(0.6, 0.45, 0.32), specularIntensity: 0.35,
+    anisotropy: 0.4, alphaMap: alpha, alphaToCoverage: true, transparent: false });
   const HAIRS = [];
   for (const s of [-1, 1]) {
     const clumps = Math.round(hairN / 7);

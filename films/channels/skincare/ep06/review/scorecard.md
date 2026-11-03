@@ -54,3 +54,12 @@ switch-off; "tissue photo · rays simplified" on the cut face; years on screen o
   and the excerpt note leaves before "certainty"; the end card sits over the plate, racked out of focus, under a light
   scrim.
 - Solar radiation's year is hidden until "sun"; the years column is headed "year listed".
+
+**Round 1 draft (74.20 s, 15 fps; channel look `prod.js` + `hudv2.js` folded in):**
+- Sync PASS: cell.land 0.1/0.1 ms, counter.show 0.5/1.0 ms, reveal 12.0/57.0 ms, scale 0.0/0.0 ms, scale.jump 0.0/5.0 ms,
+  section 0.0/0.0 ms, signature 8.0/11.0 ms, swell 2.0/2.0 ms, zap 0.0/0.0 ms.
+- Mix: −14.1 LUFS / −2.0 dBTP (AAC), LRA 2.9; music −29.2 vs dialog −13.6 LUFS (gap 15.7 LU, pass); phone mono loss 0.07 dB.
+- Render audit: 0 warnings; 1.77 s/frame at draft; lint 0/0.
+- Open: the switch-off's left half reads as a soft darkening rather than a clear split; the cut face is close (the face
+  fills most of the frame, the block's top reads brown but flat); the spines' notes are drawn as the card's header row
+  (note above spine) because a note-under-spine card would push the spine out of the safe box.

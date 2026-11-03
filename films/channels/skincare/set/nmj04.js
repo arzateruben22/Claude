@@ -67,14 +67,14 @@ export const createNMJ = ({ x = 500, seed = 41, cyan = "#5FF2E8", lilac = "#B79B
   const bulb = new THREE.Mesh(ruffled(1, 0.07, 3), bulbMat); bulb.position.copy(BC); bulb.scale.set(...BS); bulb.renderOrder = 4; g.add(bulb);
 
   // ── vesicles: lit spheres, a cyan inner glow and a bright rim, varied in size, clustered over the docking zone ──
-  const vesMat = rim(new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.32, 0.7, 0.72), emissive: new THREE.Color(cyan), emissiveIntensity: 0.22, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.12 }), "#C9FFFA", 1.1, 2.0, "nmjVes");
+  const vesMat = rim(new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.32, 0.7, 0.72), emissive: new THREE.Color(cyan), emissiveIntensity: 0.16, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.12 }), "#C9FFFA", 0.8, 2.4, "nmjVes");
   const DOCK = [-2.1, -1, 0.1, 1.2, 2.3].map((dx, i) => ({ x: BC.x + dx, z: (i % 2 ? 0.7 : -0.3), y: 1.0 }));
   const VES = [];
-  for (let n = 0; n < 72; n++) {
+  for (let n = 0; n < 50; n++) {
     let p;
-    if (n < 46) { const d = DOCK[n % DOCK.length]; p = [d.x + (R() - 0.5) * 1.1, d.y + 0.35 + R() * 0.9, d.z + (R() - 0.5) * 1.2]; }   // clusters over each docking site
+    if (n < 40) { const d = DOCK[n % DOCK.length]; p = [d.x + (R() - 0.5) * 0.9, d.y + 0.3 + R() * 0.7, d.z + (R() - 0.5) * 1.0]; }   // clusters over each docking site
     else { for (;;) { const q = [R() * 2 - 1, R() * 2 - 1, R() * 2 - 1]; if (q[0] ** 2 + q[1] ** 2 + q[2] ** 2 < 1 && q[1] > -0.2) { p = [BC.x + q[0] * BS[0] * 0.7, BC.y + q[1] * BS[1] * 0.6, BC.z + q[2] * BS[2] * 0.68]; break; } } }
-    VES.push({ p, r: 0.1 + R() * R() * 0.16, ph: [R() * 6.28, R() * 6.28, R() * 6.28], f: 0.4 + R() * 0.5 });
+    VES.push({ p, r: 0.08 + R() * R() * 0.12, ph: [R() * 6.28, R() * 6.28, R() * 6.28], f: 0.4 + R() * 0.5 });
   }
   const ves = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 24, 16), vesMat, VES.length); g.add(ves);
   const docked = new THREE.InstancedMesh(new THREE.SphereGeometry(0.2, 24, 16), vesMat, DOCK.length); g.add(docked);
