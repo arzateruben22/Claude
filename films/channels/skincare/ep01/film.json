@@ -875,6 +875,13 @@
    "slot": "tl"
   },
   {
+   "id": "b-model2b",
+   "text": "model on a tissue photo",
+   "t0": 52.3333,
+   "t1": 53.4333,
+   "slot": "tl"
+  },
+  {
    "id": "b-photo",
    "text": "tissue photo (normal skin)",
    "t0": 17.8,
