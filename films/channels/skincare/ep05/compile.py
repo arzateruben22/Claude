@@ -75,10 +75,10 @@ MACRO = {
     "dmg": [CUE["but"] + 0.5, CUE["misses"] + 0.2],              # the hidden freckles darken under UV (illustration)
     "patches": [CUE["others"], CUE["all"] + 0.3],                 # "whenever they pleased, or not at all": sunscreen comes and goes
     "mixed": [CUE["both"] - 0.1, CUE["both"] + 0.9],             # the loop, on "Both": bare gaps open in the screened half, patches land on the bare half (never sunscreen against none)
-    "film": [B["toscale"]["t0"] + 0.3, CUE["dose"] + 0.4],        # the morning layer shows as a satin film
+    "film": [CUE["dose"] - 0.1, CUE["dose"] + 0.9],        # the morning layer shows as a satin film
     "age": [CUE["researchers"], B["why"]["t0"] - 0.2],           # the cast: the lines deepen on the right ("4.5 years, compressed")
 }
-RACK = {"hook": [CUE["aged"], CUE["aged"] + 0.7], "micro": [CUE["melanoma"] - 0.6, CUE["melanoma"] + 0.6]}
+RACK = {"hook": [CUE["aged"], CUE["aged"] + 0.7], "micro": [CUE["melanoma"] - 0.15, CUE["melanoma"] + 0.75]}
 
 # ── the overlay: captions carry the words; at most two labels at once; honesty notes small, in a corner ──
 LABELS = [   # anchors: "at" a world point on a half (scene.mjs), or "screen" fractions
@@ -90,16 +90,17 @@ LABELS = [   # anchors: "at" a world point on a half (scene.mjs), or "screen" fr
     {"id": "l-sun", "text": "sunscreen", "kind": "water", "t0": CUE["camera"], "t1": B["whoa"]["t0"], "screen": [0.12, 0.52], "side": 1},
     {"id": "l-bare", "text": "bare skin", "kind": "uv", "t0": CUE["camera"], "t1": B["whoa"]["t0"], "screen": [0.83, 0.52], "side": -1},
 ]
+SCAN_AT = 0.14 * 0.8   # when the scan line reaches the top-left badge (≈ 14 % down the frame; the sweep takes 0.8 s)
 BADGES = [
     {"id": "b-model0", "text": "model, not a photo", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "bl"},
-    {"id": "b-model", "text": "model, not a photo", "t0": B["normal"]["t0"], "t1": CUE["researchers"] - 0.1, "slot": "tl"},
+    {"id": "b-model", "text": "model, not a photo", "t0": B["normal"]["t0"], "t1": B["change"]["t0"], "slot": "tl"},
+    {"id": "b-model2", "text": "model, not a photo", "t0": B["change"]["t0"], "t1": CUE["researchers"] - 0.1, "slot": "tl"},
     {"id": "b-cast", "text": "model · 4.5 years, compressed", "t0": CUE["researchers"] - 0.1, "t1": B["why"]["t0"], "slot": "tl"},
-    {"id": "b-burn", "text": "model, not a photo", "t0": B["why"]["t0"], "t1": CUE["but"], "slot": "tl"},
-    {"id": "b-uv1", "text": "illustration · not trial data", "t0": CUE["but"], "t1": B["whoa"]["t0"], "slot": "tl"},
+    # the scan is not a cut: one badge whose text rolls over as the line passes it (no gap, no stack)
+    {"id": "b-uv1", "segs": [["model, not a photo", B["why"]["t0"]], ["illustration · not trial data", UV["uv"][0] + SCAN_AT]], "t0": B["why"]["t0"], "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-micro", "text": "tissue photo · not a melanoma", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-est", "text": "model · estimate · lab test dose", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tl"},
-    {"id": "b-loop", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": CUE["skin"], "slot": "tl"},
-    {"id": "b-uv2", "text": "illustration · not trial data", "t0": CUE["skin"], "t1": t_end, "slot": "tl"},
+    {"id": "b-loop", "segs": [["model, not a photo", B["takeaway"]["t0"]], ["illustration · not trial data", UV["loop"][0] + SCAN_AT]], "t0": B["takeaway"]["t0"], "t1": t_end + 0.3, "slot": "tl", "keep": True},
 ]
 SPINE = [0.5, 0.225]
 COUNTERS = [
@@ -129,17 +130,17 @@ def cap(row, lead=LEAD):
     assert row["t1"] > row["t0"] + 0.5, row
 
 
-for row in BADGES + COUNTERS + LABELS + list(PLATES.values()):
+for row in [b for b in BADGES if not b.get("keep")] + COUNTERS + LABELS + list(PLATES.values()):
     cap(row)
 for slot in {b["slot"] for b in BADGES}:   # badges in one slot never stack during a crossfade
-    seq = [b for b in BADGES if b["slot"] == slot]
+    seq = [b for b in BADGES if b["slot"] == slot and "segs" not in b]
     for a, b in zip(seq, seq[1:]):
         a["t1"] = round(min(a["t1"], b["t0"] - 0.6), 4)
 
-GAUGE = {"rise": [B["toscale"]["t0"] + 0.4, B["toscale"]["t0"] + 1.3], "sc": CUE["fifth"] - 0.3, "paper": CUE["paper"],
+GAUGE = {"rise": [B["toscale"]["t0"] + 0.4, B["toscale"]["t0"] + 1.3], "sc": CUE["dose"], "paper": CUE["paper"],
          "back": [B["takeaway"]["t0"] - 0.6, B["takeaway"]["t0"] - 0.1], "sc_um": FILM_UM, "paper_um": PAPER_UM, "bar": "film", "sc_text": "≈ 20 µm"}
 
-TITLE = {"series": "Skin Sense · No. 005", "title": "The sunscreen *experiment*", "t1": B["normal"]["t0"] - LEAD, "sig": A("vo01:aged?", 0.6)}   # the signature ≥ 0.5 s off "aged"
+TITLE = {"series": "Skin Sense · No. 005", "title": "The sunscreen *experiment*", "t1": B["normal"]["t0"] - LEAD, "sig": 1.7}   # the signature well off "Which hand aged?"
 END = {"title": "Next: tanning beds and cigarettes. Same list, same *risk*?", "follow": "Skin Sense · No. 006",
        "next": "Nambour Skin Cancer Prevention Trial, Queensland: sunscreen 1992–96 (ageing measured over 4.5 years); melanoma followed to 2006. Narration: synthetic voice (AI)."}
 POSTER = A("vo07:count.", 0.3)
@@ -183,7 +184,7 @@ for L in LABELS:
 for c in COUNTERS:
     ev.append({"t": c["t0"], "kind": "counter.show", "tag": c["id"]})
 for b in BADGES:   # a badge that arrives with a stronger sound (a scan, a cut) stays silent: two sounds within 0.6 s blur the sync
-    if b["t0"] > 0 and all(abs(b["t0"] - x) > 0.6 for x in taken + [L["t0"] for L in LABELS] + [c["t0"] for c in COUNTERS]):
+    if b["t0"] > 0 and "segs" not in b and all(abs(b["t0"] - x) > 0.6 for x in taken + [L["t0"] for L in LABELS] + [c["t0"] for c in COUNTERS]):
         ev.append({"t": b["t0"], "kind": "badge", "tag": b["id"]})
 snd = sorted(e["t"] for e in ev if e["kind"] not in ("section", "swell"))
 close = [(a, b) for a, b in zip(snd, snd[1:]) if 1e-6 < b - a < 0.6]
