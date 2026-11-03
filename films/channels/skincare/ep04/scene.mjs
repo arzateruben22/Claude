@@ -201,14 +201,14 @@ window.seek = function (t) {
     const u = span(t, shot);
     let frown = 1, pos, tgt, fp;
     let fs = 0.14;
-    if (shot === "brow") { frown = 0.1 + 0.9 * u01(t, BW.frown); pos = mix3([2.4, -1.9, 36], [1.2, -1.0, 27], u); tgt = mix3([0, -1.0, 0], [0, -0.5, 0], u); }   // the upper face, one slow push toward the "11"
+    if (shot === "brow") { frown = 0.1 + 0.9 * u01(t, BW.frown); pos = mix3([2.0, -1.4, 22], [0.9, -0.6, 14], u); tgt = mix3([0, -0.6, 0], [0, 0.2, 0], u); fs = 0.05; }   // the upper face, one slow push toward the "11"
     else if (shot === "brow2") { frown = 0.3 + 0.7 * u01(t, BW.fold); pos = mix3([2.6, -1.0, 8.0], [1.8, -0.6, 6.5], u); tgt = [0, 0.75, 0]; }   // the crease setting, close
     else if (shot === "browb") { frown = 1; pos = mix3([1.2, -1.0, 27], [1.0, -0.8, 24], u); tgt = [0, -0.5, 0]; }   // the brow again: the frown itself
     else if (shot === "dose") {   // wide, then a push to the crease on "twenty", then a rack to the plate on "kill"
       frown = 0.9; const p1 = u01(t, [SH.dose, D.frown]), p2 = u01(t, [D.frown, D.kill]);
       pos = mix3(mix3([1.4, -2.0, 32], [1.1, -1.8, 27], p1), [0.5, -1.0, 13], p2); tgt = mix3(mix3([0, -1.0, 0], [0, -0.9, 0], p1), [0, -0.6, 0], p2); uv = uvNow(t, shot);
       fs = 0.14 + 0.5 * u01(t, [D.kill, D.kill + 0.8]); }
-    else { frown = 0.1 + 0.9 * u01(t, BW.close); pos = mix3([2.4, -1.9, 36], [2.6, -2.0, 37.5], u); tgt = [0, -1.0, 0]; }   // the close: frame 0's composition (the loop)
+    else { frown = 0.1 + 0.9 * u01(t, BW.close); pos = mix3([2.0, -1.4, 22], [2.2, -1.5, 23.5], u); tgt = [0, -0.6, 0]; fs = 0.05; }   // the close: frame 0's composition (the loop)
     BR.set({ frown });
     look(pos, tgt);
     camera.updateMatrixWorld();
