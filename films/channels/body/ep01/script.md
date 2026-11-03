@@ -1,4 +1,4 @@
-# Body Backstage No. 01: "Single file" (draft; a physiologist signs off before it posts)
+# Body Backstage No. 01: "Single file" (season 1 reboot, live scan; a physiologist signs off before it posts)
 
 About 71 s, 9:16, narrated by a synthetic voice (bf_emma, labelled as AI), with an original score.
 Built from the bible's episode-1 script (`../bible.md`, §8) with every fix from the cross-check
@@ -18,31 +18,34 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 `{-}` marks a sentence that states nothing outside the film; neither is spoken. Check it with
 `python3 -I kits/cinema/script/lint.py films/channels/body/ep01 --segment meanwhile`.
 
+Reboot (3 Nov 2026): every line rewritten the way a friend would say it (no "micrometers", "erythrocyte" or bare
+counts; comparisons and plain words), the claims unchanged. The picture is the live-scan look (../looktest).
+
 ## hook {shot: macro; frame 0 is the hero cell folded into a parachute in a capillary · title: "Single file" · pre: 0.1 · energy: 0.7} (0–5.6 s)
-vo: Why is this cell *folded*? Because the road ahead is *narrower* than the cell. {c1}
+vo: How does this cell *fit*? {-} Its pipe is *narrower* than it is. {c1}
 
 ## normal {shot: craneBack to the hero cell in an artery · locator: 2D body silhouette in the HUD, the region marked by a chartreuse pulse-line blip on the beat (no ring: body has no circles) · labels: red blood cell, no nucleus · energy: 0.45} (5.6–17.6 s)
-vo: Meet a *red blood cell*: a dimpled disc, about seven and a half micrometers. {c2} It even pushed out
-its own *nucleus*. {c3} You have about twenty-five trillion of them: most of your own cells. {c4}
+vo: Each one is a *dented disc*. {c2} It even threw out its own *nucleus* to make room. {c3} And you've got about
+twenty-five trillion of them: most of your own cells. {c4}
 
 ## change {shot: rideAlong as the vessel branches and narrows, slowed ×10 with a "slowed ×10" badge, at most 3 s, no motes within two cell widths of the lens · label: capillary · energy: 0.5} (17.6–26.8 s)
-vo: Follow it as the vessel branches, and branches again, into a *capillary*. {c5} There's no room
-to overtake, so cells go through in *single file*. {c6}
+vo: Follow one as the pipes split, and split again, into the *tiniest* ones. {c5} There's no room to pass, so
+they go in *single file*. {c6}
 
 ## why {shot: slow push; fold, slide, spring back · picture-only 2.5 s · energy: 0.55} (26.8–38 s)
-vo: You'd guess its surface stretches to fit. {-} It can't. {c7} The *dimples* give it spare surface for its
-volume, so it folds into a *parachute* instead. {c8,c9}
+vo: You'd guess it just stretches to fit. {-} It can't. {c7} That *dent* gives it spare skin, so it folds up neatly
+like a *parachute* instead. {c8,c9}
 
 ## whoa {shot: pullBack to a capillary net, every cell in single file · non-circular iris (membrane blob or vertical wipe) + scale pill "3 µm" · picture-only 3.5 s · energy: 0.7} (38–51.2 s)
-vo: The tightest vessels are about three micrometers: less than *half its width*. {c10} And it keeps
-squeezing through, all its life: about *a hundred and twenty days*. {c11}
+vo: The tightest squeeze is less than *half its width*. {c10} And it does this its whole life, over
+and over, for about *four months*. {c11}
 
 ## takeaway {shot: the cell pops out and springs back to a disc; on "jam" the camera looks back down the capillary, where a stylised crescent sickle cell (label "sickle cell", badged "illustration") is lodged · label: O₂, white with its glyph and ring · energy: 0.5} (51.2–58.8 s)
-vo: Sickle cells lose the *disc shape*, stiffen, and can jam where oxygen is handed out. {c12,c16} That
-dimple isn't decoration. {c17}
+vo: Sickle cells lose that *dent*, stiffen, and can jam where oxygen gets dropped off. {c12,c16} That dent
+has a job. {c17}
 
 ## meanwhile {segment: meanwhile · tally "while you watched": new red cells, 2,000,000 × t from frame 0, on the pulse line · mallet ticks on the lub-dub · energy: 0.45} (58.8–64.8 s)
-vo: *Meanwhile*, as you watched, your bone marrow made over a hundred million new red cells. {c13}
+vo: *Meanwhile*, as you watched, your bones made over a hundred million new ones. {c13}
 
 ## tease {shot: push into the cell · end card held ≥ 2 s · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.4} (64.8–71.6 s)
 vo: Next: what this cell *carries*. {-} Room for about a billion passengers. {c14,c15}

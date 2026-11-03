@@ -1,4 +1,4 @@
-// Meanwhile, Inside No. 01, "Single file": the picture, a pure function of t.
+// Body Backstage No. 01, "Single file" (season 1 reboot, live scan): the picture, a pure function of t.
 //
 // The channel's set (films/channels/body/set, bible §5 with the cross-check's fixes) plus this episode's
 // staging. Everything timed comes from film.json (compile.py hangs it on the spoken words); the look comes
@@ -49,8 +49,9 @@ const camera = new THREE.PerspectiveCamera(34, W / H, 1, 4000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 2500 });
 scene.add(L.lights, L.backdrop);
 scene.fog = L.fog;
+L.studio(renderer, scene, 0.6);                          // live scan: reflections for the wet clearcoat
 // kMax stays the tier's (32 final, 6 draft); the scene caps it per frame in probe mode (kCap below)
-if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, maxCoc: 0.024 });
+if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.026 });
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-life .v { color: var(--pulse); }
 #hud-life, #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
@@ -485,8 +486,8 @@ const ANCH = {
   sickle: (t) => { const s = sickleS(t), p = PH.at(s); sickleBasis(s); return [p[0] + vSy.x * 2.1, p[1] + vSy.y * 2.1, p[2] + vSy.z * 2.1 + 0.6]; },   // its convex edge, from t alone
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side });
-hud.badge("warp", { from: clk, slot: "tl" });
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: "tl" });
+hud.badge("warp", { from: clk, slot: "tr" });   // top right: the title owns a keep-out at top left (owner, 3 Nov)
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: "tr" });
 // a pill's bar is its length at the hero, on screen. hud.js clamps a bar to 4 px–60 % of the safe width, and a
 // clamped bar no longer matches its text (the meet close-up's 7.5 µm is 690–860 px at 1080 wide), so a length that
 // would be clamped shows no bar: the pill keeps its text alone
@@ -508,6 +509,8 @@ const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * 
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 const stageEl = document.querySelector(".stage");
 const IR = iris(stageEl, { events: FILM.iris });
+const FIN = L.finish(stageEl);                            // live scan: grain and vignette over the picture
+scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze (bokeh off focus)
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 318 * S1, h: 232 * S1, region: [0.83, 0.5] });
 const MEET = SHOTS.find((s) => s.name === "meet"), TREE = SHOTS.find((s) => s.name === "tree");
 const lubs = (t0, t1) => { const out = []; for (let k = Math.ceil(t0 / 0.8); k * 0.8 <= t1; k++) out.push(+(k * 0.8).toFixed(4)); return out; };
@@ -567,6 +570,8 @@ window.seek = function (t) {
   const lp = sh === "meet" ? presence(t, MEET.at + 0.35, TREE.at - 0.45, { d: 0.45, out: 0.35 }).o : 0;
   LOC.update(t, lp, beatAmp(t, MEET_BEATS));
   IR.update(t);
+  FIN.set(t);
+  MOT.set(t, sh === "net" ? 0.6 : 1);
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, kCap(t));

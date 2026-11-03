@@ -3,92 +3,80 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Why is this cell folded? Because the road ahead is narrower than the cell.",
-   "heard": "Why is this cell folded? Because the road ahead is narrower than the cell.",
+   "text": "How does this cell fit? Its pipe is narrower than it is.",
+   "heard": "How does this cell fit? Its pipe is narrower than it is.",
    "words": [
     {
-     "w": "Why",
-     "start": 0.02,
+     "w": "How",
+     "start": 0.03,
      "end": 0.32,
      "heard": true
     },
     {
-     "w": "is",
-     "start": 0.38,
+     "w": "does",
+     "start": 0.415,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "this",
-     "start": 0.465,
+     "start": 0.445,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "cell",
-     "start": 0.71,
+     "start": 0.72,
      "end": 1.04,
      "heard": true
     },
     {
-     "w": "folded?",
-     "start": 0.985,
-     "end": 1.524,
+     "w": "fit?",
+     "start": 1.0,
+     "end": 1.444,
      "heard": true,
-     "end_asr": 2.0
+     "end_asr": 1.6
     },
     {
-     "w": "Because",
-     "start": 2.01,
-     "end": 2.24,
+     "w": "Its",
+     "start": 1.925,
+     "end": 2.16,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 2.16,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "road",
-     "start": 2.415,
-     "end": 2.88,
-     "heard": true
-    },
-    {
-     "w": "ahead",
-     "start": 2.92,
-     "end": 3.28,
+     "w": "pipe",
+     "start": 2.225,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "is",
-     "start": 3.36,
-     "end": 3.52,
+     "start": 2.57,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "narrower",
-     "start": 3.49,
-     "end": 4.0,
+     "start": 2.755,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "than",
-     "start": 4.055,
+     "start": 3.34,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.6,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "is.",
+     "start": 3.64,
      "end": 4.16,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 4.085,
-     "end": 4.32,
-     "heard": true
-    },
-    {
-     "w": "cell.",
-     "start": 4.4,
-     "end": 4.72,
      "heard": true
     }
    ],
@@ -96,207 +84,183 @@
   },
   {
    "id": "vo02",
-   "text": "Meet a red blood cell: a dimpled disc, about seven and a half micrometers. It even pushed out its own nucleus. You have about twenty-five trillion of them: most of your own cells.",
-   "heard": "Meet a red blood cell, a dimpled disk about seven and a half micrometers. It even pushed out its own nucleus. You have about 25 trillion of them, most of your own cells.",
+   "text": "Each one is a dented disc. It even threw out its own nucleus to make room. And you've got about twenty-five trillion of them: most of your own cells.",
+   "heard": "Of each one is a dented disk. It even threw out its own nucleus to make room. And you've got about twenty-five trillion of them, most of your own cells.",
    "words": [
     {
-     "w": "Meet",
-     "start": 0.02,
-     "end": 0.4,
+     "w": "Each",
+     "start": 0.32,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.485,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.81,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.285,
-     "end": 0.48,
+     "start": 0.99,
+     "end": 1.12,
      "heard": true
     },
     {
-     "w": "red",
-     "start": 0.575,
-     "end": 0.72,
+     "w": "dented",
+     "start": 1.18,
+     "end": 1.76,
      "heard": true
     },
     {
-     "w": "blood",
-     "start": 0.69,
-     "end": 1.04,
-     "heard": true
+     "w": "disc.",
+     "start": 1.74,
+     "end": 2.369,
+     "heard": false,
+     "end_asr": 2.72
     },
     {
-     "w": "cell:",
-     "start": 1.005,
-     "end": 1.68,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 1.775,
-     "end": 1.84,
-     "heard": true
-    },
-    {
-     "w": "dimpled",
-     "start": 1.89,
-     "end": 2.32,
-     "heard": true
-    },
-    {
-     "w": "disc,",
-     "start": 2.275,
-     "end": 2.72,
-     "heard": false
-    },
-    {
-     "w": "about",
-     "start": 2.725,
+     "w": "It",
+     "start": 2.69,
      "end": 2.96,
      "heard": true
     },
     {
-     "w": "seven",
-     "start": 2.9,
+     "w": "even",
+     "start": 2.94,
      "end": 3.28,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 3.315,
-     "end": 3.44,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 3.5,
-     "end": 3.55,
-     "heard": true
-    },
-    {
-     "w": "half",
-     "start": 3.53,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "micrometers.",
-     "start": 3.785,
-     "end": 4.616,
-     "heard": true,
-     "end_asr": 4.88
-    },
-    {
-     "w": "It",
-     "start": 4.95,
-     "end": 5.12,
-     "heard": true
-    },
-    {
-     "w": "even",
-     "start": 5.04,
-     "end": 5.36,
-     "heard": true
-    },
-    {
-     "w": "pushed",
-     "start": 5.435,
-     "end": 5.76,
+     "w": "threw",
+     "start": 3.375,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "out",
-     "start": 5.66,
-     "end": 5.92,
+     "start": 3.77,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "its",
-     "start": 5.97,
-     "end": 6.08,
+     "start": 3.86,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "own",
-     "start": 6.0,
-     "end": 6.32,
+     "start": 4.085,
+     "end": 4.4,
      "heard": true
     },
     {
-     "w": "nucleus.",
-     "start": 6.265,
-     "end": 7.035,
+     "w": "nucleus",
+     "start": 4.4,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.19,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "make",
+     "start": 5.45,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "room.",
+     "start": 5.53,
+     "end": 6.104,
      "heard": true,
-     "end_asr": 7.28
+     "end_asr": 6.4
     },
     {
-     "w": "You",
-     "start": 7.355,
-     "end": 7.52,
+     "w": "And",
+     "start": 6.425,
+     "end": 6.56,
      "heard": true
     },
     {
-     "w": "have",
-     "start": 7.615,
-     "end": 7.68,
+     "w": "you've",
+     "start": 6.455,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "got",
+     "start": 6.8,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "about",
-     "start": 7.75,
-     "end": 7.92,
+     "start": 7.09,
+     "end": 7.28,
      "heard": true
     },
     {
      "w": "twenty-five",
-     "start": 7.93,
-     "end": 8.56,
-     "heard": false
+     "start": 7.38,
+     "end": 8.16,
+     "heard": true
     },
     {
      "w": "trillion",
-     "start": 8.62,
+     "start": 8.255,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.91,
      "end": 9.04,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 9.12,
-     "end": 9.2,
-     "heard": true
-    },
-    {
      "w": "them:",
-     "start": 9.15,
-     "end": 9.68,
+     "start": 8.94,
+     "end": 9.6,
      "heard": true
     },
     {
      "w": "most",
-     "start": 9.74,
-     "end": 9.92,
+     "start": 9.62,
+     "end": 9.84,
      "heard": true
     },
     {
      "w": "of",
-     "start": 10.02,
+     "start": 9.935,
      "end": 10.08,
      "heard": true
     },
     {
      "w": "your",
-     "start": 10.05,
-     "end": 10.32,
+     "start": 10.04,
+     "end": 10.24,
      "heard": true
     },
     {
      "w": "own",
-     "start": 10.395,
+     "start": 10.19,
      "end": 10.48,
      "heard": true
     },
     {
      "w": "cells.",
-     "start": 10.565,
-     "end": 11.04,
+     "start": 10.47,
+     "end": 11.2,
      "heard": true
     }
    ],
@@ -304,152 +268,152 @@
   },
   {
    "id": "vo03",
-   "text": "Follow it as the vessel branches, and branches again, into a capillary. There's no room to overtake, so cells go through in single file.",
-   "heard": "Follow it as the vessel branches, and branches again into a capillary. There's no room to overtake, so cells go through in single file.",
+   "text": "Follow one as the pipes split, and split again, into the tiniest ones. There's no room to pass, so they go in single file.",
+   "heard": "I follow one as the pipes split, and split again into the tiniest ones. There's no room to pass, so they go in single file.",
    "words": [
     {
      "w": "Follow",
-     "start": 0.025,
-     "end": 0.48,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 0.545,
+     "start": 0.15,
      "end": 0.64,
      "heard": true
     },
     {
-     "w": "as",
-     "start": 0.615,
-     "end": 0.8,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 0.805,
+     "w": "one",
+     "start": 0.605,
      "end": 0.88,
      "heard": true
     },
     {
-     "w": "vessel",
-     "start": 0.835,
-     "end": 1.36,
+     "w": "as",
+     "start": 0.945,
+     "end": 1.12,
      "heard": true
     },
     {
-     "w": "branches,",
-     "start": 1.3,
-     "end": 2.08,
+     "w": "the",
+     "start": 1.165,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "pipes",
+     "start": 1.31,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "split,",
+     "start": 1.925,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.185,
-     "end": 2.32,
-     "heard": true
-    },
-    {
-     "w": "branches",
-     "start": 2.35,
+     "start": 2.71,
      "end": 2.88,
      "heard": true
     },
     {
-     "w": "again,",
-     "start": 2.86,
-     "end": 3.12,
-     "heard": true
-    },
-    {
-     "w": "into",
-     "start": 3.17,
+     "w": "split",
+     "start": 3.03,
      "end": 3.36,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 3.295,
-     "end": 3.44,
+     "w": "again,",
+     "start": 3.345,
+     "end": 3.6,
      "heard": true
     },
     {
-     "w": "capillary.",
-     "start": 3.51,
-     "end": 4.16,
-     "heard": true,
-     "end_asr": 4.48
+     "w": "into",
+     "start": 3.66,
+     "end": 3.92,
+     "heard": true
     },
     {
-     "w": "There's",
-     "start": 4.49,
+     "w": "the",
+     "start": 4.02,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "tiniest",
+     "start": 4.05,
      "end": 4.8,
      "heard": true
     },
     {
+     "w": "ones.",
+     "start": 4.71,
+     "end": 5.283,
+     "heard": true,
+     "end_asr": 5.68
+    },
+    {
+     "w": "There's",
+     "start": 5.6,
+     "end": 6.08,
+     "heard": true
+    },
+    {
      "w": "no",
-     "start": 4.73,
-     "end": 4.96,
-     "heard": true
-    },
-    {
-     "w": "room",
-     "start": 4.99,
-     "end": 5.28,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 5.38,
-     "end": 5.44,
-     "heard": true
-    },
-    {
-     "w": "overtake,",
-     "start": 5.525,
+     "start": 5.98,
      "end": 6.32,
      "heard": true
     },
     {
+     "w": "room",
+     "start": 6.33,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 6.67,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "pass,",
+     "start": 6.835,
+     "end": 7.52,
+     "heard": true
+    },
+    {
      "w": "so",
-     "start": 6.34,
-     "end": 6.48,
+     "start": 7.53,
+     "end": 7.68,
      "heard": true
     },
     {
-     "w": "cells",
-     "start": 6.415,
-     "end": 6.96,
-     "heard": true
-    },
-    {
-     "w": "go",
-     "start": 6.93,
-     "end": 7.12,
-     "heard": true
-    },
-    {
-     "w": "through",
-     "start": 7.14,
-     "end": 7.36,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 7.395,
-     "end": 7.6,
-     "heard": true
-    },
-    {
-     "w": "single",
-     "start": 7.645,
+     "w": "they",
+     "start": 7.705,
      "end": 7.92,
      "heard": true
     },
     {
-     "w": "file.",
-     "start": 7.81,
+     "w": "go",
+     "start": 7.925,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 8.225,
      "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "single",
+     "start": 8.385,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "file.",
+     "start": 9.05,
+     "end": 9.52,
      "heard": true
     }
    ],
@@ -457,323 +421,297 @@
   },
   {
    "id": "vo04",
-   "text": "You'd guess its surface stretches to fit. It can't. The dimples give it spare surface for its volume, so it folds into a parachute instead.",
-   "heard": "You'd guess its surface stretches to fit. It can't eh. The dimples give it spare surface for its volume, so it folds into a parachute instead.",
+   "text": "You'd guess it just stretches to fit. It can't. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
+   "heard": "You'd guess it just stretches to fit. It can't eh. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
    "words": [
     {
      "w": "You'd",
-     "start": 0.025,
+     "start": 0.02,
      "end": 0.32,
      "heard": true
     },
     {
      "w": "guess",
-     "start": 0.245,
-     "end": 0.48,
+     "start": 0.27,
+     "end": 0.56,
      "heard": true
     },
     {
-     "w": "its",
-     "start": 0.545,
-     "end": 0.64,
+     "w": "it",
+     "start": 0.625,
+     "end": 0.675,
      "heard": true
     },
     {
-     "w": "surface",
-     "start": 0.575,
-     "end": 1.04,
+     "w": "just",
+     "start": 0.655,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "stretches",
-     "start": 1.11,
-     "end": 1.6,
+     "start": 0.935,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "to",
-     "start": 1.58,
-     "end": 1.76,
+     "start": 1.38,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "fit.",
-     "start": 1.725,
-     "end": 2.16,
-     "heard": true,
-     "end_asr": 2.48
+     "start": 1.565,
+     "end": 1.92,
+     "heard": true
     },
     {
      "w": "It",
-     "start": 2.48,
-     "end": 2.64,
+     "start": 2.405,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "can't.",
-     "start": 2.68,
-     "end": 2.96,
+     "start": 2.585,
+     "end": 2.88,
      "heard": true
     },
     {
-     "w": "The",
-     "start": 3.705,
+     "w": "That",
+     "start": 3.635,
      "end": 3.76,
      "heard": true
     },
     {
-     "w": "dimples",
-     "start": 3.82,
-     "end": 4.24,
+     "w": "dent",
+     "start": 3.885,
+     "end": 4.16,
      "heard": true
     },
     {
-     "w": "give",
-     "start": 4.275,
+     "w": "gives",
+     "start": 4.21,
      "end": 4.4,
      "heard": true
     },
     {
      "w": "it",
-     "start": 4.485,
+     "start": 4.495,
      "end": 4.56,
      "heard": true
     },
     {
      "w": "spare",
-     "start": 4.625,
-     "end": 4.88,
-     "heard": true
-    },
-    {
-     "w": "surface",
-     "start": 4.905,
-     "end": 5.28,
-     "heard": true
-    },
-    {
-     "w": "for",
-     "start": 5.35,
-     "end": 5.44,
-     "heard": true
-    },
-    {
-     "w": "its",
-     "start": 5.5,
-     "end": 5.6,
-     "heard": true
-    },
-    {
-     "w": "volume,",
-     "start": 5.6,
-     "end": 6.32,
-     "heard": true
-    },
-    {
-     "w": "so",
-     "start": 6.4,
-     "end": 6.48,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 6.43,
-     "end": 6.64,
-     "heard": true
-    },
-    {
-     "w": "folds",
-     "start": 6.58,
-     "end": 6.96,
-     "heard": true
-    },
-    {
-     "w": "into",
-     "start": 6.895,
-     "end": 7.12,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 7.075,
-     "end": 7.28,
-     "heard": true
-    },
-    {
-     "w": "parachute",
-     "start": 7.27,
-     "end": 7.92,
-     "heard": true
-    },
-    {
-     "w": "instead.",
-     "start": 8.03,
-     "end": 8.32,
-     "heard": true
-    }
-   ],
-   "clamped": true
-  },
-  {
-   "id": "vo05",
-   "text": "The tightest vessels are about three micrometers: less than half its width. And it keeps squeezing through, all its life: about a hundred and twenty days.",
-   "heard": "The tightest vessels are about three micrometers, less than half its width, and it keeps squeezing through, all its life, about a hundred and twenty days.",
-   "words": [
-    {
-     "w": "The",
-     "start": 0.02,
-     "end": 0.16,
-     "heard": true
-    },
-    {
-     "w": "tightest",
-     "start": 0.155,
-     "end": 0.64,
-     "heard": true
-    },
-    {
-     "w": "vessels",
-     "start": 0.59,
-     "end": 1.12,
-     "heard": true
-    },
-    {
-     "w": "are",
-     "start": 1.095,
-     "end": 1.28,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 1.315,
-     "end": 1.52,
-     "heard": true
-    },
-    {
-     "w": "three",
-     "start": 1.525,
-     "end": 1.68,
-     "heard": true
-    },
-    {
-     "w": "micrometers:",
-     "start": 1.65,
-     "end": 3.04,
-     "heard": true
-    },
-    {
-     "w": "less",
-     "start": 3.07,
-     "end": 3.36,
-     "heard": true
-    },
-    {
-     "w": "than",
-     "start": 3.445,
-     "end": 3.6,
-     "heard": true
-    },
-    {
-     "w": "half",
-     "start": 3.605,
-     "end": 3.92,
-     "heard": true
-    },
-    {
-     "w": "its",
-     "start": 3.97,
-     "end": 4.08,
-     "heard": true
-    },
-    {
-     "w": "width.",
-     "start": 4.0,
-     "end": 4.566,
-     "heard": true,
-     "end_asr": 4.8
-    },
-    {
-     "w": "And",
-     "start": 4.885,
+     "start": 4.655,
      "end": 4.96,
      "heard": true
     },
     {
+     "w": "skin,",
+     "start": 5.045,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 5.75,
+     "end": 5.84,
+     "heard": true
+    },
+    {
      "w": "it",
-     "start": 4.915,
-     "end": 5.12,
-     "heard": true
-    },
-    {
-     "w": "keeps",
-     "start": 5.145,
-     "end": 5.36,
-     "heard": true
-    },
-    {
-     "w": "squeezing",
-     "start": 5.34,
+     "start": 5.78,
      "end": 6.0,
      "heard": true
     },
     {
-     "w": "through,",
-     "start": 5.89,
+     "w": "folds",
+     "start": 5.94,
      "end": 6.32,
      "heard": true
     },
     {
-     "w": "all",
-     "start": 6.35,
-     "end": 6.56,
+     "w": "up",
+     "start": 6.415,
+     "end": 6.48,
      "heard": true
     },
     {
-     "w": "its",
-     "start": 6.6,
-     "end": 6.8,
+     "w": "neatly",
+     "start": 6.475,
+     "end": 6.88,
      "heard": true
     },
     {
-     "w": "life:",
-     "start": 6.685,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 7.57,
-     "end": 7.76,
+     "w": "like",
+     "start": 6.76,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.805,
-     "end": 7.92,
+     "start": 7.045,
+     "end": 7.12,
      "heard": true
     },
     {
-     "w": "hundred",
-     "start": 7.835,
+     "w": "parachute",
+     "start": 7.155,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "instead.",
+     "start": 7.94,
      "end": 8.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "The tightest squeeze is less than half its width. And it does this its whole life, over and over, for about four months.",
+   "heard": "The tightest squeeze is less than half its width, and it does this its whole life, over and over, for about four months.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "tightest",
+     "start": 0.225,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "squeeze",
+     "start": 0.995,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.51,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "less",
+     "start": 1.67,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 2.07,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 2.29,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 2.7,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "width.",
+     "start": 2.73,
+     "end": 3.373,
+     "heard": true,
+     "end_asr": 3.68
+    },
+    {
+     "w": "And",
+     "start": 3.69,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.73,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 4.01,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 4.24,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 4.595,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 4.675,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "life,",
+     "start": 5.285,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 5.71,
+     "end": 6.08,
      "heard": true
     },
     {
      "w": "and",
-     "start": 8.265,
-     "end": 8.32,
+     "start": 6.165,
+     "end": 6.32,
      "heard": true
     },
     {
-     "w": "twenty",
-     "start": 8.415,
-     "end": 8.8,
+     "w": "over,",
+     "start": 6.41,
+     "end": 6.72,
      "heard": true
     },
     {
-     "w": "days.",
-     "start": 8.755,
-     "end": 9.28,
+     "w": "for",
+     "start": 6.705,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.935,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 7.165,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "months.",
+     "start": 7.47,
+     "end": 8.0,
      "heard": true
     }
    ],
@@ -781,122 +719,122 @@
   },
   {
    "id": "vo06",
-   "text": "Sickle cells lose the disc shape, stiffen, and can jam where oxygen is handed out. That dimple isn't decoration.",
-   "heard": "Sickle cells lose the disc shape, stiffen, and can jam where oxygen is handed out. That dimple isn't decoration.",
+   "text": "Sickle cells lose that dent, stiffen, and can jam where oxygen gets dropped off. That dent has a job.",
+   "heard": "Sickle cells lose that dent, stiffen, and can jam where oxygen gets dropped off. That dent has a job.",
    "words": [
     {
      "w": "Sickle",
-     "start": 0.02,
+     "start": 0.025,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "cells",
-     "start": 0.43,
+     "start": 0.425,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "lose",
-     "start": 0.715,
-     "end": 0.96,
+     "start": 0.695,
+     "end": 1.04,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 1.005,
-     "end": 1.12,
+     "w": "that",
+     "start": 1.145,
+     "end": 1.2,
      "heard": true
     },
     {
-     "w": "disc",
-     "start": 1.12,
-     "end": 1.44,
-     "heard": true
-    },
-    {
-     "w": "shape,",
-     "start": 1.325,
-     "end": 1.76,
+     "w": "dent,",
+     "start": 1.205,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "stiffen,",
-     "start": 1.66,
+     "start": 1.76,
      "end": 2.48,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.555,
+     "start": 2.5,
      "end": 2.64,
      "heard": true
     },
     {
      "w": "can",
-     "start": 2.695,
+     "start": 2.645,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "jam",
-     "start": 2.89,
-     "end": 3.28,
+     "start": 2.84,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "where",
-     "start": 3.225,
-     "end": 3.44,
+     "start": 3.2,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "oxygen",
-     "start": 3.445,
+     "start": 3.365,
      "end": 3.92,
      "heard": true
     },
     {
-     "w": "is",
-     "start": 4.01,
-     "end": 4.08,
+     "w": "gets",
+     "start": 4.05,
+     "end": 4.16,
      "heard": true
     },
     {
-     "w": "handed",
-     "start": 4.04,
-     "end": 4.48,
+     "w": "dropped",
+     "start": 4.17,
+     "end": 4.56,
      "heard": true
     },
     {
-     "w": "out.",
-     "start": 4.56,
-     "end": 4.747,
+     "w": "off.",
+     "start": 4.595,
+     "end": 4.773,
      "heard": true,
-     "end_asr": 4.96
+     "end_asr": 5.04
     },
     {
      "w": "That",
-     "start": 5.065,
-     "end": 5.2,
+     "start": 5.095,
+     "end": 5.28,
      "heard": true
     },
     {
-     "w": "dimple",
-     "start": 5.315,
-     "end": 5.68,
+     "w": "dent",
+     "start": 5.325,
+     "end": 5.76,
      "heard": true
     },
     {
-     "w": "isn't",
-     "start": 5.71,
-     "end": 6.0,
+     "w": "has",
+     "start": 5.69,
+     "end": 5.92,
      "heard": true
     },
     {
-     "w": "decoration.",
-     "start": 6.04,
-     "end": 6.8,
+     "w": "a",
+     "start": 5.93,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "job.",
+     "start": 6.06,
+     "end": 6.64,
      "heard": true
     }
    ],
@@ -904,54 +842,48 @@
   },
   {
    "id": "vo07",
-   "text": "Meanwhile, as you watched, your bone marrow made over a hundred million new red cells.",
-   "heard": "Meanwhile, as you watched, your bone marrow made over a hundred million new red cells.",
+   "text": "Meanwhile, as you watched, your bones made over a hundred million new ones.",
+   "heard": "And meanwhile, as you watched, your bones made over a hundred million new ones.",
    "words": [
     {
      "w": "Meanwhile,",
-     "start": 0.02,
-     "end": 0.8,
+     "start": 0.24,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "as",
-     "start": 0.775,
-     "end": 0.96,
+     "start": 0.865,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "you",
-     "start": 1.035,
-     "end": 1.12,
+     "start": 1.13,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "watched,",
-     "start": 1.065,
-     "end": 1.84,
+     "start": 1.16,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "your",
-     "start": 1.95,
-     "end": 2.08,
+     "start": 2.095,
+     "end": 2.24,
      "heard": true
     },
     {
-     "w": "bone",
-     "start": 2.145,
-     "end": 2.4,
-     "heard": true
-    },
-    {
-     "w": "marrow",
-     "start": 2.4,
-     "end": 2.8,
+     "w": "bones",
+     "start": 2.335,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "made",
-     "start": 2.745,
+     "start": 2.77,
      "end": 2.96,
      "heard": true
     },
@@ -963,38 +895,32 @@
     },
     {
      "w": "a",
-     "start": 3.11,
+     "start": 3.145,
      "end": 3.36,
      "heard": true
     },
     {
      "w": "hundred",
-     "start": 3.345,
+     "start": 3.36,
      "end": 3.68,
      "heard": true
     },
     {
      "w": "million",
-     "start": 3.65,
-     "end": 4.0,
+     "start": 3.69,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "new",
-     "start": 3.985,
-     "end": 4.24,
+     "start": 4.08,
+     "end": 4.32,
      "heard": true
     },
     {
-     "w": "red",
-     "start": 4.28,
-     "end": 4.56,
-     "heard": true
-    },
-    {
-     "w": "cells.",
-     "start": 4.465,
-     "end": 5.04,
+     "w": "ones.",
+     "start": 4.345,
+     "end": 4.8,
      "heard": true
     }
    ]

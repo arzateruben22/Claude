@@ -51,13 +51,13 @@ LANG = "en-gb"
 # Kokoro speed per sentence of each line, chosen from measured durations (README.md, "Voice"). The
 # hook's question stays near natural speed so it is spoken by 2.0 s; its answer slows a little.
 SPEEDS = {
-    "vo01": [1.0, 0.85],
-    "vo02": [0.92, 0.94, 0.96],
-    "vo03": [0.86, 0.86],
-    "vo04": [0.95, 0.94, 0.92],
-    "vo05": [0.88, 0.88],
-    "vo06": [0.97, 0.98],
-    "vo07": [0.85],
+    "vo01": [1.0, 0.82],
+    "vo02": [0.78, 0.78, 0.8],
+    "vo03": [0.74, 0.74],
+    "vo04": [0.9, 0.9, 0.88],
+    "vo05": [0.76, 0.78],
+    "vo06": [0.92, 0.92],
+    "vo07": [0.8],
     "vo08": [0.96, 0.92],
 }
 GAP, GAP_Q = 0.30, 0.45          # seconds of silence after a sentence, after a question

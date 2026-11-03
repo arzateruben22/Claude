@@ -104,9 +104,9 @@ export const look = (THREE, o) => {
 
   // ── lights: a rig that travels with the camera ──
   const lights = new THREE.Group();
-  const hemi = new THREE.HemisphereLight(lin(sc["light-hemi-sky"] || "#DDF3EC"), lin(sc["light-hemi-ground"] || "#0A1F1C"), 0.5);
+  const hemi = new THREE.HemisphereLight(lin(sc["light-hemi-sky"] || "#DDF3EC"), lin(sc["light-hemi-ground"] || "#0A1F1C"), o.hemi ?? 0.35);
   const key = new THREE.DirectionalLight(lin(sc["light-key"] || "#FFF1E6"), 2.2);
-  const rim = new THREE.DirectionalLight(lin(sc["light-rim"] || "#CFF5E6"), 1.4);
+  const rim = new THREE.DirectionalLight(lin(sc["light-rim"] || "#CFF5E6"), o.rim ?? 2.6);
   // a soft fill from below the lens: the cells' undersides (the parachute's inside) otherwise went near-black
   const fill = new THREE.DirectionalLight(lin(sc["light-fill"] || "#F3DDD3"), 0.9);
   lights.add(hemi, key, key.target, rim, rim.target, fill, fill.target);
@@ -141,5 +141,40 @@ export const look = (THREE, o) => {
     m.customProgramCacheKey = () => `mi-look-${fres}-${fresPow}-${p.key || ""}`;
     return m;
   };
-  return { lights, backdrop, fog, place, patch, lin, acesInv: (h) => acesInv(h, exposure), uniforms, hemi, key, rim };
+  // live scan finish (3 Nov): film grain (deterministic in t) and a soft vignette, DOM layers over the frame; L.finish(root).set(t)
+  const finish = (root, { grain = 0.012, vignette = 0.5 } = {}) => {
+    const v = document.createElement("div");
+    Object.assign(v.style, { position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1, background: `radial-gradient(130% 90% at 50% 45%, rgba(0,0,0,0) 55%, rgba(0,4,5,${vignette}) 100%)` });
+    const c = document.createElement("canvas"), N = 256; c.width = c.height = N;
+    Object.assign(c.style, { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", mixBlendMode: "overlay", opacity: String(grain * 8), zIndex: 1 });
+    root.append(v, c);   // into .stage, after the canvas (z 1) and under #hud (z 3), so the grain blends with the picture
+    const k = c.getContext("2d"), img = k.createImageData(N, N);
+    return { set(t) { let x = (1 + Math.floor(t * 30)) * 2654435761 >>> 0; for (let i = 0; i < img.data.length; i += 4) { x ^= x << 13; x ^= x >>> 17; x ^= x << 5; x >>>= 0; const g = 128 + ((x & 255) - 128); img.data[i] = img.data[i + 1] = img.data[i + 2] = g; img.data[i + 3] = 255; } k.putImageData(img, 0, 0); } };
+  };
+  // an HDR studio for reflections (clearcoat, sheen): a warm key softbox, a cool rim strip, the teal bounce, a faint chartreuse kicker
+  const studio = (renderer, scene, k = 0.6) => {
+    const env = new THREE.Scene(); env.background = new THREE.Color(0x020807);
+    const box = (w, h, color, i, p) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(i * k), side: THREE.DoubleSide })); m.position.set(...p); m.lookAt(0, 0, 0); env.add(m); };
+    box(7, 4, 0xfff0e2, 5, [-6, 7, 6]); box(1.5, 9, 0xe8fff4, 4, [7, 2, -7]); box(10, 2, 0x0f3a33, 1.5, [0, -6, 3]); box(2, 2, 0xd6f25f, 0.6, [8, -1, 5]);
+    const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(env, 0.03).texture;   // r160: no scene.environmentIntensity, so k scales the boxes
+  };
+  // atmosphere: motes riding with the camera at fixed depths (the finish's depth of field turns the near ones into bokeh).
+  // Positions are a pure function of t; hidden from the finish's probe (they are not what moves in the shot).
+  const motes = (camera, { n = 160, zNear = 3, zFar = 300, size = 5, color = "#FFF1E6", op = 0.45 } = {}) => {
+    const c = document.createElement("canvas"); c.width = c.height = 64; const k = c.getContext("2d"), g = k.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(0.35, "rgba(255,255,255,.5)"); g.addColorStop(1, "rgba(255,255,255,0)"); k.fillStyle = g; k.fillRect(0, 0, 64, 64);
+    const pos = new Float32Array(n * 3), seed = [];
+    let x = 2463534242; const rnd = () => { x ^= x << 13; x ^= x >>> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; };
+    for (let i = 0; i < n; i++) seed.push([rnd() * 2 - 1, rnd() * 2 - 1, rnd(), rnd() * 6.283]);
+    const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    const m = new THREE.PointsMaterial({ map: new THREE.CanvasTexture(c), size, sizeAttenuation: false, color: new THREE.Color(color), transparent: true, opacity: op, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
+    const pts = new THREE.Points(geo, m); pts.frustumCulled = false; pts.userData.noProbe = true; camera.add(pts);
+    return { points: pts, set(t, o = 1) {
+      pts.visible = o > 0.002; m.opacity = op * o;
+      const cam = camera, th = Math.tan((cam.fov * Math.PI) / 360);
+      seed.forEach(([sx, sy, sz, ph], i) => { const z = -(zNear + (zFar - zNear) * sz * sz), hh = -z * th, ww = hh * cam.aspect;   // more of them near the lens
+        pos[3 * i] = (sx + 0.06 * Math.sin(t * 0.23 + ph)) * ww; pos[3 * i + 1] = (((sy + 1 + 0.03 * t + 0.05 * Math.sin(t * 0.31 + ph * 2)) % 2) - 1) * hh; pos[3 * i + 2] = z; });
+      geo.attributes.position.needsUpdate = true; } };
+  };
+  return { lights, backdrop, fog, place, patch, lin, acesInv: (h) => acesInv(h, exposure), uniforms, hemi, key, rim, finish, studio, motes };
 };

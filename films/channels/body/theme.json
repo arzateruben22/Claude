@@ -1,16 +1,16 @@
 {
-  "_doc": "Body Backstage (the human-body channel): 'surgical green'. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py (tokens, scene, labels, contrast). Hexes are the bible's (films/channels/body/bible.md §2) with the cross-check's fixes: O₂ is white with an 'O₂' glyph and a ring, CO₂ is slate, immune gets a dashed ring, lining is sage, the title's accent word is chartreuse (pulse stays on blood only), and the rim light is mint. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8), so a 540×960 draft is the final at half size. Not Lumevina (no rose or gold on black, no Inter, no glass bells), not Los Güeros, not Claude coral: contrast.py checks the distances.",
-  "id": "meanwhile-inside",
+  "_doc": "Body Backstage (the human-body channel): 'live scan', the season 1 reboot look the owner approved on 3 Nov 2026 (films/channels/body/looktest). The body is filmed like a premium medical-visualisation title: photoreal wet tissue under a film light rig on an abyss teal-black ground, and the channel's chartreuse kept as the scan instrument (scan line, slice edges, reticles, readouts). Read by kits/cinema/film/page.mjs and kits/cinema/sci/contrast.py. Sizes are px at 1080×1920; the roles carry them in vmin (px / 10.8). Not Lumevina (black/rose/gold, glass bells), not Skin Sense (violet + cyan), not Los Güeros, not Claude coral.",
+  "id": "body-backstage",
   "name": "Body Backstage",
   "channel": "body",
   "promise": "What your body is doing right now, while you watch.",
   "tokens": {
-    "bg": "#0A1F1C",
-    "bg-hi": "#123A33",
-    "surface": "#14342E",
-    "plate": "#071513",
-    "text": "#EFF6F2",
-    "text-2": "#A9C7BE",
+    "bg": "#040E10",
+    "bg-hi": "#0B2A2B",
+    "surface": "#0A1E20",
+    "plate": "#030C0E",
+    "text": "#F2F7F5",
+    "text-2": "#A6C4BE",
     "signal": "#D6F25F",
     "pulse": "#FF6688",
     "oxy": "#FF6688",
@@ -24,16 +24,17 @@
     "lining": "#A8D89A"
   },
   "scene": {
-    "_doc": "3D materials and lights only: never text, never CSS. Tissue and vessel are lit under the green hemisphere so they always read warm against green and never sit on near-black (cross-check). Only signal and pulse bloom.",
-    "rbc": "#E5334F",
-    "rbc-deep": "#8E2A3F",
-    "tissue": "#F0C9B8",
-    "vessel": "#E9B3A8",
-    "light-hemi-sky": "#DDF3EC",
-    "light-hemi-ground": "#33524A",
-    "light-key": "#FFF1E6",
-    "light-rim": "#CFF5E6",
-    "lights": "hemisphere #DDF3EC / #0A1F1C at 0.5; warm key #FFF1E6 at 2.2 from the top right; mint rim #CFF5E6 at 1.4 from behind (was pink #FF8FA0: too close to Skin School's recipe)"
+    "_doc": "3D materials and lights only: never text, never CSS. Wet, photoreal tissue under a warm key, a cool mint-white rim and a dark teal fill; only signal and blood bloom.",
+    "rbc": "#C8102E",
+    "rbc-deep": "#7A0F22",
+    "tissue": "#E59A90",
+    "vessel": "#D88B84",
+    "light-hemi-sky": "#9FD8C8",
+    "light-hemi-ground": "#08100F",
+    "light-key": "#FFF0E2",
+    "light-rim": "#DFF8EE",
+    "lights": "hemisphere #9FD8C8 / #08100F at 0.35; warm key #FFF0E2 from the top right; mint-white rim #DFF8EE from behind; a soft warm fill from below the lens",
+    "light-fill": "#E8C8BE"
   },
   "plate": {
     "color": "plate",
@@ -47,7 +48,7 @@
   },
   "roles": {
     "accent": "signal",
-    "plate": "rgba(7, 21, 19, .82)",
+    "plate": "rgba(3, 12, 14, .82)",
     "cap-next": "text-2",
     "cap-said": "text",
     "cap-lit": "signal",
@@ -55,10 +56,10 @@
     "label-bg": "surface",
     "label-text": "text",
     "ring": "text",
-    "badge-bg": "rgba(7, 21, 19, .78)",
+    "badge-bg": "rgba(3, 12, 14, .78)",
     "badge-text": "text-2",
     "badge-border": "text-2",
-    "scrim": "rgba(7, 21, 19, .80)",
+    "scrim": "rgba(3, 12, 14, .82)",
     "scale-line": "signal",
     "cap-size": "5.093vmin",
     "cap-weight": "700",
@@ -66,37 +67,37 @@
     "cap-radius": "3.4vmin",
     "label-size": "3.889vmin",
     "label-weight": "600",
-    "label-radius": "999px",
+    "label-radius": "1vmin",
     "badge-size": "2.963vmin",
     "badge-weight": "600",
-    "badge-radius": "999px",
+    "badge-radius": ".6vmin",
     "counter-size": "10vmin",
-    "series-size": "2.963vmin",
-    "title-size": "8.148vmin",
-    "title-weight": "600",
-    "title-tracking": "-.012em",
+    "series-size": "2.5vmin",
+    "title-size": "7.6vmin",
+    "title-weight": "800",
+    "title-tracking": "-.02em",
     "end-size": "8.148vmin"
   },
   "fonts": [
-    {
-      "family": "Fraunces",
-      "file": "fonts/Fraunces-VF.woff2",
-      "weight": "100 900",
-      "style": "normal"
-    },
     {
       "family": "Atkinson Hyperlegible Next",
       "file": "fonts/AtkinsonHyperlegibleNext-VF.woff2",
       "weight": "200 800",
       "style": "normal"
+    },
+    {
+      "family": "Atkinson Hyperlegible Mono",
+      "file": "fonts/AtkinsonHyperlegibleMono-VF.ttf",
+      "weight": "200 800",
+      "style": "normal"
     }
   ],
   "type": {
-    "display": "Fraunces",
+    "display": "Atkinson Hyperlegible Next",
     "text": "Atkinson Hyperlegible Next",
-    "mono": "Atkinson Hyperlegible Next",
+    "mono": "Atkinson Hyperlegible Mono",
     "glyph": "Atkinson Hyperlegible Next",
-    "_doc": "Display: Fraunces 144pt SuperSoft SemiBold (wght 600, opsz 144, SOFT 100; set in cssText), for titles and static numbers. Text: Atkinson Hyperlegible Next, 700 captions, 600 labels, 400–500 secondary. Counters and badges use Atkinson with tabular figures (tnum), because Fraunces has proportional figures only (no tnum: a running counter would jitter). Atkinson has no subscript figures, so the '₂' in the O₂/CO₂ glyphs falls back to DejaVu Sans (the page's system-safe stack), never to Inter. Both files ship unmodified (Atkinson reserves its names)."
+    "_doc": "One family, two widths. Titles and big numbers: Atkinson Hyperlegible Next 800 (tight tracking); captions 700; labels 600. The instrument (series line, badges, readouts, scale pills, counters' units): Atkinson Hyperlegible Mono, tracked uppercase. Fraunces retired with the old look (3 Nov). Both ship unmodified (Atkinson reserves its names)."
   },
   "sizes": {
     "_doc": "px at 1080×1920. Captions: at most 2 lines of at most 24 characters (kits/cinema/script pages them with max_chars = 24); the size is the largest whole px at which the widest of the 142 rows of all three episode-1 scripts (paged at 24 characters) fits the plate's maximum width, 0.72 × W = 778 px, without hud.js shrinking it. Measured in Chromium with this face on 2026-10-22: it fits up to 55.3 px; at 55 px the widest row ('balls down the same way.') makes a 772 px plate. The studio plan's 56–72 px was set for 32-character lines. Labels: the pill is at least 0.035 × H = 67 px tall.",
@@ -259,16 +260,12 @@
     ]
   },
   "motif": {
-    "signature_shape": "The pulse line: one chartreuse (signal) ECG-like trace that blips lub-dub under the Fraunces title on the sonic signature. The same line draws the label leaders, the scale bar and the iris edge.",
-    "no_circle": "No circle anywhere: no circular title frame, end card, avatar or iris (the space channel owns the ring). The locator is a 2D SVG body silhouette with the region marked by a pulse-line blip on the beat.",
-    "iris": "Scale changes go through a non-circular iris: a soft membrane-blob mask or a vertical slide wipe, plus a scale pill ('×2,000 · 10 µm').",
-    "title_card": "Fraunces title (accent word in signal), the pulse line under it, 'Meanwhile, Inside · No. 01' below; the payoff image behind. It is also the poster and the loop point.",
-    "end_card": "The pulse line flat-lines into 'Next, inside: …', then 'Follow Meanwhile, Inside'. Held ≥ 2 s.",
-    "recurring_segment": "The 'Meanwhile' tally: a real-time counter of what your body did while you watched ('while you watched: about 85 heartbeats'), set in Atkinson with tabular figures.",
-    "tease": "Next, inside: …",
-    "colour_rules": "Pulse (#FF6688) is for blood only. Signal (chartreuse) is nerve signals, the spoken word, the pulse line and the title's accent word. Only signal and pulse bloom; text never does.",
-    "sound": "E♭ major at 75 BPM (resting heart rate); mallet ostinato on the lub-dub; signature thump E♭2, thump B♭2 at +0.4 s, mallet G5 at +1.2 s (no bell)."
+    "signature_shape": "The scan: one chartreuse phosphor line that sweeps the frame on a beat and switches what it passes into scan view (dark glass cores, glowing edges, iso-depth slices, blood running hot). The same chartreuse draws slice edges where the scan cuts tissue open, the reticles that lock on to moving cells, and the readouts.",
+    "keep_out": "The series line and the title own a clear zone (top left, from the safe top to below the title): a dark scrim sits behind them, and no label, counter, reticle or card is placed there while the title shows (owner, 3 Nov).",
+    "iris": "Scale changes go through the scan: a sweep that hands one scale to the next, plus a scale bar that re-measures.",
+    "title_card": "Atkinson Next 800 title (accent word in signal) over a scrim; 'BODY BACKSTAGE · NO. 0N' in tracked mono above it.",
+    "end_card": "'Next, inside: …' in Atkinson Next 800, 'Body Backstage · No. 0N', and a 'Follow Body Backstage' chip."
   },
-  "cssText": ".stage { background: radial-gradient(120vmax 80vmax at 50% 30%, var(--bg-hi) 0%, var(--bg) 62%); }\n.hud-h, .hud-end .t { font-weight: 600; font-variation-settings: \"opsz\" 144, \"SOFT\" 100; }\n.hud-counter .v, .hud-scale, .hud-badge { font-feature-settings: \"tnum\" 1; }\n.hud-label.mk-dot .mk { box-shadow: 0 0 0 .32vmin var(--hud-ring); }",
-  "scrim": "rgba(7, 21, 19, .92)"
+  "cssText": ".stage { background: radial-gradient(120vmax 80vmax at 50% 30%, var(--bg-hi) 0%, var(--bg) 62%); }\n.hud-series, .hud-badge, .hud-scale, .hud-counter .u, .hud-end .n { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .14em; font-weight: 500; }\n.hud-series { color: var(--text-2); }\n.hud-h, .hud-end .t { font-weight: 800; }\n.hud-counter .v, .hud-scale, .hud-badge { font-feature-settings: \"tnum\" 1; }\n.hud-title::before { content: \"\"; position: absolute; z-index: -1; left: -30vmin; right: -22vmin; top: -26vmin; bottom: -16vmin; background: radial-gradient(closest-side, rgba(3,12,14,.80) 0%, rgba(3,12,14,.66) 55%, rgba(3,12,14,0) 100%); }\n.hud-label { border-width: .15vmin; }\n.hud-label.mk-dot .mk { box-shadow: 0 0 0 .32vmin var(--hud-ring); }",
+  "scrim": "rgba(3, 12, 14, .92)"
 }

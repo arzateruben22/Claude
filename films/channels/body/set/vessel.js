@@ -61,30 +61,37 @@ export const vessel = (THREE, L, P, o = {}) => {
   const segs = Math.max(4, Math.ceil((s1 - s0) / step));
   const map = o.tex ? o.tex.clone() : null;
   if (map) { map.repeat.set(1 / (o.tile ?? 22), o.around ?? 2); map.needsUpdate = true; }
-  const mat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(o.color || "#E9B3A8"), map, roughness: 0.55, metalness: 0, side: THREE.DoubleSide }),
+  const mat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin(o.color || "#E9B3A8"), map, roughness: 0.42, metalness: 0, clearcoat: 0.8, clearcoatRoughness: 0.12, sheen: 0.5, sheenRoughness: 0.5, sheenColor: new THREE.Color(1.0, 0.55, 0.48), side: THREE.DoubleSide }),
     { fresnel: o.fresnel ?? 0.3, key: "vessel" });
   const inner = new THREE.Mesh(tube(P, { radius: R, s0, s1, segments: segs, radial, arc: [Math.PI / 2, (3 * Math.PI) / 2], inside: true }), mat);
   // the two cut edges: strips from the inner radius out through the wall, facing the cut (+n)
-  const rimMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(o.rimColor || "#B98479"), roughness: 0.7, metalness: 0, side: THREE.DoubleSide }), { fresnel: 0.1, key: "vrim" });
-  const pos = [], nor = [], idx = [];
-  for (const a of [Math.PI / 2, (3 * Math.PI) / 2]) {
-    const base = pos.length / 3;
-    for (let j = 0; j <= segs; j++) {
-      const s = s0 + ((s1 - s0) * j) / segs, F = P.frame(s), r = R(s), w = wallF(s), c = Math.cos(a), sn = Math.sin(a);
-      const d = [F.n[0] * c + F.b[0] * sn, F.n[1] * c + F.b[1] * sn, F.n[2] * c + F.b[2] * sn];
-      for (const rr of [r, r + w]) { pos.push(F.p[0] + d[0] * rr, F.p[1] + d[1] * rr, F.p[2] + d[2] * rr); nor.push(F.n[0], F.n[1], F.n[2]); }
+  const rimMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(o.rimColor || "#B98479"), roughness: 0.6, metalness: 0, side: THREE.DoubleSide }), { fresnel: 0.1, key: "vrim" });
+  // live scan: the cut faces are where the scan sliced the wall, so they glow the instrument's chartreuse
+  const cutMat = new THREE.MeshBasicMaterial({ color: new THREE.Color("#D6F25F").multiplyScalar(o.cutGlow ?? 1.3), toneMapped: false, side: THREE.DoubleSide });
+  // a strip on each cut, from radius a to b (fractions of the wall: 0 = the lumen, 1 = the outer face)
+  const strip = (fa, fb) => {
+    const pos = [], nor = [], idx = [];
+    for (const a of [Math.PI / 2, (3 * Math.PI) / 2]) {
+      const base = pos.length / 3;
+      for (let j = 0; j <= segs; j++) {
+        const s = s0 + ((s1 - s0) * j) / segs, F = P.frame(s), r = R(s), w = wallF(s), c = Math.cos(a), sn = Math.sin(a);
+        const d = [F.n[0] * c + F.b[0] * sn, F.n[1] * c + F.b[1] * sn, F.n[2] * c + F.b[2] * sn];
+        for (const rr of [r + w * fa, r + w * fb]) { pos.push(F.p[0] + d[0] * rr + F.n[0] * 0.01, F.p[1] + d[1] * rr + F.n[1] * 0.01, F.p[2] + d[2] * rr + F.n[2] * 0.01); nor.push(F.n[0], F.n[1], F.n[2]); }
+      }
+      for (let j = 0; j < segs; j++) { const A = base + 2 * j, B = A + 1, C = A + 2, D = A + 3; idx.push(A, B, C, B, D, C); }
     }
-    for (let j = 0; j < segs; j++) { const A = base + 2 * j, B = A + 1, C = A + 2, D = A + 3; idx.push(A, B, C, B, D, C); }
-  }
-  const rg = new THREE.BufferGeometry();
-  rg.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
-  rg.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
-  rg.setIndex(idx); rg.computeBoundingSphere();
-  const rims = new THREE.Mesh(rg, rimMat);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
+    g.setIndex(idx); g.computeBoundingSphere(); return g;
+  };
+  // the cut face is tissue; only a hairline at its inner edge glows (where the scan's plane meets the lumen)
+  const rims = new THREE.Mesh(strip(0, 1), rimMat);
+  const hair = o.cutGlow === 0 ? null : new THREE.Mesh(strip(0, o.hairline ?? 0.16), cutMat);
   // the outer face of the back half: seen past the silhouette when the camera is off-axis
   const outer = new THREE.Mesh(tube(P, { radius: (s) => R(s) + wallF(s), s0, s1, segments: segs, radial, arc: [Math.PI / 2, (3 * Math.PI) / 2] }), rimMat);
   const group = new THREE.Group();
-  group.add(inner, rims, outer);
+  group.add(inner, rims, outer); if (hair) group.add(hair);
   group.userData.noProbe = true;
-  return { group, inner, rims, outer, radius: R, path: P };
+  return { group, inner, rims, hair, outer, radius: R, path: P };
 };
