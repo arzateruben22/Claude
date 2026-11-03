@@ -107,3 +107,57 @@ export const bokeh = (scene, { n = 140, box = [[-1, 1], [-1, 1], [-1, 1]], size 
   const pts = new THREE.Points(geo, m); pts.frustumCulled = false; scene.add(pts);
   return { points: pts, set({ op: o = op, t = 0 } = {}) { m.opacity = o; pts.rotation.y = 0.004 * t; } };
 };
+
+// ── look v2: the channel-level production pass (3 Nov). One call per episode; everything opt-in, so films that don't
+// call it are unchanged.
+//   lookV2({ canvas, hudRoot, fog, terrain, skin })  → { grade, backdrop }
+//     skin:    a skinMaterial (studio.js), upgraded in place: less clay, less plastic. A softer, broader specular, a
+//              little clearcoat, roughness that varies across the surface, and a warm translucent edge (light that
+//              went in coming back out at grazing angles) in place of the flat sheen
+//     terrain: a createTerrain (terrain.js): hairs become tapered, glossy, individually tinted strands (not sticks)
+//     scene:   its fog is retinted to the backdrop's deep violet and thickened, so the horizon melts into the volume
+//     canvas / hudRoot: the graded backdrop behind the canvas, one grade over the picture (vignette, split tone,
+//              deeper blacks)
+export const upgradeSkin = (m, { edge = [1.0, 0.45, 0.35], edgeK = 0.35 } = {}) => {
+  if (!m || m.userData.v2) return m;
+  m.userData.v2 = true;
+  m.clearcoat = Math.min(m.clearcoat, 0.12); m.clearcoatRoughness = 0.45; m.specularIntensity = 0.28; m.sheen = 0.45; m.sheenRoughness = 0.7;
+  m.sheenColor = new THREE.Color(1.0, 0.72, 0.62); m.roughness = Math.max(m.roughness, 0.5);
+  // roughness that varies (oilier on the crests, drier in the furrows): a soft noise map
+  const S = 128, cv = document.createElement("canvas"); cv.width = cv.height = S; const x = cv.getContext("2d"), R = rng(77), img = x.createImageData(S, S);
+  for (let i = 0; i < S * S; i++) { const v = 150 + 70 * (R() - 0.5) + 35 * Math.sin(i % S / 9) * Math.cos(Math.floor(i / S) / 11); img.data[4 * i] = img.data[4 * i + 1] = img.data[4 * i + 2] = Math.max(0, Math.min(255, v)); img.data[4 * i + 3] = 255; }
+  x.putImageData(img, 0, 0); const rt = new THREE.CanvasTexture(cv); rt.wrapS = rt.wrapT = THREE.RepeatWrapping; rt.repeat.set(5, 5); m.roughnessMap = rt;
+  m.onBeforeCompile = (sh) => {
+    sh.uniforms.uEdge = { value: new THREE.Color(...edge) }; sh.uniforms.uEdgeK = { value: edgeK };
+    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nuniform vec3 uEdge; uniform float uEdgeK;")
+      .replace("#include <emissivemap_fragment>", "#include <emissivemap_fragment>\n  { float fr = pow(1.0 - clamp(dot(normalize(vNormal), normalize(vViewPosition)), 0.0, 1.0), 2.2); totalEmissiveRadiance += uEdge * uEdgeK * fr * diffuseColor.rgb; }");
+  };
+  m.customProgramCacheKey = () => "skinV2";
+  m.needsUpdate = true;
+  return m;
+};
+
+export const upgradeHairs = (terrain, { color = [0.32, 0.2, 0.13] } = {}) => {
+  let hairs = null; terrain.group.traverse((o) => { if (o.isInstancedMesh && !hairs) hairs = o; });
+  if (!hairs || hairs.userData.v2) return hairs;
+  hairs.userData.v2 = true;
+  // a tapered strand with a slight bend, 8 sides: reads as hair under the lens, not as a stick
+  const g = new THREE.CylinderGeometry(0.012, 0.05, 1, 8, 6, false).translate(0, 0.5, 0), p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) { const y = p.getY(i); p.setX(i, p.getX(i) + 0.06 * y * y); }
+  g.computeVertexNormals(); hairs.geometry.dispose(); hairs.geometry = g;
+  hairs.material = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(...color), roughness: 0.32, sheen: 0.6, sheenRoughness: 0.35, sheenColor: new THREE.Color(0.9, 0.75, 0.6), clearcoat: 0.3, clearcoatRoughness: 0.25 });
+  const R = rng(91), c = new THREE.Color();
+  for (let i = 0; i < hairs.count; i++) { const v = 0.7 + 0.6 * R(); c.setRGB(v, v * (0.92 + 0.1 * R()), v * (0.85 + 0.12 * R())); hairs.setColorAt(i, c); }
+  if (hairs.instanceColor) hairs.instanceColor.needsUpdate = true;
+  return hairs;
+};
+
+export const lookV2 = ({ canvas, hudRoot, scene, fog = scene && scene.fog, terrain, skin, fogColor = 0x1a0d36, top = "#3b2479", bottom = "#06030c", vignette = 0.5 } = {}) => {
+  if (skin) upgradeSkin(skin);
+  if (terrain) upgradeHairs(terrain);
+  if (fog) { fog.color.set(fogColor); if (fog.isFog) { fog.near *= 0.8; fog.far *= 0.85; } }   // pass the episode's fog (scenes park it while sets without fog are up)
+  const bd = canvas ? backdropCss(canvas, { top, bottom }) : null;
+  if (canvas) canvas.style.filter = "contrast(1.06) saturate(1.03)";   // deeper blacks under the grain; one grade
+  const gr = hudRoot ? grade(hudRoot, { vignette }) : null;
+  return { grade: gr, backdrop: bd };
+};

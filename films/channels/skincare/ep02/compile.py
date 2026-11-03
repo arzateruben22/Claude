@@ -97,7 +97,6 @@ BADGES = [
     {"id": "b-head", "text": "near head-on light", "t0": B["normal"]["t0"] + 0.3, "t1": t_split, "slot": "tr"},   # with ≈ 4–7 %, which leaves at the same cut
     {"id": "b-one", "text": "one study · illustration", "t0": t_split, "t1": t_in, "slot": "tr"},
     {"id": "b-simp", "text": "simplified · one example (model)", "t0": t_in, "t1": t_face, "slot": "tl"},
-    {"id": "b-face", "text": "model skin, not a photo", "t0": t_face, "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-step", "text": "Verkruysse 2008 · Wu et al., 2012", "t0": t_face, "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-cg", "text": "Jensen et al., 2001", "t0": B["takeaway"]["t0"] + 0.2, "t1": A("vo07:Yours", -0.3), "slot": "tr"},
     {"id": "b-cgm", "text": "models, not photos", "t0": B["takeaway"]["t0"] + 0.2, "t1": A("vo07:Yours", -0.3), "slot": "tl"},

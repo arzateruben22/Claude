@@ -14,7 +14,7 @@ import { createWeave } from "../set/weave03.js";
 import { toneColor } from "../set/section.js";
 import { createStudio, skinMaterial, strandMaterial, cellMaterial, createGrain } from "../set/studio.js";
 import { DERMIS } from "../set/ref/textures.js";
-import { backdropCss, hazeVolume, richen, grade, bokeh } from "../set/prod.js";
+import { lookV2, hazeVolume, richen, bokeh } from "../set/prod.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, G = FILM.gauge, PL = FILM.place, FPS = FILM.fps || 30;
 const S1 = Math.min(W, H) / 1080;
@@ -60,7 +60,7 @@ const adult = mkBlock(PL.wx, 1), fetal = mkBlock(PL.fx, FS);
 const mouth = mkBlock(PL.mx, FS);
 // the mouse study (Martin et al., 2003), stacked: with germ-fighting cells, a patch; without them, the weave regrown
 const MSC = 0.42, miceA = mkBlock(PL.mox, MSC), miceB = mkBlock(PL.mox, MSC);
-miceA.g.position.y = 225; miceB.g.position.y = -50;
+miceA.g.position.y = 225; miceB.g.position.y = -50; miceA.back.visible = miceB.back.visible = false;   // no backing cards: the two blocks sit in the volume
 const immA = new THREE.Group(); miceA.g.add(immA);
 const immAMat = cellMaterial({ tint: [0.86, 0.92, 1.0], opacity: 0.9 }); immAMat.transmission = 0;
 const IMMA = Array.from({ length: 26 }, (_, i) => { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(8 + 3 * ((i * 7) % 5) / 4, 2), immAMat); immA.add(m);
@@ -72,7 +72,6 @@ const immMat = cellMaterial({ tint: [0.86, 0.9, 1.0], opacity: 0.8 }); immMat.tr
 const IMM = Array.from({ length: 22 }, (_, i) => { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(0.075 + 0.03 * ((i * 7) % 5) / 4, 2), immMat); imm.add(m); const a = i * 2.39996, r = 1.4 + 0.9 * ((i * 13) % 7) / 7; return { m, a, r, v: ((i * 5) % 11) / 11 - 0.5 }; });
 // production pass: fibre surfaces on every weave, a graded volume behind the sets, haze, far bokeh, one grade
 for (const b of [adult, fetal, mouth, miceA, miceB]) richen(b.weave.group, { seed: 31, jitter: 0, hue: 0, micro: 0.7 });
-const dome = backdropCss(canvas, { top: "#3b2479", bottom: "#06030c" });
 const hz = hazeVolume(scene, { at: [PL.wx, -120, -80], size: [1600, 900, 300], color: "#c9b6ff", n: 5, op: 0.045 });
 const bk = bokeh(scene, { n: 140, box: [[PL.wx - 1400, PL.wx + 1400], [-700, 500], [-1600, -700]], size: 70, color: "#d9ccff", op: 0.3 });
 // the rope (whoa): "only as strong as a rope missing one strand in five": five twisted strands, one slipping away
@@ -88,7 +87,7 @@ const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.up
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
-const gradeFx = grade(hudRoot, { vignette: 0.5 });
+const look = lookV2({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material });   // the channel look: skin, hairs, fog, grade
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.285, w: 0.8, h: 0.3 });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
 const day = createDaylight({ root: hudRoot, W, H, y: 0.7, label: "daylight" }); day.el.style.fontSize = "2.6vmin";
