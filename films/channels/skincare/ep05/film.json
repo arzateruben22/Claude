@@ -164,8 +164,8 @@
    63.666666666666664
   ],
   "film": [
-   53.966699999999996,
-   55.733333333333334
+   55.233333333333334,
+   56.233333333333334
   ],
   "age": [
    23.466666666666665,
@@ -178,8 +178,8 @@
    1.2999999999999998
   ],
   "micro": [
-   43.1,
-   44.300000000000004
+   43.550000000000004,
+   44.45
   ]
  },
  "cue": {
@@ -221,7 +221,7 @@
    54.0667,
    54.966699999999996
   ],
-  "sc": 57.56666666666667,
+  "sc": 55.333333333333336,
   "paper": 58.53333333333333,
   "back": [
    60.0667,
@@ -340,6 +340,13 @@
    "slot": "tl"
   },
   {
+   "id": "b-model2",
+   "text": "model, not a photo",
+   "t0": 16.8,
+   "t1": 22.6667,
+   "slot": "tl"
+  },
+  {
    "id": "b-cast",
    "text": "model · 4.5 years, compressed",
    "t0": 23.366666666666664,
@@ -347,16 +354,18 @@
    "slot": "tl"
   },
   {
-   "id": "b-burn",
-   "text": "model, not a photo",
-   "t0": 28.0,
-   "t1": 31.4,
-   "slot": "tl"
-  },
-  {
    "id": "b-uv1",
-   "text": "illustration · not trial data",
-   "t0": 32.0,
+   "segs": [
+    [
+     "model, not a photo",
+     28.0
+    ],
+    [
+     "illustration · not trial data",
+     32.062
+    ]
+   ],
+   "t0": 28.0,
    "t1": 39.9,
    "slot": "tl"
   },
@@ -376,17 +385,20 @@
   },
   {
    "id": "b-loop",
-   "text": "model, not a photo",
+   "segs": [
+    [
+     "model, not a photo",
+     60.6667
+    ],
+    [
+     "illustration · not trial data",
+     65.39533333333333
+    ]
+   ],
    "t0": 60.6667,
-   "t1": 64.7333,
-   "slot": "tl"
-  },
-  {
-   "id": "b-uv2",
-   "text": "illustration · not trial data",
-   "t0": 65.33333333333333,
-   "t1": 66.2667,
-   "slot": "tl"
+   "t1": 67.26666666666667,
+   "slot": "tl",
+   "keep": true
   }
  ],
  "counters": [
@@ -438,7 +450,7 @@
   "series": "Skin Sense · No. 005",
   "title": "The sunscreen *experiment*",
   "t1": 4.8999999999999995,
-  "sig": 1.2
+  "sig": 1.7
  },
  "endCard": 66.96666666666667,
  "end": {

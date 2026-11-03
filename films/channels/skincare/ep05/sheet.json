@@ -78,7 +78,7 @@
    ]
   },
   {
-   "t": 1.2,
+   "t": 1.7,
    "kind": "signature",
    "tag": "title"
   },
@@ -118,6 +118,11 @@
    "t1": 28.0
   },
   {
+   "t": 16.8,
+   "kind": "badge",
+   "tag": "b-model2"
+  },
+  {
    "t": 21.0,
    "kind": "label",
    "tag": "l-daily2",
@@ -154,11 +159,6 @@
    "kind": "section",
    "id": "why",
    "t1": 40.6
-  },
-  {
-   "t": 28.0,
-   "kind": "badge",
-   "tag": "b-burn"
   },
   {
    "t": 31.95,
@@ -226,7 +226,7 @@
    "tag": "up-to-film"
   },
   {
-   "t": 57.56666666666667,
+   "t": 55.333333333333336,
    "kind": "scale",
    "tag": "g-film"
   },
@@ -240,11 +240,6 @@
    "kind": "section",
    "id": "takeaway",
    "t1": 67.2
-  },
-  {
-   "t": 60.6667,
-   "kind": "badge",
-   "tag": "b-loop"
   },
   {
    "t": 65.28333333333333,

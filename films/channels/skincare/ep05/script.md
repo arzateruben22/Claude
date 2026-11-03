@@ -39,28 +39,28 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep05 --segment toscale`.
 
-## hook {shot: the sunscreen macro, one patch of skin, left half under sunscreen, right bare, the same to the eye · labels: badge "model, not a photo" · title "The sunscreen experiment" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5.5 s)
+## hook {shot: the sunscreen macro, one patch of skin, left half under sunscreen, right bare, the same to the eye · labels: badge "model, not a photo" · title "The sunscreen experiment" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0.0–5.6 s)
 vo: Which hand *aged*? In four and a half years, one showed no detectable ageing. {c5}
 
-## normal {shot: a long crane along the macro's seam, dust in a light shaft; "daily" on the screened half · labels: spine "Nambour · 1992" · badge "model, not a photo" · picture-only 0.5 s · energy: 0.45} (5.5–17.5 s)
+## normal {shot: a long crane along the macro's seam, dust in a light shaft; "daily" on the screened half · labels: spine "Nambour · 1992" · badge "model, not a photo" · picture-only 0.5 s · energy: 0.45} (5.6–16.8 s)
 vo: They belong to two neighbours in Nambour, a Queensland town where pure chance decided who would wear sunscreen every *morning*. {c1} Head, neck, arms and hands, before the day began. {c2}
 
-## change {shot: close on the bare half, patches of sunscreen coming and going, then the silicone cast of the skin's lines · labels: spine "ageing trial: 4.5 years" · plate "relative odds 0.76 (0.59–0.98) · Hughes et al., 2013" · picture-only 0.6 s · energy: 0.55} (17.5–29 s)
+## change {shot: close on the bare half, patches of sunscreen coming and going, then the silicone cast of the skin's lines · labels: spine "ageing trial: 4.5 years" · plate "relative odds 0.76 (0.59–0.98) · Hughes et al., 2013" · picture-only 0.6 s · energy: 0.55} (16.8–28.0 s)
 vo: It was never sunscreen against *none*: the others could use it whenever they pleased, or not at all. {c3} Researchers read the fine lines in silicone casts of hands. {c4}
 
-## why {shot: the macro, a warm flush, then the UV switch (a cyan scan line) on "But" · labels: badge "illustration · not trial data" · labels "sunscreen" / "bare skin" · picture-only 2 s · energy: 0.5} (29–42 s)
+## why {shot: the macro, a warm flush, then the UV switch (a cyan scan line) on "But" · labels: badge "illustration · not trial data" · labels "sunscreen" / "bare skin" · picture-only 2 s · energy: 0.5} (28.0–40.6 s)
 vo: It's easy to think sun damage is the burn you feel. {-} But an ultraviolet camera reveals damage the naked eye misses, long before it shows on the *surface*. {c6}
 
-## whoa {shot: the micrograph cut face of the dermis, the ten-year tally over it, 11 against 22 · labels: badge "micrograph · healthy stained skin" · spine "followed to 2006" · plate "HR 0.50 (0.24–1.02) · small numbers · not quite significant · Green et al., 2011" · picture-only 3 s · energy: 0.8} (42–55 s)
+## whoa {shot: the micrograph cut face of the dermis, the ten-year tally over it, 11 against 22 · labels: badge "tissue photo · not a melanoma" · spine "followed to 2006" · plate "HR 0.50 (0.24–1.02) · small numbers · not quite significant · Green et al., 2011" · picture-only 3 s · energy: 0.8} (40.6–53.7 s)
 vo: And they were followed for ten more years. {c7} Melanoma, the most serious skin cancer, came out at about *half*, in numbers too small to be sure. {c9,c13}
 
-## toscale {segment: toscale · the macro grazing over the screened half's satin film, the gauge beside a sheet of paper · labels: gauge "≈ 20 µm · paper 100 µm" · badge "estimate · lab test dose" · picture-only 0.5 s · energy: 0.4} (55–62 s)
+## toscale {segment: toscale · the macro grazing over the screened half's satin film, the gauge beside a sheet of paper · labels: gauge "≈ 20 µm · paper 100 µm" · badge "estimate · lab test dose" · picture-only 0.5 s · energy: 0.4} (53.7–60.7 s)
 vo: At a lab's test dose, that morning layer is about a fifth of a paper's *thickness*. {c10}
 
-## takeaway {shot: back to the hook's macro (the loop), the UV switch on "skin" · labels: none beyond the badge (the adherence figures stay off screen until confirmed from the paper itself) · badge "model, not a photo" · picture-only 0.5 s · energy: 0.3} (62–68.5 s)
+## takeaway {shot: back to the hook's macro (the loop), the UV switch on "skin" · labels: none beyond the badge (the adherence figures stay off screen until confirmed from the paper itself) · badge "model, not a photo" · picture-only 0.5 s · energy: 0.3} (60.7–67.2 s)
 vo: So, which hand aged? Both groups missed mornings; one missed fewer, and the skin kept *count*. {c12,c11}
 
-## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.5 s)
+## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (67.2–74.2 s)
 vo: Next: tanning beds share a list with cigarettes. {c14} Same list, same *risk*? {-}
 end card: "Next: tanning beds and cigarettes. Same list, same risk?" · "Skin Sense · No. 006" · footnote: "Nambour Skin Cancer Prevention Trial, Queensland, 1992–96, followed to 2006"
 
