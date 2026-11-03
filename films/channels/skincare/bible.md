@@ -19,6 +19,9 @@ it. No advice, no diagnosis, no products, no brands, no before/after of real peo
 season (light, medium, deep, then around again). Never change tone inside an episode's story: a tone change on a line
 about risk, behaviour or illness reads as linking that tone to it. The UV reveals carry a **daylight strip** of three
 tones (light · medium · deep) when the subject applies to all skin; that strip never pairs a tone with a risk line.
+No lethality or disease line over a face or skin of any particular tone (coordinator, 3 Nov): a death or disease line
+over a person reads as a statement about that person. Put it on a non-skin shot that shows what the sentence says
+(an object, a molecule, a chart, a tissue photo), and bring the skin back when the subject is ordinary skin again.
 
 **Honesty, always on screen:** every comparison is labelled **"model, not a photo"**; illustrations say so; time
 compressions are badged ("weeks, compressed"); results in animals or single studies say so ("in mice", "one study",
