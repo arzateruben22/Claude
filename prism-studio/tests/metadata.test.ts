@@ -24,6 +24,16 @@ describe("metadata", () => {
   it("strips the script's markup", () => {
     expect(clean("Which ball lands *first*? {-} Both {c1,c2} sit at the *same height* .")).toBe("Which ball lands first? Both sit at the same height.");
   });
+  it("Skin Sense carries the education-not-advice line on every platform; other channels don't", () => {
+    const skin = buildMetadata({ ...input, channel: { name: "Skin Sense", label: "SKIN", tagline: "Skin biology, with the evidence on the screen.", topic: "skincare" } });
+    expect(skin.youtube.caption).toContain("Education, not medical advice. See a dermatologist about your own skin.");
+    expect(skin.instagram.caption).toContain("Education, not medical advice. See a dermatologist about your own skin.");
+    expect(skin.tiktok.caption).toContain("Education, not medical advice.");
+    expect(skin.tiktok.caption.endsWith(skin.tiktok.hashtags)).toBe(true);
+    expect(skin.tiktok.caption.length).toBeLessThanOrEqual(LIMITS.tiktok.captionTarget + 20);
+    const physics = buildMetadata(input);
+    for (const t of [physics.youtube.caption, physics.tiktok.caption, physics.instagram.caption]) expect(t).not.toContain("medical advice");
+  });
   it("cuts at a word boundary", () => {
     expect(cut("one two three four five", 12)).toBe("one two…");
     expect(cut("short", 12)).toBe("short");

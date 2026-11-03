@@ -100,7 +100,7 @@ export const CHANNELS: {
 /** The planned first season of a channel that has nothing imported yet: shown as "Season 1 in production" with these
  *  titles until its series is in the database (the import's slate then takes over). Titles only, never counts. */
 export const PLANNED_SEASONS: Record<string, { label: string; titles: string[] }> = {
-  skincare: { label: "Season 1", titles: ["The dead layer", "Does SPF 100 beat SPF 50?", "Bath fingers", "What a tan is", "Same cells, every colour", "Goosebumps"] },
+  skincare: { label: "Season 1", titles: ["The fight you never saw", "Where a glow comes from", "What's in a scar", "The deadliest dose", "The sunscreen experiment", "Same list as cigarettes"] },
   whatif: { label: "Season 1", titles: ["Through the Earth", "Everyone, one place", "All the ants", "Count to a billion", "Everybody jump", "Every raindrop at once"] },
 };
 
