@@ -96,7 +96,7 @@ BADGES = [
     {"id": "b-illus", "text": "illustration", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "br"},
     {"id": "b-head", "text": "near head-on light", "t0": B["normal"]["t0"] + 0.3, "t1": t_split, "slot": "tr"},   # with ≈ 4–7 %, which leaves at the same cut
     {"id": "b-one", "text": "one study · illustration", "t0": t_split, "t1": t_in, "slot": "tr"},
-    {"id": "b-simp", "text": "simplified · one example (model)", "t0": t_in, "t1": t_face, "slot": "tl"},
+    {"id": "b-simp", "text": "simplified · one example (model)", "t0": t_in, "t1": t_rise, "slot": "tl"},
     {"id": "b-step", "text": "Verkruysse 2008 · Wu et al., 2012", "t0": t_face, "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-cg", "text": "Jensen et al., 2001", "t0": B["takeaway"]["t0"] + 0.2, "t1": A("vo07:Yours", -0.3), "slot": "tr"},
     {"id": "b-cgm", "text": "models, not photos", "t0": B["takeaway"]["t0"] + 0.2, "t1": A("vo07:Yours", -0.3), "slot": "tl"},
@@ -131,11 +131,11 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
 KEYS = {"beam": [-1.0, 0.0],   # the beam already falling at frame 0
         "glint": [CUE["glint"] - 0.5, CUE["glint"] + 0.2], "spread": [CUE["dry"] - 0.3, CUE["haze"] + 0.3],
         "paths": [t_in + 0.2, CUE["bounces"] + 1.0], "out": [CUE["out"] - 0.8, CUE["out"] + 0.6], "warm": [CUE["melanin"] - 0.3, CUE["redder"] - 0.5],
-        "widen": [CUE["rush"] - 0.1, CUE["redder"] + 0.3], "flush": [CUE["turned"] - 0.3, CUE["colour"] + 0.6], "pulse": [A("vo05:beat:", -0.2), B["toscale"]["t0"] - 0.3], "cam": [A("vo05:camera", -0.2), A("vo05:it.", 0.4)], "cg": [B["takeaway"]["t0"], A("vo07:Yours", -0.3)], "inside": [A("vo07:inside.", -0.5), A("vo07:inside.", 0.3)], "sheen": [CUE["sitting"] - 0.4, CUE["sitting"] + 0.3, CUE["but4"] - 0.1, CUE["but4"] + 0.5], "bloom": [CUE["inside"] - 0.2, CUE["inside"] + 0.6], "blue": [CUE["blue"] - 0.1, CUE["millimetre"] + 0.5],
+        "widen": [CUE["rush"] - 0.1, CUE["redder"] + 0.3], "flush": [CUE["turned"] - 0.3, CUE["colour"] + 0.6], "pulse": [A("vo05:beat:", -0.6), B["toscale"]["t0"] - 0.3], "cam": [A("vo05:camera", -0.2), A("vo05:it.", 0.4)], "cg": [B["takeaway"]["t0"], A("vo07:Yours", -0.3)], "inside": [A("vo07:inside.", -0.5), A("vo07:inside.", 0.3)], "sheen": [CUE["sitting"] - 0.4, CUE["sitting"] + 0.3, CUE["but4"] - 0.1, CUE["but4"] + 0.5], "bloom": [CUE["inside"] - 0.2, CUE["inside"] + 0.6], "blue": [CUE["blue"] - 0.1, CUE["millimetre"] + 0.5],
         "sheets": [CUE["ten"] - 0.2, CUE["ten"] + 1.0], "redbar": [CUE["red"] - 0.1, CUE["deeper"] + 0.4], "glowout": [CUE["met"] - 0.6, CUE["back"] + 0.4]}
 DEPTH = {"blue_mm": BLUE_MM, "red_mm": list(RED_MM), "paper_um": PAPER_UM}
 
-TITLE = {"series": "Skin Sense · No. 002", "title": "Where a glow *comes from*", "t1": CUE["inside"] - 0.8, "sig": A("vo01:from?", 0.35)}
+TITLE = {"series": "Skin Sense · No. 002", "title": "Where a glow *comes from*", "t0": A("vo01:from?", 0.45), "t1": CUE["inside"] - 0.8, "sig": A("vo01:from?", 0.35)}
 END = {"title": "Next: why do you *scar*?", "follow": "Skin Sense · No. 003",
        "next": "Sources: Lister 2012; Jacques (OMLC); Verkruysse et al. 2008; Wu et al. 2012; Jensen et al. 2001. Narration: synthetic voice (AI)."}
 POSTER = A("vo04:blood.", 0.2)
