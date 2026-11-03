@@ -70,7 +70,7 @@
    "tag": "o2hook",
    "pos": [
     0.703,
-    0.411
+    0.412
    ]
   },
   {
@@ -229,8 +229,8 @@
    "kind": "label",
    "tag": "venous",
    "pos": [
-    0.647,
-    0.387
+    0.646,
+    0.436
    ]
   },
   {
@@ -238,8 +238,8 @@
    "kind": "counter.show",
    "tag": "venous",
    "pos": [
-    0.647,
-    0.387
+    0.646,
+    0.436
    ]
   },
   {
@@ -247,8 +247,8 @@
    "kind": "label",
    "tag": "redlight",
    "pos": [
-    0.422,
-    0.275
+    0.434,
+    0.291
    ]
   },
   {
@@ -256,8 +256,8 @@
    "kind": "label",
    "tag": "bluelight",
    "pos": [
-    0.281,
-    0.213
+    0.254,
+    0.211
    ]
   },
   {
@@ -333,22 +333,30 @@
    "t": 53.45,
    "kind": "badge",
    "tag": "ill-skin2",
-   "text": "stained section · not to scale"
+   "text": "stained section · not to scale",
+   "pos": [
+    0.497,
+    0.146
+   ]
   },
   {
    "t": 53.53333333333333,
    "kind": "label",
    "tag": "arrive",
    "pos": [
-    0.302,
-    0.54
+    0.259,
+    0.523
    ]
   },
   {
    "t": 55.35,
    "kind": "badge",
    "tag": "nts-lung2",
-   "text": "not to scale"
+   "text": "not to scale",
+   "pos": [
+    0.681,
+    0.191
+   ]
   },
   {
    "t": 55.65,
@@ -364,8 +372,8 @@
    "kind": "label",
    "tag": "leave",
    "pos": [
-    0.648,
-    0.344
+    0.555,
+    0.288
    ]
   },
   {
@@ -537,14 +545,12 @@
   "redlight": 33.1667,
   "bluelight": 33.4333,
   "sac": 41.1667,
-  "arrive": 53.5667,
-  "leave": 56.8,
   "node": 69,
   "quarter": 45.7,
   "tally": 60.2333,
   "seats": 3.0333,
   "copies": 8.2667,
   "aboard": 10.3333,
-  "full": 53.4333
+  "full": 55.6667
  }
 }

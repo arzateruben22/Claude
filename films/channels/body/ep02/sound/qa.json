@@ -1,0 +1,599 @@
+{
+ "compose_s": 13.0,
+ "master_s": 24.1,
+ "master": {
+  "gain_db": 4.12,
+  "iterations": 3,
+  "lufs": -14.05,
+  "true_peak_db": -2.0,
+  "ceiling_db": -2.0,
+  "limiting_max_db": -5.66,
+  "aac": {
+   "lufs": -14.1,
+   "true_peak_db": -1.9,
+   "lra": 3.3
+  },
+  "stems_sum_error_db": -240.0
+ },
+ "sync": {
+  "per_kind": {
+   "beat": {
+    "n": 8,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "bind": {
+    "n": 4,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "breath": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": true,
+    "pass": true
+   },
+   "counter.end": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "counter.show": {
+    "n": 6,
+    "max_ms": 1.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "diffuse": {
+    "n": 2,
+    "max_ms": 3.2,
+    "median_ms": 1.6,
+    "slow": true,
+    "pass": true
+   },
+   "dissolve": {
+    "n": 1,
+    "max_ms": 4.9,
+    "median_ms": 4.9,
+    "slow": true,
+    "pass": true
+   },
+   "impact": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "label": {
+    "n": 11,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "section": {
+    "n": 8,
+    "max_ms": 57.5,
+    "median_ms": 0.0,
+    "slow": true,
+    "pass": true
+   },
+   "signature": {
+    "n": 2,
+    "max_ms": 9.0,
+    "median_ms": 4.5,
+    "slow": false,
+    "pass": true
+   },
+   "spike": {
+    "n": 4,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "swell": {
+    "n": 2,
+    "max_ms": 47.0,
+    "median_ms": 47.0,
+    "slow": true,
+    "pass": true
+   }
+  },
+  "pass": true,
+  "events": [
+   {
+    "kind": "signature",
+    "tag": "title",
+    "show": 0.0,
+    "method": "rise",
+    "err_ms": 9.0
+   },
+   {
+    "kind": "dissolve",
+    "tag": "billion",
+    "show": 2.9,
+    "method": "peak",
+    "err_ms": 4.9
+   },
+   {
+    "kind": "counter.show",
+    "tag": "seats",
+    "show": 3.0333,
+    "method": "rise",
+    "err_ms": 1.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 4.8,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "hb",
+    "show": 6.6667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "copies",
+    "show": 8.2667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "aboard",
+    "show": 10.3333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "diffuse",
+    "tag": "irons",
+    "show": 10.7667,
+    "method": "peak",
+    "err_ms": 3.2
+   },
+   {
+    "kind": "label",
+    "tag": "iron",
+    "show": 11.0667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "o2",
+    "show": 13.3667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 14.4,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "bind",
+    "tag": "board0",
+    "show": 18.0333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "bind",
+    "tag": "board1",
+    "show": 18.8333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "bind",
+    "tag": "board2",
+    "show": 19.6333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "bind",
+    "tag": "board3",
+    "show": 20.4333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "swell",
+    "tag": "flush",
+    "show": 22.4,
+    "method": "shape",
+    "err_ms": 47.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 24.4,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "vein",
+    "show": 24.7667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "venous",
+    "show": 31.6333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "redlight",
+    "show": 33.1667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "bluelight",
+    "show": 33.4333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "impact",
+    "tag": "swallow",
+    "show": 35.0,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "swell",
+    "tag": "lung-swell",
+    "show": 39.6,
+    "method": "shape",
+    "err_ms": 47.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 39.6,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "sac",
+    "show": 41.1667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "quarter",
+    "show": 45.7,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "diffuse",
+    "tag": "o2-in",
+    "show": 46.1,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "breath",
+    "tag": "fill",
+    "show": 46.7,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.end",
+    "tag": "quarter-end",
+    "show": 49.6667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 53.2,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "arrive",
+    "show": 53.5667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "full",
+    "show": 55.6667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "leave",
+    "show": 56.8,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.end",
+    "tag": "full-end",
+    "show": 57.1667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat0",
+    "show": 59.2,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 59.6,
+    "method": "peak",
+    "err_ms": -57.5
+   },
+   {
+    "kind": "beat",
+    "tag": "beat1",
+    "show": 60.0,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "tally",
+    "show": 60.2333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat2",
+    "show": 60.8,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat3",
+    "show": 61.6,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat4",
+    "show": 62.4,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat5",
+    "show": 63.2,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat6",
+    "show": 64.0,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat7",
+    "show": 64.8,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 65.2,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "spike",
+    "tag": "jump0",
+    "show": 66.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "spike",
+    "tag": "jump1",
+    "show": 67.2667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "spike",
+    "tag": "jump2",
+    "show": 68.4667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "node",
+    "show": 69.0,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "spike",
+    "tag": "jump3",
+    "show": 69.7,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 70.7,
+    "method": "peak",
+    "err_ms": -14.1
+   },
+   {
+    "kind": "signature",
+    "tag": "end",
+    "show": 70.7,
+    "method": "rise",
+    "err_ms": 0.0
+   }
+  ]
+ },
+ "picture_sync": [
+  {
+   "tag": "seats",
+   "kind": "counter.show",
+   "picture": 3.0333,
+   "sound": 3.0333,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "hb",
+   "kind": "label",
+   "picture": 6.6667,
+   "sound": 6.6667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "copies",
+   "kind": "counter.show",
+   "picture": 8.2667,
+   "sound": 8.2667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "aboard",
+   "kind": "counter.show",
+   "picture": 10.3333,
+   "sound": 10.3333,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "iron",
+   "kind": "label",
+   "picture": 11.0667,
+   "sound": 11.0667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "o2",
+   "kind": "label",
+   "picture": 13.3667,
+   "sound": 13.3667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "vein",
+   "kind": "label",
+   "picture": 24.7667,
+   "sound": 24.7667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "venous",
+   "kind": "label",
+   "picture": 31.6333,
+   "sound": 31.6333,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "redlight",
+   "kind": "label",
+   "picture": 33.1667,
+   "sound": 33.1667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "bluelight",
+   "kind": "label",
+   "picture": 33.4333,
+   "sound": 33.4333,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "sac",
+   "kind": "label",
+   "picture": 41.1667,
+   "sound": 41.1667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "quarter",
+   "kind": "counter.show",
+   "picture": 45.7,
+   "sound": 45.7,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "full",
+   "kind": "counter.show",
+   "picture": 55.6667,
+   "sound": 55.6667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "tally",
+   "kind": "counter.show",
+   "picture": 60.2333,
+   "sound": 60.2333,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "node",
+   "kind": "label",
+   "picture": 69,
+   "sound": 69.0,
+   "err_ms": 0.0
+  }
+ ],
+ "under_voice": {
+  "music_lufs": -29.2,
+  "dialog_lufs": -13.4,
+  "gap_lu": 15.8,
+  "pass": true
+ },
+ "phone": {
+  "correlation": 0.88,
+  "mono_loss_db": 0.09,
+  "dialog_mono_loss_db": 0.1,
+  "pass": true
+ }
+}
