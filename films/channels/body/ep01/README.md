@@ -1,5 +1,7 @@
 # Meanwhile, Inside No. 01, "Single file"
 
+**STATUS (3 Nov 2026): delivered, season 1 reboot ("live scan").** Final in `out/` (qa.py PASS): `body-backstage-001-9x16.mp4` (92.0 MB, CRF 20), `-youtube.mp4` (1440×2560, 91 MB), poster and contact sheet. Scorecard: `review/scorecard.md`; reviews: `review/REVIEW.md`. `out/` still holds the old look's cover, thumb and posting files: they must be remade before posting (posting is on hold).
+
 Episode 1 of Meanwhile, Inside, the human-body channel (`films/channels/body`). It runs 71.6 s at 9:16 and
 is narrated by bf_emma, a synthetic voice that must be labelled as AI. It was built end to end on the
 studio's brand-neutral pipeline (`kits/cinema/voice`, `script`, `studio`, `film` and `sci`) as far as a
