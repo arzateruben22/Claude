@@ -70,5 +70,5 @@ Sources (every number in these episodes is checked against a source)
 - Earth Fact Sheet (NASA NSSDC): https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
 - It's Surprisingly Hard to Go to the Sun (NASA): https://www.nasa.gov/solar-system/its-surprisingly-hard-to-go-to-the-sun/
 
-Narration is a synthetic voice (AI-generated). Music and sound design are original, made for Light Minute. Type: Unbounded, Lexend, Martian Mono (SIL Open Font License).
+Narration is a synthetic voice (AI-generated). Music and sound design are original, made for One More Orbit. Type: Unbounded, Lexend, Martian Mono (SIL Open Font License).
 TODO before posting: the channel handle and links, the expert sign-offs listed in each episode's review/HUMAN-REVIEW.md, and YouTube's altered/synthetic content setting.
