@@ -92,37 +92,8 @@ const wipe = (m, mode, { uv = [0, 0, 0], day = [1, 1, 1], em = [0, 0, 0] } = {})
 };
 
 // ── A: the sunscreen macro (x = 0) ──────────────────────────────────────────
-// the relief's finer life (episode-local, on top of set/terrain.js): every time the terrain rebuilds its heights, the
-// creases are rounded (one smoothing pass) and a second, finer family of furrows, small rounded bumps and deeper,
-// bowl-shaped pores are added; the detail field is computed once
-const detail = (T, seed) => {
-  const geo = T.mesh.geometry, pos = geo.attributes.position, n = Math.round(Math.sqrt(pos.count)), N = n - 1, step = 80 / N;
-  const h2 = (x, y) => { const v = Math.sin(x * 127.1 + y * 311.7 + seed) * 43758.5453; return v - Math.floor(v); };
-  const vn = (x, y) => { const i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy); return (h2(i, j) * (1 - u) + h2(i + 1, j) * u) * (1 - v) + (h2(i, j + 1) * (1 - u) + h2(i + 1, j + 1) * u) * v; };
-  const D = new Float32Array(pos.count);
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i), z = pos.getZ(i);
-    const w = 0.5 * vn(x * 0.7, z * 0.7);
-    const f1 = Math.abs(Math.sin((x * 0.83 + z * 0.31) * 2.1 + 2.0 * w)), f2 = Math.abs(Math.sin((x * 0.27 - z * 0.92) * 1.9 + 2.2 * w));
-    const fine = Math.pow(1 - Math.min(f1, f2), 3);   // a finer crossing family, rounded in profile
-    D[i] = -0.07 * fine + 0.07 * (vn(x * 1.3, z * 1.3) - 0.5) + 0.03 * (vn(x * 3.1 + 7, z * 3.1) - 0.5);
-    for (const [px, pz] of T.pores) { const r2 = (x - px) ** 2 + (z - pz) ** 2; if (r2 < 0.5) D[i] -= 0.22 * Math.max(0, 1 - r2 / 0.5) ** 2; }   // a deeper, rounded bowl
-  }
-  const Y = new Float32Array(pos.count), orig = T.set.bind(T);
-  T.set = (o) => {
-    const v0 = pos.version; orig(o); if (pos.version === v0) return;
-    for (let i = 0; i < pos.count; i++) Y[i] = pos.getY(i);
-    for (let iz = 0; iz <= N; iz++) for (let ix = 0; ix <= N; ix++) {
-      const i = iz * n + ix, a = Math.max(0, ix - 1), b = Math.min(N, ix + 1), c = Math.max(0, iz - 1), d = Math.min(N, iz + 1);
-      const sm = (Y[iz * n + a] + Y[iz * n + b] + Y[c * n + ix] + Y[d * n + ix] + 2 * Y[i]) / 6;   // a rounded crease, not a knife edge
-      pos.setY(i, sm + D[i]);
-    }
-    pos.needsUpdate = true; geo.computeVertexNormals();
-  };
-  return T;
-};
 const mkHalf = (keepLeft) => {
-  const T = detail(createTerrain({ seed: 21, spots: 90, half: "right", segs: 400 }), 3);
+  const T = createTerrain({ seed: 21, spots: 90, half: "right", segs: 400, organic: true });   // the shared organic relief (terrain.js): irregular plateaus, varied pores
   const clip = [new THREE.Plane(new THREE.Vector3(keepLeft ? -1 : 1, 0, 0), 0)];
   const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: keepLeft ? 0.7 : 0.05, hydration: keepLeft ? 0.8 : 0.25, repeat: 14, seed: 6, micro: 0.35 });
   m.roughness = keepLeft ? 0.3 : 0.6; m.clippingPlanes = clip; T.mesh.material = m;
@@ -223,7 +194,7 @@ const FOGA = new THREE.Fog(0x2c1660, 22, 60);
 
 // ── K: the silicone cast of the skin's lines (x = 500) ───────────────────────
 const XK = 500;
-const K = detail(createTerrain({ seed: 21, spots: 0, hair: false, segs: 360 }), 5);
+const K = createTerrain({ seed: 21, spots: 0, hair: false, segs: 360, organic: true });
 K.group.position.x = XK; scene.add(K.group);
 { const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.05, hydration: 0.1, micro: 1.3, repeat: 11, seed: 4 });   // the fine crosshatch of skin lines (two crossing families), caught by the raking light
   K.mesh.material = m; }
