@@ -1,0 +1,28 @@
+{
+ "footnote_claims": [
+  {
+   "id": "f17",
+   "sentence": "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992.",
+   "where": "end-card footnote",
+   "claim": "Alan B. Scott reported botulinum toxin injection of eye muscles to correct strabismus in 1980.",
+   "source_url": "https://www.ski.org/publication/botulinum-toxin-injection-of-eye-muscles-to-correct-strabismus/",
+   "source_title": "Scott AB. Botulinum toxin injection of eye muscles to correct strabismus. Ophthalmology 1980",
+   "accessed": "2026-11-03",
+   "verified_via": "search excerpt",
+   "status": "ok",
+   "note": "End-card footnote, not a voice line: ledgered here because lint ties claims.json to voice sentences."
+  },
+  {
+   "id": "f18",
+   "sentence": "Alan Scott first injected it into eye muscles to treat strabismus (1980); Jean and Alastair Carruthers reported frown lines in 1992.",
+   "where": "end-card footnote",
+   "claim": "Jean and Alastair Carruthers reported treating glabellar frown lines with botulinum toxin A in 1992.",
+   "source_url": "https://pubmed.ncbi.nlm.nih.gov/1740562/",
+   "source_title": "Carruthers JD, Carruthers JA. Treatment of glabellar frown lines with C. botulinum-A exotoxin. J Dermatol Surg Oncol 1992",
+   "accessed": "2026-11-03",
+   "verified_via": "search excerpt",
+   "status": "ok",
+   "note": "End-card footnote, not a voice line: ledgered here because lint ties claims.json to voice sentences."
+  }
+ ]
+}
