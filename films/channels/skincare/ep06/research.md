@@ -1,4 +1,4 @@
-# Tanning beds: research (Outer Layer s1v2)
+# Tanning beds: research (Skin Sense s1v2)
 
 Accessed 2026-11-02. Every figure was checked through WebSearch excerpts only: WebFetch is blocked
 (www.iarc.who.int does not resolve in this session), so a person must open each link in `claims.json`

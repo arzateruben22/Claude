@@ -11,6 +11,6 @@
 | Everything else in the picture (the plate, the tubes, the skin, the rays, the dust) | generated in code (`scene.mjs`, `../set/*.js`); no photographs, no footage, no brands | studio code |
 
 The IARC Group 1 plate is typeset in the channel's fonts: an excerpt of the agent names (IARC Monographs list), not
-a reproduction of an IARC document. The stained section is a micrograph of human skin graded only through lighting;
+a reproduction of an IARC document. The stained section is a tissue photo (micrograph) of human skin graded only through lighting;
 its stain colours are the stain's, not a skin tone. Nothing here comes from Lumevina (its look, voice, products or
 wording) or any brand.

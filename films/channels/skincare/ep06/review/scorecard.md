@@ -4,7 +4,7 @@
 
 Rebuilt in the owner-approved look test 2 (`../../s1v2/BUILD-LOOK2.md`), on the facts-pass-2 script (vo lines
 unchanged). Four hero shots (`storyboard.md`): the list as an engraved slate plate in haze; deep-tone skin under the
-canopy of UVA tubes; the UV switch-off (the cyan scan line on "Whole countries acted"); the cut face, micrograph with
+canopy of UVA tubes; the UV switch-off (the cyan scan line on "Whole countries acted"); the cut face, the tissue photo with
 UVA dashes and the gauge. Channel renamed to Skin Sense (ID `skin-sense-006`, series line and follow chip).
 
 **Measured (draft, 15 fps):**
@@ -19,6 +19,13 @@ UVA dashes and the gauge. Channel renamed to Skin Sense (ID `skin-sense-006`, se
 risk" (lit on "sure", relit for the takeaway); "large, powerful units" + "UVA vs midday sun · may be ×10–15";
 "pooled studies · 2012 (corr.) · 2007" + "relative risk · first use < 35: 1.59 · 1.75"; "model, not a photo" on the
 switch-off; "tissue photo · rays simplified" on the cut face; years on screen only; no advice.
+
+**After the draft (coordinator's rules, 3 Nov), not yet re-rendered as a full draft:**
+- Duration: the draft ran 76.07 s; the delivery window is 60–75 s. Picture-only holds trimmed in `script.md`
+  headings only (normal 0.5 → 0.3 s, change 0.6 → 0.3 s, toscale 0.5 → 0.3 s, takeaway 0.5 → 0.3 s; no vo line
+  touched; why 2.0 s, whoa 3.0 s and the end card 1.6 s are at or near lint's floors): film.json now 74.20 s, lint 0/0.
+- The cut face's badge now reads "tissue photo · rays simplified"; the texture is shown once (repeat 1, 1; no
+  rotation, crop or tiling). The slide's pale background now shows as a thin band above the stratum corneum.
 
 **Open:**
 - The stained micrograph is the public-domain H&E section used by the look test; a person confirms its licence on

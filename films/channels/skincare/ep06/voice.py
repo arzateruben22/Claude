@@ -1,4 +1,4 @@
-"""Voice Outer Layer No. 006 with one Kokoro speed per line (an episode-local wrapper around
+"""Voice Skin Sense No. 006 with one Kokoro speed per line (an episode-local wrapper around
 kits/cinema/voice/tts.py, which takes one --speed for the whole script).
 
   $CINEMA_VOICE/venv/bin/python -I films/channels/skincare/ep06/voice.py --models $CINEMA_VOICE/models
