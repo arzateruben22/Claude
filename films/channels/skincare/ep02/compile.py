@@ -23,6 +23,11 @@ ID = "skin-sense-002"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
+CAM_END = f.duration   # the camera's last key stays where the untrimmed film ended, so the motion before the cut is unchanged
+MAXDUR = 75.0   # the delivery window is 60–75 s: trim the end card's tail (the card keeps its start)
+if f.duration > MAXDUR:
+    cut = f.duration - MAXDUR
+    BEATS = f.layout(plan, end_hold=end_hold - cut, total=MAXDUR)
 A = f.at
 B = {b["id"]: b for b in BEATS}
 
@@ -71,7 +76,7 @@ CAM = {
     "cg": [{"t": B["takeaway"]["t0"], "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 28, "az": 0}, {"t": A("vo07:Yours", -0.3), "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 27, "az": 0, "ease": "sine"}],
     "macro2": [{"t": A("vo07:Yours", -0.3), "target": [TX + 0.5, -0.2, 0.3], "el": 70, **MK, "dist": 6, "az": -2},   # up out of the skin
                {"t": A("vo07:Yours", 1.2), "target": [TX, 0, 2], "el": 28, **MK, "dist": 22, "az": -4, "ease": "out3"},
-               {"t": B["tease"]["t1"], "target": [TX, 0, 4], "el": 24, **MK, "dist": 34, "az": -10, "ease": "sine"}],
+               {"t": CAM_END, "target": [TX, 0, 4], "el": 24, **MK, "dist": 34, "az": -10, "ease": "sine"}],
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):

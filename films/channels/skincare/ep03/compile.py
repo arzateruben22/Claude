@@ -23,6 +23,11 @@ ID = "skin-sense-003"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
+CAM_END = f.duration   # the camera's last key stays where the untrimmed film ended, so the motion before the cut is unchanged
+MAXDUR = 75.0   # the delivery window is 60–75 s: trim the end card's tail (the card keeps its start)
+if f.duration > MAXDUR:
+    cut = f.duration - MAXDUR
+    BEATS = f.layout(plan, end_hold=end_hold - cut, total=MAXDUR)
 A = f.at
 B = {b["id"]: b for b in BEATS}
 
@@ -72,7 +77,7 @@ CAM = {
                {"t": B["takeaway"]["t0"] + 0.7, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 22, "az": -7.5, "ease": "out3"},   # ...to frame 0 again
                {"t": t_uv, "target": [TX, 0, 0.8], "el": 40, **MK, "dist": 19, "az": -7, "ease": "sine"}],   # frame 0 again
     "uv": [{"t": t_uv, "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 17, "az": 1},
-           {"t": B["tease"]["t1"], "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 20, "az": -3, "ease": "sine"}],
+           {"t": CAM_END, "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 20, "az": -3, "ease": "sine"}],
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
@@ -104,7 +109,7 @@ BADGES = [
 ]
 SPINE = [0.5, 0.215]
 COUNTERS = [
-    {"id": "c-q", "label": "before birth", "text": "no scar", "t0": CUE["closer"] + 0.15, "t1": CUE["collagen"]},
+    {"id": "c-q", "label": "before birth", "text": "no scar", "t0": CUE["closer"] - 0.05, "t1": CUE["collagen"]},
     {"id": "c-weave", "label": "the dermis", "text": "woven", "t0": CUE["collagen"], "t1": CUE["patches"]},
     {"id": "c-patch", "label": "a scar", "text": "patched", "t0": CUE["patches"], "t1": CUE["four"] - 0.3},
     {"id": "c-str", "label": "strength, at most", "text": f"≈ {STRENGTH}%", "t0": CUE["four"] - 0.3, "t1": B["whoa"]["t0"]},
