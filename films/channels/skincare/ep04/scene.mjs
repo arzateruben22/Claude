@@ -18,6 +18,7 @@ import { createBrow } from "../set/brow04.js";
 import { createNMJ } from "../set/nmj04.js";
 import { SECTION, DERMIS } from "../set/ref/textures.js";
 import { lookV2, richen } from "../set/prod.js";
+import { unifyHud } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, FPS = FILM.fps || 30, G = FILM.gauge, J = FILM.j, BW = FILM.brow, P = FILM.plates;
 const S1 = Math.min(W, H) / 1080;
@@ -98,6 +99,7 @@ window.SCENE_READY = Promise.all([load(SECTION), load(DERMIS)]).then(([sec, der]
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
 const hud = createHud({ camera, shots: FILM.shots });
+unifyHud(hudRoot);   // one HUD system: one plate, one radius, a bar not a dot; mono sources, sans labels
 const KIND = { cell: { color: "text", glyph: "●", mark: "none" }, water: { color: "water", glyph: "◇", mark: "none" }, uv: { color: "uv", glyph: "◆", mark: "none" } };
 const A = {};
 hud.captions(FILM.captions, { fade: 0.05 });
@@ -129,7 +131,7 @@ hudRoot.appendChild(scan);
 const plate = (html, css) => {
   const el = document.createElement("div");
   el.innerHTML = html;
-  Object.assign(el.style, { position: "absolute", zIndex: "4", pointerEvents: "none", background: "var(--hud-plate)", boxShadow: "var(--hud-shadow)", borderRadius: "2.4vmin",
+  Object.assign(el.style, { position: "absolute", zIndex: "4", pointerEvents: "none", background: "var(--hud-plate)", boxShadow: "var(--hud-shadow)", borderRadius: "var(--ol-r, 2.4vmin)",
     color: "var(--text)", opacity: "0", visibility: "hidden", ...css });
   hudRoot.appendChild(el); return el;
 };
@@ -215,7 +217,7 @@ window.seek = function (t) {
     } else {
       const prune = u01(t, J.prune);
       st = { ...st, sprout: u01(t, J.sprout), prune, cut: 1 - prune, toxin: 1 - prune, puff: seg(t, J.puff2[0], J.puff2[1]) };
-      pos = mix3([3, 15, 40], [2, 11, 33], u); tgt = mix3([1, 3.0, 0], [1, 3.2, 0], u);   // the ending low in the frame, the readout above it      // the ending and its spare endings along the fibre
+      pos = mix3([3, 15, 40], [2, 11, 33], u); tgt = mix3([1, 2.0, 0], [1, 2.2, 0], u);   // the ending under the readout, clear of the captions      // the ending and its spare endings along the fibre
       focusPt = jx([1, 0.8, 0]); fstop = 0.18;
     }
     N.set(st);
