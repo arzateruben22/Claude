@@ -1,0 +1,131 @@
+{
+ "film": "films/channels/body/ep01",
+ "theme": "films/channels/body/theme.json",
+ "tier": "final",
+ "aspect": "9x16",
+ "scene": "body-backstage-001",
+ "dur": 70.4,
+ "frames": 2112,
+ "width": 1080,
+ "height": 1920,
+ "fps": 30,
+ "shutterFps": 30,
+ "kMax": null,
+ "plain": false,
+ "chunkSeconds": 10,
+ "chunkFrames": 300,
+ "codeSha256": "576e7e687f870692396fa71bee070bcdaa0d654057d5299e998f353cb13cf4a5",
+ "files": {
+  "scene": {
+   "path": "films/channels/body/ep01/scene.mjs",
+   "sha256": "bb806edf3f38252cc421ce0b6b1c6e5d7e5c04e36248a883a9ef88724b7943a8"
+  },
+  "film.json": {
+   "path": "films/channels/body/ep01/film.json",
+   "sha256": "c1fce720fc180adb1583e05cb7211418f7496daf872cbeadf961f605d2c41cd0"
+  },
+  "theme.json": {
+   "path": "films/channels/body/theme.json",
+   "sha256": "55c44255b9c5550ad5db132e9d4a140c6b8b2320082336bf7dca05c2b43360d8"
+  },
+  "cinema3d.js": {
+   "path": "kits/cinema/cinema3d.js",
+   "sha256": "9c6c4e2876c3e6b0088f70eb7f5d561e86d67c935ed965f2313c6f97538390df"
+  },
+  "three.module.min.js": {
+   "path": "kits/cinema/vendor/three.module.min.js",
+   "sha256": "3e690ac7d180b0aadf0891bea39eec643e29e2d3e75c99b18689518665f69ba6"
+  },
+  "films/channels/body/set/look.js": {
+   "path": "films/channels/body/set/look.js",
+   "sha256": "0f32bf4dc98baf23dcf57adef06082683e9280fe6e73712c7701f21ddc91189c"
+  },
+  "films/channels/body/set/motif.js": {
+   "path": "films/channels/body/set/motif.js",
+   "sha256": "5b2f414e5915a8ebe557db4c7e867ed85d123f41c27e8bda665e11fd37078c54"
+  },
+  "films/channels/body/set/probe.js": {
+   "path": "films/channels/body/set/probe.js",
+   "sha256": "71552bfb72d3e64c4162e1ff8378805f21a3dff4a225588277bf691cdb7d82ee"
+  },
+  "films/channels/body/set/rbc.js": {
+   "path": "films/channels/body/set/rbc.js",
+   "sha256": "4e616c4a7c88f8d39ce18676133810eae714e84a7211602ff9eeb347bedd5dcf"
+  },
+  "films/channels/body/set/vessel.js": {
+   "path": "films/channels/body/set/vessel.js",
+   "sha256": "29ec50b98e8d2e83bf1bbd1bb5085546c6005aa484e4a88774df60d84f9ea3b9"
+  },
+  "kits/cinema/film/runtime.js": {
+   "path": "kits/cinema/film/runtime.js",
+   "sha256": "e9e4f046bd1b108f0999693e70121d9ca8c89cd9e8bb4792ea6fa6658890bf0f"
+  },
+  "kits/cinema/keys.js": {
+   "path": "kits/cinema/keys.js",
+   "sha256": "f17f0aa170a15505755fda1494ead6d5b8e986fedd6f93ec7e69ab054323a7e9"
+  },
+  "kits/cinema/sci/clock.js": {
+   "path": "kits/cinema/sci/clock.js",
+   "sha256": "1ff65c8908bd3eda320ad3d7a01c6cdd235ec5f0e0541308f605f1df39135e72"
+  },
+  "kits/cinema/sci/cutaway.js": {
+   "path": "kits/cinema/sci/cutaway.js",
+   "sha256": "06f84c4888720c1b3d29aeaa6ecb647176fbcc300538458eb460aafff9814c41"
+  },
+  "kits/cinema/sci/hud.js": {
+   "path": "kits/cinema/sci/hud.js",
+   "sha256": "e05cf73274b01ea9f3289dc5ef0a33c18906a4133c64a1fe0d86939776a6bb9d"
+  },
+  "kits/cinema/sci/path.js": {
+   "path": "kits/cinema/sci/path.js",
+   "sha256": "9cb44607fa821a79f72708cd91393fda80466dae42c8837fd836263f51af38bb"
+  },
+  "kits/cinema/sci/swarm.js": {
+   "path": "kits/cinema/sci/swarm.js",
+   "sha256": "85d4a7707a353c6b46a8b5b6a6370316e21147fff5ba60b460550eb915acd0b7"
+  },
+  "font:AtkinsonHyperlegibleNext-VF.woff2": {
+   "path": "films/channels/body/fonts/AtkinsonHyperlegibleNext-VF.woff2",
+   "sha256": "abde1ad5cf78b9ac575ef90d991f2e9101eb0b3b6668bde9a00e2e1e27d99afd"
+  },
+  "font:AtkinsonHyperlegibleMono-VF.ttf": {
+   "path": "films/channels/body/fonts/AtkinsonHyperlegibleMono-VF.ttf",
+   "sha256": "5ce8b1698d1ded7dff2178c1a3ad159470085a58ea239e8b2cb88f4fb4a6f646"
+  }
+ },
+ "pageSha256": "3cb377b58d24d80216773f112b035e83656e3f6ddf000a61f8159356c1a15fab",
+ "chromium": "153.0.8010.12",
+ "info": {
+  "page.mjs": "1d93148fad9d5ca5e77622b48859c9d9f9a9cc307d3d9769bd55b885d2cdd1a5",
+  "render.mjs": "f9cee36e910f3bec571cfe5eaa55bba478d441c0082e2f421c3121df0984d1b9",
+  "node": "v22.23.4",
+  "chromiumPath": "/opt/pw-browsers/chromium-1243/chrome-linux64/chrome",
+  "fontsMissing": []
+ },
+ "startedAt": "2026-11-03T09:19:26.702Z",
+ "mixed": [],
+ "runs": [
+  {
+   "at": "2026-11-03T09:19:26.702Z",
+   "pid": 194,
+   "args": [
+    "--film",
+    ".",
+    "--tier",
+    "final",
+    "--from",
+    "60",
+    "--to",
+    "70.4"
+   ],
+   "frames": 312,
+   "codeSha256": "576e7e687f870692396fa71bee070bcdaa0d654057d5299e998f353cb13cf4a5",
+   "endedAt": "2026-11-03T09:59:31.629Z",
+   "status": "done",
+   "rendered": 312,
+   "renderSecPerFrame": 7.508,
+   "wallSec": 2405,
+   "warnings": 0
+  }
+ ]
+}
