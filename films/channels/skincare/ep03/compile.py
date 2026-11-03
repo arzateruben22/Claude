@@ -62,7 +62,7 @@ CAM = {
               {"t": CUE["skin1"] + 0.2, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 21, "az": -9, "ease": "out3"},
               {"t": CUE["closer"], "target": [TX, 0, 0.5], "el": 42, **MK, "dist": 17, "az": -8, "ease": "inout2"},
               {"t": t_weave, "target": [TX, 0, 0], "el": 70, **MK, "dist": 6, "az": -3, "ease": "in2"}],   # down into the scar
-    "weave": [{"t": t_weave, "target": [WX, -60, 0], "el": 55, **WK, "dist": 700, "az": -20},   # from above the surface, through it...
+    "weave": [{"t": t_weave, "target": [WX, -120, 0], "el": 30, **WK, "dist": 1150, "az": -24},   # open inside the tissue (the dip covers the cut): no dive through the surface layer
               {"t": CUE["collagen"], "target": [WX, -130, 0], "el": 22, **WK, "dist": 1250, "az": -26, "ease": "inout2"},   # ...to the weave
               {"t": CUE["cut"], "target": [WX, -130, 0], "el": 26, **WK, "dist": 1350, "az": -20, "ease": "sine"},
               {"t": CUE["patches"], "target": [WX, -130, 0], "el": 30, **WK, "dist": 1050, "az": -16, "ease": "inout2"},   # into the empty gap

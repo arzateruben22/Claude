@@ -14,6 +14,7 @@ import { createWeave } from "../set/weave03.js";
 import { toneColor } from "../set/section.js";
 import { createStudio, skinMaterial, strandMaterial, cellMaterial, createGrain } from "../set/studio.js";
 import { DERMIS } from "../set/ref/textures.js";
+import { backdropCss, hazeVolume, richen, grade, bokeh } from "../set/prod.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, G = FILM.gauge, PL = FILM.place, FPS = FILM.fps || 30;
 const S1 = Math.min(W, H) / 1080;
@@ -47,7 +48,7 @@ const mkBlock = (x, scale) => {
   weave.group.traverse((o) => { if (o.isMesh && o.material && o.material.isMeshStandardMaterial) { o.material.envMapIntensity = 0.5; o.material.roughness = Math.min(o.material.roughness, 0.42); } });   // a little studio sheen on the threads
   const back = new THREE.Mesh(new THREE.PlaneGeometry(1500, 900), new THREE.MeshStandardMaterial({ roughness: 0.9, color: 0x4a3040 })); back.position.set(0, -EPI - 130, -420); g.add(back);   // the micrograph behind the section
   const epiMat = new THREE.MeshStandardMaterial({ roughness: 0.6, transparent: true, opacity: 0.94 });
-  const epi = new THREE.Mesh(new THREE.BoxGeometry(600, EPI, 300), epiMat); epi.position.y = -EPI / 2; g.add(epi);
+  const epi = new THREE.Mesh(new THREE.BoxGeometry(600, EPI, 300), epiMat); epi.position.y = -EPI / 2; g.add(epi); epiMat.userData.mesh = epi;
   const floor = new THREE.Mesh(new THREE.BoxGeometry(600, 12, 300), new THREE.MeshStandardMaterial({ roughness: 0.8 })); floor.position.y = -EPI - 266; g.add(floor);
   scene.add(g);
   return { g, weave, epiMat, floor, back };
@@ -69,11 +70,25 @@ const uv = createUVSkin({ seed: 7.0 }); uv.mesh.rotation.x = -0.18; scene.add(uv
 const imm = new THREE.Group(); uv.mesh.add(imm);
 const immMat = cellMaterial({ tint: [0.86, 0.9, 1.0], opacity: 0.8 }); immMat.transmission = 0;
 const IMM = Array.from({ length: 22 }, (_, i) => { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(0.075 + 0.03 * ((i * 7) % 5) / 4, 2), immMat); imm.add(m); const a = i * 2.39996, r = 1.4 + 0.9 * ((i * 13) % 7) / 7; return { m, a, r, v: ((i * 5) % 11) / 11 - 0.5 }; });
+// production pass: fibre surfaces on every weave, a graded volume behind the sets, haze, far bokeh, one grade
+for (const b of [adult, fetal, mouth, miceA, miceB]) richen(b.weave.group, { seed: 31, jitter: 0, hue: 0, micro: 0.7 });
+const dome = backdropCss(canvas, { top: "#3b2479", bottom: "#06030c" });
+const hz = hazeVolume(scene, { at: [PL.wx, -120, -80], size: [1600, 900, 300], color: "#c9b6ff", n: 5, op: 0.045 });
+const bk = bokeh(scene, { n: 140, box: [[PL.wx - 1400, PL.wx + 1400], [-700, 500], [-1600, -700]], size: 70, color: "#d9ccff", op: 0.3 });
+// the rope (whoa): "only as strong as a rope missing one strand in five": five twisted strands, one slipping away
+const rope = new THREE.Group(); rope.position.set(PL.wx, -10, 300); scene.add(rope);
+const ropeMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.93, 0.86, 0.76), roughness: 0.55, sheen: 0.5, sheenColor: new THREE.Color(1, 0.95, 0.9), clearcoat: 0.2 });
+const ropeLost = ropeMat.clone();
+const STRANDS = [0, 1, 2, 3, 4].map((i) => {
+  const pts = []; for (let k = 0; k <= 120; k++) { const u = k / 120, a = u * Math.PI * 2 * 3.2 + i * Math.PI * 2 / 5; pts.push(new THREE.Vector3(-185 + 370 * u, 15 * Math.sin(a), 15 * Math.cos(a))); }
+  const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 240, 7.5, 10), i === 2 ? ropeLost : ropeMat); rope.add(m); return m; });
+richen(rope, { seed: 7, jitter: 0, hue: 0, micro: 0.8 });
 const rig = createRig(FILM.cam);
 const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.updateMatrixWorld(); return uv.mesh.localToWorld(p).toArray(); };
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
+const gradeFx = grade(hudRoot, { vignette: 0.5 });
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.285, w: 0.8, h: 0.3 });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
 const day = createDaylight({ root: hudRoot, W, H, y: 0.7, label: "daylight" }); day.el.style.fontSize = "2.6vmin";
@@ -177,6 +192,15 @@ window.seek = function (t) {
   else if (isA || ["fetal", "mouth", "mice"].includes(shot)) { const bx = { fetal: PL.fx, mouth: PL.mx, mice: PL.mox }[shot] || PL.wx; placeDust(t, [bx, -150, 250], [900, 500, 300], 4); }
   else dust.visible = false;
   fstop = shot === "macro" ? 0.22 : shot === "macro2" ? 0.15 : 0; focusPt = [PL.tx, 0, SCAR[0]];   // the scar in focus
+  const isB = isA || ["fetal", "mouth", "mice"].includes(shot);   // the tissue blocks: a lens on them too, haze and bokeh around
+  if (isB) { fstop = 0.1; const bx = { fetal: PL.fx, mouth: PL.mx, mice: PL.mox }[shot] || PL.wx; focusPt = [bx, -110, 150]; hz.set({ at: [bx, -120, -80], t }); bk.points.position.x = bx - PL.wx; }
+  adult.epiMat.userData.mesh.visible = !(shot === "weave" && t < SH.weave + 1.0);   // the surface layer's shading bands at the cut: it fades in after
+  hz.group.visible = bk.points.visible = isB; bk.set({ t });
+  // the rope: in the test, from "rope" until the cut; on "strand" one of the five slips out and dims
+  const ropeOn = shot === "test" ? E.inout2(seg(t, CUE.four - 1.6, CUE.four - 1.0)) : 0;
+  rope.visible = ropeOn > 0.01; rope.scale.setScalar(0.6 + 0.4 * ropeOn); rope.rotation.x = 0.15 * t;
+  const lost = E.inout2(seg(t, CUE.four - 0.1, CUE.four + 0.9));
+  STRANDS[2].position.set(30 * lost, 48 * lost, 90 * lost); STRANDS[2].rotation.z = -0.08 * lost; ropeLost.transparent = true; ropeLost.opacity = 1 - 0.45 * lost; ropeLost.color.setRGB(1.0, 0.86 - 0.55 * lost, 0.76 - 0.5 * lost); ropeLost.emissive.setRGB(0.35 * lost, 0.05 * lost, 0.04 * lost);
 
   // ── the macro flight: the scar across the knee ──
   if (isM) terrain.set({ tone: SKIN.map((v) => v * 1.25), furrows: 0.35, scar: SCAR, scarGlow: 0 });
