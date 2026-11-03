@@ -136,7 +136,7 @@ const sebum = (H2, keepLeft) => {
   const P = H2.T.pores.filter(([x]) => (keepLeft ? x < 0 : x > 0) && Math.abs(x) < 20), Rs = rng(keepLeft ? 61 : 62), pick = P.filter(() => Rs() < 0.35);
   const mat = new THREE.MeshPhysicalMaterial({ color: 0xfff1e0, roughness: 0.05, clearcoat: 1, clearcoatRoughness: 0.03, transparent: true, opacity: 0.85, clippingPlanes: H2.clip });
   const im = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 12, 8), mat, pick.length), dm = new THREE.Object3D(), gp = H2.T.mesh.geometry.attributes.position, n = 401;
-  pick.forEach(([x, z], i) => { const ix = Math.round((x + 40) / 0.2), iz = Math.round((z + 40) / 0.2), y = gp.getY(iz * n + ix); const r = 0.05 + 0.05 * Rs(); dm.position.set(x, y + r * 0.2, z); dm.scale.set(r, r * 0.45, r); dm.updateMatrix(); im.setMatrixAt(i, dm.matrix); });
+  pick.forEach(([x, z], i) => { const ix = Math.max(0, Math.min(400, Math.round((x + 40) / 0.2))), iz = Math.max(0, Math.min(400, Math.round((z + 40) / 0.2))), y = gp.getY(iz * n + ix); const r = 0.05 + 0.05 * Rs(); dm.position.set(x, y + r * 0.2, z); dm.scale.set(r, r * 0.45, r); dm.updateMatrix(); im.setMatrixAt(i, dm.matrix); });
   H2.T.group.add(im); return { im, mat };
 };
 const SEB = [sebum(HL, true), sebum(HR, false)];
@@ -444,7 +444,7 @@ window.seek = function (t) {
   d1.forEach((e, i) => { e.style.opacity = fadeIn(t, M.mel + (i / d1.length) * (M.half - M.mel), 0.15).toFixed(3); });
   d2.forEach((e, i) => { e.style.opacity = fadeIn(t, M.mel + (i / d2.length) * (M.half - M.mel), 0.15).toFixed(3); });
   msub.style.opacity = fadeIn(t, M.small - 0.2, 0.4).toFixed(3);
-  msub.style.display = t >= M.small - 0.2 ? "" : "none"; melRows.style.display = melHead.style.display = t >= M.mel - 0.3 ? "" : "none";   // the plate grows as its rows arrive
+  msub.style.display = t >= M.small - 0.2 ? "" : "none"; melRows.style.display = t >= M.mel - 0.3 ? "grid" : "none"; melHead.style.display = t >= M.mel - 0.3 ? "block" : "none";   // the plate grows as its rows arrive
 
   // ── to scale: the test dose's film beside the paper ──
   const lift = shot === "film" ? Math.min(u01(t, G.rise), 1 - u01(t, G.back)) : 0;
