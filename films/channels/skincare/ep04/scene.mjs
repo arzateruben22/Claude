@@ -17,6 +17,7 @@ import { toneColor } from "../set/section.js";
 import { createStudio, skinMaterial, createShaft, createGrain } from "../set/studio.js";
 import { createBrow, browNormal } from "../set/brow04.js";
 import { createNMJ } from "../set/nmj04.js";
+import { createBalance, createMolecule } from "../set/scale04.js";
 import { SECTION, DERMIS } from "../set/ref/textures.js";
 import { richen, hazeVolume } from "../set/prod.js";
 import { lookV3, skinV3 } from "../set/look3.js";
@@ -37,7 +38,7 @@ let focusPt = [0, 0, 0], fstop = 0;
 window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 injectCss();
 const R = rng(4);
-const XJ = 500, XC = 1000;                                      // the places: the brow at x = 0, the junction, the cut face
+const XJ = 500, XC = 1000, XM = 1500, XS = 2000;                                      // the places: the brow at x = 0, the junction, the cut face
 const load = (uri, srgb = true) => new Promise((res) => { const img = new Image(); img.onload = () => { const t = new THREE.Texture(img); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.needsUpdate = true; res(t); }; img.src = uri; });
 
 // ── atmosphere: floating particles (soft discs; the depth of field turns them to bokeh) and haze cards ──
@@ -84,6 +85,15 @@ const hzJ1 = haze(260, 160, [XJ, 0, -46], "#2C1660", 0.55), hzJ2 = haze(200, 120
 const hvJ = hazeVolume(scene, { at: [XJ, 2, -14], size: [120, 70, 24], color: "#b9a6ff", n: 5, op: 0.05 });
 const shaftJ = createShaft({ from: [XJ - 16, 26, -6], to: [XJ + 3, -3, 1], radius: 4, color: "#B79BFF" }); scene.add(shaftJ.group);
 const dustJ = particles(380, [[XJ - 16, -6, -8], [XJ + 16, 14, 16]], 0.1, "#E9DEFF");
+
+// ── the non-skin props for the lethality lines: the balance (≈ 1 g against ≈ 1 g) and the toxin molecule ──
+const S = createBalance({ x: XS }); scene.add(S.group);
+const M = createMolecule({ x: XM }); scene.add(M.group);
+const shaftS = createShaft({ from: [XS - 7, 9, 3], to: [XS + 1, -1.5, 0], radius: 1.6, color: "#E6DAFF" }); scene.add(shaftS.group);
+const dustS = particles(260, [[XS - 4, -1.5, -1], [XS + 4, 3, 6]], 0.03, "#F1EAFF", 0.6);
+const hzS = haze(60, 40, [XS, 0, -6], "#2C1660", 0.4), hzM = haze(80, 50, [XM, 0, -9], "#2C1660", 0.45);
+const shaftM = createShaft({ from: [XM - 9, 12, -3], to: [XM + 1, -3, 0], radius: 2.6, color: "#C9B4FF" }); scene.add(shaftM.group);
+const dustM = particles(300, [[XM - 7, -5, -2], [XM + 7, 5, 9]], 0.05, "#E9DEFF");
 
 // ── the cut face: the stained micrograph under the skin's surface (as look test 2's dermis) ──
 const C = new THREE.Group(); C.position.x = XC; scene.add(C);
@@ -178,8 +188,10 @@ window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
-  const isB = ["brow", "brow2", "kerner", "dose", "close"].includes(shot), isJ = ["nmj", "nmj2", "nmj3", "nmj4", "gap", "regrow"].includes(shot), isC = shot === "cut";
-  BR.group.visible = isB; N.group.visible = isJ; C.visible = isC; backC.visible = isC; hzJ1.visible = hzJ2.visible = hzJ3.visible = isJ; hvJ.group.visible = isJ; hvJ.set({ op: 0.05, t });
+  const isN = shot === "note" || shot === "note2", isM = shot === "kerner";
+  const isB = ["brow", "browb", "brow2", "dose", "close"].includes(shot), isJ = ["nmj", "nmj2", "nmj3", "nmj4", "gap", "regrow"].includes(shot), isC = shot === "cut";
+  BR.group.visible = isB; N.group.visible = isJ; S.group.visible = hzS.visible = isN; M.group.visible = hzM.visible = isM;
+  shaftS.set({ op: isN ? 0.7 : 0 }); dustS.set(t, isN ? 1 : 0); shaftM.set({ op: isM ? 0.8 : 0 }); dustM.set(t, isM ? 1 : 0); C.visible = isC; backC.visible = isC; hzJ1.visible = hzJ2.visible = hzJ3.visible = isJ; hvJ.group.visible = isJ; hvJ.set({ op: 0.05, t });
   shaftBrow.set({ op: isB ? 0.6 * (1 - uvNow(t, shot)) : 0 }); shaftJ.set({ op: isJ ? 0.8 : 0 }); shaftC.set({ op: isC ? 1 : 0 });
   dustBrow.set(t, isB ? 1 : 0); dustJ.set(t, isJ ? 1 : 0); dustC.set(t, isC ? 1 : 0);
   let uv = 0;
@@ -191,7 +203,7 @@ window.seek = function (t) {
     let fs = 0.14;
     if (shot === "brow") { frown = 0.1 + 0.9 * u01(t, BW.frown); pos = mix3([2.4, -1.9, 36], [1.2, -1.0, 27], u); tgt = mix3([0, -1.0, 0], [0, -0.5, 0], u); }   // the upper face, one slow push toward the "11"
     else if (shot === "brow2") { frown = 0.3 + 0.7 * u01(t, BW.fold); pos = mix3([2.6, -1.0, 8.0], [1.8, -0.6, 6.5], u); tgt = [0, 0.75, 0]; }   // the crease setting, close
-    else if (shot === "kerner") { frown = 1 - 0.9 * u01(t, BW.slack); pos = mix3([0.6, -1.4, 18], [0.2, -2.2, 26], u); tgt = mix3([0, 0.0, 0], [0, 0.6, 0], u); }   // a slow pull back under the plate; the frown goes slack on "paralysis"
+    else if (shot === "browb") { frown = 1; pos = mix3([1.2, -1.0, 27], [1.0, -0.8, 24], u); tgt = [0, -0.5, 0]; }   // the brow again: the frown itself
     else if (shot === "dose") {   // wide, then a push to the crease on "twenty", then a rack to the plate on "kill"
       frown = 0.9; const p1 = u01(t, [SH.dose, D.frown]), p2 = u01(t, [D.frown, D.kill]);
       pos = mix3(mix3([1.4, -2.0, 32], [1.1, -1.8, 27], p1), [0.5, -1.0, 13], p2); tgt = mix3(mix3([0, -1.0, 0], [0, -0.9, 0], p1), [0, -0.6, 0], p2); uv = uvNow(t, shot);
@@ -208,6 +220,21 @@ window.seek = function (t) {
     if (shot === "dose" && fs > 0.15) { const dv = new THREE.Vector3(); camera.getWorldDirection(dv); focusPt = camera.position.clone().addScaledVector(dv, 13 - 9 * (fs - 0.14) / 0.5).toArray(); }   // the rack to the plate
   }
   const sw = seg(t, FILM.scan.sweep[0], FILM.scan.sweep[1]); scan.style.top = `${(sw * H).toFixed(1)}px`; scan.style.opacity = shot === "dose" && sw > 0 && sw < 1 ? "1" : "0";
+
+  // ── the balance and the molecule (no skin under a lethality line) ──
+  if (isN) {
+    const u = span(t, shot); S.set({ t });
+    if (shot === "note") look(mix3([XS + 1.6, 1.9, 8.5], [XS + 0.9, 1.4, 6.6], u), mix3([XS, 0.0, 0], [XS + 0.3, 0.1, 0], u));   // one slow push on the level pans
+    else look(mix3([XS + 2.6, 1.4, 5.2], [XS + 2.0, 1.1, 4.4], u), mix3([XS + 1.4, -0.8, 0], [XS + 1.4, -0.7, 0], u));        // the crystals, low under the plate
+    studio.aim([XS, 0.3, 0], [-0.7, 0.6, 0.4], [0.5, 0.5, -0.7]); studio.set({ key: 2.2, rim: 3.0, fill: 0.5, env: 0.8, warm: 0.3 });
+    focusPt = shot === "note" ? [XS, 0.3, 0] : [XS + 1.5, 0.35, 0]; fstop = 0.2; A.heap = S.at.heap();
+  }
+  if (isM) {
+    const u = span(t, shot); M.set({ t });
+    look(mix3([XM - 0.5, 0.8, 15], [XM + 0.4, 0.4, 11.5], u), mix3([XM, -1.4, 0], [XM, -1.2, 0], u));   // the molecule low in the frame, Kerner's plate above it
+    studio.aim([XM, 0, 0], [-0.55, 0.75, 0.5], [0.6, 0.4, -0.8]); studio.set({ key: 1.6, rim: 3.2, fill: 0.45, env: 0.7, warm: 0.1 });
+    focusPt = [XM, 0, 0]; fstop = 0.2;
+  }
 
   // ── the junction ──
   if (isJ) {
@@ -257,7 +284,7 @@ window.seek = function (t) {
   show(kerner, shot === "kerner" || shot === "nmj3" ? win(t, K.t0, K.t1, 0.4) : 0);
   k2.style.opacity = fadeIn(t, K.guessed, 0.5).toFixed(3);
   if (sp) sp.style.color = t >= K.sausages ? "var(--water)" : "inherit";
-  show(dose, shot === "dose" ? win(t, D.t0, D.t1) : 0);
+  show(dose, shot === "dose" || shot === "note2" ? win(t, D.t0, D.t1) : 0);
   b1.style.width = `max(0.5vmin, ${(100 * frac * fadeIn(t, D.frown, 0.4)).toFixed(3)}%)`;   // on one scale: the frown's dose a sliver of the plate's width
   b2.style.width = `${(100 * E.out3(seg(t, D.kill - 0.1, D.kill + 1.2))).toFixed(2)}%`;           // the lethal estimate runs the full width
   r1.style.opacity = fadeIn(t, D.frown - 0.2, 0.3).toFixed(3); r2.style.opacity = fadeIn(t, D.kill - 0.2, 0.3).toFixed(3);
@@ -270,12 +297,12 @@ window.seek = function (t) {
 
   // ── the veil: three frames of the ground on each scale jump; the scene sinks back under the end card ──
   let step = 0;
-  for (const c of [SH.nmj, SH.cut, SH.nmj2, SH.nmj4, SH.gap]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
+  for (const c of [SH.nmj, SH.cut, SH.nmj2, SH.nmj4, SH.gap, SH.note, SH.kerner]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
   veil.style.opacity = (0.55 * step).toFixed(4);   // the end card's own scrim veils the brow (≈ 60 %)
 
   grain.set(t);
   hud.update(t);
-  const stack = shot === "dose" && Number(dose.style.opacity) > 0.5;   // the spine as the dose plate's top row
+  const stack = (shot === "dose" || shot === "note2") && Number(dose.style.opacity) > 0.5;   // the spine as the dose plate's top row
   spineEl.classList.toggle("ol-card-top", stack); dose.classList.toggle("ol-card-body", stack);
   if (stack) card(); else spineEl.style.width = "";
   if (lift > 0) spineEl.style.opacity = (Number(spineEl.style.opacity || 1) * (1 - lift)).toFixed(3);   // the gauge owns the top while it is lifted

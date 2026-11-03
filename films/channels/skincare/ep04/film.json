@@ -10,6 +10,14 @@
    "name": "brow"
   },
   {
+   "at": 2.033333333333333,
+   "name": "note"
+  },
+  {
+   "at": 5.933333333333334,
+   "name": "browb"
+  },
+  {
    "at": 7.2,
    "name": "nmj"
   },
@@ -35,7 +43,15 @@
   },
   {
    "at": 39.6667,
+   "name": "nmj4"
+  },
+  {
+   "at": 44.733333333333334,
    "name": "dose"
+  },
+  {
+   "at": 46.53333333333333,
+   "name": "note2"
   },
   {
    "at": 51.8,
@@ -51,14 +67,18 @@
   }
  ],
  "next": {
-  "brow": 7.2,
+  "brow": 2.033333333333333,
+  "note": 5.933333333333334,
+  "browb": 7.2,
   "nmj": 13.766666666666667,
   "brow2": 16.666666666666668,
   "cut": 19.966666666666665,
   "nmj2": 27.0667,
   "kerner": 36.6,
   "nmj3": 39.6667,
-  "dose": 51.8,
+  "nmj4": 44.733333333333334,
+  "dose": 46.53333333333333,
+  "note2": 51.8,
   "gap": 59.2667,
   "regrow": 66.73333333333333,
   "close": 74.6667
@@ -130,6 +150,9 @@
  "cue": {
   "poison": 0.1,
   "frown": 1.0666666666666667,
+  "in2": 2.033333333333333,
+  "theory": 2.3,
+  "could1": 3.9,
   "banknote": 2.966666666666667,
   "million": 4.4,
   "every": 5.933333333333334,
@@ -155,6 +178,7 @@
   "units": 41.233333333333334,
   "mice": 43.53333333333333,
   "one": 44.733333333333334,
+  "under": 46.53333333333333,
   "twenty": 45.766666666666666,
   "hundredth": 46.9,
   "kill": 47.766666666666666,
@@ -274,6 +298,17 @@
  },
  "labels": [
   {
+   "id": "l-heap",
+   "text": "≈ 1 g of crystalline toxin",
+   "kind": "uv",
+   "anchor": "heap",
+   "t0": 3.9,
+   "t1": 5.3333,
+   "shot": "note",
+   "side": -1,
+   "v": "above"
+  },
+  {
    "id": "l-nerve",
    "text": "nerve ending",
    "kind": "cell",
@@ -312,16 +347,30 @@
    "id": "b-model",
    "text": "model, not a photo",
    "t0": 0.0,
+   "t1": 1.4333,
+   "slot": "tr"
+  },
+  {
+   "id": "b-illusN",
+   "text": "illustration",
+   "t0": 2.333333333333333,
+   "t1": 5.3333,
+   "slot": "tr"
+  },
+  {
+   "id": "b-modelB",
+   "text": "model, not a photo",
+   "t0": 6.133333333333334,
    "t1": 6.6,
-   "slot": "bl"
+   "slot": "tr"
   },
   {
    "id": "b-gram",
    "kind": "card",
-   "title": "≈ 1 g, inhaled and evenly dispersed",
+   "title": "≈ 1 g inhaled, ideal dispersal",
    "text": "theoretical (JAMA 2001)",
-   "t0": 2.966666666666667,
-   "t1": 6.6,
+   "t0": 2.3,
+   "t1": 5.3333,
    "slot": "bl"
   },
   {
@@ -354,7 +403,7 @@
   },
   {
    "id": "b-model3",
-   "text": "model, not a photo",
+   "text": "illustration",
    "t0": 27.3667,
    "t1": 36.0,
    "slot": "tl"
@@ -363,13 +412,13 @@
    "id": "b-illus2",
    "text": "illustration",
    "t0": 36.9,
-   "t1": 39.0667,
+   "t1": 44.1333,
    "slot": "tl"
   },
   {
    "id": "b-uv",
    "text": "illustration",
-   "t0": 46.516666666666666,
+   "t0": 45.03333333333333,
    "t1": 51.2,
    "slot": "tl"
   },
@@ -382,15 +431,10 @@
   },
   {
    "id": "b-months",
-   "text": "≈ 3–4 months, time compressed",
-   "t0": 59.5667,
-   "t1": 66.1333,
-   "slot": "tl"
-  },
-  {
-   "id": "b-mice",
+   "kind": "card",
+   "title": "≈ 3–4 months, time compressed",
    "text": "mouse studies; in people, debated",
-   "t0": 63.93333333333334,
+   "t0": 59.5667,
    "t1": 66.1333,
    "slot": "tl"
   },
@@ -405,12 +449,24 @@
  "counters": [],
  "spine": {
   "id": "c-spine",
-  "t0": 2.3000000000000003,
+  "t0": 2.966666666666667,
   "t1": 67.33333333333333,
   "kill": 47.766666666666666,
   "at": [
-   0.5,
-   0.235
+   [
+    0.0,
+    [
+     0.5,
+     0.235
+    ]
+   ],
+   [
+    59.2667,
+    [
+     0.5,
+     0.34
+    ]
+   ]
   ],
   "labels": [
    [

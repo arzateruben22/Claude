@@ -43,14 +43,14 @@ TONE = "light"          # bible §1: one melanin level per episode (004: light)
 # ── the words the picture hangs on ───────────────────────────────────────
 t_end = A("vo08:Next:", -0.25)
 CUE = {
-    "poison": A("vo01:Poison,"), "frown": A("vo01:frown?"), "banknote": A("vo01:banknote's"), "million": A("vo01:million."),
+    "poison": A("vo01:Poison,"), "frown": A("vo01:frown?"), "in2": A("vo01:In#2"), "theory": A("vo01:theory,"), "could1": A("vo01:could"), "banknote": A("vo01:banknote's"), "million": A("vo01:million."),
     "every": A("vo02:Every"), "nerve": A("vo02:nerve"), "messenger": A("vo02:messenger"), "muscle": A("vo02:muscle"),
     "pulls": A("vo02:pulls,"), "skin": A("vo02:skin"), "folds": A("vo02:folds"), "crease": A("vo02:crease."),
     "botulinum": A("vo03:Botulinum"), "touches": A("vo03:touches"), "slips": A("vo03:slips"), "cuts": A("vo03:cuts"),
     "needs": A("vo03:needs,"), "waits": A("vo03:waits,"), "leaves": A("vo03:leaves."),
     "justinus": A("vo04:Justinus"), "paralysis": A("vo04:paralysis"), "sausages": A("vo04:sausages,"), "guessed": A("vo04:guessed"),
     "medicine": A("vo04:medicine."),
-    "units": A("vo05:units,"), "mice": A("vo05:mice."), "one": A("vo05:One"), "twenty": A("vo05:twenty,"), "hundredth": A("vo05:hundredth"),
+    "units": A("vo05:units,"), "mice": A("vo05:mice."), "one": A("vo05:One"), "under": A("vo05:under"), "twenty": A("vo05:twenty,"), "hundredth": A("vo05:hundredth"),
     "kill": A("vo05:kill"), "person": A("vo05:person."),
     "gap": A("vo06:gap"), "thousand": A("vo06:thousand"), "paper": A("vo06:paper."),
     "silenced": A("vo07:silenced,"), "months": A("vo07:months"), "grows": A("vo07:grows"), "endings": A("vo07:endings,"),
@@ -59,15 +59,18 @@ CUE = {
 
 # ── the hero shots; every cut on a word ─────────────────────────────────
 SHOTS = [
-    {"at": 0.0, "name": "brow"},                         # hook: the frown, a skin macro, one slow push into the "11"
+    {"at": 0.0, "name": "brow"},                         # hook: "Poison, in a frown?": the upper face, the frown setting
+    {"at": CUE["in2"], "name": "note"},                  # "In theory … kill a million": the balance, a paper note level with ≈ 1 g of crystals (no lethality line over skin)
+    {"at": CUE["every"], "name": "browb"},               # the brow again, now the subject is the frown itself
     {"at": CUE["nerve"], "name": "nmj"},                 # the scale jump below: the nerve ending on the muscle
     {"at": CUE["skin"], "name": "brow2"},                # "the skin above folds into a crease": the brow, the frown setting
     {"at": CUE["botulinum"], "name": "cut"},             # "never touches the skin": the stained cut face, the push down past it
     {"at": CUE["slips"], "name": "nmj2"},                # inside the nerve ending: the toxin, the cut, the message waits
-    {"at": B["why"]["t0"], "name": "kerner"},            # the brow, pulled back, Kerner's plate; the frown goes slack on "paralysis"
+    {"at": B["why"]["t0"], "name": "kerner"},            # Kerner's plate over the toxin molecule (an illustration; "deadly paralysis" never over skin)
     {"at": CUE["medicine"], "name": "nmj3"},             # back to the silenced ending (the plate leaves with the cut)
     {"at": B["whoa"]["t0"], "name": "nmj4"},             # "counted in units, measured by their effect on mice": the silenced ending, one slow orbit
-    {"at": CUE["one"], "name": "dose"},             # the brow; the UV scan on "twenty"; the dose plate
+    {"at": CUE["one"], "name": "dose"},
+    {"at": CUE["under"], "name": "note2"},               # "under a hundredth of what could kill a person": back to the balance, the plate's lethal bar (no lethality line over skin)             # the brow; the UV scan on "twenty"; the dose plate
     {"at": B["toscale"]["t0"], "name": "gap"},           # the cleft, the gauge lifted
     {"at": B["takeaway"]["t0"], "name": "regrow"},       # the spare endings grow, then are pruned
     {"at": A("vo07:away.", 0.45), "name": "close"},      # the brow, the crease returning, under the end card (the loop)
@@ -90,18 +93,21 @@ SCAN = {"sweep": [CUE["twenty"] - 0.05, CUE["twenty"] + 0.75]}   # the signature
 # ── the overlay: at most two labels at once; honesty notes small, in a corner ──
 TITLE = {"series": "Skin Sense · No. 004", "title": "The deadliest *dose*", "t1": A("vo01:theory,", -0.2), "sig": A("vo01:frown?", 0.35)}
 LABELS = [
+    {"id": "l-heap", "text": "≈ 1 g of crystalline toxin", "kind": "uv", "anchor": "heap", "t0": CUE["could1"], "t1": CUE["every"], "shot": "note", "side": -1, "v": "above"},
     {"id": "l-nerve", "text": "nerve ending", "kind": "cell", "anchor": "bulb", "t0": CUE["nerve"] + 0.4, "t1": CUE["muscle"], "shot": "nmj", "side": -1, "v": "above"},
     {"id": "l-ach", "text": "acetylcholine", "kind": "water", "anchor": "gap", "t0": CUE["messenger"] + 0.75, "t1": CUE["skin"], "shot": "nmj", "side": 1, "v": "above"},
     {"id": "l-snap", "text": "SNAP-25", "kind": "water", "anchor": "snap", "t0": CUE["cuts"] + 0.3, "t1": B["why"]["t0"], "shot": "nmj2", "side": 1, "v": "above"},
 ]
 BADGES = [
-    {"id": "b-model", "text": "model, not a photo", "t0": 0.0, "t1": CUE["nerve"], "slot": "tr"},
-    {"id": "b-gram", "kind": "card", "title": "≈ 1 g inhaled, ideal dispersal", "text": "theoretical (JAMA 2001)", "t0": CUE["banknote"], "t1": CUE["nerve"], "slot": "bl"},   # bottom left with the model note: the top holds the title, then the spine
+    {"id": "b-model", "text": "model, not a photo", "t0": 0.0, "t1": CUE["in2"], "slot": "tr"},
+    {"id": "b-illusN", "text": "illustration", "t0": CUE["in2"] + 0.3, "t1": CUE["every"], "slot": "tr"},
+    {"id": "b-modelB", "text": "model, not a photo", "t0": CUE["every"] + 0.2, "t1": CUE["nerve"], "slot": "tr"},
+    {"id": "b-gram", "kind": "card", "title": "≈ 1 g inhaled, ideal dispersal", "text": "theoretical (JAMA 2001)", "t0": CUE["theory"], "t1": CUE["every"], "slot": "bl"},   # bottom left with the model note: the top holds the title, then the spine
     {"id": "b-simp", "text": "simplified · not to scale", "t0": CUE["nerve"] + 0.3, "t1": CUE["skin"], "slot": "tl"},
     {"id": "b-model2", "text": "model, not a photo", "t0": CUE["skin"] + 0.2, "t1": CUE["botulinum"], "slot": "tl"},
     {"id": "b-micro", "text": "tissue photo · stained skin", "t0": CUE["botulinum"] + 0.25, "t1": CUE["slips"], "slot": "tl"},
     {"id": "b-illus", "text": "illustration", "t0": CUE["slips"] + 0.3, "t1": B["why"]["t0"], "slot": "tl"},
-    {"id": "b-model3", "text": "model, not a photo", "t0": B["why"]["t0"] + 0.3, "t1": CUE["medicine"], "slot": "tl"},
+    {"id": "b-model3", "text": "illustration", "t0": B["why"]["t0"] + 0.3, "t1": CUE["medicine"], "slot": "tl"},
     {"id": "b-illus2", "text": "illustration", "t0": CUE["medicine"] + 0.3, "t1": CUE["one"], "slot": "tl"},
     {"id": "b-uv", "text": "illustration", "t0": CUE["one"] + 0.3, "t1": B["toscale"]["t0"], "slot": "tl"},   # the dose shot's one corner note
     {"id": "b-gap", "text": "≈ 50 nm, varies by site · simplified", "t0": B["toscale"]["t0"] + 0.3, "t1": B["takeaway"]["t0"], "slot": "tl"},
@@ -109,7 +115,7 @@ BADGES = [
     {"id": "b-model4", "text": "model, not a photo", "t0": SH["close"] + 0.3, "t1": t_end, "slot": "tl"},
 ]
 # the spine readout: the payoff's number, held lit from the takeaway to the end card (after the gauge, which owns the top)
-SPINE = {"id": "c-spine", "t0": TITLE["t1"] + 0.5,   # after the title is fully out
+SPINE = {"id": "c-spine", "t0": CUE["banknote"],   # after the title is fully out; clear of the note's and the label's cues
          "t1": t_end - 0.4, "kill": CUE["kill"], "at": [[0.0, [0.5, 0.235]], [B["takeaway"]["t0"], [0.5, 0.34]]],   # lower in the takeaway, under its note
          "labels": [[0.0, "one frown's dose"], [CUE["kill"], "one frown, of a lethal dose"]], "q": "?", "a": "< 1 %"}
 COUNTERS = []
