@@ -84,8 +84,8 @@ LAB_Y = 0.5
 LABELS = [
     {"id": "l-daily", "text": "daily", "kind": "water", "t0": CUE["morning"] - 0.2, "t1": CUE["researchers"] - 0.1, "screen": [0.12, LAB_Y], "side": 1},
     {"id": "l-pleased", "text": "as they pleased", "kind": "uv", "t0": CUE["pleased"] - 0.3, "t1": CUE["researchers"] - 0.1, "screen": [0.83, LAB_Y], "side": -1},
-    {"id": "l-sun", "text": "sunscreen", "kind": "water", "t0": CUE["camera"], "t1": B["whoa"]["t0"], "screen": [0.12, 0.52], "side": 1},
-    {"id": "l-bare", "text": "bare skin", "kind": "uv", "t0": CUE["camera"], "t1": B["whoa"]["t0"], "screen": [0.83, 0.52], "side": -1},
+    {"id": "l-sun", "text": "sunscreen", "kind": "water", "t0": CUE["camera"], "t1": B["whoa"]["t0"] - 0.6, "screen": [0.12, 0.52], "side": 1},
+    {"id": "l-bare", "text": "bare skin", "kind": "uv", "t0": CUE["camera"], "t1": B["whoa"]["t0"] - 0.6, "screen": [0.83, 0.52], "side": -1},
 ]
 BADGES = [
     {"id": "b-model0", "text": "model, not a photo", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "tr"},
