@@ -52,8 +52,18 @@ const mkBlock = (x, scale) => {
   scene.add(g);
   return { g, weave, epiMat, floor, back };
 };
+const MUCOSA = new THREE.Color(0.86, 0.42, 0.46);   // mouth lining: pinker, wetter
 const FS = 0.62;   // fetal skin: a smaller block
 const adult = mkBlock(PL.wx, 1), fetal = mkBlock(PL.fx, FS);
+// adult mouth lining: no hair follicles, a cut that closes nearly seamlessly (an illustration)
+const mouth = mkBlock(PL.mx, FS);
+// the mouse study (Martin et al., 2003), stacked: with germ-fighting cells, a patch; without them, the weave regrown
+const MSC = 0.42, miceA = mkBlock(PL.mox, MSC), miceB = mkBlock(PL.mox, MSC);
+miceA.g.position.y = 225; miceB.g.position.y = -50;
+const immA = new THREE.Group(); miceA.g.add(immA);
+const immAMat = cellMaterial({ tint: [0.86, 0.92, 1.0], opacity: 0.9 }); immAMat.transmission = 0;
+const IMMA = Array.from({ length: 26 }, (_, i) => { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(8 + 3 * ((i * 7) % 5) / 4, 2), immAMat); immA.add(m);
+  return { m, x: ((i * 37) % 13 - 6) * 10, y: -110 - ((i * 11) % 7) * 12, z: ((i * 23) % 17 - 8) * 16, ph: i * 0.7 }; });
 const uv = createUVSkin({ seed: 7.0 }); uv.mesh.rotation.x = -0.18; scene.add(uv.mesh);
 // the defence: germ-fighting cells gathering at the seam (the mouse study, a model)
 const imm = new THREE.Group(); uv.mesh.add(imm);
@@ -77,11 +87,11 @@ const dustMat = new THREE.PointsMaterial({ map: dotTex, color: 0xf0e8ff, transpa
 const dust = new THREE.Points(dustGeo, dustMat); dust.frustumCulled = false; scene.add(dust);
 const placeDust = (t, c, size, pt) => { dust.visible = true; dustMat.size = pt; dustBase.forEach(([x, y, z, ph], i) => { dustPos[3 * i] = c[0] + x * size[0] + 0.03 * size[0] * Math.sin(t * 0.3 + ph); dustPos[3 * i + 1] = c[1] + y * size[1] + 0.02 * size[1] * Math.sin(t * 0.21 + ph); dustPos[3 * i + 2] = c[2] + z * size[2]; }); dustGeo.attributes.position.needsUpdate = true; };
 window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true;
-  for (const b of [adult, fetal]) { b.back.material.map = tx; b.back.material.color.setRGB(0.38, 0.3, 0.4); b.back.material.needsUpdate = true; } res(); }; img.onerror = () => res(); img.src = DERMIS; });
+  for (const b of [adult]) { b.back.material.map = tx; b.back.material.color.setRGB(0.38, 0.3, 0.4); b.back.material.needsUpdate = true; } res(); }; img.onerror = () => res(); img.src = DERMIS; });
 // the micrograph behind the weave is a real photo: said so, under the captions, while it shows
 const photoNote = document.createElement("div"); photoNote.textContent = "behind: a tissue photo (normal skin)";
-Object.assign(photoNote.style, { position: "absolute", left: "50%", top: `${0.705 * H}px`, transform: "translateX(-50%)", fontFamily: "var(--font-mono)", fontSize: "2.3vmin", letterSpacing: ".04em", textTransform: "uppercase",
-  color: "var(--text-2)", background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1vmin", whiteSpace: "nowrap", zIndex: 3, opacity: "0", pointerEvents: "none" });
+Object.assign(photoNote.style, { position: "absolute", left: "50%", top: `${0.285 * H}px`, transform: "translateX(-50%)", fontFamily: "var(--font-mono)", fontSize: "2.9vmin", letterSpacing: ".03em", textTransform: "none",
+  color: "var(--text)", background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1vmin", whiteSpace: "nowrap", zIndex: 3, opacity: "0", pointerEvents: "none" });
 hudRoot.appendChild(photoNote);
 const dip = document.createElement("div");
 Object.assign(dip.style, { position: "absolute", inset: "0", background: "var(--bg, #2C1660)", opacity: "0", zIndex: 1, pointerEvents: "none" });
@@ -153,16 +163,18 @@ function createTopGauge() {
 window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
   if (stage(t).name !== stage(tr).name) t = tr;
-  const shot = stage(t).name;
-  rig.place(camera, shot, t);
+  const shotRaw = stage(t).name;
+  rig.place(camera, shotRaw, t);
+  const shot = shotRaw === "uvb" ? "uv" : shotRaw;   // uvb: the UV scar again, for "the price of defence"
   const isA = ["weave", "test", "gauge"].includes(shot);
   const isM = shot === "macro" || shot === "macro2";
   terrain.group.visible = isM; adult.g.visible = isA; fetal.g.visible = shot === "fetal"; uv.mesh.visible = shot === "uv";
+  mouth.g.visible = shot === "mouth"; miceA.g.visible = miceB.g.visible = shot === "mice";
   scene.fog = isM ? FOG : null;
   lights.sun.intensity = isM ? 3.0 : 1.8; lights.key.intensity = isM ? 0.45 : 1.3;
   studio.set({ key: isM ? 0.5 : 1.1, rim: isM ? 1.6 : 2.2, fill: 0.3, env: shot === "uv" ? 0 : 0.45, warm: isM ? 0.6 : 0.3 });
   if (isM) placeDust(t, [PL.tx, 2, 0], [30, 8, 24], 0.1);
-  else if (isA || shot === "fetal") { const bx = shot === "fetal" ? PL.fx : PL.wx; placeDust(t, [bx, -150, 250], [900, 500, 300], 4); }
+  else if (isA || ["fetal", "mouth", "mice"].includes(shot)) { const bx = { fetal: PL.fx, mouth: PL.mx, mice: PL.mox }[shot] || PL.wx; placeDust(t, [bx, -150, 250], [900, 500, 300], 4); }
   else dust.visible = false;
   fstop = shot === "macro" ? 0.22 : shot === "macro2" ? 0.15 : 0; focusPt = [PL.tx, 0, SCAR[0]];   // the scar in focus
 
@@ -205,6 +217,23 @@ window.seek = function (t) {
     fetal.epiMat.color.setRGB(...epiCol.map((v) => Math.min(1, v * 1.1))); fetal.epiMat.opacity = 0.3;
     fetal.floor.material.color.setRGB(...toneColor("dermis", tone));
   }
+  // ── adult mouth lining: the cut closes, the weave nearly as it was; no follicles (none in the mouth lining) ──
+  if (shot === "mouth") {
+    const mcut = E.inout2(seg(t, SH.mouth + 0.15, SH.mouth + 0.6)), mre = E.inout2(seg(t, SH.mouth + 0.9, SH.mouth + 2.6));
+    mouth.weave.set({ tone, cut: mcut, regrow: 0.93 * mre, patch: 0.07 * mre, follicles: 0, glow: 0 });
+    mouth.weave.group.traverse((o) => { if (o.isMesh && o.material && o.material.color) o.material.color.lerp(MUCOSA, 0.35); });
+    mouth.epiMat.color.copy(MUCOSA); mouth.epiMat.opacity = 0.32;
+    mouth.floor.material.color.setRGB(...toneColor("dermis", tone));
+  }
+  A.mgap = [PL.mx, -110 * FS, 150 * FS];
+  // ── the mouse study: with the cells (top) a patch forms; without them (bottom) the weave regrows ──
+  if (shot === "mice") {
+    const k = E.inout2(seg(t, SH.mice + 0.5, SH.mice + 2.2));
+    miceA.weave.set({ tone, cut: 1, patch: k, glow: 0.35 * k, follicles: 1 }); miceB.weave.set({ tone, cut: 1, regrow: k, follicles: 1 });
+    for (const b of [miceA, miceB]) { b.epiMat.color.setRGB(...epiCol); b.epiMat.opacity = 0.3; b.floor.material.color.setRGB(...toneColor("dermis", tone)); }
+    IMMA.forEach(({ m, x, y, z, ph }, i) => { const g = E.out3(seg(t, SH.mice + 0.1 + 0.025 * i, SH.mice + 0.9 + 0.025 * i)); m.position.set(x * (0.4 + 0.6 * g) + 4 * Math.sin(t * 1.3 + ph), y + 160 * (1 - g), z); m.scale.setScalar(0.3 + 0.7 * g); });
+  }
+  A.miceL = [PL.mox, 225 + 20, 150 * MSC]; A.miceR = [PL.mox, -50 + 20, 150 * MSC];
   A.fgap = [PL.fx, -110 * FS, 150 * FS]; A.fside = [PL.fx - 150 * FS, -40 * FS, 150 * FS];
 
   // ── the gauge: a centred card above the section: the top layer ≈ a sheet of paper, the weave below ──
@@ -214,16 +243,17 @@ window.seek = function (t) {
   // ── the UV camera on the scar: a seam with no pores and no pattern ──
   // the knee again, in daylight, then the UV camera switches on: the seam with no pores and no pattern
   if (shot === "uv") uv.set({ damage: 0.35, scar: 1, glow: 1, opacity: 1 });
-  imm.visible = shot === "uv";
-  if (shot === "uv") { const c = uv.at(0.66, 0.5), g = E.inout2(seg(t, CUE.repair - 0.2, CUE.repair + 2.6));
-    IMM.forEach(({ m, a, r, v }, i) => { const rr = r * (1 - 0.82 * g) + 0.1, aa = a + 0.25 * t; m.position.set(c[0] + 0.25 * rr * Math.cos(aa), c[1] + rr * Math.sin(aa) * 0.9 + v * 0.3 * g, c[2] + 0.12 + 0.03 * Math.sin(t * 2 + i)); m.scale.setScalar(0.4 + 0.6 * E.out3(seg(t, CUE.repair - 0.3 + 0.03 * i, CUE.repair + 0.3 + 0.03 * i))); }); }
+  imm.visible = shotRaw === "uvb";   // the defence at the seam, with "the price of defence"
+  if (shotRaw === "uvb") { const c = uv.at(0.66, 0.5), g = E.inout2(seg(t, SH.uvb - 0.2, SH.uvb + 2.2));
+    IMM.forEach(({ m, a, r, v }, i) => { const rr = r * (1 - 0.82 * g) + 0.1, aa = a + 0.25 * t; m.position.set(c[0] + 0.25 * rr * Math.cos(aa), c[1] + rr * Math.sin(aa) * 0.9 + v * 0.3 * g, c[2] + 0.12 + 0.03 * Math.sin(t * 2 + i)); m.scale.setScalar(0.4 + 0.6 * E.out3(seg(t, SH.uvb - 0.3 + 0.03 * i, SH.uvb + 0.3 + 0.03 * i))); }); }
   day.set({ op: shot === "uv" ? fadeIn(t, SH.uv + 0.6, 0.5) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
   const dz = (c) => Math.max(0, 1 - Math.abs(t - c) / 0.14);
-  dip.style.opacity = Math.max(dz(SH.weave), dz(SH.fetal), dz(SH.gauge), dz(SH.uv)).toFixed(3);   // macro2 rises out of the skin instead
+  dip.style.opacity = Math.max(dz(SH.weave), dz(SH.fetal), dz(SH.mouth), dz(SH.gauge), dz(SH.uv), dz(SH.mice), dz(SH.uvb)).toFixed(3);   // macro2 rises out of the skin instead
   A.uvscar = uvAt(0.66, 0.5);
   vf.set({ op: shot === "uv" ? fadeIn(t, SH.uv, 0.4) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
 
-  photoNote.style.opacity = (["weave", "test", "fetal", "gauge"].includes(shot) ? fadeIn(t, SH.weave + 0.3, 0.4) * (1 - fadeIn(t, SH.macro2 - 0.4, 0.3)) : 0).toFixed(3);
+  photoNote.style.opacity = isA ? "1" : "0";
+  photoNote.style.top = `${({ test: 0.43, gauge: 0.495 }[shot] || 0.285) * H}px`;   // clear of the strength meter and the gauge card   // the micrograph is only behind the adult weave: the note is up on every frame it shows
   grain.set(t);
   hud.update(t);
   tBars.update(t);
