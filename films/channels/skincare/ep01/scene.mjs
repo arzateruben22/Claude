@@ -43,7 +43,7 @@ window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 // ── the set ─────────────────────────────────────────────────────────────────
 const uv = createUVSkin({ seed: 3.0 }); uv.mesh.rotation.x = -0.18; scene.add(uv.mesh);
 const SPOT = [0.6, 0.45, 0.055];
-const terrain = createTerrain({ seed: 9, spots: 0, segs: 400 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+const terrain = createTerrain({ seed: 9, spots: 0, segs: 400, organic: true }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
 { const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.08, hydration: 0.3, repeat: 14, seed: 6, micro: 0.35 }); m.roughness = 0.58; terrain.mesh.material = m;
   terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.3, 0.18, 0.12], gloss: 0.5 }); o.material.transmission = 0; } }); }
 const F = createAcneFollicle({ x: PL.fx, seed: 21, width: 4000, depth: 2300 }), Gf = createAcneFollicle({ x: PL.gx, seed: 22, block: false });   // one wide strip of skin holds both follicles

@@ -18,7 +18,7 @@ export const goldenHour = (scene, { fog = [55, 110] } = {}) => {
   return { sun, key };
 };
 
-export const createTerrain = ({ size = 80, segs = 360, pore = 3.2, seed = 7, hair = true, spots = 0, half = "right" } = {}) => {
+export const createTerrain = ({ size = 80, segs = 360, pore = 3.2, seed = 7, hair = true, spots = 0, half = "right", organic = false } = {}) => {   // organic (opt-in, look v3): irregular plateaus and pores of varied size, not a diamond tile
   const R = rng(seed), S = size;
   const geo = new THREE.PlaneGeometry(S, S, segs, segs); geo.rotateX(-Math.PI / 2);
   const pos = geo.attributes.position, base = Float32Array.from(pos.array), cols = new Float32Array(pos.count * 3);
@@ -33,11 +33,21 @@ export const createTerrain = ({ size = 80, segs = 360, pore = 3.2, seed = 7, hai
   const F = new Float32Array(pos.count), P = new Float32Array(pos.count), K = new Float32Array(pos.count), N = new Float32Array(pos.count), Y0 = new Float32Array(pos.count);
   for (let i = 0; i < pos.count; i++) {
     const x = base[3 * i], z = base[3 * i + 2];
-    const d1 = Math.abs(Math.sin((x + z) * 0.55 + 0.6 * fbm(x * 0.2, z * 0.2))), d2 = Math.abs(Math.sin((x - z) * 0.48 + 0.7 * fbm(x * 0.2 + 5, z * 0.2)));
-    F[i] = Math.pow(1 - Math.min(d1, d2), 6);
-    let p = 0; for (const [px, pz] of pores) { const r2 = (x - px) ** 2 + (z - pz) ** 2; if (r2 < 1.2) p += 0.55 * Math.exp(-r2 / 0.18); } P[i] = p;
+    if (!organic) {
+      const d1 = Math.abs(Math.sin((x + z) * 0.55 + 0.6 * fbm(x * 0.2, z * 0.2))), d2 = Math.abs(Math.sin((x - z) * 0.48 + 0.7 * fbm(x * 0.2 + 5, z * 0.2)));
+      F[i] = Math.pow(1 - Math.min(d1, d2), 6);
+      let p = 0; for (const [px, pz] of pores) { const r2 = (x - px) ** 2 + (z - pz) ** 2; if (r2 < 1.2) p += 0.55 * Math.exp(-r2 / 0.18); } P[i] = p;
+    } else {
+      // furrows along the edges of irregular cells (a warped Worley field: plateaus of varied size and shape)
+      const wx = x + 1.6 * (fbm(x * 0.15 + 3, z * 0.15) - 0.5) * 2, wz = z + 1.6 * (fbm(x * 0.15, z * 0.15 + 7) - 0.5) * 2, C = 2.4;
+      const gi = Math.floor(wx / C), gj = Math.floor(wz / C); let a = 1e9, b = 1e9;
+      for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) { const ci = gi + di, cj = gj + dj, cx = (ci + 0.15 + 0.7 * h2(ci, cj)) * C, cz = (cj + 0.15 + 0.7 * h2(ci + 17, cj + 3)) * C, d = Math.hypot(wx - cx, wz - cz); if (d < a) { b = a; a = d; } else if (d < b) b = d; }
+      const edge = b - a, w = 0.5 + 0.25 * fbm(x * 0.4, z * 0.4);
+      F[i] = 0.7 * Math.pow(Math.max(0, 1 - edge / w), 1.6) * (0.6 + 0.5 * fbm(x * 0.3 + 9, z * 0.3));
+      let p = 0; for (let q = 0; q < pores.length; q++) { const [px, pz] = pores[q], r2 = (x - px) ** 2 + (z - pz) ** 2; if (r2 < 1.6) { const s = 0.5 + h2(q, 3.1) * 1.1; p += 0.55 * (0.6 + 0.6 * h2(q, 9.7)) * Math.exp(-r2 / (0.18 * s)); } } P[i] = p;
+    }
     let k = 0; for (const [sx, sz, sr] of SP) { const d2 = ((x - sx) ** 2 + (z - sz) ** 2) / (sr * sr); if (d2 < 2.5) k = Math.max(k, 1 / (1 + Math.exp((d2 - 1) * 6))); } K[i] = k;
-    N[i] = fbm(x * 1.5, z * 1.5); Y0[i] = 0.25 * fbm(x * 0.35, z * 0.35);
+    N[i] = fbm(x * 1.5, z * 1.5); Y0[i] = 0.25 * fbm(x * 0.35, z * 0.35) + (organic ? 0.06 * fbm(x * 2.6, z * 2.6) : 0);
   }
   const mat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.62, metalness: 0, sheen: 0.12, sheenColor: new THREE.Color(0xffd2b0), sheenRoughness: 0.6 });
   const mesh = new THREE.Mesh(geo, mat);
