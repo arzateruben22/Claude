@@ -1,0 +1,7 @@
+{
+ "repo": "ResembleAI/chatterbox",
+ "revision": "TODO-pin-commit-sha-after-first-download",
+ "licence_expected": "mit",
+ "files": {"t3_cfg.safetensors": "", "s3gen.safetensors": "", "ve.safetensors": "", "tokenizer.json": "", "conds.pt": ""},
+ "note": "Hashes are empty until the weights can be downloaded (huggingface.co blocked in the build container). setup_clone.sh fills them on first download; review and commit them, after which clone.py refuses any other bytes."
+}

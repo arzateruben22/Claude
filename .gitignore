@@ -3,3 +3,9 @@ __pycache__/
 los-gueros-preview.html
 films/*/build/
 films/*/motion/.tmp/
+
+# owner voice data: never commit
+owner/
+*.pt
+*.safetensors
+voice-ab/
