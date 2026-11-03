@@ -40,28 +40,28 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "It's a neutrophil, your commonest white cell, about eight micrometres across. Yet under a sore fingertip, they pile up outside the wall.",
+   "text": "It's a neutrophil, your most common white cell, a bit wider than a red one. Under a sore fingertip, they pile up outside the wall.",
    "stars": [
     "neutrophil",
     "outside"
    ],
-   "phonemes": "ɪts ɐ njˈuːtɹəfˌɪl, jɔː kˈɒmənɪst wˈaɪt sˈɛl, ɐbˌaʊt ˈeɪt mˈaɪkɹəʊmˌiːtəz əkɹˈɒs. jˈɛt ˌʌndəɹ ɐ sˈɔː fˈɪŋɡətˌɪp, ðeɪ pˈaɪl ˌʌp aʊtsˈaɪd ðə wˈɔːl.",
+   "phonemes": "ɪts ɐ njˈuːtɹəfˌɪl, jɔː mˈəʊst kˈɒmən wˈaɪt sˈɛl, ɐ bˈɪt wˈaɪdə ðˌanə ɹˈɛd wˌɒn. ˌʌndəɹ ɐ sˈɔː fˈɪŋɡətˌɪp, ðeɪ pˈaɪl ˌʌp aʊtsˈaɪd ðə wˈɔːl.",
    "speeds": [
-    0.92,
-    0.9
+    0.81,
+    0.79
    ],
    "gaps": [
     0.3
    ],
    "silences": [
     [
-     4.4386,
-     4.7386
+     4.6612,
+     4.9612
     ]
    ],
    "file": "02.wav",
-   "dur": 7.931,
-   "sha256": "4307322866e8a3c6a16484a527890323b358235006a1787aa4a7298dd71a444c"
+   "dur": 8.538,
+   "sha256": "71d93d1b067eeefee153056f2ccfeb330192b82478aafdef23c8aacedd496181"
   },
   {
    "id": "vo03",
@@ -98,14 +98,14 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Where tissue is inflamed, the wall turns sticky, and the cell rolls. Then its grips switch on, and it stops. It crawls to a seam between two wall cells. In a rare inherited condition, those grips are faulty. Cells roll on past.",
+   "text": "Where you're hurt or infected, the wall turns sticky, and the cell rolls. Then its grips switch on, and it stops. It crawls to a seam between two wall cells. In a rare inherited condition, those grips are faulty. Cells roll on past.",
    "stars": [
     "rolls",
     "stops",
     "seam",
     "past"
    ],
-   "phonemes": "wˌeə tˈɪʃuː ɪz ɪnflˈeɪmd, ðə wˈɔːl tˈɜːnz stˈɪki, and ðə sˈɛl ɹˈəʊlz. ðˈɛn ɪts ɡɹˈɪps swˈɪtʃ ˈɒn, and ɪt stˈɒps. ɪt kɹˈɔːlz tʊ ɐ sˈiːm bɪtwˌiːn tˈuː wˈɔːl sˈɛlz. ɪn ɐ ɹˈeəɹ ɪnhˈɛɹɪtɪd kəndˈɪʃən, ðəʊz ɡɹˈɪps ɑː fˈɒlti. sˈɛlz ɹˈəʊl ˈɒn pˈɑːst .",
+   "phonemes": "wˌeə jɔː hˈɜːt ɔːɹ ɪnfˈɛktɪd, ðə wˈɔːl tˈɜːnz stˈɪki, and ðə sˈɛl ɹˈəʊlz. ðˈɛn ɪts ɡɹˈɪps swˈɪtʃ ˈɒn, and ɪt stˈɒps. ɪt kɹˈɔːlz tʊ ɐ sˈiːm bɪtwˌiːn tˈuː wˈɔːl sˈɛlz. ɪn ɐ ɹˈeəɹ ɪnhˈɛɹɪtɪd kəndˈɪʃən, ðəʊz ɡɹˈɪps ɑː fˈɒlti. sˈɛlz ɹˈəʊl ˈɒn pˈɑːst .",
    "speeds": [
     0.92,
     0.92,
@@ -121,25 +121,25 @@
    ],
    "silences": [
     [
-     3.6653,
-     3.9653
+     3.9486,
+     4.2486
     ],
     [
-     6.0409,
-     6.3409
+     6.3242,
+     6.6242
     ],
     [
-     8.7872,
-     9.0872
+     9.0705,
+     9.3705
     ],
     [
-     12.3509,
-     12.6509
+     12.6342,
+     12.9342
     ]
    ],
    "file": "04.wav",
-   "dur": 14.36,
-   "sha256": "9b98a67ee3a6af61812039b70e12c6d1d4c13a7d5c80fcbb1bc959b224ed163d"
+   "dur": 14.643,
+   "sha256": "6825c821ddf3ba6e624e5992eafb1bb4a7efb04eca20f689736f1d8509746d5f"
   },
   {
    "id": "vo05",
@@ -202,28 +202,20 @@
   {
    "id": "vo07",
    "beat": "meanwhile",
-   "text": "Meanwhile, as you watched, your bone marrow made new neutrophils. More than ten million.",
+   "text": "Meanwhile, as you watched, your bones made more than ten million new ones.",
    "stars": [
     "Meanwhile",
     "million"
    ],
-   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, jɔː bˈəʊn mˈaɹəʊ mˌeɪd njˈuː njˈuːtɹəfˌɪlz. mˈɔː ðɐn tˈɛn mˈɪliən.",
+   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, jɔː bˈəʊnz mˌeɪd mˈɔː ðɐn tˈɛn mˈɪliən njˈuː wˌɒnz.",
    "speeds": [
-    0.88,
-    0.82
+    0.84
    ],
-   "gaps": [
-    0.4
-   ],
-   "silences": [
-    [
-     3.7607,
-     4.1607
-    ]
-   ],
+   "gaps": [],
+   "silences": [],
    "file": "07.wav",
-   "dur": 5.747,
-   "sha256": "8a36827fe39cd8b253e24f15313118dfaddcfc08a494f6a3d8870a46bc816e5c"
+   "dur": 4.359,
+   "sha256": "a83d2d41d8ee2e6cdf070fc845e9bc5464909c15a98fc53056ac63205b60a19c"
   },
   {
    "id": "vo08",

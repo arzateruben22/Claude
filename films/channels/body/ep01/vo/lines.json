@@ -14,42 +14,42 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Why is this cell folded? Because the road ahead is narrower than the cell.",
+   "text": "How does this cell fit? Its pipe is narrower than it is.",
    "stars": [
-    "folded",
+    "fit",
     "narrower"
    ],
-   "phonemes": "wˌaɪ ɪz ðɪs sˈɛl fˈəʊldɪd? bɪkˈɒz ðə ɹˈəʊd ɐhˈɛd ɪz nˈaɹəʊə ðɐn ðə sˈɛl.",
+   "phonemes": "hˌaʊ dˈʌz ðɪs sˈɛl fˈɪt? ɪts pˈaɪp ɪz nˈaɹəʊə ðɐn ɪt ˈɪz.",
    "speeds": [
     1.0,
-    0.85
+    0.82
    ],
    "gaps": [
     0.45
    ],
    "silences": [
     [
-     1.5238,
-     1.9738
+     1.4437,
+     1.8937
     ]
    ],
    "file": "01.wav",
-   "dur": 4.789,
-   "sha256": "2d13299f24f3c77dc8bb743a84bdc123b2c4f5904e775249aaa01b78c0f43c2a"
+   "dur": 4.202,
+   "sha256": "b7f6639c9e0c9dad9fdf7c9ece37ef3fb2424b70aac357265d81aec724787ae8"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Meet a red blood cell: a dimpled disc, about seven and a half micrometers. It even pushed out its own nucleus. You have about twenty-five trillion of them: most of your own cells.",
+   "text": "Each one is a dented disc, pressed in on both sides. It even threw out its own nucleus. And they outnumber all your other cells put together.",
    "stars": [
-    "red blood cell",
+    "dented disc",
     "nucleus"
    ],
-   "phonemes": "mˈiːt ɐ ɹˈɛd blˈʌd sˈɛl: ɐ dˈɪmpəld dˈɪsk, ɐbˌaʊt sˈɛvən and ɐ hˈɑːf mˈaɪkɹəʊmˌiːtəz . ɪt ˈiːvən pˈʊʃt ˈaʊt ɪts ˈəʊn njˈuːkliəs . juː hav ɐbˌaʊt twˈɛntifˈaɪv tɹˈɪliən ɒv ðˌɛm: mˈəʊst əv jɔːɹ ˈəʊn sˈɛlz.",
+   "phonemes": "ˈiːtʃ wˈɒn ɪz ɐ dˈɛntɪd dˈɪsk, pɹˈɛst ɪn ˌɒn bˈəʊθ sˈaɪdz. ɪt ˈiːvən θɹˈuː ˈaʊt ɪts ˈəʊn njˈuːkliəs . and ðeɪ aʊtnˈʌmbəɹ ˈɔːl jɔːɹ ˈʌðə sˈɛlz pˌʊt təɡˈɛðə.",
    "speeds": [
-    0.92,
-    0.94,
-    0.96
+    0.78,
+    0.78,
+    0.8
    ],
    "gaps": [
     0.3,
@@ -57,57 +57,57 @@
    ],
    "silences": [
     [
-     4.6158,
-     4.9158
+     4.0618,
+     4.3618
     ],
     [
-     7.0351,
-     7.3351
+     7.053,
+     7.353
     ]
    ],
    "file": "02.wav",
-   "dur": 11.049,
-   "sha256": "badcd8332fac9dd6dda28f1d5fce9980f3679fee01f6fa9deef5f25cba63409f"
+   "dur": 10.644,
+   "sha256": "1789d6203ee93b9ec8aec9bda08a54baddc97f358a2fd46b4e653c516d188606"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Follow it as the vessel branches, and branches again, into a capillary. There's no room to overtake, so cells go through in single file.",
+   "text": "Follow one as the pipes split, and split again, into the tiniest ones. There's no room to pass, so they go in single file.",
    "stars": [
-    "capillary",
+    "tiniest",
     "single file"
    ],
-   "phonemes": "fˈɒləʊ ɪt az ðə vˈɛsəl bɹˈantʃɪz, and bɹˈantʃɪz ɐɡˈɛn, ˌɪntʊ ɐ kəpˈɪləɹi . ðeəz nˈəʊ ɹˈuːm tʊ ˌəʊvətˈeɪk, sˌəʊ sˈɛlz ɡˌəʊ θɹuː ɪn sˈɪŋɡəl fˈaɪl.",
+   "phonemes": "fˈɒləʊ wˈɒn az ðə pˈaɪps splˈɪt, and splˈɪt ɐɡˈɛn, ˌɪntʊ ðə tˈaɪniɪst wˌɒnz. ðeəz nˈəʊ ɹˈuːm tə pˈas, sˌəʊ ðeɪ ɡˌəʊ ɪn sˈɪŋɡəl fˈaɪl.",
    "speeds": [
-    0.86,
-    0.86
+    0.74,
+    0.74
    ],
    "gaps": [
     0.3
    ],
    "silences": [
     [
-     4.1599,
-     4.4599
+     5.2832,
+     5.5832
     ]
    ],
    "file": "03.wav",
-   "dur": 8.456,
-   "sha256": "3d9ac66ad3ead40e9c9f5af9ca1cdfb22a4bd2e384da1a723c4114ae1ea940af"
+   "dur": 9.568,
+   "sha256": "430578eefaede16c2a42099504f76cbba1d7dc9bef1bccd7eec164bca12538de"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "You'd guess its surface stretches to fit. It can't. The dimples give it spare surface for its volume, so it folds into a parachute instead.",
+   "text": "You'd guess its skin stretches to fit. It barely does. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
    "stars": [
-    "dimples",
+    "dent",
     "parachute"
    ],
-   "phonemes": "juːd ɡˈɛs ɪts sˈɜːfɪs stɹˈɛtʃɪz tə fˈɪt. ɪt kˈɑːnt. ðə dˈɪmpəlz ɡˈɪv ɪt spˈeə sˈɜːfɪs fɔːɹ ɪts vˈɒljuːm, sˌəʊ ɪt fˈəʊldz ˌɪntʊ ɐ pˈaɹəʃˌuːt ɪnstˈɛd.",
+   "phonemes": "juːd ɡˈɛs ɪts skˈɪn stɹˈɛtʃɪz tə fˈɪt. ɪt bˈeəli dˈʌz. ðat dˈɛnt ɡˈɪvz ɪt spˈeə skˈɪn, sˌəʊ ɪt fˈəʊldz ˌʌp nˈiːtli lˈaɪk ɐ pˈaɹəʃˌuːt ɪnstˈɛd.",
    "speeds": [
-    0.95,
-    0.94,
-    0.92
+    0.9,
+    0.9,
+    0.88
    ],
    "gaps": [
     0.3,
@@ -115,85 +115,85 @@
    ],
    "silences": [
     [
-     2.16,
-     2.46
+     2.2355,
+     2.5355
     ],
     [
-     3.3827,
-     3.6827
+     3.7911,
+     4.0911
     ]
    ],
    "file": "04.wav",
-   "dur": 8.393,
-   "sha256": "3e0240b2a9666cab13141879bee751c1e7a680b7a5c04132e2413a7479ee3779"
+   "dur": 8.79,
+   "sha256": "ebc0b0bd7bc5d682157e8d9cf5781688856435116fb7a9ac4b18e4c7cf0febad"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "The tightest vessels are about three micrometers: less than half its width. And it keeps squeezing through, all its life: about a hundred and twenty days.",
+   "text": "The tightest squeeze is less than half its width. And it does this its whole life, over and over, for about four months.",
    "stars": [
     "half its width",
-    "a hundred and twenty days"
+    "four months"
    ],
-   "phonemes": "ðə tˈaɪtɪst vˈɛsəlz ɑːɹ ɐbˌaʊt θɹˈiː mˈaɪkɹəʊmˌiːtəz : lˈɛs ðɐn hˈɑːf ɪts wˈɪtθ. and ɪt kˈiːps skwˈiːzɪŋ θɹˈuː, ˈɔːl ɪts lˈaɪf: ɐbˌaʊt ɐ hˈʌndɹɪd and twˈɛnti dˈeɪz.",
+   "phonemes": "ðə tˈaɪtɪst skwˈiːz ɪz lˈɛs ðɐn hˈɑːf ɪts wˈɪtθ. and ɪt dˈʌz ðɪs ɪts hˈəʊl lˈaɪf, ˌəʊvəɹ and ˈəʊvə, fɔːɹ ɐbˌaʊt fˈɔː mˈʌnθs.",
    "speeds": [
-    0.88,
-    0.88
+    0.76,
+    0.78
    ],
    "gaps": [
     0.3
    ],
    "silences": [
     [
-     4.5659,
-     4.8659
+     3.3727,
+     3.6727
     ]
    ],
    "file": "05.wav",
-   "dur": 9.287,
-   "sha256": "827b05deb57002351ab900a93b7381318c1ca4f18553e3e23969c891011810aa"
+   "dur": 8.078,
+   "sha256": "d4ba229c0cb838756609c31568258612f2e9d6e142f17303be740baa9fa2d18c"
   },
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "Sickle cells lose the disc shape, stiffen, and can jam where oxygen is handed out. That dimple isn't decoration.",
+   "text": "Sickle cells lose that dent, stiffen, and can jam where oxygen gets dropped off. That dent has a job.",
    "stars": [
-    "disc shape"
+    "dent"
    ],
-   "phonemes": "sˈɪkəl sˈɛlz lˈuːz ðə dˈɪsk ʃˈeɪp, stˈɪfən, and kan dʒˈam wˌeəɹ ˈɒksɪdʒən ɪz hˈandɪd ˈaʊt. ðat dˈɪmpəl ˌɪzənt dˌɛkəɹˈeɪʃən.",
+   "phonemes": "sˈɪkəl sˈɛlz lˈuːz ðat dˈɛnt, stˈɪfən, and kan dʒˈam wˌeəɹ ˈɒksɪdʒən ɡˈɛts dɹˈɒpt ˈɒf. ðat dˈɛnt hɐz ɐ dʒˈɒb.",
    "speeds": [
-    0.97,
-    0.98
+    0.92,
+    0.92
    ],
    "gaps": [
     0.3
    ],
    "silences": [
     [
-     4.7467,
-     5.0467
+     4.7734,
+     5.0734
     ]
    ],
    "file": "06.wav",
-   "dur": 6.837,
-   "sha256": "e9e90c1853a39c21f5a3a5acf4dc018038158b155d06a9a3536ed8c1b3ed5530"
+   "dur": 6.653,
+   "sha256": "076394348cebe14e3f7f2b29650b4de6cf65b265c000ed1603795c26d9e74f20"
   },
   {
    "id": "vo07",
    "beat": "meanwhile",
-   "text": "Meanwhile, as you watched, your bone marrow made over a hundred million new red cells.",
+   "text": "Meanwhile, as you watched, your bones made over a hundred million new ones.",
    "stars": [
     "Meanwhile"
    ],
-   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, jɔː bˈəʊn mˈaɹəʊ mˌeɪd ˌəʊvəɹ ɐ hˈʌndɹɪd mˈɪliən njˈuː ɹˈɛd sˈɛlz.",
+   "phonemes": "mˈiːnwaɪl, az juː wˈɒtʃt, jɔː bˈəʊnz mˌeɪd ˌəʊvəɹ ɐ hˈʌndɹɪd mˈɪliən njˈuː wˌɒnz.",
    "speeds": [
-    0.85
+    0.8
    ],
    "gaps": [],
    "silences": [],
    "file": "07.wav",
-   "dur": 5.093,
-   "sha256": "0ccf6cf768563ab4321cf1cb322a14dac32f067cc47d103e3bd7c5c8dd68f271"
+   "dur": 4.845,
+   "sha256": "82b35d85e853b9d90d30610610caf2e4483608403f814c75a7f452028ac1b81d"
   },
   {
    "id": "vo08",

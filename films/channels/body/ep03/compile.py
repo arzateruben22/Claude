@@ -4,7 +4,7 @@ Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word
   python3 -I films/channels/body/ep03/compile.py
 
 One world, few cuts (WRITING.md, "The picture"). The fibres (scene.mjs):
-  hero    a myelinated fibre with its cell body at x < 0 and its terminal at the far end (µm; internodes compressed)
+  hero    a myelinated fibre with its cell body at x < 0 and its terminal at the far end (μm; internodes compressed)
   bare    a thin bare fibre above it (the re-fire, step by step; the slow racer)
   ms      a fibre below it in brain and spinal cord, one sheath damaged (the signal falters there)
 One illustrated slide, the drum: Helmholtz's method (a frog muscle on its nerve, a lever, a pen on a turning drum;
@@ -52,7 +52,7 @@ HOOK = {"node0": 2, "t0": -HOP * 0.35}   # frame 0: the spark half way across th
 HOOK_RUN = A("vo02:cell's", -0.3)                        # "racing down one cell's thin fibre": a fresh spike leaves the cell body
 WHY_JUMP = {"t0": A("vo04:Many", 0.2), "hop": 0.8, "k0": 2}   # the hero at "myelin": hops from node 2, one lands on "gaps", one on "leaps"
 MS = {"t0": A("vo04:Where", 0.0), "hop": 0.9, "bad": 6, "k0": 4, "stall": A("vo04:stall", 0.1)}   # two hops to the damaged sheath, falters, stalls
-BARE = {"t0": B["why"]["t0"] + 0.2, "v": 10.0, "x0": 90.0, "step": 5.0}   # why: the bare fibre re-fired step by step (µm/s, shown)
+BARE = {"t0": B["why"]["t0"] + 0.2, "v": 10.0, "x0": 90.0, "step": 5.0}   # why: the bare fibre re-fired step by step (μm/s, shown)
 # the race, from one start line: the bare head crawls a fifth of the frame; wrapped pulses streak across every 1.2 s (150 : 1)
 RACE = {"x0": 24.0, "bare0": A("vo05:thinnest", -0.1), "vbare": 2.0, "wrap0": A("vo05:Thick"), "vwrap": 300.0, "every": 1.2,
         # "Thick wrapped ones" (26 Oct audit): the wrapped racer (the hero) is drawn 1.5× thicker in the race. It thickens
@@ -67,7 +67,7 @@ DRUM = {"spin0": B["change"]["t0"], "traces": [A("vo03:timed", -0.1), A("vo03:me
 CAM = {
     "hook": [
         {"t": 0.0, "pos": [116.0, 26.0, 170.0], "look": [110.0, -6.0, 0.0], "fov": 34},   # frame 0: the framed internode (nodes 2–3) inside the safe box
-        {"t": A("vo01:timed"), "pos": [112.0, 22.0, 150.0], "look": [106.0, -6.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo01:time"), "pos": [112.0, 22.0, 150.0], "look": [106.0, -6.0, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo02:racing"), "pos": [120.0, 40.0, 380.0], "look": [110.0, -6.0, 0.0], "fov": 34, "ease": "p2"},   # pull back along the fibre
         {"t": A("vo02:cell's"), "pos": [20.0, 36.0, 220.0], "look": [16.0, -6.0, 0.0], "fov": 34, "ease": "p2"},      # the cell body: one cell
         {"t": A("vo02:Some", -0.1), "pos": [22.0, 36.0, 226.0], "look": [18.0, -6.0, 0.0], "fov": 34, "ease": "sine"},  # held while it is named
@@ -114,7 +114,7 @@ LABELS = [
     {"id": "nerve", "text": "its nerve", "color": "nerve", "mark": "dot", "at": "frognerve", "t0": A("vo03:fifty", 0.2), "t1": A("vo03:Helmholtz"), "shot": "drum", "side": -1},
     {"id": "trace", "text": "far stimulus: its twitch starts later", "color": "text", "mark": "dot", "at": "traces", "t0": A("vo03:metres", 0.15) + 0.7, "t1": CUT["fibres"] - 0.3, "shot": "drum", "side": 1},
     {"id": "bare", "text": "bare fibre", "color": "nerve", "mark": "dot", "at": "bare", "t0": B["why"]["t0"] + 0.5, "t1": A("vo04:re-fires", -0.4), "shot": "fibres", "side": 1},   # hands its name to the readout
-    {"id": "myelin", "text": "myelin", "color": "bone", "mark": "dot", "at": "sheath", "t0": A("vo04:myelin", 0.25), "t1": A("vo04:re-firing", 0.0), "shot": "fibres", "side": 1},   # after the N3→N4 arc has landed
+    {"id": "myelin", "text": "myelin", "color": "bone", "mark": "dot", "at": "sheath", "t0": A("vo04:myelin", 0.25), "t1": A("vo04:re-fire", 0.0), "shot": "fibres", "side": 1},   # after the N3→N4 arc has landed
     {"id": "gap", "text": "bare gap", "color": "nerve", "mark": "dot", "at": "node", "t0": A("vo04:gaps"), "t1": A("vo04:leaps", -0.2), "shot": "fibres", "side": -1},
     {"id": "ms", "text": "damaged myelin ·\nbrain and spinal cord", "color": "bone", "mark": "dashed", "at": "damaged", "t0": round(MS["t0"] + 2 * MS["hop"] - 0.2, 4), "t1": A("vo04:signals", 0.0), "shot": "fibres", "side": 1},   # gone before "slow or stall": the falter and the stall play clear
     {"id": "racebare", "text": "thinnest bare fibre", "color": "nerve", "mark": "dot", "at": "barefront", "t0": A("vo05:thinnest"), "t1": B["takeaway"]["t0"] - 0.3, "shot": "fibres", "side": -1},
@@ -144,17 +144,18 @@ FIG = {"t0": B["takeaway"]["t0"] + 0.15, "t1": B["tease"]["t0"] + 0.2,      # th
        "spark": A("vo07:spark")}
 TEASE_T0 = round(TEASE["arrive"] - 4 * TEASE["hop"], 4)
 BADGES = [
-    {"id": "slow-hook", "text": "slowed · distances compressed", "slot": "tl", "t0": 0.0, "t1": CUT["drum"] - 0.3},
+    {"id": "slow-hook", "text": "slowed · distances compressed", "slot": "tr", "t0": 0.0, "t1": CUT["drum"] - 0.3},
     {"id": "nts-hook", "text": "not to scale", "t0": 0.0, "t1": CUT["drum"] - 0.3},
     {"id": "ill-drum", "text": "illustration · delay exaggerated", "t0": CUT["drum"], "t1": CUT["fibres"] - 0.3},
-    {"id": "slow-drum", "text": "slowed", "slot": "tl", "t0": round(CUT["drum"] + 0.15, 4), "t1": CUT["fibres"] - 0.3},
+    {"id": "slow-drum", "text": "slowed", "slot": "tr", "t0": round(CUT["drum"] + 0.15, 4), "t1": CUT["fibres"] - 0.3},
     {"id": "nts-fib", "text": "not to scale", "t0": CUT["fibres"], "t1": FIG["t0"]},
-    {"id": "slow", "text": "slowed · distances compressed", "slot": "tl", "t0": CUT["fibres"], "t1": B["takeaway"]["t0"] - 0.3},
-    {"id": "real", "text": "real time", "slot": "tl", "t0": TOE["stub"] - 0.6, "t1": B["meanwhile"]["t0"]},
+    {"id": "slow", "text": "slowed · distances compressed", "slot": "tr", "t0": CUT["fibres"], "t1": B["takeaway"]["t0"] - 0.3},
+    {"id": "real", "text": "real time", "slot": "tr", "t0": TOE["stub"] - 0.6, "t1": B["meanwhile"]["t0"]},
     {"id": "nts-tease", "text": "not to scale", "t0": FIG["t1"] - 0.3, "t1": EC},
-    {"id": "slow-tease", "text": "slowed", "slot": "tl", "t0": round(TEASE_T0 - 0.3, 4), "t1": EC},
+    {"id": "slow-tease", "text": "slowed", "slot": "tr", "t0": round(TEASE_T0 - 0.3, 4), "t1": EC},
 ]
-TITLE = {"series": "Body Backstage · No. 03", "title": "The *jump*", "t1": round(A("vo01:The", 0.3), 4), "sig": 0.0, "y": 0.17}
+SCAN = {"up": [B["whoa"]["t0"] + 0.5, B["whoa"]["t0"] + 2.0], "park": 0.5, "off": B["takeaway"]["t0"], "tag": "▼ scan view"}   # live scan: the line rises from the bottom and parks; below it, scan view
+TITLE = {"series": "Body Backstage · No. 03", "title": "The *jump*", "t1": round(A("vo01:A", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *the gap*", "next": "Body Backstage · No. 04", "follow": "Follow Body Backstage",
        "fact": "In 1850 Helmholtz timed a frog's nerve signal at about 27 metres a second."}   # c5, c6
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
@@ -189,12 +190,12 @@ CAPTION_KEEP = [
 ]
 
 film = {
-    "id": "meanwhile-inside-003", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
+    "id": "body-backstage-003", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "hop": HOP, "hookSig": HOOK, "hookRun": HOOK_RUN, "whyJump": WHY_JUMP, "ms": MS, "bare": BARE, "race": RACE,
     "tease": TEASE, "toe": TOE, "drum": DRUM, "fig": FIG,
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,
-    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
+    "segBeats": SEG_BEATS, "title": TITLE, "scan": SCAN, "endCard": EC, "end": END,
     "look": THEME["scene"],
     "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

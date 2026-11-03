@@ -1,4 +1,4 @@
-// Meanwhile, Inside No. 01, "Single file": the picture, a pure function of t.
+// Body Backstage No. 01, "Single file" (season 1 reboot, live scan): the picture, a pure function of t.
 //
 // The channel's set (films/channels/body/set, bible §5 with the cross-check's fixes) plus this episode's
 // staging. Everything timed comes from film.json (compile.py hangs it on the spoken words); the look comes
@@ -49,10 +49,12 @@ const camera = new THREE.PerspectiveCamera(34, W / H, 1, 4000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 2500 });
 scene.add(L.lights, L.backdrop);
 scene.fog = L.fog;
+L.studio(renderer, scene, 0.6);                          // live scan: reflections for the wet clearcoat
 // kMax stays the tier's (32 final, 6 draft); the scene caps it per frame in probe mode (kCap below)
-if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, maxCoc: 0.024 });
+if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.026 });
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-life .v { color: var(--pulse); }
+.mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 500 3vmin/1.35 var(--font-text); color: var(--text-2); }
 #hud-life, #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 #hud-life .lb, #hud-tally .lb { color: var(--text); }
 #hud-tally .v { font-size: 9.6vmin; }
@@ -339,6 +341,14 @@ const writeCells = (t, sh) => {
 
 // ── the artery's crowd (the meet shot): drifting, tumbling discs around the hero, a clear lane for the lens ──
 const ART = [-2000, 0, 0];
+const NETBED = (() => { const m = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin("#9A5E58"), map: TEX.clone(), roughness: 0.5, clearcoat: 0.6, clearcoatRoughness: 0.2, sheen: 0.4, sheenColor: new THREE.Color(1, 0.55, 0.48) }), { fresnel: 0.15, key: "netbed" });
+  m.map.repeat.set(14, 14); m.map.wrapS = m.map.wrapT = THREE.RepeatWrapping; m.map.needsUpdate = true;
+  const g = new THREE.Mesh(new THREE.PlaneGeometry(1600, 1600, 1, 1), m); g.userData.noProbe = true; g.visible = false; scene.add(g); return g; })();
+// round 2 (h): the artery's far wall behind the crowd, wet lining, left to the depth of field
+const ARTWALL = (() => { const m = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin("#C98A82"), map: TEX.clone(), roughness: 0.45, clearcoat: 0.7, clearcoatRoughness: 0.15, sheen: 0.5, sheenColor: new THREE.Color(1, 0.55, 0.48), side: THREE.DoubleSide }), { fresnel: 0.2, key: "artwall" });
+  m.map.repeat.set(6, 6); m.map.wrapS = m.map.wrapT = THREE.RepeatWrapping; m.map.needsUpdate = true;
+  const g = new THREE.Mesh(new THREE.CylinderGeometry(160, 160, 900, 96, 1, true, Math.PI * 0.5, Math.PI), m);
+  g.rotation.z = Math.PI / 2; g.position.set(ART[0], ART[1], ART[2] - 20); g.userData.noProbe = true; scene.add(g); return g; })();
 const CROWD = swarm({
   n: 210, seed: 23, waves: [{ amp: [1.6, 1.2, 1.4], omega: 0.35 }, { amp: 0.5, omega: 0.9 }],
   home: (i, r) => {
@@ -442,14 +452,14 @@ const PAX = swarm({
   n: PAXN, seed: 11, waves: [{ amp: 0.06, omega: 1.3 }],
   home: (i, r) => { for (;;) { const x = (2 * r() - 1) * RC * 0.94, h = halfThick(Math.abs(x)) * 0.86, y = (2 * r() - 1) * h; if (Math.abs(y) <= h) return [x, y, 0.02 + 0.05 * r()]; } },
 });
-const swMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(THEME.tokens.o2 || "#FFFFFF"), emissive: L.lin("#FFFFFF"), emissiveIntensity: 0.35, roughness: 0.35 }), { fresnel: 0.1, key: "o2" });
+const swMat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin("#E8FFF6"), emissive: L.lin("#BFF8E4"), emissiveIntensity: 0.22, roughness: 0.15, clearcoat: 1, transmission: 0 }), { fresnel: 0.45, key: "o2" });   // glassy, mint-lit molecules
 const swMesh = O2.mesh(new THREE.IcosahedronGeometry(1, 2), swMat, O2N + PAXN);
 scene.add(swMesh);
 const SWSTATE = new Array(O2N + PAXN);
 const writeSwarm = (t, sh) => {
   const showO2 = sh === "out" ? presence(t, sO2 - 1.0, FILM.shots.find((s) => s.name === "tease").at - 0.6, { d: 0.6, out: 0.5 }).o : 0;
   for (let i = 0; i < O2N; i++) {
-    const p = O2.at(i, t), sc = showO2 * 0.32 * Math.min(1, O2.mix(i, t) * 3 + 0.25);
+    const p = O2.at(i, t), sc = showO2 * 0.32 * (0.45 + 0.9 * hash(i + 700)) * Math.min(1, O2.mix(i, t) * 3 + 0.25);   // varied sizes (not snow)
     instance(swMesh, i, p, null, sc); SWSTATE[i] = { p, scale: sc };
   }
   const open = sh === "tease" ? E.out3(seg(hero.cut, 0.55, 1)) : 0, sparkle = sh === "tease" ? seg(t, FILM.hero.sparkle[0], FILM.hero.sparkle[0] + 0.5) * (1 - seg(t, FILM.hero.sparkle[1], FILM.hero.sparkle[1] + 0.6)) : 0;
@@ -485,8 +495,9 @@ const ANCH = {
   sickle: (t) => { const s = sickleS(t), p = PH.at(s); sickleBasis(s); return [p[0] + vSy.x * 2.1, p[1] + vSy.y * 2.1, p[2] + vSy.z * 2.1 + 0.6]; },   // its convex edge, from t alone
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side });
-hud.badge("warp", { from: clk, slot: "tl" });
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: "tl" });
+hud.badge("warp", { from: clk, slot: "tr", t0: FILM.title.t1 + 0.7 });   // after the title has fully gone   // top right: the title owns a keep-out at top left (owner, 3 Nov)
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.7),   // the title owns its zone while it shows (owner, 3 Nov)
+   t1: b.t1, slot: "tr" });
 // a pill's bar is its length at the hero, on screen. hud.js clamps a bar to 4 px–60 % of the safe width, and a
 // clamped bar no longer matches its text (the meet close-up's 7.5 µm is 690–860 px at 1080 wide), so a length that
 // would be clamped shows no bar: the pill keeps its text alone
@@ -504,10 +515,14 @@ const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: c
 const yPulse = pulseLine({ width: Math.round(560 * S1), height: Math.round(58 * S1), at: 0.5 });
 tallyEl.appendChild(yPulse.el);
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
+{ const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * S1), at: 0.25 });
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 const stageEl = document.querySelector(".stage");
+const SCL = L.scanLine(stageEl);
 const IR = iris(stageEl, { events: FILM.iris });
+const FIN = L.finish(stageEl);                            // live scan: grain and vignette over the picture
+scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze (bokeh off focus)
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 318 * S1, h: 232 * S1, region: [0.83, 0.5] });
 const MEET = SHOTS.find((s) => s.name === "meet"), TREE = SHOTS.find((s) => s.name === "tree");
 const lubs = (t0, t1) => { const out = []; for (let k = Math.ceil(t0 / 0.8); k * 0.8 <= t1; k++) out.push(+(k * 0.8).toFixed(4)); return out; };
@@ -539,6 +554,8 @@ const foldPoint = (p) => foldFn(p, [0, 1, 0], hero.k, hero.th).p;
 
 // ── seek ────────────────────────────────────────────────────────────────────────────────────────
 window.seek = function (t) {
+  // round 2 (g): under the end card the picture replays frame 0 (the HUD keeps the real clock)
+  const tReal = t; if (t >= FILM.loopAt) t = t - FILM.loopAt;
   stage(t);
   const sh = shotOf(t), C = window.CINEMA;
   placeHero(t, sh);
@@ -552,21 +569,32 @@ window.seek = function (t) {
   L.place(camera, F.point);
   scene.fog.density = 0.25 / Math.max(10, fd);
   world.visible = sh !== "meet";
+  ARTWALL.visible = sh === "meet";
   for (const g of TISSUE) g.visible = sh !== "net";
+  // round 3 (h): the first second of the ride, neighbouring vessels that cross the lens step out (a cut face filled the frame)
+  const rideIn = sh === "road" && t < FILM.ride[0] + 1.1; VESSELS.forEach((v, i) => { v.group.visible = !(rideIn && i > 0); });
+  // round 3 (h): the net lies on a wet tissue bed, left to the depth of field (no bare tubes on black)
+  NETBED.visible = sh === "net"; if (NETBED.visible) NETBED.position.set(hero.p[0], hero.p[1], -70);
   writeCells(t, sh);
   writeSwarm(t, sh);
   // the ghost outline: only in the tightest vessel, beside the folded cell
-  const g = sh === "road" ? presence(t, FILM.ghost[0], FILM.ghost[1] - 0.25, { d: 0.45, out: 0.25 }).o : 0;
+  // the ghost: its full, unfolded width beside the folded cell; also from frame 0, so the hook's "narrower than it is" is on screen
+  const g = sh === "road" ? presence(t, FILM.ghost[0], FILM.ghost[1] - 0.25, { d: 0.45, out: 0.25 }).o : sh === "hook" ? 0.75 * (1 - seg(t, FILM.title.t1 + 1.2, FILM.title.t1 + 1.8)) : 0;
   ghost.visible = g > 0.001; ghost.material.uniforms.opacity.value = 0.85 * g;
   ghost.position.copy(heroPos3); ghost.quaternion.copy(qH);
   // the overlay and its motifs
-  hud.update(t);
+  hud.update(tReal);
   tPulse.update(beatAmp(t, [FILM.title.sig, FILM.title.sig + 0.4], { rest: 0.5 }));
-  yPulse.update(beatAmp(t, FILM.segBeats));
-  ePulse.update(beatAmp(t, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
+  yPulse.update(beatAmp(tReal, FILM.segBeats));
+  ePulse.update(beatAmp(tReal, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
   const lp = sh === "meet" ? presence(t, MEET.at + 0.35, TREE.at - 0.45, { d: 0.45, out: 0.35 }).o : 0;
   LOC.update(t, lp, beatAmp(t, MEET_BEATS));
-  IR.update(t);
+  IR.update(tReal);
+  FIN.set(t);
+  // scan view (the look's signature): in the net, the line rises from the bottom and parks mid-frame; below it, scan view
+  { const S = FILM.scan, on = sh === "net" && t >= S.up[0] && t < S.off ? 1 : 0, y = on ? 1 - (1 - S.park) * E.inout2(seg(t, S.up[0], S.up[1])) : 2;
+    L.SCAN.set(y, on); SCL.set(y, on * (1 - seg(t, S.off - 0.35, S.off - 0.05)), "▼ scan view · blood flow"); }
+  MOT.set(t, sh === "net" ? 0.6 : 1);
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, kCap(t));

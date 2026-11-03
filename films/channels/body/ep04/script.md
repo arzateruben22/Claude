@@ -62,8 +62,8 @@ vo: The handoff takes about a thousandth of a second. {c11} Use a junction, and 
 vo: So your nerve cells mostly don't *touch*. {c13} They *talk*, across gaps, in chemicals. {c16}
 
 ## meanwhile {segment: meanwhile · tally "while you watched": breaths at a resting 15 a minute, from frame 0, on the pulse line; the body locator marks the brainstem · mallet ticks on the lub-dub · energy: 0.4} (58.5–67.3 s)
-vo: *Meanwhile*, as you watched, you took about fifteen breaths. {c14} Each began in your brainstem
-and crossed gaps like these to your diaphragm. {c15}
+vo: *Meanwhile*, as you watched, you took about fifteen breaths. {c14} Each started at the base of
+your brain and crossed gaps like these. {c15}
 
 ## tease {shot: an air sac in the dark, filling · end card held ≥ 2 s; under it the iris returns to frame 0 (a seamless replay); the card's fact: Golgi and Cajal shared the 1906 Nobel Prize · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.3–73.5 s)
 vo: Next: those breaths. {-} Where does all that air *go*? {-}

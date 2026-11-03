@@ -1,4 +1,4 @@
-// Meanwhile, Inside No. 02, "A billion passengers": the picture, a pure function of t.
+// Body Backstage No. 02 (season 1 reboot, live scan), "A billion passengers": the picture, a pure function of t.
 //
 // The channel's set (films/channels/body/set) plus this episode's staging. Everything timed comes from
 // film.json (compile.py hangs it on the spoken words); the look comes from theme.json.
@@ -29,6 +29,7 @@ import { beatAmp, pulseLine, iris, locator, MOTIF_CSS } from "../set/motif.js";
 import { probe } from "../set/probe.js";
 import { hemoglobin, hbGeometry, o2Geometry } from "../set/hemoglobin.js";
 import { fibre } from "../set/neuron.js";
+import { SECTION } from "../../skincare/set/ref/textures.js";   // the public-domain H&E skin section (licence confirmed by the owner)
 
 const FILM = window.FILM, W = window.W, H = window.H, THEME = window.THEME || { tokens: {} };
 const S1 = Math.min(W, H) / 1080;
@@ -47,7 +48,8 @@ const camera = new THREE.PerspectiveCamera(34, W / H, 0.5, 4000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 2500 });
 scene.add(L.lights, L.backdrop);
 scene.fog = L.fog;
-if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, maxCoc: 0.024 });
+L.studio(renderer, scene, 0.6);                          // live scan: reflections for the wet clearcoat
+if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.024 });
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-quarter .v { color: var(--text); }
 #hud-quarter, #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
@@ -55,7 +57,7 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-tally .v { font-size: 9.6vmin; }
 .hud-end .mi-pulse { margin: 0 0 3vmin; }
 .hud-title .mi-pulse { margin-top: 2.2vmin; }
-.mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 500 3vmin/1.35 var(--font-text); color: var(--text-2); }
+.mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 600 3.3vmin/1.35 var(--font-text); color: var(--text); background: var(--hud-plate); padding: 1.4vmin 2.2vmin; border-radius: 1.2vmin; }   /* review r2: plated, larger */
 #hud-seats .v, #hud-copies .v, #hud-aboard .v, #hud-venous .v, #hud-full .v { color: var(--pulse); }
 #hud-seats, #hud-copies, #hud-aboard, #hud-venous, #hud-full { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 #hud-seats .lb, #hud-copies .lb, #hud-aboard .lb, #hud-venous .lb, #hud-full .lb { color: var(--text); }
@@ -66,7 +68,7 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .hud-scrim { background: rgba(7, 21, 19, .6); }
 `; document.head.appendChild(css);
 const lin = (h) => L.lin(h);
-const SLIDE = (sh) => (sh === "loop" ? "cell" : sh);   // the loop shot is frame 0's composition again
+const SLIDE = (sh) => (sh === "loop" ? "cell" : sh === "skin2" ? "skin" : sh === "lung2" ? "lung" : sh);   // the loop shot is frame 0's composition again; skin2/lung2 re-cut the takeaway
 const G = { cell: new THREE.Group(), hb: new THREE.Group(), skin: new THREE.Group(), lung: new THREE.Group(), nerve: new THREE.Group() };
 for (const g of Object.values(G)) scene.add(g);
 const clk = clock(FILM.clock, { words: { slow: "{n}× slower" } });
@@ -74,7 +76,7 @@ const clk = clock(FILM.clock, { words: { slow: "{n}× slower" } });
 // ════ the cell ════════════════════════════════════════════════════════════════════════════════════
 // the hero, cut open along its axis (its biconcave section faces the lens), a little tilted toward us
 const heroMat = cellMaterial(THREE, L, { rbc: FILM.look.rbc, deep: "#B8445A", instanced: false, fresnel: 0.18 });
-const capMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#B23A52"), emissive: lin("#8E2A3F"), emissiveIntensity: 0.1, roughness: 0.6, side: THREE.DoubleSide }), { fresnel: 0.05, key: "cap" });
+const capMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#B23A52"), emissive: lin("#8E2A3F"), emissiveIntensity: 0.1, roughness: 0.6, side: THREE.DoubleSide }), { fresnel: 0.05, key: "cap" });
 {
   const prev = capMat.onBeforeCompile, mem = lin("#F6A3B0");
   capMat.onBeforeCompile = (sh, r) => {
@@ -90,7 +92,7 @@ G.cell.add(HC.group);
 HC.set({ cut: { n: [0, 0, 1], d: 0 } });
 G.cell.updateMatrixWorld(true); HC.update();
 // the hemoglobin crowd on the cut face (oversized: 0.34 µm across, against a real 5.5 nm), in the cut's plane
-const HBR = 0.17, hbMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#E06A7E"), vertexColors: true, roughness: 0.5, emissive: lin("#E5334F"), emissiveIntensity: 0.08 }), { fresnel: 0.25, key: "hbcrowd" });
+const HBR = 0.17, hbMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#E06A7E"), vertexColors: true, roughness: 0.5, emissive: lin("#E5334F"), emissiveIntensity: 0.08 }), { fresnel: 0.25, key: "hbcrowd" });
 const CROWD = [];
 {
   const r = rng(29);
@@ -109,7 +111,7 @@ HC.group.add(crowd);
 // the seated O₂ ("passengers"): four on each hemoglobin, at its seats, shown from "billion"
 const SEATS = [[2.3, 1.55, 0], [-2.3, 1.55, 0], [0, -1.55, 2.3], [0, -1.55, -2.3]].map((c) => { const l = Math.hypot(...c); return c.map((x) => (x / l) * 5.4); });
 const O2_REST = 0.14;   // set on every seek (one material for every O₂ in the film: no state carried between frames)
-const o2Mat = L.patch(new THREE.MeshStandardMaterial({ color: lin(THEME.tokens.o2 || "#FFFFFF"), emissive: lin("#FFFFFF"), emissiveIntensity: O2_REST, roughness: 0.3 }), { fresnel: 0.25, key: "o2" });
+const o2Mat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin(THEME.tokens.o2 || "#FFFFFF"), emissive: lin("#FFFFFF"), emissiveIntensity: O2_REST, roughness: 0.3 }), { fresnel: 0.25, key: "o2" });
 const pax = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), o2Mat, CROWD.length * 4);
 pax.instanceMatrix.setUsage(THREE.DynamicDrawUsage); pax.frustumCulled = false;
 HC.group.add(pax);
@@ -136,10 +138,11 @@ const writeCell = (t) => {
     instance(pax, k++, paxAt(i, s), null, sc);
   }
   pax.instanceMatrix.needsUpdate = true;
-  o2Mat.emissiveIntensity = O2_REST + 1.2 * glow * (0.75 + 0.25 * Math.sin(t * 11));
+  const seat = seg(t, 0.95, 1.1) * (1 - seg(t, 1.2, 1.9));   // the glint as it docks (1.0 s)
+  o2Mat.emissiveIntensity = O2_REST + 1.2 * Math.max(glow * (0.75 + 0.25 * Math.sin(t * 11)), 1.4 * seat);
   const lit = seg(t, FILM.cell.hbLit, FILM.cell.hbLit + 0.4) * (1 - seg(t, SHOT.hb.at - 0.4, SHOT.hb.at));
   const c = CROWD[HBLIT].tone * (1 + 0.55 * lit); crowd.setColorAt(HBLIT, new THREE.Color(c, c * (1 + 0.1 * lit), c * (1 + 0.1 * lit))); crowd.instanceColor.needsUpdate = true;
-  const p = hookP(t); hookO2.position.set(...p); hookO2.scale.setScalar(HBR * 0.5);
+  const p = hookP(t); hookO2.position.set(...p); hookO2.scale.setScalar(HBR * 1.6);   // review r3 (a): big enough to read as the event
   hookO2.quaternion.setFromEuler(new THREE.Euler(0.4, 0.9 + 0.3 * t, 0.2));
 };
 const cellWorld = (p) => HC.group.localToWorld(new THREE.Vector3(...p)).toArray();
@@ -188,7 +191,7 @@ const writeHb = (t) => {
 };
 
 // ════ skin over a vein (1 unit = 50 µm) ═════════════════════════════════════════════════════════════
-const VEIN = {};
+const VEIN = {}, SECT = {};
 const SK = { w: 56, d: 90, z: 40, veinY: -24, veinR: 8 };
 // venous blood: halfway along the hemoglobin shot's ramp (garnet = 0 of 4, crimson = 4 of 4), since about 75% of its seats are full
 const VENOUS = new THREE.Color(lin("#7A2234")).lerp(new THREE.Color(lin(FILM.look.rbc)), 0.5);
@@ -207,20 +210,24 @@ const VENOUS = new THREE.Color(lin("#7A2234")).lerp(new THREE.Color(lin(FILM.loo
   }
   cx.putImageData(img, 0, 0);
   const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 1;
-  const top = new THREE.Mesh(new THREE.PlaneGeometry(SK.w, SK.z * 2), L.patch(new THREE.MeshStandardMaterial({ map: tex, roughness: 0.7 }), { fresnel: 0.15, key: "skintop" }));
+  const top = new THREE.Mesh(new THREE.PlaneGeometry(SK.w, SK.z * 2), L.patch(new THREE.MeshPhysicalMaterial({ map: tex, roughness: 0.7 }), { fresnel: 0.15, key: "skintop" }));
   top.rotation.x = -Math.PI / 2; top.position.y = 0.01; G.skin.add(top);
-  const layer = (y0, y1, col, emi = 0.06) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(SK.w, y1 - y0, SK.z * 2), L.patch(new THREE.MeshStandardMaterial({ color: lin(col), emissive: lin(col), emissiveIntensity: emi, roughness: 0.8 }), { fresnel: 0.2, key: "skin" + col }));
+  const layer = (y0, y1, col, emi = 0.06, dry = false) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(SK.w, y1 - y0, SK.z * 2), L.patch(new THREE.MeshPhysicalMaterial({ color: lin(col), emissive: lin(col), emissiveIntensity: emi, roughness: 0.8 }), { fresnel: 0.2, key: "skin" + col, dry }));
     m.position.set(0, (y0 + y1) / 2, 0); G.skin.add(m); return m;
   };
   layer(-2.2, 0, "#F0CDBE", 0.1);            // epidermis
   layer(-14, -2.2, "#EDB3A3", 0.12);         // papillary dermis
   layer(-34, -14, "#D58C80", 0.1);           // dermis
-  layer(-SK.d, -34, "#EAD0B0", 0.1);         // the fat below, where the vein runs
+  layer(-SK.d, -34, "#EAD0B0", 0.1, true);   // the fat below, where the vein runs (matte: review r2, no crackle, no blown highlight)
+  // live scan (review r1): the cut face above the fat is a real stained section of human skin (public domain, the
+  // owner confirmed its licence 3 Nov: skincare/set/ref/SOURCES.md), not flat colour bands
+  SECT.mesh = new THREE.Mesh(new THREE.PlaneGeometry(SK.w, 34), L.patch(new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.42 }), { fresnel: 0.12, key: "skinsect" }));
+  SECT.mesh.position.set(0, -17, SK.z + 0.03); G.skin.add(SECT.mesh);
   // the vein: its wall and its dark blood, through the block; its end shows in the cut face
-  const wall = new THREE.Mesh(new THREE.CylinderGeometry(SK.veinR + 1.1, SK.veinR + 1.1, SK.z * 2 + 0.2, 128), L.patch(new THREE.MeshStandardMaterial({ color: lin(FILM.look.vessel || "#E9B3A8"), roughness: 0.8 }), { fresnel: 0.2, key: "veinwall" }));
+  const wall = new THREE.Mesh(new THREE.CylinderGeometry(SK.veinR + 1.1, SK.veinR + 1.1, SK.z * 2 + 0.2, 128), L.patch(new THREE.MeshPhysicalMaterial({ color: lin(FILM.look.vessel || "#E9B3A8"), roughness: 0.8 }), { fresnel: 0.2, key: "veinwall" }));
   wall.rotation.x = Math.PI / 2; wall.position.set(0, SK.veinY, 0.05); G.skin.add(wall);
-  VEIN.blood = new THREE.Mesh(new THREE.CylinderGeometry(SK.veinR, SK.veinR, SK.z * 2 + 0.4, 128), L.patch(new THREE.MeshStandardMaterial({ color: VENOUS.clone().multiplyScalar(0.7), emissive: VENOUS.clone(), emissiveIntensity: 0.18, roughness: 0.25 }), { fresnel: 0.1, key: "venous" }));
+  VEIN.blood = new THREE.Mesh(new THREE.CylinderGeometry(SK.veinR, SK.veinR, SK.z * 2 + 0.4, 128), L.patch(new THREE.MeshPhysicalMaterial({ color: VENOUS.clone().multiplyScalar(0.7), emissive: VENOUS.clone(), emissiveIntensity: 0.18, roughness: 0.25 }), { fresnel: 0.1, key: "venous" }));
   VEIN.blood.rotation.x = Math.PI / 2; VEIN.blood.position.set(0, SK.veinY, 0.1); G.skin.add(VEIN.blood);
   // the cut lumen is full of red cells (drawn about 4× too large to read at this scale: badged not to scale)
   const rl = rng(23), lumen = [];
@@ -241,7 +248,7 @@ const VENOUS = new THREE.Color(lin("#7A2234")).lerp(new THREE.Color(lin(FILM.loo
   G.skin.add(lc);
 }
 // the rays, in the plane just in front of the cut face: polylines drawn on, with a soft head
-const rayMat = (hex) => L.patch(new THREE.MeshStandardMaterial({ color: lin(hex), emissive: lin(hex), emissiveIntensity: 0.55, roughness: 0.4, transparent: true }), { fresnel: 0, key: "ray" + hex });
+const rayMat = (hex) => { const m = new THREE.MeshBasicMaterial({ color: new THREE.Color(hex).multiplyScalar(1.3), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }); m.emissiveIntensity = 0; return m; };   // review r3 (h): light, not arrows: a soft additive glow
 const ZR = SK.z + 0.8;
 // light paths: thin tubes along a smooth curve through the points (each corner rounded), drawn on, with an arrow head
 const ray = (pts, hex, r = 0.38) => {
@@ -276,6 +283,7 @@ const writeSkin = (t) => {
   const ub = E.inout2(seg(t, S.blue[0], S.blue[1])); RAYS.blue.forEach((r, i) => r.set(E.inout2(seg(t, S.blue[0] + 0.25 * i, S.blue[1] + 0.25 * i))));
   const ur = E.in2(seg(t, S.red[0], S.red[1])); RAYS.red.set(ur, 1 - 0.45 * E.out3(seg(t, S.swallow, S.swallow + 0.7)));
   RAYS.back.set(E.inout2(seg(t, S.back[0], S.back[1])));
+  { const tl = FILM.shots.find((q) => q.name === "lung").at; if (t >= tl - 0.9) for (const r of [...RAYS.blue, RAYS.red, RAYS.back]) r.set(0, 0); }   // review r2: no rays left over the pull-out
   // the vein takes the light in: its blood glows once on "swallows"
   const sw = seg(t, S.swallow - 0.05, S.swallow + 0.2) * (1 - seg(t, S.swallow + 0.25, S.swallow + 0.9));
   VEIN.blood.material.emissiveIntensity = 0.18 + 0.32 * sw;
@@ -283,32 +291,32 @@ const writeSkin = (t) => {
 };
 
 // ════ the lung: an air sac and its capillary (µm), shown 12× slower ════════════════════════════════
-const sacMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#EDB8A8"), emissive: lin("#F0C9B8"), emissiveIntensity: 0.12, roughness: 0.8 }), { fresnel: 0.25, fresnelPower: 3.0, key: "sac" });
+const sacMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#E39A90"), emissive: lin("#FF7563"), emissiveIntensity: 0.05, roughness: 0.4, clearcoat: 0.85, clearcoatRoughness: 0.12, sheen: 0.6, sheenRoughness: 0.45, sheenColor: new THREE.Color(1, 0.46, 0.39) }), { fresnel: 0.35, fresnelPower: 2.4, key: "sac", contour: 0.4 });   // live scan: wet, translucent-edged tissue
 const SACS = [];
 {
   const r = rng(13);
-  const add = (c, R, sq = 0.42) => { const C = cutaway({ radius: R, noise: { amp: 0.07, freq: 1.5, seed: 3 + SACS.length }, segments: [72, 48], material: sacMat }); C.group.position.set(...c); C.group.scale.set(1, 1, sq); G.lung.add(C.group); SACS.push({ c, R, g: C.group }); };
-  add([0, 0, -24], 58);                                   // the hero's air sac, its face just behind the capillary
+  const add = (c, R, sq = 0.42) => { const C = cutaway({ radius: R, noise: { amp: 0.13, freq: 2.2, seed: 3 + SACS.length }, segments: [72, 48], material: sacMat }); C.group.position.set(...c); C.group.scale.set(1, 1, sq); G.lung.add(C.group); SACS.push({ c, R, g: C.group }); };
+  add([0, 0, -24], 58);   // (noise amp raised below for a lumpier, living surface)                                   // the hero's air sac, its face just behind the capillary
   for (let k = 0; k < 7; k++) { const a = (k / 7) * 6.283 + 0.4, d = 118 + 14 * r(); add([Math.cos(a) * d, Math.sin(a) * d * 1.15, -40 - 30 * r()], 46 + 14 * r(), 0.5); }
 }
 const PL = path([[-150, -120, 0], [-80, -66, 0], [-40, -30, 0], [0, -4, 0], [40, 22, 0], [80, 60, 0], [150, 120, 0]], { up: [0, 0, 1] });
-const capR = 4.0, CAPV = vessel(THREE, L, PL, { radius: capR, wall: 0.5, tex: lining(THREE, { seed: 5 }), radial: 22, step: 2.5, rimColor: "#D39A8F" });
+const capR = 4.6, CAPV = vessel(THREE, L, PL, { radius: capR, wall: 0.5, tex: lining(THREE, { seed: 5 }), radial: 22, step: 2.5, rimColor: "#D39A8F" });
 G.lung.add(CAPV.group);
 const sF0 = PL.nearest([-40, -30, 0]), sF1 = sF0 + 60;      // the contact: the seats fill over 0.25 s at 240 µm/s
 const V = 240, GAPS = 14;                                   // µm/s of lung time; µm between cells
 const NC = Math.ceil(PL.length / GAPS);
 const lungGeo = rbcGeometry(THREE, { around: 56, along: 40 });
 const aFold = new THREE.InstancedBufferAttribute(new Float32Array(NC * 2), 2); aFold.setUsage(THREE.DynamicDrawUsage); lungGeo.setAttribute("aFold", aFold);
-const lungCells = new THREE.InstancedMesh(lungGeo, cellMaterial(THREE, L, { rbc: FILM.look.rbc, deep: FILM.look["rbc-deep"], roughness: 0.6, fresnel: 0.1 }), NC);
+const lungCells = new THREE.InstancedMesh(lungGeo, cellMaterial(THREE, L, { rbc: FILM.look.rbc, deep: FILM.look["rbc-deep"], roughness: 0.62, clearcoat: 0.12, fresnel: 0.1 }), NC);
 lungCells.instanceMatrix.setUsage(THREE.DynamicDrawUsage); lungCells.frustumCulled = false; G.lung.add(lungCells);
 for (let i = 0; i < NC; i++) lungCells.setColorAt(i, new THREE.Color(1, 1, 1));   // the colour attribute exists before the first compile
-const FK = foldFor(capR).k;
+const FK = foldFor(capR).k;   // fitted to a 9.2 μm lumen: a gentle cup that clears the wall (review r1: capsules, cells through the wall)
 const tauF0 = clk.tau(FILM.lung.flush[0]);
 const s0 = sF0 - V * tauF0;                               // the hero (slot 0) stands at sF0 when the seats start filling
 const heroLS = (tau) => s0 + V * tau;
 const cellS = (i, tau) => { const s = heroLS(tau) - i * GAPS; return ((s % PL.length) + PL.length) % PL.length; };
 const oxyAt = (s) => E.inout2(seg(s, sF0, sF1));
-const DEOXY = new THREE.Color(0.42, 0.45, 0.52), cTmp = new THREE.Color();   // arriving: about 75% full, clearly between garnet (empty) and crimson
+const DEOXY = new THREE.Color(0.3, 0.26, 0.34), cTmp = new THREE.Color();   // arriving clearly darker (garnet), flushing to crimson over the air sac   // arriving: about 75% full, clearly between garnet (empty) and crimson
 const qL = new THREE.Quaternion(), vY = new THREE.Vector3(0, 1, 0), vT = new THREE.Vector3();
 const LCELL = new Array(NC);
 const writeLung = (t) => {
@@ -367,9 +375,10 @@ const ANCH = {
   node: (t) => NF.at(NERVE_NODES[nerveK0 + 3], 1.5),
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
-hud.badge("warp", { from: clk, slot: "tl" });
+hud.badge("warp", { from: clk, slot: "tr" });   // the title owns the top-left keep-out (owner, 3 Nov)
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.7),   // the title owns its zone while it shows (owner, 3 Nov)
+   t1: b.t1, slot: b.slot || "tr" });
 const Q = FILM.quarter, SPINE_Y = 0.262;
 const commas = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 for (const sp of FILM.spine) {
@@ -386,6 +395,9 @@ const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * S1), at: 0.25 });
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
+const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
+const SCL = L.scanLine(document.querySelector(".stage"));
+scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze
 // the lung: the blood's round trip drawn on over "sends … once a minute" (larger, on a plate, to read on a phone)
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 560 * S1, h: 330 * S1, region: [0.42, 0.26], plate: true, loop: true });
 const LOCARM = locator(document.getElementById("hud"), { x: 92 * S1, y: 560 * S1, h: 232 * S1, region: [0.83, 0.5], plate: true });   // the skin: a forearm
@@ -402,7 +414,7 @@ const TARGETS = {
   sac: () => [0, 0, -4], hero: (t) => PL.at(heroLS(clk.tau(t))),
   front: (t) => NF.at(Math.max(0, nerveFront(t))),
 };
-window.CINEMA_FOCUS = (t) => focusAt(FILM.foc[shotOf(t)] || FILM.foc.cell, t, { targets: TARGETS });
+window.CINEMA_FOCUS = (t) => focusAt(FILM.foc[shotOf(t)] || FILM.foc[SLIDE(shotOf(t))] || FILM.foc.cell, t, { targets: TARGETS });
 
 // ── the probe: per slide, in its own units ─────────────────────────────────────────────────────
 const PR = { cell: probe(THREE, { W, H, near: 3, ndc: 1.15 }), hb: probe(THREE, { W, H, near: 6, ndc: 1.15 }), skin: probe(THREE, { W, H, near: 20, ndc: 1.15 }),
@@ -433,7 +445,7 @@ window.seek = function (t) {
   o2Mat.emissiveIntensity = O2_REST;
   L.rim.intensity = sh === "lung" || sh === "skin" ? 0.6 : 1.4;   // the mint rim greys warm tissue
   const heroP = PL.at(heroLS(clk.tau(t)));
-  placeCamera(camera, FILM.cam[shot], t, { track: () => heroP, handheld: 0 });
+  placeCamera(camera, FILM.cam[shot] || FILM.cam[SLIDE(shot)], t, { track: () => heroP, handheld: 0 });
   camera.near = sh === "cell" ? 0.2 : 0.5; camera.far = 4000; camera.updateProjectionMatrix();
   if (sh === "cell") writeCell(shot === "loop" ? 0 : t);
   if (sh === "hb") writeHb(t);
@@ -452,6 +464,9 @@ window.seek = function (t) {
   LOC.update(t, sh === "lung" ? presence(t, LOC_T[0], LOC_T[1], { d: 0.45, out: 0.35 }).o : 0, beatAmp(t, LOC_BEATS), E.inout2(seg(t, ...FILM.lung.loop)));
   LOCARM.update(t, sh === "skin" ? presence(t, ARM_T[0], ARM_T[1], { d: 0.45, out: 0.35 }).o : 0, beatAmp(t, lubs(ARM_T[0], ARM_T[1])));
   IR.update(t);
+  FIN.set(t); MOT.set(t, sh === "lung" ? 0 : 1);   // review r3: no near motes blooming in the lung close-up
+  { const S = FILM.scan, on = t >= S.up[0] && t < S.off ? 1 : 0, y = on ? 1 - (1 - S.park) * E.inout2(seg(t, S.up[0], S.up[1])) : 2;   // scan view
+    L.SCAN.set(y, on); SCL.set(y, on * (1 - seg(t, S.off - 0.35, S.off - 0.05)), S.tag); }
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, 12);
@@ -461,4 +476,5 @@ window.seek = function (t) {
   }
   renderer.render(scene, camera);
 };
-window.SCENE_READY = Promise.resolve();
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const t = new THREE.Texture(img); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.needsUpdate = true;
+  SECT.mesh.material.map = t; SECT.mesh.material.needsUpdate = true; res(); }; img.src = SECTION; });

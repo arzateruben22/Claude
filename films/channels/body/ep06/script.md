@@ -69,15 +69,15 @@ sentence that states nothing outside the film.
 vo: How does this cell *leave* your blood? {-} This wall has no open *door*. {c1}
 
 ## normal {shot: the same cell a minute earlier, round, riding the stream among red-cell discs; the lining edge to edge, no opening; on "eight micrometres" a scale pill beside the cell reads "about 8 µm · round, in blood"; on "outside" the camera drifts through the lining into the tissue beyond it, where white cells have piled up (no fingertip here: it is saved for the takeaway) · energy: 0.45} (5.2–14.4 s)
-vo: It's a *neutrophil*, your commonest white cell, about eight micrometres across. {c2,c3} Yet under
-a sore fingertip, they pile up *outside* the wall. {c5}
+vo: It's a *neutrophil*, your most common white cell, a bit wider than a red one. {c2,c3} Under a sore
+fingertip, they pile up *outside* the wall. {c5}
 
 ## change {shot: on a sound, that tissue and its vessel redrawn as one 19th-century engraving with one badge, "illustrated"; on "tissue" the tissue's cells glow, where the old idea grew pus; on "Julius Cohnheim" the same engraving comes alive as a living frog's thin gut membrane (no redraw); on "out" engraved white cells push through the vessel wall and spill into the tissue; the spine readout dimmed · energy: 0.55} (14.4–24.9 s)
 vo: Rudolf Virchow taught that pus grew from the inflamed *tissue*. {c6} In eighteen sixty-seven, his
 assistant Julius Cohnheim watched a living frog's vessels. {c7,c24,c8} White cells climbed *out*. {c9,c10}
 
 ## why {shot: on a sound, back in the live venule, the hero in the same place on screen, slowed; on "sticky" fine threads light on the lining, snag it, and it tumbles (no note); on "stops" its grips light and the stream parts around it; it crawls across the lining to a seam between two wall cells, which glows; on the stakes line one faulty cell, its grips dark (badge "illustration: rare inherited condition"), rolls along the lining and on past the seam without stopping, and nothing else comes in · picture-only 2 s, before the whoa: back on the hero at the seam, its lobed nucleus pressed to the join · energy: 0.55} (24.9–42.5 s)
-vo: Where tissue is inflamed, the wall turns sticky, and the cell *rolls*. {c27,c11} Then its grips
+vo: Where you're hurt or infected, the wall turns sticky, and the cell *rolls*. {c27,c11} Then its grips
 switch on, and it *stops*. {c12} It crawls to a *seam* between two wall cells. {c13,c14} In a rare
 inherited condition, those grips are faulty. {c15} Cells roll on *past*. {c25}
 
@@ -89,8 +89,7 @@ narrower than itself. {c17} Behind it, the seam seals *shut*. {c26}
 vo: So pus is mostly white cells from your *blood*. {c19,c20} Each one let itself out. {c21}
 
 ## meanwhile {segment: meanwhile · tally "while you watched: new neutrophils": the spine readout itself, 173,611 a second from frame 0, badged "low estimate", lights and drops onto the pulse line (about 10.7–11.6 million while the line is spoken); the body locator marks the bone marrow · mallet ticks on the lub-dub · energy: 0.4} (61.5–67.4 s)
-vo: *Meanwhile*, as you watched, your bone marrow made new neutrophils. {c22} More than ten
-*million*. {c23}
+vo: *Meanwhile*, as you watched, your bones made more than ten *million* new ones. {c22,c23}
 
 ## tease {shot: pull back out of the fingertip, up the arm, to the heart; a small patch high in its upper right chamber flickers chartreuse on each lub (picture only; its sources belong to episode 7) · end card held ≥ 2 s, the tally holding its last value; under it the membrane iris returns to frame 0, the cell halfway through the wall (a seamless replay; the tally starts again from 0); the card's fact: Augustus Waller saw blood cells cross capillary walls in 1846, 21 years before Cohnheim (Philosophical Magazine 29: 397) · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.4–73.9 s)
 vo: Next: the spark. {-} What sets off nearly every *heartbeat* you have? {-}

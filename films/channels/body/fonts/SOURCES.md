@@ -13,6 +13,8 @@ read with `git ls-remote` and a blobless clone.
 | `Fraunces-OFL.txt` (4,391 B) | Fraunces licence | | <https://raw.githubusercontent.com/undercasetype/Fraunces/1.000/OFL.txt> (the release zip has no licence file; identical to the one on `main`) | `bdf4c22802eaf804f998195871c6b8938aac2ac14b2d78a8bd66a6f1eced833b` |
 | `AtkinsonHyperlegibleNext-VF.woff2` (48,188 B) | Atkinson Hyperlegible Next, Version 2.001 | wght 200–800 | <https://raw.githubusercontent.com/googlefonts/atkinson-hyperlegible-next/7925f50f649b3813257faf2f4c0b381011f434f1/fonts/webfonts/AtkinsonHyperlegibleNext%5Bwght%5D.woff2> (`main` at 7925f50, 2025-02-21; the repo has no releases or tags) | `abde1ad5cf78b9ac575ef90d991f2e9101eb0b3b6668bde9a00e2e1e27d99afd` |
 | `AtkinsonHyperlegibleNext-OFL.txt` (4,431 B) | Atkinson Hyperlegible Next licence | | <https://raw.githubusercontent.com/googlefonts/atkinson-hyperlegible-next/7925f50f649b3813257faf2f4c0b381011f434f1/OFL.txt> | `aca6a428580965d2297d1b718042dd427c2a9443ece3b0d02d758e161e0c4030` |
+| `AtkinsonHyperlegibleMono-VF.ttf` (53,960 B) | Atkinson Hyperlegible Mono (variable) | wght 200–800 | <https://raw.githubusercontent.com/googlefonts/atkinson-hyperlegible-next-mono/154d50362016cc3e873eb21d242cd0772384c8f9/fonts/variable/AtkinsonHyperlegibleMono%5Bwght%5D.ttf> (`main` at 154d503, downloaded 3 Nov 2026 for the reboot look test) | `5ce8b1698d1ded7dff2178c1a3ad159470085a58ea239e8b2cb88f4fb4a6f646` |
+| `AtkinsonHyperlegibleMono-OFL.txt` | Atkinson Hyperlegible Mono licence | | <https://raw.githubusercontent.com/googlefonts/atkinson-hyperlegible-next-mono/154d50362016cc3e873eb21d242cd0772384c8f9/OFL.txt> | `1ebb31cf7393164f20d10c1d48406cddb5314feff8465531cf1e4ba37e9dd740` |
 
 ## Notes
 

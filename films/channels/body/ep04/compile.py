@@ -85,10 +85,10 @@ CAM = {
         {"t": A("vo04:electricity"), "pos": [-10.0, 1.0, 110.0], "look": [0.0, -3.5, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo04:jump", 0.35), "pos": [-9.0, 1.2, 106.0], "look": [0.0, -3.5, 0.0], "fov": 34, "ease": "sine"},   # hold wide: the glow reaches the wall and stops there, on the words
         # the tip, close, a little lower and wider so the receptors and the drift clear the caption plate
-        {"t": A("vo04:floods", 0.0), "pos": [2.5, 5.2, 66.0], "look": [6.0, -2.4, 0.0], "fov": 34, "ease": "p2"},
-        {"t": REL["drift"][1], "pos": [5.5, 3.5, 62.0], "look": [9.0, -2.6, 0.0], "fov": 34, "ease": "sine"},
-        {"t": B["whoa"]["t0"], "pos": [6.5, 2.6, 70.0], "look": [10.0, -2.3, 0.0], "fov": 34, "ease": "sine"},
-        {"t": REPLAY[1], "pos": [6.5, 2.6, 72.0], "look": [10.0, -2.3, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo04:floods", 0.0), "pos": [3.0, -15.0, 27.0], "look": [12.0, -0.5, 0.0], "fov": 34, "ease": "p2"},   # live scan: grazing across the receptor field into the cut terminal (owner, 3 Nov)
+        {"t": REL["drift"][1], "pos": [4.0, -14.0, 25.0], "look": [12.2, -0.6, 0.0], "fov": 34, "ease": "sine"},
+        {"t": B["whoa"]["t0"], "pos": [3.0, -13.0, 29.0], "look": [12.0, -0.5, 0.0], "fov": 34, "ease": "sine"},
+        {"t": REPLAY[1], "pos": [3.0, -12.5, 31.0], "look": [12.0, -0.5, 0.0], "fov": 34, "ease": "sine"},
         # the field: a cell with five junctions on it; the one used again and again pulses and grows
         {"t": A("vo05:junction", 0.3), "pos": [150.0, -205.0, 260.0], "look": [90.0, -290.0, -232.0], "fov": 34, "ease": "p2"},   # on the junction as it is named
         {"t": B["takeaway"]["t0"], "pos": [140.0, -200.0, 240.0], "look": [88.0, -288.0, -232.0], "fov": 34, "ease": "sine"},
@@ -141,13 +141,14 @@ BADGES = [
     {"id": "nts2", "text": "not to scale", "t0": A("vo05:Use", 0.0), "t1": CUT["sac"]},
     {"id": "few", "text": "simplified: a few of thousands drawn", "t0": A("vo02:reaches", 0.0), "t1": A("vo02:hundred", -0.45)},   # gone before the 100+ trillion readout
     {"id": "ill", "text": "illustration: one stained tissue, two readings", "t0": PANELS["t0"], "t1": PANELS["t1"] - 0.35},
-    {"id": "slow-why", "text": "slowed", "slot": "tl", "t0": REL["sig"][0], "t1": EM[1]},
-    {"id": "slow", "text": "slowed", "slot": "tl", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
-    {"id": "fast", "text": "sped up", "slot": "tl", "t0": A("vo05:Use", 0.0), "t1": B["whoa"]["t1"]},
-    {"id": "slow-talk", "text": "slowed", "slot": "tl", "t0": TALK, "t1": TALK + 2.4},
-    *[{"id": f"slow-b{i}", "text": "slowed", "slot": "tl", "t0": round(b - 0.4, 4), "t1": round(b + 2.0, 4)} for i, b in enumerate(BREATHS)],
+    {"id": "slow-why", "text": "slowed", "slot": "br", "t0": REL["sig"][0], "t1": EM[1]},
+    {"id": "slow", "text": "slowed", "slot": "br", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
+    {"id": "fast", "text": "sped up", "slot": "br", "t0": A("vo05:Use", 0.0), "t1": B["whoa"]["t1"]},
+    {"id": "slow-talk", "text": "slowed", "slot": "br", "t0": TALK, "t1": TALK + 2.4},
+    *[{"id": f"slow-b{i}", "text": "slowed", "slot": "br", "t0": round(b - 0.4, 4), "t1": round(b + 2.0, 4)} for i, b in enumerate(BREATHS)],
     {"id": "nts-sac", "text": "illustration, not to scale", "t0": CUT["sac"], "t1": CUT["loop"]},   # gone under the end card; frame 0 carries "not to scale"
 ]
+SCAN = {"up": [REPLAY[0], REPLAY[0] + 1.4], "park": 0.5, "off": REPLAY[1], "tag": "▼ scan view"}   # live scan: the line rises from the bottom and parks; below it, scan view
 TITLE = {"series": "Body Backstage · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *where breath goes*", "next": "Body Backstage · No. 05", "follow": "Follow Body Backstage",
        "fact": "Golgi and Cajal shared the 1906 Nobel Prize, and argued in their lectures."}   # c6
@@ -170,8 +171,8 @@ CAPTION_KEEP = [
     "a thousandth of a second",
     "grow stronger",
     "gaps like these",
-    "your brainstem",
-    "your diaphragm",
+    "your brain",
+    "the base",
     "fifteen breaths",
     "those breaths",
     "that air",
@@ -179,17 +180,17 @@ CAPTION_KEEP = [
     "thousands of others",
     "tiny sacs",
     "reaches thousands",
-    "in your brainstem",
+    "at the base",
     "and crossed",
 ]
 
 film = {
-    "id": "meanwhile-inside-004", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
+    "id": "body-backstage-004", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "sharp": SHARP, "rel": REL, "replay": REPLAY, "use": USE, "breaths": BREATHS, "talk": TALK, "meet": MEET,
     "panels": PANELS, "loc": LOC,
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,
-    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
+    "segBeats": SEG_BEATS, "title": TITLE, "scan": SCAN, "endCard": EC, "end": END,
     "look": THEME["scene"],
     "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

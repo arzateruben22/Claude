@@ -51,15 +51,16 @@ LANG = "en-gb"
 # Kokoro speed per sentence of each line, chosen from measured durations (README.md, "Voice"). The
 # hook's question stays near natural speed so it is spoken by 2.0 s; its answer slows a little.
 SPEEDS = {
-    "vo01": [1.0, 0.85],
-    "vo02": [0.92, 0.94, 0.96],
-    "vo03": [0.86, 0.86],
-    "vo04": [0.95, 0.94, 0.92],
-    "vo05": [0.88, 0.88],
-    "vo06": [0.97, 0.98],
-    "vo07": [0.85],
+    "vo01": [1.0, 0.82],
+    "vo02": [0.78, 0.78, 0.8],
+    "vo03": [0.74, 0.74],
+    "vo04": [0.9, 0.9, 0.88],
+    "vo05": [0.76, 0.78],
+    "vo06": [0.92, 0.92],
+    "vo07": [0.8],
     "vo08": [0.96, 0.92],
 }
+LEAD_GATE = {"vo03": 0.09, "vo07": 0.18}   # seconds: see the write below
 GAP, GAP_Q = 0.30, 0.45          # seconds of silence after a sentence, after a question
 
 
@@ -125,6 +126,11 @@ def main():
                 parts.append(np.zeros(int(round(g * sr)), np.float32))
         audio = np.concatenate(parts)
         f = out / f"{i:02d}.wav"
+        # a soft breath/onset before the first word read as a stray syllable to the recognizer ("I follow", "And
+        # meanwhile"); gate it: silence before LEAD_GATE seconds, then a 30 ms fade in (the first word starts later)
+        if lid in LEAD_GATE:
+            g0 = int(LEAD_GATE[lid] * sr); n = min(len(audio) - g0, int(0.03 * sr))
+            audio[:g0] = 0.0; audio[g0:g0 + n] *= np.linspace(0.0, 1.0, n, dtype=np.float32)
         sf.write(f, audio, sr, subtype="PCM_24")
         dur = round(len(audio) / sr, 3)
         meta["lines"].append({"id": lid, "beat": beat, "text": text, "stars": stars, "phonemes": " ".join(phs), "speeds": speeds, "gaps": gaps, "silences": sils,

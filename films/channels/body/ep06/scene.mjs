@@ -1,4 +1,4 @@
-// Meanwhile, Inside No. 06, "The exit": the picture, a pure function of t.
+// Body Backstage No. 06 (season 1 reboot, live scan), "The exit": the picture, a pure function of t.
 //
 // Places (each its own spot in one scene, joined by the iris):
 //   vein    (µm) a venule under a fingertip's skin: a floor of wall cells (cutaway pancakes) meeting at seams, the
@@ -45,10 +45,11 @@ const camera = new THREE.PerspectiveCamera(34, W / H, 0.2, 12000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 9000 });
 scene.add(L.lights, L.backdrop);
 scene.fog = L.fog;
-if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, maxCoc: 0.024 });
+L.studio(renderer, scene, 0.6);                          // live scan: reflections for the wet clearcoat
+if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.024 });
 const lin = (h) => L.lin(h);
 const G = Object.fromEntries(Object.keys(PLACE).map((k) => { const g = new THREE.Group(); g.position.set(...PLACE[k]); scene.add(g); return [k, g]; }));
-const mat = (hex, key, o = {}) => L.patch(new THREE.MeshStandardMaterial({ color: lin(hex), roughness: o.r ?? 0.6, emissive: lin(o.emi || hex), emissiveIntensity: o.ei ?? 0.04,
+const mat = (hex, key, o = {}) => L.patch(new THREE.MeshPhysicalMaterial({ color: lin(hex), roughness: o.r ?? 0.6, emissive: lin(o.emi || hex), emissiveIntensity: o.ei ?? 0.04,
   side: o.side ?? THREE.FrontSide, transparent: !!o.transparent, opacity: o.opacity ?? 1 }), { fresnel: o.fres ?? 0.3, fresnelPower: o.fp ?? 2.2, key });
 const SIG = "#D6F25F";
 
@@ -76,7 +77,7 @@ const seamDeform = (s, open) => {
   f.key = Math.round(open * 500); return f;
 };
 // the seam itself: a thin line along z at x = 0 that glows when it is named
-const seamMat = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 0, roughness: 1, fog: false, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+const seamMat = new THREE.MeshPhysicalMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 0, roughness: 1, fog: false, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
 const seamLine = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.3, 36), seamMat); seamLine.position.set(0, 0.12, 0); G.vein.add(seamLine);
 // the far wall of the vessel: a half pipe behind (radius 32, its axis at y = 30), lined
 const pipe = (() => {
@@ -88,7 +89,7 @@ const pipe = (() => {
   for (let i = 0; i < NX; i++) for (let j = 0; j < NP; j++) { const a = i * (NP + 1) + j, b = a + NP + 1; idx.push(a, b, a + 1, a + 1, b, b + 1); }
   const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2)); g.setIndex(idx); g.computeVertexNormals();
   const tex = lining(THREE, { seed: 9 }); tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  return new THREE.Mesh(g, L.patch(new THREE.MeshStandardMaterial({ color: lin("#D9A39A"), map: tex, roughness: 0.7, side: THREE.DoubleSide }), { fresnel: 0.15, key: "pipe" }));
+  return new THREE.Mesh(g, L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#D9A39A"), map: tex, roughness: 0.7, side: THREE.DoubleSide }), { fresnel: 0.15, key: "pipe" }));
 })();
 G.vein.add(pipe);
 // the stream: red cells over the floor, faster in the middle of the vessel, wrapping along x
@@ -113,7 +114,7 @@ const PILED = [[22, -9, 2, 0.6, 2], [36, -12, -6, 0.3, 3], [12, -15, -10, 0.5, 4
   N.set({ pass: 1, settle: st }); G.vein.add(N.group); return N;
 });
 // the selectins: fine threads on the lining along the hero's path, lighting on "sticky"
-const THN = 160, thMat = new THREE.MeshStandardMaterial({ color: lin("#A8D89A"), emissive: lin("#A8D89A"), emissiveIntensity: 0, roughness: 0.6 });
+const THN = 160, thMat = new THREE.MeshPhysicalMaterial({ color: lin("#A8D89A"), emissive: lin("#A8D89A"), emissiveIntensity: 0, roughness: 0.6 });
 const threads = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.06, 0.08, 1, 5), thMat, THN); threads.frustumCulled = false; G.vein.add(threads);
 { const r = rng(51), m = new THREE.Matrix4(), q = new THREE.Quaternion(); for (let i = 0; i < THN; i++) { const x = -72 + 74 * r(), z = -7 + 14 * r(), h = 0.7 + 0.8 * r(); q.setFromEuler(new THREE.Euler((r() - 0.5) * 0.8, 0, (r() - 0.5) * 0.8)); threads.setMatrixAt(i, m.compose(new THREE.Vector3(x, h / 2, z), q, new THREE.Vector3(1, h, 1))); } }
 // the hero and the faulty cell
@@ -192,7 +193,7 @@ const finger = new THREE.Group(); G.finger.add(finger);
 }
 // the sore spot by the nail fold: a swelling with a soft warm glow (never a wound, never blood or pus drawn)
 const SPOT = [4.2, 7.6, 3.4];
-const spotMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#C99079"), roughness: 0.5, emissive: lin("#FFB37A"), emissiveIntensity: 0.3 }), { fresnel: 0.2, key: "spot" });
+const spotMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#C99079"), roughness: 0.5, emissive: lin("#FFB37A"), emissiveIntensity: 0.3 }), { fresnel: 0.2, key: "spot" });
 const spot = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), spotMat); spot.scale.set(3.6, 1.6, 3.0); spot.position.set(...SPOT); spot.lookAt(SPOT[0], SPOT[1] + 5, SPOT[2] + 3); finger.add(spot);
 // the white cells beneath it, ghosted through the skin
 const ghostMat = new THREE.MeshBasicMaterial({ color: lin("#F3EEE4"), transparent: true, opacity: 0, depthTest: false, depthWrite: false });
@@ -237,7 +238,8 @@ const ANCH = {
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.7),   // the title owns its zone while it shows (owner, 3 Nov)
+   t1: b.t1, slot: b.slot || "tr" });
 // the size: a scale bar as long as the cell is across, at its depth
 hud.scale("size", { text: FILM.scale.text, t0: FILM.scale.t0, t1: FILM.scale.t1, bar: (t) => { const c = heroWorld(t), a = hud.project([c[0] - HERO.R, c[1], c[2]]), b = hud.project([c[0] + HERO.R, c[1], c[2]]); return Math.hypot(b.x - a.x, b.y - a.y); } });
 // the spine readout: the meanwhile's tally itself, counting from frame 0 (shown from the title's exit), dimmed to a third until the meanwhile
@@ -250,6 +252,9 @@ const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * 
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 { const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
+const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
+const SCL = L.scanLine(document.querySelector(".stage"));
+scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 612 * S1, h: 232 * S1, region: FILM.loc.region, plate: true });
 const NS = "http://www.w3.org/2000/svg";
 
@@ -371,6 +376,9 @@ window.seek = function (t) {
   ePulse.update(beatAmp(t, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
   LOC.update(t, presence(t, FILM.loc.t0, FILM.loc.t1, { d: 0.45, out: 0.35 }).o, beatAmp(t, FILM.segBeats));
   IR.update(t);
+  FIN.set(t); MOT.set(t);
+  { const S = FILM.scan, on = t >= S.up[0] && t < S.off ? 1 : 0, y = on ? 1 - (1 - S.park) * E.inout2(seg(t, S.up[0], S.up[1])) : 2;   // scan view
+    L.SCAN.set(y, on); SCL.set(y, on * (1 - seg(t, S.off - 0.35, S.off - 0.05)), S.tag); }
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, 12);

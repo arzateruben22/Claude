@@ -57,7 +57,7 @@ SPEEDS = {
     "vo04": [0.92, 0.9, 0.9],
     "vo05": [0.84, 0.82],
     "vo06": [0.86, 0.86],
-    "vo07": [0.88, 0.88],
+    "vo07": [0.84, 0.82],
     "vo08": [0.86, 0.86],
 }
 GAP, GAP_Q = 0.30, 0.45          # seconds of silence after a sentence, after a question

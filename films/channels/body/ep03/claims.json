@@ -1,7 +1,7 @@
 [
  {
   "id": "c1",
-  "sentence": "The leading expert doubted it could ever be timed.",
+  "sentence": "A top expert doubted anyone could time it.",
   "claim": "Johannes Müller, the leading physiologist of the 1840s, held that the nerve signal was so fast it could never be measured.",
   "source_url": "https://psychology.uga.edu/sites/default/files/inline-files/Helmholtz%20Final%20Proof%2026%20May%2C%202019.pdf",
   "source_title": "Hermann von Helmholtz and the speed of the nerve impulse (University of Georgia, Department of Psychology, manuscript, 2019)",
@@ -100,7 +100,7 @@
  },
  {
   "id": "c7",
-  "sentence": "Many of your fibres wear fatty myelin, re-firing only at gaps, so the signal leaps.",
+  "sentence": "Many fibres wear a fatty coat, myelin, and only re-fire at its gaps, so the signal leaps.",
   "claim": "Many vertebrate axons are wrapped in myelin, an insulating sheath of membrane layers made by glial cells (oligodendrocytes and Schwann cells), interrupted by bare gaps, the nodes of Ranvier.",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK10921/",
   "source_title": "Purves et al., Neuroscience 2nd ed., Increased Conduction Velocity as a Result of Myelination (NCBI Bookshelf NBK10921)",
@@ -111,7 +111,7 @@
  },
  {
   "id": "c8",
-  "sentence": "Many of your fibres wear fatty myelin, re-firing only at gaps, so the signal leaps.",
+  "sentence": "Many fibres wear a fatty coat, myelin, and only re-fire at its gaps, so the signal leaps.",
   "claim": "In myelinated axons action potentials are generated only at the nodes of Ranvier; current flows passively under the myelin to the next node, so the signal appears to jump (saltatory conduction).",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK10921/",
   "source_title": "Purves et al., Neuroscience 2nd ed., Increased Conduction Velocity as a Result of Myelination (NCBI Bookshelf NBK10921)",
@@ -122,7 +122,7 @@
  },
  {
   "id": "c9",
-  "sentence": "Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
+  "sentence": "Where it's damaged, as in multiple sclerosis, signals slow or stall.",
   "claim": "In multiple sclerosis, damage to myelin disrupts or slows nerve signals; signals can be slowed, garbled or blocked.",
   "source_url": "https://health.harvard.edu/topics/multiple-sclerosis",
   "source_title": "Multiple sclerosis (Harvard Health Publishing)",

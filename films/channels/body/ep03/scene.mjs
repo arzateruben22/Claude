@@ -1,4 +1,4 @@
-// Meanwhile, Inside No. 03, "The jump": the picture, a pure function of t.
+// Body Backstage No. 03 (season 1 reboot, live scan), "The jump": the picture, a pure function of t.
 //
 // One world (µm, internodes compressed; badged "not to scale"): three nerve fibres along x (set/neuron.js):
 //   hero  y = 0     myelinated, its cell body at x < 0 and its terminal at x = 660 (the tease's "end of the line")
@@ -42,7 +42,8 @@ const camera = new THREE.PerspectiveCamera(34, W / H, 1, 4000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 2500 });
 scene.add(L.lights, L.backdrop);
 scene.fog = L.fog;
-if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, maxCoc: 0.024 });
+L.studio(renderer, scene, 0.6);                          // live scan: reflections for the wet clearcoat
+if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.024 });
 const lin = (h) => L.lin(h);
 const G = { fibres: new THREE.Group(), drum: new THREE.Group() };
 for (const g of Object.values(G)) scene.add(g);
@@ -64,14 +65,14 @@ const satin = (hex) => L.patch(new THREE.MeshPhysicalMaterial({ color: lin(hex),
   clearcoat: 0.2, clearcoatRoughness: 0.4, emissive: lin("#F6EEDC"), emissiveIntensity: 0.05 }), { fresnel: 0.2, fresnelPower: 3.0, key: "satin" + hex });
 for (const F of [HERO, MSF]) { const m = satin("#F1E6D2"); F.group.children.forEach((c) => { if (c.material === F.sheathMat) c.material = m; }); F.sheathMat = m; }
 // the spark at each gap: additive light (it blooms; the sheath never does), a little wider than the axon's own glow
-const sparkBand = () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 0, roughness: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
+const sparkBand = () => new THREE.MeshPhysicalMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 0, roughness: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
 for (const F of [HERO, MSF]) F.bands.forEach((b) => { b.material = sparkBand(); b.scale.set(1, 1.2, 1.2); });
 const glowSet = (F, o) => { F.set(o); F.bands.forEach((b) => { b.material.emissiveIntensity *= 2.8; b.material.opacity = 1; }); };
 // the damaged sheath on the ms fibre: its own dense lathe, eaten away in small patches down to the axon
 const BAD = FILM.ms.bad;
 const msSheaths = MSF.group.children.filter((m) => m.material === MSF.sheathMat);
 {
-  const m = msSheaths[BAD], mat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#CDBFA6"), roughness: 0.7 }), { fresnel: 0.2, key: "badsheath" });
+  const m = msSheaths[BAD], mat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#CDBFA6"), roughness: 0.7 }), { fresnel: 0.2, key: "badsheath" });
   const il = 40, ar = 1.1, R = 3.3, prof = [];
   for (let i = 0; i <= 96; i++) { const x = (i / 96) * il, e = Math.min(1, Math.min(x, il - x) / (il * 0.12)), sn = Math.sin((e * Math.PI) / 2); prof.push(new THREE.Vector2(ar + (R - ar) * Math.pow(sn, 0.7), x)); }
   const g = new THREE.LatheGeometry(prof, 64); g.rotateZ(-Math.PI / 2);
@@ -86,7 +87,7 @@ const msSheaths = MSF.group.children.filter((m) => m.material === MSF.sheathMat)
   g.computeVertexNormals(); m.geometry = g; m.material = mat;
 }
 // the cell body and its dendrites, at the hero's start
-const somaMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#C9A9B6"), roughness: 0.55 }), { fresnel: 0.4, fresnelPower: 2.2, key: "soma" });
+const somaMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#C9A9B6"), roughness: 0.55 }), { fresnel: 0.4, fresnelPower: 2.2, key: "soma" });
 const SOMA = cutaway({ radius: 12, noise: { amp: 0.12, freq: 1.6, seed: 5 }, segments: [64, 48], material: somaMat });
 SOMA.group.position.set(-13, 0, 0); SOMA.group.scale.set(1.15, 1, 1); G.fibres.add(SOMA.group);
 {
@@ -102,10 +103,10 @@ SOMA.group.position.set(-13, 0, 0); SOMA.group.scale.set(1.15, 1, 1); G.fibres.a
 }
 // the terminal at the hero's end, the gap, and the next cell's surface beyond it (dark: the signal stops here)
 const TX = 660;
-const boutonMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#C9A9B6"), roughness: 0.5, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.25, key: "bouton" });
+const boutonMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#C9A9B6"), roughness: 0.5, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.25, key: "bouton" });
 const BOUTON = cutaway({ radius: 6, noise: { amp: 0.1, freq: 1.8, seed: 9 }, segments: [48, 32], material: boutonMat });
 BOUTON.group.position.set(TX + 4, 0, 0); BOUTON.group.scale.set(1.1, 1, 1); G.fibres.add(BOUTON.group);
-const postMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#6F5C68"), roughness: 0.6 }), { fresnel: 0.1, key: "post" });   // the next cell, dark beyond the gap
+const postMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#6F5C68"), roughness: 0.6 }), { fresnel: 0.1, key: "post" });   // the next cell, dark beyond the gap
 const POST = cutaway({ radius: 26, noise: { amp: 0.05, freq: 1.2, seed: 11 }, segments: [64, 48], material: postMat });
 POST.group.position.set(TX + 37, 0, -2); POST.group.scale.set(0.95, 1.2, 1); G.fibres.add(POST.group);
 // neighbours, for depth
@@ -114,8 +115,8 @@ const NEIGH = [];
 for (const [y, z, a, s] of [[130, -160, 0, 7], [-80, -190, -0.04, 8], [-130, -240, 0.02, 9]]) { const F = fibre(THREE, L, { length: 940, axonR: 0.9, myelin: { r: 2.8, internode: 36, node: 2 }, myelinColor: "#B5AA97", axonColor: "#9C8C96" }); F.group.position.set(-60, y, z); F.group.rotation.z = a; G.fibres.add(F.group); NEIGH.push(F); }
 
 // the leap: an arc of light from one gap to the next, just over the sheath, drawn on as the signal crosses
-const arcMat = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 2.6, roughness: 1, fog: false });
-const headMat = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 4.0, roughness: 1, fog: false });
+const arcMat = new THREE.MeshPhysicalMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 2.6, roughness: 1, fog: false });
+const headMat = new THREE.MeshPhysicalMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 4.0, roughness: 1, fog: false });
 const ARCN = 64, ARCR = 10, ARCH = 2.6;
 const STEP = MY.internode + MY.node;   // every hop is one internode plus its gap (both fibres share it)
 const arcGeo = (() => { const pts = []; for (let i = 0; i <= 32; i++) { const u = i / 32; pts.push(new THREE.Vector3(u * STEP, ARCH * Math.sin(Math.PI * u), 0)); } return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), ARCN, 0.55, ARCR, false); })();
@@ -200,9 +201,9 @@ const ENV = (() => {
   const pm = new THREE.PMREMGenerator(renderer), rt = pm.fromScene(es, 0.04); pm.dispose(); return rt.texture;
 })();
 {
-  const soot = L.patch(new THREE.MeshStandardMaterial({ color: lin("#2E2A27"), roughness: 0.8, metalness: 0.05, envMap: ENV, envMapIntensity: 0.35 }), { fresnel: 0.45, key: "drum" });
+  const soot = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#2E2A27"), roughness: 0.8, metalness: 0.05, envMap: ENV, envMapIntensity: 0.35 }), { fresnel: 0.45, key: "drum" });
   drum.add(new THREE.Mesh(new THREE.CylinderGeometry(DR.r, DR.r, DR.h, 128, 1, false), soot));
-  const brass = L.patch(new THREE.MeshStandardMaterial({ color: lin("#B08D57"), roughness: 0.35, metalness: 0.7, envMap: ENV, envMapIntensity: 1.0 }), { fresnel: 0.2, key: "brass" });
+  const brass = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#B08D57"), roughness: 0.35, metalness: 0.7, envMap: ENV, envMapIntensity: 1.0 }), { fresnel: 0.2, key: "brass" });
   const axle = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, DR.h + 16, 16), brass); drum.add(axle);
   const base = new THREE.Mesh(new THREE.BoxGeometry(60, 3, 34), brass); base.position.set(4, -24, -6); G.drum.add(base);
   // contact shade on the base under the drum and the post
@@ -218,7 +219,7 @@ const TRACE_T = 1.3, ROWS = [-3.2, 3.2], SHIFT = [0, 0.16];   // near and far st
 const WHIRL = [D.traces[0] + TRACE_T + 0.02, D.traces[1] - 0.05], WX = 2 * Math.PI - DR.w * (D.traces[1] - D.traces[0]), DSTOP = D.traces[1] + TRACE_T + 0.1;
 const drumAngle = (t) => DR.w * (Math.min(t, DSTOP) - D.spin0) + WX * E.inout2(seg(t, WHIRL[0], WHIRL[1]));
 const penAngle = (t) => DR.pen - drumAngle(t);           // the drum-local angle under the pen
-const traceMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#EFF6F2"), emissive: lin("#EFF6F2"), emissiveIntensity: 0.55, roughness: 0.5 }), { fresnel: 0, key: "trace" });
+const traceMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#EFF6F2"), emissive: lin("#EFF6F2"), emissiveIntensity: 0.55, roughness: 0.5 }), { fresnel: 0, key: "trace" });
 const A0 = penAngle(D.traces[0]);
 const TRACES = D.traces.map((t0, i) => {
   const N = 160, pts = [];
@@ -227,16 +228,16 @@ const TRACES = D.traces.map((t0, i) => {
   drum.add(m); return { m, g, t0, N };
 });
 // the muscle, its clamp, the nerve going up with two stimulating points, the lever to the pen
-const muscleMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#D68A99"), roughness: 0.55 }), { fresnel: 0.35, key: "muscle" });
+const muscleMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#D68A99"), roughness: 0.55 }), { fresnel: 0.35, key: "muscle" });
 const MUS = cutaway({ radius: 7, noise: { amp: 0.1, freq: 1.6, seed: 2 }, segments: [56, 40], material: muscleMat });
 const MUSC = [-14, 0, 0]; MUS.group.position.set(...MUSC); G.drum.add(MUS.group);
-const metal = L.patch(new THREE.MeshStandardMaterial({ color: lin("#9AA3A0"), roughness: 0.35, metalness: 0.8 }), { fresnel: 0.15, key: "steel" });
+const metal = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#9AA3A0"), roughness: 0.35, metalness: 0.8 }), { fresnel: 0.15, key: "steel" });
 { const c = new THREE.Mesh(new THREE.BoxGeometry(12, 3, 8), metal); c.position.set(-14, 13.5, 0); G.drum.add(c); const post = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 50, 12), metal); post.position.set(-27, -1, -4); G.drum.add(post); const arm = new THREE.Mesh(new THREE.BoxGeometry(14, 1.4, 1.4), metal); arm.position.set(-20.5, 14.5, -2); G.drum.add(arm); }
 const nerveP = path([[-14, 10, 0], [-17, 22, 1], [-21, 34, 1.5], [-23, 46, 1], [-22, 56, 0]]);
-const nerveMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#E8DCC6"), roughness: 0.55, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.3, key: "frognerve" });
+const nerveMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#E8DCC6"), roughness: 0.55, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.3, key: "frognerve" });
 G.drum.add(new THREE.Mesh(tube(nerveP, { radius: 0.9, radial: 12, step: 1 }), nerveMat));
 const ELEC = [nerveP.at(nerveP.length * 0.32), nerveP.at(nerveP.length * 0.82)];
-const sparkMat = L.patch(new THREE.MeshStandardMaterial({ color: lin(SIG), emissive: lin(SIG), emissiveIntensity: 0, roughness: 0.3 }), { fresnel: 0, key: "elec" });
+const sparkMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin(SIG), emissive: lin(SIG), emissiveIntensity: 0, roughness: 0.3 }), { fresnel: 0, key: "elec" });
 const ELM = ELEC.map((p, i) => {
   const g = new THREE.Group(); g.position.set(p[0] - 4.5, p[1], p[2]);
   const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 9, 10), metal); wire.rotation.z = Math.PI / 2; g.add(wire);
@@ -302,7 +303,8 @@ const ANCH = {
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v, lift: lb.lift });
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.7),   // the title owns its zone while it shows (owner, 3 Nov)
+   t1: b.t1, slot: b.slot || "tr" });
 const commas = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 const FIG_Y = 0.215;
 const firedAt = (t) => { const W1 = FILM.whyJump; return t < W1.t0 ? 0 : Math.min(NODES.length, 1 + Math.floor((t - W1.t0) / W1.hop)); };
@@ -322,6 +324,9 @@ const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * 
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 { const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
+const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
+const SCL = L.scanLine(document.querySelector(".stage"));
+scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 340 * S1, h: 232 * S1, region: [0.42, 0.93], plate: true });   // the toe
 const LOC_T = [FILM.spine.find((s) => s.id === "len").t0, SHOT.drum.at - 0.3];
 
@@ -419,6 +424,9 @@ window.seek = function (t) {
   ePulse.update(beatAmp(t, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
   LOC.update(t, shot === "hook" ? presence(t, LOC_T[0], LOC_T[1], { d: 0.45, out: 0.35 }).o : 0, 0.5);
   IR.update(t);
+  FIN.set(t); MOT.set(t);
+  { const S = FILM.scan, on = t >= S.up[0] && t < S.off ? 1 : 0, y = on ? 1 - (1 - S.park) * E.inout2(seg(t, S.up[0], S.up[1])) : 2;   // scan view
+    L.SCAN.set(y, on); SCL.set(y, on * (1 - seg(t, S.off - 0.35, S.off - 0.05)), S.tag); }
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, 12);

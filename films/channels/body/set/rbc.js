@@ -25,7 +25,9 @@
 // heroDeform(k, th) → a deform for cutaway.js (with a key, so a still cell is not recomputed)
 
 export const R = 3.75;
-const KS = 3.75 / 3.91, C0 = 0.81, C2 = 7.83, C4 = -4.39;
+// C0: Evans & Fung give 0.81 µm (a deep dimple); the reboot (3 Nov review) takes 1.7 so a side view reads as a dented disc,
+// not a ring doughnut: the centre is about 1.6 µm thick instead of 0.78 µm, the rim unchanged (an illustration choice, badged)
+const KS = 3.75 / 3.91, C0 = 1.7, C2 = 7.83, C4 = -4.39;
 export const halfThick = (rho) => { const x = Math.min(1, Math.abs(rho) / R); return 0.5 * KS * Math.sqrt(Math.max(0, 1 - x * x)) * (C0 + C2 * x * x + C4 * x ** 4); };
 export const H_MAX = (() => { let m = 0; for (let i = 0; i <= 400; i++) m = Math.max(m, halfThick((i / 400) * R)); return m; })();
 
@@ -129,9 +131,11 @@ export const FOLD_GLSL = `
 
 // the instanced cell: rbc → rbc-deep toward the thin centre (the dimple reads), fresnel rim, backdrop fog
 export const cellMaterial = (THREE, L, o = {}) => {
-  const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: o.roughness ?? 0.42, metalness: 0 });
+  // live scan (3 Nov): wet and physically based: a clearcoat film, a red sheen at grazing angles (light through the thin rim)
+  const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: o.roughness ?? 0.48, metalness: 0, clearcoat: o.clearcoat ?? 0.4, clearcoatRoughness: 0.3,
+    sheen: 0.55, sheenRoughness: 0.45, sheenColor: new THREE.Color(1.0, 0.28, 0.3), specularIntensity: 0.6 });
   const rim = L.lin(o.rbc || "#E5334F"), deep = L.lin(o.deep || "#8E2A3F");
-  L.patch(m, { fresnel: o.fresnel ?? 0.22, key: "cell" + (o.instanced === false ? "-solo" : "") });
+  L.patch(m, { fresnel: o.fresnel ?? 0.3, hot: true, key: "cell" + (o.instanced === false ? "-solo" : "") });
   const prev = m.onBeforeCompile;
   m.onBeforeCompile = (sh, r) => {
     prev(sh, r);

@@ -88,3 +88,11 @@ standing cheats top right, at most two per corner. Body's no-circles rule and id
   takeaway → meanwhile → tease. Two reviewers flagged it. Provisional: keep episode 1's order for the series.
 - **Episode 1's backdrop.** Resolved: its v3 final (26 Oct) was rendered with the fixed `set/look.js`, so the series
   matches.
+
+## Season 1 reboot: look test (3 Nov 2026)
+The owner asked for high-tech science visuals, less textbook facts, and a multi-million-dollar production
+finish (brief: `films/channels/briefs/body-backstage-reboot.md`). The look test is "live scan"
+(`looktest/README.md`): photoreal wet tissue under a film light rig; the channel's chartreuse kept as the scan
+instrument; a scan view that switches materials on the beat; Atkinson Hyperlegible Mono added for readouts.
+The (h) production-value scores were lungs 4, capillary 4 and synapse 3, with a fix planned for the synapse.
+Final tier runs at about 12 s a frame. Episodes are on hold until the owner approves.

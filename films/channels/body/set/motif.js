@@ -89,36 +89,44 @@ const blob = (cx, cy, r, ph) => {
 };
 const inC = (x) => x * x * x, outC = (x) => 1 - Math.pow(1 - x, 3), cl = (x) => Math.min(1, Math.max(0, x));
 
+// live scan (3 Nov): scale changes go through the scan. Same API as the old membrane iris: the scan line sweeps
+// down the frame drawing a dark band behind it (the cut hides at full cover, e.t), then sweeps on down revealing the
+// next scale above it. The line is the instrument's chartreuse with a soft glow; the band is the ground colour.
 export const iris = (stage, o = {}) => {
-  const W = window.W, H = window.H, NS = "http://www.w3.org/2000/svg", ev = o.events || [];
-  const el = document.createElementNS(NS, "svg");
-  el.setAttribute("class", "mi-iris"); el.setAttribute("viewBox", `0 0 ${W} ${H}`); el.setAttribute("aria-hidden", "true");
-  const hole = document.createElementNS(NS, "path"), edge = document.createElementNS(NS, "path");
-  hole.setAttribute("fill", o.fill || "var(--bg)"); hole.setAttribute("fill-rule", "evenodd");
-  edge.setAttribute("fill", "none"); edge.setAttribute("stroke", o.stroke || "var(--signal)"); edge.setAttribute("stroke-width", (Math.min(W, H) * 0.0055).toFixed(2));
-  el.append(hole, edge);
+  const W = window.W, H = window.H, ev = o.events || [];
+  const el = document.createElement("div"), band = document.createElement("div"), line = document.createElement("div");
+  el.className = "mi-iris"; el.setAttribute("aria-hidden", "true");
+  Object.assign(el.style, { position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1, visibility: "hidden" });
+  Object.assign(band.style, { position: "absolute", left: 0, right: 0, background: o.fill || "repeating-linear-gradient(0deg, rgba(214,242,95,.05) 0px, rgba(214,242,95,.05) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 6px), linear-gradient(var(--bg-hi), var(--bg))" });   // the instrument's raster, never flat black
+  Object.assign(line.style, { position: "absolute", left: 0, right: 0, height: `${Math.max(2, H * 0.0018).toFixed(1)}px`, background: o.stroke || "var(--signal)",
+    boxShadow: "0 0 14px 3px rgba(214,242,95,.55), 0 0 60px 10px rgba(214,242,95,.16)" });
+  el.append(band, line);
   const canvas = stage.querySelector("#gl");
   stage.insertBefore(el, canvas ? canvas.nextSibling : stage.firstChild);
-  const full = Math.hypot(W, H) * 0.62;
+  // while a sweep is on, the HUD's labels, pills, counters and notes step aside (captions stay): nothing hangs on the band
+  const st = document.createElement("style"); st.textContent = ".stage.mi-wipe .hud-label, .stage.mi-wipe .hud-counter, .stage.mi-wipe .hud-scale, .stage.mi-wipe .hud-badge, .stage.mi-wipe .hud-leads { visibility: hidden !important; }"; document.head.appendChild(st);
   const state = (t) => {
-    for (const e of ev) {
+    for (const [i, e] of ev.entries()) {
+      const up = e.dir ? e.dir < 0 : i % 2 === 1;   // the sweeps alternate: down, up, down …
       const c = e.close ?? 0.26, op = e.open ?? 0.34;
-      if (t >= e.t - c && t < e.t) return { e, r: full * (1 - inC(cl((t - (e.t - c)) / c))) };
-      if (t >= e.t && t < e.t + op) return { e, r: full * outC(cl((t - e.t) / op)) };
+      if (t >= e.t - c && t < e.t) return { phase: 0, up, u: cl((t - (e.t - c)) / c) };
+      if (t >= e.t && t < e.t + op) return { phase: 1, up, u: outC(cl((t - e.t) / op)) };
     }
     return null;
   };
   const update = (t) => {
     const s = state(t);
+    stage.classList.toggle("mi-wipe", !!s);
     if (!s) { el.style.visibility = "hidden"; return; }
     el.style.visibility = "visible";
-    const cx = (s.e.cx ?? 0.5) * W, cy = (s.e.cy ?? 0.38) * H, ph = 0.9 * t + (s.e.ph ?? 0);
-    const b = s.r > 0.5 ? blob(cx, cy, s.r, ph) : "";
-    hole.setAttribute("d", `M -10 -10 H ${W + 10} V ${H + 10} H -10 Z ` + b);
-    edge.setAttribute("d", b);
-    edge.style.opacity = s.r > 0.5 ? "1" : "0";
+    const u = s.up ? 1 - s.u : s.u, y = u * (H + 4) - 2;
+    // down: the band grows from the top, then the next shot is revealed from the top; up: the mirror image
+    const fromTop = s.up ? s.phase === 1 : s.phase === 0;
+    if (fromTop) Object.assign(band.style, { top: "0px", height: `${Math.max(0, y)}px` });
+    else Object.assign(band.style, { top: `${y}px`, height: `${Math.max(0, H - y)}px` });
+    line.style.top = `${y.toFixed(1)}px`;
   };
-  return { el, update, covered: (t) => { const s = state(t); return !!s && s.r < 1; } };
+  return { el, update, covered: (t) => { const s = state(t); return !!s && ((s.phase === 0 && s.u > 0.995) || (s.phase === 1 && s.u < 0.005)); } };
 };
 
 // a front-view figure in a 100 × 230 box: head (an egg), neck, torso, arms, legs, as one outline path

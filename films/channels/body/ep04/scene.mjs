@@ -1,4 +1,4 @@
-// Meanwhile, Inside No. 04, "The gap": the picture, a pure function of t.
+// Body Backstage No. 04 (season 1 reboot, live scan), "The gap": the picture, a pure function of t.
 //
 // One world (arbitrary units; the junction hugely enlarged, badged "not to scale"):
 //   the hero junction at the origin: an axon (set/neuron.js, bare) ending in a terminal (cutaway.js, cut open toward
@@ -46,17 +46,23 @@ const camera = new THREE.PerspectiveCamera(34, W / H, 1, 6000);
 const L = look(THREE, { tokens: THEME.tokens, scene: FILM.look, W, H, backdropRadius: 4500 });
 scene.add(L.lights, L.backdrop);
 scene.fog = L.fog;
-if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 1.25, bloom: 0.45, maxCoc: 0.03 });
+L.studio(renderer, scene, 0.6);                          // live scan: reflections for the wet clearcoat
+if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.03 });
 const lin = (h) => L.lin(h);
 const SIG = "#D6F25F";
 const world = new THREE.Group(), sacG = new THREE.Group(); scene.add(world, sacG);
 
 // ════ the hero junction ══════════════════════════════════════════════════════════════════════════
-const cellMat = (hex, key, emi = 0) => L.patch(new THREE.MeshStandardMaterial({ color: lin(hex), roughness: 0.55, emissive: lin(SIG), emissiveIntensity: emi }), { fresnel: 0.38, fresnelPower: 2.2, key });
+// live scan: wet tissue (clearcoat film, warm sheen at grazing angles)
+const wet = (o) => new THREE.MeshPhysicalMaterial({ clearcoat: 0.85, clearcoatRoughness: 0.12, sheen: 0.5, sheenRoughness: 0.45, sheenColor: new THREE.Color(1.0, 0.6, 0.55), ...o });
+const cellMat = (hex, key, emi = 0) => L.patch(wet({ color: lin(hex), roughness: 0.42, emissive: lin(SIG), emissiveIntensity: emi }), { fresnel: 0.38, fresnelPower: 2.2, key });
+// lumpy geometry (no plain spheres: a membrane is never perfectly round)
+const lumpyGeo = (g, amt, f, seed) => { const p = g.attributes.position, v = new THREE.Vector3(); for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); const n = v.clone().normalize(), r = v.length();
+  const d = amt * (Math.sin(n.x * f * 3.1 + seed) * Math.sin(n.y * f * 2.7 + seed * 1.3) * Math.sin(n.z * f * 3.4 + seed * 0.7)) + 0.4 * amt * Math.sin(n.x * f * 7.9 + n.y * 5.3 + seed); v.addScaledVector(n, d * r); p.setXYZ(i, v.x, v.y, v.z); } g.computeVertexNormals(); return g; };
 const AX = fibre(THREE, L, { length: 228.2, axonR: 2.0 });   // ends at the terminal's wall (x −8.8)
 AX.group.position.set(-237, 0, 0); world.add(AX.group);
 const tipMat = cellMat("#C9A9B6", "tip");
-const capMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#8E7480"), roughness: 0.7, side: THREE.DoubleSide }), { fresnel: 0.05, key: "tipcap" });
+const capMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#8E7480"), roughness: 0.7, side: THREE.DoubleSide }), { fresnel: 0.05, key: "tipcap" });
 {
   const prev = capMat.onBeforeCompile, mem = lin("#E7D3DA");
   capMat.onBeforeCompile = (sh, r) => {
@@ -69,13 +75,14 @@ const capMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#8E7480"), r
 const TIP = cutaway({ radius: 9, noise: { amp: 0.06, freq: 1.5, seed: 4 }, segments: [80, 60], capSegments: 160, material: tipMat, capMaterial: capMat });
 world.add(TIP.group); TIP.set({ cut: { n: [0, 0, 1], d: 0 } }); world.updateMatrixWorld(true); TIP.update();
 // the next cell: warm tissue with its rim kept to the very edge (a strong mint rim made it a grey plastic egg)
-const postMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#C49E9E"), roughness: 0.6, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.14, fresnelPower: 4.0, key: "post" });
+const postMat = L.patch(wet({ color: lin("#C49E9E"), roughness: 0.5, clearcoat: 0.35, clearcoatRoughness: 0.3, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.14, fresnelPower: 4.0, key: "post" });
 const POST = cutaway({ radius: 38, noise: { amp: 0.06, freq: 1.2, seed: 11 }, segments: [96, 72], material: postMat });
 POST.group.position.set(50.5, 0, 0); world.add(POST.group);
 const GAPX = [9.1, 50.5 - POST.r([-1, 0, 0])];         // the gap: the terminal's face and the next cell's face
 // the vesicles inside the cut terminal (in the cut's plane); the eight docked ones sit at the face by the gap
 const VN = 42, DOCK = 8;
-const vesMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#CFE8C6"), emissive: lin("#A8D89A"), emissiveIntensity: 0.18, roughness: 0.35 }), { fresnel: 0.3, key: "ves" });
+// packets: dark glass with a chartreuse rim (the message they carry), lumpy and of mixed sizes (owner, 3 Nov)
+const vesMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#3A4A1E"), emissive: lin(SIG), emissiveIntensity: 0.1, roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.06, sheen: 0.4, sheenColor: new THREE.Color(0.84, 0.95, 0.37) }), { fresnel: 0.6, fresnelPower: 2.0, key: "ves" });
 const VH = [];
 {
   const r = rng(21);
@@ -83,22 +90,33 @@ const VH = [];
   for (let tries = 0; VH.length < VN && tries < 5000; tries++) { const x = (r() * 2 - 1) * 7, y = (r() * 2 - 1) * 7; if (x * x + y * y > 6.6 * 6.6 || x > 4.8) continue; if (VH.some((p) => Math.hypot(p[0] - x, p[1] - y) < 2.05)) continue; VH.push([x, y, 0.6 + 0.4 * r()]); }
 }
 const NV = VH.length;   // as many as fit (the rejection loop stops early on a crowded section)
-const ves = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 2), vesMat, NV); ves.instanceMatrix.setUsage(THREE.DynamicDrawUsage); ves.frustumCulled = false; world.add(ves);
+const ves = new THREE.InstancedMesh(lumpyGeo(new THREE.SphereGeometry(1, 48, 32), 0.07, 1.4, 3), vesMat, NV); ves.instanceMatrix.setUsage(THREE.DynamicDrawUsage); ves.frustumCulled = false; world.add(ves);
 // calcium, outside the terminal's face, moving in; messengers, from the docked vesicles across the gap
 const CAN = 26, MSN = 192;
-const caMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#E8D7B0"), emissive: lin("#E8D7B0"), emissiveIntensity: 0.35, roughness: 0.4 }), { fresnel: 0, key: "ca" });
-const msMat = L.patch(new THREE.MeshStandardMaterial({ color: lin(SIG), emissive: lin(SIG), emissiveIntensity: 0.6, roughness: 0.4 }), { fresnel: 0, key: "msg" });
+const caMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#E8D7B0"), emissive: lin("#E8D7B0"), emissiveIntensity: 0.35, roughness: 0.4 }), { fresnel: 0, key: "ca" });
+const msMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin(SIG), emissive: lin(SIG), emissiveIntensity: 0.6, roughness: 0.4 }), { fresnel: 0, key: "msg" });
 const caM = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.42, 1), caMat, CAN); caM.instanceMatrix.setUsage(THREE.DynamicDrawUsage); caM.frustumCulled = false; world.add(caM);
 const msM = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.2, 1), msMat, MSN);   // a fine mist of molecules
 msM.instanceMatrix.setUsage(THREE.DynamicDrawUsage); msM.frustumCulled = false; world.add(msM);
 const CAH = Array.from({ length: CAN }, (_, i) => { const a = (hash(i + 40) - 0.5) * 2.2, rr = 12 + 4 * hash(i + 41); return { from: [Math.cos(a) * rr, Math.sin(a) * rr, 0.5 + 3 * hash(i + 42)], to: [Math.cos(a) * 6.8, Math.sin(a) * 6.8, 0.8] }; });
 // receptors on the next cell's face
-const RN = 14, recMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#8C9670"), emissive: lin(SIG), emissiveIntensity: 0, roughness: 0.4 }), { fresnel: 0.2, key: "rec" });   // dark at rest, so lit reads as the signal
-const rec = new THREE.InstancedMesh(new THREE.CapsuleGeometry(0.42, 1.1, 4, 10), recMat, RN); world.add(rec);
+// a receptor field on the next cell's face (owner, 3 Nov): about 170 lumpy receptors over the patch facing the gap, dark at
+// rest, lit by the messengers; the last one (the label's anchor) stays the top of the central column
+const RN = 260, recMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#8E9A62"), emissive: lin(SIG), emissiveIntensity: 0, roughness: 0.3, clearcoat: 0.6, sheen: 0.4, sheenColor: new THREE.Color(0.84, 0.95, 0.37) }), { fresnel: 0.35, key: "rec" });
+const rec = new THREE.InstancedMesh(lumpyGeo(new THREE.CapsuleGeometry(0.38, 0.7, 6, 12), 0.05, 2.2, 5), recMat, RN); world.add(rec);
 const RH = [];
-for (let i = 0; i < RN; i++) { const y = -6.4 + (12.8 * i) / (RN - 1) + 0.35 * (hash(i + 61) - 0.5), z = 0.4 + 2.6 * hash(i + 60); const x = 50.5 - POST.r([-1, y / 40, z / 40].map((v, k, a) => v / Math.hypot(...a))) * 1.0 + 0.05; RH.push([x, y, z]); instance(rec, i, [x, y, z], new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(1, 0, 0)), 0.85 + 0.3 * hash(i + 62)); }
+{ const up = new THREE.Vector3(0, 1, 0), q = new THREE.Quaternion();
+  for (let i = 0; i < RN; i++) {
+    let y, z;
+    if (i >= RN - 14) { const k = i - (RN - 14); y = -6.4 + (12.8 * k) / 13 + 0.35 * (hash(i + 61) - 0.5); z = 0.4 + 2.6 * hash(i + 60); }   // the central column (kept from the old staging)
+    else { const a = hash(i + 300) * 6.283, d = Math.sqrt(hash(i + 301)) * 11; y = Math.cos(a) * d; z = Math.sin(a) * d; }
+    const dir = [-1, y / 38, z / 38], nl = Math.hypot(...dir), n = dir.map((v) => v / nl), rr = POST.r(n) - 0.3;   // on the surface along its own normal, half sunk in
+    const x = 50.5 + n[0] * rr; y = n[1] * rr; z = n[2] * rr;
+    RH.push([x, y, z]); q.setFromUnitVectors(up, new THREE.Vector3(-n[0], -n[1], -n[2]).multiplyScalar(-1).negate());
+    instance(rec, i, [x, y, z], q, 0.62 + 0.18 * hash(i + 62));
+  } }
 // a haze of far particles behind the junction (teal, never mistaken for calcium): depth for the bokeh
-const HZN = 140, haze = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.22, 1), L.patch(new THREE.MeshStandardMaterial({ color: lin("#5E8A7E"), emissive: lin("#5E8A7E"), emissiveIntensity: 0.05, roughness: 0.7 }), { fresnel: 0, key: "haze" }), HZN);
+const HZN = 140, haze = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.22, 1), L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#5E8A7E"), emissive: lin("#5E8A7E"), emissiveIntensity: 0.05, roughness: 0.7 }), { fresnel: 0, key: "haze" }), HZN);
 haze.instanceMatrix.setUsage(THREE.DynamicDrawUsage); haze.frustumCulled = false; world.add(haze);
 const HZ = []; { const r = rng(55); while (HZ.length < HZN) { const q = [-30 + 100 * r(), -45 + 90 * r(), -90 + 115 * r()]; if (q[0] > 8 && q[0] < 13 && Math.abs(q[1]) < 8) continue; if (Math.hypot(q[0], q[1], q[2]) < 10 || Math.hypot(q[0] - 50.5, q[1], q[2]) < 40) continue; HZ.push(q); } }
 
@@ -139,7 +157,7 @@ const writeJunction = (t) => {
         p = VH[i]; sc = nxt ? seg(t, nxt.sig[0] - 1.0, nxt.sig[0] - 0.3) : seg(t, Si.post + 1.2, Si.post + 2.2);
       }
     }
-    instance(ves, i, p, null, sc * em * (0.82 + 0.3 * hash(i + 90)));
+    instance(ves, i, p, null, sc * em * (0.7 + 0.6 * hash(i + 90)));
   }
   ves.instanceMatrix.needsUpdate = true;
   // messengers: born at the docked vesicles' fusion points, drifting across to the receptors
@@ -161,7 +179,7 @@ const writeJunction = (t) => {
   msM.instanceMatrix.needsUpdate = true;
   const lit = S ? seg(t, S.post - 0.25, S.post) * (1 - seg(t, S.post + 0.6, S.post + 1.6)) : 0;
   // the receptors carry "received" (one input is a small local change, not the whole next cell firing)
-  recMat.emissiveIntensity = 0.9 * lit; postMat.emissiveIntensity = 0.04 * lit;
+  recMat.emissiveIntensity = 0.45 * lit; postMat.emissiveIntensity = 0.04 * lit;
   // the junction used again and again (whoa): it pulses and grows (sped up, badged)
   const su = sinceUse(t), pulse = su < 0.5 ? 1 - su / 0.5 : 0, grow = E.inout2(seg(t, FILM.use.grow[0], FILM.use.grow[1]));
   USED.mat.emissiveIntensity = 0.15 + 0.7 * pulse + 0.25 * grow; USED.bouton.scale.setScalar(1 + 0.45 * grow);
@@ -216,7 +234,7 @@ let USED = null;
 }
 
 // ════ the air sac (the tease) ════════════════════════════════════════════════════════════════════
-const sacMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#B98580"), emissive: lin("#F0C9B8"), emissiveIntensity: 0.03, roughness: 0.5, side: THREE.DoubleSide }), { fresnel: 0.85, fresnelPower: 1.8, key: "sac" });
+const sacMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#B98580"), emissive: lin("#F0C9B8"), emissiveIntensity: 0.03, roughness: 0.5, side: THREE.DoubleSide }), { fresnel: 0.85, fresnelPower: 1.8, key: "sac" });
 const SAC = cutaway({ radius: 50, noise: { amp: 0.06, freq: 1.4, seed: 8 }, segments: [80, 60], material: sacMat });
 SAC.group.position.set(3000, 0, 0); sacG.add(SAC.group);
 SAC.set({ cut: { n: [0, 0, 1], d: 0 } }); sacG.updateMatrixWorld(true); SAC.update(); SAC.cap.visible = false;   // cut open: hollow, an air space (no cap disc)
@@ -255,7 +273,8 @@ const ANCH = {
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v, lift: lb.lift });
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.7),   // the title owns its zone while it shows (owner, 3 Nov)
+   t1: b.t1, slot: b.slot || "tr" });
 for (const sp of FILM.spine) {
   const fmt = sp.text ? () => sp.text : (v) => v.toFixed(sp.fmt ?? 0).replace(/(\.\d*?[1-9])0+$/, "$1");   // 0.001, not 0.0010
   const o = sp.keys ? { keys: sp.keys, ease: "lin" } : { value: () => 0 };
@@ -270,6 +289,9 @@ const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * 
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 { const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
+const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
+const SCL = L.scanLine(document.querySelector(".stage"));
+scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 395 * S1, h: 232 * S1, region: FILM.loc.region, plate: true });
 
 // the two readings of one stained tissue: the same seeded drawing; Golgi's joins every branch into the next cell,
@@ -348,6 +370,9 @@ window.seek = function (t) {
   ePulse.update(beatAmp(t, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
   LOC.update(t, presence(t, FILM.loc.t0, FILM.loc.t1, { d: 0.45, out: 0.35 }).o, beatAmp(t, FILM.breaths, { decay: 1.2 }));
   IR.update(t);
+  FIN.set(t); MOT.set(t);
+  { const S = FILM.scan, on = t >= S.up[0] && t < S.off ? 1 : 0, y = on ? 1 - (1 - S.park) * E.inout2(seg(t, S.up[0], S.up[1])) : 2;   // scan view
+    L.SCAN.set(y, on); SCL.set(y, on * (1 - seg(t, S.off - 0.35, S.off - 0.05)), S.tag); }
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, 12);

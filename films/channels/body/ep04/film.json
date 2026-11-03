@@ -1,5 +1,5 @@
 {
- "id": "meanwhile-inside-004",
+ "id": "body-backstage-004",
  "fps": 30,
  "bpm": 75,
  "dur": 74.4,
@@ -316,13 +316,13 @@
    {
     "t": 34.733333333333334,
     "pos": [
-     2.5,
-     5.2,
-     66.0
+     3.0,
+     -15.0,
+     27.0
     ],
     "look": [
-     6.0,
-     -2.4,
+     12.0,
+     -0.5,
      0.0
     ],
     "fov": 34,
@@ -331,13 +331,13 @@
    {
     "t": 39.1,
     "pos": [
-     5.5,
-     3.5,
-     62.0
+     4.0,
+     -14.0,
+     25.0
     ],
     "look": [
-     9.0,
-     -2.6,
+     12.2,
+     -0.6,
      0.0
     ],
     "fov": 34,
@@ -346,13 +346,13 @@
    {
     "t": 42.0,
     "pos": [
-     6.5,
-     2.6,
-     70.0
+     3.0,
+     -13.0,
+     29.0
     ],
     "look": [
-     10.0,
-     -2.3,
+     12.0,
+     -0.5,
      0.0
     ],
     "fov": 34,
@@ -361,13 +361,13 @@
    {
     "t": 45.13333333333333,
     "pos": [
-     6.5,
-     2.6,
-     72.0
+     3.0,
+     -12.5,
+     31.0
     ],
     "look": [
-     10.0,
-     -2.3,
+     12.0,
+     -0.5,
      0.0
     ],
     "fov": 34,
@@ -722,42 +722,42 @@
   {
    "id": "slow-why",
    "text": "slowed",
-   "slot": "tl",
+   "slot": "br",
    "t0": 30.833333333333332,
    "t1": 40.6333
   },
   {
    "id": "slow",
    "text": "slowed",
-   "slot": "tl",
+   "slot": "br",
    "t0": 42.233333333333334,
    "t1": 45.266666666666666
   },
   {
    "id": "fast",
    "text": "sped up",
-   "slot": "tl",
+   "slot": "br",
    "t0": 45.53333333333333,
    "t1": 53.6
   },
   {
    "id": "slow-talk",
    "text": "slowed",
-   "slot": "tl",
+   "slot": "br",
    "t0": 56.333333333333336,
    "t1": 58.733333333333334
   },
   {
    "id": "slow-b0",
    "text": "slowed",
-   "slot": "tl",
+   "slot": "br",
    "t0": 59.6,
    "t1": 62.0
   },
   {
    "id": "slow-b1",
    "text": "slowed",
-   "slot": "tl",
+   "slot": "br",
    "t0": 63.6,
    "t1": 66.0
   },
@@ -799,6 +799,15 @@
   "sig": 0.0,
   "y": 0.17
  },
+ "scan": {
+  "up": [
+   42.233333333333334,
+   43.63333333333333
+  ],
+  "park": 0.5,
+  "off": 45.13333333333333,
+  "tag": "▼ scan view"
+ },
  "endCard": 72.4,
  "end": {
   "t0": 72.4,
@@ -808,16 +817,17 @@
   "fact": "Golgi and Cajal shared the 1906 Nobel Prize, and argued in their lectures."
  },
  "look": {
-  "_doc": "3D materials and lights only: never text, never CSS. Tissue and vessel are lit under the green hemisphere so they always read warm against green and never sit on near-black (cross-check). Only signal and pulse bloom.",
-  "rbc": "#E5334F",
-  "rbc-deep": "#8E2A3F",
-  "tissue": "#F0C9B8",
-  "vessel": "#E9B3A8",
-  "light-hemi-sky": "#DDF3EC",
-  "light-hemi-ground": "#33524A",
-  "light-key": "#FFF1E6",
-  "light-rim": "#CFF5E6",
-  "lights": "hemisphere #DDF3EC / #0A1F1C at 0.5; warm key #FFF1E6 at 2.2 from the top right; mint rim #CFF5E6 at 1.4 from behind (was pink #FF8FA0: too close to Skin School's recipe)"
+  "_doc": "3D materials and lights only: never text, never CSS. Wet, photoreal tissue under a warm key, a cool mint-white rim and a dark teal fill; only signal and blood bloom.",
+  "rbc": "#C8102E",
+  "rbc-deep": "#7A0F22",
+  "tissue": "#E59A90",
+  "vessel": "#D88B84",
+  "light-hemi-sky": "#9FD8C8",
+  "light-hemi-ground": "#08100F",
+  "light-key": "#FFF0E2",
+  "light-rim": "#DFF8EE",
+  "lights": "hemisphere #9FD8C8 / #08100F at 0.35; warm key #FFF0E2 from the top right; mint-white rim #DFF8EE from behind; a soft warm fill from below the lens",
+  "light-fill": "#E8C8BE"
  },
  "captions": [
   {
@@ -1574,7 +1584,7 @@
   },
   {
    "t0": 59.92,
-   "t1": 61.425,
+   "t1": 61.385,
    "lines": [
     [
      [
@@ -1585,125 +1595,117 @@
     [
      [
       "as",
-      60.65
+      60.675
      ],
      [
       "you",
-      60.68
+      60.955
      ],
      [
       "watched,",
-      60.93
+      60.985
      ]
     ]
    ]
   },
   {
-   "t0": 61.425,
-   "t1": 63.23,
+   "t0": 61.385,
+   "t1": 63.33,
    "lines": [
     [
      [
       "you",
-      61.425
+      61.385
      ],
      [
       "took",
-      61.56
+      61.615
      ]
     ],
     [
      [
       "about",
-      61.765
+      61.86
      ],
      [
       "15",
-      61.975
+      62.075
      ],
      [
       "breaths.",
-      62.48
+      62.58
      ]
     ]
    ]
   },
   {
-   "t0": 63.355,
-   "t1": 64.975,
+   "t0": 63.47,
+   "t1": 65.525,
    "lines": [
     [
      [
       "Each",
-      63.355
+      63.47
      ],
      [
-      "began",
-      63.67
+      "started",
+      63.88
+     ],
+     [
+      "at",
+      64.09
+     ],
+     [
+      "the",
+      64.29
+     ],
+     [
+      "base",
+      64.435
      ]
     ],
     [
      [
-      "in",
-      63.94
+      "of",
+      64.765
      ],
      [
       "your",
-      64.155
+      64.795
      ],
      [
-      "brainstem",
-      64.225
+      "brain",
+      65.01
      ]
     ]
    ]
   },
   {
-   "t0": 64.985,
-   "t1": 66.415,
+   "t0": 65.525,
+   "t1": 67.355,
    "lines": [
     [
      [
       "and",
-      64.985
+      65.525
      ],
      [
       "crossed",
-      65.13
+      65.675
      ]
     ],
     [
      [
       "gaps",
-      65.485
+      66.05
      ],
      [
       "like",
-      65.995
+      66.42
      ],
      [
-      "these",
-      66.105
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 66.415,
-   "t1": 67.41,
-   "lines": [
-    [
-     [
-      "to",
-      66.415
-     ],
-     [
-      "your",
-      66.465
-     ],
-     [
-      "diaphragm.",
-      66.66
+      "these.",
+      66.605
      ]
     ]
    ]
@@ -1809,9 +1811,9 @@
   {
    "id": "vo07",
    "t": 59.9,
-   "dur": 7.411,
+   "dur": 7.335,
    "file": "vo/07.wav",
-   "text": "Meanwhile, as you watched, you took about fifteen breaths. Each began in your brainstem and crossed gaps like these to your diaphragm."
+   "text": "Meanwhile, as you watched, you took about fifteen breaths. Each started at the base of your brain and crossed gaps like these."
   },
   {
    "id": "vo08",

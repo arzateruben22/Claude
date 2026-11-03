@@ -3,19 +3,19 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "How fast is this spark? The leading expert doubted it could ever be timed.",
-   "heard": "How fast is this spark? The leading expert doubted it could ever be timed.",
+   "text": "How fast is this spark? A top expert doubted anyone could time it.",
+   "heard": "How fast is this spark? A top expert doubted anyone could time it.",
    "words": [
     {
      "w": "How",
      "start": 0.02,
-     "end": 0.32,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "fast",
      "start": 0.31,
-     "end": 0.64,
+     "end": 0.72,
      "heard": true
     },
     {
@@ -27,7 +27,7 @@
     {
      "w": "this",
      "start": 0.865,
-     "end": 1.04,
+     "end": 1.12,
      "heard": true
     },
     {
@@ -35,60 +35,54 @@
      "start": 1.17,
      "end": 1.652,
      "heard": true,
-     "end_asr": 1.68
+     "end_asr": 2.0
     },
     {
-     "w": "The",
-     "start": 2.12,
+     "w": "A",
+     "start": 2.135,
      "end": 2.24,
      "heard": true
     },
     {
-     "w": "leading",
-     "start": 2.15,
+     "w": "top",
+     "start": 2.255,
      "end": 2.56,
      "heard": true
     },
     {
      "w": "expert",
-     "start": 2.655,
-     "end": 3.04,
+     "start": 2.455,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "doubted",
-     "start": 3.1,
-     "end": 3.52,
+     "start": 2.97,
+     "end": 3.44,
      "heard": true
     },
     {
-     "w": "it",
-     "start": 3.655,
-     "end": 3.705,
+     "w": "anyone",
+     "start": 3.415,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "could",
-     "start": 3.685,
-     "end": 3.84,
+     "start": 4.05,
+     "end": 4.1,
      "heard": true
     },
     {
-     "w": "ever",
-     "start": 3.835,
-     "end": 4.08,
+     "w": "time",
+     "start": 4.085,
+     "end": 4.32,
      "heard": true
     },
     {
-     "w": "be",
-     "start": 4.105,
-     "end": 4.24,
-     "heard": true
-    },
-    {
-     "w": "timed.",
-     "start": 4.22,
-     "end": 4.72,
+     "w": "it.",
+     "start": 4.415,
+     "end": 4.64,
      "heard": true
     }
    ],
@@ -422,8 +416,8 @@
   },
   {
    "id": "vo04",
-   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many of your fibres wear fatty myelin, re-firing only at gaps, so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
-   "heard": "It isn't current in a wire, the cell refires it step by step. Many of your fibers wear fatty myelin, refiring only at gaps so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
+   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many fibres wear a fatty coat, myelin, and only re-fire at its gaps, so the signal leaps. Where it's damaged, as in multiple sclerosis, signals slow or stall.",
+   "heard": "It isn't current in a wire, the cell refires it step by step. Many fibers wear a fatty coat, myelin and only refire at its gaps, so the signal leaps. Where it's damaged as in multiple sclerosis, signals slow or stall.",
    "words": [
     {
      "w": "It",
@@ -452,13 +446,13 @@
     {
      "w": "a",
      "start": 0.785,
-     "end": 0.96,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "wire:",
-     "start": 0.915,
-     "end": 1.52,
+     "start": 0.92,
+     "end": 1.6,
      "heard": true
     },
     {
@@ -482,7 +476,7 @@
     {
      "w": "it,",
      "start": 2.675,
-     "end": 2.8,
+     "end": 2.725,
      "heard": true
     },
     {
@@ -511,166 +505,166 @@
      "heard": true
     },
     {
-     "w": "of",
-     "start": 4.24,
-     "end": 4.4,
-     "heard": true
-    },
-    {
-     "w": "your",
-     "start": 4.405,
-     "end": 4.56,
-     "heard": true
-    },
-    {
      "w": "fibres",
-     "start": 4.61,
-     "end": 5.04,
+     "start": 4.31,
+     "end": 4.72,
      "heard": false
     },
     {
      "w": "wear",
-     "start": 5.07,
-     "end": 5.28,
+     "start": 4.74,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.035,
+     "end": 5.085,
      "heard": true
     },
     {
      "w": "fatty",
-     "start": 5.335,
-     "end": 5.68,
+     "start": 5.09,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "coat,",
+     "start": 5.36,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "myelin,",
-     "start": 5.57,
-     "end": 6.48,
+     "start": 5.865,
+     "end": 6.4,
      "heard": true
     },
     {
-     "w": "re-firing",
-     "start": 6.55,
-     "end": 7.2,
+     "w": "and",
+     "start": 6.4,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "only",
-     "start": 7.145,
+     "start": 6.53,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "re-fire",
+     "start": 6.805,
      "end": 7.36,
      "heard": true
     },
     {
      "w": "at",
-     "start": 7.45,
-     "end": 7.52,
+     "start": 7.38,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 7.51,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "gaps,",
-     "start": 7.555,
-     "end": 7.92,
+     "start": 7.63,
+     "end": 8.32,
      "heard": true
     },
     {
      "w": "so",
-     "start": 7.82,
-     "end": 8.08,
+     "start": 8.38,
+     "end": 8.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.005,
-     "end": 8.16,
-     "heard": true
-    },
-    {
-     "w": "signal",
-     "start": 8.095,
+     "start": 8.41,
      "end": 8.56,
      "heard": true
     },
     {
+     "w": "signal",
+     "start": 8.445,
+     "end": 8.96,
+     "heard": true
+    },
+    {
      "w": "leaps.",
-     "start": 8.585,
-     "end": 9.001,
+     "start": 9.025,
+     "end": 9.446,
      "heard": true,
-     "end_asr": 9.2
+     "end_asr": 9.68
     },
     {
      "w": "Where",
-     "start": 9.32,
-     "end": 9.44,
+     "start": 9.765,
+     "end": 9.92,
      "heard": true
     },
     {
-     "w": "myelin",
-     "start": 9.35,
-     "end": 10.08,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 10.135,
-     "end": 10.185,
+     "w": "it's",
+     "start": 9.995,
+     "end": 10.16,
      "heard": true
     },
     {
      "w": "damaged,",
-     "start": 10.165,
-     "end": 10.8,
+     "start": 10.135,
+     "end": 10.56,
      "heard": true
     },
     {
      "w": "as",
-     "start": 10.815,
-     "end": 10.96,
+     "start": 10.615,
+     "end": 10.8,
      "heard": true
     },
     {
      "w": "in",
-     "start": 10.955,
-     "end": 11.12,
+     "start": 10.685,
+     "end": 10.96,
      "heard": true
     },
     {
      "w": "multiple",
-     "start": 11.025,
-     "end": 11.52,
+     "start": 10.87,
+     "end": 11.36,
      "heard": true
     },
     {
      "w": "sclerosis,",
-     "start": 11.435,
-     "end": 12.64,
+     "start": 11.28,
+     "end": 12.4,
      "heard": true
     },
     {
      "w": "signals",
-     "start": 12.675,
-     "end": 13.2,
-     "heard": true
-    },
-    {
-     "w": "can",
-     "start": 13.21,
-     "end": 13.36,
+     "start": 12.47,
+     "end": 12.96,
      "heard": true
     },
     {
      "w": "slow",
-     "start": 13.24,
-     "end": 13.76,
+     "start": 13.045,
+     "end": 13.36,
      "heard": true
     },
     {
      "w": "or",
-     "start": 13.8,
-     "end": 13.92,
+     "start": 13.38,
+     "end": 13.52,
      "heard": true
     },
     {
      "w": "stall.",
-     "start": 13.83,
-     "end": 14.4,
+     "start": 13.615,
+     "end": 13.92,
      "heard": true
     }
    ],

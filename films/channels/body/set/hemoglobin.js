@@ -48,12 +48,13 @@ export const hemoglobin = (THREE, L, o = {}) => {
   const units = [], hemes = [], irons = [], mats = [];
   const heme = new THREE.CylinderGeometry(0.95, 0.95, 0.22, 28);
   const ironG = new THREE.IcosahedronGeometry(0.34, 2);
-  const hemeMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin("#3A0E18"), emissive: L.lin("#8E2A3F"), emissiveIntensity: 0.25, roughness: 0.4 }), { fresnel: 0.15, key: "heme" });
+  const hemeMat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin("#3A0E18"), emissive: L.lin("#8E2A3F"), emissiveIntensity: 0.25, roughness: 0.4 }), { fresnel: 0.15, key: "heme" });
   // one material per iron, so each can glint on its own (the count "four")
-  const ironMat = () => L.patch(new THREE.MeshStandardMaterial({ color: L.lin("#E8C9A0"), emissive: L.lin("#FFD9A8"), emissiveIntensity: 0.6, roughness: 0.3, metalness: 0.2 }), { fresnel: 0.1, key: "iron" });
+  const ironMat = () => L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin("#E8C9A0"), emissive: L.lin("#FFD9A8"), emissiveIntensity: 0.6, roughness: 0.3, metalness: 0.2 }), { fresnel: 0.1, key: "iron" });
   C4.forEach((c, i) => {
     // a dark-red protein with a soft rim (a strong fresnel greys it): its own colour glows faintly
-    const m = L.patch(new THREE.MeshStandardMaterial({ color: garnet.clone(), emissive: garnet.clone(), emissiveIntensity: 0.15, roughness: 0.45 }), { fresnel: 0.12, fresnelPower: 4.0, key: "hb" + i });
+    const m = L.patch(new THREE.MeshPhysicalMaterial({ color: garnet.clone(), emissive: garnet.clone(), emissiveIntensity: 0.15, roughness: 0.6, clearcoat: 0.18, clearcoatRoughness: 0.4 }), { fresnel: 0.12, fresnelPower: 4.0, key: "hb" + i });
+    if (m.normalScale) m.normalScale.set(0.75, 0.75);   // review r3: matte, with surface relief (a protein, not a gummy)
     const u = new THREE.Mesh(lumpy(THREE, 2.75, seed * 17 + i, o.detail ?? 4), m);
     u.position.set(...c); units.push(u); mats.push(m);
     // the heme pocket: outward and a little up from the unit's centre, the disc facing out

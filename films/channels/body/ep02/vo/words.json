@@ -72,8 +72,8 @@
   },
   {
    "id": "vo02",
-   "text": "It's packed with one protein, hemoglobin: about two hundred and seventy million copies. Each one has four iron atoms, and each can hold an oxygen.",
-   "heard": "It's packed with one protein hemoglobin, about 270 million coppers. Each one has four iron atoms, and each can hold an oxygen.",
+   "text": "It's stuffed with one protein, hemoglobin: about a quarter of a billion copies. Each one has four iron seats, and each seat holds one oxygen.",
+   "heard": "It's stuffed with one protein hemoglobin, about a quarter of a billion copies. Each one has four iron seats, and each seat holds one oxygen.",
    "words": [
     {
      "w": "It's",
@@ -82,148 +82,148 @@
      "heard": true
     },
     {
-     "w": "packed",
-     "start": 0.245,
+     "w": "stuffed",
+     "start": 0.29,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "with",
-     "start": 0.485,
+     "start": 0.52,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "one",
-     "start": 0.62,
+     "start": 0.655,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "protein,",
-     "start": 0.945,
-     "end": 1.36,
+     "start": 0.975,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "hemoglobin:",
-     "start": 1.49,
+     "start": 1.545,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "about",
-     "start": 2.75,
-     "end": 3.04,
+     "start": 2.77,
+     "end": 2.96,
      "heard": true
     },
     {
-     "w": "two",
-     "start": 3.085,
-     "end": 4.16,
-     "heard": false
+     "w": "a",
+     "start": 2.995,
+     "end": 3.12,
+     "heard": true
     },
     {
-     "w": "hundred",
-     "start": 3.115,
-     "end": 4.16,
-     "heard": false
+     "w": "quarter",
+     "start": 3.12,
+     "end": 3.44,
+     "heard": true
     },
     {
-     "w": "and",
-     "start": 3.145,
-     "end": 4.16,
-     "heard": false
+     "w": "of",
+     "start": 3.32,
+     "end": 3.6,
+     "heard": true
     },
     {
-     "w": "seventy",
-     "start": 3.175,
-     "end": 4.16,
-     "heard": false
+     "w": "a",
+     "start": 3.69,
+     "end": 3.74,
+     "heard": true
     },
     {
-     "w": "million",
-     "start": 4.07,
-     "end": 4.56,
+     "w": "billion",
+     "start": 3.72,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "copies.",
-     "start": 4.555,
-     "end": 5.138,
-     "heard": false,
-     "end_asr": 5.44
+     "start": 4.085,
+     "end": 4.705,
+     "heard": true,
+     "end_asr": 4.96
     },
     {
      "w": "Each",
-     "start": 5.46,
-     "end": 5.68,
+     "start": 5.025,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "one",
-     "start": 5.725,
-     "end": 5.92,
+     "start": 5.29,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "has",
-     "start": 5.935,
-     "end": 6.08,
+     "start": 5.485,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "four",
-     "start": 6.15,
-     "end": 6.24,
+     "start": 5.67,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "iron",
-     "start": 6.42,
-     "end": 6.8,
+     "start": 5.935,
+     "end": 6.4,
      "heard": true
     },
     {
-     "w": "atoms,",
-     "start": 6.87,
-     "end": 7.52,
+     "w": "seats,",
+     "start": 6.355,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "and",
-     "start": 7.58,
-     "end": 7.68,
+     "start": 7.095,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "each",
-     "start": 7.61,
-     "end": 7.92,
+     "start": 7.125,
+     "end": 7.44,
      "heard": true
     },
     {
-     "w": "can",
-     "start": 7.985,
-     "end": 8.08,
+     "w": "seat",
+     "start": 7.38,
+     "end": 7.68,
      "heard": true
     },
     {
-     "w": "hold",
-     "start": 8.015,
-     "end": 8.32,
+     "w": "holds",
+     "start": 7.65,
+     "end": 8.0,
      "heard": true
     },
     {
-     "w": "an",
-     "start": 8.35,
-     "end": 8.48,
+     "w": "one",
+     "start": 7.915,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "oxygen.",
-     "start": 8.615,
-     "end": 9.04,
+     "start": 8.25,
+     "end": 8.8,
      "heard": true
     }
    ],
@@ -231,8 +231,8 @@
   },
   {
    "id": "vo03",
-   "text": "Watch one fill. The first oxygen struggles to board, but each one makes the next one easier. Dark red at the start; full, it's bright red.",
-   "heard": "Watch one fill. The first oxygen struggles to board, but each one makes the next one easier. Dark red at the start, full it's bright red.",
+   "text": "Watch one fill. The first oxygen struggles to get on, but each one makes the next one easier. Empty, it's dark red; full, it's bright red.",
+   "heard": "Watch one fill. The first oxygen struggles to get on, but each one makes the next one easier. Empty its dark red, full its bright red.",
    "words": [
     {
      "w": "Watch",
@@ -243,7 +243,7 @@
     {
      "w": "one",
      "start": 0.345,
-     "end": 0.56,
+     "end": 0.64,
      "heard": true
     },
     {
@@ -251,7 +251,7 @@
      "start": 0.675,
      "end": 1.208,
      "heard": true,
-     "end_asr": 1.52
+     "end_asr": 1.36
     },
     {
      "w": "The",
@@ -261,135 +261,135 @@
     },
     {
      "w": "first",
-     "start": 1.695,
+     "start": 1.685,
      "end": 1.92,
      "heard": true
     },
     {
      "w": "oxygen",
-     "start": 1.98,
-     "end": 2.56,
+     "start": 2.0,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "struggles",
-     "start": 2.625,
+     "start": 2.65,
      "end": 3.04,
      "heard": true
     },
     {
      "w": "to",
-     "start": 3.02,
+     "start": 3.04,
      "end": 3.2,
      "heard": true
     },
     {
-     "w": "board,",
-     "start": 3.165,
-     "end": 3.92,
+     "w": "get",
+     "start": 3.145,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "on,",
+     "start": 3.495,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "but",
-     "start": 3.975,
-     "end": 4.08,
+     "start": 4.05,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "each",
-     "start": 4.045,
-     "end": 4.32,
+     "start": 4.12,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "one",
-     "start": 4.245,
-     "end": 4.56,
+     "start": 4.32,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "makes",
-     "start": 4.56,
-     "end": 4.88,
+     "start": 4.64,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "the",
-     "start": 4.895,
-     "end": 5.04,
+     "start": 4.965,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "next",
-     "start": 5.155,
-     "end": 5.28,
+     "start": 5.23,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "one",
-     "start": 5.24,
-     "end": 5.52,
+     "start": 5.325,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "easier.",
-     "start": 5.5,
-     "end": 5.974,
+     "start": 5.595,
+     "end": 6.071,
      "heard": true,
-     "end_asr": 6.24
+     "end_asr": 6.4
     },
     {
-     "w": "Dark",
-     "start": 6.295,
-     "end": 6.64,
-     "heard": true
-    },
-    {
-     "w": "red",
-     "start": 6.595,
-     "end": 6.88,
-     "heard": true
-    },
-    {
-     "w": "at",
-     "start": 6.915,
-     "end": 7.04,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 7.085,
-     "end": 7.2,
-     "heard": true
-    },
-    {
-     "w": "start;",
-     "start": 7.115,
-     "end": 7.6,
-     "heard": true
-    },
-    {
-     "w": "full,",
-     "start": 7.63,
-     "end": 7.92,
+     "w": "Empty,",
+     "start": 6.415,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "it's",
-     "start": 8.045,
-     "end": 8.24,
+     "start": 6.645,
+     "end": 7.04,
+     "heard": false
+    },
+    {
+     "w": "dark",
+     "start": 7.04,
+     "end": 7.36,
      "heard": true
     },
     {
+     "w": "red;",
+     "start": 7.29,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "full,",
+     "start": 7.805,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "it's",
+     "start": 8.175,
+     "end": 8.4,
+     "heard": false
+    },
+    {
      "w": "bright",
-     "start": 8.19,
-     "end": 8.48,
+     "start": 8.335,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "red.",
-     "start": 8.42,
-     "end": 8.88,
+     "start": 8.565,
+     "end": 9.04,
      "heard": true
     }
    ],
@@ -397,8 +397,8 @@
   },
   {
    "id": "vo04",
-   "text": "Veins often look blue, so it's easy to guess the blood inside them is. It never is. Returning blood is darker red. Red light sinks in, and the vein swallows it, so less red comes back.",
-   "heard": "Veins often look blue, so it's easy to guess the blood inside them is. It never is. Returning blood is darker red. Red light sinks in and the vein swallows it, so less red comes back.",
+   "text": "Veins often look blue, so it's easy to guess the blood inside is too. It never is. Blood heading home is darker red. Red light sinks in, the vein swallows it, so less red bounces back.",
+   "heard": "Veins often look blue, so it's easy to guess the blood inside is too. It never is. Blood heading home is darker red. Red light sinks in, the vein swallows it, so less red bounces back.",
    "words": [
     {
      "w": "Veins",
@@ -421,201 +421,201 @@
     {
      "w": "blue,",
      "start": 1.1,
-     "end": 1.68,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "so",
-     "start": 1.71,
-     "end": 1.84,
+     "start": 1.685,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "it's",
-     "start": 1.92,
+     "start": 1.715,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "easy",
-     "start": 2.03,
-     "end": 2.32,
+     "start": 1.995,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "to",
-     "start": 2.35,
-     "end": 2.4,
+     "start": 2.3,
+     "end": 2.35,
      "heard": true
     },
     {
      "w": "guess",
-     "start": 2.47,
-     "end": 2.72,
+     "start": 2.42,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "the",
-     "start": 2.725,
+     "start": 2.675,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "blood",
-     "start": 2.83,
-     "end": 3.2,
+     "start": 2.78,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "inside",
-     "start": 3.285,
-     "end": 3.52,
+     "start": 3.14,
+     "end": 3.44,
      "heard": true
     },
     {
-     "w": "them",
-     "start": 3.53,
-     "end": 3.76,
+     "w": "is",
+     "start": 3.455,
+     "end": 3.68,
      "heard": true
     },
     {
-     "w": "is.",
-     "start": 3.855,
-     "end": 4.07,
+     "w": "too.",
+     "start": 3.635,
+     "end": 4.021,
      "heard": true,
      "end_asr": 4.4
     },
     {
      "w": "It",
-     "start": 4.405,
-     "end": 4.64,
+     "start": 4.36,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "never",
-     "start": 4.565,
-     "end": 4.96,
+     "start": 4.515,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "is.",
-     "start": 4.84,
-     "end": 5.28,
+     "start": 4.79,
+     "end": 5.2,
      "heard": true
     },
     {
-     "w": "Returning",
-     "start": 5.895,
+     "w": "Blood",
+     "start": 5.86,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "heading",
+     "start": 6.325,
      "end": 6.56,
      "heard": true
     },
     {
-     "w": "blood",
-     "start": 6.555,
+     "w": "home",
+     "start": 6.52,
      "end": 6.88,
      "heard": true
     },
     {
      "w": "is",
-     "start": 6.99,
-     "end": 7.12,
+     "start": 6.92,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "darker",
-     "start": 7.17,
+     "start": 7.12,
      "end": 7.6,
      "heard": true
     },
     {
      "w": "red.",
-     "start": 7.55,
-     "end": 8.015,
+     "start": 7.5,
+     "end": 7.964,
      "heard": true,
      "end_asr": 8.24
     },
     {
      "w": "Red",
-     "start": 8.335,
+     "start": 8.285,
      "end": 8.56,
      "heard": true
     },
     {
      "w": "light",
-     "start": 8.55,
+     "start": 8.5,
      "end": 8.88,
      "heard": true
     },
     {
      "w": "sinks",
-     "start": 8.835,
-     "end": 9.36,
+     "start": 8.785,
+     "end": 9.2,
      "heard": true
     },
     {
      "w": "in,",
-     "start": 9.455,
+     "start": 9.08,
      "end": 9.52,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 9.55,
+     "w": "the",
+     "start": 9.57,
      "end": 9.68,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 9.58,
-     "end": 9.76,
-     "heard": true
-    },
-    {
      "w": "vein",
-     "start": 9.76,
-     "end": 10.16,
+     "start": 9.6,
+     "end": 10.0,
      "heard": true
     },
     {
      "w": "swallows",
-     "start": 10.235,
-     "end": 10.64,
+     "start": 10.135,
+     "end": 10.48,
      "heard": true
     },
     {
      "w": "it,",
-     "start": 10.76,
-     "end": 10.88,
+     "start": 10.475,
+     "end": 10.8,
      "heard": true
     },
     {
      "w": "so",
-     "start": 10.9,
-     "end": 11.04,
+     "start": 10.83,
+     "end": 10.96,
      "heard": true
     },
     {
      "w": "less",
-     "start": 10.98,
-     "end": 11.36,
+     "start": 10.86,
+     "end": 11.28,
      "heard": true
     },
     {
      "w": "red",
-     "start": 11.345,
-     "end": 11.68,
+     "start": 11.27,
+     "end": 11.52,
      "heard": true
     },
     {
-     "w": "comes",
-     "start": 11.615,
-     "end": 11.92,
+     "w": "bounces",
+     "start": 11.515,
+     "end": 12.0,
      "heard": true
     },
     {
      "w": "back.",
-     "start": 11.935,
-     "end": 12.24,
+     "start": 11.985,
+     "end": 12.32,
      "heard": true
     }
    ],

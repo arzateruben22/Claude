@@ -14,12 +14,12 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "How fast is this spark? The leading expert doubted it could ever be timed.",
+   "text": "How fast is this spark? A top expert doubted anyone could time it.",
    "stars": [
     "spark",
-    "timed"
+    "time"
    ],
-   "phonemes": "hˌaʊ fˈast ɪz ðɪs spˈɑːk? ðə lˈiːdɪŋ ˈɛkspɜːt dˈaʊtɪd ɪt kʊd ˈɛvə biː tˈaɪmd.",
+   "phonemes": "hˌaʊ fˈast ɪz ðɪs spˈɑːk? ɐ tˈɒp ˈɛkspɜːt dˈaʊtɪd ˈɛnɪwˌɒn kʊd tˈaɪm ɪt.",
    "speeds": [
     1.0,
     0.95
@@ -34,8 +34,8 @@
     ]
    ],
    "file": "01.wav",
-   "dur": 4.741,
-   "sha256": "834c42552c2c8eaefb5bcc4d1a4bde476d67d329d1b83d4af1d3f058afa09f3c"
+   "dur": 4.658,
+   "sha256": "7cd4c13e599a19d79d7b38355b677cba2d340b353cd57ef10e4041640e50d199"
   },
   {
    "id": "vo02",
@@ -103,12 +103,12 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many of your fibres wear fatty myelin, re-firing only at gaps, so the signal leaps. Where myelin is damaged, as in multiple sclerosis, signals can slow or stall.",
+   "text": "It isn't current in a wire: the cell re-fires it, step by step. Many fibres wear a fatty coat, myelin, and only re-fire at its gaps, so the signal leaps. Where it's damaged, as in multiple sclerosis, signals slow or stall.",
    "stars": [
     "myelin",
     "leaps"
    ],
-   "phonemes": "ɪt ˌɪzənt kˈʌɹənt ɪn ɐ wˈaɪə: ðə sˈɛl ɹˌiːfˈaɪəz ɪt, stˈɛp baɪ stˈɛp. mˈɛnɪəv jɔː fˈaɪbəz wˈeə fˈati mˈaɪɪlˌɪn, ɹˌiːfˈaɪəɹɪŋ ˈəʊnli at ɡˈaps, sˌəʊ ðə sˈɪɡnəl lˈiːps. wˌeə mˈaɪɪlˌɪn ɪz dˈamɪdʒd, az ɪn mˌʌltɪpəl skləɹˈəʊsɪs, sˈɪɡnəlz kan slˈəʊ ɔː stˈɔːl.",
+   "phonemes": "ɪt ˌɪzənt kˈʌɹənt ɪn ɐ wˈaɪə: ðə sˈɛl ɹˌiːfˈaɪəz ɪt, stˈɛp baɪ stˈɛp. mˈɛni fˈaɪbəz wˈeəɹ ɐ fˈati kˈəʊt, mˈaɪɪlˌɪn, and ˈəʊnli ɹˌiːfˈaɪəɹ at ɪts ɡˈaps, sˌəʊ ðə sˈɪɡnəl lˈiːps. wˌeəɹ ɪts dˈamɪdʒd, az ɪn mˌʌltɪpəl skləɹˈəʊsɪs, sˈɪɡnəlz slˈəʊ ɔː stˈɔːl.",
    "speeds": [
     0.95,
     0.95,
@@ -124,13 +124,13 @@
      3.9968
     ],
     [
-     9.0014,
-     9.3014
+     9.4458,
+     9.7458
     ]
    ],
    "file": "04.wav",
-   "dur": 14.425,
-   "sha256": "5364059827f5c4b05066ff2f08217b47bd282b6b7bb445471104142a91291c15"
+   "dur": 13.986,
+   "sha256": "21d55e11eee304c6cc5d427a82287b13c27d72f0e3508ab11b31efdeec414c92"
   },
   {
    "id": "vo05",

@@ -41,12 +41,12 @@ export const wanderer = (THREE, L, o = {}) => {
     const th = (i / NR) * Math.PI, ph = (j / NA) * Math.PI * 2, d = [Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)];
     RUF[i * (NA + 1) + j] = 0.05 * fbm3(d[0] * 3.2, d[1] * 3.2, d[2] * 3.2, { seed: 11 + seed }) + 0.025 * fbm3(d[0] * 11, d[1] * 11, d[2] * 11, { seed: 12 + seed, octaves: 2 });
   }
-  const bodyMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(o.color || "#F3EEE4"), roughness: 0.45, emissive: L.lin(o.color || "#F3EEE4"), emissiveIntensity: 0.06,
+  const bodyMat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin(o.color || "#F3EEE4"), roughness: 0.45, emissive: L.lin(o.color || "#F3EEE4"), emissiveIntensity: 0.06,
     transparent: true, opacity: o.opacity ?? 0.62, depthWrite: false }), { fresnel: 0.55, fresnelPower: 2.0, key: "wanderer" });
   const body = new THREE.Mesh(geo, bodyMat); body.renderOrder = 2;
   const spin = new THREE.Group(); spin.add(body); group.add(spin);
   // the nucleus: three lobes joined by thin strands (the segmented nucleus that gives the cell its name in a smear)
-  const nucMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(o.nucleus || "#8C6FA6"), roughness: 0.5, emissive: L.lin(o.nucleus || "#8C6FA6"), emissiveIntensity: 0.12 }), { fresnel: 0.25, key: "wnuc" });
+  const nucMat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin(o.nucleus || "#8C6FA6"), roughness: 0.5, emissive: L.lin(o.nucleus || "#8C6FA6"), emissiveIntensity: 0.12 }), { fresnel: 0.25, key: "wnuc" });
   const lobeG = new THREE.SphereGeometry(1, 28, 20);
   { const p = lobeG.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i), k = 1 + 0.08 * fbm3(x * 2, y * 2, z * 2, { seed: 21 + seed }); p.setXYZ(i, x * k, y * k, z * k); } lobeG.computeVertexNormals(); }
   const LOBE = [[-1.5, 0.5, 0.3, 1.25], [0.2, -0.3, -0.4, 1.35], [1.6, 0.6, 0.2, 1.15]];   // rest offsets (in R units/4.15) and radii
