@@ -79,5 +79,5 @@ Sources (every number in these episodes is checked against a source)
 - Physiology, Tidal Volume (StatPearls, NCBI Bookshelf NBK482502): https://www.ncbi.nlm.nih.gov/books/NBK482502/
 - Ley et al. 2007, Getting to the site of inflammation: the leukocyte adhesion cascade updated, Nat Rev Immunol (PubMed; bible S22): https://pubmed.ncbi.nlm.nih.gov/17717539/
 
-Narration is a synthetic voice (AI-generated). Music and sound design are original, made for Meanwhile, Inside. Type: Fraunces, Atkinson Hyperlegible Next (SIL Open Font License).
+Narration is a synthetic voice (AI-generated). Music and sound design are original, made for Body Backstage. Type: Fraunces, Atkinson Hyperlegible Next (SIL Open Font License).
 TODO before posting: the channel handle and links, the expert sign-offs listed in each episode's review/HUMAN-REVIEW.md, and YouTube's altered/synthetic content setting.
