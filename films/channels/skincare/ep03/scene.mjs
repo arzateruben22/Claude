@@ -45,7 +45,7 @@ const SCAR = [0.5, 1.6];
 const EPI = 100;
 const mkBlock = (x, scale) => {
   const g = new THREE.Group(); g.position.x = x; g.scale.setScalar(scale);
-  const weave = createWeave({ w: 600, h: 260, d: 300, seed: 31 + x });
+  const weave = createWeave({ w: 600, h: 260, d: 300, seed: 31 + x, irregular: true });
   weave.group.position.y = -EPI; g.add(weave.group);
   weave.group.traverse((o) => { if (o.isMesh && o.material && o.material.isMeshStandardMaterial) { o.material.envMapIntensity = 0.5; o.material.roughness = Math.min(o.material.roughness, 0.42); } });   // a little studio sheen on the threads
   const back = new THREE.Mesh(new THREE.PlaneGeometry(1500, 900), new THREE.MeshStandardMaterial({ roughness: 0.9, color: 0x4a3040 })); back.position.set(0, -EPI - 130, -420); g.add(back);   // the micrograph behind the section
@@ -62,7 +62,8 @@ const adult = mkBlock(PL.wx, 1), fetal = mkBlock(PL.fx, FS);
 const mouth = mkBlock(PL.mx, FS);
 // the mouse study (Martin et al., 2003), stacked: with germ-fighting cells, a patch; without them, the weave regrown
 const MSC = 0.3, miceA = mkBlock(PL.mox, MSC), miceB = mkBlock(PL.mox, MSC);
-miceA.g.position.y = 230; miceB.g.position.y = 10; miceA.back.visible = miceB.back.visible = false;   // no backing cards: the two blocks sit in the volume
+miceA.g.position.x = PL.mox - 112; miceB.g.position.x = PL.mox + 112;   // side by side, filling the panel
+ miceA.back.visible = miceB.back.visible = false;   // no backing cards: the two blocks sit in the volume
 const immA = new THREE.Group(); miceA.g.add(immA);
 const immAMat = cellMaterial({ tint: [0.86, 0.92, 1.0], opacity: 0.9 }); immAMat.transmission = 0;
 const IMMA = Array.from({ length: 26 }, (_, i) => { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(8 + 3 * ((i * 7) % 5) / 4, 2), immAMat); immA.add(m);
@@ -77,6 +78,31 @@ for (const b of [adult, fetal, mouth, miceA, miceB]) richen(b.weave.group, { see
 // collagen as fibre bundles: the micro surface stretched along each strand (fibrils), a satin roughness
 for (const b of [adult, fetal, mouth, miceA, miceB]) b.weave.group.traverse((o) => { if (o.isMesh && o.material && o.material.normalMap && !o.material.userData.fibre) {
   o.material.normalMap = o.material.normalMap.clone(); o.material.normalMap.repeat.set(2, 18); o.material.normalMap.needsUpdate = true; o.material.normalScale.set(0.6, 0.6); o.material.roughness = 0.42; o.material.envMapIntensity = 0.9; o.material.userData.fibre = true; } });
+// round 9: the fibrils as lengthwise grooves you can see at draft size (a stripe map, not only a normal map), a warm
+// rim on the silhouettes that face the camera, and the slab's bottom fading into the volume instead of a dark floor
+const fibrilTex = (() => { const cv = document.createElement("canvas"); cv.width = 64; cv.height = 256; const x = cv.getContext("2d"), R = (() => { let s = 5; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+  x.fillStyle = "#fff"; x.fillRect(0, 0, 64, 256);
+  for (let i = 0; i < 11; i++) { const y = (i + 0.2 + 0.6 * R()) * 256 / 11, w = 3 + R() * 6, a = 0.28 + 0.3 * R(); x.fillStyle = `rgba(70,50,40,${a})`; x.fillRect(0, y - w / 2, 64, w); x.fillStyle = `rgba(255,250,240,0.5)`; x.fillRect(0, y + w / 2, 64, 1.5); }
+  const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; })();
+const finishBlock = (b) => {
+  const fade = { y0: { value: -1e9 }, y1: { value: -1e9 + 1 } }; b.fade = fade; b.floor.visible = false;
+  const mats = new Set(); b.weave.group.traverse((o) => { if (o.isMesh && o.material) mats.add(o.material); });
+  for (const m of mats) {
+    if (m.normalMap && m.userData.fibre) { m.map = fibrilTex; m.bumpMap = null; m.normalScale.set(1.1, 1.1); }
+    m.transparent = true; const prev = m.onBeforeCompile;
+    m.onBeforeCompile = (sh, r) => { prev && prev(sh, r); sh.uniforms.uY0 = fade.y0; sh.uniforms.uY1 = fade.y1;
+      sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying vec3 vWP;").replace("#include <begin_vertex>", "#include <begin_vertex>\nvWP = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+      sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec3 vWP; uniform float uY0; uniform float uY1;")
+        .replace("#include <dithering_fragment>", `#include <dithering_fragment>
+  { vec3 n = normalize(vNormal); float rim = pow(1.0 - abs(dot(n, normalize(vViewPosition))), 2.6) * (0.55 + 0.45 * clamp(n.y + 0.3, 0.0, 1.0));
+    gl_FragColor.rgb += vec3(1.0, 0.66, 0.38) * 0.42 * rim;
+    float fa = smoothstep(uY0, uY1, vWP.y); gl_FragColor.rgb = mix(vec3(0.03, 0.02, 0.06), gl_FragColor.rgb, fa); gl_FragColor.a *= fa; }`); };
+    m.customProgramCacheKey = () => "ep03fin" + (m.normalMap ? 1 : 0) + (m.map ? 1 : 0);
+    m.needsUpdate = true;
+  }
+};
+const fadeAt = (b) => { b.g.updateMatrixWorld(); const v = new THREE.Vector3(0, -EPI - 268, 0); b.g.localToWorld(v); const y0 = v.y; v.set(0, -EPI - 150, 0); b.g.localToWorld(v); b.fade.y0.value = y0; b.fade.y1.value = v.y; };
+for (const b of [adult, fetal, mouth, miceA, miceB]) finishBlock(b);
 const hz = hazeVolume(scene, { at: [PL.wx, -120, -80], size: [1600, 900, 300], color: "#c9b6ff", n: 5, op: 0.045 });
 const bk = bokeh(scene, { n: 140, box: [[PL.wx - 1400, PL.wx + 1400], [-700, 500], [-1600, -700]], size: 70, color: "#d9ccff", op: 0.3 });
 // the rope (whoa): "only as strong as a rope missing one strand in five": five twisted strands, one slipping away
@@ -217,6 +243,8 @@ window.seek = function (t) {
   if (isB) { fstop = 0.16; const bx = { fetal: PL.fx, mouth: PL.mx, mice: PL.mox }[shot] || PL.wx; focusPt = [bx, -110, 150]; hz.set({ at: [bx, -120, -80], t }); bk.points.position.x = bx - PL.wx; }
   adult.epiMat.userData.mesh.visible = !(shot === "weave" && t < SH.weave + 1.0);   // the surface layer's shading bands at the cut: it fades in after
   hz.group.visible = bk.points.visible = isB; bk.set({ t });
+  if (isB) for (const b of [adult, fetal, mouth, miceA, miceB]) if (b.g.visible) fadeAt(b);
+  if (shot === "mice") focusPt = [PL.mox, -54, 45];   // the two blocks, larger now: focus between them
   // the rope: in the test, from "rope" until the cut; on "strand" one of the five slips out and dims
   const ropeOn = shot === "test" ? E.inout2(seg(t, CUE.four - 1.6, CUE.four - 1.0)) : 0;
   rope.visible = ropeOn > 0.01; rope.scale.setScalar(0.6 + 0.4 * ropeOn); rope.rotation.x = 0.15 * t;
@@ -278,7 +306,7 @@ window.seek = function (t) {
     for (const b of [miceA, miceB]) { b.epiMat.color.setRGB(...epiCol); b.epiMat.opacity = 0.3; b.floor.material.color.setRGB(...toneColor("dermis", tone)); }
     IMMA.forEach(({ m, x, y, z, ph }, i) => { const g = E.out3(seg(t, SH.mice + 0.1 + 0.025 * i, SH.mice + 0.9 + 0.025 * i)); m.position.set(x * (0.4 + 0.6 * g) + 4 * Math.sin(t * 1.3 + ph), y + 160 * (1 - g), z); m.scale.setScalar(0.3 + 0.7 * g); });
   }
-  A.miceL = [PL.mox, 230 + 20, 150 * MSC]; A.miceR = [PL.mox, 10 + 20, 150 * MSC];
+  A.miceL = [PL.mox - 112, 20, 150 * MSC]; A.miceR = [PL.mox + 112, -92, 150 * MSC];   // under its block (the two labels would collide side by side)
   A.fgap = [PL.fx, -110 * FS, 150 * FS]; A.fside = [PL.fx - 150 * FS, -40 * FS, 150 * FS];
 
   // ── the gauge: a centred card above the section: the top layer ≈ a sheet of paper, the weave below ──

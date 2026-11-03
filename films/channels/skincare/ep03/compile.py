@@ -70,15 +70,15 @@ CAM = {
               {"t": B["why"]["t0"], "target": [WX, -130, 0], "el": 28, **WK, "dist": 1300, "az": -12, "ease": "sine"}],
     "test": [{"t": B["why"]["t0"], "target": [WX, -150, 0], "el": 28, **WK, "fy": 0.5, "dist": 1300, "az": -12},
              {"t": CUE["tears"] + 0.4, "target": [WX, -150, 0], "el": 22, **WK, "fy": 0.5, "dist": 1000, "az": -8, "ease": "inout2"},   # a slow push while it is pulled
-             {"t": B["whoa"]["t0"], "target": [WX, -150, 0], "el": 26, **WK, "fy": 0.5, "dist": 1450, "az": -4, "ease": "inout2"}],   # back out: the whole patch
+             {"t": B["whoa"]["t0"], "target": [WX, -150, 0], "el": 26, **WK, "fy": 0.5, "dist": 1450, "az": -4, "ease": "lin"}],   # back out: the whole patch
     "fetal": [{"t": B["whoa"]["t0"], "target": [FX, -110, 0], "el": 26, **WK, "dist": 1100, "az": -14},
               {"t": t_mouth, "target": [FX, -110, 0], "el": 23, **WK, "dist": 1030, "az": -5, "ease": "sine"}],
     "mouth": [{"t": t_mouth, "target": [MX, -110, 0], "el": 24, **WK, "dist": 1050, "az": 8},
-              {"t": B["toscale"]["t0"], "target": [MX, -110, 0], "el": 22, **WK, "dist": 950, "az": 3, "ease": "sine"}],
-    "mice": [{"t": t_mice, "target": [MOX, -40, 0], "el": 20, **WK, "fy": 0.5, "dist": 2050, "az": -6},
-             {"t": t_uvb, "target": [MOX, -40, 0], "el": 18, **WK, "fy": 0.5, "dist": 1900, "az": -2, "ease": "sine"}],
+              {"t": B["toscale"]["t0"], "target": [MX, -110, 0], "el": 21, **WK, "dist": 870, "az": 1, "ease": "lin"}],
+    "mice": [{"t": t_mice, "target": [MOX, -125, 0], "el": 16, **WK, "fy": 0.5, "dist": 1560, "az": -6},
+             {"t": t_uvb, "target": [MOX, -125, 0], "el": 15, **WK, "fy": 0.5, "dist": 1480, "az": -2, "ease": "sine"}],
     "gauge": [{"t": B["toscale"]["t0"], "target": [WX, -40, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1300, "az": -8},   # the section low in frame, the card above it
-              {"t": B["takeaway"]["t0"], "target": [WX, -40, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1200, "az": -6, "ease": "sine"}],
+              {"t": B["takeaway"]["t0"], "target": [WX, -40, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1180, "az": -3, "ease": "lin"}],
     "macro2": [{"t": B["takeaway"]["t0"], "target": [TX, 0, 0.5], "el": 72, **MK, "dist": 6, "az": -5},   # up out of the skin...
                {"t": B["takeaway"]["t0"] + 0.7, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 22, "az": -7.5, "ease": "out3"},   # ...to frame 0 again
                {"t": t_uv, "target": [TX, 0, 0.8], "el": 40, **MK, "dist": 19, "az": -7, "ease": "sine"}],   # frame 0 again
@@ -103,7 +103,7 @@ LABELS = [
     {"id": "l-fpatch", "text": "mouth lining: nearly scarless", "kind": "water", "anchor": "mgap", "t0": t_mouth + 0.5, "t1": B["toscale"]["t0"], "shot": "mouth", "side": 1, "v": "above", "fixed": True},
     {"id": "l-top", "text": "the top layer", "kind": "water", "anchor": "top", "t0": CUE["top"] - 0.2, "t1": B["takeaway"]["t0"], "shot": "gauge", "side": 1, "v": "below", "fixed": True},
     {"id": "l-with", "text": "mice with these cells: a scar", "kind": "cell", "anchor": "miceL", "t0": t_mice + 0.4, "t1": t_uvb, "shot": "mice", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-without", "text": "mice without them: no scar", "kind": "water", "anchor": "miceR", "t0": t_mice + 1.0, "t1": t_uvb, "shot": "mice", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-without", "text": "mice without them: no scar", "kind": "water", "anchor": "miceR", "t0": t_mice + 1.0, "t1": t_uvb, "shot": "mice", "side": 1, "v": "below", "fixed": True},
     {"id": "l-defence", "text": "while it healed: cells at the seam", "kind": "cell", "anchor": "uvscar", "t0": t_uvb + 0.4, "t1": t_end, "shot": "uvb", "side": 1, "v": "above", "fixed": True},
     {"id": "l-scar2", "text": "the same old scar", "kind": "cell", "anchor": "scar", "t0": B["takeaway"]["t0"] + 0.2, "t1": t_uv, "shot": "macro2", "side": 1, "v": "above", "fixed": True},
     {"id": "l-seam", "text": "a seam: no pores", "kind": "water", "anchor": "uvscar", "t0": t_uv + 0.3, "t1": t_mice, "shot": "uv", "side": 1, "v": "above", "fixed": True},
@@ -166,6 +166,8 @@ glue(f, {"vo01": ["Why do you", "scar now?", "Before birth,", "a cut healed", "w
          "vo06": ["most of your body,", "the top layer,", "this paper's thickness,", "without a seam."], "vo07": ["So, why", "the scar?", "germ-fighting cells", "without one:", "the price of defence."],
          "vo08": ["a deadly poison,", "a frown.", "goes in?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
+for c in CAPS:   # no fetal words over the mouth block: a caption that runs into the cut ends at the dip
+    if c["t0"] < t_mouth - 0.3 < t_mouth < c["t1"]: c["t1"] = round(t_mouth - 0.07, 3)
 
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,

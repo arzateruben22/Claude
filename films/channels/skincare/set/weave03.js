@@ -10,7 +10,7 @@ import * as THREE from "three";
 import { rng } from "cinema/film/runtime.js";
 import { toneColor } from "./section.js";
 
-export const createWeave = ({ w = 600, h = 260, d = 300, seed = 31, gap = 80 } = {}) => {
+export const createWeave = ({ w = 600, h = 260, d = 300, seed = 31, gap = 80, irregular = false } = {}) => {
   const R = rng(seed), g = new THREE.Group();
   const mat = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0, color: 0xf0e2d0 });
   const patchMat = new THREE.MeshStandardMaterial({ roughness: 0.35, metalness: 0, color: 0xf6efe6, emissive: 0x000000 });
@@ -43,9 +43,24 @@ export const createWeave = ({ w = 600, h = 260, d = 300, seed = 31, gap = 80 } =
   }
   // the patch: parallel threads across the gap, all one way (along z)
   const patch = [];
-  for (let layer = 0; layer < 6; layer++) for (let x = -gap + 8; x < gap; x += 14) {
+  if (!irregular) for (let layer = 0; layer < 6; layer++) for (let x = -gap + 8; x < gap; x += 14) {
     const m = bundle("z", x, -30 - layer * (h - 50) / 5, 0, d, 6, patchMat); m.userData.k = R(); m.userData.x = x; g.add(m); patch.push(m);
   }
+  // irregular (opt-in, No. 003 round 9): still all one way, but strands of uneven thickness and spacing that wander a
+  // little, tapered and frayed at the ends, some shorter than the block, so the patch reads as tissue, not as rods
+  else { const P = rng(seed + 7);
+    for (let layer = 0; layer < 6; layer++) for (let x = -gap + 4 + P() * 6; x < gap - 2; x += 7 + P() * 13) {
+      const r = 2.8 + Math.pow(P(), 1.5) * 6.5, y0 = -30 - layer * (h - 50) / 5 + (P() - 0.5) * 22;
+      const s0 = -d / 2 - 2 + P() * P() * 30, s1 = d / 2 + 2 - P() * P() * 30, n = 40, ph = P() * 6.3, ph2 = P() * 6.3, amp = 2 + P() * 5, wl = 50 + P() * 60;
+      const pts = []; for (let i = 0; i <= n; i++) { const s = s0 + ((s1 - s0) * i) / n; pts.push(new THREE.Vector3(x + amp * Math.sin(s / wl + ph), y0 + 3 * Math.sin(s / 37 + ph2), s)); }
+      const geo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 60, r, 9, false), pa = geo.attributes.position, c = new THREE.Vector3();
+      // taper: pull each ring toward the curve centre near the ends, with a slight swelling partway along
+      const curve = geo.parameters.path; for (let i = 0; i < pa.count; i++) { const ring = Math.floor(i / 10), u = Math.min(1, ring / 60); curve.getPointAt(u, c);
+        const e = Math.min(u, 1 - u), t = Math.min(1, e / 0.12), k = (0.55 + 0.45 * Math.sqrt(t)) * (1 + 0.18 * Math.sin(u * 9 + ph));
+        pa.setXYZ(i, c.x + (pa.getX(i) - c.x) * k, c.y + (pa.getY(i) - c.y) * k, c.z + (pa.getZ(i) - c.z) * k); }
+      geo.computeVertexNormals();
+      const m = new THREE.Mesh(geo, patchMat); m.userData = { dir: "z", offset: x, y0, k: P(), x }; g.add(m); patch.push(m);
+    } }
   // the regrown weave inside the gap (whoa): short woven bundles in both directions
   const regrow = [];
   for (let layer = 0; layer < 4; layer++) {
@@ -69,7 +84,7 @@ export const createWeave = ({ w = 600, h = 260, d = 300, seed = 31, gap = 80 } =
       const k = 1 - 0.45 * dim;
       const base = toneColor("dermis", tone).map((v) => Math.min(1, v * 1.45 + 0.22));
       mat.color.setRGB(...base.map((v) => v * k)); regrowMat.color.copy(mat.color);
-      patchMat.color.setRGB(0.97 * k, 0.94 * k, 0.9 * k); patchMat.emissive.setRGB(0.12 * glow, 0.55 * glow, 0.52 * glow);
+      if (irregular) patchMat.color.setRGB(...base.map((v, i) => Math.min(1, v * 1.05 + 0.06) * k)); else patchMat.color.setRGB(0.97 * k, 0.94 * k, 0.9 * k);   // irregular: the same fibre, only paler patchMat.emissive.setRGB(0.12 * glow, 0.55 * glow, 0.52 * glow);
       fMat.color.setRGB(...toneColor("basal", tone).map((v) => v * k)); gMat.color.setRGB(...toneColor("living", tone).map((v) => v * k * 1.1));
       g.scale.set(1 + 0.12 * pull[0], 1 - 0.05 * (Math.abs(pull[0]) + Math.abs(pull[1])), 1 + 0.12 * pull[1]);
       const open = cut * (1 - Math.max(pk, rk));
