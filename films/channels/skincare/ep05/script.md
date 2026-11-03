@@ -1,6 +1,6 @@
 # Skin Sense No. 005: "The sunscreen experiment" (draft; dermatologist sign-off before posting)
 
-About 74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Brief: s1v2/BRIEF.md,
+About 76.5 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Brief: s1v2/BRIEF.md,
 topic "sunscreen vs no sunscreen", told through one trial. Facts pass 2 (2 Nov, `../s1v2/FACTS-PASS-2.md`). This
 episode is about sunscreen, so a board-certified dermatologist signs it off before posting (bible §8, §9).
 
