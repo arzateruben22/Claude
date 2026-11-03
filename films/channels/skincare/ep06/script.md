@@ -39,25 +39,25 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. In a v
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep06 --segment toscale`.
 
-## hook {shot: frame 0, the reveal on the list: an IARC Group 1 excerpt over skin under a bed's light ("model, not a photo"); on "cigarettes" two lines light, on "meat" a third · labels that stay: "IARC Group 1" + "model, not a photo" · title: "Same list as cigarettes" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.3 s)
+## hook {shot: frame 0, hero 1: the IARC Group 1 excerpt as an engraved slate plate in violet haze, the bed's tubes soft behind it; on "cigarettes" two rows light, on "meat" a third · labels that stay: "IARC Group 1 · excerpt" (after the title) · title: "Same list as cigarettes" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.3 s)
 vo: Same list as cigarettes? Processed *meat* is on it too. {c1}
 
-## normal {shot: no cut: the list holds, three lines lit; on "sure" one line lands under them · labels that stay: "IARC Group 1" + "strength of evidence, not size of risk" · picture-only 0.3 s · energy: 0.45} (4.3–15.7 s)
+## normal {shot: no cut: the plate holds, three rows lit; on "sure" its engraved line lights: "ranks the strength of evidence, not the size of risk" · labels that stay: "IARC Group 1 · excerpt" · picture-only 0.3 s · energy: 0.45} (4.3–15.7 s)
 vo: All three share the top group of the World Health Organization's cancer agency, which says that doesn't make them equally dangerous: it ranks how *sure* the evidence is. {c2,c3}
 
-## change {shot: a scale jump into the bed, its tubes lighting; on "ten to fifteen" they flare · labels that stay: "UVA · ×10–15 midday sun" + "large, powerful units · may be" · picture-only 0.3 s · energy: 0.55} (15.7–27.2 s)
+## change {shot: hero 2, a scale jump into the bed: deep-tone skin under a canopy of UVA tubes; on "ten to fifteen" they flare, on "sun" they swell · labels that stay: "model, not a photo" until "large, powerful units" takes the corner, with the spine "UVA vs midday sun · may be ×10–15" · picture-only 0.3 s · energy: 0.55} (15.7–27.2 s)
 vo: Into the bed, then: its light is mostly UVA, the long rays. {c4} In large, powerful units, it may be ten to fifteen times as intense as the midday *sun*. {c5}
 
-## why {shot: no cut; the reveal on the first sessions, sorted by age · labels that stay: "first use before 35 · RR 1.59 (2012, corrected) · 1.75 (2007)" + "pooled studies · relative risk" · picture-only 2.0 s · energy: 0.5} (27.2–41.6 s)
+## why {shot: no cut; on "young" the camera re-frames up into the tubes, and the skin stays out of frame through the risk figures (no skin tone with a risk line) · labels that stay: "melanoma · relative risk · first use < 35: 1.59 · 1.75" + "pooled studies · 2012 (corr.) · 2007" · picture-only 2.0 s · energy: 0.5} (27.2–41.6 s)
 vo: When the beds joined that group, the sharpest signal came from people who started young. {c6} In pooled studies, first use before thirty-five went with melanoma risk raised by more than *half*. {c7}
 
-## whoa {shot: the reveal on the map: on "Brazil" one country goes dark, on "off" a second · labels that stay: "commercial beds banned: Brazil 2009 · Australia 2015" + "model, not a photo" · picture-only 3.0 s · energy: 0.8} (41.6–51.3 s)
+## whoa {shot: hero 3, the UV switch (cyan scan line) on the same skin in the UV camera: on "off" the left half and its bank go dark (Australia), on "Brazil" the right (Brazil) · labels that stay: "Australia · 2015–16" + "Brazil · 2009", note "model, not a photo" · picture-only 3.0 s · energy: 0.8} (41.6–51.3 s)
 vo: Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them *too*. {c8,c9}
 
-## toscale {segment: toscale · the reveal on the skin's section: long rays pass the top layer; the gauge sets it beside the paper · labels that stay: "≈ 100 µm · paper 100 µm" + "simplified" · picture-only 0.3 s · energy: 0.4} (51.3–58.9 s)
+## toscale {segment: toscale · hero 4: a block of skin cut open, its face a stained tissue photo; long rays pass the top layer into the dermis; the gauge sets the top layer beside the paper · labels that stay: "≈ 100 µm · paper 100 µm" + "tissue photo · rays simplified" · picture-only 0.3 s · energy: 0.4} (51.3–58.9 s)
 vo: And those long rays reach right through the top layer, on most skin about as thin as *paper*. {c10,c11}
 
-## takeaway {shot: back to the hook's list; on "sun" a fourth line lights above the others, dated first · labels that stay: "solar radiation · Group 1 since 1992 · beds 2009" + "strength of evidence, not size of risk" · picture-only 0.3 s · energy: 0.3} (58.9–67.3 s)
+## takeaway {shot: back to the hook's plate; on "sun" the Solar radiation row lights, dated 1992 (the beds 2009); on "Same list" the tobacco and beds rows relight · labels that stay: "IARC Group 1 · excerpt" + "strength of evidence, not size of risk" on the plate, then the spine "Group 1 ranks certainty" · picture-only 0.3 s · energy: 0.3} (58.9–67.3 s)
 vo: The sun made that list years before the beds. {c12} Same list as cigarettes: not the same harm, the same *certainty*. {c13}
 
 ## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (67.3–73.3 s)

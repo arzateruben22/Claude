@@ -97,6 +97,11 @@
    "tag": "into-bed"
   },
   {
+   "t": 16.400000000000002,
+   "kind": "badge",
+   "tag": "b-model-bed"
+  },
+  {
    "t": 21.566666666666666,
    "kind": "badge",
    "tag": "b-units"
@@ -114,6 +119,11 @@
    "t": 24.066666666666666,
    "kind": "zap",
    "tag": "tubes-flare"
+  },
+  {
+   "t": 27.4,
+   "kind": "reveal",
+   "tag": "tubes-swell"
   },
   {
    "t": 28.4667,
@@ -158,7 +168,7 @@
    "tag": "b-model"
   },
   {
-   "t": 44.96666666666667,
+   "t": 44.91666666666667,
    "kind": "cell.land",
    "tag": "australia-off"
   },
@@ -168,20 +178,20 @@
    "tag": "brazil-off"
   },
   {
-   "t": 51.8,
-   "kind": "section",
-   "id": "toscale",
-   "t1": 58.8
-  },
-  {
-   "t": 52.03333333333333,
+   "t": 49.93333333333333,
    "kind": "scale.jump",
    "tag": "into-section"
   },
   {
-   "t": 52.33333333333333,
+   "t": 50.23333333333333,
    "kind": "badge",
    "tag": "b-micro"
+  },
+  {
+   "t": 51.8,
+   "kind": "section",
+   "id": "toscale",
+   "t1": 58.8
   },
   {
    "t": 54.8,
@@ -213,6 +223,11 @@
    "t": 59.33333333333333,
    "kind": "reveal",
    "tag": "list-sun"
+  },
+  {
+   "t": 62.5,
+   "kind": "cell.land",
+   "tag": "list-relit"
   },
   {
    "t": 66.13333333333333,
