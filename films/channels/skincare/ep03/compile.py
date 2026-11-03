@@ -118,7 +118,7 @@ BADGES = [
     {"id": "b-simp2", "text": "simplified", "t0": B["takeaway"]["t0"], "t1": t_uv, "slot": "br"},
     {"id": "b-model", "text": "model, not a photo", "t0": t_uv, "t1": t_mice, "slot": "br"},
     {"id": "b-modelb", "text": "model, not a photo", "t0": t_uvb, "t1": t_end, "slot": "br"},
-    {"id": "b-mouse", "text": "mouse study · Martin et al., 2003 · model", "t0": t_mice, "t1": t_uvb, "slot": "tr"},
+    {"id": "b-mouse", "text": "mouse study · Martin 2003 · model", "t0": t_mice, "t1": t_uvb, "slot": "tr"},
 ]
 SPINE = [0.5, 0.215]
 COUNTERS = [

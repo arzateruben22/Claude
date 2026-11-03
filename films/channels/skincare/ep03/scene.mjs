@@ -74,6 +74,9 @@ const immMat = cellMaterial({ tint: [0.86, 0.9, 1.0], opacity: 0.8 }); immMat.tr
 const IMM = Array.from({ length: 22 }, (_, i) => { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(0.075 + 0.03 * ((i * 7) % 5) / 4, 2), immMat); imm.add(m); const a = i * 2.39996, r = 1.4 + 0.9 * ((i * 13) % 7) / 7; return { m, a, r, v: ((i * 5) % 11) / 11 - 0.5 }; });
 // production pass: fibre surfaces on every weave, a graded volume behind the sets, haze, far bokeh, one grade
 for (const b of [adult, fetal, mouth, miceA, miceB]) richen(b.weave.group, { seed: 31, jitter: 0, hue: 0, micro: 0.7 });
+// collagen as fibre bundles: the micro surface stretched along each strand (fibrils), a satin roughness
+for (const b of [adult, fetal, mouth, miceA, miceB]) b.weave.group.traverse((o) => { if (o.isMesh && o.material && o.material.normalMap && !o.material.userData.fibre) {
+  o.material.normalMap = o.material.normalMap.clone(); o.material.normalMap.repeat.set(2, 18); o.material.normalMap.needsUpdate = true; o.material.normalScale.set(0.6, 0.6); o.material.roughness = 0.42; o.material.envMapIntensity = 0.9; o.material.userData.fibre = true; } });
 const hz = hazeVolume(scene, { at: [PL.wx, -120, -80], size: [1600, 900, 300], color: "#c9b6ff", n: 5, op: 0.045 });
 const bk = bokeh(scene, { n: 140, box: [[PL.wx - 1400, PL.wx + 1400], [-700, 500], [-1600, -700]], size: 70, color: "#d9ccff", op: 0.3 });
 // the rope (whoa): "only as strong as a rope missing one strand in five": five twisted strands, one slipping away
@@ -95,8 +98,9 @@ const scarDetail = () => {
     const x = pos.getX(i), z = pos.getZ(i), d = Math.abs(z - z0), sk = 1 - Math.min(1, Math.max(0, (d - hw * 0.8) / (hw * 0.3)));
     const edge = Math.exp(-((d - hw * 0.92) ** 2) / (2 * (hw * 0.08) ** 2));
     const stri = Math.sin((z - z0) * 26 + 0.6 * Math.sin(x * 0.7)) * 0.5 + 0.5;
-    pos.setY(i, pos.getY(i) + 0.045 * edge + 0.012 * stri * sk);
-    if (col && sk > 0) for (let c = 0; c < 3; c++) col.array[3 * i + c] *= (1 - 0.06 * sk + 0.06 * sk * (stri - 0.5)) * (c === 0 ? 1 + 0.03 * sk : 1 - 0.02 * sk);   // satin: a touch rosier, striped faintly
+    const outer = Math.exp(-((d - hw * 1.05) ** 2) / (2 * (hw * 0.07) ** 2));   // the furrowed skin dips just outside the raised edge (its shadow)
+    pos.setY(i, pos.getY(i) + 0.085 * edge - 0.03 * outer + 0.028 * stri * sk);
+    if (col && sk > 0) for (let c = 0; c < 3; c++) col.array[3 * i + c] *= (1 - 0.06 * sk + 0.12 * sk * (stri - 0.5) - 0.18 * outer) * (c === 0 ? 1 + 0.03 * sk : 1 - 0.02 * sk);   // satin: a touch rosier, striped faintly
   }
   pos.needsUpdate = true; if (col) col.needsUpdate = true; geo.computeVertexNormals(); scarDone = pos.array;
 };
@@ -196,7 +200,7 @@ window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
   if (stage(t).name !== stage(tr).name) t = tr;
   const shotRaw = stage(t).name;
-  rig.place(camera, shotRaw, t);
+  const P = rig.place(camera, shotRaw, t);
   const shot = shotRaw === "uvb" ? "uv" : shotRaw;   // uvb: the UV scar again, for "the price of defence"
   const isA = ["weave", "test", "gauge"].includes(shot);
   const isM = shot === "macro" || shot === "macro2";
@@ -204,13 +208,13 @@ window.seek = function (t) {
   mouth.g.visible = shot === "mouth"; miceA.g.visible = miceB.g.visible = shot === "mice";
   scene.fog = isM ? FOG : null;
   lights.sun.intensity = isM ? 3.0 : 1.8; lights.key.intensity = isM ? 0.45 : 1.3;
-  studio.set({ key: isM ? 0.5 : 1.1, rim: isM ? 1.6 : 2.2, fill: 0.3, env: shot === "uv" ? 0 : 0.45, warm: isM ? 0.6 : 0.3 });
+  studio.set({ key: isM ? 0.5 : 1.1, rim: isM ? 1.6 : 3.4, fill: 0.3, env: shot === "uv" ? 0 : 0.45, warm: isM ? 0.6 : 0.3 });
   if (isM) placeDust(t, [PL.tx, 2, 0], [30, 8, 24], 0.1);
   else if (isA || ["fetal", "mouth", "mice"].includes(shot)) { const bx = { fetal: PL.fx, mouth: PL.mx, mice: PL.mox }[shot] || PL.wx; placeDust(t, [bx, -150, 250], [900, 500, 300], 4); }
   else dust.visible = false;
-  fstop = shot === "macro" ? 0.22 : shot === "macro2" ? 0.15 : 0; focusPt = [PL.tx, 0, SCAR[0]];   // the scar in focus
+  fstop = shot === "macro" ? 0.18 : shot === "macro2" ? 0.15 : 0; focusPt = isM ? P.target : [PL.tx, 0, SCAR[0]];   // focus where the camera looks: the scar, from frame 0
   const isB = isA || ["fetal", "mouth", "mice"].includes(shot);   // the tissue blocks: a lens on them too, haze and bokeh around
-  if (isB) { fstop = 0.1; const bx = { fetal: PL.fx, mouth: PL.mx, mice: PL.mox }[shot] || PL.wx; focusPt = [bx, -110, 150]; hz.set({ at: [bx, -120, -80], t }); bk.points.position.x = bx - PL.wx; }
+  if (isB) { fstop = 0.16; const bx = { fetal: PL.fx, mouth: PL.mx, mice: PL.mox }[shot] || PL.wx; focusPt = [bx, -110, 150]; hz.set({ at: [bx, -120, -80], t }); bk.points.position.x = bx - PL.wx; }
   adult.epiMat.userData.mesh.visible = !(shot === "weave" && t < SH.weave + 1.0);   // the surface layer's shading bands at the cut: it fades in after
   hz.group.visible = bk.points.visible = isB; bk.set({ t });
   // the rope: in the test, from "rope" until the cut; on "strand" one of the five slips out and dims
@@ -262,7 +266,7 @@ window.seek = function (t) {
   if (shot === "mouth") {
     const mcut = E.inout2(seg(t, SH.mouth + 0.15, SH.mouth + 0.6)), mre = E.inout2(seg(t, SH.mouth + 0.9, SH.mouth + 2.6));
     mouth.weave.set({ tone, cut: mcut, regrow: 0.93 * mre, patch: 0.07 * mre, follicles: 0, glow: 0 });
-    mouth.weave.group.traverse((o) => { if (o.isMesh && o.material && o.material.color) o.material.color.lerp(MUCOSA, 0.35); });
+    mouth.weave.group.traverse((o) => { if (o.isMesh && o.material && o.material.color) { o.material.color.lerp(MUCOSA, 0.35); o.material.roughness = 0.2; o.material.envMapIntensity = 1.3; } });   // wet mucosa: glossier, pinker
     mouth.epiMat.color.copy(MUCOSA); mouth.epiMat.opacity = 0.32;
     mouth.floor.material.color.setRGB(...toneColor("dermis", tone));
   }

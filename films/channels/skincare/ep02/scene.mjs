@@ -39,7 +39,7 @@ window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 const tone = FILM.tone, SKIN = toneColor("living", tone);
 
 // ── the set ─────────────────────────────────────────────────────────────────
-const terrain = createTerrain({ seed: 13, spots: 0, segs: 400 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+const terrain = createTerrain({ seed: 13, spots: 0, segs: 400, organic: true }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
 { const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.1, hydration: 0.35, repeat: 14, seed: 6, micro: 0.35 }); m.roughness = 0.56; terrain.mesh.material = m;
   terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.3, 0.18, 0.12], gloss: 0.5 }); o.material.transmission = 0; } }); }
 const beam = createBeam({ from: [PL.tx - 9, 16, -6], to: [PL.tx, 0.25, 0], radius: 0.1 }); scene.add(beam.group);
@@ -59,7 +59,7 @@ const S = createSection({ width: 180, depth: 60, sc: 17, gran: 10, spin: 48, bas
 S.group.position.x = PL.sx; scene.add(S.group);
 richen(S.group, { seed: 23, jitter: 0.14, hue: 0.07, micro: 0.5, skip: (o) => o.geometry && o.geometry.type === "CylinderGeometry" });   // the horny-layer plates stay flat (tilted, they striped into dashes)   // no two cells alike; a micro surface on every one
 const V = createVessels({ x: [-80, 80], ys: [-118, -132], z: 30.4, r: 4.2, ox: PL.sx, dz: 0 }); scene.add(V.group);
-const paths = createPaths({ n: 18, origin: [0, 0, 32], width: 170, depth: 150, seed: 6 }); paths.group.position.x = PL.sx; scene.add(paths.group);
+const paths = createPaths({ n: 9, origin: [0, 0, 32], width: 170, depth: 150, seed: 6 }); paths.group.position.x = PL.sx; scene.add(paths.group);
 // light paths as glowing threads (not 1-px wire): a thin tube with a soft halo along each path, revealed with the path
 const glowTubes = paths.group.children.filter((o) => o.isLine).map((l) => {
   const a = l.geometry.attributes.position, pts = []; for (let i = 0; i < a.count; i++) pts.push(new THREE.Vector3(a.getX(i), a.getY(i), a.getZ(i)));
@@ -71,7 +71,7 @@ const glowTubes = paths.group.children.filter((o) => o.isLine).map((l) => {
 });
 const syncTubes = () => glowTubes.forEach(({ l, core, halo }) => {
   const np = l.userData.np, f = Math.min(1, (l.geometry.drawRange.count - 1) / (np - 1)), op = l.material.opacity;
-  for (const [m, k] of [[core, 0.8], [halo, 0.12]]) { m.geometry.setDrawRange(0, Math.round(m.geometry.index.count * f / 6) * 6); m.material.color.copy(l.material.color); m.material.opacity = op * k; m.visible = op > 0.002; }
+  for (const [m, k] of [[core, 0.55], [halo, 0.08]]) { m.geometry.setDrawRange(0, Math.round(m.geometry.index.count * f / 6) * 6); m.material.color.copy(l.material.color); m.material.opacity = op * k; m.visible = op > 0.002; }
 });
 const beamS = createBeam({ from: [PL.sx - 70, 230, 32], to: [PL.sx, 1, 32], radius: 2.2 }); scene.add(beamS.group);
 const shaftS = createShaft({ from: [PL.sx - 80, 260, 20], to: [PL.sx, -60, 26], radius: 26, color: "#fff1e2" }); scene.add(shaftS.group);   // the light as a volume in the tissue, not just a rod
@@ -105,13 +105,13 @@ const cgSkin = new THREE.Color(...SKIN.map((v) => v * 1.05));
 const faceGeo = (() => { const g = new THREE.SphereGeometry(1.6, 128, 96), p = g.attributes.position, v = new THREE.Vector3();
   const bump = (x, y, cx, cy, sx, sy) => Math.exp(-((x - cx) ** 2) / (2 * sx * sx) - ((y - cy) ** 2) / (2 * sy * sy));
   for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); const f = Math.max(0, v.z / 1.6);   // front half only
-    let d = 0.5 * bump(v.x, v.y, 0, -0.02, 0.13, 0.3) - 0.24 * (bump(v.x, v.y, -0.48, 0.3, 0.2, 0.13) + bump(v.x, v.y, 0.48, 0.3, 0.2, 0.13)) + 0.14 * bump(v.x, v.y, 0, 0.55, 0.75, 0.1)
+    let d = 0.34 * bump(v.x, v.y, 0, -0.02, 0.2, 0.32) - 0.16 * (bump(v.x, v.y, -0.46, 0.3, 0.26, 0.17) + bump(v.x, v.y, 0.46, 0.3, 0.26, 0.17)) + 0.12 * bump(v.x, v.y, 0, 0.55, 0.75, 0.12) + 0.07 * bump(v.x, v.y, 0, -0.52, 0.28, 0.07)
       - 0.07 * bump(v.x, v.y, 0, -0.62, 0.3, 0.08) + 0.06 * (bump(v.x, v.y, -0.6, -0.15, 0.3, 0.25) + bump(v.x, v.y, 0.6, -0.15, 0.3, 0.25));
     v.addScaledVector(v.clone().normalize(), d * f * f); if (v.y < -0.6) v.y -= 0.25 * (-0.6 - v.y) * f; v.z -= 0.18 * Math.max(0, -v.z); p.setXYZ(i, v.x, v.y, v.z); }
   g.computeVertexNormals(); return g; })();
-const cgL = new THREE.Mesh(faceGeo, new THREE.MeshStandardMaterial({ color: cgSkin, roughness: 0.22, metalness: 0 }));
+const cgL = new THREE.Mesh(faceGeo, new THREE.MeshStandardMaterial({ color: cgSkin.clone().multiplyScalar(1.12), roughness: 0.22, metalness: 0 }));   // matched in lightness to the right face: only the light differs
 const cgR = new THREE.Mesh(faceGeo, new THREE.MeshPhysicalMaterial({ color: cgSkin, roughness: 0.6, metalness: 0, sheen: 0.9, sheenRoughness: 0.55,
-  sheenColor: new THREE.Color(1.0, 0.55, 0.45), emissive: new THREE.Color(0.55, 0.12, 0.08), emissiveIntensity: 0.45, clearcoat: 0.15, clearcoatRoughness: 0.4 }));
+  sheenColor: new THREE.Color(1.0, 0.55, 0.45), emissive: new THREE.Color(0.55, 0.12, 0.08), emissiveIntensity: 0.3, clearcoat: 0.15, clearcoatRoughness: 0.4 }));
 cgR.material.normalMap = skinMaterial({ micro: 0.6, seed: 9, repeat: 4 }).normalMap; cgR.material.normalScale = new THREE.Vector2(0.4, 0.4);
 cgL.scale.set(0.78, 0.96, 0.74); cgR.scale.set(0.78, 0.96, 0.74); cgL.position.set(-1.55, -0.25, 1.2); cgR.position.set(1.55, -0.25, 1.2);
 const cgRim = new THREE.PointLight(0xff8a6a, 0, 9, 1.6); cgRim.position.set(1.55, -0.25, -2.4);
@@ -191,7 +191,7 @@ const KIND = { layer: { color: "ink", glyph: "▬" }, cell: { color: "text", gly
 const A = {};
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
-const tBars = titleBars(titleEl, { t0: 0, sig: FILM.title.sig });
+const tBars = titleBars(titleEl, { t0: FILM.title.t0 || 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, value: () => 0, fmt: () => c.text, lit: () => true });
@@ -217,7 +217,7 @@ window.seek = function (t) {
   const isT = ["macro", "split", "rise", "macro2", "face"].includes(shot), isS = shot === "inside" || shot === "depth";
   terrain.group.visible = isT; S.group.visible = V.group.visible = paths.group.visible = deep.visible = isS;
   face.mesh.visible = false;   // the pulse beat is shot on the macro skin itself (the terrain), not a flat patch
-  hz.group.visible = bk.points.visible = isS; hz.set({ t }); bk.set({ t });
+  hz.group.visible = isS; bk.points.visible = shot === "depth";   // no starfield over the section's surface hz.set({ t }); bk.set({ t });
   hzM.group.visible = ["macro", "split", "macro2"].includes(shot); hzM.set({ t });
   cgL.visible = cgR.visible = shot === "cg"; cgRim.intensity = shot === "cg" ? 7 : 0;
   if (deepPhotoMat) deep.material = shot === "depth" ? deepPhotoMat : deepPlainMat;   // the micrograph (a real photo) only in the depth beat, where its note is up

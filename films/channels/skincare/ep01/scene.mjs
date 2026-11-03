@@ -43,7 +43,7 @@ window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 // ── the set ─────────────────────────────────────────────────────────────────
 const uv = createUVSkin({ seed: 3.0 }); uv.mesh.rotation.x = -0.18; scene.add(uv.mesh);
 const SPOT = [0.6, 0.45, 0.055];
-const terrain = createTerrain({ seed: 9, spots: 0, segs: 400 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+const terrain = createTerrain({ seed: 9, spots: 0, segs: 400, organic: true }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
 { const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.08, hydration: 0.3, repeat: 14, seed: 6, micro: 0.35 }); m.roughness = 0.58; terrain.mesh.material = m;
   terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.3, 0.18, 0.12], gloss: 0.5 }); o.material.transmission = 0; } }); }
 const F = createAcneFollicle({ x: PL.fx, seed: 21, width: 4000, depth: 2300 }), Gf = createAcneFollicle({ x: PL.gx, seed: 22, block: false });   // one wide strip of skin holds both follicles
@@ -181,16 +181,17 @@ window.seek = function (t) {
   const P = rig.place(camera, shot, t);
   const isUV = shot === "uv" || shot === "uv2", isF = ["follicle", "pair", "rupture", "gauge"].includes(shot);
   const isFl = shot === "flight" || shot === "rise";
-  uv.mesh.visible = isUV; terrain.group.visible = isFl; F.group.visible = isF; Gf.group.visible = shot === "pair"; stream.visible = shot === "stream"; shaftS.set({ op: shot === "stream" ? 1 : 0 });
-  scene.fog = isFl ? FOG : shot === "stream" ? FOGS : null;
+  uv.mesh.visible = isUV; terrain.group.visible = isFl; F.group.visible = isF && shot !== "gauge"; Gf.group.visible = shot === "pair"; stream.visible = shot === "stream" || shot === "gauge"; shaftS.set({ op: shot === "stream" ? 1 : shot === "gauge" ? 0.7 : 0 });
+  scene.fog = isFl ? FOG : shot === "stream" || shot === "gauge" ? FOGS : null;
   lights.sun.intensity = isFl ? 2.6 : 1.2; lights.key.intensity = isFl ? 0.3 : 0.8;
   studio.set({ key: isFl ? 0.45 : 1.4, rim: isFl ? 1.6 : 2.6, fill: 0.35, env: isUV ? 0 : 0.5, warm: isFl ? 0.5 : 0.2 });
   fstop = shot === "flight" ? 0.5 : shot === "rise" ? 0.18 : 0; focusPt = shot === "flight" ? [PL.tx + 1.5, 0, 1] : shot === "rise" ? [PL.tx + 0.8, 0, 1.5] : [0, 0, 0];
-  if (isF) { fstop = shot === "gauge" ? 0.15 : 0.1; focusPt = P.target; }
+  if (isF) { fstop = 0.1; focusPt = P.target; }
+  if (shot === "gauge") { fstop = 0.3; focusPt = [SX + 6, 0, 12]; }   // focus pulled toward the glass: the cells behind it are soft bokeh
   hzF.group.visible = ["follicle", "pair", "rupture"].includes(shot); hzF.set({ t });   // a lens on the follicles too; the gauge card is glass over the section, far out of focus
   shaftF.set({ op: ["follicle", "pair", "rupture"].includes(shot) ? 0.9 : 0 });
   if (isUV) { fstop = 0.12; focusPt = P.target; }
-  hzS.group.visible = bkS.points.visible = shot === "stream"; hzS.set({ t }); bkS.set({ t });
+  hzS.group.visible = bkS.points.visible = shot === "stream" || shot === "gauge"; hzS.set({ t }); bkS.set({ t });
 
   // ── the UV cheek: the spot ringed in cyan; the follicle bacteria glow orange-red; the photos flip back in time ──
   if (isUV) {
@@ -249,7 +250,7 @@ window.seek = function (t) {
   F.group.visible = F.group.visible && !(shot === "gauge" && lift > 0.98);   // the follicle stays behind the card only while it rises and goes
 
   // ── the marrow stream: cells drift past in a slow river, the near ones soft in the haze ──
-  if (shot === "stream") {
+  if (shot === "stream" || shot === "gauge") {   // the gauge's glass sits over the same stream
     const u = seg(t, K.stream[0], K.stream[1]);
     sCells.forEach((g, i) => { const d = g.userData, x = ((d.u + 0.06 * (t - K.stream[0])) % 1) * 60 - 30; g.position.set(x, d.y + 0.6 * Math.sin(x * 0.12 + i), d.z); g.scale.setScalar(d.s); g.rotation.set(t * 0.2 + i, t * 0.15, 0); });
     focusPt = [SX + 2, 0, 0]; fstop = 0.35;
