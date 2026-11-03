@@ -60,7 +60,7 @@ export const hazeVolume = (scene, { at = [0, 0, 0], size = [1000, 600, 600], col
   return { group: g, set({ op: o = op, t = 0, at: p } = {}) { if (p) g.position.set(...p); g.children.forEach((c, i) => { c.rotation.z = i * 0.7 + 0.02 * t * (i % 2 ? 1 : -1); }); mats.forEach((m) => { m.opacity = o; }); } };
 };
 
-export const richen = (group, { seed = 5, jitter = 0.12, hue = 0.06, micro = 0.5, sheen = 0.3, clearcoat = 0.2 } = {}) => {
+export const richen = (group, { seed = 5, jitter = 0.12, hue = 0.06, micro = 0.5, sheen = 0.3, clearcoat = 0.2, tilt = 0.12, skip = null } = {}) => {
   const R = rng(seed * 7919 + 1), dummy = new THREE.Object3D(), q = new THREE.Quaternion(), e = new THREE.Euler();
   const nm = skinMaterial({ micro, seed: seed + 3, repeat: 3 }).normalMap;
   // in place: the scene's own code keeps recolouring these materials every frame, so they stay the same objects
@@ -79,7 +79,7 @@ export const richen = (group, { seed = 5, jitter = 0.12, hue = 0.06, micro = 0.5
       for (let i = 0; i < o.count; i++) {
         o.getMatrixAt(i, M); M.decompose(dummy.position, q, dummy.scale);
         const s = 1 + (R() - 0.5) * 2 * jitter; dummy.scale.multiplyScalar(s);
-        e.setFromQuaternion(q); e.x += (R() - 0.5) * 0.12; e.z += (R() - 0.5) * 0.12; dummy.quaternion.setFromEuler(e);
+        const tk = skip && skip(o) ? 0 : tilt; e.setFromQuaternion(q); e.x += (R() - 0.5) * tk; e.z += (R() - 0.5) * tk; dummy.quaternion.setFromEuler(e);
         dummy.updateMatrix(); o.setMatrixAt(i, dummy.matrix);
         const v = 1 + (R() - 0.5) * 2 * hue; c.setRGB(v * (1 + (R() - 0.5) * hue), v, v * (1 + (R() - 0.5) * hue)); o.setColorAt(i, c);
       }

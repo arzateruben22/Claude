@@ -13,9 +13,11 @@ import { createUVSkin, createViewfinder, createDaylight } from "../set/uvcam.js"
 import { createTerrain, goldenHour } from "../set/terrain.js";
 import { createSection, createVessels, toneColor } from "../set/section.js";
 import { createBeam, createGlint, createPaths } from "../set/light02.js";
-import { createStudio, skinMaterial, strandMaterial, createGrain } from "../set/studio.js";
+import { createStudio, skinMaterial, strandMaterial, createGrain, createShaft } from "../set/studio.js";
 import { DERMIS } from "../set/ref/textures.js";
-import { lookV2, hazeVolume, richen, bokeh } from "../set/prod.js";
+import { hazeVolume, richen, bokeh } from "../set/prod.js";
+import { lookV3 } from "../set/look3.js";
+import { unifyHud } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, PL = FILM.place, FPS = FILM.fps || 30, D = FILM.depth;
 const canvas = document.getElementById("gl");
@@ -37,7 +39,7 @@ window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 const tone = FILM.tone, SKIN = toneColor("living", tone);
 
 // ── the set ─────────────────────────────────────────────────────────────────
-const terrain = createTerrain({ seed: 13, spots: 0, segs: 400 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+const terrain = createTerrain({ seed: 13, spots: 0, segs: 400, organic: true }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
 { const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.1, hydration: 0.35, repeat: 14, seed: 6, micro: 0.35 }); m.roughness = 0.56; terrain.mesh.material = m;
   terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.3, 0.18, 0.12], gloss: 0.5 }); o.material.transmission = 0; } }); }
 const beam = createBeam({ from: [PL.tx - 9, 16, -6], to: [PL.tx, 0.25, 0], radius: 0.1 }); scene.add(beam.group);
@@ -55,10 +57,24 @@ const bloom = glowAt([PL.tx, 0.2, 0], 5.5);   // the beam's foot: the light sink
 
 const S = createSection({ width: 180, depth: 60, sc: 17, gran: 10, spin: 48, basal: 10, seed: 23, x: PL.sx, backing: true });
 S.group.position.x = PL.sx; scene.add(S.group);
-richen(S.group, { seed: 23, jitter: 0.14, hue: 0.07, micro: 0.5 });   // no two cells alike; a micro surface on every one
+richen(S.group, { seed: 23, jitter: 0.14, hue: 0.07, micro: 0.5, skip: (o) => o.geometry && o.geometry.type === "CylinderGeometry" });   // the horny-layer plates stay flat (tilted, they striped into dashes)   // no two cells alike; a micro surface on every one
 const V = createVessels({ x: [-80, 80], ys: [-118, -132], z: 30.4, r: 4.2, ox: PL.sx, dz: 0 }); scene.add(V.group);
-const paths = createPaths({ n: 18, origin: [0, 0, 32], width: 170, depth: 150, seed: 6 }); paths.group.position.x = PL.sx; scene.add(paths.group);
+const paths = createPaths({ n: 9, origin: [0, 0, 32], width: 170, depth: 150, seed: 6 }); paths.group.position.x = PL.sx; scene.add(paths.group);
+// light paths as glowing threads (not 1-px wire): a thin tube with a soft halo along each path, revealed with the path
+const glowTubes = paths.group.children.filter((o) => o.isLine).map((l) => {
+  const a = l.geometry.attributes.position, pts = []; for (let i = 0; i < a.count; i++) pts.push(new THREE.Vector3(a.getX(i), a.getY(i), a.getZ(i)));
+  const curve = new THREE.CatmullRomCurve3(pts), seg = (a.count - 1) * 6;
+  const core = new THREE.Mesh(new THREE.TubeGeometry(curve, seg, 0.32, 6), new THREE.MeshBasicMaterial({ transparent: true, depthTest: false, blending: THREE.AdditiveBlending }));
+  const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, seg, 1.1, 8), new THREE.MeshBasicMaterial({ transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending }));
+  core.renderOrder = halo.renderOrder = 21; l.parent.add(core, halo); l.visible = false;
+  return { l, core, halo };
+});
+const syncTubes = () => glowTubes.forEach(({ l, core, halo }) => {
+  const np = l.userData.np, f = Math.min(1, (l.geometry.drawRange.count - 1) / (np - 1)), op = l.material.opacity;
+  for (const [m, k] of [[core, 0.55], [halo, 0.08]]) { m.geometry.setDrawRange(0, Math.round(m.geometry.index.count * f / 6) * 6); m.material.color.copy(l.material.color); m.material.opacity = op * k; m.visible = op > 0.002; }
+});
 const beamS = createBeam({ from: [PL.sx - 70, 230, 32], to: [PL.sx, 1, 32], radius: 2.2 }); scene.add(beamS.group);
+const shaftS = createShaft({ from: [PL.sx - 80, 260, 20], to: [PL.sx, -60, 26], radius: 26, color: "#fff1e2" }); scene.add(shaftS.group);   // the light as a volume in the tissue, not just a rod
 // the wrong idea (why): a glow sitting on the skin, a warm film on its top, shown and then let go
 const sheen = new THREE.Mesh(new THREE.BoxGeometry(200, 5, 2), new THREE.MeshBasicMaterial({ color: 0xffc48a, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
 sheen.position.set(PL.sx, 3, 32); scene.add(sheen);
@@ -75,16 +91,30 @@ const hudRoot = document.getElementById("hud");
 // production pass: a graded volume behind every non-terrain set, haze the key reads through, far bokeh, one grade
 const hz = hazeVolume(scene, { at: [PL.sx, -70, -60], size: [700, 420, 160], color: "#c9b6ff", n: 5, op: 0.05 });
 const bk = bokeh(scene, { n: 120, box: [[PL.sx - 600, PL.sx + 600], [-500, 300], [-900, -400]], size: 46, color: "#d9ccff", op: 0.35 });
-const look = lookV2({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material });   // the channel look: skin, hairs, fog, grade
+const look = lookV3({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material }); unifyHud(hudRoot);   // the channel look v3 and the one-system HUD
+// the graded backdrop drawn in WebGL too (an opaque canvas: the sky is the gradient, not a flat violet strip; additive light reads as light)
+scene.background = (() => { const cv = document.createElement("canvas"); cv.width = 4; cv.height = 256; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256);
+  g.addColorStop(0, "#3b2479"); g.addColorStop(1, "#06030c"); x.fillStyle = g; x.fillRect(0, 0, 4, 256); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; return tx; })();
+// the viewfinder's own text on the HUD plate, readable on bright skin
+{ const s = document.createElement("style"); s.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.6vmin 1.4vmin;border-radius:1.4vmin;font-size:2.9vmin!important;color:var(--text)}.ol-vf .rec{color:var(--water)}"; document.head.appendChild(s); }
+// haze in the light over the macro skin: the beam reads as light in air, not a frosted rod
+const hzM = hazeVolume(scene, { at: [PL.tx, 6, -4], size: [40, 26, 16], color: "#fff0e0", n: 5, op: 0.05 });
 // the twist: two rendered skin forms under one light; left, the light stays on the surface (a hard highlight, no glow);
 // right, the light goes inside (soft, warm, lit from within). Models, not photos.
 const cgSkin = new THREE.Color(...SKIN.map((v) => v * 1.05));
-const cgL = new THREE.Mesh(new THREE.SphereGeometry(1.6, 96, 64), new THREE.MeshStandardMaterial({ color: cgSkin, roughness: 0.22, metalness: 0 }));
-const cgR = new THREE.Mesh(new THREE.SphereGeometry(1.6, 96, 64), new THREE.MeshPhysicalMaterial({ color: cgSkin, roughness: 0.6, metalness: 0, sheen: 0.9, sheenRoughness: 0.55,
-  sheenColor: new THREE.Color(1.0, 0.55, 0.45), emissive: new THREE.Color(0.55, 0.12, 0.08), emissiveIntensity: 0.45, clearcoat: 0.15, clearcoatRoughness: 0.4 }));
+const faceGeo = (() => { const g = new THREE.SphereGeometry(1.6, 128, 96), p = g.attributes.position, v = new THREE.Vector3();
+  const bump = (x, y, cx, cy, sx, sy) => Math.exp(-((x - cx) ** 2) / (2 * sx * sx) - ((y - cy) ** 2) / (2 * sy * sy));
+  for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); const f = Math.max(0, v.z / 1.6);   // front half only
+    let d = 0.34 * bump(v.x, v.y, 0, -0.02, 0.2, 0.32) - 0.16 * (bump(v.x, v.y, -0.46, 0.3, 0.26, 0.17) + bump(v.x, v.y, 0.46, 0.3, 0.26, 0.17)) + 0.12 * bump(v.x, v.y, 0, 0.55, 0.75, 0.12) + 0.07 * bump(v.x, v.y, 0, -0.52, 0.28, 0.07)
+      - 0.07 * bump(v.x, v.y, 0, -0.62, 0.3, 0.08) + 0.06 * (bump(v.x, v.y, -0.6, -0.15, 0.3, 0.25) + bump(v.x, v.y, 0.6, -0.15, 0.3, 0.25));
+    v.addScaledVector(v.clone().normalize(), d * f * f); if (v.y < -0.6) v.y -= 0.25 * (-0.6 - v.y) * f; v.z -= 0.18 * Math.max(0, -v.z); p.setXYZ(i, v.x, v.y, v.z); }
+  g.computeVertexNormals(); return g; })();
+const cgL = new THREE.Mesh(faceGeo, new THREE.MeshStandardMaterial({ color: cgSkin.clone().multiplyScalar(1.12), roughness: 0.22, metalness: 0 }));   // matched in lightness to the right face: only the light differs
+const cgR = new THREE.Mesh(faceGeo, new THREE.MeshPhysicalMaterial({ color: cgSkin, roughness: 0.6, metalness: 0, sheen: 0.9, sheenRoughness: 0.55,
+  sheenColor: new THREE.Color(1.0, 0.55, 0.45), emissive: new THREE.Color(0.55, 0.12, 0.08), emissiveIntensity: 0.3, clearcoat: 0.15, clearcoatRoughness: 0.4 }));
 cgR.material.normalMap = skinMaterial({ micro: 0.6, seed: 9, repeat: 4 }).normalMap; cgR.material.normalScale = new THREE.Vector2(0.4, 0.4);
-cgL.scale.set(0.78, 0.96, 0.74); cgR.scale.set(0.78, 0.96, 0.74); cgL.position.set(-1.7, -0.25, 1.2); cgR.position.set(1.7, -0.25, 1.2);
-const cgRim = new THREE.PointLight(0xff8a6a, 0, 9, 1.6); cgRim.position.set(1.7, -0.25, -2.4);
+cgL.scale.set(0.78, 0.96, 0.74); cgR.scale.set(0.78, 0.96, 0.74); cgL.position.set(-1.55, -0.25, 1.2); cgR.position.set(1.55, -0.25, 1.2);
+const cgRim = new THREE.PointLight(0xff8a6a, 0, 9, 1.6); cgRim.position.set(1.55, -0.25, -2.4);
 scene.add(cgL, cgR, cgRim);
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.255, w: 0.8, h: 0.29 });
 vf.el.querySelector(".rec").textContent = "● REC  DAYLIGHT"; vf.el.style.fontSize = "3.1vmin"; vf.el.style.setProperty("--ol-rec-size", "3.2vmin");
@@ -137,7 +167,7 @@ const lips = mk("path", { d: "M455 640 Q500 668 545 640 Q500 652 455 640 Z", fil
 const cgWrap = document.createElement("div");
 Object.assign(cgWrap.style, { position: "absolute", left: `${0.16 * W}px`, top: `${0.27 * H}px`, width: `${0.68 * W}px`, height: `${0.3 * H}px`, display: "flex", gap: `${0.04 * W}px`, zIndex: 1, opacity: "0", pointerEvents: "none" });
 hudRoot.appendChild(cgWrap);
-const cgTag = (txt) => { const d = document.createElement("div"); d.textContent = txt; Object.assign(d.style, { fontFamily: "var(--font-mono)", fontSize: "2.6vmin", letterSpacing: ".01em", textTransform: "none", color: "var(--text)", textAlign: "center", marginTop: "1vmin", whiteSpace: "nowrap", background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1vmin" }); return d; };
+const cgTag = (txt) => { const d = document.createElement("div"); d.textContent = txt; Object.assign(d.style, { fontFamily: "var(--font-mono)", fontSize: "3.1vmin", letterSpacing: ".01em", textTransform: "none", color: "var(--text)", textAlign: "center", marginTop: "1vmin", whiteSpace: "nowrap", background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1vmin" }); return d; };
 const cgCols = [0, 1].map(() => { const col = document.createElement("div"); Object.assign(col.style, { flex: "1", display: "flex", flexDirection: "column", alignItems: "center" }); cgWrap.appendChild(col); return col; });
 const skinHex = (k) => { const c = SKIN.map((v) => v * 1.2), r = [Math.min(1, c[0] * (1 + 0.1 * k)), c[1] * (1 - 0.13 * k), c[2] * (1 - 0.1 * k)]; return `rgb(${r.map((v) => Math.round(Math.min(1, v) * 255)).join(",")})`; };
 // the depth chart (toscale): a full-width card, mm down the left; blue to ≈ 1 mm beside ten 100 µm sheets; red on to ≈ 4–5 mm
@@ -161,7 +191,7 @@ const KIND = { layer: { color: "ink", glyph: "▬" }, cell: { color: "text", gly
 const A = {};
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
-const tBars = titleBars(titleEl, { t0: 0, sig: FILM.title.sig });
+const tBars = titleBars(titleEl, { t0: FILM.title.t0 || 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, value: () => 0, fmt: () => c.text, lit: () => true });
@@ -175,7 +205,7 @@ if (foot) Object.assign(foot.style, { fontSize: "3.5vmin", color: "var(--text-2)
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-14vmin)";
 
-const grain = createGrain(hudRoot, { amount: 0.007 });
+const grain = look.grain;
 let deepPhotoMat = null;
 window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; deepPhotoMat = new THREE.MeshBasicMaterial({ map: tx, color: new THREE.Color(1, 0.92, 0.95) }); res(); }; img.src = DERMIS; });
 
@@ -187,7 +217,8 @@ window.seek = function (t) {
   const isT = ["macro", "split", "rise", "macro2", "face"].includes(shot), isS = shot === "inside" || shot === "depth";
   terrain.group.visible = isT; S.group.visible = V.group.visible = paths.group.visible = deep.visible = isS;
   face.mesh.visible = false;   // the pulse beat is shot on the macro skin itself (the terrain), not a flat patch
-  hz.group.visible = bk.points.visible = isS; hz.set({ t }); bk.set({ t });
+  hz.group.visible = isS; bk.points.visible = shot === "depth";   // no starfield over the section's surface hz.set({ t }); bk.set({ t });
+  hzM.group.visible = ["macro", "split", "macro2"].includes(shot); hzM.set({ t });
   cgL.visible = cgR.visible = shot === "cg"; cgRim.intensity = shot === "cg" ? 7 : 0;
   if (deepPhotoMat) deep.material = shot === "depth" ? deepPhotoMat : deepPlainMat;   // the micrograph (a real photo) only in the depth beat, where its note is up
   scene.fog = isT ? FOG : null;
@@ -220,7 +251,9 @@ window.seek = function (t) {
     const warm = shot === "inside" ? E.inout2(seg(t, K.warm[0], K.warm[0] + 1.0)) : 1;   // amber on "melanin", then blood red on "rush"
     paths.set({ grow: shot === "inside" ? E.inout2(seg(t, K.paths[0], K.paths[1])) : 1, out: shot === "inside" ? E.inout2(seg(t, K.out[0], K.out[1])) * (0.6 + 0.4 * warm) : 1,
       red: shot === "inside" ? 0.4 * warm + 0.6 * widen : 1, op: 1 - dim });
+    syncTubes();
   }
+  shaftS.set({ op: shot === "inside" ? 0.8 : 0 });
   beamS.set({ op: isS ? 1 - (shot === "depth" ? 0.6 * fadeIn(t, SH.depth, 0.6) : 0) : 0 });
   const sh = shot === "inside" ? E.inout2(seg(t, K.sheen[0], K.sheen[1])) * (1 - E.inout2(seg(t, K.sheen[2], K.sheen[3]))) : 0;
   sheen.material.opacity = 0.55 * sh; sheen.visible = sh > 0.002;
@@ -230,18 +263,18 @@ window.seek = function (t) {
   // the colour rises and falls with each heartbeat (amplified, as Eulerian video magnification shows it)
   const beat = (x) => Math.pow(0.5 + 0.5 * Math.sin(2 * Math.PI * x / 0.85), 5);
   const amp = shot === "face" ? E.inout2(seg(t, K.pulse[0], K.pulse[0] + 1.2)) : 0;
-  const flush = 0.35 * amp * beat(t), pulse = 0;
+  const flush = amp * Math.pow(0.5 + 0.5 * Math.sin(2 * Math.PI * (t - K.pulse[0]) / 0.85), 2), pulse = 0;   // amplified, about 70 a minute
   const fk = 0.15 + flush;
   const skc = skinHex(fk); [head, earL, earR, neck].forEach((e) => e !== head && e.setAttribute("fill", skc)); sh0.setAttribute("stop-color", skc);
   sh1.setAttribute("stop-color", (() => { const c = SKIN.map((v) => v * 0.95); return `rgb(${c.map((v) => Math.round(v * 255)).join(",")})`; })());
   blL.setAttribute("opacity", (0.15 + 0.85 * flush + 0.2 * pulse).toFixed(3)); blR.setAttribute("opacity", (0.15 + 0.85 * flush + 0.2 * pulse).toFixed(3));
   fsvg.style.opacity = "0";
   // the pulse: the macro skin itself flushes with each beat (amplified, as Eulerian video magnification shows it)
-  terrain.mesh.material.color.setRGB(1 + 0.22 * flush, 1 - 0.1 * flush, 1 - 0.09 * flush);
+  terrain.mesh.material.color.setRGB(1 + 0.32 * flush, 1 - 0.2 * flush, 1 - 0.16 * flush);   // amplified, as in Eulerian video magnification (labelled)
   // a slow push in on the cheek across the whole beat (no locked frame)
   const push = shot === "face" ? E.inout2(seg(t, SH.face, SH.depth)) : 0;
   fsvg.style.transform = `scale(${(1 + 0.18 * push).toFixed(4)})`; fsvg.style.transformOrigin = "57% 78%";
-  vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : 0, left: "model skin · not a photo", right: "" });
+  vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : 0, left: "model skin · colour amplified", right: "" });
   slider.style.opacity = (shot === "face" ? fadeIn(t, SH.face + 0.6, 0.5) : 0).toFixed(3);
   // the pulse trace, read from the face's colour: the last three seconds, drawn as a line
   const pts = []; for (let k = 0; k <= 90; k++) { const x = t - 3 + k / 30; pts.push(`${(k / 90 * 300).toFixed(1)},${(40 - 32 * beat(x) * (x > K.cam[0] ? 1 : 0.15)).toFixed(1)}`); }
@@ -250,7 +283,7 @@ window.seek = function (t) {
   // ── the model faces: computer faces before subsurface scattering beside a face whose light goes inside ──
   if (shot === "cg") buildCg();
   cgWrap.style.opacity = (shot === "cg" ? fadeIn(t, SH.cg, 0.4) : 0).toFixed(3);
-  vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : shot === "cg" ? fadeIn(t, SH.cg, 0.4) : 0, left: shot === "cg" ? "" : "model skin · not a photo", right: "" });
+  vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : shot === "cg" ? fadeIn(t, SH.cg, 0.4) : 0, left: shot === "cg" ? "" : "model skin · colour amplified", right: "" });
 
   // ── the depth chart ──
   const cOp = shot === "depth" ? fadeIn(t, SH.depth - 0.05, 0.3) * (1 - fadeIn(t, SH.macro2 - 0.5, 0.45)) : 0;
