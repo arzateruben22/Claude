@@ -74,7 +74,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'roughly 90 feet per second' (= 27.4 m/s, computed); Schmidgen's account gives 25–43 m/s. 'About thirty' covers it. The drum is an illustration of his method (badged 'illustration · delay exaggerated' top right and 'slowed' top left): the far stimulus's later rise is drawn far wider than the real few thousandths of a second."
+  "note": "Excerpt: 'roughly 90 feet per second' (= 27.4 m/s, computed); Schmidgen's account gives 25–43 m/s. 'About thirty' covers it. The drum is an illustration of his method (badged 'illustration · delay exaggerated' top right and 'slowed' top right): the far stimulus's later rise is drawn far wider than the real few thousandths of a second."
  },
  {
   "id": "c17",
@@ -107,7 +107,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: myelin is formed by oligodendrocytes (CNS) and Schwann cells (PNS); the gaps are the nodes of Ranvier. 'Fatty': myelin is a lipid-rich membrane (standard description). 'Many of your fibres': not all axons are myelinated. 26 Oct audit: 'Many of yours' had no noun a listener could point it back to (the sentence before ends on 'wire' and 'cell'), so it names the fibres; myelin wraps the fibre (axon), not the cell."
+  "note": "Excerpt: myelin is formed by oligodendrocytes (CNS) and Schwann cells (PNS); the gaps are the nodes of Ranvier. 'Fatty': myelin is a lipid-rich membrane (standard description). 'Many fibres': not all axons are myelinated. 26 Oct audit: 'Many of yours' had no noun a listener could point it back to (the sentence before ends on 'wire' and 'cell'), so it names the fibres; myelin wraps the fibre (axon), not the cell."
  },
  {
   "id": "c8",
@@ -118,7 +118,7 @@
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: action potentials are generated only at the nodes; current passes passively to the next node, where the cycle repeats. 'Leaps' is the textbook picture; ions do not physically jump. 26 Oct audit: 'Many of yours' became 'Many of your fibres' (wording only)."
+  "note": "Excerpt: action potentials are generated only at the nodes; current passes passively to the next node, where the cycle repeats. 'Leaps' is the textbook picture; ions do not physically jump. 26 Oct audit: 'Many of yours' became 'Many fibres' (wording only)."
  },
  {
   "id": "c9",
@@ -177,7 +177,7 @@
  },
  {
   "id": "c19",
-  "sentence": "The jolt rides faster fibres; the ache, bare ones.",
+  "sentence": "The jolt takes fast fibres, the ache slow ones.",
   "claim": "Painful stimuli are carried by thinly myelinated A-delta fibres (about 5–25 m/s), giving a sharp, well-localised first pain, and by unmyelinated C fibres (about 0.5–2 m/s), giving a dull, aching second pain that follows; the delay is easiest to notice far from the brain.",
   "source_url": "https://openbooks.lib.msu.edu/neuroscience/chapter/pain/",
   "source_title": "Pain (Introduction to Neuroscience, Michigan State University Libraries open textbook)",

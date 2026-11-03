@@ -55,13 +55,13 @@ vo: The thinnest bare fibres crawl at about a metre a second. {c10} Thick wrappe
 hundred and fifty. {c11} Faster than a Formula One *car*. {c12}
 
 ## takeaway {shot: a large body silhouette; from the toe two signals leave together, the fast one reaches the brain on "jolt", the slow one on "ache" (real time) · energy: 0.3} (54.2–61 s)
-vo: So a stubbed toe can hurt *twice*. {c13} The jolt rides faster fibres; the ache, bare ones. {c19}
+vo: So a stubbed toe can hurt *twice*. {c13} The jolt takes fast fibres, the ache slow ones. {c19}
 
 ## meanwhile {segment: meanwhile · tally "while you watched": heartbeats at a resting 75 a minute, from frame 0, on the pulse line · mallet ticks on the lub-dub · energy: 0.4} (61–67.7 s)
 vo: *Meanwhile*, as you watched, a heart at rest beat about eighty times. {c14} Each began with a
 *spark*. {c15}
 
-## tease {shot: the fibre's end: a terminal, and a dark gap beyond it · end card held ≥ 2 s; under it the iris returns to frame 0's spark (a seamless replay); the card's fact: Helmholtz, 1850, about 27 m/s in a frog · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.7–75 s)
+## tease {shot: the fibre's end: a terminal, and a dark gap beyond it · end card held ≥ 3 s; under it the iris returns to frame 0's spark (a seamless replay); the card's fact: Helmholtz, 1850, about 27 m/s in a frog · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.7–75 s)
 vo: Next: the end of the line. {-} A gap most signals can't *jump*. {c16}
 end card: "Next: The gap" · "Body Backstage · No. 04"
 

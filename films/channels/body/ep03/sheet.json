@@ -1,5 +1,5 @@
 {
- "duration": 74.0,
+ "duration": 74.8,
  "fps": 30,
  "preset": "meanwhile-pulse",
  "duck_db": -9.0,
@@ -37,19 +37,19 @@
   {
    "id": "takeaway",
    "t0": 53.6,
-   "t1": 60.4,
+   "t1": 60.0,
    "energy": 0.3
   },
   {
    "id": "meanwhile",
-   "t0": 60.4,
-   "t1": 67.2,
+   "t0": 60.0,
+   "t1": 66.8,
    "energy": 0.4
   },
   {
    "id": "tease",
-   "t0": 67.2,
-   "t1": 74.0,
+   "t0": 66.8,
+   "t1": 74.8,
    "energy": 0.35
   }
  ],
@@ -448,6 +448,11 @@
   },
   {
    "t": 45.7,
+   "kind": "counter.end",
+   "tag": "wrap-end"
+  },
+  {
+   "t": 45.7,
    "kind": "spike",
    "tag": "race0"
   },
@@ -464,11 +469,6 @@
    "t": 46.9,
    "kind": "spike",
    "tag": "race1"
-  },
-  {
-   "t": 47.5,
-   "kind": "counter.end",
-   "tag": "wrap-end"
   },
   {
    "t": 48.1,
@@ -508,7 +508,7 @@
    "t": 53.6,
    "kind": "section",
    "id": "takeaway",
-   "t1": 60.4
+   "t1": 60.0
   },
   {
    "t": 55.699999999999996,
@@ -540,19 +540,24 @@
    "tag": "jolt"
   },
   {
-   "t": 58.53333333333333,
+   "t": 58.36666666666667,
    "kind": "swell",
    "tag": "ache",
-   "t1": 60.13333333333333
+   "t1": 59.96666666666667
   },
   {
-   "t": 60.4,
+   "t": 60.0,
+   "kind": "beat",
+   "tag": "beat0"
+  },
+  {
+   "t": 60.0,
    "kind": "section",
    "id": "meanwhile",
-   "t1": 67.2
+   "t1": 66.8
   },
   {
-   "t": 60.699999999999996,
+   "t": 60.3,
    "kind": "counter.show",
    "tag": "tally",
    "pos": [
@@ -563,50 +568,50 @@
   {
    "t": 60.8,
    "kind": "beat",
-   "tag": "beat0"
+   "tag": "beat1"
   },
   {
    "t": 61.6,
    "kind": "beat",
-   "tag": "beat1"
+   "tag": "beat2"
   },
   {
    "t": 62.4,
    "kind": "beat",
-   "tag": "beat2"
+   "tag": "beat3"
   },
   {
    "t": 63.2,
    "kind": "beat",
-   "tag": "beat3"
+   "tag": "beat4"
   },
   {
    "t": 64.0,
    "kind": "beat",
-   "tag": "beat4"
+   "tag": "beat5"
   },
   {
    "t": 64.8,
    "kind": "beat",
-   "tag": "beat5"
+   "tag": "beat6"
   },
   {
    "t": 65.6,
    "kind": "beat",
-   "tag": "beat6"
+   "tag": "beat7"
   },
   {
-   "t": 66.03333333333333,
+   "t": 65.63333333333334,
    "kind": "spike",
    "tag": "pacemaker"
   },
   {
    "t": 66.4,
    "kind": "beat",
-   "tag": "beat7"
+   "tag": "beat8"
   },
   {
-   "t": 67.10000000000001,
+   "t": 66.7,
    "kind": "badge",
    "tag": "nts-tease",
    "text": "not to scale",
@@ -616,13 +621,13 @@
    ]
   },
   {
-   "t": 67.2,
+   "t": 66.8,
    "kind": "section",
    "id": "tease",
-   "t1": 74.0
+   "t1": 74.8
   },
   {
-   "t": 68.76666666666667,
+   "t": 68.36666666666666,
    "kind": "label",
    "tag": "terminal",
    "pos": [
@@ -631,7 +636,7 @@
    ]
   },
   {
-   "t": 68.9333,
+   "t": 68.5333,
    "kind": "badge",
    "tag": "slow-tease",
    "text": "slowed",
@@ -641,32 +646,32 @@
    ]
   },
   {
-   "t": 69.2333,
+   "t": 68.8333,
    "kind": "spike",
    "tag": "tease0"
   },
   {
-   "t": 69.7333,
+   "t": 69.3333,
    "kind": "spike",
    "tag": "tease1"
   },
   {
-   "t": 70.2333,
+   "t": 69.8333,
    "kind": "spike",
    "tag": "tease2"
   },
   {
-   "t": 70.7333,
+   "t": 70.3333,
    "kind": "spike",
    "tag": "tease3"
   },
   {
-   "t": 71.2333,
+   "t": 70.8333,
    "kind": "spike",
    "tag": "tease4"
   },
   {
-   "t": 72.0,
+   "t": 71.8,
    "kind": "signature",
    "tag": "end"
   }
@@ -704,12 +709,12 @@
   },
   {
    "id": "vo07",
-   "t": 60.7,
+   "t": 60.3,
    "file": "vo/07.wav"
   },
   {
    "id": "vo08",
-   "t": 67.5,
+   "t": 67.1,
    "file": "vo/08.wav"
   }
  ],

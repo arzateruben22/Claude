@@ -88,16 +88,24 @@ const msSheaths = MSF.group.children.filter((m) => m.material === MSF.sheathMat)
 }
 // the cell body and its dendrites, at the hero's start
 const somaMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#C9A9B6"), roughness: 0.55 }), { fresnel: 0.4, fresnelPower: 2.2, key: "soma" });
-const SOMA = cutaway({ radius: 12, noise: { amp: 0.12, freq: 1.6, seed: 5 }, segments: [64, 48], material: somaMat });
+const SOMA = cutaway({ radius: 12, noise: { amp: 0.22, freq: 2.3, seed: 5 }, segments: [112, 84], material: somaMat });   // review r1 (h): a lumpy living cell body, not a ball
 SOMA.group.position.set(-13, 0, 0); SOMA.group.scale.set(1.15, 1, 1); G.fibres.add(SOMA.group);
 {
   const r = rng(17);
-  for (let k = 0; k < 7; k++) {
-    const a = Math.PI * (0.45 + 1.1 * (k / 6)) + 0.2 * r(), b = (r() - 0.5) * 1.2, len = 30 + 26 * r();
-    const pts = []; for (let i = 0; i <= 6; i++) { const u = i / 6, w = 3 * Math.sin(u * 3 + k); pts.push([-13 + Math.cos(a) * (10 + len * u), Math.sin(a) * (10 + len * u) * Math.cos(b) + w, Math.sin(b) * (8 + len * u * 0.6)]); }
+  // review r1 (h): dendrites wander, taper and branch (no straight cones)
+  const branch = (p0, dir, len, r0, depth) => {
+    const pts = [p0.slice()], d = dir.slice(); let p = p0.slice();
+    for (let i = 1; i <= 9; i++) { d[0] += (r() - 0.5) * 0.5; d[1] += (r() - 0.5) * 0.5; d[2] += (r() - 0.5) * 0.35; const n = Math.hypot(...d); for (let q = 0; q < 3; q++) d[q] /= n;
+      p = p.map((x, q) => x + d[q] * len / 9); pts.push(p.slice()); }
     const P = path(pts);
-    const g = tube(P, { radius: (s) => 2.2 * (1 - 0.75 * s / P.length) + 0.3, radial: 12, step: 2 });
-    G.fibres.add(new THREE.Mesh(g, somaMat));
+    G.fibres.add(new THREE.Mesh(tube(P, { radius: (sv) => r0 * (1 - 0.8 * sv / P.length) + 0.25, radial: 12, step: 1.5 }), somaMat));
+    if (depth > 0) for (const f of [0.4, 0.68]) { const k = Math.round(f * 9), q = pts[k], nd = [d[0] + (r() - 0.5) * 1.6, d[1] + (r() - 0.5) * 1.6, d[2] + (r() - 0.5)]; const n = Math.hypot(...nd);
+      branch(q, nd.map((x) => x / n), len * 0.5, r0 * (1 - 0.8 * f) * 0.8, depth - 1); }
+  };
+  for (let k = 0; k < 7; k++) {
+    const a = Math.PI * (0.45 + 1.1 * (k / 6)) + 0.2 * r(), b = (r() - 0.5) * 1.2, len = 34 + 28 * r();
+    const dir = [Math.cos(a), Math.sin(a) * Math.cos(b), Math.sin(b)];
+    branch([-13 + dir[0] * 10, dir[1] * 10, dir[2] * 8], dir, len, 2.4, 1);
   }
   const hill = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 4.5, 8, 24), somaMat); hill.rotation.z = Math.PI / 2; hill.position.set(-1.5, 0, 0); G.fibres.add(hill);
 }
@@ -106,7 +114,7 @@ const TX = 660;
 const boutonMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#C9A9B6"), roughness: 0.5, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.25, key: "bouton" });
 const BOUTON = cutaway({ radius: 6, noise: { amp: 0.1, freq: 1.8, seed: 9 }, segments: [48, 32], material: boutonMat });
 BOUTON.group.position.set(TX + 4, 0, 0); BOUTON.group.scale.set(1.1, 1, 1); G.fibres.add(BOUTON.group);
-const postMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#6F5C68"), roughness: 0.6 }), { fresnel: 0.1, key: "post" });   // the next cell, dark beyond the gap
+const postMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#6F5C68"), roughness: 0.7 }), { fresnel: 0.1, key: "post", dry: true });   // review r1: matte (no crackle, no clipped highlight)   // the next cell, dark beyond the gap
 const POST = cutaway({ radius: 26, noise: { amp: 0.05, freq: 1.2, seed: 11 }, segments: [64, 48], material: postMat });
 POST.group.position.set(TX + 37, 0, -2); POST.group.scale.set(0.95, 1.2, 1); G.fibres.add(POST.group);
 // neighbours, for depth
@@ -273,7 +281,7 @@ const traceAnchor = () => { const a = A0 - DR.w * TRACE_T * 0.63; drum.updateMat
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .hud-end .mi-pulse { margin: 0 0 3vmin; }
 .hud-title .mi-pulse { margin-top: 2.2vmin; }
-.mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 500 3vmin/1.35 var(--font-text); color: var(--text-2); }
+.mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 600 3.3vmin/1.35 var(--font-text); color: var(--text); background: var(--hud-plate); padding: 1.4vmin 2.2vmin; border-radius: 1.2vmin; }   /* review r1: plated */
 .mi-spine { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 .mi-spine .v { color: var(--nerve); } .mi-spine .lb { color: var(--text); }   /* nerve numbers in the nerve colour: pink is for blood only */
 #hud-ms { white-space: pre-line; max-width: none; border-radius: 3vmin; }

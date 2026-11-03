@@ -841,8 +841,8 @@
   },
   {
    "id": "vo06",
-   "text": "So a stubbed toe can hurt twice. The jolt rides faster fibres; the ache, bare ones.",
-   "heard": "So a stubbed toe can hurt twice. The jolt rides faster fibers, the ache bare wands.",
+   "text": "So a stubbed toe can hurt twice. The jolt takes fast fibres, the ache slow ones.",
+   "heard": "So a stubbed toe can hurt twice. The jolt takes fast fibers, the ache slow ones.",
    "words": [
     {
      "w": "So",
@@ -900,46 +900,46 @@
      "heard": true
     },
     {
-     "w": "rides",
-     "start": 2.95,
-     "end": 3.44,
+     "w": "takes",
+     "start": 2.995,
+     "end": 3.36,
      "heard": true
     },
     {
-     "w": "faster",
-     "start": 3.34,
-     "end": 3.92,
+     "w": "fast",
+     "start": 3.35,
+     "end": 3.68,
      "heard": true
     },
     {
-     "w": "fibres;",
-     "start": 3.89,
-     "end": 4.48,
+     "w": "fibres,",
+     "start": 3.66,
+     "end": 4.32,
      "heard": false
     },
     {
      "w": "the",
-     "start": 4.62,
-     "end": 4.67,
+     "start": 4.37,
+     "end": 4.42,
      "heard": true
     },
     {
-     "w": "ache,",
-     "start": 4.65,
-     "end": 4.96,
+     "w": "ache",
+     "start": 4.48,
+     "end": 4.72,
      "heard": true
     },
     {
-     "w": "bare",
-     "start": 5.075,
-     "end": 5.2,
+     "w": "slow",
+     "start": 4.805,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "ones.",
-     "start": 5.295,
-     "end": 5.5,
-     "heard": false
+     "start": 5.045,
+     "end": 5.52,
+     "heard": true
     }
    ],
    "clamped": true
