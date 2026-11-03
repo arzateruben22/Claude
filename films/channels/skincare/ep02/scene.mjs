@@ -85,6 +85,11 @@ css.textContent = `.sl-tr{position:relative;display:block;width:36vmin;height:1.
 .dc .ax{position:relative;width:9vmin;white-space:nowrap;border-left:.35vmin solid var(--text-2)}.dc .ax span{position:absolute;left:1vmin;font-size:2.3vmin;color:var(--text-2);transform:translateY(-50%)}`;
 document.head.appendChild(css);
 hudRoot.appendChild(slider);
+// the micrograph under the section is a real photo: said so, under the captions, while it shows
+const photoNote = document.createElement("div"); photoNote.textContent = "behind: a tissue photo (normal skin)";
+Object.assign(photoNote.style, { position: "absolute", left: "50%", top: `${0.705 * H}px`, transform: "translateX(-50%)", fontFamily: "var(--font-mono)", fontSize: "2.3vmin", letterSpacing: ".04em", textTransform: "uppercase",
+  color: "var(--text-2)", background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1vmin", whiteSpace: "nowrap", zIndex: 3, opacity: "0", pointerEvents: "none" });
+hudRoot.appendChild(photoNote);
 let cgBuilt = false;
 const buildCg = () => { if (cgBuilt) return; cgBuilt = true;
   [0, 1].forEach((i) => { const f = fsvg.cloneNode(true); Object.assign(f.style, { position: "static", width: "100%", height: "85%", opacity: "1", transform: "none" });
@@ -153,7 +158,7 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-14vmin)";
 
 const grain = createGrain(hudRoot, { amount: 0.007 });
-window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(6, 6); tx.needsUpdate = true; deep.material.map = tx; deep.material.color.setRGB(1, 0.92, 0.95); deep.material.needsUpdate = true; res(); }; img.src = DERMIS; });
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; deep.material.map = tx; deep.material.color.setRGB(1, 0.92, 0.95); deep.material.needsUpdate = true; res(); }; img.src = DERMIS; });
 
 window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
@@ -232,6 +237,7 @@ window.seek = function (t) {
   hR.style.opacity = E.out3(seg(t, K.redbar[0], K.redbar[0] + 0.3)).toFixed(3); vR.style.opacity = E.out3(seg(t, K.redbar[1] - 0.2, K.redbar[1] + 0.2)).toFixed(3);
   day.set({ op: shot === "macro2" ? fadeIn(t, SH.macro2 + 0.3, 0.6) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
 
+  photoNote.style.opacity = (shot === "depth" ? fadeIn(t, SH.depth + 0.3, 0.4) * (1 - fadeIn(t, SH.cg - 0.35, 0.3)) : 0).toFixed(3);
   grain.set(t);
   hud.update(t);
   tBars.update(t);
