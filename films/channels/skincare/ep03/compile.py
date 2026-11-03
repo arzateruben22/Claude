@@ -73,12 +73,12 @@ CAM = {
              {"t": B["whoa"]["t0"], "target": [WX, -150, 0], "el": 26, **WK, "fy": 0.5, "dist": 1450, "az": -4, "ease": "lin"}],   # back out: the whole patch
     "fetal": [{"t": B["whoa"]["t0"], "target": [FX, -110, 0], "el": 26, **WK, "dist": 1100, "az": -14},
               {"t": t_mouth, "target": [FX, -110, 0], "el": 23, **WK, "dist": 1030, "az": -5, "ease": "sine"}],
-    "mouth": [{"t": t_mouth, "target": [MX, -110, 0], "el": 24, **WK, "dist": 1050, "az": 8},
-              {"t": B["toscale"]["t0"], "target": [MX, -110, 0], "el": 21, **WK, "dist": 870, "az": 1, "ease": "lin"}],
+    "mouth": [{"t": t_mouth, "target": [MX, -110, 0], "el": 24, **WK, "dist": 1100, "az": 9},
+              {"t": B["toscale"]["t0"], "target": [MX, -110, 0], "el": 20, **WK, "dist": 780, "az": -1, "ease": "lin"}],
     "mice": [{"t": t_mice, "target": [MOX, -125, 0], "el": 16, **WK, "fy": 0.5, "dist": 1560, "az": -6},
              {"t": t_uvb, "target": [MOX, -125, 0], "el": 15, **WK, "fy": 0.5, "dist": 1480, "az": -2, "ease": "sine"}],
     "gauge": [{"t": B["toscale"]["t0"], "target": [WX, -40, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1300, "az": -8},   # the section low in frame, the card above it
-              {"t": B["takeaway"]["t0"], "target": [WX, -40, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1180, "az": -3, "ease": "lin"}],
+              {"t": B["takeaway"]["t0"], "target": [WX, -40, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1080, "az": 1, "ease": "lin"}],
     "macro2": [{"t": B["takeaway"]["t0"], "target": [TX, 0, 0.5], "el": 72, **MK, "dist": 6, "az": -5},   # up out of the skin...
                {"t": B["takeaway"]["t0"] + 0.7, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 22, "az": -7.5, "ease": "out3"},   # ...to frame 0 again
                {"t": t_uv, "target": [TX, 0, 0.8], "el": 40, **MK, "dist": 19, "az": -7, "ease": "sine"}],   # frame 0 again
