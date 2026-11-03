@@ -202,7 +202,7 @@ window.seek = function (t) {
     studio.aim([0, 0.6, 0], [-0.74, 0.5, 0.45], [0.25, 0.85, -0.45]); studio.set({ key: 2.6 * (1 - 0.5 * uv), rim: 2.4, fill: 0.9, env: 0.35, warm: 0.6 * (1 - uv) });   // a warm key grazing from the upper left, a cool fill ≈ 1.5 stops under, a rim from behind and above
     browSkin.color.copy(browBase).lerp(UVSKIN, uv); browSkin.emissive.setRGB(0.03 * uv, 0.02 * uv, 0.1 * uv); BR.hairMat.color.copy(HAIR).lerp(UVHAIR, uv);
     browSkin.sheenColor.setRGB(1 - 0.3 * uv, 0.72 - 0.06 * uv, 0.62 + 0.36 * uv);   // the warm edge sheen toward UV lilac
-    focusPt = [0, 0.8, 0.2]; fstop = shot === "brow2" ? 0.22 : fs;   // focus on the crease; the brows fall off
+    focusPt = [0, 0.8, 0.2]; fstop = shot === "brow2" ? 0.1 : fs;   // focus on the crease; the brows fall off
     if (shot === "dose" && fs > 0.15) { const dv = new THREE.Vector3(); camera.getWorldDirection(dv); focusPt = camera.position.clone().addScaledVector(dv, 13 - 9 * (fs - 0.14) / 0.5).toArray(); }   // the rack to the plate
   }
   const sw = seg(t, FILM.scan.sweep[0], FILM.scan.sweep[1]); scan.style.top = `${(sw * H).toFixed(1)}px`; scan.style.opacity = shot === "dose" && sw > 0 && sw < 1 ? "1" : "0";

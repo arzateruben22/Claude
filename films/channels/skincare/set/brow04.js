@@ -51,7 +51,7 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H
   const surf = (X, Y, f) => {
     const ax = Math.abs(X);
     const ridge = 0.55 * Math.exp(-((Y - 0.95) ** 2) / 0.9) * (1 - Math.exp(-(X * X) / 2.2));                 // the two brow ridges
-    const nose = 0.9 * Math.exp(-(X * X) / 0.9) * (1 / (1 + Math.exp((Y + 1.6) * 2.2)));                   // the bridge rising below
+    const nose = 0.5 * Math.exp(-(X * X) / 1.8) * (1 / (1 + Math.exp((Y + 1.6) * 2.2)));                   // the bridge rising below
     const socket = -0.32 * Math.exp(-(((ax - 3.1) ** 2) / 2.4 + ((Y + 1.9) ** 2) / 1.2));                    // shallow: no bruise
     const lid = 0.2 * Math.exp(-(((ax - 3.1) ** 2) / 1.5 + ((Y + 2.45) ** 2) / 0.16)) - 0.07 * Math.exp(-(((ax - 3.1) ** 2) / 1.8 + ((Y + 2.0) ** 2) / 0.015));   // the upper lids and their crease
     const env = Math.exp(-((Y - 0.8) ** 2) / 0.45);
