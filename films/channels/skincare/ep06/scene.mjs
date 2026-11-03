@@ -185,7 +185,7 @@ const beamMat = (op) => new THREE.ShaderMaterial({ transparent: true, depthWrite
 const rays = [[-4.0, -7], [-0.8, -3.5], [2.4, -9], [4.8, -5]].map(([x, z]) => {   // soft volumetric cones from the tubes onto the skin (read as beams from any angle, never as flat cards)
   const m = beamMat(), cone = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 2.4, TUBE_Y + 0.4, 40, 1, true), m);
   cone.position.set(XB + x, TUBE_Y / 2 - 0.2, z); scene.add(cone);
-  return { group: cone, set({ op = 1 } = {}) { cone.visible = op > 0.002; m.uniforms.uOp.value = 0.22 * op; } };
+  return { group: cone, set({ op = 1 } = {}) { cone.visible = op > 0.002; m.uniforms.uOp.value = 0.13 * op; } };
 });
 const dustBed = particles(380, [[XB - 7, 0.3, -14], [XB + 7, 6.2, 9]], 0.055, "#F3E9FF");
 const FOGB = new THREE.FogExp2(0x2c1660, 0.045), FOGU = new THREE.FogExp2(0x1a0d36, 0.018);   // the UV shot looks down from above the tubes: thinner fog
@@ -360,6 +360,7 @@ window.seek = function (t) {
     const bk = shot === "uv" ? 1.0 : 0.45; bankL.intensity = bk * kL + (shot === "uv" ? 0.12 : 0); bankR.intensity = bk * kR + (shot === "uv" ? 0.12 : 0);   // each bank rims across the seam; an afterglow stays
     coreMats[0].color.copy(VIOLET).multiplyScalar(0.06 + 1.6 * kL); coreMats[1].color.copy(VIOLET).multiplyScalar(0.06 + 1.6 * kR);
     glassMats[0].emissive.copy(VIOLET).multiplyScalar(0.12 * kL); glassMats[1].emissive.copy(VIOLET).multiplyScalar(0.12 * kR);
+    [kL, kR].forEach((k, i) => { glassMats[i].opacity = 0.06 + 0.16 * Math.min(1, k); glassMats[i].envMapIntensity = 0.12 + 0.5 * Math.min(1, k); });   // a bank that is off goes dark in frame: no lit glass
   } else rays.forEach((r) => r.set({ op: 0 }));
   scan.style.opacity = shot === "uv" && seg(t, FILM.uvd.scan[0], FILM.uvd.scan[1]) > 0 && seg(t, FILM.uvd.scan[0], FILM.uvd.scan[1]) < 1 ? "1" : "0";
   for (const { g, d } of tags) { const op = shot === "uv" ? win(t, g.t0, g.t1, 0.3) : 0; d.style.opacity = op.toFixed(3); d.style.visibility = op > 0.002 ? "visible" : "hidden"; }

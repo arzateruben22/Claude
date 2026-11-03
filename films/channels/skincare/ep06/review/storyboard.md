@@ -33,7 +33,7 @@ lilac in the bed's UV. The left half is lit by one bank of tubes, the right by t
 
 | # | Sentence | Image | Camera |
 |---|---|---|---|
-| 8 | "Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them too." | On "off" the left bank and the skin under it go dark ("Australia · 2015"); on "Brazil" the right bank goes dark ("Brazil · 2009"); a cool fill and an afterglow keep pores and furrows legible; the dark holds about 1.8 s, then a cut on the music grid | One slow push down the seam |
+| 8 | "Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them too." | On "off" the left bank and the skin under it go dark ("Australia · 2015"); on "Brazil" the right bank goes dark ("Brazil · 2009"); a cool fill and an afterglow keep pores and furrows legible; the dark holds about 1.8 s, then a cut on the music grid | From above the canopy, looking down between the tubes: both banks cross the frame and the seam runs down the middle; one slow push |
 
 ## Hero 4: the cut face (toscale, 54–62 s)
 A block of skin cut open: the top is deep-tone skin, the face a real stained tissue photo. Violet UVA dashes fall

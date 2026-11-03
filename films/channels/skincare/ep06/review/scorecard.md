@@ -63,3 +63,25 @@ switch-off; "tissue photo · rays simplified" on the cut face; years on screen o
 - Open: the switch-off's left half reads as a soft darkening rather than a clear split; the cut face is close (the face
   fills most of the frame, the block's top reads brown but flat); the spines' notes are drawn as the card's header row
   (note above spine) because a note-under-spine card would push the spine out of the safe box.
+
+## Review round 2 fixes (3 Nov; scored a 3, b 4, c 3, d 3, e 4, f 3, g 4, h 2)
+
+- **Ethics:** the risk spine and its note hard-out 0.75 s before the cut to the skin, so their fade ends by about
+  41.5 s; no frame of skin carries the figure.
+- **One deep tone:** skin albedo lowered (DEEP 0.095, 0.05, 0.03 linear), a warm grazing bounce added, the violet bank
+  light, fill and environment cut in the canopy; the UV lilac darkened.
+- **Canopy:** the flat haze wall removed (the terrain runs into fog); the flat shaft cards replaced by soft volumetric
+  cones from the tubes; tubes ignore fog so they read as the light source.
+- **Switch-off:** seen from above the canopy, both banks cross the frame and the seam runs down the middle with a
+  narrow soft falloff; an "off" bank's cores and glass go dark in frame; the right half stays lilac until "Brazil";
+  a cool fill and a 20% floor keep pores legible after.
+- **First 2 s:** the slab at about 65% of the frame width, centred under the title; a bank of bright tubes behind
+  and below it; the lit rows drawn bright enough to bloom.
+- **Cut face:** a portrait block (photo cropped through the UVs) seen three-quarters from further back, its top a
+  deep-tone relief with pores; the gauge over the lower dermis with dashed leader lines registered to the surface and to
+  the traced boundary; the paper bar paper-white; the paper column moved right.
+- **Section cut:** stays on the music grid 1.8 s after "too", now with a shutter sound; motion-blur samples no longer
+  cross a cut (no one-frame bleed).
+- **Nice:** a slow sideways drift in the sunburst, a rack pulse on "half", a faint tube flicker, the spine in on
+  "half"; "Australia · 2015–16" with an en dash.
+- Shared look v3 (`set/look3.js`): skin (`skinV3` with the canopy's low key), hairs, grain; no local overrides.
