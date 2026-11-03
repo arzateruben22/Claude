@@ -75,7 +75,7 @@ const capMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#8E7480"), r
 const TIP = cutaway({ radius: 9, noise: { amp: 0.06, freq: 1.5, seed: 4 }, segments: [80, 60], capSegments: 160, material: tipMat, capMaterial: capMat });
 world.add(TIP.group); TIP.set({ cut: { n: [0, 0, 1], d: 0 } }); world.updateMatrixWorld(true); TIP.update();
 // the next cell: warm tissue with its rim kept to the very edge (a strong mint rim made it a grey plastic egg)
-const postMat = L.patch(wet({ color: lin("#C49E9E"), roughness: 0.45, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.14, fresnelPower: 4.0, key: "post" });
+const postMat = L.patch(wet({ color: lin("#C49E9E"), roughness: 0.5, clearcoat: 0.35, clearcoatRoughness: 0.3, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.14, fresnelPower: 4.0, key: "post" });
 const POST = cutaway({ radius: 38, noise: { amp: 0.06, freq: 1.2, seed: 11 }, segments: [96, 72], material: postMat });
 POST.group.position.set(50.5, 0, 0); world.add(POST.group);
 const GAPX = [9.1, 50.5 - POST.r([-1, 0, 0])];         // the gap: the terminal's face and the next cell's face
@@ -90,7 +90,7 @@ const VH = [];
   for (let tries = 0; VH.length < VN && tries < 5000; tries++) { const x = (r() * 2 - 1) * 7, y = (r() * 2 - 1) * 7; if (x * x + y * y > 6.6 * 6.6 || x > 4.8) continue; if (VH.some((p) => Math.hypot(p[0] - x, p[1] - y) < 2.05)) continue; VH.push([x, y, 0.6 + 0.4 * r()]); }
 }
 const NV = VH.length;   // as many as fit (the rejection loop stops early on a crowded section)
-const ves = new THREE.InstancedMesh(lumpyGeo(new THREE.IcosahedronGeometry(1, 4), 0.07, 1.4, 3), vesMat, NV); ves.instanceMatrix.setUsage(THREE.DynamicDrawUsage); ves.frustumCulled = false; world.add(ves);
+const ves = new THREE.InstancedMesh(lumpyGeo(new THREE.SphereGeometry(1, 48, 32), 0.07, 1.4, 3), vesMat, NV); ves.instanceMatrix.setUsage(THREE.DynamicDrawUsage); ves.frustumCulled = false; world.add(ves);
 // calcium, outside the terminal's face, moving in; messengers, from the docked vesicles across the gap
 const CAN = 26, MSN = 192;
 const caMat = L.patch(new THREE.MeshStandardMaterial({ color: lin("#E8D7B0"), emissive: lin("#E8D7B0"), emissiveIntensity: 0.35, roughness: 0.4 }), { fresnel: 0, key: "ca" });
@@ -102,17 +102,18 @@ const CAH = Array.from({ length: CAN }, (_, i) => { const a = (hash(i + 40) - 0.
 // receptors on the next cell's face
 // a receptor field on the next cell's face (owner, 3 Nov): about 170 lumpy receptors over the patch facing the gap, dark at
 // rest, lit by the messengers; the last one (the label's anchor) stays the top of the central column
-const RN = 170, recMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#5E6A44"), emissive: lin(SIG), emissiveIntensity: 0, roughness: 0.35, clearcoat: 0.8 }), { fresnel: 0.25, key: "rec" });
-const rec = new THREE.InstancedMesh(lumpyGeo(new THREE.CapsuleGeometry(0.4, 0.9, 6, 12), 0.12, 2.2, 5), recMat, RN); world.add(rec);
+const RN = 260, recMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#8E9A62"), emissive: lin(SIG), emissiveIntensity: 0, roughness: 0.3, clearcoat: 0.6, sheen: 0.4, sheenColor: new THREE.Color(0.84, 0.95, 0.37) }), { fresnel: 0.35, key: "rec" });
+const rec = new THREE.InstancedMesh(lumpyGeo(new THREE.CapsuleGeometry(0.38, 0.7, 6, 12), 0.05, 2.2, 5), recMat, RN); world.add(rec);
 const RH = [];
 { const up = new THREE.Vector3(0, 1, 0), q = new THREE.Quaternion();
   for (let i = 0; i < RN; i++) {
     let y, z;
     if (i >= RN - 14) { const k = i - (RN - 14); y = -6.4 + (12.8 * k) / 13 + 0.35 * (hash(i + 61) - 0.5); z = 0.4 + 2.6 * hash(i + 60); }   // the central column (kept from the old staging)
-    else { const a = hash(i + 300) * 6.283, d = Math.sqrt(hash(i + 301)) * 14; y = Math.cos(a) * d; z = Math.sin(a) * d; }
-    const dir = [-1, y / 40, z / 40], nl = Math.hypot(...dir), n = dir.map((v) => v / nl), x = 50.5 - POST.r(n) * 1.0 + 0.05;
+    else { const a = hash(i + 300) * 6.283, d = Math.sqrt(hash(i + 301)) * 11; y = Math.cos(a) * d; z = Math.sin(a) * d; }
+    const dir = [-1, y / 38, z / 38], nl = Math.hypot(...dir), n = dir.map((v) => v / nl), rr = POST.r(n) - 0.3;   // on the surface along its own normal, half sunk in
+    const x = 50.5 + n[0] * rr; y = n[1] * rr; z = n[2] * rr;
     RH.push([x, y, z]); q.setFromUnitVectors(up, new THREE.Vector3(-n[0], -n[1], -n[2]).multiplyScalar(-1).negate());
-    instance(rec, i, [x, y, z], q, 0.7 + 0.5 * hash(i + 62));
+    instance(rec, i, [x, y, z], q, 0.62 + 0.18 * hash(i + 62));
   } }
 // a haze of far particles behind the junction (teal, never mistaken for calcium): depth for the bokeh
 const HZN = 140, haze = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(0.22, 1), L.patch(new THREE.MeshStandardMaterial({ color: lin("#5E8A7E"), emissive: lin("#5E8A7E"), emissiveIntensity: 0.05, roughness: 0.7 }), { fresnel: 0, key: "haze" }), HZN);
@@ -178,7 +179,7 @@ const writeJunction = (t) => {
   msM.instanceMatrix.needsUpdate = true;
   const lit = S ? seg(t, S.post - 0.25, S.post) * (1 - seg(t, S.post + 0.6, S.post + 1.6)) : 0;
   // the receptors carry "received" (one input is a small local change, not the whole next cell firing)
-  recMat.emissiveIntensity = 0.9 * lit; postMat.emissiveIntensity = 0.04 * lit;
+  recMat.emissiveIntensity = 0.45 * lit; postMat.emissiveIntensity = 0.04 * lit;
   // the junction used again and again (whoa): it pulses and grows (sped up, badged)
   const su = sinceUse(t), pulse = su < 0.5 ? 1 - su / 0.5 : 0, grow = E.inout2(seg(t, FILM.use.grow[0], FILM.use.grow[1]));
   USED.mat.emissiveIntensity = 0.15 + 0.7 * pulse + 0.25 * grow; USED.bouton.scale.setScalar(1 + 0.45 * grow);

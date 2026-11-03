@@ -861,7 +861,7 @@
   {
    "id": "slow-hook",
    "text": "slowed · distances compressed",
-   "slot": "tl",
+   "slot": "tr",
    "t0": 0.0,
    "t1": 14.483333
   },
@@ -880,7 +880,7 @@
   {
    "id": "slow-drum",
    "text": "slowed",
-   "slot": "tl",
+   "slot": "tr",
    "t0": 14.9333,
    "t1": 24.883333
   },
@@ -893,14 +893,14 @@
   {
    "id": "slow",
    "text": "slowed · distances compressed",
-   "slot": "tl",
+   "slot": "tr",
    "t0": 25.183333,
    "t1": 53.300000000000004
   },
   {
    "id": "real",
    "text": "real time",
-   "slot": "tl",
+   "slot": "tr",
    "t0": 55.699999999999996,
    "t1": 60.4
   },
@@ -913,7 +913,7 @@
   {
    "id": "slow-tease",
    "text": "slowed",
-   "slot": "tl",
+   "slot": "tr",
    "t0": 68.9333,
    "t1": 72.0
   }

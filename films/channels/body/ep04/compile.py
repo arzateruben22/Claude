@@ -85,10 +85,10 @@ CAM = {
         {"t": A("vo04:electricity"), "pos": [-10.0, 1.0, 110.0], "look": [0.0, -3.5, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo04:jump", 0.35), "pos": [-9.0, 1.2, 106.0], "look": [0.0, -3.5, 0.0], "fov": 34, "ease": "sine"},   # hold wide: the glow reaches the wall and stops there, on the words
         # the tip, close, a little lower and wider so the receptors and the drift clear the caption plate
-        {"t": A("vo04:floods", 0.0), "pos": [21.0, -10.0, 40.0], "look": [9.5, -1.0, 0.0], "fov": 34, "ease": "p2"},   # live scan: grazing across the receptor field into the cut terminal (owner, 3 Nov)
-        {"t": REL["drift"][1], "pos": [19.5, -9.0, 37.0], "look": [10.0, -1.2, 0.0], "fov": 34, "ease": "sine"},
-        {"t": B["whoa"]["t0"], "pos": [20.0, -8.5, 43.0], "look": [10.5, -1.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": REPLAY[1], "pos": [20.5, -8.0, 46.0], "look": [10.5, -1.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo04:floods", 0.0), "pos": [3.0, -15.0, 27.0], "look": [12.0, -0.5, 0.0], "fov": 34, "ease": "p2"},   # live scan: grazing across the receptor field into the cut terminal (owner, 3 Nov)
+        {"t": REL["drift"][1], "pos": [4.0, -14.0, 25.0], "look": [12.2, -0.6, 0.0], "fov": 34, "ease": "sine"},
+        {"t": B["whoa"]["t0"], "pos": [3.0, -13.0, 29.0], "look": [12.0, -0.5, 0.0], "fov": 34, "ease": "sine"},
+        {"t": REPLAY[1], "pos": [3.0, -12.5, 31.0], "look": [12.0, -0.5, 0.0], "fov": 34, "ease": "sine"},
         # the field: a cell with five junctions on it; the one used again and again pulses and grows
         {"t": A("vo05:junction", 0.3), "pos": [150.0, -205.0, 260.0], "look": [90.0, -290.0, -232.0], "fov": 34, "ease": "p2"},   # on the junction as it is named
         {"t": B["takeaway"]["t0"], "pos": [140.0, -200.0, 240.0], "look": [88.0, -288.0, -232.0], "fov": 34, "ease": "sine"},
@@ -141,11 +141,11 @@ BADGES = [
     {"id": "nts2", "text": "not to scale", "t0": A("vo05:Use", 0.0), "t1": CUT["sac"]},
     {"id": "few", "text": "simplified: a few of thousands drawn", "t0": A("vo02:reaches", 0.0), "t1": A("vo02:hundred", -0.45)},   # gone before the 100+ trillion readout
     {"id": "ill", "text": "illustration: one stained tissue, two readings", "t0": PANELS["t0"], "t1": PANELS["t1"] - 0.35},
-    {"id": "slow-why", "text": "slowed", "slot": "tl", "t0": REL["sig"][0], "t1": EM[1]},
-    {"id": "slow", "text": "slowed", "slot": "tl", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
-    {"id": "fast", "text": "sped up", "slot": "tl", "t0": A("vo05:Use", 0.0), "t1": B["whoa"]["t1"]},
-    {"id": "slow-talk", "text": "slowed", "slot": "tl", "t0": TALK, "t1": TALK + 2.4},
-    *[{"id": f"slow-b{i}", "text": "slowed", "slot": "tl", "t0": round(b - 0.4, 4), "t1": round(b + 2.0, 4)} for i, b in enumerate(BREATHS)],
+    {"id": "slow-why", "text": "slowed", "slot": "br", "t0": REL["sig"][0], "t1": EM[1]},
+    {"id": "slow", "text": "slowed", "slot": "br", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
+    {"id": "fast", "text": "sped up", "slot": "br", "t0": A("vo05:Use", 0.0), "t1": B["whoa"]["t1"]},
+    {"id": "slow-talk", "text": "slowed", "slot": "br", "t0": TALK, "t1": TALK + 2.4},
+    *[{"id": f"slow-b{i}", "text": "slowed", "slot": "br", "t0": round(b - 0.4, 4), "t1": round(b + 2.0, 4)} for i, b in enumerate(BREATHS)],
     {"id": "nts-sac", "text": "illustration, not to scale", "t0": CUT["sac"], "t1": CUT["loop"]},   # gone under the end card; frame 0 carries "not to scale"
 ]
 TITLE = {"series": "Body Backstage · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.17}
