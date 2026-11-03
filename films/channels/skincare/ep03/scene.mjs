@@ -265,7 +265,7 @@ window.seek = function (t) {
 
   // ── the UV camera on the scar: a seam with no pores and no pattern ──
   // the knee again, in daylight, then the UV camera switches on: the seam with no pores and no pattern
-  if (shot === "uv") uv.set({ damage: 0.35, scar: 1, glow: 1, opacity: 1 });
+  if (shot === "uv") uv.set({ damage: 0.35, scar: 1, glow: 1, opacity: 1, form: 1 });
   imm.visible = shotRaw === "uvb";   // the defence at the seam, with "the price of defence"
   if (shotRaw === "uvb") { const c = uv.at(0.66, 0.5), g = E.inout2(seg(t, SH.uvb - 0.2, SH.uvb + 2.2));
     IMM.forEach(({ m, a, r, v }, i) => { const rr = r * (1 - 0.82 * g) + 0.1, aa = a + 0.25 * t; m.position.set(c[0] + 0.25 * rr * Math.cos(aa), c[1] + rr * Math.sin(aa) * 0.9 + v * 0.3 * g, c[2] + 0.12 + 0.03 * Math.sin(t * 2 + i)); m.scale.setScalar(0.4 + 0.6 * E.out3(seg(t, SH.uvb - 0.3 + 0.03 * i, SH.uvb + 0.3 + 0.03 * i))); }); }
