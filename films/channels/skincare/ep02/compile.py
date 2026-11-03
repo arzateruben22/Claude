@@ -71,8 +71,13 @@ CAM = {
     "rise": [{"t": t_rise, "target": [TX + 0.5, -0.2, 0.3], "el": 70, **MK, "dist": 6, "az": -1}, {"t": t_face, "target": [TX, 0, 2], "el": 30, **MK, "dist": 26, "az": -5, "ease": "out3"}],
     "face": [{"t": t_face, "target": [TX + 3, 0, 5], "el": 42, **MK, "dist": 17, "az": 12},   # the macro skin, away from the beam: it flushes with every beat
              {"t": B["toscale"]["t0"], "target": [TX + 3, 0, 5], "el": 38, **MK, "dist": 13, "az": 6, "ease": "sine"}],
+    # round 9: the pull-back to true depth: the cells, then 1 mm (blue, ten sheets), then 5 mm (red)
     "depth": [{"t": B["toscale"]["t0"], "target": [SX, -90, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 420, "az": 2},
-              {"t": B["takeaway"]["t0"], "target": [SX, -90, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 380, "az": 3, "ease": "sine"}],
+              {"t": CUE["blue"] - 0.1, "target": [SX, -110, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.43, "dist": 470, "az": 2, "ease": "sine"},
+              {"t": CUE["millimetre"] + 0.6, "target": [SX, -736, 0], "el": 4, "fov": 30, "fx": 0.5, "fy": 0.45, "dist": 4900, "az": 2.5, "ease": "inout3"},
+              {"t": CUE["red"] - 0.1, "target": [SX, -760, 0], "el": 4, "fov": 30, "fx": 0.5, "fy": 0.45, "dist": 5200, "az": 3, "ease": "lin"},
+              {"t": CUE["deeper"] + 0.6, "target": [SX, -2600, 0], "el": 3, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 15000, "az": 3, "ease": "inout3"},
+              {"t": B["takeaway"]["t0"], "target": [SX, -2600, 0], "el": 3, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 15500, "az": 3.5, "ease": "lin"}],
     "cg": [{"t": B["takeaway"]["t0"], "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 28, "az": 0}, {"t": A("vo07:Yours", -0.3), "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 27, "az": 0, "ease": "sine"}],
     "macro2": [{"t": A("vo07:Yours", -0.3), "target": [TX + 0.5, -0.2, 0.3], "el": 70, **MK, "dist": 6, "az": -2},   # up out of the skin
                {"t": A("vo07:Yours", 1.2), "target": [TX, 0, 2], "el": 28, **MK, "dist": 22, "az": -4, "ease": "out3"},

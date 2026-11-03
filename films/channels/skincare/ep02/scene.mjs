@@ -80,8 +80,8 @@ const sheen = new THREE.Mesh(new THREE.BoxGeometry(200, 5, 2), new THREE.MeshBas
 sheen.position.set(PL.sx, 3, 32); scene.add(sheen);
 // below the section: the deep dermis continues (no clear colour under the slab)
 const deepPlainMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(...toneColor("dermis", tone).map((v) => v * 0.8)) });
-const deep = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000), new THREE.MeshBasicMaterial({ color: new THREE.Color(...toneColor("dermis", tone).map((v) => v * 0.8)) }));
-deep.position.set(PL.sx, -140 - 1500, 0); scene.add(deep);
+const deep = new THREE.Mesh(new THREE.PlaneGeometry(9000, 9000), new THREE.MeshBasicMaterial({ color: new THREE.Color(...toneColor("dermis", tone).map((v) => v * 0.8)) }));
+deep.position.set(PL.sx, -140 - 4500, -5); scene.add(deep);   // deep enough for the 5 mm pull-back (round 9)
 
 const face = createUVSkin({ seed: 5.0 }); face.mesh.rotation.x = -0.18; scene.add(face.mesh);
 const rig = createRig(FILM.cam);
@@ -95,6 +95,23 @@ const look = lookV3({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.mat
 // the graded backdrop drawn in WebGL too (an opaque canvas: the sky is the gradient, not a flat violet strip; additive light reads as light)
 scene.background = (() => { const cv = document.createElement("canvas"); cv.width = 4; cv.height = 256; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256);
   g.addColorStop(0, "#3b2479"); g.addColorStop(1, "#06030c"); x.fillStyle = g; x.fillRect(0, 0, 4, 256); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; return tx; })();
+const bgViolet = scene.background;
+// round 9: warm haze over the skin and above the section (air lit by the same sun), not a flat violet fill
+const bgWarm = (() => { const cv = document.createElement("canvas"); cv.width = 4; cv.height = 256; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256);
+  g.addColorStop(0, "#e7b896"); g.addColorStop(0.35, "#c98b6c"); g.addColorStop(0.75, "#7a4636"); g.addColorStop(1, "#2a1513"); x.fillStyle = g; x.fillRect(0, 0, 4, 256); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; return tx; })();
+const FOG_V = FOG ? FOG.color.clone() : null, FOG_W = new THREE.Color("#c89276");
+// round 9: the hydrated half as a gloss gradient in the skin itself (no satin plate), the dry half matte and ashier
+const satin = []; terrain.group.traverse((o) => { if (o.isMesh && o.geometry && o.geometry.type === "PlaneGeometry" && o.material && o.material.clearcoat === 1) satin.push(o); });
+const uSplit = { value: 0 };
+{ const m = terrain.mesh.material, prev = m.onBeforeCompile, key = m.customProgramCacheKey ? m.customProgramCacheKey() : "";
+  m.onBeforeCompile = (sh, r) => { prev && prev(sh, r); sh.uniforms.uSplit = uSplit;
+    sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying float vLX;").replace("#include <begin_vertex>", "#include <begin_vertex>\nvLX = position.x;");
+    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vLX; uniform float uSplit;")
+      .replace("#include <roughnessmap_fragment>", `#include <roughnessmap_fragment>
+  { float dry = smoothstep(-0.9, 0.9, vLX); roughnessFactor = mix(roughnessFactor, mix(0.2, 0.97, dry), uSplit); }`)
+      .replace("#include <color_fragment>", `#include <color_fragment>
+  { float dry = smoothstep(-0.9, 0.9, vLX); diffuseColor.rgb = mix(diffuseColor.rgb, mix(diffuseColor.rgb * 1.03, mix(diffuseColor.rgb, vec3(dot(diffuseColor.rgb, vec3(0.33))), 0.25) * 0.97, dry), uSplit); }`); };
+  m.customProgramCacheKey = () => key + "split2"; m.needsUpdate = true; }
 // the viewfinder's own text on the HUD plate, readable on bright skin
 { const s = document.createElement("style"); s.textContent = ".ol-vf .rec,.ol-vf .hl,.ol-vf .hr{background:var(--hud-plate);padding:.6vmin 1.4vmin;border-radius:1.4vmin;font-size:2.9vmin!important;color:var(--text)}.ol-vf .rec{color:var(--water)}"; document.head.appendChild(s); }
 // haze in the light over the macro skin: the beam reads as light in air, not a frosted rod
@@ -186,6 +203,45 @@ const dcss = document.createElement("style");
 dcss.textContent = `.dc{justify-content:center;gap:3vmin;background:var(--card);font-size:3.6vmin;padding:3vmin 4vmin}.dc .ax{margin-right:7vmin}.dc .ax span{font-size:3.2vmin;color:var(--text)}.dc .col{gap:1.4vmin}.dc .bar,.dc .sh i{width:10vmin}.dc .sh{gap:0}.dc .h{font-weight:600}.dc .v{font-size:3.3vmin;color:var(--water);font-weight:600;white-space:nowrap}`;
 document.head.appendChild(dcss);
 
+// round 9: the depth figure drawn in the tissue at true scale (µm): a blue light column to ≈ 1 mm, ten 100 µm sheets of
+// paper beside it, a red column on to ≈ 4–5 mm; the camera pulls back from the cells until 5 mm fits. Values as tags.
+const colTex = (fadeFrom) => { const cv = document.createElement("canvas"); cv.width = 4; cv.height = 256; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256);
+  g.addColorStop(0, "rgba(255,255,255,0.95)"); g.addColorStop(fadeFrom, "rgba(255,255,255,0.7)"); g.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = g; x.fillRect(0, 0, 4, 256);
+  const t = new THREE.CanvasTexture(cv); return t; };
+const mkCol = (hex, fadeFrom) => { const grp = new THREE.Group(); scene.add(grp);
+  const geo = new THREE.CylinderGeometry(1, 1, 1, 32, 1, true).translate(0, -0.5, 0);
+  const core = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: hex, map: colTex(fadeFrom), transparent: true, depthWrite: false, side: THREE.DoubleSide }));   // normal blend: it reads on the bright photo
+  const halo = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: hex, map: colTex(fadeFrom), transparent: true, opacity: 0.22, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide })); halo.scale.set(2.6, 1, 2.6);
+  grp.add(core, halo); return grp; };
+const colB = mkCol(0x5f7dff, 0.85), colR = mkCol(0xe8253a, 0.8);
+const paperMat = new THREE.MeshStandardMaterial({ color: 0xf2ebe1, roughness: 0.85, transparent: true });
+const paper = new THREE.Group(); scene.add(paper);
+const sheet3 = Array.from({ length: 10 }, (_, i) => { const m = new THREE.Mesh(new THREE.BoxGeometry(1, 88, 1), paperMat.clone()); m.position.y = -6 - 100 * i - 44; paper.add(m); return m; });
+const tagCss = document.createElement("style"); tagCss.textContent = `.dtag{position:absolute;font-family:var(--font-mono);font-size:3.1vmin;color:var(--text);background:var(--hud-plate);box-shadow:var(--hud-shadow);padding:.6vmin 1.6vmin;border-radius:var(--ol-r,1.4vmin);border-left:.7vmin solid var(--c);white-space:nowrap;opacity:0;pointer-events:none;z-index:3}
+.dtag b{font-weight:600;color:var(--c)}.dtick{position:absolute;left:${0.06 * W}px;font-family:var(--font-mono);font-size:2.9vmin;color:var(--text);opacity:0;white-space:nowrap;transform:translateY(-50%);background:var(--hud-plate);padding:.3vmin 1.1vmin;border-radius:1vmin}
+.dtick:after{content:"";position:absolute;left:100%;top:50%;width:${0.05 * W}px;margin-left:1vmin;border-top:.3vmin solid rgba(247,243,255,.6)}`;
+document.head.appendChild(tagCss);
+const mkTag = (html, c) => { const d = document.createElement("div"); d.className = "dtag"; d.innerHTML = html; d.style.setProperty("--c", c); hudRoot.appendChild(d); return d; };
+const tagB = mkTag("blue <b>≈ 1 mm</b>", "#7C98FF"), tagP = mkTag("10 sheets <b>× 100 µm</b>", "#F2EBE1"), tagR = mkTag("red <b>≈ 4–5 mm</b>", "#FF5A4E");
+const ticks = [0, 1, 2, 3, 4, 5].map((m) => { const d = document.createElement("div"); d.className = "dtick"; d.textContent = `${m} mm`; hudRoot.appendChild(d); return d; });
+const scr = (x, y, z) => { const v = new THREE.Vector3(x, y, z).project(camera); return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * H]; };
+const depthFigure = (t, shot, dist) => {
+  const on = shot === "depth", fade = on ? fadeIn(t, SH.depth - 0.05, 0.3) * (1 - fadeIn(t, SH.cg - 0.45, 0.4)) : 0;
+  colB.visible = colR.visible = paper.visible = on;
+  const b = E.out3(seg(t, K.blue[0], K.blue[1])), r = E.out3(seg(t, K.redbar[0], K.redbar[1]));
+  const rad = 0.011 * dist, Z = 36;
+  const xP = PL.sx - 0.069 * dist, xB = PL.sx - 0.009 * dist, xR = PL.sx + 0.06 * dist;   // spaced as fractions of the frame, so they read at every distance
+  colB.position.set(xB, 0, Z); colB.scale.set(rad, Math.max(1e-3, 1000 * D.blue_mm * b), rad); colB.children.forEach((m) => { m.material.opacity = (m === colB.children[0] ? 0.8 : 0.3) * fade; });
+  colR.position.set(xR, 0, Z); colR.scale.set(rad, Math.max(1e-3, 1000 * D.red_mm[1] * r), rad); colR.children.forEach((m) => { m.material.opacity = (m === colR.children[0] ? 0.8 : 0.3) * fade; });
+  paper.position.set(xP, 0, Z); sheet3.forEach((m, i) => { m.scale.set(0.035 * dist, 1, 0.02 * dist); m.material.opacity = 0.92 * fade * E.out3(seg(t, K.sheets[0] + i * 0.08, K.sheets[0] + i * 0.08 + 0.3)); });
+  const place = (el, p, op, row) => { el.style.opacity = (op * fade).toFixed(3); if (op * fade < 0.002) return; const w = el.offsetWidth, h = el.offsetHeight;   // centred under the tip; row staggers tags that share a depth
+    const x = Math.max(0.05 * W, Math.min(0.95 * W - w, p[0] - w / 2)); el.style.left = `${x}px`; el.style.top = `${Math.min(0.9 * H - h, p[1] + 0.012 * H + row * (h + 0.008 * H))}px`; };
+  place(tagB, scr(xB, -1000 * D.blue_mm * b, Z), E.out3(seg(t, K.blue[1] - 0.2, K.blue[1] + 0.2)), 0);
+  place(tagP, scr(xP, -1000, Z), E.out3(seg(t, K.sheets[1] - 0.2, K.sheets[1] + 0.2)), 1);
+  place(tagR, scr(xR, -1000 * D.red_mm[1] * r, Z), E.out3(seg(t, K.redbar[1] - 0.2, K.redbar[1] + 0.2)), 0);
+  const tk = on ? E.out3(seg(t, K.blue[0], K.blue[0] + 0.5)) * fade : 0;
+  ticks.forEach((d, m) => { const y = scr(PL.sx, -1000 * m, Z)[1], vis = y > 0.12 * H && y < 0.88 * H ? 1 : 0; d.style.top = `${y}px`; d.style.opacity = (tk * vis).toFixed(3); });
+};
 const hud = createHud({ camera, shots: FILM.shots });
 const KIND = { layer: { color: "ink", glyph: "▬" }, cell: { color: "text", glyph: "●" }, water: { color: "water", glyph: "◇" }, uv: { color: "uv", glyph: "◆" } };
 const A = {};
@@ -207,27 +263,43 @@ endEl.style.transform = "translateY(-14vmin)";
 
 const grain = look.grain;
 let deepPhotoMat = null;
-window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; deepPhotoMat = new THREE.MeshBasicMaterial({ map: tx, color: new THREE.Color(1, 0.92, 0.95) }); res(); }; img.src = DERMIS; });
+let photoPlane = null, avgMat = null;
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => {
+  // round 9: one copy of the photo at its old scale, feathered at the sides and bottom into its own average colour (the
+  // pull-back sees past it; tiling or mirroring it read as wallpaper)
+  const cv = document.createElement("canvas"); cv.width = img.width; cv.height = img.height; const x = cv.getContext("2d"); x.drawImage(img, 0, 0);
+  const px = x.getImageData(0, 0, cv.width, cv.height).data; let r = 0, g = 0, b = 0, n = 0; for (let k = 0; k < px.length; k += 64) { r += px[k]; g += px[k + 1]; b += px[k + 2]; n++; }
+  avgMat = new THREE.MeshBasicMaterial({ color: new THREE.Color().setRGB(r / n / 255, g / n / 255 * 0.92, b / n / 255 * 0.95, THREE.SRGBColorSpace) });
+  x.globalCompositeOperation = "destination-in";
+  let gr = x.createLinearGradient(0, 0, cv.width, 0); gr.addColorStop(0, "rgba(0,0,0,0)"); gr.addColorStop(0.18, "#000"); gr.addColorStop(0.82, "#000"); gr.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = gr; x.fillRect(0, 0, cv.width, cv.height);
+  gr = x.createLinearGradient(0, 0, 0, cv.height); gr.addColorStop(0, "#000"); gr.addColorStop(0.8, "#000"); gr.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = gr; x.fillRect(0, 0, cv.width, cv.height);
+  const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace;
+  deepPhotoMat = new THREE.MeshBasicMaterial({ map: tx, color: new THREE.Color(1, 0.92, 0.95), transparent: true, depthWrite: false });
+  photoPlane = new THREE.Mesh(new THREE.PlaneGeometry(8000, 8000), deepPhotoMat); photoPlane.position.set(PL.sx, -140 - 4000, -4); photoPlane.visible = false; scene.add(photoPlane);
+  res(); }; img.src = DERMIS; });
 
 window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
-  rig.place(camera, shot, t);
+  const P = rig.place(camera, shot, t);
   const isT = ["macro", "split", "rise", "macro2", "face"].includes(shot), isS = shot === "inside" || shot === "depth";
   terrain.group.visible = isT; S.group.visible = V.group.visible = paths.group.visible = deep.visible = isS;
   face.mesh.visible = false;   // the pulse beat is shot on the macro skin itself (the terrain), not a flat patch
   hz.group.visible = isS; bk.points.visible = shot === "depth";   // no starfield over the section's surface hz.set({ t }); bk.set({ t });
   hzM.group.visible = ["macro", "split", "macro2"].includes(shot); hzM.set({ t });
   cgL.visible = cgR.visible = shot === "cg"; cgRim.intensity = shot === "cg" ? 7 : 0;
-  if (deepPhotoMat) deep.material = shot === "depth" ? deepPhotoMat : deepPlainMat;   // the micrograph (a real photo) only in the depth beat, where its note is up
+  if (avgMat) { deep.material = shot === "depth" ? avgMat : deepPlainMat; photoPlane.visible = shot === "depth"; }   // the micrograph (a real photo) only in the depth beat, where its note is up   // the micrograph (a real photo) only in the depth beat, where its note is up
   scene.fog = isT ? FOG : null;
   lights.sun.intensity = isT ? 3.0 : 1.6; lights.key.intensity = isT ? 0.4 : 1.2;
   studio.set({ key: isT ? 0.5 : 1.0, rim: isT ? 1.6 : 2.0, fill: 0.3, env: 0.45, warm: 0.6 });
   fstop = shot === "face" ? 0.3 : isT ? 0.45 : isS ? 0.16 : shot === "face" ? 0.35 : shot === "cg" ? 0.12 : 0; focusPt = isS ? [PL.sx, -80, 30] : shot === "cg" ? [0, -1.0, 2.8] : shot === "face" ? [PL.tx + 3, 0, 5] : [PL.tx, 0, 0];
+  if (shot === "depth") { fstop = 0.16 * Math.min(1, 600 / P.dist); focusPt = [PL.sx, P.target[1], 30]; }   // the lens follows the pull-back
 
   // ── the terrain: one beam and its glint; then two halves, smooth (one ray) and dry (a haze) ──
   if (isT) terrain.set({ tone: SKIN.map((v) => v * 1.1), furrows: shot === "split" ? 1.5 : 0.3, sheen: shot === "split" ? 1 : 0, spot: 0 });
+  satin.forEach((o) => { o.visible = false; }); uSplit.value = shot === "split" ? 1 : 0;
+  const warmAir = isT || shot === "inside" || shot === "depth"; scene.background = warmAir ? bgWarm : bgViolet; if (FOG) FOG.color.copy(warmAir ? FOG_W : FOG_V);
   const one = shot === "macro" || shot === "macro2";
   beam.set({ op: one ? 1 : 0, grow: shot === "macro" ? E.out3(seg(t, K.beam[0], K.beam[1])) : 1 });
   glint.set({ op: shot === "macro" ? E.out3(seg(t, K.glint[0], K.glint[1])) : 0, spread: 0 });
@@ -287,7 +359,8 @@ window.seek = function (t) {
 
   // ── the depth chart ──
   const cOp = shot === "depth" ? fadeIn(t, SH.depth - 0.05, 0.3) * (1 - fadeIn(t, SH.macro2 - 0.5, 0.45)) : 0;
-  chart.style.opacity = cOp.toFixed(3); chart.style.visibility = cOp > 0.002 ? "visible" : "hidden";
+  chart.style.opacity = "0"; chart.style.visibility = "hidden"; void cOp;   // the card is replaced by the figure in the tissue (round 9)
+  depthFigure(t, shot, P.dist);
   barB.style.height = `${(D.blue_mm * PXMM * E.out3(seg(t, K.blue[0], K.blue[1]))).toFixed(1)}px`;
   sheets.forEach((s, i) => { s.style.opacity = (E.out3(seg(t, K.sheets[0] + i * 0.08, K.sheets[0] + i * 0.08 + 0.3))).toFixed(2); });
   barR.style.height = `${(D.red_mm[1] * PXMM * E.out3(seg(t, K.redbar[0], K.redbar[1]))).toFixed(1)}px`;
@@ -295,7 +368,7 @@ window.seek = function (t) {
   hR.style.opacity = E.out3(seg(t, K.redbar[0], K.redbar[0] + 0.3)).toFixed(3); vR.style.opacity = E.out3(seg(t, K.redbar[1] - 0.2, K.redbar[1] + 0.2)).toFixed(3);
   day.set({ op: shot === "macro2" ? fadeIn(t, SH.macro2 + 0.3, 0.6) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
 
-  photoNote.style.opacity = shot === "depth" ? "1" : "0";   // on every frame the photo is
+  photoNote.style.opacity = shot === "depth" ? "1" : "0"; photoNote.style.top = `${0.885 * H}px`;   // below the figure and the caption (round 9)   // on every frame the photo is
   grain.set(t);
   hud.update(t);
   tBars.update(t);
