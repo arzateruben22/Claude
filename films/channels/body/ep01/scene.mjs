@@ -341,6 +341,9 @@ const writeCells = (t, sh) => {
 
 // ── the artery's crowd (the meet shot): drifting, tumbling discs around the hero, a clear lane for the lens ──
 const ART = [-2000, 0, 0];
+const NETBED = (() => { const m = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin("#9A5E58"), map: TEX.clone(), roughness: 0.5, clearcoat: 0.6, clearcoatRoughness: 0.2, sheen: 0.4, sheenColor: new THREE.Color(1, 0.55, 0.48) }), { fresnel: 0.15, key: "netbed" });
+  m.map.repeat.set(14, 14); m.map.wrapS = m.map.wrapT = THREE.RepeatWrapping; m.map.needsUpdate = true;
+  const g = new THREE.Mesh(new THREE.PlaneGeometry(1600, 1600, 1, 1), m); g.userData.noProbe = true; g.visible = false; scene.add(g); return g; })();
 // round 2 (h): the artery's far wall behind the crowd, wet lining, left to the depth of field
 const ARTWALL = (() => { const m = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin("#C98A82"), map: TEX.clone(), roughness: 0.45, clearcoat: 0.7, clearcoatRoughness: 0.15, sheen: 0.5, sheenColor: new THREE.Color(1, 0.55, 0.48), side: THREE.DoubleSide }), { fresnel: 0.2, key: "artwall" });
   m.map.repeat.set(6, 6); m.map.wrapS = m.map.wrapT = THREE.RepeatWrapping; m.map.needsUpdate = true;
@@ -449,14 +452,14 @@ const PAX = swarm({
   n: PAXN, seed: 11, waves: [{ amp: 0.06, omega: 1.3 }],
   home: (i, r) => { for (;;) { const x = (2 * r() - 1) * RC * 0.94, h = halfThick(Math.abs(x)) * 0.86, y = (2 * r() - 1) * h; if (Math.abs(y) <= h) return [x, y, 0.02 + 0.05 * r()]; } },
 });
-const swMat = L.patch(new THREE.MeshStandardMaterial({ color: L.lin(THEME.tokens.o2 || "#FFFFFF"), emissive: L.lin("#FFFFFF"), emissiveIntensity: 0.35, roughness: 0.35 }), { fresnel: 0.1, key: "o2" });
+const swMat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin("#E8FFF6"), emissive: L.lin("#BFF8E4"), emissiveIntensity: 0.22, roughness: 0.15, clearcoat: 1, transmission: 0 }), { fresnel: 0.45, key: "o2" });   // glassy, mint-lit molecules
 const swMesh = O2.mesh(new THREE.IcosahedronGeometry(1, 2), swMat, O2N + PAXN);
 scene.add(swMesh);
 const SWSTATE = new Array(O2N + PAXN);
 const writeSwarm = (t, sh) => {
   const showO2 = sh === "out" ? presence(t, sO2 - 1.0, FILM.shots.find((s) => s.name === "tease").at - 0.6, { d: 0.6, out: 0.5 }).o : 0;
   for (let i = 0; i < O2N; i++) {
-    const p = O2.at(i, t), sc = showO2 * 0.32 * Math.min(1, O2.mix(i, t) * 3 + 0.25);
+    const p = O2.at(i, t), sc = showO2 * 0.32 * (0.45 + 0.9 * hash(i + 700)) * Math.min(1, O2.mix(i, t) * 3 + 0.25);   // varied sizes (not snow)
     instance(swMesh, i, p, null, sc); SWSTATE[i] = { p, scale: sc };
   }
   const open = sh === "tease" ? E.out3(seg(hero.cut, 0.55, 1)) : 0, sparkle = sh === "tease" ? seg(t, FILM.hero.sparkle[0], FILM.hero.sparkle[0] + 0.5) * (1 - seg(t, FILM.hero.sparkle[1], FILM.hero.sparkle[1] + 0.6)) : 0;
@@ -492,8 +495,8 @@ const ANCH = {
   sickle: (t) => { const s = sickleS(t), p = PH.at(s); sickleBasis(s); return [p[0] + vSy.x * 2.1, p[1] + vSy.y * 2.1, p[2] + vSy.z * 2.1 + 0.6]; },   // its convex edge, from t alone
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side });
-hud.badge("warp", { from: clk, slot: "tr", t0: FILM.title.t1 + 0.3 });   // top right: the title owns a keep-out at top left (owner, 3 Nov)
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.3),   // the title owns its zone while it shows (owner, 3 Nov)
+hud.badge("warp", { from: clk, slot: "tr", t0: FILM.title.t1 + 0.7 });   // after the title has fully gone   // top right: the title owns a keep-out at top left (owner, 3 Nov)
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.7),   // the title owns its zone while it shows (owner, 3 Nov)
    t1: b.t1, slot: "tr" });
 // a pill's bar is its length at the hero, on screen. hud.js clamps a bar to 4 px–60 % of the safe width, and a
 // clamped bar no longer matches its text (the meet close-up's 7.5 µm is 690–860 px at 1080 wide), so a length that
@@ -568,6 +571,10 @@ window.seek = function (t) {
   world.visible = sh !== "meet";
   ARTWALL.visible = sh === "meet";
   for (const g of TISSUE) g.visible = sh !== "net";
+  // round 3 (h): the first second of the ride, neighbouring vessels that cross the lens step out (a cut face filled the frame)
+  const rideIn = sh === "road" && t < FILM.ride[0] + 1.1; VESSELS.forEach((v, i) => { v.group.visible = !(rideIn && i > 0); });
+  // round 3 (h): the net lies on a wet tissue bed, left to the depth of field (no bare tubes on black)
+  NETBED.visible = sh === "net"; if (NETBED.visible) NETBED.position.set(hero.p[0], hero.p[1], -70);
   writeCells(t, sh);
   writeSwarm(t, sh);
   // the ghost outline: only in the tightest vessel, beside the folded cell

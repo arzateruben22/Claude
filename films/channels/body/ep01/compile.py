@@ -189,7 +189,7 @@ LABELS = [
     {"id": "nonuc", "text": "no nucleus", "color": "text", "mark": "none", "at": "cap", "t0": A("vo02:nucleus"), "t1": A("vo02:they", 0.6), "shot": "meet", "side": -1},
     {"id": "capillary", "text": "tiniest pipe", "color": "lining", "mark": "dot", "at": "capwall", "t0": A("vo03:tiniest"), "t1": CUT["road"], "shot": "tree", "side": -1},
     {"id": "dimple", "text": "the dent", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:dent"), "t1": A("vo04:so", 0.3), "shot": "road", "side": 1},
-    {"id": "ghost0", "text": "its full width", "color": "text", "mark": "dot", "at": "ghost", "t0": round(TITLE_T1 + 0.1, 4), "t1": round(TITLE_T1 + 1.6, 4), "shot": "hook", "side": 1},   # round 2 (a): the outline is the cell, not a bubble
+    {"id": "ghost0", "text": "its full width", "color": "text", "mark": "dot", "at": "ghost", "t0": round(TITLE_T1 + 0.1, 4), "t1": round(TITLE_T1 + 1.2, 4), "shot": "hook", "side": 1},   # round 2 (a): the outline is the cell, not a bubble
     {"id": "ghostw", "text": "its full width", "color": "text", "mark": "dot", "at": "ghost", "t0": A("vo05:half"), "t1": CUT["net"] - 0.3, "shot": "road", "side": 1},
     {"id": "sickle", "text": "sickle cell", "color": "deoxy", "mark": "dot", "at": "sickle", "t0": A("vo06:jam", 0.2), "t1": A("vo06:off", -0.4), "shot": "out", "side": -1},   # the 26 Oct audit: the stakes on screen; gone (0.4 s fade) as the O₂ label lands on "out"
     # the O₂ label lands on "out" ("oxygen is handed out"), once its molecule has climbed out of the vessel: from "oxygen"

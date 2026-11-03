@@ -238,7 +238,7 @@ const ANCH = {
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.3),   // the title owns its zone while it shows (owner, 3 Nov)
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.7),   // the title owns its zone while it shows (owner, 3 Nov)
    t1: b.t1, slot: b.slot || "tr" });
 // the size: a scale bar as long as the cell is across, at its depth
 hud.scale("size", { text: FILM.scale.text, t0: FILM.scale.t0, t1: FILM.scale.t1, bar: (t) => { const c = heroWorld(t), a = hud.project([c[0] - HERO.R, c[1], c[2]]), b = hud.project([c[0] + HERO.R, c[1], c[2]]); return Math.hypot(b.x - a.x, b.y - a.y); } });
