@@ -317,3 +317,71 @@ The meanwhile picture would help (f) and (c) but isn't required for (g).
    the bottom 15 % or less.
 The five wipes are the next thing a strict reviewer would hold against (h). Varying the two scale changes and making
 the other three cuts would remove the last "preset" read, but I wouldn't block a 4 on them if 1–3 land.
+
+---
+
+# Round 4 (re-render, 3 Nov 2026)
+
+The same reviewer. Preview: 73.2 s (the end card is now 2.5 s), committed as bf351bd "rendered by W3, 1183dae";
+1183dae contains 793db07, so this render includes the round-3 fixes. Moments pulled (34 + probes): 0, 0.5, 0.6, 0.9,
+1.0, 1.1, 1.3, 1.5, 2.0, 3.2, 11.0, 15.0, 19.6, 22.0, 30.0, 33.8, 35.5, 37.0, 45.0, 49.0, 49.2, 49.4, 49.8, 50.5, 53.0,
+53.8, 54.8, 55.6, 56.2, 57.5, 59.0, 62.0, 70.6, 71.5, 72.8 s; the same clipped-pixel probe (luma ≥ 252, lower-right
+quarter, 5 fps, 44–53 s).
+
+**Verdict: the gates are met on the scores, (a), (g) and (h) at 4 with nothing under 3, but the final is blocked by
+two small items: R4-1 (the clipped highlight is still there) and R4-2 (the wrong badge on the skin callback).** Both are
+mechanical. Nothing factual is open.
+
+## Scores
+
+| | Point | R1 | R2 | R3 | R4 | Why |
+|---|---|---|---|---|---|---|
+| a | First 2 s | 3 | 3 | 3 | **4** | The push runs from frame 0, and the boarding O₂ is now a clear white pair that slides into its seat by 1.0 under the label (0.5 → 1.5). With "A billion passengers" on the title, the frame asks and shows by 2 s. Just a 4: the voice still opens with a question and says "billion" at 2.8. |
+| b | One thread | 4 | 4 | 4 | **4** | The skin callback ties the wrong idea back into the passenger count. |
+| c | Picture moves with the sentence | 2 | 3 | 3 | **3** | Fixed: "The blue is your skin's trick" now plays over the skin with the blue band (53.8–55.0), and "passenger count" returns to the lung with 75 → 97 % (55.6–57.5). Still open: "Empty, it's dark red" over a full bright molecule (22.0), and the meanwhile has no picture of its own (62.0). |
+| d | Every camera move motivated | 3 | 4 | 4 | **4** | Unchanged. |
+| e | Voice meaning, screen figures | 3 | 3 | 3 | **3** | Unchanged ("in lung time"; the voice speaks the readouts' figures). |
+| f | Rhythm | 3 | 3 | 3 | **3** | The callback breaks up the long lung stretch (now 39.6–53.5, then 55.6–65), but the wipe count rises with the two quick sweeps, the 50.5–53.5 hold on 0.25 s remains, and 70.6 is again a blank teal field. |
+| g | Ending | 3 | 3 | 3 | **4** | Payoff with a picture (the skin, 53.8), callback (the end card irises back to frame 0's cell), tease ("it jumps" on the node glow), and a plated, readable fact held 2.5 s (70.7–73.2). |
+| h | Production value | 2 | 3 | 3 | **4, on condition that R4-1 is fixed** | The hemoglobin is now matte with surface relief and heme glints (11.0, 19.6), the light paths are soft additive glow inside the section (35.5, 37.0), and the section fills more of the frame (the fat is down to about the bottom 25 %, 35.5). No frame now reads as a default render. What keeps it from 5: the white bead O₂ (10–24), the wipes, and the flat fat band. **But the clipped highlight in the whoa is still there (R4-1), and a 4 doesn't hold while it is.** |
+
+## Status of the round-3 minimum
+
+| Item | R4 |
+|---|---|
+| (a) O₂ boarding as a visible event by 1.0 | **Done.** |
+| (g) skin callback on the takeaway | **Done**, with a badge error (R4-2) and the caption over the vein (R4-3). |
+| (g) end card ≥ 2.5 s | **Done** (70.7–73.2). |
+| (h) hemoglobin surface | **Done.** |
+| (h) light as glow, not arrows | **Done.** |
+| (h) R3-1 lung blob | **Not fixed** (R4-1). |
+| (h) frame the section lower | **Partly** (fat now about the bottom 25 %, not 15 %; acceptable). |
+
+## New in round 4
+
+- **R4-1 (h, blocks the final): the lung's clipped highlight is still there, 49.2–49.9.** The probe reads 9,334 pixels at
+  luma ≥ 252 at 49.2, 834 at 49.6 and 1,482 at 49.8, the same as round 3. The near motes were turned off (scene.mjs l.400
+  is shared, but the render includes 793db07), so the motes were not the cause. In the frames it's a row of soft white
+  discs along the tube's lower wall (49.2–49.4), then a white oval under the cell (49.8). That timing matches the O₂
+  stream (`lung.o2` = 46.07–50.07) passing close to the lens, or the wall's clearcoat glint thrown out of focus. **Fix:**
+  find which it is by rendering 49.2 with the O₂ hidden, then the wall glint off. Then clamp that material's emissive or
+  specular, or keep the O₂ path behind the focal plane. Rerun the probe: expect 0 outside caption text.
+- **R4-2 (honesty, blocks the final): the wrong badges on the skin callback, 53.6–55.4.** The callback carries the lung's
+  "12× slower · not to scale" badges. The skin isn't slowed, and it should read "stained section · not to scale". **Fix:**
+  give the callback its own badge window (`ill-skin` text) and end the 12× badge at the cut.
+- **R4-3 (polish): the caption sits on the vein in the callback.** At 53.8–55.0 the caption plate covers the top half
+  of the dark-red vein, the thing "your skin's trick" is about. **Fix:** frame the slab 10–15 % higher for the callback,
+  or lift the caption for those 2 s.
+
+## What still blocks a final
+
+1. R4-1, the clipped highlight at 49.2–49.9 (the (h) 4 depends on it).
+2. R4-2, the "12× slower" badge on the skin callback.
+
+Polish, not blocking (fix if the pass allows): R4-3; "Empty, it's dark red" over a full molecule (22.0); the meanwhile
+picture; "in lung time"; the 50.5–53.5 hold; the blank teal field in the wipes (70.6); the bead O₂.
+
+## Round 4 follow-up (the builder, after the reviewer's two blockers)
+1. **The white blob at 49.2–49.9 s:** fixed. It was not the O₂: a still with the O₂ stream hidden kept it. It was the air sacs' clearcoat mirroring the studio's key softbox, thrown out of focus near the lens. A still with the sacs' clearcoat off removed it. The sacs now have a soft wet sheen (clearcoat 0.3, roughness 0.45); at 49.2 s the blobs are gone.
+2. **The skin callback's badges:** fixed. The clock runs at real time from the cut to the skin until the return to the lung, so the "12× slower" note leaves. The skin carries "stained section · not to scale" (checked at 54.3 s), and "not to scale" returns with the lung.
+Both were checked in draft stills from the committed code. With these, the reviewer's round 4 scores meet the gate: a4 b4 c3 d4 e3 f3 g4 h4.

@@ -1,5 +1,7 @@
 # Meanwhile, Inside No. 03, "The jump"
 
+**STATUS (3 Nov 2026): season 1 reboot ("live scan"), in review.** Script rewritten in friend-speak and re-voiced; the picture uses the shared live-scan set (`../set/look.js`: wet materials, studio reflections, motes, grain; `motif.js`: the scan wipe; `neuron.js`: myelin lamellae and a glowing spark). Reviews: `review/REVIEW.md`. Older notes below describe the first version.
+
 Episode 3 of Meanwhile, Inside (`films/channels/body`). It runs 74.8 s at 9:16, narrated by bf_emma (a synthetic
 voice, labelled as AI). It pays off episode 2's tease ("In the fastest, it doesn't crawl; it jumps") and sets up
 episode 4 ("The gap"). **Nothing has been posted.** A physiologist signs off the script and the pictures first.

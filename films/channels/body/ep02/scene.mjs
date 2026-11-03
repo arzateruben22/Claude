@@ -291,7 +291,7 @@ const writeSkin = (t) => {
 };
 
 // ════ the lung: an air sac and its capillary (µm), shown 12× slower ════════════════════════════════
-const sacMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#E39A90"), emissive: lin("#FF7563"), emissiveIntensity: 0.05, roughness: 0.4, clearcoat: 0.85, clearcoatRoughness: 0.12, sheen: 0.6, sheenRoughness: 0.45, sheenColor: new THREE.Color(1, 0.46, 0.39) }), { fresnel: 0.35, fresnelPower: 2.4, key: "sac", contour: 0.4 });   // live scan: wet, translucent-edged tissue
+const sacMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#E39A90"), emissive: lin("#FF7563"), emissiveIntensity: 0.05, roughness: 0.45, clearcoat: 0.3, clearcoatRoughness: 0.45, sheen: 0.6, sheenRoughness: 0.45, sheenColor: new THREE.Color(1, 0.46, 0.39) }), { fresnel: 0.35, fresnelPower: 2.4, key: "sac", contour: 0.4 });   // review r4: a soft wet sheen, not a mirror (its key-light reflection bloomed to white near the lens)   // live scan: wet, translucent-edged tissue
 const SACS = [];
 {
   const r = rng(13);

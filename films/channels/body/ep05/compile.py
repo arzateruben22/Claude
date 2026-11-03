@@ -122,7 +122,8 @@ LABELS = [
     {"id": "wbc", "text": "white blood cell", "color": "immune", "mark": "dashed", "at": "wbc", "t0": A("vo08:cell", 0.0), "t1": EC, "shot": "exit", "side": -1, "v": "middle"},
 ]
 SPINE = [
-    {"id": "q", "t0": 0.0, "t1": A("vo02:Below", -0.3), "text": "?", "unit": "", "label": "air sacs in your lungs", "at": [0.5, 0.36]},   # below the title's line
+    {"id": "q", "t0": round(A("vo01:Not", 0.3) + 0.7, 4),   # after the title has fully gone (owner, 3 Nov: nothing in the title zone)
+     "t1": A("vo02:Below", -0.3), "text": "?", "unit": "", "label": "air sacs in your lungs", "at": [0.5, 0.36]},   # below the title's line
     {"id": "forks", "t0": A("vo02:fork", -0.2), "t1": A("vo02:At", -0.2), "keys": [[A("vo02:fork"), 1], [A("vo02:twenty-three", 0.3), 23]], "unit": "", "label": [[0.0, "counting the forks"], [A("vo02:twenty-three", 0.3), "forks, up to about"]]},   # c2
     {"id": "size", "t0": A("vo02:each"), "t1": B["change"]["t0"] - 0.2, "text": "0.2", "unit": "mm", "label": "each pocket, about", "at": [0.5, 0.26]},   # c3
     {"id": "year", "t0": A("vo03:sixteen", -0.1), "t1": A("vo03:bubbles", 0.7), "text": "1661", "unit": "", "label": "Malpighi's microscope"},   # c5

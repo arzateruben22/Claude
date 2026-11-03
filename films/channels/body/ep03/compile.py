@@ -123,7 +123,8 @@ LABELS = [
 ]
 # the spine readout (WRITING.md, "The picture" 2): one number in one place, its label naming the beat
 SPINE = [
-    {"id": "q", "t0": 0.0, "t1": A("vo02:Some", -0.3), "text": "?", "unit": "m/s", "label": "how fast is this spark?"},
+    {"id": "q", "t0": round(A("vo01:A", 0.3) + 0.7, 4),   # after the title has fully gone (owner, 3 Nov: nothing in the title zone)
+     "t1": A("vo02:Some", -0.3), "text": "?", "unit": "m/s", "label": "how fast is this spark?"},
     {"id": "len", "t0": A("vo02:fibres"), "t1": A("vo02:How", -0.45), "value": 1, "unit": "m", "label": "spine to toe: about"},   # c3
     {"id": "take", "t0": A("vo02:How"), "t1": CUT["drum"] - 0.3, "text": "?", "unit": "s", "label": "spine to toe takes"},
     {"id": "light", "t0": A("vo03:light"), "t1": A("vo03:Helmholtz", -0.1), "value": 300_000_000, "unit": "m/s", "label": "Müller: as fast as light?"},   # c4, c20
@@ -132,7 +133,7 @@ SPINE = [
     {"id": "patch", "t0": A("vo04:re-fires", 0.0), "t1": A("vo04:Many", -0.25), "text": "every step", "unit": "", "label": "bare fibre: re-fired at"},
     {"id": "fired", "t0": WHY_JUMP["t0"], "t1": A("vo04:Where", -0.2), "count": "fired", "unit": "", "label": "wrapped: re-fired only at gaps"},
     # one readout for the race, its label stepping from the crawl to the wrapped (no two plates crossfading in one slot)
-    {"id": "race", "t0": A("vo05:crawl"), "t1": A("vo05:Faster", -0.45), "keys": [[A("vo05:Thick"), 1], [A("vo05:fifty", 0.3), 150]], "unit": "m/s",
+    {"id": "race", "t0": A("vo05:crawl"), "t1": A("vo05:Faster", -0.45), "keys": [[A("vo05:Thick", -0.01), 1], [A("vo05:Thick"), 150]], "unit": "m/s",
      "label": [[A("vo05:crawl"), "thinnest bare fibres, about"], [A("vo05:Thick"), "thick wrapped fibres, up to"]]},   # c10, c11
     {"id": "kmh", "t0": A("vo05:Faster"), "t1": B["takeaway"]["t0"] - 0.2, "value": 540, "unit": "km/h", "label": "wrapped fibre · F1 record: 373"},   # c12
     {"id": "toe", "t0": TOE["stub"] - 0.4, "t1": B["meanwhile"]["t0"] + 0.1, "keys": [[TOE["stub"], 0.0], [TOE["slow"], round(TOE["slow"] - TOE["stub"], 2)]], "unit": "s", "label": "since the stub, real time", "fmt": 1},   # c13, c19
@@ -154,7 +155,7 @@ BADGES = [
     {"id": "nts-tease", "text": "not to scale", "t0": FIG["t1"] - 0.3, "t1": EC},
     {"id": "slow-tease", "text": "slowed", "slot": "tr", "t0": round(TEASE_T0 - 0.3, 4), "t1": EC},
 ]
-SCAN = {"up": [B["whoa"]["t0"] + 0.5, B["whoa"]["t0"] + 2.0], "park": 0.5, "off": B["takeaway"]["t0"], "tag": "▼ scan view"}   # live scan: the line rises from the bottom and parks; below it, scan view
+SCAN = {"up": [999.0, 999.5], "park": 0.5, "off": 999.0, "tag": ""}   # review r1: no scan moment in the race (it hid the hero; the voice never asks for it)   # live scan: the line rises from the bottom and parks; below it, scan view
 TITLE = {"series": "Body Backstage · No. 03", "title": "The *jump*", "t1": round(A("vo01:A", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *the gap*", "next": "Body Backstage · No. 04", "follow": "Follow Body Backstage",
        "fact": "In 1850 Helmholtz timed a frog's nerve signal at about 27 metres a second."}   # c5, c6

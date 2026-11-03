@@ -166,11 +166,11 @@
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So a stubbed toe can hurt twice. The jolt rides faster fibres; the ache, bare ones.",
+   "text": "So a stubbed toe can hurt twice. The jolt takes fast fibres, the ache slow ones.",
    "stars": [
     "twice"
    ],
-   "phonemes": "sˌəʊ ɐ stˈʌbd tˈəʊ kan hˈɜːt twˈaɪs. ðə dʒˈəʊlt ɹˈaɪdz fˈastə fˈaɪbəz; ðɪ ˈeɪk, bˈeə wˌɒnz.",
+   "phonemes": "sˌəʊ ɐ stˈʌbd tˈəʊ kan hˈɜːt twˈaɪs. ðə dʒˈəʊlt tˈeɪks fˈast fˈaɪbəz, ðɪ ˈeɪk slˈəʊ wˌɒnz.",
    "speeds": [
     0.84,
     0.84
@@ -185,8 +185,8 @@
     ]
    ],
    "file": "06.wav",
-   "dur": 5.848,
-   "sha256": "7e93ff3f96db9b0260e827e3d06f6c49fb6b4489fa37c95cfe4bce387ad53c92"
+   "dur": 5.536,
+   "sha256": "fb66557d42a6033e93ae4aea5b59043455502daf835d444f6d73c506ae6f3813"
   },
   {
    "id": "vo07",
