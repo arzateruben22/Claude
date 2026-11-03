@@ -43,3 +43,17 @@ Small layout issues (not blockers):
 - At 54.4 s the cut-face section appears as a hard-edged band across the top of the photo during the push. Feather the seam.
 
 With 1 and 2 fixed, the film passes.
+
+## Round 9 follow-up (d8b64e7; stills at 53, 56, 57.5 and 59.8 s): PASS
+
+| Round-9 blocker | Now |
+|---|---|
+| 1. Micrograph under a mm scale | **Fixed.** The note reads "behind: a tissue photo, not to scale" on all four stills, so the photo is no longer presented as true scale. |
+| 2. Note in the unsafe band | **Fixed.** The note sits at y ≈ 200 px (≈ 0.21 H), under the "Estimate" badge, inside the safe box. At about 13–14 px it is readable. |
+| Small: "0 mm" under the badge; ticks in the margin | **Fixed.** "0 mm" is gone (the surface line marks zero). The tick labels start at about x 46 px, on the 45 px margin. |
+
+Remaining, not blocking:
+- The note plate sits right on the surface line, so it covers where the columns and the paper stack begin (56–59.8 s). Nudging the note up about 12 px, or the figure down, would show their origin.
+- In the final, check on the sequential render that the dot grid on the photo is absent, as the stills tool notes.
+
+Verdict: **PASS.** Scores stand at a 4 · b 4 · c 4 · d 4 · e 4 · f 3 · g 4 · h 4. Clear to start the final at d8b64e7. Before posting, the dermatologist sign-off (CLAIMS-REVIEW.md) and the owner's approval are still required.

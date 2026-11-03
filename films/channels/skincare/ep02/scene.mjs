@@ -368,7 +368,7 @@ window.seek = function (t) {
   hR.style.opacity = E.out3(seg(t, K.redbar[0], K.redbar[0] + 0.3)).toFixed(3); vR.style.opacity = E.out3(seg(t, K.redbar[1] - 0.2, K.redbar[1] + 0.2)).toFixed(3);
   day.set({ op: shot === "macro2" ? fadeIn(t, SH.macro2 + 0.3, 0.6) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
 
-  photoNote.style.opacity = shot === "depth" ? "1" : "0"; photoNote.style.top = `${0.198 * H}px`; photoNote.textContent = "behind: a tissue photo, not to scale";   // under the badge, in the safe box; the figure is true scale, the photo is not (round 10)   // on every frame the photo is
+  photoNote.style.opacity = shot === "depth" ? "1" : "0"; photoNote.style.top = `${0.184 * H}px`; photoNote.textContent = "behind: a tissue photo, not to scale";   // under the badge, in the safe box; the figure is true scale, the photo is not (round 10)   // on every frame the photo is
   grain.set(t);
   hud.update(t);
   tBars.update(t);
