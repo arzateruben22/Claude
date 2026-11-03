@@ -1,13 +1,13 @@
-# Posting sheet: Meanwhile, Inside No. 004, "Do they touch?"
+# Posting sheet: Body Backstage No. 004, "Do they touch?"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `meanwhile-inside-004-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `meanwhile-inside-004-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `body-backstage-004-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `body-backstage-004-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-Do they touch? | Meanwhile, Inside No. 004
+Do they touch? | Body Backstage No. 004
 
 **Description**
 
@@ -32,12 +32,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Meanwhile, Inside: What your body is doing right now, while you watch.
+Body Backstage: What your body is doing right now, while you watch.
 
 #Shorts #humanbody #biology
 ```
 
-**Tags**: Meanwhile, Inside, humanbody, biology, they, touch, science, explainer, education
+**Tags**: Body Backstage, humanbody, biology, they, touch, science, explainer, education
 
 **Captions**: upload the .srt (English).
 
