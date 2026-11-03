@@ -1,13 +1,13 @@
-# Posting sheet: Back of the Envelope No. 005, "Everybody jump"
+# Posting sheet: Possibility Lab No. 005, "Everybody jump"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `envelope-005-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `envelope-005-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `possibility-lab-005-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `possibility-lab-005-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-Everybody jump | Back of the Envelope No. 005
+Everybody jump | Possibility Lab No. 005
 
 **Description**
 
@@ -27,12 +27,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Back of the Envelope: Impossible questions, honest assumptions, real calculations.
+Possibility Lab: Impossible questions, honest assumptions, real calculations.
 
 #Shorts #whatif #science
 ```
 
-**Tags**: Back of the Envelope, whatif, science, everybody, jump, explainer, education
+**Tags**: Possibility Lab, whatif, science, everybody, jump, explainer, education
 
 **Captions**: upload the .srt (English).
 
