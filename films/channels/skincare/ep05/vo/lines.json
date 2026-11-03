@@ -17,10 +17,10 @@
     "aged"
    ],
    "phonemes": "wˌɪtʃ hˈand ˈeɪdʒd? ɪn fˈɔː and ɐ hˈɑːf jˈiəz, wˈɒn ʃˈəʊd nˈəʊ dɪtˈɛktəbəl ˈeɪdʒɪŋ.",
-   "speed": 0.81,
+   "speed": 0.88,
    "file": "01.wav",
-   "dur": 5.317,
-   "sha256": "d84f19e52b9e34fb62e407ede279ea77954a11d58d1d6bb002913f9bf671e659"
+   "dur": 4.683,
+   "sha256": "530f4e1514ade012cf2c85a93a6c0f7cbc1884c59123faff5174fe95814fb63f"
   },
   {
    "id": "vo02",
@@ -30,10 +30,10 @@
     "morning"
    ],
    "phonemes": "ðeɪ bɪlˈɒŋ tə tˈuː nˈeɪbəz ˈɪn nˈæmbɔː , ˈeɪ kwˈiːnzlənd tˈaʊn wˌeə pjˈʊə tʃˈans dɪsˈaɪdɪd hˌuː wʊd wˈeə sˈʌnskɹiːn ˈɛvɹɪ mˈɔːnɪŋ. hˈɛd, nˈɛk, ˈɑːmz and hˈandz, bɪfˌɔː ðə dˈeɪ bɪɡˈan.",
-   "speed": 0.84,
+   "speed": 0.9,
    "file": "02.wav",
-   "dur": 10.944,
-   "sha256": "5a36c3127d889fc52b7919cf9634dde69e0850c7ff7518aae640094178fa35d7"
+   "dur": 10.225,
+   "sha256": "0bdeabab42f956e5b9f9e97a29bfaa82f2f04dd8dc5cd1d99fa02b0fd8fcc801"
   },
   {
    "id": "vo03",
@@ -95,10 +95,10 @@
     "count"
    ],
    "phonemes": "sˈəʊ, wˌɪtʃ hˈand ˈeɪdʒd? bˈəʊθ ɡɹˈuːps mˈɪst mˈɔːnɪŋz; wˈɒn mˈɪst fjˈuːə, and ðə skˈɪn kˈɛpt kˈaʊnt.",
-   "speed": 0.8,
+   "speed": 0.89,
    "file": "07.wav",
-   "dur": 6.251,
-   "sha256": "2d15a95e0c23768265cd96a68ddf294f8e4d127edd1b878b701a596af1114172"
+   "dur": 5.346,
+   "sha256": "1c15b06e5f7109862fb1f1bcf3aff25b837e8b104790ae375f4c9aeff3d76c40"
   },
   {
    "id": "vo08",
@@ -108,10 +108,10 @@
     "risk"
    ],
    "phonemes": "nˈɛkst: tˈanɪŋ bˈɛdz ʃˈeəɹ ɐ lˈɪst wɪð sˌɪɡəɹˈɛts. sˈeɪm lˈɪst, sˈeɪm ɹˈɪsk?",
-   "speed": 0.84,
+   "speed": 0.91,
    "file": "08.wav",
-   "dur": 4.586,
-   "sha256": "8910b8149bd4fe84f61497dd53e35d7dd97f4b9449d440aeac71289812ea1747"
+   "dur": 4.382,
+   "sha256": "c90c82b6bddc4fcea044edd8fdb852c53ff364c98441f04bfa5144616113a474"
   }
  ]
 }

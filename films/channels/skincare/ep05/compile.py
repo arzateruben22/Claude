@@ -96,7 +96,7 @@ BADGES = [
     {"id": "b-cast", "text": "model · 4.5 years, compressed", "t0": CUE["researchers"] - 0.1, "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-burn", "text": "model, not a photo", "t0": B["why"]["t0"], "t1": CUE["but"], "slot": "tl"},
     {"id": "b-uv1", "text": "illustration · not trial data", "t0": CUE["but"], "t1": B["whoa"]["t0"], "slot": "tl"},
-    {"id": "b-micro", "text": "micrograph · healthy stained skin", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
+    {"id": "b-micro", "text": "tissue photo · not a melanoma", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-est", "text": "model · estimate · lab test dose", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tl"},
     {"id": "b-loop", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": CUE["skin"], "slot": "tl"},
     {"id": "b-uv2", "text": "illustration · not trial data", "t0": CUE["skin"], "t1": t_end, "slot": "tl"},

@@ -4,90 +4,90 @@
   {
    "id": "vo01",
    "text": "Which hand aged? In four and a half years, one showed no detectable ageing.",
-   "heard": "Which hand aged? In four and a half years, one showed no detectable aging.",
+   "heard": "Which hand aged? In four and a half years one showed no detectable aging.",
    "words": [
     {
      "w": "Which",
      "start": 0.02,
-     "end": 0.4,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "hand",
-     "start": 0.285,
-     "end": 0.72,
+     "start": 0.24,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "aged?",
-     "start": 0.68,
-     "end": 1.68,
+     "start": 0.55,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "In",
-     "start": 1.775,
-     "end": 1.92,
+     "start": 1.51,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "four",
-     "start": 1.99,
-     "end": 2.16,
+     "start": 1.685,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.04,
-     "end": 2.32,
+     "start": 1.735,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.39,
-     "end": 2.44,
+     "start": 2.07,
+     "end": 2.12,
      "heard": true
     },
     {
      "w": "half",
-     "start": 2.42,
-     "end": 2.72,
+     "start": 2.1,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "years,",
-     "start": 2.64,
-     "end": 3.04,
+     "start": 2.56,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "one",
-     "start": 3.1,
-     "end": 3.28,
+     "start": 2.74,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "showed",
-     "start": 3.415,
-     "end": 3.68,
+     "start": 3.025,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "no",
-     "start": 3.615,
-     "end": 3.84,
+     "start": 3.225,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "detectable",
-     "start": 3.925,
-     "end": 4.56,
+     "start": 3.505,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "ageing.",
-     "start": 4.6,
-     "end": 4.86,
+     "start": 4.135,
+     "end": 4.38,
      "heard": false
     }
    ]
@@ -95,7 +95,7 @@
   {
    "id": "vo02",
    "text": "They belong to two neighbours in Nambour, a Queensland town where pure chance decided who would wear sunscreen every morning. Head, neck, arms and hands, before the day began.",
-   "heard": "They belonged to two neighbours in Nambore, a Queensland town where pure chance decided who would wear sunscreen every morning, head, neck, arms and hands, before the day began.",
+   "heard": "They belonged to two neighbours in Nambor, a Queensland town where pure chance decided who would wear sunscreen every morning, head, neck, arms and hands, before the day began.",
    "words": [
     {
      "w": "They",
@@ -105,170 +105,170 @@
     },
     {
      "w": "belong",
-     "start": 0.2,
+     "start": 0.16,
      "end": 0.56,
      "heard": false
     },
     {
      "w": "to",
-     "start": 0.66,
-     "end": 0.71,
+     "start": 0.625,
+     "end": 0.675,
      "heard": true
     },
     {
      "w": "two",
-     "start": 0.69,
+     "start": 0.705,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "neighbours",
-     "start": 0.745,
-     "end": 1.28,
+     "start": 0.735,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "in",
-     "start": 1.29,
+     "start": 1.23,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "Nambour,",
-     "start": 1.32,
-     "end": 2.48,
+     "start": 1.36,
+     "end": 2.24,
      "heard": false
     },
     {
      "w": "a",
-     "start": 2.56,
-     "end": 2.64,
+     "start": 2.345,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "Queensland",
-     "start": 2.705,
-     "end": 3.28,
+     "start": 2.495,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "town",
-     "start": 3.245,
-     "end": 3.6,
+     "start": 3.03,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "where",
-     "start": 3.66,
-     "end": 3.84,
+     "start": 3.395,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "pure",
-     "start": 3.865,
-     "end": 4.16,
+     "start": 3.575,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "chance",
-     "start": 4.12,
-     "end": 4.56,
+     "start": 3.83,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "decided",
-     "start": 4.565,
-     "end": 5.12,
+     "start": 4.215,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "who",
-     "start": 5.095,
-     "end": 5.2,
+     "start": 4.56,
+     "end": 4.8,
      "heard": true
     },
     {
      "w": "would",
-     "start": 5.125,
-     "end": 5.36,
+     "start": 4.895,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "wear",
-     "start": 5.335,
-     "end": 5.68,
+     "start": 4.925,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "sunscreen",
-     "start": 5.705,
-     "end": 6.4,
+     "start": 5.27,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "every",
-     "start": 6.285,
-     "end": 6.64,
+     "start": 5.81,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "morning.",
-     "start": 6.52,
-     "end": 7.6,
+     "start": 6.255,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "Head,",
-     "start": 7.645,
-     "end": 8.16,
+     "start": 7.13,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "neck,",
-     "start": 8.21,
-     "end": 8.72,
+     "start": 7.615,
+     "end": 8.08,
      "heard": true
     },
     {
      "w": "arms",
-     "start": 8.71,
-     "end": 9.04,
+     "start": 8.095,
+     "end": 8.4,
      "heard": true
     },
     {
      "w": "and",
-     "start": 9.18,
-     "end": 9.28,
+     "start": 8.545,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "hands,",
-     "start": 9.21,
-     "end": 9.84,
+     "start": 8.575,
+     "end": 9.2,
      "heard": true
     },
     {
      "w": "before",
-     "start": 9.855,
-     "end": 10.08,
+     "start": 9.195,
+     "end": 9.44,
      "heard": true
     },
     {
      "w": "the",
-     "start": 9.96,
-     "end": 10.24,
+     "start": 9.545,
+     "end": 9.595,
      "heard": true
     },
     {
      "w": "day",
-     "start": 10.21,
-     "end": 10.4,
+     "start": 9.575,
+     "end": 9.76,
      "heard": true
     },
     {
      "w": "began.",
-     "start": 10.45,
-     "end": 10.88,
+     "start": 9.78,
+     "end": 10.16,
      "heard": true
     }
    ]
@@ -896,98 +896,98 @@
    "words": [
     {
      "w": "So,",
-     "start": 0.165,
-     "end": 0.4,
+     "start": 0.025,
+     "end": 0.24,
      "heard": true
     },
     {
      "w": "which",
-     "start": 0.56,
-     "end": 0.72,
+     "start": 0.46,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "hand",
-     "start": 0.635,
-     "end": 1.04,
+     "start": 0.53,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "aged?",
-     "start": 0.99,
-     "end": 2.0,
+     "start": 0.83,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "Both",
-     "start": 2.09,
-     "end": 2.32,
+     "start": 1.81,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "groups",
-     "start": 2.38,
-     "end": 2.72,
+     "start": 2.075,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "missed",
-     "start": 2.605,
-     "end": 3.04,
+     "start": 2.265,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "mornings;",
-     "start": 3.045,
-     "end": 3.76,
+     "start": 2.565,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "one",
-     "start": 3.785,
-     "end": 4.0,
+     "start": 3.175,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "missed",
-     "start": 4.0,
-     "end": 4.32,
+     "start": 3.24,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "fewer,",
-     "start": 4.22,
-     "end": 4.64,
+     "start": 3.715,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "and",
-     "start": 4.665,
-     "end": 4.8,
+     "start": 4.005,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "the",
-     "start": 4.695,
-     "end": 4.88,
+     "start": 4.195,
+     "end": 4.245,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 5.015,
-     "end": 5.36,
+     "start": 4.36,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "kept",
-     "start": 5.32,
-     "end": 5.68,
+     "start": 4.605,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "count.",
-     "start": 5.705,
-     "end": 6.24,
+     "start": 4.91,
+     "end": 5.28,
      "heard": true
     }
    ]
@@ -1005,68 +1005,68 @@
     },
     {
      "w": "tanning",
-     "start": 0.5,
-     "end": 0.96,
+     "start": 0.53,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "beds",
-     "start": 0.975,
-     "end": 1.36,
+     "start": 0.905,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "share",
-     "start": 1.345,
-     "end": 1.6,
+     "start": 1.27,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.56,
-     "end": 1.68,
+     "start": 1.515,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "list",
-     "start": 1.735,
-     "end": 1.84,
+     "start": 1.67,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "with",
-     "start": 1.835,
-     "end": 2.0,
+     "start": 1.76,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "cigarettes.",
-     "start": 1.9,
-     "end": 3.12,
+     "start": 1.83,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "Same",
-     "start": 3.11,
-     "end": 3.36,
+     "start": 2.94,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "list,",
-     "start": 3.36,
-     "end": 3.84,
+     "start": 3.2,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "same",
-     "start": 3.73,
-     "end": 4.08,
+     "start": 3.675,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "risk?",
-     "start": 4.11,
-     "end": 4.56,
+     "start": 3.935,
+     "end": 4.32,
      "heard": true
     }
    ]
