@@ -1,0 +1,23 @@
+{
+ "chunk": 7,
+ "first": 2100,
+ "end": 2296,
+ "versions": [
+  {
+   "codeSha256": "7537b25e0f56467d7e2bf81744515dbba629ec02c0c26c20935fcc0c6e83f015",
+   "pageSha256": "cc4b5770821df479bb3a03c03cc4443f349f54dcc291a5698dbd3a6ad3068e2e",
+   "chromium": "153.0.8010.12",
+   "at": "2026-11-03T01:16:53.646Z"
+  }
+ ],
+ "encoded": {
+  "file": "chunks/007.mp4",
+  "first": 2100,
+  "frames": 196,
+  "fps": 30,
+  "bytes": 13220979,
+  "sha256": "a5fc57f66971a346f85d5f80c7b922ae1998d2fdc1021cd02f493e39ca6f1775",
+  "verifiedFrames": 196,
+  "at": "2026-11-03T01:28:05.400Z"
+ }
+}
