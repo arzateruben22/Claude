@@ -18,6 +18,7 @@ import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { createTerrain } from "../set/terrain.js";
 import { toneColor } from "../set/section.js";
 import { createStudio, skinMaterial, createShaft, createGrain } from "../set/studio.js";
+import { lookV2, upgradeSkin, upgradeHairs, hazeVolume, bokeh } from "../set/prod.js";
 import { SECTION } from "../set/ref/textures.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, FPS = FILM.fps || 30, G = FILM.gauge, P = FILM.plates;
@@ -69,8 +70,10 @@ const dmgMat = new THREE.MeshBasicMaterial({ color: 0x1e0c4a, transparent: true,
 const dmg = new THREE.Group(); dmg.renderOrder = 1; scene.add(dmg);
 for (let i = 0; i < 90; i++) { const r = 0.12 + R() * R() * 0.45, m = new THREE.Mesh(new THREE.CircleGeometry(r, 20), dmgMat); m.rotation.x = -Math.PI / 2; m.position.set(0.4 + R() * 9, 0.42, -14 + R() * 20); m.scale.set(1, 0.7 + R() * 0.6, 1); dmg.add(m); }
 // the seam between the halves: a fine pale line, so the two halves read from frame 0
-const seamMat = new THREE.MeshBasicMaterial({ color: 0xfff3e6, transparent: true, opacity: 0, depthWrite: false });
-const seam = new THREE.Mesh(new THREE.PlaneGeometry(0.06, 80).rotateX(-Math.PI / 2), seamMat); seam.position.set(0, 0.43, 0); scene.add(seam);
+const seamTex = (() => { const c = document.createElement("canvas"); c.width = 64; c.height = 4; const k = c.getContext("2d"), g = k.createLinearGradient(0, 0, 64, 0);   // a soft edge, not a rope
+  g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.5, "rgba(255,255,255,1)"); g.addColorStop(1, "rgba(255,255,255,0)"); k.fillStyle = g; k.fillRect(0, 0, 64, 4); return new THREE.CanvasTexture(c); })();
+const seamMat = new THREE.MeshBasicMaterial({ color: 0xffe6d2, alphaMap: seamTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+const seam = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 80).rotateX(-Math.PI / 2), seamMat); seam.position.set(0, 0.43, 0); scene.add(seam);
 // the loop: missed mornings on the screened half (bare gaps; fewer hidden freckles there), sunscreen mornings on the bare half
 const gapMat = new THREE.MeshStandardMaterial({ color: 0xffffff, alphaMap: null, transparent: true, opacity: 0, roughness: 0.75, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3 });
 const GAPS = [[-2.4, -1.2, 1.3], [-4.6, -5.5, 1.5], [-1.6, -8.5, 1.2], [-5.2, 0.8, 1.1]];
@@ -110,7 +113,10 @@ const face = new THREE.Mesh(new THREE.PlaneGeometry(16, 10.5), faceMat); face.po
 const sideMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.78, 0.5, 0.55), roughness: 0.55 });
 const blockSide = new THREE.Mesh(new THREE.BoxGeometry(16, 10.5, 6), [sideMat, sideMat, skinMaterial({ tone: tone.map((v) => v * 1.1), oil: 0.1, repeat: 3, seed: 9, micro: 0.5 }), sideMat, sideMat, sideMat]);
 blockSide.position.set(0, -5.25, -3.01); Bk.add(blockSide);
-const backB = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), new THREE.MeshBasicMaterial({ color: 0x2c1660 })); backB.position.set(0, -4, -14); Bk.add(backB);
+// the blocks sit in a lit volume (prod.js): haze the key reads through, far bokeh behind
+const hzB = hazeVolume(scene, { at: [XB, -4, -10], size: [60, 40, 14], color: "#c9b6ff", n: 5, op: 0.05 });
+const bkB = bokeh(scene, { n: 120, box: [[XB - 40, XB + 40], [-30, 20], [-60, -25]], size: 1.6, color: "#d9ccff", op: 0.3 });
+const hzK = hazeVolume(scene, { at: [XK, 3, -30], size: [90, 30, 20], color: "#b9c4ff", n: 4, op: 0.04 });
 const shaftB = createShaft({ from: [-6, 18, -4], to: [1, -6, 1], radius: 2.8, color: "#C9B4FF" }); shaftB.group.position.x = XB; scene.add(shaftB.group);
 const dustB = particles(320, [[XB - 9, -11, 0.5], [XB + 9, 6, 9]], 0.07, "#FFF2F8");
 
@@ -118,6 +124,11 @@ window.SCENE_READY = Promise.all([load(SECTION)]).then(([sec]) => { faceMat.map 
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
+const prodLook = lookV2({ canvas, hudRoot, fog: FOGA, terrain: HL.T, skin: HL.m });   // the channel look (prod.js): skin, hairs, fog, backdrop, grade
+upgradeSkin(HR.m); upgradeHairs(HR.T); upgradeSkin(K.mesh.material);
+FOGK.color.set(0x1a0d36);
+// the screened half keeps its sunscreen gloss over the upgraded skin
+Object.assign(HL.m, { clearcoat: 0.45, clearcoatRoughness: 0.2, roughness: 0.4 }); K.mesh.material.sheenColor.setRGB(0.85, 0.88, 0.95);
 const grain = createGrain(hudRoot, { amount: 0.006 });
 const hud = createHud({ camera, shots: FILM.shots });
 const labelAt = { L: [-2.2, 0.4, -1], R: [2.2, 0.4, -1] };   // a point on each half, set per shot in seek()
@@ -187,6 +198,7 @@ window.seek = function (t) {
   HL.T.group.visible = HR.T.group.visible = isA; K.group.visible = isK; Bk.visible = isB;
   shaftA.set({ op: isA ? 1 : 0 }); shaftK.set({ op: isK ? 0.9 : 0 }); shaftB.set({ op: isB ? 1 : 0 });
   dustA.set(t, isA ? 1 : 0); dustK.set(t, isK ? 0.8 : 0); dustB.set(t, isB ? 1 : 0);
+  hzB.group.visible = bkB.points.visible = isB; hzK.group.visible = isK; hzB.set({ t }); hzK.set({ t }); bkB.set({ t });
   scene.fog = isA ? FOGA : isK ? FOGK : null;
 
   // ── the macro: daylight, or the UV view under the scan ──
@@ -203,7 +215,7 @@ window.seek = function (t) {
     dmgMat.opacity = 0.75 * dk * uv; dmg.visible = dmgMat.opacity > 0.01; dmgL.visible = shot === "loop" && dmg.visible;
     // the screened half reads glossy from frame 0 (a faint satin film); the film shot shows it fully
     filmMat.opacity = shot === "film" ? 0.2 * u01(t, MC.film) : 0.1 * (1 - uv); filmMesh.visible = filmMat.opacity > 0.005;
-    seamMat.opacity = shot === "film" ? 0.25 : 0.6 - 0.35 * uv; seam.visible = true;
+    seamMat.opacity = shot === "film" ? 0.08 : 0.16 - 0.08 * uv; seam.visible = true;
     const mixed = shot === "loop" ? u01(t, MC.mixed) : 0;   // "Both groups missed mornings": gaps in the screen, sunscreen on the bare half
     gapMat.opacity = 0.95 * mixed; gaps.forEach((m) => (m.visible = mixed > 0.005));
     gapMat.color.setRGB(...mixT(tone.map((v) => v * 0.95), UVBARE, uv)); gapMat.emissive.setRGB(0.03 * uv, 0.02 * uv, 0.09 * uv);
@@ -257,7 +269,7 @@ window.seek = function (t) {
     look(mix3([XB - 2.4, 0.5, 17.5], [XB + 2.2, -2.9, 8.6], u), mix3([XB - 0.6, -4.6, 0], [XB + 2.4, -4.7, 0], u));   // drifts up and right: the naevus nest (lower left of the section) stays off centre
     studio.aim([XB, -4, 0], [-0.45, 0.8, 0.55], [0.55, 0.35, -0.85]); studio.set({ key: 1.6, rim: 2.6, fill: 0.45, env: 0.5, warm: 0.2 });
     const rk = u01(t, RK.micro);   // rack: the dust in front, then the cut face
-    focusPt = mix3([XB - 0.4, -2.6, 6.5], [XB + 1.8, -4.4, 0], rk); fstop = 0.18;
+    focusPt = mix3([XB - 0.4, -2.6, 6.5], [XB + 1.8, -4.4, 0], rk); fstop = 0.1;
   }
 
   // ── plates ──
