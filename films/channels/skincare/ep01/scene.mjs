@@ -16,6 +16,8 @@ import { createStudio, skinMaterial, strandMaterial, createShaft, createGrain } 
 import { DERMIS } from "../set/ref/textures.js";
 import { createAcneFollicle } from "../set/acne01.js";
 import { toneColor } from "../set/section.js";
+import { lookV2, richen, hazeVolume, bokeh } from "../set/prod.js";
+import { unifyHud } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, G = FILM.gauge, PL = FILM.place, FPS = FILM.fps || 30;
 const S1 = Math.min(W, H) / 1080;
@@ -58,7 +60,9 @@ const shaftS = createShaft({ from: [SX - 10, 18, -8], to: [SX + 4, -6, 2], radiu
 const sheenTex = (() => { const cv = document.createElement("canvas"); cv.width = 256; cv.height = 4; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 256, 0);
   g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.42, "rgba(190,250,245,0.25)"); g.addColorStop(0.5, "rgba(230,255,252,1)"); g.addColorStop(0.58, "rgba(190,250,245,0.25)"); g.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = g; x.fillRect(0, 0, 256, 4);
   const tx = new THREE.CanvasTexture(cv); tx.wrapS = THREE.ClampToEdgeWrapping; return tx; })();
-const sheenMat = new THREE.MeshBasicMaterial({ map: sheenTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xbff7f2 });
+const sheenAlpha = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 128; const x = cv.getContext("2d"), g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+  g.addColorStop(0, "#fff"); g.addColorStop(0.55, "#888"); g.addColorStop(1, "#000"); x.fillStyle = g; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(cv); })();   // the sheen fades out toward the cheek's edges: light on the skin, not a card
+const sheenMat = new THREE.MeshBasicMaterial({ alphaMap: sheenAlpha, map: sheenTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xbff7f2 });
 const sheen = new THREE.Mesh(uv.mesh.geometry, sheenMat); sheen.position.z = 0.012; sheen.renderOrder = 2; uv.mesh.add(sheen);
 const rig = createRig(FILM.cam);
 const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.updateMatrixWorld(); return uv.mesh.localToWorld(p).toArray(); };
@@ -66,6 +70,16 @@ const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.up
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
 const VF = { x: 0.1, y: 0.285, w: 0.8, h: 0.3 };
+// the channel look (v2): skin, hairs, fog, graded backdrop, one grade; follicles and stream cells given surfaces and variety
+const look = lookV2({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material });
+unifyHud(hudRoot);   // one HUD system: one plate, one radius, a bar not a dot; mono sources, sans labels
+// the graded backdrop drawn by WebGL too (an opaque canvas): additive light (the stream's shaft, haze) would otherwise
+// write alpha and read darker than the CSS gradient behind it
+scene.background = (() => { const cv = document.createElement("canvas"); cv.width = 4; cv.height = 256; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256);
+  g.addColorStop(0, "#3b2479"); g.addColorStop(1, "#06030c"); x.fillStyle = g; x.fillRect(0, 0, 4, 256); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; return tx; })();
+richen(F.group, { seed: 21, jitter: 0.1, hue: 0.06, micro: 0.6 }); richen(Gf.group, { seed: 22, jitter: 0.1, hue: 0.06, micro: 0.6 }); richen(stream, { seed: 5, jitter: 0, hue: 0, micro: 0.7 });
+const hzS = hazeVolume(scene, { at: [SX, 0, -10], size: [70, 40, 20], color: "#b9a6ff", n: 5, op: 0.06 });
+const bkS = bokeh(scene, { n: 120, box: [[SX - 60, SX + 60], [-30, 30], [-60, -25]], size: 3.5, color: "#d9ccff", op: 0.35 });
 const vf = createViewfinder({ root: hudRoot, W, H, ...VF });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
 Object.assign(vf.el.querySelector(".rec").style, { background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1.2vmin" });   // readable over daylight skin too
@@ -158,7 +172,7 @@ window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name, tone = FILM.tone;
-  rig.place(camera, shot, t);
+  const P = rig.place(camera, shot, t);
   const isUV = shot === "uv" || shot === "uv2", isF = ["follicle", "pair", "rupture", "gauge"].includes(shot);
   const isFl = shot === "flight" || shot === "rise";
   uv.mesh.visible = isUV; terrain.group.visible = isFl; F.group.visible = isF; Gf.group.visible = shot === "pair"; stream.visible = shot === "stream"; shaftS.set({ op: shot === "stream" ? 1 : 0 });
@@ -166,6 +180,9 @@ window.seek = function (t) {
   lights.sun.intensity = isFl ? 2.6 : 1.2; lights.key.intensity = isFl ? 0.3 : 0.8;
   studio.set({ key: isFl ? 0.45 : 1.4, rim: isFl ? 1.6 : 2.6, fill: 0.35, env: isUV ? 0 : 0.5, warm: isFl ? 0.5 : 0.2 });
   fstop = shot === "flight" ? 0.5 : shot === "rise" ? 0.18 : 0; focusPt = shot === "flight" ? [PL.tx + 1.5, 0, 1] : shot === "rise" ? [PL.tx + 0.8, 0, 1.5] : [0, 0, 0];
+  if (isF) { fstop = 0.1; focusPt = P.target; }   // a lens on the follicles too
+  if (isUV) { fstop = 0.12; focusPt = P.target; }
+  hzS.group.visible = bkS.points.visible = shot === "stream"; hzS.set({ t }); bkS.set({ t });
 
   // ── the UV cheek: the spot ringed in cyan; the follicle bacteria glow orange-red; the photos flip back in time ──
   if (isUV) {
@@ -176,7 +193,7 @@ window.seek = function (t) {
     const W1 = K.wipe1, W2 = K.wipe2;
     const day = shot === "uv" ? (t >= K.dayOn && t < W1[1] ? 1 : 0) : (t < W2[1] ? 1 : 0);
     const wp = shot === "uv" ? (t >= W1[0] && t < W1[1] ? E.inout2(seg(t, W1[0], W1[1])) : -1) : (t >= W2[0] && t < W2[1] ? E.inout2(seg(t, W2[0], W2[1])) : -1);
-    uv.set({ focus: [...SPOT, spot], spot, porph: shot === "uv" ? Math.max(porph, t >= W1[0] ? 1 - fadeIn(t, SH.flight - 0.8, 0.6) : 0) : 0.55, rings: 2.0 * rings, ringR: 0.2, glow: 1, opacity: 1, bump: 0.22 * spot, spotRed: 1,
+    uv.set({ focus: [...SPOT, spot], spot, porph: shot === "uv" ? Math.max(porph, t >= W1[0] ? 1 - fadeIn(t, SH.flight - 0.8, 0.6) : 0) : 0.55, rings: 2.0 * rings, ringR: 0.2, glow: 1, opacity: 1, form: 1, bump: 0.22 * spot, spotRed: 1,
       day, wipe: wp, skin: toneColor("living", tone).map((v) => Math.min(1, v * 1.15)) });
     vf.el.querySelector(".rec").textContent = day > 0.5 && wp < 0 ? "● REC  DAYLIGHT" : "● REC  UV 365 nm";
   }
