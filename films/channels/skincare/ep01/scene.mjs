@@ -16,7 +16,8 @@ import { createStudio, skinMaterial, strandMaterial, createShaft, createGrain } 
 import { DERMIS } from "../set/ref/textures.js";
 import { createAcneFollicle } from "../set/acne01.js";
 import { toneColor } from "../set/section.js";
-import { lookV2, richen, hazeVolume, bokeh } from "../set/prod.js";
+import { richen, hazeVolume, bokeh } from "../set/prod.js";
+import { lookV3 } from "../set/look3.js";
 import { unifyHud } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, G = FILM.gauge, PL = FILM.place, FPS = FILM.fps || 30;
@@ -71,7 +72,7 @@ const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.up
 const hudRoot = document.getElementById("hud");
 const VF = { x: 0.1, y: 0.285, w: 0.8, h: 0.3 };
 // the channel look (v2): skin, hairs, fog, graded backdrop, one grade; follicles and stream cells given surfaces and variety
-const look = lookV2({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material });
+const look = lookV3({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material });   // the channel look v3: skin, hairs, fog, grade, grain
 unifyHud(hudRoot);   // one HUD system: one plate, one radius, a bar not a dot; mono sources, sans labels
 // the graded backdrop drawn by WebGL too (an opaque canvas): additive light (the stream's shaft, haze) would otherwise
 // write alpha and read darker than the CSS gradient behind it
@@ -165,7 +166,7 @@ const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute("position", new
 const dustMat = new THREE.PointsMaterial({ map: dotTex, color: 0xf0e8ff, transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
 const dust = new THREE.Points(dustGeo, dustMat); dust.frustumCulled = false; scene.add(dust);
 const placeDust = (t, c, size, pt) => { dust.visible = true; dustMat.size = pt; dustBase.forEach(([x, y, z, ph], i) => { dustPos[3 * i] = c[0] + x * size[0] + 0.03 * size[0] * Math.sin(t * 0.3 + ph); dustPos[3 * i + 1] = c[1] + y * size[1] + 0.02 * size[1] * t % size[1]; dustPos[3 * i + 2] = c[2] + z * size[2]; }); dustGeo.attributes.position.needsUpdate = true; };
-const grain = createGrain(hudRoot, { amount: 0.007 });
+const grain = look.grain;   // look v3: fine grain in the midtones
 window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; F.look({ dermisMap: tx }); Gf.look({}); res(); }; img.src = DERMIS; });
 
 window.seek = function (t) {
