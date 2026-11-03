@@ -96,7 +96,9 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
             ) : <div className="note-row"><p className="faint post-note">Not planned yet: plan the week to give it a slot, then mark it uploaded from the Upload Desk.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div>}
           </div>
         ) : x ? (
-          <div className="post-actions">
+          // the file and the official upload page ride along as data (never links here: not approved), for the
+          // read-only static preview, which turns them into links next to "Needs approval" (scripts/static-preview.cjs)
+          <div className="post-actions" data-file={mediaUrl(x.filePath, `${base}.mp4`)} data-upload={uploadUrl} data-platform={platform}>
             <p className="post-note" id={noteId}>
               {version?.superseded ? "A newer render replaced this one. Approve the new version" : `Approve this exact video and text for ${account}`} first: Download and Open {platform} appear once it&apos;s approved.
             </p>

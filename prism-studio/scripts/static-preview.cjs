@@ -13,6 +13,8 @@ const OUT = path.resolve(process.argv[2]);
 const PASS = fs.readFileSync(path.join(__dirname, "../data/DEV-PASSWORD.txt"), "utf8").trim();
 const MAX_PAGES = 160;
 const FILES_BASE = (process.env.FILES_BASE || "").replace(/\/?$/, "/").replace(/^\/$/, "");   // see the download buttons below
+// where "works in your live studio" points: the owner's launch checklist (docs/LAUNCH-CHECKLIST.md, published)
+const LIVE_URL = process.env.LIVE_URL || "https://claude.ai/artifact/6EKHKokWLjAXuCo3VrvUzd";
 const SKIP = /^\/(api|login|logout|_next|offline)(\/|$)|\.(webmanifest|js|png|jpg|svg|ico|mp4|zip|srt)$/;
 
 const pageFile = (u) => {
@@ -28,8 +30,36 @@ const assetName = (u) => {
     const rel = key.split("?")[0].replace(/^(films|media):/, "").replace(/^films\//, "").replace(/^channels\//, "").replace(/\/out\//, "/");
     return "media/" + rel.replace(/\//g, "--").replace(/[^a-zA-Z0-9._-]/g, "_");
   }
+  if (u.pathname.startsWith("/api/srt/")) return "srt/" + u.pathname.split("/").pop().replace(/[^a-zA-Z0-9-]/g, "_") + ".srt";   // the captions file, saved with the pages
   return u.pathname.replace(/^\/+/, "").replace(/^_next\/static\//, "next/").replace(/[^a-zA-Z0-9._/-]/g, "_");
 };
+
+// A post that isn't approved yet carries its file and the official upload page as data (PostCard): in the preview they
+// become links, the 1440p file for YouTube and the 1080p master elsewhere, beside the "Needs approval" note.
+const filesLink = (key) => {
+  const f = /^films:(?:films\/)?(.+)$/.exec(key || "");
+  return FILES_BASE && f ? FILES_BASE + "films/" + f[1] : null;
+};
+function postActions(html, here) {
+  return html.replace(/<div class="post-actions" data-file="([^"]+)" data-upload="([^"]+)" data-platform="([^"]+)">/g, (m, file, upload, platform) => {
+    let u; try { u = new URL(file.replace(/&amp;/g, "&"), here); } catch { return m; }
+    const href = filesLink(u.searchParams.get("k"));
+    if (!href) return m;
+    return `${m}<div class="preview-post"><div class="row"><a class="btn" href="${href}" target="_blank" rel="noopener">Download video</a>` +
+      `<a class="btn ghost" href="${upload}" target="_blank" rel="noopener noreferrer">Open ${platform} ↗</a></div>` +
+      `<p class="faint" style="margin:0;font-size:13.5px">Not approved in the studio yet: watch it in Review before you post it.</p></div>`;
+  });
+}
+// Buttons that change something need the live studio: off here (disabled, so nothing pretends to work), and the main
+// ones say where they do work. Copy buttons (data-copy) stay.
+const LIVE = /^(Approve for|Hold this episode|Publish now|Mark uploaded|Connect|Reconnect|Plan the next|Save settings|Import|Queue it|Regenerate)/;
+function liveOnly(html) {
+  return html.replace(/<button\b(?![^>]*data-copy)([^>]*)>([\s\S]*?)<\/button>/g, (m, attrs, inner) => {
+    const text = inner.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+    const off = `<button${attrs.replace(/\sdisabled(="[^"]*")?/, "")} disabled aria-disabled="true" title="Works in your live studio">${inner}</button>`;
+    return LIVE.test(text) ? `${off}<a class="live-only" href="${LIVE_URL}" target="_blank" rel="noopener">Works in your live studio</a>` : off;
+  });
+}
 
 (async () => {
   fs.rmSync(OUT, { recursive: true, force: true });
@@ -92,7 +122,7 @@ const assetName = (u) => {
     return name;
   };
 
-  const banner = `<div class="static-banner" role="note">Read-only preview of Prism Studio · copy buttons work; buttons that change things are off</div>`;
+  const banner = `<div class="static-banner" role="note">Read-only preview · copy, download and open work · approving and posting changes <a href="${LIVE_URL}" target="_blank" rel="noopener">work in your live studio</a></div>`;
   const helper = `<script>
 document.addEventListener("submit", function (e) { e.preventDefault(); }, true);
 document.addEventListener("click", function (e) {
@@ -104,11 +134,9 @@ document.addEventListener("click", function (e) {
     function fallback() { var ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (_) {} ta.remove(); done(); }
     return;
   }
-  var x = e.target.closest && e.target.closest("button:not([data-copy]):not([type=button]), input[type=submit]");
-  if (x) { e.preventDefault(); x.setAttribute("title", "Off in the read-only preview"); }
 }, true);
 </script>`;
-  const css = `<style>.static-banner{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:#0A0C10;color:#B0B6C0;font:500 12px/1.4 "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid rgba(222,229,240,.12);text-align:center}@media (max-width:719px){.static-banner{position:static;padding:calc(6px + env(safe-area-inset-top,0px)) 16px 6px;font-size:11px;line-height:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}body:has(.static-banner) .reel{height:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 29px - env(safe-area-inset-top,0px))}body:has(.static-banner) .slide{--screen-h:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 29px - env(safe-area-inset-top,0px));--top-h:60px}body:has(.static-banner) .slide-top{padding-top:0}}</style>`;
+  const css = `<style>.static-banner a{color:#EDEFF2}.live-only{display:inline-flex;align-items:center;min-height:44px;font:600 13px/1.3 "Bricolage Grotesque",ui-sans-serif,sans-serif;color:#B0B6C0;text-decoration:underline;text-underline-offset:3px}.preview-post{display:grid;gap:8px}.preview-post .row{display:flex;flex-wrap:wrap;gap:8px}.static-banner{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:#0A0C10;color:#B0B6C0;font:500 12px/1.4 "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid rgba(222,229,240,.12);text-align:center}@media (max-width:719px){.static-banner{position:static;padding:calc(6px + env(safe-area-inset-top,0px)) 16px 6px;font-size:11px;line-height:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}body:has(.static-banner) .reel{height:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 29px - env(safe-area-inset-top,0px))}body:has(.static-banner) .slide{--screen-h:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 29px - env(safe-area-inset-top,0px));--top-h:60px}body:has(.static-banner) .slide-top{padding-top:0}}</style>`;
 
   const written = [];
   for (const [p, html0] of pages) {
@@ -124,6 +152,7 @@ document.addEventListener("click", function (e) {
       if (u.origin !== here.origin) return m;
       const k = u.pathname + u.search;
       if (pages.has(k)) return a + pageFile(u) + (u.hash || "") + z;
+      if (u.pathname.startsWith("/api/srt/")) return m;   // saved with the assets below
       if (u.pathname.startsWith("/api/media")) {
         // a download button: with FILES_BASE (where the films repo's files can be fetched, e.g. a public repo's raw
         // URL), point it at the full-quality file there; otherwise leave it (it is handled with the assets below)
@@ -142,13 +171,14 @@ document.addEventListener("click", function (e) {
       let u; try { u = new URL(r.replace(/&amp;/g, "&"), here); } catch { continue; }
       if (u.origin !== here.origin) continue;
       if (pages.has(u.pathname + u.search) || u.pathname.endsWith(".html")) continue;
-      if (!/^\/(_next\/static|fonts|wallpaper|icons|api\/media|icon\.png|favicon)/.test(u.pathname)) continue;
+      if (!/^\/(_next\/static|fonts|wallpaper|icons|api\/media|api\/srt\/|icon\.png|favicon)/.test(u.pathname)) continue;
       local.set(r, "assets/" + (await fetchAsset(u.href)));
     }
     // one pass per kind, so nothing is rewritten twice
     html = html.replace(/(\s(?:src|poster|href)=")([^"]+)(")/g, (m, a, v, z) => (local.has(v) ? a + local.get(v) + z : m));
     html = html.replace(/(\ssrcset=")([^"]+)(")/g, (m, a, v, z) => a + v.split(",").map((s) => { const [u, ...w] = s.trim().split(/\s+/); return [local.get(u) || u, ...w].join(" "); }).join(", ") + z);
     html = html.replace(/url\((&quot;|['"])?([^'")&]+)(&quot;|['"])?\)/g, (m, q1, u, q2) => (local.has(u) ? `url(${q1 || ""}${local.get(u)}${q2 || ""})` : m));
+    html = liveOnly(postActions(html, here));
     html = html.replace(/<body([^>]*)>/i, `<body$1>${banner}`).replace(/<\/head>/i, `${css}</head>`).replace(/<\/body>/i, `${helper}</body>`);
     const f = pageFile(here);
     if (f === "./") {
