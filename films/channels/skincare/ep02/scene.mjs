@@ -61,6 +61,7 @@ const beamS = createBeam({ from: [PL.sx - 70, 230, 32], to: [PL.sx, 1, 32], radi
 const sheen = new THREE.Mesh(new THREE.BoxGeometry(200, 5, 2), new THREE.MeshBasicMaterial({ color: 0xffc48a, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }));
 sheen.position.set(PL.sx, 3, 32); scene.add(sheen);
 // below the section: the deep dermis continues (no clear colour under the slab)
+const deepPlainMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(...toneColor("dermis", tone).map((v) => v * 0.8)) });
 const deep = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000), new THREE.MeshBasicMaterial({ color: new THREE.Color(...toneColor("dermis", tone).map((v) => v * 0.8)) }));
 deep.position.set(PL.sx, -140 - 1500, 0); scene.add(deep);
 
@@ -87,14 +88,15 @@ document.head.appendChild(css);
 hudRoot.appendChild(slider);
 // the micrograph under the section is a real photo: said so, under the captions, while it shows
 const photoNote = document.createElement("div"); photoNote.textContent = "behind: a tissue photo (normal skin)";
-Object.assign(photoNote.style, { position: "absolute", left: "50%", top: `${0.705 * H}px`, transform: "translateX(-50%)", fontFamily: "var(--font-mono)", fontSize: "2.3vmin", letterSpacing: ".04em", textTransform: "uppercase",
-  color: "var(--text-2)", background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1vmin", whiteSpace: "nowrap", zIndex: 3, opacity: "0", pointerEvents: "none" });
+Object.assign(photoNote.style, { position: "absolute", left: "50%", top: `${0.588 * H}px`, transform: "translateX(-50%)", fontFamily: "var(--font-mono)", fontSize: "2.9vmin", letterSpacing: ".03em", textTransform: "none",
+  color: "var(--text)", background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1vmin", whiteSpace: "nowrap", zIndex: 3, opacity: "0", pointerEvents: "none" });
 hudRoot.appendChild(photoNote);
 let cgBuilt = false;
 const buildCg = () => { if (cgBuilt) return; cgBuilt = true;
   [0, 1].forEach((i) => { const f = fsvg.cloneNode(true); Object.assign(f.style, { position: "static", width: "100%", height: "85%", opacity: "1", transform: "none" });
-    if (i === 0) { f.querySelectorAll("ellipse, path").forEach((e) => { const fl = e.getAttribute("fill"); if (fl && fl !== "none" && fl !== "#2a1a14" && fl !== "#a8555a") e.setAttribute("fill", "#cdbab4"); }); f.querySelectorAll("ellipse").forEach((e) => { if ((e.getAttribute("fill") || "").includes("blush")) e.setAttribute("opacity", "0"); });
-      const hl = document.createElementNS("http://www.w3.org/2000/svg", "ellipse"); [["cx", 455], ["cy", 380], ["rx", 46], ["ry", 22], ["fill", "#ffffff"], ["opacity", "0.85"]].forEach(([k, v]) => hl.setAttribute(k, v)); f.appendChild(hl); f.style.filter = "saturate(.6)"; }
+    // both faces in the episode's one tone; they differ only in how light behaves: a hard surface highlight and no flush (left), soft light from inside (right)
+    if (i === 0) { f.querySelectorAll("ellipse").forEach((e) => { if ((e.getAttribute("fill") || "").includes("blush")) e.setAttribute("opacity", "0"); });
+      const hl = document.createElementNS("http://www.w3.org/2000/svg", "ellipse"); [["cx", 455], ["cy", 380], ["rx", 46], ["ry", 22], ["fill", "#ffffff"], ["opacity", "0.85"]].forEach(([k, v]) => hl.setAttribute(k, v)); f.appendChild(hl); f.style.filter = "contrast(1.18) saturate(.92)"; }
     else { f.style.filter = "drop-shadow(0 0 2.4vmin rgba(255,120,90,.55))"; f.querySelectorAll("ellipse").forEach((e) => { if ((e.getAttribute("fill") || "").includes("blush")) e.setAttribute("opacity", "0.65"); }); }
     cgCols[i].appendChild(f); cgCols[i].appendChild(cgTag(i === 0 ? "light stays on top" : "light goes inside")); }); };
 // the model face (whoa): a stylised face drawn in the viewfinder (labelled "model face, not a photo"): its skin and
@@ -158,7 +160,8 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-14vmin)";
 
 const grain = createGrain(hudRoot, { amount: 0.007 });
-window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; deep.material.map = tx; deep.material.color.setRGB(1, 0.92, 0.95); deep.material.needsUpdate = true; res(); }; img.src = DERMIS; });
+let deepPhotoMat = null;
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; deepPhotoMat = new THREE.MeshBasicMaterial({ map: tx, color: new THREE.Color(1, 0.92, 0.95) }); res(); }; img.src = DERMIS; });
 
 window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
@@ -166,7 +169,9 @@ window.seek = function (t) {
   const shot = stage(t).name;
   rig.place(camera, shot, t);
   const isT = ["macro", "split", "rise", "macro2"].includes(shot), isS = shot === "inside" || shot === "depth";
-  terrain.group.visible = isT; S.group.visible = V.group.visible = paths.group.visible = deep.visible = isS; face.mesh.visible = shot === "face";
+  terrain.group.visible = isT; S.group.visible = V.group.visible = paths.group.visible = deep.visible = isS;
+  face.mesh.visible = shot === "face";
+  if (deepPhotoMat) deep.material = shot === "depth" ? deepPhotoMat : deepPlainMat;   // the micrograph (a real photo) only in the depth beat, where its note is up
   scene.fog = isT ? FOG : null;
   lights.sun.intensity = isT ? 3.0 : 1.6; lights.key.intensity = isT ? 0.4 : 1.2;
   studio.set({ key: isT ? 0.5 : 1.0, rim: isT ? 1.6 : 2.0, fill: 0.3, env: 0.45, warm: 0.6 });
@@ -237,7 +242,7 @@ window.seek = function (t) {
   hR.style.opacity = E.out3(seg(t, K.redbar[0], K.redbar[0] + 0.3)).toFixed(3); vR.style.opacity = E.out3(seg(t, K.redbar[1] - 0.2, K.redbar[1] + 0.2)).toFixed(3);
   day.set({ op: shot === "macro2" ? fadeIn(t, SH.macro2 + 0.3, 0.6) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
 
-  photoNote.style.opacity = (shot === "depth" ? fadeIn(t, SH.depth + 0.3, 0.4) * (1 - fadeIn(t, SH.cg - 0.35, 0.3)) : 0).toFixed(3);
+  photoNote.style.opacity = shot === "depth" ? "1" : "0";   // on every frame the photo is
   grain.set(t);
   hud.update(t);
   tBars.update(t);

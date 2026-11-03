@@ -98,7 +98,7 @@ BADGES = [
     {"id": "b-one", "text": "one study · illustration", "t0": t_split, "t1": t_in, "slot": "tr"},
     {"id": "b-simp", "text": "simplified · one example (model)", "t0": t_in, "t1": t_face, "slot": "tl"},
     {"id": "b-face", "text": "model face, not a photo", "t0": t_face, "t1": B["toscale"]["t0"], "slot": "tl"},
-    {"id": "b-step", "text": "Verkruysse et al., 2008", "t0": t_face, "t1": B["toscale"]["t0"], "slot": "bl"},
+    {"id": "b-step", "text": "Verkruysse 2008 · Wu et al., 2012", "t0": t_face, "t1": B["toscale"]["t0"], "slot": "tr"},
     {"id": "b-cg", "text": "Jensen et al., 2001", "t0": B["takeaway"]["t0"] + 0.2, "t1": A("vo07:Yours", -0.3), "slot": "tr"},
     {"id": "b-cgm", "text": "model faces, not photos", "t0": B["takeaway"]["t0"] + 0.2, "t1": A("vo07:Yours", -0.3), "slot": "tl"},
     {"id": "b-est", "text": "estimate · varies by skin and site", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tr"},
@@ -123,6 +123,7 @@ def before_cut(t1, lead=0.45):
 
 for row in BADGES + COUNTERS + LABELS:
     row["t1"] = before_cut(row["t1"])
+COUNTERS.sort(key=lambda r: r["t0"])   # the spacing pass below needs time order
 for a, b in zip(COUNTERS, COUNTERS[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
@@ -137,7 +138,7 @@ DEPTH = {"blue_mm": BLUE_MM, "red_mm": list(RED_MM), "paper_um": PAPER_UM}
 
 TITLE = {"series": "Skin Sense · No. 002", "title": "Where a glow *comes from*", "t1": CUE["inside"] - 0.8, "sig": A("vo01:from?", 0.35)}
 END = {"title": "Next: why do you *scar*?", "follow": "Skin Sense · No. 003",
-       "next": "Only about 4–7% of light bounces off skin's surface; most goes inside and much comes back out. Narration: synthetic voice (AI)."}
+       "next": "Sources: Lister 2012; Jacques (OMLC); Verkruysse et al. 2008; Wu et al. 2012; Jensen et al. 2001. Narration: synthetic voice (AI)."}
 POSTER = A("vo04:blood.", 0.2)
 
 glue(f, {"vo01": ["your glow", "on your face", "inside you."], "vo02": ["one ray in twenty", "as a glint.", "Smooth, hydrated skin", "back one way;", "dry skin", "into a haze."],

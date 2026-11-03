@@ -713,10 +713,10 @@
   },
   {
    "id": "b-step",
-   "text": "Verkruysse et al., 2008",
+   "text": "Verkruysse 2008 · Wu et al., 2012",
    "t0": 39.733333333333334,
    "t1": 51.8167,
-   "slot": "bl"
+   "slot": "tr"
   },
   {
    "id": "b-cg",
@@ -785,11 +785,11 @@
    ]
   },
   {
-   "id": "c-final",
-   "label": "the glow comes",
-   "text": "from within",
-   "t0": 66.56666666666666,
-   "t1": 42.8667,
+   "id": "c-pulse",
+   "label": "your face's colour",
+   "text": "beats",
+   "t0": 43.266666666666666,
+   "t1": 51.8167,
    "fmt": "text",
    "at": [
     0.5,
@@ -797,11 +797,11 @@
    ]
   },
   {
-   "id": "c-pulse",
-   "label": "your face's colour",
-   "text": "beats",
-   "t0": 43.266666666666666,
-   "t1": 51.8167,
+   "id": "c-final",
+   "label": "the glow comes",
+   "text": "from within",
+   "t0": 66.56666666666666,
+   "t1": 68.46666666666667,
    "fmt": "text",
    "at": [
     0.5,
@@ -820,7 +820,7 @@
  "end": {
   "title": "Next: why do you *scar*?",
   "follow": "Skin Sense · No. 003",
-  "next": "Only about 4–7% of light bounces off skin's surface; most goes inside and much comes back out. Narration: synthetic voice (AI)."
+  "next": "Sources: Lister 2012; Jacques (OMLC); Verkruysse et al. 2008; Wu et al. 2012; Jensen et al. 2001. Narration: synthetic voice (AI)."
  },
  "captions": [
   {
