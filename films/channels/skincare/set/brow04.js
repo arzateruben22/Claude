@@ -53,10 +53,10 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H
     const ridge = 0.55 * Math.exp(-((Y - 0.95) ** 2) / 0.9) * (1 - Math.exp(-(X * X) / 2.2));                 // the two brow ridges
     const nose = 0.5 * Math.exp(-(X * X) / 1.8) * (1 / (1 + Math.exp((Y + 1.6) * 2.2)));                   // the bridge rising below
     const socket = -0.32 * Math.exp(-(((ax - 3.1) ** 2) / 2.4 + ((Y + 1.9) ** 2) / 1.2));                    // shallow: no bruise
-    const lid = 0.2 * Math.exp(-(((ax - 3.1) ** 2) / 1.5 + ((Y + 2.45) ** 2) / 0.16)) - 0.07 * Math.exp(-(((ax - 3.1) ** 2) / 1.8 + ((Y + 2.0) ** 2) / 0.015));   // the upper lids and their crease
+    const lid = 0.2 * Math.exp(-(((ax - 3.1) ** 2) / 1.5 + ((Y + 2.45) ** 2) / 0.16)) - 0.12 * Math.exp(-(((ax - 3.1) ** 2) / 1.8 + ((Y + 2.0) ** 2) / 0.015));   // the upper lids and their crease
     const env = Math.exp(-((Y - 0.8) ** 2) / 0.45);
-    const folds = f * env * (-0.1 * (Math.exp(-((X - 0.36) ** 2) / 0.035) + Math.exp(-((X + 0.36) ** 2) / 0.035))   // the two valleys of the "11" (soft)
-      + 0.11 * Math.exp(-(X * X) / 0.06)                                                                       // the bulge between them
+    const folds = f * env * (-0.14 * (Math.exp(-((X - 0.38) ** 2) / 0.06) + Math.exp(-((X + 0.38) ** 2) / 0.06))   // the two valleys of the "11" (soft)
+      + 0.12 * Math.exp(-(X * X) / 0.1)                                                                       // the bulge between them
       + 0.07 * (Math.exp(-((X - 0.78) ** 2) / 0.09) + Math.exp(-((X + 0.78) ** 2) / 0.09)));                    // the corrugators bunching outside
     const draw = -0.06 * f * Math.exp(-(X * X) / 1.6) * Math.exp(-((Y - 0.6) ** 2) / 1.5);
     return ridge + nose + socket + lid + folds + draw;
@@ -87,6 +87,12 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H
   const VEL = Array.from({ length: vellusN }, () => ({ x: (R() - 0.5) * W * 0.9, y: yc + (R() - 0.5) * H * 0.9, a: (R() - 0.5) * 1.2 + (R() > 0.5 ? 0.6 : 2.5), l: 0.05 + R() * 0.07 }));
   const vm = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.0012, 0.0035, 1, 4, 1).rotateZ(-Math.PI / 2).translate(0.5, 0, 0), vellusMat, VEL.length); vm.frustumCulled = false; g.add(vm);
 
+  // the upper lashes along each lid's margin: dark strands curving down and outward (they make the lower face read as a face)
+  const LASH = [];
+  for (const s of [-1, 1]) for (let i = 0; i < 80; i++) { const u = R(), ax = 2.0 + 2.3 * u, w = (ax - 3.1) / 1.15;
+    LASH.push({ x: s * ax, y: -2.62 + 0.2 * w * w + (R() - 0.5) * 0.04, th: -1.25 + s * 0.0 + (u - 0.5) * 0.9 + (R() - 0.5) * 0.15, s, l: 0.3 + 0.18 * Math.sin(Math.PI * u) + R() * 0.08 }); }
+  const lashMat = new THREE.MeshStandardMaterial({ color: 0x140c08, roughness: 0.45 });
+  const lm = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.003, 0.012, 1, 5, 4).rotateZ(-Math.PI / 2).translate(0.5, 0, 0), lashMat, LASH.length); lm.frustumCulled = false; g.add(lm);
   const dm = new THREE.Object3D(); dm.rotation.order = "ZYX";
   let last = -1;
   return {
@@ -106,6 +112,8 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H
         });
         m.instanceMatrix.needsUpdate = true;
       }
+      LASH.forEach((h, i) => { dm.position.set(h.x, h.y, surf(h.x, h.y, frown) + 0.01); dm.rotation.set(0, -0.6, h.s > 0 ? h.th : Math.PI - h.th); dm.scale.set(h.l, 1, 1); dm.updateMatrix(); lm.setMatrixAt(i, dm.matrix); });
+      lm.instanceMatrix.needsUpdate = true;
       VEL.forEach((v, i) => { dm.position.set(v.x, v.y, surf(v.x, v.y, frown) + 0.003); dm.rotation.set(0, -0.15, v.a); dm.scale.set(v.l, 1, 1); dm.updateMatrix(); vm.setMatrixAt(i, dm.matrix); });
       vm.instanceMatrix.needsUpdate = true;
     },

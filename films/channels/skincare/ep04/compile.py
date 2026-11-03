@@ -66,7 +66,8 @@ SHOTS = [
     {"at": CUE["slips"], "name": "nmj2"},                # inside the nerve ending: the toxin, the cut, the message waits
     {"at": B["why"]["t0"], "name": "kerner"},            # the brow, pulled back, Kerner's plate; the frown goes slack on "paralysis"
     {"at": CUE["medicine"], "name": "nmj3"},             # back to the silenced ending (the plate leaves with the cut)
-    {"at": B["whoa"]["t0"], "name": "dose"},             # the brow; the UV scan on "twenty"; the dose plate
+    {"at": B["whoa"]["t0"], "name": "nmj4"},             # "counted in units, measured by their effect on mice": the silenced ending, one slow orbit
+    {"at": CUE["one"], "name": "dose"},             # the brow; the UV scan on "twenty"; the dose plate
     {"at": B["toscale"]["t0"], "name": "gap"},           # the cleft, the gauge lifted
     {"at": B["takeaway"]["t0"], "name": "regrow"},       # the spare endings grow, then are pruned
     {"at": A("vo07:away.", 0.45), "name": "close"},      # the brow, the crease returning, under the end card (the loop)
@@ -94,22 +95,22 @@ LABELS = [
     {"id": "l-snap", "text": "SNAP-25", "kind": "water", "anchor": "snap", "t0": CUE["cuts"] + 0.3, "t1": B["why"]["t0"], "shot": "nmj2", "side": 1, "v": "above"},
 ]
 BADGES = [
-    {"id": "b-model", "text": "model, not a photo", "t0": 0.0, "t1": CUE["nerve"], "slot": "bl"},   # out of the top stack, clear of the title
-    {"id": "b-gram", "kind": "card", "title": "≈ 1 g, inhaled and evenly dispersed", "text": "theoretical (JAMA 2001)", "t0": CUE["banknote"], "t1": CUE["nerve"], "slot": "bl"},   # bottom left with the model note: the top holds the title, then the spine
+    {"id": "b-model", "text": "model, not a photo", "t0": 0.0, "t1": CUE["nerve"], "slot": "tr"},
+    {"id": "b-gram", "kind": "card", "title": "≈ 1 g inhaled, ideal dispersal", "text": "theoretical (JAMA 2001)", "t0": CUE["banknote"], "t1": CUE["nerve"], "slot": "bl"},   # bottom left with the model note: the top holds the title, then the spine
     {"id": "b-simp", "text": "simplified · not to scale", "t0": CUE["nerve"] + 0.3, "t1": CUE["skin"], "slot": "tl"},
     {"id": "b-model2", "text": "model, not a photo", "t0": CUE["skin"] + 0.2, "t1": CUE["botulinum"], "slot": "tl"},
     {"id": "b-micro", "text": "tissue photo · stained skin", "t0": CUE["botulinum"] + 0.25, "t1": CUE["slips"], "slot": "tl"},
     {"id": "b-illus", "text": "illustration", "t0": CUE["slips"] + 0.3, "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-model3", "text": "model, not a photo", "t0": B["why"]["t0"] + 0.3, "t1": CUE["medicine"], "slot": "tl"},
-    {"id": "b-illus2", "text": "illustration", "t0": CUE["medicine"] + 0.3, "t1": B["whoa"]["t0"], "slot": "tl"},
-    {"id": "b-uv", "text": "illustration", "t0": SCAN["sweep"][1], "t1": B["toscale"]["t0"], "slot": "tl"},
+    {"id": "b-illus2", "text": "illustration", "t0": CUE["medicine"] + 0.3, "t1": CUE["one"], "slot": "tl"},
+    {"id": "b-uv", "text": "illustration", "t0": CUE["one"] + 0.3, "t1": B["toscale"]["t0"], "slot": "tl"},   # the dose shot's one corner note
     {"id": "b-gap", "text": "≈ 50 nm, varies by site · simplified", "t0": B["toscale"]["t0"] + 0.3, "t1": B["takeaway"]["t0"], "slot": "tl"},
-    {"id": "b-months", "text": "≈ 3–4 months, time compressed", "t0": B["takeaway"]["t0"] + 0.3, "t1": SH["close"], "slot": "tl"},
-    {"id": "b-mice", "text": "mouse studies; in people, debated", "t0": CUE["grows"] - 0.2, "t1": SH["close"], "slot": "tl"},
+    {"id": "b-months", "kind": "card", "title": "≈ 3–4 months, time compressed", "text": "mouse studies; in people, debated", "t0": B["takeaway"]["t0"] + 0.3, "t1": SH["close"], "slot": "tl"},
     {"id": "b-model4", "text": "model, not a photo", "t0": SH["close"] + 0.3, "t1": t_end, "slot": "tl"},
 ]
 # the spine readout: the payoff's number, held lit from the takeaway to the end card (after the gauge, which owns the top)
-SPINE = {"id": "c-spine", "t0": TITLE["t1"] + 0.2, "t1": t_end - 0.4, "kill": CUE["kill"], "at": [0.5, 0.235],
+SPINE = {"id": "c-spine", "t0": TITLE["t1"] + 0.5,   # after the title is fully out
+         "t1": t_end - 0.4, "kill": CUE["kill"], "at": [[0.0, [0.5, 0.235]], [B["takeaway"]["t0"], [0.5, 0.34]]],   # lower in the takeaway, under its note
          "labels": [[0.0, "one frown's dose"], [CUE["kill"], "one frown, of a lethal dose"]], "q": "?", "a": "< 1 %"}
 COUNTERS = []
 PLATES = {
@@ -166,7 +167,7 @@ for L in LABELS:
     ev.append({"t": L["t0"], "kind": "label", "tag": L["id"]})
 for c in COUNTERS:
     ev.append({"t": c["t0"], "kind": "counter.show", "tag": c["id"]})
-# the spine readout (bible §8) arrives silently as the title leaves: a cue 0.9 s after the title's signature is masked by its tail (sync)
+ev.append({"t": SPINE["t0"], "kind": "counter.show", "tag": SPINE["id"]})   # the spine readout (bible §8), 1.2 s after the title's signature
 for b in BADGES:
     if b["t0"] > 0:
         ev.append({"t": b["t0"], "kind": "badge", "tag": b["id"]})

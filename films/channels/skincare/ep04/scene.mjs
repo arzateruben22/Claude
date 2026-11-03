@@ -65,15 +65,15 @@ browSkin.map = (() => { const c = document.createElement("canvas"); c.width = c.
     g.addColorStop(0, red ? "rgba(236,170,160,.22)" : "rgba(255,246,236,.25)"); g.addColorStop(1, "rgba(255,255,255,0)"); k.fillStyle = g; k.fillRect(x - r, y - r, 2 * r, 2 * r); }
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1.5, 1.5); return t; })();
 BR.mesh.material = browSkin;
-skinV3(browSkin, { keyDir: [-0.74, 0.5, 0.45], scatterK: 0.22 });   // the warm terminator matched to this film's upper-left key
+skinV3(browSkin, { keyDir: [-0.86, 0.44, 0.26], scatterK: 0.22 });   // the warm terminator matched to this film's upper-left key
 const look3 = lookV3({ canvas, hudRoot, skin: browSkin });   // the channel look v3: skinV3 (a warm terminator, oily micro-speculars), the backdrop, one grade, grainV3
 browSkin.clearcoat = 0.18; browSkin.clearcoatRoughness = 0.3;   // a second, sharper lobe over skinV3's broad matte one (oil on the crests)
 const browBase = browSkin.color.clone();
 BR.group.scale.z = 1.25;
 scene.add(BR.group);
-const shaftBrow = createShaft({ from: [-14, 16, 12], to: [2, -3, 3], radius: 2.6, color: "#FFE2C8" }); scene.add(shaftBrow.group);   // the key's volumetric shaft
-const dustBrow = particles(260, [[-6, -5, 4], [6, 6, 14]], 0.03, "#FFF1F8", 0.6);                                                    // foreground dust, drifting through it
-const UVSKIN = new THREE.Color(0.4, 0.3, 0.78), UVHAIR = new THREE.Color(0.06, 0.03, 0.14), HAIR = BR.hairMat.color.clone();
+const shaftBrow = createShaft({ from: [-16, 18, 22], to: [4, -6, 12], radius: 2.2, color: "#FFE2C8" }); scene.add(shaftBrow.group);   // the key's volumetric shaft
+const dustBrow = particles(320, [[-7, -7, 9], [7, 7, 24]], 0.05, "#FFF1F8", 0.65);                                                    // foreground dust, drifting through it
+const UVSKIN = new THREE.Color(0.4, 0.3, 0.78), UVHAIR = new THREE.Color(0.14, 0.09, 0.3), HAIR = BR.hairMat.color.clone();
 const _kd = new THREE.Vector3();
 
 // ── the junction at cell scale ──
@@ -122,6 +122,7 @@ for (const L of FILM.labels) {
   const k = KIND[L.kind];
   hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: () => A[L.anchor] || [0, 0, 0], t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v, fixed: L.fixed });
 }
+hudRoot.style.setProperty("--hud-scrim", "rgba(16, 8, 36, .4)");   // the end card veils the brow lightly: the loop to frame 0 stays visible
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
@@ -177,9 +178,9 @@ window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
-  const isB = ["brow", "brow2", "kerner", "dose", "close"].includes(shot), isJ = ["nmj", "nmj2", "nmj3", "gap", "regrow"].includes(shot), isC = shot === "cut";
+  const isB = ["brow", "brow2", "kerner", "dose", "close"].includes(shot), isJ = ["nmj", "nmj2", "nmj3", "nmj4", "gap", "regrow"].includes(shot), isC = shot === "cut";
   BR.group.visible = isB; N.group.visible = isJ; C.visible = isC; backC.visible = isC; hzJ1.visible = hzJ2.visible = hzJ3.visible = isJ; hvJ.group.visible = isJ; hvJ.set({ op: 0.05, t });
-  shaftBrow.set({ op: isB ? 0.35 * (1 - uvNow(t, shot)) : 0 }); shaftJ.set({ op: isJ ? 0.8 : 0 }); shaftC.set({ op: isC ? 1 : 0 });
+  shaftBrow.set({ op: isB ? 0.6 * (1 - uvNow(t, shot)) : 0 }); shaftJ.set({ op: isJ ? 0.8 : 0 }); shaftC.set({ op: isC ? 1 : 0 });
   dustBrow.set(t, isB ? 1 : 0); dustJ.set(t, isJ ? 1 : 0); dustC.set(t, isC ? 1 : 0);
   let uv = 0;
 
@@ -188,21 +189,22 @@ window.seek = function (t) {
     const u = span(t, shot);
     let frown = 1, pos, tgt, fp;
     let fs = 0.14;
-    if (shot === "brow") { frown = 0.1 + 0.9 * u01(t, BW.frown); pos = mix3([2.4, -1.8, 30], [1.0, -0.6, 19], u); tgt = mix3([0, -0.6, 0], [0, 0.2, 0], u); }   // the upper face, one slow push toward the "11"
-    else if (shot === "brow2") { frown = 0.3 + 0.7 * u01(t, BW.fold); pos = mix3([2.4, -0.9, 6.0], [1.6, -0.4, 4.9], u); tgt = [0, 0.75, 0]; }   // the crease setting, close
+    if (shot === "brow") { frown = 0.1 + 0.9 * u01(t, BW.frown); pos = mix3([2.4, -1.9, 36], [1.2, -1.0, 27], u); tgt = mix3([0, -1.0, 0], [0, -0.5, 0], u); }   // the upper face, one slow push toward the "11"
+    else if (shot === "brow2") { frown = 0.3 + 0.7 * u01(t, BW.fold); pos = mix3([2.6, -1.0, 8.0], [1.8, -0.6, 6.5], u); tgt = [0, 0.75, 0]; }   // the crease setting, close
     else if (shot === "kerner") { frown = 1 - 0.9 * u01(t, BW.slack); pos = mix3([0.6, -1.4, 18], [0.2, -2.2, 26], u); tgt = mix3([0, 0.0, 0], [0, 0.6, 0], u); }   // a slow pull back under the plate; the frown goes slack on "paralysis"
     else if (shot === "dose") {   // wide, then a push to the crease on "twenty", then a rack to the plate on "kill"
       frown = 0.9; const p1 = u01(t, [SH.dose, D.frown]), p2 = u01(t, [D.frown, D.kill]);
-      pos = mix3(mix3([1.4, -2.0, 30], [1.1, -1.8, 26], p1), [0.5, -1.0, 13], p2); tgt = mix3(mix3([0, -0.9, 0], [0, -0.8, 0], p1), [0, -0.6, 0], p2); uv = uvNow(t, shot);
+      pos = mix3(mix3([1.4, -2.0, 32], [1.1, -1.8, 27], p1), [0.5, -1.0, 13], p2); tgt = mix3(mix3([0, -1.0, 0], [0, -0.9, 0], p1), [0, -0.6, 0], p2); uv = uvNow(t, shot);
       fs = 0.14 + 0.5 * u01(t, [D.kill, D.kill + 0.8]); }
-    else { frown = 0.1 + 0.9 * u01(t, BW.close); pos = mix3([2.4, -1.8, 30], [2.6, -1.9, 31.5], u); tgt = [0, -0.6, 0]; }   // the close: frame 0's composition (the loop)
+    else { frown = 0.1 + 0.9 * u01(t, BW.close); pos = mix3([2.4, -1.9, 36], [2.6, -2.0, 37.5], u); tgt = [0, -1.0, 0]; }   // the close: frame 0's composition (the loop)
     BR.set({ frown });
     look(pos, tgt);
     camera.updateMatrixWorld();
-    studio.aim([0, 0.6, 0], [-0.74, 0.5, 0.45], [0.25, 0.85, -0.45]); studio.set({ key: 2.6 * (1 - 0.5 * uv), rim: 2.4, fill: 0.9, env: 0.35, warm: 0.6 * (1 - uv) });   // a warm key grazing from the upper left, a cool fill ≈ 1.5 stops under, a rim from behind and above
-    browSkin.color.copy(browBase).lerp(UVSKIN, uv); browSkin.emissive.setRGB(0.03 * uv, 0.02 * uv, 0.1 * uv); BR.hairMat.color.copy(HAIR).lerp(UVHAIR, uv);
+    studio.aim([0, 0.6, 0], [-0.86, 0.44, 0.26], [0.15, 0.9, -0.4]); studio.set({ key: 2.8 * (1 - 0.5 * uv), rim: 3.2, fill: 0.9, env: 0.35, warm: 0.6 * (1 - uv) });   // a warm key grazing from the upper left, a cool fill ≈ 1.5 stops under, a rim from behind and above
+    browSkin.color.copy(browBase).lerp(UVSKIN, uv); browSkin.emissive.setRGB(0.03 * uv, 0.02 * uv, 0.1 * uv); BR.hairMat.color.copy(HAIR).lerp(UVHAIR, uv); BR.hairMat.sheen = 0.25 + 0.75 * uv; BR.hairMat.sheenColor.setRGB(0.7 + 0.1 * uv, 0.52 + 0.1 * uv, 0.36 + 0.64 * uv);   // under UV the hairs keep a lilac sheen
+    BR.vellusMat.opacity = 0.55 * (1 - uv);
     browSkin.sheenColor.setRGB(1 - 0.3 * uv, 0.72 - 0.06 * uv, 0.62 + 0.36 * uv);   // the warm edge sheen toward UV lilac
-    focusPt = [0, 0.8, 0.2]; fstop = shot === "brow2" ? 0.1 : fs;   // focus on the crease; the brows fall off
+    focusPt = [0, 0.8, 0.2]; fstop = shot === "brow2" ? 0.04 : fs;   // focus on the crease; the brows fall off
     if (shot === "dose" && fs > 0.15) { const dv = new THREE.Vector3(); camera.getWorldDirection(dv); focusPt = camera.position.clone().addScaledVector(dv, 13 - 9 * (fs - 0.14) / 0.5).toArray(); }   // the rack to the plate
   }
   const sw = seg(t, FILM.scan.sweep[0], FILM.scan.sweep[1]); scan.style.top = `${(sw * H).toFixed(1)}px`; scan.style.opacity = shot === "dose" && sw > 0 && sw < 1 ? "1" : "0";
@@ -220,6 +222,9 @@ window.seek = function (t) {
       st = { ...st, toxin: u01(t, J.toxin), cut: u01(t, J.cut), bump: Math.abs(Math.sin(Math.PI * 2 * seg(t, J.bump[0], J.bump[1]))) * (t < J.bump[1] ? 1 : 0) };
       pos = mix3([-4, 5.0, 16], [1.4, 2.4, 10.5], u); tgt = mix3([0, 1.6, 0], [1.2, 0.9, 0], u);   // a slow push down into the ending, to the docking proteins
       N.set(st); const rk = u01(t, [J.cut[0] - 0.5, J.cut[0] + 0.2]); focusPt = mix3(N.at.tox(), N.at.snap(), rk); fstop = 0.4;   // the rack: the toxin, then SNAP-25 as it splits
+    } else if (shot === "nmj4") {
+      pos = mix3([-6, 4.4, 21], [-3.5, 3.6, 17.5], u); tgt = [1, 1.3, 0];                     // the silenced ending again, from the other side: units, mice
+      focusPt = jx([1, 1.2, 0.3]); fstop = 0.22;
     } else if (shot === "nmj3") {
       st = { ...st, bump: Math.abs(Math.sin(Math.PI * 3 * seg(t, J.bump2[0], J.bump2[1]))) * (t < J.bump2[1] ? 1 : 0) };
       pos = mix3([7, 4.6, 21], [4, 4, 17.5], u); tgt = [1, 1.4, 0];                         // the silenced ending, a slow drift
@@ -265,7 +270,7 @@ window.seek = function (t) {
 
   // ── the veil: three frames of the ground on each scale jump; the scene sinks back under the end card ──
   let step = 0;
-  for (const c of [SH.nmj, SH.cut, SH.nmj2, SH.gap]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
+  for (const c of [SH.nmj, SH.cut, SH.nmj2, SH.nmj4, SH.gap]) step = Math.max(step, 1 - Math.min(1, Math.abs(t - c) / 0.1));
   veil.style.opacity = (0.55 * step).toFixed(4);   // the end card's own scrim veils the brow (≈ 60 %)
 
   grain.set(t);
@@ -273,6 +278,7 @@ window.seek = function (t) {
   const stack = shot === "dose" && Number(dose.style.opacity) > 0.5;   // the spine as the dose plate's top row
   spineEl.classList.toggle("ol-card-top", stack); dose.classList.toggle("ol-card-body", stack);
   if (stack) card(); else spineEl.style.width = "";
+  if (lift > 0) spineEl.style.opacity = (Number(spineEl.style.opacity || 1) * (1 - lift)).toFixed(3);   // the gauge owns the top while it is lifted
   tBars.update(t);
   eBars.update(t);
   renderer.render(scene, camera);
