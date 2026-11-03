@@ -38,7 +38,7 @@ window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 const tone = FILM.tone, SKIN = toneColor("living", tone);
 
 // ── the set ─────────────────────────────────────────────────────────────────
-const terrain = createTerrain({ seed: 17, spots: 0, segs: 400 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+const terrain = createTerrain({ seed: 17, spots: 0, segs: 400, organic: true }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
 { const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.08, hydration: 0.3, repeat: 14, seed: 9, micro: 0.35 }); m.roughness = 0.58; terrain.mesh.material = m;
   terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.3, 0.18, 0.12], gloss: 0.5 }); o.material.transmission = 0; } }); }
 const SCAR = [0.5, 1.6];
