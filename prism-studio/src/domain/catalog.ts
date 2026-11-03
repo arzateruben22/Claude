@@ -21,7 +21,7 @@ export const CHANNELS: {
   voice: { narrator: string; provider: string }; editorial: Editorial; filmsPath: string | null; creation: { key: string; name: string };
 }[] = [
   {
-    topic: "skincare", slug: "skincare", name: "Outer Layer", provisional: false,
+    topic: "skincare", slug: "skincare", name: "Skin Sense", provisional: false,
     tagline: "Skin biology, ingredients and routines, with the evidence on the screen.",
     color: "#00685F", colorInk: "#00685F", label: "SKIN",
     voice: { narrator: "TBD: auditioning (not af_heart: that voice is Lumevina's)", provider: "kokoro" },
@@ -33,10 +33,10 @@ export const CHANNELS: {
       examples: ["Why does a pore clog?", "Does SPF 100 beat SPF 50?"],
       avoid: ["inferring behaviour from appearance", "promised results", "brand endorsements without disclosure", "Lumevina's look (black, rose and gold; glass bells)"],
     },
-    filmsPath: null, creation: { key: "glass_garden", name: "The Glass Garden" },
+    filmsPath: "films/channels/skincare", creation: { key: "glass_garden", name: "The Glass Garden" },
   },
   {
-    topic: "physics", slug: "physics", name: "Rest Frame", provisional: true,
+    topic: "physics", slug: "physics", name: "Reality Rulebook", provisional: false,
     tagline: "Everyday things, slowed down until the physics shows.",
     color: "#2F5BFF", colorInk: "#1E3FCC", label: "PHYSICS",
     voice: { narrator: "af_bella (speed 1.0)", provider: "kokoro" },
@@ -51,7 +51,7 @@ export const CHANNELS: {
     filmsPath: "films/channels/physics", creation: { key: "gravity_marble", name: "The Gravity Marble" },
   },
   {
-    topic: "body", slug: "body", name: "Meanwhile, Inside", provisional: true,
+    topic: "body", slug: "body", name: "Body Backstage", provisional: false,
     tagline: "What your body is doing right now, while you watch.",
     color: "#FF6F5E", colorInk: "#B23A2C", label: "BODY",
     voice: { narrator: "bf_emma", provider: "kokoro" },
@@ -66,7 +66,7 @@ export const CHANNELS: {
     filmsPath: "films/channels/body", creation: { key: "bioelectric_car", name: "The Bioelectric Car" },
   },
   {
-    topic: "space", slug: "space", name: "Light Minute", provisional: true,
+    topic: "space", slug: "space", name: "One More Orbit", provisional: false,
     tagline: "One minute, one 'whoa' about the universe, every number sourced.",
     color: "#5B3FD0", colorInk: "#46309F", label: "SPACE",
     voice: { narrator: "am_michael", provider: "kokoro" },
@@ -81,7 +81,7 @@ export const CHANNELS: {
     filmsPath: "films/channels/space", creation: { key: "pocket_universe", name: "The Pocket Universe" },
   },
   {
-    topic: "whatif", slug: "whatif", name: "Back of the Envelope", provisional: false,
+    topic: "whatif", slug: "whatif", name: "Possibility Lab", provisional: false,
     tagline: "Impossible questions, honest assumptions, real calculations.",
     color: "#EB63FF", colorInk: "#A21CAF", label: "WHAT IF?",
     voice: { narrator: "TBD: auditioning", provider: "kokoro" },
@@ -93,15 +93,15 @@ export const CHANNELS: {
       examples: ["What if every cat meowed at the same time?"],
       avoid: ["presenting a scenario as a prediction", "hidden assumptions", "fake precision"],
     },
-    filmsPath: null, creation: { key: "rift_dragon", name: "The Rift Dragon" },
+    filmsPath: "films/channels/whatif", creation: { key: "rift_dragon", name: "The Rift Dragon" },
   },
 ];
 
 /** The planned first season of a channel that has nothing imported yet: shown as "Season 1 in production" with these
  *  titles until its series is in the database (the import's slate then takes over). Titles only, never counts. */
 export const PLANNED_SEASONS: Record<string, { label: string; titles: string[] }> = {
-  skincare: { label: "Season 1", titles: ["The dead layer", "Does SPF 100 beat SPF 50?", "Bath fingers", "What a tan is", "Same cells, every colour", "Goosebumps"] },
-  whatif: { label: "Season 1", titles: ["Through the Earth", "Everyone, one place", "All the ants", "Count to a billion", "Everybody jump", "Every cat at once"] },
+  skincare: { label: "Season 1", titles: ["The fight you never saw", "Where a glow comes from", "What's in a scar", "The deadliest dose", "The sunscreen experiment", "Same list as cigarettes"] },
+  whatif: { label: "Season 1", titles: ["Through the Earth", "Everyone, one place", "All the ants", "Count to a billion", "Everybody jump", "Every raindrop at once"] },
 };
 
 export const CHALLENGES: Record<Topic, { tier: "intro" | "series" | "advanced" | "masterwork"; key: string; title: string; description: string; check: string }[]> = {

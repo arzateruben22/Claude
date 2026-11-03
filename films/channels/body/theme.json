@@ -1,7 +1,7 @@
 {
-  "_doc": "Meanwhile, Inside (the human-body channel): 'surgical green'. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py (tokens, scene, labels, contrast). Hexes are the bible's (films/channels/body/bible.md §2) with the cross-check's fixes: O₂ is white with an 'O₂' glyph and a ring, CO₂ is slate, immune gets a dashed ring, lining is sage, the title's accent word is chartreuse (pulse stays on blood only), and the rim light is mint. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8), so a 540×960 draft is the final at half size. Not Lumevina (no rose or gold on black, no Inter, no glass bells), not Los Güeros, not Claude coral: contrast.py checks the distances.",
+  "_doc": "Body Backstage (the human-body channel): 'surgical green'. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py (tokens, scene, labels, contrast). Hexes are the bible's (films/channels/body/bible.md §2) with the cross-check's fixes: O₂ is white with an 'O₂' glyph and a ring, CO₂ is slate, immune gets a dashed ring, lining is sage, the title's accent word is chartreuse (pulse stays on blood only), and the rim light is mint. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8), so a 540×960 draft is the final at half size. Not Lumevina (no rose or gold on black, no Inter, no glass bells), not Los Güeros, not Claude coral: contrast.py checks the distances.",
   "id": "meanwhile-inside",
-  "name": "Meanwhile, Inside",
+  "name": "Body Backstage",
   "channel": "body",
   "promise": "What your body is doing right now, while you watch.",
   "tokens": {

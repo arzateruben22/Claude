@@ -1,4 +1,4 @@
-"""Compile Light Minute No. 006, "Your speed": script + voice timings + this direction → film.json and sheet.json.
+"""Compile One More Orbit No. 006, "Your speed": script + voice timings + this direction → film.json and sheet.json.
 Every moment hangs on a beat or a spoken word; every physical number comes from claims.json.
 
   python3 -I films/channels/space/ep06/compile.py
@@ -161,8 +161,8 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "Light Minute · No. 006", "title": "Your *speed*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: trees or *stars*", "follow": "Light Minute · No. 007",
+TITLE = {"series": "One More Orbit · No. 006", "title": "Your *speed*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next orbit: trees or *stars*", "follow": "One More Orbit · No. 007",
        "next": "One lap of the galaxy takes the Sun about\u00a0230 million years."}   # footnote (c9); "about" stays with its number
 CUE = {"last": A("vo05:Last"), "cab0": t_cab0, "cab1": t_cab1, "jolt": t_jolt, "ride": A("vo04:ride"), "jm": t_jm, "rd": t_rd, "zoom": t_zoom, "p0": t_p0, "p1": t_p1, "e0": t_e0, "e1": t_e1, "j0": t_j0, "j1": t_j1, "lap": A("vo05:One"), "gcring": A("vo07:To"), "eq": A("vo02:equator")}
 POSTER = A("vo05:appeared", 0.4)

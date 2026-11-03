@@ -1,4 +1,4 @@
-"""Compile Rest Frame No. 003, "Where does the bounce go?": script + voice timings + this direction → film.json and
+"""Compile Reality Rulebook No. 003, "Where does the bounce go?": script + voice timings + this direction → film.json and
 sheet.json, as in episodes 1 and 2. Every moment hangs on a beat or a spoken word; every physical moment (a top, a
 contact, the stacked hit, the tennis ball's peak) is solved backwards through the closed-form motion and the clock.
 
@@ -331,7 +331,7 @@ CAM = {
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
-TITLE = {"series": "Rest Frame · No. 003", "title": "Where does the *bounce* go?", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+TITLE = {"series": "Reality Rulebook · No. 003", "title": "Where does the *bounce* go?", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
 # caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
 CAP_FIX = [
     'Even if it all / stays in the ball: | about three thousandths / of a degree.',
@@ -349,7 +349,7 @@ film = {
     "labels": LABELS, "badges": BADGES, "cam": CAM, "hookNote": {"slow": [0.0, F_h], "paused": [F_h, cut("normal")]},
     "captionY": 0.632, "title": TITLE,
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
-    "end": {"title": "Next drop: the hammer and the *feather*", "follow": "Follow Rest Frame",
+    "end": {"title": "Next drop: the hammer and the *feather*", "follow": "Follow Reality Rulebook",
             "foot": "Joule, 1850: 772 foot-pounds warm a pound of water 1 °F. Today's value is 778."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }

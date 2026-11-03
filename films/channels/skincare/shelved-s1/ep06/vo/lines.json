@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep06/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why do we get goosebumps? We hardly have fur.",
+   "stars": [
+    "goosebumps"
+   ],
+   "phonemes": "wˌaɪ dˈuː wiː ɡɛt ɡˈuːsbʌmps? wiː hˈɑːdli hav fˈɜː.",
+   "speed": 0.8,
+   "file": "01.wav",
+   "dur": 3.273,
+   "sha256": "45f587b0fb3588b705dbd1a178ce667cf22e15afcefb9cd6d7d60627c3d62b0c"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Nearly every hair has its own tiny muscle, and when we're cold or frightened, a nerve tugs it, pulling the hair upright and the skin into a bump.",
+   "stars": [
+    "bump"
+   ],
+   "phonemes": "nˌiəli ˈɛvɹɪ hˈeə hɐz ɪts ˈəʊn tˈaɪni mˈʌsəl, and wɛn wiə kˈəʊld ɔː fɹˈaɪtənd, ɐ nˈɜːv tˈʌɡz ɪt, pˈʊlɪŋ ðə hˈeəɹ ˈʌpɹaɪt and ðə skˈɪn ˌɪntʊ ɐ bˈʌmp.",
+   "speed": 0.8,
+   "file": "02.wav",
+   "dur": 9.921,
+   "sha256": "2b837516bd1ef6d76e8154467f46aef819acdba5a986cc02bf5a9b89e2b138a0"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "In a furry animal, that fluffs the coat into a blanket of trapped air. We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs.",
+   "stars": [
+    "air"
+   ],
+   "phonemes": "ɪn ɐ fˈɜːɹi ˈanɪməl, ðat flˈʌfs ðə kˈəʊt ˌɪntʊ ɐ blˈaŋkɪt ɒv tɹˈapt ˈeə. wiː hav ɐbˌaʊt az mˈɛni hˈeə fˈɒlɪkəlz az ˈeɪ ʧˌɪmpænzˈiː , bˌʌt aʊəz ɡɹˈəʊ fˈaɪn, ˈɔːlməʊst ɪnvˈɪzɪbəl hˈeəz.",
+   "speed": 0.86,
+   "file": "03.wav",
+   "dur": 10.709,
+   "sha256": "14100ff2b40df5c79e81c7aa0226dbdf95e8fd715c848e2112de245ca3142275"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "So the bumps look like a leftover. But a team at Harvard found that nerve also reaches the stem cells that grow hair, and the muscle holds it in place.",
+   "stars": [
+    "place"
+   ],
+   "phonemes": "sˌəʊ ðə bˈʌmps lˈʊk lˈaɪk ɐ lˈɛftəʊvə. bˌʌt ɐ tˈiːm at hˈɑːvəd fˈaʊnd ðat nˈɜːv ˈɔːlsəʊ ɹˈiːtʃɪz ðə stˈɛm sˈɛlz ðat ɡɹˈəʊ hˈeə, and ðə mˈʌsəl hˈəʊldz ɪt ɪn plˈeɪs.",
+   "speed": 0.78,
+   "file": "04.wav",
+   "dur": 10.946,
+   "sha256": "76bb0c7506ac484452d75e65e7e8533ba642ea17105e93badddbd5a917cdfb09"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "In the cold, that nerve wakes the stem cells, and the mice grew new hair sooner. Take the little muscle away, and the wiring fades.",
+   "stars": [
+    "sooner"
+   ],
+   "phonemes": "ɪnðə kˈəʊld, ðat nˈɜːv wˈeɪks ðə stˈɛm sˈɛlz, and ðə mˈaɪs ɡɹˈuː njˈuː hˈeə sˈuːnə. tˈeɪk ðə lˈɪtəl mˈʌsəl ɐwˈeɪ, and ðə wˈaɪəɹɪŋ fˈeɪdz.",
+   "speed": 0.8,
+   "file": "05.wav",
+   "dur": 9.053,
+   "sha256": "44a580cc68e53da025a20e8b8138ad017b9a6026c3681b389cfc76e848a5d455"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "And most of the hairs it tends are thinner than a third of a sheet of paper.",
+   "stars": [
+    "paper"
+   ],
+   "phonemes": "and mˈəʊst əv ðə hˈeəz ɪt tˈɛndz ɑː θˈɪnə ðˌanə θˈɜːd əvə ʃˈiːt ɒv pˈeɪpə.",
+   "speed": 0.64,
+   "file": "06.wav",
+   "dur": 6.244,
+   "sha256": "473f63694e83976427170949aa1c8958661bab103d03229571ad7dd8cc075a88"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So why do we still get goosebumps? Because the muscle that raises a hair still looks after it.",
+   "stars": [
+    "looks after it"
+   ],
+   "phonemes": "sˌəʊ wˌaɪ dˈuː wiː stˈɪl ɡɛt ɡˈuːsbʌmps? bɪkˈɒz ðə mˈʌsəl ðat ɹˈeɪzɪz ɐ hˈeə stˈɪl lˈʊks ˈaftəɹ ɪt.",
+   "speed": 0.76,
+   "file": "07.wav",
+   "dur": 6.695,
+   "sha256": "ac1e8eeeaf1c30f9e7e98a6efa91f84564cc39a39974d29efc45098da82d2871"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "That's the outer layer, for now. Next season, we go deeper.",
+   "stars": [
+    "deeper"
+   ],
+   "phonemes": "ðats ðɪ ˈaʊtə lˈeɪə, fɔː nˈaʊ. nˈɛkst sˈiːzən, wiː ɡˌəʊ dˈiːpə.",
+   "speed": 0.86,
+   "file": "08.wav",
+   "dur": 3.696,
+   "sha256": "a9d70a495d2b02453a3001efc092f33e2f0733483041c84e9124b627ecc2d66a"
+  }
+ ]
+}

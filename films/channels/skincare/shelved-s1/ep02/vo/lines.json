@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep02/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Bigger number, bigger shield? On a sunscreen, not the way you'd think.",
+   "stars": [
+    "shield"
+   ],
+   "phonemes": "bˈɪɡə nˈʌmbə, bˈɪɡə ʃˈiːld? ˌɒn ɐ sˈʌnskɹiːn, nˌɒt ðə wˈeɪ juːd θˈɪŋk.",
+   "speed": 0.86,
+   "file": "01.wav",
+   "dur": 4.083,
+   "sha256": "ff93845f1c8af45870b96e022cf72abfebb9b60250340499120d29148fa02183"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "The number isn't a percentage. It's a ratio: how much more burning light your skin can take under the film before it reddens.",
+   "stars": [
+    "reddens"
+   ],
+   "phonemes": "ðə nˈʌmbəɹ ˌɪzənt ɐ pəsˈɛntɪdʒ. ɪts ɐ ɹˈeɪʃɪˌəʊ: hˌaʊ mˈʌtʃ mˈɔː bˈɜːnɪŋ lˈaɪt jɔː skˈɪn kan tˈeɪk ˌʌndə ðə fˈɪlm bɪfˌɔːɹ ɪt ɹˈɛdənz.",
+   "speed": 0.82,
+   "file": "02.wav",
+   "dur": 8.007,
+   "sha256": "77fa596e8b6c15d846e85941cbc95413d08989c0fbb639e9598c342594f6724d"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Flip it around, and both let only a thin sliver of that light through, so the bigger number blocks barely more.",
+   "stars": [
+    "barely"
+   ],
+   "phonemes": "flˈɪp ɪt ɐɹˈaʊnd, and bˈəʊθ lˈɛt ˈəʊnli ɐ θˈɪn slˈɪvəɹ ɒv ðat lˈaɪt θɹˈuː, sˌəʊ ðə bˈɪɡə nˈʌmbə blˈɒks bˈeəli mˈɔː.",
+   "speed": 0.76,
+   "file": "03.wav",
+   "dur": 7.735,
+   "sha256": "72920d6bef49adbdc32d6dba08f00da6d5dd3f19dd35f1c813c8923eb4927fc9"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "But look at what actually gets in. Half as much. That's the real difference, as long as the film is as thick as the lab's.",
+   "stars": [
+    "in"
+   ],
+   "phonemes": "bˌʌt lˈʊk at wɒt ˈaktʃuːəli ɡˈɛts ˈɪn. hˈɑːf az mˈʌtʃ. ðats ðə ɹˈiəl dˈɪfɹəns, az lˈɒŋ az ðə fˈɪlm ɪz az θˈɪk az ðə lˈabz.",
+   "speed": 0.72,
+   "file": "04.wav",
+   "dur": 9.362,
+   "sha256": "a8df600c4645c9b0d326409faa142e45f53e9add97ac0113b00636aeffc89e21"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "But real people, studies found, spread a quarter to half as much, and protection falls well below the label. How far is still argued.",
+   "stars": [
+    "argued"
+   ],
+   "phonemes": "bˌʌt ɹˈiəl pˈiːpəl, stˈʌdiz fˈaʊnd, spɹˈɛd ɐ kwˈɔːtə tə hˈɑːf az mˈʌtʃ, and pɹətˈɛkʃən fˈɔːlz wˈɛl bɪlˌəʊ ðə lˈeɪbəl. hˌaʊ fˈɑːɹ ɪz stˈɪl ˈɑːɡjuːd.",
+   "speed": 0.82,
+   "file": "05.wav",
+   "dur": 8.643,
+   "sha256": "b88f152860dda9cbd2453dfc52f92ffdd6bfc09d79ec2afbab6eca493a3d163f"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "That lab layer is about as thick as the dead layer under it. A fifth of a sheet of paper.",
+   "stars": [
+    "paper"
+   ],
+   "phonemes": "ðat lˈab lˈeɪəɹ ɪz ɐbˌaʊt az θˈɪk az ðə dˈɛd lˈeɪəɹ ˈʌndəɹ ɪt. ɐ fˈɪfθ əvə ʃˈiːt ɒv pˈeɪpə.",
+   "speed": 0.72,
+   "file": "06.wav",
+   "dur": 7.313,
+   "sha256": "b93977f06924f58a8bc23e5de504e808a603fb672f7ae49bf7b43320b94d5a0e"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So the bigger number isn't twice the shield. It's half the light getting in, when there's enough of it.",
+   "stars": [
+    "in"
+   ],
+   "phonemes": "sˌəʊ ðə bˈɪɡə nˈʌmbəɹ ˌɪzənt twˈaɪs ðə ʃˈiːld. ɪts hˈɑːf ðə lˈaɪt ɡˌɛtɪŋ ˈɪn, wˌɛn ðeəz ɪnˈʌf ɒv ɪt.",
+   "speed": 0.72,
+   "file": "07.wav",
+   "dur": 6.961,
+   "sha256": "ebf77b9e78e9ac520fdfb2d11e94d2311474897967947206837902b95d289e86"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: why do fingers wrinkle in the bath, but not your arm?",
+   "stars": [
+    "arm"
+   ],
+   "phonemes": "nˈɛkst: wˌaɪ dˈuː fˈɪŋɡəz ɹˈɪŋkəl ɪnðə bˈaθ, bˌʌt nˌɒt jɔːɹ ˈɑːm?",
+   "speed": 0.76,
+   "file": "08.wav",
+   "dur": 4.287,
+   "sha256": "5d7eeef66d48dd83b93b643c74b18494ae99c28f6040b3414514df87c8e1d0b6"
+  }
+ ]
+}

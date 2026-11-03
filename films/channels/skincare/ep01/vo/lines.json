@@ -1,0 +1,118 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep01/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Is this spot new? Its fight began under skin that looked perfectly clear.",
+   "stars": [
+    "new"
+   ],
+   "phonemes": "ɪz ðɪs spˈɒt njˈuː? ɪts fˈaɪt bɪɡˈan ˌʌndə skˈɪn ðat lˈʊkt pˈɜːfɛktlˌɪ klˈiə.",
+   "speed": 0.82,
+   "file": "01.wav",
+   "dur": 4.901,
+   "sha256": "ea79af595c8569f189c9effda2babcc2901888369e43e49d2fd5c3da8e34993d"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Follow faces photo by photo, and more than one new red spot in four rises from skin that looked clear. So what was happening underneath?",
+   "stars": [
+    "clear"
+   ],
+   "phonemes": "fˈɒləʊ fˈeɪsɪz fˈəʊtəʊ baɪ fˈəʊtəʊ, and mˈɔː ðɐn wˈɒn njˈuː ɹˈɛd spˈɒt ɪn fˈɔː ɹˈaɪzɪz fɹɒm skˈɪn ðat lˈʊkt klˈiə. sˌəʊ wɒt wɒz hˈapənɪŋ ˌʌndənˈiːθ?",
+   "speed": 0.82,
+   "file": "02.wav",
+   "dur": 9.116,
+   "sha256": "6905d078ba225aea2bd50382a995fd3cbba9f58ae44d11683cf7152a1c287b12"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Beneath that clear skin, the defence has already gathered, immune cells crowding the follicle, some as thickly as in a red spot.",
+   "stars": [
+    "spot"
+   ],
+   "phonemes": "bɪnˌiːθ ðat klˈiə skˈɪn, ðə dɪfˈɛns hɐz ɔːlɹˌɛdi ɡˈaðəd, ɪmjˈuːn sˈɛlz kɹˈaʊdɪŋ ðə fˈɒlɪkəl , sˌʌm az θˈɪkli az ɪn ɐ ɹˈɛd spˈɒt.",
+   "speed": 0.82,
+   "file": "03.wav",
+   "dur": 8.318,
+   "sha256": "102b75c4033ba6166bbfb31afd8180c980802f1d3340d3194decab9002970e6e"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "It's easy to picture an infection. But it's the most common bacterium in clear, oily skin, and skin with acne carries no more. What makes the spot is largely your body's answer.",
+   "stars": [
+    "answer"
+   ],
+   "phonemes": "ɪts ˈiːzi tə pˈɪktʃəɹ ɐn ɪnfˈɛkʃən. bˌʌt ɪts ðə mˈəʊst kˈɒmən bæktˈɪəriəm ɪn klˈiə, ˈɔɪli skˈɪn, and skˈɪn wɪð ˈaknɪ kˈaɹiz nˈəʊmˌɔː. wˌɒt mˌeɪks ðə spˈɒt ɪz lˈɑːdʒli jɔː bˈɒdiz ˈansə.",
+   "speed": 0.82,
+   "file": "04.wav",
+   "dur": 11.866,
+   "sha256": "abb5061427528356de89d0c90837236041f44e907f24cf64251558098d54c10f"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "White cells flood in until the follicle's wall can give way, spilling the fight deeper. Each day, your marrow makes several for every person on Earth.",
+   "stars": [
+    "deeper",
+    "Earth"
+   ],
+   "phonemes": "wˈaɪt sˈɛlz flˈʌd ɪn ʌntˈɪl ðə fˈɒlɪkəl ˈɛs wˈɔːl kan ɡˈɪv wˈeɪ, spˈɪlɪŋ ðə fˈaɪt dˈiːpə. ˈiːtʃ dˈeɪ, jɔː mˈaɹəʊ mˌeɪks sˈɛvɹəl fɔːɹ ˈɛvɹɪ pˈɜːsən ˌɒn ˈɜːθ.",
+   "speed": 0.82,
+   "file": "05.wav",
+   "dur": 9.302,
+   "sha256": "effa2afe68cf7267dd94ae640da1ef78568518c6f858095a3764e9e8d015d34f"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "And pus is the fight's fallen: white cells so small that ten in a row still wouldn't span this paper's thickness.",
+   "stars": [
+    "thickness"
+   ],
+   "phonemes": "and pˈʌs ɪz ðə fˈaɪts fˈɔːlən: wˈaɪt sˈɛlz sˌəʊ smˈɔːl ðat tˈɛn ˌɪnɐ ɹˈəʊ stˈɪl wˈʊdənt spˈan ðɪs pˈeɪpəz θˈɪknəs.",
+   "speed": 0.79,
+   "file": "06.wav",
+   "dur": 7.85,
+   "sha256": "ccddd1ab9c32f59fdb7baad5b7d24a466fe0bd48bc9eda42c7a19123fec4ffbf"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Is it new? No: a fight begun out of sight, against a germ that even helps build your skin's barrier.",
+   "stars": [
+    "barrier"
+   ],
+   "phonemes": "ɪz ɪt njˈuː? nˈəʊ: ɐ fˈaɪt bɪɡˈʌn ˌaʊtəv sˈaɪt, ɐɡˈɛnst ɐ dʒˈɜːm ðat ˈiːvən hˈɛlps bˈɪld jɔː skˈɪnz bˈaɹiə.",
+   "speed": 0.79,
+   "file": "07.wav",
+   "dur": 7.399,
+   "sha256": "ff61b3ad98b6e2d5eb3b517ab647859a5feed29d453c67e1cb580ced87767f85"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: the light on your face, and where it really goes.",
+   "stars": [
+    "goes"
+   ],
+   "phonemes": "nˈɛkst: ðə lˈaɪt ˌɒn jɔː fˈeɪs, and wˌeəɹ ɪt ɹˈiəlɪ ɡˈəʊz.",
+   "speed": 0.75,
+   "file": "08.wav",
+   "dur": 4.047,
+   "sha256": "cfe8ed30506c73553f8c3d223c050fdbd502a0d8f5c0aeb9ccd8126cfebc9a4d"
+  }
+ ]
+}

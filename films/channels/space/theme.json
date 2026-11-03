@@ -1,7 +1,7 @@
 {
- "_doc": "Light Minute (the space channel): indigo night, teal for light, lilac for gravity. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py. Hexes are the bible's (films/channels/space/bible.md §2). The cross-check's fixes: captions in Lexend (Atkinson is the body channel's caption face), counters in Martian Mono, Unbounded stays the display face; labels and counters chime on pings, never glass bells. 'bg' is an alias of 'void' for the page. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8). Not Lumevina, not Los Güeros, not Claude coral, and no red, amber, gold or rose: contrast.py checks the distances.",
+ "_doc": "One More Orbit (the space channel): indigo night, teal for light, lilac for gravity. Read by kits/cinema/film/page.mjs (tokens → --<name>, roles → --hud-<role>, fonts → @font-face, type → --font-<role>, safe, captionY, cssText) and by kits/cinema/sci/contrast.py. Hexes are the bible's (films/channels/space/bible.md §2). The cross-check's fixes: captions in Lexend (Atkinson is the body channel's caption face), counters in Martian Mono, Unbounded stays the display face; labels and counters chime on pings, never glass bells. 'bg' is an alias of 'void' for the page. Sizes are px at 1080×1920; the roles carry the same sizes in vmin (px / 10.8). Not Lumevina, not Los Güeros, not Claude coral, and no red, amber, gold or rose: contrast.py checks the distances.",
  "id": "light-minute",
- "name": "Light Minute",
+ "name": "One More Orbit",
  "channel": "space",
  "promise": "One minute, one 'whoa' about the universe, every number sourced.",
 

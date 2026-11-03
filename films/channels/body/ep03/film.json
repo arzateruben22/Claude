@@ -937,7 +937,7 @@
   67.2
  ],
  "title": {
-  "series": "Meanwhile, Inside · No. 03",
+  "series": "Body Backstage · No. 03",
   "title": "The *jump*",
   "t1": 2.5333,
   "sig": 0.0,
@@ -947,8 +947,8 @@
  "end": {
   "t0": 72.8,
   "title": "Next, inside: *the gap*",
-  "next": "Meanwhile, Inside · No. 04",
-  "follow": "Follow Meanwhile, Inside",
+  "next": "Body Backstage · No. 04",
+  "follow": "Follow Body Backstage",
   "fact": "In 1850 Helmholtz timed a frog's nerve signal at about 27 metres a second."
  },
  "look": {

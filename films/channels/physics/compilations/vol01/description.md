@@ -56,5 +56,5 @@ Sources (every number in these episodes is checked against a source)
 - JoVE Science Education, Conservation of Angular Momentum (adapted from OpenStax): https://app.jove.com/v/12716
 - Guinness World Records, Fastest spin on ice skates: https://www.guinnessworldrecords.com/world-records/fastest-spin-ice-skating
 
-Narration is a synthetic voice (AI-generated). Music and sound design are original, made for Rest Frame. Type: Archivo, IBM Plex Sans, IBM Plex Mono (SIL Open Font License).
+Narration is a synthetic voice (AI-generated). Music and sound design are original, made for Reality Rulebook. Type: Archivo, IBM Plex Sans, IBM Plex Mono (SIL Open Font License).
 TODO before posting: the channel handle and links, the expert sign-offs listed in each episode's review/HUMAN-REVIEW.md, and YouTube's altered/synthetic content setting.

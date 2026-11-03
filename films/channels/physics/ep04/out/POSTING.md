@@ -1,13 +1,13 @@
-# Posting sheet: Rest Frame No. 004, "The hammer and the feather"
+# Posting sheet: Reality Rulebook No. 004, "The hammer and the feather"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `rest-frame-004-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `rest-frame-004-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `reality-rulebook-004-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `reality-rulebook-004-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-The hammer and the feather | Rest Frame No. 004
+The hammer and the feather | Reality Rulebook No. 004
 
 **Description**
 
@@ -30,12 +30,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Rest Frame: Everyday things, slowed down until the physics shows.
+Reality Rulebook: Everyday things, slowed down until the physics shows.
 
 #Shorts #physics #science
 ```
 
-**Tags**: Rest Frame, physics, science, hammer, feather, explainer, education
+**Tags**: Reality Rulebook, physics, science, hammer, feather, explainer, education
 
 **Captions**: upload the .srt (English).
 

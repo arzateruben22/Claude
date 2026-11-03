@@ -1,4 +1,4 @@
-"""Compile Light Minute No. 005, "How big is the Sun": script + voice timings + this direction → film.json and
+"""Compile One More Orbit No. 005, "How big is the Sun": script + voice timings + this direction → film.json and
 sheet.json. Every moment hangs on a beat or a spoken word; every physical number comes from claims.json.
 
   python3 -I films/channels/space/ep05/compile.py
@@ -211,8 +211,8 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "Light Minute · No. 005", "title": "How big is the *Sun*", "t1": TITLE_T1, "sig": A("line:vo01:end", 0.05), "y": 0.17}   # below the hook's note
-END = {"title": "Next light: how fast are you *moving*", "follow": "Light Minute · No. 006",
+TITLE = {"series": "One More Orbit · No. 005", "title": "How big is the *Sun*", "t1": TITLE_T1, "sig": A("line:vo01:end", 0.05), "y": 0.17}   # below the hook's note
+END = {"title": "Next orbit: how fast are you *moving*", "follow": "One More Orbit · No. 006",
        "next": "The Sun holds about 99.8% of all the mass in the solar system."}   # footnote (c18; NASA)
 
 CUE = {"wide": t_wide, "side": t_side, "orbit": A("vo07:Sun#2"), "light": A("vo07:Light"), "twenty": A("vo07:twenty"), "x0": A("vo04:Bigger#2"), "x1": A("vo04:thousand"),

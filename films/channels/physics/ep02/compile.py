@@ -1,4 +1,4 @@
-"""Compile Rest Frame No. 002, "The swing's secret": script + voice timings + this direction → film.json (the
+"""Compile Reality Rulebook No. 002, "The swing's secret": script + voice timings + this direction → film.json (the
 scene's clock: shots, the time warp, the takes, the cue table, camera keys, labels, badges, captions, end card)
 and sheet.json (the studio's cue sheet). Nothing here is a hand-typed time: every moment hangs on a beat or a
 spoken word, and every physical moment (a release, a bottom pass, the realignment, the twentieth swing) is
@@ -368,7 +368,7 @@ CAM = {
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 
-TITLE = {"series": "Rest Frame · No. 002", "title": "The swing's *secret*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+TITLE = {"series": "Reality Rulebook · No. 002", "title": "The swing's *secret*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
 # caption pages the phrase pager can't break well on its own (set/captions_py.py: ' / ' row, ' | ' page)
 CAP_FIX = [
     'Ghosts every tenth / of a second | bunch up at the turns.',
@@ -388,7 +388,7 @@ film = {
     "cam": CAM, "spine": SPINE, "spineAt": SPINE_AT, "dim": DIMS, "gclock": CLOCK,
     "captionY": 0.632, "title": TITLE,
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
-    "end": {"title": "Next drop: where does the bounce *go*?", "follow": "Follow Rest Frame",
+    "end": {"title": "Next drop: where does the bounce *go*?", "follow": "Follow Reality Rulebook",
             "foot": "Huygens built the first pendulum clock in 1656. It kept time to about a minute a day."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }

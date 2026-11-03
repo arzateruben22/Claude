@@ -1,13 +1,13 @@
-# Posting sheet: Light Minute No. 004, "The falling Moon"
+# Posting sheet: One More Orbit No. 004, "The falling Moon"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `lightminute-004-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `lightminute-004-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `one-more-orbit-004-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `one-more-orbit-004-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-The falling Moon | Light Minute No. 004
+The falling Moon | One More Orbit No. 004
 
 **Description**
 
@@ -32,12 +32,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Light Minute: One minute, one 'whoa' about the universe, every number sourced.
+One More Orbit: One minute, one 'whoa' about the universe, every number sourced.
 
 #Shorts #space #astronomy
 ```
 
-**Tags**: Light Minute, space, astronomy, falling, moon, science, explainer, education
+**Tags**: One More Orbit, space, astronomy, falling, moon, science, explainer, education
 
 **Captions**: upload the .srt (English).
 

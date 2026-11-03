@@ -1,4 +1,4 @@
-"""Compile Meanwhile, Inside No. 06, "The exit": script + voice timings + this direction → film.json and sheet.json.
+"""Compile Body Backstage No. 06, "The exit": script + voice timings + this direction → film.json and sheet.json.
 Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word (A("vo05:pours")).
 
   python3 -I films/channels/body/ep06/compile.py
@@ -147,8 +147,8 @@ BADGES = [
 ]
 PANEL = {"t0": B["change"]["t0"] + 0.1, "t1": CUT["why"] - 0.1, "tissue": A("vo03:tissue", -0.1), "alive": A("vo03:Julius", -0.1), "out": [A("vo03:climbed", -0.2), A("vo03:out", 0.6)]}
 FIG = {"t0": CUT["tease"], "t1": DUR}
-TITLE = {"series": "Meanwhile, Inside · No. 06", "title": "The *exit*", "t1": round(A("vo01:This", 0.3), 4), "sig": 0.0, "y": 0.17}
-END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the spark*", "next": "Meanwhile, Inside · No. 07", "follow": "Follow Meanwhile, Inside",
+TITLE = {"series": "Body Backstage · No. 06", "title": "The *exit*", "t1": round(A("vo01:This", 0.3), 4), "sig": 0.0, "y": 0.17}
+END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the spark*", "next": "Body Backstage · No. 07", "follow": "Follow Body Backstage",
        "fact": "Augustus Waller saw blood cells cross capillary walls in 1846, 21 years before Cohnheim."}
 LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": B["tease"]["t0"] - 0.3, "region": [0.42, 0.52]}   # the bone marrow (the pelvis and thigh bones)
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(DUR / BEAT) + 1)]

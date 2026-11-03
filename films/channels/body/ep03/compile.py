@@ -1,4 +1,4 @@
-"""Compile Meanwhile, Inside No. 03, "The jump": script + voice timings + this direction → film.json and sheet.json.
+"""Compile Body Backstage No. 03, "The jump": script + voice timings + this direction → film.json and sheet.json.
 Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word (A("vo03:timed")).
 
   python3 -I films/channels/body/ep03/compile.py
@@ -154,8 +154,8 @@ BADGES = [
     {"id": "nts-tease", "text": "not to scale", "t0": FIG["t1"] - 0.3, "t1": EC},
     {"id": "slow-tease", "text": "slowed", "slot": "tl", "t0": round(TEASE_T0 - 0.3, 4), "t1": EC},
 ]
-TITLE = {"series": "Meanwhile, Inside · No. 03", "title": "The *jump*", "t1": round(A("vo01:The", 0.3), 4), "sig": 0.0, "y": 0.17}
-END = {"t0": EC, "title": "Next, inside: *the gap*", "next": "Meanwhile, Inside · No. 04", "follow": "Follow Meanwhile, Inside",
+TITLE = {"series": "Body Backstage · No. 03", "title": "The *jump*", "t1": round(A("vo01:The", 0.3), 4), "sig": 0.0, "y": 0.17}
+END = {"t0": EC, "title": "Next, inside: *the gap*", "next": "Body Backstage · No. 04", "follow": "Follow Body Backstage",
        "fact": "In 1850 Helmholtz timed a frog's nerve signal at about 27 metres a second."}   # c5, c6
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 

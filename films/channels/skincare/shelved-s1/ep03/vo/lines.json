@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep03/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why do wet fingers wrinkle? Your arm stays smooth in the same bath.",
+   "stars": [
+    "wrinkle"
+   ],
+   "phonemes": "wˌaɪ dˈuː wˈɛt fˈɪŋɡəz ɹˈɪŋkəl? jɔːɹ ˈɑːm stˈeɪz smˈuːð ɪnðə sˈeɪm bˈaθ.",
+   "speed": 0.82,
+   "file": "01.wav",
+   "dur": 4.431,
+   "sha256": "ddb2233559a4ad045eef297cd2cdca1f551634174060ddd2f06936072dfadff3"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "It looks like skin soaking up water and swelling, like a sponge. It's the story we grew up with, and it's wrong.",
+   "stars": [
+    "wrong"
+   ],
+   "phonemes": "ɪt lˈʊks lˈaɪk skˈɪn sˈəʊkɪŋ ˌʌp wˈɔːtə and swˈɛlɪŋ, lˈaɪk ɐ spˈʌndʒ. ɪts ðə stˈɔːɹi wiː ɡɹˈuː ˈʌp wɪð, and ɪts ɹˈɒŋ.",
+   "speed": 0.7,
+   "file": "02.wav",
+   "dur": 8.187,
+   "sha256": "fe2610a87fbb84d971338b26ad8a1a5997b1d184c7df3e80a7e4ee746b862c48"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Almost a century ago, doctors noticed something odd: a finger whose nerve had been cut stayed perfectly smooth in the bath.",
+   "stars": [
+    "smooth"
+   ],
+   "phonemes": "ˈɔːlməʊst ɐ sˈɛntʃəɹi ɐɡˈəʊ, dˈɒktəz nˈəʊtɪst sˈʌmθɪŋ ˈɒd: ɐ fˈɪŋɡə hˌuːz nˈɜːv hɐdbɪn kˈʌt stˈeɪd pˈɜːfɛktlˌɪ smˈuːð ɪnðə bˈaθ.",
+   "speed": 0.8,
+   "file": "03.wav",
+   "dur": 8.58,
+   "sha256": "d60583fbada5b2a4c76ff2cbd7a1cf101c68197867a505ffe8f4f6919e382d78"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "So the wrinkles come from your nerves. In water, they narrow the tiny vessels under each fingertip, the pad shrinks a little, and the skin on top buckles.",
+   "stars": [
+    "buckles"
+   ],
+   "phonemes": "sˌəʊ ðə ɹˈɪŋkəlz kˈʌm fɹɒm jɔː nˈɜːvz. ɪn wˈɔːtə, ðeɪ nˈaɹəʊ ðə tˈaɪni vˈɛsəlz ˌʌndəɹ ˈiːtʃ fˈɪŋɡətˌɪp, ðə pˈad ʃɹˈɪŋks ɐ lˈɪtəl, and ðə skˈɪn ˌɒn tˈɒp bˈʌkəlz.",
+   "speed": 0.8,
+   "file": "04.wav",
+   "dur": 10.256,
+   "sha256": "66e8c376fb123fa312e01015e3b4b6e01cb6d694683753a3c397d916aeb8d66d"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "A wrinkle is a reflex, one doctors use to test a nerve. Why we have it is argued: one study found a wet grip, the next found none.",
+   "stars": [
+    "argued"
+   ],
+   "phonemes": "ɐ ɹˈɪŋkəl ɪz ɐ ɹˈiːflɛks, wˈɒn dˈɒktəz jˈuːs tə tˈɛst ɐ nˈɜːv. wˌaɪ wiː hav ɪt ɪz ˈɑːɡjuːd: wˈɒn stˈʌdi fˈaʊnd ɐ wˈɛt ɡɹˈɪp, ðə nˈɛkst fˈaʊnd nˈɒn.",
+   "speed": 0.73,
+   "file": "05.wav",
+   "dur": 10.688,
+   "sha256": "de6f9de4398458e18b15e6977a608800216bf44242620871d485b476c44de55b"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of paper.",
+   "stars": [
+    "paper"
+   ],
+   "phonemes": "ɪt ˈəʊnli hˈapənz ɒnðə hˈeələs skˈɪn ɒv hˈandz and fˈiːt, wˌɪtʃ ˈɔːlsəʊ kˈaɹi ðə θˈɪkɪst dˈɛd lˈeɪə, nˌiəli tˈuː ʃˈiːts ɒv pˈeɪpə.",
+   "speed": 0.8,
+   "file": "06.wav",
+   "dur": 8.643,
+   "sha256": "5f1c8f800ab14641f99bfac1922e5118ad26ad40e70f2512ba03bec4d9ab0fa6"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So your fingers don't wrinkle because they're soaked. They wrinkle because your nerves decide to.",
+   "stars": [
+    "decide"
+   ],
+   "phonemes": "sˌəʊ jɔː fˈɪŋɡəz dˈəʊnt ɹˈɪŋkəl bɪkˈɒz ðeɪə sˈəʊkt. ðeɪ ɹˈɪŋkəl bɪkˈɒz jɔː nˈɜːvz dɪsˈaɪd tuː.",
+   "speed": 0.8,
+   "file": "07.wav",
+   "dur": 5.885,
+   "sha256": "5d383023424f149ba5248a0c4f67c2b4a221042e73410e8c121ae53d84fa9048"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: is a tan really a shield for your skin?",
+   "stars": [
+    "shield"
+   ],
+   "phonemes": "nˈɛkst: ɪz ɐ tˈan ɹˈiəlɪ ɐ ʃˈiːld fɔː jɔː skˈɪn?",
+   "speed": 0.73,
+   "file": "08.wav",
+   "dur": 3.871,
+   "sha256": "c289117664e19ae6dc92c15a9505b0ea28e042b3a233340283505706bd56d7b0"
+  }
+ ]
+}

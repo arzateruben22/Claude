@@ -1,0 +1,457 @@
+{
+ "duration": 75.0,
+ "fps": 30,
+ "preset": "outerlayer-slide",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.6,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 5.6,
+   "t1": 15.8667,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 15.8667,
+   "t1": 25.2,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 25.2,
+   "t1": 39.6667,
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 39.6667,
+   "t1": 52.7333,
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 52.7333,
+   "t1": 61.6,
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 61.6,
+   "t1": 70.0,
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 70.0,
+   "t1": 75.0,
+   "energy": 0.35
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 5.6
+  },
+  {
+   "t": 1.4,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 2.0,
+   "kind": "label",
+   "tag": "l-spot",
+   "pos": [
+    0.712,
+    0.417
+   ]
+  },
+  {
+   "t": 2.0,
+   "kind": "badge",
+   "tag": "b-model"
+  },
+  {
+   "t": 3.8000000000000003,
+   "kind": "badge",
+   "tag": "b-uv"
+  },
+  {
+   "t": 5.6,
+   "kind": "section",
+   "id": "normal",
+   "t1": 15.8667
+  },
+  {
+   "t": 7.706,
+   "kind": "badge",
+   "tag": "b-illus"
+  },
+  {
+   "t": 7.806,
+   "kind": "cell.land",
+   "tag": "flip1"
+  },
+  {
+   "t": 8.711,
+   "kind": "cell.land",
+   "tag": "flip2"
+  },
+  {
+   "t": 9.617,
+   "kind": "cell.land",
+   "tag": "flip3"
+  },
+  {
+   "t": 10.066666666666666,
+   "kind": "badge",
+   "tag": "b-do"
+  },
+  {
+   "t": 10.366666666666667,
+   "kind": "counter.show",
+   "tag": "c-28",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 10.522,
+   "kind": "cell.land",
+   "tag": "flip4"
+  },
+  {
+   "t": 11.428,
+   "kind": "cell.land",
+   "tag": "flip5"
+  },
+  {
+   "t": 12.333,
+   "kind": "cell.land",
+   "tag": "flip6"
+  },
+  {
+   "t": 12.333333333333334,
+   "kind": "reveal",
+   "tag": "uv-switch"
+  },
+  {
+   "t": 15.8667,
+   "kind": "section",
+   "id": "change",
+   "t1": 25.2
+  },
+  {
+   "t": 15.8667,
+   "kind": "scale.jump",
+   "tag": "into-skin"
+  },
+  {
+   "t": 17.8,
+   "kind": "badge",
+   "tag": "b-simp"
+  },
+  {
+   "t": 17.8,
+   "kind": "badge",
+   "tag": "b-photo"
+  },
+  {
+   "t": 18.8,
+   "kind": "label",
+   "tag": "l-ring",
+   "pos": [
+    0.606,
+    0.505
+   ]
+  },
+  {
+   "t": 19.866666666666667,
+   "kind": "badge",
+   "tag": "b-jer"
+  },
+  {
+   "t": 19.866666666666667,
+   "kind": "badge",
+   "tag": "b-back"
+  },
+  {
+   "t": 20.53333333333333,
+   "kind": "diffuse",
+   "tag": "ring"
+  },
+  {
+   "t": 25.2,
+   "kind": "section",
+   "id": "why",
+   "t1": 39.6667
+  },
+  {
+   "t": 25.2,
+   "kind": "badge",
+   "tag": "b-modp"
+  },
+  {
+   "t": 29.066666666666666,
+   "kind": "label",
+   "tag": "l-bact",
+   "pos": [
+    0.548,
+    0.549
+   ]
+  },
+  {
+   "t": 30.433333333333334,
+   "kind": "label",
+   "tag": "l-wo",
+   "pos": [
+    0.664,
+    0.224
+   ]
+  },
+  {
+   "t": 32.53333333333333,
+   "kind": "label",
+   "tag": "l-with",
+   "pos": [
+    0.254,
+    0.221
+   ]
+  },
+  {
+   "t": 36.63333333333333,
+   "kind": "badge",
+   "tag": "b-deb"
+  },
+  {
+   "t": 36.63333333333333,
+   "kind": "reveal",
+   "tag": "answer"
+  },
+  {
+   "t": 37.13333333333333,
+   "kind": "counter.show",
+   "tag": "c-ans",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 39.6667,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 52.7333
+  },
+  {
+   "t": 39.6667,
+   "kind": "badge",
+   "tag": "b-model2"
+  },
+  {
+   "t": 39.6667,
+   "kind": "swell",
+   "tag": "whoa",
+   "t1": 52.7333
+  },
+  {
+   "t": 40.8,
+   "kind": "label",
+   "tag": "l-white",
+   "pos": [
+    0.476,
+    0.247
+   ]
+  },
+  {
+   "t": 42.699999999999996,
+   "kind": "dissolve",
+   "tag": "rupture",
+   "t1": 45.333333333333336
+  },
+  {
+   "t": 44.333333333333336,
+   "kind": "label",
+   "tag": "l-spill",
+   "pos": [
+    0.2,
+    0.424
+   ]
+  },
+  {
+   "t": 45.6,
+   "kind": "badge",
+   "tag": "b-model2s"
+  },
+  {
+   "t": 45.9,
+   "kind": "badge",
+   "tag": "b-sum"
+  },
+  {
+   "t": 47.13333333333333,
+   "kind": "counter.show",
+   "tag": "c-day",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 52.3333,
+   "kind": "badge",
+   "tag": "b-model2b"
+  },
+  {
+   "t": 52.7333,
+   "kind": "section",
+   "id": "toscale",
+   "t1": 61.6
+  },
+  {
+   "t": 53.0333,
+   "kind": "badge",
+   "tag": "b-scale"
+  },
+  {
+   "t": 54.43333333333334,
+   "kind": "scale",
+   "tag": "g-cell"
+  },
+  {
+   "t": 56.833333333333336,
+   "kind": "scale",
+   "tag": "g-ten"
+  },
+  {
+   "t": 59.53333333333333,
+   "kind": "reveal",
+   "tag": "g-paper"
+  },
+  {
+   "t": 61.6,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 70.0
+  },
+  {
+   "t": 61.6,
+   "kind": "badge",
+   "tag": "b-model3"
+  },
+  {
+   "t": 61.6,
+   "kind": "scale.jump",
+   "tag": "out-of-spot"
+  },
+  {
+   "t": 62.93333333333333,
+   "kind": "reveal",
+   "tag": "uv-switch2"
+  },
+  {
+   "t": 63.13333333333333,
+   "kind": "counter.show",
+   "tag": "c-final",
+   "pos": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "t": 63.73333333333333,
+   "kind": "label",
+   "tag": "l-rings",
+   "pos": [
+    0.515,
+    0.529
+   ]
+  },
+  {
+   "t": 65.96666666666667,
+   "kind": "badge",
+   "tag": "b-alm"
+  },
+  {
+   "t": 68.36666666666666,
+   "kind": "label",
+   "tag": "l-barrier",
+   "pos": [
+    0.578,
+    0.417
+   ]
+  },
+  {
+   "t": 70.0,
+   "kind": "section",
+   "id": "tease",
+   "t1": 75.0
+  },
+  {
+   "t": 70.36666666666666,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.9,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 16.166666666666668,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 25.5,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 39.96666666666667,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 53.03333333333333,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 61.9,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 70.3,
+   "file": "vo/08.wav"
+  }
+ ],
+ "shown": {
+  "l-spot": 2.0333,
+  "l-ring": 18.8333,
+  "l-bact": 29.1,
+  "l-wo": 30.4667,
+  "l-with": 32.5667,
+  "l-white": 40.8333,
+  "l-spill": 44.3667,
+  "l-rings": 63.7667,
+  "l-barrier": 68.4
+ }
+}

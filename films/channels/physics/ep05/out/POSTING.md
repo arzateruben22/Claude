@@ -1,13 +1,13 @@
-# Posting sheet: Rest Frame No. 005, "The spinning chair"
+# Posting sheet: Reality Rulebook No. 005, "The spinning chair"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `rest-frame-005-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `rest-frame-005-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `reality-rulebook-005-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `reality-rulebook-005-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-The spinning chair | Rest Frame No. 005
+The spinning chair | Reality Rulebook No. 005
 
 **Description**
 
@@ -26,12 +26,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Rest Frame: Everyday things, slowed down until the physics shows.
+Reality Rulebook: Everyday things, slowed down until the physics shows.
 
 #Shorts #physics #science
 ```
 
-**Tags**: Rest Frame, physics, science, spinning, chair, explainer, education
+**Tags**: Reality Rulebook, physics, science, spinning, chair, explainer, education
 
 **Captions**: upload the .srt (English).
 

@@ -1,4 +1,4 @@
-# Meanwhile, Inside No. 06: "The exit" (draft; a physiologist signs off before it posts)
+# Body Backstage No. 06: "The exit" (draft; a physiologist signs off before it posts)
 
 About 74 s, 9:16, narrated by a synthetic voice (bf_emma, labelled as AI), with an original score.
 Built from the bible's episode-6 row (`../bible.md`, §7) to the story standard
@@ -94,7 +94,7 @@ vo: *Meanwhile*, as you watched, your bone marrow made new neutrophils. {c22} Mo
 
 ## tease {shot: pull back out of the fingertip, up the arm, to the heart; a small patch high in its upper right chamber flickers chartreuse on each lub (picture only; its sources belong to episode 7) · end card held ≥ 2 s, the tally holding its last value; under it the membrane iris returns to frame 0, the cell halfway through the wall (a seamless replay; the tally starts again from 0); the card's fact: Augustus Waller saw blood cells cross capillary walls in 1846, 21 years before Cohnheim (Philosophical Magazine 29: 397) · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.4–73.9 s)
 vo: Next: the spark. {-} What sets off nearly every *heartbeat* you have? {-}
-end card: "Next: The spark" · "Meanwhile, Inside · No. 07"
+end card: "Next: The spark" · "Body Backstage · No. 07"
 
 ## Notes
 - The tally (the spine readout, from frame 0) counts new neutrophils at 173,611 a second: 1.5 × 10¹⁰

@@ -1,0 +1,1021 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Why do wet fingers wrinkle? Your arm stays smooth in the same bath.",
+   "heard": "Why do wet fingers wrinkle? Your arm stays smooth in the same bath.",
+   "words": [
+    {
+     "w": "Why",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 0.325,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "wet",
+     "start": 0.575,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "fingers",
+     "start": 0.62,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "wrinkle?",
+     "start": 1.04,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "Your",
+     "start": 2.01,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "arm",
+     "start": 2.245,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "stays",
+     "start": 2.645,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "smooth",
+     "start": 3.05,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 3.35,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.56,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 3.685,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "bath.",
+     "start": 3.955,
+     "end": 4.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "It looks like skin soaking up water and swelling, like a sponge. It's the story we grew up with, and it's wrong.",
+   "heard": "It looks like skin soaking up water and swelling like a sponge. It's the story we grew up with, and it's wrong.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "looks",
+     "start": 0.23,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 0.73,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 0.995,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "soaking",
+     "start": 1.505,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 2.01,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 2.1,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.74,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "swelling,",
+     "start": 2.885,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 3.58,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.755,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "sponge.",
+     "start": 4.08,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "It's",
+     "start": 5.31,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.59,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "story",
+     "start": 5.83,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 6.22,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "grew",
+     "start": 6.385,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 6.83,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "with,",
+     "start": 6.91,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.22,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "it's",
+     "start": 7.38,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "wrong.",
+     "start": 7.665,
+     "end": 8.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Almost a century ago, doctors noticed something odd: a finger whose nerve had been cut stayed perfectly smooth in the bath.",
+   "heard": "Almost a century ago, doctors noticed something odd. A finger whose nerve had been cut stayed perfectly smooth in the bath.",
+   "words": [
+    {
+     "w": "Almost",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.465,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "century",
+     "start": 0.665,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "ago,",
+     "start": 1.155,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "doctors",
+     "start": 1.85,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "noticed",
+     "start": 2.295,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "something",
+     "start": 3.045,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "odd:",
+     "start": 3.325,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.255,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "finger",
+     "start": 4.45,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "whose",
+     "start": 4.87,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "nerve",
+     "start": 5.05,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "had",
+     "start": 5.655,
+     "end": 5.705,
+     "heard": true
+    },
+    {
+     "w": "been",
+     "start": 5.685,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "cut",
+     "start": 5.845,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "stayed",
+     "start": 6.29,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "perfectly",
+     "start": 6.655,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "smooth",
+     "start": 7.34,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.82,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.105,
+     "end": 8.155,
+     "heard": true
+    },
+    {
+     "w": "bath.",
+     "start": 8.135,
+     "end": 8.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "So the wrinkles come from your nerves. In water, they narrow the tiny vessels under each fingertip, the pad shrinks a little, and the skin on top buckles.",
+   "heard": "So the wrinkles come from your nerves. In water they narrow the tiny vessels under each finger tip, the pad shrinks a little, and the skin on top buckles.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.265,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "wrinkles",
+     "start": 0.295,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "come",
+     "start": 0.935,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 1.195,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.255,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "nerves.",
+     "start": 1.48,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 2.705,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "water,",
+     "start": 2.735,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 3.455,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "narrow",
+     "start": 3.485,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.2,
+     "end": 4.25,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 4.23,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "vessels",
+     "start": 4.66,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 5.135,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 5.375,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "fingertip,",
+     "start": 5.54,
+     "end": 6.64,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 6.755,
+     "end": 6.805,
+     "heard": true
+    },
+    {
+     "w": "pad",
+     "start": 6.865,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "shrinks",
+     "start": 7.17,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.885,
+     "end": 7.935,
+     "heard": true
+    },
+    {
+     "w": "little,",
+     "start": 7.93,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.49,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.52,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 8.845,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 9.15,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "top",
+     "start": 9.28,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "buckles.",
+     "start": 9.64,
+     "end": 10.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "A wrinkle is a reflex, one doctors use to test a nerve. Why we have it is argued: one study found a wet grip, the next found none.",
+   "heard": "A wrinkle is a reflex one doctors used to test a nerve. Why we have it is argued. One study found a wet grip, the next found none.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "wrinkle",
+     "start": 0.295,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.825,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.855,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "reflex,",
+     "start": 1.005,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 1.975,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "doctors",
+     "start": 2.375,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "use",
+     "start": 2.905,
+     "end": 3.2,
+     "heard": false
+    },
+    {
+     "w": "to",
+     "start": 3.2,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "test",
+     "start": 3.345,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.675,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "nerve.",
+     "start": 3.75,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "Why",
+     "start": 5.025,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 5.33,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 5.36,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 5.775,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 5.815,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "argued:",
+     "start": 6.025,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 7.225,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "study",
+     "start": 7.545,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "found",
+     "start": 8.14,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.41,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "wet",
+     "start": 8.44,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "grip,",
+     "start": 8.9,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.375,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "next",
+     "start": 9.75,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "found",
+     "start": 9.87,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "none.",
+     "start": 10.155,
+     "end": 10.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of paper.",
+   "heard": "It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of paper.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 0.215,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "happens",
+     "start": 0.735,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.12,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.165,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "hairless",
+     "start": 1.435,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 2.12,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.45,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "hands",
+     "start": 2.555,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.025,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "feet,",
+     "start": 3.25,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "which",
+     "start": 4.135,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "also",
+     "start": 4.22,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "carry",
+     "start": 4.72,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.095,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "thickest",
+     "start": 5.285,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "dead",
+     "start": 5.81,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "layer,",
+     "start": 6.025,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 6.935,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 7.34,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "sheets",
+     "start": 7.695,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.865,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "paper.",
+     "start": 8.095,
+     "end": 8.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So your fingers don't wrinkle because they're soaked. They wrinkle because your nerves decide to.",
+   "heard": "So your fingers don't wrinkle because they are soaked. They wrinkle because your nerves decide to.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.03,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.405,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "fingers",
+     "start": 0.49,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "don't",
+     "start": 1.02,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "wrinkle",
+     "start": 1.195,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "because",
+     "start": 1.71,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "they're",
+     "start": 2.045,
+     "end": 2.32,
+     "heard": false
+    },
+    {
+     "w": "soaked.",
+     "start": 2.385,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 3.305,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "wrinkle",
+     "start": 3.335,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "because",
+     "start": 3.955,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 4.245,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "nerves",
+     "start": 4.28,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "decide",
+     "start": 4.97,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "to.",
+     "start": 5.52,
+     "end": 5.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: is a tan really a shield for your skin?",
+   "heard": "Next, is a tan really a shield for your skin?",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.04,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.845,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.875,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "tan",
+     "start": 1.15,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "really",
+     "start": 1.625,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.065,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "shield",
+     "start": 2.15,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 2.675,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.76,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "skin?",
+     "start": 3.33,
+     "end": 3.84,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

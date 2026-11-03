@@ -17,6 +17,7 @@ CASES = [
     ("Measure it: nine gaps, a twentieth of a second each.", "Measure it: nine gaps, a twentieth of a second each."),
     ("Which ball lands first? One thrown sideways, one just dropped.", "Which ball lands first? One thrown sideways, one just dropped."),
     ("a dimpled disc, about seven and a half micrometers.", "a dimpled disc, about 7.5 micrometers."),
+    ("there are about two and a half million ants.", "there are about 2.5 million ants."),
     ("The tightest vessels are about three micrometers: less than half its width.", "The tightest vessels are about 3 micrometers: less than half its width."),
     ("It coasts at about seventeen kilometers a second.", "It coasts at about 17 kilometers a second."),
     ("Earth to the Moon in six hours.", "Earth to the Moon in 6 hours."),

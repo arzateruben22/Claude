@@ -1,5 +1,7 @@
 # Series bible: the human body channel
 
+> **Channel name: Body Backstage** (the owner's rename, 2 Nov 2026; was Meanwhile, Inside). On screen from then on: the title series line "Body Backstage · No. …" and the end card. Older notes below keep the old name.
+
 Files are in `/tmp/claude-0/-home-user-Claude/b65d3a2f-52c6-526e-b15b-5f369330bc42/scratchpad/series/body/`: `BIBLE.md`, `meanwhile-pulse.json`, `ep01-script.md` and `contrast.py`. Nothing in `/home/user/Claude` was changed.
 
 **Sourcing:** the proxy blocked page fetches. Every source below was checked only through search-result excerpts from the publisher's own pages (NCBI/StatPearls, PubMed, BioNumbers, university pages). TODO: a person opens each link and confirms the wording before a script is locked.

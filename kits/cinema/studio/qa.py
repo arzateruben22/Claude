@@ -32,9 +32,13 @@ METHOD = {"bell": "rise", "chime": "rise", "tick": "rise",
           # the science channels: struck and pinged tones ring, so they rise; clicks, knocks and
           # noise match their own waveform; sweeps by their loudest moment; slow beds by shape
           "mallet": "rise", "ping": "rise", "blip": "rise", "boing": "rise", "thump": "rise",
+          # (Outer Layer: a blown reed also rings, so it rises)
+          "reed": "rise",
           "knock": "wave", "shutter": "wave", "zap": "wave", "squish": "wave",
           "glide": "peak",
-          "ramp": "shape", "hum": "shape", "drone": "shape"}
+          "ramp": "shape", "hum": "shape", "drone": "shape",
+          # Back of the Envelope: a pluck rings (rise); a pencil scratch matches its own waveform
+          "pluck": "rise", "scratch": "wave"}
 SLOW = {"peak", "shape"}
 
 

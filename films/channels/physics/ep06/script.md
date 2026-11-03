@@ -1,4 +1,4 @@
-# Rest Frame No. 006: "The ten-meter straw" (draft; a physicist signs off before it posts)
+# Reality Rulebook No. 006: "The ten-meter straw" (draft; a physicist signs off before it posts)
 
 About 70 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labeled as AI), with an
 original score. Built from the bible's episode 6 (`../bible.md`, §7 #6) and episode 5's tease ("Next: a
@@ -53,7 +53,7 @@ vo: Straws don't pull. {c10} The atmosphere *pushes*, and its push runs out near
 
 ## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (67.5–74 s)
 vo: Next: frozen water, floating on liquid water. {c14} Why doesn't it *sink*? {-}
-end card: "Next drop: why ice *floats*" · "Follow Rest Frame" · footnote: "Torricelli, 1644: the same air held a column of mercury about 76 cm high."
+end card: "Next drop: why ice *floats*" · "Follow Reality Rulebook" · footnote: "Torricelli, 1644: the same air held a column of mercury about 76 cm high."
 
 ## Notes
 - The heights are computed from the pressures (h = Δp / ρg); the rise's speed is an illustration (badged).

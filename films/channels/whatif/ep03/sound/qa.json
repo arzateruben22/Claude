@@ -1,0 +1,262 @@
+{
+ "compose_s": 9.0,
+ "master_s": 17.2,
+ "master": {
+  "gain_db": 2.82,
+  "iterations": 3,
+  "lufs": -14.08,
+  "true_peak_db": -2.0,
+  "ceiling_db": -2.0,
+  "limiting_max_db": -4.66,
+  "aac": {
+   "lufs": -14.1,
+   "true_peak_db": -1.8,
+   "lra": 5.0
+  },
+  "stems_sum_error_db": -240.0
+ },
+ "sync": {
+  "per_kind": {
+   "answer.box": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "arrive": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "label": {
+    "n": 6,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "section": {
+    "n": 6,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "signature": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "term.write": {
+    "n": 9,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   }
+  },
+  "pass": true,
+  "events": [
+   {
+    "kind": "term.write",
+    "tag": "spine-0",
+    "show": 0.9,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "signature",
+    "tag": "title",
+    "show": 4.7,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 5.4,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-ants",
+    "show": 13.0333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-us",
+    "show": 13.3333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-1",
+    "show": 14.1667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 15.6,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-2",
+    "show": 22.9,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "arrive",
+    "tag": "dip",
+    "show": 24.0667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 27.0,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-mm",
+    "show": 30.7333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-tip",
+    "show": 31.2333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "answer.box",
+    "tag": "spine-3",
+    "show": 39.0333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "arrive",
+    "tag": "fifth",
+    "show": 39.1333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 42.0,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-4",
+    "show": 43.9,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-wild",
+    "show": 44.3,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-5",
+    "show": 47.3333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-you",
+    "show": 49.6333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 55.2,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-6",
+    "show": 55.2333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-12 Mt C \u00f7 60 Mt C",
+    "show": 55.3667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-heaviest estimate, 50 Mt C",
+    "show": 56.0667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-lightest estimate, 3.6 Mt C",
+    "show": 59.7,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 61.2,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "signature",
+    "tag": "end",
+    "show": 67.2667,
+    "method": "rise",
+    "err_ms": -0.0
+   }
+  ]
+ },
+ "picture_sync": [],
+ "under_voice": {
+  "music_lufs": -27.6,
+  "dialog_lufs": -13.6,
+  "gap_lu": 14.1,
+  "pass": true
+ },
+ "phone": {
+  "correlation": 0.89,
+  "mono_loss_db": 0.11,
+  "dialog_mono_loss_db": 0.07,
+  "pass": true
+ }
+}

@@ -1,4 +1,4 @@
-# Rest Frame No. 002: "The swing's secret" (draft; a physicist signs off before it posts)
+# Reality Rulebook No. 002: "The swing's secret" (draft; a physicist signs off before it posts)
 
 About 72 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labeled as AI), with an
 original score. Built from the bible's episode 2 (`../bible.md`, §7 #2) and episode 1's tease
@@ -48,7 +48,7 @@ vo: Length sets the beat. {c13} A wider swing just moves faster: *almost* fast e
 
 ## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (66.5–72 s)
 vo: Next: a dropped ball, bouncing back. {-} It never reaches your *hand*. {c15}
-end card: "Next drop: where does the bounce go?" · "Follow Rest Frame"
+end card: "Next drop: where does the bounce go?" · "Follow Reality Rulebook"
 
 ## Notes
 - The scene runs the exact pendulum (no small-angle approximation), without air or friction; the

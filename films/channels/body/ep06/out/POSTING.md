@@ -1,13 +1,13 @@
-# Posting sheet: Meanwhile, Inside No. 006, "The exit"
+# Posting sheet: Body Backstage No. 006, "The exit"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `meanwhile-inside-006-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `meanwhile-inside-006-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `body-backstage-006-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `body-backstage-006-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-The exit | Meanwhile, Inside No. 006
+The exit | Body Backstage No. 006
 
 **Description**
 
@@ -38,12 +38,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Meanwhile, Inside: What your body is doing right now, while you watch.
+Body Backstage: What your body is doing right now, while you watch.
 
 #Shorts #humanbody #biology
 ```
 
-**Tags**: Meanwhile, Inside, humanbody, biology, exit, science, explainer, education
+**Tags**: Body Backstage, humanbody, biology, exit, science, explainer, education
 
 **Captions**: upload the .srt (English).
 

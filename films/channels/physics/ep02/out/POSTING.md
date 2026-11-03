@@ -1,13 +1,13 @@
-# Posting sheet: Rest Frame No. 002, "The swing's secret"
+# Posting sheet: Reality Rulebook No. 002, "The swing's secret"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `rest-frame-002-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `rest-frame-002-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `reality-rulebook-002-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `reality-rulebook-002-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-The swing's secret | Rest Frame No. 002
+The swing's secret | Reality Rulebook No. 002
 
 **Description**
 
@@ -29,12 +29,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Rest Frame: Everyday things, slowed down until the physics shows.
+Reality Rulebook: Everyday things, slowed down until the physics shows.
 
 #Shorts #physics #science
 ```
 
-**Tags**: Rest Frame, physics, science, swings, secret, explainer, education
+**Tags**: Reality Rulebook, physics, science, swings, secret, explainer, education
 
 **Captions**: upload the .srt (English).
 

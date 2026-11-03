@@ -1,4 +1,4 @@
-# Rest Frame No. 004: "The hammer and the feather" (draft; a physicist signs off before it posts)
+# Reality Rulebook No. 004: "The hammer and the feather" (draft; a physicist signs off before it posts)
 
 About 70 s, 9:16, narrated by a synthetic voice (af_bella at speed 1.0, labeled as AI), with an
 original score. Built from the bible's episode 4 (`../bible.md`, §7 #4) and episode 3's tease ("Next: a
@@ -47,7 +47,7 @@ vo: Gravity speeds them up equally. {c13} Only the *air* tells them apart. {c14}
 
 ## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (66.5–73.5 s)
 vo: Next: a spinning office chair. {-} Pull in your arms, and it spins faster. {c15} *Why*? {-}
-end card: "Next drop: the spinning chair" · "Follow Rest Frame" · footnote: "The feather was a falcon's. Apollo 15's lunar module was named Falcon."
+end card: "Next drop: the spinning chair" · "Follow Reality Rulebook" · footnote: "The feather was a falcon's. Apollo 15's lunar module was named Falcon."
 
 ## Notes
 - The falls are closed form (no simulation). On Earth the hammer is drawn without air (its drag over 1.6 m

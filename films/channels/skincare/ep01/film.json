@@ -1,0 +1,1796 @@
+{
+ "id": "skin-sense-001",
+ "fps": 30,
+ "bpm": 64.2857,
+ "dur": 75.0,
+ "poster": 45.03333333333333,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "uv"
+  },
+  {
+   "at": 15.8667,
+   "name": "flight"
+  },
+  {
+   "at": 17.8,
+   "name": "follicle"
+  },
+  {
+   "at": 25.2,
+   "name": "pair"
+  },
+  {
+   "at": 39.6667,
+   "name": "rupture"
+  },
+  {
+   "at": 45.6,
+   "name": "stream"
+  },
+  {
+   "at": 52.7333,
+   "name": "gauge"
+  },
+  {
+   "at": 61.6,
+   "name": "rise"
+  },
+  {
+   "at": 62.2,
+   "name": "uv2"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.6,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 5.6,
+   "t1": 15.8667,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 15.8667,
+   "t1": 25.2,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 25.2,
+   "t1": 39.6667,
+   "line": "vo04",
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 39.6667,
+   "t1": 52.7333,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 52.7333,
+   "t1": 61.6,
+   "line": "vo06",
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 61.6,
+   "t1": 70.0,
+   "line": "vo07",
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 70.0,
+   "t1": 75.0,
+   "line": "vo08",
+   "energy": 0.35
+  }
+ ],
+ "tone": 0.18,
+ "flips": [
+  7.806,
+  8.711,
+  9.617,
+  10.522,
+  11.428,
+  12.333
+ ],
+ "keys": {
+  "porph": [
+   -1.0,
+   0.0
+  ],
+  "spotGone": [
+   10.522,
+   12.333
+  ],
+  "ring": [
+   20.53333333333333,
+   23.2
+  ],
+  "ringLit": [
+   18.6,
+   19.3
+  ],
+  "bact": [
+   28.666666666666668,
+   29.466666666666665
+  ],
+  "answer": [
+   36.63333333333333,
+   37.43333333333334
+  ],
+  "flood": [
+   40.5,
+   42.699999999999996
+  ],
+  "rupt": [
+   42.699999999999996,
+   45.333333333333336
+  ],
+  "rings": [
+   63.13333333333333,
+   63.93333333333333
+  ],
+  "stream": [
+   45.6,
+   52.7333
+  ],
+  "barrier": [
+   68.16666666666667,
+   69.36666666666666
+  ],
+  "wipe1": [
+   12.233333333333334,
+   12.933333333333334
+  ],
+  "wipe2": [
+   62.83333333333333,
+   63.53333333333333
+  ],
+  "dayOn": 7.456
+ },
+ "place": {
+  "fx": 5000.0,
+  "gx": 5700.0,
+  "tx": 1000.0,
+  "sx": 9000.0
+ },
+ "cam": {
+  "uv": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     -0.2,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 30,
+    "az": -7
+   },
+   {
+    "t": 1.3333333333333335,
+    "target": [
+     0,
+     -0.2,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 19,
+    "az": -3,
+    "ease": "out3"
+   },
+   {
+    "t": 5.6,
+    "target": [
+     0,
+     -0.2,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 18,
+    "az": -1,
+    "ease": "sine"
+   },
+   {
+    "t": 12.333333333333334,
+    "target": [
+     0,
+     -0.2,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 17,
+    "az": 0,
+    "ease": "inout2"
+   },
+   {
+    "t": 15.8667,
+    "target": [
+     0.72,
+     -0.45,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 6,
+    "az": 0,
+    "ease": "in2"
+   }
+  ],
+  "flight": [
+   {
+    "t": 15.8667,
+    "target": [
+     1000.0,
+     0,
+     6
+    ],
+    "el": 26,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 34,
+    "az": -6
+   },
+   {
+    "t": 16.8,
+    "target": [
+     1001.2,
+     0,
+     1.5
+    ],
+    "el": 34,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 20,
+    "az": -3,
+    "ease": "inout2"
+   },
+   {
+    "t": 17.8,
+    "target": [
+     1001.5,
+     -0.3,
+     0.4
+    ],
+    "el": 58,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 7,
+    "az": -1,
+    "ease": "in2"
+   }
+  ],
+  "follicle": [
+   {
+    "t": 17.8,
+    "target": [
+     5000.0,
+     -120,
+     0
+    ],
+    "el": 14,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.52,
+    "dist": 1500,
+    "az": -2
+   },
+   {
+    "t": 19.866666666666667,
+    "target": [
+     5000.0,
+     -260,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.52,
+    "dist": 2000,
+    "az": -4,
+    "ease": "inout2"
+   },
+   {
+    "t": 22.8,
+    "target": [
+     5130.0,
+     -260,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.52,
+    "dist": 1700,
+    "az": -3,
+    "ease": "inout2"
+   },
+   {
+    "t": 25.2,
+    "target": [
+     5000.0,
+     -270,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.52,
+    "dist": 2200,
+    "az": -2,
+    "ease": "inout2"
+   }
+  ],
+  "pair": [
+   {
+    "t": 25.2,
+    "target": [
+     5000.0,
+     -270,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 2200,
+    "az": -2
+   },
+   {
+    "t": 29.066666666666666,
+    "target": [
+     5350.0,
+     -280,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 4000,
+    "az": -1,
+    "ease": "inout2"
+   },
+   {
+    "t": 34.13333333333333,
+    "target": [
+     5330.0,
+     -280,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 3900,
+    "az": 0,
+    "ease": "sine"
+   },
+   {
+    "t": 36.833333333333336,
+    "target": [
+     5120.0,
+     -290,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.4,
+    "dist": 3100,
+    "az": 1,
+    "ease": "inout2"
+   },
+   {
+    "t": 39.6667,
+    "target": [
+     5000.0,
+     -300,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 2250,
+    "az": 1,
+    "ease": "in2"
+   }
+  ],
+  "rupture": [
+   {
+    "t": 39.6667,
+    "target": [
+     5000.0,
+     -300,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.42,
+    "dist": 2250,
+    "az": 1
+   },
+   {
+    "t": 40.8,
+    "target": [
+     5000.0,
+     -320,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.27,
+    "dist": 2350,
+    "az": 1,
+    "ease": "inout2"
+   },
+   {
+    "t": 42.9,
+    "target": [
+     5000.0,
+     -380,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.3,
+    "dist": 2000,
+    "az": 0,
+    "ease": "inout2"
+   },
+   {
+    "t": 45.6,
+    "target": [
+     5000.0,
+     -360,
+     0
+    ],
+    "el": 10,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.32,
+    "dist": 1900,
+    "az": -1,
+    "ease": "inout2"
+   }
+  ],
+  "stream": [
+   {
+    "t": 45.6,
+    "target": [
+     9000.0,
+     0,
+     0
+    ],
+    "el": 4,
+    "fov": 32,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 26,
+    "az": -14
+   },
+   {
+    "t": 52.7333,
+    "target": [
+     9006.0,
+     0,
+     0
+    ],
+    "el": 6,
+    "fov": 32,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 21,
+    "az": -6,
+    "ease": "sine"
+   }
+  ],
+  "gauge": [
+   {
+    "t": 52.7333,
+    "target": [
+     5000.0,
+     -380,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.66,
+    "fy": 0.46,
+    "dist": 2600,
+    "az": -2
+   },
+   {
+    "t": 61.6,
+    "target": [
+     5100.0,
+     -520,
+     0
+    ],
+    "el": 6,
+    "fov": 30,
+    "fx": 0.7,
+    "fy": 0.46,
+    "dist": 1500,
+    "az": -3,
+    "ease": "inout2"
+   }
+  ],
+  "rise": [
+   {
+    "t": 61.6,
+    "target": [
+     1001.5,
+     -0.3,
+     0.4
+    ],
+    "el": 60,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 6,
+    "az": -1
+   },
+   {
+    "t": 62.2,
+    "target": [
+     1000.5,
+     0,
+     2
+    ],
+    "el": 30,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 24,
+    "az": -3.4,
+    "ease": "out3"
+   }
+  ],
+  "uv2": [
+   {
+    "t": 62.2,
+    "target": [
+     0.72,
+     -0.45,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 9,
+    "az": 1
+   },
+   {
+    "t": 63.33333333333333,
+    "target": [
+     0,
+     -0.2,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 18,
+    "az": 0,
+    "ease": "out3"
+   },
+   {
+    "t": 76.5334,
+    "target": [
+     0,
+     -0.2,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 20,
+    "az": -2,
+    "ease": "sine"
+   }
+  ]
+ },
+ "cue": {
+  "new": 1.0333333333333334,
+  "clear1": 4.4,
+  "photo": 6.9,
+  "quarter": 10.366666666666667,
+  "clear2": 12.333333333333334,
+  "underneath": 14.333333333333334,
+  "beneath": 16.2,
+  "defence": 18.166666666666668,
+  "already": 18.8,
+  "immune": 19.866666666666667,
+  "crowding": 20.833333333333332,
+  "thickly": 22.8,
+  "spot3": 23.9,
+  "infection": 26.866666666666667,
+  "bacterium": 29.066666666666666,
+  "without": 33.733333333333334,
+  "answers": 36.833333333333336,
+  "flood": 40.8,
+  "wall": 42.4,
+  "give": 42.9,
+  "deeper": 44.833333333333336,
+  "squeeze": 45.9,
+  "further": 46.56666666666667,
+  "mark": 47.333333333333336,
+  "pus": 53.333333333333336,
+  "small": 56.833333333333336,
+  "ten": 57.46666666666667,
+  "paper": 59.733333333333334,
+  "no": 62.93333333333333,
+  "end": 64.06666666666666,
+  "sight": 65.16666666666667,
+  "spots4": 32.53333333333333,
+  "oily": 30.733333333333334,
+  "barrier": 68.76666666666667,
+  "likely": 48.8
+ },
+ "gauge": {
+  "rise": [
+   52.8333,
+   53.4333
+  ],
+  "pus": 53.233333333333334,
+  "sc": 54.43333333333334,
+  "ten": [
+   56.833333333333336,
+   58.46666666666667
+  ],
+  "paper": 59.53333333333333,
+  "back": [
+   61.300000000000004,
+   61.58
+  ],
+  "cell_um": 8.0,
+  "paper_um": 100.0,
+  "n": 10
+ },
+ "labels": [
+  {
+   "id": "l-spot",
+   "text": "the spot",
+   "kind": "cell",
+   "anchor": "spot",
+   "t0": 2.0,
+   "t1": 6.9,
+   "shot": "uv",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-ring",
+   "text": "white cells (immune)",
+   "kind": "water",
+   "anchor": "ring",
+   "t0": 18.8,
+   "t1": 24.75,
+   "shot": "follicle",
+   "side": 1,
+   "fixed": true
+  },
+  {
+   "id": "l-bact",
+   "text": "the same bacterium in both",
+   "kind": "uv",
+   "anchor": "bactMid",
+   "t0": 29.066666666666666,
+   "t1": 32.43333333333333,
+   "shot": "pair",
+   "side": 1,
+   "v": "below",
+   "fixed": true
+  },
+  {
+   "id": "l-with",
+   "text": "skin with acne",
+   "kind": "cell",
+   "anchor": "fWith",
+   "t0": 32.53333333333333,
+   "t1": 34.333333333333336,
+   "shot": "pair",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-wo",
+   "text": "clear, oily skin",
+   "kind": "cell",
+   "anchor": "fWo",
+   "t0": 30.433333333333334,
+   "t1": 32.18333333333333,
+   "shot": "pair",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-white",
+   "text": "more white cells",
+   "kind": "cell",
+   "anchor": "cell",
+   "t0": 40.8,
+   "t1": 42.9,
+   "shot": "rupture",
+   "side": 1,
+   "v": "below",
+   "fixed": true
+  },
+  {
+   "id": "l-spill",
+   "text": "the spill",
+   "kind": "cell",
+   "anchor": "spill",
+   "t0": 44.333333333333336,
+   "t1": 45.15,
+   "shot": "rupture",
+   "side": -1,
+   "fixed": true
+  },
+  {
+   "id": "l-barrier",
+   "text": "it helps build the barrier",
+   "kind": "uv",
+   "anchor": "spot",
+   "t0": 68.36666666666666,
+   "t1": 70.36666666666666,
+   "shot": "uv2",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-rings",
+   "text": "follicles already ringed",
+   "kind": "water",
+   "anchor": "rings",
+   "t0": 63.73333333333333,
+   "t1": 68.16666666666667,
+   "shot": "uv2",
+   "side": -1,
+   "v": "below",
+   "fixed": true
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-model",
+   "text": "model, not a photo",
+   "t0": 2.0,
+   "t1": 17.35,
+   "slot": "br"
+  },
+  {
+   "id": "b-uv",
+   "text": "UV: porphyrins glow orange-red",
+   "t0": 3.8000000000000003,
+   "t1": 6.8,
+   "slot": "bl"
+  },
+  {
+   "id": "b-do",
+   "text": "one study of 25 · Do et al., 2008",
+   "t0": 10.066666666666666,
+   "t1": 15.4167,
+   "slot": "tr"
+  },
+  {
+   "id": "b-illus",
+   "text": "illustration",
+   "t0": 7.706,
+   "t1": 15.4167,
+   "slot": "bl"
+  },
+  {
+   "id": "b-jer",
+   "text": "biopsy study · Jeremy et al., 2003",
+   "t0": 19.866666666666667,
+   "t1": 24.75,
+   "slot": "tl"
+  },
+  {
+   "id": "b-back",
+   "text": "acne patients' back skin",
+   "t0": 19.866666666666667,
+   "t1": 24.75,
+   "slot": "tr"
+  },
+  {
+   "id": "b-simp",
+   "text": "simplified",
+   "t0": 17.8,
+   "t1": 52.2833,
+   "slot": "br"
+  },
+  {
+   "id": "b-modp",
+   "text": "model on a tissue photo",
+   "t0": 25.2,
+   "t1": 36.43333333333334,
+   "slot": "tl"
+  },
+  {
+   "id": "b-deb",
+   "text": "debated",
+   "t0": 36.63333333333333,
+   "t1": 39.2167,
+   "slot": "tl"
+  },
+  {
+   "id": "b-model2",
+   "text": "model on a tissue photo",
+   "t0": 39.6667,
+   "t1": 45.15,
+   "slot": "tl"
+  },
+  {
+   "id": "b-model2s",
+   "text": "model, not a photo",
+   "t0": 45.6,
+   "t1": 52.2833,
+   "slot": "tl"
+  },
+  {
+   "id": "b-model2b",
+   "text": "model on a tissue photo",
+   "t0": 52.3333,
+   "t1": 53.4333,
+   "slot": "tl"
+  },
+  {
+   "id": "b-photo",
+   "text": "tissue photo (normal skin)",
+   "t0": 17.8,
+   "t1": 24.75,
+   "slot": "bl"
+  },
+  {
+   "id": "b-alm",
+   "text": "lab + mouse study · Almoughrabie 2023",
+   "t0": 65.96666666666667,
+   "t1": 70.36666666666666,
+   "slot": "tl"
+  },
+  {
+   "id": "b-sum",
+   "text": "neutrophils · Summers et al., 2010",
+   "t0": 45.9,
+   "t1": 52.2833,
+   "slot": "bl"
+  },
+  {
+   "id": "b-scale",
+   "text": "to scale · Ting-Beall, 1993",
+   "t0": 53.0333,
+   "t1": 61.15,
+   "slot": "tr"
+  },
+  {
+   "id": "b-model3",
+   "text": "model, not a photo",
+   "t0": 61.6,
+   "t1": 70.36666666666666,
+   "slot": "br"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-28",
+   "label": "of new red spots, from clear skin",
+   "text": "28%",
+   "t0": 10.366666666666667,
+   "t1": 15.4167,
+   "fmt": "text",
+   "at": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "id": "c-ans",
+   "label": "the spot is largely",
+   "text": "the body's answer",
+   "t0": 37.13333333333333,
+   "t1": 39.2167,
+   "fmt": "text",
+   "at": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "id": "c-day",
+   "label": "new white cells, each day",
+   "text": "≈ 50–100 billion",
+   "t0": 47.13333333333333,
+   "t1": 52.2833,
+   "fmt": "text",
+   "at": [
+    0.5,
+    0.215
+   ]
+  },
+  {
+   "id": "c-final",
+   "label": "the spot",
+   "text": "not new",
+   "t0": 63.13333333333333,
+   "t1": 69.86666666666666,
+   "fmt": "text",
+   "at": [
+    0.5,
+    0.215
+   ]
+  }
+ ],
+ "pills": [],
+ "title": {
+  "series": "Skin Sense · No. 001",
+  "title": "The fight you *never saw*",
+  "t0": 0.6,
+  "t1": 3.9000000000000004,
+  "sig": 1.4
+ },
+ "endCard": 70.36666666666666,
+ "end": {
+  "title": "Next: where the light on your face *goes*",
+  "follow": "Skin Sense · No. 002",
+  "next": "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008). Narration: synthetic voice (AI)."
+ },
+ "captions": [
+  {
+   "t0": 0.087,
+   "t1": 1.647,
+   "lines": [
+    [
+     [
+      "Is",
+      0.087
+     ],
+     [
+      "this spot",
+      0.337
+     ],
+     [
+      "new?",
+      1.042
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.647,
+   "t1": 3.737,
+   "lines": [
+    [
+     [
+      "Its fight",
+      1.647
+     ],
+     [
+      "began",
+      2.182
+     ],
+     [
+      "under",
+      2.642
+     ]
+    ],
+    [
+     [
+      "skin",
+      2.882
+     ],
+     [
+      "that",
+      3.232
+     ],
+     [
+      "looked",
+      3.367
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.737,
+   "t1": 5.247,
+   "lines": [
+    [
+     [
+      "perfectly clear.",
+      3.737
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.93,
+   "t1": 8.56,
+   "lines": [
+    [
+     [
+      "Follow",
+      5.93
+     ],
+     [
+      "faces",
+      6.36
+     ]
+    ],
+    [
+     [
+      "photo by photo,",
+      6.895
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.56,
+   "t1": 10.61,
+   "lines": [
+    [
+     [
+      "and",
+      8.56
+     ],
+     [
+      "more",
+      8.59
+     ],
+     [
+      "than",
+      8.89
+     ]
+    ],
+    [
+     [
+      "one new red spot",
+      8.92
+     ],
+     [
+      "in four",
+      10.085
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.61,
+   "t1": 13.29,
+   "lines": [
+    [
+     [
+      "rises",
+      10.61
+     ],
+     [
+      "from",
+      11.205
+     ],
+     [
+      "skin",
+      11.565
+     ]
+    ],
+    [
+     [
+      "that",
+      11.99
+     ],
+     [
+      "looked clear.",
+      12.18
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.29,
+   "t1": 15.24,
+   "lines": [
+    [
+     [
+      "So",
+      13.29
+     ],
+     [
+      "what was happening",
+      13.385
+     ]
+    ],
+    [
+     [
+      "underneath?",
+      14.32
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.187,
+   "t1": 18.082,
+   "lines": [
+    [
+     [
+      "Beneath",
+      16.187
+     ],
+     [
+      "that",
+      16.637
+     ],
+     [
+      "clear skin,",
+      16.817
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 18.082,
+   "t1": 19.872,
+   "lines": [
+    [
+     [
+      "the defence",
+      18.082
+     ],
+     [
+      "has",
+      18.672
+     ]
+    ],
+    [
+     [
+      "already gathered,",
+      18.792
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.872,
+   "t1": 22.347,
+   "lines": [
+    [
+     [
+      "immune cells",
+      19.872
+     ],
+     [
+      "crowding",
+      20.842
+     ]
+    ],
+    [
+     [
+      "the follicle,",
+      21.302
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.347,
+   "t1": 24.707,
+   "lines": [
+    [
+     [
+      "some",
+      22.347
+     ],
+     [
+      "as",
+      22.622
+     ],
+     [
+      "thickly",
+      22.812
+     ]
+    ],
+    [
+     [
+      "as",
+      23.287
+     ],
+     [
+      "in",
+      23.432
+     ],
+     [
+      "a red spot.",
+      23.697
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 25.52,
+   "t1": 27.985,
+   "lines": [
+    [
+     [
+      "It's",
+      25.52
+     ],
+     [
+      "easy",
+      25.76
+     ],
+     [
+      "to",
+      26.095
+     ],
+     [
+      "picture",
+      26.225
+     ]
+    ],
+    [
+     [
+      "an infection.",
+      26.5
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.985,
+   "t1": 30.01,
+   "lines": [
+    [
+     [
+      "But",
+      27.985
+     ],
+     [
+      "it's",
+      28.015
+     ],
+     [
+      "the most common",
+      28.28
+     ]
+    ],
+    [
+     [
+      "bacterium",
+      29.07
+     ],
+     [
+      "in",
+      29.82
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.01,
+   "t1": 33.38,
+   "lines": [
+    [
+     [
+      "clear, oily skin,",
+      30.01
+     ],
+     [
+      "and",
+      31.74
+     ]
+    ],
+    [
+     [
+      "skin with acne",
+      31.995
+     ],
+     [
+      "carries",
+      32.955
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.38,
+   "t1": 34.445,
+   "lines": [
+    [
+     [
+      "no more.",
+      33.38
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.445,
+   "t1": 36.1,
+   "lines": [
+    [
+     [
+      "What",
+      34.445
+     ],
+     [
+      "makes",
+      34.61
+     ],
+     [
+      "the",
+      34.94
+     ]
+    ],
+    [
+     [
+      "spot",
+      35.185
+     ],
+     [
+      "is",
+      35.425
+     ],
+     [
+      "largely",
+      35.63
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 36.1,
+   "t1": 37.64,
+   "lines": [
+    [
+     [
+      "your body's answer.",
+      36.1
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 39.987,
+   "t1": 42.412,
+   "lines": [
+    [
+     [
+      "White cells",
+      39.987
+     ],
+     [
+      "flood in",
+      40.807
+     ]
+    ],
+    [
+     [
+      "until",
+      41.267
+     ],
+     [
+      "the",
+      41.577
+     ],
+     [
+      "follicle's",
+      41.752
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 42.412,
+   "t1": 43.812,
+   "lines": [
+    [
+     [
+      "wall",
+      42.412
+     ],
+     [
+      "can",
+      42.712
+     ],
+     [
+      "give way,",
+      42.897
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.812,
+   "t1": 45.892,
+   "lines": [
+    [
+     [
+      "spilling",
+      43.812
+     ]
+    ],
+    [
+     [
+      "the fight deeper.",
+      44.337
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 45.892,
+   "t1": 47.982,
+   "lines": [
+    [
+     [
+      "Each day,",
+      45.892
+     ],
+     [
+      "your marrow",
+      46.537
+     ]
+    ],
+    [
+     [
+      "makes",
+      47.262
+     ],
+     [
+      "several",
+      47.322
+     ],
+     [
+      "for",
+      47.797
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.982,
+   "t1": 49.547,
+   "lines": [
+    [
+     [
+      "every person",
+      47.982
+     ],
+     [
+      "on Earth.",
+      48.587
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.053,
+   "t1": 55.603,
+   "lines": [
+    [
+     [
+      "And",
+      53.053
+     ],
+     [
+      "pus",
+      53.323
+     ],
+     [
+      "is",
+      53.718
+     ],
+     [
+      "the",
+      53.898
+     ]
+    ],
+    [
+     [
+      "fight's fallen:",
+      54.083
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 55.603,
+   "t1": 58.723,
+   "lines": [
+    [
+     [
+      "white cells",
+      55.603
+     ],
+     [
+      "so",
+      56.513
+     ],
+     [
+      "small",
+      56.848
+     ]
+    ],
+    [
+     [
+      "that",
+      57.238
+     ],
+     [
+      "10 in a row",
+      57.458
+     ],
+     [
+      "still",
+      58.483
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 58.723,
+   "t1": 61.173,
+   "lines": [
+    [
+     [
+      "wouldn't",
+      58.723
+     ],
+     [
+      "span",
+      59.173
+     ]
+    ],
+    [
+     [
+      "this paper's thickness.",
+      59.448
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.92,
+   "t1": 62.94,
+   "lines": [
+    [
+     [
+      "Is it new?",
+      61.92
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 62.94,
+   "t1": 65.765,
+   "lines": [
+    [
+     [
+      "No:",
+      62.94
+     ],
+     [
+      "a",
+      63.895
+     ],
+     [
+      "fight",
+      64.06
+     ],
+     [
+      "begun",
+      64.51
+     ]
+    ],
+    [
+     [
+      "out of sight,",
+      65.03
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 65.765,
+   "t1": 67.985,
+   "lines": [
+    [
+     [
+      "against",
+      65.765
+     ],
+     [
+      "a germ",
+      66.15
+     ],
+     [
+      "that",
+      66.755
+     ]
+    ],
+    [
+     [
+      "even",
+      66.86
+     ],
+     [
+      "helps",
+      67.065
+     ],
+     [
+      "build",
+      67.73
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 67.985,
+   "t1": 69.56,
+   "lines": [
+    [
+     [
+      "your skin's barrier.",
+      67.985
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 70.625,
+   "t1": 72.56,
+   "lines": [
+    [
+     [
+      "Next:",
+      70.625
+     ]
+    ],
+    [
+     [
+      "the",
+      71.075
+     ],
+     [
+      "light",
+      71.105
+     ],
+     [
+      "on your face,",
+      71.54
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 72.56,
+   "t1": 74.6,
+   "lines": [
+    [
+     [
+      "and",
+      72.56
+     ],
+     [
+      "where",
+      72.71
+     ],
+     [
+      "it",
+      73.02
+     ]
+    ],
+    [
+     [
+      "really goes.",
+      73.06
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.06666666666666667,
+   "dur": 4.901,
+   "file": "vo/01.wav",
+   "text": "Is this spot new? Its fight began under skin that looked perfectly clear."
+  },
+  {
+   "id": "vo02",
+   "t": 5.9,
+   "dur": 9.116,
+   "file": "vo/02.wav",
+   "text": "Follow faces photo by photo, and more than one new red spot in four rises from skin that looked clear. So what was happening underneath?"
+  },
+  {
+   "id": "vo03",
+   "t": 16.166666666666668,
+   "dur": 8.318,
+   "file": "vo/03.wav",
+   "text": "Beneath that clear skin, the defence has already gathered, immune cells crowding the follicle, some as thickly as in a red spot."
+  },
+  {
+   "id": "vo04",
+   "t": 25.5,
+   "dur": 11.866,
+   "file": "vo/04.wav",
+   "text": "It's easy to picture an infection. But it's the most common bacterium in clear, oily skin, and skin with acne carries no more. What makes the spot is largely your body's answer."
+  },
+  {
+   "id": "vo05",
+   "t": 39.96666666666667,
+   "dur": 9.302,
+   "file": "vo/05.wav",
+   "text": "White cells flood in until the follicle's wall can give way, spilling the fight deeper. Each day, your marrow makes several for every person on Earth."
+  },
+  {
+   "id": "vo06",
+   "t": 53.03333333333333,
+   "dur": 7.85,
+   "file": "vo/06.wav",
+   "text": "And pus is the fight's fallen: white cells so small that ten in a row still wouldn't span this paper's thickness."
+  },
+  {
+   "id": "vo07",
+   "t": 61.9,
+   "dur": 7.399,
+   "file": "vo/07.wav",
+   "text": "Is it new? No: a fight begun out of sight, against a germ that even helps build your skin's barrier."
+  },
+  {
+   "id": "vo08",
+   "t": 70.3,
+   "dur": 4.047,
+   "file": "vo/08.wav",
+   "text": "Next: the light on your face, and where it really goes."
+  }
+ ]
+}

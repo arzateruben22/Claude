@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep03/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why do you scar now? Before birth, a cut healed without one.",
+   "stars": [
+    "scar"
+   ],
+   "phonemes": "wˌaɪ dˈuː juː skˈɑː nˈaʊ? bɪfˌɔː bˈɜːθ, ɐ kˈʌt hˈiːld wɪðˈaʊt wˌɒn.",
+   "speed": 0.74,
+   "file": "01.wav",
+   "dur": 4.568,
+   "sha256": "0be8a16dbb14c1925537fd91cd5d6feff0a748db9bf08409539a2f573d2ae788"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Under the surface, most of your skin's strength is collagen, woven every which way like a basket, so it gives whichever way it's pulled.",
+   "stars": [
+    "pulled"
+   ],
+   "phonemes": "ˌʌndə ðə sˈɜːfɪs, mˈəʊst əv jɔː skˈɪnz stɹˈɛŋθ ɪz kˈɒləʤən , wˈəʊvən ˈɛvɹɪ wˌɪtʃ wˈeɪ lˈaɪk ɐ bˈaskɪt, sˌəʊ ɪt ɡˈɪvz wɪtʃˈɛvə wˈeɪ ɪts pˈʊld.",
+   "speed": 0.82,
+   "file": "02.wav",
+   "dur": 8.34,
+   "sha256": "8ec7261768fe6060b14790c0cb184a1dfec03d8fb7535e2df3e843aa90d8f64c"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Cut through it, and the body doesn't reweave. It patches: new threads side by side, all one way, with no hair or sweat glands.",
+   "stars": [
+    "glands"
+   ],
+   "phonemes": "kˈʌt θɹˈuː ɪt, and ðə bˈɒdi dˈʌzənt ɹɪwˈiːv. ɪt pˈatʃɪz: njˈuː θɹˈɛdz sˈaɪd baɪ sˈaɪd, ˈɔːl wˈɒn wˈeɪ, wɪð nˈəʊ hˈeə ɔː swˈɛt ɡlˈandz.",
+   "speed": 0.78,
+   "file": "03.wav",
+   "dur": 9.087,
+   "sha256": "350375ca455c944a0f361dac80b7741fb37a7077e7e51335c660e5f4c36ef8fb"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "We call that healed, as good as new. But pulled until it tears, even an old scar is only as strong as a rope missing one strand in five.",
+   "stars": [
+    "five"
+   ],
+   "phonemes": "wiː kˈɔːl ðat hˈiːld, az ɡˈʊd az njˈuː. bˌʌt pˈʊld ʌntˈɪl ɪt tˈeəz, ˈiːvən ɐn ˈəʊld skˈɑːɹ ɪz ˈəʊnli az stɹˈɒŋ az ɐ ɹˈəʊp mˈɪsɪŋ wˈɒn stɹˈand ɪn fˈaɪv.",
+   "speed": 0.67,
+   "file": "04.wav",
+   "dur": 11.886,
+   "sha256": "196307decd21fe8a14e906e1f26761aa54e68b59f2f500b2da14d677e5d68abe"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Until about the sixth month of pregnancy, a baby's skin regrows the weave, follicles and all. And one place in you still nearly can: your mouth.",
+   "stars": [
+    "mouth"
+   ],
+   "phonemes": "ʌntˈɪl ɐbˌaʊt ðə sˈɪksθ mˈʌnθ ɒv pɹˈɛɡnənsi, ɐ bˈeɪbiz skˈɪn ɹɪɡɹˈəʊz ðə wˈiːv, fˈɒlɪkəlz and ˈɔːl. and wˈɒn plˈeɪs ɪn juː stˈɪl nˌiəli kˈan: jɔː mˈaʊθ.",
+   "speed": 0.82,
+   "file": "05.wav",
+   "dur": 9.749,
+   "sha256": "c6ef3e6780765c13bc212a569e4b9b7fde520c86e5abcda1754b8f249cc37d8a"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "But on most of your body, only the top layer, about this paper's thickness, regrows without a seam.",
+   "stars": [
+    "seam"
+   ],
+   "phonemes": "bˌʌt ˌɒn mˈəʊst əv jɔː bˈɒdi, ˈəʊnli ðə tˈɒp lˈeɪə, ɐbˌaʊt ðɪs pˈeɪpəz θˈɪknəs, ɹɪɡɹˈəʊz wɪðˌaʊt ɐ sˈiːm.",
+   "speed": 0.82,
+   "file": "06.wav",
+   "dur": 6.316,
+   "sha256": "01fe5ffb23bdca20c3928cc861fefce60fa0f9f54e6dfe44c7f542b508de13f5"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So, why the scar? Mice born without germ-fighting cells heal without one: a scar may be the price of defence.",
+   "stars": [
+    "defence"
+   ],
+   "phonemes": "sˈəʊ, wˌaɪ ðə skˈɑː? mˈaɪs bˈɔːn wɪðˌaʊt dʒˈɜːmfˈaɪtɪŋ sˈɛlz hˈiːl wɪðˈaʊt wˌɒn: ɐ skˈɑː mˈeɪ biː ðə pɹˈaɪs ɒv dɪfˈɛns.",
+   "speed": 0.82,
+   "file": "07.wav",
+   "dur": 7.359,
+   "sha256": "3aef46b9508752609270e1409ee6bf5fe6c3c665e7414f1f7368534ff70d57a5"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a deadly poison, in a frown. How much goes in?",
+   "stars": [
+    "in"
+   ],
+   "phonemes": "nˈɛkst: ɐ dˈɛdli pˈɔɪzən, ɪn ɐ fɹˈaʊn. hˌaʊ mˈʌtʃ ɡəʊz ˈɪn?",
+   "speed": 0.76,
+   "file": "08.wav",
+   "dur": 4.461,
+   "sha256": "e03ca0f3fec909b184c1ef0357a0c372a7bf3e30ab6af50fb4ff3cfa4da8cef7"
+  }
+ ]
+}

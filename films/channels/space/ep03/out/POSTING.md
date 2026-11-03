@@ -1,13 +1,13 @@
-# Posting sheet: Light Minute No. 003, "Venus day"
+# Posting sheet: One More Orbit No. 003, "Venus day"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `lightminute-003-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `lightminute-003-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `one-more-orbit-003-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `one-more-orbit-003-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-Venus day | Light Minute No. 003
+Venus day | One More Orbit No. 003
 
 **Description**
 
@@ -30,12 +30,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Light Minute: One minute, one 'whoa' about the universe, every number sourced.
+One More Orbit: One minute, one 'whoa' about the universe, every number sourced.
 
 #Shorts #space #astronomy
 ```
 
-**Tags**: Light Minute, space, astronomy, venus, science, explainer, education
+**Tags**: One More Orbit, space, astronomy, venus, science, explainer, education
 
 **Captions**: upload the .srt (English).
 

@@ -1,4 +1,4 @@
-# Meanwhile, Inside No. 01: "Single file" (draft; a physiologist signs off before it posts)
+# Body Backstage No. 01: "Single file" (draft; a physiologist signs off before it posts)
 
 About 71 s, 9:16, narrated by a synthetic voice (bf_emma, labelled as AI), with an original score.
 Built from the bible's episode-1 script (`../bible.md`, §8) with every fix from the cross-check
@@ -46,7 +46,7 @@ vo: *Meanwhile*, as you watched, your bone marrow made over a hundred million ne
 
 ## tease {shot: push into the cell · end card held ≥ 2 s · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.4} (64.8–71.6 s)
 vo: Next: what this cell *carries*. {-} Room for about a billion passengers. {c14,c15}
-end card: "Next: A billion passengers" · "Meanwhile, Inside · No. 02"
+end card: "Next: A billion passengers" · "Body Backstage · No. 02"
 
 ## Notes
 - The tally counts from frame 0 at 2 million a second (MedlinePlus). The line lands at about

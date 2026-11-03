@@ -41,6 +41,11 @@ export const LIMITS = {
   instagram: { caption: 2200, hashtags: 30, comment: 2200 },
 } as const;
 
+/** Health channels' standing line: education, never personal medical advice (Skin Sense, 3 Nov 2026). The full line
+ *  goes in the YouTube description and the Instagram caption; TikTok's short caption carries the short form. */
+export const HEALTH_NOTE: Partial<Record<Topic, string>> = { skincare: "Education, not medical advice. See a dermatologist about your own skin." };
+export const HEALTH_NOTE_SHORT: Partial<Record<Topic, string>> = { skincare: "Education, not medical advice." };
+
 export const HASHTAG_SETS: Record<Topic, Record<Platform, string[]>> = {
   physics: { youtube: ["#Shorts", "#physics", "#science"], tiktok: ["#physics", "#science", "#learnontiktok", "#stem", "#slowmotion"], instagram: ["#physics", "#science", "#stem", "#sciencefacts", "#learnsomethingnew", "#slowmotion", "#education", "#physicsfun"] },
   space: { youtube: ["#Shorts", "#space", "#astronomy"], tiktok: ["#space", "#astronomy", "#learnontiktok", "#science", "#cosmos"], instagram: ["#space", "#astronomy", "#cosmos", "#science", "#universe", "#sciencefacts", "#stem", "#spacefacts"] },
@@ -56,6 +61,8 @@ export function clean(vo: string): string {
 
 const sentences = (s: string) => clean(s).split(/(?<=[.!?…])\s+/).filter(Boolean);
 const firstSentence = (s: string) => sentences(s)[0] ?? "";
+/** The first sentence that states something: a question in the takeaway ("Is it new?") only repeats the hook's job. */
+const firstStatement = (s: string) => sentences(s).find((x) => !/\?\s*$/.test(x)) ?? "";
 /** A beat's narration as written copy: markup removed, numbers in written form. */
 const beat = (beats: MetaInput["beats"], ...names: string[]) => { for (const n of names) { const b = beats.find((x) => x.beat === n); if (b && clean(b.vo)) return writtenForms(clean(b.vo)); } return ""; };
 
@@ -117,7 +124,7 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   const why = beat(input.beats, "why");
   const takeaway = beat(input.beats, "takeaway", "whoa");
   const question = hook.includes("?") ? hook.slice(0, hook.indexOf("?") + 1) : hook;
-  const oneLiner = firstSentence(takeaway) || firstSentence(why);
+  const oneLiner = firstStatement(takeaway) || firstStatement(why);
   const srcs = uniqueSources(input.sources);
   const series = ep.seriesTitle ? `${ep.seriesTitle}${ep.seriesOrder ? `, part ${ep.seriesOrder}${ep.seriesTotal ? ` of ${ep.seriesTotal}` : ""}` : ""}` : "";
   const next = input.next ? clean(input.next).replace(/^next:\s*/i, "") : "";
@@ -144,7 +151,7 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
     hook, [why, takeaway].filter(Boolean).join(" "),
     [series ? `Series: ${series}.` : "", next ? `Next: ${next}` : ""].filter(Boolean).join(" "),
     sourceLines.length ? `Sources\n${[...sourceLines.slice(0, k), ...(k < sourceLines.length ? [`…and ${sourceLines.length - k} more in the pinned comment.`] : [])].join("\n")}` : "",
-    ai, `${ch}: ${input.channel.tagline}`.replace(/:\s*$/, ""), ytTags.join(" "),
+    ai, HEALTH_NOTE[topic] ?? "", `${ch}: ${input.channel.tagline}`.replace(/:\s*$/, ""), ytTags.join(" "),
   ].filter(Boolean).join("\n\n");
   let shown = sourceLines.length, description = ytDescription(shown);
   while (description.length > LIMITS.youtube.description && shown > 0) description = ytDescription(--shown);   // whole sources, never half of one
@@ -162,8 +169,9 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   const tw: string[] = [];
   const ttTags = HASHTAG_SETS[topic].tiktok.join(" ");
   const ttBody = [question || cut(hook, 120), oneLiner].filter(Boolean).join(" ");
-  const ttRoom = LIMITS.tiktok.captionTarget - ttTags.length - 1 - (ai ? 0 : 0);
-  let ttCaption = `${cut(ttBody, Math.max(60, ttRoom))} ${ttTags}`.trim();
+  const ttHealth = HEALTH_NOTE_SHORT[topic] ?? "";
+  const ttRoom = LIMITS.tiktok.captionTarget - ttTags.length - 1 - (ttHealth ? ttHealth.length + 1 : 0);
+  let ttCaption = [cut(ttBody, Math.max(60, ttRoom)), ttHealth, ttTags].filter(Boolean).join(" ").trim();
   if (ttCaption.length > LIMITS.tiktok.caption) { ttCaption = cut(ttCaption, LIMITS.tiktok.caption); tw.push("caption cut to 2,200 characters"); }
   // the publishers, "; "-separated; the first comment also carries the production note. Too many for 150 characters: a
   // thread ("Sources 1/2: OpenStax; NASA. Synthetic (AI) voice; …" then "Sources 2/2: ESA; IAU.")
@@ -178,7 +186,7 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   const iw: string[] = [];
   const igTags = HASHTAG_SETS[topic].instagram.slice(0, LIMITS.instagram.hashtags);
   const igNote = input.disclosures.aiVoice ? "Synthetic (AI) narration; code-rendered animation." : "Code-rendered animation.";
-  const igText = [hook, [why ? firstSentence(why) : "", oneLiner].filter(Boolean).join(" "), series ? `${series}.` : "", srcs.length ? `Sources in the first comment. ${igNote}` : igNote].filter(Boolean).join("\n\n");
+  const igText = [hook, [why ? firstSentence(why) : "", oneLiner].filter(Boolean).join(" "), series ? `${series}.` : "", srcs.length ? `Sources in the first comment. ${igNote}` : igNote, HEALTH_NOTE[topic] ?? ""].filter(Boolean).join("\n\n");
   let igCaption = `${igText}\n\n${igTags.join(" ")}`;
   if (igCaption.length > LIMITS.instagram.caption) { igCaption = `${cut(igText, LIMITS.instagram.caption - igTags.join(" ").length - 2)}\n\n${igTags.join(" ")}`; iw.push("caption cut to 2,200 characters"); }
   const igThread = listThread(LIMITS.instagram.comment, "Instagram", iw);

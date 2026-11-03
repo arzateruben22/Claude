@@ -1,0 +1,318 @@
+{
+ "compose_s": 10.9,
+ "master_s": 22.6,
+ "master": {
+  "gain_db": 3.8,
+  "iterations": 3,
+  "lufs": -14.09,
+  "true_peak_db": -2.0,
+  "ceiling_db": -2.0,
+  "limiting_max_db": -5.87,
+  "aac": {
+   "lufs": -14.1,
+   "true_peak_db": -1.5,
+   "lra": 4.3
+  },
+  "stems_sum_error_db": -240.0
+ },
+ "sync": {
+  "per_kind": {
+   "answer.box": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "arrive": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "counter.tick": {
+    "n": 7,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "label": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "section": {
+    "n": 5,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "signature": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "swell": {
+    "n": 2,
+    "max_ms": 37.0,
+    "median_ms": 37.0,
+    "slow": true,
+    "pass": true
+   },
+   "term.write": {
+    "n": 12,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   }
+  },
+  "pass": true,
+  "events": [
+   {
+    "kind": "signature",
+    "tag": "title",
+    "show": 4.3,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-0",
+    "show": 5.4,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "hour-1",
+    "show": 5.6333,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "hour-4",
+    "show": 6.5,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "hour-7",
+    "show": 7.3667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-1",
+    "show": 8.0333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "hour-13",
+    "show": 9.0667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "hour-16",
+    "show": 9.9333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "hour-19",
+    "show": 10.8,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "counter.tick",
+    "tag": "hour-22",
+    "show": 11.6333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-2",
+    "show": 13.6667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 16.8,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "swell",
+    "tag": "squeeze",
+    "show": 17.5,
+    "method": "shape",
+    "err_ms": 37.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-3",
+    "show": 19.6667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-4",
+    "show": 21.4667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 25.8,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-ocean",
+    "show": 31.8,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-5",
+    "show": 31.8,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 39.0,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "arrive",
+    "tag": "macro",
+    "show": 39.0,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-7",
+    "show": 44.2333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "answer.box",
+    "tag": "spine-8",
+    "show": 45.7333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-9",
+    "show": 47.7667,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 52.8,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-1,400\u00a0km\u00b3 \u00f7 510\u00a0million\u00a0km\u00b2",
+    "show": 52.9667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-upper bound: 577,000\u00a0km\u00b3/yr",
+    "show": 53.6667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "work-drier: 486,000\u00a0km\u00b3/yr",
+    "show": 57.9667,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 59.4,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "term.write",
+    "tag": "spine-10",
+    "show": 59.4333,
+    "method": "wave",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "swell",
+    "tag": "storm",
+    "show": 64.2333,
+    "method": "shape",
+    "err_ms": 37.0
+   },
+   {
+    "kind": "label",
+    "tag": "l-storm",
+    "show": 65.1,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "signature",
+    "tag": "end",
+    "show": 67.3,
+    "method": "rise",
+    "err_ms": -0.0
+   }
+  ]
+ },
+ "picture_sync": [],
+ "under_voice": {
+  "music_lufs": -26.6,
+  "dialog_lufs": -13.7,
+  "gap_lu": 12.9,
+  "pass": true
+ },
+ "phone": {
+  "correlation": 0.87,
+  "mono_loss_db": 0.24,
+  "dialog_mono_loss_db": 0.07,
+  "pass": true
+ }
+}

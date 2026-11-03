@@ -1,4 +1,4 @@
-"""Compile Light Minute No. 002: script + voice timings + this direction → film.json (the scene's clock:
+"""Compile One More Orbit No. 002: script + voice timings + this direction → film.json (the scene's clock:
 shots, scene clocks, camera keys, the ladder, labels, badges, counters, pills, captions, title and end
 card) and sheet.json (the studio's cue sheet). Nothing here is a hand-typed time: every moment hangs on
 a beat or a spoken word (kits/cinema/script/timeline.py anchors), and every physical number comes from
@@ -22,7 +22,7 @@ from timeline import Film   # noqa: E402
 sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
-FPS, BPM = 30, 56.25                     # DECISIONS.md: Light Minute is E dorian at 56.25 BPM (a 16th = 8 frames)
+FPS, BPM = 30, 56.25                     # DECISIONS.md: One More Orbit is E dorian at 56.25 BPM (a 16th = 8 frames)
 ID = "lightminute-002"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
@@ -231,8 +231,8 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
         a["t1"] = round(b["t0"] - 0.4, 4)
 PILLS = []   # (the two pills only repeated their captions under the plate)
 
-TITLE = {"series": "Light Minute · No. 002", "title": "The *nearest star*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next light: a\u00a0planet that turns\u00a0*backwards*", "follow": "Light Minute · No. 003",   # breaks after "Next light:"
+TITLE = {"series": "One More Orbit · No. 002", "title": "The *nearest star*", "t1": B["normal"]["t0"] - 0.5, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next orbit: a\u00a0planet that turns\u00a0*backwards*", "follow": "One More Orbit · No. 003",   # breaks after "Next orbit:"
        "next": "Voyager 1 reaches one light-day from Earth on 18 November 2026 (NASA)."}   # the true-fact footnote (c5)
 
 CUE = {"voy": A("vo02:Voyager"), "launch": t_launch, "stop": t_stop, "line": A("vo03:line"), "sig": t_sig, "arr1": t_arr1, "cmd": t_cmd, "ans": t_ans, "arr2": t_arr2, "takeaway": t_tk,

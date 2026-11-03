@@ -1189,7 +1189,7 @@
   64.0
  ],
  "title": {
-  "series": "Meanwhile, Inside · No. 01",
+  "series": "Body Backstage · No. 01",
   "title": "Single *file*",
   "t1": 2.45,
   "sig": 0.0,
@@ -1199,8 +1199,8 @@
  "end": {
   "t0": 69.6,
   "title": "Next, inside: *a billion passengers*",
-  "next": "Meanwhile, Inside · No. 02",
-  "follow": "Follow Meanwhile, Inside"
+  "next": "Body Backstage · No. 02",
+  "follow": "Follow Body Backstage"
  },
  "look": {
   "_doc": "3D materials and lights only: never text, never CSS. Tissue and vessel are lit under the green hemisphere so they always read warm against green and never sit on near-black (cross-check). Only signal and pulse bloom.",
