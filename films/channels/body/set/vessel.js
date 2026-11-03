@@ -61,7 +61,7 @@ export const vessel = (THREE, L, P, o = {}) => {
   const segs = Math.max(4, Math.ceil((s1 - s0) / step));
   const map = o.tex ? o.tex.clone() : null;
   if (map) { map.repeat.set(1 / (o.tile ?? 22), o.around ?? 2); map.needsUpdate = true; }
-  const mat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin(o.color || "#E9B3A8"), map, roughness: 0.42, metalness: 0, clearcoat: 0.8, clearcoatRoughness: 0.12, sheen: 0.5, sheenRoughness: 0.5, sheenColor: new THREE.Color(1.0, 0.55, 0.48), side: THREE.DoubleSide }),
+  const mat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin(o.color || "#E9B3A8"), map, roughness: 0.45, metalness: 0, clearcoat: 0.45, clearcoatRoughness: 0.28, sheen: 0.5, sheenRoughness: 0.5, sheenColor: new THREE.Color(1.0, 0.55, 0.48), side: THREE.DoubleSide }),
     { fresnel: o.fresnel ?? 0.3, contour: o.contour ?? 0.5, key: "vessel" });
   const inner = new THREE.Mesh(tube(P, { radius: R, s0, s1, segments: segs, radial, arc: [Math.PI / 2, (3 * Math.PI) / 2], inside: true }), mat);
   // the two cut edges: strips from the inner radius out through the wall, facing the cut (+n)

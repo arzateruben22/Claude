@@ -69,7 +69,8 @@ CELL = {
 
 # ── one hemoglobin: the first O₂ struggles (a failed first docking), then each docks on first contact ──
 # (c5 is affinity, not speed: every O₂ flies at the same speed; the first one slips off its seat once)
-BOARD = [A("vo03:get", 0.15), A("vo03:makes", 0.05), A("vo03:next", 0.05), A("vo03:easier", 0.1)]
+_B0, _B1 = A("vo03:get", 0.15), A("vo03:easier", 0.1)
+BOARD = [round(_B0 + (_B1 - _B0) * k / 3, 4) for k in range(4)]   # evenly spaced: the picture says "easier", never "faster" (the 24 Oct fact check)
 APPROACH = [0.6, 0.6, 0.6, 0.6]                          # seconds from setting off to the seat (the 2nd–4th)
 HB = {
     "board": BOARD, "approach": APPROACH,
@@ -110,7 +111,7 @@ NERVE["hop"] = round((NERVE["jump"] - NERVE["t0"]) / 3, 6)   # three hops to the
 # ── camera keys per shot (absolute, in each slide's own units; "rel" ones follow the lung's hero) ──
 CAM = {
     "cell": [
-        {"t": 0.0, "pos": [2.0, 1.2, 21.0], "look": [0.0, -0.4, 0.0], "fov": 34},
+        {"t": 0.0, "pos": [3.2, 2.0, 27.0], "look": [0.0, -0.4, 0.0], "fov": 34},   # review r2 (a): a push from frame 0
         {"t": A("vo01:billion"), "pos": [1.6, 1.0, 18.5], "look": [0.0, -0.3, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo02:hemoglobin", -0.3), "pos": [0.9, 0.6, 13.0], "look": [0.2, -0.2, 0.0], "fov": 33, "ease": "p2"},
         {"t": CUT["hb"], "pos": [0.5, 0.3, 7.5], "look": [0.3, -0.1, 0.0], "fov": 32, "ease": "p2"},     # into the crowd
@@ -189,7 +190,7 @@ LABELS = [
 BADGES = [
     {"id": "nts-cell", "text": "not to scale", "t0": 0.0, "t1": CUT["hb"] - 0.3},
     {"id": "ill-hb", "text": "illustration · slowed", "t0": CUT["hb"], "t1": CUT["skin"] - 0.3},
-    {"id": "ill-skin", "text": "illustration · not to scale", "t0": CUT["skin"], "t1": CUT["lung"] - 0.3},
+    {"id": "ill-skin", "text": "stained section · not to scale", "t0": CUT["skin"], "t1": CUT["lung"] - 0.3},
     {"id": "nts-lung", "text": "not to scale", "t0": CUT["lung"], "t1": CUT["nerve"] - 0.3},
     {"id": "nts-nerve", "text": "not to scale · slowed", "t0": CUT["nerve"], "t1": EC},
 ]

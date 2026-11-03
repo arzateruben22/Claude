@@ -179,12 +179,12 @@
    "tag": "board0"
   },
   {
-   "t": 19.4,
+   "t": 18.8,
    "kind": "bind",
    "tag": "board1"
   },
   {
-   "t": 19.966666666666665,
+   "t": 19.6,
    "kind": "bind",
    "tag": "board2"
   },
@@ -203,7 +203,7 @@
    "t": 24.383333,
    "kind": "badge",
    "tag": "ill-skin",
-   "text": "illustration · not to scale",
+   "text": "stained section · not to scale",
    "pos": [
     0.528,
     0.146

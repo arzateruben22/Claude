@@ -57,7 +57,7 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-tally .v { font-size: 9.6vmin; }
 .hud-end .mi-pulse { margin: 0 0 3vmin; }
 .hud-title .mi-pulse { margin-top: 2.2vmin; }
-.mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 500 3vmin/1.35 var(--font-text); color: var(--text-2); }
+.mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 600 3.3vmin/1.35 var(--font-text); color: var(--text); background: var(--hud-plate); padding: 1.4vmin 2.2vmin; border-radius: 1.2vmin; }   /* review r2: plated, larger */
 #hud-seats .v, #hud-copies .v, #hud-aboard .v, #hud-venous .v, #hud-full .v { color: var(--pulse); }
 #hud-seats, #hud-copies, #hud-aboard, #hud-venous, #hud-full { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 #hud-seats .lb, #hud-copies .lb, #hud-aboard .lb, #hud-venous .lb, #hud-full .lb { color: var(--text); }
@@ -211,14 +211,14 @@ const VENOUS = new THREE.Color(lin("#7A2234")).lerp(new THREE.Color(lin(FILM.loo
   const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 1;
   const top = new THREE.Mesh(new THREE.PlaneGeometry(SK.w, SK.z * 2), L.patch(new THREE.MeshPhysicalMaterial({ map: tex, roughness: 0.7 }), { fresnel: 0.15, key: "skintop" }));
   top.rotation.x = -Math.PI / 2; top.position.y = 0.01; G.skin.add(top);
-  const layer = (y0, y1, col, emi = 0.06) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(SK.w, y1 - y0, SK.z * 2), L.patch(new THREE.MeshPhysicalMaterial({ color: lin(col), emissive: lin(col), emissiveIntensity: emi, roughness: 0.8 }), { fresnel: 0.2, key: "skin" + col }));
+  const layer = (y0, y1, col, emi = 0.06, dry = false) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(SK.w, y1 - y0, SK.z * 2), L.patch(new THREE.MeshPhysicalMaterial({ color: lin(col), emissive: lin(col), emissiveIntensity: emi, roughness: 0.8 }), { fresnel: 0.2, key: "skin" + col, dry }));
     m.position.set(0, (y0 + y1) / 2, 0); G.skin.add(m); return m;
   };
   layer(-2.2, 0, "#F0CDBE", 0.1);            // epidermis
   layer(-14, -2.2, "#EDB3A3", 0.12);         // papillary dermis
   layer(-34, -14, "#D58C80", 0.1);           // dermis
-  layer(-SK.d, -34, "#EAD0B0", 0.1);         // the fat below, where the vein runs
+  layer(-SK.d, -34, "#EAD0B0", 0.1, true);   // the fat below, where the vein runs (matte: review r2, no crackle, no blown highlight)
   // live scan (review r1): the cut face above the fat is a real stained section of human skin (public domain, the
   // owner confirmed its licence 3 Nov: skincare/set/ref/SOURCES.md), not flat colour bands
   SECT.mesh = new THREE.Mesh(new THREE.PlaneGeometry(SK.w, 34), L.patch(new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.42 }), { fresnel: 0.12, key: "skinsect" }));
@@ -282,6 +282,7 @@ const writeSkin = (t) => {
   const ub = E.inout2(seg(t, S.blue[0], S.blue[1])); RAYS.blue.forEach((r, i) => r.set(E.inout2(seg(t, S.blue[0] + 0.25 * i, S.blue[1] + 0.25 * i))));
   const ur = E.in2(seg(t, S.red[0], S.red[1])); RAYS.red.set(ur, 1 - 0.45 * E.out3(seg(t, S.swallow, S.swallow + 0.7)));
   RAYS.back.set(E.inout2(seg(t, S.back[0], S.back[1])));
+  { const tl = FILM.shots.find((q) => q.name === "lung").at; if (t >= tl - 0.9) for (const r of [...RAYS.blue, RAYS.red, RAYS.back]) r.set(0, 0); }   // review r2: no rays left over the pull-out
   // the vein takes the light in: its blood glows once on "swallows"
   const sw = seg(t, S.swallow - 0.05, S.swallow + 0.2) * (1 - seg(t, S.swallow + 0.25, S.swallow + 0.9));
   VEIN.blood.material.emissiveIntensity = 0.18 + 0.32 * sw;

@@ -8,7 +8,7 @@
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: '~270 million hemoglobin molecules' per cell (episode 1, c14). Sources range 250–300 million, so the product below is 1.0–1.2 billion. 'Passengers' are oxygen molecules, the capacity, not a count of what is aboard at every moment. The readout shows 270,000,000 ('about') while the number is spoken."
+  "note": "Excerpt: '~270 million hemoglobin molecules' per cell (episode 1, c14). Sources range 250–300 million, so the product below is 1.0–1.2 billion. 'Passengers' are oxygen molecules, the capacity, not a count of what is aboard at every moment. The readout shows 270,000,000 ('about') while the number is spoken. Reboot (3 Nov): the readout shows about 1,000,000,000 O₂ seats from 3.0 s (after the title) and 270,000,000 hemoglobins on 'quarter'; the caption reads 'a quarter of a billion'."
  },
  {
   "id": "c2",
@@ -52,7 +52,7 @@
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Search excerpts (UCSB overview; Berg, Biochemistry 8e §7.2 'Hemoglobin binds oxygen cooperatively'): 'the more oxygen is bound to hemoglobin, the easier it is for more oxygen to bind'; the first binds with difficulty, then a conformational change makes the next easier. 'Easier' = higher affinity (review fix: not 'faster'). The film shows it as a failed first docking (the first O₂ slips off its seat once) and then three dockings on first contact, all at the same speed; badged 'illustration · slowed'."
+  "note": "Search excerpts (UCSB overview; Berg, Biochemistry 8e §7.2 'Hemoglobin binds oxygen cooperatively'): 'the more oxygen is bound to hemoglobin, the easier it is for more oxygen to bind'; the first binds with difficulty, then a conformational change makes the next easier. 'Easier' = higher affinity (review fix: not 'faster'). The film shows it as a failed first docking (the first O₂ slips off its seat once) and then three dockings on first contact, all at the same speed; badged 'illustration · slowed'. Reboot (3 Nov): the four boardings are evenly spaced, so the picture shows 'each makes the next easier' (affinity), not 'faster'."
  },
  {
   "id": "c6",
@@ -162,7 +162,7 @@
   "accessed": "2026-10-24",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt (e-Learning Anaesthesia, 'Oxygen flux'): delivery about 1000 mL/min, 'resting consumption only 25% of this (250 mL/min)'. Vernier and others: 200–250 mL/min. The tally is 250/60 × t mL from frame 0; the line starts near 62 s, about 258 mL; a US cup is about 237 mL (computed: 'about a cup' holds from 50 s to 70 s, 208–292 mL, within ±25%)."
+  "note": "Excerpt (e-Learning Anaesthesia, 'Oxygen flux'): delivery about 1000 mL/min, 'resting consumption only 25% of this (250 mL/min)'. Vernier and others: 200–250 mL/min. The tally is 250/60 × t mL from frame 0; the line starts near 62 s, about 258 mL; a US cup is about 237 mL (computed: 'about a cup' holds from 50 s to 70 s, 208–292 mL, within ±25%). Reboot (3 Nov): the tally reads about 264–270 mL as 'about a cup' is spoken (a US cup is 237 mL; within the ledger's ±25%)."
  },
  {
   "id": "c16",

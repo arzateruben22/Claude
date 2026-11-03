@@ -162,3 +162,87 @@ hook's O₂ label right edge at about x 894 (0–5.5). The badges sit top right 
 One coherent HUD system (Atkinson type, plated readouts, dot/ring markers); the spine readout runs the whole episode
 (1 B → 270 M → n of 4 → 75 % → 0.25 s → 75→97 % → mL tally); the 0→4 count lands on each docking; the light-path
 explanation is correct and badged; the end card's match to frame 0 is a real callback; the facts are clean.
+
+---
+
+# Round 2 (re-render, 3 Nov 2026)
+
+The same reviewer, against the round-1 findings. Moments pulled (65): 0, 1.0, 2.0, 2.5, 2.9, 3.2, 4.0, 8.4, 13.5, 18.5,
+20.6, 22.0, 22.8, 24.6, 25.5, 26.5, 27.5, 28.5, 29.0, 29.2, 29.4, 29.6, 29.7, 29.8, 30.0, 31.0, 31.7, 31.9, 32.2, 33.5,
+35.0, 36.5, 37.0, 37.5, 37.9, 38.2, 38.5, 39.0, 39.4, 42.0, 44.5, 46.0, 47.5, 49.0, 50.5, 52.5, 54.0, 56.5, 58.5, 59.6,
+60.0, 60.4, 62.0, 64.0, 66.0, 67.5, 69.0, 69.8, 71.0, 72.2 s (plus crops at 29.7, 38.5, 49.0 and 58.5).
+
+**Verdict: still not ready for finals, but much closer.** No score is under 3 now, and both owner's rules hold. Three
+things still block the final: (a), (g) and (h) are each 3 and need 4, and the ledger notes from finding 16 are still
+stale (plus a new asset-record gap, R2-3).
+
+## Scores
+
+| | Point | R1 | R2 | Why it moved (or didn't) |
+|---|---|---|---|---|
+| a | First 2 s | 3 | **3** | The title keep-out is fixed (2.5: the title stands alone; the readout arrives at 3.0). The hook itself is unchanged: still camera to 2.9, a tiny O₂ dot, a question, and "billion" at 2.8 s. |
+| b | One thread | 4 | **4** | Unchanged; the 75 % now joins the thread (it lands on "darker"). |
+| c | Picture moves with the sentence | 2 | **3** | Fixed: the whoa (44.5 garnet → 49.0 crimson on "a quarter of a second"), the 75 % on "darker" (31.9), and the move into the section on "It never is" (29.2–30.0). Still open: "Empty, it's dark red" over a full bright molecule (22.0), "The blue is your skin's trick" over the lung (54.0), and the meanwhile has no picture of its own (60–64.7). |
+| d | Every camera move motivated | 3 | **4** | The 28.87 pop is gone: the camera now eases from the top view into the cut face over 29.0–30.0, on "It never is", a reveal with a reason. The dive (42–44.5), pull-back (52.5) and nerve track are motivated. The still hook remains the soft spot. |
+| e | Voice meaning, screen figures | 3 | **3** | The 75 % is now anchored, and the 97 %/tally overlap is gone. The voice still speaks the figures the readouts show (billion, quarter of a billion, quarter of a second), and "in lung time" is still unexplained. |
+| f | Rhythm | 3 | **3** | Unchanged: the five identical wipes; 25.6 s in the lung location, now with 3.0 s of hold on a frozen 0.25 s counter (50.5–53.5); the lower half of 30–39.4 is a flat fat plane. |
+| g | Ending | 3 | **3** | The tease shot is better (wrapped sheaths, a soft glow on the node, 67.5–69.8), but the payoff still has no picture of skin, and the end card is unchanged (tiny fact text over the cell, 2.0 s). |
+| h | Production value | 2 | **3** | Real gains: the stained skin section with the vein set in it (25.5–39.4), dented garnet-to-crimson discs that fit the lumen (44.5–50.5), lumpy wet air sacs, wet hemoglobin, ringed myelin. Still default-looking: gummy hemoglobin lobes and white O₂ beads (10–24), flat 2D light arrows that no longer sit in the 3D slab (39.0), the plain beige skin top and a tiled crackle "fat" plane filling 45 % of the frame (30–39.4), capsule-silhouette myelin, the stock wipes, and a new clipped white blob (R2-1). |
+
+## Round-1 findings, status
+
+| # | Finding | R2 |
+|---|---|---|
+| 1 | Primitives in four shots | **Partly.** Skin cut face, air sacs and myelin improved; hemoglobin, O₂ beads, light arrows, the skin top and the fat plane unchanged. |
+| 2 | Glossy capsule red cells, wall clipping | **Fixed.** 44.5–50.5: real dented discs with a soft fold, less gloss, inside the tube; the contact glint at 50.5 reads as the wall, not a crossing. |
+| 3 | The whoa has no picture | **Fixed for the lung** (44.5 garnet, 47.5 turning, 49.0 crimson). **Open for 21.1–22.0** ("Empty, it's dark red" over a full molecule). |
+| 4 | Readout over the title | **Fixed.** `spine.seats.t0` = 3.017 > `title.t1` 2.317; 2.5 and 2.9 are clean. |
+| 5 | Camera pop and HUD pile-up | **Fixed.** Eased move 29.0–30.0; the "vein" label and locator are gone before the move; the 75 % plate starts at 31.9 with nothing under it. |
+| 6 | Scan view not justified | **Fixed by cutting it** (`scan.up` = 999). |
+| 7 | 75 % on the wrong sentence | **Fixed** (31.9, on "darker"). |
+| 8 | Arriving/leaving look the same; 97 %/tally overlap | **Overlap fixed** (59.6 the 97 % alone, 60.4 the tally alone). **Colour partly**: lower-left cells are garnet, upper-right crimson at 58.5, but the difference is subtle at phone size, and the brightest cell sits under the 97 % plate's edge. |
+| 9 | Last 20 s in one place | **Open.** |
+| 10 | Five identical wipes | **Open** (not changed, as stated). |
+| 11 | Hook | **Open** (not changed, as stated). |
+| 12 | Counts; "lung time" | **Open.** |
+| 13 | Legibility | **Partly** (the scan tag is gone with the scan view); the end-card fact and badge sizes are unchanged. |
+| 14 | Labels | **Partly.** The vein dot still sits on plain skin off the blue stripe (25.5–29.0); "iron"/"O₂" still touch at 13.5; "blue light" still sits on its arrows (35.0–38.2). |
+| 15 | O₂-aboard plate clips the hemoglobin | **Open** (20.6–22.8). |
+| 16 | Ledger notes | **Open.** c1's, c5's and c15's notes are unchanged, and `hb.board` is still 18.0, 19.4, 19.97, 20.4 (gaps shrinking: the "faster" reading). |
+
+## New in round 2
+
+- **R2-1 (h, glitch): a clipped white blob.** A soft, blown-out white disc (about 70 px at 540 wide, pure white core)
+  drifts through the lower right at 29.6–29.8, 38.5–39.0 and 49.0. It reads as a mote or specular too close to the lens
+  and breaks "no clipped highlights". **Fix:** clamp mote brightness, keep motes out of the near plane, or cap bloom
+  input; check with a max-luma probe on those frames.
+- **R2-2 (h, glitch): the light arrows detach from the slab.** At 39.0–39.4, as the camera pulls back and the slab tilts,
+  the arrows stay screen-vertical and stick up above the skin's top surface. **Fix:** parent the rays to the slab (or fade
+  them out by 38.4, when the labels leave), and preferably replace them with volumetric beams (finding 1).
+- **R2-3 (licensing record): the skin micrograph isn't in `assets.md`.** `assets.md` line 18 still says the skin is a
+  "stylised model… not micrographs". The brief requires every micrograph to be recorded with its source, licence and "a
+  person must confirm on the original page". The owner's confirmation should be noted there too. **Fix:** add the row
+  (source URL, author, licence, date, owner's confirmation) and correct line 18.
+- **R2-4 (honesty): the stain colours.** The cut face is a stained section (purple and pink are the stain, not living
+  skin), shown next to a "darker red" vein. The badge says "illustration · not to scale". **Fix:** make it "stained
+  section · not to scale" while the cut face shows (25.5–39.4), or grade the section toward living tissue tones. A
+  physiologist should see it either way (add it to HUMAN-REVIEW.md).
+- **R2-5 (h): the fat plane.** At 30–39.4 the lower 45 % of the frame is a flat beige plane with a regular crackle
+  texture. **Fix:** frame the section lower (the cut face filling the frame), or give the fat real lobules
+  (translucent, wet, varied cell sizes, SSS).
+
+## What still blocks a final
+
+1. **(h) to 4:** hemoglobin lobes with surface detail and heme glints, smaller and varied O₂ with motion blur (10–24);
+   volumetric light in the skin instead of 2D arrows, attached to the slab (33–39.4, R2-2); the fat plane (R2-5); fix the
+   clipped blob (R2-1); and vary or cut the five wipes (finding 10).
+2. **(a) to 4:** the hook (finding 11): move the camera from frame 0, make the boarding O₂ a visible event by 1.0 s,
+   and get the twist into the voice by 2 s.
+3. **(g) to 4:** give the payoff a picture (a 1.5 s skin callback with the blue fading on "The blue is your skin's
+   trick"); give the meanwhile its own picture; make the end-card fact readable (plated, caption size) and hold the card
+   2.5–3 s.
+4. **Nothing factual open:** update the c1, c5 and c15 notes (or equalise the docking gaps), and record the skin
+   micrograph in `assets.md` (R2-3).
+
+Not blocking but worth doing in the same pass: "Empty, it's dark red" over a full molecule (22.0); "lung time"; the vein
+dot; the O₂-aboard plate over the hemoglobin; a stronger garnet/crimson difference along the tube (58.5).

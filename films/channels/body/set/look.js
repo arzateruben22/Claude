@@ -191,7 +191,7 @@ export const look = (THREE, o) => {
   const studio = (renderer, scene, k = 0.6) => {
     const env = new THREE.Scene(); env.background = new THREE.Color(0x020807);
     const box = (w, h, color, i, p) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(i * k), side: THREE.DoubleSide })); m.position.set(...p); m.lookAt(0, 0, 0); env.add(m); };
-    box(7, 4, 0xfff0e2, 5, [-6, 7, 6]); box(1.5, 9, 0xe8fff4, 4, [7, 2, -7]); box(10, 2, 0x0f3a33, 1.5, [0, -6, 3]); box(2, 2, 0xd6f25f, 0.6, [8, -1, 5]);
+    box(7, 4, 0xfff0e2, 2.2, [-6, 7, 6]); box(1.5, 9, 0xe8fff4, 2.0, [7, 2, -7]);   // review: no clipped highlights box(10, 2, 0x0f3a33, 1.5, [0, -6, 3]); box(2, 2, 0xd6f25f, 0.6, [8, -1, 5]);
     const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(env, 0.03).texture;   // r160: no scene.environmentIntensity, so k scales the boxes
   };
   // atmosphere: motes riding with the camera at fixed depths (the finish's depth of field turns the near ones into bokeh).
