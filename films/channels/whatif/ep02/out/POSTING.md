@@ -1,13 +1,13 @@
-# Posting sheet: Back of the Envelope No. 002, "Everyone, one place"
+# Posting sheet: Possibility Lab No. 002, "Everyone, one place"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `envelope-002-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `envelope-002-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `possibility-lab-002-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `possibility-lab-002-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-Everyone, one place | Back of the Envelope No. 002
+Everyone, one place | Possibility Lab No. 002
 
 **Description**
 
@@ -29,12 +29,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Back of the Envelope: Impossible questions, honest assumptions, real calculations.
+Possibility Lab: Impossible questions, honest assumptions, real calculations.
 
 #Shorts #whatif #science
 ```
 
-**Tags**: Back of the Envelope, whatif, science, everyone, place, explainer, education
+**Tags**: Possibility Lab, whatif, science, everyone, place, explainer, education
 
 **Captions**: upload the .srt (English).
 
