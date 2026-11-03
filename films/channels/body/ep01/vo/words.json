@@ -84,183 +84,171 @@
   },
   {
    "id": "vo02",
-   "text": "Each one is a dented disc. It even threw out its own nucleus to make room. And you've got about twenty-five trillion of them: most of your own cells.",
-   "heard": "Of each one is a dented disk. It even threw out its own nucleus to make room. And you've got about twenty-five trillion of them, most of your own cells.",
+   "text": "Each one is a dented disc, pressed in on both sides. It even threw out its own nucleus. And they outnumber all your other cells put together.",
+   "heard": "Each one is a dented disc, pressed in on both sides. It even threw out its own nucleus. And they outnumber all your other cells put together.",
    "words": [
     {
      "w": "Each",
-     "start": 0.32,
-     "end": 0.56,
+     "start": 0.02,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "one",
-     "start": 0.485,
-     "end": 0.8,
+     "start": 0.46,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "is",
-     "start": 0.81,
-     "end": 0.96,
+     "start": 0.695,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.99,
-     "end": 1.12,
+     "start": 0.84,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "dented",
-     "start": 1.18,
-     "end": 1.76,
+     "start": 1.03,
+     "end": 1.52,
      "heard": true
     },
     {
-     "w": "disc.",
-     "start": 1.74,
-     "end": 2.369,
-     "heard": false,
-     "end_asr": 2.72
+     "w": "disc,",
+     "start": 1.565,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "pressed",
+     "start": 2.25,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.59,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 3.01,
+     "end": 3.06,
+     "heard": true
+    },
+    {
+     "w": "both",
+     "start": 3.04,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "sides.",
+     "start": 3.325,
+     "end": 4.062,
+     "heard": true,
+     "end_asr": 4.4
     },
     {
      "w": "It",
-     "start": 2.69,
-     "end": 2.96,
+     "start": 4.38,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "even",
-     "start": 2.94,
-     "end": 3.28,
+     "start": 4.665,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "threw",
-     "start": 3.375,
-     "end": 3.68,
+     "start": 5.13,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "out",
-     "start": 3.77,
-     "end": 3.92,
+     "start": 5.525,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "its",
-     "start": 3.86,
-     "end": 4.16,
+     "start": 5.635,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "own",
-     "start": 4.085,
-     "end": 4.4,
+     "start": 5.86,
+     "end": 6.16,
      "heard": true
     },
     {
-     "w": "nucleus",
-     "start": 4.4,
-     "end": 5.2,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 5.19,
-     "end": 5.36,
-     "heard": true
-    },
-    {
-     "w": "make",
-     "start": 5.45,
-     "end": 5.6,
-     "heard": true
-    },
-    {
-     "w": "room.",
-     "start": 5.53,
-     "end": 6.104,
+     "w": "nucleus.",
+     "start": 6.16,
+     "end": 7.053,
      "heard": true,
-     "end_asr": 6.4
+     "end_asr": 7.44
     },
     {
      "w": "And",
-     "start": 6.425,
-     "end": 6.56,
+     "start": 7.39,
+     "end": 7.6,
      "heard": true
     },
     {
-     "w": "you've",
-     "start": 6.455,
-     "end": 6.88,
+     "w": "they",
+     "start": 7.615,
+     "end": 7.76,
      "heard": true
     },
     {
-     "w": "got",
-     "start": 6.8,
-     "end": 7.04,
+     "w": "outnumber",
+     "start": 7.765,
+     "end": 8.56,
      "heard": true
     },
     {
-     "w": "about",
-     "start": 7.09,
-     "end": 7.28,
-     "heard": true
-    },
-    {
-     "w": "twenty-five",
-     "start": 7.38,
-     "end": 8.16,
-     "heard": true
-    },
-    {
-     "w": "trillion",
-     "start": 8.255,
+     "w": "all",
+     "start": 8.56,
      "end": 8.8,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 8.91,
+     "w": "your",
+     "start": 8.845,
      "end": 9.04,
      "heard": true
     },
     {
-     "w": "them:",
-     "start": 8.94,
-     "end": 9.6,
+     "w": "other",
+     "start": 8.99,
+     "end": 9.28,
      "heard": true
     },
     {
-     "w": "most",
-     "start": 9.62,
+     "w": "cells",
+     "start": 9.245,
      "end": 9.84,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 9.935,
+     "w": "put",
+     "start": 9.8,
      "end": 10.08,
      "heard": true
     },
     {
-     "w": "your",
-     "start": 10.04,
-     "end": 10.24,
-     "heard": true
-    },
-    {
-     "w": "own",
-     "start": 10.19,
-     "end": 10.48,
-     "heard": true
-    },
-    {
-     "w": "cells.",
-     "start": 10.47,
-     "end": 11.2,
+     "w": "together.",
+     "start": 10.02,
+     "end": 10.56,
      "heard": true
     }
    ],
@@ -421,154 +409,162 @@
   },
   {
    "id": "vo04",
-   "text": "You'd guess it just stretches to fit. It can't. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
-   "heard": "You'd guess it just stretches to fit. It can't eh. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
+   "text": "You'd guess its skin just stretches to fit. It can't. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
+   "heard": "You'd guess its skin just stretches to fit. It can't eh. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
    "words": [
     {
      "w": "You'd",
-     "start": 0.02,
+     "start": 0.025,
      "end": 0.32,
      "heard": true
     },
     {
      "w": "guess",
-     "start": 0.27,
+     "start": 0.26,
      "end": 0.56,
      "heard": true
     },
     {
-     "w": "it",
-     "start": 0.625,
-     "end": 0.675,
+     "w": "its",
+     "start": 0.57,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 0.755,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "just",
-     "start": 0.655,
-     "end": 0.88,
+     "start": 1.075,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "stretches",
-     "start": 0.935,
-     "end": 1.36,
+     "start": 1.375,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "to",
-     "start": 1.38,
-     "end": 1.52,
+     "start": 1.845,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "fit.",
-     "start": 1.565,
-     "end": 1.92,
-     "heard": true
+     "start": 2.03,
+     "end": 2.474,
+     "heard": true,
+     "end_asr": 2.8
     },
     {
      "w": "It",
-     "start": 2.405,
-     "end": 2.56,
+     "start": 2.815,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "can't.",
-     "start": 2.585,
-     "end": 2.88,
+     "start": 2.995,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "That",
-     "start": 3.635,
-     "end": 3.76,
+     "start": 4.045,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "dent",
-     "start": 3.885,
-     "end": 4.16,
-     "heard": true
-    },
-    {
-     "w": "gives",
-     "start": 4.21,
-     "end": 4.4,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 4.495,
+     "start": 4.3,
      "end": 4.56,
      "heard": true
     },
     {
-     "w": "spare",
-     "start": 4.655,
-     "end": 4.96,
-     "heard": true
-    },
-    {
-     "w": "skin,",
-     "start": 5.045,
-     "end": 5.68,
-     "heard": true
-    },
-    {
-     "w": "so",
-     "start": 5.75,
-     "end": 5.84,
+     "w": "gives",
+     "start": 4.625,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "it",
-     "start": 5.78,
-     "end": 6.0,
+     "start": 4.905,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "spare",
+     "start": 5.065,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "skin,",
+     "start": 5.46,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 6.16,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.19,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "folds",
-     "start": 5.94,
-     "end": 6.32,
+     "start": 6.35,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "up",
-     "start": 6.415,
-     "end": 6.48,
-     "heard": true
-    },
-    {
-     "w": "neatly",
-     "start": 6.475,
+     "start": 6.665,
      "end": 6.88,
      "heard": true
     },
     {
+     "w": "neatly",
+     "start": 6.885,
+     "end": 7.28,
+     "heard": true
+    },
+    {
      "w": "like",
-     "start": 6.76,
-     "end": 7.04,
+     "start": 7.16,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.045,
-     "end": 7.12,
+     "start": 7.455,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "parachute",
-     "start": 7.155,
-     "end": 7.76,
+     "start": 7.57,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "instead.",
-     "start": 7.94,
-     "end": 8.24,
+     "start": 8.355,
+     "end": 8.64,
      "heard": true
     }
-   ]
+   ],
+   "clamped": true
   },
   {
    "id": "vo05",

@@ -81,8 +81,8 @@ HERO = {
     "hook": {"at": 0.0, "place": "narrow", "ahead": 52.0},
     # the meet shot: a free disc in an artery's crowd; its tumble (axis relative to the camera) and its cut
     "meet": {"turn": [[CUT["meet"], "face"], [A("vo02:dented", -0.35), "face"], [A("vo02:dented", 0.5), "edge"],
-                      [A("vo02:you've", 0.6), "edge"], [A("vo02:most", 0.2), "tumble"]],
-             "cut": [[A("vo02:nucleus", -0.5), 0.0], [A("vo02:nucleus", 0.05), 1.0], [A("vo02:you've", 0.35), 1.0], [A("vo02:you've", 0.95), 0.0]]},
+                      [A("vo02:they", 0.6), "edge"], [A("vo02:outnumber", 0.2), "tumble"]],
+             "cut": [[A("vo02:nucleus", -0.5), 0.0], [A("vo02:nucleus", 0.05), 1.0], [A("vo02:they", 0.35), 1.0], [A("vo02:they", 0.95), 0.0]]},
     # the journey, one continuous solve from the tree to the tightest: [film time, feature reached]
     "road": [
         [A("vo03:split"), "bp1"],                     # the first branch point, on "branches"
@@ -104,7 +104,7 @@ HERO = {
     "sparkle": [A("vo08:billion"), A("vo08:passengers:end", 0.3)],
 }
 
-# ── camera keys per shot: offsets from the hero (rel), so tracking shots keep it; µm, fov in degrees ──
+# ── camera keys per shot: offsets from the hero (rel), so tracking shots keep it; μm, fov in degrees ──
 CAM = {
     "hook": [
         {"t": 0.0, "pos": [6.0, -6.5, 19.5], "look": [0.0, -0.6, 0.0], "fov": 34},
@@ -116,8 +116,8 @@ CAM = {
         {"t": CUT["meet"], "pos": [1.5, 3.0, 30.0], "look": [0.0, -1.4, 0.0], "fov": 34},
         {"t": A("vo02:dented", -0.3), "pos": [-2.0, 2.5, 26.0], "look": [0.0, -1.2, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo02:nucleus", 0.1), "pos": [-1.0, -1.6, 34.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "p2"},   # in to the cut, level with it
-        {"t": A("vo02:you've", 0.5), "pos": [-0.8, -1.5, 34.5], "look": [0.0, -1.5, 0.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo02:trillion", 0.2), "pos": [14.0, 12.0, 74.0], "look": [0.0, 3.0, 0.0], "fov": 36, "ease": "p3"},   # crane back: the crowd
+        {"t": A("vo02:they", 0.5), "pos": [-0.8, -1.5, 34.5], "look": [0.0, -1.5, 0.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo02:together", 0.2), "pos": [14.0, 12.0, 74.0], "look": [0.0, 3.0, 0.0], "fov": 36, "ease": "p3"},   # crane back: the crowd
         {"t": CUT["tree"], "pos": [18.0, 16.0, 92.0], "look": [0.0, 4.0, 0.0], "fov": 36, "ease": "sine"},
     ],
     "tree": [
@@ -126,7 +126,7 @@ CAM = {
         {"t": CUT["road"], "pos": [12.0, -20.0, 80.0], "look": [0.0, 2.0, 0.0], "fov": 36, "ease": "sine"},
     ],
     "road": [
-        # the ride-along: locked beside the cell, looking up the vessel past it (walls stream; no cell within 15 µm of the lens)
+        # the ride-along: locked beside the cell, looking up the vessel past it (walls stream; no cell within 15 μm of the lens)
         {"t": CUT["road"], "pos": [7.0, -10.0, 21.0], "look": [0.0, -0.5, -1.0], "fov": 40},
         {"t": RIDE1, "pos": [7.0, -10.0, 21.0], "look": [0.0, -0.5, -1.0], "fov": 40, "ease": "sine"},
         {"t": A("vo03:single", 0.3), "pos": [14.0, -12.0, 50.0], "look": [0.0, -15.0, 0.0], "fov": 36, "ease": "p2"},    # single file: the cells coming up behind it
@@ -136,7 +136,7 @@ CAM = {
         {"t": A("vo04:parachute", -0.2), "pos": [9.5, -5.0, 27.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "p2"},   # three-quarter: the cup
         {"t": SQUEEZE, "pos": [8.5, -3.0, 26.0], "look": [0.0, -1.6, 0.0], "fov": 34, "ease": "sine"},
         {"t": B["why"]["t1"] - 0.2, "pos": [11.0, -6.0, 32.0], "look": [0.0, -4.0, 0.0], "fov": 34, "ease": "sine"},    # the next cell squeezes too
-        {"t": A("vo05:tightest", -0.2), "pos": [3.0, -1.5, 30.0], "look": [0.0, -2.4, 0.0], "fov": 34, "ease": "p2"},     # side on: the 3 µm vessel
+        {"t": A("vo05:tightest", -0.2), "pos": [3.0, -1.5, 30.0], "look": [0.0, -2.4, 0.0], "fov": 34, "ease": "p2"},     # side on: the 3 μm vessel
         {"t": CUT["net"], "pos": [3.0, -1.5, 29.0], "look": [0.0, -2.4, 0.0], "fov": 34, "ease": "sine"},
     ],
     "net": [  # the reveal pull: an even zoom out (a geometric dolly), then a slow drift
@@ -169,7 +169,7 @@ for keys in CAM.values():                                # every key is an offse
 FOC = {
     "hook": [{"t": 0.0, "at": "hero", "f": 0.55}, {"t": A("vo01:narrower", -0.2), "at": "ahead", "f": 0.5}],
     "meet": [{"t": CUT["meet"], "at": "hero", "f": 0.5}, {"t": A("vo02:nucleus", -0.2), "at": "cap", "f": 0.5},
-             {"t": A("vo02:trillion"), "at": "hero", "f": 0.3}],
+             {"t": A("vo02:together"), "at": "hero", "f": 0.3}],
     "tree": [{"t": CUT["tree"], "at": "hero", "f": 0.25}],
     "road": [{"t": CUT["road"], "at": "hero", "f": 0.45}, {"t": A("vo03:single", -0.4), "at": "hero", "f": 0.3},
              {"t": A("vo04:dent", -0.6), "at": "cap", "f": 0.5}, {"t": A("vo04:parachute", -0.2), "at": "hero", "f": 0.5},
@@ -183,7 +183,7 @@ FOC = {
 # ── the overlay: labels (each names its part in words; colour on the dot and border), pills, counters ──
 LABELS = [
     {"id": "rbc", "text": "red blood cell", "color": "oxy", "mark": "dot", "at": "hero", "t0": A("vo02:Each"), "t1": CUT["tree"], "shot": "meet", "side": 1},
-    {"id": "nonuc", "text": "no nucleus", "color": "text", "mark": "none", "at": "cap", "t0": A("vo02:nucleus"), "t1": A("vo02:you've", 0.6), "shot": "meet", "side": -1},
+    {"id": "nonuc", "text": "no nucleus", "color": "text", "mark": "none", "at": "cap", "t0": A("vo02:nucleus"), "t1": A("vo02:they", 0.6), "shot": "meet", "side": -1},
     {"id": "capillary", "text": "tiniest pipe", "color": "lining", "mark": "dot", "at": "capwall", "t0": A("vo03:tiniest"), "t1": CUT["road"], "shot": "tree", "side": -1},
     {"id": "dimple", "text": "the dent", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:dent"), "t1": A("vo04:so", 0.3), "shot": "road", "side": 1},
     {"id": "ghostw", "text": "its full width", "color": "text", "mark": "dot", "at": "ghost", "t0": A("vo05:half"), "t1": CUT["net"] - 0.3, "shot": "road", "side": 1},
@@ -194,10 +194,10 @@ LABELS = [
 ]
 O2_OUT = A("vo06:oxygen")                                # the O₂ swarm's clock (scene.mjs): it leaves the vessel on "oxygen"
 SCALES = [
-    {"id": "cell", "text": "7.5 µm", "len": 7.5, "at": "hero", "t0": A("vo02:disc"), "t1": A("vo02:nucleus", -0.3), "shot": "meet"},
-    {"id": "vessel", "text": "3 µm", "len": 3.0, "at": "hero", "t0": A("vo05:less"), "t1": CUT["net"] - 0.4, "shot": "road"},   # the HUD fades over 0.4 s: gone by the cut
-    # from +2.9 s: before that the pull is still too close for a 50 µm bar to fit (scene.mjs shows no bar rather than a clamped one)
-    {"id": "net", "text": "50 µm", "len": 50.0, "at": "hero", "t0": CUT["net"] + 2.9, "t1": CUT["out"] - 0.4, "shot": "net"},
+    {"id": "cell", "text": "7.5 μm", "len": 7.5, "at": "hero", "t0": A("vo02:disc"), "t1": A("vo02:nucleus", -0.3), "shot": "meet"},
+    {"id": "vessel", "text": "3 μm", "len": 3.0, "at": "hero", "t0": A("vo05:less"), "t1": CUT["net"] - 0.4, "shot": "road"},   # the HUD fades over 0.4 s: gone by the cut
+    # from +2.9 s: before that the pull is still too close for a 50 μm bar to fit (scene.mjs shows no bar rather than a clamped one)
+    {"id": "net", "text": "50 μm", "len": 50.0, "at": "hero", "t0": CUT["net"] + 2.9, "t1": CUT["out"] - 0.4, "shot": "net"},
 ]
 GHOST = [A("vo05:half", -0.1), CUT["net"]]               # the undeformed cell's outline, beside the folded one
 LIFE = {"t0": A("vo05:about", -0.2), "keys": [[A("vo05:about"), 0], [A("vo05:months"), 4]], "t1": CUT["out"] - 0.3, "unit": "months", "label": "one red cell's life"}
@@ -211,7 +211,9 @@ BADGES = [
     {"id": "nts-in", "text": "not to scale", "t0": A("vo08:carries"), "t1": EC},
 ]
 TITLE = {"series": "Body Backstage · No. 01", "title": "Single *file*", "t1": round(A("vo01:Its") + 0.35, 4), "sig": 0.0, "y": 0.17}
-END = {"t0": EC, "title": "Next, inside: *a billion passengers*", "next": "Body Backstage · No. 02", "follow": "Follow Body Backstage"}
+END = {"t0": EC, "title": "Next: *a billion passengers*", "next": "Body Backstage · No. 02", "follow": "Follow Body Backstage",
+       "fact": "Red cells squeeze through vessels about 3 μm wide, under half their own width (University of Rochester)."}   # c1, c10
+SCAN = {"up": [CUT["net"] + 0.7, CUT["net"] + 2.2], "park": 0.5, "off": CUT["out"]}   # the net in scan view: the line rises and parks mid-frame
 
 # the lub-dub: beats on the 75 BPM grid (a beat is 0.8 s); the pulse line kicks on each lub
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
@@ -258,7 +260,7 @@ film = {
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "clock": CLOCK, "ride": [RIDE0, RIDE1 + RIDE_BACK],
     "hero": HERO, "cam": CAM, "foc": FOC,
     "labels": LABELS, "o2": O2_OUT, "scales": SCALES, "ghost": GHOST, "life": LIFE, "tally": TALLY, "badges": BADGES,
-    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
+    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END, "scan": SCAN,
     "look": THEME["scene"],
     "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

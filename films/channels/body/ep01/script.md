@@ -25,15 +25,15 @@ counts; comparisons and plain words), the claims unchanged. The picture is the l
 vo: How does this cell *fit*? {-} Its pipe is *narrower* than it is. {c1}
 
 ## normal {shot: craneBack to the hero cell in an artery · locator: 2D body silhouette in the HUD, the region marked by a chartreuse pulse-line blip on the beat (no ring: body has no circles) · labels: red blood cell, no nucleus · energy: 0.45} (5.6–17.6 s)
-vo: Each one is a *dented disc*. {c2} It even threw out its own *nucleus* to make room. {c3} And you've got about
-twenty-five trillion of them: most of your own cells. {c4}
+vo: Each one is a *dented disc*, pressed in on both sides. {c2} It even threw out its own *nucleus*. {c3} And they outnumber all your other
+cells put together. {c4}
 
 ## change {shot: rideAlong as the vessel branches and narrows, slowed ×10 with a "slowed ×10" badge, at most 3 s, no motes within two cell widths of the lens · label: capillary · energy: 0.5} (17.6–26.8 s)
 vo: Follow one as the pipes split, and split again, into the *tiniest* ones. {c5} There's no room to pass, so
 they go in *single file*. {c6}
 
 ## why {shot: slow push; fold, slide, spring back · picture-only 2.5 s · energy: 0.55} (26.8–38 s)
-vo: You'd guess it just stretches to fit. {-} It can't. {c7} That *dent* gives it spare skin, so it folds up neatly
+vo: You'd guess its skin just stretches to fit. {-} It can't. {c7} That *dent* gives it spare skin, so it folds up neatly
 like a *parachute* instead. {c8,c9}
 
 ## whoa {shot: pullBack to a capillary net, every cell in single file · non-circular iris (membrane blob or vertical wipe) + scale pill "3 µm" · picture-only 3.5 s · energy: 0.7} (38–51.2 s)

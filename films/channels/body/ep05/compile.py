@@ -7,7 +7,7 @@ Places (scene.mjs), joined by the membrane iris on a section's sound:
   lung   an airway tree (generations compressed, badged) whose chosen tip, a cluster of air sacs, sits at the origin;
          the hero sac cut open (hollow), a net of capillaries over it. The change draws the old idea over the same
          cluster (a "clotted blood" envelope: dense, solid flesh, an illustration) and dissolves it on "bubbles".
-  wall   the air–blood wall at true scale (µm): air, a 0.4 µm wall (under 0.5 µm, c7), a capillary with a red cell; O₂ slipping across;
+  wall   the air–blood wall at true scale (μm): air, a 0.4 μm wall (under 0.5 μm, c7), a capillary with a red cell; O₂ slipping across;
          then the wall thickens and the O₂ slows (the stakes).
   room   metres: a person, the sacs unfolding from their chest into a 70 m² floor, a full doubles tennis court's lines around it;
          they fold back for the takeaway; the person breathes through the tally.
@@ -74,8 +74,8 @@ CAM = {
         {"t": B["why"]["t0"] + 0.2, "pos": [2.6, 1.8, 9.0], "look": "HERO", "fov": 34, "ease": "p2"},           # the open sac, its capillaries
         {"t": CUT["wall"], "pos": [2.2, 1.5, 7.8], "look": "HERO", "fov": 34, "ease": "sine"},
     ],
-    # the camera sits between the wall's faces (no side face adds to its width: the wall reads at its true 0.4 µm),
-    # the cell and the crossing band above the caption plate. 26 Oct audit: x 0.4 → 0.32 with the barrier now 0.4 µm
+    # the camera sits between the wall's faces (no side face adds to its width: the wall reads at its true 0.4 μm),
+    # the cell and the crossing band above the caption plate. 26 Oct audit: x 0.4 → 0.32 with the barrier now 0.4 μm
     # (scene.mjs WS), the same 0.8 of the way across it, so the camera stays between its faces
     "wall": [
         {"t": CUT["wall"], "pos": [0.32, 1.0, 30.0], "look": [2.7, -1.1, 0.0], "fov": 34},
@@ -126,7 +126,7 @@ SPINE = [
     {"id": "forks", "t0": A("vo02:fork", -0.2), "t1": A("vo02:At", -0.2), "keys": [[A("vo02:fork"), 1], [A("vo02:twenty-three", 0.3), 23]], "unit": "", "label": [[0.0, "counting the forks"], [A("vo02:twenty-three", 0.3), "forks, up to about"]]},   # c2
     {"id": "size", "t0": A("vo02:each"), "t1": B["change"]["t0"] - 0.2, "text": "0.2", "unit": "mm", "label": "each pocket, about", "at": [0.5, 0.26]},   # c3
     {"id": "year", "t0": A("vo03:sixteen", -0.1), "t1": A("vo03:bubbles", 0.7), "text": "1661", "unit": "", "label": "Malpighi's microscope"},   # c5
-    {"id": "wallt", "t0": A("vo04:thinner", -0.2), "t1": A("vo04:red", -0.55), "text": "0.5", "unit": "µm", "label": "the wall, under", "at": [0.5, 0.24]},   # c7 (the thin half; as thin as about 0.2 µm)
+    {"id": "wallt", "t0": A("vo04:thinner", -0.2), "t1": A("vo04:red", -0.55), "text": "0.5", "unit": "μm", "label": "the wall, under", "at": [0.5, 0.24]},   # c7 (the thin half; as thin as about 0.2 μm)
     {"id": "area", "t0": A("vo05:Spread"), "t1": B["takeaway"]["t1"] - 0.3, "keys": [[ROOM["unfold"][0], 0], [ROOM["unfold"][1], 70]], "unit": "m²", "label": [[A("vo05:Spread"), "unfolded, about"], [ROOM["fold"][1], "folded in your chest, about"]]},   # held through the takeaway   # c9 (estimates 50–140 m²: the whoa's badge)
 ]
 # 5.5 L a minute (c13: 5–8 at rest): the tally reads 6.0 L as "six" is said

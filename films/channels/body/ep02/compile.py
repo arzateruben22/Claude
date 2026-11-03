@@ -9,10 +9,10 @@ Anchors as in episode 1: A("vo03:get") is when "board" starts in line vo03; ":en
 beat's start. Cuts sit half a frame before a frame and are hidden at the closed moment of the membrane iris.
 
 The slides (each its own place and scale, joined by the iris; scene.mjs builds them):
-  cell   the hero red cell cut open, its cut face packed with hemoglobin (µm; hemoglobin oversized)
+  cell   the hero red cell cut open, its cut face packed with hemoglobin (μm; hemoglobin oversized)
   hb     one hemoglobin, four O₂ boarding (1 unit = 0.5 nm; an illustration)
-  skin   a block of skin over a vein, light going in (1 unit = 50 µm; an illustration, not to scale)
-  lung   an air sac with a capillary on it: dark cells arrive, flush bright, leave (µm; slowed)
+  skin   a block of skin over a vein, light going in (1 unit = 50 μm; an illustration, not to scale)
+  lung   an air sac with a capillary on it: dark cells arrive, flush bright, leave (μm; slowed)
   nerve  a myelinated fibre; the signal jumps node to node (the tease)
 
 If build/cues-body-backstage-002-9x16.json exists (render.mjs --cues), its measured positions and first-shown

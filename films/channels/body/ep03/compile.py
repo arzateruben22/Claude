@@ -4,7 +4,7 @@ Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word
   python3 -I films/channels/body/ep03/compile.py
 
 One world, few cuts (WRITING.md, "The picture"). The fibres (scene.mjs):
-  hero    a myelinated fibre with its cell body at x < 0 and its terminal at the far end (µm; internodes compressed)
+  hero    a myelinated fibre with its cell body at x < 0 and its terminal at the far end (μm; internodes compressed)
   bare    a thin bare fibre above it (the re-fire, step by step; the slow racer)
   ms      a fibre below it in brain and spinal cord, one sheath damaged (the signal falters there)
 One illustrated slide, the drum: Helmholtz's method (a frog muscle on its nerve, a lever, a pen on a turning drum;
@@ -52,7 +52,7 @@ HOOK = {"node0": 2, "t0": -HOP * 0.35}   # frame 0: the spark half way across th
 HOOK_RUN = A("vo02:cell's", -0.3)                        # "racing down one cell's thin fibre": a fresh spike leaves the cell body
 WHY_JUMP = {"t0": A("vo04:Many", 0.2), "hop": 0.8, "k0": 2}   # the hero at "myelin": hops from node 2, one lands on "gaps", one on "leaps"
 MS = {"t0": A("vo04:Where", 0.0), "hop": 0.9, "bad": 6, "k0": 4, "stall": A("vo04:stall", 0.1)}   # two hops to the damaged sheath, falters, stalls
-BARE = {"t0": B["why"]["t0"] + 0.2, "v": 10.0, "x0": 90.0, "step": 5.0}   # why: the bare fibre re-fired step by step (µm/s, shown)
+BARE = {"t0": B["why"]["t0"] + 0.2, "v": 10.0, "x0": 90.0, "step": 5.0}   # why: the bare fibre re-fired step by step (μm/s, shown)
 # the race, from one start line: the bare head crawls a fifth of the frame; wrapped pulses streak across every 1.2 s (150 : 1)
 RACE = {"x0": 24.0, "bare0": A("vo05:thinnest", -0.1), "vbare": 2.0, "wrap0": A("vo05:Thick"), "vwrap": 300.0, "every": 1.2,
         # "Thick wrapped ones" (26 Oct audit): the wrapped racer (the hero) is drawn 1.5× thicker in the race. It thickens

@@ -58,12 +58,20 @@
    "t": 0.0,
    "kind": "badge",
    "tag": "nts-cell",
-   "text": "not to scale"
+   "text": "not to scale",
+   "pos": [
+    0.659,
+    0.146
+   ]
   },
   {
    "t": 0.0,
    "kind": "label",
-   "tag": "o2hook"
+   "tag": "o2hook",
+   "pos": [
+    0.703,
+    0.401
+   ]
   },
   {
    "t": 0.0,
@@ -80,7 +88,11 @@
   {
    "t": 2.3167,
    "kind": "counter.show",
-   "tag": "seats"
+   "tag": "seats",
+   "pos": [
+    0.5,
+    0.262
+   ]
   },
   {
    "t": 2.9,
@@ -97,23 +109,39 @@
   {
    "t": 6.633333333333334,
    "kind": "label",
-   "tag": "hb"
+   "tag": "hb",
+   "pos": [
+    0.358,
+    0.433
+   ]
   },
   {
    "t": 8.233333333333333,
    "kind": "counter.show",
-   "tag": "copies"
+   "tag": "copies",
+   "pos": [
+    0.5,
+    0.262
+   ]
   },
   {
    "t": 9.916666,
    "kind": "badge",
    "tag": "ill-hb",
-   "text": "illustration · slowed"
+   "text": "illustration · slowed",
+   "pos": [
+    0.55,
+    0.146
+   ]
   },
   {
    "t": 10.316666,
    "kind": "counter.show",
-   "tag": "aboard"
+   "tag": "aboard",
+   "pos": [
+    0.5,
+    0.262
+   ]
   },
   {
    "t": 10.766666666666667,
@@ -124,12 +152,20 @@
   {
    "t": 11.033333333333333,
    "kind": "label",
-   "tag": "iron"
+   "tag": "iron",
+   "pos": [
+    0.719,
+    0.355
+   ]
   },
   {
    "t": 13.333333333333334,
    "kind": "label",
-   "tag": "o2"
+   "tag": "o2",
+   "pos": [
+    0.703,
+    0.456
+   ]
   },
   {
    "t": 14.4,
@@ -167,7 +203,11 @@
    "t": 24.383333,
    "kind": "badge",
    "tag": "ill-skin",
-   "text": "illustration · not to scale"
+   "text": "illustration · not to scale",
+   "pos": [
+    0.476,
+    0.146
+   ]
   },
   {
    "t": 24.4,
@@ -178,27 +218,47 @@
   {
    "t": 24.733333333333334,
    "kind": "label",
-   "tag": "vein"
+   "tag": "vein",
+   "pos": [
+    0.587,
+    0.381
+   ]
   },
   {
    "t": 27.466666666666665,
    "kind": "counter.show",
-   "tag": "venous"
+   "tag": "venous",
+   "pos": [
+    0.573,
+    0.581
+   ]
   },
   {
    "t": 27.466666666666665,
    "kind": "label",
-   "tag": "venous"
+   "tag": "venous",
+   "pos": [
+    0.573,
+    0.581
+   ]
   },
   {
    "t": 33.13333333333333,
    "kind": "label",
-   "tag": "redlight"
+   "tag": "redlight",
+   "pos": [
+    0.422,
+    0.274
+   ]
   },
   {
    "t": 33.4,
    "kind": "label",
-   "tag": "bluelight"
+   "tag": "bluelight",
+   "pos": [
+    0.281,
+    0.212
+   ]
   },
   {
    "t": 35.0,
@@ -210,7 +270,11 @@
    "t": 39.583333,
    "kind": "badge",
    "tag": "nts-lung",
-   "text": "not to scale"
+   "text": "not to scale",
+   "pos": [
+    0.659,
+    0.191
+   ]
   },
   {
    "t": 39.583333,
@@ -227,12 +291,20 @@
   {
    "t": 41.13333333333333,
    "kind": "label",
-   "tag": "sac"
+   "tag": "sac",
+   "pos": [
+    0.616,
+    0.259
+   ]
   },
   {
    "t": 45.666667,
    "kind": "counter.show",
-   "tag": "quarter"
+   "tag": "quarter",
+   "pos": [
+    0.5,
+    0.262
+   ]
   },
   {
    "t": 46.066666999999995,
@@ -260,17 +332,29 @@
   {
    "t": 53.400000000000006,
    "kind": "counter.show",
-   "tag": "full"
+   "tag": "full",
+   "pos": [
+    0.5,
+    0.262
+   ]
   },
   {
    "t": 53.53333333333333,
    "kind": "label",
-   "tag": "arrive"
+   "tag": "arrive",
+   "pos": [
+    0.302,
+    0.54
+   ]
   },
   {
    "t": 56.766666666666666,
    "kind": "label",
-   "tag": "leave"
+   "tag": "leave",
+   "pos": [
+    0.648,
+    0.344
+   ]
   },
   {
    "t": 57.166666666666664,
@@ -291,7 +375,11 @@
   {
    "t": 59.9,
    "kind": "counter.show",
-   "tag": "tally"
+   "tag": "tally",
+   "pos": [
+    0.458,
+    0.29
+   ]
   },
   {
    "t": 60.0,
@@ -332,7 +420,11 @@
    "t": 65.183333,
    "kind": "badge",
    "tag": "nts-nerve",
-   "text": "not to scale · slowed"
+   "text": "not to scale · slowed",
+   "pos": [
+    0.55,
+    0.146
+   ]
   },
   {
    "t": 65.2,
@@ -358,7 +450,11 @@
   {
    "t": 68.96666666666667,
    "kind": "label",
-   "tag": "node"
+   "tag": "node",
+   "pos": [
+    0.61,
+    0.386
+   ]
   },
   {
    "t": 69.6667,
@@ -418,5 +514,25 @@
    "t": 65.5,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "o2hook": 0,
+  "hb": 6.6667,
+  "iron": 11.0667,
+  "o2": 13.3667,
+  "vein": 24.7667,
+  "venous": 27.5,
+  "redlight": 33.1667,
+  "bluelight": 33.4333,
+  "sac": 41.1667,
+  "arrive": 53.5667,
+  "leave": 56.8,
+  "node": 69,
+  "quarter": 45.7,
+  "tally": 59.9333,
+  "seats": 2.3333,
+  "copies": 8.2667,
+  "aboard": 10.3333,
+  "full": 53.4333
+ }
 }

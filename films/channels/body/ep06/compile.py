@@ -4,7 +4,7 @@ Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word
   python3 -I films/channels/body/ep06/compile.py
 
 Places (scene.mjs), joined by the membrane iris on a section's sound:
-  vein    a venule under a fingertip's skin (µm; the cell, the red cells and the gap near true size): a floor of wall
+  vein    a venule under a fingertip's skin (μm; the cell, the red cells and the gap near true size): a floor of wall
           cells with a seam between two of them at x = 0, the blood streaming over it (slowed, badged), the tissue
           beneath. The hero neutrophil (set/wanderer.js) rides the stream, rolls, stops, crawls to the seam, wedges
           its nucleus in, pours through, and the seam closes behind it. In the hook and the whoa the floor is cut
@@ -51,7 +51,7 @@ CUT = {"normal": cut(B["normal"]["t0"]), "why": cut(B["why"]["t0"]), "whoa": cut
 SHOTS = [{"at": 0.0, "name": "hook"}] + [{"at": t, "name": n} for n, t in CUT.items()]
 IRIS = [{"t": t, "cx": 0.5, "cy": 0.42} for t in CUT.values()]
 
-# ── the hero's day (µm, x along the stream; the seam at x = 0) ─────────────────────────────────────
+# ── the hero's day (μm, x along the stream; the seam at x = 0) ─────────────────────────────────────
 HOOK = {"pass": [0.46, 0.54]}                                       # frame 0: halfway through, easing on a little
 NORMAL = {"x": [-80.0, -18.0], "out": [A("vo02:outside", -0.2), B["normal"]["t1"]]}   # riding the stream; then down through the lining
 WHY = {
@@ -132,7 +132,7 @@ LABELS = [
     {"id": "grips", "text": "grips", "color": "signal", "mark": "dot", "at": "grips", "t0": A("vo04:grips"), "t1": A("vo04:It#2", -0.2), "shot": "why", "side": 1},
     {"id": "seam", "text": "a seam between two wall cells", "color": "lining", "mark": "dot", "at": "seam", "t0": A("vo04:seam"), "t1": A("vo04:In", -0.2), "shot": "why", "side": -1},
 ]
-SCALE = {"t0": A("vo02:wider", -0.1), "t1": A("vo02:Under", -0.2), "text": "about 8 µm · round, in blood"}   # c3
+SCALE = {"t0": A("vo02:wider", -0.1), "t1": A("vo02:Under", -0.2), "text": "about 8 μm · round, in blood"}   # c3
 TALLY = {"t0": round(A("vo01:This", 0.3) + 0.45, 4),   # after the title has gone (the poster is the cell alone)
           "t1": B["tease"]["t0"] - 0.2, "lit": [B["meanwhile"]["t0"], B["tease"]["t0"] - 0.2], "rate": 1.5e10 / 86400.0,
          "label": "while you watched: new neutrophils"}   # c23: 1.5 × 10¹⁰ a day ÷ 86,400 s (computed), a low estimate

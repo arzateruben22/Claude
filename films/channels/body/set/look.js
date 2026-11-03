@@ -125,18 +125,35 @@ export const look = (THREE, o) => {
   // ── fog to the backdrop, and a fresnel rim, patched into any built-in lit material ──
   const fog = new THREE.FogExp2(lin(tok.bg || "#0A1F1C"), o.fogDensity ?? 0.006);
   const rimCol = lin(sc["light-rim"] || "#CFF5E6");
+  // live scan (3 Nov): scan view, shared by every patched material. Below the scan line (SCAN.y: a fraction of the frame
+  // from the top; SCAN.on 0..1) a surface reads as the instrument sees it: a dark glass core, glowing edges, iso-depth
+  // slices; blood (p.hot) runs hot red. Colours are display-space, applied after the tone map and fog.
+  const scanU = { uScanY: { value: 2 }, uScanOn: { value: 0 } };
+  const SCAN = { set(y, on = 1) { scanU.uScanY.value = y; scanU.uScanOn.value = on; } };
   const patch = (m, p = {}) => {
     const fres = p.fresnel ?? 0, fresPow = p.fresnelPower ?? 3, prev = m.onBeforeCompile;
+    const sEdge = new THREE.Color(p.scanEdge || (p.hot ? "#FF5A6E" : "#BFF8E4")), sCore = new THREE.Color(p.scanCore || (p.hot ? "#2A0208" : "#021416"));
     m.onBeforeCompile = (sh, r) => {
       if (prev) prev(sh, r);
-      Object.assign(sh.uniforms, uniforms, { uFres: { value: fres }, uFresCol: { value: rimCol }, uFresPow: { value: fresPow } });
+      Object.assign(sh.uniforms, uniforms, scanU, { uFres: { value: fres }, uFresCol: { value: rimCol }, uFresPow: { value: fresPow },
+        uSEdge: { value: sEdge }, uSCore: { value: sCore }, uSHot: { value: p.hot ? 1 : 0 }, uSCont: { value: p.contour ?? 0 } });
       sh.fragmentShader = sh.fragmentShader
         .replace("#include <common>", "#include <common>\n" + GRAD + "\nuniform float uFres, uFresPow, uFogStart; uniform vec3 uFresCol;")
         .replace("#include <emissivemap_fragment>", "#include <emissivemap_fragment>\n  totalEmissiveRadiance += uFresCol * uFres * pow(1.0 - clamp(dot(normalize(normal), normalize(vViewPosition)), 0.0, 1.0), uFresPow);")
         .replace("#include <fog_fragment>", `#ifdef USE_FOG
           float fogD = max(0.0, vFogDepth - uFogStart), fogF = 1.0 - exp(-fogDensity * fogDensity * fogD * fogD);
           gl_FragColor.rgb = mix(gl_FragColor.rgb, innerBg(gl_FragCoord.xy), fogF);
-        #endif`);
+        #endif`)
+        .replace("#include <common>", "#include <common>\nuniform float uScanY, uScanOn, uSHot, uSCont; uniform vec3 uSEdge, uSCore;")
+        .replace("#include <dithering_fragment>", `#include <dithering_fragment>
+          if (uScanOn > 0.001) {
+            float yTop = 1.0 - gl_FragCoord.y / uRes.y, below = smoothstep(uScanY - 0.002, uScanY + 0.002, yTop) * uScanOn;
+            float fr = pow(1.0 - abs(dot(normalize(vNormal), normalize(vViewPosition))), 1.7);
+            vec3 sv = mix(uSCore, uSEdge, fr) + uSEdge * 0.9 * pow(fr, 7.0);
+            sv = mix(sv, uSEdge * (0.55 + 0.6 * fr), uSHot);
+            if (uSCont > 0.0) { float z = -vViewPosition.z * uSCont, w = fwidth(z); sv += uSEdge * 0.5 * (1.0 - smoothstep(0.0, 1.5 * w, abs(fract(z) - 0.5) - 0.5 + 1.5 * w)); }
+            gl_FragColor.rgb = mix(gl_FragColor.rgb, sv, below);
+          }`);
     };
     m.customProgramCacheKey = () => `mi-look-${fres}-${fresPow}-${p.key || ""}`;
     return m;
@@ -176,5 +193,17 @@ export const look = (THREE, o) => {
         pos[3 * i] = (sx + 0.06 * Math.sin(t * 0.23 + ph)) * ww; pos[3 * i + 1] = (((sy + 1 + 0.03 * t + 0.05 * Math.sin(t * 0.31 + ph * 2)) % 2) - 1) * hh; pos[3 * i + 2] = z; });
       geo.attributes.position.needsUpdate = true; } };
   };
-  return { lights, backdrop, fog, place, patch, lin, acesInv: (h) => acesInv(h, exposure), uniforms, hemi, key, rim, finish, studio, motes };
+  // the scan line itself (DOM, over the picture): L.scanLine(stage).set(yFraction, opacity)
+  const scanLine = (root) => {
+    const ln = document.createElement("div"), tag = document.createElement("div");
+    Object.assign(ln.style, { position: "absolute", left: 0, right: 0, height: `${Math.max(2, H * 0.0016).toFixed(1)}px`, background: "var(--signal)", zIndex: 2, pointerEvents: "none",
+      boxShadow: "0 0 14px 3px rgba(214,242,95,.55), 0 0 60px 10px rgba(214,242,95,.16)", visibility: "hidden" });
+    Object.assign(tag.style, { position: "absolute", left: `${(W * 90 / 1080).toFixed(0)}px`, zIndex: 2, pointerEvents: "none", font: `500 ${(W * 0.021).toFixed(1)}px/1 var(--font-mono)`,
+      letterSpacing: ".14em", textTransform: "uppercase", color: "var(--signal)", background: "rgba(3,12,14,.72)", padding: `${(W * 0.004).toFixed(1)}px ${(W * 0.009).toFixed(1)}px`, borderRadius: `${(W * 0.006).toFixed(1)}px`, visibility: "hidden" });
+    tag.textContent = "▼ scan view";
+    root.append(ln, tag);
+    return { set(y, op = 1, text) { const v = op > 0.01 && y > -0.01 && y < 1.01; ln.style.visibility = tag.style.visibility = v ? "visible" : "hidden"; if (!v) return;
+      ln.style.top = `${(y * H).toFixed(1)}px`; ln.style.opacity = tag.style.opacity = op.toFixed(3); tag.style.top = `${(y * H + H * 0.009).toFixed(1)}px`; if (text) tag.textContent = text; } };
+  };
+  return { lights, backdrop, fog, place, patch, lin, acesInv: (h) => acesInv(h, exposure), uniforms, hemi, key, rim, finish, studio, motes, SCAN, scanLine };
 };

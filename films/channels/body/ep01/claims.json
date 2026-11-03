@@ -12,7 +12,7 @@
  },
  {
   "id": "c2",
-  "sentence": "Each one is a dented disc.",
+  "sentence": "Each one is a dented disc, pressed in on both sides.",
   "claim": "Red blood cells are dimpled (biconcave) discs, 7–8 µm across.",
   "source_url": "https://www.elsevier.com/resources/anatomy/blood/blood-cells/erythrocyte/16056",
   "source_title": "Erythrocyte (Elsevier, Complete Anatomy)",
@@ -23,7 +23,7 @@
  },
  {
   "id": "c3",
-  "sentence": "It even threw out its own nucleus to make room.",
+  "sentence": "It even threw out its own nucleus.",
   "claim": "A maturing mammalian red blood cell expels its nucleus (enucleation), so mature red cells have none. In the Whitehead study (mouse erythroblasts), a contracting ring of actin pinches the nucleus off and macrophages clear it.",
   "source_url": "https://wi.mit.edu/news/how-red-blood-cells-nuke-their-nuclei",
   "source_title": "Whitehead Institute, How red blood cells nuke their nuclei",
@@ -34,14 +34,14 @@
  },
  {
   "id": "c4",
-  "sentence": "And you've got about twenty-five trillion of them: most of your own cells.",
+  "sentence": "And they outnumber all your other cells put together.",
   "claim": "A reference adult has about 30 trillion human cells, about 84% of them red blood cells (about 25 trillion). The body also holds about 38 trillion bacteria, hence 'your own cells'.",
   "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=113005",
   "source_title": "BioNumbers 113005: distribution of cell number and mass by cell type (Sender, Fuchs & Milo 2016, PLOS Biology)",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Cross-check fix applied: 'most of the cells in your body' was false once bacteria count. The 84% share is from BioNumbers' excerpt of the paper's figure and Medical News Today; 0.84 × 30 trillion = 25.2 trillion (computed)."
+  "note": "Cross-check fix applied: 'most of the cells in your body' was false once bacteria count. The 84% share is from BioNumbers' excerpt of the paper's figure and Medical News Today; 0.84 × 30 trillion = 25.2 trillion (computed). Reboot (3 Nov): spoken as 'outnumber all your other cells put together' (84% of human cells, so more than all the rest combined)."
  },
  {
   "id": "c5",

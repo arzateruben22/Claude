@@ -54,6 +54,7 @@ L.studio(renderer, scene, 0.6);                          // live scan: reflectio
 if (window.CINEMA) Object.assign(window.CINEMA, { threshold: 0.95, bloom: 0.38, maxCoc: 0.026 });
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-life .v { color: var(--pulse); }
+.mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 500 3vmin/1.35 var(--font-text); color: var(--text-2); }
 #hud-life, #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 #hud-life .lb, #hud-tally .lb { color: var(--text); }
 #hud-tally .v { font-size: 9.6vmin; }
@@ -486,7 +487,7 @@ const ANCH = {
   sickle: (t) => { const s = sickleS(t), p = PH.at(s); sickleBasis(s); return [p[0] + vSy.x * 2.1, p[1] + vSy.y * 2.1, p[2] + vSy.z * 2.1 + 0.6]; },   // its convex edge, from t alone
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side });
-hud.badge("warp", { from: clk, slot: "tr" });   // top right: the title owns a keep-out at top left (owner, 3 Nov)
+hud.badge("warp", { from: clk, slot: "tr", t0: FILM.title.t1 + 0.3 });   // top right: the title owns a keep-out at top left (owner, 3 Nov)
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: "tr" });
 // a pill's bar is its length at the hero, on screen. hud.js clamps a bar to 4 px–60 % of the safe width, and a
 // clamped bar no longer matches its text (the meet close-up's 7.5 µm is 690–860 px at 1080 wide), so a length that
@@ -505,9 +506,11 @@ const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: c
 const yPulse = pulseLine({ width: Math.round(560 * S1), height: Math.round(58 * S1), at: 0.5 });
 tallyEl.appendChild(yPulse.el);
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
+{ const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * S1), at: 0.25 });
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 const stageEl = document.querySelector(".stage");
+const SCL = L.scanLine(stageEl);
 const IR = iris(stageEl, { events: FILM.iris });
 const FIN = L.finish(stageEl);                            // live scan: grain and vignette over the picture
 scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze (bokeh off focus)
@@ -559,7 +562,8 @@ window.seek = function (t) {
   writeCells(t, sh);
   writeSwarm(t, sh);
   // the ghost outline: only in the tightest vessel, beside the folded cell
-  const g = sh === "road" ? presence(t, FILM.ghost[0], FILM.ghost[1] - 0.25, { d: 0.45, out: 0.25 }).o : 0;
+  // the ghost: its full, unfolded width beside the folded cell; also from frame 0, so the hook's "narrower than it is" is on screen
+  const g = sh === "road" ? presence(t, FILM.ghost[0], FILM.ghost[1] - 0.25, { d: 0.45, out: 0.25 }).o : sh === "hook" ? 0.75 * (1 - seg(t, FILM.title.t1 + 1.2, FILM.title.t1 + 1.8)) : 0;
   ghost.visible = g > 0.001; ghost.material.uniforms.opacity.value = 0.85 * g;
   ghost.position.copy(heroPos3); ghost.quaternion.copy(qH);
   // the overlay and its motifs
@@ -571,6 +575,9 @@ window.seek = function (t) {
   LOC.update(t, lp, beatAmp(t, MEET_BEATS));
   IR.update(t);
   FIN.set(t);
+  // scan view (the look's signature): in the net, the line rises from the bottom and parks mid-frame; below it, scan view
+  { const S = FILM.scan, on = sh === "net" && t >= S.up[0] && t < S.off ? 1 : 0, y = on ? 1 - (1 - S.park) * E.inout2(seg(t, S.up[0], S.up[1])) : 2;
+    L.SCAN.set(y, on); SCL.set(y, on * (1 - seg(t, S.off - 0.35, S.off - 0.05)), "▼ scan view · blood flow"); }
   MOT.set(t, sh === "net" ? 0.6 : 1);
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;

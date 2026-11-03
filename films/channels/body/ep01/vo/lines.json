@@ -40,12 +40,12 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Each one is a dented disc. It even threw out its own nucleus to make room. And you've got about twenty-five trillion of them: most of your own cells.",
+   "text": "Each one is a dented disc, pressed in on both sides. It even threw out its own nucleus. And they outnumber all your other cells put together.",
    "stars": [
     "dented disc",
     "nucleus"
    ],
-   "phonemes": "ˈiːtʃ wˈɒn ɪz ɐ dˈɛntɪd dˈɪsk. ɪt ˈiːvən θɹˈuː ˈaʊt ɪts ˈəʊn njˈuːkliəs tə mˌeɪk ɹˈuːm. and juːv ɡɒt ɐbˌaʊt twˈɛntifˈaɪv tɹˈɪliən ɒv ðˌɛm: mˈəʊst əv jɔːɹ ˈəʊn sˈɛlz.",
+   "phonemes": "ˈiːtʃ wˈɒn ɪz ɐ dˈɛntɪd dˈɪsk, pɹˈɛst ɪn ˌɒn bˈəʊθ sˈaɪdz. ɪt ˈiːvən θɹˈuː ˈaʊt ɪts ˈəʊn njˈuːkliəs . and ðeɪ aʊtnˈʌmbəɹ ˈɔːl jɔːɹ ˈʌðə sˈɛlz pˌʊt təɡˈɛðə.",
    "speeds": [
     0.78,
     0.78,
@@ -57,17 +57,17 @@
    ],
    "silences": [
     [
-     2.3687,
-     2.6687
+     4.0618,
+     4.3618
     ],
     [
-     6.1042,
-     6.4042
+     7.053,
+     7.353
     ]
    ],
    "file": "02.wav",
-   "dur": 11.215,
-   "sha256": "fe9ca0dbca7d80a7595e4484650947fab79fab7adb63d238c375b175926f8aa7"
+   "dur": 10.644,
+   "sha256": "1789d6203ee93b9ec8aec9bda08a54baddc97f358a2fd46b4e653c516d188606"
   },
   {
    "id": "vo03",
@@ -98,12 +98,12 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "You'd guess it just stretches to fit. It can't. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
+   "text": "You'd guess its skin just stretches to fit. It can't. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
    "stars": [
     "dent",
     "parachute"
    ],
-   "phonemes": "juːd ɡˈɛs ɪt dʒˈʌst stɹˈɛtʃɪz tə fˈɪt. ɪt kˈɑːnt. ðat dˈɛnt ɡˈɪvz ɪt spˈeə skˈɪn, sˌəʊ ɪt fˈəʊldz ˌʌp nˈiːtli lˈaɪk ɐ pˈaɹəʃˌuːt ɪnstˈɛd.",
+   "phonemes": "juːd ɡˈɛs ɪts skˈɪn dʒˈʌst stɹˈɛtʃɪz tə fˈɪt. ɪt kˈɑːnt. ðat dˈɛnt ɡˈɪvz ɪt spˈeə skˈɪn, sˌəʊ ɪt fˈəʊldz ˌʌp nˈiːtli lˈaɪk ɐ pˈaɹəʃˌuːt ɪnstˈɛd.",
    "speeds": [
     0.9,
     0.9,
@@ -115,17 +115,17 @@
    ],
    "silences": [
     [
-     2.0623,
-     2.3622
+     2.474,
+     2.774
     ],
     [
-     3.3118,
-     3.6118
+     3.7236,
+     4.0236
     ]
    ],
    "file": "04.wav",
-   "dur": 8.31,
-   "sha256": "b8f44b7786a595e4cf391bd70c0fd32b4951844a1aa08216642e362d5801df49"
+   "dur": 8.722,
+   "sha256": "f27a8c8bdf778e6972157d570e750c6836736ae38e1c526aa77c9f27cb7c0a99"
   },
   {
    "id": "vo05",

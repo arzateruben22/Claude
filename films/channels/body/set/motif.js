@@ -97,7 +97,7 @@ export const iris = (stage, o = {}) => {
   const el = document.createElement("div"), band = document.createElement("div"), line = document.createElement("div");
   el.className = "mi-iris"; el.setAttribute("aria-hidden", "true");
   Object.assign(el.style, { position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1, visibility: "hidden" });
-  Object.assign(band.style, { position: "absolute", left: 0, right: 0, background: o.fill || "var(--bg)" });
+  Object.assign(band.style, { position: "absolute", left: 0, right: 0, background: o.fill || "repeating-linear-gradient(0deg, rgba(214,242,95,.05) 0px, rgba(214,242,95,.05) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 6px), linear-gradient(var(--bg-hi), var(--bg))" });   // the instrument's raster, never flat black
   Object.assign(line.style, { position: "absolute", left: 0, right: 0, height: `${Math.max(2, H * 0.0018).toFixed(1)}px`, background: o.stroke || "var(--signal)",
     boxShadow: "0 0 14px 3px rgba(214,242,95,.55), 0 0 60px 10px rgba(214,242,95,.16)" });
   el.append(band, line);
