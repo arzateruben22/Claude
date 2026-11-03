@@ -67,7 +67,9 @@ IRIS = [  # cx, cy: where the hole closes and reopens (the incoming subject's pl
     {"t": CUT["meet"], "cx": 0.5, "cy": 0.40}, {"t": CUT["tree"], "cx": 0.5, "cy": 0.40},
     {"t": CUT["road"], "cx": 0.5, "cy": 0.38}, {"t": CUT["net"], "cx": 0.5, "cy": 0.40, "close": 0.3, "open": 0.4},
     {"t": CUT["out"], "cx": 0.5, "cy": 0.40}, {"t": CUT["tease"], "cx": 0.5, "cy": 0.40},
+    {"t": cut(EC + 1.0), "cx": 0.5, "cy": 0.40},   # round 2 (g): under the end card the picture returns to frame 0, so the film loops
 ]
+LOOP_AT = cut(EC + 1.0)
 
 # ── the blood-flow clock (sci/clock.js): slowed ×100, and ×10 for the ride-along (≤ 3 s, bible + cross-check) ──
 RIDE0 = CUT["road"]                                      # the ride starts as the iris opens on it
@@ -180,12 +182,14 @@ FOC = {
     "tease": [{"t": CUT["tease"], "at": "hero", "f": 0.5}, {"t": A("vo08:carries"), "at": "cap", "f": 0.55}],
 }
 
+TITLE_T1 = round(A("vo01:Its") + 0.35, 4)
 # ── the overlay: labels (each names its part in words; colour on the dot and border), pills, counters ──
 LABELS = [
     {"id": "rbc", "text": "red blood cell", "color": "oxy", "mark": "dot", "at": "hero", "t0": A("vo02:Each"), "t1": CUT["tree"], "shot": "meet", "side": 1},
     {"id": "nonuc", "text": "no nucleus", "color": "text", "mark": "none", "at": "cap", "t0": A("vo02:nucleus"), "t1": A("vo02:they", 0.6), "shot": "meet", "side": -1},
     {"id": "capillary", "text": "tiniest pipe", "color": "lining", "mark": "dot", "at": "capwall", "t0": A("vo03:tiniest"), "t1": CUT["road"], "shot": "tree", "side": -1},
     {"id": "dimple", "text": "the dent", "color": "oxy", "mark": "dot", "at": "cap", "t0": A("vo04:dent"), "t1": A("vo04:so", 0.3), "shot": "road", "side": 1},
+    {"id": "ghost0", "text": "its full width", "color": "text", "mark": "dot", "at": "ghost", "t0": round(TITLE_T1 + 0.1, 4), "t1": round(TITLE_T1 + 1.6, 4), "shot": "hook", "side": 1},   # round 2 (a): the outline is the cell, not a bubble
     {"id": "ghostw", "text": "its full width", "color": "text", "mark": "dot", "at": "ghost", "t0": A("vo05:half"), "t1": CUT["net"] - 0.3, "shot": "road", "side": 1},
     {"id": "sickle", "text": "sickle cell", "color": "deoxy", "mark": "dot", "at": "sickle", "t0": A("vo06:jam", 0.2), "t1": A("vo06:off", -0.4), "shot": "out", "side": -1},   # the 26 Oct audit: the stakes on screen; gone (0.4 s fade) as the O₂ label lands on "out"
     # the O₂ label lands on "out" ("oxygen is handed out"), once its molecule has climbed out of the vessel: from "oxygen"
@@ -210,7 +214,7 @@ BADGES = [
     {"id": "nts-o2", "text": "not to scale", "t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["tease"] - 0.3},
     {"id": "nts-in", "text": "not to scale", "t0": A("vo08:carries"), "t1": EC},
 ]
-TITLE = {"series": "Body Backstage · No. 01", "title": "Single *file*", "t1": round(A("vo01:Its") + 0.35, 4), "sig": 0.0, "y": 0.17}
+TITLE = {"series": "Body Backstage · No. 01", "title": "Single *file*", "t1": TITLE_T1, "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next: *a billion passengers*", "next": "Body Backstage · No. 02", "follow": "Follow Body Backstage",
        "fact": "Red cells squeeze through vessels about 3 μm wide, under half their own width (University of Rochester)."}   # c1, c10
 SCAN = {"up": [CUT["net"] + 0.7, CUT["net"] + 2.2], "park": 0.5, "off": CUT["out"]}   # the net in scan view: the line rises and parks mid-frame
@@ -260,7 +264,7 @@ film = {
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "clock": CLOCK, "ride": [RIDE0, RIDE1 + RIDE_BACK],
     "hero": HERO, "cam": CAM, "foc": FOC,
     "labels": LABELS, "o2": O2_OUT, "scales": SCALES, "ghost": GHOST, "life": LIFE, "tally": TALLY, "badges": BADGES,
-    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END, "scan": SCAN,
+    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END, "scan": SCAN, "loopAt": LOOP_AT,
     "look": THEME["scene"],
     "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

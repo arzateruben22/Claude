@@ -125,6 +125,11 @@
    "t": 63.583333,
    "cx": 0.5,
    "cy": 0.4
+  },
+  {
+   "t": 69.383333,
+   "cx": 0.5,
+   "cy": 0.4
   }
  ],
  "clock": [
@@ -1062,6 +1067,17 @@
    "side": 1
   },
   {
+   "id": "ghost0",
+   "text": "its full width",
+   "color": "text",
+   "mark": "dot",
+   "at": "ghost",
+   "t0": 2.4833,
+   "t1": 3.9833,
+   "shot": "hook",
+   "side": 1
+  },
+  {
    "id": "ghostw",
    "text": "its full width",
    "color": "text",
@@ -1211,6 +1227,7 @@
   "park": 0.5,
   "off": 50.383333
  },
+ "loopAt": 69.383333,
  "look": {
   "_doc": "3D materials and lights only: never text, never CSS. Wet, photoreal tissue under a warm key, a cool mint-white rim and a dark teal fill; only signal and blood bloom.",
   "rbc": "#C8102E",

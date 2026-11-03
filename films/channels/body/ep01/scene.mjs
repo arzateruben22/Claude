@@ -341,6 +341,11 @@ const writeCells = (t, sh) => {
 
 // ── the artery's crowd (the meet shot): drifting, tumbling discs around the hero, a clear lane for the lens ──
 const ART = [-2000, 0, 0];
+// round 2 (h): the artery's far wall behind the crowd, wet lining, left to the depth of field
+const ARTWALL = (() => { const m = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin("#C98A82"), map: TEX.clone(), roughness: 0.45, clearcoat: 0.7, clearcoatRoughness: 0.15, sheen: 0.5, sheenColor: new THREE.Color(1, 0.55, 0.48), side: THREE.DoubleSide }), { fresnel: 0.2, key: "artwall" });
+  m.map.repeat.set(6, 6); m.map.wrapS = m.map.wrapT = THREE.RepeatWrapping; m.map.needsUpdate = true;
+  const g = new THREE.Mesh(new THREE.CylinderGeometry(160, 160, 900, 96, 1, true, Math.PI * 0.5, Math.PI), m);
+  g.rotation.z = Math.PI / 2; g.position.set(ART[0], ART[1], ART[2] - 20); g.userData.noProbe = true; scene.add(g); return g; })();
 const CROWD = swarm({
   n: 210, seed: 23, waves: [{ amp: [1.6, 1.2, 1.4], omega: 0.35 }, { amp: 0.5, omega: 0.9 }],
   home: (i, r) => {
@@ -546,6 +551,8 @@ const foldPoint = (p) => foldFn(p, [0, 1, 0], hero.k, hero.th).p;
 
 // ── seek ────────────────────────────────────────────────────────────────────────────────────────
 window.seek = function (t) {
+  // round 2 (g): under the end card the picture replays frame 0 (the HUD keeps the real clock)
+  const tReal = t; if (t >= FILM.loopAt) t = t - FILM.loopAt;
   stage(t);
   const sh = shotOf(t), C = window.CINEMA;
   placeHero(t, sh);
@@ -559,6 +566,7 @@ window.seek = function (t) {
   L.place(camera, F.point);
   scene.fog.density = 0.25 / Math.max(10, fd);
   world.visible = sh !== "meet";
+  ARTWALL.visible = sh === "meet";
   for (const g of TISSUE) g.visible = sh !== "net";
   writeCells(t, sh);
   writeSwarm(t, sh);
@@ -568,13 +576,13 @@ window.seek = function (t) {
   ghost.visible = g > 0.001; ghost.material.uniforms.opacity.value = 0.85 * g;
   ghost.position.copy(heroPos3); ghost.quaternion.copy(qH);
   // the overlay and its motifs
-  hud.update(t);
+  hud.update(tReal);
   tPulse.update(beatAmp(t, [FILM.title.sig, FILM.title.sig + 0.4], { rest: 0.5 }));
-  yPulse.update(beatAmp(t, FILM.segBeats));
-  ePulse.update(beatAmp(t, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
+  yPulse.update(beatAmp(tReal, FILM.segBeats));
+  ePulse.update(beatAmp(tReal, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));
   const lp = sh === "meet" ? presence(t, MEET.at + 0.35, TREE.at - 0.45, { d: 0.45, out: 0.35 }).o : 0;
   LOC.update(t, lp, beatAmp(t, MEET_BEATS));
-  IR.update(t);
+  IR.update(tReal);
   FIN.set(t);
   // scan view (the look's signature): in the net, the line rises from the bottom and parks mid-frame; below it, scan view
   { const S = FILM.scan, on = sh === "net" && t >= S.up[0] && t < S.off ? 1 : 0, y = on ? 1 - (1 - S.park) * E.inout2(seg(t, S.up[0], S.up[1])) : 2;

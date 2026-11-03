@@ -103,20 +103,26 @@ export const iris = (stage, o = {}) => {
   el.append(band, line);
   const canvas = stage.querySelector("#gl");
   stage.insertBefore(el, canvas ? canvas.nextSibling : stage.firstChild);
+  // while a sweep is on, the HUD's labels, pills, counters and notes step aside (captions stay): nothing hangs on the band
+  const st = document.createElement("style"); st.textContent = ".stage.mi-wipe .hud-label, .stage.mi-wipe .hud-counter, .stage.mi-wipe .hud-scale, .stage.mi-wipe .hud-badge, .stage.mi-wipe .hud-leads { visibility: hidden !important; }"; document.head.appendChild(st);
   const state = (t) => {
-    for (const e of ev) {
+    for (const [i, e] of ev.entries()) {
+      const up = e.dir ? e.dir < 0 : i % 2 === 1;   // the sweeps alternate: down, up, down …
       const c = e.close ?? 0.26, op = e.open ?? 0.34;
-      if (t >= e.t - c && t < e.t) return { phase: 0, u: inC(cl((t - (e.t - c)) / c)) * 0 + cl((t - (e.t - c)) / c) };
-      if (t >= e.t && t < e.t + op) return { phase: 1, u: outC(cl((t - e.t) / op)) };
+      if (t >= e.t - c && t < e.t) return { phase: 0, up, u: cl((t - (e.t - c)) / c) };
+      if (t >= e.t && t < e.t + op) return { phase: 1, up, u: outC(cl((t - e.t) / op)) };
     }
     return null;
   };
   const update = (t) => {
     const s = state(t);
+    stage.classList.toggle("mi-wipe", !!s);
     if (!s) { el.style.visibility = "hidden"; return; }
     el.style.visibility = "visible";
-    const y = (s.phase === 0 ? s.u : s.u) * (H + 4) - 2;
-    if (s.phase === 0) Object.assign(band.style, { top: "0px", height: `${Math.max(0, y)}px` });
+    const u = s.up ? 1 - s.u : s.u, y = u * (H + 4) - 2;
+    // down: the band grows from the top, then the next shot is revealed from the top; up: the mirror image
+    const fromTop = s.up ? s.phase === 1 : s.phase === 0;
+    if (fromTop) Object.assign(band.style, { top: "0px", height: `${Math.max(0, y)}px` });
     else Object.assign(band.style, { top: `${y}px`, height: `${Math.max(0, H - y)}px` });
     line.style.top = `${y.toFixed(1)}px`;
   };

@@ -67,6 +67,11 @@
    "gain": -3.0
   },
   {
+   "t": 2.4833,
+   "kind": "label",
+   "tag": "ghost0"
+  },
+  {
    "t": 4.8,
    "kind": "section",
    "id": "normal",
