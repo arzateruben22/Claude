@@ -68,7 +68,7 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .hud-scrim { background: rgba(7, 21, 19, .6); }
 `; document.head.appendChild(css);
 const lin = (h) => L.lin(h);
-const SLIDE = (sh) => (sh === "loop" ? "cell" : sh);   // the loop shot is frame 0's composition again
+const SLIDE = (sh) => (sh === "loop" ? "cell" : sh === "skin2" ? "skin" : sh === "lung2" ? "lung" : sh);   // the loop shot is frame 0's composition again; skin2/lung2 re-cut the takeaway
 const G = { cell: new THREE.Group(), hb: new THREE.Group(), skin: new THREE.Group(), lung: new THREE.Group(), nerve: new THREE.Group() };
 for (const g of Object.values(G)) scene.add(g);
 const clk = clock(FILM.clock, { words: { slow: "{n}× slower" } });
@@ -138,10 +138,11 @@ const writeCell = (t) => {
     instance(pax, k++, paxAt(i, s), null, sc);
   }
   pax.instanceMatrix.needsUpdate = true;
-  o2Mat.emissiveIntensity = O2_REST + 1.2 * glow * (0.75 + 0.25 * Math.sin(t * 11));
+  const seat = seg(t, 0.95, 1.1) * (1 - seg(t, 1.2, 1.9));   // the glint as it docks (1.0 s)
+  o2Mat.emissiveIntensity = O2_REST + 1.2 * Math.max(glow * (0.75 + 0.25 * Math.sin(t * 11)), 1.4 * seat);
   const lit = seg(t, FILM.cell.hbLit, FILM.cell.hbLit + 0.4) * (1 - seg(t, SHOT.hb.at - 0.4, SHOT.hb.at));
   const c = CROWD[HBLIT].tone * (1 + 0.55 * lit); crowd.setColorAt(HBLIT, new THREE.Color(c, c * (1 + 0.1 * lit), c * (1 + 0.1 * lit))); crowd.instanceColor.needsUpdate = true;
-  const p = hookP(t); hookO2.position.set(...p); hookO2.scale.setScalar(HBR * 0.5);
+  const p = hookP(t); hookO2.position.set(...p); hookO2.scale.setScalar(HBR * 1.6);   // review r3 (a): big enough to read as the event
   hookO2.quaternion.setFromEuler(new THREE.Euler(0.4, 0.9 + 0.3 * t, 0.2));
 };
 const cellWorld = (p) => HC.group.localToWorld(new THREE.Vector3(...p)).toArray();
@@ -247,7 +248,7 @@ const VENOUS = new THREE.Color(lin("#7A2234")).lerp(new THREE.Color(lin(FILM.loo
   G.skin.add(lc);
 }
 // the rays, in the plane just in front of the cut face: polylines drawn on, with a soft head
-const rayMat = (hex) => L.patch(new THREE.MeshPhysicalMaterial({ color: lin(hex), emissive: lin(hex), emissiveIntensity: 0.55, roughness: 0.4, transparent: true }), { fresnel: 0, key: "ray" + hex });
+const rayMat = (hex) => { const m = new THREE.MeshBasicMaterial({ color: new THREE.Color(hex).multiplyScalar(1.3), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }); m.emissiveIntensity = 0; return m; };   // review r3 (h): light, not arrows: a soft additive glow
 const ZR = SK.z + 0.8;
 // light paths: thin tubes along a smooth curve through the points (each corner rounded), drawn on, with an arrow head
 const ray = (pts, hex, r = 0.38) => {
@@ -413,7 +414,7 @@ const TARGETS = {
   sac: () => [0, 0, -4], hero: (t) => PL.at(heroLS(clk.tau(t))),
   front: (t) => NF.at(Math.max(0, nerveFront(t))),
 };
-window.CINEMA_FOCUS = (t) => focusAt(FILM.foc[shotOf(t)] || FILM.foc.cell, t, { targets: TARGETS });
+window.CINEMA_FOCUS = (t) => focusAt(FILM.foc[shotOf(t)] || FILM.foc[SLIDE(shotOf(t))] || FILM.foc.cell, t, { targets: TARGETS });
 
 // ── the probe: per slide, in its own units ─────────────────────────────────────────────────────
 const PR = { cell: probe(THREE, { W, H, near: 3, ndc: 1.15 }), hb: probe(THREE, { W, H, near: 6, ndc: 1.15 }), skin: probe(THREE, { W, H, near: 20, ndc: 1.15 }),
@@ -444,7 +445,7 @@ window.seek = function (t) {
   o2Mat.emissiveIntensity = O2_REST;
   L.rim.intensity = sh === "lung" || sh === "skin" ? 0.6 : 1.4;   // the mint rim greys warm tissue
   const heroP = PL.at(heroLS(clk.tau(t)));
-  placeCamera(camera, FILM.cam[shot], t, { track: () => heroP, handheld: 0 });
+  placeCamera(camera, FILM.cam[shot] || FILM.cam[SLIDE(shot)], t, { track: () => heroP, handheld: 0 });
   camera.near = sh === "cell" ? 0.2 : 0.5; camera.far = 4000; camera.updateProjectionMatrix();
   if (sh === "cell") writeCell(shot === "loop" ? 0 : t);
   if (sh === "hb") writeHb(t);
@@ -463,7 +464,7 @@ window.seek = function (t) {
   LOC.update(t, sh === "lung" ? presence(t, LOC_T[0], LOC_T[1], { d: 0.45, out: 0.35 }).o : 0, beatAmp(t, LOC_BEATS), E.inout2(seg(t, ...FILM.lung.loop)));
   LOCARM.update(t, sh === "skin" ? presence(t, ARM_T[0], ARM_T[1], { d: 0.45, out: 0.35 }).o : 0, beatAmp(t, lubs(ARM_T[0], ARM_T[1])));
   IR.update(t);
-  FIN.set(t); MOT.set(t);
+  FIN.set(t); MOT.set(t, sh === "lung" ? 0 : 1);   // review r3: no near motes blooming in the lung close-up
   { const S = FILM.scan, on = t >= S.up[0] && t < S.off ? 1 : 0, y = on ? 1 - (1 - S.park) * E.inout2(seg(t, S.up[0], S.up[1])) : 2;   // scan view
     L.SCAN.set(y, on); SCL.set(y, on * (1 - seg(t, S.off - 0.35, S.off - 0.05)), S.tag); }
   if (C && C.mode === "probe") {

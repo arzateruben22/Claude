@@ -246,3 +246,74 @@ stale (plus a new asset-record gap, R2-3).
 
 Not blocking but worth doing in the same pass: "Empty, it's dark red" over a full molecule (22.0); "lung time"; the vein
 dot; the O₂-aboard plate over the hemoglobin; a stronger garnet/crimson difference along the tube (58.5).
+
+---
+
+# Round 3 (re-render, 3 Nov 2026)
+
+The same reviewer. Moments pulled (30 + probes): 0, 0.7, 1.4, 2.0, 2.9, 3.5, 13.5, 18.0, 19.4, 20.0, 21.0, 22.0, 26.0, 29.7,
+31.0, 33.5, 36.0, 38.0, 38.6, 39.0, 49.0, 50.5, 54.0, 58.5, 62.0, 69.0, 70.6, 71.2, 71.8, 72.3 s; crops at 29.7, 38.6 and
+49.0; a clipped-pixel scan (luma ≥ 252) of the lung frame's lower right at 5 fps over 44–53 s. I also checked
+`film.json` (`hb.board`, `cam.cell`, badges), `assets.md` and the c1/c5/c15 notes.
+
+**Verdict: not ready for finals yet.** Nothing factual is open now. The scores don't move, because the round-3 changes
+fixed items inside each score but not the ones holding (a), (g) and (h) at 3.
+
+## Scores
+
+| | Point | R1 | R2 | R3 | Why |
+|---|---|---|---|---|---|
+| a | First 2 s | 3 | 3 | **3** | The push from frame 0 works (0 → 2.9: the cell grows smoothly under the title). But the frame-0 event is still a 6 px O₂ dot under a label, the voice still asks a question, and "billion" is heard at 2.8. Closer, not there. |
+| b | One thread | 4 | 4 | **4** | Unchanged. |
+| c | Picture moves with the sentence | 2 | 3 | **3** | Even boardings now match "easier" (18.0, 18.8, 19.6, 20.4). Still open: "Empty, it's dark red" over a full bright molecule (22.0); the takeaway over the lung (54.0); the meanwhile has no picture (62.0). |
+| d | Every camera move motivated | 3 | 4 | **4** | The hook push adds a motivated move at frame 0. |
+| e | Voice meaning, screen figures | 3 | 3 | **3** | Unchanged ("in lung time"; the voice speaks the readouts' figures). |
+| f | Rhythm | 3 | 3 | **3** | Unchanged (wipes, 25.6 s in the lung, the hold at 50.5–53.5). |
+| g | Ending | 3 | 3 | **3** | The end-card fact is now plated and readable (71.2). The payoff "The blue is your skin's trick" still plays over the lung with no skin, and the card still holds only 2.0 s (70.4–72.4). |
+| h | Production value | 2 | 3 | **3** | Fixed: no clipped blob in the skin shot (29.7, 38.6: max luma 253/241), no crackle, rays gone before the pull-out (39.0). Still holding (h) at 3: the gummy hemoglobin and white bead O₂ (10–24, the longest unimproved stretch, 14 s); flat 2D arrows on the micrograph (33–38.4); the fat plane, now matte but a flat, untextured beige that fills about 45 % of the frame (30–39); the stock wipes; and **the clipped blob is still in the lung** (R3-1). |
+
+## Status of the round-2 items
+
+| Item | R3 |
+|---|---|
+| R2-1 clipped white blob | **Fixed in the skin shot; open in the lung** (R3-1). |
+| R2-2 rays detached on the pull-out | **Fixed** (hidden from 38.7; 39.0 clean). |
+| R2-3 micrograph not in `assets.md` | **Fixed** (row 12: Kilbad, Wikimedia Commons, public domain, owner confirmed 3 Nov; line 19 corrected). |
+| R2-4 stain colours | **Fixed** (the badge reads "stained section · not to scale", 26.0–39.0). Still worth a physiologist's look (HUMAN-REVIEW.md). |
+| R2-5 fat plane | **Partly** (the crackle is gone; the plane is now plain and flat). |
+| 16 ledger notes | **Fixed.** c5 and c15 now match the film, and `hb.board` is evenly spaced. Tidy-up (not blocking): c1 still opens with the old sentence ("the readout shows 270,000,000 while the number is spoken") before the reboot note that corrects it; delete the old sentence. |
+| 13 end-card fact | **Fixed** (plated, larger). |
+
+## New in round 3
+
+- **R3-1 (h, glitch): clipped blob in the lung, 49.2–49.9.** In the lower-right quarter, 9,328 pixels sit at luma ≥ 252 at
+  49.2, 858 at 49.6 and 1,508 at 49.8 (a few dozen elsewhere in 44–53). At 49.0 you can see it as a pure white bokeh disc
+  under the caption. It's the same fault as R2-1, now only in the lung: a mote or specular passing close to the lens.
+  **Fix:** clamp mote emission or keep motes out of the near plane for the lung macro (44–51); or cap bloom input. Then
+  rerun the same probe and expect 0 at ≥ 252 outside caption text.
+
+## The minimum still needed for 4
+
+**(a) First 2 s → 4: one change, in picture only.** By 1.0 s, make the boarding O₂ at the cut a visible event: about
+3–4× its current size, sliding into a lit seat with a glint and a sound hit (the mallet), under the push already there. A
+striking frame plus the title's "A billion passengers" carries the "wait, what?" by 2 s without re-voicing. (If you're
+re-voicing anyway, "This one cell has room for a billion passengers" would make it a solid 4.)
+
+**(g) Ending → 4: two changes.**
+1. A 1.5–2 s callback to the skin slab on "The blue is your skin's trick" (53.5–55.5): the blue stripe fades as the
+   cut face shows the dark-red vein. Then return to the lung for "passenger count". The skin shot is already built, so
+   this is a re-cut, not a new scene.
+2. Hold the end card at least 2.5 s (extend `dur` to about 72.9) so the plated fact can be read.
+The meanwhile picture would help (f) and (c) but isn't required for (g).
+
+**(h) Production value → 4: three changes, and one cheap reframe.**
+1. **Hemoglobin and O₂ (10–24):** surface detail on the lobes (a ribbon or folded-chain relief instead of smooth gummy
+   blobs), rougher and less glossy, with a heme glint at each seat; O₂ smaller and varied, with motion blur as they
+   approach. This is the longest stretch with no improvement and decides the score.
+2. **Light in the skin (33–38.4):** replace the 2D arrows with soft light paths inside the section (additive, scattering
+   glow: blue spreading out in the top layer, red going deep and dimming at the vein), keeping the labels.
+3. **R3-1:** clear the lung's clipped blob (49.2–49.9).
+4. **Cheap reframe:** frame the section lower in 30–39 so the cut face fills the frame and the flat fat plane drops to
+   the bottom 15 % or less.
+The five wipes are the next thing a strict reviewer would hold against (h). Varying the two scale changes and making
+the other three cuts would remove the last "preset" read, but I wouldn't block a 4 on them if 1–3 land.

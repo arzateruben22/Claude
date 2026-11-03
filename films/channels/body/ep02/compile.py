@@ -53,16 +53,19 @@ CUT = {
     "hb": cut(A("vo02:Each", -0.18)),                    # the cut face → one hemoglobin (scale in)
     "skin": cut(B["why"]["t0"]),                         # → a block of skin over a vein (scale out)
     "lung": cut(B["whoa"]["t0"]),                        # → an air sac and its capillary
+    "skin2": cut(A("vo06:The", -0.05)),                  # review r3 (g): the skin's trick is said over the skin again
+    "lung2": cut(A("vo06:red", -0.25)),                  # … and back to the lung for the passenger count
     "nerve": cut(B["tease"]["t0"]),                      # → a nerve fibre (the next episode)
     "loop": cut(EC),                                     # → back to frame 0's composition under the end card (a seamless replay)
 }
 SHOTS = [{"at": 0.0, "name": "cell"}] + [{"at": t, "name": n} for n, t in CUT.items()]
 IRIS = [{"t": CUT["hb"], "cx": 0.5, "cy": 0.40}, {"t": CUT["skin"], "cx": 0.5, "cy": 0.40},
-        {"t": CUT["lung"], "cx": 0.5, "cy": 0.40}, {"t": CUT["nerve"], "cx": 0.5, "cy": 0.40}, {"t": CUT["loop"], "cx": 0.5, "cy": 0.40}]
+        {"t": CUT["lung"], "cx": 0.5, "cy": 0.40}, {"t": CUT["skin2"], "close": 0.18, "open": 0.24}, {"t": CUT["lung2"], "close": 0.18, "open": 0.24},
+        {"t": CUT["nerve"], "cx": 0.5, "cy": 0.40}, {"t": CUT["loop"], "cx": 0.5, "cy": 0.40}]
 
 # ── the cell: the hook's boarding O₂ at the cut, the sparkle on "billion", the push into the crowd ──
 CELL = {
-    "o2": [[0.0, 0.62], [A("vo01:Room"), 1.0]],              # one O₂ on its way to a seat: 62% there on frame 0
+    "o2": [[0.0, 0.5], [1.0, 1.0]],   # review r3 (a): the boarding is the event: seated by 1.0 s, with a glint              # one O₂ on its way to a seat: 62% there on frame 0
     "sparkle": [A("vo01:billion"), A("vo01:passengers:end", 0.2)],
     "hbLit": A("vo02:hemoglobin", -0.1),                    # the labelled hemoglobin brightens
 }
@@ -127,9 +130,9 @@ CAM = {
     "skin": [
         {"t": CUT["skin"], "pos": [40.0, 80.0, 118.0], "look": [0.0, -12.0, 18.0], "fov": 34},               # the block's corner: the bluish band on top, the vein in the cut face
         {"t": SKIN["section"][0], "pos": [34.0, 72.0, 130.0], "look": [0.0, -12.0, 22.0], "fov": 34, "ease": "sine"},
-        {"t": SKIN["section"][1], "pos": [11.0, -13.0, 184.0], "look": [2.0, -24.0, 40.0], "fov": 34, "ease": "p2"},  # square to the cut face
-        {"t": SKIN["red"][1], "pos": [8.0, -13.0, 178.0], "look": [2.0, -24.0, 40.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo04:back:end", 0.3), "pos": [7.0, -13.0, 180.0], "look": [2.0, -24.0, 40.0], "fov": 34, "ease": "sine"},
+        {"t": SKIN["section"][1], "pos": [9.0, -15.0, 150.0], "look": [2.0, -19.0, 40.0], "fov": 34, "ease": "p2"},  # square to the cut face
+        {"t": SKIN["red"][1], "pos": [8.0, -15.0, 146.0], "look": [2.0, -19.0, 40.0], "fov": 34, "ease": "sine"},
+        {"t": A("vo04:back:end", 0.3), "pos": [7.0, -15.0, 148.0], "look": [2.0, -19.0, 40.0], "fov": 34, "ease": "sine"},
         # the beat closes back on the surface: the bluish band above the vein, the rays still drawn
         {"t": CUT["lung"], "pos": [30.0, 52.0, 150.0], "look": [0.0, -14.0, 26.0], "fov": 34, "ease": "sine"},
     ],
@@ -203,7 +206,7 @@ SPINE = [
     {"id": "copies", "t0": A("vo02:quarter"), "t1": CUT["hb"] - 0.3, "value": 270_000_000, "label": "hemoglobins in this one cell, about"},   # c1: the spoken number, on screen as it is said
     {"id": "aboard", "t0": CUT["hb"] + 0.4, "t1": CUT["skin"] - 0.3, "steps": BOARD, "unit": "of 4", "label": "O₂ aboard this hemoglobin"},
     {"id": "venous", "t0": A("vo04:darker"), "t1": A("vo04:red#2", -0.1), "value": 75, "unit": "%", "label": "seats still full in returning blood, about"},   # c18
-    {"id": "full", "t0": B["takeaway"]["t0"] + 0.2, "t1": B["meanwhile"]["t0"] - 0.1, "keys": [[A("vo06:red"), 75], [A("vo06:count", 0.4), 97]], "unit": "%", "label": "seats full: arriving → leaving, about"},   # c19
+    {"id": "full", "t0": CUT["lung2"] + 0.3, "t1": B["meanwhile"]["t0"] - 0.1, "keys": [[A("vo06:red"), 75], [A("vo06:count", 0.4), 97]], "unit": "%", "label": "seats full: arriving → leaving, about"},   # c19
 ]
 TALLY = {"t0": B["meanwhile"]["t0"] + 0.6, "t1": CUT["nerve"] - 0.25, "rate": 250.0 / 60.0, "unit": "mL", "label": "O₂ handed out as you watched, about"}   # c15
 SCAN = {"up": [999.0, 999.5], "park": 0.5, "off": 999.0, "tag": ""}   # no scan moment in No. 02 (review r1: the voice never asks for one)   # live scan: the line rises from the bottom and parks; below it, scan view

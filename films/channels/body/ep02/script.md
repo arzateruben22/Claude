@@ -53,7 +53,7 @@ seats. {c14,c19}
 ## meanwhile {segment: meanwhile · tally "while you watched": millilitres of oxygen your blood handed out, 250/60 × t from frame 0, on the pulse line · mallet ticks on the lub-dub · energy: 0.4} (62–67.5 s)
 vo: *Meanwhile*, as you watched, your blood handed your body about a cup of oxygen. {c15}
 
-## tease {shot: a nerve fibre in the dark, a spark at one end · end card held ≥ 2 s · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.5–74.5 s)
+## tease {shot: a nerve fibre in the dark, a spark at one end · end card held ≥ 2.5 s · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.5–74.5 s)
 vo: Next: the signal in your nerves. {-} In the fastest, it doesn't crawl; it *jumps*. {c16}
 end card: "Next: The jump" · "Body Backstage · No. 03"
 
