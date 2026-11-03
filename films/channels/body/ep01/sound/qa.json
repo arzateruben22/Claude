@@ -1,0 +1,424 @@
+{
+ "compose_s": 13.8,
+ "master_s": 24.2,
+ "master": {
+  "gain_db": 4.15,
+  "iterations": 3,
+  "lufs": -14.04,
+  "true_peak_db": -2.0,
+  "ceiling_db": -2.0,
+  "limiting_max_db": -6.47,
+  "aac": {
+   "lufs": -14.1,
+   "true_peak_db": -1.7,
+   "lra": 3.3
+  },
+  "stems_sum_error_db": -240.0
+ },
+ "sync": {
+  "per_kind": {
+   "beat": {
+    "n": 8,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "breath": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": true,
+    "pass": true
+   },
+   "cell.pass": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "counter.end": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "counter.show": {
+    "n": 1,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "diffuse": {
+    "n": 1,
+    "max_ms": 32.2,
+    "median_ms": 32.2,
+    "slow": true,
+    "pass": true
+   },
+   "dissolve": {
+    "n": 1,
+    "max_ms": 17.2,
+    "median_ms": 17.2,
+    "slow": true,
+    "pass": true
+   },
+   "impact": {
+    "n": 2,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "label": {
+    "n": 8,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": false,
+    "pass": true
+   },
+   "section": {
+    "n": 7,
+    "max_ms": 57.5,
+    "median_ms": 0.0,
+    "slow": true,
+    "pass": true
+   },
+   "signature": {
+    "n": 2,
+    "max_ms": 9.0,
+    "median_ms": 4.5,
+    "slow": false,
+    "pass": true
+   },
+   "swell": {
+    "n": 1,
+    "max_ms": 47.0,
+    "median_ms": 47.0,
+    "slow": true,
+    "pass": true
+   }
+  },
+  "pass": true,
+  "events": [
+   {
+    "kind": "signature",
+    "tag": "title",
+    "show": 0.0,
+    "method": "rise",
+    "err_ms": 9.0
+   },
+   {
+    "kind": "label",
+    "tag": "ghost0",
+    "show": 2.5,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 4.8,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "rbc",
+    "show": 5.1667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "nonuc",
+    "show": 11.3,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 16.4,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "capillary",
+    "show": 20.7667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "breath",
+    "tag": "ride",
+    "show": 22.2333,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 26.8,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "dimple",
+    "show": 31.5,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "cell.pass",
+    "tag": "squeeze",
+    "show": 36.1333,
+    "method": "wave",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "impact",
+    "tag": "spring",
+    "show": 37.2333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 38.4,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "ghostw",
+    "show": 41.0333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "swell",
+    "tag": "net-swell",
+    "show": 42.2667,
+    "method": "shape",
+    "err_ms": 47.0
+   },
+   {
+    "kind": "counter.show",
+    "tag": "life",
+    "show": 45.4667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "counter.end",
+    "tag": "life-end",
+    "show": 46.1667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 50.4,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "impact",
+    "tag": "pop",
+    "show": 51.9,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "sickle",
+    "show": 53.7667,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "diffuse",
+    "tag": "o2-out",
+    "show": 54.0667,
+    "method": "peak",
+    "err_ms": -32.2
+   },
+   {
+    "kind": "label",
+    "tag": "o2",
+    "show": 55.3333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat0",
+    "show": 57.6,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 58.0,
+    "method": "peak",
+    "err_ms": -57.5
+   },
+   {
+    "kind": "beat",
+    "tag": "beat1",
+    "show": 58.4,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat2",
+    "show": 59.2,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat3",
+    "show": 60.0,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat4",
+    "show": 60.8,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat5",
+    "show": 61.6,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat6",
+    "show": 62.4,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "beat",
+    "tag": "beat7",
+    "show": 63.2,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 63.6,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "dissolve",
+    "tag": "passengers",
+    "show": 66.8,
+    "method": "peak",
+    "err_ms": 17.2
+   },
+   {
+    "kind": "signature",
+    "tag": "end",
+    "show": 68.4,
+    "method": "rise",
+    "err_ms": 0.0
+   }
+  ]
+ },
+ "picture_sync": [
+  {
+   "tag": "ghost0",
+   "kind": "label",
+   "picture": 2.5,
+   "sound": 2.5,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "rbc",
+   "kind": "label",
+   "picture": 5.1667,
+   "sound": 5.1667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "nonuc",
+   "kind": "label",
+   "picture": 11.3,
+   "sound": 11.3,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "capillary",
+   "kind": "label",
+   "picture": 20.7667,
+   "sound": 20.7667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "dimple",
+   "kind": "label",
+   "picture": 31.5,
+   "sound": 31.5,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "ghostw",
+   "kind": "label",
+   "picture": 41.0333,
+   "sound": 41.0333,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "life",
+   "kind": "counter.show",
+   "picture": 45.4667,
+   "sound": 45.4667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "sickle",
+   "kind": "label",
+   "picture": 53.7667,
+   "sound": 53.7667,
+   "err_ms": 0.0
+  },
+  {
+   "tag": "o2",
+   "kind": "label",
+   "picture": 55.3333,
+   "sound": 55.3333,
+   "err_ms": 0.0
+  }
+ ],
+ "under_voice": {
+  "music_lufs": -29.4,
+  "dialog_lufs": -13.4,
+  "gap_lu": 16.0,
+  "pass": true
+ },
+ "phone": {
+  "correlation": 0.89,
+  "mono_loss_db": 0.11,
+  "dialog_mono_loss_db": 0.09,
+  "pass": true
+ }
+}
