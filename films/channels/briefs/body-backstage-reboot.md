@@ -45,6 +45,26 @@ coherent system, don't pile all of them on):
 current frame. Commit them under `films/channels/body/looktest/` with a short README, and send the coordinator the
 paths. **Do not rebuild episodes until the owner approves the look.** If the owner asks for another test, make one.
 
+## 1b. Production value: "a very high, multi-million-dollar production budget aesthetic" (owner, 3 Nov)
+The owner added this for every graphic and visual. Treat it as a hard gate, scored like the compelling pass:
+**(h) production value, 1–5; finals need 4+.** A frame fails (h) if any part of it reads as a default 3D render, a
+template, or a stock motion-graphics preset. What earns it:
+- **Light like a film set**: a motivated key, fill and rim on every hero; volumetric atmosphere and light shafts;
+  physically based materials (subsurface scattering on tissue, wet specular, translucency), never unlit flat colour
+  or an untextured primitive.
+- **A real lens**: shallow depth of field with true bokeh on hero shots, motion blur (cinema3d), a subtle vignette,
+  restrained chromatic edge and grain, one consistent grade (ACES), no clipped highlights.
+- **Detail density**: micro-surface detail, secondary motion (drift, pulse, flow), particles with depth, layered
+  foreground/background parallax. Nothing in frame is a plain sphere, cylinder or flat card.
+- **Camera with intent**: every move motivated and eased (dolly, crane, dive, rack focus), macro scale cues.
+- **Typography and HUD as a design system**: one type scale, kinetic reveals timed to the voice, tracked callouts,
+  clean safe areas; no default-looking labels.
+- **Reference bar**: the polish of a premium documentary title sequence or a high-end medical-visualisation studio
+  (use as a quality bar only; never copy anyone's look or assets).
+Practical limits to respect: everything stays code-rendered (three.js + the cinema kit, no paid generation), the
+final tier may take longer per frame (more samples): say in your look-test message what each episode's final will
+take, so the coordinator can spread finals across the idle render workers.
+
 ## 2. The facts: less textbook, more interesting
 Rewrite every script to the story standard (`kits/cinema/script/WRITING.md`, its Flow rules and "Never write"
 list; `lint.py` must pass) with these extra rules from the owner's note:
