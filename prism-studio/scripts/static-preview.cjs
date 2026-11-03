@@ -41,11 +41,13 @@ const filesLink = (key) => {
   return FILES_BASE && f ? FILES_BASE + "films/" + f[1] : null;
 };
 function postActions(html, here) {
-  return html.replace(/<div class="post-actions" data-file="([^"]+)" data-upload="([^"]+)" data-platform="([^"]+)">/g, (m, file, upload, platform) => {
+  // the app's own note ("Download … appear once it's approved") is dropped here: the preview's line below replaces it
+  return html.replace(/<div class="post-actions" data-file="([^"]+)" data-upload="([^"]+)" data-platform="([^"]+)">\s*<p class="post-note"[^>]*>[\s\S]*?<\/p>/g, (m, file, upload, platform) => {
     let u; try { u = new URL(file.replace(/&amp;/g, "&"), here); } catch { return m; }
     const href = filesLink(u.searchParams.get("k"));
     if (!href) return m;
-    return `${m}<div class="preview-post"><div class="row"><a class="btn" href="${href}" target="_blank" rel="noopener">Download video</a>` +
+    const open = m.slice(0, m.indexOf(">") + 1);
+    return `${open}<div class="preview-post"><div class="row"><a class="btn" href="${href}" target="_blank" rel="noopener">Download video</a>` +
       `<a class="btn ghost" href="${upload}" target="_blank" rel="noopener noreferrer">Open ${platform} ↗</a></div>` +
       `<p class="faint" style="margin:0;font-size:13.5px">Not approved in the studio yet: watch it in Review before you post it.</p></div>`;
   });
