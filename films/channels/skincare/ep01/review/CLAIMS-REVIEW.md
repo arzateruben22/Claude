@@ -1,4 +1,4 @@
-# Claims sign-off: Outer Layer No. 001 (reboot): "The fight you never saw"
+# Claims sign-off: Skin Sense No. 001 (reboot): "The fight you never saw"
 
 For a board-certified dermatologist. Every factual sentence the narrator says or the screen shows is below. 13 of 13 were checked against a search excerpt of the source, not the page itself: open each link, confirm the claim, and tick the box (or write the fix in Notes). The episode does not post until every row is ticked.
 

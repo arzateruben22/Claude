@@ -1,5 +1,5 @@
 import * as THREE from "three";
-// Outer Layer No. 003 (reboot), "What's in a scar" (films/channels/skincare/ep03). The picture as a pure function of
+// Skin Sense No. 003 (reboot), "What's in a scar" (films/channels/skincare/ep03). The picture as a pure function of
 // t (window.seek). Places (compile.py): the macro terrain with an old scar across it (golden hour, deep tone); the
 // dermis in section, its collagen woven over and under (a tug each way), cut, and patched with parallel threads (lit
 // cyan) while follicles and glands stay out; a strength meter that stalls near 80%; fetal skin whose cut regrows the
@@ -76,8 +76,13 @@ const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute("position", new
 const dustMat = new THREE.PointsMaterial({ map: dotTex, color: 0xf0e8ff, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
 const dust = new THREE.Points(dustGeo, dustMat); dust.frustumCulled = false; scene.add(dust);
 const placeDust = (t, c, size, pt) => { dust.visible = true; dustMat.size = pt; dustBase.forEach(([x, y, z, ph], i) => { dustPos[3 * i] = c[0] + x * size[0] + 0.03 * size[0] * Math.sin(t * 0.3 + ph); dustPos[3 * i + 1] = c[1] + y * size[1] + 0.02 * size[1] * Math.sin(t * 0.21 + ph); dustPos[3 * i + 2] = c[2] + z * size[2]; }); dustGeo.attributes.position.needsUpdate = true; };
-window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(3, 2); tx.needsUpdate = true;
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true;
   for (const b of [adult, fetal]) { b.back.material.map = tx; b.back.material.color.setRGB(0.38, 0.3, 0.4); b.back.material.needsUpdate = true; } res(); }; img.onerror = () => res(); img.src = DERMIS; });
+// the micrograph behind the weave is a real photo: said so, under the captions, while it shows
+const photoNote = document.createElement("div"); photoNote.textContent = "behind: a tissue photo (normal skin)";
+Object.assign(photoNote.style, { position: "absolute", left: "50%", top: `${0.705 * H}px`, transform: "translateX(-50%)", fontFamily: "var(--font-mono)", fontSize: "2.3vmin", letterSpacing: ".04em", textTransform: "uppercase",
+  color: "var(--text-2)", background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1vmin", whiteSpace: "nowrap", zIndex: 3, opacity: "0", pointerEvents: "none" });
+hudRoot.appendChild(photoNote);
 const dip = document.createElement("div");
 Object.assign(dip.style, { position: "absolute", inset: "0", background: "var(--bg, #2C1660)", opacity: "0", zIndex: 1, pointerEvents: "none" });
 hudRoot.appendChild(dip);
@@ -218,6 +223,7 @@ window.seek = function (t) {
   A.uvscar = uvAt(0.66, 0.5);
   vf.set({ op: shot === "uv" ? fadeIn(t, SH.uv, 0.4) * (1 - fadeIn(t, FILM.endCard - 0.4, 0.4)) : 0 });
 
+  photoNote.style.opacity = (["weave", "test", "fetal", "gauge"].includes(shot) ? fadeIn(t, SH.weave + 0.3, 0.4) * (1 - fadeIn(t, SH.macro2 - 0.4, 0.3)) : 0).toFixed(3);
   grain.set(t);
   hud.update(t);
   tBars.update(t);

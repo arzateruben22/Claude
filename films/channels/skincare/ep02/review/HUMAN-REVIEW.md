@@ -19,4 +19,4 @@
 
 ## Every episode
 AI labelling on the end card; a flash analyzer on the master; a listen on phone and headphones; the description's
-sources; the owner's taste call; handle and trademark checks for "Outer Layer" (TODO).
+sources; the owner's taste call; handle and trademark checks for "Skin Sense" (TODO).

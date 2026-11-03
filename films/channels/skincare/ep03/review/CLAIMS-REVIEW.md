@@ -1,4 +1,4 @@
-# Claims sign-off: Outer Layer No. 003 (reboot): "What's in a scar"
+# Claims sign-off: Skin Sense No. 003 (reboot): "What's in a scar"
 
 For a board-certified dermatologist. Every factual sentence the narrator says or the screen shows is below. 11 of 11 were checked against a search excerpt of the source, not the page itself: open each link, confirm the claim, and tick the box (or write the fix in Notes). The episode does not post until every row is ticked.
 

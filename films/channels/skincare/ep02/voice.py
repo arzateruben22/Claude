@@ -1,4 +1,4 @@
-"""Voice Outer Layer No. 001 with one Kokoro speed per line (an episode-local wrapper around
+"""Voice Skin Sense No. 001 with one Kokoro speed per line (an episode-local wrapper around
 kits/cinema/voice/tts.py, which takes one --speed for the whole script).
 
   $CINEMA_VOICE/venv/bin/python -I films/channels/skincare/ep02/voice.py --models $CINEMA_VOICE/models
@@ -30,7 +30,7 @@ spec = importlib.util.spec_from_file_location("tts", VOICE / "tts.py")
 tts = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(tts)
 
-NARRATOR = "bf_isabella"         # bible §4 / auditions/README.md: Outer Layer's narrator
+NARRATOR = "bf_isabella"         # bible §4 / auditions/README.md: Skin Sense's narrator
 # Kokoro speed per line: a touch below the first cut (the Flow standard, 29 Oct), the short lines slower so they land.
 SPEEDS = {"vo01": 0.79, "vo02": 0.82, "vo03": 0.76, "vo04": 0.74, "vo05": 0.74, "vo06": 0.82, "vo07": 0.96, "vo08": 0.76}
 

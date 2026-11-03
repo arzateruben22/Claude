@@ -1,4 +1,4 @@
-"""Compile Outer Layer No. 001 (reboot), "The fight you never saw": script + voice timings + this direction →
+"""Compile Skin Sense No. 001 (reboot), "The fight you never saw": script + voice timings + this direction →
 film.json (shots, camera keys, the UV and follicle keys, labels, badges, counters, captions, title and end card) and
 sheet.json (the studio's cue sheet). Every moment hangs on a beat or a spoken word; every number on screen comes from
 claims.json.
@@ -19,7 +19,7 @@ sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
 FPS, BPM = 30, 64.2857
-ID = "outerlayer-001"
+ID = "skin-sense-001"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
@@ -92,30 +92,33 @@ for shot, keys in CAM.items():
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
-    {"id": "l-spot", "text": "the spot", "kind": "cell", "anchor": "spot", "t0": 0.0, "t1": CUE["photo"], "shot": "uv", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-spot", "text": "the spot", "kind": "cell", "anchor": "spot", "t0": 2.0, "t1": CUE["photo"], "shot": "uv", "side": 1, "v": "above", "fixed": True},
     {"id": "l-ring", "text": "white cells (immune)", "kind": "water", "anchor": "ring", "t0": CUE["already"], "t1": B["why"]["t0"], "shot": "follicle", "side": 1, "fixed": True},
     {"id": "l-bact", "text": "the same bacterium in both", "kind": "uv", "anchor": "bactMid", "t0": CUE["bacterium"], "t1": CUE["spots4"] - 0.1, "shot": "pair", "side": 1, "v": "below", "fixed": True},
     {"id": "l-with", "text": "skin with acne", "kind": "cell", "anchor": "fWith", "t0": CUE["spots4"], "t1": CUE["without"] + 0.6, "shot": "pair", "side": -1, "v": "above", "fixed": True},
     {"id": "l-wo", "text": "clear, oily skin", "kind": "cell", "anchor": "fWo", "t0": CUE["oily"] - 0.3, "t1": CUE["spots4"] - 0.35, "shot": "pair", "side": 1, "v": "above", "fixed": True},
     {"id": "l-white", "text": "more white cells", "kind": "cell", "anchor": "cell", "t0": CUE["flood"], "t1": CUE["give"], "shot": "rupture", "side": 1, "v": "below", "fixed": True},
     {"id": "l-spill", "text": "the spill", "kind": "cell", "anchor": "spill", "t0": CUE["deeper"] - 0.5, "t1": t_stream, "shot": "rupture", "side": -1, "fixed": True},
-    {"id": "l-barrier", "text": "it helps build the barrier", "kind": "uv", "anchor": "porph", "t0": CUE["barrier"] - 0.4, "t1": t_end, "shot": "uv2", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-rings", "text": "follicles already ringed", "kind": "water", "anchor": "rings", "t0": CUE["no"] + 0.8, "t1": t_end, "shot": "uv2", "side": -1, "v": "below", "fixed": True},
+    {"id": "l-barrier", "text": "it helps build the barrier", "kind": "uv", "anchor": "spot", "t0": CUE["barrier"] - 0.4, "t1": t_end, "shot": "uv2", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-rings", "text": "follicles already ringed", "kind": "water", "anchor": "rings", "t0": CUE["no"] + 0.8, "t1": CUE["barrier"] - 0.6, "shot": "uv2", "side": -1, "v": "below", "fixed": True},
 ]
 BADGES = [
-    {"id": "b-model", "text": "model, not a photo", "t0": 0.0, "t1": t_fol, "slot": "br"},
+    {"id": "b-model", "text": "model, not a photo", "t0": 2.0, "t1": t_fol, "slot": "br"},
     {"id": "b-uv", "text": "UV: porphyrins glow orange-red", "t0": CUE["clear1"] - 0.6, "t1": B["normal"]["t0"] + 1.2, "slot": "bl"},
     {"id": "b-do", "text": "one study of 25 · Do et al., 2008", "t0": CUE["quarter"] - 0.3, "t1": t_flight, "slot": "tr"},
     {"id": "b-illus", "text": "illustration", "t0": max(FLIPS[0] - 0.1, B["normal"]["t0"] + 1.5), "t1": t_flight, "slot": "bl"},
     {"id": "b-jer", "text": "biopsy study · Jeremy et al., 2003", "t0": CUE["immune"], "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-back", "text": "acne patients' back skin", "t0": CUE["immune"], "t1": B["why"]["t0"], "slot": "tr"},
     {"id": "b-simp", "text": "simplified", "t0": t_fol, "t1": B["toscale"]["t0"], "slot": "br"},
-    {"id": "b-modp", "text": "model, not a photo", "t0": B["why"]["t0"], "t1": CUE["answers"] - 0.4, "slot": "tl"},
+    {"id": "b-modp", "text": "model on a tissue photo", "t0": B["why"]["t0"], "t1": CUE["answers"] - 0.4, "slot": "tl"},
     {"id": "b-deb", "text": "debated", "t0": CUE["answers"] - 0.2, "t1": B["whoa"]["t0"], "slot": "tl"},
-    {"id": "b-model2", "text": "model, not a photo", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
+    {"id": "b-model2", "text": "model on a tissue photo", "t0": B["whoa"]["t0"], "t1": t_stream, "slot": "tl"},
+    {"id": "b-model2s", "text": "model, not a photo", "t0": t_stream, "t1": B["toscale"]["t0"], "slot": "tl"},
+    {"id": "b-photo", "text": "tissue photo (normal skin)", "t0": t_fol, "t1": B["why"]["t0"], "slot": "bl"},
+    {"id": "b-alm", "text": "lab + mouse study · Almoughrabie 2023", "t0": CUE["barrier"] - 2.8, "t1": t_end, "slot": "tl"},
     {"id": "b-sum", "text": "neutrophils · Summers et al., 2010", "t0": t_stream + 0.3, "t1": B["toscale"]["t0"], "slot": "bl"},
     {"id": "b-scale", "text": "to scale · Ting-Beall, 1993", "t0": B["toscale"]["t0"] + 0.3, "t1": B["takeaway"]["t0"], "slot": "tr"},
-    {"id": "b-model3", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tl"},
+    {"id": "b-model3", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "br"},
 ]
 SPINE = [0.5, 0.215]
 COUNTERS = [
@@ -150,8 +153,8 @@ GAUGE = {"rise": [B["toscale"]["t0"] + 0.1, B["toscale"]["t0"] + 0.7], "pus": CU
          "paper": CUE["paper"] - 0.2, "back": [B["takeaway"]["t0"] - 0.3, B["takeaway"]["t0"] - 0.02], "cell_um": CELL_UM, "paper_um": PAPER_UM, "n": 10}
 assert GAUGE["n"] * CELL_UM <= PAPER_UM
 
-TITLE = {"series": "Outer Layer · No. 001", "title": "The fight you *never saw*", "t1": CUE["clear1"] - 0.5, "sig": A("vo01:new?", 0.35)}
-END = {"title": "Next layer: where the light on your face *goes*", "follow": "Outer Layer · No. 002",
+TITLE = {"series": "Skin Sense · No. 001", "title": "The fight you *never saw*", "t0": 0.6, "t1": CUE["clear1"] - 0.5, "sig": A("vo01:new?", 0.35)}
+END = {"title": "Next: where the light on your face *goes*", "follow": "Skin Sense · No. 002",
        "next": "In one study, 28% of new inflamed spots rose from skin that looked clear (Do et al., 2008). Narration: synthetic voice (AI)."}
 POSTER = A("vo05:deeper.", 0.2)
 

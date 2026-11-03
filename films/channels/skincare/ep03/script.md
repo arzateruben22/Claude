@@ -1,4 +1,4 @@
-# Outer Layer s1v2: "What's in a scar" (draft; dermatologist sign-off before posting)
+# Skin Sense s1v2: "What's in a scar" (draft; dermatologist sign-off before posting)
 
 About 74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2, topic 6.
 
@@ -56,7 +56,7 @@ vo: So, why the scar? {-} Mice born without germ-fighting cells heal without one
 
 ## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–74 s)
 vo: Next: a deadly poison, in a frown. {-} How much goes *in*? {-}
-end card: "Next layer: a deadly poison, in a frown. How much goes in?" · "Outer Layer · No. 003"
+end card: "Next: a deadly poison, in a frown. How much goes in?" · "Skin Sense · No. 003"
 
 ## Notes
 - Facts pass 2 (2 Nov, owner's direction): new whoa (the mouth) and new closing twist (inflammation and the
