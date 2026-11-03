@@ -12,9 +12,9 @@ Single file | Body Backstage No. 001
 **Description**
 
 ```
-Why is this cell folded? Because the road ahead is narrower than the cell.
+How does this cell fit? Its pipe is narrower than it is.
 
-You'd guess its surface stretches to fit. It can't. The dimples give it spare surface for its volume, so it folds into a parachute instead. Sickle cells lose the disc shape, stiffen, and can jam where oxygen is handed out. That dimple isn't decoration.
+You'd guess its skin stretches to fit. It barely does. That dent gives it spare skin, so it folds up neatly like a parachute instead. Sickle cells lose that dent, stiffen, and can jam where oxygen gets dropped off. That dent has a job.
 
 Series: Season 1: The traffic inside you, part 1 of 6. Next: A billion passengers
 
@@ -70,7 +70,7 @@ Sources
 **Caption**
 
 ```
-Why is this cell folded? Sickle cells lose the disc shape, stiffen, and can jam where oxygen is handed out. #humanbody #biology #learnontiktok #science #anatomy
+How does this cell fit? Sickle cells lose that dent, stiffen, and can jam where oxygen gets dropped off. #humanbody #biology #learnontiktok #science #anatomy
 ```
 
 **Pinned comment** (150-character limit): post it, then each reply under it, in order
@@ -96,9 +96,9 @@ Sources 3/3: NHLBI (NIH).
 **Caption**
 
 ```
-Why is this cell folded? Because the road ahead is narrower than the cell.
+How does this cell fit? Its pipe is narrower than it is.
 
-You'd guess its surface stretches to fit. Sickle cells lose the disc shape, stiffen, and can jam where oxygen is handed out.
+You'd guess its skin stretches to fit. Sickle cells lose that dent, stiffen, and can jam where oxygen gets dropped off.
 
 Season 1: The traffic inside you, part 1 of 6.
 
