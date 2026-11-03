@@ -434,30 +434,30 @@
    {
     "t": 39.733333333333334,
     "target": [
+     1003.0,
      0,
-     -1.35,
-     0
+     5
     ],
-    "el": -1,
-    "fov": 30,
+    "el": 42,
+    "fov": 34,
     "fx": 0.5,
-    "fy": 0.5,
-    "dist": 28,
-    "az": -2
+    "fy": 0.48,
+    "dist": 17,
+    "az": 12
    },
    {
     "t": 52.2667,
     "target": [
+     1003.0,
      0,
-     -1.35,
-     0
+     5
     ],
-    "el": -1,
-    "fov": 30,
+    "el": 38,
+    "fov": 34,
     "fx": 0.5,
-    "fy": 0.5,
-    "dist": 25,
-    "az": 0,
+    "fy": 0.48,
+    "dist": 13,
+    "az": 6,
     "ease": "sine"
    }
   ],
@@ -706,7 +706,7 @@
   },
   {
    "id": "b-face",
-   "text": "model face, not a photo",
+   "text": "model skin, not a photo",
    "t0": 39.733333333333334,
    "t1": 51.8167,
    "slot": "tl"
@@ -716,7 +716,7 @@
    "text": "Verkruysse 2008 · Wu et al., 2012",
    "t0": 39.733333333333334,
    "t1": 51.8167,
-   "slot": "tr"
+   "slot": "tl"
   },
   {
    "id": "b-cg",
@@ -727,7 +727,7 @@
   },
   {
    "id": "b-cgm",
-   "text": "model faces, not photos",
+   "text": "models, not photos",
    "t0": 60.8667,
    "t1": 65.6167,
    "slot": "tl"

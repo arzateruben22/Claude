@@ -15,6 +15,7 @@ import { createSection, createVessels, toneColor } from "../set/section.js";
 import { createBeam, createGlint, createPaths } from "../set/light02.js";
 import { createStudio, skinMaterial, strandMaterial, createGrain } from "../set/studio.js";
 import { DERMIS } from "../set/ref/textures.js";
+import { backdropCss, hazeVolume, richen, grade, bokeh } from "../set/prod.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, PL = FILM.place, FPS = FILM.fps || 30, D = FILM.depth;
 const canvas = document.getElementById("gl");
@@ -54,6 +55,7 @@ const bloom = glowAt([PL.tx, 0.2, 0], 5.5);   // the beam's foot: the light sink
 
 const S = createSection({ width: 180, depth: 60, sc: 17, gran: 10, spin: 48, basal: 10, seed: 23, x: PL.sx, backing: true });
 S.group.position.x = PL.sx; scene.add(S.group);
+richen(S.group, { seed: 23, jitter: 0.14, hue: 0.07, micro: 0.5 });   // no two cells alike; a micro surface on every one
 const V = createVessels({ x: [-80, 80], ys: [-118, -132], z: 30.4, r: 4.2, ox: PL.sx, dz: 0 }); scene.add(V.group);
 const paths = createPaths({ n: 18, origin: [0, 0, 32], width: 170, depth: 150, seed: 6 }); paths.group.position.x = PL.sx; scene.add(paths.group);
 const beamS = createBeam({ from: [PL.sx - 70, 230, 32], to: [PL.sx, 1, 32], radius: 2.2 }); scene.add(beamS.group);
@@ -70,6 +72,21 @@ const rig = createRig(FILM.cam);
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
+// production pass: a graded volume behind every non-terrain set, haze the key reads through, far bokeh, one grade
+const dome = backdropCss(canvas, { top: "#3b2479", bottom: "#06030c" });
+const hz = hazeVolume(scene, { at: [PL.sx, -70, -60], size: [700, 420, 160], color: "#c9b6ff", n: 5, op: 0.05 });
+const bk = bokeh(scene, { n: 120, box: [[PL.sx - 600, PL.sx + 600], [-500, 300], [-900, -400]], size: 46, color: "#d9ccff", op: 0.35 });
+const gradeFx = grade(hudRoot, { vignette: 0.5 });
+// the twist: two rendered skin forms under one light; left, the light stays on the surface (a hard highlight, no glow);
+// right, the light goes inside (soft, warm, lit from within). Models, not photos.
+const cgSkin = new THREE.Color(...SKIN.map((v) => v * 1.05));
+const cgL = new THREE.Mesh(new THREE.SphereGeometry(1.6, 96, 64), new THREE.MeshStandardMaterial({ color: cgSkin, roughness: 0.22, metalness: 0 }));
+const cgR = new THREE.Mesh(new THREE.SphereGeometry(1.6, 96, 64), new THREE.MeshPhysicalMaterial({ color: cgSkin, roughness: 0.6, metalness: 0, sheen: 0.9, sheenRoughness: 0.55,
+  sheenColor: new THREE.Color(1.0, 0.55, 0.45), emissive: new THREE.Color(0.55, 0.12, 0.08), emissiveIntensity: 0.45, clearcoat: 0.15, clearcoatRoughness: 0.4 }));
+cgR.material.normalMap = skinMaterial({ micro: 0.6, seed: 9, repeat: 4 }).normalMap; cgR.material.normalScale = new THREE.Vector2(0.4, 0.4);
+cgL.scale.set(0.78, 0.96, 0.74); cgR.scale.set(0.78, 0.96, 0.74); cgL.position.set(-1.7, -0.25, 1.2); cgR.position.set(1.7, -0.25, 1.2);
+const cgRim = new THREE.PointLight(0xff8a6a, 0, 9, 1.6); cgRim.position.set(1.7, -0.25, -2.4);
+scene.add(cgL, cgR, cgRim);
 const vf = createViewfinder({ root: hudRoot, W, H, x: 0.1, y: 0.255, w: 0.8, h: 0.29 });
 vf.el.querySelector(".rec").textContent = "● REC  DAYLIGHT"; vf.el.style.fontSize = "3.1vmin"; vf.el.style.setProperty("--ol-rec-size", "3.2vmin");
 const day = createDaylight({ root: hudRoot, W, H, y: 0.7, label: "daylight" }); day.el.style.fontSize = "2.9vmin";
@@ -98,7 +115,7 @@ const buildCg = () => { if (cgBuilt) return; cgBuilt = true;
     if (i === 0) { f.querySelectorAll("ellipse").forEach((e) => { if ((e.getAttribute("fill") || "").includes("blush")) e.setAttribute("opacity", "0"); });
       const hl = document.createElementNS("http://www.w3.org/2000/svg", "ellipse"); [["cx", 455], ["cy", 380], ["rx", 46], ["ry", 22], ["fill", "#ffffff"], ["opacity", "0.85"]].forEach(([k, v]) => hl.setAttribute(k, v)); f.appendChild(hl); f.style.filter = "contrast(1.18) saturate(.92)"; }
     else { f.style.filter = "drop-shadow(0 0 2.4vmin rgba(255,120,90,.55))"; f.querySelectorAll("ellipse").forEach((e) => { if ((e.getAttribute("fill") || "").includes("blush")) e.setAttribute("opacity", "0.65"); }); }
-    cgCols[i].appendChild(f); cgCols[i].appendChild(cgTag(i === 0 ? "light stays on top" : "light goes inside")); }); };
+    void f; cgCols[i].style.justifyContent = "flex-end"; cgCols[i].appendChild(cgTag(i === 0 ? "light stays on top" : "light goes inside")); }); };   // the faces themselves are rendered (cgL, cgR)
 // the model face (whoa): a stylised face drawn in the viewfinder (labelled "model face, not a photo"): its skin and
 // cheeks take on blood colour as the slider rises
 const NS = "http://www.w3.org/2000/svg", mk = (tag, at, p) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (p) p.appendChild(e); return e; };
@@ -119,9 +136,9 @@ mk("path", { d: "M395 415 Q430 395 468 410", ...ink, "stroke-width": 9 }, fsvg);
 mk("path", { d: "M500 470 Q492 545 478 575 Q500 590 522 575", ...ink, "stroke-width": 6 }, fsvg);   // nose
 const lips = mk("path", { d: "M455 640 Q500 668 545 640 Q500 652 455 640 Z", fill: "#a8555a" }, fsvg);
 const cgWrap = document.createElement("div");
-Object.assign(cgWrap.style, { position: "absolute", left: `${0.12 * W}px`, top: `${0.27 * H}px`, width: `${0.76 * W}px`, height: `${0.3 * H}px`, display: "flex", gap: `${0.04 * W}px`, zIndex: 1, opacity: "0", pointerEvents: "none" });
+Object.assign(cgWrap.style, { position: "absolute", left: `${0.16 * W}px`, top: `${0.27 * H}px`, width: `${0.68 * W}px`, height: `${0.3 * H}px`, display: "flex", gap: `${0.04 * W}px`, zIndex: 1, opacity: "0", pointerEvents: "none" });
 hudRoot.appendChild(cgWrap);
-const cgTag = (txt) => { const d = document.createElement("div"); d.textContent = txt; Object.assign(d.style, { fontFamily: "var(--font-mono)", fontSize: "2.4vmin", letterSpacing: ".02em", textTransform: "uppercase", color: "var(--text)", textAlign: "center", marginTop: "1vmin", whiteSpace: "nowrap" }); return d; };
+const cgTag = (txt) => { const d = document.createElement("div"); d.textContent = txt; Object.assign(d.style, { fontFamily: "var(--font-mono)", fontSize: "2.6vmin", letterSpacing: ".01em", textTransform: "none", color: "var(--text)", textAlign: "center", marginTop: "1vmin", whiteSpace: "nowrap", background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1vmin" }); return d; };
 const cgCols = [0, 1].map(() => { const col = document.createElement("div"); Object.assign(col.style, { flex: "1", display: "flex", flexDirection: "column", alignItems: "center" }); cgWrap.appendChild(col); return col; });
 const skinHex = (k) => { const c = SKIN.map((v) => v * 1.2), r = [Math.min(1, c[0] * (1 + 0.1 * k)), c[1] * (1 - 0.13 * k), c[2] * (1 - 0.1 * k)]; return `rgb(${r.map((v) => Math.round(Math.min(1, v) * 255)).join(",")})`; };
 // the depth chart (toscale): a full-width card, mm down the left; blue to ≈ 1 mm beside ten 100 µm sheets; red on to ≈ 4–5 mm
@@ -168,14 +185,16 @@ window.seek = function (t) {
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name;
   rig.place(camera, shot, t);
-  const isT = ["macro", "split", "rise", "macro2"].includes(shot), isS = shot === "inside" || shot === "depth";
+  const isT = ["macro", "split", "rise", "macro2", "face"].includes(shot), isS = shot === "inside" || shot === "depth";
   terrain.group.visible = isT; S.group.visible = V.group.visible = paths.group.visible = deep.visible = isS;
-  face.mesh.visible = shot === "face";
+  face.mesh.visible = false;   // the pulse beat is shot on the macro skin itself (the terrain), not a flat patch
+  hz.group.visible = bk.points.visible = isS; hz.set({ t }); bk.set({ t });
+  cgL.visible = cgR.visible = shot === "cg"; cgRim.intensity = shot === "cg" ? 7 : 0;
   if (deepPhotoMat) deep.material = shot === "depth" ? deepPhotoMat : deepPlainMat;   // the micrograph (a real photo) only in the depth beat, where its note is up
   scene.fog = isT ? FOG : null;
   lights.sun.intensity = isT ? 3.0 : 1.6; lights.key.intensity = isT ? 0.4 : 1.2;
   studio.set({ key: isT ? 0.5 : 1.0, rim: isT ? 1.6 : 2.0, fill: 0.3, env: 0.45, warm: 0.6 });
-  fstop = isT ? 0.45 : 0; focusPt = [PL.tx, 0, 0];
+  fstop = shot === "face" ? 0.3 : isT ? 0.45 : isS ? 0.16 : shot === "face" ? 0.35 : shot === "cg" ? 0.12 : 0; focusPt = isS ? [PL.sx, -80, 30] : shot === "cg" ? [0, -1.0, 2.8] : shot === "face" ? [PL.tx + 3, 0, 5] : [PL.tx, 0, 0];
 
   // ── the terrain: one beam and its glint; then two halves, smooth (one ray) and dry (a haze) ──
   if (isT) terrain.set({ tone: SKIN.map((v) => v * 1.1), furrows: shot === "split" ? 1.5 : 0.3, sheen: shot === "split" ? 1 : 0, spot: 0 });
@@ -217,11 +236,13 @@ window.seek = function (t) {
   const skc = skinHex(fk); [head, earL, earR, neck].forEach((e) => e !== head && e.setAttribute("fill", skc)); sh0.setAttribute("stop-color", skc);
   sh1.setAttribute("stop-color", (() => { const c = SKIN.map((v) => v * 0.95); return `rgb(${c.map((v) => Math.round(v * 255)).join(",")})`; })());
   blL.setAttribute("opacity", (0.15 + 0.85 * flush + 0.2 * pulse).toFixed(3)); blR.setAttribute("opacity", (0.15 + 0.85 * flush + 0.2 * pulse).toFixed(3));
-  fsvg.style.opacity = (shot === "face" ? fadeIn(t, SH.face, 0.4) : 0).toFixed(3); face.mesh.visible = false;
+  fsvg.style.opacity = "0";
+  // the pulse: the macro skin itself flushes with each beat (amplified, as Eulerian video magnification shows it)
+  terrain.mesh.material.color.setRGB(1 + 0.22 * flush, 1 - 0.1 * flush, 1 - 0.09 * flush);
   // a slow push in on the cheek across the whole beat (no locked frame)
   const push = shot === "face" ? E.inout2(seg(t, SH.face, SH.depth)) : 0;
   fsvg.style.transform = `scale(${(1 + 0.18 * push).toFixed(4)})`; fsvg.style.transformOrigin = "57% 78%";
-  vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : 0, left: "model face", right: "" });
+  vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : 0, left: "a cheek", right: "" });
   slider.style.opacity = (shot === "face" ? fadeIn(t, SH.face + 0.6, 0.5) : 0).toFixed(3);
   // the pulse trace, read from the face's colour: the last three seconds, drawn as a line
   const pts = []; for (let k = 0; k <= 90; k++) { const x = t - 3 + k / 30; pts.push(`${(k / 90 * 300).toFixed(1)},${(40 - 32 * beat(x) * (x > K.cam[0] ? 1 : 0.15)).toFixed(1)}`); }
@@ -230,7 +251,7 @@ window.seek = function (t) {
   // ── the model faces: computer faces before subsurface scattering beside a face whose light goes inside ──
   if (shot === "cg") buildCg();
   cgWrap.style.opacity = (shot === "cg" ? fadeIn(t, SH.cg, 0.4) : 0).toFixed(3);
-  vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : shot === "cg" ? fadeIn(t, SH.cg, 0.4) : 0, left: shot === "cg" ? "" : "model face", right: "" });
+  vf.set({ op: shot === "face" ? fadeIn(t, SH.face, 0.4) : shot === "cg" ? fadeIn(t, SH.cg, 0.4) : 0, left: shot === "cg" ? "" : "a cheek", right: "" });
 
   // ── the depth chart ──
   const cOp = shot === "depth" ? fadeIn(t, SH.depth - 0.05, 0.3) * (1 - fadeIn(t, SH.macro2 - 0.5, 0.45)) : 0;
