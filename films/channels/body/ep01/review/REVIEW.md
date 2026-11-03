@@ -236,3 +236,72 @@ The same reviewer, re-scoring against its own round-1 findings. Source: the re-r
    branching mesh if time allows.
 4. **Also before the final:** listen to and trim the voice takes (#13), and fix the sickle-cell timing (#8, a story
    point).
+
+---
+
+# Round 3 (re-render, 3 Nov 2026)
+
+The same reviewer. I pulled 33 new frames from the re-rendered preview (70.4 s): the hook, every sweep (4.75, 16.3,
+16.45, 22.1, 42.3, 50.3, 63.5), the meet shot, the ride-along, the net, the sickle cell and O₂, and the end card through
+to the loop.
+
+**Verdict: (a) and (g) now pass. (h) at 3 still blocks the final.**
+
+## Scores
+
+| | Point | R1 | R2 | R3 | Note |
+|---|---|---|---|---|---|
+| a | First 2 s | 2 | 3 | **4** | The ghost of the full width is visibly wider than the pipe from frame 0, and the question comes by 1.0 s. The label "its full width" lands on "narrower" (2.8 s), so the contradiction is named. It's not a 5: there's no fold at frame 0, and the hero is still a dome inside a pale shell. |
+| b | One thread | 3 | 3 | **3** | Unchanged script: the nucleus and outnumber lines and the meanwhile tally are still side steps. |
+| c | Picture moves with the sentence | 3 | 3 | **3** | "Tiniest pipe" still labels a wide vessel (20.8 s); "no room to pass" still has room (23.5 s); the meanwhile beat reuses the takeaway frame (60 s). |
+| d | Camera moves motivated | 3 | 3 | **3** | The sweeps alternate direction and the meet shot now sits in an artery (the wet wall out of focus behind, 9–14 s). The ride-along still reads as a cut. |
+| e | Voice meaning, screen figures | 3 | 4 | **4** | Unchanged. |
+| f | Rhythm | 3 | 3 | **3** | Unchanged: the holds still come after their reveals. |
+| g | Ending | 3 | 3 | **4** | The card fades over a sweep back to the frame-0 composition (pipe plus ghost visible behind the card at 70.3 s), so the replay seam matches. Button, tease and sourced fact are all in place. The loop is dim under the card scrim, and the hook's payoff still lands at 34 s, not at the end. |
+| h | Production value | 2 | 3 | **3** | Better: the sweeps are clean (no HUD on the band at 4.75, 16.3, 22.1, 42.3, 50.3, 63.5 s), the meet shot is in an artery, and the badges are sentence case. Still fails "no frame reads as a default render" at:<br>• 22.3 s: a grey seam strip runs through the hero cell on the first ride-along frame.<br>• 43.5–50 s: the net is straight cylinders.<br>• 22.3, 25, 33.5 s: side views read as donuts, and at 25 s there's a white sliver in the dimple.<br>• 53.9–63 s: the O₂ reads as snow.<br>• 17.5 s: cells overlap. |
+
+**Blocks a final:** (h) at 3. (a) and (g) are at 4 and no score is under 3.
+
+## Round-1 and round-2 findings, round-3 status
+
+- **Now fixed:**
+  - #6 (sweeps leaving HUD orphaned on the band).
+  - #10 (loop back to frame 0, with the fact line).
+  - #11 (end card; the ghost badge at 68.7 s is gone).
+  - N2 (the hook's ghost is now labelled).
+- **Improved, still partly:**
+  - #7: the artery wall is now in the meet shot. The net, the seams and the overlaps are known and unchanged.
+- **Still open:**
+  - #2 (tail): "tiniest pipe" (20.8 s) and "no room" (23.5 s).
+  - #4 (tail): donut side views, and the dimple sliver at 25 s.
+  - #8: the sickle cell isn't jammed on "jam" (53.9 s).
+  - #12: the 3 μm bar orientation, the "you are here" size, and three notes in the top-right corner at 55.5 s.
+  - #13: voice artefacts, flagged for a human listen (the owner keeps this voice).
+  - #14 (tail): the meanwhile beat has no picture of its own.
+  - N1: the scan tag almost touches the caption plate at 44 s.
+
+## New in round 3 (small)
+
+- **R3-1 (4.2–4.4 s)** The "its full width" label is still fading after the ghost has left the frame, and its leader runs
+  to the bottom edge, pointing at nothing.
+  **Fix:** end the label 0.2 s before the ghost exits, or keep the leader anchored on screen.
+- **R3-2 (22.1 s)** The upward sweep line passes through the incoming caption ("into the tiniest ones") as it fades.
+  **Fix:** delay the caption until the line has cleared the caption band, or let the caption plate sit above the band's
+  raster.
+- **R3-3 (2.7–2.9 s)** The speed badge fades in while the title is still fading out. It never crosses the title, but
+  starting it at the title's fully-out time keeps owner fix 2 strict.
+
+## What still blocks the final: (h) to 4
+
+1. Weld or hide the junction seam that cuts through the hero cell at the start of the ride-along (22.3 s). It is the
+   most visible default-render frame in the film.
+2. Make the dimple shallower so side and bottom views stop reading as donuts (22.3, 25, 33.5 s), and remove the white
+   sliver inside the dimple at 25 s.
+3. Stop cells overlapping each other and the walls (17.5 s).
+4. Give the O₂ different sizes, depth of field and a flow direction (53.9–63 s).
+5. The straight-cylinder net (43.5–50 s) is the remaining large gap. The scan view carries the lower half, but the
+   upper half is bare tubes on black. A tapering, branching mesh, or at least a tissue bed with parallax behind the
+   tubes, would close it.
+
+Items 1–4 are local fixes. With them done and the net at least given a bed, I would expect (h) at 4. The sickle timing
+(#8) and the voice listen (#13) should be closed before the final too, though they don't gate a score.

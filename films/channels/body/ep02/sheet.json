@@ -60,7 +60,7 @@
    "tag": "nts-cell",
    "text": "not to scale",
    "pos": [
-    0.659,
+    0.681,
     0.146
    ]
   },
@@ -130,7 +130,7 @@
    "tag": "ill-hb",
    "text": "illustration · slowed",
    "pos": [
-    0.55,
+    0.589,
     0.146
    ]
   },
@@ -205,7 +205,7 @@
    "tag": "ill-skin",
    "text": "illustration · not to scale",
    "pos": [
-    0.476,
+    0.528,
     0.146
    ]
   },
@@ -272,7 +272,7 @@
    "tag": "nts-lung",
    "text": "not to scale",
    "pos": [
-    0.659,
+    0.681,
     0.191
    ]
   },
@@ -422,7 +422,7 @@
    "tag": "nts-nerve",
    "text": "not to scale · slowed",
    "pos": [
-    0.55,
+    0.589,
     0.146
    ]
   },
