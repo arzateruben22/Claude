@@ -7,7 +7,7 @@ DIR=${1:-$HOME/.cache/cinema-voice}
 HERE=$(cd "$(dirname "$0")" && pwd)
 mkdir -p "$DIR/models/chatterbox"
 [ -x "$DIR/clone-venv/bin/python" ] || python3.11 -m venv "$DIR/clone-venv" 2>/dev/null || python3 -m venv "$DIR/clone-venv"
-"$DIR/clone-venv/bin/pip" install -q --disable-pip-version-check chatterbox-tts==0.1.7 huggingface_hub soundfile pyloudnorm
+"$DIR/clone-venv/bin/pip" install -q --disable-pip-version-check chatterbox-tts==0.1.7 huggingface_hub soundfile pyloudnorm sherpa-onnx==1.13.8
 "$DIR/clone-venv/bin/python" -I - "$HERE/clone.lock.json" "$DIR/models/chatterbox" <<'PY'
 import hashlib, json, sys
 from huggingface_hub import snapshot_download, model_info

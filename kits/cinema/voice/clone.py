@@ -20,6 +20,7 @@ import soundfile as sf
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from scriptfile import script_lines   # noqa: E402
+from align import recognizer, asr   # noqa: E402,F401  (sherpa-onnx is imported lazily inside)
 
 SR = 24000
 HERE = Path(__file__).resolve().parent
@@ -77,7 +78,7 @@ def candidates(dirs):
         meta = json.loads((d / "lines.json").read_text()) if (d / "lines.json").exists() else {"lines": []}
         info = {l["file"]: l for l in meta["lines"]}
         for f in sorted(d.glob("*.wav")):
-            if "consent" in f.name.lower():
+            if "consent" in f.name.lower() or (f.name == "01.wav" and (d / "consent.wav").exists()):
                 continue
             x = load(f)
             dur = len(x) / SR
@@ -137,11 +138,26 @@ def pick_reference(takes, whisper_takes):
     return pick
 
 
-def require_consent(dirs):
-    """A speaker is cloned only if their takes include the consent line (a file with "consent" in its name).
-    This checks the take exists; a person must still listen that it says the consent sentence."""
-    if not any("consent" in f.name.lower() for d in dirs for f in Path(d).glob("*.wav")):
-        sys.exit("NO CONSENT TAKE found in --takes (a WAV with 'consent' in its name): not cloning this voice")
+CONSENT = ("This is my own voice, and I agree to it being copied to narrate these science channels: "
+           "Reality Rulebook, One More Orbit, Body Backstage, Possibility Lab and Skin Sense.")
+CONSENT_MIN = 0.8
+
+
+def require_consent(dirs, models):
+    """Refuse unless a take saved as consent.wav (line 01 of voice 1, saved at ingest) TRANSCRIBES to the
+    consent sentence (>= 0.8 word similarity, Parakeet via align.py). The transcript is the gate, not the filename."""
+    import difflib
+    from align import recognizer, asr
+    from scriptfile import norm
+    f = next((Path(d) / "consent.wav" for d in dirs if (Path(d) / "consent.wav").exists()), None)
+    if not f:
+        sys.exit("NO consent.wav in --takes: save line 01 of voice 1 as consent.wav at ingest. Not cloning this voice")
+    heard = [norm(w) for w, _, _ in asr(recognizer(models), load(f), SR)]
+    want = [norm(w) for w in CONSENT.split()]
+    sim = difflib.SequenceMatcher(None, heard, want).ratio()
+    print(f"consent check: word similarity {sim:.2f} (need {CONSENT_MIN}); heard: {' '.join(heard)}")
+    if sim < CONSENT_MIN:
+        sys.exit("CONSENT LINE DOES NOT MATCH: refusing to clone this voice")
 
 
 def trim(a, db=-45.0, pad=0.02):
@@ -184,6 +200,7 @@ def main():
     ap.add_argument("--theme", help="theme.json: narrator.voice 'clone-<id>' must match --speaker (guards a wrong-voice render)")
     ap.add_argument("--line-voice", action="append", default=[], metavar="BEAT=SPEAKER",
                     help="voice this beat with another already-prepared speaker (two-host formats later)")
+    ap.add_argument("--models", default=str(CACHE / "models"), help="folder with parakeet/ (setup.sh)")
     ap.add_argument("--refresh-ref", action="store_true")
     ap.add_argument("--pick-only", action="store_true")
     ap.add_argument("--exaggeration", type=float, default=0.4, help="calm narrator ~0.35-0.5")
@@ -200,7 +217,7 @@ def main():
     if in_git(OWNER.parent if OWNER.parent.exists() else Path.home()):
         sys.exit(f"{OWNER} is inside a git work tree; refusing (owner voice data stays out of git)")
     if a.refresh_ref or not (OWNER / "cond_narration.wav").exists():
-        require_consent(a.takes)
+        require_consent(a.takes, a.models)
         pick = pick_reference(a.takes, a.whisper_takes)
         print("reference:", json.dumps(pick))
     if a.pick_only:

@@ -57,6 +57,8 @@ of the single cleanest take is the conditioning clip. Output is level-matched to
 One reference set per speaker (`--speaker female|male`, folder `~/.cache/cinema-voice/<id>/`). `lines.json`
 says `"voice": "clone-<id>"`. A channel names its narrator in `theme.json`, `{"narrator": {"voice": "clone-female"}}`;
 `--theme` makes clone.py refuse a mismatched `--speaker`. A beat can use the other speaker with
-`--line-voice BEAT=male` (that line then carries its own `"voice"`); no duet format is built. **Consent gate:**
-a speaker's takes must include a WAV with "consent" in its name or clone.py refuses; it only checks the
-take exists, so a person still has to listen that it says the consent line.
+`--line-voice BEAT=male` (that line then carries its own `"voice"`); no duet format is built. **Consent gate (in the code path):** at ingest, save line 01 of voice 1 (the consent sentence) as
+`consent.wav` next to the speaker's polished takes. clone.py transcribes it with Parakeet and needs >= 0.8 word
+similarity to: "This is my own voice, and I agree to it being copied to narrate these science channels: Reality
+Rulebook, One More Orbit, Body Backstage, Possibility Lab and Skin Sense." No match, no clone. That line and
+its source `01.wav` are never used as reference audio.
