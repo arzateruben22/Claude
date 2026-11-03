@@ -306,11 +306,6 @@
    ]
   },
   {
-   "t": 52.5833,
-   "kind": "badge",
-   "tag": "b-model2b"
-  },
-  {
    "t": 52.7333,
    "kind": "section",
    "id": "toscale",

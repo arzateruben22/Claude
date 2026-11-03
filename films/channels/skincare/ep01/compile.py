@@ -118,8 +118,7 @@ BADGES = [
     {"id": "b-modp", "text": "model on a tissue photo", "t0": B["why"]["t0"], "t1": CUE["answers"] - 0.4, "slot": "tl"},
     {"id": "b-deb", "text": "debated", "t0": CUE["answers"] - 0.2, "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-model2", "text": "model on a tissue photo", "t0": B["whoa"]["t0"], "t1": t_stream, "slot": "tl"},
-    {"id": "b-model2s", "text": "model, not a photo", "t0": t_stream, "t1": B["toscale"]["t0"] - 0.45, "slot": "tl"},
-    {"id": "b-model2b", "text": "model on a tissue photo", "t0": B["toscale"]["t0"] - 0.15, "t1": B["toscale"]["t0"] + 0.05, "slot": "tl"},
+    {"id": "b-model2s", "text": "model, not a photo", "t0": t_stream, "t1": B["toscale"]["t0"] + 0.3, "slot": "tl"},   # over the stream (no photo here), until the card
     {"id": "b-photo", "text": "tissue photo (normal skin)", "t0": t_fol, "t1": B["why"]["t0"], "slot": "bl"},
     {"id": "b-alm", "text": "lab + mouse study · Almoughrabie 2023", "t0": CUE["barrier"] - 2.8, "t1": t_end - 0.45, "slot": "tl"},
     {"id": "b-sum", "text": "neutrophils · Summers et al., 2010", "t0": t_stream + 0.3, "t1": B["toscale"]["t0"], "slot": "bl"},

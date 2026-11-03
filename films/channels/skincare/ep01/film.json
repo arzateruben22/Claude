@@ -871,14 +871,7 @@
    "id": "b-model2s",
    "text": "model, not a photo",
    "t0": 45.6,
-   "t1": 52.2833,
-   "slot": "tl"
-  },
-  {
-   "id": "b-model2b",
-   "text": "model on a tissue photo",
-   "t0": 52.5833,
-   "t1": 52.7833,
+   "t1": 53.0333,
    "slot": "tl"
   },
   {

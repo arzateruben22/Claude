@@ -138,7 +138,8 @@ function createCellGauge() {
   const head = mk("text", { x: cx + 40 * S1, y: cy + 62 * S1, opacity: 0, "font-size": 34 * S1, fill: "var(--text-2)", "font-family": "var(--font-mono)", "letter-spacing": "0.12em" }, g); head.textContent = "TO SCALE";
   const colX = cx + 0.5 * cw, papX = cx + 0.68 * cw, r = (G.cell_um / 2) * um;
   mk("line", { x1: cx + 40 * S1, x2: cx + cw - 40 * S1, y1: base, y2: base, stroke: "var(--text-2)", "stroke-width": 2 * S1 }, g);
-  const cells = Array.from({ length: G.n }, (_, i) => mk("circle", { cx: colX, cy: base - r - 2 * r * i, r: r * 0.96, fill: "var(--water)", stroke: "var(--slide-low)", "stroke-width": 2 * S1 }, g));
+  const lit = mk("radialGradient", { id: "g-cell", cx: "38%", cy: "34%", r: "70%" }, mk("defs", {}, g)); mk("stop", { offset: "0%", "stop-color": "#f2fffd" }, lit); mk("stop", { offset: "55%", "stop-color": "#8fe6dd" }, lit); mk("stop", { offset: "100%", "stop-color": "#3f8f8a" }, lit);   // the gauge's cells lit like the stream's
+  const cells = Array.from({ length: G.n }, (_, i) => mk("circle", { cx: colX, cy: base - r - 2 * r * i, r: r * 0.96, fill: "url(#g-cell)", stroke: "var(--slide-low)", "stroke-width": 2 * S1 }, g));
   const PW = 0.14 * cw;
   mk("rect", { x: papX, y: base - GH, width: PW, height: GH, rx: 4 * S1, fill: "none", stroke: "var(--text-2)", "stroke-width": 2.5 * S1, "stroke-dasharray": `${10 * S1} ${8 * S1}` }, g);   // the paper's outline waits from the start
   const paper = mk("rect", { x: papX, width: PW, rx: 4 * S1, fill: "var(--text)", opacity: 0.92 }, g);
@@ -250,6 +251,7 @@ window.seek = function (t) {
   F.group.visible = F.group.visible && !(shot === "gauge" && lift > 0.98);   // the follicle stays behind the card only while it rises and goes
 
   // ── the marrow stream: cells drift past in a slow river, the near ones soft in the haze ──
+  stream.position.z = shot === "gauge" ? -14 : 0; sCell.opacity = shot === "gauge" ? 0.3 : 0.6;   // behind the glass only, dimmed (the measured cells are the card's)
   if (shot === "stream" || shot === "gauge") {   // the gauge's glass sits over the same stream
     const u = seg(t, K.stream[0], K.stream[1]);
     sCells.forEach((g, i) => { const d = g.userData, x = ((d.u + 0.06 * (t - K.stream[0])) % 1) * 60 - 30; g.position.set(x, d.y + 0.6 * Math.sin(x * 0.12 + i), d.z); g.scale.setScalar(d.s); g.rotation.set(t * 0.2 + i, t * 0.15, 0); });
