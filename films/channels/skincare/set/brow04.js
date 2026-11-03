@@ -55,7 +55,7 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H
     const socket = -0.32 * Math.exp(-(((ax - 3.1) ** 2) / 2.4 + ((Y + 1.9) ** 2) / 1.2));                    // shallow: no bruise
     const lid = 0.2 * Math.exp(-(((ax - 3.1) ** 2) / 1.5 + ((Y + 2.45) ** 2) / 0.16)) - 0.07 * Math.exp(-(((ax - 3.1) ** 2) / 1.8 + ((Y + 2.0) ** 2) / 0.015));   // the upper lids and their crease
     const env = Math.exp(-((Y - 0.8) ** 2) / 0.45);
-    const folds = f * env * (-0.13 * (Math.exp(-((X - 0.36) ** 2) / 0.018) + Math.exp(-((X + 0.36) ** 2) / 0.018))   // the two valleys of the "11" (soft)
+    const folds = f * env * (-0.1 * (Math.exp(-((X - 0.36) ** 2) / 0.035) + Math.exp(-((X + 0.36) ** 2) / 0.035))   // the two valleys of the "11" (soft)
       + 0.11 * Math.exp(-(X * X) / 0.06)                                                                       // the bulge between them
       + 0.07 * (Math.exp(-((X - 0.78) ** 2) / 0.09) + Math.exp(-((X + 0.78) ** 2) / 0.09)));                    // the corrugators bunching outside
     const draw = -0.06 * f * Math.exp(-(X * X) / 1.6) * Math.exp(-((Y - 0.6) ** 2) / 1.5);
@@ -65,7 +65,7 @@ export const createBrow = ({ x = 0, tone = [0.8, 0.6, 0.48], seed = 9, W = 18, H
   // ── the groom: per brow, clumps of tapered strands; the head (medial) hairs stand up, the body and tail flow outward ──
   const hairGeo = new THREE.CylinderGeometry(0.004, 0.018, 1, 6, 8, false).rotateZ(-Math.PI / 2).translate(0.5, 0, 0);   // root at the origin, tip along +x
   { const p = hairGeo.attributes.position, col = []; for (let i = 0; i < p.count; i++) { const u = p.getX(i); p.setY(i, p.getY(i) - 0.07 * u * u); const k = Math.pow(u, 1.5);   // a slight bend; dark at the root, paler at the tip
-      col.push(0.1 + 0.32 * k, 0.06 + 0.22 * k, 0.04 + 0.14 * k); } hairGeo.setAttribute("color", new THREE.Float32BufferAttribute(col, 3)); hairGeo.computeVertexNormals(); }
+      col.push(0.02 + 0.1 * k, 0.011 + 0.06 * k, 0.007 + 0.035 * k);   // linear: a dark brown root to a warm, paler tip } hairGeo.setAttribute("color", new THREE.Float32BufferAttribute(col, 3)); hairGeo.computeVertexNormals(); }
   const alpha = (() => { const c = document.createElement("canvas"); c.width = 4; c.height = 64; const k = c.getContext("2d"); const gr = k.createLinearGradient(0, 64, 0, 0);
     gr.addColorStop(0, "#fff"); gr.addColorStop(0.7, "#ddd"); gr.addColorStop(1, "#333"); k.fillStyle = gr; k.fillRect(0, 0, 4, 64); return new THREE.CanvasTexture(c); })();
   const hairMat = new THREE.MeshPhysicalMaterial({ vertexColors: true, color: 0xffffff, roughness: 0.55, metalness: 0, sheen: 0.25, sheenRoughness: 0.5, sheenColor: new THREE.Color(0.7, 0.52, 0.36), specularIntensity: 0.25,

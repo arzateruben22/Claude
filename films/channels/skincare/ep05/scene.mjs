@@ -20,6 +20,7 @@ import { toneColor } from "../set/section.js";
 import { createStudio, skinMaterial, createShaft, createGrain } from "../set/studio.js";
 import { lookV2, upgradeSkin, upgradeHairs, hazeVolume, bokeh } from "../set/prod.js";
 import { unifyHud, stackAsCard } from "../set/hudv2.js";
+import { lookV3, skinV3, hairsV3 } from "../set/look3.js";
 import { SECTION } from "../set/ref/textures.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, FPS = FILM.fps || 30, G = FILM.gauge, P = FILM.plates;
@@ -215,8 +216,9 @@ window.SCENE_READY = Promise.all([load(SECTION)]).then(([sec]) => { sec.repeat.s
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
-const prodLook = lookV2({ canvas, hudRoot, fog: FOGA, terrain: HL.T, skin: HL.m });   // the channel look (prod.js): skin, hairs, fog, backdrop, grade
-upgradeSkin(HR.m); upgradeHairs(HR.T);
+const prodLook = lookV3({ canvas, hudRoot, fog: FOGA, terrain: HL.T, skin: HL.m, grain: 0.007 });   // the channel look v3 (look3.js): skin, hairs, fog, backdrop, grade, grain
+skinV3(HR.m); hairsV3(HR.T);
+for (const H2 of [HL, HR]) H2.T.group.traverse((o) => { if (o.isInstancedMesh) { o.material.clippingPlanes = H2.clip; o.material.needsUpdate = true; } });   // each half keeps only its own hairs
 upgradeSkin(K.mesh.material, { edge: [0.82, 0.85, 0.95], edgeK: 0.22 });   // silicone: soft sheen, a slight translucent edge, no transmission
 Object.assign(K.mesh.material, { roughness: 0.55, sheen: 0.35, specularIntensity: 0.35 }); K.mesh.material.sheenColor.setRGB(0.86, 0.9, 1.0);
 FOGK.color.set(0x1a0d36);
@@ -230,7 +232,7 @@ wipe(gapMat, "col", { uv: [0.71, 0.55, 1.15], em: [0.05, 0.03, 0.14] });
 const wHL = wipe(HL.m, "ratio", { uv: [0.12, 0.08, 0.26], day: tone }), wHR = wipe(HR.m, "ratio", { uv: [0.62, 0.48, 1.0], day: tone, em: [0.03, 0.02, 0.09] });
 wipe(coatMat, "col", { uv: [0.07, 0.05, 0.16] });
 wipe(dmgMat, "alpha"); wipe(dmgLMat, "alpha");
-const grain = createGrain(hudRoot, { amount: 0.006 });
+const grain = prodLook.grain;   // look3: fine soft-light grain with a real black point
 const hud = createHud({ camera, shots: FILM.shots });
 unifyHud(hudRoot);   // one HUD system (hudv2.js): one plate, one radius, a bar not a dot; mono sources, sans labels
 const labelAt = { L: [-2.2, 0.4, -1], R: [2.2, 0.4, -1] };   // a point on each half, set per shot in seek()

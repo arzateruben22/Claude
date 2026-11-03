@@ -65,7 +65,7 @@ browSkin.map = (() => { const c = document.createElement("canvas"); c.width = c.
     g.addColorStop(0, red ? "rgba(236,170,160,.22)" : "rgba(255,246,236,.25)"); g.addColorStop(1, "rgba(255,255,255,0)"); k.fillStyle = g; k.fillRect(x - r, y - r, 2 * r, 2 * r); }
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1.5, 1.5); return t; })();
 BR.mesh.material = browSkin;
-skinV3(browSkin, { keyDir: [-0.74, 0.5, 0.45] });   // the warm terminator matched to this film's upper-left key
+skinV3(browSkin, { keyDir: [-0.74, 0.5, 0.45], scatterK: 0.22 });   // the warm terminator matched to this film's upper-left key
 const look3 = lookV3({ canvas, hudRoot, skin: browSkin });   // the channel look v3: skinV3 (a warm terminator, oily micro-speculars), the backdrop, one grade, grainV3
 browSkin.clearcoat = 0.18; browSkin.clearcoatRoughness = 0.3;   // a second, sharper lobe over skinV3's broad matte one (oil on the crests)
 const browBase = browSkin.color.clone();

@@ -123,7 +123,7 @@ CAM = {
                      K(A("vo04:started"), [0.6, 2.3, 8.6], [0.6, 0.5, -4.0]), K(CUE["pooled"] + 0.6, [0.9, 2.2, 7.6], [0.7, 8.6, -6.5]),
                      K(CUT["uv"], [2.6, 2.2, 6.6], [2.0, 8.8, -8.0])],   # the sunburst drifts slowly sideways
             "rack": [CUE["young"], CUE["pooled"]]},
-    "uv": {"keys": [K(CUT["uv"], [0.0, 4.4, 15.5], [0.0, 1.7, -8.0]), K(CUT["section"], [0.0, 3.9, 12.5], [0.0, 1.4, -9.0])]},   # wide: both banks at the top of frame, the seam down the middle
+    "uv": {"keys": [K(CUT["uv"], [0.0, 10.5, 15.0], [0.0, 0.0, -7.0]), K(CUT["section"], [0.0, 9.6, 12.0], [0.0, 0.0, -8.0])]},   # from above the tubes: both banks cross the frame, the seam runs down the middle   # wide: both banks at the top of frame, the seam down the middle
     "section": {"keys": [K(CUT["section"], [17.0, 7.0, 23.5], [0.4, -3.6, -2.0]), K(CUT["list2"], [14.2, 5.8, 19.8], [0.2, -3.8, -2.0])]},   # three-quarter: face, side and the relief of the top
     "list2": {"keys": [K(CUT["list2"], [-0.9, 0.4, 19.2], [-0.15, -0.7, 0]), K(f.duration, [0.2, 0.1, 17.8], [0.0, -0.62, 0])]},
 }

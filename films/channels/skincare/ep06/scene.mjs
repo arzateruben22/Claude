@@ -141,7 +141,7 @@ const uvShader = (sh) => {   // the UV camera: one material, a soft seam between
       float kk = mix(uL, uR, sideK);
       float lum = clamp(dot(diffuseColor.rgb, vec3(0.3, 0.59, 0.11)) / 0.1, 0.35, 1.5);
       diffuseColor.rgb = mix(diffuseColor.rgb, uLilac * lum, uUV);`)
-    .replace("#include <tonemapping_fragment>", "gl_FragColor.rgb *= mix(1.0, 0.13 + 0.87 * kk, uUV);\n#include <tonemapping_fragment>")
+    .replace("#include <tonemapping_fragment>", "gl_FragColor.rgb *= mix(1.0, 0.2 + 0.8 * kk, uUV);\n#include <tonemapping_fragment>")
     .replace("#include <emissivemap_fragment>", "#include <emissivemap_fragment>\ntotalEmissiveRadiance += uGlow * kk * uUV;");
 };
 T.mesh.material = skinM;
@@ -188,7 +188,7 @@ const rays = [[-4.0, -7], [-0.8, -3.5], [2.4, -9], [4.8, -5]].map(([x, z]) => { 
   return { group: cone, set({ op = 1 } = {}) { cone.visible = op > 0.002; m.uniforms.uOp.value = 0.22 * op; } };
 });
 const dustBed = particles(380, [[XB - 7, 0.3, -14], [XB + 7, 6.2, 9]], 0.055, "#F3E9FF");
-const FOGB = new THREE.FogExp2(0x2c1660, 0.045);
+const FOGB = new THREE.FogExp2(0x2c1660, 0.045), FOGU = new THREE.FogExp2(0x1a0d36, 0.018);   // the UV shot looks down from above the tubes: thinner fog
 
 // ── 4: the cut face: a block of deep-tone skin seen three-quarters, its face the stained tissue photo ──
 const C = new THREE.Group(); C.position.x = XC; scene.add(C);
@@ -311,7 +311,7 @@ window.seek = function (t) {
   shaftL.set({ op: isList ? 0.8 : 0 }); dustL.set(t, isList ? 1 : 0); dustNear.set(t, isList ? 1 : 0);
   dustBed.set(t, isBed ? 1 : 0);
   shaftC.set({ op: shot === "section" ? 1 : 0 }); dustC.set(t, shot === "section" ? 1 : 0);
-  scene.fog = isBed ? FOGB : null;
+  scene.fog = shot === "bed" ? FOGB : shot === "uv" ? FOGU : null; housingMat.visible = shot !== "uv";
   bounce.intensity = 0; rimV.intensity = isList ? 2.4 : 0; bankL.intensity = bankR.intensity = 0; coolFill.intensity = 0;
   let endDefocus = E.inout2(seg(t, FILM.endCard - 0.8, FILM.endCard + 0.4));
 
@@ -353,7 +353,7 @@ window.seek = function (t) {
       kL = flicker(t, FILM.uvd.australia); kR = flicker(t, FILM.uvd.brazil);
       UV.uUV.value = uv; UV.uL.value = kL; UV.uR.value = kR;
       studio.aim([XB, 0, 0], [-0.6, 0.6, 0.5], [0.5, 0.35, -0.85]); studio.set({ key: 1.6 * (1 - 0.7 * uv), rim: 1.2, fill: 0.05, env: 0.15, warm: 0.8 * (1 - uv) }); bounce.intensity = 0.9 * (1 - uv);
-      coolFill.intensity = 0.35 * uv;   // after both banks: a cool fill keeps the shadows at ~10%, pores and furrows still read
+      coolFill.intensity = 0.9 * uv;   // after both banks: a cool fill keeps the shadows at ~10%, pores and furrows still read
       focusPt = mix3(add([0, 0, 2], XB), add([0, 0, -1.5], XB), E.inout2(seg(t, CUT.uv, CUT.section))); fstop = 0.22;
       rays.forEach((r) => r.set({ op: 0 }));
     }
