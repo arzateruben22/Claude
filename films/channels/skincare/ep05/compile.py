@@ -42,7 +42,7 @@ assert abs((1 - OR) - 0.24) < 1e-9 and MEL[1] == 2 * MEL[0] and HR_CI[1] > 1.0
 TONE = "medium"         # bible §1: 005 is drawn in the medium tone
 
 # ── the words the picture hangs on ──────────────────────────────────────────
-t_end = A("vo08:Next:", -0.25)
+t_end = A("vo08:Next:", -0.55)   # the end card's signature ≥ 0.5 s before the tease voice
 CUE = {
     "aged": A("vo01:aged?"), "four": A("vo01:four"), "one": A("vo01:one"),
     "nambour": A("vo02:Nambour,"), "chance": A("vo02:chance"), "morning": A("vo02:morning."), "head": A("vo02:Head,"),
@@ -74,27 +74,30 @@ MACRO = {
     "flush": [B["why"]["t0"] + 0.3, CUE["burn"] + 0.6],          # the burn you feel: a warm flush on the bare half
     "dmg": [CUE["but"] + 0.5, CUE["misses"] + 0.2],              # the hidden freckles darken under UV (illustration)
     "patches": [CUE["others"], CUE["all"] + 0.3],                 # "whenever they pleased, or not at all": sunscreen comes and goes
+    "mixed": [CUE["both"] - 0.1, CUE["both"] + 0.9],             # the loop, on "Both": bare gaps open in the screened half, patches land on the bare half (never sunscreen against none)
     "film": [B["toscale"]["t0"] + 0.3, CUE["dose"] + 0.4],        # the morning layer shows as a satin film
     "age": [CUE["researchers"], B["why"]["t0"] - 0.2],           # the cast: the lines deepen on the right ("4.5 years, compressed")
 }
-RACK = {"hook": [CUE["aged"], CUE["four"]], "micro": [CUE["melanoma"] - 0.6, CUE["melanoma"] + 0.6]}
+RACK = {"hook": [CUE["aged"], CUE["aged"] + 0.7], "micro": [CUE["melanoma"] - 0.6, CUE["melanoma"] + 0.6]}
 
 # ── the overlay: captions carry the words; at most two labels at once; honesty notes small, in a corner ──
-LAB_Y = 0.5
-LABELS = [
-    {"id": "l-daily", "text": "daily", "kind": "water", "t0": CUE["morning"] - 0.2, "t1": CUE["researchers"] - 0.1, "screen": [0.12, LAB_Y], "side": 1},
-    {"id": "l-pleased", "text": "as they pleased", "kind": "uv", "t0": CUE["pleased"] - 0.3, "t1": CUE["researchers"] - 0.1, "screen": [0.83, LAB_Y], "side": -1},
-    {"id": "l-sun", "text": "sunscreen", "kind": "water", "t0": CUE["camera"], "t1": B["whoa"]["t0"] - 0.6, "screen": [0.12, 0.52], "side": 1},
-    {"id": "l-bare", "text": "bare skin", "kind": "uv", "t0": CUE["camera"], "t1": B["whoa"]["t0"] - 0.6, "screen": [0.83, 0.52], "side": -1},
+LABELS = [   # anchors: "at" a world point on a half (scene.mjs), or "screen" fractions
+    {"id": "l-one", "text": "one neighbour", "kind": "water", "t0": 0.3, "t1": 5.4, "at": "L", "side": -1},
+    {"id": "l-other", "text": "the other", "kind": "uv", "t0": 0.3, "t1": 5.4, "at": "R", "side": 1},
+    {"id": "l-daily", "text": "daily", "kind": "water", "t0": CUE["morning"] - 0.2, "t1": B["change"]["t0"], "at": "L", "side": -1},
+    {"id": "l-daily2", "text": "daily", "kind": "water", "t0": CUE["pleased"] - 0.3, "t1": CUE["researchers"], "at": "L", "side": -1},
+    {"id": "l-pleased", "text": "as they pleased", "kind": "uv", "t0": CUE["pleased"] - 0.3, "t1": CUE["researchers"], "at": "R", "side": 1},
+    {"id": "l-sun", "text": "sunscreen", "kind": "water", "t0": CUE["camera"], "t1": B["whoa"]["t0"], "screen": [0.12, 0.52], "side": 1},
+    {"id": "l-bare", "text": "bare skin", "kind": "uv", "t0": CUE["camera"], "t1": B["whoa"]["t0"], "screen": [0.83, 0.52], "side": -1},
 ]
 BADGES = [
-    {"id": "b-model0", "text": "model, not a photo", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "tr"},
+    {"id": "b-model0", "text": "model, not a photo", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "bl"},
     {"id": "b-model", "text": "model, not a photo", "t0": B["normal"]["t0"], "t1": CUE["researchers"] - 0.1, "slot": "tl"},
     {"id": "b-cast", "text": "model · 4.5 years, compressed", "t0": CUE["researchers"] - 0.1, "t1": B["why"]["t0"], "slot": "tl"},
     {"id": "b-burn", "text": "model, not a photo", "t0": B["why"]["t0"], "t1": CUE["but"], "slot": "tl"},
     {"id": "b-uv1", "text": "illustration · not trial data", "t0": CUE["but"], "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-micro", "text": "micrograph · healthy stained skin", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
-    {"id": "b-est", "text": "estimate · lab test dose", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tl"},
+    {"id": "b-est", "text": "model · estimate · lab test dose", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tl"},
     {"id": "b-loop", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": CUE["skin"], "slot": "tl"},
     {"id": "b-uv2", "text": "illustration · not trial data", "t0": CUE["skin"], "t1": t_end, "slot": "tl"},
 ]
@@ -106,28 +109,37 @@ COUNTERS = [
      "t0": B["whoa"]["t0"] + 0.7, "t1": B["toscale"]["t0"], "at": SPINE},
 ]
 PLATES = {
-    "odds": {"t0": CUE["lines"], "t1": B["why"]["t0"], "text": "increased ageing, daily group: about a quarter less likely",
+    "odds": {"t0": CUE["lines"], "t1": B["why"]["t0"], "text": "lower odds of increased ageing in the daily group",
              "sub": f"relative odds {OR:.2f} (95% CI {OR_CI[0]:.2f}–{OR_CI[1]:.2f}) · Hughes et al., 2013"},
     "mel": {"t0": CUE["melanoma"] - 0.3, "t1": B["toscale"]["t0"], "mel": CUE["melanoma"], "half": CUE["half"], "small": CUE["small"],
-            "n": list(MEL), "sub": f"{MEL[0]} vs {MEL[1]} · hazard ratio {HR:.2f} (95% CI {HR_CI[0]:.2f}–{HR_CI[1]:.2f})",
-            "note": "small numbers · not quite significant · Green et al., 2011"},
+            "n": list(MEL), "sub": f"{MEL[0]} vs {MEL[1]} · hazard ratio {HR:.2f} (95% CI {HR_CI[0]:.2f}–{HR_CI[1]:.2f}) · Green et al., 2011",
+            "note": "small numbers · not quite significant"},
 }
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 
 
-def before_cut(t1, lead=0.3):
-    return round(t1 - lead, 4) if any(abs(t1 - c) < 1e-6 for c in CUTS) or abs(t1 - t_end) < 1e-6 else t1
+LEAD = 0.7   # the HUD fades an overlay out over ~0.5 s after its t1: end it this long before its shot's cut (or the end card)
 
 
-for row in BADGES + COUNTERS + LABELS:
-    row["t1"] = before_cut(row["t1"])
-for k in PLATES.values():
-    k["t1"] = before_cut(k["t1"])
+def cap(row, lead=LEAD):
+    """End an overlay at least `lead` before the first cut (or the end card) after it appears, so the frame after a cut
+    is clean."""
+    nxt_cut = min([c for c in CUTS + [t_end] if c > row["t0"] + 1e-6], default=t_end)
+    row["t1"] = round(min(row["t1"], nxt_cut - lead), 4)
+    assert row["t1"] > row["t0"] + 0.5, row
+
+
+for row in BADGES + COUNTERS + LABELS + list(PLATES.values()):
+    cap(row)
+for slot in {b["slot"] for b in BADGES}:   # badges in one slot never stack during a crossfade
+    seq = [b for b in BADGES if b["slot"] == slot]
+    for a, b in zip(seq, seq[1:]):
+        a["t1"] = round(min(a["t1"], b["t0"] - 0.6), 4)
 
 GAUGE = {"rise": [B["toscale"]["t0"] + 0.4, B["toscale"]["t0"] + 1.3], "sc": CUE["fifth"] - 0.3, "paper": CUE["paper"],
          "back": [B["takeaway"]["t0"] - 0.6, B["takeaway"]["t0"] - 0.1], "sc_um": FILM_UM, "paper_um": PAPER_UM, "bar": "film", "sc_text": "≈ 20 µm"}
 
-TITLE = {"series": "Skin Sense · No. 005", "title": "The sunscreen *experiment*", "t1": B["normal"]["t0"] - 0.4, "sig": A("vo01:aged?", 0.35)}
+TITLE = {"series": "Skin Sense · No. 005", "title": "The sunscreen *experiment*", "t1": B["normal"]["t0"] - LEAD, "sig": A("vo01:aged?", 0.6)}   # the signature ≥ 0.5 s off "aged"
 END = {"title": "Next: tanning beds and cigarettes. Same list, same *risk*?", "follow": "Skin Sense · No. 006",
        "next": "Nambour Skin Cancer Prevention Trial, Queensland: sunscreen 1992–96 (ageing measured over 4.5 years); melanoma followed to 2006. Narration: synthetic voice (AI)."}
 POSTER = A("vo07:count.", 0.3)

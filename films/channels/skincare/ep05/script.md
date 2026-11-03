@@ -1,6 +1,6 @@
 # Skin Sense No. 005: "The sunscreen experiment" (draft; dermatologist sign-off before posting)
 
-About 70–74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Brief: s1v2/BRIEF.md,
+About 74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Brief: s1v2/BRIEF.md,
 topic "sunscreen vs no sunscreen", told through one trial. Facts pass 2 (2 Nov, `../s1v2/FACTS-PASS-2.md`). This
 episode is about sunscreen, so a board-certified dermatologist signs it off before posting (bible §8, §9).
 
@@ -48,10 +48,10 @@ vo: They belong to two neighbours in Nambour, a Queensland town where pure chanc
 ## change {shot: close on the bare half, patches of sunscreen coming and going, then the silicone cast of the skin's lines · labels: spine "ageing trial: 4.5 years" · plate "relative odds 0.76 (0.59–0.98) · Hughes et al., 2013" · picture-only 0.6 s · energy: 0.55} (17.5–29 s)
 vo: It was never sunscreen against *none*: the others could use it whenever they pleased, or not at all. {c3} Researchers read the fine lines in silicone casts of hands. {c4}
 
-## why {shot: the macro, a warm flush, then the UV switch (a cyan scan line) on "But" · labels: badge "illustration · not trial data" · spine holds · picture-only 2.2 s · energy: 0.5} (29–42 s)
+## why {shot: the macro, a warm flush, then the UV switch (a cyan scan line) on "But" · labels: badge "illustration · not trial data" · labels "sunscreen" / "bare skin" · picture-only 2 s · energy: 0.5} (29–42 s)
 vo: It's easy to think sun damage is the burn you feel. {-} But an ultraviolet camera reveals damage the naked eye misses, long before it shows on the *surface*. {c6}
 
-## whoa {shot: the micrograph cut face of the dermis, the ten-year tally over it, 11 against 22 · labels: badge "micrograph · healthy stained skin" · spine "followed to 2006" · plate "HR 0.50 (0.24–1.02) · small numbers · not quite significant · Green et al., 2011" · picture-only 3.2 s · energy: 0.8} (42–55 s)
+## whoa {shot: the micrograph cut face of the dermis, the ten-year tally over it, 11 against 22 · labels: badge "micrograph · healthy stained skin" · spine "followed to 2006" · plate "HR 0.50 (0.24–1.02) · small numbers · not quite significant · Green et al., 2011" · picture-only 3 s · energy: 0.8} (42–55 s)
 vo: And they were followed for ten more years. {c7} Melanoma, the most serious skin cancer, came out at about *half*, in numbers too small to be sure. {c9,c13}
 
 ## toscale {segment: toscale · the macro grazing over the screened half's satin film, the gauge beside a sheet of paper · labels: gauge "≈ 20 µm · paper 100 µm" · badge "estimate · lab test dose" · picture-only 0.5 s · energy: 0.4} (55–62 s)
