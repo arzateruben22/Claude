@@ -159,3 +159,80 @@ Gate for finals: no score under 3, and (a), (g), (h) at 4 or more. **Fails on a 
 
 - A physiologist's sign-off, the channel handle, and the AI-voice label in the post (script Notes).
 - Every source was checked only through search excerpts. A person opens each link before posting.
+
+---
+
+# Round 2 (re-render, 3 Nov 2026)
+
+The same reviewer, re-scoring against its own round-1 findings. Source: the re-rendered `review/preview-ep01.mp4`
+(draft, 540×960, 70.4 s, −14.1 LUFS, −1.9 dBTP). I pulled 61 new frames: every cut (4.78, 16.38, 22.22, 42.25, 50.38,
+63.58, 68.4), every label, pill, badge and counter on/off point, and the end card.
+
+**Verdict: still not ready for finals.** No score is under 3 now, but (a), (g) and (h) are each at 3 and need 4.
+
+## Scores
+
+| | Point | R1 | R2 | Why it moved, or didn't |
+|---|---|---|---|---|
+| a | First 2 s | 2 | **3** | The ghost of the full width is wider than the pipe from frame 0, so "narrower than it is" now reads. But the striking element is a pale, unlabelled translucent shell around a pink dome that still fits the pipe comfortably. There is no fold or squeeze at frame 0, and a first-time viewer can read the shell as a bubble. |
+| b | One thread | 3 | **3** | Better: "outnumber all your other cells put together" replaces the bare count. But the nucleus and the outnumber lines are still side steps off "how does it fit". The meanwhile beat and the tease still branch away from the dent. |
+| c | Picture moves with the sentence | 3 | **3** | The hook is fixed. "Tiniest pipe" still labels a vessel about twice the cell's width (20.7–22.2 s). "No room to pass" still plays over visible room (23.5 s). The meanwhile beat still reuses the takeaway frame (55–63 s). |
+| d | Camera moves motivated | 3 | **3** | Unchanged: six identical sweeps, the artery shot with no artery, the ride-along that reads as a cut. |
+| e | Voice meaning, screen figures | 3 | **4** | The 25 trillion is now a comparison in the voice. The two remaining counts ("over a hundred million", "a billion") have exact figures on screen (the tally, the caption). μm units are correct on every pill. |
+| f | Rhythm | 3 | **3** | Unchanged: the holds still come after their reveals (35.8–38.7, 46.8–50.7 s), the sweep is the same each time, and the beats are even. |
+| g | Ending | 3 | **3** | The end card is better: "Next: a billion passengers" breaks cleanly and a sourced fact line is added. Still no loop back to frame 0; the hook's payoff stays at 34 s. |
+| h | Production value | 2 | **3** | Real gains: softer satin cells with no hard hotspots (5.4, 30, 52 s), the scan-view reveal in the net (43.5–50 s, the look's signature finally on screen), and a textured raster in the sweeps instead of black. Still there: straight-cylinder net, starfield artery shot, junction seams, donut side views, snow-like O₂, HUD orphaned on the sweeps. |
+
+**Blocks a final:** (a) 3, (g) 3, (h) 3. Each needs 4.
+
+## Round-1 findings: status
+
+| # | Finding | Status | Evidence in round 2 |
+|---|---|---|---|
+| 1 | μm rendered as "MM" | **Fixed** | "7.5 μm" (6.7–11 s), "3 μm" (40.4–41.9 s), "50 μm" (45.2–50 s); the end-card fact also reads "3 μm". |
+| 2 | Picture contradicts the hook and "no room" | **Partly** | Hook fixed by the ghost (0–4 s). "Tiniest pipe" (20.7–22.2 s) and "no room to pass" (23.5–25 s) are unchanged. |
+| 3 | "It can't [stretch]" regression; "to make room" | **Fixed** | The voice now says "its skin just stretches… It can't", and "to make room" is gone. Left over: the notes for c2 ("about seven and a half") and c3 ("pushed out its own nucleus") still quote old wordings. |
+| 4 | Glossy candy cells, donuts, streaks | **Partly** | The highlights are soft now: fix 1 is met on material. The torus or donut read remains in side and bottom views (22.3, 25, 25.6, 30 top, 33.5 s). At 25 s a vertical white sliver shows inside the dimple of the upper cell. |
+| 5 | Speed badge in the title zone | **Fixed** | The badge first appears at about 2.7 s. For about 0.2 s (2.7–2.9 s) it shares the frame with the title as the title fades (2.8 s). Fix 2 is met in practice. If you want zero overlap, start it at the title's fully-out time. |
+| 6 | Sweeps: black half-frame, orphaned HUD | **Partly** | The band is a teal raster now, not black. Still: "red blood cell" on the band pointing at nothing (16.3 s), "tiniest pipe" the same (22.1 s), the "4 months" counter and the "50 μm" pill on the band (50.3 s) and ghosting into the next shot (50.45 s), the tally on the band (63.5 s). The band still hides the incoming shot, and all six sweeps are identical. |
+| 7 | Primitives and seams | **Partly** | Scan view added to the net (43.5–50 s). Known and still open: straight-cylinder net, starfield meet shot (4.8–16.4 s), seams (22.3 s grey strip through the hero cell, 52 and 58 s junctions), overlapping cells (17.5 s), snow-like O₂ (53.9–63 s), clipped bloom on the cargo shot (68.2 s). |
+| 8 | Sickle cell not jammed on "jam" | **Open** | Known: it floats in a wider lumen at 53.9 s. |
+| 9 | Counts instead of comparisons | **Partly** | 25 trillion is fixed. "Over a hundred million" and "a billion" stay counts, now backed by figures on screen. Acceptable for (e). |
+| 10 | No loop back; no footnote | **Partly** | Fact line added (68.7–70.4 s). No loop back to the frame-0 squeeze. |
+| 11 | End-card layout | **Partly** | The line break and the wording are fixed. The card still sits over the dotted cell under a thin scrim, and a faint ghost of "100× SLOWER" is still visible at 68.7 s. |
+| 12 | Small type, pill placement, O₂ crowding | **Open** | "you are here" is still about 18 px tall at 1080 (5.4–15 s). The 7.5 μm pill is text only, away from the cell (7 s). The 3 μm bar floats left of the vessel instead of across it (40.5 s). Three notes sit in the top-right corner at 55.5 s. |
+| 13 | Stray sounds in the voice | **Open** | `vo/words.json` still hears "I follow" (vo03), "It can't eh" (vo04) and "And meanwhile" (vo07). Listen to each and trim. |
+| 14 | Small timing | **Partly** | "no nucleus" now lands on "nucleus" (11.3–13.3 s), which fixes that one. The meanwhile beat still has no picture of its own (55–63 s). |
+
+## New in round 2
+
+- **N1 (44–49 s) The "SCAN VIEW · BLOOD FLOW" tag crowds the caption.** It sits at about y 1165 at 1080, almost touching
+  the caption plate (about 1180). The 50 μm pill stacks directly under it. The voice never says what the scan is
+  showing, so the signature beat lands as decoration.
+  **Fix:** park the tag at the right end of the scan line, at least 40 px above the plate. Move the 50 μm pill above the
+  line. Time the sweep so its rise lands on "whole life".
+- **N2 (0–4 s) The hook's ghost has no name until 41 s.**
+  **Fix:** a 1 s "its full width" tag (the same label style as 41 s) on "narrower" (2.8 s), or fold the real cell
+  visibly as it enters the ghost. Either earns (a) a 4: the viewer must see "too wide" and "it folds anyway" by 2–3 s.
+- **N3 (0–0.5 s) The ghost's top edge sits about 20 px under the title's pulse line, inside the title's dark backing.**
+  It doesn't cross the line, but it crowds it.
+  **Fix:** frame the ghost 60 px or more lower at frame 0.
+- **N4 (claims) Stale notes.** c2's and c3's notes quote earlier wordings. Bring them in line with "dented disc, pressed
+  in on both sides" and "threw out its own nucleus".
+
+## What gets this to the final gate
+
+1. **(a) to 4:** label the ghost by about 2.8 s, or show the fold at frame 0, inside the 3 μm segment with the walls
+   touching (N2 and #2).
+2. **(g) to 4:** end on the frame-0 composition after "That dent has a job", now understood, then the tease (#10).
+3. **(h) to 4:**
+   - Retire every HUD element before each sweep, and show the incoming shot under the band (#6).
+   - Weld the junction seams and stop cells overlapping each other and the walls (#7).
+   - Make the dimple shallower so side views stop reading as donuts (#4).
+   - Put the meet shot inside a vessel (#7).
+   - Give the O₂ different sizes, depth of field and a flow direction (#7).
+
+   The straight-cylinder net is the largest single gap left, but its new scan view rescues it in part. Rebuild it as a
+   branching mesh if time allows.
+4. **Also before the final:** listen to and trim the voice takes (#13), and fix the sickle-cell timing (#8, a story
+   point).
