@@ -15,7 +15,6 @@ Nothing here comes from Lumevina (its look, voice, products or wording) or any b
 
 | Image | Use | Source | Licence |
 |---|---|---|---|
-| Stained section of normal human epidermis and dermis (H&E, 10x) | the follicle block's cut face (collagen, cells, vessels) | Kilbad, Wikimedia Commons `Normal_Epidermis_and_Dermis_with_Intradermal_Nevus_10x.JPG`, via the scikit-image data mirror (`../set/ref/`) | public domain, as stated by the source |
+| Stained section of normal human epidermis and dermis (H&E, 10x) | the follicle block's cut face (collagen, cells, vessels) | Kilbad, Wikimedia Commons `Normal_Epidermis_and_Dermis_with_Intradermal_Nevus_10x.JPG`, via the scikit-image data mirror (`../set/ref/`) | public domain; licence confirmed on the original page by the owner, 3 Nov 2026 (public domain: "I grant anyone the right to use this work for any purpose, without any conditions"; file version of 30 Dec 2015) |
 
-**A person must confirm each licence on the original page before posting** (the original host is blocked in this
-build environment). Details and checksums: `../set/ref/SOURCES.md`.
+The original host is blocked in this build environment; the licence was confirmed on the original page by the owner. Details and checksums: `../set/ref/SOURCES.md`.
