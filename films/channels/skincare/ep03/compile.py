@@ -102,9 +102,9 @@ LABELS = [
     {"id": "l-fol", "text": "follicles regrow", "kind": "cell", "anchor": "fgap", "t0": CUE["follicles"] - 0.2, "t1": CUE["after"] - 0.3, "shot": "fetal", "side": 1, "v": "above", "fixed": True},
     {"id": "l-fpatch", "text": "mouth lining: nearly scarless", "kind": "water", "anchor": "mgap", "t0": t_mouth + 0.5, "t1": B["toscale"]["t0"], "shot": "mouth", "side": 1, "v": "above", "fixed": True},
     {"id": "l-top", "text": "the top layer", "kind": "water", "anchor": "top", "t0": CUE["top"] - 0.2, "t1": B["takeaway"]["t0"], "shot": "gauge", "side": 1, "v": "below", "fixed": True},
-    {"id": "l-with", "text": "with these cells: a scar", "kind": "cell", "anchor": "miceL", "t0": t_mice + 0.4, "t1": t_uvb, "shot": "mice", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-without", "text": "without them (mice): no scar", "kind": "water", "anchor": "miceR", "t0": t_mice + 1.0, "t1": t_uvb, "shot": "mice", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-defence", "text": "germ-fighting cells at the seam", "kind": "cell", "anchor": "uvscar", "t0": t_uvb + 0.4, "t1": t_end, "shot": "uvb", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-with", "text": "mice with these cells: a scar", "kind": "cell", "anchor": "miceL", "t0": t_mice + 0.4, "t1": t_uvb, "shot": "mice", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-without", "text": "mice without them: no scar", "kind": "water", "anchor": "miceR", "t0": t_mice + 1.0, "t1": t_uvb, "shot": "mice", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-defence", "text": "while it healed: cells at the seam", "kind": "cell", "anchor": "uvscar", "t0": t_uvb + 0.4, "t1": t_end, "shot": "uvb", "side": 1, "v": "above", "fixed": True},
     {"id": "l-scar2", "text": "the same old scar", "kind": "cell", "anchor": "scar", "t0": B["takeaway"]["t0"] + 0.2, "t1": t_uv, "shot": "macro2", "side": 1, "v": "above", "fixed": True},
     {"id": "l-seam", "text": "a seam: no pores", "kind": "water", "anchor": "uvscar", "t0": t_uv + 0.3, "t1": t_mice, "shot": "uv", "side": 1, "v": "above", "fixed": True},
 ]
@@ -116,8 +116,9 @@ BADGES = [
     {"id": "b-mouthb", "text": "illustration · adult mouth lining", "t0": t_mouth, "t1": B["toscale"]["t0"], "slot": "tr"},
     {"id": "b-body", "text": "most of the body", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-simp2", "text": "simplified", "t0": B["takeaway"]["t0"], "t1": t_uv, "slot": "br"},
-    {"id": "b-model", "text": "model, not a photo", "t0": t_uv, "t1": t_end, "slot": "br"},
-    {"id": "b-mouse", "text": "mouse study · Martin et al., 2003", "t0": t_mice, "t1": t_uvb, "slot": "tr"},
+    {"id": "b-model", "text": "model, not a photo", "t0": t_uv, "t1": t_mice, "slot": "br"},
+    {"id": "b-modelb", "text": "model, not a photo", "t0": t_uvb, "t1": t_end, "slot": "br"},
+    {"id": "b-mouse", "text": "mouse study · Martin et al., 2003 · model", "t0": t_mice, "t1": t_uvb, "slot": "tr"},
 ]
 SPINE = [0.5, 0.215]
 COUNTERS = [

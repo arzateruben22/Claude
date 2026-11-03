@@ -78,7 +78,11 @@ unifyHud(hudRoot);   // one HUD system: one plate, one radius, a bar not a dot; 
 // write alpha and read darker than the CSS gradient behind it
 scene.background = (() => { const cv = document.createElement("canvas"); cv.width = 4; cv.height = 256; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256);
   g.addColorStop(0, "#3b2479"); g.addColorStop(1, "#06030c"); x.fillStyle = g; x.fillRect(0, 0, 4, 256); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; return tx; })();
+F.sculpt(); Gf.sculpt();   // a lumpy canal wall, lobed glands, irregular cells, a stratified surface layer
 richen(F.group, { seed: 21, jitter: 0.1, hue: 0.06, micro: 0.6 }); richen(Gf.group, { seed: 22, jitter: 0.1, hue: 0.06, micro: 0.6 }); richen(stream, { seed: 5, jitter: 0, hue: 0, micro: 0.7 });
+// a key from above, as a shaft of light down into the follicle (volumetric)
+const shaftF = createShaft({ from: [PL.fx - 20, 40, 70], to: [PL.fx, -470, 10], radius: 70, color: "#fff2e6" }); scene.add(shaftF.group);   // from the skin's surface down the canal
+const hzF = hazeVolume(scene, { at: [PL.fx, 320, -200], size: [4200, 760, 500], color: "#e8d4ff", n: 5, op: 0.07 });   // the air over the cut block: haze, not an empty band
 const hzS = hazeVolume(scene, { at: [SX, 0, -10], size: [70, 40, 20], color: "#b9a6ff", n: 5, op: 0.06 });
 const bkS = bokeh(scene, { n: 120, box: [[SX - 60, SX + 60], [-30, 30], [-60, -25]], size: 3.5, color: "#d9ccff", op: 0.35 });
 const vf = createViewfinder({ root: hudRoot, W, H, ...VF });
@@ -130,7 +134,7 @@ function createCellGauge() {
   hudRoot.appendChild(svg);
   const cx = 0.1 * W, cw = 0.8 * W, cy = 0.17 * H, ch = 0.41 * H, GH = 0.27 * H, base = cy + ch - 0.06 * H, um = GH / G.paper_um;
   const g = mk("g", {}, svg);
-  mk("rect", { x: cx, y: cy, width: cw, height: ch, rx: 24 * S1, fill: "var(--card)", opacity: 0.97 }, g);
+  mk("rect", { x: cx, y: cy, width: cw, height: ch, rx: 24 * S1, fill: "var(--card)", opacity: 0.66, stroke: "rgba(255,255,255,0.22)", "stroke-width": 2 * S1 }, g);   // glass over the defocused section
   const head = mk("text", { x: cx + 40 * S1, y: cy + 62 * S1, opacity: 0, "font-size": 34 * S1, fill: "var(--text-2)", "font-family": "var(--font-mono)", "letter-spacing": "0.12em" }, g); head.textContent = "TO SCALE";
   const colX = cx + 0.5 * cw, papX = cx + 0.68 * cw, r = (G.cell_um / 2) * um;
   mk("line", { x1: cx + 40 * S1, x2: cx + cw - 40 * S1, y1: base, y2: base, stroke: "var(--text-2)", "stroke-width": 2 * S1 }, g);
@@ -167,7 +171,8 @@ const dustMat = new THREE.PointsMaterial({ map: dotTex, color: 0xf0e8ff, transpa
 const dust = new THREE.Points(dustGeo, dustMat); dust.frustumCulled = false; scene.add(dust);
 const placeDust = (t, c, size, pt) => { dust.visible = true; dustMat.size = pt; dustBase.forEach(([x, y, z, ph], i) => { dustPos[3 * i] = c[0] + x * size[0] + 0.03 * size[0] * Math.sin(t * 0.3 + ph); dustPos[3 * i + 1] = c[1] + y * size[1] + 0.02 * size[1] * t % size[1]; dustPos[3 * i + 2] = c[2] + z * size[2]; }); dustGeo.attributes.position.needsUpdate = true; };
 const grain = look.grain;   // look v3: fine grain in the midtones
-window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; F.look({ dermisMap: tx }); Gf.look({}); res(); }; img.src = DERMIS; });
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const bcv = document.createElement("canvas"); bcv.width = img.width; bcv.height = img.height; const bx = bcv.getContext("2d"); bx.filter = "blur(5px) brightness(0.9)"; bx.drawImage(img, 0, 0);   // the photo behind the model, pre-blurred: the model reads in front of it
+  const tx = new THREE.CanvasTexture(bcv); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; F.look({ dermisMap: tx }); Gf.look({}); res(); }; img.src = DERMIS; });
 
 window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
@@ -181,7 +186,9 @@ window.seek = function (t) {
   lights.sun.intensity = isFl ? 2.6 : 1.2; lights.key.intensity = isFl ? 0.3 : 0.8;
   studio.set({ key: isFl ? 0.45 : 1.4, rim: isFl ? 1.6 : 2.6, fill: 0.35, env: isUV ? 0 : 0.5, warm: isFl ? 0.5 : 0.2 });
   fstop = shot === "flight" ? 0.5 : shot === "rise" ? 0.18 : 0; focusPt = shot === "flight" ? [PL.tx + 1.5, 0, 1] : shot === "rise" ? [PL.tx + 0.8, 0, 1.5] : [0, 0, 0];
-  if (isF) { fstop = 0.1; focusPt = P.target; }   // a lens on the follicles too
+  if (isF) { fstop = shot === "gauge" ? 0.15 : 0.1; focusPt = P.target; }
+  hzF.group.visible = ["follicle", "pair", "rupture"].includes(shot); hzF.set({ t });   // a lens on the follicles too; the gauge card is glass over the section, far out of focus
+  shaftF.set({ op: ["follicle", "pair", "rupture"].includes(shot) ? 0.9 : 0 });
   if (isUV) { fstop = 0.12; focusPt = P.target; }
   hzS.group.visible = bkS.points.visible = shot === "stream"; hzS.set({ t }); bkS.set({ t });
 
