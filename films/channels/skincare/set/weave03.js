@@ -69,12 +69,20 @@ export const createWeave = ({ w = 600, h = 260, d = 300, seed = 31, gap = 80, ir
     for (let o = -gap + 20; o < gap; o += 34) { const m = bundle("z", o, y0 - 12, layer, d, 7, regrowMat); m.userData.k = R(); g.add(m); regrow.push(m); }
   }
   // follicles and glands: tubes down from the surface with a bulb, and coiled sweat-gland knots
+  const shaftMat = new THREE.MeshStandardMaterial({ roughness: 0.35, color: 0x2a1a12 }); shaftMat.userData.noStripe = true;
   const fMat = new THREE.MeshStandardMaterial({ roughness: 0.55, color: 0x6b4a3a }), gMat = new THREE.MeshStandardMaterial({ roughness: 0.5, color: 0xd7a07a });
+  if (irregular) fMat.userData.noStripe = true;   // the sheath keeps the micro surface, not the collagen's lengthwise grooves
   const appendages = [];
   for (let i = 0; i < 9; i++) {
     const x = -w / 2 + 40 + R() * (w - 80), z = -d / 2 + 30 + R() * (d - 60), inGap = Math.abs(x) < gap + 10;
     const grp = new THREE.Group(); grp.position.set(x, 0, z);
-    if (i % 3) { const tube = new THREE.Mesh(new THREE.CylinderGeometry(9, 12, h * 0.8, 10).translate(0, -h * 0.4, 0), fMat); const bulb = new THREE.Mesh(new THREE.SphereGeometry(17, 12, 10), fMat); bulb.position.y = -h * 0.8; grp.add(tube, bulb); }
+    if (i % 3 && irregular) {   // a follicle as one turned form: rounded lip, a sheath that thickens, an onion bulb; a hair shaft up its middle
+      const sw = 0.85 + 0.3 * R(), prof = [[0.1, 3], [5, 2.6], [8, 0], [8.6, -8], [9.4, -h * 0.3], [10.6, -h * 0.55], [12.5, -h * 0.68], [16.5, -h * 0.76], [17, -h * 0.8], [14, -h * 0.85], [8, -h * 0.88], [0.1, -h * 0.89]]
+        .map(([r, y]) => new THREE.Vector2(r * sw, y));
+      const sheath = new THREE.Mesh(new THREE.LatheGeometry(new THREE.SplineCurve(prof).getPoints(60), 28), fMat);
+      const shaft = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 3.2, h * 0.84 + 14, 10).translate(0, -h * 0.42 + 7, 0), shaftMat);
+      grp.rotation.z = (R() - 0.5) * 0.25; grp.add(sheath, shaft); }
+    else if (i % 3) { const tube = new THREE.Mesh(new THREE.CylinderGeometry(9, 12, h * 0.8, 10).translate(0, -h * 0.4, 0), fMat); const bulb = new THREE.Mesh(new THREE.SphereGeometry(17, 12, 10), fMat); bulb.position.y = -h * 0.8; grp.add(tube, bulb); }
     else { const knot = new THREE.Mesh(new THREE.TorusKnotGeometry(18, 5, 64, 8, 2, 3), gMat); knot.position.y = -h * 0.75; const duct = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, h * 0.7, 6).translate(0, -h * 0.35, 0), gMat); grp.add(knot, duct); }
     grp.userData.inGap = inGap; g.add(grp); appendages.push(grp);
   }
@@ -85,7 +93,7 @@ export const createWeave = ({ w = 600, h = 260, d = 300, seed = 31, gap = 80, ir
       const base = toneColor("dermis", tone).map((v) => Math.min(1, v * 1.45 + 0.22));
       mat.color.setRGB(...base.map((v) => v * k)); regrowMat.color.copy(mat.color);
       if (irregular) patchMat.color.setRGB(...base.map((v, i) => Math.min(1, v * 1.05 + 0.06) * k)); else patchMat.color.setRGB(0.97 * k, 0.94 * k, 0.9 * k);   // irregular: the same fibre, only paler patchMat.emissive.setRGB(0.12 * glow, 0.55 * glow, 0.52 * glow);
-      fMat.color.setRGB(...toneColor("basal", tone).map((v) => v * k)); gMat.color.setRGB(...toneColor("living", tone).map((v) => v * k * 1.1));
+      fMat.color.setRGB(...toneColor("basal", tone).map((v) => v * k * (irregular ? 1.35 : 1))); gMat.color.setRGB(...toneColor("living", tone).map((v) => v * k * 1.1));
       g.scale.set(1 + 0.12 * pull[0], 1 - 0.05 * (Math.abs(pull[0]) + Math.abs(pull[1])), 1 + 0.12 * pull[1]);
       const open = cut * (1 - Math.max(pk, rk));
       weave.forEach((m) => {

@@ -43,6 +43,9 @@ const terrain = createTerrain({ seed: 17, spots: 0, segs: 400, organic: true });
   terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.3, 0.18, 0.12], gloss: 0.5 }); o.material.transmission = 0; } }); }
 const SCAR = [0.5, 1.6];
 const EPI = 100;
+const featherTex = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 256; const x = cv.getContext("2d");
+  const g = x.createRadialGradient(128, 128, 30, 128, 128, 128); g.addColorStop(0, "#fff"); g.addColorStop(0.55, "#fff"); g.addColorStop(1, "#000"); x.fillStyle = g; x.fillRect(0, 0, 256, 256);
+  return new THREE.CanvasTexture(cv); })();
 const mkBlock = (x, scale) => {
   const g = new THREE.Group(); g.position.x = x; g.scale.setScalar(scale);
   const weave = createWeave({ w: 600, h: 260, d: 300, seed: 31 + x, irregular: true });
@@ -50,6 +53,12 @@ const mkBlock = (x, scale) => {
   weave.group.traverse((o) => { if (o.isMesh && o.material && o.material.isMeshStandardMaterial) { o.material.envMapIntensity = 0.5; o.material.roughness = Math.min(o.material.roughness, 0.42); } });   // a little studio sheen on the threads
   const back = new THREE.Mesh(new THREE.PlaneGeometry(1500, 900), new THREE.MeshStandardMaterial({ roughness: 0.9, color: 0x4a3040 })); back.position.set(0, -EPI - 130, -420); g.add(back);   // the micrograph behind the section
   const epiMat = new THREE.MeshStandardMaterial({ roughness: 0.6, transparent: true, opacity: 0.94 });
+  // round 10: the surface layer feathers away toward the back (no hard far edge across the frame); the photo plane behind
+  // feathers at all four edges into the haze, so it reads as background, not as a card
+  epiMat.onBeforeCompile = (sh) => { sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying float vLZ;").replace("#include <begin_vertex>", "#include <begin_vertex>\nvLZ = position.z;");
+    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vLZ;").replace("#include <dithering_fragment>", "#include <dithering_fragment>\n  gl_FragColor.a *= smoothstep(-150.0, -20.0, vLZ);"); };
+  epiMat.customProgramCacheKey = () => "epiFeather";
+  back.material.transparent = true; back.material.alphaMap = featherTex; back.material.depthWrite = false;
   const epi = new THREE.Mesh(new THREE.BoxGeometry(600, EPI, 300), epiMat); epi.position.y = -EPI / 2; g.add(epi); epiMat.userData.mesh = epi;
   const floor = new THREE.Mesh(new THREE.BoxGeometry(600, 12, 300), new THREE.MeshStandardMaterial({ roughness: 0.8 })); floor.position.y = -EPI - 266; g.add(floor);
   scene.add(g);
@@ -82,20 +91,29 @@ for (const b of [adult, fetal, mouth, miceA, miceB]) b.weave.group.traverse((o) 
 // rim on the silhouettes that face the camera, and the slab's bottom fading into the volume instead of a dark floor
 const fibrilTex = (() => { const cv = document.createElement("canvas"); cv.width = 64; cv.height = 256; const x = cv.getContext("2d"), R = (() => { let s = 5; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
   x.fillStyle = "#fff"; x.fillRect(0, 0, 64, 256);
-  for (let i = 0; i < 11; i++) { const y = (i + 0.2 + 0.6 * R()) * 256 / 11, w = 3 + R() * 6, a = 0.28 + 0.3 * R(); x.fillStyle = `rgba(70,50,40,${a})`; x.fillRect(0, y - w / 2, 64, w); x.fillStyle = `rgba(255,250,240,0.5)`; x.fillRect(0, y + w / 2, 64, 1.5); }
+  for (let i = 0; i < 16; i++) { const y = R() * 256, w = 2 + R() * 9, a = 0.05 + 0.09 * R(); x.fillStyle = `rgba(90,60,45,${a})`; x.fillRect(0, y - w / 2, 64, w); }   // round 10: a faint tonal variation only
   const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; })();
+// the fibrils as relief: grooves of varied width and depth around each bundle, wandering a little along it, as a normal map
+const grooveTex = (() => { const Wd = 128, Ht = 256, R = (() => { let s = 11; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+  const G = Array.from({ length: 22 }, () => ({ y: R() * Ht, w: 1.5 + R() * 6, d: 0.4 + R() * 0.9, ph: R() * 6.3, a: 1 + R() * 3 }));
+  const hgt = (x, y) => { let h = 0; for (const g of G) for (const o of [-Ht, 0, Ht]) { const dy = y - (g.y + o + g.a * Math.sin(x / Wd * 6.283 * 2 + g.ph)); h -= g.d * Math.exp(-(dy * dy) / (2 * g.w * g.w)); } return h; };
+  const cv = document.createElement("canvas"); cv.width = Wd; cv.height = Ht; const x = cv.getContext("2d"), img = x.createImageData(Wd, Ht);
+  for (let yy = 0; yy < Ht; yy++) for (let xx = 0; xx < Wd; xx++) { const dx = (hgt(xx + 1, yy) - hgt(xx - 1, yy)) * 0.5, dy = (hgt(xx, yy + 1) - hgt(xx, yy - 1)) * 0.5, k = 1.6;
+    let nx = -dx * k, ny = dy * k, nz = 1; const l = Math.hypot(nx, ny, nz); nx /= l; ny /= l; nz /= l; const o = 4 * (yy * Wd + xx);
+    img.data[o] = 128 + 127 * nx; img.data[o + 1] = 128 + 127 * ny; img.data[o + 2] = 128 + 127 * nz; img.data[o + 3] = 255; }
+  x.putImageData(img, 0, 0); const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8; return t; })();
 const finishBlock = (b) => {
   const fade = { y0: { value: -1e9 }, y1: { value: -1e9 + 1 } }; b.fade = fade; b.floor.visible = false;
   const mats = new Set(); b.weave.group.traverse((o) => { if (o.isMesh && o.material) mats.add(o.material); });
   for (const m of mats) {
-    if (m.normalMap && m.userData.fibre) { m.map = fibrilTex; m.bumpMap = null; m.normalScale.set(1.1, 1.1); }
+    if (m.normalMap && m.userData.fibre && !m.userData.noStripe) { m.map = fibrilTex; m.normalMap = grooveTex; m.normalScale.set(1.0, 1.0); m.roughness = 0.38; m.sheen = 0; }
     m.transparent = true; const prev = m.onBeforeCompile;
     m.onBeforeCompile = (sh, r) => { prev && prev(sh, r); sh.uniforms.uY0 = fade.y0; sh.uniforms.uY1 = fade.y1;
       sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying vec3 vWP;").replace("#include <begin_vertex>", "#include <begin_vertex>\nvWP = (modelMatrix * vec4(transformed, 1.0)).xyz;");
       sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec3 vWP; uniform float uY0; uniform float uY1;")
         .replace("#include <dithering_fragment>", `#include <dithering_fragment>
   { vec3 n = normalize(vNormal); float rim = pow(1.0 - abs(dot(n, normalize(vViewPosition))), 2.6) * (0.55 + 0.45 * clamp(n.y + 0.3, 0.0, 1.0));
-    gl_FragColor.rgb += vec3(1.0, 0.66, 0.38) * 0.42 * rim;
+    gl_FragColor.rgb += vec3(1.0, 0.66, 0.38) * 0.55 * rim;
     float fa = smoothstep(uY0, uY1, vWP.y); gl_FragColor.rgb = mix(vec3(0.03, 0.02, 0.06), gl_FragColor.rgb, fa); gl_FragColor.a *= fa; }`); };
     m.customProgramCacheKey = () => "ep03fin" + (m.normalMap ? 1 : 0) + (m.map ? 1 : 0);
     m.needsUpdate = true;
@@ -113,6 +131,18 @@ const STRANDS = [0, 1, 2, 3, 4].map((i) => {
   const pts = []; for (let k = 0; k <= 120; k++) { const u = k / 120, a = u * Math.PI * 2 * 3.2 + i * Math.PI * 2 / 5; pts.push(new THREE.Vector3(-185 + 370 * u, 15 * Math.sin(a), 15 * Math.cos(a))); }
   const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 240, 7.5, 10), i === 2 ? ropeLost : ropeMat); rope.add(m); return m; });
 richen(rope, { seed: 7, jitter: 0, hue: 0, micro: 0.8 });
+// round 10: the rope in the collagen's fibre surface, and the lost strand as a cut with frayed ends either side
+for (const m of [ropeMat, ropeLost]) { m.map = fibrilTex; m.normalMap = grooveTex; m.normalScale = new THREE.Vector2(1.0, 1.0); m.sheen = 0.25; m.needsUpdate = true; }
+const strandPts = (i, u0, u1, n = 60) => { const pts = []; for (let k = 0; k <= n; k++) { const u = u0 + (u1 - u0) * k / n, a = u * Math.PI * 2 * 3.2 + i * Math.PI * 2 / 5; pts.push(new THREE.Vector3(-185 + 370 * u, 15 * Math.sin(a), 15 * Math.cos(a))); } return pts; };
+const GAP = [0.4, 0.6], FR = (() => { let s = 77; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+const halves = [[0, GAP[0], 1], [GAP[1], 1, -1]].map(([u0, u1, dir]) => {
+  const grp = new THREE.Group(); rope.add(grp);
+  const curve = new THREE.CatmullRomCurve3(strandPts(2, u0, u1)); grp.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 140, 7.5, 10), ropeLost));
+  const end = curve.getPointAt(dir > 0 ? 1 : 0), tan = curve.getTangentAt(dir > 0 ? 1 : 0).multiplyScalar(dir), fray = new THREE.Group(); fray.position.copy(end); grp.add(fray);
+  for (let k = 0; k < 11; k++) { const off = new THREE.Vector3((FR() - 0.5) * 9, (FR() - 0.5) * 9, (FR() - 0.5) * 9).projectOnPlane(tan), len = 12 + FR() * 18, spread = new THREE.Vector3(FR() - 0.5, FR() - 0.5, FR() - 0.5).multiplyScalar(0.9);
+    const pts = [0, 0.5, 1].map((q) => off.clone().add(tan.clone().add(spread.clone().multiplyScalar(q)).normalize().multiplyScalar(len * q)));
+    fray.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 8, 1.2 + FR() * 1.1, 5), ropeLost)); }
+  return { grp, fray, dir }; });
 // the scar band (look v3): a satiny seam with faint lengthwise striations and a raised edge against the furrowed skin,
 // carved once into the terrain after its own compute (it recomputes only when its settings change; ours are fixed)
 let scarDone = null;
@@ -241,7 +271,7 @@ window.seek = function (t) {
   fstop = shot === "macro" ? 0.18 : shot === "macro2" ? 0.15 : 0; focusPt = isM ? P.target : [PL.tx, 0, SCAR[0]];   // focus where the camera looks: the scar, from frame 0
   const isB = isA || ["fetal", "mouth", "mice"].includes(shot);   // the tissue blocks: a lens on them too, haze and bokeh around
   if (isB) { fstop = 0.16; const bx = { fetal: PL.fx, mouth: PL.mx, mice: PL.mox }[shot] || PL.wx; focusPt = [bx, -110, 150]; hz.set({ at: [bx, -120, -80], t }); bk.points.position.x = bx - PL.wx; }
-  adult.epiMat.userData.mesh.visible = !(shot === "weave" && t < SH.weave + 1.0);   // the surface layer's shading bands at the cut: it fades in after
+  adult.epiMat.userData.mesh.visible = shot === "gauge";   // round 10: the surface slab only where the gauge names it (in the weave and the test its far edge read as a glass card)   // the surface layer's shading bands at the cut: it fades in after
   hz.group.visible = bk.points.visible = isB; bk.set({ t });
   if (isB) for (const b of [adult, fetal, mouth, miceA, miceB]) if (b.g.visible) fadeAt(b);
   if (shot === "mice") focusPt = [PL.mox, -54, 45];   // the two blocks, larger now: focus between them
@@ -249,7 +279,8 @@ window.seek = function (t) {
   const ropeOn = shot === "test" ? E.inout2(seg(t, CUE.four - 1.6, CUE.four - 1.0)) : 0;
   rope.visible = ropeOn > 0.01; rope.scale.setScalar(0.6 + 0.4 * ropeOn); rope.rotation.x = 0.15 * t;
   const lost = E.inout2(seg(t, CUE.four - 0.1, CUE.four + 0.9));
-  STRANDS[2].position.set(30 * lost, 48 * lost, 90 * lost); STRANDS[2].rotation.z = -0.08 * lost; ropeLost.transparent = true; ropeLost.opacity = 1 - 0.45 * lost; ropeLost.color.setRGB(1.0, 0.86 - 0.55 * lost, 0.76 - 0.5 * lost); ropeLost.emissive.setRGB(0.35 * lost, 0.05 * lost, 0.04 * lost);
+  STRANDS[2].visible = lost < 0.02; halves.forEach((hv) => { hv.grp.visible = lost >= 0.02; hv.grp.position.x = -hv.dir * 9 * lost; hv.fray.scale.setScalar(Math.max(0.01, lost)); });   // the strand parts: a gap, frayed both sides
+  ropeLost.transparent = false; ropeLost.opacity = 1; ropeLost.color.setRGB(1.0, 0.86 - 0.55 * lost, 0.76 - 0.5 * lost); ropeLost.emissive.setRGB(0.35 * lost, 0.05 * lost, 0.04 * lost);
 
   // ── the macro flight: the scar across the knee ──
   if (isM) { terrain.set({ tone: SKIN.map((v) => v * 1.25), furrows: 0.35, scar: SCAR, scarGlow: 0 }); scarDetail(); }
