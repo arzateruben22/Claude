@@ -1,13 +1,13 @@
-# Posting sheet: Meanwhile, Inside No. 001, "Single file"
+# Posting sheet: Body Backstage No. 001, "Single file"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).
 
-**Cover / thumbnail**: `meanwhile-inside-001-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `meanwhile-inside-001-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `body-backstage-001-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `body-backstage-001-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
 
-Single file | Meanwhile, Inside No. 001
+Single file | Body Backstage No. 001
 
 **Description**
 
@@ -36,12 +36,12 @@ Sources
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
-Meanwhile, Inside: What your body is doing right now, while you watch.
+Body Backstage: What your body is doing right now, while you watch.
 
 #Shorts #humanbody #biology
 ```
 
-**Tags**: Meanwhile, Inside, humanbody, biology, single, file, science, explainer, education
+**Tags**: Body Backstage, humanbody, biology, single, file, science, explainer, education
 
 **Captions**: upload the .srt (English).
 
