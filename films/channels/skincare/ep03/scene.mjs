@@ -98,8 +98,9 @@ const scarDetail = () => {
     const x = pos.getX(i), z = pos.getZ(i), d = Math.abs(z - z0), sk = 1 - Math.min(1, Math.max(0, (d - hw * 0.8) / (hw * 0.3)));
     const edge = Math.exp(-((d - hw * 0.92) ** 2) / (2 * (hw * 0.08) ** 2));
     const stri = Math.sin((z - z0) * 26 + 0.6 * Math.sin(x * 0.7)) * 0.5 + 0.5;
-    pos.setY(i, pos.getY(i) + 0.045 * edge + 0.012 * stri * sk);
-    if (col && sk > 0) for (let c = 0; c < 3; c++) col.array[3 * i + c] *= (1 - 0.06 * sk + 0.06 * sk * (stri - 0.5)) * (c === 0 ? 1 + 0.03 * sk : 1 - 0.02 * sk);   // satin: a touch rosier, striped faintly
+    const outer = Math.exp(-((d - hw * 1.05) ** 2) / (2 * (hw * 0.07) ** 2));   // the furrowed skin dips just outside the raised edge (its shadow)
+    pos.setY(i, pos.getY(i) + 0.085 * edge - 0.03 * outer + 0.028 * stri * sk);
+    if (col && sk > 0) for (let c = 0; c < 3; c++) col.array[3 * i + c] *= (1 - 0.06 * sk + 0.12 * sk * (stri - 0.5) - 0.18 * outer) * (c === 0 ? 1 + 0.03 * sk : 1 - 0.02 * sk);   // satin: a touch rosier, striped faintly
   }
   pos.needsUpdate = true; if (col) col.needsUpdate = true; geo.computeVertexNormals(); scarDone = pos.array;
 };
@@ -199,7 +200,7 @@ window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
   if (stage(t).name !== stage(tr).name) t = tr;
   const shotRaw = stage(t).name;
-  rig.place(camera, shotRaw, t);
+  const P = rig.place(camera, shotRaw, t);
   const shot = shotRaw === "uvb" ? "uv" : shotRaw;   // uvb: the UV scar again, for "the price of defence"
   const isA = ["weave", "test", "gauge"].includes(shot);
   const isM = shot === "macro" || shot === "macro2";
@@ -211,7 +212,7 @@ window.seek = function (t) {
   if (isM) placeDust(t, [PL.tx, 2, 0], [30, 8, 24], 0.1);
   else if (isA || ["fetal", "mouth", "mice"].includes(shot)) { const bx = { fetal: PL.fx, mouth: PL.mx, mice: PL.mox }[shot] || PL.wx; placeDust(t, [bx, -150, 250], [900, 500, 300], 4); }
   else dust.visible = false;
-  fstop = shot === "macro" ? 0.22 : shot === "macro2" ? 0.15 : 0; focusPt = [PL.tx, 0, SCAR[0]];   // the scar in focus
+  fstop = shot === "macro" ? 0.18 : shot === "macro2" ? 0.15 : 0; focusPt = isM ? P.target : [PL.tx, 0, SCAR[0]];   // focus where the camera looks: the scar, from frame 0
   const isB = isA || ["fetal", "mouth", "mice"].includes(shot);   // the tissue blocks: a lens on them too, haze and bokeh around
   if (isB) { fstop = 0.16; const bx = { fetal: PL.fx, mouth: PL.mx, mice: PL.mox }[shot] || PL.wx; focusPt = [bx, -110, 150]; hz.set({ at: [bx, -120, -80], t }); bk.points.position.x = bx - PL.wx; }
   adult.epiMat.userData.mesh.visible = !(shot === "weave" && t < SH.weave + 1.0);   // the surface layer's shading bands at the cut: it fades in after
