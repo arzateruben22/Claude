@@ -23,6 +23,11 @@ ID = "skin-sense-002"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
+CAM_END = f.duration   # the camera's last key stays where the untrimmed film ended, so the motion before the cut is unchanged
+MAXDUR = 75.0   # the delivery window is 60–75 s: trim the end card's tail (the card keeps its start)
+if f.duration > MAXDUR:
+    cut = f.duration - MAXDUR
+    BEATS = f.layout(plan, end_hold=end_hold - cut, total=MAXDUR)
 A = f.at
 B = {b["id"]: b for b in BEATS}
 
@@ -64,14 +69,14 @@ CAM = {
                {"t": CUE["rush"], "target": [SX + 10, -100, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 280, "az": 1, "ease": "inout2"},   # to the capillary
                {"t": t_rise, "target": [SX + 10, -60, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 280, "az": 2, "ease": "sine"}],
     "rise": [{"t": t_rise, "target": [TX + 0.5, -0.2, 0.3], "el": 70, **MK, "dist": 6, "az": -1}, {"t": t_face, "target": [TX, 0, 2], "el": 30, **MK, "dist": 26, "az": -5, "ease": "out3"}],
-    "face": [{"t": t_face, "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 28, "az": -2},
-             {"t": B["toscale"]["t0"], "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 25, "az": 0, "ease": "sine"}],
+    "face": [{"t": t_face, "target": [TX + 3, 0, 5], "el": 42, **MK, "dist": 17, "az": 12},   # the macro skin, away from the beam: it flushes with every beat
+             {"t": B["toscale"]["t0"], "target": [TX + 3, 0, 5], "el": 38, **MK, "dist": 13, "az": 6, "ease": "sine"}],
     "depth": [{"t": B["toscale"]["t0"], "target": [SX, -90, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 420, "az": 2},
               {"t": B["takeaway"]["t0"], "target": [SX, -90, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 380, "az": 3, "ease": "sine"}],
     "cg": [{"t": B["takeaway"]["t0"], "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 28, "az": 0}, {"t": A("vo07:Yours", -0.3), "target": [0, -1.35, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 27, "az": 0, "ease": "sine"}],
     "macro2": [{"t": A("vo07:Yours", -0.3), "target": [TX + 0.5, -0.2, 0.3], "el": 70, **MK, "dist": 6, "az": -2},   # up out of the skin
                {"t": A("vo07:Yours", 1.2), "target": [TX, 0, 2], "el": 28, **MK, "dist": 22, "az": -4, "ease": "out3"},
-               {"t": B["tease"]["t1"], "target": [TX, 0, 4], "el": 24, **MK, "dist": 34, "az": -10, "ease": "sine"}],
+               {"t": CAM_END, "target": [TX, 0, 4], "el": 24, **MK, "dist": 34, "az": -10, "ease": "sine"}],
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
@@ -92,10 +97,9 @@ BADGES = [
     {"id": "b-head", "text": "near head-on light", "t0": B["normal"]["t0"] + 0.3, "t1": t_split, "slot": "tr"},   # with ≈ 4–7 %, which leaves at the same cut
     {"id": "b-one", "text": "one study · illustration", "t0": t_split, "t1": t_in, "slot": "tr"},
     {"id": "b-simp", "text": "simplified · one example (model)", "t0": t_in, "t1": t_face, "slot": "tl"},
-    {"id": "b-face", "text": "model face, not a photo", "t0": t_face, "t1": B["toscale"]["t0"], "slot": "tl"},
-    {"id": "b-step", "text": "Verkruysse et al., 2008", "t0": t_face, "t1": B["toscale"]["t0"], "slot": "bl"},
+    {"id": "b-step", "text": "Verkruysse 2008 · Wu et al., 2012", "t0": t_face, "t1": B["toscale"]["t0"], "slot": "tl"},
     {"id": "b-cg", "text": "Jensen et al., 2001", "t0": B["takeaway"]["t0"] + 0.2, "t1": A("vo07:Yours", -0.3), "slot": "tr"},
-    {"id": "b-cgm", "text": "model faces, not photos", "t0": B["takeaway"]["t0"] + 0.2, "t1": A("vo07:Yours", -0.3), "slot": "tl"},
+    {"id": "b-cgm", "text": "models, not photos", "t0": B["takeaway"]["t0"] + 0.2, "t1": A("vo07:Yours", -0.3), "slot": "tl"},
     {"id": "b-est", "text": "estimate · varies by skin and site", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tr"},
     {"id": "b-illus2", "text": "illustration", "t0": A("vo07:Yours", -0.3), "t1": t_end, "slot": "tr"},
 ]
@@ -118,6 +122,7 @@ def before_cut(t1, lead=0.45):
 
 for row in BADGES + COUNTERS + LABELS:
     row["t1"] = before_cut(row["t1"])
+COUNTERS.sort(key=lambda r: r["t0"])   # the spacing pass below needs time order
 for a, b in zip(COUNTERS, COUNTERS[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
@@ -132,7 +137,7 @@ DEPTH = {"blue_mm": BLUE_MM, "red_mm": list(RED_MM), "paper_um": PAPER_UM}
 
 TITLE = {"series": "Skin Sense · No. 002", "title": "Where a glow *comes from*", "t1": CUE["inside"] - 0.8, "sig": A("vo01:from?", 0.35)}
 END = {"title": "Next: why do you *scar*?", "follow": "Skin Sense · No. 003",
-       "next": "Only about 4–7% of light bounces off skin's surface; most goes inside and much comes back out. Narration: synthetic voice (AI)."}
+       "next": "Sources: Lister 2012; Jacques (OMLC); Verkruysse et al. 2008; Wu et al. 2012; Jensen et al. 2001. Narration: synthetic voice (AI)."}
 POSTER = A("vo04:blood.", 0.2)
 
 glue(f, {"vo01": ["your glow", "on your face", "inside you."], "vo02": ["one ray in twenty", "as a glint.", "Smooth, hydrated skin", "back one way;", "dry skin", "into a haze."],
