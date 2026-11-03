@@ -111,7 +111,7 @@ BADGES = [
     {"id": "b-model4", "text": "model, not a photo", "t0": SH["close"] + 0.3, "t1": t_end, "slot": "tl"},
 ]
 # the spine readout: the payoff's number, held lit from the takeaway to the end card (after the gauge, which owns the top)
-COUNTERS = [{"id": "c-dose", "label": "one frown, of a lethal dose", "fmt": "text", "text": "< 1 %", "t0": B["takeaway"]["t0"] + 0.9, "t1": t_end - 0.4, "at": [0.5, 0.21]}]
+COUNTERS = [{"id": "c-dose", "label": "one frown, of a lethal dose", "fmt": "text", "text": "< 1 %", "t0": B["takeaway"]["t0"] + 0.9, "t1": t_end - 0.4, "at": [0.5, 0.29]}]
 PLATES = {
     "kerner": {"t0": CUE["justinus"] - 0.2, "t1": B["whoa"]["t0"] - 0.3, "sausages": CUE["sausages"] - 0.1, "guessed": CUE["guessed"],
                "name": "Justinus Kerner", "role": "physician, Württemberg · 1820", "line1": "1817–1822: “sausage poison” described",

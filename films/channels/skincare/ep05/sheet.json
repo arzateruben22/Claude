@@ -78,12 +78,20 @@
   {
    "t": 7.4,
    "kind": "counter.show",
-   "tag": "c-start"
+   "tag": "c-start",
+   "pos": [
+    0.5,
+    0.225
+   ]
   },
   {
    "t": 12.700000000000001,
    "kind": "label",
-   "tag": "l-daily"
+   "tag": "l-daily",
+   "pos": [
+    0.223,
+    0.5
+   ]
   },
   {
    "t": 18.2,
@@ -94,7 +102,11 @@
   {
    "t": 22.4,
    "kind": "label",
-   "tag": "l-pleased"
+   "tag": "l-pleased",
+   "pos": [
+    0.633,
+    0.5
+   ]
   },
   {
    "t": 24.766666666666666,
@@ -104,7 +116,11 @@
   {
    "t": 25.566666666666666,
    "kind": "counter.show",
-   "tag": "c-age"
+   "tag": "c-age",
+   "pos": [
+    0.5,
+    0.225
+   ]
   },
   {
    "t": 29.4,
@@ -125,12 +141,20 @@
   {
    "t": 34.5,
    "kind": "label",
-   "tag": "l-sun"
+   "tag": "l-sun",
+   "pos": [
+    0.271,
+    0.52
+   ]
   },
   {
    "t": 34.5,
    "kind": "label",
-   "tag": "l-bare"
+   "tag": "l-bare",
+   "pos": [
+    0.69,
+    0.52
+   ]
   },
   {
    "t": 42.0,
@@ -152,7 +176,11 @@
   {
    "t": 42.7,
    "kind": "counter.show",
-   "tag": "c-follow"
+   "tag": "c-follow",
+   "pos": [
+    0.5,
+    0.225
+   ]
   },
   {
    "t": 49.1,
@@ -249,5 +277,11 @@
    "t": 70.76666666666667,
    "file": "vo/08.wav"
   }
- ]
+ ],
+ "shown": {
+  "l-daily": 12.7333,
+  "l-pleased": 22.4333,
+  "l-sun": 34.5333,
+  "l-bare": 34.5333
+ }
 }

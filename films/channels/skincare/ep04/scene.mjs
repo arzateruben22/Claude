@@ -212,7 +212,7 @@ window.seek = function (t) {
     } else {
       const prune = u01(t, J.prune);
       st = { ...st, sprout: u01(t, J.sprout), prune, cut: 1 - prune, toxin: 1 - prune, puff: seg(t, J.puff2[0], J.puff2[1]) };
-      pos = mix3([3, 15, 40], [2, 11, 33], u); tgt = mix3([1, 0.2, 0], [1, 0.6, 0], u);      // the ending and its spare endings along the fibre
+      pos = mix3([3, 15, 40], [2, 11, 33], u); tgt = mix3([1, 3.0, 0], [1, 3.2, 0], u);   // the ending low in the frame, the readout above it      // the ending and its spare endings along the fibre
       focusPt = jx([1, 0.8, 0]); fstop = 0.18;
     }
     N.set(st);
