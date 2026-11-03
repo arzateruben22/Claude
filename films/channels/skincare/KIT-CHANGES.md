@@ -27,3 +27,7 @@ Proof nothing moved (the studio run with each side's pre-merge kit, then with th
   AAC −1.6 dBTP, as its committed `sound/qa.json`).
 - set/motif.js (2 Nov, reboot): the gauge ruler's "µm" unit was inside a comment (never drawn); moved out. Only the reboot's films use set/ (season 1 renders from shelved-s1/set, unchanged).
 - set/terrain.js (2 Nov): goldenHour's fog colour 0x3a2a20 → the theme's violet 0x2c1660 (the far edge melts into the ground colour; the second builder's override). Only the reboot's films use set/.
+- set/uvcam.js (3 Nov, channel look v2): a new opt-in `form` (uniform uForm, default 0) gives the UV/daylight skin micro relief, a key, a rim and a small highlight, and a soft falloff in place of the hard oval edge. At form 0 the shader's output is unchanged (every new term is multiplied or mixed by uForm), so films that don't pass it render as before.
+- set/prod.js (3 Nov, new): the channel production pass (lookV2, upgradeSkin, upgradeHairs, richen, hazeVolume, bokeh, backdropCss, grade). Opt-in; nothing older imports it.
+- set/hudv2.js (3 Nov, new): unifyHud (labels, badges, counters, captions as one plate system, scoped to #hud.ol-v2) and stackAsCard. Opt-in; nothing older imports it.
+- set/look3.js (3 Nov, new): lookV3 = lookV2 + skinV3 (warm terminator scatter, oily micro-speculars), hairsV3 (taper, dark root to pale backlit tip; groom 'lateral' for brows), grainV3 (fine, soft-light), a real black point. Opt-in; nothing older imports it.
