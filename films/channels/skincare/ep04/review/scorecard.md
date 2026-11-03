@@ -103,3 +103,21 @@ The picture was rebuilt in the approved look (look test 2), on the facts-pass-2 
 - The spine readout ("< 1 %", one frown of a lethal dose) holds from the takeaway to the end card, so it never sits on the lifted gauge.
 - The title, the captions, the gauge and the end card (tease, a follow chip for No. 005, a footnote ending "Narration: synthetic voice (AI)") are kept.
 - The channel is now named Skin Sense (ID `skin-sense-004`).
+
+**Draft (look 2), 3 Nov** (`skin-sense-004-9x16-draft-preview.mp4`, `draft-contact-sheet.jpg`)
+- **Sync:** PASS. label 0.0/5.0 ms, reveal 12.0/12.0 (slow kind), swell 51.0/51.0 (slow kind), signature 11.0/11.0; all others 0–5 ms.
+  - The first run failed on "acetylcholine": it sat 0.17 s after the messenger's diffuse sound. It now lands on "onto".
+- **Mix:** music −28.9 LUFS under dialog −13.5 LUFS. The gap is 15.4 LU (pass).
+- **Length:** 74.67 s, inside the 60–75 s window.
+- **Render:** 2.38 s/frame at draft, K average 2.3 (`kMax` 3 in the scene).
+
+**After that draft (stills only; the next draft carries them)**
+- **Coordinator's rules:** the cut face's note is now "tissue photo · stained skin", and its texture is one copy (repeat 1, 1; no tile seams).
+- **Channel look, stage 1:** `lookV2` upgrades the brow's skin and adds the graded backdrop and one grade. Grain is 0.007. `richen` is applied to the junction, and the cut face is at fstop 0.1.
+- **HUD:** `unifyHud` gives one HUD system, and the plates take its radius.
+- **Takeaway framing:** the ending sits under the readout, clear of the captions.
+
+**Open**
+- **Eyebrow hairs:** they still read as combed slabs in the oblique macro. `upgradeHairs` assumes terrain hairs standing upright, so it does not fit the brow.
+- **End card:** it covers the brow fully, so the loop to frame 0 is only felt through the cut.
+- **(h) production value:** not yet scored on the look-v2 frames.

@@ -18,6 +18,7 @@ import { createTerrain } from "../set/terrain.js";
 import { createStudio, skinMaterial, createShaft, createGrain } from "../set/studio.js";
 import { SECTION } from "../set/ref/textures.js";
 import { lookV2, hazeVolume, bokeh } from "../set/prod.js";
+import { unifyHud, stackAsCard } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, CUT = FILM.cut, G = FILM.gauge, PL = FILM.plate;
 const S1 = Math.min(W, H) / 1080;
@@ -216,15 +217,19 @@ const hazeB = hazeVolume(scene, { at: [XB, 3, -10], size: [40, 20, 30], color: "
 const bokehL = bokeh(scene, { n: 60, box: [[-14, 14], [-8, 8], [-26, -14]], size: 0.5, color: "#c9b4ff", op: 0.35 });
 const grain = createGrain(hudRoot, { amount: 0.007 });
 const hud = createHud({ camera, shots: FILM.shots });
+unifyHud(hudRoot);   // one HUD system (hudv2.js): one plate, one radius, a bar not a dot; mono sources, sans labels
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const tBars = titleBars(titleEl, { t0: 0, sig: FILM.title.sig });
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
+const BADGE = {}; for (const b of FILM.badges) BADGE[b.id] = hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
+const CTR = {};
 for (const c of FILM.counters) {
-  const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, value: () => 0, fmt: () => c.text, lit: () => true });
+  const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, value: () => 0, fmt: () => c.text, lit: () => true }); CTR[c.id] = el;
   Object.assign(el.style, { background: "var(--hud-plate)", padding: "1.1vmin 2.6vmin 1.3vmin", borderRadius: "var(--hud-cap-radius, 2.4vmin)", boxShadow: "var(--hud-shadow)" });
   if (c.small) el.querySelector(".v").style.fontSize = c.small;
 }
+// each spine and the note that qualifies it as one card: the note is the card's header row, the spine its body
+const cards = [stackAsCard(BADGE["b-units"], CTR["c-uva"]), stackAsCard(BADGE["b-pooled"], CTR["c-rr"])];
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
@@ -352,6 +357,7 @@ window.seek = function (t) {
   veil.style.opacity = (0.3 * endDefocus).toFixed(4);
   grain.set(t);
   hud.update(t);
+  cards.forEach((c) => c());
   const scrim = hudRoot.querySelector(".hud-scrim");
   if (scrim) scrim.style.opacity = (0.45 * E.out3(seg(t, FILM.endCard, FILM.endCard + 0.6))).toFixed(4);   // the end card over the defocused plate, in the same light
   tBars.update(t);

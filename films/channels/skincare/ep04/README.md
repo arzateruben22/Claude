@@ -16,6 +16,8 @@ There are four hero shots (`review/storyboard.md`):
 3. **The cut face:** the stained micrograph cut face below the skin (`../set/ref`, public domain).
 4. **The dose:** the brow with the UV scan line on "twenty", and the dose plate (notes: "estimate, 70 kg adult · units differ by product · side effects can occur far below this").
 
+The channel look (stage 1, `../set/prod.js`: `lookV2`, `richen`) and the unified HUD (`../set/hudv2.js`: `unifyHud`) are applied.
+
 The old schematic `../set/junction04.js`, the UV camera brow (`../set/uvcam.js`) and the macro terrain are retired from this episode.
 
 ## Files
