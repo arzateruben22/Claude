@@ -34,6 +34,11 @@ describe("metadata", () => {
     const physics = buildMetadata(input);
     for (const t of [physics.youtube.caption, physics.tiktok.caption, physics.instagram.caption]) expect(t).not.toContain("medical advice");
   });
+  it("the one-line takeaway skips a question and uses the answer", () => {
+    const q = buildMetadata({ ...input, beats: input.beats.map((b) => (b.beat === "takeaway" ? { ...b, vo: "Is it new? No: a fight begun out of sight. {c2}" } : b)) });
+    expect(q.tiktok.caption).toContain("No: a fight begun out of sight.");
+    expect(q.tiktok.caption).not.toContain("Is it new?");
+  });
   it("cuts at a word boundary", () => {
     expect(cut("one two three four five", 12)).toBe("one two…");
     expect(cut("short", 12)).toBe("short");

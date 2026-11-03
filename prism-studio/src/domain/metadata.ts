@@ -61,6 +61,8 @@ export function clean(vo: string): string {
 
 const sentences = (s: string) => clean(s).split(/(?<=[.!?…])\s+/).filter(Boolean);
 const firstSentence = (s: string) => sentences(s)[0] ?? "";
+/** The first sentence that states something: a question in the takeaway ("Is it new?") only repeats the hook's job. */
+const firstStatement = (s: string) => sentences(s).find((x) => !/\?\s*$/.test(x)) ?? "";
 /** A beat's narration as written copy: markup removed, numbers in written form. */
 const beat = (beats: MetaInput["beats"], ...names: string[]) => { for (const n of names) { const b = beats.find((x) => x.beat === n); if (b && clean(b.vo)) return writtenForms(clean(b.vo)); } return ""; };
 
@@ -122,7 +124,7 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   const why = beat(input.beats, "why");
   const takeaway = beat(input.beats, "takeaway", "whoa");
   const question = hook.includes("?") ? hook.slice(0, hook.indexOf("?") + 1) : hook;
-  const oneLiner = firstSentence(takeaway) || firstSentence(why);
+  const oneLiner = firstStatement(takeaway) || firstStatement(why);
   const srcs = uniqueSources(input.sources);
   const series = ep.seriesTitle ? `${ep.seriesTitle}${ep.seriesOrder ? `, part ${ep.seriesOrder}${ep.seriesTotal ? ` of ${ep.seriesTotal}` : ""}` : ""}` : "";
   const next = input.next ? clean(input.next).replace(/^next:\s*/i, "") : "";
