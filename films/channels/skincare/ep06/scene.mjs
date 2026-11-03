@@ -15,9 +15,10 @@ import { stage, seg, E, rng } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
 import { titleBars, endBars, createGauge, injectCss } from "../set/motif.js";
 import { createTerrain } from "../set/terrain.js";
-import { createStudio, skinMaterial, createShaft, createGrain } from "../set/studio.js";
+import { createStudio, skinMaterial, createShaft } from "../set/studio.js";
 import { SECTION } from "../set/ref/textures.js";
-import { lookV2, hazeVolume, bokeh } from "../set/prod.js";
+import { hazeVolume, bokeh } from "../set/prod.js";
+import { lookV3, skinV3 } from "../set/look3.js";
 import { unifyHud, stackAsCard } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, CUT = FILM.cut, G = FILM.gauge, PL = FILM.plate;
@@ -78,7 +79,7 @@ const LIT = { tobacco: overlay(0.002), beds: overlay(0.0022), meat: overlay(0.00
 plate.rotation.set(-0.07, 0.22, 0.012);   // 12–13° off the lens, so the push gives parallax
 const hzL1 = haze(70, 40, [0, 0, -12], "#2C1660", 0.38), hzL2 = haze(70, 40, [0, 0, -5], "#3A2178", 0.12);
 const farTubes = new THREE.Group(); scene.add(farTubes);   // a tube bank behind and below the slab, out of focus: its violet rim
-const farCore = new THREE.MeshBasicMaterial({ color: VIOLET.clone().multiplyScalar(3.2) });
+const farCore = new THREE.MeshBasicMaterial({ color: VIOLET.clone().multiplyScalar(2.0) });
 const farHouse = new THREE.MeshPhysicalMaterial({ color: 0x2a2342, roughness: 0.3, metalness: 0.8, side: THREE.DoubleSide });
 for (let i = 0; i < 7; i++) { const x = -6 + i * 2.0, z = -16;   // a bed's tube bank seen end-on-ish below and behind the slab: the DOF makes each a soft glowing rod
   const c = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 30, 16), farCore); c.rotation.x = Math.PI / 2 - 0.35; c.position.set(x, -6.5, z); farTubes.add(c);
@@ -130,7 +131,7 @@ const T = createTerrain({ seed: 31, spots: 0, segs: 400 });
 T.group.position.x = XB; scene.add(T.group);
 const skinM = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.06, hydration: 0.25, repeat: 14, seed: 6, micro: 0.45 });
 // skin sheen, roughness and speculars come from the shared skinMaterial (the channel-wide production pass)
-const UV = { uUV: { value: 0 }, uL: { value: 1 }, uR: { value: 1 }, uSeam: { value: XB }, uLilac: { value: new THREE.Color(0.22, 0.15, 0.42) }, uGlow: { value: new THREE.Color(0.06, 0.035, 0.15) } };
+const UV = { uUV: { value: 0 }, uL: { value: 1 }, uR: { value: 1 }, uSeam: { value: XB }, uLilac: { value: new THREE.Color(0.22, 0.15, 0.42) }, uGlow: { value: new THREE.Color(0.11, 0.07, 0.26) } };
 const uvShader = (sh) => {   // the UV camera: one material, a soft seam between the two banks' halves
   Object.assign(sh.uniforms, UV);
   sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying float vWX;").replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvWX = (modelMatrix * vec4(transformed, 1.0)).x;");
@@ -158,8 +159,8 @@ const occlude = () => {   // ambient occlusion baked into the vertex colours: fu
 };
 // the canopy: per tube an emissive core, a glass envelope, a reflector housing; an acrylic sheet under them all
 const canopy = new THREE.Group(); canopy.position.x = XB; scene.add(canopy);
-const coreMats = [0, 1].map(() => new THREE.MeshBasicMaterial({ color: 0x000000 }));
-const glassMats = [0, 1].map(() => { const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.04, metalness: 0, transparent: true, opacity: 0.22, clearcoat: 1, clearcoatRoughness: 0.03, emissive: 0x000000, depthWrite: false }); m.userData.envK = 3; return m; });
+const coreMats = [0, 1].map(() => new THREE.MeshBasicMaterial({ color: 0x000000, fog: false }));
+const glassMats = [0, 1].map(() => { const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.04, metalness: 0, transparent: true, opacity: 0.22, clearcoat: 1, clearcoatRoughness: 0.03, emissive: 0x000000, depthWrite: false, fog: false }); m.userData.envK = 3; return m; });
 const housingMat = new THREE.MeshPhysicalMaterial({ color: 0x3a3352, roughness: 0.22, metalness: 0.9, side: THREE.DoubleSide });
 const TUBE_Y = 6.6, LEN = 46, TZ = -12;
 const coreG = new THREE.CylinderGeometry(0.075, 0.075, LEN, 12), glassG = new THREE.CylinderGeometry(0.2, 0.2, LEN, 24), housingG = new THREE.CylinderGeometry(0.42, 0.42, LEN, 24, 1, true, Math.PI / 2, Math.PI);
@@ -226,11 +227,12 @@ const dm = new THREE.Object3D();
 
 // ── the overlay: one HUD system (the theme's plate fill, radius, mono and sans) ─────────
 const hudRoot = document.getElementById("hud");
-const look = lookV2({ canvas, hudRoot, fog: FOGB, terrain: T, skin: skinM });   // the channel look (set/prod.js): skin, hairs, fog, grade
+const look = lookV3({ canvas, hudRoot, fog: FOGB, terrain: T });   // the channel look (set/look3.js): hairs, fog, grade, grain
+skinV3(skinM, { keyDir: [-0.85, 0.42, 0.35] });   // the canopy key is low and to the side (the tubes are overhead)
 { const v2 = skinM.onBeforeCompile; skinM.onBeforeCompile = (sh) => { v2(sh); uvShader(sh); }; skinM.customProgramCacheKey = () => "skinV2-ep06uv"; skinM.needsUpdate = true; }
 const hazeL = hazeVolume(scene, { at: [0, 0, -7], size: [40, 28, 16], color: "#b9a6ff", n: 5, op: 0.07 });
 const bokehL = bokeh(scene, { n: 60, box: [[-14, 14], [-8, 8], [-26, -14]], size: 0.5, color: "#c9b4ff", op: 0.35 });
-const grain = createGrain(hudRoot, { amount: 0.007 });
+const grain = look.grain;
 const hud = createHud({ camera, shots: FILM.shots });
 unifyHud(hudRoot);   // one HUD system (hudv2.js): one plate, one radius, a bar not a dot; mono sources, sans labels
 hud.captions(FILM.captions);
