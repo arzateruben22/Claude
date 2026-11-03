@@ -101,7 +101,7 @@ RATE = 1.0 / 12.0
 FLUSH1 = A("vo05:second:end", 0.1)
 FLUSH0 = round(FLUSH1 - 0.25 / RATE, 6)                  # ≈ "fill": the hero meets the air sac's face
 # real speed again on "Meanwhile": the cells surge, and the speed note leaves by itself (it reads the clock)
-CLOCK = [{"t": 0.0, "rate": 1.0}, {"t": CUT["lung"], "rate": RATE}, {"t": B["meanwhile"]["t0"], "rate": 1.0}]
+CLOCK = [{"t": 0.0, "rate": 1.0}, {"t": CUT["lung"], "rate": RATE}, {"t": CUT["skin2"], "rate": 1.0}, {"t": CUT["lung2"], "rate": RATE}, {"t": B["meanwhile"]["t0"], "rate": 1.0}]   # the skin callback is real time (review r4)
 LUNG = {"flush": [FLUSH0, FLUSH1], "o2": [FLUSH0 - 0.6, FLUSH1 + 0.4],
         "loop": [A("vo05:sends"), A("vo05:minute:end")]}   # the locator draws the blood's round trip: one lap, closing on "minute"
 QUARTER = {"t0": FLUSH0 - 1.0, "keys": [[FLUSH0, 0.0], [FLUSH1, 0.25]], "t1": B["takeaway"]["t0"] - 0.3,
@@ -194,7 +194,9 @@ BADGES = [
     {"id": "nts-cell", "text": "not to scale", "t0": 0.0, "t1": CUT["hb"] - 0.3},
     {"id": "ill-hb", "text": "illustration · slowed", "t0": CUT["hb"], "t1": CUT["skin"] - 0.3},
     {"id": "ill-skin", "text": "stained section · not to scale", "t0": CUT["skin"], "t1": CUT["lung"] - 0.3},
-    {"id": "nts-lung", "text": "not to scale", "t0": CUT["lung"], "t1": CUT["nerve"] - 0.3},
+    {"id": "nts-lung", "text": "not to scale", "t0": CUT["lung"], "t1": CUT["skin2"] - 0.2},
+    {"id": "ill-skin2", "text": "stained section · not to scale", "t0": CUT["skin2"], "t1": CUT["lung2"] - 0.2},
+    {"id": "nts-lung2", "text": "not to scale", "t0": CUT["lung2"], "t1": CUT["nerve"] - 0.3},
     {"id": "nts-nerve", "text": "not to scale · slowed", "t0": CUT["nerve"], "t1": EC},
 ]
 # the spine readout (WRITING.md, "The picture" 2): one number on screen in one place from the title's exit to the

@@ -330,6 +330,12 @@
    "t1": 59.6
   },
   {
+   "t": 53.45,
+   "kind": "badge",
+   "tag": "ill-skin2",
+   "text": "stained section · not to scale"
+  },
+  {
    "t": 53.53333333333333,
    "kind": "label",
    "tag": "arrive",
@@ -337,6 +343,12 @@
     0.302,
     0.54
    ]
+  },
+  {
+   "t": 55.35,
+   "kind": "badge",
+   "tag": "nts-lung2",
+   "text": "not to scale"
   },
   {
    "t": 55.65,
