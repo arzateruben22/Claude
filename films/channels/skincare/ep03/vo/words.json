@@ -3,8 +3,8 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Why do wet fingers wrinkle? Your arm stays smooth in the same bath.",
-   "heard": "Why do wet fingers wrinkle? Your arm stays smooth in the same bath.",
+   "text": "Why do you scar now? Before birth, a cut healed without one.",
+   "heard": "Why do you scar now? Before birth a cut healed without one,",
    "words": [
     {
      "w": "Why",
@@ -14,1005 +14,1029 @@
     },
     {
      "w": "do",
-     "start": 0.325,
+     "start": 0.33,
      "end": 0.48,
      "heard": true
     },
     {
-     "w": "wet",
-     "start": 0.575,
-     "end": 0.72,
+     "w": "you",
+     "start": 0.52,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "fingers",
-     "start": 0.62,
-     "end": 1.12,
+     "w": "scar",
+     "start": 0.67,
+     "end": 1.04,
      "heard": true
     },
     {
-     "w": "wrinkle?",
-     "start": 1.04,
-     "end": 1.92,
+     "w": "now?",
+     "start": 1.245,
+     "end": 1.76,
      "heard": true
     },
     {
-     "w": "Your",
-     "start": 2.01,
+     "w": "Before",
+     "start": 1.775,
      "end": 2.16,
      "heard": true
     },
     {
-     "w": "arm",
-     "start": 2.245,
-     "end": 2.56,
+     "w": "birth,",
+     "start": 2.24,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "stays",
-     "start": 2.645,
-     "end": 2.96,
+     "w": "a",
+     "start": 2.725,
+     "end": 2.88,
      "heard": true
     },
     {
-     "w": "smooth",
-     "start": 3.05,
-     "end": 3.44,
+     "w": "cut",
+     "start": 2.86,
+     "end": 3.2,
      "heard": true
     },
     {
-     "w": "in",
-     "start": 3.35,
-     "end": 3.52,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 3.56,
+     "w": "healed",
+     "start": 3.12,
      "end": 3.68,
      "heard": true
     },
     {
-     "w": "same",
-     "start": 3.685,
-     "end": 3.92,
+     "w": "without",
+     "start": 3.65,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "bath.",
-     "start": 3.955,
-     "end": 4.4,
+     "w": "one.",
+     "start": 4.125,
+     "end": 4.24,
      "heard": true
     }
    ]
   },
   {
    "id": "vo02",
-   "text": "It looks like skin soaking up water and swelling, like a sponge. It's the story we grew up with, and it's wrong.",
-   "heard": "It looks like skin soaking up water and swelling like a sponge. It's the story we grew up with, and it's wrong.",
+   "text": "Under the surface, most of your skin's strength is collagen, woven every which way like a basket, so it gives whichever way it's pulled.",
+   "heard": "Under the surface most of your skin's strength is collagen, woven every which way like a basket, so it gives whichever way it's pulled.",
    "words": [
     {
-     "w": "It",
+     "w": "Under",
      "start": 0.02,
      "end": 0.32,
      "heard": true
     },
     {
-     "w": "looks",
-     "start": 0.23,
-     "end": 0.64,
+     "w": "the",
+     "start": 0.305,
+     "end": 0.48,
      "heard": true
     },
     {
-     "w": "like",
-     "start": 0.73,
-     "end": 0.88,
+     "w": "surface,",
+     "start": 0.53,
+     "end": 1.12,
      "heard": true
     },
     {
-     "w": "skin",
-     "start": 0.995,
-     "end": 1.44,
+     "w": "most",
+     "start": 1.1,
+     "end": 1.36,
      "heard": true
     },
     {
-     "w": "soaking",
-     "start": 1.505,
-     "end": 1.92,
+     "w": "of",
+     "start": 1.405,
+     "end": 1.52,
      "heard": true
     },
     {
-     "w": "up",
-     "start": 2.01,
+     "w": "your",
+     "start": 1.435,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "skin's",
+     "start": 1.795,
      "end": 2.16,
      "heard": true
     },
     {
-     "w": "water",
-     "start": 2.1,
-     "end": 2.72,
+     "w": "strength",
+     "start": 2.185,
+     "end": 2.48,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 2.74,
-     "end": 2.96,
+     "w": "is",
+     "start": 2.485,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "swelling,",
-     "start": 2.885,
+     "w": "collagen,",
+     "start": 2.685,
      "end": 3.6,
      "heard": true
     },
     {
+     "w": "woven",
+     "start": 3.72,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 4.2,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "which",
+     "start": 4.36,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 4.795,
+     "end": 5.04,
+     "heard": true
+    },
+    {
      "w": "like",
-     "start": 3.58,
-     "end": 3.84,
+     "start": 5.16,
+     "end": 5.21,
      "heard": true
     },
     {
      "w": "a",
-     "start": 3.755,
-     "end": 4.0,
+     "start": 5.29,
+     "end": 5.36,
      "heard": true
     },
     {
-     "w": "sponge.",
-     "start": 4.08,
-     "end": 5.2,
-     "heard": true
-    },
-    {
-     "w": "It's",
-     "start": 5.31,
-     "end": 5.52,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 5.59,
-     "end": 5.76,
-     "heard": true
-    },
-    {
-     "w": "story",
-     "start": 5.83,
-     "end": 6.16,
-     "heard": true
-    },
-    {
-     "w": "we",
-     "start": 6.22,
+     "w": "basket,",
+     "start": 5.435,
      "end": 6.32,
      "heard": true
     },
     {
-     "w": "grew",
-     "start": 6.385,
-     "end": 6.72,
+     "w": "so",
+     "start": 6.46,
+     "end": 6.56,
      "heard": true
     },
     {
-     "w": "up",
-     "start": 6.83,
-     "end": 6.88,
+     "w": "it",
+     "start": 6.49,
+     "end": 6.64,
      "heard": true
     },
     {
-     "w": "with,",
-     "start": 6.91,
-     "end": 7.2,
+     "w": "gives",
+     "start": 6.725,
+     "end": 6.96,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 7.22,
-     "end": 7.36,
+     "w": "whichever",
+     "start": 6.99,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 7.33,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "it's",
-     "start": 7.38,
-     "end": 7.68,
+     "start": 7.695,
+     "end": 7.92,
      "heard": true
     },
     {
-     "w": "wrong.",
-     "start": 7.665,
-     "end": 8.16,
+     "w": "pulled.",
+     "start": 7.905,
+     "end": 8.32,
      "heard": true
     }
    ]
   },
   {
    "id": "vo03",
-   "text": "Almost a century ago, doctors noticed something odd: a finger whose nerve had been cut stayed perfectly smooth in the bath.",
-   "heard": "Almost a century ago, doctors noticed something odd. A finger whose nerve had been cut stayed perfectly smooth in the bath.",
+   "text": "Cut through it, and the body doesn't reweave. It patches: new threads side by side, all one way, with no hair or sweat glands.",
+   "heard": "Cut through it and the body doesn't reweave. It patches. New threads side by side, all one way with no hair or sweat glands.",
    "words": [
     {
-     "w": "Almost",
-     "start": 0.02,
-     "end": 0.48,
+     "w": "Cut",
+     "start": 0.26,
+     "end": 0.4,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 0.465,
+     "w": "through",
+     "start": 0.39,
      "end": 0.64,
      "heard": true
     },
     {
-     "w": "century",
-     "start": 0.665,
-     "end": 1.12,
+     "w": "it,",
+     "start": 0.775,
+     "end": 0.825,
      "heard": true
     },
     {
-     "w": "ago,",
-     "start": 1.155,
-     "end": 1.76,
-     "heard": true
-    },
-    {
-     "w": "doctors",
-     "start": 1.85,
-     "end": 2.32,
-     "heard": true
-    },
-    {
-     "w": "noticed",
-     "start": 2.295,
-     "end": 2.96,
-     "heard": true
-    },
-    {
-     "w": "something",
-     "start": 3.045,
-     "end": 3.28,
-     "heard": true
-    },
-    {
-     "w": "odd:",
-     "start": 3.325,
-     "end": 4.16,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 4.255,
-     "end": 4.4,
-     "heard": true
-    },
-    {
-     "w": "finger",
-     "start": 4.45,
-     "end": 4.8,
-     "heard": true
-    },
-    {
-     "w": "whose",
-     "start": 4.87,
-     "end": 5.12,
-     "heard": true
-    },
-    {
-     "w": "nerve",
-     "start": 5.05,
-     "end": 5.52,
-     "heard": true
-    },
-    {
-     "w": "had",
-     "start": 5.655,
-     "end": 5.705,
-     "heard": true
-    },
-    {
-     "w": "been",
-     "start": 5.685,
-     "end": 5.84,
-     "heard": true
-    },
-    {
-     "w": "cut",
-     "start": 5.845,
-     "end": 6.08,
-     "heard": true
-    },
-    {
-     "w": "stayed",
-     "start": 6.29,
-     "end": 6.64,
-     "heard": true
-    },
-    {
-     "w": "perfectly",
-     "start": 6.655,
-     "end": 7.36,
-     "heard": true
-    },
-    {
-     "w": "smooth",
-     "start": 7.34,
-     "end": 7.84,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 7.82,
-     "end": 8.0,
+     "w": "and",
+     "start": 0.84,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.105,
-     "end": 8.155,
+     "start": 1.065,
+     "end": 1.12,
      "heard": true
     },
     {
-     "w": "bath.",
-     "start": 8.135,
-     "end": 8.56,
+     "w": "body",
+     "start": 1.095,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "doesn't",
+     "start": 1.4,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "reweave.",
+     "start": 1.73,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 2.92,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "patches:",
+     "start": 3.095,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "new",
+     "start": 4.27,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "threads",
+     "start": 4.525,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "side",
+     "start": 5.07,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 5.47,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "side,",
+     "start": 5.795,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 6.185,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 6.38,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "way,",
+     "start": 6.665,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 7.05,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 7.085,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 7.33,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 7.805,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "sweat",
+     "start": 7.965,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "glands.",
+     "start": 8.46,
+     "end": 9.04,
      "heard": true
     }
    ]
   },
   {
    "id": "vo04",
-   "text": "So the wrinkles come from your nerves. In water, they narrow the tiny vessels under each fingertip, the pad shrinks a little, and the skin on top buckles.",
-   "heard": "So the wrinkles come from your nerves. In water they narrow the tiny vessels under each finger tip, the pad shrinks a little, and the skin on top buckles.",
+   "text": "We call that healed, as good as new. But pulled until it tears, even an old scar is only as strong as a rope missing one strand in five.",
+   "heard": "We call that healed as good as new. But pulled until it tears, even an old scar is only as strong as a rope missing one strand in five.",
    "words": [
     {
-     "w": "So",
-     "start": 0.02,
-     "end": 0.32,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 0.265,
+     "w": "We",
+     "start": 0.285,
      "end": 0.4,
      "heard": true
     },
     {
-     "w": "wrinkles",
-     "start": 0.295,
-     "end": 0.96,
+     "w": "call",
+     "start": 0.37,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "come",
-     "start": 0.935,
-     "end": 1.2,
+     "w": "that",
+     "start": 0.68,
+     "end": 0.88,
      "heard": true
     },
     {
-     "w": "from",
-     "start": 1.195,
-     "end": 1.36,
+     "w": "healed,",
+     "start": 0.895,
+     "end": 1.44,
      "heard": true
     },
     {
-     "w": "your",
-     "start": 1.255,
-     "end": 1.6,
+     "w": "as",
+     "start": 1.595,
+     "end": 1.84,
      "heard": true
     },
     {
-     "w": "nerves.",
-     "start": 1.48,
-     "end": 2.56,
+     "w": "good",
+     "start": 1.845,
+     "end": 2.08,
      "heard": true
     },
     {
-     "w": "In",
-     "start": 2.705,
-     "end": 2.8,
+     "w": "as",
+     "start": 2.01,
+     "end": 2.32,
      "heard": true
     },
     {
-     "w": "water,",
-     "start": 2.735,
-     "end": 3.28,
+     "w": "new.",
+     "start": 2.575,
+     "end": 3.44,
      "heard": true
     },
     {
-     "w": "they",
-     "start": 3.455,
-     "end": 3.52,
+     "w": "But",
+     "start": 3.54,
+     "end": 3.6,
      "heard": true
     },
     {
-     "w": "narrow",
-     "start": 3.485,
-     "end": 4.08,
+     "w": "pulled",
+     "start": 3.785,
+     "end": 4.32,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 4.2,
-     "end": 4.25,
-     "heard": true
-    },
-    {
-     "w": "tiny",
-     "start": 4.23,
+     "w": "until",
+     "start": 4.41,
      "end": 4.64,
      "heard": true
     },
     {
-     "w": "vessels",
-     "start": 4.66,
-     "end": 5.2,
+     "w": "it",
+     "start": 4.735,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "under",
-     "start": 5.135,
-     "end": 5.36,
+     "w": "tears,",
+     "start": 4.865,
+     "end": 5.92,
      "heard": true
     },
     {
-     "w": "each",
-     "start": 5.375,
-     "end": 5.6,
+     "w": "even",
+     "start": 5.925,
+     "end": 6.16,
      "heard": true
     },
     {
-     "w": "fingertip,",
-     "start": 5.54,
-     "end": 6.64,
-     "heard": false
-    },
-    {
-     "w": "the",
-     "start": 6.755,
-     "end": 6.805,
+     "w": "an",
+     "start": 6.33,
+     "end": 6.56,
      "heard": true
     },
     {
-     "w": "pad",
-     "start": 6.865,
-     "end": 7.2,
+     "w": "old",
+     "start": 6.51,
+     "end": 6.88,
      "heard": true
     },
     {
-     "w": "shrinks",
-     "start": 7.17,
+     "w": "scar",
+     "start": 6.81,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 7.47,
      "end": 7.76,
      "heard": true
     },
     {
+     "w": "only",
+     "start": 7.68,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 8.06,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "strong",
+     "start": 8.385,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 8.74,
+     "end": 8.88,
+     "heard": true
+    },
+    {
      "w": "a",
-     "start": 7.885,
-     "end": 7.935,
+     "start": 8.77,
+     "end": 9.04,
      "heard": true
     },
     {
-     "w": "little,",
-     "start": 7.93,
-     "end": 8.4,
+     "w": "rope",
+     "start": 9.04,
+     "end": 9.44,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 8.49,
-     "end": 8.56,
+     "w": "missing",
+     "start": 9.545,
+     "end": 10.08,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 8.52,
-     "end": 8.72,
+     "w": "one",
+     "start": 10.085,
+     "end": 10.4,
      "heard": true
     },
     {
-     "w": "skin",
-     "start": 8.845,
-     "end": 9.12,
+     "w": "strand",
+     "start": 10.495,
+     "end": 10.96,
      "heard": true
     },
     {
-     "w": "on",
-     "start": 9.15,
-     "end": 9.28,
+     "w": "in",
+     "start": 10.935,
+     "end": 11.2,
      "heard": true
     },
     {
-     "w": "top",
-     "start": 9.28,
-     "end": 9.6,
-     "heard": true
-    },
-    {
-     "w": "buckles.",
-     "start": 9.64,
-     "end": 10.24,
+     "w": "five.",
+     "start": 11.255,
+     "end": 11.84,
      "heard": true
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "A wrinkle is a reflex, one doctors use to test a nerve. Why we have it is argued: one study found a wet grip, the next found none.",
-   "heard": "A wrinkle is a reflex one doctors used to test a nerve. Why we have it is argued. One study found a wet grip, the next found none.",
+   "text": "Until about the sixth month of pregnancy, a baby's skin regrows the weave, follicles and all. And one place in you still nearly can: your mouth.",
+   "heard": "Until about the sixth month of pregnancy, a baby's skin regrows the weave, follicles, and all, and one place in you still nearly can, your mouth.",
    "words": [
     {
-     "w": "A",
+     "w": "Until",
      "start": 0.02,
-     "end": 0.16,
+     "end": 0.48,
      "heard": true
     },
     {
-     "w": "wrinkle",
-     "start": 0.295,
-     "end": 0.8,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 0.825,
-     "end": 0.96,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 0.855,
-     "end": 1.12,
-     "heard": true
-    },
-    {
-     "w": "reflex,",
-     "start": 1.005,
-     "end": 1.84,
-     "heard": true
-    },
-    {
-     "w": "one",
-     "start": 1.975,
-     "end": 2.24,
-     "heard": true
-    },
-    {
-     "w": "doctors",
-     "start": 2.375,
-     "end": 2.88,
-     "heard": true
-    },
-    {
-     "w": "use",
-     "start": 2.905,
-     "end": 3.2,
-     "heard": false
-    },
-    {
-     "w": "to",
-     "start": 3.2,
-     "end": 3.36,
-     "heard": true
-    },
-    {
-     "w": "test",
-     "start": 3.345,
-     "end": 3.68,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 3.675,
-     "end": 3.84,
-     "heard": true
-    },
-    {
-     "w": "nerve.",
-     "start": 3.75,
-     "end": 4.88,
-     "heard": true
-    },
-    {
-     "w": "Why",
-     "start": 5.025,
-     "end": 5.28,
-     "heard": true
-    },
-    {
-     "w": "we",
-     "start": 5.33,
-     "end": 5.44,
-     "heard": true
-    },
-    {
-     "w": "have",
-     "start": 5.36,
-     "end": 5.68,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 5.775,
-     "end": 5.84,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 5.815,
-     "end": 6.08,
-     "heard": true
-    },
-    {
-     "w": "argued:",
-     "start": 6.025,
-     "end": 7.12,
-     "heard": true
-    },
-    {
-     "w": "one",
-     "start": 7.225,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "study",
-     "start": 7.545,
-     "end": 8.08,
-     "heard": true
-    },
-    {
-     "w": "found",
-     "start": 8.14,
-     "end": 8.32,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 8.41,
-     "end": 8.48,
-     "heard": true
-    },
-    {
-     "w": "wet",
-     "start": 8.44,
-     "end": 8.8,
-     "heard": true
-    },
-    {
-     "w": "grip,",
-     "start": 8.9,
-     "end": 9.36,
+     "w": "about",
+     "start": 0.505,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "the",
-     "start": 9.375,
-     "end": 9.6,
+     "start": 0.68,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "next",
-     "start": 9.75,
-     "end": 9.84,
+     "w": "sixth",
+     "start": 0.895,
+     "end": 1.2,
      "heard": true
     },
     {
-     "w": "found",
-     "start": 9.87,
-     "end": 10.24,
+     "w": "month",
+     "start": 1.16,
+     "end": 1.44,
      "heard": true
     },
     {
-     "w": "none.",
-     "start": 10.155,
-     "end": 10.64,
+     "w": "of",
+     "start": 1.57,
+     "end": 1.62,
+     "heard": true
+    },
+    {
+     "w": "pregnancy,",
+     "start": 1.6,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.655,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "baby's",
+     "start": 2.785,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 3.39,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "regrows",
+     "start": 3.67,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.15,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "weave,",
+     "start": 4.18,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "follicles",
+     "start": 4.865,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.585,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "all.",
+     "start": 5.85,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "And",
+     "start": 6.63,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 6.66,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "place",
+     "start": 7.025,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.315,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 7.345,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 7.71,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 7.92,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "can:",
+     "start": 8.215,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 9.005,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "mouth.",
+     "start": 9.035,
+     "end": 9.68,
      "heard": true
     }
    ]
   },
   {
    "id": "vo06",
-   "text": "It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of paper.",
-   "heard": "It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of paper.",
+   "text": "But on most of your body, only the top layer, about this paper's thickness, regrows without a seam.",
+   "heard": "But on most of your body, only the top layer about this paper's thickness regrows without a seam.",
    "words": [
     {
-     "w": "It",
+     "w": "But",
      "start": 0.02,
-     "end": 0.32,
-     "heard": true
-    },
-    {
-     "w": "only",
-     "start": 0.215,
-     "end": 0.64,
-     "heard": true
-    },
-    {
-     "w": "happens",
-     "start": 0.735,
-     "end": 1.04,
+     "end": 0.24,
      "heard": true
     },
     {
      "w": "on",
-     "start": 1.12,
-     "end": 1.28,
+     "start": 0.125,
+     "end": 0.4,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 1.165,
-     "end": 1.44,
-     "heard": true
-    },
-    {
-     "w": "hairless",
-     "start": 1.435,
-     "end": 2.08,
-     "heard": true
-    },
-    {
-     "w": "skin",
-     "start": 2.12,
-     "end": 2.4,
+     "w": "most",
+     "start": 0.4,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "of",
-     "start": 2.45,
-     "end": 2.64,
+     "start": 0.65,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "hands",
-     "start": 2.555,
-     "end": 3.04,
+     "w": "your",
+     "start": 0.74,
+     "end": 0.96,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 3.025,
-     "end": 3.28,
+     "w": "body,",
+     "start": 0.96,
+     "end": 1.68,
      "heard": true
     },
     {
-     "w": "feet,",
-     "start": 3.25,
-     "end": 4.08,
-     "heard": true
-    },
-    {
-     "w": "which",
-     "start": 4.135,
-     "end": 4.32,
-     "heard": true
-    },
-    {
-     "w": "also",
-     "start": 4.22,
-     "end": 4.64,
-     "heard": true
-    },
-    {
-     "w": "carry",
-     "start": 4.72,
-     "end": 5.04,
+     "w": "only",
+     "start": 1.755,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "the",
-     "start": 5.095,
-     "end": 5.2,
+     "start": 2.095,
+     "end": 2.16,
      "heard": true
     },
     {
-     "w": "thickest",
-     "start": 5.285,
-     "end": 5.76,
-     "heard": true
-    },
-    {
-     "w": "dead",
-     "start": 5.81,
-     "end": 6.08,
+     "w": "top",
+     "start": 2.25,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "layer,",
-     "start": 6.025,
-     "end": 6.88,
+     "start": 2.5,
+     "end": 3.04,
      "heard": true
     },
     {
-     "w": "nearly",
-     "start": 6.935,
-     "end": 7.28,
+     "w": "about",
+     "start": 3.085,
+     "end": 3.28,
      "heard": true
     },
     {
-     "w": "two",
-     "start": 7.34,
-     "end": 7.6,
+     "w": "this",
+     "start": 3.295,
+     "end": 3.44,
      "heard": true
     },
     {
-     "w": "sheets",
-     "start": 7.695,
-     "end": 7.92,
+     "w": "paper's",
+     "start": 3.505,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 7.865,
-     "end": 8.0,
+     "w": "thickness,",
+     "start": 4.005,
+     "end": 4.56,
      "heard": true
     },
     {
-     "w": "paper.",
-     "start": 8.095,
-     "end": 8.4,
+     "w": "regrows",
+     "start": 4.86,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "without",
+     "start": 5.445,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.7,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "seam.",
+     "start": 5.935,
+     "end": 6.24,
      "heard": true
     }
    ]
   },
   {
    "id": "vo07",
-   "text": "So your fingers don't wrinkle because they're soaked. They wrinkle because your nerves decide to.",
-   "heard": "So your fingers don't wrinkle because they are soaked. They wrinkle because your nerves decide to.",
+   "text": "So, why the scar? Mice born without germ-fighting cells heal without one: a scar may be the price of defence.",
+   "heard": "So why the scar? Mice born without germ-fighting cells heal without one. A scar may be the price of defence.",
    "words": [
     {
-     "w": "So",
-     "start": 0.03,
+     "w": "So,",
+     "start": 0.02,
      "end": 0.24,
      "heard": true
     },
     {
-     "w": "your",
-     "start": 0.405,
-     "end": 0.48,
+     "w": "why",
+     "start": 0.395,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "fingers",
-     "start": 0.49,
-     "end": 0.96,
+     "w": "the",
+     "start": 0.615,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "don't",
-     "start": 1.02,
-     "end": 1.2,
+     "w": "scar?",
+     "start": 0.86,
+     "end": 1.6,
      "heard": true
     },
     {
-     "w": "wrinkle",
-     "start": 1.195,
-     "end": 1.76,
-     "heard": true
-    },
-    {
-     "w": "because",
-     "start": 1.71,
+     "w": "Mice",
+     "start": 1.77,
      "end": 2.0,
      "heard": true
     },
     {
-     "w": "they're",
-     "start": 2.045,
-     "end": 2.32,
-     "heard": false
-    },
-    {
-     "w": "soaked.",
-     "start": 2.385,
-     "end": 3.2,
+     "w": "born",
+     "start": 2.095,
+     "end": 2.4,
      "heard": true
     },
     {
-     "w": "They",
-     "start": 3.305,
-     "end": 3.44,
+     "w": "without",
+     "start": 2.48,
+     "end": 2.72,
      "heard": true
     },
     {
-     "w": "wrinkle",
-     "start": 3.335,
-     "end": 4.0,
+     "w": "germ-fighting",
+     "start": 2.75,
+     "end": 3.52,
      "heard": true
     },
     {
-     "w": "because",
-     "start": 3.955,
-     "end": 4.24,
+     "w": "cells",
+     "start": 3.61,
+     "end": 3.92,
      "heard": true
     },
     {
-     "w": "your",
-     "start": 4.245,
-     "end": 4.4,
+     "w": "heal",
+     "start": 3.94,
+     "end": 4.32,
      "heard": true
     },
     {
-     "w": "nerves",
-     "start": 4.28,
-     "end": 4.96,
+     "w": "without",
+     "start": 4.305,
+     "end": 4.64,
      "heard": true
     },
     {
-     "w": "decide",
-     "start": 4.97,
+     "w": "one:",
+     "start": 4.625,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.33,
      "end": 5.44,
      "heard": true
     },
     {
-     "w": "to.",
-     "start": 5.52,
+     "w": "scar",
+     "start": 5.535,
      "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "may",
+     "start": 5.93,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 6.035,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.265,
+     "end": 6.315,
+     "heard": true
+    },
+    {
+     "w": "price",
+     "start": 6.295,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 6.555,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "defence.",
+     "start": 6.68,
+     "end": 7.28,
      "heard": true
     }
    ]
   },
   {
    "id": "vo08",
-   "text": "Next: is a tan really a shield for your skin?",
-   "heard": "Next, is a tan really a shield for your skin?",
+   "text": "Next: a deadly poison, in a frown. How much goes in?",
+   "heard": "Next a deadly poison in a frown, how much goes in?",
    "words": [
     {
      "w": "Next:",
-     "start": 0.04,
-     "end": 0.72,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 0.845,
-     "end": 0.96,
+     "start": 0.33,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.875,
-     "end": 1.12,
+     "start": 0.6,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "tan",
-     "start": 1.15,
-     "end": 1.6,
+     "w": "deadly",
+     "start": 0.89,
+     "end": 1.36,
      "heard": true
     },
     {
-     "w": "really",
-     "start": 1.625,
+     "w": "poison,",
+     "start": 1.405,
      "end": 2.0,
      "heard": true
     },
     {
+     "w": "in",
+     "start": 2.035,
+     "end": 2.16,
+     "heard": true
+    },
+    {
      "w": "a",
-     "start": 2.065,
-     "end": 2.24,
+     "start": 2.245,
+     "end": 2.32,
      "heard": true
     },
     {
-     "w": "shield",
-     "start": 2.15,
-     "end": 2.72,
+     "w": "frown.",
+     "start": 2.275,
+     "end": 3.12,
      "heard": true
     },
     {
-     "w": "for",
-     "start": 2.675,
-     "end": 2.88,
+     "w": "How",
+     "start": 3.135,
+     "end": 3.28,
      "heard": true
     },
     {
-     "w": "your",
-     "start": 2.76,
-     "end": 3.2,
+     "w": "much",
+     "start": 3.58,
+     "end": 3.68,
      "heard": true
     },
     {
-     "w": "skin?",
-     "start": 3.33,
-     "end": 3.84,
+     "w": "goes",
+     "start": 3.78,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "in?",
+     "start": 3.81,
+     "end": 4.24,
      "heard": true
     }
    ]

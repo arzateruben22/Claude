@@ -1,10 +1,12 @@
-"""Compile Outer Layer No. 003, "Bath fingers": script + voice timings + this direction → film.json (shots, the
-wrinkle and vessel keys, camera keys, labels, badges, counters, captions, title and end card) and sheet.json (the
-studio's cue sheet). Every moment hangs on a beat or a spoken word; every number on screen comes from claims.json.
+"""Compile Skin Sense No. 003 (reboot), "What's in a scar": script + voice timings + this direction →
+film.json (shots, camera keys, the UV and follicle keys, labels, badges, counters, captions, title and end card) and
+sheet.json (the studio's cue sheet). Every moment hangs on a beat or a spoken word; every number on screen comes from
+claims.json.
 
   python3 -I films/channels/skincare/ep03/compile.py
 
-Units in the scene: 1 unit = 1 µm; the skin's surface is y = 0; bath water fills 0 … +40 over a block.
+Places, never in one frame: the macro terrain with the scar (x = 1000, arbitrary units), the adult weave in section
+(x = 5000, µm; surface y = 0), the fetal weave (x = 7000) and the UV viewfinder (x = 0, the shader plane's units).
 """
 import json
 import sys
@@ -17,7 +19,7 @@ sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
 FPS, BPM = 30, 64.2857
-ID = "outerlayer-003"
+ID = "skin-sense-003"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
@@ -25,98 +27,93 @@ A = f.at
 B = {b["id"]: b for b in BEATS}
 
 # ── the numbers (claims.json) ──────────────────────────────────────────────
-PALM_UM, CHEEK_UM, PAPER_UM = 173.0, 17.0, 100.0     # c9: palm 173 µm, cheek 16.8 µm (Egawa 2007); paper ≈ 100 µm
-WRINKLE = 4.0                                        # drawn fold amplitude, µm (an illustration: badged "simplified")
-NARROW = 0.6                                         # the vessels narrow to this fraction of their width (illustration)
-assert 1.6 < PALM_UM / PAPER_UM < 1.9                # "nearly two sheets of paper"
+STRENGTH = 80                # c5: healed wounds reach about 80 % of unwounded strength (Levenson et al. 1965, rat skin)
+EPI_UM, PAPER_UM = 100.0, 100.0   # c9: epidermis ≈ 0.07–0.12 mm on most of the body; paper ≈ 100 µm
+WEEKS = "≈ 22–24 weeks"      # c6, c7
+TONE = 0.9                   # bible §1: one tone per episode, rotating (003 deep)
+TX, WX, FX = 1000.0, 5000.0, 7000.0
 
-# ── shots: one world of two pads in a bath, one push inside, few cuts, each one matched ──────────────────────────────
-# pads (hook and the sponge): a fingertip pad, furrowed, beside a smooth forearm patch; a push to the fingertip for the
-# wrong idea · nerves: a match cut on "Almost" to the same framing, now two fingertips, one nerve cut · inside: a push
-# into the fingertip's cut face (the vessels narrow, the pad sinks, the skin buckles) · reflex: back out to the furrowed
-# pad in its bath, marbles for the grip study, then a pull-back that lifts the gauge card (to scale) · close: the hook
-t_end = A("vo08:Next", -0.25)
-SHOTS = [{"at": 0.0, "name": "pads"}, {"at": A("vo03:Almost", -0.15), "name": "nerves"},
-         {"at": B["why"]["t0"], "name": "inside"}, {"at": B["whoa"]["t0"], "name": "reflex"}, {"at": B["takeaway"]["t0"], "name": "close"}]
-TONE = {"pads": 0.9, "nerves": 0.9, "inside": 0.9, "reflex": 0.9, "close": 0.9}   # one tone for the whole world (bible §1): deep
+# ── shots ─────────────────────────────────────────────────────────────────
+t_weave, t_end = A("vo02:Under", -0.3), A("vo08:Next:", -0.25)
+t_uv = A("vo07:Mice", -1.2)   # the takeaway opens on the hook's frame, then the UV camera switches on
+SHOTS = [{"at": 0.0, "name": "macro"}, {"at": t_weave, "name": "weave"}, {"at": B["why"]["t0"], "name": "test"},
+         {"at": B["whoa"]["t0"], "name": "fetal"}, {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": B["takeaway"]["t0"], "name": "macro2"}, {"at": t_uv, "name": "uv"}]
+CUE = {"skin1": A("vo01:now?"), "closer": A("vo01:Before"), "thread": A("vo01:one."), "strength": A("vo02:strength"), "collagen": A("vo02:collagen,"),
+       "woven": A("vo02:woven"), "basket": A("vo02:basket,"), "gives": A("vo02:gives"), "pulled": A("vo02:pulled."), "cut": A("vo03:Cut"),
+       "reweave": A("vo03:reweave."), "patches": A("vo03:patches:"), "laying": A("vo03:new"), "side": A("vo03:side"), "leaves": A("vo03:no"),
+       "glands": A("vo03:glands."), "healed": A("vo04:healed,"), "pulled4": A("vo04:pulled"), "tears": A("vo04:tears,"), "four": A("vo04:strand"),
+       "strength4": A("vo04:five."), "until": A("vo05:Until"), "sixth": A("vo05:sixth"), "regrows": A("vo05:regrows"), "follicles": A("vo05:follicles"),
+       "after": A("vo05:place"), "patches5": A("vo05:mouth."), "top": A("vo06:top"), "paper": A("vo06:paper's"), "seam": A("vo06:seam."),
+       "repair": A("vo07:Mice"), "cut5": A("vo05:baby's"), "reweave3": A("vo03:reweave."), "close": A("vo07:one:"), "never": A("vo07:price"), "weave7": A("vo07:defence.")}
 
-CUE = {"swell": [A("vo02:swelling,", -0.3), A("vo02:sponge.", 0.2)], "wrong": A("vo02:wrong."),
-       "cut": A("vo03:cut"), "smooth": A("vo03:smooth"), "nerves": A("vo04:nerves."), "narrow": [A("vo04:narrow"), A("vo04:narrow", 2.0)],
-       "shrink": [A("vo04:shrinks"), A("vo04:little,", 0.3)], "buckle": [A("vo04:buckles.", -0.6), A("vo04:buckles.", 0.5)],
-       "reflex": A("vo05:reflex,"), "argued": A("vo05:argued:"), "grip": A("vo05:grip,"), "none": A("vo05:none."),
-       "hairless": A("vo06:hairless"), "thickest": A("vo06:thickest"), "paper": A("vo06:paper."), "soaked": A("vo07:soaked."),
-       "decide": A("vo07:decide"), "found": A("vo05:found"), "test": A("vo05:test")}
-
-# ── the camera (the microscope stage) ──────────────────────────────────────────────────────────────────────────────
-PADS = {"target": [0, -20, 0], "el": 20, "fov": 30, "fx": 0.5, "fy": 0.44, "dist": 520, "az": -4}
-TIP = {"target": [-40, -16, 0], "el": 18, "fov": 30, "fx": 0.5, "fy": 0.44}
+# ── the camera ─────────────────────────────────────────────────────────────
+MK = {"fov": 34, "fx": 0.5, "fy": 0.48}
+WK = {"fov": 30, "fx": 0.5, "fy": 0.44}
 CAM = {
-    "pads": [{"t": 0.0, **PADS, "dist": 620, "az": -8}, {"t": B["normal"]["t0"], **PADS, "dist": 470, "az": -4, "ease": "sine"},   # a push from frame 0
-             # the wrong idea: a push to the fingertip as it "swells", then back out to the same framing for the match cut
-             {"t": CUE["swell"][1], **TIP, "dist": 300, "az": -6, "ease": "inout2"},
-             {"t": CUE["wrong"] + 0.2, **TIP, "dist": 300, "az": -5, "ease": "sine"},
-             {"t": A("vo03:Almost", -0.15), **PADS, "dist": 470, "ease": "inout2"}],
-    # the nerves: the same framing (a match), then a push into the fingertip's cut face, where the inside shot begins
-    "nerves": [{"t": A("vo03:Almost", -0.15), **PADS, "dist": 470}, {"t": CUE["smooth"] + 0.3, **PADS, "dist": 500, "az": -2, "ease": "sine"},
-               {"t": B["why"]["t0"] - 0.7, "target": [-40, -18, 23], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 240, "az": -2, "ease": "inout2"},
-               {"t": B["why"]["t0"], "target": [-40, -18, 23], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 110, "az": -2, "ease": "in2"}],   # through the pad's face: the inside shot opens close on the tissue
-    # inside: close on the section's cut face (from the push), down to the vessels, up to the surface as it buckles,
-    # then out again on "reflex" (the reflex shot opens on the pad at that distance)
-    "inside": [{"t": B["why"]["t0"], "target": [0, -60, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 130, "az": -2},
-               {"t": CUE["narrow"][0] - 0.4, "target": [0, -96, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 250, "az": -1, "ease": "inout2"},
-               {"t": CUE["narrow"][1], "target": [0, -96, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 240, "az": -1, "ease": "sine"},   # held on both vessels while they narrow
-               {"t": CUE["shrink"][0], "target": [0, -40, 0], "el": 7, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": 0, "ease": "inout2"},
-               {"t": CUE["buckle"][1], "target": [0, -10, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 280, "az": 1, "ease": "inout2"},
-               {"t": B["whoa"]["t0"], "target": [0, -10, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 560, "az": -2, "ease": "inout2"}],   # out to the whole buckled block: the reflex opens on the furrowed pad at the same size
-    # the reflex: the furrowed pad in its bath, marbles on it; an orbit through the grip study; then the pull-back that
-    # lifts the gauge card (the pad lower right, clear of the card and above the captions)
-    "reflex": [{"t": B["whoa"]["t0"], "target": [-40, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 300, "az": -2},
-               {"t": CUE["test"] + 0.3, "target": [0, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 640, "az": -4, "ease": "inout2"},   # the nerve-cut pad beside it: the test
-               {"t": CUE["argued"] - 0.3, "target": [0, -14, 0], "el": 22, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 620, "az": -5, "ease": "sine"},   # held on both pads
-               {"t": CUE["argued"] + 0.4, "target": [-40, -14, 0], "el": 24, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 340, "az": -6, "ease": "inout2"},
-               {"t": CUE["none"] + 0.4, "target": [-40, -14, 0], "el": 26, "fov": 30, "fx": 0.5, "fy": 0.46, "dist": 330, "az": 6, "ease": "inout2"},
-               {"t": B["toscale"]["t0"] + 2.6, "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.78, "fy": 0.36, "dist": 580, "az": 8, "ease": "inout2"},
-               {"t": B["takeaway"]["t0"], "target": [-40, -20, 0], "el": 20, "fov": 30, "fx": 0.78, "fy": 0.36, "dist": 570, "az": 9, "ease": "sine"}],
-    "close": [{"t": B["takeaway"]["t0"], **PADS, "dist": 520, "az": -4},
-              {"t": B["tease"]["t1"], **PADS, "dist": 560, "az": -8, "ease": "sine"}],
+    "macro": [{"t": 0.0, "target": [TX - 9, 0, 1.2], "el": 30, **MK, "dist": 30, "az": -14},   # frame 0 mid-glide along the scar
+              {"t": CUE["skin1"] + 0.2, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 21, "az": -9, "ease": "out3"},
+              {"t": CUE["closer"], "target": [TX, 0, 0.5], "el": 42, **MK, "dist": 17, "az": -8, "ease": "inout2"},
+              {"t": t_weave, "target": [TX, 0, 0], "el": 70, **MK, "dist": 6, "az": -3, "ease": "in2"}],   # down into the scar
+    "weave": [{"t": t_weave, "target": [WX, -60, 0], "el": 55, **WK, "dist": 700, "az": -20},   # from above the surface, through it...
+              {"t": CUE["collagen"], "target": [WX, -130, 0], "el": 22, **WK, "dist": 1250, "az": -26, "ease": "inout2"},   # ...to the weave
+              {"t": CUE["cut"], "target": [WX, -130, 0], "el": 26, **WK, "dist": 1350, "az": -20, "ease": "sine"},
+              {"t": CUE["patches"], "target": [WX, -130, 0], "el": 30, **WK, "dist": 1050, "az": -16, "ease": "inout2"},   # into the empty gap
+              {"t": CUE["glands"], "target": [WX, -130, 0], "el": 28, **WK, "dist": 1250, "az": -14, "ease": "inout2"},
+              {"t": B["why"]["t0"], "target": [WX, -130, 0], "el": 28, **WK, "dist": 1300, "az": -12, "ease": "sine"}],
+    "test": [{"t": B["why"]["t0"], "target": [WX, -150, 0], "el": 28, **WK, "fy": 0.5, "dist": 1300, "az": -12},
+             {"t": CUE["tears"] + 0.4, "target": [WX, -150, 0], "el": 22, **WK, "fy": 0.5, "dist": 1000, "az": -8, "ease": "inout2"},   # a slow push while it is pulled
+             {"t": B["whoa"]["t0"], "target": [WX, -150, 0], "el": 26, **WK, "fy": 0.5, "dist": 1450, "az": -4, "ease": "inout2"}],   # back out: the whole patch
+    "fetal": [{"t": B["whoa"]["t0"], "target": [FX, -110, 0], "el": 26, **WK, "dist": 1100, "az": -14},
+              {"t": CUE["after"], "target": [FX, -110, 0], "el": 24, **WK, "dist": 1000, "az": -6, "ease": "inout2"},
+              {"t": B["toscale"]["t0"], "target": [FX, -110, 0], "el": 22, **WK, "dist": 1050, "az": -4, "ease": "sine"}],
+    "gauge": [{"t": B["toscale"]["t0"], "target": [WX, -40, 0], "el": 14, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1300, "az": -8},   # the section low in frame, the card above it
+              {"t": B["takeaway"]["t0"], "target": [WX, -40, 0], "el": 12, "fov": 30, "fx": 0.5, "fy": 0.6, "dist": 1200, "az": -6, "ease": "sine"}],
+    "macro2": [{"t": B["takeaway"]["t0"], "target": [TX, 0, 0.5], "el": 72, **MK, "dist": 6, "az": -5},   # up out of the skin...
+               {"t": B["takeaway"]["t0"] + 0.7, "target": [TX, 0, 1.2], "el": 36, **MK, "dist": 22, "az": -7.5, "ease": "out3"},   # ...to frame 0 again
+               {"t": t_uv, "target": [TX, 0, 0.8], "el": 40, **MK, "dist": 19, "az": -7, "ease": "sine"}],   # frame 0 again
+    "uv": [{"t": t_uv, "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 17, "az": 1},
+           {"t": B["tease"]["t1"], "target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 20, "az": -3, "ease": "sine"}],
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
-        rate = abs(b["az"] - a["az"]) / (b["t"] - a["t"])
-        assert rate <= 4.0 + 1e-9, f"{shot}: az turns {rate:.2f}°/s"
+        assert b["t"] > a["t"], f"{shot}: keys out of order"
+        assert abs(b["az"] - a["az"]) / (b["t"] - a["t"]) <= 4.0 + 1e-9, f"{shot}: az too fast"
 
 # ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
-    {"id": "l-tip-h", "text": "fingertip", "kind": "layer", "anchor": "tip", "t0": 0.0, "t1": B["normal"]["t0"], "shot": "pads", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-arm-h", "text": "forearm", "kind": "layer", "anchor": "arm", "t0": A("vo01:arm"), "t1": B["normal"]["t0"], "shot": "pads", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-sponge", "text": "swelling like a sponge?", "kind": "water", "anchor": "ghost", "t0": A("vo02:swelling,"), "t1": CUE["wrong"], "shot": "pads", "side": 1, "v": "below", "fixed": True},
-    {"id": "l-nerve", "text": "nerve", "kind": "cell", "anchor": "nerve_l", "t0": A("vo03:finger"), "t1": B["why"]["t0"] - 1.2, "shot": "nerves", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-cutn", "text": "nerve cut", "kind": "cell", "anchor": "nerve_r", "t0": CUE["cut"], "t1": B["why"]["t0"] - 1.2, "shot": "nerves", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-vessel", "text": "tiny vessels", "kind": "cell", "anchor": "vessel", "t0": A("vo04:vessels"), "t1": CUE["narrow"][1] - 0.3, "shot": "inside", "side": -1, "fixed": True},
-    {"id": "l-cutr", "text": "nerve cut: stays smooth", "kind": "cell", "anchor": "cutpad", "t0": CUE["test"] + 0.2, "t1": CUE["argued"] - 0.2, "shot": "reflex", "side": 1, "v": "above", "fixed": True},
-    {"id": "l-tip-c", "text": "fingertip", "kind": "layer", "anchor": "tip", "t0": A("vo07:So", -0.1), "t1": t_end, "shot": "close", "side": -1, "v": "above", "fixed": True},
-    {"id": "l-arm-c", "text": "forearm", "kind": "layer", "anchor": "arm", "t0": A("vo07:So", 0.25), "t1": t_end, "shot": "close", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-scar", "text": "an old scar", "kind": "cell", "anchor": "scar", "t0": 0.0, "t1": t_weave, "shot": "macro", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-col", "text": "collagen", "kind": "cell", "anchor": "weave", "t0": CUE["collagen"], "t1": CUE["cut"] - 0.3, "shot": "weave", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-patch", "text": "the patch: all one way", "kind": "water", "anchor": "gap", "t0": CUE["side"], "t1": CUE["leaves"] - 0.1, "shot": "weave", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-app", "text": "follicles, glands: none inside", "kind": "cell", "anchor": "app", "t0": CUE["leaves"], "t1": B["why"]["t0"], "shot": "weave", "side": 1, "v": "below", "fixed": True},
+    {"id": "l-fetal", "text": "fetal skin", "kind": "layer", "anchor": "fside", "t0": B["whoa"]["t0"] + 0.3, "t1": B["toscale"]["t0"], "shot": "fetal", "side": -1, "v": "above", "fixed": True},
+    {"id": "l-fol", "text": "follicles regrow", "kind": "cell", "anchor": "fgap", "t0": CUE["follicles"] - 0.2, "t1": CUE["after"] - 0.3, "shot": "fetal", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-fpatch", "text": "your mouth: nearly the same", "kind": "water", "anchor": "fgap", "t0": CUE["patches5"] - 0.2, "t1": B["toscale"]["t0"], "shot": "fetal", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-top", "text": "the top layer", "kind": "water", "anchor": "top", "t0": CUE["top"] - 0.2, "t1": B["takeaway"]["t0"], "shot": "gauge", "side": 1, "v": "below", "fixed": True},
+    {"id": "l-scar2", "text": "the same old scar", "kind": "cell", "anchor": "scar", "t0": B["takeaway"]["t0"] + 0.2, "t1": t_uv, "shot": "macro2", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-seam", "text": "a seam: no pores", "kind": "water", "anchor": "uvscar", "t0": t_uv + 0.3, "t1": t_end, "shot": "uv", "side": 1, "v": "above", "fixed": True},
 ]
 BADGES = [
-    {"id": "b-simp-h", "text": "simplified", "t0": B["normal"]["t0"] - 0.6, "t1": t_end, "slot": "tr"},   # the whole film after the title
-    {"id": "b-wrong", "text": "not what happens", "t0": CUE["wrong"], "t1": A("vo03:Almost", -0.15), "slot": "tl"},
-    {"id": "b-1930", "text": "Lewis & Pickering, 1930s", "t0": A("vo03:doctors"), "t1": B["why"]["t0"], "slot": "tl"},
-    {"id": "b-ws", "text": "Wilder-Smith 2003 · sped up", "t0": A("vo04:narrow"), "t1": B["whoa"]["t0"], "slot": "tl"},   # under the vessels, above the captions
-    {"id": "b-trigger", "text": "trigger: still studied", "t0": A("vo04:In"), "t1": B["whoa"]["t0"], "slot": "tr"},
-    {"id": "b-debated", "text": "debated", "t0": CUE["argued"], "t1": B["toscale"]["t0"], "slot": "tr"},
-    {"id": "b-studies", "text": "Kareklas 2013 · Haseleu 2014", "t0": CUE["found"] - 0.4, "t1": B["toscale"]["t0"], "slot": "tl"},
-    {"id": "b-palm", "text": "Egawa 2007", "t0": CUE["thickest"], "t1": B["takeaway"]["t0"], "slot": "tr"},
+    {"id": "b-simp", "text": "simplified", "t0": 0.0, "t1": B["change"]["t0"], "slot": "br"},
+    {"id": "b-time", "text": "weeks, compressed · illustration", "t0": B["change"]["t0"], "t1": B["why"]["t0"], "slot": "tr"},
+    {"id": "b-rat", "text": "model · rats · Levenson 1965", "t0": B["why"]["t0"], "t1": B["whoa"]["t0"], "slot": "br"},
+    {"id": "b-fetal", "text": f"illustration · {WEEKS}", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tr"},
+    {"id": "b-body", "text": "most of the body", "t0": B["toscale"]["t0"], "t1": B["takeaway"]["t0"], "slot": "tr"},
+    {"id": "b-simp2", "text": "simplified", "t0": B["takeaway"]["t0"], "t1": t_uv, "slot": "br"},
+    {"id": "b-model", "text": "model, not a photo", "t0": t_uv, "t1": t_end, "slot": "br"},
+    {"id": "b-mouse", "text": "mouse study · Martin et al., 2003", "t0": A("vo07:Mice", -0.1), "t1": t_end, "slot": "tr"},
 ]
-SPINE = [0.30, 0.215]
-COUNTERS = [   # one readout through the film (WRITING.md, The picture, rule 2)
-    {"id": "c-q", "label": "fingertip vs forearm", "fmt": "text", "text": "why?", "t0": B["normal"]["t0"] + 0.1, "t1": A("vo03:Almost", -0.55), "at": SPINE},
-    {"id": "c-1930", "label": "a finger, its nerve cut", "fmt": "text", "text": "1930s", "t0": A("vo03:Almost"), "t1": B["why"]["t0"] - 0.45, "at": SPINE},
-    {"id": "c-nerve", "label": "wrinkled by", "fmt": "text", "text": "nerves", "t0": B["why"]["t0"] + 0.4, "t1": CUE["reflex"] - 0.4, "at": SPINE},
-    {"id": "c-reflex", "label": "a nerve reflex", "fmt": "text", "text": "reflex", "t0": CUE["reflex"], "t1": CUE["found"] - 0.4, "at": SPINE},
-    {"id": "c-2013", "label": "a better wet grip?", "fmt": "text", "text": "2013 ✓", "t0": CUE["found"], "t1": A("vo05:next") - 0.4, "at": SPINE},
-    {"id": "c-2014", "label": "a better wet grip?", "fmt": "text", "text": "2014 ✗", "t0": A("vo05:next"), "t1": B["toscale"]["t0"] + 0.4, "at": SPINE},
-    {"id": "c-final", "label": "wrinkled by", "fmt": "text", "text": "nerves", "t0": B["takeaway"]["t0"] + 0.2, "t1": t_end - 0.5, "at": SPINE},
+SPINE = [0.5, 0.215]
+COUNTERS = [
+    {"id": "c-q", "label": "before birth", "text": "no scar", "t0": CUE["closer"] + 0.15, "t1": CUE["collagen"]},
+    {"id": "c-weave", "label": "the dermis", "text": "woven", "t0": CUE["collagen"], "t1": CUE["patches"]},
+    {"id": "c-patch", "label": "a scar", "text": "patched", "t0": CUE["patches"], "t1": CUE["four"] - 0.3},
+    {"id": "c-str", "label": "strength, at most", "text": f"≈ {STRENGTH}%", "t0": CUE["four"] - 0.3, "t1": B["whoa"]["t0"]},
+    {"id": "c-wk", "label": "scarless before", "text": "≈ 22–24 wk", "t0": CUE["sixth"] - 0.2, "t1": CUE["after"] - 0.2},
+    {"id": "c-after", "label": "still, inside", "text": "your mouth", "t0": CUE["patches5"] - 0.1, "t1": B["toscale"]["t0"]},
+    {"id": "c-final", "label": "a scar may be", "text": "the price of defence", "t0": CUE["repair"] + 0.2, "t1": t_end - 0.5},
 ]
+for c in COUNTERS:
+    c.update({"fmt": "text", "at": SPINE})
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 
 
@@ -130,26 +127,32 @@ for a, b in zip(COUNTERS, COUNTERS[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "sc": CUE["thickest"] - 0.6, "paper": B["toscale"]["t0"] + 1.0, "cheek": CUE["thickest"] + 0.6,
-         "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": PALM_UM, "paper_um": PAPER_UM}
+# the scar story's keys (scene.mjs reads them); fpatch is off in facts pass 2 (the fetal weave stays regrown; the mouth line follows)
+KEYS = {"tug1": [CUE["gives"] - 0.2, CUE["gives"] + 0.6], "tug2": [CUE["pulled"] - 0.3, CUE["pulled"] + 0.6], "cut": [CUE["cut"] - 0.1, CUE["cut"] + 0.7],
+        "patch": [CUE["laying"] - 0.2, CUE["glands"] - 0.4], "glow": [CUE["side"] - 0.4, CUE["side"] + 0.4], "meter": [CUE["healed"] - 0.2, CUE["pulled4"]],
+        "stretch": [CUE["pulled4"] - 0.3, CUE["tears"] + 0.3], "fcut": [CUE["cut5"] - 0.1, CUE["cut5"] + 0.5], "regrow": [CUE["regrows"] - 0.3, CUE["follicles"] + 0.6],
+        "fpatch": [1e9, 1e9 + 1], "tear": [CUE["tears"] - 0.2, CUE["tears"] + 0.5], "day": [B["takeaway"]["t0"] + 0.3, CUE["repair"] - 0.2], "scar": [CUE["repair"] - 0.6, CUE["repair"] + 0.4]}
+GAUGE = {"rise": [B["toscale"]["t0"] + 0.3, B["toscale"]["t0"] + 1.2], "sc": CUE["top"] - 0.3, "paper": CUE["paper"] - 0.2,
+         "back": [B["takeaway"]["t0"] - 0.6, B["takeaway"]["t0"] - 0.05], "epi_um": EPI_UM, "paper_um": PAPER_UM}
+STR = {"pct": STRENGTH}
 
-TITLE = {"series": "Outer Layer · No. 003", "title": "Bath *fingers*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:wrinkle?", 0.35)}
-END = {"title": "Next layer: is a tan a *shield*?", "follow": "Outer Layer · No. 004",
-       "next": "A finger with a cut nerve doesn't wrinkle in water (Lewis & Pickering). Narration: synthetic voice (AI)."}
-POSTER = A("vo05:grip,", 0.3)
+TITLE = {"series": "Skin Sense · No. 003", "title": "What's in a *scar*", "t1": CUE["closer"] - 0.6, "sig": A("vo01:now?", 0.35)}
+END = {"title": "Next: a poison in a *frown*", "follow": "Skin Sense · No. 004",
+       "next": "Healed wounds reach about 80% of the original strength (Levenson et al., 1965, rat skin). Narration: synthetic voice (AI)."}
+POSTER = A("vo03:side", 0.4)
 
-glue(f, {"vo01": ["wet fingers", "the same bath."], "vo02": ["soaking up water", "and swelling,", "like a sponge.", "grew up with,"],
-         "vo03": ["Almost a century ago,", "doctors noticed", "something odd:", "had been cut", "in the bath."],
-         "vo04": ["your nerves.", "tiny vessels", "under each fingertip,", "the pad shrinks", "a little, and", "the skin", "on top"],
-         "vo05": ["a reflex,", "one doctors use", "test a nerve.", "a wet grip,", "found none."],
-         "vo06": ["hairless skin", "of hands and feet,", "which also carry", "the thickest", "dead layer, nearly", "two sheets of paper."],
-         "vo07": ["don't wrinkle", "because they're soaked.", "decide to."], "vo08": ["your skin?"]})
+glue(f, {"vo01": ["Why do you", "scar now?", "Before birth,", "a cut healed", "without one."], "vo02": ["Under the surface,", "your skin's strength", "is collagen,", "every which way", "like a basket,", "whichever way", "it's pulled."],
+         "vo03": ["Cut through it,", "the body", "doesn't reweave.", "It patches:", "new threads", "side by side,", "all one way,", "no hair", "or sweat glands."],
+         "vo04": ["We call that healed,", "as good as new.", "until it tears,", "an old scar", "a rope", "one strand in five."],
+         "vo05": ["about the sixth month", "of pregnancy,", "a baby's skin", "the weave,", "follicles and all.", "one place in you", "your mouth."],
+         "vo06": ["most of your body,", "the top layer,", "this paper's thickness,", "without a seam."], "vo07": ["So, why", "the scar?", "germ-fighting cells", "without one:", "the price of defence."],
+         "vo08": ["a deadly poison,", "a frown.", "goes in?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
-    "shots": SHOTS, "beats": BEATS, "tone": TONE,
-    "skin": {"wrinkle": WRINKLE, "narrow": NARROW, "palm_um": PALM_UM, "cheek_um": CHEEK_UM, "paper_um": PAPER_UM},
+    "shots": SHOTS, "beats": BEATS, "tone": TONE, "keys": KEYS, "str": STR,
+    "place": {"tx": TX, "wx": WX, "fx": FX},
     "cam": CAM, "cue": CUE, "gauge": GAUGE,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": [],
     "title": TITLE, "endCard": t_end, "end": END,
@@ -169,13 +172,17 @@ for b in BADGES:
     if b["t0"] > 0:
         ev.append({"t": b["t0"], "kind": "badge", "tag": b["id"]})
 ev += [
-    {"t": CUE["swell"][0], "kind": "swell", "tag": "sponge", "t1": CUE["swell"][1]},
-    {"t": CUE["wrong"], "kind": "dissolve", "tag": "wrong", "t1": CUE["wrong"] + 0.8},
-    {"t": CUE["narrow"][0], "kind": "dissolve", "tag": "narrow", "t1": CUE["narrow"][1]},
-    {"t": CUE["buckle"][1] - 0.5, "kind": "cell.land", "tag": "buckle"},
+    {"t": t_weave, "kind": "scale.jump", "tag": "into-skin"},
+    {"t": KEYS["tug1"][0], "kind": "cell.land", "tag": "tug1"},
+    {"t": KEYS["tug2"][0], "kind": "cell.land", "tag": "tug2"},
+    {"t": KEYS["cut"][0], "kind": "dissolve", "tag": "cut", "t1": KEYS["cut"][1]},
+    {"t": KEYS["glow"][0], "kind": "reveal", "tag": "patch"},
+    {"t": KEYS["meter"][1], "kind": "scale", "tag": "meter"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
-    {"t": GAUGE["sc"], "kind": "scale", "tag": "g-palm"},
+    {"t": KEYS["regrow"][0], "kind": "diffuse", "tag": "regrow"},
+    {"t": GAUGE["sc"], "kind": "scale", "tag": "g-epi"},
     {"t": GAUGE["paper"], "kind": "reveal", "tag": "g-paper"},
+    {"t": B["takeaway"]["t0"], "kind": "cell.land", "tag": "shutter"},
 ]
 cues_file = HERE / "build" / f"cues-{ID}-9x16.json"
 shown = {}
@@ -198,6 +205,7 @@ if shown:
 (HERE / "sheet.json").write_text(json.dumps(sheet, indent=1, ensure_ascii=False))
 print(f"film.json: {f.duration:.2f} s, {len(SHOTS)} shots, {sum(len(k) for k in CAM.values())} camera keys, {len(LABELS)} labels, "
       f"{len(BADGES)} badges, {len(COUNTERS)} counters, {len(CAPS)} caption pages, end card {t_end:.2f} s")
+print("  shots " + " · ".join(f"{s['name']} {s['at']:.2f}" for s in SHOTS))
 print(f"sheet.json: {len(sheet['events'])} events" + (f", {len(shown)} shown times from the picture" if shown else ""))
 for pg in CAPS:
-    print(f"  {pg['t0']:6.2f}–{pg['t1']:6.2f}  " + " / ".join(" ".join(w for w, _ in r).replace(" ", " ") for r in pg["lines"]))
+    print(f"  {pg['t0']:6.2f}–{pg['t1']:6.2f}  " + " / ".join(" ".join(w for w, _ in r).replace(" ", " ") for r in pg["lines"]))

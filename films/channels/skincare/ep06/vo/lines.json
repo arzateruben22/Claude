@@ -12,106 +12,106 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Why do we get goosebumps? We hardly have fur.",
+   "text": "Same list as cigarettes? Processed meat is on it too.",
    "stars": [
-    "goosebumps"
+    "meat"
    ],
-   "phonemes": "wˌaɪ dˈuː wiː ɡɛt ɡˈuːsbʌmps? wiː hˈɑːdli hav fˈɜː.",
-   "speed": 0.8,
+   "phonemes": "sˈeɪm lˈɪst az sˌɪɡəɹˈɛts? pɹˈəʊsɛst mˈiːt ɪz ˌɒn ɪt tˈuː.",
+   "speed": 0.84,
    "file": "01.wav",
-   "dur": 3.273,
-   "sha256": "45f587b0fb3588b705dbd1a178ce667cf22e15afcefb9cd6d7d60627c3d62b0c"
+   "dur": 3.734,
+   "sha256": "e99c2fc6e7acaa9db4161d90fa52bf27f9289d12a2449b503f39af316148fc96"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Nearly every hair has its own tiny muscle, and when we're cold or frightened, a nerve tugs it, pulling the hair upright and the skin into a bump.",
+   "text": "All three share the top group of the World Health Organization's cancer agency, which says that doesn't make them equally dangerous: it ranks how sure the evidence is.",
    "stars": [
-    "bump"
+    "sure"
    ],
-   "phonemes": "nˌiəli ˈɛvɹɪ hˈeə hɐz ɪts ˈəʊn tˈaɪni mˈʌsəl, and wɛn wiə kˈəʊld ɔː fɹˈaɪtənd, ɐ nˈɜːv tˈʌɡz ɪt, pˈʊlɪŋ ðə hˈeəɹ ˈʌpɹaɪt and ðə skˈɪn ˌɪntʊ ɐ bˈʌmp.",
-   "speed": 0.8,
+   "phonemes": "ˈɔːl θɹˈiː ʃˈeə ðə tˈɒp ɡɹˈuːp ɒvðə wˈɜːld hˈɛlθ ˌɔːɡɐnaɪzˈeɪʃənz kˈansəɹ ˈeɪdʒənsi, wˌɪtʃ sˈɛz ðat dˈʌzənt mˌeɪk ðˌɛm ˈiːkwəli dˈeɪndʒəɹəs: ɪt ɹˈaŋks hˌaʊ ʃˈʊə ðɪ ˈɛvɪdəns ɪz.",
+   "speed": 0.84,
    "file": "02.wav",
-   "dur": 9.921,
-   "sha256": "2b837516bd1ef6d76e8154467f46aef819acdba5a986cc02bf5a9b89e2b138a0"
+   "dur": 10.406,
+   "sha256": "3bd793d2fdaeebd44a93425f5441a0d8ac7e86f76eb760025a881f5f6c864ce4"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "In a furry animal, that fluffs the coat into a blanket of trapped air. We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs.",
+   "text": "Into the bed, then: its light is mostly UVA, the long rays. In large, powerful units, it may be ten to fifteen times as intense as the midday sun.",
    "stars": [
-    "air"
+    "sun"
    ],
-   "phonemes": "ɪn ɐ fˈɜːɹi ˈanɪməl, ðat flˈʌfs ðə kˈəʊt ˌɪntʊ ɐ blˈaŋkɪt ɒv tɹˈapt ˈeə. wiː hav ɐbˌaʊt az mˈɛni hˈeə fˈɒlɪkəlz az ˈeɪ ʧˌɪmpænzˈiː , bˌʌt aʊəz ɡɹˈəʊ fˈaɪn, ˈɔːlməʊst ɪnvˈɪzɪbəl hˈeəz.",
-   "speed": 0.86,
+   "phonemes": "ˌɪntʊ ðə bˈɛd, ðˈɛn: ɪts lˈaɪt ɪz mˈəʊstli jˌuːviːˈeɪ , ðə lˈɒŋ ɹˈeɪz. ɪn lˈɑːdʒ, pˈaʊəfəl jˈuːnɪts, ɪt mˈeɪ biː tˈɛn tə fˈɪftiːn tˈaɪmz az ɪntˈɛns az ðə mˌɪddˈeɪ sˈʌn.",
+   "speed": 0.84,
    "file": "03.wav",
-   "dur": 10.709,
-   "sha256": "14100ff2b40df5c79e81c7aa0226dbdf95e8fd715c848e2112de245ca3142275"
+   "dur": 10.061,
+   "sha256": "72ff754f3d221d2027b0f1ecfb2ae5017acad5da73353c4b9e7fd92fa960178e"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "So the bumps look like a leftover. But a team at Harvard found that nerve also reaches the stem cells that grow hair, and the muscle holds it in place.",
+   "text": "When the beds joined that group, the sharpest signal came from people who started young. In pooled studies, first use before thirty-five went with melanoma risk raised by more than half.",
    "stars": [
-    "place"
+    "half"
    ],
-   "phonemes": "sˌəʊ ðə bˈʌmps lˈʊk lˈaɪk ɐ lˈɛftəʊvə. bˌʌt ɐ tˈiːm at hˈɑːvəd fˈaʊnd ðat nˈɜːv ˈɔːlsəʊ ɹˈiːtʃɪz ðə stˈɛm sˈɛlz ðat ɡɹˈəʊ hˈeə, and ðə mˈʌsəl hˈəʊldz ɪt ɪn plˈeɪs.",
-   "speed": 0.78,
+   "phonemes": "wˌɛn ðə bˈɛdz dʒˈɔɪnd ðat ɡɹˈuːp, ðə ʃˈɑːpɪst sˈɪɡnəl kˈeɪm fɹɒm pˈiːpəl hˌuː stˈɑːtɪd jˈʌŋ. ɪn pˈuːld stˈʌdiz, fˈɜːst jˈuːs bɪfˌɔː θˈɜːtifˈaɪv wˈɛnt wɪð mˌɛləˈnəʊmə ɹˈɪsk ɹˈeɪzd baɪ mˈɔː ðɐn hˈɑːf.",
+   "speed": 0.92,
    "file": "04.wav",
-   "dur": 10.946,
-   "sha256": "76bb0c7506ac484452d75e65e7e8533ba642ea17105e93badddbd5a917cdfb09"
+   "dur": 10.784,
+   "sha256": "e226bd44549141821f44b80ae8a8d2fcdb5e10a20cc5be9b34c3732af87094a2"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "In the cold, that nerve wakes the stem cells, and the mice grew new hair sooner. Take the little muscle away, and the wiring fades.",
+   "text": "Within months, whole countries acted: Brazil banned commercial tanning beds, and later Australia switched its own off.",
    "stars": [
-    "sooner"
+    "off"
    ],
-   "phonemes": "ɪnðə kˈəʊld, ðat nˈɜːv wˈeɪks ðə stˈɛm sˈɛlz, and ðə mˈaɪs ɡɹˈuː njˈuː hˈeə sˈuːnə. tˈeɪk ðə lˈɪtəl mˈʌsəl ɐwˈeɪ, and ðə wˈaɪəɹɪŋ fˈeɪdz.",
-   "speed": 0.8,
+   "phonemes": "wɪðˌɪn mˈʌnθs, hˈəʊl kˈʌntɹiz ˈaktɪd: bɹɐzˈɪl bˈand kəmˈɜːʃəl tˈanɪŋ bˈɛdz, and lˈeɪtəɹ ɒstɹˈeɪliə swˈɪtʃt ɪts ˈəʊn ˈɒf.",
+   "speed": 0.96,
    "file": "05.wav",
-   "dur": 9.053,
-   "sha256": "44a580cc68e53da025a20e8b8138ad017b9a6026c3681b389cfc76e848a5d455"
+   "dur": 6.768,
+   "sha256": "fde32e4021697bf693e5d9131ce1183f0a6acdc58dbbbbed1021f65677ec1d82"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "And most of the hairs it tends are thinner than a third of a sheet of paper.",
+   "text": "And those long rays reach right through the top layer, on most skin about as thin as paper.",
    "stars": [
     "paper"
    ],
-   "phonemes": "and mˈəʊst əv ðə hˈeəz ɪt tˈɛndz ɑː θˈɪnə ðˌanə θˈɜːd əvə ʃˈiːt ɒv pˈeɪpə.",
-   "speed": 0.64,
+   "phonemes": "and ðəʊz lˈɒŋ ɹˈeɪz ɹˈiːtʃ ɹˈaɪt θɹuː ðə tˈɒp lˈeɪə, ˌɒn mˈəʊst skˈɪn ɐbˌaʊt az θˈɪn az pˈeɪpə.",
+   "speed": 0.76,
    "file": "06.wav",
-   "dur": 6.244,
-   "sha256": "473f63694e83976427170949aa1c8958661bab103d03229571ad7dd8cc075a88"
+   "dur": 6.391,
+   "sha256": "6046566843164ae68214be1a99911c82082bd7a5622bea0298940c9dcc7a8095"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So why do we still get goosebumps? Because the muscle that raises a hair still looks after it.",
+   "text": "The sun made that list years before the beds. Same list as cigarettes: not the same harm, the same certainty.",
    "stars": [
-    "looks after it"
+    "certainty"
    ],
-   "phonemes": "sˌəʊ wˌaɪ dˈuː wiː stˈɪl ɡɛt ɡˈuːsbʌmps? bɪkˈɒz ðə mˈʌsəl ðat ɹˈeɪzɪz ɐ hˈeə stˈɪl lˈʊks ˈaftəɹ ɪt.",
-   "speed": 0.76,
+   "phonemes": "ðə sˈʌn mˌeɪd ðat lˈɪst jˈiəz bɪfˌɔː ðə bˈɛdz. sˈeɪm lˈɪst az sˌɪɡəɹˈɛts: nˌɒt ðə sˈeɪm hˈɑːm, ðə sˈeɪm sˈɜːtənti.",
+   "speed": 0.84,
    "file": "07.wav",
-   "dur": 6.695,
-   "sha256": "ac1e8eeeaf1c30f9e7e98a6efa91f84564cc39a39974d29efc45098da82d2871"
+   "dur": 6.807,
+   "sha256": "d34255c650ef92bf125a32d0dacea7e7f247a0b360f41ec29f48a7b79cacc84b"
   },
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "That's the outer layer, for now. Next season, we go deeper.",
+   "text": "Next season: why do bath fingers wrinkle, but never your arm?",
    "stars": [
-    "deeper"
+    "arm"
    ],
-   "phonemes": "ðats ðɪ ˈaʊtə lˈeɪə, fɔː nˈaʊ. nˈɛkst sˈiːzən, wiː ɡˌəʊ dˈiːpə.",
-   "speed": 0.86,
+   "phonemes": "nˈɛkst sˈiːzən: wˌaɪ dˈuː bˈaθ fˈɪŋɡəz ɹˈɪŋkəl, bˌʌt nˈɛvə jɔːɹ ˈɑːm?",
+   "speed": 0.84,
    "file": "08.wav",
-   "dur": 3.696,
-   "sha256": "a9d70a495d2b02453a3001efc092f33e2f0733483041c84e9124b627ecc2d66a"
+   "dur": 3.922,
+   "sha256": "78befc9d98284c445ad6e9cad98800ac11eed7f2ca9f6dfc97e21229e104df72"
   }
  ]
 }

@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep01/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Is your skin alive? The part you can see isn't: not one cell.",
+   "stars": [
+    "alive"
+   ],
+   "phonemes": "ɪz jɔː skˈɪn ɐlˈaɪv? ðə pˈɑːt juː kan sˈiː ˈɪzənt: nˌɒt wˈɒn sˈɛl.",
+   "speed": 0.78,
+   "file": "01.wav",
+   "dur": 4.668,
+   "sha256": "e9f3a301853017d141f804ff18a23160227ce645dc6edb6cfae540b6e2a5699b"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Look closer: the surface is a stack of flattened cells, more than a dozen deep, each an empty shell packed with keratin. The living ones start just underneath.",
+   "stars": [
+    "keratin"
+   ],
+   "phonemes": "lˈʊk klˈəʊsə: ðə sˈɜːfɪs ɪz ɐ stˈak ɒv flˈatənd sˈɛlz, mˈɔː ðˌanə dˈʌzən dˈiːp, ˈiːtʃ ɐn ˈɛmpti ʃˈɛl pˈakt wɪð kˈɛɹətɪn . ðə lˈɪvɪŋ wˈɒnz stˈɑːt dʒˈʌst ˌʌndənˈiːθ.",
+   "speed": 0.86,
+   "file": "02.wav",
+   "dur": 9.636,
+   "sha256": "1cb632c52057a7801ba18d43068129f7320fe8912cee23eedb8e6eb4ca98f8ba"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart. On purpose.",
+   "stars": [
+    "On purpose."
+   ],
+   "phonemes": "ˈɛvɹɪ wˈɒn ɒv ðˌɛm bɪɡˈan dˌaʊn ðˈeə, ɐlˈaɪv, ðˈɛn ɹˈəʊz fɔːɹ ɐbˌaʊt tˈuː wˈiːks, fˈɪlɪŋ wɪð kˈɛɹətɪn , ʌntˈɪl nˌiə ðə tˈɒp ɪt tˈʊk ɪtsˈɛlf ɐpˈɑːt. ˌɒn pˈɜːpəs.",
+   "speed": 0.8,
+   "file": "03.wav",
+   "dur": 10.13,
+   "sha256": "0d256ba90d315a74f31ac2a0ad89b905259177a436d9c79ae513c0c4796b716a"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "It looks like waste, waiting to flake away. But sealed together with fats, those shells build a kind of brick wall, and the wall keeps your water inside.",
+   "stars": [
+    "brick wall"
+   ],
+   "phonemes": "ɪt lˈʊks lˈaɪk wˈeɪst, wˈeɪtɪŋ tə flˈeɪk ɐwˈeɪ. bˌʌt sˈiːld təɡˌɛðə wɪð fˈats, ðəʊz ʃˈɛlz bˈɪld ɐ kˈaɪnd ɒv bɹˈɪk wˈɔːl, and ðə wˈɔːl kˈiːps jɔː wˈɔːtəɹ ɪnsˈaɪd.",
+   "speed": 0.79,
+   "file": "04.wav",
+   "dur": 10.399,
+   "sha256": "32f4bed73bdb66caa2fc33ec9b7f57ddac46b08be1bae595392e4ec2f05138e9"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Babies born too early haven't finished theirs, and doctors measuring their skin found it losing water about five times as fast. That's how much the wall holds back.",
+   "stars": [
+    "five times"
+   ],
+   "phonemes": "bˈeɪbiz bˈɔːn tˈuː ˈɜːlɪ hˈavənt fˈɪnɪʃt ðˈeəz, and dˈɒktəz mˈɛʒəɹɪŋ ðeə skˈɪn fˈaʊnd ɪt lˈuːzɪŋ wˈɔːtəɹ ɐbˌaʊt fˈaɪv tˈaɪmz az fˈast. ðats hˌaʊ mˈʌtʃ ðə wˈɔːl hˈəʊldz bˈak.",
+   "speed": 0.86,
+   "file": "05.wav",
+   "dur": 10.294,
+   "sha256": "0687c5eeff7986abbcfafe59eac68508ebd5fc1b5b24545a8f066f5d0d3b8e51"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "And that whole wall, on a cheek, is thinner than a fifth of a sheet of paper.",
+   "stars": [
+    "paper"
+   ],
+   "phonemes": "and ðat hˈəʊl wˈɔːl, ˌɒn ɐ tʃˈiːk, ɪz θˈɪnə ðˌanə fˈɪfθ əvə ʃˈiːt ɒv pˈeɪpə.",
+   "speed": 0.7,
+   "file": "06.wav",
+   "dur": 5.782,
+   "sha256": "06b55d025e3057a9fd891d6c49fa8861fe68b8b3eafe4ca7c9b78640ec318ac8"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So, is your skin alive? Underneath, yes. On top, it wears a layer that died for it.",
+   "stars": [
+    "died"
+   ],
+   "phonemes": "sˈəʊ, ɪz jɔː skˈɪn ɐlˈaɪv? ˌʌndənˈiːθ, jˈɛs. ˌɒn tˈɒp, ɪt wˈeəz ɐ lˈeɪə ðat dˈaɪd fɔːɹ ɪt.",
+   "speed": 0.8,
+   "file": "07.wav",
+   "dur": 5.946,
+   "sha256": "92482ee35f14f307a55c8a607aa2428ae0b77e5eb7d240367f2f94d9bd2f08c0"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: does SPF one hundred block twice as much as fifty?",
+   "stars": [
+    "fifty"
+   ],
+   "phonemes": "nˈɛkst: dˈʌz ˌɛspˌiːˈɛf wˈɒn hˈʌndɹɪd blˈɒk twˈaɪs az mˈʌtʃ az fˈɪfti?",
+   "speed": 0.8,
+   "file": "08.wav",
+   "dur": 4.537,
+   "sha256": "022797531d6a50919c330639d8489feee464997d8a488b88d52f663efa8ee5e8"
+  }
+ ]
+}

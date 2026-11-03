@@ -2,96 +2,80 @@
  "id": "outerlayer-006",
  "fps": 30,
  "bpm": 64.2857,
- "dur": 74.2,
- "poster": 36.8,
+ "dur": 74.6667,
+ "poster": 66.66666666666667,
  "shots": [
   {
    "at": 0.0,
-   "name": "hook"
+   "name": "uvhook"
   },
   {
-   "at": 4.2,
-   "name": "follicle"
+   "at": 1.7,
+   "name": "list"
   },
   {
-   "at": 14.9333,
-   "name": "fur"
+   "at": 16.8,
+   "name": "bed"
   },
   {
-   "at": 19.533333333333335,
-   "name": "ours"
+   "at": 43.4,
+   "name": "uv"
   },
   {
-   "at": 26.6,
-   "name": "bulge"
+   "at": 54.1333,
+   "name": "section"
   },
   {
-   "at": 40.1333,
-   "name": "cold"
-  },
-  {
-   "at": 46.2,
-   "name": "nomuscle"
-  },
-  {
-   "at": 52.7333,
-   "name": "gauge"
-  },
-  {
-   "at": 60.2,
-   "name": "close"
-  },
-  {
-   "at": 63.2,
-   "name": "payoff"
+   "at": 61.6,
+   "name": "list2"
   }
  ],
  "beats": [
   {
    "id": "hook",
    "t0": 0.0,
-   "t1": 4.2,
+   "t1": 4.6667,
    "line": "vo01",
    "energy": 0.6
   },
   {
    "id": "normal",
-   "t0": 4.2,
-   "t1": 14.9333,
+   "t0": 4.6667,
+   "t1": 16.8,
    "line": "vo02",
    "energy": 0.45
   },
   {
    "id": "change",
-   "t0": 14.9333,
-   "t1": 26.6,
+   "t0": 16.8,
+   "t1": 28.9333,
    "line": "vo03",
    "energy": 0.55
   },
   {
    "id": "why",
-   "t0": 26.6,
-   "t1": 40.1333,
+   "t0": 28.9333,
+   "t1": 43.4,
    "line": "vo04",
    "energy": 0.5
   },
   {
    "id": "whoa",
-   "t0": 40.1333,
-   "t1": 52.7333,
+   "t0": 43.4,
+   "t1": 54.1333,
    "line": "vo05",
    "energy": 0.8
   },
   {
    "id": "toscale",
-   "t0": 52.7333,
-   "t1": 60.2,
+   "t0": 54.1333,
+   "t1": 61.6,
    "line": "vo06",
    "energy": 0.4
   },
   {
    "id": "takeaway",
-   "t0": 60.2,
+   "t0": 61.6,
    "t1": 68.1333,
    "line": "vo07",
    "energy": 0.3
@@ -99,1652 +83,1243 @@
   {
    "id": "tease",
    "t0": 68.1333,
-   "t1": 74.2,
+   "t1": 74.6667,
    "line": "vo08",
    "energy": 0.35
   }
  ],
- "tone": {
-  "hook": 0.18,
-  "follicle": 0.18,
-  "fur": 0.18,
-  "ours": 0.18,
-  "bulge": 0.18,
-  "cold": 0.18,
-  "nomuscle": 0.18,
-  "gauge": 0.18,
-  "close": 0.18,
-  "payoff": 0.18
- },
+ "tone": "deep",
+ "trans": [],
  "bio": {
-  "vellus_um": 30.0,
+  "ux": 4000.0,
+  "sx": -4000.0,
   "paper_um": 100.0,
-  "fx": 6000.0,
-  "px": -6000.0
+  "epi_um": 100.0,
+  "sc_um": 17.0,
+  "rows": 15,
+  "gran_um": 10.0,
+  "spin_um": 63.0,
+  "basal_um": 10.0
  },
  "cam": {
-  "hook": [
+  "uvhook": [
    {
     "t": 0.0,
     "target": [
-     0,
-     60,
+     4000.0,
+     0.1,
      0
     ],
-    "el": 34,
+    "el": 2,
+    "az": 0,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.42,
-    "dist": 3600,
-    "az": -14
+    "fy": 0.4,
+    "dist": 30
    },
    {
-    "t": 2.0,
+    "t": 1.7,
     "target": [
-     0,
-     60,
+     4000.0,
+     0.1,
      0
     ],
-    "el": 34,
+    "el": 2,
+    "az": 0,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.42,
-    "dist": 3300,
-    "az": -12,
-    "ease": "inout2"
+    "fy": 0.4,
+    "dist": 23,
+    "ease": "linear"
+   }
+  ],
+  "list": [
+   {
+    "t": 1.7,
+    "target": [
+     0,
+     -0.4,
+     14
+    ],
+    "dist": 26,
+    "az": -6,
+    "el": 14,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.5
    },
    {
-    "t": 4.2,
+    "t": 9.966666666666667,
     "target": [
-     0,
-     60,
-     0
+     -3,
+     -0.4,
+     10
     ],
-    "el": 34,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 3000,
+    "dist": 22,
     "az": -10,
-    "ease": "sine"
-   }
-  ],
-  "follicle": [
-   {
-    "t": 4.2,
-    "target": [
-     6130.0,
-     -260,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.47,
-    "dist": 2700,
-    "az": -4
-   },
-   {
-    "t": 8.5,
-    "target": [
-     6160.0,
-     -200,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
+    "el": 14,
+    "fov": 34,
     "fx": 0.5,
     "fy": 0.5,
-    "dist": 2600,
-    "az": -3,
     "ease": "inout2"
    },
    {
-    "t": 12.4,
+    "t": 13.833333333333334,
     "target": [
-     6060.0,
-     -40,
-     0
+     3,
+     -0.4,
+     6
     ],
-    "el": 8,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.4,
-    "dist": 2300,
-    "az": -1,
-    "ease": "inout2"
-   },
-   {
-    "t": 14.9333,
-    "target": [
-     6060.0,
-     -40,
-     0
-    ],
-    "el": 8,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.4,
-    "dist": 2100,
-    "az": 0,
-    "ease": "sine"
-   }
-  ],
-  "fur": [
-   {
-    "t": 14.9333,
-    "target": [
-     -6000.0,
-     200,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 2600,
-    "az": -8
-   },
-   {
-    "t": 19.533333333333335,
-    "target": [
-     -6000.0,
-     240,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 2300,
-    "az": -4,
-    "ease": "sine"
-   }
-  ],
-  "ours": [
-   {
-    "t": 19.533333333333335,
-    "target": [
-     0,
-     60,
-     0
-    ],
-    "el": 34,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 3800,
-    "az": 6
-   },
-   {
-    "t": 26.6,
-    "target": [
-     0,
-     60,
-     0
-    ],
-    "el": 34,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 3300,
-    "az": 4,
-    "ease": "sine"
-   }
-  ],
-  "bulge": [
-   {
-    "t": 26.6,
-    "target": [
-     6130.0,
-     -260,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.47,
-    "dist": 3200,
-    "az": 0
-   },
-   {
-    "t": 29.866666666666667,
-    "target": [
-     6130.0,
-     -260,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.47,
-    "dist": 3000,
-    "az": 0,
-    "ease": "sine"
-   },
-   {
-    "t": 32.43333333333333,
-    "target": [
-     6110.0,
-     -250,
-     0
-    ],
-    "el": 5,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.5,
-    "dist": 1500,
-    "az": 2,
-    "ease": "inout2"
-   },
-   {
-    "t": 40.1333,
-    "target": [
-     6110.0,
-     -250,
-     0
-    ],
-    "el": 5,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.5,
-    "dist": 1400,
-    "az": 2,
-    "ease": "sine"
-   }
-  ],
-  "cold": [
-   {
-    "t": 40.1333,
-    "target": [
-     6110.0,
-     -250,
-     0
-    ],
-    "el": 5,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.5,
-    "dist": 1400,
-    "az": 2
-   },
-   {
-    "t": 43.8,
-    "target": [
-     6130.0,
-     -260,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 2600,
-    "az": 0,
-    "ease": "inout2"
-   },
-   {
-    "t": 46.2,
-    "target": [
-     6300.0,
-     -260,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 2700,
-    "az": -1,
-    "ease": "sine"
-   }
-  ],
-  "nomuscle": [
-   {
-    "t": 46.2,
-    "target": [
-     7400.0,
-     -260,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 2700,
-    "az": -1
-   },
-   {
-    "t": 52.7333,
-    "target": [
-     7320.0,
-     -260,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 2500,
-    "az": 0,
-    "ease": "sine"
-   }
-  ],
-  "gauge": [
-   {
-    "t": 52.7333,
-    "target": [
-     6130.0,
-     -260,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.66,
-    "fy": 0.47,
-    "dist": 2800,
-    "az": -2
-   },
-   {
-    "t": 57.7,
-    "target": [
-     5960.0,
-     120,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.7,
-    "fy": 0.46,
-    "dist": 1700,
-    "az": -3,
-    "ease": "inout2"
-   },
-   {
-    "t": 60.2,
-    "target": [
-     5960.0,
-     120,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.7,
-    "fy": 0.46,
-    "dist": 1600,
-    "az": -3,
-    "ease": "sine"
-   }
-  ],
-  "close": [
-   {
-    "t": 60.2,
-    "target": [
-     0,
-     60,
-     0
-    ],
-    "el": 34,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 2600,
-    "az": -6
-   },
-   {
-    "t": 63.2,
-    "target": [
-     0,
-     60,
-     0
-    ],
-    "el": 34,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 2100,
-    "az": -8,
-    "ease": "inout2"
-   }
-  ],
-  "payoff": [
-   {
-    "t": 63.2,
-    "target": [
-     6130.0,
-     -220,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 3000,
-    "az": -4
-   },
-   {
-    "t": 66.03333333333333,
-    "target": [
-     6130.0,
-     -220,
-     0
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.42,
-    "dist": 2500,
+    "dist": 20,
     "az": -2,
+    "el": 24,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.5,
     "ease": "inout2"
    },
    {
-    "t": 71.26666666666667,
+    "t": 16.8,
     "target": [
-     6130.0,
-     -260,
-     0
+     0,
+     -0.6,
+     2
     ],
-    "el": 6,
-    "fov": 30,
+    "dist": 12,
+    "az": 0,
+    "el": 34,
+    "fov": 34,
     "fx": 0.5,
-    "fy": 0.42,
-    "dist": 2400,
-    "az": -1,
+    "fy": 0.5,
+    "ease": "in2"
+   }
+  ],
+  "bed": [
+   {
+    "t": 16.8,
+    "target": [
+     0,
+     -0.4,
+     6
+    ],
+    "dist": 18,
+    "el": 18,
+    "az": 0,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.56
+   },
+   {
+    "t": 24.866666666666667,
+    "target": [
+     0,
+     -0.4,
+     2
+    ],
+    "dist": 16,
+    "el": 14,
+    "az": 4,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.56,
+    "ease": "inout2"
+   },
+   {
+    "t": 43.4,
+    "target": [
+     0,
+     -0.4,
+     -4
+    ],
+    "dist": 20,
+    "el": 22,
+    "az": 10,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.56,
     "ease": "sine"
-   },
+   }
+  ],
+  "uv": [
    {
-    "t": 72.56666666666666,
+    "t": 43.4,
     "target": [
-     6200.0,
-     -460,
+     4000.0,
+     0.1,
      0
     ],
-    "el": 4,
+    "el": 2,
+    "az": 0,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.42,
-    "dist": 1800,
-    "az": 1,
-    "ease": "inout2"
+    "fy": 0.4,
+    "dist": 25
    },
    {
-    "t": 74.2,
+    "t": 54.1333,
     "target": [
-     6200.0,
-     -470,
+     4000.0,
+     0.1,
      0
     ],
-    "el": 4,
+    "el": 2,
+    "az": 0,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.42,
-    "dist": 1750,
-    "az": 1,
+    "fy": 0.4,
+    "dist": 23,
+    "ease": "sine"
+   }
+  ],
+  "section": [
+   {
+    "t": 54.1333,
+    "target": [
+     -4000.0,
+     -70,
+     0
+    ],
+    "dist": 520,
+    "el": 8,
+    "az": -6,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.62
+   },
+   {
+    "t": 61.6,
+    "target": [
+     -4000.0,
+     -70,
+     0
+    ],
+    "dist": 480,
+    "el": 8,
+    "az": 0,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.62,
+    "ease": "sine"
+   }
+  ],
+  "list2": [
+   {
+    "t": 61.6,
+    "target": [
+     0,
+     -0.4,
+     16
+    ],
+    "dist": 26,
+    "az": -8,
+    "el": 14,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.5
+   },
+   {
+    "t": 74.6667,
+    "target": [
+     0,
+     -0.4,
+     10
+    ],
+    "dist": 24,
+    "az": -4,
+    "el": 14,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.5,
     "ease": "sine"
    }
   ]
  },
  "cue": {
-  "goose": 0.9,
-  "fur": 2.7333333333333334,
-  "muscle": 6.8,
-  "cold": 8.5,
-  "tugs": 10.533333333333333,
-  "upright": 12.4,
-  "bump": 14.0,
-  "fluffs": 16.7,
-  "air": 19.0,
-  "chimp": 21.8,
-  "ours": 22.9,
-  "but": 29.866666666666667,
-  "hairs": 54.233333333333334,
-  "fine": 23.566666666666666,
-  "leftover": 28.333333333333332,
-  "harvard": 30.533333333333335,
-  "reaches": 32.43333333333333,
-  "stem": 33.2,
-  "holds": 36.4,
-  "wakes": 41.93333333333333,
-  "sooner": 45.4,
-  "take": 46.4,
-  "fades": 48.833333333333336,
-  "thinner": 56.166666666666664,
-  "paper": 57.7,
-  "raises": 64.46666666666667,
-  "because": 63.333333333333336,
-  "goose2": 62.06666666666667,
-  "deeper": 71.56666666666666,
-  "looks": 66.03333333333333
+  "list": 0.5333333333333333,
+  "most": 1.7,
+  "cigs": 0.9333333333333333,
+  "deadly": 3.2666666666666666,
+  "who": 5.3,
+  "top": 9.966666666666667,
+  "tobacco": 11.033333333333333,
+  "ranks": 13.133333333333333,
+  "sure": 13.833333333333334,
+  "harm": 15.766666666666667,
+  "follow": 17.133333333333333,
+  "bed": 18.5,
+  "uva": 20.3,
+  "long": 21.166666666666668,
+  "large": 22.7,
+  "ten": 24.866666666666667,
+  "midday": 27.1,
+  "weighed": 29.266666666666666,
+  "young": 34.1,
+  "pooled": 35.233333333333334,
+  "before": 37.0,
+  "melanoma": 38.333333333333336,
+  "half": 40.266666666666666,
+  "countries": 44.2,
+  "brazil": 45.56666666666667,
+  "same": 47.666666666666664,
+  "australia": 49.06666666666667,
+  "off": 50.43333333333333,
+  "rays": 55.2,
+  "layer": 57.13333333333333,
+  "paper": 60.06666666666667,
+  "same2": 61.93333333333333,
+  "harm2": 65.3,
+  "certainty": 66.36666666666666
  },
  "gauge": {
   "rise": [
-   52.7333,
-   53.6333
+   54.5333,
+   55.433299999999996
   ],
-  "sc": 54.233333333333334,
-  "paper": 57.7,
+  "sc": 56.93333333333333,
+  "paper": 60.06666666666667,
   "back": [
-   59.6,
-   60.150000000000006
+   61.1,
+   62.0
   ],
-  "sc_um": 30.0,
+  "sc_um": 100.0,
   "paper_um": 100.0,
-  "bar": "hair"
+  "bar": "top layer",
+  "sc_text": "≈ 100 µm"
  },
- "trans": [],
+ "plates": {
+  "vfhook": {
+   "t0": 0.0,
+   "t1": 1.7
+  },
+  "list": {
+   "t0": 0.2,
+   "t1": 16.5,
+   "lit": 0.33333333333333337,
+   "lit2": 10.833333333333334,
+   "rank": 13.633333333333335
+  },
+  "list2": {
+   "t0": 61.800000000000004,
+   "t1": 68.16666666666667,
+   "rank": 65.1
+  },
+  "rr": {
+   "t0": 34.93333333333334,
+   "t1": 43.1,
+   "before": 37.0,
+   "rr": [
+    1.59,
+    1.75
+   ]
+  },
+  "bans": {
+   "t0": 44.0,
+   "t1": 53.8333,
+   "brazil": 45.56666666666667,
+   "australia": 49.06666666666667,
+   "off": 50.43333333333333,
+   "bans": [
+    [
+     "Brazil",
+     2009
+    ],
+    [
+     "Australia",
+     2015
+    ]
+   ]
+  },
+  "viewfinder": {
+   "t0": 43.4,
+   "t1": 54.1333
+  }
+ },
+ "bed": {
+  "on": [
+   17.0,
+   18.8
+  ],
+  "glow": [
+   24.566666666666666,
+   25.766666666666666
+  ]
+ },
+ "uvd": {
+  "brazil": [
+   45.56666666666667,
+   46.56666666666667
+  ],
+  "off": [
+   49.06666666666667,
+   50.93333333333333
+  ]
+ },
+ "rays": {
+  "on": [
+   54.3333,
+   55.2
+  ]
+ },
  "labels": [
   {
-   "id": "l-muscle",
-   "text": "a tiny muscle",
-   "kind": "cell",
-   "anchor": "muscle",
-   "t0": 6.8,
-   "t1": 10.333333333333334,
-   "shot": "follicle",
-   "side": 1
+   "id": "l-uva",
+   "text": "UVA, the long rays",
+   "kind": "uv",
+   "anchor": "tube",
+   "t0": 20.1,
+   "t1": 29.266666666666666,
+   "shot": "bed",
+   "side": 1,
+   "v": "below",
+   "fixed": true
   },
   {
-   "id": "l-nerve",
-   "text": "a nerve",
-   "kind": "layer",
-   "anchor": "nerve",
-   "t0": 10.533333333333333,
-   "t1": 14.4833,
-   "shot": "follicle",
+   "id": "l-epi",
+   "text": "the top layer",
+   "kind": "cell",
+   "anchor": "epi",
+   "t0": 56.53333333333333,
+   "t1": 61.25,
+   "shot": "section",
+   "side": -1
+  },
+  {
+   "id": "l-deep",
+   "text": "UVA reaches past it",
+   "kind": "uv",
+   "anchor": "derm",
+   "t0": 55.2,
+   "t1": 61.25,
+   "shot": "section",
    "side": 1,
    "v": "below"
-  },
-  {
-   "id": "l-hair",
-   "text": "the hair stands",
-   "kind": "cell",
-   "anchor": "hair",
-   "t0": 12.4,
-   "t1": 14.4833,
-   "shot": "follicle",
-   "side": -1
-  },
-  {
-   "id": "l-air",
-   "text": "trapped air",
-   "kind": "layer",
-   "anchor": "air",
-   "t0": 18.1,
-   "t1": 19.483333333333334,
-   "shot": "fur",
-   "side": 1
-  },
-  {
-   "id": "l-fine",
-   "text": "fine hairs",
-   "kind": "cell",
-   "anchor": "finehair",
-   "t0": 23.566666666666666,
-   "t1": 26.15,
-   "shot": "ours",
-   "side": 1
-  },
-  {
-   "id": "l-stem",
-   "text": "stem cells",
-   "kind": "water",
-   "anchor": "stem",
-   "t0": 33.2,
-   "t1": 39.6833,
-   "shot": "bulge",
-   "side": -1
-  },
-  {
-   "id": "l-hold",
-   "text": "the muscle holds the nerve",
-   "kind": "cell",
-   "anchor": "insertion",
-   "t0": 36.4,
-   "t1": 39.6833,
-   "shot": "bulge",
-   "side": 1
-  },
-  {
-   "id": "l-new",
-   "text": "a new hair",
-   "kind": "cell",
-   "anchor": "bulb",
-   "t0": 42.73333333333333,
-   "t1": 45.75,
-   "shot": "cold",
-   "side": 1
-  },
-  {
-   "id": "l-twin",
-   "text": "a second follicle",
-   "kind": "cell",
-   "anchor": "nomhair",
-   "t0": 46.300000000000004,
-   "t1": 47.1,
-   "shot": "nomuscle",
-   "side": -1
-  },
-  {
-   "id": "l-nomus",
-   "text": "no muscle",
-   "kind": "cell",
-   "anchor": "nomus",
-   "t0": 47.199999999999996,
-   "t1": 48.53333333333334,
-   "shot": "nomuscle",
-   "side": 1
-  },
-  {
-   "id": "l-fade",
-   "text": "its wiring fades",
-   "kind": "layer",
-   "anchor": "nomnerve",
-   "t0": 48.733333333333334,
-   "t1": 52.2833,
-   "shot": "nomuscle",
-   "side": 1
   }
  ],
  "badges": [
   {
-   "id": "b-simp-h",
-   "text": "simplified",
-   "t0": 0.0,
-   "t1": 3.75,
+   "id": "b-iarc",
+   "text": "IARC Monographs, Group 1",
+   "t0": 3.2666666666666666,
+   "t1": 16.45,
    "slot": "tr"
+  },
+  {
+   "id": "b-units",
+   "text": "model · large, powerful units",
+   "t0": 17.1,
+   "t1": 28.9333,
+   "slot": "tl"
+  },
+  {
+   "id": "b-pooled",
+   "text": "pooled studies (meta-analyses)",
+   "t0": 35.233333333333334,
+   "t1": 43.05,
+   "slot": "tl"
+  },
+  {
+   "id": "b-model-uv",
+   "text": "model, not a photo",
+   "t0": 43.4,
+   "t1": 53.7833,
+   "slot": "tl"
   },
   {
    "id": "b-simp",
    "text": "simplified",
-   "t0": 4.2,
-   "t1": 14.4833,
-   "slot": "tr"
-  },
-  {
-   "id": "b-illus",
-   "text": "illustration",
-   "t0": 14.9333,
-   "t1": 19.0833,
-   "slot": "tr"
-  },
-  {
-   "id": "b-simp-o",
-   "text": "simplified",
-   "t0": 19.533333333333335,
-   "t1": 26.15,
-   "slot": "tr"
-  },
-  {
-   "id": "b-mice",
-   "text": "in mice · Shwartz et al., 2020",
-   "t0": 30.533333333333335,
-   "t1": 52.2833,
-   "slot": "bl"
-  },
-  {
-   "id": "b-simp-b",
-   "text": "simplified",
-   "t0": 26.6,
-   "t1": 39.6833,
-   "slot": "tr"
-  },
-  {
-   "id": "b-time",
-   "text": "weeks, compressed",
-   "t0": 40.1333,
-   "t1": 52.2833,
-   "slot": "br"
-  },
-  {
-   "id": "b-vel",
-   "text": "vellus: < 30 µm by definition",
-   "t0": 56.166666666666664,
-   "t1": 59.75,
-   "slot": "tr"
-  },
-  {
-   "id": "b-simp-z",
-   "text": "simplified",
-   "t0": 60.2,
-   "t1": 68.2,
-   "slot": "tr"
-  },
-  {
-   "id": "b-mice-z",
-   "text": "in mice · Shwartz et al., 2020",
-   "t0": 63.86666666666667,
-   "t1": 68.2,
-   "slot": "bl"
+   "t0": 54.433299999999996,
+   "t1": 61.25,
+   "slot": "tl"
   }
  ],
  "counters": [
   {
-   "id": "c-q",
-   "label": "goosebumps, with no fur",
+   "id": "c-uva",
+   "label": "UVA vs midday sun (may be)",
    "fmt": "text",
-   "text": "why?",
-   "t0": 2.8333333333333335,
-   "t1": 3.75,
+   "text": "×10–15",
+   "t0": 24.666666666666668,
+   "t1": 28.9333,
    "at": [
-    0.5,
-    0.215
+    0.62,
+    0.2
    ]
   },
   {
-   "id": "c-apm",
-   "label": "the muscle",
+   "id": "c-rr",
+   "label": "melanoma risk, first use < 35",
    "fmt": "text",
-   "text": "arrector pili",
-   "t0": 7.3,
-   "t1": 14.4833,
+   "text": "×1.6–1.75",
+   "t0": 39.96666666666667,
+   "t1": 43.05,
    "at": [
-    0.5,
-    0.215
+    0.62,
+    0.2
    ]
   },
   {
-   "id": "c-chimp",
-   "label": "hair follicles",
+   "id": "c-end",
+   "label": "Group 1 ranks",
    "fmt": "text",
-   "text": "≈ chimp",
-   "t0": 21.8,
-   "t1": 26.15,
+   "text": "certainty",
+   "t0": 66.16666666666666,
+   "t1": 67.76666666666667,
    "at": [
-    0.5,
-    0.215
-   ]
-  },
-  {
-   "id": "c-ne",
-   "label": "the nerve's signal",
-   "fmt": "text",
-   "text": "noradrenaline",
-   "t0": 32.88333333333333,
-   "t1": 45.75,
-   "at": [
-    0.5,
-    0.215
-   ]
-  },
-  {
-   "id": "c-final",
-   "label": "the little muscle",
-   "fmt": "text",
-   "text": "tends hair",
-   "t0": 60.400000000000006,
-   "t1": 67.7,
-   "at": [
-    0.5,
-    0.215
+    0.62,
+    0.2
    ]
   }
  ],
  "pills": [],
  "title": {
   "series": "Outer Layer · No. 006",
-  "title": "*Goosebumps*",
-  "t1": 2.4333333333333336,
-  "sig": 1.2333333333333334
+  "title": "Same list as *cigarettes*",
+  "t1": 4.1667,
+  "sig": 1.3
  },
- "endCard": 68.2,
+ "endCard": 68.46666666666667,
  "end": {
-  "title": "Next season: *deeper*",
-  "follow": "Outer Layer · Season 1",
-  "next": "In mice, the nerve that raises a hair also wakes the stem cells that regrow it (Shwartz et al., Cell, 2020). Narration: synthetic voice (AI)."
+  "title": "Next season: why do bath fingers *wrinkle*?",
+  "follow": "Outer Layer · season 2",
+  "next": "IARC classified UV-emitting tanning devices as carcinogenic to humans (Group 1) in 2009. Narration: synthetic voice (AI)."
  },
  "captions": [
   {
-   "t0": 0.087,
-   "t1": 1.897,
+   "t0": 0.212,
+   "t1": 1.692,
    "lines": [
     [
      [
-      "Why",
-      0.087
+      "Same list",
+      0.212
      ],
      [
-      "do",
-      0.372
-     ],
-     [
-      "we",
-      0.402
-     ],
-     [
-      "get",
-      0.612
-     ]
-    ],
-    [
-     [
-      "goosebumps?",
-      0.897
+      "as cigarettes?",
+      0.632
      ]
     ]
    ]
   },
   {
-   "t0": 1.897,
-   "t1": 3.467,
+   "t0": 1.692,
+   "t1": 3.807,
    "lines": [
     [
      [
-      "We",
-      1.897
+      "Most",
+      1.692
      ],
      [
-      "hardly",
-      2.102
+      "people",
+      2.017
      ],
      [
-      "have",
-      2.502
-     ],
+      "hear:",
+      2.362
+     ]
+    ],
+    [
      [
-      "fur.",
-      2.717
+      "just as deadly.",
+      2.747
      ]
     ]
    ]
   },
   {
-   "t0": 4.525,
-   "t1": 7.975,
+   "t0": 4.987,
+   "t1": 6.847,
    "lines": [
     [
      [
-      "Nearly",
-      4.525
+      "It's",
+      4.987
      ],
      [
-      "every",
-      5.03
+      "the",
+      5.212
      ],
      [
-      "hair",
-      5.32
-     ],
-     [
-      "has",
-      5.695
+      "World",
+      5.307
      ]
     ],
+    [
+     [
+      "Health",
+      5.542
+     ],
+     [
+      "Organization's",
+      5.982
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 6.847,
+   "t1": 9.957,
+   "lines": [
+    [
+     [
+      "cancer agency:",
+      6.847
+     ]
+    ],
+    [
+     [
+      "tanning",
+      8.577
+     ],
+     [
+      "beds",
+      9.002
+     ],
+     [
+      "sit",
+      9.252
+     ],
+     [
+      "in",
+      9.582
+     ],
+     [
+      "its",
+      9.842
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.957,
+   "t1": 12.677,
+   "lines": [
+    [
+     [
+      "top group,",
+      9.957
+     ]
+    ],
+    [
+     [
+      "beside",
+      10.612
+     ],
+     [
+      "tobacco smoke.",
+      11.047
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.677,
+   "t1": 14.562,
+   "lines": [
+    [
+     [
+      "That",
+      12.677
+     ],
+     [
+      "group",
+      12.827
+     ],
+     [
+      "ranks",
+      13.137
+     ]
+    ],
+    [
+     [
+      "how sure",
+      13.477
+     ],
+     [
+      "the",
+      14.037
+     ],
+     [
+      "evidence",
+      14.172
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 14.562,
+   "t1": 16.547,
+   "lines": [
+    [
+     [
+      "is,",
+      14.562
+     ]
+    ],
+    [
+     [
+      "not",
+      15.087
+     ],
+     [
+      "how big the harm.",
+      15.232
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.13,
+   "t1": 19.38,
+   "lines": [
+    [
+     [
+      "Follow",
+      17.13
+     ],
+     [
+      "the",
+      17.51
+     ],
+     [
+      "evidence",
+      17.675
+     ]
+    ],
+    [
+     [
+      "into the bed:",
+      18.28
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.38,
+   "t1": 22.675,
+   "lines": [
     [
      [
       "its",
-      5.995
+      19.38
      ],
      [
-      "own",
-      6.095
+      "light",
+      19.47
      ],
      [
-      "tiny muscle,",
-      6.415
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 7.975,
-   "t1": 9.965,
-   "lines": [
-    [
-     [
-      "and",
-      7.975
+      "is",
+      19.855
      ],
      [
-      "when",
-      8.005
-     ],
-     [
-      "we're",
-      8.32
+      "mostly UVA,",
+      20.04
      ]
     ],
     [
      [
-      "cold",
-      8.515
-     ],
-     [
-      "or",
-      9.02
-     ],
-     [
-      "frightened,",
-      9.315
+      "the long rays.",
+      21.11
      ]
     ]
    ]
   },
   {
-   "t0": 9.965,
-   "t1": 13.315,
-   "lines": [
-    [
-     [
-      "a",
-      9.965
-     ],
-     [
-      "nerve",
-      9.995
-     ],
-     [
-      "tugs",
-      10.55
-     ],
-     [
-      "it,",
-      11.075
-     ],
-     [
-      "pulling",
-      11.65
-     ]
-    ],
-    [
-     [
-      "the",
-      12.035
-     ],
-     [
-      "hair",
-      12.08
-     ],
-     [
-      "upright",
-      12.405
-     ],
-     [
-      "and",
-      12.965
-     ],
-     [
-      "the",
-      13.025
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 13.315,
-   "t1": 14.64,
-   "lines": [
-    [
-     [
-      "skin",
-      13.315
-     ],
-     [
-      "into a bump.",
-      13.715
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 15.253,
-   "t1": 17.868,
+   "t0": 22.675,
+   "t1": 24.48,
    "lines": [
     [
      [
       "In",
-      15.253
+      22.675
      ],
      [
-      "a",
-      15.533
-     ],
-     [
-      "furry",
-      15.563
-     ],
-     [
-      "animal,",
-      15.888
-     ],
-     [
-      "that",
-      16.568
+      "large,",
+      22.705
      ]
     ],
     [
      [
-      "fluffs",
-      16.698
+      "powerful",
+      23.385
+     ],
+     [
+      "units,",
+      23.74
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.48,
+   "t1": 27.07,
+   "lines": [
+    [
+     [
+      "it",
+      24.48
+     ],
+     [
+      "may",
+      24.555
+     ],
+     [
+      "be",
+      24.745
+     ],
+     [
+      "10 to 15 times",
+      24.85
+     ]
+    ],
+    [
+     [
+      "as",
+      26.11
+     ],
+     [
+      "intense",
+      26.27
+     ],
+     [
+      "as",
+      26.76
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.07,
+   "t1": 28.28,
+   "lines": [
+    [
+     [
+      "the midday sun.",
+      27.07
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.253,
+   "t1": 31.653,
+   "lines": [
+    [
+     [
+      "Weighing",
+      29.253
      ],
      [
       "the",
-      17.218
+      29.748
      ],
      [
-      "coat",
-      17.253
-     ],
-     [
-      "into",
-      17.473
-     ],
-     [
-      "a",
-      17.633
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 17.868,
-   "t1": 19.743,
-   "lines": [
-    [
-     [
-      "blanket",
-      17.868
-     ],
-     [
-      "of",
-      18.243
-     ],
-     [
-      "trapped air.",
-      18.413
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 19.743,
-   "t1": 21.623,
-   "lines": [
-    [
-     [
-      "We",
-      19.743
-     ],
-     [
-      "have",
-      19.773
-     ],
-     [
-      "about",
-      20.048
-     ],
-     [
-      "as",
-      20.258
-     ],
-     [
-      "many",
-      20.403
+      "studies,",
+      29.873
      ]
     ],
     [
      [
-      "hair follicles",
-      20.683
+      "the",
+      30.458
      ],
      [
-      "as",
-      21.488
+      "agency's",
+      30.488
+     ],
+     [
+      "experts",
+      31.333
      ]
     ]
    ]
   },
   {
-   "t0": 21.623,
-   "t1": 24.403,
+   "t0": 31.653,
+   "t1": 33.733,
    "lines": [
     [
      [
-      "a chimpanzee,",
-      21.623
+      "found",
+      31.653
+     ],
+     [
+      "the",
+      32.013
+     ],
+     [
+      "sharpest",
+      32.128
+     ]
+    ],
+    [
+     [
+      "signal",
+      32.563
+     ],
+     [
+      "in",
+      33.198
+     ],
+     [
+      "people",
+      33.328
+     ],
+     [
+      "who",
+      33.503
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.733,
+   "t1": 35.093,
+   "lines": [
+    [
+     [
+      "started young.",
+      33.733
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 35.093,
+   "t1": 38.183,
+   "lines": [
+    [
+     [
+      "In",
+      35.093
+     ],
+     [
+      "pooled",
+      35.248
+     ],
+     [
+      "studies,",
+      35.798
+     ]
+    ],
+    [
+     [
+      "starting",
+      36.498
+     ],
+     [
+      "before 35",
+      37.008
+     ],
+     [
+      "went",
+      37.998
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.183,
+   "t1": 39.933,
+   "lines": [
+    [
+     [
+      "with",
+      38.183
+     ],
+     [
+      "a",
+      38.258
+     ],
+     [
+      "melanoma",
+      38.333
+     ]
+    ],
+    [
+     [
+      "risk",
+      39.163
+     ],
+     [
+      "raised",
+      39.358
+     ],
+     [
+      "by",
+      39.853
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 39.933,
+   "t1": 41.133,
+   "lines": [
+    [
+     [
+      "more than half.",
+      39.933
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.72,
+   "t1": 45.565,
+   "lines": [
+    [
+     [
+      "Then",
+      43.72
+     ],
+     [
+      "whole countries",
+      43.92
+     ]
+    ],
+    [
+     [
+      "acted:",
+      44.835
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 45.565,
+   "t1": 47.545,
+   "lines": [
+    [
+     [
+      "Brazil",
+      45.565
+     ],
+     [
+      "banned",
+      45.99
+     ]
+    ],
+    [
+     [
+      "commercial tanning beds",
+      46.305
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.545,
+   "t1": 49.075,
+   "lines": [
+    [
+     [
+      "that same year;",
+      47.545
+     ],
+     [
+      "later,",
+      48.62
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 49.075,
+   "t1": 51.04,
+   "lines": [
+    [
+     [
+      "Australia",
+      49.075
+     ]
+    ],
+    [
+     [
+      "switched its own off.",
+      49.795
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 54.453,
+   "t1": 56.728,
+   "lines": [
+    [
+     [
+      "And",
+      54.453
+     ],
+     [
+      "the long rays",
+      54.678
+     ]
+    ],
+    [
+     [
+      "reach",
+      55.633
+     ],
+     [
+      "right",
+      55.998
+     ],
+     [
+      "through",
+      56.423
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.728,
+   "t1": 59.313,
+   "lines": [
+    [
+     [
+      "the top layer,",
+      56.728
+     ]
+    ],
+    [
+     [
+      "on",
+      58.083
+     ],
+     [
+      "most",
+      58.368
+     ],
+     [
+      "skin",
+      58.708
+     ],
+     [
+      "about",
+      59.093
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.313,
+   "t1": 60.973,
+   "lines": [
+    [
+     [
+      "as thin as paper.",
+      59.313
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.925,
+   "t1": 64.875,
+   "lines": [
+    [
+     [
+      "Same list",
+      61.925
+     ],
+     [
+      "as cigarettes,",
+      62.545
+     ]
+    ],
+    [
+     [
+      "then:",
+      63.405
+     ],
+     [
+      "not",
+      64.18
+     ],
+     [
+      "the",
+      64.42
+     ],
+     [
+      "same",
+      64.45
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 64.875,
+   "t1": 67.24,
+   "lines": [
+    [
+     [
+      "size of harm,",
+      64.875
      ]
     ],
     [
      [
       "but",
-      22.853
-     ],
-     [
-      "ours",
-      22.908
-     ],
-     [
-      "grow",
-      23.263
-     ],
-     [
-      "fine,",
-      23.568
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 24.403,
-   "t1": 26.173,
-   "lines": [
-    [
-     [
-      "almost",
-      24.403
-     ],
-     [
-      "invisible",
-      24.783
-     ],
-     [
-      "hairs.",
-      25.403
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 26.92,
-   "t1": 29.865,
-   "lines": [
-    [
-     [
-      "So",
-      26.92
+      65.84
      ],
      [
       "the",
-      27.345
+      65.97
      ],
      [
-      "bumps",
-      27.375
-     ],
-     [
-      "look",
-      27.765
-     ]
-    ],
-    [
-     [
-      "like",
-      28.06
-     ],
-     [
-      "a",
-      28.31
-     ],
-     [
-      "leftover.",
-      28.34
+      "same certainty.",
+      66.16
      ]
     ]
    ]
   },
   {
-   "t0": 29.865,
-   "t1": 32.425,
+   "t0": 68.713,
+   "t1": 71.228,
    "lines": [
     [
      [
-      "But",
-      29.865
-     ],
-     [
-      "a",
-      30.08
-     ],
-     [
-      "team",
-      30.175
-     ],
-     [
-      "at",
-      30.5
-     ],
-     [
-      "Harvard",
-      30.53
-     ]
-    ],
-    [
-     [
-      "found",
-      31.205
-     ],
-     [
-      "that",
-      31.515
-     ],
-     [
-      "nerve",
-      31.62
-     ],
-     [
-      "also",
-      32.165
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 32.425,
-   "t1": 35.725,
-   "lines": [
-    [
-     [
-      "reaches",
-      32.425
-     ],
-     [
-      "the",
-      33.155
-     ],
-     [
-      "stem cells",
-      33.185
-     ]
-    ],
-    [
-     [
-      "that",
-      34.22
-     ],
-     [
-      "grow",
-      34.395
-     ],
-     [
-      "hair,",
-      34.77
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 35.725,
-   "t1": 38.08,
-   "lines": [
-    [
-     [
-      "and",
-      35.725
-     ],
-     [
-      "the",
-      35.755
-     ],
-     [
-      "muscle",
-      35.86
-     ]
-    ],
-    [
-     [
-      "holds",
-      36.395
-     ],
-     [
-      "it",
-      37.01
-     ],
-     [
-      "in place.",
-      37.065
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 40.453,
-   "t1": 43.773,
-   "lines": [
-    [
-     [
-      "In",
-      40.453
-     ],
-     [
-      "the",
-      40.778
-     ],
-     [
-      "cold,",
-      40.808
-     ],
-     [
-      "that",
-      41.303
-     ],
-     [
-      "nerve",
-      41.448
-     ]
-    ],
-    [
-     [
-      "wakes",
-      41.948
-     ],
-     [
-      "the",
-      42.278
-     ],
-     [
-      "stem cells,",
-      42.493
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 43.773,
-   "t1": 46.398,
-   "lines": [
-    [
-     [
-      "and",
-      43.773
-     ],
-     [
-      "the",
-      43.803
-     ],
-     [
-      "mice",
-      43.918
-     ],
-     [
-      "grew",
-      44.453
-     ]
-    ],
-    [
-     [
-      "new hair sooner.",
-      44.753
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 46.398,
-   "t1": 47.928,
-   "lines": [
-    [
-     [
-      "Take",
-      46.398
-     ],
-     [
-      "the",
-      46.628
-     ],
-     [
-      "little",
-      46.703
-     ]
-    ],
-    [
-     [
-      "muscle",
-      46.918
-     ],
-     [
-      "away,",
-      47.533
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 47.928,
-   "t1": 49.773,
-   "lines": [
-    [
-     [
-      "and",
-      47.928
-     ],
-     [
-      "the",
-      47.958
-     ],
-     [
-      "wiring",
-      48.183
-     ],
-     [
-      "fades.",
-      48.838
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 53.368,
-   "t1": 56.973,
-   "lines": [
-    [
-     [
-      "And",
-      53.368
-     ],
-     [
-      "most",
-      53.403
-     ],
-     [
-      "of",
-      53.848
-     ],
-     [
-      "the",
-      54.078
-     ],
-     [
-      "hairs",
-      54.238
-     ],
-     [
-      "it",
-      54.778
-     ]
-    ],
-    [
-     [
-      "tends",
-      54.978
-     ],
-     [
-      "are",
-      55.878
-     ],
-     [
-      "thinner",
-      56.153
-     ],
-     [
-      "than",
-      56.618
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 56.973,
-   "t1": 59.073,
-   "lines": [
-    [
-     [
-      "a third",
-      56.973
-     ],
-     [
-      "of",
-      57.463
-     ]
-    ],
-    [
-     [
-      "a sheet of paper.",
-      57.608
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 60.535,
-   "t1": 63.34,
-   "lines": [
-    [
-     [
-      "So",
-      60.535
+      "Next season:",
+      68.713
      ],
      [
       "why",
-      60.825
+      69.668
      ],
      [
       "do",
-      61.12
-     ],
-     [
-      "we",
-      61.315
-     ],
-     [
-      "still",
-      61.445
+      69.863
      ]
     ],
     [
      [
-      "get",
-      61.74
+      "bath fingers",
+      70.028
      ],
      [
-      "goosebumps?",
-      62.08
+      "wrinkle,",
+      70.673
      ]
     ]
    ]
   },
   {
-   "t0": 63.34,
-   "t1": 66.02,
+   "t0": 71.228,
+   "t1": 72.573,
    "lines": [
     [
      [
-      "Because",
-      63.34
+      "but",
+      71.228
      ],
      [
-      "the",
-      63.715
+      "never",
+      71.333
      ],
      [
-      "muscle",
-      63.745
-     ],
-     [
-      "that",
-      64.44
-     ]
-    ],
-    [
-     [
-      "raises",
-      64.47
-     ],
-     [
-      "a",
-      65.065
-     ],
-     [
-      "hair",
-      65.215
-     ],
-     [
-      "still",
-      65.81
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 66.02,
-   "t1": 67.44,
-   "lines": [
-    [
-     [
-      "looks after it.",
-      66.02
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 68.463,
-   "t1": 70.538,
-   "lines": [
-    [
-     [
-      "That's",
-      68.463
-     ],
-     [
-      "the",
-      68.813
-     ],
-     [
-      "outer",
-      68.843
-     ],
-     [
-      "layer,",
-      69.133
-     ]
-    ],
-    [
-     [
-      "for",
-      69.603
-     ],
-     [
-      "now.",
-      69.948
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 70.538,
-   "t1": 72.328,
-   "lines": [
-    [
-     [
-      "Next",
-      70.538
-     ],
-     [
-      "season,",
-      70.728
-     ]
-    ],
-    [
-     [
-      "we",
-      71.348
-     ],
-     [
-      "go",
-      71.378
-     ],
-     [
-      "deeper.",
-      71.578
+      "your arm?",
+      71.573
      ]
     ]
    ]
@@ -1754,58 +1329,58 @@
   {
    "id": "vo01",
    "t": 0.06666666666666667,
-   "dur": 3.273,
+   "dur": 3.825,
    "file": "vo/01.wav",
-   "text": "Why do we get goosebumps? We hardly have fur."
+   "text": "Same list as cigarettes? Most people hear: just as deadly."
   },
   {
    "id": "vo02",
-   "t": 4.5,
-   "dur": 9.921,
+   "t": 4.966666666666667,
+   "dur": 11.304,
    "file": "vo/02.wav",
-   "text": "Nearly every hair has its own tiny muscle, and when we're cold or frightened, a nerve tugs it, pulling the hair upright and the skin into a bump."
+   "text": "It's the World Health Organization's cancer agency: tanning beds sit in its top group, beside tobacco smoke. That group ranks how sure the evidence is, not how big the harm."
   },
   {
    "id": "vo03",
-   "t": 15.233333333333333,
-   "dur": 10.709,
+   "t": 17.1,
+   "dur": 10.896,
    "file": "vo/03.wav",
-   "text": "In a furry animal, that fluffs the coat into a blanket of trapped air. We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs."
+   "text": "Follow the evidence into the bed: its light is mostly UVA, the long rays. In large, powerful units, it may be ten to fifteen times as intense as the midday sun."
   },
   {
    "id": "vo04",
-   "t": 26.9,
-   "dur": 10.946,
+   "t": 29.233333333333334,
+   "dur": 11.632,
    "file": "vo/04.wav",
-   "text": "So the bumps look like a leftover. But a team at Harvard found that nerve also reaches the stem cells that grow hair, and the muscle holds it in place."
+   "text": "Weighing the studies, the agency's experts found the sharpest signal in people who started young. In pooled studies, starting before thirty-five went with a melanoma risk raised by more than half."
   },
   {
    "id": "vo05",
-   "t": 40.43333333333333,
-   "dur": 9.053,
+   "t": 43.7,
+   "dur": 7.087,
    "file": "vo/05.wav",
-   "text": "In the cold, that nerve wakes the stem cells, and the mice grew new hair sooner. Take the little muscle away, and the wiring fades."
+   "text": "Then whole countries acted: Brazil banned commercial tanning beds that same year; later, Australia switched its own off."
   },
   {
    "id": "vo06",
-   "t": 53.03333333333333,
-   "dur": 6.244,
+   "t": 54.43333333333333,
+   "dur": 6.31,
    "file": "vo/06.wav",
-   "text": "And most of the hairs it tends are thinner than a third of a sheet of paper."
+   "text": "And the long rays reach right through the top layer, on most skin about as thin as paper."
   },
   {
    "id": "vo07",
-   "t": 60.5,
-   "dur": 6.695,
+   "t": 61.9,
+   "dur": 5.346,
    "file": "vo/07.wav",
-   "text": "So why do we still get goosebumps? Because the muscle that raises a hair still looks after it."
+   "text": "Same list as cigarettes, then: not the same size of harm, but the same certainty."
   },
   {
    "id": "vo08",
    "t": 68.43333333333334,
-   "dur": 3.696,
+   "dur": 3.922,
    "file": "vo/08.wav",
-   "text": "That's the outer layer, for now. Next season, we go deeper."
+   "text": "Next season: why do bath fingers wrinkle, but never your arm?"
   }
  ]
 }

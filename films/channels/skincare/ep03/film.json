@@ -1,29 +1,37 @@
 {
- "id": "outerlayer-003",
+ "id": "skin-sense-003",
  "fps": 30,
  "bpm": 64.2857,
- "dur": 70.0,
- "poster": 45.43333333333333,
+ "dur": 75.1334,
+ "poster": 20.233333333333334,
  "shots": [
   {
    "at": 0.0,
-   "name": "pads"
+   "name": "macro"
   },
   {
-   "at": 14.166666666666666,
-   "name": "nerves"
+   "at": 5.166666666666667,
+   "name": "weave"
   },
   {
-   "at": 23.3333,
-   "name": "inside"
+   "at": 24.7333,
+   "name": "test"
   },
   {
-   "at": 35.9333,
-   "name": "reflex"
+   "at": 39.2,
+   "name": "fetal"
   },
   {
-   "at": 57.4,
-   "name": "close"
+   "at": 52.2667,
+   "name": "gauge"
+  },
+  {
+   "at": 59.7333,
+   "name": "macro2"
+  },
+  {
+   "at": 60.6,
+   "name": "uv"
   }
  ],
  "beats": [
@@ -37,586 +45,639 @@
   {
    "id": "normal",
    "t0": 5.1333,
-   "t1": 14.0,
+   "t1": 14.4667,
    "line": "vo02",
-   "energy": 0.4
+   "energy": 0.45
   },
   {
    "id": "change",
-   "t0": 14.0,
-   "t1": 23.3333,
+   "t0": 14.4667,
+   "t1": 24.7333,
    "line": "vo03",
    "energy": 0.55
   },
   {
    "id": "why",
-   "t0": 23.3333,
-   "t1": 35.9333,
+   "t0": 24.7333,
+   "t1": 39.2,
    "line": "vo04",
    "energy": 0.5
   },
   {
    "id": "whoa",
-   "t0": 35.9333,
-   "t1": 48.0667,
+   "t0": 39.2,
+   "t1": 52.2667,
    "line": "vo05",
    "energy": 0.8
   },
   {
    "id": "toscale",
-   "t0": 48.0667,
-   "t1": 57.4,
+   "t0": 52.2667,
+   "t1": 59.7333,
    "line": "vo06",
    "energy": 0.4
   },
   {
    "id": "takeaway",
-   "t0": 57.4,
-   "t1": 63.9333,
+   "t0": 59.7333,
+   "t1": 68.1333,
    "line": "vo07",
    "energy": 0.3
   },
   {
    "id": "tease",
-   "t0": 63.9333,
-   "t1": 70.0,
+   "t0": 68.1333,
+   "t1": 75.1334,
    "line": "vo08",
    "energy": 0.35
   }
  ],
- "tone": {
-  "pads": 0.9,
-  "nerves": 0.9,
-  "inside": 0.9,
-  "reflex": 0.9,
-  "close": 0.9
+ "tone": 0.9,
+ "keys": {
+  "tug1": [
+   11.966666666666667,
+   12.766666666666666
+  ],
+  "tug2": [
+   13.033333333333333,
+   13.933333333333334
+  ],
+  "cut": [
+   14.933333333333334,
+   15.733333333333333
+  ],
+  "patch": [
+   18.833333333333336,
+   22.833333333333336
+  ],
+  "glow": [
+   19.433333333333334,
+   20.23333333333333
+  ],
+  "meter": [
+   25.733333333333334,
+   28.833333333333332
+  ],
+  "stretch": [
+   28.53333333333333,
+   30.2
+  ],
+  "fcut": [
+   42.199999999999996,
+   42.8
+  ],
+  "regrow": [
+   42.86666666666667,
+   44.96666666666667
+  ],
+  "fpatch": [
+   1000000000.0,
+   1000000001.0
+  ],
+  "tear": [
+   29.7,
+   30.4
+  ],
+  "day": [
+   60.0333,
+   61.599999999999994
+  ],
+  "scar": [
+   61.199999999999996,
+   62.199999999999996
+  ]
  },
- "skin": {
-  "wrinkle": 4.0,
-  "narrow": 0.6,
-  "palm_um": 173.0,
-  "cheek_um": 17.0,
-  "paper_um": 100.0
+ "str": {
+  "pct": 80
+ },
+ "place": {
+  "tx": 1000.0,
+  "wx": 5000.0,
+  "fx": 7000.0
  },
  "cam": {
-  "pads": [
+  "macro": [
    {
     "t": 0.0,
     "target": [
+     991.0,
      0,
-     -20,
-     0
+     1.2
     ],
-    "el": 20,
-    "fov": 30,
+    "el": 30,
+    "fov": 34,
     "fx": 0.5,
-    "fy": 0.44,
-    "dist": 620,
-    "az": -8
+    "fy": 0.48,
+    "dist": 30,
+    "az": -14
    },
    {
-    "t": 5.1333,
+    "t": 1.5,
     "target": [
+     1000.0,
      0,
-     -20,
-     0
+     1.2
     ],
-    "el": 20,
-    "fov": 30,
+    "el": 36,
+    "fov": 34,
     "fx": 0.5,
-    "fy": 0.44,
-    "dist": 470,
-    "az": -4,
-    "ease": "sine"
+    "fy": 0.48,
+    "dist": 21,
+    "az": -9,
+    "ease": "out3"
    },
    {
-    "t": 9.7,
+    "t": 1.8333333333333333,
     "target": [
-     -40,
-     -16,
-     0
+     1000.0,
+     0,
+     0.5
     ],
-    "el": 18,
-    "fov": 30,
+    "el": 42,
+    "fov": 34,
     "fx": 0.5,
-    "fy": 0.44,
-    "dist": 300,
-    "az": -6,
+    "fy": 0.48,
+    "dist": 17,
+    "az": -8,
     "ease": "inout2"
    },
    {
-    "t": 13.299999999999999,
+    "t": 5.166666666666667,
     "target": [
-     -40,
-     -16,
-     0
-    ],
-    "el": 18,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.44,
-    "dist": 300,
-    "az": -5,
-    "ease": "sine"
-   },
-   {
-    "t": 14.166666666666666,
-    "target": [
+     1000.0,
      0,
-     -20,
      0
     ],
-    "el": 20,
-    "fov": 30,
+    "el": 70,
+    "fov": 34,
     "fx": 0.5,
-    "fy": 0.44,
-    "dist": 470,
-    "az": -4,
-    "ease": "inout2"
-   }
-  ],
-  "nerves": [
-   {
-    "t": 14.166666666666666,
-    "target": [
-     0,
-     -20,
-     0
-    ],
-    "el": 20,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.44,
-    "dist": 470,
-    "az": -4
-   },
-   {
-    "t": 21.933333333333334,
-    "target": [
-     0,
-     -20,
-     0
-    ],
-    "el": 20,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.44,
-    "dist": 500,
-    "az": -2,
-    "ease": "sine"
-   },
-   {
-    "t": 22.633300000000002,
-    "target": [
-     -40,
-     -18,
-     23
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.46,
-    "dist": 240,
-    "az": -2,
-    "ease": "inout2"
-   },
-   {
-    "t": 23.3333,
-    "target": [
-     -40,
-     -18,
-     23
-    ],
-    "el": 6,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.46,
-    "dist": 110,
-    "az": -2,
+    "fy": 0.48,
+    "dist": 6,
+    "az": -3,
     "ease": "in2"
    }
   ],
-  "inside": [
+  "weave": [
    {
-    "t": 23.3333,
+    "t": 5.166666666666667,
     "target": [
-     0,
+     5000.0,
      -60,
      0
     ],
-    "el": 6,
+    "el": 55,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.46,
-    "dist": 130,
-    "az": -2
+    "fy": 0.44,
+    "dist": 700,
+    "az": -20
    },
    {
-    "t": 26.733333333333334,
+    "t": 8.133333333333333,
     "target": [
-     0,
-     -96,
-     0
-    ],
-    "el": 5,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.4,
-    "dist": 250,
-    "az": -1,
-    "ease": "inout2"
-   },
-   {
-    "t": 29.133333333333333,
-    "target": [
-     0,
-     -96,
-     0
-    ],
-    "el": 5,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.4,
-    "dist": 240,
-    "az": -1,
-    "ease": "sine"
-   },
-   {
-    "t": 30.8,
-    "target": [
-     0,
-     -40,
-     0
-    ],
-    "el": 7,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.46,
-    "dist": 300,
-    "az": 0,
-    "ease": "inout2"
-   },
-   {
-    "t": 33.766666666666666,
-    "target": [
-     0,
-     -10,
-     0
-    ],
-    "el": 10,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.46,
-    "dist": 280,
-    "az": 1,
-    "ease": "inout2"
-   },
-   {
-    "t": 35.9333,
-    "target": [
-     0,
-     -10,
+     5000.0,
+     -130,
      0
     ],
     "el": 22,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.46,
-    "dist": 560,
-    "az": -2,
-    "ease": "inout2"
-   }
-  ],
-  "reflex": [
-   {
-    "t": 35.9333,
-    "target": [
-     -40,
-     -14,
-     0
-    ],
-    "el": 22,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.46,
-    "dist": 300,
-    "az": -2
-   },
-   {
-    "t": 39.86666666666667,
-    "target": [
-     0,
-     -14,
-     0
-    ],
-    "el": 22,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.46,
-    "dist": 640,
-    "az": -4,
+    "fy": 0.44,
+    "dist": 1250,
+    "az": -26,
     "ease": "inout2"
    },
    {
-    "t": 41.96666666666667,
+    "t": 15.033333333333333,
     "target": [
-     0,
-     -14,
-     0
-    ],
-    "el": 22,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.46,
-    "dist": 620,
-    "az": -5,
-    "ease": "sine"
-   },
-   {
-    "t": 42.666666666666664,
-    "target": [
-     -40,
-     -14,
-     0
-    ],
-    "el": 24,
-    "fov": 30,
-    "fx": 0.5,
-    "fy": 0.46,
-    "dist": 340,
-    "az": -6,
-    "ease": "inout2"
-   },
-   {
-    "t": 46.8,
-    "target": [
-     -40,
-     -14,
+     5000.0,
+     -130,
      0
     ],
     "el": 26,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.46,
-    "dist": 330,
-    "az": 6,
+    "fy": 0.44,
+    "dist": 1350,
+    "az": -20,
+    "ease": "sine"
+   },
+   {
+    "t": 17.866666666666667,
+    "target": [
+     5000.0,
+     -130,
+     0
+    ],
+    "el": 30,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 1050,
+    "az": -16,
     "ease": "inout2"
    },
    {
-    "t": 50.6667,
+    "t": 23.233333333333334,
     "target": [
-     -40,
-     -20,
+     5000.0,
+     -130,
      0
     ],
-    "el": 20,
+    "el": 28,
     "fov": 30,
-    "fx": 0.78,
-    "fy": 0.36,
-    "dist": 580,
-    "az": 8,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 1250,
+    "az": -14,
     "ease": "inout2"
    },
    {
-    "t": 57.4,
+    "t": 24.7333,
     "target": [
-     -40,
-     -20,
+     5000.0,
+     -130,
      0
     ],
-    "el": 20,
+    "el": 28,
     "fov": 30,
-    "fx": 0.78,
-    "fy": 0.36,
-    "dist": 570,
-    "az": 9,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 1300,
+    "az": -12,
     "ease": "sine"
    }
   ],
-  "close": [
+  "test": [
    {
-    "t": 57.4,
+    "t": 24.7333,
     "target": [
-     0,
-     -20,
+     5000.0,
+     -150,
      0
     ],
-    "el": 20,
+    "el": 28,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.44,
-    "dist": 520,
-    "az": -4
+    "fy": 0.5,
+    "dist": 1300,
+    "az": -12
    },
    {
-    "t": 70.0,
+    "t": 30.299999999999997,
     "target": [
-     0,
-     -20,
+     5000.0,
+     -150,
      0
     ],
-    "el": 20,
+    "el": 22,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 1000,
+    "az": -8,
+    "ease": "inout2"
+   },
+   {
+    "t": 39.2,
+    "target": [
+     5000.0,
+     -150,
+     0
+    ],
+    "el": 26,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 1450,
+    "az": -4,
+    "ease": "inout2"
+   }
+  ],
+  "fetal": [
+   {
+    "t": 39.2,
+    "target": [
+     7000.0,
+     -110,
+     0
+    ],
+    "el": 26,
     "fov": 30,
     "fx": 0.5,
     "fy": 0.44,
-    "dist": 560,
-    "az": -8,
+    "dist": 1100,
+    "az": -14
+   },
+   {
+    "t": 46.53333333333333,
+    "target": [
+     7000.0,
+     -110,
+     0
+    ],
+    "el": 24,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 1000,
+    "az": -6,
+    "ease": "inout2"
+   },
+   {
+    "t": 52.2667,
+    "target": [
+     7000.0,
+     -110,
+     0
+    ],
+    "el": 22,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.44,
+    "dist": 1050,
+    "az": -4,
+    "ease": "sine"
+   }
+  ],
+  "gauge": [
+   {
+    "t": 52.2667,
+    "target": [
+     5000.0,
+     -40,
+     0
+    ],
+    "el": 14,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.6,
+    "dist": 1300,
+    "az": -8
+   },
+   {
+    "t": 59.7333,
+    "target": [
+     5000.0,
+     -40,
+     0
+    ],
+    "el": 12,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.6,
+    "dist": 1200,
+    "az": -6,
+    "ease": "sine"
+   }
+  ],
+  "macro2": [
+   {
+    "t": 59.7333,
+    "target": [
+     1000.0,
+     0,
+     0.5
+    ],
+    "el": 72,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 6,
+    "az": -5
+   },
+   {
+    "t": 60.4333,
+    "target": [
+     1000.0,
+     0,
+     1.2
+    ],
+    "el": 36,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 22,
+    "az": -7.5,
+    "ease": "out3"
+   },
+   {
+    "t": 60.6,
+    "target": [
+     1000.0,
+     0,
+     0.8
+    ],
+    "el": 40,
+    "fov": 34,
+    "fx": 0.5,
+    "fy": 0.48,
+    "dist": 19,
+    "az": -7,
+    "ease": "sine"
+   }
+  ],
+  "uv": [
+   {
+    "t": 60.6,
+    "target": [
+     0,
+     -0.2,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 17,
+    "az": 1
+   },
+   {
+    "t": 75.1334,
+    "target": [
+     0,
+     -0.2,
+     0
+    ],
+    "el": -1,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 20,
+    "az": -3,
     "ease": "sine"
    }
   ]
  },
  "cue": {
-  "swell": [
-   8.033333333333333,
-   9.7
-  ],
-  "wrong": 13.1,
-  "cut": 20.133333333333333,
-  "smooth": 21.633333333333333,
-  "nerves": 25.1,
-  "narrow": [
-   27.133333333333333,
-   29.133333333333333
-  ],
-  "shrink": [
-   30.8,
-   31.866666666666667
-  ],
-  "buckle": [
-   32.666666666666664,
-   33.766666666666666
-  ],
-  "reflex": 37.233333333333334,
-  "argued": 42.266666666666666,
-  "grip": 45.13333333333333,
-  "none": 46.4,
-  "hairless": 49.8,
-  "thickest": 53.666666666666664,
-  "paper": 56.46666666666667,
-  "soaked": 60.1,
-  "decide": 62.666666666666664,
-  "found": 44.36666666666667,
-  "test": 39.56666666666667
+  "skin1": 1.3,
+  "closer": 1.8333333333333333,
+  "thread": 4.2,
+  "strength": 7.633333333333334,
+  "collagen": 8.133333333333333,
+  "woven": 9.166666666666666,
+  "basket": 10.866666666666667,
+  "gives": 12.166666666666666,
+  "pulled": 13.333333333333334,
+  "cut": 15.033333333333333,
+  "reweave": 16.5,
+  "patches": 17.866666666666667,
+  "laying": 19.033333333333335,
+  "side": 19.833333333333332,
+  "leaves": 21.866666666666667,
+  "glands": 23.233333333333334,
+  "healed": 25.933333333333334,
+  "pulled4": 28.833333333333332,
+  "tears": 29.9,
+  "four": 35.53333333333333,
+  "strength4": 36.3,
+  "until": 39.53333333333333,
+  "sixth": 40.4,
+  "regrows": 43.166666666666664,
+  "follicles": 44.36666666666667,
+  "after": 46.53333333333333,
+  "patches5": 48.53333333333333,
+  "top": 54.8,
+  "paper": 56.06666666666667,
+  "seam": 58.5,
+  "repair": 61.8,
+  "cut5": 42.3,
+  "reweave3": 16.5,
+  "close": 64.66666666666667,
+  "never": 66.33333333333333,
+  "weave7": 66.7
  },
  "gauge": {
   "rise": [
-   48.366699999999994,
-   49.2667
+   52.5667,
+   53.4667
   ],
-  "sc": 53.06666666666666,
-  "paper": 49.0667,
-  "cheek": 54.266666666666666,
+  "sc": 54.5,
+  "paper": 55.86666666666667,
   "back": [
-   56.9,
-   57.8
+   59.1333,
+   59.6833
   ],
-  "sc_um": 173.0,
+  "epi_um": 100.0,
   "paper_um": 100.0
  },
  "labels": [
   {
-   "id": "l-tip-h",
-   "text": "fingertip",
-   "kind": "layer",
-   "anchor": "tip",
+   "id": "l-scar",
+   "text": "an old scar",
+   "kind": "cell",
+   "anchor": "scar",
    "t0": 0.0,
-   "t1": 5.1333,
-   "shot": "pads",
-   "side": -1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-arm-h",
-   "text": "forearm",
-   "kind": "layer",
-   "anchor": "arm",
-   "t0": 2.2666666666666666,
-   "t1": 5.1333,
-   "shot": "pads",
+   "t1": 4.7167,
+   "shot": "macro",
    "side": 1,
    "v": "above",
    "fixed": true
   },
   {
-   "id": "l-sponge",
-   "text": "swelling like a sponge?",
+   "id": "l-col",
+   "text": "collagen",
+   "kind": "cell",
+   "anchor": "weave",
+   "t0": 8.133333333333333,
+   "t1": 14.733333333333333,
+   "shot": "weave",
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-patch",
+   "text": "the patch: all one way",
    "kind": "water",
-   "anchor": "ghost",
-   "t0": 8.333333333333334,
-   "t1": 13.1,
-   "shot": "pads",
+   "anchor": "gap",
+   "t0": 19.833333333333332,
+   "t1": 21.766666666666666,
+   "shot": "weave",
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-app",
+   "text": "follicles, glands: none inside",
+   "kind": "cell",
+   "anchor": "app",
+   "t0": 21.866666666666667,
+   "t1": 24.2833,
+   "shot": "weave",
    "side": 1,
    "v": "below",
    "fixed": true
   },
   {
-   "id": "l-nerve",
-   "text": "nerve",
-   "kind": "cell",
-   "anchor": "nerve_l",
-   "t0": 18.733333333333334,
-   "t1": 22.133300000000002,
-   "shot": "nerves",
+   "id": "l-fetal",
+   "text": "fetal skin",
+   "kind": "layer",
+   "anchor": "fside",
+   "t0": 39.5,
+   "t1": 51.8167,
+   "shot": "fetal",
    "side": -1,
    "v": "above",
    "fixed": true
   },
   {
-   "id": "l-cutn",
-   "text": "nerve cut",
+   "id": "l-fol",
+   "text": "follicles regrow",
    "kind": "cell",
-   "anchor": "nerve_r",
-   "t0": 20.133333333333333,
-   "t1": 22.133300000000002,
-   "shot": "nerves",
+   "anchor": "fgap",
+   "t0": 44.166666666666664,
+   "t1": 46.233333333333334,
+   "shot": "fetal",
    "side": 1,
    "v": "above",
    "fixed": true
   },
   {
-   "id": "l-vessel",
-   "text": "tiny vessels",
-   "kind": "cell",
-   "anchor": "vessel",
-   "t0": 28.3,
-   "t1": 28.833333333333332,
-   "shot": "inside",
-   "side": -1,
-   "fixed": true
-  },
-  {
-   "id": "l-cutr",
-   "text": "nerve cut: stays smooth",
-   "kind": "cell",
-   "anchor": "cutpad",
-   "t0": 39.76666666666667,
-   "t1": 42.06666666666666,
-   "shot": "reflex",
+   "id": "l-fpatch",
+   "text": "your mouth: nearly the same",
+   "kind": "water",
+   "anchor": "fgap",
+   "t0": 48.33333333333333,
+   "t1": 51.8167,
+   "shot": "fetal",
    "side": 1,
    "v": "above",
    "fixed": true
   },
   {
-   "id": "l-tip-c",
-   "text": "fingertip",
-   "kind": "layer",
-   "anchor": "tip",
-   "t0": 57.63333333333333,
-   "t1": 64.03333333333333,
-   "shot": "close",
-   "side": -1,
+   "id": "l-top",
+   "text": "the top layer",
+   "kind": "water",
+   "anchor": "top",
+   "t0": 54.599999999999994,
+   "t1": 59.2833,
+   "shot": "gauge",
+   "side": 1,
+   "v": "below",
+   "fixed": true
+  },
+  {
+   "id": "l-scar2",
+   "text": "the same old scar",
+   "kind": "cell",
+   "anchor": "scar",
+   "t0": 59.9333,
+   "t1": 60.15,
+   "shot": "macro2",
+   "side": 1,
    "v": "above",
    "fixed": true
   },
   {
-   "id": "l-arm-c",
-   "text": "forearm",
-   "kind": "layer",
-   "anchor": "arm",
-   "t0": 57.96666666666667,
-   "t1": 64.03333333333333,
-   "shot": "close",
+   "id": "l-seam",
+   "text": "a seam: no pores",
+   "kind": "water",
+   "anchor": "uvscar",
+   "t0": 60.9,
+   "t1": 68.5,
+   "shot": "uv",
    "side": 1,
    "v": "above",
    "fixed": true
@@ -624,832 +685,774 @@
  ],
  "badges": [
   {
-   "id": "b-simp-h",
+   "id": "b-simp",
    "text": "simplified",
-   "t0": 4.5333000000000006,
-   "t1": 64.03333333333333,
+   "t0": 0.0,
+   "t1": 14.4667,
+   "slot": "br"
+  },
+  {
+   "id": "b-time",
+   "text": "weeks, compressed · illustration",
+   "t0": 14.4667,
+   "t1": 24.2833,
    "slot": "tr"
   },
   {
-   "id": "b-wrong",
-   "text": "not what happens",
-   "t0": 13.1,
-   "t1": 13.7167,
-   "slot": "tl"
+   "id": "b-rat",
+   "text": "model · rats · Levenson 1965",
+   "t0": 24.7333,
+   "t1": 38.75,
+   "slot": "br"
   },
   {
-   "id": "b-1930",
-   "text": "Lewis & Pickering, 1930s",
-   "t0": 16.166666666666668,
-   "t1": 22.8833,
-   "slot": "tl"
-  },
-  {
-   "id": "b-ws",
-   "text": "Wilder-Smith 2003 · sped up",
-   "t0": 27.133333333333333,
-   "t1": 35.4833,
-   "slot": "tl"
-  },
-  {
-   "id": "b-trigger",
-   "text": "trigger: still studied",
-   "t0": 26.333333333333332,
-   "t1": 35.4833,
+   "id": "b-fetal",
+   "text": "illustration · ≈ 22–24 weeks",
+   "t0": 39.2,
+   "t1": 51.8167,
    "slot": "tr"
   },
   {
-   "id": "b-debated",
-   "text": "debated",
-   "t0": 42.266666666666666,
-   "t1": 48.0667,
+   "id": "b-body",
+   "text": "most of the body",
+   "t0": 52.2667,
+   "t1": 59.2833,
    "slot": "tr"
   },
   {
-   "id": "b-studies",
-   "text": "Kareklas 2013 · Haseleu 2014",
-   "t0": 43.96666666666667,
-   "t1": 48.0667,
-   "slot": "tl"
+   "id": "b-simp2",
+   "text": "simplified",
+   "t0": 59.7333,
+   "t1": 60.15,
+   "slot": "br"
   },
   {
-   "id": "b-palm",
-   "text": "Egawa 2007",
-   "t0": 53.666666666666664,
-   "t1": 56.95,
+   "id": "b-model",
+   "text": "model, not a photo",
+   "t0": 60.6,
+   "t1": 68.5,
+   "slot": "br"
+  },
+  {
+   "id": "b-mouse",
+   "text": "mouse study · Martin et al., 2003",
+   "t0": 61.7,
+   "t1": 68.5,
    "slot": "tr"
   }
  ],
  "counters": [
   {
    "id": "c-q",
-   "label": "fingertip vs forearm",
+   "label": "before birth",
+   "text": "no scar",
+   "t0": 1.9833333333333332,
+   "t1": 7.7333,
    "fmt": "text",
-   "text": "why?",
-   "t0": 5.2333,
-   "t1": 13.766666666666667,
    "at": [
-    0.3,
+    0.5,
     0.215
    ]
   },
   {
-   "id": "c-1930",
-   "label": "a finger, its nerve cut",
+   "id": "c-weave",
+   "label": "the dermis",
+   "text": "woven",
+   "t0": 8.133333333333333,
+   "t1": 17.4667,
    "fmt": "text",
-   "text": "1930s",
-   "t0": 14.333333333333334,
-   "t1": 22.883300000000002,
    "at": [
-    0.3,
+    0.5,
     0.215
    ]
   },
   {
-   "id": "c-nerve",
-   "label": "wrinkled by",
+   "id": "c-patch",
+   "label": "a scar",
+   "text": "patched",
+   "t0": 17.866666666666667,
+   "t1": 34.8333,
    "fmt": "text",
-   "text": "nerves",
-   "t0": 23.7333,
-   "t1": 36.8333,
    "at": [
-    0.3,
+    0.5,
     0.215
    ]
   },
   {
-   "id": "c-reflex",
-   "label": "a nerve reflex",
+   "id": "c-str",
+   "label": "strength, at most",
+   "text": "≈ 80%",
+   "t0": 35.233333333333334,
+   "t1": 38.75,
    "fmt": "text",
-   "text": "reflex",
-   "t0": 37.233333333333334,
-   "t1": 43.9667,
    "at": [
-    0.3,
+    0.5,
     0.215
    ]
   },
   {
-   "id": "c-2013",
-   "label": "a better wet grip?",
+   "id": "c-wk",
+   "label": "scarless before",
+   "text": "≈ 22–24 wk",
+   "t0": 40.199999999999996,
+   "t1": 46.33333333333333,
    "fmt": "text",
-   "text": "2013 ✓",
-   "t0": 44.36666666666667,
-   "t1": 45.6,
    "at": [
-    0.3,
+    0.5,
     0.215
    ]
   },
   {
-   "id": "c-2014",
-   "label": "a better wet grip?",
+   "id": "c-after",
+   "label": "still, inside",
+   "text": "your mouth",
+   "t0": 48.43333333333333,
+   "t1": 51.8167,
    "fmt": "text",
-   "text": "2014 ✗",
-   "t0": 46.0,
-   "t1": 48.466699999999996,
    "at": [
-    0.3,
+    0.5,
     0.215
    ]
   },
   {
    "id": "c-final",
-   "label": "wrinkled by",
+   "label": "a scar may be",
+   "text": "the price of defence",
+   "t0": 62.0,
+   "t1": 68.0,
    "fmt": "text",
-   "text": "nerves",
-   "t0": 57.6,
-   "t1": 63.53333333333333,
    "at": [
-    0.3,
+    0.5,
     0.215
    ]
   }
  ],
  "pills": [],
  "title": {
-  "series": "Outer Layer · No. 003",
-  "title": "Bath *fingers*",
-  "t1": 4.6333,
-  "sig": 1.4333333333333333
+  "series": "Skin Sense · No. 003",
+  "title": "What's in a *scar*",
+  "t1": 1.2333333333333334,
+  "sig": 1.6666666666666667
  },
- "endCard": 64.03333333333333,
+ "endCard": 68.5,
  "end": {
-  "title": "Next layer: is a tan a *shield*?",
-  "follow": "Outer Layer · No. 004",
-  "next": "A finger with a cut nerve doesn't wrinkle in water (Lewis & Pickering). Narration: synthetic voice (AI)."
+  "title": "Next: a poison in a *frown*",
+  "follow": "Skin Sense · No. 004",
+  "next": "Healed wounds reach about 80% of the original strength (Levenson et al., 1965, rat skin). Narration: synthetic voice (AI)."
  },
  "captions": [
   {
-   "t0": 0.053,
-   "t1": 2.043,
+   "t0": 0.087,
+   "t1": 1.842,
    "lines": [
     [
      [
-      "Why",
-      0.053
+      "Why do you",
+      0.087
      ],
      [
-      "do",
-      0.358
-     ],
-     [
-      "wet fingers",
-      0.608
-     ]
-    ],
-    [
-     [
-      "wrinkle?",
-      1.073
+      "scar now?",
+      0.737
      ]
     ]
    ]
   },
   {
-   "t0": 2.043,
-   "t1": 4.733,
+   "t0": 1.842,
+   "t1": 3.717,
    "lines": [
     [
      [
-      "Your",
-      2.043
-     ],
-     [
-      "arm",
-      2.278
-     ],
-     [
-      "stays",
-      2.678
-     ],
-     [
-      "smooth",
-      3.083
+      "Before birth,",
+      1.842
      ]
     ],
     [
      [
-      "in",
-      3.383
-     ],
+      "a cut healed",
+      2.792
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.717,
+   "t1": 4.607,
+   "lines": [
+    [
      [
-      "the same bath.",
-      3.593
+      "without one.",
+      3.717
      ]
     ]
    ]
   },
   {
    "t0": 5.453,
-   "t1": 8.173,
+   "t1": 7.918,
    "lines": [
     [
      [
-      "It",
+      "Under the surface,",
       5.453
      ],
      [
-      "looks",
-      5.663
-     ],
-     [
-      "like",
-      6.163
-     ],
-     [
-      "skin",
-      6.428
+      "most",
+      6.533
      ]
     ],
     [
      [
-      "soaking up water",
-      6.938
+      "of",
+      6.838
+     ],
+     [
+      "your skin's strength",
+      6.868
      ]
     ]
    ]
   },
   {
-   "t0": 8.173,
-   "t1": 10.743,
+   "t0": 7.918,
+   "t1": 10.593,
    "lines": [
     [
      [
-      "and swelling,",
-      8.173
+      "is collagen,",
+      7.918
      ]
     ],
     [
      [
-      "like a sponge.",
-      9.013
+      "woven",
+      9.153
+     ],
+     [
+      "every which way",
+      9.633
      ]
     ]
    ]
   },
   {
-   "t0": 10.743,
-   "t1": 12.653,
+   "t0": 10.593,
+   "t1": 13.128,
    "lines": [
     [
      [
-      "It's",
-      10.743
+      "like a basket,",
+      10.593
      ],
      [
-      "the",
-      11.023
+      "so",
+      11.893
      ],
      [
-      "story",
-      11.263
+      "it",
+      11.923
      ]
     ],
     [
      [
-      "we",
-      11.653
+      "gives",
+      12.158
      ],
      [
-      "grew up with,",
-      11.818
+      "whichever way",
+      12.423
      ]
     ]
    ]
   },
   {
-   "t0": 12.653,
-   "t1": 13.893,
+   "t0": 13.128,
+   "t1": 14.053,
    "lines": [
+    [
+     [
+      "it's pulled.",
+      13.128
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 15.027,
+   "t1": 16.167,
+   "lines": [
+    [
+     [
+      "Cut through it,",
+      15.027
+     ]
+    ],
     [
      [
       "and",
-      12.653
+      15.607
      ],
      [
-      "it's",
-      12.813
-     ],
-     [
-      "wrong.",
-      13.098
+      "the body",
+      15.832
      ]
     ]
    ]
   },
   {
-   "t0": 14.32,
-   "t1": 17.345,
+   "t0": 16.167,
+   "t1": 17.687,
    "lines": [
     [
      [
-      "Almost a century ago,",
-      14.32
+      "doesn't reweave.",
+      16.167
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.687,
+   "t1": 20.952,
+   "lines": [
+    [
+     [
+      "It patches:",
+      17.687
+     ],
+     [
+      "new threads",
+      19.037
      ]
     ],
     [
      [
-      "doctors noticed",
-      16.15
+      "side by side,",
+      19.837
      ]
     ]
    ]
   },
   {
-   "t0": 17.345,
-   "t1": 20.59,
+   "t0": 20.952,
+   "t1": 24.107,
    "lines": [
     [
      [
-      "something odd:",
-      17.345
+      "all one way,",
+      20.952
      ],
      [
-      "a",
-      18.555
-     ],
-     [
-      "finger",
-      18.75
+      "with",
+      21.817
      ]
     ],
     [
      [
-      "whose",
-      19.17
+      "no hair",
+      21.852
      ],
      [
-      "nerve",
-      19.35
-     ],
-     [
-      "had been cut",
-      19.955
+      "or sweat glands.",
+      22.572
      ]
     ]
    ]
   },
   {
-   "t0": 20.59,
-   "t1": 23.16,
+   "t0": 25.318,
+   "t1": 28.573,
    "lines": [
     [
      [
-      "stayed",
-      20.59
-     ],
-     [
-      "perfectly",
-      20.955
+      "We call that healed,",
+      25.318
      ]
     ],
     [
      [
-      "smooth",
-      21.64
-     ],
-     [
-      "in the bath.",
-      22.12
+      "as good as new.",
+      26.628
      ]
     ]
    ]
   },
   {
-   "t0": 23.653,
-   "t1": 26.338,
+   "t0": 28.573,
+   "t1": 30.958,
    "lines": [
     [
      [
-      "So",
-      23.653
+      "But",
+      28.573
      ],
      [
-      "the",
-      23.898
-     ],
-     [
-      "wrinkles",
-      23.928
-     ],
-     [
-      "come",
-      24.568
+      "pulled",
+      28.818
      ]
     ],
     [
      [
-      "from",
-      24.828
-     ],
-     [
-      "your nerves.",
-      24.888
+      "until it tears,",
+      29.443
      ]
     ]
    ]
   },
   {
-   "t0": 26.338,
-   "t1": 28.768,
+   "t0": 30.958,
+   "t1": 34.578,
    "lines": [
     [
      [
-      "In",
-      26.338
+      "even",
+      30.958
      ],
      [
-      "water,",
-      26.368
-     ],
-     [
-      "they",
-      27.088
-     ],
-     [
-      "narrow",
-      27.118
-     ]
-    ],
-    [
-     [
-      "the",
-      27.833
-     ],
-     [
-      "tiny vessels",
-      27.863
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 28.768,
-   "t1": 31.518,
-   "lines": [
-    [
-     [
-      "under each fingertip,",
-      28.768
-     ]
-    ],
-    [
-     [
-      "the pad shrinks",
-      30.388
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 31.518,
-   "t1": 34.173,
-   "lines": [
-    [
-     [
-      "a little, and",
-      31.518
-     ],
-     [
-      "the skin",
-      32.153
-     ]
-    ],
-    [
-     [
-      "on top",
-      32.783
-     ],
-     [
-      "buckles.",
-      33.273
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 36.253,
-   "t1": 38.208,
-   "lines": [
-    [
-     [
-      "A",
-      36.253
-     ],
-     [
-      "wrinkle",
-      36.528
+      "an old scar",
+      31.363
      ],
      [
       "is",
-      37.058
-     ],
-     [
-      "a reflex,",
-      37.088
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 38.208,
-   "t1": 41.258,
-   "lines": [
-    [
-     [
-      "one doctors use",
-      38.208
+      32.503
      ]
     ],
     [
-     [
-      "to",
-      39.433
-     ],
-     [
-      "test a nerve.",
-      39.578
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 41.258,
-   "t1": 43.458,
-   "lines": [
-    [
-     [
-      "Why",
-      41.258
-     ],
-     [
-      "we",
-      41.563
-     ],
-     [
-      "have",
-      41.593
-     ]
-    ],
-    [
-     [
-      "it",
-      42.008
-     ],
-     [
-      "is",
-      42.048
-     ],
-     [
-      "argued:",
-      42.258
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 43.458,
-   "t1": 45.608,
-   "lines": [
-    [
-     [
-      "one",
-      43.458
-     ],
-     [
-      "study",
-      43.778
-     ],
-     [
-      "found",
-      44.373
-     ]
-    ],
-    [
-     [
-      "a wet grip,",
-      44.643
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 45.608,
-   "t1": 47.173,
-   "lines": [
-    [
-     [
-      "the",
-      45.608
-     ],
-     [
-      "next",
-      45.983
-     ],
-     [
-      "found none.",
-      46.103
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 48.387,
-   "t1": 50.817,
-   "lines": [
-    [
-     [
-      "It",
-      48.387
-     ],
      [
       "only",
-      48.582
+      32.713
      ],
      [
-      "happens",
-      49.102
+      "as",
+      33.093
+     ],
+     [
+      "strong",
+      33.418
+     ],
+     [
+      "as",
+      33.773
+     ],
+     [
+      "a rope",
+      33.803
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.578,
+   "t1": 37.173,
+   "lines": [
+    [
+     [
+      "missing",
+      34.578
+     ]
+    ],
+    [
+     [
+      "one strand in five.",
+      35.118
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 39.52,
+   "t1": 41.07,
+   "lines": [
+    [
+     [
+      "Until",
+      39.52
+     ]
+    ],
+    [
+     [
+      "about the sixth month",
+      40.005
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.07,
+   "t1": 43.65,
+   "lines": [
+    [
+     [
+      "of pregnancy,",
+      41.07
+     ]
+    ],
+    [
+     [
+      "a baby's skin",
+      42.155
+     ],
+     [
+      "regrows",
+      43.17
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.65,
+   "t1": 46.13,
+   "lines": [
+    [
+     [
+      "the weave,",
+      43.65
+     ]
+    ],
+    [
+     [
+      "follicles and all.",
+      44.365
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.13,
+   "t1": 48.505,
+   "lines": [
+    [
+     [
+      "And",
+      46.13
+     ],
+     [
+      "one place in you",
+      46.16
+     ]
+    ],
+    [
+     [
+      "still",
+      47.21
+     ],
+     [
+      "nearly",
+      47.42
+     ],
+     [
+      "can:",
+      47.715
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 48.505,
+   "t1": 49.48,
+   "lines": [
+    [
+     [
+      "your mouth.",
+      48.505
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 52.587,
+   "t1": 54.322,
+   "lines": [
+    [
+     [
+      "But",
+      52.587
      ],
      [
       "on",
-      49.487
+      52.692
      ]
     ],
     [
      [
-      "the",
-      49.532
-     ],
-     [
-      "hairless skin",
-      49.802
+      "most of your body,",
+      52.967
      ]
     ]
    ]
   },
   {
-   "t0": 50.817,
-   "t1": 53.462,
+   "t0": 54.322,
+   "t1": 55.652,
    "lines": [
     [
      [
-      "of hands and feet,",
-      50.817
+      "only",
+      54.322
+     ],
+     [
+      "the top layer,",
+      54.662
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 55.652,
+   "t1": 57.427,
+   "lines": [
+    [
+     [
+      "about",
+      55.652
      ]
     ],
     [
      [
-      "which also carry",
-      52.502
+      "this paper's thickness,",
+      55.862
      ]
     ]
    ]
   },
   {
-   "t0": 53.462,
-   "t1": 55.707,
+   "t0": 57.427,
+   "t1": 59.107,
    "lines": [
     [
      [
-      "the thickest",
-      53.462
+      "regrows",
+      57.427
+     ],
+     [
+      "without a seam.",
+      58.012
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.053,
+   "t1": 61.803,
+   "lines": [
+    [
+     [
+      "So, why",
+      60.053
+     ],
+     [
+      "the scar?",
+      60.648
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.803,
+   "t1": 64.338,
+   "lines": [
+    [
+     [
+      "Mice",
+      61.803
+     ],
+     [
+      "born",
+      62.128
+     ],
+     [
+      "without",
+      62.513
      ]
     ],
     [
      [
-      "dead layer, nearly",
-      54.177
+      "germ-fighting cells",
+      62.783
+     ],
+     [
+      "heal",
+      63.973
      ]
     ]
    ]
   },
   {
-   "t0": 55.707,
-   "t1": 57.067,
+   "t0": 64.338,
+   "t1": 67.613,
    "lines": [
     [
      [
-      "two sheets of paper.",
-      55.707
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 57.73,
-   "t1": 59.41,
-   "lines": [
-    [
-     [
-      "So",
-      57.73
+      "without one:",
+      64.338
      ],
      [
-      "your",
-      58.105
+      "a",
+      65.363
      ],
      [
-      "fingers",
-      58.19
+      "scar",
+      65.568
+     ],
+     [
+      "may",
+      65.963
      ]
     ],
     [
      [
-      "don't wrinkle",
-      58.72
+      "be",
+      66.068
+     ],
+     [
+      "the price of defence.",
+      66.298
      ]
     ]
    ]
   },
   {
-   "t0": 59.41,
-   "t1": 61.005,
-   "lines": [
-    [
-     [
-      "because they're soaked.",
-      59.41
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 61.005,
-   "t1": 63.84,
-   "lines": [
-    [
-     [
-      "They",
-      61.005
-     ],
-     [
-      "wrinkle",
-      61.035
-     ],
-     [
-      "because",
-      61.655
-     ]
-    ],
-    [
-     [
-      "your",
-      61.945
-     ],
-     [
-      "nerves",
-      61.98
-     ],
-     [
-      "decide to.",
-      62.67
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 64.273,
-   "t1": 68.373,
+   "t0": 68.763,
+   "t1": 71.568,
    "lines": [
     [
      [
       "Next:",
-      64.273
+      68.763
      ],
      [
-      "is",
-      65.078
-     ],
-     [
-      "a",
-      65.108
-     ],
-     [
-      "tan",
-      65.383
-     ],
-     [
-      "really",
-      65.858
+      "a deadly poison,",
+      69.033
      ]
     ],
     [
      [
-      "a",
-      66.298
+      "in",
+      70.468
      ],
      [
-      "shield",
-      66.383
+      "a frown.",
+      70.678
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 71.568,
+   "t1": 72.973,
+   "lines": [
+    [
+     [
+      "How",
+      71.568
      ],
      [
-      "for",
-      66.908
+      "much",
+      72.013
      ],
      [
-      "your skin?",
-      66.993
+      "goes in?",
+      72.213
      ]
     ]
    ]
@@ -1458,59 +1461,59 @@
  "voice": [
   {
    "id": "vo01",
-   "t": 0.03333333333333333,
-   "dur": 4.431,
+   "t": 0.06666666666666667,
+   "dur": 4.568,
    "file": "vo/01.wav",
-   "text": "Why do wet fingers wrinkle? Your arm stays smooth in the same bath."
+   "text": "Why do you scar now? Before birth, a cut healed without one."
   },
   {
    "id": "vo02",
    "t": 5.433333333333334,
-   "dur": 8.187,
+   "dur": 8.34,
    "file": "vo/02.wav",
-   "text": "It looks like skin soaking up water and swelling, like a sponge. It's the story we grew up with, and it's wrong."
+   "text": "Under the surface, most of your skin's strength is collagen, woven every which way like a basket, so it gives whichever way it's pulled."
   },
   {
    "id": "vo03",
-   "t": 14.3,
-   "dur": 8.58,
+   "t": 14.766666666666667,
+   "dur": 9.087,
    "file": "vo/03.wav",
-   "text": "Almost a century ago, doctors noticed something odd: a finger whose nerve had been cut stayed perfectly smooth in the bath."
+   "text": "Cut through it, and the body doesn't reweave. It patches: new threads side by side, all one way, with no hair or sweat glands."
   },
   {
    "id": "vo04",
-   "t": 23.633333333333333,
-   "dur": 10.256,
+   "t": 25.033333333333335,
+   "dur": 11.886,
    "file": "vo/04.wav",
-   "text": "So the wrinkles come from your nerves. In water, they narrow the tiny vessels under each fingertip, the pad shrinks a little, and the skin on top buckles."
+   "text": "We call that healed, as good as new. But pulled until it tears, even an old scar is only as strong as a rope missing one strand in five."
   },
   {
    "id": "vo05",
-   "t": 36.233333333333334,
-   "dur": 10.688,
+   "t": 39.5,
+   "dur": 9.749,
    "file": "vo/05.wav",
-   "text": "A wrinkle is a reflex, one doctors use to test a nerve. Why we have it is argued: one study found a wet grip, the next found none."
+   "text": "Until about the sixth month of pregnancy, a baby's skin regrows the weave, follicles and all. And one place in you still nearly can: your mouth."
   },
   {
    "id": "vo06",
-   "t": 48.36666666666667,
-   "dur": 8.643,
+   "t": 52.56666666666667,
+   "dur": 6.316,
    "file": "vo/06.wav",
-   "text": "It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of paper."
+   "text": "But on most of your body, only the top layer, about this paper's thickness, regrows without a seam."
   },
   {
    "id": "vo07",
-   "t": 57.7,
-   "dur": 5.885,
+   "t": 60.03333333333333,
+   "dur": 7.359,
    "file": "vo/07.wav",
-   "text": "So your fingers don't wrinkle because they're soaked. They wrinkle because your nerves decide to."
+   "text": "So, why the scar? Mice born without germ-fighting cells heal without one: a scar may be the price of defence."
   },
   {
    "id": "vo08",
-   "t": 64.23333333333333,
-   "dur": 3.871,
+   "t": 68.43333333333334,
+   "dur": 4.461,
    "file": "vo/08.wav",
-   "text": "Next: is a tan really a shield for your skin?"
+   "text": "Next: a deadly poison, in a frown. How much goes in?"
   }
  ]
 }

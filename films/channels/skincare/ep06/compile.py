@@ -1,15 +1,12 @@
-"""Compile Outer Layer No. 006, "Goosebumps": script + voice timings + this direction → film.json (the
-scene's clock: shots, camera keys, labels, badges, counters, captions, title and end card) and sheet.json (the
-studio's cue sheet). Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word
-(kits/cinema/script/timeline.py anchors), and every number on screen comes from claims.json.
+"""Compile Outer Layer No. 006, "Same list as cigarettes" (the reboot's look: UV camera + macro flight): script +
+voice timings + this direction → film.json and sheet.json. Every moment hangs on a beat or a spoken word; every
+number on screen comes from claims.json, hedged as the sources are.
 
   python3 -I films/channels/skincare/ep06/compile.py
 
-If build/cues-outerlayer-006-9x16.json exists (render.mjs --cues), each label and counter also gets the picture's
-own screen position (pan) and its measured first frame ("shown", the studio's independent sync check).
-
-Units in the scene: 1 unit = 1 µm. The skin's surface is y = 0; depth is −y. The patch of skin (x = 0, about 3 mm
-across), the follicle cut open (x = 6000) and the furred coat (x = −6000) are separate places, never in one frame.
+Places (one scene, far apart): the skin under the bed (the macro terrain at x = 0, deep tone, with a canopy of UVA
+tubes above it), the same skin through the 365 nm camera (x = +4000), and a cut-face section for the long rays
+(../set/section.js, x = −4000, units µm). The list (IARC Group 1) is an overlay plate, typeset, never a photo.
 """
 import json
 import sys
@@ -21,7 +18,7 @@ from timeline import Film   # noqa: E402
 sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
-FPS, BPM = 30, 64.2857                   # bible §3: F major at 64.2857 BPM (a 16th = 7 frames)
+FPS, BPM = 30, 64.2857
 ID = "outerlayer-006"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
@@ -29,168 +26,151 @@ BEATS = f.layout(plan, end_hold=end_hold)
 A = f.at
 B = {b["id"]: b for b in BEATS}
 
-# ── the biology (claims.json) ───────────────────────────────────────────────
-VELLUS_UM = 30.0        # c12: vellus hairs are by definition < 30 µm across
-PAPER_UM = 100.0        # c13: 80 gsm copy paper ≈ 100 µm
-assert VELLUS_UM / PAPER_UM < 1 / 3 + 1e-9, "thinner than a third"
-FX, PX = 6000.0, -6000.0                 # the follicle's place and the fur's place
+# ── the numbers (claims.json) ───────────────────────────────────────────────
+GROUP_YEAR = 2009                       # c1
+UVA_X = (10, 15)                        # c4: "may be 10 to 15 times" the midday sun, large powerful units (AAP 2011)
+RR = (1.59, 1.75)                       # c6: first use before 35 (Boniol 2012, corrected; IARC 2007)
+BANS = [("Brazil", 2009), ("Australia", 2015)]   # c7, c8 (commercial beds; WA from 2016)
+EPI_UM, PAPER_UM = 100.0, 100.0         # c10: the epidermis ≈ 0.1 mm (0.07–0.12) on most skin; paper ≈ 100 µm
+assert min(RR) > 1.5, "raised by more than half"
+SC_UM, ROWS, GRAN_UM, SPIN_UM, BASAL_UM = 17.0, 15, 10.0, 63.0, 10.0   # the section's epidermis drawn ≈ 100 µm (simplified)
+assert abs(SC_UM + GRAN_UM + SPIN_UM + BASAL_UM - EPI_UM) < 1e-9
+TONE = "deep"           # bible §1: 006 is drawn in the deep tone
 
 # ── shots ─────────────────────────────────────────────────────────────────
-# hook: the payoff, skin at the mm rung (deep tone), bumps up round fine hairs · follicle: one bump cut open (light
-# tone): the muscle, the nerve, the hair standing · fur: a furred coat lifting, air trapped · ours: our skin, the same
-# follicles, fine hairs (medium tone) · bulge: down the follicle to its stem cells, the nerve reaching them · cold:
-# frost, the nerve fires, the stem cells wake, a new hair grows · nomuscle: the muscle taken away, the wiring fades ·
-# gauge: to scale · close: the hook
-t_ours, t_nom, t_end = A("vo03:We", -0.2), A("vo05:Take", -0.2), A("vo08:That's", -0.25)
-SHOTS = [{"at": 0.0, "name": "hook"}, {"at": B["normal"]["t0"], "name": "follicle"}, {"at": B["change"]["t0"], "name": "fur"},
-         {"at": t_ours, "name": "ours"}, {"at": B["why"]["t0"], "name": "bulge"}, {"at": B["whoa"]["t0"], "name": "cold"},
-         {"at": t_nom, "name": "nomuscle"}, {"at": B["toscale"]["t0"], "name": "gauge"}, {"at": B["takeaway"]["t0"], "name": "close"},
-         {"at": A("vo07:Because", -0.15), "name": "payoff"}]   # the answer over the follicle: the muscle raising its hair, the stem cells lit
-TONE = {k: 0.18 for k in ("hook", "follicle", "fur", "ours", "bulge", "cold", "nomuscle", "gauge", "close", "payoff")}   # bible §1 (owner-approved 2 Nov): one melanin level for the whole episode, rotating (004 medium, 006 light)
-
+t_end = A("vo08:Next", -0.25)
 CUE = {
-    "goose": A("vo01:goosebumps?"), "fur": A("vo01:fur."), "muscle": A("vo02:muscle,"), "cold": A("vo02:cold"),
-    "tugs": A("vo02:tugs"), "upright": A("vo02:upright"), "bump": A("vo02:bump."), "fluffs": A("vo03:fluffs"),
-    "air": A("vo03:air."), "chimp": A("vo03:chimpanzee,"), "ours": A("vo03:ours"), "but": A("vo04:But"), "hairs": A("vo06:hairs"), "fine": A("vo03:fine,"), "leftover": A("vo04:leftover."),
-    "harvard": A("vo04:Harvard"), "reaches": A("vo04:reaches"), "stem": A("vo04:stem"), "holds": A("vo04:holds"),
-    "wakes": A("vo05:wakes"), "sooner": A("vo05:sooner."), "take": A("vo05:Take"), "fades": A("vo05:fades."),
-    "thinner": A("vo06:thinner"), "paper": A("vo06:sheet"), "raises": A("vo07:raises"), "because": A("vo07:Because"), "goose2": A("vo07:goosebumps?"), "deeper": A("vo08:deeper."), "looks": A("vo07:looks"),
+    "list": A("vo01:list"), "most": A("vo01:Most"), "cigs": A("vo01:cigarettes?"), "deadly": A("vo01:deadly."),
+    "who": A("vo02:World"), "top": A("vo02:top"), "tobacco": A("vo02:tobacco"), "ranks": A("vo02:ranks"), "sure": A("vo02:sure"), "harm": A("vo02:harm."),
+    "follow": A("vo03:Follow"), "bed": A("vo03:bed:"), "uva": A("vo03:UVA,"), "long": A("vo03:long"), "large": A("vo03:large,"), "ten": A("vo03:ten"), "midday": A("vo03:midday"),
+    "weighed": A("vo04:Weighing"), "young": A("vo04:young."), "pooled": A("vo04:pooled"), "before": A("vo04:before"), "melanoma": A("vo04:melanoma"), "half": A("vo04:half."),
+    "countries": A("vo05:countries"), "brazil": A("vo05:Brazil"), "same": A("vo05:same"), "australia": A("vo05:Australia"), "off": A("vo05:off."),
+    "rays": A("vo06:rays"), "layer": A("vo06:layer,"), "paper": A("vo06:paper."),
+    "same2": A("vo07:Same"), "harm2": A("vo07:harm,"), "certainty": A("vo07:certainty."),
 }
+SHOTS = [{"at": 0.0, "name": "uvhook"}, {"at": CUE["most"], "name": "list"}, {"at": B["change"]["t0"], "name": "bed"}, {"at": B["whoa"]["t0"], "name": "uv"},
+         {"at": B["toscale"]["t0"], "name": "section"}, {"at": B["takeaway"]["t0"], "name": "list2"}]
 
-# ── the camera (the microscope-stage rig: target, dist, el, az, fov, fx, fy) ──
-HOOK = {"target": [0, 60, 0], "el": 34, "fov": 30, "fx": 0.5, "fy": 0.42}
-FOL = {"fov": 30, "fx": 0.5, "fy": 0.36}   # the section sits high: its bulb clear of the captions
+UX, SX = 4000.0, -4000.0
+FLY = {"el": 14, "fov": 34, "fx": 0.5, "fy": 0.5}
+UVK = {"target": [UX, 0.1, 0], "el": 2, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.4}
 CAM = {
-    "hook": [{"t": 0.0, **HOOK, "dist": 3600, "az": -14}, {"t": 2.0, **HOOK, "dist": 3300, "az": -12, "ease": "inout2"},
-             {"t": B["normal"]["t0"], **HOOK, "dist": 3000, "az": -10, "ease": "sine"}],
-    "follicle": [{"t": B["normal"]["t0"], "target": [FX + 130, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.47, "dist": 2700, "az": -4},   # the block fills the frame (no void)
-                 {"t": CUE["cold"], "target": [FX + 160, -200, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 2600, "az": -3, "ease": "inout2"},   # to the muscle and the nerve
-                 {"t": CUE["upright"], "target": [FX + 60, -40, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 2300, "az": -1, "ease": "inout2"},   # up to the surface: the bump, and the muscle above the caption
-                 {"t": B["change"]["t0"], "target": [FX + 60, -40, 0], "el": 8, "fov": 30, "fx": 0.5, "fy": 0.40, "dist": 2100, "az": 0, "ease": "sine"}],
-    "fur": [{"t": B["change"]["t0"], "target": [PX, 200, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2600, "az": -8},
-            {"t": t_ours, "target": [PX, 240, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2300, "az": -4, "ease": "sine"}],
-    "ours": [{"t": t_ours, **HOOK, "dist": 3800, "az": 6},
-             {"t": B["why"]["t0"], **HOOK, "dist": 3300, "az": 4, "ease": "sine"}],
-    "bulge": [{"t": B["why"]["t0"], "target": [FX + 130, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.47, "dist": 3200, "az": 0},
-              {"t": CUE["but"], "target": [FX + 130, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.47, "dist": 3000, "az": 0, "ease": "sine"},
-              {"t": CUE["reaches"], "target": [FX + 110, -250, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 1500, "az": 2, "ease": "inout2"},   # the push on "But", to the niche at frame centre
-              {"t": B["whoa"]["t0"], "target": [FX + 110, -250, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 1400, "az": 2, "ease": "sine"}],
-    "cold": [{"t": B["whoa"]["t0"], "target": [FX + 110, -250, 0], "el": 5, "fov": 30, "fx": 0.5, "fy": 0.5, "dist": 1400, "az": 2},   # continues from the niche
-             {"t": CUE["sooner"] - 1.6, "target": [FX + 130, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2600, "az": 0, "ease": "inout2"},   # out to the whole follicle as the new hair climbs
-             {"t": t_nom, "target": [FX + 300, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2700, "az": -1, "ease": "sine"}],
-    # the twin follicle at the cold shot's framing (a match cut): the same follicle, its muscle about to be taken away
-    "nomuscle": [{"t": t_nom, "target": [FX + 1100 + 300, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2700, "az": -1},
-                 {"t": B["toscale"]["t0"], "target": [FX + 1100 + 220, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2500, "az": 0, "ease": "sine"}],
-    "gauge": [{"t": B["toscale"]["t0"], "target": [FX + 130, -260, 0], "el": 6, "fov": 30, "fx": 0.66, "fy": 0.47, "dist": 2800, "az": -2},
-              {"t": CUE["paper"], "target": [FX - 40, 120, 0], "el": 6, "fov": 30, "fx": 0.70, "fy": 0.46, "dist": 1700, "az": -3, "ease": "inout2"},   # a push to the real hair at the surface, beside its bar
-              {"t": B["takeaway"]["t0"], "target": [FX - 40, 120, 0], "el": 6, "fov": 30, "fx": 0.70, "fy": 0.46, "dist": 1600, "az": -3, "ease": "sine"}],
-    "close": [{"t": B["takeaway"]["t0"], **HOOK, "dist": 2600, "az": -6}, {"t": A("vo07:Because", -0.15), **HOOK, "dist": 2100, "az": -8, "ease": "inout2"}],   # a push into the bumps...
-    "payoff": [{"t": A("vo07:Because", -0.15), "target": [FX + 130, -220, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 3000, "az": -4},   # ...that lands inside one: the muscle, its hair, the stem cells
-               {"t": CUE["looks"], "target": [FX + 130, -220, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2500, "az": -2, "ease": "inout2"},
-               {"t": CUE["deeper"] - 0.3, "target": [FX + 130, -260, 0], "el": 6, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 2400, "az": -1, "ease": "sine"},
-               {"t": CUE["deeper"] + 1.0, "target": [FX + 200, -460, 0], "el": 4, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 1800, "az": 1, "ease": "inout2"},   # "deeper": down into the dermis under the card
-               {"t": B["tease"]["t1"], "target": [FX + 200, -470, 0], "el": 4, "fov": 30, "fx": 0.5, "fy": 0.42, "dist": 1750, "az": 1, "ease": "sine"}],
+    # the list is an overlay: behind it, a slow, dim flight over the skin (the tubes off)
+    # the hook opens mid-push inside the UV camera: skin glowing under a bed's light; the list lights its two lines over it.
+    # On "Most", the signature switch to daylight: the same skin, the flight
+    "uvhook": [{"t": 0.0, **UVK, "dist": 30}, {"t": CUE["most"], **UVK, "dist": 23, "ease": "linear"}],
+    "list": [{"t": CUE["most"], "target": [0, -0.4, 14], "dist": 26, "az": -6, **FLY},
+             {"t": CUE["top"], "target": [-3, -0.4, 10], "dist": 22, "az": -10, **FLY, "ease": "inout2"},
+             {"t": CUE["sure"], "target": [3, -0.4, 6], "dist": 20, "az": -2, **{**FLY, "el": 24}, "ease": "inout2"},
+             {"t": B["change"]["t0"], "target": [0, -0.6, 2], "dist": 12, "az": 0, **{**FLY, "el": 34}, "ease": "in2"}],   # dives toward the skin: into the bed
+    # into the bed: the tubes light; the flight runs under them; the camera holds through the why
+    "bed": [{"t": B["change"]["t0"], "target": [0, -0.4, 6], "dist": 18, "el": 18, "az": 0, "fov": 34, "fx": 0.5, "fy": 0.56},
+            {"t": CUE["ten"], "target": [0, -0.4, 2], "dist": 16, "el": 14, "az": 4, "fov": 34, "fx": 0.5, "fy": 0.56, "ease": "inout2"},
+            {"t": B["whoa"]["t0"], "target": [0, -0.4, -4], "dist": 20, "el": 22, "az": 10, "fov": 34, "fx": 0.5, "fy": 0.56, "ease": "sine"}],
+    "uv": [{"t": B["whoa"]["t0"], **UVK, "dist": 25}, {"t": B["toscale"]["t0"], **UVK, "dist": 23, "ease": "sine"}],
+    "section": [{"t": B["toscale"]["t0"], "target": [SX, -70, 0], "dist": 520, "el": 8, "az": -6, "fov": 30, "fx": 0.5, "fy": 0.62},
+                {"t": B["takeaway"]["t0"], "target": [SX, -70, 0], "dist": 480, "el": 8, "az": 0, "fov": 30, "fx": 0.5, "fy": 0.62, "ease": "sine"}],
+    "list2": [{"t": B["takeaway"]["t0"], "target": [0, -0.4, 16], "dist": 26, "az": -8, **FLY},
+              {"t": B["tease"]["t1"], "target": [0, -0.4, 10], "dist": 24, "az": -4, **FLY, "ease": "sine"}],
 }
-for shot, keys in CAM.items():           # a microscope stage: slow arcs (≤ 4° a second)
+for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
-        rate = abs(b["az"] - a["az"]) / (b["t"] - a["t"])
-        assert rate <= 4.0 + 1e-9, f"{shot}: az turns {rate:.2f}°/s"
+        rate = abs(b["az"] - a["az"]) / max(1e-6, b["t"] - a["t"])
+        assert rate <= 6.0 + 1e-9, f"{shot}: az turns {rate:.2f}°/s"
 
-# ── the overlay ─────────────────────────────────────────────────────────────
 LABELS = [
-    {"id": "l-muscle", "text": "a tiny muscle", "kind": "cell", "anchor": "muscle", "t0": CUE["muscle"], "t1": CUE["tugs"] - 0.2, "shot": "follicle", "side": 1},
-    {"id": "l-nerve", "text": "a nerve", "kind": "layer", "anchor": "nerve", "t0": CUE["tugs"], "t1": B["change"]["t0"], "shot": "follicle", "side": 1, "v": "below"},
-    {"id": "l-hair", "text": "the hair stands", "kind": "cell", "anchor": "hair", "t0": CUE["upright"], "t1": B["change"]["t0"], "shot": "follicle", "side": -1},
-    {"id": "l-air", "text": "trapped air", "kind": "layer", "anchor": "air", "t0": CUE["air"] - 0.9, "t1": t_ours - 0.05, "shot": "fur", "side": 1},
-    {"id": "l-fine", "text": "fine hairs", "kind": "cell", "anchor": "finehair", "t0": CUE["fine"], "t1": B["why"]["t0"], "shot": "ours", "side": 1},
-    {"id": "l-stem", "text": "stem cells", "kind": "water", "anchor": "stem", "t0": CUE["stem"], "t1": B["whoa"]["t0"], "shot": "bulge", "side": -1},
-    {"id": "l-hold", "text": "the muscle holds the nerve", "kind": "cell", "anchor": "insertion", "t0": CUE["holds"], "t1": B["whoa"]["t0"], "shot": "bulge", "side": 1},
-    {"id": "l-new", "text": "a new hair", "kind": "cell", "anchor": "bulb", "t0": CUE["wakes"] + 0.8, "t1": t_nom, "shot": "cold", "side": 1},
-    {"id": "l-twin", "text": "a second follicle", "kind": "cell", "anchor": "nomhair", "t0": t_nom + 0.1, "t1": CUE["take"] + 0.7, "shot": "nomuscle", "side": -1},
-    {"id": "l-nomus", "text": "no muscle", "kind": "cell", "anchor": "nomus", "t0": CUE["take"] + 0.8, "t1": CUE["fades"] - 0.3, "shot": "nomuscle", "side": 1},
-    {"id": "l-fade", "text": "its wiring fades", "kind": "layer", "anchor": "nomnerve", "t0": CUE["fades"] - 0.1, "t1": B["toscale"]["t0"], "shot": "nomuscle", "side": 1},
+    {"id": "l-uva", "text": "UVA, the long rays", "kind": "uv", "anchor": "tube", "t0": CUE["uva"] - 0.2, "t1": CUE["weighed"], "shot": "bed", "side": 1, "v": "below", "fixed": True},
+    {"id": "l-epi", "text": "the top layer", "kind": "cell", "anchor": "epi", "t0": CUE["layer"] - 0.6, "t1": B["takeaway"]["t0"], "shot": "section", "side": -1},
+    {"id": "l-deep", "text": "UVA reaches past it", "kind": "uv", "anchor": "derm", "t0": CUE["rays"], "t1": B["takeaway"]["t0"], "shot": "section", "side": 1, "v": "below"},
 ]
 BADGES = [
-    {"id": "b-simp-h", "text": "simplified", "t0": 0.0, "t1": B["normal"]["t0"], "slot": "tr"},
-    {"id": "b-simp", "text": "simplified", "t0": B["normal"]["t0"], "t1": B["change"]["t0"], "slot": "tr"},
-    {"id": "b-illus", "text": "illustration", "t0": B["change"]["t0"], "t1": t_ours, "slot": "tr"},
-    {"id": "b-simp-o", "text": "simplified", "t0": t_ours, "t1": B["why"]["t0"], "slot": "tr"},
-    {"id": "b-mice", "text": "in mice · Shwartz et al., 2020", "t0": CUE["harvard"], "t1": B["toscale"]["t0"], "slot": "bl"},
-    {"id": "b-simp-b", "text": "simplified", "t0": B["why"]["t0"], "t1": B["whoa"]["t0"], "slot": "tr"},
-    {"id": "b-time", "text": "weeks, compressed", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "br"},
-    {"id": "b-vel", "text": "vellus: < 30 µm by definition", "t0": CUE["thinner"], "t1": B["takeaway"]["t0"], "slot": "tr"},
-    {"id": "b-simp-z", "text": "simplified", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "tr"},
-    {"id": "b-mice-z", "text": "in mice · Shwartz et al., 2020", "t0": CUE["raises"] - 0.6, "t1": t_end, "slot": "bl"},
+    {"id": "b-iarc", "text": "IARC Monographs, Group 1", "t0": CUE["deadly"], "t1": B["change"]["t0"], "slot": "tr"},
+    {"id": "b-units", "text": "model · large, powerful units", "t0": B["change"]["t0"] + 0.3, "t1": B["why"]["t0"], "slot": "tl"},
+    {"id": "b-pooled", "text": "pooled studies (meta-analyses)", "t0": CUE["pooled"], "t1": B["whoa"]["t0"], "slot": "tl"},
+    {"id": "b-model-uv", "text": "model, not a photo", "t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"], "slot": "tl"},
+    {"id": "b-simp", "text": "simplified", "t0": B["toscale"]["t0"] + 0.3, "t1": B["takeaway"]["t0"], "slot": "tl"},
 ]
-SPINE = [0.5, 0.215]                      # top right, under the notes: the depth gauge owns the left edge
+SPINE = [0.62, 0.2]
 COUNTERS = [
-    {"id": "c-q", "label": "goosebumps, with no fur", "fmt": "text", "text": "why?", "t0": CUE["fur"] + 0.1, "t1": B["normal"]["t0"], "at": SPINE},
-    {"id": "c-apm", "label": "the muscle", "fmt": "text", "text": "arrector pili", "t0": CUE["muscle"] + 0.5, "t1": B["change"]["t0"], "at": SPINE},
-    {"id": "c-chimp", "label": "hair follicles", "fmt": "text", "text": "≈ chimp", "t0": CUE["chimp"], "t1": B["why"]["t0"], "at": SPINE},
-    {"id": "c-ne", "label": "the nerve's signal", "fmt": "text", "text": "noradrenaline", "t0": CUE["reaches"] + 0.45, "t1": t_nom, "at": SPINE},
-    # (no spine value in the to-scale beat: the lifted gauge carries "< 30 µm" itself, and the card needs the space)
-    {"id": "c-final", "label": "the little muscle", "fmt": "text", "text": "tends hair", "t0": B["takeaway"]["t0"] + 0.2, "t1": t_end - 0.5, "at": SPINE},
+    {"id": "c-uva", "label": "UVA vs midday sun (may be)", "fmt": "text", "text": "×10–15", "t0": CUE["ten"] - 0.2, "t1": B["why"]["t0"], "at": SPINE},
+    {"id": "c-rr", "label": "melanoma risk, first use < 35", "fmt": "text", "text": "×1.6–1.75", "t0": CUE["half"] - 0.3, "t1": B["whoa"]["t0"], "at": SPINE},
+    {"id": "c-end", "label": "Group 1 ranks", "fmt": "text", "text": "certainty", "t0": CUE["certainty"] - 0.2, "t1": t_end - 0.7, "at": SPINE},
 ]
+PLATES = {
+    "vfhook": {"t0": 0.0, "t1": CUE["most"]},
+    "list": {"t0": 0.2, "t1": B["change"]["t0"] - 0.3, "lit": CUE["cigs"] - 0.6, "lit2": CUE["tobacco"] - 0.2, "rank": CUE["sure"] - 0.2},
+    "list2": {"t0": B["takeaway"]["t0"] + 0.2, "t1": t_end - 0.3, "rank": CUE["harm2"] - 0.2},
+    "rr": {"t0": CUE["pooled"] - 0.3, "t1": B["whoa"]["t0"] - 0.3, "before": CUE["before"], "rr": list(RR)},
+    "bans": {"t0": CUE["countries"] - 0.2, "t1": B["toscale"]["t0"] - 0.3, "brazil": CUE["brazil"], "australia": CUE["australia"], "off": CUE["off"], "bans": BANS},
+    "viewfinder": {"t0": B["whoa"]["t0"], "t1": B["toscale"]["t0"]},
+    # no daylight strip: tones under a tanning-bed risk story would pair tones with a risk (bible §1)
+}
+BED = {"on": [B["change"]["t0"] + 0.2, CUE["bed"] + 0.3], "glow": [CUE["ten"] - 0.3, CUE["ten"] + 0.9]}
+UVD = {"brazil": [CUE["brazil"], CUE["brazil"] + 1.0], "off": [CUE["australia"], CUE["off"] + 0.5]}
 CUTS = [sh["at"] for sh in SHOTS[1:]]
-# every cut is a short dip to the slide colour (as No. 004), so no cut jumps the picture's brightness in one frame
-TRANS = []   # no dips: every shot keeps pushing in, so each cut is a match on the move (the close pulls out for the loop)
 
 
-def before_cut(t1, lead=0.45):           # faded out before the cut, so nothing of one shot sits on the next
+def before_cut(t1, lead=0.35):
     return round(t1 - lead, 4) if any(abs(t1 - c) < 1e-6 for c in CUTS) else t1
 
 
 for row in BADGES + COUNTERS + LABELS:
     row["t1"] = before_cut(row["t1"])
-for a, b in zip(COUNTERS, COUNTERS[1:]):  # two values never share the screen
+for a, b in zip(COUNTERS, COUNTERS[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-GAUGE = {"rise": [B["toscale"]["t0"], B["toscale"]["t0"] + 0.9], "sc": CUE["hairs"], "paper": CUE["paper"],
-         "back": [B["takeaway"]["t0"] - 0.6, B["takeaway"]["t0"] - 0.05], "sc_um": VELLUS_UM, "paper_um": PAPER_UM, "bar": "hair"}
+GAUGE = {"rise": [B["toscale"]["t0"] + 0.4, B["toscale"]["t0"] + 1.3], "sc": CUE["layer"] - 0.2, "paper": CUE["paper"],
+         "back": [B["takeaway"]["t0"] - 0.5, B["takeaway"]["t0"] + 0.4], "sc_um": EPI_UM, "paper_um": PAPER_UM, "bar": "top layer", "sc_text": "≈ 100 µm"}
+RAYS = {"on": [B["toscale"]["t0"] + 0.2, CUE["rays"]]}
 
-TITLE = {"series": "Outer Layer · No. 006", "title": "*Goosebumps*", "t1": CUE["fur"] - 0.3, "sig": A("vo01:goosebumps?", 0.35)}
-END = {"title": "Next season: *deeper*", "follow": "Outer Layer · Season 1",
-       "next": "In mice, the nerve that raises a hair also wakes the stem cells that regrow it (Shwartz et al., Cell, 2020). Narration: synthetic voice (AI)."}
-POSTER = A("vo04:holds", 0.4)
+TITLE = {"series": "Outer Layer · No. 006", "title": "Same list as *cigarettes*", "t1": B["normal"]["t0"] - 0.5, "sig": A("vo01:cigarettes?", 0.35)}
+END = {"title": "Next season: why do bath fingers *wrinkle*?", "follow": "Outer Layer · season 2",
+       "next": "IARC classified UV-emitting tanning devices as carcinogenic to humans (Group 1) in 2009. Narration: synthetic voice (AI)."}
+POSTER = A("vo07:certainty.", 0.3)
 
-glue(f, {"vo02": ["tiny muscle,", "into a bump."], "vo03": ["trapped air.", "hair follicles", "a chimpanzee,"], "vo04": ["stem cells", "in place."],
-         "vo05": ["stem cells,", "new hair sooner."], "vo06": ["a third", "a sheet of paper."], "vo07": ["looks after it."]})
+glue(f, {"vo01": ["Same list", "as cigarettes?", "just as deadly."], "vo02": ["cancer agency,", "top group,", "tobacco smoke.", "how sure", "how big the harm."],
+         "vo03": ["into the bed:", "mostly UVA,", "the long rays.", "ten to fifteen times", "the midday sun."], "vo04": ["started young.", "before thirty-five", "more than half."],
+         "vo05": ["whole countries", "commercial tanning beds", "that same year,", "switched its own off."], "vo06": ["the long rays", "the top layer,", "as thin as paper."],
+         "vo07": ["Same list", "as cigarettes,", "size of harm,", "same certainty."], "vo08": ["Next season:", "bath fingers", "your arm?"]})
 CAPS = hold(f, keep_units(f.captions(max_chars=24)))
 
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
-    "shots": SHOTS, "beats": BEATS, "tone": TONE,
-    "bio": {"vellus_um": VELLUS_UM, "paper_um": PAPER_UM, "fx": FX, "px": PX},
-    "cam": CAM, "cue": CUE, "gauge": GAUGE, "trans": TRANS,
+    "shots": SHOTS, "beats": BEATS, "tone": TONE, "trans": [],
+    "bio": {"ux": UX, "sx": SX, "paper_um": PAPER_UM, "epi_um": EPI_UM, "sc_um": SC_UM, "rows": ROWS, "gran_um": GRAN_UM, "spin_um": SPIN_UM, "basal_um": BASAL_UM},
+    "cam": CAM, "cue": CUE, "gauge": GAUGE, "plates": PLATES, "bed": BED, "uvd": UVD, "rays": RAYS,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": [],
     "title": TITLE, "endCard": t_end, "end": END,
     "captions": CAPS,
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 
-# ── the studio's cue sheet ─────────────────────────────────────────────────
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title"})
 ev.append({"t": t_end, "kind": "signature", "tag": "end"})
 for L in LABELS:
-    if L["t0"] > 0:
-        ev.append({"t": L["t0"], "kind": "label", "tag": L["id"]})
+    ev.append({"t": L["t0"], "kind": "label", "tag": L["id"]})
 for c in COUNTERS:
     ev.append({"t": c["t0"], "kind": "counter.show", "tag": c["id"]})
 for b in BADGES:
     if b["t0"] > 0:
         ev.append({"t": b["t0"], "kind": "badge", "tag": b["id"]})
 ev += [
-    {"t": CUE["tugs"], "kind": "cell.land", "tag": "tug"},
-    {"t": B["normal"]["t0"], "kind": "scale.jump", "tag": "into-follicle"},
-    {"t": CUE["fluffs"], "kind": "reveal", "tag": "fluff"},
-    {"t": CUE["reaches"], "kind": "diffuse", "tag": "reach"},
+    {"t": CUE["most"], "kind": "cell.land", "tag": "shutter-0"},
+    {"t": PLATES["list"]["lit"], "kind": "reveal", "tag": "list-lit"},
+    {"t": PLATES["list"]["rank"], "kind": "cell.land", "tag": "rank"},
+    {"t": B["change"]["t0"], "kind": "scale.jump", "tag": "into-bed"},
+    {"t": BED["on"][0], "kind": "zap", "tag": "tubes-on"},
+    {"t": PLATES["rr"]["before"], "kind": "reveal", "tag": "rr"},
+    {"t": B["whoa"]["t0"], "kind": "cell.land", "tag": "shutter"},
     {"t": B["whoa"]["t0"], "kind": "swell", "tag": "whoa", "t1": B["whoa"]["t1"]},
-    {"t": CUE["wakes"], "kind": "diffuse", "tag": "wake"},
-    {"t": CUE["fades"], "kind": "dissolve", "tag": "fade", "t1": round(CUE["fades"] + 0.8, 4)},
-    {"t": GAUGE["sc"], "kind": "scale", "tag": "g-hair"},
+    {"t": UVD["brazil"][0], "kind": "cell.land", "tag": "brazil"},
+    {"t": UVD["off"][1] - 0.4, "kind": "cell.land", "tag": "australia-off"},
+    {"t": B["toscale"]["t0"], "kind": "scale.jump", "tag": "into-section"},
+    {"t": GAUGE["sc"], "kind": "scale", "tag": "g-epi"},
     {"t": GAUGE["paper"], "kind": "reveal", "tag": "g-paper"},
+    {"t": B["takeaway"]["t0"], "kind": "scale.jump", "tag": "back-to-list"},
 ]
 cues_file = HERE / "build" / f"cues-{ID}-9x16.json"
 shown = {}
@@ -215,5 +195,3 @@ print(f"film.json: {f.duration:.2f} s, {len(SHOTS)} shots, {sum(len(k) for k in 
       f"{len(BADGES)} badges, {len(COUNTERS)} counters, {len(CAPS)} caption pages, end card {t_end:.2f} s")
 print("  shots " + " · ".join(f"{s['name']} {s['at']:.2f}" for s in SHOTS))
 print(f"sheet.json: {len(sheet['events'])} events" + (f", {len(shown)} shown times from the picture" if shown else ""))
-for pg in CAPS:
-    print(f"  {pg['t0']:6.2f}–{pg['t1']:6.2f}  " + " / ".join(" ".join(w for w, _ in r).replace(" ", " ") for r in pg["lines"]))

@@ -1,18 +1,20 @@
 # What a person must check before this posts
 
 ## This episode
-- **Claims, by a board-certified dermatologist and a neurologist for the nerve test** (`CLAIMS-REVIEW.md`; all from
-  search excerpts, open every link). Closely:
-  - "Almost a century ago": Lewis & Pickering, dated 1935 or 1936 by different sources; the screen says "1930s".
-  - The mechanism (sympathetic vasoconstriction, pulp volume loss, buckling) follows Wilder-Smith & Chow (2003) and
-    later reviews; what starts the reflex in water is still studied (badged).
-  - "One doctors use to test a nerve": the immersion (or EMLA) wrinkling test of sympathetic function.
-  - "One study found a wet grip, the next found none": Kareklas et al. (2013) vs Haseleu et al. (2014); badged "debated".
-  - "Nearly two sheets of paper": the palm's 173 µm (Egawa 2007, confocal Raman, 15 adults) against 100 µm paper.
-  - "Your nerves decide to": figurative for an involuntary reflex; check it reads that way.
-- **No advice, no diagnosis** (the nerve test is described, not recommended to anyone).
-- **Skin tone:** one deep tone throughout (the one-tone-per-episode rule, bible §1, owner-approved 2 Nov); nothing about it is said or implied.
+- **Claims, by a board-certified dermatologist** (`CLAIMS-REVIEW.md`; all from search excerpts, open every link). Closely:
+  - "About four-fifths" is from rat skin (Levenson 1965), badged; the voice never says "your" scar is 80%.
+  - "About the sixth month": reviews give ≈ 22–24 weeks (on screen).
+  - "This paper's thickness": epidermis ≈ 0.07–0.12 mm on most of the body (badged "most of the body").
+  - The UV takeaway (a scar as a smooth seam with no pores) is a model, labelled "model, not a photo".
+  - Facts pass 2: "your mouth" (oral mucosa heals with nearly no scar, Waasdorp et al. 2021): "nearly", not "without".
+  - Facts pass 2: "Mice born without germ-fighting cells heal without one" is one mouse study (PU.1 null mice, Martin
+    et al. 2003, badged "mouse study"); "a scar may be the price of defence" is hedged ("may"). The cells gathering at
+    the seam on screen are a model.
+  - The hook's "you" means people in general (as fetuses): "Before birth, a cut healed without one" (c11, Larson 2010).
+- **No advice, no diagnosis, no products or brands.** Every comparison is labelled "model, not a photo".
+- **Skin tone:** one deep tone throughout (the one-tone-per-episode rule, bible §1, owner-approved 2 Nov); the
+  daylight strip shows three tones only where the subject applies to all skin, never beside a risk line.
 
 ## Every episode
-As No. 001's `review/HUMAN-REVIEW.md`: AI labelling, a flash analyzer, a listen on phone and headphones, the
-description's sources, the owner's taste call, handle and trademark checks (TODO).
+AI labelling on the end card; a flash analyzer on the master; a listen on phone and headphones; the description's
+sources; the owner's taste call; handle and trademark checks for "Skin Sense" (TODO).

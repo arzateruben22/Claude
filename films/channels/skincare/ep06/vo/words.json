@@ -3,1070 +3,1040 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Why do we get goosebumps? We hardly have fur.",
-   "heard": "Why do we get goosebumps? We hardly have fur.",
+   "text": "Same list as cigarettes? Processed meat is on it too.",
+   "heard": "Same list as cigarettes. Processed meat is on it too.",
    "words": [
     {
-     "w": "Why",
-     "start": 0.02,
-     "end": 0.32,
-     "heard": true
-    },
-    {
-     "w": "do",
-     "start": 0.305,
+     "w": "Same",
+     "start": 0.055,
      "end": 0.4,
      "heard": true
     },
     {
-     "w": "we",
-     "start": 0.335,
-     "end": 0.56,
+     "w": "list",
+     "start": 0.495,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "get",
-     "start": 0.545,
-     "end": 0.72,
+     "w": "as",
+     "start": 0.625,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "goosebumps?",
-     "start": 0.83,
-     "end": 1.84,
+     "w": "cigarettes?",
+     "start": 0.84,
+     "end": 1.76,
      "heard": true
     },
     {
-     "w": "We",
-     "start": 1.83,
-     "end": 2.0,
-     "heard": true
-    },
-    {
-     "w": "hardly",
-     "start": 2.035,
+     "w": "Processed",
+     "start": 1.79,
      "end": 2.4,
      "heard": true
     },
     {
-     "w": "have",
-     "start": 2.435,
-     "end": 2.56,
+     "w": "meat",
+     "start": 2.32,
+     "end": 2.72,
      "heard": true
     },
     {
-     "w": "fur.",
-     "start": 2.65,
-     "end": 2.96,
+     "w": "is",
+     "start": 2.66,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.83,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.22,
+     "end": 3.27,
+     "heard": true
+    },
+    {
+     "w": "too.",
+     "start": 3.29,
+     "end": 3.68,
      "heard": true
     }
    ]
   },
   {
    "id": "vo02",
-   "text": "Nearly every hair has its own tiny muscle, and when we're cold or frightened, a nerve tugs it, pulling the hair upright and the skin into a bump.",
-   "heard": "Nearly every hair has its own tiny muscle, and when we are cold or frightened a nerve tugs it, pulling the hair upright and the skin into a bump.",
+   "text": "All three share the top group of the World Health Organization's cancer agency, which says that doesn't make them equally dangerous: it ranks how sure the evidence is.",
+   "heard": "All three share the top group of the World Health Organization's Cancer Agency, which says that doesn't make them equally dangerous. It ranks how sure the evidence is.",
    "words": [
     {
-     "w": "Nearly",
-     "start": 0.025,
-     "end": 0.56,
+     "w": "All",
+     "start": 0.255,
+     "end": 0.4,
      "heard": true
     },
     {
-     "w": "every",
-     "start": 0.53,
-     "end": 0.8,
+     "w": "three",
+     "start": 0.315,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "hair",
-     "start": 0.82,
-     "end": 1.2,
+     "w": "share",
+     "start": 0.73,
+     "end": 0.88,
      "heard": true
     },
     {
-     "w": "has",
-     "start": 1.195,
-     "end": 1.44,
+     "w": "the",
+     "start": 0.945,
+     "end": 1.04,
      "heard": true
     },
     {
-     "w": "its",
-     "start": 1.495,
+     "w": "top",
+     "start": 1.08,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "group",
+     "start": 1.385,
      "end": 1.68,
      "heard": true
     },
     {
-     "w": "own",
-     "start": 1.595,
+     "w": "of",
+     "start": 1.755,
+     "end": 1.805,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.785,
      "end": 1.92,
      "heard": true
     },
     {
-     "w": "tiny",
-     "start": 1.915,
-     "end": 2.32,
+     "w": "World",
+     "start": 1.855,
+     "end": 2.16,
      "heard": true
     },
     {
-     "w": "muscle,",
-     "start": 2.315,
-     "end": 3.36,
+     "w": "Health",
+     "start": 2.14,
+     "end": 2.56,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 3.475,
-     "end": 3.525,
+     "w": "Organization's",
+     "start": 2.52,
+     "end": 3.44,
      "heard": true
     },
     {
-     "w": "when",
-     "start": 3.505,
-     "end": 3.76,
+     "w": "cancer",
+     "start": 3.5,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "we're",
-     "start": 3.82,
-     "end": 4.08,
-     "heard": false
-    },
-    {
-     "w": "cold",
-     "start": 4.015,
-     "end": 4.48,
+     "w": "agency,",
+     "start": 3.915,
+     "end": 5.04,
      "heard": true
     },
     {
-     "w": "or",
-     "start": 4.52,
-     "end": 4.72,
-     "heard": true
-    },
-    {
-     "w": "frightened,",
-     "start": 4.815,
+     "w": "which",
+     "start": 5.11,
      "end": 5.28,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 5.465,
+     "w": "says",
+     "start": 5.215,
      "end": 5.6,
      "heard": true
     },
     {
-     "w": "nerve",
-     "start": 5.495,
-     "end": 6.0,
+     "w": "that",
+     "start": 5.655,
+     "end": 5.84,
      "heard": true
     },
     {
-     "w": "tugs",
-     "start": 6.05,
-     "end": 6.48,
+     "w": "doesn't",
+     "start": 5.83,
+     "end": 6.16,
      "heard": true
     },
     {
-     "w": "it,",
-     "start": 6.575,
-     "end": 7.04,
+     "w": "make",
+     "start": 6.09,
+     "end": 6.32,
      "heard": true
     },
     {
-     "w": "pulling",
-     "start": 7.15,
-     "end": 7.44,
+     "w": "them",
+     "start": 6.33,
+     "end": 6.64,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 7.535,
-     "end": 7.6,
+     "w": "equally",
+     "start": 6.665,
+     "end": 7.12,
      "heard": true
     },
     {
-     "w": "hair",
-     "start": 7.58,
-     "end": 7.92,
+     "w": "dangerous:",
+     "start": 7.085,
+     "end": 8.24,
      "heard": true
     },
     {
-     "w": "upright",
-     "start": 7.905,
-     "end": 8.48,
+     "w": "it",
+     "start": 8.335,
+     "end": 8.4,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 8.465,
-     "end": 8.64,
+     "w": "ranks",
+     "start": 8.43,
+     "end": 8.88,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 8.525,
-     "end": 8.72,
-     "heard": true
-    },
-    {
-     "w": "skin",
-     "start": 8.815,
+     "w": "how",
+     "start": 8.83,
      "end": 9.12,
      "heard": true
     },
     {
-     "w": "into",
-     "start": 9.215,
-     "end": 9.28,
+     "w": "sure",
+     "start": 9.195,
+     "end": 9.44,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 9.245,
-     "end": 9.36,
+     "w": "the",
+     "start": 9.395,
+     "end": 9.52,
      "heard": true
     },
     {
-     "w": "bump.",
-     "start": 9.515,
-     "end": 9.84,
+     "w": "evidence",
+     "start": 9.54,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "is.",
+     "start": 9.925,
+     "end": 10.4,
      "heard": true
     }
    ]
   },
   {
    "id": "vo03",
-   "text": "In a furry animal, that fluffs the coat into a blanket of trapped air. We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs.",
-   "heard": "In a furry animal, that fluffs the coat into a blanket of trapped air. We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs.",
+   "text": "Into the bed, then: its light is mostly UVA, the long rays. In large, powerful units, it may be ten to fifteen times as intense as the midday sun.",
+   "heard": "Into the bed, then. Its light is mostly UVA the long rays. In large, powerful units, it may be ten to fifteen times as intense as the midday sun.",
    "words": [
     {
-     "w": "In",
+     "w": "Into",
      "start": 0.02,
-     "end": 0.24,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 0.3,
-     "end": 0.35,
-     "heard": true
-    },
-    {
-     "w": "furry",
-     "start": 0.33,
-     "end": 0.72,
-     "heard": true
-    },
-    {
-     "w": "animal,",
-     "start": 0.655,
-     "end": 1.2,
-     "heard": true
-    },
-    {
-     "w": "that",
-     "start": 1.335,
-     "end": 1.44,
-     "heard": true
-    },
-    {
-     "w": "fluffs",
-     "start": 1.465,
-     "end": 1.92,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.985,
-     "end": 2.035,
+     "start": 0.435,
+     "end": 0.485,
      "heard": true
     },
     {
-     "w": "coat",
-     "start": 2.02,
-     "end": 2.32,
+     "w": "bed,",
+     "start": 0.465,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "into",
-     "start": 2.24,
+     "w": "then:",
+     "start": 0.715,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 1.52,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 1.615,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.99,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "mostly",
+     "start": 2.045,
      "end": 2.48,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 2.4,
-     "end": 2.64,
-     "heard": true
-    },
-    {
-     "w": "blanket",
-     "start": 2.635,
-     "end": 3.04,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 3.01,
+     "w": "UVA,",
+     "start": 2.445,
      "end": 3.12,
      "heard": true
     },
     {
-     "w": "trapped",
-     "start": 3.18,
-     "end": 3.68,
+     "w": "the",
+     "start": 3.19,
+     "end": 3.36,
      "heard": true
     },
     {
-     "w": "air.",
-     "start": 3.76,
-     "end": 4.4,
+     "w": "long",
+     "start": 3.255,
+     "end": 3.52,
      "heard": true
     },
     {
-     "w": "We",
-     "start": 4.51,
-     "end": 4.56,
+     "w": "rays.",
+     "start": 3.62,
+     "end": 4.64,
      "heard": true
     },
     {
-     "w": "have",
-     "start": 4.54,
-     "end": 4.72,
+     "w": "In",
+     "start": 4.755,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "about",
-     "start": 4.815,
-     "end": 4.96,
+     "w": "large,",
+     "start": 4.785,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "powerful",
+     "start": 5.465,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "units,",
+     "start": 5.82,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.585,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "may",
+     "start": 6.66,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 6.855,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 6.955,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.2,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "fifteen",
+     "start": 7.34,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 7.75,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "as",
-     "start": 5.025,
-     "end": 5.2,
+     "start": 8.195,
+     "end": 8.32,
      "heard": true
     },
     {
-     "w": "many",
-     "start": 5.17,
-     "end": 5.36,
-     "heard": true
-    },
-    {
-     "w": "hair",
-     "start": 5.45,
-     "end": 5.68,
-     "heard": true
-    },
-    {
-     "w": "follicles",
-     "start": 5.77,
-     "end": 6.24,
+     "w": "intense",
+     "start": 8.225,
+     "end": 8.88,
      "heard": true
     },
     {
      "w": "as",
-     "start": 6.255,
-     "end": 6.4,
+     "start": 8.83,
+     "end": 9.04,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 6.39,
-     "end": 6.56,
+     "w": "the",
+     "start": 9.125,
+     "end": 9.175,
      "heard": true
     },
     {
-     "w": "chimpanzee,",
-     "start": 6.575,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "but",
-     "start": 7.62,
-     "end": 7.68,
-     "heard": true
-    },
-    {
-     "w": "ours",
-     "start": 7.675,
-     "end": 8.0,
-     "heard": true
-    },
-    {
-     "w": "grow",
-     "start": 8.03,
-     "end": 8.4,
-     "heard": true
-    },
-    {
-     "w": "fine,",
-     "start": 8.335,
-     "end": 9.12,
-     "heard": true
-    },
-    {
-     "w": "almost",
-     "start": 9.17,
+     "w": "midday",
+     "start": 9.155,
      "end": 9.52,
      "heard": true
     },
     {
-     "w": "invisible",
-     "start": 9.55,
-     "end": 10.16,
-     "heard": true
-    },
-    {
-     "w": "hairs.",
-     "start": 10.17,
-     "end": 10.64,
+     "w": "sun.",
+     "start": 9.59,
+     "end": 10.0,
      "heard": true
     }
    ]
   },
   {
    "id": "vo04",
-   "text": "So the bumps look like a leftover. But a team at Harvard found that nerve also reaches the stem cells that grow hair, and the muscle holds it in place.",
-   "heard": "So the bumps look like a leftover, but a team at Harvard found that nerve also reaches the stem cells that grow hair, and the muscle holds it in place.",
+   "text": "When the beds joined that group, the sharpest signal came from people who started young. In pooled studies, first use before thirty-five went with melanoma risk raised by more than half.",
+   "heard": "When the beds joined that group, the sharpest signal came from people who started young. In pooled studies, first use before 35 went with melanoma risk raised by more than half.",
    "words": [
     {
-     "w": "So",
+     "w": "When",
      "start": 0.02,
-     "end": 0.08,
+     "end": 0.16,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.445,
-     "end": 0.495,
+     "start": 0.23,
+     "end": 0.28,
      "heard": true
     },
     {
-     "w": "bumps",
-     "start": 0.475,
-     "end": 0.96,
+     "w": "beds",
+     "start": 0.26,
+     "end": 0.56,
      "heard": true
     },
     {
-     "w": "look",
-     "start": 0.865,
-     "end": 1.2,
+     "w": "joined",
+     "start": 0.495,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "like",
-     "start": 1.16,
-     "end": 1.36,
+     "w": "that",
+     "start": 0.98,
+     "end": 1.04,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 1.41,
+     "w": "group,",
+     "start": 1.01,
      "end": 1.52,
      "heard": true
     },
     {
-     "w": "leftover.",
-     "start": 1.44,
-     "end": 2.8,
+     "w": "the",
+     "start": 1.635,
+     "end": 1.685,
      "heard": true
     },
     {
-     "w": "But",
-     "start": 2.965,
+     "w": "sharpest",
+     "start": 1.665,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "signal",
+     "start": 2.25,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "came",
+     "start": 2.69,
      "end": 3.04,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 3.18,
-     "end": 3.23,
+     "w": "from",
+     "start": 3.135,
+     "end": 3.2,
      "heard": true
     },
     {
-     "w": "team",
-     "start": 3.275,
-     "end": 3.52,
+     "w": "people",
+     "start": 3.165,
+     "end": 3.44,
      "heard": true
     },
     {
-     "w": "at",
-     "start": 3.6,
+     "w": "who",
+     "start": 3.355,
      "end": 3.68,
      "heard": true
     },
     {
-     "w": "Harvard",
-     "start": 3.63,
-     "end": 4.24,
+     "w": "started",
+     "start": 3.695,
+     "end": 4.16,
      "heard": true
     },
     {
-     "w": "found",
-     "start": 4.305,
-     "end": 4.56,
+     "w": "young.",
+     "start": 4.055,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "that",
-     "start": 4.615,
-     "end": 4.72,
+     "w": "In",
+     "start": 5.055,
+     "end": 5.12,
      "heard": true
     },
     {
-     "w": "nerve",
-     "start": 4.72,
-     "end": 5.36,
+     "w": "pooled",
+     "start": 5.085,
+     "end": 5.76,
      "heard": true
     },
     {
-     "w": "also",
-     "start": 5.265,
-     "end": 5.6,
-     "heard": true
-    },
-    {
-     "w": "reaches",
-     "start": 5.525,
-     "end": 6.16,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 6.255,
+     "w": "studies,",
+     "start": 5.76,
      "end": 6.32,
      "heard": true
     },
     {
-     "w": "stem",
-     "start": 6.285,
-     "end": 6.8,
+     "w": "first",
+     "start": 6.41,
+     "end": 6.56,
      "heard": true
     },
     {
-     "w": "cells",
-     "start": 6.89,
+     "w": "use",
+     "start": 6.675,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "before",
+     "start": 6.965,
      "end": 7.28,
      "heard": true
     },
     {
-     "w": "that",
-     "start": 7.32,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "grow",
-     "start": 7.495,
+     "w": "thirty-five",
+     "start": 7.3,
      "end": 7.92,
+     "heard": false
+    },
+    {
+     "w": "went",
+     "start": 7.995,
+     "end": 8.16,
      "heard": true
     },
     {
-     "w": "hair,",
-     "start": 7.87,
-     "end": 8.72,
+     "w": "with",
+     "start": 8.22,
+     "end": 8.32,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 8.825,
-     "end": 8.88,
+     "w": "melanoma",
+     "start": 8.39,
+     "end": 9.12,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 8.855,
-     "end": 8.96,
+     "w": "risk",
+     "start": 9.125,
+     "end": 9.44,
      "heard": true
     },
     {
-     "w": "muscle",
-     "start": 8.96,
-     "end": 9.52,
+     "w": "raised",
+     "start": 9.32,
+     "end": 9.76,
      "heard": true
     },
     {
-     "w": "holds",
-     "start": 9.495,
-     "end": 10.0,
+     "w": "by",
+     "start": 9.79,
+     "end": 9.92,
      "heard": true
     },
     {
-     "w": "it",
-     "start": 10.11,
-     "end": 10.24,
+     "w": "more",
+     "start": 9.82,
+     "end": 10.08,
      "heard": true
     },
     {
-     "w": "in",
-     "start": 10.165,
-     "end": 10.4,
+     "w": "than",
+     "start": 10.16,
+     "end": 10.32,
      "heard": true
     },
     {
-     "w": "place.",
-     "start": 10.39,
-     "end": 10.88,
+     "w": "half.",
+     "start": 10.33,
+     "end": 10.72,
      "heard": true
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "In the cold, that nerve wakes the stem cells, and the mice grew new hair sooner. Take the little muscle away, and the wiring fades.",
-   "heard": "In the cold that nerve wakes the stem cells, and the mice grew new hair sooner, take the little muscle away and the wiring fades.",
+   "text": "Within months, whole countries acted: Brazil banned commercial tanning beds, and later Australia switched its own off.",
+   "heard": "Within months whole countries acted. Brazil banned commercial tanning beds, and later Australia switched its own off.",
    "words": [
     {
-     "w": "In",
+     "w": "Within",
      "start": 0.02,
-     "end": 0.24,
+     "end": 0.32,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 0.345,
-     "end": 0.48,
+     "w": "months,",
+     "start": 0.32,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "cold,",
-     "start": 0.375,
-     "end": 0.72,
-     "heard": true
-    },
-    {
-     "w": "that",
-     "start": 0.87,
+     "w": "whole",
+     "start": 0.675,
      "end": 1.04,
      "heard": true
     },
     {
-     "w": "nerve",
-     "start": 1.015,
-     "end": 1.44,
+     "w": "countries",
+     "start": 1.005,
+     "end": 1.52,
      "heard": true
     },
     {
-     "w": "wakes",
-     "start": 1.515,
-     "end": 1.84,
+     "w": "acted:",
+     "start": 1.62,
+     "end": 2.24,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 1.845,
-     "end": 2.0,
+     "w": "Brazil",
+     "start": 2.35,
+     "end": 2.72,
      "heard": true
     },
     {
-     "w": "stem",
-     "start": 2.06,
-     "end": 2.4,
+     "w": "banned",
+     "start": 2.775,
+     "end": 3.12,
      "heard": true
     },
     {
-     "w": "cells,",
-     "start": 2.465,
-     "end": 3.2,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 3.34,
-     "end": 3.39,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 3.37,
+     "w": "commercial",
+     "start": 3.09,
      "end": 3.52,
      "heard": true
     },
     {
-     "w": "mice",
-     "start": 3.485,
-     "end": 3.92,
+     "w": "tanning",
+     "start": 3.575,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "grew",
-     "start": 4.02,
-     "end": 4.32,
-     "heard": true
-    },
-    {
-     "w": "new",
-     "start": 4.32,
+     "w": "beds,",
+     "start": 3.93,
      "end": 4.56,
      "heard": true
     },
     {
-     "w": "hair",
-     "start": 4.495,
-     "end": 4.96,
-     "heard": true
-    },
-    {
-     "w": "sooner.",
-     "start": 4.97,
-     "end": 5.84,
-     "heard": true
-    },
-    {
-     "w": "Take",
-     "start": 5.965,
-     "end": 6.08,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 6.195,
-     "end": 6.32,
-     "heard": true
-    },
-    {
-     "w": "little",
-     "start": 6.27,
-     "end": 6.56,
-     "heard": true
-    },
-    {
-     "w": "muscle",
-     "start": 6.485,
-     "end": 7.04,
-     "heard": true
-    },
-    {
-     "w": "away,",
-     "start": 7.1,
-     "end": 7.36,
-     "heard": true
-    },
-    {
      "w": "and",
-     "start": 7.495,
-     "end": 7.6,
+     "start": 4.575,
+     "end": 4.72,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 7.525,
-     "end": 7.76,
+     "w": "later",
+     "start": 4.81,
+     "end": 5.04,
      "heard": true
     },
     {
-     "w": "wiring",
-     "start": 7.75,
-     "end": 8.4,
+     "w": "Australia",
+     "start": 4.97,
+     "end": 5.68,
      "heard": true
     },
     {
-     "w": "fades.",
-     "start": 8.405,
-     "end": 9.04,
+     "w": "switched",
+     "start": 5.775,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 6.01,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 6.12,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "off.",
+     "start": 6.405,
+     "end": 6.72,
      "heard": true
     }
    ]
   },
   {
    "id": "vo06",
-   "text": "And most of the hairs it tends are thinner than a third of a sheet of paper.",
-   "heard": "and most of the hairs it tends are thinner than a third of a sheet of pa,",
+   "text": "And those long rays reach right through the top layer, on most skin about as thin as paper.",
+   "heard": "And those long rays reach right through the top layer, on most skin about as thin as paper.",
    "words": [
     {
      "w": "And",
-     "start": 0.335,
-     "end": 0.48,
+     "start": 0.02,
+     "end": 0.16,
      "heard": true
     },
     {
-     "w": "most",
-     "start": 0.37,
-     "end": 0.8,
+     "w": "those",
+     "start": 0.495,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 0.815,
-     "end": 0.96,
+     "w": "long",
+     "start": 0.56,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "rays",
+     "start": 0.975,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 1.43,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "right",
+     "start": 1.79,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 2.215,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.045,
-     "end": 1.2,
+     "start": 2.52,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "hairs",
-     "start": 1.205,
-     "end": 1.76,
+     "w": "top",
+     "start": 2.625,
+     "end": 2.96,
      "heard": true
     },
     {
-     "w": "it",
-     "start": 1.745,
-     "end": 2.0,
+     "w": "layer,",
+     "start": 2.885,
+     "end": 3.76,
      "heard": true
     },
     {
-     "w": "tends",
-     "start": 1.945,
-     "end": 2.56,
+     "w": "on",
+     "start": 3.875,
+     "end": 3.925,
      "heard": true
     },
     {
-     "w": "are",
-     "start": 2.845,
-     "end": 2.895,
+     "w": "most",
+     "start": 4.175,
+     "end": 4.24,
      "heard": true
     },
     {
-     "w": "thinner",
-     "start": 3.12,
-     "end": 3.52,
+     "w": "skin",
+     "start": 4.5,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "than",
-     "start": 3.585,
-     "end": 3.84,
+     "w": "about",
+     "start": 4.885,
+     "end": 5.12,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 3.94,
-     "end": 4.0,
+     "w": "as",
+     "start": 5.08,
+     "end": 5.28,
      "heard": true
     },
     {
-     "w": "third",
-     "start": 4.045,
-     "end": 4.48,
+     "w": "thin",
+     "start": 5.38,
+     "end": 5.6,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 4.43,
-     "end": 4.64,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 4.575,
-     "end": 4.8,
-     "heard": true
-    },
-    {
-     "w": "sheet",
-     "start": 4.68,
-     "end": 5.2,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 5.16,
-     "end": 5.44,
+     "w": "as",
+     "start": 5.585,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "paper.",
-     "start": 5.445,
-     "end": 5.74,
-     "heard": false
+     "start": 5.84,
+     "end": 6.32,
+     "heard": true
     }
    ]
   },
   {
    "id": "vo07",
-   "text": "So why do we still get goosebumps? Because the muscle that raises a hair still looks after it.",
-   "heard": "So why do we still get goosebumps? Because the muscle that raises a hare still looks after it.",
+   "text": "The sun made that list years before the beds. Same list as cigarettes: not the same harm, the same certainty.",
+   "heard": "The sun made that list years before the beds. Same list as cigarettes, not the same harm, the same certainty.",
    "words": [
     {
-     "w": "So",
-     "start": 0.035,
-     "end": 0.16,
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
      "heard": true
     },
     {
-     "w": "why",
-     "start": 0.325,
+     "w": "sun",
+     "start": 0.25,
      "end": 0.56,
      "heard": true
     },
     {
-     "w": "do",
-     "start": 0.62,
+     "w": "made",
+     "start": 0.655,
      "end": 0.72,
      "heard": true
     },
     {
-     "w": "we",
-     "start": 0.815,
-     "end": 0.96,
+     "w": "that",
+     "start": 0.735,
+     "end": 0.88,
      "heard": true
     },
     {
-     "w": "still",
-     "start": 0.945,
-     "end": 1.2,
+     "w": "list",
+     "start": 0.885,
+     "end": 1.28,
      "heard": true
     },
     {
-     "w": "get",
-     "start": 1.24,
-     "end": 1.44,
+     "w": "years",
+     "start": 1.175,
+     "end": 1.6,
      "heard": true
     },
     {
-     "w": "goosebumps?",
-     "start": 1.58,
-     "end": 2.8,
-     "heard": true
-    },
-    {
-     "w": "Because",
-     "start": 2.84,
-     "end": 3.12,
+     "w": "before",
+     "start": 1.605,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.215,
-     "end": 3.28,
+     "start": 1.975,
+     "end": 2.025,
      "heard": true
     },
     {
-     "w": "muscle",
-     "start": 3.245,
-     "end": 3.84,
+     "w": "beds.",
+     "start": 2.095,
+     "end": 2.88,
      "heard": true
     },
     {
-     "w": "that",
-     "start": 3.94,
-     "end": 4.0,
+     "w": "Same",
+     "start": 2.94,
+     "end": 3.2,
      "heard": true
     },
     {
-     "w": "raises",
-     "start": 3.97,
-     "end": 4.56,
+     "w": "list",
+     "start": 3.2,
+     "end": 3.52,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 4.565,
-     "end": 4.72,
+     "w": "as",
+     "start": 3.52,
+     "end": 3.68,
      "heard": true
     },
     {
-     "w": "hair",
-     "start": 4.715,
-     "end": 5.28,
-     "heard": false
-    },
-    {
-     "w": "still",
-     "start": 5.31,
-     "end": 5.52,
+     "w": "cigarettes:",
+     "start": 3.76,
+     "end": 4.64,
      "heard": true
     },
     {
-     "w": "looks",
-     "start": 5.52,
-     "end": 6.0,
+     "w": "not",
+     "start": 4.625,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "after",
-     "start": 5.915,
-     "end": 6.24,
+     "w": "the",
+     "start": 4.835,
+     "end": 5.04,
      "heard": true
     },
     {
-     "w": "it.",
-     "start": 6.26,
-     "end": 6.64,
+     "w": "same",
+     "start": 5.025,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "harm,",
+     "start": 5.295,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.685,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 5.855,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "certainty.",
+     "start": 6.175,
+     "end": 6.8,
      "heard": true
     }
    ]
   },
   {
    "id": "vo08",
-   "text": "That's the outer layer, for now. Next season, we go deeper.",
-   "heard": "That's the outer layer for now. Next season we go deeper.",
+   "text": "Next season: why do bath fingers wrinkle, but never your arm?",
+   "heard": "Next season, why do bath fingers wrinkle but never your arm?",
    "words": [
     {
-     "w": "That's",
-     "start": 0.03,
-     "end": 0.32,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 0.38,
-     "end": 0.48,
-     "heard": true
-    },
-    {
-     "w": "outer",
-     "start": 0.41,
-     "end": 0.8,
-     "heard": true
-    },
-    {
-     "w": "layer,",
-     "start": 0.7,
-     "end": 1.28,
-     "heard": true
-    },
-    {
-     "w": "for",
-     "start": 1.17,
-     "end": 1.44,
-     "heard": true
-    },
-    {
-     "w": "now.",
-     "start": 1.515,
-     "end": 2.0,
-     "heard": true
-    },
-    {
      "w": "Next",
-     "start": 2.105,
-     "end": 2.4,
+     "start": 0.28,
+     "end": 0.4,
      "heard": true
     },
     {
-     "w": "season,",
-     "start": 2.295,
-     "end": 2.8,
+     "w": "season:",
+     "start": 0.44,
+     "end": 1.12,
      "heard": true
     },
     {
-     "w": "we",
-     "start": 2.915,
-     "end": 2.965,
+     "w": "why",
+     "start": 1.235,
+     "end": 1.285,
      "heard": true
     },
     {
-     "w": "go",
-     "start": 2.945,
-     "end": 3.12,
+     "w": "do",
+     "start": 1.43,
+     "end": 1.52,
      "heard": true
     },
     {
-     "w": "deeper.",
-     "start": 3.145,
+     "w": "bath",
+     "start": 1.595,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "fingers",
+     "start": 1.9,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "wrinkle,",
+     "start": 2.24,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 2.795,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 2.9,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 3.14,
      "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "arm?",
+     "start": 3.44,
+     "end": 3.84,
      "heard": true
     }
    ]

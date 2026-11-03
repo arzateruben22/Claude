@@ -2,20 +2,21 @@
 
 ## This episode
 - **Claims, by a board-certified dermatologist** (`CLAIMS-REVIEW.md`; all from search excerpts, open every link). Closely:
-  - The 1/SPF transmission picture is an idealisation (badged "model: one UVB band"): SPF is a sunburn ratio, not a
-    transmission measurement; UVA protection (broad spectrum) is not this film's subject.
-  - "≈98% · ≈99%" and "2% vs 1%": the AAD's SPF 30 = 97% is sourced; 98% for SPF 50 is widely attributed to the AAD;
-    99% and the 2%/1% are computed (1 − 1/SPF).
-  - "A quarter to half as much": Petersen & Wulf (2014) review, 0.39–1.0 mg/cm² against 2 mg/cm².
-  - "Protection falls well below the label. How far is still argued.": Faurschou & Wulf (2007) exponential vs a German
-    multicenter study (cited by BASF, an industry source) closer to linear; the thin-film picture (about 4× more getting
-    through) is an illustration, badged "illustration · debated", with no number on screen.
-  - "About as thick as the dead layer, a fifth of a sheet of paper": 2 mg/cm² ≈ 20 µm at density ≈ 1 (computed) against
-    the cheek's 17 µm and paper's 100 µm.
-- **No advice.** The film never tells anyone what to apply or how much; the dermatologist confirms "when there's enough
-  of it" reads as how the numbers work, not as an instruction. No product, brand or ingredient is shown or named.
-- **Skin tone:** one light tone throughout (the one-tone-per-episode rule, bible §1, owner-approved 2 Nov), so no tone is tied to "real people spread less".
+  - "4–7%" reflected at the surface near head-on (screen: "near head-on light").
+  - "≈ 40% back out" is one worked example (badged "one example (model)").
+  - Facts pass 2: the pulse beat (your face's colour changes with each heartbeat; a camera can read it) rests on
+    Verkruysse et al. 2008 and Wu et al. 2012; the colour change on the model face is amplified, as in their videos,
+    and the face is badged "model face, not a photo".
+  - Facts pass 2: the computer faces (light on top vs light inside, Jensen et al. 2001) are drawn models, badged
+    "model faces, not photos"; the Academy technical award is stated in the script, a person confirms it.
+  - Depths (blue ≈ 1 mm, red 4–5 mm) are estimates that vary by skin and site (badged).
+- **No advice, no diagnosis, no products or brands.** Every comparison is labelled "model, not a photo".
+- **Skin tone:** one medium tone throughout (the one-tone-per-episode rule, bible §1, owner-approved 2 Nov); the
+  daylight strip shows three tones only where the subject applies to all skin, never beside a risk line.
+
+- **Look:** this episode has no UV-camera reveal (its subject is visible light; the face beat is a daylight
+  viewfinder). The owner confirms that is acceptable under bible §2.
 
 ## Every episode
-As No. 001's `review/HUMAN-REVIEW.md`: AI labelling on every platform, a broadcast flash analyzer, a listen on phone and
-headphones, the description's sources (`lint.py … --sources`), the owner's taste call, handle and trademark checks (TODO).
+AI labelling on the end card; a flash analyzer on the master; a listen on phone and headphones; the description's
+sources; the owner's taste call; handle and trademark checks for "Skin Sense" (TODO).

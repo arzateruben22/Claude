@@ -12,107 +12,106 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Is a tan a shield? A thin one, built after the harm.",
+   "text": "Poison, in a frown? In theory, a banknote's weight could kill a million people.",
    "stars": [
-    "shield"
+    "frown"
    ],
-   "phonemes": "ɪz ɐ tˈan ɐ ʃˈiːld? ɐ θˈɪn wˌɒn, bˈɪlt ˈaftə ðə hˈɑːm.",
-   "speed": 0.76,
+   "phonemes": "pˈɔɪzən, ɪn ɐ fɹˈaʊn? ɪn θˈiəɹi, ɐ bˈaŋknəʊtz wˈeɪt kʊd kˈɪl ɐ mˈɪliən pˈiːpəl.",
+   "speed": 0.83,
    "file": "01.wav",
-   "dur": 4.267,
-   "sha256": "63a3fb04af17f13268da5b2ad1b781b870a9017624212adeb9d206acd342575b"
+   "dur": 5.155,
+   "sha256": "bb4a32cc3d9ee2f1ff1c44aee1f527be7e945e4e02f3de0205a06a61167e3e2d"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Sunlight carries ultraviolet, and its shorter rays reach the living cells under the dead layer. In under a trillionth of a second, one can fuse two letters of their DNA.",
+   "text": "Every frown starts at a nerve ending, letting out a chemical messenger onto the muscle below. The muscle pulls, and the skin above folds into a crease.",
    "stars": [
-    "DNA"
+    "crease"
    ],
-   "phonemes": "sˈʌnlaɪt kˈaɹiz ˌʊltɹɐvˈaɪəlɪt, and ɪts ʃˈɔːtə ɹˈeɪz ɹˈiːtʃ ðə lˈɪvɪŋ sˈɛlz ˌʌndə ðə dˈɛd lˈeɪə. ɪn ˌʌndəɹ ɐ tɹˈɪliənθ əvə sˈɛkənd, wˈɒn kan fjˈuːz tˈuː lˈɛtəz ɒv ðeə dˌiːˌɛnˈeɪ.",
-   "speed": 0.88,
+   "phonemes": "ˈɛvɹɪ fɹˈaʊn stˈɑːts atə nˈɜːv ˈɛndɪŋ, lˈɛtɪŋ ˈaʊt ɐ kˈɛmɪkəl mˈɛsɪndʒəɹ ˌɒntʊ ðə mˈʌsəl bɪlˈəʊ. ðə mˈʌsəl pˈʊlz, and ðə skˈɪn əbˌʌv fˈəʊldz ˌɪntʊ ɐ kɹˈiːs.",
+   "speed": 0.82,
    "file": "02.wav",
-   "dur": 10.333,
-   "sha256": "0d0277fef71347cb6b6eb2d84a03bb291d179f2ddc905b5413ade6a724383357"
+   "dur": 9.823,
+   "sha256": "28bc33bf229c1ec9d9956360ad737580978ba15caba9b397ec69201f9245e591"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "The cell notices. A guardian protein switches on, and the cell sends a chemical message down to the pigment cells: make melanin.",
+   "text": "Botulinum toxin never touches the skin. It slips inside the nerve ending and cuts one protein the message needs, so the message waits, and never leaves.",
    "stars": [
-    "melanin"
+    "leaves"
    ],
-   "phonemes": "ðə sˈɛl nˈəʊtɪsɪz. ɐ ɡˈɑːdiən pɹˈəʊtiːn swˈɪtʃɪz ˈɒn, and ðə sˈɛl sˈɛndz ɐ kˈɛmɪkəl mˈɛsɪdʒ dˌaʊn tə ðə pˈɪɡmənt sˈɛlz: mˈeɪk mˈɛlənɪn .",
+   "phonemes": "bˌɒtjʊlˈaɪnəm tˈɒksɪn nˈɛvə tˈʌtʃɪz ðə skˈɪn. ɪt slˈɪps ɪnsˈaɪd ðə nˈɜːv ˈɛndɪŋ and kˈʌts wˈɒn pɹˈəʊtiːn ðə mˈɛsɪdʒ nˈiːdz, sˌəʊ ðə mˈɛsɪdʒ wˈeɪts, and nˈɛvə lˈiːvz.",
    "speed": 0.84,
    "file": "03.wav",
-   "dur": 8.543,
-   "sha256": "8f653f61601eba0db51182130ea2ab2a48b770345d8a90ead192b82ba0b0f008"
+   "dur": 9.782,
+   "sha256": "fe1e62d641e8263253787e75cf391f16b031e95f09fb3122509eff2eb10a1d49"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "In Boston, mice whose skin cells lacked that guardian never tanned at all. So a tan isn't skin getting ready for the sun. It's skin answering damage already done.",
+   "text": "Two centuries ago a German doctor, Justinus Kerner, traced a deadly paralysis to spoiled sausages, and guessed the same poison might one day become a medicine.",
    "stars": [
-    "answering"
+    "medicine"
    ],
-   "phonemes": "ɪn bˈɒstən, mˈaɪs hˌuːz skˈɪn sˈɛlz lˈakt ðat ɡˈɑːdiən nˈɛvə tˈand at ˈɔːl. sˌəʊ ɐ tˈan ˌɪzənt skˈɪn ɡˌɛtɪŋ ɹˈɛdi fəðə sˈʌn. ɪts skˈɪn ˈansəɹɪŋ dˈamɪdʒ ɔːlɹˌɛdi dˈʌn.",
-   "speed": 0.84,
+   "phonemes": "tˈuː sˈɛntʃəɹiz ɐɡˈəʊ ɐ dʒˈɜːmən dˈɒktə, jʊstˈiːnʊs kˈɛɐnɐ , tɹˈeɪst ɐ dˈɛdli pəɹˈaləsˌɪs tə spˈɔɪld sˈɒsɪdʒɪz, and ɡˈɛst ðə sˈeɪm pˈɔɪzən mˌaɪt wˈɒn dˈeɪ bɪkˌʌm ɐ mˈɛdsən.",
+   "speed": 0.93,
    "file": "04.wav",
-   "dur": 10.057,
-   "sha256": "de39c8c1a2832d9f7103c4f8bbac683ff669e5a9a0893049a1c7508b7a1c85fa"
+   "dur": 9.973,
+   "sha256": "3d584c2fefda797a275e56facaa47b023c393c6517f85a38bd2c9499b23f3351"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Over the next few days, the melanin settles over each nucleus like a tiny parasol. Together, a whole tan adds up to about SPF three or four.",
+   "text": "A dose of this medicine isn't weighed; it's counted in mouse deaths. One frown takes twenty of those, still under a hundredth of what could kill a person.",
    "stars": [
-    "parasol",
-    "three or four"
+    "person"
    ],
-   "phonemes": "ˌəʊvə ðə nˈɛkst fjˈuː dˈeɪz, ðə mˈɛlənɪn sˈɛtəlz ˌəʊvəɹ ˈiːtʃ njˈuːklɪəs lˈaɪk ɐ tˈaɪni pˈæɹəsɒl . təɡˈɛðə, ɐ hˈəʊl tˈan ˈadz ˌʌp tʊ ɐbˌaʊt ˌɛspˌiːˈɛf θɹˈiː ɔː fˈɔː.",
-   "speed": 0.86,
+   "phonemes": "ɐ dˈəʊs ɒv ðɪs mˈɛdsən ˌɪzənt wˈeɪd; ɪts kˈaʊntɪd ɪn mˈaʊs dˈɛθs. wˈɒn fɹˈaʊn tˈeɪks twˈɛnti ɒv ðˈəʊz, stˈɪl ˌʌndəɹ ɐ hˈʌndɹədθ ɒv wɒt kʊd kˈɪl ɐ pˈɜːsən.",
+   "speed": 0.82,
    "file": "05.wav",
-   "dur": 9.613,
-   "sha256": "a7322082ff5d1c469d45da6b8078d625c3578c92775c648c4fb08f63a66170d1"
+   "dur": 9.585,
+   "sha256": "f6c167f76f25d00a4e1c0d3b541503308f4c0c8b92ec4463b3249761c188f894"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "Each parasol is about as wide as its nucleus: a dozen stacked would be as thick as a sheet of paper.",
+   "text": "And the gap that message never crosses is about two thousand times thinner than a sheet of paper.",
    "stars": [
     "paper"
    ],
-   "phonemes": "ˈiːtʃ pˈæɹəsɒl ɪz ɐbˌaʊt az wˈaɪd az ɪts njˈuːklɪəs: ɐ dˈʌzən stˈakt wʊd biː az θˈɪk az ɐ ʃˈiːt ɒv pˈeɪpə.",
+   "phonemes": "and ðə ɡˈap ðat mˈɛsɪdʒ nˈɛvə kɹˈɒsɪz ɪz ɐbˌaʊt tˈuː θˈaʊzənd tˈaɪmz θˈɪnə ðˌanə ʃˈiːt ɒv pˈeɪpə.",
    "speed": 0.8,
    "file": "06.wav",
-   "dur": 7.225,
-   "sha256": "71fdbea38a4c3e5071f983381bbf16dac81cf49e29a245cf4c65aa17dc4602df"
+   "dur": 6.552,
+   "sha256": "f675d6d1cdb56417504d3bfbf7fe2459c4d95bf2ca6c26599159f5c52da82f91"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So, is a tan a shield? A thin one. It's how your skin remembers the light.",
+   "text": "Poison in a frown: one message silenced, and months later the nerve grows spare endings, then prunes them away.",
    "stars": [
-    "remembers"
+    "away"
    ],
-   "phonemes": "sˈəʊ, ɪz ɐ tˈan ɐ ʃˈiːld? ɐ θˈɪn wˌɒn. ɪts hˌaʊ jɔː skˈɪn ɹɪmˈɛmbəz ðə lˈaɪt.",
-   "speed": 0.78,
+   "phonemes": "pˈɔɪzən ɪn ɐ fɹˈaʊn: wˈɒn mˈɛsɪdʒ sˈaɪlənst, and mˈʌnθs lˈeɪtə ðə nˈɜːv ɡɹˈəʊz spˈeəɹ ˈɛndɪŋz, ðˈɛn pɹˈuːnz ðˌɛm ɐwˈeɪ.",
+   "speed": 0.84,
    "file": "07.wav",
-   "dur": 5.446,
-   "sha256": "e5b3fb14a148331a870ff26842047369d2d934f1dc0e1cc7d53942e239f17658"
+   "dur": 7.257,
+   "sha256": "be67b1b255ab97071464cd1da00e07b7bc527fe1a4b97fee1e4759a4689e0be6"
   },
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: who has more pigment cells, the darkest skin or the lightest?",
+   "text": "Next: two neighbours under the same sun, one experiment. Which hand aged?",
    "stars": [
-    "lightest"
+    "aged"
    ],
-   "phonemes": "nˈɛkst: hˌuː hɐz mˈɔː pˈɪɡmənt sˈɛlz, ðə dˈɑːkɪst skˈɪn ɔː ðə lˈaɪtɪst?",
+   "phonemes": "nˈɛkst: tˈuː nˈeɪbəz ˌʌndə ðə sˈeɪm sˈʌn, wˈɒn ɛkspˈɛɹɪmənt. wˌɪtʃ hˈand ˈeɪdʒd?",
    "speed": 0.84,
    "file": "08.wav",
-   "dur": 4.254,
-   "sha256": "2453b9487911090bf1e40cf03ccd2ff10a16462c4fc0910cba5134059921294a"
+   "dur": 4.523,
+   "sha256": "bca0dfd360b2cff9745d142342e115963ae2da415515cd8e645eb799ec7625e8"
   }
  ]
 }

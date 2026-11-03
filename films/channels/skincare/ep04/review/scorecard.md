@@ -1,42 +1,86 @@
-# Scorecard: Outer Layer No. 004, "What a tan is"
+# Scorecard: Outer Layer No. 004, "The deadliest dose" (the reboot's look)
 
 ## Measured gates (final)
 
-From `kits/cinema/film/qa.py` (PASS) and `scorecard.py` on `out/outerlayer-004-9x16.mp4`, rendered at the final tier (1080×1920, CRF 15) by the render worker at 74499b6 and re-checked here. The text-in-safe-box audit is written on the rendering box, so it is not in this table; the draft audit at the same code was clean.
+To be filled in from `kits/cinema/film/qa.py` and `scorecard.py`, run on the delivered file.
 
-| Gate | Target | Result |
-|---|---|---|
-| Format | 1080×1920, 30 fps, H.264, AAC | 1080×1920, 30 fps CFR, 2226 frames, H.264 High BT709, AAC 48 kHz stereo 260k, 6.41 Mbps video, 62.0 MB |
-| Length | 60–75 s; picture = sound | 74.200 s / 74.200 s |
-| Loudness | −14 LUFS, ≤ −1 dBTP on the AAC | **−14.1 LUFS, −1.9 dBTP**, LRA 3.5 LU |
-| Voice over music | ≥ 10 LU | 15.2 LU (dialogue −13.5, music −28.7 LUFS while speaking) |
-| Phone speaker | mono-safe | Correlation 0.89; mono loss 0.11 dB (dialogue 0.08 dB) |
-| Sound sync | transients within a frame | 12 kinds, 38 events, all PASS: transients worst 13 ms; slow swells (reveal, scale.jump, section, swell) worst 51 ms |
-| Labels vs picture | sound on the first visible frame | 11/11 exact (DOM-measured first visible frame) |
-| Flashing | ≤ 3 flashes a second | 6 large-area luminance changes (frames 154, 345, 490, 784, 1020, 1162), 3 flash pairs, worst 1/s |
+Draft 1 results:
+- **Mix:** −14.1 LUFS / −1.9 dBTP; the voice sits 15.6 LU above the music.
+- **Sync:** every sound kind passes.
+- **Render audit:** clean.
 
-## Compelling pass (the owner's 30 Oct standard; one independent reviewer, every round)
+## Compelling pass (one independent reviewer, every round)
 
-| Point | Draft 3 | Draft 4 | Draft 5 | Draft 6 | Draft 7 | Draft 8 | Draft 9 |
-|---|---|---|---|---|---|---|---|
-| (a) First 2 s | 3 | 4 | 4 | 4 | 4 | 4 | **4** |
-| (b) One thread | 4 | 4 | 4 | 4 | 4 | 4 | **4** |
-| (c) Picture moves with the sentence | 3 | 4 | 4 | 4 | 4 | 4 | **4** |
-| (d) Motivated cuts | 3 | 3 | 3 | 2 | 3 | 3 | **4** |
-| (e) Voice meaning, screen figures | 4 | 5 | 5 | 5 | 5 | 5 | **5** |
-| (f) Rhythm | 4 | 4 | 4 | 4 | 4 | 4 | **4** |
-| (g) Ending and tease | 4 | 4 | 4 | 4 | 4 | 4 | **4** |
-
-(Drafts 1–2 were reviewed against the full checklist before the compelling pass was scored per round.)
+| Point | Draft 1 | Draft 2 | Draft 3 | Draft 4 |
+|---|---|---|---|---|
+| (a) First 2 s | 3 | 2 | 2 | 3 |
+| (b) One thread | 4 | 4 | 4 | 4 |
+| (c) Picture moves with the sentence | 3 | 2 | 3 | 3 |
+| (d) Motivated cuts | 3 | 3 | 3 | 3 |
+| (e) Voice meaning, screen figures | 4 | 4 | 4 | 4 |
+| (f) Rhythm | 3 | 3 | 3 | 4 |
+| (g) Ending and tease | 3 | 3 | 3 | 3 |
 
 ## Review rounds, in short
-1. Draft 1: tease caption over the end card, camera inside cells, five hard cuts, the to-scale line said more than its
-   note (width vs thickness), gauge under the captions, subjects too dim, caption breaks, tone implication, badges.
-2. Draft 3: fixes in; plus the channel's one-tone rule (owner-approved 2 Nov): medium throughout.
-3. Drafts 4–9: the cuts. Overlay irises read as white blobs; the final answer is match cuts on a sound, computed
-   from the picture (the incoming subject lands on the outgoing subject's spot and eases back over 0.8 s), and a
-   halo on the fused bases as each DNA shot opens. Field, to scale and close became one camera move.
 
-## Still open, for people
-- The dermatologist on c4's wording ("under a trillionth of a second" against the source's "within about 1 ps", lab DNA).
-- Close cells read as open cups at about 260 µm (the shared section's cut-face look); a taste call.
+### Draft 1
+
+Each finding below was checked against the frames and `claims.json` before acting.
+
+**Honesty**
+- **Tone strip:** the daylight strip sat under the lethal-dose line, which pairs skin tones with a risk (bible §1). Removed.
+- **Dose plate:** now says "units differ by product" and "side effects can occur far below this". Both are from c8 and c9's notes.
+- **New badges:**
+  - "regrowth studied in mice" (c13: mouse muscle);
+  - "≈ 3–4 months, compressed" (c12);
+  - "estimate · not to scale" on the gauge.
+
+**The spine readout** (the one number kept on screen throughout)
+- It now runs from the first second ("one frown's dose: ?").
+- "< 1 %" now holds lit from "kill" to the end card. Before, it left before the payoff.
+
+**The why beat**
+- It had been 13 s on one composition. It now cuts back below on "guessed", to the silenced nerve ending, so the thread returns to the junction.
+
+**Pictures**
+- **Hook:** a deeper crease and a sharper focus.
+- **Inside the nerve ending:** the cut protein's two halves are bigger and part visibly.
+- **Takeaway:**
+  - the camera is closer on the new endings;
+  - the original ending sends its message again (c13);
+  - the crease returns.
+- **Gauge:** it lifts sooner, and the gap reads "≈ 50 nm" (it had run under the paper bar).
+- **Dose plate:** moved above the captions.
+- **UV reveal:** fades in faster.
+
+**Not changed**
+- **The end card's follow chip** (No. 005) is the next episode, as on every end card.
+- **"So how much goes in?"** is kept. The question answers the hook, and the plate's notes now carry the safety context.
+
+### Drafts 2–4
+
+A fresh reviewer each round, scoring independently. Every finding was checked against frames I pulled myself before acting.
+
+**Draft 2**
+- **The spine readout disappeared at 28–48 s:** I had ended it at the why beat by mistake. It now runs continuously.
+- **Fog:** its colour now matches the ground (0x2c1660), which removes a dark notched band at the terrain's edge.
+- **Turn words now have events:**
+  - "never leaves": the vesicles press at the membrane and fall back;
+  - "sausages": "sausage poison" lights up on its word;
+  - "guessed": Kerner's second line arrives.
+
+**Draft 3**
+- **The hook was too close to read as a frown.** I confirmed this in the frames. The hook now has two brow mounds and a crease, a wider and sharper camera, and the ng/kg figure on screen on "by the nanogram".
+- **The dose plate's bars sat under the captions.** The plate moved up, and REC moved to the viewfinder's foot. A CSS override was needed because the shared style loads after the scene's.
+- **Caption breaks:** now fall at phrase boundaries.
+
+**Draft 4**
+- **The brow still didn't read as a face:**
+  - eyebrow hairs on the two mounds;
+  - the frown sets on screen (the relief deepens over the first second);
+  - the UV reveal now carries the same crease and mounds, so "the same brow" is literally true;
+  - the dose points sit lower, clear of the spine.
+- **The loop:** on "endings" the film returns to the brow, with the frown setting again before the end card.
+- **The 7.17 s cut:** the cut face now opens close on its crease.
+- **Gauge:** the card sits to the left of the nerve ending.
+- **Spine:** relabelled at the payoff ("one frown, of a lethal dose") and cleared before the end card. This removes a stray dash that showed through the end bars.

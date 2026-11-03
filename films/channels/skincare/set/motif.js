@@ -15,7 +15,7 @@ const CSS = `
 .ol-bars i { display: block; height: var(--h); background: var(--text); border-radius: .3vmin; transform-origin: 0 50%; }
 .ol-bars i:nth-child(1) { --h: .55vmin; } .ol-bars i:nth-child(2) { --h: .95vmin; } .ol-bars i:nth-child(3) { --h: 1.45vmin; }
 .ol-band { position: absolute; left: 0; width: 100%; z-index: 2; pointer-events: none; opacity: 0;
-  background: linear-gradient(180deg, rgba(238, 242, 241, 0) 0%, rgba(238, 242, 241, .86) 24%, rgba(238, 242, 241, .86) 76%, rgba(238, 242, 241, 0) 100%); }
+  background: linear-gradient(180deg, rgba(44, 22, 96, 0) 0%, rgba(44, 22, 96, .86) 24%, rgba(44, 22, 96, .86) 76%, rgba(44, 22, 96, 0) 100%); }
 .hud-end { text-align: center; }
 .hud-end .ol-bars { margin: 0 auto 3.2vmin; width: 10vmin; gap: 1vmin; }
 .hud-end .ol-bars i:nth-child(1) { --h: 1vmin; } .hud-end .ol-bars i:nth-child(2) { --h: 1.7vmin; } .hud-end .ol-bars i:nth-child(3) { --h: 2.6vmin; }
@@ -89,7 +89,7 @@ export const createGauge = ({ root, W, H, S1 = Math.min(W, H) / 1080, safe, film
   const ticks = Array.from({ length: 21 }, (_, i) => mk("line", { stroke: "var(--text)", "stroke-width": (i % 5 === 0 ? 3 : 2) * S1 }, g));   // 0–200 µm; those past the span are hidden
   const lab = [0, 50, 100, 150, 200].map((v) => mk("text", { "font-size": 26 * S1, "dominant-baseline": "middle" }, g));
   lab.forEach((e, i) => (e.textContent = `${[0, 50, 100, 150, 200][i]}`));
-  const unit = mk("text", { "font-size": 24 * S1 }, g);   // ink, not text-2: ≥ 4.5:1 over the card's edge unit.textContent = "µm";
+  const unit = mk("text", { "font-size": 24 * S1 }, g); unit.textContent = "µm";   // ink, not text-2: ≥ 4.5:1 over the card's edge
   const paperMark = mk("line", { stroke: "var(--text-2)", "stroke-width": 2 * S1, "stroke-dasharray": `${6 * S1} ${5 * S1}` }, g);
   const paperTxt = mk("text", { "font-size": 24 * S1, class: "sub", "dominant-baseline": "middle" }, g); paperTxt.textContent = "paper ≈ 100 µm";
   // the lifted bars

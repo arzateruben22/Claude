@@ -12,106 +12,107 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Bigger number, bigger shield? On a sunscreen, not the way you'd think.",
+   "text": "Where's your glow from? Most light on your face goes inside you.",
    "stars": [
-    "shield"
+    "glow"
    ],
-   "phonemes": "bˈɪɡə nˈʌmbə, bˈɪɡə ʃˈiːld? ˌɒn ɐ sˈʌnskɹiːn, nˌɒt ðə wˈeɪ juːd θˈɪŋk.",
-   "speed": 0.86,
+   "phonemes": "wˌeəz jɔː ɡlˈəʊ fɹɒm? mˈəʊst lˈaɪt ˌɒn jɔː fˈeɪs ɡəʊz ɪnsˈaɪd juː.",
+   "speed": 0.79,
    "file": "01.wav",
-   "dur": 4.083,
-   "sha256": "ff93845f1c8af45870b96e022cf72abfebb9b60250340499120d29148fa02183"
+   "dur": 4.587,
+   "sha256": "eaccb04e4d33bd19a526e3e95ec3c0ba94abda77a31c9d6737b8985641ac22b3"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "The number isn't a percentage. It's a ratio: how much more burning light your skin can take under the film before it reddens.",
+   "text": "Only about one ray in twenty bounces off as a glint. Smooth, hydrated skin sends it back one way; dry skin scatters it into a haze.",
    "stars": [
-    "reddens"
+    "haze"
    ],
-   "phonemes": "ðə nˈʌmbəɹ ˌɪzənt ɐ pəsˈɛntɪdʒ. ɪts ɐ ɹˈeɪʃɪˌəʊ: hˌaʊ mˈʌtʃ mˈɔː bˈɜːnɪŋ lˈaɪt jɔː skˈɪn kan tˈeɪk ˌʌndə ðə fˈɪlm bɪfˌɔːɹ ɪt ɹˈɛdənz.",
+   "phonemes": "ˈəʊnli ɐbˌaʊt wˈɒn ɹˈeɪ ɪn twˈɛnti bˈaʊnsɪz ˈɒf az ɐ ɡlˈɪnt. smˈuːð, haɪdɹˈeɪtɪd skˈɪn sˈɛndz ɪt bˈak wˈɒn wˈeɪ; dɹˈaɪ skˈɪn skˈatəz ɪt ˌɪntʊ ɐ hˈeɪz.",
    "speed": 0.82,
    "file": "02.wav",
-   "dur": 8.007,
-   "sha256": "77fa596e8b6c15d846e85941cbc95413d08989c0fbb639e9598c342594f6724d"
+   "dur": 9.497,
+   "sha256": "90a446f5c4075b34f49a6e7c35dfd126c0afe5a799883fa581b57f099c5d80c8"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Flip it around, and both let only a thin sliver of that light through, so the bigger number blocks barely more.",
+   "text": "But the glint isn't the glow. The rest slips in, bounces among cells and fibres, and several times more finds its way back out.",
    "stars": [
-    "barely"
+    "out"
    ],
-   "phonemes": "flˈɪp ɪt ɐɹˈaʊnd, and bˈəʊθ lˈɛt ˈəʊnli ɐ θˈɪn slˈɪvəɹ ɒv ðat lˈaɪt θɹˈuː, sˌəʊ ðə bˈɪɡə nˈʌmbə blˈɒks bˈeəli mˈɔː.",
+   "phonemes": "bˌʌt ðə ɡlˈɪnt ˌɪzənt ðə ɡlˈəʊ. ðə ɹˈɛst slˈɪps ˈɪn, bˈaʊnsɪz ɐmˌʌŋ sˈɛlz and fˈaɪbəz, and sˈɛvɹəl tˈaɪmz mˈɔː fˈaɪndz ɪts wˈeɪ bˈak ˈaʊt.",
    "speed": 0.76,
    "file": "03.wav",
-   "dur": 7.735,
-   "sha256": "72920d6bef49adbdc32d6dba08f00da6d5dd3f19dd35f1c813c8923eb4927fc9"
+   "dur": 9.685,
+   "sha256": "1429306daa66f83bd92afb1ad9d5543149022367a0dade8bf116350c3cb3e7c1"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "But look at what actually gets in. Half as much. That's the real difference, as long as the film is as thick as the lab's.",
+   "text": "You'd picture a glow as shine sitting on the skin. But it's light that has travelled through you, past your melanin and your blood.",
    "stars": [
-    "in"
+    "blood"
    ],
-   "phonemes": "bˌʌt lˈʊk at wɒt ˈaktʃuːəli ɡˈɛts ˈɪn. hˈɑːf az mˈʌtʃ. ðats ðə ɹˈiəl dˈɪfɹəns, az lˈɒŋ az ðə fˈɪlm ɪz az θˈɪk az ðə lˈabz.",
-   "speed": 0.72,
+   "phonemes": "juːd pˈɪktʃəɹ ɐ ɡlˈəʊ az ʃˈaɪn sˈɪtɪŋ ɒnðə skˈɪn. bˌʌt ɪts lˈaɪt ðat hɐz tɹˈavəld θɹˈuː juː, pˈast jɔː mˈɛlənɪn and jɔː blˈʌd.",
+   "speed": 0.74,
    "file": "04.wav",
-   "dur": 9.362,
-   "sha256": "a8df600c4645c9b0d326409faa142e45f53e9add97ac0113b00636aeffc89e21"
+   "dur": 8.813,
+   "sha256": "095775c2500fe2a68fac2aff97ebc821ab5ec982df86fff6045a44734e3a45fc"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "But real people, studies found, spread a quarter to half as much, and protection falls well below the label. How far is still argued.",
+   "text": "Blood moves with your heart, so your face changes colour with every beat: too faint to see, but an ordinary camera can count your pulse in it.",
    "stars": [
-    "argued"
+    "pulse"
    ],
-   "phonemes": "bˌʌt ɹˈiəl pˈiːpəl, stˈʌdiz fˈaʊnd, spɹˈɛd ɐ kwˈɔːtə tə hˈɑːf az mˈʌtʃ, and pɹətˈɛkʃən fˈɔːlz wˈɛl bɪlˌəʊ ðə lˈeɪbəl. hˌaʊ fˈɑːɹ ɪz stˈɪl ˈɑːɡjuːd.",
-   "speed": 0.82,
+   "phonemes": "blˈʌd mˈuːvz wɪð jɔː hˈɑːt, sˌəʊ jɔː fˈeɪs tʃˈeɪndʒɪz kˈʌlə wɪð ˈɛvɹɪ bˈiːt: tˈuː fˈeɪnt tə sˈiː, bˌʌt ɐn ˈɔːdɪnəɹi kˈamɹə kan kˈaʊnt jɔː pˈʌls ɪn ɪt.",
+   "speed": 0.74,
    "file": "05.wav",
-   "dur": 8.643,
-   "sha256": "b88f152860dda9cbd2453dfc52f92ffdd6bfc09d79ec2afbab6eca493a3d163f"
+   "dur": 10.434,
+   "sha256": "ff700e1366dde1c8a9df755a67759216c81d9bca53ee083371e7df66eb4ecad8"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "That lab layer is about as thick as the dead layer under it. A fifth of a sheet of paper.",
+   "text": "And it goes deep: blue light barely a millimetre, about ten sheets of paper; red several times further, through the skin.",
    "stars": [
-    "paper"
+    "skin"
    ],
-   "phonemes": "ðat lˈab lˈeɪəɹ ɪz ɐbˌaʊt az θˈɪk az ðə dˈɛd lˈeɪəɹ ˈʌndəɹ ɪt. ɐ fˈɪfθ əvə ʃˈiːt ɒv pˈeɪpə.",
-   "speed": 0.72,
+   "phonemes": "and ɪt ɡəʊz dˈiːp: blˈuː lˈaɪt bˈeəli ɐ mˈɪlɪmˌiːtə, ɐbˌaʊt tˈɛn ʃˈiːts ɒv pˈeɪpə; ɹˈɛd sˈɛvɹəl tˈaɪmz fˈɜːðə, θɹuː ðə skˈɪn.",
+   "speed": 0.82,
    "file": "06.wav",
-   "dur": 7.313,
-   "sha256": "b93977f06924f58a8bc23e5de504e808a603fb672f7ae49bf7b43320b94d5a0e"
+   "dur": 7.505,
+   "sha256": "bcb068e77b51c1018802e6055adc2feabf4d94a53fd9cebe274edfbe0a0c364f"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So the bigger number isn't twice the shield. It's half the light getting in, when there's enough of it.",
+   "text": "Film faces made by computer once looked like plastic: their light never went inside. Yours does; that's your glow.",
    "stars": [
-    "in"
+    "inside",
+    "glow"
    ],
-   "phonemes": "sˌəʊ ðə bˈɪɡə nˈʌmbəɹ ˌɪzənt twˈaɪs ðə ʃˈiːld. ɪts hˈɑːf ðə lˈaɪt ɡˌɛtɪŋ ˈɪn, wˌɛn ðeəz ɪnˈʌf ɒv ɪt.",
-   "speed": 0.72,
+   "phonemes": "fˈɪlm fˈeɪsɪz mˌeɪd baɪ kəmpjˈuːtə wˈʌns lˈʊkt lˈaɪk plˈastɪk: ðeə lˈaɪt nˈɛvə wɛnt ɪnsˈaɪd. jˈɔːz dˈʌz; ðats jɔː ɡlˈəʊ.",
+   "speed": 0.96,
    "file": "07.wav",
-   "dur": 6.961,
-   "sha256": "ebf77b9e78e9ac520fdfb2d11e94d2311474897967947206837902b95d289e86"
+   "dur": 6.799,
+   "sha256": "18433690b8119ed8d9df362ba56f352f7b4d7f37aa97f41d0625235cf44b1ac5"
   },
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: why do fingers wrinkle in the bath, but not your arm?",
+   "text": "Next: before birth, a cut healed without a trace. So why do you scar?",
    "stars": [
-    "arm"
+    "scar"
    ],
-   "phonemes": "nˈɛkst: wˌaɪ dˈuː fˈɪŋɡəz ɹˈɪŋkəl ɪnðə bˈaθ, bˌʌt nˌɒt jɔːɹ ˈɑːm?",
+   "phonemes": "nˈɛkst: bɪfˌɔː bˈɜːθ, ɐ kˈʌt hˈiːld wɪðˌaʊt ɐ tɹˈeɪs. sˌəʊ wˌaɪ dˈuː juː skˈɑː?",
    "speed": 0.76,
    "file": "08.wav",
-   "dur": 4.287,
-   "sha256": "5d7eeef66d48dd83b93b643c74b18494ae99c28f6040b3414514df87c8e1d0b6"
+   "dur": 5.306,
+   "sha256": "f766ef135f26b7721a2b7b5a67a65fb870bb29f8a42e08f97a17d626d69fbbd2"
   }
  ]
 }

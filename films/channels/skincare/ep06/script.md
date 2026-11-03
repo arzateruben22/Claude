@@ -1,57 +1,90 @@
-# Outer Layer No. 006: "Goosebumps" (draft; dermatologist sign-off before posting)
+# Outer Layer No. 006: "Same list as cigarettes" (draft; dermatologist sign-off before posting)
 
-About 72 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Bible §7 #6.
+About 73 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2, tanning beds.
+**Tanning episode: a board-certified dermatologist signs off on every line before posting (bible §8, §9).**
+Facts pass 2 (2 Nov): three ranked "I didn't know that" beats, one counter-intuitive turn, fewer labels.
 
-The story: every hair has a tiny muscle, and a nerve that pulls it when we are cold or afraid. In a furred
-animal that fluffs the coat into a blanket of trapped air; we have about as many follicles as a chimpanzee, but
-ours grow fine, near-invisible hairs, so the bumps rise with nothing to fluff. The wrong idea is "a useless
-leftover"; the person is Ya-Chieh Hsu's lab at Harvard (Shwartz et al., Cell, 2020), which found that the same
-nerve also wires into the follicle's stem cells, the muscle holds that wiring in place, and in the cold it wakes
-them. The whoa: the reflex that once fluffed fur still tends the follicle that grows the hair. "To scale" puts
-one of our fine hairs beside the paper.
+The story: tanning beds sit on the same cancer list as tobacco smoke (IARC Group 1, 2009), and so does processed
+meat (2015). Nobody thinks a sausage is a cigarette, and the list's keepers say so: the top group ranks how sure the
+evidence is, not how big the harm (the counter-intuitive turn, which the hook sets up and the takeaway lands). The
+film then follows that evidence: the light the beds give off (mostly UVA; in large, powerful units it "may be 10 to
+15 times" the midday sun's intensity), the people the experts saw it in most clearly (first use before 35: melanoma
+risk RR 1.59 and 1.75 in two meta-analyses), then whole countries acting on it within months (Brazil 2009,
+Australia 2015). "To scale" puts the top layer of skin (≈ 100 µm on most skin) beside the paper, with the long
+rays passing it. The closing twist: the sun itself made the list in 1992, seventeen years before the beds did,
+because the list follows the evidence, and the evidence on the beds took longer to become sure.
 
-Flow (WRITING.md, 29 Oct): one thread from the hook's "Why do we get goosebumps?" to the takeaway's "still"; the voice
-carries the meaning and the screen the specifics (arrector pili, sympathetic nerve, noradrenaline, the chimpanzee
-comparison, Shwartz et al. 2020 in mice, vellus < 30 µm, 100 µm paper). The picture changes scale with the
-ideas: an arm's skin at the mm rung → one follicle in section, its muscle and nerve → a furred coat lifting →
-our fine hairs → the stem cells at the bulge, lit by the nerve → back out to the bumps.
+The three beats, ranked: (1) processed meat shares the list, so the list can't be ranking harm (hook, and the
+turn in normal); (2) whole countries switched commercial beds off within months (whoa); (3) the sun was on the list
+years before the beds (the takeaway's reframe, calling back "Same list as cigarettes").
 
-Honesty, on screen: the follicle section is "simplified"; the fur is an "illustration"; the stem-cell finding is
-"in mice"; the hair width is "vellus: by definition < 30 µm". The skin is drawn in one melanin level (light) for
-the whole episode (bible §1, owner-approved 2 Nov). No advice.
+Flow (WRITING.md, 29 Oct): one thread from the hook's "Same list as cigarettes?" through "all three" and "how
+sure" to the takeaway's "the same certainty"; the sun of the change ("the midday sun") comes back in the takeaway.
+The voice carries the meaning and about three numbers ("ten to fifteen times", "thirty-five", "more than half");
+the screen carries the specifics (IARC, Group 1, 2009, 2015, 1992, UVA, 10–15×, RR 1.59 / 1.75, Brazil 2009,
+Australia 2015, ≈ 100 µm, 100 µm paper). Every number has a human-scale meaning in the voice: the midday sun,
+an age, "more than half", paper, "years before". The picture changes scale with the ideas: the list, three lines
+lit → the open bed → a section of skin under the light → a crowd of first sessions, sorted by age → a map, two
+countries going dark → the section's top layer beside the paper → the list again. Cuts are scale jumps only.
+
+Labels: at most two on screen at a time; the captions carry the words. Each beat header names the labels that stay.
+
+Honesty, on screen: the list carries "strength of evidence, not size of risk" through the hook's turn and the
+takeaway; the intensity figure is badged "large, powerful units · may be"; the risk figures are "pooled studies ·
+relative risk" with both reviews and their ages; the section is "simplified"; the skin is a "model, not a photo".
+No advice: the film never tells the viewer to use or avoid anything (or what to eat); it reports a classification,
+measurements and what two governments did.
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. In a vo line, `{c1}` ties a sentence
 to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep06 --segment toscale`.
 
-## hook {shot: frame 0, the payoff: skin at the mm rung in a light tone, bumps raised round each fine hair, gauge at 0 µm · badge: simplified · title: "Goosebumps" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.5 s)
-vo: Why do we get *goosebumps*? We hardly have fur. {c1}
+## hook {shot: frame 0, the reveal on the list: an IARC Group 1 excerpt over skin under a bed's light ("model, not a photo"); on "cigarettes" two lines light, on "meat" a third · labels that stay: "IARC Group 1" + "model, not a photo" · title: "Same list as cigarettes" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–4.3 s)
+vo: Same list as cigarettes? Processed *meat* is on it too. {c1}
 
-## normal {shot: the skin flattens, then a cut opens through one bump: a follicle, its hair, a tiny muscle running from the follicle to the surface, a nerve beside it; on "cold" the nerve lights, the muscle shortens, the hair stands and the skin around it puckers · spine arrector pili · picture-only 0.5 s · energy: 0.45} (4.5–16 s)
-vo: Nearly every hair has its own tiny muscle, and when we're cold or frightened, a nerve tugs it, pulling the hair upright and the skin into a *bump*. {c2,c3}
+## normal {shot: no cut: the list holds, three lines lit; on "sure" one line lands under them · labels that stay: "IARC Group 1" + "strength of evidence, not size of risk" · picture-only 0.5 s · energy: 0.45} (4.3–15.7 s)
+vo: All three share the top group of the World Health Organization's cancer agency, which says that doesn't make them equally dangerous: it ranks how *sure* the evidence is. {c2,c3}
 
-## change {shot: match cut on "In" to a furred coat in section: hundreds of hairs stand together and the air between them thickens; then back to ours on "ours": the same number of follicles, the hairs fine and pale · spine ≈ same follicles as a chimpanzee · badge: illustration · picture-only 0.6 s · energy: 0.55} (16–28 s)
-vo: In a furry animal, that fluffs the coat into a blanket of trapped *air*. {c4} We have about as many hair follicles as a chimpanzee, but ours grow fine, almost invisible hairs. {c5,c6}
+## change {shot: a scale jump into the bed, its tubes lighting; on "ten to fifteen" they flare · labels that stay: "UVA · ×10–15 midday sun" + "large, powerful units · may be" · picture-only 0.6 s · energy: 0.55} (15.7–27.2 s)
+vo: Into the bed, then: its light is mostly UVA, the long rays. {c4} In large, powerful units, it may be ten to fifteen times as intense as the midday *sun*. {c5}
 
-## why {shot: push down the follicle to the bulge on "But"; the stem cells there light; the nerve's branches reach them on "nerve", held in place by the muscle · badges: in mice · Shwartz et al., 2020 · picture-only 2.2 s · energy: 0.5} (28–42 s)
-vo: So the bumps look like a leftover. {c7} But a team at Harvard found that nerve also reaches the stem cells that grow hair, and the muscle holds it in *place*. {c8,c9}
+## why {shot: no cut; the reveal on the first sessions, sorted by age · labels that stay: "first use before 35 · RR 1.59 (2012, corrected) · 1.75 (2007)" + "pooled studies · relative risk" · picture-only 2.0 s · energy: 0.5} (27.2–41.6 s)
+vo: When the beds joined that group, the sharpest signal came from people who started young. {c6} In pooled studies, first use before thirty-five went with melanoma risk raised by more than *half*. {c7}
 
-## whoa {shot: cold arrives (a frost line across the surface); the nerve fires, the stem cells divide and a new hair grows up the follicle (time ×N); remove the muscle in a second follicle beside it on "Without" and its wiring fades, its hair waits · spine noradrenaline · picture-only 3.2 s · energy: 0.8} (42–55 s)
-vo: In the cold, that nerve wakes the stem cells, and the mice grew new hair *sooner*. {c10} Take the little muscle away, and the wiring fades. {c11}
+## whoa {shot: the reveal on the map: on "Brazil" one country goes dark, on "off" a second · labels that stay: "commercial beds banned: Brazil 2009 · Australia 2015" + "model, not a photo" · picture-only 3.0 s · energy: 0.8} (41.6–51.3 s)
+vo: Within months, whole countries acted: Brazil banned commercial tanning beds, and later Australia switched its own *off*. {c8,c9}
 
-## toscale {segment: toscale · the gauge lifts to centre beside the follicle: one of our fine hairs' width fills in, then the paper's 100 µm · picture-only 0.5 s · energy: 0.4} (55–61.5 s)
-vo: And most of the hairs it tends are thinner than a third of a sheet of *paper*. {c12,c13}
+## toscale {segment: toscale · the reveal on the skin's section: long rays pass the top layer; the gauge sets it beside the paper · labels that stay: "≈ 100 µm · paper 100 µm" + "simplified" · picture-only 0.5 s · energy: 0.4} (51.3–58.9 s)
+vo: And those long rays reach right through the top layer, on most skin about as thin as *paper*. {c10,c11}
 
-## takeaway {shot: back to the hook's skin, the bumps rising once more · picture-only 0.5 s · energy: 0.3} (61.5–68.5 s)
-vo: So why do we still get goosebumps? Because the muscle that raises a hair still *looks after it*. {c14}
+## takeaway {shot: back to the hook's list; on "sun" a fourth line lights above the others, dated first · labels that stay: "solar radiation · Group 1 since 1992 · beds 2009" + "strength of evidence, not size of risk" · picture-only 0.5 s · energy: 0.3} (58.9–67.3 s)
+vo: The sun made that list years before the beds. {c12} Same list as cigarettes: not the same harm, the same *certainty*. {c13}
 
-## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (68.5–74.5 s)
-vo: That's the outer layer, for now. Next season, we go *deeper*. {-}
-end card: "Next season: deeper" · "Outer Layer · Season 1"
+## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (67.3–73.3 s)
+vo: Next season: why do bath fingers wrinkle, but never your *arm*? {-}
+end card: "Next season: why do bath fingers wrinkle?" · "Outer Layer · season 2" · footnote: "IARC classified UV-emitting tanning devices as carcinogenic to humans (Group 1) in 2009."
 
 ## Notes
-- Every claim was checked through search excerpts only (the proxy blocks page fetches); see `claims.json`. A
-  person opens each link, and a board-certified dermatologist signs off, before posting.
-- The tease (the season's last) is a placeholder until the first builder or the coordinator names season 2's
-  first topic.
-- Listen at T0: goosebumps, follicles, chimpanzee.
+- Every claim was checked through search excerpts only: the proxy blocks page fetches (www.iarc.who.int does not
+  resolve in this session); see `claims.json`. A person opens each link, and a board-certified dermatologist signs
+  off, before posting.
+- Processed meat (new, c1–c3): IARC classified processed meat consumption as Group 1 in October 2015 (Monographs
+  Vol. 114); WHO's Q&A says it is "in the same category as causes of cancer such as tobacco smoking and asbestos
+  (IARC Group 1) … but this does NOT mean that they are all equally dangerous". The film names it only as a member
+  of the list, never as a diet point.
+- "More than half": the corrected Boniol et al. 2012 BMJ estimate for first use before 35 is RR 1.59 (1.36–1.85);
+  the original 1.87 was withdrawn (correction, BMJ 2012;345:e8503). The IARC 2007 meta-analysis gave 1.75
+  (1.35–2.26) for first use before 35. IARC's 2009 summary describes the same result as a 75% increase "before age
+  30"; the film doesn't use that pairing. "More than half" is true of both; the screen shows both, with their ages.
+- "Ten to fifteen times": AAP technical report (Balk, Pediatrics 2011), "may be 10 to 15 times higher than that of
+  the midday sun", for UVA from large, powerful units; the figure is old and not universal (measured devices range
+  from about 2 to 26 times solar UVA). Fallback, if the dermatologist prefers it: WHO's "at least as intense as
+  midday tropical sunlight".
+- "Within months": IARC's decision was published in late July 2009; ANVISA's RDC 56 is dated 9 November 2009.
+  The ban has been challenged in Brazilian courts (sources conflict on its current reach); the film reports only
+  that Brazil banned them.
+- "The sun made that list years before the beds" (new, c12): IARC Vol. 55 (1992) put solar radiation in Group 1
+  and sunlamp/sunbed use in Group 2A; the beds moved to Group 1 in 2009. On screen: 1992 and 2009.
+- "About as thin as paper": epidermis usually ≈ 0.1 mm (0.07–0.12 mm), thicker on palms and soles.
+- Tease and end card unchanged, word for word (season chain, `../s1v2/SEASON.md`).
+- Listen at T0: UVA, melanoma.

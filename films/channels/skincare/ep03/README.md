@@ -1,17 +1,11 @@
-# Outer Layer No. 003: "Bath fingers"
+# Skin Sense No. 003 (reboot): "What's in a scar"
 
-About 71 s, 9:16 (1080×1920, 30 fps), narrated by a synthetic voice (bf_isabella, labelled "Narration: synthetic voice
-(AI)"), with an original score (`outerlayer-slide`). Bible §7 #3. One deep skin tone throughout (bible §1).
+About 70–77 s, 9:16 (1080×1920, 30 fps), narrated by a synthetic voice (bf_isabella, labelled "Narration: synthetic
+voice (AI)"), with an original score (`outerlayer-slide`). The reboot's look (bible §2): UV-camera reveals and macro
+flights. One deep skin tone throughout (bible §1, owner-approved).
 
-**The story (Flow standard):** why do wet fingers wrinkle when your arm stays smooth? It looks like skin swelling like
-a sponge, and that's wrong: almost a century ago doctors saw that a finger with a cut nerve stays smooth in the bath.
-The nerves narrow the tiny vessels under each fingertip, the pad shrinks a little, and the skin on top buckles. A
-wrinkle is a reflex doctors use to test a nerve; why we have it is argued (a wet grip found once, then not). It only
-happens on the hairless skin of hands and feet, where the dead layer runs thickest, nearly two sheets of paper. So your
-fingers don't wrinkle because they're soaked; they wrinkle because your nerves decide to.
+**The story:** The dermis is collagen woven over and under in every direction; a cut is patched with parallel threads and no hair or sweat glands; even an old scar holds only about four-fifths of the original strength (Levenson et al., 1965, rat skin); until about 22–24 weeks of pregnancy a cut regrows the weave, follicles and all; on most of the body only the top layer (≈ a sheet of paper) grows back without a seam.
 
-**On screen:** Lewis & Pickering, 1930s; Wilder-Smith & Chow, 2003; reflex; 2013 ✓ then 2014 ✗; the palm's 173 µm
-against the cheek's 17 µm and paper's 100 µm.
-
-Files as in No. 001: `script.md`, `claims.json` (13), `voice.py`/`vo/`, `compile.py` → `film.json`/`sheet.json`,
-`scene.mjs` (`../set/section.js`: wrinkle(), vessels, water), `review/`, `out/`.
+Script and claims from the second builder's `s1v2/scar` (coordinator's jaw-drop pass); shot directions rewritten for
+the new look. Files: `script.md`, `claims.json`, `voice.py`/`vo/`, `compile.py` → `film.json`/`sheet.json`, `scene.mjs`
+(`../set/uvcam.js`, `../set/terrain.js` and the episode's set piece), `review/`, `out/`.

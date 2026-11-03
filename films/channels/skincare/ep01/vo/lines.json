@@ -12,106 +12,107 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Is your skin alive? The part you can see isn't: not one cell.",
+   "text": "Is this spot new? Its fight began under skin that looked perfectly clear.",
    "stars": [
-    "alive"
+    "new"
    ],
-   "phonemes": "ɪz jɔː skˈɪn ɐlˈaɪv? ðə pˈɑːt juː kan sˈiː ˈɪzənt: nˌɒt wˈɒn sˈɛl.",
-   "speed": 0.78,
+   "phonemes": "ɪz ðɪs spˈɒt njˈuː? ɪts fˈaɪt bɪɡˈan ˌʌndə skˈɪn ðat lˈʊkt pˈɜːfɛktlˌɪ klˈiə.",
+   "speed": 0.82,
    "file": "01.wav",
-   "dur": 4.668,
-   "sha256": "e9f3a301853017d141f804ff18a23160227ce645dc6edb6cfae540b6e2a5699b"
+   "dur": 4.901,
+   "sha256": "ea79af595c8569f189c9effda2babcc2901888369e43e49d2fd5c3da8e34993d"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Look closer: the surface is a stack of flattened cells, more than a dozen deep, each an empty shell packed with keratin. The living ones start just underneath.",
+   "text": "Follow faces photo by photo, and more than one new red spot in four rises from skin that looked clear. So what was happening underneath?",
    "stars": [
-    "keratin"
+    "clear"
    ],
-   "phonemes": "lˈʊk klˈəʊsə: ðə sˈɜːfɪs ɪz ɐ stˈak ɒv flˈatənd sˈɛlz, mˈɔː ðˌanə dˈʌzən dˈiːp, ˈiːtʃ ɐn ˈɛmpti ʃˈɛl pˈakt wɪð kˈɛɹətɪn . ðə lˈɪvɪŋ wˈɒnz stˈɑːt dʒˈʌst ˌʌndənˈiːθ.",
-   "speed": 0.86,
+   "phonemes": "fˈɒləʊ fˈeɪsɪz fˈəʊtəʊ baɪ fˈəʊtəʊ, and mˈɔː ðɐn wˈɒn njˈuː ɹˈɛd spˈɒt ɪn fˈɔː ɹˈaɪzɪz fɹɒm skˈɪn ðat lˈʊkt klˈiə. sˌəʊ wɒt wɒz hˈapənɪŋ ˌʌndənˈiːθ?",
+   "speed": 0.82,
    "file": "02.wav",
-   "dur": 9.636,
-   "sha256": "1cb632c52057a7801ba18d43068129f7320fe8912cee23eedb8e6eb4ca98f8ba"
+   "dur": 9.116,
+   "sha256": "6905d078ba225aea2bd50382a995fd3cbba9f58ae44d11683cf7152a1c287b12"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Every one of them began down there, alive, then rose for about two weeks, filling with keratin, until near the top it took itself apart. On purpose.",
+   "text": "Beneath that clear skin, the defence has already gathered, immune cells crowding the follicle, some as thickly as in a red spot.",
    "stars": [
-    "On purpose."
+    "spot"
    ],
-   "phonemes": "ˈɛvɹɪ wˈɒn ɒv ðˌɛm bɪɡˈan dˌaʊn ðˈeə, ɐlˈaɪv, ðˈɛn ɹˈəʊz fɔːɹ ɐbˌaʊt tˈuː wˈiːks, fˈɪlɪŋ wɪð kˈɛɹətɪn , ʌntˈɪl nˌiə ðə tˈɒp ɪt tˈʊk ɪtsˈɛlf ɐpˈɑːt. ˌɒn pˈɜːpəs.",
-   "speed": 0.8,
+   "phonemes": "bɪnˌiːθ ðat klˈiə skˈɪn, ðə dɪfˈɛns hɐz ɔːlɹˌɛdi ɡˈaðəd, ɪmjˈuːn sˈɛlz kɹˈaʊdɪŋ ðə fˈɒlɪkəl , sˌʌm az θˈɪkli az ɪn ɐ ɹˈɛd spˈɒt.",
+   "speed": 0.82,
    "file": "03.wav",
-   "dur": 10.13,
-   "sha256": "0d256ba90d315a74f31ac2a0ad89b905259177a436d9c79ae513c0c4796b716a"
+   "dur": 8.318,
+   "sha256": "102b75c4033ba6166bbfb31afd8180c980802f1d3340d3194decab9002970e6e"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "It looks like waste, waiting to flake away. But sealed together with fats, those shells build a kind of brick wall, and the wall keeps your water inside.",
+   "text": "It's easy to picture an infection. But it's the most common bacterium in clear, oily skin, and skin with acne carries no more. What makes the spot is largely your body's answer.",
    "stars": [
-    "brick wall"
+    "answer"
    ],
-   "phonemes": "ɪt lˈʊks lˈaɪk wˈeɪst, wˈeɪtɪŋ tə flˈeɪk ɐwˈeɪ. bˌʌt sˈiːld təɡˌɛðə wɪð fˈats, ðəʊz ʃˈɛlz bˈɪld ɐ kˈaɪnd ɒv bɹˈɪk wˈɔːl, and ðə wˈɔːl kˈiːps jɔː wˈɔːtəɹ ɪnsˈaɪd.",
-   "speed": 0.79,
+   "phonemes": "ɪts ˈiːzi tə pˈɪktʃəɹ ɐn ɪnfˈɛkʃən. bˌʌt ɪts ðə mˈəʊst kˈɒmən bæktˈɪəriəm ɪn klˈiə, ˈɔɪli skˈɪn, and skˈɪn wɪð ˈaknɪ kˈaɹiz nˈəʊmˌɔː. wˌɒt mˌeɪks ðə spˈɒt ɪz lˈɑːdʒli jɔː bˈɒdiz ˈansə.",
+   "speed": 0.82,
    "file": "04.wav",
-   "dur": 10.399,
-   "sha256": "32f4bed73bdb66caa2fc33ec9b7f57ddac46b08be1bae595392e4ec2f05138e9"
+   "dur": 11.866,
+   "sha256": "abb5061427528356de89d0c90837236041f44e907f24cf64251558098d54c10f"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Babies born too early haven't finished theirs, and doctors measuring their skin found it losing water about five times as fast. That's how much the wall holds back.",
+   "text": "White cells flood in until the follicle's wall can give way, spilling the fight deeper. Each day, your marrow makes several for every person on Earth.",
    "stars": [
-    "five times"
+    "deeper",
+    "Earth"
    ],
-   "phonemes": "bˈeɪbiz bˈɔːn tˈuː ˈɜːlɪ hˈavənt fˈɪnɪʃt ðˈeəz, and dˈɒktəz mˈɛʒəɹɪŋ ðeə skˈɪn fˈaʊnd ɪt lˈuːzɪŋ wˈɔːtəɹ ɐbˌaʊt fˈaɪv tˈaɪmz az fˈast. ðats hˌaʊ mˈʌtʃ ðə wˈɔːl hˈəʊldz bˈak.",
-   "speed": 0.86,
+   "phonemes": "wˈaɪt sˈɛlz flˈʌd ɪn ʌntˈɪl ðə fˈɒlɪkəl ˈɛs wˈɔːl kan ɡˈɪv wˈeɪ, spˈɪlɪŋ ðə fˈaɪt dˈiːpə. ˈiːtʃ dˈeɪ, jɔː mˈaɹəʊ mˌeɪks sˈɛvɹəl fɔːɹ ˈɛvɹɪ pˈɜːsən ˌɒn ˈɜːθ.",
+   "speed": 0.82,
    "file": "05.wav",
-   "dur": 10.294,
-   "sha256": "0687c5eeff7986abbcfafe59eac68508ebd5fc1b5b24545a8f066f5d0d3b8e51"
+   "dur": 9.302,
+   "sha256": "effa2afe68cf7267dd94ae640da1ef78568518c6f858095a3764e9e8d015d34f"
   },
   {
    "id": "vo06",
    "beat": "toscale",
-   "text": "And that whole wall, on a cheek, is thinner than a fifth of a sheet of paper.",
+   "text": "And pus is the fight's fallen: white cells so small that ten in a row still wouldn't span this paper's thickness.",
    "stars": [
-    "paper"
+    "thickness"
    ],
-   "phonemes": "and ðat hˈəʊl wˈɔːl, ˌɒn ɐ tʃˈiːk, ɪz θˈɪnə ðˌanə fˈɪfθ əvə ʃˈiːt ɒv pˈeɪpə.",
-   "speed": 0.7,
+   "phonemes": "and pˈʌs ɪz ðə fˈaɪts fˈɔːlən: wˈaɪt sˈɛlz sˌəʊ smˈɔːl ðat tˈɛn ˌɪnɐ ɹˈəʊ stˈɪl wˈʊdənt spˈan ðɪs pˈeɪpəz θˈɪknəs.",
+   "speed": 0.79,
    "file": "06.wav",
-   "dur": 5.782,
-   "sha256": "06b55d025e3057a9fd891d6c49fa8861fe68b8b3eafe4ca7c9b78640ec318ac8"
+   "dur": 7.85,
+   "sha256": "ccddd1ab9c32f59fdb7baad5b7d24a466fe0bd48bc9eda42c7a19123fec4ffbf"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "So, is your skin alive? Underneath, yes. On top, it wears a layer that died for it.",
+   "text": "Is it new? No: a fight begun out of sight, against a germ that even helps build your skin's barrier.",
    "stars": [
-    "died"
+    "barrier"
    ],
-   "phonemes": "sˈəʊ, ɪz jɔː skˈɪn ɐlˈaɪv? ˌʌndənˈiːθ, jˈɛs. ˌɒn tˈɒp, ɪt wˈeəz ɐ lˈeɪə ðat dˈaɪd fɔːɹ ɪt.",
-   "speed": 0.8,
+   "phonemes": "ɪz ɪt njˈuː? nˈəʊ: ɐ fˈaɪt bɪɡˈʌn ˌaʊtəv sˈaɪt, ɐɡˈɛnst ɐ dʒˈɜːm ðat ˈiːvən hˈɛlps bˈɪld jɔː skˈɪnz bˈaɹiə.",
+   "speed": 0.79,
    "file": "07.wav",
-   "dur": 5.946,
-   "sha256": "92482ee35f14f307a55c8a607aa2428ae0b77e5eb7d240367f2f94d9bd2f08c0"
+   "dur": 7.399,
+   "sha256": "ff61b3ad98b6e2d5eb3b517ab647859a5feed29d453c67e1cb580ced87767f85"
   },
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: does SPF one hundred block twice as much as fifty?",
+   "text": "Next: the light on your face, and where it really goes.",
    "stars": [
-    "fifty"
+    "goes"
    ],
-   "phonemes": "nˈɛkst: dˈʌz ˌɛspˌiːˈɛf wˈɒn hˈʌndɹɪd blˈɒk twˈaɪs az mˈʌtʃ az fˈɪfti?",
-   "speed": 0.8,
+   "phonemes": "nˈɛkst: ðə lˈaɪt ˌɒn jɔː fˈeɪs, and wˌeəɹ ɪt ɹˈiəlɪ ɡˈəʊz.",
+   "speed": 0.75,
    "file": "08.wav",
-   "dur": 4.537,
-   "sha256": "022797531d6a50919c330639d8489feee464997d8a488b88d52f663efa8ee5e8"
+   "dur": 4.047,
+   "sha256": "cfe8ed30506c73553f8c3d223c050fdbd502a0d8f5c0aeb9ccd8126cfebc9a4d"
   }
  ]
 }

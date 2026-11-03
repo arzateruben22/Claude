@@ -1,49 +1,82 @@
-# Outer Layer No. 003: "Bath fingers" (draft; dermatologist sign-off before posting)
+# Skin Sense s1v2: "What's in a scar" (draft; dermatologist sign-off before posting)
 
-About 72 s, 9:16, narrated by a synthetic voice (bf_isabella, labelled as AI), with an original score. Bible §7 #3.
-It pays off No. 002's tease ("why do fingers wrinkle in the bath, but not your arm?").
+About 74 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score. Season 1 v2, topic 6.
 
-The story: everyone "knows" wrinkly fingers are skin soaking up water like a sponge. Doctors noticed almost a
-century ago that a finger whose nerve was cut stays smooth in the bath, so the wrinkles are made by the nervous
-system: it narrows the vessels under the fingertip, the pad loses a little volume and the skin on top buckles. Which
-makes the wrinkle a reflex, one doctors still use to test a nerve. Why we have it is still argued over (a grip in the
-wet: found once, not found again). It happens only on the hairless skin of hands and feet, which carries the
-thickest dead layer of all, nearly twice a sheet of paper on the palm.
+The story (facts pass 2, 2 Nov): before birth, a cut heals without a scar; now it doesn't. Why? Normal skin's
+deep layer (the dermis) is a basket weave of collagen that gives every way you pull; a scar is the same collagen
+laid side by side in one direction, with no hair and no sweat glands. The wrong idea is "healed means as good as
+new": in the classic tensile study (Levenson et al. 1965, rats) healed skin topped out at about 80% of the skin
+around it, a rope missing one strand in five. The whoa: until roughly 22–24 weeks of gestation a wound in fetal
+skin regrows the weave, follicles and all, and one place in an adult still nearly can: the lining of the mouth.
+"To scale" puts the part of skin that regrows perfectly (the epidermis, about 0.07–0.12 mm on most of the body)
+beside the paper (≈ 100 µm). The closing twist answers the hook: mice born without the white cells that drive
+inflammation (macrophages, neutrophils) healed skin wounds with no visible scar, so the scar may be the price of
+defence.
 
-Flow (WRITING.md, 29 Oct): one thread from the hook's question to "your nerves decide"; the voice carries the
-meaning, the screen carries the specifics (Lewis & Pickering, 1930s; Wilder-Smith & Chow, 2003; Kareklas 2013 vs
-Haseleu 2014; palm 173 µm vs cheek 17 µm vs paper 100 µm); "to scale" is the palm's dead layer, the last turn.
+The three "I didn't know that" beats, ranked: (1) scarless healing before about 24 weeks of gestation, the hook;
+(2) the mouth still heals nearly without a scar, the whoa; (3) mice without inflammatory white cells heal
+scar-free, the closing twist. The counter-intuitive turn: "healed" is not "as good as new" (why).
 
-Honesty, on screen: the fingertip and its section are "simplified"; the vessel narrowing runs under "time ×N"; the
-grip idea is "debated"; the trigger (how water starts the reflex) is "still studied".
+Flow (WRITING.md, 29 Oct): one thread from the hook's "Why do you scar now? Before birth, a cut healed without one"
+to the takeaway's "So, why the scar? … heal without one"; the voice carries the meaning and the screen the
+specifics (≈ 80% strength, rat skin, ≈ 22–24 weeks, 0.07–0.12 mm, 100 µm paper, mouse study, Levenson et al.
+1965 and Martin et al. 2003 in the end-card footnote). Spoken numbers: the sixth month, one strand in five, the
+paper's thickness.
 
-## hook {shot: frame 0, the payoff: a fingertip at the mm rung in the water, its pad furrowed, beside a smooth forearm patch · title: "Bath fingers" · badge: simplified · pre: 0.02 · picture-only 0.3 s · energy: 0.6} (0–5 s)
-vo: Why do wet fingers *wrinkle*? Your arm stays smooth in the same bath. {c0}
+Honesty, on screen: the section is "simplified"; the strength curve is a "model", badged "rat skin"; the fetal
+section is an "illustration", never a photo; the epidermis depth is "most of the body"; the knee at the end is
+"model, not a photo"; the mice are badged "mouse study". At most two labels at a time; captions carry the words.
+No real person's scar, no before/after. The film describes biology only; it never says what to do about a scar or
+names a treatment or product. Any line about scars as a skin condition is for the dermatologist to sign off.
 
-## normal {shot: the fingertip swells like a sponge (a wrong-idea ghost, struck through as it's named) · picture-only 0.3 s · energy: 0.4} (5–15 s)
-vo: It looks like skin soaking up water and swelling, like a sponge. {c1} It's the story we grew up with, and it's *wrong*. {c11}
+One line per beat. `*starred*` words get a camera landing or a sound hit. In a vo line, `{c1}` ties a sentence
+to `claims.json` and `{-}` marks a sentence that states nothing outside the film.
+Check it with `python3 -I kits/cinema/script/lint.py films/channels/skincare/ep03 --segment toscale`.
 
-## change {shot: two fingertips in the water; one with its nerve cut (a dashed nerve) stays smooth, the other furrows · spine "1930s" · picture-only 0.3 s · energy: 0.55} (15–24.5 s)
-vo: Almost a century ago, doctors noticed something odd: a finger whose nerve had been cut stayed perfectly *smooth* in the bath. {c2}
+## hook {shot: frame 0, the reveal on an old scar across a knee · labels stay: simplified · title: "What's in a scar" · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0–5 s)
+vo: Why do you *scar* now? {-} Before birth, a cut healed without one. {c11}
 
-## why {shot: cut into the fingertip's section: the vessels under the pad narrow (time ×N), the pad sinks, and the skin on top folds · picture-only 2.0 s · energy: 0.5} (24.5–37.5 s)
-vo: So the wrinkles come from your nerves. {c3} In water, they narrow the tiny vessels under each fingertip, the pad shrinks a little, and the skin on top *buckles*. {c4}
+## normal {shot: the push into the weave under the surface · labels stay: simplified · picture-only 0.5 s · energy: 0.45} (5–15 s)
+vo: Under the surface, most of your skin's strength is collagen, woven every which way like a basket, so it gives whichever way it's *pulled*. {c1}
 
-## whoa {shot: pull back: the wrinkle as a reflex, a hand gripping wet marbles, a question mark over it · badges: debated · picture-only 1.0 s · energy: 0.8} (37.5–51 s)
-vo: A wrinkle is a reflex, one doctors use to test a nerve. {c5} Why we have it is *argued*: one study found a wet grip, the next found none. {c6,c7}
+## change {shot: the cut, and the patch laid in one direction · labels stay: illustration · picture-only 0.6 s · energy: 0.55} (15–25 s)
+vo: Cut through it, and the body doesn't reweave. {c2} It patches: new threads side by side, all one way, with no hair or sweat *glands*. {c3,c4}
 
-## toscale {segment: toscale · the gauge lifts beside the palm's section: its dead layer fills past the paper mark, the cheek's 17 µm beside it · picture-only 0.3 s · energy: 0.4} (51–59.5 s)
-vo: It only happens on the hairless skin of hands and feet, which also carry the thickest dead layer, nearly two sheets of *paper*. {c8,c9}
+## why {shot: the pull test on the patch, stalling short of full · labels stay: model · rat skin · picture-only 2.2 s · energy: 0.5} (25–38.5 s)
+vo: We call that healed, as good as new. {-} But pulled until it tears, even an old scar is only as strong as a rope missing one strand in *five*. {c5}
 
-## takeaway {shot: back to the fingertip and the arm · picture-only 0.3 s · energy: 0.3} (59.5–66.5 s)
-vo: So your fingers don't wrinkle because they're soaked. {c12} They wrinkle because your nerves *decide* to. {c10}
+## whoa {shot: the reveal on fetal skin regrowing the weave, then the inside of a cheek · labels stay: illustration · ≈ 22–24 weeks · picture-only 3.0 s · energy: 0.8} (38.5–51.5 s)
+vo: Until about the sixth month of pregnancy, a baby's skin regrows the weave, follicles and all. {c6} And one place in you still nearly can: your *mouth*. {c7}
 
-## tease {end card held ≥ 1.6 s · signature: reed F5, C6, A5 · energy: 0.35} (66.5–72 s)
-vo: Next: is a tan really a *shield* for your skin? {-}
-end card: "Next layer: is a tan a shield?" · "Outer Layer · No. 004"
+## toscale {segment: toscale · shot: the top layer beside the paper · labels stay: most of the body · picture-only 0.5 s · energy: 0.4} (51.5–59 s)
+vo: But on most of your body, only the top layer, about this paper's thickness, regrows without a *seam*. {c8,c9}
+
+## takeaway {shot: back to the hook's knee · labels stay: model, not a photo · mouse study · picture-only 0.5 s · energy: 0.3} (59–67.5 s)
+vo: So, why the scar? {-} Mice born without germ-fighting cells heal without one: a scar may be the price of *defence*. {c10}
+
+## tease {end card held ≥ 1.6 s · energy: 0.35} (67.5–74 s)
+vo: Next: a deadly poison, in a frown. {-} How much goes *in*? {-}
+end card: "Next: a deadly poison, in a frown. How much goes in?" · "Skin Sense · No. 003"
 
 ## Notes
-- Every claim was checked through search excerpts only; see `claims.json`. A person opens each link, and a
-  board-certified dermatologist (and a neurologist for the nerve test) signs off, before posting.
-- Lewis and Pickering's paper is dated 1935 or 1936 by different sources: the screen says "1930s".
-- Listen at T0: (none).
+- Facts pass 2 (2 Nov, owner's direction): new whoa (the mouth) and new closing twist (inflammation and the
+  PU.1 null mouse); the strength figure now spoken as a rope; labels cut to two at a time. Shot descriptions are
+  look-agnostic while the picture is redesigned; re-voice before compile.
+- Every claim was checked through search excerpts only (page fetches are blocked in this session); see
+  `claims.json`. A person opens each link, and a board-certified dermatologist signs off, before posting.
+- Tease and end card set with the season's chain (see `../s1v2/SEASON.md`).
+- "Only as strong as a rope missing one strand in five": Levenson et al. 1965 measured rat skin; the 80%
+  ceiling is standard surgical teaching for human skin, but the voice never says "your" scar is 80%. Badge
+  "rat skin"; screen "≈ 80%".
+- "About the sixth month": reviews give the switch at about 22–24 weeks of gestation (weeks 22–26 are the sixth
+  month). The screen shows the weeks.
+- "Still nearly can: your mouth": reviews call oral mucosal healing "nearly scarless" and "minimal scarring", not
+  scar-free; it can scar with complications or disease. The voice says "nearly".
+- "Mice born without germ-fighting cells": PU.1 null mice lack macrophages and functioning neutrophils
+  (Martin et al. 2003); their wounds closed on time and the repair "appears scar-free". That inflammation drives
+  scarring is the authors' and later reviews' interpretation, supported by fetal studies (an induced inflammatory
+  response makes fetal wounds scar); hence "may be". Screen badge "mouse study".
+- "About this paper's thickness": the epidermis is about 0.07–0.12 mm on most of the body (≈ 100 µm paper),
+  0.05 mm on the eyelids, up to about 1.5 mm on palms and soles.
+- End-card footnote: "Levenson et al., 1965 (rat skin) · Martin et al., 2003 (mice)".
+- Listen at T0: collagen, follicles.

@@ -3,3 +3,7 @@
 */out/*-draft.jpg
 __pycache__/
 compilations/*/work/
+shelved-s1/compilations/*/work/
+build/
+**/out/*-draft.mp4
+**/out/*-draft.jpg
