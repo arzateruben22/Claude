@@ -14,7 +14,7 @@ A billion passengers | Body Backstage No. 002
 ```
 What's this cell carrying? Room for about a billion passengers.
 
-Veins often look blue, so it's easy to guess the blood inside them is. It never is. Returning blood is darker red. Red light sinks in, and the vein swallows it, so less red comes back. The blue is your skin's trick. The red is a passenger count: brighter means fuller seats.
+Veins often look blue, so it's easy to guess the blood inside is too. It never is. Blood heading home is darker red. Red light sinks in, the vein swallows it, so less red bounces back. The blue is your skin's trick. The red is a passenger count: brighter means fuller seats.
 
 Series: Season 1: The traffic inside you, part 2 of 6. Next: The jump
 
@@ -86,7 +86,7 @@ Sources 2/2: uwaterloo.ca; NCBI (NIH); lumen.luc.edu; e-safe-anaesthesia.org; cv
 ```
 What's this cell carrying? Room for about a billion passengers.
 
-Veins often look blue, so it's easy to guess the blood inside them is. The blue is your skin's trick.
+Veins often look blue, so it's easy to guess the blood inside is too. The blue is your skin's trick.
 
 Season 1: The traffic inside you, part 2 of 6.
 
