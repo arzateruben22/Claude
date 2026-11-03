@@ -305,3 +305,59 @@ to the loop.
 
 Items 1–4 are local fixes. With them done and the net at least given a bed, I would expect (h) at 4. The sickle timing
 (#8) and the voice listen (#13) should be closed before the final too, though they don't gate a score.
+
+---
+
+# Round 4 (re-render, 3 Nov 2026)
+
+The same reviewer. I pulled 16 new frames targeted at the (h) blockers and the hook timing:
+0, 2.9, 3.3, 4.1, 17.5, 22.3, 22.6, 25, 30, 33.5, 44, 47, 55.5, 58.5, 60 and 64.5 s.
+
+**Verdict: (h) reaches 4, just.** Every gate is now met: no score under 3, and (a), (g) and (h) at 4. Nothing factual
+is open. The finals can go ahead, with the polish items below checked on the final-tier stills.
+
+## Scores
+
+| | Point | R1 | R2 | R3 | R4 |
+|---|---|---|---|---|---|
+| a | First 2 s | 2 | 3 | 4 | **4** |
+| b | One thread | 3 | 3 | 3 | **3** |
+| c | Picture moves with the sentence | 3 | 3 | 3 | **3** |
+| d | Camera moves motivated | 3 | 3 | 3 | **3** |
+| e | Voice meaning, screen figures | 3 | 4 | 4 | **4** |
+| f | Rhythm | 3 | 3 | 3 | **3** |
+| g | Ending | 3 | 3 | 4 | **4** |
+| h | Production value | 2 | 3 | 3 | **4** |
+
+## The round-3 (h) blockers
+
+| # | Blocker | R4 | Evidence |
+|---|---|---|---|
+| 1 | Seam strip through the hero cell at 22.3 s | **Fixed** | 22.3 and 22.6 s are clean: the hero cell sits alone in the lumen. |
+| 2 | Donut side views | **Fixed in side views, partly underneath** | At 30 and 33.5 s the cells now read as dented discs; "the dent" points at a real dimple. Bottom-up views (22.6, 25 s) still show a dark central pit, but it reads as a dimple, not a hole. The thin white vertical sliver inside the upper cell's dimple at 25 s is still there. |
+| 3 | O₂ like snow | **Partly** | The sizes now vary and the dots are glassier (55.5, 58.5 s). They still read as loose white beads at draft, with no clear flow from vessel to tissue. |
+| 4 | Bare straight-cylinder net | **Fixed enough** | The wet tissue bed with its cell texture (44, 47 s) turns the upper half from tubes on black into vessels lying on tissue. The scan view carries the lower half. The vessels themselves are still straight tubes, now acceptable in context. |
+| 5 | Overlapping cells | **Open (known)** | At 17.5 s two cells still touch and stack. It reads as a short rouleau, so it's tolerable, but it's not intended. |
+
+Also fixed: the speed badge now comes in only after the title is fully gone (3.3 s; the title is out by 2.9 s), and the
+"its full width" label leaves before the ghost does (4.1 s). Owner fix 2 holds strictly, and the leftover leader from
+R3-1 is gone.
+
+**Why only 4:** these frames no longer read as a default render. What keeps (h) from 5 is the O₂ beads, the sickle
+cell's flat cartoon crescent, the 25 s sliver, and the straight net vessels.
+
+## Still open (none blocks the gate)
+
+- **Story:**
+  - #8: the sickle cell isn't jammed on "jam" (53.9 s).
+  - #2 tail: "tiniest pipe" labels a wide vessel (20.8 s), and "no room to pass" plays over visible room (23.5 s).
+  - #14 tail: the meanwhile beat has no picture of its own (58.5–63 s).
+- **HUD:**
+  - #12: the 3 μm bar is not laid across the vessel, and "you are here" is still small.
+  - #12: three notes in the top-right corner at 55.5 s.
+  - N1: the scan tag almost touches the caption plate at 44 s.
+  - R3-2: the sweep line passes through the incoming caption at 22.1 s.
+- **Voice (#13):** the recogniser still hears "I follow", "It can't eh" and "And meanwhile". The owner keeps this
+  voice; a human listens before posting.
+- **Pre-final checks on final-tier stills:** the 25 s dimple sliver, the 17.5 s overlap, and the bloom on the cargo
+  shot (68 s).
