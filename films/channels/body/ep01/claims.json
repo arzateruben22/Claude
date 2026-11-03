@@ -67,14 +67,14 @@
  },
  {
   "id": "c7",
-  "sentence": "It can't.",
+  "sentence": "It barely does.",
   "claim": "Squeezing through narrow capillaries, a red cell deforms at constant volume and nearly constant surface area: its membrane strongly resists stretching.",
   "source_url": "https://resolve.cambridge.org/core/journals/journal-of-fluid-mechanics/article/squeezing-of-red-blood-cells-through-capillaries-with-nearminimal-diameters/2B2B5F3222CFED12071E045D2C824D2E",
   "source_title": "Halpern & Secomb 1989, The squeezing of red blood cells through capillaries with near-minimal diameters, J. Fluid Mech. 203:381",
   "accessed": "2026-10-22",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "The membrane strongly resists stretching: a squeezed red cell keeps nearly constant surface area, so it folds rather than stretches (the wrong guess the line sets up). 26 Oct audit (independent fact check): the wrong guess now says 'its surface stretches to fit': a red cell does lengthen easily (optical-tweezer studies stretch it); what it can't do is grow its membrane area (lysis at about 2–4% area expansion). The guess and its correction are now the same idea, and match this claim."
+  "note": "The membrane strongly resists stretching: a squeezed red cell keeps nearly constant surface area, so it folds rather than stretches (the wrong guess the line sets up). 26 Oct audit (independent fact check): the wrong guess now says 'its surface stretches to fit': a red cell does lengthen easily (optical-tweezer studies stretch it); what it can't do is grow its membrane area (lysis at about 2–4% area expansion). The guess and its correction are now the same idea, and match this claim. Reboot (3 Nov): 'It can't.' was re-voiced as 'It barely does.' (the voice added a stray vowel after 'can't'); the claim's wording (the membrane strongly resists stretching) fits it better."
  },
  {
   "id": "c8",

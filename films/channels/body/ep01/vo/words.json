@@ -257,11 +257,11 @@
   {
    "id": "vo03",
    "text": "Follow one as the pipes split, and split again, into the tiniest ones. There's no room to pass, so they go in single file.",
-   "heard": "I follow one as the pipes split, and split again into the tiniest ones. There's no room to pass, so they go in single file.",
+   "heard": "Follow one as the pipes split, and split again into the tiniest ones. There's no room to pass, so they go in single file.",
    "words": [
     {
      "w": "Follow",
-     "start": 0.15,
+     "start": 0.095,
      "end": 0.64,
      "heard": true
     },
@@ -409,158 +409,158 @@
   },
   {
    "id": "vo04",
-   "text": "You'd guess its skin just stretches to fit. It can't. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
-   "heard": "You'd guess its skin just stretches to fit. It can't eh. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
+   "text": "You'd guess its skin stretches to fit. It barely does. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
+   "heard": "You'd guess its skin stretches to fit. It barely does. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
    "words": [
     {
      "w": "You'd",
-     "start": 0.025,
+     "start": 0.03,
      "end": 0.32,
      "heard": true
     },
     {
      "w": "guess",
-     "start": 0.26,
+     "start": 0.27,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "its",
-     "start": 0.57,
+     "start": 0.59,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 0.755,
-     "end": 1.04,
-     "heard": true
-    },
-    {
-     "w": "just",
-     "start": 1.075,
-     "end": 1.28,
+     "start": 0.81,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "stretches",
-     "start": 1.375,
-     "end": 1.84,
+     "start": 1.185,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "to",
-     "start": 1.845,
-     "end": 2.0,
+     "start": 1.605,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "fit.",
-     "start": 2.03,
-     "end": 2.474,
+     "start": 1.79,
+     "end": 2.236,
      "heard": true,
-     "end_asr": 2.8
+     "end_asr": 2.56
     },
     {
      "w": "It",
-     "start": 2.815,
-     "end": 2.96,
+     "start": 2.59,
+     "end": 2.72,
      "heard": true
     },
     {
-     "w": "can't.",
-     "start": 2.995,
-     "end": 3.36,
+     "w": "barely",
+     "start": 2.79,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "does.",
+     "start": 3.17,
+     "end": 3.76,
      "heard": true
     },
     {
      "w": "That",
-     "start": 4.045,
+     "start": 4.115,
      "end": 4.24,
      "heard": true
     },
     {
      "w": "dent",
-     "start": 4.3,
-     "end": 4.56,
+     "start": 4.365,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "gives",
-     "start": 4.625,
+     "start": 4.69,
      "end": 4.88,
      "heard": true
     },
     {
      "w": "it",
-     "start": 4.905,
+     "start": 4.965,
      "end": 5.04,
      "heard": true
     },
     {
      "w": "spare",
-     "start": 5.065,
+     "start": 5.135,
      "end": 5.44,
      "heard": true
     },
     {
      "w": "skin,",
-     "start": 5.46,
-     "end": 6.08,
+     "start": 5.525,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "so",
-     "start": 6.16,
-     "end": 6.24,
+     "start": 6.23,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "it",
-     "start": 6.19,
-     "end": 6.4,
+     "start": 6.26,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "folds",
-     "start": 6.35,
-     "end": 6.72,
+     "start": 6.42,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "up",
-     "start": 6.665,
-     "end": 6.88,
+     "start": 6.895,
+     "end": 6.96,
      "heard": true
     },
     {
      "w": "neatly",
-     "start": 6.885,
-     "end": 7.28,
+     "start": 6.95,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "like",
-     "start": 7.16,
-     "end": 7.44,
+     "start": 7.24,
+     "end": 7.52,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.455,
+     "start": 7.525,
      "end": 7.6,
      "heard": true
     },
     {
      "w": "parachute",
-     "start": 7.57,
-     "end": 8.16,
+     "start": 7.635,
+     "end": 8.24,
      "heard": true
     },
     {
      "w": "instead.",
-     "start": 8.355,
-     "end": 8.64,
+     "start": 8.42,
+     "end": 8.72,
      "heard": true
     }
    ],
@@ -839,11 +839,11 @@
   {
    "id": "vo07",
    "text": "Meanwhile, as you watched, your bones made over a hundred million new ones.",
-   "heard": "And meanwhile, as you watched, your bones made over a hundred million new ones.",
+   "heard": "Meanwhile, as you watched, your bones made over a hundred million new ones.",
    "words": [
     {
      "w": "Meanwhile,",
-     "start": 0.24,
+     "start": 0.18,
      "end": 0.88,
      "heard": true
     },

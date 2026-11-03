@@ -33,7 +33,7 @@ vo: Follow one as the pipes split, and split again, into the *tiniest* ones. {c5
 they go in *single file*. {c6}
 
 ## why {shot: slow push; fold, slide, spring back · picture-only 2.5 s · energy: 0.55} (26.8–38 s)
-vo: You'd guess its skin just stretches to fit. {-} It can't. {c7} That *dent* gives it spare skin, so it folds up neatly
+vo: You'd guess its skin stretches to fit. {-} It barely does. {c7} That *dent* gives it spare skin, so it folds up neatly
 like a *parachute* instead. {c8,c9}
 
 ## whoa {shot: pullBack to a capillary net, every cell in single file · non-circular iris (membrane blob or vertical wipe) + scale pill "3 µm" · picture-only 3.5 s · energy: 0.7} (38–51.2 s)

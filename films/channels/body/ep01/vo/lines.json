@@ -93,17 +93,17 @@
    ],
    "file": "03.wav",
    "dur": 9.568,
-   "sha256": "51f4f591bfb5ac9aac170f8ac75773212116f5adea7a6f14f5a8c870d6ab9a4c"
+   "sha256": "430578eefaede16c2a42099504f76cbba1d7dc9bef1bccd7eec164bca12538de"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "You'd guess its skin just stretches to fit. It can't. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
+   "text": "You'd guess its skin stretches to fit. It barely does. That dent gives it spare skin, so it folds up neatly like a parachute instead.",
    "stars": [
     "dent",
     "parachute"
    ],
-   "phonemes": "juːd ɡˈɛs ɪts skˈɪn dʒˈʌst stɹˈɛtʃɪz tə fˈɪt. ɪt kˈɑːnt. ðat dˈɛnt ɡˈɪvz ɪt spˈeə skˈɪn, sˌəʊ ɪt fˈəʊldz ˌʌp nˈiːtli lˈaɪk ɐ pˈaɹəʃˌuːt ɪnstˈɛd.",
+   "phonemes": "juːd ɡˈɛs ɪts skˈɪn stɹˈɛtʃɪz tə fˈɪt. ɪt bˈeəli dˈʌz. ðat dˈɛnt ɡˈɪvz ɪt spˈeə skˈɪn, sˌəʊ ɪt fˈəʊldz ˌʌp nˈiːtli lˈaɪk ɐ pˈaɹəʃˌuːt ɪnstˈɛd.",
    "speeds": [
     0.9,
     0.9,
@@ -115,17 +115,17 @@
    ],
    "silences": [
     [
-     2.474,
-     2.774
+     2.2355,
+     2.5355
     ],
     [
-     3.7236,
-     4.0236
+     3.7911,
+     4.0911
     ]
    ],
    "file": "04.wav",
-   "dur": 8.722,
-   "sha256": "f27a8c8bdf778e6972157d570e750c6836736ae38e1c526aa77c9f27cb7c0a99"
+   "dur": 8.79,
+   "sha256": "ebc0b0bd7bc5d682157e8d9cf5781688856435116fb7a9ac4b18e4c7cf0febad"
   },
   {
    "id": "vo05",
@@ -193,7 +193,7 @@
    "silences": [],
    "file": "07.wav",
    "dur": 4.845,
-   "sha256": "0e05c26ee2b0cd5dd2e1cf8379f6be758083e0ac7189a3c6f27485b1751b180b"
+   "sha256": "82b35d85e853b9d90d30610610caf2e4483608403f814c75a7f452028ac1b81d"
   },
   {
    "id": "vo08",
