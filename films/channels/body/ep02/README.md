@@ -1,5 +1,7 @@
 # Meanwhile, Inside No. 02, "A billion passengers"
 
+**STATUS (3 Nov 2026): delivered, season 1 reboot ("live scan").** Final in `out/` (qa.py PASS): `body-backstage-002-9x16.mp4` (92.3 MB, CRF 20, 73.2 s), `-youtube.mp4` (1440×2560, 90 MB), poster and contact sheet. Scorecard: `review/scorecard.md`; reviews: `review/REVIEW.md`. `out/` still holds the old look's cover, thumb and posting files: they must be remade before posting (posting is on hold).
+
 Episode 2 of Meanwhile, Inside, the human-body channel (`films/channels/body`). It runs 72.8 s at 9:16 and is
 narrated by bf_emma, a synthetic voice that must be labelled as AI. It pays off episode 1's tease ("Room for about a
 billion passengers") and sets up episode 3 ("The jump"). **Nothing has been posted.** A physiologist signs off the
