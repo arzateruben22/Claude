@@ -79,12 +79,13 @@ RAYS = {"on": [CUT["section"] + 0.2, CUE["rays"]], "pass": CUE["through"]}
 GAUGE = {"rise": [CUE["and"] - 0.2, CUE["and"] + 0.7], "sc": CUE["layer"] - 0.2, "paper": CUE["paper"],
          "back": [CUT["list2"] - 0.5, CUT["list2"]], "sc_um": EPI_UM, "paper_um": PAPER_UM, "bar": "top layer", "sc_text": "≈ 100 µm"}
 
+RISK_OUT = round(CUT["uv"] - 0.75, 4)   # the risk figures fade out completely before the cut to the skin (their fade takes ~0.45 s)
 # ── small labels: at most two at once (spines and tags), honesty notes one at a time in a corner ──────
 BADGES = [
     {"id": "b-iarc", "text": "IARC Group 1 · excerpt", "t0": B["normal"]["t0"] - 0.2, "t1": SHOT_END["list"], "slot": "tl"},
     {"id": "b-model-bed", "text": "model, not a photo", "t0": CUT["bed"] + 0.3, "t1": CUE["large"] - 0.3, "slot": "tl"},
     {"id": "b-units", "text": "large, powerful units", "t0": CUE["large"] - 0.2, "t1": CUE["when"] - 0.2, "slot": "tl"},
-    {"id": "b-pooled", "text": "pooled studies · 2012 corr., 2007", "t0": CUE["pooled"] - 0.1, "t1": SHOT_END["bed"], "slot": "tl"},
+    {"id": "b-pooled", "text": "pooled studies · 2012 corr., 2007", "t0": CUE["pooled"] - 0.1, "t1": RISK_OUT, "slot": "tl"},
     {"id": "b-model", "text": "model, not a photo", "t0": CUT["uv"] + 0.9, "t1": SHOT_END["uv"], "slot": "tl"},
     {"id": "b-micro", "text": "tissue photo · rays simplified", "t0": CUT["section"] + 0.3, "t1": SHOT_END["section"], "slot": "tr"},
     {"id": "b-iarc2", "text": "IARC Group 1 · excerpt", "t0": CUT["list2"] + 0.2, "t1": CUE["certainty"] - 0.7, "slot": "tl"},
@@ -92,7 +93,7 @@ BADGES = [
 SPINE = [0.56, 0.265]     # below the corner notes' row, clear of their width
 COUNTERS = [
     {"id": "c-uva", "label": "UVA vs midday sun · may be", "text": f"×{UVA_X[0]}–{UVA_X[1]}", "t0": CUE["ten"] - 0.2, "t1": CUE["when"] - 0.2, "at": SPINE, "minW": "44vmin"},
-    {"id": "c-rr", "label": "melanoma · relative risk · first use < 35", "text": f"{RR['2012']:.2f} · {RR['2007']:.2f}", "t0": CUE["half"] - 0.4, "t1": SHOT_END["bed"],
+    {"id": "c-rr", "label": "melanoma · relative risk · first use < 35", "text": f"{RR['2012']:.2f} · {RR['2007']:.2f}", "t0": CUE["half"] - 0.1, "t1": RISK_OUT,
      "at": [0.48, 0.265], "small": "7.4vmin", "minW": "70vmin"},
     {"id": "c-end", "label": "Group 1 ranks", "text": "certainty", "t0": CUE["certainty"] - 0.2, "t1": t_end - 0.5, "at": [0.5, 0.175]},
 ]
@@ -115,15 +116,15 @@ TITLE_T1 = B["normal"]["t0"] - 0.5
 # ── cameras: per shot, keys {t, pos, look} eased between (scene units, relative to the shot's place) ─────────
 K = lambda t, pos, look: {"t": round(t, 4), "pos": pos, "look": look}   # noqa: E731
 CAM = {
-    "list": {"keys": [K(0.0, [1.0, 0.1, 21.6], [0.3, -0.45, 0]), K(TITLE_T1, [0.7, 0.2, 21.0], [0.15, -0.55, 0]),
-                      K(CUE["sure"], [0.0, 0.3, 18.6], [0.0, -0.8, 0]), K(CUT["bed"], [-0.6, 0.1, 17.6], [-0.1, -0.85, 0])],
+    "list": {"keys": [K(0.0, [0.7, 0.05, 15.6], [0.2, -0.75, 0]), K(TITLE_T1, [0.5, 0.15, 15.2], [0.1, -0.8, 0]),
+                      K(CUE["sure"], [0.0, 0.25, 14.4], [0.0, -0.85, 0]), K(CUT["bed"], [-0.5, 0.1, 13.6], [-0.1, -0.85, 0])],
              "rack": [0.0, CUE["cigs"] - 0.2]},
     "bed": {"keys": [K(CUT["bed"], [-2.0, 3.4, 15.0], [0.0, 2.2, -6.0]), K(CUE["sun"], [0.2, 2.6, 10.5], [0.5, 0.8, -5.0]),
                      K(A("vo04:started"), [0.6, 2.3, 8.6], [0.6, 0.5, -4.0]), K(CUE["pooled"] + 0.6, [0.9, 2.2, 7.6], [0.7, 8.6, -6.5]),
-                     K(CUT["uv"], [1.3, 2.2, 6.4], [0.9, 8.8, -8.0])],
+                     K(CUT["uv"], [2.6, 2.2, 6.6], [2.0, 8.8, -8.0])],   # the sunburst drifts slowly sideways
             "rack": [CUE["young"], CUE["pooled"]]},
-    "uv": {"keys": [K(CUT["uv"], [0.0, 6.2, 12.5], [0.0, 0.0, -1.0]), K(CUT["section"], [0.0, 4.6, 9.0], [0.0, -0.3, -2.5])]},
-    "section": {"keys": [K(CUT["section"], [12.0, 6.2, 21.0], [0.8, -3.0, -1.5]), K(CUT["list2"], [9.0, 4.8, 16.5], [0.4, -3.2, -1.5])]},
+    "uv": {"keys": [K(CUT["uv"], [0.0, 4.4, 15.5], [0.0, 1.7, -8.0]), K(CUT["section"], [0.0, 3.9, 12.5], [0.0, 1.4, -9.0])]},   # wide: both banks at the top of frame, the seam down the middle
+    "section": {"keys": [K(CUT["section"], [17.0, 7.0, 23.5], [0.4, -3.6, -2.0]), K(CUT["list2"], [14.2, 5.8, 19.8], [0.2, -3.8, -2.0])]},   # three-quarter: face, side and the relief of the top
     "list2": {"keys": [K(CUT["list2"], [-0.9, 0.4, 19.2], [-0.15, -0.7, 0]), K(f.duration, [0.2, 0.1, 17.8], [0.0, -0.62, 0])]},
 }
 for name, c in CAM.items():
@@ -175,6 +176,7 @@ ev += [
     {"t": UVD["australia"][0], "kind": "cell.land", "tag": "australia-off"},
     {"t": UVD["brazil"][0] + 0.2, "kind": "cell.land", "tag": "brazil-off"},
     {"t": CUT["section"], "kind": "scale.jump", "tag": "into-section"},
+    {"t": CUT["section"], "kind": "cell.land", "tag": "shutter-section"},
     {"t": GAUGE["sc"], "kind": "scale", "tag": "g-epi"},
     {"t": GAUGE["paper"], "kind": "reveal", "tag": "g-paper"},
     {"t": CUT["list2"], "kind": "scale.jump", "tag": "back-to-list"},

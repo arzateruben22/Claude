@@ -34,7 +34,7 @@ let focusPt = [0, 0, 0], fstop = 0;
 window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 const R = rng(6);
 injectCss();
-const DEEP = [0.16, 0.085, 0.05];   // bible: 006 is the deep tone, the only tone in the film
+const DEEP = [0.095, 0.05, 0.03];   // bible: 006 is the deep tone, the only tone in the film (albedo low enough to read deep brown under the violet wash)
 const XB = 500, XC = 1000;
 const VIOLET = new THREE.Color("#9C7BFF");
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
@@ -72,17 +72,18 @@ slab.position.z = -0.14; plate.add(slab);
 const FRONT = 0.05 + 0.002;
 const plateMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.48, metalness: 0.15, clearcoat: 0.45, clearcoatRoughness: 0.3, sheen: 0.2, sheenColor: new THREE.Color(0.7, 0.6, 1.0) });
 const face = new THREE.Mesh(new THREE.PlaneGeometry(PW - 0.02, PH - 0.02), plateMat); face.position.z = FRONT; plate.add(face);
-const overlay = (z) => { const m = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color: new THREE.Color(1.15, 1.15, 1.15), toneMapped: true });
+const overlay = (z) => { const m = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, color: new THREE.Color(1.9, 1.9, 1.9), toneMapped: true });
   const o = new THREE.Mesh(new THREE.PlaneGeometry(PW - 0.02, PH - 0.02), m); o.position.z = FRONT + z; plate.add(o); return m; };
 const LIT = { tobacco: overlay(0.002), beds: overlay(0.0022), meat: overlay(0.0024), sun: overlay(0.0026), rank: overlay(0.0028) };
 plate.rotation.set(-0.07, 0.22, 0.012);   // 12–13° off the lens, so the push gives parallax
 const hzL1 = haze(70, 40, [0, 0, -12], "#2C1660", 0.38), hzL2 = haze(70, 40, [0, 0, -5], "#3A2178", 0.12);
 const farTubes = new THREE.Group(); scene.add(farTubes);   // a tube bank behind and below the slab, out of focus: its violet rim
-const farGlow = new THREE.MeshBasicMaterial({ map: glowTex, color: VIOLET.clone().multiplyScalar(0.5), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
-const farCore = new THREE.MeshBasicMaterial({ color: VIOLET.clone().multiplyScalar(2.0) });
-for (let i = 0; i < 5; i++) { const y = -5.2 + i * 1.5, z = -15 - i * 1.2; const gl = new THREE.Mesh(new THREE.PlaneGeometry(60, 1.6), farGlow); gl.position.set(0, y, z); farTubes.add(gl);
-  const c = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 60, 10), farCore); c.rotation.z = Math.PI / 2; c.position.set(0, y, z + 0.01); farTubes.add(c); }
-farTubes.rotation.z = 0.05;
+const farCore = new THREE.MeshBasicMaterial({ color: VIOLET.clone().multiplyScalar(3.2) });
+const farHouse = new THREE.MeshPhysicalMaterial({ color: 0x2a2342, roughness: 0.3, metalness: 0.8, side: THREE.DoubleSide });
+for (let i = 0; i < 7; i++) { const x = -6 + i * 2.0, z = -16;   // a bed's tube bank seen end-on-ish below and behind the slab: the DOF makes each a soft glowing rod
+  const c = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 30, 16), farCore); c.rotation.x = Math.PI / 2 - 0.35; c.position.set(x, -6.5, z); farTubes.add(c);
+  const h = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 30, 16, 1, true, Math.PI / 2, Math.PI), farHouse); h.rotation.x = Math.PI / 2 - 0.35; h.position.set(x, -6.0, z); farTubes.add(h); }
+farTubes.rotation.z = 0.0;
 const rimV = new THREE.DirectionalLight(0x9c7bff, 0); rimV.position.set(4, -3, -12); rimV.target.position.set(0, 0, 0); scene.add(rimV, rimV.target);   // the bank's violet rim from behind and below
 const shaftL = createShaft({ from: [-10, 15, 4], to: [3, -5, -1], radius: 2.0, color: "#D7C8FF" }); scene.add(shaftL.group);
 const dustL = particles(260, [[-7, -5, -3], [7, 6, 9]], 0.045, "#F3E9FF");
@@ -129,13 +130,13 @@ const T = createTerrain({ seed: 31, spots: 0, segs: 400 });
 T.group.position.x = XB; scene.add(T.group);
 const skinM = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.06, hydration: 0.25, repeat: 14, seed: 6, micro: 0.45 });
 // skin sheen, roughness and speculars come from the shared skinMaterial (the channel-wide production pass)
-const UV = { uUV: { value: 0 }, uL: { value: 1 }, uR: { value: 1 }, uSeam: { value: XB }, uLilac: { value: new THREE.Color(0.34, 0.24, 0.66) }, uGlow: { value: new THREE.Color(0.06, 0.035, 0.15) } };
+const UV = { uUV: { value: 0 }, uL: { value: 1 }, uR: { value: 1 }, uSeam: { value: XB }, uLilac: { value: new THREE.Color(0.22, 0.15, 0.42) }, uGlow: { value: new THREE.Color(0.06, 0.035, 0.15) } };
 const uvShader = (sh) => {   // the UV camera: one material, a soft seam between the two banks' halves
   Object.assign(sh.uniforms, UV);
   sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying float vWX;").replace("#include <worldpos_vertex>", "#include <worldpos_vertex>\nvWX = (modelMatrix * vec4(transformed, 1.0)).x;");
   sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying float vWX;\nuniform float uUV, uL, uR, uSeam;\nuniform vec3 uLilac, uGlow;")
     .replace("#include <color_fragment>", `#include <color_fragment>
-      float sideK = smoothstep(-1.6, 1.6, vWX - uSeam);
+      float sideK = smoothstep(-0.3, 0.3, vWX - uSeam);
       float kk = mix(uL, uR, sideK);
       float lum = clamp(dot(diffuseColor.rgb, vec3(0.3, 0.59, 0.11)) / 0.1, 0.35, 1.5);
       diffuseColor.rgb = mix(diffuseColor.rgb, uLilac * lum, uUV);`)
@@ -174,24 +175,38 @@ const bankL = new THREE.DirectionalLight(0x9c7bff, 0), bankR = new THREE.Directi
 bankL.position.set(XB - 14, 22, -4); bankL.target.position.set(XB + 2, 0, -4); bankR.position.set(XB + 14, 22, -4); bankR.target.position.set(XB - 2, 0, -4);
 scene.add(bankL, bankL.target, bankR, bankR.target);
 const coolFill = new THREE.HemisphereLight(0x8fa8ff, 0x140c24, 0);
+const bounce = new THREE.DirectionalLight(0xffb487, 0); bounce.position.set(XB, 1.2, 30); bounce.target.position.set(XB, 0, -6); scene.add(bounce, bounce.target);   // a warm grazing bounce: the brown reads before the violet wash
 scene.add(coolFill);
-const rays = [[-3.5, -6, 2.2], [1.2, -3, 2.6], [3.8, -9, 2.0]].map(([x, z, r]) => { const s = createShaft({ from: [XB + x - 1.2, TUBE_Y - 0.3, z - 2], to: [XB + x + 0.6, -0.4, z + 2.5], radius: r, color: "#B79BFF" }); scene.add(s.group); return s; });
+const beamMat = (op) => new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false,
+  uniforms: { uOp: { value: 0 }, uC: { value: VIOLET.clone() } },
+  vertexShader: "varying vec2 vUv; varying vec3 vN, vV; void main() { vUv = uv; vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }",
+  fragmentShader: "uniform float uOp; uniform vec3 uC; varying vec2 vUv; varying vec3 vN, vV; void main() { float f = pow(abs(dot(vN, vV)), 2.2); float a = uOp * f * pow(vUv.y, 0.8) * smoothstep(0.0, 0.25, vUv.y); gl_FragColor = vec4(uC * a, a); }" });
+const rays = [[-4.0, -7], [-0.8, -3.5], [2.4, -9], [4.8, -5]].map(([x, z]) => {   // soft volumetric cones from the tubes onto the skin (read as beams from any angle, never as flat cards)
+  const m = beamMat(), cone = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 2.4, TUBE_Y + 0.4, 40, 1, true), m);
+  cone.position.set(XB + x, TUBE_Y / 2 - 0.2, z); scene.add(cone);
+  return { group: cone, set({ op = 1 } = {}) { cone.visible = op > 0.002; m.uniforms.uOp.value = 0.22 * op; } };
+});
 const dustBed = particles(380, [[XB - 7, 0.3, -14], [XB + 7, 6.2, 9]], 0.055, "#F3E9FF");
 const FOGB = new THREE.FogExp2(0x2c1660, 0.045);
 
 // ── 4: the cut face: a block of deep-tone skin seen three-quarters, its face the stained tissue photo ──
 const C = new THREE.Group(); C.position.x = XC; scene.add(C);
-const CROP = 120 / 672, FH = 16 * (672 * (1 - CROP)) / 1024;   // the photo's top rows (bare slide) cropped through the UVs: no tiling, no stretch
+const CROP = 120 / 672, U0 = 0.3, U1 = 0.7, BW = 16 * (U1 - U0), FH = 16 * (672 * (1 - CROP)) / 1024;   // a portrait block: the photo cropped through the UVs (no tiling, no stretch; its top rows of bare slide dropped)
 const faceMat = new THREE.MeshPhysicalMaterial({ roughness: 0.42, clearcoat: 0.35, clearcoatRoughness: 0.3, sheen: 0.2, sheenColor: new THREE.Color(1, 0.85, 0.9) });
-const faceG = new THREE.PlaneGeometry(16, FH); { const uv = faceG.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setY(i, uv.getY(i) * (1 - CROP)); }
+const faceG = new THREE.PlaneGeometry(BW, FH); { const uv = faceG.attributes.uv; for (let i = 0; i < uv.count; i++) { uv.setY(i, uv.getY(i) * (1 - CROP)); uv.setX(i, U0 + uv.getX(i) * (U1 - U0)); } }
 const faceC = new THREE.Mesh(faceG, faceMat); faceC.position.set(0, -FH / 2, 0); C.add(faceC);
 const sideMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.55, 0.3, 0.42), roughness: 0.6, sheen: 0.3, sheenColor: new THREE.Color(0.9, 0.6, 0.8) });
 const topMat = skinMaterial({ tone: DEEP.map((v) => v * 0.6), oil: 0.05, repeat: 3, seed: 9, micro: 0.7 }); topMat.sheen = 0.05; topMat.roughness = 0.7; topMat.clearcoat = 0.03; topMat.specularIntensity = 0.2;
-const block = new THREE.Mesh(new THREE.BoxGeometry(16, FH, 6), [sideMat, sideMat, topMat, sideMat, sideMat, sideMat]); block.position.set(0, -FH / 2, -3.005); C.add(block);
+const BD = 4.2, block = new THREE.Mesh(new THREE.BoxGeometry(BW, FH, BD), [sideMat, sideMat, topMat, sideMat, sideMat, sideMat]); block.position.set(0, -FH / 2, -BD / 2 - 0.005); C.add(block);
+// the top surface in relief: the same microrelief as the canopy's skin (furrows, pores), deep tone, scaled onto the block's top
+const TT = createTerrain({ size: 9, segs: 200, pore: 0.6, seed: 12, spots: 0, hair: false });
+TT.mesh.material = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.06, hydration: 0.25, repeat: 6, seed: 9, micro: 0.6 });
+TT.group.scale.set(BW / 9, 0.45, BD / 9); TT.group.position.set(0, 0.02, -BD / 2); C.add(TT.group);
 // the top layer's lower edge, traced from the photo (px of the 1024 × 672 original), marked with a fine lilac line
 const JPX = [[0, 300], [60, 335], [130, 330], [180, 280], [240, 295], [300, 295], [340, 240], [420, 225], [480, 215], [540, 225], [600, 195], [660, 220], [720, 210], [790, 175], [850, 215], [900, 185], [960, 215], [1024, 215]];
-const jx = (px) => -8 + 16 * px / 1024, jy = (py) => -(py - 120) / (672 - 120) * FH;
-const JW = JPX.map(([x, y]) => [jx(x), jy(y)]);
+const jx = (px) => -BW / 2 + BW * (px / 1024 - U0) / (U1 - U0), jy = (py) => -(py - 120) / (672 - 120) * FH;
+const JW = JPX.map(([x, y]) => [jx(x), jy(y)]).filter(([x], i, a) => (x >= -BW / 2 - 1e-6 && x <= BW / 2 + 1e-6) || (a[i + 1] && a[i + 1][0] > -BW / 2 && x < -BW / 2) || (a[i - 1] && a[i - 1][0] < BW / 2 && x > BW / 2))
+  .map(([x, y]) => [Math.max(-BW / 2, Math.min(BW / 2, x)), y]);
 const junctionY = (x) => { for (let i = 1; i < JW.length; i++) if (x <= JW[i][0]) { const [x0, y0] = JW[i - 1], [x1, y1] = JW[i], u = (x - x0) / (x1 - x0); return y0 + (y1 - y0) * u; } return JW[JW.length - 1][1]; };
 const jCurve = new THREE.CatmullRomCurve3(JW.map(([x, y]) => new THREE.Vector3(x, y, 0.03)));
 const jMat = new THREE.MeshBasicMaterial({ color: new THREE.Color("#E4D8FF"), transparent: true, opacity: 0 });
@@ -200,13 +215,13 @@ const dashTex = (() => { const c = document.createElement("canvas"); c.width = 3
   g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.7, "rgba(255,255,255,.85)"); g.addColorStop(1, "rgba(255,255,255,1)"); k.fillStyle = g; k.fillRect(6, 0, 20, 128);
   k.globalCompositeOperation = "destination-in"; const h = k.createLinearGradient(0, 0, 32, 0); h.addColorStop(0, "rgba(0,0,0,0)"); h.addColorStop(0.5, "rgba(0,0,0,1)"); h.addColorStop(1, "rgba(0,0,0,0)"); k.fillStyle = h; k.fillRect(0, 0, 32, 128);
   return new THREE.CanvasTexture(c); })();
-const ND = 16, dashMat = new THREE.MeshBasicMaterial({ map: dashTex, color: VIOLET.clone().multiplyScalar(1.7), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+const ND = 11, dashMat = new THREE.MeshBasicMaterial({ map: dashTex, color: VIOLET.clone().multiplyScalar(1.7), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
 const dashes = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.24, 1.6), dashMat, ND); dashes.position.set(XC, 0, 0.14); scene.add(dashes);
 const flashMat = new THREE.MeshBasicMaterial({ map: dotTex, color: new THREE.Color("#C9B4FF").multiplyScalar(1.4), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
 const flashes = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.9, 0.9), flashMat, ND); flashes.position.set(XC, 0, 0.15); scene.add(flashes);
-const DASH = Array.from({ length: ND }, (_, i) => ({ x: -7 + 14 * (i + 0.5) / ND + (R() - 0.5) * 0.5, ph: R(), stop: i % 6 === 2 ? -0.9 - R() * 0.6 : -4.2 - R() * 3.2, sp: 2.6 + R() * 0.8 }));   // a few stop in the top layer; most cross into the dermis
-const shaftC = createShaft({ from: [XC - 6, 14, 4], to: [XC + 1, -6, 1], radius: 2.6, color: "#C9B4FF" }); scene.add(shaftC.group);
-const dustC = particles(300, [[XC - 9, -9, 0.5], [XC + 11, 6, 12]], 0.06, "#FFF2F8");
+const DASH = Array.from({ length: ND }, (_, i) => ({ x: -BW / 2 + 0.4 + (BW - 0.8) * (i + 0.5) / ND + (R() - 0.5) * 0.5, ph: R(), stop: i % 6 === 2 ? -0.9 - R() * 0.6 : -4.2 - R() * 3.2, sp: 2.6 + R() * 0.8 }));   // a few stop in the top layer; most cross into the dermis
+const shaftC = createShaft({ from: [XC - 5, 14, 3], to: [XC + 1, -6, 0.5], radius: 2.0, color: "#C9B4FF" }); scene.add(shaftC.group);
+const dustC = particles(300, [[XC - 8, -9, 0.5], [XC + 14, 7, 16]], 0.06, "#FFF2F8");
 const dm = new THREE.Object3D();
 
 // ── the overlay: one HUD system (the theme's plate fill, radius, mono and sans) ─────────
@@ -214,7 +229,6 @@ const hudRoot = document.getElementById("hud");
 const look = lookV2({ canvas, hudRoot, fog: FOGB, terrain: T, skin: skinM });   // the channel look (set/prod.js): skin, hairs, fog, grade
 { const v2 = skinM.onBeforeCompile; skinM.onBeforeCompile = (sh) => { v2(sh); uvShader(sh); }; skinM.customProgramCacheKey = () => "skinV2-ep06uv"; skinM.needsUpdate = true; }
 const hazeL = hazeVolume(scene, { at: [0, 0, -7], size: [40, 28, 16], color: "#b9a6ff", n: 5, op: 0.07 });
-const hazeB = hazeVolume(scene, { at: [XB, 3, -10], size: [40, 20, 30], color: "#b9a6ff", n: 5, op: 0.06 });
 const bokehL = bokeh(scene, { n: 60, box: [[-14, 14], [-8, 8], [-26, -14]], size: 0.5, color: "#c9b4ff", op: 0.35 });
 const grain = createGrain(hudRoot, { amount: 0.007 });
 const hud = createHud({ camera, shots: FILM.shots });
@@ -237,7 +251,16 @@ const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";
-const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.2, liftAt: [0.47, 0.335] });   // lifted over the dermis, on the right
+const GL = [0.5, 0.385];
+const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.2, liftAt: GL });   // lifted over the lower dermis, on the right
+const gEls = (() => { const svg = hudRoot.querySelector(".ol-gauge"), rects = [...svg.querySelectorAll("rect")], texts = [...svg.querySelectorAll("text")];
+  const paperBar = rects.find((r) => r.getAttribute("fill") === "var(--slide-low)"); if (paperBar) paperBar.setAttribute("fill", "#F4F1EA");   // the paper bar in paper white
+  return { svg, paperBar, card: rects[1], paperTxt: texts.find((e) => e.textContent === "paper"), paperVal: texts[texts.length - 1] }; })();
+const leader = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+Object.assign(leader.style, { position: "absolute", inset: "0", width: "100%", height: "100%", pointerEvents: "none", zIndex: 3 }); leader.setAttribute("viewBox", `0 0 ${W} ${H}`);
+leader.innerHTML = `<g fill="none" stroke="#E4D8FF" stroke-width="${2 * S1}" stroke-dasharray="${6 * S1} ${5 * S1}"><path class="a"/><path class="b"/></g><g fill="#E4D8FF"><circle class="ca" r="${4 * S1}"/><circle class="cb" r="${4 * S1}"/></g>`;
+hudRoot.appendChild(leader);
+const pv = new THREE.Vector3(), toScreen = (p) => { pv.set(...p).project(camera); return [(pv.x + 1) / 2 * W, (1 - pv.y) / 2 * H]; };
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
 const scan = document.createElement("div");   // the UV switch: a cyan line sweeping down the frame
 Object.assign(scan.style, { position: "absolute", left: 0, right: 0, height: `${0.004 * H}px`, background: "#5FF2E8", boxShadow: "0 0 18px 4px rgba(95,242,232,.55)", opacity: "0", zIndex: 2 });
@@ -256,7 +279,7 @@ window.SCENE_READY = (async () => {
   const sec = await new Promise((res) => { const img = new Image(); img.onload = () => { const t = new THREE.Texture(img); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; t.needsUpdate = true; res(t); }; img.src = SECTION; });
   sec.repeat.set(1, 1);   // the whole photo once; the crop lives in the face's UVs
   faceMat.map = sec; faceMat.needsUpdate = true;
-  T.set({ tone: DEEP, furrows: 0.35 }); occlude();
+  T.set({ tone: DEEP, furrows: 0.35 }); occlude(); TT.set({ tone: DEEP, furrows: 0.5 });
 })();
 
 // the camera: keys {t, pos, look} per shot, eased between
@@ -275,17 +298,19 @@ const flicker = (t, [t0, t1]) => {   // a bank going out: two stutters, then the
 };
 
 window.seek = function (t) {
+  const tr = Math.round(t * FILM.fps) / FILM.fps;
+  if (stage(t).name !== stage(tr).name) t = tr;   // a motion-blur sample across a cut stays in its own shot
   const shot = stage(t).name, isList = shot === "list" || shot === "list2", isBed = shot === "bed" || shot === "uv";
   const cam = shotCam(shot, t);
   plate.visible = farTubes.visible = hzL1.visible = hzL2.visible = isList;
   T.group.visible = canopy.visible = isBed;
   C.visible = dashes.visible = flashes.visible = shot === "section";
-  hazeL.group.visible = bokehL.points.visible = isList; hazeB.group.visible = isBed; hazeL.set({ t }); hazeB.set({ t }); bokehL.set({ t });
+  hazeL.group.visible = bokehL.points.visible = isList; hazeL.set({ t }); bokehL.set({ t });
   shaftL.set({ op: isList ? 0.8 : 0 }); dustL.set(t, isList ? 1 : 0); dustNear.set(t, isList ? 1 : 0);
   dustBed.set(t, isBed ? 1 : 0);
   shaftC.set({ op: shot === "section" ? 1 : 0 }); dustC.set(t, shot === "section" ? 1 : 0);
   scene.fog = isBed ? FOGB : null;
-  rimV.intensity = isList ? 2.4 : 0; bankL.intensity = bankR.intensity = 0; coolFill.intensity = 0;
+  bounce.intensity = 0; rimV.intensity = isList ? 2.4 : 0; bankL.intensity = bankR.intensity = 0; coolFill.intensity = 0;
   let endDefocus = E.inout2(seg(t, FILM.endCard - 0.8, FILM.endCard + 0.4));
 
   // ── the list: rows light on their words; one line wins (the previous ones drop to a third) ──
@@ -314,21 +339,23 @@ window.seek = function (t) {
       const on = fadeIn(t, FILM.bed.on[0], FILM.bed.on[1] - FILM.bed.on[0]), fl = win(t, FILM.bed.flare[0], FILM.bed.flare[1], 0.25), sw = win(t, FILM.bed.swell[0], FILM.bed.swell[1], 0.35), fall = E.inout2(seg(t, FILM.bed.fall[0], FILM.bed.fall[1]));
       kL = kR = on * (1 + 0.9 * fl + 0.5 * sw) * (1 - 0.45 * fall);
       UV.uUV.value = 0; UV.uL.value = UV.uR.value = 1;
-      studio.aim([XB, 0, -2], [-0.85, 0.42, 0.35], [0.4, 0.5, -0.85]); studio.set({ key: 2.2, rim: 1.2, fill: 0.14, env: 0.3, warm: 0.7 });   // a low warm key: the terminator across the relief
+      studio.aim([XB, 0, -2], [-0.85, 0.42, 0.35], [0.4, 0.5, -0.85]); studio.set({ key: 2.4, rim: 1.0, fill: 0.05, env: 0.15, warm: 0.8 }); bounce.intensity = 0.9;   // a low warm key: the terminator across the relief
       const rk = E.inout2(seg(t, FILM.cam.bed.rack[0], FILM.cam.bed.rack[1]));
-      focusPt = mix3(mix3([XB, 1.2, -3], [XB, 5.8, -7], fl * 0.4), [XB + 0.8, 6.6, -10], rk); fstop = 0.22 + 0.14 * rk;   // the rack onto the tubes: the skin falls away before the risk figures
+      const pulse = win(t, CUE.half - 0.15, CUE.half + 0.55, 0.22);   // a rack pulse on "half"
+      focusPt = mix3(mix3(mix3([XB, 1.2, -3], [XB, 5.8, -7], fl * 0.4), [XB + 0.8, 6.6, -10], rk), cam.pos, 0.35 * pulse); fstop = 0.22 + 0.14 * rk;
+      if (t > CUE.pooled) { const n = Math.sin(t * 37.0) * Math.sin(t * 11.3 + 1.7); kL *= 1 - 0.06 * Math.max(0, n); kR *= 1 - 0.06 * Math.max(0, -n); }   // a faint tube flicker   // the rack onto the tubes: the skin falls away before the risk figures
       rays.forEach((r) => r.set({ op: Math.min(1.2, kL) }));
     } else {
       const uv = E.inout2(seg(t, FILM.uvd.scan[0] + 0.1, FILM.uvd.scan[1]));
       const sw = seg(t, FILM.uvd.scan[0], FILM.uvd.scan[1]); scan.style.top = `${(sw * H).toFixed(1)}px`;
       kL = flicker(t, FILM.uvd.australia); kR = flicker(t, FILM.uvd.brazil);
       UV.uUV.value = uv; UV.uL.value = kL; UV.uR.value = kR;
-      studio.aim([XB, 0, 0], [-0.6, 0.6, 0.5], [0.5, 0.35, -0.85]); studio.set({ key: 1.3 * (1 - 0.75 * uv), rim: 1.4, fill: 0.1, env: 0.3, warm: 0.5 * (1 - uv) });
+      studio.aim([XB, 0, 0], [-0.6, 0.6, 0.5], [0.5, 0.35, -0.85]); studio.set({ key: 1.6 * (1 - 0.7 * uv), rim: 1.2, fill: 0.05, env: 0.15, warm: 0.8 * (1 - uv) }); bounce.intensity = 0.9 * (1 - uv);
       coolFill.intensity = 0.35 * uv;   // after both banks: a cool fill keeps the shadows at ~10%, pores and furrows still read
       focusPt = mix3(add([0, 0, 2], XB), add([0, 0, -1.5], XB), E.inout2(seg(t, CUT.uv, CUT.section))); fstop = 0.22;
       rays.forEach((r) => r.set({ op: 0 }));
     }
-    const bk = shot === "uv" ? 1.4 : 0.8; bankL.intensity = bk * kL + (shot === "uv" ? 0.12 : 0); bankR.intensity = bk * kR + (shot === "uv" ? 0.12 : 0);   // each bank rims across the seam; an afterglow stays
+    const bk = shot === "uv" ? 1.0 : 0.45; bankL.intensity = bk * kL + (shot === "uv" ? 0.12 : 0); bankR.intensity = bk * kR + (shot === "uv" ? 0.12 : 0);   // each bank rims across the seam; an afterglow stays
     coreMats[0].color.copy(VIOLET).multiplyScalar(0.06 + 1.6 * kL); coreMats[1].color.copy(VIOLET).multiplyScalar(0.06 + 1.6 * kR);
     glassMats[0].emissive.copy(VIOLET).multiplyScalar(0.12 * kL); glassMats[1].emissive.copy(VIOLET).multiplyScalar(0.12 * kR);
   } else rays.forEach((r) => r.set({ op: 0 }));
@@ -356,6 +383,14 @@ window.seek = function (t) {
   gauge.update(t, { top: 0.2 * H, bottom: 0.5 * H, um: 100, op: lift, lift: 1, sc: G.sc_um, paperUm: G.paper_um, scText: G.sc_text,
     fillSc: E.out3(seg(t, G.sc - 0.1, G.sc + 0.7)), fillPaper: E.out3(seg(t, G.paper - 0.1, G.paper + 1.1)) });
 
+  { const sh = 36 * S1; if (lift > 0.001) { [gEls.paperBar, gEls.paperTxt, gEls.paperVal].forEach((e) => e && e.setAttribute("x", (parseFloat(e.getAttribute("x")) + sh).toFixed(1)));
+      if (gEls.card) gEls.card.setAttribute("width", (parseFloat(gEls.card.getAttribute("width")) + sh).toFixed(1)); } }   // two clear columns: the paper's column set further right
+  if (shot === "section" && lift > 0.001) {   // leader lines: the gauge's top-layer bar registered to the block's surface and to the traced boundary
+    const xs = 0.9, top = toScreen([XC + xs, 0, 0.05]), jun = toScreen([XC + xs, junctionY(xs), 0.05]), gx = GL[0] * W + 80 * S1, gy0 = GL[1] * H, gy1 = gy0 + 0.18 * H;
+    leader.querySelector(".a").setAttribute("d", `M${gx} ${gy0}L${top[0]} ${top[1]}`); leader.querySelector(".b").setAttribute("d", `M${gx} ${gy1}L${jun[0]} ${jun[1]}`);
+    leader.querySelector(".ca").setAttribute("cx", top[0]); leader.querySelector(".ca").setAttribute("cy", top[1]); leader.querySelector(".cb").setAttribute("cx", jun[0]); leader.querySelector(".cb").setAttribute("cy", jun[1]);
+    leader.style.opacity = (lift * fadeIn(t, G.sc - 0.2, 0.5)).toFixed(3);
+  } else leader.style.opacity = "0";
   veil.style.opacity = (0.3 * endDefocus).toFixed(4);
   grain.set(t);
   hud.update(t);

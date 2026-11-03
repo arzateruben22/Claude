@@ -137,7 +137,7 @@
    "tag": "b-pooled"
   },
   {
-   "t": 38.7,
+   "t": 39.0,
    "kind": "counter.show",
    "tag": "c-rr",
    "pos": [
@@ -181,6 +181,11 @@
    "t": 49.93333333333333,
    "kind": "scale.jump",
    "tag": "into-section"
+  },
+  {
+   "t": 49.93333333333333,
+   "kind": "cell.land",
+   "tag": "shutter-section"
   },
   {
    "t": 50.23333333333333,
