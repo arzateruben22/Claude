@@ -104,7 +104,7 @@ LABELS = [
     {"id": "l-wo", "text": "clear, oily skin", "kind": "cell", "anchor": "fWo", "t0": CUE["oily"] - 0.3, "t1": CUE["spots4"] - 0.35, "shot": "pair", "side": 1, "v": "above", "fixed": True},
     {"id": "l-white", "text": "more white cells", "kind": "cell", "anchor": "cell", "t0": CUE["flood"], "t1": CUE["give"], "shot": "rupture", "side": 1, "v": "below", "fixed": True},
     {"id": "l-spill", "text": "the spill", "kind": "cell", "anchor": "spill", "t0": CUE["deeper"] - 0.5, "t1": t_stream, "shot": "rupture", "side": -1, "fixed": True},
-    {"id": "l-barrier", "text": "it helps build the barrier", "kind": "uv", "anchor": "spot", "t0": CUE["barrier"] - 0.4, "t1": t_end, "shot": "uv2", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-barrier", "text": "it helps build the barrier", "kind": "uv", "anchor": "spot", "t0": CUE["barrier"] - 0.4, "t1": t_end - 0.45, "shot": "uv2", "side": 1, "v": "above", "fixed": True},
     {"id": "l-rings", "text": "follicles already ringed", "kind": "water", "anchor": "rings", "t0": CUE["no"] + 0.8, "t1": CUE["barrier"] - 0.6, "shot": "uv2", "side": -1, "v": "below", "fixed": True},
 ]
 BADGES = [
@@ -119,12 +119,12 @@ BADGES = [
     {"id": "b-deb", "text": "debated", "t0": CUE["answers"] - 0.2, "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-model2", "text": "model on a tissue photo", "t0": B["whoa"]["t0"], "t1": t_stream, "slot": "tl"},
     {"id": "b-model2s", "text": "model, not a photo", "t0": t_stream, "t1": B["toscale"]["t0"] - 0.45, "slot": "tl"},
-    {"id": "b-model2b", "text": "model on a tissue photo", "t0": B["toscale"]["t0"] - 0.4, "t1": B["toscale"]["t0"] + 0.7, "slot": "tl"},
+    {"id": "b-model2b", "text": "model on a tissue photo", "t0": B["toscale"]["t0"] - 0.15, "t1": B["toscale"]["t0"] + 0.7, "slot": "tl"},
     {"id": "b-photo", "text": "tissue photo (normal skin)", "t0": t_fol, "t1": B["why"]["t0"], "slot": "bl"},
-    {"id": "b-alm", "text": "lab + mouse study · Almoughrabie 2023", "t0": CUE["barrier"] - 2.8, "t1": t_end, "slot": "tl"},
+    {"id": "b-alm", "text": "lab + mouse study · Almoughrabie 2023", "t0": CUE["barrier"] - 2.8, "t1": t_end - 0.45, "slot": "tl"},
     {"id": "b-sum", "text": "neutrophils · Summers et al., 2010", "t0": t_stream + 0.3, "t1": B["toscale"]["t0"], "slot": "bl"},
     {"id": "b-scale", "text": "to scale · Ting-Beall, 1993", "t0": B["toscale"]["t0"] + 0.3, "t1": B["takeaway"]["t0"], "slot": "tr"},
-    {"id": "b-model3", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "br"},
+    {"id": "b-model3", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": t_end - 0.45, "slot": "br"},
 ]
 SPINE = [0.5, 0.215]
 COUNTERS = [
