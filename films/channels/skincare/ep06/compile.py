@@ -114,17 +114,17 @@ for i in range(int(f.duration * FPS)):   # at most two small labels at once; hon
 
 TITLE_T1 = B["normal"]["t0"] - 0.5
 # ── cameras: per shot, keys {t, pos, look} eased between (scene units, relative to the shot's place) ─────────
-K = lambda t, pos, look: {"t": round(t, 4), "pos": pos, "look": look}   # noqa: E731
+K = lambda t, pos, look, ease=None: {"t": round(t, 4), "pos": pos, "look": look, **({"ease": ease} if ease else {})}   # noqa: E731
 CAM = {
     "list": {"keys": [K(0.0, [0.8, 0.05, 25.5], [0.1, -0.3, 0]), K(TITLE_T1, [0.6, 0.15, 24.8], [0.05, -0.4, 0]),
                       K(CUE["sure"], [0.0, 0.25, 23.0], [0.0, -0.6, 0]), K(CUT["bed"], [-0.5, 0.1, 22.0], [-0.1, -0.65, 0])],
              "rack": [0.0, CUE["cigs"] - 0.2]},
     "bed": {"keys": [K(CUT["bed"], [-2.0, 3.4, 15.0], [0.0, 2.2, -6.0]), K(CUE["sun"], [0.2, 2.6, 10.5], [0.5, 0.8, -5.0]),
-                     K(A("vo04:started"), [0.6, 2.3, 8.6], [0.6, 0.5, -4.0]), K(CUE["pooled"] + 0.6, [0.9, 2.2, 7.6], [0.7, 8.6, -6.5]),
+                     K(A("vo04:started"), [0.6, 2.3, 8.6], [0.6, 0.5, -4.0]), K(CUE["pooled"] + 0.6, [0.9, 2.2, 7.6], [0.7, 8.6, -6.5]), K(CUE["half"], [1.8, 2.5, 7.0], [1.2, 8.7, -7.2]),
                      K(CUT["uv"], [2.6, 2.2, 6.6], [2.0, 8.8, -8.0])],   # the sunburst drifts slowly sideways
             "rack": [CUE["young"], CUE["pooled"]]},
-    "uv": {"keys": [K(CUT["uv"], [0.0, 10.5, 15.0], [0.0, 0.0, -7.0]), K(CUT["section"], [0.0, 9.6, 12.0], [0.0, 0.0, -8.0])]},   # from above the tubes: both banks cross the frame, the seam runs down the middle   # wide: both banks at the top of frame, the seam down the middle
-    "section": {"keys": [K(CUT["section"], [17.0, 7.0, 23.5], [0.4, -3.6, -2.0]), K(CUT["list2"], [14.2, 5.8, 19.8], [0.2, -3.8, -2.0])]},   # three-quarter: face, side and the relief of the top
+    "uv": {"keys": [K(CUT["uv"], [0.0, 15.0, 14.0], [0.0, 0.0, -5.0], "out"), K(CUT["section"], [0.0, 13.2, 11.0], [0.0, 0.0, -6.0])]},   # from high above the tubes: they read as tubes, the seam runs down the middle; enters at speed (the cut carries the motion)   # from above the tubes: both banks cross the frame, the seam runs down the middle   # wide: both banks at the top of frame, the seam down the middle
+    "section": {"keys": [K(CUT["section"], [17.0, 7.0, 23.5], [0.4, -3.6, -2.0], "out"), K(CUT["list2"], [14.2, 5.8, 19.8], [0.2, -3.8, -2.0])]},   # three-quarter: face, side and the relief of the top
     "list2": {"keys": [K(CUT["list2"], [-0.9, 0.4, 19.2], [-0.15, -0.7, 0]), K(f.duration, [0.2, 0.1, 17.8], [0.0, -0.62, 0])]},
 }
 for name, c in CAM.items():

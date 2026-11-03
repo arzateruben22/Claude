@@ -151,7 +151,7 @@ T.group.traverse((o) => { if (o.isInstancedMesh) hairs = o; else if (o.isMesh &&
 const hairBase = Array.from({ length: hairs.count }, (_, i) => { const m = new THREE.Matrix4(); hairs.getMatrixAt(i, m); return m; });
 const hairPh = hairBase.map(() => R() * 6.28), hm = new THREE.Matrix4(), hr = new THREE.Matrix4();
 const HIDE = new THREE.Matrix4().makeScale(0, 0, 0), hairFar = hairBase.map((m) => m.elements[14] < -16);   // far strands would silhouette on the fog as spikes: the near field only
-const driftHairs = (t) => { hairBase.forEach((m, i) => { hr.makeRotationFromEuler(new THREE.Euler(0.05 * Math.sin(t * 0.5 + hairPh[i]), 0, 0.05 * Math.cos(t * 0.37 + hairPh[i]))); hm.multiplyMatrices(m, hr); hairs.setMatrixAt(i, hairFar[i] ? HIDE : hm); }); hairs.instanceMatrix.needsUpdate = true; };
+const driftHairs = (t) => { hairBase.forEach((m, i) => { hr.makeRotationFromEuler(new THREE.Euler(0.08 * Math.sin(t * 0.5 + hairPh[i]), 0, 0.08 * Math.cos(t * 0.37 + hairPh[i]))); hm.multiplyMatrices(m, hr); hairs.setMatrixAt(i, hairFar[i] ? HIDE : hm); }); hairs.instanceMatrix.needsUpdate = true; };
 const occlude = () => {   // ambient occlusion baked into the vertex colours: furrows, pores and hair roots sit in shadow
   const p = T.mesh.geometry.attributes.position, c = T.mesh.geometry.attributes.color;
   for (let i = 0; i < p.count; i++) { const y = p.getY(i), k = 0.45 + 0.55 * THREE.MathUtils.smoothstep(y, -0.55, 0.15); c.setXYZ(i, c.getX(i) * k, c.getY(i) * k, c.getZ(i) * k); }
@@ -182,10 +182,10 @@ const beamMat = (op) => new THREE.ShaderMaterial({ transparent: true, depthWrite
   uniforms: { uOp: { value: 0 }, uC: { value: VIOLET.clone() } },
   vertexShader: "varying vec2 vUv; varying vec3 vN, vV; void main() { vUv = uv; vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }",
   fragmentShader: "uniform float uOp; uniform vec3 uC; varying vec2 vUv; varying vec3 vN, vV; void main() { float f = pow(abs(dot(vN, vV)), 2.2); float a = uOp * f * pow(vUv.y, 0.8) * smoothstep(0.0, 0.25, vUv.y); gl_FragColor = vec4(uC * a, a); }" });
-const rays = [[-4.0, -7], [-0.8, -3.5], [2.4, -9], [4.8, -5]].map(([x, z]) => {   // soft volumetric cones from the tubes onto the skin (read as beams from any angle, never as flat cards)
+const rays = [[-4.0, -7], [-0.8, -3.5], [2.4, -9], [0.8, -1.5], [4.8, -5]].map(([x, z]) => {   // soft volumetric cones from the tubes onto the skin (read as beams from any angle, never as flat cards)
   const m = beamMat(), cone = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 2.4, TUBE_Y + 0.4, 40, 1, true), m);
   cone.position.set(XB + x, TUBE_Y / 2 - 0.2, z); scene.add(cone);
-  return { group: cone, set({ op = 1 } = {}) { cone.visible = op > 0.002; m.uniforms.uOp.value = 0.13 * op; } };
+  return { bank: x < 0 ? 0 : 1, group: cone, set({ op = 1 } = {}) { cone.visible = op > 0.002; m.uniforms.uOp.value = 0.24 * op; } };
 });
 const dustBed = particles(380, [[XB - 7, 0.3, -14], [XB + 7, 6.2, 9]], 0.055, "#F3E9FF");
 const FOGB = new THREE.FogExp2(0x2c1660, 0.045), FOGU = new THREE.FogExp2(0x1a0d36, 0.018);   // the UV shot looks down from above the tubes: thinner fog
@@ -196,13 +196,22 @@ const CROP = 120 / 672, U0 = 0.3, U1 = 0.7, BW = 16 * (U1 - U0), FH = 16 * (672 
 const faceMat = new THREE.MeshPhysicalMaterial({ roughness: 0.42, clearcoat: 0.35, clearcoatRoughness: 0.3, sheen: 0.2, sheenColor: new THREE.Color(1, 0.85, 0.9) });
 const faceG = new THREE.PlaneGeometry(BW, FH); { const uv = faceG.attributes.uv; for (let i = 0; i < uv.count; i++) { uv.setY(i, uv.getY(i) * (1 - CROP)); uv.setX(i, U0 + uv.getX(i) * (U1 - U0)); } }
 const faceC = new THREE.Mesh(faceG, faceMat); faceC.position.set(0, -FH / 2, 0); C.add(faceC);
-const sideMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.55, 0.3, 0.42), roughness: 0.6, sheen: 0.3, sheenColor: new THREE.Color(0.9, 0.6, 0.8) });
+const sideTex = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.62, 0.55, 0.62), roughness: 0.5, clearcoat: 0.25, clearcoatRoughness: 0.35 });   // the right side is a cut face too: dermis and its deeper layer, a shade darker
+const sideMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.32, 0.18, 0.26), roughness: 0.6, sheen: 0.3, sheenColor: new THREE.Color(0.9, 0.6, 0.8) });
 const topMat = skinMaterial({ tone: DEEP.map((v) => v * 0.6), oil: 0.05, repeat: 3, seed: 9, micro: 0.7 }); topMat.sheen = 0.05; topMat.roughness = 0.7; topMat.clearcoat = 0.03; topMat.specularIntensity = 0.2;
-const BD = 4.2, block = new THREE.Mesh(new THREE.BoxGeometry(BW, FH, BD), [sideMat, sideMat, topMat, sideMat, sideMat, sideMat]); block.position.set(0, -FH / 2, -BD / 2 - 0.005); C.add(block);
+const BD = 4.2, block = new THREE.Mesh(new THREE.BoxGeometry(BW, FH, BD), [sideTex, sideMat, topMat, sideMat, sideMat, sideMat]); block.position.set(0, -FH / 2, -BD / 2 - 0.005); C.add(block);
 // the top surface in relief: the same microrelief as the canopy's skin (furrows, pores), deep tone, scaled onto the block's top
 const TT = createTerrain({ size: 9, segs: 200, pore: 0.6, seed: 12, spots: 0, hair: false });
 TT.mesh.material = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.06, hydration: 0.25, repeat: 6, seed: 9, micro: 0.6 });
 TT.group.scale.set(BW / 9, 0.45, BD / 9); TT.group.position.set(0, 0.02, -BD / 2); C.add(TT.group);
+const bevelMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(0.5, 0.36, 0.48), roughness: 0.3, clearcoat: 0.8, clearcoatRoughness: 0.15 });
+[[[BW / 2, -FH / 2, 0], [0, 0, 0], FH], [[0, 0, 0], [0, 0, Math.PI / 2], BW], [[BW / 2, 0, -BD / 2], [Math.PI / 2, 0, 0], BD]].forEach(([pos, rot, len]) => {   // slight bevels on the three edges toward the lens: they catch the rim
+  const e = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, len, 10), bevelMat); e.position.set(...pos); e.rotation.set(...rot); C.add(e); });
+const shadowTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 128; const k = c.getContext("2d"), g = k.createRadialGradient(64, 64, 8, 64, 64, 64);
+  g.addColorStop(0, "rgba(4,2,10,0.85)"); g.addColorStop(0.55, "rgba(4,2,10,0.45)"); g.addColorStop(1, "rgba(4,2,10,0)"); k.fillStyle = g; k.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c); })();
+const contact = new THREE.Mesh(new THREE.PlaneGeometry(BW * 2.2, BD * 3.2), new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false }));   // a contact shadow on an unseen floor: the block sits, it doesn't float
+contact.rotation.x = -Math.PI / 2; contact.position.set(0.4, -FH - 0.02, -BD / 2 + 0.3); C.add(contact);
+const rimC = new THREE.DirectionalLight(0x9c7bff, 0); rimC.position.set(XC - 6, 10, -12); rimC.target.position.set(XC, -3, -2); scene.add(rimC, rimC.target);
 // the top layer's lower edge, traced from the photo (px of the 1024 × 672 original), marked with a fine lilac line
 const JPX = [[0, 300], [60, 335], [130, 330], [180, 280], [240, 295], [300, 295], [340, 240], [420, 225], [480, 215], [540, 225], [600, 195], [660, 220], [720, 210], [790, 175], [850, 215], [900, 185], [960, 215], [1024, 215]];
 const jx = (px) => -BW / 2 + BW * (px / 1024 - U0) / (U1 - U0), jy = (py) => -(py - 120) / (672 - 120) * FH;
@@ -228,6 +237,9 @@ const dm = new THREE.Object3D();
 // ── the overlay: one HUD system (the theme's plate fill, radius, mono and sans) ─────────
 const hudRoot = document.getElementById("hud");
 const look = lookV3({ canvas, hudRoot, fog: FOGB, terrain: T });   // the channel look (set/look3.js): hairs, fog, grade, grain
+FOGB.color.set(0x2e1a5e); FOGB.density = 0.05;   // the far skin melts into the tube light, no dark band under the canopy
+{ const g = hairs.geometry, pp = g.attributes.position; for (let i = 0; i < pp.count; i++) { const y = pp.getY(i); pp.setX(i, pp.getX(i) + 0.1 * y * y); } pp.needsUpdate = true; g.computeVertexNormals();
+  const c = new THREE.Color(); for (let i = 0; i < hairs.count; i++) { hairs.getColorAt(i, c); c.multiplyScalar(0.32); hairs.setColorAt(i, c); } if (hairs.instanceColor) hairs.instanceColor.needsUpdate = true; }   // deep-tone hair: darker strands, more curl
 skinV3(skinM, { keyDir: [-0.85, 0.42, 0.35] });   // the canopy key is low and to the side (the tubes are overhead)
 { const v2 = skinM.onBeforeCompile; skinM.onBeforeCompile = (sh) => { v2(sh); uvShader(sh); }; skinM.customProgramCacheKey = () => "skinV2-ep06uv"; skinM.needsUpdate = true; }
 const hazeL = hazeVolume(scene, { at: [0, 0, -7], size: [40, 28, 16], color: "#b9a6ff", n: 5, op: 0.07 });
@@ -253,7 +265,7 @@ const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "2.9vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "68vmin", margin: "2.6vmin auto 0" });
 const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";
-const GL = [0.5, 0.385];
+const GL = [0.5, 0.376];
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.2, liftAt: GL });   // lifted over the lower dermis, on the right
 const gEls = (() => { const svg = hudRoot.querySelector(".ol-gauge"), rects = [...svg.querySelectorAll("rect")], texts = [...svg.querySelectorAll("text")];
   const paperBar = rects.find((r) => r.getAttribute("fill") === "var(--slide-low)"); if (paperBar) paperBar.setAttribute("fill", "#F4F1EA");   // the paper bar in paper white
@@ -282,6 +294,7 @@ window.SCENE_READY = (async () => {
   sec.repeat.set(1, 1);   // the whole photo once; the crop lives in the face's UVs
   faceMat.map = sec; faceMat.needsUpdate = true;
   T.set({ tone: DEEP, furrows: 0.35 }); occlude(); TT.set({ tone: DEEP, furrows: 0.5 });
+  const st = sec.clone(); st.repeat.set(BD / 16, 1 - CROP); st.offset.set(0.62, 0); st.needsUpdate = true; sideTex.map = st; sideTex.needsUpdate = true;   // the side shows the deeper dermis, at the photo's own scale
 })();
 
 // the camera: keys {t, pos, look} per shot, eased between
@@ -289,7 +302,7 @@ const OFF = { list: 0, list2: 0, bed: XB, uv: XB, section: XC };
 const shotCam = (name, t) => {
   const K = FILM.cam[name].keys, x = OFF[name];
   let i = 0; while (i < K.length - 2 && t >= K[i + 1].t) i++;
-  const a = K[i], b = K[Math.min(i + 1, K.length - 1)], u = E.inout2(seg(t, a.t, b.t));
+  const a = K[i], b = K[Math.min(i + 1, K.length - 1)], u = (a.ease === "out" ? E.out2 : E.inout2)(seg(t, a.t, b.t));
   const pos = add(mix3(a.pos, b.pos, u), x), look = add(mix3(a.look, b.look, u), x);
   camera.position.set(...pos); camera.lookAt(...look); return { pos, look };
 };
@@ -312,7 +325,7 @@ window.seek = function (t) {
   dustBed.set(t, isBed ? 1 : 0);
   shaftC.set({ op: shot === "section" ? 1 : 0 }); dustC.set(t, shot === "section" ? 1 : 0);
   scene.fog = shot === "bed" ? FOGB : shot === "uv" ? FOGU : null; housingMat.visible = shot !== "uv";
-  bounce.intensity = 0; rimV.intensity = isList ? 2.4 : 0; bankL.intensity = bankR.intensity = 0; coolFill.intensity = 0;
+  rimC.intensity = 0; bounce.intensity = 0; rimV.intensity = isList ? 2.4 : 0; bankL.intensity = bankR.intensity = 0; coolFill.intensity = 0;
   let endDefocus = E.inout2(seg(t, FILM.endCard - 0.8, FILM.endCard + 0.4));
 
   // ── the list: rows light on their words; one line wins (the previous ones drop to a third) ──
@@ -321,7 +334,7 @@ window.seek = function (t) {
     studio.aim([0, 0, 0], [-0.6, 0.75, 0.6], [0.5, -0.2, -0.85]); studio.set({ key: 1.8, rim: 0.6, fill: 0.16, env: 0.55, warm: 0.12 });
     if (shot === "list") {
       const rk = E.inout2(seg(t, FILM.cam.list.rack[0], FILM.cam.list.rack[1]));
-      focusPt = mix3(mix3(cam.pos, [0, -0.3, 0], 0.62), [0, -0.3, 0.1], rk); fstop = 0.2;   // frame 0 already mostly sharp; the rack lands on "cigarettes"
+      focusPt = mix3(mix3(cam.pos, [0, -0.3, 0], 0.62), [0, -0.3, 0.1], rk); fstop = 0.34;   // frame 0 already mostly sharp; the rack lands on "cigarettes"
       const ranked = fadeIn(t, PL.rank, 0.5);
       LIT.tobacco.opacity = fadeIn(t, L["Tobacco smoking"]) * (1 - 0.6 * ranked); LIT.beds.opacity = fadeIn(t, L["UV-emitting tanning devices"]) * (1 - 0.6 * ranked);
       LIT.meat.opacity = fadeIn(t, L["Processed meat"]) * (1 - 0.6 * ranked); LIT.sun.opacity = 0; LIT.rank.opacity = ranked;
@@ -346,7 +359,7 @@ window.seek = function (t) {
       const pulse = win(t, CUE.half - 0.15, CUE.half + 0.55, 0.22);   // a rack pulse on "half"
       focusPt = mix3(mix3(mix3([XB, 1.2, -3], [XB, 5.8, -7], fl * 0.4), [XB + 0.8, 6.6, -10], rk), cam.pos, 0.35 * pulse); fstop = 0.22 + 0.14 * rk;
       if (t > CUE.pooled) { const n = Math.sin(t * 37.0) * Math.sin(t * 11.3 + 1.7); kL *= 1 - 0.06 * Math.max(0, n); kR *= 1 - 0.06 * Math.max(0, -n); }   // a faint tube flicker   // the rack onto the tubes: the skin falls away before the risk figures
-      rays.forEach((r) => r.set({ op: Math.min(1.2, kL) }));
+      rays.forEach((r) => r.set({ op: Math.min(1.2, r.bank ? kR : kL) }));
     } else {
       const uv = E.inout2(seg(t, FILM.uvd.scan[0] + 0.1, FILM.uvd.scan[1]));
       const sw = seg(t, FILM.uvd.scan[0], FILM.uvd.scan[1]); scan.style.top = `${(sw * H).toFixed(1)}px`;
@@ -355,19 +368,19 @@ window.seek = function (t) {
       studio.aim([XB, 0, 0], [-0.6, 0.6, 0.5], [0.5, 0.35, -0.85]); studio.set({ key: 1.6 * (1 - 0.7 * uv), rim: 1.2, fill: 0.05, env: 0.15, warm: 0.8 * (1 - uv) }); bounce.intensity = 0.9 * (1 - uv);
       coolFill.intensity = 0.9 * uv;   // after both banks: a cool fill keeps the shadows at ~10%, pores and furrows still read
       focusPt = mix3(add([0, 0, 2], XB), add([0, 0, -1.5], XB), E.inout2(seg(t, CUT.uv, CUT.section))); fstop = 0.22;
-      rays.forEach((r) => r.set({ op: 0 }));
+      rays.forEach((r) => r.set({ op: 0.6 * (r.bank ? kR : kL) }));   // each bank's shafts go out with it
     }
     const bk = shot === "uv" ? 1.0 : 0.45; bankL.intensity = bk * kL + (shot === "uv" ? 0.12 : 0); bankR.intensity = bk * kR + (shot === "uv" ? 0.12 : 0);   // each bank rims across the seam; an afterglow stays
-    coreMats[0].color.copy(VIOLET).multiplyScalar(0.06 + 1.6 * kL); coreMats[1].color.copy(VIOLET).multiplyScalar(0.06 + 1.6 * kR);
+    coreMats[0].color.copy(VIOLET).multiplyScalar(0.015 + 1.6 * kL); coreMats[1].color.copy(VIOLET).multiplyScalar(0.015 + 1.6 * kR);
     glassMats[0].emissive.copy(VIOLET).multiplyScalar(0.12 * kL); glassMats[1].emissive.copy(VIOLET).multiplyScalar(0.12 * kR);
-    [kL, kR].forEach((k, i) => { glassMats[i].opacity = 0.06 + 0.16 * Math.min(1, k); glassMats[i].envMapIntensity = 0.12 + 0.5 * Math.min(1, k); });   // a bank that is off goes dark in frame: no lit glass
+    [kL, kR].forEach((k, i) => { glassMats[i].opacity = 0.22 * Math.min(1, k); glassMats[i].visible = k > 0.02; glassMats[i].envMapIntensity = 0.5 * Math.min(1, k); });   // a bank that is off goes dark in frame: no lit glass
   } else rays.forEach((r) => r.set({ op: 0 }));
   scan.style.opacity = shot === "uv" && seg(t, FILM.uvd.scan[0], FILM.uvd.scan[1]) > 0 && seg(t, FILM.uvd.scan[0], FILM.uvd.scan[1]) < 1 ? "1" : "0";
   for (const { g, d } of tags) { const op = shot === "uv" ? win(t, g.t0, g.t1, 0.3) : 0; d.style.opacity = op.toFixed(3); d.style.visibility = op > 0.002 ? "visible" : "hidden"; }
 
   // ── the cut face: the long rays fall, cross the marked top layer and carry on into the dermis ──
   if (shot === "section") {
-    studio.aim([XC, -3, 0], [-0.5, 0.8, 0.45], [0.7, 0.3, -0.7]); studio.set({ key: 1.5, rim: 2.2, fill: 0.3, env: 0.45, warm: 0 });
+    rimC.intensity = 2.2; studio.aim([XC, -3, 0], [-0.5, 0.8, 0.45], [0.7, 0.3, -0.7]); studio.set({ key: 1.5, rim: 2.2, fill: 0.3, env: 0.45, warm: 0 });
     focusPt = mix3([XC + 0.4, -2.0, 0], [XC + 0.2, -2.4, 0], E.inout2(seg(t, CUT.section, CUT.list2))); fstop = 0.1;
     const gain = fadeIn(t, FILM.rays.on[0], FILM.rays.on[1] - FILM.rays.on[0]);
     jMat.opacity = 0.75 * fadeIn(t, CUE.through - 0.3, 0.6);
