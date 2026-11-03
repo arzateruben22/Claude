@@ -17,6 +17,7 @@ import { createStudio, skinMaterial, createShaft, createGrain } from "../set/stu
 import { createBrow } from "../set/brow04.js";
 import { createNMJ } from "../set/nmj04.js";
 import { SECTION, DERMIS } from "../set/ref/textures.js";
+import { lookV2, richen } from "../set/prod.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, FPS = FILM.fps || 30, G = FILM.gauge, J = FILM.j, BW = FILM.brow, P = FILM.plates;
 const S1 = Math.min(W, H) / 1080;
@@ -72,6 +73,7 @@ const UVSKIN = new THREE.Color(0.4, 0.3, 0.78), UVHAIR = new THREE.Color(0.06, 0
 
 // ── the junction at cell scale ──
 const N = createNMJ({ x: XJ });
+richen(N.group, { seed: 4, jitter: 0.1, hue: 0.05, micro: 0.5 });   // no two parts identical; a micro normal on the membrane and the fibre
 scene.add(N.group);
 const hzJ1 = haze(260, 160, [XJ, 0, -46], "#2C1660", 0.55), hzJ2 = haze(200, 120, [XJ, 0, -22], "#3A2178", 0.22);
 const shaftJ = createShaft({ from: [XJ - 16, 26, -6], to: [XJ + 3, -3, 1], radius: 4, color: "#B79BFF" }); scene.add(shaftJ.group);
@@ -117,7 +119,8 @@ const eBars = endBars(endEl, { t0: FILM.endCard, d: 0.8 });
 endEl.style.transform = "translateY(-22vmin)";                              // the card sits above the tease's caption plate
 const gauge = createGauge({ root: hudRoot, W, H, S1, safe: hud.safe, liftK: 1.25, liftAt: [0.47, 0.3] });
 for (const el of document.querySelectorAll(".ol-gauge text")) if (el.textContent === "dead layer") el.textContent = G.bar;
-const grain = createGrain(hudRoot, { amount: 0.02 });
+const look2 = lookV2({ canvas, hudRoot, skin: browSkin });   // the channel look (stage 1): the brow's skin upgraded, the graded backdrop, one grade
+const grain = createGrain(hudRoot, { amount: 0.007 });
 // the UV switch: a cyan line sweeping down the frame (DOM), as in look test 2
 const scan = document.createElement("div");
 Object.assign(scan.style, { position: "absolute", left: 0, right: 0, height: `${0.004 * H}px`, background: "#5FF2E8", boxShadow: "0 0 18px 4px rgba(95,242,232,.55)", opacity: "0", zIndex: 2, pointerEvents: "none" });
@@ -182,7 +185,7 @@ window.seek = function (t) {
     look(pos, tgt);
     studio.aim([0, 0.7, 0], [-0.85, 0.42, 0.42], [0.9, 0.15, 0.3]); studio.set({ key: 2.8 * (1 - 0.5 * uv), rim: 1.6, fill: 0.22, env: 0.35, warm: 0.6 * (1 - uv) });   // a raking key from the left: the lines read as grooves
     browSkin.color.copy(browBase).lerp(UVSKIN, uv); browSkin.emissive.setRGB(0.03 * uv, 0.02 * uv, 0.1 * uv); hairMat.color.copy(HAIR).lerp(UVHAIR, uv);
-    browSkin.sheenColor.setRGB(1 - 0.3 * uv, 0.86 - 0.2 * uv, 0.78 + 0.2 * uv);
+    browSkin.sheenColor.setRGB(1 - 0.3 * uv, 0.72 - 0.06 * uv, 0.62 + 0.36 * uv);   // from lookV2's warm edge sheen toward UV lilac
     doseGlow.material.opacity = 0.75 * uv * (0.85 + 0.15 * Math.sin(t * 3));
     focusPt = [0, 0.75, 0]; fstop = shot === "brow2" ? 0.26 : 0.2;
   } else doseGlow.material.opacity = 0;
@@ -226,7 +229,7 @@ window.seek = function (t) {
     const u = span(t, "cut");
     look(mix3([XC - 2, 0.2, 15], [XC + 0.6, -4.2, 10.5], u), mix3([XC - 1, -2.4, 0], [XC + 0.8, -6.4, 0], u));   // a slow push down past the skin's layers
     studio.aim([XC, -4, 0], [-0.45, 0.8, 0.55], [0.55, 0.35, -0.85]); studio.set({ key: 1.6, rim: 2.6, fill: 0.45, env: 0.5, warm: 0.2 });
-    focusPt = mix3([XC - 1, -2.4, 0], [XC + 0.8, -6.2, 0], u); fstop = 0.18;
+    focusPt = mix3([XC - 1, -2.4, 0], [XC + 0.8, -6.2, 0], u); fstop = 0.1;
   }
 
   // ── plates ──

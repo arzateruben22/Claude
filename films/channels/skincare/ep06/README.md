@@ -12,22 +12,23 @@ and Brazil banned commercial beds; the long rays pass the ≈ 100 µm top layer;
 beds in 2009.
 
 **The picture (four hero shots, `review/storyboard.md`):**
-1. **The list:** IARC Group 1 as an engraved slate plate in violet haze, a dust shaft across it; cyan inlays light
+1. **The list:** IARC Group 1 as a bevelled, engraved slate slab tilted ~12° in violet haze, a tube bank behind it as bokeh and a dust shaft across it; cyan inlays in recessed grooves light
    the three rows, then the evidence line (hook, normal; returns for the takeaway with the sun's row, 1992).
-2. **The canopy:** deep-tone skin under UVA tubes glowing violet, a shaft of dust; the tubes flare on "ten"; a rack
-   focus from the tubes to the skin for the why.
+2. **The canopy:** deep-tone skin under 3D UVA tubes (core, glass, reflector housings, acrylic), god rays and dust;
+   the tubes flare on "ten" and swell on "sun"; on "young" the camera re-frames up into the canopy, so no skin is in
+   frame under the risk figures.
 3. **The switch-off (the UV switch):** the cyan scan line on "Whole countries acted"; in the UV camera the skin's
-   left half goes dark with its bank of tubes (Australia · 2015), then the right (Brazil · 2009).
-4. **The cut face:** a block of skin cut open, its face a real stained tissue photo (micrograph); violet UVA dashes pass the top
+   left half goes dark as its bank flickers out (Australia · 2015–16), then the right (Brazil · 2009).
+4. **The cut face:** a block of skin cut open, seen three-quarters, its face a real stained tissue photo (micrograph); violet UVA dashes pass the top
    layer into the dermis; the gauge sets the top layer ≈ 100 µm beside the paper.
 
 Honesty on screen: "IARC Group 1 · excerpt" and the plate's own line "ranks the strength of evidence, not the size of
 risk"; "large, powerful units" and "UVA vs midday sun · may be"; "pooled studies · 2012 (corr.) · 2007" with
-"relative risk · first use < 35"; "model, not a photo" on the UV switch-off; "tissue photo · rays simplified" on the
+"relative risk · first use < 35"; "model, not a photo" on the canopy and the UV switch-off; "tissue photo · rays simplified" on the
 cut face. Years appear on screen only. No advice.
 
 Files: `script.md`, `claims.json`, `voice.py`/`vo/`, `compile.py` → `film.json`/`sheet.json`, `scene.mjs`
-(`../set/studio.js`, `../set/terrain.js`, `../set/motif.js`, `../set/ref/textures.js`), `review/`, `out/`.
+(`../set/studio.js`, `../set/prod.js` (the channel look), `../set/terrain.js`, `../set/motif.js`, `../set/ref/textures.js`), `review/`, `out/`.
 
     python3 -I films/channels/skincare/ep06/compile.py
     python3 -I kits/cinema/script/lint.py films/channels/skincare/ep06 --segment toscale

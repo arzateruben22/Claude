@@ -16,15 +16,16 @@ dust shaft across it and the bed's violet tubes soft far behind. Cyan inlays lig
 | 3 | "All three share the top group … equally dangerous: it ranks how sure the evidence is." | The three rows held lit; on "sure" the engraved line under them lights: "strength of evidence, not size of risk" | The push settles low on that line |
 
 ## Hero 2: the canopy (change + why, 16–43 s)
-Deep-tone skin (microrelief, pores, fine hairs) under a canopy of UVA tubes glowing violet; a violet shaft with dust
-falls from the tubes onto the skin. One slow move under the tubes.
+Deep-tone skin (microrelief, pores, hairs) under a canopy of UVA tubes (emissive core, glass envelope, reflector
+housing, acrylic sheet); god rays with dust fall onto the skin. Corner note "model, not a photo" until "large,
+powerful units". The tubes flare on "ten" and swell on "sun"; the camera re-frames up into the canopy on "young".
 
 | # | Sentence | Image | Camera |
 |---|---|---|---|
 | 4 | "Into the bed, then: its light is mostly UVA, the long rays." | Cut on "Into": the tubes come up violet over the skin | A slow glide along the skin under the tubes |
 | 5 | "In large, powerful units, it may be ten to fifteen times as intense as the midday sun." | On "ten" the tubes flare; spine "×10–15" ("UVA vs midday sun · may be"), note "large, powerful units" | The glide continues |
-| 6 | "When the beds joined that group, the sharpest signal came from people who started young." | The tubes back to a third; the light pools on the skin | Lowers to a grazing angle; rack focus from the tubes to the skin |
-| 7 | "In pooled studies, first use before thirty-five went with melanoma risk raised by more than half." | Spine "1.59 · 1.75" (melanoma RR, first use < 35 · 2012 corrected · 2007); note "pooled studies · relative risk" | Holds on the skin |
+| 6 | "When the beds joined that group, the sharpest signal came from people who started young." | The tubes back to a third over the skin; on "young" the camera re-frames up into the canopy | From "started" a slow tilt up off the skin into the tubes; the focus racks onto the tubes by "pooled" |
+| 7 | "In pooled studies, first use before thirty-five went with melanoma risk raised by more than half." | **No skin in frame:** only the tube canopy, its glass, housings and god rays, defocused dust. Spine "1.59 · 1.75" ("melanoma · relative risk · first use < 35"); note "pooled studies · 2012 (corr.) · 2007". The risk line never sits on the episode's skin tone (and the pooled studies were mostly of fair-skinned groups) | Holds looking up into the canopy |
 
 ## Hero 3: the switch-off (whoa, 43–54 s): the UV switch
 The same skin seen by the UV camera: the cyan scan line sweeps down on "Whole countries acted" and the skin glows
@@ -32,7 +33,7 @@ lilac in the bed's UV. The left half is lit by one bank of tubes, the right by t
 
 | # | Sentence | Image | Camera |
 |---|---|---|---|
-| 8 | "Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them too." | On "off" the left bank and the skin under it go dark ("Australia · 2015"); on "Brazil" the right bank goes dark ("Brazil · 2009"); note "model, not a photo" | One slow push over the seam |
+| 8 | "Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them too." | On "off" the left bank and the skin under it go dark ("Australia · 2015"); on "Brazil" the right bank goes dark ("Brazil · 2009"); a cool fill and an afterglow keep pores and furrows legible; the dark holds about 1.8 s, then a cut on the music grid | One slow push down the seam |
 
 ## Hero 4: the cut face (toscale, 54–62 s)
 A block of skin cut open: the top is deep-tone skin, the face a real stained tissue photo. Violet UVA dashes fall

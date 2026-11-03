@@ -34,3 +34,23 @@ switch-off; "tissue photo · rays simplified" on the cut face; years on screen o
   photo": two labels plus one note.
 - The far skin under the canopy melts into violet haze; a reviewer may want more skin and less shaft in the change.
 - Dermatologist sign-off on every line before posting (unchanged).
+
+## Review round 1 fixes (3 Nov; scored on the 76.07 s draft: a 3, b 4, c 3, d 3, e 4, f 3, g 3, h 2)
+
+- **Ethics:** from "started" the camera tilts up off the skin into the canopy and the focus racks onto the tubes by
+  "pooled"; no skin is in frame under the melanoma figures (storyboard rows 6–7).
+- **Facts:** "Australia · 2015–16" (c9 note updated); the plate's evidence line is set larger than the rows, on two
+  lines; "model, not a photo" on the canopy until "large, powerful units"; beat headers in `script.md` match the build
+  (headers only, no vo line touched).
+- **Production (episode objects only; the shared pass in `../set/prod.js` via `lookV2` brings the skin, hairs, fog
+  and grade):** a bevelled slate slab, tilted, engraved, with recessed cyan inlays, a violet rim from a defocused tube
+  bank, haze volume, background bokeh and foreground dust; frame 0 starts mid-rack on the slab with no duplicate
+  caption under the title; 3D tubes (core, glass, reflector housing, acrylic), god rays, exponential fog, hair drift,
+  baked occlusion; the switch-off on one shader with a soft seam: the left bank flickers out and the whole left half
+  goes dark, the right bank rims across, a cool fill and afterglow after "Brazil", the dark held ~1.8 s before a cut on
+  the music grid; the cut face three-quarters with a darker deep-tone top, 16 thicker dashes crossing a traced
+  epidermis–dermis line with a flash, the gauge over the dermis on the right.
+- **Ending and layout:** the tobacco and beds rows relight to full on "Same list"; the spines sit below the corner notes
+  and the excerpt note leaves before "certainty"; the end card sits over the plate, racked out of focus, under a light
+  scrim.
+- Solar radiation's year is hidden until "sun"; the years column is headed "year listed".

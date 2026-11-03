@@ -330,7 +330,7 @@ window.seek = function (t) {
 
   // ── the cut face: the long rays fall, cross the marked top layer and carry on into the dermis ──
   if (shot === "section") {
-    studio.aim([XC, -3, 0], [-0.5, 0.8, 0.45], [0.7, 0.3, -0.7]); studio.set({ key: 1.7, rim: 2.2, fill: 0.3, env: 0.45, warm: 0.3 });
+    studio.aim([XC, -3, 0], [-0.5, 0.8, 0.45], [0.7, 0.3, -0.7]); studio.set({ key: 1.5, rim: 2.2, fill: 0.3, env: 0.45, warm: 0 });
     focusPt = mix3([XC + 0.4, -2.0, 0], [XC + 0.2, -2.4, 0], E.inout2(seg(t, CUT.section, CUT.list2))); fstop = 0.1;
     const gain = fadeIn(t, FILM.rays.on[0], FILM.rays.on[1] - FILM.rays.on[0]);
     jMat.opacity = 0.75 * fadeIn(t, CUE.through - 0.3, 0.6);
