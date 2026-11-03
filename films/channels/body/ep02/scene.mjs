@@ -370,7 +370,8 @@ const ANCH = {
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
 hud.badge("warp", { from: clk, slot: "tr" });   // the title owns the top-left keep-out (owner, 3 Nov)
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.3),   // the title owns its zone while it shows (owner, 3 Nov)
+   t1: b.t1, slot: b.slot || "tr" });
 const Q = FILM.quarter, SPINE_Y = 0.262;
 const commas = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 for (const sp of FILM.spine) {
@@ -388,6 +389,7 @@ const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * 
 endEl.insertBefore(ePulse.el, endEl.firstChild);
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
 const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
+const SCL = L.scanLine(document.querySelector(".stage"));
 scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze
 // the lung: the blood's round trip drawn on over "sends … once a minute" (larger, on a plate, to read on a phone)
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 560 * S1, h: 330 * S1, region: [0.42, 0.26], plate: true, loop: true });
@@ -456,6 +458,8 @@ window.seek = function (t) {
   LOCARM.update(t, sh === "skin" ? presence(t, ARM_T[0], ARM_T[1], { d: 0.45, out: 0.35 }).o : 0, beatAmp(t, lubs(ARM_T[0], ARM_T[1])));
   IR.update(t);
   FIN.set(t); MOT.set(t);
+  { const S = FILM.scan, on = t >= S.up[0] && t < S.off ? 1 : 0, y = on ? 1 - (1 - S.park) * E.inout2(seg(t, S.up[0], S.up[1])) : 2;   // scan view
+    L.SCAN.set(y, on); SCL.set(y, on * (1 - seg(t, S.off - 0.35, S.off - 0.05)), S.tag); }
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, 12);

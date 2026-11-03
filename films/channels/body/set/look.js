@@ -148,8 +148,8 @@ export const look = (THREE, o) => {
         .replace("#include <dithering_fragment>", `#include <dithering_fragment>
           if (uScanOn > 0.001) {
             float yTop = 1.0 - gl_FragCoord.y / uRes.y, below = smoothstep(uScanY - 0.002, uScanY + 0.002, yTop) * uScanOn;
-            float fr = pow(1.0 - abs(dot(normalize(vNormal), normalize(vViewPosition))), 1.7);
-            vec3 sv = mix(uSCore, uSEdge, fr) + uSEdge * 0.9 * pow(fr, 7.0);
+            float fr = pow(1.0 - abs(dot(normalize(vNormal), normalize(vViewPosition))), 3.0);   // a tight edge: big flat surfaces stay dark glass
+            vec3 sv = mix(uSCore, uSEdge * 0.8, fr) + uSEdge * 0.9 * pow(fr, 9.0);
             sv = mix(sv, uSEdge * (0.55 + 0.6 * fr), uSHot);
             if (uSCont > 0.0) { float z = -vViewPosition.z * uSCont, w = fwidth(z); sv += uSEdge * 0.5 * (1.0 - smoothstep(0.0, 1.5 * w, abs(fract(z) - 0.5) - 0.5 + 1.5 * w)); }
             gl_FragColor.rgb = mix(gl_FragColor.rgb, sv, below);

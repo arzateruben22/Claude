@@ -154,6 +154,7 @@ BADGES = [
     {"id": "nts-tease", "text": "not to scale", "t0": FIG["t1"] - 0.3, "t1": EC},
     {"id": "slow-tease", "text": "slowed", "slot": "tr", "t0": round(TEASE_T0 - 0.3, 4), "t1": EC},
 ]
+SCAN = {"up": [B["whoa"]["t0"] + 0.5, B["whoa"]["t0"] + 2.0], "park": 0.5, "off": B["takeaway"]["t0"], "tag": "▼ scan view"}   # live scan: the line rises from the bottom and parks; below it, scan view
 TITLE = {"series": "Body Backstage · No. 03", "title": "The *jump*", "t1": round(A("vo01:A", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *the gap*", "next": "Body Backstage · No. 04", "follow": "Follow Body Backstage",
        "fact": "In 1850 Helmholtz timed a frog's nerve signal at about 27 metres a second."}   # c5, c6
@@ -194,7 +195,7 @@ film = {
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "hop": HOP, "hookSig": HOOK, "hookRun": HOOK_RUN, "whyJump": WHY_JUMP, "ms": MS, "bare": BARE, "race": RACE,
     "tease": TEASE, "toe": TOE, "drum": DRUM, "fig": FIG,
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,
-    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
+    "segBeats": SEG_BEATS, "title": TITLE, "scan": SCAN, "endCard": EC, "end": END,
     "look": THEME["scene"],
     "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

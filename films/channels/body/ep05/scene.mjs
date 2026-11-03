@@ -308,7 +308,8 @@ const ANCH = {
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side, fixed: lb.fixed, v: lb.v });
 // rule 8: the speed column top left, the standing cheats top right (at most two notes per corner)
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot || "tr" });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.3),   // the title owns its zone while it shows (owner, 3 Nov)
+   t1: b.t1, slot: b.slot || "tr" });
 for (const sp of FILM.spine) {
   const fmt = sp.text ? () => sp.text : (v) => String(Math.round(v));
   const o = sp.keys ? { keys: sp.keys, ease: "lin" } : { value: () => 0 };
@@ -323,6 +324,7 @@ endEl.insertBefore(ePulse.el, endEl.firstChild);
 { const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
 const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
+const SCL = L.scanLine(document.querySelector(".stage"));
 scene.add(camera); const MOT = L.motes(camera, { n: 140, size: 6, op: 0.4 });   // live scan: motes in the haze
 const LOC = locator(document.getElementById("hud"), { x: 92 * S1, y: 700 * S1, h: 232 * S1, region: FILM.loc.region, plate: true });
 
@@ -372,6 +374,8 @@ window.seek = function (t) {
   LOC.update(t, presence(t, FILM.loc.t0, FILM.loc.t1, { d: 0.45, out: 0.35 }).o, beatAmp(t, FILM.breaths, { decay: 1.2 }));
   IR.update(t);
   FIN.set(t); MOT.set(t);
+  { const S = FILM.scan, on = t >= S.up[0] && t < S.off ? 1 : 0, y = on ? 1 - (1 - S.park) * E.inout2(seg(t, S.up[0], S.up[1])) : 2;   // scan view
+    L.SCAN.set(y, on); SCL.set(y, on * (1 - seg(t, S.off - 0.35, S.off - 0.05)), S.tag); }
   if (C && C.mode === "probe") {
     if (TIER_KMAX == null) TIER_KMAX = C.kMax;
     C.kMax = Math.min(TIER_KMAX, 12);

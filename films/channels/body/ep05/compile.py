@@ -135,7 +135,7 @@ BADGES = [
     {"id": "nts", "text": "not to scale", "t0": 0.0, "t1": CUT["wall"] - 0.3},
     {"id": "few", "text": "simplified: 7 of ~23 forks drawn", "t0": A("vo02:fork", -0.2), "t1": A("vo02:millimetre", 0.6)},
     {"id": "ill", "text": "illustration: the old idea", "t0": FLESH[0], "t1": FLESH[2]},
-    {"id": "scale", "text": "wall and cell to scale · O₂ enlarged", "t0": CUT["wall"], "t1": CUT["room"] - 0.3},
+    {"id": "scale", "text": "to scale · O₂ enlarged", "t0": CUT["wall"], "t1": CUT["room"] - 0.3},
     {"id": "thick", "text": "illustration: a thickened wall", "t0": WALL["thick"][0], "t1": CUT["room"] - 0.3},   # the ×6 swelling is a picture of "harder", not a measured thickness
     {"id": "slow", "text": "slowed", "slot": "tl", "t0": WALL["slip"][0] - 0.5, "t1": CUT["room"] - 0.3},
     {"id": "ill2", "text": "area to scale · estimates 50–140 m²", "t0": CUT["room"], "t1": ROOM["fold"][1] + 0.3},
@@ -145,6 +145,7 @@ BADGES = [
     {"id": "flow", "text": "blood flow slowed", "slot": "tl", "t0": CUT["exit"], "t1": EC},
     {"id": "fast", "text": "squeeze sped up", "slot": "tl", "t0": EXIT["push"][0] - 0.2, "t1": EC},
 ]
+SCAN = {"up": [CUT["wall"] + 0.8, CUT["wall"] + 2.3], "park": 0.5, "off": CUT["room"], "tag": "▼ scan view · blood flow"}   # live scan: the line rises from the bottom and parks; below it, scan view
 TITLE = {"series": "Body Backstage · No. 05", "title": "Where breath *goes*", "t1": round(A("vo01:Not", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *the exit*", "next": "Body Backstage · No. 06", "follow": "Follow Body Backstage",
        "fact": "Your lungs hold about 480 million air sacs (Ochs and colleagues, 2004)."}   # c1
@@ -189,7 +190,7 @@ film = {
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "flesh": FLESH, "wall": WALL, "room": ROOM, "exit": EXIT, "breaths": BREATHS, "loc": LOC,
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,
-    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
+    "segBeats": SEG_BEATS, "title": TITLE, "scan": SCAN, "endCard": EC, "end": END,
     "look": THEME["scene"],
     "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

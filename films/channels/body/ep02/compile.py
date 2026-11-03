@@ -203,12 +203,23 @@ SPINE = [
     {"id": "full", "t0": B["takeaway"]["t0"] + 0.2, "t1": B["meanwhile"]["t0"] + 0.1, "keys": [[A("vo06:red"), 75], [A("vo06:count", 0.4), 97]], "unit": "%", "label": "seats full: arriving → leaving, about"},   # c19
 ]
 TALLY = {"t0": B["meanwhile"]["t0"] + 0.3, "t1": CUT["nerve"] - 0.25, "rate": 250.0 / 60.0, "unit": "mL", "label": "O₂ handed out as you watched, about"}   # c15
+SCAN = {"up": [CUT["skin"] + 1.0, CUT["skin"] + 2.5], "park": 0.55, "off": CUT["lung"], "tag": "▼ scan view · under the skin"}   # live scan: the line rises from the bottom and parks; below it, scan view
 TITLE = {"series": "Body Backstage · No. 02", "title": "A billion *passengers*", "t1": round(A("vo01:Room") + 0.35, 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the jump*", "next": "Body Backstage · No. 03", "follow": "Follow Body Backstage",
        "fact": "Each red cell carries about 270 million hemoglobins, with four oxygen seats on each."}   # c1, c2
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 
 # caption pages: the balanced pager (no one-word tails), never splitting these phrases across rows or pages
+def fix_caps(pages):
+    """numerals.py writes "a quarter of a billion" as "of 1 billion": a quarter of a billion is said, so show it."""
+    for pg in pages:
+        ws = [w for ln in pg["lines"] for w in ln]
+        for k, w in enumerate(ws):
+            if w[0] == "1 billion" and k > 0 and ws[k - 1][0] == "of":
+                w[0] = "a billion"
+    return pages
+
+
 CAPTION_KEEP = [
     "billion passengers",
     "one protein",
@@ -244,9 +255,9 @@ film = {
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "clock": CLOCK,
     "cell": CELL, "hb": HB, "skin": SKIN, "lung": LUNG, "nerve": NERVE, "quarter": QUARTER,
     "cam": CAM, "foc": FOC, "labels": LABELS, "badges": BADGES, "tally": TALLY, "spine": SPINE,
-    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
+    "segBeats": SEG_BEATS, "title": TITLE, "scan": SCAN, "endCard": EC, "end": END,
     "look": THEME["scene"],
-    "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
+    "captions": fix_caps(f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP)),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

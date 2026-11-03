@@ -800,7 +800,7 @@
    "t0": 33.53333333333333,
    "t1": 33.766666666666666,
    "text": "0.5",
-   "unit": "µm",
+   "unit": "μm",
    "label": "the wall, under",
    "at": [
     0.5,
@@ -855,7 +855,7 @@
   },
   {
    "id": "scale",
-   "text": "wall and cell to scale · O₂ enlarged",
+   "text": "to scale · O₂ enlarged",
    "t0": 28.816666,
    "t1": 42.483333
   },
@@ -936,6 +936,15 @@
   "t1": 2.2667,
   "sig": 0.0,
   "y": 0.17
+ },
+ "scan": {
+  "up": [
+   29.616666000000002,
+   31.116666000000002
+  ],
+  "park": 0.5,
+  "off": 42.783333,
+  "tag": "▼ scan view · blood flow"
  },
  "endCard": 71.6,
  "end": {

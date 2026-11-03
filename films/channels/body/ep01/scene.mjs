@@ -488,7 +488,8 @@ const ANCH = {
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, glyph: lb.glyph, mark: lb.mark, color: lb.color, at: (t) => ANCH[lb.at](t), t0: lb.t0, t1: lb.t1, shot: lb.shot, side: lb.side });
 hud.badge("warp", { from: clk, slot: "tr", t0: FILM.title.t1 + 0.3 });   // top right: the title owns a keep-out at top left (owner, 3 Nov)
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: "tr" });
+for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: Math.max(b.t0, FILM.title.t1 + 0.3),   // the title owns its zone while it shows (owner, 3 Nov)
+   t1: b.t1, slot: "tr" });
 // a pill's bar is its length at the hero, on screen. hud.js clamps a bar to 4 px–60 % of the safe width, and a
 // clamped bar no longer matches its text (the meet close-up's 7.5 µm is 690–860 px at 1080 wide), so a length that
 // would be clamped shows no bar: the pill keeps its text alone

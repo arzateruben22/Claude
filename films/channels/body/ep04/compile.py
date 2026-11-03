@@ -148,6 +148,7 @@ BADGES = [
     *[{"id": f"slow-b{i}", "text": "slowed", "slot": "br", "t0": round(b - 0.4, 4), "t1": round(b + 2.0, 4)} for i, b in enumerate(BREATHS)],
     {"id": "nts-sac", "text": "illustration, not to scale", "t0": CUT["sac"], "t1": CUT["loop"]},   # gone under the end card; frame 0 carries "not to scale"
 ]
+SCAN = {"up": [REPLAY[0], REPLAY[0] + 1.4], "park": 0.5, "off": REPLAY[1], "tag": "▼ scan view"}   # live scan: the line rises from the bottom and parks; below it, scan view
 TITLE = {"series": "Body Backstage · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "title": "Next, inside: *where breath goes*", "next": "Body Backstage · No. 05", "follow": "Follow Body Backstage",
        "fact": "Golgi and Cajal shared the 1906 Nobel Prize, and argued in their lectures."}   # c6
@@ -189,7 +190,7 @@ film = {
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "sharp": SHARP, "rel": REL, "replay": REPLAY, "use": USE, "breaths": BREATHS, "talk": TALK, "meet": MEET,
     "panels": PANELS, "loc": LOC,
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,
-    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
+    "segBeats": SEG_BEATS, "title": TITLE, "scan": SCAN, "endCard": EC, "end": END,
     "look": THEME["scene"],
     "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],

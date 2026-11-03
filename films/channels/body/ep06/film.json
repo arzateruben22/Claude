@@ -225,7 +225,7 @@
  "scale": {
   "t0": 8.666666666666666,
   "t1": 10.266666666666667,
-  "text": "about 8 µm · round, in blood"
+  "text": "about 8 μm · round, in blood"
  },
  "cam": {
   "hook": [
@@ -796,6 +796,15 @@
   "t1": 0.7667,
   "sig": 0.0,
   "y": 0.17
+ },
+ "scan": {
+  "up": [
+   27.183333,
+   28.683333
+  ],
+  "park": 0.52,
+  "off": 43.583333,
+  "tag": "▼ scan view"
  },
  "endCard": 72.0,
  "end": {

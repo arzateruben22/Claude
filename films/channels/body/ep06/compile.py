@@ -147,6 +147,7 @@ BADGES = [
 ]
 PANEL = {"t0": B["change"]["t0"] + 0.1, "t1": CUT["why"] - 0.1, "tissue": A("vo03:tissue", -0.1), "alive": A("vo03:Julius", -0.1), "out": [A("vo03:climbed", -0.2), A("vo03:out", 0.6)]}
 FIG = {"t0": CUT["tease"], "t1": DUR}
+SCAN = {"up": [CUT["why"] + 0.8, CUT["why"] + 2.3], "park": 0.52, "off": CUT["whoa"], "tag": "▼ scan view"}   # live scan: the line rises from the bottom and parks; below it, scan view
 TITLE = {"series": "Body Backstage · No. 06", "title": "The *exit*", "t1": round(A("vo01:This", 0.3), 4), "sig": 0.0, "y": 0.17}
 END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the spark*", "next": "Body Backstage · No. 07", "follow": "Follow Body Backstage",
        "fact": "Augustus Waller saw blood cells cross capillary walls in 1846, 21 years before Cohnheim."}
@@ -190,7 +191,7 @@ film = {
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "hookSt": HOOK, "normal": NORMAL, "why": WHY, "whoa": WHOA, "finger": FINGER, "tease": TEASE,
     "panel": PANEL, "fig": FIG, "loc": LOC, "scale": SCALE,
     "cam": CAM, "foc": FOC, "labels": LABELS, "badges": BADGES, "tally": TALLY,
-    "segBeats": SEG_BEATS, "title": TITLE, "endCard": EC, "end": END,
+    "segBeats": SEG_BEATS, "title": TITLE, "scan": SCAN, "endCard": EC, "end": END,
     "look": THEME["scene"],
     "captions": f.captions(max_chars=THEME["sizes"]["caption"]["maxChars"], balance=True, keep=CAPTION_KEEP),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
