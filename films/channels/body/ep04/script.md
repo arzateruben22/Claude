@@ -38,34 +38,34 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}
 direction for the compiler. In a vo line, `{c1,c2}` ties a sentence to `claims.json`; `{-}` marks a
 sentence that states nothing outside the film.
 
-## hook {shot: frame 0: two nerve endings meeting, seemingly joined, in a soft light-microscope blur; readout "touching: ?" · title: "Do they touch?" (the episode is "The gap"; the frame-0 title asks, it doesn't answer) · pre: 0.1 · energy: 0.7} (0–5 s)
-vo: Do your nerve cells *touch*? For decades, no microscope could *show* it. {c1}
+## hook {shot: frame 0: two nerve endings meeting, seemingly joined, in a soft light-microscope blur; readout "touching: ?" · title: "Do they touch?" (the episode is "The gap"; the frame-0 title asks, it doesn't answer) · pre: 0.1 · energy: 0.7} (0–6.4 s)
+vo: Do your nerve cells *touch*? Mostly, *no*. {c13} For decades, no microscope could *show* it. {c1}
 
-## normal {shot: pull back: one neuron's branches reaching thousands of others; readout "junctions in your brain: 100+ trillion" · energy: 0.45} (5–15 s)
-vo: A typical nerve cell reaches thousands of others. {c2} Your brain holds over a hundred trillion
-of these meeting points. {c3} Through a lens, they look *joined*. {c17}
+## normal {shot: pull back: one neuron's branches reaching thousands of others; readout "junctions in your brain: 100+ trillion" · energy: 0.45} (6.4–15.2 s)
+vo: Your brain holds over a hundred trillion
+meeting points: over ten thousand for every person *alive*. {c3,c18} Through a lens, they look *joined*. {c17}
 
-## change {shot: the same stained tissue, two readings side by side: Golgi's continuous web and Cajal's separate cells (illustrations, badged) · energy: 0.55} (15–25.5 s)
+## change {shot: the same stained tissue, two readings side by side: Golgi's continuous web and Cajal's separate cells (illustrations, badged) · energy: 0.55} (15.2–26.4 s)
 vo: Camillo Golgi, who made the stain, saw one continuous *web*. {c4} With it, Santiago Ramón y Cajal
 saw separate *cells*. {c5} In nineteen oh six they shared a Nobel, still *arguing*. {c6}
 
-## why {shot: the blur sharpens into an electron-microscope-style view (badge: illustration, not to scale): a gap; the signal arrives, calcium floods the tip, vesicles spill, messengers drift across; readout "the gap: about 20–50 nm" · picture-only 2.5 s · energy: 0.55} (25.5–41.5 s)
+## why {shot: the blur sharpens into an electron-microscope-style view (badge: illustration, not to scale): a gap; the signal arrives, calcium floods the tip, vesicles spill, messengers drift across; readout "the gap: about 20–50 nm" · picture-only 2.5 s · energy: 0.55} (26.4–42.4 s)
 vo: In the nineteen fifties, electron microscopes finally showed it: a *gap*. {c7} At most junctions,
 electricity can't jump it. {c8} Calcium floods the tip, tiny sacs spill a chemical messenger, and it
 *drifts* across. {c9,c10}
 
-## whoa {shot: the handoff, slowed: the readout counts to 0.001 s; then pull back to a field of junctions; one used again and again grows brighter and bigger · picture-only 3.5 s · energy: 0.75} (41.5–53 s)
+## whoa {shot: the handoff, slowed: the readout counts to 0.001 s; then pull back to a field of junctions; one used again and again grows brighter and bigger · picture-only 3.5 s · energy: 0.75} (42.4–54 s)
 vo: The handoff takes about a thousandth of a second. {c11} Use a junction, and it can grow
 *stronger*: likely part of how you *learn*. {c12}
 
-## takeaway {shot: the two cells, the gap between them lit; the score drops · energy: 0.3} (53–58.5 s)
-vo: So your nerve cells mostly don't *touch*. {c13} They *talk*, across gaps, in chemicals. {c16}
+## takeaway {shot: the two cells, the gap between them lit; the score drops · energy: 0.3} (54–60 s)
+vo: So your nerve cells mostly don't *touch*. {c19} They *talk*, across gaps, in chemicals. {c16}
 
-## meanwhile {segment: meanwhile · tally "while you watched": breaths at a resting 15 a minute, from frame 0, on the pulse line; the body locator marks the brainstem · mallet ticks on the lub-dub · energy: 0.4} (58.5–67.3 s)
+## meanwhile {segment: meanwhile · tally "while you watched": breaths at a resting 15 a minute, from frame 0, on the pulse line; the body locator marks the brainstem · mallet ticks on the lub-dub · energy: 0.4} (60–68.4 s)
 vo: *Meanwhile*, as you watched, you took about fifteen breaths. {c14} Each started at the base of
 your brain and crossed gaps like these. {c15}
 
-## tease {shot: an air sac in the dark, filling · end card held ≥ 2 s; under it the iris returns to frame 0 (a seamless replay); the card's fact: Golgi and Cajal shared the 1906 Nobel Prize · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (67.3–73.5 s)
+## tease {shot: an air sac in the dark, filling · end card held ≥ 2 s; under it the iris returns to frame 0 (a seamless replay); the card's fact: Golgi and Cajal shared the 1906 Nobel Prize · signature: thump E♭2, thump B♭2 +0.4 s, mallet G5 +1.2 s · energy: 0.35} (68.4–74.8 s)
 vo: Next: those breaths. {-} Where does all that air *go*? {-}
 end card: "Next: Where breath goes" · "Body Backstage · No. 05"
 

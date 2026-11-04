@@ -51,8 +51,8 @@ LANG = "en-gb"
 # Kokoro speed per sentence of each line, chosen from measured durations (README.md, "Voice"). The
 # hook's question stays near natural speed so it is spoken by 2.0 s; its answer slows a little.
 SPEEDS = {
-    "vo01": [1.0, 0.92],
-    "vo02": [0.88, 0.88, 0.88],
+    "vo01": [1.0, 1.0, 0.92],
+    "vo02": [0.88, 0.88],
     "vo03": [0.9, 0.9, 0.9],
     "vo04": [0.92, 0.9, 0.9],
     "vo05": [0.84, 0.82],

@@ -6,7 +6,7 @@
  "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
  "kokoro_onnx": "0.6.1",
  "onnxruntime": "1.31.0",
- "python": "3.13.17",
+ "python": "3.13.18",
  "made_by": "films/channels/body/ep04/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
  "gap": 0.3,
  "gap_question": 0.45,
@@ -14,59 +14,61 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Do your nerve cells touch? For decades, no microscope could show it.",
+   "text": "Do your nerve cells touch? Mostly, no. For decades, no microscope could show it.",
    "stars": [
     "touch",
+    "no",
     "show"
    ],
-   "phonemes": "dˈuː jɔː nˈɜːv sˈɛlz tˈʌtʃ? fɔː dˈɛkeɪdz, nˈəʊ mˈaɪkɹəskˌəʊp kʊd ʃˈəʊ ɪt.",
+   "phonemes": "dˈuː jɔː nˈɜːv sˈɛlz tˈʌtʃ? mˈəʊstli, nˈəʊ. fɔː dˈɛkeɪdz, nˈəʊ mˈaɪkɹəskˌəʊp kʊd ʃˈəʊ ɪt.",
    "speeds": [
+    1.0,
     1.0,
     0.92
    ],
    "gaps": [
-    0.45
+    0.45,
+    0.3
    ],
    "silences": [
     [
      1.4995,
      1.9495
+    ],
+    [
+     3.0238,
+     3.3238
     ]
    ],
    "file": "01.wav",
-   "dur": 4.383,
-   "sha256": "c04473fbb2cb432a3e6593a5fad6d984688cfe7bc0e39e7dac36ebed305c29b1"
+   "dur": 5.757,
+   "sha256": "0d36fe5ebe38d3c619f8efb6bb7436f7bf4937247432daa3dd26ba2c321bee09"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "A typical nerve cell reaches thousands of others. Your brain holds over a hundred trillion of these meeting points. Through a lens, they look joined.",
+   "text": "Your brain holds over a hundred trillion meeting points: over ten thousand for every person alive. Through a lens, they look joined.",
    "stars": [
+    "alive",
     "joined"
    ],
-   "phonemes": "ɐ tˈɪpɪkəl nˈɜːv sˈɛl ɹˈiːtʃɪz θˈaʊzəndz ɒv ˈʌðəz. jɔː bɹˈeɪn hˈəʊldz ˌəʊvəɹ ɐ hˈʌndɹɪd tɹˈɪliən ɒv ðiːz mˈiːtɪŋ pˈɔɪnts. θɹuː ɐ lˈɛnz, ðeɪ lˈʊk dʒˈɔɪnd.",
+   "phonemes": "jɔː bɹˈeɪn hˈəʊldz ˌəʊvəɹ ɐ hˈʌndɹɪd tɹˈɪliən mˈiːtɪŋ pˈɔɪnts: ˌəʊvə tˈɛn θˈaʊzənd fɔːɹ ˈɛvɹɪ pˈɜːsən ɐlˈaɪv. θɹuː ɐ lˈɛnz, ðeɪ lˈʊk dʒˈɔɪnd.",
    "speeds": [
-    0.88,
     0.88,
     0.88
    ],
    "gaps": [
-    0.3,
     0.3
    ],
    "silences": [
     [
-     2.785,
-     3.085
-    ],
-    [
-     6.3803,
-     6.6803
+     5.7926,
+     6.0926
     ]
    ],
    "file": "02.wav",
-   "dur": 8.627,
-   "sha256": "dc12b85a54dd9568820de323e6109f6046fe9995c26199ad971b639b1326c0d6"
+   "dur": 8.039,
+   "sha256": "4fb2ac71e4d891274d526784cc610ef79ddd1f5299a3c466c4aad4f487666282"
   },
   {
    "id": "vo03",

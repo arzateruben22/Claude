@@ -75,7 +75,7 @@ CAM = {
         # on "gap" the view swings side-on and the gap opens with the focus snap
         {"t": 0.0, "pos": [-36.0, 7.0, 70.0], "look": [9.0, 0.0, 0.0], "fov": 34},
         {"t": A("vo01:show"), "pos": [-34.0, 5.2, 66.0], "look": [9.0, 0.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo02:reaches", 0.2), "pos": [-70.0, -140.0, 1200.0], "look": [-100.0, -200.0, -80.0], "fov": 34, "ease": "p2"},   # one cell's reach
+        {"t": A("vo02:Your", 0.2), "pos": [-70.0, -140.0, 1200.0], "look": [-100.0, -200.0, -80.0], "fov": 34, "ease": "p2"},   # one cell's reach
         {"t": A("vo02:trillion", 0.2), "pos": [-60.0, -160.0, 1700.0], "look": [-90.0, -200.0, -100.0], "fov": 34, "ease": "p2"},   # the network
         {"t": A("vo02:Through", 0.0), "pos": [-55.0, -150.0, 1640.0], "look": [-90.0, -200.0, -100.0], "fov": 34, "ease": "sine"},
         {"t": A("vo02:joined", 0.1), "pos": [-36.0, 7.0, 76.0], "look": [9.0, 0.0, 0.0], "fov": 34, "ease": "p3"},           # back to the contact
@@ -104,7 +104,7 @@ CAM = {
 CAM["loop"] = [dict(CAM["syn"][0], t=CUT["loop"])]
 FOC = {
     # frame 0 and the hook: focus far behind the contact (a soft light-microscope blur); it snaps sharp on "gap"
-    "syn": [{"t": 0.0, "at": "behind", "f": 0.9}, {"t": A("vo02:reaches", 0.0), "at": "net", "f": 0.25}, {"t": A("vo02:joined", -0.3), "at": "behind", "f": 0.9},
+    "syn": [{"t": 0.0, "at": "behind", "f": 0.9}, {"t": A("vo02:Your", 0.0), "at": "net", "f": 0.25}, {"t": A("vo02:joined", -0.3), "at": "behind", "f": 0.9},
             {"t": SHARP[0], "at": "behind", "f": 0.9}, {"t": SHARP[1], "at": "gap", "f": 0.45}, {"t": A("vo05:Use", -0.1), "at": "cell2", "f": 0.3},
             {"t": A("vo06:touch", -0.4), "at": "gap", "f": 0.45}],
     "sac": [{"t": CUT["sac"], "at": "sac", "f": 0.35}],
@@ -140,7 +140,7 @@ BADGES = [
     {"id": "nts", "text": "not to scale", "t0": 0.0, "t1": round(EM[0] - 0.3, 4)},
     {"id": "ill-em", "text": "illustration · not to scale", "t0": EM[0], "t1": A("vo05:Use", -0.3)},   # through the whoa's slowed replay of the same picture
     {"id": "nts2", "text": "not to scale", "t0": A("vo05:Use", 0.0), "t1": CUT["sac"]},
-    {"id": "few", "text": "simplified: a few of thousands drawn", "t0": A("vo02:reaches", 0.0), "t1": A("vo02:hundred", -0.45)},   # gone before the 100+ trillion readout
+    {"id": "few", "text": "simplified: only a few drawn", "t0": A("vo02:Your", 0.0), "t1": A("vo02:hundred", -0.45)},   # gone before the 100+ trillion readout
     {"id": "ill", "text": "illustration: one stained tissue, two readings", "t0": PANELS["t0"], "t1": PANELS["t1"] - 0.35},
     {"id": "slow-why", "text": "slowed", "slot": "br", "t0": REL["sig"][0], "t1": EM[1]},
     {"id": "slow", "text": "slowed", "slot": "br", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
