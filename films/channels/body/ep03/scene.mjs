@@ -333,6 +333,8 @@ const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 #hud-ms { white-space: pre-line; max-width: none; border-radius: 3vmin; }
 #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
 #hud-tally .lb { color: var(--text); }
+.mi-f1 { position: absolute; left: 50%; top: 72%; transform: translateX(-50%); width: 62vmin; opacity: 0; z-index: 2; background: var(--hud-plate); padding: 1.4vmin 2vmin; border-radius: 2vmin; font: 700 2.3vmin/1.1 var(--font-mono, monospace); color: var(--text); pointer-events: none; }
+.mi-f1 .r { display: grid; grid-template-columns: 17vmin 1fr 9vmin; align-items: center; gap: 1.4vmin; margin: .7vmin 0; } .mi-f1 .b { display: block; height: 2.2vmin; width: 0; background: var(--text-2); border-radius: 1vmin; } .mi-f1 .b.s { background: var(--signal); } .mi-f1 .v { text-align: right; }
 .mi-fig { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; }
 `; document.head.appendChild(css);
 const hud = createHud({ camera });
@@ -366,17 +368,24 @@ for (const sp of FILM.spine) {
   const fmt = sp.text ? () => sp.text : sp.fmt ? (v) => v.toFixed(sp.fmt) : commas;
   const o = sp.keys ? { keys: sp.keys, ease: "lin" } : { value: sp.count === "fired" ? firedAt : () => sp.value ?? 0 };
   // over the body figure (the stub, the tally) the readout sits higher, so the figure fits between it and the caption
-  const el = hud.counter(sp.id, { ...o, fmt, unit: sp.unit, label: sp.label, t0: sp.t0, t1: sp.t1, at: [sp.id === "light" ? 0.55 : 0.5, sp.id === "toe" ? FIG_Y : 0.31], minCh: 1 });   // light's plate right of the frog's nerve
+  const el = hud.counter(sp.id, { ...o, fmt, unit: sp.unit, label: sp.label, t0: sp.t0, t1: sp.t1, at: [sp.id === "light" ? 0.55 : 0.5, sp.id === "toe" ? FIG_Y : sp.id === "ans" ? 0.2 : 0.31], minCh: 1 });   // light's plate right of the frog's nerve
   el.classList.add("mi-spine");
   if (sp.id === "light") el.querySelector(".v").style.fontSize = "6.8vmin";   // nine digits inside the safe box, right of the nerve
 }
 const tallyEl = hud.counter("tally", { value: (t) => FILM.tally.rate * t, fmt: (v) => String(Math.floor(v)), unit: FILM.tally.unit, label: FILM.tally.label, t0: FILM.tally.t0, t1: FILM.tally.t1, at: [0.5, FIG_Y], minCh: 2 });
 const yPulse = pulseLine({ width: Math.round(560 * S1), height: Math.round(58 * S1), at: 0.5 });
 tallyEl.appendChild(yPulse.el);
+// round 2 (review r1 finding 4): on "Formula One car" two bars grow, 373 km/h against 540
+const F1 = FILM.f1, barEl = document.createElement("div"); barEl.className = "mi-f1";
+barEl.innerHTML = `<div class="r"><span class="n">F1 record</span><i class="b a"></i><span class="v">373</span></div><div class="r"><span class="n">wrapped</span><i class="b s"></i><span class="v">540</span></div>`;
+document.getElementById("hud").appendChild(barEl);
+const writeF1 = (t) => { const o = presence(t, F1.t0, F1.t1, { d: 0.3, out: 0.4 }).o; barEl.style.opacity = o.toFixed(3);
+  barEl.querySelector(".a").style.width = `${(373 / 540 * 100 * E.out3(seg(t, F1.t0 + 0.1, F1.t0 + 1.0))).toFixed(1)}%`; barEl.querySelector(".b.s").style.width = `${(100 * E.out3(seg(t, F1.t0 + 0.6, F1.t0 + 1.8))).toFixed(1)}%`; };
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const ePulse = pulseLine({ width: Math.round(810 * S1), height: Math.round(64 * S1), at: 0.25 });
 endEl.insertBefore(ePulse.el, endEl.firstChild);
-{ const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact); }
+{ const fact = document.createElement("div"); fact.className = "mi-fact"; fact.textContent = FILM.end.fact; endEl.appendChild(fact);
+  const ans = document.createElement("div"); ans.className = "mi-fact"; ans.style.cssText = "margin:0 0 2.4vmin;font-size:4.6vmin;font-weight:800;color:var(--signal)"; ans.textContent = "? m/s → up to 150 m/s"; endEl.insertBefore(ans, endEl.children[1] || null); }   // the loop answers the hook (review r1 finding 7)
 const IR = iris(document.querySelector(".stage"), { events: FILM.iris });
 const FIN = L.finish(document.querySelector(".stage"));   // live scan: grain and vignette
 const SCL = L.scanLine(document.querySelector(".stage"));
@@ -417,6 +426,7 @@ figEl.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns
     <rect class="fast" x="-4" y="-4" width="8" height="8" rx="2" fill="var(--signal)" opacity="0"/>
     <rect class="slow" x="-3.5" y="-3.5" width="7" height="7" rx="1.8" fill="var(--text)" opacity="0"/>
     <polyline class="heart" fill="none" stroke="var(--signal)" stroke-width="${(6 / FS * S1).toFixed(3)}" stroke-linejoin="round" points=""/>
+    <path class="hearto" d="M52 66 C46 60 44 54 48 52 C50 51 52 52 52.5 54 C53 52 55 51 57 52 C61 54 59 60 52.5 66 Z" fill="var(--signal)" opacity="0" filter="url(#bglow)"/>
     <rect class="pace" x="-1.8" y="-1.8" width="3.6" height="3.6" rx="0.9" transform="translate(52.5 58)" fill="var(--signal)" opacity="0"/>
   </g></svg>`;
 document.getElementById("hud").prepend(figEl);
@@ -450,6 +460,7 @@ const writeFig = (t) => {
   const pts = [[hx - w, hy], [hx - 4, hy], [hx - 2.5, hy - 1.5 * amp], [hx - 1, hy + 2 * amp], [hx, hy - 15 * amp], [hx + 1.2, hy + 3 * amp], [hx + 2.4, hy], [hx + 4.5, hy - 2 * amp], [hx + 6.5, hy], [hx + w * 0.6, hy]];
   figQ("heart").setAttribute("points", pts.map((p) => p.map((x) => x.toFixed(2)).join(",")).join(" "));
   figQ("heart").setAttribute("opacity", (t >= FILM.tally.t0 - 0.3 ? 1 : 0).toString());
+  figQ("hearto").setAttribute("opacity", (t >= FILM.tally.t0 - 0.3 ? 0.35 + 0.55 * amp : 0).toFixed(3)); figQ("hearto").setAttribute("transform", `translate(52.5 60) scale(${(1 + 0.18 * amp).toFixed(3)}) translate(-52.5 -60)`);
   // the pacemaker: a spark at the top of the heart just before each kick, brightest on "spark"
   let pc = 0; if (t >= FILM.tally.t0 - 0.3) for (const b of FILM.segBeats) pc = Math.max(pc, seg(t, b - 0.09, b - 0.04) * (1 - seg(t, b - 0.02, b + 0.22)));
   const big = 1 + 0.8 * seg(t, F.spark - 0.05, F.spark + 0.1) * (1 - seg(t, F.spark + 0.3, F.spark + 1.0));
@@ -484,7 +495,7 @@ window.seek = function (t) {
   L.place(camera, F.point);
   scene.fog.density = 0.25 / Math.max(10, fd);
   hud.update(t);
-  writeFig(t);
+  writeFig(t); writeF1(t);
   tPulse.update(beatAmp(t, [FILM.title.sig, FILM.title.sig + 0.4], { rest: 0.5 }));
   yPulse.update(beatAmp(t, FILM.segBeats));
   ePulse.update(beatAmp(t, [FILM.endCard, FILM.endCard + 0.4], { flat: FILM.endCard + 1.2, rest: 0.6 }));

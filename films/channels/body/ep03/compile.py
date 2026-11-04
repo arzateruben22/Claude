@@ -1,5 +1,5 @@
 """Compile Body Backstage No. 03, "The jump": script + voice timings + this direction → film.json and sheet.json.
-Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word (A("vo03:timed")).
+Nothing here is a hand-typed time: every moment hangs on a beat or a spoken word (A("vo03:timed#2")).
 
   python3 -I films/channels/body/ep03/compile.py
 
@@ -62,7 +62,7 @@ TEASE = {"t0": B["tease"]["t0"] + 0.3, "hop": 0.5, "arrive": A("vo08:jump")}    
 TOE = {"stub": A("vo06:jolt", -0.12), "fast": A("vo06:jolt", -0.02), "slow": A("vo06:ache", 0.0)}   # real time: ~0.1 s and ~2.1 s
 # two recordings on the same strip of the drum (it turns once between them), so the far stimulus's later rise sits over
 # the near one's; the drum stops once the second is written, so both face the lens
-DRUM = {"spin0": B["change"]["t0"], "traces": [A("vo03:timed", -0.1), A("vo03:metres", 0.15)], "stim": [A("vo03:timed", -0.1), A("vo03:metres", 0.15)]}
+DRUM = {"spin0": B["change"]["t0"], "traces": [A("vo03:timed#2", -0.1), A("vo03:metres", 0.15)], "stim": [A("vo03:timed#2", -0.1), A("vo03:metres", 0.15)]}
 
 CAM = {
     "hook": [
@@ -77,7 +77,7 @@ CAM = {
     "drum": [
         {"t": CUT["drum"], "pos": [-42.0, 18.0, 236.0], "look": [-2.0, 2.0, 0.0], "fov": 34},                      # the rig: nerve, muscle, lever, drum (the lever above the caption)
         {"t": A("vo03:Helmholtz"), "pos": [-34.0, 16.0, 226.0], "look": [-2.0, 2.0, 0.0], "fov": 34, "ease": "sine"},
-        {"t": A("vo03:timed", 0.1), "pos": [-30.0, 6.0, 128.0], "look": [-16.0, -4.0, 0.0], "fov": 34, "ease": "p2"},  # medium: electrodes, lever and traces in one frame
+        {"t": A("vo03:timed#2", 0.1), "pos": [-30.0, 6.0, 128.0], "look": [-16.0, -4.0, 0.0], "fov": 34, "ease": "p2"},  # medium: electrodes, lever and traces in one frame
         {"t": CUT["fibres"], "pos": [-30.0, 5.0, 122.0], "look": [-17.0, -5.0, 0.0], "fov": 34, "ease": "sine"},
     ],
     "fibres": [
@@ -101,7 +101,7 @@ CAM["loop"] = [dict(CAM["hook"][0], t=CUT["loop"])]
 
 FOC = {
     "hook": [{"t": 0.0, "at": "spark", "f": 0.5}, {"t": A("vo02:racing"), "at": "spark", "f": 0.3}, {"t": A("vo02:cell's", -0.4), "at": "soma", "f": 0.35}, {"t": A("vo02:spine", -0.3), "at": "mid", "f": 0.2}],
-    "drum": [{"t": CUT["drum"], "at": "rig", "f": 0.3}, {"t": A("vo03:timed"), "at": "traces", "f": 0.45}],
+    "drum": [{"t": CUT["drum"], "at": "rig", "f": 0.3}, {"t": A("vo03:timed#2"), "at": "traces", "f": 0.45}],
     "fibres": [{"t": CUT["fibres"], "at": "bare", "f": 0.45}, {"t": A("vo04:Many", 0.2), "at": "spark", "f": 0.45}, {"t": A("vo04:Where", 0.2), "at": "ms", "f": 0.45},
                {"t": B["whoa"]["t0"], "at": "race", "f": 0.3}, {"t": B["takeaway"]["t0"], "at": "near", "f": 0.9},
                {"t": B["tease"]["t0"], "at": "mid", "f": 0.3}, {"t": A("vo08:end#1", -0.4), "at": "terminal", "f": 0.5}],
@@ -195,7 +195,7 @@ film = {
     "id": "body-backstage-003", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "iris": IRIS, "hop": HOP, "hookSig": HOOK, "hookRun": HOOK_RUN, "whyJump": WHY_JUMP, "ms": MS, "bare": BARE, "race": RACE,
-    "tease": TEASE, "toe": TOE, "drum": DRUM, "fig": FIG,
+    "tease": TEASE, "toe": TOE, "drum": DRUM, "fig": FIG, "f1": {"t0": A("vo05:Faster"), "t1": B["takeaway"]["t0"] - 0.2, "f1": 373, "fibre": 540},
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,
     "segBeats": SEG_BEATS, "title": TITLE, "scan": SCAN, "endCard": EC, "end": END,
     "look": THEME["scene"],
