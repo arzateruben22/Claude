@@ -141,7 +141,7 @@ BADGES = [
     {"id": "ill-em", "text": "illustration · not to scale", "t0": EM[0], "t1": A("vo05:Use", -0.3)},   # through the whoa's slowed replay of the same picture
     {"id": "nts2", "text": "not to scale", "t0": A("vo05:Use", 0.0), "t1": CUT["sac"]},
     {"id": "few", "text": "simplified: only a few drawn", "t0": A("vo02:Your", 0.0), "t1": A("vo02:hundred", -0.45)},   # gone before the 100+ trillion readout
-    {"id": "ill", "text": "illustration: one stained tissue, two readings", "t0": PANELS["t0"], "t1": PANELS["t1"] - 0.35},
+    {"id": "ill", "text": "illustration · two readings", "t0": PANELS["t0"], "t1": PANELS["t1"] - 0.35},
     {"id": "slow-why", "text": "slowed", "slot": "br", "t0": REL["sig"][0], "t1": EM[1]},
     {"id": "slow", "text": "slowed", "slot": "br", "t0": REPLAY[0], "t1": A("vo05:Use", -0.3)},
     {"id": "fast", "text": "sped up", "slot": "br", "t0": A("vo05:Use", 0.0), "t1": B["whoa"]["t1"]},

@@ -133,7 +133,7 @@ const writeLung = (t) => {
   HERO.forEach((C, k) => C.group.scale.setScalar(k ? br : 1));
   // the route lights generation by generation as the forks are counted, then settles
   // the route steps back to a third as "At the tips" begins, then fades with the sacs readout
-  const SPN = (id) => FILM.spine.find((x) => x.id === id), fk = SPN("forks").keys, rF = SPN("forks").t1, rS = SPN("sacs").t1, off = (1 - 0.67 * seg(t, rF, rF + 0.6)) * (1 - seg(t, rS, rS + 1.0));
+  const SPN = (id) => FILM.spine.find((x) => x.id === id), fk = SPN("forks").keys, rF = SPN("forks").t1, rS = SPN("size").t1, off = (1 - 0.67 * seg(t, rF, rF + 0.6)) * (1 - seg(t, rS, rS + 1.0));
   for (const { m, gen } of routeMats) m.emissiveIntensity = 0.5 * seg(t, fk[0][0] + (fk[1][0] - fk[0][0]) * gen / 7 - 0.1, fk[0][0] + (fk[1][0] - fk[0][0]) * gen / 7 + 0.2) * off;
 };
 
