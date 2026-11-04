@@ -62,20 +62,12 @@
   {
    "t": 0.3,
    "kind": "label",
-   "tag": "l-one",
-   "pos": [
-    0.233,
-    0.306
-   ]
+   "tag": "l-one"
   },
   {
    "t": 0.3,
    "kind": "label",
-   "tag": "l-other",
-   "pos": [
-    0.729,
-    0.311
-   ]
+   "tag": "l-other"
   },
   {
    "t": 1.7,
@@ -96,20 +88,12 @@
   {
    "t": 6.966666666666667,
    "kind": "counter.show",
-   "tag": "c-start",
-   "pos": [
-    0.5,
-    0.225
-   ]
+   "tag": "c-start"
   },
   {
    "t": 11.966666666666667,
    "kind": "label",
-   "tag": "l-daily",
-   "pos": [
-    0.148,
-    0.345
-   ]
+   "tag": "l-daily"
   },
   {
    "t": 16.8,
@@ -125,20 +109,12 @@
   {
    "t": 21.0,
    "kind": "label",
-   "tag": "l-daily2",
-   "pos": [
-    0.148,
-    0.307
-   ]
+   "tag": "l-daily2"
   },
   {
    "t": 21.0,
    "kind": "label",
-   "tag": "l-pleased",
-   "pos": [
-    0.675,
-    0.328
-   ]
+   "tag": "l-pleased"
   },
   {
    "t": 23.366666666666664,
@@ -148,11 +124,7 @@
   {
    "t": 24.166666666666664,
    "kind": "counter.show",
-   "tag": "c-age",
-   "pos": [
-    0.458,
-    0.313
-   ]
+   "tag": "c-age"
   },
   {
    "t": 28.0,
@@ -168,20 +140,12 @@
   {
    "t": 33.1,
    "kind": "label",
-   "tag": "l-sun",
-   "pos": [
-    0.247,
-    0.52
-   ]
+   "tag": "l-sun"
   },
   {
    "t": 33.1,
    "kind": "label",
-   "tag": "l-bare",
-   "pos": [
-    0.713,
-    0.52
-   ]
+   "tag": "l-bare"
   },
   {
    "t": 40.6,
@@ -203,11 +167,7 @@
   {
    "t": 41.300000000000004,
    "kind": "counter.show",
-   "tag": "c-follow",
-   "pos": [
-    0.458,
-    0.253
-   ]
+   "tag": "c-follow"
   },
   {
    "t": 47.7,
@@ -299,14 +259,5 @@
    "t": 67.5,
    "file": "vo/08.wav"
   }
- ],
- "shown": {
-  "l-one": 0.3333,
-  "l-other": 0.3333,
-  "l-daily": 12,
-  "l-daily2": 21.0333,
-  "l-pleased": 21.0333,
-  "l-sun": 33.1333,
-  "l-bare": 33.1333
- }
+ ]
 }
