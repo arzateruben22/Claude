@@ -94,3 +94,11 @@ list; `lint.py` must pass) with these extra rules from the owner's note:
 `films/channels/body/bible.md` (current identity, to replace or evolve), `films/channels/body/PRODUCTION.md`,
 `films/channels/skincare/looktest2/README.md` on `claude/outer-layer-s1` (how the approved Skin Sense look was built),
 `kits/cinema/film/README.md`.
+
+## Owner decision (3 Nov, ~7:35 PM PST)
+The "live scan" look test (commit a678d46: abyss teal-black, photoreal wet tissue lit like a film set, the chartreuse
+scan instrument, scan-view material switch, Atkinson Hyperlegible Next + Mono) is **approved with three fixes**:
+1. red blood cells as real biconcave discs (dented, folding as they squeeze through), never spheres;
+2. the synapse: lumpy vesicles of mixed size, a receptor field, a grazing camera across the gap, (h) 4+;
+3. a clear zone behind the series line and title in every episode (nothing crosses them).
+Finals use the idle Sonnet render workers, split by time range.

@@ -20,6 +20,9 @@ function parse(stored: string): { salt: string; want: Buffer; opts: ScryptOption
   return { salt, want: Buffer.from(hash, "hex"), opts };
 }
 
+/** Whether the owner's passphrase hash is set (until it is, sign-in is off and /setup offers to make one). */
+export const ownerConfigured = (env: Record<string, string | undefined> = process.env) => parse(env.OWNER_PASSWORD_HASH || "") !== null;
+
 export function checkPassword(passphrase: string, stored = process.env.OWNER_PASSWORD_HASH || ""): boolean {
   const s = parse(stored);
   if (!s) return false;

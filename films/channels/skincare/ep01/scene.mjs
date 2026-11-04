@@ -16,6 +16,9 @@ import { createStudio, skinMaterial, strandMaterial, createShaft, createGrain } 
 import { DERMIS } from "../set/ref/textures.js";
 import { createAcneFollicle } from "../set/acne01.js";
 import { toneColor } from "../set/section.js";
+import { richen, hazeVolume, bokeh } from "../set/prod.js";
+import { lookV3 } from "../set/look3.js";
+import { unifyHud } from "../set/hudv2.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, K = FILM.keys, G = FILM.gauge, PL = FILM.place, FPS = FILM.fps || 30;
 const S1 = Math.min(W, H) / 1080;
@@ -40,7 +43,7 @@ window.CINEMA_FOCUS = () => ({ point: focusPt, fstop });
 // ── the set ─────────────────────────────────────────────────────────────────
 const uv = createUVSkin({ seed: 3.0 }); uv.mesh.rotation.x = -0.18; scene.add(uv.mesh);
 const SPOT = [0.6, 0.45, 0.055];
-const terrain = createTerrain({ seed: 9, spots: 0, segs: 400 }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
+const terrain = createTerrain({ seed: 9, spots: 0, segs: 400, organic: true }); terrain.group.position.x = PL.tx; scene.add(terrain.group);
 { const m = skinMaterial({ tone: [1, 1, 1], vertexColors: true, oil: 0.08, hydration: 0.3, repeat: 14, seed: 6, micro: 0.35 }); m.roughness = 0.58; terrain.mesh.material = m;
   terrain.group.traverse((o) => { if (o.isInstancedMesh) { o.material = strandMaterial({ tint: [0.3, 0.18, 0.12], gloss: 0.5 }); o.material.transmission = 0; } }); }
 const F = createAcneFollicle({ x: PL.fx, seed: 21, width: 4000, depth: 2300 }), Gf = createAcneFollicle({ x: PL.gx, seed: 22, block: false });   // one wide strip of skin holds both follicles
@@ -58,7 +61,9 @@ const shaftS = createShaft({ from: [SX - 10, 18, -8], to: [SX + 4, -6, 2], radiu
 const sheenTex = (() => { const cv = document.createElement("canvas"); cv.width = 256; cv.height = 4; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 256, 0);
   g.addColorStop(0, "rgba(255,255,255,0)"); g.addColorStop(0.42, "rgba(190,250,245,0.25)"); g.addColorStop(0.5, "rgba(230,255,252,1)"); g.addColorStop(0.58, "rgba(190,250,245,0.25)"); g.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = g; x.fillRect(0, 0, 256, 4);
   const tx = new THREE.CanvasTexture(cv); tx.wrapS = THREE.ClampToEdgeWrapping; return tx; })();
-const sheenMat = new THREE.MeshBasicMaterial({ map: sheenTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xbff7f2 });
+const sheenAlpha = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 128; const x = cv.getContext("2d"), g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+  g.addColorStop(0, "#fff"); g.addColorStop(0.55, "#888"); g.addColorStop(1, "#000"); x.fillStyle = g; x.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(cv); })();   // the sheen fades out toward the cheek's edges: light on the skin, not a card
+const sheenMat = new THREE.MeshBasicMaterial({ alphaMap: sheenAlpha, map: sheenTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, color: 0xbff7f2 });
 const sheen = new THREE.Mesh(uv.mesh.geometry, sheenMat); sheen.position.z = 0.012; sheen.renderOrder = 2; uv.mesh.add(sheen);
 const rig = createRig(FILM.cam);
 const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.updateMatrixWorld(); return uv.mesh.localToWorld(p).toArray(); };
@@ -66,6 +71,20 @@ const uvAt = (u, v) => { const p = new THREE.Vector3(...uv.at(u, v)); uv.mesh.up
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hudRoot = document.getElementById("hud");
 const VF = { x: 0.1, y: 0.285, w: 0.8, h: 0.3 };
+// the channel look (v2): skin, hairs, fog, graded backdrop, one grade; follicles and stream cells given surfaces and variety
+const look = lookV3({ canvas, hudRoot, fog: FOG, terrain, skin: terrain.mesh.material });   // the channel look v3: skin, hairs, fog, grade, grain
+unifyHud(hudRoot);   // one HUD system: one plate, one radius, a bar not a dot; mono sources, sans labels
+// the graded backdrop drawn by WebGL too (an opaque canvas): additive light (the stream's shaft, haze) would otherwise
+// write alpha and read darker than the CSS gradient behind it
+scene.background = (() => { const cv = document.createElement("canvas"); cv.width = 4; cv.height = 256; const x = cv.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256);
+  g.addColorStop(0, "#3b2479"); g.addColorStop(1, "#06030c"); x.fillStyle = g; x.fillRect(0, 0, 4, 256); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; return tx; })();
+F.sculpt(); Gf.sculpt();   // a lumpy canal wall, lobed glands, irregular cells, a stratified surface layer
+richen(F.group, { seed: 21, jitter: 0.1, hue: 0.06, micro: 0.6 }); richen(Gf.group, { seed: 22, jitter: 0.1, hue: 0.06, micro: 0.6 }); richen(stream, { seed: 5, jitter: 0, hue: 0, micro: 0.7 });
+// a key from above, as a shaft of light down into the follicle (volumetric)
+const shaftF = createShaft({ from: [PL.fx - 20, 40, 70], to: [PL.fx, -470, 10], radius: 70, color: "#fff2e6" }); scene.add(shaftF.group);   // from the skin's surface down the canal
+const hzF = hazeVolume(scene, { at: [PL.fx, 320, -200], size: [4200, 760, 500], color: "#e8d4ff", n: 5, op: 0.07 });   // the air over the cut block: haze, not an empty band
+const hzS = hazeVolume(scene, { at: [SX, 0, -10], size: [70, 40, 20], color: "#b9a6ff", n: 5, op: 0.06 });
+const bkS = bokeh(scene, { n: 120, box: [[SX - 60, SX + 60], [-30, 30], [-60, -25]], size: 3.5, color: "#d9ccff", op: 0.35 });
 const vf = createViewfinder({ root: hudRoot, W, H, ...VF });
 vf.el.style.setProperty("--ol-rec-size", "3.3vmin"); vf.el.style.setProperty("--ol-rec-weight", "600");
 Object.assign(vf.el.querySelector(".rec").style, { background: "var(--hud-plate)", padding: ".5vmin 1.4vmin", borderRadius: "1.2vmin" });   // readable over daylight skin too
@@ -115,11 +134,12 @@ function createCellGauge() {
   hudRoot.appendChild(svg);
   const cx = 0.1 * W, cw = 0.8 * W, cy = 0.17 * H, ch = 0.41 * H, GH = 0.27 * H, base = cy + ch - 0.06 * H, um = GH / G.paper_um;
   const g = mk("g", {}, svg);
-  mk("rect", { x: cx, y: cy, width: cw, height: ch, rx: 24 * S1, fill: "var(--card)", opacity: 0.97 }, g);
+  mk("rect", { x: cx, y: cy, width: cw, height: ch, rx: 24 * S1, fill: "var(--card)", opacity: 0.66, stroke: "rgba(255,255,255,0.22)", "stroke-width": 2 * S1 }, g);   // glass over the defocused section
   const head = mk("text", { x: cx + 40 * S1, y: cy + 62 * S1, opacity: 0, "font-size": 34 * S1, fill: "var(--text-2)", "font-family": "var(--font-mono)", "letter-spacing": "0.12em" }, g); head.textContent = "TO SCALE";
   const colX = cx + 0.5 * cw, papX = cx + 0.68 * cw, r = (G.cell_um / 2) * um;
   mk("line", { x1: cx + 40 * S1, x2: cx + cw - 40 * S1, y1: base, y2: base, stroke: "var(--text-2)", "stroke-width": 2 * S1 }, g);
-  const cells = Array.from({ length: G.n }, (_, i) => mk("circle", { cx: colX, cy: base - r - 2 * r * i, r: r * 0.96, fill: "var(--water)", stroke: "var(--slide-low)", "stroke-width": 2 * S1 }, g));
+  const lit = mk("radialGradient", { id: "g-cell", cx: "38%", cy: "34%", r: "70%" }, mk("defs", {}, g)); mk("stop", { offset: "0%", "stop-color": "#f2fffd" }, lit); mk("stop", { offset: "55%", "stop-color": "#8fe6dd" }, lit); mk("stop", { offset: "100%", "stop-color": "#3f8f8a" }, lit);   // the gauge's cells lit like the stream's
+  const cells = Array.from({ length: G.n }, (_, i) => mk("circle", { cx: colX, cy: base - r - 2 * r * i, r: r * 0.96, fill: "url(#g-cell)", stroke: "var(--slide-low)", "stroke-width": 2 * S1 }, g));
   const PW = 0.14 * cw;
   mk("rect", { x: papX, y: base - GH, width: PW, height: GH, rx: 4 * S1, fill: "none", stroke: "var(--text-2)", "stroke-width": 2.5 * S1, "stroke-dasharray": `${10 * S1} ${8 * S1}` }, g);   // the paper's outline waits from the start
   const paper = mk("rect", { x: papX, width: PW, rx: 4 * S1, fill: "var(--text)", opacity: 0.92 }, g);
@@ -151,21 +171,28 @@ const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute("position", new
 const dustMat = new THREE.PointsMaterial({ map: dotTex, color: 0xf0e8ff, transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true });
 const dust = new THREE.Points(dustGeo, dustMat); dust.frustumCulled = false; scene.add(dust);
 const placeDust = (t, c, size, pt) => { dust.visible = true; dustMat.size = pt; dustBase.forEach(([x, y, z, ph], i) => { dustPos[3 * i] = c[0] + x * size[0] + 0.03 * size[0] * Math.sin(t * 0.3 + ph); dustPos[3 * i + 1] = c[1] + y * size[1] + 0.02 * size[1] * t % size[1]; dustPos[3 * i + 2] = c[2] + z * size[2]; }); dustGeo.attributes.position.needsUpdate = true; };
-const grain = createGrain(hudRoot, { amount: 0.007 });
-window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const tx = new THREE.Texture(img); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; F.look({ dermisMap: tx }); Gf.look({}); res(); }; img.src = DERMIS; });
+const grain = look.grain;   // look v3: fine grain in the midtones
+window.SCENE_READY = new Promise((res) => { const img = new Image(); img.onload = () => { const bcv = document.createElement("canvas"); bcv.width = img.width; bcv.height = img.height; const bx = bcv.getContext("2d"); bx.filter = "blur(5px) brightness(0.9)"; bx.drawImage(img, 0, 0);   // the photo behind the model, pre-blurred: the model reads in front of it
+  const tx = new THREE.CanvasTexture(bcv); tx.colorSpace = THREE.SRGBColorSpace; tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(1, 1); tx.needsUpdate = true; F.look({ dermisMap: tx }); Gf.look({}); res(); }; img.src = DERMIS; });
 
 window.seek = function (t) {
   const tr = Math.round(t * FPS) / FPS;
   if (stage(t).name !== stage(tr).name) t = tr;
   const shot = stage(t).name, tone = FILM.tone;
-  rig.place(camera, shot, t);
+  const P = rig.place(camera, shot, t);
   const isUV = shot === "uv" || shot === "uv2", isF = ["follicle", "pair", "rupture", "gauge"].includes(shot);
   const isFl = shot === "flight" || shot === "rise";
-  uv.mesh.visible = isUV; terrain.group.visible = isFl; F.group.visible = isF; Gf.group.visible = shot === "pair"; stream.visible = shot === "stream"; shaftS.set({ op: shot === "stream" ? 1 : 0 });
-  scene.fog = isFl ? FOG : shot === "stream" ? FOGS : null;
+  uv.mesh.visible = isUV; terrain.group.visible = isFl; F.group.visible = isF && shot !== "gauge"; Gf.group.visible = shot === "pair"; stream.visible = shot === "stream" || shot === "gauge"; shaftS.set({ op: shot === "stream" ? 1 : shot === "gauge" ? 0.7 : 0 });
+  scene.fog = isFl ? FOG : shot === "stream" || shot === "gauge" ? FOGS : null;
   lights.sun.intensity = isFl ? 2.6 : 1.2; lights.key.intensity = isFl ? 0.3 : 0.8;
   studio.set({ key: isFl ? 0.45 : 1.4, rim: isFl ? 1.6 : 2.6, fill: 0.35, env: isUV ? 0 : 0.5, warm: isFl ? 0.5 : 0.2 });
   fstop = shot === "flight" ? 0.5 : shot === "rise" ? 0.18 : 0; focusPt = shot === "flight" ? [PL.tx + 1.5, 0, 1] : shot === "rise" ? [PL.tx + 0.8, 0, 1.5] : [0, 0, 0];
+  if (isF) { fstop = 0.1; focusPt = P.target; }
+  if (shot === "gauge") { fstop = 0.3; focusPt = [SX + 6, 0, 12]; }   // focus pulled toward the glass: the cells behind it are soft bokeh
+  hzF.group.visible = ["follicle", "pair", "rupture"].includes(shot); hzF.set({ t });   // a lens on the follicles too; the gauge card is glass over the section, far out of focus
+  shaftF.set({ op: ["follicle", "pair", "rupture"].includes(shot) ? 0.9 : 0 });
+  if (isUV) { fstop = 0.12; focusPt = P.target; }
+  hzS.group.visible = bkS.points.visible = shot === "stream" || shot === "gauge"; hzS.set({ t }); bkS.set({ t });
 
   // ── the UV cheek: the spot ringed in cyan; the follicle bacteria glow orange-red; the photos flip back in time ──
   if (isUV) {
@@ -176,7 +203,7 @@ window.seek = function (t) {
     const W1 = K.wipe1, W2 = K.wipe2;
     const day = shot === "uv" ? (t >= K.dayOn && t < W1[1] ? 1 : 0) : (t < W2[1] ? 1 : 0);
     const wp = shot === "uv" ? (t >= W1[0] && t < W1[1] ? E.inout2(seg(t, W1[0], W1[1])) : -1) : (t >= W2[0] && t < W2[1] ? E.inout2(seg(t, W2[0], W2[1])) : -1);
-    uv.set({ focus: [...SPOT, spot], spot, porph: shot === "uv" ? Math.max(porph, t >= W1[0] ? 1 - fadeIn(t, SH.flight - 0.8, 0.6) : 0) : 0.55, rings: 2.0 * rings, ringR: 0.2, glow: 1, opacity: 1, bump: 0.22 * spot, spotRed: 1,
+    uv.set({ focus: [...SPOT, spot], spot, porph: shot === "uv" ? Math.max(porph, t >= W1[0] ? 1 - fadeIn(t, SH.flight - 0.8, 0.6) : 0) : 0.55, rings: 2.0 * rings, ringR: 0.2, glow: 1, opacity: 1, form: 1, bump: 0.22 * spot, spotRed: 1,
       day, wipe: wp, skin: toneColor("living", tone).map((v) => Math.min(1, v * 1.15)) });
     vf.el.querySelector(".rec").textContent = day > 0.5 && wp < 0 ? "● REC  DAYLIGHT" : "● REC  UV 365 nm";
   }
@@ -224,7 +251,8 @@ window.seek = function (t) {
   F.group.visible = F.group.visible && !(shot === "gauge" && lift > 0.98);   // the follicle stays behind the card only while it rises and goes
 
   // ── the marrow stream: cells drift past in a slow river, the near ones soft in the haze ──
-  if (shot === "stream") {
+  stream.position.z = shot === "gauge" ? -14 : 0; sCell.opacity = shot === "gauge" ? 0.3 : 0.6;   // behind the glass only, dimmed (the measured cells are the card's)
+  if (shot === "stream" || shot === "gauge") {   // the gauge's glass sits over the same stream
     const u = seg(t, K.stream[0], K.stream[1]);
     sCells.forEach((g, i) => { const d = g.userData, x = ((d.u + 0.06 * (t - K.stream[0])) % 1) * 60 - 30; g.position.set(x, d.y + 0.6 * Math.sin(x * 0.12 + i), d.z); g.scale.setScalar(d.s); g.rotation.set(t * 0.2 + i, t * 0.15, 0); });
     focusPt = [SX + 2, 0, 0]; fstop = 0.35;

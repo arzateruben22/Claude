@@ -62,7 +62,7 @@ FLIPS = [round(CUE["photo"] + k * (CUE["clear2"] - CUE["photo"]) / 6, 3) for k i
 UVK = {"target": [0, -0.2, 0], "el": -1, "fov": 30, "fx": 0.5, "fy": 0.5}
 SPOTK = {**UVK, "target": [0.72, -0.45, 0]}   # the spot (u .60, v .45) on the cheek
 CAM = {
-    "uv": [{"t": 0.0, **UVK, "dist": 30, "az": -7}, {"t": CUE["new"] + 0.3, **UVK, "dist": 19, "az": -3, "ease": "out3"},   # frame 0 mid-push
+    "uv": [{"t": 0.0, **UVK, "dist": 23, "az": -7}, {"t": CUE["new"] + 0.3, **UVK, "dist": 19, "az": -3, "ease": "out3"},   # frame 0 mid-push
            {"t": B["normal"]["t0"], **UVK, "dist": 18, "az": -1, "ease": "sine"},
            {"t": CUE["clear2"], **UVK, "dist": 17, "az": 0, "ease": "inout2"},
            {"t": t_flight, **SPOTK, "dist": 6, "az": 0, "ease": "in2"}],   # a push into the spot's pore: a dip, and the flight takes over
@@ -83,8 +83,8 @@ CAM = {
                 {"t": CUE["give"], "target": [FX, -380, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.3, "dist": 2000, "az": 0, "ease": "inout2"},
                 {"t": t_stream, "target": [FX, -360, 0], "el": 10, "fov": 30, "fx": 0.5, "fy": 0.32, "dist": 1900, "az": -1, "ease": "inout2"}],
     "stream": [{"t": t_stream, "target": [SX, 0, 0], "el": 4, "fov": 32, "fx": 0.5, "fy": 0.5, "dist": 26, "az": -14}, {"t": B["toscale"]["t0"], "target": [SX + 6, 0, 0], "el": 6, "fov": 32, "fx": 0.5, "fy": 0.5, "dist": 21, "az": -6, "ease": "sine"}],   # alongside the river
-    "gauge": [{"t": B["toscale"]["t0"], "target": [FX, -380, 0], "el": 6, "fov": 30, "fx": 0.66, "fy": 0.46, "dist": 2600, "az": -2},
-              {"t": B["takeaway"]["t0"], "target": [FX + 100, -520, 0], "el": 6, "fov": 30, "fx": 0.7, "fy": 0.46, "dist": 1500, "az": -3, "ease": "inout2"}],
+    "gauge": [{"t": B["toscale"]["t0"], "target": [SX + 6, 0, 0], "el": 6, "fov": 32, "fx": 0.5, "fy": 0.5, "dist": 24, "az": -2},   # the card as glass over the stream: the same cells drift behind it
+              {"t": B["takeaway"]["t0"], "target": [SX + 9, 0, 0], "el": 7, "fov": 32, "fx": 0.5, "fy": 0.5, "dist": 21, "az": 2, "ease": "inout2"}],
     "rise": [{"t": B["takeaway"]["t0"], "target": [TX + 1.5, -0.3, 0.4], "el": 60, "fov": 34, "fx": 0.5, "fy": 0.5, "dist": 6, "az": -1},   # up out of the pore...
              {"t": t_uv2, "target": [TX + 0.5, 0, 2], "el": 30, "fov": 34, "fx": 0.5, "fy": 0.48, "dist": 24, "az": -6, "ease": "out3"}],   # ...over the clear skin
     "uv2": [{"t": t_uv2, **SPOTK, "dist": 9, "az": 1}, {"t": CUE["no"] + 0.4, **UVK, "dist": 18, "az": 0, "ease": "out3"}, {"t": CAM_END, **UVK, "dist": 20, "az": -2, "ease": "sine"}],   # out of the spot, back to the cheek
@@ -104,7 +104,7 @@ LABELS = [
     {"id": "l-wo", "text": "clear, oily skin", "kind": "cell", "anchor": "fWo", "t0": CUE["oily"] - 0.3, "t1": CUE["spots4"] - 0.35, "shot": "pair", "side": 1, "v": "above", "fixed": True},
     {"id": "l-white", "text": "more white cells", "kind": "cell", "anchor": "cell", "t0": CUE["flood"], "t1": CUE["give"], "shot": "rupture", "side": 1, "v": "below", "fixed": True},
     {"id": "l-spill", "text": "the spill", "kind": "cell", "anchor": "spill", "t0": CUE["deeper"] - 0.5, "t1": t_stream, "shot": "rupture", "side": -1, "fixed": True},
-    {"id": "l-barrier", "text": "it helps build the barrier", "kind": "uv", "anchor": "spot", "t0": CUE["barrier"] - 0.4, "t1": t_end, "shot": "uv2", "side": 1, "v": "above", "fixed": True},
+    {"id": "l-barrier", "text": "it helps build the barrier", "kind": "uv", "anchor": "spot", "t0": CUE["barrier"] - 0.4, "t1": t_end - 0.45, "shot": "uv2", "side": 1, "v": "above", "fixed": True},
     {"id": "l-rings", "text": "follicles already ringed", "kind": "water", "anchor": "rings", "t0": CUE["no"] + 0.8, "t1": CUE["barrier"] - 0.6, "shot": "uv2", "side": -1, "v": "below", "fixed": True},
 ]
 BADGES = [
@@ -118,13 +118,12 @@ BADGES = [
     {"id": "b-modp", "text": "model on a tissue photo", "t0": B["why"]["t0"], "t1": CUE["answers"] - 0.4, "slot": "tl"},
     {"id": "b-deb", "text": "debated", "t0": CUE["answers"] - 0.2, "t1": B["whoa"]["t0"], "slot": "tl"},
     {"id": "b-model2", "text": "model on a tissue photo", "t0": B["whoa"]["t0"], "t1": t_stream, "slot": "tl"},
-    {"id": "b-model2s", "text": "model, not a photo", "t0": t_stream, "t1": B["toscale"]["t0"] - 0.45, "slot": "tl"},
-    {"id": "b-model2b", "text": "model on a tissue photo", "t0": B["toscale"]["t0"] - 0.4, "t1": B["toscale"]["t0"] + 0.7, "slot": "tl"},
+    {"id": "b-model2s", "text": "model, not a photo", "t0": t_stream, "t1": B["toscale"]["t0"] + 0.3, "slot": "tl"},   # over the stream (no photo here), until the card
     {"id": "b-photo", "text": "tissue photo (normal skin)", "t0": t_fol, "t1": B["why"]["t0"], "slot": "bl"},
-    {"id": "b-alm", "text": "lab + mouse study · Almoughrabie 2023", "t0": CUE["barrier"] - 2.8, "t1": t_end, "slot": "tl"},
+    {"id": "b-alm", "text": "lab + mouse study · Almoughrabie 2023", "t0": CUE["barrier"] - 2.8, "t1": t_end - 0.45, "slot": "tl"},
     {"id": "b-sum", "text": "neutrophils · Summers et al., 2010", "t0": t_stream + 0.3, "t1": B["toscale"]["t0"], "slot": "bl"},
     {"id": "b-scale", "text": "to scale · Ting-Beall, 1993", "t0": B["toscale"]["t0"] + 0.3, "t1": B["takeaway"]["t0"], "slot": "tr"},
-    {"id": "b-model3", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": t_end, "slot": "br"},
+    {"id": "b-model3", "text": "model, not a photo", "t0": B["takeaway"]["t0"], "t1": t_end - 0.45, "slot": "br"},
 ]
 SPINE = [0.5, 0.215]
 COUNTERS = [

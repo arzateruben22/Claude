@@ -2,7 +2,7 @@
  "id": "skin-sense-002",
  "fps": 30,
  "bpm": 64.2857,
- "dur": 76.5334,
+ "dur": 75.0,
  "poster": 35.46666666666667,
  "shots": [
   {
@@ -91,7 +91,7 @@
   {
    "id": "tease",
    "t0": 68.6,
-   "t1": 76.5334,
+   "t1": 75.0,
    "line": "vo08",
    "energy": 0.35
   }
@@ -131,7 +131,7 @@
    42.86666666666667
   ],
   "pulse": [
-   43.166666666666664,
+   42.766666666666666,
    51.9667
   ],
   "cam": [
@@ -434,30 +434,30 @@
    {
     "t": 39.733333333333334,
     "target": [
+     1003.0,
      0,
-     -1.35,
-     0
+     5
     ],
-    "el": -1,
-    "fov": 30,
+    "el": 42,
+    "fov": 34,
     "fx": 0.5,
-    "fy": 0.5,
-    "dist": 28,
-    "az": -2
+    "fy": 0.48,
+    "dist": 17,
+    "az": 12
    },
    {
     "t": 52.2667,
     "target": [
+     1003.0,
      0,
-     -1.35,
-     0
+     5
     ],
-    "el": -1,
-    "fov": 30,
+    "el": 38,
+    "fov": 34,
     "fx": 0.5,
-    "fy": 0.5,
-    "dist": 25,
-    "az": 0,
+    "fy": 0.48,
+    "dist": 13,
+    "az": 6,
     "ease": "sine"
    }
   ],
@@ -477,19 +477,79 @@
     "az": 2
    },
    {
-    "t": 60.6667,
+    "t": 53.93333333333333,
     "target": [
      5000.0,
-     -90,
+     -110,
      0
     ],
     "el": 6,
     "fov": 30,
     "fx": 0.5,
-    "fy": 0.42,
-    "dist": 380,
-    "az": 3,
+    "fy": 0.43,
+    "dist": 470,
+    "az": 2,
     "ease": "sine"
+   },
+   {
+    "t": 55.56666666666667,
+    "target": [
+     5000.0,
+     -736,
+     0
+    ],
+    "el": 4,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.45,
+    "dist": 4900,
+    "az": 2.5,
+    "ease": "inout3"
+   },
+   {
+    "t": 57.6,
+    "target": [
+     5000.0,
+     -760,
+     0
+    ],
+    "el": 4,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.45,
+    "dist": 5200,
+    "az": 3,
+    "ease": "lin"
+   },
+   {
+    "t": 59.4,
+    "target": [
+     5000.0,
+     -2600,
+     0
+    ],
+    "el": 3,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 15000,
+    "az": 3,
+    "ease": "inout3"
+   },
+   {
+    "t": 60.6667,
+    "target": [
+     5000.0,
+     -2600,
+     0
+    ],
+    "el": 3,
+    "fov": 30,
+    "fx": 0.5,
+    "fy": 0.5,
+    "dist": 15500,
+    "az": 3.5,
+    "ease": "lin"
    }
   ],
   "cg": [
@@ -701,22 +761,15 @@
    "id": "b-simp",
    "text": "simplified · one example (model)",
    "t0": 18.366666666666667,
-   "t1": 39.2833,
-   "slot": "tl"
-  },
-  {
-   "id": "b-face",
-   "text": "model face, not a photo",
-   "t0": 39.733333333333334,
-   "t1": 51.8167,
+   "t1": 37.8833,
    "slot": "tl"
   },
   {
    "id": "b-step",
-   "text": "Verkruysse et al., 2008",
+   "text": "Verkruysse 2008 · Wu et al., 2012",
    "t0": 39.733333333333334,
    "t1": 51.8167,
-   "slot": "bl"
+   "slot": "tl"
   },
   {
    "id": "b-cg",
@@ -727,7 +780,7 @@
   },
   {
    "id": "b-cgm",
-   "text": "model faces, not photos",
+   "text": "models, not photos",
    "t0": 60.8667,
    "t1": 65.6167,
    "slot": "tl"
@@ -785,11 +838,11 @@
    ]
   },
   {
-   "id": "c-final",
-   "label": "the glow comes",
-   "text": "from within",
-   "t0": 66.56666666666666,
-   "t1": 42.8667,
+   "id": "c-pulse",
+   "label": "your face's colour",
+   "text": "beats",
+   "t0": 43.266666666666666,
+   "t1": 51.8167,
    "fmt": "text",
    "at": [
     0.5,
@@ -797,11 +850,11 @@
    ]
   },
   {
-   "id": "c-pulse",
-   "label": "your face's colour",
-   "text": "beats",
-   "t0": 43.266666666666666,
-   "t1": 51.8167,
+   "id": "c-final",
+   "label": "the glow comes",
+   "text": "from within",
+   "t0": 66.56666666666666,
+   "t1": 68.46666666666667,
    "fmt": "text",
    "at": [
     0.5,
@@ -813,6 +866,7 @@
  "title": {
   "series": "Skin Sense · No. 002",
   "title": "Where a glow *comes from*",
+  "t0": 1.6333333333333333,
   "t1": 2.8,
   "sig": 1.5333333333333334
  },
@@ -820,7 +874,7 @@
  "end": {
   "title": "Next: why do you *scar*?",
   "follow": "Skin Sense · No. 003",
-  "next": "Only about 4–7% of light bounces off skin's surface; most goes inside and much comes back out. Narration: synthetic voice (AI)."
+  "next": "Sources: Lister 2012; Jacques (OMLC); Verkruysse et al. 2008; Wu et al. 2012; Jensen et al. 2001. Narration: synthetic voice (AI)."
  },
  "captions": [
   {

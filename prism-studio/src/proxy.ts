@@ -2,7 +2,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { COOKIE, verifySession } from "./lib/session";
 
-const OPEN = [/^\/login$/, /^\/api\/health$/, /^\/icon\.png$/, /^\/api\/auth\//, /^\/api\/public-media\//, /^\/manifest\.webmanifest$/, /^\/sw\.js$/, /^\/icons\//, /^\/fonts\//, /^\/wallpaper\/[\w-]+\.jpg$/, /^\/offline$/, /^\/favicon/];
+const OPEN = [/^\/login$/, /^\/setup$/, /^\/api\/health$/, /^\/icon\.png$/, /^\/api\/auth\//, /^\/api\/public-media\//, /^\/manifest\.webmanifest$/, /^\/sw\.js$/, /^\/icons\//, /^\/fonts\//, /^\/wallpaper\/[\w-]+\.jpg$/, /^\/offline$/, /^\/favicon/];
 
 export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -15,4 +15,6 @@ export async function proxy(req: NextRequest) {
   return NextResponse.redirect(url);
 }
 
-export const config = { matcher: ["/((?!_next/static|_next/image).*)"] };
+// /api/media-push checks its own token and must stream large uploads: a request the proxy sees is buffered in memory
+// and cut at 10 MB (Next's proxyClientMaxBodySize), so it is left out here.
+export const config = { matcher: ["/((?!_next/static|_next/image|api/media-push$).*)"] };

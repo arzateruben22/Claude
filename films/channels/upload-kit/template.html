@@ -1,0 +1,99 @@
+<title>Season 1 Upload Kit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@600;800&family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a posting desk. One column of channel sections; each episode is a row of platform strips you work down and tick off. */
+:root {
+  --bg: #F3F5F7; --surface: #FFFFFF; --ink: #121A22; --muted: #586474; --line: #D9DFE6;
+  --accent: #0E6B66; --accent-ink: #FFFFFF; --done: #1F7A3A; --chip: #E7ECF1;
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --text: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0F141A; --surface: #161D25; --ink: #E8EDF2; --muted: #9AA7B5; --line: #2A3441;
+  --accent: #4FC7BD; --accent-ink: #062523; --done: #6BD48A; --chip: #1F2833; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0F141A; --surface: #161D25; --ink: #E8EDF2; --muted: #9AA7B5; --line: #2A3441;
+  --accent: #4FC7BD; --accent-ink: #062523; --done: #6BD48A; --chip: #1F2833; color-scheme: dark }
+body { background: var(--bg); color: var(--ink); font: 400 16px/1.55 var(--text); }
+.wrap { max-width: 760px; margin: 0 auto; padding-block: 20px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(28px, 6vw, 40px); font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: 24px; font-weight: 800; }
+h3 { font-size: 18px; font-weight: 600; }
+.lede { color: var(--muted); max-width: 62ch; margin: 6px 0 0; }
+.eyebrow { font: 500 12px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0; }
+.check { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+.check h2 { font-size: 18px; margin-bottom: 8px; }
+.check ol { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; }
+nav.tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: flex; gap: 8px; overflow-x: auto; padding-block: 10px; background: var(--bg); border-bottom: 1px solid var(--line); scrollbar-width: none; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+nav.tabs a { flex: none; font: 600 14px/1 var(--text); color: var(--ink); text-decoration: none; background: var(--chip); border-radius: 999px; padding: 10px 14px; }
+nav.tabs a:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.channel { display: grid; gap: 14px; scroll-margin-top: 64px; }
+.chead p { margin: 2px 0 0; color: var(--muted); }
+.ep { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+.ep.long { grid-template-columns: minmax(0, 1fr); }
+.ep.wait { grid-template-columns: minmax(0, 1fr); background: transparent; border-style: dashed; }
+.ep.wait h3 { color: var(--muted); }
+.ep.wait .note { border: 0; padding: 0; background: transparent; }
+.cover { width: 96px; height: auto; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 8px; background: var(--chip); }
+.body { display: grid; gap: 8px; min-width: 0; }
+.files { margin: 0; font-size: 14px; color: var(--muted); }
+.files a { color: var(--accent); }
+.plat { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding-top: 10px; border-top: 1px solid var(--line); }
+.pname { flex-basis: 100%; font: 500 12px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.dl, .copy { font: 600 14px/1 var(--text); border-radius: 8px; padding: 11px 12px; min-height: 44px; display: inline-flex; align-items: center; cursor: pointer; }
+.dl { background: var(--accent); color: var(--accent-ink); text-decoration: none; }
+.copy { background: var(--chip); color: var(--ink); border: 1px solid var(--line); }
+.copy.ok { border-color: var(--done); color: var(--done); }
+.done { margin-left: auto; display: inline-flex; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); min-height: 44px; }
+.done input { width: 20px; height: 20px; accent-color: var(--done); }
+.note { background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 14px 16px; margin: 0; color: var(--muted); }
+.count { font: 500 13px/1 var(--mono); color: var(--muted); }
+@media (max-width: 420px) { .ep { grid-template-columns: 72px minmax(0, 1fr); } .cover { width: 72px; } .done { margin-left: 0; } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Season 1 · %%COUNT%% ready</p>
+    <h1>Upload kit</h1>
+    <p class="lede">Every finished short with its full-quality files and the text for each platform. Tap a video button to open the file, then save it to your phone; tap a copy button to copy that text. Ticks are remembered on this device only.</p>
+  </header>
+  <section class="check" aria-labelledby="before">
+    <h2 id="before">Before each post</h2>
+    <ol>
+      <li>Turn on the platform's AI-generated content label. The narration is a synthetic voice.</li>
+      <li>Leave auto-captions off; captions are already in the video.</li>
+      <li>Use the 1440p file for YouTube Shorts and the 1080p file for TikTok and Instagram Reels.</li>
+      <li>Post the sources as the first comment and pin it.</li>
+      <li>Post in order, starting with No. 001: one episode per channel per day is a good start.</li>
+      <li>Each episode's review notes recommend a specialist read of its claims before posting. That call is yours.</li>
+    </ol>
+  </section>
+  <nav class="tabs" aria-label="Channels">%%NAV%%</nav>
+  %%SECTIONS%%
+</div>
+<script>
+(function () {
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+  document.querySelectorAll('input[data-k]').forEach(function (cb) {
+    cb.checked = store('kit:' + cb.dataset.k) === '1';
+    cb.addEventListener('change', function () { store('kit:' + cb.dataset.k, cb.checked ? '1' : '0'); });
+  });
+  function fallback(text) {
+    var ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta);
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('button.copy'); if (!b) return;
+    var text = b.dataset.copy || '', label = b.textContent;
+    var done = function () { b.classList.add('ok'); b.textContent = 'Copied'; setTimeout(function () { b.classList.remove('ok'); b.textContent = label; }, 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () { fallback(text); done(); });
+    else { fallback(text); done(); }
+  });
+})();
+</script>

@@ -33,7 +33,7 @@ COPY drizzle ./drizzle
 COPY src ./src
 COPY worker ./worker
 COPY scripts/env.ts scripts/migrate.ts scripts/seed.ts scripts/import-episodes.ts ./scripts/
-COPY deploy/entrypoint.sh ./deploy/
+COPY deploy/entrypoint.sh deploy/run-both.mjs ./deploy/
 # Fail here, not at 3 a.m., if the worker or a script imports a package this stage doesn't carry.
 RUN node -e "require('esbuild').buildSync({entryPoints:['worker/index.ts','scripts/migrate.ts','scripts/seed.ts','scripts/import-episodes.ts'],bundle:true,platform:'node',format:'esm',write:false,outdir:'/tmp/check',logLevel:'error'})" \
  && chmod +x deploy/entrypoint.sh && mkdir -p /data/media /films .next/cache && chown node:node /data/media /films .next/cache

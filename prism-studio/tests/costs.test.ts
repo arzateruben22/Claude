@@ -244,7 +244,7 @@ describe("canUsePaidGeneration(channelId, amount)", () => {
     await setBudget(db, { channelId: null, month: "2026-10", capCents: 5000 });
     const r = await canUsePaidGeneration(db, a.id, 100, OCT);
     expect(r).toMatchObject({ ok: false, code: "unconverted" });
-    expect(r.reason).toMatch(/CA\$7\.00 Star map, Light Minute|\$7\.00 Star map, Light Minute/);
+    expect(r.reason).toContain(`$7.00 Star map, ${b.name}`);   // the channel's own name, whatever it is now
   });
 
   it("a budget already used says so, whatever else is in another currency", async () => {
