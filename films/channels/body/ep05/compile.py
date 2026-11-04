@@ -189,7 +189,7 @@ CAPTION_KEEP = [
 film = {
     "id": "body-backstage-005", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
-    "shots": SHOTS, "beats": BEATS, "iris": IRIS, "flesh": FLESH, "wall": WALL, "room": ROOM, "exit": EXIT, "breaths": BREATHS, "loc": LOC,
+    "bag": [A("vo01:bag"), A("vo01:Into")], "shots": SHOTS, "beats": BEATS, "iris": IRIS, "flesh": FLESH, "wall": WALL, "room": ROOM, "exit": EXIT, "breaths": BREATHS, "loc": LOC,
     "cam": CAM, "foc": FOC, "labels": LABELS, "spine": SPINE, "badges": BADGES, "tally": TALLY,
     "segBeats": SEG_BEATS, "title": TITLE, "scan": SCAN, "endCard": EC, "end": END,
     "look": THEME["scene"],

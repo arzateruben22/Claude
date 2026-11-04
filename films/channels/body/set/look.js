@@ -217,7 +217,7 @@ export const look = (THREE, o) => {
     const ln = document.createElement("div"), tag = document.createElement("div");
     Object.assign(ln.style, { position: "absolute", left: 0, right: 0, height: `${Math.max(2, H * 0.0016).toFixed(1)}px`, background: "var(--signal)", zIndex: 2, pointerEvents: "none",
       boxShadow: "0 0 14px 3px rgba(214,242,95,.55), 0 0 60px 10px rgba(214,242,95,.16)", visibility: "hidden" });
-    Object.assign(tag.style, { position: "absolute", left: `${(W * 90 / 1080).toFixed(0)}px`, zIndex: 2, pointerEvents: "none", font: `500 ${(W * 0.021).toFixed(1)}px/1 var(--font-mono)`,
+    Object.assign(tag.style, { position: "absolute", left: `${(W * 90 / 1080).toFixed(0)}px`, zIndex: 2, pointerEvents: "none", font: `600 ${(W * 0.034).toFixed(1)}px/1 var(--font-mono)`,
       letterSpacing: ".14em", textTransform: "uppercase", color: "var(--signal)", background: "rgba(3,12,14,.72)", padding: `${(W * 0.004).toFixed(1)}px ${(W * 0.009).toFixed(1)}px`, borderRadius: `${(W * 0.006).toFixed(1)}px`, visibility: "hidden" });
     tag.textContent = "▼ scan view";
     root.append(ln, tag);

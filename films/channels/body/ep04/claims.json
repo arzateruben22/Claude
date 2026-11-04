@@ -178,13 +178,13 @@
  {
   "id": "c18",
   "sentence": "Your brain holds over a hundred trillion meeting points: over ten thousand for every person alive.",
-  "claim": "Computed: 100 trillion synapses divided by about 8.2 billion people is about 12,000 per person (so 'over ten thousand'); the estimate runs 100-500 trillion, so 'over' holds.",
-  "source_url": "https://bri.ucla.edu/brain-fact/billions-of-neurons-trillions-of-synapses/",
-  "source_title": "Billions of neurons, trillions of synapses (UCLA Brain Research Institute, Brain Fact)",
+  "claim": "Computed: 100 trillion synapses divided by about 8 billion people (UN: world population reached 8 billion in 2022) is about 12,500 per person, so 'over ten thousand' holds; the synapse estimate runs 100-500 trillion, so 'over' holds. Basis: computation.",
+  "source_url": "https://www.un.org/en/global-issues/population",
+  "source_title": "United Nations: Global issues, Population (world population reached 8 billion in 2022; gives no live number)",
   "accessed": "2026-10-25",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "ok",
-  "note": "Computed: 100e12 synapses / about 8.2e9 people = about 12,000, so 'over ten thousand' holds for any estimate of 100 trillion or more. The UN world-population figure (about 8 billion, https://www.un.org/en/global-issues/population) was not opened: a person confirms it on the original page."
+  "note": "100e12 / 8e9 = 12,500. The owner opened the UN page on 4 Nov 2026 and confirmed: it gives 8 billion reached in 2022, no live count. The synapse count is c3's (UCLA). Physiologist sign-off: TODO."
  },
  {
   "id": "c19",

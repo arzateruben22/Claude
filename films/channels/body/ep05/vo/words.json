@@ -79,8 +79,8 @@
   },
   {
    "id": "vo02",
-   "text": "Below your windpipe, the airways fork again and again, about twenty-three times. At the tips hang tiny air pockets, half a billion of them, each a fifth of a millimetre.",
-   "heard": "Below your windpipe the airways fork again and again, about 23 times. At the tips hang tiny air pockets, half a billion of them, each a fifth of a millimeter.",
+   "text": "Below your windpipe, the airways fork again and again, up to about twenty-three times. At the tips hang tiny air pockets, about half a billion of them, each a fifth of a millimetre.",
+   "heard": "Below your windpipe the airways fork again and again, up to about 23 times. At the tips hang tiny air pockets, about half a billion of them, each a fifth of a millimeter.",
    "words": [
     {
      "w": "Below",
@@ -90,177 +90,195 @@
     },
     {
      "w": "your",
-     "start": 0.39,
+     "start": 0.415,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "windpipe,",
-     "start": 0.555,
-     "end": 1.2,
+     "start": 0.575,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.205,
+     "start": 1.23,
      "end": 1.28,
      "heard": true
     },
     {
      "w": "airways",
-     "start": 1.235,
+     "start": 1.26,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "fork",
-     "start": 1.765,
+     "start": 1.79,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "again",
-     "start": 2.1,
+     "start": 2.125,
      "end": 2.4,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.505,
-     "end": 2.56,
+     "start": 2.495,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "again,",
-     "start": 2.535,
-     "end": 3.12,
+     "start": 2.53,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 3.265,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.445,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "about",
-     "start": 3.12,
-     "end": 3.36,
+     "start": 3.68,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "twenty-three",
-     "start": 3.46,
-     "end": 4.16,
+     "start": 3.935,
+     "end": 4.64,
      "heard": false
     },
     {
      "w": "times.",
-     "start": 4.07,
-     "end": 4.691,
+     "start": 4.545,
+     "end": 5.184,
      "heard": true,
-     "end_asr": 4.96
+     "end_asr": 5.44
     },
     {
      "w": "At",
-     "start": 5.01,
-     "end": 5.12,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 5.04,
-     "end": 5.2,
-     "heard": true
-    },
-    {
-     "w": "tips",
-     "start": 5.3,
+     "start": 5.5,
      "end": 5.6,
      "heard": true
     },
     {
+     "w": "the",
+     "start": 5.53,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "tips",
+     "start": 5.805,
+     "end": 6.16,
+     "heard": true
+    },
+    {
      "w": "hang",
-     "start": 5.49,
-     "end": 5.92,
+     "start": 6.055,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "tiny",
-     "start": 5.85,
-     "end": 6.24,
+     "start": 6.415,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "air",
-     "start": 6.28,
-     "end": 6.56,
+     "start": 6.845,
+     "end": 7.12,
      "heard": true
     },
     {
      "w": "pockets,",
-     "start": 6.515,
-     "end": 7.44,
+     "start": 7.08,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 7.83,
+     "end": 8.08,
      "heard": true
     },
     {
      "w": "half",
-     "start": 7.505,
-     "end": 7.76,
+     "start": 8.11,
+     "end": 8.4,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.865,
-     "end": 7.915,
+     "start": 8.425,
+     "end": 8.56,
      "heard": true
     },
     {
      "w": "billion",
-     "start": 7.895,
-     "end": 8.24,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 8.32,
-     "end": 8.37,
-     "heard": true
-    },
-    {
-     "w": "them,",
-     "start": 8.35,
-     "end": 8.64,
-     "heard": true
-    },
-    {
-     "w": "each",
-     "start": 8.7,
+     "start": 8.535,
      "end": 8.88,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 8.845,
+     "w": "of",
+     "start": 8.965,
      "end": 9.04,
      "heard": true
     },
     {
-     "w": "fifth",
-     "start": 9.12,
-     "end": 9.36,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 9.405,
-     "end": 9.52,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 9.435,
+     "w": "them,",
+     "start": 8.995,
      "end": 9.6,
      "heard": true
     },
     {
+     "w": "each",
+     "start": 9.685,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.83,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "fifth",
+     "start": 10.065,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 10.39,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 10.42,
+     "end": 10.56,
+     "heard": true
+    },
+    {
      "w": "millimetre.",
-     "start": 9.51,
-     "end": 9.9,
+     "start": 10.5,
+     "end": 10.86,
      "heard": false
     }
    ],

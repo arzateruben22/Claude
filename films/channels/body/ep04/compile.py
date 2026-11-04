@@ -103,8 +103,8 @@ CAM = {
 }
 CAM["loop"] = [dict(CAM["syn"][0], t=CUT["loop"])]
 FOC = {
-    # frame 0 and the hook: focus far behind the contact (a soft light-microscope blur); it snaps sharp on "gap"
-    "syn": [{"t": 0.0, "at": "behind", "f": 0.9}, {"t": A("vo02:Your", 0.0), "at": "net", "f": 0.25}, {"t": A("vo02:joined", -0.3), "at": "behind", "f": 0.9},
+    # round 2: frame 0 is a crisp, lit pair of endings that almost touch; the soft light-microscope blur comes in on "Through a lens"
+    "syn": [{"t": 0.0, "at": "gap", "f": 0.5}, {"t": A("vo01:show"), "at": "gap", "f": 0.5}, {"t": A("vo02:Through", -0.2), "at": "behind", "f": 0.9}, {"t": A("vo02:Your", 0.0), "at": "net", "f": 0.25}, {"t": A("vo02:joined", -0.3), "at": "behind", "f": 0.9},
             {"t": SHARP[0], "at": "behind", "f": 0.9}, {"t": SHARP[1], "at": "gap", "f": 0.45}, {"t": A("vo05:Use", -0.1), "at": "cell2", "f": 0.3},
             {"t": A("vo06:touch", -0.4), "at": "gap", "f": 0.45}],
     "sac": [{"t": CUT["sac"], "at": "sac", "f": 0.35}],
@@ -151,13 +151,15 @@ BADGES = [
 ]
 SCAN = {"up": [REPLAY[0], REPLAY[0] + 1.4], "park": 0.5, "off": REPLAY[1], "tag": "▼ scan view"}   # live scan: the line rises from the bottom and parks; below it, scan view
 TITLE = {"series": "Body Backstage · No. 04", "title": "Do they *touch*?", "t1": round(A("vo01:For", 0.3), 4), "sig": 0.0, "y": 0.17}
-END = {"t0": EC, "title": "Next, inside: *where breath goes*", "next": "Body Backstage · No. 05", "follow": "Follow Body Backstage",
+END = {"t0": EC, "title": "Next: *where breath goes*", "next": "Body Backstage · No. 05", "follow": "Follow Body Backstage",
        "fact": "Golgi and Cajal shared the 1906 Nobel Prize, and argued in their lectures."}   # c6
 LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": CUT["sac"] - 0.4, "region": [0.5, 0.16]}   # the brainstem, where each breath begins
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(TALLY["t1"] / BEAT) + 1)]
 
 # caption pages: the balanced pager (no one-word tails), never splitting these phrases across rows or pages
 CAPTION_KEEP = [
+    "over a hundred trillion",
+    "Over 100 trillion",
     "nerve cells",
     "a hundred trillion",
     "meeting points",

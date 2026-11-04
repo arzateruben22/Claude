@@ -501,6 +501,16 @@
   "syn": [
    {
     "t": 0.0,
+    "at": "gap",
+    "f": 0.5
+   },
+   {
+    "t": 5.233333333333333,
+    "at": "gap",
+    "f": 0.5
+   },
+   {
+    "t": 12.6,
     "at": "behind",
     "f": 0.9
    },
@@ -810,7 +820,7 @@
  "endCard": 72.8,
  "end": {
   "t0": 72.8,
-  "title": "Next, inside: *where breath goes*",
+  "title": "Next: *where breath goes*",
   "next": "Body Backstage · No. 05",
   "follow": "Follow Body Backstage",
   "fact": "Golgi and Cajal shared the 1906 Nobel Prize, and argued in their lectures."
@@ -923,7 +933,7 @@
   },
   {
    "t0": 6.725,
-   "t1": 7.71,
+   "t1": 7.525,
    "lines": [
     [
      [
@@ -937,19 +947,19 @@
      [
       "holds",
       7.22
-     ],
-     [
-      "over",
-      7.525
      ]
     ]
    ]
   },
   {
-   "t0": 7.71,
+   "t0": 7.525,
    "t1": 9.9,
    "lines": [
     [
+     [
+      "over",
+      7.525
+     ],
      [
       "100 trillion",
       7.71

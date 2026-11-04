@@ -101,7 +101,7 @@ const TOCAM = new THREE.Vector3(4, 3, 15).normalize();   // frame 0's camera dir
 { let k = 0; HC.forEach((s, i) => { if (s.c.dot(TOCAM) > HC[k].c.dot(TOCAM)) k = i; }); HC.unshift(HC.splice(k, 1)[0]); }
 // the hero cluster: cutaway sacs; the front one cut open, hollow (no cap, both faces), its inside a darker lining
 const insideMat = mat("#B0706E", "sacin", { side: THREE.DoubleSide, fres: 0.25 });
-const HERO = HC.map((s, k) => { const C = cutaway({ radius: s.r, noise: { amp: 0.06, freq: 1.5, seed: 40 + k }, segments: [64, 48], material: sacMat }); C.group.position.copy(s.c); G.lung.add(C.group); return C; });
+const HERO = HC.map((s, k) => { const C = cutaway({ radius: s.r * 1.08, noise: { amp: 0.15, freq: 1.7, seed: 40 + k }, segments: [64, 48], material: sacMat }); C.group.position.copy(s.c); G.lung.add(C.group); return C; });
 const HS = HC[0];
 // camera keys written with look "HERO" are offsets from the hero sac (compile.py cannot know where the tree puts it)
 for (const k of FILM.cam.lung) if (k.look === "HERO") { k.look = HS.c.toArray(); k.pos = k.pos.map((x, i) => x + k.look[i]); }
@@ -123,12 +123,22 @@ HERO.forEach((C, k) => { const r = rng(300 + k); for (let n = 0; n < 30; n++) {
 // gently lumpy, no pores: not foam, so the pale bubbles under it are the break), opaque while held, so "bubbles" is a
 // reveal; it fades by alpha hashing (no sorting: depth and focus stay right). 26 Oct audit: was pale #D9AFA6, matte
 // (roughness 0.9) and finely pitted (noise amp 0.08, freq 5), which read as airy foam
-const fleshMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#8A3A34"), roughness: 0.45, alphaHash: true, opacity: 0, emissive: lin("#3A1512"), emissiveIntensity: 0.06 }), { fresnel: 0.3, key: "flesh" });
-const FLESHM = cutaway({ radius: HS.r * 2.9, noise: { amp: 0.035, freq: 1.3, seed: 7 }, segments: [128, 96], material: fleshMat });
+const clotTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 256; const x = c.getContext("2d"), r = rng(91); x.fillStyle = "#808080"; x.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 420; i++) { const g = x.createRadialGradient(0, 0, 0, 0, 0, 1); const px = r() * 256, py = r() * 256, rad = 3 + 18 * r(); const v = r() < 0.5 ? 30 : 225; x.fillStyle = `rgba(${v},${v},${v},${0.12 + 0.25 * r()})`; x.beginPath(); x.ellipse(px, py, rad, rad * (0.5 + r()), r() * 3, 0, 6.28); x.fill(); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 2); return t; })();
+const fleshMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#6E2A28"), roughness: 0.82, bumpMap: clotTex, bumpScale: 5, alphaHash: true, opacity: 0, emissive: lin("#2A0F0D"), emissiveIntensity: 0.05 }), { fresnel: 0.12, key: "flesh" });   // round 2: matte, clotted, mottled (no glossy sphere)
+const FLESHM = cutaway({ radius: HS.r * 2.9, noise: { amp: 0.09, freq: 2.2, seed: 7 }, segments: [128, 96], material: fleshMat });
 FLESHM.group.position.copy(HC.reduce((a, s) => a.add(s.c), new THREE.Vector3()).multiplyScalar(1 / HC.length)); G.lung.add(FLESHM.group);
+// round 2 (review r1, a): frame 0 shows the bag people imagine (a translucent balloon with a tied neck) over the cluster; it
+// thins out on "bag" and is gone by "Into these", so the sacs are the answer
+const BAGM = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#CFE4E0"), roughness: 0.15, clearcoat: 1, transparent: true, opacity: 0.5, depthWrite: false, side: THREE.DoubleSide }), { fresnel: 0.95, fresnelPower: 1.6, key: "bag" });
+const BAG = new THREE.Group(), bagBody = new THREE.Mesh(new THREE.SphereGeometry(HS.r * 3.0, 64, 48), BAGM); bagBody.scale.set(1, 1.2, 0.95);
+const bagNeck = new THREE.Mesh(new THREE.ConeGeometry(HS.r * 0.7, HS.r * 1.6, 24, 1, true), BAGM); bagNeck.position.y = HS.r * 3.9; BAG.add(bagBody, bagNeck);
+BAG.position.copy(FLESHM.group.position); G.lung.add(BAG);
 const writeLung = (t) => {
   const F = FILM.flesh, o = Math.min(seg(t, F[0], F[0] + 0.6), 1 - seg(t, F[1], F[2]));
   fleshMat.opacity = o; FLESHM.group.visible = o > 0.003;
+  { const bo = 0.5 * (1 - seg(t, FILM.bag[0] + 0.05, FILM.bag[1] - 0.05)); BAGM.opacity = bo; BAG.visible = bo > 0.01; }
   const br = 1 + 0.035 * Math.sin(t * 1.4);                    // the cluster breathes gently
   HERO.forEach((C, k) => C.group.scale.setScalar(k ? br : 1));
   // the route lights generation by generation as the forks are counted, then settles
@@ -188,6 +198,16 @@ TILE.forEach((T, i) => tiles.setColorAt(i, new THREE.Color(1, 1, 1).multiplyScal
 const ground = new THREE.Mesh(new THREE.CircleGeometry(400, 128), mat("#0F302A", "ground", { fres: 0, ei: 0, r: 0.95 })); ground.rotation.x = -Math.PI / 2; G.room.add(ground);
 const lineMat = mat("#EFF6F2", "lines", { fres: 0, ei: 0.5, emi: "#EFF6F2" });
 const COURT = new THREE.Group(); G.room.add(COURT);
+// round 2 (review r1, h): a real court surface under the lines (acrylic hard court: blue run-off, green playing area) and a net
+const floorTex = (() => { const c = document.createElement("canvas"); c.width = 512; c.height = 256; const x = c.getContext("2d"), r = rng(77);
+  x.fillStyle = "#2B5C85"; x.fillRect(0, 0, 512, 256); x.fillStyle = "#3C7D5F"; x.fillRect(64, 36, 384, 184);
+  for (let i = 0; i < 5000; i++) { x.fillStyle = `rgba(${r() < 0.5 ? "255,255,255" : "0,0,0"},${0.02 + 0.05 * r()})`; x.fillRect(r() * 512, r() * 256, 1 + 2 * r(), 1 + 2 * r()); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; })();
+const floorMat = L.patch(new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: floorTex, roughness: 0.55, clearcoat: 0.35, clearcoatRoughness: 0.4, transparent: true, opacity: 0 }), { fresnel: 0.1, key: "courtfloor" });
+const courtFloor = new THREE.Mesh(new THREE.PlaneGeometry(18.3, 36.6), floorMat); courtFloor.rotation.x = -Math.PI / 2; courtFloor.position.set(0, 0.02, 0); COURT.add(courtFloor);
+const netMat = new THREE.MeshBasicMaterial({ color: lin("#E8EEF0"), transparent: true, opacity: 0.0, fog: true });
+const netTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 64; const x = c.getContext("2d"); x.strokeStyle = "rgba(255,255,255,0.9)"; x.lineWidth = 3; x.strokeRect(0, 0, 64, 64); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(48, 5); return t; })();
+const netMesh = new THREE.Mesh(new THREE.PlaneGeometry(12.8, 0.914), new THREE.MeshBasicMaterial({ map: netTex, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })); netMesh.position.set(0, 0.46, 0); COURT.add(netMesh);
 { const Lc = 23.77, Wd = 10.97, Ws = 8.23, Sv = 6.4, post = 0.914, w = 0.05;
   const bar = (x, z, sx, sz) => { const m = new THREE.Mesh(new THREE.BoxGeometry(sx, 0.01, sz), lineMat); m.position.set(x, 0.045, z); COURT.add(m); };
   // a full doubles court (23.77 × 10.97 m = 260.8 m², c10), its lines as a real court has them, drawn whole: the 70 m²
@@ -199,14 +219,18 @@ const COURT = new THREE.Group(); G.room.add(COURT);
   bar(0, 0, Wd + 2 * post, 0.06); }                                                      // the net, to its posts 0.914 m outside the doubles sidelines
 COURT.position.set(1.6, 0, 0); COURT.rotation.y = 0;
 // the person: a simple standing figure, 1.75 m
-const skinMat = mat("#D9B8A8", "person", { fres: 0.2 });
+// round 2 (review r1, h): a translucent, rim-lit scan figure (glass body, iso-depth slices), not a clay mannequin
+const skinMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#7FD8C8"), roughness: 0.2, clearcoat: 1, clearcoatRoughness: 0.1, emissive: lin("#2F8F82"), emissiveIntensity: 0.22, transparent: true, opacity: 0.55, depthWrite: false }), { fresnel: 0.95, fresnelPower: 1.5, key: "person" });
 // the torso has its own material: it marks the chest on "chest" and turns see-through for the sponge inside
-const torsoMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#D9B8A8"), roughness: 0.6, emissive: lin("#D6F25F"), emissiveIntensity: 0, transparent: true, opacity: 1, depthWrite: true }), { fresnel: 0.2, fresnelPower: 2.2, key: "torso" });
+const torsoMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#7FD8C8"), roughness: 0.25, emissive: lin("#D6F25F"), emissiveIntensity: 0, transparent: true, opacity: 1, depthWrite: true }), { fresnel: 0.9, fresnelPower: 1.6, key: "torso" });
 const PERSON = new THREE.Group(); G.room.add(PERSON);
 const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.46, 8, 24), torsoMat); torso.position.y = 1.17; torso.scale.set(1, 1, 0.62); PERSON.add(torso);
 const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.055, 0.12, 16), skinMat); neck.position.y = 1.5; PERSON.add(neck);
 const head = new THREE.Mesh(new THREE.SphereGeometry(0.115, 32, 24), skinMat); head.position.y = 1.66; head.scale.set(1, 1.18, 1); PERSON.add(head);
 const shoulders = new THREE.Mesh(new THREE.CapsuleGeometry(0.075, 0.3, 6, 16), skinMat); shoulders.rotation.z = Math.PI / 2; shoulders.position.y = 1.42; shoulders.scale.set(1, 1, 0.75); PERSON.add(shoulders);
+{ const sl = new THREE.MeshBasicMaterial({ color: lin("#BFEFE3"), transparent: true, opacity: 0.35, fog: false });
+  for (let y = 0.92; y <= 1.46; y += 0.07) { const r = 0.17 + 0.012 * Math.sin((y - 0.9) * 6), ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.0035, 6, 48), sl); ring.rotation.x = Math.PI / 2; ring.position.y = y; ring.scale.set(1, 0.62, 1); PERSON.add(ring); }
+  for (let y = 1.56; y <= 1.76; y += 0.05) { const r = 0.115 * Math.sqrt(Math.max(0.05, 1 - ((y - 1.66) / 0.136) ** 2)), ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.0035, 6, 40), sl); ring.rotation.x = Math.PI / 2; ring.position.y = y; PERSON.add(ring); } }
 for (const s of [-1, 1]) {
   const leg = new THREE.Mesh(new THREE.CapsuleGeometry(0.075, 0.72, 4, 12), skinMat); leg.position.set(0.1 * s, 0.46, 0); PERSON.add(leg);
   const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.055, 0.56, 4, 12), skinMat); arm.position.set(0.25 * s, 1.1, 0); arm.rotation.z = 0.05 * s; PERSON.add(arm);
@@ -232,7 +256,7 @@ const writeRoom = (t) => {
   }
   tiles.instanceMatrix.needsUpdate = true;
   // gone 0.45 s into the fold: the camera dives to the person and the doubles court's near corner leaves the frame ~0.75 s in
-  const co = seg(t, R.court - 0.1, R.court + 0.6) * (1 - seg(t, R.fold[0], R.fold[0] + 0.45)); COURT.visible = co > 0.01; lineMat.emissiveIntensity = 0.5 * co; COURT.scale.setScalar(1);
+  const co = seg(t, R.court - 0.1, R.court + 0.6) * (1 - seg(t, R.fold[0], R.fold[0] + 0.45)); COURT.visible = co > 0.01; lineMat.emissiveIntensity = 0.5 * co; floorMat.opacity = 0.93 * co; netMesh.material.opacity = 0.55 * co; COURT.scale.setScalar(1);
   COURT.children.forEach((m) => { m.scale.y = 1; m.visible = co > 0.01; });
   const br = FILM.breaths.reduce((a, b) => Math.max(a, t >= b && t < b + 4 ? Math.sin(Math.PI * Math.min(1, (t - b) / 2.4)) : 0), 0);
   torso.scale.set(1 + 0.08 * br, 1, 0.62 * (1 + 0.08 * br));

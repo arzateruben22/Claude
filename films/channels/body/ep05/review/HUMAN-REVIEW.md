@@ -40,3 +40,7 @@ Meanwhile, Inside No. 05, "Where breath goes". Nothing has been posted.
 8. **Upload** the MP4 directly; auto-captions off.
 
 TODO placeholders: the channel handle, the posting accounts, a pinned sources page, a disclaimer line if wanted.
+
+## Added 4 Nov 2026 (005 r1 review)
+- A physiologist: Galen called lung flesh light and spongy (a sponge is an old description, not new). That may undercut the takeaway "a sponge that spreads air thin" as the NEW idea against the old clotted-blood idea. Decide whether to reword.
+- Open claims (status "TODO open link" in claims.json): c2, c9, c10, c11, c13, c15, c16. Each needs a better source; do not mark ok on a search excerpt alone.

@@ -243,6 +243,27 @@ const SAC2 = [[3, 2, -1.6, 36], [-2.6, -2.2, -1.2, 40], [1.7, -3.0, -2.6, 30], [
   const C = cutaway({ radius: r, noise: { amp: 0.07, freq: 1.4, seed: 12 + k }, segments: [48, 36], material: sacMat }); C.group.position.set(3000 + c[0], c[1], c[2]); sacG.add(C.group); return C;
 });
 
+// round 2 (review r1, g/h): the tease reads as a lung's air sacs: a cluster on a branching airway, each sac wrapped in a net of red
+// capillaries, wet and lit like the synapse hero (a key and a rim from the rig, a wet clearcoat, a fresnel glow at the thin wall)
+sacMat.clearcoat = 0.7; sacMat.clearcoatRoughness = 0.2; sacMat.roughness = 0.4; sacMat.needsUpdate = true;
+{
+  const rr = rng(61), vein = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#B8283C"), emissive: lin("#8E1E30"), emissiveIntensity: 0.25, roughness: 0.35, clearcoat: 0.8, clearcoatRoughness: 0.2 }), { fresnel: 0.3, key: "capil" });
+  const airway = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#D9B8A8"), roughness: 0.4, clearcoat: 0.6, clearcoatRoughness: 0.25, sheen: 0.5, sheenColor: lin("#FFE4D0") }), { fresnel: 0.3, key: "airway" });
+  const sacs = [[0, 0, 0, 50], ...[[3, 2, -1.6, 36], [-2.6, -2.2, -1.2, 40], [1.7, -3.0, -2.6, 30], [-1.7, 2.7, -2.4, 34]].map(([x, y, z, r]) => { const d = Math.hypot(x, y, z), c = [x, y, z].map((v) => (v / d) * (50 + r - 4)); return [c[0], c[1], c[2], r]; })];
+  // capillaries: wandering strands hugging each sac's surface
+  for (const [cx, cy, cz, R] of sacs) for (let k = 0; k < 16; k++) {
+    let a = rr() * 6.28, b = (rr() - 0.5) * 2.4; const pts = [];
+    for (let i = 0; i < 18; i++) { a += (rr() - 0.5) * 0.7; b = Math.max(-1.3, Math.min(1.3, b + (rr() - 0.5) * 0.5));
+      pts.push([3000 + cx + Math.cos(b) * Math.cos(a) * (R + 0.7), cy + Math.sin(b) * (R + 0.7), cz + Math.cos(b) * Math.sin(a) * (R + 0.7)]); }
+    const P = path(pts); sacG.add(new THREE.Mesh(tube(P, { radius: (sv) => 0.75 * (1 - 0.35 * sv / P.length), radial: 8, step: 1.2 }), vein));
+  }
+  // the airway: from the lower left, widening into the main sac, a branch to the nearest neighbours
+  const trunk = path([[2895, -78, 4], [2930, -62, 3], [2958, -42, 2], [2972, -22, 0]]);
+  sacG.add(new THREE.Mesh(tube(trunk, { radius: (sv) => 6.2 - 2.4 * sv / trunk.length, radial: 20, step: 1.5 }), airway));
+  for (const [cx, cy, cz, R] of sacs.slice(1)) { const d = Math.hypot(cx, cy, cz), e = [cx, cy, cz].map((v) => (v / d) * (50 + R * 0.5));
+    const br = path([[2972, -22, 0], [3000 + e[0] * 0.5, e[1] * 0.5, e[2] * 0.5 + 2], [3000 + e[0] * 0.92, e[1] * 0.92, e[2] * 0.92]]);
+    sacG.add(new THREE.Mesh(tube(br, { radius: (sv) => 2.2 - 1.1 * sv / br.length, radial: 12, step: 1.2 }), airway)); }
+}
 // ════ the overlay ════════════════════════════════════════════════════════════════════════════════
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .hud-end .mi-pulse { margin: 0 0 3vmin; }
@@ -300,7 +321,7 @@ const NS = "http://www.w3.org/2000/svg";
 const drawing = (gapped) => {
   const r = rng(5), cells = [[90, 120], [250, 90], [170, 250], [60, 330], [280, 300], [190, 420]], out = [];
   cells.forEach(([x, y], i) => {
-    out.push(`<path d="M${x - 13} ${y} C${x - 13} ${y - 15} ${x + 13} ${y - 15} ${x + 13} ${y} C${x + 13} ${y + 13} ${x - 13} ${y + 13} ${x - 13} ${y} Z" fill="var(--bone)"/>`);
+    out.push(`<path d="M${x - 15} ${y} C${x - 15} ${y - 17} ${x + 15} ${y - 17} ${x + 15} ${y} C${x + 15} ${y + 15} ${x - 15} ${y + 15} ${x - 15} ${y} Z" fill="url(#psoma)" filter="url(#pglow)"/><circle cx="${x + 2}" cy="${y - 1}" r="5" fill="#7A4E58" opacity="0.55"/>`);
     for (let k = 0; k < 3; k++) { const a = r() * 6.28, l = 26 + 30 * r(); out.push(`<path d="M${x} ${y} q ${(Math.cos(a) * l * 0.5 + (r() - 0.5) * 12).toFixed(1)} ${(Math.sin(a) * l * 0.5 + (r() - 0.5) * 12).toFixed(1)} ${(Math.cos(a) * l).toFixed(1)} ${(Math.sin(a) * l).toFixed(1)}" stroke="var(--bone)" stroke-width="3" fill="none" stroke-linecap="round"/>`); }
   });
   [[0, 1], [0, 2], [1, 2], [2, 3], [2, 4], [4, 5], [3, 5], [1, 4]].forEach(([a, b]) => {
@@ -314,10 +335,13 @@ const drawing = (gapped) => {
 const panels = document.createElement("div"); panels.className = "mi-panels";
 const PW = 340, PH = 470, PS = (W * 0.3565) / PW, PY = H * 0.21;
 const panel = (cls, x, who, cap, gapped) => `<g class="${cls}" transform="translate(${x.toFixed(1)} ${PY.toFixed(1)}) scale(${PS.toFixed(4)})">
-    <rect width="${PW}" height="${PH}" rx="18" fill="var(--surface)"/><g class="raw" opacity="0.35">${drawing(false)}</g><g class="read" opacity="0">${drawing(gapped)}</g>
+    <rect width="${PW}" height="${PH}" rx="18" fill="url(#pcard)" stroke="var(--signal)" stroke-opacity="0.35" stroke-width="2.2"/><rect x="3" y="3" width="${PW - 6}" height="${PH * 0.22}" rx="15" fill="#FFFFFF" opacity="0.045"/><g class="raw" opacity="0.35">${drawing(false)}</g><g class="read" opacity="0">${drawing(gapped)}</g>
     <g class="name" opacity="0"><text class="who" x="${PW / 2}" y="${PH + 70}" text-anchor="middle">${who}</text><text class="cap" x="${PW / 2}" y="${PH + 118}" text-anchor="middle">${cap}</text></g></g>`;
-const NBY = PY + PH * PS * 0.45;
+const NBY = PY + PH * PS + 62 * S1;   // round 2: under the panels, not across them
 panels.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="${NS}">
+  <defs><radialGradient id="psoma" cx="0.38" cy="0.32" r="0.8"><stop offset="0" stop-color="#FFE9D6"/><stop offset="0.55" stop-color="#E5B9A8"/><stop offset="1" stop-color="#9C6A66"/></radialGradient>
+  <linearGradient id="pcard" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="#16403F"/><stop offset="1" stop-color="#071A19"/></linearGradient>
+  <filter id="pglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
   <rect width="${W}" height="${H}" fill="var(--bg)" opacity="0.88"/>
   ${panel("golgi", W * 0.0833, "Golgi", "one continuous web", false)}
   ${panel("cajal", W * 0.477, "Cajal", "separate cells", true)}

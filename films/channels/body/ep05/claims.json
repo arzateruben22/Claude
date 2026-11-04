@@ -1,7 +1,7 @@
 [
  {
   "id": "c1",
-  "sentence": "At the tips hang tiny air pockets, half a billion of them, each a fifth of a millimetre.",
+  "sentence": "At the tips hang tiny air pockets, about half a billion of them, each a fifth of a millimetre.",
   "claim": "An adult's two lungs hold on average about 480 million alveoli (range 274–790 million in six lungs studied).",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/14512270/",
   "source_title": "Ochs et al. 2004, The number of alveoli in the human lung, Am J Respir Crit Care Med 169:120 (PubMed)",
@@ -12,18 +12,18 @@
  },
  {
   "id": "c2",
-  "sentence": "Below your windpipe, the airways fork again and again, about twenty-three times.",
+  "sentence": "Below your windpipe, the airways fork again and again, up to about twenty-three times.",
   "claim": "In Weibel's classic model the airways branch dichotomously through about 23 generations from the trachea to the alveolar sacs.",
   "source_url": "https://taylorandfrancis.com/knowledge/Medicine_and_healthcare/Anatomy/Respiratory_zone",
   "source_title": "Respiratory zone (Taylor & Francis Knowledge; Weibel's airway model)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "Excerpt: 23 dichotomously branching airway generations comprising conducting and respiratory zones; some count 24 depending on whether the trachea is generation 0. A model of an average path; real branching is irregular. Review fix: 'up to about' (real paths run from about 8 to 25 generations)."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, per the 005 r1 review): the source is a Taylor & Francis summary page, not the paper (Weibel's model); a better source is needed. Excerpt: 23 dichotomously branching airway generations comprising conducting and respiratory zones; some count 24 depending on whether the trachea is generation 0. A model of an average path; real branching is irregular. Review fix: 'up to about' (real paths run from about 8 to 25 generations)."
  },
  {
   "id": "c3",
-  "sentence": "At the tips hang tiny air pockets, half a billion of them, each a fifth of a millimetre.",
+  "sentence": "At the tips hang tiny air pockets, about half a billion of them, each a fifth of a millimetre.",
   "claim": "The mean volume of a single alveolus is about 4.2 million µm³, a diameter of about 0.2 mm.",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/14512270/",
   "source_title": "Ochs et al. 2004, The number of alveoli in the human lung, Am J Respir Crit Care Med 169:120 (PubMed)",
@@ -95,8 +95,8 @@
   "source_title": "Frontiers for Young Minds, 2021 (Core Concept: Human Health), on pulmonary fibrosis",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "Excerpts: gas exchange works best when the alveoli are thin; with fibrosis less oxygen gets into the body with every breath. A review (PMC4422352, Am J Physiol) describes a stiff lung with compromised gas exchange and shortness of breath on exertion. Stated as a mechanism, no advice; the disease is not named on air."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, per the 005 r1 review): a children's journal article; a better (clinical) source is needed. Excerpts: gas exchange works best when the alveoli are thin; with fibrosis less oxygen gets into the body with every breath. A review (PMC4422352, Am J Physiol) describes a stiff lung with compromised gas exchange and shortness of breath on exertion. Stated as a mechanism, no advice; the disease is not named on air."
  },
  {
   "id": "c9",
@@ -106,8 +106,8 @@
   "source_title": "Physiology, Lung (StatPearls / NCBI Bookshelf NBK493219; bible S19)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "Bible S19 (70–100 m²) and S20 (120–140 m² by morphometry). West JB, Respiratory Physiology: The Essentials, 9th ed., Lippincott Williams & Wilkins 2012, ch. 1 (Structure and Function), search excerpt: the blood–gas barrier 'is thin and has an area of between 50 and 100 square meters' (the excerpt came from an online copy of the chapter that looks unauthorised, so it is not linked here: check the wording against a library copy). 'About seventy' is the commonly cited figure (a lecture: about 70 m² in a healthy adult male); the area varies with lung size. The readout says 'about 70 m²' and the whoa's badge 'estimates 50–140 m²' (bible §9: ranges on screen). 26 Oct audit: 'at least seventy' became 'about seventy': with a textbook giving 50–100 m², 70 m² is not a floor for every viewer; West ch. 1 added. 26 Oct audit (second check): West is cited as the book, not the online copy."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, per the 005 r1 review): cited from an unauthorised copy of West's textbook; a licensed source is needed. Bible S19 (70–100 m²) and S20 (120–140 m² by morphometry). West JB, Respiratory Physiology: The Essentials, 9th ed., Lippincott Williams & Wilkins 2012, ch. 1 (Structure and Function), search excerpt: the blood–gas barrier 'is thin and has an area of between 50 and 100 square meters' (the excerpt came from an online copy of the chapter that looks unauthorised, so it is not linked here: check the wording against a library copy). 'About seventy' is the commonly cited figure (a lecture: about 70 m² in a healthy adult male); the area varies with lung size. The readout says 'about 70 m²' and the whoa's badge 'estimates 50–140 m²' (bible §9: ranges on screen). 26 Oct audit: 'at least seventy' became 'about seventy': with a textbook giving 50–100 m², 70 m² is not a floor for every viewer; West ch. 1 added. 26 Oct audit (second check): West is cited as the book, not the online copy."
  },
  {
   "id": "c10",
@@ -117,8 +117,8 @@
   "source_title": "ITF Rules of Tennis 2026, Rule 1: The Court (International Tennis Federation)",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "Excerpt, ITF Rules of Tennis 2026, Rule 1: 'The court is a rectangle, 78 feet (23.77 m) long and, for singles matches, 27 feet (8.23 m) wide. For doubles matches, the court is 36 feet (10.97 m) wide.' Secondary excerpts: the ITF's tennis glossary (https://itftennis.com/en/about-us/organisation/tennis-glossary): the service lines 21 ft (6.40 m) from the net; Wikipedia, 'Tennis court' (https://en.wikipedia.org/wiki/Tennis_court, citing the ITF rules): 78 ft (23.77 m) by 27 ft (8.23 m) for singles, the net posts 3 ft (0.914 m) outside the doubles court; ASICS, 'Tennis court dimensions' (https://www.asics.com/ie/en-ie/asics-advice/tennis-court-dimensions/): the net posts 3 ft (0.914 m) outside the court. Computed: 23.77 × 10.97 = 260.8 m²; 70 / 260.8 = 0.27, 'about a quarter' (at 50 m² about a fifth, at 130 m² about half: the comparison is for the 70 m² said). The whoa's shot draws the full doubles court whole, with its singles sidelines, service lines and centre line, at the floor's scale. 26 Oct audit: 'At least a third' (true only of a singles court, 195.6 m²) became 'About a quarter' of the full court, the court a viewer pictures and the one the shot now draws; on the second check the source moved from Wikipedia to the ITF rules themselves (seen in a search result)."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, per the 005 r1 review): tied to the wrong sentence: the source does not support the sentence it is attached to; re-tie or re-source. Excerpt, ITF Rules of Tennis 2026, Rule 1: 'The court is a rectangle, 78 feet (23.77 m) long and, for singles matches, 27 feet (8.23 m) wide. For doubles matches, the court is 36 feet (10.97 m) wide.' Secondary excerpts: the ITF's tennis glossary (https://itftennis.com/en/about-us/organisation/tennis-glossary): the service lines 21 ft (6.40 m) from the net; Wikipedia, 'Tennis court' (https://en.wikipedia.org/wiki/Tennis_court, citing the ITF rules): 78 ft (23.77 m) by 27 ft (8.23 m) for singles, the net posts 3 ft (0.914 m) outside the doubles court; ASICS, 'Tennis court dimensions' (https://www.asics.com/ie/en-ie/asics-advice/tennis-court-dimensions/): the net posts 3 ft (0.914 m) outside the court. Computed: 23.77 × 10.97 = 260.8 m²; 70 / 260.8 = 0.27, 'about a quarter' (at 50 m² about a fifth, at 130 m² about half: the comparison is for the 70 m² said). The whoa's shot draws the full doubles court whole, with its singles sidelines, service lines and centre line, at the floor's scale. 26 Oct audit: 'At least a third' (true only of a singles court, 195.6 m²) became 'About a quarter' of the full court, the court a viewer pictures and the one the shot now draws; on the second check the source moved from Wikipedia to the ITF rules themselves (seen in a search result)."
  },
  {
   "id": "c11",
@@ -128,8 +128,8 @@
   "source_title": "Malpighi, Marcello (Complete Dictionary of Scientific Biography, Encyclopedia.com)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "As c1 and c5: vesicular, not hollow and not fleshy. 'Balloons' is the common picture the takeaway corrects."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, per the 005 r1 review): a biography of Malpighi cannot support a modern anatomy claim; a better source is needed. As c1 and c5: vesicular, not hollow and not fleshy. 'Balloons' is the common picture the takeaway corrects."
  },
  {
   "id": "c16",
@@ -139,8 +139,8 @@
   "source_title": "Malpighi, Marcello (Complete Dictionary of Scientific Biography, Encyclopedia.com)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "As c1 and c5: vesicular, not hollow and not fleshy. 'Balloons' is the common picture the takeaway corrects."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, per the 005 r1 review): a biography of Malpighi cannot support a modern anatomy claim; a better source is needed. As c1 and c5: vesicular, not hollow and not fleshy. 'Balloons' is the common picture the takeaway corrects."
  },
  {
   "id": "c12",
@@ -161,8 +161,8 @@
   "source_title": "Physiology, Tidal Volume (StatPearls, NCBI Bookshelf NBK482502)",
   "accessed": "2026-10-25",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "Excerpts: StatPearls tidal volume about 500 mL (male), about 400 mL (female); American Lung Association 12–20 breaths a minute; JoVE gives 5–8 L/min at rest. The tally runs at 5.5 L/min (inside 5–8), so it reads 6.0 L as 'six' is said at 65.3 s (5.5 / 60 × 65.3 = 5.99, computed) and about 6.2 L when it leaves: 'about six'. 26 Oct audit: the claim still said the tally uses 6 L a minute; it uses 5.5 (compile.py, this note and the script's heading already did)."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, per the 005 r1 review): the 5-8 L/min figure was not found on the linked page; a better source is needed. Excerpts: StatPearls tidal volume about 500 mL (male), about 400 mL (female); American Lung Association 12–20 breaths a minute; JoVE gives 5–8 L/min at rest. The tally runs at 5.5 L/min (inside 5–8), so it reads 6.0 L as 'six' is said at 65.3 s (5.5 / 60 × 65.3 = 5.99, computed) and about 6.2 L when it leaves: 'about six'. 26 Oct audit: the claim still said the tally uses 6 L a minute; it uses 5.5 (compile.py, this note and the script's heading already did)."
  },
  {
   "id": "c14",

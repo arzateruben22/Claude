@@ -6,7 +6,7 @@
  "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
  "kokoro_onnx": "0.6.1",
  "onnxruntime": "1.31.0",
- "python": "3.13.17",
+ "python": "3.13.18",
  "made_by": "films/channels/body/ep05/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
  "gap": 0.3,
  "gap_question": 0.45,
@@ -46,11 +46,11 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Below your windpipe, the airways fork again and again, about twenty-three times. At the tips hang tiny air pockets, half a billion of them, each a fifth of a millimetre.",
+   "text": "Below your windpipe, the airways fork again and again, up to about twenty-three times. At the tips hang tiny air pockets, about half a billion of them, each a fifth of a millimetre.",
    "stars": [
     "twenty-three"
    ],
-   "phonemes": "bɪlˌəʊ jɔː wˈɪndpaɪp, ðɪ ˈeəweɪz fˈɔːk ɐɡˈɛn and ɐɡˈɛn, ɐbˌaʊt twˈɛntiθɹˈiː tˈaɪmz. at ðə tˈɪps hˈaŋ tˈaɪni ˈeə pˈɒkɪts, hˈɑːf ɐ bˈɪliən ɒv ðˌɛm, ˈiːtʃ ɐ fˈɪfθ əvə mˈɪlɪmˌiːtə.",
+   "phonemes": "bɪlˌəʊ jɔː wˈɪndpaɪp, ðɪ ˈeəweɪz fˈɔːk ɐɡˈɛn and ɐɡˈɛn, ˌʌp tʊ ɐbˌaʊt twˈɛntiθɹˈiː tˈaɪmz. at ðə tˈɪps hˈaŋ tˈaɪni ˈeə pˈɒkɪts, ɐbˌaʊt hˈɑːf ɐ bˈɪliən ɒv ðˌɛm, ˈiːtʃ ɐ fˈɪfθ əvə mˈɪlɪmˌiːtə.",
    "speeds": [
     0.82,
     0.82
@@ -60,13 +60,13 @@
    ],
    "silences": [
     [
-     4.6908,
-     4.9908
+     5.1842,
+     5.4842
     ]
    ],
    "file": "02.wav",
-   "dur": 10.349,
-   "sha256": "744d42230bcf7d2329d6b9b7b12280182d0ad3749835b43ffc52a42f34d6bdd6"
+   "dur": 11.343,
+   "sha256": "c18889c6815da03061806e9ed9850aa74250009dbf2be9a1a5098a1714048a00"
   },
   {
    "id": "vo03",
