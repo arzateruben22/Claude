@@ -104,11 +104,20 @@ document.addEventListener("click", function (e) {
     function fallback() { var ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (_) {} ta.remove(); done(); }
     return;
   }
+  var nx = e.target.closest && e.target.closest("a[data-chan-next]");
+  if (nx) {   // Review's Next channel: the first episode of the channel after the one on screen (the link itself is the no-script fallback)
+    var cs = [].slice.call(document.querySelectorAll("a[data-chan]")), sl = [].slice.call(document.querySelectorAll(".slide"));
+    var at = (document.elementsFromPoint(innerWidth / 2, innerHeight / 2).filter(function (n) { return n.classList && n.classList.contains("slide"); })[0]) || sl.filter(function (n) { return "#" + n.id === location.hash; })[0] || sl[0];
+    var ch = at && at.getAttribute("data-channel"), i = cs.map(function (c) { return c.getAttribute("data-chan"); }).indexOf(ch);
+    var to = cs.length > 1 && document.getElementById(cs[(i + 1) % cs.length].hash.slice(1));
+    if (to) { e.preventDefault(); to.scrollIntoView({ block: "start", inline: "start" }); history.replaceState(null, "", "#" + to.id); }
+    return;
+  }
   var x = e.target.closest && e.target.closest("button:not([data-copy]):not([type=button]), input[type=submit]");
   if (x) { e.preventDefault(); x.setAttribute("title", "Off in the read-only preview"); }
 }, true);
 </script>`;
-  const css = `<style>.static-banner{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:#0A0C10;color:#B0B6C0;font:500 12px/1.4 "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid rgba(222,229,240,.12);text-align:center}@media (max-width:719px){.static-banner{position:static;padding:calc(6px + env(safe-area-inset-top,0px)) 16px 6px;font-size:11px;line-height:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}body:has(.static-banner) .reel{height:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 29px - env(safe-area-inset-top,0px))}body:has(.static-banner) .slide{--screen-h:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 29px - env(safe-area-inset-top,0px));--top-h:60px}body:has(.static-banner) .slide-top{padding-top:0}}</style>`;
+  const css = `<style>.static-banner{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:#0A0C10;color:#B0B6C0;font:500 12px/1.4 "JetBrains Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid rgba(222,229,240,.12);text-align:center}@media (max-width:719px){.static-banner{position:static;padding:calc(6px + env(safe-area-inset-top,0px)) 16px 6px;font-size:11px;line-height:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}body:has(.static-banner) .reel-page{--chan-h:56px}body:has(.static-banner) .reel{height:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 29px - env(safe-area-inset-top,0px) - var(--chan-h,0px))}body:has(.static-banner) .slide{--screen-h:calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - 29px - env(safe-area-inset-top,0px) - var(--chan-h,0px));--top-h:60px}body:has(.static-banner) .chan-switch{padding-top:0;height:var(--chan-h)}body:has(.static-banner) .slide-top{padding-top:0}}@media (min-width:720px){body:has(.static-banner) .chan-switch{top:33px}}</style>`;
 
   const written = [];
   for (const [p, html0] of pages) {
@@ -117,7 +126,8 @@ document.addEventListener("click", function (e) {
       .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
       .replace(/<link\b[^>]*rel="(?:preload|modulepreload|manifest|prefetch)"[^>]*>/gi, "")
       .replace(/<link\b[^>]*as="script"[^>]*>/gi, "")
-      .replace(/<template[\s\S]*?<\/template>/gi, "");
+      .replace(/<template[\s\S]*?<\/template>/gi, "")
+      .replace(/(<a\b[^>]*\sdata-chan="[^"]*"[^>]*?)\saria-current="true"/g, "$1");   // Review's channel in view when the crawl scrolled past it
     // links between pages
     html = html.replace(/(<a\b[^>]*?\shref=")([^"]*)(")/gi, (m, a, h, z) => {
       let u; try { u = new URL(h.replace(/&amp;/g, "&"), here); } catch { return m; }

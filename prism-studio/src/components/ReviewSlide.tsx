@@ -34,7 +34,7 @@ export function ReviewSlide({ full, tz, head, prev, next, position, back, source
   ].filter(Boolean);
   const kicker = `${channel.label} · No. ${String(ep.number).padStart(3, "0")}`;
   return (
-    <article id={`ep-${ep.id}`} className={`slide${single ? " single" : ""}`} style={topicStyle(channel)} aria-label={`${ep.title}, ${kicker}`}>
+    <article id={`ep-${ep.id}`} data-channel={channel.id} className={`slide${single ? " single" : ""}`} style={topicStyle(channel)} aria-label={`${ep.title}, ${kicker}`}>
       <div className="slide-top">
         {back
           ? <Link href={back.href} className="kicker topic-text">← {back.label} · No. {String(ep.number).padStart(3, "0")}</Link>

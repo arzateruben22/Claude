@@ -914,6 +914,43 @@ a.budget-name:hover { text-decoration: underline; }
 @media (min-width: 720px) and (max-width: 899px) { .slide { grid-template-columns: 240px minmax(0, 1fr); } }
 @media (prefers-reduced-motion: no-preference) { .reel { scroll-behavior: smooth; } }
 
+/* ── Review: the channel switcher (src/components/ChannelSwitch.tsx) ────────
+   One big button per channel with its waiting count, then Next channel. Phone: a slim strip above the reel (the reel and
+   its slides give up --chan-h), the channel buttons scroll sideways, Next channel stays at the thumb. Desktop: a sticky row
+   under the intro that wraps. The channel colour is a dot, never a fill; the channel in view gets the light chip. */
+.chan-switch { display: flex; align-items: center; gap: var(--s2); z-index: 20; background: #07080B; border: 1px solid var(--line); }
+.chan-list { display: flex; gap: var(--s2); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.chan-btn { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border: 1px solid var(--line-3); border-radius: var(--r-sm); background: rgba(255, 255, 255, .02);
+  color: var(--text); font: 580 14px/1.2 var(--ui); text-decoration: none; white-space: nowrap; }
+.chan-btn::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--topic); }
+.chan-btn:hover { background: rgba(255, 255, 255, .07); border-color: rgba(222, 229, 240, .5); }
+.chan-btn:focus-visible, .chan-next:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.chan-count { min-width: 24px; padding: 3px 7px; border-radius: 999px; background: var(--fill); color: var(--text-2); text-align: center; font: 560 13px/1.2 var(--mono); }
+.chan-btn[aria-current="true"] { background: #E4E8EE; border-color: #E4E8EE; color: #0A0C10; }
+.chan-btn[aria-current="true"] .chan-count { background: rgba(10, 12, 16, .12); color: #0A0C10; }
+.chan-next { flex: none; min-height: 48px; padding-inline: 16px; white-space: nowrap; }
+.chan-next svg { transform: scaleX(-1); }
+@media (max-width: 719px) {
+  .reel-page { --chan-h: calc(56px + env(safe-area-inset-top)); }
+  .chan-switch { height: var(--chan-h); padding: env(safe-area-inset-top) 12px 0; border-width: 0 0 1px; }
+  .chan-list { flex: 1 1 auto; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; padding-right: var(--s4);
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 20px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 20px), transparent); }
+  .chan-list::-webkit-scrollbar { display: none; }
+  .chan-list li { flex: none; scroll-snap-align: start; }
+  .chan-btn { padding: 0 12px; gap: 8px; font-size: 13.5px; }
+  .chan-next { padding-inline: 12px; gap: 6px; }
+  .reel-page .reel { height: calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - var(--chan-h)); }
+  .reel-page .slide { --screen-h: calc(100dvh - var(--nav-h) - env(safe-area-inset-bottom) - var(--chan-h)); --top-h: 60px; }
+  .reel-page .slide-top { padding-top: 0; }
+}
+@media (min-width: 720px) {
+  .chan-switch { position: sticky; top: 0; flex-wrap: wrap; gap: var(--s3); margin: 0 0 var(--s5); padding: var(--s3); border-radius: var(--r); }
+  .chan-list { flex: 1 1 0; flex-wrap: wrap; gap: var(--s3); }
+  .chan-btn { min-height: 56px; padding: 0 18px; font-size: 15px; }
+  .chan-next { margin-left: auto; min-height: 56px; }
+  .reel > .slide { scroll-margin-top: 164px; }   /* clear the sticky switcher, up to two rows */
+}
+
 /* ── phone polish (390 px and the installed app) ──────────────────────── */
 /* taps: no grey flash, no double-tap zoom delay on controls */
 a, button, summary, label, input, select, textarea { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }

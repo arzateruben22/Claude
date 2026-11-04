@@ -4,6 +4,8 @@ import { reviewQueue, studio } from "@/lib/data";
 import { STATE_LABEL, stateTone } from "@/lib/format";
 import { ReviewSlide } from "@/components/ReviewSlide";
 import { ReelNav } from "@/components/ReelNav";
+import { ChannelSwitch } from "@/components/ChannelSwitch";
+import { channelJumps } from "@/lib/channel-jump";
 
 export const metadata: Metadata = { title: "Review" };
 
@@ -12,6 +14,7 @@ export const metadata: Metadata = { title: "Review" };
 export default async function Review() {
   const [queue, s] = await Promise.all([reviewQueue(), studio()]);
   const step = (i: number) => (queue[i] ? { href: `#ep-${queue[i].ep.id}`, label: queue[i].ep.title } : null);
+  const jumps = channelJumps(queue);
   return (
     <div className={queue.length ? "reel-page" : undefined}>
       <header className="reel-intro">
@@ -19,6 +22,7 @@ export default async function Review() {
         <h1>Review</h1>
         <p className="lede">Watch it, check the sources, then approve each account&apos;s video and text. A new render or any text edit needs a fresh approval.</p>
       </header>
+      {jumps.length ? <ChannelSwitch channels={jumps} /> : null}
       {!queue.length ? <div className="card"><p className="muted" style={{ margin: 0 }}>Nothing waiting. Episodes arrive here when their final render passes quality checks.</p></div> : (
         <div className="reel" id="reel">
           {queue.map((f, i) => (
