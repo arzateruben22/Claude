@@ -60,10 +60,7 @@ const MSF = fibre(THREE, L, { length: 600, axonR: 1.1, myelin: { r: 3.3, interno
 BARE.group.position.set(0, 24, 0); MSF.group.position.set(0, -24, 0);
 G.fibres.add(HERO.group, BARE.group, MSF.group);
 const NODES = HERO.nodes, MNODES = MSF.nodes;
-// the sheath: satin, not clay (a soft sheen and a light clearcoat), for the hero and the ms fibre
-const satin = (hex) => L.patch(new THREE.MeshPhysicalMaterial({ color: lin(hex), roughness: 0.45, sheen: 0.5, sheenRoughness: 0.5, sheenColor: lin("#FFF2DC"),
-  clearcoat: 0.2, clearcoatRoughness: 0.4, emissive: lin("#F6EEDC"), emissiveIntensity: 0.05 }), { fresnel: 0.2, fresnelPower: 3.0, key: "satin" + hex });
-for (const F of [HERO, MSF]) { const m = satin("#F1E6D2"); F.group.children.forEach((c) => { if (c.material === F.sheathMat) c.material = m; }); F.sheathMat = m; }
+// round 2 (review r1 finding 1): keep the fibre's own lamellae sheath (set/neuron.js: spiral bump map, pearly sheen, wet clearcoat); the old satin override flattened it into a smooth pill
 // the spark at each gap: additive light (it blooms; the sheath never does), a little wider than the axon's own glow
 const sparkBand = () => new THREE.MeshPhysicalMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 0, roughness: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
 for (const F of [HERO, MSF]) F.bands.forEach((b) => { b.material = sparkBand(); b.scale.set(1, 1.2, 1.2); });
