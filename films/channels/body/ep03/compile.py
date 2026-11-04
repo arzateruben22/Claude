@@ -66,8 +66,8 @@ DRUM = {"spin0": B["change"]["t0"], "traces": [A("vo03:timed#2", -0.1), A("vo03:
 
 CAM = {
     "hook": [
-        {"t": 0.0, "pos": [116.0, 26.0, 170.0], "look": [110.0, -6.0, 0.0], "fov": 34},   # frame 0: the framed internode (nodes 2–3) inside the safe box
-        {"t": A("vo01:guessed"), "pos": [112.0, 22.0, 150.0], "look": [106.0, -6.0, 0.0], "fov": 34, "ease": "sine"},
+        {"t": 0.0, "pos": [150.0, 24.0, 190.0], "look": [118.0, -6.0, 0.0], "fov": 34},   # frame 0: the framed internode (nodes 2–3) inside the safe box; round 3: the camera pushes along the sheath
+        {"t": A("vo01:thought"), "pos": [104.0, 22.0, 140.0], "look": [106.0, -6.0, 0.0], "fov": 34, "ease": "sine"},
         {"t": A("vo02:racing"), "pos": [120.0, 40.0, 380.0], "look": [110.0, -6.0, 0.0], "fov": 34, "ease": "p2"},   # pull back along the fibre
         {"t": A("vo02:cell's"), "pos": [20.0, 36.0, 220.0], "look": [16.0, -6.0, 0.0], "fov": 34, "ease": "p2"},      # the cell body: one cell
         {"t": A("vo02:Some", -0.1), "pos": [22.0, 36.0, 226.0], "look": [18.0, -6.0, 0.0], "fov": 34, "ease": "sine"},  # held while it is named
@@ -100,7 +100,7 @@ CAM = {
 CAM["loop"] = [dict(CAM["hook"][0], t=CUT["loop"])]
 
 FOC = {
-    "hook": [{"t": 0.0, "at": "spark", "f": 0.5}, {"t": A("vo02:racing"), "at": "spark", "f": 0.3}, {"t": A("vo02:cell's", -0.4), "at": "soma", "f": 0.35}, {"t": A("vo02:spine", -0.3), "at": "mid", "f": 0.2}],
+    "hook": [{"t": 0.0, "at": "mid", "f": 0.16}, {"t": 1.5, "at": "spark", "f": 0.5}, {"t": A("vo02:racing"), "at": "spark", "f": 0.3}, {"t": A("vo02:cell's", -0.4), "at": "soma", "f": 0.35}, {"t": A("vo02:spine", -0.3), "at": "mid", "f": 0.2}],
     "drum": [{"t": CUT["drum"], "at": "rig", "f": 0.3}, {"t": A("vo03:timed#2"), "at": "traces", "f": 0.45}],
     "fibres": [{"t": CUT["fibres"], "at": "bare", "f": 0.45}, {"t": A("vo04:Many", 0.2), "at": "spark", "f": 0.45}, {"t": A("vo04:Where", 0.2), "at": "ms", "f": 0.45},
                {"t": B["whoa"]["t0"], "at": "race", "f": 0.3}, {"t": B["takeaway"]["t0"], "at": "near", "f": 0.9},
@@ -112,7 +112,7 @@ LABELS = [
     {"id": "soma", "text": "one nerve cell", "color": "nerve", "mark": "dot", "at": "soma", "t0": A("vo02:cell's"), "t1": A("vo02:Some", 0.1), "shot": "hook", "side": 1, "v": "middle"},
     {"id": "muscle", "text": "frog muscle", "color": "muscle", "mark": "dot", "at": "muscle", "t0": A("vo03:In"), "t1": A("vo03:Helmholtz"), "shot": "drum", "side": -1},
     {"id": "nerve", "text": "its nerve", "color": "nerve", "mark": "dot", "at": "frognerve", "t0": A("vo03:fifty", 0.2), "t1": A("vo03:Helmholtz"), "shot": "drum", "side": -1},
-    {"id": "trace", "text": "zapped farther away: its twitch starts later", "color": "text", "mark": "dot", "at": "traces", "t0": A("vo03:metres", 0.15) + 0.7, "t1": CUT["fibres"] - 0.3, "shot": "drum", "side": 1},
+    {"id": "trace", "text": "the delay", "color": "text", "mark": "dot", "at": "delay", "t0": A("vo03:metres", 0.15) + 0.7, "t1": CUT["fibres"] - 0.3, "shot": "drum", "side": 1},
     {"id": "bare", "text": "bare fibre", "color": "nerve", "mark": "dot", "at": "bare", "t0": B["why"]["t0"] + 0.5, "t1": A("vo04:re-fires", -0.4), "shot": "fibres", "side": 1},   # hands its name to the readout
     {"id": "myelin", "text": "myelin", "color": "bone", "mark": "dot", "at": "sheath", "t0": A("vo04:myelin", 0.25), "t1": round(A("vo04:myelin", 0.25) + 1.6, 4), "shot": "fibres", "side": 1},   # after the N3→N4 arc has landed
     {"id": "gap", "text": "bare gap", "color": "nerve", "mark": "dot", "at": "node", "t0": A("vo04:gaps", -0.1), "t1": round(A("vo04:gaps", -0.1) + 1.7, 4), "shot": "fibres", "side": 1},
@@ -123,12 +123,11 @@ LABELS = [
 ]
 # the spine readout (WRITING.md, "The picture" 2): one number in one place, its label naming the beat
 SPINE = [
-    {"id": "q", "t0": round(max(A("vo01:A"), 2.6 + 0.7), 4),   # after the title has fully gone (owner, 3 Nov: nothing in the title zone)
+    {"id": "q", "t0": round(max(A("vo01:An"), 2.6 + 0.7), 4),   # after the title has fully gone (owner, 3 Nov: nothing in the title zone)
      "t1": A("vo02:Some", -0.3), "text": "?", "unit": "m/s", "label": "how fast is this spark?"},
     {"id": "len", "t0": A("vo02:fibres"), "t1": A("vo02:How", -0.45), "value": 1, "unit": "m", "label": "spine to toe: about"},   # c3
-    {"id": "take", "t0": A("vo02:How"), "t1": CUT["drum"] - 0.3, "text": "?", "unit": "s", "label": "spine to toe takes"},
     {"id": "light", "t0": A("vo03:Müller"), "t1": A("vo03:Helmholtz", -0.1), "value": 300_000_000, "unit": "m/s", "label": "Müller: as fast as light?"},   # c4, c20
-    {"id": "frog", "t0": A("vo03:About"), "t1": CUT["fibres"] - 0.3, "keys": [[A("vo03:About"), 0], [A("vo03:second", 0.2), 27]], "unit": "m/s",
+    {"id": "frog", "t0": A("vo03:About"), "t1": CUT["fibres"] - 0.3, "keys": [[A("vo03:About"), 27], [A("vo03:second", 0.2), 27]], "unit": "m/s",
      "label": [[A("vo03:About"), "Helmholtz, 1850, frog: about"], [A("vo03:cheetah"), "Helmholtz 1850 · cheetah speed"]]},   # c6, c17
     # round 2 (review r1 finding 9): no echo of the caption and no raw count. One comparison the drawn model supports:
     # over the same 170 um, the bare fibre re-fires every 5 um (34 times), the wrapped one only at its gaps (4 times)

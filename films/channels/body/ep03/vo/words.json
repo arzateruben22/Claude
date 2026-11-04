@@ -3,8 +3,8 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "As fast as light? A top expert once guessed it was.",
-   "heard": "As fast as light. A top expert once guessed it was.",
+   "text": "As fast as light? An expert once thought so.",
+   "heard": "As fast as light. An expert once thought so.",
    "words": [
     {
      "w": "As",
@@ -32,45 +32,33 @@
      "end_asr": 1.76
     },
     {
-     "w": "A",
-     "start": 1.855,
-     "end": 1.92,
-     "heard": true
-    },
-    {
-     "w": "top",
-     "start": 1.975,
-     "end": 2.24,
+     "w": "An",
+     "start": 1.84,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "expert",
-     "start": 2.175,
-     "end": 2.72,
+     "start": 2.01,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "once",
-     "start": 2.685,
+     "start": 2.455,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "thought",
+     "start": 2.84,
      "end": 3.04,
      "heard": true
     },
     {
-     "w": "guessed",
-     "start": 3.07,
+     "w": "so.",
+     "start": 3.045,
      "end": 3.44,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 3.425,
-     "end": 3.6,
-     "heard": true
-    },
-    {
-     "w": "was.",
-     "start": 3.485,
-     "end": 3.92,
      "heard": true
     }
    ],

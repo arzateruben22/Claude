@@ -14,11 +14,11 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "As fast as light? A top expert once guessed it was.",
+   "text": "As fast as light? An expert once thought so.",
    "stars": [
     "light"
    ],
-   "phonemes": "az fˈast az lˈaɪt? ɐ tˈɒp ˈɛkspɜːt wˈʌns ɡˈɛst ɪt wˈɒz.",
+   "phonemes": "az fˈast az lˈaɪt? ɐn ˈɛkspɜːt wˈʌns θˈɔːt sˈəʊ.",
    "speeds": [
     1.0,
     0.9
@@ -33,8 +33,8 @@
     ]
    ],
    "file": "01.wav",
-   "dur": 3.979,
-   "sha256": "4f198b068b8d989639c17b9f0521ccdaa99a22d091977361f512b7f4502a55fc"
+   "dur": 3.516,
+   "sha256": "b6614e312ef4fb64d599f76ffd0d6864452b2e9fc404c35f395ea74072d842f4"
   },
   {
    "id": "vo02",

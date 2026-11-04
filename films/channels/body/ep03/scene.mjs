@@ -58,9 +58,39 @@ const HERO = fibre(THREE, L, { length: 660, axonR: 1.2, myelin: MY });
 const BARE = fibre(THREE, L, { length: 600, axonR: 0.8 });
 const MSF = fibre(THREE, L, { length: 600, axonR: 1.1, myelin: { r: 3.3, internode: 40, node: 2.5 } });
 BARE.group.position.set(0, 24, 0); MSF.group.position.set(0, -24, 0);
+{  // round 3 (review r2, h): the bare fibre is a wet, beaded strand, not a rod: bump, clearcoat, a thicker swelling every so often
+  const cv = document.createElement("canvas"); cv.width = 256; cv.height = 32; const cx = cv.getContext("2d"), r = rng(31); cx.fillStyle = "#808080"; cx.fillRect(0, 0, 256, 32);
+  for (let i = 0; i < 160; i++) { cx.fillStyle = `rgba(${r() < 0.5 ? "255,255,255" : "0,0,0"},${0.1 + 0.2 * r()})`; cx.beginPath(); cx.arc(r() * 256, r() * 32, 1 + 3 * r(), 0, 6.28); cx.fill(); }
+  const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(24, 1);
+  const am = BARE.axonMat; am.bumpMap = t; am.bumpScale = 2.2; am.clearcoat = 0.9; am.clearcoatRoughness = 0.12; am.roughness = 0.3; am.needsUpdate = true;
+  BARE.group.scale.set(1, 1.6, 1.6);
+}
 G.fibres.add(HERO.group, BARE.group, MSF.group);
 const NODES = HERO.nodes, MNODES = MSF.nodes;
 // round 2 (review r1 finding 1): keep the fibre's own lamellae sheath (set/neuron.js: spiral bump map, pearly sheen, wet clearcoat); the old satin override flattened it into a smooth pill
+// round 3 (review r2, h): irregular, tapering sheaths (no two alike: a low swell, a lumpy flank, a slight waist) ...
+{
+  const rr = rng(23);
+  for (const F of [HERO, MSF]) F.group.children.forEach((m) => {
+    if (m.material !== F.sheathMat || !m.geometry || !m.geometry.attributes) return;
+    const g = m.geometry, p = g.attributes.position, ph = rr() * 6.28, ph2 = rr() * 6.28, amp = 0.05 + 0.07 * rr(), lump = 0.03 + 0.05 * rr(), lo = 0.9 + 0.2 * rr();
+    let x0 = Infinity, x1 = -Infinity; for (let i = 0; i < p.count; i++) { x0 = Math.min(x0, p.getX(i)); x1 = Math.max(x1, p.getX(i)); }
+    for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i), u = (x - x0) / (x1 - x0 || 1), a = Math.atan2(z, y);
+      const k = lo * (1 + amp * Math.sin(u * 6.28 + ph) + lump * Math.sin(a * 3 + u * 9 + ph2) * Math.sin(u * 3.14)) * (1 - 0.1 * Math.exp(-((u - 0.5) ** 2) / 0.02));
+      p.setXYZ(i, x, y * k, z * k); }
+    g.computeVertexNormals();
+  });
+}
+// ... and a cut section held beside the sheath in the why: the layers wrapped round the axon, as the scan would show them
+const CSEC = new THREE.Group(); G.fibres.add(CSEC);
+{
+  const mk = (c, e) => new THREE.MeshBasicMaterial({ color: lin(c), side: THREE.DoubleSide, transparent: true, opacity: 1, fog: false });
+  const N = 15, r0 = 1.5, r1 = 6.2, bg = new THREE.Mesh(new THREE.CircleGeometry(r1 + 0.9, 64), new THREE.MeshBasicMaterial({ color: lin("#0A1F1E"), transparent: true, opacity: 0.78, fog: false })); bg.position.z = -0.1; CSEC.add(bg);
+  for (let i = 0; i < N; i++) { const a = r0 + (r1 - r0) * (i / N), b = r0 + (r1 - r0) * ((i + 0.62) / N), ring = new THREE.Mesh(new THREE.RingGeometry(a, b, 72), mk(i % 2 ? "#F1E6D2" : "#B9A98C")); ring.position.z = 0.02 * i; CSEC.add(ring); }
+  const core = new THREE.Mesh(new THREE.CircleGeometry(r0 * 0.95, 40), new THREE.MeshBasicMaterial({ color: lin(SIG), fog: false })); core.position.z = 0.5; CSEC.add(core);
+  const edge = new THREE.Mesh(new THREE.RingGeometry(r1 + 0.9, r1 + 1.25, 72), new THREE.MeshBasicMaterial({ color: lin(SIG), transparent: true, opacity: 0.85, fog: false })); CSEC.add(edge);
+  CSEC.scale.setScalar(1.15); CSEC.visible = false;
+}
 // the spark at each gap: additive light (it blooms; the sheath never does), a little wider than the axon's own glow
 const sparkBand = () => new THREE.MeshPhysicalMaterial({ color: 0x000000, emissive: lin(SIG), emissiveIntensity: 0, roughness: 1, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
 for (const F of [HERO, MSF]) F.bands.forEach((b) => { b.material = sparkBand(); b.scale.set(1, 1.2, 1.2); });
@@ -217,6 +247,8 @@ const writeFibres = (t, sh) => {
     setArc(arcM, MNODES[k], MNODES[k + 1], u, 3.3 - 0.4);
   } else { glowSet(MSF, { front: -1, mode: "jump" }); setArc(arcM, null, null, 0, 0); }
   startMat.opacity = 0.85 * presence(t, FILM.race.bare0 - 0.4, B.takeaway.t0 - 0.2, { d: 0.4, out: 0.5 }).o * (sh === "fibres" ? 1 : 0);
+  { const ML = FILM.labels.find((l) => l.id === "myelin"), o = sh === "fibres" ? presence(t, ML.t0 - 0.25, ML.t1 + 0.2, { d: 0.3, out: 0.3 }).o : 0;
+    CSEC.visible = o > 0.01; CSEC.position.set(NODES[3] + 34, MY.r + 9, 5); CSEC.scale.setScalar(0.95 * (0.55 + 0.45 * E.out3(o))); CSEC.rotation.y = 0.25 * (1 - o); }
   // one cell, alone: the bare and ms fibres are not in the hook (the ms one sits out the race and the figure too)
   BARE.group.visible = sh === "fibres";
   MSF.group.visible = sh === "fibres" && !(t >= B.whoa.t0 && t < B.tease.t0);
@@ -259,6 +291,14 @@ const ENV = (() => {
   const trim = new THREE.Mesh(new THREE.BoxGeometry(61.4, 0.7, 35.4), brass); trim.position.set(4, -22.3, -6); G.drum.add(trim);   // brass bevel line on the top edge
   const plinth = new THREE.Mesh(new THREE.BoxGeometry(56, 1.6, 30), wood); plinth.position.set(4, -22.0, -6); G.drum.add(plinth);
   for (const [fx, fz] of [[-24, -20], [32, -20], [-24, 8], [32, 8]]) { const ft = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 2.1, 2.2, 20), brass); ft.position.set(fx, -26.5, fz); G.drum.add(ft); }
+  // round 3: an induction coil (the stimulator Helmholtz would have used) and a gear train under the drum
+  { const cu = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#B4683A"), roughness: 0.3, metalness: 0.9, envMap: ENV, envMapIntensity: 1.1 }), { fresnel: 0.2, key: "copper" });
+    const pts = []; for (let i = 0; i <= 220; i++) { const u = i / 220, a = u * 6.283 * 16; pts.push(new THREE.Vector3(-4.5 + 9 * u, Math.sin(a) * 2.6, Math.cos(a) * 2.6)); }
+    const coil = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 440, 0.28, 8, false), cu); coil.position.set(12, -19.6, 4); G.drum.add(coil);
+    const core = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 11, 20), brass); core.rotation.z = Math.PI / 2; core.position.set(12, -19.6, 4); G.drum.add(core);
+    for (const dx of [-7, 7]) { const post = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 3, 16), brass); post.position.set(12 + dx, -20.4, 4); G.drum.add(post); const kn = new THREE.Mesh(new THREE.SphereGeometry(1.0, 16, 12), wood); kn.position.set(12 + dx, -18.6, 4); G.drum.add(kn); }
+    for (const [gx, gz, gr, gt] of [[-4, 6, 3.2, 16], [2.5, 6, 2.2, 11]]) { const gear = new THREE.Mesh(new THREE.CylinderGeometry(gr, gr, 0.9, gt * 2), brass); const sh = new THREE.Shape(); for (let i = 0; i < gt * 2; i++) { const a = (i / (gt * 2)) * 6.283, rr = i % 2 ? gr * 0.82 : gr; (i ? sh.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : sh.moveTo(Math.cos(a) * rr, Math.sin(a) * rr)); }
+      const gm = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.9, bevelEnabled: false }), brass); gm.rotation.x = Math.PI / 2; gm.position.set(gx, -22.3, gz); G.drum.add(gm); } }
   // contact shade on the base under the drum and the post
   const cv = document.createElement("canvas"); cv.width = cv.height = 128; const cx = cv.getContext("2d"), gr = cx.createRadialGradient(64, 64, 0, 64, 64, 64);
   gr.addColorStop(0, "rgba(2,8,7,1)"); gr.addColorStop(1, "rgba(2,8,7,0)"); cx.fillStyle = gr; cx.fillRect(0, 0, 128, 128);
@@ -320,12 +360,24 @@ const writeDrum = (t) => {
   lever.quaternion.setFromUnitVectors(new THREE.Vector3(1, 0, 0), vL.normalize());
   penTip.position.set(...pen); penTip.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), vM.set(-Math.sin(DR.pen), 0, -Math.cos(DR.pen)));
   nerveMat.emissiveIntensity = 0;
+  DELAY.m.opacity = 0.95 * seg(t, TRACES[1].t0 + TRACE_T * 0.7, TRACES[1].t0 + TRACE_T * 0.7 + 0.3);
 };
+// round 3 (review r2, c): "the delay": a bracket on the drum between the near and the far twitch's first rise
+const DELAY = (() => {
+  const g = new THREE.Group(), m = new THREE.MeshBasicMaterial({ color: lin(SIG), transparent: true, opacity: 0, fog: false }), r = DR.r + 0.25;
+  const a1 = A0 - DR.w * TRACE_T * 0.27, a2 = A0 - DR.w * TRACE_T * (0.27 + SHIFT[1]), pt = (a, y) => new THREE.Vector3(Math.sin(a) * r, y, Math.cos(a) * r);
+  const arc = []; for (let i = 0; i <= 16; i++) arc.push(pt(a1 + (a2 - a1) * i / 16, 0));
+  g.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(arc), 16, 0.2, 6, false), m));
+  for (const a of [a1, a2]) g.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(pt(a, -2.4), pt(a, 2.4)), 2, 0.2, 6, false), m));
+  drum.add(g); return { g, m, mid: pt((a1 + a2) / 2, 0.9) };
+})();
+const delayAnchor = () => { drum.updateMatrixWorld(true); return drum.localToWorld(DELAY.mid.clone()).toArray(); };
 const traceAnchor = () => { const a = A0 - DR.w * TRACE_T * 0.63; drum.updateMatrixWorld(true); return drum.localToWorld(new THREE.Vector3(Math.sin(a) * DR.r, ROWS[1] + 5.4, Math.cos(a) * DR.r)).toArray(); };   // just over the far twitch's peak
 
 // ════ the overlay ════════════════════════════════════════════════════════════════════════════════
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .hud-end .mi-pulse { margin: 0 0 3vmin; }
+.hud-end { background: rgba(7, 21, 19, .66); padding: 3.4vmin 3.6vmin 3vmin; border-radius: 3.2vmin; }
 .hud-title .mi-pulse { margin-top: 2.2vmin; }
 .mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 600 3.3vmin/1.35 var(--font-text); color: var(--text); background: var(--hud-plate); padding: 1.4vmin 2.2vmin; border-radius: 1.2vmin; }   /* review r1: plated */
 .mi-spine { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); }
@@ -349,6 +401,7 @@ const ANCH = {
   muscle: () => [-(MUSC[0] + 6), MUSC[1] - 2, 6],   // its flank toward the drum (the rig is mirrored): the pill sits in the gap
   frognerve: () => { const p = nerveP.at(nerveP.length * 0.6); return [-(p[0] + 1), p[1], p[2] + 1]; },   // mirrored rig
   traces: () => traceAnchor(),
+  delay: () => delayAnchor(),
   bare: (t) => { const b = FILM.bare, d = Math.max(0, b.v * (t - b.t0)); return [b.x0 + b.step * Math.floor(d / b.step) - 3, 25, 0]; },   // the glow's head, as it steps
   sheath: () => [NODES[3] + 30, MY.r, 1.5],
   node: () => [NODES[FILM.whyJump.k0 + 5], -(MY.r + 0.3), 1.2],   // node 7, where the leap in flight on "gaps" lands: the bottom of its notch (the pill sits below the arcs)
@@ -415,6 +468,7 @@ figEl.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns
     <g clip-path="url(#bclip)">
       <rect x="0" y="0" width="100" height="230" fill="url(#bcore)"/>
       ${Array.from({ length: 29 }, (_, i) => `<line x1="0" x2="100" y1="${4 + i * 8}" y2="${4 + i * 8}" stroke="#BFEFE3" stroke-opacity="${i % 4 === 0 ? 0.22 : 0.09}" stroke-width="${(0.9 / FS * S1).toFixed(3)}"/>`).join("")}
+      <ellipse cx="42" cy="62" rx="7" ry="13" fill="#8FE3D0" fill-opacity="0.12"/><ellipse cx="58" cy="62" rx="7" ry="13" fill="#8FE3D0" fill-opacity="0.12"/><ellipse cx="50" cy="22" rx="11" ry="13" fill="#BFEFE3" fill-opacity="0.12"/>
       <polyline points="50,46 50,70 50,114 50,158 50,226" fill="none" stroke="#BFEFE3" stroke-opacity="0.18" stroke-width="${(3.4 / FS * S1).toFixed(3)}" stroke-dasharray="1.2 2.2"/>
     </g>
     <path d="${FIGURE}" fill="none" stroke="#9FF0DC" stroke-opacity="0.9" stroke-width="${(2.4 / FS * S1).toFixed(3)}" stroke-linejoin="round" filter="url(#bglow)"/>
@@ -439,8 +493,8 @@ const writeFig = (t) => {
   if (o <= 0.001) return;
   // the meanwhile: in to the heart (×1.6 about the chest)
   // ×1.6 about the chest, lowered as it grows so the head stays under the tally plate
-  const dz = E.inout2(seg(t, F.zoom[0], F.zoom[1])), z = 1 + 0.6 * dz, hx0 = 54, hy0 = 64;
-  figQ("body").setAttribute("transform", `translate(${(FX + hx0 * FS * (1 - z)).toFixed(1)} ${(FY + hy0 * FS * (1 - z) + 120 * S1 * dz).toFixed(1)}) scale(${(FS * z).toFixed(4)})`);
+  const dz = E.inout2(seg(t, F.zoom[0], F.zoom[1])), z = 1 + 1.3 * dz, hx0 = 54, hy0 = 64;
+  figQ("body").setAttribute("transform", `translate(${(FX + hx0 * FS * (1 - z)).toFixed(1)} ${(FY + hy0 * FS * (1 - z) + 190 * S1 * dz).toFixed(1)}) scale(${(FS * z).toFixed(4)})`);
   const uf = seg(t, T.stub, T.fast), us = seg(t, T.stub, T.slow);
   const pf = routeAt(uf), ps = routeAt(us);
   // the route draws on from the toe before the stub ("toe … twice"); each signal leaves its trail along it
