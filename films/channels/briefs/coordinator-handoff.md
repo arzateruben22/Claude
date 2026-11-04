@@ -53,6 +53,22 @@ the changed `covers/<slug>-NN.jpg` as files). Edit `NOTE`/`HOLD` at the top of g
    Delivery encode: CRF 15, or the lowest CRF that keeps the master at or under 95 MB.
    Skin Sense captions carry "Education, not medical advice"; a dermatologist review is the owner's call.
 
+## Prism Studio (the owner's posting studio; he calls it "Prism Studio")
+- What it is: a Next.js + Postgres app in `prism-studio/` on this branch. It holds the channel catalog, the upload
+  queue, captions and covers for every episode (YouTube, TikTok, Instagram), approvals, costs and lessons. Read
+  `prism-studio/CLAUDE.md` (its rules: publishing is manual, never store passwords or codes) and `prism-studio/README.md`.
+- Links the owner uses (both private artifacts of his; read them with the Artifact tool, action "read"):
+  - **Prism Studio preview** (static, clickable, buttons linked): https://claude.ai/artifact/WBGPX93rZhTPXeB9jvKaiu
+  - **Prism Studio launch checklist** (Railway hosting, steps 1–7): https://claude.ai/artifact/6EKHKokWLjAXuCo3VrvUzd
+    (same content as `prism-studio/docs/LAUNCH-CHECKLIST.md`)
+- When he says "give me Prism Studio", send the preview link. To refresh it with new episodes: run
+  `prism-studio/scripts/static-preview.cjs` (read its header for usage; `static-preview-media.cjs` copies media), then
+  publish to the same artifact URL (read it first).
+- Per episode, run from `prism-studio/`: `npm run covers -- <ep> --force`, then `npx tsx scripts/posting-pack.ts <ep>`.
+  Tests: `npm run typecheck && npm test` (start Postgres first: `service postgresql start`).
+- Hosting isn't live yet: it waits on the owner's Railway address. Then `npm run media:push` sends films to
+  `/api/media-push` (MEDIA_PUSH_TOKEN comes from the environment, never from chat).
+
 ## Open questions for the owner
 1. Was the old-look Body Backstage No. 001 already posted? If yes, the new one goes up as a re-release.
 2. Does he want his cloned voice (sent as an A/B test on 3 Nov)? If yes: the clone toolchain is on branch
