@@ -206,11 +206,30 @@ const ENV = (() => {
   const pm = new THREE.PMREMGenerator(renderer), rt = pm.fromScene(es, 0.04); pm.dispose(); return rt.texture;
 })();
 {
-  const soot = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#2E2A27"), roughness: 0.8, metalness: 0.05, envMap: ENV, envMapIntensity: 0.35 }), { fresnel: 0.45, key: "drum" });
+  // round 2 (review r1 finding 1): a period instrument, not primitives. Smoked paper on the drum (soot with fine
+  // horizontal scratches), a grained wooden base with a bevelled brass trim, brass rims, spindle and crank.
+  const cvs = (w, h, f) => { const c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); f(x, w, h); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; return t; };
+  const rr = rng(41);
+  const sootTex = cvs(512, 256, (x, w, h) => { x.fillStyle = "#3A322C"; x.fillRect(0, 0, w, h);
+    for (let i = 0; i < 2600; i++) { const a = 0.04 + 0.12 * rr(); x.fillStyle = rr() < 0.5 ? `rgba(12,9,7,${a})` : `rgba(120,100,84,${a * 0.6})`; x.fillRect(rr() * w, rr() * h, 6 + rr() * 60, 0.6); }
+    x.fillStyle = "rgba(190,170,140,0.18)"; x.fillRect(0, h * 0.47, w, 2); });   // the paper's overlap seam
+  const sootBump = cvs(512, 256, (x, w, h) => { x.fillStyle = "#808080"; x.fillRect(0, 0, w, h); for (let i = 0; i < 1800; i++) { x.fillStyle = `rgba(${rr() < 0.5 ? 40 : 220},${rr() < 0.5 ? 40 : 220},${rr() < 0.5 ? 40 : 220},0.35)`; x.fillRect(rr() * w, rr() * h, 4 + rr() * 40, 0.8); } });
+  const woodTex = cvs(512, 256, (x, w, h) => { x.fillStyle = "#4A3022"; x.fillRect(0, 0, w, h);
+    for (let i = 0; i < 160; i++) { const y = rr() * h; x.strokeStyle = `rgba(${rr() < 0.5 ? "28,16,10" : "112,76,50"},${0.12 + 0.2 * rr()})`; x.lineWidth = 0.6 + 1.6 * rr(); x.beginPath(); x.moveTo(0, y); for (let px = 0; px <= w; px += 32) x.lineTo(px, y + 3 * Math.sin(px / 61 + i)); x.stroke(); } });
+  const soot = L.patch(new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: sootTex, bumpMap: sootBump, bumpScale: 1.2, roughness: 0.62, metalness: 0.05, envMap: ENV, envMapIntensity: 0.4 }), { fresnel: 0.35, key: "drum" });
+  sootTex.repeat.set(3, 1);
+  const brass = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#B08D57"), roughness: 0.3, metalness: 0.85, envMap: ENV, envMapIntensity: 1.2 }), { fresnel: 0.2, key: "brass" });
+  const wood = L.patch(new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: woodTex, roughness: 0.5, clearcoat: 0.5, clearcoatRoughness: 0.3, envMap: ENV, envMapIntensity: 0.5 }), { fresnel: 0.25, key: "wood" });
   drum.add(new THREE.Mesh(new THREE.CylinderGeometry(DR.r, DR.r, DR.h, 128, 1, false), soot));
-  const brass = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#B08D57"), roughness: 0.35, metalness: 0.7, envMap: ENV, envMapIntensity: 1.0 }), { fresnel: 0.2, key: "brass" });
-  const axle = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, DR.h + 16, 16), brass); drum.add(axle);
-  const base = new THREE.Mesh(new THREE.BoxGeometry(60, 3, 34), brass); base.position.set(4, -24, -6); G.drum.add(base);
+  for (const sy of [1, -1]) { const rim = new THREE.Mesh(new THREE.CylinderGeometry(DR.r + 0.5, DR.r + 0.5, 1.6, 96), brass); rim.position.y = sy * (DR.h / 2 + 0.2); drum.add(rim);
+    const hub = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 1.2, 32), brass); hub.position.y = sy * (DR.h / 2 + 1.2); drum.add(hub); }
+  const axle = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, DR.h + 20, 24), brass); drum.add(axle);
+  const crank = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 9, 12), brass); crank.rotation.z = Math.PI / 2; crank.position.set(4.5, DR.h / 2 + 9, 0); drum.add(crank);
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(1.3, 20, 14), wood); knob.position.set(9, DR.h / 2 + 9, 0); drum.add(knob);
+  const base = new THREE.Mesh(new THREE.BoxGeometry(60, 3, 34, 1, 1, 1), wood); base.position.set(4, -24, -6); G.drum.add(base);
+  const trim = new THREE.Mesh(new THREE.BoxGeometry(61.4, 0.7, 35.4), brass); trim.position.set(4, -22.3, -6); G.drum.add(trim);   // brass bevel line on the top edge
+  const plinth = new THREE.Mesh(new THREE.BoxGeometry(56, 1.6, 30), wood); plinth.position.set(4, -22.0, -6); G.drum.add(plinth);
+  for (const [fx, fz] of [[-24, -20], [32, -20], [-24, 8], [32, 8]]) { const ft = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 2.1, 2.2, 20), brass); ft.position.set(fx, -26.5, fz); G.drum.add(ft); }
   // contact shade on the base under the drum and the post
   const cv = document.createElement("canvas"); cv.width = cv.height = 128; const cx = cv.getContext("2d"), gr = cx.createRadialGradient(64, 64, 0, 64, 64, 64);
   gr.addColorStop(0, "rgba(2,8,7,1)"); gr.addColorStop(1, "rgba(2,8,7,0)"); cx.fillStyle = gr; cx.fillRect(0, 0, 128, 128);
@@ -233,14 +252,15 @@ const TRACES = D.traces.map((t0, i) => {
   drum.add(m); return { m, g, t0, N };
 });
 // the muscle, its clamp, the nerve going up with two stimulating points, the lever to the pen
-const muscleMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#D68A99"), roughness: 0.55 }), { fresnel: 0.35, key: "muscle" });
+const striae = (() => { const c = document.createElement("canvas"); c.width = 64; c.height = 256; const x = c.getContext("2d"); x.fillStyle = "#808080"; x.fillRect(0, 0, 64, 256); for (let i = 0; i < 90; i++) { x.fillStyle = `rgba(${i % 2 ? 30 : 230},${i % 2 ? 30 : 230},${i % 2 ? 30 : 230},0.5)`; x.fillRect(i * 0.7, 0, 0.5 + (i % 3) * 0.4, 256); } const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(4, 1); return t; })();   // round 2: muscle fibre striation
+const muscleMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#D68A99"), roughness: 0.4, bumpMap: striae, bumpScale: 1.6, clearcoat: 0.6, clearcoatRoughness: 0.25, sheen: 0.6, sheenColor: lin("#FFC0CC") }), { fresnel: 0.35, key: "muscle" });
 const MUS = cutaway({ radius: 7, noise: { amp: 0.1, freq: 1.6, seed: 2 }, segments: [56, 40], material: muscleMat });
 const MUSC = [-14, 0, 0]; MUS.group.position.set(...MUSC); G.drum.add(MUS.group);
 const metal = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#9AA3A0"), roughness: 0.35, metalness: 0.8 }), { fresnel: 0.15, key: "steel" });
 { const c = new THREE.Mesh(new THREE.BoxGeometry(12, 3, 8), metal); c.position.set(-14, 13.5, 0); G.drum.add(c); const post = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 50, 12), metal); post.position.set(-27, -1, -4); G.drum.add(post); const arm = new THREE.Mesh(new THREE.BoxGeometry(14, 1.4, 1.4), metal); arm.position.set(-20.5, 14.5, -2); G.drum.add(arm); }
 const nerveP = path([[-14, 10, 0], [-17, 22, 1], [-21, 34, 1.5], [-23, 46, 1], [-22, 56, 0]]);
-const nerveMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#E8DCC6"), roughness: 0.55, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.3, key: "frognerve" });
-G.drum.add(new THREE.Mesh(tube(nerveP, { radius: 0.9, radial: 12, step: 1 }), nerveMat));
+const nerveMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#E8DCC6"), roughness: 0.25, clearcoat: 0.9, clearcoatRoughness: 0.1, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.3, key: "frognerve" });
+G.drum.add(new THREE.Mesh(tube(nerveP, { radius: 0.6, radial: 14, step: 1 }), nerveMat));
 const ELEC = [nerveP.at(nerveP.length * 0.32), nerveP.at(nerveP.length * 0.82)];
 const sparkMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin(SIG), emissive: lin(SIG), emissiveIntensity: 0, roughness: 0.3 }), { fresnel: 0, key: "elec" });
 const ELM = ELEC.map((p, i) => {
