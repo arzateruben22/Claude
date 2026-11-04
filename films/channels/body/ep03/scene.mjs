@@ -185,6 +185,11 @@ const heroState = (t, sh) => {
   if (t >= t0) { const x = (t - t0) / T.hop, j = Math.floor(x); return { k: Math.min(kLast, kLast - 3 + j), u: j <= 3 ? x - j : 1, tease: true, end: seg(t, T.arrive - 0.1, T.arrive + 0.2) }; }
   return null;
 };
+// round 2 (review r1 finding 4): the race runs from one lit start line, with distance ticks, so a winner is visible
+const startMat = new THREE.MeshBasicMaterial({ color: lin(SIG), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, fog: false });
+const RACEX0 = FILM.race.x0, startLine = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 64), startMat); startLine.position.set(RACEX0 - 2, 8, 0); G.fibres.add(startLine);
+const tickGeo = new THREE.PlaneGeometry(0.35, 6), ticks = [];
+for (let i = 1; i <= 6; i++) { const m = new THREE.Mesh(tickGeo, startMat); m.position.set(RACEX0 - 2 + i * 30, -12, 0); G.fibres.add(m); ticks.push(m); }
 const writeFibres = (t, sh) => {
   // the hero; in the race it is the thick wrapped racer, drawn FILM.race.thick × thicker (its arc's head stays round)
   const th = raceThick(t); HERO.group.scale.set(1, th, th); arcH.userData.head.scale.set(th, 1, 1);
@@ -211,6 +216,7 @@ const writeFibres = (t, sh) => {
     const u = k < BAD ? x - Math.floor(x) : Math.min(0.42, (x - (BAD - M.k0)) * 0.6) * (1 - stall);
     setArc(arcM, MNODES[k], MNODES[k + 1], u, 3.3 - 0.4);
   } else { glowSet(MSF, { front: -1, mode: "jump" }); setArc(arcM, null, null, 0, 0); }
+  startMat.opacity = 0.85 * presence(t, FILM.race.bare0 - 0.4, B.takeaway.t0 - 0.2, { d: 0.4, out: 0.5 }).o * (sh === "fibres" ? 1 : 0);
   // one cell, alone: the bare and ms fibres are not in the hook (the ms one sits out the race and the figure too)
   BARE.group.visible = sh === "fibres";
   MSF.group.visible = sh === "fibres" && !(t >= B.whoa.t0 && t < B.tease.t0);
@@ -390,10 +396,22 @@ const pl = (cls, stroke, w, extra = "") => `<polyline class="${cls}" points="${R
 figEl.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="${NS}">
   <rect x="0" y="0" width="${W}" height="${H}" fill="var(--bg)" opacity="0.5"/>
   <g class="body" transform="translate(${FX.toFixed(1)} ${FY.toFixed(1)}) scale(${FS.toFixed(4)})">
-    <path d="${FIGURE}" fill="var(--surface)" fill-opacity="0.9" stroke="var(--text-2)" stroke-width="${(2.2 / FS * S1).toFixed(3)}" fill-rule="nonzero"/>
+    <defs>
+      <linearGradient id="bvol" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2F6F68" stop-opacity="0.85"/><stop offset="0.45" stop-color="#0E2E2D" stop-opacity="0.78"/><stop offset="1" stop-color="#1F5650" stop-opacity="0.85"/></linearGradient>
+      <radialGradient id="bcore" cx="0.5" cy="0.3" r="0.6"><stop offset="0" stop-color="#8FE3D0" stop-opacity="0.35"/><stop offset="1" stop-color="#8FE3D0" stop-opacity="0"/></radialGradient>
+      <clipPath id="bclip"><path d="${FIGURE}"/></clipPath>
+      <filter id="bglow" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="${(2.4 / FS * S1).toFixed(2)}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <path d="${FIGURE}" fill="url(#bvol)" fill-rule="nonzero"/>
+    <g clip-path="url(#bclip)">
+      <rect x="0" y="0" width="100" height="230" fill="url(#bcore)"/>
+      ${Array.from({ length: 29 }, (_, i) => `<line x1="0" x2="100" y1="${4 + i * 8}" y2="${4 + i * 8}" stroke="#BFEFE3" stroke-opacity="${i % 4 === 0 ? 0.22 : 0.09}" stroke-width="${(0.9 / FS * S1).toFixed(3)}"/>`).join("")}
+      <polyline points="50,46 50,70 50,114 50,158 50,226" fill="none" stroke="#BFEFE3" stroke-opacity="0.18" stroke-width="${(3.4 / FS * S1).toFixed(3)}" stroke-dasharray="1.2 2.2"/>
+    </g>
+    <path d="${FIGURE}" fill="none" stroke="#9FF0DC" stroke-opacity="0.9" stroke-width="${(2.4 / FS * S1).toFixed(3)}" stroke-linejoin="round" filter="url(#bglow)"/>
     ${pl("route", "var(--text-2)", 3, 'stroke-opacity="0.6"')}
     ${pl("slowtrail", "var(--text)", 5)}
-    ${pl("fasttrail", "var(--signal)", 6)}
+    ${pl("fasttrail", "var(--signal)", 6, 'filter="url(#bglow)"')}
     <path class="toe" d="M33 219 L42 219 L42 225 L33 225 Z" fill="var(--signal)" opacity="0"/>
     <path class="brain" d="M41 18 C44 10 56 10 59 18 C60 24 56 28 50 28 C44 28 40 24 41 18 Z" fill="var(--signal)" opacity="0"/>
     <rect class="fast" x="-4" y="-4" width="8" height="8" rx="2" fill="var(--signal)" opacity="0"/>
