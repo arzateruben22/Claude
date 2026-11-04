@@ -13,3 +13,16 @@ and a re-align; findings 8, 9 (readout copy), 10 (label hold times), 11 (drum tr
 "the ache, bare ones."), 14, 15 (meanwhile picture), 16 (assets.md, README). The 3 s end card (finding 7) is also open.
 Next: set up the voice toolchain, re-voice vo01 and vo06, then the compile.py copy/timing items, then one full draft
 render (about 47 min) after the 8 Nov reset.
+
+## Update (4 Nov, later)
+Voice toolchain installed (kits/cinema/voice/setup.sh). Re-voiced and re-aligned: vo01 now "As fast as light? A top expert
+once guessed it was." (question and surprise by 1.2 s), vo03 "That was Johannes Müller, who doubted it could be timed.",
+vo06 "...the ache takes slow ones" (no more stray syllable), speeds trimmed so the film lands on 74.8 s with a 3.0 s end card.
+lint.py: 0 errors. claims.json sentences for c1, c4, c19, c20 updated to the new wording (c4/c20 now tie to "A top expert
+once guessed it was."). compile.py: title out at 2.6 s and the "? m/s" readout after it; "every step" readout removed; the gap
+count became "34 vs 4 re-fires, same stretch: bare vs wrapped" (from the drawn model: 5 µm steps vs 4 internodes over
+170 µm; badged not to scale); label holds (myelin 1.6 s, bare gap 1.7 s with side +1, damaged myelin 2.6 s); "zapped
+farther away: its twitch starts later"; the tease's "not to scale" badge after the figure has gone.
+Still open: F1 two-bar comparison (the readout "wrapped fibre · F1 record: 373 / 540 km/h" stays), drum traces drawn on
+"timed"/"it" with a bracket (finding 11), the meanwhile heart picture (finding 15), end-card callback "? m/s" -> "150 m/s"
+(finding 7), the CLAIMS-REVIEW and scorecard still describe the old final. No full draft render until after the 8 Nov reset.

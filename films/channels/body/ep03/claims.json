@@ -1,7 +1,7 @@
 [
  {
   "id": "c1",
-  "sentence": "A top expert doubted anyone could time it.",
+  "sentence": "That was Johannes Müller, who doubted it could be timed.",
   "claim": "Johannes Müller, the leading physiologist of the 1840s, held that the nerve signal was so fast it could never be measured.",
   "source_url": "https://psychology.uga.edu/sites/default/files/inline-files/Helmholtz%20Final%20Proof%2026%20May%2C%202019.pdf",
   "source_title": "Hermann von Helmholtz and the speed of the nerve impulse (University of Georgia, Department of Psychology, manuscript, 2019)",
@@ -34,7 +34,7 @@
  },
  {
   "id": "c4",
-  "sentence": "Johannes Müller thought it might be as fast as light.",
+  "sentence": "A top expert once guessed it was.",
   "claim": "Müller thought the nerve signal's speed might be of the order of the speed of light; he cited estimates up to 60 times the speed of light.",
   "source_url": "https://psychology.uga.edu/sites/default/files/inline-files/Helmholtz%20Final%20Proof%2026%20May%2C%202019.pdf",
   "source_title": "Hermann von Helmholtz and the speed of the nerve impulse (University of Georgia, Department of Psychology, manuscript, 2019)",
@@ -45,7 +45,7 @@
  },
  {
   "id": "c20",
-  "sentence": "Johannes Müller thought it might be as fast as light.",
+  "sentence": "A top expert once guessed it was.",
   "claim": "The speed of light in vacuum is exactly 299,792,458 m/s (shown on screen as Müller's guess).",
   "source_url": "https://physics.nist.gov/cuu/Constants/Value/c.html",
   "source_title": "Speed of light in vacuum (NIST Reference on Constants, Units and Uncertainty; CODATA 2022)",
@@ -177,7 +177,7 @@
  },
  {
   "id": "c19",
-  "sentence": "The jolt takes fast fibres, the ache slow ones.",
+  "sentence": "The jolt takes fast fibres; the ache takes slow ones.",
   "claim": "Painful stimuli are carried by thinly myelinated A-delta fibres (about 5–25 m/s), giving a sharp, well-localised first pain, and by unmyelinated C fibres (about 0.5–2 m/s), giving a dull, aching second pain that follows; the delay is easiest to notice far from the brain.",
   "source_url": "https://openbooks.lib.msu.edu/neuroscience/chapter/pain/",
   "source_title": "Pain (Introduction to Neuroscience, Michigan State University Libraries open textbook)",

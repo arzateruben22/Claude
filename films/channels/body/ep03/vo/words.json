@@ -3,86 +3,74 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "How fast is this spark? A top expert doubted anyone could time it.",
-   "heard": "How fast is this spark? A top expert doubted anyone could time it.",
+   "text": "As fast as light? A top expert once guessed it was.",
+   "heard": "As fast as light. A top expert once guessed it was.",
    "words": [
     {
-     "w": "How",
+     "w": "As",
      "start": 0.02,
-     "end": 0.4,
+     "end": 0.24,
      "heard": true
     },
     {
      "w": "fast",
-     "start": 0.31,
-     "end": 0.72,
+     "start": 0.28,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "is",
-     "start": 0.655,
+     "w": "as",
+     "start": 0.6,
      "end": 0.88,
      "heard": true
     },
     {
-     "w": "this",
-     "start": 0.865,
-     "end": 1.12,
-     "heard": true
-    },
-    {
-     "w": "spark?",
-     "start": 1.17,
-     "end": 1.652,
+     "w": "light?",
+     "start": 0.765,
+     "end": 1.373,
      "heard": true,
-     "end_asr": 2.0
+     "end_asr": 1.76
     },
     {
      "w": "A",
-     "start": 2.135,
-     "end": 2.24,
+     "start": 1.855,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "top",
-     "start": 2.255,
-     "end": 2.56,
+     "start": 1.975,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "expert",
-     "start": 2.455,
-     "end": 2.96,
+     "start": 2.175,
+     "end": 2.72,
      "heard": true
     },
     {
-     "w": "doubted",
-     "start": 2.97,
+     "w": "once",
+     "start": 2.685,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "guessed",
+     "start": 3.07,
      "end": 3.44,
      "heard": true
     },
     {
-     "w": "anyone",
-     "start": 3.415,
+     "w": "it",
+     "start": 3.425,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "was.",
+     "start": 3.485,
      "end": 3.92,
-     "heard": true
-    },
-    {
-     "w": "could",
-     "start": 4.05,
-     "end": 4.1,
-     "heard": true
-    },
-    {
-     "w": "time",
-     "start": 4.085,
-     "end": 4.32,
-     "heard": true
-    },
-    {
-     "w": "it.",
-     "start": 4.415,
-     "end": 4.64,
      "heard": true
     }
    ],
@@ -250,164 +238,164 @@
   },
   {
    "id": "vo03",
-   "text": "Johannes Müller thought it might be as fast as light. In eighteen fifty, his former student Helmholtz timed it. About thirty metres a second: cheetah speed.",
-   "heard": "Johannes Müller thought it might be as fast as light. In 1850, his former student Helmholtz timed it. About 30 meters a second, cheetah speed.",
+   "text": "That was Johannes Müller, who doubted it could be timed. In eighteen fifty, his former student Helmholtz timed it. About thirty metres a second: cheetah speed.",
+   "heard": "That was Johannes Müller, who doubted it could be timed. In 1850, his former student Helmholtz timed it. About 30 meters a second, cheetah speed.",
    "words": [
     {
-     "w": "Johannes",
+     "w": "That",
      "start": 0.02,
-     "end": 0.56,
+     "end": 0.24,
      "heard": true
     },
     {
-     "w": "Müller",
-     "start": 0.605,
-     "end": 1.12,
+     "w": "was",
+     "start": 0.175,
+     "end": 0.4,
      "heard": true
     },
     {
-     "w": "thought",
-     "start": 1.02,
-     "end": 1.28,
+     "w": "Johannes",
+     "start": 0.43,
+     "end": 0.96,
      "heard": true
     },
     {
-     "w": "it",
-     "start": 1.195,
-     "end": 1.44,
+     "w": "Müller,",
+     "start": 0.95,
+     "end": 1.6,
      "heard": true
     },
     {
-     "w": "might",
-     "start": 1.56,
-     "end": 1.61,
+     "w": "who",
+     "start": 1.6,
+     "end": 1.76,
      "heard": true
     },
     {
-     "w": "be",
-     "start": 1.59,
-     "end": 1.68,
-     "heard": true
-    },
-    {
-     "w": "as",
-     "start": 1.775,
-     "end": 1.84,
-     "heard": true
-    },
-    {
-     "w": "fast",
-     "start": 1.805,
+     "w": "doubted",
+     "start": 1.75,
      "end": 2.16,
      "heard": true
     },
     {
-     "w": "as",
-     "start": 2.1,
-     "end": 2.32,
+     "w": "it",
+     "start": 2.285,
+     "end": 2.335,
      "heard": true
     },
     {
-     "w": "light.",
-     "start": 2.245,
-     "end": 2.749,
+     "w": "could",
+     "start": 2.405,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 2.5,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "timed.",
+     "start": 2.54,
+     "end": 3.025,
      "heard": true,
-     "end_asr": 3.04
+     "end_asr": 3.28
     },
     {
      "w": "In",
-     "start": 3.07,
-     "end": 3.2,
+     "start": 3.345,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "eighteen",
-     "start": 3.23,
-     "end": 4.32,
+     "start": 3.615,
+     "end": 4.48,
      "heard": false
     },
     {
      "w": "fifty,",
-     "start": 3.26,
-     "end": 4.32,
+     "start": 3.645,
+     "end": 4.48,
      "heard": false
     },
     {
      "w": "his",
-     "start": 4.385,
-     "end": 4.48,
+     "start": 4.54,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "former",
-     "start": 4.415,
-     "end": 4.88,
+     "start": 4.57,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "student",
-     "start": 4.975,
-     "end": 5.28,
+     "start": 4.98,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "Helmholtz",
-     "start": 5.325,
+     "start": 5.425,
      "end": 6.08,
      "heard": true
     },
     {
      "w": "timed",
-     "start": 5.98,
-     "end": 6.4,
+     "start": 6.12,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "it.",
-     "start": 6.5,
-     "end": 6.604,
+     "start": 6.605,
+     "end": 6.712,
      "heard": true,
-     "end_asr": 6.96
+     "end_asr": 7.04
     },
     {
      "w": "About",
-     "start": 6.945,
-     "end": 7.2,
+     "start": 7.03,
+     "end": 7.28,
      "heard": true
     },
     {
      "w": "thirty",
-     "start": 7.26,
-     "end": 7.6,
+     "start": 7.33,
+     "end": 7.68,
      "heard": true
     },
     {
      "w": "metres",
-     "start": 7.525,
-     "end": 8.08,
+     "start": 7.595,
+     "end": 8.16,
      "heard": false
     },
     {
      "w": "a",
-     "start": 8.175,
-     "end": 8.225,
+     "start": 8.25,
+     "end": 8.3,
      "heard": true
     },
     {
      "w": "second:",
-     "start": 8.205,
-     "end": 8.64,
+     "start": 8.28,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "cheetah",
-     "start": 8.72,
-     "end": 9.04,
+     "start": 8.785,
+     "end": 9.12,
      "heard": true
     },
     {
      "w": "speed.",
-     "start": 9.145,
+     "start": 9.215,
      "end": 9.6,
      "heard": true
     }
@@ -841,12 +829,12 @@
   },
   {
    "id": "vo06",
-   "text": "So a stubbed toe can hurt twice. The jolt takes fast fibres, the ache slow ones.",
-   "heard": "So a stubbed toe can hurt twice. The jolt takes fast fibers, the ache slow ones.",
+   "text": "So a stubbed toe can hurt twice. The jolt takes fast fibres; the ache takes slow ones.",
+   "heard": "So a stubbed toe can hurt twice. The jolt takes fast fibers, the ache takes slow ones.",
    "words": [
     {
      "w": "So",
-     "start": 0.03,
+     "start": 0.15,
      "end": 0.24,
      "heard": true
     },
@@ -901,44 +889,50 @@
     },
     {
      "w": "takes",
-     "start": 2.995,
-     "end": 3.36,
+     "start": 2.985,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "fast",
-     "start": 3.35,
+     "start": 3.175,
      "end": 3.68,
      "heard": true
     },
     {
-     "w": "fibres,",
-     "start": 3.66,
+     "w": "fibres;",
+     "start": 3.61,
      "end": 4.32,
      "heard": false
     },
     {
      "w": "the",
-     "start": 4.37,
-     "end": 4.42,
+     "start": 4.45,
+     "end": 4.5,
      "heard": true
     },
     {
      "w": "ache",
-     "start": 4.48,
-     "end": 4.72,
+     "start": 4.55,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "slow",
-     "start": 4.805,
+     "w": "takes",
+     "start": 4.825,
      "end": 5.12,
      "heard": true
     },
     {
+     "w": "slow",
+     "start": 5.03,
+     "end": 5.44,
+     "heard": true
+    },
+    {
      "w": "ones.",
-     "start": 5.045,
-     "end": 5.52,
+     "start": 5.405,
+     "end": 5.84,
      "heard": true
     }
    ],
@@ -1062,74 +1056,74 @@
    "words": [
     {
      "w": "Next:",
-     "start": 0.25,
+     "start": 0.02,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.485,
+     "start": 0.46,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "end",
-     "start": 0.67,
+     "start": 0.645,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "of",
-     "start": 0.995,
-     "end": 1.045,
+     "start": 0.96,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.025,
+     "start": 0.99,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "line.",
-     "start": 1.265,
-     "end": 1.69,
+     "start": 1.275,
+     "end": 1.601,
      "heard": true,
-     "end_asr": 2.0
+     "end_asr": 1.92
     },
     {
      "w": "A",
-     "start": 2.11,
-     "end": 2.16,
+     "start": 2.025,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "gap",
-     "start": 2.31,
-     "end": 2.56,
+     "start": 2.055,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "most",
-     "start": 2.545,
-     "end": 2.8,
+     "start": 2.415,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "signals",
-     "start": 2.925,
-     "end": 3.36,
+     "start": 2.895,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "can't",
-     "start": 3.375,
-     "end": 3.68,
+     "start": 3.245,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "jump.",
-     "start": 3.74,
+     "start": 3.575,
      "end": 4.08,
      "heard": true
     }

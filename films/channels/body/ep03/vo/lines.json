@@ -6,7 +6,7 @@
  "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
  "kokoro_onnx": "0.6.1",
  "onnxruntime": "1.31.0",
- "python": "3.13.17",
+ "python": "3.13.18",
  "made_by": "films/channels/body/ep03/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
  "gap": 0.3,
  "gap_question": 0.45,
@@ -14,28 +14,27 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "How fast is this spark? A top expert doubted anyone could time it.",
+   "text": "As fast as light? A top expert once guessed it was.",
    "stars": [
-    "spark",
-    "time"
+    "light"
    ],
-   "phonemes": "hˌaʊ fˈast ɪz ðɪs spˈɑːk? ɐ tˈɒp ˈɛkspɜːt dˈaʊtɪd ˈɛnɪwˌɒn kʊd tˈaɪm ɪt.",
+   "phonemes": "az fˈast az lˈaɪt? ɐ tˈɒp ˈɛkspɜːt wˈʌns ɡˈɛst ɪt wˈɒz.",
    "speeds": [
     1.0,
-    0.95
+    0.9
    ],
    "gaps": [
     0.45
    ],
    "silences": [
     [
-     1.6523,
-     2.1023
+     1.3726,
+     1.8226
     ]
    ],
    "file": "01.wav",
-   "dur": 4.658,
-   "sha256": "7cd4c13e599a19d79d7b38355b677cba2d340b353cd57ef10e4041640e50d199"
+   "dur": 3.979,
+   "sha256": "4f198b068b8d989639c17b9f0521ccdaa99a22d091977361f512b7f4502a55fc"
   },
   {
    "id": "vo02",
@@ -71,16 +70,17 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Johannes Müller thought it might be as fast as light. In eighteen fifty, his former student Helmholtz timed it. About thirty metres a second: cheetah speed.",
+   "text": "That was Johannes Müller, who doubted it could be timed. In eighteen fifty, his former student Helmholtz timed it. About thirty metres a second: cheetah speed.",
    "stars": [
-    "light",
+    "Müller",
+    "timed",
     "cheetah"
    ],
-   "phonemes": "jəʊhˈanɪs mˈuːlə θˈɔːt ɪt mˌaɪt biː az fˈast az lˈaɪt. ɪn ˈeɪtiːn fˈɪfti, hɪz fˈɔːmə stjˈuːdənt hˈɛlmhəʊltz tˈaɪmd ɪt. ɐbˌaʊt θˈɜːti mˈiːtəz ɐ sˈɛkənd: tʃˈiːtə spˈiːd.",
+   "phonemes": "ðɐt wˈɒz jəʊhˈanɪs mˈuːlə, hˌuː dˈaʊtɪd ɪt kʊd biː tˈaɪmd. ɪn ˈeɪtiːn fˈɪfti, hɪz fˈɔːmə stjˈuːdənt hˈɛlmhəʊltz tˈaɪmd ɪt. ɐbˌaʊt θˈɜːti mˈiːtəz ɐ sˈɛkənd: tʃˈiːtə spˈiːd.",
    "speeds": [
-    0.92,
-    0.92,
-    0.9
+    0.98,
+    0.97,
+    0.95
    ],
    "gaps": [
     0.3,
@@ -88,17 +88,17 @@
    ],
    "silences": [
     [
-     2.7491,
-     3.0491
+     3.0249,
+     3.3249
     ],
     [
-     6.6037,
-     6.9037
+     6.7123,
+     7.0123
     ]
    ],
    "file": "03.wav",
-   "dur": 9.612,
-   "sha256": "d10ea8d4fc041cd12223b46d469f5fb3a83bdd00dd7e6381835ee3054718d75d"
+   "dur": 9.619,
+   "sha256": "93bb9d46870cfff8ca3fffe02176ab12dd040c87fe28ebf7020a503fe2d09199"
   },
   {
    "id": "vo04",
@@ -166,11 +166,11 @@
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So a stubbed toe can hurt twice. The jolt takes fast fibres, the ache slow ones.",
+   "text": "So a stubbed toe can hurt twice. The jolt takes fast fibres; the ache takes slow ones.",
    "stars": [
     "twice"
    ],
-   "phonemes": "sˌəʊ ɐ stˈʌbd tˈəʊ kan hˈɜːt twˈaɪs. ðə dʒˈəʊlt tˈeɪks fˈast fˈaɪbəz, ðɪ ˈeɪk slˈəʊ wˌɒnz.",
+   "phonemes": "sˌəʊ ɐ stˈʌbd tˈəʊ kan hˈɜːt twˈaɪs. ðə dʒˈəʊlt tˈeɪks fˈast fˈaɪbəz; ðɪ ˈeɪk tˈeɪks slˈəʊ wˌɒnz.",
    "speeds": [
     0.84,
     0.84
@@ -185,8 +185,8 @@
     ]
    ],
    "file": "06.wav",
-   "dur": 5.536,
-   "sha256": "fb66557d42a6033e93ae4aea5b59043455502daf835d444f6d73c506ae6f3813"
+   "dur": 5.898,
+   "sha256": "172022fd6dadb023b1e7b26663722b427855317da17db406377cf7a272c48a8b"
   },
   {
    "id": "vo07",
@@ -223,21 +223,21 @@
    ],
    "phonemes": "nˈɛkst: ðɪ ˈɛnd ɒvðə lˈaɪn. ɐ ɡˈap mˈəʊst sˈɪɡnəlz kˈɑːnt dʒˈʌmp.",
    "speeds": [
-    0.88,
-    0.84
+    0.92,
+    0.88
    ],
    "gaps": [
     0.4
    ],
    "silences": [
     [
-     1.6899,
-     2.0899
+     1.6013,
+     2.0013
     ]
    ],
    "file": "08.wav",
-   "dur": 4.299,
-   "sha256": "348703b76b4f8f3cc67216f074a59680ce5d732a866d67e063e34ca1177a72cc"
+   "dur": 4.11,
+   "sha256": "9e2585e0291482c00d4e01419057a665660998402ca87493086886f26b6ddddb"
   }
  ]
 }

@@ -34,14 +34,14 @@ direction for the compiler. In a vo line, `{c1,c2}` ties a sentence to `claims.j
 sentence that states nothing outside the film.
 
 ## hook {shot: frame 0 is a chartreuse spark mid-leap between two bare gaps of a myelinated fibre; the spine readout reads "? m/s" · title: "The jump" · pre: 0.1 · energy: 0.7} (0–5.5 s)
-vo: How fast is this *spark*? A top expert doubted anyone could *time* it. {c1}
+vo: As fast as *light*? {-} A top expert once guessed it was. {c4,c20}
 
 ## normal {shot: pull back along the fibre to the whole cell, then the body locator: spine to toe; readout "spine to toe: about 1 m" · energy: 0.45} (5.5–15.3 s)
 vo: It's a nerve signal, racing down one cell's thin fibre. {c2} Some fibres reach from spine
 to *toe*: about a metre. {c3} How long does that take? {-}
 
 ## change {shot: Helmholtz's method, illustrated: a frog muscle on its nerve, a lever and a pen on a turning drum; two twitch traces offset; the readout settles on 27 m/s, "about cheetah speed" · energy: 0.55} (15.3–25.8 s)
-vo: Johannes Müller thought it might be as fast as *light*. {c4,c20} In eighteen fifty, his former
+vo: That was Johannes *Müller*, who doubted it could be *timed*. {c1} In eighteen fifty, his former
 student Helmholtz timed it. {c5} About thirty metres a second: *cheetah*
 speed. {c6,c17}
 
@@ -55,7 +55,7 @@ vo: The thinnest bare fibres crawl at about a metre a second. {c10} Thick wrappe
 hundred and fifty. {c11} Faster than a Formula One *car*. {c12}
 
 ## takeaway {shot: a large body silhouette; from the toe two signals leave together, the fast one reaches the brain on "jolt", the slow one on "ache" (real time) · energy: 0.3} (54.2–61 s)
-vo: So a stubbed toe can hurt *twice*. {c13} The jolt takes fast fibres, the ache slow ones. {c19}
+vo: So a stubbed toe can hurt *twice*. {c13} The jolt takes fast fibres; the ache takes slow ones. {c19}
 
 ## meanwhile {segment: meanwhile · tally "while you watched": heartbeats at a resting 75 a minute, from frame 0, on the pulse line · mallet ticks on the lub-dub · energy: 0.4} (61–67.7 s)
 vo: *Meanwhile*, as you watched, a heart at rest beat about eighty times. {c14} Each began with a
