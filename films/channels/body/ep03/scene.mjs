@@ -109,11 +109,34 @@ SOMA.group.position.set(-13, 0, 0); SOMA.group.scale.set(1.15, 1, 1); G.fibres.a
 // the terminal at the hero's end, the gap, and the next cell's surface beyond it (dark: the signal stops here)
 const TX = 660;
 const boutonMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#C9A9B6"), roughness: 0.5, emissive: lin(SIG), emissiveIntensity: 0 }), { fresnel: 0.25, key: "bouton" });
-const BOUTON = cutaway({ radius: 6, noise: { amp: 0.1, freq: 1.8, seed: 9 }, segments: [48, 32], material: boutonMat });
-BOUTON.group.position.set(TX + 4, 0, 0); BOUTON.group.scale.set(1.1, 1, 1); G.fibres.add(BOUTON.group);
-const postMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#6F5C68"), roughness: 0.7 }), { fresnel: 0.1, key: "post", dry: true });   // review r1: matte (no crackle, no clipped highlight)   // the next cell, dark beyond the gap
-const POST = cutaway({ radius: 26, noise: { amp: 0.05, freq: 1.2, seed: 11 }, segments: [64, 48], material: postMat });
-POST.group.position.set(TX + 37, 0, -2); POST.group.scale.set(0.95, 1.2, 1); G.fibres.add(POST.group);
+// round 2 (review r1 findings 1, 7): the terminal is a bouton swelling out of a tapering stalk, its skin mottled and
+// translucent (vesicles glimpsed under it); the next cell is a curved membrane wall studded with receptors, not a ball.
+const mott = (w, h, seed, base, dots) => { const r = rng(seed), c = document.createElement("canvas"); c.width = w; c.height = h; const x = c.getContext("2d"); x.fillStyle = base; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < dots; i++) { const rad = 2 + 7 * r(); x.fillStyle = `rgba(${r() < 0.5 ? "255,255,255" : "0,0,0"},${0.05 + 0.12 * r()})`; x.beginPath(); x.arc(r() * w, r() * h, rad, 0, 6.283); x.fill(); } const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; };
+boutonMat.bumpMap = mott(256, 128, 61, "#808080", 420); boutonMat.bumpScale = 2.2; boutonMat.clearcoat = 0.6; boutonMat.clearcoatRoughness = 0.25; boutonMat.roughness = 0.4; boutonMat.needsUpdate = true;
+const BOUTON = new THREE.Group();
+{
+  const prof = [], N = 40;   // the lathe runs along y: stalk at y 0, swelling to r 6.5, a rounded face at y 16
+  for (let i = 0; i <= N; i++) { const u = i / N, y = u * 16; const stalk = 1.3 + 0.2 * (1 - u), bulb = 6.4 * Math.pow(Math.sin(Math.PI * Math.min(1, Math.max(0, (u - 0.1) / 0.9))), 0.55); prof.push(new THREE.Vector2(Math.max(stalk, u < 0.1 ? stalk : bulb), y)); }
+  const g = new THREE.LatheGeometry(prof, 64); g.rotateZ(-Math.PI / 2); g.translate(-12, 0, 0);
+  const p = g.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i), n = Math.sin(x * 0.9 + y * 1.7) * Math.cos(z * 1.3 + x * 0.6); p.setXYZ(i, x, y * (1 + 0.04 * n), z * (1 + 0.04 * n)); }
+  g.computeVertexNormals(); BOUTON.add(new THREE.Mesh(g, boutonMat));
+  // vesicles glimpsed through the skin: small bright spheres just under the surface of the bulb
+  const vr = rng(71), vm = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#E6D3DC"), roughness: 0.3, emissive: lin("#E6D3DC"), emissiveIntensity: 0.12 }), { fresnel: 0.3, key: "vesicle" });
+  const ves = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 2), vm, 18), m4 = new THREE.Matrix4();
+  for (let i = 0; i < 18; i++) { const x = 2 + 7 * vr(), a = vr() * 6.283, rr = 3.6 * vr(), s = 0.55 + 0.6 * vr(); m4.compose(new THREE.Vector3(x, Math.cos(a) * rr, Math.sin(a) * rr), new THREE.Quaternion(), new THREE.Vector3(s, s, s)); ves.setMatrixAt(i, m4); }
+  BOUTON.add(ves);
+}
+BOUTON.position.set(TX - 2, 0, 0); G.fibres.add(BOUTON);
+const postMat = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#7B6578"), emissive: lin("#3E2F3D"), emissiveIntensity: 0.2, roughness: 0.45, clearcoat: 0.5, clearcoatRoughness: 0.3, bumpMap: mott(256, 256, 73, "#808080", 300), bumpScale: 1.4 }), { fresnel: 0.3, key: "post", dry: true });
+const POST = cutaway({ radius: 40, noise: { amp: 0.04, freq: 1.0, seed: 11 }, segments: [64, 48], material: postMat });
+POST.group.position.set(TX + 40, 0, -4); POST.group.scale.set(0.25, 1.1, 1); G.fibres.add(POST.group);   // a curved wall facing the bouton across the gap
+{ // receptors: small domes on the wall's face
+  const rr = rng(83), rm = L.patch(new THREE.MeshPhysicalMaterial({ color: lin("#C9A9B6"), roughness: 0.4, emissive: lin("#C9A9B6"), emissiveIntensity: 0.08 }), { fresnel: 0.3, key: "receptor" });
+  const rec = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 14, 10), rm, 70), m4 = new THREE.Matrix4();
+  for (let i = 0; i < 70; i++) { const y = (rr() - 0.5) * 42, z = (rr() - 0.5) * 30, x = TX + 40 - 10 * Math.sqrt(Math.max(0.05, 1 - (y / 44) ** 2 - (z / 40) ** 2)) - 0.4, s = 0.9 + 0.9 * rr(); m4.compose(new THREE.Vector3(x, y, z - 4), new THREE.Quaternion(), new THREE.Vector3(s * 0.8, s, s)); rec.setMatrixAt(i, m4); }
+  G.fibres.add(rec);
+}
 // neighbours, for depth
 // neighbours, dimmer, for depth (clear of the readout row and of the racers)
 const NEIGH = [];
@@ -173,7 +196,7 @@ const writeFibres = (t, sh) => {
     const a = NODES[k], b = k < kLast ? NODES[k + 1] : st.tease && t < FILM.tease.arrive ? TX : null;
     setArc(arcH, a, b, b == null ? 0 : st.u * (st.fade ?? 1), MY.r - 0.4);
   } else { glowSet(HERO, { front: -1, mode: "jump" }); setArc(arcH, null, null, 0, 0); }
-  boutonMat.emissiveIntensity = st && st.end ? 1.8 * st.end * (1 - 0.3 * seg(t, FILM.tease.arrive + 0.4, FILM.tease.arrive + 1.4)) : 0;
+  boutonMat.emissiveIntensity = st && st.end ? 0.55 * st.end * (1 - 0.3 * seg(t, FILM.tease.arrive + 0.4, FILM.tease.arrive + 1.4)) : 0;
   // the bare fibre: the why's step-by-step re-firing (the head moves in steps), then the race's crawl
   const Bf = FILM.bare, R = FILM.race;
   if (sh === "fibres" && t < B.whoa.t0) BARE.set({ front: t >= Bf.t0 ? Bf.x0 + Bf.step * Math.floor((Bf.v * (t - Bf.t0)) / Bf.step) : -1, mode: "flow", tail: 26 });
