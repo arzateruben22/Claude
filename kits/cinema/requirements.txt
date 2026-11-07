@@ -1,0 +1,5 @@
+# Python packages for the sound studio and scripts (kits/cinema/studio, kits/cinema/script, films/channels/*/epNN/*.py)
+numpy>=2
+soundfile>=0.12
+# The voice toolchain installs its own pinned venv with kits/cinema/voice/setup.sh:
+#   kokoro-onnx==0.6.1  onnxruntime==1.31.0  soundfile==0.14.0  sherpa-onnx==1.13.8  espeakng-loader==0.2.4  phonemizer==3.4.0  numpy>=2
