@@ -32,3 +32,17 @@ Our pipeline is code-rendered 3D. Reaching this photoreal level in pure code is 
 - Image model and budget for the key art.
 - Keep the "Skin Sense" name and teal accent, or move the palette to the ivory / navy / rose look above.
 - Whether episodes 001-003 get redone in the new look.
+
+## Format and plan (owner, 7 Nov 2026)
+- **Shorts:** at least 60 seconds each (vertical 9:16) for YouTube Shorts, TikTok and Reels. One or two illustrated
+  slides per idea, hedged wording, citation footer.
+- **Long video:** after every 5-6 shorts, one long YouTube video (16:9, about 5-10 minutes) summarising those shorts:
+  a hook, the mechanism slides in order, a recap "feedback loop" diagram near the end, a "what we know in people"
+  slide and the takeaway. Each slide holds 10-25 s while the narration follows the on-screen text.
+- **Order:** finish Skin Sense 001-006 as planned (001-003 stay as they are; 004-006 are in draft), then the first long
+  video for them. After that, a new 5-short series on **sugar and acne** (our own angle and structure on the same
+  science; never a copy of another creator's slide order), then its long video:
+  1. where oil (sebum) comes from; 2. how a clogged pore forms; 3. bacteria and inflammation;
+  4. sugar, insulin and acne: what research suggests and what it does not; 5. what happens in people when diet changes.
+- **Art:** our own key art with an image model once the owner approves the budget (cap about $15; test 5-6 images across
+  tiers first, mid tier expected). All text, labels and citations are drawn in code.
