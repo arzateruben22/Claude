@@ -247,3 +247,16 @@ What to expect:
 | The push says the host was denied | Add the studio's host to the Claude environment's **Allowed domains** |
 | A platform says the redirect URI doesn't match | Its URI must be exactly the one above, with your `<name>`, `https`, and no trailing slash |
 | Accounts shows "needs reconnecting" | Tap **Reconnect**. YouTube in Testing does this weekly |
+
+## Registering a finished long video (compilation) on the host
+
+The import brings in episodes only. To attach a long video that already sits in `films/channels/<channel>/compilations/vol01/`
+to its episodes, open Railway → the service → **Console** and run (type it, or turn off bracketed paste first with
+`bind 'set enable-bracketed-paste off'`):
+
+```
+npm run lesson:register -- films/channels/<channel> ep01,ep02,ep03,ep04,ep05 "Lesson title"
+```
+
+The lesson then waits on Review like any other. The image must include `scripts/register-lesson.ts` (it does from the
+commit that added it to the Dockerfile).
