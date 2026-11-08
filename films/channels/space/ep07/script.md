@@ -21,13 +21,13 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 vo: More trees, or more *stars*? {-} Guess *first*. {-}
 
 ## normal {shot: the galaxy, slow arc; a pin on the Sun · spine "stars in the Milky Way: 100 to 400 billion (estimate)" · picture-only 0.2 s · energy: 0.45} (3.4–13 s)
-vo: Our galaxy has hundreds of *billions* of stars. {c1} Nobody counted them. {c2} Astronomers weigh the galaxy, then divide by one typical star. {c10}
+vo: Our galaxy has hundreds of *billions* of stars. {c1} Nobody counted them. {c2} Most of its weight is dark matter, not stars, so the number is an *estimate*. {c10}
 
 ## change {shot: pull in to Earth; its forests light as teal dots · spine "trees on Earth: about 3 trillion (estimate)" · picture-only 0.2 s · energy: 0.55} (13–22.5 s)
 vo: Now the trees. In twenty fifteen, a team put Earth's at about three *trillion*. {c3} That's several hundred trees for every person alive. {c11}
 
 ## why {shot: two methods side by side: ground plots scaled up with satellite maps; a galaxy weighed and divided · spine "both are estimates" · picture-only 2 s · energy: 0.62} (22.5–37 s)
-vo: Researchers counted trees in *ground* plots, then scaled up with satellite maps. {c5} Neither number is exact, and both carry wide error *bars*. {c6} The honest answer is a *range*. {-}
+vo: Researchers counted trees in *ground* plots, then scaled up with satellite maps. {c5} Both are estimates, not exact counts, so each really means *about*. {c6} The honest answer is a *range*. {-}
 
 ## whoa {shot: every star turns into a tree: the galaxy's dots turn teal and fill Earth's tally; the tally overflows past the galaxy · spine "trees ÷ stars: roughly 8 to 30" · picture-only 3 s · energy: 0.8} (37–51 s)
 vo: Now turn every star into a *tree*. {-} The stars run out, and Earth's forests keep *going*. {-} Trees win, by roughly eight to *thirty* times. {c7}

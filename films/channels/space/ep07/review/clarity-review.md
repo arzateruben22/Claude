@@ -17,6 +17,9 @@ One beat flagged earlier: normal read at grade 8.3.
 ## Figures cut (coordinator, 8 Nov)
 Spoken figures went from 7 to 4 (2015, three trillion, eight to thirty, a millionth). "100 to 400 billion" is now "hundreds of billions" with the exact range on screen; "96,000 years" became "several hundred trees for every person"; the 100,000-year readout became "longer than all of written history". The lint's flow warning is gone.
 
+## Source-pass changes (8 Nov)
+- Yale's release on the 2015 study supports 3.04 trillion, 422 per person and the method (400,000+ plots plus satellite imagery); it says nothing about error bars, so 'error bars' became 'estimates, not exact counts, so each really means about'. NASA's Hubble mass page supports 'most of the weight is dark matter'; no reachable page supports 'weigh the galaxy then divide by one star', so that line was replaced. 'Nobody counted them' stays marked as our inference.
+
 ## Still open
 - Lint warns: hook 7 words and normal 21 words (template ranges, deliberate).
 - Hook has 7 words (template wants 8 to 14): deliberate, for speed.
