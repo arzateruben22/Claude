@@ -21,10 +21,10 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 vo: More trees, or more *stars*? {-} Guess *first*. {-}
 
 ## normal {shot: the galaxy, slow arc; a pin on the Sun · spine "stars in the Milky Way: 100 to 400 billion (estimate)" · picture-only 0.2 s · energy: 0.45} (3.4–13 s)
-vo: Our galaxy has roughly a hundred to four hundred *billion* stars. {c1} Nobody counted them. {c2} Astronomers weigh the galaxy, then divide by one typical star. {c10}
+vo: Our galaxy has hundreds of *billions* of stars. {c1} Nobody counted them. {c2} Astronomers weigh the galaxy, then divide by one typical star. {c10}
 
 ## change {shot: pull in to Earth; its forests light as teal dots · spine "trees on Earth: about 3 trillion (estimate)" · picture-only 0.2 s · energy: 0.55} (13–22.5 s)
-vo: Now the trees. In twenty fifteen, a team put Earth's at about three *trillion*. {c3} Count one a second and you'd need about ninety-six thousand years. {c4}
+vo: Now the trees. In twenty fifteen, a team put Earth's at about three *trillion*. {c3} That's several hundred trees for every person alive. {c11}
 
 ## why {shot: two methods side by side: ground plots scaled up with satellite maps; a galaxy weighed and divided · spine "both are estimates" · picture-only 2 s · energy: 0.62} (22.5–37 s)
 vo: Researchers counted trees in *ground* plots, then scaled up with satellite maps. {c5} Neither number is exact, and both carry wide error *bars*. {c6} The honest answer is a *range*. {-}
@@ -35,8 +35,8 @@ vo: Now turn every star into a *tree*. {-} The stars run out, and Earth's forest
 ## takeaway {shot: hold on the overflow · picture-only 0.2 s · energy: 0.3} (51–58 s)
 vo: So the next tree you pass is one of *more* than the stars. {-} Big numbers hide in ordinary places. {-}
 
-## readout {segment: readout · the closing light-time readout: "100,000 years" across the galaxy; "1 millionth of a second" across a city block · a ping per line · picture-only 0.2 s · energy: 0.45} (58–65.5 s)
-vo: *Light time* across our galaxy: about a hundred thousand years. {c8} Across a city block: about a *millionth* of a second. {c9}
+## readout {segment: readout · the closing light-time readout: "100,000 years" on screen across the galaxy; "1 millionth of a second" across a city block · a ping per line · picture-only 0.2 s · energy: 0.45} (58–65.5 s)
+vo: *Light time* across our galaxy: longer than all of written history. {c8} Across a city block: about a *millionth* of a second. {c9}
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
 vo: Next: with that many stars, why is the night sky *dark*? {-}
@@ -44,5 +44,5 @@ end card: "Next orbit: the *dark* sky" · "One More Orbit · No. 008"
 
 ## Notes
 - Every claim is OPEN until a person opens its source page (see `claims.json`); nothing here was opened.
-- Listen at T0: "Milky Way", "trillion", "about ninety-six thousand".
+- Listen at T0: "Milky Way", "trillion", "hundreds of billions".
 - TODO: the handle (@lightminute), kilometers vs miles, the AI-voice label in the post.
