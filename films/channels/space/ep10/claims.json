@@ -3,12 +3,18 @@
   "id": "c1",
   "sentence": "The edge is called the event horizon.",
   "claim": "The event horizon is the boundary around a black hole beyond which nothing, not even light, can escape.",
-  "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
+  "source_url": "https://science.nasa.gov/universe/black-holes/",
   "source_title": "Black hole safety brochure (NASA SVS)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "gravity just beneath its surface, the event horizon, is strong enough that nothing - not even light - can escape.",
+   "qualification": "Page also says 'what matter looks like inside their event horizons' is unknown: the film says nothing about the inside."
+  }
  },
  {
   "id": "c2",
@@ -25,34 +31,52 @@
   "id": "c3",
   "sentence": "Nothing travels faster than light, so nothing gets out from there.",
   "claim": "Nothing can outrun light, so nothing escapes from within the horizon.",
-  "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
+  "source_url": "https://science.nasa.gov/universe/black-holes/",
   "source_title": "NASA SVS",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Do not say what happens inside.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Do not say what happens inside.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...nothing - not even light - can escape.",
+   "qualification": "Supports 'nothing gets out'; the 'nothing is faster than light' half is general physics, not on this page."
+  }
  },
  {
   "id": "c4",
   "sentence": "Gravity really does slow clocks.",
   "claim": "Gravity slows clocks (gravitational time dilation); the nearer a mass, the slower a clock ticks.",
-  "source_url": "https://todo.invalid/find-source",
+  "source_url": "https://www.nist.gov/atomic-clocks/a-powerful-tool-for-science/putting-einstein-test",
   "source_title": "TO FIND",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA GPS relativity page). SOURCE NOT YET FOUND.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. (was TO FIND) (find: NASA GPS relativity page). SOURCE NOT YET FOUND.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Each test confirmed Einstein's predictions that moving clocks tick more slowly than stationary ones, and clocks in higher gravity tick more sluggishly than ones in lower gravity.",
+   "qualification": "Good support for the clock claim."
+  }
  },
  {
   "id": "c5",
-  "sentence": "Your phone's GPS corrects for that every day.",
+  "sentence": "GPS satellites must correct for that to keep good time.",
   "claim": "GPS satellite clocks are corrected for relativity (gravity and speed), every day in the system's design.",
-  "source_url": "https://todo.invalid/find-source",
+  "source_url": "https://www.nist.gov/atomic-clocks/a-powerful-tool-for-science/putting-einstein-test",
   "source_title": "TO FIND",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA GPS relativity page). SOURCE NOT YET FOUND. The 'every day' wording must match.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. (was TO FIND) (find: NASA GPS relativity page). SOURCE NOT YET FOUND. The 'every day' wording must match.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "When military scientists and engineers launched the positioning satellites, they realized they needed to correct for relativity's effects to get the system to provide accurate time on Earth.",
+   "qualification": "Script reworded from 'every day' to 'must correct ... to keep good time' to match the page."
+  }
  },
  {
   "id": "c6",
@@ -69,23 +93,35 @@
   "id": "c7",
   "sentence": "Light time: we photographed a black hole in twenty nineteen.",
   "claim": "The Event Horizon Telescope released the first image of a black hole's shadow (M87*) in April 2019.",
-  "source_url": "https://todo.invalid/find-source",
+  "source_url": "https://science.nasa.gov/resource/first-image-of-a-black-hole/",
   "source_title": "TO FIND",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: Event Horizon Telescope 2019 release, NSF/NASA). SOURCE NOT YET FOUND.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. (was TO FIND) (find: Event Horizon Telescope 2019 release, NSF/NASA). SOURCE NOT YET FOUND.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "First Image of a Black Hole, April 10, 2019. Credit: Event Horizon Telescope Collaboration.",
+   "qualification": "Confirms the date and the image."
+  }
  },
  {
   "id": "c8",
   "sentence": "Its light had traveled about fifty-five million years.",
   "claim": "M87* is about 55 million light-years from Earth.",
-  "source_url": "https://todo.invalid/find-source",
+  "source_url": "https://science.nasa.gov/resource/first-image-of-a-black-hole/",
   "source_title": "TO FIND",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: EHT M87* distance page). SOURCE NOT YET FOUND.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. (was TO FIND) (find: EHT M87* distance page). SOURCE NOT YET FOUND.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...the center of the elliptical galaxy M87, located about 55 million light years from Earth.",
+   "qualification": "Script: 'about fifty-five million years' of light travel."
+  }
  },
  {
   "id": "c11",
@@ -102,12 +138,18 @@
   "id": "c20",
   "sentence": "The closer to a black hole, the slower a clock ticks.",
   "claim": "Gravity slows clocks (gravitational time dilation); the nearer a mass, the slower a clock ticks.",
-  "source_url": "https://todo.invalid/find-source",
+  "source_url": "https://www.nist.gov/atomic-clocks/a-powerful-tool-for-science/putting-einstein-test",
   "source_title": "TO FIND",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA GPS relativity page). SOURCE NOT YET FOUND.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. (was TO FIND) (find: NASA GPS relativity page). SOURCE NOT YET FOUND.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...clocks in higher gravity tick more sluggishly than ones in lower gravity.",
+   "qualification": "Supports 'closer to the mass = slower'; the black-hole case is the same law, extrapolated."
+  }
  },
  {
   "id": "c21",
@@ -124,11 +166,17 @@
   "id": "c22",
   "sentence": "Time depends on where you are, and how strong gravity is.",
   "claim": "Gravity slows clocks (gravitational time dilation); the nearer a mass, the slower a clock ticks.",
-  "source_url": "https://todo.invalid/find-source",
+  "source_url": "https://www.nist.gov/atomic-clocks/a-powerful-tool-for-science/putting-einstein-test",
   "source_title": "TO FIND",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA GPS relativity page). SOURCE NOT YET FOUND.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. (was TO FIND) (find: NASA GPS relativity page). SOURCE NOT YET FOUND.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...time is also affected by gravity. The more strongly you feel the force of gravity, ... the slower time passes for you.",
+   "qualification": "Supports gravity-dependence; 'where you are' is our summary."
+  }
  }
 ]

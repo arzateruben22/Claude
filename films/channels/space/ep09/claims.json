@@ -28,9 +28,15 @@
   "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
   "source_title": "Unfolding story of kilonova (NASA)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Do not say 'the' source.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Do not say 'the' source.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Astronomers think that after neutron stars merge, the debris generates visible and infrared light from the decay of radioactive elements like platinum and gold formed in the debris from the merger.",
+   "qualification": "Page says 'astronomers think'; supports 'one place', NOT 'the only place' or 'confirmed'."
+  }
  },
  {
   "id": "c4",
@@ -39,20 +45,32 @@
   "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
   "source_title": "Kilonova (NASA)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm the year and the word 'happen' (seen, not made).",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm the year and the word 'happen' (seen, not made).",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...first detected in gravitational waves by LIGO and Virgo on August 17, 2017. GW170817 was the first and thus far the only cosmic event where both gravitational waves and ... light were detected.",
+   "qualification": "'Ripples in space' is our plain-word gloss of gravitational waves."
+  }
  },
  {
   "id": "c5",
   "sentence": "A neutron star is about as wide as a city, yet heavier than the Sun.",
   "claim": "A neutron star is about 20 km across, with about 1.4 to 2 Suns of mass.",
-  "source_url": "https://todo.invalid/find-source",
+  "source_url": "https://science.nasa.gov/universe/stories/quick-reads/whats-inside-a-dead-star/",
   "source_title": "TO FIND",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA neutron star page). 'About as wide as a city' needs a source.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. (was TO FIND) (find: NASA neutron star page). 'About as wide as a city' needs a source.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Neutron stars pack more mass than the Sun into a sphere about as wide as New York City's Manhattan Island is long.",
+   "qualification": "Source switched to this page; 'a city' is the loose form of 'Manhattan Island's length' (about 20 km)."
+  }
  },
  {
   "id": "c6",
@@ -61,9 +79,15 @@
   "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
   "source_title": "Kilonova (NASA)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...the decay of radioactive elements like platinum and gold formed in the debris from the merger.",
+   "qualification": "Supports heavy atoms made in the debris; the 'hot matter thrown out' wording is a gloss."
+  }
  },
  {
   "id": "c7",

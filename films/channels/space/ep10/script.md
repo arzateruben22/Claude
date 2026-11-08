@@ -20,7 +20,7 @@ vo: The edge is called the event *horizon*. {c1} Escape speed is how fast you mu
 vo: Nothing travels faster than light, so nothing gets out from there. {c3} Now picture a friend, falling *toward* it, while you watch from far away. {-}
 
 ## why {shot: clocks tick slower near a mass; a GPS satellite corrected each day · spine "gravity slows clocks" · picture-only 2 s · energy: 0.62} (22.5–37 s)
-vo: Gravity really does slow clocks. {c4} Your phone's GPS corrects for that every *day*. {c5} The closer to a black hole, the slower a clock *ticks*. {c20} Now compare the two views. {-}
+vo: Gravity really does slow clocks. {c4} GPS satellites must correct for that to keep good *time*. {c5} The closer to a black hole, the slower a clock *ticks*. {c20} Now compare the two views. {-}
 
 ## whoa {shot: split screen: the faller's clock runs on normally; the watcher's view slows, reddens and fades at the ring · spine "faller: normal · watcher: frozen" · picture-only 3 s · energy: 0.8} (37–51 s)
 vo: To *you*, far away, your friend slows, reddens, fades, and seems to *freeze*. {c6} To *them*, at a huge black hole, their own clock runs as usual. {c21}

@@ -10,7 +10,7 @@
 | 13.0 | Nothing travels faster than light, so nothing gets out from there. | split screen; left a watcher far away, right a faller approaching the ring | spine: two views of one fall | bell on a label or counter |
 | 17.8 | Now picture a friend, falling toward it, while you watch from far away. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
 | 22.5 | Gravity really does slow clocks. | clocks tick slower near a mass; a GPS satellite corrected each day | spine: gravity slows clocks | bell on a label or counter |
-| 26.1 | Your phone's GPS corrects for that every day. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
+| 26.1 | GPS satellites must correct for that to keep good time. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
 | 29.8 | The closer to a black hole, the slower a clock ticks. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
 | 33.4 | Now compare the two views. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
 | 37.0 | To you, far away, your friend slows, reddens, fades, and seems to freeze. | split screen: the faller's clock runs on normally; the watcher's view slows, reddens and fades at the ring | spine: faller: normal · watcher: frozen | bell on a label or counter |

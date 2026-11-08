@@ -3,23 +3,35 @@
   "id": "c1",
   "sentence": "On paper, yes.",
   "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
+  "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Thought experiment: real Saturn is gas and would not float as one object.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Thought experiment: real Saturn is gas and would not float as one object.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Saturn is the only planet in our solar system with an average density that is less than water. The giant gas planet could float in a bathtub if such a colossal thing existed.",
+   "qualification": "Page itself frames the bathtub as hypothetical; the exact 0.69 figure is on NASA NSSDC (blocked from here)."
+  }
  },
  {
   "id": "c2",
   "sentence": "Saturn is about nine Earths wide.",
   "claim": "Saturn's equatorial diameter is about 9.4 Earth diameters (120,536 km vs 12,756 km).",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
+  "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Spoken as 'about nine'.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Spoken as 'about nine'.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "With an equatorial diameter of about 74,897 miles (120,500 kilometers), Saturn is 9 times wider than Earth.",
+   "qualification": "Matches 'about nine'."
+  }
  },
  {
   "id": "c3",
@@ -28,9 +40,15 @@
   "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn facts (NASA)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Saturn is a massive ball made mostly of hydrogen and helium.",
+   "qualification": "'The two lightest gases' is general knowledge (hydrogen, helium): fine."
+  }
  },
  {
   "id": "c4",
@@ -50,41 +68,65 @@
   "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn facts (NASA)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm the 80 minutes or compute 1.43e9 km / 299,792 km/s = 79.6 min.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm the 80 minutes or compute 1.43e9 km / 299,792 km/s = 79.6 min.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "From this distance, it takes sunlight 80 minutes to travel from the Sun to Saturn.",
+   "qualification": "Matches."
+  }
  },
  {
   "id": "c20",
   "sentence": "Saturn weighs less than the same amount of water, space for space.",
   "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
+  "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Thought experiment: real Saturn is gas and would not float as one object.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Thought experiment: real Saturn is gas and would not float as one object.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...an average density that is less than water.",
+   "qualification": "Supports 'less than the same amount of water'."
+  }
  },
  {
   "id": "c21",
   "sentence": "Saturn is mostly gas, so its weight is spread thin.",
   "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
+  "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Thought experiment: real Saturn is gas and would not float as one object.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Thought experiment: real Saturn is gas and would not float as one object.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "As a gas giant, Saturn doesn't have a true surface. The planet is mostly swirling gases and liquids deeper down.",
+   "qualification": "'Mostly gas' is a simplification of 'mostly hydrogen and helium'."
+  }
  },
  {
   "id": "c22",
   "sentence": "In the thought experiment, Saturn floats.",
   "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
+  "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Thought experiment: real Saturn is gas and would not float as one object.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Thought experiment: real Saturn is gas and would not float as one object.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The giant gas planet could float in a bathtub if such a colossal thing existed.",
+   "qualification": "The 'it would not stay in one piece' half is our own thought-experiment framing."
+  }
  }
 ]

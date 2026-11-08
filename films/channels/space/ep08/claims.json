@@ -80,12 +80,18 @@
   "id": "c8",
   "sentence": "Light time: from the Sun, about eight minutes.",
   "claim": "Sunlight takes about 8 min 20 s to reach Earth.",
-  "source_url": "https://www.nist.gov/si-redefinition/meter",
+  "source_url": "https://science.nasa.gov/universe/exoplanets/our-milky-way-galaxy-how-big-is-space/",
   "source_title": "Light speed (NIST), own arithmetic",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Same figure as episode 1 (Smithsonian: howthingsfly.si.edu).",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Same figure as episode 1 (Smithsonian: howthingsfly.si.edu).",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Earth is about eight light minutes from the Sun.",
+   "qualification": "Page says about eight light minutes; same figure as episode 1."
+  }
  },
  {
   "id": "c9",

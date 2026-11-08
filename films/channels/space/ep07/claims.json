@@ -8,7 +8,13 @@
   "accessed": "2026-11-08",
   "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. Candidate from the bible; a person must open the page and confirm the range. Hedged 'roughly'.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Our galaxy probably contains 100 to 400 billion stars, and is about 100,000 light-years across.",
+   "qualification": "Page says 'probably'; script says 'hundreds of billions' (range shown on screen)."
+  }
  },
  {
   "id": "c2",
@@ -74,7 +80,13 @@
   "accessed": "2026-11-08",
   "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. Candidate. Confirm the diameter on the page.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...and is about 100,000 light-years across.",
+   "qualification": "Written history (about 5,000 years) is our own comparison, not on the page."
+  }
  },
  {
   "id": "c9",
