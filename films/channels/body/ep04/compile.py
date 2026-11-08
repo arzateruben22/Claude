@@ -90,7 +90,7 @@ CAM = {
         {"t": B["whoa"]["t0"], "pos": [3.0, -13.0, 29.0], "look": [12.0, -0.5, 0.0], "fov": 34, "ease": "sine"},
         {"t": REPLAY[1], "pos": [3.0, -12.5, 31.0], "look": [12.0, -0.5, 0.0], "fov": 34, "ease": "sine"},
         # the field: a cell with five junctions on it; the one used again and again pulses and grows
-        {"t": A("vo05:junction", 0.3), "pos": [150.0, -205.0, 260.0], "look": [90.0, -290.0, -232.0], "fov": 34, "ease": "p2"},   # on the junction as it is named
+        {"t": A("vo05:junction", -0.1), "pos": [150.0, -205.0, 260.0], "look": [90.0, -290.0, -232.0], "fov": 34, "ease": "p2"},   # on the junction as it is named
         {"t": B["takeaway"]["t0"], "pos": [140.0, -200.0, 240.0], "look": [88.0, -288.0, -232.0], "fov": 34, "ease": "sine"},
         {"t": A("vo06:touch", 0.0), "pos": [-2.5, 5.2, 70.0], "look": [8.0, -1.0, 0.0], "fov": 34, "ease": "p3"},             # back to the gap, lit
         {"t": B["meanwhile"]["t0"], "pos": [-1.0, 12.0, 125.0], "look": [8.0, -0.5, 0.0], "fov": 34, "ease": "sine"},        # under the tally
