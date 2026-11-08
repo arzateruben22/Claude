@@ -19,11 +19,11 @@ vo: The muscle fibre gets the message, and *pulls*. {s3}
 ## toxin {shot: wide; the toxin arrives}
 vo: Botulinum toxin gets inside the nerve *ending*. {s4}
 
-## cut {shot: close on the protein, the cut}
-vo: It cuts one protein the nerve needs to send the *message*. {s5}
+## cut {shot: close on the protein, blocked}
+vo: It blocks proteins the nerve needs to send the *message*. {s5}
 
 ## blocked {shot: the release is blocked}
-vo: So the message is never *sent*. {s6}
+vo: So, for a while, the message is not *sent*. {s6}
 
 ## takeaway {shot: wide, the headline}
 vo: The skin was never the target. {s7} The *message* was. {-}

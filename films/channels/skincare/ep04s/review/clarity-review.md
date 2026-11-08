@@ -6,7 +6,7 @@ Why the two warnings stay: they are short sentences whose grade is lifted only b
 **Lines rewritten for a sixth grader (and why)**
 - "What tells your forehead to frown?": a specific question in 2.1 s, in everyday words; replaces the lethality hook.
 - "A nerve ending releases a chemical messenger, acetylcholine, and the muscle fibre answers by pulling." (18 words, two ideas, grade 13) → three short lines: where it starts / what is released / what the muscle does.
-- "Botulinum toxin cuts one protein inside that nerve ending, so the message is never sent." → three lines (gets in / cuts one protein / so the message is never sent); one idea each, ≤ 12 words.
+- "Botulinum toxin cuts one protein inside that nerve ending, so the message is never sent." → three lines (gets in / blocks proteins the nerve needs / so, for a while, the message is not sent); one idea each, ≤ 12 words. "Cuts one protein" and "never" were dropped after reading the source (see claims-table.md).
 - "The skin is never the target. The message is." → past tense ("was") to close the story the film just told.
 
 **Cut or tightened**

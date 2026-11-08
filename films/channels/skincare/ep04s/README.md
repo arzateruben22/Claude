@@ -10,7 +10,7 @@ Build: `python3 -I build.py` (film.json + mix.m4a), then `node kits/cinema/film/
 **Art slot:** `art.json` names the image and the label anchors (0–1 of the image). Clean text-free art: replace `art/placeholder.png`, set `placeholder` false, adjust anchors. Labels, leader lines, the cut mark and the push-in follow.
 **Placeholder:** a crop of the reference (its baked-in pills double up with the drawn ones; marked "Placeholder art" on screen).
 
-## Claims (script tags → `../ep04/claims.json`): c1, c2, c3, c14 (mechanism), c4 (skin is not the target). All OPEN until a person opens each source; treatment topic needs a board-certified dermatologist sign-off.
+## Claims: see review/claims-table.md (s1-s7; SOURCE-READ where the PMC page supports the wording, OPEN otherwise; none person-checked).
 
 ## TODO / known gaps
 - Word timings for captions are **estimated** (character-weighted): the Parakeet model failed its SHA256 check in this session. Re-run `align.py` and `build.py`.

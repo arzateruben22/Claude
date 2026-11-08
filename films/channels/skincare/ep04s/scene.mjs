@@ -79,7 +79,7 @@ const LABELS = [
   { id: "ach", text: "Acetylcholine", a: "ach", off: [48, 92], t0: CUE.ach - 0.3, t1: L_("vo04")[1] - 0.2 },
   { id: "fibre", text: "Muscle fibre", a: "fibre", off: [-56, 96], t0: L_("vo04")[0] + 0.2, t1: L_("vo05")[0] - 0.1 },
   { id: "toxin", text: "Botulinum toxin", a: "toxin", off: [60, -90], t0: CUE.toxin + 0.15, t1: L_("vo06")[0] - 0.1, dot: true },
-  { id: "snap", text: "SNAP-25 · cut", a: "snap", off: [-60, 150], t0: CUE.cuts - 0.1, t1: L_("vo07")[1] },
+  { id: "snap", text: "SNAP-25 · blocked", a: "snap", off: [-60, 150], t0: CUE.cuts - 0.1, t1: L_("vo07")[1] },
   { id: "blocked", text: "Message blocked", a: "ach", off: [48, 92], t0: L_("vo07")[0] + 0.35, t1: L_("vo08")[0] - 0.1 },
 ];
 const NS = "http://www.w3.org/2000/svg";
@@ -98,7 +98,7 @@ for (const e of [ring, slash]) { e.setAttribute("fill", "none"); e.setAttribute(
 
 const SUP = [
   [0, "A nerve sends a signal.<br>A muscle responds."],
-  [L_("vo05")[0] - 0.2, "One protein cut.<br>No message sent."],
+  [L_("vo05")[0] - 0.2, "A key step is blocked.<br>No message sent."],
   [L_("vo08")[0] - 0.2, "Movement starts<br>with a message."],
 ];
 // captions: pages of up to 3 words, broken at phrase ends

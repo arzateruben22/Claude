@@ -23,8 +23,8 @@ def at(line, word):
     k = [x for x in words_at if x[0] == line and x[1].strip(",.?!").lower() == word.strip(",.?!").lower()]
     return words_at[k[0]][0]
 END = {L["id"]: round(START[L["id"]] + L["dur"], 3) for L in lines}
-cue = {"lines": {k: [START[k], END[k]] for k in START}, "ach": at("vo03", "acetylcholine"), "toxin": at("vo05", "Botulinum"), "cuts": at("vo06", "cuts"),
-       "never": at("vo07", "never"), "skin": at("vo08", "skin"), "message": at("vo08", "message")}
+cue = {"lines": {k: [START[k], END[k]] for k in START}, "ach": at("vo03", "acetylcholine"), "toxin": at("vo05", "Botulinum"), "cuts": at("vo06", "blocks"),
+       "never": at("vo07", "not"), "skin": at("vo08", "skin"), "message": at("vo08", "message")}
 film = {"id": "skin-sense-004-sample", "fps": 30, "dur": DUR, "poster": round(START["vo06"] + 1.2, 2), "theme": "../theme.json", "shots": [{"at": 0.0, "name": "main"}], "cue": cue, "captions": caps, "lines": START}
 json.dump(film, open(HERE / "film.json", "w"), indent=1)
 # audio: each line at its start, summed, normalised to -14 LUFS / -1.5 dBTP (voice only; the sample has no score yet)

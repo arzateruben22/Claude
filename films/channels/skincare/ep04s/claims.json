@@ -7,19 +7,19 @@
   "source_title": "Physiology, Neuromuscular Junction (StatPearls; editor P. C. Bollu, updated 17 Feb 2025)",
   "accessed": "2026-11-02",
   "verified_via": "search excerpt",
-  "status": "TODO open link",
-  "note": "Carried over from ep04/claims.json (same sources: c1); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+  "status": "OPEN",
+  "note": "Not directly stated on the page I could read. The page says botulinum toxin 'acts at the neuromuscular junction to cause muscle paralysis by inhibiting the release of acetylcholine from presynaptic motor neurons', which implies the nerve ending is what drives the muscle. The StatPearls page named earlier is blocked here and the NCBI Bookshelf copy returned a reCAPTCHA. A person should open a neuromuscular-junction page."
  },
  {
   "id": "s2",
   "sentence": "The nerve lets out a chemical messenger called acetylcholine.",
   "claim": "At the neuromuscular junction the motor nerve ending releases acetylcholine, a chemical messenger, into a narrow gap.",
-  "source_url": "https://www.statpearls.com/point-of-care/25815",
-  "source_title": "Physiology, Neuromuscular Junction (StatPearls; editor P. C. Bollu, updated 17 Feb 2025)",
-  "accessed": "2026-11-02",
-  "verified_via": "search excerpt",
-  "status": "TODO open link",
-  "note": "Carried over from ep04/claims.json (same sources: c1); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
+  "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
+  "accessed": "2026-11-08",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
+  "note": "PMC2856357 (read 2026-11-08): 'blocking the release of acetylcholine, which is the principal neurotransmitter at the neuromuscular junction' and 'inhibiting the release of acetylcholine from presynaptic motor neurons'. 'Chemical messenger' is a plain-words gloss for neurotransmitter."
  },
  {
   "id": "s3",
@@ -29,8 +29,8 @@
   "source_title": "Physiology, Neuromuscular Junction (StatPearls; editor P. C. Bollu, updated 17 Feb 2025)",
   "accessed": "2026-11-02",
   "verified_via": "search excerpt",
-  "status": "TODO open link",
-  "note": "Carried over from ep04/claims.json (same sources: c1); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+  "status": "OPEN",
+  "note": "Implied only: the same page says blocking acetylcholine release causes muscle paralysis, so release normally makes the muscle work. Not stated as 'the muscle fibre pulls'. Needs a neuromuscular-junction source a person opens (StatPearls blocked here)."
  },
  {
   "id": "s4",
@@ -38,32 +38,32 @@
   "claim": "Botulinum toxin acts at the neuromuscular junction; its light chain works inside the motor nerve ending.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
   "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
-  "accessed": "2026-11-02",
-  "verified_via": "search excerpt",
-  "status": "TODO open link",
-  "note": "Carried over from ep04/claims.json (same sources: c3/c14/c4); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+  "accessed": "2026-11-08",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
+  "note": "PMC2856357: the toxin binds 'to high affinity receptors at the presynaptic surface of cholinergic neurones, and the toxin-receptor complex is taken up into the cell by endocytosis… the toxin escapes into the cytoplasm.'"
  },
  {
   "id": "s5",
-  "sentence": "It cuts one protein the nerve needs to send the message.",
-  "claim": "The type A light chain is a protease that cleaves SNAP-25, a protein needed for acetylcholine vesicles to fuse with the membrane.",
+  "sentence": "It blocks proteins the nerve needs to send the message.",
+  "claim": "The toxin's light chain interacts with SNARE proteins in the nerve ending, including SNAP-25, to prevent acetylcholine vesicles from fusing with the membrane.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
   "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
-  "accessed": "2026-11-02",
-  "verified_via": "search excerpt",
-  "status": "TODO open link",
-  "note": "Carried over from ep04/claims.json (same sources: c3/c14/c4); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+  "accessed": "2026-11-08",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
+  "note": "PMC2856357: 'The light (L) chain interact[s] with different proteins (synaptosomal associated protein (SNAP) 25, vesicle associated membrane protein and syntaxin) in the nerve terminals to prevent fusion of acetylcholine vesicles with the cell membrane.' The page does NOT say 'cuts', or 'one protein', so the sample now says 'blocks proteins'. SNAP-25 is named among them. The type-A cleavage of SNAP-25 is well known but is not on the page I read: OPEN until a person opens a source that states it."
  },
  {
   "id": "s6",
-  "sentence": "So the message is never sent.",
-  "claim": "With SNAP-25 cleaved, the vesicles cannot fuse, so acetylcholine is not released (the effect is temporary and wears off over months).",
+  "sentence": "So, for a while, the message is not sent.",
+  "claim": "With vesicle fusion prevented, acetylcholine is not released; the effect of type A usually lasts about three months.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
   "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
-  "accessed": "2026-11-02",
-  "verified_via": "search excerpt",
-  "status": "TODO open link",
-  "note": "Carried over from ep04/claims.json (same sources: c3/c14/c4); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+  "accessed": "2026-11-08",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
+  "note": "PMC2856357: blocks 'the release of acetylcholine'; 'The weakness induced by injection with botulinum toxin A usually lasts about three months'; function recovers 'by the sprouting of nerve terminals… this usually takes two to three months'. So the line says 'for a while', not 'never'."
  },
  {
   "id": "s7",
@@ -71,9 +71,9 @@
   "claim": "The toxin's effect is on the nerve-muscle junction (it blocks acetylcholine release), not on the skin itself.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
   "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
-  "accessed": "2026-11-02",
-  "verified_via": "search excerpt",
-  "status": "TODO open link",
-  "note": "Carried over from ep04/claims.json (same sources: c3/c14/c4); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+  "accessed": "2026-11-08",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
+  "note": "PMC2856357: 'acts at the neuromuscular junction to cause muscle paralysis by inhibiting the release of acetylcholine'. The page does not use the phrase 'the skin is not the target'; that is the film's plain-words reading (dermatologist to confirm)."
  }
 ]
