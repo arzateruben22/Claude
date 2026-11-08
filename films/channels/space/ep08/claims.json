@@ -25,7 +25,8 @@
   "accessed": "2026-11-08",
   "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Own simple physics too (inverse-square vs number grows with area); confirm the source states the cancellation.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "textbook": "Classic textbook argument (fainter as distance squared, more stars as distance squared), the standard step in Olbers' paradox; NASA's Night Sky Notes page gives the forest picture but not this step, so it stays OPEN for a person."
  },
  {
   "id": "c3",
@@ -36,7 +37,8 @@
   "accessed": "2026-11-08",
   "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. As c2.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "textbook": "Same classic textbook argument; stays OPEN for a person."
  },
  {
   "id": "c5",
@@ -115,7 +117,8 @@
   "accessed": "2026-11-08",
   "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. OWN INFERENCE, hedged to 'billions'.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "calc": "CALC (inference): light from any galaxy has traveled less than the universe's age, 13.8 billion years (ESA, SOURCE-READ), so 'billions of years' is safe; no page states a galaxy-by-galaxy figure."
  },
  {
   "id": "c20",

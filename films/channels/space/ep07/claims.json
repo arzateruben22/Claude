@@ -127,7 +127,8 @@
   "accessed": "2026-11-08",
   "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. OWN CALCULATION; a block is taken as about 300 m (illustrative). Say 'a city block' only; do not state a length.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "calc": "CALC: light covers 300 m in 300 / 299,792,458 s = 1.0 microsecond (c from NIST; 'a city block' taken as about 300 m, illustrative)."
  },
  {
   "id": "c10",
