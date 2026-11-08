@@ -3,13 +3,14 @@
   "id": "c1",
   "sentence": "You are about as wide as you are tall.",
   "claim": "An adult's arm span (fingertip to fingertip) is about equal to body height (ratio about 1.0; roughly 1.03 in men and 1.01 in women in some studies).",
-  "source_url": "https://doi.org/10.1371/journal.pone.0092800",
-  "source_title": "Candidate: Quanjer et al., 'Height and arm span: lung function reference values', and other arm-span/height studies (to be confirmed)",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/32575104/",
+  "source_title": "Arm Span and Its Relation to Height in a 2- to 17-Year-Old Reference Population (abstract via PubMed E-utilities)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Candidate source, not opened; the exact paper must be chosen by a person. Children's ratio differs a little; the film says 'about'."
+  "note": "OPEN until a person opens the page (builder read it, quote in builder_read). Supports \"about as wide as you are tall\" for children and teens (ratio 0.95-1.02). The adult ratio (about 1.0) is quoted there from other references: a person should open one adult source (Quanjer et al.) before posting.",
+  "builder_read": "\"Mean AS/H increased from 0.9848 to 1.0155 in boys and from 0.9468 to 1.0028 in girls\" (children 2-17 years, Maastricht study, 2,595 children); adult ratio taken from published European reference data (not read)."
  },
  {
   "id": "c2",
@@ -51,13 +52,14 @@
   "id": "c5",
   "sentence": "It circles the Earth about three hundred and thirty times.",
   "claim": "13.1 million km / 40,075 km (equator) = 327: 'about three hundred and thirty times'.",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
-  "source_title": "Arithmetic (calc.py: laps); equator from NASA Earth fact sheet",
+  "source_url": "https://science.nasa.gov/earth/facts/",
+  "source_title": "NASA Science, Earth Facts (equatorial diameter)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "calculation",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Computed; equator 40,075 km is NASA's figure (candidate, not opened)."
+  "note": "OPEN until a person opens the page (builder read it, quote in builder_read). The page gives the diameter, not the circumference: pi x 12,756 km = 40,074 km (calc.py uses 40,075 km, the standard equator length). The 327 laps is arithmetic; say \"about three hundred and thirty\".",
+  "builder_read": "\"With an equatorial diameter of 7,926 miles (12,756 kilometers), Earth is the biggest of the terrestrial planets\""
  },
  {
   "id": "c6",
@@ -87,12 +89,13 @@
   "id": "c8",
   "sentence": "The same line would reach the Moon again and again.",
   "claim": "13.1 million km / 384,400 km (the Moon's mean distance) = 34 one-way trips (shown '34 trips to the Moon').",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
-  "source_title": "Arithmetic (calc.py: moon_trips); Moon distance from NASA Moon fact sheet",
+  "source_url": "https://science.nasa.gov/moon/facts/",
+  "source_title": "NASA Science, Moon Facts",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "calculation",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Computed; Moon distance is NASA's mean figure (candidate, not opened)."
+  "note": "OPEN until a person opens the page (builder read it, quote in builder_read). Average (centre to centre) distance. 13.1 million km / 384,400 km = 34 one-way trips.",
+  "builder_read": "\"The Moon is an average of 238,855 miles (384,400 kilometers) away.\""
  }
 ]

@@ -31,5 +31,5 @@ All beats are under the limit of 8. Several grades are low because the sentences
 
 ## Still blocked (say so plainly)
 - Word timings: Parakeet checksum is waiting on the owner (coordinator informed). Until then `compile.py` ran on a letter-proportional stand-in, so `scene-table.md` timestamps are not yet final.
-- Sources: all claims OPEN (see claims-table.md).
+- Sources: five of nine claims were read by the builder against NASA and PubMed pages (SOURCE-READ, quotes in claims-table.md); none is OK until a person opens it. The three calculations rest on those inputs.
 - Draft render: not yet run (the render waits for real timings so the draft reviewers score the real pictures).
