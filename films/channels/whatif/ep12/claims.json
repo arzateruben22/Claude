@@ -1,0 +1,86 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Somewhere on Earth, lightning is flashing right now, about forty-four times every second, all around the planet.",
+  "claim": "Global flash rate about 44 flashes a second (Christian et al. 2003, from NASA's Optical Transient Detector).",
+  "source_url": "https://doi.org/10.1029/2002JD002347",
+  "source_title": "Christian et al., 'Global frequency and distribution of lightning as observed from space by the Optical Transient Detector', J. Geophys. Res. 108 (2003)",
+  "accessed": "2026-11-08",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "kind": "source",
+  "note": "OPEN: NOT read. NOT READ: doi.org was blocked and PubMed had no abstract. The figure is from memory (about 44 +/- 5 a second); a person must open the paper."
+ },
+ {
+  "id": "c2",
+  "sentence": "That adds up to more than a billion flashes in a year.",
+  "claim": "44 x 31.6 million s = 1.39 billion flashes a year (calc.py: flashes).",
+  "source_url": "https://doi.org/10.1029/2002JD002347",
+  "source_title": "Arithmetic (calc.py); rate from c1",
+  "accessed": "2026-11-08",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "kind": "calculation",
+  "note": "OPEN: NOT read. Computed."
+ },
+ {
+  "id": "c3",
+  "sentence": "One flash carries roughly a billion joules, a rough guess with a wide range.",
+  "claim": "Energy of one lightning flash is of order 1e9 J (a billion joules), with a wide range (about 1e8 to 1e10 J).",
+  "source_url": "https://www.weather.gov/safety/lightning-science-overview",
+  "source_title": "NWS/NOAA lightning science; Rakov & Uman, Lightning: Physics and Effects (2003)",
+  "accessed": "2026-11-08",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "kind": "source",
+  "note": "OPEN: NOT read. NOT READ (weather.gov returned nothing to this container). Order-of-magnitude figure from memory; the coordinator asked for a range, so the film says 'roughly' and shows 0.5 to 47 days."
+ },
+ {
+  "id": "c4",
+  "sentence": "That is about four hundred billion kilowatt-hours, a very big number.",
+  "claim": "1.39e9 flashes x 1e9 J = 1.39e18 J = 386 billion kWh (1 kWh = 3.6e6 J).",
+  "source_url": "https://doi.org/10.1029/2002JD002347",
+  "source_title": "Arithmetic (calc.py: kwh_bn); unit conversion",
+  "accessed": "2026-11-08",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "kind": "calculation",
+  "note": "OPEN: NOT read. Computed; inputs c1, c3."
+ },
+ {
+  "id": "c5",
+  "sentence": "The world uses nearly eighty times more electricity in a year.",
+  "claim": "World electricity generation is about 30,000 TWh a year (about 2023); 30,000 / 386 = 78.",
+  "source_url": "https://ember-energy.org/data/electricity-data-explorer/",
+  "source_title": "Ember, Global Electricity Review / Electricity Data Explorer (or IEA)",
+  "accessed": "2026-11-08",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "kind": "source",
+  "note": "OPEN: NOT read. NOT READ: ember-energy.org not allowed. Figure from memory (about 29,000-30,000 TWh); a person must open the report and fix the year."
+ },
+ {
+  "id": "c6",
+  "sentence": "All the lightning on Earth would run it for about five days.",
+  "claim": "386 TWh / 30,000 TWh = 1.3% of a year = 4.7 days (calc.py: days).",
+  "source_url": "https://ember-energy.org/data/electricity-data-explorer/",
+  "source_title": "Arithmetic (calc.py: days)",
+  "accessed": "2026-11-08",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "kind": "calculation",
+  "note": "OPEN: NOT read. Computed; inputs c3 and c5 are both rough, so say 'about five days' and show the range."
+ },
+ {
+  "id": "c7",
+  "sentence": "If a flash holds ten times less or ten times more, the answer swings from half a day to about seven weeks.",
+  "claim": "At 1e8 J a flash: 0.5 days; at 1e10 J: 47 days (6.7 weeks).",
+  "source_url": "https://doi.org/10.1029/2002JD002347",
+  "source_title": "Arithmetic (calc.py: SENS)",
+  "accessed": "2026-11-08",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "kind": "calculation",
+  "note": "OPEN: NOT read. Computed."
+ }
+]
