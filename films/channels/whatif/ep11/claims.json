@@ -75,7 +75,7 @@
  },
  {
   "id": "c7",
-  "sentence": "But all that water is only about an eighth of one percent of the planet's volume.",
+  "sentence": "But its water is only about an eighth of one percent of its volume.",
   "claim": "1.386e9 km3 / 1.087e12 km3 (Earth's volume) = 0.13%, about one-eighth of one percent.",
   "source_url": "https://science.nasa.gov/earth/facts/",
   "source_title": "Arithmetic (calc.py: share_pct); Earth volume from NASA's diameter",

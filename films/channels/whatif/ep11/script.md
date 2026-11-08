@@ -29,7 +29,7 @@ vo: It is less than half as wide as the *Moon*. {c4} Next to the Earth, it is a 
 vo: Only a small part of the water is fresh; count just that, and the ball is about four hundred kilometers *wide*. {c6}
 
 ## takeaway {shot: the Earth with a thin blue film; the ball beside it · picture-only 0.3 s · energy: 0.45} (61–69 s)
-vo: Earth looks like a water world from space. {-} But all its water is only about an eighth of one percent of the planet's *volume*. {c7}
+vo: Earth looks like a water world from space. {-} But its water is only about an eighth of one percent of its *volume*. {c7}
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (69–74.5 s)
 vo: Next envelope: could we catch all the world's *lightning*? {-}
@@ -37,5 +37,5 @@ end card: "Next envelope: *catching all the lightning*" · "Possibility Lab · N
 
 ## Notes
 - Every number is `calc.py`'s. The answer is about 1,400 km (1,383 km computed), badged "liquid, ice and vapor counted together": all water, not only the sea.
-- "Size" in the last line means volume: one eighth of one percent of the Earth's volume.
+- The last line means volume: one eighth of one percent of the Earth's volume.
 - Listen at T0: "kilometers", "fourteen hundred", "marble".
