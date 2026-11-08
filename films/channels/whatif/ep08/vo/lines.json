@@ -1,0 +1,214 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/ep08/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How long is a chain of us? Everyone on Earth, holding hands.",
+   "stars": [
+    "us"
+   ],
+   "phonemes": "hˌaʊ lˈɔŋ ɪz ɐ tʃˈeɪn ʌv ˌʌs? ˈɛvɹɪwˌʌn ˌɔn ˈɜːθ, hˈoʊldɪŋ hˈændz.",
+   "speeds": [
+    0.84,
+    0.66
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     1.4522,
+     2.0522
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.685,
+   "sha256": "93a3ed094f7a5e9b448133ed85c1d3b740dd09daa33a0b6186f4b69a0d262562"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Stretch your arms out wide. You are about as wide as you are tall. Call it a meter and a half, for grown-ups and kids together.",
+   "stars": [
+    "tall",
+    "together"
+   ],
+   "phonemes": "stɹˈɛtʃ jʊɹ ˈɑːɹmz ˈaʊt wˈaɪd. juː ɑːɹ ɐbˌaʊt æz wˈaɪd æz juː ɑːɹ tˈɔːl. kˈɔːl ɪɾ ɐ mˈiːɾɚ ænd ɐ hˈæf, fɔːɹ ɡɹˈoʊnˌʌps ænd kˈɪdz təɡˈɛðɚ.",
+   "speeds": [
+    0.76,
+    0.74,
+    0.74
+   ],
+   "gaps": [
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     1.772,
+     2.152
+    ],
+    [
+     4.4137,
+     4.7937
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 8.719,
+   "sha256": "3d4becf5c84d13a318b44569f67a0e77b1a30b9d3bb56d306fb16e4574d3b447"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Now add all eight billion people, one after another, hand in hand. Out past the horizon it goes, until the line is about thirteen million kilometers long.",
+   "stars": [
+    "long"
+   ],
+   "phonemes": "nˈaʊ ˈæd ˈɔːl ˈeɪt bˈɪliən pˈiːpəl, wˈʌn ˈæftɚɹ ɐnˈʌðɚ, hˈænd ɪn hˈænd. ˈaʊt pˈæst ðə hɚɹˈaɪzən ɪt ɡˈoʊz, ʌntˈɪl ðə lˈaɪn ɪz ɐbˌaʊt θˈɜːtiːn mˈɪliən kɪlˈɑːmɪɾɚz lˈɔŋ.",
+   "speeds": [
+    0.8,
+    0.8
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     4.5242,
+     4.9042
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 11.381,
+   "sha256": "b5a663fa4661511e85d07626f1cb3e3d7b2b3e645f466e8a24ef89f73eb9f677"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "That number is too big to picture. So let's wrap the line around something we all know: the Earth. Pull it tight, like a thread.",
+   "stars": [
+    "Earth"
+   ],
+   "phonemes": "ðæt nˈʌmbɚɹ ɪz tˈuː bˈɪɡ tə pˈɪktʃɚ. sˌoʊ lˈɛts ɹˈæp ðə lˈaɪn ɚɹˈaʊnd sˈʌmθɪŋ wiː ˈɔːl nˈoʊ: ðɪ ˈɜːθ. pˈʊl ɪt tˈaɪt, lˈaɪk ɐ θɹˈɛd.",
+   "speeds": [
+    0.8,
+    0.74,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     1.8884,
+     2.2684
+    ],
+    [
+     6.4023,
+     6.7823
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 8.423,
+   "sha256": "b207df8888a6cacecb62561e2b410404ec112d45258943313380adf27269f018"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "It circles the Earth about three hundred and thirty times. And one lap needs only one person in three hundred of us.",
+   "stars": [
+    "times",
+    "us"
+   ],
+   "phonemes": "ɪt sˈɜːkəlz ðɪ ˈɜːθ ɐbˌaʊt θɹˈiː hˈʌndɹɪd ænd θˈɜːɾi tˈaɪmz. ænd wˈʌn lˈæp nˈiːdz ˈoʊnli wˈʌn pˈɜːsən ɪn θɹˈiː hˈʌndɹɪd ʌv ˌʌs.",
+   "speeds": [
+    0.72,
+    0.72
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     4.0765,
+     4.4565
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 8.732,
+   "sha256": "e8029cd013336be91780bb270786933c8ebd870f8dcd9ba983979e71bf12dfec"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Make everyone a little shorter or taller, and the chain still wraps the Earth hundreds of times.",
+   "stars": [
+    "times"
+   ],
+   "phonemes": "mˌeɪk ˈɛvɹɪwˌʌn ɐ lˈɪɾəl ʃˈɔːɹɾɚ ɔːɹ tˈɔːlɚ, ænd ðə tʃˈeɪn stˈɪl ɹˈæps ðɪ ˈɜːθ hˈʌndɹɪdz ʌv tˈaɪmz.",
+   "speeds": [
+    0.74
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 6.761,
+   "sha256": "87c7834d3db4890ca96956890f613d2e68ea4c8bf156cc724986365f2e363046"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "The same line would reach the Moon again and again. We are each small, but together we are very long.",
+   "stars": [
+    "again",
+    "long"
+   ],
+   "phonemes": "ðə sˈeɪm lˈaɪn wʊd ɹˈiːtʃ ðə mˈuːn ɐɡˈɛn ænd ɐɡˈɛn. wiː ɑːɹ ˈiːtʃ smˈɔːl, bˌʌt təɡˌɛðɚ wiː ɑːɹ vˈɛɹi lˈɔŋ.",
+   "speeds": [
+    0.74,
+    0.7
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     3.1421,
+     3.5221
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 6.906,
+   "sha256": "e0d41fa072a976223223cbc1d5be3e6703e7babb00a9cfde97194d96618ad269"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: a rope round the Earth, lifted one meter.",
+   "stars": [
+    "meter"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: ɐ ɹˈoʊp ɹˈaʊnd ðɪ ˈɜːθ, lˈɪftᵻd wˈʌn mˈiːɾɚ.",
+   "speeds": [
+    0.72
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 4.426,
+   "sha256": "6cf5da4b3e6778b6f84d5cb3c004b4afcbdea020644475839d5f213658711db4"
+  }
+ ]
+}
