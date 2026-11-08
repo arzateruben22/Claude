@@ -140,6 +140,9 @@ def pick_reference(takes, whisper_takes):
 
 CONSENT = ("This is my own voice, and I agree to it being copied to narrate these science channels: "
            "Reality Rulebook, One More Orbit, Body Backstage, Possibility Lab and Skin Sense.")
+# The general sentence for a voice kept on file to narrate any of the owner's videos, on any subject.
+CONSENT_GENERAL = ("This is my own voice, and I agree to it being copied to narrate my videos on any subject, "
+                   "across all of my channels and projects.")
 CONSENT_MIN = 0.8
 
 
@@ -153,8 +156,8 @@ def require_consent(dirs, models):
     if not f:
         sys.exit("NO consent.wav in --takes: save line 01 of voice 1 as consent.wav at ingest. Not cloning this voice")
     heard = [norm(w) for w, _, _ in asr(recognizer(models), load(f), SR)]
-    want = [norm(w) for w in CONSENT.split()]
-    sim = difflib.SequenceMatcher(None, heard, want).ratio()
+    # either sentence passes: the original channel list, or the general sentence; the better match counts
+    sim = max(difflib.SequenceMatcher(None, heard, [norm(w) for w in c.split()]).ratio() for c in (CONSENT, CONSENT_GENERAL))
     print(f"consent check: word similarity {sim:.2f} (need {CONSENT_MIN}); heard: {' '.join(heard)}")
     if sim < CONSENT_MIN:
         sys.exit("CONSENT LINE DOES NOT MATCH: refusing to clone this voice")
