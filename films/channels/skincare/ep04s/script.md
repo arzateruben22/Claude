@@ -1,15 +1,29 @@
 # Skin Sense No. 004 (sample): "The Message Behind a Frown"
 
-Sample, about 20 s, new art direction (ART-DIRECTION.md). Mechanism only; no brand, no advice, no lethality line.
+Sample, about 24 s, new art direction (../ART-DIRECTION.md) and Standards v2 (briefs/STANDARDS-v2.md). One question: what
+tells your forehead to frown? Answer: a message from a nerve; the toxin blocks the message, not the skin. Mechanism only; no
+brand, no advice, no lethality line. Sample beats only: not the 60 s template.
 
-## hook {shot: the nerve ending and the muscle fibre}
-vo: What makes a *frown*? {-}
+## hook {shot: close on the nerve ending}
+vo: What tells your forehead to *frown*? {-}
 
-## signal {shot: nerve ending, acetylcholine, muscle fibre}
-vo: A nerve ending releases a chemical messenger, acetylcholine, and the muscle fibre answers by *pulling*. {c1,c2}
+## start {shot: nerve ending drawn on}
+vo: It starts at the end of a *nerve*. {s1}
 
-## toxin {shot: the toxin cuts one protein}
-vo: Botulinum toxin cuts one protein inside that nerve ending, so the message is never *sent*. {c3,c14}
+## message {shot: close on the release, label acetylcholine}
+vo: The nerve lets out a chemical messenger called *acetylcholine*. {s2}
 
-## takeaway {shot: the message}
-vo: The skin is never the target. The *message* is. {c4}
+## pull {shot: the muscle fibre}
+vo: The muscle fibre gets the message, and *pulls*. {s3}
+
+## toxin {shot: wide; the toxin arrives}
+vo: Botulinum toxin gets inside the nerve *ending*. {s4}
+
+## cut {shot: close on the protein, the cut}
+vo: It cuts one protein the nerve needs to send the *message*. {s5}
+
+## blocked {shot: the release is blocked}
+vo: So the message is never *sent*. {s6}
+
+## takeaway {shot: wide, the headline}
+vo: The skin was never the target. {s7} The *message* was. {-}

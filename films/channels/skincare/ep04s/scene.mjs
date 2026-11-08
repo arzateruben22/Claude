@@ -55,34 +55,51 @@ const supEl = root.querySelector("#sup"), capEl = root.querySelector("#cap");
 // the art: full width, its height by its own aspect, centred in the box
 const AW = 1080 * u, AH = AW * ART.h / ART.w, BH = 1060 * u, BTOP = 560 * u, TOP0 = (BH - AH) / 2;
 art.style.width = `${AW}px`; art.style.height = `${AH}px`; art.style.top = `${TOP0}px`;
-const camAt = (t) => { const k = ease(seg(t, 0, FILM.dur)); return { s: 1 + 0.075 * k, px: -8 * u * k, py: -12 * u * k }; };   // a slow push-in toward the nerve ending
-const anchorAt = (name, t) => {
-  const c = camAt(t), [ax, ay] = ART.anchors[name], cx = AW / 2, cy = BH / 2;
-  const lx = ax * AW, ly = TOP0 + ay * AH;
-  return [cx + (lx - cx) * c.s + c.px, BTOP + cy + (ly - cy) * c.s + c.py];
+// camera: a close-up per line (focus in art coordinates 0-1, scale), each reached by a short eased move, then a slow drift
+const LN = CUE.lines, S = (id) => LN[id][0];
+const KF = [
+  { t: 0, id: "vo01", s: 1.55, f: [0.40, 0.36] }, { t: S("vo02"), s: 1.6, f: [0.37, 0.31] }, { t: S("vo03"), s: 1.8, f: [0.56, 0.50] },
+  { t: S("vo04"), s: 1.45, f: [0.62, 0.72] }, { t: S("vo05"), s: 1.0, f: [0.5, 0.5] }, { t: S("vo06"), s: 2.05, f: [0.50, 0.49] },
+  { t: S("vo07"), s: 1.7, f: [0.57, 0.53] }, { t: S("vo08"), s: 1.05, f: [0.5, 0.5] },
+];
+const camAt = (t) => {
+  let i = 0; for (let k = 0; k < KF.length; k++) if (t >= KF[k].t - 0.05) i = k;
+  const a = KF[Math.max(0, i - 1)], b = KF[i], m = i ? ease(seg(t, b.t - 0.05, b.t + 0.85)) : 1, drift = 1 + 0.025 * seg(t, b.t, b.t + 4);
+  return { s: (a.s + (b.s - a.s) * m) * drift, fx: a.f[0] + (b.f[0] - a.f[0]) * m, fy: a.f[1] + (b.f[1] - a.f[1]) * m };
 };
+const toScreen = (nx, ny, c) => [AW / 2 + (nx - c.fx) * AW * c.s, BTOP + BH / 2 + (ny - c.fy) * AH * c.s];
+const ANCH = { ...ART.anchors, toxin: null };
+const toxinPos = (t) => { const p = ease(seg(t, CUE.toxin + 0.1, CUE.toxin + 2.6)); return [0.16 + (ART.anchors.snap[0] - 0.16) * p, 0.1 + (ART.anchors.snap[1] - 0.1) * p]; };
+const anchorAt = (name, t) => { const c = camAt(t), [ax, ay] = name === "toxin" ? toxinPos(t) : ART.anchors[name]; return toScreen(ax, ay, c); };
 
-// labels: pill offset from its anchor (rigid, so it stays attached); drawn on with the narration
+// labels: a pill at an offset from its anchor (rigid, so it stays attached), kept inside the frame; drawn on with the narration
+const L_ = (id) => LN[id];
 const LABELS = [
-  { id: "nerve", text: "Nerve ending", a: "nerve", off: [-6, -165], t0: CUE.nerve, t1: CUE.toxin - 0.5 },
-  { id: "ach", text: "Acetylcholine", a: "ach", off: [48, 92], t0: CUE.ach, t1: CUE.toxin - 0.5 },
-  { id: "fibre", text: "Muscle fibre", a: "fibre", off: [-56, 96], t0: CUE.fibre, t1: CUE.toxin - 0.5 },
-  { id: "snap", text: "SNAP-25 · cut", a: "snap", off: [-60, 150], t0: CUE.cuts - 0.1, t1: FILM.dur - 0.4, cut: true },
+  { id: "nerve", text: "Nerve ending", a: "nerve", off: [-6, -165], t0: L_("vo02")[0], t1: L_("vo03")[1] },
+  { id: "ach", text: "Acetylcholine", a: "ach", off: [48, 92], t0: CUE.ach - 0.3, t1: L_("vo04")[1] - 0.2 },
+  { id: "fibre", text: "Muscle fibre", a: "fibre", off: [-56, 96], t0: L_("vo04")[0] + 0.2, t1: L_("vo05")[0] - 0.1 },
+  { id: "toxin", text: "Botulinum toxin", a: "toxin", off: [60, -90], t0: CUE.toxin + 0.15, t1: L_("vo06")[0] - 0.1, dot: true },
+  { id: "snap", text: "SNAP-25 · cut", a: "snap", off: [-60, 150], t0: CUE.cuts - 0.1, t1: L_("vo07")[1] },
+  { id: "blocked", text: "Message blocked", a: "ach", off: [48, 92], t0: L_("vo07")[0] + 0.35, t1: L_("vo08")[0] - 0.1 },
 ];
 const NS = "http://www.w3.org/2000/svg";
+await document.fonts.ready;
 for (const L of LABELS) {
-  L.pill = document.createElement("div"); L.pill.className = "pill"; L.pill.textContent = L.text; pills.appendChild(L.pill);
+  L.pill = document.createElement("div"); L.pill.className = "pill"; L.pill.textContent = L.text; pills.appendChild(L.pill); L.pw = L.pill.getBoundingClientRect().width; L.ph = L.pill.getBoundingClientRect().height;
   L.line = document.createElementNS(NS, "path"); L.line.setAttribute("stroke", NAVY); L.line.setAttribute("stroke-width", 2.4 * u); L.line.setAttribute("fill", "none"); lead.appendChild(L.line);
-  L.dot = document.createElementNS(NS, "circle"); L.dot.setAttribute("r", 8 * u); L.dot.setAttribute("fill", IVORY); L.dot.setAttribute("stroke", NAVY); L.dot.setAttribute("stroke-width", 2.4 * u); lead.appendChild(L.dot);
+  L.dot = document.createElementNS(NS, "circle"); L.dot.setAttribute("r", (L.dot === true ? 8 : 8) * u); L.dot.setAttribute("fill", IVORY); L.dot.setAttribute("stroke", NAVY); L.dot.setAttribute("stroke-width", 2.4 * u); lead.appendChild(L.dot);
 }
+// the toxin: a navy particle with a soft halo travelling to the protein (a simplified picture, not a molecule model)
+const halo = document.createElementNS(NS, "circle"), core = document.createElementNS(NS, "circle");
+halo.setAttribute("fill", "rgba(14,27,61,.22)"); core.setAttribute("fill", NAVY); lead.insertBefore(core, lead.firstChild); lead.insertBefore(halo, lead.firstChild);
 // the cut: a ring and a slash at the protein, on "cuts"
 const ring = document.createElementNS(NS, "circle"), slash = document.createElementNS(NS, "path");
 for (const e of [ring, slash]) { e.setAttribute("fill", "none"); e.setAttribute("stroke", TEAL); e.setAttribute("stroke-width", 5 * u); e.setAttribute("stroke-linecap", "round"); lead.appendChild(e); }
 
 const SUP = [
   [0, "A nerve sends a signal.<br>A muscle responds."],
-  [CUE.toxin - 0.2, "One protein cut.<br>No message sent."],
-  [CUE.skin - 0.2, "The skin is never the target.<br>The message is."],
+  [L_("vo05")[0] - 0.2, "One protein cut.<br>No message sent."],
+  [L_("vo08")[0] - 0.2, "Movement starts<br>with a message."],
 ];
 // captions: pages of up to 3 words, broken at phrase ends
 const pages = []; let cur = [];
@@ -94,36 +111,37 @@ if (cur.length) pages.push(cur);
 
 window.seek = function (t) {
   stage(t);
-  const c = camAt(t), fi = eo(seg(t, 0, 0.7));
-  art.style.transform = `translate(${c.px}px,${c.py}px) scale(${c.s})`;
-  // the transform origin is the art's top-left; recentre the push on the box centre
-  const cx = AW / 2, cyl = BH / 2 - TOP0;
-  art.style.transform = `translate(${c.px + cx * (1 - c.s)}px,${c.py + cyl * (1 - c.s)}px) scale(${c.s})`;
+  const c = camAt(t), fi = eo(seg(t, 0, 0.5)), F = [c.fx * AW, TOP0 + c.fy * AH];
+  art.style.transform = `translate(${AW / 2 - F[0] * c.s}px,${BH / 2 - F[1] * c.s}px) scale(${c.s})`;
   artbox.style.opacity = fi.toFixed(3);
-  root.querySelector(".h1").style.opacity = root.querySelector(".eyebrow").style.opacity = eo(seg(t, 0, 0.5)).toFixed(3);
-  // supporting line cross-fade
+  root.querySelector(".h1").style.opacity = root.querySelector(".eyebrow").style.opacity = eo(seg(t, 0, 0.4)).toFixed(3);
   let k = 0; for (let i = 0; i < SUP.length; i++) if (t >= SUP[i][0]) k = i;
   if (supEl.dataset.k !== String(k)) { supEl.innerHTML = SUP[k][1]; supEl.dataset.k = String(k); }
-  supEl.style.opacity = (eo(seg(t, SUP[k][0], SUP[k][0] + 0.35)) * eo(seg(t, 0.2, 0.8))).toFixed(3);
-  // labels: pill rises with the line drawing from the anchor, fades out when its beat ends
+  supEl.style.opacity = (eo(seg(t, SUP[k][0], SUP[k][0] + 0.35)) * eo(seg(t, 0.1, 0.6))).toFixed(3);
+  // the toxin particle
+  const [tx, ty] = anchorAt("toxin", t), tv = eo(seg(t, CUE.toxin, CUE.toxin + 0.3)) * (1 - eo(seg(t, CUE.cuts + 0.5, CUE.cuts + 0.9)));
+  halo.setAttribute("cx", tx); halo.setAttribute("cy", ty); halo.setAttribute("r", 26 * u * c.s ** 0.3); halo.setAttribute("opacity", tv.toFixed(3));
+  core.setAttribute("cx", tx); core.setAttribute("cy", ty); core.setAttribute("r", 11 * u * c.s ** 0.3); core.setAttribute("opacity", tv.toFixed(3));
   for (const L of LABELS) {
-    const p = eo(seg(t, L.t0, L.t0 + 0.55)), out = 1 - eo(seg(t, L.t1, L.t1 + 0.35)), vis = p * out;
-    const [ax, ay] = anchorAt(L.a, t), px0 = ax + L.off[0] * u, py0 = ay + L.off[1] * u;
+    const [ax, ay] = anchorAt(L.a, t);
+    const inside = eo(seg(ay, BTOP + 10 * u, BTOP + 90 * u)) * (1 - eo(seg(ay, BTOP + BH - 150 * u, BTOP + BH - 80 * u))) * eo(seg(ax, -10 * u, 60 * u)) * (1 - eo(seg(ax, W - 60 * u, W + 10 * u)));
+    const p = eo(seg(t, L.t0, L.t0 + 0.5)), out = (1 - eo(seg(t, L.t1, L.t1 + 0.3))) * inside, vis = p * out;
+    const pw = L.pw, ph = L.ph;
+    let px0 = ax + L.off[0] * u, py0 = ay + L.off[1] * u;
+    const left = L.off[0] >= 0;
+    // keep the pill inside the frame (the leader still reaches its anchor)
+    px0 = left ? Math.min(Math.max(px0, 34 * u), W - 34 * u - pw) : Math.min(Math.max(px0, 34 * u + pw), W - 34 * u);
+    py0 = Math.min(Math.max(py0, BTOP + 30 * u + ph / 2), BTOP + BH - 90 * u);
     L.pill.style.opacity = vis.toFixed(3);
-    const pw = L.pill.offsetWidth, ph = L.pill.offsetHeight;
-    L.pill.style.transform = `translate(${(L.off[0] < 0 ? px0 : px0) - (L.off[0] < 0 ? pw : 0)}px,${py0 - ph / 2}px)`;
-    // leader: from the anchor toward the pill's near edge, drawn on by p
-    const ex = L.off[0] < 0 ? px0 : px0, ey = py0;
-    const x1 = ax, y1 = ay, x2 = ex + 0, y2 = ey, mx = x1 + (x2 - x1) * p, my = y1 + (y2 - y1) * p;
-    L.line.setAttribute("d", `M${x1},${y1} L${mx},${my}`); L.line.setAttribute("opacity", out.toFixed(3));
+    L.pill.style.transform = `translate(${left ? px0 : px0 - pw}px,${py0 - ph / 2}px)`;
+    const mx = ax + (px0 - ax) * p, my = ay + (py0 - ay) * p;
+    L.line.setAttribute("d", `M${ax},${ay} L${mx},${my}`); L.line.setAttribute("opacity", out.toFixed(3));
     L.dot.setAttribute("cx", ax); L.dot.setAttribute("cy", ay); L.dot.setAttribute("opacity", (p * out).toFixed(3));
   }
-  // the cut
-  const [sx, sy] = anchorAt("snap", t), q = seg(t, CUE.cuts, CUE.cuts + 0.5), hold = 1 - eo(seg(t, FILM.dur - 0.9, FILM.dur - 0.4));
-  ring.setAttribute("cx", sx); ring.setAttribute("cy", sy); ring.setAttribute("r", (22 + 26 * eo(q)) * u); ring.setAttribute("opacity", (q > 0 ? (1 - 0.35 * q) * hold : 0).toFixed(3));
-  const d = 40 * u * eo(seg(t, CUE.cuts + 0.1, CUE.cuts + 0.45));
+  const [sx, sy] = anchorAt("snap", t), q = seg(t, CUE.cuts, CUE.cuts + 0.5), hold = 1 - eo(seg(t, LN.vo07[1], LN.vo07[1] + 0.4));
+  ring.setAttribute("cx", sx); ring.setAttribute("cy", sy); ring.setAttribute("r", (22 + 26 * eo(q)) * u * c.s ** 0.4); ring.setAttribute("opacity", (q > 0 ? (1 - 0.35 * q) * hold : 0).toFixed(3));
+  const d = 40 * u * c.s ** 0.4 * eo(seg(t, CUE.cuts + 0.1, CUE.cuts + 0.45));
   slash.setAttribute("d", `M${sx - d},${sy + d} L${sx + d},${sy - d}`); slash.setAttribute("opacity", (q > 0 ? hold : 0).toFixed(3));
-  // captions: the current page, the current word underlined
   let pg = null; for (const g of pages) if (t >= g[0].t0 - 0.05 && t <= g[g.length - 1].t1 + 0.3) pg = g;
   if (!pg) capEl.innerHTML = "";
   else capEl.innerHTML = `<span class="pg">${pg.map((w) => `<span class="${t >= w.t0 && t < w.t1 ? "on" : ""}">${w.w}</span>`).join(" ")}</span>`;

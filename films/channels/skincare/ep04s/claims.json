@@ -1,0 +1,79 @@
+[
+ {
+  "id": "s1",
+  "sentence": "It starts at the end of a nerve.",
+  "claim": "A muscle contracts when a motor nerve ending signals it at the neuromuscular junction.",
+  "source_url": "https://www.statpearls.com/point-of-care/25815",
+  "source_title": "Physiology, Neuromuscular Junction (StatPearls; editor P. C. Bollu, updated 17 Feb 2025)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "Carried over from ep04/claims.json (same sources: c1); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+ },
+ {
+  "id": "s2",
+  "sentence": "The nerve lets out a chemical messenger called acetylcholine.",
+  "claim": "At the neuromuscular junction the motor nerve ending releases acetylcholine, a chemical messenger, into a narrow gap.",
+  "source_url": "https://www.statpearls.com/point-of-care/25815",
+  "source_title": "Physiology, Neuromuscular Junction (StatPearls; editor P. C. Bollu, updated 17 Feb 2025)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "Carried over from ep04/claims.json (same sources: c1); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+ },
+ {
+  "id": "s3",
+  "sentence": "The muscle fibre gets the message, and pulls.",
+  "claim": "The released acetylcholine acts on the muscle fibre to make it contract.",
+  "source_url": "https://www.statpearls.com/point-of-care/25815",
+  "source_title": "Physiology, Neuromuscular Junction (StatPearls; editor P. C. Bollu, updated 17 Feb 2025)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "Carried over from ep04/claims.json (same sources: c1); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+ },
+ {
+  "id": "s4",
+  "sentence": "Botulinum toxin gets inside the nerve ending.",
+  "claim": "Botulinum toxin acts at the neuromuscular junction; its light chain works inside the motor nerve ending.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
+  "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "Carried over from ep04/claims.json (same sources: c3/c14/c4); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+ },
+ {
+  "id": "s5",
+  "sentence": "It cuts one protein the nerve needs to send the message.",
+  "claim": "The type A light chain is a protease that cleaves SNAP-25, a protein needed for acetylcholine vesicles to fuse with the membrane.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
+  "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "Carried over from ep04/claims.json (same sources: c3/c14/c4); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+ },
+ {
+  "id": "s6",
+  "sentence": "So the message is never sent.",
+  "claim": "With SNAP-25 cleaved, the vesicles cannot fuse, so acetylcholine is not released (the effect is temporary and wears off over months).",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
+  "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "Carried over from ep04/claims.json (same sources: c3/c14/c4); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+ },
+ {
+  "id": "s7",
+  "sentence": "The skin was never the target.",
+  "claim": "The toxin's effect is on the nerve-muscle junction (it blocks acetylcholine release), not on the skin itself.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
+  "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
+  "accessed": "2026-11-02",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "Carried over from ep04/claims.json (same sources: c3/c14/c4); OPEN until a person opens the source page. Treatment topic: dermatologist sign-off."
+ }
+]

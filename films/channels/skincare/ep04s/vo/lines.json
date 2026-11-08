@@ -1,6 +1,6 @@
 {
  "voice": "bf_isabella",
- "speed": 0.86,
+ "speed": 0.9,
  "lang": "en-gb",
  "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
  "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
@@ -11,50 +11,98 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "What makes a frown?",
+   "text": "What tells your forehead to frown?",
    "stars": [
     "frown"
    ],
-   "phonemes": "wˌɒt mˌeɪks ɐ fɹˈaʊn?",
+   "phonemes": "wˌɒt tˈɛlz jɔː fˈɔːhɛd tə fɹˈaʊn?",
    "file": "01.wav",
-   "dur": 1.479,
-   "sha256": "f9d03c05cd63b35b98b174747a585b532045275659a6ed6185ce871b027db815"
+   "dur": 2.077,
+   "sha256": "755fb02b5fc0095e258f326a4e85043748110850f795a210e7b30b1eea69a177"
   },
   {
    "id": "vo02",
-   "beat": "signal",
-   "text": "A nerve ending releases a chemical messenger, acetylcholine, and the muscle fibre answers by pulling.",
+   "beat": "start",
+   "text": "It starts at the end of a nerve.",
    "stars": [
-    "pulling"
+    "nerve"
    ],
-   "phonemes": "ɐ nˈɜːv ˈɛndɪŋ ɹɪlˈiːsɪz ɐ kˈɛmɪkəl mˈɛsɪndʒə, ˈasɪtˌɪlkəlˌiːn, and ðə mˈʌsəl fˈaɪbəɹ ˈansəz baɪ pˈʊlɪŋ.",
+   "phonemes": "ɪt stˈɑːts at ðɪ ˈɛnd əvə nˈɜːv.",
    "file": "02.wav",
-   "dur": 6.469,
-   "sha256": "22b0a97c949d009e24d5f0daecbb5d8310d845c627e58893d4645ab195e16e67"
+   "dur": 1.897,
+   "sha256": "214a6c08c581a530d333c1fea23aaf9b7d754b3d58b827117f6c8dfb270e6294"
   },
   {
    "id": "vo03",
-   "beat": "toxin",
-   "text": "Botulinum toxin cuts one protein inside that nerve ending, so the message is never sent.",
+   "beat": "message",
+   "text": "The nerve lets out a chemical messenger called acetylcholine.",
    "stars": [
-    "sent"
+    "acetylcholine"
    ],
-   "phonemes": "bˌɒtjʊlˈaɪnəm tˈɒksɪn kˈʌts wˈɒn pɹˈəʊtiːn ɪnsˈaɪd ðat nˈɜːv ˈɛndɪŋ, sˌəʊ ðə mˈɛsɪdʒ ɪz nˈɛvə sˈɛnt.",
+   "phonemes": "ðə nˈɜːv lˈɛts ˈaʊt ɐ kˈɛmɪkəl mˈɛsɪndʒə kˈɔːld ˈasɪtˌɪlkəlˌiːn.",
    "file": "03.wav",
-   "dur": 5.959,
-   "sha256": "ed2364c3cc9fe0e42c161229786e662335d1def55fba61193806d625e60d964c"
+   "dur": 3.653,
+   "sha256": "48f3c87691b497f18662003fecb44694b880bf6e888e7412d35e22f213a28edd"
   },
   {
    "id": "vo04",
-   "beat": "takeaway",
-   "text": "The skin is never the target. The message is.",
+   "beat": "pull",
+   "text": "The muscle fibre gets the message, and pulls.",
+   "stars": [
+    "pulls"
+   ],
+   "phonemes": "ðə mˈʌsəl fˈaɪbə ɡˈɛts ðə mˈɛsɪdʒ, and pˈʊlz.",
+   "file": "04.wav",
+   "dur": 2.788,
+   "sha256": "10ffcb7295c34f69d761da6904af258b4c0c71cc1fe1734e6e6830ba47915c76"
+  },
+  {
+   "id": "vo05",
+   "beat": "toxin",
+   "text": "Botulinum toxin gets inside the nerve ending.",
+   "stars": [
+    "ending"
+   ],
+   "phonemes": "bˌɒtjʊlˈaɪnəm tˈɒksɪn ɡˈɛts ɪnsˈaɪd ðə nˈɜːv ˈɛndɪŋ.",
+   "file": "05.wav",
+   "dur": 3.155,
+   "sha256": "36db22882a742a7f9c3651d19c20b1c5a999df70c02ccc3bacafad643c600da5"
+  },
+  {
+   "id": "vo06",
+   "beat": "cut",
+   "text": "It cuts one protein the nerve needs to send the message.",
    "stars": [
     "message"
    ],
-   "phonemes": "ðə skˈɪn ɪz nˈɛvə ðə tˈɑːɡɪt. ðə mˈɛsɪdʒ ɪz.",
-   "file": "04.wav",
-   "dur": 2.991,
-   "sha256": "4d9cac7c6111fa58e46590506e82b053c1a60174d0a45ba32f283794c7568a9c"
+   "phonemes": "ɪt kˈʌts wˈɒn pɹˈəʊtiːn ðə nˈɜːv nˈiːdz tə sˈɛnd ðə mˈɛsɪdʒ.",
+   "file": "06.wav",
+   "dur": 3.187,
+   "sha256": "75091f38cd8c583112d5c670909725bd295c72ce248c7ed7760523869cda635d"
+  },
+  {
+   "id": "vo07",
+   "beat": "blocked",
+   "text": "So the message is never sent.",
+   "stars": [
+    "sent"
+   ],
+   "phonemes": "sˌəʊ ðə mˈɛsɪdʒ ɪz nˈɛvə sˈɛnt.",
+   "file": "07.wav",
+   "dur": 1.941,
+   "sha256": "e2e902b2cdd0bae00a2c6dbffa6dc18ad8aba77bb347a0b76ed4592b7e99131d"
+  },
+  {
+   "id": "vo08",
+   "beat": "takeaway",
+   "text": "The skin was never the target. The message was.",
+   "stars": [
+    "message"
+   ],
+   "phonemes": "ðə skˈɪn wɒz nˈɛvə ðə tˈɑːɡɪt. ðə mˈɛsɪdʒ wɒz.",
+   "file": "08.wav",
+   "dur": 2.989,
+   "sha256": "38e6ad2250edc88f536bd7a15449ed5060e5ecbc70d24c98fe0052f5cc598419"
   }
  ]
 }
