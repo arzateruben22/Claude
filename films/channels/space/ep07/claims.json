@@ -1,0 +1,101 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Our galaxy holds roughly a hundred to four hundred billion stars.",
+  "claim": "The Milky Way holds an estimated 100 to 400 billion stars.",
+  "source_url": "https://science.nasa.gov/universe/exoplanets/our-milky-way-galaxy-how-big-is-space/",
+  "source_title": "Our Milky Way Galaxy: How Big Is Space? (NASA)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. Candidate from the bible; a person must open the page and confirm the range. Hedged 'roughly'.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "Nobody counted them: astronomers weigh the galaxy, then divide by a typical star.",
+  "claim": "The star count is modelled from the galaxy's mass, not counted star by star.",
+  "source_url": "https://asd.gsfc.nasa.gov/blueshift/index.php/2015/07/22/how-many-stars-in-the-milky-way/",
+  "source_title": "How many stars in the Milky Way? (NASA Blueshift)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. Candidate. Confirm the method wording ('mass divided by average star mass'); soften the line if the page says more is involved.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "In twenty fifteen, a team put Earth's at about three trillion.",
+  "claim": "A 2015 Nature study estimated about 3.04 trillion trees on Earth.",
+  "source_url": "https://www.nature.com/articles/nature14967",
+  "source_title": "Mapping tree density at a global scale (Crowther et al., Nature 2015)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. Candidate from the bible. Confirm 3.04 trillion and the year.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "Count one a second and you'd need about ninety-six thousand years.",
+  "claim": "3.04 trillion seconds is about 96,000 years (3.04e12 / 31,557,600 s per year = 96,340).",
+  "source_url": "https://www.nature.com/articles/nature14967",
+  "source_title": "Own arithmetic from c3",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. OWN CALCULATION, not a sourced fact; inherits c3's status.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "Researchers counted trees in ground plots, then scaled up with satellite maps.",
+  "claim": "The estimate combined ground-based tree-density measurements with satellite data and regression models.",
+  "source_url": "https://www.nature.com/articles/nature14967",
+  "source_title": "Crowther et al., Nature 2015",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. Candidate. Confirm the methods summary on the abstract page.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "Neither number is exact, and both carry wide error bars.",
+  "claim": "Both figures are model estimates with large uncertainty.",
+  "source_url": "https://www.nature.com/articles/nature14967",
+  "source_title": "Crowther et al. (trees); NASA Blueshift (stars)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. Candidate. Confirm the trees paper reports an uncertainty range and that the stars range itself (100 to 400 billion) shows the spread.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "Trees win, by roughly eight to thirty times.",
+  "claim": "3.04 trillion / 400 billion = 7.6 and 3.04 trillion / 100 billion = 30.4, so roughly 8 to 30 times.",
+  "source_url": "https://www.nature.com/articles/nature14967",
+  "source_title": "Own arithmetic from c1 and c3",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. OWN CALCULATION from two OPEN claims; it inherits their status.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "Light time across our galaxy: about a hundred thousand years.",
+  "claim": "The Milky Way's disc is about 100,000 light-years across, so light needs about 100,000 years to cross it.",
+  "source_url": "https://science.nasa.gov/universe/exoplanets/our-milky-way-galaxy-how-big-is-space/",
+  "source_title": "Our Milky Way Galaxy: How Big Is Space? (NASA)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. Candidate. Confirm the diameter on the page.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c9",
+  "sentence": "Across a city block: about a millionth of a second.",
+  "claim": "Light crosses 300 m in 1 microsecond (300 / 299,792,458 s).",
+  "source_url": "https://www.nist.gov/si-redefinition/meter",
+  "source_title": "Own arithmetic with c (NIST)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. OWN CALCULATION; a block is taken as about 300 m (illustrative). Say 'a city block' only; do not state a length.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ }
+]
