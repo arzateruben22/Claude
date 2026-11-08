@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { freshDb, renderedEpisode, eq, S } from "./helpers";
 import type { DB } from "../src/db/client";
-import { markHandedOff, markUploaded, mayAutoPublish, parsePostUrl, undoUploaded } from "../src/domain/publications";
+import { backfillPosted, markHandedOff, markUploaded, mayAutoPublish, parsePostUrl, undoUploaded } from "../src/domain/publications";
 import { onPublicationReported, channelXp } from "../src/domain/living";
 import { approve } from "../src/domain/approvals";
 
@@ -79,5 +79,22 @@ describe("one record per destination", () => {
     expect(xp).toBe(60 + 10 + 10 + 100);   // publish once, placement per destination, First Light once (studio-wide)
     const [rule] = await db.select().from(S.milestoneRules).where(eq(S.milestoneRules.key, "first_published"));
     expect((await db.select().from(S.achievementEvents).where(eq(S.achievementEvents.ruleId, rule.id))).length).toBe(1);
+  });
+});
+
+describe("backfill of posts made before the studio", () => {
+  it("marks only the named platforms as owner-reported, labels them, and is idempotent", async () => {
+    const { ep, pubs } = await renderedEpisode(db, "whatif");
+    const first = await backfillPosted(db, ep.id, ["youtube", "instagram"], "Backfilled: posted before Prism Studio tracked it.");
+    expect(first.find((r) => r.platform === "youtube")?.outcome).toBe("marked");
+    expect(first.find((r) => r.platform === "instagram")?.outcome).toBe("marked");
+    const [yt] = await db.select().from(S.publications).where(eq(S.publications.id, pubs.youtube.id));
+    expect(yt.status).toBe("owner_reported");
+    expect(yt.evidence).toBe("owner_reported");
+    expect(yt.note).toContain("Backfilled");
+    const [tt] = await db.select().from(S.publications).where(eq(S.publications.id, pubs.tiktok.id));
+    expect(tt.status).toBe("planned");
+    const again = await backfillPosted(db, ep.id, ["youtube", "instagram"], "x");
+    expect(again.map((r) => r.outcome)).toEqual(["already", "already"]);
   });
 });

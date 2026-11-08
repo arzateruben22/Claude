@@ -24,7 +24,8 @@
     "wallpaper": "node scripts/wallpaper/render.mjs",
     "lesson:register": "tsx scripts/register-lesson.ts",
     "media:check": "tsx scripts/check-media.ts",
-    "media:push": "node scripts/push-media.mjs"
+    "media:push": "node scripts/push-media.mjs",
+    "posted:backfill": "tsx scripts/mark-posted.ts"
   },
   "dependencies": {
     "drizzle-orm": "0.45.4",

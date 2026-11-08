@@ -1,9 +1,9 @@
 // One publication record per (episode, destination). Statuses move independently per destination:
 // a YouTube upload never marks TikTok or Instagram. Opening a link, downloading, copying or sharing is never proof
 // of publication: only "Mark uploaded" (owner-reported) or an integration's verification is.
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import type { DB } from "../db/client";
-import { destinations, publications } from "../db/schema";
+import { destinations, platformExports, publications, versions } from "../db/schema";
 import { audit, type Conn, DomainError } from "./core";
 import { currentApproval } from "./approvals";
 
@@ -74,6 +74,39 @@ export async function markUploaded(d: DB, id: string, v: { postUrl?: string; sch
     await audit(tx, "owner", "publication.mark_uploaded", "publication", id, { destination: dest.handle || dest.platform, postUrl, status });
     return row;
   });
+}
+
+const REPORTED: PubStatus[] = ["owner_reported", "scheduled_on_platform", "verified_published"];
+
+/** Backfill: record posts the owner made by hand before the studio tracked them. It is owner-reported (never
+ *  "verified"), skips the Review approval on purpose because the post already happened, labels every row in its note
+ *  and audit entry, and never touches simulated rows, other platforms, or a destination already recorded. */
+export async function backfillPosted(d: DB, episodeId: string, platforms: ("youtube" | "tiktok" | "instagram")[], note: string) {
+  const rows = await d.select({ p: publications, platform: destinations.platform }).from(publications)
+    .innerJoin(destinations, eq(destinations.id, publications.destinationId))
+    .where(and(eq(publications.episodeId, episodeId), inArray(destinations.platform, platforms)));
+  const result: { platform: string; outcome: "marked" | "already" | "simulated" | "missing"; publicationId?: string }[] = [];
+  for (const pl of platforms) {
+    if (rows.some((r) => r.platform === pl)) continue;
+    // Instagram rows are normally created by the calendar; for a post that already happened, create the shared
+    // account's row from the current version's Instagram export (still one record per destination).
+    const [dest] = pl === "instagram" ? await d.select().from(destinations).where(and(eq(destinations.platform, "instagram"), eq(destinations.shared, true))) : [];
+    const vers = dest ? await d.select().from(versions).where(eq(versions.episodeId, episodeId)) : [];
+    const cur = vers.filter((v) => !v.superseded).sort((a, b) => b.versionNo - a.versionNo)[0];
+    const [x] = cur ? await d.select().from(platformExports).where(and(eq(platformExports.versionId, cur.id), eq(platformExports.platform, "instagram"))) : [];
+    if (!dest || !x) { result.push({ platform: pl, outcome: "missing" }); continue; }
+    const [row] = await d.insert(publications).values({ episodeId, destinationId: dest.id, exportId: x.id, kind: "instagram", status: "planned" })
+      .onConflictDoNothing().returning();
+    if (row) rows.push({ p: row, platform: "instagram" });
+    else result.push({ platform: pl, outcome: "missing" });
+  }
+  for (const { p, platform } of rows) {
+    if (p.simulated) { result.push({ platform, outcome: "simulated", publicationId: p.id }); continue; }
+    if (REPORTED.includes(p.status)) { result.push({ platform, outcome: "already", publicationId: p.id }); continue; }
+    await markUploaded(d, p.id, { note });
+    result.push({ platform, outcome: "marked", publicationId: p.id });
+  }
+  return result;
 }
 
 /** Undo an owner report made by mistake (keeps the audit trail). */
