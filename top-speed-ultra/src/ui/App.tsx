@@ -160,7 +160,8 @@ export function App() {
 
   useEffect(() => { game.current?.setMapCanvas(mapRef.current); });
   // parked at a venue: the keyboard lands on Get out
-  useEffect(() => { if (venueUi.parked) getOutRef.current?.focus({ preventScroll: true }); }, [venueUi.parked]);
+  // (and the route is done: the Go to button stops showing one)
+  useEffect(() => { if (venueUi.parked) { setNavTarget(null); getOutRef.current?.focus({ preventScroll: true }); } }, [venueUi.parked]);
   // owner mode from an open page's address: #owner on, #owner=0 off (settings.ts reads it at load)
   useEffect(() => {
     const h = () => { const o = ownerFromHash(); if (o !== null) update({ owner: o }); };

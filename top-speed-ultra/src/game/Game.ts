@@ -1842,7 +1842,7 @@ export class Game {
   venue() { const v = this.venueState; return v ? { id: v.vr.venue.id, name: v.vr.venue.name, phase: v.phase, ramp: v.vr.path.id, street: v.vr.exit.street, from: v.vr.exit.from } : null; }
   get venues() { return VENUES.map((v) => v.name); }
   /** park at the venue whose ramp you're on (the trigger, or a tap on the prompt) */
-  arriveVenue(vr = this.vr?.get(this.path)) {
+  arriveVenue(vr = this.vramps().get(this.path)) {
     if (!vr || this.venueState || !this.venueAllowed || this.paused) return false;
     const auto = this.autoDrive;
     this.venueState = { vr, phase: 'parked' };
