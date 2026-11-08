@@ -41,6 +41,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from numerals import numerals_text  # noqa: E402
 
 FLOW_FIGURES = 4   # figures the voice says in one episode, at most (WRITING.md, Flow)
+CLARITY_BEAT_GRADE = 8      # Flesch-Kincaid grade per beat (a rough guide, not a rule)
+CLARITY_FILM_GRADE = 7
+CLARITY_MAX_WORDS = 22
+
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "voice"))
@@ -268,6 +272,26 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
             if run == 3:
                 r.warn(bb["id"], "three short sentences in a row: join two with the thought that links them (WRITING.md, Flow)")
                 break
+
+    # ── first-listen clarity (briefs/STANDARDS-v2.md: a sixth grader can follow it) ──────────
+    def fk_grade(text):
+        sents = [x for x in re.split(r"(?<=[.?!…])\s+", text.strip()) if word_count(x)]
+        ws = [w for x in sents for w in x.split() if re.search(r"[A-Za-z]", w)]
+        if not sents or not ws:
+            return None
+        return 0.39 * len(ws) / len(sents) + 11.8 * sum(syllables(w) for w in ws) / len(ws) - 15.59
+    for bb in beats:
+        g = fk_grade(bb["text"])
+        if g is not None and g > CLARITY_BEAT_GRADE:
+            r.warn(bb["id"], f"reads at about grade {g:.1f}; aim for grade {CLARITY_BEAT_GRADE} or below: shorter sentences, "
+                             f"everyday words, explain any term in the same breath (briefs/STANDARDS-v2.md)")
+        for sent in re.split(r"(?<=[.?!…])\s+", bb["text"]):
+            if word_count(sent) > CLARITY_MAX_WORDS:
+                r.warn(bb["id"], f"a {word_count(sent)}-word sentence; split it so it lands on the first listen")
+    g_all = fk_grade(" ".join(bb["text"] for bb in beats))
+    if g_all is not None:
+        (r.warn if g_all > CLARITY_FILM_GRADE else r.note)(f"clarity: the whole script reads at about grade {g_all:.1f} "
+                                                          f"(target {CLARITY_FILM_GRADE} or below)")
 
     # ── length ──────────────────────────────────────────────────────
     if not WORDS[0] <= total_words <= WORDS[1]:
