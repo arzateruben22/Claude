@@ -302,9 +302,12 @@ Where it falls short (candidly):
   that change; the tee's back shows a dark yoke line across the shoulder blades.
 - Phone LOD 0 is 71k triangles, about 18% over the 60k target.
 - NPCs aren't instanced: each one is its own skinned mesh, so it's one draw call per person (30 for 30), not the 16
-  for every NPC planned below.
+  for every NPC planned below. P1c keeps inside 16 (Low) and 24 (High) by drawing only the nearest people as bodies and
+  the rest as flat impostors painted from their own bodies, all in one instanced call (`src/onfoot/lot57/crowdview.ts`).
 - Building people is slow. 30 people took about 15 s on a desktop CPU, so the game must build them over several frames or
-  in a worker, cache them, and start from far LODs. None of that is built yet.
+  in a worker, cache them, and start from far LODs. P1c (on the standalone page) builds every far body (LOD 2) at load
+  and the patio bodies (LOD 1) in two workers afterwards; the close-up LOD 0 is still built on the main thread (its hair
+  cards need a canvas). Caching is not built.
 
 ### Groups that look like they're talking
 
@@ -481,7 +484,19 @@ Each phase ends with its checks passing in Playwright (headless Chromium, SwiftS
 - **Progress.**
   - [x] P1a (2026-11-02): Lot 57 on foot: the venue, the avatar, controls, collisions and test hooks
     (35 of 35 checks; see `PROJECT_OC_PROGRESS.md`).
-  - [ ] NPCs in talking groups, staff and the crowd curve at full scale.
+  - [x] P1b (2026-11-02): things to do: tap to go (seats, people, counters), Sit and Stand, Order at the bar and both
+    trucks with a pick-up beat and the item held afterwards, Join a group and Leave, nothing through a wall. Two
+    groups of three regulars, the bartender and two cooks as the first people (see `PROJECT_OC_PROGRESS.md`;
+    repaired after review the same day: the cooks drawn on Low, a tap on another group from inside a circle, the
+    bar's ends, the regulars' clothes).
+  - [x] P1c (2026-11-02, committed 2026-10-21, build r2): forty people: twelve parties of guests (31) in standing and seated talking
+    groups, seven staff, two sidewalk walkers; the crowd curve by day and hour with arrivals and departures; the chip;
+    the crowd drawn inside the Low budget (bodies near, impostors far, the patio bodies built in workers). See
+    `PROJECT_OC_PROGRESS.md` for what was checked and what isn't built (dogs, mingling, joining a seated group, the
+    weather's effect on the crowd). Repaired after review the same day (build r2): a stale "closed" toast, the
+    facing check measured as drawn (bodies by the head, cut-outs by the body, which now turns toward the speaker),
+    the people's per-frame work trimmed, a repaint that froze a walker, light specks on the cut-outs' legs, and the
+    people's calls measured as well as counted (which found held cups' glass drawn in two passes and counted as one).
 
 - **Deliverables.**
   - Lot 57 built in code: the Shed, the yard, string lights, the lawn, trucks, the lot and the sign. The rest of the

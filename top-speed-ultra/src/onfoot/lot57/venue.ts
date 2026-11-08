@@ -22,11 +22,24 @@ export type SeatKind = 'bench' | 'stool' | 'hightop' | 'picnic' | 'lawn';
 export interface Seat { id: number; x: number; z: number; y: number; face: number; kind: SeatKind; at: string; ax: number; az: number }
 /** a place to do something (order at the bar or a truck window, play a lawn game) */
 export interface Spot { kind: 'bar' | 'truck' | 'game'; x: number; z: number; face: number; label: string }
+/**
+ * A counter you order across (the Shed's bar, a truck's window): its serving edge, a line at x from z0 to z1 (local
+ * metres) with you on the `side` it faces (+1 east, -1 west); where a served item is set down on it (setX, setY, at
+ * your z along it); and the staff member's post behind it: where they serve (x, facing `face`), where they turn to
+ * make an order (workX, facing `workFace`), the floor height and how far along it they move.
+ */
+export interface CounterSpot {
+  id: 'bar' | 'tacos' | 'noodles'; label: string;
+  x: number; z0: number; z1: number; side: 1 | -1;
+  setX: number; setY: number;
+  staff: { x: number; workX: number; y: number; z: number; z0: number; z1: number; face: number; workFace: number };
+}
 
 export interface Venue {
   colliders: Collider[];
   seats: Seat[];
   spots: Spot[];
+  counters: CounterSpot[];
   bulbs: THREE.Vector3[];
   wires: number[];                    // line segment pairs (x, y, z, x, y, z)
   heaters: THREE.Vector3[];
@@ -48,7 +61,7 @@ export interface Tree { x: number; z: number; y: number; s: number; kind: 'olive
 const faceTo = (dx: number, dz: number) => Math.atan2(dx, dz);
 
 export function buildVenue(kit: Kit, m: Mats): Venue {
-  const col: Collider[] = [], seats: Seat[] = [], spots: Spot[] = [], closedOnly: Collider[] = [], openOnly: Collider[] = [];
+  const col: Collider[] = [], seats: Seat[] = [], spots: Spot[] = [], closedOnly: Collider[] = [], openOnly: Collider[] = [], counters: CounterSpot[] = [];
   const trees: Tree[] = [];
   const insideLights: { x: number; y: number; z: number; i: number }[] = [];
   const r = rand(5757);
@@ -161,7 +174,16 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
     let s0 = u0;
     for (const h of [...holes].filter((hh) => hh.y0 < 0.3).sort((a, b) => a.a - b.a)) { if (h.a > s0) solid.push([s0, h.a]); s0 = Math.max(s0, h.b); }
     if (u1 > s0) solid.push([s0, u1]);
-    for (const [a, b] of solid) col.push(dir === 'x' ? seg(a, at, b, at, t, 'wall', true) : seg(at, a, at, b, t, 'wall', true));
+    // (each stretch split where a window is, so the stretch in front of a window can be marked see-through: you
+    // still can't walk or act through it)
+    // (windows at eye level only: a sill under 1.6 m; the high windows over the bar don't count)
+    const windows = holes.filter((hh) => hh.y0 >= 0.3 && hh.y0 <= 1.6).sort((p, q) => p.a - q.a);
+    const put = (a: number, b: number, see: boolean) => { const c = dir === 'x' ? seg(a, at, b, at, t, 'wall', true) : seg(at, a, at, b, t, 'wall', true); if (see) c.see = true; col.push(c); };
+    for (const [a, b] of solid) {
+      let c = a;
+      for (const w of windows) { if (w.b <= c || w.a >= b) continue; const wa = Math.max(c, w.a), wb = Math.min(b, w.b); if (wa > c) put(c, wa, false); put(wa, wb, true); c = wb; }
+      if (b > c) put(c, b, false);
+    }
   }
 
   function shed() {
@@ -347,6 +369,9 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
     col.push(boxMM(cx0 - 0.2, BZ1, cx1 + 0.14, -14.5, 'bar', false));                    // the bar's hinged flap end (staff only)
     paint.boxMM(cx0, 0, BZ1, cx1, 1.02, -14.5, 0x4a5a56); wood.boxMM(cx0 - 0.05, 1.02, BZ1, cx1 + 0.08, 1.08, -14.5, 0x8a5c38);
     spots.push({ kind: 'bar', x: cx1 + 0.75, z: -25, face: faceTo(-1, 0), label: 'the bar' });
+    // the bartender serves from the aisle behind the counter (backX + 0.62 to cx0) and turns to the taps to pour
+    counters.push({ id: 'bar', label: 'the bar', x: cx1 + 0.08, z0: BZ0, z1: BZ1, side: 1, setX: cx1 - 0.16, setY: 1.08,
+      staff: { x: cx0 - 0.42, workX: backX + 0.95, y: 0, z: -25, z0: BZ0 + 0.6, z1: BZ1 - 0.6, face: faceTo(1, 0), workFace: faceTo(-1, 0) } });
     // 20 stools along the counter
     for (let i = 0; i < 20; i++) {
       const z = BZ0 + 0.4 + i * (BZ1 - BZ0 - 0.8) / 19, x = cx1 + 0.55;
@@ -798,6 +823,9 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
     col.push(box(X - 0.2, wm, 0.4, wz1 - wz0, 0, 'counter'));
     blob(x, z, W + 1.4, L + 1.4);
     spots.push({ kind: 'truck', x: X - 0.85, z: wm, face: faceTo(1, 0), label });
+    // the cook stands at the window on the kitchen's floor (y0) and turns to the flat-top on the line to cook
+    counters.push({ id: label.startsWith('Two Lane') ? 'tacos' : 'noodles', label, x: X - 0.36, z0: wz0, z1: wz1, side: -1, setX: X - 0.17, setY: wy0,
+      staff: { x: X + 0.48, workX: X + 1.12, y: y0, z: wm, z0: wz0 + 0.45, z1: wz1 - 0.45, face: faceTo(-1, 0), workFace: faceTo(1, 0) } });
   }
 
   // ---------------------------------------------------------------- the frontage: planter wall, gate, sign
@@ -860,7 +888,8 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
       blob(ax, az, hw * 2 + 0.4, foot * 2 + 0.4);
     }
     // planters along the frontage strip (outside, toward the sidewalk)
-    for (const x of [-30, -18, 14, 26, 38]) { rubber.box(x, 0.06, -50.3, 2.6, 0.12, 1.4, HEX.soil); grasses(x, -50.3, 0.9, 0.12, 8); }
+    // (beds you walk round, not through: you, and the guests who come in off the sidewalk)
+    for (const x of [-30, -18, 14, 26, 38]) { rubber.box(x, 0.06, -50.3, 2.6, 0.12, 1.4, HEX.soil); grasses(x, -50.3, 0.9, 0.12, 8); col.push(box(x, -50.3, 2.6, 1.4, 0, 'planter')); }
 
     // ---- our sign: a steel pylon with a lit cabinet at the Orangewood and Dupont corner. The cabinet is turned 45
     // degrees to face the corner (north-east) and Orangewood's westbound side (south-west), so it reads from the
@@ -1001,5 +1030,5 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
   }
 
   const heaters = [[-7.5, -26], [10.5, -26], [-7.5, -12], [10.5, -12]].map(([x, z]) => new THREE.Vector3(x, 2.1, z));
-  return { colliders: col, seats, spots, bulbs: [...lights.bulbs, ...bulbsExtra], wires: lights.wires, heaters, closedOnly, openOnly, lightSpots: lights.lightSpots, insideLights, trees, wheels: venueWheels };
+  return { colliders: col, seats, spots, counters, bulbs: [...lights.bulbs, ...bulbsExtra], wires: lights.wires, heaters, closedOnly, openOnly, lightSpots: lights.lightSpots, insideLights, trees, wheels: venueWheels };
 }

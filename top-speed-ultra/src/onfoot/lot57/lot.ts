@@ -108,6 +108,8 @@ export class ParkedCars {
   count = 0;
   /** detailed models for the nearest cars, a 150-triangle stand-in for the rest */
   near = 0;
+  /** detailed models only within this many metres of you (Low: a car 70 m off behind the Shed gets the stand-in) */
+  nearDist = Infinity;
   private meshes: { kind: TrafficKind; parts: THREE.InstancedMesh[]; far: THREE.InstancedMesh[]; proxy: THREE.InstancedMesh; len: number; wid: number }[] = [];
   private cars: { k: number; m: THREE.Matrix4; c: THREE.Color; x: number; z: number }[] = [];
   private lastX = Infinity; private lastZ = Infinity;
@@ -180,9 +182,9 @@ export class ParkedCars {
     this.lastX = x; this.lastZ = z;
     for (const k of this.meshes) { for (const im of k.parts) im.count = 0; for (const im of k.far) im.count = 0; k.proxy.count = 0; }
     const order = this.cars.map((c, i) => ({ i, d: Math.hypot(c.x - x, c.z - z) })).sort((a, b) => a.d - b.d);
-    order.forEach(({ i }, rank) => {
+    order.forEach(({ i, d }, rank) => {
       const c = this.cars[i], k = this.meshes[c.k];
-      if (rank < Math.min(this.near, NEAR_CAP)) for (const im of k.parts) { const j = im.count++; im.setMatrixAt(j, c.m); if (im.instanceColor) im.setColorAt(j, c.c); }
+      if (rank < Math.min(this.near, NEAR_CAP) && d < this.nearDist) for (const im of k.parts) { const j = im.count++; im.setMatrixAt(j, c.m); if (im.instanceColor) im.setColorAt(j, c.c); }
       else if (k.far.length) for (const im of k.far) { const j = im.count++; im.setMatrixAt(j, c.m); if (im.instanceColor) im.setColorAt(j, c.c); }
       else { const j = k.proxy.count++; k.proxy.setMatrixAt(j, c.m); k.proxy.setColorAt(j, c.c); }
     });

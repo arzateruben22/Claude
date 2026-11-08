@@ -12,6 +12,9 @@ export interface Collider {
   tag: string;                 // wall, fence, table, bench, truck, car, building, pole, tree, gate, door, counter...
   tall: boolean;               // blocks the third-person camera
   dyn: boolean;                // changes with the clock (gates, roll-up doors, parked cars)
+  /** a stretch of wall with a window in it (from a sill up): solid to walk and to act through, but you see people
+   *  beyond it (the Low preset's view test, main.ts) */
+  see?: boolean;
   on: boolean;                 // active now
   // seg: a -> b, radius r (half the wall's thickness); circ: centre a, radius r
   ax: number; az: number; bx: number; bz: number; r: number;
@@ -228,9 +231,9 @@ export function boxCorners(o: Collider): [number, number][] {
 /** everything as plain data, for the test page's independent checker */
 export function exportColliders(set: ColliderSet) {
   return set.all.filter((o) => o.on).map((o) => {
-    if (o.k === 'circ') return { k: 'circ', tag: o.tag, x: o.ax, z: o.az, r: o.r };
-    if (o.k === 'seg') return { k: 'seg', tag: o.tag, ax: o.ax, az: o.az, bx: o.bx, bz: o.bz, r: o.r };
-    if (o.k === 'box') return { k: 'poly', tag: o.tag, pts: boxCorners(o).flat() };
-    return { k: 'poly', tag: o.tag, pts: Array.from(o.pts!) };
+    if (o.k === 'circ') return { k: 'circ', tag: o.tag, tall: o.tall, x: o.ax, z: o.az, r: o.r };
+    if (o.k === 'seg') return { k: 'seg', tag: o.tag, tall: o.tall, ax: o.ax, az: o.az, bx: o.bx, bz: o.bz, r: o.r };
+    if (o.k === 'box') return { k: 'poly', tag: o.tag, tall: o.tall, pts: boxCorners(o).flat() };
+    return { k: 'poly', tag: o.tag, tall: o.tall, pts: Array.from(o.pts!) };
   });
 }

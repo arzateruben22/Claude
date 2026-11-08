@@ -65,14 +65,51 @@
   .sheet input[type=range] { padding: 0; accent-color: var(--red-hi); background: transparent; width: 160px; }
   .sheet .go { margin-top: 8px; min-height: 46px; width: 100%; border-radius: 12px; border: 0; background: var(--cream); color: var(--teal); font-weight: 800; font-size: 16px; }
   .small { font-size: 12px !important; opacity: 0.85; }
+  /* P1b: captions and reply chips (Join), the order sheet (Order), the order and holding chip */
+  #caption { position: absolute; left: 50%; bottom: calc(150px + var(--safe-b)); transform: translateX(-50%); max-width: min(620px, calc(100% - 210px)); padding: 10px 16px; font-size: 17px; line-height: 1.4; text-align: center; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+  #caption.on { opacity: 1; }
+  #caption b { display: block; font-family: var(--cond); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #ffd9a6; margin-bottom: 2px; }
+  #chips { position: absolute; left: 50%; bottom: calc(62px + var(--safe-b)); transform: translateX(-50%); display: none; gap: 10px; max-width: calc(100% - 220px); }
+  #chips.on { display: flex; }
+  #chips button { min-height: 56px; min-width: 120px; max-width: 300px; padding: 8px 18px; border-radius: 16px; border: 2px solid rgba(243, 230, 196, 0.75); background: rgba(18, 51, 58, 0.94); font-size: 16px; font-weight: 700; line-height: 1.25; text-align: left; box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+  #chips button:hover { background: rgba(28, 72, 80, 0.98); }
+  #chips button small { display: block; font-size: 11px; opacity: 0.7; font-weight: 600; letter-spacing: 0.06em; }
+  #status2 { position: absolute; left: calc(10px + var(--safe-l)); top: calc(62px + var(--safe-t)); display: none; align-items: center; gap: 10px; min-height: 44px; padding: 6px 14px 6px 10px; border-radius: 22px; font-size: 14px; font-weight: 700; max-width: calc(100% - 130px); }
+  #status2.on { display: flex; }
+  #status2 i { display: block; width: 26px; height: 26px; border-radius: 50%; flex: none; background: conic-gradient(var(--cream) calc(var(--p, 0) * 1turn), rgba(243, 230, 196, 0.2) 0); -webkit-mask: radial-gradient(circle, transparent 7px, #000 8px); mask: radial-gradient(circle, transparent 7px, #000 8px); }
+  #status2.ready i { background: var(--cream); -webkit-mask: none; mask: none; box-shadow: inset 0 0 0 7px var(--patina); }
+  #status2.hold i { background: var(--red-hi); -webkit-mask: none; mask: none; border: 3px solid var(--cream); }
+  #order .panel { width: min(640px, 100%); }
+  #order .who { margin: 0 0 12px; font-size: 16px; }
+  #order .who b { color: #ffd9a6; }
+  #menuItems { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+  #menuItems button { min-height: 64px; padding: 10px 14px; border-radius: 14px; border: 2px solid rgba(243, 230, 196, 0.55); background: rgba(243, 230, 196, 0.08); text-align: left; font-size: 17px; font-weight: 800; line-height: 1.2; }
+  #menuItems button:hover { background: rgba(243, 230, 196, 0.18); }
+  #menuItems button small { display: block; font-size: 13px; font-weight: 500; opacity: 0.85; margin-top: 3px; }
+  #menuItems button kbd { float: right; font: 700 12px var(--sans); opacity: 0.6; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; margin-left: 8px; }
+  #order .note { font-size: 13px; opacity: 0.85; margin: 12px 0 0; }
+  #order .go { background: transparent; color: var(--cream); border: 2px solid var(--line); }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
   body.rm * { transition: none !important; animation: none !important; }
   @media (max-width: 520px) {
+    /* portrait: captions under the crowd chip (clear of the view's middle), reply chips in a column above the order
+       chip, which sits above the map credit; the second action button stacks above the first */
+    #caption { top: calc(196px + var(--safe-t)); bottom: auto; max-width: calc(100% - 24px); font-size: 16px; }
+    #chips { left: calc(12px + var(--safe-l)); transform: none; flex-direction: column; bottom: calc(150px + var(--safe-b)); max-width: calc(100% - 130px); width: calc(100% - 130px); }
+    #chips button { max-width: none; width: 100%; }
+    #status2 { top: auto; bottom: calc(96px + var(--safe-b)); max-width: calc(100% - 120px); }
+    #act2 { right: calc(28px + var(--safe-r)); bottom: calc(132px + var(--safe-b)); }
     #tc { top: calc(62px + var(--safe-t)); max-width: calc(100% - 20px); }
     #toast { top: calc(140px + var(--safe-t)); }
     #place { font-size: 12px; }
   }
   @media (max-height: 420px) {
+    #caption { bottom: calc(108px + var(--safe-b)); font-size: 15px; padding: 7px 12px; }
+    #chips { bottom: calc(40px + var(--safe-b)); }
+    #chips button { min-height: 52px; font-size: 15px; }
+    #status2 { bottom: calc(38px + var(--safe-b)); }
+    #order .panel { max-height: calc(100% - 12px); padding: 12px 14px 10px; }
+    #menuItems button { min-height: 56px; }
     #act { bottom: calc(30px + var(--safe-b)); }
     #act2 { bottom: calc(38px + var(--safe-b)); }
     #hint { bottom: calc(96px + var(--safe-b)); }
@@ -97,6 +134,9 @@
   <button id="act2" aria-label="Second action"></button>
   <button id="act" aria-label="Action"></button>
   <div id="hint" class="panel" role="note">Drag left to walk · drag right to look · tap to go</div>
+  <div id="caption" class="panel" role="status" aria-live="polite"></div>
+  <div id="chips" role="group" aria-label="Your reply"><button id="reply0" data-r="0"></button><button id="reply1" data-r="1"></button></div>
+  <div id="status2" class="panel" role="status" aria-live="polite"><i aria-hidden="true"></i><span id="status2Text"></span></div>
   <div id="toast" class="panel" role="status" aria-live="polite"></div>
   <div id="credit">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar. Lot 57 and everyone in it are fictional.</div>
 </div>
@@ -106,6 +146,15 @@
     <p>Lot 57 is a fictional hangout. The crowd is simulated from the time of day and the day of the week. Nothing here is live, and nobody here is a real person or another player.</p>
     <p class="small">The hours, the menu, the trucks and the sign are ours. The streets are the real ones, as OpenStreetMap maps them.</p>
     <button class="go" data-close>Got it</button>
+  </div>
+</div>
+<div id="order" class="sheet" role="dialog" aria-modal="true" aria-labelledby="orderTitle">
+  <div class="panel">
+    <h2 id="orderTitle">Order</h2>
+    <p class="who" id="orderWho"></p>
+    <div id="menuItems"></div>
+    <p class="note">On the house: Lot 57's menu is fictional and free. Nothing here costs money or credits, and your menu is alcohol-free (you drove here).</p>
+    <button class="go" data-close>Not now</button>
   </div>
 </div>
 <div id="pause" class="sheet" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">

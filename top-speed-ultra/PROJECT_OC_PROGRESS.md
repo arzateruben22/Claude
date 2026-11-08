@@ -316,6 +316,579 @@ unchanged.
   - **Lot 57's `PRESET`** (L1) is re-synced again at S4 (O1).
   - **Lot 57's copies** of the GTAO and ground-depth flaws (O34) and of the two shadow flaws (O28) are its owners'.
 
+## 2026-10-21: Lot 57 on foot, P1c committed (people, build r2)
+
+P1c, the people milestone, is committed as build r2 (`dist/onfoot/index.html` md5 e50e3fa0f8840195e793470d0b8776db,
+not committed itself). It has forty people: guests in standing and seated talking groups, staff and walkers. The crowd
+curve follows day and hour, and the "Simulated crowd" chip is on screen. The play reviewer kept it. They checked
+`npx tsc --noEmit` (clean), saw no console or page errors in their own Playwright run (390x844 Low, High portrait,
+Low), found nothing changed in the game, the people builder or the configs, and found the real venue's name nowhere.
+Their counts by clock match the r2 entry below. Screenshots: `tests/out/onfoot/onfoot-*-p1c-r2.png`, among them
+the 1280x720, 844x390 and 390x844 Tuesday 15:00 and Saturday 21:00 crowd shots and
+`onfoot-1280x720-crowd-reopen-third-p1c-r2.png`. Known small defect: one reachable only through a test hook, which doesn't block.
+
+## 2026-11-02: Lot 57 on foot, P1c repaired after review (build r2, not committed)
+
+The P1c review kept build F for play and returned it for code. Everything both reviewers asked for is below, with
+what it measured. Nothing is committed: this repair pass was told not to commit. These are unchanged: the game's
+code, its `vite.config.ts` and `package.json`, `src/onfoot/vite.config.ts`, and the people builder
+(`src/onfoot/people/`, another session's files).
+
+- **The reviewers' QA of build F** (`dist/onfoot/index.html`, md5 0572831d…), logged here as the code review asked:
+  - **The play reviewer's runs.** Two runs of their own, one at a time: 390x844 touch at Low, then 1280x720 at High.
+    - No console or page errors. `npx tsc --noEmit` clean.
+    - The real venue's name is in none of `src/onfoot`, `dist/onfoot` or `src/data/anaheim`.
+    - No changes to `src/game`, `src/ui`, the root `vite.config.ts` or `package.json`.
+  - **Counts by clock**, matching the builder's:
+    - Tuesday 15:00 Quiet, 0.155 of capacity: 5 guests, 4 staff, 9 inside.
+    - Saturday 21:00 Packed, 0.915: 29 guests, 15 seated, 11 groups, 7 staff, 35 inside.
+    - Friday 18:00 Lively: 22 guests, 28 inside. Monday 11:00 Quiet: 9 inside.
+    - Thursday 03:00, Sunday 22:00 and Tuesday 23:30: 0 inside and 0 staff. Sunday 22:00 still has 2 walkers outside.
+    - 30 quick clock flips, and a turnover followed at once by closing: the right counts, and 0 shown or drawn
+      inside when closed.
+  - **Talk.** In 440 Low and 40 High samples, never two speakers at once.
+    - In rendered High frames, listeners drawn as bodies faced the speaker in 95 of 101 looks.
+    - The cut-outs, read from their stale head bones, faced the speaker in 28 of 197 looks at High and 156 of 515
+      at Low.
+  - **Budgets.**
+    - Low 390x844: 100 to 110 calls, at most 225k triangles, the people 2 calls.
+    - High at Saturday 21:00: 191 calls, 563k triangles, the people 24 calls (their limit exactly).
+  - **The rest.**
+    - The chip was on screen at every clock they checked, and read "Closed" when closed.
+    - Reduced motion took head bob from 0.0299 m to 0 and turned transitions off.
+    - These were all refused cleanly: an off-map go or tap, edge taps, a tap on a taken seat, and 20 rapid act()
+      presses.
+  - **The people's CPU** (`crowdMs`):
+    - Low: median 0.3 ms, worst 2.4 ms.
+    - High: median 0.9 ms, 90th percentile 2.1 ms, worst 5.5 ms.
+    - 5.5 ms on Low in the frame after a clock change.
+  - **Defects found:**
+    - A stale "Lot 57 is closed · opens 11:00" toast under "Open till 01:00" and "Packed".
+    - The 96% facing figure came from unrendered steps, which animate everyone.
+    - The CPU spikes.
+    - White specks on a cut-out's legs at night.
+  - **The code reviewer** returned it for two things: a per-frame allocation in hot loops, and a repaint that froze
+    a walker. Everything else they could check held.
+- **Fixed**, all in `src/onfoot/`:
+  - **The stale toast.** When setting the clock changes whether Lot 57 is open, a toast that says it's closed is
+    taken off at once (`hud.ts` `clearToast`, `main.ts` `applyClock`).
+  - **Facing, measured as drawn.**
+    - `groups()` now reports `bodyFaces` (the body's heading within 25 degrees of the line to the speaker) beside
+      `facesSpeaker` (the head, from the bones).
+    - New checks count a body by its head and a cut-out by its body, in two ways:
+      - in rendered frames;
+      - over 30 s stepped the way a rendered frame steps (`sim(s, false, 'view')`, new: only the people drawn as
+        bodies animate).
+    - The old check, which animates everyone, is kept and now says so.
+    - Standing listeners now turn their body part of the way toward the speaker: 80% of the angle, at most 40
+      degrees, with the builder's little turning steps. They stay turned through the pause after, and the head
+      does the rest. A cut-out shows only the body's heading, so it now faces the speaker too.
+    - A person who turns from a cut-out into a body (or is posed when the clock is set) is posed with a
+      quarter-second step, so their head is already looking at the speaker. With a 1/30 s step it still pointed at
+      a stale target for the first frames.
+  - **The people's per-frame work** (`lot57/npcs.ts`, `crowdview.ts`):
+    - **Looks.** A listener stores who they look at. The eyes are read in the animation step, not every frame. The
+      builder is told only when the target changes, or every 0.3 s to follow a moving head.
+    - **Bones.** Each person's head, chest, arms, forearms, right hand and fingers are looked up once. They are the
+      builder's skeleton, the same objects at every level of detail.
+    - **Held items.** Only the chain from the scene down to the hand and fingers is updated, not the whole body's
+      tree, and at most once a frame.
+    - **Animation phases.** Each person's animation steps start at their own phase.
+    - **No per-frame closures or arrays** in `allot()`, the host's greeting test or the worker pool's count.
+    - **Setting the clock** now poses everyone out, and plans the busser's first leg, in the clock change itself
+      rather than in the first frame after it.
+    - **A split of `crowdMs`.** `stats().crowdParts` breaks it into talk, move, anim, allot, pump, post and path
+      planning.
+  - **Repaints.** `paint()` now:
+    - puts back exactly what was shown;
+    - restarts what the person was playing, so a walker walks on;
+    - clears the look, which is set again at their next step;
+    - marks the pose stale, so a body is posed again before it's drawn.
+  - **The light specks on cut-outs' legs.** Each cut-out cell is now painted at twice its size and box-filtered
+    down into the atlas. A leg is only two or three texels wide, and its lit edge broke into specks when magnified.
+  - **The people's 24 calls on High** are now measured, not only counted:
+    - New hook `peopleCalls()` draws the frame with the people and again without them.
+    - That found a real undercount. A cup's glass is transparent and double-sided, so three.js draws it in two
+      passes: one call counted, two drawn (worst view: 24 counted, 28 drawn).
+    - Held items are now counted as they're drawn (`drawCost`).
+    - The High and Low budget sweeps measure every view, and a new check runs after an Ultra-to-High switch.
+  - **Hooks for the checks:** `repaint(id)`, `legs(id)` (the stride), `atlas(id)` (a person's cells read back as a
+    PNG), and `setClock()` now returns `ms`. `walkgrid.ts` gained two diagnostic fields: the last search's expanded
+    cells and its string-pulling time.
+- **Checked on build r2** (`dist/onfoot/index.html`, md5 in `tests/out/onfoot/logs/p1c-r2.md5`):
+  - **How it was run.** `node tests/onfoot.mjs --only=crowd,crowd-phone,names --suffix=-p1c-r2`: **29 of 29**
+    (`tests/out/onfoot/logs/onfoot-p1c-r2-crowd.log`). Headless Chromium with SwiftShader, one browser at a time on
+    a machine shared with other jobs. `npx tsc --noEmit` clean. Every screenshot named here was looked at.
+  - **Counts by clock: unchanged from build F.**
+    - Tuesday 15:00: 5 guests, 4 staff, 9 inside.
+    - Saturday 21:00: 29 guests, 15 seated, 11 groups, 7 staff, 35 inside.
+    - The four closed hours: 0 inside.
+  - **Talk.** 0 samples with two speakers in any run.
+    - **Unrendered**, everyone animated (the old method, labelled): heads 903 of 936 (96%).
+    - **As drawn at High**, two views. Rendered frames: bodies by the head 92 of 94, cut-outs by the body 69 of 71,
+      together 98%. Stepped as drawn over 30 s: 337 of 355 and 262 of 270, together 96%.
+    - **As drawn on Low.**
+      - 844x390, rendered: bodies 31 of 31, cut-outs 181 of 211 (86%), together 88%.
+      - 844x390, stepped: 84 of 85 and 458 of 530, together 88%.
+      - 390x844, rendered: 23 of 25 and 111 of 143 (78%), together 80%.
+      - 390x844, stepped: 84 of 89 and 306 of 352, together 88%.
+    - Seated cut-outs stay lowest: they turn at most 25 degrees on the seat.
+  - **The toast.** At Tuesday 23:30 in the yard: "Lot 57 is closed · opens 11:00". Set to Saturday 21:00: no toast,
+    under "Open till 01:00" and "Packed" (`onfoot-1280x720-crowd-reopen-third-p1c-r2.png`).
+  - **The repaint.** A walker drawn as a body was repainted mid-walk. Over the next six frames, its stride (one thigh
+    ahead of the other) went 6.7, 25.2, 31.6, 14, 9.8 and 30 degrees, and it was still playing 'walk'. A guest
+    standing idle measured 1.3 degrees.
+  - **The specks are gone.** See `onfoot-1280x720-crowd-cal-night-imp-p1c-r2.png` and the crop
+    `onfoot-1280x720-crowd-cal-night-legs-p1cE-vs-p1c-r2.png` (build E's cut-out, r2's cut-out, r2's body). The
+    atlas read back (`atlas(id)`) shows smooth limbs too.
+  - **Budgets, counted and measured.**
+    - **High:** 22 views, first and third person. The people at most 24 calls counted and 24 measured. The whole
+      frame at most 201 calls and 691,699 triangles.
+    - **After Ultra to High:** 12 views, counted equal to measured in every one, worst 24.
+    - **Low 844x390:** at most 121 calls and 236,465 triangles. The people 13 counted, 13 measured.
+    - **Low 390x844:** at most 102 calls and 236,817 triangles. The people 16 counted, 16 measured.
+    - **Open: one view.** In the High sweep, third person at the lot gate counted 8 and measured 10 (9 in the run
+      before), still far under 24. Probed from a fresh boot, the same view matched (9 and 9), so the cause wasn't
+      found.
+  - **The required screenshots,** all looked at, with the chip and the credit on screen:
+    - `onfoot-1280x720-crowd-{tue15,sat21}-p1c-r2.png`
+    - `onfoot-844x390-crowd-{tue15,sat21}-p1c-r2.png`
+    - `onfoot-390x844-crowd-{tue15,sat21}-p1c-r2.png`
+  - **Unchanged from build F:**
+    - Reduced motion: head bob 3.0 cm, then 0; the toast's transition 0 s.
+    - The staff, the walkers and an arriving party (which sat down within 62 s).
+    - Ultra: 15 bodies, 461 calls.
+    - The real venue's name is in none of the 52 files.
+- **The people's CPU** (`crowdMs`, this machine's desktop CPU under SwiftShader, not a phone):
+
+  | Measure | Build F | Build r2 |
+  | --- | --- | --- |
+  | High, 150 frames standing at Saturday 21:00 (median / 90th percentile / worst) | 1.0 / 1.3 / 8.0 ms | 0.7 / 0.8 / 1.6 ms |
+  | Low 844x390 (median / 90th percentile / worst) | not measured this session | 0.4 / 0.6 / 2.2 ms |
+  | Low 390x844 (median / 90th percentile / worst) | 0.6 / 0.9 / 3.6 ms | 0.3 / 0.5 / 6.9 ms |
+  | First three frames after a clock change, worst | 4.2 ms High, 4.5 ms Low | 0.9 ms High, 0.4 and 0.7 ms Low |
+
+  - **Where the numbers come from.** Build F's column is an A/B run back to back with an intermediate repair build
+    (`tests/out/onfoot/logs/p1c-r2-cpu-ab-buildF-vs-r2pre.jsonl`). r2's column is the suite run.
+  - **What's solid and what isn't.**
+    - The steady-state medians and 90th percentiles are about the same, and they move with the machine's load:
+      another job's browser ran at 250% CPU at times, and the load average was 4 to 9 on 4 cores.
+    - Under that load the intermediate build and F traded places: High worst 7.2 against 8.0 ms, Low worst 4.7
+      against 3.6 ms.
+    - The clear change is the first frame after a clock change.
+  - **The first frame after a clock change.**
+    - The split showed most of it in one path search: the busser starting his first round, 6 to 14 ms right after
+      a clock change. The same search, about 340 expanded cells, took 0.4 ms at other times.
+    - That search now runs inside the clock change, which already takes 0.5 to 6 s. In r2 no first frame after a
+      clock change has any planning in it.
+  - **The remaining spikes** move between parts from frame to frame. One 390x844 frame spent 6.8 ms animating 4
+    people who usually take 0.1 ms. That fits pauses (scheduling, or collecting the builder's per-update garbage),
+    not steady work.
+- **Runs on the way, for honesty:**
+  - **Build r2a** (`onfoot-p1c-r2a-crowd.log`): 28 of 29. The new measured-calls check failed, which found the glass
+    undercount.
+  - **Build r2b** (`onfoot-p1c-r2b-crowd.log`): 28 of 29.
+    - At 390x844 the rendered-frames sample read bodies 21 of 36. It was 12 consecutive frames, about 2 s, often of
+      the same few people, right after the camera moved.
+    - That led to the quarter-second pose for new bodies, and to spacing the samples 0.5 s apart.
+  - **A probe of the phone groups** (`onfoot-p1c-r2c-phone-probe.log`, the final build with the consecutive
+    samples): 10 of 10.
+  - **Speck and spike probes:** one-off scripts, not in the suite.
+- **Regression on build r2:** `node tests/onfoot.mjs --only=desktop,actions,actions-phone --suffix=-p1c-r2`, **40 of
+  40** (`tests/out/onfoot/logs/onfoot-p1c-r2-regress.log`).
+  - That covers P1a's desktop group (tap to go reaching all 157 free seats from both starts, closing time, the
+    hooks) and P1b's actions at High and on a phone (ordering at the bar and both trucks, Join and Leave, nothing
+    through a wall, the cooks drawn on Low).
+  - Group talk in that run: listeners faced the speaker in 916 of 946.
+  - `onfoot-1280x720-act-joined-p1c-r2.png` was looked at.
+  - Not re-run: the landscape and portrait groups and the 1,000 walks. The walk grid's change is two diagnostic
+    fields, and its paths are unchanged.
+- **For the people builder's session** (its files weren't touched; these would trim the crowd's per-frame garbage):
+  - `person.ts` `lookAt()`: copy into a vector it keeps, instead of `target.clone()` on every call.
+  - `anim.ts` `update()`, while a look target is set: replace the per-update `new THREE.Vector3()`,
+    `this.lookTarget.clone()` and `new THREE.Quaternion()` with module-level scratch objects.
+    - Its returned `{ yaw, pitch }` object, `person.ts`'s per-update `(out) => …getWorldPosition(out)` closure, and
+      `pose()`'s `R`, `knee` and `ank` closures are allocated on every update too.
+  - `person.ts` `eyes()`: the `hf.toBody([0, 0, 0.01])` offset could be worked out once, not per call.
+
+## 2026-11-02: Lot 57 on foot, P1c: forty people, the crowd curve and the chip (build F, not committed)
+
+P1c of `PROJECT_OC_ON_FOOT.md` Phase 1 ("NPCs", "Groups that look like they're talking", "Walkers, arrivals and
+staff", "Simulated crowds", the phone budgets), on the standalone page (`src/onfoot/`). The game's code, its
+`vite.config.ts` and `package.json`, `src/onfoot/vite.config.ts` and the people builder (`src/onfoot/people/`, used
+through its exports only) are unchanged. An earlier builder of P1c left most of this on disk uncommitted (its own
+19-check run passed on its build); this entry is the run on the builds made since (B to F; F is on disk).
+
+- **What's there** (all in `src/onfoot/`):
+  - `lot57/npcs.ts`: forty people, every one built by the people builder and every one fictional.
+    - 31 guests in twelve parties: five standing circles (two barrel tables in the yard, one in the Shed, the
+      bag-toss lawn, the third truck slot) and seven seated groups (tables 3, 6, 9 and 11 in the yard, a picnic
+      table by the trucks, two at the bar, the lawn chairs). P1b's two groups are the same people.
+    - Seven staff in our patina green: the bartender and a cook in each truck (they serve you, P1b), a second
+      bartender working the back bar (from 40% of capacity), a host at the gate, a busser making rounds of the
+      tables (from 30%), and a lot attendant waving cars in on busy nights.
+    - Two walkers on the Orangewood sidewalks (one jogs), whether Lot 57 is open or not; one late, none from 01:00
+      to 06:00.
+    - The crowd curve: `clock.ts`'s simulated share of the fictional 220 times 31 guests decides how many are in, as
+      whole parties in a fixed arrival order. Setting the clock settles it at once. On the live clock parties arrive
+      at random (about one every two minutes while it's under its level), walk in by a path from a car in the lot or
+      along the Orangewood sidewalk and in by the entry walk, stay (log-normal, median 75 minutes) and walk out
+      again. Closed: nobody inside, the staff gone. Nothing is live.
+    - Talk in every group: one speaker at a time, turns of 1 to 10 s (median about 3.5), 0.2 to 0.8 s pauses, the
+      next speaker usually whoever was looked at; listeners look at the speaker with glances away and nod in the
+      pauses; group laughter; a sip every 40 to 90 s. Seated listeners turn up to 25 degrees on the seat toward the
+      speaker; a seated speaker beats the words with a hand.
+  - `lot57/crowdview.ts`: drawing forty people inside the budgets, nearest first, from what the rest of the scene
+    left last frame: the patio body (LOD 1, built in two workers), the far body (LOD 2, built at load), or an
+    impostor (a card painted at load from that person's own body from eight sides, standing and sitting; all of
+    them one instanced draw call). Walls, buildings and truck bodies hide people. One instanced soft-shadow call;
+    on High the nearest four cast the sun's shadow. Ultra has no budget in the plan: everyone near is a body.
+  - `lot57/crowd-worker.ts`: the worker that builds the patio bodies (the page's own script started from a blob).
+  - `main.ts`: the crowd wired in. When a frame is over the triangle budget, or people near you were drawn as
+    impostors for want of triangles, fewer parked cars get their detailed model. New hooks: `crowd()`,
+    `turnover()`, `crowdView()`, `takenSeats()`, `peopleReady()`; `stats()` now reports guests, inside, groups,
+    talking, seated, walkers, street, staff, bodies, impostors, the LOD counts, the people's calls and triangles and
+    the rest of the scene's.
+  - `lot57/doings.ts`: a seat a guest is in or walking to can't be taken ("Someone's sitting there."); Join is for
+    standing circles that are all there.
+- **This session's changes on top of the earlier draft** (builds B to F):
+  - The yard read empty under "Packed": two of its twelve tables had people. The roster is now twelve parties
+    (was ten): at Saturday 21:00 four yard tables and two barrel tables have people. A pair sits across from each
+    other (the bench or lawn chair opposite), not side by side.
+  - After dark the people stood in the lit yard as dark cut-outs: the venue's night light is baked into its own
+    materials, and the builder's body material saw only the sky and a few real lights. The coarse bodies now take
+    the same warm lamp fill as the held items, by where each person stands (`crowdview.ts` `withFill`, the
+    builder's material wrapped, not changed). Bodies and impostors drawn side by side match (the new calibration
+    check).
+  - Parties from the street cut across the verge and through the frontage planting beds. They now walk the
+    sidewalk to the entry walk and in through the gate, and out the same way; the five beds are colliders, for you
+    too (`venue.ts`).
+  - Parties walked in and out holding their drinks. Now they walk empty-handed and have their drinks once they're
+    settled.
+  - Tests: the arriving shot is aimed at the party and checks it's drawn (the old one missed them); a new check
+    draws one view all bodies, then all impostors, by night and by day.
+  - `stats()` reports `crowdMs`, the people's CPU in the last frame (`simMs` counts only your own steps), and the
+    budget checks print its worst.
+- **Checked** with `node tests/onfoot.mjs`: headless Chromium, `--use-angle=swiftshader --enable-unsafe-swiftshader`,
+  one browser at a time on a machine shared with five other workflows. `npx tsc --noEmit` is clean. Every screenshot
+  named here was looked at. Two builds:
+  - **Build F**, the one on disk (`dist/onfoot/index.html`, md5 in `tests/out/onfoot/logs/p1c-buildF.md5`): P1a's
+    desktop group, the crowd groups and names, **39 of 39** (`tests/out/onfoot/logs/onfoot-p1c-buildF.log`,
+    `--suffix=-p1cF`).
+  - **Build E**: the crowd groups and names, **20 of 20** (`onfoot-p1c-buildE-crowd.log`), and every other group,
+    **54 of 54** (`onfoot-p1c-buildE-regress.log`), `--suffix=-p1cE`. Build F differs from E only in measuring: two
+    timers in `main.ts` and the `crowdMs` field in `stats()` (and the tests printing it).
+  - The numbers below are build F's unless marked E.
+    - Boot on Tuesday 15:00 at 1280x720 (High) with no console errors: 40 people, the far bodies built at load in
+      7.2 s, the 40 patio bodies from the two workers within 17 s more (0.8 to 1.0 s each), no worker errors; the
+      impostor atlas is 2048x1680. On a phone (Low) the far bodies took 7.4 s (844x390) and 7.5 s (390x844).
+    - The counts by the clock (guests, staff, people on the sidewalks, everyone inside the fence): Tuesday 15:00
+      Quiet (0.155 of capacity): 5 guests (2 seated, 2 groups), 4 staff, 2 on the sidewalks, 9 inside. Saturday
+      21:00 Packed (0.915): 29 guests (15 seated, 11 groups), 7 staff, 2 on the sidewalks, 35 inside. Ten more open
+      hours from Monday 12:00 to Sunday 20:30 all within the curve's target (at most one over, never more than three
+      under) and rising with the share. Closed (Tuesday 09:00 and 23:30, Sunday 22:00, Thursday 03:00): 0 inside, 0
+      guests, 0 staff; 2, 1, 2 and 0 walkers on the sidewalks.
+    - Talk: 660 group samples over 30 s at Saturday 21:00 in all 11 groups there (five standing, six seated): 0
+      with two speakers; listeners faced the speaker (the head within 25 degrees of the speaker's eyes, from the
+      bones) in 928 of 968 looks (96%); the lowest group 91% (table 6). Build E: 916 of 947 (97%), lowest 92%.
+    - Staff: Tuesday 15:00 the bartender, both cooks and the host; Saturday 21:00 also the second bartender, the
+      busser (12.8 m of rounds in 20 s) and the lot attendant in the lot. Walkers: both on the Orangewood
+      sidewalks, 9.5 and 26.3 m in 10 s; none at Thursday 03:00.
+    - Turnover at Saturday 14:00: the barrel table by the lawn left for the lot and table 3 walked in off the
+      street, along the sidewalk and in by the entry walk, empty-handed, and sat down within 49.5 s
+      (`onfoot-1280x720-crowd-arriving-p1cF.png`, both of them drawn); no walk without a path.
+    - Budgets, from `stats()` at Saturday 21:00 (calls and triangles from `renderer.info`, every pass included):
+      - **Low** (the phone default), 12 views in first and third person each: 844x390 worst 121 calls and 236,465
+        triangles, the people at most 15 calls; 390x844 worst 102 calls and 236,817 triangles, the people at most
+        14 calls. Limits 150, 250k and 16. In P1a's seven views (build E) worst 121 calls and 242,222 triangles.
+      - **High** (1280x720), 11 views in first and third person: worst 199 calls and 691,699 triangles, the people
+        at most 24 calls. Limits 350, 700k and 24. The scene alone didn't pass 700k in any view.
+      - The screenshot views: High Tuesday 15:00 174 calls, 496,958 triangles (3 bodies, 1 impostor); High Saturday
+        21:00 191 calls, 574,838 triangles (10 bodies, 6 impostors; the people 24 calls, 64,588 triangles); Low
+        844x390 83 and 89 calls, 126,612 and 146,698 triangles; Low 390x844 77 and 83 calls, 123,242 and 143,308.
+      - Ultra (no budget in the plan): 461 calls, 2,787,428 triangles, 15 bodies.
+      - The people's CPU (`crowdMs`: their talk, walks, animation and drawing choices), on this machine's desktop
+        CPU under SwiftShader, not a phone: in the budget views at most 1.2 ms a frame on High and 1.3 and 4.7 ms
+        on Low (one frame each, three frames after a jump of the camera). Over 150 frames standing still at
+        Saturday 21:00 (a one-off script, not in the suite): Low median 0.5 to 0.7 ms, 90th percentile 0.7 to
+        2.8 ms, worst 7.2 ms; High median 1.0 ms, 90th percentile 1.4 to 5.0 ms, worst 12.1 ms. The plan's target
+        is under 2 ms on a mid phone; the spikes are over it already on a desktop (see below).
+    - Bodies against impostors in one view, night and day
+      (`onfoot-1280x720-crowd-cal-{night,day}-{body,imp}-p1cE.png`): they read alike.
+    - Reduced motion: head bob 3.0 cm, then 0; the toast's transition 0 s.
+    - Screenshots with the chip on screen (`hudVisible` checks it and the map credit in each), looked at:
+      `onfoot-1280x720-crowd-{tue15,sat21,sat21-wide,sat21-ultra,arriving}-p1cF.png`,
+      `onfoot-1280x720-crowd-{sat21-shed,sat21-lawn}-p1cE.png`, `onfoot-844x390-crowd-{tue15,sat21}-p1cF.png`,
+      `onfoot-390x844-crowd-{tue15,sat21}-p1cF.png`.
+    - The real venue's name is in none of the 52 files (`src/onfoot`, `src/data/anaheim`, the built page).
+  - Build E, every earlier group (P1a's desktop, landscape and portrait, P1b's actions at High and on a phone, the 1,000
+    walks) with the forty people in: **54 of 54** on build E (`tests/out/onfoot/logs/onfoot-p1c-buildE-regress.log`).
+    - Tap to go still reaches every free seat from the front gate and the lot walk and sits you (314 walks, 157
+      free seats); the 15 seats the guests sit in at Saturday 21:00 are refused ("Someone's sitting there.") from
+      both starts. 1,000 random walks (500 tap, 500 stick) never end inside a collider, leave the area or cross a
+      wall: 1,532,032 positions over 36,851 m against 502 colliders (the five planting beds added); all 450 tap
+      walks with a path arrived.
+    - P1b's actions with the crowd in: ordering at the bar and both trucks, from a stool, from either end of the
+      bar; Join and Leave in the yard and on the lawn, a tap from one circle to another; nothing through a wall;
+      the cooks drawn on Low. Group talk in that run: 0 of 660 samples with two speakers, listeners facing the
+      speaker in 923 of 963 (96%).
+    - Budgets in P1a's and P1b's views: High at most 200 calls (the day view) and 677,612 triangles (third
+      person in the yard) over P1a's nine views; the High action views 129 to 197 calls, up to 684k triangles;
+      Low (844x390) worst 121 calls and 242,222 triangles; the phone action views 66 and 74 calls, 129k and 170k
+      triangles.
+    - The Ultra night and dusk views ran through (the earlier builder's run had lost its browser there): yard
+      288 calls and 2.22M triangles, third person at dusk 551 calls and 3.41M.
+    - Screenshots looked at: `onfoot-1280x720-{night,ultra-night,ultra-third-evening,act-joined}-p1cE.png`,
+      `onfoot-844x390-night-p1cE.png`, `onfoot-390x844-act-joined-p1cE.png`.
+  - Earlier runs this session, for honesty: build B (the roster change alone) passed the same 19 crowd checks
+    (`onfoot-p1c-buildB-crowd.log`); build D (with the lamp fill, the gate walk and the planting beds) passed 20 of
+    20 (`onfoot-p1c-buildD-crowd.log`). Build C's run and build D's regression run were stopped by hand when a
+    newer build replaced them (their logs say so). A build G that spread the people's animation updates over
+    frames measured no better (Low 90th percentile 0.8 to 4.1 ms, High 1.3 to 6.6 ms) and was reverted; the page
+    rebuilt after the revert is byte-identical to build F. The earlier builder's last regression run
+    (`onfoot-p1c-final-regress.log`) lost its browser at the Ultra night check and stopped; it isn't counted.
+- **Not built, or not measured.**
+  - Mingling (someone drifting to another group or the bar and back), dogs, joggers' routes beyond the two
+    sidewalks, arrivals from drop-offs at the Dupont kerb, and joining a seated group.
+  - The weather's effect on the crowd (the page has no weather) and the first-Friday third truck. The Tuesday
+    trivia night is in the curve (+15% from 19:00 to 21:00).
+  - Ordering on arrival: a party has its drinks once it's settled, without a visit to the bar.
+  - Walking people don't step round each other, only round you and the tables.
+  - The lawn chairs' party comes only when the crowd is near full (it's last in the arrival order), so the talk
+    check doesn't sample it at Saturday 21:00.
+  - At patio distance an impostor holds its painted pose: a walker drawn as one glides.
+  - Frame rates on a phone, and the people's CPU per frame on a phone. On this desktop the median is 0.5 to 1 ms
+    but one frame in ten reaches 2.8 ms (Low) to 5 ms (High) and the worst 7 to 12 ms: over the plan's 2 ms phone
+    target. Where the spikes come from isn't profiled yet (spreading the animation over frames didn't help).
+- **For the people builder's session** (its files weren't touched; `src/onfoot/people/` is used through its exports):
+  - `lodMaterial()` could take a fill uniform (a local ambient level) so the crowd needn't wrap its
+    `onBeforeCompile` (`crowdview.ts` `withFill`).
+  - LOD 0 can't be built in a worker: its hair cards draw on a canvas. An `OffscreenCanvas` path would let the
+    close-ups build off the main thread too.
+  - A seated laugh and a seated talk gesture (the crowd hand-poses the shoulders and a beat hand on top of the
+    builder's 'sit'), and an apron garment for the staff.
+  - One draw call per person is the crowd's limit on phones (13 bodies at most on Low); a shared skinned batch or
+    instanced skinning for the coarse LODs would let more people near you be bodies.
+  - Carried from P1b: the LOD 1 shells' ragged open necklines and armholes, and skin flecks at the shoulders on
+    heavy builds.
+
+## 2026-11-02: Lot 57 on foot, P1b repaired after review (build D)
+
+The P1b review (one reviewer rejected for play, one kept the code) found four faults the 53 checks never exercised,
+and per-frame allocations to remove before commit. All are fixed in `src/onfoot/` and `tests/onfoot.mjs`. The
+game's code, its `vite.config.ts` and `package.json`, `src/onfoot/vite.config.ts` and the people builder
+(`src/onfoot/people/`) are unchanged.
+
+- **Fixed**
+  - **The cooks were never drawn on Low, the phone default** (a regression from build C's budget fix). The Low
+    view test drew its line to the person's centre, and both cooks stand inside their truck's collider, so the
+    line always hit the truck. Staff are now tested to a point 0.3 m out on the customer's side of their counter
+    (`npcs.ts`, `StaffPost.seeX`). The view test also has its own filter now (`main.ts`, `blocksView`). Only
+    full-height things hide a person: walls, buildings, truck bodies, tanks and doors. Glass doesn't, and neither
+    does a stretch of wall with an eye-level window in it (the Shed's two storefront windows and the tank-room
+    window: `venue.ts` marks those stretches `see`, and they stay solid to walk into and to act through). The low
+    planter walls, fences and gates you see over don't hide anyone either; build C hid the yard's people from the
+    Orangewood sidewalk behind the 0.95 m planter wall.
+  - **A tap on a person while you stood in another group's circle stopped you 2.38 m from the old group.**
+    Leaving a circle always walked you a step back, and that walk replaced the tap's. Now the step back happens
+    only when you press Leave standing still, or on the way in to join (`doings.ts` `leave()`). If you're already
+    walking somewhere else, you keep going.
+  - **At the ends of the bar the drink was ready before the bartender got there.** The 4 to 8 s now start once the
+    bartender or cook reaches the taps or the flat-top (`doings.ts` `tick()`, with a 20 s fallback). Staff also
+    walk at 1.2 m/s, not 0.75 (`npcs.ts` `update()`); the builder's walk cycle is tuned for 1.25.
+  - **The regulars' clothes showed skin.** At LOD 1 (what everyone is drawn with on Low and High), the builder's
+    shells cut v, scoop, square and strap necklines and sleeveless armholes with ragged edges. That made a dress
+    read as torn. Separately, Lena's tan shirt (`0xc9a77a`) read as bare skin under the string lights. I rendered
+    the regulars side by side at LOD 1 (crew, v and scoop necks; 0.3 and 0.5 sleeves; on a slim and a heavy
+    build): a crew neck with half sleeves was the cleanest. `npcs.ts` `patioOutfit()` now gives the regulars'
+    tops and dresses a crew neck (shirts and polos keep their collars) and sleeves to at least half the upper arm
+    (0.5 where they were under 0.3). A top in a skin-like colour (sRGB hue 12 to 50 degrees) takes one of our dark
+    colours instead (Lena's shirt is now red). Heels still become flats on the lawn.
+  - **Per-frame allocations.**
+    - `doings.ts` `available()` now writes the shared pair in place: no list, no closure.
+    - `npcs.ts` `soft()` reuses its objects.
+    - Module-level Sets replace the array literals in `items.ts` `formOf` and `isDrink` and in `npcs.ts`
+      `placeHeld`.
+    - `itemName` reads a table built once.
+    - The order chip is rewritten only when its stage, item, order or 2% progress step changes.
+    - The staff-mouth loop is a plain loop.
+    - `hud.ts` `status()` caches its text span and writes `--p` only on change.
+- **Checked** on build D (`dist/onfoot/index.html`, md5 in `tests/out/onfoot/logs/p1b-buildD.md5`) with
+  `node tests/onfoot.mjs --suffix=-r2`. Headless Chromium with SwiftShader, one browser at a time. `npx tsc
+  --noEmit` is clean. Every screenshot named here was looked at.
+  - Landscape, portrait, phone actions, walks and names: **22 of 22**
+    (`tests/out/onfoot/logs/onfoot-p1b-r2-lowgroups-buildD-2026-11-02.log`).
+    - New phone check (390x844, Low): each truck cook is drawn 1.94 m from you at the window, at the flat-top
+      while making, and back at the window when the elote is ready (`onfoot-390x844-act-truck-r2.png`). Both cooks
+      are hidden from behind their trucks. The bartender is drawn through the west storefront window from the
+      forecourt, and hidden from a spot where the line runs through the wall between that window and the
+      entrance.
+    - Low budgets hold: worst 118 calls and 242,295 triangles over P1a's seven views; the phone action views drew
+      64 calls and 122k triangles holding, 71 calls and 162k joined (build C: 73 and 161k joined).
+    - 1,000 random walks pass against 497 colliders: the window stretches add six segments to the 491, with the
+      same union.
+  - High actions (1280x720), the 13 earlier checks and two new ones, with the phone actions run again in the same
+    process: **21 of 21** (`tests/out/onfoot/logs/onfoot-p1b-r2-actions-buildD-run3-2026-11-02.log`).
+    - Bar ends: from stools 0 and 19, the bartender walked 6.96 m and 14.4 m before starting. The orders were ready
+      at 12.5 s and 17.1 s (makes of 6.68 s and 5.15 s), with the bartender 1 m from the cup across the counter and
+      0 m along it. The check allows 1.05 m across and 0.3 m along: the bartender stands behind the 0.72 m counter
+      and its mats.
+    - Tap from inside a circle: joined to the yard group, a tap on Kenji in the lawn group walked you 31.8 m. You
+      left the yard circle on the way, stopped 1.72 m from the lawn group's centre (radius 0.8 m), and were offered
+      Join for that group.
+    - Glass: the wall check now also taps seat 22 through the storefront glass. It's picked, the walk goes in by
+      the entrance (crossing the Shed's north wall at x -5135.86, inside the 2.8 m doorway), and you sit.
+    - Budgets: the High action views drew 114 calls and 306k triangles holding, 177 and 640k holding in third
+      person, and 193 and 691k joined in third person (limits 350 and 700k). Ultra joined drew 393 calls and
+      2,478,124 triangles.
+    - Group talk: 0 of 120 samples had two speakers; listeners faced the speaker in 197 of 208 (95%).
+  - P1a's desktop group at High (1280x720): **19 of 19** on build D
+    (`tests/out/onfoot/logs/onfoot-p1b-r2-desktop-buildD-2026-11-02.log`). Tap to go still reaches all 172 seats
+    from both starts (344 walks, all seated). The High budget holds over the nine views: worst 228 calls and
+    680,215 triangles (the third person from the front), limits 350 and 700k.
+  - So every High check now comes from build D: the review's gap (the 32 High checks from build A) is closed.
+  - Run history, for honesty. The first High actions run on build D
+    (`onfoot-p1b-r2-actions-buildD-run1-2026-11-02.log`) passed 13 of 15. The two failures were in the tests: the
+    stool check waited exactly the make's length, and the new bar-ends check compared local with game coordinates.
+    A second run (`...-run2-fixedwaits-...log`) showed that the older bar check's fixed wait (`dur - 2.5 + 0.2` s
+    after a 2.5 s step) also came up 0.02 s short now that the make starts on arrival. That left an order pending,
+    and four more checks failed in a cascade. Every order wait in the suite now steps the world until the order is
+    ready (at most 30 s).
+- **Screenshots** (`tests/out/onfoot/`, `-r2` names, all looked at):
+  - `onfoot-390x844-act-truck-r2.png` (new) and `onfoot-390x844-act-{making,joined,reply,left}-r2.png`.
+  - `onfoot-844x390-night-r2.png` and `onfoot-1280x720-{night,trucks-night}-r2.png`.
+  - `onfoot-1280x720-act-{ready,ready-truck,seated-holding,holding-third,joined,joined-third,left,wall-tap,
+    joined-ultra}-r2.png`.
+  - The other `-r2` shots were re-made by the same runs and aren't cited here.
+- **Known costs and carried forward.**
+  - Switching quality between Low and High here rebuilds the nine people, and the page freezes for 23 to 32 s
+    (the reviewer's measurement; not re-measured here).
+  - On heavy builds (fat about 0.9), the LOD 1 shell still lets the skin through in small flecks at the top of the
+    shoulders, whatever the garment. A crew dress, a top and skirt, and a closed cardigan all showed it in the
+    side-by-side renders. Jules at the yard table shows it in `onfoot-1280x720-act-joined-r2.png`. That fix
+    belongs to the people builder's session (notes below).
+  - At night the cooks read as dark silhouettes against their lit kitchens on Low, which has no point lights. On
+    High the taco cook is still in silhouette while the noodle cook is lit (`onfoot-1280x720-trucks-night-r2.png`,
+    looked at).
+  - `onfoot-1280x720-act-wall-tap-r2.png` is nearly black: the forecourt is unlit at night (P1a), and the solid
+    wall fills the middle of the view.
+  - Toast and caption timers count frames, so they linger under SwiftShader. That's a test artefact.
+- **For the people builder's session** (its files weren't touched):
+  - LOD 1 garment shells cut open necklines (v, scoop, square, strap) and sleeveless armholes with a ragged,
+    stair-stepped edge that shows skin in patches.
+  - On bodies with fat at about 0.85 or more, skin flecks show at the shoulder tops through any upper garment at
+    LOD 1. Seen on `randomPerson(301)` (fat 0.88) and `randomPerson(302)` (0.93) at 1 to 2 m.
+  - There's no apron garment for staff.
+
+## 2026-11-02: Lot 57 on foot, P1b: things to do (tap to go, Sit, Order, Join and Leave)
+
+P1b of `PROJECT_OC_ON_FOOT.md` Phase 1 ("What you can do"), on the standalone page (`src/onfoot/`). The game's code,
+its `vite.config.ts` and `package.json`, and the people builder (`src/onfoot/people/`, used through its exports only)
+are unchanged.
+
+- **New** (all in `src/onfoot/`):
+  - `lot57/doings.ts`: the context actions and their order: Pick up, Leave, Stand, Drive, Order, Join, Sit. One big
+    button (76 px) shows the best one; a second, smaller one appears when two make sense (Order and Sit at the bar;
+    Stand and Order on a bar stool). Every action needs a clear line from you to what it acts on (no wall, fence,
+    gate, glass, door, truck, tank or building in between, tested in 2D against the colliders) as well as range.
+  - Ordering: the bar and both truck windows. A sheet of five big buttons (64 px tall) per counter, our own items,
+    free (no prices, no credits), alcohol-free for you. The bartender or cook comes along the counter to you, turns
+    to the taps or the flat-top to make it (4 to 8 s, a progress ring on the order chip), sets it on the counter and
+    says so; Pick up puts it in your hand. You hold it in the lower right of the first-person view and in your
+    avatar's right hand in third person (the forearm brought up, steady while you walk). Ordering from a bar stool
+    works without standing.
+  - `lot57/items.ts`: the menu (15 items over three counters) and each item modelled in code: lathed cups with our
+    printed sleeves (LOT 57, TWO LANE, NIGHT SHIFT), ice, straws and citrus wheels; a shaker pint with a foam head;
+    paper boats with a checked liner (tacos with chunky filling, a three-hole pretzel with salt and mustard,
+    dumplings); a noodle box with flaps, a wire handle and chopsticks; an elote cup; a bowl of cucumbers. One
+    painted 256 px atlas, three materials, lit after dark like the venue's baked light.
+  - `lot57/npcs.ts`: two groups of three regulars (by the barrel table in the yard, on the lawn by the bag toss),
+    the bartender and a cook in each truck, built by the people builder at load. Groups talk on their own: one
+    speaker at a time, turns of 1 to 10 s (median about 3.5 s), pauses, listeners looking at the speaker with
+    glances away, nods, group laughter. Join opens a gap in the circle where you stand (they re-space keeping their
+    order, the host across from you) and they turn to you; a short conversation runs (`lot57/talk.ts`: a line, two
+    reply chips, their answer, a second exchange from someone else, then "Drive safe" and back to their own talk).
+    Leave mid-conversation and someone says goodbye; the circle closes up with your spot between two of them. On
+    Ultra the host is the builder's close-up body (LOD 0). People are soft: tap to go plans round them, and they
+    nudge rather than block you.
+  - Tap to go: a seat (sits you down), one of the regulars (walks you up to the group), staff or the counter or a
+    truck window (walks you there and opens the order sheet on arrival), or the ground. Only what you can see
+    counts: a seat or a person farther along the ray than the first solid wall it hits isn't picked. Glass isn't a
+    wall for a tap: a stool seen through a storefront window from the forecourt is picked, and the walk goes in by
+    the entrance (seat 22, checked in the repair below). Acting still needs a clear line, so Sit isn't offered
+    through the glass.
+  - HUD: captions with the speaker's name (a question stays up until you answer), reply chips, the order sheet,
+    and an order and holding chip. Phone portrait stacks the chips in a column above the order chip and puts the
+    captions under the crowd chip; keyboard 1 to 5 picks on the sheet, 1 and 2 reply, Escape closes; gamepad B
+    stands, leaves or closes.
+  - Test hooks added on `window.__onfoot`: `target`, `press`, `sheet`, `pick`, `closeSheet`, `reply`, `state`,
+    `talk`, `groups`, `npcs`, `counters`, `reach`, `offerAt`, `sight`, `project`, `lastTap`, `inHand`, `hold`;
+    `sim(seconds, untilStop, world)` runs the people and the order too; `stats()` now reports npcs, groups, staff,
+    npcsDrawn, npcTris, npcCalls, crowdBuildMs, holding.
+  - Low stays inside its budget with the people in it: on phones, regulars past 40 m and drinks in hand past 15 m
+    aren't drawn (the plan's far-crowd impostors aren't built), people a wall or a truck body hides aren't drawn, and
+    the parked cars get their detailed models only within 45 m (the 12 nearest had them however far off, 70 m away
+    behind the Shed from the sidewalk). High and Ultra draw as before.
+  - Fixes found by the checks: the opener's caption timed out while the reply chips waited (it now stays until you
+    answer); the member who said goodbye kept talking over the group's own next turn; the paper boats and noodle box
+    were wound inside out (liner outside, print inside); the tacos read as sausages (now chunky filling between
+    tortilla edges); in portrait the caption overlapped the chips and the order chip sat on the map credit.
+- **Checked** with `node tests/onfoot.mjs` (headless Chromium, `--use-angle=swiftshader --enable-unsafe-swiftshader`,
+  one browser at a time on a machine shared with five other workflows). **53 of 53 pass** across two builds:
+  - Build A (`tests/out/onfoot/logs/onfoot-p1b-full-buildA-2026-11-02.log`, every group): 52 of 53; the Low budget
+    view failed at 252,499 of 250k triangles with both groups in it.
+  - Build C, the final one (`dist/onfoot/index.html` md5 in `tests/out/onfoot/logs/p1b-buildC.md5`): landscape,
+    portrait, phone actions, walks and names re-run, **21 of 21**
+    (`tests/out/onfoot/logs/onfoot-p1b-lowgroups-buildC-2026-11-02.log`). Build C differs from A only in lines that
+    apply on Low (the phone people and drink distances, the 45 m car detail), so the 32 High checks (P1a's desktop
+    group and P1b's desktop actions) stood from build A (the review found that gap; all of them were re-run on
+    build D in the repair entry above). `npx tsc --noEmit` is clean. Every screenshot named below
+    was looked at.
+  - Tap to go: a tap on the ground walks a 4-waypoint path round a table with the dots shown, and arrives; a tap on
+    a seat on screen walks there and sits; P1a's check still reaches all 172 seats from the front gate and the lot
+    walk and sits (344 walks, now with the people in place); 1,000 random walks (500 tap, 500 stick) never end inside
+    a collider, leave the area or cross a wall (1,456,209 positions over 35,012 m, 491 colliders), and all 445
+    tap walks with a path arrive.
+  - Sit and Stand at every kind of seat (bench, picnic, lawn chair, bar stool, high-top) with the button; on a bar
+    stool the buttons read Stand and Order.
+  - Order and hold: at the bar, the sheet's five items, made in 6.19 s (4 to 8), the bartender at the taps, ready on
+    the counter, Pick up, held in first person and in third person 0.088 m from your avatar's right hand; both
+    trucks (birria tacos, garlic noodles), each Pick up replacing what you held; from a bar stool, ordered and
+    picked up without standing; on a phone, a finger tap on the bar walks you there and opens the sheet (buttons
+    64 px tall), a tap on an item, Pick up with the button.
+  - Join and Leave: the yard group re-spaces to leave a 90 degree gap either side of you, the host across; a full
+    conversation (hello, a line, your reply chip, the answer, a second exchange from another member, "Good talking.
+    Drive safe."), then Leave puts you 1.97 m from the centre; the lawn group joined by tapping one of them on screen
+    and left mid-conversation (a goodbye); on a phone the caption, chips (56 px or taller) and button are on screen
+    and clear of each other. Group talk over 30 s: 0 of 120 samples with two speakers, listeners facing the speaker
+    in 196 of 204 (96%).
+  - Nothing through a wall: over every free point in a 0.5 m grid round the venue (30,486 points), each offer (2,009
+    at normal reach; 14,803 with the ranges stretched four times) has a clear line to what it acts on, checked in
+    Node against the exported colliders; at four times the reach the line test turned down 185 nearest seats behind
+    walls. A tap on a high-top stool behind the Shed's north wall from the forecourt, and on the cook from behind the
+    taco truck, went to the ground; the same stool tapped from inside was picked; nothing is offered at a truck's back.
+  - Ultra: the host who talks to you is the builder's close-up body (LOD 0): 393 calls, 2,447,828 triangles in that
+    view (no Ultra budget in the plan).
+  - Budgets (`renderer.info`, shadow passes included): High worst 228 calls and 680,195 triangles over P1a's nine
+    views, and 193 calls, 690,134 triangles in the action views (joined, third person; limits 350 and 700k); Low
+    worst 118 calls and 242,295 triangles over P1a's seven views (limits 150 and 250k), and in the phone action views
+    73 calls and 161k triangles joined, 64 and 122k holding (as the check prints them).
+  - `stats()` on High at the start, Sat 21:00: npcs 9, groups 2, staff 3, seated 0, walkers 0, npcsDrawn 7, npcTris
+    10,852, npcCalls 7, draw calls 231, triangles 655,584, sim 0 ms, frame 6.2 ms (CPU time in SwiftShader, not a
+    frame rate), crowd built in 15,063 ms. On Low (390x844): 100 calls, 219,370 triangles, crowd built in 10,964 ms.
+- **Screenshots** (`tests/out/onfoot/`): `onfoot-1280x720-act-{tap-to-go,sit,order-sheet,making,ready,holding,
+  holding-third,ready-truck,holding-noodles,seated-holding,joined,joined-third,left,wall-tap,joined-ultra}.png`,
+  `onfoot-390x844-act-{tap-to-go,sit,order-sheet,making,ready,holding,joined,reply,left}.png`, and P1a's views re-shot
+  with the people in them.
+- **Not done or not measured**: frame rates on a phone or a GPU; the crowd at full scale (40 NPCs, arrivals,
+  walkers, seated groups, the crowd curve driving numbers) is the next milestone. Building the nine people takes
+  10 to 15 s of the load here. The people builder's own limits show up close (LOD 1 faces at conversation distance
+  are soft; some outfits showed skin-coloured patches at the neckline, fixed for the regulars in the repair below,
+  and some flats read as bare feet); staff wear our
+  patina-green tops because the builder has no apron garment; the hold pose and nods are applied over the
+  builder's animation from `npcs.ts` (the builder's files are unchanged). The forecourt north of the Shed is unlit
+  at night (P1a).
+
 ## 2026-11-02: Lot 57 on foot, P1a finished and re-verified on the final build (35 of 35 checks)
 
 The P1a builder of 2026-10-21 (entry below) was cut off mid-run: its last suite runs (17:45 and earlier) lost their
