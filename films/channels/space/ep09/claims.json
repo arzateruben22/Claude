@@ -1,0 +1,145 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Not our Sun.",
+  "claim": "Heavy elements such as gold are made mostly by neutron-capture processes; ordinary Sun-like stars make little gold.",
+  "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
+  "source_title": "Lawler (NASA UV-Vis study, r-process)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Hedge 'don't make much'. Confirm the PDF; find a plainer NASA page for stars like the Sun.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "To build it, you need a flood of neutrons, all at once.",
+  "claim": "The r-process needs a flood of neutrons, over in seconds, to build about half the elements heavier than iron, gold among them.",
+  "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
+  "source_title": "Lawler (NASA)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "One place that does that: two neutron stars crashing together.",
+  "claim": "Neutron-star mergers are a confirmed site of r-process element production (one source).",
+  "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
+  "source_title": "Unfolding story of kilonova (NASA)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Do not say 'the' source.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "In twenty seventeen, astronomers saw one happen, as ripples in space and as light.",
+  "claim": "GW170817 (Aug 2017): a neutron-star merger seen in gravitational waves, light and X-rays.",
+  "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
+  "source_title": "Kilonova (NASA)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm the year and the word 'happen' (seen, not made).",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "A neutron star is about as wide as a city, yet heavier than the Sun.",
+  "claim": "A neutron star is about 20 km across, with about 1.4 to 2 Suns of mass.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA neutron star page). 'About as wide as a city' needs a source.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "A crash throws out hot matter, and some becomes heavy atoms.",
+  "claim": "The kilonova glowed from the radioactive decay of freshly made heavy elements.",
+  "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
+  "source_title": "Kilonova (NASA)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "Scientists still debate what else makes gold.",
+  "claim": "How much gold comes from mergers versus other sources is debated.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA or a review on where gold and platinum come from). SOURCE NOT YET FOUND. Coordinator: others are debated; never say all.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "Some of its gold was probably made in a crash like that, before our Sun was born.",
+  "claim": "The Sun and planets formed from gas already enriched in heavy elements by earlier stellar events, about 4.6 billion years ago.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: a page saying heavy elements in the solar system pre-date the Sun). SOURCE NOT YET FOUND. 'Probably' keeps the hedge.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c9",
+  "sentence": "Light time: that crash was about a hundred thirty million light-years away.",
+  "claim": "GW170817 happened about 130 million light-years away.",
+  "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
+  "source_title": "GW170817 distance (LIGO / NASA)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Same source family as episode 1's LIGO claim.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c10",
+  "sentence": "Its light left before the dinosaurs died out.",
+  "claim": "130 million years ago is before the dinosaurs' end, about 66 million years ago.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (own arithmetic; and a page for the end of the dinosaurs: about 66 million years ago). Own arithmetic plus a NASA or Smithsonian date for the extinction.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c20",
+  "sentence": "Gold is heavier than iron.",
+  "claim": "Heavy elements such as gold are made mostly by neutron-capture processes; ordinary Sun-like stars make little gold.",
+  "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
+  "source_title": "Lawler (NASA UV-Vis study, r-process)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Hedge 'don't make much'. Confirm the PDF; find a plainer NASA page for stars like the Sun.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c21",
+  "sentence": "Stars like our Sun don't make much of it.",
+  "claim": "Heavy elements such as gold are made mostly by neutron-capture processes; ordinary Sun-like stars make little gold.",
+  "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
+  "source_title": "Lawler (NASA UV-Vis study, r-process)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Hedge 'don't make much'. Confirm the PDF; find a plainer NASA page for stars like the Sun.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c22",
+  "sentence": "So some gold may be older than our whole planet.",
+  "claim": "The Sun and planets formed from gas already enriched in heavy elements by earlier stellar events, about 4.6 billion years ago.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: a page saying heavy elements in the solar system pre-date the Sun). SOURCE NOT YET FOUND. 'Probably' keeps the hedge.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ }
+]

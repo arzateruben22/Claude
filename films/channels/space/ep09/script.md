@@ -1,0 +1,41 @@
+# One More Orbit No. 009: "Your gold" (draft; fact-check before posting)
+
+About 72 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original score.
+Bible §7 #9. Hedge from the coordinator: neutron-star mergers are ONE confirmed source of gold; others are debated; never say all.
+
+The story: Gold is made when atoms are flooded with neutrons. We saw one such place, two neutron stars merging, in 2017. Some of the gold in a ring was probably made in events like it before the Sun formed.
+
+One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}` in a heading is
+direction for the compiler. In a vo line, `{cN}` after a sentence ties it to `claims.json` and
+`{-}` marks a sentence that states nothing outside the film; neither is spoken. Check it with
+`python3 -I kits/cinema/script/lint.py films/channels/space/ep09 --segment readout`.
+
+## hook {shot: frame 0, the payoff: two neutron stars about to merge, a teal bead of gold flung toward a ring; spine "gold: from where?" · title: "Your *gold*" · pre: 0.03 · picture-only 0.2 s · energy: 0.7} (0–3.4 s)
+vo: Where does *gold* come from? {-} Not our *Sun*. {c1}
+
+## normal {shot: the periodic table, gold lit, iron marked; a Sun-like star fusing lighter atoms and stopping short · spine "gold: heavier than iron" · picture-only 0.2 s · energy: 0.45} (3.4–13 s)
+vo: Gold is heavier than iron. {c20} Stars like our Sun don't make much of it. {c21} To build it, you need a flood of *neutrons*, all at once. {c2}
+
+## change {shot: two neutron stars spiral together; the 2017 signal arrives · spine "2017: a merger seen" · picture-only 0.2 s · energy: 0.55} (13–22.5 s)
+vo: One place that does that: two neutron stars *crashing* together. {c3} In twenty seventeen, astronomers saw one happen, as ripples in space and as *light*. {c4}
+
+## why {shot: a city-sized ball with more mass than the Sun; the crash flings out hot matter that cools into new atoms · spine "the crash makes heavy atoms" · picture-only 2 s · energy: 0.62} (22.5–37 s)
+vo: A neutron star is about as wide as a *city*, yet heavier than the Sun. {c5} A crash throws out hot matter, and some becomes heavy atoms. {c6} Scientists still debate what *else* makes gold. {c7}
+
+## whoa {shot: zoom from the cloud into a ring on a hand; one gold bead settles into it · spine "your ring: older than the Sun" · picture-only 3 s · energy: 0.8} (37–51 s)
+vo: Zoom in on your *ring*. {-} Some of its gold was probably made in a crash like that, *before* our Sun was born. {c8} Think of it as a *souvenir*. {-}
+
+## takeaway {shot: hold on the ring with the galaxy behind · picture-only 0.2 s · energy: 0.3} (51–58 s)
+vo: So some gold may be older than our whole *planet*. {c22} Stardust isn't a poem. {-} It's *chemistry*. {-}
+
+## readout {segment: readout · light-time readout: "130 million years" · a ping per line · picture-only 0.2 s · energy: 0.45} (58–65.5 s)
+vo: *Light time*: that crash was about a hundred thirty million light-years away. {c9} Its light left before the *dinosaurs* died out. {c10}
+
+## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
+vo: Next: what happens at the edge of a *black hole*? {-}
+end card: "Next orbit: the *black hole* edge" · "One More Orbit · No. 010"
+
+## Notes
+- Every claim is OPEN until a person opens its source page (see `claims.json`); NOTHING here was opened. Rows marked TO FIND have no source yet: find one or cut the sentence.
+- Listen at T0 after voicing.
+- TODO: the handle (@lightminute), kilometers vs miles, the AI-voice label in the post.

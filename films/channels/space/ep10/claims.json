@@ -1,0 +1,134 @@
+[
+ {
+  "id": "c1",
+  "sentence": "The edge is called the event horizon.",
+  "claim": "The event horizon is the boundary around a black hole beyond which nothing, not even light, can escape.",
+  "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
+  "source_title": "Black hole safety brochure (NASA SVS)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "At the horizon, it's more than light speed.",
+  "claim": "At the event horizon, the escape speed equals the speed of light.",
+  "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
+  "source_title": "Black hole safety brochure (NASA SVS)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "Nothing travels faster than light, so nothing gets out from there.",
+  "claim": "Nothing can outrun light, so nothing escapes from within the horizon.",
+  "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
+  "source_title": "NASA SVS",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Do not say what happens inside.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "Gravity really does slow clocks.",
+  "claim": "Gravity slows clocks (gravitational time dilation); the nearer a mass, the slower a clock ticks.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA GPS relativity page). SOURCE NOT YET FOUND.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "Your phone's GPS corrects for that every day.",
+  "claim": "GPS satellite clocks are corrected for relativity (gravity and speed), every day in the system's design.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA GPS relativity page). SOURCE NOT YET FOUND. The 'every day' wording must match.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "To you, far away, your friend slows, reddens, fades, and seems to freeze.",
+  "claim": "Seen from afar, an infalling object appears to slow, redden, fade and freeze at the horizon; the faller notices nothing special locally.",
+  "source_url": "https://science.nasa.gov/universe/black-holes/supermassive-black-holes/",
+  "source_title": "NASA black hole visualization (2024)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Coordinator: do not claim what happens inside. Confirm the page wording.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "Light time: we photographed a black hole in twenty nineteen.",
+  "claim": "The Event Horizon Telescope released the first image of a black hole's shadow (M87*) in April 2019.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: Event Horizon Telescope 2019 release, NSF/NASA). SOURCE NOT YET FOUND.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "Its light had traveled about fifty-five million years.",
+  "claim": "M87* is about 55 million light-years from Earth.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: EHT M87* distance page). SOURCE NOT YET FOUND.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c11",
+  "sentence": "Escape speed is how fast you must go to leave for good.",
+  "claim": "Escape velocity is the speed needed to break free of a body's gravity for good.",
+  "source_url": "https://science.nasa.gov/universe/black-holes/",
+  "source_title": "Black holes (NASA; find exact page)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm; any NASA education page on escape velocity will do.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c20",
+  "sentence": "The closer to a black hole, the slower a clock ticks.",
+  "claim": "Gravity slows clocks (gravitational time dilation); the nearer a mass, the slower a clock ticks.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA GPS relativity page). SOURCE NOT YET FOUND.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c21",
+  "sentence": "To them, at a huge black hole, their own clock runs as usual.",
+  "claim": "Seen from afar, an infalling object appears to slow, redden, fade and freeze at the horizon; the faller notices nothing special locally.",
+  "source_url": "https://science.nasa.gov/universe/black-holes/supermassive-black-holes/",
+  "source_title": "NASA black hole visualization (2024)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Coordinator: do not claim what happens inside. Confirm the page wording.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c22",
+  "sentence": "Time depends on where you are, and how strong gravity is.",
+  "claim": "Gravity slows clocks (gravitational time dilation); the nearer a mass, the slower a clock ticks.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA GPS relativity page). SOURCE NOT YET FOUND.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ }
+]

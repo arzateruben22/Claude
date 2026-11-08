@@ -1,0 +1,90 @@
+[
+ {
+  "id": "c1",
+  "sentence": "On paper, yes.",
+  "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
+  "source_title": "Saturn Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Thought experiment: real Saturn is gas and would not float as one object.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "Saturn is about nine Earths wide.",
+  "claim": "Saturn's equatorial diameter is about 9.4 Earth diameters (120,536 km vs 12,756 km).",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
+  "source_title": "Saturn Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Spoken as 'about nine'.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "But it's mostly hydrogen and helium, the two lightest gases.",
+  "claim": "Saturn is made mostly of hydrogen and helium.",
+  "source_url": "https://science.nasa.gov/saturn/facts/",
+  "source_title": "Saturn facts (NASA)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "Earth is rock and metal, packed tight, so it sinks.",
+  "claim": "Earth's mean density is 5.51 g/cm3, so it sinks in water; Earth is rock and metal.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+  "source_title": "Earth Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "Light time: sunlight takes about eighty minutes to reach Saturn.",
+  "claim": "Saturn is about 9.5 AU from the Sun; sunlight takes about 80 minutes.",
+  "source_url": "https://science.nasa.gov/saturn/facts/",
+  "source_title": "Saturn facts (NASA)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm the 80 minutes or compute 1.43e9 km / 299,792 km/s = 79.6 min.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c20",
+  "sentence": "Saturn weighs less than the same amount of water, space for space.",
+  "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
+  "source_title": "Saturn Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Thought experiment: real Saturn is gas and would not float as one object.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c21",
+  "sentence": "Saturn is mostly gas, so its weight is spread thin.",
+  "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
+  "source_title": "Saturn Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Thought experiment: real Saturn is gas and would not float as one object.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c22",
+  "sentence": "In the thought experiment, Saturn floats.",
+  "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
+  "source_title": "Saturn Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Thought experiment: real Saturn is gas and would not float as one object.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ }
+]

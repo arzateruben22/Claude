@@ -1,0 +1,134 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Then every line of sight would end on a star.",
+  "claim": "In an infinite, eternal, unchanging universe every line of sight would end on a star.",
+  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_title": "Olbers' paradox (Britannica)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Candidate from the bible.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "Far stars look fainter, but there are more of them.",
+  "claim": "Fainter with distance but more stars at larger distances: the two effects cancel, so the sky would be as bright as a star's surface.",
+  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_title": "Olbers' paradox (Britannica)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Own simple physics too (inverse-square vs number grows with area); confirm the source states the cancellation.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "Those two effects cancel, so the whole sky should glow like a star's surface.",
+  "claim": "In that model the whole sky would glow.",
+  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_title": "Olbers' paradox (Britannica)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. As c2.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "In eighteen forty-eight, writer Edgar Allan Poe guessed why.",
+  "claim": "Edgar Allan Poe's 1848 essay Eureka proposed that the farthest light has not yet reached us.",
+  "source_url": "https://todo.invalid/find-source",
+  "source_title": "TO FIND",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: a page on Poe's Eureka, 1848, and Olbers' paradox). SOURCE NOT YET FOUND: if no solid source is found, cut the Poe sentence.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "Far starlight may not have had time to reach us.",
+  "claim": "Light from beyond a certain distance has not had time to reach us because the universe has a finite age.",
+  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_title": "Olbers' paradox (Britannica)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm. Finite age is the main factor; expansion is minor (hedge).",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "We now put the universe's age near thirteen point eight billion years.",
+  "claim": "The universe is 13.787 +/- 0.020 billion years old (Planck 2018).",
+  "source_url": "https://www.esa.int/Science_Exploration/Space_Science/Planck/Planck_science_highlights",
+  "source_title": "Planck science highlights (ESA)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Spoken as 'about thirteen point eight'.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "The dark sky hints that the universe has a beginning.",
+  "claim": "The dark night sky points to a universe of finite age.",
+  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_title": "Olbers' paradox (Britannica)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Hedge: 'hints', 'a clue'. Do not say it proves the Big Bang.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "Light time: from the Sun, about eight minutes.",
+  "claim": "Sunlight takes about 8 min 20 s to reach Earth.",
+  "source_url": "https://www.nist.gov/si-redefinition/meter",
+  "source_title": "Light speed (NIST), own arithmetic",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Same figure as episode 1 (Smithsonian: howthingsfly.si.edu).",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c9",
+  "sentence": "From the farthest galaxies we can see, more than thirteen billion years.",
+  "claim": "Light from the most distant galaxies seen has traveled for more than 13 billion years.",
+  "source_url": "https://science.nasa.gov/mission/hubble/",
+  "source_title": "NASA Hubble / Webb deep fields (find exact page)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Find the exact NASA page.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c20",
+  "sentence": "Past a certain distance, starlight is still on its way.",
+  "claim": "Light from beyond a certain distance has not had time to reach us because the universe has a finite age.",
+  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_title": "Olbers' paradox (Britannica)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm. Finite age is the main factor; expansion is minor (hedge).",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c21",
+  "sentence": "So we can only see so far.",
+  "claim": "Light from beyond a certain distance has not had time to reach us because the universe has a finite age.",
+  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_title": "Olbers' paradox (Britannica)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm. Finite age is the main factor; expansion is minor (hedge).",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c22",
+  "sentence": "It's a clue: the universe has not been shining forever.",
+  "claim": "The dark night sky points to a universe of finite age.",
+  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_title": "Olbers' paradox (Britannica)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Hedge: 'hints', 'a clue'. Do not say it proves the Big Bang.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ }
+]
