@@ -39,6 +39,7 @@ import { Crowd, StaffPost, CrowdCtx, Npc } from './lot57/npcs';
 import { Doings, ActLabel } from './lot57/doings';
 import { useWorkers } from './lot57/crowdview';
 import { serveBuilds } from './lot57/crowd-worker';
+import { Embed, MountOptions, mountPage, optionsToParams } from './embed';
 
 type Quality = 'low' | 'high' | 'ultra';
 const PRESET: Record<Quality, { shadows: number; post: boolean; bloom: boolean; ao: boolean; msaa: number; maxPR: number; scale: number; lights: number; people: 'phone' | 'high'; tex: number }> = {
@@ -46,11 +47,14 @@ const PRESET: Record<Quality, { shadows: number; post: boolean; bloom: boolean; 
   high: { shadows: 2048, post: true, bloom: true, ao: false, msaa: 4, maxPR: 2, scale: 1, lights: 4, people: 'high', tex: 1024 },
   ultra: { shadows: 4096, post: true, bloom: true, ao: true, msaa: 4, maxPR: 2, scale: 1, lights: 8, people: 'high', tex: 1024 },
 };
-const q = new URLSearchParams(location.search);
+let q = new URLSearchParams(location.search);
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const sysReduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 let quality: Quality = (['low', 'high', 'ultra'].includes(q.get('quality') ?? '') ? q.get('quality') : coarse ? 'low' : 'high') as Quality;
 let reduced = q.get('motion') === 'reduced' || sysReduced;
+/** mounted in the game (mount, below): its hooks to stop, release and drive; null on the page's own */
+let embed: Embed | null = null;
+const track = <T>(f: () => T): T => (embed ? embed.track(f) : f());
 
 declare global { interface Window { __onfoot?: Record<string, unknown>; __onfootError?: string } }
 addEventListener('error', (e) => { window.__onfootError = String(e.message || e); });
@@ -166,8 +170,8 @@ async function main() {
   let parkedFill: [number, number] = [0, 0];
   world.add(parked.group);
   const choice = readDriver(q);
-  const carId = (['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e'].includes(choice.car) ? choice.car : 'rossini-gt') as 'rossini-gt';
-  const mine = yourCar(lot.mine, carId, undefined, PRESET[quality].people);
+  const carId = (['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e', 'oc-hyper'].includes(choice.car) ? choice.car : 'rossini-gt') as 'rossini-gt';
+  const mine = yourCar(lot.mine, carId, embed?.paint, PRESET[quality].people);
   world.add(mine.group);
   await stage();
 
@@ -271,7 +275,7 @@ async function main() {
     if (!bloom) return;
     bloom.threshold = lerp(4.5, 0.88, night); bloom.strength = lerp(0.12, 0.32, night);
   };
-  const hud = new Hud();
+  const hud = track(() => new Hud());
   let inputRef: Input | null = null;
   const rnd = rand(4242);
   const doings = new Doings({
@@ -448,7 +452,7 @@ async function main() {
   });
 
   // ------------------------------------------------------------------------------------------ input, HUD, actions
-  const input = new Input(canvas, { stick: hud.stick, knob: hud.knob, car: hud.car });
+  const input = track(() => new Input(canvas, { stick: hud.stick, knob: hud.knob, car: hud.car }));
   const dots = new THREE.InstancedMesh(new THREE.CircleGeometry(0.075, 12).rotateX(-Math.PI / 2), mats.dots, 200);
   dots.count = 0; dots.renderOrder = 6; dots.name = 'path-dots'; dots.frustumCulled = false; scene.add(dots);
   const showPath = (p: P2[] | null) => {
@@ -463,7 +467,7 @@ async function main() {
   };
   /** what the action buttons offer here (lot57/doings.ts: Pick up, Leave, Stand, Drive, Order, Join, Sit) */
   const available = () => doings.available();
-  const doAction = (which: 1 | 2): string | null => { const a = available()[which - 1]; return doings.act(a); };
+  const doAction = (which: 1 | 2): string | null => { const a = available()[which - 1]; if (a === 'Drive' && embed?.onDrive) { embed.onDrive(); return 'drive'; } return doings.act(a); };
   const walkToCar = (skip: boolean) => {
     if (skip) { player.place(lot.door.x, lot.door.z); player.yaw = Math.PI; showPath(null); return true; }
     const p = player.goTo(lot.door.x, lot.door.z); showPath(p);
@@ -638,6 +642,7 @@ async function main() {
   };
   let frozen = false;
   const frame = (now: number) => {
+    if (embed?.dead) return;
     requestAnimationFrame(frame);
     if (frozen) { lastT = now; return; }
     const dt = Math.min(0.1, (now - lastT) / 1000); lastT = now;
@@ -942,6 +947,9 @@ async function main() {
   Object.defineProperty(hooks, 'frames', { get: () => frames });
   window.__onfoot = hooks as unknown as Record<string, unknown>;
 
+  // in the game: what dispose releases (embed.ts)
+  const em = embed;
+  if (em) em.cleanup = () => { removeEventListener('resize', onResize); doings.cancelAll(); em.release(renderer, scene, [crowd, person, parked, composer, dots], [hud, input, doings]); };
   hud.show();
   loading(1, 'Ready');
   hooks.buildMs = Math.round(performance.now() - t0);
@@ -949,7 +957,7 @@ async function main() {
   canvas.focus();
   requestAnimationFrame((t) => { lastT = t; frame(t); });
   // ready after a couple of frames have drawn
-  const waitReady = () => { if (frames >= 2) hooks.ready = true; else requestAnimationFrame(waitReady); };
+  const waitReady = () => { if (frames >= 2) hooks.ready = true; else if (!embed?.dead) requestAnimationFrame(waitReady); };
   waitReady();
 }
 
@@ -984,13 +992,24 @@ function plantTrees(world: THREE.Group, trees: Tree[], quality: Quality) {
   world.add(g);
 }
 
+/**
+ * Mount Lot 57 in host (Phase 3a): the game passes the page's markup (html), your car and paint, the quality, the
+ * clock and onDrive; the page's own boot below passes nothing (the markup is there, the options are the address).
+ */
+export function mount(host: HTMLElement, o: MountOptions = {}) {
+  q = optionsToParams(o, o.html ? '' : location.search);
+  quality = (['low', 'high', 'ultra'].includes(q.get('quality') ?? '') ? q.get('quality') : coarse ? 'low' : 'high') as Quality;
+  reduced = q.get('motion') === 'reduced' || sysReduced;
+  return mountPage(host, o, (e) => { embed = o.html ? e : null; return main(); });
+}
+
 // The same script runs twice: as the page, and as the worker that builds the people's patio bodies (no document
 // there: lot57/crowd-worker.ts). The worker is this page's own inlined script, started again from a blob, so none of
 // the builder's code ships twice. It starts as a classic worker in strict mode: a page opened from disk can't start a
 // module worker from a blob, and the single-file bundle has no imports or exports. (Served by Vite's dev server the
 // script isn't inline: the bodies are built on the main thread instead, slowly.)
 if (typeof document === 'undefined') serveBuilds();
-else {
+else if (!(globalThis as { __onfootEmbed?: boolean }).__onfootEmbed) {
   const src = document.querySelector<HTMLScriptElement>('script[type="module"]:not([src])')?.textContent ?? '';
   if (src.length > 10000 && typeof Worker === 'function' && !/\bimport\.meta\b/.test(src)) {
     try {
@@ -998,5 +1017,5 @@ else {
       useWorkers(() => new Worker(url, { name: 'lot57-people' }));
     } catch { useWorkers(null); }
   }
-  main().catch((e) => { window.__onfootError = String((e as Error)?.stack ?? e); const st = document.getElementById('status'); if (st) st.textContent = 'Something went wrong building the page: ' + String((e as Error)?.message ?? e); });
+  mount(document.body).ready.catch((e) => { window.__onfootError = String((e as Error)?.stack ?? e); const st = document.getElementById('status'); if (st) st.textContent = 'Something went wrong building the page: ' + String((e as Error)?.message ?? e); });
 }

@@ -1585,3 +1585,21 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .jobs-done { display: grid; gap: 6px; margin: 0; padding: 0 6px; list-style: none; }
 .jobs-done li { display: grid; gap: 2px; padding: 10px 12px; box-shadow: inset 0 0 0 1px var(--cyan-line), inset 3px 0 0 var(--good); background: var(--cyan-wash); }
 .jobs-done b { color: var(--good); font: 600 14px/1.2 var(--f-ui); } .jobs-done span { color: var(--dim); font-size: 13px; }
+
+/* the venues (Phase 3a, Game.arriveVenue / getOut / drive): on a venue's exit ramp its prompt (tap to park there now);
+   parked, Get out (and Drive on) where the pedals were, centred low so a thumb finds it in every layout; every target
+   at least 44 px */
+.venue-prompt { position: absolute; left: 50%; bottom: calc(var(--ctl-b) + 150px); transform: translateX(-50%); display: inline-flex; align-items: center; gap: 10px;
+  min-height: 48px; padding: 6px 18px; border: 0; cursor: pointer; color: var(--ink); background: var(--glass-2); box-shadow: inset 0 0 0 1px var(--line-2), inset 3px 0 0 var(--ice);
+  font: 600 13px/1.2 var(--f-ui); animation: pop 0.28s var(--ease); }
+.venue-prompt small { font: 600 11px/1 var(--f-mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+.venue-prompt b { font: 800 20px/1 var(--f-display); letter-spacing: 0.04em; text-transform: uppercase; }
+.venue-prompt i { font-style: normal; font-size: 22px; color: var(--ice-text); }
+.app[data-hud="desk"] .venue-prompt { bottom: calc(var(--ctl-b) + 120px); }
+.venue-park { position: absolute; left: 50%; bottom: calc(var(--ctl-b) + 28px); transform: translateX(-50%); display: flex; gap: 12px; align-items: center; pointer-events: auto; }
+.venue-park .btn { min-height: 52px; min-width: 120px; }
+.venue-park .getout { min-width: 168px; font-size: 18px; }
+.app[data-hud="pl"] .venue-park { bottom: calc(var(--ctl-b) + 12px); }
+.grid.nav.places { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin-bottom: 6px; }
+.gcell.place b { font: 800 18px/1 var(--f-display); letter-spacing: 0.04em; text-transform: uppercase; }
+.gcell.place span { color: var(--dim); font-size: 12px; }

@@ -45,8 +45,9 @@ import { laneTest, pathAt, pathLength } from './staff';
 import { BAR_NAME } from './brand';
 import { FRONT, fd, DOOR_START, HANDOFF, TREES, ZONES, PZONES, furniture } from './layout';
 import { pointInPoly as pointInRing } from '../../engine/geom';
+import { Embed, MountOptions, mountPage, optionsToParams } from '../../embed';
 
-const q = new URLSearchParams(location.search);
+let q = new URLSearchParams(location.search);
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const sysReduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Ultra is an entitlement flag only (decision 15): owner mode and the test build unlock it; there's no price and no
@@ -56,6 +57,9 @@ let ultraUnlocked = q.get('ultra') === '1' || q.get('quality') === 'ultra' || ((
 let quality: Quality = (['low', 'high', 'ultra'].includes(q.get('quality') ?? '') ? q.get('quality') : coarse ? 'low' : 'high') as Quality;
 if (quality === 'ultra' && !ultraUnlocked) quality = 'high';
 let reduced = q.get('motion') === 'reduced' || sysReduced;
+/** mounted in the game (mount, below): its hooks to stop, release and drive; null on the page's own */
+let embed: Embed | null = null;
+const track = <T>(f: () => T): T => (embed ? embed.track(f) : f());
 
 declare global { interface Window { __onfoot?: Record<string, unknown>; __onfootError?: string } }
 addEventListener('error', (e) => { window.__onfootError = String(e.message || e); });
@@ -209,8 +213,8 @@ async function main() {
   parked.group.userData.group = 'parked'; scene.add(parked.group);
   let parkedFill: [number, number] = [0, 0];
   const choice = readDriver(q);
-  const carId = (['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e'].includes(choice.car) ? choice.car : 'rossini-gt') as 'rossini-gt';
-  let mine = yourCar(site.yourStall, carId, undefined, PRESET[quality].people);
+  const carId = (['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e', 'oc-hyper'].includes(choice.car) ? choice.car : 'rossini-gt') as 'rossini-gt';
+  let mine = yourCar(site.yourStall, carId, embed?.paint, PRESET[quality].people);
   mine.group.userData.group = 'your-car'; scene.add(mine.group);
   const carBox = new THREE.Box3().setFromObject(mine.group), carSize = carBox.getSize(new THREE.Vector3());
   const paintHex = (() => { let c = 0xb8b8b8; mine.group.traverse((o) => { const mm = (o as THREE.Mesh).material as THREE.MeshStandardMaterial | undefined; if ((o as THREE.Mesh).isMesh && mm && o.name.includes('paint') && mm.color) c = mm.color.getHex(); }); return c; })();
@@ -289,8 +293,8 @@ async function main() {
   let open = false, night = 0, share = 0, level: C.CrowdLevel = 'Closed', liveT = 0, bladeN = 3, bladeT = 0;
   let composer: EffectComposer | null = null, bloom: UnrealBloomPass | null = null, gtao: GTAOPass | null = null;
   const tuneBloom = () => { if (!bloom) return; bloom.threshold = lerp(4.5, 0.88, night); bloom.strength = lerp(0.12, 0.34, night); };
-  const hud = new Hud();
-  const barHud = new BarHud(hud);
+  const hud = track(() => new Hud());
+  const barHud = track(() => new BarHud(hud));
   const S = def.schedule;
   const fillShare = () => (open ? clamp(0.12 + share * 0.92, 0, 0.96) : 0.05);
   const applyClock = (firstTime = false) => {
@@ -412,7 +416,7 @@ async function main() {
       // Props ones, kept for the next switch
       scene.remove(treeGroup); for (const c of treeGroup.children) (c as THREE.InstancedMesh).dispose(); treeGroup = plantTrees(def.trees, qq); scene.add(treeGroup);
       scene.remove(mine.group); disposeCar(mine.group);
-      mine = yourCar(site.yourStall, carId, undefined, P.people); mine.group.userData.group = 'your-car'; scene.add(mine.group);
+      mine = yourCar(site.yourStall, carId, embed?.paint, P.people); mine.group.userData.group = 'your-car'; scene.add(mine.group);
     }
     // the far set: simple at Low and HD, full at Ultra (switching rebuilds the far batches)
     if (P.far !== farMode) { const f = streets.rebuildFar(P.far); f.group.userData.group = 'far streets'; scene.add(f.group); farMode = P.far; }
@@ -446,7 +450,7 @@ async function main() {
   });
 
   // ------------------------------------------------------------------------------------------ input, HUD, actions
-  const bin = new BarInput(canvas, { stick: hud.stick, knob: hud.knob, car: hud.car });
+  const bin = track(() => new BarInput(canvas, { stick: hud.stick, knob: hud.knob, car: hud.car }));
   const input = bin.input;
   const dots = new THREE.InstancedMesh(new THREE.CircleGeometry(0.075, 12).rotateX(-Math.PI / 2), mats.dots, 200);
   dots.count = 0; dots.renderOrder = 6; dots.name = 'path-dots'; dots.frustumCulled = false; scene.add(dots);
@@ -472,6 +476,7 @@ async function main() {
     if (which !== 1 || !a) return null;
     if (a === 'Stand') { player.stand(); return 'stand'; }
     if (a === 'Sit') { const s = nearSeat(); if (s) { player.sit(s); hud.fadeHint(); return 'sit'; } return null; }
+    if (a === 'Drive' && embed?.onDrive) { embed.onDrive(); return 'drive'; }
     if (a === 'Drive') { hud.toast(`${BAR_NAME} is on its own page for now. Driving out comes when it joins the game.`, 4.5); return 'drive'; }
     return null;
   };
@@ -651,6 +656,7 @@ async function main() {
     return hide;
   };
   const frame = (now: number) => {
+    if (embed?.dead) return;
     requestAnimationFrame(frame);
     if (frozen) { lastT = now; return; }
     const dt = Math.min(0.1, (now - lastT) / 1000); lastT = now;
@@ -1094,13 +1100,16 @@ async function main() {
   Object.defineProperty(hooks, 'frames', { get: () => frames });
   window.__onfoot = hooks as unknown as Record<string, unknown>;
 
+  // in the game: what dispose releases (embed.ts)
+  const em = embed;
+  if (em) em.cleanup = () => { removeEventListener('resize', onResize); em.release(renderer, scene, [person, parked, composer], [hud, barHud, bin]); };
   hud.show();
   loading(1, 'Ready');
   hooks.buildMs = Math.round(performance.now() - t0);
   doneLoading(reduced);
   canvas.focus();
   requestAnimationFrame((t) => { lastT = t; frame(t); });
-  const waitReady = () => { if (frames >= 2) hooks.ready = true; else requestAnimationFrame(waitReady); };
+  const waitReady = () => { if (frames >= 2) hooks.ready = true; else if (!embed?.dead) requestAnimationFrame(waitReady); };
   waitReady();
 }
 
@@ -1136,4 +1145,17 @@ function plantTrees(trees: { x: number; z: number; y: number; s: number; kind: s
   return g;
 }
 
-main().catch((e) => { window.__onfootError = String((e as Error)?.stack ?? e); const st = document.getElementById('status'); if (st) st.textContent = 'Something went wrong building the page: ' + String((e as Error)?.message ?? e); });
+/**
+ * Mount Stoppage Time in host (J1): the game passes the page's markup (html), your car and paint, the quality, the
+ * clock and onDrive; the page's own boot below passes nothing (the markup is there, the options are the address).
+ */
+export function mount(host: HTMLElement, o: MountOptions = {}) {
+  q = optionsToParams(o, o.html ? '' : location.search);
+  if (q.get('quality') === 'ultra') ultraUnlocked = true;
+  quality = (['low', 'high', 'ultra'].includes(q.get('quality') ?? '') ? q.get('quality') : coarse ? 'low' : 'high') as Quality;
+  if (quality === 'ultra' && !ultraUnlocked) quality = 'high';
+  reduced = q.get('motion') === 'reduced' || sysReduced;
+  return mountPage(host, o, (e) => { embed = o.html ? e : null; return main(); });
+}
+
+if (!(globalThis as { __onfootEmbed?: boolean }).__onfootEmbed) mount(document.body).ready.catch((e) => { window.__onfootError = String((e as Error)?.stack ?? e); const st = document.getElementById('status'); if (st) st.textContent = 'Something went wrong building the page: ' + String((e as Error)?.message ?? e); });
