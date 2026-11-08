@@ -40,7 +40,7 @@ nights are packed (simulated, see below).
 **Identity (ours, distinct from any real venue):**
 - Palette: night teal `#12333A`, lamp cream `#F3E6C4`, signal red `#C8462F`, patina green `#4F7F6A`, brick
   `#8E4A36`. No gold-and-black.
-- The sign: a 6.5 m steel pylon at the Orangewood and Dupont corner with a lit cabinet. "LOT 57" in tall condensed
+- The sign: a steel pylon at the Orangewood and Dupont corner with a lit cabinet (4.2 m × 2.9 m, its top at about 7.2 m). "LOT 57" in tall condensed
   capitals, cream on teal; "TAPROOM · YARD · TRUCKS" below in red. The glyph is three lane lines converging on a
   single bulb. Drawn in canvas at load.
 - The building, "the Shed": brick-red tilt-up walls, a five-tooth sawtooth roof facing north, four roll-up doors
@@ -101,9 +101,9 @@ North is up (toward Orangewood). World coordinates; all sizes are our design.
 
 | Part | Extent (x, z) | Contents |
 | --- | --- | --- |
-| Frontage | z ≈ -8398, x -5148 to -5048 | Low brick planter wall, 8 m front gate at x -5104 to -5096, the sign at (-5149, -8397). |
+| Frontage | z ≈ -8398, x -5148 to -5048 | Low brick planter wall, 8 m front gate at x -5104 to -5096 with a chalkboard A-frame on the walk in, the sign at (-5151, -8398), its cabinet turned 45° to face the corner and Orangewood. |
 | The Shed (taproom) | x -5148 to -5120, z -8394 to -8342 | 28 m × 52 m. Bar and 20 stools, 6 high-tops, tank wall, chalkboard menu. |
-| The yard | x -5120 to -5078, z -8394 to -8342 | 12 communal tables in three rows of four, 8 seats each (96). 8 light poles, 6 m tall, about 300 bulbs on catenaries. 4 patio heaters. |
+| The yard | x -5120 to -5078, z -8394 to -8342 | 12 communal tables in three rows of four, 8 seats each (96), each under a market umbrella. 4 barrel standing tables (no seats). 8 light poles, 6 m tall, about 300 bulbs on catenaries. 4 patio heaters. |
 | Lawn | x -5078 to -5048, z -8394 to -8366 | Turf. Three bag-toss lanes, a giant stacking-block table, two clusters of lawn chairs. |
 | Food-truck bay | x -5078 to -5048, z -8364 to -8342 | Two trucks with windows facing the yard, a third slot for busy nights, 4 picnic tables (24 seats). |
 | Lot | x -5153 to -5042, z -8336 to -8290 | About 120 stalls in four rows on the two mapped aisles. Entries from Dupont where the mapped driveways are. "Your" stall is the one nearest the lot gate. |
@@ -302,9 +302,12 @@ Where it falls short (candidly):
   that change; the tee's back shows a dark yoke line across the shoulder blades.
 - Phone LOD 0 is 71k triangles, about 18% over the 60k target.
 - NPCs aren't instanced: each one is its own skinned mesh, so it's one draw call per person (30 for 30), not the 16
-  for every NPC planned below.
+  for every NPC planned below. P1c keeps inside 16 (Low) and 24 (High) by drawing only the nearest people as bodies and
+  the rest as flat impostors painted from their own bodies, all in one instanced call (`src/onfoot/lot57/crowdview.ts`).
 - Building people is slow. 30 people took about 15 s on a desktop CPU, so the game must build them over several frames or
-  in a worker, cache them, and start from far LODs. None of that is built yet.
+  in a worker, cache them, and start from far LODs. P1c (on the standalone page) builds every far body (LOD 2) at load
+  and the patio bodies (LOD 1) in two workers afterwards; the close-up LOD 0 is still built on the main thread (its hair
+  cards need a canvas). Caching is not built.
 
 ### Groups that look like they're talking
 
@@ -477,6 +480,23 @@ Each phase ends with its checks passing in Playwright (headless Chromium, SwiftS
   - Counts are printed and match the source.
 
 ### Phase 1: the venue on foot (a standalone page, not yet the game)
+
+- **Progress.**
+  - [x] P1a (2026-11-02): Lot 57 on foot: the venue, the avatar, controls, collisions and test hooks
+    (35 of 35 checks; see `PROJECT_OC_PROGRESS.md`).
+  - [x] P1b (2026-11-02): things to do: tap to go (seats, people, counters), Sit and Stand, Order at the bar and both
+    trucks with a pick-up beat and the item held afterwards, Join a group and Leave, nothing through a wall. Two
+    groups of three regulars, the bartender and two cooks as the first people (see `PROJECT_OC_PROGRESS.md`;
+    repaired after review the same day: the cooks drawn on Low, a tap on another group from inside a circle, the
+    bar's ends, the regulars' clothes).
+  - [x] P1c (2026-11-02, committed 2026-10-21, build r2): forty people: twelve parties of guests (31) in standing and seated talking
+    groups, seven staff, two sidewalk walkers; the crowd curve by day and hour with arrivals and departures; the chip;
+    the crowd drawn inside the Low budget (bodies near, impostors far, the patio bodies built in workers). See
+    `PROJECT_OC_PROGRESS.md` for what was checked and what isn't built (dogs, mingling, joining a seated group, the
+    weather's effect on the crowd). Repaired after review the same day (build r2): a stale "closed" toast, the
+    facing check measured as drawn (bodies by the head, cut-outs by the body, which now turns toward the speaker),
+    the people's per-frame work trimmed, a repaint that froze a walker, light specks on the cut-outs' legs, and the
+    people's calls measured as well as counted (which found held cups' glass drawn in two passes and counted as one).
 
 - **Deliverables.**
   - Lot 57 built in code: the Shed, the yard, string lights, the lawn, trucks, the lot and the sign. The rest of the
