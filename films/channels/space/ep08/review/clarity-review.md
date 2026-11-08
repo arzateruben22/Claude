@@ -10,7 +10,7 @@ Lint (kits/cinema/script/lint.py, STANDARDS-v2): 161 words, whole script about g
 - Any figure beyond about four spoken numbers moved to on-screen text or became a comparison.
 
 ## Source-pass changes (8 Nov)
-- Poe 1848 line cut (no primary source found); replaced by 'The key here is time.'. The 'more than thirteen billion years' galaxy line softened to 'billions of years'. ESA confirms 13.8 billion years. Britannica (Olbers) returns 403 from here, so c1-c3, c5, c7 stay OPEN.
+- Poe 1848 line cut (no primary source found); replaced by 'The key here is time.'. The 'more than thirteen billion years' galaxy line softened to 'billions of years'. ESA confirms 13.8 billion years. NASA's Night Sky Notes page (forest analogy, finite age and size) now supports the Olbers lines; only 'far stars look fainter but there are more of them, so they cancel' (c2, c3) has no page read yet.
 
 ## Still open
 - Needs a listen after voicing (blocked on the Parakeet pin approval). Hook timing is an estimate until then.

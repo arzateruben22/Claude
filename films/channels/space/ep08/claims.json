@@ -3,12 +3,18 @@
   "id": "c1",
   "sentence": "Then every line of sight would end on a star.",
   "claim": "In an infinite, eternal, unchanging universe every line of sight would end on a star.",
-  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_url": "https://science.nasa.gov/solar-system/skywatching/night-sky-network/looking-beyond-the-stars-septembers-night-sky-notes/",
   "source_title": "Olbers' paradox (Britannica)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Candidate from the bible.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Candidate from the bible.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Much like looking into a dense forest where every line of sight has a tree, every direction we look in the sky has billions of stars with no vacant spots... Olbers Paradox asks why the night sky is dark if the Universe is infinitely old and static.",
+   "qualification": "NASA's own forest analogy; the 'no edge or start' setup matches 'infinitely old and static'."
+  }
  },
  {
   "id": "c2",
@@ -36,12 +42,18 @@
   "id": "c5",
   "sentence": "Far starlight may not have had time to reach us yet.",
   "claim": "Light from beyond a certain distance has not had time to reach us because the universe has a finite age.",
-  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_url": "https://science.nasa.gov/solar-system/skywatching/night-sky-network/looking-beyond-the-stars-septembers-night-sky-notes/",
   "source_title": "Olbers' paradox (Britannica)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm. Finite age is the main factor; expansion is minor (hedge).",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm. Finite age is the main factor; expansion is minor (hedge).",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The paradox has since been resolved, now that we understand that the Universe has a finite age and size, with the speed of light having a definite value.",
+   "qualification": "NASA ties the answer to a finite age plus light's definite speed; 'may not have had time' is our plain wording."
+  }
  },
  {
   "id": "c6",
@@ -64,12 +76,18 @@
   "id": "c7",
   "sentence": "The dark sky hints that the universe has a beginning.",
   "claim": "The dark night sky points to a universe of finite age.",
-  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_url": "https://science.nasa.gov/solar-system/skywatching/night-sky-network/looking-beyond-the-stars-septembers-night-sky-notes/",
   "source_title": "Olbers' paradox (Britannica)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Hedge: 'hints', 'a clue'. Do not say it proves the Big Bang.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Hedge: 'hints', 'a clue'. Do not say it proves the Big Bang.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The observable phenomenon of a dark sky leads us directly into the debate about the very nature of the Universe... the Universe has a finite age and size.",
+   "qualification": "NASA says finite age and size; 'a beginning' is a plain-word version, hedged by 'hints'. Do not say it proves the Big Bang."
+  }
  },
  {
   "id": "c8",
@@ -103,33 +121,51 @@
   "id": "c20",
   "sentence": "Past a certain distance, starlight is still on its way.",
   "claim": "Light from beyond a certain distance has not had time to reach us because the universe has a finite age.",
-  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_url": "https://science.nasa.gov/solar-system/skywatching/night-sky-network/looking-beyond-the-stars-septembers-night-sky-notes/",
   "source_title": "Olbers' paradox (Britannica)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm. Finite age is the main factor; expansion is minor (hedge).",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm. Finite age is the main factor; expansion is minor (hedge).",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The paradox has since been resolved, now that we understand that the Universe has a finite age and size, with the speed of light having a definite value.",
+   "qualification": "As above."
+  }
  },
  {
   "id": "c21",
   "sentence": "So we can only see so far.",
   "claim": "Light from beyond a certain distance has not had time to reach us because the universe has a finite age.",
-  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_url": "https://science.nasa.gov/solar-system/skywatching/night-sky-network/looking-beyond-the-stars-septembers-night-sky-notes/",
   "source_title": "Olbers' paradox (Britannica)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm. Finite age is the main factor; expansion is minor (hedge).",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm. Finite age is the main factor; expansion is minor (hedge).",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The paradox has since been resolved, now that we understand that the Universe has a finite age and size, with the speed of light having a definite value.",
+   "qualification": "Our plain-word inference from a finite age and a definite speed of light."
+  }
  },
  {
   "id": "c22",
   "sentence": "It's a clue: the universe has not been shining forever.",
   "claim": "The dark night sky points to a universe of finite age.",
-  "source_url": "https://www.britannica.com/science/Olbers-paradox",
+  "source_url": "https://science.nasa.gov/solar-system/skywatching/night-sky-network/looking-beyond-the-stars-septembers-night-sky-notes/",
   "source_title": "Olbers' paradox (Britannica)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Hedge: 'hints', 'a clue'. Do not say it proves the Big Bang.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Hedge: 'hints', 'a clue'. Do not say it proves the Big Bang.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The paradox has since been resolved, now that we understand that the Universe has a finite age and size, with the speed of light having a definite value.",
+   "qualification": "Finite age, in plain words. The page also credits expansion (redshift) for dimming the oldest light; the film keeps it simple."
+  }
  }
 ]
