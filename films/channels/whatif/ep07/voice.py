@@ -48,9 +48,9 @@ LANG = "en-us"
 # Kokoro speed per sentence of each line, chosen from measured durations. The hook's question stays
 # brisk so it is spoken by 2.0 s; its answer slows.
 SPEEDS = {
-    "vo01": [0.84, 0.74],
+    "vo01": [0.84, 0.62],
     "vo02": [0.76, 0.76],
-    "vo03": [0.76],
+    "vo03": [0.76, 0.76, 0.72],
     "vo04": [0.8, 0.76, 0.74],
     "vo05": [0.72, 0.7],
     "vo06": [0.74],

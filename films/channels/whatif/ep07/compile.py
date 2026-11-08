@@ -73,8 +73,8 @@ CAM = {
     "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **k(1.2, 30, 8, 0.40), "ease": "sine"}],      # a slow back-off through "Starting at your own front door"
     "pull": [                                                                    # a constant rate of zoom in log distance
         {"t": t_pull0, **k(1.2, 30, 8, 0.40)},
-        {"t": t_pull0 + (t_pull1 - t_pull0) * 0.45, **k(1.0e3, 3.0e3, 6.5, 0.40), "ease": "linear"},
-        {"t": t_pull0 + (t_pull1 - t_pull0) * 0.75, **k(3.0e6, 2.0e7, 4.5, 0.40), "ease": "linear"},
+        {"t": t_pull0 + (t_pull1 - t_pull0) * 0.45, **k(1.5e2, 3.0e3, 6.5, 0.40), "ease": "linear"},
+        {"t": t_pull0 + (t_pull1 - t_pull0) * 0.75, **k(1.0e6, 2.0e7, 4.5, 0.40), "ease": "linear"},
         {"t": t_pull1, **SPACE, "ease": "inout2"},
     ],
     "space": [{"t": B["change"]["t0"], **SPACE}, {"t": t_home, **{**SPACE, "dist": 2.15e9}, "ease": "sine"}, {"t": t_end, **{**SPACE, "dist": 2.15e9}}],

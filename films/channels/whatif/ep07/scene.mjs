@@ -60,7 +60,9 @@ const rings = new THREE.InstancedMesh(new THREE.RingGeometry(0.86, 1, 48), basic
 rings.frustumCulled = false; rings.renderOrder = 2; rings.userData.noProbe = true;
 scene.add(rings);
 const ringE = mk(new THREE.CircleGeometry(1, 64), CHALK2, 6), ringM = mk(new THREE.CircleGeometry(1, 64), CHALK, 6);   // the Earth and the Moon, outlined
-const mark = mk(new THREE.RingGeometry(0.82, 1, 48), CHALK, 7);                   // the hook's small Moon, "not to scale", on the line above you
+const limbO = mk(new THREE.CircleGeometry(1, 128), CHALK2, 1), limbI = mk(new THREE.CircleGeometry(1, 128), TK.graphite || "#171A1E", 2);   // the Earth's edge in section, a thin chalk arc
+const mark = mk(new THREE.CircleGeometry(1, 48), CHALK, 7);
+const craters = [[-0.32, 0.28, 0.2], [0.30, -0.05, 0.28], [-0.1, -0.42, 0.15]].map(([x, y, r]) => ({ x, y, r, m: mk(new THREE.CircleGeometry(1, 24), CHALK2, 8) }));                   // the hook's small Moon, "not to scale", on the line above you
 
 // ── the camera ──────────────────────────────────────────────────────────────
 const rig = createRig(FILM.cam);
@@ -119,10 +121,10 @@ window.seek = function (t) {
   const px = d * 0.0016;                                                           // a few pixels, at any distance
 
   // the planets: graticule only where it reads; the desk fades as the paper stops being the world
-  earth.set({ opacity: 1, cam: camera.position.toArray(), grid: 1 - seg(Math.log10(d), 3.5, 5.5) });
-  moon.set({ opacity: 1, cam: camera.position.toArray(), grid: 1 });
-  desk.group.visible = d < 600;
-  desk.update({ grid: 1 - seg(Math.log10(d), 1.6, 2.7), pool: [pose.target[0], pose.target[2]], casters: [[0, WD.fig, 0, 0.35]], span: Math.max(800, d * 8) });
+  earth.set({ opacity: 0, cam: camera.position.toArray(), grid: 1 - seg(Math.log10(d), 3.5, 5.5) });
+  moon.set({ opacity: 0, cam: camera.position.toArray(), grid: 1 });
+  desk.group.visible = d < 90;
+  desk.update({ grid: 1 - seg(Math.log10(d), 1.3, 1.9), pool: [pose.target[0], pose.target[2]], casters: [[0, WD.fig, 0, 0.35]], span: Math.max(800, d * 8) });
   you.group.visible = d < 4e3;
 
   // the lanes spread as the walk begins, then rest
@@ -159,13 +161,17 @@ window.seek = function (t) {
   rings.visible = space;
   const pl = seg(Math.log10(d), 5.2, 6.8) * (shot === "end" ? gate : 1);
   ringE.visible = ringM.visible = pl > 0.01; ringE.material.opacity = ringM.material.opacity = 0.9 * pl;
+  const lm = seg(d, 80, 120) * (1 - seg(Math.log10(d), 6.2, 6.6)) * (shot === "end" ? gate : 1);
+  limbO.visible = limbI.visible = lm > 0.01; limbO.material.opacity = 0.9 * lm; limbI.material.opacity = 1;
+  place(limbO, 0, -WD.rE, WD.rE + px * 0.9, WD.rE + px * 0.9); place(limbI, 0, -WD.rE, WD.rE - px * 0.9, WD.rE - px * 0.9);
   const rE = Math.max(WD.rE, px * 2.6), rM = Math.max(WD.rM, px * 2.2);
   place(ringE, 0, -rE, rE, rE); place(ringM, 0, WD.yMoon, rM, rM);
   // the hook's small moon on the line above you: fades once the real one is findable
-  const mk0 = 1 - E.inout2(seg(Math.log10(d), 1.6, 3.0));
+  const mk0 = 1 - E.inout2(seg(Math.log10(d), 1.5, 2.3));
   mark.visible = mk0 > 0.01 && d < 4e3; mark.material.opacity = 0.9 * mk0;
-  place(mark, 0, 14 + d * 0.22, 2.0 + d * 0.015, 2.0 + d * 0.015);
-  mark.scale.set(2.0 + d * 0.015, 2.0 + d * 0.015, 1); mark.position.set(0, 14 + d * 0.22, 0);
+  const mr = 0.26 + Math.max(0, d - 17) * 0.012, my = 3.0 + Math.max(0, d - 17) * 0.2;
+  mark.position.set(0, my, 0); mark.scale.set(mr, mr, 1);
+  for (const c of craters) { c.m.visible = mark.visible; c.m.material.opacity = 0.9 * mk0; c.m.position.set(c.x * mr, my + c.y * mr, 0); c.m.scale.set(c.r * mr, c.r * mr, 1); }
 
   hud.update(t);
   const tail = E.inout2(seg(t, beat("tease").t1 - 0.6, beat("tease").t1));

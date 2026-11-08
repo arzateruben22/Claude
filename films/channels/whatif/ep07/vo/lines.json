@@ -21,7 +21,7 @@
    "phonemes": "hˌaʊ lˈɔŋ tə wˈɔːk tə ðə mˈuːn? stˈɑːɹɾɪŋ æt jʊɹ ˈoʊn fɹˈʌnt dˈɔːɹ.",
    "speeds": [
     0.84,
-    0.74
+    0.62
    ],
    "gaps": [
     0.6
@@ -33,8 +33,8 @@
     ]
    ],
    "file": "01.wav",
-   "dur": 4.081,
-   "sha256": "a441d759839fc4e4990f9aff8135ca79522192e399b9a2f0290be24918e15ee8"
+   "dur": 4.742,
+   "sha256": "1bb461bedf9cb536d580c44a0dc638f94caeb8b7524f4c8e49a5f43cd61ada92"
   },
   {
    "id": "vo02",
@@ -65,19 +65,33 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Walk at an easy pace, the kind you could chat through, and never stop, not even to sleep, and you arrive in about nine years.",
+   "text": "Walk at an easy pace, the kind you could chat through. Never stop, not even to sleep. You would arrive in about nine years.",
    "stars": [
     "years"
    ],
-   "phonemes": "wˈɔːk æɾ ɐn ˈiːzi pˈeɪs, ðə kˈaɪnd juː kʊd tʃˈæt θɹˈuː, ænd nˈɛvɚ stˈɑːp, nˌɑːt ˈiːvən tə slˈiːp, ænd juː ɚɹˈaɪv ɪn ɐbˌaʊt nˈaɪn jˈɪɹz.",
+   "phonemes": "wˈɔːk æɾ ɐn ˈiːzi pˈeɪs, ðə kˈaɪnd juː kʊd tʃˈæt θɹˈuː. nˈɛvɚ stˈɑːp, nˌɑːt ˈiːvən tə slˈiːp. juː wʊd ɚɹˈaɪv ɪn ɐbˌaʊt nˈaɪn jˈɪɹz.",
    "speeds": [
-    0.76
+    0.76,
+    0.76,
+    0.72
    ],
-   "gaps": [],
-   "silences": [],
+   "gaps": [
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     3.3276,
+     3.7076
+    ],
+    [
+     5.8051,
+     6.1851
+    ]
+   ],
    "file": "03.wav",
-   "dur": 9.01,
-   "sha256": "b2bf89a1559b2f36b00df224c1f10c74f619923e2a872ad27a58ba587a5d5487"
+   "dur": 8.495,
+   "sha256": "ab529efe277e30a245d03e4e67b6c1f2fd5aa21f7f57faefe3eecd93bc348d8d"
   },
   {
    "id": "vo04",
@@ -113,12 +127,12 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "A working day of walking, every day, gets you there in about twenty-six years. Stick to the popular daily step goal instead, and it is closer to a hundred and forty.",
+   "text": "A working day of walking gets you there in about twenty-six years. Stick to the popular daily step goal, and it is closer to a hundred and forty.",
    "stars": [
     "years",
     "forty"
    ],
-   "phonemes": "ɐ wˈɜːkɪŋ dˈeɪ ʌv wˈɔːkɪŋ, ˈɛvɹi dˈeɪ, ɡˈɛts juː ðɛɹ ɪn ɐbˌaʊt twˈɛntisˈɪks jˈɪɹz. stˈɪk tə ðə pˈɑːpjʊlɚ dˈeɪli stˈɛp ɡˈoʊl ɪnstˈɛd, ænd ɪɾ ɪz klˈoʊsɚ tʊ ɐ hˈʌndɹɪd ænd fˈɔːɹɾi.",
+   "phonemes": "ɐ wˈɜːkɪŋ dˈeɪ ʌv wˈɔːkɪŋ ɡˈɛts juː ðɛɹ ɪn ɐbˌaʊt twˈɛntisˈɪks jˈɪɹz. stˈɪk tə ðə pˈɑːpjʊlɚ dˈeɪli stˈɛp ɡˈoʊl, ænd ɪɾ ɪz klˈoʊsɚ tʊ ɐ hˈʌndɹɪd ænd fˈɔːɹɾi.",
    "speeds": [
     0.72,
     0.7
@@ -128,13 +142,13 @@
    ],
    "silences": [
     [
-     5.8291,
-     6.2091
+     4.7764,
+     5.1564
     ]
    ],
    "file": "05.wav",
-   "dur": 13.293,
-   "sha256": "0272ed5388a7bc1dd9fd14b3304af7279d19725e8bd1b8e963dce9d536ff0c68"
+   "dur": 11.483,
+   "sha256": "b9a7a336ffc3cc9281d27ffc0cddc810d95630556677b11b226b317afa44a525"
   },
   {
    "id": "vo06",

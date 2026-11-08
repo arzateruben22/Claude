@@ -17,13 +17,13 @@ vo: How long to walk to the *Moon*? Starting at your own front door. {-}
 vo: The Moon sits about thirty Earths away, lined up side by *side*, with nothing but dark between. {c1,c2} That is a very long way for a pair of *shoes*. {-}
 
 ## change {shot: the walker sets off along the line; the years counter runs · events: term.write · energy: 0.65} (17–27 s)
-vo: Walk at an easy pace, the kind you could chat through, and never stop, not even to sleep, and you arrive in about nine *years*. {c3,c4}
+vo: Walk at an easy pace, the kind you could chat through. {c3} Never stop, not even to sleep. {-} You would arrive in about nine *years*. {c4}
 
 ## why {shot: the walker stalls at a bed, a table, a chair, then moves on; the counter slows · badge: ∵ eight hours a day · picture-only 2 s · energy: 0.55} (27–40 s)
 vo: But nobody walks day and night. {-} You sleep, you eat, you stop to tie a shoe. {-} So give yourself a working day of *walking*. {c5}
 
 ## whoa {shot: the walker's line stretches out across the gap; the counter reaches the Moon; the box closes round "≈ 26 yr" · events: answer.box · picture-only 3 s · energy: 0.75} (40–55 s)
-vo: A working day of walking, every day, gets you there in about twenty-six *years*. {c6} Stick to the popular daily step goal instead, and it is closer to a hundred and *forty*. {c7}
+vo: A working day of walking gets you there in about twenty-six *years*. {c6} Stick to the popular daily step goal, and it is closer to a hundred and *forty*. {c7}
 
 ## work {segment: work · show your work: the whole sum on one line, its badges green, the sensitivity rows below · energy: 0.5} (55–61 s)
 vo: Slower adds years, quicker trims a few, but it never gets *close*. {c8}
