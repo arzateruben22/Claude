@@ -1,0 +1,1514 @@
+{
+ "id": "envelope-007",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 73.8,
+ "poster": 43.3,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "front"
+  },
+  {
+   "at": 5.4,
+   "name": "pull"
+  },
+  {
+   "at": 17.4,
+   "name": "space"
+  },
+  {
+   "at": 67.26666666666667,
+   "name": "end"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.4,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 5.4,
+   "t1": 17.4,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 17.4,
+   "t1": 27.0,
+   "line": "vo03",
+   "energy": 0.65
+  },
+  {
+   "id": "why",
+   "t0": 27.0,
+   "t1": 37.8,
+   "line": "vo04",
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 37.8,
+   "t1": 52.8,
+   "line": "vo05",
+   "energy": 0.75
+  },
+  {
+   "id": "work",
+   "t0": 52.8,
+   "t1": 58.8,
+   "line": "vo06",
+   "energy": 0.5
+  },
+  {
+   "id": "takeaway",
+   "t0": 58.8,
+   "t1": 67.2,
+   "line": "vo07",
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 67.2,
+   "t1": 73.8,
+   "line": "vo08",
+   "energy": 0.4
+  }
+ ],
+ "world": {
+  "fig": 1.7,
+  "rE": 6378000.0,
+  "rM": 1737400.0,
+  "yMoon": 378022000.0,
+  "top": 376284600.0,
+  "earthKm": 12756.0,
+  "n": 30
+ },
+ "cam": {
+  "front": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     1.2,
+     0
+    ],
+    "dist": 17,
+    "el": 8,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4
+   },
+   {
+    "t": 5.4,
+    "target": [
+     0,
+     1.2,
+     0
+    ],
+    "dist": 30,
+    "el": 8,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4,
+    "ease": "sine"
+   }
+  ],
+  "pull": [
+   {
+    "t": 5.4,
+    "target": [
+     0,
+     1.2,
+     0
+    ],
+    "dist": 30,
+    "el": 8,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4
+   },
+   {
+    "t": 6.78,
+    "target": [
+     0,
+     150.0,
+     0
+    ],
+    "dist": 3000.0,
+    "el": 6.5,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4,
+    "ease": "linear"
+   },
+   {
+    "t": 7.7,
+    "target": [
+     0,
+     1000000.0,
+     0
+    ],
+    "dist": 20000000.0,
+    "el": 4.5,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4,
+    "ease": "linear"
+   },
+   {
+    "t": 8.466666666666667,
+    "target": [
+     0,
+     110000000.0,
+     0
+    ],
+    "dist": 2200000000.0,
+    "el": 3,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4,
+    "ease": "inout2"
+   }
+  ],
+  "space": [
+   {
+    "t": 17.4,
+    "target": [
+     0,
+     110000000.0,
+     0
+    ],
+    "dist": 2200000000.0,
+    "el": 3,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4
+   },
+   {
+    "t": 58.8,
+    "target": [
+     0,
+     110000000.0,
+     0
+    ],
+    "dist": 2150000000.0,
+    "el": 3,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4,
+    "ease": "sine"
+   },
+   {
+    "t": 67.26666666666667,
+    "target": [
+     0,
+     110000000.0,
+     0
+    ],
+    "dist": 2150000000.0,
+    "el": 3,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4
+   }
+  ],
+  "end": [
+   {
+    "t": 67.26666666666667,
+    "target": [
+     0,
+     110000000.0,
+     0
+    ],
+    "dist": 2150000000.0,
+    "el": 3,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4
+   },
+   {
+    "t": 73.8,
+    "target": [
+     0,
+     1.2,
+     0
+    ],
+    "dist": 17,
+    "el": 8,
+    "az": 0,
+    "fov": 24,
+    "fy": 0.4,
+    "ease": "inout2"
+   }
+  ]
+ },
+ "cue": {
+  "pull": [
+   5.4,
+   8.466666666666667
+  ],
+  "rings": [
+   8.866666666666667,
+   12.2
+  ],
+  "spread": [
+   17.4,
+   18.5
+  ],
+  "clockA": [
+   [
+    17.666666666666668,
+    0.0
+   ],
+   [
+    25.7,
+    8.770248688113165
+   ]
+  ],
+  "clockB": [
+   [
+    33.766666666666666,
+    0.0
+   ],
+   [
+    42.3,
+    26.310746064339494
+   ],
+   [
+    49.13333333333333,
+    140.32397900981064
+   ],
+   [
+    52.8,
+    140.32397900981064
+   ]
+  ],
+  "box": 42.3,
+  "nine": 25.7,
+  "apollo": [
+   59.666666666666664,
+   62.833333333333336
+  ],
+  "home": 58.8
+ },
+ "spine": [
+  {
+   "t": 6.1,
+   "label": "the Moon's mean distance",
+   "terms": [
+    [
+     "in",
+     "384,400 km"
+    ]
+   ]
+  },
+  {
+   "t": 17.666666666666668,
+   "label": "an easy pace, nonstop",
+   "terms": [
+    [
+     "in",
+     "384,400 km"
+    ],
+    [
+     "op",
+     "÷"
+    ],
+    [
+     "in",
+     "5 km/h"
+    ]
+   ]
+  },
+  {
+   "t": 25.4,
+   "label": "nonstop, day and night",
+   "terms": [
+    [
+     "in",
+     "76,880 h"
+    ],
+    [
+     "op",
+     "≈"
+    ],
+    [
+     "ans",
+     "9 years"
+    ]
+   ]
+  },
+  {
+   "t": 33.766666666666666,
+   "label": "walking 8 hours a day",
+   "terms": [
+    [
+     "in",
+     "76,880 h ÷ 8 h"
+    ],
+    [
+     "op",
+     "≈"
+    ],
+    [
+     "ans",
+     "? years"
+    ]
+   ]
+  },
+  {
+   "t": 42.3,
+   "label": "a working day of walking",
+   "terms": [
+    [
+     "op",
+     "≈"
+    ],
+    [
+     "ans",
+     "26 years"
+    ]
+   ],
+   "box": true
+  },
+  {
+   "t": 44.266666666666666,
+   "label": "a working day of walking",
+   "terms": [
+    [
+     "op",
+     "≈"
+    ],
+    [
+     "ans",
+     "26 years"
+    ]
+   ],
+   "box": true,
+   "keep": true
+  },
+  {
+   "t": 58.8,
+   "label": "to the Moon on foot",
+   "terms": [
+    [
+     "op",
+     "≈"
+    ],
+    [
+     "ans",
+     "26 years"
+    ]
+   ],
+   "box": true,
+   "keep": true
+  }
+ ],
+ "spineOut": 67.26666666666667,
+ "work": {
+  "t0": 52.8,
+  "t1": 58.5,
+  "title": "Show your work",
+  "rows": [
+   {
+    "t": 52.949999999999996,
+    "k": "384,400 km ÷ 5 km/h ÷ 8 h ÷ 365",
+    "v": "≈ 26 yr",
+    "lit": false
+   },
+   {
+    "t": 53.06666666666667,
+    "k": "slower: 4 km/h",
+    "v": "≈ 33 yr",
+    "lit": true
+   },
+   {
+    "t": 54.46666666666667,
+    "k": "quicker: 6 km/h",
+    "v": "≈ 22 yr",
+    "lit": true
+   }
+  ],
+  "assume": [
+   "no road",
+   "8 h a day",
+   "0.75 m a step"
+  ]
+ },
+ "labels": [
+  {
+   "id": "l-you",
+   "text": "you",
+   "kind": "anchor",
+   "anchor": "you",
+   "t0": 0.0,
+   "t1": 5.3,
+   "shot": "front",
+   "side": 1
+  },
+  {
+   "id": "l-earth",
+   "text": "Earth",
+   "kind": "part",
+   "anchor": "earth",
+   "t0": 8.866666666666667,
+   "t1": 67.26666666666667,
+   "shot": "space",
+   "side": 1
+  },
+  {
+   "id": "l-moon",
+   "text": "the Moon · 384,400 km",
+   "kind": "part",
+   "anchor": "moon",
+   "t0": 6.2,
+   "t1": 67.26666666666667,
+   "shot": "space",
+   "side": -1
+  },
+  {
+   "id": "l-nonstop",
+   "text": "nonstop: ≈ 9 yr",
+   "kind": "part",
+   "anchor": "laneA",
+   "t0": 25.7,
+   "t1": 27.4,
+   "shot": "space",
+   "side": -1
+  },
+  {
+   "id": "l-steps",
+   "text": "10,000 steps a day: ≈ 140 yr",
+   "kind": "calc",
+   "anchor": "laneS",
+   "t0": 44.266666666666666,
+   "t1": 52.5,
+   "shot": "space",
+   "side": -1
+  },
+  {
+   "id": "l-apollo",
+   "text": "Apollo: about 3 days",
+   "kind": "anchor",
+   "anchor": "capsule",
+   "t0": 59.666666666666664,
+   "t1": 66.96666666666667,
+   "shot": "space",
+   "side": 1
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "thought experiment",
+   "t0": 0.0,
+   "t1": 5.2,
+   "slot": "bl"
+  },
+  {
+   "id": "b-scale",
+   "text": "not to scale until the Moon",
+   "t0": 5.4,
+   "t1": 8.166666666666666,
+   "slot": "tr"
+  },
+  {
+   "id": "b-pace",
+   "text": "∵ an easy pace, 5 km/h",
+   "t0": 17.666666666666668,
+   "t1": 27.2,
+   "slot": "tl"
+  },
+  {
+   "id": "b-road",
+   "text": "∵ no road, no rest",
+   "t0": 26.0,
+   "t1": 27.4,
+   "slot": "tr"
+  },
+  {
+   "id": "b-day",
+   "text": "∵ 8 hours a day",
+   "t0": 33.766666666666666,
+   "t1": 52.5,
+   "slot": "tl"
+  },
+  {
+   "id": "b-stride",
+   "text": "∵ 0.75 m a step",
+   "t0": 44.266666666666666,
+   "t1": 52.5,
+   "slot": "tr"
+  },
+  {
+   "id": "b-rounded",
+   "text": "rounded",
+   "t0": 42.599999999999994,
+   "t1": 52.5,
+   "slot": "bl"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-years",
+   "label": "years of walking",
+   "t0": 17.666666666666668,
+   "t1": 52.5,
+   "at": [
+    0.8,
+    0.33
+   ],
+   "keys": [
+    [
+     17.666666666666668,
+     0.0
+    ],
+    [
+     25.7,
+     8.770248688113165
+    ],
+    [
+     27.4,
+     8.770248688113165
+    ],
+    [
+     28.0,
+     0.0
+    ],
+    [
+     33.766666666666666,
+     0.0
+    ],
+    [
+     42.3,
+     26.310746064339494
+    ],
+    [
+     49.13333333333333,
+     140.32397900981064
+    ]
+   ],
+   "end": 26.310746064339494
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab · No. 007",
+  "title": "Walking to the *Moon*",
+  "t1": 5.2,
+  "sig": 4.9
+ },
+ "endCard": 67.26666666666667,
+ "end": {
+  "title": "Next envelope: *everyone, holding hands*",
+  "follow": "Possibility Lab · No. 007",
+  "next": "NASA Moon fact sheet: mean distance about 384,400 km."
+ },
+ "captions": [
+  {
+   "t0": 0.1,
+   "t1": 2.065,
+   "lines": [
+    [
+     [
+      "How",
+      0.1
+     ],
+     [
+      "long",
+      0.303
+     ],
+     [
+      "to",
+      0.573
+     ],
+     [
+      "walk",
+      0.708
+     ]
+    ],
+    [
+     [
+      "to",
+      0.978
+     ],
+     [
+      "the",
+      1.113
+     ],
+     [
+      "Moon?",
+      1.315
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 2.253,
+   "t1": 5.113,
+   "lines": [
+    [
+     [
+      "Starting",
+      2.253
+     ],
+     [
+      "at",
+      3.02
+     ],
+     [
+      "your",
+      3.212
+     ],
+     [
+      "own",
+      3.595
+     ]
+    ],
+    [
+     [
+      "front",
+      3.883
+     ],
+     [
+      "door.",
+      4.363
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.7,
+   "t1": 8.95,
+   "lines": [
+    [
+     [
+      "The",
+      5.7
+     ],
+     [
+      "Moon",
+      5.995
+     ],
+     [
+      "sits",
+      6.389
+     ]
+    ],
+    [
+     [
+      "about",
+      6.783
+     ],
+     [
+      "30",
+      7.276
+     ],
+     [
+      "Earths",
+      7.867
+     ],
+     [
+      "away,",
+      8.457
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.95,
+   "t1": 10.723,
+   "lines": [
+    [
+     [
+      "lined",
+      8.95
+     ],
+     [
+      "up",
+      9.442
+     ],
+     [
+      "side",
+      9.639
+     ],
+     [
+      "by",
+      10.033
+     ],
+     [
+      "side,",
+      10.23
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.723,
+   "t1": 13.245,
+   "lines": [
+    [
+     [
+      "with",
+      10.723
+     ],
+     [
+      "nothing",
+      11.116
+     ],
+     [
+      "but",
+      11.806
+     ]
+    ],
+    [
+     [
+      "dark",
+      12.101
+     ],
+     [
+      "between.",
+      12.495
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.663,
+   "t1": 16.755,
+   "lines": [
+    [
+     [
+      "That",
+      13.663
+     ],
+     [
+      "is",
+      13.998
+     ],
+     [
+      "a",
+      14.165
+     ],
+     [
+      "very",
+      14.249
+     ],
+     [
+      "long",
+      14.583
+     ],
+     [
+      "way",
+      14.918
+     ]
+    ],
+    [
+     [
+      "for",
+      15.169
+     ],
+     [
+      "a",
+      15.42
+     ],
+     [
+      "pair",
+      15.503
+     ],
+     [
+      "of",
+      15.838
+     ],
+     [
+      "shoes.",
+      16.005
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.7,
+   "t1": 18.986,
+   "lines": [
+    [
+     [
+      "Walk",
+      17.7
+     ],
+     [
+      "at",
+      18.003
+     ],
+     [
+      "an",
+      18.154
+     ],
+     [
+      "easy",
+      18.305
+     ],
+     [
+      "pace,",
+      18.608
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 18.986,
+   "t1": 21.173,
+   "lines": [
+    [
+     [
+      "the",
+      18.986
+     ],
+     [
+      "kind",
+      19.213
+     ],
+     [
+      "you",
+      19.515
+     ]
+    ],
+    [
+     [
+      "could",
+      19.742
+     ],
+     [
+      "chat",
+      20.12
+     ],
+     [
+      "through.",
+      20.423
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 21.408,
+   "t1": 23.752,
+   "lines": [
+    [
+     [
+      "Never",
+      21.408
+     ],
+     [
+      "stop,",
+      21.827
+     ]
+    ],
+    [
+     [
+      "not",
+      22.247
+     ],
+     [
+      "even",
+      22.498
+     ],
+     [
+      "to",
+      22.834
+     ],
+     [
+      "sleep.",
+      23.002
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 23.885,
+   "t1": 26.498,
+   "lines": [
+    [
+     [
+      "You",
+      23.885
+     ],
+     [
+      "would",
+      24.109
+     ],
+     [
+      "arrive",
+      24.481
+     ]
+    ],
+    [
+     [
+      "in",
+      24.928
+     ],
+     [
+      "about",
+      25.077
+     ],
+     [
+      "nine",
+      25.45
+     ],
+     [
+      "years.",
+      25.748
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.3,
+   "t1": 29.467,
+   "lines": [
+    [
+     [
+      "But",
+      27.3
+     ],
+     [
+      "nobody",
+      27.513
+     ],
+     [
+      "walks",
+      27.938
+     ]
+    ],
+    [
+     [
+      "day",
+      28.292
+     ],
+     [
+      "and",
+      28.505
+     ],
+     [
+      "night.",
+      28.717
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.523,
+   "t1": 32.623,
+   "lines": [
+    [
+     [
+      "You",
+      29.523
+     ],
+     [
+      "sleep,",
+      29.766
+     ],
+     [
+      "you",
+      30.252
+     ],
+     [
+      "eat,",
+      30.495
+     ]
+    ],
+    [
+     [
+      "you",
+      30.82
+     ],
+     [
+      "stop",
+      31.063
+     ],
+     [
+      "to",
+      31.387
+     ],
+     [
+      "tie",
+      31.549
+     ],
+     [
+      "a",
+      31.792
+     ],
+     [
+      "shoe.",
+      31.873
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 32.659,
+   "t1": 35.558,
+   "lines": [
+    [
+     [
+      "So",
+      32.659
+     ],
+     [
+      "give",
+      32.818
+     ],
+     [
+      "yourself",
+      33.136
+     ],
+     [
+      "a",
+      33.773
+     ]
+    ],
+    [
+     [
+      "working",
+      33.853
+     ],
+     [
+      "day",
+      34.41
+     ],
+     [
+      "of",
+      34.649
+     ],
+     [
+      "walking.",
+      34.808
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.1,
+   "t1": 40.184,
+   "lines": [
+    [
+     [
+      "A",
+      38.1
+     ],
+     [
+      "working",
+      38.187
+     ],
+     [
+      "day",
+      38.795
+     ]
+    ],
+    [
+     [
+      "of",
+      39.055
+     ],
+     [
+      "walking",
+      39.229
+     ],
+     [
+      "gets",
+      39.837
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 40.184,
+   "t1": 43.105,
+   "lines": [
+    [
+     [
+      "you",
+      40.184
+     ],
+     [
+      "there",
+      40.445
+     ]
+    ],
+    [
+     [
+      "in",
+      40.879
+     ],
+     [
+      "about",
+      41.053
+     ],
+     [
+      "26",
+      41.487
+     ],
+     [
+      "years.",
+      42.355
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.256,
+   "t1": 46.369,
+   "lines": [
+    [
+     [
+      "Stick",
+      43.256
+     ],
+     [
+      "to",
+      43.759
+     ],
+     [
+      "the",
+      43.959
+     ],
+     [
+      "popular",
+      44.261
+     ]
+    ],
+    [
+     [
+      "daily",
+      44.964
+     ],
+     [
+      "step",
+      45.466
+     ],
+     [
+      "goal,",
+      45.867
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.369,
+   "t1": 49.73,
+   "lines": [
+    [
+     [
+      "and",
+      46.369
+     ],
+     [
+      "it",
+      46.671
+     ],
+     [
+      "is",
+      46.872
+     ],
+     [
+      "closer",
+      47.072
+     ],
+     [
+      "to",
+      47.675
+     ],
+     [
+      "140.",
+      47.876
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.1,
+   "t1": 56.043,
+   "lines": [
+    [
+     [
+      "Slower",
+      53.1
+     ],
+     [
+      "adds",
+      53.635
+     ],
+     [
+      "years,",
+      53.992
+     ]
+    ],
+    [
+     [
+      "quicker",
+      54.527
+     ],
+     [
+      "trims",
+      55.151
+     ],
+     [
+      "a",
+      55.597
+     ],
+     [
+      "few,",
+      55.686
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.043,
+   "t1": 58.042,
+   "lines": [
+    [
+     [
+      "but",
+      56.043
+     ],
+     [
+      "it",
+      56.311
+     ],
+     [
+      "never",
+      56.489
+     ],
+     [
+      "gets",
+      56.935
+     ],
+     [
+      "close.",
+      57.292
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.1,
+   "t1": 61.324,
+   "lines": [
+    [
+     [
+      "The",
+      59.1
+     ],
+     [
+      "Apollo",
+      59.367
+     ],
+     [
+      "crews",
+      59.901
+     ]
+    ],
+    [
+     [
+      "made",
+      60.346
+     ],
+     [
+      "the",
+      60.701
+     ],
+     [
+      "same",
+      60.968
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.324,
+   "t1": 63.498,
+   "lines": [
+    [
+     [
+      "trip",
+      61.324
+     ]
+    ],
+    [
+     [
+      "in",
+      61.68
+     ],
+     [
+      "about",
+      61.858
+     ],
+     [
+      "three",
+      62.303
+     ],
+     [
+      "days.",
+      62.748
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.573,
+   "t1": 66.971,
+   "lines": [
+    [
+     [
+      "The",
+      63.573
+     ],
+     [
+      "distance",
+      63.829
+     ],
+     [
+      "never",
+      64.512
+     ]
+    ],
+    [
+     [
+      "changed,",
+      64.94
+     ],
+     [
+      "only",
+      65.623
+     ],
+     [
+      "the",
+      65.965
+     ],
+     [
+      "speed.",
+      66.221
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 67.5,
+   "t1": 68.613,
+   "lines": [
+    [
+     [
+      "Next",
+      67.5
+     ],
+     [
+      "envelope:",
+      67.863
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 68.679,
+   "t1": 71.698,
+   "lines": [
+    [
+     [
+      "what",
+      68.679
+     ],
+     [
+      "if",
+      69.042
+     ],
+     [
+      "everyone",
+      69.224
+     ]
+    ],
+    [
+     [
+      "on",
+      69.95
+     ],
+     [
+      "Earth",
+      70.131
+     ],
+     [
+      "held",
+      70.585
+     ],
+     [
+      "hands?",
+      70.948
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "dur": 4.742,
+   "file": "vo/01.wav",
+   "text": "How long to walk to the Moon? Starting at your own front door."
+  },
+  {
+   "id": "vo02",
+   "t": 5.7,
+   "dur": 10.807,
+   "file": "vo/02.wav",
+   "text": "The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between. That is a very long way for a pair of shoes."
+  },
+  {
+   "id": "vo03",
+   "t": 17.7,
+   "dur": 8.495,
+   "file": "vo/03.wav",
+   "text": "Walk at an easy pace, the kind you could chat through. Never stop, not even to sleep. You would arrive in about nine years."
+  },
+  {
+   "id": "vo04",
+   "t": 27.3,
+   "dur": 8.145,
+   "file": "vo/04.wav",
+   "text": "But nobody walks day and night. You sleep, you eat, you stop to tie a shoe. So give yourself a working day of walking."
+  },
+  {
+   "id": "vo05",
+   "t": 38.1,
+   "dur": 11.483,
+   "file": "vo/05.wav",
+   "text": "A working day of walking gets you there in about twenty-six years. Stick to the popular daily step goal, and it is closer to a hundred and forty."
+  },
+  {
+   "id": "vo06",
+   "t": 53.1,
+   "dur": 4.727,
+   "file": "vo/06.wav",
+   "text": "Slower adds years, quicker trims a few, but it never gets close."
+  },
+  {
+   "id": "vo07",
+   "t": 59.1,
+   "dur": 7.634,
+   "file": "vo/07.wav",
+   "text": "The Apollo crews made the same trip in about three days. The distance never changed, only the speed."
+  },
+  {
+   "id": "vo08",
+   "t": 67.5,
+   "dur": 3.992,
+   "file": "vo/08.wav",
+   "text": "Next envelope: what if everyone on Earth held hands?"
+  }
+ ]
+}

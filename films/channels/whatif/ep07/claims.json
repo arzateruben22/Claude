@@ -3,37 +3,40 @@
   "id": "c1",
   "sentence": "The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between.",
   "claim": "The Moon's mean distance from Earth is about 384,400 km (shown on screen as '384,400 km'; the Moon's orbit is elliptical, 356,400-406,700 km).",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
-  "source_title": "NASA Space Science Data Coordinated Archive: Moon Fact Sheet",
+  "source_url": "https://science.nasa.gov/moon/facts/",
+  "source_title": "NASA Science, Moon Facts",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Candidate source, not opened by a person. Mean distance is the 'perigee/apogee' average; the film says 'about'."
+  "note": "OPEN until a person opens the page (builder read it, quote in builder_read). Average distance, centre to centre; walking surface to surface is about 2% shorter. The film says \"about\" and shows 384,400 km.",
+  "builder_read": "\"The Moon is an average of 238,855 miles (384,400 kilometers) away.\""
  },
  {
   "id": "c2",
   "sentence": "The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between.",
   "claim": "384,400 km / 12,756 km (Earth's equatorial diameter) = 30.1: 'about thirty Earths'.",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
-  "source_title": "NASA Space Science Data Coordinated Archive: Earth Fact Sheet",
+  "source_url": "https://science.nasa.gov/moon/facts/",
+  "source_title": "NASA Science, Moon Facts (and Earth Facts: equatorial diameter 12,756 km)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Candidate source, not opened. Division is in calc.py (earths = 30). Mean diameter 12,742 km gives 30.2: same answer."
+  "note": "OPEN until a person opens the page (builder read it, quote in builder_read). NASA states the 30-Earths comparison itself (the Earth Facts page gives the 12,756 km equatorial diameter). 384,400 / 12,756 = 30.1.",
+  "builder_read": "\"That means 30 Earth-sized planets could fit in between Earth and the Moon.\""
  },
  {
   "id": "c3",
   "sentence": "Walk at an easy pace, the kind you could chat through.",
   "claim": "An easy walking pace is about 5 km/h (about 1.4 m/s); comfortable gait speed in healthy adults is roughly 1.3-1.4 m/s.",
-  "source_url": "https://doi.org/10.1093/ageing/26.1.15",
-  "source_title": "Bohannon, 'Comfortable and maximum walking speed of adults aged 20-79 years', Age and Ageing 26, 15-19 (1997)",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/9143432/",
+  "source_title": "Bohannon, Comfortable and maximum walking speed of adults aged 20-79 years, Age and Ageing 26 (1997) (abstract via PubMed E-utilities)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Candidate source, not opened. Paper's means are about 1.3-1.4 m/s (4.7-5.0 km/h); the film says 'easy pace' and shows 5 km/h as an input, with 4 and 6 as the sensitivity."
+  "note": "OPEN until a person opens the page (builder read it, quote in builder_read). 1.27-1.46 m/s is 4.6-5.3 km/h, so \"an easy pace, about 5 km/h\" is supported as a comfortable speed. It was measured over a short walkway, not a day-long hike: the film says \"easy pace\" and shows 4 and 6 km/h as sensitivity.",
+  "builder_read": "\"mean comfortable gait speed ranged from 127.2 cm/s for women in their seventies to 146.2 cm/s for men in their forties\" (230 healthy volunteers, timed over 7.62 m)."
  },
  {
   "id": "c4",
@@ -75,13 +78,14 @@
   "id": "c7",
   "sentence": "Stick to the popular daily step goal, and it is closer to a hundred and forty.",
   "claim": "10,000 steps a day is the popular goal; at an assumed 0.75 m a step that is 7.5 km a day, so 384,400 / 7.5 = 51,253 days = 140 years: 'closer to a hundred and forty'.",
-  "source_url": "https://doi.org/10.2165/00007256-200434010-00001",
-  "source_title": "Tudor-Locke & Bassett, 'How many steps/day are enough?', Sports Medicine 34, 1-8 (2004)",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/14715035/",
+  "source_title": "Tudor-Locke & Bassett, How many steps/day are enough? Sports Medicine 34 (2004) (abstract via PubMed E-utilities)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Candidate source, not opened, for the 10,000-step goal only. The 0.75 m stride is an ASSUMPTION (about 0.4 x height); say 'about' and badge it. A person should open the paper for the goal's origin before posting."
+  "note": "OPEN until a person opens the page (builder read it, quote in builder_read). Supports \"popular daily step goal\" only; it is not a health rule. The 0.75 m stride is the film's ASSUMPTION (about 7.5 km a day), badged on screen.",
+  "builder_read": "\"A value of 10000 steps/day is gaining popularity with the media and in practice and can be traced to Japanese walking clubs and a business slogan 30+ years ago.\""
  },
  {
   "id": "c8",
@@ -99,12 +103,13 @@
   "id": "c9",
   "sentence": "The Apollo crews made the same trip in about three days.",
   "claim": "Apollo 11 left Earth on 16 July 1969 and entered lunar orbit on 19 July: about three days.",
-  "source_url": "https://www.nasa.gov/mission/apollo-11/",
-  "source_title": "NASA, Apollo 11 mission page (and the Apollo 11 Flight Journal timeline)",
+  "source_url": "https://www.nasa.gov/history/apollo-11-mission-overview/",
+  "source_title": "NASA, Apollo 11 Mission Overview",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Candidate source, not opened. Launch 13:32 UTC 16 July; lunar orbit insertion about 17:22 UTC 19 July (about 76 h). 'About three days' is the claim."
+  "note": "OPEN until a person opens the page (builder read it, quote in builder_read). 75 h 50 min is about 3.2 days to lunar orbit: \"about three days\" is a fair rounding. Landing was a day later.",
+  "builder_read": "\"Apollo 11 launched from Cape Kennedy on July 16, 1969 ... On July 19 ... came the first lunar orbit insertion maneuver. At about 75 hours, 50 minutes into the flight ...\""
  }
 ]
