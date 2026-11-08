@@ -6,7 +6,7 @@
  "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
  "kokoro_onnx": "0.6.1",
  "onnxruntime": "1.31.0",
- "python": "3.13.17",
+ "python": "3.13.18",
  "made_by": "films/channels/body/ep06/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
  "gap": 0.3,
  "gap_question": 0.45,
@@ -40,12 +40,12 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "It's a neutrophil, your most common white cell, a bit wider than a red one. Under a sore fingertip, they pile up outside the wall.",
+   "text": "It's a neutrophil, the most common white cell in adults, about as wide as a red one. Under a sore fingertip, they pile up outside the wall.",
    "stars": [
     "neutrophil",
     "outside"
    ],
-   "phonemes": "ɪts ɐ njˈuːtɹəfˌɪl, jɔː mˈəʊst kˈɒmən wˈaɪt sˈɛl, ɐ bˈɪt wˈaɪdə ðˌanə ɹˈɛd wˌɒn. ˌʌndəɹ ɐ sˈɔː fˈɪŋɡətˌɪp, ðeɪ pˈaɪl ˌʌp aʊtsˈaɪd ðə wˈɔːl.",
+   "phonemes": "ɪts ɐ njˈuːtɹəfˌɪl, ðə mˈəʊst kˈɒmən wˈaɪt sˈɛl ɪn ˈadʌlts, ɐbˌaʊt az wˈaɪd az ɐ ɹˈɛd wˌɒn. ˌʌndəɹ ɐ sˈɔː fˈɪŋɡətˌɪp, ðeɪ pˈaɪl ˌʌp aʊtsˈaɪd ðə wˈɔːl.",
    "speeds": [
     0.81,
     0.79
@@ -55,13 +55,13 @@
    ],
    "silences": [
     [
-     4.6612,
-     4.9612
+     5.4092,
+     5.7092
     ]
    ],
    "file": "02.wav",
-   "dur": 8.538,
-   "sha256": "71d93d1b067eeefee153056f2ccfeb330192b82478aafdef23c8aacedd496181"
+   "dur": 9.286,
+   "sha256": "f9e573614962361bcc702bbce2927165ba6a9b0f65db6eff6cb1acf0aded682e"
   },
   {
    "id": "vo03",
@@ -73,9 +73,9 @@
    ],
    "phonemes": "ɹˈuːdɒlf fˈɪəkəʊ tˈɔːt ðat pˈʌs ɡɹˈuː fɹʌmðɪ ɪnflˈeɪmd tˈɪʃuː. ɪn ˈeɪtiːn sˈɪkstisˈɛvən, hɪz ɐsˈɪstənt dʒˈuːlɪəs kˈəʊnhaɪm wˈɒtʃt ɐ lˈɪvɪŋ fɹˈɒɡz vˈɛsəlz. wˈaɪt sˈɛlz klˈaɪmd ˈaʊt.",
    "speeds": [
-    0.95,
-    0.92,
-    0.92
+    1.05,
+    1.03,
+    1.03
    ],
    "gaps": [
     0.3,
@@ -83,35 +83,35 @@
    ],
    "silences": [
     [
-     3.2902,
-     3.5902
+     3.0879,
+     3.3879
     ],
     [
-     8.9319,
-     9.2319
+     8.2674,
+     8.5674
     ]
    ],
    "file": "03.wav",
-   "dur": 10.833,
-   "sha256": "e71f6fb21e6bf3fea278930efd93f6bed2dd47b20b7af337486adf35da3e2f5e"
+   "dur": 10.057,
+   "sha256": "f3a6d10fe04a302117a089d32bd6a934446846e31b96cfdc5151bee9b906c746"
   },
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Where you're hurt or infected, the wall turns sticky, and the cell rolls. Then its grips switch on, and it stops. It crawls to a seam between two wall cells. In a rare inherited condition, those grips are faulty. Cells roll on past.",
+   "text": "Where you're hurt or infected, the wall turns sticky, and the cell rolls. Then its grips switch on, and it stops. In mice, it crawls to a seam in the wall. In a rare inherited condition, those grips are faulty. Cells roll on past.",
    "stars": [
     "rolls",
     "stops",
     "seam",
     "past"
    ],
-   "phonemes": "wˌeə jɔː hˈɜːt ɔːɹ ɪnfˈɛktɪd, ðə wˈɔːl tˈɜːnz stˈɪki, and ðə sˈɛl ɹˈəʊlz. ðˈɛn ɪts ɡɹˈɪps swˈɪtʃ ˈɒn, and ɪt stˈɒps. ɪt kɹˈɔːlz tʊ ɐ sˈiːm bɪtwˌiːn tˈuː wˈɔːl sˈɛlz. ɪn ɐ ɹˈeəɹ ɪnhˈɛɹɪtɪd kəndˈɪʃən, ðəʊz ɡɹˈɪps ɑː fˈɒlti. sˈɛlz ɹˈəʊl ˈɒn pˈɑːst .",
+   "phonemes": "wˌeə jɔː hˈɜːt ɔːɹ ɪnfˈɛktɪd, ðə wˈɔːl tˈɜːnz stˈɪki, and ðə sˈɛl ɹˈəʊlz. ðˈɛn ɪts ɡɹˈɪps swˈɪtʃ ˈɒn, and ɪt stˈɒps. ɪn mˈaɪs, ɪt kɹˈɔːlz tʊ ɐ sˈiːm ɪnðə wˈɔːl. ɪn ɐ ɹˈeəɹ ɪnhˈɛɹɪtɪd kəndˈɪʃən, ðəʊz ɡɹˈɪps ɑː fˈɒlti. sˈɛlz ɹˈəʊl ˈɒn pˈɑːst .",
    "speeds": [
-    0.92,
-    0.92,
-    0.92,
     0.9,
-    0.86
+    0.9,
+    0.9,
+    0.88,
+    0.84
    ],
    "gaps": [
     0.3,
@@ -121,36 +121,36 @@
    ],
    "silences": [
     [
-     3.9486,
-     4.2486
+     3.998,
+     4.298
     ],
     [
-     6.3242,
-     6.6242
+     6.4371,
+     6.7371
     ],
     [
-     9.0705,
-     9.3705
+     9.144,
+     9.444
     ],
     [
-     12.6342,
-     12.9342
+     12.7447,
+     13.0447
     ]
    ],
    "file": "04.wav",
-   "dur": 14.643,
-   "sha256": "6825c821ddf3ba6e624e5992eafb1bb4a7efb04eca20f689736f1d8509746d5f"
+   "dur": 14.805,
+   "sha256": "2a04eb1e7983a16758482cf8b6001e332b61f989fd2268b879ae524117771484"
   },
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "This one wedges its nucleus into the seam, making its own door. It pours through a gap narrower than itself. Behind it, the seam seals shut.",
+   "text": "This one wedges its nucleus into the seam, making its own door. It pours through a gap narrower than itself. In lab studies, the seam seals shut behind it.",
    "stars": [
     "own",
     "pours",
     "shut"
    ],
-   "phonemes": "ðˈɪswˌɒn wˈɛdʒɪz ɪts njˈuːklɪəs ˌɪntʊ ðə sˈiːm, mˌeɪkɪŋ ɪts ˈəʊn dˈɔː. ɪt pˈɔːz θɹuː ɐ ɡˈap nˈaɹəʊə ðɐn ɪtsˈɛlf. bɪhˈaɪnd ɪt, ðə sˈiːm sˈiːlz ʃˈʌt.",
+   "phonemes": "ðˈɪswˌɒn wˈɛdʒɪz ɪts njˈuːklɪəs ˌɪntʊ ðə sˈiːm, mˌeɪkɪŋ ɪts ˈəʊn dˈɔː. ɪt pˈɔːz θɹuː ɐ ɡˈap nˈaɹəʊə ðɐn ɪtsˈɛlf. ɪn lˈab stˈʌdiz, ðə sˈiːm sˈiːlz ʃˈʌt bɪhˈaɪnd ɪt.",
    "speeds": [
     0.9,
     0.88,
@@ -171,17 +171,18 @@
     ]
    ],
    "file": "05.wav",
-   "dur": 8.947,
-   "sha256": "8d484d2363c0d364419d146b4acb1c9111a166cf7095395e56aa0dc8e47e844b"
+   "dur": 9.852,
+   "sha256": "0e2cc48ba6173b0bc09ac8282a6d584a1459a3908fd31403017da232f1478040"
   },
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So pus is mostly white cells from your blood. Each one let itself out.",
+   "text": "So pus is mostly white cells from your blood. In mice, white cells open their own way out.",
    "stars": [
-    "blood"
+    "blood",
+    "out"
    ],
-   "phonemes": "sˌəʊ pˈʌs ɪz mˈəʊstli wˈaɪt sˈɛlz fɹɒm jɔː blˈʌd. ˈiːtʃ wˈɒn lˈɛt ɪtsˈɛlf ˈaʊt.",
+   "phonemes": "sˌəʊ pˈʌs ɪz mˈəʊstli wˈaɪt sˈɛlz fɹɒm jɔː blˈʌd. ɪn mˈaɪs, wˈaɪt sˈɛlz ˈəʊpən ðeəɹ ˈəʊn wˈeɪ ˈaʊt.",
    "speeds": [
     0.86,
     0.84
@@ -196,8 +197,8 @@
     ]
    ],
    "file": "06.wav",
-   "dur": 4.96,
-   "sha256": "a84dd8e6215425dd2b080a7f3e97bca8be865235e74bf1e9f4758376707ef4fc"
+   "dur": 6.009,
+   "sha256": "a408bd06885d6b67a34559c6b4c4149e20f5e06f610fe80addae01be384bbe22"
   },
   {
    "id": "vo07",
@@ -220,27 +221,28 @@
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: the spark. What sets off nearly every heartbeat you have?",
+   "text": "Next: season two. What sets off nearly every heartbeat?",
    "stars": [
+    "two",
     "heartbeat"
    ],
-   "phonemes": "nˈɛkst: ðə spˈɑːk. wˌɒt sˈɛts ˈɒf nˌiəli ˈɛvɹɪ hˈɑːtbiːt juː hˈav?",
+   "phonemes": "nˈɛkst: sˈiːzən tˈuː. wˌɒt sˈɛts ˈɒf nˌiəli ˈɛvɹɪ hˈɑːtbiːt?",
    "speeds": [
-    1.0,
-    0.86
+    1.1,
+    0.95
    ],
    "gaps": [
     0.4
    ],
    "silences": [
     [
-     1.2113,
-     1.6113
+     1.2161,
+     1.6161
     ]
    ],
    "file": "08.wav",
-   "dur": 4.212,
-   "sha256": "8bf7aa8978f6a52364762cde27d473e7617fd558fd7582be6e6d13c3221119a2"
+   "dur": 3.779,
+   "sha256": "c1ee1027be7322393ba94efeb11b566bcb70b3c22e32a3c9c40a7f14f69e1a80"
   }
  ]
 }

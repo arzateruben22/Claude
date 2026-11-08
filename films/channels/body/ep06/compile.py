@@ -71,7 +71,7 @@ WHOA = {
     "free": [A("vo05:shut", 0.4), B["whoa"]["t1"]],                  # picture only: free in the tissue
 }
 FINGER = {"pull": [CUT["finger"], A("vo06:blood", 0.4)]}             # the pull-out: from the sore spot to the fingertip
-TEASE = {"t0": CUT["tease"], "zoom": [CUT["tease"], A("vo08:spark", 0.3)]}   # up the arm to the heart
+TEASE = {"t0": CUT["tease"], "zoom": [CUT["tease"], A("vo08:two", 0.3)]}   # up the arm to the heart
 
 # ── camera keys per shot (each place's own frame) ──────────────────────────────────────────────────
 CAM = {
@@ -82,7 +82,7 @@ CAM = {
     "normal": [
         # "rel": offsets from the riding cell (the camera travels with it)
         {"t": CUT["normal"], "pos": [14.0, 14.0, 56.0], "look": [2.0, -2.0, 0.0], "fov": 34, "rel": True},     # alongside the cell in the stream
-        {"t": A("vo02:wider", -0.2), "pos": [8.0, 10.0, 40.0], "look": [1.0, -1.0, 0.0], "fov": 34, "ease": "sine", "rel": True},
+        {"t": A("vo02:wide", -0.2), "pos": [8.0, 10.0, 40.0], "look": [1.0, -1.0, 0.0], "fov": 34, "ease": "sine", "rel": True},
         {"t": A("vo02:Under", 0.0), "pos": [10.0, 12.0, 50.0], "look": [2.0, -2.0, 0.0], "fov": 34, "ease": "sine", "rel": True},
         # "outside": down through the lining into the tissue, where white cells have piled up
         {"t": A("vo02:outside", 0.4), "pos": [12.0, -10.0, 54.0], "look": [14.0, -14.0, 0.0], "fov": 34, "ease": "p2"},
@@ -127,21 +127,21 @@ FOC = {
 
 # ── the overlay ──────────────────────────────────────────────────────────────────────────────────
 LABELS = [
-    {"id": "neut", "text": "white blood cell", "color": "immune", "mark": "dot", "at": "hero", "t0": A("vo02:neutrophil", 0.0), "t1": A("vo02:bit", -0.2), "shot": "normal", "side": 1},
+    {"id": "neut", "text": "white blood cell", "color": "immune", "mark": "dot", "at": "hero", "t0": A("vo02:neutrophil", 0.0), "t1": A("vo02:about", -0.2), "shot": "normal", "side": 1},
     {"id": "piled", "text": "white cells, outside the wall", "color": "immune", "mark": "dot", "at": "piled", "t0": A("vo02:outside", 0.3), "t1": B["normal"]["t1"] - 0.3, "shot": "normal", "side": -1},
     {"id": "grips", "text": "grips", "color": "signal", "mark": "dot", "at": "grips", "t0": A("vo04:grips"), "t1": A("vo04:It#2", -0.2), "shot": "why", "side": 1},
     {"id": "seam", "text": "a seam between two wall cells", "color": "lining", "mark": "dot", "at": "seam", "t0": A("vo04:seam"), "t1": A("vo04:In", -0.2), "shot": "why", "side": -1},
 ]
-SCALE = {"t0": A("vo02:wider", -0.1), "t1": A("vo02:Under", -0.2), "text": "about 8 μm · round, in blood"}   # c3
+SCALE = {"t0": A("vo02:wide", -0.1), "t1": A("vo02:Under", -0.2), "text": "about 8 μm · round, in blood"}   # c3
 TALLY = {"t0": round(A("vo01:This", 0.3) + 0.45, 4),   # after the title has gone (the poster is the cell alone)
           "t1": B["tease"]["t0"] - 0.2, "lit": [B["meanwhile"]["t0"], B["tease"]["t0"] - 0.2], "rate": 1.5e10 / 86400.0,
          "label": "while you watched: new neutrophils"}   # c23: 1.5 × 10¹⁰ a day ÷ 86,400 s (computed), a low estimate
 BADGES = [
-    {"id": "slow0", "text": "slowed", "slot": "tr", "t0": 0.0, "t1": B["change"]["t0"] - 0.3},
-    {"id": "ill-plate", "text": "illustrated", "t0": B["change"]["t0"] + 0.2, "t1": CUT["why"] - 0.3},
-    {"id": "slow1", "text": "slowed", "slot": "tr", "t0": CUT["why"], "t1": CUT["whoa"] - 0.3},
-    {"id": "lad", "text": "illustration: rare inherited condition", "t0": WHY["faulty"][0] - 0.2, "t1": WHY["faulty"][1] + 0.3},
-    {"id": "fast", "text": "sped up", "slot": "tr", "t0": CUT["whoa"], "t1": CUT["finger"] - 0.3},
+    {"id": "slow0", "text": "slowed · not to scale", "slot": "tr", "t0": 0.0, "t1": B["change"]["t0"] - 0.3},
+    {"id": "ill-plate", "text": "illustration", "t0": B["change"]["t0"] + 0.2, "t1": CUT["why"] - 0.3},
+    {"id": "slow1", "text": "slowed · not to scale", "slot": "tr", "t0": CUT["why"], "t1": CUT["whoa"] - 0.3},
+    {"id": "lad", "text": "illustration", "slot": "tr", "t0": WHY["faulty"][0] - 0.2, "t1": WHY["faulty"][1] + 0.3},
+    {"id": "fast", "text": "sped up · not to scale", "slot": "tr", "t0": CUT["whoa"], "t1": CUT["finger"] - 0.3},
     {"id": "ill-finger", "text": "illustration", "t0": CUT["finger"], "t1": DUR},
     {"id": "low", "text": "low estimate", "slot": "tr", "t0": B["meanwhile"]["t0"], "t1": B["tease"]["t0"] - 0.3},
 ]
@@ -149,7 +149,7 @@ PANEL = {"t0": B["change"]["t0"] + 0.1, "t1": CUT["why"] - 0.1, "tissue": A("vo0
 FIG = {"t0": CUT["tease"], "t1": DUR}
 SCAN = {"up": [CUT["why"] + 0.8, CUT["why"] + 2.3], "park": 0.52, "off": CUT["whoa"], "tag": "▼ scan view"}   # live scan: the line rises from the bottom and parks; below it, scan view
 TITLE = {"series": "Body Backstage · No. 06", "title": "The *exit*", "t1": round(A("vo01:This", 0.3), 4), "sig": 0.0, "y": 0.17}
-END = {"t0": EC, "y": 0.258, "title": "Next, inside: *the spark*", "next": "Body Backstage · No. 07", "follow": "Follow Body Backstage",
+END = {"t0": EC, "y": 0.258, "title": "Next: *season two*", "next": "Body Backstage", "follow": "Follow Body Backstage",
        "fact": "Augustus Waller saw blood cells cross capillary walls in 1846, 21 years before Cohnheim."}
 LOC = {"t0": B["meanwhile"]["t0"] + 0.4, "t1": B["tease"]["t0"] - 0.3, "region": [0.42, 0.52]}   # the bone marrow (the pelvis and thigh bones)
 SEG_BEATS = [round(k * BEAT, 4) for k in range(round(B["meanwhile"]["t0"] / BEAT), int(DUR / BEAT) + 1)]

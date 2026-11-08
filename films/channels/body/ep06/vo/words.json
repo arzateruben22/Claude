@@ -90,8 +90,8 @@
   },
   {
    "id": "vo02",
-   "text": "It's a neutrophil, your most common white cell, a bit wider than a red one. Under a sore fingertip, they pile up outside the wall.",
-   "heard": "It's a neutrophil your most common white cell, a bit wider than a red one. Under a sore fingertip, they pile up outside the wall.",
+   "text": "It's a neutrophil, the most common white cell in adults, about as wide as a red one. Under a sore fingertip, they pile up outside the wall.",
+   "heard": "It's a neutrophil, the most common white cell in adults, about as wide as a red one. Under a sore fingertip, they pile up outside the wall.",
    "words": [
     {
      "w": "It's",
@@ -101,147 +101,159 @@
     },
     {
      "w": "a",
-     "start": 0.16,
-     "end": 0.32,
+     "start": 0.19,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "neutrophil,",
-     "start": 0.23,
-     "end": 1.04,
+     "start": 0.28,
+     "end": 1.2,
      "heard": true
     },
     {
-     "w": "your",
-     "start": 1.025,
-     "end": 1.28,
+     "w": "the",
+     "start": 1.14,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "most",
-     "start": 1.335,
+     "start": 1.44,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "common",
-     "start": 1.5,
-     "end": 1.84,
+     "start": 1.525,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "white",
-     "start": 1.87,
+     "start": 1.94,
      "end": 2.24,
      "heard": true
     },
     {
-     "w": "cell,",
-     "start": 2.125,
-     "end": 2.96,
+     "w": "cell",
+     "start": 2.2,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.73,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "adults,",
+     "start": 2.77,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.86,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 4.11,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "wide",
+     "start": 4.27,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 4.625,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 3.015,
-     "end": 3.12,
-     "heard": true
-    },
-    {
-     "w": "bit",
-     "start": 3.135,
-     "end": 3.36,
-     "heard": true
-    },
-    {
-     "w": "wider",
-     "start": 3.265,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "than",
-     "start": 3.755,
-     "end": 3.92,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 3.99,
-     "end": 4.04,
+     "start": 4.655,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "red",
-     "start": 4.02,
-     "end": 4.4,
+     "start": 4.86,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "one.",
-     "start": 4.48,
-     "end": 4.661,
+     "start": 5.035,
+     "end": 5.409,
      "heard": true,
-     "end_asr": 4.96
+     "end_asr": 5.68
     },
     {
      "w": "Under",
-     "start": 4.98,
-     "end": 5.2,
+     "start": 5.725,
+     "end": 6.0,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.19,
-     "end": 5.36,
+     "start": 6.09,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "sore",
-     "start": 5.34,
-     "end": 5.76,
-     "heard": true
-    },
-    {
-     "w": "fingertip,",
-     "start": 5.78,
+     "start": 6.225,
      "end": 6.56,
      "heard": true
     },
     {
+     "w": "fingertip,",
+     "start": 6.53,
+     "end": 7.28,
+     "heard": true
+    },
+    {
      "w": "they",
-     "start": 6.55,
-     "end": 6.72,
+     "start": 7.3,
+     "end": 7.52,
      "heard": true
     },
     {
      "w": "pile",
-     "start": 6.745,
-     "end": 7.2,
+     "start": 7.495,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "up",
-     "start": 7.315,
-     "end": 7.365,
+     "start": 8.065,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "outside",
-     "start": 7.36,
-     "end": 7.84,
+     "start": 8.11,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.94,
-     "end": 8.0,
+     "start": 8.69,
+     "end": 8.8,
      "heard": true
     },
     {
      "w": "wall.",
-     "start": 7.97,
-     "end": 8.48,
+     "start": 8.72,
+     "end": 9.28,
      "heard": true
     }
    ],
@@ -250,7 +262,7 @@
   {
    "id": "vo03",
    "text": "Rudolf Virchow taught that pus grew from the inflamed tissue. In eighteen sixty-seven, his assistant Julius Cohnheim watched a living frog's vessels. White cells climbed out.",
-   "heard": "Rudolf Firko taught that pus grew from the inflamed tissue. In 1867, his assistant Julius Kohnheim watched a living frog's vessels. White cells climbed out.",
+   "heard": "Rudolf Firko taught that pus grew from the inflamed tissue. In 1867, his assistant Julius Koenheim watched a living frog's vessels. White cells climbed out.",
    "words": [
     {
      "w": "Rudolf",
@@ -260,154 +272,154 @@
     },
     {
      "w": "Virchow",
-     "start": 0.49,
+     "start": 0.465,
      "end": 1.04,
      "heard": false
     },
     {
      "w": "taught",
-     "start": 0.97,
+     "start": 1.135,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "that",
-     "start": 1.27,
-     "end": 1.36,
+     "start": 1.21,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "pus",
-     "start": 1.375,
-     "end": 1.68,
+     "start": 1.35,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "grew",
-     "start": 1.75,
-     "end": 2.0,
+     "start": 1.68,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "from",
-     "start": 2.0,
-     "end": 2.16,
+     "start": 1.93,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "the",
-     "start": 2.04,
-     "end": 2.24,
+     "start": 1.97,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "inflamed",
-     "start": 2.24,
-     "end": 2.88,
+     "start": 2.16,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "tissue.",
-     "start": 2.82,
-     "end": 3.29,
+     "start": 2.67,
+     "end": 3.088,
      "heard": true,
-     "end_asr": 3.52
+     "end_asr": 3.36
     },
     {
      "w": "In",
-     "start": 3.61,
-     "end": 3.76,
+     "start": 3.405,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "eighteen",
-     "start": 3.76,
-     "end": 5.36,
+     "start": 3.695,
+     "end": 4.96,
      "heard": false
     },
     {
      "w": "sixty-seven,",
-     "start": 3.79,
-     "end": 5.36,
+     "start": 3.725,
+     "end": 4.96,
      "heard": false
     },
     {
      "w": "his",
-     "start": 5.465,
-     "end": 5.6,
+     "start": 5.085,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "assistant",
-     "start": 5.495,
-     "end": 6.08,
+     "start": 5.115,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "Julius",
-     "start": 6.175,
-     "end": 6.64,
+     "start": 5.73,
+     "end": 6.08,
      "heard": true
     },
     {
      "w": "Cohnheim",
-     "start": 6.69,
-     "end": 7.36,
+     "start": 6.18,
+     "end": 6.8,
      "heard": false
     },
     {
      "w": "watched",
-     "start": 7.46,
-     "end": 7.6,
+     "start": 6.895,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.565,
-     "end": 7.68,
+     "start": 7.03,
+     "end": 7.12,
      "heard": true
     },
     {
      "w": "living",
-     "start": 7.595,
-     "end": 7.92,
+     "start": 7.06,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "frog's",
-     "start": 7.96,
-     "end": 8.4,
+     "start": 7.415,
+     "end": 7.84,
      "heard": true
     },
     {
      "w": "vessels.",
-     "start": 8.36,
-     "end": 8.932,
+     "start": 7.755,
+     "end": 8.267,
      "heard": true,
-     "end_asr": 9.2
+     "end_asr": 8.56
     },
     {
      "w": "White",
-     "start": 9.255,
-     "end": 9.6,
+     "start": 8.585,
+     "end": 8.88,
      "heard": true
     },
     {
      "w": "cells",
-     "start": 9.53,
-     "end": 10.0,
+     "start": 8.84,
+     "end": 9.28,
      "heard": true
     },
     {
      "w": "climbed",
-     "start": 10.005,
-     "end": 10.4,
+     "start": 9.295,
+     "end": 9.68,
      "heard": true
     },
     {
      "w": "out.",
-     "start": 10.31,
-     "end": 10.8,
+     "start": 9.575,
+     "end": 10.0,
      "heard": true
     }
    ],
@@ -415,8 +427,8 @@
   },
   {
    "id": "vo04",
-   "text": "Where you're hurt or infected, the wall turns sticky, and the cell rolls. Then its grips switch on, and it stops. It crawls to a seam between two wall cells. In a rare inherited condition, those grips are faulty. Cells roll on past.",
-   "heard": "Where you're hurt or infected, the wall turns sticky and the cell rolls. Then its grips switch on and it stops. It crawls to a seam between two wall cells. In a rare inherited condition, those grips are faulty. Cells roll on past.",
+   "text": "Where you're hurt or infected, the wall turns sticky, and the cell rolls. Then its grips switch on, and it stops. In mice, it crawls to a seam in the wall. In a rare inherited condition, those grips are faulty. Cells roll on past.",
+   "heard": "Where you're hurt or infected, the wall turns sticky and the cell rolls. Then its grips switch on and it stops. In mice it crawls to a seam in the wall. In a rare inherited condition, those grips are faulty. Cells roll on past.",
    "words": [
     {
      "w": "Where",
@@ -438,246 +450,252 @@
     },
     {
      "w": "or",
-     "start": 0.755,
+     "start": 0.81,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "infected,",
      "start": 1.055,
-     "end": 1.76,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.87,
-     "end": 1.92,
+     "start": 1.89,
+     "end": 1.94,
      "heard": true
     },
     {
      "w": "wall",
-     "start": 1.9,
+     "start": 1.92,
      "end": 2.24,
      "heard": true
     },
     {
      "w": "turns",
-     "start": 2.185,
-     "end": 2.48,
+     "start": 2.21,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "sticky,",
-     "start": 2.595,
+     "start": 2.615,
      "end": 2.96,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.99,
+     "start": 3.01,
      "end": 3.12,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.02,
+     "start": 3.04,
      "end": 3.2,
      "heard": true
     },
     {
      "w": "cell",
-     "start": 3.255,
+     "start": 3.28,
      "end": 3.52,
      "heard": true
     },
     {
      "w": "rolls.",
-     "start": 3.425,
-     "end": 3.949,
+     "start": 3.47,
+     "end": 3.998,
      "heard": true,
      "end_asr": 4.24
     },
     {
      "w": "Then",
-     "start": 4.27,
-     "end": 4.4,
+     "start": 4.32,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "its",
-     "start": 4.315,
+     "start": 4.37,
      "end": 4.64,
      "heard": true
     },
     {
      "w": "grips",
-     "start": 4.7,
-     "end": 4.96,
+     "start": 4.75,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "switch",
-     "start": 4.9,
-     "end": 5.36,
+     "start": 4.95,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "on,",
-     "start": 5.265,
-     "end": 5.52,
+     "start": 5.32,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "and",
-     "start": 5.56,
-     "end": 5.68,
+     "start": 5.625,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "it",
-     "start": 5.705,
-     "end": 5.84,
+     "start": 5.78,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "stops.",
-     "start": 5.835,
-     "end": 6.324,
+     "start": 5.91,
+     "end": 6.437,
      "heard": true,
-     "end_asr": 6.56
+     "end_asr": 6.72
     },
     {
-     "w": "It",
-     "start": 6.645,
-     "end": 6.72,
+     "w": "In",
+     "start": 6.78,
+     "end": 6.88,
      "heard": true
     },
     {
-     "w": "crawls",
-     "start": 6.795,
-     "end": 7.12,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 7.14,
+     "w": "mice,",
+     "start": 6.81,
      "end": 7.28,
      "heard": true
     },
     {
+     "w": "it",
+     "start": 7.425,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "crawls",
+     "start": 7.575,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.92,
+     "end": 8.08,
+     "heard": true
+    },
+    {
      "w": "a",
-     "start": 7.185,
-     "end": 7.36,
+     "start": 7.965,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "seam",
-     "start": 7.44,
-     "end": 7.76,
+     "start": 8.25,
+     "end": 8.48,
      "heard": true
     },
     {
-     "w": "between",
-     "start": 7.78,
-     "end": 8.0,
-     "heard": true
-    },
-    {
-     "w": "two",
-     "start": 8.02,
-     "end": 8.24,
-     "heard": true
-    },
-    {
-     "w": "wall",
-     "start": 8.285,
+     "w": "in",
+     "start": 8.48,
      "end": 8.64,
      "heard": true
     },
     {
-     "w": "cells.",
-     "start": 8.595,
-     "end": 9.07,
-     "heard": true,
-     "end_asr": 9.36
-    },
-    {
-     "w": "In",
-     "start": 9.4,
-     "end": 9.52,
+     "w": "the",
+     "start": 8.69,
+     "end": 8.8,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 9.43,
+     "w": "wall.",
+     "start": 8.72,
+     "end": 9.144,
+     "heard": true,
+     "end_asr": 9.44
+    },
+    {
+     "w": "In",
+     "start": 9.475,
      "end": 9.6,
      "heard": true
     },
     {
+     "w": "a",
+     "start": 9.505,
+     "end": 9.68,
+     "heard": true
+    },
+    {
      "w": "rare",
-     "start": 9.675,
-     "end": 10.0,
+     "start": 9.73,
+     "end": 10.08,
      "heard": true
     },
     {
      "w": "inherited",
-     "start": 10.005,
+     "start": 10.075,
      "end": 10.72,
      "heard": true
     },
     {
      "w": "condition,",
-     "start": 10.635,
-     "end": 11.36,
+     "start": 10.71,
+     "end": 11.44,
      "heard": true
     },
     {
      "w": "those",
-     "start": 11.42,
-     "end": 11.6,
+     "start": 11.495,
+     "end": 11.68,
      "heard": true
     },
     {
      "w": "grips",
-     "start": 11.7,
-     "end": 12.0,
-     "heard": true
-    },
-    {
-     "w": "are",
-     "start": 11.895,
+     "start": 11.8,
      "end": 12.08,
      "heard": true
     },
     {
+     "w": "are",
+     "start": 11.995,
+     "end": 12.16,
+     "heard": true
+    },
+    {
      "w": "faulty.",
-     "start": 12.13,
-     "end": 12.634,
+     "start": 12.23,
+     "end": 12.745,
      "heard": true,
-     "end_asr": 12.96
+     "end_asr": 13.04
     },
     {
      "w": "Cells",
-     "start": 12.955,
-     "end": 13.44,
+     "start": 13.08,
+     "end": 13.6,
      "heard": true
     },
     {
      "w": "roll",
-     "start": 13.38,
-     "end": 13.76,
+     "start": 13.525,
+     "end": 13.92,
      "heard": true
     },
     {
      "w": "on",
-     "start": 13.715,
-     "end": 14.0,
+     "start": 13.875,
+     "end": 14.16,
      "heard": true
     },
     {
      "w": "past.",
-     "start": 13.915,
-     "end": 14.56,
+     "start": 14.08,
+     "end": 14.72,
      "heard": true
     }
    ],
@@ -685,8 +703,8 @@
   },
   {
    "id": "vo05",
-   "text": "This one wedges its nucleus into the seam, making its own door. It pours through a gap narrower than itself. Behind it, the seam seals shut.",
-   "heard": "This one wedges its nucleus into the seam, making its own door. It pours through a gap narrower than itself. Behind it, the seam seals shut.",
+   "text": "This one wedges its nucleus into the seam, making its own door. It pours through a gap narrower than itself. In lab studies, the seam seals shut behind it.",
+   "heard": "This one wedges its nucleus into the seam, making its own door. It pours through a gap narrower than itself. In lab studies the seam seals shut behind it.",
    "words": [
     {
      "w": "This",
@@ -799,7 +817,7 @@
     },
     {
      "w": "than",
-     "start": 5.715,
+     "start": 5.71,
      "end": 6.0,
      "heard": true
     },
@@ -808,42 +826,60 @@
      "start": 5.945,
      "end": 6.506,
      "heard": true,
-     "end_asr": 6.8
+     "end_asr": 6.72
     },
     {
-     "w": "Behind",
-     "start": 6.83,
-     "end": 7.2,
+     "w": "In",
+     "start": 6.825,
+     "end": 6.96,
      "heard": true
     },
     {
-     "w": "it,",
-     "start": 7.285,
-     "end": 7.44,
+     "w": "lab",
+     "start": 6.855,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "studies,",
+     "start": 7.39,
+     "end": 7.68,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.455,
-     "end": 7.6,
+     "start": 7.875,
+     "end": 7.925,
      "heard": true
     },
     {
      "w": "seam",
-     "start": 7.53,
-     "end": 8.0,
+     "start": 7.905,
+     "end": 8.32,
      "heard": true
     },
     {
      "w": "seals",
-     "start": 8.05,
-     "end": 8.4,
+     "start": 8.395,
+     "end": 8.8,
      "heard": true
     },
     {
-     "w": "shut.",
-     "start": 8.455,
-     "end": 8.88,
+     "w": "shut",
+     "start": 8.88,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "behind",
+     "start": 9.115,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 9.52,
+     "end": 9.84,
      "heard": true
     }
    ],
@@ -851,8 +887,8 @@
   },
   {
    "id": "vo06",
-   "text": "So pus is mostly white cells from your blood. Each one let itself out.",
-   "heard": "So pus is mostly white cells from your blood. Each one let itself out.",
+   "text": "So pus is mostly white cells from your blood. In mice, white cells open their own way out.",
+   "heard": "So pus is mostly white cells from your blood. In mice, white cells open their own way out.",
    "words": [
     {
      "w": "So",
@@ -899,7 +935,7 @@
     {
      "w": "your",
      "start": 2.335,
-     "end": 2.4,
+     "end": 2.48,
      "heard": true
     },
     {
@@ -907,36 +943,60 @@
      "start": 2.39,
      "end": 2.821,
      "heard": true,
-     "end_asr": 3.04
+     "end_asr": 3.12
     },
     {
-     "w": "Each",
-     "start": 3.21,
-     "end": 3.52,
+     "w": "In",
+     "start": 3.14,
+     "end": 3.28,
      "heard": true
     },
     {
-     "w": "one",
-     "start": 3.41,
-     "end": 3.76,
+     "w": "mice,",
+     "start": 3.17,
+     "end": 3.84,
      "heard": true
     },
     {
-     "w": "let",
-     "start": 3.855,
-     "end": 4.0,
+     "w": "white",
+     "start": 3.885,
+     "end": 4.16,
      "heard": true
     },
     {
-     "w": "itself",
-     "start": 4.04,
-     "end": 4.4,
+     "w": "cells",
+     "start": 4.12,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "open",
+     "start": 4.585,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "their",
+     "start": 4.945,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 5.11,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 5.38,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "out.",
-     "start": 4.335,
-     "end": 4.88,
+     "start": 5.585,
+     "end": 6.0,
      "heard": true
     }
    ],
@@ -1029,8 +1089,8 @@
   },
   {
    "id": "vo08",
-   "text": "Next: the spark. What sets off nearly every heartbeat you have?",
-   "heard": "Next the spark. What sets off nearly every heartbeat you have.",
+   "text": "Next: season two. What sets off nearly every heartbeat?",
+   "heard": "Next Season 2. What sets off nearly every heartbeat.",
    "words": [
     {
      "w": "Next:",
@@ -1039,64 +1099,52 @@
      "heard": true
     },
     {
-     "w": "the",
-     "start": 0.42,
-     "end": 0.56,
+     "w": "season",
+     "start": 0.36,
+     "end": 0.88,
      "heard": true
     },
     {
-     "w": "spark.",
-     "start": 0.66,
-     "end": 1.211,
+     "w": "two.",
+     "start": 0.795,
+     "end": 1.216,
      "heard": true,
-     "end_asr": 1.6
+     "end_asr": 1.52
     },
     {
      "w": "What",
-     "start": 1.63,
-     "end": 1.84,
+     "start": 1.635,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "sets",
-     "start": 1.82,
+     "start": 1.78,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "off",
-     "start": 2.07,
-     "end": 2.4,
+     "start": 2.04,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "nearly",
-     "start": 2.425,
-     "end": 2.8,
+     "start": 2.34,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "every",
-     "start": 2.825,
-     "end": 3.04,
+     "start": 2.74,
+     "end": 2.88,
      "heard": true
     },
     {
-     "w": "heartbeat",
-     "start": 2.95,
-     "end": 3.68,
-     "heard": true
-    },
-    {
-     "w": "you",
-     "start": 3.58,
-     "end": 3.84,
-     "heard": true
-    },
-    {
-     "w": "have?",
-     "start": 3.735,
-     "end": 4.16,
+     "w": "heartbeat?",
+     "start": 3.04,
+     "end": 3.76,
      "heard": true
     }
    ],

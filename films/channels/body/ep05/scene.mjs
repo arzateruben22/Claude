@@ -138,7 +138,7 @@ BAG.position.copy(FLESHM.group.position); G.lung.add(BAG);
 const writeLung = (t) => {
   const F = FILM.flesh, o = Math.min(seg(t, F[0], F[0] + 0.6), 1 - seg(t, F[1], F[2]));
   fleshMat.opacity = o; FLESHM.group.visible = o > 0.003;
-  { const bo = 0.5 * (1 - seg(t, FILM.bag[0] + 0.05, FILM.bag[1] - 0.05)); BAGM.opacity = bo; BAG.visible = bo > 0.01; }
+  { const bo = 0.28 * (1 - seg(t, FILM.bag[0] + 0.05, FILM.bag[1] - 0.05)); BAGM.opacity = bo; BAG.visible = bo > 0.01; }
   const br = 1 + 0.035 * Math.sin(t * 1.4);                    // the cluster breathes gently
   HERO.forEach((C, k) => C.group.scale.setScalar(k ? br : 1));
   // the route lights generation by generation as the forks are counted, then settles
@@ -199,12 +199,12 @@ const ground = new THREE.Mesh(new THREE.CircleGeometry(400, 128), mat("#0F302A",
 const lineMat = mat("#EFF6F2", "lines", { fres: 0, ei: 0.5, emi: "#EFF6F2" });
 const COURT = new THREE.Group(); G.room.add(COURT);
 // round 2 (review r1, h): a real court surface under the lines (acrylic hard court: blue run-off, green playing area) and a net
-const floorTex = (() => { const c = document.createElement("canvas"); c.width = 512; c.height = 256; const x = c.getContext("2d"), r = rng(77);
+const courtTex = (() => { const c = document.createElement("canvas"); c.width = 512; c.height = 256; const x = c.getContext("2d"), r = rng(77);
   x.fillStyle = "#2B5C85"; x.fillRect(0, 0, 512, 256); x.fillStyle = "#3C7D5F"; x.fillRect(64, 36, 384, 184);
   for (let i = 0; i < 5000; i++) { x.fillStyle = `rgba(${r() < 0.5 ? "255,255,255" : "0,0,0"},${0.02 + 0.05 * r()})`; x.fillRect(r() * 512, r() * 256, 1 + 2 * r(), 1 + 2 * r()); }
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; })();
-const floorMat = L.patch(new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: floorTex, roughness: 0.55, clearcoat: 0.35, clearcoatRoughness: 0.4, transparent: true, opacity: 0 }), { fresnel: 0.1, key: "courtfloor" });
-const courtFloor = new THREE.Mesh(new THREE.PlaneGeometry(18.3, 36.6), floorMat); courtFloor.rotation.x = -Math.PI / 2; courtFloor.position.set(0, 0.02, 0); COURT.add(courtFloor);
+const courtMat = L.patch(new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: courtTex, emissive: 0xffffff, emissiveMap: courtTex, emissiveIntensity: 0.45, roughness: 0.55, clearcoat: 0.35, clearcoatRoughness: 0.4, transparent: true, opacity: 0 }), { fresnel: 0.1, key: "courtfloor" });
+const courtFloor = new THREE.Mesh(new THREE.PlaneGeometry(18.3, 36.6), courtMat); courtFloor.rotation.x = -Math.PI / 2; courtFloor.position.set(0, 0.02, 0); COURT.add(courtFloor);
 const netMat = new THREE.MeshBasicMaterial({ color: lin("#E8EEF0"), transparent: true, opacity: 0.0, fog: true });
 const netTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 64; const x = c.getContext("2d"); x.strokeStyle = "rgba(255,255,255,0.9)"; x.lineWidth = 3; x.strokeRect(0, 0, 64, 64); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(48, 5); return t; })();
 const netMesh = new THREE.Mesh(new THREE.PlaneGeometry(12.8, 0.914), new THREE.MeshBasicMaterial({ map: netTex, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })); netMesh.position.set(0, 0.46, 0); COURT.add(netMesh);
@@ -256,7 +256,7 @@ const writeRoom = (t) => {
   }
   tiles.instanceMatrix.needsUpdate = true;
   // gone 0.45 s into the fold: the camera dives to the person and the doubles court's near corner leaves the frame ~0.75 s in
-  const co = seg(t, R.court - 0.1, R.court + 0.6) * (1 - seg(t, R.fold[0], R.fold[0] + 0.45)); COURT.visible = co > 0.01; lineMat.emissiveIntensity = 0.5 * co; floorMat.opacity = 0.93 * co; netMesh.material.opacity = 0.55 * co; COURT.scale.setScalar(1);
+  const co = seg(t, R.court - 0.1, R.court + 0.6) * (1 - seg(t, R.fold[0], R.fold[0] + 0.45)); COURT.visible = co > 0.01; lineMat.emissiveIntensity = 0.5 * co; courtMat.opacity = 0.93 * co; netMesh.material.opacity = 0.55 * co; COURT.scale.setScalar(1);
   COURT.children.forEach((m) => { m.scale.y = 1; m.visible = co > 0.01; });
   const br = FILM.breaths.reduce((a, b) => Math.max(a, t >= b && t < b + 4 ? Math.sin(Math.PI * Math.min(1, (t - b) / 2.4)) : 0), 0);
   torso.scale.set(1 + 0.08 * br, 1, 0.62 * (1 + 0.08 * br));

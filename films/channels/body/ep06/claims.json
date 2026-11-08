@@ -12,7 +12,7 @@
  },
  {
   "id": "c2",
-  "sentence": "It's a neutrophil, your most common white cell, a bit wider than a red one.",
+  "sentence": "It's a neutrophil, the most common white cell in adults, about as wide as a red one.",
   "claim": "In adults, neutrophils are the most numerous circulating white blood cell: about 60-70% of a normal white count of about 4,000-11,000 cells per microlitre.",
   "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK570571/",
   "source_title": "Neutrophilia - StatPearls - NCBI Bookshelf (NBK570571)",
@@ -23,8 +23,8 @@
  },
  {
   "id": "c3",
-  "sentence": "It's a neutrophil, your most common white cell, a bit wider than a red one.",
-  "claim": "A neutrophil suspended in fluid (round, roughly as in blood) measures about 8.3-8.4 µm across (range about 7.3-9.7 µm), the largest leukocyte type in that study.",
+  "sentence": "It's a neutrophil, the most common white cell in adults, about as wide as a red one.",
+  "claim": "A neutrophil suspended in fluid (round, roughly as in blood) measures about 8.3-8.4 µm across (range about 7.3-9.7 µm), the largest leukocyte type in that study. Hedge (006 r1 review): 'about as wide as a red one', since the neutrophil-red cell gap (about 8 vs about 7.5 µm) is within scatter; 'a bit wider' was dropped.",
   "source_url": "https://bionumbers.hms.harvard.edu/bionumber.aspx?id=100510",
   "source_title": "BioNumbers (Harvard Medical School) ID 100510: neutrophil diameter (Downey et al. 1990)",
   "accessed": "2026-10-26",
@@ -73,8 +73,8 @@
   "source_title": "Julius Cohnheim (Encyclopaedia Britannica, print view)",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "Excerpts (relayed): 'At the Pathological Institute, Berlin (1865-68), Cohnheim was an outstanding pupil of Rudolf Virchow'; while assisting him, Cohnheim also researched the causes of inflammation. Wikipedia: 'Cohnheim became an assistant at Berlin University's pathological institute under Virchow in the fall of 1864, and stayed until 1868.' The start year differs by one between sources; he was in post in 1867 under both, so 'his assistant' holds. No start year is voiced. Review fix: 'his assistant', not 'his own assistant' ('own' is kept once, for the whoa's door)."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, 006 r1 review): a person must open the source and confirm before this is marked ok. Excerpts (relayed): 'At the Pathological Institute, Berlin (1865-68), Cohnheim was an outstanding pupil of Rudolf Virchow'; while assisting him, Cohnheim also researched the causes of inflammation. Wikipedia: 'Cohnheim became an assistant at Berlin University's pathological institute under Virchow in the fall of 1864, and stayed until 1868.' The start year differs by one between sources; he was in post in 1867 under both, so 'his assistant' holds. No start year is voiced. Review fix: 'his assistant', not 'his own assistant' ('own' is kept once, for the whoa's door)."
  },
  {
   "id": "c8",
@@ -128,8 +128,8 @@
   "source_title": "PMC review on selectin and integrin signalling in leukocyte recruitment (PMC4592324)",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "Excerpt: 'Endothelial selectins initiate tethering and rolling of leukocytes.' 'The wall turns sticky' is the endothelial selectins (c27 for why they appear where tissue is inflamed). This step needs no CD18, so in LAD-I (c15, c25) the cells still roll. The search result did not show the article's title, so the source title is descriptive. The rolling-speed note (a mouse figure) is cut from the picture (review fix)."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, 006 r1 review): a person must open the source and confirm before this is marked ok. Excerpt: 'Endothelial selectins initiate tethering and rolling of leukocytes.' 'The wall turns sticky' is the endothelial selectins (c27 for why they appear where tissue is inflamed). This step needs no CD18, so in LAD-I (c15, c25) the cells still roll. The search result did not show the article's title, so the source title is descriptive. The rolling-speed note (a mouse figure) is cut from the picture (review fix)."
  },
  {
   "id": "c12",
@@ -144,25 +144,25 @@
  },
  {
   "id": "c13",
-  "sentence": "It crawls to a seam between two wall cells.",
+  "sentence": "In mice, it crawls to a seam in the wall.",
   "claim": "After arrest, neutrophils crawl along the inside of the vessel to distant emigration sites, using the integrin Mac-1 gripping ICAM-1; cells that cannot crawl start to transmigrate close to where they stopped and are slower to get out.",
   "source_url": "https://rupress.org/jem/article/203/12/2569/46312/Intraluminal-crawling-of-neutrophils-to-emigration",
   "source_title": "Phillipson M et al. Intraluminal crawling of neutrophils to emigration sites: a molecularly distinct process from adhesion in the recruitment cascade. J Exp Med 2006;203(12):2569",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "Mouse intravital work. Only the title is verbatim; the rest summarises the abstract. A follow-up Vav1 study says crawling often heads toward a junction between wall cells, and a review (PMC2882030) says Mac-1 crawling moves the cell toward preferred junctions. 'Seam' means an endothelial junction. Mac-1 is itself a β2 integrin, so 'those grips' (c15) covers the crawl too."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, 006 r1 review): a person must open the source and confirm before this is marked ok. Mouse data (006 r1 review): voiced 'in mice', not as the viewer's body. Mouse intravital work. Only the title is verbatim; the rest summarises the abstract. A follow-up Vav1 study says crawling often heads toward a junction between wall cells, and a review (PMC2882030) says Mac-1 crawling moves the cell toward preferred junctions. 'Seam' means an endothelial junction. Mac-1 is itself a β2 integrin, so 'those grips' (c15) covers the crawl too."
  },
  {
   "id": "c14",
-  "sentence": "It crawls to a seam between two wall cells.",
+  "sentence": "In mice, it crawls to a seam in the wall.",
   "claim": "Most neutrophils leave between two endothelial cells (paracellular); in mouse venules 60-85 µm wide, fewer than 15% went through a single wall cell (transcellular).",
   "source_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11196655/",
   "source_title": "Xia et al. Conditions that promote transcellular neutrophil migration in vivo. Scientific Reports 2024 (PMC11196655)",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'less than 15% of neutrophils extravasated transcellularly in WT mice'. A relayed excerpt on the same study gives about 90% paracellular in the mouse cremaster. Mouse data. The line follows this one cell on the usual route and does not say 'all'; a minority go straight through one wall cell (Ley 2007 lists both routes)."
+  "note": "Mouse data (006 r1 review): voiced 'in mice', not as the viewer's body. Excerpt: 'less than 15% of neutrophils extravasated transcellularly in WT mice'. A relayed excerpt on the same study gives about 90% paracellular in the mouse cremaster. Mouse data. The line follows this one cell on the usual route and does not say 'all'; a minority go straight through one wall cell (Ley 2007 lists both routes)."
  },
  {
   "id": "c15",
@@ -172,8 +172,8 @@
   "source_title": "Leukocyte Adhesion Deficiency - StatPearls (point-of-care 24214)",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "Relayed excerpts (the full text is behind registration): 'Leukocytes cannot migrate to infection sites to kill invading microorganisms due to mutations in the CD18 glycoprotein'; counts are typically elevated; 'no pus'. Search summaries of LAD-I reports (e.g. 'Novel ITGB2 Mutation Is Responsible for a Severe Form of Leucocyte Adhesion Deficiency Type 1', PMC8913115) relate severity to the degree of CD18 deficiency. Review fix: 'faulty', not 'fail' or 'fail to switch on': the grips are absent, too few or defective. 'Those grips' are the β2 integrins of c12-c13. Placed after the crawl so roll, stop, crawl run unbroken; what the faulty cells do is c25. Not named on air; no talk of infection, treatment or immunity (bible §9, Ep 6)."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, 006 r1 review): a person must open the source and confirm before this is marked ok. Relayed excerpts (the full text is behind registration): 'Leukocytes cannot migrate to infection sites to kill invading microorganisms due to mutations in the CD18 glycoprotein'; counts are typically elevated; 'no pus'. Search summaries of LAD-I reports (e.g. 'Novel ITGB2 Mutation Is Responsible for a Severe Form of Leucocyte Adhesion Deficiency Type 1', PMC8913115) relate severity to the degree of CD18 deficiency. Review fix: 'faulty', not 'fail' or 'fail to switch on': the grips are absent, too few or defective. 'Those grips' are the β2 integrins of c12-c13. Placed after the crawl so roll, stop, crawl run unbroken; what the faulty cells do is c25. Not named on air; no talk of infection, treatment or immunity (bible §9, Ep 6)."
  },
  {
   "id": "c25",
@@ -210,14 +210,14 @@
  },
  {
   "id": "c26",
-  "sentence": "Behind it, the seam seals shut.",
+  "sentence": "In lab studies, the seam seals shut behind it.",
   "claim": "When a neutrophil crosses between two wall cells, a gap opens in the VE-cadherin junction as it passes and closes again once it is through: in time-lapse imaging of cultured human vessel-lining cells under flow, the gap was closed after full transmigration (by about 265 s in one example), and in another study the crossing took under 5 minutes, with the gap resealing shortly after.",
   "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2726622",
   "source_title": "Alcaide P, Auerbach S, Luscinskas FW. Neutrophil recruitment under shear flow: it's all about endothelial cell rings and gaps. Microcirculation 2009;16(1):43-57 (PMC2726622)",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Figure 2 legend (excerpt): 'After full transmigration, the VE-Cadherin gap is closed, and ICAM-1 is again uniformly distributed on the apical surface of the endothelial cell' (TNF-α-activated HUVECs, 1 dyne/cm², frames at t = 65, 100 and 265 s). Cross-checks: Gonzalez, Cyrus & Muller, Am J Pathol 2016 (https://pmc.ncbi.nlm.nih.gov/articles/PMC4861767), figure 8 legend: 'A VE-cadherin gap forms just as the PMN cell is in the act of transmigrating, and TEM occurs within 5 minutes, with the gap resealing shortly after.' Kipcke et al., Front Immunol 2025 (https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2025.1665264/full): each gap is paired with junction-associated intermittent lamellipodia (JAIL) that locally restore VE-cadherin adhesion. All three are cultured cells, and no in vivo time course turned up in research, so the line states the seal, not its timing, and the 'sped up' badge carries no minutes. Review fix: replaces 'Around it, the wall pulls tight' (Heemskerk 2016's contractile pore, mostly cultured cells), which sat badly with Barzilai's 'no contractility needed' (c1, c16). It claims the seal behind this one cell, not that an inflamed vessel never leaks (c5): in mice, leak and exit run on different VE-cadherin switches (Wessel 2014, c21)."
+  "note": "Hedge (006 r1 review): the reseal is from cultured-cell work; voiced as 'in lab studies' and badged illustration; do not draw it in a living vessel unhedged. Figure 2 legend (excerpt): 'After full transmigration, the VE-Cadherin gap is closed, and ICAM-1 is again uniformly distributed on the apical surface of the endothelial cell' (TNF-α-activated HUVECs, 1 dyne/cm², frames at t = 65, 100 and 265 s). Cross-checks: Gonzalez, Cyrus & Muller, Am J Pathol 2016 (https://pmc.ncbi.nlm.nih.gov/articles/PMC4861767), figure 8 legend: 'A VE-cadherin gap forms just as the PMN cell is in the act of transmigrating, and TEM occurs within 5 minutes, with the gap resealing shortly after.' Kipcke et al., Front Immunol 2025 (https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2025.1665264/full): each gap is paired with junction-associated intermittent lamellipodia (JAIL) that locally restore VE-cadherin adhesion. All three are cultured cells, and no in vivo time course turned up in research, so the line states the seal, not its timing, and the 'sped up' badge carries no minutes. Review fix: replaces 'Around it, the wall pulls tight' (Heemskerk 2016's contractile pore, mostly cultured cells), which sat badly with Barzilai's 'no contractility needed' (c1, c16). It claims the seal behind this one cell, not that an inflamed vessel never leaks (c5): in mice, leak and exit run on different VE-cadherin switches (Wessel 2014, c21)."
  },
  {
   "id": "c19",
@@ -227,8 +227,8 @@
   "source_title": "Abscess and phlegmon (Atlas of Head and Neck Pathology, The Ohio State University College of Medicine)",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
-  "status": "ok",
-  "note": "Excerpts: an abscess is 'a localized collection of pus' with 'severe inflammation with masses of neutrophils, living and dead, necrotic tissue debris'; 'leukocytes produce proteases that degrade dead tissue and convert it into pus. This process is termed liquefactive necrosis.' Cross-checks: Britannica's suppuration entry (https://www.britannica.com/science/suppuration) describes pus as mostly dead and dying neutrophils with bacteria, cell debris and fluid leaked from the vessels (the search tool's summary, not a verbatim quote); PathologyOutlines (skin abscess) describes a dense infiltrate with many neutrophils and necrotic debris. 'Mostly' covers the debris, microbes and fluid. Review fix: a pathology source replaces Merriam-Webster, and the line now says what pus is before it says where it comes from (c20). Pus is spoken, never shown; nothing is advised."
+  "status": "TODO open link",
+  "note": "OPEN (4 Nov 2026, 006 r1 review): a person must open the source and confirm before this is marked ok. Excerpts: an abscess is 'a localized collection of pus' with 'severe inflammation with masses of neutrophils, living and dead, necrotic tissue debris'; 'leukocytes produce proteases that degrade dead tissue and convert it into pus. This process is termed liquefactive necrosis.' Cross-checks: Britannica's suppuration entry (https://www.britannica.com/science/suppuration) describes pus as mostly dead and dying neutrophils with bacteria, cell debris and fluid leaked from the vessels (the search tool's summary, not a verbatim quote); PathologyOutlines (skin abscess) describes a dense infiltrate with many neutrophils and necrotic debris. 'Mostly' covers the debris, microbes and fluid. Review fix: a pathology source replaces Merriam-Webster, and the line now says what pus is before it says where it comes from (c20). Pus is spoken, never shown; nothing is advised."
  },
  {
   "id": "c20",
@@ -243,14 +243,14 @@
  },
  {
   "id": "c21",
-  "sentence": "Each one let itself out.",
+  "sentence": "In mice, white cells open their own way out.",
   "claim": "A white cell triggers its own way out: in mice, leukocytes set off the dephosphorylation of VE-cadherin Tyr731 through the phosphatase SHP-2, which lets AP-2 bind and starts VE-cadherin's endocytosis, opening the junction; and leukocytes generate the gaps themselves, without needing the wall cells to contract.",
   "source_url": "https://www.nature.com/articles/ni.2824",
   "source_title": "Wessel F et al. Leukocyte extravasation and vascular permeability are each controlled in vivo by different tyrosine residues of VE-cadherin. Nat Immunol 2014;15:223-230",
   "accessed": "2026-10-26",
   "verified_via": "search excerpt",
   "status": "ok",
-  "note": "Excerpt: 'Leukocytes triggered dephosphorylation of Tyr731 via the tyrosine phosphatase SHP-2, which allowed the adaptin AP-2 to bind and initiate endocytosis of VE-cadherin.' Knock-in mice: the Y731F mutant reduced neutrophil extravasation in the cremaster, while Y685F blocked the rise in permeability instead. With Barzilai 2017 (c1, c16: leukocytes generate the gaps; no endothelial contractility needed). 'Let itself out' is the cell's agency: it gives the signal, and the wall's own machinery undoes the latch; the film does not claim the wall plays no part. 'Each one': the white cells in pus crossed from the blood (c20), by the route the why and the whoa show. Review fix: replaces 'White cells that rolled, stopped, crawled and squeezed out' (a recap, and 'squeezed' contradicted the whoa's wording)."
+  "note": "Mouse data (006 r1 review): voiced 'in mice', not as the viewer's body. Excerpt: 'Leukocytes triggered dephosphorylation of Tyr731 via the tyrosine phosphatase SHP-2, which allowed the adaptin AP-2 to bind and initiate endocytosis of VE-cadherin.' Knock-in mice: the Y731F mutant reduced neutrophil extravasation in the cremaster, while Y685F blocked the rise in permeability instead. With Barzilai 2017 (c1, c16: leukocytes generate the gaps; no endothelial contractility needed). 'Let itself out' is the cell's agency: it gives the signal, and the wall's own machinery undoes the latch; the film does not claim the wall plays no part. 'Each one': the white cells in pus crossed from the blood (c20), by the route the why and the whoa show. Review fix: replaces 'White cells that rolled, stopped, crawled and squeezed out' (a recap, and 'squeezed' contradicted the whoa's wording)."
  },
  {
   "id": "c22",

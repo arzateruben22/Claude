@@ -337,7 +337,7 @@ const PW = 340, PH = 470, PS = (W * 0.3565) / PW, PY = H * 0.21;
 const panel = (cls, x, who, cap, gapped) => `<g class="${cls}" transform="translate(${x.toFixed(1)} ${PY.toFixed(1)}) scale(${PS.toFixed(4)})">
     <rect width="${PW}" height="${PH}" rx="18" fill="url(#pcard)" stroke="var(--signal)" stroke-opacity="0.35" stroke-width="2.2"/><rect x="3" y="3" width="${PW - 6}" height="${PH * 0.22}" rx="15" fill="#FFFFFF" opacity="0.045"/><g class="raw" opacity="0.35">${drawing(false)}</g><g class="read" opacity="0">${drawing(gapped)}</g>
     <g class="name" opacity="0"><text class="who" x="${PW / 2}" y="${PH + 70}" text-anchor="middle">${who}</text><text class="cap" x="${PW / 2}" y="${PH + 118}" text-anchor="middle">${cap}</text></g></g>`;
-const NBY = PY + PH * PS + 62 * S1;   // round 2: under the panels, not across them
+const NBY = PY + (PH + 175) * PS;   // round 2: under the panels, not across them
 panels.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="${NS}">
   <defs><radialGradient id="psoma" cx="0.38" cy="0.32" r="0.8"><stop offset="0" stop-color="#FFE9D6"/><stop offset="0.55" stop-color="#E5B9A8"/><stop offset="1" stop-color="#9C6A66"/></radialGradient>
   <linearGradient id="pcard" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="#16403F"/><stop offset="1" stop-color="#071A19"/></linearGradient>

@@ -209,6 +209,7 @@ const writeFinger = (t) => {
 const css = document.createElement("style"); css.textContent = MOTIF_CSS + `
 .hud-end .mi-pulse { margin: 0 0 3vmin; }
 .hud-title .mi-pulse { margin-top: 2.2vmin; }
+.hud-title::before { display: none !important; }   /* round 2: no dark smudge behind the title (it has its own plate) */
 #hud-title { width: max-content !important; padding: 1.6vmin 2.6vmin 2vmin; background: var(--hud-plate); border-radius: var(--hud-cap-radius, 3vmin); }   /* the title on its plate: 4.5:1 over the bright venule */
 .mi-fact { margin-top: 3.2vmin; max-width: 70vmin; font: 500 3vmin/1.35 var(--font-text); color: var(--text-2); }
 #hud-tally { background: var(--hud-plate); padding: 1.6vmin 3.2vmin 1.4vmin; border-radius: var(--hud-cap-radius, 3vmin); transition: none; }
