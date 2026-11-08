@@ -4,6 +4,7 @@
 // Every account (YouTube, TikTok and the shared Instagram) gets the same rows. Opening, downloading or copying never
 // counts as posted; only "Mark uploaded" or a verified integration does.
 import Link from "next/link";
+import { PlanWeek } from "./PlanWeek";
 import { publishNow, reportUploaded } from "@/app/actions";
 import { coverOf, isReady, thumbOf, uploadUrlFor, type PostItem } from "@/lib/data";
 import { composePostText } from "@/domain/metadata";
@@ -47,7 +48,7 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
             No. {no}
             {" · "}
             {p?.scheduledFor ? formatLocal(p.scheduledFor, tz, { weekday: "short", hour: "numeric", minute: "2-digit" })
-              : <>{p ? "not scheduled" : "not planned yet"} · <Link href="/calendar">plan the week</Link></>}
+              : <>{p ? "not scheduled" : "not planned yet"}</>}
           </div>
         </div>
         <div className="post-state">
@@ -93,7 +94,7 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
                   <label className="check"><input type="checkbox" name="confirmAccount" /> <span>I posted it to <b>{account}</b> on {platform}.</span></label>
                 </ActionForm>
               </details>
-            ) : <div className="note-row"><p className="faint post-note">Not planned yet: plan the week to give it a slot, then mark it uploaded from the Upload Desk.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div>}
+            ) : <div className="note-row"><p className="faint post-note">Not planned yet: plan the week to give it a slot, then mark it uploaded from the Upload Desk.</p><PlanWeek /></div>}
           </div>
         ) : x ? (
           <div className="post-actions">

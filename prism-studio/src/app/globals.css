@@ -1003,3 +1003,17 @@ h1 + :is(.card, section, form, .stack, .stack-lg) { margin-top: var(--s4); }
 /* first-run setup (/setup): the variables to paste into the host, one per line */
 .setup-block { margin: 0; padding: 10px 12px; background: var(--well); border: 1px solid var(--line); border-radius: var(--r-sm); font: 500 12.5px/1.55 var(--mono); color: var(--text-2); white-space: pre-wrap; overflow-wrap: anywhere; }
 .offline-banner { position: sticky; top: 0; z-index: 50; background: var(--warn); color: #1B1200; text-align: center; font-size: 13.5px; padding: calc(6px + env(safe-area-inset-top)) 10px 6px; }
+
+/* one queue row per episode: each account keeps its own state */
+.q-acct { display: inline-flex; align-items: baseline; gap: 6px; }
+.plan-week { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+
+/* channel screen: seasons and episodes at the top, one row per season, episodes scroll sideways */
+.ep-nav { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; min-width: 0; }
+.ep-nav-row { display: grid; grid-template-columns: 82px minmax(0, 1fr); align-items: center; gap: 10px; min-width: 0; }
+.ep-nav-season { font: 600 12px/1.2 var(--mono, ui-monospace, monospace); letter-spacing: .08em; text-transform: uppercase; color: var(--text-2); }
+.ep-nav-eps { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; min-width: 0; scrollbar-width: thin; }
+.ep-chip { flex: none; max-width: 230px; min-height: 40px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--line-3); border-radius: var(--r-sm); color: var(--text); text-decoration: none; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: rgba(255, 255, 255, .03); }
+.ep-chip:hover { border-color: currentColor; background: rgba(255, 255, 255, .07); }
+.ep-chip .num { color: var(--text-3); font-size: 12px; }
+@media (max-width: 719px) { .ep-nav-row { grid-template-columns: 1fr; gap: 4px; } }

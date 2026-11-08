@@ -14,7 +14,7 @@ export default async function Home() {
   // a day), and "Nothing due today" only when neither is waiting
   const ig = v.instagram, slots = `${ig.toPlan} Instagram slot${ig.toPlan === 1 ? "" : "s"} to plan${ig.day === "tomorrow" ? " for tomorrow" : ""}`;
   const first = v.dueToday ? <span>{v.dueToday} to upload today</span>
-    : ig.toPlan ? <span><Link href="/calendar">{slots}</Link></span>
+    : ig.toPlan ? <span><Link href="/m/instagram">{slots}</Link></span>
     : <span className="quiet-bit">Nothing due today</span>;
   return (
     <div className="home">

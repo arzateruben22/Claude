@@ -10,8 +10,6 @@ import { Icon, type IconName } from "./Icon";
 const MAIN: { href: string; label: string; icon: IconName }[] = [
   { href: "/", label: "Home", icon: "wall" },
   { href: "/upload", label: "Upload", icon: "upload" },
-  { href: "/review", label: "Review", icon: "review" },
-  { href: "/calendar", label: "Calendar", icon: "calendar" },
   { href: "/rewards", label: "Rewards", icon: "trophy" },
 ];
 const MORE: { href: string; label: string; icon: IconName }[] = [

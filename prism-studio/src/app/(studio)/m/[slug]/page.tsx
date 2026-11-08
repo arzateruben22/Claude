@@ -3,6 +3,7 @@
 // (channels) or today's slots, the rotation and the never-repeats ledger (Instagram).
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PlanWeek } from "@/components/PlanWeek";
 import { notFound } from "next/navigation";
 import { channelBySlug, channelExtension, coverOf, instagramExtension, rigView, smallCover, type PostItem } from "@/lib/data";
 import { INSTAGRAM_SLUG } from "@/lib/rig";
@@ -18,6 +19,7 @@ import { Icon } from "@/components/Icon";
 import { identityOf } from "@/lib/identity";
 import { IdentityArt } from "@/components/IdentityArt";
 import { SeasonBar } from "@/components/SeasonBar";
+import { seasonLabel } from "@/domain/season";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -56,6 +58,37 @@ function QueueRow({ t, tz }: { t: PostItem; tz: string }) {
   );
 }
 
+/** Group a channel's queued posts by episode, keeping the first post's order, so YouTube and TikTok share one row. */
+function byEpisode(items: PostItem[]): PostItem[][] {
+  const groups = new Map<string, PostItem[]>();
+  for (const t of items) groups.set(t.e.id, [...(groups.get(t.e.id) ?? []), t]);
+  return [...groups.values()];
+}
+
+/** One episode, all its accounts on one row: each account shows its own state, since approvals and posts are per account. */
+function EpisodeQueueRow({ items, tz }: { items: PostItem[]; tz: string }) {
+  const t = items[0];
+  const cover = smallCover(coverOf(t));
+  const when = items.map((x) => x.p?.scheduledFor).filter(Boolean).sort((a, b) => +a! - +b!)[0];
+  return (
+    <li className="q-row" style={topicStyle(t.channel)}>
+      <span className="q-cover" aria-hidden>{cover ? <img src={mediaUrl(cover)} alt="" decoding="async" loading="lazy" /> : null}</span>
+      <Link href={`/episodes/${t.e.id}`} className="q-title">{t.e.title}</Link>
+      <span className="q-where">{items.map((x) => PLATFORM_LABEL[x.dest.platform]).join(" + ")}</span>
+      <span className="q-when num">{when ? formatLocal(when, tz, { weekday: "short", hour: "numeric", minute: "2-digit" }) : "Not scheduled"}</span>
+      <span className="q-chips">
+        {items.map((x) => (
+          <span key={x.p?.id ?? x.dest.id} className="q-acct">
+            {items.length > 1 ? <span className="faint">{PLATFORM_LABEL[x.dest.platform]}</span> : null}
+            {x.p && x.p.status !== "planned" ? <span className={`chip ${pubTone(x.p.status)}`}>{PUB_LABEL[x.p.status]}</span> : null}
+            {x.approval ? <span className="chip good">Approved</span> : <Link href={`/episodes/${x.e.id}#placements`} className="chip warn">Needs approval</Link>}
+          </span>
+        ))}
+      </span>
+    </li>
+  );
+}
+
 async function ChannelScreen({ slug }: { slug: string }) {
   const v = await channelExtension(slug);
   if (!v) notFound();
@@ -75,10 +108,31 @@ async function ChannelScreen({ slug }: { slug: string }) {
         {v.season ? <SeasonBar season={v.season} className="ext-season" /> : null}
         <div className="ext-links">
           <Link href={`/channels/${c.slug}`} className="btn ghost small">Channel details</Link>
-          {v.reviewCount ? <Link href="/review" className="btn ghost small">{v.reviewCount} to review</Link> : null}
           <Link href="/upload" className="btn ghost small">Upload Desk</Link>
         </div>
         {v.paused ? <div className="notice">{c.paused ? "This channel is paused" : "Publishing is paused"}: nothing new is planned.</div> : null}
+        {v.series.length || v.loose.length ? (
+          <nav className="ep-nav" aria-label="Seasons and episodes">
+            {v.series.map((x) => (
+              <div key={x.series.id} className="ep-nav-row">
+                <span className="ep-nav-season">{seasonLabel(x.series.title)}</span>
+                <div className="ep-nav-eps">
+                  {x.episodes.map((e, i) => (
+                    <Link key={e.id} href={`/episodes/${e.id}`} className="ep-chip" title={e.title}>
+                      <span className="num">{String(i + 1).padStart(2, "0")}</span> {e.title}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+            {v.loose.length ? (
+              <div className="ep-nav-row">
+                <span className="ep-nav-season">Other</span>
+                <div className="ep-nav-eps">{v.loose.map((e) => <Link key={e.id} href={`/episodes/${e.id}`} className="ep-chip" title={e.title}>{e.title}</Link>)}</div>
+              </div>
+            ) : null}
+          </nav>
+        ) : null}
       </header>
 
       {noEpisodes ? (
@@ -132,12 +186,11 @@ async function ChannelScreen({ slug }: { slug: string }) {
         {v.upcoming.length ? (
           <div className="card flush">
             <ul className="q">
-              {scheduled.map((t) => <QueueRow key={t.p!.id} t={t} tz={v.tz} />)}
-              {unscheduled.map((t) => <QueueRow key={t.p!.id} t={t} tz={v.tz} />)}
+              {byEpisode([...scheduled, ...unscheduled]).map((g) => <EpisodeQueueRow key={g[0].e.id} items={g} tz={v.tz} />)}
             </ul>
           </div>
         ) : <p className="muted">Nothing else queued. {v.accounts.some((a) => a.next) ? "The next posts are above." : "New renders appear here once they pass review."}</p>}
-        {unscheduled.length ? <div className="note-row small-note"><p className="faint">Plan the week to give unscheduled posts a slot.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div> : null}
+        {unscheduled.length ? <div className="note-row small-note"><p className="faint">Plan the week to give unscheduled posts a slot.</p><PlanWeek /></div> : null}
       </section>
 
       <section className="section">
@@ -195,7 +248,7 @@ async function InstagramScreen() {
         <div className="ext-links">
           <a href={v.uploadUrl} target="_blank" rel="noopener noreferrer" className="btn ghost small"><Icon name="external" size={16} /> {v.ig?.handle || "Instagram"}</a>
           <Link href="/connections" className="btn ghost small">Account</Link>
-          <Link href="/calendar" className="btn ghost small">Calendar</Link>
+          <PlanWeek />
         </div>
         {v.paused ? <div className="notice">Publishing is paused: nothing new is planned.</div> : null}
       </header>
@@ -216,7 +269,7 @@ async function InstagramScreen() {
             ))}
           </div>
         ) : <div className="card"><p className="muted">{v.paused ? "Publishing is paused, so there are no slots today." : "No Instagram slots today (blackout)."}</p></div>}
-        {v.slots.some((x) => x.state === "unplanned") ? <div className="note-row small-note"><p className="faint">These are the next episodes in rotation. Plan the week to put them in {v.day === "tomorrow" ? "tomorrow" : "today"}&apos;s slots; each still needs its approval.</p><Link href="/calendar" className="btn ghost small">Plan the week</Link></div> : null}
+        {v.slots.some((x) => x.state === "unplanned") ? <div className="note-row small-note"><p className="faint">These are the next episodes in rotation. Plan the week to put them in {v.day === "tomorrow" ? "tomorrow" : "today"}&apos;s slots; each still needs its approval.</p><PlanWeek /></div> : null}
       </section>
 
       <section className="section">
