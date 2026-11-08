@@ -1,0 +1,41 @@
+# Possibility Lab No. 010: "Every shuffle is new" (draft; fact-check before posting)
+
+About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
+The destination No. 009's end card promised. Every number comes from `calc.py` (exact 52 factorial; UN population;
+NASA's age of the universe); `compile.py` reads its `RESULTS`. The voice says four figures (fifty-two, sixty-eight
+digits, eight billion, fourteen billion); the running sum, labels and footnote carry the rest (8 x 10^67, 3.6 x 10^27
+shuffles, 4 x 10^-41, the 1,000-times row).
+
+One line per beat. `*starred*` words get a camera landing or a sound hit. `{c1,c2}` after a sentence ties
+it to `claims.json`; `{-}` marks a sentence that states nothing outside the film.
+Check it with `python3 -I kits/cinema/script/lint.py films/channels/whatif/ep10 --segment work`.
+
+## hook {shot: you, one blue figure, riffle a deck on the graph paper; the cards fan out in one new order · badge: thought experiment · title: "Every shuffle is new" · pre: 0.1 · picture-only 0.3 s · energy: 0.6} (0–5.3 s)
+vo: Has this *ever* happened? Shuffle a deck, and look at the order. {-}
+
+## normal {shot: the deck fans; the choices multiply: 52, then 51, then 50 on the spine · spine "52 × 51 × 50 …" · picture-only 0.3 s · energy: 0.45} (5.3–17 s)
+vo: A deck has fifty-two cards, so the first can be any of fifty-two, the next any of the *rest*. {c1} Multiply all those choices, and you count the *orders*. {c2}
+
+## change {shot: the product grows into a long number that fills the screen · events: term.write · energy: 0.65} (17–27 s)
+vo: The answer has sixty-eight digits, a number too big to say out *loud*. {c3} Every shuffle you ever make is just one pick from that huge *pile*. {-}
+
+## why {shot: a crowd of figures each shuffling; a clock runs back to the Big Bang · badge: ∵ one shuffle a second, for everyone · picture-only 2 s · energy: 0.55} (27–40 s)
+vo: Now give every person alive a deck, about eight billion of us. {c4} Let everyone shuffle once a second, for as long as the universe has existed: fourteen billion *years*. {c5}
+
+## whoa {shot: all those shuffles pile up as a bar, beside a bar for all possible orders that is far too tall to fit; the box closes round "< 1 in 10^36" · events: answer.box · picture-only 3 s · energy: 0.75} (40–52.5 s)
+vo: Even then, you cover less than one part in a trillion trillion trillion of the *orders*. {c6} Your shuffle is almost certainly the first of its *kind*. {c7}
+
+## work {segment: work · show your work: the whole sum on one line, its badges green, the sensitivity rows below · energy: 0.5} (52.5–60 s)
+vo: Give the planet a thousand times more shufflers, and it barely *changes*. {c8} The pile of orders is just too *big*. {-}
+
+## takeaway {shot: back to your deck, one new order, held · picture-only 0.3 s · energy: 0.45} (60–68 s)
+vo: Shuffle well, and your order has almost certainly never existed before. {c9} Not certain, but a very safe *bet*. {-}
+
+## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (68–73.5 s)
+vo: Next envelope: all the water on Earth, in one *ball*. {-}
+end card: "Next envelope: *all the water, one ball*" · "Possibility Lab · No. 010" · footnote: "52! = 80,658,175,170,943,878,571,660,636,856,403,766,975,289,505,440,883,277,824,000,000,000,000." (c2)
+
+## Notes
+- Every number is `calc.py`'s; "almost certainly" is a probability statement, said as one. Real shuffles are imperfect: the film says "shuffle well".
+- The thought experiment is badged: one fair shuffle a second for every person alive, since the Big Bang.
+- Listen at T0: "fifty-two", "sixty-eight", "trillion trillion trillion".
