@@ -1,20 +1,19 @@
 # ep07 claims table
 
-Every claim is OPEN: a person has not opened any source page. "What the source says" is from a search excerpt only, or
-(where noted) from our own model, and must be checked.
+SOURCE-READ = the builder read the source page's full text and it supports the wording (quote given). OK still needs a person to open the page. OPEN = not read, or not supported as worded.
 
 | claim | source (direct link) | what the source actually says | qualifications | status |
 |---|---|---|---|---|
-| c1 The bottom of a released slinky doesn't fall at first | https://ar5iv.arxiv.org/html/1208.4629 (Cross and Wheatland, Am. J. Phys. 80, 1051, 2012) | Search excerpt: models a falling tension spring (building on Calkin 1993) and fits filmed drops of real slinkies | Ideal slinky; the page's own wording not read | OPEN |
-| c2 The bottom doesn't move at all until the top reaches it | same | Not read | Our ideal chain is exactly at rest; a real slinky nearly | OPEN |
-| c3 The top coils pile up from above | same | Not read | | OPEN |
-| c4 About a third of a second | same | Search excerpt: total collapse time typically about 0.3 s for real slinkies | Our ideal 60 cm model gives √(2ℓ/g) = 0.35 s (computed, not measured) | OPEN |
-| c5 Nothing down there has been told | same | Not read | A metaphor for the wave front | OPEN |
-| c6 The pull travels down the coils as a wave | same | Search excerpt: collapse time equals the time a wave front takes to propagate down the slinky | | OPEN |
-| c7 Until the news arrives the bottom has no reason to move | same | Not read | Statics argument; confirm | OPEN |
-| c8 The middle falls like a dropped ball | https://openstax.org/books/university-physics-volume-1/pages/9-6-center-of-mass | Not read | Air ignored | OPEN |
-| c9 The average of the coils is a plain fall | same | Not read | | OPEN |
-| c10 Bottom ghosts stack for a third of a second | same as c4 (computed) | Our chain run | Model number | OPEN |
-| c11 Then the whole pile falls together | https://ar5iv.arxiv.org/html/1208.4629 | Not read | | OPEN |
-| c12 News takes time to travel through a spring | same | Not read | | OPEN |
-| c13 Spaghetti never breaks in two | https://doi.org/10.1103/PhysRevLett.95.095505 (Audoly and Neukirch, 2005) | Not read | Coordinator note: this is the 2005 result; hedge as "almost never" unless the paper says never; re-check before ep08 | OPEN |
+| c1 Not for a while. | https://arxiv.org/abs/1208.4629 | If a slinky is hanging vertically under gravity from its top (at rest) and then released, the bottom of the slinky does not start to move downwards until the collapsing top section collides with the bottom." |  | SOURCE-READ |
+| c2 The top drops… and the bottom doesn't move at all. | https://arxiv.org/abs/1208.4629 | the bottom of the slinky does not begin to fall until the top section of the slinky, which collapses turn by turn from the top, collides with the bottom." | Real slinkies are close to, not exactly, at rest. | SOURCE-READ |
+| c3 Slowed down, the top coils pile up from above, while the bottom floats there. | https://arxiv.org/abs/1208.4629 | collapses turn by turn from the top" | Abstract. | SOURCE-READ |
+| c4 For about three tenths of a second. | https://arxiv.org/abs/1208.4629 | The total collapse time tc (typically ∼ 0.3 s for real slinkies)" | Their typical-parameter model (1 m hung, 200 g) gives about 0.24 s. Our scene is an illustration tuned to about 0.3 s; say 'about'. | SOURCE-READ |
+| c5 Nothing down there has been told. | https://arxiv.org/abs/1208.4629 | a finite time is required for a wave front to propagate down the slinky communicating the release of the top." | 'Told' is our plain-words metaphor for 'communicating the release'. | SOURCE-READ |
+| c6 The pull of the spring doesn't jump to the other end; it travels down the coils, like a wave. | https://arxiv.org/abs/1208.4629 | corresponds to the time required for a wave front to propagate down the slinky to communicate the release of the top end." |  | SOURCE-READ |
+| c7 Until the news arrives, the bottom has no reason to move. | https://ar5iv.arxiv.org/html/1208.4629 | Not read (or not supported as worded) | OPEN: the paper supports 'does not start to move until the collapsing top section collides with the bottom'; the tension-unchanged reasoning is ours (statics). Check wording. | OPEN |
+| c8 It falls the whole time, like a dropped ball. | https://arxiv.org/abs/1208.4629 | The center of mass falls from rest with acceleration g" | Eq. (19), the model; also Newton's second law with gravity the only external force (air ignored). | SOURCE-READ |
+| c9 The top rushes down, the bottom waits, and the average is a plain fall. | https://arxiv.org/abs/1208.4629 | the center of mass is at X_com = ∫X(ξ)dξ (Eq. 12)" | The centre of mass is the mass average of the slinky's positions; 'average' in our line is plain words for that. | SOURCE-READ |
+| c10 Measure it: the bottom's ghosts stack in one place for three tenths of a second. | https://ar5iv.arxiv.org/html/1208.4629 | Not read (or not supported as worded) | Uses c4's 0.3 s; the picture's collapse is tuned to it. OPEN: needs c4's page check by a person. | OPEN |
+| c11 Then the top arrives, and they all go together. | https://ar5iv.arxiv.org/html/1208.4629 | Not read (or not supported as worded) | Confirm in the paper. OPEN: a person must open the page; nothing here was read in full. | OPEN |
+| c12 News at one end takes time to reach the other, even through a spring. | https://arxiv.org/abs/1208.4629 | a finite time is required for a wave front to propagate down the slinky" | Their statement is about slinkies; 'a spring' in general is ours. | SOURCE-READ |
+| c13 It never breaks in two. | https://doi.org/10.1103/PhysRevLett.95.095505 | Not read (or not supported as worded) | Not yet searched for ep07: re-check before ep08 is voiced; hedge 'almost never' if the paper says so. (The ledger date is the search date for ep08's slate only.) OPEN: a person must open the page; nothing here was read in full. | OPEN |

@@ -13,3 +13,7 @@ Rewrites and why:
 
 Not yet done: a read-aloud pass on the rendered voice, the draft render, and word-timed re-keying. Blocked on the voice
 alignment model's hash (owner approval), so compile and render have not run.
+
+Update after reading the source (8 Nov): the paper's typical collapse time is about 0.3 s, so the script now says "about
+three tenths of a second" (not "a third") and the picture is tuned to 0.3 s; the earlier 0.35 s came from our own simple
+model, not the paper, and is dropped.

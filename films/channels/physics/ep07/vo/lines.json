@@ -36,14 +36,14 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Slowed down, the top coils pile up from above, while the bottom floats there. For about a third of a second.",
+   "text": "Slowed down, the top coils pile up from above, while the bottom floats there. For about three tenths of a second.",
    "stars": [
-    "third"
+    "three tenths"
    ],
-   "phonemes": "slˈoʊd dˈaʊn, ðə tˈɑːp kˈɔɪlz pˈaɪl ˌʌp fɹʌm əbˈʌv, wˌaɪl ðə bˈɑːɾəm flˈoʊts ðˈɛɹ. fɔːɹ ɐbˌaʊt ɐ θˈɜːd əvə sˈɛkənd.",
+   "phonemes": "slˈoʊd dˈaʊn, ðə tˈɑːp kˈɔɪlz pˈaɪl ˌʌp fɹʌm əbˈʌv, wˌaɪl ðə bˈɑːɾəm flˈoʊts ðˈɛɹ. fɔːɹ ɐbˌaʊt θɹˈiː tˈɛnθs əvə sˈɛkənd.",
    "file": "03.wav",
-   "dur": 6.508,
-   "sha256": "a312a1a7bcfdd7e43c56acfd0bb011f624273ffdbc3e60fa86ab29d7cb706ad1"
+   "dur": 6.852,
+   "sha256": "96a00e8ff176cde51291fd6bfb2e3bd8c852617215b5cd088edd89555b6b4bbd"
   },
   {
    "id": "vo04",
@@ -72,14 +72,14 @@
   {
    "id": "vo06",
    "beat": "measure",
-   "text": "Measure it: the bottom's ghosts stack in one place for a third of a second. Then the top arrives, and they all go together.",
+   "text": "Measure it: the bottom's ghosts stack in one place for three tenths of a second. Then the top arrives, and they all go together.",
    "stars": [
     "Measure it"
    ],
-   "phonemes": "mˈɛʒɚɹ ɪt: ðə bˈɑːɾəmz ɡˈoʊsts stˈæk ɪn wˈʌn plˈeɪs fɚɹə θˈɜːd əvə sˈɛkənd. ðˈɛn ðə tˈɑːp ɚɹˈaɪvz, ænd ðeɪ ˈɔːl ɡˌoʊ təɡˈɛðɚ.",
+   "phonemes": "mˈɛʒɚɹ ɪt: ðə bˈɑːɾəmz ɡˈoʊsts stˈæk ɪn wˈʌn plˈeɪs fɔːɹ θɹˈiː tˈɛnθs əvə sˈɛkənd. ðˈɛn ðə tˈɑːp ɚɹˈaɪvz, ænd ðeɪ ˈɔːl ɡˌoʊ təɡˈɛðɚ.",
    "file": "06.wav",
-   "dur": 7.444,
-   "sha256": "f89de55a448c16334bd71fc1458faaaad04e0097f48bdc168aa3515f84fac62c"
+   "dur": 7.795,
+   "sha256": "df1bf5346dfebde19382dfbbaa74052bd8a3d549979b833ac613780e56ffcec5"
   },
   {
    "id": "vo07",

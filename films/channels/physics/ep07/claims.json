@@ -3,67 +3,67 @@
   "id": "c1",
   "sentence": "Not for a while.",
   "claim": "A hanging slinky released from the top: its bottom end stays at rest while the top falls.",
-  "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
-  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
+  "source_url": "https://arxiv.org/abs/1208.4629",
+  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Search excerpt: Cross and Wheatland model a falling tension spring (after Calkin 1993) and fit filmed drops of real slinkies. OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"If a slinky is hanging vertically under gravity from its top (at rest) and then released, the bottom of the slinky does not start to move downwards until the collapsing top section collides with the bottom.\""
  },
  {
   "id": "c2",
   "sentence": "The top drops… and the bottom doesn't move at all.",
   "claim": "Until the collapse of the turns reaches it, the bottom end of the released slinky does not move.",
-  "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
-  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
+  "source_url": "https://arxiv.org/abs/1208.4629",
+  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Ideal model: exactly at rest (our chain run). Hedge to 'ideal slinky'. OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"the bottom of the slinky does not begin to fall until the top section of the slinky, which collapses turn by turn from the top, collides with the bottom.\" Real slinkies are close to, not exactly, at rest."
  },
  {
   "id": "c3",
   "sentence": "Slowed down, the top coils pile up from above, while the bottom floats there.",
   "claim": "The turns collapse from the top end, bunching together, while the lower turns are still at rest.",
-  "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
-  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
+  "source_url": "https://arxiv.org/abs/1208.4629",
+  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Confirm the collapse-front description in the paper. OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"collapses turn by turn from the top\" Abstract."
  },
  {
   "id": "c4",
-  "sentence": "For about a third of a second.",
-  "claim": "The total collapse time is typically about 0.3 s for real slinkies; in our ideal 60 cm model it is √(2ℓ/g) = 0.35 s.",
-  "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
-  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
+  "sentence": "For about three tenths of a second.",
+  "claim": "The total collapse time is typically about 0.3 s for real slinkies.",
+  "source_url": "https://arxiv.org/abs/1208.4629",
+  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Search excerpt: 'typically about 0.3 s'. The 0.35 s is computed in scene.mjs; say 'about'. OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"The total collapse time tc (typically ∼ 0.3 s for real slinkies)\" Their typical-parameter model (1 m hung, 200 g) gives about 0.24 s. Our scene is an illustration tuned to about 0.3 s; say 'about'."
  },
  {
   "id": "c5",
   "sentence": "Nothing down there has been told.",
   "claim": "The bottom is unaffected until the release of the top end has been communicated to it.",
-  "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
-  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
+  "source_url": "https://arxiv.org/abs/1208.4629",
+  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Metaphor for the wave front; check it matches the paper's wording. OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"a finite time is required for a wave front to propagate down the slinky communicating the release of the top.\" 'Told' is our plain-words metaphor for 'communicating the release'."
  },
  {
   "id": "c6",
   "sentence": "The pull of the spring doesn't jump to the other end; it travels down the coils, like a wave.",
   "claim": "The collapse time equals the time a wave front takes to propagate down the slinky, communicating the release of the top end.",
-  "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
-  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
+  "source_url": "https://arxiv.org/abs/1208.4629",
+  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Search excerpt, same paper. OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"corresponds to the time required for a wave front to propagate down the slinky to communicate the release of the top end.\""
  },
  {
   "id": "c7",
@@ -74,40 +74,40 @@
   "accessed": "2026-11-08",
   "verified_via": "search excerpt",
   "status": "TODO open link",
-  "note": "Statics: the bottom's spring force balances its weight until then. Confirm in the paper. OPEN: a person must open the page; nothing here was read in full."
+  "note": "OPEN: the paper supports 'does not start to move until the collapsing top section collides with the bottom'; the tension-unchanged reasoning is ours (statics). Check wording."
  },
  {
   "id": "c8",
   "sentence": "It falls the whole time, like a dropped ball.",
   "claim": "After release the only external force is gravity, so the centre of mass of the slinky accelerates downward at g from the first instant (air ignored).",
-  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/9-6-center-of-mass",
-  "source_title": "OpenStax University Physics Vol. 1, 9.6 Center of Mass; Cross and Wheatland 2012",
+  "source_url": "https://arxiv.org/abs/1208.4629",
+  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Confirm both pages. OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"The center of mass falls from rest with acceleration g\" Eq. (19), the model; also Newton's second law with gravity the only external force (air ignored)."
  },
  {
   "id": "c9",
   "sentence": "The top rushes down, the bottom waits, and the average is a plain fall.",
   "claim": "The centre of mass is the mass-weighted average of the coils' positions; it falls like a free body while the top moves and the bottom waits.",
-  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/9-6-center-of-mass",
-  "source_title": "OpenStax University Physics Vol. 1, 9.6 Center of Mass",
+  "source_url": "https://arxiv.org/abs/1208.4629",
+  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": " OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"the center of mass is at X_com = ∫X(ξ)dξ (Eq. 12)\" The centre of mass is the mass average of the slinky's positions; 'average' in our line is plain words for that."
  },
  {
   "id": "c10",
-  "sentence": "Measure it: the bottom's ghosts stack in one place for a third of a second.",
-  "claim": "The ghosts of the bottom coil, stamped at equal time steps, coincide until the wave front arrives, about 0.35 s (ideal 60 cm model).",
+  "sentence": "Measure it: the bottom's ghosts stack in one place for three tenths of a second.",
+  "claim": "The bottom coil's ghosts, stamped at equal time steps, coincide until the wave front arrives, about 0.3 s later (illustrated).",
   "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
   "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
   "accessed": "2026-11-08",
   "verified_via": "search excerpt",
   "status": "TODO open link",
-  "note": "Computed from our chain. OPEN: a person must open the page; nothing here was read in full."
+  "note": "Uses c4's 0.3 s; the picture's collapse is tuned to it. OPEN: needs c4's page check by a person."
  },
  {
   "id": "c11",
@@ -124,12 +124,12 @@
   "id": "c12",
   "sentence": "News at one end takes time to reach the other, even through a spring.",
   "claim": "Changes of tension propagate through a spring at a finite wave speed rather than instantly.",
-  "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
-  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
+  "source_url": "https://arxiv.org/abs/1208.4629",
+  "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Standard wave physics; cite the paper's collapse-time-equals-front-time statement. OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"a finite time is required for a wave front to propagate down the slinky\" Their statement is about slinkies; 'a spring' in general is ours."
  },
  {
   "id": "c13",
