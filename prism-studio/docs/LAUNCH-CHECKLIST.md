@@ -260,3 +260,15 @@ npm run lesson:register -- films/channels/<channel> ep01,ep02,ep03,ep04,ep05 "Le
 
 The lesson then waits on Review like any other. The image must include `scripts/register-lesson.ts` (it does from the
 commit that added it to the Dockerfile).
+
+## Recording posts made before the studio tracked them (backfill)
+
+In Railway → the service → **Console** (turn off bracketed paste first with `bind 'set enable-bracketed-paste off'`):
+
+```
+npm run posted:backfill -- films/channels/<channel> ep01-ep06 youtube,tiktok,instagram --dry-run
+npm run posted:backfill -- films/channels/<channel> ep01-ep06 youtube,tiktok,instagram
+```
+
+Only name platforms where the posts are really live. Each record is labelled "Backfilled: posted before Prism Studio
+tracked it" and can be undone from the Upload Desk.
