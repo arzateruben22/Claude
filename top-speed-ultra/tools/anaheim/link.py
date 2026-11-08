@@ -1,13 +1,15 @@
 # The freeway link: which of the game's freeway exits (src/data/oc-network.json) lead toward the venue, and which
 # real streets lead from each ramp terminal to the venue's parking lot. Decodes slice.json the way the game would
-# (so it also checks the format), routes over its street graph, and writes src/data/anaheim/freeway-link.json.
+# (so it also checks the format), routes over its street graph, and writes src/data/anaheim/<prefix>freeway-link.json.
+#   python3 link.py [venue]     (default lot57 -> freeway-link.json; sportsbar -> sportsbar-freeway-link.json)
 import json, math, heapq, os, collections as C
 from shapely.geometry import Point, Polygon, LineString
-from ana import OUT, jload, slice_box
+from ana import OUT, jload, slice_box, venue
 
+V = venue()
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
 net = jload(os.path.join(ROOT, 'src/data/oc-network.json'))
-sl = jload(os.path.join(OUT, 'slice.json'))
+sl = jload(V['slice'])
 X0, Z0, X1, Z1 = sl['box']; VX, VZ = sl['venue']['x'], sl['venue']['z']
 dic = sl['dict']
 
@@ -44,6 +46,28 @@ for s in sl['seg']:
                  'k': list(zip(s.get('k', [])[0::2], s.get('k', [])[1::2])), 'ow': s.get('ow', 0), 'lk': bool(s.get('lk')),
                  'r': s.get('r')})
 conn = undelta(sl['conn'])
+# Venues with a small slice (V['route_city']) also route over the city's main and local streets (streets-city.json,
+# built by city.py from the same release), joined to the slice where they share a connector: the same Overture
+# connector, so the same decimetre position. City pieces lying wholly inside the slice box are left out, since the slice
+# has them with their subclasses and link flags. The city layer has no link flag, so its motorway pieces count as
+# possible ramps when ramp terminals are found (each terminal must still lie within 40 m of the game's ramp).
+if V.get('route_city'):
+    cs = jload(os.path.join(OUT, 'streets-city.json')); cd = cs['dict']
+    at = {(round(x * 10), round(z * 10)): i for i, (x, z) in enumerate(conn)}
+    cmap = []
+    for x, z in undelta(cs['conn']):
+        q = (round(x * 10), round(z * 10))
+        if q not in at: at[q] = len(conn); conn.append((x, z))
+        cmap.append(at[q])
+    n_city = 0
+    for s in cs['seg']:
+        pts = undelta(s['p'])
+        if all(X0 <= x <= X1 and Z0 <= z <= Z1 for x, z in pts): continue
+        cls = cd['cls'][s['c']]; n_city += 1
+        segs.append({'pts': pts, 'cls': cls, 'sub': None, 'name': cd['name'][s['n']] if 'n' in s else None,
+                     'k': [(v, cmap[c]) for v, c in zip(s.get('k', [])[0::2], s.get('k', [])[1::2])],
+                     'ow': s.get('ow', 0), 'lk': cls == 'motorway', 'r': s.get('r')})
+    print('city street pieces added for routing', n_city, 'connectors now', len(conn))
 DRIVE = {'primary', 'secondary', 'tertiary', 'residential', 'unclassified', 'service', 'living_street', 'trunk'}
 G = C.defaultdict(list)  # node -> [(node, cost, metres, seg index)]
 # cost per metre: prefer the public arterials a driver would take; lot aisles and driveways only at the ends
@@ -68,10 +92,14 @@ terminals = [c for c in link_conns if c in street_conns]
 
 # ---------------------------------------------------------------- the venue building and lot
 bld_at, lot_i = sl['venue']['bld'], sl['venue']['lot']
-lot_poly = Polygon(undelta(sl['infra'][lot_i]['p']))
+site = sl['venue'].get('site')  # venues with a site block carry their lot ring (mapped or derived) and its aisles
+lot_poly = Polygon(undelta(site['lot_p'])) if site else Polygon(undelta(sl['infra'][lot_i]['p']))
 lot_d = lot_poly.distance(Point(VX, VZ))
-# destination nodes: connectors of parking aisles inside (or within 5 m of) that lot
-dest = {c for s in segs if s['sub'] == 'parking_aisle' for v, c in s['k'] if lot_poly.buffer(5).contains(Point(conn[c]))}
+# destination nodes: connectors of the lot's own aisles (site block), else of parking aisles inside (or within 5 m of)
+# that lot
+dest = {c for si in site['lot_aisles'] for v, c in segs[si]['k'] if lot_poly.buffer(1).contains(Point(conn[c]))} if site else set()
+if not dest:
+    dest = {c for s in segs if s['sub'] == 'parking_aisle' for v, c in s['k'] if lot_poly.buffer(5).contains(Point(conn[c]))}
 if not dest:  # fall back to any drivable connector inside the lot
     dest = {c for c in G if lot_poly.buffer(5).contains(Point(conn[c]))}
 
@@ -92,6 +120,7 @@ def route(src):
 exits = []
 for s in net['signs']:
     if s['p'] not in mains: continue
+    if V.get('freeways') and net['paths'][s['p']]['route'] not in V['freeways']: continue
     rp = paths[s['p']]
     x, z, _ = rp[s['i']]
     if not (X0 - 1500 <= x <= X1 + 1500 and Z0 - 1500 <= z <= Z1 + 1500): continue
@@ -103,7 +132,10 @@ for s in net['signs']:
     # ramp terminal: the street connector closest to the chain's centreline
     line = LineString([(p[0], p[1]) for pid in chain for p in paths[pid]])
     best = min(terminals, key=lambda c: line.distance(Point(conn[c])), default=None)
-    if best is None or line.distance(Point(conn[best])) > 40: continue
+    # within 40 m of the ramp; 5 m when routing over the city layer, which has no link flags and stops at the city limits,
+    # so a ramp whose real terminal lies outside both would otherwise snap to an unrelated junction it passes (every
+    # terminal found so far sits within 4.3 m of its ramp)
+    if best is None or line.distance(Point(conn[best])) > (5 if V.get('route_city') else 40): continue
     tdist = line.distance(Point(conn[best]))
     streets = sorted({segs[si]['name'] for si in street_conns[best] if segs[si]['name']})
     r = route(best)
@@ -132,6 +164,10 @@ for s in net['signs']:
         for x, z in pts:
             qx, qz = round(x * 10), round(z * 10); flat += [qx - px, qz - pz]; px, pz = qx, qz
         e['route'] = {'metres': round(d), 'streets': names, 'p': flat}
+        if V.get('route_city'):  # how much of it runs on the city layer, outside the walkable slice
+            out_m = sum(math.dist(a, b) for a, b in zip(pts, pts[1:])
+                        if not (X0 <= (a[0] + b[0]) / 2 <= X1 and Z0 <= (a[1] + b[1]) / 2 <= Z1))
+            e['route']['outside_slice_m'] = round(out_m)
         e['straight_line_m_terminal_to_venue'] = round(math.dist(conn[best], (VX, VZ)))
     exits.append(e)
 exits.sort(key=lambda e: e.get('route', {}).get('metres', 1e9))
@@ -141,10 +177,10 @@ out = {
             'streets from each ramp terminal to the venue lot. Routes obey one-way tags; drivable classes only.',
     'attribution': sl['attribution'],
     'venue': {'x': VX, 'z': VZ, 'bld': bld_at, 'lot_infra': lot_i, 'lot_metres_from_venue': round(lot_d, 1),
-              'lot_area_m2': round(lot_poly.area)},
+              'lot_area_m2': round(lot_poly.area), **({'lot_how': site['lot_how']} if site else {})},
     'exits': exits,
 }
-with open(os.path.join(OUT, 'freeway-link.json'), 'w') as f: json.dump(out, f, separators=(',', ':'))
+with open(V['link'], 'w') as f: json.dump(out, f, separators=(',', ':'))
 for e in exits:
     print(e['freeway'], e['main_path'], e['sign'], 'ramps', e['ramp_paths'], 'terminal', e['terminal']['streets'],
           e['terminal']['metres_from_ramp_centreline'], '->', e.get('route', {}).get('metres'), e.get('route', {}).get('streets'))

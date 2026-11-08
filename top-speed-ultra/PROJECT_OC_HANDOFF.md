@@ -203,6 +203,9 @@ itself; `top-speed-ultra/` conflicts there resolve in favour of always-on's inte
   - Then F2-B (fixes in tsu-store after the SKU commits) and F3-B (fixes per branch once idle) from the F2 and F3
     findings files, and F6 (PROJECT_OC_DECISIONS.md: nine decisions, all pending; the owner answers one at a time).
   - Resume fewer lanes at a time if the owner wants the window to last: nine at once burn about 6% a minute.
+- **Map scope from the owner (2026-10-20, decision 11):** LA County is stopped; the map is Orange County only, every
+  freeway, street, roundabout and mall. After the hypercar and the sky-camera and debris fixes, OC streets come next
+  (Fable prompt "OC streets" below), with the drive into Lot 57 as their first slice.
 - **Priority order from the owner (2026-10-19, decision 10 in PROJECT_OC_DECISIONS.md):** the hypercar fully
   drivable first (F1 dynamics, then hypercar M1 to M6, then F4 budgets, then the live merge and suite), then the
   store SKU and F2, then on foot at Lot 57 (F5 people specs, then PROJECT_OC_ON_FOOT.md Phases 1 to 3), then the UI
@@ -479,6 +482,31 @@ Do not change code in this session beyond recording the decisions.
   closely spaced exits; exit numbers from OSM junction:ref). Ready-to-paste prompt: `docs/specs/SIGNS_PROMPT.md`.
   Census: `tools/signs-census.ts` (416 signs, 122 dropping a destination, 73 of 396 exit pairs under 800 m; reproduced).
   It needs one Game.ts hook (`roads.setNight(dark)`) from whoever owns Game.ts.
+### Fable prompt: OC streets (every street in Orange County), queued 2026-10-20
+
+```
+OC Ultra (top-speed-ultra), the OC streets design. The owner (2026-10-20, decision 11 in PROJECT_OC_DECISIONS.md): stop LA
+County; the map is Orange County only, done deeply: every freeway and expressway, every public street with intersections,
+signals and stop signs, roundabouts, malls and their parking structures. Design it, then build its first slice.
+Read: CLAUDE.md, PROJECT_OC_DECISIONS.md (10 and 11), PROJECT_OC_TECHNICAL_NOTES.md (roads, streaming, the single-file
+build, the F4 "Budgets" section on claude/stream), PROJECT_OC_ON_FOOT.md (the Anaheim data, Phases 2-3, the 804 m drive in
+from the 57), tools/anaheim/README.md and its pipeline, src/data/anaheim/*.json, src/game/world/ (Network, Roads, Path),
+src/game/traffic/, PROJECT_OC_DYNAMICS.md.
+Design (write "OC streets" in PROJECT_OC_TECHNICAL_NOTES.md): (1) the data: every OC city's streets, connectors,
+roundabouts, signals and stop signs where tagged, malls and parking structures, from Overture/OpenStreetMap only (credited;
+never Google), measured counts and sizes per city; (2) a tiled street model that fits the single-file artifact (16 MB cap;
+today 3.75 MB) with streaming by distance and speed; (3) intersections: geometry, lane inference without lane counts, signal
+phases, stop-sign rules, turn lanes, roundabout entry and yield; (4) the freeway-to-street hand-off at every ramp terminal;
+(5) surface traffic (the IDM on streets, yielding, turning) and pedestrians at crossings; (6) phone budgets per tier;
+(7) the freeway gaps (I-605 at Seal Beach, the SR-90 expressway); (8) milestones with checks. Then build slice 1: the drive
+from the 57 South exit into the Lot 57 lot (on-foot Phase 3b) on real streets with working signals.
+Rules: OSM/Overture only and credited; no live data claims; static-first, no downloaded assets; honest labels; commits on a
+branch off claude/always-on, local only while the owner's push hold stands; no model names in code or commits.
+Proof: per-city data counts against the source; the autopilot drives from the 57 to the lot without touching a kerb or
+running a red; a scan finds no street geometry inside any freeway travel lane; draw calls and triangles at Low and High in a
+dense city block; npm test groups boot, interchanges, render, phone plus a new streets group. Log in PROJECT_OC_PROGRESS.md.
+If Fable is unavailable, run it on Opus with a design judge pair before any build.
+```
 
 ## Opus queue (routine items waiting for a daytime session)
 
@@ -491,3 +519,87 @@ Do not change code in this session beyond recording the decisions.
   Monopoly houses, the paper mountains, flat clear-day light, traffic bodies' door seams and mirrors, the chase
   camera's hovering rear wheels; teeth, mouth corners, brows and beards on the people.
 - Merge note (store lane ST1, 2026-10-21): claude/modes had no Ultra entitlement yet, so `claude/store` defines it in `src/store/entitlements.ts` (`ULTRA_ENTITLEMENT = 'graphics-ultra'`, `ultraUnlocked({ owner })`; no sku or price): RS2 should read that flag, not define its own.
+
+## For Lot 57's owners (from the sports bar's S1, 2026-11-02; `PROJECT_OC_SPORTS_BAR.md` open item O28)
+
+Two shadow flaws in Lot 57's page (`src/onfoot/main.ts` at `claude/onfoot` ab9fbe1), found by reading three.js 0.160.1
+and checked on the bar's page, which works round both. The bar doesn't edit Lot 57's files before E0, so these are
+Lot 57's to take (or E0's):
+
+1. **A mesh on layer 1 casts into no shadow map.** `WebGLRenderer.render` passes the main camera to
+   `shadowMap.render`, and `WebGLShadowMap.renderObject` tests `object.layers.test(camera.layers)` with that main
+   camera (`WebGLShadowMap.js` renderObject); a shadow camera's layers are never read, so
+   `env.sun.shadow.camera.layers.enable(1)` does nothing. Lot 57 puts your first-person body on layer 1 (and on High
+   the LOD 1 kept under the close-up LOD 0, in `applyAvatar`), so in first person your driver casts no shadow, and on
+   High in third person nothing casts for the close-up body. **Remedy (the bar's):** a hidden caster. Keep the body on
+   layer 0, visible, `castShadow` on, and give its mesh an `onBeforeRender` that saves `geometry.drawRange.count` and
+   sets it to 0, and an `onAfterRender` that puts it back: every colour pass then issues an empty draw (1 call, 0
+   triangles), and the shadow pass, which calls `onBeforeShadow` instead, draws it in full. The bar's
+   `venues/sportsbar/visibility.ts` (`setHiddenCaster`) does this; S1 measured it (the sun's map drops by the caster's
+   own triangles when its `castShadow` is turned off; `tests/sportsbar.mjs`, the shadows group).
+2. **At Ultra the shadow maps are drawn twice a frame.** Every `renderer.render` redraws the maps unless
+   `shadowMap.autoUpdate` and `shadowMap.needsUpdate` are both false, and GTAO's normal pass is a second
+   `renderer.render` of the scene (`GTAOPass.js`). **Remedy (the bar's):** `renderer.shadowMap.autoUpdate = false`, and
+   once a frame, just before the composer runs, `renderer.shadowMap.needsUpdate = true`: the frame's first render draws
+   the maps and clears the flag, so GTAO's normal pass (and any measuring render) draws none. The bar's `main.ts`
+   (`render()`) does this; S1 checks one frame's `renderer.info` against the pass, each map once, GTAO's pass and the
+   post.
+
+Two more, found in the bar's S1 screenshots after the note above was written (the bar's page shares the code they come
+from; Lot 57's page was not run for them, so on Lot 57 they are likely, not seen):
+
+3. **GTAO darkens what lies under a mesh with no normals, and the mountain ring.** GTAO's normal pass draws every
+   visible mesh (but points and lines) with a `MeshNormalMaterial`. The lamp pools (`lamp-pools` in Lot 57's
+   `main.ts`, built from positions and UVs only) and the game's mountain ring (`src/game/env`, a `MeshBasicMaterial`
+   with no normals) read there as surfaces facing nowhere. On the bar's page at Ultra the lot under the pools went near
+   black at noon and the mountains turned dark slate; with GTAO off, or the fix, both read as on HD
+   (`tests/out/sportsbar/probe/`). **Remedy (the bar's):** wrap the pass's `overrideVisibility` so that, after its own
+   rule, it also hides every mesh with no `normal` attribute or whose material writes no depth (the pools, glass, blob
+   shadows, a wordmark); `restoreVisibility` puts them back. The bar's `main.ts` (`applyQuality`) does this.
+4. **The 3200 m ground quad can draw over the asphalt.** The ground plane (one quad at y -0.03, no polygon offset)
+   drew over the lot's asphalt (y 0.012, offset -1) across the whole near lot in one view at 844x390 on Low, though
+   not at 390x844 or 1280x720 from the same spot: a triangle that size rasterises with depth error larger than the
+   4.2 cm between them. **Remedy (the bar's):** a polygon offset on the ground material pushing it back (factor 4,
+   units 8); the asphalt then wins at every view the suite shoots.
+
+Three leaks, found by S1's repair counting `renderer.info.memory` over rounds of quality switches on the bar's page
+(Low, HD, Ultra, HD, Low with a pose after each: 6 textures and 50 geometries more each round before the fixes, none
+after). The bar's page now frees each itself; the files they come from are unchanged, so Lot 57's page and the game
+still leak them:
+
+5. **`ParkedCars.dispose()` frees only the instance buffers** (`lot57/lot.ts`; its comment says the models are the
+   game's, shared). But `trafficParts()` (`src/preview/traffic.ts`) builds new geometries on every call, and each
+   `ParkedCars` makes its own stand-in geometries and stand-in material, so every rebuild (a switch between High and
+   Ultra) leaves 25 geometries (5 kinds x 4 parts and a stand-in) on the GPU. **Remedy (the bar's):** before
+   `dispose()`, dispose every mesh's geometry in the group and the stand-ins' material (`disposeParked` in the bar's
+   `main.ts`).
+6. **The people builder's `dispose()` leaves the skeleton's bone texture** (`people/person.ts`: it disposes the
+   geometries and materials, not `skeleton.dispose()`), one 12 x 12 float texture per body; a crowd that rebuilds
+   bodies (S3a) would leak one per body. **Remedy (the bar's, for your avatar):** dispose the old body's skeletons,
+   and the textures its materials hold that the new body doesn't share (`disposePerson`). For `people/`'s owners.
+7. **The game's `Environment.rebuildEnv()` frees the PMREM texture, not its render target** (`src/game/env/
+   Environment.ts`): `texture.dispose()` on a render target's texture releases nothing in three.js 0.160.1, so each
+   rebuild (the sun moving, a weather change, a page dimming the environment's ground) leaves a 768 x 1024 half-float
+   target (about 6 MB) on the GPU. **Remedy (the bar's):** the page replaces `rebuildEnv` on its own instance with the
+   same rebuild that keeps the `fromScene()` render target and disposes the previous one. For the game's owners too.
+
+## Owner questions (open)
+
+- **The sports bar's Low and the sun map** (`PROJECT_OC_SPORTS_BAR.md`, "Owner questions", 1). Decision 15 lists
+  "hard shadows" for Low, and the game's `RETRO` preset has a 1024 sun map; the bar's Low plans none (hard-edged blobs
+  and baked light) to stay inside Low's 150-call, 250k frame. If the owner or RS3's style guide asks for hard sun
+  shadows, the bar turns on a 1024 `BasicShadowMap` with a short caster list: inside and overhead it fits, but outside
+  Low takes its first three fallbacks (no detailed parked cars, fewer LOD 1 people, no far street props). Not settled.
+- **Person builds stall the page** (same section, 2). Each build is one synchronous call on a desktop CPU: 0.29 s to
+  1.0 s for LOD 2 and LOD 1, 4.6 s for a phone LOD 0 and 7 to 9.5 s for a high-quality one. The plan now fills the room
+  on a time budget that works at any frame rate (full in about 46 s at Low, 2.3 min at HD, 4.1 min at Ultra, cards
+  standing in), builds **no NPC LOD 0 at Low, HD or Ultra** (the person you talk to stays at LOD 1, so a conversation
+  never freezes the page: 4.6 s saved at Low, 7 to 9.5 s at HD and Ultra), and builds your avatar's Ultra-only LOD 0
+  during loading or behind a paused "Preparing Ultra…" sheet. Each LOD 1 or LOD 2 build is still a stalled frame. A
+  fix needs a worker or step-wise build in `people/` (F5's builders and Lot 57's P1d own it). Not settled: accept the
+  fill's stalls and LOD 1 for the person you talk to, or ask for that build before the bar's S3a (with it, NPC LOD 0
+  comes back; at Low inside it needs Low's first fallback).
+- **For RS3 and `people/`'s owners (from the sports bar plan):** a toon path for the people builder's skin. Under the
+  Retro Stylizer's hook-fit rule `skinMaterial` stays physically lit (its hook adds `computeSpecularOcclusion`), so a
+  LOD 0 body in view at Low would have toon clothes and physical skin. The bar draws no LOD 0 at Low, so nothing shows
+  it yet.

@@ -25,6 +25,11 @@ def jdump(o, p, **kw):
     with open(p, 'w') as f: json.dump(o, f, **kw)
 
 import concurrent.futures as _cf
+def bbmask(b, bb):
+    """row mask: the rows whose bbox struct column b intersects bb=(lon0,lon1,lat0,lat1)."""
+    import pyarrow.compute as pc
+    return pc.and_(pc.and_(pc.greater_equal(pc.struct_field(b, 'xmax'), bb[0]), pc.less_equal(pc.struct_field(b, 'xmin'), bb[1])),
+                   pc.and_(pc.greater_equal(pc.struct_field(b, 'ymax'), bb[2]), pc.less_equal(pc.struct_field(b, 'ymin'), bb[3])))
 def fetch(theme, typ, bb, columns, workers=8, rowfilter=None):
     """Read only the row groups (found by scan.py) whose bbox stats intersect bb=(lon0,lon1,lat0,lat1),
     then keep the rows whose own bbox intersects bb. Returns one pyarrow Table."""
@@ -40,23 +45,71 @@ def fetch(theme, typ, bb, columns, workers=8, rowfilter=None):
                 break
             except Exception:
                 if attempt == 2: raise
-        b = t['bbox']
-        m = pc.and_(pc.and_(pc.greater_equal(pc.struct_field(b, 'xmax'), bb[0]), pc.less_equal(pc.struct_field(b, 'xmin'), bb[1])),
-                    pc.and_(pc.greater_equal(pc.struct_field(b, 'ymax'), bb[2]), pc.less_equal(pc.struct_field(b, 'ymin'), bb[3])))
-        t = t.filter(m)
+        t = t.filter(bbmask(t['bbox'], bb))
         return rowfilter(t) if rowfilter else t
     with _cf.ThreadPoolExecutor(workers) as ex:
         tabs = list(ex.map(rd, jobs))
     import pyarrow as pa
     return pa.concat_tables(tabs), len(jobs)
 
-# The walkable slice: 3 km x 3 km around the venue (x east, z south, metres, game coordinates), reaching
-# Katella Ave and the arena to the north, the CA-57 and Douglass Rd to the east, State College Blvd and the
-# I-5 to the west and south-west.
-SLICE_W, SLICE_E, SLICE_N, SLICE_S = 1500, 1500, 1800, 1200
-def slice_box():
-    v = jload(f'{DATA}/venue.json')
-    return (round(v['x'] - SLICE_W), round(v['z'] - SLICE_N), round(v['x'] + SLICE_E), round(v['z'] + SLICE_S))
+# Local extracts in data/ that earlier runs range-read from this same release with no row filter (each was checked to
+# hold exactly the rows, in the same order, of a full range read of the Lot 57 box). fetch_local() uses one in place of
+# a range read when it has every column asked for and provably covers the box: every row of an unfiltered bbox read
+# intersects the read's box, so that box contains [min xmax, max xmin] x [min ymax, max ymin] over the extract's rows.
+LOCAL = {('places', 'place'): 'places-area', ('transportation', 'segment'): 'segments-5km',
+         ('transportation', 'connector'): 'city-connector', ('buildings', 'building'): 'city-building'}
+def fetch_local(theme, typ, bb, need):
+    """the rows of theme/type whose bbox intersects bb, from a local extract that has the columns `need` and covers
+    bb, else range-read from the release (all columns). Returns (table, how)."""
+    import pyarrow.parquet as pq, pyarrow.compute as pc
+    name = LOCAL.get((theme, typ))
+    fn = f'{DATA}/{name}.parquet' if name else None
+    if fn and os.path.exists(fn):
+        missing = sorted(set(need) - set(pq.read_schema(fn).names))
+        if not missing:
+            t = pq.read_table(fn); b = t['bbox']
+            ext = lambda k, f: f(pc.struct_field(b, k)).as_py()
+            if ext('xmax', pc.min) <= bb[0] and ext('xmin', pc.max) >= bb[1] and ext('ymax', pc.min) <= bb[2] and ext('ymin', pc.max) >= bb[3]:
+                return t.filter(bbmask(b, bb)), f'local data/{name}.parquet'
+            why = f'data/{name}.parquet does not cover the box'
+        else: why = f'data/{name}.parquet lacks {", ".join(missing)}'
+    else: why = 'no local extract'
+    t, n = fetch(theme, typ, bb, None)
+    return t, f'range read, {n} row groups ({why})'
+
+# ---- venues. Each is a real spot found in Overture places (venue.py) where we build our OWN fictional place; the real
+# business is only the lookup that finds the point, and its name is never written to src/. Pass the key as the first
+# argument to venue.py, fetch_slice.py, build_slice.py, link.py, verify.py and render.py. No argument means Lot 57,
+# whose files keep their original names, so its outputs come out byte-identical.
+#   box: metres west, east, north, south of the point.  addr: the address words that mark the place records at the
+#   spot (dropped from the places file).  prefix: on every file the venue writes (data/ and src/data/anaheim/).
+#   site: write the venue's footprint and parking lot into the slice's venue block (build_slice.py).
+#   route_city: link.py also routes over streets-city.json beyond the slice.  freeways: link.py's exits, by route.
+VENUES = {
+    # 3 km x 3 km round Lot 57, reaching Katella Ave and the arena to the north, the CA-57 and Douglass Rd to the east,
+    # State College Blvd and the I-5 to the west and south-west.
+    'lot57': {'box': (1500, 1500, 1800, 1200), 'addr': ('2210', 'orangewood'), 'prefix': '', 'venue_json': 'venue.json'},
+    # 1.2 km x 1.2 km round our own sports bar's spot on S Claudina Way, between E Cerritos Ave and E Katella Ave, just
+    # east of the I-5.
+    'sportsbar': {'box': (600, 600, 600, 600), 'addr': ('1759', 'claudina'), 'prefix': 'sportsbar-',
+                  'venue_json': 'sportsbar-venue.json', 'site': True, 'route_city': True, 'freeways': ('I-5',)},
+}
+def venue(argv=None):
+    """the venue named by the first command-line argument (default lot57), with its file paths filled in."""
+    argv = sys.argv if argv is None else argv
+    key = argv[1] if len(argv) > 1 else 'lot57'
+    if key not in VENUES: raise SystemExit(f'unknown venue {key!r}; one of {", ".join(VENUES)}')
+    V = dict(VENUES[key], key=key); p = V['prefix']
+    V.update(json=f'{DATA}/{V["venue_json"]}', raw=lambda typ: f'{DATA}/{p}slice-{typ}.parquet',
+             counts=f'{DATA}/{p}slice-counts.json', verify=f'{DATA}/{p}verify.json',
+             slice=os.path.join(OUT, f'{p}slice.json'), places=os.path.join(OUT, f'{p}slice-places.json'),
+             link=os.path.join(OUT, f'{p}freeway-link.json'))
+    return V
+SLICE_W, SLICE_E, SLICE_N, SLICE_S = VENUES['lot57']['box']
+def slice_box(V=None):
+    V = V or venue(['', 'lot57'])
+    v = jload(V['json']); w, e, n, s = V['box']
+    return (round(v['x'] - w), round(v['z'] - n), round(v['x'] + e), round(v['z'] + s))
 def box_lonlat(box, pad=0):
     lon0, lat1 = unproj(box[0] - pad, box[1] - pad); lon1, lat0 = unproj(box[2] + pad, box[3] + pad)
     return (lon0, lon1, lat0, lat1)

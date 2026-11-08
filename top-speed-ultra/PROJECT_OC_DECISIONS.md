@@ -66,3 +66,49 @@ Given by the owner in chat on 2026-10-19 (about 22:10 UTC), while the lanes were
   progression, phone, boot) and the dynamics harness, republish: the "fully drivable" milestone. 5) The store SKU,
   then F2-A and F2-B. 6) On foot: F5 people specs, then Lot 57 Phase 1 (the standalone page), Phase 2 (the
   streets), Phase 3 (into the game). 7) UI pass, realism-2, F3.
+
+### 11. The map: Orange County only, all of it (LA County stopped)
+
+- **Decision** (the owner in chat, 2026-10-20 about 07:00 UTC): "lets put a full stop into the la count and solely focus
+  on the OC map including all freewats, neighborhood streets, roundabouts, etc." LA County and anything beyond Orange
+  County are stopped, not deferred. The map's scope is Orange County, done deeply:
+  - **Every freeway and expressway in the county**, the ten built plus the gaps: I-605's short stretch at Seal Beach and
+    Los Alamitos, and the SR-90 Imperial Highway expressway in Yorba Linda and Brea. Exit numbers if a source has them.
+  - **Every public street**: arterials, collectors and neighbourhood streets in all of OC's cities, drivable, with
+    intersections, signals and stop signs, turn lanes, and traffic that uses them.
+  - **Roundabouts** (OpenStreetMap junction=roundabout), **malls and their parking structures and lots**, and the other
+    built places along the streets (from Overture buildings and land use).
+- **Facts it was made on.** The OC freeway network is built (20 carriageways, 1,247 ramp pieces, 1,256 junctions); all of
+  Anaheim's streets are already pulled (about 10,000 named segments with their intersections, no lane counts in the
+  source); the game has no surface-street driving yet; the weekly usage limit (86% on 2026-10-20) means little new work
+  starts before it resets on 2026-10-25 22:00 UTC.
+- **Order.** The hypercar (in progress) and the owner's sky-camera and debris fixes (in progress) finish first. OC streets
+  come next, ahead of the walkable Lot 57 page: their first slice is the drive from the 57 into the Golden Road spot (the
+  on-foot plan's Phase 3b, 804 m of real streets with signals), so the Golden Road work continues inside it. The owner can
+  move the walkable page back ahead of the streets with one message.
+- **What it costs.** It is the largest remaining system: a street pipeline for every OC city (Overture/OSM, credited), a
+  tiled street-and-intersection model that stays inside the single-file build's size limit, intersection and signal logic,
+  surface traffic and pedestrians, and phone budgets. A design pass comes first (the Fable prompt "OC streets" in
+  PROJECT_OC_HANDOFF.md).
+
+## 2026-10-21: maximum overdrive
+
+### 12. Maximum graphics for the hypercar and Lot 57, then a Sims-like world at Lopez and Lefty's, and every OC freeway at full throttle
+
+- **Decision** (the owner in chat, 2026-10-21 about 00:00 UTC): "FULL FUCKEN MAXIMUM OVERDRIVE FOR MAMXIMUM GRAPHICS AND
+  RENDERING OF THE HYPERCAR AND GOLDEN ROAD AND IMMEDIATELY AFTER MAKE A PLAYABLE SIMS INTERACTION WORLD FOR LOPEZ AND
+  LEFTYS IN ANAHEIM!!!! FULL MAXIMUM OVERDRIVE AND DONT STOP!!!! RENDER ALL OC FREEWAY GRAPHICS FULL THROTTLE".
+- **What runs, all at once.** The hypercar's lights, cockpit, seat, body fidelity and abilities (claude/hypercar,
+  claude/hypercar-drive); the sky camera and debris fixes (claude/fix-sky, claude/fix-road); Lot 57 on foot at maximum
+  graphics, the standalone page, Phase 1 plus a graphics milestone (claude/onfoot); an Ultra render tier, a hypercar
+  showroom and photo mode, and the hypercar's materials at Ultra (claude/gfx, off the live preview); every OC freeway's
+  graphics: surfaces, furniture and signs, interchanges and landscaping, night and horizon, I-605 and SR-90, and a sweep
+  of every carriageway (claude/realism-2). Lot 57 moves back ahead of the OC streets (decision 11 allowed that with one
+  message); OC streets follow.
+- **Lopez and Lefty's.** Next after Lot 57: a playable Sims-like world there, built on the on-foot machinery. A web search
+  found no business of that name; asked the owner whether it is a real Anaheim place (and where) or their own concept. A
+  real business's name and look can't be used unless it is the owner's or they have permission; otherwise it is built as
+  our own venue at the real site, like Lot 57.
+- **Facts it was made on.** The weekly limit read 0 at 23:43 UTC on Oct 20 after hitting 1.0 at about 15:30; the machine
+  has 4 cores shared by all the workflows' Playwright renders; the five-hour and weekly limits, not the number of lanes,
+  set the total amount of work per day, so more lanes trade depth for breadth.
