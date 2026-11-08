@@ -10,9 +10,8 @@
 | 13.0 | On Earth, wind and rain wipe a footprint out in days. | a footprint on Earth beach washes away under rain and wind; the same print on the Moon stays | spine: Earth: days · Moon: no wind, no rain | bell on a label or counter |
 | 17.8 | The Moon has almost no air, so no wind and no rain. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
 | 22.5 | Only slow things wear a print down. | tiny grains strike the dust; radiation and sunlight slowly bleach and stir it; a print edge softens over a long timeline | spine: only slow things wear it down | bell on a label or counter |
-| 26.1 | Tiny space grains keep hitting the dust, one at a time. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 29.8 | Sunlight and radiation slowly change it too. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 33.4 | Estimates say a print could last millions of years. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
+| 27.3 | Tiny space grains keep hitting the dust, one at a time. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
+| 32.2 | That sandblasting wears the Moon down about a millimeter every million years. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
 | 37.0 | Pull back from one boot print to the whole site. | pull back from one print to the whole site: tracks, the lander's base, gear left behind | spine: still where they left it | bell on a label or counter |
 | 44.0 | The lander's base and the tracks are still where the astronauts left them, as orbiters show. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
 | 51.0 | No beach on Earth keeps a footprint like that. | hold on the Moon rising over a street at night | captions | bell on a label or counter |

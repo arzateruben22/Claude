@@ -9,6 +9,9 @@ Lint (kits/cinema/script/lint.py, STANDARDS-v2): 165 words, whole script about g
 ## Cut or tightened
 - Any figure beyond about four spoken numbers moved to on-screen text or became a comparison.
 
+## Source-pass changes (8 Nov)
+- Source pass: the NASA-hosted Lawler paper is a 2012 community white paper, and it undercuts 'Not our Sun' / 'Sun-like stars don't make much' (slow-process stars do make some heavy elements), so those lines were cut. Hook is now 'Look up.'; normal explains neutron capture in plain words ('one way is the fast way'). 'Before our Sun was born' and 'older than our planet' cut (no source). The 130-million-light-year line cut (no NASA page); the readout now uses NASA's statement that the light came hours after the gravitational waves.
+
 ## Still open
 - Needs a listen after voicing (blocked on the Parakeet pin approval). Hook timing is an estimate until then.
 - c5, c7, c8 have no source yet; cut or soften any that stay without one.

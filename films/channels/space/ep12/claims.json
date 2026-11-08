@@ -53,24 +53,36 @@
  {
   "id": "c4",
   "sentence": "Tiny space grains keep hitting the dust, one at a time.",
-  "claim": "Micrometeorites and radiation slowly erode and stir the lunar surface.",
-  "source_url": "https://todo.invalid/find-source",
-  "source_title": "TO FIND",
+  "claim": "The constant rain of micrometeorites grinds away all airless planetary surfaces.",
+  "source_url": "https://science.nasa.gov/solar-system/moon/history-of-lunar-exploration/",
+  "source_title": "History of Lunar Exploration (NASA)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA page on micrometeorite erosion and lunar regolith). SOURCE NOT YET FOUND.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. ",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The constant rain of micrometeorites grinds away all airless planetary surfaces, albeit this sandblaster is extremely slow (the Moon erodes at a rate of roughly 1 millimeter per million years.)",
+   "qualification": "'One at a time' is our plain wording of a constant rain of micrometeorites."
+  }
  },
  {
   "id": "c5",
-  "sentence": "Estimates say a print could last millions of years.",
-  "claim": "Footprints on the Moon could last for millions of years (an estimate).",
-  "source_url": "https://todo.invalid/find-source",
-  "source_title": "TO FIND",
+  "sentence": "That sandblasting wears the Moon down about a millimeter every million years.",
+  "claim": "The Moon erodes at a rate of roughly 1 millimeter per million years.",
+  "source_url": "https://science.nasa.gov/solar-system/moon/history-of-lunar-exploration/",
+  "source_title": "History of Lunar Exploration (NASA)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: a source for footprint lifetime). SOURCE NOT YET FOUND. Coordinator: say it as an estimate; if no source is found, cut the number.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. A person should check the lifetime inference.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The constant rain of micrometeorites grinds away all airless planetary surfaces, albeit this sandblaster is extremely slow (the Moon erodes at a rate of roughly 1 millimeter per million years.)",
+   "qualification": "Matches (roughly). One arXiv review uses a rate about ten times faster, so treat the number as rough."
+  }
  },
  {
   "id": "c6",
@@ -108,17 +120,6 @@
  },
  {
   "id": "c21",
-  "sentence": "Sunlight and radiation slowly change it too.",
-  "claim": "Micrometeorites and radiation slowly erode and stir the lunar surface.",
-  "source_url": "https://todo.invalid/find-source",
-  "source_title": "TO FIND",
-  "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA page on micrometeorite erosion and lunar regolith). SOURCE NOT YET FOUND.",
-  "verified_via": "search excerpt",
-  "status": "TODO open link"
- },
- {
-  "id": "c22",
   "sentence": "The lander's base and the tracks are still where the astronauts left them, as orbiters show.",
   "claim": "LRO photographed Apollo landing sites; astronaut tracks and descent stages are visible.",
   "source_url": "https://science.nasa.gov/resource/apollo-11-landing-site/",
@@ -135,14 +136,20 @@
   }
  },
  {
-  "id": "c23",
+  "id": "c22",
   "sentence": "Look up tonight: some of them may still be there.",
-  "claim": "Footprints on the Moon could last for millions of years (an estimate).",
-  "source_url": "https://todo.invalid/find-source",
-  "source_title": "TO FIND",
+  "claim": "The Moon erodes at a rate of roughly 1 millimeter per million years.",
+  "source_url": "https://science.nasa.gov/solar-system/moon/history-of-lunar-exploration/",
+  "source_title": "History of Lunar Exploration (NASA)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: a source for footprint lifetime). SOURCE NOT YET FOUND. Coordinator: say it as an estimate; if no source is found, cut the number.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. A person should check the lifetime inference.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The constant rain of micrometeorites grinds away all airless planetary surfaces, albeit this sandblaster is extremely slow (the Moon erodes at a rate of roughly 1 millimeter per million years.)",
+   "qualification": "Our inference: a print a few centimeters deep and a loss of about a millimeter per million years suggest a very long life; the page does not mention footprints."
+  }
  }
 ]

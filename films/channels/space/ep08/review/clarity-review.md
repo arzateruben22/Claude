@@ -9,6 +9,9 @@ Lint (kits/cinema/script/lint.py, STANDARDS-v2): 161 words, whole script about g
 ## Cut or tightened
 - Any figure beyond about four spoken numbers moved to on-screen text or became a comparison.
 
+## Source-pass changes (8 Nov)
+- Poe 1848 line cut (no primary source found); replaced by 'The key here is time.'. The 'more than thirteen billion years' galaxy line softened to 'billions of years'. ESA confirms 13.8 billion years. Britannica (Olbers) returns 403 from here, so c1-c3, c5, c7 stay OPEN.
+
 ## Still open
 - Needs a listen after voicing (blocked on the Parakeet pin approval). Hook timing is an estimate until then.
 - The Poe sentence (c4) has no source yet: cut it if none is found.

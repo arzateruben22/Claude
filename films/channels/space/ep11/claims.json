@@ -54,12 +54,18 @@
   "id": "c4",
   "sentence": "Earth is rock and metal, packed tight, so it sinks.",
   "claim": "Earth's mean density is 5.51 g/cm3, so it sinks in water; Earth is rock and metal.",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
   "source_title": "Earth Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Mean density (kg/m3): Earth 5,513.",
+   "qualification": "'Rock and metal' is general knowledge; the sheet gives the density only."
+  }
  },
  {
   "id": "c5",
@@ -82,7 +88,7 @@
   "id": "c20",
   "sentence": "Saturn weighs less than the same amount of water, space for space.",
   "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
-  "source_url": "https://science.nasa.gov/saturn/facts/",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
   "source_title": "Saturn Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-08",
   "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Thought experiment: real Saturn is gas and would not float as one object.",
@@ -91,8 +97,8 @@
   "source_read": {
    "date": "2026-11-08",
    "by": "builder (an AI), fetched the page and read it",
-   "quote": "...an average density that is less than water.",
-   "qualification": "Supports 'less than the same amount of water'."
+   "quote": "Mean density (kg/m3): Saturn 687, Earth 5,513.",
+   "qualification": "Water is 1,000 kg/m3 (standard value, not on the sheet)."
   }
  },
  {

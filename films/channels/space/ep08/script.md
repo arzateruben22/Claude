@@ -20,7 +20,7 @@ vo: Say the universe has no edge or start. {-} Then every line of sight would en
 vo: Far stars look fainter, but there are more of them. {c2} Those two effects cancel, so the whole sky should *glow* like a star's surface. {c3}
 
 ## why {shot: a timeline from now back to the start; light from far stars drawn as dashes still on the way · spine "light needs time to arrive" · picture-only 2 s · energy: 0.62} (22.5–37 s)
-vo: In eighteen forty-eight, writer Edgar Allan Poe guessed why. {c4} Far starlight may not have had *time* to reach us. {c5} We now put the universe's age near thirteen point eight billion *years*. {c6}
+vo: The key here is *time*. {-} Far starlight may not have had time to reach us *yet*. {c5} We now put the universe's age near thirteen point eight billion *years*. {c6}
 
 ## whoa {shot: the sightline stops at a horizon; beyond it the stars are switched off, "still on the way" · spine "the dark is a clue" · picture-only 3 s · energy: 0.8} (37–51 s)
 vo: Past a certain distance, starlight is still on its *way*. {c20} So we can only see so *far*. {c21} The dark sky hints that the universe has a *beginning*. {c7}
@@ -29,7 +29,7 @@ vo: Past a certain distance, starlight is still on its *way*. {c20} So we can on
 vo: So tonight's dark isn't empty. {-} It's a *clue*: the universe has not been shining forever. {c22}
 
 ## readout {segment: readout · light-time readout: "8 min" Sun; "billions of years" far galaxies · a ping per line · picture-only 0.2 s · energy: 0.45} (58–65.5 s)
-vo: *Light time*: from the Sun, about eight minutes. {c8} From the farthest galaxies we can see, more than thirteen *billion* years. {c9}
+vo: *Light time*: from the Sun, about eight minutes. {c8} From the farthest galaxies we see, *billions* of years. {c9}
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
 vo: Next: where did the *gold* in your ring come from? {-}

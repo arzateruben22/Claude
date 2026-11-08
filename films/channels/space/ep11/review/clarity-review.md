@@ -9,6 +9,9 @@ Lint (kits/cinema/script/lint.py, STANDARDS-v2): 152 words, whole script about g
 ## Cut or tightened
 - Any figure beyond about four spoken numbers moved to on-screen text or became a comparison.
 
+## Source-pass changes (8 Nov)
+- Source pass: NASA's Saturn page says Saturn is the only planet less dense than water and could float in a bathtub; NSSDC gives 687 vs 5,513 kg per cubic meter. All 8 claims SOURCE-READ.
+
 ## Still open
 - Needs a listen after voicing (blocked on the Parakeet pin approval). Hook timing is an estimate until then.
 - none beyond OPEN sources.

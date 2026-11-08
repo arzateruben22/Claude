@@ -3,7 +3,7 @@
   "id": "c1",
   "sentence": "The edge is called the event horizon.",
   "claim": "The event horizon is the boundary around a black hole beyond which nothing, not even light, can escape.",
-  "source_url": "https://science.nasa.gov/universe/black-holes/",
+  "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
   "source_title": "Black hole safety brochure (NASA SVS)",
   "accessed": "2026-11-08",
   "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm.",
@@ -12,26 +12,32 @@
   "source_read": {
    "date": "2026-11-08",
    "by": "builder (an AI), fetched the page and read it",
-   "quote": "gravity just beneath its surface, the event horizon, is strong enough that nothing - not even light - can escape.",
-   "qualification": "Page also says 'what matter looks like inside their event horizons' is unknown: the film says nothing about the inside."
+   "quote": "Event Horizon - The Point of No Return (diagram label); '...not even light can escape their gravity.'",
+   "qualification": "Diagram label, not a definition sentence."
   }
  },
  {
   "id": "c2",
-  "sentence": "At the horizon, it's more than light speed.",
-  "claim": "At the event horizon, the escape speed equals the speed of light.",
+  "sentence": "Past that edge, escaping would take more than light speed.",
+  "claim": "Once you enter the event horizon, escaping requires traveling faster than light.",
   "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
-  "source_title": "Black hole safety brochure (NASA SVS)",
+  "source_title": "NASA black hole safety card (SVS)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. ",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Once you enter the event horizon, escaping the black hole requires traveling faster than light.",
+   "qualification": "Matches. The film says nothing about what is inside."
+  }
  },
  {
   "id": "c3",
   "sentence": "Nothing travels faster than light, so nothing gets out from there.",
   "claim": "Nothing can outrun light, so nothing escapes from within the horizon.",
-  "source_url": "https://science.nasa.gov/universe/black-holes/",
+  "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
   "source_title": "NASA SVS",
   "accessed": "2026-11-08",
   "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Do not say what happens inside.",
@@ -40,8 +46,8 @@
   "source_read": {
    "date": "2026-11-08",
    "by": "builder (an AI), fetched the page and read it",
-   "quote": "...nothing - not even light - can escape.",
-   "qualification": "Supports 'nothing gets out'; the 'nothing is faster than light' half is general physics, not on this page."
+   "quote": "...not even light can escape their gravity. / ...escaping the black hole requires traveling faster than light.",
+   "qualification": "'Nothing travels faster than light' is standard physics, not stated on this card."
   }
  },
  {
@@ -80,14 +86,20 @@
  },
  {
   "id": "c6",
-  "sentence": "To you, far away, your friend slows, reddens, fades, and seems to freeze.",
+  "sentence": "To you, far away, your friend's clock seems to tick slower.",
   "claim": "Seen from afar, an infalling object appears to slow, redden, fade and freeze at the horizon; the faller notices nothing special locally.",
-  "source_url": "https://science.nasa.gov/universe/black-holes/supermassive-black-holes/",
+  "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
   "source_title": "NASA black hole visualization (2024)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Coordinator: do not claim what happens inside. Confirm the page wording.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Coordinator: do not claim what happens inside. Confirm the page wording.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Time dilation: ...Anyone watching you will notice time passing more slowly for you, but you feel like time is speeding up for everyone else.",
+   "qualification": "'Slower and slower' follows 'as you get closer'."
+  }
  },
  {
   "id": "c7",
@@ -125,7 +137,7 @@
  },
  {
   "id": "c11",
-  "sentence": "Escape speed is how fast you must go to leave for good.",
+  "sentence": "Escape speed is the speed needed to leave for good.",
   "claim": "Escape velocity is the speed needed to break free of a body's gravity for good.",
   "source_url": "https://science.nasa.gov/universe/black-holes/",
   "source_title": "Black holes (NASA; find exact page)",
@@ -133,6 +145,23 @@
   "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm; any NASA education page on escape velocity will do.",
   "verified_via": "search excerpt",
   "status": "TODO open link"
+ },
+ {
+  "id": "c13",
+  "sentence": "To them, it's everyone else who seems to speed up.",
+  "claim": "Watchers see time pass slowly for a faller, who feels time speeding up for everyone else.",
+  "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
+  "source_title": "NASA black hole safety card",
+  "accessed": "2026-11-08",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. ",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...you feel like time is speeding up for everyone else.",
+   "qualification": "Matches."
+  }
  },
  {
   "id": "c20",
@@ -153,14 +182,20 @@
  },
  {
   "id": "c21",
-  "sentence": "To them, at a huge black hole, their own clock runs as usual.",
+  "sentence": "The closer they get, the bigger the gap.",
   "claim": "Seen from afar, an infalling object appears to slow, redden, fade and freeze at the horizon; the faller notices nothing special locally.",
-  "source_url": "https://science.nasa.gov/universe/black-holes/supermassive-black-holes/",
+  "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
   "source_title": "NASA black hole visualization (2024)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Coordinator: do not claim what happens inside. Confirm the page wording.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Coordinator: do not claim what happens inside. Confirm the page wording.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "As you get closer to the black hole, time appears to be passing faster for distant objects.",
+   "qualification": "Matches."
+  }
  },
  {
   "id": "c22",

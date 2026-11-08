@@ -9,6 +9,9 @@ Lint (kits/cinema/script/lint.py, STANDARDS-v2): 164 words, whole script about g
 ## Cut or tightened
 - Any figure beyond about four spoken numbers moved to on-screen text or became a comparison.
 
+## Source-pass changes (8 Nov)
+- Source pass: 'could last millions of years' replaced by NASA's own figure, about a millimeter per million years (History of Lunar Exploration page); 'sunlight and radiation' line cut (unsourced). NASA's Apollo 11 landing-site page shows the descent stage and footprint trails from orbit.
+
 ## Still open
 - Needs a listen after voicing (blocked on the Parakeet pin approval). Hook timing is an estimate until then.
 - c4 and c5 have no source yet: if c5 stays unsourced, cut 'millions of years'.

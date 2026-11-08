@@ -1,25 +1,37 @@
 [
  {
   "id": "c1",
-  "sentence": "Not our Sun.",
-  "claim": "Heavy elements such as gold are made mostly by neutron-capture processes; ordinary Sun-like stars make little gold.",
+  "sentence": "Gold is heavier than iron.",
+  "claim": "Elements heavier than iron are formed by neutron-capture reactions.",
   "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
-  "source_title": "Lawler (NASA UV-Vis study, r-process)",
+  "source_title": "Roederer, Sobeck and Lawler white paper to NASA (2012)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Hedge 'don't make much'. Confirm the PDF; find a plainer NASA page for stars like the Sun.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. ",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The elements heavier than iron ... are formed by neutron-capture reactions.",
+   "qualification": "Community white paper to NASA (2012), not a NASA statement. Gold above iron is basic chemistry."
+  }
  },
  {
   "id": "c2",
-  "sentence": "To build it, you need a flood of neutrons, all at once.",
-  "claim": "The r-process needs a flood of neutrons, over in seconds, to build about half the elements heavier than iron, gold among them.",
+  "sentence": "Atoms that heavy are built by soaking up neutrons.",
+  "claim": "Heavy atoms are built by neutron capture.",
   "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
-  "source_title": "Lawler (NASA)",
+  "source_title": "same white paper",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Confirm.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. ",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "The elements heavier than iron ... are formed by neutron-capture reactions.",
+   "qualification": "Community white paper to NASA (2012), not a NASA statement. 'Soaking up' is our plain wording."
+  }
  },
  {
   "id": "c3",
@@ -91,79 +103,104 @@
  },
  {
   "id": "c7",
-  "sentence": "Scientists still debate what else makes gold.",
-  "claim": "How much gold comes from mergers versus other sources is debated.",
-  "source_url": "https://todo.invalid/find-source",
-  "source_title": "TO FIND",
+  "sentence": "Scientists still debate what else makes heavy atoms.",
+  "claim": "As of 2012 the sites of r-process production were not definitively known.",
+  "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
+  "source_title": "same white paper (2012, before GW170817)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: NASA or a review on where gold and platinum come from). SOURCE NOT YET FOUND. Coordinator: others are debated; never say all.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Dated; supports 'debated', not the current state of the art.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...there are no definitive observations linking high-mass r-process material with an astrophysical site or sites of nucleosynthesis... reasonable but unproven models of r-process nucleosynthesis in neutron star plus neutron star or black hole mergers...",
+   "qualification": "2012, before GW170817: supports 'debated' as of then, not a current survey."
+  }
  },
  {
   "id": "c8",
-  "sentence": "Some of its gold was probably made in a crash like that, before our Sun was born.",
+  "sentence": "Some of its gold may have been made in a crash like that, somewhere in space.",
   "claim": "The Sun and planets formed from gas already enriched in heavy elements by earlier stellar events, about 4.6 billion years ago.",
-  "source_url": "https://todo.invalid/find-source",
-  "source_title": "TO FIND",
-  "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: a page saying heavy elements in the solar system pre-date the Sun). SOURCE NOT YET FOUND. 'Probably' keeps the hedge.",
-  "verified_via": "search excerpt",
-  "status": "TODO open link"
- },
- {
-  "id": "c9",
-  "sentence": "Light time: that crash was about a hundred thirty million light-years away.",
-  "claim": "GW170817 happened about 130 million light-years away.",
   "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
-  "source_title": "GW170817 distance (LIGO / NASA)",
-  "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Same source family as episode 1's LIGO claim.",
-  "verified_via": "search excerpt",
-  "status": "TODO open link"
- },
- {
-  "id": "c10",
-  "sentence": "Its light left before the dinosaurs died out.",
-  "claim": "130 million years ago is before the dinosaurs' end, about 66 million years ago.",
-  "source_url": "https://todo.invalid/find-source",
   "source_title": "TO FIND",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (own arithmetic; and a page for the end of the dinosaurs: about 66 million years ago). Own arithmetic plus a NASA or Smithsonian date for the extinction.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. (was TO FIND) (find: a page saying heavy elements in the solar system pre-date the Sun). SOURCE NOT YET FOUND. 'Probably' keeps the hedge.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...radioactive elements like platinum and gold formed in the debris from the merger.",
+   "qualification": "Page says 'astronomers think'; the film says 'may have been'."
+  }
+ },
+ {
+  "id": "c12",
+  "sentence": "One way is the fast way: a place packed with neutrons.",
+  "claim": "High neutron densities lead to the rapid neutron-capture process (r-process).",
+  "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
+  "source_title": "same white paper",
+  "accessed": "2026-11-08",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. ",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Relatively high neutron densities lead to heavy element nucleosynthesis by the rapid neutron-capture process (r-process).",
+   "qualification": "Community white paper to NASA (2012), not a NASA statement. Says 'one way' (the slow process is the other)."
+  }
+ },
+ {
+  "id": "c13",
+  "sentence": "Its visible light was spotted several hours later.",
+  "claim": "Visible and infrared light from GW170817 was detected several hours after the gravitational waves.",
+  "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
+  "source_title": "Kilonova (NASA)",
+  "accessed": "2026-11-08",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. ",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Visible light and infrared emission were detected from GW170817 several hours after the gravitational waves.",
+   "qualification": ""
+  }
  },
  {
   "id": "c20",
-  "sentence": "Gold is heavier than iron.",
-  "claim": "Heavy elements such as gold are made mostly by neutron-capture processes; ordinary Sun-like stars make little gold.",
-  "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
-  "source_title": "Lawler (NASA UV-Vis study, r-process)",
+  "sentence": "So some gold may be leftovers of a star crash.",
+  "claim": "The Sun and planets formed from gas already enriched in heavy elements by earlier stellar events, about 4.6 billion years ago.",
+  "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
+  "source_title": "TO FIND",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Hedge 'don't make much'. Confirm the PDF; find a plainer NASA page for stars like the Sun.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. (was TO FIND) (find: a page saying heavy elements in the solar system pre-date the Sun). SOURCE NOT YET FOUND. 'Probably' keeps the hedge.",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "...radioactive elements like platinum and gold formed in the debris from the merger.",
+   "qualification": "As above."
+  }
  },
  {
   "id": "c21",
-  "sentence": "Stars like our Sun don't make much of it.",
-  "claim": "Heavy elements such as gold are made mostly by neutron-capture processes; ordinary Sun-like stars make little gold.",
-  "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
-  "source_title": "Lawler (NASA UV-Vis study, r-process)",
+  "sentence": "Light time: the crash's ripples in space came first.",
+  "claim": "GW170817 (Aug 2017): a neutron-star merger seen in gravitational waves, light and X-rays.",
+  "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
+  "source_title": "Kilonova (NASA)",
   "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. Hedge 'don't make much'. Confirm the PDF; find a plainer NASA page for stars like the Sun.",
+  "note": "SOURCE-READ by the builder; still needs a person to open it before OK. Confirm the year and the word 'happen' (seen, not made).",
   "verified_via": "search excerpt",
-  "status": "TODO open link"
- },
- {
-  "id": "c22",
-  "sentence": "So some gold may be older than our whole planet.",
-  "claim": "The Sun and planets formed from gas already enriched in heavy elements by earlier stellar events, about 4.6 billion years ago.",
-  "source_url": "https://todo.invalid/find-source",
-  "source_title": "TO FIND",
-  "accessed": "2026-11-08",
-  "note": "NOT YET CHECKED: candidate source. A person opens the page before this is marked ok. SOURCE TO FIND: (find: a page saying heavy elements in the solar system pre-date the Sun). SOURCE NOT YET FOUND. 'Probably' keeps the hedge.",
-  "verified_via": "search excerpt",
-  "status": "TODO open link"
+  "status": "TODO open link",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Visible light and infrared emission were detected from GW170817 several hours after the gravitational waves.",
+   "qualification": ""
+  }
  }
 ]

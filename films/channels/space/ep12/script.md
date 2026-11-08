@@ -20,13 +20,13 @@ vo: In nineteen sixty-nine, Apollo astronauts walked in the Moon's *dust*. {c1} 
 vo: On Earth, wind and rain wipe a footprint out in *days*. {-} The Moon has almost no air, so no wind and no *rain*. {c3}
 
 ## why {shot: tiny grains strike the dust; radiation and sunlight slowly bleach and stir it; a print edge softens over a long timeline · spine "only slow things wear it down" · picture-only 2 s · energy: 0.62} (22.5–37 s)
-vo: Only slow things wear a print down. {-} Tiny space grains keep hitting the dust, one at a *time*. {c4} Sunlight and radiation slowly change it too. {c21} Estimates say a print could last *millions* of years. {c5}
+vo: Only slow things wear a print down. {-} Tiny space grains keep hitting the dust, one at a *time*. {c4} That sandblasting wears the Moon down about a *millimeter* every million years. {c5}
 
 ## whoa {shot: pull back from one print to the whole site: tracks, the lander's base, gear left behind · spine "still where they left it" · picture-only 3 s · energy: 0.8} (37–51 s)
-vo: Pull back from one boot print to the whole *site*. {-} The lander's base and the tracks are *still* where the astronauts left them, as orbiters show. {c22}
+vo: Pull back from one boot print to the whole *site*. {-} The lander's base and the tracks are *still* where the astronauts left them, as orbiters show. {c21}
 
 ## takeaway {shot: hold on the Moon rising over a street at night · picture-only 0.2 s · energy: 0.3} (51–58 s)
-vo: No beach on Earth keeps a footprint like that. {-} Look up tonight: some of them may *still* be there. {c23}
+vo: No beach on Earth keeps a footprint like that. {-} Look up tonight: some of them may *still* be there. {c22}
 
 ## readout {segment: readout · light-time readout: "1.3 s" Earth to Moon · a ping per line · picture-only 0.2 s · energy: 0.45} (58–65.5 s)
 vo: *Light time* to the Moon: about one and a quarter *seconds*. {c6} Close enough to talk, with a short wait. {-}
