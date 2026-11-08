@@ -25,15 +25,17 @@ Earth tunnel, everyone in one city, ants, count to a billion, everybody jump, ev
   (NASA); Moon distance 384,400 km (NASA).
 - **Fits:** the same comparison engine as ep02 (the crowd) but linear, and it ties people to the planet.
 
-## ep09 All the gold
-- **Wait, what?** "Melt every ounce of gold ever mined. How big is the block?"
-- **Payoff:** about 215,000 tonnes: a cube roughly 22 m on a side, which fits inside a tennis court's footprint
-  (about 23.8 x 10.9 m) when stacked to a house's height.
-- **Assumptions:** pure gold at 19.3 g/cm3; estimate of mined stock (about +/-5%); recycling changes nothing.
-- **Claims:** total above-ground gold about 216,000 t end 2024 (World Gold Council); density of gold 19.32
-  g/cm3 (NIST/CRC Handbook); tennis court size 23.77 x 10.97 m doubles (ITF); volume = mass/density.
-- **Fits:** the viewer's body: a cube you could "walk around in 30 s". A wrong idea ("it'd fill a stadium")
-  turned by arithmetic.
+## ep09 A rope around the Earth (replaces "All the gold", which overlaps One More Orbit's gold episode; coordinator, 8 Nov)
+- **Wait, what?** "Tie a rope round the whole Earth. Lift it one metre off the ground, all the way round. How much more rope?"
+- **Payoff:** about 6.3 metres: 2 x pi x 1 m. The answer does not depend on the planet at all: the same for a
+  football, the Earth or the Sun.
+- **Assumptions:** a perfect sphere, a rope on the ground (idealised: oceans, mountains ignored), lifted
+  evenly to 1 m, no sag; "the whole Earth" taken as the equator.
+- **Claims:** equator about 40,075 km, radius about 6,378 km (NASA Earth fact sheet); circumference = 2 x pi x r,
+  so lifting r by h adds 2 x pi x h (geometry, `calc.py`); a person's height about 1.7 m as the anchor
+  (NCD-RisC) so the extra rope is "about four of you".
+- **Fits:** the wrong idea ("a whole planet's worth of rope!") turned by arithmetic you can check with a hula
+  hoop; viewer-scale anchor (you, then a ring, then a planet).
 
 ## ep10 Every shuffle is new
 - **Wait, what?** "Shuffle a deck of cards. That exact order has probably never existed before."
@@ -72,7 +74,7 @@ Earth tunnel, everyone in one city, ants, count to a billion, everybody jump, ev
   magnitude", or the build swaps in whichever source a person opens.
 
 ## Cross-checks and risks
-- Ep07, 08 and 11 use NASA distances/diameters; ep08, 10 use UN WPP 2024; the numerals in the voice must
+- Ep07, 08, 09 and 11 use NASA distances/diameters; ep08, 10 use UN WPP 2024; the numerals in the voice must
   match the screen (calc.py is the single source, as in Season 1).
 - Ep08 mentions the Moon distance only as a comparison, so ep07's payoff is not spoiled.
 - Ep11 payoff wording ("about as wide as ...") will be chosen from a figure a person can open; no landmark is

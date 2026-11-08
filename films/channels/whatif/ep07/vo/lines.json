@@ -1,0 +1,200 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/ep07/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How long to walk to the Moon? Starting at your own front door.",
+   "stars": [
+    "Moon"
+   ],
+   "phonemes": "hˌaʊ lˈɔŋ tə wˈɔːk tə ðə mˈuːn? stˈɑːɹɾɪŋ æt jʊɹ ˈoʊn fɹˈʌnt dˈɔːɹ.",
+   "speeds": [
+    0.84,
+    0.74
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     1.5528,
+     2.1528
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.081,
+   "sha256": "a441d759839fc4e4990f9aff8135ca79522192e399b9a2f0290be24918e15ee8"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between. That is a very long way for a pair of shoes.",
+   "stars": [
+    "side",
+    "shoes"
+   ],
+   "phonemes": "ðə mˈuːn sˈɪts ɐbˌaʊt θˈɜːɾi ˈɜːθs ɐwˈeɪ, lˈaɪnd ˌʌp sˈaɪd baɪ sˈaɪd, wɪð nˈʌθɪŋ bˌʌt dˈɑːɹk bᵻtwˈiːn. ðæt ɪz ɐ vˈɛɹi lˈɔŋ wˈeɪ fɚɹə pˈɛɹ ʌv ʃˈuːz.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     7.583,
+     7.963
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 10.807,
+   "sha256": "1bf77e527ee017fec0b00fd77ce054ce6753f7a3d1fc2c343db07ad19fee6e30"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Walk at an easy pace, the kind you could chat through, and never stop, not even to sleep, and you arrive in about nine years.",
+   "stars": [
+    "years"
+   ],
+   "phonemes": "wˈɔːk æɾ ɐn ˈiːzi pˈeɪs, ðə kˈaɪnd juː kʊd tʃˈæt θɹˈuː, ænd nˈɛvɚ stˈɑːp, nˌɑːt ˈiːvən tə slˈiːp, ænd juː ɚɹˈaɪv ɪn ɐbˌaʊt nˈaɪn jˈɪɹz.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "03.wav",
+   "dur": 9.01,
+   "sha256": "b2bf89a1559b2f36b00df224c1f10c74f619923e2a872ad27a58ba587a5d5487"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "But nobody walks day and night. You sleep, you eat, you stop to tie a shoe. So give yourself a working day of walking.",
+   "stars": [
+    "walking"
+   ],
+   "phonemes": "bˌʌt nˈoʊbɑːdi wˈɔːks dˈeɪ ænd nˈaɪt. juː slˈiːp, juː ˈiːt, juː stˈɑːp tə tˈaɪ ɐ ʃˈuː. sˌoʊ ɡˈɪv jɔːɹsˈɛlf ɐ wˈɜːkɪŋ dˈeɪ ʌv wˈɔːkɪŋ.",
+   "speeds": [
+    0.8,
+    0.76,
+    0.74
+   ],
+   "gaps": [
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     1.8425,
+     2.2225
+    ],
+    [
+     4.9787,
+     5.3587
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 8.145,
+   "sha256": "723e3aada0642e3431e83775f097f8980be1ced5a96af9d70c3fec019cae6aac"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "A working day of walking, every day, gets you there in about twenty-six years. Stick to the popular daily step goal instead, and it is closer to a hundred and forty.",
+   "stars": [
+    "years",
+    "forty"
+   ],
+   "phonemes": "ɐ wˈɜːkɪŋ dˈeɪ ʌv wˈɔːkɪŋ, ˈɛvɹi dˈeɪ, ɡˈɛts juː ðɛɹ ɪn ɐbˌaʊt twˈɛntisˈɪks jˈɪɹz. stˈɪk tə ðə pˈɑːpjʊlɚ dˈeɪli stˈɛp ɡˈoʊl ɪnstˈɛd, ænd ɪɾ ɪz klˈoʊsɚ tʊ ɐ hˈʌndɹɪd ænd fˈɔːɹɾi.",
+   "speeds": [
+    0.72,
+    0.7
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     5.8291,
+     6.2091
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 13.293,
+   "sha256": "0272ed5388a7bc1dd9fd14b3304af7279d19725e8bd1b8e963dce9d536ff0c68"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Slower adds years, quicker trims a few, but it never gets close.",
+   "stars": [
+    "close"
+   ],
+   "phonemes": "slˈoʊɚɹ ˈædz jˈɪɹz, kwˈɪkɚ tɹˈɪmz ɐ fjˈuː, bˌʌt ɪt nˈɛvɚ ɡˈɛts klˈoʊs.",
+   "speeds": [
+    0.74
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 4.727,
+   "sha256": "f8b81d855c88543787b36e8eeb5a5194971e2e257272f80aa68bcdf48ddb2a9d"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "The Apollo crews made the same trip in about three days. The distance never changed, only the speed.",
+   "stars": [
+    "days",
+    "speed"
+   ],
+   "phonemes": "ðɪ ɐpˈɑːloʊ kɹˈuːz mˌeɪd ðə sˈeɪm tɹˈɪp ɪn ɐbˌaʊt θɹˈiː dˈeɪz. ðə dˈɪstəns nˈɛvɚ tʃˈeɪndʒd, ˈoʊnli ðə spˈiːd.",
+   "speeds": [
+    0.74,
+    0.7
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     4.0925,
+     4.4725
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 7.634,
+   "sha256": "7e73d6486c40b10e408fe789ab5c44d9c3eb5acc1bd2543d04fe41830b4302f1"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: what if everyone on Earth held hands?",
+   "stars": [
+    "hands"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: wˌʌt ɪf ˈɛvɹɪwˌʌn ˌɔn ˈɜːθ hˈɛld hˈændz?",
+   "speeds": [
+    0.72
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 3.992,
+   "sha256": "033155ccf3c55b9d0ae1f0721ee080d89b570b34dc597295a91f1842301600fd"
+  }
+ ]
+}
