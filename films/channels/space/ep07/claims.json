@@ -1,7 +1,7 @@
 [
  {
   "id": "c1",
-  "sentence": "Our galaxy holds roughly a hundred to four hundred billion stars.",
+  "sentence": "Our galaxy has roughly a hundred to four hundred billion stars.",
   "claim": "The Milky Way holds an estimated 100 to 400 billion stars.",
   "source_url": "https://science.nasa.gov/universe/exoplanets/our-milky-way-galaxy-how-big-is-space/",
   "source_title": "Our Milky Way Galaxy: How Big Is Space? (NASA)",
@@ -12,8 +12,8 @@
  },
  {
   "id": "c2",
-  "sentence": "Nobody counted them: astronomers weigh the galaxy, then divide by a typical star.",
-  "claim": "The star count is modelled from the galaxy's mass, not counted star by star.",
+  "sentence": "Nobody counted them.",
+  "claim": "The Milky Way's stars have not been counted one by one; the figure is an estimate.",
   "source_url": "https://asd.gsfc.nasa.gov/blueshift/index.php/2015/07/22/how-many-stars-in-the-milky-way/",
   "source_title": "How many stars in the Milky Way? (NASA Blueshift)",
   "accessed": "2026-11-08",
@@ -95,6 +95,17 @@
   "source_title": "Own arithmetic with c (NIST)",
   "accessed": "2026-11-08",
   "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. OWN CALCULATION; a block is taken as about 300 m (illustrative). Say 'a city block' only; do not state a length.",
+  "verified_via": "search excerpt",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c10",
+  "sentence": "Astronomers weigh the galaxy, then divide by one typical star.",
+  "claim": "The star count is modelled from the galaxy's mass and the typical mass of a star.",
+  "source_url": "https://asd.gsfc.nasa.gov/blueshift/index.php/2015/07/22/how-many-stars-in-the-milky-way/",
+  "source_title": "How many stars in the Milky Way? (NASA Blueshift)",
+  "accessed": "2026-11-08",
+  "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. Candidate. Confirm the method wording ('mass divided by average star mass'); soften the line if the page says more is involved.",
   "verified_via": "search excerpt",
   "status": "TODO open link"
  }

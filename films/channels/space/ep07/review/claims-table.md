@@ -1,0 +1,16 @@
+# ep07 claims table (all OPEN: a person must open each source page; nothing below has been opened)
+
+| claim | source (direct link) | what the source actually says | qualifications | status |
+|---|---|---|---|---|
+| c1: Our galaxy has roughly a hundred to four hundred billion stars. | https://science.nasa.gov/universe/exoplanets/our-milky-way-galaxy-how-big-is-space/ | NOT YET READ (candidate source) | The Milky Way holds an estimated 100 to 400 billion stars. Hedges to keep: about, roughly, estimate | OPEN |
+| c2: Nobody counted them. | https://asd.gsfc.nasa.gov/blueshift/index.php/2015/07/22/how-many-stars-in-the-milky-way/ | NOT YET READ (candidate source) | The Milky Way's stars have not been counted one by one; the figure is an estimate. Hedges to keep: about, roughly, estimate | OPEN |
+| c3: In twenty fifteen, a team put Earth's at about three trillion. | https://www.nature.com/articles/nature14967 | NOT YET READ (candidate source) | A 2015 Nature study estimated about 3.04 trillion trees on Earth. Hedges to keep: about, roughly, estimate | OPEN |
+| c4: Count one a second and you'd need about ninety-six thousand years. | https://www.nature.com/articles/nature14967 | NOT YET READ (candidate source) | 3.04 trillion seconds is about 96,000 years (3.04e12 / 31,557,600 s per year = 96,340). Hedges to keep: about, roughly, estimate | OPEN |
+| c5: Researchers counted trees in ground plots, then scaled up with satellite maps. | https://www.nature.com/articles/nature14967 | NOT YET READ (candidate source) | The estimate combined ground-based tree-density measurements with satellite data and regression models. Hedges to keep: about, roughly, estimate | OPEN |
+| c6: Neither number is exact, and both carry wide error bars. | https://www.nature.com/articles/nature14967 | NOT YET READ (candidate source) | Both figures are model estimates with large uncertainty. Hedges to keep: about, roughly, estimate | OPEN |
+| c7: Trees win, by roughly eight to thirty times. | https://www.nature.com/articles/nature14967 | NOT YET READ (candidate source) | 3.04 trillion / 400 billion = 7.6 and 3.04 trillion / 100 billion = 30.4, so roughly 8 to 30 times. Hedges to keep: about, roughly, estimate | OPEN |
+| c8: Light time across our galaxy: about a hundred thousand years. | https://science.nasa.gov/universe/exoplanets/our-milky-way-galaxy-how-big-is-space/ | NOT YET READ (candidate source) | The Milky Way's disc is about 100,000 light-years across, so light needs about 100,000 years to cross it. Hedges to keep: about, roughly, estimate | OPEN |
+| c9: Across a city block: about a millionth of a second. | https://www.nist.gov/si-redefinition/meter | NOT YET READ (candidate source) | Light crosses 300 m in 1 microsecond (300 / 299,792,458 s). Hedges to keep: about, roughly, estimate | OPEN |
+| c10: Astronomers weigh the galaxy, then divide by one typical star. | https://asd.gsfc.nasa.gov/blueshift/index.php/2015/07/22/how-many-stars-in-the-milky-way/ | NOT YET READ (candidate source) | The star count is modelled from the galaxy's mass and the typical mass of a star. Hedges to keep: about, roughly, estimate | OPEN |
+
+Own arithmetic (c4, c7, c9) is checkable from the inputs and inherits the status of the claims it uses.

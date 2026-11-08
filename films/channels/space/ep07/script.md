@@ -21,7 +21,7 @@ direction for the compiler. In a vo line, `{c1,c2}` after a sentence ties it to 
 vo: More trees, or more *stars*? {-} Guess *first*. {-}
 
 ## normal {shot: the galaxy, slow arc; a pin on the Sun · spine "stars in the Milky Way: 100 to 400 billion (estimate)" · picture-only 0.2 s · energy: 0.45} (3.4–13 s)
-vo: Our galaxy holds roughly a hundred to four hundred *billion* stars. {c1} Nobody counted them: astronomers weigh the galaxy, then divide by a typical star. {c2}
+vo: Our galaxy has roughly a hundred to four hundred *billion* stars. {c1} Nobody counted them. {c2} Astronomers weigh the galaxy, then divide by one typical star. {c10}
 
 ## change {shot: pull in to Earth; its forests light as teal dots · spine "trees on Earth: about 3 trillion (estimate)" · picture-only 0.2 s · energy: 0.55} (13–22.5 s)
 vo: Now the trees. In twenty fifteen, a team put Earth's at about three *trillion*. {c3} Count one a second and you'd need about ninety-six thousand years. {c4}
