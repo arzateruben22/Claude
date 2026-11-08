@@ -737,13 +737,6 @@
    "t1": 42.883333
   },
   {
-   "id": "lad",
-   "text": "illustration",
-   "slot": "tr",
-   "t0": 36.5,
-   "t1": 41.266666666666666
-  },
-  {
    "id": "fast",
    "text": "sped up · not to scale",
    "slot": "tr",
@@ -755,13 +748,6 @@
    "text": "illustration",
    "t0": 56.383333,
    "t1": 74.8
-  },
-  {
-   "id": "low",
-   "text": "low estimate",
-   "slot": "tr",
-   "t0": 63.2,
-   "t1": 68.10000000000001
   }
  ],
  "tally": {
@@ -772,7 +758,7 @@
    68.2
   ],
   "rate": 173611.11111111112,
-  "label": "while you watched: new neutrophils"
+  "label": "while you watched, a low estimate: new neutrophils"
  },
  "segBeats": [
   63.2,

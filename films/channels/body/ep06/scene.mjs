@@ -273,15 +273,20 @@ const plate = document.createElement("div"); plate.className = "mi-plate";
   for (let i = 0; i < 3; i++) { const x = 150 + 150 * i, y = 268; white.push(`<g class="wc" data-x="${x}"><path d="${blob(0, 0, 19, 17, 400 + i, 0.1)}" class="wb"/><path d="M-9 -2 q4 -6 8 0 q4 6 9 -1" class="wn"/></g>`); }
   plate.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="${NS}">
   <defs><clipPath id="pl-clip"><rect x="12" y="12" width="${PL.w - 24}" height="${PL.h - 24}" rx="10"/></clipPath><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><line x1="0" y1="0" x2="0" y2="7" stroke="var(--bone)" stroke-width="1.2" opacity="0.55"/></pattern></defs>
+  <defs><filter id="eng" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter>
+    <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="9"/><feColorMatrix values="0 0 0 0 0.9  0 0 0 0 0.85  0 0 0 0 0.7  0 0 0 0.18 0"/></filter>
+    <radialGradient id="membg" cx="0.5" cy="0.5" r="0.7"><stop offset="0" stop-color="#F2B7A8" stop-opacity="0.75"/><stop offset="1" stop-color="#8E4B4A" stop-opacity="0.5"/></radialGradient></defs>
   <rect width="${W}" height="${H}" fill="var(--bg)" opacity="0.9"/>
   <g transform="translate(${PX.toFixed(1)} ${PY.toFixed(1)}) scale(${PS2.toFixed(4)})">
     <rect width="${PL.w}" height="${PL.h}" rx="18" fill="var(--surface)"/>
     <rect x="12" y="12" width="${PL.w - 24}" height="${PL.h - 24}" rx="10" fill="none" stroke="var(--bone)" stroke-width="1.5" opacity="0.5"/>
-    <g class="tissue" fill="url(#hatch)" stroke="var(--bone)" stroke-width="2.2">${tissue.join("")}</g>
+    <rect class="memb" x="12" y="12" width="${PL.w - 24}" height="${PL.h - 24}" rx="10" fill="url(#membg)" opacity="0"/>
+    <g class="tissue" filter="url(#eng)" fill="url(#hatch)" stroke="var(--bone)" stroke-width="2.2">${tissue.join("")}</g>
     <g class="glow" fill="var(--bone)" opacity="0">${tissue.join("")}</g>
     <path d="M0 180 C150 168 300 194 600 178 L600 192 C300 208 150 182 0 194 Z" fill="url(#hatch)" stroke="var(--bone)" stroke-width="2"/>
     <path d="M0 300 C150 312 300 290 600 304 L600 318 C300 304 150 326 0 314 Z" fill="url(#hatch)" stroke="var(--bone)" stroke-width="2"/>
-    <g clip-path="url(#pl-clip)"><g class="blood" fill="none" stroke="var(--bone)" stroke-width="2">${blood.join("")}</g>
+    <rect class="paper" width="${PL.w}" height="${PL.h}" rx="18" filter="url(#grain)" opacity="0.9"/>
+    <g clip-path="url(#pl-clip)"><g class="blood" fill="var(--pulse)" fill-opacity="0" stroke="var(--bone)" stroke-width="2">${blood.join("")}</g>
     <g class="white" fill="var(--surface)" stroke="var(--bone)" stroke-width="2.6">${white.join("")}</g></g>
   </g></svg>`;
   document.getElementById("hud").prepend(plate);
@@ -295,6 +300,7 @@ const writePlate = (t) => {
   if (o <= 0.001) return;
   pq("glow").setAttribute("opacity", (0.45 * seg(t, P.tissue - 0.1, P.tissue + 0.4) * (1 - 0.6 * seg(t, P.alive, P.alive + 1.0))).toFixed(3));
   const alive = Math.max(0, t - P.alive);
+  { const m = seg(t, P.alive - 0.2, P.alive + 1.4); pq("memb").setAttribute("opacity", (0.7 * m).toFixed(3)); pq("blood").setAttribute("fill-opacity", (0.75 * m).toFixed(3)); pq("tissue").setAttribute("opacity", (1 - 0.55 * m).toFixed(3)); pq("paper").setAttribute("opacity", (0.9 * (1 - m)).toFixed(3)); }   // the engraving warms into the living membrane (no redraw)
   pq("blood").setAttribute("transform", `translate(${((alive * 24) % 50).toFixed(1)} 0)`);
   // the white cells roll slowly along the lower wall, then climb out through it (pinched as they pass)
   WCS.forEach(({ g, x }, i) => {
@@ -309,9 +315,24 @@ const FIGURE = "M50 6 C59 6 64 13 64 22 C64 32 58 40 50 40 C42 40 36 32 36 22 C3
 const HEART = "M50 58 C46 52 40 55 41 61 C42 67 49 71 54 75 C59 71 66 67 67 61 C68 55 62 52 58 58 C56 61 52 61 50 58 Z";
 const figEl = document.createElement("div"); figEl.className = "mi-fig";
 figEl.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="${NS}">
+  <defs>
+    <linearGradient id="bvol" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2F6F68" stop-opacity="0.85"/><stop offset="0.45" stop-color="#0E2E2D" stop-opacity="0.78"/><stop offset="1" stop-color="#1F5650" stop-opacity="0.85"/></linearGradient>
+    <clipPath id="bclip"><path d="${FIGURE}"/></clipPath>
+    <radialGradient id="hmus" cx="0.38" cy="0.3" r="0.85"><stop offset="0" stop-color="#FF8E86"/><stop offset="0.45" stop-color="#C7384A"/><stop offset="1" stop-color="#6E1426"/></radialGradient>
+    <radialGradient id="hglow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#FF6F6A" stop-opacity="0.55"/><stop offset="1" stop-color="#FF6F6A" stop-opacity="0"/></radialGradient>
+    <filter id="bglow" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="0.9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
   <rect width="${W}" height="${H}" fill="var(--bg)" opacity="0.94"/>
-  <g class="body"><path d="${FIGURE}" fill="var(--surface)" fill-opacity="0.9" stroke="var(--text-2)" stroke-width="0.7"/>
-    <path d="${HEART}" fill="var(--pulse)" fill-opacity="0.85"/>
+  <g class="body"><path d="${FIGURE}" fill="url(#bvol)"/>
+    <g clip-path="url(#bclip)">${Array.from({ length: 29 }, (_, i) => `<line x1="0" x2="100" y1="${4 + i * 8}" y2="${4 + i * 8}" stroke="#BFEFE3" stroke-opacity="${i % 4 === 0 ? 0.2 : 0.08}" stroke-width="0.35"/>`).join("")}</g>
+    <path d="${FIGURE}" fill="none" stroke="#9FF0DC" stroke-opacity="0.9" stroke-width="0.9" filter="url(#bglow)"/>
+    <circle cx="54" cy="64" r="20" fill="url(#hglow)"/>
+    <g class="heart" filter="url(#bglow)">
+      <path d="M53 52 C53 49 56 48 57 50 L57 55 Z" fill="#9B2A3C"/><path d="M46 52 C45 50 49 49 50 52 L50 57 Z" fill="#7C1F31"/>
+      <path d="${HEART}" fill="url(#hmus)"/>
+      <path d="M50 58 C52 62 54 66 54 75" fill="none" stroke="#FFC0B8" stroke-opacity="0.45" stroke-width="0.45"/>
+      <path d="M43 59 C45 56 48 57 49 60" fill="none" stroke="#FFD6CF" stroke-opacity="0.6" stroke-width="0.5"/>
+    </g>
     <path class="pace" d="M45 57 C46 55 49 55 50 57 C50 59 47 60 45 59 Z" fill="var(--signal)" opacity="0"/></g></svg>`;
 document.getElementById("hud").prepend(figEl);
 const figQ = (c) => figEl.querySelector("." + c);

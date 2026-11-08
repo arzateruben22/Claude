@@ -145,12 +145,6 @@
    "tag": "seam"
   },
   {
-   "t": 36.5,
-   "kind": "badge",
-   "tag": "lad",
-   "text": "illustration"
-  },
-  {
    "t": 43.183333,
    "kind": "badge",
    "tag": "fast",
@@ -197,12 +191,6 @@
    "kind": "section",
    "id": "takeaway",
    "t1": 63.2
-  },
-  {
-   "t": 63.2,
-   "kind": "badge",
-   "tag": "low",
-   "text": "low estimate"
   },
   {
    "t": 63.2,

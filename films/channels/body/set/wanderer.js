@@ -43,6 +43,11 @@ export const wanderer = (THREE, L, o = {}) => {
   }
   const bodyMat = L.patch(new THREE.MeshPhysicalMaterial({ color: L.lin(o.color || "#F3EEE4"), roughness: 0.45, emissive: L.lin(o.color || "#F3EEE4"), emissiveIntensity: 0.06,
     transparent: true, opacity: o.opacity ?? 0.62, depthWrite: false }), { fresnel: 0.55, fresnelPower: 2.0, key: "wanderer" });
+  // round 2 (review r1, h): a granular, pitted membrane (the cell's cytoplasm is full of granules), not a smooth glass ball
+  { const cv = document.createElement("canvas"); cv.width = 256; cv.height = 128; const cx = cv.getContext("2d"); cx.fillStyle = "#808080"; cx.fillRect(0, 0, 256, 128);
+    let st = 1234567 + seed * 977; const rnd = () => ((st = (st * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+    for (let i = 0; i < 900; i++) { const g = rnd() < 0.5 ? 235 : 25; cx.fillStyle = `rgba(${g},${g},${g},${0.25 + 0.3 * rnd()})`; cx.beginPath(); cx.arc(rnd() * 256, rnd() * 128, 0.8 + 1.8 * rnd(), 0, 6.283); cx.fill(); }
+    const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 1); bodyMat.bumpMap = t; bodyMat.bumpScale = 1.4; bodyMat.needsUpdate = true; }
   const body = new THREE.Mesh(geo, bodyMat); body.renderOrder = 2;
   const spin = new THREE.Group(); spin.add(body); group.add(spin);
   // the nucleus: three lobes joined by thin strands (the segmented nucleus that gives the cell its name in a smear)

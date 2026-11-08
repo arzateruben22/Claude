@@ -135,15 +135,13 @@ LABELS = [
 SCALE = {"t0": A("vo02:wide", -0.1), "t1": A("vo02:Under", -0.2), "text": "about 8 μm · round, in blood"}   # c3
 TALLY = {"t0": round(A("vo01:This", 0.3) + 0.45, 4),   # after the title has gone (the poster is the cell alone)
           "t1": B["tease"]["t0"] - 0.2, "lit": [B["meanwhile"]["t0"], B["tease"]["t0"] - 0.2], "rate": 1.5e10 / 86400.0,
-         "label": "while you watched: new neutrophils"}   # c23: 1.5 × 10¹⁰ a day ÷ 86,400 s (computed), a low estimate
+         "label": "while you watched, a low estimate: new neutrophils"}   # c23: 1.5 × 10¹⁰ a day ÷ 86,400 s (computed), a low estimate
 BADGES = [
     {"id": "slow0", "text": "slowed · not to scale", "slot": "tr", "t0": 0.0, "t1": B["change"]["t0"] - 0.3},
     {"id": "ill-plate", "text": "illustration", "t0": B["change"]["t0"] + 0.2, "t1": CUT["why"] - 0.3},
     {"id": "slow1", "text": "slowed · not to scale", "slot": "tr", "t0": CUT["why"], "t1": CUT["whoa"] - 0.3},
-    {"id": "lad", "text": "illustration", "slot": "tr", "t0": WHY["faulty"][0] - 0.2, "t1": WHY["faulty"][1] + 0.3},
     {"id": "fast", "text": "sped up · not to scale", "slot": "tr", "t0": CUT["whoa"], "t1": CUT["finger"] - 0.3},
     {"id": "ill-finger", "text": "illustration", "t0": CUT["finger"], "t1": DUR},
-    {"id": "low", "text": "low estimate", "slot": "tr", "t0": B["meanwhile"]["t0"], "t1": B["tease"]["t0"] - 0.3},
 ]
 PANEL = {"t0": B["change"]["t0"] + 0.1, "t1": CUT["why"] - 0.1, "tissue": A("vo03:tissue", -0.1), "alive": A("vo03:Julius", -0.1), "out": [A("vo03:climbed", -0.2), A("vo03:out", 0.6)]}
 FIG = {"t0": CUT["tease"], "t1": DUR}
