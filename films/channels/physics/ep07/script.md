@@ -14,7 +14,7 @@ compiler. In a vo line, `{c1,c2}` after a sentence ties it to `claims.json` and 
 outside the film; neither is spoken. Check it with `python3 -I kits/cinema/script/lint.py films/channels/physics/ep07 --segment measure`.
 
 ## hook {shot: close on the bottom coil, the top falling above it · title drop: "The slinky that waits" · badge: slowed ×10 · pre: 0.1 · energy: 0.7} (0–4.2 s)
-vo: Does a slinky's bottom *fall*? {-} Not at first… not *yet*. {c1}
+vo: Does a slinky's bottom *fall*? {-} Not for a *while*. {c1}
 
 ## normal {shot: wide, the whole slinky held up from the top · labels: "held at the top", "about 60 cm hung" · pre: 0.12 · energy: 0.45} (4.2–13 s)
 vo: Held by the top, a slinky hangs long and still. {-} Let go. {-} The top drops… and the bottom doesn't move at *all*. {c2}
@@ -31,10 +31,10 @@ vo: And the *middle*? It falls the whole time, like a dropped ball. {c8} The top
 ## measure {segment: measure · the ladder of ghosts, the stopwatch reads "0.35 s" when the top meets the bottom · pre: 0.2 · energy: 0.5} (50–59 s)
 vo: *Measure it*: the bottom's ghosts stack in one place for a third of a second. {c10} Then the top arrives, and they all go together. {c11}
 
-## takeaway {shot: hold on the pile falling together · badge: "Ideal slinky: no air, no friction" · pre: 0.25 · energy: 0.45} (59–64 s)
-vo: News at one end takes *time* to reach the other. {c12}
+## takeaway {shot: hold on the pile falling together · badge: "Ideal slinky: no air, no friction" · pre: 0.25 · energy: 0.45} (59–65 s)
+vo: News at one end takes *time* to reach the other, even through a spring. {c12}
 
-## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (64–70 s)
+## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (65–71 s)
 vo: Next: dry spaghetti, bent until it snaps. {-} It never breaks in *two*. {c13}
 end card: "Next drop: spaghetti never breaks in two" · "Follow Reality Rulebook" · footnote: "Calkin, Am. J. Phys. 61, 261 (1993): the first careful analysis of the falling spring"
 

@@ -1,7 +1,7 @@
 [
  {
   "id": "c1",
-  "sentence": "Not at first… not yet.",
+  "sentence": "Not for a while.",
   "claim": "A hanging slinky released from the top: its bottom end stays at rest while the top falls.",
   "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
   "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
@@ -122,7 +122,7 @@
  },
  {
   "id": "c12",
-  "sentence": "News at one end takes time to reach the other.",
+  "sentence": "News at one end takes time to reach the other, even through a spring.",
   "claim": "Changes of tension propagate through a spring at a finite wave speed rather than instantly.",
   "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
   "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",

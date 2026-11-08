@@ -11,15 +11,15 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Does a slinky's bottom fall? Not at first… not yet.",
+   "text": "Does a slinky's bottom fall? Not for a while.",
    "stars": [
     "fall",
-    "yet"
+    "while"
    ],
-   "phonemes": "dˈʌz ɐ slˈɪŋkiz bˈɑːɾəm fˈɔːl? nˌɑːt æt fˈɜːst… nˌɑːt jˈɛt.",
+   "phonemes": "dˈʌz ɐ slˈɪŋkiz bˈɑːɾəm fˈɔːl? nˌɑːt fɚɹə wˈaɪl.",
    "file": "01.wav",
-   "dur": 3.185,
-   "sha256": "ccfbb1b4fbe4a283cc867d6b3817e8dd4da3c229e060b6861bda0bf1d6f37507"
+   "dur": 2.618,
+   "sha256": "b3ee38289fc4252c4634cd6028d95139e8659ca5799d3214256610f03e3f37d4"
   },
   {
    "id": "vo02",
@@ -84,14 +84,14 @@
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "News at one end takes time to reach the other.",
+   "text": "News at one end takes time to reach the other, even through a spring.",
    "stars": [
     "time"
    ],
-   "phonemes": "nˈuːz æt wˈʌn ˈɛnd tˈeɪks tˈaɪm tə ɹˈiːtʃ ðɪ ˈʌðɚ.",
+   "phonemes": "nˈuːz æt wˈʌn ˈɛnd tˈeɪks tˈaɪm tə ɹˈiːtʃ ðɪ ˈʌðɚ, ˈiːvən θɹuː ɐ spɹˈɪŋ.",
    "file": "07.wav",
-   "dur": 2.435,
-   "sha256": "0a7436b05901b3b485a2f9354dc8822b56f036643f066214d0d3458659b2cbdb"
+   "dur": 3.771,
+   "sha256": "4b15d04f3f141c1cf10ba212b7a9a04ceea2dcc922443d1063e48d91756e8eba"
   },
   {
    "id": "vo08",
