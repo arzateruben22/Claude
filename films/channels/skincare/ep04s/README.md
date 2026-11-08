@@ -1,7 +1,7 @@
 # Skin Sense No. 004 sample: "The Message Behind a Frown" (new art direction, 21.5 s)
 
 Preview: `review/skin-sense-004-sample-preview.mp4` (540×960 draft, plain 2D render, voice only) and `review/contact-sheet.jpg`.
-Built to `../ART-DIRECTION.md` (copy of the branch `claude/skin-sense-art-direction` file) and `../reference/ep04-frown-reference.webp`.
+Built to `ART-DIRECTION.md` on branch `claude/skin-sense-art-direction` (not copied here: a git fetch of that branch timed out; its text was read through the GitHub tool) and `../reference/ep04-frown-reference.webp`.
 Supersedes the 3D draft in `../ep04/` (kept, not deleted). Lethality hook dropped (owner ruling).
 
 Beats: hook question · nerve ending, acetylcholine, muscle fibre (signal and response) · toxin cuts one protein (SNAP-25), message never sent · takeaway.
