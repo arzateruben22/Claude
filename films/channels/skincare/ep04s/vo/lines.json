@@ -1,0 +1,60 @@
+{
+ "voice": "bf_isabella",
+ "speed": 0.86,
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "What makes a frown?",
+   "stars": [
+    "frown"
+   ],
+   "phonemes": "wˌɒt mˌeɪks ɐ fɹˈaʊn?",
+   "file": "01.wav",
+   "dur": 1.479,
+   "sha256": "f9d03c05cd63b35b98b174747a585b532045275659a6ed6185ce871b027db815"
+  },
+  {
+   "id": "vo02",
+   "beat": "signal",
+   "text": "A nerve ending releases a chemical messenger, acetylcholine, and the muscle fibre answers by pulling.",
+   "stars": [
+    "pulling"
+   ],
+   "phonemes": "ɐ nˈɜːv ˈɛndɪŋ ɹɪlˈiːsɪz ɐ kˈɛmɪkəl mˈɛsɪndʒə, ˈasɪtˌɪlkəlˌiːn, and ðə mˈʌsəl fˈaɪbəɹ ˈansəz baɪ pˈʊlɪŋ.",
+   "file": "02.wav",
+   "dur": 6.469,
+   "sha256": "22b0a97c949d009e24d5f0daecbb5d8310d845c627e58893d4645ab195e16e67"
+  },
+  {
+   "id": "vo03",
+   "beat": "toxin",
+   "text": "Botulinum toxin cuts one protein inside that nerve ending, so the message is never sent.",
+   "stars": [
+    "sent"
+   ],
+   "phonemes": "bˌɒtjʊlˈaɪnəm tˈɒksɪn kˈʌts wˈɒn pɹˈəʊtiːn ɪnsˈaɪd ðat nˈɜːv ˈɛndɪŋ, sˌəʊ ðə mˈɛsɪdʒ ɪz nˈɛvə sˈɛnt.",
+   "file": "03.wav",
+   "dur": 5.959,
+   "sha256": "ed2364c3cc9fe0e42c161229786e662335d1def55fba61193806d625e60d964c"
+  },
+  {
+   "id": "vo04",
+   "beat": "takeaway",
+   "text": "The skin is never the target. The message is.",
+   "stars": [
+    "message"
+   ],
+   "phonemes": "ðə skˈɪn ɪz nˈɛvə ðə tˈɑːɡɪt. ðə mˈɛsɪdʒ ɪz.",
+   "file": "04.wav",
+   "dur": 2.991,
+   "sha256": "4d9cac7c6111fa58e46590506e82b053c1a60174d0a45ba32f283794c7568a9c"
+  }
+ ]
+}
