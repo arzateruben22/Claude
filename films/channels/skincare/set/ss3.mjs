@@ -32,7 +32,7 @@ export async function run({ stage, FILM, W, H, EP }) {
 .ss .ph{position:absolute;left:${px(40)};top:${px(1540)};font:600 ${px(22)}/1 "Red Hat Mono";letter-spacing:.08em;padding:${px(8)} ${px(14)};border:${px(2)} dashed ${GOLD};border-radius:${px(8)};background:rgba(248,242,231,.9);color:#6E4C0A;text-transform:uppercase}
 .ss .foot{position:absolute;left:0;right:0;text-align:center}
 .ss .foot.a{top:${px(1776)};font:400 ${px(30)}/1 "Red Hat Text";letter-spacing:.03em}.ss .foot.b{top:${px(1828)};font:400 ${px(27)}/1 "Red Hat Text";letter-spacing:.03em;opacity:.85}
-.ss .rule{position:absolute;top:${px(1790)};height:${px(2)};background:rgba(14,27,61,.4);width:${px(190)}}
+.ss .foot,.ss .rule{z-index:6}.ss .endc{z-index:5}.ss .rule{position:absolute;top:${px(1790)};height:${px(2)};background:rgba(14,27,61,.4);width:${px(190)}}
 .ss .badge{position:absolute;left:${px(40)};top:${px(590)};padding:${px(8)} ${px(16)};border-radius:${px(30)};background:rgba(248,242,231,.92);border:${px(2)} solid rgba(14,27,61,.2);font:600 ${px(24)}/1 "Red Hat Text";letter-spacing:.05em;text-transform:uppercase;opacity:0}
 .ss .plate{position:absolute;left:${px(70)};right:${px(70)};top:${px(640)};padding:${px(46)} ${px(46)};border:${px(2)} solid rgba(14,27,61,.22);border-radius:${px(26)};background:rgba(251,247,238,.97);box-shadow:0 ${px(10)} ${px(34)} rgba(14,27,61,.14);opacity:0}
 .ss .plate .pt{font:600 ${px(46)}/1.15 "Newsreader",serif;margin-bottom:${px(26)}}
@@ -66,7 +66,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
   const loadImg = (srcs) => new Promise((res) => { let i = 0; const nx = () => { while (i < srcs.length && !HAVE.includes(srcs[i].split("/").pop())) i++; if (i >= srcs.length) return res(null); const j = i++, el = new Image(); el.onload = () => res({ el, idx: j }); el.onerror = nx; el.src = srcs[j]; }; nx(); });
   for (const [k, im] of Object.entries(EP.images)) {
     const r = await loadImg([].concat(im.src)); if (!r) throw new Error("no picture for " + k);
-    const el = r.el, h = AW * el.naturalHeight / el.naturalWidth; el.style.cssText = `position:absolute;left:0;transform-origin:0 0;max-width:none;width:${AW}px;height:${h}px;top:${(BH - h) / 2}px;opacity:0`; artbox.appendChild(el);
+    const el = r.el, h = AW * el.naturalHeight / el.naturalWidth; el.style.cssText = `position:absolute;left:0;transform-origin:0 0;max-width:none;width:${AW}px;height:${h}px;top:0;opacity:0`; artbox.appendChild(el);
     IM[k] = { el, AH: h, TOP0: (BH - h) / 2, fb: r.idx >= (im.real || 2) };
   }
   if (EP.placeholder && Object.values(IM).some((g) => g.fb)) $("#ph").style.display = "block";
@@ -84,7 +84,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
   const NS = "http://www.w3.org/2000/svg", mk = (tag, at, par = lead, first) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); first ? par.insertBefore(e, par.firstChild) : par.appendChild(e); return e; };
   await document.fonts.ready;
   const defs = mk("defs", {}, fxs); defs.innerHTML = `<radialGradient id="gT"><stop offset="0" stop-color="#48BFB0" stop-opacity=".95"/><stop offset=".55" stop-color="#48BFB0" stop-opacity=".45"/><stop offset="1" stop-color="#48BFB0" stop-opacity="0"/></radialGradient>
-<radialGradient id="gD"><stop offset="0" stop-color="#3B2F72" stop-opacity=".78"/><stop offset=".6" stop-color="#3B2F72" stop-opacity=".4"/><stop offset="1" stop-color="#3B2F72" stop-opacity="0"/></radialGradient>
+<radialGradient id="gD"><stop offset="0" stop-color="#2A2060" stop-opacity=".95"/><stop offset=".6" stop-color="#2A2060" stop-opacity=".6"/><stop offset="1" stop-color="#3B2F72" stop-opacity="0"/></radialGradient>
 <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${(1.3 * u).toFixed(2)}"/></filter><filter id="soft2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${(3 * u).toFixed(2)}"/></filter>`;
   const LABELS = EP.labels.map((L) => ({ ...L, t0: R(L.t0), t1: R(L.t1) }));
   for (const L of LABELS) { L.pill = document.createElement("div"); L.pill.className = "pill"; L.pill.textContent = L.text; pills.appendChild(L.pill); const r = L.pill.getBoundingClientRect(); L.pw = r.width; L.ph = r.height;
@@ -97,7 +97,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
     if (f.type === "spray") for (let i = 0; i < f.n; i++) f.els.push(mk("circle", { fill: "url(#gT)", opacity: 0 }, gFx));
     if (f.type === "toxin") for (let i = 0; i < f.n; i++) f.els.push(mk("circle", { fill: "url(#gD)", opacity: 0 }, gFx));
     if (f.type === "snap") { f.els = [mk("path", { fill: "none", stroke: "#D9F2EE", "stroke-width": 7 * u, "stroke-linecap": "round", opacity: 0 }, gFx), mk("path", { fill: "none", stroke: "#D9F2EE", "stroke-width": 7 * u, "stroke-linecap": "round", opacity: 0 }, gFx), mk("circle", { fill: "url(#gT)", opacity: 0 }, gFx)]; }
-    if (f.type === "sprouts") f.els = f.branches.flatMap(() => [mk("path", { fill: "none", stroke: "#D9A13B", "stroke-width": 7 * u, "stroke-linecap": "round", opacity: 0 }, gFx), mk("circle", { fill: "#F0C36A", opacity: 0 }, gFx)]);
+    if (f.type === "sprouts") f.els = f.branches.flatMap(() => [mk("path", { fill: "none", stroke: "#E3A92F", "stroke-width": 10 * u, "stroke-linecap": "round", opacity: 0 }, gFx), mk("circle", { fill: "#F0C36A", opacity: 0 }, gFx)]);
   }
   const bez = (q, p) => { const [x0, y0, x1, y1, x2, y2, x3, y3] = q, m = 1 - p; return [m ** 3 * x0 + 3 * m * m * p * x1 + 3 * m * p * p * x2 + p ** 3 * x3, m ** 3 * y0 + 3 * m * m * p * y1 + 3 * m * p * p * y2 + p ** 3 * y3]; };
   const polyAt = (pts, p) => { const n = pts.length - 1, x = Math.min(0.9999, p) * n, i = Math.floor(x), f = ease(x - i); return [pts[i][0] + (pts[i + 1][0] - pts[i][0]) * f, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * f]; };
@@ -111,13 +111,19 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
         f.els[0].setAttribute("d", `M${cx - L2},${cy + L2 * 0.45} Q${cx - L2 * 0.5},${cy - L2 * 0.2} ${cx - gap},${cy - wob}`); f.els[1].setAttribute("d", `M${cx + gap},${cy + wob} Q${cx + L2 * 0.5},${cy + L2 * 0.2} ${cx + L2},${cy - L2 * 0.45}`);
         f.els[0].setAttribute("opacity", (0.78 * w).toFixed(3)); f.els[1].setAttribute("opacity", (0.78 * w).toFixed(3)); const fl = Math.max(0, 1 - Math.abs(t - f.cut - 0.1) / 0.35); f.els[2].setAttribute("cx", cx); f.els[2].setAttribute("cy", cy); f.els[2].setAttribute("r", 40 * u * sc); f.els[2].setAttribute("opacity", (w * fl).toFixed(3)); }
       if (f.type === "sprouts") f.branches.forEach((q, i) => { const p = ease(Math.min(1, Math.max(0, (seg(t, f.t0, f.t1 - 1.0) - i * 0.12) / 0.76))), pts = []; for (let j = 0; j <= 16; j++) { const [bx, by] = bez(q, (j / 16) * p), [qx, qy] = S(bx, by); pts.push(`${j ? "L" : "M"}${qx.toFixed(1)},${qy.toFixed(1)}`); }
-        const [ex, ey] = S(...bez(q, p)); f.els[i * 2].setAttribute("d", pts.join(" ")); f.els[i * 2].setAttribute("opacity", (p > 0 ? 0.8 * on * (1 - eo(seg(t, f.t1 - 0.6, f.t1))) : 0).toFixed(3)); f.els[i * 2 + 1].setAttribute("cx", ex); f.els[i * 2 + 1].setAttribute("cy", ey); f.els[i * 2 + 1].setAttribute("r", 8 * u * sc); f.els[i * 2 + 1].setAttribute("opacity", (p > 0.05 ? 0.85 * on * (1 - eo(seg(t, f.t1 - 0.6, f.t1))) : 0).toFixed(3)); });
+        const [ex, ey] = S(...bez(q, p)); f.els[i * 2].setAttribute("d", pts.join(" ")); f.els[i * 2].setAttribute("opacity", (p > 0 ? 0.95 * on * (1 - eo(seg(t, f.t1 - 0.6, f.t1))) : 0).toFixed(3)); f.els[i * 2 + 1].setAttribute("cx", ex); f.els[i * 2 + 1].setAttribute("cy", ey); f.els[i * 2 + 1].setAttribute("r", 11 * u * sc); f.els[i * 2 + 1].setAttribute("opacity", (p > 0.05 ? 0.85 * on * (1 - eo(seg(t, f.t1 - 0.6, f.t1))) : 0).toFixed(3)); });
     }
   };
   const PLATES = (EP.plates || []).map((P) => ({ ...P, t0: R(P.t0), t1: R(P.t1), rows: (P.rows || []).map((r) => ({ ...r, t: R(r.t) })), tags: (P.tags || []).map((g) => ({ ...g, t: R(g.t) })), bars: (P.bars || []).map((b) => ({ ...b, t: R(b.t) })), noteT: P.note ? R(P.noteT) : 0, lines: (P.lines || []).map((l) => ({ ...l, t: R(l.t) })) }));
   const plEls = PLATES.map((P) => { const d = document.createElement("div"); d.className = "plate"; d.style.top = px(P.top || 640); if (P.fill) d.style.background = P.fill;
     d.innerHTML = `<div class="pt">${P.title}</div>` + (P.tags.length ? `<div>${P.tags.map((g) => `<span class="tag">${g.text}</span>`).join("")}</div>` : "") + P.lines.map((l) => `<div class="row" style="${l.style || ""}"><span>${l.text}</span></div>`).join("") + P.rows.map((r) => `<div class="row"><span>${r.text}</span><small>${r.small || ""}</small></div>`).join("") + P.bars.map((b) => `<div class="bl">${b.label}</div><div class="bar" style="background:${b.color || NAVY}"></div>`).join("") + (P.note ? `<div class="note">${P.note}</div>` : "");
     $("#plates").appendChild(d); return d; });
+  if (EP.engraving) engr.innerHTML = `<svg viewBox="0 0 940 560" width="100%" height="${560 * u * (940 * u / 940) / u * 0 + 560 * (W - 140 * u) / 940}" style="position:absolute;left:0;top:0"><defs><pattern id="hA" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="9" stroke="#0E1B3D" stroke-width="2.2"/></pattern><pattern id="hB" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><line x1="0" y1="0" x2="0" y2="7" stroke="#0E1B3D" stroke-width="1.4"/></pattern></defs>
+<g fill="none" stroke="#0E1B3D" stroke-linecap="round" stroke-linejoin="round"><path d="M70 70 Q470 120 870 70" stroke-width="3"/><path d="M70 70 q-20 -4 -30 -22 M870 70 q20 -4 30 -22" stroke-width="3"/><path d="M450 110 l20 -12 l20 12 l-20 12 z" fill="#0E1B3D" stroke-width="2"/>
+<path d="M70 130 Q470 190 870 130" stroke-width="5"/>
+${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x - 70) / 800 * Math.PI) + 8; return `<path d="M${x} ${y} q-6 22 0 40" stroke-width="3"/><g transform="rotate(${[-4, 3, -3, 4][i]} ${x} ${y + 60})"><rect x="${x - 56}" y="${y + 38}" width="112" height="250" rx="52" fill="url(#hA)" stroke-width="3.5"/><path d="M${x - 40} ${y + 70} q-6 100 4 190" stroke-width="2" opacity=".55"/><path d="M${x - 14} ${y + 38} q-8 -14 0 -22 M${x + 14} ${y + 38} q8 -14 0 -22" stroke-width="3"/></g>`; }).join("")}
+<g transform="rotate(-7 470 470)"><path d="M180 430 L600 410 Q650 430 600 458 L180 462 Z" fill="url(#hB)" stroke-width="3.5"/><rect x="600" y="418" width="190" height="34" rx="14" fill="url(#hA)" stroke-width="3.5"/><circle cx="640" cy="435" r="3.5" fill="#0E1B3D"/><circle cx="700" cy="435" r="3.5" fill="#0E1B3D"/><circle cx="755" cy="435" r="3.5" fill="#0E1B3D"/></g>
+<path d="M120 540 Q470 560 820 540" stroke-width="2.5"/></g></svg>`;
   const SUP = EP.sup.map(([t, h]) => [R(t), h]), BADGES = EP.badges.map(([a, z, tx]) => [R(a), R(z), tx]), QUIET = (EP.quiet || []).map(([a, z]) => [R(a), R(z)]), ENGR = (EP.engraved || []).map(([a, z]) => [R(a), R(z)]);
   const SCAN = (EP.scan || []).map(([a, z]) => [R(a), R(z)]), scanEl = mk("rect", { x: 0, width: W, height: 6 * u, fill: TEAL, opacity: 0 }, lead);
   const NEXT = R(EP.end.t), pages = []; let cur = [];
@@ -127,9 +133,9 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
     const c = camAt(t);
     let q = 0; for (const [a, z] of QUIET) q = Math.max(q, Math.min(eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z))));
     let eg = 0; for (const [a, z] of ENGR) eg = Math.max(eg, Math.min(eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z)))); engr.style.opacity = eg.toFixed(3);
-    for (const [k, g] of Object.entries(IM)) { const p = c.P[k]; if (!p) { g.el.style.opacity = "0"; continue; } const FX0 = p.fx * AW, FY0 = g.TOP0 + p.fy * g.AH;
+    for (const [k, g] of Object.entries(IM)) { const p = c.P[k]; if (!p) { g.el.style.opacity = "0"; continue; } const FX0 = p.fx * AW, FY0 = p.fy * g.AH;
       g.el.style.transform = `translate(${AW / 2 - FX0 * p.s}px,${BH / 2 - FY0 * p.s}px) scale(${p.s})`; g.el.style.opacity = p.op.toFixed(3); }
-    artbox.style.opacity = (1 - 0.94 * q).toFixed(3);
+    artbox.style.opacity = (1 - q).toFixed(3);
     drawFx(t, c);
     const ev = eo(seg(t, NEXT - 0.3, NEXT + 0.2));
     let k = 0; for (let i = 0; i < SUP.length; i++) if (t >= SUP[i][0]) k = i;
@@ -137,7 +143,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
     supEl.style.opacity = (eo(seg(t, SUP[k][0], SUP[k][0] + 0.35)) * (1 - q) * (1 - eg) * (1 - ev)).toFixed(3);
     const b = BADGES.find(([a, z]) => t >= a && t < z); if (b) badge.textContent = b[2];
     badge.style.opacity = b ? (eo(seg(t, b[0], b[0] + 0.3)) * (1 - eo(seg(t, b[1] - 0.3, b[1]))) * (1 - q) * (1 - eg)).toFixed(3) : "0";
-    PLATES.forEach((P, i) => { const d = plEls[i]; d.style.opacity = (Math.min(P.t0 <= 0.1 ? 1 : eo(seg(t, P.t0, P.t0 + 0.45)), 1 - eo(seg(t, P.t1 - 0.4, P.t1)))).toFixed(3);
+    PLATES.forEach((P, i) => { const d = plEls[i]; d.style.opacity = (Math.min(P.t0 <= 0.1 ? 1 : eo(seg(t, P.t0 + 0.4, P.t0 + 0.85)), 1 - eo(seg(t, P.t1 - 0.85, P.t1 - 0.4)))).toFixed(3);
       const tg = d.querySelectorAll(".tag"); P.tags.forEach((g, j) => { tg[j].style.opacity = eo(seg(t, g.t, g.t + 0.4)).toFixed(3); });
       const rows = d.querySelectorAll(".row"), bl = d.querySelectorAll(".bl"), bars = d.querySelectorAll(".bar"), nl = P.lines.length;
       P.lines.forEach((l, j) => { rows[j].style.opacity = eo(seg(t, l.t, l.t + 0.4)).toFixed(3); });
@@ -146,7 +152,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
       const nt = d.querySelector(".note"); if (nt) nt.style.opacity = eo(seg(t, P.noteT, P.noteT + 0.4)).toFixed(3); });
     let chg = 1; for (const cc of CH) chg *= t < cc ? 1 - eo(seg(t, cc - 0.35, cc)) : eo(seg(t, cc + 0.35, cc + 0.95));
     for (const L of LABELS) {
-      const an = c.b.anchors[L.a]; if (!an) { L.pill.style.opacity = "0"; L.line.setAttribute("opacity", "0"); L.dot.setAttribute("opacity", "0"); continue; }
+      const an = c.b.anchors[L.a]; if (!an || (L.img && L.img !== c.img)) { L.pill.style.opacity = "0"; L.line.setAttribute("opacity", "0"); L.dot.setAttribute("opacity", "0"); continue; }
       const [ax, ay] = scr(c.img, an[0], an[1], c);
       const inside = eo(seg(ay, BTOP + 10 * u, BTOP + 90 * u)) * (1 - eo(seg(ay, BTOP + BH - 150 * u, BTOP + BH - 80 * u))) * eo(seg(ax, -10 * u, 60 * u)) * (1 - eo(seg(ax, W - 60 * u, W + 10 * u)));
       const p = eo(seg(t, L.t0, L.t0 + 0.5)), out = (1 - eo(seg(t, L.t1, L.t1 + 0.3))) * inside * chg * (1 - 0.95 * Math.max(q, eg)), vis = p * out, pw = L.pw, ph = L.ph, left = L.off[0] >= 0;

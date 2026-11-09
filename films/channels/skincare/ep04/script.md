@@ -4,8 +4,7 @@ About 65 s, 9:16, new art direction (../ART-DIRECTION.md), Standards v2 (../../b
 voice (labelled as AI). Mechanism only: the voice says "botulinum toxin", never a brand. One question: who tells your face to
 frown? Answer: a message from a nerve; the toxin blocks the message, not the skin. The wrong idea: that it works on the skin.
 The person: Justinus Kerner (1820s). The twist (whoa): the block is not permanent; the nerve slowly grows new endings.
-No lethality line (owner ruling), no dose, no brand, no advice, no before/after. The art is a placeholder until clean text-free
-art exists (ep04/art-prompts.md); every label, headline and caption is drawn in code.
+No lethality line (owner ruling), no dose, no brand, no advice, no before/after. The pictures are the owner's eight illustrations (ep04/art/); every label, headline and caption, and the soft overlays, are drawn in code.
 
 ## hook {shot: close on the nerve ending, the sacs and the gap · labels: title · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0.0–4.8 s)
 vo: Who tells your face to *frown*? {-} It starts with one small, quiet message. {-}
@@ -19,13 +18,13 @@ vo: Botulinum toxin gets inside that nerve ending. {s4} There it cuts one protei
 ## why {shot: an engraved-style plate for Justinus Kerner, then back to the nerve · labels: Justinus Kerner · 1820s · picture-only 2.2 s · energy: 0.5} (28.5–40.3 s)
 vo: Two hundred years ago, a German doctor named Justinus Kerner described a food poison found in sausages. {s7} He guessed it might one day become a *medicine*. {s8}
 
-## whoa {shot: the nerve grows new endings · labels: new endings · about 3 months · picture-only 3.1 s · energy: 0.8} (40.3–52.2 s)
-vo: And here is the twist. {-} The block does not last. {s9} The nerve slowly grows new endings, and about three months later the message flows *again*. {s10}
+## whoa {shot: the nerve grows new endings · labels: new endings · about 3 months · picture-only 3.1 s · energy: 0.8} (40.3–53.1 s)
+vo: And here is the twist. {-} The block does not last. {s9} The nerve slowly grows new endings, and a few months later the message flows *again*. {s10}
 
-## takeaway {shot: wide, the full illustration, the headline · picture-only 0.5 s · energy: 0.3} (52.2–60.1 s)
+## takeaway {shot: wide, the full illustration, the headline · picture-only 0.5 s · energy: 0.3} (53.1–61.0 s)
 vo: So a frown is a message, and this toxin blocks it. {s11} The skin was never the target. {s12} The *nerve* was. {-}
 
-## tease {end card held ≥ 1.5 s · energy: 0.35} (60.1–66.5 s)
+## tease {end card held ≥ 1.5 s · energy: 0.35} (61.0–67.4 s)
 vo: Next: two neighbours, under the same sun, and one experiment. {-} Which hand *aged*? {-}
 end card: "Next: same sun, one experiment. Which hand aged?" · "Skin Sense · No. 005" · footnote: "Narration: synthetic voice (AI)."
 

@@ -64,15 +64,15 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "And here is the twist. The block does not last. The nerve slowly grows new endings, and about three months later the message flows again.",
+   "text": "And here is the twist. The block does not last. The nerve slowly grows new endings, and a few months later the message flows again.",
    "stars": [
     "again"
    ],
-   "phonemes": "and hˈiəɹ ɪz ðə twˈɪst. ðə blˈɒk dʌznˌɒt lˈast. ðə nˈɜːv slˈəʊli ɡɹˈəʊz njˈuː ˈɛndɪŋz, and ɐbˌaʊt θɹˈiː mˈʌnθs lˈeɪtə ðə mˈɛsɪdʒ flˈəʊz ɐɡˈɛn.",
-   "speed": 0.85,
+   "phonemes": "and hˈiəɹ ɪz ðə twˈɪst. ðə blˈɒk dʌznˌɒt lˈast. ðə nˈɜːv slˈəʊli ɡɹˈəʊz njˈuː ˈɛndɪŋz, and ɐ fjˈuː mˈʌnθs lˈeɪtə ðə mˈɛsɪdʒ flˈəʊz ɐɡˈɛn.",
+   "speed": 0.79,
    "file": "05.wav",
-   "dur": 8.444,
-   "sha256": "690e49d5f7f8a24e48113c6d86bd8b20b72502a36d5699c55d3a4719979a3ac1"
+   "dur": 9.37,
+   "sha256": "c7166b5ed147a4d40373d7480daef6f51f33ce918ffd82d44494dac152ef34e6"
   },
   {
    "id": "vo06",

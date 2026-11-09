@@ -631,157 +631,157 @@
   },
   {
    "id": "vo05",
-   "text": "And here is the twist. The block does not last. The nerve slowly grows new endings, and about three months later the message flows again.",
-   "heard": "And here is the twist, the block does not last. The nerve slowly grows new endings, and about three months later the message flows again.",
+   "text": "And here is the twist. The block does not last. The nerve slowly grows new endings, and a few months later the message flows again.",
+   "heard": "And here is the twist, the block does not last. The nerve slowly grows new endings, and a few months later the message flows again.",
    "words": [
     {
      "w": "And",
-     "start": 0.025,
-     "end": 0.24,
+     "start": 0.02,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "here",
-     "start": 0.2,
-     "end": 0.48,
+     "start": 0.27,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "is",
-     "start": 0.47,
-     "end": 0.64,
+     "start": 0.59,
+     "end": 0.72,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.64,
-     "end": 0.8,
+     "start": 0.775,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "twist.",
-     "start": 0.76,
-     "end": 1.28,
+     "start": 0.91,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "The",
-     "start": 1.67,
-     "end": 1.72,
+     "start": 1.815,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "block",
-     "start": 1.785,
-     "end": 2.16,
-     "heard": true
-    },
-    {
-     "w": "does",
-     "start": 2.08,
+     "start": 1.965,
      "end": 2.4,
      "heard": true
     },
     {
-     "w": "not",
-     "start": 2.45,
+     "w": "does",
+     "start": 2.38,
      "end": 2.72,
      "heard": true
     },
     {
+     "w": "not",
+     "start": 2.825,
+     "end": 2.96,
+     "heard": true
+    },
+    {
      "w": "last.",
-     "start": 2.79,
-     "end": 3.36,
+     "start": 3.215,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "The",
-     "start": 3.51,
-     "end": 3.56,
+     "start": 3.955,
+     "end": 4.005,
      "heard": true
     },
     {
      "w": "nerve",
-     "start": 3.54,
-     "end": 4.0,
+     "start": 3.985,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "slowly",
-     "start": 4.04,
-     "end": 4.32,
+     "start": 4.415,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "grows",
-     "start": 4.4,
-     "end": 4.72,
+     "start": 5.115,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "new",
-     "start": 4.725,
-     "end": 4.96,
+     "start": 5.515,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "endings,",
-     "start": 4.895,
-     "end": 5.6,
+     "start": 5.76,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "and",
-     "start": 5.67,
-     "end": 5.84,
+     "start": 6.57,
+     "end": 6.64,
      "heard": true
     },
     {
-     "w": "about",
-     "start": 5.845,
-     "end": 6.08,
+     "w": "a",
+     "start": 6.735,
+     "end": 6.8,
      "heard": true
     },
     {
-     "w": "three",
-     "start": 6.16,
-     "end": 6.32,
+     "w": "few",
+     "start": 6.77,
+     "end": 6.96,
      "heard": true
     },
     {
      "w": "months",
-     "start": 6.225,
-     "end": 6.72,
+     "start": 6.84,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "later",
-     "start": 6.635,
-     "end": 7.04,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 7.15,
-     "end": 7.2,
-     "heard": true
-    },
-    {
-     "w": "message",
-     "start": 7.18,
+     "start": 7.31,
      "end": 7.68,
      "heard": true
     },
     {
+     "w": "the",
+     "start": 7.75,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "message",
+     "start": 7.78,
+     "end": 8.4,
+     "heard": true
+    },
+    {
      "w": "flows",
-     "start": 7.6,
-     "end": 8.08,
+     "start": 8.475,
+     "end": 8.96,
      "heard": true
     },
     {
      "w": "again.",
-     "start": 8.11,
-     "end": 8.4,
+     "start": 8.985,
+     "end": 9.36,
      "heard": true
     }
    ]
