@@ -292,7 +292,7 @@ window.seek = function (t) {
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   { const sc = document.querySelector(".hud-scrim"); if (sc && t >= FILM.endCard) sc.style.opacity = String(Number(sc.style.opacity || 0) * 0.45); }
   tFlap.update(t);
-  spine.update(t, gate);
+  { let h = 0; for (const [a, b] of (FILM.spineHide || [])) h = Math.max(h, seg(t, a, a + 0.25) * (1 - seg(t, b - 0.01, b + 0.25))); spine.update(t, gate * (1 - h)); }
   work.update(t, gate);
   box.update(t);
   renderer.render(scene, camera);

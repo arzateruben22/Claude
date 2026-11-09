@@ -107,7 +107,7 @@ const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.14 });
 const endT = endEl.querySelector(".t"), endFo = endEl.querySelector(".fo"); if (endT) endT.style.fontSize = "5.6vmin"; if (endFo) endFo.style.marginTop = "1.6vmin";
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.7vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "1.6vmin auto 0" });
-const ebox = endBox(endEl, { t0: FILM.endCard, answer: FILM.endAnswer, S1: Math.min(W, H) / 1080 });
+const ebox = FILM.endAnswer ? endBox(endEl, { t0: FILM.endCard, answer: FILM.endAnswer, S1: Math.min(W, H) / 1080 }) : { update() {} };
 // the 68 digits of 52!, typed across the screen
 const DIG = String(FILM.world.digits).replace(/\D/g, "");               // the 68 digits, set in a fixed block of 4 lines of 17 on their own plate
 const digEl = document.createElement("div");
@@ -191,7 +191,7 @@ window.seek = function (t) {
   const tail = E.inout2(seg(t, beat("tease").t1 - 1.35, beat("tease").t1 - 0.8));   // the card text is gone while the deck is still dimmed; then the dim lifts on the bare deck
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);
-  spine.update(t, gate);
+  { let h = 0; for (const [a, b] of (FILM.spineHide || [])) h = Math.max(h, seg(t, a, a + 0.25) * (1 - seg(t, b - 0.01, b + 0.25))); spine.update(t, gate * (1 - h)); }
   work.update(t, gate);
   ebox.update(t);
   void W;

@@ -108,11 +108,6 @@
    "t1": 22.033333333333335
   },
   {
-   "t": 21.466666666666665,
-   "kind": "term.write",
-   "tag": "spine-2"
-  },
-  {
    "t": 23.4,
    "kind": "section",
    "id": "why",
@@ -124,26 +119,10 @@
    "tag": "c-years"
   },
   {
-   "t": 24.683333333333334,
-   "kind": "term.write",
-   "tag": "spine-3"
-  },
-  {
    "t": 34.2,
    "kind": "section",
    "id": "whoa",
    "t1": 42.6
-  },
-  {
-   "t": 38.5,
-   "kind": "answer.box",
-   "tag": "spine-4",
-   "t1": 39.0
-  },
-  {
-   "t": 39.43333333333333,
-   "kind": "term.write",
-   "tag": "spine-5"
   },
   {
    "t": 42.6,
@@ -165,11 +144,6 @@
    "t": 43.96666666666667,
    "kind": "term.write",
    "tag": "work-quicker: 6 km/h"
-  },
-  {
-   "t": 53.666666666666664,
-   "kind": "term.write",
-   "tag": "spine-6"
   },
   {
    "t": 56.4,

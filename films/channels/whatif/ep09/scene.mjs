@@ -141,7 +141,7 @@ const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.14 });
 const endT = endEl.querySelector(".t"), endFo = endEl.querySelector(".fo"); if (endT) endT.style.fontSize = "5.6vmin"; if (endFo) endFo.style.marginTop = "1.6vmin";
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.7vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "1.6vmin auto 0" });
-const ebox = endBox(endEl, { t0: FILM.endCard, answer: FILM.endAnswer, S1: Math.min(W, H) / 1080 });
+const ebox = FILM.endAnswer ? endBox(endEl, { t0: FILM.endCard, answer: FILM.endAnswer, S1: Math.min(W, H) / 1080 }) : { update() {} };
 // the guess bar: how much extra rope you might guess ("thousands of km?")
 const bigEl = document.createElement("div");
 bigEl.style.cssText = "position:absolute;left:50%;top:19%;transform:translateX(-50%);padding:1.4vmin 3.6vmin;border:.7vmin solid " + MARK + ";border-radius:2.4vmin;background:rgba(14,17,21,.78);opacity:0;pointer-events:none;z-index:4;font:700 11vmin/1.05 var(--font-mono);color:var(--hud-text);white-space:nowrap";
@@ -231,7 +231,7 @@ window.seek = function (t) {
   const tail = E.inout2(seg(t, beat("tease").t1 - 1.5, beat("tease").t1 - 0.75));
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);
-  spine.update(t, gate);
+  { let h = 0; for (const [a, b] of (FILM.spineHide || [])) h = Math.max(h, seg(t, a, a + 0.25) * (1 - seg(t, b - 0.01, b + 0.25))); spine.update(t, gate * (1 - h)); }
   work.update(t, gate);
   ebox.update(t);
   void clamp01; void W;
