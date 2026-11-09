@@ -1,7 +1,8 @@
 // Screenshot every screen of the game's UI, at phone and desktop size, for design work and review.
 //   npm run build && node tools/ui-shots.mjs [outDir] [--only=phone|desktop] [--game=path/to/top-speed-ultra.html]
 // Writes <outDir>/<size>-<screen>.png (default tests/out/ui/), phone at 390 x 844 and desktop at 1440 x 900. Screens: menu,
-// settings, bests, profile, driver, garage, start, course (the menu's sheet), loading, driving, goto, paused, results.
+// settings, bests, profile, driver, garage, start, course (the menu's sheet), loading, driving, goto, radial (the quick
+// menu), paused, results.
 // Prints which screens it captured and any page errors.
 import { chromium } from 'playwright';
 import { mkdirSync, existsSync } from 'node:fs';
@@ -64,6 +65,9 @@ for (const [size, ctxOpt] of Object.entries(SIZES)) {
   await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout: 240000, polling: 500 });
   await tryShot('driving', async () => { await page.evaluate(() => { const g = window.__game; g.setPaused(true); g.fastForward(4, {}, 30); g.setPaused(false); }); await page.waitForTimeout(1500); });
   await tryShot('goto', async () => { await page.getByRole('button', { name: 'Go to' }).click(); });
+  await close();
+  // the radial quick menu (U3), opened the keyboard's way: Tab held 300 ms (Map is chosen first)
+  await tryShot('radial', async () => { await page.keyboard.down('Tab'); await page.waitForTimeout(450); await page.keyboard.up('Tab'); await page.getByRole('menu', { name: 'Quick menu' }).waitFor({ timeout: 60000 }); });
   await close();
   await tryShot('paused', async () => { await page.evaluate(() => window.__game.setPaused(true)); });
   await tryShot('results', async () => { await page.evaluate(() => window.__game.endFreeDrive()); await page.waitForSelector('.result', { timeout: 10000 }); });

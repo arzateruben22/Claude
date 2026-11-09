@@ -85,6 +85,7 @@ export interface GameEvents {
   context: (lost: boolean) => void;
   hudToggle: (show: boolean) => void;
   corner: (mode: Settings['corner']) => void;
+  quick?: (open: boolean) => void;          // the pad's Back held for the quick menu (U3), then let go
 }
 
 export class Game {
@@ -574,6 +575,7 @@ export class Game {
       if (a === 'corner') this.cycleCorner();
       if (a === 'ability') this.useAbility();
       if (a === 'radio') this.cycleRadio();
+      if (a === 'quick' || a === 'quickUp') this.ev.quick?.(a === 'quick');
       if (a === 'transmission') { this.phys.auto = !this.phys.auto; this.ev.toast(this.phys.auto ? 'Automatic' : 'Manual: − / + to shift', 'info'); }
       if (a === 'shiftUp' || a === 'shiftDown') {
         if (this.phys.auto) { this.phys.auto = false; this.ev.toast('Manual: − / + to shift', 'info'); }

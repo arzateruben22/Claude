@@ -6,7 +6,7 @@
 // stood while the new fades in. Opened from the pause screen, the same panels show as a card over the paused drive.
 
 import { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react';
-import type { CSSProperties, ReactNode, KeyboardEvent as ReactKeyboardEvent } from 'react';
+import type { CSSProperties, ReactNode, KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent, MouseEvent as ReactMouseEvent } from 'react';
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
@@ -19,6 +19,8 @@ import { CARS, carById, figures, slotsFor } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
+import { Radial, QuickHandle, QuickId, QuickItem, QuickVia } from './Radial';
+import { QUICK_HOLD_MS } from '../game/input';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
 type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback';
@@ -56,6 +58,13 @@ export function App() {
   const [entering, setEntering] = useState(false);                    // the sheet's new content is fading in
   const [loadShown, setLoadShown] = useState(true);                   // the loading screen, kept up while it fades out
   const reportRef = useRef<HTMLTextAreaElement>(null);
+  // the radial quick menu (U3): how it was opened (and by which pointer, for a press-and-slide), the menu itself, where
+  // keyboard focus was before it, and the press on the Pause chip that may become a hold
+  const [quick, setQuick] = useState<{ via: QuickVia; pointer: number | null } | null>(null);
+  const quickMenu = useRef<QuickHandle>(null);
+  const quickFrom = useRef<Element | null>(null);
+  const press = useRef<{ id: number; timer: number; down: boolean; long: boolean } | null>(null);
+  const quickEv = useRef<(open: boolean) => void>(() => {});
   const toastId = useRef(0);
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
@@ -98,6 +107,7 @@ export function App() {
         context: (l) => setLost(l),
         hudToggle: (on) => setHudOn(on),
         corner: (c) => update({ corner: c }),
+        quick: (open) => quickEv.current(open),
       });
     } catch (e) {
       setError('This game needs WebGL 2, and this browser or device has it turned off. ' + String((e as Error).message || ''));
@@ -175,6 +185,83 @@ export function App() {
   const playing = screen === 'playing';
   // the adaptive HUD (U1): in Minimal, true once a drive has gone IDLE_MS without a tap, mouse move, key or pad button
   const idle = useIdle(playing && settings.hudStyle === 'minimal', () => game.current?.input.padAt ?? 0);
+
+  // ---- the radial quick menu (U3): hold Pause (touch or mouse), Tab or the pad's Back for QUICK_HOLD_MS while driving
+  const canQuick = useRef(false), quickOn = useRef(false);
+  canQuick.current = playing && !panel; quickOn.current = !!quick;
+  const openQuick = (via: QuickVia, pointer: number | null = null) => { if (canQuick.current && !quickOn.current) { quickOn.current = true; setQuick({ via, pointer }); } };
+  // closing puts keyboard focus back where it was before Tab was held (or drops it, rather than leave it nowhere)
+  const closeQuick = () => {
+    const from = quickFrom.current;
+    quickFrom.current = null; quickOn.current = false;
+    setQuick(null);
+    const a = document.activeElement;
+    if (from instanceof HTMLElement && from.isConnected && from !== document.body) from.focus({ preventScroll: true });
+    else if (a instanceof HTMLElement && a.closest('.quick')) a.blur();
+  };
+  const pickQuick = (id: QuickId) => {
+    closeQuick();
+    const g = game.current;
+    if (!g) return;
+    if (id === 'map') { const on = settingsRef.current.corner !== 'map'; update({ corner: on ? 'map' : 'off' }); toast(on ? 'Road map on' : 'Road map off'); }
+    if (id === 'goto') setPanel('nav');
+    if (id === 'radio') g.cycleRadio();
+    if (id === 'camera') g.cycleCam();
+    // the garage and the settings are full cards: the drive pauses under them, and Done comes back to the pause screen
+    if (id === 'garage' || id === 'settings') { g.setPaused(true); setPanel(id); }
+  };
+  const quickItems: QuickItem[] = [
+    { id: 'map', label: 'Map', hint: settings.corner === 'map' ? 'Hide the corner map' : 'Show the road map in the corner' },
+    { id: 'goto', label: 'Go to', hint: navTarget ? `Heading for ${navTarget} · change the route` : 'Pick a freeway to drive to' },
+    { id: 'garage', label: 'Garage', hint: 'Your cars · pauses the drive' },
+    { id: 'radio', label: 'Radio', hint: 'Next station' },
+    { id: 'camera', label: 'Camera', hint: 'Next view' },
+    { id: 'settings', label: 'Settings', hint: 'Pauses the drive' },
+  ];
+  // the pad: Back held opens it; let go, it picks what the stick points at
+  quickEv.current = (open) => { if (open) { quickFrom.current = null; openQuick('pad'); } else quickMenu.current?.release(); };
+  // it only lives while driving with no card up, and while it's open the pad's right stick aims it instead of looking
+  useEffect(() => { if (quick && !(playing && !panel)) { quickOn.current = false; setQuick(null); } }, [quick, playing, panel]);
+  useEffect(() => { if (game.current) game.current.input.menuOpen = !!quick; }, [quick]);
+  // Tab held: a quick Tab still moves focus as it always did; held, it opens the menu (and its repeats stop moving focus)
+  useEffect(() => {
+    if (!playing || panel) return;
+    let timer = 0;
+    const stop = () => { clearTimeout(timer); timer = 0; };
+    const down = (e: KeyboardEvent) => {
+      if (e.code !== 'Tab' || e.altKey || e.ctrlKey || e.metaKey || quickOn.current) return;
+      if (e.repeat) { if (timer) e.preventDefault(); return; }
+      const from = document.activeElement;
+      stop();
+      timer = window.setTimeout(() => { timer = 0; quickFrom.current = from; openQuick('key'); }, QUICK_HOLD_MS);
+    };
+    const up = (e: KeyboardEvent) => { if (e.code === 'Tab') stop(); };
+    addEventListener('keydown', down, true);
+    addEventListener('keyup', up, true);
+    addEventListener('blur', stop);
+    return () => { stop(); removeEventListener('keydown', down, true); removeEventListener('keyup', up, true); removeEventListener('blur', stop); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playing, panel]);
+  // the Pause chip: a tap pauses as it always has; held, the menu opens under the finger's slide
+  const chipDown = (e: ReactPointerEvent<HTMLButtonElement>) => {
+    if (!e.isPrimary || e.button !== 0) return;
+    if (press.current) clearTimeout(press.current.timer);
+    press.current = null;
+    if (quickOn.current) return;                                    // the menu is open: this tap closes it (chipClick)
+    const id = e.pointerId;
+    try { e.currentTarget.setPointerCapture(id); } catch { /* fine */ }
+    const p = { id, down: true, long: false, timer: 0 };
+    p.timer = window.setTimeout(() => { if (press.current === p && p.down) { p.long = true; quickFrom.current = null; openQuick('pointer', id); } }, QUICK_HOLD_MS);
+    press.current = p;
+  };
+  const chipUp = (e: ReactPointerEvent<HTMLButtonElement>) => { const p = press.current; if (p && p.id === e.pointerId) { p.down = false; clearTimeout(p.timer); } };
+  const chipClick = (e: ReactMouseEvent<HTMLButtonElement>) => {
+    const p = press.current;
+    press.current = null;
+    if (p?.long && e.detail > 0) return;                            // the end of a hold, not a tap (a key's click has detail 0)
+    if (quickOn.current) { closeQuick(); return; }
+    game.current?.setPaused(true);
+  };
   const cornerPx = CORNER_PX[settings.cornerSize] ?? CORNER_PX[1];
   const start = STARTS.find((s) => s.label === settings.start) ?? STARTS[0];
   // "start at your exit": the key names the carriageway; the exit list gives its sign text
@@ -349,7 +436,8 @@ export function App() {
               </section>
             </div>
           </div>
-          {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause.</p>}
+          {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause, hold Tab for the quick menu.</p>}
+          <p className="fine">Quick menu: hold Pause (or Tab, or a pad's Back) while driving, slide onto Map, Go to, Garage, Radio, Camera or Settings and let go.</p>
           <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div>
         </>,
       };
@@ -424,8 +512,10 @@ export function App() {
           <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}>Go to</button>
           <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station">Radio</button>
           {/* the menu chip: always on screen; while the Minimal HUD is tucked away it is all that's left of the bar, a round
-              pause button in the corner (styles.css). Its name stays "Pause" either way. */}
-          <button type="button" className="tbtn menu" onClick={() => game.current?.setPaused(true)}>
+              pause button in the corner (styles.css). Its name stays "Pause" either way. A tap pauses; held, it opens the
+              quick menu (U3). */}
+          <button type="button" className="tbtn menu" title="Pause (hold for the quick menu)" onClick={chipClick} onPointerDown={chipDown} onPointerUp={chipUp} onPointerCancel={chipUp}
+            onContextMenu={(e) => e.preventDefault()}>
             <svg className="tico" viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><path d="M4.5 3v8M9.5 3v8" /></svg><span>Pause</span>
           </button>
         </div>
@@ -433,6 +523,10 @@ export function App() {
       <div className="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast ' + t.kind}>{t.text}</div>)}</div>
       {playing && (coarse || settings.showTouch) && game.current && (
         <Touch input={game.current.input} manual={settings.transmission === 'manual'} onShift={(d) => game.current?.pushAction(d > 0 ? 'shiftUp' : 'shiftDown')} />
+      )}
+      {playing && !panel && quick && (
+        <Radial ref={quickMenu} via={quick.via} pointer={quick.pointer} held={() => !!press.current?.down} reduced={reducedMotion()} items={quickItems}
+          aim={() => game.current?.input.padAim} onPick={pickQuick} onClose={closeQuick} />
       )}
 
       {error && <div className="overlay center"><div className="panel narrow"><Brand /><p>{error}</p></div></div>}
