@@ -11,12 +11,58 @@ at that real site**. It has our name, our look, our interior and our menu. In th
 real bar". Its name appears only in the data tooling, as the lookup key that finds the point, never in `src/` or in
 shipped data.
 
+**Status (2026-11-09): S3b done: built, repaired after review and kept the same day, committed** (spots kept for you on a busy night, Watch
+and "you're next" on a busy spot, Join from your menu, guests' darts and shuffleboard on the physics, lines that name a
+goal only after one, no self-pairs), on `claude/sports-bar`, committed: people advertise (the 11 interactions with the
+acceptance formula and the expected deltas, scored beside the objects' adverts under the candidate rule and the budget),
+the beats for guests and for you (your radial menu for people with "More…" and the "i", Introduce and Buy a round
+among them, and guests' own rounds), talking groups of 2 to 6 across parties (Talk and Join forming and joining them,
+the beats inside, goodbyes, wrap-ups and decisions elsewhere taking people out), relationships and memory (the pairs'
+numbers, the ring of 8, highlights, levels, the regulars' and your friendships kept on the device), people's cards and
+People here, about 120 lines (145), guests' games (invites by relationship and competitiveness; every kind on its
+spot's physics on screen and resolved statistically off it), and the hooks `rel(id?)` and `interact(targetId, kind)`. Its
+checks and numbers are in `PROJECT_OC_PROGRESS.md`; the as-built notes are under S3b. S4 is next.
+
+**Status (2026-11-09): S3a built** on `claude/sports-bar`, uncommitted: the crowd (regulars and walk-ins in parties,
+arrivals from the lot and the drop-off, stays and leaving, live up to the preset's cap with the staff, held guests),
+autonomy over the objects' adverts by the utility AI with its log and watchdog, the staff (two to four bartenders by
+sections on the lane path, the westmost one's flap trips at Low, one to three servers, the host, the barback, the cooks'
+plates at the pass, restroom visits), fillers drawn as cards from the atlas eight with the hand-over to live guests, the
+visibility rule for people (LOD 1, LOD 2, cards, the casting people, Ultra's pool-slot people), the builds on the time
+budget with their log, a change of graphics behind its sheet, moods on bodies and the crowd's reactions to the screens.
+Its checks and numbers are in `PROJECT_OC_PROGRESS.md`; the as-built notes are under S3a. **S3a was repaired after
+review the same day** (`pose()` builds after the camera moves; a body sent to the spares forgets its draw state, so a
+reused one is never shown under a card; a radial menu closes on a pose and a change of graphics; the people's draw path
+no longer builds its lists, sets and tuples a frame; the switch checks hold the units' rule and held-before-fillers
+exactly; a settled room's drinks are spread through the drink cycle; at HD and Ultra small parties leave whole tables to
+the fillers; every group measured before the last fixes re-run on the final code: see the progress log and the as-built
+notes under S3a). S3b is next.
+
+**Status (2026-11-09): S2b built** on `claude/sports-bar`, uncommitted: pool on both tables, darts on the three
+boards and the shuffleboard, each against the scripted house player (Rocío, one of our staff), with the plan's
+physics, rules, controls, the house's shot selection and aim error, the game cameras, the results (the moodlet, the
+tokens, "Lost a close one") and the four game clips; the pieces are instances of S2a's six item meshes. Its checks
+pass (`PROJECT_OC_PROGRESS.md`; the as-built notes are under S2b). **S2b was repaired after review the same day**
+(your ball in hand anywhere on the bed, your avatar hidden under the pool view, the toasts clear of the crowd chip, a
+dart caught in the air, the shuffleboard's zones and numbers and its swipe's sideways sign, the hooks refusing values
+that aren't numbers, and no allocations in the games' per-frame drawing and bar: see the progress log and the as-built
+notes under S2b). S3a is next.
+
 **Status (2026-11-02): S1 built** on `claude/sports-bar`, uncommitted (only the merge of Lot 57's P1a, ce67d8f, is
 committed): the standalone page `src/onfoot/sportsbar.html` with the venue, the lot, the streets and your avatar,
 no people yet. `PROJECT_OC_PROGRESS.md` has what was checked and what's left; the open items below carry S1's
 results. **S1 was repaired after review the same day** (the restroom neon, the dartboards, the chalk centre circle,
 the ceiling, the pool tables, tap to go from the customer side, the light streams at Low and HD, what a quality switch
-leaves behind, and Low's street and venue rows: see the progress log). S2a is next.
+leaves behind, and Low's street and venue rows: see the progress log).
+
+**Status (2026-11-08): S2a built** on `claude/sports-bar`, uncommitted (only the merge of Lot 57's P1b and P1c, a5ac3fd,
+is committed): needs, mood and moodlets, the smart objects and the action queue, ordering at the counter and at the
+tables with one bartender and one server, the screens (the fictional leagues, the featured match and game nights, the
+broadcast pictures, highlights, the guide), watching, the jukebox, the water station, the dance spot, house tokens,
+saving and the clip layer. Its checks pass (`PROJECT_OC_PROGRESS.md`). **S2a was repaired after review on 2026-11-09**
+(ordering one menu at a time, the final-whistle goal on the big screen, Sip at its pace, a round-robin schedule, sim
+time across a set clock, stale messages, the radial at 844 x 390, the frame's allocations; six new page checks and
+three new unit checks: see the progress log and the as-built notes under S2a). S2b is next.
 
 **Status (2026-10-21): planned.** The site data was built by S0-data. It added `src/data/anaheim/sportsbar-slice.json`
 and `sportsbar-freeway-link.json`, extending `tools/anaheim/`. This plan uses their numbers. Two scripts there re-run
@@ -40,40 +86,44 @@ closes it, logs the result in `PROJECT_OC_PROGRESS.md`, and updates this table a
 
 | # | Open item | What it rests on now | How it's resolved | Phase | Status |
 | --- | --- | --- | --- | --- | --- |
-| O1 | Lot 57's numbers (L1 to L21) and its contracts move while this plan waits | Measured at the `tsu-foot` worktree over `022f988` on 2026-10-21, about 06:00 UTC (L14, L20 and L21 about 10:33). Since then `main.ts` has moved again (3ab822eb73 at 11:09 UTC, where your avatar's LOD 0 is now built at High as well as Ultra), `style.ts` too (e606208d78, 10:53), and `lot57/wheels.ts` is new | The S1 builder's first step: re-measure every row, the contracts table and the Retro API; update this plan wherever a moved row is cited; re-run the sums and both scripts; log the changes | S1 (and S4 for `PRESET`) | **S1 (2026-11-02): done.** Re-measured at `claude/onfoot` ab9fbe1 (merged at ce67d8f): L2, L3, L5, L7, L9, L11 and L20 moved and are updated in their rows; the rest, the contracts (additive changes only) and the Retro API (RS1 still uncommitted; `RetroWorld` gains `sun`) hold. No sum moved. Both scripts re-run (they now compute the frame from building 61 as the page does: 39 near points, one more than before). Logged in `PROJECT_OC_PROGRESS.md`. `PRESET` is re-synced again at S4. |
+| O1 | Lot 57's numbers (L1 to L21) and its contracts move while this plan waits | Measured at the `tsu-foot` worktree over `022f988` on 2026-10-21, about 06:00 UTC (L14, L20 and L21 about 10:33). Since then `main.ts` has moved again (3ab822eb73 at 11:09 UTC, where your avatar's LOD 0 is now built at High as well as Ultra), `style.ts` too (e606208d78, 10:53), and `lot57/wheels.ts` is new | The S1 builder's first step: re-measure every row, the contracts table and the Retro API; update this plan wherever a moved row is cited; re-run the sums and both scripts; log the changes | S1 (and S4 for `PRESET`) | **S2a (2026-11-08): done again** at 47c71a6 (merged at a5ac3fd): L17 moved (Lot 57's `Hud` binds P1b's ids without null checks, so S1's page would throw at `new Hud()`; S2a's `sportsbar.html` carries them), L3 and L12 gained additive members, the rest unchanged; the contracts additive; `people/` unchanged; the Retro module still uncommitted. No sum moved. **S1 (2026-11-02): done.** Re-measured at `claude/onfoot` ab9fbe1 (merged at ce67d8f): L2, L3, L5, L7, L9, L11 and L20 moved and are updated in their rows; the rest, the contracts (additive changes only) and the Retro API (RS1 still uncommitted; `RetroWorld` gains `sun`) hold. No sum moved. Both scripts re-run (they now compute the frame from building 61 as the page does: 39 near points, one more than before). Logged in `PROJECT_OC_PROGRESS.md`. `PRESET` is re-synced again at S4. |
 | O2 | The `people/` internals the bar relies on, which aren't API: the `lod1` and `lod2` mesh names, `setLod` hiding the other levels with `visible = false`, one shared skeleton, `frustumCulled = false` and `castShadow` per level (`person.ts` lines 447 and 538), the hair meshes' names and program keys | Read in `person.ts` on 2026-10-21 | S1's re-measure reads them again. If they've moved, `visibility.ts` follows them; if a hidden caster can't be made, the costed fallback under "Shadows in three.js 0.160.1" applies | S1 | **S1: closed.** Read again at ab9fbe1, unchanged; the hidden casters stand on them (S1's shadow checks). |
-| O3 | The people builder's costs and build times | Lot 57's plan's desktop measurements of 14 October; HD's LOD 2 cost (1.5k) and build time (0.4 s) are **assumed** | S1 builds a person at each level and quality, reads `stats()` and times each build; the costs, the sums, the fill table and owner question 2 follow | S1 | **S1: measured** (the table after "What things cost"): LOD 2 at high quality 1.1k to 1.5k and 0.2 to 0.3 s; every LOD 0 inside 210k and 20 calls; your driver's high LOD 1 11.8k (0.2k over the 11.6k the sums use, inside every margin). Owner question 2's figures stand. |
-| O4 | The allocations: the venue, the streets, HD's and Ultra's sky, the six item models, Ultra's pool tables and lamps | Allocations with headroom; the streets stand on the script's cost model | S1 measures the venue, streets, trees and sky with `breakdown()`; S2a and S2b the items; S4 the pool spots; an overrun takes its preset's listed fallbacks in order | S1, S2a, S2b, S4 | **S1: measured** (`breakdown()` at the five poses, the worst of each): the venue 35 to 39 calls and 16.2k to 16.5k at every preset (allocated 40/50k, 50/90k, 60/150k); the near streets 11 to 14 calls and 14.6k to 15.9k with the streams (allocated 11k at Low, 15k at HD and 25k at Ultra: 3.7k over at Low and 0.1k over at HD); all the streets 18 calls and 38.1k at Low (3.1k over its 35k), 18 and 38.5k at HD, 29 and 78.2k at Ultra; the trees 4 calls, 3.7k and 9.5k; the sky 4 calls, 2.0k. The streets' Low overrun is far smaller than the venue's underrun (33.5k), so every pose's pass stays inside its "without people or items" row (the progress log has every pose) and no fallback was taken. The items wait for S2a and S2b; the pool spots' tables and lamps are 228 triangles each. **S1's repair:** Low's rows re-allocated (the venue 50k to 45k, all the streets 35k to 40k; the near set's row at Low and HD 11k and 15k to 16k), the sums unchanged (see under "The allocations"); with the repair's ceiling and pool tables the venue is 35 to 39 calls and 17.1k to 19.1k at every preset, and each pool spot's table and lamp 684 triangles. The suite checks all the streets as built at every preset and the venue, the streets and the trees as drawn at every budget pose against these rows. |
+| O3 | The people builder's costs and build times | Lot 57's plan's desktop measurements of 14 October; HD's LOD 2 cost (1.5k) and build time (0.4 s) are **assumed** | S1 builds a person at each level and quality, reads `stats()` and times each build; the costs, the sums, the fill table and owner question 2 follow | S1 | **S1: measured** (the table after "What things cost"): LOD 2 at high quality 1.1k to 1.5k and 0.2 to 0.3 s; every LOD 0 inside 210k and 20 calls; your driver's high LOD 1 11.8k (0.2k over the 11.6k the sums use, inside every margin). Owner question 2's figures stand. **S3a: across the crowd** (`s3a-switch-3.log`, the drawn LOD 1 bodies at `door` after `buildAll()`): at phone quality 6.5k to 9.5k a body (mean 7.8k to 7.9k, the sums' 7.5k), at high quality 8.6k to 14.3k (mean 11.8k, the sums' 11.6k). The sums stay on 7.5k and 11.6k: the means are 0.3k to 0.4k and 0.2k over, at most 2.8k at Low's 7 and 8.2k at Ultra's 41 LOD 1s, inside every margin, and every budget pose measured inside its column with the real bodies. **S3a's repair, re-measured** (`s3a-r2-all.log`): the means 7.8k to 7.9k and 11.7k to 11.8k, so the sums' per-body figure stays exceeded by 0.3k to 0.4k and 0.1k to 0.2k a body; the pass's margin under its row at each pose (calls/triangles): Low door 13/37.4k, tv-east 6/32.0k, stall 20/38.3k, patio 54/111.1k, overhead 7/30.9k; HD 32/93.4k, 23/100.1k, 41/108.0k, 67/224.7k, 32/104.1k; Ultra 115/506.4k, 52/225.7k, 61/232.9k, 83/350.2k, 60/174.0k (the progress log has the 390 x 844 poses and the frames). |
+| O4 | The allocations: the venue, the streets, HD's and Ultra's sky, the six item models, Ultra's pool tables and lamps | Allocations with headroom; the streets stand on the script's cost model | S1 measures the venue, streets, trees and sky with `breakdown()`; S2a and S2b the items; S4 the pool spots; an overrun takes its preset's listed fallbacks in order | S1, S2a, S2b, S4 | **S1: measured** (`breakdown()` at the five poses, the worst of each): the venue 35 to 39 calls and 16.2k to 16.5k at every preset (allocated 40/50k, 50/90k, 60/150k); the near streets 11 to 14 calls and 14.6k to 15.9k with the streams (allocated 11k at Low, 15k at HD and 25k at Ultra: 3.7k over at Low and 0.1k over at HD); all the streets 18 calls and 38.1k at Low (3.1k over its 35k), 18 and 38.5k at HD, 29 and 78.2k at Ultra; the trees 4 calls, 3.7k and 9.5k; the sky 4 calls, 2.0k. The streets' Low overrun is far smaller than the venue's underrun (33.5k), so every pose's pass stays inside its "without people or items" row (the progress log has every pose) and no fallback was taken. The items wait for S2a and S2b; the pool spots' tables and lamps are 228 triangles each. **S1's repair:** Low's rows re-allocated (the venue 50k to 45k, all the streets 35k to 40k; the near set's row at Low and HD 11k and 15k to 16k), the sums unchanged (see under "The allocations"); with the repair's ceiling and pool tables the venue is 35 to 39 calls and 17.1k to 19.1k at every preset, and each pool spot's table and lamp 684 triangles. The suite checks all the streets as built at every preset and the venue, the streets and the trees as drawn at every budget pose against these rows. **S2a: the items measured** (`tests/sportsbar-s2a.mjs`): per instance glass 19, basket 20, disc 16, ball 32, band 16, stick 12 at Low and 40, 44, 31, 128, 32, 24 at HD and Ultra, all within their rows; with every model at its cap, 6 calls and 5.7k at Low and 13.9k at HD and Ultra (rows 6.0k and 14.1k) at every budget pose. **S2b: the game pieces measured in play** (`tests/sportsbar-s2b.mjs`, the budgets group at 844 x 390, the five budget poses at each preset, with a game of each kind set up: pool table 1 broken and aiming, dartboard 1 with two darts in, the shuffleboard with three pucks down and the next waiting, pool table 2 racked): 31 balls, 14 bands, 5 discs and 5 sticks, in 4 of the six meshes, 4 calls and 1.4k at Low and 4.7k at HD and Ultra (the glass and basket meshes, at count 0, draw nothing); at their caps again 6 calls, 5.7k and 13.9k. Every pose's pass is within the sums' column with the pieces in play and with every model at its cap, and less the people and items within its "without people or items" row (Low inside 72 to 79 calls and 92k to 101k of 118 and 203.9k; HD outside at the stall 111 and 267k of 176 and 449.5k; Ultra outside at the stall 145 and 621k of 246 and 1,086k: the progress log has every pose). With the three games set up, `breakdown()` changes only in the item meshes (a fixed camera over the games: 110 calls and 162.5k without the pieces, 114 and 163.9k with them). The house player is S2b's third staff body, built at load: staff 3 calls and 21.8k at Low, 33.3k at HD and Ultra, within the people the sums count. **S2b's repair:** the shuffleboard's painted zone numbers (12 strokes in the markings batch) add about 0.2k triangles to the venue and no call (the same fixed camera: 110 calls and 162.7k without the pieces, 162.5k before); the budget poses weren't re-run for it (in S2b's budget run the closest any pose came to a row was 3 calls and 31.8k triangles under it, Low at `tv-east` less the people and items, and the numbers add no call). |
 | O5 | The street triangles | `sportsbar_sets.py`'s cost model: near 9,850, far 23,522 simple and 61,630 full (9,862, 23,522 and 61,612 with the frame computed from building 61, S1). It counts every pier, the ones the pier rule leaves out included, so it's high by 32 triangles a skipped pier (the script prints how many) | S1's `breakdown()` of the built near and far sets | S1 | **S1: measured.** The built near set is 14.6k to 15.9k (the cost model said 9.9k plus 0.4k to 1.6k of streams: the ramps are sampled every 8 m and the raised pieces carry their own marking ribbons), the far set 23.4k simple and 62.3k in full (the model: 23.5k and 61.6k). |
 | O6 | The post quads (bloom 13, output 1, GTAO 3 besides its normal pass) | Read from three.js 0.160.1's passes, not measured | S4 measures the final post chains | S4 | **S1: measured on S1's chains** (`tests/sportsbar.mjs`, the budgets group: one frame's `renderer.info` less the pass, the AO pass and the maps): 14 calls at HD (bloom 13, output 1, as read) and 18 at Ultra at every pose (GTAO 4 besides its normal pass, one more than read). S4 measures the final chains again. |
-| O7 | Frame rates here: about 2 fps at Low and 0.3 fps at HD and Ultra under SwiftShader, and the 3 slow warm-up frames after a load or a switch (108 s for three frames on High, 271 s on Ultra) | The game's figures in `PROJECT_OC_PROGRESS.md`, **assumed** for the bar's page, which isn't built | S1 logs the page's own rates and warm-up at each preset; S3a's marks are taken from its own logged frames, never from these figures | S1, S3a | **S1: logged** (`node tests/sportsbar.mjs --only=rates`, 844 x 390, the `door` pose, this machine at a load of about 15): after a switch, the 3 warm-up frames took 6.4 s at Low, 8.6 s at HD and 19.0 s at Ultra; then 0.94, 1.81 and 3.35 s a frame (1.06, 0.55 and 0.30 fps); the page's own CPU per frame 1.5, 4.1 and 9.2 ms. S1's repair, on its final build (a load of about 8): the 3 warm-up frames 2.0, 2.8 and 4.5 s, then 1.04, 0.76 and 0.39 fps, the page's CPU 1.6, 7.6 and 7.1 ms a frame (`tests/out/sportsbar/logs/s1-r2-final.log`). The game's figures above stand for the game; S3a's marks use the bar's own logs. |
-| O8 | The fill times (about 46 s, 2.5 min and 5.9 min at 30 fps) and any phone's | Arithmetic and a frame-by-frame simulation from the desktop build times, with the casters' LOD 1 builds at their most (HD 5, Ultra 35); a phone is slower by an amount nobody has measured | S3a's build log records the real times on this machine; no phone run is possible here, and none is claimed | S3a |
-| O9 | The hidden casters and the per-light members ("Shadows in three.js 0.160.1") | Read from three.js 0.160.1's source in `node_modules/three` (`WebGLRenderer.js`, `WebGLShadowMap.js`, `GTAOPass.js`); not yet run on a page | S1: your avatar's shadow in first and third person at HD and Ultra, in screenshots and in `stats().maps`; S3a: each pool spot's members in `vis()` and its calls and triangles in `stats().maps`. If the hooks fail, the costed fallback (your avatar's LOD 0 casts itself; in first person no avatar shadow, logged) | S1, S3a | **S1's part: done.** Your avatar's hidden casters work at HD and Ultra, first and third person: at every budget pose the sun's map drops by the caster's own 11,762 triangles when the test turns its `castShadow` off, the caster draws 1 call and 0 triangles in the pass in first person and under the Ultra LOD 0, and no LOD 0 mesh casts; the shadow screenshots are in the progress log. S3a's part (the pool spots' people) is open; S1 checked the pool spots' own members: each map draws only its table and lamp (228 triangles; 684 since S1's repair gave the tables rails, cushions, pockets and sights), every other caster an empty call. |
-| O10 | The empty calls the per-light members and the hidden casters cost, and their CPU | Upper bounds: every mesh with `castShadow` on counted as tested in each pool spot's map (165 empty a map inside, 175 overhead), and every caster but your avatar counted as drawn at LOD 2 (a hidden LOD 1 in each colour pass: HD 5, Ultra up to 35); the CPU of an empty call (a program bind and its uniforms) is unmeasured | S3a and S4 measure each map at `door` and `overhead` against the sums and log the frame's CPU ms; if it runs over, Ultra's fourth fallback turns the pool spots' maps off | S3a, S4 |
+| O7 | Frame rates here: about 2 fps at Low and 0.3 fps at HD and Ultra under SwiftShader, and the 3 slow warm-up frames after a load or a switch (108 s for three frames on High, 271 s on Ultra) | The game's figures in `PROJECT_OC_PROGRESS.md`, **assumed** for the bar's page, which isn't built | S1 logs the page's own rates and warm-up at each preset; S3a's marks are taken from its own logged frames, never from these figures | S1, S3a | **S1: logged** (`node tests/sportsbar.mjs --only=rates`, 844 x 390, the `door` pose, this machine at a load of about 15): after a switch, the 3 warm-up frames took 6.4 s at Low, 8.6 s at HD and 19.0 s at Ultra; then 0.94, 1.81 and 3.35 s a frame (1.06, 0.55 and 0.30 fps); the page's own CPU per frame 1.5, 4.1 and 9.2 ms. S1's repair, on its final build (a load of about 8): the 3 warm-up frames 2.0, 2.8 and 4.5 s, then 1.04, 0.76 and 0.39 fps, the page's CPU 1.6, 7.6 and 7.1 ms a frame (`tests/out/sportsbar/logs/s1-r2-final.log`). The game's figures above stand for the game; S3a's marks use the bar's own logs. **S3a: logged** from the bar's own build log (`tests/sportsbar-s3a.mjs`, the builds group, 844 x 390, Saturday 21:00, from the load, a load of 13 to 21 here): the 3 warm-up frames took 5.0, 4.5 and 1.4 s at Low, 6.7, 7.4 and 2.7 s at HD and 8.7, 19.9 and 4.5 s at Ultra; then the median frame less its build (F) was 0.88 s at Low, 2.21 s at HD and 4.37 s at Ultra. S3a's marks use these. **Re-run after the repair** (`s3a-r2-all.log`, a load of about 14): warm-up 1.9, 3.5 and 2.0 s at Low, 3.3, 6.5 and 2.1 s at HD, 3.7, 10.9 and 5.4 s at Ultra; F 0.94, 2.14 and 3.89 s. |
+| O8 | The fill times (about 46 s, 2.5 min and 5.9 min at 30 fps) and any phone's | Arithmetic and a frame-by-frame simulation from the desktop build times, with the casters' LOD 1 builds at their most (HD 5, Ultra 35); a phone is slower by an amount nobody has measured | S3a's build log records the real times on this machine; no phone run is possible here, and none is claimed | S3a | **S3a: measured here.** At Low the room reached its cap from the load in 31 background builds (26 at LOD 2, 5 at LOD 1, after the atlas eight and the staff at load) over a span of 55.1 s after the 3 warm-up frames, the builds themselves 11.78 s of it. At HD and Ultra the first 30 builds (all LOD 2) took 71.8 s and 131.5 s of span (6.43 s and 8.02 s of building); the full rooms there are measured through `buildAll()` at the poses. No phone was run. **Re-run after the repair:** Low 31 builds (26 LOD 2, 5 LOD 1) over 43.7 s of span (7.9 s of building); HD and Ultra's first 30 over 75.9 s and 121.8 s (6.93 s and 6.15 s of building). |
+| O9 | The hidden casters and the per-light members ("Shadows in three.js 0.160.1") | Read from three.js 0.160.1's source in `node_modules/three` (`WebGLRenderer.js`, `WebGLShadowMap.js`, `GTAOPass.js`); not yet run on a page | S1: your avatar's shadow in first and third person at HD and Ultra, in screenshots and in `stats().maps`; S3a: each pool spot's members in `vis()` and its calls and triangles in `stats().maps`. If the hooks fail, the costed fallback (your avatar's LOD 0 casts itself; in first person no avatar shadow, logged) | S1, S3a | **S1's part: done.** Your avatar's hidden casters work at HD and Ultra, first and third person: at every budget pose the sun's map drops by the caster's own 11,762 triangles when the test turns its `castShadow` off, the caster draws 1 call and 0 triangles in the pass in first person and under the Ultra LOD 0, and no LOD 0 mesh casts; the shadow screenshots are in the progress log. S3a's part (the pool spots' people) is open; S1 checked the pool spots' own members: each map draws only its table and lamp (228 triangles; 684 since S1's repair gave the tables rails, cushions, pockets and sights), every other caster an empty call. **S3a's part: done.** At Ultra inside and overhead each pool spot's map draws its table and lamp and the people at its slots by their LOD 1 (`vis().people`: 1 to 4 people a table, a hidden LOD 1 under a LOD 2 where drawn at LOD 2), and nothing else: 11.5k to 46.4k triangles a map (row 98.8k) at every pose; frozen outside (684 triangles, the map last drawn). The sun's map takes the casting people (19 at Ultra, 2 to 5 at HD, the nearest outside the unit with a LOD 1 built) by their LOD 1 alone; `castingNotLod1` was empty at every pose (no LOD 2 or LOD 0 mesh casting). |
+| O10 | The empty calls the per-light members and the hidden casters cost, and their CPU | Upper bounds: every mesh with `castShadow` on counted as tested in each pool spot's map (165 empty a map inside, 175 overhead), and every caster but your avatar counted as drawn at LOD 2 (a hidden LOD 1 in each colour pass: HD 5, Ultra up to 35); the CPU of an empty call (a program bind and its uniforms) is unmeasured | S3a and S4 measure each map at `door` and `overhead` against the sums and log the frame's CPU ms; if it runs over, Ultra's fourth fallback turns the pool spots' maps off | S3a, S4 | **S3a's part: measured** (`stats().maps`, the budget poses): each pool spot's map at Ultra is 52 to 57 calls inside and overhead (the plan's upper bound 177 and 187), of which 3 to 12 draw; the sun's map 37 to 41 calls at HD inside, 69 to 74 outside and overhead, 61 to 96 at Ultra; every pose's whole frame inside its row (the tightest: HD overhead 274 calls and 771.7k of 374 and 1,014.5k; Ultra overhead 686 and 2,664.5k of 1,185 and 3,396.7k). The empty calls' CPU isn't separated from the frame's: the page's frame CPU was 5 to 18 ms in frames with no build. S4 measures again on its final chains. **S3b's budget run** (groups talking, 5 or 6 guests' matches): each pool spot's map at Ultra 53 to 58 calls and 12.3k to 49.2k triangles inside and overhead (frozen at 684 outside), the sun's map 40 to 41 calls at HD inside and 69 to 74 outside and overhead, 66 to 97 at Ultra; every pose's frame inside its row (the tightest: HD `overhead` 278 calls and 759.9k of 374 and 1,014.5k; Ultra portrait `overhead` 706 and 2,664.1k of 1,185 and 3,396.7k). |
 | O11 | The shadow maps drawn once a frame | three.js 0.160.1 redraws them in every `renderer.render`, and GTAO's normal pass is one; the bar's page turns `shadowMap.autoUpdate` off and asks for one update a frame | S1's check that a frame's `renderer.info` is the pass, each map once, GTAO's normal pass and the post | S1 | **S1: closed.** At every HD and Ultra pose, one frame's `renderer.info` equals the pass, at Ultra GTAO's normal pass as drawn (`stats().ao`: 59 to 117 calls, the pass less the lines, points, see-through overlays and meshes without normals it leaves out; see O34), each updating map once, and 14 post calls at HD or 18 at Ultra, within 1%. |
-| O12 | S3a's span bound (1.7) for the background builds | Exact for frames at their median non-build time (a build, its gap and the frames it waits for are at most 5/3 of the reference); a frame-by-frame simulation gives 1.0 to 1.4 at a steady 30, 2 and 0.3 fps. The gap and "never idle" marks are exact at any frame rate | S3a runs the marks on its logs. If a run that passes the gap and never-idle marks still exceeds 1.7 only because its frames were irregular, the builder replays the rule on the logged frames, records the replayed ratio as that run's bound and says so in the progress log | S3a |
-| O13 | The run time of S3a's "A change of graphics" here | Six switches, each with 3 slow warm-up frames (O7), about 15 to 30 min under SwiftShader, an estimate | S3a logs it; the timed builds start after each switch's warm-up frames | S3a |
-| O14 | Held guests and staff going off shift (the live cap on a switch, under "People are slow to build" and "Fillers") | New design in this plan; Lot 57's spec has nothing like it | S3a builds them and checks them (the crowd, filler and change-of-graphics checks) | S3a |
+| O12 | S3a's span bound (1.7) for the background builds | Exact for frames at their median non-build time (a build, its gap and the frames it waits for are at most 5/3 of the reference); a frame-by-frame simulation gives 1.0 to 1.4 at a steady 30, 2 and 0.3 fps. The gap and "never idle" marks are exact at any frame rate | S3a runs the marks on its logs. If a run that passes the gap and never-idle marks still exceeds 1.7 only because its frames were irregular, the builder replays the rule on the logged frames, records the replayed ratio as that run's bound and says so in the progress log | S3a | **S3a: closed.** The marks pass on the logged frames with no replay: the span ratio (span over the sum of max(F, 3d)) 1.316 at Low, 1.083 at HD and 1.004 at Ultra from the load, and 1.133 for the timed Low-to-HD switch; no frame with two builds, the gap met at every build (at least 1.01, 1.52, 1.83 and 2.01 times the need), no idle frame. **Re-run after the repair:** 1.335, 1.183, 1.044 and 1.063 (the switch), the gap at least 1.04, 2.18, 4.94 and 1.73 times the need, no frame with two, no idle frame. |
+| O13 | The run time of S3a's "A change of graphics" here | Six switches, each with 3 slow warm-up frames (O7), about 15 to 30 min under SwiftShader, an estimate | S3a logs it; the timed builds start after each switch's warm-up frames | S3a | **S3a: logged.** The six switches (and the join, the timed Low-to-HD run and a held guest's tap) took 8 min 9 s here (`s3a-switch-3.log`, 06:34 to 06:42 UTC); behind each sheet: 2.5 s to HD from Low, 2.5 s to Ultra from Low (plus your avatar's close-up), 4.7 s to Low from HD or Ultra, and 1 to 8 ms between HD and Ultra. **Re-run after the repair** (`s3a-r2-all.log`): the switch group's checks took 8 min; behind each sheet 2.4 s to HD from Low, 5.5 s to Ultra from Low, 5.4 s and 10.6 s to Low from HD and Ultra (a load of about 14), 0 to 1 ms between HD and Ultra. |
+| O14 | Held guests and staff going off shift (the live cap on a switch, under "People are slow to build" and "Fillers") | New design in this plan; Lot 57's spec has nothing like it | S3a builds them and checks them (the crowd, filler and change-of-graphics checks) | S3a | **S3a: built and checked** (the switch group, 10 of 10): going down the farthest units are held (Ultra to Low held 59 guests 10.1 to 30.1 m away, 12 regulars and 19 standing among them; Ultra to HD 30, 19.4 to 30.1 m), never your party; going up held guests come back first (Low to Ultra: 59 back, no filler made live) and fillers after; the staff over Low's five go off shift (their jobs re-queued); a held guest tapped comes back as themselves under the cap. **S3a's repair:** the switch log records each held guest's unit distance, every live guest's after the hold and the room before anyone came back, and the check asserts the units' rule (the nearest held unit at least as far as the farthest live one: 9.22 m and 9.22 m to Low from Ultra and from HD, 19.24 m and 19.24 m to HD from Ultra, one table split at the cut) and, going up, every held guest back before any filler was made live (Low to HD 20 of 20, HD to Ultra 11 of 11, Low to Ultra 59 of 59). |
 | O15 | The Retro style module (RS1) | Uncommitted on `claude/modes`; its API read at about 10:35 UTC (`style.ts` 5a1598bdd2), changed since (e606208d78, 10:53) | S1 re-reads the API; S4 turns Retro on after `claude/modes` merges, or ships Low with standard materials at full resolution and says so in the handoff | S1, S4 | **S1's part: done.** Re-read on 2026-11-02: still uncommitted on `claude/modes`; the API the bar uses holds (`RetroWorld` gains an optional `sun`). The S1 page's Low draws the standard materials at full resolution (render scale 1, pixel ratio 1 to 2, no shadow map), as this row allows; S4 turns Retro on or says so in the handoff. |
-| O16 | The hair finding: a LOD 0's toon hair cap and hair cards wouldn't compile, so they're `retroSkip` | The hooks' text read and resolved against the toon shader; no GLSL compiled | S3a's forced LOD 0 run at Low fails on any shader error; the handoff asks RS1 to make the hook-fit test catch such a hook | S3a |
-| O17 | No NPC's face moves (no NPC LOD 0) | A LOD 0 is one synchronous build of 4.6 s or 7 to 9.5 s | Owner question 2 | The owner; S3a applies the answer |
+| O16 | The hair finding: a LOD 0's toon hair cap and hair cards wouldn't compile, so they're `retroSkip` | The hooks' text read and resolved against the toon shader; no GLSL compiled | S3a's forced LOD 0 run at Low fails on any shader error; the handoff asks RS1 to make the hook-fit test catch such a hook | S3a | **S3a: the shader half done.** At Low, after a 30 sim-minute fast-forward and every pose, one NPC forced to LOD 0 in view (17 calls, 65.8k triangles; its `hair-cap` and `hair-cards` marked `retroSkip`) compiled with no shader or `WebGLProgram` error (`renderer.debug.onShaderError` watched). The toon half can't run until the Retro module lands (O15); the handoff asks RS1 for the hook-fit test (item 13). |
+| O17 | No NPC's face moves (no NPC LOD 0) | A LOD 0 is one synchronous build of 4.6 s or 7 to 9.5 s | Owner question 2 | The owner; S3a applies the answer | **S3a: applied as planned** (no answer yet): the build queue never builds an NPC LOD 0 and the draw rule never asks for one; `people()` and `vis()` report NPCs at LOD 0 (0 in every S3a check and pose). Only the Low shader check forces one, on purpose. |
 | O18 | Low draws no sun shadows, unlike the game's `RETRO` preset and decision 15's "hard shadows" | The plan's choice, for Low's budget | Owner question 1 | The owner; S4 applies the answer |
 | O19 | Our unit's extent (the arm's east 36 m) and the patio on unmapped paving | **Assumptions**: the data doesn't divide the building, and nothing is mapped on the strip | They stay ours and are built as planned; only the owner or new open data can change them | (stays an assumption) |
 | O20 | The lot: S0-data's derived lot, 55 to 62 stalls, and the 0.84 fill bias | The derived lot, our stall layout and L6's fill rule as measured | S1 lays out the stalls, counts them and recomputes 0.84 from the re-measured rule | S1 | **S1: closed.** 55 stalls in four rows (every one facing 0 or pi; aisle 416's line keeps three of the south row out), your stall the north row's nearest the routes' end; L6's rule, unchanged, gives these stalls a mean bias of 0.834, which the page computes at load and divides by. |
 | O21 | The walk grid, the lane path and the front's clearances | `sportsbar_zones.py`'s model of L12's grid, and shapely on the plan's numbers | S1 runs the same tests on the built colliders and Lot 57's real grid at the page's offset, and the front's from `layout()` | S1 | **S1: closed.** On the built colliders and Lot 57's real grid at the page's offset: all 137 stand points (the 103 modelled and the 34 standing, pool and darts spots) within 0.413 m of a reachable cell, H 0.052 m, no reachable cell in the lane or the flap (also with them painted back in); the lane path clears every collider but the gate by 0.10 m; the front from `layout()`: walk 0.40 m, ramp 0.41 m, bikes 0.81 m, planters 1.00 and 1.02 m, patio 1.88 m from aisle 416's ribbon, the ribbon 3.72 m from building 61. |
 | O22 | The I-5's drawing: the bridge rule, piers left out over drawn ribbons, the Katella slab under the decks, and the ground the ramps meet (the 60 m terrain cells smear the embankments) | The script's rule on the slice | S1's "The I-5 is drawn" check on the built sets, and its street and door screenshots from the patio and Katella | S1 | **S1: closed.** "The I-5 is drawn" passes on the built sets (the five carriageway pieces 14 m and seven links 8 m wide, decks at 7.6 m, 98 piers built and 33 left out, 19 of them near, as the script prints; no built pier meets a drawn ribbon; 393 connectors with one height each; 58 crossings without a junction, all 5.5 m apart or in one of the 5 tunnel spans). Screenshots from the patio rail and from Katella are under S1 in the progress log. |
-| O23 | Simulation CPU (2.5, 3 and 4 ms), the 6 decisions' 0.4 ms, the code size (180 KB), the first walkable frame (under 6 s) | Targets and estimates | S1 times the first frame; S3a reports simulation and decision ms; S4 the code size | S1, S3a, S4 | **S1's part: logged.** The first walkable frame (`buildMs`, load to ready) took 11.5 s to 14.8 s at Low here, on the loaded machine; the 6 s target is a desktop estimate, not measured here. |
-| O24 | The utility arithmetic (about 99% choose a drink when thirsty) | The formulas as written | S3a's "needs drive choices" check, at 70% | S3a |
-| O25 | Lot 57's P1b and P1c (Order, Join, Leave, held items; NPCs, groups, the crowd, staff) | Not written yet | If they haven't landed by S2a and S3a, the bar writes them in `engine/` from Lot 57's spec and says so in the handoff | S2a, S3a |
+| O23 | Simulation CPU (2.5, 3 and 4 ms), the 6 decisions' 0.4 ms, the code size (180 KB), the first walkable frame (under 6 s) | Targets and estimates | S1 times the first frame; S3a reports simulation and decision ms; S4 the code size | S1, S3a, S4 | **S1's part: logged.** The first walkable frame (`buildMs`, load to ready) took 11.5 s to 14.8 s at Low here, on the loaded machine; the 6 s target is a desktop estimate, not measured here. **S3a's part: logged** (the budget poses and the 30 sim-minute run): the crowd's step 0.1 to 0.9 ms a frame (one 4.3 ms), its drawing 0.4 to 2.8 ms a frame without the build in it; a frame's decisions (one batch of up to 6) 0.15 to 0.35 ms on average (the slowest batch 5.1 ms of 400 batches), against the 0.4 ms desktop target, under SwiftShader on this loaded machine; the page's whole frame CPU 5 to 18 ms in frames with no build, and 255 to 1,238 ms in frames a LOD 1 build landed in (the build log has each). **S3a's repair:** a batch 0.408 ms on average in the 30 sim-minute run (the slowest 5.3 ms of 400); the crowd's own frame, with the review's per-frame allocations gone, over many real frames: 0.9 ms median (3.1 ms at the 90th percentile) at Low's door and 2.2 ms (3.9 ms) at Ultra's, single frames up to 19 and 120 ms (`s3a-r2-crowdframe.log`). **S3b: with people's adverts** (up to 8 people and 48 of their adverts a decision, 43 adverts at most in 1,048 decisions), a batch took 0.52 to 0.53 ms on average at the budget poses (S3a's repair 0.41 ms; the desktop target 0.4 ms), the crowd's step 0.2 to 1.4 ms; this machine, under SwiftShader, at a load of 5 to 23 (`PROJECT_OC_PROGRESS.md`, S3b). **S3b repair:** with the pairs looked up by id (no key strings), the person adverts' log built only when a check asks, heads read into a scratch vector and the matches stepped without a copy, the mean of the last 400 batches was 0.306 to 0.308 ms at Low's seven budget poses and 0.328 ms at HD's and Ultra's (the same run of 21 poses after a 30 sim-minute fast-forward; the earlier S3b build's Low run gave 0.46 ms), under the 0.4 ms desktop target; this machine at a load of about 8 (`s3b-r2-budgets-shots.log`). |
+| O24 | The utility arithmetic (about 99% choose a drink when thirsty) | The formulas as written | S3a's "needs drive choices" check, at 70% | S3a | **S3a: closed.** `engine/sim/autonomy.ts` reproduces the worked arithmetic exactly (`tests/sportsbar-crowd.mjs`: watching 70.46, the drink 28.94 without the urgent rule and 58.94 with it, water 47.35, watching plain 25.46, the bar screens 6.72, table service 73.57, 28.33 at thirst 45 and 24.36 at 50), and the top-three draw picks a drink-tagged action 0.9882 of the time over 20,000 seeded decisions (the plan's 0.988). On the page (Low, Saturday 21:00, `tests/sportsbar-s3a.mjs`, the checks group): 16 of 18 thirsty guests (88.9%), 5 of 5 hungry ones and 15 of 15 bored ones chose a drink-, food- or fun-tagged action within their next two decisions. |
+| O25 | Lot 57's P1b and P1c (Order, Join, Leave, held items; NPCs, groups, the crowd, staff) | Not written yet | If they haven't landed by S2a and S3a, the bar writes them in `engine/` from Lot 57's spec and says so in the handoff | S2a, S3a | **S3b:** the talking groups now form and change across parties (`engine/sim/groups.ts` gains joining and leaving; the bar's `social.ts` keeps who's in which group); Lot 57's Join is the bar's own through `social.ts`. **S3a: P1c not adopted.** Its crowd (`lot57/npcs.ts`, `crowdview.ts`) is bound to Lot 57's venue and draws people its own way (per-person impostors, worker builds), so the bar keeps the plan's atlas eight and time budget and writes Lot 57's group rules into `engine/sim/groups.ts` (the handoff says so; E0 keeps one copy). Neither page has the murmur: no audio is built on either page. **S2a: landed** (`claude/onfoot` 7d94139 and 47c71a6, merged at a5ac3fd). The bar uses P1b's order sheet, captions and holding chip through `Hud`; it keeps its own instanced held items (`engine/sim/held.ts`: P1b's items are three meshes each) and its own ordering (the action queue and two scripted staff), since P1b's `doings.ts` is bound to Lot 57's venue and crowd (the module map's P1b and P1c row; the handoff says so). P1c's people are S3a's to adopt. |
 | O26 | E0, the move into `engine/` | Waits for Lot 57's P1d to be committed | S4, or whoever next touches both venues | S4 or later |
 | O27 | The names: "Stoppage Time" and the fictional leagues and teams | One web search each, not a trademark search; the blocklist | Searched again before anything ships; the blocklist test runs in every phase | S4, before release |
 | O28 | Lot 57's own shadow flaws: its first-person body on layer 1 casts nothing, and at Ultra its maps are drawn twice a frame (GTAO's normal pass draws them again) | Its `main.ts` as read (3ab822eb73, 11:09 UTC) and three.js 0.160.1 | Not the bar's to change before E0: the handoff carries both to Lot 57's owners | S1 writes the handoff note | **S1: closed.** The note is in `PROJECT_OC_HANDOFF.md` ("For Lot 57's owners"). |
 | O29 | Ultra's entitlement (RS2) | Not landed; test hooks set Ultra in test builds | S4 reads the shared entitlement, with no price and no purchase path | S4 |
 | O30 | Phones | Nothing in this plan has run on a phone | The budgets stay targets until the owner runs one; the handoff asks for it | (the owner) |
 | O31 | The exits and routes ("Joining the game later") | S0-data's `sportsbar-freeway-link.json`, still being refined when this was written | The file is authoritative; J1, in the game's workflow, reads it as it then stands | J1 (after S4) |
-| O32 | Cards (fillers, held guests and unbuilt people) reading as people through the glazing and from above | A design claim, unseen | S3a's `door`, `stall`, `patio` and overhead screenshots are looked at; the mitigations are under "Risks" (8 directions, three poses, the promotion radius) | S3a |
-| O33 | The bar's new clips (drink, eat, dances, cheer, groan, clap, the game clips) looking right on a rig built for talking, walking and sitting | Procedural, unmade | S2a and S2b ship the clips that read well and write any that don't up in the handoff for the design review queue | S2a, S2b |
+| O32 | Cards (fillers, held guests and unbuilt people) reading as people through the glazing and from above | A design claim, unseen | S3a's `door`, `stall`, `patio` and overhead screenshots are looked at; the mitigations are under "Risks" (8 directions, three poses, the promotion radius) | S3a | **S3a: looked at.** From the patio (`s3a-patio-low-844x390-r1.png`) the people inside, cards and bodies, read as people through the south windows; from overhead on a packed Friday (`s3a-overhead-friday-1280x720-r1.png`) the room reads as full; at the door (`s3a-door-low-844x390-r1.png`) the far end's cards read as a crowd. The `stall` pose faces the unit's north wall at its corner, so no glazing is in view from there (`s3a-stall-low-844x390-r1.png`). A first build sampled the atlas at the wrong cell size, so cards showed the next cell's legs (a guest seemed sunk to the shoulders); fixed before these shots. Shot again after the repair (`-r2`), looked at: the same reading. |
+| O33 | The bar's new clips (drink, eat, dances, cheer, groan, clap, the game clips) looking right on a rig built for talking, walking and sitting | Procedural, unmade | S2a and S2b ship the clips that read well and write any that don't up in the handoff for the design review queue | S2a, S2b | **S2a's part: shipped, looked at** (`tests/out/sportsbar/s2a-clip-*.png`): cheer and arm pump read clearly, clap reads (the hands meet a little high), drink and eat bring the hand to the chin; sway and two-step read only in motion; groan reads more as hands behind the head than on it. The groan and the two quiet dances are written up in `PROJECT_OC_HANDOFF.md` for the design review queue. **S2b's part: shipped, looked at** (`tests/out/sportsbar/s2b-clip-*-r2.png`, from the side): the dart throw (the dart up by the eye, the elbow up) and the shuffleboard slide (a lean and a long forward reach) read well; the pool stance reads as a lean over the table but the cue arm hangs rather than drawing back, and the pool shot's forearm swing barely shows from the side (S2b's repair hides your own avatar in the pool camera's view, where it stood just under the camera; Rocío's are seen from your own view on her turns; the cue is drawn on its own, not in either player's hands, and goes to the same design pass). Each plays at LOD 0, 1 and 2 (`tests/sportsbar-s2b.mjs`), `people/` untouched. The pool stance and shot are written up in `PROJECT_OC_HANDOFF.md` for the design review queue. |
 | O34 | GTAO and the ground's depth (found in S1's screenshots) | At Ultra, GTAO's normal pass drew the lot lights' pools and the game's mountain ring, which carry no normals, as surfaces facing nowhere: the lot under the pools went near black at noon and the mountains dark slate. At 844 x 390 on Low, the 3200 m ground quad drew over the lot's asphalt 4.2 cm above it from the spawn | Fixed on the bar's page in S1: the AO pass leaves out every mesh with no normals or no depth write (`applyQuality`), and the ground's material has a polygon offset pushing it back (`mats.ts`); `stats().ao` measures the AO pass as drawn, and the budgets check uses it. Lot 57's page shares both: the handoff tells its owners | S1 | **S1: closed** on the bar's page (`tests/out/sportsbar/probe/`, before and after); Lot 57's copy is its owners' (`PROJECT_OC_HANDOFF.md`, "For Lot 57's owners", items 3 and 4). |
+| O35 | Guests' darts and shuffleboard matches on the physics (found building S3b) | S3b plays guests' pool on the table's physics while it's on screen or within 15 m and resolves it statistically otherwise, as planned; guests' darts and shuffleboard are resolved statistically on screen too (each turn's score from the thrower's skill, the throw and slide clips played; their pieces aren't drawn) | Put guests' darts (`DartsGame`, the house's throw with each side's competitiveness) and shuffleboard (`ShuffleGame`) on the spots' physics while on screen, with their pieces drawn, as the pool tables do | S3b (repair) | **S3b repair: closed.** Guests' darts and shuffleboard are on the spots' physics while on screen or within 15 m (`DartsSpot` and `ShuffleSpot` in `games.ts`: the house's throw model and the plan's NPC slide, each side's competitiveness; darts and pucks drawn as instances) and statistical otherwise, changing mode only between turns or frames. Checked on the page (`tests/sportsbar-s3b.mjs`, games group; `s3b-r2-low-*.log`) and seen in `s3b-npc-darts-1280x720-r2.png` and `s3b-npc-shuffle-1280x720-r2.png`. |
+| O36 | Guests take every game spot on a busy night (found building S3b) | With people's adverts on, a Challenge advertises its game's deltas (pool's fun 40 x p) and outbids most adverts for the competitive: on a Saturday 21:00 room every pool table, board and the shuffleboard was in use within 3 sim minutes, and 5 or 6 matches were on at every budget pose (10 to 12 of Low's 31 guests). Your own game then waits for a spot (the radial offers Watch pool on a busy table) | Watch it in play; if it reads as too many, tune within the plan (the play adverts' 5 to 8 minutes, a cap on guests' matches, or a spot kept free for you), with the owner's view | S3b (repair) | **S3b repair: closed** (a spot kept free for you). Guests never take the last free pool table or dartboard (your own game of a kind counts), a spot you chose is held while you walk there, and a spot guests are using answers a tap with Watch and "you're next" (nobody else starts there when their match ends). Measured at Saturday 21:00 (Low, week 43, `seed(1)`): after 5 and after 15 sim minutes, pool-2 and darts-3 free for you (Play in their menus), the other four spots in guests' matches, and Challenge offered to 12 of 12 guests checked; your game started from the menu's Play on each kind with no guest moved (`s3b-r2-busy.log`, `s3b-r2-low-*.log`). Whether four matches read as too many is still the owner's to judge in play. |
+| O37 | Friendship climbs fast within one visit (found reviewing S3b) | The plan's updates allow it: accepted Jokes one after another (+9 each, k 0.35) take a stranger to Good friend (friendship 90) in one visit; nothing limits repeats of one interaction | S4 weighs it with the owner: diminishing returns for the same interaction with the same person in a short time, or a per-visit cap on friendship's rise; the tests' hand-worked numbers move with any change | S4 | |
+| O38 | Ultra's fillers and the listeners' facing (found reviewing S3b) | At S3b the review counted 99 fillers at Ultra (110 at S3a; the target 130) and listeners facing the speaker in 76% of samples (98% before visitors stood beside the person they came to; the floor 70%); the repair's runs measured 73% and 92% on two builds. The repair's S3a fillers check at Saturday 21:00 (passing): Ultra live 90 + held 0 + fillers 22 = 112 of 130, HD 60 + 2 + 59 = 121, Low 31 + 9 + 64 = 104, each with every free eligible slot filled (`s3b-r2-regress-s3a.log`) | S4 looks at where Ultra's fillers go once guests' games and circles take floor, and at where a visitor stands by a seated group (facing for the seated members), and logs both | S4 | |
 
 ## Ground rules
 
@@ -455,7 +505,7 @@ promise. The numbers are in the next table, not here.
 | `lot57/driver.ts` | `readDriver`, `driverPerson`, `eyeHeight`: your driver, from the game's own settings | No |
 | `lot57/player.ts` | `Player`, constructed as `(set: ColliderSet, grid: WalkGrid, roadAt)`; public `x`, `z`, `yaw`, `pitch`, `eye`, `view`, `seat`, `person`; walking and jogging with push-out; `goTo(x, z, goal?)` (a path on the grid, then `sit(seat)` on arrival when the goal is a seat); `sit(seat)`, which puts the body on the seat; `stand()`, which puts it back at the seat's stand point or the nearest free cell; `place`; `look`; and `camera(cam)`, which places the first- or third-person camera and returns `{ dist, hide }`. `View = 'first' \| 'third'`. Also `WALK`, `JOG`, `STEP` and `Stick`. | Yes: `get indoors()` calls Lot 57's `inShed(x, z)` |
 | `lot57/input.ts` | `Input`: the floating stick, the look drag, taps, keys and the gamepad, with an `enabled` switch and a fixed `Action` union (L18) | The key map and the action union are fixed |
-| `lot57/hud.ts` | `Hud`: the action buttons, toasts, the hint, the pause sheet (quality, clock and motion controls) and the crowd chip, `setPlace(clock, hours)` for the place panel (S1: read at ab9fbe1); `loading()` and `doneLoading()`; `setView(View)`; `setQuality`; `onView: (v?: View) => void`, called with no argument by the view button (cycle) and with the clicked button's `data-v` by the view segment | It binds fixed element ids in Lot 57's `index.html` (L17) |
+| `lot57/hud.ts` | `Hud`: the action buttons, toasts, the hint, the pause sheet (quality, clock and motion controls) and the crowd chip, `setPlace(clock, hours)` for the place panel (S1: read at ab9fbe1); `loading()` and `doneLoading()`; `setView(View)`; `setQuality`; `onView: (v?: View) => void`, called with no argument by the view button (cycle) and with the clicked button's `data-v` by the view segment. S2a (47c71a6): P1b's `caption(who, text, s)`, `replies()`, `openOrder(counter, staff)` with `onOrderPick` and `onOrderClose`, `closeOrder()`, `status(text, kind, frac)` (the order and holding chip), `sheet(id, on)` and `clearToast()`; the bar uses the order sheet, the captions and the chip | It binds fixed element ids in Lot 57's `index.html` (L17) |
 | `lot57/lot.ts` | `Stall` (`x, z, face, row, mine, ada`); `ParkedCars`, constructed as `(stalls, quality: 'phone' \| 'high', nearCount, farDetail = false)` (S1: the fourth argument is new at ab9fbe1; the bar passes false), with `fill(share, seed)`, `update(x, z, force?)` (the nearest `near` cars detailed, the rest stand-ins, every instanced mesh's bounding sphere recomputed), `dispose()`, and public `near`, `count`, `colliders`, `group` and read-only `quality`. Per traffic kind, one `InstancedMesh` for each detailed part and one for the stand-ins, so three.js culls each as a whole. `yourCar(stall, car, paint, quality)` returns `{ group, collider }`. `buildLot`, `LotInfo` (with `door`), `MEDIAN`, `WALK_GAP`. | It reads Lot 57's `PLAN` (from `coords.ts`). `buildLot` builds Lot 57's rows; `fill()` biases toward Lot 57's gate and pulls cars along world z (L6) |
 | `lot57/mats.ts` | `Quality` (`'low' \| 'high' \| 'ultra'`), the `GLOW` channels, `glowify`, `makeMats(board)`, `setNight` (S1: and `setUltraMaps`, Lot 57's own) | `makeMats` also builds Lot 57's sign atlas, reader board and surfaces |
 | `lot57/tex.ts` | Code-painted surfaces (asphalt, concrete, pavers, turf, dirt, wood, brick, glow, blob, picket, chain); Lot 57's `PAL`, `tiltupTex`, `rollDoorTex`, `ATLAS`, `labelsAtlas`, `readerTex` | In part |
@@ -467,7 +517,11 @@ promise. The numbers are in the next table, not here.
 | `index.html`, `vite.config.ts` | The HUD's elements; the single-file build to `dist/onfoot/` | Lot 57's |
 | `src/onfoot/people/` (committed, shared) | `buildPerson(opts)` returns a `Person` with `group`, `update(dt)`, `setLod(0 \| 1 \| 2)` (builds a level the first time it's asked for, in one synchronous call, and keeps it), `play(anim)`, `lookAt(target)`, `setExpression(name, w)`, `say(line, s)`, `stats()` and `dispose()`. **Only LOD 0 has a moving face:** its face meshes carry the morph targets that `setExpression` (smile, laugh, listen and the rest), the blinks and `say`'s mouth drive, and only LOD 0 shows the eyeballs the gaze turns. LOD 1 and LOD 2 are each one `lodMaterial` mesh with the eyes, brows and lips painted on, so their faces never move. What works at every level is the body: the clips (`play`, and the laugh clip `setExpression('laugh')` starts), the talk gestures `say` drives, and `lookAt`'s head turn. `skinMaterial`, `clothMaterial`, `hairCapMaterial`, `cardMaterial` (hair cards, lashes, brows), `eyeMaterial`, `accMaterial` and `lodMaterial` make its materials; the builder casts LOD 0 and LOD 1 bodies and not LOD 2 ones. **Internals the bar also relies on** (not API, so S1's re-measure checks them in `person.ts`): each built level is a child group of `group`, LOD 1's holding one mesh named `lod1` and LOD 2's one named `lod2`; `setLod(n)` sets every other built level's group `visible = false`; every level is bound to one shared skeleton, so a hidden level shown again takes the same pose; LOD 0's hair are the meshes `hair-cap` (`hairCapMaterial`, program key `haircap-`) and `hair-cards` (`cardMaterial` with its hair hook, key `card-<quality>-1-`). | Not Lot 57's: F5's builders and Lot 57's P1d own it |
 
-Not written yet: P1b (Order, Join, Leave and held items) and P1c (NPCs, groups, the crowd and staff).
+**P1b and P1c have landed** (`claude/onfoot` 7d94139 and 47c71a6, merged into `claude/sports-bar` at a5ac3fd on
+2026-11-08): P1b's Order, Join and Leave, its order sheet, captions, reply chips and holding chip (`lot57/doings.ts`,
+`lot57/items.ts`, `lot57/talk.ts`, more of `lot57/hud.ts`), and P1c's forty people, groups, crowd curve, staff and
+their drawing (`lot57/npcs.ts`, `lot57/crowdview.ts`, `lot57/crowd-worker.ts`). What the bar takes from them in S2a is
+under the module map's P1b and P1c row.
 
 **S1's re-read (ab9fbe1, 2026-11-02):** every contract above holds. Additive changes: `ParkedCars`'s fourth argument
 (L2), `Hud.setPlace`, `setUltraMaps`, and two new Lot 57 modules the bar doesn't use (`lot57/trees.ts`, its olive and
@@ -476,6 +530,16 @@ shade trees in code, and `lot57/wheels.ts`, its trucks' wheels). The `people/` i
 `lod1` and `lod2`, `setLod` setting every other level's group `visible = false`, one shared skeleton,
 `frustumCulled = false` and `castShadow` per level at lines 447 and 538, the hair meshes `hair-cap` and `hair-cards`),
 so the hidden casters stand on them as planned (O2).
+
+**S2a's re-read (47c71a6, 2026-11-08):** every contract above holds, with additive changes, and one of them breaks the
+bar's page in practice: `Hud` now also binds the P1b elements (L17 below) in its constructor without a null check, so
+a page without them throws at `new Hud()`. S1's committed `sportsbar.html` didn't carry them; S2a's does, so the bar's
+wrapper is unchanged. The other additions: `Player` gains a `Goal` type (`seat`, `spot`, `join`, `counter`), an
+`onArrive(goal)` callback when a walk with a goal other than a seat ends (S2a's action queue uses it), and `soft`
+people it eases past; `WalkGrid.computeFree` takes an optional list of people to plan round; `Collider` gains `see`
+(a window stretch); `Venue` gains `counters` (`CounterSpot`); `ParkedCars` gains `nearDist` (Lot 57 sets 45 m on Low;
+the bar leaves it at its default, no limit). The `people/` internals are unchanged (no diff in `src/onfoot/people/`
+since ab9fbe1), so O2 holds.
 
 ### Lot 57's numbers, as measured
 
@@ -504,6 +568,25 @@ measured again for the round-6 revision. For this one, `main.ts` was re-read at 
 first-person layer only, and `walkgrid.ts` (still 671715d7a0) for its painting methods in the contracts table. Under the
 drift rule the rest stay as measured, and the S1 builder's re-measure covers every row.
 
+**S3a's re-measure (2026-11-09, about 04:30 UTC).** `git fetch origin claude/onfoot` found nothing newer than 47c71a6,
+merged at a5ac3fd, so no merge was made. `git diff 47c71a6 HEAD` on `lot57/`, `main.ts`, `index.html`, `vite.config.ts`
+and `people/` is empty, and the blobs read as S2a's (`main.ts` bd91c72b38, `lot57/lot.ts` 89c14a9be3, `player.ts`
+47fa3b893d, `venue.ts` 950d5b337a, `walkgrid.ts` e8111a175d, `hud.ts` 0e34bd2fb8, `collide.ts` 7b5ae9a25b,
+`index.html` f7a1c87dff): every row, the contracts and the `people/` internals hold, and no sum moves. The Retro module
+is still only on `origin/claude/wip-modes` (its WIP snapshot 94b0d52, `style.ts` 9bfd9da822, the same blob as S1's
+read) and not on `claude/modes`, so O15 stands. Seen, not measured (it isn't committed): the `tsu-foot` worktree has
+uncommitted P1d work (`lot57/retro.ts`, `look.ts`, `sky.ts` and others new; `hud.ts` reads the quality segment's
+`data-q` through `closest('button')` and names HD `hd`, which would move L17 and the bar's `onQuality` when it lands).
+
+**S2a's re-measure (2026-11-08, about 23:10 UTC).** Lot 57's P1b and P1c are committed: `claude/onfoot` 47c71a6, merged
+into `claude/sports-bar` at a5ac3fd. Every row was read again there. Moved since ab9fbe1: `main.ts` (bd91c72b38),
+`lot57/lot.ts` (89c14a9be3), `player.ts` (47fa3b893d), `venue.ts` (950d5b337a), `walkgrid.ts` (e8111a175d), `hud.ts`
+(0e34bd2fb8), `collide.ts` (7b5ae9a25b) and `index.html` (f7a1c87dff); new: `items.ts`, `doings.ts`, `talk.ts`,
+`npcs.ts`, `crowdview.ts`, `crowd-worker.ts`; the rest unchanged (`data.ts`, `mats.ts`, `input.ts`, `clock.ts`,
+`coords.ts`, `geom.ts`, `driver.ts`, `tex.ts`, `vite.config.ts`, `trees.ts`, `wheels.ts`). **Moved:** L17 (the new ids);
+L3 and L12 gained additive members (in their rows). **Unchanged:** L1, L2, L4 to L11, L13 to L16 and L18 to L21. No row
+the sums use moved, so the sums and both scripts stand (L12's grid rule is unchanged).
+
 **S1's re-measure (2026-11-02, about 06:00 UTC).** Lot 57's P1a is committed: `claude/onfoot` ab9fbe1 (05:21 UTC),
 merged into `claude/sports-bar` at ce67d8f. Every row was read again there (blobs: `main.ts` f0fe075d93, `lot57/lot.ts`
 81b3e3ae80, `data.ts` b79ce775b0, `mats.ts` 20663b80bd, `player.ts` 7e31264c0f, `venue.ts` e23389c3a3, `walkgrid.ts`
@@ -520,7 +603,7 @@ the plan's history.
 | --- | --- | --- | --- |
 | L1 | `PRESET` (`main.ts`) | Low: no shadow map, no post, no bloom, no GTAO, MSAA 0, pixel ratio up to 1, render scale 0.85, 0 point lights, people `'phone'`, textures 512. High: 2048 map, post, bloom, no GTAO, MSAA 4, pixel ratio up to 2, scale 1, 4 lights, people `'high'`, 1024. Ultra: as High with a 4096 map, GTAO and 8 lights. | The bar's `PRESET` copy (module map, `main.ts` row) |
 | L2 | Parked cars' quality (`main.ts`, `carQuality`) | `'phone'` on Low and High, `'high'` on Ultra; when the quality changes, `applyQuality` disposes the `ParkedCars` and builds a new one, refills it with the same share and seed, and refreshes the colliders. **S1 (ab9fbe1):** the same, and `ParkedCars` takes a fourth argument, `farDetail` (default false), which Lot 57's page sets on Ultra: the cars beyond `near` are then the game's phone-quality traffic models, not casting, instead of 152-triangle stand-ins. The bar passes false (its sums count stand-ins) | The bar's own choice, which matches it (module map, `lot.ts` row) |
-| L3 | Detailed parked cars (`main.ts`, `nearCars`) | 12 on Low, 36 on High and Ultra, set in `applyQuality`. **S1 (ab9fbe1): 12 on Low, 24 on High, 40 on Ultra** | Not used: the bar sets `near` per state |
+| L3 | Detailed parked cars (`main.ts`, `nearCars`) | 12 on Low, 36 on High and Ultra, set in `applyQuality`. **S1 (ab9fbe1): 12 on Low, 24 on High, 40 on Ultra.** S2a (47c71a6): the same counts; new, Lot 57's own: `parked.nearDist = 45` m on Low, and a give-way rule that lowers `near` while a frame runs over its preset's triangle budget | Not used: the bar sets `near` per state |
 | L4 | `NEAR_CAP` (`lot.ts`) | At most 40 detailed cars, whatever `near` says | The bar's `near` never passes 36 |
 | L5 | The stand-in (`lot.ts`, private `proxyGeometry`) | Two boxes and four 8-sided wheels: 152 triangles. Stand-ins cast (`castShadow = true`), and of the detailed parts only paint and trim do. S1: unchanged; the new far detailed parts (L2's `farDetail`) don't cast | "What things cost"; `visibility.ts`'s casting rule |
 | L6 | `fill(share, seed)` (`lot.ts`) | A stall fills when a seeded draw is under `share × (0.75 + 0.5 × max(0, 1 - d / 90))`, d the distance to Lot 57's gate at local (-5, 20); each car is pulled toward its wheel stop along world z by `(stallD - car length) / 2 - 0.2`, with `stallD` 5.5 from `coords.ts`. `main.ts` passes share `0.12 + 0.92 × crowd share` (at most 0.96; 0.05 when closed) and seed `day × 100 + hour`. | The bar's stalls face 0 or π, 5.5 m deep, and it passes `min(1, share / 0.84)` (module map, `lot.ts` row); the poses' fill seed 621 |
@@ -529,12 +612,12 @@ the plan's history.
 | L9 | Your avatar's level of detail (`main.ts`) | **S1 (ab9fbe1):** built at LOD 1 at the preset's people quality, and **LOD 0 on High and Ultra**, built during loading (or, after a switch from Low, two frames after a "Building your driver up close…" toast); third person shows LOD 0 once it's built; on High the LOD 0 doesn't cast and its LOD 1 is kept visible on layer 1 to cast; on Ultra the LOD 0 casts itself; a change of people quality rebuilds the avatar. (Read at 3ab822eb73 and before: LOD 0 only on Ultra, set 800 ms after you switch to third person, one synchronous build in the loop; leaving Ultra sets LOD 1.) In first person it puts the body on layer 1 alone, and at setup it enables layer 1 on the sun's shadow camera (`env.sun.shadow.camera.layers.enable(1)`). That records **Lot 57's intent**, a body the main camera doesn't draw that still casts, not what happens: in three.js 0.160.1 the shadow pass tests layers against the main camera, so the body casts into no map (see "Shadows in three.js 0.160.1"). Re-read at `main.ts` 3ab822eb73 (11:09 UTC), that part is unchanged. | "Who is at which LOD": the bar builds it differently, on purpose, and casts with a hidden caster instead |
 | L10 | Casting (`main.ts` `applyQuality`) | Each mesh's first `castShadow` is kept in `userData.cast`; `applyQuality` puts every mesh back from it when there's a map (Lot 57's `venue-plants` only on Ultra) | `visibility.ts`'s casting rule |
 | L11 | `plantTrees` (`main.ts`) | **S1 (ab9fbe1):** palms only, from the game's `Props`: `palmTrunk()` and `palmCrown(low ? 0 : 1)`, in up to 4 `InstancedMesh`es (the palms within 120 m of the venue casting, the rest in `-far` meshes that don't); the bounding sphere computed once after placing; rebuilt on a change of people quality. Lot 57's olive and shade trees are now built in code by `lot57/trees.ts` into its world batches. (Before: palms and shade trees, `treeCanopy(low ? 1 : 3)` and `treeTrunk()` too, all casting.) | Our street trees: the bar instances its 6 palms and 4 shade trees from `Props` itself (`palmCrown(low ? 0 : 1)`, `treeCanopy(low ? 1 : 3)`, `palmTrunk()`, `treeTrunk()`, all casting, spheres after placing), its own choice, as the costs row states |
-| L12 | The walk grid (`walkgrid.ts`) | `CELL` 0.5 m, world-aligned; `RADIUS` 0.3 m; a cell is free when it and its four neighbours are in the region and its centre is at least `RADIUS + 0.02` from every collider; A* is 8-connected with no corner cutting; `path()` snaps an end that isn't free to the nearest free cell within 3 m; two heights, 0 and 0.15 m (`raised`) | The bartenders' lane path, the patio, the front's ramp, S1's walk checks, `sportsbar_zones.py` |
+| L12 | The walk grid (`walkgrid.ts`) | `CELL` 0.5 m, world-aligned; `RADIUS` 0.3 m; a cell is free when it and its four neighbours are in the region and its centre is at least `RADIUS + 0.02` from every collider; A* is 8-connected with no corner cutting; `path()` snaps an end that isn't free to the nearest free cell within 3 m; two heights, 0 and 0.15 m (`raised`). S2a (47c71a6): unchanged; `computeFree` takes an optional list of people (P1c's soft people) | The bartenders' lane path, the patio, the front's ramp, S1's walk checks, `sportsbar_zones.py` |
 | L13 | The camera and seating (`player.ts`) | Third person 2.4 m behind, 0.45 m right, 1.75 m up, pulled in by walls; `hide` under 0.7 m; pitch -55° to 45°; seated, the look turns at most 100° either side of the seat's facing; seated eye `seat.y + 0.68` | "Camera"; `BarPlayer` |
 | L14 | `ROAD_W` and the motorways (`data.ts`; measured again at blob 59611bda6d on 2026-10-21 at about 10:33 UTC) | Primary 12 m one-way, 24 m otherwise; secondary 11.5 and 30; tertiary 14; residential, unclassified and living street 11; service 6 (parking aisle 7, driveway 6, alley 5); 0 for other classes, motorways among them. Of the motorways it draws only the CA-57's pieces over Orangewood, picked by position, as a raised slab 12.5 m wide one-way (25 m otherwise) from 6.6 to 7.6 m up, with a pier every 28 m; it skips every other motorway piece and reads no `br`, `lv` or `tn` | `engine/streets.ts` copies the widths and adds its own motorway widths and bridge rule (module map, `data.ts` row); the front's clearances; the trees' rule |
 | L15 | `clock.ts` | `CAPACITY` 220; the noise is ±10%, hashed from the calendar weekday and whole hour | The bar's `Schedule` (its own capacity and `noiseSeed`) |
 | L16 | `coords.ts` | `ORIGIN` (-5100, -8350); `PLAN.lot` stalls 2.75 m × 5.5 m | E0's Lot 57 def; L6 |
-| L17 | The ids `Hud` binds (`hud.ts`) | `hud`, `act`, `act2`, `car`, `stick`, `knob`, `toast`, `hint`, `viewBtn`, `viewLabel`, `menu`, `crowd`, `crowdText`, `about`, `pause`, `segView`, `segQ`, `segClock`, `segMotion`, `day`, `hour`, `hourOut`, `clock`, `hours`, `loading`, `status` and the canvas `view`; a `[data-close]` button inside `about` and inside `pause`, bound without a null check; `data-v`, `data-q`, `data-c` and `data-m` buttons in the segments; `bar` with an `i` inside for the loading bar | `sportsbar.html` (module map, `hud.ts` row) |
+| L17 | The ids `Hud` binds (`hud.ts`) | `hud`, `act`, `act2`, `car`, `stick`, `knob`, `toast`, `hint`, `viewBtn`, `viewLabel`, `menu`, `crowd`, `crowdText`, `about`, `pause`, `segView`, `segQ`, `segClock`, `segMotion`, `day`, `hour`, `hourOut`, `clock`, `hours`, `loading`, `status` and the canvas `view`; a `[data-close]` button inside `about` and inside `pause`, bound without a null check; `data-v`, `data-q`, `data-c` and `data-m` buttons in the segments; `bar` with an `i` inside for the loading bar. **S2a (47c71a6): also `caption`, `chips` with `reply0` and `reply1`, `status2` with `status2Text`, and the sheet `order` with `orderTitle`, `orderWho`, `menuItems` and a `[data-close]` button, bound in the constructor without null checks** (S1's page lacked them; S2a's carries them) | `sportsbar.html` (module map, `hud.ts` row) |
 | L18 | `Action` (`input.ts`) | `'act' \| 'act2' \| 'view' \| 'car' \| 'carSkip' \| 'pause' \| 'stand'` | `BarAction` |
 | L19 | Seat and spot kinds (`venue.ts`) | `Seat.kind`: `'bench'`, `'stool'`, `'hightop'`, `'picnic'`, `'lawn'`; `Spot.kind`: `'bar'`, `'truck'`, `'game'` | The bar's seats; `Slot` |
 | L20 | The page's build and dev server (`vite.config.ts`; blob 7bf87eb386, measured on 2026-10-21 at about 10:33 UTC, the same blob at ab9fbe1) | Port 5757; `json: { stringify: true }`; output to `dist/onfoot/`; a `trimSlice` plugin trims Lot 57's slice at build time to its view box and the fields it reads | The bar's own config and its port, 5758 (module map, `index.html`, `vite.config.ts` row) |
@@ -570,7 +653,7 @@ Before E0 the bar never edits `lot57/`, `main.ts`, Lot 57's page or `people/`. I
 | `main.ts` | Can't be imported. `venues/sportsbar/quality.ts` holds a copy of `PRESET`, marked `// COPY of lot57 main.ts PRESET: E0 replaces it with engine/quality.ts`, and is re-synced at S4. Its High and Ultra rows are L1 as measured, re-synced by S1's re-measure and again at S4; its Low row differs from L1 on purpose, per decision 15 (below the table). The bar's `venues/sportsbar/main.ts` follows `main.ts`'s structure for `applyQuality` and the loop, under the same marker, but its choices (the parked cars' quality and count, your avatar's level of detail, the trees, and what a change of people quality does to the crowd: every body rebuilt at the new quality on the time budget, under "People are slow to build") are its own and are stated in this plan, not inherited. The game modules Lot 57's page imports from `src/game/` (`Environment`, `configureTextures`, `Props`, the records board) are the game's, so the bar imports them directly. | `engine/quality.ts` (`PRESET` and `applyQuality`) and `engine/page.ts` (the loop and hooks), shared by both pages. |
 | `index.html`, `vite.config.ts` | The bar has its own `src/onfoot/sportsbar.html` and `src/onfoot/vite.sportsbar.config.ts`, with a copy of the single-file plugin. It writes `dist/sportsbar/sportsbar.html`, a different folder from Lot 57's `dist/onfoot/`, so neither build empties the other's. Its root is `src/onfoot/`, like Lot 57's, so it sets `build.rollupOptions.input` to `sportsbar.html` (the default input would be Lot 57's `index.html`), and its dev server uses port 5758 (Lot 57's is 5757: L20). It keeps `json: { stringify: true }`, so the slice is embedded as one JSON string. | The plugin moves to `engine/`. |
 | `people/` | Not edited before E0: see "Who changes `src/onfoot/people/`". | The bar's clips join `people/anim.ts`. |
-| (not written yet) P1b: Order, Join, Leave, held items. P1c: NPCs, groups, the crowd, staff. | If they exist when S2a and S3a start, the bar imports them through the facade like the rest. If not, it writes them in `engine/` (`actions.ts`, `held.ts`, `groups.ts`, `crowd.ts`, `staff.ts`) from `PROJECT_OC_ON_FOOT.md`'s spec, and says so in `PROJECT_OC_HANDOFF.md`. | One copy survives: Lot 57's if it landed first, otherwise the bar's. |
+| P1b: Order, Join, Leave, held items. P1c: NPCs, groups, the crowd, staff. (Both landed: 7d94139 and 47c71a6.) | If they exist when S2a and S3a start, the bar imports them through the facade like the rest. If not, it writes them in `engine/` (`actions.ts`, `held.ts`, `groups.ts`, `crowd.ts`, `staff.ts`) from `PROJECT_OC_ON_FOOT.md`'s spec, and says so in `PROJECT_OC_HANDOFF.md`. **S2a's choice:** the bar uses P1b's HUD pieces through `Hud` (the order sheet with our menu, the captions, the order and holding chip). It doesn't use `lot57/items.ts`: each of its items is three meshes of its own, while this plan draws every held item as an instance of six shared meshes ("Held items, table items and game pieces"), so the bar's `engine/sim/held.ts` holds them; nor `lot57/doings.ts`, which is bound to Lot 57's `Venue` and `Crowd` (the bar's ordering is S2a's action queue and its two scripted staff, `venues/sportsbar/life.ts` and `crew.ts`). P1c's people are S3a's to adopt or not. The handoff says so. | One copy survives: Lot 57's if it landed first, otherwise the bar's. |
 | (new) | `engine/sim/`: needs, moods, personality, smart objects, the action queue, utility AI, interactions, relationships and memory, the TV leagues, tokens, saving, fillers and the clip layer. Written engine-first; the bar turns it on. | Unchanged. |
 | (new: what's drawn inside and outside) | `venues/sportsbar/visibility.ts`, the bar's own, written in S1 (cars and streets) and extended in S3a (people). It owns the rule in "Inside, outside and overhead": once a frame, after the camera moves, it works out the state from the camera and the view, and sets `parked.near`, swaps your car and its stand-in, picks each live person's draw mode (LOD 0 for your avatar at Ultra only, LOD 1 or 2, a card, or hidden) and whether they cast, and freezes or frees the Ultra pool spots' shadow maps. **The street sets and the street trees don't change with the state:** both street sets and all ten trees are drawn inside, outside and overhead, so no street feature can appear or vanish at a door. Two more duties: (1) **What casts into the sun's map doesn't change with the state either.** At HD and Ultra, in every state, the sun's map takes the venue's casting batches, both street sets, the trees, the parked cars and your car as they're drawn (detailed, or as stand-ins), the item meshes, and `castPeople` people (HD 6, Ultra 20): your avatar, wherever it is, and the others outside the unit nearest the camera (the overhead's target in overhead), **each casting with its LOD 1 body**: a caster drawn at LOD 1 casts as drawn, and one drawn at LOD 2 keeps its LOD 1 under it as a hidden caster, the LOD 2 not casting; the build queue builds every caster's LOD 1 (see "People are slow to build"), and until it lands that person isn't in the casting set. Outside, the people drawn as meshes always include the casting people, so no caster is a card on one side of a door and a mesh on the other; inside and overhead everyone built is a mesh. Nobody else inside the unit casts into the sun's map: the roof's shadow covers them, and their contact shadows are the blobs. At Ultra the people at a pool table's slots cast into that table's spot map alone (see "Shadows in three.js 0.160.1"). So stepping through a door changes no shadow in the sun's map; the only shadows that change there are those of the swapped objects themselves (a stand-in's for a detailed car's), which are among the listed swaps; a caster's drawn LOD can change at a door, but it casts with the same LOD 1 body on both sides. A guest who walks out to the patio joins the casting set as they cross, wherever the camera is. Lot 57's stand-ins cast and its `applyQuality` puts every mesh's `castShadow` back from `userData.cast` (L5, L10), and the people builder casts LOD 0 and LOD 1 bodies and not LOD 2 ones (the contract); so after `applyQuality`, and whenever the casting set or a caster's level changes, `visibility.ts` sets casting itself: on for the `lod1` of each person in the set (shown, or hidden under its LOD 2), off for everyone else and for every LOD 0 and LOD 2 mesh, and it sets up the hidden casters and each mesh's map membership ("Shadows in three.js 0.160.1"). `vis()` reports each map's members. Keeping the cars, the items and the people casting while you're inside costs HD's inside frame 23 calls (18 drawn into the sun's map and 5 empty ones for the casters' hidden LOD 1s in the pass) and 93.1k, and Ultra's 209 calls (57 drawn into the sun's map, 114 empty ones in the two pool spots' maps and 38 for the casters' hidden LOD 1s in the pass and GTAO's) and 376.5k (the sums), both inside their margins. (2) **Restyling at Low.** `RetroStyle` styles each scene child once, by its epoch marker, so a mesh that appears later under an already-styled group would render with its standard material under `RetroPass`. With the Retro style attached, it calls `retro.restyle(group)` after every change it makes to a subtree: each person's LOD swap or body rebuild, each card-to-mesh swap, and each swap of your car and its stand-in. `restyle()` is idempotent, so a repeat costs one traverse. A LOD 0 body's `hair-cap` and `hair-cards` are marked `retroSkip` before that restyle (see "Who is at which LOD"). It reads `def.budgets`. Nothing in `lot57/` changes. | `engine/visibility.ts`; Lot 57 can use it for the Shed. |
 | (the game's Retro style, `src/game/render/style.ts`, on `claude/modes`) | Imported directly, like `Environment`, once `claude/modes` has merged into `claude/sports-bar`: it's a game module, not Lot 57's. At Low the bar's page makes one `RetroStyle(renderer)`, calls `attach(scene, roots)`, and each frame `render(scene, camera, world)` in place of `renderer.render`, with `world` from the game's `Environment`: its `RetroWorld` fields are the sun direction (`sunDir`), `daylight`, `saturation`, the realistic `sky` to hide, the hemisphere light (`hemi`), the cloud deck (`clouds`), which it alpha-cuts to hard edges while it shows, and the lens `flare`, which it hides. The bar passes all seven. Leaving Low calls `detach()`. The module also has `restyle(o)`, `unstyle(o)` and `watch(roots)`; `stylizer.isMine(m)` says whether a material is one of its toon materials; a mesh with `userData.retroSkip` is left alone; and a material with its own shader hook is converted only if the hook fits a toon shader (the hook-fit rule: a hook that writes a physically based identifier, such as `computeSpecularOcclusion`, keeps its own material). The rule doesn't catch a hook that sets a variable only the physical shader declares: the LOD 0 hair cap's and hair cards' hooks pass it, but their toon versions wouldn't compile, so the bar marks those two meshes `retroSkip` (see "Who is at which LOD"). As read again on 2026-10-21 at about 10:35 UTC (`style.ts` blob 5a1598bdd2, changed at 09:52 and 10:19 since the 05:53 read of d4209454c5; the API above is unchanged), uncommitted in the `tsu-modes` worktree (RS1). **S1's re-read (2026-11-02):** still uncommitted there (`style.ts` 9bfd9da822, last changed 2026-10-21 16:33 UTC) and not on `claude/modes`'s commits, so not merged here. The API holds; `RetroWorld` gains an eighth optional field, `sun` (the light that casts the shadows, for its shadow camera's depth range), and `RetroOptions` gains `shadowReach`. S4 passes all eight. Until it merges, the bar's Low draws with the standard materials at full resolution (S1 does). | Unchanged: Lot 57's P1d uses the same module. |
@@ -1071,7 +1154,13 @@ Four earlier names were dropped because each shared a word with a real team's na
 - Matches run back to back in each league's windows, so a short visit sees real moments.
 
 **The schedule** is fictional and seeded: `seed = hash(venue noiseSeed, ISO week, day, slot, channel)`. The ISO week is
-the device's current week, the one `anaheimDate` uses for the sun; tests pin it with `setWeek(n)`.
+the device's current week, the one `anaheimDate` uses for the sun; tests pin it with `setWeek(n)`. **Who plays (S2a's
+repair):** each day's pairings in a league come from a seeded round-robin, `hash(venue noiseSeed, 'pairs', ISO week,
+day, channel, salt)`: the circle method gives the eight teams 7 rounds of 4 matches (28 pairings, each pair once), in a
+seeded order, each round's first match one that shares no team with the round before's last, so no pairing repeats
+within a day (Saturday's Marigold window has 23 slots) and no team plays two slots in a row. When the day before has
+its featured match in the same league (Friday and Saturday's Marigold, Sunday and Monday's gridiron), the salt goes up
+until the two featured pairings differ. The slot's own seed above still draws the match.
 
 | Channel | Shows |
 | --- | --- |
@@ -1875,7 +1964,7 @@ servers' trays, the pool balls and cues, the darts and the shuffleboard pucks.
   cards and the blob shadows. The ones whose instances are placed once (the trees) compute their sphere after
   placing, as Lot 57's `plantTrees` does (L11), and `ParkedCars.update` recomputes its own (the contract).
 
-| Model (ours: the triangles are allocations, measured in S2a and S2b) | Cap | Low | HD and Ultra |
+| Model (ours: the triangles are allocations, measured in S2a and S2b; S2a built 19, 20, 16, 32, 16 and 12 at Low and 40, 44, 31, 128, 32 and 24 at HD and Ultra; S2b's pieces in play with a game of each kind set up: 31 balls, 14 bands, 5 discs and 5 sticks, 4 calls and 1.4k at Low, 4.7k at HD and Ultra, see O4) | Cap | Low | HD and Ultra |
 | --- | --- | --- | --- |
 | Glass: drinks in hands and on tables, and the empties | 132, a place each | 20 | 40 |
 | Basket: food in hands and on tables | 40 | 24 | 48 |
@@ -2658,7 +2747,7 @@ module from `claude/modes` merged in.
     patio rail (also at 844 × 390 on Low).
 - **Look at them:** does it read as a believable neighbourhood sports bar in a SoCal strip, not a grey box?
 
-### S2a: needs, objects, ordering and the screens
+### S2a: needs, objects, ordering and the screens (done, committed 2026-11-09 after repair; see PROJECT_OC_PROGRESS.md)
 
 - **Brief.**
   - **`engine/sim/`:** needs, moods and moodlets, personality (with the trait scalings), the smart-object catalogue and
@@ -2712,14 +2801,73 @@ module from `claude/modes` merged in.
     "SIMULATED", and none has "live" in any case.
   - The menu: alcohol-free for the player, no prices. The blocklist test passes.
   - Saving round-trips, and the page works with storage blocked.
+- **As built (S2a, 2026-11-08), where the build chose within or beside the brief:**
+  - The three channels' pictures are cells of one canvas texture (one per channel would be three textures and, with the
+    screens grouped by channel, three or four draw calls); the twelve screens are one mesh, one draw call, and the
+    venue's still test card's batch is hidden in its place. Low 512 x 288 a channel at 8 Hz, HD 1024 x 576 at 15 Hz,
+    Ultra 1024 x 576 at 30 Hz, as planned.
+  - Ordering is an overlay: placing an order ends the queue's action, and the order carries on by itself (the drink at
+    the counter in 4 to 8 s; food and table service brought by the server wherever you are). Table service: the server
+    sets off so as to arrive 30 + 60 x the crowd share seconds after the call (30 to 90 s; one server in S2a), the walk
+    being the server's path on the walk grid over the server's pace.
+  - **One menu at a time (S2a's repair).** Only one order is ever choosing: an order at the counter that needs the menu
+    waits in the queue (its icon stays) while another menu is open, and opens its own when that one is answered; a
+    server who arrives while a menu is open waits beside you. A picked item answers the open menu only if it's of that
+    menu's kind; "Not now" drops the order that menu was opened for, and only it; a menu sheet closed without an answer
+    drops its order, and an order left choosing with no menu open is dropped the same frame, so `notHolding` can't stay
+    false for the rest of a visit. An empty in your hand doesn't count as holding: it's set down when the next item
+    arrives, and with no table within 3 m you're told once where it can go.
+  - **Sips (S2a's repair):** a tap on Sip does nothing while a sip's 2.4 s clip plays, so a drink can't go in one go;
+    the empty goes down only after the last sip's clip.
+  - **Reservations** hold for the walk there (its path at walking pace) plus 10 s, as planned; yours, lapsing while you
+    still walk (a time scale outruns the walk), is renewed for the rest of the walk if the slot is still free.
+  - **The Cheer button** shows for 8 s after any moment, as planned: a goal, a big chance, a touchdown, a field goal, a
+    big play or a final whistle (S2a first showed it only for goals and touchdowns).
+  - **A set clock or a fast-forward** takes the toasts and captions down; a toast or caption raised during a
+    fast-forward stays only if its time hasn't run out in sim time by the jump's end.
+  - **The radial menu** is kept below the needs strip and above the map credit (at 844 x 390 the big screen's opened
+    over the strip).
+  - A drink is sipped (+7 thirst, 6 sips); food is eaten at +10 hunger a minute until its total is eaten (wings 50,
+    fries 55, the burger 60: the "basket +35 to +60"), the bite clip marking the beats. The wings are one item with the
+    three flavours in its note. Water from the bar is +30, the station's +20.
+  - The jukebox's use spot is its own, in front of it at frame (32.0, 1.75), not a layout slot (the layout's slot counts
+    and S1's zone checks don't change).
+  - Sim time: a set clock stays where it was set on screen, and sim time (the needs and the matches) runs on from it at
+    1x or the time scale, with fast-forward adding to it; setting the clock resets it. With the device's clock, sim
+    time is the device's plus what the time scale and fast-forward added.
+  - Staff: two people in our uniform built at LOD 1, the bartender on the lane path and a server on the walk grid, and
+    their own work pose (`wipe`) beside the plan's eight guest clips. Inside the unit they don't cast, as the casting
+    rule says.
+  - Tonight's three draws from twelve goals (the plan's ten examples plus "Dance on a game night" and "Pick a song");
+    S2a can complete four of them (your favourite ordered, a match watched to the final whistle, a dance, a song). The
+    player's favourites are seeded per device and saved. "A match watched to the final whistle" takes the watched
+    screen's channel just before the whistle: at the whistle's own minute the big screen, and the screens that follow
+    it, have already turned to highlights (S2a's first build checked after the switch, so it could never complete on
+    them).
+  - **Sim time across a set clock (S2a's repair):** setting the clock always restarts sim time from it, even at the
+    same reading, and every timer that counts in absolute sim time (the next sip, an order's wait, an action's start, a
+    dance, the reservations, the moodlets' fading, the nudges' spacing) keeps its time left across the jump.
+  - **The checks the repair added** (`tests/sportsbar-s2a.mjs`, 22 in its `checks` group; `tests/sportsbar-sim.mjs`,
+    32): Order a drink then Order food at the counter (one menu at a time, an item of the wrong kind ignored, both
+    delivered, both offered again after); Not now on each menu and a menu closed unanswered (only that order dropped,
+    nothing left choosing); twelve Sip taps give one sip, the next only after 2.4 sim s, and the sips go on with the
+    clock set back; "watch a match to the final whistle" completed on the big screen and on a patio screen that follows
+    it (+5 tokens); the low-need nudge toast, and no toast or caption after a set clock; the heaters' +2 at night
+    within 2.5 m only; in the shots, the 844 x 390 dance with no stale message and the big screen's radial below the
+    strip; in the unit test, the schedule (no pairing twice a day, no team in two slots running, no featured pairing
+    repeated from the day before, over 26 weeks), its determinism, and `eventsBetween`'s order and reused buffer.
+  - Not built in S2a: the audio, the Watch camera drift, the autonomy setting (S3a's utility AI) and the first-visit
+    "Tap people and things" hint.
 - **Screenshots.**
   - The needs panel open (390 × 844, 844 × 390).
   - The radial menu on the bar, ordering, and holding a drink in first person.
   - The TV wall with the featured match and a GOAL banner, and the guide card. The shot is taken at the featured
-    match's first goal, found from `tv()`'s events for Saturday of week 43, not at a fixed time.
+    match's first goal, found from `tv()`'s events for Saturday of week 43, not at a fixed time. (Since the repair's
+    round-robin, week 43's Saturday featured match ends 0-0, simulated; the shot takes the next week whose has a goal,
+    and the suite says which.)
   - A `gameNight` dance at 1280 × 720, Saturday 21:00.
 
-### S2b: the games
+### S2b: the games (done, committed 2026-11-09 after repair; see PROJECT_OC_PROGRESS.md)
 
 - **Brief.**
   - **Playable pool, darts and shuffleboard** against the scripted house opponent: the physics, the rules, the
@@ -2743,8 +2891,98 @@ module from `claude/modes` merged in.
   - Each game clip plays on a person built at each LOD, and `git diff` on `people/` is still empty.
 - **Screenshots.**
   - A pool shot overhead, darts behind the oche, and a shuffleboard slide, at 844 × 390 and 1280 × 720.
+- **As built (S2b, 2026-11-09), where the build chose within or beside the brief:**
+  - **Engine first.** `engine/sim/pool.ts` (the physics, simplified 8-ball, the house's shot selection, and the
+    unwatched games' statistical turn and seeded layout), `engine/sim/darts.ts` (the standard board, 301 straight out,
+    your sway, the house's throws), `engine/sim/shuffle.ts` (the physics, the zones, frames to 15, the house's slides)
+    and `engine/sim/games.ts` (the results' numbers). No three.js in any of them; `tests/sportsbar-games.mjs` runs
+    them in Node. The venue's side is `venues/sportsbar/games.ts` (the six game spots, your controls, the pieces, the
+    house's turns), `gamecams.ts` and `house.ts`.
+  - **The house opponent** is one of our staff, Rocío (fictional), in the house uniform, built at LOD 1 with the
+    bartender and the server at load, so setting up a game adds no person and no draw call. Between games she waits by
+    the darts; in a game she walks to her place on the walk grid for each turn and plays the game clips. Her
+    competitiveness is 0.6 (pool: an aim error of 3.3 degrees). One house player serves one game turn at a time.
+  - **Pool, as built.** The plan's numbers exactly (r 0.028 m, the 1.98 x 0.99 m bed, 0.95, 0.75, 0.25 m/s², six
+    pockets r 0.055, 240 Hz, no spin); cushions are the bed's edges (a ball's centre is held 0.028 m in) and a ball whose
+    centre comes within 0.055 m of a pocket's point (the bed's corners and the long sides' middles) drops. The venue's
+    pool tables were redrawn to that bed (the same boxes moved, so the same 684 triangles a table and lamp). Rules beyond
+    the plan's (ours): the 8 on the break is spotted; the break assigns no groups; your ball in hand starts on the head
+    spot and stays in hand until you shoot: a drag that starts on the cue ball (within 8 cm of it on the cloth) moves it
+    anywhere on the bed, to the nearest free spot (`PoolGame.place(x, y, keep)` through `freeSpot`; the repair: S2b put
+    it on the head spot only, which missed the plan's "ball in hand anywhere"), and the hint says so; the house places
+    it where its best shot scores most; potting the 8 before your group is cleared, or
+    scratching on it, loses; no foul for hitting nothing. Your shot's speed is 0.25 to 5.5 m/s by the drag (0.55 m of
+    drag on the table's plane is full power). The guide line is a stick instance on the cloth to the first contact, a
+    disc at the ghost ball and a short lime stick along the object ball's line.
+  - **Darts, as built.** The board's face was redrawn at the standard radii with the numbers round it (the texture is
+    the board the scoring reads). Your aim starts on the treble 20; a slow drag moves it 0.4 mm a pixel; the sway is 30
+    mm, steadies to 9 mm at 1.2 s, then grows (up to 80 mm), up to 1.5 times wider under 30 energy; a flick is an
+    upward stroke faster than one screen height a second over its last 0.15 s, and the dart lands at the aim plus the
+    sway at the flick's start plus up to 4 mm of release scatter. The house aims at the bed its score needs (the treble
+    20 above 60) with a per-axis error of 0.03 - 0.02 x competitive m (ours).
+  - **Shuffleboard, as built.** The bed was redrawn to 6.7 x 0.51 m between two low side rails, with the far foul line
+    (1.83 m from the end, red) and the zone lines 1.3, 0.9 and 0.5 m from the end. Ours: the puck leaves 0.10 m onto the
+    bed (so 3.0 m/s stops in zone 3, 0.02 m short of hanging); since the repair the lines are 4 cm wide and cream (the
+    foul line a bright red), and the numbers 1, 2 and 3 are painted upright for the thrower in the middle of each zone
+    (18 cm strokes in the same markings batch: no new call), so the zones read from the game camera; a puck short of
+    the foul line is taken off; frames are
+    scored the standard way (only the side with the farthest puck scores); the scorer throws first in the next frame.
+    The house aims at the middle of zone 3, or 0.9 m past your leading puck to knock it off when it's ahead of hers. A
+    swipe's speed over its last 0.18 s sets the puck's: 1.2 m/s per screen height a second (0.4 to 4.6 m/s), its
+    sideways drift the line (within 3 degrees), where it starts the lateral release. (The repair fixed the sideways
+    sign: S2b took the screen's left for its right, so a swipe drifting right sent the puck left and the camera stood
+    on your left; now a drift to the right goes right, and the camera stands on your right.)
+  - **Results.** A win adds "Won a game" at 12 x (0.6 + 0.8 x competitive) and 5 house tokens; a loss is "Lost a close
+    one" when it was close (ours: pool, 2 or fewer of your balls left; darts, 40 or fewer to go; shuffleboard, 11 or
+    more points). Tonight's three gain "Win a game of darts", "Land a 3 at shuffleboard" and "Pot two balls in one pool
+    turn". The relationship deltas (+6 and +4) are recorded in `engine/sim/games.ts` for S3b; nothing is wagered.
+  - **The game cameras** blend from your view (Lot 57's camera, or the overhead) to the game's over 0.5 s, or cut with
+    reduced motion, and stay through your turn: the shot rolling, the darts in the board, the pause after; they return
+    when the turn passes. Pool: straight down over the bed, under the lamp (at most 1.08 m above the cloth, the field
+    widened to fit), the long side across a landscape screen. Darts: over your right shoulder, 0.6 m behind and 0.46 m to the
+    right of where you stand at the oche, 1.84 m up, a 24 degree field. Shuffleboard: over the release point, beside the bed, down the board while you aim;
+    since the repair, while your puck slides and in the pause after it the camera follows it down the board, 1.7 m
+    behind it and over its line (eye 1.52 to 1.72 m up), so where it stops reads against the zones' lines and numbers,
+    which from the throwing end are 6 m off and nearly edge-on. In the
+    darts and shuffleboard views your avatar is drawn (LOD 1), whatever your view. In the pool view it's hidden (a
+    hidden caster at HD and Ultra), from the move in to the move back: it stands just under that camera (its eye about
+    0.25 m below the camera's), so S2b's build showed its arms and shoulders as near-black shapes at the frame's edge
+    at Low and at HD alike; S2b's note that only Low's missing lights did that was wrong. The bar's `main.ts` changed in
+    a few lines only (the camera hook, and your avatar's rule in a game view).
+  - **Your place.** For each of your shots you're stood where you shoot from (behind the cue ball clear of the table,
+    on the oche, at the board's end), and beside the game on the house's turn. Walking 8 m from the game, or Leave
+    (the second action button on the house's turn), leaves it, with no result.
+  - **Repaired after review (2026-11-09).**
+    - **Ball in hand** for you, as above; the hooks `shoot(id, { place: [x, y], ... })` (refused without ball in hand),
+      `placeCue`, and `houseShot(id, 'scratch' | { angle, speed })` (the house's next shot scripted, for the check
+      that needs a house scratch).
+    - **Your avatar under the pool view**, as above.
+    - **The toasts** sit under the top centre column and the screens chip (their bottom measured by a
+      `ResizeObserver`, never per frame), and in a game just above the game's bar, so no toast covers the "Simulated
+      crowd" chip.
+    - **The darts throw screenshot** is taken while the third dart is in the air: a frame here is longer than the
+      0.44 s throw, so the hook `holdDart(id, k)` holds a dart at that share of its flight (the screenshots: 12%, just
+      out of your hand), and the check fails when no dart is in the air.
+    - **The shuffleboard's zones and numbers**, its following camera and its sideways sign, as above.
+    - **The scripted shots** refuse a direction, speed, place, aim or line that isn't a finite number, and a speed of
+      0 or less, instead of clamping it (a NaN angle had left the table rolling to the 60 s settle limit); the engine's
+      `PoolGame.shoot` and `ShuffleGame.slide` refuse them too.
+    - **No allocations in the per-frame paths:** the pool spot's drawing and `toW` write table-to-local points into a
+      scratch pair or inline math with the cached axes; `guide()` fills one result object; the shuffleboard draws
+      pucks through a private method with the cached bed axes; the darts' sway and reticle write into scratch pairs
+      (`swayInto`); the oche, aside, thrower and house places, the darts and shuffleboard cameras' eyes and the
+      walk-away anchor are worked out once at construction; the game bar's text is rebuilt only when the game's
+      version changes (bumped by shots, landings, turns, pauses' ends and placing), the balls and pucks left kept as
+      fields (`PoolGame.leftN`, `ShuffleGame.bySide`); the shuffleboard's substep loop keeps one event object. The
+      house's ball-in-hand search passes the skipped ids to `clearPath` as numbers and gets its targets once.
+    - **Left as it was:** the cue is drawn on its own, not in your or Rocío's hands (written up for the design review
+      queue with the pool clips, O33).
+  - **Not built in S2b:** Watch pool and other people's games (S3a's crowd; the statistical turn and the seeded layout
+    are in `engine/sim/pool.ts`, not yet wired, and darts' and shuffleboard's per-throw draws aren't written); teams of
+    2 and the party invites (S3a); the games' sounds (with S2a's audio); keyboard and gamepad shots (the drag, the
+    flick and the swipe are pointer gestures; the hooks shoot for tests).
 
-### S3a: the crowd, staff, fillers and how people are drawn
+### S3a: the crowd, staff, fillers and how people are drawn (done, committed 2026-11-09 after repair; see PROJECT_OC_PROGRESS.md)
 
 S3 is split, as S2 was: S3a fills the room and draws it within budget; S3b adds what people do with each other. Each
 ends with its own checks and its own budget run at the poses.
@@ -2889,8 +3127,109 @@ ends with its own checks and its own budget run at the poses.
   - Low (844 × 390), Saturday 21:00, the `door` pose: does the room read as packed?
   - The `stall` and `patio` poses at Low: do the people inside read through the glazing as cards?
   - A Tuesday 15:00 quiet afternoon.
+- **As built (S3a, 2026-11-09), where the build chose within or beside the brief:**
+  - **Engine first.** `engine/sim/crowd.ts` (the regulars' pool, parties, stays, teams by arrival time, the staff
+    plan), `engine/sim/autonomy.ts` (the utility AI, term by term), `engine/sim/groups.ts` (the talking groups),
+    `engine/sim/builds.ts` (the time budget and its log), `engine/sim/names.ts` (200 first names) and
+    `engine/sim/lines.ts` (the starter 30 lines). No three.js in any of them; `tests/sportsbar-crowd.mjs` runs them in
+    Node, the plan's worked arithmetic among its checks. The venue's side is `venues/sportsbar/crowd.ts` (the crowd,
+    the staff wiring, fillers, the draw modes, casting, the builds, a change of graphics, the hooks) and
+    `venues/sportsbar/cards.ts` (the atlas and the cards); `crew.ts` gains the sections, the flap trip, the host and the
+    barback.
+  - **Where the people's rule lives.** The visibility rule for people (draw modes, LODs, the casting set, the pool-slot
+    people, the hidden casters under LOD 2 bodies) is in `venues/sportsbar/crowd.ts` (`drawModes`, `applyBody`),
+    beside the cars' and streets' rule in `visibility.ts`, whose hidden-caster hooks and per-light members it uses; the
+    fillers and the cards are the venue's own (`crowd.ts`, `cards.ts`), not `engine/sim/`, since they draw. E0 can move
+    both into `engine/visibility.ts` and `engine/cards.ts` unchanged.
+  - **P1c not adopted.** Lot 57's crowd (`lot57/npcs.ts`, `crowdview.ts`) is bound to its own venue and draws people
+    its own way (per-person impostors, worker builds); the bar keeps the plan's atlas eight and time budget, and writes
+    Lot 57's group rules into `engine/sim/groups.ts` for E0 to keep one copy of. Neither page has the murmur (no audio
+    is built on either page yet).
+  - **Who's live.** `people().live` counts the guests and the staff on shift (the cap: 36, 70, 100); your avatar is
+    on top of it. The sums count the live cap as all the people meshes, your avatar among them, so with your avatar
+    drawn there's one person mesh more than the sums' row (1 call, 1.1k to 1.5k at LOD 2), inside every margin; the LOD
+    1 count takes your avatar's LOD 1 into account (the NPCs' LOD 1 count is one less while it's drawn at LOD 1).
+  - **The staff.** All ten bodies are built at load (the S2a bartender and server and the house player at LOD 1 as
+    before, plus their LOD 2; three more bartenders, two more servers, the host and the barback at LOD 2) and go on and
+    off shift with the share: drawn and counted only on shift. The house player is always on at HD and Ultra; at Low
+    she's on only while a game is set up with her, and then takes the host's place, so Low never draws more than 5. The
+    bar's budgets row `staff` is 5, 10 and 10 (up to 9 and the house player). Bartenders' sections are equal stretches
+    of the counter from the first gap to the pick-up (13.75 to 26.2 in u); the crew holds every bartender's lane limits
+    0.6 m from its neighbours. The cooks' hands at the pass are a plate (a disc instance) for the 6 s a dish waits there.
+  - **Fillers** never take the counter's stools and gaps (a guest there is a live one the bartenders serve), the staff
+    spots, the water station, the jukebox's spot, the games' places or the front walk's spots (ours).
+  - **Arrivals** come from the courtyard lot or the drop-off by the front aisle; a room under its live target gets
+    parties at a Poisson rate of the deficit over about 6 sim minutes (ours), and a room at its cap stays at its cap:
+    after 2 sim minutes short, fillers become live walk-ins in place (the plan's going-up rule), and `fastForward()` and
+    `buildAll()` top the room up the same way. Leaving guests' bodies go to the spare pool when it's short (the builder
+    can't recolour a built body).
+  - **Room under the cap.** Whenever someone must become live with the room at its cap (a filler's unit handed over, a
+    held guest coming back near you or tapped), room is made first: a whole table goes to fillers (the farthest
+    seated, idle table of walk-ins, no regulars and nobody you've met) only when four or more places are wanted, and
+    fewer places hold the farthest such walk-ins one by one, so the live count lands on the cap exactly (a first build
+    demoted a table of four for one place, and the room sat at 98 to 99 of 100). A change of graphics holds by units
+    itself, and the staff plan's own cap rule waits during one.
+  - **The person menu in S3a** is the person's first name and "Say hi" (a hello caption); S3b brings the 11
+    interactions. Tapping a filler hands its unit over first; a held guest comes back as themselves.
+  - **NPC games** wait for S3b: NPCs don't take the play adverts; Watch pool is offered while you play.
+  - **You beside the crowd** (ours, found by S2a's checks run against the crowd): your table and counter orders go to
+    the least busy server on shift, and that server's trips for them go ahead of the crowd's; a server's job waits out
+    its delay (the plan's arrival time) in the queue, so a job not yet due never keeps a server standing while another
+    is due (alone, as in S2a, the timing is the same); at a one-person spot a guest is using (the jukebox's, the water
+    station's) your action waits in the queue, the crowd leaves the spot to you and it starts when they're done
+    (giving up after 2 sim minutes); and Watch on a screen whose every place is taken finds you clear floor 2.5 to 9 m
+    in front of it with it in view (the patio's inside its rail), clear of people and of the crowd's places. The
+    jukebox's spot is the page's own (S2a's), not a venue slot: the crowd takes it into its places so guests pick songs
+    too.
+  - **S1's memory check with a crowd:** the people are a moving population (who's in, who's at LOD 1; a filler made
+    live is a new person), so the check takes the people's own uploaded geometries (`peopleGeometries()`: the bodies
+    the crowd holds now, the guests', the spares' and the staff's) off the renderer's count and logs them beside each
+    row; a body let go without being disposed is in none of the crowd's lists, so it stays in the rest and fails it.
+  - **crowdAt('outside', n)** moves live walk-ins (never regulars or your party) from inside to the patio's seats and to
+    standing spots on the front walk (ours: two rows between the wall and the planters, the door and ramp clear).
+  - **Bodies' fill.** Inside, the builder's body material, lit only by the sky and the few real lights, drew guests as
+    near-black cut-outs at Low; each body's LOD 1 and LOD 2 material gets a fill light (Lot 57's technique from
+    `crowdview.ts`, written in the bar's crowd): inside 0.34 at Low and about half that at HD and Ultra, outside a little
+    at night.
+  - **Not exercised here:** the patio closing for rain (the page has no weather), the Retro style's toon check (O15).
+  - **The repair after review (2026-11-09):**
+    - **`pose()` builds where the camera is.** It moves the camera first (`placeCamera`), then `buildAll()` (whose LOD 1
+      queue takes the nearest people from the camera), then the rule; before, the queue picked the nearest people from
+      the previous camera, so the goal shots' nearest guests were LOD 2 faces. The `camera([...])` hook places the
+      camera at once, and the goal shots call `buildAll()` after it.
+    - **Spares forget their draw state.** A body sent to the spares (`removeNpc`) clears its draw signature and its
+      clip; one taken by a hand-over is hidden with no signature, so its first `applyBody` sets its visibility, LOD and
+      casting afresh. Before, a body sent home while drawn as a card and reused by a guest drawn as a card kept the
+      old signature, `applyBody` returned early and the body stayed shown, at the old guest's place, under the card.
+      `vis().people` reports `shownAsCards` and `sparesShown`; the new `spares` check builds that case at Low outside.
+    - **A radial menu closes** on `pose()` and on every change of graphics (it's pinned to a point on the screen).
+    - **The per-frame allocations the review listed in the people's draw path are gone:** one pooled people list, filled and insertion-sorted once a
+      frame (again only if a hand-over near you changed who's live), read by the LOD 1 queue (worked out once a frame,
+      not in both `hasWork()` and `nextJob()`) and by `drawModes` (two passes stand in for the casters-first copy; the
+      casters are a flag, not a set); inside or not tested on (x, z) without a tuple; the camera point one object; the
+      plates' scale one vector; the hand items without an array a person; the hand-over's cell check numbers, not a
+      string; the scheduler's frame log a ring of records reused in place.
+    - **The switch log carries its evidence:** each held guest's unit distance and every live guest's (not yours)
+      after the hold, and the room under the cap before anyone came back. Going down, the check asserts the nearest
+      held unit is at least as far as the farthest live one (the units' rule: a unit's distance is its nearest
+      member's); going up, that held guests came back before any filler was made live (when both happened, all of the
+      held came back, or as many as the room took).
+    - **Drinks in a settled room (ours).** A room that settles at a set clock seated every guest with fresh needs
+      (thirst 50 to 75), so their drinks ran in step: after a 30 sim-minute fast-forward from Saturday 21:00 at Low
+      only 1 of 31 held a drink (a probe: the waits weren't the cause, table service 128 s median and the bar 9 s). A
+      settled guest now has thirst 40 to 85, and a quarter are part-way through a drink (1 to 6 sips left), drawn from
+      a stream of its own so the seating is the same as before. Arrivals still come in with the table's needs. The
+      30 sim-minute run logs once a sim minute how many guests hold a drink (`drinks()`).
+    - **Small parties and whole tables at HD and Ultra (ours).** With the target past the guest cap and the guest cap
+      over 0.4 of the capacity (HD's 60, Ultra's 90; not Low's 31, whose guests leave tables enough), parties of two and
+      three take singles close together (standing spots or stools) with p 0.75 rather than 0.35, so fewer tables of four
+      hold a party of two; no table mixes fillers and live people, so a part-filled table is lost to the fillers.
+      Measured at Saturday 21:00 (the fillers check, switching up from Low at the door): Low 108, HD 114 and Ultra 110
+      of 130 (before, 108, 93 and 91); as loaded at each preset with you at the spawn, 98, 113 and 107. A room reached
+      by switching up keeps the seating it had, so Ultra's can still come out under Low's on another seed or path (a
+      probe during the repair read 100 at the door after switching up).
 
-### S3b: interactions, relationships and conversations
+### S3b: interactions, relationships and conversations (done, committed 2026-11-09 after repair; see PROJECT_OC_PROGRESS.md)
 
 - **Brief.**
   - **People advertise.** Person adverts with the expected-delta formula and the candidate rule (under "NPC
@@ -2921,6 +3260,82 @@ ends with its own checks and its own budget run at the poses.
   - A conversation with the radial menu open, and a person's card.
   - Buying a round, and a toast.
   - An NPC pool game in play, from the overhead view.
+- **As built (S3b, 2026-11-09), where the build chose within or beside the brief:**
+  - **Engine first.** `engine/sim/relations.ts` (the pairs: rapport and friendship by the plan's updates, the fades,
+    the ring of 8, highlights, levels, 64 a person, saving), `engine/sim/interactions.ts` (the 11 interactions' table,
+    acceptance, the context and memory terms, the expected deltas, a round's and an introduction's numbers),
+    `engine/sim/groups.ts` (2 to 6: joining and leaving) and `engine/sim/lines.ts` (141 lines at the build, 145 after the
+    repair: S3a's 30 and 115 tagged by interaction and outcome, memory (`remembers`), your state and moments). No three.js in any of them; `tests/sportsbar-social.mjs`
+    checks them in Node against hand-worked numbers. `engine/sim/autonomy.ts` gains the person advert's terms (its
+    trait for affinity; Excited +15 on cheer and high-five; +30 on cheer, high-five and toast for 60 s after a goal).
+    The venue's side is `venues/sportsbar/social.ts` (groups, beats, your menu and exchange, rounds, cards, People here,
+    saving, the hooks) and `venues/sportsbar/npcgames.ts` (invites and guests' matches); `games.ts` gains the opponent
+    (the house, or a guest you challenged) and the pool tables' guests' match.
+  - **Groups across parties.** A party's own group is where it sits (its members' homes' centre); a Talk or a Join forms
+    a circle where the target is. Present in a group: live, not walking, within 3.2 m of its place. A decision for an
+    action elsewhere takes a person out; back at their place, a party's members regroup (ours). A guest who joined
+    another party's group wraps up after two or three of their own turns with a goodbye and goes back to their place
+    (the plan's "two or three exchanges", for guests; yours is the exchange with the reply chips).
+  - **Beats "inside a group or across a table" (ours).** Talk, Challenge and (yours) Introduce are offered at any
+    distance under the candidate rule; the other beats only within 2.5 m or in the same group. A guest walks up for
+    Talk and Challenge only.
+  - **Guests don't start interactions with you (ours):** you aren't a candidate in a guest's decision; you start
+    them. Staff and fillers aren't candidates, as planned.
+  - **People who came together know each other (ours):** walk-ins in one party start at rapport 20 and friendship 30;
+    a regulars' friend group at friendship 50 unless the device remembers them.
+  - **Guests' rounds (ours, within "its own rule"):** outgoing above 0.6, in a group of 3 or more for 2 sim minutes, the
+    group not bought one in 10 minutes, at most once a visit: a 1 in 4 chance at each of their decisions. A server
+    brings everyone's favourite (yours alcohol-free) in one trip, 1 to 2 minutes after; a guest holding a drink gets the
+    new one in hand.
+  - **The numbers the plan leaves to the build (ours):** a highlight is a moment of 8 or more either way; a shared
+    highlight (NPC choices +10) is a good one other than the first meeting; the level reads friendship rounded to a
+    whole number; the 64-a-person cap drops the smallest |friendship| + |rapport| / 2, then the oldest; a rejected Talk
+    or High-five gives the actor "Brushed off"; a game played together moves the pair by +5 (the bar keeps one pair's
+    numbers, so the mean of the plan's +6 and +4) when both moods are Fine or better, by 0 otherwise.
+  - **Invites** are answered at once (ours, for the plan's "no partner in 30 s"): the best two candidates by friendship
+    + rapport / 2 + 30 competitive (+10 for their favourite game) are asked in turn, each through their own utility
+    (their current action against the game's advert, with hysteresis); none, and darts become solo practice and the
+    others are dropped. Guests also start matches through Challenge.
+  - **Guests' games on the physics, every kind (repair; O35 closed):** a guests' match is on its spot's physics while
+    the spot is on screen or within 15 m (on screen: in the camera's view within 30 m; walls aren't considered) and
+    statistical otherwise. Pool as before (the balls left laid out on the way back). Darts on `DartsGame` (the house's
+    throw model, the bed by what's left and sigma 0.03 - 0.02 competitive, with each side's own competitiveness; 301
+    straight out; each dart flies and lands in the board, drawn as stick instances in cream and blue); shuffleboard on
+    `ShuffleGame` (the plan's NPC slide: a target zone or a knock-off, speed error 0.10 - 0.07 competitive m/s and line
+    error 1.5 - 1.0 competitive degrees; pucks drawn as disc instances). Off screen a darts turn and a shuffleboard frame
+    are drawn from the thrower's skill as before, into the same game; the mode changes only between turns (darts) or
+    frames (shuffleboard), so no piece jumps. One guest's darts practice is the same on a board of its own.
+  - **Spots kept for you (repair; O36 closed):** guests never take the last free pool table or the last free dartboard
+    (a game of that kind you're playing counts as yours), so on a busy night one of each stays open; the shuffleboard
+    isn't kept. A spot you chose to play at is held while you walk there (90 sim s, or until your game begins). A spot
+    guests are using always answers a tap: its menu has Watch (pool, darts, shuffleboard: you stand at a watcher's place
+    by it, or on clear floor 1.6 to 4.5 m off when every watcher's place is taken, and face the game), and a toast says
+    you're next; when their match ends nobody else starts there for 2 sim minutes and a toast says it's free.
+  - **Join from your menu (repair):** a person in a group of 2 to 5 that you aren't in offers Join (after Talk), with no
+    acceptance roll, as at Lot 57: you walk to the gap their circle opens and join; the members present turn to you and
+    one says hello. You leave by Say goodbye or by walking 4 m from the group's place.
+  - **Lines that name a moment (repair):** toast and cheer lines about a goal just now are tagged and picked only with a
+    goal in the last 60 s, and a late winner's only when that goal came in its match's last fifth of play; S3a's "goal
+    of the season" line too. A remembered round or toast keeps the team that had just scored (if one had), and its
+    memory line names that team only then ("You're the one who bought that round. Respect." otherwise).
+  - **Nobody pairs with themselves (repair):** Introduce refuses a second person who is the target (even forced),
+    `rel(id, id)` is refused, and the pairs never store a person with themselves (a saved one is skipped on load).
+  - **A group that filled during the walk (repair):** a Talk accepted toward a group that has 6 by the time the beat
+    ends goes back to what the actor was doing (or decides anew), logged as full; and a guest whose group ends, or who
+    leaves it, is never left in a 'group' action outside one.
+  - **The decisions' allocations (repair):** pairs are looked up by id both ways round (no key string built), the
+    person adverts' log is built only when a check asks for it, heads are read into one scratch vector, and the
+    matches are stepped without copying the list.
+  - **Your Challenge** walks you to the game as any game does, and the guest is your opponent (their name, their
+    competitiveness, their body walking the turns), not the house; at Low the house player then isn't counted as in a
+    game.
+  - **No murmur** (no audio on either page yet, as S3a).
+  - **The earlier phases' test hooks (repair):** `playHere` (S2b) no longer moves guests: on a spot they're using it
+    says busy and makes you next there, as a tap does, and S2b's checks run the sim on until their match ends;
+    `stageGames` stages a game on a free spot of each kind and leaves guests' matches alone. S2a's table-service check
+    takes the first high-top with a stool free for you. S3a's `join()` returns your group's party and members' keys as before.
+  - **A visitor's place** in a circle is the free spot nearest the person they came to (the actor's side breaking
+    ties), so the beats "across a table" are in reach once there.
 
 ### S4: maximum graphics and polish
 

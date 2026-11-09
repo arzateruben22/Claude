@@ -575,7 +575,9 @@ if (want('budgets')) {
           await frames(page, 2);
           const s = await H(page, 'window.__onfoot.stats()'), b = await H(page, 'window.__onfoot.breakdown()'), v = await H(page, 'window.__onfoot.vis()'), bud = await H(page, 'window.__onfoot.budget()');
           const av = b.groups.avatar ?? { calls: 0, tris: 0 };
-          const lessCalls = s.pass.calls - av.calls, lessTris = s.pass.tris - av.tris;
+          // the row leaves out the people and the items: your avatar, and from S2a the staff and the six item meshes
+          const pi = ['avatar', 'staff', 'items'].reduce((acc, k) => ({ calls: acc.calls + (b.groups[k]?.calls ?? 0), tris: acc.tris + (b.groups[k]?.tris ?? 0) }), { calls: 0, tris: 0 });
+          const lessCalls = s.pass.calls - pi.calls, lessTris = s.pass.tris - pi.tris;
           const [bc, bt] = bud.noPeople;
           const okPass = lessCalls <= bc && lessTris <= bt;
           const agree = Math.abs(b.total.calls - s.pass.calls) <= Math.max(1, s.pass.calls * 0.01) && Math.abs(b.total.tris - s.pass.tris) <= s.pass.tris * 0.01;
@@ -603,7 +605,7 @@ if (want('budgets')) {
             const own = v.poolTris[k - 1];
             const m = s.maps[`pool-${k}`]; expect(m && Math.abs(m.tris - own) <= 2, `pool-${k}'s map draws ${m?.tris} triangles, its table and lamp ${own}`);
           }
-          expect(okPass, `pass less your avatar ${lessCalls} calls, ${fmt(lessTris)} > ${bc}, ${fmt(bt)} (${gtxt})`);
+          expect(okPass, `pass less the people and items ${lessCalls} calls, ${fmt(lessTris)} > ${bc}, ${fmt(bt)} (${gtxt})`);
           // the rows as drawn at the pose: the venue, all the streets and the trees, each within its allocation
           const A = bud.alloc, gv = b.groups.venue ?? { calls: 0, tris: 0 }, gt = b.groups.trees ?? { calls: 0, tris: 0 };
           const gs = ['near streets', 'far streets'].reduce((a, k) => ({ calls: a.calls + (b.groups[k]?.calls ?? 0), tris: a.tris + (b.groups[k]?.tris ?? 0) }), { calls: 0, tris: 0 });
@@ -717,17 +719,20 @@ if (want('cars')) {
 // the parked cars' models and stand-ins' material; and every clock change's environment map frees the old one's render
 // target. The first round leaves the game builders' caches warm (the car materials' high-quality maps, HD's palm crowns
 // and canopies, the sun's map kept at Low), so the first round sets the baseline and the second must come back to it
-// exactly; the first round's residue is logged.
+// exactly; the first round's residue is logged. S3a: the crowd's bodies are a moving population (who's in, who's at
+// LOD 1, a filler made live is a new person), so the people's own geometries (peopleGeometries(): the uploaded geometries
+// of the bodies the crowd holds now, the guests', the spares' and the staff's) are read with each row and taken off the
+// count; a body let go without being disposed is in none of the crowd's lists, so it stays in the rest and is caught.
 if (want('memory')) {
   const { ctx, page, errors } = await open([844, 390], 'quality=low&ultra=1&day=Sat&hour=21&hint=0');
   await check('memory: boots with no console errors', async () => { expect(!errors.length, errors.join(' | ')); });
-  const read = async (q) => { await H(page, `(() => { const o = window.__onfoot; o.setQuality('${q}'); o.pose('overhead'); })()`); await frames(page, 2); const st = await H(page, 'window.__onfoot.stats()'); return { q, textures: st.textures, geometries: st.geometries, programs: st.programs }; };
+  const read = async (q) => { await H(page, `(() => { const o = window.__onfoot; o.setQuality('${q}'); o.pose('overhead'); })()`); await frames(page, 2); const st = await H(page, 'window.__onfoot.stats()'); const people = await H(page, 'window.__onfoot.peopleGeometries ? window.__onfoot.peopleGeometries() : 0'); return { q, textures: st.textures, geometries: st.geometries - people, people, programs: st.programs }; };
   const seq = ['high', 'ultra', 'high', 'low'], rows = [await read('low')];
   for (let c = 0; c < 2; c++) for (const q of seq) rows.push(await read(q));
   summary.memory = rows;
   await check('memory: Low -> HD -> Ultra -> HD -> Low comes back to the same textures and geometries, round after round (the first round warms the game builders\' caches)', async () => {
     const start = rows[0], one = rows[4], two = rows[8];
-    const txt = rows.map((r) => `${r.q} ${r.textures}t/${r.geometries}g`).join(' -> ');
+    const txt = rows.map((r) => `${r.q} ${r.textures}t/${r.geometries}g` + (r.people ? ` (+${r.people}g people)` : '')).join(' -> ');
     for (let k = 2; k <= 4; k++) expect(rows[k + 4].textures === rows[k].textures && rows[k + 4].geometries === rows[k].geometries, `at ${rows[k].q} (step ${k}) the second round reads ${rows[k + 4].textures}t/${rows[k + 4].geometries}g, the first ${rows[k].textures}t/${rows[k].geometries}g: ${txt}`);
     expect(two.textures === one.textures && two.geometries === one.geometries, `the second round left ${two.textures - one.textures} textures and ${two.geometries - one.geometries} geometries more: ${txt}`);
     return `${txt}; the first round's residue over the start: ${one.textures - start.textures} textures, ${one.geometries - start.geometries} geometries (caches); the second round adds 0 and 0`;

@@ -327,29 +327,32 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
     const tb = new Batch(1.4), lb = new Batch(1.4);
     const fb = (b: Batch, u0: number, u1: number, v0: number, v1: number, y0: number, y1: number, hex: number) => { const [x, z] = L((u0 + u1) / 2, (v0 + v1) / 2); b.box(x, (y0 + y1) / 2, z, u1 - u0, y1 - y0, v1 - v0, hex, rot); };
     const fcylB = (b: Batch, u: number, v: number, y0: number, r0: number, r1: number, h: number, segs: number, hex: number) => { const [x, z] = L(u, v); b.cyl(x, y0, z, r0, r1, h, segs, hex, true); };
-    // the body and apron, the night-violet bed, and the oak rails round it (their tops at 0.92 m)
+    // the body and apron, the night-violet bed, and the oak rails round it (their tops at 0.92 m). S2b: the playing
+    // bed between the cushions' noses is the plan's 0.99 m x 1.98 m (engine/sim/pool.ts plays on it): the cloth under
+    // the cushions runs to +-0.54 x +-1.035, the rails from there to the apron's edge (the same boxes as S1's, moved)
     fb(tb, cu - 0.62, cu + 0.62, cv - 1.12, cv + 1.12, 0.62, 0.84, 0x5a3b22);              // the apron
-    fb(tb, cu - 0.5, cu + 0.5, cv - 1.0, cv + 1.0, 0.84, 0.875, 0x2c2470);                // the night-violet cloth
-    for (const [a, b2, c, d] of [[-0.62, -0.5, -1.12, 1.12], [0.5, 0.62, -1.12, 1.12], [-0.5, 0.5, -1.12, -1.0], [-0.5, 0.5, 1.0, 1.12]]) fb(tb, cu + a, cu + b2, cv + c, cv + d, 0.84, 0.92, 0x6b4428);
-    // the cushions: cloth-covered rubber along the rails' inner edges, broken at the six pockets
-    const CUSH = 0x3a3190, cw = 0.045, gap = 0.1;
+    fb(tb, cu - 0.54, cu + 0.54, cv - 1.035, cv + 1.035, 0.84, 0.875, 0x2c2470);            // the night-violet cloth
+    for (const [a, b2, c, d] of [[-0.62, -0.54, -1.12, 1.12], [0.54, 0.62, -1.12, 1.12], [-0.54, 0.54, -1.12, -1.035], [-0.54, 0.54, 1.035, 1.12]]) fb(tb, cu + a, cu + b2, cv + c, cv + d, 0.84, 0.92, 0x6b4428);
+    // the cushions: cloth-covered rubber from the bed's edge to the rails, broken at the six pockets
+    const CUSH = 0x3a3190, cw = 0.045, gap = 0.1, HW = 0.495, HL = 0.99;
     for (const s2 of [-1, 1]) {
-      const u0 = s2 < 0 ? cu - 0.5 : cu + 0.5 - cw, u1 = u0 + cw;
-      fb(tb, u0, u1, cv - 1.0 + gap, cv - gap * 0.75, 0.875, 0.905, CUSH);
-      fb(tb, u0, u1, cv + gap * 0.75, cv + 1.0 - gap, 0.875, 0.905, CUSH);
-      const v0 = s2 < 0 ? cv - 1.0 : cv + 1.0 - cw;
-      fb(tb, cu - 0.5 + gap, cu + 0.5 - gap, v0, v0 + cw, 0.875, 0.905, CUSH);
+      const u0 = s2 < 0 ? cu - HW - cw : cu + HW, u1 = u0 + cw;
+      fb(tb, u0, u1, cv - HL + gap, cv - gap * 0.75, 0.875, 0.905, CUSH);
+      fb(tb, u0, u1, cv + gap * 0.75, cv + HL - gap, 0.875, 0.905, CUSH);
+      const v0 = s2 < 0 ? cv - HL - cw : cv + HL;
+      fb(tb, cu - HW + gap, cu + HW - gap, v0, v0 + cw, 0.875, 0.905, CUSH);
     }
-    // the six pockets: a black mouth through the rail's top at each corner and each side's middle
-    for (const [du, dv] of [[-0.5, -1], [0.5, -1], [-0.5, 1], [0.5, 1], [-0.52, 0], [0.52, 0]]) {
-      const pu = cu + du * (Math.abs(dv) === 1 ? 0.97 : 1), pv = cv + dv * 0.985;
-      fcylB(tb, pu, pv, 0.79, 0.068, 0.068, 0.134, 10, 0x070707);
+    // the six pockets: a black mouth through the rail's top at each corner and each side's middle, centred on the
+    // pockets the physics uses (the bed's corners and the long sides' middles), a little outward
+    for (const [du, dv] of [[-1, -1], [1, -1], [-1, 1], [1, 1], [-1, 0], [1, 0]]) {
+      const pu = cu + du * (HW + (dv ? 0.014 : 0.03)), pv = cv + dv * (HL + 0.014);
+      fcylB(tb, pu, pv, 0.79, 0.06, 0.06, 0.134, 10, 0x070707);
     }
     // the diamond sights on the rails' tops (mother-of-pearl dots), three a half-side along the long rails, three a
     // short end
     for (const s2 of [-1, 1]) {
-      for (const t of [-0.75, -0.5, -0.25, 0.25, 0.5, 0.75]) fb(tb, cu + s2 * 0.56 - 0.012, cu + s2 * 0.56 + 0.012, cv + t - 0.012, cv + t + 0.012, 0.92, 0.923, 0xe8e2d4);
-      for (const t of [-0.25, 0, 0.25]) fb(tb, cu + t - 0.012, cu + t + 0.012, cv + s2 * 1.06 - 0.012, cv + s2 * 1.06 + 0.012, 0.92, 0.923, 0xe8e2d4);
+      for (const t of [-0.75, -0.5, -0.25, 0.25, 0.5, 0.75]) fb(tb, cu + s2 * 0.58 - 0.012, cu + s2 * 0.58 + 0.012, cv + t * 0.99 - 0.012, cv + t * 0.99 + 0.012, 0.92, 0.923, 0xe8e2d4);
+      for (const t of [-0.25, 0, 0.25]) fb(tb, cu + t * 0.99 - 0.012, cu + t * 0.99 + 0.012, cv + s2 * 1.0775 - 0.012, cv + s2 * 1.0775 + 0.012, 0.92, 0.923, 0xe8e2d4);
     }
     for (const [du, dv] of [[-0.48, -0.95], [0.48, -0.95], [-0.48, 0.95], [0.48, 0.95]]) fb(tb, cu + du - 0.08, cu + du + 0.08, cv + dv - 0.08, cv + dv + 0.08, FL, 0.62, 0x3b2616);
     // the lamp over it: a long shade on two cords, lit underneath
@@ -372,9 +375,32 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
     fbox(paint, u + 0.42, u + 0.72, 15.72, 15.75, 1.4 + FL, 2.0 + FL, 0x22282a);                // a chalk scoreboard
     light(u, 15.2, 2.4, 5, 2, 4, 1.4);
   }
-  fbox(oak, 3.2, 9.9, 1.15, 1.75, FL, 0.95, 0x8a5a36);                                         // the shuffleboard, 22 ft
-  fbox(oak, 3.3, 9.8, 1.25, 1.65, 0.95, 0.97, 0xe8d0a6);
-  for (const u of [8.6, 9.0, 9.4]) fbox(marks, u, u + 0.02, 1.26, 1.64, 0.972, 0.974, 0x1b1b1b);
+  // the shuffleboard, 22 ft: S2b's bed is the plan's 6.7 m x 0.51 m (engine/sim/shuffle.ts slides on it, x = u - 3.2),
+  // between two low side rails; the lines: the far foul line 1.83 m from the end, then zones 1, 2 and 3 at 1.3, 0.9
+  // and 0.5 m from it (the throwing end is at u 3.2, the far end at u 9.9)
+  fbox(oak, 3.2, 9.9, 1.15, 1.75, FL, 0.95, 0x8a5a36);
+  fbox(oak, 3.2, 9.9, 1.195, 1.705, 0.95, 0.97, 0xe8d0a6);
+  fbox(oak, 3.2, 9.9, 1.15, 1.195, 0.95, 1.0, 0x6b4428); fbox(oak, 3.2, 9.9, 1.705, 1.75, 0.95, 1.0, 0x6b4428);
+  // S2b's repair: the lines 4 cm wide and light (cream on the oak; the foul line a bright red), and the zone numbers 1,
+  // 2 and 3 painted in the middle of each zone, upright for the thrower, in the same markings batch (no new call): each
+  // numeral is a few 2.2 cm strokes, 18 cm tall and 11 cm wide
+  for (const u of [8.07, 8.6, 9.0, 9.4]) fbox(marks, u - 0.02, u + 0.02, 1.2, 1.7, 0.972, 0.974, u === 8.07 ? 0xe0343a : 0xf1e6cc);
+  {
+    // the thrower looks along +u; looking along a local direction (dx, dz) with y up, their right is (-dz, dx), so the
+    // numerals' x runs along +v when that's +v (the same sign as games.ts's `side`)
+    const fu = F.dirToLocal(1, 0), fv = F.dirToLocal(0, 1), side = Math.sign(fu[0] * fv[1] - fu[1] * fv[0]) || 1;
+    const H = 0.18, Wd = 0.11, S = 0.022, y0 = 0.972, y1 = 0.9745;
+    // the seven strokes in the numeral's own frame (x to the thrower's right, y away from them): [x0, x1, y0, y1]
+    const SEG: Record<string, [number, number, number, number]> = {
+      a: [-Wd / 2, Wd / 2, H / 2 - S, H / 2], g: [-Wd / 2, Wd / 2, -S / 2, S / 2], d: [-Wd / 2, Wd / 2, -H / 2, -H / 2 + S],
+      b: [Wd / 2 - S, Wd / 2, 0, H / 2], c: [Wd / 2 - S, Wd / 2, -H / 2, 0], f: [-Wd / 2, -Wd / 2 + S, 0, H / 2], e: [-Wd / 2, -Wd / 2 + S, -H / 2, 0],
+    };
+    const DIGIT: Record<number, string> = { 1: 'bc', 2: 'abged', 3: 'abgcd' };
+    // the zones' middles along the bed (u), zone 3 from its line to the end
+    for (const [n, uc] of [[1, 8.8], [2, 9.2], [3, 9.62]] as [number, number][]) {
+      for (const k of DIGIT[n]) { const [x0, x1, yy0, yy1] = SEG[k]; fbox(marks, uc + yy0, uc + yy1, 1.45 + side * x0, 1.45 + side * x1, y0, y1, 0xf1e6cc); }
+    }
+  }
   fbox(paint, JUKEBOX[0] - 0.35, JUKEBOX[0] + 0.35, 0.7, 1.2, FL, FL + 1.45, 0x2a2238);          // the jukebox
   fbox(neon, JUKEBOX[0] - 0.3, JUKEBOX[0] + 0.3, 1.2, 1.22, FL + 0.6, FL + 1.3, HEX.coral);
   light(JUKEBOX[0], 1.6, 1.2, 3, 2, 4);

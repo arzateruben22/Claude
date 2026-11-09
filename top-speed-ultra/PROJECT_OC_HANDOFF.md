@@ -583,6 +583,70 @@ still leak them:
    target (about 6 MB) on the GPU. **Remedy (the bar's):** the page replaces `rebuildEnv` on its own instance with the
    same rebuild that keeps the `fromScene()` render target and disposes the previous one. For the game's owners too.
 
+### From the sports bar's S2a (2026-11-08; `PROJECT_OC_SPORTS_BAR.md` open items O1, O25 and O33)
+
+8. **`Hud` binds P1b's elements without null checks** (`lot57/hud.ts` at 47c71a6: `caption`, `chips`, `reply0`,
+   `reply1`, `status2`, `status2Text`, `order` with its `[data-close]`, `orderTitle`, `orderWho`, `menuItems`). A page
+   that builds a `Hud` without them throws at `new Hud()` (`$('menuItems').addEventListener` on null): the bar's S1
+   page did, after the merge. The bar's S2a page carries them; any other page that uses `Hud` (the game, at J1) must
+   too, or `Hud` could look them up with a null check.
+9. **The bar didn't adopt P1b's held items or `doings.ts`** (O25). The sports bar's plan draws every held item as an
+   instance of six shared meshes ("Held items, table items and game pieces"), while `lot57/items.ts` makes three meshes
+   per item, and `doings.ts` is bound to Lot 57's `Venue` and `Crowd`. So the bar has its own `engine/sim/held.ts` and
+   its own ordering (`venues/sportsbar/life.ts`, `crew.ts`); it does use P1b's order sheet, captions and holding chip
+   through `Hud`. At E0 one copy of the held items survives; the bar's measured costs are in its plan (O4).
+   Since S2a's repair the bar also reads `Hud.orderOpen` (a public field at 47c71a6) to tell a menu sheet closed
+   without an answer, whose order it then drops; if `Hud` makes it private, the bar needs a getter.
+
+**For the design review queue (O33).** The bar's clips (`src/onfoot/engine/sim/clips.ts`, an external pose layer on
+the people builder's rig, `people/` untouched) were looked at on your avatar (`tests/out/sportsbar/s2a-clip-*.png`):
+cheer, arm pump and clap read; drink and eat bring the hand to the chin. Three need a better pose: **groan** reads as
+hands behind the head rather than on top of it with the head bowed; **sway** and **two-step** read only in motion (a
+still shows bent arms and little else). They ship as they are in S2a.
+
+### From the sports bar's S2b (2026-11-09; `PROJECT_OC_SPORTS_BAR.md` open items O4 and O33)
+
+10. **A camera moved after `Player.camera()` keeps a stale world matrix.** `lot57/player.ts`'s camera ends with
+    `lookAt`, which updates the camera's world matrix at your eye before it turns it; anything that moves the camera
+    after that in the same frame (the bar's game views, an overhead or photo camera) must call
+    `camera.updateMatrixWorld()` before projecting a point that frame, or the projection uses your eye's pose (the bar's
+    S2b dart reticle sat 0.4 m off the board until it did). The renderer fixes it for the render itself; tap rays and
+    `Vector3.project` in the same frame don't.
+
+**For the design review queue (O33, S2b's game clips).** The game clips (`src/onfoot/engine/sim/clips.ts`, the same
+external pose layer, `people/` untouched) were looked at on your avatar from the side
+(`tests/out/sportsbar/s2b-clip-*-r2.png`): the **dart throw** (the dart up by the eye, the elbow up) and the
+**shuffleboard slide** (a lean and a long forward reach) read well. The **pool stance** reads as a lean over the
+table, but the cue arm hangs instead of drawing back along the cue, and the **pool shot** only swings that forearm, so
+from the side it hardly differs from the stance. The cue arm wants its upper arm drawn back and up with the forearm
+hanging (as a stroke), and the shot a visible swing from the elbow. They ship as they are in S2b. (Since S2b's repair
+your own avatar isn't drawn in the pool camera's view at all: it stood just under that camera and showed as dark
+shapes at the frame's edge; Rocío's stance and shot are seen from your own view on her turns.) **The cue is drawn on
+its own** (an instance of the stick mesh behind the cue ball, 8 degrees up), not in your or Rocío's hands: with the
+stance reworked, the cue's butt wants to follow the right hand (`handR`'s world position) and the stand point to put
+that hand on the aim line. Both are for the same design pass.
+
+### From the sports bar's S3a (2026-11-09; `PROJECT_OC_SPORTS_BAR.md` open items O16, O25 and O32)
+
+11. **The bar didn't adopt P1c's crowd** (O25). `lot57/npcs.ts` and `crowdview.ts` are bound to Lot 57's venue and draw
+    people their own way (an impostor painted per person, LOD 1 built in workers). The bar's plan draws everyone not
+    built, every filler and every held guest from one atlas of 8 bodies (`venues/sportsbar/cards.ts`) and builds bodies
+    on a time budget (`engine/sim/builds.ts`); it writes Lot 57's talking-group rules (turns, looks, nods, laughter)
+    into `engine/sim/groups.ts`, pure, so E0 keeps one copy. Lot 57's worker builds (`lot57/crowd-worker.ts`) are the
+    way out of owner question 2 below for both venues once `people/`'s owners bless them for LOD 2 too. Neither page has
+    the crowd's murmur yet (no audio on either page).
+12. **A body's fill light.** The builder's LOD material, lit only by the sky and the few real lights, drew people
+    inside the bar as near-black cut-outs at Low, as Lot 57 found on its yard; the bar wraps each body's LOD 1 and LOD 2
+    material with a fill (Lot 57's `withFill` technique, written in `venues/sportsbar/crowd.ts`). Worth one shared copy
+    in `engine/` at E0.
+13. **For RS1 (the Retro module's hook-fit test, O16).** A LOD 0 body's hair cap and hair cards pass the hook-fit rule
+    but their toon versions wouldn't compile (`gHairT`, `gHairSpec` and `gHairShift` are set at `lights_fragment_begin`
+    and declared only in their own replacement for `lights_physical_pars_fragment`, which the toon shader doesn't
+    include). The bar marks those two meshes `retroSkip` on every LOD 0 it builds; please make the hook-fit test reject a
+    hook that sets a variable the toon shader never declares. The Retro module still isn't on `claude/modes`, so the
+    bar's Low draws standard materials and the toon half of S3a's "Low stays Retro" check can't run yet (the
+    shader-error half ran: see the progress log).
+
 ## Owner questions (open)
 
 - **The sports bar's Low and the sun map** (`PROJECT_OC_SPORTS_BAR.md`, "Owner questions", 1). Decision 15 lists
