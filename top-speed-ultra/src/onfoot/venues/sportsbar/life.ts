@@ -140,6 +140,8 @@ export class BarLife {
     return best;
   }
   overheadTarget() { return this.ctx.overheadTarget(); }
+  /** S4: a game night now (the featured match's final whistle until close): the dance spot's lights (look.ts) */
+  gameNightNow() { const n = this.now(); return this.tv.gameNight(this.weekNow(), n.day, n.hour); }
   /** a guest or one of the staff within r metres of (x, z) (the doors open for them) */
   someoneNear(x: number, z: number, r: number) { return !!this.crowd && this.crowd.someoneNear(x, z, r); }
   /** the crowd's counts for stats() */
