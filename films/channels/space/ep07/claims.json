@@ -24,7 +24,7 @@
   "source_title": "How many stars in the Milky Way? (NASA Blueshift)",
   "accessed": "2026-11-08",
   "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. Candidate. Confirm the method wording ('mass divided by average star mass'); soften the line if the page says more is involved.",
-  "verified_via": "search excerpt",
+  "verified_via": "not read",
   "status": "TODO open link",
   "inference": "INFERENCE: NASA says the galaxy 'probably contains' 100 to 400 billion stars, a range, which implies an estimate; no page says 'nobody counted them'. A person decides whether to keep 'nobody'."
  },
@@ -121,7 +121,7 @@
   "source_title": "Own arithmetic with c (NIST)",
   "accessed": "2026-11-08",
   "note": "NOT YET CHECKED, not even by a search excerpt this session: candidate source from the bible/slate. A person opens the page before this is marked ok. OWN CALCULATION; a block is taken as about 300 m (illustrative). Say 'a city block' only; do not state a length.",
-  "verified_via": "search excerpt",
+  "verified_via": "not read",
   "status": "TODO open link",
   "calc": "CALC: light covers 300 m in 300 / 299,792,458 s = 1.0 microsecond (c from NIST; 'a city block' taken as about 300 m, illustrative)."
  },

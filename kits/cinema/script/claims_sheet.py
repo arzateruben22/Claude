@@ -21,9 +21,10 @@ def main(argv):
     claims = json.loads((ep / "claims.json").read_text())
     title = next((l[2:].strip() for l in (ep / "README.md").read_text().splitlines() if l.startswith("# ")), ep.name)
     excerpt = sum(1 for c in claims if c.get("verified_via") == "search excerpt")
+    unread = sum(1 for c in claims if c.get("verified_via") == "not read")
     lines = [f"# Claims sign-off: {title}", "",
              f"For {who}. Every factual sentence the narrator says or the screen shows is below. "
-             f"{excerpt} of {len(claims)} were checked against a search excerpt of the source, not the page itself: "
+             f"{excerpt} of {len(claims)} were checked against a search excerpt of the source, not the page itself, and {unread} have not been read at all: "
              "open each link, confirm the claim, and tick the box (or write the fix in Notes). "
              "The episode does not post until every row is ticked.", "",
              "| # | Spoken / on screen | The claim | Source | Checked by | OK | Notes |", "|---|---|---|---|---|---|---|"]

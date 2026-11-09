@@ -73,7 +73,7 @@ PRE, HOLD = 0.3, 0.4     # timeline.layout's defaults: lead-in before a line, ho
 
 FIELDS = ("id", "sentence", "claim", "source_url", "source_title", "accessed", "verified_via", "status")
 STATUS = ("ok", "needs-wording", "TODO open link")
-VIA = ("search excerpt", "page")
+VIA = ("search excerpt", "page", "not read")   # "not read": nobody has opened the source yet (the honest default for a candidate link)
 
 NUMBER_WORDS = set("""zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen
 sixteen seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety hundred hundreds thousand
