@@ -45,32 +45,95 @@ t_pull1 = A("vo02:away", 0.0)                              # space is in view by
 t_rings = [A("vo02:lined", -0.1), A("vo02:between", -0.3)]   # thirty Earths appear one after another
 t_walk0 = A("vo03:Walk", -0.05)
 t_nine = A("vo03:years", -0.05)
-t_rw = A("vo04:But", 0.1)                                  # the clock rewinds: "nobody walks day and night"
-t_b0 = t_rw + 0.9                                          # the race begins at once: a walker who stops to sleep, eat and tie a shoe
+t_dive0 = B["change"]["t0"]                                 # a dive from the wide view onto the nonstop walker
+t_dive1 = t_dive0 + 1.3
+t_run0 = t_dive1 + 0.9                                     # the nonstop walker sets off a beat after the camera arrives, with the Earth under its feet
+t_halfway = t_run0 + (t_nine - t_run0) * 0.5
+t_zo0 = t_nine + 0.35                                      # zoom out to the wide view again
+t_zo1 = t_zo0 + 1.15
+t_rw = t_zo0                                               # the clock rewinds: "nobody walks day and night"
+t_b1 = t_zo1 + 1.15                                        # a second dive, onto the blue walker, who sets off at once
+t_b0 = t_b1
+t_sleep, t_eat, t_shoe = A("vo04:sleep", -0.05), A("vo04:eat", -0.05), A("vo04:shoe", -0.05)
+PAUSES = [[round(t_sleep - 0.15, 3), round(t_sleep + 0.9, 3)], [round(t_eat - 0.1, 3), round(t_eat + 0.95, 3)], [round(t_shoe - 0.15, 3), round(t_shoe + 1.2, 3)]]
 t_26 = A("vo05:years", -0.05)                              # the 8 h walker arrives on "twenty-six years"
+t_zo2 = t_26 + 1.0
+t_zo3 = t_zo2 + 1.2
 t_steps = A("vo06:steps", -0.1)                           # the popular goal: the grey walker takes over
 t_140 = A("vo06:forty", 0.1)                               # the clock runs on to 140
 t_box = t_26
 t_work0, t_home, t_end = B["work"]["t0"], B["takeaway"]["t0"], A("vo08:Next", -0.25)
-t_apollo = [A("vo07:Apollo", 0.3), A("vo07:days", 0.1)]    # the capsule crosses the gap
+t_apollo = [A("vo07:Apollo", 0.3), A("vo07:three", -0.1)]  # the capsule crosses the gap, landing on "three days"
+t_62 = t_apollo[1] + 1.8                                   # a second change
 t_spread = [A("vo03:Walk", -0.3), A("vo03:Walk", 0.8)]      # the lanes open out
+assert t_zo1 + 1.15 < t_sleep + 0.2, (t_zo1, t_sleep)
 
 # the clocks, in years
-CLOCK_A = [[t_walk0, 0.0], [t_nine, YN]]                                     # nonstop
-CLOCK_B = [[t_b0, 0.0], [t_26, Y8], [t_steps, Y8], [t_140, YS], [B["work"]["t0"] + 20, YS]]      # the race
-COUNT = [[t_walk0, 0.0], [t_nine, YN], [t_rw, YN], [t_rw + 0.6, 0.0], [t_b0, 0.0], [t_26, Y8], [t_steps, Y8], [t_140, YS]]
+CLOCK_A = [[t_run0, 0.0], [t_nine, YN]]                                      # nonstop
+CLOCK_B = [[t_b1, 0.0], [t_26, Y8], [t_steps, Y8], [t_140, YS], [B["work"]["t0"] + 20, YS]]      # the race
+COUNT = [[t_run0, 0.0], [t_nine, YN], [t_zo1, YN], [t_zo1 + 0.5, 0.0], [t_b1, 0.0], [t_26, Y8], [t_steps, Y8], [t_140, YS]]
+
+# the walkers' places along the line (0 at the Earth, 1 at the Moon), sampled every frame
+import math
+DT = 1.0 / FPS
+NS = int(round(f.duration * FPS)) + 2
+lin = lambda x, a, b_: min(1.0, max(0.0, (x - a) / (b_ - a)))
+def yB_(t):
+    k_ = CLOCK_B
+    if t <= k_[0][0]: return 0.0
+    for i in range(1, len(k_)):
+        if t <= k_[i][0]: return k_[i - 1][1] + (k_[i][1] - k_[i - 1][1]) * (t - k_[i - 1][0]) / (k_[i][0] - k_[i - 1][0])
+    return k_[-1][1]
+def speedB(t):                                             # 8 hours a day: walk a third of the time, stop for sleep, food and a shoe
+    if any(p0 <= t < p1 for p0, p1 in PAUSES): return 0.0
+    ph = ((t - t_b1) / 0.5) % 1.0
+    return math.sin(math.pi * ph / 0.34) ** 2 if ph < 0.34 else 0.0
+cum, c_ = [], 0.0
+for i in range(NS):
+    t = i * DT
+    if t_b1 <= t <= t_26: c_ += speedB(t) * DT
+    cum.append(c_)
+tot = cum[int(round(t_26 * FPS))]
+PA = [round(lin(i * DT, t_run0, t_nine), 6) for i in range(NS)]
+PB = [round(min(1.0, cum[i] / tot), 6) for i in range(NS)]
+PS = [round(min(1.0, yB_(i * DT) / YS), 6) for i in range(NS)]
+fn = lambda P: (lambda t: P[min(NS - 1, max(0, int(t * FPS)))] + (P[min(NS - 1, int(t * FPS) + 1)] - P[min(NS - 1, max(0, int(t * FPS)))]) * (t * FPS - int(t * FPS)))
 
 # ── shots ──
 SHOTS = [
     {"at": 0.0, "name": "front"},                        # hook: you, and the line that leaves the paper
     {"at": B["normal"]["t0"], "name": "pull"},           # normal: back off the paper to space
-    {"at": B["change"]["t0"], "name": "space"},          # change … takeaway: one frame of the Earth–Moon line
-    {"at": t_end, "name": "end"},
+    {"at": t_dive0, "name": "chase-a"},                  # a dive onto the nonstop walker, a chase to the Moon, and back out
+    {"at": t_zo1, "name": "chase-b"},                    # a dive onto the blue walker: stop and go
+    {"at": t_zo3, "name": "space"},                      # the wide view for the work card and the step goal
+    {"at": t_home, "name": "apollo"},                    # the capsule, then a push toward the Moon
+    {"at": t_end, "name": "end"},                        # down to frame 0 and a calm hold
 ]
+Hm = lambda d: 0.425 * d                                 # the frame's height in metres at distance d (fov 24)
+def pose(P, q, d, fy, el=3, az=0, x=0.0):                # a camera that puts world height P at the fraction q of the frame (from the top)
+    return {"target": [x, P - (fy - q) * Hm(d), 0], "dist": d, "el": el, "az": az, "fov": 24, "fy": fy}
 k = lambda ty, dist, el, fy=0.40, az=0: {"target": [0, ty, 0], "dist": dist, "el": el, "az": az, "fov": 24, "fy": fy}
 FRONT = k(1.2, 17, 8, 0.40)
-SPACE = k(1.10e8, 2.2e9, 3, 0.40)
-SPACE2 = k(9.8e7, 1.9e9, 3, 0.40)         # a slow push in through the whole walk
+SPACE = k(1.43e8, 2.3e9, 3, 0.40)
+SPACE2 = k(1.40e8, 2.2e9, 3, 0.40)
+D_C = 3.0e7                                              # a chase camera: the frame is 1.3e7 m tall, the Earth half of it
+HS = 0.055 * D_C                                         # the walker's height at that distance: 13% of the frame
+FYC = 0.79                                               # the walker stands low in the frame, under the caption plates' middle band, in the lower half
+chase = lambda P, az=0: pose(P + HS * 0.5, FYC, D_C, FYC, el=3, az=az)
+def chase_keys(t0, t1, path, az_fn=lambda t: 0.0, step=0.1):
+    out, t = [], t0
+    while t < t1 - 1e-9:
+        out.append({"t": round(t, 4), **chase(LINE_TOP * path(t), az_fn(t)), "ease": "linear"}); t += step
+    out.append({"t": round(t1, 4), **chase(LINE_TOP * path(t1), az_fn(t1)), "ease": "linear"})
+    return out
+def dive(t0, t1, P_to, az=0):                            # wide → mid → chase, in log steps (the same trick as the pull-back)
+    mid = pose(P_to, 0.70, 2.4e8, 0.60)
+    return [{"t": t0, **SPACE}, {"t": round(t0 + (t1 - t0) * 0.5, 4), **mid, "ease": "sine"}, {"t": t1, **chase(P_to, az), "ease": "inout2"}]
+def zoom_out(t0, t1, P_from):                            # chase → mid (the Moon near the top) → wide
+    mid = pose(P_from + 2.0e6, 0.20, 2.4e8, 0.60)
+    return [{"t": t0, **chase(P_from)}, {"t": round(t0 + (t1 - t0) * 0.5, 4), **mid, "ease": "linear"}, {"t": t1, **SPACE, "ease": "inout2"}]
+swing = lambda a0, a1, amp: (lambda t: amp * math.sin(math.pi * lin(t, a0, a1)) ** 2)
+fA, fB, fS = fn(PA), fn(PB), fn(PS)
 CAM = {
     "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **k(1.2, 30, 8, 0.40), "ease": "sine"}],      # a slow back-off through "Starting at your own front door"
     "pull": [                                                                    # a constant rate of zoom in log distance
@@ -79,15 +142,23 @@ CAM = {
         {"t": t_pull0 + (t_pull1 - t_pull0) * 0.75, **k(1.0e6, 2.0e7, 4.5, 0.40), "ease": "linear"},
         {"t": t_pull1, **SPACE, "ease": "inout2"},
         {"t": A("vo02:lined", 0.1), **SPACE, "ease": "sine"},
-        {"t": B["change"]["t0"] - 1.8, **k(3.2e8, 9.0e8, 2, 0.40), "ease": "inout2"},      # up the line toward the Moon: how far it is
-        {"t": B["change"]["t0"], **SPACE, "ease": "inout2"},
+        {"t": t_dive0 - 1.8, **k(3.2e8, 9.0e8, 2, 0.40), "ease": "inout2"},      # up the line toward the Moon: how far it is
+        {"t": t_dive0, **SPACE, "ease": "inout2"},
     ],
-    "space": [{"t": B["change"]["t0"], **SPACE}, {"t": t_end - 0.1, **SPACE2, "ease": "sine"}, {"t": t_end, **SPACE2}],
-    "end": [                                                                      # back down to frame 0, by the same log steps as the pull-back, so the loop closes exactly
-        {"t": t_end, **SPACE2},
-        {"t": t_end + (B["tease"]["t1"] - t_end) * 0.45, **k(1.0e6, 2.0e7, 4.5, 0.40), "ease": "sine"},
-        {"t": t_end + (B["tease"]["t1"] - t_end) * 0.75, **k(1.5e2, 3.0e3, 6.5, 0.40), "ease": "linear"},
-        {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"},
+    "chase-a": dive(t_dive0, t_dive1, 0.0)[:-1] + [{"t": t_dive1, **chase(0.0), "ease": "inout2"}] + chase_keys(t_dive1 + 0.1, t_nine, fA, swing(t_halfway - 1.5, t_halfway + 2.5, -10.0))
+               + [{"t": round(t_zo0, 4), **chase(LINE_TOP)}] + zoom_out(t_zo0, t_zo1, LINE_TOP)[1:],
+    "chase-b": dive(t_zo1, t_b1, 0.0)[:-1] + [{"t": t_b1, **chase(0.0), "ease": "inout2"}] + chase_keys(t_b1 + 0.1, t_26, fB, swing(A("vo04:you", -0.3) + 2.0, A("vo04:you", -0.3) + 6.5, 10.0))
+               + [{"t": round(t_zo2, 4), **chase(LINE_TOP)}] + zoom_out(t_zo2, t_zo3, LINE_TOP)[1:],
+    "space": [{"t": t_zo3, **SPACE}, {"t": t_home, **SPACE2, "ease": "sine"}],
+    "apollo": [{"t": t_home, **SPACE2}, {"t": t_62, **SPACE2, "ease": "sine"},
+               {"t": t_end, **pose(Y_MOON, 0.30, 7.0e8, 0.45, el=3), "ease": "inout2"}],              # a second change: in toward the Moon
+    "end": [                                                                      # back down to frame 0 by the pull-back's own steps, then a calm hold: the loop closes
+        {"t": t_end, **pose(Y_MOON, 0.30, 7.0e8, 0.45, el=3)},
+        {"t": t_end + 0.9, **SPACE2, "ease": "inout2"},
+        {"t": t_end + 1.7, **k(1.0e6, 2.0e7, 4.5, 0.40), "ease": "linear"},
+        {"t": t_end + 2.4, **k(1.5e2, 3.0e3, 6.5, 0.40), "ease": "linear"},
+        {"t": t_end + 3.1, **FRONT, "ease": "inout2"},
+        {"t": B["tease"]["t1"], **FRONT},
     ],
 }
 for shot, keys in CAM.items():
@@ -95,17 +166,18 @@ for shot, keys in CAM.items():
         dt = b["t"] - a["t"]
         assert dt > 0, (shot, a["t"], b["t"])
         for kk in ("az", "el"):
-            assert abs(b[kk] - a[kk]) / dt <= 3.0 + 1e-9, f"{shot}: {kk} turns too fast between {a['t']:.2f} and {b['t']:.2f}"
+            assert abs(b[kk] - a[kk]) / dt <= 8.0 + 1e-9, f"{shot}: {kk} turns too fast between {a['t']:.2f} and {b['t']:.2f}"
 for x, y in zip(SHOTS[:-1], SHOTS[1:]):
-    assert CAM[x["name"]][-1]["target"] == CAM[y["name"]][0]["target"] and CAM[x["name"]][-1]["dist"] == CAM[y["name"]][0]["dist"], (x, y)
+    p, q_ = CAM[x["name"]][-1], CAM[y["name"]][0]
+    assert p["target"] == q_["target"] and p["dist"] == q_["dist"], (x, y, p, q_)
 
 # ── the spine readout ──
 sp_ = lambda t, label, terms, **kw: {"t": t, "label": label, "terms": terms, **kw}
 SPINE = [
     sp_(A("vo02:Moon", 0.1), "the Moon's mean distance", [["in", f"{R['moon_km']:,} km"]]),
     sp_(t_walk0, "an easy pace, nonstop", [["in", f"{R['moon_km']:,} km"], ["op", "÷"], ["in", "5 km/h"]]),
-    sp_(A("vo03:nine", -0.05), "nonstop, day and night", [["in", f"{R['hours']:,} h"], ["op", "≈"], ["ans", f"{R['years_nonstop']} years"]]),
-    sp_(t_b0, "walking 8 hours a day", [["in", f"{R['hours']:,} h ÷ 8 h"], ["op", "≈"], ["ans", "? years"]]),
+    sp_(A("vo03:nine", -0.05), "nonstop, day and night", [["in", f"{R['hours']:,} h"], ["ans", f"≈ {R['years_nonstop']} years"]]),
+    sp_(t_b0, "walking 8 hours a day", [["in", f"{R['hours']:,} h ÷ 8 h"], ["ans", "≈ ? years"]]),
     sp_(t_box, "a working day of walking", [["ans", f"≈ {R['years_8h']} years"]], box=True),
     sp_(A("vo05:years", 0.9), "a working day of walking", [["ans", f"≈ {R['years_8h']} years"]], box=True, keep=True),
     sp_(t_home, "to the Moon on foot", [["ans", f"≈ {R['years_8h']} years"]], box=True, keep=True),
@@ -125,28 +197,31 @@ WORK = {
 
 # ── labels, badges, counters ──
 LABELS = [
-    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": 1},
-    {"id": "l-earth", "text": "Earth", "kind": "part", "anchor": "earth", "t0": t_rings[0], "t1": t_end, "shot": "space", "side": 1},
-    {"id": "l-moon", "text": "the Moon · 384,400 km", "kind": "part", "anchor": "moon", "t0": A("vo02:Moon", 0.2), "t1": t_b0 - 0.2, "shot": "space", "side": -1},
-    {"id": "l-nonstop", "text": "nonstop: ≈ 9 yr", "kind": "part", "anchor": "laneA", "t0": t_nine, "t1": t_rw, "shot": "space", "side": -1},
-    {"id": "l-steps", "text": "10,000 steps a day: ≈ 140 yr", "kind": "calc", "anchor": "laneS", "t0": t_steps, "t1": t_work0 + 20, "shot": "space", "side": -1},
-    {"id": "l-apollo", "text": "Apollo: about 3 days", "kind": "anchor", "anchor": "capsule", "t0": t_apollo[0], "t1": t_end - 0.3, "shot": "space", "side": 1},
+    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "side": 1},
+    {"id": "l-earth", "text": "Earth", "kind": "part", "anchor": "earth", "t0": t_rings[0], "t1": t_dive0 - 2.0, "side": 1},
+    {"id": "l-moon", "text": "the Moon · 384,400 km", "kind": "part", "anchor": "moon", "t0": A("vo02:Moon", 0.2), "t1": t_dive0 - 0.2, "side": -1},
+    {"id": "l-steps", "text": "10,000 steps a day: ≈ 140 yr", "kind": "calc", "anchor": "walkS", "t0": t_steps, "t1": t_140 + 0.4, "side": 1, "v": "below"},
+    {"id": "l-apollo", "text": "Apollo 11: about 3 days", "kind": "anchor", "anchor": "capsule", "t0": t_apollo[0] + 0.2, "t1": t_end - 0.3, "side": 1},
 ]
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.0, "t1": t_title_out, "slot": "bl"},
     {"id": "b-scale", "text": "not to scale until the Moon", "t0": t_pull0, "t1": t_pull1 - 0.3, "slot": "tr"},
-    {"id": "b-pace", "text": "∵ an easy pace, 5 km/h", "t0": t_walk0, "t1": t_rw - 0.2, "slot": "tl"},
-    {"id": "b-road", "text": "∵ no road, no rest", "t0": t_nine + 0.3, "t1": t_rw, "slot": "tr"},
-    {"id": "b-day", "text": "∵ 8 hours a day", "t0": t_b0, "t1": t_steps - 0.1, "slot": "tl"},
-    {"id": "b-stride", "text": "∵ 0.75 m a step", "t0": t_steps, "t1": B["takeaway"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-rounded", "text": "rounded", "t0": t_box + 0.3, "t1": t_steps - 0.1, "slot": "bl"},
+    {"id": "b-pace", "text": "∵ an easy pace, 5 km/h", "t0": t_walk0, "t1": t_zo0, "slot": "tl"},
+    {"id": "b-road", "text": "∵ no road, no rest", "t0": t_halfway, "t1": t_zo0, "slot": "tr"},
+    {"id": "b-day", "text": "∵ 8 hours a day", "t0": t_zo1, "t1": t_steps - 0.1, "slot": "tl"},
+    {"id": "b-stride", "text": "∵ 0.75 m a step", "t0": t_steps, "t1": t_140 + 0.4, "slot": "tr"},
+    {"id": "b-half", "text": "halfway", "t0": t_halfway - 0.3, "t1": t_halfway + 1.5, "slot": "tl"},
+    {"id": "b-nonstop", "text": "nonstop: ≈ 9 yr", "t0": t_nine, "t1": t_zo0 + 0.8, "slot": "tr"},
+    {"id": "b-figs", "text": "figures not to scale", "t0": t_dive0, "t1": t_halfway, "slot": "tr"},
+    {"id": "b-figs2", "text": "figures not to scale", "t0": t_zo1, "t1": t_zo1 + 4.0, "slot": "tr"},
+    {"id": "b-rounded", "text": "rounded", "t0": t_box + 0.3, "t1": t_steps - 0.1, "slot": "tr"},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 for b in BADGES:
     if any(abs(b["t1"] - c) < 1e-6 for c in CUTS):
         b["t1"] = round(b["t1"] - 0.3, 4)
 COUNTERS = [
-    {"id": "c-years", "label": "years of walking", "t0": t_walk0, "t1": B["takeaway"]["t0"] - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
+    {"id": "c-years", "label": "years of walking", "t0": t_run0 - 0.2, "t1": t_work0 - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
 ]
 
 TITLE = {"series": "Possibility Lab · Season 2 · Episode 1", "title": "Walking to the *Moon*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
@@ -154,7 +229,8 @@ END = {"title": "Next envelope: *everyone, holding hands*", "follow": "Possibili
        "next": "NASA Science, Moon Facts: average distance 384,400 km."}
 
 CUE = {"pull": [t_pull0, t_pull1], "rings": t_rings, "spread": t_spread, "clockA": CLOCK_A, "clockB": CLOCK_B, "box": t_box, "nine": t_nine,
-       "apollo": t_apollo, "home": t_home}
+       "apollo": t_apollo, "home": t_home, "pauses": PAUSES, "props": {"bed": t_sleep, "table": t_eat, "shoe": t_shoe}, "run": [t_run0, t_b1, t_zo1],
+       "fps": FPS, "pathA": PA, "pathB": PB, "pathS": PS, "dc": D_C, "hs": 0.055, "fy": FYC}
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": round(t_box + 1.0, 4),
     "shots": SHOTS, "beats": BEATS,
@@ -179,7 +255,7 @@ for i, sp in enumerate(SPINE):
 for r in WORK["rows"]:
     ev.append({"t": r["t"], "kind": "term.write", "tag": f"work-{r['k']}"})
 ev += [
-    {"t": t_walk0, "kind": "swell", "tag": "walk", "t1": t_nine},
+    {"t": t_run0, "kind": "swell", "tag": "walk", "t1": t_nine},
     {"t": t_apollo[0], "kind": "swell", "tag": "apollo", "t1": t_apollo[1]},
 ]
 sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working",

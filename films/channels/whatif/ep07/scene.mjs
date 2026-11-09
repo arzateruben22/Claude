@@ -1,14 +1,15 @@
 import * as THREE from "three";
-// Possibility Lab No. 007, "Walking to the Moon" (films/channels/whatif/ep07). The picture as a pure function of t for
+// Possibility Lab Season 2, Episode 1 (S2E01, folder ep07), "Walking to the Moon". The picture as a pure function of t for
 // the film kit's page (kits/cinema/film): window.seek(t) sets the shot, the camera, the world and the overlay from t
 // alone, then makes exactly one renderer.render().
 //
-// One world (bible §2), in true metres: you (anchor blue) stand on the graph-paper desk, which is the top of the Earth
-// (set/ladder05.js's planet, R about 6,378 km, resting on the desk), and a thin line leaves the paper straight up. The
-// camera pulls back (distance eased in log space) until the Earth and the Moon sit on that one line, thirty Earth-widths
-// apart: a ruler of rings fills the gap. Three walkers climb it on one clock of years: nonstop (about 9), eight hours a
-// day (about 26, blue: you) and 10,000 steps a day (about 140). The takeaway sends a small capsule up the same line
-// in three days. Everything timed comes from film.json, which compile.py hangs on the voice; this file only stages it.
+// One world (bible §2), in true metres: you (anchor blue) stand on the graph-paper desk, the top of the Earth, and a thin
+// line leaves the paper straight up to the Moon. The camera pulls back to the whole line (a ruler of thirty Earths), then
+// DIVES onto a walker and chases it: the figures are drawn at a screen size (13% of the frame, low in it), not to scale,
+// the Earth and the Moon shaded globes at true size. Three walkers climb the line on one clock of years: nonstop (about
+// 9), eight hours a day (about 26, blue: you, in stop-and-go steps, with a bed, a table and a shoe popping in at each
+// stop) and 10,000 steps a day (about 140). The takeaway sends a capsule up the line in three days. The last frame is
+// frame 0. Everything timed comes from film.json, which compile.py hangs on the voice; this file only stages it.
 import { stage, seg, E, clamp01 } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
 import { createDesk } from "../set/desk.js";
@@ -77,17 +78,35 @@ void main() {
 const globe = (hex, grat, crat) => {
   const c = hexRgb(hex), u = { uCol: { value: new THREE.Vector3(...c) }, uDark: { value: new THREE.Vector3(...c.map((v) => v * 0.28)) }, uLight: { value: new THREE.Vector3(-0.55, 0.45, 0.8) },
     uExposure: { value: 1 }, uOpacity: { value: 1 }, uGrat: { value: grat }, uCrat: { value: crat } };
-  const m = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), new THREE.ShaderMaterial({ uniforms: u, vertexShader: SVS, fragmentShader: SFS, transparent: true, depthTest: false, depthWrite: false, extensions: { derivatives: true } }));
+  const m = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), new THREE.ShaderMaterial({ uniforms: u, vertexShader: SVS, fragmentShader: SFS, transparent: true, depthTest: true, depthWrite: false, extensions: { derivatives: true } }));
   m.renderOrder = 5; m.frustumCulled = false; m.userData.noProbe = true; scene.add(m);
   return { mesh: m, set: (o) => { m.visible = o > 0.01; u.uOpacity.value = o; } };
 };
 const ringE = globe(CHALK2, 1, 0), ringM = globe(CHALK, 0, 1);
-const walker = createFigure({ tokens: TK, height: WD.fig });          // you, walking: the blue figure at the head of your lane
-walker.set({ at: [0, WD.fig / 2, 0] });
-scene.add(walker.group);   // the Earth and the Moon, outlined
+const figTk = (hex) => ({ ...TK, anchor: hex });
+const wkA = createFigure({ tokens: figTk(CHALK2), height: WD.fig }), wkB = createFigure({ tokens: TK, height: WD.fig }), wkS = createFigure({ tokens: figTk("#8A8D96"), height: WD.fig });
+for (const w of [wkA, wkB, wkS]) { w.set({ at: [0, WD.fig / 2, 0] }); w.group.visible = false; scene.add(w.group); }
+// props for the stops: a bed, a table, a shoe (boxes and ellipsoids in the same half-Lambert chalk as the globes)
+const solid = (hex) => { const c = hexRgb(hex), u = { uCol: { value: new THREE.Vector3(...c) }, uDark: { value: new THREE.Vector3(...c.map((v) => v * 0.35)) }, uLight: { value: new THREE.Vector3(-0.55, 0.6, 0.8) }, uExposure: { value: 1 }, uOpacity: { value: 1 }, uGrat: { value: 0 }, uCrat: { value: 0 } };
+  return new THREE.ShaderMaterial({ uniforms: u, vertexShader: SVS, fragmentShader: SFS, transparent: true, extensions: { derivatives: true } }); };
+const MC = solid(CHALK), MC2 = solid(CHALK2), MB = solid(ANCH), MM = solid(MARK);
+const bx = (w, h, dd, m, x, y, z) => { const o = new THREE.Mesh(new THREE.BoxGeometry(w, h, dd), m); o.position.set(x, y, z); return o; };
+const el = (rx, ry, rz, m, x, y, z) => { const o = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), m); o.scale.set(rx, ry, rz); o.position.set(x, y, z); return o; };
+const cy = (r, h, m, x, y, z) => { const o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 24), m); o.position.set(x, y, z); return o; };
+const prop = (kids) => { const g = new THREE.Group(); kids.forEach((k) => g.add(k)); g.visible = false; g.userData.noProbe = true; scene.add(g); return g; };
+const propBed = prop([bx(2.0, 0.34, 1.05, MC2, 0, 0.17, 0), bx(1.9, 0.2, 0.95, MC, 0, 0.44, 0), bx(0.5, 0.16, 0.75, MC, -0.7, 0.62, 0), bx(1.2, 0.26, 0.97, MB, 0.3, 0.6, 0)]);
+const propTable = prop([bx(1.5, 0.12, 0.95, MC, 0, 0.95, 0), ...[[-0.62, -0.38], [0.62, -0.38], [-0.62, 0.38], [0.62, 0.38]].map(([x, z]) => bx(0.1, 0.9, 0.1, MC2, x, 0.45, z)), cy(0.3, 0.05, MC2, -0.2, 1.03, 0), cy(0.12, 0.2, MM, 0.35, 1.1, 0.1)]);
+const propShoe = prop([bx(1.2, 0.14, 0.46, MC2, 0, 0.07, 0), el(0.5, 0.3, 0.26, MC, -0.25, 0.3, 0), el(0.38, 0.2, 0.25, MC, 0.35, 0.2, 0), bx(0.5, 0.04, 0.05, MM, 0.0, 0.5, 0.0)]);
+// the Earth and the Moon, outlined
 const limbO = mk(new THREE.CircleGeometry(1, 128), CHALK2, 1), limbI = mk(new THREE.CircleGeometry(1, 128), TK.graphite || "#171A1E", 2);   // the Earth's edge in section, a thin chalk arc
 const mark = mk(new THREE.CircleGeometry(1, 48), CHALK, 7);
 const craters = [[-0.32, 0.28, 0.2], [0.30, -0.05, 0.28], [-0.1, -0.42, 0.15]].map(([x, y, r]) => ({ x, y, r, m: mk(new THREE.CircleGeometry(1, 24), CHALK2, 8) }));                   // the hook's small Moon, "not to scale", on the line above you
+
+// scenery for the chase: star dust at random depths (both only near
+const NDUST = 2600, dust = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 10), basic(CHALK2, 0.5), NDUST);
+dust.frustumCulled = false; dust.renderOrder = 1; dust.userData.noProbe = true; scene.add(dust);
+{ let sd = 7; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; const MD = new THREE.Matrix4(), QD = new THREE.Quaternion(), SD = new THREE.Vector3(), PD = new THREE.Vector3();
+  for (let i = 0; i < NDUST; i++) { const r = 5e4 + rnd() * rnd() * 2.2e5; SD.set(r, r, 1); PD.set((rnd() - 0.5) * 3.2e7, rnd() * WD.top, (rnd() - 0.5) * 3.2e7); MD.compose(PD, QD, SD); dust.setMatrixAt(i, MD); } dust.instanceMatrix.needsUpdate = true; }
 
 // ── the camera ──────────────────────────────────────────────────────────────
 const rig = createRig(FILM.cam);
@@ -96,24 +115,17 @@ const rig = createRig(FILM.cam);
 const hud = createHud({ camera, shots: FILM.shots });
 const LANE_X = { A: -1, B: 0, S: 1 };                                             // lane offsets as multiples of `off`
 let off = 0;                                                                      // set in seek: metres, scales with the camera's distance
-const yA = (t) => lerpKeys(CUE.clockA, t), yB = (t) => lerpKeys(CUE.clockB, t);
-function lerpKeys(K, t) {
-  if (t <= K[0][0]) return K[0][1];
-  for (let i = 1; i < K.length; i++) if (t <= K[i][0]) return K[i - 1][1] + (K[i][1] - K[i - 1][1]) * (t - K[i - 1][0]) / Math.max(1e-6, K[i][0] - K[i - 1][0]);
-  return K[K.length - 1][1];
-}
-const YN = WD.years || 8.77, Y8 = 26.31, YS = 140.32;
-const stairs = (t) => {                      // 8 hours a day: the blue walker walks a third of the time and stops (sleep, food, a shoe), same average pace
-  const t0 = CUE.clockB[0][0], t1 = CUE.clockB[1][0], N = Math.max(1, Math.round(2 * (t1 - t0)));
-  if (t <= t0) return 0; if (t >= t1) return 1;
-  const ph = (t - t0) * 2, n = Math.floor(ph), f = ph - n, s = Math.min(1, f / 0.34), e = s * s * (3 - 2 * s);
-  return Math.min(1, (n + e) / N);
-};
-const frac = { A: (t) => Math.min(1, yA(t) / YN), B: (t) => stairs(t), S: (t) => Math.min(1, yB(t) / YS) };
+const PATH = (arr) => (t) => { const x = Math.max(0, t) * CUE.fps, i = Math.max(0, Math.min(arr.length - 2, Math.floor(x))); return arr[i] + (arr[i + 1] - arr[i]) * (x - i); };
+const frac = { A: PATH(CUE.pathA), B: PATH(CUE.pathB), S: PATH(CUE.pathS) };
+let figH = 1.7;                                                                   // the walkers' height this frame (13% of the frame's height at any distance)
+const wpos = (k) => { const t = window.__t || 0; return [LANE_X[k] * off, WD.top * frac[k](t), 0]; };
+const PROPX = { bed: 1.45, table: -1.5, shoe: 1.4 };
+const ppos = (name) => { const p = wpos("B"); return [p[0] + PROPX[name] * figH, p[1], 0]; };
 const AN = {
-  you: () => [0, WD.fig, 0], earth: () => [WD.rE * 0.0, -WD.rE * 0.6, 0], moon: () => [-WD.rM * 0.0, WD.yMoon + WD.rM * 1.25, 0],
-  laneA: () => [LANE_X.A * off, WD.top, 0], laneS: () => [LANE_X.S * off, WD.top * frac.S(window.__t || 0), 0],
-  capsule: () => [3 * off, WD.top * 0.55, 0],
+  you: () => [0, WD.fig, 0], earth: () => [0, -WD.rE * 0.6, 0], moon: () => [0, WD.yMoon + WD.rM * 1.25, 0],
+  walkA: () => wpos("A"), walkB: () => wpos("B"), walkS: () => wpos("S"),
+  bed: () => ppos("bed"), table: () => ppos("table"), shoe: () => ppos("shoe"),
+  capsule: () => [3 * off, WD.top * E.inout2(seg(window.__t || 0, CUE.apollo[0], CUE.apollo[1])), 0],
 };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
@@ -156,33 +168,44 @@ window.seek = function (t) {
   moon.set({ opacity: 0, cam: camera.position.toArray(), grid: 1 });
   desk.group.visible = d < 90;
   desk.update({ grid: 1 - seg(Math.log10(d), 1.3, 1.9), pool: [pose.target[0], pose.target[2]], casters: [[0, WD.fig, 0, 0.35]], span: Math.max(800, d * 8) });
-  you.group.visible = d < 4e3 && (shot !== "end" || t > beat("tease").t1 - 0.45);
+  you.group.visible = d < 4e3 && (shot !== "end" || t > beat("tease").t1 - 0.9);
 
   // the lanes spread as the walk begins, then rest
   const spread = E.inout2(seg(t, CUE.spread[0], CUE.spread[1]));
   off = d * 0.05 * (space ? spread : 0) * (shot === "end" ? 1 - E.inout2(seg(t, FILM.endCard + 0.3, FILM.endCard + 1.6)) : 1);
+  if (d < 3e5) off = d * 0.05 * spread;                                           // in a chase the lanes sit a body apart
+  figH = 0.055 * d;
+  const hs = figH / WD.fig, outG = shot === "end" ? gate : 1;
   const fA = frac.A(t), fB = frac.B(t), fS = frac.S(t);
-  const started = seg(t, CUE.clockA[0][0] - 0.05, CUE.clockA[0][0] + 0.3);
-  const raceOn = seg(t, CUE.clockB[0][0] - 0.05, CUE.clockB[0][0] + 0.3);
-  const top = WD.top, pre = shot === "front" || t < CUE.clockA[0][0];
-  // before the walk: a single thin line up from you (the road to the Moon), blue, full height
-  const hookLine = pre ? 1 : 0;
+  const top = WD.top, pre = shot === "front" || shot === "pull" || t < CUE.spread[0];
+  const endLine = shot === "end" ? E.inout2(seg(t, beat("tease").t1 - 0.9, beat("tease").t1 - 0.3)) : 0;   // the loop: the line and the little Moon return once the card has lifted
   const setLane = (k, x, f, w, o) => { const l = lane[k]; l.visible = o > 0.003; l.material.opacity = o; place(l, x, 0, w, Math.max(1e-6, top * f)); };
-  const endLine = shot === "end" ? E.inout2(seg(t, beat("tease").t1 - 0.45, beat("tease").t1 - 0.05)) : 0;   // the loop: the line and the little Moon return once the card has lifted
-  setLane("B", LANE_X.B * off, hookLine || endLine > 0 ? 1 : fB * raceOn, px * (hookLine || endLine > 0 ? 0.6 : 1.1), hookLine ? 0.8 : shot === "end" ? Math.max(raceOn * gate, 0.8 * endLine) : raceOn);
-  setLane("A", LANE_X.A * off, fA, px * 0.9, started * (shot === "end" ? gate : 1));
-  setLane("S", LANE_X.S * off, fS, px * 0.7, raceOn * (shot === "end" ? gate : 1));
-  const bd = (k, x, f, r, o, y0 = 0) => { const b = bead[k]; b.visible = o > 0.003; b.material.opacity = o; b.position.set(x, y0 + (top - y0) * f, 0); b.scale.set(r, r, 1); };
-  bd("A", LANE_X.A * off, fA, px * 2.4, started);
-  bead.B.visible = false;
-  const wk = space && !hookLine ? raceOn * (shot === "end" ? gate : 1) : 0, hs = d * 0.026 / WD.fig;
-  walker.group.visible = wk > 0.02; walker.group.scale.setScalar(hs); walker.group.position.set(LANE_X.B * off, top * fB, 0);
-  bd("S", LANE_X.S * off, fS, px * 2.2, raceOn);
-  // the Apollo capsule: a small marker bead up the line in three days, trailing a short streak, beside the others
+  const hookLine = pre ? 1 : 0, lanesOn = !pre && shot !== "end" ? 1 : shot === "end" ? gate : 0;
+  setLane("B", LANE_X.B * off, hookLine || endLine > 0 ? 1 : fB, px * (hookLine || endLine > 0 ? 0.6 : 1.0), hookLine ? 0.8 : shot === "end" ? Math.max(0.0, 0.8 * endLine) : seg(t, CUE.run[2] - 0.2, CUE.run[2] + 0.3));
+  setLane("A", LANE_X.A * off, fA, px * 0.9, seg(t, CUE.spread[1], CUE.run[0]) * lanesOn);
+  setLane("S", LANE_X.S * off, fS, px * 0.7, seg(t, CUE.run[2], CUE.run[1]) * lanesOn);
+  // the walkers: big figures, each bobbing as it walks, still when it stops
+  const moving = (P, tt) => Math.abs(P(tt + 0.05) - P(tt - 0.05)) > 1e-6;
+  const walk = (w, x, f, P, on, hex) => {
+    const mv = moving(P, t) ? 1 : 0, ph = t * 7.5;
+    w.group.visible = on > 0.02; w.group.scale.setScalar(hs);
+    w.set({ at: [x, top * f + (mv ? Math.abs(Math.sin(ph)) * 0.035 * figH : 0) + hs * WD.fig / 2, 0], arms: mv ? 0.12 + 0.12 * Math.sin(ph) : 0.04, tilt: mv ? 0.05 : 0 });
+  };
+  const wkAOn = seg(t, CUE.spread[1] - 0.2, CUE.spread[1] + 0.3) * lanesOn * (pre ? 0 : 1);
+  const wkBOn = seg(t, CUE.run[2] - 0.2, CUE.run[2] + 0.3) * lanesOn * (pre ? 0 : 1);
+  walk(wkA, LANE_X.A * off, fA, frac.A, wkAOn);
+  walk(wkB, LANE_X.B * off, fB, frac.B, wkBOn);
+  walk(wkS, LANE_X.S * off, fS, frac.S, seg(t, CUE.run[2], CUE.run[1]) * lanesOn * (pre ? 0 : 1));
+  for (const k of ["A", "B", "S", "C"]) bead[k].visible = false;
+  // the stops: a bed, a table and a shoe pop in beside the blue walker, one after another
+  const popU = (t0, t1) => E.back(seg(t, t0, t0 + 0.32)) * (1 - E.in3(seg(t, t1 - 0.28, t1)));
+  const prp = (g, name, t0, t1, rot) => { const u = Math.max(0, popU(t0, t1)), p = wpos("B"); g.visible = u > 0.01 && t > t0 && t < t1; g.scale.setScalar(hs * u); g.position.set(p[0] + PROPX[name] * figH, p[1], 0); g.rotation.y = rot + 0.25 * Math.sin(t * 2); };
+  prp(propBed, "bed", CUE.props.bed, CUE.props.bed + 1.0, -0.55); prp(propTable, "table", CUE.props.table, CUE.props.table + 1.0, 0.5); prp(propShoe, "shoe", CUE.props.shoe, CUE.props.shoe + 1.2, -0.5);
+  // the Apollo capsule: a marker bead up the line, landing on "three days", trailing a streak (size set by the camera's distance)
   const cap = E.inout2(seg(t, CUE.apollo[0], CUE.apollo[1]));
-  const capOn = seg(t, CUE.apollo[0] - 0.05, CUE.apollo[0] + 0.2) * (shot === "end" ? gate : 1);
-  setLane("C", 3 * off, cap, px * 0.8, capOn);
-  bd("C", 3 * off, cap, px * 2.6, capOn);
+  const capOn = seg(t, CUE.apollo[0] - 0.05, CUE.apollo[0] + 0.12) * (1 - E.in3(seg(t, CUE.apollo[1] + 0.5, CUE.apollo[1] + 1.4))) * outG;
+  setLane("C", 3 * off, cap, px * 0.9, 0.7 * capOn);
+  const cb = bead.C; cb.visible = capOn > 0.003; cb.material.opacity = capOn; cb.position.set(3 * off, top * cap, 0); cb.scale.set(figH * 0.17, figH * 0.17, 1);
 
   // the ruler: thirty Earths, 29 rings between you and the Moon, each appearing in turn
   for (let i = 1; i < WD.n; i++) {
@@ -192,15 +215,17 @@ window.seek = function (t) {
     S3.set(r, r, 1); P3.set(0, -WD.rE + i * WD.earthKm * 1e3, 0); M.compose(P3, Q, S3); rings.setMatrixAt(i - 1, M);
   }
   rings.instanceMatrix.needsUpdate = true;
-  rings.visible = space;
+  const near = 1 - seg(Math.log10(d), 7.9, 8.3);
+  dust.visible = near > 0.02 && shot !== "front" && shot !== "pull" && shot !== "end"; dust.material.opacity = 0.5 * near;
+  rings.visible = space; rings.material.opacity = 0.9 * seg(Math.log10(d), 8.2, 8.6);
   const pl = seg(Math.log10(d), 5.2, 6.8) * (shot === "end" ? gate : 1);
   ringE.set(pl); ringM.set(pl);
   const lm = seg(d, 80, 120) * (1 - seg(Math.log10(d), 6.2, 6.6)) * (shot === "end" ? gate : 1);
   limbO.visible = limbI.visible = lm > 0.01; limbO.material.opacity = 0.9 * lm; limbI.material.opacity = 1;
   place(limbO, 0, -WD.rE, WD.rE + px * 0.9, WD.rE + px * 0.9); place(limbI, 0, -WD.rE, WD.rE - px * 0.9, WD.rE - px * 0.9);
   const rE = Math.max(WD.rE, px * 3.4), rM = Math.max(WD.rM, px * 3.0);
-  ringE.mesh.position.set(0, -rE, 0); ringE.mesh.scale.set(rE, rE, rE);
-  ringM.mesh.position.set(0, WD.yMoon, 0); ringM.mesh.scale.set(rM, rM, rM);
+  ringE.mesh.position.set(0, -rE, -1.35 * rE); ringE.mesh.scale.set(rE, rE, rE);
+  ringM.mesh.position.set(0, WD.yMoon, -1.35 * rM); ringM.mesh.scale.set(rM, rM, rM);
   // the hook's small moon on the line above you: fades once the real one is findable
   const mk0 = 1 - E.inout2(seg(Math.log10(d), 1.5, 2.3));
   mark.visible = mk0 > 0.01 && d < 4e3 && (shot !== "end" || endLine > 0.01); mark.material.opacity = 0.9 * mk0 * (shot === "end" ? endLine : 1);
@@ -209,7 +234,7 @@ window.seek = function (t) {
   for (const c of craters) { c.m.visible = mark.visible; c.m.material.opacity = 0.9 * mk0; c.m.position.set(c.x * mr, my + c.y * mr, 0); c.m.scale.set(c.r * mr, c.r * mr, 1); }
 
   hud.update(t);
-  const tail = E.inout2(seg(t, beat("tease").t1 - 0.6, beat("tease").t1));
+  const tail = E.inout2(seg(t, beat("tease").t1 - 1.1, beat("tease").t1 - 0.35));
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);
   spine.update(t, gate);

@@ -36,8 +36,14 @@ All beats are under the limit of 8. Several grades are low because the sentences
 - Picture: shaded 3D Earth and Moon, a blue walker figure in stop-and-go steps (8 hours a day: it stops to sleep, eat, tie a shoe), a camera pan up the line in the normal beat, labels staged one at a time, the work card's sum on one line, the end card showing "≈ 26 years" with the line cleared, and the last frame equal to frame 0.
 - Claims: c4, c6, c8, c10 relabelled as calculations; c5 as an assumption; the Bohannon link removed from them; the footnote names "NASA Science, Moon Facts".
 
+## Review round 2 changes (9 Nov 2026)
+- Layout rebuilt for the whole 9:16 frame: a dive from the wide view onto each walker and a chase, with big figures (13% of the frame) low in it, the Earth and the Moon big at the start and the arrival, star dust for depth, and three vignettes at the stops (bed, table, shoe, timed to "sleep", "eat" and "shoe"). Camera moves at 10.5 s (pan up the line), 17 s and 31 s (a swing round the walker) and 62 s (a push in toward the Moon).
+- The 10,000-step label holds until "a hundred and forty"; the counter is hidden while the work card is up, so nothing overlaps; the nonstop label is a badge so it no longer overlaps the Moon label; the lone "≈" at 24.5 s is gone (the "≈" and its figure are now one term).
+- The end is a calm hold on frame 0's picture; the loop's whole-frame PSNR is 21.5 dB and 29.1 dB outside the HUD (title, badge, caption, label).
+- Runtime is 72.0 s. c5's `source_url` in the ledger must be a web address for the linter (it errors on "none"); the table prints "none (assumption)".
+
 ## Status (9 Nov 2026)
 - Word timings: aligned with the owner-approved Parakeet pin (8 word ends clamped to the pauses). `film.json` is built from real timings.
-- Draft render: `out/envelope-007-9x16-draft.mp4` (540x960, 15 fps, 73.8 s, AAC -14.1 LUFS / -1.6 dBTP, sync PASS), 0 audit warnings. Final not rendered, awaiting the gate.
+- Draft render: `out/envelope-s2e01-9x16-draft.mp4` (540x960, 15 fps, 72.0 s, AAC -14.1 LUFS / -1.8 dBTP, sync PASS), 0 audit warnings. Final not rendered, awaiting the gate.
 - Sources: five of nine claims read by the builder (SOURCE-READ); none OK until a person opens it.
 - Rhythm: see scene-table.md for the two stretches that run longer than 4 s between distinct changes.
