@@ -1,6 +1,6 @@
 # Scene table: Skin Sense No. 04, The message behind a frown (66.5 s)
 
-Times are film seconds (voice `vo/lines.json`, word times `vo/words.json`, Parakeet). Each row is a visual change; the bracket is the time since the last one. The "art" is a **procedural placeholder** (`set/gen_art.py`, marked on screen); plates, charts, pills, the scan line and every caption are drawn in code. Footers on every frame: "Conceptual illustration · not to scale", "Education, not medical advice". No disease or risk line is shown over skin or a person.
+Times are film seconds (voice `vo/lines.json`, word times `vo/words.json`, Parakeet). Each row is a visual change; the bracket is the time since the last one. The pictures are the owner's art (`art/ep0N-0M.webp`) where present, else marked procedural placeholders (`set/gen_art.py`); plates, charts, pills, the scan line, soft overlays and every caption are drawn in code. Footers on every frame: "Conceptual illustration · not to scale", "Education, not medical advice". No disease or risk line is shown over skin or a person.
 Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm, not the studio mixer or `qa.py`). Longest gap between changes: 3.7 s (0 gaps over 4 s).
 
 | time | narration | visual change (and on-screen text) | sound |

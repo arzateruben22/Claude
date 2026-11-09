@@ -17,4 +17,4 @@
 
 **Pacing** (`scene-table.md`): 22 visual changes in 68 s; longest gap 5.0 s (six gaps over 4 s: reading time for the chart plates and the to-scale bars, and the 3.2 s hold after the twist).
 
-**First-listen check:** not done with a real listener. **Still blocked / not done:** clean text-free art (procedural placeholder, marked); score and effects; final-tier render; every source OPEN (none page-read, none person-checked); dermatologist sign-off.
+**First-listen check:** not done with a real listener. **Still blocked / not done:** (the owner's five pictures are in; picture 4 reads deep plum, so "UV camera view · stylised" stays on screen as a badge and a pill); score and effects; final-tier render; every source OPEN (none page-read, none person-checked); dermatologist sign-off.
