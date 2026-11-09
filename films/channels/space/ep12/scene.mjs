@@ -100,6 +100,7 @@ const moonUp = createPlanet({ radius: 12, surface: moonSurface({ width: 1024, se
 const emE = createPlanet({ radius: 2.5, surface: earthSurface({ width: W >= 1000 ? 2048 : 1024 }), tilt: 0, pin: 0, rimDay: 0.5, rimNight: 0.5, segments: 64 }); const emEg = new THREE.Group(); emEg.position.fromArray(EMP); emEg.add(emE.group); scene.add(emEg);
 const emM = createPlanet({ radius: 0.7, surface: moonSurface({ width: 512, seed: 9 }), tilt: 0, pin: 0, rimDay: 0.5, rimNight: 0.4, segments: 48 }); const emMg = new THREE.Group(); emMg.position.set(EMP[0] + 28, EMP[1], EMP[2]); emMg.add(emM.group); scene.add(emMg);
 const emRing = ring({ color: pos(line("teal", 0.95)), width: 5, opacity: 0 }); scene.add(emRing.mesh);
+const emRing2 = ring({ color: pos(line("teal", 0.8)), width: 3, opacity: 0 }); scene.add(emRing2.mesh);
 
 // ── the 2-D layer: the dips ──────────────────────────────────────────────────────────────────────
 const tc = document.createElement("canvas");
@@ -165,7 +166,8 @@ let lastAmp = -1;
 window.seek = function (t) {
   if (!LOOPEL) makeLoop();
   const dipT = CUE.dip[4] + 0.15, tt = t >= dipT ? 0 : t;
-  const cm = camAt(tt); camera.position.fromArray(cm.p); camera.fov = cm.fov; camera.updateProjectionMatrix(); camera.lookAt(...cm.l); camera.updateMatrixWorld();
+  const cm = camAt(tt); { const dd = Math.hypot(cm.p[0] - cm.l[0], cm.p[1] - cm.l[1], cm.p[2] - cm.l[2]) * 0.03; cm.p = [cm.p[0] + Math.sin(tt * 0.9) * dd, cm.p[1] + Math.sin(tt * 0.65 + 1.0) * dd * 0.6, cm.p[2] + Math.sin(tt * 0.5 + 2.0) * dd * 0.5]; }   // a slow drift: the picture is never still
+  camera.position.fromArray(cm.p); camera.fov = cm.fov; camera.updateProjectionMatrix(); camera.lookAt(...cm.l); camera.updateMatrixWorld();
   const D = CUE.dip, inBeach = tt >= D[0] + 0.1 && tt < D[1] + 0.1, inStreet = tt >= D[2] + 0.1 && tt < D[3] + 0.1, inEM = tt >= D[3] + 0.1 && tt < CUE.end + 1;
   const onMoon = !inBeach && !inStreet && !inEM;
   moonMesh.visible = onMoon; floorBig.visible = onMoon; lander.visible = onMoon && ((tt >= CUE.orbiters - 0.2 && tt < CUE.c) || tt >= CUE.pull + 0.5); eg.visible = onMoon; beachMesh.visible = inBeach; rain.visible = inBeach; grains.visible = onMoon; street.visible = inStreet; mgU.visible = inStreet; emEg.visible = inEM; emMg.visible = inEM;
@@ -182,10 +184,11 @@ window.seek = function (t) {
   gG.attributes.position.needsUpdate = true; gG.attributes.alpha.needsUpdate = true;
   // the street Moon rises; the Earth and Moon readout
   mgU.position.y = 17 + 7 * E.inout3(seg(tt, CUE.tk, CUE.rd)); moonUp.set({ center: [0, 0, 0], sunDir: [-0.4, 0.2, 0.9], sun: 1, rimNight: 0.4, spin: 0.3 + 0.02 * tt });
-  emE.set({ center: [0, 0, 0], sunDir: [0.6, 0.3, 0.7], sun: 1, rimNight: 0.5, spin: -0.9 + 0.08 * tt }); emM.set({ center: [0, 0, 0], sunDir: [-0.6, 0.3, 0.7], sun: 1, rimNight: 0.4, spin: 0.2 });
+  emE.set({ center: [0, 0, 0], sunDir: [0.6, 0.3, 0.7], sun: 1, rimNight: 0.5, spin: -0.9 + 0.45 * tt }); emM.set({ center: [0, 0, 0], sunDir: [-0.6, 0.3, 0.7], sun: 1, rimNight: 0.4, spin: 0.2 });
   earthSky.set({ center: [0, 0, 0], sunDir: [0.5, 0.2, 0.85], sun: 1, rimNight: 0.5, spin: -0.9 + 0.03 * tt });
   const u = E.inout3(seg(tt, CUE.light + 0.1, CUE.quarter + 1.0)), rr = 28 * u;
   emRing.arc({ center: EMP, r: Math.max(0.01, rr), e1: [1, 0, 0], e2: [0, 0, -1] }).set({ opacity: inEM && u > 0.002 ? 0.95 * (1 - 0.3 * u) * (1 - fadeIn(tt, CUE.end - 0.3, 0.3)) : 0 });
+  { const ph = Math.max(0, tt - (CUE.quarter + 0.6)) * 0.55 % 1, on2 = inEM && tt > CUE.quarter + 0.6; emRing2.arc({ center: EMP, r: Math.max(0.01, 3 + 25 * ph), e1: [1, 0, 0], e2: [0, 0, -1] }).set({ opacity: on2 ? 0.55 * (1 - ph) * (1 - fadeIn(tt, CUE.end - 0.3, 0.3)) : 0 }); }
   overlay2d(t);
   hud.update(t); tRing.update(t); eRing.update(t);
   const lk = fadeIn(t, FILM.loop0, 0.45);

@@ -68,8 +68,9 @@ CAMK = [
     (CUE["tonight"], [ST[0] + 1.5, 1.7, 15], [ST[0], 17, -90], 48),
     (t_rd - 0.3, [ST[0] + 2.0, 1.8, 14], [ST[0], 20, -90], 48),
     (t_rd + 0.3, [EMP[0] + 14, 70, EMP[2] + 120], [EMP[0] + 14, 0, EMP[2] + 50], 40),     # Earth and Moon, from above
-    (t_end - 0.15, [EMP[0] + 16, 74, EMP[2] + 124], [EMP[0] + 14, 0, EMP[2] + 50], 40),
-    (f.duration - 0.7, [EMP[0] + 16, 74, EMP[2] + 124], [EMP[0] + 14, 0, EMP[2] + 50], 40),   # hold the Earth-Moon view behind the end card until the loop
+    (CUE["quarter"] + 1.0, [EMP[0] + 6, 64, EMP[2] + 110], [EMP[0] + 14, 0, EMP[2] + 50], 40),
+    (t_end - 0.15, [EMP[0] + 24, 80, EMP[2] + 130], [EMP[0] + 14, 0, EMP[2] + 50], 40),
+    (f.duration - 0.7, [EMP[0] + 8, 66, EMP[2] + 114], [EMP[0] + 14, 0, EMP[2] + 50], 40),   # hold the Earth-Moon view behind the end card until the loop
     (f.duration, [1.5, 0.75, 2.2], [0, 0.0, 0], 38),
 ]
 CAMK = [{"t": round(t, 4), "p": p, "l": l, "fov": fv} for t, p, l, fv in CAMK]

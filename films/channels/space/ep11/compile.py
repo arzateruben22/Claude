@@ -65,7 +65,8 @@ CAMK = [
     (t_tk, [8, 2.5, 22], [6, 0.3, 0], 38),                                        # Saturn in the tank, rings level
     (CUE["who"], [3, 1.5, 21], [6, 0.3, 0], 38),
     (t_rd + 0.5, [-70, 170, 400], [-70, 0, 0], 44),                               # out: the Sun and Saturn
-    (t_end - 0.15, [-70, 176, 408], [-70, 0, 0], 44),
+    (CUE["reach"] + 1.2, [-52, 150, 372], [-68, 0, 0], 44),
+    (t_end - 0.15, [-95, 160, 395], [-72, 0, 0], 44),
     (f.duration - 0.7, [-70, 176, 408], [-70, 0, 0], 44),                        # hold the read-out view behind the end card until the loop
     (f.duration, [14, 4, 20], [6, 0.2, 0], 38),
 ]
