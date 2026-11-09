@@ -69,9 +69,9 @@ BADGES = [
     {"id": "sim3", "kind": "tag", "text": "Simulation, sped up", "t0": cut("takeaway"), "t1": ENDSHOW - 0.3, "slot": "tr"},
 ]
 SPINE = [
-    {"t0": cut("normal"), "t1": round(cut("why") - 0.1, 4), "label": "big ball's height", "unit": "cm", "dp": 0},
-    {"t0": cut("whoa"), "t1": round(A("vo05:And") - 0.2, 4), "label": "big ball's height", "unit": "cm", "dp": 0},
-    {"t0": cut("measure"), "t1": round(ENDSHOW - 0.3, 4), "label": "big ball's height", "unit": "cm", "dp": 0},
+    {"t0": cut("normal"), "t1": round(cut("why") - 0.1, 4), "label": "ball centre height", "unit": "cm", "dp": 0},
+    {"t0": cut("whoa"), "t1": round(A("vo05:And") - 0.2, 4), "label": "ball centre height", "unit": "cm", "dp": 0},
+    {"t0": cut("measure"), "t1": round(ENDSHOW - 0.3, 4), "label": "ball centre height", "unit": "cm", "dp": 0},
 ]
 SPINE_AT = [[-1e9, [0.5, 0.262]]]
 ARROWS_W = [A("vo05:Grains"), A("vo05:And") + 0.2]
@@ -87,7 +87,7 @@ def key(t, v, ease="p2"):
 
 WC = PR["Wc"]
 CX = WC / 2
-YC = 19.0
+YC = 18.9
 D = 70.0
 WIDE = view([CX, YC, 0.0], D)
 PANX = REV["ox"] + CX
@@ -97,9 +97,9 @@ CAM = {
     "change": [key(cut("change"), {**WIDE, "yaw": 6.0}), key(cut("why"), {**WIDE, "yaw": -4.0}, "sine")],
     "why": [key(cut("why"), {**WIDE, "yaw": -4.0}), key(A("vo04:Each"), view([CX, YC, 0.0], D, 0.0, 6.0), "p3"), key(cut("whoa"), view([CX, YC, 0.0], D, 0.0, -6.0), "sine")],
     "whoa": [key(cut("whoa"), {**WIDE, "yaw": 0.0}), key(A("vo05:And") - 0.2, {**WIDE, "yaw": 5.0}, "sine"), key(A("vo05:And") + 0.8, view([PANX, YC, 0.0], D, 0.0, 4.0), "p3"), key(cut("measure"), view([PANX, YC, 0.0], D - 3.0, 0.0, -5.0), "sine")],
-    "measure": [key(cut("measure"), {**WIDE, "yaw": -4.0}), key(cut("takeaway"), {**WIDE, "yaw": 5.0}, "sine")],
+    "measure": [key(cut("measure"), {**WIDE, "yaw": -4.0}), key(round(cut("measure") + 3.5, 4), {**WIDE, "yaw": 0.0}, "sine"), key(cut("takeaway"), {**WIDE, "look": [CX, YC + 1.6, 0.0], "yaw": 5.0}, "sine")],
     "takeaway": [key(cut("takeaway"), view([CX, YC + 1.6, 0.0], D, 0.0, 8.0)), key(cut("tease"), view([CX, YC + 1.6, 0.0], D, 0.0, -8.0), "sine")],
-    "tease": [key(cut("tease"), view([CX, YC, 0.0], 80.0)), key(DUR, view([CX, YC, 0.0], 92.0), "sine")],
+    "tease": [key(cut("tease"), view([CX, YC + 1.6, 0.0], 80.0)), key(DUR, view([CX, YC + 1.6, 0.0], 92.0), "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 TITLE = {"series": "Reality Rulebook · Season 2 · Episode 3", "title": "The nut that *rises*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": -0.7}
@@ -107,7 +107,7 @@ film = {
     "id": "reality-rulebook-s2e03", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/, sim.json and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "cue": {"cuts": CUTS, "height": HEIGHT_W, "arrows": ARROWS_W, "ghosts": GHOSTS}, "spine": SPINE, "spineAt": SPINE_AT,
-    "sim": SIM, "rev": REV, "replay": {"t0": cut("measure"), "rate": RP, "note": "1.6× faster"}, "endShow": ENDSHOW, "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
+    "sim": SIM, "rev": REV, "replay": {"t0": cut("measure"), "rate": RP, "note": "1.6× real time"}, "endShow": ENDSHOW, "speedEnd": round(A("vo05:And") - 0.25, 4), "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
     "noteSlots": {"speed": "tl", "hook": "tr"}, "speedNote": "2× slower",
     "captions": [pg for pg in phrase_captions(f, max_chars=24, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endCard": EC,
     "end": {"title": "Next drop: the coffee *ring*", "follow": "Follow Reality Rulebook", "foot": "Mathijssen et al., arXiv 2201.12128 (2022)."},

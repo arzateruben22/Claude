@@ -5,7 +5,7 @@ S2E03 (folder ep09).
 About 68 s, 9:16, narrated by a synthetic voice (af_bella at speed 0.85, labeled as AI), with an original score.
 
 - One world: a glass jar of small grains with one big ball at the bottom, shaken. The grains are a 2D computer simulation
-  (soft discs, seeded, run once by `sim.mjs` and stored in `sim.json`), drawn as a time-lapse (badged). It is our model, not a
+  (soft discs, seeded, run once by `sim.mjs` and stored in `sim.json`), drawn 2× slower than its own clock (badged). It is our model, not a
   measurement: it shows the big disc rising through the bed, and says so. The jar is drawn in 3-D (a thin glass cell, grains at fixed depths) from that 2-D model; the reverse-effect jar in the whoa beat is an illustration (a frozen snapshot with a lighter ball moved by hand), badged as such.
 - The facts are from one review of the physics of food (Mathijssen et al., arXiv 2201.12128): larger grains often rise when
   mixed grains are shaken (the Brazil nut effect), buoyancy alone doesn't explain it, percolation and granular convection
@@ -22,7 +22,7 @@ vo: Where will the nut end up? {-} Starting *underneath* everything. {-}
 ## normal {shot: wide, a hand shakes the jar · labels: "small grains", "one big ball" · picture-only 2 s · pre: 0.12 · energy: 0.45} (3.7–16.3 s)
 vo: Shake a jar of mixed nuts, or a box of cereal, and the biggest pieces often rise to the *top*. {c1} Scientists call it the Brazil nut effect. {c2}
 
-## change {shot: time-lapse of the jar shaking, the big ball climbing · labels: "time-lapse", "big ball" · pre: 0.1 · energy: 0.5} (16.3–22.4 s)
+## change {shot: the jar shaking, the big ball climbing · labels: "big ball" · pre: 0.1 · energy: 0.5} (16.3–22.4 s)
 vo: You'd expect heavy things to sink. {-} Yet it happens even when the big pieces are *heavier*. {c3}
 
 ## why {shot: a cutaway on the big ball: small grains dropping into the gap under it each shake · picture-only 2 s · pre: 0.2 · energy: 0.55} (22.4–34.9 s)
@@ -31,7 +31,7 @@ vo: Here is one reason. {-} Each shake lifts the grains, and small ones tumble i
 ## whoa {shot: pull back to the whole jar: grains flowing up the walls and down the middle, then a second jar where the big ball sinks · picture-only 3 s · pre: 0.15 · energy: 0.75} (34.9–49.3 s)
 vo: Scientists have found several effects at work. {c6} Grains can flow in a loop, up the walls and down the *middle*. {c7} And in some jars, the big ones sink instead. {c8}
 
-## measure {segment: measure · a replay of the climb from the bottom, 1.6x faster than the main run (badge: "Replay · 1.6× faster"), the height counts up from about 4 cm · pre: 0.2 · energy: 0.5} (49.3–58.7 s)
+## measure {segment: measure · a replay of the climb from the bottom at 1.6 s of simulated shaking per second of film (badge "1.6× real time"; the main run is 0.5 s per second, badged "2× slower"), the ball-centre height counts up from about 4 cm · pre: 0.2 · energy: 0.5} (49.3–58.7 s)
 vo: *Measure it*: in this simulation, the big disc climbs from the bottom to near the top. {c9} It takes about ten seconds of shaking. {c12}
 
 ## takeaway {shot: hold on the big ball sitting among the top grains · badge: "Simulation, sped up" (the replay keeps running) · pre: 0.25 · energy: 0.45} (58.7–67.2 s)
@@ -43,7 +43,7 @@ end card: "Next drop: the coffee ring" · "Follow Reality Rulebook" · footnote:
 
 ## Notes
 - c1-c3, c6-c8, c10 are SOURCE-READ against the arXiv review (full text read); c4 and c5 are read for percolation but the
-  "propped up" step is our plain wording of the mechanism (OPEN); c9 is our own simulation (OPEN, not a published result);
-  c11 is ep10's tease (Deegan 1997, not read).
+  "propped up" step is our plain wording of the mechanism (OPEN); c9 is our own simulation (OPEN, not a published result; the readout is the ball's centre height, 3.9 cm at the start);
+  c11 is ep10's tease (Deegan 1997, search excerpt only, not opened); c12 is our own simulation (OPEN: the disc passes 15 cm after about 10 s of simulated shaking).
 - Listen at T0: "Brazil nut", "heavier", "popcorn", "ring".
 - TODO: the handle, a physicist's sign-off, the AI-voice label in the post.

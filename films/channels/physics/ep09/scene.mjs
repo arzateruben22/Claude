@@ -83,6 +83,8 @@ const baseMat = new THREE.MeshStandardMaterial({ color: new THREE.Color("#3B3F48
 const sheenMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.14, depthWrite: false });
 const mtx = new THREE.Matrix4(), qa = new THREE.Quaternion(), qb = new THREE.Quaternion(), s3 = new THREE.Vector3(), p3 = new THREE.Vector3(), eu = new THREE.Euler(), ax = new THREE.Vector3();
 // a cell = a glass jar: grains (3 nut shapes), the big ball, a ring marker, a base that shakes with the floor
+// no motion-blur accumulation: the shaken grains alias at 30 fps and the blur smears them into double rings
+if (window.CINEMA) window.CINEMA.shutter = 0;
 const mkCell = (ox, light) => {
   const jar = new THREE.Group(); jar.position.x = ox; scene.add(jar);
   const sub = new THREE.Group(); jar.add(sub);          // everything that shakes
@@ -101,7 +103,7 @@ const mkCell = (ox, light) => {
   const place = (get, bpos, shakeY) => {
     meshes.forEach((m, k) => { const list = idx[k]; for (let j = 0; j < list.length; j++) { const n = list[j], [x, y] = get(n), sp = spin[n];
       eu.set(sp[0] + y * 0.5, sp[1], sp[2] - x * 1.0); qa.setFromEuler(eu); p3.set(x, y, zOf(n)); const sz = RS * (0.92 + 0.14 * hash(n, 5)); s3.set(sz, sz, sz); mtx.compose(p3, qa, s3); m.setMatrixAt(j, mtx); } m.instanceMatrix.needsUpdate = true; });
-    ball.position.set(bpos[0], bpos[1], 0); ball.rotation.set(0.4, 0.6, -bpos[0] * 0.2); ring.position.set(bpos[0], bpos[1], DZ + 0.9);
+    ball.position.set(bpos[0], bpos[1], 0); ball.rotation.set(0.4, 0.6, -bpos[0] * 0.2); ring.position.set(bpos[0], bpos[1], DZ + 1.6);
     sub.position.y = shakeY; };
   return { jar, ball, ring, place };
 };
@@ -159,7 +161,8 @@ hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
 hud.badge("hook-speed", { kind: "speed", slot: FILM.noteSlots.hook, t0: 0, t1: CUE.cuts.normal, text: () => FILM.speedNote });
-hud.badge("speed", { kind: "speed", slot: FILM.noteSlots.speed, t0: CUE.cuts.normal, t1: null, text: (t) => (t >= FILM.replay.t0 ? FILM.replay.note : FILM.speedNote) });
+hud.badge("speed", { kind: "speed", slot: FILM.noteSlots.speed, t0: CUE.cuts.normal, t1: FILM.speedEnd, text: () => FILM.speedNote });   // not while the illustration jar is on screen: a hand-moved ball has no speed
+hud.badge("speed2", { kind: "speed", slot: FILM.noteSlots.speed, t0: FILM.replay.t0, t1: null, text: () => FILM.replay.note });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const anchorFn = (an) => {
   if (an === "ball") return (t) => { const [x, y] = posAt(t, 0); return [x + RB, y, DZ]; };
@@ -167,12 +170,12 @@ const anchorFn = (an) => {
   if (an === "under") return (t) => { const [x, y] = posAt(t, 0); return [x + 1, y - RB - 1.2, DZ]; };
   if (an === "wallL") return () => [1.6, 22, DZ + 1];
   if (an === "mid") return () => [WC / 2, 12, DZ + 1];
-  if (an === "ghost0") return () => { const [x, y] = ghostPos(0); return [x + RB, y, DZ]; };
+  if (an === "ghost0") return () => { const [x, y] = ghostPos(0); return [x + RB + 1.4, y, DZ]; };
   if (an === "lball") return (t) => { const r = revAt(t); return [JX + r.bx + RB, r.by, DZ]; };
   return () => [WC / 2, 14, 0];
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: false });
-const spineVal = (t) => Math.max(0, posAt(t, 0)[1] - RB);
+const spineVal = (t) => posAt(t, 0)[1];   // the ball's CENTRE height, as in review/sim-trace.md (3.9 cm at the start)
 const counterEls = FILM.spine.map((SPN, i) => { const o = { value: spineVal, fmt: (v) => v.toFixed(0), unit: "cm", label: SPN.label, t0: SPN.t0, t1: SPN.t1, minCh: 2 }, el = hud.counter(i ? "spine" + (i + 1) : "spine", o); placeSpine(o, el, hud, W, H, FILM.spineAt); return el; });
 const ES = FILM.endShow, endEl = hud.end({ t0: ES - 0.3, d: 0.3, ...FILM.end });
 const footEl = document.createElement("div"); footEl.className = "rf-foot"; footEl.textContent = FILM.end.foot; endEl.appendChild(footEl);
@@ -193,7 +196,7 @@ window.seek = function (t) {
   const ak = win(t, CUE.arrows);
   arrowsUp.forEach((a) => { a.visible = ak > 0.01; a.children.forEach((m) => { m.material.opacity = ak; }); });
   arrowsDown.forEach((a) => { a.visible = ak > 0.01; a.children.forEach((m) => { m.material.opacity = ak; }); });
-  ghosts.forEach((g, k) => { const tk = CUE.ghosts.every * k; g.visible = t >= CUE.ghosts.t0 && t < CUE.ghosts.t1 && simT(t) >= tk + 0.1; if (g.visible) { const [gx, gy] = ghostPos(k); g.position.set(gx, gy, DZ + 1.0); } });
+  ghosts.forEach((g, k) => { const tk = CUE.ghosts.every * k; g.visible = t >= CUE.ghosts.t0 && t < CUE.ghosts.t1 && simT(t) >= tk + 0.1; if (g.visible) { const [gx, gy] = ghostPos(k); g.position.set(gx, gy, DZ + 1.7); } });
   cyc.update({ grid: 1, casters: [[WC / 2, 2, 0, 11], [JX + WC / 2, 2, 0, 11]] });
   dropT(t); dropE(t);
   hud.update(t);
