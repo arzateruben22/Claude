@@ -6,7 +6,7 @@ Every moment hangs on a beat or a spoken word; every number on screen comes from
 One 3-D world (not to scale where badged): lunar dust (a real height-field with boot prints, a trail, a lander base and rover tracks) in low light
 with Earth in the sky (hook); a beach where the same print washes out under rain and wind (c3 contrast, shown under a dip); grains striking the dust,
 slowly (c4, c5); the camera pulling back from one print to the whole site (c21); the Moon rising over a street at night (c22); a ring from Earth to
-the Moon for about one and a quarter seconds (c6). The last frame is frame 0's pose (a replay loops).
+the Moon for about 1.3 seconds (c6). The last frame is frame 0's pose (a replay loops).
 """
 import json
 import sys
@@ -29,12 +29,12 @@ t_n, t_c, t_why, t_w, t_tk, t_rd = (B[k]["t0"] for k in ("normal", "change", "wh
 t_end = A("vo08:That's", -0.25)
 CUE = {
     "n": t_n, "c": t_c, "why": t_why, "w": t_w, "tk": t_tk, "rd": t_rd, "end": t_end,
-    "apollo": A("vo02:Apollo"), "dust": A("vo02:dust"), "orbiters": A("vo02:orbiters"), "tracks": A("vo02:tracks"), "still": A("vo02:still"),
+    "apollo": A("vo02:Apollo"), "dust": A("vo02:dust"), "orbiters": A("vo02:orbiter"), "tracks": A("vo02:tracks"), "still": A("vo02:still"),
     "earth": A("vo03:Earth"), "days": A("vo03:days"), "air": A("vo03:air"), "rain": A("vo03:rain#2"),
     "slow": A("vo04:slow"), "grains": A("vo04:grains"), "time": A("vo04:time"), "sand": A("vo04:sandblasting"), "mm": A("vo04:millimeter"),
     "pull": A("vo05:Pull"), "site": A("vo05:site"), "lander": A("vo05:lander's"), "left": A("vo05:left"),
     "beach": A("vo06:beach"), "tonight": A("vo06:tonight"),
-    "light": A("vo07:Light"), "quarter": A("vo07:quarter"), "talk": A("vo07:talk"),
+    "light": A("vo07:Light"), "quarter": A("vo07:three"), "talk": A("vo07:talk"),
 }
 assert CUE["apollo"] < CUE["dust"] < CUE["orbiters"] < t_c < CUE["earth"] < CUE["days"] < CUE["air"] < CUE["rain"] < t_why < CUE["grains"] < CUE["mm"] < t_w < CUE["site"] < t_tk, CUE
 CUE["dip"] = [round(t_c - 0.15, 4), round(CUE["air"] - 0.35, 4), round(t_tk - 0.25, 4), round(t_rd - 0.25, 4), round(t_end - 0.15, 4)]    # beach, back to the Moon, street, Earth and Moon, loop
@@ -94,13 +94,13 @@ BADGES = [
 COUNTERS = [
     {"id": "c-hook", "label": "footprints on the Moon", "text": "still there?", "t0": 0.0, "t1": t_n},
     {"id": "c-1969", "label": "Apollo astronauts walked here", "text": "1969", "t0": CUE["apollo"], "t1": CUE["orbiters"] - 0.2},
-    {"id": "c-still", "label": "tracks from later missions", "text": "still there", "t0": CUE["orbiters"], "t1": t_c},
+    {"id": "c-still", "label": "the Apollo 11 site, from orbit", "text": "tracks still there", "t0": CUE["orbiters"], "t1": t_c},
     {"id": "c-days", "label": "a beach footprint", "text": "gone in days", "t0": CUE["earth"], "t1": CUE["air"] - 0.4},
     {"id": "c-air", "label": "the Moon has almost no air", "text": "no wind, no rain", "t0": CUE["air"], "t1": t_why - 0.2},
     {"id": "c-mm", "label": "sandblasting wears the Moon", "text": "1 mm per million years", "t0": CUE["grains"], "t1": t_w - 0.4},
     {"id": "c-left", "label": "the lander's base and the tracks", "text": "still where they were left", "t0": CUE["lander"], "t1": t_tk - 0.2},
     {"id": "c-up", "label": "look up tonight", "text": "some may still be there", "t0": CUE["tonight"] - 0.4, "t1": t_rd},
-    {"id": "c-read", "label": "light time · Earth to the Moon", "text": "about 1.25 seconds", "read": True, "t0": CUE["quarter"] - 0.8, "t1": round(t_end - 0.45, 4)},
+    {"id": "c-read", "label": "light time · Earth to the Moon", "text": "about 1.3 seconds", "read": True, "t0": CUE["quarter"] - 0.8, "t1": round(t_end - 0.45, 4)},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
@@ -111,9 +111,9 @@ for a, b in zip(spine, spine[1:]):
 
 TITLE = {"series": "One More Orbit · Season 2 · Episode 6", "title": "*Footprints*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "That's *season two*", "follow": "One More Orbit · Season 2 · Episode 6",
-       "next": "Apollo-era tracks and landers have been photographed from orbit (NASA)."}
+       "next": "NASA LRO has imaged the Apollo 11 site."}
 POSTER = A("vo05:site", 0.6)
-glue(f, {"vo02": ["Apollo astronauts", "the Moon's dust.", "tracks left by", "still there."], "vo03": ["no wind and no rain."], "vo04": ["a millimeter every", "million years."], "vo06": ["Look up tonight:", "may still be there."], "vo07": ["one and a quarter seconds."], "vo08": ["another orbit,", "same sky."]})
+glue(f, {"vo02": ["Apollo astronauts", "the Moon's dust.", "Apollo 11 landing site.", "still there."], "vo03": ["no wind and no rain."], "vo04": ["a millimeter every", "million years."], "vo06": ["Look up tonight:", "may still be there."], "vo07": ["one point three seconds."], "vo08": ["another orbit,", "same sky."]})
 LOOP0 = round(f.duration - 0.6, 4)
 film = {
     "loop0": LOOP0, "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,

@@ -16,7 +16,7 @@ direction for the compiler. In a vo line, `{cN}` after a sentence ties it to `cl
 vo: Are the footprints still *there*? {-} On the *Moon*. {-}
 
 ## normal {shot: the print in close view, then Apollo 11, 1969, an orbit view of tracks at a landing site · spine "Apollo 11: July 1969" · picture-only 0.2 s · energy: 0.45} (3.7–14.9 s)
-vo: In nineteen sixty-nine, Apollo astronauts walked in the Moon's *dust*. {c1} Since then, orbiters have photographed tracks left by later missions. {c2} The tracks are still *there*. {c20}
+vo: In nineteen sixty-nine, Apollo astronauts walked in the Moon's *dust*. {c1} Since then, an orbiter has photographed the *Apollo 11* landing site. {c2} The tracks are still *there*. {c20}
 
 ## change {shot: a footprint on Earth beach washes away under rain and wind; the same print on the Moon stays · spine "Earth: days · Moon: no wind, no rain" · picture-only 0.2 s · energy: 0.55} (14.9–23.5 s)
 vo: On Earth, wind and rain wipe a footprint out in *days*. {-} The Moon has almost no air, so no wind and no *rain*. {c3}
@@ -31,7 +31,7 @@ vo: Pull back from one boot print to the whole *site*. {-} The lander's base and
 vo: No beach on Earth keeps a footprint like that. {-} Look up tonight: some of them may *still* be there. {c22}
 
 ## readout {segment: readout · light-time readout: "1.3 s" Earth to Moon · a ping per line · picture-only 0.2 s · energy: 0.45} (57.6–65.1 s)
-vo: *Light time* to the Moon: about one and a quarter *seconds*. {c6} Close enough to talk, with a short wait. {-}
+vo: *Light time* to the Moon: about one point three *seconds*. {c6} Close enough to talk, with a short wait. {-}
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.1–71 s)
 vo: That's season two. {-} Next: *another* orbit, another question, same sky. {-}

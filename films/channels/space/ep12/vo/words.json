@@ -58,8 +58,8 @@
   },
   {
    "id": "vo02",
-   "text": "In nineteen sixty-nine, Apollo astronauts walked in the Moon's dust. Since then, orbiters have photographed tracks left by later missions. The tracks are still there.",
-   "heard": "In 1969, Apollo astronauts walked in the moon's dust. Since then, orbiters have photographed tracks left by later missions. The tracks are still there.",
+   "text": "In nineteen sixty-nine, Apollo astronauts walked in the Moon's dust. Since then, an orbiter has photographed the Apollo 11 landing site. The tracks are still there.",
+   "heard": "In 1969, Apollo astronauts walked in the moon's dust. Since then, an orbiter has photographed the Apollo 11 landing site. The tracks are still there.",
    "words": [
     {
      "w": "In",
@@ -69,31 +69,31 @@
     },
     {
      "w": "nineteen",
-     "start": 0.335,
+     "start": 0.355,
      "end": 1.52,
      "heard": false
     },
     {
      "w": "sixty-nine,",
-     "start": 0.365,
+     "start": 0.385,
      "end": 1.52,
      "heard": false
     },
     {
      "w": "Apollo",
-     "start": 1.54,
+     "start": 1.56,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "astronauts",
-     "start": 2.2,
+     "start": 2.21,
      "end": 2.88,
      "heard": true
     },
     {
      "w": "walked",
-     "start": 2.835,
+     "start": 2.84,
      "end": 3.2,
      "heard": true
     },
@@ -105,7 +105,7 @@
     },
     {
      "w": "the",
-     "start": 3.36,
+     "start": 3.25,
      "end": 3.52,
      "heard": true
     },
@@ -117,98 +117,104 @@
     },
     {
      "w": "dust.",
-     "start": 4.1,
+     "start": 4.095,
      "end": 4.72,
      "heard": true
     },
     {
      "w": "Since",
-     "start": 4.745,
-     "end": 5.12,
+     "start": 4.82,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "then,",
-     "start": 5.125,
+     "start": 5.175,
      "end": 5.52,
      "heard": true
     },
     {
-     "w": "orbiters",
-     "start": 5.685,
-     "end": 6.24,
+     "w": "an",
+     "start": 5.645,
+     "end": 5.76,
      "heard": true
     },
     {
-     "w": "have",
-     "start": 6.185,
-     "end": 6.4,
+     "w": "orbiter",
+     "start": 5.86,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 6.315,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "photographed",
-     "start": 6.485,
-     "end": 7.04,
+     "start": 6.555,
+     "end": 7.12,
      "heard": true
     },
     {
-     "w": "tracks",
-     "start": 7.04,
-     "end": 7.52,
+     "w": "the",
+     "start": 7.13,
+     "end": 7.2,
      "heard": true
     },
     {
-     "w": "left",
-     "start": 7.43,
-     "end": 7.76,
+     "w": "Apollo",
+     "start": 7.16,
+     "end": 7.84,
      "heard": true
     },
     {
-     "w": "by",
-     "start": 7.75,
-     "end": 8.0,
+     "w": "11",
+     "start": 7.86,
+     "end": 8.4,
      "heard": true
     },
     {
-     "w": "later",
-     "start": 7.975,
-     "end": 8.32,
+     "w": "landing",
+     "start": 8.31,
+     "end": 8.8,
      "heard": true
     },
     {
-     "w": "missions.",
-     "start": 8.37,
-     "end": 9.04,
+     "w": "site.",
+     "start": 8.715,
+     "end": 9.36,
      "heard": true
     },
     {
      "w": "The",
-     "start": 9.16,
-     "end": 9.21,
+     "start": 9.505,
+     "end": 9.555,
      "heard": true
     },
     {
      "w": "tracks",
-     "start": 9.26,
-     "end": 9.76,
-     "heard": true
-    },
-    {
-     "w": "are",
-     "start": 9.645,
-     "end": 9.92,
-     "heard": true
-    },
-    {
-     "w": "still",
-     "start": 9.99,
+     "start": 9.605,
      "end": 10.16,
      "heard": true
     },
     {
+     "w": "are",
+     "start": 10.08,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 10.335,
+     "end": 10.48,
+     "heard": true
+    },
+    {
      "w": "there.",
-     "start": 10.2,
-     "end": 10.56,
+     "start": 10.52,
+     "end": 10.88,
      "heard": true
     }
    ]
@@ -831,8 +837,8 @@
   },
   {
    "id": "vo07",
-   "text": "Light time to the Moon: about one and a quarter seconds. Close enough to talk, with a short wait.",
-   "heard": "Light time to the moon, about one and a quarter seconds. Close enough to talk with a short wait.",
+   "text": "Light time to the Moon: about one point three seconds. Close enough to talk, with a short wait.",
+   "heard": "Light time to the moon, about 1.3 seconds, close enough to talk with a short wait.",
    "words": [
     {
      "w": "Light",
@@ -848,104 +854,98 @@
     },
     {
      "w": "to",
-     "start": 0.715,
+     "start": 0.7,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.765,
+     "start": 0.815,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "Moon:",
-     "start": 0.99,
+     "start": 1.095,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "about",
-     "start": 1.74,
-     "end": 2.0,
+     "start": 1.815,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "one",
-     "start": 2.02,
-     "end": 2.16,
-     "heard": true
+     "start": 1.845,
+     "end": 3.2,
+     "heard": false
     },
     {
-     "w": "and",
-     "start": 2.41,
-     "end": 2.48,
-     "heard": true
+     "w": "point",
+     "start": 1.9,
+     "end": 3.2,
+     "heard": false
     },
     {
-     "w": "a",
-     "start": 2.575,
-     "end": 2.625,
-     "heard": true
-    },
-    {
-     "w": "quarter",
-     "start": 2.625,
-     "end": 3.12,
-     "heard": true
+     "w": "three",
+     "start": 1.93,
+     "end": 3.2,
+     "heard": false
     },
     {
      "w": "seconds.",
-     "start": 3.285,
-     "end": 4.0,
+     "start": 3.29,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "Close",
-     "start": 4.115,
-     "end": 4.4,
+     "start": 4.29,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "enough",
-     "start": 4.415,
-     "end": 4.72,
+     "start": 4.59,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "to",
-     "start": 4.735,
-     "end": 4.96,
+     "start": 4.91,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "talk,",
-     "start": 4.89,
-     "end": 5.28,
+     "start": 5.07,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "with",
-     "start": 5.47,
-     "end": 5.6,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 5.58,
+     "start": 5.52,
      "end": 5.76,
      "heard": true
     },
     {
+     "w": "a",
+     "start": 5.69,
+     "end": 5.92,
+     "heard": true
+    },
+    {
      "w": "short",
-     "start": 5.845,
-     "end": 6.08,
+     "start": 5.94,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "wait.",
-     "start": 6.1,
-     "end": 6.56,
+     "start": 6.2,
+     "end": 6.72,
      "heard": true
     }
    ]

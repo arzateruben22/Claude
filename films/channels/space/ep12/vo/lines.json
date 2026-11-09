@@ -26,16 +26,17 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "In nineteen sixty-nine, Apollo astronauts walked in the Moon's dust. Since then, orbiters have photographed tracks left by later missions. The tracks are still there.",
+   "text": "In nineteen sixty-nine, Apollo astronauts walked in the Moon's dust. Since then, an orbiter has photographed the Apollo 11 landing site. The tracks are still there.",
    "stars": [
     "dust",
+    "Apollo 11",
     "there"
    ],
-   "phonemes": "ɪn nˈaɪntiːn sˈɪkstinˈaɪn, ɐpˈɑːloʊ ˈæstɹənˌɔːts wˈɔːkt ɪnðə mˈuːnz dˈʌst. sˈɪns ðˈɛn, ˈɔːɹbɪɾɚz hæv fˈoʊɾəɡɹˌæft tɹˈæks lˈɛft baɪ lˈeɪɾɚ mˈɪʃənz. ðə tɹˈæks ɑːɹ stˈɪl ðˈɛɹ.",
+   "phonemes": "ɪn nˈaɪntiːn sˈɪkstinˈaɪn, ɐpˈɑːloʊ ˈæstɹənˌɔːts wˈɔːkt ɪnðə mˈuːnz dˈʌst. sˈɪns ðˈɛn, ɐn ˈɔːɹbɪɾɚ hɐz fˈoʊɾəɡɹˌæft ðɪ ɐpˈɑːloʊ ɪlˈɛvən lˈændɪŋ sˈaɪt. ðə tɹˈæks ɑːɹ stˈɪl ðˈɛɹ.",
    "speed": 1.1,
    "file": "02.wav",
-   "dur": 10.574,
-   "sha256": "531ef755559117e22a4915630af560b5e0c3132e017aa9fd141b36858d6cd9b0"
+   "dur": 10.921,
+   "sha256": "2431bd8c69af3d620d268dd59be6815b5a166a111513c442974c97f2d48f778c"
   },
   {
    "id": "vo03",
@@ -95,16 +96,16 @@
   {
    "id": "vo07",
    "beat": "readout",
-   "text": "Light time to the Moon: about one and a quarter seconds. Close enough to talk, with a short wait.",
+   "text": "Light time to the Moon: about one point three seconds. Close enough to talk, with a short wait.",
    "stars": [
     "Light time",
     "seconds"
    ],
-   "phonemes": "lˈaɪt tˈaɪm tə ðə mˈuːn: ɐbˌaʊt wˈʌn ænd ɐ kwˈɔːɹɾɚ sˈɛkəndz. klˈoʊs ɪnˈʌf tə tˈɔːk, wɪð ɐ ʃˈɔːɹt wˈeɪt.",
+   "phonemes": "lˈaɪt tˈaɪm tə ðə mˈuːn: ɐbˌaʊt wˈʌn pˈɔɪnt θɹˈiː sˈɛkəndz. klˈoʊs ɪnˈʌf tə tˈɔːk, wɪð ɐ ʃˈɔːɹt wˈeɪt.",
    "speed": 0.86,
    "file": "07.wav",
-   "dur": 6.633,
-   "sha256": "643de6a68c2de4e6f477ee4f04e81329df5733d981fddfa6ce1a71298ccffea1"
+   "dur": 6.734,
+   "sha256": "0cf2a4d98e30ab94016b0bd65337a22caef1bcecad70647db92db603ed543a0e"
   },
   {
    "id": "vo08",
