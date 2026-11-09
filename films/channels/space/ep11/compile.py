@@ -64,13 +64,13 @@ CAMK = [
     (CUE["piece"] + 0.6, [10, 6, 15], [6, 0, 0], 40),
     (t_tk, [8, 2.5, 22], [6, 0.3, 0], 38),                                        # Saturn in the tank, rings level
     (CUE["who"], [3, 1.5, 21], [6, 0.3, 0], 38),
-    (t_rd + 0.5, [-70, 150, 350], [-70, 0, 0], 44),                               # out: the Sun and Saturn
-    (t_end - 0.15, [-70, 156, 358], [-70, 0, 0], 44),
+    (t_rd + 0.5, [-70, 170, 400], [-70, 0, 0], 44),                               # out: the Sun and Saturn
+    (t_end - 0.15, [-70, 176, 408], [-70, 0, 0], 44),
     (f.duration, [14, 4, 20], [6, 0.2, 0], 38),
 ]
 def far(t, p, l):                                      # Saturn and its ring are wide: stand back from the tank and Saturn shots (not the balance, not the readout)
     if t < t_rd and l[1] > -30:
-        return [round(l[i] + (p[i] - l[i]) * (2.6 if t < t_n + 0.2 else 3.5), 3) for i in range(3)]
+        return [round(l[i] + (p[i] - l[i]) * (3.2 if t < t_n + 0.2 else 3.5), 3) for i in range(3)]
     return p
 CAMK = [{"t": round(t, 4), "p": far(t, p, l), "l": l, "fov": fv} for t, p, l, fv in CAMK]
 assert all(b["t"] >= a["t"] for a, b in zip(CAMK, CAMK[1:])), [(k["t"]) for k in CAMK]
@@ -89,7 +89,7 @@ LABELS = [
 ]
 PILLS = [
     {"id": "p-dens", "text": "density = weight ÷ space", "t0": round(CUE["density"], 4), "t1": round(t_w - 0.4, 4), "at": [90 / 1080, 0.175]},
-    {"id": "p-real", "text": "real Saturn would not float: it's gas, it would mix", "t0": round(CUE["mix"] - 0.1, 4), "t1": round(t_tk - 0.2, 4), "at": [90 / 1080, 0.175]},
+    {"id": "p-real", "text": "real Saturn would not float", "t0": round(CUE["mix"] - 0.1, 4), "t1": round(t_tk - 0.2, 4), "at": [90 / 1080, 0.175]},
 ]
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 3.0, "t1": round(t_rd - 0.2, 4), "slot": "tr"},

@@ -101,9 +101,9 @@
   {
    "t": 0.0,
    "p": [
-    26.8,
-    10.08,
-    52.0
+    31.6,
+    12.36,
+    64.0
    ],
    "l": [
     6,
@@ -115,9 +115,9 @@
   {
    "t": 3.5333,
    "p": [
-    16.4,
-    7.48,
-    57.2
+    18.8,
+    9.16,
+    70.4
    ],
    "l": [
     6,
@@ -424,8 +424,8 @@
    "t": 54.3667,
    "p": [
     -70,
-    150,
-    350
+    170,
+    400
    ],
    "l": [
     -70,
@@ -438,8 +438,8 @@
    "t": 61.7833,
    "p": [
     -70,
-    156,
-    358
+    176,
+    408
    ],
    "l": [
     -70,
@@ -726,7 +726,7 @@
   },
   {
    "id": "p-real",
-   "text": "real Saturn would not float: it's gas, it would mix",
+   "text": "real Saturn would not float",
    "t0": 42.6333,
    "t1": 47.2667,
    "at": [
@@ -745,7 +745,7 @@
  "end": {
   "title": "Next orbit: the *footprints*",
   "follow": "One More Orbit · S2 · Episode 6",
-  "next": "Saturn: mean density 687 kg/m3 (NASA)."
+  "next": "NASA: Saturn, 687 kg/m3."
  },
  "captions": [
   {
