@@ -6,10 +6,10 @@
 // This is our model of the Brazil nut effect, not a measurement; the film badges it as a simulation.
 import { writeFileSync } from "node:fs";
 function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-export function run({ N = 70, rs = 1.0, rb = 3.8, Wc = 14, A = 1.0, f = 9, T = 40, seed = 2, k = 8e5, gam = 200, dt = 1e-4, fps = 30 } = {}) {
+export function run({ top = false, mb = 1, N = 70, rs = 1.0, rb = 3.8, Wc = 14, A = 1.0, f = 9, T = 40, seed = 2, k = 8e5, gam = 200, dt = 1e-4, fps = 30 } = {}) {
   const R = rng(seed), g = 981, P = [];
-  P.push({ x: Wc / 2, y: rb + 0.1, vx: 0, vy: 0, r: rb, m: rb * rb / (rs * rs) });
-  let y = 2 * rb + 0.5, x = rs + 0.1;
+  P.push({ x: Wc / 2, y: top ? 40 : rb + 0.1, vx: 0, vy: 0, r: rb, m: rb * rb / (rs * rs) * mb });
+  let y = top ? 0.1 + rs : 2 * rb + 0.5, x = rs + 0.1;
   for (let i = 0; i < N; i++) { if (x > Wc - rs - 0.1) { x = rs + 0.1 + R() * 0.3; y += 2 * rs * 0.95; } P.push({ x, y, vx: 0, vy: 0, r: rs, m: 1 }); x += 2 * rs * 1.01; }
   const frames = [], steps = Math.round(T / dt), every = Math.round(1 / fps / dt);
   let t = 0;

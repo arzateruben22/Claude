@@ -6,7 +6,7 @@ About 68 s, 9:16, narrated by a synthetic voice (af_bella at speed 0.85, labeled
 
 - One world: a glass jar of small grains with one big ball at the bottom, shaken. The grains are a 2D computer simulation
   (soft discs, seeded, run once by `sim.mjs` and stored in `sim.json`), drawn as a time-lapse (badged). It is our model, not a
-  measurement: it shows the big disc rising through the bed, and says so.
+  measurement: it shows the big disc rising through the bed, and says so. The jar is drawn in 3-D (a thin glass cell, grains at fixed depths) from that 2-D model; the reverse-effect jar in the whoa beat is an illustration (a frozen snapshot with a lighter ball moved by hand), badged as such.
 - The facts are from one review of the physics of food (Mathijssen et al., arXiv 2201.12128): larger grains often rise when
   mixed grains are shaken (the Brazil nut effect), buoyancy alone doesn't explain it, percolation and granular convection
   each play a part, and a reverse effect exists.

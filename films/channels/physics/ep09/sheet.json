@@ -86,7 +86,7 @@
    "t": 4.0166,
    "kind": "badge",
    "tag": "sim",
-   "text": "Computer simulation (2D)"
+   "text": "2D model, drawn in 3-D"
   },
   {
    "t": 4.016633,
@@ -142,15 +142,31 @@
    "tag": "wo-up"
   },
   {
-   "t": 41.7667,
-   "kind": "badge",
-   "tag": "rev",
-   "text": "Bigger but lighter grains can sink."
-  },
-  {
    "t": 41.93333333333333,
    "kind": "label",
    "tag": "wo-down"
+  },
+  {
+   "t": 41.9667,
+   "kind": "badge",
+   "tag": "illus",
+   "text": "Illustration, not a simulation"
+  },
+  {
+   "t": 44.6,
+   "kind": "label",
+   "tag": "wo-light"
+  },
+  {
+   "t": 49.3166,
+   "kind": "badge",
+   "tag": "sim2",
+   "text": "2D model, drawn in 3-D"
+  },
+  {
+   "t": 49.316633,
+   "kind": "counter.show",
+   "tag": "spine2"
   },
   {
    "t": 49.3333,

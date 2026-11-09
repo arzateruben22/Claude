@@ -85,7 +85,7 @@
   "accessed": "2026-11-09",
   "verified_via": "page",
   "status": "TODO open link",
-  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"Here larger but lighter particles can sink in a shaken bed of smaller grains\""
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"Here larger but lighter particles can sink in a shaken bed of smaller grains\" Picture: the sinking-ball jar is an illustration (frozen snapshot, lighter ball moved by hand), badged as such; our simulation does not reproduce the reverse effect."
  },
  {
   "id": "c9",
