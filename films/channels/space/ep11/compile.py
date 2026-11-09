@@ -64,11 +64,15 @@ CAMK = [
     (CUE["piece"] + 0.6, [10, 6, 15], [6, 0, 0], 40),
     (t_tk, [8, 2.5, 22], [6, 0.3, 0], 38),                                        # Saturn in the tank, rings level
     (CUE["who"], [3, 1.5, 21], [6, 0.3, 0], 38),
-    (t_rd + 0.5, [0, 70, 150], [-70, 0, 0], 44),                                  # out: the Sun and Saturn
-    (t_end - 0.15, [0, 74, 154], [-70, 0, 0], 44),
+    (t_rd + 0.5, [-70, 150, 350], [-70, 0, 0], 44),                               # out: the Sun and Saturn
+    (t_end - 0.15, [-70, 156, 358], [-70, 0, 0], 44),
     (f.duration, [14, 4, 20], [6, 0.2, 0], 38),
 ]
-CAMK = [{"t": round(t, 4), "p": p, "l": l, "fov": fv} for t, p, l, fv in CAMK]
+def far(t, p, l):                                      # Saturn and its ring are wide: stand back from the tank and Saturn shots (not the balance, not the readout)
+    if t < t_rd and l[1] > -30:
+        return [round(l[i] + (p[i] - l[i]) * 2.4, 3) for i in range(3)]
+    return p
+CAMK = [{"t": round(t, 4), "p": far(t, p, l), "l": l, "fov": fv} for t, p, l, fv in CAMK]
 assert all(b["t"] >= a["t"] for a, b in zip(CAMK, CAMK[1:])), [(k["t"]) for k in CAMK]
 CAM = {"space": [{"t": 0, "target": [0, 0, 0], "dist": 10}], "end": [{"t": 0, "target": [0, 0, 0], "dist": 10}]}    # unused by the scene (own camera)
 SHOTS = [{"at": 0.0, "name": "space"}, {"at": t_end, "name": "end"}]
@@ -77,7 +81,7 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-sat", "text": "Saturn", "kind": "star", "anchor": "sat", "t0": round(CUE["weighs"] - 0.2, 4), "t1": round(CUE["tank"], 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-tank", "text": "tank of water", "kind": "light", "anchor": "tank", "t0": round(CUE["tank"], 4), "t1": round(t_c - 0.1, 4), "side": 1, "v": "above", "fixed": True},
-    {"id": "l-earth", "text": "Earth, same scale", "kind": "body", "anchor": "earthP", "t0": round(t_c + 0.6, 4), "t1": round(CUE["hydrogen"] - 0.2, 4), "side": 1, "v": "below", "fixed": True},
+    {"id": "l-earth", "text": "Earth, same scale", "kind": "body", "anchor": "earthP", "t0": round(t_c + 0.6, 4), "t1": round(CUE["hydrogen"] - 0.2, 4), "side": -1, "v": "below", "fixed": True},
     {"id": "l-gas", "text": "hydrogen + helium", "kind": "light", "anchor": "sat", "t0": round(CUE["hydrogen"], 4), "t1": round(t_why - 0.4, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-rock", "text": "rock and metal: tight", "kind": "body", "anchor": "rock", "t0": round(CUE["earth"], 4), "t1": round(CUE["gas"] - 0.1, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-gasb", "text": "gas: spread thin", "kind": "star", "anchor": "gasb", "t0": round(CUE["gas"], 4), "t1": round(t_w - 0.4, 4), "side": 1, "v": "above", "fixed": True},

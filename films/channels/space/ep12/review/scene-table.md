@@ -1,22 +1,20 @@
-# ep12 scene table (PLANNED: times are the script's windows split by sentence; replaced by measured times after voicing)
+# S2E06 (folder ep12) scene table: MEASURED times (from vo/words.json and film.json, 9 Nov 2026)
 
-| time | narration | visual | on-screen text | sound |
-|---|---|---|---|---|
-| 0.0 | Are the footprints still there? | frame 0, the payoff: a boot print in grey dust under black sky, Earth small above; spine "footprints on the Moon: still there?" | spine: footprints on the Moon: still there? | signature pings |
-| 1.7 | On the Moon. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 3.4 | In nineteen sixty-nine, Apollo astronauts walked in the Moon's dust. | the print in close view, then Apollo 11, 1969, an orbit view of tracks at a landing site | spine: Apollo 11: July 1969 | bell on a label or counter |
-| 6.6 | Since then, orbiters have photographed tracks left by later missions. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 9.8 | The tracks are still there. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 13.0 | On Earth, wind and rain wipe a footprint out in days. | a footprint on Earth beach washes away under rain and wind; the same print on the Moon stays | spine: Earth: days · Moon: no wind, no rain | bell on a label or counter |
-| 17.8 | The Moon has almost no air, so no wind and no rain. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 22.5 | Only slow things wear a print down. | tiny grains strike the dust; radiation and sunlight slowly bleach and stir it; a print edge softens over a long timeline | spine: only slow things wear it down | bell on a label or counter |
-| 27.3 | Tiny space grains keep hitting the dust, one at a time. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 32.2 | That sandblasting wears the Moon down about a millimeter every million years. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 37.0 | Pull back from one boot print to the whole site. | pull back from one print to the whole site: tracks, the lander's base, gear left behind | spine: still where they left it | bell on a label or counter |
-| 44.0 | The lander's base and the tracks are still where the astronauts left them, as orbiters show. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 51.0 | No beach on Earth keeps a footprint like that. | hold on the Moon rising over a street at night | captions | bell on a label or counter |
-| 54.5 | Look up tonight: some of them may still be there. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 58.0 | Light time to the Moon: about one and a quarter seconds. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 61.8 | Close enough to talk, with a short wait. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 65.5 | That's season two. | the picture develops with the sentence (new element or close-up) | captions | signature pings |
-| 68.5 | Next: another orbit, another question, same sky. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
+One real 3-D world; the camera moves on every beat.
+
+| time | narration | visual | on-screen text |
+|---|---|---|---|
+| 0.0 | Are the footprints still there? On the Moon. | Frame 0: a boot print in grey dust under a black sky, Earth in the sky | title; 'still there?' |
+| 5.6 | In nineteen sixty-nine, Apollo astronauts walked in the Moon's dust. | Camera follows the trail of prints | counter '1969'; label 'a boot print' |
+| 9.7 | Since then, orbiters have photographed tracks left by later missions. | Camera rises to an orbit view: prints, rover tracks, lander base | pill 'seen from orbit'; label 'tracks seen from orbit' |
+| 15.1 | On Earth, wind and rain wipe a footprint out in days. | Dip to a beach: the same print, rain and wind; the print smooths away | label 'beach: gone in days' |
+| 20.5 | The Moon has almost no air, so no wind and no rain. | Dip back to the Moon: the print stays | counter 'no wind, no rain' |
+| 23.5 | Only slow things wear a print down. | Low and close on the print | none |
+| 27.4 | Tiny space grains keep hitting the dust, one at a time. That sandblasting wears the Moon down about a millimeter every million years. | Grains fall and strike the dust with small flashes | pill 'grains hit the dust'; counter '1 mm per million years' |
+| 38.2 | Pull back from one boot print to the whole site. | Camera pulls back and up | none |
+| 41.4 | The lander's base and the tracks are still where the astronauts left them, as orbiters show. | Whole site from above: lander base, prints, rover tracks | label 'lander base'; counter 'still where they were left' |
+| 50.1 | No beach on Earth keeps a footprint like that. Look up tonight: some of them may still be there. | Dip, then the Moon rising over a street at night | counter 'some may still be there' |
+| 57.6 | Light time to the Moon: about one and a quarter seconds. Close enough to talk, with a short wait. | Earth and Moon from above; a ring grows from Earth to the Moon (not to scale) | read-out 'about 1.25 seconds' |
+| 65.1 | That's season two. Next: another orbit, another question, same sky. | End card; a dip, then frame 0's pose (SSIM 0.936) | end card |
+
+Measured: 71.5 s, render log 0 warnings, sound sync PASS, -14.1 LUFS. The Moon surface is a height-field of this film's own making (an illustration), not a map.

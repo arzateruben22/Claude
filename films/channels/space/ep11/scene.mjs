@@ -113,10 +113,10 @@ function overlay2d(t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
   const bk = fadeIn(t, CUE.weighs, 0.5) * (1 - fadeIn(t, CUE.tank - 0.2, 0.4));
   if (bk > 0.01) {
-    const x0 = 130 * sx, wMax = 820 * sx; ctx.fillStyle = rgba(VOID, 0.8 * bk); ctx.beginPath(); ctx.roundRect(90 * sx, 1300 * sy, 900 * sx, 170 * sy, 18 * S1); ctx.fill();
+    const x0 = 130 * sx, wMax = 820 * sx; ctx.fillStyle = rgba(VOID, 0.8 * bk); ctx.beginPath(); ctx.roundRect(90 * sx, 1480 * sy, 900 * sx, 170 * sy, 18 * S1); ctx.fill();
     ctx.font = `700 ${Math.round(26 * S1)}px Lexend, sans-serif`; ctx.textBaseline = "middle"; ctx.textAlign = "left";
-    ctx.fillStyle = rgba(ICE, bk); ctx.fillText("water  1.0", x0, 1330 * sy); ctx.fillStyle = rgba(ICE, 0.9 * bk); ctx.beginPath(); ctx.roundRect(x0, 1346 * sy, wMax, 20 * sy, 8 * S1); ctx.fill();
-    const g = E.out3(seg(t, CUE.weighs + 0.4, CUE.weighs + 1.6)); ctx.fillStyle = rgba(LEMON, bk); ctx.fillText("Saturn  0.69", x0, 1396 * sy); ctx.fillStyle = rgba(LEMON, 0.95 * bk); ctx.beginPath(); ctx.roundRect(x0, 1412 * sy, wMax * 0.687 * g, 20 * sy, 8 * S1); ctx.fill();
+    ctx.fillStyle = rgba(ICE, bk); ctx.fillText("water  1.0", x0, 1510 * sy); ctx.fillStyle = rgba(ICE, 0.9 * bk); ctx.beginPath(); ctx.roundRect(x0, 1526 * sy, wMax, 20 * sy, 8 * S1); ctx.fill();
+    const g = E.out3(seg(t, CUE.weighs + 0.4, CUE.weighs + 1.6)); ctx.fillStyle = rgba(LEMON, bk); ctx.fillText("Saturn  0.69", x0, 1576 * sy); ctx.fillStyle = rgba(LEMON, 0.95 * bk); ctx.beginPath(); ctx.roundRect(x0, 1592 * sy, wMax * 0.687 * g, 20 * sy, 8 * S1); ctx.fill();
   }
   const D = CUE.dip, fl = (d) => E.inout3(seg(t, d - 0.1, d + 0.2)) * (1 - E.inout3(seg(t, d + 0.2, d + 0.45)));
   const dip = Math.max(fl(D[0]), fl(D[1]), fl(D[2]), E.inout3(seg(t, D[3] - 0.1, D[3] + 0.15)) * (1 - E.inout3(seg(t, D[3] + 0.15, D[3] + 0.4))));
@@ -194,7 +194,7 @@ window.seek = function (t) {
   const dk = fadeIn(tt, CUE.tank, 0.7) * (1 - fadeIn(tt, CUE.c - 0.3, 0.4));
   dimA.seg([sp[0] - R, sp[1] + 4.6, 0], [sp[0] + R, sp[1] + 4.6, 0]).set({ opacity: 0.95 * dk }); dimB.seg([TANKC[0] - 10, 4.9, 0], [TANKC[0] + 10, 4.9, 0]).set({ opacity: 0.95 * dk });
   // Earth at Saturn's scale
-  const ep = [sp[0] + 6.4, sp[1] - 1.2, 3.2]; earthP.position.fromArray(ep); S.earthP = ep; earth.set({ center: [0, 0, 0], sunDir: [0.5, 0.3, 0.8], sun: 1, rimNight: 0.5, spin: -0.9 + 0.1 * tt });
+  const ep = [sp[0] - 5.6, sp[1] - 8.2, 4.0]; earthP.position.fromArray(ep); S.earthP = ep; earth.set({ center: [0, 0, 0], sunDir: [0.5, 0.3, 0.8], sun: 1, rimNight: 0.5, spin: -0.9 + 0.1 * tt });
   // the balance: level at first; the rock ball sinks in the pool, the gas ball floats on it
   const u1 = E.inout3(seg(tt, CUE.tight - 0.4, CUE.tight + 1.4)), u2 = E.inout3(seg(tt, CUE.thin - 1.2, CUE.thin + 0.8));
   const rockY = 1.5 - 1.2 - 3.2 * u1, gasY = 1.5 - 2.6 * 0.1 + 1.0 - 0.9 * u2;

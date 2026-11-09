@@ -47,8 +47,8 @@ stars.frustumCulled = false; scene.add(stars); scene.fog = null;
 const hn = (x, z, s) => { let h = Math.imul((Math.floor(x * 7.31) * 374761393) ^ (Math.floor(z * 7.31) * 668265263) ^ s, 1274126177); h = Math.imul(h ^ (h >>> 13), 1103515245); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
 const vn = (x, z, s) => { const xi = Math.floor(x), zi = Math.floor(z), fx = x - xi, fz = z - zi, u = fx * fx * (3 - 2 * fx), v = fz * fz * (3 - 2 * fz); const g = (i, j) => hn(i / 7.31 + 0.01, j / 7.31 + 0.01, s); return g(xi, zi) + (g(xi + 1, zi) - g(xi, zi)) * u + (g(xi, zi + 1) - g(xi, zi)) * v + (g(xi, zi) - g(xi + 1, zi) - g(xi, zi + 1) + g(xi + 1, zi + 1)) * u * v; };
 const baseH = (x, z, rough) => rough * (0.5 * vn(x * 0.9, z * 0.9, 3) + 0.25 * vn(x * 2.7, z * 2.7, 5) + 0.12 * vn(x * 8, z * 8, 7) - 0.45);
-function printH(dx, dz, ang) { const c = Math.cos(ang), s = Math.sin(ang), u = dx * c + dz * s, v = -dx * s + dz * c; const L = 0.62, Wd = 0.27; const q = (u / L) ** 2 + (v / Wd) ** 2; if (q > 1.6) return 0;
-  const bowl = -0.075 * Math.exp(-q * 2.4), tread = 0.012 * Math.sin(u * 22) * Math.exp(-q * 2.5), rim = 0.026 * Math.exp(-Math.pow((Math.sqrt(q) - 1.0) / 0.2, 2)); return bowl + tread + rim; }
+function printH(dx, dz, ang) { const c = Math.cos(ang), s = Math.sin(ang), u = dx * c + dz * s, v = -dx * s + dz * c; const L = 0.8, Wd = 0.35; const q = (u / L) ** 2 + (v / Wd) ** 2; if (q > 1.6) return 0;
+  const bowl = -0.09 * Math.exp(-q * 2.4), tread = 0.005 * Math.sin(u * 22) * Math.exp(-q * 2.5), rim = 0.03 * Math.exp(-Math.pow((Math.sqrt(q) - 1.0) / 0.2, 2)); return bowl + tread + rim; }
 function buildTerrain(size, n, rough, prints, tracks) {
   const g = new THREE.PlaneGeometry(size, size, n, n); g.rotateX(-Math.PI / 2); const P = g.attributes.position;
   const apply = (amp) => { for (let i = 0; i < P.count; i++) { const x = P.getX(i), z = P.getZ(i); let y = baseH(x, z, rough); let pr = 0;
@@ -61,18 +61,19 @@ function buildTerrain(size, n, rough, prints, tracks) {
 const prints = [], path = [[LAND[0] + 2.0, LAND[2] + 1.4], [-5, -4.6], [-2.2, -1.6], [0, 0], [3.0, 0.6], [7, 1.8], [12, 3.0], [17, 4.4]];
 for (let k = 1; k < path.length; k++) { const [x0, z0] = path[k - 1], [x1, z1] = path[k], L = Math.hypot(x1 - x0, z1 - z0), a = Math.atan2(z1 - z0, x1 - x0); for (let d = 0; d < L; d += 1.15) { const side = (Math.floor(d / 1.15) + k) % 2 ? 1 : -1; prints.push([x0 + (x1 - x0) * d / L - Math.sin(a) * 0.32 * side, z0 + (z1 - z0) * d / L + Math.cos(a) * 0.32 * side, a + 0.08 * side]); } }
 prints.push([0, 0, 0.05]);
-const moonT = buildTerrain(70, 520, 0.05, prints, [[LAND[0] - 1.5, LAND[2] + 4.5, 14, 14], [LAND[0] - 1.5, LAND[2] + 5.3, 14, 14.8]]);
+const moonT = buildTerrain(50, 560, 0.012, prints, [[LAND[0] - 1.5, LAND[2] + 4.5, 14, 14], [LAND[0] - 1.5, LAND[2] + 5.3, 14, 14.8]]);
 const moonMesh = new THREE.Mesh(moonT.g, new THREE.MeshStandardMaterial({ color: 0xa4a7b8, roughness: 1, metalness: 0 })); scene.add(moonMesh);
 // the lander base: a platform, four legs, a dish (pale)
+const floorBig = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), new THREE.MeshStandardMaterial({ color: 0xa4a7b8, roughness: 1 })); floorBig.rotation.x = -Math.PI / 2; floorBig.position.y = -0.08; scene.add(floorBig);
 const lander = new THREE.Group(); lander.position.set(LAND[0], 0.05, LAND[2]); scene.add(lander);
 const lm = new THREE.MeshStandardMaterial({ color: 0xd8dcf0, roughness: 0.6, metalness: 0.2 });
 const plat = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.32, 1.9), lm); plat.position.y = 0.95; lander.add(plat);
 for (const [lx, lz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.25, 8), lm); leg.position.set(lx * 1.15, 0.5, lz * 1.15); leg.rotation.z = -lx * 0.5; leg.rotation.x = lz * 0.5; lander.add(leg); const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.05, 12), lm); pad.position.set(lx * 1.5, 0.0, lz * 1.5); lander.add(pad); }
 const body = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.7, 0.8, 10), lm); body.position.y = 1.5; lander.add(body);
 // Earth in the black sky (frame 0), and the Earth and Moon of the readout
-const earthSky = createPlanet({ radius: 5, surface: earthSurface({ width: W >= 1000 ? 2048 : 1024 }), tilt: 0, pin: 0, rimDay: 0.5, rimNight: 0.5, segments: 64 }); const eg = new THREE.Group(); eg.position.set(34, 26, -110); eg.add(earthSky.group); scene.add(eg);
+const earthSky = createPlanet({ radius: 5, surface: earthSurface({ width: W >= 1000 ? 2048 : 1024 }), tilt: 0, pin: 0, rimDay: 0.5, rimNight: 0.5, segments: 64 }); const eg = new THREE.Group(); eg.position.set(-72, 30, -96); eg.add(earthSky.group); scene.add(eg);
 // the beach: the same print in sand; it washes out under rain and wind
-const beachT = buildTerrain(14, 150, 0.035, [[0, 0, 0.05]], []);
+const beachT = buildTerrain(14, 190, 0.01, [[0, 0, 0.05]], []);
 const beachMesh = new THREE.Mesh(beachT.g, new THREE.MeshStandardMaterial({ color: 0xc7c0a0, roughness: 1 })); beachMesh.position.fromArray(BEACH); scene.add(beachMesh);
 const NR = 700, rr2 = mul(29), rP = new Float32Array(NR * 3), rA = new Float32Array(NR), rG = new THREE.BufferGeometry();
 rG.setAttribute("position", new THREE.BufferAttribute(rP, 3)); rG.setAttribute("alpha", new THREE.BufferAttribute(rA, 1));
@@ -88,7 +89,7 @@ const grains = new THREE.Points(gG, ptMat([0.95, 0.93, 0.8], 7)); grains.frustum
 const GR = Array.from({ length: NGR }, () => ({ x: (gr() - 0.5) * 2.6, z: (gr() - 0.5) * 2.0, ph: gr(), per: 0.7 + gr() * 0.8 }));
 // the street at night: dark ground and buildings with lit windows, the Moon rising
 const street = new THREE.Group(); street.position.fromArray(ST); scene.add(street);
-street.add(Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({ color: 0x0a0d24 })), { rotation: new THREE.Euler(-Math.PI / 2, 0, 0) }));
+const gnd = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshBasicMaterial({ color: 0x0a0d24 })); gnd.rotation.x = -Math.PI / 2; street.add(gnd);
 const bm = mul(41), bx = new THREE.MeshBasicMaterial({ color: 0x12163a }), winP = [];
 for (let side = -1; side <= 1; side += 2) for (let i = 0; i < 9; i++) { const w = 6 + bm() * 4, h = 10 + bm() * 22, d = 8 + bm() * 4, x = side * (11 + w / 2), z = 10 - i * 12; const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), bx); m.position.set(x, h / 2, z); street.add(m);
   for (let k = 0; k < 14; k++) if (bm() > 0.45) winP.push(x - side * w * 0.5 + (bm() - 0.5) * 0.2, 1.5 + bm() * (h - 2.5), z + d / 2 + 0.05 + (bm() - 0.5) * 0.0); }
@@ -164,9 +165,9 @@ window.seek = function (t) {
   const cm = camAt(tt); camera.position.fromArray(cm.p); camera.fov = cm.fov; camera.updateProjectionMatrix(); camera.lookAt(...cm.l); camera.updateMatrixWorld();
   const D = CUE.dip, inBeach = tt >= D[0] + 0.1 && tt < D[1] + 0.1, inStreet = tt >= D[2] + 0.1 && tt < D[3] + 0.1, inEM = tt >= D[3] + 0.1 && tt < CUE.end + 1;
   const onMoon = !inBeach && !inStreet && !inEM;
-  moonMesh.visible = onMoon; lander.visible = onMoon; eg.visible = onMoon; beachMesh.visible = inBeach; rain.visible = inBeach; grains.visible = onMoon; street.visible = inStreet; mgU.visible = inStreet; emEg.visible = inEM; emMg.visible = inEM;
+  moonMesh.visible = onMoon; floorBig.visible = onMoon; lander.visible = onMoon && ((tt >= CUE.orbiters - 0.2 && tt < CUE.c) || tt >= CUE.pull + 0.5); eg.visible = onMoon; beachMesh.visible = inBeach; rain.visible = inBeach; grains.visible = onMoon; street.visible = inStreet; mgU.visible = inStreet; emEg.visible = inEM; emMg.visible = inEM;
   sunL.position.set(inStreet ? -10 : -30, inStreet ? 12 : 7, 14); sunL.target.position.set(0, 0, 0);
-  S.print = [0, 0.02, 0]; S.trail = [4, 0.1, 0.8]; S.lander = [LAND[0], 1.3, LAND[2]]; S.beachP = [BEACH[0], 0.1, 0];
+  S.print = [0, 0.02, 0]; S.trail = [3, 0.1, -9]; S.lander = [LAND[0], 1.3, LAND[2]]; S.beachP = [BEACH[0], 0.1, 0];
   // the beach print: it washes out on "days" (rain and wind), the sand smooths
   const amp = 1 - E.inout3(seg(tt, CUE.earth + 0.6, CUE.days + 0.3)); if (inBeach && Math.abs(amp - lastAmp) > 0.01) { beachT.apply(amp); lastAmp = amp; }
   for (let i = 0; i < NR; i++) { const ph = (tt * 1.8 + i * 0.137) % 1, x = BEACH[0] + (rr2() - 0.5) * 0.0 + Math.sin(i * 12.9) * 3.2 + 1.2 * (1 - ph), z = Math.cos(i * 7.7) * 3.2, y = 4 * (1 - ph); rP[i * 3] = x + 0.4 * (1 - ph); rP[i * 3 + 1] = y; rP[i * 3 + 2] = z; rA[i] = inBeach ? 0.55 * fadeIn(tt, CUE.earth, 0.6) * (1 - fadeIn(tt, CUE.air - 0.5, 0.3)) : 0; }

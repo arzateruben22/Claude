@@ -42,13 +42,13 @@ BEACH, ST, EMP = [600, 0, 0], [-700, 0, 0], [0, 0, -700]
 LAND = [-9, 0, -7]
 # camera: {t, p (position), l (look-at), fov}, eased between keys (the scene lerps)
 CAMK = [
-    (0.0, [1.9, 0.5, 2.5], [0, 0.0, 0], 38),
-    (t_n - 0.2, [1.5, 0.45, 2.1], [0, 0.0, 0], 38),
+    (0.0, [1.5, 0.75, 2.2], [0, 0.0, 0], 38),
+    (t_n - 0.2, [1.2, 0.7, 1.9], [0, 0.0, 0], 38),
     (CUE["apollo"], [4.6, 0.8, 2.2], [3, 0, 0.4], 38),                             # along the trail
     (CUE["dust"], [9, 1.0, 3.6], [8, 0, 0.6], 38),
-    (CUE["orbiters"] - 0.3, [5, 24, 20], [2, 0, 0], 38),                           # up: an orbiter's view
-    (CUE["tracks"] + 0.5, [2, 52, 22], [-2, 0, -2], 38),
-    (t_c - 0.2, [2, 52, 22], [-2, 0, -2], 38),
+    (CUE["orbiters"] - 0.3, [5, 40, 24], [2, 0, 0], 42),                           # up: an orbiter's view
+    (CUE["tracks"] + 0.5, [2, 64, 28], [-2, 0, -2], 46),
+    (t_c - 0.2, [2, 64, 28], [-2, 0, -2], 46),
     (CUE["dip"][0] + 0.32, [BEACH[0] + 2.0, 0.55, 2.8], [BEACH[0], 0, 0], 38),     # the beach (cut under a dip)
     (CUE["days"], [BEACH[0] + 2.6, 0.9, 3.3], [BEACH[0] + 0.4, 0, 0], 38),
     (CUE["dip"][1], [BEACH[0] + 3.0, 1.2, 3.8], [BEACH[0] + 0.4, 0, 0], 38),
@@ -59,16 +59,16 @@ CAMK = [
     (CUE["mm"], [1.4, 0.5, 1.5], [0, 0, 0], 34),
     (t_w - 0.1, [1.4, 0.5, 1.5], [0, 0, 0], 34),
     (CUE["pull"], [2.2, 0.8, 2.2], [0, 0, 0], 38),                                  # pull back from one boot print
-    (CUE["site"], [3, 14, 12], [0, 0, 0], 38),
-    (CUE["lander"], [-1, 36, 24], [-4, 0, -4], 38),                                 # the whole site
-    (CUE["left"] + 1.0, [-2, 46, 30], [-4, 0, -4], 38),
-    (t_tk - 0.2, [-2, 46, 30], [-4, 0, -4], 38),
+    (CUE["site"], [3, 22, 14], [0, 0, 0], 42),
+    (CUE["lander"], [-1, 62, 36], [-4, 0, -4], 48),                                 # the whole site
+    (CUE["left"] + 1.0, [-2, 70, 38], [-4, 0, -4], 48),
+    (t_tk - 0.2, [-2, 70, 38], [-4, 0, -4], 48),
     (t_tk + 0.35, [ST[0], 1.7, 16], [ST[0], 15, -90], 48),                          # the Moon over a street (cut under a dip)
     (CUE["tonight"], [ST[0] + 1.5, 1.7, 15], [ST[0], 17, -90], 48),
     (t_rd - 0.3, [ST[0] + 2.0, 1.8, 14], [ST[0], 20, -90], 48),
-    (t_rd + 0.3, [EMP[0] + 14, 30, EMP[2] + 54], [EMP[0] + 14, 0, EMP[2]], 40),     # Earth and Moon, from above
-    (t_end - 0.15, [EMP[0] + 16, 34, EMP[2] + 58], [EMP[0] + 14, 0, EMP[2]], 40),
-    (f.duration, [1.9, 0.5, 2.5], [0, 0.0, 0], 38),
+    (t_rd + 0.3, [EMP[0] + 14, 70, EMP[2] + 120], [EMP[0] + 14, 0, EMP[2]], 40),     # Earth and Moon, from above
+    (t_end - 0.15, [EMP[0] + 16, 74, EMP[2] + 124], [EMP[0] + 14, 0, EMP[2]], 40),
+    (f.duration, [1.5, 0.75, 2.2], [0, 0.0, 0], 38),
 ]
 CAMK = [{"t": round(t, 4), "p": p, "l": l, "fov": fv} for t, p, l, fv in CAMK]
 assert all(b["t"] >= a["t"] for a, b in zip(CAMK, CAMK[1:])), [(k["t"]) for k in CAMK]
@@ -82,7 +82,6 @@ LABELS = [
     {"id": "l-beach", "text": "beach: gone in days", "kind": "light", "anchor": "beachP", "t0": round(CUE["dip"][0] + 0.5, 4), "t1": round(CUE["dip"][1] - 0.1, 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-moon", "text": "Moon: no wind, no rain", "kind": "body", "anchor": "print", "t0": round(CUE["dip"][1] + 0.5, 4), "t1": round(t_why - 0.3, 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-land", "text": "lander base", "kind": "star", "anchor": "lander", "t0": round(CUE["lander"] - 0.3, 4), "t1": round(t_tk - 0.4, 4), "side": -1, "v": "above", "fixed": True},
-    {"id": "l-tr2", "text": "the astronauts' tracks", "kind": "body", "anchor": "trail", "t0": round(CUE["lander"] + 0.4, 4), "t1": round(t_tk - 0.4, 4), "side": 1, "v": "below", "fixed": True},
 ]
 PILLS = [
     {"id": "p-grain", "text": "grains hit the dust, one at a time", "t0": round(CUE["grains"] - 0.3, 4), "t1": round(CUE["mm"] - 0.2, 4), "at": [90 / 1080, 0.175]},
