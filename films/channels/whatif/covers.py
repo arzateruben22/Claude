@@ -91,16 +91,18 @@ def main():
     # 16:9 thumbnail: the title left (about 5 words at most), the hero right
     TW, TH = 1280, 720
     th = Image.new("RGB", (TW, TH), BG)
-    hw = 470
+    hw = 520
     th.paste(fit_cover(hero, hw, TH, ax), (TW - hw, 0))
     g2 = Image.new("L", (160, 1)); g2.putdata([int(255 * (1 - i / 159) ** 1.4) for i in range(160)])
     th.paste(Image.new("RGB", (160, TH), BG), (TW - hw, 0), g2.resize((160, TH)))
     d = ImageDraw.Draw(th)
     d.text((64, 70), a.series.upper().replace("POSSIBILITY LAB · ", "POSSIBILITY LAB\n"), font=font("JetBrainsMono-VF.ttf", 28, 600), fill=MAG, spacing=8)
-    tt = (a.thumb_title or " ".join(lines)).split()
-    # break the title into lines of at most two words, big
-    rows = [" ".join(tt[i:i + 2]) for i in range(0, len(tt), 2)]
-    draw_title(d, 64, 210, rows, a.accent, 150, 1.0)
+    if "|" in a.thumb_title:
+        rows = a.thumb_title.split("|")
+    else:
+        tt = (a.thumb_title or " ".join(lines)).split()
+        rows = [" ".join(tt[i:i + 2]) for i in range(0, len(tt), 2)]    # lines of at most two words, big
+    draw_title(d, 64, 210, rows, a.accent, 140, 1.0)
     th.save(out / f"{a.name}-thumb.jpg", quality=92)
     print("wrote", out / f"{a.name}-cover.jpg", out / f"{a.name}-cover-480.jpg", out / f"{a.name}-thumb.jpg")
 
