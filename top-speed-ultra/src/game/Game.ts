@@ -923,6 +923,10 @@ export class Game {
     const safe = 10 + p.vx * 0.5 + (closing * closing) / 14;
     const tooFast = p.vx > target + 1.5;
     c.throttle = p.vx < target && lead.g > safe ? 0.85 : 0.04;
+    // in a slide, lift as a driver does: from 1.4° of body slip, down to 5 % by 3.4°. In Simulation the traction control
+    // only catches a spin, so 0.85 throttle out of a slow-down could step a torquey car's tail out and walk it across a
+    // lane (the OC Hypercar's race tune into a box truck, hypercar M4); the arcade profiles rarely pass 1°
+    c.throttle *= 1 - 0.95 * smoothstep(0.025, 0.06, Math.abs(Math.atan2(p.vy, Math.max(1, p.vx))));
     c.brake = lead.g < safe * 0.75 ? clamp((safe * 0.75 - lead.g) / 15 + 0.2, 0.2, 1) : tooFast ? clamp((p.vx - target) / 12, 0.1, 0.7) : 0;
     c.handbrake = false;
   }

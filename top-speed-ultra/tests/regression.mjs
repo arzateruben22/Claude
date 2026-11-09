@@ -5,6 +5,10 @@
 //   npm test -- --only=race,survival      some groups (boot, interchanges, survival, race, abilities,
 //                                         progression, render, phone, launch)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
+//   SUITE_HANDLING=0.9 npm test -- ...    every group at that handling value: Settings' Arcade is 0.15, Sport 0.5,
+//                                         Simulation 0.9 (src/game/settings.ts PROFILES). Without it the suite drives at
+//                                         0.35, the value its checks were tuned at (the game's default was 0.35 until
+//                                         the profiles; a new player now starts in Arcade)
 //
 // Software rendering runs at about 10 fps, so distance is covered with fastForward (the simulation without
 // rendering) and real frames are used only where rendering is the point. Screenshots go to tests/out/.
@@ -21,6 +25,12 @@ const OUT = path.join(ROOT, 'tests', 'out');
 const MPH = 2.236936;
 const only = (process.argv.find((a) => a.startsWith('--only=')) ?? '').slice(7).split(',').filter(Boolean);
 const slow = process.argv.includes('--slow');
+const HANDLING = process.env.SUITE_HANDLING ? Number(process.env.SUITE_HANDLING) : 0.35;
+if (!(HANDLING >= 0 && HANDLING <= 1)) { console.error(`SUITE_HANDLING must be 0..1, not ${process.env.SUITE_HANDLING}`); process.exit(2); }
+// the driving profiles as Settings names them (the spec the UI is checked against), and what the suite's value reads as
+const PROFILE_AT = [['Arcade', 0.15], ['Sport', 0.5], ['Simulation', 0.9]];
+const profileName = (h) => PROFILE_AT.find(([, v]) => Math.abs(v - h) < 0.004)?.[0] ?? 'Custom';
+console.log(`handling ${HANDLING} (${profileName(HANDLING)})`);
 
 if (!existsSync(GAME)) { console.error(`No build at ${GAME}. Run \`npm run build\` first.`); process.exit(2); }
 mkdirSync(OUT, { recursive: true });
@@ -50,7 +60,7 @@ async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
   const ctx = await browser.newContext(phone
     ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }
     : { viewport: { width: size[0], height: size[1] } });
-  const base = { quality: 'low', adaptive: false, density: 'moderate', time: 'day', weather: 'clear' };
+  const base = { quality: 'low', adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING };
   await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { ...base, ...settings });
   const page = await ctx.newPage();
   // software rendering shares the CPU with other renders and builds here: a click or a screenshot can wait a while
@@ -174,6 +184,24 @@ function hyperHelpers() {
   };
   window.__toasts = window.__toasts ?? [];
   if (!window.__toastsOn) { const o = g.ev.toast; g.ev.toast = (m, k) => { window.__toasts.push(m); o(m, k); }; window.__toastsOn = true; }
+}
+// in the page, with Settings open: what the handling field shows (the readout, the pressed and lit profile, the slider)
+// and where the value lives (the saved settings and the physics)
+function readHandling() {
+  const f = document.querySelector('.field.handling'), g = window.__game;
+  return {
+    out: f.querySelector('output').textContent,
+    pressed: [...f.querySelectorAll('.seg button[aria-pressed="true"]')].map((b) => b.textContent),
+    buttons: [...f.querySelectorAll('.seg button')].map((b) => b.textContent),
+    lit: [...f.querySelectorAll('.profiles .on dt')].map((d) => d.textContent),
+    active: f.querySelector('.profiles .on dd')?.textContent ?? '',
+    lines: f.querySelectorAll('.profiles dd').length,
+    ticks: f.querySelectorAll('.htrack i').length,
+    value: Number(f.querySelector('#handling').value),
+    settings: g.settings.handling, phys: g.phys.handling,
+    saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').handling,
+    sideScroll: document.documentElement.scrollWidth > innerWidth,
+  };
 }
 // start a mode in the OC Hypercar (owner mode for the test, no traffic) and pause it; the tune it latched
 const hyperIn = (page, mode) => game(page, async (mode) => {
@@ -314,10 +342,11 @@ await group('survival', async (use) => {
     g.traffic.reseed(7); g.traffic.fill(g.view());
   });
   await check('streak and score build over 100 mph in heavy traffic', async () => {
-    const r = await game(page, () => { const g = window.__game; g.fastForward(45, {}, 52); return { score: g.score, streak: g.streak, best: g.bestStreak, passes: g.overtakes, near: g.nearMisses, over: g.over, top: g.top }; });
+    const r = await game(page, () => { const g = window.__game; g.fastForward(45, {}, 52); return { score: g.score, streak: g.streak, best: g.bestStreak, passes: g.overtakes, near: g.nearMisses, over: g.over, top: g.top, h: g.phys.handling, car: g.driving }; });
+    expect(r.h === HANDLING, `the run drove at handling ${r.h}, not the suite's ${HANDLING}`);
     expect(!r.over, 'the run ended');
     expect(r.score > 0 && r.best > 5, `score ${fmt(r.score)}, best streak ${fmt(r.best)} s`);
-    return `score ${Math.round(r.score)}, best streak ${fmt(r.best)} s, ${r.passes} clean passes, ${r.near} near misses, top ${Math.round(r.top * MPH)} mph`;
+    return `${r.car} at handling ${r.h} (${profileName(r.h)}): score ${Math.round(r.score)}, best streak ${fmt(r.best)} s, ${r.passes} clean passes, ${r.near} near misses, top ${Math.round(r.top * MPH)} mph`;
   });
   await check('streak drops under 100 mph, best streak kept', async () => {
     const r = await game(page, () => {
@@ -413,10 +442,48 @@ await group('survival', async (use) => {
     expect(a.driven === b.driven, 'the traffic diverged over 8 s');
     return `${JSON.parse(a.filled).length} cars at the start and ${JSON.parse(a.driven).length} after 8 s, identical`;
   });
+  // the OC Hypercar in Speed Survival (owner mode for the test): its race tune, never Unleashed in a scored mode, on the
+  // first check's mark in the same seeded heavy traffic, at the suite's handling (SUITE_HANDLING runs it per profile).
+  // carTop() is the game's flat-out estimate from gearing and drag (the rivals' pace): 234 mph for the race tune, 341
+  // for Unleashed
+  await check('the OC Hypercar (race tune) builds a streak over 100 mph in the same heavy traffic', async () => {
+    const r = await game(page, async () => {
+      const g = window.__game;
+      g.updateSettings({ ...g.settings, owner: true });
+      g.chooseOwnerCar('oc-hyper');
+      Object.assign(g.input.c, { throttle: 0, brake: 0, steer: 0, thrust: 0 });
+      await g.start('survival'); g.setPaused(true);
+      const m = g.findMain('I-405 North');
+      g.placeCar(m, m.len * 0.12, 1, 30); g.apLane = 1;
+      g.traffic.reseed(7); g.traffic.fill(g.view());
+      g.fastForward(45, {}, 52);
+      return { car: g.driving, live: g.hyper.live, grip: g.carGrip, carTop: g.carTop(), h: g.phys.handling, score: g.score, best: g.bestStreak, passes: g.overtakes, near: g.nearMisses, over: g.over, top: g.top };
+    });
+    expect(r.car === 'oc-hyper' && !r.live && r.grip === 1.04 && r.carTop * MPH < 240, `not the race tune: ${JSON.stringify(r)}`);
+    expect(r.h === HANDLING, `the run drove at handling ${r.h}, not the suite's ${HANDLING}`);
+    expect(!r.over, 'the run ended');
+    expect(r.score > 0 && r.best > 5, `score ${fmt(r.score)}, best streak ${fmt(r.best)} s`);
+    return `race tune (grip ${r.grip}, the game's flat-out estimate ${Math.round(r.carTop * MPH)} mph) at handling ${r.h} (${profileName(r.h)}): score ${Math.round(r.score)}, best streak ${fmt(r.best)} s, ${r.passes} clean passes, ${r.near} near misses, top ${Math.round(r.top * MPH)} mph`;
+  });
 });
 
 await group('race', async (use) => {
   const { page } = await use({ settings: { course: 'irvine', density: 'moderate' } });
+  // Settings (1280 x 720) names the profile these races run at: its button pressed, its line lit, the slider on its value
+  await check('Settings at 1280 × 720 shows the handling profile these races drive at', async () => {
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    const f = page.locator('.field.handling');
+    await f.waitFor();
+    await f.scrollIntoViewIfNeeded();
+    const r = await game(page, readHandling);
+    const name = profileName(HANDLING), file = `settings-profiles-1280-${name.toLowerCase()}.png`;
+    await page.screenshot({ path: path.join(OUT, file) });
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    expect(r.value === HANDLING && r.phys === HANDLING, `slider ${r.value}, physics ${r.phys}, suite ${HANDLING}`);
+    expect(r.out === `${name} · ${HANDLING.toFixed(2)}` && r.pressed.join() === (name === 'Custom' ? '' : name) && r.lit.join() === name, `reads "${r.out}", pressed ${r.pressed.join()}, lit ${r.lit.join()}`);
+    expect(r.lines === (name === 'Custom' ? 4 : 3) && r.ticks === 3 && r.sideScroll === false, `${r.lines} lines, ${r.ticks} ticks, side scroll ${r.sideScroll}`);
+    return `"${r.out}", ${name === 'Custom' ? 'no profile pressed, Custom' : name + ' pressed and'} lit, ${r.lines} lines ("${r.active}"), ${file}`;
+  });
   // hands off or flat on the gas, the grid holds; holding the brake there must not back the car up
   for (const throttle of [0, 1]) {
     await check(`the countdown holds you and every rival (gas ${throttle ? 'flat' : 'off'})`, async () => {
@@ -470,9 +537,11 @@ await group('race', async (use) => {
     const r = await game(page, async () => {
       const g = window.__game; let t = 0;
       await g.start('race'); g.setPaused(true);
+      const h = g.phys.handling;
       while (!g.over && t < 400) { g.fastForward(1, {}, 120); t++; }
-      return { over: g.over, t, order: g.race?.order, pos: g.race?.position };
+      return { over: g.over, t, order: g.race?.order, pos: g.race?.position, h };
     });
+    expect(r.h === HANDLING, `the race drove at handling ${r.h}, not the suite's ${HANDLING}`);
     expect(r.over, `not finished after ${r.t} s`);
     await page.waitForFunction(() => window.__results.length > 0, null, { timeout: 900000, polling: 500 });
     const res = await game(page, () => window.__results.at(-1));
@@ -495,6 +564,28 @@ await group('race', async (use) => {
     const res = await game(page, () => window.__results.at(-1));
     expect(res.reason === 'Too far behind' && res.race.position === 4, `${res.reason}, P${res.race.position}`);
     return `"${res.reason}" at P${res.race.position} after ${r.t} s`;
+  });
+  // the OC Hypercar in a race (owner mode for the test): the race tune, its rivals set against that tune's top speed, so
+  // flat out on the autopilot it wins as the GT does, at the suite's handling (SUITE_HANDLING runs it per profile)
+  await check('the OC Hypercar (race tune), flat out on the autopilot, wins the Irvine Sprint', async () => {
+    const r = await game(page, async () => {
+      const g = window.__game; let t = 0;
+      window.__results.length = 0;
+      g.updateSettings({ ...g.settings, owner: true });
+      g.chooseOwnerCar('oc-hyper');
+      Object.assign(g.input.c, { throttle: 0, brake: 0, steer: 0, thrust: 0 });
+      await g.start('race'); g.setPaused(true);
+      const at = { car: g.driving, live: g.hyper.live, grip: g.carGrip, carTop: g.carTop(), h: g.phys.handling };
+      while (!g.over && t < 400) { g.fastForward(1, {}, 120); t++; }
+      return { ...at, over: g.over, t };
+    });
+    expect(r.car === 'oc-hyper' && !r.live && r.grip === 1.04 && r.carTop * MPH < 240, `not the race tune: ${JSON.stringify(r)}`);
+    expect(r.h === HANDLING, `the race drove at handling ${r.h}, not the suite's ${HANDLING}`);
+    expect(r.over, `not finished after ${r.t} s`);
+    await page.waitForFunction(() => window.__results.length > 0, null, { timeout: 900000, polling: 500 });
+    const res = await game(page, () => window.__results.at(-1));
+    expect(res.race.position === 1, `finished P${res.race.position}: ${res.reason}`);
+    return `race tune (grip ${r.grip}, the game's flat-out estimate ${Math.round(r.carTop * MPH)} mph) at handling ${r.h} (${profileName(r.h)}): P1 in ${res.race.time}, order ${res.race.order.join(' > ')}`;
   });
 });
 
@@ -1389,6 +1480,41 @@ await group('phone', async (use) => {
     const text = await page.locator('.overlay').last().innerText();
     expect(/level/i.test(text), 'no level shown');
     await page.keyboard.press('Escape');
+  });
+  // the driving profiles at 390 x 844: each button puts the one handling value (Settings, the save and the physics) on
+  // its point, the slider moved off a point reads Custom with its own line, and the page never scrolls sideways
+  await check('Settings at 390 × 844: Arcade, Sport and Simulation set the handling to 0.15 / 0.5 / 0.9; off those points it reads Custom; one line each; saved', async () => {
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    const f = page.locator('.field.handling');
+    await f.waitFor();
+    await f.scrollIntoViewIfNeeded();
+    const r0 = await game(page, readHandling), seen = [];
+    expect(r0.value === HANDLING && r0.phys === HANDLING && r0.out === `${profileName(HANDLING)} · ${HANDLING.toFixed(2)}`, `opened at ${JSON.stringify(r0)}`);
+    for (const [name, h] of PROFILE_AT) {
+      await f.getByRole('button', { name, exact: true }).click();
+      const r = await game(page, readHandling);
+      expect(r.value === h && r.settings === h && r.phys === h && r.saved === h, `${name}: slider ${r.value}, settings ${r.settings}, physics ${r.phys}, saved ${r.saved}`);
+      expect(r.out === `${name} · ${h.toFixed(2)}` && r.pressed.join() === name && r.lit.join() === name && r.lines === 3 && r.buttons.join() === 'Arcade,Sport,Simulation', `${name}: reads "${r.out}", pressed ${r.pressed.join()}, lit ${r.lit.join()}, ${r.lines} lines, buttons ${r.buttons.join()}`);
+      expect(!r.sideScroll, `${name}: the page scrolls sideways`);
+      if (name === 'Arcade') { await game(page, () => document.querySelector('.field.handling').scrollIntoView({ block: 'start' })); await page.screenshot({ path: path.join(OUT, 'phone-settings-arcade.png') }); }
+      seen.push(`${name} ${r.value}: "${r.active}"`);
+    }
+    // one step left of Simulation on the slider (the keyboard, as a switch user would): Custom, between Sport and Simulation
+    await page.locator('#handling').focus();
+    await page.keyboard.press('ArrowLeft');
+    const c = await game(page, readHandling);
+    expect(Math.abs(c.value - 0.85) < 1e-9 && c.settings === c.value && c.phys === c.value && c.saved === c.value, `custom: slider ${c.value}, settings ${c.settings}, physics ${c.phys}, saved ${c.saved}`);
+    expect(c.out === 'Custom · 0.85' && c.pressed.length === 0 && c.lit.join() === 'Custom' && c.lines === 4 && /Between Sport and Simulation/.test(c.active), `custom: reads "${c.out}", pressed ${c.pressed.join()}, lit ${c.lit.join()}, ${c.lines} lines, "${c.active}"`);
+    expect(!c.sideScroll, 'custom: the page scrolls sideways');
+    await game(page, () => document.querySelector('.field.handling').scrollIntoView({ block: 'start' }));
+    await page.screenshot({ path: path.join(OUT, 'phone-settings-custom.png') });
+    // back to the suite's value, on the slider
+    const steps = Math.round((HANDLING - c.value) / 0.05);
+    for (let k = 0; k < Math.abs(steps); k++) await page.keyboard.press(steps > 0 ? 'ArrowRight' : 'ArrowLeft');
+    const back = await game(page, readHandling);
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    expect(Math.abs(back.phys - HANDLING) < 1e-9 && Math.abs(back.saved - HANDLING) < 1e-9, `not back at ${HANDLING}: ${JSON.stringify(back)}`);
+    return `${seen.join('; ')}; slider to 0.85: "${c.out}", "${c.active}"; back to ${back.out}`;
   });
   await check('driving HUD: top bar clear of the gear readout, touch controls shown', async () => {
     await drive(page, 'Free Drive');

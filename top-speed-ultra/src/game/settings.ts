@@ -14,7 +14,7 @@ export interface Settings {
   quality: Quality;
   adaptive: boolean;        // scale resolution to hold the frame rate
   density: Density;
-  handling: number;         // 0 = arcade (assists on) .. 1 = simulation
+  handling: number;         // 0 = arcade (assists on) .. 1 = simulation; the named profiles are points on it (PROFILES)
   transmission: Transmission;
   master: number;
   engine: number;
@@ -61,6 +61,35 @@ export const QUALITY: Record<Quality, QualityPreset> = {
   ultra:  { label: 'Ultra',  renderScale: 1,    maxPixelRatio: 2,   shadows: 4096, post: true,  bloom: true,  ao: true,  msaa: 4, drawDistance: 2400, props: 1.25, texture: 2048 },
 };
 
+// Driving profiles (hypercar plan M4): named points on the handling slider, which stays the one saved value (the
+// physics reads `handling`, so saves and the suite keep working). The values are the dynamics model's (PROJECT_OC_DYNAMICS.md
+// §3.9); each line says what that point changes, from Physics.ts: tyre grip 1.12 + 0.3·(1 − h) (Sport 8 % and
+// Simulation 16 % under Arcade), the stability control's pull 5·(1 − h) per second plus a race-mode pull past about 5°
+// of slide, the slide bleed 2.2·(1 − h)², the traction control's slip target (at the tyre's peak through h 0.35, a
+// spin-catcher at 0.9), the falloff past the peak 0.02 + 0.18·h (4.7 / 11 / 18 %) and the steering lock 1 + 0.35·h.
+// Any other value is Custom: every assist scales smoothly between the named points.
+export type Profile = 'arcade' | 'sport' | 'sim';
+export const PROFILES: Record<Profile, { label: string; h: number; line: string }> = {
+  arcade: { label: 'Arcade', h: 0.15, line: 'Strong stability and traction control, the most grip; forgiving past the limit.' },
+  sport: { label: 'Sport', h: 0.5, line: 'Lighter stability control, 8% less grip; the rear can step out on the power.' },
+  sim: { label: 'Simulation', h: 0.9, line: 'Stability control only in a real slide, 16% less grip; the tyres let go past the limit.' },
+};
+export const PROFILE_IDS = Object.keys(PROFILES) as Profile[];
+// the named profile a handling value is, or 'custom' (the slider moves in 0.05 steps, so the match is exact in practice)
+export function profileOf(h: number): Profile | 'custom' {
+  for (const id of PROFILE_IDS) if (Math.abs(h - PROFILES[id].h) < 0.004) return id;
+  return 'custom';
+}
+// a custom value in words: which named points it sits between
+export function customLine(h: number): string {
+  const pts = PROFILE_IDS.map((id) => PROFILES[id]);
+  if (h < pts[0].h) return `More assisted than Arcade: stronger stability control and more grip still.`;
+  if (h > pts[pts.length - 1].h) return `Past Simulation: the least assistance and the least grip.`;
+  const i = pts.findIndex((p, k) => k < pts.length - 1 && h > p.h && h < pts[k + 1].h);
+  if (i < 0) return 'Your own point on the slider.';
+  return `Between ${pts[i].label} and ${pts[i + 1].label}: every assist scales smoothly with the slider.`;
+}
+
 // cars per kilometre per lane, and the share of aggressive drivers
 export const DENSITY: Record<Density, { label: string; perKmLane: number; bold: number }> = {
   none:     { label: 'None',     perKmLane: 0,   bold: 0 },
@@ -104,7 +133,7 @@ function guessQuality(): Quality {
 
 export function defaults(): Settings {
   return {
-    quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
+    quality: guessQuality(), adaptive: true, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true, owner: false,
   };
 }
@@ -145,6 +174,7 @@ function readSettings(): Settings {
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
       course: typeof v.course === 'string' ? v.course : d.course,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
+      handling: typeof v.handling === 'number' && Number.isFinite(v.handling) ? Math.min(1, Math.max(0, v.handling)) : d.handling,
       owner: v.owner === true,
     };
   } catch { return d; }

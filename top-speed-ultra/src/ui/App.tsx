@@ -6,7 +6,7 @@ import type { CSSProperties } from 'react';
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
-import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, loadBest } from '../game/settings';
+import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, loadBest, PROFILES, PROFILE_IDS, profileOf, customLine } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
@@ -402,9 +402,7 @@ export function App() {
                 <section className="sgroup">
                   <h3 className="sect">Driving</h3>
                   <div className="field"><label>Gearbox</label><Seg value={settings.transmission} options={['auto', 'manual']} labels={(t) => (t === 'auto' ? 'Automatic' : 'Manual')} onChange={(t) => update({ transmission: t })} /></div>
-                  <div className="field"><label htmlFor="handling">Handling</label>
-                    <div className="slider"><span>Arcade</span><input id="handling" type="range" min={0} max={1} step={0.05} value={settings.handling} style={fill(settings.handling, 0, 1)} onChange={(e) => update({ handling: Number(e.target.value) })} /><span>Sim</span></div>
-                  </div>
+                  <Handling value={settings.handling} onChange={(h) => update({ handling: h })} />
                   <div className="field"><label>Ultra Realism</label>
                     {game.current?.ultraOpen ? <>
                       <Toggle label="On: the world closes in at speed" value={settings.ultra} onChange={(v) => update({ ultra: v })} />
@@ -587,6 +585,32 @@ function fill(v: number, min: number, max: number): CSSProperties {
 }
 function Seg<T extends string>({ value, options, labels, onChange }: { value: T; options: T[]; labels: (v: T) => string; onChange: (v: T) => void }) {
   return <div className="seg" role="group">{options.map((o) => <button key={o} aria-pressed={o === value} onClick={() => onChange(o)}>{labels(o)}</button>)}</div>;
+}
+// the handling slider (0 arcade .. 1 simulation, the one saved value the physics reads) with its named profiles: each
+// button puts the slider on its point (settings.ts PROFILES), anywhere else on the slider reads Custom, and one line each
+// says what that point changes (a Custom line joins them, lit, with no profile pressed). The ticks under the track mark
+// the three points.
+function Handling({ value, onChange }: { value: number; onChange: (h: number) => void }) {
+  const cur = profileOf(value);
+  const name = cur === 'custom' ? 'Custom' : PROFILES[cur].label;
+  return (
+    <div className="field handling">
+      <label htmlFor="handling">Handling <output>{name} · {value.toFixed(2)}</output></label>
+      <div className="seg" role="group" aria-label="Handling profile">
+        {PROFILE_IDS.map((id) => <button key={id} aria-pressed={cur === id} onClick={() => onChange(PROFILES[id].h)}>{PROFILES[id].label}</button>)}
+      </div>
+      <div className="slider"><span>Arcade</span>
+        <div className="htrack">
+          <input id="handling" type="range" min={0} max={1} step={0.05} value={value} style={fill(value, 0, 1)} aria-valuetext={`${name}, ${value.toFixed(2)}`} onChange={(e) => onChange(Number(e.target.value))} />
+          {PROFILE_IDS.map((id) => <i key={id} aria-hidden="true" className={cur === id ? 'on' : ''} style={{ '--at': PROFILES[id].h } as CSSProperties} />)}
+        </div>
+        <span>Sim</span></div>
+      <dl className="profiles">
+        {PROFILE_IDS.map((id) => <div key={id} className={cur === id ? 'on' : ''}><dt>{PROFILES[id].label}</dt><dd>{PROFILES[id].line}</dd></div>)}
+        {cur === 'custom' && <div className="on"><dt>Custom</dt><dd>{customLine(value)}</dd></div>}
+      </dl>
+    </div>
+  );
 }
 function Toggle({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
   return <label className="toggle"><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /><span>{label}</span></label>;

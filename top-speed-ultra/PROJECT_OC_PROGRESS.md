@@ -4,6 +4,64 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-09: driving profiles in Settings: Arcade, Sport, Simulation (hypercar M4, committed)
+
+Branch `claude/hypercar-drive`, committed. The OC Hypercar is a procedural model built in code (no downloaded asset). Settings → Driving → Handling now has three named
+profiles at the points the dynamics model defines (`PROJECT_OC_DYNAMICS.md` §3.9): Arcade 0.15, Sport 0.5, Simulation
+0.9. A button puts the slider on its point; the slider anywhere else reads Custom (no profile pressed, a lit Custom
+line saying which two it sits between). One line each says what the point changes; ticks under the track mark the
+points; the readout says "Arcade · 0.15". The slider value stays the only saved setting the physics reads, so saves and
+the suite's hooks work as before. A new player starts in Arcade (the default was 0.35, which an older save keeps and
+Settings shows as Custom). **No physics changed** (`Physics.ts` untouched): the profiles are the model's own values;
+anything deeper is queued for a vehicle-dynamics session (`PROJECT_OC_HYPERCAR.md` §8.1, §9). Code: `settings.ts`
+(`PROFILES`, `profileOf`, `customLine`, the saved value clamped to 0..1), `App.tsx` (`Handling`), `styles.css`; the
+suite gains `SUITE_HANDLING`, the profile checks and the hypercar's race tune in the survival and race groups; the
+autopilot (`Game.ts`, the suite's driver and the menu demo) lifts the throttle in a slide (below).
+
+- **Settings, checked in the suite.** At 390 × 844 (phone group): Arcade, Sport and Simulation each set the slider,
+  the game's settings, the physics and the saved settings to 0.15 / 0.5 / 0.9, with that button pressed and its line
+  lit; one keyboard step left of Simulation reads "Custom · 0.85" with "Between Sport and Simulation: every assist
+  scales smoothly with the slider."; no sideways scroll. At 1280 × 720 (race group): Settings names the profile the run
+  drives at. Images: `tests/out/phone-settings-arcade.png`, `tests/out/phone-settings-custom.png`,
+  `tests/out/settings-profiles-1280-arcade.png`, `-sport.png`, `-simulation.png`, and a fresh profile against a save at
+  0.35 at both sizes in `tests/out/profiles/` (`settings-1280-fresh.png`, `settings-1280-saved035.png`,
+  `settings-390-fresh.png`, `settings-390-saved035.png`; `tests/out/profiles/shoot.mjs`).
+- **Measured per profile** (`node tests/dynamics.mjs`: 1,742 passed, 0 failed; every car and both of the hypercar's
+  tunes through `tuneFor` in `tests/out/profiles/measure.mjs`, table in `PROJECT_OC_HYPERCAR.md` §8.1): e.g. the
+  Corsa 0-60 3.09 / 3.71 / 4.71 s, 100-0 71.1 / 76.3 / 84.0 m, 1.04 / 1.15 / 1.12 g at 40 m/s in Arcade / Sport /
+  Simulation; the Unleashed tune 2.20 / 2.38 / 2.77 s, 56.1 / 60.4 / 66.5 m, 1.44 / 1.50 / 1.45 g. No spin on the
+  harness's straights with a lane change and a yaw shove: every earnable car and the race tune at 201 mph (worst
+  0.58-1.34°), the Unleashed tune at 300 and 336 mph (worst 0.71-1.05°).
+- **Found, not fixed (from M3):** the race tune is 0.6 mph over the Corsa's top speed in every profile (229.7 vs 229.1)
+  and 0.01 g over at 80 m/s in Simulation. A race CdA of 0.81 fixes the top speed; the 80 m/s figure did not move with
+  CdA, ClA or grip, so it needs the tune's owner (§8.1).
+- **Suite** (`SUITE_HANDLING=<h> npm test -- --only=survival,race,phone`, the final build): Arcade 0.15 **24/24**,
+  Sport 0.5 **24/24**, Simulation 0.9 **24/24**. In each: the GT and the hypercar's race tune build a Survival streak
+  in the seeded heavy traffic (race tune: score 12,730 / 11,609 / 11,329, best streak 16.64 s; the run asserts the
+  physics drove at the suite's value), and each wins the Irvine Sprint flat out on the autopilot (race tune P1 in
+  2:05.2 / 3:03.2 / 2:25.4; the time depends on the traffic it meets, see below). New checks: Settings at 1280 × 720
+  names the run's profile; the 390 × 844 check above.
+- **Found by the proof, fixed in the test driver.** The first Simulation run failed the new hypercar Survival check:
+  braking behind traffic, then 0.85 throttle out of it, the race tune's tail stepped out (4° of body slip at 38 m/s;
+  the Simulation traction control only catches a spin) and the autopilot let it walk a lane into a box truck at
+  25.5 s. A probe of the same drive on seven seeds (`tests/out/profiles/survival-probe.mjs`,
+  `survival-probe-before.txt`): at 0.9 the race tune ended 3 of 7 drives, the Corsa 1 of 6, the GT 0 of 7; at 0.15 the
+  race tune 0 of 6. The autopilot now lifts in a slide (throttle × 1 − 0.95·smoothstep(1.4°, 3.4°) of body slip):
+  29 of 29 drives then ran the full 45 s with no contact, worst slip 3.3° (`survival-probe-after.json`); the Arcade
+  drives were identical to before. In the Irvine Sprint (`tests/out/profiles/race-probe.mjs`, each run twice and
+  repeating exactly) the lift never engaged in Arcade (worst slip 1.19° GT, 0.84° race tune) and in Sport only after
+  a contact; in Simulation the cars reach 1.56-1.59° before any contact, so it eases them there. The suite's race
+  times moved between builds (GT at 0.15: 2:11.1 before, 2:40.9 after) because its race checks carry the autopilot's
+  lane over from the previous check and the traffic met differs; with the lane reset each probe run repeats to the
+  tenth. For play: in Simulation the race tune steps out on the power more readily than the Corsa (13 % more torque at
+  the wheels in each gear).
+- **Also after the autopilot change, at the suite's default 0.35:** `npm test -- --only=abilities,interchanges` 28/28,
+  every hypercar number as in the M5 entry (0-60 0.792 s with THRUST, a full tank 6.03 s, 334.32 → 340.6 mph, Ground
+  Lock 1.54 → 2.04 g at 25 m/s). Not run this time: boot, progression, render, launch.
+- **Not changed, for the other session:** `Physics.ts` (the profiles need nothing from it). If the Unleashed tune
+  should corner harder in Arcade at 40 m/s (held at 1.81 g by Arcade's steering lock and the `rKin / (1 + 0.0009 v²)`
+  yaw target, §6.3 of the plan), that is a change there.
+
 ## 2026-10-20: hypercar M5 committed (Cold Thrust, Ground Lock, Thrust Hop)
 
 Milestone M5 is done and committed on `claude/hypercar-drive`. The OC Hypercar is still a procedural model built in

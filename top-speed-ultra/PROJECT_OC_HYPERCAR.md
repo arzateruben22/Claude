@@ -781,9 +781,98 @@ Every milestone ends with `npm run build`, the named suite groups, renders read 
 | **M1b Body fidelity (queued, 2026-10-19)** | M1 landed with its side view, budget and code accepted by both reviewers, but the art review (twice) found the front, rear and top not yet recognisably the sheet's car. By the owner's build order (the hypercar drivable first), the body was committed as it is and these fixes wait for a fidelity pass after M6; M2 takes the headlamp blades because it owns the lights:<br>1. Nose and face (hyper nose style plus the car-shape.ts masks): replace the convex black lower 'bumper' with the sheet's structure. Put a crisp silver lip at blade height overhanging a black intake zone set back 8-12 cm, with angular vertical fins and a central divider. Bring silver fender 'fangs' down each outer corner to the splitter, with the LED on the fang's inner edge. Sharpen the nose in plan (lower nose.R and raise p, or add a plan V) so the bonnet comes to a blunt point at the badge, as in the hero panel.<br>2. Headlamp blades: make them read as the sheet's main feature. Each runs from about 0.12 m off centre to the fender corner (about 0.75 m long per side), about 2.5 cm tall, emissive, under a dark lamp-socket recess. Today they are thin short arcs on the edge of a black mass.<br>3. Bonnet: shrink the filled dark V (the first mask) to a narrow spine, no more than 10 cm at the cowl, with an arrow tip at the badge. Add two dark hood vents or sockets either side near the cowl, so the bonnet reads silver as on the sheet.<br>4. Splitter: cut proud from 0.24 to about 0.10-0.12 m so it tucks under the nose. Make it read carbon black, not tan, in daylight. Shrink the corner end plates. Re-check SIDE against the sheet: no plank ahead of the nose.<br>5. Side: enlarge intakeQ into the sheet's big scoop. It should be a dark sculpted cavity from the door's rear edge down and back to the sill, about twice the current area, with the door crease feeding into it and the blue sill LED clearly visible in the SIDE view.<br>6. Plan (WP): add the coke-bottle. Take the half-width at the cabin from 0.925 to about 0.84 m and keep the rear haunches about 1.03-1.05 m, so the TOP view reads as front and rear pods. Reshape the haunch openings into the sheet's large dark teardrops; drop the finned rocket shapes and the cross-ribs that read as wires.<br>7. Rear: wrap the silver haunches round the sides of a sculpted, recessed tail instead of a flat black rectangular box. Remove the stepped silver/carbon corner notches. Let the red bar follow the tail's upper edge and wrap slightly round the corners. Show structure under the wing between the fins.<br>8. Proof renders: shoot the hero from the sheet's low camera (about 0.6 m, front-left, close, wide lens) so the comparison is like for like. Remove the mottled reflection tears on the bonnet and front arch in the hero (raise the preview probe resolution for proof shots, or fix their cause). Darken the canopy glass so the hero doesn't show white struts. Then rebuild hyper-vs-ref and include a matched hero overlay.<br>9. Details: un-clip the caliper's OC mark (or drop it). Round off the square wheel-well opening visible in hyper-wheel-r2. Lift the front and rear views' paint from mid grey (about 140,148,165) toward the sheet's light silver.<br>10. Re-run the same evidence afterwards: the budgets against the Corsa (still within 40 / 260k high and 36 / 135k phone), the other four cars unchanged within render noise, tsc on both configs, the build, and the boot, render and phone suite groups. | The same renders as M1, each beside its reference crop, judged again by the art lens; the other four cars pixel-unchanged; budget inside §10. Groups `boot`, `render`, `phone` |
 | **M2 Lights and cockpit** | LED material and strips (splitter, sills, diffuser, wing plates), the blades, the red bar (brake-lit through `mats.tail`), headlight beams moved to the blades, bloom on High and Ultra; interior `'hyper'` (Corsa buckets, display binnacle, pressure gauge, ambient strip). Optional tyre lettering in our own text | Night and sunset renders: beauty, rear, chase, seat, dash. In-game frames: braking raises the bar (emissive 1.6 → 5); beams on at night. Groups `render`, `phone` |
 | **M3 The fastest car: two tunes** | `CarDef` with `unleashed` and `race` sets; `applyCar(c, tune)` latched at `start()`; new `SPEC` fields (brake gain, `Cf`/`Cr`, steering gain, collision box); HUD chip; garage card from measured numbers; the Free Drive earnings cap; the swept traffic collision; streaming at speed. **Blockers from M1, before the `CarDef`:** the seat drop must land first (the roof over the shared eye is 1.067 m, 0.093 m below it), and the narrow canopy puts its flank 0.06 m from the eye at x −0.37 m once dropped, so the driver should sit further in (the sheet's occupants are about ±0.25 m out). `PlayerCar.update` spins both axles at `vx / SPEC.wheelR` (0.345 m) while this car's tyres are 0.35 / 0.37 m: scale each axle's spin by `SPEC.wheelR / r` (§3) | A headless physics test (this document's harness, promoted to `tests/`) asserts: Unleashed ≥ §5.2's numbers and first on every metric; the race tune ≤ the Corsa on every metric at handling 0.35 and 1.0. In-game: Free Drive applies Unleashed (`SPEC.power` 1.5 MW); Races, Time Trial and Survival apply the race tune; nothing changes mid-run. The ten checks in §5.5. Groups `boot`, `race`, `survival`, `progression`, `interchanges`, and a new `hypercar` group |
-| **M4 Driving profiles: Arcade, Sport, Simulation** | Named points on the handling slider (Arcade 0.0–0.35, Sport about 0.6, Simulation 1.0) with their assists shown; the stability control's yaw target scaled by the car's grip, so the rKin / (1 + 0.0009 v²) cap doesn't throttle a 1.2 g car | Each profile's 0-60, 100-0 and lateral g logged for all five cars and both hypercar tunes. No spins at 200 mph in Arcade (the existing claim) and at 300 mph on straights in the hypercar. Race tune still ≤ the Corsa in every profile |
+| **M4 Driving profiles: Arcade, Sport, Simulation** | **Done 2026-11-09 (committed)** (§8.1; logged in `PROJECT_OC_PROGRESS.md`): the Settings profiles at the dynamics model's points (Arcade 0.15, Sport 0.5, Simulation 0.9), one line each, Custom off those points, a new player in Arcade; no physics changed. Planned as: named points on the handling slider (Arcade 0.0–0.35, Sport about 0.6, Simulation 1.0) with their assists shown; the stability control's yaw target scaled by the car's grip, so the rKin / (1 + 0.0009 v²) cap doesn't throttle a 1.2 g car | Each profile's 0-60, 100-0 and lateral g logged for all five cars and both hypercar tunes. No spins at 200 mph in Arcade (the existing claim) and at 300 mph on straights in the hypercar. Race tune still ≤ the Corsa in every profile |
 | **M5 Cold Thrust, Ground Lock, Thrust Hop** | **Done (committed 2026-10-20 entry). Built 2026-10-20, repaired after review 2026-10-21, the repaired build re-verified 2026-11-09, the hop's planner retuned for play 2026-11-09** (§6.4; logged in `PROJECT_OC_PROGRESS.md`; as built in §6.2-6.4). Thrust force, fan suction, tank, airborne state, controls, jets, sound, HUD and cockpit gauge, the rules of §6 | `abilities`: thrust 0-60 ≤ 0.8 s; tank drains and refills to §6.1's numbers; off in race, time and survival, in a countdown and while paused; Ground Lock about 2 g at 25 m/s (≥ 1.85 g in Arcade) and at 40 m/s in Simulation (≥ 1.9 g), more than the tyres alone (Arcade's 1.81 g at 40 m/s is held by its steering lock, §6.3); a hop clears a parked sedan and a moving semi at set closing speeds with no contact and lands on the same path (path id unchanged, inside the lanes); in natural moderate traffic at least half the double-taps lined up 50 m behind a vehicle at +30 m/s (and 15 m behind a sedan at +15 m/s) go over it with 0 contacts on the same road, and at least 30 % of casual double-taps at 55 m/s are granted; refused under an overpass and a gantry. `phone`: the THRUST button's hold and double-tap at 390 × 844. Chase-view renders of the jets |
 | **M6 Founder Edition exclusives** | Plaque (sill and console), reserved paint and LEDs, the wake-up sweep, the reveal stage, the run-card badge | Renders: the door sill and console (plaque reads "No. 0000 · TEST" in owner mode), the reveal stage, a run card. The reserved paint can't be chosen for another car. No real serials anywhere until the store's entitlement exists |
+
+### 8.1 M4 as built (2026-11-09, committed)
+
+**What it is.** Three named driving profiles in Settings, at the points the dynamics model already defines on the
+handling slider (`PROJECT_OC_DYNAMICS.md` §3.9): **Arcade 0.15**, **Sport 0.5**, **Simulation 0.9**. Each button puts
+the slider on its point; the slider anywhere else reads **Custom** (no profile pressed, a Custom line lit, "Between
+Sport and Simulation: every assist scales smoothly with the slider"). Ticks under the track mark the three points; the
+readout says "Arcade · 0.15". One line each, from what `Physics.ts` does at that point:
+
+| Profile | The line in Settings | What the physics does there |
+| --- | --- | --- |
+| Arcade 0.15 | Strong stability and traction control, the most grip; forgiving past the limit. | Tyre μ 1.375; stability pull 4.25/s, slide bleed 1.59/s; TC holds the tyre's peak; falloff past the peak 4.7 %; steering lock ×1.05 |
+| Sport 0.5 | Lighter stability control, 8% less grip; the rear can step out on the power. | μ 1.27 (−7.6 %); pull 2.5/s plus the race-mode pull past about 5° of slide, bleed 0.55/s; TC lets the rear flare (normalised slip 3.9); falloff 11 %; lock ×1.18 |
+| Simulation 0.9 | Stability control only in a real slide, 16% less grip; the tyres let go past the limit. | μ 1.15 (−16.4 %); pull 0.5/s plus the race-mode pull, bleed 0.02/s; TC only catches a spin (5.15); falloff 18 %; lock ×1.32 |
+
+**Where.** `src/game/settings.ts` (`PROFILES`, `PROFILE_IDS`, `profileOf`, `customLine`; the saved `handling` is
+clamped to 0..1 on load), `src/ui/App.tsx` (`Handling`, in Settings → Driving), `src/ui/styles.css` (`.htrack`,
+`.profiles`). The slider value stays the one saved setting the physics reads, so older saves load as they were and the
+suite's hooks (`phys.handling`, the settings it seeds) work unchanged. The suite (`tests/regression.mjs`) takes
+`SUITE_HANDLING`, checks Settings at 390 × 844 and 1280 × 720, and drives the hypercar's race tune in its survival and
+race groups. The autopilot in `Game.ts` (the suite's driver and the menu's demo) lifts in a slide (below).
+
+**One decision.** A new player now starts in **Arcade (0.15)**, so the first look at Settings shows a named profile.
+The default was 0.35 (between Arcade and Sport), which `figures()` and §5's tables were measured at; a save made
+before this keeps 0.35 and Settings shows it as Custom ("Between Arcade and Sport"). Reverting is one constant
+(`defaults()` in `settings.ts`).
+
+**No physics changed.** `Physics.ts` is untouched: the profiles are the dynamics model's own values. Weight transfer,
+load sensitivity, ABS and traction control are that model's (merged from `claude/drift`). Anything deeper waits for a
+vehicle-dynamics session (§9's queue). The plan's "grip-scaled stability control" was found already covered by the
+model's `rCap = mu·g/max(5, v)` (`PROJECT_OC_DYNAMICS.md` §3.10). What still holds the Unleashed tune in Arcade at
+40 m/s (1.81 g with Ground Lock, §6.3) is Arcade's steering lock and the `rKin / (1 + 0.0009 v²)` yaw target, both in
+`Physics.ts`; changing them is for that session, not this milestone.
+
+**Measured** (`node tests/dynamics.mjs`: 1,742 passed, 0 failed; the real `CarDef`s and both of the hypercar's tunes
+through `tuneFor` with the harness's own scenarios, `tests/out/profiles/measure.mjs`):
+
+| Profile | Car | 0-60 s | 0-100 s | top mph | 100-0 m | lat g 25 / 40 / 80 m/s |
+| --- | --- | --- | --- | --- | --- | --- |
+| Arcade 0.15 | Rossini GT | 3.25 | 5.88 | 209.1 | 74.8 | 1.18 / 1.00 / 0.60 |
+| | Rossini Brio | 3.19 | 6.53 | 199.6 | 70.2 | 1.27 / 1.08 / 0.68 |
+| | Rossini Corsa | 3.09 | 5.45 | 229.1 | 71.1 | 1.23 / 1.04 / 0.63 |
+| | Vela E | 3.32 | 5.78 | 222.6 | 75.4 | 1.10 / 0.87 / 0.45 |
+| | OC Hypercar, Unleashed | 2.20 | 3.75 | 337.9 | 56.1 | 1.58 / 1.44 / 1.05 |
+| | OC Hypercar, race tune | 3.09 | 5.46 | 229.7 | 70.8 | 1.22 / 1.02 / 0.61 |
+| Sport 0.5 | Rossini GT | 3.97 | 6.73 | 209.0 | 80.5 | 1.15 / 1.09 / 0.80 |
+| | Rossini Brio | 3.69 | 7.03 | 199.6 | 75.6 | 1.23 / 1.17 / 0.89 |
+| | Rossini Corsa | 3.71 | 6.33 | 229.1 | 76.3 | 1.20 / 1.15 / 0.84 |
+| | Vela E | 3.95 | 6.64 | 222.6 | 81.4 | 1.10 / 1.01 / 0.63 |
+| | OC Hypercar, Unleashed | 2.38 | 4.02 | 337.9 | 60.4 | 1.50 / 1.50 / 1.28 |
+| | OC Hypercar, race tune | 3.70 | 6.33 | 229.7 | 76.2 | 1.19 / 1.13 / 0.82 |
+| Simulation 0.9 | Rossini GT | 5.01 | 8.49 | 209.0 | 88.8 | 1.05 / 1.06 / 1.00 |
+| | Rossini Brio | 4.59 | 8.07 | 199.6 | 83.1 | 1.13 / 1.14 / 1.07 |
+| | Rossini Corsa | 4.71 | 7.98 | 229.1 | 84.0 | 1.10 / 1.12 / 1.04 |
+| | Vela E | 4.99 | 8.35 | 222.6 | 89.8 | 1.03 / 1.00 / 0.78 |
+| | OC Hypercar, Unleashed | 2.77 | 4.63 | 337.9 | 66.5 | 1.39 / 1.45 / 1.43 |
+| | OC Hypercar, race tune | 4.71 | 8.03 | 229.7 | 83.8 | 1.10 / 1.11 / 1.05 |
+
+- **No spins on the straights** (the harness's lane change at 1 s and 0.12 rad/s yaw shove at 4 s): every earnable car
+  and the race tune at 201 mph, worst body slip 0.58-0.79° in Arcade, 0.73-1.04° in Sport, 0.89-1.34° in Simulation;
+  the Unleashed tune (the real `CarDef`, all-wheel drive and vectoring) at 300 and 336 mph, worst 0.71 / 0.71° in
+  Arcade, 0.87 / 0.88° in Sport, 1.02 / 1.05° in Simulation. After 7 s every run was at most 0.18° (the Vela E in
+  Simulation; the Unleashed tune at most 0.15°).
+- **The suite at each profile** (`SUITE_HANDLING=0.15|0.5|0.9 npm test -- --only=survival,race,phone`, the final
+  build): 24/24, 24/24, 24/24. The survival and race groups now drive the hypercar's race tune too (a Survival streak in
+  the seeded heavy traffic; a flat-out win of the Irvine Sprint) and check the run drove at the suite's handling;
+  Settings is checked at 1280 × 720 (race group) and 390 × 844 (phone group). Images:
+  `tests/out/settings-profiles-1280-{arcade,sport,simulation}.png`, `tests/out/phone-settings-arcade.png`,
+  `tests/out/phone-settings-custom.png`, and `tests/out/profiles/settings-{1280,390}-{fresh,saved035}.png` (a new
+  player against a save at the old 0.35).
+- **Found by the proof: the autopilot spun the race tune out in Simulation.** The first suite run at 0.9 ended the
+  hypercar's 45 s heavy-traffic Survival drive at 25.5 s: braking behind traffic to 27 m/s, then 0.85 throttle out of
+  it, the tail stepped out (4° of body slip at 38 m/s; in Simulation the traction control only catches a spin) and the
+  car walked a full lane right into a box truck while the autopilot held its lane. A probe of the same drive on more
+  seeds (`tests/out/profiles/survival-probe.mjs`, before: `survival-probe-before.txt`): at 0.9 the race tune ended 3 of
+  7 drives (worst slip 13-19° in the slides), the Corsa 1 of 6 (17.7°), the GT 0 of 7; at Arcade 0.15 the race tune
+  0 of 6 (worst 1.3°). The car does what Simulation promises; the test driver didn't lift. The autopilot now eases off
+  in a slide (throttle × 1 − 0.95·smoothstep(1.4°, 3.4°) of body slip), as a driver does. After: 29 of 29 drives ran
+  the full 45 s with no contact, worst slip 3.3° (`survival-probe-after.json`); the Arcade drives came out identical
+  to before (the lift never engaged). For play: in Simulation the race tune steps out on the power more readily than
+  the Corsa (1,000 Nm on a 4.0 final against 820 Nm on 4.3: 13 % more torque at the wheels in each gear).
+- **The race tune against the Corsa: not at or under on every number (found here, from M3, not fixed by M4).** It is
+  0.6 mph over on top speed in all three profiles (229.7 vs 229.1) and 0.01 g over at 80 m/s in Simulation (1.05 vs
+  1.04; at h 1.0 it is 1.15 vs 1.09); its 100-0 is 0.1-0.3 m shorter and its Sport 0-60 0.01 s quicker, at the
+  harness's noise bounds. `tests/dynamics.mjs` reports this as an advisory (the same CarDef as its race-tune-like
+  test car). A race CdA of 0.81 brings the top speed under in every profile (228.7-228.8 mph) and changes nothing
+  else past noise; the Simulation 80 m/s figure did not move with CdA 0.81, ClA 0.95 or grip 1.03 (1.06 in each), so
+  it needs a look at why the heavier race tune holds more at 80 m/s in Simulation than the Corsa. Queued for the
+  tune's owner (§5.3: "if any measurement puts the race tune over the Corsa, it becomes the Corsa's numbers verbatim").
 
 ## 9. Physics: what exists, what each milestone adds, what waits
 
@@ -817,7 +906,7 @@ Every milestone ends with `npm run build`, the named suite groups, renders read 
 - An airborne state, scripted as in §6.4. While it lasts, `step()` skips the tyre forces, path switching and wall
   contact, and `PlayerCar` adds the hop height.
 
-**M4** adds the three profiles and the grip-scaled stability control.
+**M4** adds the three profiles (built 2026-11-09, §8.1: Settings only, no physics). The grip-scaled stability control was found already in the model (`rCap`, `PROJECT_OC_DYNAMICS.md` §3.10).
 
 **Queued for a deeper vehicle-dynamics session** (Fable-class, the same work as the drift physics in the `tsu-drift`
 worktree):
