@@ -27,7 +27,7 @@ spec.loader.exec_module(tts)
 NARRATOR = "am_michael"          # DECISIONS.md: Light Minute's narrator
 # Kokoro speed per line, chosen from measured durations (README.md, "Voice"): the short questions
 # slower so they land, the two long explanatory lines a little brisker so the film stays under 75 s.
-SPEEDS = {"vo01": 0.9, "vo02": 0.95, "vo03": 0.95, "vo04": 0.95, "vo05": 0.95, "vo06": 0.95, "vo07": 0.95, "vo08": 0.78}
+SPEEDS = {"vo01": 0.92, "vo02": 0.95, "vo03": 0.95, "vo04": 0.95, "vo05": 0.95, "vo06": 0.95, "vo07": 0.95, "vo08": 0.78}
 
 
 def main():

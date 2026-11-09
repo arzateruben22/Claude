@@ -13,7 +13,7 @@ direction for the compiler. In a vo line, `{cN}` after a sentence ties it to `cl
 `python3 -I kits/cinema/script/lint.py films/channels/space/ep11 --segment readout`.
 
 ## hook {shot: frame 0, the payoff: Saturn bobbing in a giant tank, ring tilted on the waterline; badge: thought experiment; spine "Saturn in water: ?" · title: "Saturn *floats*" · pre: 0.03 · picture-only 0.2 s · energy: 0.7} (0–3.4 s)
-vo: Could the planet *Saturn* float? {-} On paper, *yes*. {c1}
+vo: *Saturn*: lighter than water? {-} On average, *yes*. {c1}
 
 ## normal {shot: Saturn beside a tank wider than itself; a density bar compares Saturn with water · spine "density: Saturn 0.7 · water 1" · picture-only 0.2 s · energy: 0.45} (3.4–13 s)
 vo: Saturn weighs less than the same amount of water, space for space. {c20} Here's a thought experiment: a tank of water wider than *Saturn*. {-}

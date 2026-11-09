@@ -12,16 +12,16 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Could the planet Saturn float? On paper, yes.",
+   "text": "Saturn: lighter than water? On average, yes.",
    "stars": [
     "Saturn",
     "yes"
    ],
-   "phonemes": "kʊd ðə plˈænɪt sˈæɾɜːn flˈoʊt? ˌɔn pˈeɪpɚ, jˈɛs.",
-   "speed": 0.9,
+   "phonemes": "sˈæɾɜːn: lˈaɪɾɚ ðɐn wˈɔːɾɚ? ˌɔn ˈævɹɪdʒ, jˈɛs.",
+   "speed": 0.92,
    "file": "01.wav",
-   "dur": 3.14,
-   "sha256": "8c14a9f13ea3e75bac73c1762d9560508f92ae7601b71d9025bb688ba6296258"
+   "dur": 3.029,
+   "sha256": "6700c465b7055948cc0c6d599c968ee6da9e9abe680d5cf564d118e1c9ef1558"
   },
   {
    "id": "vo02",

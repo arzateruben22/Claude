@@ -115,7 +115,7 @@ const pulse = (t) => { for (const tp of EXPL) { const x = t - tp; if (x > 0 && x
 const pulse0 = (t) => { let z = 0; for (const tp of CUE.pulses) { const x = t - tp; if (x > 0 && x < 2.2) z += 0.035 * (x < 0.25 ? Math.sin((x / 0.25) * 1.5708) : Math.exp(-(x - 0.25) / 0.55)); } return z; };
 // a periodic table (simplified): 18 columns, 7 rows; iron and gold lit
 const ROWS = [[0, 17], [0, 1, 12, 13, 14, 15, 16, 17], [0, 1, 12, 13, 14, 15, 16, 17], Array.from({ length: 18 }, (_, i) => i), Array.from({ length: 18 }, (_, i) => i), Array.from({ length: 18 }, (_, i) => i), Array.from({ length: 18 }, (_, i) => i)];
-const TX0 = 180, TY0 = 340, CW = 40, CH = 35, FE = [3, 7], AU = [5, 10];
+const TX0 = 54, TY0 = 300, CW = 54, CH = 46, FE = [3, 7], AU = [5, 10];
 const cellXY = (r, c) => [TX0 + c * CW + CW / 2, TY0 + r * CH + CH / 2];
 const heavier = (r, c) => r > FE[0] || (r === FE[0] && c > FE[1]);
 const NR = mul(5);
@@ -125,19 +125,19 @@ function explainer(t, k) {
   if (k <= 0.01) return;
   ctx.fillStyle = rgba(VOID, 0.985 * k); ctx.fillRect(0, 0, W, H);
   const hK = fadeIn(t, CUE.heavier - 0.2, 0.7);
-  const zin = E.inout3(seg(t, CUE.heavier + 0.2, CUE.heavier + 1.2)) * (1 - E.inout3(seg(t, CUE.soak - 0.8, CUE.soak - 0.1))), zs = 1 + 0.75 * zin, zfx = 270 * zin + 540 * (1 - zin), zfy = 450 * zin + 450 * (1 - zin);
+  const zin = E.inout3(seg(t, CUE.heavier + 0.2, CUE.heavier + 1.2)) * (1 - E.inout3(seg(t, CUE.soak - 0.8, CUE.soak - 0.1))), zs = 1 + 0.4 * zin, zfx = 400 * zin + 540 * (1 - zin), zfy = 470 * zin + 450 * (1 - zin);
   ctx.save(); ctx.translate(zfx * sx, zfy * sy); ctx.scale(zs, zs); ctx.translate(-zfx * sx, -zfy * sy);
   for (let r = 0; r < ROWS.length; r++) for (const c of ROWS[r]) {
     const [x, y] = cellXY(r, c), isFe = r === FE[0] && c === FE[1], isAu = r === AU[0] && c === AU[1];
     ctx.beginPath(); ctx.roundRect(x * sx - (CW / 2 - 2) * sx, y * sy - (CH / 2 - 2) * sy, (CW - 4) * sx, (CH - 4) * sy, 5 * S1);
     ctx.fillStyle = rgba(isAu ? LEMON : isFe ? LILAC : TXT2, (isAu || isFe ? 0.95 : heavier(r, c) ? 0.12 + 0.2 * hK : 0.14) * k); ctx.fill();
   }
-  label("Fe  iron", cellXY(FE[0], FE[1])[0], cellXY(FE[0], FE[1])[1] - 40, LILAC, k, 26);
-  label("Au  gold", cellXY(AU[0], AU[1])[0] + 20, cellXY(AU[0], AU[1])[1] + 40, LEMON, k, 26);
+  label("Fe  iron", cellXY(FE[0], FE[1])[0], cellXY(FE[0], FE[1])[1] - 52, LILAC, k, 36);
+  label("Au  gold", cellXY(AU[0], AU[1])[0] + 20, cellXY(AU[0], AU[1])[1] + 52, LEMON, k, 36);
   if (hK > 0.01) { const [x0, y0] = cellXY(...FE), [x1, y1] = cellXY(...AU); ctx.strokeStyle = rgba(LEMON, 0.9 * hK * k); lw(3.5); ctx.beginPath(); ctx.moveTo(x0 * sx, y0 * sy); ctx.lineTo((x0 + (x1 - x0) * hK) * sx, (y0 + (y1 - y0) * hK) * sy); ctx.stroke(); }
   ctx.restore();
   // a nucleus soaking up neutrons (slowly at first, then a flood)
-  const cx = 540, cy = 880, base = 54, soak = seg(t, CUE.soak - 0.3, CUE.fast), flood = seg(t, CUE.fast, CUE.n + (CUE.c - CUE.n));
+  const cx = 540, cy = 790, base = 54, soak = seg(t, CUE.soak - 0.3, CUE.fast), flood = seg(t, CUE.fast, CUE.n + (CUE.c - CUE.n));
   const nuc = base * (1 + 0.45 * E.inout3(soak) + 0.35 * flood);
   ctx.fillStyle = rgba(LEMON, 0.16 * k); circ(cx, cy, nuc + 16); ctx.fill();
   const NN = 26; for (let i = 0; i < NN; i++) { const a = i * 2.399, d = Math.sqrt((i + 0.5) / NN) * nuc * 0.92; circ(cx + Math.cos(a) * d, cy + Math.sin(a) * d, 9); ctx.fillStyle = rgba(i % 2 ? LEMON : ICE, 0.95 * k); ctx.fill(); }
@@ -192,6 +192,7 @@ for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, lit: () => true, value: () => 0, fmt: () => c.text });
   CEL[c.id] = el; el.classList.add(c.read ? "lm-read" : "lm-clock");
   const lb = el.querySelector(".lb");
+  if (c.id === "c-heavy" && lb) lb.style.fontSize = "3.6vmin";
   if (lb) lb.style.textShadow = "0 0 1.2vmin rgba(8,10,28,.95), 0 0 2.6vmin rgba(8,10,28,.85)";
   const v = el.querySelector(".v");
   if (v && c.text.length > 12) v.style.fontSize = c.read ? "4.2vmin" : "5.2vmin";
@@ -270,7 +271,7 @@ window.seek = function (t) {
   bG.attributes.position.needsUpdate = true; bG.attributes.alpha.needsUpdate = true; bG.attributes.size.needsUpdate = true;
   // the ring takes them: it glints as beads arrive; it turns slowly
   const pp = (c) => Math.exp(-Math.pow((tt - c) / 0.4, 2)); ringMat.uniforms.uGlint.value = Math.min(1.6, arrived / NB * 1.1 + 0.15 * (tt < CUE.spiral0 ? 1 : 0) + 0.5 * (pp(CUE.poem) + pp(CUE.chem))); ringMat.uniforms.uT.value = tt;
-  jewel.scale.setScalar(1 + 0.12 * (pp(CUE.poem) + pp(CUE.chem))); jewel.rotation.y = 0.4 + 0.12 * tt; jewel.rotation.z = 0.2 + 0.05 * tt;
+  jewel.scale.setScalar(1 + 0.12 * (pp(CUE.poem) + pp(CUE.chem))); jewel.rotation.order = "YXZ"; jewel.rotation.set(0.95 + 0.15 * Math.sin(tt * 0.6), Math.atan2(camera.position.x - RING[0], camera.position.z - RING[2]) + 0.35 * Math.sin(tt * 0.5), 0.15);
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 0.8, bandGain: 0.7 });
   overlay2d(t);
   hud.update(t); tRing.update(t); eRing.update(t);

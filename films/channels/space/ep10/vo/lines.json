@@ -40,15 +40,15 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Nothing travels faster than light, so nothing gets out from there. Now picture a friend, falling toward it, while you watch from far away.",
+   "text": "Nothing travels faster than light, so nothing gets out from there. Now picture a friend, hovering close to it, while you watch from far away.",
    "stars": [
-    "toward"
+    "hovering"
    ],
-   "phonemes": "nˈʌθɪŋ tɹˈævəlz fˈæstɚ ðɐn lˈaɪt, sˌoʊ nˈʌθɪŋ ɡˈɛts ˈaʊt fɹʌm ðˈɛɹ. nˈaʊ pˈɪktʃɚɹ ɐ fɹˈɛnd, fˈɔːlɪŋ təwˈɔːɹd ɪt, wˌaɪl juː wˈɑːtʃ fɹʌm fˈɑːɹ ɐwˈeɪ.",
+   "phonemes": "nˈʌθɪŋ tɹˈævəlz fˈæstɚ ðɐn lˈaɪt, sˌoʊ nˈʌθɪŋ ɡˈɛts ˈaʊt fɹʌm ðˈɛɹ. nˈaʊ pˈɪktʃɚɹ ɐ fɹˈɛnd, hˈʌvɚɹɪŋ klˈoʊs tʊ ɪt, wˌaɪl juː wˈɑːtʃ fɹʌm fˈɑːɹ ɐwˈeɪ.",
    "speed": 0.95,
    "file": "03.wav",
-   "dur": 8.788,
-   "sha256": "ae88cfd7e75e2fbeb914fb7f0830c725839b1c0af2efb5caf39f9df4edd97f60"
+   "dur": 8.867,
+   "sha256": "6d2248ceb2c5f9ba36713e813e520a5c26c11fdf54060e71d6381ca74f3b6691"
   },
   {
    "id": "vo04",
@@ -67,19 +67,18 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "To you, far away, your friend's clock seems to tick slower. To them, it's everyone else who seems to speed up. The closer they get, the bigger the gap.",
+   "text": "To you, far away, your friend's clock seems to tick slower. To someone hovering close, everyone else seems to speed up. The closer they hover, the bigger the gap.",
    "stars": [
     "you",
     "slower",
-    "them",
     "up",
     "gap"
    ],
-   "phonemes": "tə juː, fˈɑːɹ ɐwˈeɪ, jʊɹ fɹˈɛndz klˈɑːk sˈiːmz tə tˈɪk slˈoʊɚ. tə ðˌɛm, ɪts ˈɛvɹɪwˌʌn ˈɛls hˌuː sˈiːmz tə spˈiːd ˈʌp. ðə klˈoʊsɚ ðeɪ ɡˈɛt, ðə bˈɪɡɚ ðə ɡˈæp.",
+   "phonemes": "tə juː, fˈɑːɹ ɐwˈeɪ, jʊɹ fɹˈɛndz klˈɑːk sˈiːmz tə tˈɪk slˈoʊɚ. tə sˈʌmwʌn hˈʌvɚɹɪŋ klˈoʊs, ˈɛvɹɪwˌʌn ˈɛls sˈiːmz tə spˈiːd ˈʌp. ðə klˈoʊsɚ ðeɪ hˈʌvɚ, ðə bˈɪɡɚ ðə ɡˈæp.",
    "speed": 0.95,
    "file": "05.wav",
-   "dur": 9.88,
-   "sha256": "e7168be390c4e7b39f504e5d0bc3b25a55156a459f8ff5b62ee2c948e34cfafa"
+   "dur": 10.56,
+   "sha256": "2511ed0c6d40f285e597c2a54b994a5248608ddf57b70fdd3ea4eb22beee6708"
   },
   {
    "id": "vo06",
@@ -111,15 +110,15 @@
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: a planet that could float in a big enough tub.",
+   "text": "Next: a planet lighter than water.",
    "stars": [
-    "float"
+    "lighter"
    ],
-   "phonemes": "nˈɛkst: ɐ plˈænɪt ðæt kʊd flˈoʊt ɪn ɐ bˈɪɡ ɪnˈʌf tˈʌb.",
+   "phonemes": "nˈɛkst: ɐ plˈænɪt lˈaɪɾɚ ðɐn wˈɔːɾɚ.",
    "speed": 0.78,
    "file": "08.wav",
-   "dur": 4.058,
-   "sha256": "7b1bcbb0f68e9feaea581391523de12a57ca4422afdc1f8847dcc68f6184fb2e"
+   "dur": 2.703,
+   "sha256": "b778b77fd511d360d9e5b625a9b57c21708a23e24ea93e79b859a87789c1ba86"
   }
  ]
 }

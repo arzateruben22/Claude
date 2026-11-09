@@ -1,8 +1,8 @@
 [
  {
   "id": "c1",
-  "sentence": "On paper, yes.",
-  "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
+  "sentence": "On average, yes.",
+  "claim": "Saturn's mean density (0.687 g/cm3) is below water's (1.0), so on average it is less dense than water.",
   "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn Facts (NASA Science)",
   "accessed": "2026-11-08",

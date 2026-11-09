@@ -3,55 +3,49 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Could the planet Saturn float? On paper, yes.",
-   "heard": "Could the planet Saturn float? On paper, yes.",
+   "text": "Saturn: lighter than water? On average, yes.",
+   "heard": "Saturn lighter than water? On average, yes.",
    "words": [
     {
-     "w": "Could",
-     "start": 0.02,
-     "end": 0.24,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 0.265,
-     "end": 0.32,
-     "heard": true
-    },
-    {
-     "w": "planet",
-     "start": 0.295,
+     "w": "Saturn:",
+     "start": 0.025,
      "end": 0.64,
      "heard": true
     },
     {
-     "w": "Saturn",
-     "start": 0.605,
-     "end": 1.2,
+     "w": "lighter",
+     "start": 0.59,
+     "end": 0.96,
      "heard": true
     },
     {
-     "w": "float?",
-     "start": 1.225,
-     "end": 1.84,
+     "w": "than",
+     "start": 0.875,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "water?",
+     "start": 1.095,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "On",
-     "start": 1.935,
-     "end": 2.16,
+     "start": 1.85,
+     "end": 2.0,
      "heard": true
     },
     {
-     "w": "paper,",
-     "start": 2.145,
-     "end": 2.64,
+     "w": "average,",
+     "start": 2.045,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "yes.",
-     "start": 2.62,
-     "end": 3.12,
+     "start": 2.535,
+     "end": 2.96,
      "heard": true
     }
    ]

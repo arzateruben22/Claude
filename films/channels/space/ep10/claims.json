@@ -139,21 +139,27 @@
   "id": "c11",
   "sentence": "Escape speed is the speed needed to leave for good.",
   "claim": "Escape velocity is the speed needed to break free of a body's gravity for good.",
-  "source_url": "https://science.nasa.gov/universe/black-holes/",
-  "source_title": "Black holes (NASA; find exact page)",
-  "accessed": "2026-11-08",
-  "note": "NOT READ (no page opened yet). Confirm; any NASA education page on escape velocity will do.",
-  "verified_via": "not read",
-  "status": "OPEN"
+  "source_url": "https://imagine.gsfc.nasa.gov/science/objects/black_holes1.html",
+  "source_title": "Black Holes (NASA Imagine the Universe)",
+  "accessed": "2026-11-09",
+  "note": "SOURCE-READ on 2026-11-09 by the builder (an AI), who fetched the page; a person still opens it before OK.",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "Formally, escape velocity is the speed an object must attain to \"break free\" of the gravitational attraction of another body.",
+   "qualification": "Definition of escape velocity; 'leave for good' is the plain-language version."
+  }
  },
  {
   "id": "c13",
-  "sentence": "To them, it's everyone else who seems to speed up.",
-  "claim": "Watchers see time pass slowly for a faller, who feels time speeding up for everyone else.",
+  "sentence": "To someone hovering close, everyone else seems to speed up.",
+  "claim": "For an observer near a black hole, time appears to pass faster for distant objects (NASA brochure: 'you feel like time is speeding up for everyone else'); stated for someone hovering near it, not for free fall.",
   "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
   "source_title": "Black hole safety information card (NASA SVS)",
   "accessed": "2026-11-08",
-  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Matches.",
+  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Matches. 9 Nov: reworded to 'someone hovering close' (a freely falling friend would not see the universe race by).",
   "verified_via": "page",
   "status": "SOURCE-READ",
   "source_read": {
@@ -182,7 +188,7 @@
  },
  {
   "id": "c21",
-  "sentence": "The closer they get, the bigger the gap.",
+  "sentence": "The closer they hover, the bigger the gap.",
   "claim": "Seen from afar, an infalling object appears to slow, redden, fade and freeze at the horizon; the faller notices nothing special locally.",
   "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
   "source_title": "Black hole safety information card (NASA SVS)",

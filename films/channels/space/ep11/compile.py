@@ -29,7 +29,7 @@ t_n, t_c, t_why, t_w, t_tk, t_rd = (B[k]["t0"] for k in ("normal", "change", "wh
 t_end = A("vo08:Next", -0.25)
 CUE = {
     "n": t_n, "c": t_c, "why": t_why, "w": t_w, "tk": t_tk, "rd": t_rd, "end": t_end,
-    "paper": A("vo01:paper"), "weighs": A("vo02:weighs"), "water": A("vo02:water"), "tank": A("vo02:tank"), "wider": A("vo02:wider"),
+    "paper": A("vo01:average"), "weighs": A("vo02:weighs"), "water": A("vo02:water"), "tank": A("vo02:tank"), "wider": A("vo02:wider"),
     "nine": A("vo03:nine"), "hydrogen": A("vo03:hydrogen"), "cloud": A("vo03:cloud"),
     "density": A("vo04:Density"), "earth": A("vo04:Earth"), "tight": A("vo04:tight"), "gas": A("vo04:gas"), "thin": A("vo04:thin"),
     "floats": A("vo05:floats"), "mix": A("vo05:mix"), "piece": A("vo05:piece"),
@@ -85,7 +85,7 @@ LABELS = [
     {"id": "l-gas", "text": "hydrogen + helium", "kind": "light", "anchor": "sat", "t0": round(CUE["hydrogen"], 4), "t1": round(t_why - 0.4, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-rock", "text": "rock and metal: tight", "kind": "body", "anchor": "rock", "t0": round(CUE["earth"], 4), "t1": round(CUE["gas"] - 0.1, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-gasb", "text": "gas: spread thin", "kind": "star", "anchor": "gasb", "t0": round(CUE["gas"], 4), "t1": round(t_w - 0.4, 4), "side": 1, "v": "above", "fixed": True},
-    {"id": "l-float", "text": "Saturn floats", "kind": "star", "anchor": "sat", "t0": round(CUE["floats"], 4), "t1": round(CUE["mix"] - 0.2, 4), "side": 1, "v": "above", "fixed": True},
+    {"id": "l-float", "text": "floats: thought experiment", "kind": "star", "anchor": "sat", "t0": round(CUE["floats"], 4), "t1": round(CUE["mix"] - 0.2, 4), "side": 1, "v": "above", "fixed": True},
 ]
 PILLS = [
     {"id": "p-dens", "text": "density = weight ÷ space", "t0": round(CUE["density"], 4), "t1": round(t_w - 0.4, 4), "at": [90 / 1080, 0.175]},
@@ -96,12 +96,12 @@ BADGES = [
     {"id": "b-nts", "text": "not to scale", "t0": round(t_rd, 4), "t1": round(t_end - 0.45, 4), "slot": "tr"},
 ]
 COUNTERS = [
-    {"id": "c-hook", "label": "Saturn in water", "text": "?", "t0": 0.0, "t1": t_n},
+    {"id": "c-hook", "label": "Saturn vs water", "text": "lighter?", "t0": 0.0, "t1": t_n},
     {"id": "c-dens", "label": "density: Saturn · water", "text": "0.69 · 1.0", "t0": CUE["weighs"], "t1": CUE["tank"] - 0.3},
     {"id": "c-wide", "label": "Saturn is about", "text": "9 Earths wide", "t0": CUE["nine"] - 0.2, "t1": CUE["hydrogen"] - 0.3},
     {"id": "c-mostly", "label": "mostly", "text": "hydrogen and helium", "t0": CUE["hydrogen"] - 0.1, "t1": t_why - 0.4},
     {"id": "c-weight", "label": "weight ÷ space", "text": "rock tight · gas thin", "t0": CUE["tight"] - 0.2, "t1": t_w - 0.4},
-    {"id": "c-float", "label": "in the thought experiment", "text": "Saturn floats", "t0": CUE["floats"] - 0.1, "t1": CUE["mix"] - 0.2},
+    {"id": "c-float", "label": "in the thought experiment", "text": "floats (in the thought experiment)", "t0": CUE["floats"] - 0.1, "t1": CUE["mix"] - 0.2},
     {"id": "c-piece", "label": "real Saturn", "text": "would not stay in one piece", "t0": CUE["mix"] - 0.1, "t1": t_tk - 0.2},
     {"id": "c-density", "label": "density tells you", "text": "who floats", "t0": CUE["who"] - 0.8, "t1": t_rd},
     {"id": "c-read", "label": "light time · Sun to Saturn", "text": "about 80 minutes", "read": True, "t0": CUE["eighty"] - 0.3, "t1": round(t_end - 0.45, 4)},
@@ -113,7 +113,7 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "One More Orbit · Season 2 · Episode 5", "title": "Saturn *floats*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "One More Orbit · Season 2 · Episode 5", "title": "Lighter than *water*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next orbit: the *footprints*", "follow": "One More Orbit · S2 · Episode 6",
        "next": "Saturn: mean density 687 kg/m3 (NASA); sunlight takes about 80 minutes to reach it."}
 POSTER = A("vo05:floats", 0.4)

@@ -120,13 +120,13 @@ function overlay2d(t) {
   // tick-rate bars: how fast each clock ticks, as one watcher sees it
   const bk = fadeIn(t, CUE.toyou, 0.5) * (1 - fadeIn(t, CUE.tk - 0.2, 0.4));
   if (bk > 0.01) {
-    const them = t >= CUE.them, rf = friendR(t), a = 1, b = them ? 1 / fRate(rf) : fRate(rf), mx = them ? 2.6 : 1.1, x0 = 130 * sx, wMax = 820 * sx, y0 = 1380 * sy; void y0;
-    ctx.fillStyle = rgba(VOID, 0.8 * bk); ctx.beginPath(); ctx.roundRect(90 * sx, 1480 * sy, 900 * sx, 170 * sy, 18 * S1); ctx.fill();
-    ctx.font = `700 ${Math.round(26 * S1)}px Lexend, sans-serif`; ctx.textBaseline = "middle"; ctx.textAlign = "left";
-    ctx.fillStyle = rgba(ICE, bk); ctx.fillText(them ? "everyone else, as your friend sees it" : "you", x0, 1510 * sy);
-    ctx.fillStyle = rgba(ICE, 0.9 * bk); ctx.beginPath(); ctx.roundRect(x0, 1526 * sy, wMax * (them ? b : a) / mx, 20 * sy, 8 * S1); ctx.fill();
-    ctx.fillStyle = rgba(LEMON, bk); ctx.fillText(them ? "your friend" : "your friend, as you see them", x0, 1576 * sy);
-    ctx.fillStyle = rgba(LEMON, 0.95 * bk); ctx.beginPath(); ctx.roundRect(x0, 1592 * sy, wMax * (them ? a : b) / mx, 20 * sy, 8 * S1); ctx.fill();
+    const them = t >= CUE.them, rf = friendR(t), a = 1, b = them ? 1 / fRate(rf) : fRate(rf), mx = them ? 2.6 : 1.1, x0 = 110 * sx, wMax = 860 * sx;
+    ctx.fillStyle = rgba(VOID, 0.85 * bk); ctx.beginPath(); ctx.roundRect(70 * sx, 1440 * sy, 940 * sx, 300 * sy, 22 * S1); ctx.fill();
+    ctx.font = `700 ${Math.round(40 * S1)}px Lexend, sans-serif`; ctx.textBaseline = "middle"; ctx.textAlign = "left";
+    ctx.fillStyle = rgba(ICE, bk); ctx.fillText(them ? "everyone else, as they see it" : "you, far away", x0, 1480 * sy);
+    ctx.fillStyle = rgba(ICE, 0.95 * bk); ctx.beginPath(); ctx.roundRect(x0, 1508 * sy, wMax * (them ? b : a) / mx, 36 * sy, 12 * S1); ctx.fill();
+    ctx.fillStyle = rgba(LEMON, bk); ctx.fillText(them ? "your friend, hovering" : "your friend, as you see them", x0, 1596 * sy);
+    ctx.fillStyle = rgba(LEMON, 0.95 * bk); ctx.beginPath(); ctx.roundRect(x0, 1624 * sy, wMax * (them ? a : b) / mx, 36 * sy, 12 * S1); ctx.fill();
   }
   const [d0, d1, d2] = CUE.dip;
   const dip = Math.max(E.inout3(seg(t, d0 - 0.1, d0 + 0.2)) * (1 - E.inout3(seg(t, d0 + 0.2, d0 + 0.45))), E.inout3(seg(t, d1 - 0.1, d1 + 0.2)) * (1 - E.inout3(seg(t, d1 + 0.2, d1 + 0.45))), E.inout3(seg(t, d2 - 0.1, d2 + 0.15)) * (1 - E.inout3(seg(t, d2 + 0.15, d2 + 0.4))));
@@ -148,6 +148,7 @@ const CEL = {};
 for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, lit: () => true, value: () => 0, fmt: () => c.text });
   CEL[c.id] = el; el.classList.add(c.read ? "lm-read" : "lm-clock");
+  if (!c.read) Object.assign(el.style, { background: "rgba(8,10,28,.82)", borderRadius: "2vmin", padding: "1.2vmin 2.4vmin" });
   const lb = el.querySelector(".lb");
   if (lb) lb.style.textShadow = "0 0 1.2vmin rgba(8,10,28,.95), 0 0 2.6vmin rgba(8,10,28,.85)";
   const v = el.querySelector(".v");
@@ -224,9 +225,9 @@ window.seek = function (t) {
   clk("you", [YOU[0], YOU[1] + 2.6, YOU[2]], 1.3, wOn); clk("fr", [fp[0], fp[1] + 1.7, fp[2]], 0.9, wOn);
   // Earth and a GPS satellite
   earth.set({ center: [0, 0, 0], sunDir: [0.5, 0.2, 0.85], sun: 1, rimNight: 0.5, spin: -0.9 + 0.06 * tt });
-  const ga = 1.2 + 0.9 * (tt - CUE.gps), gp = [EARTH[0] + 3.6 * Math.cos(ga), EARTH[1] + 0.5 * Math.sin(ga), EARTH[2] + 3.6 * Math.sin(ga)];
+  const ga = 1.2 + 0.45 * (tt - CUE.gps), gp = [EARTH[0] + 9.2 * Math.cos(ga), EARTH[1] + 1.2 * Math.sin(ga), EARTH[2] + 9.2 * Math.sin(ga)];
   S.gps = gp; gpsB.set({ center: gp, camera, opacity: inGPS ? 1 : 0 });
-  gpsOrb.arc({ center: EARTH, r: 3.6, e1: [1, 0, 0], e2: [0, 0.14, 1] }).set({ opacity: inGPS ? 0.6 : 0 });
+  gpsOrb.arc({ center: EARTH, r: 9.2, e1: [1, 0, 0], e2: [0, 0.14, 1] }).set({ opacity: inGPS ? 0.6 : 0 });
   // the readout ring: from the hole outward; a dot for us at its edge
   const u = E.inout3(seg(tt, CUE.photo + 0.2, CUE.years + 0.5)), rr = 40 * u;
   ringR.arc({ center: [0, 0, 0], r: Math.max(0.01, rr), ...XZ }).set({ opacity: u > 0.002 ? 0.95 * (1 - 0.35 * u) * (1 - fadeIn(tt, CUE.end - 0.3, 0.3)) : 0 });

@@ -30,9 +30,9 @@ t_end = A("vo08:Next", -0.25)
 CUE = {
     "n": t_n, "c": t_c, "why": t_why, "w": t_w, "tk": t_tk, "rd": t_rd, "end": t_end,
     "horizon": A("vo02:horizon"), "escape": A("vo02:Escape"), "more": A("vo02:more"),
-    "nothing": A("vo03:Nothing"), "gets": A("vo03:gets"), "friend": A("vo03:friend"), "falling": A("vo03:falling"), "watch": A("vo03:watch"),
+    "nothing": A("vo03:Nothing"), "gets": A("vo03:gets"), "friend": A("vo03:friend"), "falling": A("vo03:hovering"), "watch": A("vo03:watch"),
     "gravity": A("vo04:Gravity"), "gps": A("vo04:GPS"), "closer": A("vo04:closer"), "slower": A("vo04:slower"), "compare": A("vo04:compare"),
-    "toyou": A("vo05:you"), "tick": A("vo05:tick"), "them": A("vo05:them"), "speed": A("vo05:speed"), "gap": A("vo05:gap"),
+    "toyou": A("vo05:you"), "tick": A("vo05:tick"), "them": A("vo05:someone"), "speed": A("vo05:speed"), "gap": A("vo05:gap"),
     "true": A("vo06:true"), "where": A("vo06:where"),
     "photo": A("vo07:photographed"), "fifty": A("vo07:fifty-five"), "years": A("vo07:years"),
 }
@@ -50,15 +50,15 @@ CAMK = [
     (CUE["falling"] + 1.6, [-18, 3, 28], [-4, 0, 0], 40),
     (t_why - 0.2, [-9, 4, 21], [0, 0, 0], 38),
     (CUE["dip"][0], [-9, 4, 21], [0, 0, 0], 38),
-    (CUE["dip"][0] + 0.32, [400, 0, 8.5], [400, 0, 0], 34),                                 # Earth and a GPS satellite (cut under a dip)
-    (CUE["dip"][1], [404, 2, 9.5], [400, 0, 0], 34),
-    (CUE["dip"][1] + 0.34, [-4, 7, 30], [0, 0, 0], 40),                               # three clocks near the hole
-    (CUE["slower"], [8, 5, 26], [0, 0, 0], 40),
-    (CUE["compare"], [18, 5, 20], [0, 0, 0], 38),
+    (CUE["dip"][0] + 0.32, [400, 6, 24], [400, 0, 0], 38),                                 # Earth and a GPS satellite (cut under a dip)
+    (CUE["dip"][1], [410, 8, 22], [400, 0, 0], 38),
+    (CUE["dip"][1] + 0.34, [-2, 8, 40], [0, 0, 0], 42),                               # three clocks near the hole
+    (CUE["slower"], [8, 6, 38], [0, 0, 0], 42),
+    (CUE["compare"], [18, 6, 30], [0, 0, 0], 42),
     (CUE["toyou"] - 0.2, [-22, 4, 25], [-4, 0, 0], 40),                               # to you, far away
     (CUE["tick"] + 1.0, [-22, 3, 24], [-3, 0, 0], 38),
     (CUE["them"], [-1, 1.2, 8], [0, 0, 0], 52),                                       # to them: from the friend's side
-    (CUE["gap"], [-3, 3, 13], [0, 0, 0], 46),
+    (CUE["gap"], [-3, 4, 18], [0, 0, 0], 44),
     (t_tk, [8, 7, 24], [0, 0, 0], 42),
     (CUE["where"], [12, 4, 28], [0, 0, 0], 42),
     (t_rd + 0.6, [0, 28, 62], [0, 0, 0], 38),                                         # out, to see the ring grow
@@ -75,7 +75,7 @@ LABELS = [
     {"id": "l-hz", "text": "event horizon", "kind": "light", "anchor": "hz", "t0": round(CUE["horizon"] + 0.2, 4), "t1": round(CUE["gets"], 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-probe", "text": "probe: falls back", "kind": "body", "anchor": "probe", "t0": round(CUE["escape"] + 0.8, 4), "t1": round(t_c - 0.1, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-you", "text": "you, far away", "kind": "body", "anchor": "you", "t0": round(CUE["friend"] - 0.7, 4), "t1": round(CUE["dip"][0], 4), "side": 1, "v": "below", "fixed": True},
-    {"id": "l-friend", "text": "your friend", "kind": "star", "anchor": "friend", "t0": round(CUE["friend"] + 0.5, 4), "t1": round(CUE["dip"][0], 4), "side": -1, "v": "above", "fixed": True},
+    {"id": "l-friend", "text": "your friend (hovering)", "kind": "star", "anchor": "friend", "t0": round(CUE["friend"] + 0.5, 4), "t1": round(CUE["dip"][0], 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-gps", "text": "GPS satellite", "kind": "body", "anchor": "gps", "t0": round(CUE["dip"][0] + 0.5, 4), "t1": round(CUE["dip"][1] - 0.1, 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-far", "text": "far: fast", "kind": "body", "anchor": "clockFar", "t0": round(CUE["dip"][1] + 0.5, 4), "t1": round(CUE["compare"], 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-near", "text": "near: slow", "kind": "grav", "anchor": "clockNear", "t0": round(CUE["closer"] + 0.4, 4), "t1": round(CUE["compare"], 4), "side": -1, "v": "below", "fixed": True},
@@ -92,9 +92,8 @@ BADGES = [
 COUNTERS = [
     {"id": "c-hook", "label": "the edge of a black hole", "text": "?", "t0": 0.0, "t1": t_n},
     {"id": "c-esc", "label": "past the edge, escape needs", "text": "more than light speed", "t0": CUE["more"] - 0.4, "t1": t_c},
-    {"id": "c-two", "label": "two views of one fall", "text": "you · your friend", "t0": CUE["friend"], "t1": CUE["dip"][0]},
-    {"id": "c-slow", "label": "close to a black hole", "text": "clocks tick slower", "t0": CUE["slower"] - 0.8, "t1": CUE["compare"] - 0.3},
-    {"id": "c-gap", "label": "the closer they get", "text": "the bigger the gap", "t0": CUE["gap"], "t1": t_tk},
+    {"id": "c-slow", "label": "close to a black hole", "text": "clocks tick slower", "t0": CUE["slower"] - 0.8, "t1": CUE["compare"] + 1.6},
+    {"id": "c-gap", "label": "the closer they hover", "text": "the gap grows", "t0": CUE["gap"], "t1": t_tk},
     {"id": "c-both", "label": "both views are", "text": "true", "t0": CUE["true"], "t1": t_rd},
     {"id": "c-read", "label": "light time · first photo", "text": "about 55 million years", "read": True, "t0": round(CUE["fifty"] - 0.6, 4), "t1": round(t_end - 0.45, 4)},
 ]
@@ -106,10 +105,10 @@ for a, b in zip(spine, spine[1:]):
         a["t1"] = round(b["t0"] - 0.4, 4)
 
 TITLE = {"series": "One More Orbit · Season 2 · Episode 4", "title": "Black-hole *edge*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next orbit: a planet that *floats*", "follow": "One More Orbit · S2 · Episode 5",
+END = {"title": "Next orbit: a planet *lighter* than water", "follow": "One More Orbit · S2 · Episode 5",
        "next": "In 2019 the Event Horizon Telescope imaged a black hole about 55 million light-years away."}
 POSTER = A("vo05:gap", 0.5)
-glue(f, {"vo02": ["event horizon."], "vo05": ["the bigger the gap."], "vo07": ["fifty-five million years."], "vo03": ["falling toward it,"]})
+glue(f, {"vo02": ["event horizon."], "vo05": ["the bigger the gap."], "vo07": ["fifty-five million years."], "vo03": ["hovering close to it,"]})
 LOOP0 = round(f.duration - 0.6, 4)
 film = {
     "loop0": LOOP0, "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,

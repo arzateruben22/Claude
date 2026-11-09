@@ -19,13 +19,13 @@ vo: What's at a black hole's *edge*? {-} Look *closer*. {-}
 vo: The edge is called the event *horizon*. {c1} Escape speed is the speed needed to leave for good. {c11} Past that edge, escaping would take *more* than light speed. {c2}
 
 ## change {shot: split screen; left a watcher far away, right a faller approaching the ring · spine "two views of one fall" · picture-only 0.2 s · energy: 0.55} (13–22.5 s)
-vo: Nothing travels faster than light, so nothing gets out from there. {c3} Now picture a friend, falling *toward* it, while you watch from far away. {-}
+vo: Nothing travels faster than light, so nothing gets out from there. {c3} Now picture a friend, *hovering* close to it, while you watch from far away. {-}
 
 ## why {shot: clocks tick slower near a mass; a GPS satellite corrected each day · spine "gravity slows clocks" · picture-only 2 s · energy: 0.62} (22.5–37 s)
 vo: Gravity really does slow clocks. {c4} GPS satellites must correct for that to keep good *time*. {c5} The closer to a black hole, the slower a clock *ticks*. {c20} Now compare the two views. {-}
 
 ## whoa {shot: split screen: the faller's clock runs on normally; the watcher's view slows down · spine "faller: normal · watcher: frozen" · picture-only 3 s · energy: 0.8} (37–51 s)
-vo: To *you*, far away, your friend's clock seems to tick *slower*. {c6} To *them*, it's everyone else who seems to speed *up*. {c13} The closer they get, the bigger the *gap*. {c21}
+vo: To *you*, far away, your friend's clock seems to tick *slower*. {c6} To someone hovering close, everyone else seems to speed *up*. {c13} The closer they hover, the bigger the *gap*. {c21}
 
 ## takeaway {shot: the two panels merge into one ring · picture-only 0.2 s · energy: 0.3} (51–58 s)
 vo: Both views are true. {-} Time depends on *where* you are, and how strong gravity is. {c22}
@@ -33,8 +33,8 @@ vo: Both views are true. {-} Time depends on *where* you are, and how strong gra
 ## readout {segment: readout · light-time readout: "55 million years" to the first photographed black hole · a ping per line · picture-only 0.2 s · energy: 0.45} (58–65.5 s)
 vo: *Light time*: we photographed a black hole in twenty nineteen. {c7} Its light had traveled about fifty-five million *years*. {c8}
 
-## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
-vo: Next: a planet that could *float* in a big enough tub. {-}
+## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–70 s)
+vo: Next: a planet *lighter* than water. {-}
 end card: "Next orbit: a planet that *floats*" · "One More Orbit · S2 · Episode 5"
 
 ## Notes

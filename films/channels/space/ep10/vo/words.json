@@ -227,8 +227,8 @@
   },
   {
    "id": "vo03",
-   "text": "Nothing travels faster than light, so nothing gets out from there. Now picture a friend, falling toward it, while you watch from far away.",
-   "heard": "Nothing travels faster than light, so nothing gets out from there. Now picture a friend falling toward it while you watch from far away.",
+   "text": "Nothing travels faster than light, so nothing gets out from there. Now picture a friend, hovering close to it, while you watch from far away.",
+   "heard": "Nothing travels faster than light, so nothing gets out from there. Now picture a friend, hovering close to it, while you watch from far away.",
    "words": [
     {
      "w": "Nothing",
@@ -238,26 +238,26 @@
     },
     {
      "w": "travels",
-     "start": 0.44,
-     "end": 0.96,
+     "start": 0.455,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "faster",
-     "start": 0.98,
+     "start": 1.01,
      "end": 1.44,
      "heard": true
     },
     {
      "w": "than",
-     "start": 1.32,
+     "start": 1.325,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "light,",
-     "start": 1.635,
-     "end": 2.08,
+     "start": 1.67,
+     "end": 2.16,
      "heard": true
     },
     {
@@ -268,110 +268,116 @@
     },
     {
      "w": "nothing",
-     "start": 2.26,
-     "end": 2.64,
+     "start": 2.25,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "gets",
-     "start": 2.54,
+     "start": 2.76,
      "end": 3.04,
      "heard": true
     },
     {
      "w": "out",
-     "start": 3.135,
+     "start": 2.98,
      "end": 3.28,
      "heard": true
     },
     {
      "w": "from",
-     "start": 3.185,
+     "start": 3.215,
      "end": 3.6,
      "heard": true
     },
     {
      "w": "there.",
-     "start": 3.655,
+     "start": 3.68,
      "end": 4.24,
      "heard": true
     },
     {
      "w": "Now",
-     "start": 4.3,
+     "start": 4.335,
      "end": 4.48,
      "heard": true
     },
     {
      "w": "picture",
-     "start": 4.625,
-     "end": 4.96,
+     "start": 4.685,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.885,
-     "end": 5.12,
+     "start": 5.105,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "friend,",
-     "start": 5.16,
-     "end": 5.68,
+     "start": 5.23,
+     "end": 5.76,
      "heard": true
     },
     {
-     "w": "falling",
-     "start": 5.615,
-     "end": 6.16,
+     "w": "hovering",
+     "start": 5.905,
+     "end": 6.4,
      "heard": true
     },
     {
-     "w": "toward",
-     "start": 6.155,
+     "w": "close",
+     "start": 6.315,
      "end": 6.64,
      "heard": true
     },
     {
+     "w": "to",
+     "start": 6.64,
+     "end": 6.8,
+     "heard": true
+    },
+    {
      "w": "it,",
-     "start": 7.03,
-     "end": 7.08,
+     "start": 7.135,
+     "end": 7.185,
      "heard": true
     },
     {
      "w": "while",
-     "start": 7.06,
-     "end": 7.2,
+     "start": 7.165,
+     "end": 7.28,
      "heard": true
     },
     {
      "w": "you",
-     "start": 7.215,
-     "end": 7.36,
+     "start": 7.31,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "watch",
-     "start": 7.37,
-     "end": 7.76,
+     "start": 7.42,
+     "end": 7.84,
      "heard": true
     },
     {
      "w": "from",
-     "start": 7.8,
-     "end": 8.0,
+     "start": 7.88,
+     "end": 8.08,
      "heard": true
     },
     {
      "w": "far",
-     "start": 8.035,
-     "end": 8.32,
+     "start": 8.11,
+     "end": 8.4,
      "heard": true
     },
     {
      "w": "away.",
-     "start": 8.205,
-     "end": 8.72,
+     "start": 8.46,
+     "end": 8.8,
      "heard": true
     }
    ]
@@ -571,8 +577,8 @@
   },
   {
    "id": "vo05",
-   "text": "To you, far away, your friend's clock seems to tick slower. To them, it's everyone else who seems to speed up. The closer they get, the bigger the gap.",
-   "heard": "To you, far away, your friend's clock seems to tick slower. To them, it's everyone else who seems to speed up. The closer they get, the bigger the gap.",
+   "text": "To you, far away, your friend's clock seems to tick slower. To someone hovering close, everyone else seems to speed up. The closer they hover, the bigger the gap.",
+   "heard": "To you, far away, your friend's clock seems to tick slower. To someone hovering close, everyone else seems to speed up. The closer they hover, the bigger the gap.",
    "words": [
     {
      "w": "To",
@@ -582,170 +588,170 @@
     },
     {
      "w": "you,",
-     "start": 0.175,
-     "end": 0.56,
+     "start": 0.165,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "far",
-     "start": 0.615,
-     "end": 0.88,
+     "start": 0.65,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "away,",
-     "start": 0.97,
-     "end": 1.36,
+     "start": 1.045,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "your",
-     "start": 1.36,
-     "end": 1.52,
+     "start": 1.415,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "friend's",
-     "start": 1.61,
-     "end": 2.0,
+     "start": 1.675,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "clock",
-     "start": 1.935,
-     "end": 2.4,
+     "start": 2.01,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "seems",
-     "start": 2.33,
-     "end": 2.64,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 2.69,
+     "start": 2.41,
      "end": 2.8,
      "heard": true
     },
     {
+     "w": "to",
+     "start": 2.795,
+     "end": 2.88,
+     "heard": true
+    },
+    {
      "w": "tick",
-     "start": 2.825,
-     "end": 3.12,
+     "start": 2.925,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "slower.",
-     "start": 3.135,
-     "end": 4.0,
+     "start": 3.235,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "To",
-     "start": 4.085,
-     "end": 4.24,
+     "start": 4.195,
+     "end": 4.32,
      "heard": true
     },
     {
-     "w": "them,",
-     "start": 4.145,
-     "end": 4.64,
+     "w": "someone",
+     "start": 4.245,
+     "end": 4.8,
      "heard": true
     },
     {
-     "w": "it's",
-     "start": 4.71,
-     "end": 4.96,
+     "w": "hovering",
+     "start": 4.81,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "close,",
+     "start": 5.205,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "everyone",
-     "start": 4.96,
-     "end": 5.36,
+     "start": 5.81,
+     "end": 6.24,
      "heard": true
     },
     {
      "w": "else",
-     "start": 5.32,
-     "end": 5.68,
-     "heard": true
-    },
-    {
-     "w": "who",
-     "start": 5.665,
-     "end": 5.84,
+     "start": 6.325,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "seems",
-     "start": 5.885,
-     "end": 6.16,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 6.17,
-     "end": 6.32,
-     "heard": true
-    },
-    {
-     "w": "speed",
-     "start": 6.45,
+     "start": 6.55,
      "end": 6.8,
      "heard": true
     },
     {
+     "w": "to",
+     "start": 6.82,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 7.1,
+     "end": 7.44,
+     "heard": true
+    },
+    {
      "w": "up.",
-     "start": 6.925,
-     "end": 7.36,
+     "start": 7.575,
+     "end": 8.0,
      "heard": true
     },
     {
      "w": "The",
-     "start": 7.46,
-     "end": 7.52,
+     "start": 8.12,
+     "end": 8.17,
      "heard": true
     },
     {
      "w": "closer",
-     "start": 7.59,
-     "end": 8.08,
+     "start": 8.23,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "they",
-     "start": 8.01,
-     "end": 8.24,
+     "start": 8.62,
+     "end": 8.8,
      "heard": true
     },
     {
-     "w": "get,",
-     "start": 8.24,
-     "end": 8.72,
+     "w": "hover,",
+     "start": 8.86,
+     "end": 9.44,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.825,
-     "end": 8.88,
+     "start": 9.525,
+     "end": 9.6,
      "heard": true
     },
     {
      "w": "bigger",
-     "start": 8.855,
-     "end": 9.28,
+     "start": 9.555,
+     "end": 9.92,
      "heard": true
     },
     {
      "w": "the",
-     "start": 9.3,
-     "end": 9.36,
+     "start": 9.81,
+     "end": 10.08,
      "heard": true
     },
     {
      "w": "gap.",
-     "start": 9.44,
-     "end": 9.84,
+     "start": 10.14,
+     "end": 10.48,
      "heard": true
     }
    ]
@@ -964,73 +970,43 @@
   },
   {
    "id": "vo08",
-   "text": "Next: a planet that could float in a big enough tub.",
-   "heard": "Next, a planet that could float in a big enough tub.",
+   "text": "Next: a planet lighter than water.",
+   "heard": "Next, a planet lighter than water.",
    "words": [
     {
      "w": "Next:",
      "start": 0.04,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.675,
      "end": 0.8,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 0.875,
-     "end": 1.04,
-     "heard": true
-    },
-    {
      "w": "planet",
-     "start": 1.025,
-     "end": 1.6,
+     "start": 0.805,
+     "end": 1.36,
      "heard": true
     },
     {
-     "w": "that",
-     "start": 1.605,
-     "end": 1.76,
+     "w": "lighter",
+     "start": 1.285,
+     "end": 1.84,
      "heard": true
     },
     {
-     "w": "could",
-     "start": 1.78,
-     "end": 2.0,
+     "w": "than",
+     "start": 1.84,
+     "end": 2.08,
      "heard": true
     },
     {
-     "w": "float",
-     "start": 1.925,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 2.57,
+     "w": "water.",
+     "start": 2.145,
      "end": 2.64,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 2.6,
-     "end": 2.8,
-     "heard": true
-    },
-    {
-     "w": "big",
-     "start": 2.885,
-     "end": 3.04,
-     "heard": true
-    },
-    {
-     "w": "enough",
-     "start": 3.075,
-     "end": 3.44,
-     "heard": true
-    },
-    {
-     "w": "tub.",
-     "start": 3.53,
-     "end": 4.0,
      "heard": true
     }
    ]

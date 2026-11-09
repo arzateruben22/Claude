@@ -471,7 +471,7 @@
   "tk": 48.5333,
   "rd": 54.9333,
   "end": 63.0,
-  "paper": 2.1666666666666665,
+  "paper": 2.066666666666667,
   "weighs": 4.566666666666666,
   "water": 6.233333333333333,
   "tank": 10.533333333333333,
@@ -585,7 +585,7 @@
   },
   {
    "id": "l-float",
-   "text": "Saturn floats",
+   "text": "floats: thought experiment",
    "kind": "star",
    "anchor": "sat",
    "t0": 39.0333,
@@ -614,8 +614,8 @@
  "counters": [
   {
    "id": "c-hook",
-   "label": "Saturn in water",
-   "text": "?",
+   "label": "Saturn vs water",
+   "text": "lighter?",
    "t0": 0.0,
    "t1": 3.7333,
    "at": [
@@ -670,7 +670,7 @@
   {
    "id": "c-float",
    "label": "in the thought experiment",
-   "text": "Saturn floats",
+   "text": "floats (in the thought experiment)",
    "t0": 38.93333333333333,
    "t1": 41.6667,
    "at": [
@@ -737,9 +737,9 @@
  ],
  "title": {
   "series": "One More Orbit · Season 2 · Episode 5",
-  "title": "Saturn *floats*",
+  "title": "Lighter than *water*",
   "t1": 3.2333,
-  "sig": 3.2333333333333334
+  "sig": 3.1
  },
  "endCard": 63.0,
  "end": {
@@ -749,49 +749,45 @@
  },
  "captions": [
   {
-   "t0": 0.053,
-   "t1": 1.968,
+   "t0": 0.058,
+   "t1": 1.883,
    "lines": [
     [
      [
-      "Could",
-      0.053
+      "Saturn:",
+      0.058
      ],
      [
-      "the",
-      0.298
+      "lighter",
+      0.623
      ],
      [
-      "planet",
-      0.328
+      "than",
+      0.908
      ],
      [
-      "Saturn",
-      0.638
-     ],
-     [
-      "float?",
-      1.258
+      "water?",
+      1.128
      ]
     ]
    ]
   },
   {
-   "t0": 1.968,
-   "t1": 3.453,
+   "t0": 1.883,
+   "t1": 3.318,
    "lines": [
     [
      [
       "On",
-      1.968
+      1.883
      ],
      [
-      "paper,",
-      2.178
+      "average,",
+      2.078
      ],
      [
       "yes.",
-      2.653
+      2.568
      ]
     ]
    ]
@@ -1503,9 +1499,9 @@
   {
    "id": "vo01",
    "t": 0.03333333333333333,
-   "dur": 3.14,
+   "dur": 3.029,
    "file": "vo/01.wav",
-   "text": "Could the planet Saturn float? On paper, yes."
+   "text": "Saturn: lighter than water? On average, yes."
   },
   {
    "id": "vo02",
