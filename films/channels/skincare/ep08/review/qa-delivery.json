@@ -1,6 +1,6 @@
 {
  "file": "films/channels/skincare/ep08/out/skin-sense-008-9x16.mp4",
- "size_mb": 25.6,
+ "size_mb": 26.3,
  "video": {
   "codec": "h264",
   "profile": "High",
@@ -11,7 +11,7 @@
   "dur": 67.733333,
   "pix_fmt": "yuv420p",
   "color": "bt709",
-  "mbps": 2.76
+  "mbps": 2.83
  },
  "film_dur": 67.733,
  "audio": {
@@ -31,7 +31,7 @@
   "transition_frames": [],
   "flashes": 0,
   "max_flashes_per_s": 0,
-  "largest_changed_area": 0.167
+  "largest_changed_area": 0.164
  },
  "fails": []
 }

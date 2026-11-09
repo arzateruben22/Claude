@@ -1,6 +1,6 @@
 {
- "compose_s": 6.5,
- "master_s": 9.5,
+ "compose_s": 6.2,
+ "master_s": 8.6,
  "master": {
   "gain_db": 1.59,
   "iterations": 2,
@@ -148,7 +148,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c7",
+    "tag": "c8",
     "show": 17.7667,
     "method": "shape",
     "err_ms": -0.0
@@ -176,7 +176,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c9",
+    "tag": "c10",
     "show": 29.5333,
     "method": "shape",
     "err_ms": -0.0
@@ -190,14 +190,14 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c11",
+    "tag": "c12",
     "show": 33.7333,
     "method": "shape",
     "err_ms": -0.0
    },
    {
     "kind": "scale.jump",
-    "tag": "c13",
+    "tag": "c15",
     "show": 38.5667,
     "method": "shape",
     "err_ms": -0.0
@@ -218,7 +218,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c16",
+    "tag": "c18",
     "show": 46.5,
     "method": "shape",
     "err_ms": -0.0

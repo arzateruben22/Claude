@@ -223,6 +223,32 @@
    "zout": 0.14
   },
   {
+   "t": 11.62,
+   "img": "q3",
+   "s": 1.05,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.02,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2,
+   "anchors": {
+    "cap": [
+     0.46,
+     0.5
+    ],
+    "nuc": [
+     0.46,
+     0.62
+    ]
+   },
+   "d": 2.03
+  },
+  {
    "t": "vo02:gather",
    "img": "q3",
    "s": 1.12,
@@ -382,6 +408,32 @@
    },
    "d": 0.35,
    "zin": 0.14
+  },
+  {
+   "t": 33.85,
+   "img": "q3",
+   "s": 1.11,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.02,
+    0
+   ],
+   "dolly": 0.08,
+   "rack": 2,
+   "anchors": {
+    "cap": [
+     0.46,
+     0.5
+    ],
+    "nuc": [
+     0.46,
+     0.62
+    ]
+   },
+   "d": 2.1
   },
   {
    "t": "vo04:strength",
@@ -1022,27 +1074,6 @@
    "dur": 1.6,
    "t0": "vo02:cap",
    "t1": "end:vo02"
-  },
-  {
-   "type": "chips",
-   "y": 1450,
-   "t0": "start:vo02",
-   "t1": "end:vo02",
-   "items": [
-    {
-     "text": "Pigment cell",
-     "t": "vo02:melanin"
-    },
-    {
-     "text": "Arms hand it on",
-     "t": "vo02:arms"
-    },
-    {
-     "text": "Cap over nucleus",
-     "t": "vo02:gather"
-    }
-   ],
-   "spike": "vo02:arms"
   },
   {
    "type": "stream",

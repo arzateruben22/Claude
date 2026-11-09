@@ -1,6 +1,6 @@
 {
- "compose_s": 6.6,
- "master_s": 8.8,
+ "compose_s": 5.7,
+ "master_s": 8.4,
  "master": {
   "gain_db": 1.55,
   "iterations": 2,
@@ -78,7 +78,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c3",
+    "tag": "c6",
     "show": 12.9333,
     "method": "shape",
     "err_ms": -0.0
@@ -99,7 +99,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c5",
+    "tag": "c8",
     "show": 20.5333,
     "method": "shape",
     "err_ms": -0.0
@@ -120,7 +120,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c7",
+    "tag": "c10",
     "show": 27.9667,
     "method": "shape",
     "err_ms": -0.0
@@ -141,7 +141,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c9",
+    "tag": "c16",
     "show": 43.2667,
     "method": "shape",
     "err_ms": -0.0
@@ -169,7 +169,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c14",
+    "tag": "c21",
     "show": 54.0,
     "method": "shape",
     "err_ms": -0.0
