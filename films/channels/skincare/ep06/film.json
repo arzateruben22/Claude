@@ -1,0 +1,1156 @@
+{
+ "id": "skin-sense-006",
+ "fps": 30,
+ "dur": 68.133,
+ "poster": 37.47,
+ "theme": "../theme.json",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "main"
+  }
+ ],
+ "captions": [
+  {
+   "w": "Same",
+   "t0": 0.09,
+   "t1": 0.45,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "list",
+   "t0": 0.545,
+   "t1": 0.69,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "as",
+   "t0": 0.65,
+   "t1": 0.85,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "cigarettes?",
+   "t0": 0.955,
+   "t1": 1.65,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "Processed",
+   "t0": 1.74,
+   "t1": 2.29,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "meat",
+   "t0": 2.24,
+   "t1": 2.61,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "is",
+   "t0": 2.535,
+   "t1": 2.77,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "on",
+   "t0": 2.705,
+   "t1": 2.93,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "it",
+   "t0": 3.055,
+   "t1": 3.105,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "too.",
+   "t0": 3.115,
+   "t1": 3.49,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "All",
+   "t0": 4.224,
+   "t1": 4.444,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "three",
+   "t0": 4.509,
+   "t1": 4.844,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "are",
+   "t0": 4.869,
+   "t1": 5.004,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "in",
+   "t0": 4.899,
+   "t1": 5.084,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 5.179,
+   "t1": 5.244,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "top",
+   "t0": 5.254,
+   "t1": 5.484,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "group",
+   "t0": 5.559,
+   "t1": 5.804,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "of",
+   "t0": 5.779,
+   "t1": 5.964,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 5.929,
+   "t1": 6.044,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "World",
+   "t0": 5.959,
+   "t1": 6.364,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Health",
+   "t0": 6.289,
+   "t1": 6.684,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Organization's",
+   "t0": 6.609,
+   "t1": 7.644,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "cancer",
+   "t0": 7.634,
+   "t1": 8.204,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "agency.",
+   "t0": 8.254,
+   "t1": 9.244,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "That",
+   "t0": 9.394,
+   "t1": 9.484,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "group",
+   "t0": 9.624,
+   "t1": 9.884,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "ranks",
+   "t0": 9.869,
+   "t1": 10.284,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "how",
+   "t0": 10.239,
+   "t1": 10.524,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "sure",
+   "t0": 10.594,
+   "t1": 10.844,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 10.939,
+   "t1": 11.004,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "evidence",
+   "t0": 11.054,
+   "t1": 11.484,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "is,",
+   "t0": 11.424,
+   "t1": 12.044,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "not",
+   "t0": 12.109,
+   "t1": 12.284,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "how",
+   "t0": 12.259,
+   "t1": 12.524,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "big",
+   "t0": 12.589,
+   "t1": 12.764,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 12.794,
+   "t1": 12.844,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "risk.",
+   "t0": 12.824,
+   "t1": 13.324,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Tanning",
+   "t0": 14.149,
+   "t1": 14.609,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "beds",
+   "t0": 14.554,
+   "t1": 14.929,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "give",
+   "t0": 14.894,
+   "t1": 15.089,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "off",
+   "t0": 15.219,
+   "t1": 15.269,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "mostly",
+   "t0": 15.249,
+   "t1": 15.569,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "UVA,",
+   "t0": 15.469,
+   "t1": 16.369,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "the",
+   "t0": 16.374,
+   "t1": 16.529,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "long",
+   "t0": 16.429,
+   "t1": 16.769,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "rays.",
+   "t0": 16.764,
+   "t1": 17.729,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "In",
+   "t0": 17.864,
+   "t1": 17.969,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "big,",
+   "t0": 18.084,
+   "t1": 18.449,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "powerful",
+   "t0": 18.529,
+   "t1": 18.929,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "units",
+   "t0": 18.889,
+   "t1": 19.409,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "it",
+   "t0": 19.324,
+   "t1": 19.569,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "may",
+   "t0": 19.534,
+   "t1": 19.649,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "be",
+   "t0": 19.699,
+   "t1": 19.809,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "ten",
+   "t0": 19.799,
+   "t1": 20.049,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "to",
+   "t0": 20.144,
+   "t1": 20.209,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "fifteen",
+   "t0": 20.184,
+   "t1": 20.689,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "times",
+   "t0": 20.594,
+   "t1": 21.089,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "as",
+   "t0": 21.244,
+   "t1": 21.329,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "strong",
+   "t0": 21.274,
+   "t1": 21.649,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "as",
+   "t0": 21.714,
+   "t1": 21.809,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "midday",
+   "t0": 21.859,
+   "t1": 22.289,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "sun.",
+   "t0": 22.374,
+   "t1": 22.609,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "When",
+   "t0": 23.593,
+   "t1": 23.733,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "beds",
+   "t0": 23.763,
+   "t1": 24.133,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "joined",
+   "t0": 24.033,
+   "t1": 24.373,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 24.283,
+   "t1": 24.453,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "list,",
+   "t0": 24.533,
+   "t1": 24.933,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 25.043,
+   "t1": 25.093,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "clearest",
+   "t0": 25.153,
+   "t1": 25.573,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "signal",
+   "t0": 25.668,
+   "t1": 26.053,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "came",
+   "t0": 26.003,
+   "t1": 26.293,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "from",
+   "t0": 26.273,
+   "t1": 26.533,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "people",
+   "t0": 26.473,
+   "t1": 26.773,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "who",
+   "t0": 26.668,
+   "t1": 27.013,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "started",
+   "t0": 27.008,
+   "t1": 27.413,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "young.",
+   "t0": 27.348,
+   "t1": 28.213,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "Studies",
+   "t0": 28.348,
+   "t1": 28.693,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "that",
+   "t0": 28.813,
+   "t1": 28.933,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "pooled",
+   "t0": 29.008,
+   "t1": 29.333,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "results",
+   "t0": 29.248,
+   "t1": 29.813,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "found",
+   "t0": 29.773,
+   "t1": 30.053,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "first",
+   "t0": 30.133,
+   "t1": 30.213,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "use",
+   "t0": 30.393,
+   "t1": 30.613,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "before",
+   "t0": 30.703,
+   "t1": 30.933,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "thirty-five",
+   "t0": 31.073,
+   "t1": 31.733,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "raised",
+   "t0": 31.763,
+   "t1": 32.053,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "melanoma",
+   "t0": 32.133,
+   "t1": 32.853,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "risk",
+   "t0": 32.858,
+   "t1": 33.173,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "by",
+   "t0": 33.183,
+   "t1": 33.333,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "more",
+   "t0": 33.263,
+   "t1": 33.493,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "than",
+   "t0": 33.573,
+   "t1": 33.653,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "half.",
+   "t0": 33.603,
+   "t1": 34.133,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "Whole",
+   "t0": 36.732,
+   "t1": 37.107,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "countries",
+   "t0": 37.057,
+   "t1": 37.587,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "acted.",
+   "t0": 37.742,
+   "t1": 38.467,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "Australia",
+   "t0": 38.542,
+   "t1": 39.107,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "switched",
+   "t0": 39.152,
+   "t1": 39.507,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "off",
+   "t0": 39.487,
+   "t1": 39.747,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "every",
+   "t0": 39.707,
+   "t1": 39.907,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "commercial",
+   "t0": 40.007,
+   "t1": 40.387,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "tanning",
+   "t0": 40.472,
+   "t1": 40.947,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "bed,",
+   "t0": 40.877,
+   "t1": 41.427,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "and",
+   "t0": 41.507,
+   "t1": 41.587,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "Brazil",
+   "t0": 41.657,
+   "t1": 42.067,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "banned",
+   "t0": 42.102,
+   "t1": 42.387,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "them",
+   "t0": 42.372,
+   "t1": 42.547,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "too.",
+   "t0": 42.552,
+   "t1": 42.867,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "Those",
+   "t0": 46.443,
+   "t1": 46.823,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "long",
+   "t0": 46.753,
+   "t1": 47.143,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "rays",
+   "t0": 47.218,
+   "t1": 47.783,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "go",
+   "t0": 47.758,
+   "t1": 48.023,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "through",
+   "t0": 48.083,
+   "t1": 48.263,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "the",
+   "t0": 48.348,
+   "t1": 48.503,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "top",
+   "t0": 48.498,
+   "t1": 48.823,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "layer",
+   "t0": 48.803,
+   "t1": 49.303,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "of",
+   "t0": 49.333,
+   "t1": 49.543,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "skin,",
+   "t0": 49.663,
+   "t1": 50.503,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "which",
+   "t0": 50.573,
+   "t1": 50.743,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "on",
+   "t0": 50.708,
+   "t1": 51.063,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "most",
+   "t0": 50.958,
+   "t1": 51.383,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "of",
+   "t0": 51.448,
+   "t1": 51.543,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "us",
+   "t0": 51.548,
+   "t1": 51.783,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "is",
+   "t0": 51.893,
+   "t1": 52.103,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "about",
+   "t0": 52.178,
+   "t1": 52.423,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "as",
+   "t0": 52.458,
+   "t1": 52.663,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "thin",
+   "t0": 52.838,
+   "t1": 53.063,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "as",
+   "t0": 53.078,
+   "t1": 53.303,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "paper.",
+   "t0": 53.343,
+   "t1": 53.783,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "The",
+   "t0": 54.857,
+   "t1": 55.077,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "sun",
+   "t0": 55.082,
+   "t1": 55.397,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "joined",
+   "t0": 55.337,
+   "t1": 55.717,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "that",
+   "t0": 55.822,
+   "t1": 55.877,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "list",
+   "t0": 55.852,
+   "t1": 56.197,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "years",
+   "t0": 56.107,
+   "t1": 56.517,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "before",
+   "t0": 56.562,
+   "t1": 56.757,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "the",
+   "t0": 56.647,
+   "t1": 56.917,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "beds.",
+   "t0": 56.932,
+   "t1": 57.877,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Same",
+   "t0": 57.952,
+   "t1": 58.197,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "list",
+   "t0": 58.197,
+   "t1": 58.517,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "as",
+   "t0": 58.567,
+   "t1": 58.677,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "cigarettes",
+   "t0": 58.622,
+   "t1": 59.397,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "means",
+   "t0": 59.377,
+   "t1": 59.717,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "the",
+   "t0": 59.717,
+   "t1": 59.877,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "same",
+   "t0": 59.907,
+   "t1": 60.117,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "certainty,",
+   "t0": 60.122,
+   "t1": 61.077,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "not",
+   "t0": 61.072,
+   "t1": 61.317,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "the",
+   "t0": 61.292,
+   "t1": 61.397,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "same",
+   "t0": 61.322,
+   "t1": 61.637,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "harm.",
+   "t0": 61.732,
+   "t1": 62.117,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Next:",
+   "t0": 62.952,
+   "t1": 63.492,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "more",
+   "t0": 63.397,
+   "t1": 63.732,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "skin",
+   "t0": 63.827,
+   "t1": 64.132,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "questions,",
+   "t0": 64.042,
+   "t1": 64.772,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "answered",
+   "t0": 64.827,
+   "t1": 65.172,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "with",
+   "t0": 65.192,
+   "t1": 65.332,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "the",
+   "t0": 65.372,
+   "t1": 65.492,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "evidence.",
+   "t0": 65.402,
+   "t1": 66.052,
+   "line": "vo08",
+   "beat": "tease"
+  }
+ ],
+ "lines": {
+  "vo01": [
+   0.05,
+   3.504,
+   "hook"
+  ],
+  "vo02": [
+   4.204,
+   13.329,
+   "normal"
+  ],
+  "vo03": [
+   14.129,
+   22.673,
+   "change"
+  ],
+  "vo04": [
+   23.573,
+   34.207,
+   "why"
+  ],
+  "vo05": [
+   36.707,
+   42.943,
+   "whoa"
+  ],
+  "vo06": [
+   46.343,
+   54.037,
+   "toscale"
+  ],
+  "vo07": [
+   54.837,
+   62.132,
+   "takeaway"
+  ],
+  "vo08": [
+   62.932,
+   66.133,
+   "tease"
+  ]
+ }
+}

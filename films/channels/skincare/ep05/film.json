@@ -1,0 +1,1163 @@
+{
+ "id": "skin-sense-005",
+ "fps": 30,
+ "dur": 67.8,
+ "poster": 37.29,
+ "theme": "../theme.json",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "main"
+  }
+ ],
+ "captions": [
+  {
+   "w": "Which",
+   "t0": 0.07,
+   "t1": 0.45,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "hand",
+   "t0": 0.335,
+   "t1": 0.77,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "aged?",
+   "t0": 0.67,
+   "t1": 1.57,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "After",
+   "t0": 1.685,
+   "t1": 1.89,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "four",
+   "t0": 1.87,
+   "t1": 2.05,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "and",
+   "t0": 2.09,
+   "t1": 2.37,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "a",
+   "t0": 2.44,
+   "t1": 2.49,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "half",
+   "t0": 2.47,
+   "t1": 2.77,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "years,",
+   "t0": 2.695,
+   "t1": 3.09,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "one",
+   "t0": 3.09,
+   "t1": 3.33,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "group",
+   "t0": 3.37,
+   "t1": 3.65,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "showed",
+   "t0": 3.575,
+   "t1": 3.89,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "no",
+   "t0": 3.865,
+   "t1": 4.13,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "extra",
+   "t0": 4.155,
+   "t1": 4.53,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "ageing.",
+   "t0": 4.575,
+   "t1": 4.83,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "In",
+   "t0": 5.845,
+   "t1": 5.985,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Nambour,",
+   "t0": 5.985,
+   "t1": 6.785,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Australia,",
+   "t0": 6.815,
+   "t1": 7.585,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "pure",
+   "t0": 7.69,
+   "t1": 7.905,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "chance",
+   "t0": 7.94,
+   "t1": 8.305,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "decided",
+   "t0": 8.345,
+   "t1": 8.785,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "who",
+   "t0": 8.685,
+   "t1": 8.945,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "would",
+   "t0": 9.025,
+   "t1": 9.105,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "wear",
+   "t0": 9.055,
+   "t1": 9.345,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "sunscreen",
+   "t0": 9.4,
+   "t1": 10.065,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "every",
+   "t0": 9.95,
+   "t1": 10.305,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "morning.",
+   "t0": 10.185,
+   "t1": 11.185,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Head,",
+   "t0": 11.23,
+   "t1": 11.585,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "neck,",
+   "t0": 11.61,
+   "t1": 12.065,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "arms",
+   "t0": 12.05,
+   "t1": 12.385,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "and",
+   "t0": 12.405,
+   "t1": 12.545,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "hands,",
+   "t0": 12.5,
+   "t1": 12.865,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "before",
+   "t0": 12.995,
+   "t1": 13.265,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 13.35,
+   "t1": 13.4,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "day",
+   "t0": 13.38,
+   "t1": 13.585,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "began.",
+   "t0": 13.585,
+   "t1": 13.985,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "The",
+   "t0": 14.856,
+   "t1": 15.076,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "other",
+   "t0": 15.091,
+   "t1": 15.236,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "group",
+   "t0": 15.236,
+   "t1": 15.556,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "could",
+   "t0": 15.526,
+   "t1": 15.716,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "use",
+   "t0": 15.636,
+   "t1": 15.876,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "sunscreen",
+   "t0": 15.951,
+   "t1": 16.676,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "whenever",
+   "t0": 16.656,
+   "t1": 17.076,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "they",
+   "t0": 17.046,
+   "t1": 17.316,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "liked.",
+   "t0": 17.211,
+   "t1": 18.116,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "Researchers",
+   "t0": 18.206,
+   "t1": 18.756,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "then",
+   "t0": 18.866,
+   "t1": 18.996,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "measured",
+   "t0": 18.896,
+   "t1": 19.396,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "the",
+   "t0": 19.371,
+   "t1": 19.556,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "fine",
+   "t0": 19.516,
+   "t1": 19.876,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "lines",
+   "t0": 19.876,
+   "t1": 20.196,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "on",
+   "t0": 20.211,
+   "t1": 20.356,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "silicone",
+   "t0": 20.411,
+   "t1": 21.076,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "copies",
+   "t0": 21.031,
+   "t1": 21.396,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "of",
+   "t0": 21.416,
+   "t1": 21.556,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "hands.",
+   "t0": 21.446,
+   "t1": 21.956,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "It",
+   "t0": 22.901,
+   "t1": 23.041,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "is",
+   "t0": 22.981,
+   "t1": 23.201,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "easy",
+   "t0": 23.166,
+   "t1": 23.521,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "to",
+   "t0": 23.641,
+   "t1": 23.691,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "think",
+   "t0": 23.671,
+   "t1": 23.841,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "sun",
+   "t0": 23.831,
+   "t1": 24.241,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "damage",
+   "t0": 24.186,
+   "t1": 24.721,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "is",
+   "t0": 24.781,
+   "t1": 24.881,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 24.961,
+   "t1": 25.041,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "burn",
+   "t0": 25.121,
+   "t1": 25.521,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "you",
+   "t0": 25.606,
+   "t1": 25.761,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "feel.",
+   "t0": 25.666,
+   "t1": 26.481,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "But",
+   "t0": 26.606,
+   "t1": 26.656,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "an",
+   "t0": 26.651,
+   "t1": 26.721,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "ultraviolet",
+   "t0": 26.831,
+   "t1": 27.681,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "camera",
+   "t0": 27.671,
+   "t1": 28.081,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "shows",
+   "t0": 28.141,
+   "t1": 28.401,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "damage",
+   "t0": 28.436,
+   "t1": 28.881,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "your",
+   "t0": 28.776,
+   "t1": 29.041,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "eyes",
+   "t0": 29.051,
+   "t1": 29.441,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "miss,",
+   "t0": 29.421,
+   "t1": 30.001,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "long",
+   "t0": 30.231,
+   "t1": 30.561,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "before",
+   "t0": 30.611,
+   "t1": 30.881,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "it",
+   "t0": 30.771,
+   "t1": 31.041,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "appears",
+   "t0": 31.156,
+   "t1": 31.441,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "on",
+   "t0": 31.456,
+   "t1": 31.601,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 31.666,
+   "t1": 31.761,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "surface.",
+   "t0": 31.791,
+   "t1": 32.321,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "Ten",
+   "t0": 34.892,
+   "t1": 35.192,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "years",
+   "t0": 35.192,
+   "t1": 35.432,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "later,",
+   "t0": 35.377,
+   "t1": 35.752,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "they",
+   "t0": 35.802,
+   "t1": 35.912,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "checked",
+   "t0": 35.937,
+   "t1": 36.392,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "again.",
+   "t0": 36.292,
+   "t1": 37.032,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "Melanoma,",
+   "t0": 37.172,
+   "t1": 37.992,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 37.877,
+   "t1": 38.072,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "most",
+   "t0": 38.167,
+   "t1": 38.312,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "serious",
+   "t0": 38.212,
+   "t1": 38.792,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "skin",
+   "t0": 38.932,
+   "t1": 39.192,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "cancer,",
+   "t0": 39.142,
+   "t1": 39.912,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "was",
+   "t0": 40.012,
+   "t1": 40.152,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "about",
+   "t0": 40.197,
+   "t1": 40.392,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "half",
+   "t0": 40.397,
+   "t1": 40.712,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "as",
+   "t0": 40.742,
+   "t1": 40.872,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "common",
+   "t0": 40.902,
+   "t1": 41.192,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "in",
+   "t0": 41.227,
+   "t1": 41.352,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "that",
+   "t0": 41.537,
+   "t1": 41.587,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "group,",
+   "t0": 41.567,
+   "t1": 42.072,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "though",
+   "t0": 42.167,
+   "t1": 42.312,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 42.297,
+   "t1": 42.392,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "numbers",
+   "t0": 42.327,
+   "t1": 42.712,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "were",
+   "t0": 42.807,
+   "t1": 42.872,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "small.",
+   "t0": 42.837,
+   "t1": 43.352,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "At",
+   "t0": 46.819,
+   "t1": 47.119,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "a",
+   "t0": 47.044,
+   "t1": 47.199,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "lab's",
+   "t0": 47.094,
+   "t1": 47.759,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "test",
+   "t0": 47.749,
+   "t1": 48.159,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "dose,",
+   "t0": 48.199,
+   "t1": 48.959,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "a",
+   "t0": 49.059,
+   "t1": 49.199,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "layer",
+   "t0": 49.089,
+   "t1": 49.599,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "of",
+   "t0": 49.669,
+   "t1": 49.759,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "sunscreen",
+   "t0": 49.834,
+   "t1": 50.639,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "is",
+   "t0": 50.634,
+   "t1": 50.799,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "about",
+   "t0": 50.834,
+   "t1": 51.039,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "a",
+   "t0": 51.054,
+   "t1": 51.279,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "fifth",
+   "t0": 51.274,
+   "t1": 51.759,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "as",
+   "t0": 51.644,
+   "t1": 51.919,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "thick",
+   "t0": 51.979,
+   "t1": 52.319,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "as",
+   "t0": 52.264,
+   "t1": 52.639,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "a",
+   "t0": 52.714,
+   "t1": 52.799,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "sheet",
+   "t0": 52.744,
+   "t1": 53.119,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "of",
+   "t0": 53.129,
+   "t1": 53.359,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "paper.",
+   "t0": 53.369,
+   "t1": 53.919,
+   "line": "vo06",
+   "beat": "toscale"
+  },
+  {
+   "w": "So,",
+   "t0": 54.799,
+   "t1": 55.014,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "which",
+   "t0": 55.229,
+   "t1": 55.414,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "hand",
+   "t0": 55.304,
+   "t1": 55.654,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "aged?",
+   "t0": 55.609,
+   "t1": 56.374,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Both",
+   "t0": 56.484,
+   "t1": 56.694,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "groups",
+   "t0": 56.774,
+   "t1": 57.014,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "missed",
+   "t0": 56.989,
+   "t1": 57.334,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "some",
+   "t0": 57.359,
+   "t1": 57.494,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "mornings.",
+   "t0": 57.394,
+   "t1": 58.294,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "One",
+   "t0": 58.394,
+   "t1": 58.534,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "missed",
+   "t0": 58.424,
+   "t1": 58.854,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "fewer,",
+   "t0": 58.814,
+   "t1": 59.174,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "and",
+   "t0": 59.219,
+   "t1": 59.334,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "the",
+   "t0": 59.249,
+   "t1": 59.494,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "skin",
+   "t0": 59.559,
+   "t1": 59.814,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "kept",
+   "t0": 59.764,
+   "t1": 60.054,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "count.",
+   "t0": 60.084,
+   "t1": 60.534,
+   "line": "vo07",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Next:",
+   "t0": 61.387,
+   "t1": 61.847,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "tanning",
+   "t0": 61.922,
+   "t1": 62.327,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "beds",
+   "t0": 62.297,
+   "t1": 62.647,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "share",
+   "t0": 62.662,
+   "t1": 62.887,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "a",
+   "t0": 62.902,
+   "t1": 62.967,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "list",
+   "t0": 63.062,
+   "t1": 63.207,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "with",
+   "t0": 63.217,
+   "t1": 63.287,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "cigarettes.",
+   "t0": 63.292,
+   "t1": 64.327,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "Same",
+   "t0": 64.357,
+   "t1": 64.647,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "list,",
+   "t0": 64.717,
+   "t1": 64.887,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "same",
+   "t0": 64.977,
+   "t1": 65.287,
+   "line": "vo08",
+   "beat": "tease"
+  },
+  {
+   "w": "risk?",
+   "t0": 65.352,
+   "t1": 65.767,
+   "line": "vo08",
+   "beat": "tease"
+  }
+ ],
+ "lines": {
+  "vo01": [
+   0.05,
+   5.125,
+   "hook"
+  ],
+  "vo02": [
+   5.825,
+   14.036,
+   "normal"
+  ],
+  "vo03": [
+   14.836,
+   21.981,
+   "change"
+  ],
+  "vo04": [
+   22.881,
+   32.372,
+   "why"
+  ],
+  "vo05": [
+   34.872,
+   43.399,
+   "whoa"
+  ],
+  "vo06": [
+   46.799,
+   53.974,
+   "toscale"
+  ],
+  "vo07": [
+   54.774,
+   60.567,
+   "takeaway"
+  ],
+  "vo08": [
+   61.367,
+   65.808,
+   "tease"
+  ]
+ }
+}

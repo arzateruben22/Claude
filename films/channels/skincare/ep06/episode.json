@@ -1,0 +1,328 @@
+{
+ "num": "06",
+ "title": "Same list<br>as cigarettes",
+ "placeholder": "Placeholder art · procedural",
+ "titleSize": 104,
+ "images": {
+  "bed": {
+   "src": "art/bed.png",
+   "w": 941,
+   "h": 1065
+  },
+  "section": {
+   "src": "art/section.png",
+   "w": 941,
+   "h": 1065
+  },
+  "skin": {
+   "src": "art/skin.png",
+   "w": 941,
+   "h": 1065
+  }
+ },
+ "camera": [
+  {
+   "t": 0,
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "img": "bed"
+  },
+  {
+   "t": "start:vo03",
+   "s": 1.05,
+   "f": [
+    0.5,
+    0.4
+   ],
+   "img": "bed"
+  },
+  {
+   "t": "vo03:UVA",
+   "s": 1.35,
+   "f": [
+    0.45,
+    0.28
+   ],
+   "img": "bed"
+  },
+  {
+   "t": "vo03:ten",
+   "s": 1.2,
+   "f": [
+    0.55,
+    0.3
+   ],
+   "img": "bed"
+  },
+  {
+   "t": "start:vo04",
+   "s": 1.1,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "img": "skin"
+  },
+  {
+   "t": "start:vo06",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "img": "section"
+  },
+  {
+   "t": "vo06:through",
+   "s": 1.35,
+   "f": [
+    0.5,
+    0.4
+   ],
+   "img": "section"
+  },
+  {
+   "t": "vo06:thin",
+   "s": 1.6,
+   "f": [
+    0.5,
+    0.34
+   ],
+   "img": "section"
+  },
+  {
+   "t": "start:vo07",
+   "s": 1.1,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "img": "bed"
+  }
+ ],
+ "labels": [
+  {
+   "text": "UVA: the long rays",
+   "a": [
+    0.5,
+    0.28
+   ],
+   "off": [
+    130,
+    -120
+   ],
+   "t0": "vo03:UVA",
+   "t1": "vo03:In+0.2"
+  },
+  {
+   "text": "May be 10–15× midday sun",
+   "a": [
+    0.5,
+    0.3
+   ],
+   "off": [
+    -60,
+    170
+   ],
+   "t0": "vo03:ten",
+   "t1": "end:vo03+0.5"
+  },
+  {
+   "text": "Top layer · about 100 µm",
+   "a": [
+    0.5,
+    0.34
+   ],
+   "off": [
+    100,
+    -130
+   ],
+   "t0": "vo06:top",
+   "t1": "end:vo06+0.4"
+  },
+  {
+   "text": "Paper · about 100 µm",
+   "a": [
+    0.5,
+    0.62
+   ],
+   "off": [
+    100,
+    130
+   ],
+   "t0": "vo06:as",
+   "t1": "end:vo06+0.4"
+  }
+ ],
+ "plates": [
+  {
+   "t0": "start:vo01",
+   "t1": "end:vo02+0.3",
+   "top": 640,
+   "title": "IARC Group 1:<br>“carcinogenic to humans”",
+   "rows": [
+    {
+     "text": "Tanning devices",
+     "small": "2009",
+     "t": "start:vo01+0.2"
+    },
+    {
+     "text": "Tobacco smoking",
+     "small": "",
+     "t": "vo01:cigarettes"
+    },
+    {
+     "text": "Processed meat",
+     "small": "2015",
+     "t": "vo01:meat"
+    }
+   ],
+   "note": "Group 1 ranks how sure the evidence is, not how big the risk.",
+   "noteT": "vo02:sure",
+   "tags": [
+    {
+     "text": "All three: the top group",
+     "t": "vo02:All"
+    },
+    {
+     "text": "It ranks the evidence",
+     "t": "vo02:ranks"
+    }
+   ]
+  },
+  {
+   "t0": "start:vo04",
+   "t1": "end:vo04+2.4",
+   "top": 650,
+   "title": "Melanoma risk compared with never using<br>(relative risk, pooled studies)",
+   "bars": [
+    {
+     "label": "Never used a tanning bed · 1.0",
+     "value": 1.0,
+     "max": 1.8,
+     "t": "vo04:Studies",
+     "color": "#9AA6C0"
+    },
+    {
+     "label": "First use before 35 · 1.59",
+     "value": 1.59,
+     "max": 1.8,
+     "t": "vo04:found",
+     "color": "#2F8F86"
+    },
+    {
+     "label": "First use before 35 · 1.75 (another study)",
+     "value": 1.75,
+     "max": 1.8,
+     "t": "vo04:raised",
+     "color": "#0E1B3D"
+    }
+   ],
+   "note": "Group results, not a prediction for any one person.",
+   "noteT": "vo04:half"
+  },
+  {
+   "t0": "start:vo05",
+   "t1": "end:vo05+3.2",
+   "top": 680,
+   "title": "Countries that acted",
+   "rows": [
+    {
+     "text": "Australia · commercial beds",
+     "small": "banned 2015",
+     "t": "vo05:Australia"
+    },
+    {
+     "text": "Brazil · tanning equipment",
+     "small": "banned 2009",
+     "t": "vo05:Brazil"
+    }
+   ]
+  },
+  {
+   "t0": "start:vo07",
+   "t1": "end:vo07+0.3",
+   "top": 640,
+   "title": "IARC Group 1:<br>“carcinogenic to humans”",
+   "rows": [
+    {
+     "text": "Solar radiation",
+     "small": "1992",
+     "t": "vo07:sun"
+    },
+    {
+     "text": "Tanning devices",
+     "small": "2009",
+     "t": "start:vo07"
+    },
+    {
+     "text": "Tobacco smoking",
+     "small": "",
+     "t": "vo07:cigarettes"
+    },
+    {
+     "text": "Processed meat",
+     "small": "2015",
+     "t": "start:vo07"
+    }
+   ],
+   "note": "Same list: the same certainty, not the same harm.",
+   "noteT": "vo07:harm"
+  }
+ ],
+ "sup": [
+  [
+   "start:vo03",
+   "UVA:<br>the long rays."
+  ],
+  [
+   "start:vo06",
+   "About as thin<br>as paper."
+  ]
+ ],
+ "badges": [
+  [
+   "start:vo03",
+   "start:vo04",
+   "Simplified · no person shown"
+  ],
+  [
+   "start:vo06",
+   "start:vo07",
+   "Simplified section · rays not to scale"
+  ]
+ ],
+ "quiet": [
+  [
+   "start:vo01",
+   "end:vo02+0.3"
+  ],
+  [
+   "start:vo04",
+   "end:vo04+2.4"
+  ],
+  [
+   "start:vo05",
+   "end:vo05+3.2"
+  ],
+  [
+   "start:vo07",
+   "end:vo07+0.3"
+  ]
+ ],
+ "scan": [
+  [
+   "vo06:through",
+   "vo06:thin+1.4"
+  ]
+ ],
+ "end": {
+  "t": "start:vo08-0.3",
+  "e1": "Next season:<br>more skin questions",
+  "e2": "answered with the evidence.",
+  "chip": "Skin Sense · season 2"
+ }
+}
