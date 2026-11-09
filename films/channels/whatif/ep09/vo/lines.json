@@ -116,12 +116,12 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "So the rope grows by two times pi times one meter, about six meters. That is about four of you, lying head to toe.",
+   "text": "So the rope grows by two times pi times one meter, a bit over six meters. That is about four of you, lying head to toe.",
    "stars": [
     "meters",
     "toe"
    ],
-   "phonemes": "sˌoʊ ðə ɹˈoʊp ɡɹˈoʊz baɪ tˈuː tˈaɪmz pˈaɪ tˈaɪmz wˈʌn mˈiːɾɚ, ɐbˌaʊt sˈɪks mˈiːɾɚz. ðæt ɪz ɐbˌaʊt fˈɔːɹ ʌv juː, lˈaɪɪŋ hˈɛd tə tˈoʊ.",
+   "phonemes": "sˌoʊ ðə ɹˈoʊp ɡɹˈoʊz baɪ tˈuː tˈaɪmz pˈaɪ tˈaɪmz wˈʌn mˈiːɾɚ, ɐ bˈɪt ˌoʊvɚ sˈɪks mˈiːɾɚz. ðæt ɪz ɐbˌaʊt fˈɔːɹ ʌv juː, lˈaɪɪŋ hˈɛd tə tˈoʊ.",
    "speeds": [
     0.74,
     0.74
@@ -131,13 +131,13 @@
    ],
    "silences": [
     [
-     6.1215,
-     6.5015
+     6.4015,
+     6.7815
     ]
    ],
    "file": "05.wav",
-   "dur": 9.342,
-   "sha256": "f0e7b45b17443d2b2a135a4583bba963d1a96d6612c386a8baaf18aae751a186"
+   "dur": 9.623,
+   "sha256": "bfca2084c06c82bde66c4dfd5fdd42e188281338ae5eaa847e63df8a36b0d403"
   },
   {
    "id": "vo06",

@@ -1,0 +1,120 @@
+1
+00:00:00,125 --> 00:00:01,435
+How much more rope?
+
+2
+00:00:01,845 --> 00:00:03,200
+Round the whole Earth,
+
+3
+00:00:03,200 --> 00:00:05,720
+lifted 1 meter
+off the ground.
+
+4
+00:00:06,925 --> 00:00:09,695
+Start with a rope
+that hugs the planet,
+
+5
+00:00:09,705 --> 00:00:12,860
+about 40,000 kilometers
+long.
+
+6
+00:00:12,990 --> 00:00:15,760
+Now lift it 1 meter
+above the ground,
+
+7
+00:00:15,760 --> 00:00:16,510
+everywhere.
+
+8
+00:00:17,720 --> 00:00:20,855
+A whole planet of rope,
+lifted all at once.
+
+9
+00:00:20,855 --> 00:00:22,110
+You might guess it needs
+
+10
+00:00:22,110 --> 00:00:24,495
+thousands
+of kilometers more.
+
+11
+00:00:25,525 --> 00:00:29,105
+But a circle's length
+is two times pi times
+
+12
+00:00:29,105 --> 00:00:32,215
+its radius, the distance
+to its center.
+
+13
+00:00:32,695 --> 00:00:34,315
+Lift the rope a meter,
+
+14
+00:00:34,315 --> 00:00:36,480
+and the radius
+grows a meter.
+
+15
+00:00:39,325 --> 00:00:42,275
+So the rope grows
+by two times pi
+
+16
+00:00:42,275 --> 00:00:45,685
+times 1 meter,
+a bit over 6 meters.
+
+17
+00:00:46,100 --> 00:00:47,560
+That is about
+four of you,
+
+18
+00:00:47,560 --> 00:00:49,050
+lying head to toe.
+
+19
+00:00:52,525 --> 00:00:55,220
+Try a basketball
+or the Sun:
+
+20
+00:00:55,220 --> 00:00:57,150
+lift the rope 1 meter,
+
+21
+00:00:57,150 --> 00:00:59,715
+and the extra
+rope is the same.
+
+22
+00:01:00,320 --> 00:01:02,560
+The planet's size
+cancels out:
+
+23
+00:01:02,560 --> 00:01:04,300
+only the lift matters.
+
+24
+00:01:04,575 --> 00:01:08,200
+10 times higher needs
+10 times more rope.
+
+25
+00:01:08,740 --> 00:01:11,285
+Next envelope:
+a shuffled deck,
+
+26
+00:01:11,285 --> 00:01:13,045
+and a very rare order.

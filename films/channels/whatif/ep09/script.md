@@ -25,7 +25,7 @@ vo: A whole planet of rope, lifted all at once. {-} You might guess it needs tho
 vo: But a circle's length is two times pi times its radius, the distance to its *center*. {c2} Lift the rope a meter, and the radius grows a *meter*. {c3}
 
 ## whoa {shot: the extra rope laid out beside you on the paper, about four of you head to toe; the box closes round "≈ 6.3 m" · events: answer.box · picture-only 3 s · energy: 0.75} (35.6–48.6 s)
-vo: So the rope grows by two times pi times one meter, about six *meters*. {c4} That is about four of you, lying head to *toe*. {c5}
+vo: So the rope grows by two times pi times one meter, a bit over six *meters*. {c4} That is about four of you, lying head to *toe*. {c5}
 
 ## work {segment: work · show your work: the whole sum on one line, its badges green, the sensitivity rows below · energy: 0.5} (48.6–56.2 s)
 vo: Try a basketball or the Sun: lift the rope one meter, and the extra rope is the *same*. {c6}
