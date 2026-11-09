@@ -821,31 +821,6 @@
    "t1": "end:vo02"
   },
   {
-   "type": "chips",
-   "y": 1450,
-   "t0": "start:vo02",
-   "t1": "end:vo02",
-   "items": [
-    {
-     "text": "Heat",
-     "t": "vo02:heat"
-    },
-    {
-     "text": "Gland",
-     "t": "vo02:coil"
-    },
-    {
-     "text": "Sweat",
-     "t": "vo02:release"
-    },
-    {
-     "text": "Surface",
-     "t": "vo02:surface"
-    }
-   ],
-   "spike": "vo02:heat"
-  },
-  {
    "type": "ink",
    "img": "q3",
    "layer": 2,

@@ -1,6 +1,6 @@
 {
  "file": "films/channels/skincare/ep11/out/skin-sense-011-9x16.mp4",
- "size_mb": 31.1,
+ "size_mb": 31.5,
  "video": {
   "codec": "h264",
   "profile": "High",
@@ -11,7 +11,7 @@
   "dur": 65.4,
   "pix_fmt": "yuv420p",
   "color": "bt709",
-  "mbps": 3.53
+  "mbps": 3.59
  },
  "film_dur": 65.4,
  "audio": {
@@ -33,7 +33,7 @@
   ],
   "flashes": 0,
   "max_flashes_per_s": 0,
-  "largest_changed_area": 0.258
+  "largest_changed_area": 0.271
  },
  "fails": []
 }

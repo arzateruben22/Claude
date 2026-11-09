@@ -3476,27 +3476,6 @@
    "t1": "end:vo04"
   },
   {
-   "type": "chips",
-   "y": 1450,
-   "t0": "start:vo04",
-   "t1": "end:vo04",
-   "items": [
-    {
-     "text": "Start sites",
-     "t": "vo04:start"
-    },
-    {
-     "text": "Waves spread",
-     "t": "vo04:waves"
-    },
-    {
-     "text": "Waves meet",
-     "t": "vo04:meet"
-    }
-   ],
-   "spike": "vo04:start"
-  },
-  {
    "type": "ink",
    "img": "q1",
    "layer": 2,

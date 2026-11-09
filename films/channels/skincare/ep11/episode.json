@@ -1171,27 +1171,6 @@
    "t1": "end:vo03"
   },
   {
-   "type": "chips",
-   "y": 1450,
-   "t0": "start:vo02",
-   "t1": "start:vo04",
-   "items": [
-    {
-     "text": "Bricks: flat cells",
-     "t": "vo02:bricks"
-    },
-    {
-     "text": "Mortar: fats",
-     "t": "vo02:mortar"
-    },
-    {
-     "text": "Sealed barrier",
-     "t": "vo03:semi-permeable"
-    }
-   ],
-   "spike": "vo02:Fats"
-  },
-  {
    "type": "stream",
    "img": "q1",
    "layer": 2,
@@ -1881,27 +1860,6 @@
    "t0": "vo05:cross",
    "t1": "end:vo05",
    "loop": 2.2
-  },
-  {
-   "type": "chips",
-   "y": 1450,
-   "t0": "start:vo05",
-   "t1": "end:vo05",
-   "items": [
-    {
-     "text": "Bricks",
-     "t": "vo05:bricks"
-    },
-    {
-     "text": "Fats do the work",
-     "t": "vo05:fats"
-    },
-    {
-     "text": "Water held in",
-     "t": "vo05:cross"
-    }
-   ],
-   "spike": "vo05:bricks"
   },
   {
    "type": "glow",
