@@ -84,7 +84,7 @@ const beadMat = new THREE.ShaderMaterial({
 const beads = new THREE.Points(bG, beadMat); beads.frustumCulled = false; scene.add(beads);
 // the jeweller's ring: a gold band (a torus) shaded as polished metal, in pale lemon
 const ringMat = new THREE.ShaderMaterial({
-  uniforms: { uCol: { value: new THREE.Vector3(0.98, 0.93, 0.7) }, uGlint: { value: 0 }, uT: { value: 0 } },
+  uniforms: { uCol: { value: new THREE.Vector3(0.98, 0.9, 0.56) }, uGlint: { value: 0 }, uT: { value: 0 } },
   vertexShader: `varying vec3 vN, vV, vP; void main(){ vP = position; vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }`,
   fragmentShader: `uniform vec3 uCol; uniform float uGlint, uT; varying vec3 vN, vV, vP;
     void main(){ vec3 n = normalize(vN), v = normalize(vV), L = normalize(vec3(0.45, 0.75, 0.55)); float f = pow(1.0 - abs(dot(n, v)), 1.5);
@@ -94,7 +94,7 @@ const ringMat = new THREE.ShaderMaterial({
 });
 const jewel = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.1, 24, 180), ringMat);
 jewel.position.fromArray(RING); jewel.rotation.set(1.05, 0.4, 0.2);
-const stone = new THREE.Mesh(new THREE.OctahedronGeometry(0.2, 0), ringMat); stone.position.set(0, 1.3, 0); jewel.add(stone);
+const stone = new THREE.Mesh(new THREE.OctahedronGeometry(0.13, 1), ringMat); stone.position.set(0, 1.3, 0); jewel.add(stone);
 scene.add(jewel);
 const rig = createRig(FILM.cam);
 

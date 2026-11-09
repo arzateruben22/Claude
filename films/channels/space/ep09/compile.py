@@ -45,6 +45,7 @@ CUE["pulses"] = [round(x, 3) for x in (A("vo01:gold"), A("vo01:up"), A("vo02:neu
                                        A("vo05:ring"), A("vo05:somewhere"), A("vo06:crash"), A("vo06:chemistry"), A("vo07:first"), A("vo07:hours"), A("vo08:black"))]
 
 RING, ORIGIN, MID = [9, -3, 6], [0, 0, 0], [5.0, -2.2, 3.4]
+RINGT = [9, -3.7, 6]                                  # look slightly below the ring so it rides above the counters
 POSE = {"target": ORIGIN, "el": 16.0, "fov": 24, "fx": 0.5, "fy": 0.40}
 key = lambda t, **k: {"t": round(t, 4), **POSE, **k}
 SPACE = [key(0.0, target=MID, dist=66.0, az=-28.0, el=16.0),
@@ -59,15 +60,15 @@ SPACE = [key(0.0, target=MID, dist=66.0, az=-28.0, el=16.0),
          key(CUE["zoom"] - 0.1, target=[5.5, -1.8, 3.2], dist=48.0, az=18.0, el=24.0, ease="sine"),
          key(CUE["zoom"] + 2.9, target=RING, dist=22.0, az=36.0, el=20.0, ease="inout3"),
          key(CUE["ring"] + 1.8, target=RING, dist=19.0, az=52.0, el=18.0, ease="sine"),
-         key(CUE["somewhere"], target=RING, dist=11.0, az=62.0, el=20.0, ease="sine"),            # push in: the beads arrive and the ring glints
-         key(CUE["somewhere"] + 2.4, target=RING, dist=7.5, az=72.0, el=5.0, ease="sine"),         # low, skimming the band
-         key(CUE["souv"], target=RING, dist=24.0, az=84.0, el=46.0, ease="sine"),                 # high and wide for "souvenir"
-         key(CUE["souv"] + 2.6, target=RING, dist=10.0, az=98.0, el=14.0, ease="sine"),
-         key(t_tk, target=RING, dist=21.0, az=108.0, el=26.0, ease="sine"),
-         key(A("vo06:crash"), target=RING, dist=9.0, az=120.0, el=12.0, ease="sine"),             # close on the metal for "a star crash"
-         key(A("vo06:poem") - 0.4, target=RING, dist=30.0, az=140.0, el=30.0, ease="sine"),       # wide, then in for the ring's reaction
-         key(CUE["chem"], target=RING, dist=14.0, az=150.0, el=10.0, ease="sine"),                 # in low for "chemistry"
-         key(t_rd - 0.1, target=RING, dist=22.0, az=156.0, el=16.0, ease="sine"),
+         key(CUE["somewhere"], target=RINGT, dist=15.0, az=62.0, el=20.0, ease="sine"),            # push in: the beads arrive and the ring glints
+         key(CUE["somewhere"] + 2.4, target=RINGT, dist=11.5, az=72.0, el=6.0, ease="sine"),         # low, skimming the band
+         key(CUE["souv"], target=RINGT, dist=24.0, az=84.0, el=46.0, ease="sine"),                 # high and wide for "souvenir"
+         key(CUE["souv"] + 2.6, target=RINGT, dist=14.0, az=98.0, el=14.0, ease="sine"),
+         key(t_tk, target=RINGT, dist=21.0, az=108.0, el=26.0, ease="sine"),
+         key(A("vo06:crash"), target=RINGT, dist=13.0, az=120.0, el=12.0, ease="sine"),             # close on the metal for "a star crash"
+         key(A("vo06:poem") - 0.4, target=RINGT, dist=30.0, az=140.0, el=30.0, ease="sine"),       # wide, then in for the ring's reaction
+         key(CUE["chem"], target=RINGT, dist=18.0, az=150.0, el=10.0, ease="sine"),                 # in low for "chemistry"
+         key(t_rd - 0.1, target=RINGT, dist=22.0, az=156.0, el=16.0, ease="sine"),
          key(t_rd + 2.2, target=[6, -5, 4], dist=50.0, az=40.0, el=28.0, ease="inout3"),
          key(t_end, target=[6, -5, 4], dist=54.0, az=44.0, el=28.0, ease="sine"),
          key(f.duration, target=MID, dist=66.0, az=-28.0, el=16.0)]
@@ -104,7 +105,7 @@ COUNTERS = [
     {"id": "c-chem", "label": "stardust is", "text": "chemistry", "t0": CUE["chem"], "t1": t_rd},
     {"id": "c-read-gw", "label": "light time · the ripples", "text": "first", "read": True, "t0": CUE["rip"], "t1": round(CUE["vis"] - 0.05, 4)},
     {"id": "c-read-gr", "label": "light time · the gamma-ray flash", "text": "1.7 seconds later", "read": True, "t0": CUE["vis"], "t1": round(CUE["glow"] - 0.05, 4)},
-    {"id": "c-read-li", "label": "light time · the glow, found by telescopes", "text": "hours later", "read": True, "t0": CUE["glow"], "t1": round(t_end - 0.45, 4)},
+    {"id": "c-read-li", "label": "light time · the glow", "text": "hours later", "read": True, "t0": CUE["glow"], "t1": round(t_end - 0.45, 4)},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
