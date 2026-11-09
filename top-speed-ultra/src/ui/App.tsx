@@ -310,7 +310,7 @@ export function App() {
           <p className="fine">Pick a place, or a freeway and direction. The yellow line on the map, the card at the top and the blue chevrons on the road show the way through each interchange.</p>
           <h3>Places</h3>
           {/* our own venues: the route ends on the venue's exit ramp, where you park and can get out */}
-          <div className="grid nav places">
+          <div className="grid places">
             {VENUE_LIST.map((v) => (
               <button key={v.name} className={'gcell place' + (navTarget === v.name ? ' on' : '')} onClick={() => navigate(v.name)}><b>{v.name}</b><span>{v.blurb}</span></button>
             ))}

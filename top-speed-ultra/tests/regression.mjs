@@ -2265,7 +2265,7 @@ await group('venues', async (use) => {
   await drive(page, 'Free Drive');
   await check('venues: Lot 57 and Stoppage Time are places in the Go to sheet', async () => {
     await page.getByRole('button', { name: 'Go to', exact: true }).click();
-    const places = await page.locator('.grid.nav.places .gcell b').allTextContents();
+    const places = await page.locator('.grid.places .gcell b').allTextContents();
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     expect(places.join() === 'Lot 57,Stoppage Time', places.join());
     return places.join(', ');
