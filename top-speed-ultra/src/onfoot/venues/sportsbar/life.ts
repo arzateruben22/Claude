@@ -113,7 +113,7 @@ export class BarLife {
   private orderId = 1;
   empties: Empty[] = [];
   save: SaveData; storage: string;
-  private savedAt = -1e9; private dirty = false;
+  private savedAt = -1e9; dirty = false;
   team: string | null = null;
   private inBarMin = 0; private tokensFromTime = 0;
   private tonight: { goals: GoalId[]; done: GoalId[] } = { goals: [], done: [] };
@@ -238,6 +238,10 @@ export class BarLife {
     // S3a: the crowd (the slots, the staff plan, the room settled, the filler atlas painted before the first frame)
     this.crowd = new Crowd(this, ctx.renderer, ctx.scene);
     this.crowd.attach(q);
+    // S3b: the friendships the device kept (yours and the regulars'), your reply chips, People here
+    this.relsLoaded = this.crowd.social.load(this.save.social);
+    ctx.hud.onReply = (i) => { this.crowd.social.reply(i); };
+    bh.onPeople = () => this.crowd.social.openPeople();
     const day = fromAbs(this.T), dateKey = this.weekNow() * 10 + day.day;
     if (!this.save.tonight || this.save.tonight.date !== dateKey || this.save.tonight.visit !== this.save.visits) this.save.tonight = { date: dateKey, visit: this.save.visits, goals: tonightsThree(dateKey, this.save.visits), done: [] };
     this.tonight = { goals: this.save.tonight.goals, done: this.save.tonight.done };
@@ -439,7 +443,7 @@ export class BarLife {
   /** take every toast and caption down (the clock was set, or a fast-forward starts) */
   clearMessages() { if (!this.ctx) return; this.ctx.hud.clearToast(/[\s\S]/); this.ctx.hud.caption(null, ''); this.toastAt = this.capAt = -1; }
   /** a toast from the life layer (its sim time noted, for the fast-forward) */
-  private tell(text: string, seconds = 3) { this.ctx.hud.toast(text, seconds); this.toastAt = this.T * SECS; this.toastFor = seconds; }
+  tell(text: string, seconds = 3) { this.ctx.hud.toast(text, seconds); this.toastAt = this.T * SECS; this.toastFor = seconds; }
   /** a staff member's caption (its sim time noted, for the fast-forward) */
   private say(who: string, text: string, seconds = 3) { this.ctx.hud.caption(who, text, seconds); this.capAt = this.T * SECS; this.capFor = seconds; }
 
@@ -544,7 +548,7 @@ export class BarLife {
     const earned = Math.min(EARN.perVisitTimeCap, Math.floor(this.inBarMin / 5));
     if (earned > this.tokensFromTime) { this.save.tokens += earned - this.tokensFromTime; this.tokensFromTime = earned; this.dirty = true; }
   }
-  private goal(g: GoalId) {
+  goal(g: GoalId) {
     if (!this.tonight.goals.includes(g) || this.tonight.done.includes(g)) return;
     this.tonight.done.push(g); this.save.tokens += EARN.tonightsGoal; this.dirty = true;
     if (this.save.tonight) this.save.tonight.done = this.tonight.done;
@@ -582,9 +586,10 @@ export class BarLife {
     const T = TYPES[o.type]; if (!T) return [];
     const out: { action: string; label: string }[] = [];
     for (const a of T.adverts) {
-      if (T.later?.includes(a.action)) continue;                                   // Watch pool: S3a's crowd
-      if (a.action.startsWith('play-') && this.games.spot(o.id)?.mine) continue;   // you're playing here already
-      if (a.action === 'chat' || a.action === 'lean-chat' || a.action === 'eat') continue;   // S3b: nobody to chat with yet; eating is automatic
+      const sp = this.games.spot(o.id);
+      if (a.action === 'watch-pool' && !(sp && sp.npcBusy)) continue;               // Watch pool: guests' games (S3b)
+      if (a.action.startsWith('play-') && (sp?.mine || sp?.npcBusy)) continue;      // you're playing here already, or guests are
+      if (a.action === 'chat' || a.action === 'lean-chat' || a.action === 'eat') continue;   // chat with people through their menus (S3b); eating is automatic
       if (a.action === 'watch' && o.type !== 'screen' && !this.screenFrom(o)) continue;
       if (!(a.requires ?? []).every((r) => this.allowed(r, o))) continue;
       out.push({ action: a.action, label: a.label });
@@ -793,7 +798,7 @@ export class BarLife {
       case 'play-pool': case 'play-darts': case 'play-shuffleboard': {
         // the queue's other actions wait: a game runs until someone wins or you leave it
         a.dur = Infinity; if (a.slot) this.res.release(a.slot, 'you');
-        this.games.begin(a.object); this.note(`game ${a.object} begun`);
+        this.games.begin(a.object, this.vsNext); this.vsNext = null; this.note(`game ${a.object} begun`);
         return;
       }
     }
@@ -1182,18 +1187,19 @@ export class BarLife {
   }
   /** close any radial menu (an object's or a person's), e.g. when the camera jumps (a pose) or the graphics change */
   closeRadial() { if (this.ctx?.barHud.radialOpen) this.ctx.barHud.closeRadial(); this.radialFor = null; }
-  /** a person's radial menu (S3a: their name and a hello; S3b brings the 11 interactions) */
+  /** a person's radial menu (S3b): up to six of the 11 interactions that fit the moment, "More…" for the rest, and the
+   *  "i" for their card */
   openPerson(id: number, sx?: number, sy?: number) {
     const n = this.crowd.byId(id); if (!n) return false;
     if (sx === undefined || sy === undefined) { const v = this._v.set(n.x, n.y + 1.5, n.z).project(this.ctx.camera); sx = (v.x * 0.5 + 0.5) * this.ctx.canvas.clientWidth; sy = (-v.y * 0.5 + 0.5) * this.ctx.canvas.clientHeight; }
     this.radialFor = `person:${id}`;
-    this.ctx.barHud.radial(sx, sy, n.name, [{ label: 'Say hi', key: 'hi' }]);
+    this.ctx.barHud.radial(sx, sy, n.name, this.crowd.social.menuFor(n), true);
     return true;
   }
   private pick(key: string) {
     const o = this.radialFor; this.ctx.barHud.closeRadial(); this.radialFor = null;
     if (!o) return;
-    if (o.startsWith('person:')) { const n = this.crowd.byId(Number(o.slice(7))); if (n && key === 'hi') this.crowd.sayHi(n); return; }
+    if (o.startsWith('person:')) { const n = this.crowd.byId(Number(o.slice(7))); if (n) this.crowd.social.pick(n, key); return; }
     const r = this.use(o, key);
     if (!r.ok) this.ctx.hud.toast(r.why ?? "Can't do that now", 2.5);
   }
@@ -1247,8 +1253,29 @@ export class BarLife {
     this.gameResults.push({ ...o, t: +this.T.toFixed(4), moodlet, tokens });
     this.note(`game ${o.id} ${o.won ? 'won' : 'lost'}${o.close ? ' (close)' : ''}`);
     const p = this.ctx.person(); if (p && o.won) this.clips.play(p, 'cheer', { upper: false });
+    // S3b: a game with a guest counts for both of you
+    const vs = this.games.vs; if (vs) this.crowd.social.playedWith(vs.id, o.won, o.close);
   }
-  private persist() { this.dirty = false; this.savedAt = performance.now() / 1000; if (this.save.tonight) this.save.tonight.done = this.tonight.done; writeSave(this.save); }
+  // ------------------------------------------------------------------------------------------------ S3b's needs of the social layer
+  /** your next game's opponent (an accepted Challenge), set before your walk to it */
+  private vsNext: Games['vs'] = null;
+  relsLoaded = 0;
+  /** an accepted Challenge: you walk to the game as for any game; your opponent is the guest */
+  challenge(spot: string, kind: string, vs: NonNullable<Games['vs']>) {
+    this.vsNext = vs;
+    const r = this.use(spot, `play-${kind}`);
+    if (!r.ok) { this.vsNext = null; this.tell(r.why ?? "Can't start that game now", 2.5); }
+    return r.ok;
+  }
+  /** house tokens spent on a round (no cash value; earned in the bar only) */
+  spendTokens(n: number) { this.save.tokens = Math.max(0, this.save.tokens - n); this.dirty = true; }
+  /** 2 tokens for a first good conversation with someone new */
+  earnFirstChat() { this.save.tokens += EARN.firstGoodChat; this.dirty = true; this.tell(`Great chat · +${EARN.firstGoodChat} house tokens`, 2.5); return EARN.firstGoodChat; }
+  /** your drink from a round: your favourite, alcohol-free like everything on your menu */
+  roundForYou() { const it = itemById(this.save.favourites.drink); const d = it && it.kind === 'drink' ? it : DRINKS[0]; if (!this.held.drink || this.held.drink.left <= 0) this.give(d); this.dirty = true; }
+  /** your avatar's beat in an interaction, logged with the clips */
+  clipYouLog(kind: string, clip: string) { this.note(`beat ${kind} (${clip})`); }
+  private persist() { this.dirty = false; this.savedAt = performance.now() / 1000; if (this.save.tonight) this.save.tonight.done = this.tonight.done; if (this.crowd) this.save.social = { ...this.crowd.social.toSave(), at: Date.now() }; writeSave(this.save); }
 
   // ------------------------------------------------------------------------------------------------ test hooks
   hooks() {
@@ -1431,6 +1458,13 @@ export class BarLife {
       drinks(reset = false) { return self.crowd.drinkReport(reset); },
       fillerCheck() { const c = self.crowd; return { target: c.target(), live: c.liveGuests, held: c.heldGuests, fillers: c.fillers.size, freeEligible: c.freeEligible(), staff: c.staffOn, cap: c.cap, handFails: c.handFails }; },
       npcs(filter?: string) { const l = self.crowd.list(); return filter ? l.filter((x) => JSON.stringify(x).includes(filter)) : l; },
+      // ---- S3b: people with each other
+      ...self.crowd.social.hooks(),
+      setTokens(n: number) { self.save.tokens = Math.max(0, Math.round(n)); self.dirty = true; return self.save.tokens; },
+      personMenu(id: number) { return self.openPerson(id) ? { items: self.ctx.barHud.radialItems, info: !!document.querySelector('#radial .info') } : null; },
+      relsLoaded() { return self.relsLoaded; },
+      /** an item into your hand now (a check's setup: Toast needs you holding a drink) */
+      giveYou(id: string) { const it = itemById(id); if (!it) return null; self.give(it); return this.held(); },
     };
   }
 }
