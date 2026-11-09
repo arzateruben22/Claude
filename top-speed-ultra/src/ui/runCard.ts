@@ -123,20 +123,19 @@ export function drawRunCard(r: Result, name: string, logo: HTMLImageElement | nu
   if (r.road) shield(g, r.road, pad, y, 92);
   y += 92;
   // the big number
-  const big = r.race ? `P${r.race.position}` : r.mode === 'time' || r.mode === 'free' ? (r.distance / MI).toFixed(2) : Math.round(r.score).toLocaleString();
-  const unit = r.race ? `of ${r.race.of} · ${r.race.time}` : r.mode === 'time' || r.mode === 'free' ? 'miles' : 'points';
+  const big = r.mode === 'free' ? (r.distance / MI).toFixed(2) : Math.round(r.score).toLocaleString();
+  const unit = r.mode === 'free' ? 'miles' : 'points';
   g.fillStyle = '#f3f1ec'; g.font = `700 230px ${FONT}`; g.fillText(big, pad - 6, y + 250);
   const bw = g.measureText(big).width;
   g.fillStyle = '#b9bcc2'; g.font = `600 44px ${FONT}`; g.fillText(unit, pad + bw + 22, y + 250);
   y += 300;
   // the reason line
   g.fillStyle = '#f3f1ec'; g.font = `700 58px ${FONT}`; g.fillText(r.reason, pad, y + 58);
-  if (r.newBest) { g.fillStyle = '#7be08d'; g.font = `700 34px ${FONT}`; g.fillText(r.race ? 'NEW BEST TIME' : 'NEW PERSONAL BEST', pad, y + 112); }
+  if (r.newBest) { g.fillStyle = '#7be08d'; g.font = `700 34px ${FONT}`; g.fillText('NEW PERSONAL BEST', pad, y + 112); }
   y += 170;
   // stats
   const stats: [string, string][] = [['Top speed', `${Math.round(r.top * MPH)} mph`], ['Distance', `${(r.distance / MI).toFixed(2)} mi`]];
   if (r.mode === 'survival') stats.push(['Streak over 100', `${r.bestStreak.toFixed(1)} s`], ['Near misses', String(r.nearMisses)], ['Clean passes', String(r.overtakes)], ['Collisions', String(r.collisions)]);
-  else if (r.race) stats.push(['Course', r.race.course], ['Credits', `+${r.race.credits.toLocaleString()}`]);
   const cols = 2, cw = (W - pad * 2) / cols;
   stats.forEach(([k, v], i) => {
     const x = pad + (i % cols) * cw, yy = y + Math.floor(i / cols) * 118;

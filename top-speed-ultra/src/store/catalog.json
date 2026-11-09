@@ -34,7 +34,7 @@
     "window": { "until": "FOUNDER_UNTIL" },
     "serial": true,
     "grants": ["car-oc-hyper", "plaque-founder-edition", "paint-oc-founder-silver"],
-    "description": "The OC Hypercar, numbered by the server when you buy it: a Founder Edition plaque with your number on the sill and the console, and OC Founder Silver paint with Founder Ice lights, reserved to this car. It runs Unleashed in Free Drive only: no clock and no rivals, your Free Drive bests stay on your device, and its Unleashed runs and run cards are marked. In Races, Time Trial and Speed Survival it runs a race tune at or under the Rossini Corsa, with its ability off. It doesn't take a garage slot and can't be sold for credits. Sold until December 31, 2026.",
+    "description": "The OC Hypercar, numbered by the server when you buy it: a Founder Edition plaque with your number on the sill and the console, and OC Founder Silver paint with Founder Ice lights, reserved to this car. It runs Unleashed in Free Drive only: no clock and no rivals, your Free Drive bests stay on your device, and its Unleashed runs and run cards are marked. In Speed Survival it runs a race tune at or under the Rossini Corsa, with its ability off. It doesn't take a garage slot and can't be sold for credits. Sold until December 31, 2026.",
     "available": false,
     "unavailable_reason": "Not on sale yet: the OC Hypercar is still being built and isn't in the game yet. It goes on sale only once it is in the game and checked."
   },

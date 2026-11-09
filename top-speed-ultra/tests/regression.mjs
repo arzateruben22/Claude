@@ -2,8 +2,8 @@
 // SwiftShader, through the window.__game test hooks, and prints PASS or FAIL with the numbers each check saw.
 //
 //   npm run build && npm test             every group
-//   npm test -- --only=race,survival      some groups (boot, interchanges, survival, race, abilities,
-//                                         progression, render, phone, launch, store, store-live)
+//   npm test -- --only=modes,survival     some groups (boot, interchanges, survival, modes, abilities,
+//                                         progression, render, phone, launch, store, store-live, venues)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //
 // Software rendering runs at about 10 fps, so distance is covered with fastForward (the simulation without
@@ -71,10 +71,15 @@ async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
   await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
   const loadS = (Date.now() - t0) / 1000;
   // keep every result the game reports, so checks can read it
-  await page.evaluate(() => { const g = window.__game, o = g.ev.over; window.__results = []; g.ev.over = (r) => { window.__results.push(r); o(r); }; });
+  await hook(page);
   return { ctx, page, errors, loadS, requests };
 }
 const game = (page, fn, arg) => page.evaluate(fn, arg);
+// after a page load: keep every result the game reports, so checks can read it; and the stopped-car helper below
+async function hook(page) {
+  await page.evaluate(() => { const g = window.__game, o = g.ev.over; window.__results = []; g.ev.over = (r) => { window.__results.push(r); o(r); }; });
+  await page.evaluate(`window.__stoppedCarAhead = ${stoppedCarAhead.toString()}`);
+}
 // wait for this many rendered frames. The wait is not what a check asserts, so it gets the same load allowance as
 // the boot and the actions above: software rendering shares these 4 cores with other passes, and at a load average of
 // 15 to 19 single frames have blocked for 8 to 32 s on SwiftShader (2026-10-17: 5 frames took 35.7, 54.7 and 58.7 s
@@ -119,6 +124,19 @@ function driveToInPage({ target, budget, cruise }) {
   }
   const at = `${g.path.label || 'an unlabelled ramp'}${g.path.main ? '' : ' (a ramp)'} at ${(g.phys.s / 1000).toFixed(1)} km, ${Math.round(g.phys.vx * 2.236936)} mph`;
   return { ok: g.path.main && g.path.label === target, from, at, t, jump, wrongS, routeLen, left: g.route.length, collisions: g.collisions };
+}
+
+// in the page: a stopped car this far ahead of you in your lane (an existing traffic car, moved and held at 0 m/s by
+// its own stop timer; Races and their AI racers were removed on 2026-11-08, and with them Traffic.addRacer)
+function stoppedCarAhead(ahead) {
+  const g = window.__game, p = g.phys, T = g.traffic;
+  T.clearAround(p.x, p.z, 200);
+  if (!T.cars.length) T.fill(g.view());
+  const car = T.cars.find((c) => Math.hypot(c.x - p.x, c.z - p.z) > 200) ?? T.cars[0];
+  if (!car) return null;
+  const lane = g.path.laneOf(p.d), s = p.s + ahead, d = g.path.laneCenter(lane), at = g.path.at(s, d);
+  Object.assign(car, { path: g.path, s, ps: s, d, pd: d, lane, from: lane, to: lane, t: -1, sig: 0, v: 0, stopT: 1e9, touched: -99, side: 1, x: at.x, z: at.z, y: at.y, h: at.h });
+  return car;
 }
 
 // ------------------------------------------------------------------------------------------- the groups
@@ -300,9 +318,7 @@ await group('survival', async (use) => {
     const r = await game(page, () => {
       const g = window.__game, p = g.phys;
       g.fastForward(6, {}, 30);
-      const lane = g.path.laneOf(p.d);
-      g.traffic.clearAround(p.x, p.z, 200);
-      const car = g.traffic.addRacer(g.path, p.s + 28, lane, 'Stopped', 0x777777, 0, 0, p.s);    // held at 0 m/s
+      const car = window.__stoppedCarAhead(28);
       const v0 = p.vx, wasOver = g.over;
       g.fastForward(3, { throttle: 1, brake: 0, steer: 0 });
       return { over: g.over, wasOver, v0, collisions: g.collisions, car: car.id };
@@ -357,120 +373,132 @@ await group('survival', async (use) => {
     expect(r.after.every((h) => h === r.to) && r.back.every((h) => h === r.was), `repaint ${r.to.toString(16)}: ${r.after.map((h) => h.toString(16))}; back to ${r.was.toString(16)}: ${r.back.map((h) => h.toString(16))}`);
     return `body ${r.shutPaint} shut lines, mirrors none; repainted #${r.to.toString(16)} and back, both followed`;
   });
-  await check('time trial traffic is the same every time', async () => {
-    const snap = () => game(page, async () => {
-      const g = window.__game, cars = () => JSON.stringify(g.traffic.cars.map((c) => [c.id, c.path.id, Math.round(c.s * 10), Math.round(c.d * 10)]));
-      Object.assign(g.input.c, { throttle: 0, brake: 0, steer: 0 });      // the same hands on the controls each time
-      await g.start('time'); g.setPaused(true);
-      const filled = cars();
-      // frames may have eaten some of the countdown while it loaded; run out the rest one step at a time
-      while (g.countdown > 0) g.fastForward(1 / 120);
-      g.apLane = 1;                              // the autopilot's lane carries over between runs
-      g.fastForward(8, {}, 40);
-      return { filled, driven: cars() };
-    });
-    const a = await snap(), b = await snap();
-    expect(a.filled === b.filled, 'the starting traffic differed');
-    expect(a.driven === b.driven, 'the traffic diverged over 8 s');
-    return `${JSON.parse(a.filled).length} cars at the start and ${JSON.parse(a.driven).length} after 8 s, identical`;
-  });
 });
 
-await group('race', async (use) => {
-  const { page } = await use({ settings: { course: 'irvine', density: 'moderate' } });
-  // hands off or flat on the gas, the grid holds; holding the brake there must not back the car up
-  for (const throttle of [0, 1]) {
-    await check(`the countdown holds you and every rival (gas ${throttle ? 'flat' : 'off'})`, async () => {
-      const r = await game(page, async (thr) => {
-        const g = window.__game;
-        Object.assign(g.input.c, { throttle: 0, brake: 0, steer: 0 });
-        await g.start('race'); g.setPaused(true);
-        const left = g.countdown, x0 = g.phys.x, z0 = g.phys.z;
-        let worst = 0;
-        while (g.countdown > 0.05) { g.fastForward(1 / 120, { throttle: thr, brake: 0, steer: 0 }); worst = Math.max(worst, Math.abs(g.phys.vx)); }
-        return { left, worst, moved: Math.hypot(g.phys.x - x0, g.phys.z - z0), gear: g.phys.gear, rivals: g.race.racers.map((c) => c.v) };
-      }, throttle);
-      expect(r.left > 1, `only ${fmt(r.left)} s of countdown left to test`);
-      expect(r.worst < 0.5 && r.moved < 0.5 && r.gear > 0, `you: up to ${fmt(r.worst)} m/s, moved ${fmt(r.moved)} m, gear ${r.gear}`);
-      expect(r.rivals.every((v) => v === 0), `rivals ${r.rivals.map(fmt)}`);
-      return `${fmt(r.left)} s: you at most ${fmt(r.worst)} m/s, moved ${fmt(r.moved)} m, in gear ${r.gear}; rivals ${r.rivals.join(', ')} m/s`;
-    });
-  }
-  // the standings: the gap column has to read in the same order as the positions (every gap is estimated at your
-  // speed), and the race timer lives in the race box, not on the road plate over the horizon
-  await check('race standings: gaps fall in position order, the timer sits in the race box', async () => {
-    const r = await game(page, async () => {
-      const g = window.__game;
-      await g.start('race'); g.setPaused(true);
-      while (g.countdown > 0) g.fastForward(0.5, { throttle: 0, brake: 0, steer: 0 }, 0);
-      // slow for 20 s so the rivals lead, then fast for 30 s to pass them: rows ahead and behind, at mixed speeds
-      let bad = null, ahead = 0, behind = 0;
-      for (let t = 0; t < 50; t++) {
-        g.fastForward(1, {}, t < 20 ? 28 : 80);
-        const st = g.race.standings;
-        for (let k = 1; k < st.length; k++) if (st[k].gap > st[k - 1].gap + 1e-9) bad ??= { t, rows: st.map((s) => `P${s.pos} ${s.name} ${s.gap.toFixed(1)}`).join(', ') };
-        ahead += st.filter((s) => s.gap > 0).length; behind += st.filter((s) => s.gap < 0).length;
-      }
-      return { bad, ahead, behind, last: g.race.standings.map((s) => `P${s.pos} ${s.name} ${s.you ? '' : s.gap.toFixed(1)}`.trim()).join(', ') };
-    });
-    expect(!r.bad, `gaps out of order at ${r.bad?.t} s: ${r.bad?.rows}`);
-    expect(r.ahead > 0 && r.behind > 0, `only rows ${r.ahead ? 'ahead' : 'behind'} were sampled`);
-    await frames(page, 2);
-    const dom = await game(page, () => ({
-      inBox: document.querySelector('.hud-race .hud-timer em')?.textContent ?? null,
-      onPlate: !!document.querySelector('.hud-road .hud-timer'),
-      gaps: [...document.querySelectorAll('.hud-standings li:not([hidden]) b')].map((b) => b.textContent),
+// Two modes only (owner, 2026-11-08: "lets get rid of these play modes all entirely and only stick to free drive and
+// try to stay over 100mph game mode"): Free Drive and Speed Survival. Races and Time Trial are gone, from the menu, the
+// phone, the World Map and the code; what an older version saved for them loads as Free Drive and is otherwise ignored.
+await group('modes', async (use) => {
+  // an earlier visit's saves: the menu's last race course and a mode ('race' on the first load, 'time' on the second),
+  // a profile with race wins, Time Trial and race runs on the local board, a Time Trial best and a race best time
+  const { page, ctx } = await use({ settings: { mode: 'race', course: 'irvine', density: 'moderate' } });
+  const first = await game(page, () => ({ picked: document.querySelector('.modes [aria-checked="true"] .mode-text b')?.textContent, mode: window.__game.mode }));
+  await ctx.addInitScript(() => {
+    const s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'); s.mode = 'time'; localStorage.setItem('tsu.settings', JSON.stringify(s));
+    localStorage.setItem('tsu.profile', JSON.stringify({ v: 1, username: 'Earlier', xp: 900, credits: 4200, racesWon: 3, runs: 5, story: { done: ['mara-1'], read: ['mara-1'] } }));
+    const run = (mode, score) => ({ mode, score, distance: 4000, top: 120, streak: 0, nearMisses: 0, overtakes: 0, collisions: 0, when: Date.now(), road: 'I-405 North' });
+    localStorage.setItem('tsu.runs.v1', JSON.stringify({ time: [run('time', 4000)], race: [run('race', 1500)], survival: [run('survival', 777)] }));
+    localStorage.setItem('tsu.best.time', '4000'); localStorage.setItem('tsu.race.irvine', '312.4');
+  });
+  await page.reload();
+  await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+  await hook(page);
+  await check('the menu offers two modes: 01 Free Drive and 02 Speed Survival, nothing else', async () => {
+    const r = await game(page, () => ({
+      cards: [...document.querySelectorAll('.modes [role="radio"]')].map((b) => [b.querySelector('.mode-text i')?.textContent, b.querySelector('.mode-text b')?.textContent, b.getAttribute('aria-checked')]),
+      text: document.querySelector('.overlay.menu')?.innerText ?? '',
     }));
-    expect(/^\d+:\d\d\.\d$/.test(dom.inBox ?? '') && !dom.onPlate, `timer in the race box "${dom.inBox}", on the road plate ${dom.onPlate}`);
-    const shown = dom.gaps.map((s) => (s === '' ? 0 : s === 'FIN' ? Infinity : Number(s.replace('−', '-'))));
-    expect(shown.every((v, k) => k === 0 || v <= shown[k - 1]), `the HUD gap column reads ${dom.gaps.join(' / ')}`);
-    return `${r.ahead} rows ahead and ${r.behind} behind over 50 s, all in order; now ${r.last}; HUD timer ${dom.inBox}, gaps ${dom.gaps.map((s) => s || 'you').join(' / ')}`;
+    await page.screenshot({ path: path.join(OUT, 'modes-menu.png') });
+    expect(JSON.stringify(r.cards.map((c) => c.slice(0, 2))) === JSON.stringify([['01', 'Free Drive'], ['02', 'Speed Survival']]), `cards: ${JSON.stringify(r.cards)}`);
+    expect(!/\bRaces?\b|Time Trial|rivals/i.test(r.text), `the menu still says: ${(/.{0,40}(\bRaces?\b|Time Trial|rivals).{0,40}/i.exec(r.text) ?? [''])[0]}`);
+    return r.cards.map((c) => `${c[0]} ${c[1]}`).join(', ');
   });
-  await check('flat out, the autopilot wins the Irvine Sprint', async () => {
-    const credits0 = await game(page, () => window.__game.profile.p.credits);
+  await check('a saved mode "race" or "time" loads as Free Drive; the old race data is ignored', async () => {
     const r = await game(page, async () => {
-      const g = window.__game; let t = 0;
-      await g.start('race'); g.setPaused(true);
-      while (!g.over && t < 400) { g.fastForward(1, {}, 120); t++; }
-      return { over: g.over, t, order: g.race?.order, pos: g.race?.position };
+      const g = window.__game, picked = document.querySelector('.modes [aria-checked="true"] .mode-text b')?.textContent;
+      const p = g.profile.p, out = { picked, settingsMode: 'mode' in g.settings, course: 'course' in g.settings, racesWon: 'racesWon' in p, credits: p.credits, done: p.story.done };
+      // the Personal bests panel: Speed Survival and Free Drive only (the old Time Trial and race runs aren't shown)
+      document.querySelectorAll('.dock button').forEach((b) => { if (/Bests/.test(b.textContent)) b.click(); });
+      await new Promise((res) => setTimeout(res, 500));
+      out.board = [...document.querySelectorAll('.sheet-body .panel .seg button')].map((b) => b.textContent);
+      out.boardRuns = [...document.querySelectorAll('.sheet-body .board li b')].map((b) => b.textContent);
+      document.querySelectorAll('.dock button').forEach((b) => { if (/Bests/.test(b.textContent)) b.click(); });
+      return out;
     });
-    expect(r.over, `not finished after ${r.t} s`);
-    await page.waitForFunction(() => window.__results.length > 0, null, { timeout: 10000 });
-    const res = await game(page, () => window.__results.at(-1));
-    const p = await game(page, () => window.__game.profile.p);
-    expect(res.race.position === 1, `finished P${res.race.position}: ${res.reason}`);
-    expect(p.racesWon === 1 && p.credits - credits0 >= 1500, `racesWon ${p.racesWon}, credits +${fmt(p.credits - credits0)}`);
-    return `P1 in ${res.race.time}, order ${res.race.order.join(' > ')}, +${Math.round(p.credits - credits0)} credits`;
+    expect(first.picked === 'Free Drive' && first.mode === 'free', `saved "race": picked ${first.picked}, game mode ${first.mode}`);
+    expect(r.picked === 'Free Drive' && !r.settingsMode && !r.course, `saved "time": picked ${r.picked}, settings.mode ${r.settingsMode}, settings.course ${r.course}`);
+    expect(!r.racesWon && r.credits === 4200 && r.done.includes('mara-1'), `profile: racesWon kept ${r.racesWon}, credits ${r.credits}, story ${r.done}`);
+    expect(JSON.stringify(r.board) === JSON.stringify(['Speed Survival', 'Free Drive']), `bests tabs ${JSON.stringify(r.board)}`);
+    return `saved "race" and "time" both open on ${r.picked}; settings drop mode and course; profile drops racesWon, keeps 4,200 credits and the story; bests tabs ${r.board.join(' / ')} (${r.boardRuns.join(', ') || 'no runs'})`;
   });
-  await check('racing slowly ends "Too far behind" in last place', async () => {
+  await check('start("race") and start("time") from an older caller run Free Drive', async () => {
+    const r = await game(page, async () => {
+      const g = window.__game, modes = [];
+      for (const m of ['race', 'time']) { await g.start(m); g.setPaused(true); modes.push([g.mode, g.inAttract, typeof g.race]); }
+      g.quitToMenu();
+      return modes;
+    });
+    expect(r.every(([m, a, race]) => m === 'free' && !a && race === 'undefined'), JSON.stringify(r));
+    return r.map(([m]) => m).join(', ');
+  });
+  await check('the phone and the World Map have no Races', async () => {
+    await page.getByRole('button', { name: /^Phone/ }).click();
+    const apps = await page.locator('.ph-app').allInnerTexts();
+    await page.locator('.ph-home').click();
+    await page.getByRole('button', { name: 'World Map', exact: true }).click();
+    await page.waitForSelector('.worldmap canvas');
+    const tabs = await page.locator('.wm-tabs button').allInnerTexts();
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    const names = apps.map((a) => a.replace(/\s+\d+$/, '').trim());
+    expect(!names.some((a) => /Races?/.test(a)) && JSON.stringify(tabs) === JSON.stringify(['Freeways', 'Places']), `phone apps ${names.join(', ')}; map tabs ${tabs.join(', ')}`);
+    return `phone: ${names.join(', ')}; map tabs: ${tabs.join(', ')}`;
+  });
+  await check('Speed Survival starts, scores above 100 mph, and one real crash ends it', async () => {
+    await drive(page, 'Speed Survival');
+    const r = await game(page, () => {
+      const g = window.__game, m = g.findMain('I-405 North');
+      g.setPaused(true);
+      g.placeCar(m, m.len * 0.12, 1, 30); g.apLane = 1;
+      g.traffic.reseed(7); g.traffic.fill(g.view());
+      g.fastForward(20, {}, 52);
+      const run = { mode: g.mode, score: g.score, streak: g.streak, v: g.phys.vx, over: g.over };
+      let seen = null; const o = g.ev.hud; g.ev.hud = (h) => { seen = h; o(h); }; g.sendHud(); g.ev.hud = o;
+      run.hud = { mode: seen.mode, streak: seen.streak, score: seen.score };
+      window.__stoppedCarAhead(28);
+      const v0 = g.phys.vx;
+      g.fastForward(3, { throttle: 1, brake: 0, steer: 0 });
+      return { ...run, v0, overAfter: g.over };
+    });
+    expect(r.mode === 'survival' && !r.over, `mode ${r.mode}, over ${r.over}`);
+    expect(r.v * MPH > 100 && r.streak > 3 && r.score > 0 && r.hud.streak > 3, `at ${Math.round(r.v * MPH)} mph: streak ${fmt(r.streak)} s, score ${Math.round(r.score)}, HUD streak ${fmt(r.hud.streak)}`);
+    expect(r.overAfter, `no crash at ${fmt(r.v0)} m/s`);
+    await page.waitForSelector('.result', { timeout: 10000 });
+    const reason = await page.locator('.result h2').innerText(), eyebrow = await page.locator('.result .eyebrow').first().innerText();
+    await page.screenshot({ path: path.join(OUT, 'modes-survival-crash.png') });
+    expect(/^crashed into/i.test(reason) && /Speed Survival/i.test(eyebrow), `"${eyebrow}": "${reason}"`);
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await page.waitForSelector('.overlay.menu');
+    return `${Math.round(r.v * MPH)} mph, streak ${fmt(r.streak)} s, score ${Math.round(r.score)}; then "${reason}" at ${fmt(r.v0 * MPH)} mph`;
+  });
+  // Auto-drive is a driving aid, never a score cheat (owner, 2026-11-01): the scored mode doesn't offer it
+  await check('Auto-drive: not offered in Speed Survival, even with a route set', async () => {
     const r = await game(page, async () => {
       const g = window.__game;
-      window.__results.length = 0;
-      await g.start('race'); g.setPaused(true);
-      let t = 0;
-      while (!g.over && t < 400) { g.fastForward(1, {}, 18); t++; }
-      return { over: g.over, t };
-    });
-    expect(r.over, `not over after ${r.t} s`);
-    await page.waitForFunction(() => window.__results.length > 0, null, { timeout: 10000 });
-    const res = await game(page, () => window.__results.at(-1));
-    expect(res.reason === 'Too far behind' && res.race.position === 4, `${res.reason}, P${res.race.position}`);
-    return `"${res.reason}" at P${res.race.position} after ${r.t} s`;
-  });
-  // Auto-drive is a driving aid, never a score cheat (owner, 2026-11-01): a Race doesn't offer it, even with a route
-  await check('Auto-drive: not offered in a Race, even with a route set', async () => {
-    const r = await game(page, async () => {
-      const g = window.__game;
-      await g.start('race'); g.setPaused(true);
-      while (g.countdown > 0) g.fastForward(0.5, { throttle: 0, brake: 0, steer: 0 }, 0);
+      await g.start('survival'); g.setPaused(true);
       const routed = g.navigateTo('CA-55 North');
       const offered = g.autoDriveOffered, took = g.setAutoDrive(true);
       g.fastForward(2, { throttle: 0.5, steer: 0, brake: 0 });
       let seen = null; const o = g.ev.hud; g.ev.hud = (h) => { seen = h; o(h); }; g.sendHud(); g.ev.hud = o;
-      return { mode: g.mode, routed, offered, took, on: g.autoDriving, hudOffer: seen.autoOffer, button: !!document.querySelector('.tbtn.auto') };
+      const out = { mode: g.mode, routed, offered, took, on: g.autoDriving, hudOffer: seen.autoOffer };
+      g.quitToMenu();
+      return out;
     });
-    expect(r.mode === 'race' && !r.offered && !r.took && !r.on && !r.hudOffer && !r.button, JSON.stringify(r));
-    return `race with a route (${r.routed ? 'set' : 'none'}): offered ${r.offered}, setAutoDrive ${r.took}, HUD offer ${r.hudOffer}, button ${r.button}`;
+    expect(r.mode === 'survival' && !r.offered && !r.took && !r.on && !r.hudOffer, JSON.stringify(r));
+    return `survival with a route (${r.routed ? 'set' : 'none'}): offered ${r.offered}, setAutoDrive ${r.took}, HUD offer ${r.hudOffer}`;
+  });
+  // the hypercar's two tunes: Unleashed in Free Drive, its race tune (the scored one) in Speed Survival
+  await check('the hypercar: Unleashed in Free Drive, its race tune in Speed Survival', async () => {
+    const r = await game(page, async () => {
+      const g = window.__game, s = { ...g.settings, owner: true };
+      g.updateSettings(s); g.chooseOwnerCar('oc-hyper');
+      const out = {};
+      for (const m of ['free', 'survival']) { await g.start(m); g.setPaused(true); out[m] = { car: g.carId, top: Math.round(g.carTop() * 2.236936) }; }
+      g.quitToMenu();
+      g.chooseOwnerCar('rossini-gt'); g.updateSettings({ ...g.settings, owner: false });
+      return out;
+    });
+    expect(r.free.car === 'oc-hyper' && r.survival.car === 'oc-hyper' && r.free.top > r.survival.top + 20 && r.survival.top <= 240, JSON.stringify(r));
+    return `flat out: Free Drive ${r.free.top} mph (Unleashed), Speed Survival ${r.survival.top} mph (race tune)`;
   });
 });
 

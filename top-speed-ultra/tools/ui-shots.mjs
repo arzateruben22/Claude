@@ -1,7 +1,7 @@
 // Screenshot every screen of the game's UI, at phone and desktop size, for design work and review.
 //   npm run build && node tools/ui-shots.mjs [outDir] [--only=phone|desktop] [--game=path/to/top-speed-ultra.html]
 // Writes <outDir>/<size>-<screen>.png (default tests/out/ui/), phone at 390 x 844 and desktop at 1440 x 900. Screens: menu,
-// settings, bests, profile, driver, garage, start, course (the menu's sheet), loading, driving, goto, paused, results.
+// settings, bests, profile, driver, garage, start (the menu's sheet), loading, driving, goto, paused, results.
 // Prints which screens it captured and any page errors.
 import { chromium } from 'playwright';
 import { mkdirSync, existsSync } from 'node:fs';
@@ -51,8 +51,6 @@ for (const [size, ctxOpt] of Object.entries(SIZES)) {
   await tryShot('garage', async () => { await page.locator('.pick', { hasText: 'Car' }).first().click(); });
   await close();
   await tryShot('start', async () => { await page.locator('.pick', { hasText: 'Start on' }).first().click(); });
-  await close();
-  await tryShot('course', async () => { await page.getByRole('radio', { name: /Races/ }).click(); await page.locator('.pick', { hasText: 'Race' }).first().click(); });
   await close();
   await page.getByRole('radio', { name: /Free Drive/ }).click();
   // the loading screen: a drive here often loads faster than a screenshot is taken, so raise it with the game's own
