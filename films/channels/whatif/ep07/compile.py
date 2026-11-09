@@ -61,6 +61,7 @@ t_26 = A("vo05:years", -0.05)                              # the 8 h walker arri
 t_zo2 = t_26 + 1.0
 t_zo3 = t_zo2 + 1.2
 t_steps = A("vo06:steps", -0.1)                           # the popular goal: the grey walker takes over
+t_hund = A("vo06:hundred", -0.05)
 t_140 = A("vo06:forty", 0.1)                               # the clock runs on to 140
 t_box = t_26
 t_work0, t_home, t_end = B["work"]["t0"], B["takeaway"]["t0"], A("vo08:Next", -0.25)
@@ -121,6 +122,7 @@ def pose(P, q, d, fy, el=3, az=0, x=0.0):                # a camera that puts wo
 k = lambda ty, dist, el, fy=0.40, az=0: {"target": [0, ty, 0], "dist": dist, "el": el, "az": az, "fov": 24, "fy": fy}
 FRONT = k(1.2, 17, 8, 0.40)
 SPACE = k(1.43e8, 2.3e9, 3, 0.40)
+SPACE3 = pose(LINE_TOP, 0.90, 2.2e9, 0.40, el=3)                 # the walkers at the Moon in the clean band under the caption; the lanes run down off-frame
 SPACE2 = pose(LINE_TOP, 0.54, 2.2e9, 0.40, el=3)                  # the wide view with the walkers at the Moon whole, just above the spine plate; the lane runs down behind the HUD
 D_C = 3.0e7                                              # a chase camera: the frame is 1.3e7 m tall, the Earth half of it
 HS = 0.055 * D_C                                         # the walker's height at that distance: 13% of the frame
@@ -159,14 +161,14 @@ CAM = {
     "chase-b": dive(t_zo1, t_b1, 0.0)[:-1] + [{"t": t_b1, **chase(0.0), "ease": "inout2"}] + chase_keys(t_b1 + 1.0 / 30, t_26, fB, swing(A("vo04:you", -0.3) + 2.0, A("vo04:you", -0.3) + 6.5, 10.0))
                + [{"t": round(t_zo2, 4), **chase(LINE_TOP)}] + zoom_out(t_zo2, t_zo3, LINE_TOP, SPACE2)[1:],
     "space": [{"t": t_zo3, **SPACE2}, {"t": t_slower, **SPACE2, "ease": "sine"}],
-    "work-a": [{"t": t_slower, **SPACE2}, {"t": round(t_slower + 0.8, 4), **pose(LINE_TOP + 2.0e6, 0.20, 2.4e8, 0.60), "ease": "sine"}, {"t": round(t_slower + 1.7, 4), **NEAR, "ease": "inout2"}, {"t": t_pb, **NEAR, "ease": "sine"}],
-    "work-b": [{"t": t_pb, **NEAR}, {"t": round(t_pb + 0.8, 4), **pose(LINE_TOP + 2.0e6, 0.45, 2.4e8, 0.60), "ease": "linear"}, {"t": round(t_pb + 1.7, 4), **SPACE2, "ease": "inout2"}, {"t": t_gf, **SPACE2, "ease": "sine"}],
-    "work-c": [{"t": t_gf, **SPACE2}, {"t": round(t_gf + 0.5, 4), **pose(LINE_TOP * fS(t_gf + 0.5) + 2.0e7, 0.60, 4.5e8, 0.60, x=0.05 * 4.5e8), "ease": "sine"}, {"t": round(t_gf + 1.0, 4), **follow(t_gf + 1.0), "ease": "inout2"}] + [{"t": round(t_gf + 1.0 + 0.15 * i, 4), **follow(t_gf + 1.0 + 0.15 * i), "ease": "linear"} for i in range(1, int((t_140 + 0.2 - t_gf - 1.0) / 0.15) + 1)]
-               + [{"t": round(t_home - 1.1, 4), **pose(LINE_TOP, 0.55, 5.5e8, 0.50), "ease": "linear"}, {"t": t_home, **SPACE2, "ease": "inout2"}],
-    "apollo": [{"t": t_home, **SPACE2}, {"t": t_62, **SPACE2, "ease": "sine"},
-               {"t": t_end, **pose(Y_MOON, 0.30, 7.0e8, 0.45, el=3), "ease": "inout2"}],              # a second change: in toward the Moon
+    "work-a": [{"t": t_slower, **SPACE2}, {"t": round(t_slower + 0.8, 4), **pose(LINE_TOP, 0.86, 2.4e8, 0.60), "ease": "sine"}, {"t": round(t_slower + 1.7, 4), **NEAR, "ease": "inout2"}, {"t": t_pb, **NEAR, "ease": "sine"}],
+    "work-b": [{"t": t_pb, **NEAR}, {"t": round(t_pb + 0.8, 4), **pose(LINE_TOP, 0.86, 2.4e8, 0.60), "ease": "linear"}, {"t": round(t_pb + 1.7, 4), **SPACE3, "ease": "inout2"}, {"t": t_gf, **SPACE3, "ease": "sine"}],
+    "work-c": [{"t": t_gf, **SPACE3}, {"t": round(t_gf + 0.5, 4), **pose(LINE_TOP * fS(t_gf + 0.5) + 2.0e7, 0.80, 4.5e8, 0.60, x=0.05 * 4.5e8), "ease": "sine"}, {"t": round(t_gf + 1.0, 4), **follow(t_gf + 1.0), "ease": "inout2"}] + [{"t": round(t_gf + 1.0 + 0.15 * i, 4), **follow(t_gf + 1.0 + 0.15 * i), "ease": "linear"} for i in range(1, int((t_140 + 0.2 - t_gf - 1.0) / 0.15) + 1)]
+               + [{"t": round(t_home - 1.1, 4), **pose(LINE_TOP, 0.86, 5.5e8, 0.50), "ease": "linear"}, {"t": t_home, **SPACE3, "ease": "inout2"}],
+    "apollo": [{"t": t_home, **SPACE3}, {"t": t_62, **SPACE3, "ease": "sine"},
+               {"t": t_end, **pose(Y_MOON, 0.90, 7.0e8, 0.45, el=3), "ease": "inout2"}],              # a second change: in toward the Moon
     "end": [                                                                      # back down to frame 0 in two seconds by the pull-back's own steps, then a calm hold: the picture behind the card
-        {"t": t_end, **pose(Y_MOON, 0.30, 7.0e8, 0.45, el=3)},
+        {"t": t_end, **pose(Y_MOON, 0.90, 7.0e8, 0.45, el=3)},
         {"t": t_end + 0.6, **SPACE2, "ease": "inout2"},
         {"t": t_end + 1.1, **k(1.0e6, 2.0e7, 4.5, 0.40), "ease": "linear"},
         {"t": t_end + 1.5, **k(1.5e2, 3.0e3, 6.5, 0.40), "ease": "linear"},
@@ -216,17 +218,18 @@ LABELS = [
 ]
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.3, "t1": t_title_out, "slot": "bl"},
-    {"id": "b-scale", "text": "not to scale until the Moon", "t0": t_pull0 + 0.7, "t1": t_pull1 - 0.3, "slot": "tr"},
+    {"id": "b-scale", "text": "not to scale", "t0": t_pull0 + 0.7, "t1": t_pull1 - 0.3, "slot": "tl"},
     {"id": "b-pace", "text": "∵ an easy pace, 5 km/h", "t0": t_walk0, "t1": t_zo0, "slot": "tl"},
     {"id": "b-road", "text": "∵ no road, no rest", "t0": t_halfway, "t1": t_zo0, "slot": "tr"},
     {"id": "b-day", "text": "∵ 8 hours a day", "t0": t_zo1, "t1": t_work0 - 0.1, "slot": "tl"},
-    {"id": "b-steps", "text": "10,000 steps a day: ≈ 140 yr", "t0": t_steps, "t1": t_140 + 0.5, "slot": "tr"},
+    {"id": "b-steps", "text": "10,000 steps a day", "t0": t_steps, "t1": t_hund, "slot": "tr"},
+    {"id": "b-140", "text": "≈ 140 yr", "t0": t_hund, "t1": t_140 + 0.5, "slot": "tr"},
     {"id": "b-half", "text": "halfway", "t0": t_halfway - 0.3, "t1": t_halfway + 1.5, "slot": "tl"},
     {"id": "b-nonstop", "text": "nonstop: ≈ 9 yr", "t0": t_nine, "t1": t_zo0 + 0.8, "slot": "tr"},
     {"id": "b-rest", "text": "a rest stop", "t0": t_rest, "t1": t_rest + 1.6, "slot": "tr"},
-    {"id": "b-d1", "text": "Apollo 11: day 1", "t0": t_apollo[0] + 0.1, "t1": t_apollo[0] + 1.05, "slot": "tr"},
-    {"id": "b-d2", "text": "day 2", "t0": t_apollo[0] + 1.05, "t1": t_apollo[0] + 2.1, "slot": "tr"},
-    {"id": "b-d3", "text": "day 3: lunar orbit", "t0": t_apollo[0] + 2.1, "t1": t_end - 0.4, "slot": "tr"},
+    {"id": "b-d1", "text": "Apollo 11: ~24 h", "t0": t_apollo[0] + 0.1, "t1": t_apollo[0] + 1.05, "slot": "tr"},
+    {"id": "b-d2", "text": "~48 h", "t0": t_apollo[0] + 1.05, "t1": t_apollo[0] + 2.1, "slot": "tr"},
+    {"id": "b-d3", "text": "~76 h: lunar orbit", "t0": t_apollo[0] + 2.1, "t1": t_end - 0.4, "slot": "tr"},
     {"id": "b-figs", "text": "figures not to scale", "t0": t_dive0, "t1": t_halfway, "slot": "tr"},
     {"id": "b-figs2", "text": "figures not to scale", "t0": t_zo1, "t1": t_zo1 + 4.0, "slot": "tr"},
     {"id": "b-rounded", "text": "rounded", "t0": t_box + 0.3, "t1": t_work0 - 0.1, "slot": "tl"},
@@ -244,7 +247,7 @@ END = {"title": "Next envelope: *everyone, holding hands*", "follow": "Possibili
        "next": "NASA Science, Moon Facts: average distance 384,400 km."}
 
 CUE = {"pull": [t_pull0, t_pull1], "rings": t_rings, "spread": t_spread, "clockA": CLOCK_A, "clockB": CLOCK_B, "box": t_box, "nine": t_nine,
-       "apollo": t_apollo, "home": t_home, "clock": [t_quick, t_quick + 1.8], "pauses": PAUSES, "props": {"bed": t_sleep, "table": t_eat, "shoe": t_shoe, "rest": t_rest}, "orbit": [t_apollo[1] + 1.2, t_end - 0.4], "lane": 1.85, "run": [t_run0, t_b1, t_zo1],
+       "apollo": t_apollo, "home": t_home, "gf": t_gf, "clock": [t_quick, t_quick + 1.8], "pauses": PAUSES, "props": {"bed": t_sleep, "table": t_eat, "shoe": t_shoe, "rest": t_rest}, "orbit": [t_apollo[1] + 1.2, t_end - 0.4], "lane": 1.85, "run": [t_run0, t_b1, t_zo1],
        "fps": FPS, "pathA": PA, "pathB": PB, "pathS": PS, "dc": D_C, "hs": 0.055, "fy": FYC}
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": round(t_box + 1.0, 4),

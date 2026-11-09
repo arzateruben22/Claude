@@ -45,7 +45,7 @@ All beats are under the limit of 8. Several grades are low because the sentences
 
 ## Review round 3 changes (9 Nov 2026)
 - 47 to 65 s: the wide shots now frame all three walkers whole, with the Moon end at 54% of the frame height; the work card moved up (y 17%) clear of their heads; the "rounded" and day badges end when the card appears and the stride badge is gone (it is on the card).
-- 57 to 60 s: a real Apollo capsule climbs its own fourth lane and lands on "three" at 60.1 s, with day 1, day 2 and day 3 badges; after landing it orbits the Moon (62 to 65 s), so the last stretch changes too. The label that ended on the blue walker's legs is gone.
+- 57 to 60 s: a real Apollo capsule climbs its own fourth lane and lands on "three" at 60.1 s, with ~24 h, ~48 h and ~76 h (lunar orbit) badges; after landing it orbits the Moon (62 to 65 s), so the last stretch changes too. The label that ended on the blue walker's legs is gone.
 - 31 to 38 s: the camera follows the walker every frame, so it is whole and sharp; a rest stop (a tent) at about 33.5 s.
 - 5.5 s: the "not to scale" badge waits until the title has gone.
 - 66 to 71 s: frame 0's picture is behind the end card from 67.6 s.

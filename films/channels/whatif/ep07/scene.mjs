@@ -157,9 +157,9 @@ for (const L of FILM.labels) {
 }
 const spine = createSpine({ states: FILM.spine, t1: FILM.spineOut, y: 0.565, safe: hud.safe, W, H });
 const work = workCard(FILM.work, { safe: hud.safe, W, H, capTop: 0.61, y: 0.17 });
-const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.27 });
+const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.14 });
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "4vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "2.5vmin auto 0" });
 const box = endBox(endEl, { t0: FILM.endCard, answer: FILM.spine[FILM.spine.length - 1].terms.find((x) => x[0] === "ans")[1], S1: Math.min(W, H) / 1080 });
 
 // ── staging ─────────────────────────────────────────────────────────────────
@@ -194,7 +194,7 @@ window.seek = function (t) {
   const top = WD.top, pre = shot === "front" || shot === "pull" || t < CUE.spread[0];
   const endLine = shot === "end" ? E.inout2(seg(t, FILM.endCard + 1.4, FILM.endCard + 2.1)) : 0;   // the loop: the line and the little Moon return once the card has lifted
   const setLane = (k, x, f, w, o) => { const l = lane[k]; l.visible = o > 0.003; l.material.opacity = o; place(l, x, 0, w, Math.max(1e-6, top * f)); };
-  const hookLine = pre ? 1 : 0, lanesOn = !pre && shot !== "end" ? 1 : shot === "end" ? gate : 0;
+  const hookLine = pre ? 1 : 0, lanesOn = !pre && shot !== "end" ? 1 - E.inout2(seg(t, FILM.endCard - 0.7, FILM.endCard - 0.1)) : shot === "end" ? gate : 0;
   setLane("B", LANE_X.B * off, hookLine || endLine > 0 ? 1 : fB, px * (hookLine || endLine > 0 ? 0.6 : 1.0), hookLine ? 0.8 : shot === "end" ? Math.max(0.0, 0.8 * endLine) : seg(t, CUE.run[2] - 0.2, CUE.run[2] + 0.3));
   setLane("A", LANE_X.A * off, fA, px * 0.9, seg(t, CUE.spread[1], CUE.run[0]) * lanesOn);
   setLane("S", LANE_X.S * off, fS, px * 0.7, seg(t, CUE.run[2], CUE.run[1]) * lanesOn);
@@ -205,8 +205,9 @@ window.seek = function (t) {
     w.group.visible = on > 0.02; w.group.scale.setScalar(hs);
     w.set({ at: [x, top * f + (mv ? Math.abs(Math.sin(ph)) * 0.035 * figH : 0) + hs * WD.fig / 2, 0], arms: mv ? 0.12 + 0.12 * Math.sin(ph) : 0.04, tilt: mv ? 0.05 : 0 });
   };
-  const wkAOn = seg(t, CUE.spread[1] - 0.2, CUE.spread[1] + 0.3) * lanesOn * (pre ? 0 : 1);
-  const wkBOn = seg(t, CUE.run[2] - 0.2, CUE.run[2] + 0.3) * lanesOn * (pre ? 0 : 1);
+  const hideAB = E.inout2(seg(t, CUE.gf - 0.1, CUE.gf + 0.3)) * (1 - E.inout2(seg(t, CUE.home - 0.5, CUE.home - 0.1)));
+  const wkAOn = (1 - hideAB) * seg(t, CUE.spread[1] - 0.2, CUE.spread[1] + 0.3) * lanesOn * (pre ? 0 : 1);
+  const wkBOn = (1 - hideAB) * seg(t, CUE.run[2] - 0.2, CUE.run[2] + 0.3) * lanesOn * (pre ? 0 : 1);
   walk(wkA, LANE_X.A * off, fA, frac.A, wkAOn);
   walk(wkB, LANE_X.B * off, fB, frac.B, wkBOn);
   walk(wkS, LANE_X.S * off, fS, frac.S, seg(t, CUE.run[2], CUE.run[1]) * lanesOn * (pre ? 0 : 1));
@@ -225,8 +226,8 @@ window.seek = function (t) {
     dial.visible = on; dial.scale.setScalar(hs * 0.95 * u); dial.position.set(p[0] + 1.55 * figH, p[1] + 0.75 * figH, 0);
     const sw = E.inout2(seg(t, CUE.clock[0] + 0.1, CUE.clock[1] - 0.3)); dial.userData.hp.rotation.z = -sw * Math.PI * 2 * 8 / 12; dial.userData.mp.rotation.z = -sw * Math.PI * 2 * 8; }
   // the Apollo capsule: a real capsule in its own fourth lane, climbing in three "days" and landing on "three", then orbiting the Moon
-  const cap = seg(t, CUE.apollo[0], CUE.apollo[1]), capE = cap, capOn = seg(t, CUE.apollo[0] - 0.1, CUE.apollo[0] + 0.15) * (1 - E.in3(seg(t, FILM.endCard - 0.3, FILM.endCard + 0.3)));
-  const orb = seg(t, CUE.orbit[0], CUE.orbit[1]), Ro = figH * 1.3, cx = CUE.lane * off, moonY = top + 1.737e6, ang0 = -Math.PI / 2 + 0.2, ang = ang0 + orb * Math.PI * 2 * 1.4;
+  const cap = seg(t, CUE.apollo[0], CUE.apollo[1]), capE = cap, capOn = seg(t, CUE.apollo[0] - 0.1, CUE.apollo[0] + 0.15) * (1 - E.in3(seg(t, FILM.endCard - 0.7, FILM.endCard - 0.1)));
+  const orb = seg(t, CUE.orbit[0], CUE.orbit[1]), Ro = figH * 1.15, cx = CUE.lane * off, moonY = top + 1.737e6, ang0 = -Math.PI / 2 + 0.2, ang = ang0 + orb * Math.PI * 2 * 1.4;
   let cxp = cx, cyp = top * capE, rot = 0;
   if (t > CUE.apollo[1]) { const o2 = E.inout2(seg(t, CUE.apollo[1], CUE.orbit[0])), px0 = Ro * Math.cos(ang), py0 = moonY + Ro * Math.sin(ang), sx = Ro * Math.cos(ang0), sy = moonY + Ro * Math.sin(ang0);
     const bx0 = cx + (sx - cx) * o2, by0 = top + (sy - top) * o2; cxp = t < CUE.orbit[0] ? bx0 : px0; cyp = t < CUE.orbit[0] ? by0 : py0; rot = t < CUE.orbit[0] ? 0 : ang; }
@@ -247,7 +248,7 @@ window.seek = function (t) {
   const near = 1 - seg(Math.log10(d), 7.9, 8.3);
   dust.visible = near > 0.02 && shot !== "front" && shot !== "pull" && shot !== "end"; dust.material.opacity = 0.5 * near;
   rings.visible = space && (shot === "pull" || shot === "end"); rings.material.opacity = 0.9 * seg(Math.log10(d), 8.2, 8.6);
-  const pl = seg(Math.log10(d), 5.2, 6.8) * (shot === "end" ? gate : 1);
+  const pl = seg(Math.log10(d), 5.2, 6.8) * (shot === "end" ? gate : 1) * (1 - hideAB);
   ringE.set(pl); ringM.set(pl);
   const lm = seg(d, 80, 120) * (1 - seg(Math.log10(d), 6.2, 6.6)) * (shot === "end" ? gate : 1);
   limbO.visible = limbI.visible = lm > 0.01; limbO.material.opacity = 0.9 * lm; limbI.material.opacity = 1;

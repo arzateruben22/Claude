@@ -26,7 +26,7 @@ S2E01 (folder ep07). Timestamps are from `film.json` (real Parakeet word timings
 |  42.6 s | (pause) | Show your work card: the sum on one line, the sensitivity rows. | 76,880 h ÷ 8 ÷ 365 ≈ 26 yr; assumptions | term.write |
 |  42.7 s | (pause) | PUSH IN from the wide view onto the walkers at the Moon, big, low in the frame. | row: slower: 4 km/h ≈ 33 yr | term.write |
 |  43.9 s | Slower adds years, quicker trims a few. Ten thousand steps a day, the popular goal, is only about seven and a half kilometers. So that trip takes about a hundred and forty years. | A time clock pops in beside you at the Moon; its hands sweep eight hours (clocking out). | row: quicker: 6 km/h ≈ 22 yr | term.write |
-|  46.0 s | Slower adds years, quicker trims a few. Ten thousand steps a day, the popular goal, is only about seven and a half kilometers. So that trip takes about a hundred and forty years. | PULL BACK to the three lanes on the step-goal line. | badges '10,000 steps a day: ≈ 140 yr', '∵ 0.75 m a step' |  |
+|  46.0 s | Slower adds years, quicker trims a few. Ten thousand steps a day, the popular goal, is only about seven and a half kilometers. So that trip takes about a hundred and forty years. | Round 5: the work beat now keeps every figure, the Moon and the capsule in the clean band under the caption (Moon end of the lanes at 90% of frame height); the lanes run down off-frame. The walkers and Moon fade out while the camera whips to the step walker, and return just before the takeaway. | badges '10,000 steps a day', then '≈ 140 yr' on 'hundred forty'; '∵ 0.75 m a step' |  |
 |  50.4 s | Slower adds years, quicker trims a few. Ten thousand steps a day, the popular goal, is only about seven and a half kilometers. So that trip takes about a hundred and forty years. | FOLLOW the grey step walker up its lane, big and low; dust streams again. |  |  |
 |  57.0 s | Apollo eleven's crew made the same trip in about three days. The distance never changed, only the speed. | A marker capsule climbs a fourth lane, landing on 'three days'. | label 'Apollo 11: about 3 days' | swell |
 |  61.9 s | Apollo eleven's crew made the same trip in about three days. The distance never changed, only the speed. | A second change: the camera pushes in toward the Moon, where the walkers wait. |  |  |
@@ -40,9 +40,14 @@ Loop check: PSNR of the last frame (71.93 s) against frame 0 is 50.8 dB over the
 | time | narration | visual | on-screen text | sound |
 |---|---|---|---|---|
 |  33.5 s | (picture only, end of the why/whoa stretch) | REST STOP: the walker sits one out and a tent pops in on a chalk ledge; the camera follows every frame, so the walker is whole and sharp (it was clipped at the bottom edge before) | badge 'a rest stop' | |
-|  57.0 s | Apollo eleven's crew | A real capsule (nose cone, window, fins, a trail) leaves the Earth end of its own fourth lane, to the right of the three walkers | badge 'Apollo 11: day 1', then 'day 2' | swell |
-|  60.1 s | the same trip in about three days | The capsule reaches the Moon on 'three' (60.1 s) | badge 'day 3: lunar orbit' | |
+|  57.0 s | Apollo eleven's crew | A real capsule (nose cone, window, fins, a trail) leaves the Earth end of its own fourth lane, to the right of the three walkers | badge 'Apollo 11: ~24 h', then '~48 h' | swell |
+|  60.1 s | the same trip in about three days | The capsule reaches the Moon on 'three' (60.1 s) | badge '~76 h: lunar orbit' (Apollo 11 entered lunar orbit about 76 h after launch; the voice says about three days) | |
 |  61.3 s | The distance never changed, only the speed. | The capsule swings out and orbits the Moon end, with a thin orbit ring, while the camera pushes in toward the Moon (one more change at 62 to 65 s) | | |
 |  67.5 s | Next envelope | Frame 0's picture (you, the line, the little Moon) is behind the end card from here to the end, scrim at 45% | | |
 
 Framing check: the 0.5 s frames from 40 s to the end were looked at one by one for clipped heads and empty lower halves. The three walkers stand whole just above the spine plate in the wide shots (the Moon end at 54% of the frame height, the lane running down behind the HUD), low in the frame (79%) in the chases, and at the bottom in the follow shot. The only clipped frames are about 0.3 s of the camera's move at 53 s. The lower 35% of the wide shots shows the lanes, the capsule's climb and the HUD plates.
+
+## Round 5 notes (S2E01, folder ep07)
+- End card: walkers, rings, capsule and orbit ring fade out 0.7 to 0.1 s before the card arrives; the card is raised so the footnote and the pill sit above the blue figure's head.
+- Orbit ring radius cut to 1.15 figure heights so it stays under the caption band.
+- 'not to scale' badge moved to the top left and shortened so it clears the Moon marker.
