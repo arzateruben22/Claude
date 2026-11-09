@@ -131,8 +131,8 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   const series = ep.seriesTitle ? `${ep.seriesTitle}${ep.seriesOrder ? `, part ${ep.seriesOrder}${ep.seriesTotal ? ` of ${ep.seriesTotal}` : ""}` : ""}` : "";
   const next = input.next ? clean(input.next).replace(/^next:\s*/i, "") : "";
   const ai = input.disclosures.aiVoice || input.disclosures.aiVisuals
-    ? `Narration: synthetic voice (AI)${input.disclosures.aiVisuals ? ". Illustrations: AI-generated, animated in code" : ". Animation: code-rendered"}, no stock footage. Sources for every number are listed below.`
-    : "Animation: code-rendered, no stock footage. Sources for every number are listed below.";
+    ? `Narration: synthetic voice (AI)${input.disclosures.aiVisuals ? ". Illustrations: AI-generated, animated in code" : ". Animation: code-rendered"}, no stock footage. Every number's source is listed in this description.`
+    : "Animation: code-rendered, no stock footage. Every number's source is listed in this description.";
   const sourceLines = srcs.map((s, i) => `${i + 1}. ${clean(s.claim)} — ${sourceLabel(s)}${s.url ? `: ${s.url}` : ""}`);
   const sourceShort = srcs.map(sourceLabel).filter((v, i, a) => a.indexOf(v) === i);
   /** the numbered source lines as a thread of comments within `limit` ("Sources" / "Sources 1/2", one source per line) */
