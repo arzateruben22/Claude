@@ -719,17 +719,20 @@ if (want('cars')) {
 // the parked cars' models and stand-ins' material; and every clock change's environment map frees the old one's render
 // target. The first round leaves the game builders' caches warm (the car materials' high-quality maps, HD's palm crowns
 // and canopies, the sun's map kept at Low), so the first round sets the baseline and the second must come back to it
-// exactly; the first round's residue is logged.
+// exactly; the first round's residue is logged. S3a: the crowd's bodies are a moving population (who's in, who's at
+// LOD 1, a filler made live is a new person), so the people's own geometries (peopleGeometries(): the uploaded geometries
+// of the bodies the crowd holds now, the guests', the spares' and the staff's) are read with each row and taken off the
+// count; a body let go without being disposed is in none of the crowd's lists, so it stays in the rest and is caught.
 if (want('memory')) {
   const { ctx, page, errors } = await open([844, 390], 'quality=low&ultra=1&day=Sat&hour=21&hint=0');
   await check('memory: boots with no console errors', async () => { expect(!errors.length, errors.join(' | ')); });
-  const read = async (q) => { await H(page, `(() => { const o = window.__onfoot; o.setQuality('${q}'); o.pose('overhead'); })()`); await frames(page, 2); const st = await H(page, 'window.__onfoot.stats()'); return { q, textures: st.textures, geometries: st.geometries, programs: st.programs }; };
+  const read = async (q) => { await H(page, `(() => { const o = window.__onfoot; o.setQuality('${q}'); o.pose('overhead'); })()`); await frames(page, 2); const st = await H(page, 'window.__onfoot.stats()'); const people = await H(page, 'window.__onfoot.peopleGeometries ? window.__onfoot.peopleGeometries() : 0'); return { q, textures: st.textures, geometries: st.geometries - people, people, programs: st.programs }; };
   const seq = ['high', 'ultra', 'high', 'low'], rows = [await read('low')];
   for (let c = 0; c < 2; c++) for (const q of seq) rows.push(await read(q));
   summary.memory = rows;
   await check('memory: Low -> HD -> Ultra -> HD -> Low comes back to the same textures and geometries, round after round (the first round warms the game builders\' caches)', async () => {
     const start = rows[0], one = rows[4], two = rows[8];
-    const txt = rows.map((r) => `${r.q} ${r.textures}t/${r.geometries}g`).join(' -> ');
+    const txt = rows.map((r) => `${r.q} ${r.textures}t/${r.geometries}g` + (r.people ? ` (+${r.people}g people)` : '')).join(' -> ');
     for (let k = 2; k <= 4; k++) expect(rows[k + 4].textures === rows[k].textures && rows[k + 4].geometries === rows[k].geometries, `at ${rows[k].q} (step ${k}) the second round reads ${rows[k + 4].textures}t/${rows[k + 4].geometries}g, the first ${rows[k].textures}t/${rows[k].geometries}g: ${txt}`);
     expect(two.textures === one.textures && two.geometries === one.geometries, `the second round left ${two.textures - one.textures} textures and ${two.geometries - one.geometries} geometries more: ${txt}`);
     return `${txt}; the first round's residue over the start: ${one.textures - start.textures} textures, ${one.geometries - start.geometries} geometries (caches); the second round adds 0 and 0`;

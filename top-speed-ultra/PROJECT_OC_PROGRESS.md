@@ -4,6 +4,154 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-09: Stoppage Time S3a built: the crowd, staff, fillers and how people are drawn
+
+S3a (`PROJECT_OC_SPORTS_BAR.md`, "### S3a") is built on `claude/sports-bar`, uncommitted. The room fills: regulars and
+walk-ins in parties, live up to the preset's cap with the staff, and fillers (cards) making up the rest of the
+simulated crowd; guests choose what to do by the plan's utility AI; two to four bartenders serve the counter by
+sections, servers run table service, and at Low the westmost bartender leaves by the flap to collect empties; the crowd
+reacts to the screens; people are drawn as LOD 1, LOD 2 or cards by the visibility rule, with the casting people and
+Ultra's pool-slot people; bodies are built on the time budget, and a change of graphics moves the live count to the
+new cap behind its sheet. `people/`, `lot57/`, `src/onfoot/main.ts` and `src/onfoot/index.html` are untouched (`git
+status` on each empty); the bar's own `venues/sportsbar/main.ts` changed in a few local lines only (below).
+`npx tsc --noEmit` passes. The page is 1,670.9 KB (559.0 KB gzipped) by Vite's count.
+
+- **The first step.** `git fetch origin claude/onfoot` found nothing newer than 47c71a6 (merged at a5ac3fd), so no
+  merge was made. The re-measure: every L row, the contracts and the `people/` internals unchanged (the plan's "S3a's
+  re-measure"); the Retro module still only on `origin/claude/wip-modes` (O15).
+- **What's new:**
+  - `engine/sim/crowd.ts` (the regulars' pool of 48 in friend groups of 2 to 5, first names from 200, traits, teams by
+    arrival time, favourites; parties of 1 to 6; log-normal stays with an 80-minute median; the staff plan by the
+    share, Low's five), `autonomy.ts` (the utility AI, term by term, the urgent rule, hysteresis, overlays and the
+    top-three draw), `groups.ts` (Lot 57's talking-group rules), `builds.ts` (the time budget and its log), `names.ts`,
+    `lines.ts` (30 starter lines). No three.js in any of them.
+  - `venues/sportsbar/crowd.ts`: the crowd on the page (settling at a set clock, Poisson arrivals from the lot and the
+    drop-off, leaving, the live cap with the staff, held guests, fillers and the hand-over with 6 spare bodies), the
+    guests' actions on the objects (the bar and table service through the staff, water, the jukebox, the restrooms out
+    of sight, watching, sitting, dancing, eating, chatting at their table), the watchdog and the decision log, the
+    reactions to the screens (cheer, groan, clap; the direct dance chance at the featured final whistle), the draw
+    modes (LOD 1, LOD 2, cards; the casting people with a hidden LOD 1 under a LOD 2; Ultra's pool-slot people), moods
+    on bodies (walk speed, a slump when Low, the clips, laughter in standing groups, captions near you), the builds,
+    a change of graphics, and the hooks.
+  - `venues/sportsbar/cards.ts`: the filler atlas (the atlas eight, 3 poses, 8 directions, 192 cells; 1024 with 48 x 96
+    cells at Low, 2048 with 96 x 192 at HD and Ultra) and the cards' one instanced mesh and the blobs'.
+  - `crew.ts`: the bartenders' sections and lane limits and the westmost one's flap trip at Low; the host; the barback.
+  - `life.ts`: the crowd wired in (its step in the sim, its frame at the top of the update, the reactions, the items in
+    hands, the person menu, the S3a hooks); your table and seat choices respect the crowd's slots and fillers.
+  - `main.ts` (local edits only): the crowd's context (the renderer, the overhead's target, the state, how your avatar
+    is drawn), Sit and tap to sit skip a taken seat, the doors open for guests too, `stats()` and `vis()` report the
+    people, `pose()` and `buildAll()` build every pending body first, and every change of graphics goes behind a
+    "Switching to …" sheet (Ultra's "Preparing Ultra…" as before), with a `switchSheet(q)` hook.
+  - `def.ts`: `fillerMinM` 6 at Low and 9 at HD and Ultra; HD's `staff` 10.
+  - Tests: `tests/sportsbar-crowd.mjs` (the engine side in Node) and `tests/sportsbar-s3a.mjs` (the page: smoke,
+    checks, staff, reactions, clock, fillers, retro, builds, switch, budgets, shots); S1's memory check changed as
+    below.
+  - The player beside the crowd (found by S2a's checks run as regressions, fixed here in `life.ts`, `crowd.ts` and
+    `crew.ts`): your food and table orders go to the least busy server on shift, and that server's trips for them go
+    ahead of the crowd's; a server's job now waits out its delay (the arrival time) in the queue, so a job not yet due
+    never keeps a server standing while another is due (a probe found both servers standing through the crowd's
+    30 to 90 s arrival delays while wings ordered at the counter sat "on the way"; alone, as in S2a, the timing is the
+    same). At a one-person spot someone in the crowd is using (the jukebox, the water station) your action waits in
+    the queue ("someone's there, you're next"), the crowd leaves the spot to you, and it starts when they're done (up
+    to 2 sim minutes). The jukebox's spot is the page's own, not a venue slot, and the crowd didn't know it (so it
+    read as taken to you, and no guest ever picked a song): the crowd now takes it into its places. With every place
+    that sees a screen taken, Watch finds you a clear patch of floor in front of it with it in view (the patio's inside
+    its rail), clear of people and of every place the crowd uses.
+  - S1's memory check (`tests/sportsbar.mjs`, "memory") now takes the people's own geometries off the renderer's count
+    (`peopleGeometries()`: the uploaded geometries of the bodies the crowd holds now, the guests', the spares' and the
+    staff's) and logs them beside each row: with the crowd, who's in and who's at LOD 1 move between rounds (the run
+    against the crowd read one geometry more at Ultra in the second round, 293 against 292). A body let go without
+    being disposed is in none of the crowd's lists, so it stays in the rest and still fails the check. A probe of the
+    same sequence read the people at 39 to 41 (Low), 85 (HD) and 150 (Ultra) geometries, the rest 105 to 106, 130 to
+    132 and 143.
+- **Checks** (headless Chromium, SwiftShader, one browser at a time; `tests/sportsbar-s3a.mjs`, logs in
+  `tests/out/sportsbar/logs/`, results in `tests/out/sportsbar/sportsbar-s3a-checks.json`):
+  - **Engine** (`tests/sportsbar-crowd.mjs`, Node): 16 of 16. The plan's worked arithmetic comes out as written:
+    watching 70.46 without the urgent rule; the drink 12 m away with 10 of 13 taken 28.94 without it and 58.94 with it;
+    water 47.35; watching re-scored plain 25.46; the bar screens from 12 m 6.72; a drink-tagged action picked with p
+    0.988 (20,000 seeded decisions); table service at thirst 29 scores 73.57; seated, ordering at about thirst 45
+    (28.33) and not at 50 (24.36); hysteresis keeps the current action; urgency 0.200, 0.650, 1.107, 2.000. Groups:
+    268 turns in 20 minutes, median 3.50 s, 1.00 to 10.00 s, 1.40 laughs a minute. The staff plan by share, Low's five,
+    48 regulars in 14 groups of 2 to 5, 200 names, stays median 79.6 minutes, 30 lines, the scheduler.
+  - **Needs drive choices** (Low, Saturday 21:00; the last run after the fixes, `s3a-checks-7.log`): thirst under 30,
+    16 of 18 (88.9%) chose a drink-tagged action within two decisions; hunger 6 of 6; fun 14 of 14 (70% wanted). After
+    a 30 sim-minute fast-forward: median mood 65.0, 0% Low; stuck at most 1.0 s, no watchdog rescues; no slot over
+    capacity; nobody in the lane; live never over 36; a frame's decisions 0.225 ms on average (a batch of up to 6; the slowest batch 2.1 ms, over the last 400 batches).
+  - **Mood on bodies:** in real frames at the tv-east pose over 6 goals, clap (4), cheer (1) and groan (2) on LOD 1,
+    clap (31), cheer (2) and groan (2) on LOD 2; 16 laughs on bodies in a 4-minute run; no NPC at LOD 0.
+  - **Staff** (the same run): at Low two bartenders served all 14 counter positions, the westmost left by the flap,
+    reached H, picked 2 empties and came back (and was out on a second trip, 3 picked, when the check read); HD and
+    Ultra four bartenders, every position served, centres at least 0.72 m (HD) and 2.313 m (Ultra) apart, nobody in
+    the lane or the flap; staff on 5, 10 and 10.
+  - **Reactions** (Ultra, Saturday 20:08, 10 seeded goals): 109 supporters who could see a screen, 61.5% reacted
+    within 1 s against a mean p of 59.6% (within 12 points wanted); 61% of the other side's groaned; 23% of the neutral
+    clapped (p 0.25); nobody who couldn't see a screen reacted. At the featured final whistle 3 of 10 eligible winners
+    started dancing (p = 0.5 x active; 2 drew it with no free spot), each one a winner who could see a screen, active
+    0.50 and up, fun 50 or less.
+  - **Fillers** (live + held + fillers = the target, or every free eligible place): Low Saturday 21:00 31 + 0 + 77 =
+    108 of 130 (77 free eligible), the nearest filler 6.07 m (6 wanted); HD 60 + 0 + 33 = 93 (33 free), nearest 9.22 m
+    (9 wanted); Ultra 90 + 0 + 1 = 91 (1 free), nearest 13.03 m; Tuesday 15:00 19 live of 19 at each preset; no table
+    mixes fillers and live people. Tapping a filler (patio table 6, 17.84 m) gave Jack, a walk-in, live there with his
+    menu. Closed (Monday 04:00) nobody inside; Low never draws more than 5 staff; the live count never passed the cap.
+  - **Low and the shaders:** one NPC forced to LOD 0 at Low after a 30 sim-minute fast-forward (17 calls, 65.8k)
+    compiled with no shader error, its hair marked `retroSkip`. The toon half waits for the Retro module (O15).
+  - **The builds on the time budget** (from load, until the room reaches its cap or the first 30 counted builds): Low
+    31 builds (26 LOD 2, 5 LOD 1), span 55.1 s within 71.2 s (ratio 1.316, F 879.5 ms); HD 30, 71.8 s within 112.7 s
+    (1.083); Ultra 30, 131.5 s within 222.7 s (1.004). Never two a frame, the gap met at every build (at least 1.01,
+    1.52 and 1.83 times the need), no idle frame. The three warm-up frames were logged and not timed (Low 5.0, 4.5 and
+    1.4 s; HD 6.7, 7.4 and 2.7 s; Ultra 8.7, 19.9 and 4.5 s).
+  - **A change of graphics** (10 of 10): Low to HD behind "Switching to HD…": live 70 at the cap from the switch
+    frame, 20 held guests back before 9 fillers made live, 21 bodies rebuilt behind the sheet (2,494 ms), your group
+    live, every body at high quality; timed, the next 30 builds passed the four marks (74.3 s within 111.6 s, ratio
+    1.133). HD to Ultra and Ultra to HD: no body rebuilt, the atlas kept. Ultra to Low: live 36, 59 held (the nearest
+    10.11 m away, the farthest 30.12 m; 12 regulars), 21 rebuilt (4,769 ms behind the sheet), every body at phone
+    quality. A held guest tapped (Chloe) came back as herself, room made under the cap first (36 of 36). LOD 1 bodies
+    after a switch: 6.5k to 9.5k at Low (mean 7.8k to 7.9k), 8.6k to 14.3k at HD and Ultra (mean 11.8k). No console
+    errors.
+  - **Budgets** (`stats()` at the poses against the sums, every row inside):
+    - Low (cap 36): door 107/165.3k of 118/203.9k; tv-east 114/171.5k; stall 119/206.8k of 139/244.3k; patio
+      85/135.9k; overhead 110/165.0k of 118/197.9k; at 390x844 door 104/165.2k and overhead 109/165.0k. No shadow maps.
+    - HD (cap 70): door pass 142/357.7k of 177/465.7k, frame 192/442.6k of 294/718.9k, sun 38/102.6k; tv-east
+      148/354.5k; stall 135/333.0k of 176/449.5k, frame 219/595.8k of 328/854.6k, sun 74/280.8k; patio 113/226.3k;
+      overhead 190/501.9k of 222/609.4k, frame 274/771.7k of 374/1014.5k; at 390x844 door 140/346.0k and overhead
+      192/507.1k.
+    - Ultra (cap 100): door pass 186/683.6k of 302/1202.6k, frame 571/1850.8k of 1155/3259.2k, sun 90/430.1k, the
+      pool maps 57/44.0k and 56/40.0k; tv-east 250/965.5k, frame 669/2286.7k; stall 185/839.3k of 246/1086.4k, frame
+      454/2243.8k of 683/3011.9k (the pool maps frozen, 684 tris); patio 163/719.5k; overhead 243/998.7k of
+      302/1180.0k, frame 679/2624.4k of 1185/3396.7k; at 390x844 door 181/663.8k and overhead 242/1001.3k, frame
+      686/2664.5k.
+    - The crowd's step 0.1 to 0.9 ms (one 4.3 ms), its frame 0.4 to 2.8 ms, a frame's decisions (a batch of up to 6) 0.155 ms on average at Ultra;
+      a frame's CPU 5 to 18 ms here without a build and 255 to 1,238 ms with a LOD 1 build in it (SwiftShader; real
+      hardware not measured).
+  - **Screenshots** (all looked at), in `tests/out/sportsbar/`:
+    - `s3a-goal-before-1280x720-r1.png` and `s3a-goal-after-1280x720-r1.png` (HD, Saturday 21:00): 14 of the 39 who
+      could see a screen reacted, claps at the front, a cheer at the back, the Cheer button up.
+    - `s3a-goal-before-390x844-r1.png` and `s3a-goal-after-390x844-r1.png` (Low): 11 of 23, two cheering.
+    - `s3a-overhead-friday-1280x720-r1.png`: a packed Friday, live 70 and 46 fillers of a target of 110; reads full.
+    - `s3a-door-low-844x390-r1.png`, `s3a-stall-low-844x390-r1.png`, `s3a-patio-low-844x390-r1.png`: Low on a
+      Saturday night; the door packed, the patio's people inside read through the glazing (the stall pose faces the
+      north wall, no glazing in view).
+    - `s3a-atlas-low-r1.png`: the Low atlas (192 cells).
+    - `s3a-tuesday-1280x720-r1.png`: a quiet Tuesday 15:00, 19 guests of 19 and 4 staff.
+  - **Regressions:** S1's Node sim (`tests/sportsbar-sim.mjs`) and S2b's engine (`tests/sportsbar-games.mjs`) all
+    pass. S2a's page checks first read 18 of 22 against the crowd (the jukebox, the
+    two counter orders, a patio screen's watch: the fixes above), then 22 of 22 (`s3a-s2a-checks-3.log`: a song +4.62
+    fun over 1.5 minutes with the walk, water +17.60 thirst; both counter orders in hand 2.50 sim minutes after the food
+    was picked; the patio screen watched 20:11 to 20:27, +5 tokens). S2b's page checks and controls: 21 of 21. S1's
+    data, honesty, shadows and memory groups: 36 of 37, the memory check one geometry over at Ultra in the second
+    round (the change above), then the memory group 2 of 2 (`s3a-s1-memory.log`: the rest 105, 132, 143, 132, 106 and
+    back to 132, 143, 132, 106 exactly; the people 39 to 41, 83 to 85 and 149 to 150 geometries).
+- **Measured before the last fixes and not re-run:** the builds, a change of graphics, the budgets, the reactions,
+  the fillers, the clock and the shots ran before the jukebox's spot joined the crowd's places and before the servers'
+  queue change (the checks and the staff groups, S2a and S1's memory ran after them, as above). Neither change should add a
+  body or a mesh (the live cap holds), but those numbers weren't re-measured.
+- **Left open:** the Retro toon half of "Low stays Retro" (O15, O16: the Retro module is still only on
+  `origin/claude/wip-modes`); S3b's people adverts, the 11 interactions and NPC games; the murmur (no audio on either
+  page); the patio closing for rain (the page has no weather); the draw pass still builds a few small arrays a frame
+  (no measured cost: the crowd's frame is 0.4 to 2.8 ms); LOD 1 bodies average 7.8k at Low and 11.8k at HD and
+  Ultra, a little over the sums' per-body figures, every pose inside its row all the same; no phone run. Nothing
+  committed.
+
 ## 2026-11-09: Stoppage Time S2b committed (pool, darts, shuffleboard)
 
 S2b, as repaired after review (the entry below), was kept by the follow-up review and is committed on
