@@ -64,15 +64,15 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Whole countries acted. Australia switched off every commercial tanning bed, and Brazil banned them too.",
+   "text": "Whole countries acted. By twenty sixteen, every Australian state had banned commercial tanning beds, and Brazil banned them too.",
    "stars": [
     "too"
    ],
-   "phonemes": "hˈəʊl kˈʌntɹiz ˈaktɪd. ɒstɹˈeɪliə swˈɪtʃt ˈɒf ˈɛvɹɪ kəmˈɜːʃəl tˈanɪŋ bˈɛd, and bɹɐzˈɪl bˈand ðˌɛm tˈuː.",
-   "speed": 0.9,
+   "phonemes": "hˈəʊl kˈʌntɹiz ˈaktɪd. baɪ twˈɛnti sˈɪkstiːn, ˈɛvɹɪ ɒstɹˈeɪliən stˈeɪt had bˈand kəmˈɜːʃəl tˈanɪŋ bˈɛdz, and bɹɐzˈɪl bˈand ðˌɛm tˈuː.",
+   "speed": 1.0,
    "file": "05.wav",
-   "dur": 6.236,
-   "sha256": "1998506c7b73d55a66cb082023c27f8acb67fd402307412b42049ca1b7eb39a0"
+   "dur": 7.407,
+   "sha256": "ac8d3215ffd0afa8e79a48399ea52e08bf0af1652125be4d13c0401ebe10e473"
   },
   {
    "id": "vo06",

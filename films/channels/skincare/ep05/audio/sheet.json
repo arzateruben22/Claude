@@ -1,0 +1,263 @@
+{
+ "duration": 67.0,
+ "fps": 30,
+ "preset": "outerlayer-slide",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.525,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 5.525,
+   "t1": 13.697,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 13.697,
+   "t1": 21.742,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 21.742,
+   "t1": 33.733,
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 33.733,
+   "t1": 45.66,
+   "energy": 0.8
+  },
+  {
+   "id": "toscale",
+   "t0": 45.66,
+   "t1": 53.635,
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 53.635,
+   "t1": 60.228,
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 60.228,
+   "t1": 67.0,
+   "energy": 0.35
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 5.525
+  },
+  {
+   "t": 0.15,
+   "kind": "badge",
+   "tag": "b1"
+  },
+  {
+   "t": 0.9,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 3.575,
+   "kind": "scale.jump",
+   "tag": "c2"
+  },
+  {
+   "t": 5.525,
+   "kind": "section",
+   "id": "normal",
+   "t1": 13.697
+  },
+  {
+   "t": 5.825,
+   "kind": "scale.jump",
+   "tag": "c3"
+  },
+  {
+   "t": 10.39,
+   "kind": "label",
+   "tag": "l0"
+  },
+  {
+   "t": 13.697,
+   "kind": "section",
+   "id": "change",
+   "t1": 21.742
+  },
+  {
+   "t": 16.472,
+   "kind": "label",
+   "tag": "l1"
+  },
+  {
+   "t": 17.367,
+   "kind": "scale.jump",
+   "tag": "c8"
+  },
+  {
+   "t": 19.672,
+   "kind": "label",
+   "tag": "l2"
+  },
+  {
+   "t": 21.742,
+   "kind": "section",
+   "id": "why",
+   "t1": 33.733
+  },
+  {
+   "t": 22.042,
+   "kind": "scale.jump",
+   "tag": "c10"
+  },
+  {
+   "t": 25.767,
+   "kind": "scale.jump",
+   "tag": "c11"
+  },
+  {
+   "t": 26.517,
+   "kind": "badge",
+   "tag": "b0"
+  },
+  {
+   "t": 26.667,
+   "kind": "label",
+   "tag": "l3"
+  },
+  {
+   "t": 33.733,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 45.66
+  },
+  {
+   "t": 34.033,
+   "kind": "scale.jump",
+   "tag": "c14"
+  },
+  {
+   "t": 34.033,
+   "kind": "swell",
+   "tag": "whoa",
+   "t1": 44.06
+  },
+  {
+   "t": 34.533,
+   "kind": "reveal",
+   "tag": "p0"
+  },
+  {
+   "t": 43.06,
+   "kind": "scale.jump",
+   "tag": "c15"
+  },
+  {
+   "t": 45.66,
+   "kind": "section",
+   "id": "toscale",
+   "t1": 53.635
+  },
+  {
+   "t": 46.11,
+   "kind": "badge",
+   "tag": "b2"
+  },
+  {
+   "t": 48.35,
+   "kind": "label",
+   "tag": "l5"
+  },
+  {
+   "t": 52.63,
+   "kind": "label",
+   "tag": "l6"
+  },
+  {
+   "t": 53.635,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 60.228
+  },
+  {
+   "t": 53.935,
+   "kind": "scale.jump",
+   "tag": "c20"
+  },
+  {
+   "t": 54.085,
+   "kind": "badge",
+   "tag": "b3"
+  },
+  {
+   "t": 55.745,
+   "kind": "label",
+   "tag": "l4"
+  },
+  {
+   "t": 60.228,
+   "kind": "section",
+   "id": "tease",
+   "t1": 67.0
+  },
+  {
+   "t": 60.528,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.05,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.825,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 13.997,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 22.042,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 34.033,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 45.96,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 53.935,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 60.528,
+   "file": "vo/08.wav"
+  }
+ ]
+}

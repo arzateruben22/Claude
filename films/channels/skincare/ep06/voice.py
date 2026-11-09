@@ -32,7 +32,7 @@ spec.loader.exec_module(tts)
 
 NARRATOR = "bf_isabella"         # bible §4 / auditions/README.md: Outer Layer's narrator
 # Kokoro speed per line: a touch below the first cut (the Flow standard, 29 Oct), the short lines slower so they land.
-SPEEDS = {"vo01": 0.9, "vo02": 0.84, "vo03": 0.84, "vo04": 0.9, "vo05": 0.9, "vo06": 0.72, "vo07": 0.84, "vo08": 0.9}
+SPEEDS = {"vo01": 0.9, "vo02": 0.84, "vo03": 0.84, "vo04": 0.9, "vo05": 1.0, "vo06": 0.72, "vo07": 0.84, "vo08": 0.9}
 
 
 def main():

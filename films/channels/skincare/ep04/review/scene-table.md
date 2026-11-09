@@ -23,7 +23,7 @@ Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm,
 | 30.4 (+1.8) | German doctor named Justinus Kerner described a | plate line appears: physician, Württemberg | voice |
 | 33.5 (+3.0) | food poison found in sausages. He | plate line appears: described a food poison found in sausages, 1817–1822 | voice |
 | 36.1 (+2.6) | He guessed it might one day become a medicine. | plate line appears: <i>His guess: it might become a medicine</i> | voice |
-| 38.1 (+2.1) | (picture only) | camera: e1b art, close-up ×1.1; supporting line: Poison first, medicine later.; badge: Illustration; pill draws on: The frown muscle | silence |
+| 38.1 (+2.1) | (picture only) | camera: e1b art, close-up ×1.1; badge: Illustration; pill draws on: The frown muscle | silence |
 | 40.6 (+2.5) | And here is the twist. | camera: e1b art, close-up ×1.3; supporting line:  | voice |
 | 42.5 (+1.8) | The block does not | camera: e8 art, close-up ×1.5 | voice |
 | 43.9 (+1.4) | last. The nerve slowly grows | camera: e8 art, close-up ×1.1; supporting line: The block wears off. The nerve rebuilds. | voice |

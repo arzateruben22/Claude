@@ -607,8 +607,8 @@
   },
   {
    "id": "vo05",
-   "text": "Whole countries acted. Australia switched off every commercial tanning bed, and Brazil banned them too.",
-   "heard": "Whole countries acted. Australia switched off every commercial tanning bed, and Brazil banned them too.",
+   "text": "Whole countries acted. By twenty sixteen, every Australian state had banned commercial tanning beds, and Brazil banned them too.",
+   "heard": "Whole countries acted. By 2016, every Australian state had banned commercial tanning beds, and Brazil banned them too.",
    "words": [
     {
      "w": "Whole",
@@ -618,86 +618,110 @@
     },
     {
      "w": "countries",
-     "start": 0.35,
+     "start": 0.32,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "acted.",
-     "start": 1.035,
-     "end": 1.76,
+     "start": 0.965,
+     "end": 1.6,
      "heard": true
     },
     {
-     "w": "Australia",
-     "start": 1.835,
-     "end": 2.4,
+     "w": "By",
+     "start": 1.74,
+     "end": 1.84,
      "heard": true
     },
     {
-     "w": "switched",
-     "start": 2.445,
+     "w": "twenty",
+     "start": 1.88,
      "end": 2.8,
-     "heard": true
+     "heard": false
     },
     {
-     "w": "off",
-     "start": 2.78,
+     "w": "sixteen,",
+     "start": 1.91,
+     "end": 2.8,
+     "heard": false
+    },
+    {
+     "w": "every",
+     "start": 2.805,
      "end": 3.04,
      "heard": true
     },
     {
-     "w": "every",
-     "start": 3.0,
-     "end": 3.2,
+     "w": "Australian",
+     "start": 2.935,
+     "end": 3.76,
      "heard": true
     },
     {
-     "w": "commercial",
-     "start": 3.3,
-     "end": 3.68,
+     "w": "state",
+     "start": 3.82,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "tanning",
-     "start": 3.765,
-     "end": 4.24,
-     "heard": true
-    },
-    {
-     "w": "bed,",
-     "start": 4.17,
-     "end": 4.72,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 4.8,
-     "end": 4.88,
-     "heard": true
-    },
-    {
-     "w": "Brazil",
-     "start": 4.95,
-     "end": 5.36,
+     "w": "had",
+     "start": 4.0,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "banned",
-     "start": 5.395,
-     "end": 5.68,
+     "start": 4.2,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "commercial",
+     "start": 4.535,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "tanning",
+     "start": 4.995,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "beds,",
+     "start": 5.345,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.03,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "Brazil",
+     "start": 6.175,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "banned",
+     "start": 6.6,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "them",
-     "start": 5.665,
-     "end": 5.84,
+     "start": 6.87,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "too.",
-     "start": 5.845,
-     "end": 6.16,
+     "start": 7.05,
+     "end": 7.36,
      "heard": true
     }
    ]

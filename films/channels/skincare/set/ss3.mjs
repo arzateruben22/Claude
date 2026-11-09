@@ -66,7 +66,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
   const loadImg = (srcs) => new Promise((res) => { let i = 0; const nx = () => { while (i < srcs.length && !HAVE.includes(srcs[i].split("/").pop())) i++; if (i >= srcs.length) return res(null); const j = i++, el = new Image(); el.onload = () => res({ el, idx: j }); el.onerror = nx; el.src = srcs[j]; }; nx(); });
   for (const [k, im] of Object.entries(EP.images)) {
     const r = await loadImg([].concat(im.src)); if (!r) throw new Error("no picture for " + k);
-    const el = r.el, h = AW * el.naturalHeight / el.naturalWidth; el.style.cssText = `position:absolute;left:0;transform-origin:0 0;max-width:none;width:${AW}px;height:${h}px;top:0;opacity:0`; artbox.appendChild(el);
+    const el = r.el, h = AW * el.naturalHeight / el.naturalWidth; el.style.cssText = `${im.filter ? "filter:" + im.filter + ";" : ""}position:absolute;left:0;transform-origin:0 0;max-width:none;width:${AW}px;height:${h}px;top:0;opacity:0`; artbox.appendChild(el);
     IM[k] = { el, AH: h, TOP0: (BH - h) / 2, fb: r.idx >= (im.real || 2) };
   }
   if (EP.placeholder && Object.values(IM).some((g) => g.fb)) $("#ph").style.display = "block";
@@ -131,7 +131,7 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
   window.seek = function (t) {
     stage(t);
     const c = camAt(t);
-    let q = 0; for (const [a, z] of QUIET) q = Math.max(q, Math.min(eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z))));
+    let q = 0; for (const [a, z] of QUIET) q = Math.max(q, Math.min(a <= 0.1 ? 1 : eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z))));
     let eg = 0; for (const [a, z] of ENGR) eg = Math.max(eg, Math.min(eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z)))); engr.style.opacity = eg.toFixed(3);
     for (const [k, g] of Object.entries(IM)) { const p = c.P[k]; if (!p) { g.el.style.opacity = "0"; continue; } const FX0 = p.fx * AW, FY0 = p.fy * g.AH;
       g.el.style.transform = `translate(${AW / 2 - FX0 * p.s}px,${BH / 2 - FY0 * p.s}px) scale(${p.s})`; g.el.style.opacity = p.op.toFixed(3); }
@@ -142,8 +142,9 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
     if (supEl.dataset.k !== String(k)) { supEl.innerHTML = SUP[k][1]; supEl.dataset.k = String(k); }
     supEl.style.opacity = (eo(seg(t, SUP[k][0], SUP[k][0] + 0.35)) * (1 - q) * (1 - eg) * (1 - ev2)).toFixed(3);
     const b = BADGES.find(([a, z]) => t >= a && t < z); if (b) badge.innerHTML = b[2].replace(/µm/g, '<span style="text-transform:none">µm</span>');
-    badge.style.opacity = b ? (eo(seg(t, b[0], b[0] + 0.3)) * (1 - eo(seg(t, b[1] - 0.3, b[1]))) * (1 - q) * (1 - eg)).toFixed(3) : "0";
+    badge.style.opacity = b ? (eo(seg(t, b[0], b[0] + 0.3)) * (1 - eo(seg(t, b[1] - 0.3, b[1]))) * (1 - q) * (1 - eg) * (1 - ev2)).toFixed(3) : "0";
     PLATES.forEach((P, i) => { const d = plEls[i]; d.style.opacity = (Math.min(P.t0 <= 0.1 ? 1 : eo(seg(t, P.t0 + 0.4, P.t0 + 0.85)), 1 - eo(seg(t, P.t1 - 0.85, P.t1 - 0.4)))).toFixed(3);
+      const life = seg(t, P.t0, P.t1); d.style.transform = `translateY(${(-14 * life * u).toFixed(2)}px) scale(${(1 + 0.035 * life).toFixed(4)})`;
       const tg = d.querySelectorAll(".tag"); P.tags.forEach((g, j) => { tg[j].style.opacity = eo(seg(t, g.t, g.t + 0.4)).toFixed(3); });
       const rows = d.querySelectorAll(".row"), bl = d.querySelectorAll(".bl"), bars = d.querySelectorAll(".bar"), nl = P.lines.length;
       P.lines.forEach((l, j) => { rows[j].style.opacity = eo(seg(t, l.t, l.t + 0.4)).toFixed(3); });
