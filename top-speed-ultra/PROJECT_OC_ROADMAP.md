@@ -36,15 +36,18 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 
 ## P2: modes, scoring and saves
 
+**Two modes (owner, 2026-11-08: "lets get rid of these play modes all entirely and only stick to free drive and try to
+stay over 100mph game mode"): Free Drive and Speed Survival.** Races and Time Trial were removed from the game.
+
 | Item | Status | Notes |
 | --- | --- | --- |
 | Five traffic levels | Done | None, Light, Moderate, Heavy and Expert. Expert has 45% aggressive drivers: shorter gaps, quicker lane changes. |
-| Deterministic traffic | Done | Seeded. Time Trial always uses the same seed and start. |
+| Deterministic traffic | Done | Seeded (the suite seeds every drive; Free Drive and Speed Survival seed at random in play). |
 | Mini camera | Done | The corner window is either a road map or a live sky camera 150 m up. Tap it to switch. Three sizes. |
 | Speed Survival scoring | Done | The streak counts time over 100 mph. Clean passes and near misses build a combo. A real crash ends the run. |
 | Exploit resistance | Done | Each car scores once. Stopped cars don't count. No score while wrong-way. Walls and contact reset the streak. The clock pauses with the game. |
 | Local leaderboard | Done | Top ten per mode, labelled "Local leaderboard · this device only". |
-| Versioned profile | Done | Name, avatar colour, level and XP, fictional credits, time, distance, top speed, best streak, near misses, passes, interchanges, races won, cars, nine achievements. Saved on the device as v1, with a migration path. |
+| Versioned profile | Done | Name, avatar colour, level and XP, fictional credits, time, distance, top speed, best streak, near misses, passes, interchanges, cars, nine achievements (races won went with the Races, 2026-11-08). Saved on the device as v1, with a migration path. |
 | Physics: arcade to sim | Done | A slider controls assists and tyre falloff. Steering lock is speed-sensitive. Sim has a light race-mode stability control. No spins at 134, 168 or about 200 mph on the autopilot. |
 | Auto and manual gearbox | Done | |
 | Start at your exit | Done | Every real exit on all 20 carriageways, from the sign data, in the Start panel. You start 450 m before its sign. Built 2026-10-15 for the local launch. |
@@ -59,7 +62,7 @@ is what the code does today, checked in a browser. Nothing is marked done on tru
 | Weather and day/night | Done | Live puts the sun at its real position over OC from the device clock. Presets: sunrise, day, sunset, night. Weather: clear, cloudy, rain, fog, mist, or changing. Rain gets streaks, a wet road, about 20% less grip and slower traffic. Night gets stars, moonlight, headlight beams and lit lamps. **No live weather feed**: none is authorised here, so weather is simulated. A future paid weather pass would be designed only; no payments exist. |
 | Driver archetypes | Done | The Closer, The Ace and The Wrench, each male or female, with five skin tones. Cosmetic: sleeves, gloves, gold, steel or smart watch, ring, bracelet. Hand animations: a watch check, a wave, one hand on the knee. |
 | Abilities | Done | Clear Path (6 s, 45 s cooldown; with no traffic it says "No traffic to clear" and keeps its charge): 35% fewer cars by flow and spawning. Cars ahead move over; nothing in view vanishes (verified). Focus Time (5 s, 40 s): the world at 0.70× (verified). Locked In (5 s, 35 s): grip ×1.3 (verified). There's a round HUD button with a cooldown ring, and the F key. |
-| AI races | Done | Irvine Sprint (405 N), Santa Ana Checkpoints (I-5 N), Foothill Sprint (241 S) and Riverside Endurance (91 E), plus Time Trial. Three rivals, a countdown that holds everyone, live position, gates, the finish, credits and XP, best times. Fixed on 2026-10-12: off the gas, the countdown's brakes selected reverse and backed you 2 m off the grid. |
+| AI races and Time Trial | Removed | Removed on 2026-11-08 at the owner's request: only Free Drive and Speed Survival are offered. The courses, rivals, race and Time Trial HUD, results and bests went with them; the story's race and Time Trial jobs are Free Drive miles on the same freeways. A saved mode from before loads as Free Drive. |
 | Economy, garage, showroom | Done | Credits are earned only. Four fictional cars with their own power, weight, gearing, drag, downforce and grip, and since 2026-10-15 four distinct bodies and interiors from the realism preview (GT, Brio, Corsa, Vela E). Garage slots: 1 + level/4. Buy, choose and sell for 60%. |
 
 ## P4: depth

@@ -484,11 +484,11 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 
 .m-foot { grid-area: foot; align-self: end; display: flex; gap: 14px; white-space: nowrap; margin: 0; padding: 0 12px 4px; font: 500 10px/1 var(--f-mono); letter-spacing: 0.32em; text-transform: uppercase; color: var(--faint); }
 
-/* the mode cards: four night scenes drawn in code (ModeArt.tsx) with the name over a scrim, the chosen one lit cyan */
+/* the mode cards: two night scenes drawn in code (ModeArt.tsx) with the name over a scrim, the chosen one lit cyan */
 .m-modes { grid-area: modes; display: grid; gap: 10px; align-self: end; min-width: 0; }
 .mode-brief { margin: 0; padding: 1px 0 1px 14px; border-left: 2px solid var(--ice); font-size: 13.5px; line-height: 1.45; color: var(--dim); }
 .mode-brief b { display: block; margin-bottom: 1px; font: 500 10.5px/1.3 var(--f-mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--ice-text); }
-.modes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .mode { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 148px; padding: 0; overflow: hidden; text-align: left; cursor: pointer; border: 0;
   color: var(--ink); background: var(--glass); box-shadow: inset 0 0 0 1px var(--line); clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%); }
 .mode-art { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: 0.9; }
@@ -585,7 +585,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .loadbar i { position: absolute; inset: 0; width: 38%; background: linear-gradient(90deg, var(--clear), var(--ice-deep) 40%, var(--ice) 75%, var(--cyan)); animation: load 1.2s var(--ease) infinite; }
 @keyframes load { from { transform: translateX(-100%); } to { transform: translateX(270%); } }
 
-/* ------------------------------------------------------------------ lists inside panels: start, go to, drivers, races, cars */
+/* ------------------------------------------------------------------ lists inside panels: start, go to, drivers, cars */
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(156px, 1fr)); gap: 10px; }
 .grid.nav { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); }
 .gcell { position: relative; display: grid; gap: 4px; justify-items: start; align-content: center; min-height: 52px; padding: 10px 12px; text-align: left; cursor: pointer; border: 0;
@@ -638,10 +638,6 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .board li time { color: var(--faint); font-size: 11px; }
 .board li.me { background: linear-gradient(90deg, var(--ice-wash), var(--clear)); box-shadow: inset 2px 0 0 var(--ice); }
 .board li.me b { color: var(--ice-text); }
-.order { list-style: none; margin: 0; padding: 0; display: grid; font-family: var(--f-mono); }
-.order li { display: flex; gap: 12px; padding: 8px 8px; border-top: 1px solid var(--line); }
-.order li b { width: 1.6em; color: var(--faint); }
-.order li.me { color: var(--ice-text); font-weight: 600; background: linear-gradient(90deg, var(--ice-wash), var(--clear)); box-shadow: inset 2px 0 0 var(--ice); }
 
 /* ------------------------------------------------------------------ settings */
 .sgrid, .scol { display: grid; gap: 26px; align-content: start; }
@@ -700,7 +696,6 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-stats div { display: flex; gap: 12px; align-items: baseline; }
 .hud-stats b { min-width: 92px; font: 500 10px/1.2 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .hud-stats span { font: 600 18px/1.15 var(--f-mono); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.hud-stats.warn div:first-of-type span { color: var(--bad); }
 .hud-fps { position: absolute; bottom: calc(var(--ctl-b) + 4px); right: 390px; padding: 2px 6px; background: var(--hud); font: 500 11px/1.3 var(--f-mono); color: var(--dim); font-variant-numeric: tabular-nums; }
 
 /* the speed block */
@@ -740,31 +735,6 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-revs.flash i.on { animation: rev-flash 0.18s steps(1) infinite alternate; }
 @keyframes rev-flash { to { opacity: 0.25; } }
 
-/* the race HUD (replaces the numbers top left): position of N with the race clock beside it, then the standings with
-   the gap in seconds (your row in ice). Nothing of it sits over the road; the corner window stays the track map. */
-.hud-race { position: absolute; top: calc(var(--sa-t) + 14px); left: calc(var(--sa-l) + 14px); display: grid; gap: 6px; width: 236px; padding: 8px 10px 7px 12px; background: var(--scan), var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 2px 0 0 var(--ice); clip-path: var(--chamfer); }
-.hud-pos { display: grid; grid-template-columns: auto 1fr auto; column-gap: 10px; align-items: end; padding-bottom: 7px; border-bottom: 1px solid var(--line); }
-.hud-pos > b { grid-row: 1 / 3; min-width: 1ch; font: 800 46px/0.82 var(--f-display); letter-spacing: 0.02em; color: var(--ice-text); }
-.hud-pos > span { display: flex; flex-direction: column; gap: 3px; }
-.hud-pos > span i { font: 500 9.5px/1 var(--f-mono); font-style: normal; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
-.hud-pos > span em { font: 600 15px/1 var(--f-mono); font-style: normal; font-variant-numeric: tabular-nums; }
-.hud-pos > .hud-timer { grid-column: 3; grid-row: 1; align-items: flex-end; }
-.hud-pos > .hud-timer em { font-size: 16px; letter-spacing: 0.01em; }
-.hud-pos > small { grid-column: 2 / -1; margin-top: 5px; font: 500 10px/1.2 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.hud-standings { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
-.hud-standings li { display: grid; grid-template-columns: 14px 34px minmax(0, 1fr) auto; align-items: center; gap: 7px; min-height: 21px; padding: 0 6px 0 4px; font: 600 12.5px/1 var(--f-ui); }
-.hud-standings i { font: 600 11px/1 var(--f-mono); font-style: normal; text-align: right; color: var(--dim); font-variant-numeric: tabular-nums; }
-.hud-standings em { padding: 3px 0 2px; font: 600 9px/1 var(--f-mono); font-style: normal; letter-spacing: 0.12em; text-align: center; color: var(--chrome); box-shadow: inset 0 0 0 1px var(--line-2); }
-.hud-standings span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.hud-standings b { min-width: 5ch; font: 600 12px/1 var(--f-mono); letter-spacing: -0.02em; text-align: right; font-variant-numeric: tabular-nums; }
-.hud-standings li.me { color: var(--night); background: var(--ice); }
-.hud-standings li.me i, .hud-standings li.me em { color: var(--night); }
-.hud-standings li.me em { box-shadow: inset 0 0 0 1px var(--ice-deep); }
-.hud-standings li.done { color: var(--dim); }
-.hud-standings li.done b { color: var(--good); }
-/* your row's tag reads "OC": the chrome letterform sits there instead (the same mask as the mark) */
-.hud-standings li.me em.oc { color: var(--clear); box-shadow: none; background: var(--g-chrome); -webkit-mask: var(--oc-mask) center / 80% auto no-repeat; mask: var(--oc-mask) center / 80% auto no-repeat; }
-.hud-race-note { font: 500 9px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
 
 .toasts { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); display: grid; gap: 8px; justify-items: center; pointer-events: none; width: max-content; max-width: min(92vw, 560px); }
 .toast { position: relative; isolation: isolate; padding: 8px 20px; font: 600 13px/1.3 var(--f-mono); letter-spacing: 0.06em; text-align: center; color: var(--ink); animation: pop 0.28s var(--ease); }
@@ -853,8 +823,8 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 
 /* ------------------------------------------------------------------ the Minimal HUD, tucked away (U1; App.tsx: useIdle) */
 /* after 4 s of just driving the icons other than Pause, the map with its compass ring, the road and (in a plain Free
-   Drive) the plate's second line fade out; speed, Pause, the guidance, the race box, FOCUS TIME and the controls stay.
-   data-wake (HUD.tsx: an exit coming up, a hard stop, a new race position, Time Trial's last 10 s) brings the map and
+   Drive) the plate's second line fade out; speed, Pause, the guidance, FOCUS TIME and the controls stay.
+   data-wake (HUD.tsx: an exit coming up, a hard stop) brings the map and
    the road back. Hidden things are `visibility: hidden` once gone, so they leave the tab order. */
 .tbar .tbtn, .corner { transition: transform 320ms var(--ease-out), opacity 260ms var(--ease-out), visibility 0s linear 0s; }
 .app.hud-idle .tbar .tbtn:not(.menu), .app.hud-idle:not(:has(.hud[data-wake])) :is(.corner:not(.sky), .hud-compass, .hud-clock, .livechip),
@@ -970,8 +940,6 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats b::before { content: attr(data-s); font: 500 10px/16px var(--f-mono); letter-spacing: 0.1em; color: var(--dim); }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats b[data-s=""] { display: none; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats span { font: 600 12px/16px var(--f-mono); letter-spacing: -0.01em; color: var(--ink); }
-/* Time Trial's last 10 s: ink on the wrong-way red (5.2:1), where red text on the plate over a white sky would be 3.4:1 */
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats.warn div:first-of-type span { padding: 0 3px; color: var(--ink); background: var(--alarm); }
 .app[data-hud="pp"] .hud-stats div:nth-of-type(3) { display: none; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats[data-errand] div:nth-of-type(3) { display: flex; order: -1; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-stats[data-errand] div:nth-of-type(3)::before { content: none; }
@@ -980,21 +948,6 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 /* a route in Free Drive: the guidance and destination take the numbers' place, on every layout (they are in the pause
    screen) */
 .hud:has(.hud-nav:not([hidden])) .hud-stats[data-mode="free"]:not([data-errand]) { display: none; }
-/* the race: "P2 of 4  1:02.3  1.2 mi to go" on one line, then the car ahead and the car behind, then the note */
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-race { gap: 2px; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos { display: flex; align-items: baseline; gap: 6px; padding-bottom: 3px; white-space: nowrap; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > b { min-width: 0; font: 700 18px/18px var(--f-display); }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > b::before { content: "P"; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > span { display: block; flex: none; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > span i { display: none; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > span em { font-size: 11px; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > .hud-timer em { font-size: 13px; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-pos > small { flex: 1 1 auto; min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; text-align: right; font-size: 9.5px; letter-spacing: 0; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-standings { gap: 1px; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-standings li { grid-template-columns: 12px 28px minmax(0, 1fr) auto; gap: 5px; min-height: 15px; padding: 0 2px; font-size: 11.5px; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-standings li:not(.near) { display: none; }
-.app[data-hud="pp"] .hud-standings li.me { display: none; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-race-note { font-size: 8.5px; letter-spacing: 0.1em; }
 /* the guidance: the errand's exit (green, like the sign it points to), the route's manoeuvre with its sign, the
    destination as one quiet line under it */
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-next { justify-self: start; max-width: 100%; padding: 2px 6px; font: 600 11.5px/1.3 var(--f-ui); text-align: left; color: var(--sign-white); background: var(--sign-green); border: 1.5px solid var(--sign-white); border-radius: 4px;
@@ -1077,13 +1030,12 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-compass { top: calc(var(--sa-t) + 8px - 5px); right: calc(var(--sa-r) + var(--edge) - 5px); }
 .app[data-hud="pl"] .hud-compass { width: calc(var(--map) + 8px); height: calc(var(--map) + 8px); top: calc(var(--sa-t) + 8px - 4px); right: calc(var(--sa-r) + var(--edge) - 4px); }
 /* the road: a 22 px chip under the map (under the icons in landscape), shown for 8 s after the road changes, when
-   something wakes the HUD, and while a Minimal HUD is up; never in a race */
+   something wakes the HUD, and while a Minimal HUD is up */
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-road { top: calc(var(--sa-t) + 8px + var(--map) + 8px); left: auto; right: calc(var(--sa-r) + var(--edge)); width: var(--map); max-width: none; transform: none;
   opacity: 0; visibility: hidden; transition: opacity 360ms var(--ease-in), visibility 0s linear 360ms; }
 .app[data-hud="pl"] .hud-road { top: calc(var(--sa-t) + 58px); right: calc(var(--sa-r) + var(--edge) + var(--map) + 10px); width: 144px; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud:is([data-road-new], [data-wake]) .hud-road, .app.hud-min:not(.hud-idle):is([data-hud="pp"], [data-hud="pl"]) .hud-road {
   opacity: 1; visibility: visible; transition: opacity 260ms var(--ease-out), visibility 0s linear 0s; }
-.app .hud:has(.hud-race:not([hidden])) .hud-road { display: none; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-roadname { justify-content: center; width: 100%; height: 22px; gap: 6px; padding: 0 6px 0 3px; font-size: 11px; letter-spacing: 0.1em; border-width: 1.5px; border-radius: 5px; box-shadow: 0 4px 12px var(--shadow); }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-roadname .shield { min-width: 20px; height: 16px; font-size: 11px; }
 /* FOCUS TIME: a 52 px hexagon in the control row, 8 px above BRAKE (left of BRAKE in landscape) */
@@ -1162,6 +1114,9 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .sheet.sub .sheet-scroll { padding-top: 20px; }
   .sheet.sub .brand .lockup { --mk: 140px; }
   .sheet.sub .dock { padding: 10px 22px 12px; }
+  /* the rail's "Orange County · California" line: with two mode cards (2026-11-08) the grid is short enough that it
+     would sit under the Drive dock; it was below the fold here before, so it stays out of sight */
+  .sheet.home .m-foot { display: none; }
 }
 /* a narrow or short window: the rail slims and the cards go two by two */
 @media (max-width: 980px) and (min-width: 561px) {
@@ -1265,10 +1220,10 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .wm-tabs button { flex: 1; }
 .wm-list { display: grid; align-content: start; gap: 2px; overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
 .wm-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; min-height: 40px; padding: 4px 10px; border: 0; text-align: left; cursor: pointer; color: var(--ink); background: var(--clear); box-shadow: inset 0 -1px 0 var(--line); }
-.wm-item.race { grid-template-columns: 1fr; gap: 2px; padding: 8px 10px; }
 .wm-item b { font: 600 14px/1.2 var(--f-ui); }
 .wm-item small { color: var(--dim); font: 500 11px/1.3 var(--f-mono); letter-spacing: 0.04em; }
 .wm-item.on { background: var(--cyan-wash); box-shadow: inset 2px 0 0 var(--cyan), inset 0 -1px 0 var(--line); }
+.wm-item.place { grid-template-columns: 1fr; gap: 2px; padding: 8px 10px; }
 .wm-item.off { cursor: default; opacity: 0.55; }
 .wm-item .shield { min-width: 34px; height: 24px; font-size: 12px; }
 @media (hover: hover) { .wm-item:not(.off):not(.on):hover { background: var(--ice-wash); } }

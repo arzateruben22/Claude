@@ -46,20 +46,14 @@ The road data is rebuilt by `tools/oc-network/` (Python), which has its own READ
 
 ## Modes
 
-- **Free Drive.** No clock. Start on any of 12 freeway points and go anywhere.
-- **Races.** Three rivals on real stretches of freeway:
-  - Irvine Sprint on the 405 North
-  - Santa Ana Checkpoints on the 5 North
-  - Foothill Sprint on the 241 South
-  - Riverside Endurance on the 91 East
+Two modes (owner, 2026-11-08). Races and Time Trial were removed.
 
-  There's a countdown, live position, gates, credits and XP for a finish, and best times.
+- **Free Drive.** No clock. Start on any of 12 freeway points and go anywhere.
 - **Speed Survival.**
   - Score builds with distance, faster above 100 mph, and more the longer your streak over 100 mph runs.
   - Clean passes and near misses build a combo.
   - A car only scores once. Stopped cars and wrong-way driving score nothing.
   - A real crash ends the run: hitting a car at more than 7 m/s closing speed, or a wall at more than 17 m/s.
-- **Time Trial.** The same start and the same traffic every time. 60 s on the clock, plus 25 s every 2 km.
 
 Traffic has five levels: None, Light, Moderate, Heavy and Expert. Expert adds aggressive drivers. Runs are kept per
 mode on this device only, and the leaderboard says so.
