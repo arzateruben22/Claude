@@ -1,0 +1,59 @@
+{
+ "rows": [
+  {
+   "name": "today",
+   "km": 384400,
+   "angle_deg": 0.52,
+   "size_x": 1.0,
+   "tide_x": 1.0,
+   "light_x": 1,
+   "period_h": 658.8,
+   "light_s": 1.282
+  },
+  {
+   "name": "half",
+   "km": 192200,
+   "angle_deg": 1.04,
+   "size_x": 2.0,
+   "tide_x": 8.0,
+   "light_x": 4,
+   "period_h": 232.9,
+   "light_s": 0.641
+  },
+  {
+   "name": "100k",
+   "km": 100000,
+   "angle_deg": 1.99,
+   "size_x": 3.8,
+   "tide_x": 56.8,
+   "light_x": 15,
+   "period_h": 87.4,
+   "light_s": 0.334
+  },
+  {
+   "name": "50k",
+   "km": 50000,
+   "angle_deg": 3.98,
+   "size_x": 7.7,
+   "tide_x": 454.4,
+   "light_x": 59,
+   "period_h": 30.9,
+   "light_s": 0.167
+  },
+  {
+   "name": "Roche fluid",
+   "km": 18365,
+   "angle_deg": 10.81,
+   "size_x": 20.9,
+   "tide_x": 9169.7,
+   "light_x": 438,
+   "period_h": 6.9,
+   "light_s": 0.061
+  }
+ ],
+ "roche_fluid_km": 18365,
+ "roche_rigid_km": 9484,
+ "sync_km": 42164,
+ "yrs_at_today_rate_to_half": 5057.9,
+ "recession_km_per_century": 0.0038
+}
