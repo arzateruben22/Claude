@@ -268,7 +268,7 @@ export type PostItem = Omit<Task, "p"> & { p: Task["p"] | null };
 export type Led = "ready" | "review" | "off";
 export type CoverTone = "light" | "dark";
 /** One Instagram slot. "missed": its time passed with nothing planned (no rotation episode is spent on it). */
-export type IgSlot = { at: Date; item: PostItem | null; state: "posted" | "ready" | "needs_approval" | "unplanned" | "missed" | "empty"; tone?: CoverTone };
+export type IgSlot = { at: Date; item: PostItem | null; state: "posted" | "ready" | "not_ready" | "unplanned" | "missed" | "empty"; tone?: CoverTone };
 export type MonitorCard = {
   slug: string; kind: "channel" | "instagram"; href: string; name: string; label: string; color: string; colorInk: string;
   cover: string | null; coverTone?: CoverTone; status: string; led: Led; ledLabel: string; slots?: IgSlot[]; season?: SeasonProgress | null;
@@ -342,8 +342,8 @@ export function coverTone(slug: string): CoverTone {
   return tone;
 }
 
-/** A ready post has a live approval of the current render's exact export. */
-export const isReady = (t: Pick<PostItem, "approval" | "x" | "version">) => !!t.approval && !!t.x && !t.version?.superseded;
+/** A ready post has a current (not superseded) render for its platform. No approval is needed to download or copy it. */
+export const isReady = (t: Pick<PostItem, "x" | "version">) => !!t.x && !t.version?.superseded;
 
 /** The current render's export for one platform, per episode (non-demo). */
 async function currentExports(d: DB, platform: "youtube" | "tiktok" | "instagram", channelIds?: string[]) {
@@ -399,7 +399,7 @@ async function instagramToday(d: DB, ig: Destination | undefined, tz: string, to
   let next = 0;
   const slots: IgSlot[] = cur.at.map((when): IgSlot => {
     const t = cur.find(when);
-    if (t) return { at: when, item: t, tone: coverTone(t.channel.slug), state: POSTED.includes(t.p.status) ? "posted" : isReady(t) ? "ready" : "needs_approval" };
+    if (t) return { at: when, item: t, tone: coverTone(t.channel.slug), state: POSTED.includes(t.p.status) ? "posted" : isReady(t) ? "ready" : "not_ready" };
     if (when < now) return { at: when, item: null, state: "missed" };
     const cand = rotation[next++] ?? null;
     return { at: when, item: cand, tone: cand ? coverTone(cand.channel.slug) : undefined, state: cand ? "unplanned" : "empty" };
@@ -452,17 +452,17 @@ export async function rigView() {
 
   const { slots, day } = await instagramToday(d, ig, tz, today);
   const posted = slots.filter((x) => x.state === "posted").length, ready = slots.filter((x) => x.state === "ready").length;
-  const waiting = slots.filter((x) => x.state === "needs_approval").length, unplanned = slots.filter((x) => x.state === "unplanned").length;
+  const waiting = slots.filter((x) => x.state === "not_ready").length, unplanned = slots.filter((x) => x.state === "unplanned").length;
   const igStatus = !ig ? "Instagram isn't set up" : s.globalPause ? "Publishing is paused" : !slots.length ? "No Instagram slots today"
     : posted === slots.length ? `${day === "today" ? "Today" : "Tomorrow"}'s ${slots.length} posted`
     : ready ? `${ready} ready to post ${day}${posted ? ` · ${posted} posted` : ""}`
-    : waiting ? `${waiting} need${waiting === 1 ? "s" : ""} approval`
+    : waiting ? `${waiting} ${waiting === 1 ? "has" : "have"} no render`
     : unplanned ? `Plan ${day}'s ${unplanned === 1 ? "post" : `${unplanned} posts`}` : "Nothing in rotation yet";
   const igLed: Led = ready ? "ready" : waiting ? "review" : "off";
   monitors.push({
     slug: INSTAGRAM_SLUG, kind: "instagram", href: `/m/${INSTAGRAM_SLUG}`, name: "Instagram", ...INSTAGRAM_LOOK,
     cover: slots.map((x) => (x.item ? coverOf(x.item) : null)).find(Boolean) ?? null, status: igStatus, led: igLed,
-    ledLabel: igLed === "ready" ? "ready to post today" : igLed === "review" ? "needs approval" : "nothing queued today", slots,
+    ledLabel: igLed === "ready" ? "ready to post today" : igLed === "review" ? "needs a render" : "nothing queued today", slots,
   });
   const reviewCount = eps.filter((e) => e.state === "ready_for_review").length;
   // built long videos (lessons) still waiting for their YouTube approval: they aren't episodes, so Review doesn't list them

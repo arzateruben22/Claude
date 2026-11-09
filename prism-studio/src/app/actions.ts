@@ -11,7 +11,7 @@ import * as S from "@/db/schema";
 import { audit, DomainError, settings } from "@/domain/core";
 import { editExport, transitionEpisode, type EpisodeState } from "@/domain/episodes";
 import { approve } from "@/domain/approvals";
-import { markHandedOff, markUploaded, undoUploaded } from "@/domain/publications";
+import { markEpisodeUploaded, markHandedOff, markUploaded, undoEpisodeUploaded, undoUploaded, type UploadGroup } from "@/domain/publications";
 import { addFunding, claimReward, recordMetric, releaseReward, setMonthlyCap } from "@/domain/rewards";
 import { chooseCosmetic, completeChallenge, evolve, markEvolutionSeen, onPublicationReported } from "@/domain/living";
 import { recordAccountMetrics, TT_METRICS, YT_METRICS } from "@/domain/earn";
@@ -177,6 +177,37 @@ export async function reportUploaded(_: Result, fd: FormData) {
     await onPublicationReported(db(), id);
     refresh("/upload", "/calendar", "/analytics", `/episodes/${p.episodeId}`);
     return ok(scheduledOnPlatformFor ? "Recorded as scheduled on the platform." : "Recorded as uploaded. Nice.");
+  });
+}
+
+const uploadGroup = z.enum(["youtube_tiktok", "instagram"]);
+const UPLOAD_LABEL: Record<UploadGroup, string> = { youtube_tiktok: "YouTube & TikTok", instagram: "Instagram" };
+const refreshUploaded = (episodeId: string) => {
+  refresh("/upload", "/calendar", "/analytics", "/review", "/m/instagram", `/episodes/${episodeId}`);
+  revalidatePath("/m/[slug]", "page");
+};
+
+/** "Uploaded on YouTube & TikTok" / "Uploaded on Instagram": the owner posted by hand; record it (no approval needed). */
+export async function uploadedAction(_: Result, fd: FormData) {
+  return run(async () => {
+    const episodeId = z.string().uuid().parse(fd.get("episodeId"));
+    const group = uploadGroup.parse(fd.get("group"));
+    const r = await markEpisodeUploaded(db(), episodeId, group);
+    refreshUploaded(episodeId);
+    const marked = r.filter((x) => x.outcome === "marked").length;
+    if (marked) return ok(`Recorded: uploaded on ${UPLOAD_LABEL[group]}.`);
+    if (r.some((x) => x.outcome === "already")) return ok(`Already recorded as uploaded on ${UPLOAD_LABEL[group]}.`);
+    return { ok: false, message: `Nothing to record: this episode has no ${UPLOAD_LABEL[group]} version yet.` };
+  });
+}
+
+export async function undoUploadedAction(_: Result, fd: FormData) {
+  return run(async () => {
+    const episodeId = z.string().uuid().parse(fd.get("episodeId"));
+    const group = uploadGroup.parse(fd.get("group"));
+    const n = await undoEpisodeUploaded(db(), episodeId, group);
+    refreshUploaded(episodeId);
+    return n ? ok(`Undone: not uploaded on ${UPLOAD_LABEL[group]}.`) : { ok: false, message: "Nothing to undo." };
   });
 }
 

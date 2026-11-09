@@ -7,9 +7,10 @@
 - **Never** store platform passwords, recovery codes or 2-step codes. Never invent account-specific links: only
   official generic links, or ones built from an ID the owner entered (`youtubeStudioFor`).
 - **Publishing is manual.** Opening, downloading, sharing or copying never marks anything published; only
-  "Mark uploaded" (owner-reported) or a verified integration does. One publication record per destination.
-- **Approvals bind an exact export** (file hash + title + caption + hashtags + cover + disclosures + destination).
-  Any change withdraws the approval.
+  the owner's "Uploaded" buttons (owner-reported) or a verified integration does. Nothing posts by itself; the buttons
+  only record what the owner did. One publication record per destination.
+- **Uploaded buttons (owner's decision, 9 Nov 2026):** the owner posts by hand and presses "Uploaded on YouTube & TikTok" /
+  "Uploaded on Instagram"; that records owner-reported posts (audit-logged, undoable). Approvals are no longer part of the UI.
 - **Money:** Prism never moves money. Personal rewards are owner-funded, reserved only within the funded balance
   and the monthly cap, under a row lock. Demo or estimated numbers never create or reserve a reward. Production
   budgets are separate, and paid generation stays off without one.

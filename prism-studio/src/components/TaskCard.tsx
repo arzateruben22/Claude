@@ -1,37 +1,21 @@
-// The Upload Desk's tasks. An approved (or already posted) task gets the full card: the account it must go to, the
-// exact video and words (PostFields), the files, the hand-off buttons and the owner's confirmation. A task still waiting
-// for its approval is one compact row (TaskRow) that links to the approval: nothing on it could be posted yet.
+// The Upload Desk's tasks: every rendered episode that is not uploaded yet gets the full card (no approval needed): the
+// account it goes to, the exact video and words (PostFields), the files, the hand-off buttons and the owner's Uploaded
+// button for the platform ("Uploaded on YouTube & TikTok" / "Uploaded on Instagram"). Done tasks show the done state
+// with Undo.
 import Link from "next/link";
-import { coverOf, isReady, smallCover, thumbOf, uploadUrlFor, type UploadTask } from "@/lib/data";
-import { publishNow, reportUploaded, undoReport } from "@/app/actions";
+import { coverOf, isReady, thumbOf, uploadUrlFor, type UploadTask } from "@/lib/data";
+import { publishNow } from "@/app/actions";
 import { composePostText } from "@/domain/metadata";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
-import { PLATFORM_LABEL, PUB_LABEL, pubTone, topicStyle } from "@/lib/format";
+import { PLATFORM_LABEL, topicStyle } from "@/lib/format";
 import { ActionForm } from "./ActionForm";
 import { HandOff } from "./HandOff";
 import { Icon } from "./Icon";
 import { PostFields } from "./PostFields";
+import { groupOf, UploadedControl } from "./UploadedControl";
 
 const when = (t: UploadTask, tz: string) => (t.p.scheduledFor ? formatLocal(t.p.scheduledFor, tz, { weekday: "short", hour: "numeric", minute: "2-digit" }) : "Not scheduled");
-
-/** A task waiting for its approval: cover, when, account, title and the link to approve it. */
-export function TaskRow({ t, tz }: { t: UploadTask; tz: string }) {
-  const { e, dest, x, version, channel } = t;
-  const cover = smallCover(coverOf(t));
-  return (
-    <li className="q-row" style={topicStyle(channel)}>
-      <span className="q-cover" aria-hidden>{cover ? <img src={mediaUrl(cover)} alt="" decoding="async" loading="lazy" /> : null}</span>
-      <Link href={`/episodes/${e.id}`} className="q-title">{e.title}{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</Link>
-      <span className="q-where">{channel.label} · {PLATFORM_LABEL[dest.platform]}{dest.handle ? ` · ${dest.handle}` : ""}</span>
-      <span className="q-when num">{when(t, tz)}</span>
-      <span className="q-chips">
-        {!x ? <span className="chip">No export yet</span>
-          : <Link href={`/episodes/${e.id}#placements`} className="chip warn">{version?.superseded ? "Newer render: approve again" : "Needs approval"}</Link>}
-      </span>
-    </li>
-  );
-}
 
 export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz: string; stopExternal: boolean; connected?: boolean }) {
   const { p, e, dest, x, version, channel } = t;
@@ -51,7 +35,7 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
           <h3 className="h2" style={{ margin: "4px 0 0" }}>{e.title}{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</h3>
           <div className="faint" style={{ fontSize: 14 }}>No. {no}{version ? ` · render v${version.versionNo}` : ""}</div>
         </div>
-        {p.status !== "planned" ? <span className={`chip ${pubTone(p.status)}`}>{PUB_LABEL[p.status]}</span> : null}
+        {done ? <span className="chip good">Uploaded</span> : <span className="chip">Not uploaded yet</span>}
       </div>
 
       <div className="acct">
@@ -65,7 +49,7 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
         {!handle ? <Link href="/connections" className="btn ghost small acct-action">Add its handle</Link> : null}
       </div>
 
-      {p.method === "api" && p.status === "handed_off" && p.note ? <div className="notice info">Uploaded by the studio: {p.note}{p.postUrl ? <> · <a href={p.postUrl} target="_blank" rel="noopener noreferrer">open</a></> : null}. Mark uploaded once it is live, or wait for the worker to confirm.</div> : null}
+      {p.method === "api" && p.status === "handed_off" && p.note ? <div className="notice info">Uploaded by the studio: {p.note}{p.postUrl ? <> · <a href={p.postUrl} target="_blank" rel="noopener noreferrer">open</a></> : null}. Press Uploaded once it is live, or wait for the worker to confirm.</div> : null}
 
       {x && !done && ready ? (
         <>
@@ -95,28 +79,16 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
               <HandOff publicationId={p.id} videoUrl={mediaUrl(x.filePath)} fileName={`${base}.mp4`} uploadUrl={uploadUrlFor(dest)} platformLabel={platform} shareText={composePostText(x)} />
             </>
           )}
-          <details className="post-report">
-            <summary>I&apos;ve posted it: mark uploaded</summary>
-            <ActionForm action={reportUploaded} className="stack-sm" submit="Mark uploaded" submitClass="btn">
-              <input type="hidden" name="publicationId" value={p.id} />
-              <label className="field">Post link <span className="hint">Optional, from the platform&apos;s share button. Checked against {platform}{dest.platform === "tiktok" && handle ? ` and ${handle}` : ""}.</span>
-                <input name="postUrl" type="url" inputMode="url" placeholder={dest.platform === "youtube" ? "https://youtube.com/shorts/…" : dest.platform === "tiktok" ? "https://www.tiktok.com/@…/video/…" : "https://www.instagram.com/reel/…"} />
-              </label>
-              <label className="field">Scheduled on the platform instead? <span className="hint">Leave empty if it&apos;s live now.</span>
-                <input name="scheduledAt" type="datetime-local" />
-              </label>
-              <label className="check"><input type="checkbox" name="confirmAccount" /> <span>I posted it to <b>{handle || accountName}</b> on {platform}.</span></label>
-            </ActionForm>
-          </details>
+          <UploadedControl episodeId={e.id} group={groupOf(dest.platform)} tz={tz} pubs={[p]} />
         </>
       ) : !done ? (
-        <div className="notice">{!x ? `No export for ${platform} yet.` : version?.superseded ? "A newer render exists." : "Not approved for this account yet."} <Link href={`/episodes/${e.id}#placements`}>Review and approve</Link></div>
+        <div className="notice">{!x ? `No export for ${platform} yet.` : "A newer render exists."} <Link href={`/episodes/${e.id}`}>Open the episode</Link></div>
       ) : null}
 
       {done ? (
         <div className="row spread">
-          <span className="muted" style={{ fontSize: 14 }}>{p.postUrl ? <a href={p.postUrl} target="_blank" rel="noopener noreferrer">View the post</a> : "No link saved"} · reported {formatLocal(p.reportedAt, tz, { timeStyle: "short" })}</span>
-          <ActionForm action={undoReport} submit="Undo" submitClass="btn ghost small"><input type="hidden" name="publicationId" value={p.id} /></ActionForm>
+          <span className="muted" style={{ fontSize: 14 }}>{p.postUrl ? <a href={p.postUrl} target="_blank" rel="noopener noreferrer">View the post</a> : "No link saved"}</span>
+          <UploadedControl episodeId={e.id} group={groupOf(dest.platform)} tz={tz} pubs={[p]} />
         </div>
       ) : null}
     </article>

@@ -1,13 +1,16 @@
-// Per-account approval: each destination approves one exact export (video file + title, caption, hashtags,
-// cover and disclosures). Editing any of it withdraws the approval; a newer render supersedes it.
+// Per-account text: each destination's exact export (title, caption, hashtags, disclosures), copyable and editable,
+// and the owner's two "Uploaded" buttons (YouTube & TikTok, Instagram). There is no approval step.
 import Link from "next/link";
-import { approveExport, regenerateText, saveExport, withdrawApproval } from "@/app/actions";
+import { regenerateText, saveExport } from "@/app/actions";
 import type { episodeFull } from "@/lib/data";
-import { formatLocal } from "@/domain/time";
-import { PLATFORM_LABEL, PUB_LABEL, pubTone, qaFails } from "@/lib/format";
+import { composePostText } from "@/domain/metadata";
+import { PLATFORM_LABEL, qaFails } from "@/lib/format";
 import { ActionForm } from "./ActionForm";
+import { CopyButton } from "./CopyButton";
+import { groupOf, UploadedControl } from "./UploadedControl";
 
 type Full = NonNullable<Awaited<ReturnType<typeof episodeFull>>>;
+const POSTED = ["owner_reported", "scheduled_on_platform", "verified_published"];
 
 export function Placements({ full, tz }: { full: Full; tz: string }) {
   const fails = full.current ? qaFails(full.current.qa) : null;
@@ -16,34 +19,34 @@ export function Placements({ full, tz }: { full: Full; tz: string }) {
     <div className="stack" id="placements">
       {fails ? (
         <div className="notice bad">
-          QA: {fails} check{fails === 1 ? "" : "s"} failed{failList.length ? ` (${failList.join("; ")})` : ""}. <Link href={`/episodes/${full.ep.id}#qa`}>See it</Link> before approving.
+          QA: {fails} check{fails === 1 ? "" : "s"} failed{failList.length ? ` (${failList.join("; ")})` : ""}. <Link href={`/episodes/${full.ep.id}#qa`}>See it</Link>.
         </div>
       ) : null}
-      {full.placements.map(({ dest, export: x, approval, lastRevoked, publication }) => (
+      <div className="uploaded-panel stack-sm">
+        <div className="label">After you post it by hand</div>
+        <div className="uploaded-bar">
+          {(["youtube_tiktok", "instagram"] as const).map((g) => (
+            <UploadedControl key={g} episodeId={full.ep.id} group={g} tz={tz} pubs={full.placements.filter((p) => groupOf(p.dest.platform) === g).map((p) => p.publication)} />
+          ))}
+        </div>
+        <p className="faint" style={{ margin: 0, fontSize: 13 }}>Nothing posts by itself: these buttons only record what you did.</p>
+      </div>
+      {full.placements.map(({ dest, export: x, publication }) => (
         <div key={dest.id} className="card flat stack-sm">
           <div className="row spread">
             <div className="acct-line">
               <span className="label">{PLATFORM_LABEL[dest.platform]}{dest.shared ? " · shared" : ""}</span>
               {dest.handle || dest.displayName ? <b>{dest.handle || dest.displayName}</b> : <Link href="/connections" className="chip warn">Account not set up</Link>}
             </div>
-            <div className="row">
-              {publication && publication.status !== "planned" ? <span className={`chip ${pubTone(publication.status)}`}>{PUB_LABEL[publication.status]}</span> : null}
-              {approval ? <span className="chip good">Approved · <span className="mono">{approval.contentHash.slice(0, 8)}</span></span> : null}
-            </div>
+            {publication && POSTED.includes(publication.status) ? <span className="chip good">Uploaded</span> : <span className="chip">Not uploaded yet</span>}
           </div>
           {!x ? <p className="muted" style={{ margin: 0 }}>No {PLATFORM_LABEL[dest.platform]} export yet.</p> : (
             <>
-              {!approval && lastRevoked ? <p className="faint" style={{ margin: 0, fontSize: 13 }}>Last approval withdrawn {formatLocal(lastRevoked.revokedAt, tz)}: {lastRevoked.revokedReason}.</p> : null}
-              <div className="row">
-                {approval
-                  ? <ActionForm action={withdrawApproval} submit="Withdraw approval" submitClass="btn quiet small"><input type="hidden" name="approvalId" value={approval.id} /></ActionForm>
-                  : <ActionForm action={approveExport} submit={`Approve for ${dest.handle || PLATFORM_LABEL[dest.platform]}`} submitClass="btn small"
-                      confirm={fails ? `QA reported ${fails} failed check${fails === 1 ? "" : "s"} on this render. Approve it for ${dest.handle || PLATFORM_LABEL[dest.platform]} anyway?` : undefined}>
-                      <input type="hidden" name="exportId" value={x.id} /><input type="hidden" name="destinationId" value={dest.id} />
-                    </ActionForm>}
-              </div>
+              {dest.platform === "youtube" && x.title ? <p className="slide-title-text">{x.title}</p> : null}
+              {x.caption ? <p className="slide-caption">{x.caption}</p> : null}
+              <div className="row"><CopyButton text={composePostText(x)} label="Copy caption + hashtags" /></div>
               <details>
-                <summary>Edit {PLATFORM_LABEL[dest.platform]} text{approval ? " (withdraws the approval)" : ""}</summary>
+                <summary>Edit {PLATFORM_LABEL[dest.platform]} text</summary>
                 <ActionForm action={saveExport} className="stack-sm" submit="Save" submitClass="btn small">
                   <input type="hidden" name="exportId" value={x.id} />
                   {dest.platform === "youtube" ? <label className="field">Title <input name="title" defaultValue={x.title} maxLength={100} /></label> : <input type="hidden" name="title" value={x.title} />}

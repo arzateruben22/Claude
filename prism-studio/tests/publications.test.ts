@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { freshDb, renderedEpisode, eq, S } from "./helpers";
+import { freshDb, renderedEpisode, and, eq, S } from "./helpers";
 import type { DB } from "../src/db/client";
-import { backfillPosted, markHandedOff, markUploaded, mayAutoPublish, parsePostUrl, undoUploaded } from "../src/domain/publications";
+import { backfillPosted, markEpisodeUploaded, markHandedOff, markUploaded, mayAutoPublish, parsePostUrl, undoEpisodeUploaded, undoUploaded } from "../src/domain/publications";
 import { onPublicationReported, channelXp } from "../src/domain/living";
 import { approve } from "../src/domain/approvals";
 
@@ -96,5 +96,61 @@ describe("backfill of posts made before the studio", () => {
     expect(tt.status).toBe("planned");
     const again = await backfillPosted(db, ep.id, ["youtube", "instagram"], "x");
     expect(again.map((r) => r.outcome)).toEqual(["already", "already"]);
+  });
+});
+
+describe("Uploaded buttons (markEpisodeUploaded)", () => {
+  it("YouTube & TikTok: needs no approval, marks both, writes the audit log, leaves Instagram alone", async () => {
+    const { ep, pubs } = await renderedEpisode(db, "physics", { title: "No approval needed" });
+    expect(await db.select().from(S.approvals).where(eq(S.approvals.episodeId, ep.id))).toHaveLength(0);
+    const r = await markEpisodeUploaded(db, ep.id, "youtube_tiktok");
+    expect(r.map((x) => x.outcome).sort()).toEqual(["marked", "marked"]);
+    for (const id of [pubs.youtube.id, pubs.tiktok.id]) {
+      const [p] = await db.select().from(S.publications).where(eq(S.publications.id, id));
+      expect(p.status).toBe("owner_reported");
+      expect(p.evidence).toBe("owner_reported");
+    }
+    const logs = await db.select().from(S.auditLog).where(eq(S.auditLog.entityId, ep.id));
+    expect(logs.some((l) => l.action === "episode.uploaded" && l.actor === "owner")).toBe(true);
+    const igRows = await db.select().from(S.publications).where(and(eq(S.publications.episodeId, ep.id), eq(S.publications.kind, "instagram")));
+    expect(igRows).toHaveLength(0);
+  });
+  it("Instagram: creates the shared row when missing and marks it", async () => {
+    const { ep, ig } = await renderedEpisode(db, "whatif", { title: "Instagram row" });
+    const r = await markEpisodeUploaded(db, ep.id, "instagram");
+    expect(r[0].outcome).toBe("marked");
+    const [row] = await db.select().from(S.publications).where(and(eq(S.publications.episodeId, ep.id), eq(S.publications.destinationId, ig.id)));
+    expect(row.status).toBe("owner_reported");
+  });
+  it("rows already uploaded are untouched", async () => {
+    const { ep, pubs } = await renderedEpisode(db, "physics", { title: "Already" });
+    await markUploaded(db, pubs.youtube.id, { postUrl: "https://youtube.com/shorts/keep", note: "mine" });
+    const r = await markEpisodeUploaded(db, ep.id, "youtube_tiktok");
+    expect(r.find((x) => x.platform === "youtube")?.outcome).toBe("already");
+    expect(r.find((x) => x.platform === "tiktok")?.outcome).toBe("marked");
+    const [yt] = await db.select().from(S.publications).where(eq(S.publications.id, pubs.youtube.id));
+    expect(yt.postUrl).toBe("https://youtube.com/shorts/keep");
+    expect(yt.note).toBe("mine");
+  });
+  it("skips simulated rows", async () => {
+    const { ep, pubs } = await renderedEpisode(db, "physics", { title: "Sim" });
+    await db.update(S.publications).set({ simulated: true }).where(eq(S.publications.id, pubs.youtube.id));
+    const r = await markEpisodeUploaded(db, ep.id, "youtube_tiktok");
+    expect(r.find((x) => x.platform === "youtube")?.outcome).toBe("simulated");
+    const [yt] = await db.select().from(S.publications).where(eq(S.publications.id, pubs.youtube.id));
+    expect(yt.status).toBe("planned");
+  });
+  it("undo puts the rows back, and removes an Instagram row the button created", async () => {
+    const { ep, pubs, ig } = await renderedEpisode(db, "physics", { title: "Undo me" });
+    await markEpisodeUploaded(db, ep.id, "youtube_tiktok");
+    await markEpisodeUploaded(db, ep.id, "instagram");
+    expect(await undoEpisodeUploaded(db, ep.id, "youtube_tiktok")).toBe(2);
+    const [yt] = await db.select().from(S.publications).where(eq(S.publications.id, pubs.youtube.id));
+    expect(yt.status).toBe("ready");
+    expect(yt.evidence).toBe("none");
+    expect(await undoEpisodeUploaded(db, ep.id, "instagram")).toBe(1);
+    const [e2] = await db.select().from(S.episodes).where(eq(S.episodes.id, ep.id));
+    expect(e2.state).toBe("ready_for_review");
+    expect(await db.select().from(S.publications).where(and(eq(S.publications.episodeId, ep.id), eq(S.publications.destinationId, ig.id)))).toHaveLength(0);
   });
 });

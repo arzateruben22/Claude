@@ -882,7 +882,7 @@ a.budget-name:hover { text-decoration: underline; }
   .slide-top-title { display: block; grid-area: title; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 600 16px/1.25 var(--ui); color: var(--text); }
   .slide-media { order: 1; flex: none; position: relative; overflow: hidden; height: calc(var(--screen-h) - var(--top-h) - var(--bar-h)); }
   .slide-video { position: absolute; inset: 0; height: 100%; }
-  .slide:not(:has(.pf-switch)) { --bar-h: 66px; }
+  .slide:not(:has(.pf-switch)) { --bar-h: 74px; }
   .slide-head { order: 2; padding: var(--s5) 16px 0; }
   .slide-info { order: 3; padding: var(--s4) 16px var(--s6); }
   .slide-bar { order: 4; position: sticky; bottom: 0; padding: 8px 12px; background: #07080B; border-top: 1px solid var(--line); }
@@ -1044,3 +1044,18 @@ h1 + :is(.card, section, form, .stack, .stack-lg) { margin-top: var(--s4); }
 .earn-or { padding-left: 4px; }
 .earn-stale { margin: 0; color: var(--warn); font-weight: 600; }
 .earn-notes { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; }
+
+/* The owner's Uploaded buttons (src/components/UploadedControl.tsx): two side by side, labels wrap, done state with Undo */
+.uploaded-bar { display: flex; flex: 1 1 auto; gap: var(--s2); align-items: stretch; min-width: 0; }
+.uploaded-bar > * { flex: 1 1 0; min-width: 0; }
+.uploaded-bar form { display: grid; height: 100%; align-content: start; }
+.uploaded-bar .btn { width: 100%; white-space: normal; text-align: center; line-height: 1.2; font-size: 13.5px; }
+.uploaded-bar .uploaded-done { display: grid; gap: 2px; justify-items: stretch; align-content: start; }
+.uploaded-bar .uploaded-done .btn.small { min-height: 32px; justify-self: center; width: auto; }
+.bar-actions .uploaded-bar .btn { min-height: 48px; padding-inline: 8px; }
+.uploaded-panel .uploaded-bar { flex-wrap: wrap; }
+.uploaded-panel .uploaded-bar > * { flex: 1 1 220px; }
+@media (min-width: 720px) { .slide-bar { max-width: 640px; } }
+@media (max-width: 719px) {
+  .slide:has(.uploaded-done) { --bar-h: 156px; }
+}

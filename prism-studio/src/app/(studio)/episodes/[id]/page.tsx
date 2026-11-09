@@ -39,7 +39,7 @@ export default async function Episode({ params }: { params: Promise<{ id: string
   const at = order.findIndex((o) => o.id === ep.id);
   const step = (o: (typeof order)[number] | undefined) => (at >= 0 && o ? { href: `/episodes/${o.id}`, label: o.title } : null);
   // downloads for the current render: the 1080p master (TikTok, Instagram), YouTube's 1440p version, the designed cover and
-  // the YouTube thumbnail. Downloading never marks anything as posted; approval and "Mark uploaded" stay per account.
+  // the YouTube thumbnail. Downloading never marks anything as posted; the Uploaded buttons record where you posted.
   const ytX = f.exports.find((x) => x.platform === "youtube") ?? null;
   const dlBase = `${channel.slug}-${String(ep.number).padStart(3, "0")}`;
   const dlCover = current ? coverOf({ x: ytX, version: current }) : null;
@@ -94,7 +94,6 @@ export default async function Episode({ params }: { params: Promise<{ id: string
                 {moves.map((m) => <option key={m} value={m}>{STATE_LABEL[m]}</option>)}
               </select>
             </ActionForm>
-            <p className="faint" style={{ fontSize: 13, margin: 0 }}>Moving an approved episode back to an earlier step withdraws its approvals.</p>
           </div>
         </section>
 
@@ -157,7 +156,7 @@ export default async function Episode({ params }: { params: Promise<{ id: string
           <ActionForm action={addNote} className="card stack-sm" submit="Add note" submitClass="btn small">
             <input type="hidden" name="episodeId" value={ep.id} />
             <label className="field">Kind
-              <select name="kind" defaultValue="edit_request"><option value="edit_request">Edit request</option><option value="note">Note</option><option value="hold">Hold (blocks the episode)</option></select>
+              <select name="kind" defaultValue="edit_request"><option value="edit_request">Edit request</option><option value="note">Note</option></select>
             </label>
             <label className="field">Note <textarea name="body" required style={{ minHeight: 80 }} /></label>
           </ActionForm>

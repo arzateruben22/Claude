@@ -1,8 +1,8 @@
 "use client";
 // The ways to take an approved export to a platform: share to the app (phones), download, or open the upload page.
 // Each records a hand-off (never a publication): only "Mark uploaded" or a verified integration says a post is live.
-// Rendered only for an approved export; unapproved posts get "Review and approve" instead (no download link at all),
-// and markHandedOff ignores a publication without a live approval in any case.
+
+
 import { useEffect, useState } from "react";
 import { handedOff } from "@/app/actions";
 import { Icon } from "./Icon";

@@ -50,7 +50,7 @@ function label(m: MonitorCard) {
   return [...parts.filter(Boolean), `Status light: ${m.ledLabel}`].join(". ") + ".";
 }
 
-const SLOT_NOTE: Record<IgSlot["state"], string> = { posted: "Posted", ready: "Ready", needs_approval: "Needs approval", unplanned: "Up next", missed: "Missed", empty: "Open" };
+const SLOT_NOTE: Record<IgSlot["state"], string> = { posted: "Uploaded", ready: "Ready", not_ready: "No render", unplanned: "Up next", missed: "Missed", empty: "Open" };
 
 function InstagramScreen({ m, tz }: { m: MonitorCard; tz: string }) {
   const slots = m.slots ?? [];

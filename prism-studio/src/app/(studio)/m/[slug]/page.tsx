@@ -9,12 +9,14 @@ import { channelBySlug, channelExtension, coverOf, instagramExtension, rigView, 
 import { INSTAGRAM_SLUG } from "@/lib/rig";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
-import { PLATFORM_LABEL, PUB_LABEL, pubTone, qaFails, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
+import { PLATFORM_LABEL, qaFails, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
 import { approveLessonAction } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
 import { CopyButton } from "@/components/CopyButton";
 import { MonitorStrip } from "@/components/MonitorStrip";
 import { PostCard } from "@/components/PostCard";
+
+const POSTED = ["owner_reported", "scheduled_on_platform", "verified_published"];
 import { Icon } from "@/components/Icon";
 import { identityOf } from "@/lib/identity";
 import { IdentityArt } from "@/components/IdentityArt";
@@ -51,8 +53,7 @@ function QueueRow({ t, tz }: { t: PostItem; tz: string }) {
       <span className="q-where">{t.dest.shared ? t.channel.label : PLATFORM_LABEL[t.dest.platform]}</span>
       <span className="q-when num">{t.p?.scheduledFor ? formatLocal(t.p.scheduledFor, tz, { weekday: "short", hour: "numeric", minute: "2-digit" }) : t.p ? "Not scheduled" : "In rotation"}</span>
       <span className="q-chips">
-        {t.p && t.p.status !== "planned" ? <span className={`chip ${pubTone(t.p.status)}`}>{PUB_LABEL[t.p.status]}</span> : null}
-        {t.approval ? <span className="chip good">Approved</span> : <Link href={`/episodes/${t.e.id}#placements`} className="chip warn">Needs approval</Link>}
+        {t.p && POSTED.includes(t.p.status) ? <span className="chip good">Uploaded</span> : <span className="chip">Not uploaded yet</span>}
       </span>
     </li>
   );
@@ -65,7 +66,7 @@ function byEpisode(items: PostItem[]): PostItem[][] {
   return [...groups.values()];
 }
 
-/** One episode, all its accounts on one row: each account shows its own state, since approvals and posts are per account. */
+/** One episode, all its accounts on one row: each account shows its own state, since uploads are recorded per account. */
 function EpisodeQueueRow({ items, tz }: { items: PostItem[]; tz: string }) {
   const t = items[0];
   const cover = smallCover(coverOf(t));
@@ -80,8 +81,7 @@ function EpisodeQueueRow({ items, tz }: { items: PostItem[]; tz: string }) {
         {items.map((x) => (
           <span key={x.p?.id ?? x.dest.id} className="q-acct">
             {items.length > 1 ? <span className="faint">{PLATFORM_LABEL[x.dest.platform]}</span> : null}
-            {x.p && x.p.status !== "planned" ? <span className={`chip ${pubTone(x.p.status)}`}>{PUB_LABEL[x.p.status]}</span> : null}
-            {x.approval ? <span className="chip good">Approved</span> : <Link href={`/episodes/${x.e.id}#placements`} className="chip warn">Needs approval</Link>}
+            {x.p && POSTED.includes(x.p.status) ? <span className="chip good">Uploaded</span> : <span className="chip">Not uploaded yet</span>}
           </span>
         ))}
       </span>
@@ -177,7 +177,7 @@ async function ChannelScreen({ slug }: { slug: string }) {
                   </div>
                 ) : <p className="muted">{a.dest.shared
                   ? <>Nothing waiting for Instagram from {name}. Each episode&apos;s Instagram caption is on the <Link href="/m/instagram">Instagram screen</Link>.</>
-                  : <>Nothing waiting for {PLATFORM_LABEL[a.dest.platform]}. Rendered, approved episodes land here.</>}</p>}
+                  : <>Nothing waiting for {PLATFORM_LABEL[a.dest.platform]}. Rendered episodes land here.</>}</p>}
                 <a className="btn ghost small" href={a.uploadUrl} target="_blank" rel="noopener noreferrer"><Icon name="external" size={16} /> {PLATFORM_LABEL[a.dest.platform]} upload page</a>
               </div>
             ))}
@@ -245,8 +245,8 @@ async function ChannelScreen({ slug }: { slug: string }) {
   );
 }
 
-const SLOT_LABEL = { posted: "Posted", ready: "Ready to post", needs_approval: "Needs approval", unplanned: "Next in rotation · not planned", missed: "Missed · nothing was planned", empty: "Nothing in rotation" } as const;
-const SLOT_TONE = { posted: "good", ready: "good", needs_approval: "warn", unplanned: "", missed: "", empty: "" } as const;
+const SLOT_LABEL = { posted: "Uploaded", ready: "Ready to post", not_ready: "No render yet", unplanned: "Next in rotation · not planned", missed: "Missed · nothing was planned", empty: "Nothing in rotation" } as const;
+const SLOT_TONE = { posted: "good", ready: "good", not_ready: "warn", unplanned: "", missed: "", empty: "" } as const;
 
 async function InstagramScreen() {
   const v = await instagramExtension();
@@ -281,7 +281,7 @@ async function InstagramScreen() {
             ))}
           </div>
         ) : <div className="card"><p className="muted">{v.paused ? "Publishing is paused, so there are no slots today." : "No Instagram slots today (blackout)."}</p></div>}
-        {v.slots.some((x) => x.state === "unplanned") ? <div className="note-row small-note"><p className="faint">These are the next episodes in rotation. Plan the week to put them in {v.day === "tomorrow" ? "tomorrow" : "today"}&apos;s slots; each still needs its approval.</p><PlanWeek /></div> : null}
+        {v.slots.some((x) => x.state === "unplanned") ? <div className="note-row small-note"><p className="faint">These are the next episodes in rotation. Plan the week to put them in {v.day === "tomorrow" ? "tomorrow" : "today"}&apos;s slots.</p><PlanWeek /></div> : null}
       </section>
 
       <section className="section">

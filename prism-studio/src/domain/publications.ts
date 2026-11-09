@@ -3,9 +3,10 @@
 // of publication: only "Mark uploaded" (owner-reported) or an integration's verification is.
 import { and, eq, inArray } from "drizzle-orm";
 import type { DB } from "../db/client";
-import { destinations, platformExports, publications, versions } from "../db/schema";
+import { destinations, episodes, metricSnapshots, platformExports, publications, versions } from "../db/schema";
 import { audit, type Conn, DomainError } from "./core";
 import { currentApproval } from "./approvals";
+import { onPublicationReported } from "./living";
 
 export type PubStatus = typeof publications.$inferSelect["status"];
 
@@ -107,6 +108,51 @@ export async function backfillPosted(d: DB, episodeId: string, platforms: ("yout
     result.push({ platform, outcome: "marked", publicationId: p.id });
   }
   return result;
+}
+
+/** The two "Uploaded" buttons: the owner posts by hand, then says where. "youtube_tiktok" covers both of the channel's
+ *  accounts, "instagram" the shared Instagram. */
+export const UPLOAD_GROUPS = { youtube_tiktok: ["youtube", "tiktok"], instagram: ["instagram"] } as const;
+export type UploadGroup = keyof typeof UPLOAD_GROUPS;
+export const UPLOADED_NOTE = "Marked uploaded by the owner (Uploaded button).";
+
+/** "Uploaded on YouTube & TikTok" / "Uploaded on Instagram": records the owner's own manual posts for one episode.
+ *  Needs no approval (the post already happened). Owner-reported only (never "verified"); creates the shared
+ *  Instagram row when missing; skips simulated rows and rows already reported; writes the audit log and runs the
+ *  rewards hook once per row it marks. */
+export async function markEpisodeUploaded(d: DB, episodeId: string, group: UploadGroup, note?: string) {
+  const platforms = [...(UPLOAD_GROUPS[group] ?? [])];
+  if (!platforms.length) throw new DomainError("bad_group", "unknown upload group");
+  const result = await backfillPosted(d, episodeId, platforms, note?.trim() || UPLOADED_NOTE);
+  for (const r of result) if (r.outcome === "marked") await onPublicationReported(d, r.publicationId!);
+  await audit(d, "owner", "episode.uploaded", "episode", episodeId, { group, outcomes: result.map((r) => `${r.platform}:${r.outcome}`) });
+  return result;
+}
+
+/** Undo an "Uploaded" press for one episode and group (owner reports only). An Instagram row the button created
+ *  itself (never scheduled, no numbers recorded) is removed again, so the episode goes back to "not posted yet". */
+export async function undoEpisodeUploaded(d: DB, episodeId: string, group: UploadGroup) {
+  const rows = await d.select({ p: publications, platform: destinations.platform }).from(publications)
+    .innerJoin(destinations, eq(destinations.id, publications.destinationId))
+    .where(and(eq(publications.episodeId, episodeId), inArray(destinations.platform, [...UPLOAD_GROUPS[group]]), eq(publications.evidence, "owner_reported")));
+  let undone = 0;
+  for (const { p, platform } of rows) {
+    const row = await undoUploaded(d, p.id);
+    if (!row) continue;
+    undone++;
+    if (platform === "instagram" && !p.scheduledFor && p.note === UPLOADED_NOTE) {
+      const snaps = await d.select({ id: metricSnapshots.id }).from(metricSnapshots).where(eq(metricSnapshots.publicationId, p.id)).limit(1);
+      if (!snaps.length) await d.delete(publications).where(eq(publications.id, p.id));
+    }
+  }
+  // the report moved the episode to "published": with no reported post left, put it back in review so season counts drop
+  if (undone) {
+    const left = await d.select({ status: publications.status }).from(publications).where(eq(publications.episodeId, episodeId));
+    if (!left.some((r) => REPORTED.includes(r.status)))
+      await d.update(episodes).set({ state: "ready_for_review", updatedAt: new Date() }).where(and(eq(episodes.id, episodeId), eq(episodes.state, "published")));
+  }
+  await audit(d, "owner", "episode.undo_uploaded", "episode", episodeId, { group, undone });
+  return undone;
 }
 
 /** Undo an owner report made by mistake (keeps the audit trail). */

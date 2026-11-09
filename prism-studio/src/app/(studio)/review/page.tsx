@@ -9,7 +9,7 @@ import { channelJumps } from "@/lib/channel-jump";
 
 export const metadata: Metadata = { title: "Review" };
 
-// On a phone, Review is a full-screen reel: one episode at a time, swipe or tap to step, Approve and Hold at the
+// On a phone, Review is a full-screen reel: one episode at a time, swipe or tap to step, the Uploaded buttons at the
 // thumb. On a desktop the same slides stack as cards (video beside the accounts).
 export default async function Review() {
   const [queue, s] = await Promise.all([reviewQueue(), studio()]);
@@ -18,9 +18,9 @@ export default async function Review() {
   return (
     <div className={queue.length ? "reel-page" : undefined}>
       <header className="reel-intro">
-        <div className="kicker">Approvals · per account, per exact version</div>
+        <div className="kicker">Watch, then post by hand</div>
         <h1>Review</h1>
-        <p className="lede">Watch it, check the sources, then approve each account&apos;s video and text. A new render or any text edit needs a fresh approval.</p>
+        <p className="lede">Watch it, check the sources, post it by hand, then press the Uploaded button for where you posted it. Nothing posts by itself.</p>
       </header>
       {jumps.length ? <ChannelSwitch channels={jumps} /> : null}
       {!queue.length ? <div className="card"><p className="muted" style={{ margin: 0 }}>Nothing waiting. Episodes arrive here when their final render passes quality checks.</p></div> : (

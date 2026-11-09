@@ -40,7 +40,7 @@ export const stateTone = (s: string) =>
     : s === "ready_for_review" ? "warn" : ["scheduled", "uploading", "processing"].includes(s) ? "info" : "";
 
 export const PUB_LABEL: Record<string, string> = {
-  planned: "Planned", ready: "Ready", handed_off: "Handed off (not yet confirmed)", owner_reported: "Uploaded (you confirmed)",
+  planned: "Planned", ready: "Ready", handed_off: "Handed off (not yet confirmed)", owner_reported: "Uploaded",
   scheduled_on_platform: "Scheduled on the platform", verified_published: "Published (verified)", failed: "Failed", cancelled: "Cancelled",
 };
 export const pubTone = (s: string) =>
