@@ -1,5 +1,5 @@
 // The in-game phone (U6 in PROJECT_OC_UI_TARGET.md; the style library's 09_PHONE_UI): a phone-shaped overlay that
-// slides in from the right of the pause screen. Its apps open only what exists (the map, the garage, the races, the
+// slides in from the right of the pause screen. Its apps open only what exists (the map, the garage, the
 // radio, your bests, your profile, settings, feedback, your homes, your credits, and since 2026-10-21 the story's
 // Messages and Contacts, story.ts). The clock is the game's (the time the sky shows). Credits are earned by driving; nothing on the phone
 // costs real money, and no message is sent or received over a network: the characters are the game's own.
@@ -8,10 +8,10 @@ import { Ico } from './Icons';
 import type { ProfileBook } from '../game/profile';
 import { inbox, unread, contacts, characterById, jobText, type Message, type Job } from '../game/story';
 
-export type PhoneApp = 'map' | 'garage' | 'course' | 'radio' | 'board' | 'profile' | 'settings' | 'feedback' | 'homes';
+export type PhoneApp = 'map' | 'garage' | 'radio' | 'board' | 'profile' | 'settings' | 'feedback' | 'homes';
 interface App { id: PhoneApp | 'credits' | 'messages' | 'contacts'; name: string; icon: Parameters<typeof Ico>[0]['name']; off?: boolean }
 const APPS: App[] = [
-  { id: 'map', name: 'Map', icon: 'map' }, { id: 'garage', name: 'Garage', icon: 'garage' }, { id: 'course', name: 'Races', icon: 'drive' },
+  { id: 'map', name: 'Map', icon: 'map' }, { id: 'garage', name: 'Garage', icon: 'garage' },
   { id: 'radio', name: 'Radio', icon: 'radio' }, { id: 'credits', name: 'Credits', icon: 'career' }, { id: 'board', name: 'Bests', icon: 'bests' },
   { id: 'profile', name: 'Profile', icon: 'driver' }, { id: 'settings', name: 'Settings', icon: 'settings' }, { id: 'feedback', name: 'Feedback', icon: 'nav' },
   { id: 'homes', name: 'Homes', icon: 'home' }, { id: 'messages', name: 'Messages', icon: 'chat' }, { id: 'contacts', name: 'Contacts', icon: 'driver' },
@@ -91,7 +91,7 @@ export function Phone({ clock, name, credits, level, book, onOpen, onJob, onClos
 }
 
 // one character's thread: their messages as bubbles; a job shows its goal and pay, done or open, with a button that sets
-// it up on the menu (the mode, the course or the freeway)
+// it up on the menu (the mode or the freeway)
 function Thread({ who, msgs, done, onBack, onJob }: { who: string; msgs: Message[]; done: string[]; onBack: () => void; onJob: (j: Job) => void }) {
   const c = characterById(who)!;
   return (

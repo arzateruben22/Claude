@@ -62,14 +62,17 @@ Built items are marked ✅. Everything else is still to do.
   - The owner wanted abilities of about 5 seconds. Tuned to 5–6 s on 2026-10-15 (Clear Path 6 s, the others 5 s). Clear Path needs a sensible
     rule in No Traffic mode.
 - ✅ A profile and stats screen, like the Trade Crawler's: name, avatar, level, XP, time, distance, best streak,
-  races won, cars, credits, achievements. Saved locally and versioned.
+  cars, credits, achievements. Saved locally and versioned. (Races won went with the Races, 2026-11-08.)
 - ✅ The radio: fictional stations whose music is made in code.
   - The owner asked for live stations or Apple Music. Only licensed or original audio, never scraped streams. Apple
     Music would need Apple's MusicKit, a developer account and the player's own subscription. That's roadmap.
 - ✅ Ultra Realism mode, unlocked by level: tunnel vision, camera shake, muffled sound, each switched on its own.
   - Still to do: the "4K hyper-realistic" visual tier, meaning licensed or scanned models, photo textures, HDRI skies
     and real building footprints.
-- ✅ Races against AI bots: sprint, checkpoint, endurance, time trial, with a countdown, standings and rewards.
+- ✖ Races against AI bots and Time Trial: built (sprint, checkpoint, endurance, time trial), then **removed on
+  2026-11-08** at the owner's request: "lets get rid of these play modes all entirely and only stick to free drive and
+  try to stay over 100mph game mode". The game has exactly two modes: **Free Drive** and **Speed Survival** (stay over
+  100 mph).
   - Racing real people is roadmap only. It needs a server and anti-cheat; never claim it exists.
 - ✅ Fake money only (credits earned by driving) to buy cars. More cars and garage slots open with level. One car
   to start.
@@ -105,7 +108,7 @@ Built items are marked ✅. Everything else is still to do.
 - **P0:** stable game, controls, continuous road, collisions.
 - **P1:** connected OC freeways, cockpit, dashboard, traffic AI.
 - **P2:** difficulty, mini camera, survival scoring, profiles, saves.
-- **P3:** weather, characters, abilities, races, progression, garage.
+- **P3:** weather, characters, abilities, progression, garage (races were built here, then removed on 2026-11-08).
 - **P4:** Ultra mode, radio, city slice, on foot.
 - **P5:** multiplayer, housing, arcade track, commercial features.
 
@@ -159,7 +162,7 @@ What that becomes (the plan, the dimension sheet, the numbers and the milestones
   - It's a procedural model built in code like the other cars, never claimed as a finished 3D asset.
 - ⬜ **Two tunes, chosen by the mode at the start of a run**, never mid-run.
   - **Unleashed in Free Drive:** the fastest, best-handling, best-traction car in the game, with its ability.
-  - **The race tune in Speed Survival, Races and Time Trial:** at or under the best earnable car (the Rossini Corsa)
+  - **The race tune in Speed Survival** (the one scored mode since 2026-11-08): at or under the best earnable car (the Rossini Corsa)
     on every measured number, with the ability off, so a paid car never wins a scored run by paying.
   - The garage card and the HUD say which tune is on (an "Unleashed" chip in Free Drive).
 - ⬜ **Its own ability, with our own names.** The inspiration was reported on 2026-10-15; its figures are

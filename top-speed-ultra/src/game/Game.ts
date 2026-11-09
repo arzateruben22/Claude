@@ -8,7 +8,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { Settings, QUALITY, DENSITY, Mode, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
+import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign } from './world/Network';
@@ -31,9 +31,8 @@ import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
 import { CARS, carById, applyCar, paintFor, wheelFor } from './cars';
 import { settle, characterById, jobText, type RunFacts, type Job } from './story';
 type ErrandJob = Extract<Job, { kind: 'errand' }>;
-const fmtClock = (t: number) => `${Math.floor(Math.max(0, t) / 60)}:${String(Math.floor(Math.max(0, t) % 60)).padStart(2, '0')}`;
-import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
+const fmtClock = (t: number) => `${Math.floor(Math.max(0, t) / 60)}:${String(Math.floor(Math.max(0, t) % 60)).padStart(2, '0')}`;
 import { equippedPaint } from '../store/locker';
 import { onStoreChange } from '../store/bus';
 import { syncGarage } from '../store/entitlements';
@@ -67,16 +66,14 @@ export const CORNER_PX = [112, 150, 196];
 const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const COARSE = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const ARRIVE_M = 80;               // a venue's ramp: how far before the street the fade parks you (the plans' 80 m)
-const NO_STANDINGS: Standing[] = [];
 // the seat view on a portrait screen: its horizontal field of view (degrees) and where the horizon sits (from the top)
 const SEAT_HFOV_P = 50, SEAT_HORIZON_P = 0.37, DEG = Math.PI / 180;
 
 export interface Hud {
   speed: number; gear: string; rpm: number; rpmFrac: number; distance: number; score: number; combo: number;
-  timeLeft: number; fps: number; mode: Mode; auto: boolean; cam: string; checkpoint: number; countdown: number; best: number; overtakes: number;
+  fps: number; mode: Mode; auto: boolean; cam: string; best: number; overtakes: number;
   road: string; next: string; nextDist: number; wrongWay: boolean; streak: number; bestStreak: number; nearMisses: number; top: number;
   ability: string; abilityOn: number; abilityCool: number;
-  racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string; standings: Standing[];
   tunnel: number; radio: string;
   // the adaptive HUD (U1): the compass bearing the car points along (degrees from north, clockwise), the simulated air
   // temperature (°F) for the clock chip, and which way the next manoeuvre goes for the nav bubble ('' with no route)
@@ -118,12 +115,7 @@ export interface Report {
 export interface Result {
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
-  race?: { course: string; position: number; of: number; time: string; best: string; credits: number; xp: number; order: string[] };
   jobs?: { from: string; job: string; credits: number }[];   // story jobs this run completed (story.ts), already paid
-}
-interface RaceState {
-  course: Course; path: Path; s0: number; L: number; cps: number[]; next: number; t: number; go: boolean;
-  racers: TrafficCar[]; gates: THREE.Group; progress: number; order: string[]; position: number; standings: Standing[];
 }
 export interface GameEvents {
   hud: (h: Hud) => void;
@@ -189,7 +181,7 @@ export class Game {
   private mapT = 0;
   // run state
   private distance = 0; private score = 0; private combo = 1; private comboT = 0; private overtakes = 0;
-  private timeLeft = 60; private nextCheckpoint = 2000; private countdown = 0; private top = 0; private over = false;
+  private top = 0; private over = false;
   private streak = 0; private bestStreak = 0; private nearMisses = 0; private collisions = 0; private wrongWay = false;
   private scrape = 0;
   private ctxLost = false;
@@ -203,7 +195,6 @@ export class Game {
   private carGrip = 1;
   private driving = 'rossini-gt';    // the car applyCarChoice last put into the physics and the scene
   private ownerPick: string | null | undefined;   // owner mode's car, kept on this device apart from the profile (undefined: not read yet)
-  race: RaceState | null = null;
   // a story errand (story.ts): set from the phone before a Free Drive, live during it (the sign, the time left)
   private pendingErrand: ErrandJob | null = null;
   errand: { job: ErrandJob; sign: Sign; t: number; done: boolean } | null = null;
@@ -352,7 +343,6 @@ export class Game {
     if (Math.abs(dx) < 1 && Math.abs(dz) < 1) return;
     ORIGIN.x += dx; ORIGIN.z += dz;
     this.roads?.rebase(); this.terrain?.rebase(this.phys.x, this.phys.z);
-    if (this.race) for (const g of this.race.gates.children) g.position.set(g.userData.ax - ORIGIN.x, g.position.y, g.userData.az - ORIGIN.z);
     this.camera.position.x -= dx; this.camera.position.z -= dz;
     this.chasePos.x -= dx; this.chasePos.z -= dz;
     this.camFrom.p.x -= dx; this.camFrom.p.z -= dz;
@@ -372,42 +362,39 @@ export class Game {
     this.audio.silence();
   }
 
-  async start(mode: Mode, startLabel = this.settings.start, courseId = this.settings.course) {
+  async start(mode: Mode, startLabel = this.settings.start) {
+    mode = modeOf(mode);               // only Free Drive and Speed Survival exist; anything older starts Free Drive
     this.leaveVenue();
-    this.endRace();
     this.applyCarChoice(mode);
-    if (mode === 'race') return this.startRace(COURSES.find((c) => c.id === courseId) ?? COURSES[0]);
     this.audio.start();
     this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
     this.audio.applyVolumes();
     this.mode = mode; this.attract = false; this.over = false;
     this.syncAtmosphere(true);         // a run opens in the player's own time and weather, behind the loading screen
-    // the time trial always starts in the same place with the same traffic, so times compare
-    const st = mode === 'time' ? STARTS[0] : STARTS.find((x) => x.label === startLabel) ?? STARTS[0];
+    const st = STARTS.find((x) => x.label === startLabel) ?? STARTS[0];
     // "start at your exit": on that exit's carriageway, 450 m before its sign, so the first thing you see is your exit
-    const exit = mode === 'time' ? null : this.resolveExit(this.settings.exit);
+    const exit = this.resolveExit(this.settings.exit);
     const m = exit ? exit.path : this.findMain(st.label);
     const s0 = exit ? clamp(exit.s - 450, 40, Math.max(40, m.len - 200)) : m.len * st.at;
     this.placeCar(m, s0, Math.min(1, m.lanes - 1), mode === 'survival' ? 30 : 0);
     if (mode === 'free') this.startErrand(m, s0); else { this.errand = null; this.pendingErrand = null; }
     this.earned(this.profile.add({ freeway: m.label }));
     this.setRoute(null);
-    this.traffic.reseed(mode === 'time' ? 405 : 1000 + Math.floor(Math.random() * 1e6));
+    this.traffic.reseed(1000 + Math.floor(Math.random() * 1e6));
     this.traffic.fill(this.view());
     this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0; this.pace = 0;
     this.streak = 0; this.bestStreak = 0; this.nearMisses = 0; this.collisions = 0;
     this.endAbility(); this.ability.reset();
-    this.timeLeft = 60; this.nextCheckpoint = 2000; this.countdown = mode === 'time' ? 3 : 0;
     this.input.recenter();
     await this.prebuild('Merging onto ' + m.label);
     this.setPaused(false);
     this.ev.loading(false);
     this.last = performance.now();
-    const what = (mode === 'survival' ? 'stay over 100 mph' : mode === 'time' ? 'Time Trial' : 'Free Drive') + (this.driving === 'oc-hyper' ? (mode === 'free' ? ' · Unleashed' : ' · race tune') : '');
+    const what = (mode === 'survival' ? 'stay over 100 mph' : 'Free Drive') + (this.driving === 'oc-hyper' ? (mode === 'free' ? ' · Unleashed' : ' · race tune') : '');
     this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
   }
 
-  quitToMenu() { this.leaveVenue(); this.errand = null; this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
+  quitToMenu() { this.leaveVenue(); this.errand = null; this.profile.save(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
   cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
   // tune a station directly (the radio card), -1 for off
   tuneRadio(i: number) { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.radio.tune(i); }
@@ -415,106 +402,11 @@ export class Game {
   get ultraOpen() { return this.profile.level >= 5; }
   private ultraOn() { return this.settings.ultra && this.ultraOpen && !this.attract; }
 
-  // ----------------------------------------------------------------------------------------- races
-  private async startRace(course: Course) {
-    this.audio.start();
-    this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
-    this.audio.applyVolumes();
-    this.mode = 'race'; this.attract = false; this.over = false;
-    this.syncAtmosphere(true);
-    const m = this.findMain(course.road), s0 = m.len * course.at, L = course.length;
-    this.placeCar(m, s0, Math.min(1, m.lanes - 1), 0);
-    this.setRoute(null);
-    this.traffic.reseed(7000 + COURSES.indexOf(course));
-    this.traffic.fill(this.view());
-    this.traffic.clearStretch(m, s0 - 80, s0 + 320);
-    // the grid: rivals in the other lanes, staggered; they're quick, but a little slower than your car flat out
-    const top = this.carTop();
-    const slots: [number, number][] = m.lanes >= 3 ? [[0, 7], [2, 7], [Math.min(3, m.lanes - 1), -7]] : [[0, 9], [1, 18], [0, -9]];
-    const racers = RIVALS.map((r, i) => this.traffic.addRacer(m, s0 + slots[i][1], slots[i][0], r.name, r.paint, top * r.pace, 4.6 - i * 0.25, s0));
-    const gates = new THREE.Group();
-    gates.add(gate(m, s0 + 14, 'start', 'START'), gate(m, s0 + L, 'finish', 'FINISH'));
-    const cps: number[] = [];
-    for (let k = 1; k <= course.cps; k++) { const s = (L * k) / (course.cps + 1); cps.push(s); gates.add(gate(m, s0 + s, 'cp', `CP ${k}`)); }
-    this.scene.add(gates);
-    this.race = { course, path: m, s0, L, cps, next: 0, t: 0, go: false, racers, gates, progress: 0, order: [], position: 4, standings: [] };
-    this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0;
-    this.streak = 0; this.bestStreak = 0; this.nearMisses = 0; this.collisions = 0;
-    this.endAbility(); this.ability.reset();
-    this.countdown = 3;
-    this.input.recenter();
-    await this.prebuild(course.name);
-    this.setPaused(false);
-    this.ev.loading(false);
-    this.last = performance.now();
-    this.ev.toast(`${course.name} · ${(L / 1609.344).toFixed(1)} mi`, 'info');
-  }
-  // what this car does flat out (from its gearing and drag), so the rivals can be set against it
+  // what this car does flat out (from its gearing and drag): Auto-drive's cruise stays under it
   private carTop() {
     const wheelTop = ((SPEC.redline * Math.PI) / 30) * SPEC.wheelR / (SPEC.gears[SPEC.gears.length - 1] * SPEC.final);
     const dragTop = Math.cbrt((SPEC.power * 0.9) / (0.5 * 1.225 * SPEC.CdA));
     return Math.min(wheelTop, dragTop);
-  }
-  private endRace() {
-    if (!this.race) return;
-    this.scene.remove(this.race.gates);
-    this.race.gates.traverse((o) => { const mm = o as THREE.Mesh; if (mm.geometry) mm.geometry.dispose(); });
-    this.traffic.removeRacers();
-    this.race = null;
-  }
-  // how far along the course something at (x, z) is
-  private courseProgress(x: number, z: number, guess: number) {
-    const r = this.race!, pr = r.path.project(x, z, r.s0 + guess);
-    return Math.abs(pr.d) < 60 ? pr.s - r.s0 : -1;
-  }
-  private raceTick(dt: number) {
-    const r = this.race!;
-    for (const c of r.racers) c.racer!.hold = this.countdown > 0;
-    if (this.over) return;
-    const p = this.phys, going = this.countdown <= 0;
-    if (going) {
-      if (!r.go) { r.go = true; }
-      r.t += dt;
-      const prog = this.path === r.path ? p.s - r.s0 : this.courseProgress(p.x, p.z, r.progress);
-      if (prog >= 0) r.progress = Math.max(r.progress, Math.min(prog, r.L));
-    }
-    // where every rival is along the course (finishers hold the line), then the standings with the gaps to you
-    const runners = r.racers.map((c, i) => {
-      const rc = c.racer!;
-      const cp = rc.done ? r.L : c.path === r.path ? c.s - r.s0 : this.courseProgress(c.x, c.z, c.s - r.s0);
-      if (!rc.done && going && cp >= r.L) { rc.done = r.t; r.order.push(rc.name); }
-      return { name: rc.name, tag: RIVALS[i]?.tag ?? '', prog: Math.min(cp, r.L), v: c.v, done: rc.done };
-    });
-    r.standings = standings({ prog: r.progress, v: Math.abs(p.vx) }, runners, r.t, r.L);
-    r.position = r.standings.find((s) => s.you)?.pos ?? r.racers.length + 1;
-    if (!going) return;
-    while (r.next < r.cps.length && r.progress >= r.cps[r.next]) {
-      r.next++;
-      this.ev.toast(`Checkpoint ${r.next}/${r.cps.length} · P${r.position}`, 'good');
-    }
-    if (r.progress >= r.L) { r.order.push('You'); this.finishRace(r.order.length); return; }
-    // everyone else is home and you're over a minute behind the winner: that's the race
-    if (r.order.length === r.racers.length && r.t - Math.max(...r.racers.map((c) => c.racer!.done)) > 60) this.finishRace(r.racers.length + 1, 'Too far behind');
-  }
-  racePosition() { return this.race?.position ?? 0; }
-  private finishRace(position: number, why?: string) {
-    const r = this.race!;
-    this.over = true;
-    const credits = r.course.reward[Math.min(position, 4) - 1], xp = Math.round(credits / 2) + (position === 1 ? 300 : 0);
-    const lvl = this.profile.reward(xp, credits);
-    if (position === 1) { this.profile.p.racesWon++; this.profile.save(); }
-    const newBest = !why && saveBestTime(r.course.id, r.t);
-    this.profile.endRun();
-    const best = bestTime(r.course.id);
-    const ordinal = ['1st', '2nd', '3rd', '4th'][Math.min(position, 4) - 1];
-    if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
-    const jobs = why ? undefined : this.settleJobs({ mode: 'race', score: credits, distance: r.progress, top: this.top, road: r.course.road, courseId: r.course.id, position });
-    setTimeout(() => this.ev.over({
-      mode: 'race', jobs, score: credits, distance: r.progress, overtakes: this.overtakes, top: this.top, reason: why ?? (position === 1 ? 'You won' : `You finished ${ordinal}`),
-      road: r.course.road, best, newBest, time: r.t, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions,
-      board: { mode: 'race', runs: [], rank: 0 },
-      race: { course: r.course.name, position, of: r.racers.length + 1, time: fmtTime(r.t), best: best ? fmtTime(best) : '', credits, xp, order: [...r.order, ...r.racers.filter((c) => !c.racer!.done).map((c) => c.racer!.name)] },
-    }), 1400);
   }
   restart() { void this.start(this.mode); }
 
@@ -611,7 +503,7 @@ export class Game {
     this.ability = new Ability(ABILITIES[d.ability]);
   }
   useAbility() {
-    if (this.attract || this.over || this.paused || this.countdown > 0 || !this.ability.ready) return false;
+    if (this.attract || this.over || this.paused || !this.ability.ready) return false;
     // with no traffic there is nothing to clear: say so and keep the charge
     if (this.ability.def.id === 'clear' && this.traffic.level.perKmLane === 0 && this.traffic.cars.length === 0) { this.ev.toast('No traffic to clear', 'info'); return false; }
     if (!this.ability.trigger()) return false;
@@ -683,7 +575,7 @@ export class Game {
   private autoDrive = false;
   private autoCruise = AUTO_CRUISE;
   get autoDriving() { return this.autoDrive; }
-  get autoDriveOffered() { return !this.attract && !this.over && this.mode === 'free' && !this.race && !!this.routeTarget; }
+  get autoDriveOffered() { return !this.attract && !this.over && this.mode === 'free' && !!this.routeTarget; }
   setAutoDrive(on: boolean, why = '') {
     if (on && !this.autoDriveOffered) return false;
     if (on === this.autoDrive) return true;
@@ -1085,7 +977,7 @@ export class Game {
     });
     this.traffic.render(alpha, this.time);
     this.updateCamera(dt);
-    this.chevrons.update(this.path, this.phys.s, this.phys.d, this.route, !this.attract && !this.race);
+    this.chevrons.update(this.path, this.phys.s, this.phys.d, this.route, !this.attract);
     this.weatherTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
@@ -1146,17 +1038,6 @@ export class Game {
     const p = this.phys;
     this.steps++;
     if (this.venueState) { this.car.snapshot(p); return; }        // parked at a venue (or on foot): the car stays put
-    if (this.countdown > 0) {
-      const before = Math.ceil(this.countdown);
-      this.countdown -= dt;
-      p.hold = true;
-      p.step(dt, { ...this.input.c, brake: 1, handbrake: true }, this.path, this.net);
-      p.hold = false;
-      if (Math.ceil(this.countdown) !== before) this.ev.toast(this.countdown > 0 ? String(Math.ceil(this.countdown)) : 'GO', 'info');
-      if (this.race) { this.raceTick(dt); this.traffic.step(dt, this.view(), this.time); }
-      this.car.snapshot(p);
-      return;
-    }
     const c = this.input.c;
     p.grip = this.env.grip * this.gripBoost * this.carGrip;
     p.step(dt, this.over ? { ...c, throttle: 0, brake: 0.3 } : c, this.path, this.net);
@@ -1220,7 +1101,6 @@ export class Game {
       this.combo = Math.min(8, this.combo + (ps.close ? 1 : 0.5));
     }
     if (this.comboT > 0) { this.comboT -= dt; if (this.comboT <= 0) this.combo = 1; }
-    if (this.race) this.raceTick(dt);
     // distance, the streak and the clocks
     const fwd = Math.max(0, view.v) * dt;
     if (!this.attract && !this.wrongWay) this.distance += fwd;
@@ -1243,11 +1123,6 @@ export class Game {
         this.score += fwd * 0.1 * band * (1 + Math.min(this.streak, 60) / 30);
       }
       if (this.mode === 'free') this.errandTick(dt);
-      if (this.mode === 'time') {
-        this.timeLeft -= dt;
-        if (this.distance >= this.nextCheckpoint) { this.nextCheckpoint += 2000; this.timeLeft += 25; this.ev.toast('Checkpoint +25 s', 'good'); }
-        if (this.timeLeft <= 0) { this.timeLeft = 0; this.endRun('Out of time'); }
-      }
     }
   }
 
@@ -1292,7 +1167,7 @@ export class Game {
   private endRun(reason: string) {
     this.over = true; this.autoDrive = false;
     this.profile.endRun();
-    const score = this.mode === 'time' ? Math.round(this.distance) : Math.round(this.score);
+    const score = Math.round(this.score);
     const best = loadBest(this.mode), newBest = score > best;
     if (newBest) saveBest(this.mode, score);
     const run: Run = { mode: this.mode, score, distance: Math.round(this.distance), top: Math.round(this.top * MPH), streak: Math.round(this.bestStreak * 10) / 10, nearMisses: this.nearMisses, overtakes: this.overtakes, collisions: this.collisions, when: Date.now(), road: this.lastMain?.label ?? '' };
@@ -1787,14 +1662,12 @@ export class Game {
     const heading = ((((Math.PI - p.psi) * 180) / Math.PI) % 360 + 360) % 360;
     this.ev.hud({
       speed: Math.round(Math.abs(p.vx) * MPH), gear: p.gear < 0 ? 'R' : String(p.gear), rpm: Math.round(p.rpm), rpmFrac: clamp(p.rpm / SPEC.redline, 0, 1),
-      distance: this.distance, score: Math.round(this.score), combo: this.combo, timeLeft: this.timeLeft, fps: this.fps, mode: this.mode,
-      auto: p.auto, cam: CAM_LABEL[this.cam], checkpoint: Math.max(0, this.nextCheckpoint - this.distance), countdown: this.countdown,
+      distance: this.distance, score: Math.round(this.score), combo: this.combo, fps: this.fps, mode: this.mode,
+      auto: p.auto, cam: CAM_LABEL[this.cam],
       best: loadBest(this.mode), overtakes: this.overtakes,
       road: this.path.main ? this.path.label : (this.path.label ? 'To ' + this.path.label : 'Ramp'),
       next, nextDist, wrongWay: this.wrongWay, streak: this.streak, bestStreak: this.bestStreak, nearMisses: this.nearMisses, top: Math.round(this.top * MPH),
       ability: this.ability.def.name, abilityOn: this.ability.active / this.ability.def.duration, abilityCool: this.ability.coolFrac,
-      racePos: this.race ? this.race.position : 0, raceOf: this.race ? this.race.racers.length + 1 : 0, raceLeft: this.race ? this.race.L - this.race.progress : 0,
-      raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '', standings: this.race ? this.race.standings : NO_STANDINGS,
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
       heading, tempF: this.env.tempF(), turn,
       navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
@@ -1837,7 +1710,7 @@ export class Game {
   // back to the cockpit on the nearest on-ramp to the freeway, the venue disposed completely.
   private vr: Map<Path, VenueRamp> | null = null;
   private vramps() { return (this.vr ??= venueRamps(this.net)); }
-  private get venueAllowed() { return !this.attract && !this.over && this.mode === 'free' && !this.race; }
+  private get venueAllowed() { return !this.attract && !this.over && this.mode === 'free'; }
   venueState: { vr: VenueRamp; phase: 'parked' | 'leaving' | 'foot' | 'returning' } | null = null;
   private foot: Mounted | null = null;
   private footHost: HTMLDivElement | null = null;
