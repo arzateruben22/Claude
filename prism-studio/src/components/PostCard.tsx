@@ -24,6 +24,8 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
   const cover = coverOf(t);
   const no = String(e.number).padStart(3, "0");
   const base = `${channel.slug}-${no}-${dest.platform}`;
+  // the file name says its resolution: the YouTube 1440p version or the 1080p master
+  const res = x && /-youtube\.mp4$/.test(x.filePath) ? "-1440p" : "-1080p";
   const thumb = dest.platform === "youtube" ? thumbOf(t) : null;
   const ready = isReady(t);
   const uploadUrl = uploadUrlFor(dest);
@@ -73,10 +75,10 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
               </ActionForm>
             ) : null}
             {p ? (
-              <HandOff publicationId={p.id} videoUrl={mediaUrl(x.filePath)} fileName={`${base}.mp4`} uploadUrl={uploadUrl} platformLabel={platform} shareText={composePostText(x)} />
+              <HandOff publicationId={p.id} videoUrl={mediaUrl(x.filePath)} fileName={`${base}${res}.mp4`} uploadUrl={uploadUrl} platformLabel={platform} shareText={composePostText(x)} />
             ) : (
               <div className="row">
-                <a className="btn" href={mediaUrl(x.filePath, `${base}.mp4`)} download={`${base}.mp4`}><Icon name="download" size={18} /> Download</a>
+                <a className="btn" href={mediaUrl(x.filePath, `${base}${res}.mp4`)} download={`${base}${res}.mp4`}><Icon name="download" size={18} /> Download</a>
                 <a className="btn ghost" href={uploadUrl} target="_blank" rel="noopener noreferrer"><Icon name="external" size={18} /> Open {platform}</a>
               </div>
             )}

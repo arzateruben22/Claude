@@ -565,6 +565,8 @@ export async function libraryView() {
   const lessons = await d.select().from(S.lessons)
     .where(and(eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), demoFilter(s.showDemo, S.lessons.isDemo))).orderBy(asc(S.lessons.createdAt));
   const bytes = (key: string) => { const f = mediaFile(key); return f ? fs.statSync(f).size : 0; };
+  // download names say which is which: skin-sense-004-1080p.mp4 (TikTok, Instagram), skin-sense-004-1440p.mp4 (YouTube)
+  const resolutionName = (key: string, res: string) => path.basename(key).replace(/-9x16(?:-youtube)?\.mp4$/, `-${res}.mp4`);
   const sibling = (cover: string | null, suffix: string) => {
     if (!cover || !/-cover\.jpg$/.test(cover)) return null;
     const k = cover.replace(/-cover\.jpg$/, suffix);
@@ -574,9 +576,9 @@ export async function libraryView() {
     const episodes = rows.filter((r) => r.e.channelId === c.id).map(({ e, v }) => {
       const cover = covers.find((x) => x.versionId === v.id)?.coverPath || v.posterPath || null;
       const ytFile = xs.find((x) => x.versionId === v.id && x.platform === "youtube")?.filePath;
-      const youtube = ytFile && ytFile !== v.videoPath ? { path: ytFile, fileName: path.basename(ytFile), bytes: bytes(ytFile) } : null;   // the 1440p version
+      const youtube = ytFile && ytFile !== v.videoPath ? { path: ytFile, fileName: resolutionName(ytFile, "1440p"), bytes: bytes(ytFile) } : null;   // the 1440p version
       return { youtube,
-        id: e.id, number: e.number, title: e.title, isDemo: e.isDemo, hasSrt: !!e.captionsSrt, videoPath: v.videoPath, fileName: path.basename(v.videoPath),
+        id: e.id, number: e.number, title: e.title, isDemo: e.isDemo, hasSrt: !!e.captionsSrt, videoPath: v.videoPath, fileName: resolutionName(v.videoPath, "1080p"),
         durationS: v.durationS, width: v.width, height: v.height, bytes: bytes(v.videoPath), cover, small: smallCover(cover), thumb: sibling(cover, "-thumb.jpg"),
       };
     });

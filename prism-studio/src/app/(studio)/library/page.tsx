@@ -49,8 +49,8 @@ export default async function Library() {
                   <div className="row">
                     <a className="btn small" href={mediaUrl(e.videoPath, e.fileName)} download><Icon name="download" size={16} /> Download</a>
                     {e.youtube ? <a className="btn ghost small" href={mediaUrl(e.youtube.path, e.youtube.fileName)} download title={`1440×2560, ${mb(e.youtube.bytes)}`}>YouTube 1440p</a> : null}
-                    {e.cover ? <a className="btn ghost small" href={mediaUrl(e.cover, e.fileName.replace(/-9x16\.mp4$/, "-cover.jpg"))} download>Cover</a> : null}
-                    {e.thumb ? <a className="btn ghost small" href={mediaUrl(e.thumb, e.fileName.replace(/-9x16\.mp4$/, "-thumb.jpg"))} download>Thumbnail</a> : null}
+                    {e.cover ? <a className="btn ghost small" href={mediaUrl(e.cover, e.fileName.replace(/-1080p\.mp4$/, "-cover.jpg"))} download>Cover</a> : null}
+                    {e.thumb ? <a className="btn ghost small" href={mediaUrl(e.thumb, e.fileName.replace(/-1080p\.mp4$/, "-thumb.jpg"))} download>Thumbnail</a> : null}
                     {e.hasSrt ? <a className="btn ghost small" href={`/api/srt/${e.id}`} download>Captions</a> : null}
                     <Link className="btn ghost small" href={`/episodes/${e.id}`}>Posting text</Link>
                   </div>
