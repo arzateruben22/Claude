@@ -1,0 +1,206 @@
+{
+ "duration": 67.733,
+ "fps": 30,
+ "preset": "outerlayer-slide",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.748,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.748,
+   "t1": 17.091,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 17.091,
+   "t1": 27.65,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 27.65,
+   "t1": 42.965,
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 42.965,
+   "t1": 53.692,
+   "energy": 0.8
+  },
+  {
+   "id": "takeaway",
+   "t0": 53.692,
+   "t1": 61.2,
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 61.2,
+   "t1": 67.733,
+   "energy": 0.35
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.748
+  },
+  {
+   "t": 0.9,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 4.748,
+   "kind": "section",
+   "id": "normal",
+   "t1": 17.091
+  },
+  {
+   "t": 7.968,
+   "kind": "label",
+   "tag": "l0"
+  },
+  {
+   "t": 12.928,
+   "kind": "scale.jump",
+   "tag": "c3"
+  },
+  {
+   "t": 17.091,
+   "kind": "section",
+   "id": "change",
+   "t1": 27.65
+  },
+  {
+   "t": 17.541,
+   "kind": "badge",
+   "tag": "b0"
+  },
+  {
+   "t": 18.911,
+   "kind": "label",
+   "tag": "l1"
+  },
+  {
+   "t": 20.511,
+   "kind": "scale.jump",
+   "tag": "c5"
+  },
+  {
+   "t": 22.371,
+   "kind": "label",
+   "tag": "l2"
+  },
+  {
+   "t": 27.65,
+   "kind": "section",
+   "id": "why",
+   "t1": 42.965
+  },
+  {
+   "t": 27.95,
+   "kind": "scale.jump",
+   "tag": "c7"
+  },
+  {
+   "t": 30.07,
+   "kind": "label",
+   "tag": "l3"
+  },
+  {
+   "t": 42.965,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 53.692
+  },
+  {
+   "t": 43.265,
+   "kind": "scale.jump",
+   "tag": "c9"
+  },
+  {
+   "t": 43.265,
+   "kind": "swell",
+   "tag": "whoa",
+   "t1": 54.292
+  },
+  {
+   "t": 43.415,
+   "kind": "badge",
+   "tag": "b1"
+  },
+  {
+   "t": 45.745,
+   "kind": "label",
+   "tag": "l4"
+  },
+  {
+   "t": 53.692,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 61.2
+  },
+  {
+   "t": 53.992,
+   "kind": "scale.jump",
+   "tag": "c14"
+  },
+  {
+   "t": 61.2,
+   "kind": "section",
+   "id": "tease",
+   "t1": 67.733
+  },
+  {
+   "t": 61.5,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.05,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.048,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 17.391,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 27.95,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 43.265,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 53.992,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 61.5,
+   "file": "vo/07.wav"
+  }
+ ]
+}
