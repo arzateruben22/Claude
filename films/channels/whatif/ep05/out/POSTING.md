@@ -66,9 +66,9 @@ Sources: HyperPhysics; un.org; topendsports.com; NASA; NIST. Synthetic (AI) voic
 **Caption**
 
 ```
-Would the Earth move? If all of us jumped, at once.
+Would the Earth move? If all 8 billion of us jumped, at once.
 
-It sounds like it should knock the planet off course. So yes, the Earth moves when we jump.
+It does move. But the Earth outweighs all of us about ten trillion times, so it shifts by less than a thousandth of an atom's width, then settles right back. It just never notices.
 
 Season 1: Impossible, worked out, part 5 of 6.
 

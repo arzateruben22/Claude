@@ -70,7 +70,7 @@ Sources: serendipstudio.org; pnas.org; phys.org; NCBI (NIH); un.org. Synthetic (
 ```
 Ants, or us: who weighs more? Every ant on Earth, on one scale.
 
-So the ants should win. So we win on the scale, by a lot.
+Scientists now count about 20 quadrillion ants, twice the old guess. But each ant is so light that all of them together weigh only about a fifth of all humans. We win on the scale. They win on the count.
 
 Season 1: Impossible, worked out, part 3 of 6.
 
