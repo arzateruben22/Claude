@@ -4,139 +4,708 @@
  "placeholder": "Placeholder art · procedural skin patch",
  "titleSize": 96,
  "images": {
-  "skin": {
-   "src": "art/skin.png",
-   "w": 941,
-   "h": 1065
+  "p1": {
+   "src": [
+    "art/ep05-01.png",
+    "art/ep05-01.webp",
+    "art/skin.png"
+   ]
   },
-  "cast": {
-   "src": "art/cast.png",
-   "w": 941,
-   "h": 1065
+  "p2": {
+   "src": [
+    "art/ep05-02.png",
+    "art/ep05-02.webp",
+    "art/skin.png"
+   ]
   },
-  "uv": {
-   "src": "art/uv.png",
-   "w": 941,
-   "h": 1065
+  "p3": {
+   "src": [
+    "art/ep05-03.png",
+    "art/ep05-03.webp",
+    "art/cast.png"
+   ]
+  },
+  "p4": {
+   "src": [
+    "art/ep05-04.png",
+    "art/ep05-04.webp",
+    "art/uv.png"
+   ]
+  },
+  "p5": {
+   "src": [
+    "art/ep05-05.png",
+    "art/ep05-05.webp",
+    "art/section.png"
+   ]
   }
  },
  "camera": [
   {
    "t": 0,
+   "img": "p1",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.25,
+    "f": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "t": "vo01:After",
+   "img": "p1",
+   "s": 1.35,
+   "f": [
+    0.32,
+    0.55
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.5,
+    "f": [
+     0.3,
+     0.45
+    ]
+   }
+  },
+  {
+   "t": "start:vo02",
+   "img": "p2",
+   "s": 1.1,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.3,
+    "f": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "t": "vo02:Head",
+   "img": "p2",
+   "s": 1.5,
+   "f": [
+    0.3,
+    0.55
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.7,
+    "f": [
+     0.27,
+     0.5
+    ]
+   }
+  },
+  {
+   "t": "start:vo03",
+   "img": "p2",
+   "s": 1.3,
+   "f": [
+    0.72,
+    0.55
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.3,
+    "f": [
+     0.72,
+     0.5
+    ]
+   }
+  },
+  {
+   "t": "vo03:Researchers",
+   "img": "p3",
+   "s": 1.2,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.4,
+    "f": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "t": "vo03:silicone",
+   "img": "p3",
+   "s": 1.7,
+   "f": [
+    0.45,
+    0.55
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.95,
+    "f": [
+     0.42,
+     0.5
+    ]
+   }
+  },
+  {
+   "t": "start:vo04",
+   "img": "p2",
+   "s": 1.1,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.2,
+    "f": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "t": "vo04:But",
+   "img": "p4",
+   "s": 1.2,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.3,
+    "f": [
+     0.5,
+     0.45
+    ]
+   }
+  },
+  {
+   "t": "vo04:long",
+   "img": "p4",
+   "s": 1.6,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.8,
+    "f": [
+     0.5,
+     0.42
+    ]
+   }
+  },
+  {
+   "t": "start:vo05",
+   "img": "p1",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.0,
+    "f": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "t": "start:vo06",
+   "img": "p5",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "anchors": {
+    "film": [
+     0.3,
+     0.5
+    ],
+    "paper": [
+     0.72,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fbAnchors": {
+    "film": [
+     0.5,
+     0.325
+    ],
+    "paper": [
+     0.5,
+     0.62
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.0,
+    "f": [
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "t": "vo06:paper",
+   "img": "p5",
    "s": 1.25,
    "f": [
     0.5,
     0.5
    ],
-   "img": "skin"
-  },
-  {
-   "t": "vo01:After",
-   "s": 1.5,
-   "f": [
-    0.3,
-    0.45
-   ],
-   "img": "skin"
-  },
-  {
-   "t": "start:vo02",
-   "s": 1.3,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "img": "skin"
-  },
-  {
-   "t": "vo02:Head",
-   "s": 1.7,
-   "f": [
-    0.27,
-    0.5
-   ],
-   "img": "skin"
-  },
-  {
-   "t": "start:vo03",
-   "s": 1.3,
-   "f": [
-    0.72,
-    0.5
-   ],
-   "img": "skin"
-  },
-  {
-   "t": "vo03:Researchers",
-   "s": 1.4,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "img": "cast"
-  },
-  {
-   "t": "vo03:silicone",
-   "s": 1.95,
-   "f": [
-    0.42,
-    0.5
-   ],
-   "img": "cast"
-  },
-  {
-   "t": "start:vo04",
-   "s": 1.2,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "img": "skin"
-  },
-  {
-   "t": "vo04:But",
-   "s": 1.3,
-   "f": [
-    0.5,
-    0.45
-   ],
-   "img": "uv"
-  },
-  {
-   "t": "vo04:long",
-   "s": 1.8,
-   "f": [
-    0.5,
-    0.42
-   ],
-   "img": "uv"
+   "anchors": {
+    "film": [
+     0.3,
+     0.5
+    ],
+    "paper": [
+     0.72,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fbAnchors": {
+    "film": [
+     0.5,
+     0.325
+    ],
+    "paper": [
+     0.5,
+     0.62
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.4,
+    "f": [
+     0.5,
+     0.5
+    ]
+   }
   },
   {
    "t": "start:vo07",
-   "s": 1.15,
+   "img": "p1",
+   "s": 1.1,
    "f": [
     0.5,
-    0.5
+    0.55
    ],
-   "img": "skin"
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.2,
+    "f": [
+     0.5,
+     0.5
+    ]
+   }
   },
   {
    "t": "vo07:kept",
-   "s": 1.7,
+   "img": "p1",
+   "s": 1.5,
    "f": [
     0.3,
-    0.5
+    0.55
    ],
-   "img": "skin"
+   "anchors": {
+    "left": [
+     0.3,
+     0.55
+    ],
+    "right": [
+     0.72,
+     0.55
+    ],
+    "mid": [
+     0.5,
+     0.55
+    ]
+   },
+   "fbAnchors": {
+    "left": [
+     0.25,
+     0.5
+    ],
+    "right": [
+     0.75,
+     0.5
+    ],
+    "mid": [
+     0.5,
+     0.5
+    ]
+   },
+   "fb": {
+    "s": 1.7,
+    "f": [
+     0.3,
+     0.5
+    ]
+   }
   }
  ],
  "labels": [
   {
    "text": "Daily sunscreen",
-   "a": [
-    0.25,
-    0.5
-   ],
+   "a": "left",
    "off": [
     120,
     -130
@@ -146,10 +715,7 @@
   },
   {
    "text": "Used when they liked",
-   "a": [
-    0.75,
-    0.5
-   ],
+   "a": "right",
    "off": [
     -40,
     -130
@@ -159,10 +725,7 @@
   },
   {
    "text": "Silicone cast",
-   "a": [
-    0.45,
-    0.5
-   ],
+   "a": "mid",
    "off": [
     130,
     -140
@@ -172,10 +735,7 @@
   },
   {
    "text": "Ultraviolet view",
-   "a": [
-    0.5,
-    0.45
-   ],
+   "a": "mid",
    "off": [
     130,
     -150
@@ -185,16 +745,33 @@
   },
   {
    "text": "Daily group",
-   "a": [
-    0.3,
-    0.5
-   ],
+   "a": "left",
    "off": [
     130,
     -130
    ],
    "t0": "vo07:Both",
    "t1": "end:vo07-0.3"
+  },
+  {
+   "text": "Sunscreen film · about 20 µm",
+   "a": "film",
+   "off": [
+    90,
+    -150
+   ],
+   "t0": "vo06:layer",
+   "t1": "end:vo06+0.4"
+  },
+  {
+   "text": "Paper · about 100 µm",
+   "a": "paper",
+   "off": [
+    -70,
+    150
+   ],
+   "t0": "vo06:paper",
+   "t1": "end:vo06+0.4"
   }
  ],
  "plates": [
@@ -221,30 +798,6 @@
    ],
    "note": "Small numbers: not quite statistically significant. Green et al., 2011.",
    "noteT": "vo05:though"
-  },
-  {
-   "t0": "start:vo06",
-   "t1": "end:vo06+0.5",
-   "top": 650,
-   "title": "To scale (an estimate)",
-   "bars": [
-    {
-     "label": "Sunscreen at the lab test dose · about 20 µm",
-     "value": 20,
-     "max": 100,
-     "t": "vo06:layer",
-     "color": "#2F8F86"
-    },
-    {
-     "label": "A sheet of paper · about 100 µm",
-     "value": 100,
-     "max": 100,
-     "t": "vo06:paper",
-     "color": "#0E1B3D"
-    }
-   ],
-   "note": "Computed from 2 mg per cm², about a fifth.",
-   "noteT": "vo06:paper+0.8"
   }
  ],
  "sup": [
@@ -269,22 +822,23 @@
   [
    0,
    "start:vo05",
-   "Simplified skin patch · not a photo"
+   "Simplified skin · not a photo"
+  ],
+  [
+   "start:vo06",
+   "start:vo07",
+   "An estimate · computed"
   ],
   [
    "start:vo07",
    "start:vo08",
-   "Simplified skin patch · not a photo"
+   "Simplified skin · not a photo"
   ]
  ],
  "quiet": [
   [
    "start:vo05",
    "end:vo05+3.2"
-  ],
-  [
-   "start:vo06",
-   "end:vo06+0.5"
   ]
  ],
  "scan": [
