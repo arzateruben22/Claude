@@ -1,4 +1,4 @@
-// The mode cards' pictures, drawn in code (no photos): four night scenes of Orange County in the UI's own colours,
+// The mode cards' pictures, drawn in code (no photos): two night scenes, one per mode, of Orange County in the UI's own colours,
 // 320 × 140, cropped to the card. Decoration beside the card's text, so hidden from screen readers.
 import type { Mode } from '../game/settings';
 
@@ -47,20 +47,6 @@ export function ModeArt({ kind }: { kind: Mode }) {
           <g key={k}><rect x={x} y={y} width={w} height="3" rx="1.5" fill="var(--ember)" /><rect x={x - 2} y={y - 1} width={w + 4} height="5" rx="2.5" fill="var(--ember)" opacity="0.35" /></g>
         ))}
         <path d="M146 108 h28 M140 122 h40" stroke="var(--ice-hi)" strokeWidth="2.5" strokeLinecap="round" opacity="0.9" />
-      </>}
-      {kind === 'race' && <>
-        <Road id={id} />
-        <rect x="104" y="52" width="112" height="7" fill="var(--sign-green)" /><path d="M106 59v30M214 59v30" stroke="var(--chrome-lo)" strokeWidth="3" />
-        {[0, 1, 2, 3, 4, 5, 6].map((c) => [0, 1].map((r) => <rect key={c * 2 + r} x={108 + c * 15} y={60 + r * 5} width="15" height="5" fill={(c + r) % 2 ? 'var(--ink)' : 'var(--night)'} />))}
-        <rect x="128" y="106" width="22" height="9" rx="3" fill="var(--ice)" /><rect x="170" y="98" width="18" height="7" rx="3" fill="var(--ember)" />
-      </>}
-      {kind === 'time' && <>
-        <Road id={id} />
-        <circle cx="160" cy="70" r="40" fill="var(--glass-2)" stroke="var(--chrome)" strokeWidth="2.5" />
-        {Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return <path key={i} d={`M${160 + Math.sin(a) * 33} ${70 - Math.cos(a) * 33}L${160 + Math.sin(a) * 36} ${70 - Math.cos(a) * 36}`} stroke="var(--dim)" strokeWidth="2" />; })}
-        <path d="M160 70 V38 A32 32 0 0 1 187.7 54" fill="none" stroke="var(--ice)" strokeWidth="5" strokeLinecap="round" />
-        <path d="M160 70 L160 44" stroke="var(--ink)" strokeWidth="2.5" strokeLinecap="round" /><circle cx="160" cy="70" r="3" fill="var(--ink)" />
-        <rect x="154" y="24" width="12" height="6" rx="2" fill="var(--chrome)" />
       </>}
     </svg>
   );

@@ -21,7 +21,6 @@ export interface Profile {
   cleanPasses: number;
   collisions: number;
   interchanges: number;              // times you've gone from one freeway onto another
-  racesWon: number;
   runs: number;
   freeways: string[];                // carriageways driven, e.g. 'CA-55 North'
   vehicles: string[];
@@ -58,16 +57,18 @@ export function levelOf(xp: number) { let l = 1; while (xpFor(l + 1) <= xp) l++;
 
 function fresh(): Profile {
   return { v: PROFILE_VERSION, username: 'Driver', avatar: 0, xp: 0, credits: 0, timeDriven: 0, distance: 0, topSpeed: 0, bestStreak: 0,
-    nearMisses: 0, cleanPasses: 0, collisions: 0, interchanges: 0, racesWon: 0, runs: 0, freeways: [], vehicles: ['rossini-gt'], car: 'rossini-gt', homes: [], home: '', story: { done: [], read: [] }, achievements: [], created: Date.now() };
+    nearMisses: 0, cleanPasses: 0, collisions: 0, interchanges: 0, runs: 0, freeways: [], vehicles: ['rossini-gt'], car: 'rossini-gt', homes: [], home: '', story: { done: [], read: [] }, achievements: [], created: Date.now() };
 }
 
 // older saves come in through here, one version at a time
 function migrate(raw: Record<string, unknown>): Profile {
   const base = fresh();
   const p = { ...base, ...raw } as Profile;
+  // Races were removed (owner, 2026-11-08): an older save's race wins are dropped, not shown or counted anywhere
+  delete (p as unknown as Record<string, unknown>).racesWon;
   // (v0 never shipped; a future v2 would be handled with: if (p.v === 1) { ...; p.v = 2; })
   p.v = PROFILE_VERSION;
-  for (const k of ['xp', 'credits', 'timeDriven', 'distance', 'topSpeed', 'bestStreak', 'nearMisses', 'cleanPasses', 'collisions', 'interchanges', 'racesWon', 'runs'] as const) {
+  for (const k of ['xp', 'credits', 'timeDriven', 'distance', 'topSpeed', 'bestStreak', 'nearMisses', 'cleanPasses', 'collisions', 'interchanges', 'runs'] as const) {
     if (typeof p[k] !== 'number' || !isFinite(p[k])) p[k] = 0;
   }
   if (!Array.isArray(p.freeways)) p.freeways = [];

@@ -5,7 +5,10 @@ import { CONFIG } from '../store/config';
 export const VERSION = '0.1.0';   // keep in step with package.json; shown in feedback reports
 
 export type Quality = 'low' | 'medium' | 'high' | 'ultra';
-export type Mode = 'free' | 'survival' | 'race' | 'time';
+// the game's two modes (owner, 2026-11-08: "only stick to free drive and try to stay over 100mph"); Races and Time
+// Trial were removed. A mode saved by an older version ('race', 'time') reads as Free Drive through modeOf.
+export type Mode = 'free' | 'survival';
+export const modeOf = (v: unknown): Mode => (v === 'survival' ? 'survival' : 'free');
 export type Density = 'none' | 'light' | 'moderate' | 'heavy' | 'expert';
 export type Corner = 'map' | 'sky' | 'off';
 export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
@@ -35,7 +38,6 @@ export interface Settings {
   driver: 'closer' | 'ace' | 'wrench';
   presentation: 'm' | 'f';
   skin: number;             // index into drivers.SKINS
-  course: string;           // the race you last picked
   music: number;            // radio volume
   ultra: boolean;           // Ultra Realism (opens at level 5), and its three parts
   ultraTunnel: boolean;
@@ -85,8 +87,6 @@ export const DENSITY: Record<Density, { label: string; perKmLane: number; bold: 
 export const MODES: Record<Mode, { label: string; blurb: string }> = {
   free:     { label: 'Free Drive',     blurb: 'All of Orange County\'s freeways, no clock. Take any interchange.' },
   survival: { label: 'Speed Survival', blurb: 'Stay over 100 mph. Near misses and clean passes build the streak. One real crash ends it.' },
-  race:     { label: 'Races',          blurb: 'Three rivals on real stretches of freeway: sprints, checkpoints, endurance.' },
-  time:     { label: 'Time Trial',     blurb: '60 seconds on the clock. Every 2 km buys 25 more.' },
 };
 
 const KEY = 'tsu.settings';
@@ -120,7 +120,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: 0.35, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, course: 'irvine', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
     hudStyle: firstHud(), owner: false, look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
   };
 }
@@ -158,6 +158,8 @@ function readSettings(): Settings {
     const raw = localStorage.getItem(KEY);
     if (!raw) return d;
     const v = JSON.parse(raw) as Partial<Settings>;
+    // keys an older version saved for the removed Races (the course picked) and any mode: not settings any more
+    const old = v as Record<string, unknown>; delete old.course; delete old.mode;
     return {
       ...d, ...v,
       quality: v.quality && v.quality in QUALITY ? v.quality : d.quality,
@@ -170,7 +172,6 @@ function readSettings(): Settings {
       driver: v.driver === 'ace' || v.driver === 'wrench' ? v.driver : 'closer',
       presentation: v.presentation === 'f' ? 'f' : 'm',
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
-      course: typeof v.course === 'string' ? v.course : d.course,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
       hudStyle: v.hudStyle === 'minimal' || v.hudStyle === 'modern' ? v.hudStyle : d.hudStyle,
       owner: v.owner === true,
@@ -187,6 +188,7 @@ export function saveSettings(s: Settings): void {
 }
 
 export function loadBest(mode: Mode): number {
+  // (an older version's Time Trial best, tsu.best.time, stays on the device unread)
   try { return Number(localStorage.getItem('tsu.best.' + mode)) || 0; } catch { return 0; }
 }
 export function saveBest(mode: Mode, v: number): void {

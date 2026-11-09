@@ -1,15 +1,14 @@
 // The World Map (U4 in PROJECT_OC_UI_TARGET.md; the style library's 03 MAP_NAVIGATION, ULTRA: a dark map with the
 // roads lit in the accent). A full-screen canvas drawn from the real network (OpenStreetMap via Overture, ODbL):
 // every freeway and, zoomed in, every ramp; the route shields; the cities; you and your planned route while driving;
-// the race courses and our own places. Drag (or one finger) pans, the wheel or a pinch zooms. The list on the side
-// does only what exists: navigate to a freeway while driving; on the menu, start at a real exit or pick a race.
+// and our own places. Drag (or one finger) pans, the wheel or a pinch zooms. The list on the side does only what
+// exists: navigate to a freeway or a place while driving; on the menu, start on a freeway or at a real exit.
 // Houses and characters are roadmap and say so. It opens from the menu's rail and the pause screen, so the game is on
 // the menu or paused while it is up.
 import { HOMES, homeById, homeXZ } from '../game/homes';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Game } from '../game/Game';
 import type { Path } from '../game/world/Path';
-import { COURSES } from '../game/race';
 import { STARTS } from '../game/settings';
 
 // the network's projection (tools/oc-network/common.py): metres east (x) and south (z) of 33.72 N, 117.83 W
@@ -30,12 +29,12 @@ const PLACES = [
   { id: 'stoppage', name: 'Stoppage Time', blurb: 'Our own sports bar on South Claudina Way, Anaheim. Drive there and get out.', x: -6622, z: -9343 },
 ];
 
-type Tab = 'freeways' | 'races' | 'places';
+type Tab = 'freeways' | 'places';
 interface View { cx: number; cz: number; mpp: number }      // centre (world metres) and metres per CSS pixel
 interface Props {
   game: Game; driving: boolean; navTarget: string | null;
   onClose: () => void; onNavigate: (label: string | null) => void;
-  onStartFreeway: (label: string) => void; onStartExit: (key: string) => void; onRace: (id: string) => void;
+  onStartFreeway: (label: string) => void; onStartExit: (key: string) => void;
   focusHome?: string;   // open on the Places tab, centred on this home (the Lifestyle panel's "On the map")
 }
 
@@ -48,11 +47,6 @@ function tokens() {
 const hexA = (hex: string, a: number) => (/^#[0-9a-f]{6}$/i.test(hex) ? `rgba(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)}, ${a})` : hex);
 const routeNo = (label: string) => /^(?:I|CA)-(\d+)/.exec(label)?.[1] ?? label;
 
-// a course's stretch of its road: the sample indices from its start to its finish
-function courseSpan(c: { at: number; length: number }, p: Path) {
-  const s0 = p.len * c.at, s1 = Math.min(p.len, s0 + c.length);
-  return [Math.floor((s0 / p.len) * (p.n - 1)), Math.floor((s1 / p.len) * (p.n - 1))] as const;
-}
 function bounds(paths: Path[]) {
   let x0 = Infinity, x1 = -Infinity, z0 = Infinity, z1 = -Infinity;
   for (const p of paths) { x0 = Math.min(x0, p.minX); x1 = Math.max(x1, p.maxX); z0 = Math.min(z0, p.minZ); z1 = Math.max(z1, p.maxZ); }
@@ -66,13 +60,12 @@ function fit(b: { x0: number; x1: number; z0: number; z1: number }, w: number, h
   return { cx: (b.x0 + b.x1) / 2 - (r.x + r.w / 2 - w / 2) * mpp, cz: (b.z0 + b.z1) / 2 - (r.y + r.h / 2 - h / 2) * mpp, mpp };
 }
 
-export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStartFreeway, onStartExit, onRace, focusHome }: Props) {
+export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStartFreeway, onStartExit, focusHome }: Props) {
   const cv = useRef<HTMLCanvasElement>(null), wrap = useRef<HTMLDivElement>(null);
   const fh = focusHome ? homeById(focusHome) : undefined, fxz = fh ? homeXZ(fh) : null;
   const [tab, setTab] = useState<Tab>(fh ? 'places' : 'freeways');
   const [place, setPlace] = useState<string | null>(null);   // a venue picked on the Places tab (navigate there while driving)
   const [sel, setSel] = useState<string | null>(navTarget ?? (driving ? game.path.label || null : null));
-  const [course, setCourse] = useState<string | null>(null);
   const [view, setView] = useState<View | null>(fxz ? { cx: fxz.x, cz: fxz.z, mpp: 14 } : null);
   const owned = game.profile.p.homes, home = game.profile.p.home;
   const mains = game.net.mains, all = useMemo(() => bounds(mains), [mains]);
@@ -113,18 +106,9 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
   const onUp = (e: React.PointerEvent) => { pts.current.delete(e.pointerId); pinch.current = 0; };
   const onWheel = (e: React.WheelEvent) => { const r = wrap.current!.getBoundingClientRect(); zoomAt(Math.exp(e.deltaY * 0.0015), e.clientX - r.left, e.clientY - r.top); };
 
-  // pick a freeway or a course: select it and frame it
+  // pick a freeway: select it and frame it
   const frame = (paths: Path[]) => { const el = wrap.current; if (el && paths.length) setView(fit(bounds(paths), el.clientWidth, el.clientHeight, 40)); };
-  const pickFreeway = (label: string) => { setSel(label); setCourse(null); frame(mains.filter((m) => m.label === label)); };
-  const pickCourse = (id: string) => {
-    setCourse(id); const c = COURSES.find((x) => x.id === id), p = c && mains.find((m) => m.label === c.road), el = wrap.current;
-    if (!c || !p || !el) return;
-    setSel(c.road);
-    // frame the race's own stretch, not the whole freeway
-    const [i0, i1] = courseSpan(c, p); let x0 = Infinity, x1 = -Infinity, z0 = Infinity, z1 = -Infinity;
-    for (let i = i0; i <= i1; i += 4) { x0 = Math.min(x0, p.xs[i]); x1 = Math.max(x1, p.xs[i]); z0 = Math.min(z0, p.zs[i]); z1 = Math.max(z1, p.zs[i]); }
-    setView(fit({ x0, x1, z0, z1 }, el.clientWidth, el.clientHeight, 70));
-  };
+  const pickFreeway = (label: string) => { setSel(label); frame(mains.filter((m) => m.label === label)); };
 
   // draw whenever the view, the selection or the size changes
   useEffect(() => {
@@ -175,21 +159,6 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
     const boxes: [number, number, number, number][] = [];
     const free = (x0: number, y0: number, x1: number, y1: number) => { if (boxes.some(([a, b, c, d]) => x0 < c && x1 > a && y0 < d && y1 > b)) return false; boxes.push([x0, y0, x1, y1]); return true; };
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    // a race course: its stretch of road, bright, with a start and a finish (drawn before the shields so its labels
-    // keep their place)
-    const cs = course ? COURSES.find((x) => x.id === course) : null, cp = cs ? mains.find((m) => m.label === cs.road) : null;
-    if (cs && cp) {
-      const [i0, i1] = courseSpan(cs, cp);
-      g.strokeStyle = T.ember; g.lineWidth = width + 3; line(cp, i0, i1);
-      g.font = '600 11px var(--f-mono, monospace)'; g.textAlign = 'left';
-      for (const [i, txt] of [[i0, 'Start'], [i1, 'Finish']] as [number, string][]) {
-        const X = sx(cp.xs[i]), Y = sy(cp.zs[i]), tw = g.measureText(txt).width;
-        g.fillStyle = T.ink; g.beginPath(); g.arc(X, Y, 5, 0, Math.PI * 2); g.fill();
-        free(X - 6, Y - 6, X + 6, Y + 6);
-        if (free(X + 7, Y - 14, X + 11 + tw, Y)) g.fillText(txt, X + 8, Y - 7);
-      }
-      g.textAlign = 'center';
-    }
     for (const pl of PLACES) { const X = sx(pl.x), Y = sy(pl.z); free(X - 9, Y - 9, X + 9, Y + 9); }
     for (const hm of HOMES) { const q = homeXZ(hm), X = sx(q.x), Y = sy(q.z); free(X - 7, Y - 8, X + 7, Y + 6); }
     // route shields: one per route, at the point of it nearest the middle of the view
@@ -238,7 +207,7 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
       g.fillStyle = T.ink; g.strokeStyle = T.deep; g.lineWidth = 2; g.beginPath(); g.moveTo(10, 0); g.lineTo(-7, 7); g.lineTo(-3, 0); g.lineTo(-7, -7); g.closePath(); g.fill(); g.stroke();
       g.restore();
     }
-  }, [view, sel, course, exits, driving, game, mains]);
+  }, [view, sel, exits, driving, game, mains]);
   // redraw on resize
   useEffect(() => { const r = () => setView((v) => (v ? { ...v } : v)); addEventListener('resize', r); return () => removeEventListener('resize', r); }, []);
 
@@ -259,7 +228,7 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
       </div>
       <aside className="wm-side">
         <div className="seg wm-tabs" role="group" aria-label="Show">
-          {(['freeways', 'races', 'places'] as Tab[]).map((t) => <button key={t} type="button" aria-pressed={tab === t} onClick={() => setTab(t)}>{t === 'freeways' ? 'Freeways' : t === 'races' ? 'Races' : 'Places'}</button>)}
+          {(['freeways', 'places'] as Tab[]).map((t) => <button key={t} type="button" aria-pressed={tab === t} onClick={() => setTab(t)}>{t === 'freeways' ? 'Freeways' : 'Places'}</button>)}
         </div>
         <div className="wm-list">
           {tab === 'freeways' && <>
@@ -269,20 +238,15 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
               </button>
             ))}
           </>}
-          {tab === 'races' && COURSES.map((c) => (
-            <button key={c.id} type="button" className={'wm-item race' + (course === c.id ? ' on' : '')} onClick={() => pickCourse(c.id)}>
-              <b>{c.name}</b><small>{c.road} · {(c.length / 1609.344).toFixed(1)} mi · {c.kind}</small>
-            </button>
-          ))}
           {tab === 'places' && <>
-            {PLACES.map((p) => <button key={p.id} type="button" className="wm-item race" onClick={() => { const el = wrap.current; if (el) setView({ cx: p.x, cz: p.z, mpp: 6 }); setPlace(p.name); }}><b>{p.name}</b><small>{p.blurb}</small></button>)}
+            {PLACES.map((p) => <button key={p.id} type="button" className="wm-item place" onClick={() => { const el = wrap.current; if (el) setView({ cx: p.x, cz: p.z, mpp: 6 }); setPlace(p.name); }}><b>{p.name}</b><small>{p.blurb}</small></button>)}
             {[...HOMES].sort((a, b) => Number(owned.includes(b.id)) - Number(owned.includes(a.id))).map((hm) => {
               const q = homeXZ(hm), mine = owned.includes(hm.id);
-              return <button key={hm.id} type="button" className={'wm-item race' + (focusHome === hm.id ? ' on' : '')} onClick={() => setView({ cx: q.x, cz: q.z, mpp: 8 })}>
+              return <button key={hm.id} type="button" className={'wm-item place' + (focusHome === hm.id ? ' on' : '')} onClick={() => setView({ cx: q.x, cz: q.z, mpp: 8 })}>
                 <b>{hm.name}{hm.id === home ? ' · home' : ''}</b><small>{hm.area} · {mine ? 'yours' : `${hm.price.toLocaleString()} credits, Lifestyle`}</small>
               </button>;
             })}
-            <div className="wm-item race off" aria-disabled="true"><b>Characters</b><small>Roadmap</small></div>
+            <div className="wm-item place off" aria-disabled="true"><b>Characters</b><small>Roadmap</small></div>
           </>}
         </div>
         <div className="wm-act">
@@ -298,7 +262,6 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
           {tab === 'places' && place && driving && (navTarget === place
             ? <button type="button" className="btn" onClick={() => onNavigate(null)}>Clear route</button>
             : <button type="button" className="btn primary" onClick={() => onNavigate(place)}>Navigate to {place}</button>)}
-          {tab === 'races' && course && !driving && <button type="button" className="btn primary" onClick={() => onRace(course)}>Race here</button>}
           {tab === 'places' && fh && fxz && owned.includes(fh.id) && !driving && (() => { const ex = game.nearestExit(fxz.x, fxz.z); return ex && <button type="button" className="btn primary" onClick={() => onStartExit(ex.exit.key)}>Start from {fh.name}</button>; })()}
           <button type="button" className="btn" onClick={onClose}>Back</button>
         </div>
