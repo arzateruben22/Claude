@@ -187,9 +187,9 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   // ── Instagram: caption with line breaks, hashtags after a gap; sources in the first comment ─
   const iw: string[] = [];
   const igTags = HASHTAG_SETS[topic].instagram.slice(0, LIMITS.instagram.hashtags);
-  // Instagram's caption carries no AI line (the owner's call, 9 Nov 2026): the disclosure there is Instagram's own AI
-  // label, which every posting note tells the owner to turn on.
-  const igText = [hook, [why ? firstSentence(why) : "", oneLiner].filter(Boolean).join(" "), series ? `${series}.` : "", srcs.length ? "Sources in the first comment." : "", HEALTH_NOTE[topic] ?? ""].filter(Boolean).join("\n\n");
+  // a short AI line in the caption as well as Instagram's own AI label (the owner's call, 9 Nov 2026)
+  const igNote = input.disclosures.aiVisuals ? "AI voice and AI-generated illustrations." : input.disclosures.aiVoice ? "AI voice; animation made in code." : "Animation made in code.";
+  const igText = [hook, [why ? firstSentence(why) : "", oneLiner].filter(Boolean).join(" "), series ? `${series}.` : "", srcs.length ? `Sources in the first comment. ${igNote}` : igNote, HEALTH_NOTE[topic] ?? ""].filter(Boolean).join("\n\n");
   let igCaption = `${igText}\n\n${igTags.join(" ")}`;
   if (igCaption.length > LIMITS.instagram.caption) { igCaption = `${cut(igText, LIMITS.instagram.caption - igTags.join(" ").length - 2)}\n\n${igTags.join(" ")}`; iw.push("caption cut to 2,200 characters"); }
   const igThread = listThread(LIMITS.instagram.comment, "Instagram", iw);
