@@ -4,6 +4,25 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-20: freeway debris fix, committed as work in progress (branch claude/fix-road, not accepted yet)
+
+- **What the owner saw**: "there seems to be debris in some parts of the freeway". Plants, ground, ramp decks,
+  barriers, columns and crack decals showed up in or across the freeway lanes.
+- **Cause**: `Network.near()` missed nearby wide roads, so scenery and ground were not kept off them; ramps and
+  freeways had different map heights where their pavements overlap; roadside hardware was placed without checking for
+  other roads' lanes; crack decals were drawn too large at Low.
+- **Fix**: `near()` corrected; plants cleared by their footprint; ground kept under the road; overlapping roads levelled
+  at load (baked at build time into `src/data/oc-levels.json` by `scripts/levels.mjs`) with humps capped by
+  `world/Profile.ts`; hardware, sign bridges and barriers placed against `pavedAt()`; cracks resized. Details in the
+  2026-11-09 entry below.
+- **Before/after images** (local, not committed): `tests/out/debris/pairs/<spot>.png` and
+  `tests/out/debris/pairs/<spot>-r2.png` (e.g. `241n-merge-r2.png`, `241n-left-r2.png`), `tests/out/debris/sweep/`.
+- **Checks**: `npx tsc --noEmit` exits 0; `npm run build && npm test` 67/67 passed; Playwright frames and autopilot
+  runs as listed below; the play reviewer found no page errors on phone and desktop sizes, including resizes.
+- **Not accepted yet**: the play reviewer rejected r2. It fixes the blocking items but puts a new artefact in the
+  travel lanes of the CA-241 North at the CA-91 West merge, visible in the builder's own frame of that spot, while the
+  summary said the lanes were clean in all frames. That spot needs another repair before this is kept.
+
 ## 2026-11-09: debris on the freeway, found and removed at the source (branch claude/fix-road, uncommitted)
 
 The owner (2026-10-20): "there seems to be debris in some parts of the freeway so lets fix that as well too". Found by
@@ -106,7 +125,8 @@ this repair, build cb599c66; HEAD is 022f988):
   `src/data/oc-levels.json` (85 KB: millimetre offsets as gzipped int16 steps; centimetres made the crest check fail
   on rounding alone), and `Network.load()` applies it in about 20 ms when its version and data signature match. Boot
   check "the heights baked at build time are what the height passes give" re-runs the passes in the page and compares
-  (within 0.5 mm; it also fails if the boot ran the passes). {BOOT}
+  (within 0.5 mm; it also fails if the boot ran the passes). With the baked file, in the browser here: the heights
+  apply in 23 ms; Network.load run again in the page, HEAD 334-476 ms, r2 360-526 ms; the passes themselves 358 ms.
 - **Sign bridges moved, not dropped.** `Roads.gantrySpot()` moves a sign bridge with no room along the road in 10 m
   steps (up to 120 m, never within 60 m of its exit). It now also keeps the truss and panels out of street bridges'
   decks (`Network.overpassAt()`) and out of a road's deck hanging 1.5 m under it. 28 of the 827 move, by 10 to 70 m,
@@ -124,7 +144,12 @@ this repair, build cb599c66; HEAD is 022f988):
   m to 0.35 m, so it stays over that road's roofs, and the physics takes barriers only from roads within 2.5 m of the
   car's (it was 3.5 m), so it isn't a wall in the lanes below: driving the CA-57 South under ramp 576's edge and the
   I-405 North under ramp 940's, no contact on either build. Now 0 m of such edges on the mains and 4 m on all roads
-  (the first samples of ramp 1164, which start open). {EDGES}
+  (the first samples of ramp 1164, which start open). Steering into edges that were open 2.5 to 4 m over a road
+  (from 30 to 60 m before them, 10 to 12 m/s): ramp 940 over the I-405 North, reviewed 28.5 m past the edge and 6.6 m
+  over what's below, r2 held by the barrier (31 contacts, 1.2 m inside); CA-73 South over ramp 663, reviewed 7.4 m
+  past and 3.8 m up, r2 held (27 contacts); CA-57 North over ramp 233 at s 1,090, reviewed 37.8 m past and 3.9 m up,
+  r2 1.3 m past the edge where its barrier starts, then back on the road. The CA-241 North and ramp 576 edges kept
+  the car on both builds.
 - **Crash cushions.** A dead end's wall and cushion now span the widest part of its end that isn't on another road
   (a lane wide or more), instead of going whenever any of three points was: dead ends with no cushion while part of
   the end is clear went from 11 (reviewed) to 1 (ramp 94, whose clear part is narrower than a lane; HEAD had 3).
@@ -134,12 +159,29 @@ this repair, build cb599c66; HEAD is 022f988):
   chunk under Node (every 4th of 9,391, Low, three passes): HEAD 2.65-2.69 ms, r2 2.65-2.85 ms; per terrain tile:
   HEAD 1.4-1.5 ms, reviewed 2.4 ms, r2 2.1-2.2 ms (the full-footprint plant clearing and `keepUnder` of the reviewed
   branch). Not measured on a real phone: none is available here.
-- **Checks**: `npx tsc --noEmit` exits 0. {SUITE} Under Node on the r2 world code: every chunk and street bridge
+- **Checks**: `npx tsc --noEmit` exits 0. `npm run build && npm test` on r2: "67/67 passed", the boot group with
+  both new checks ("levelled heights add no crest, dip or steep grade the map does not have": 967 roads moved,
+  130,242 10 m stretches, the mains' sharpest crest 92 m/s and dip 89 m/s where sharper than the map's own; "the
+  heights baked at build time are what the height passes give": 23 ms, within 0.5 mm). The autopilot, same traffic
+  seed on HEAD, reviewed and r2 (Moderate, 40 m/s cruise): CA-55 North s 24,300 to the CA-91 East through the hump,
+  largest vertical acceleration 0.36 g, 0.63 g and 0.37 g; CA-241 North s 38,900 to the 91 West, 4.7 g, 26.6 g and
+  2.8 g (the reviewed branch's dip at the merge); I-5 North s 55,600 to the CA-55 North, 0.71, 0.42 and 0.41 g; no
+  page errors on any. Traffic contacts on the first two: 0, 2, 2 and 0, 1, 1. Under Node on the r2 world code: every chunk and street bridge
   (8,773, 25,367,172 triangles) has nothing in a carriageway's travel lanes (reviewed: none; an earlier r2 version
   had the CA-55 step above, fixed); junctions within 0.30 m; scenery and ground check clean; no barrier within 1 m of
   a travel lane.
 - **Frames** (`tests/out/debris/pairs/<spot>-r2.png`, local: reviewed on top, r2 below, driver's seat and chase,
-  1280 × 720 Low Day, no traffic): {FRAMES}
+  1280 × 720 Low Day, no traffic, 16 spots). The CA-55 North at s 25,190 (r2 is already 3 m up the climb, level with
+  the structure on the left that the reviewed branch passes under; lanes clean on both); ramp 970 at s 310 (the same
+  view on both, lanes clean; a stepped deck underside far ahead on both); ramps 800, 576, 626 and 224 where the limits
+  moved the most (up to 2.3 m; ramp 800's crest ahead rounder, the lanes clean on both); the CA-241 North at s 39,670 (now a Jersey barrier along its left
+  edge over the 91 West) and s 39,720 (the stretch above where its left lane is left out over the 91 West: the car
+  sits over the 91's concrete, a seam beside it, as at HEAD); the CA-57 South under ramp 576 (nothing in the lanes);
+  the CA-73 South's right edge (a barrier now); the moved sign bridges: Main Street over the I-5 South (reviewed: no
+  sign, its panels inside the bridge deck; r2: the sign bridge in front of it), the I-5 North at s 57,486 (both panels
+  clear beyond the overpass), the CA-73 North at s 26,589 (it stands just beyond a ramp's deck, so the top of its
+  panel is hidden behind that deck until you're under it: cosmetic, not in the lanes); ramp 507's crash cushion
+  (across its whole end on both).
 - **Not done (optional polish)**: the sky gap and deck fin under ramp 495 over the I-405 North (s ≈ 14,850 m), the
   stepped soffit notch over the I-5 North at s ≈ 57,400 m, a proper end on the Jersey at the ramp 224 gore on the
   CA-55 South and blending its asphalt/concrete wedges. All overhead or off the lanes.

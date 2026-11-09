@@ -30,8 +30,11 @@ const MARGIN_V = 1.03, MARGIN_TOL = 0.97, MARGIN_GRADE = 0.002;
 // stiffness of an active limit
 const BETA = 1e4, MU = 1e8, PAD = 150, ITER = 60;
 
-// base: the map's heights; want: the heights asked for; weight: how much each sample's height matters (1 where the road
-// follows another, about 0.02 elsewhere, PIN at junctions). Returns the heights to use, or null if want is within limits.
+// base: the map's heights; want: the heights asked for; weight: how much each sample's height matters (levelOverlaps
+// gives 0.1 to 1 where the road follows another, by the pavement they share, 10,000 where the other's pavement reaches
+// its travel lanes, 0.02 elsewhere, PIN at junctions). Returns the heights to use, or null if want is within limits.
+// stats, if given, gets the solver's steps, the limits held at the end, the worst a limit is still broken by (m over
+// L) and the window's samples.
 export function limitProfile(base: Float32Array, want: Float32Array, weight: Float32Array, main: boolean,
   stats?: { iters: number; worst: number; active: number; window: number }): Float32Array | null {
   const n = want.length, B = PROFILE.B, W = PROFILE.WIN, L = B * STEP;
