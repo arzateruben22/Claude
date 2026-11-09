@@ -1,0 +1,123 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/space/ep08/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why is the night sky dark? Think hard.",
+   "stars": [
+    "sky",
+    "hard"
+   ],
+   "phonemes": "wˌaɪ ɪz ðə nˈaɪt skˈaɪ dˈɑːɹk? θˈɪŋk hˈɑːɹd.",
+   "speed": 0.855,
+   "file": "01.wav",
+   "dur": 2.707,
+   "sha256": "329574d550f130b5bee9757f9d3a8b0248bea9cba42fc4b0bc39fd465041a50a"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Say the universe has no edge or start. Then every line of sight would end on a star. Like a forest: every look hits a trunk.",
+   "stars": [
+    "star"
+   ],
+   "phonemes": "sˈeɪ ðə jˈuːnɪvˌɜːs hɐz nˈoʊ ˈɛdʒ ɔːɹ stˈɑːɹt. ðˈɛn ˈɛvɹi lˈaɪn ʌv sˈaɪt wʊd ˈɛnd ˌɔn ɐ stˈɑːɹ. lˈaɪk ɐ fˈɔːɹɪst: ˈɛvɹi lˈʊk hˈɪts ɐ tɹˈʌŋk.",
+   "speed": 0.92,
+   "file": "02.wav",
+   "dur": 8.995,
+   "sha256": "e60986564f9c747c0d175d94ce94d1889b0d437c2a4457dd85002cd061dd1a37"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Far stars look fainter, but there are more of them. Those two effects cancel, so the whole sky should glow like a star's surface.",
+   "stars": [
+    "glow"
+   ],
+   "phonemes": "fˈɑːɹ stˈɑːɹz lˈʊk fˈeɪntɚ, bˌʌt ðɛɹˌɑːɹ mˈɔːɹ ʌv ðˌɛm. ðoʊz tˈuː ɪfˈɛkts kˈænsəl, sˌoʊ ðə hˈoʊl skˈaɪ ʃˌʊd ɡlˈoʊ lˈaɪk ɐ stˈɑːɹz sˈɜːfɪs.",
+   "speed": 0.96,
+   "file": "03.wav",
+   "dur": 8.406,
+   "sha256": "096f7254f4adfdbe761fa358c30fc431320ad78c10627cb46b894724343f6432"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "The key here is time. Far starlight may not have had time to reach us yet. We now put the universe's age near thirteen point eight billion years.",
+   "stars": [
+    "time",
+    "yet",
+    "years"
+   ],
+   "phonemes": "ðə kˈiː hˈɪɹ ɪz tˈaɪm. fˈɑːɹ stˈɑːɹlaɪt mˈeɪ nˌɑːɾɐv hæd tˈaɪm tə ɹˈiːtʃ ˌʌs jˈɛt. wiː nˈaʊ pˌʊt ðə jˈuːnɪvˌɜːsᵻz ˈeɪdʒ nˌɪɹ θˈɜːtiːn pˈɔɪnt ˈeɪt bˈɪliən jˈɪɹz.",
+   "speed": 0.97,
+   "file": "04.wav",
+   "dur": 9.719,
+   "sha256": "a6d2cd575b28238545731fce4aa9662cdea781fde1ba8640124aec0ade303afc"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Past a certain distance, starlight is still on its way. So we can only see so far. The dark sky hints that the universe has a beginning.",
+   "stars": [
+    "way",
+    "far",
+    "beginning"
+   ],
+   "phonemes": "pˈæst ɐ sˈɜːʔn dˈɪstəns, stˈɑːɹlaɪt ɪz stˈɪl ˌɔn ɪts wˈeɪ. sˌoʊ wiː kæn ˈoʊnli sˈiː sˈoʊ fˌɑːɹ. ðə dˈɑːɹk skˈaɪ hˈɪnts ðætðə jˈuːnɪvˌɜːs hɐz ɐ bɪɡˈɪnɪŋ.",
+   "speed": 1.0,
+   "file": "05.wav",
+   "dur": 9.22,
+   "sha256": "ceba81460381e78c03b6817b4fb809e465d6a9818e6ac988de83267536eea77f"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So tonight's dark isn't empty. It's a clue: the universe has not been shining forever.",
+   "stars": [
+    "clue"
+   ],
+   "phonemes": "sˌoʊ tənˈaɪts dˈɑːɹk ˌɪzənt ˈɛmpti. ɪts ɐ klˈuː: ðə jˈuːnɪvˌɜːs həznɑːt bˌɪn ʃˈaɪnɪŋ fɚɹˈɛvɚ.",
+   "speed": 0.95,
+   "file": "06.wav",
+   "dur": 5.87,
+   "sha256": "9d61c86232482525a0e60e9528a2209e4871e64f460d3fee88e7a91f69c60c2f"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time: from the Sun, about eight minutes. From the farthest galaxies we see, billions of years.",
+   "stars": [
+    "Light time",
+    "billions"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm: fɹʌmðə sˈʌn, ɐbˌaʊt ˈeɪt mˈɪnɪts. fɹʌmðə fˈɑːɹðɪst ɡˈælɐksiz wiː sˈiː, bˈɪliənz ʌv jˈɪɹz.",
+   "speed": 1.0,
+   "file": "07.wav",
+   "dur": 6.295,
+   "sha256": "aa5f9e6c7bfa6d764dff979d71df424f93e905a47ec5180fb79c41a5753f2031"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: where did the gold in your ring come from?",
+   "stars": [
+    "gold"
+   ],
+   "phonemes": "nˈɛkst: wˌɛɹ dˈɪd ðə ɡˈoʊld ɪn jʊɹ ɹˈɪŋ kˈʌm fɹʌm?",
+   "speed": 0.72,
+   "file": "08.wav",
+   "dur": 3.624,
+   "sha256": "6541adc4f6291808727be4b37f537df823941b0197f11ecb1af66cdbf81d2455"
+  }
+ ]
+}

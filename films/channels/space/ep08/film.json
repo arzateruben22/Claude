@@ -1,0 +1,1194 @@
+{
+ "id": "lightminute-008",
+ "fps": 30,
+ "bpm": 56.25,
+ "dur": 66.1333,
+ "poster": 32.0,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "space"
+  },
+  {
+   "at": 60.4,
+   "name": "end"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 3.2,
+   "line": "vo01",
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 3.2,
+   "t1": 12.8,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 12.8,
+   "t1": 21.8667,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 21.8667,
+   "t1": 34.1333,
+   "line": "vo04",
+   "energy": 0.62
+  },
+  {
+   "id": "whoa",
+   "t0": 34.1333,
+   "t1": 46.9333,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "takeaway",
+   "t0": 46.9333,
+   "t1": 53.3333,
+   "line": "vo06",
+   "energy": 0.3
+  },
+  {
+   "id": "readout",
+   "t0": 53.3333,
+   "t1": 60.2667,
+   "line": "vo07",
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 60.2667,
+   "t1": 66.1333,
+   "line": "vo08",
+   "energy": 0.4
+  }
+ ],
+ "cam": {
+  "space": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "el": 30.0,
+    "fov": 24,
+    "fx": 0.5,
+    "fy": 0.36,
+    "dist": 60.0,
+    "az": 0.0
+   },
+   {
+    "t": 63.4,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "el": 30.0,
+    "fov": 24,
+    "fx": 0.5,
+    "fy": 0.36,
+    "dist": 62.0,
+    "az": 4.0,
+    "ease": "sine"
+   }
+  ],
+  "end": [
+   {
+    "t": 0.0,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "el": 30.0,
+    "fov": 24,
+    "fx": 0.5,
+    "fy": 0.36,
+    "dist": 60.0,
+    "az": 0.0
+   },
+   {
+    "t": 63.4,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "el": 30.0,
+    "fov": 24,
+    "fx": 0.5,
+    "fy": 0.36,
+    "dist": 62.0,
+    "az": 4.0,
+    "ease": "sine"
+   }
+  ]
+ },
+ "cue": {
+  "n": 3.2,
+  "c": 12.8,
+  "why": 21.8667,
+  "w": 34.1333,
+  "tk": 46.9333,
+  "rd": 53.3333,
+  "end": 60.4,
+  "spokes0": 6.5,
+  "spokes1": 8.733333333333333,
+  "forest": 9.666666666666666,
+  "fainter": 14.133333333333333,
+  "more": 15.333333333333334,
+  "cancel": 17.666666666666668,
+  "glow": 19.766666666666666,
+  "surface": 20.966666666666665,
+  "time": 23.266666666666666,
+  "yet": 26.8,
+  "age0": 29.666666666666668,
+  "age1": 31.4,
+  "way": 37.8,
+  "far": 39.9,
+  "begin": 43.13333333333333,
+  "clue": 49.9,
+  "sun": 54.833333333333336,
+  "farthest": 57.06666666666667
+ },
+ "labels": [],
+ "badges": [
+  {
+   "id": "b-illus",
+   "text": "illustration",
+   "t0": 2.9,
+   "t1": 53.0333,
+   "slot": "tr"
+  },
+  {
+   "id": "b-nts",
+   "text": "not to scale",
+   "t0": 54.833333333333336,
+   "t1": 59.95,
+   "slot": "tr"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-hook",
+   "label": "the night sky",
+   "text": "dark?",
+   "t0": 0.0,
+   "t1": 3.2,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-endless",
+   "label": "an endless, eternal universe",
+   "text": "a star in every direction",
+   "t0": 6.5,
+   "t1": 14.133333333333333,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-cancel",
+   "label": "fainter, but more: they cancel",
+   "text": "the sky glows",
+   "t0": 17.666666666666668,
+   "t1": 21.8667,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-age",
+   "label": "the universe's age",
+   "text": "13.8 billion years",
+   "t0": 29.666666666666668,
+   "t1": 34.1333,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-dark",
+   "label": "so the sky is",
+   "text": "dark: a clue",
+   "t0": 43.13333333333333,
+   "t1": 52.9333,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-read-sun",
+   "label": "light time · the Sun",
+   "text": "8 minutes",
+   "read": true,
+   "t0": 53.3333,
+   "t1": 56.6667,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-read-far",
+   "label": "light time · the farthest galaxies",
+   "text": "billions of years",
+   "read": true,
+   "t0": 57.06666666666667,
+   "t1": 59.95,
+   "at": [
+    0.5,
+    0.555
+   ]
+  }
+ ],
+ "pills": [
+  {
+   "id": "p-sky",
+   "text": "the night sky",
+   "t0": 2.9,
+   "t1": 53.0333,
+   "at": [
+    0.08333333333333333,
+    0.198
+   ]
+  },
+  {
+   "id": "p-map",
+   "text": "distance map: you in the middle",
+   "t0": 6.5,
+   "t1": 53.0333,
+   "at": [
+    0.08333333333333333,
+    0.74
+   ]
+  },
+  {
+   "id": "p-way",
+   "text": "still on its way",
+   "t0": 37.8,
+   "t1": 46.9333,
+   "at": [
+    0.3148148148148148,
+    0.532
+   ]
+  }
+ ],
+ "title": {
+  "series": "One More Orbit · No. 008",
+  "title": "Dark *sky*",
+  "t1": 2.7,
+  "sig": 2.8
+ },
+ "endCard": 60.4,
+ "end": {
+  "title": "Next orbit: your *gold*",
+  "follow": "One More Orbit · No. 009",
+  "next": "Planck (ESA): the universe is about 13.8 billion years old."
+ },
+ "captions": [
+  {
+   "t0": 0.128,
+   "t1": 1.988,
+   "lines": [
+    [
+     [
+      "Why",
+      0.128
+     ],
+     [
+      "is",
+      0.503
+     ],
+     [
+      "the",
+      0.593
+     ]
+    ],
+    [
+     [
+      "night",
+      0.633
+     ],
+     [
+      "sky",
+      1.123
+     ],
+     [
+      "dark?",
+      1.438
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.988,
+   "t1": 2.973,
+   "lines": [
+    [
+     [
+      "Think",
+      1.988
+     ],
+     [
+      "hard.",
+      2.188
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.525,
+   "t1": 6.5,
+   "lines": [
+    [
+     [
+      "Say",
+      3.525
+     ],
+     [
+      "the",
+      3.775
+     ],
+     [
+      "universe",
+      3.87
+     ],
+     [
+      "has",
+      4.385
+     ]
+    ],
+    [
+     [
+      "no edge or start.",
+      4.55
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 6.5,
+   "t1": 9.66,
+   "lines": [
+    [
+     [
+      "Then",
+      6.5
+     ],
+     [
+      "every",
+      6.81
+     ],
+     [
+      "line",
+      6.93
+     ],
+     [
+      "of",
+      7.235
+     ],
+     [
+      "sight",
+      7.47
+     ]
+    ],
+    [
+     [
+      "would",
+      7.87
+     ],
+     [
+      "end",
+      8.125
+     ],
+     [
+      "on",
+      8.33
+     ],
+     [
+      "a",
+      8.54
+     ],
+     [
+      "star.",
+      8.72
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.66,
+   "t1": 12.76,
+   "lines": [
+    [
+     [
+      "Like",
+      9.66
+     ],
+     [
+      "a",
+      9.81
+     ],
+     [
+      "forest:",
+      10.04
+     ]
+    ],
+    [
+     [
+      "every",
+      11.015
+     ],
+     [
+      "look",
+      11.145
+     ],
+     [
+      "hits",
+      11.55
+     ],
+     [
+      "a",
+      11.775
+     ],
+     [
+      "trunk.",
+      11.96
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.135,
+   "t1": 16.545,
+   "lines": [
+    [
+     [
+      "Far",
+      13.135
+     ],
+     [
+      "stars",
+      13.595
+     ],
+     [
+      "look",
+      13.975
+     ],
+     [
+      "fainter,",
+      14.15
+     ]
+    ],
+    [
+     [
+      "but",
+      14.875
+     ],
+     [
+      "there",
+      15.085
+     ],
+     [
+      "are",
+      15.235
+     ],
+     [
+      "more",
+      15.35
+     ],
+     [
+      "of",
+      15.795
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.65,
+   "t1": 16.68,
+   "lines": [
+    [
+     [
+      "them.",
+      16.65
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.68,
+   "t1": 19.585,
+   "lines": [
+    [
+     [
+      "Those",
+      16.68
+     ],
+     [
+      "two",
+      16.98
+     ],
+     [
+      "effects",
+      17.275
+     ]
+    ],
+    [
+     [
+      "cancel,",
+      17.65
+     ],
+     [
+      "so",
+      18.47
+     ],
+     [
+      "the",
+      18.535
+     ],
+     [
+      "whole",
+      18.745
+     ],
+     [
+      "sky",
+      19.145
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.585,
+   "t1": 21.8,
+   "lines": [
+    [
+     [
+      "should",
+      19.585
+     ],
+     [
+      "glow",
+      19.755
+     ],
+     [
+      "like",
+      20.155
+     ]
+    ],
+    [
+     [
+      "a",
+      20.335
+     ],
+     [
+      "star's",
+      20.545
+     ],
+     [
+      "surface.",
+      20.965
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.192,
+   "t1": 24.002,
+   "lines": [
+    [
+     [
+      "The",
+      22.192
+     ],
+     [
+      "key",
+      22.312
+     ],
+     [
+      "here",
+      22.622
+     ],
+     [
+      "is",
+      22.987
+     ],
+     [
+      "time.",
+      23.282
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.002,
+   "t1": 26.472,
+   "lines": [
+    [
+     [
+      "Far",
+      24.002
+     ],
+     [
+      "starlight",
+      24.322
+     ],
+     [
+      "may",
+      25.012
+     ],
+     [
+      "not",
+      25.282
+     ]
+    ],
+    [
+     [
+      "have",
+      25.527
+     ],
+     [
+      "had",
+      25.557
+     ],
+     [
+      "time",
+      25.777
+     ],
+     [
+      "to",
+      26.162
+     ],
+     [
+      "reach",
+      26.202
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.472,
+   "t1": 27.567,
+   "lines": [
+    [
+     [
+      "us",
+      26.472
+     ],
+     [
+      "yet.",
+      26.787
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.567,
+   "t1": 29.672,
+   "lines": [
+    [
+     [
+      "We",
+      27.567
+     ],
+     [
+      "now",
+      27.597
+     ],
+     [
+      "put",
+      27.942
+     ],
+     [
+      "the",
+      28.107
+     ]
+    ],
+    [
+     [
+      "universe's",
+      28.192
+     ],
+     [
+      "age",
+      28.857
+     ],
+     [
+      "near",
+      29.292
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.672,
+   "t1": 32.147,
+   "lines": [
+    [
+     [
+      "13.8 billion years.",
+      29.672
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.453,
+   "t1": 37.448,
+   "lines": [
+    [
+     [
+      "Past",
+      34.453
+     ],
+     [
+      "a",
+      34.733
+     ],
+     [
+      "certain",
+      34.923
+     ],
+     [
+      "distance,",
+      35.308
+     ]
+    ],
+    [
+     [
+      "starlight",
+      36.123
+     ],
+     [
+      "is",
+      36.773
+     ],
+     [
+      "still",
+      37.028
+     ],
+     [
+      "on",
+      37.193
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 37.448,
+   "t1": 38.388,
+   "lines": [
+    [
+     [
+      "its",
+      37.448
+     ],
+     [
+      "way.",
+      37.798
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.388,
+   "t1": 40.733,
+   "lines": [
+    [
+     [
+      "So",
+      38.388
+     ],
+     [
+      "we",
+      38.693
+     ],
+     [
+      "can",
+      38.898
+     ],
+     [
+      "only",
+      38.928
+     ]
+    ],
+    [
+     [
+      "see",
+      39.323
+     ],
+     [
+      "so",
+      39.613
+     ],
+     [
+      "far.",
+      39.898
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 40.733,
+   "t1": 43.148,
+   "lines": [
+    [
+     [
+      "The",
+      40.733
+     ],
+     [
+      "dark",
+      40.763
+     ],
+     [
+      "sky",
+      41.148
+     ],
+     [
+      "hints",
+      41.703
+     ]
+    ],
+    [
+     [
+      "that",
+      42.043
+     ],
+     [
+      "the",
+      42.218
+     ],
+     [
+      "universe",
+      42.248
+     ],
+     [
+      "has",
+      42.833
+     ],
+     [
+      "a",
+      42.873
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.148,
+   "t1": 43.933,
+   "lines": [
+    [
+     [
+      "beginning.",
+      43.148
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.258,
+   "t1": 49.538,
+   "lines": [
+    [
+     [
+      "So",
+      47.258
+     ],
+     [
+      "tonight's",
+      47.478
+     ]
+    ],
+    [
+     [
+      "dark",
+      47.908
+     ],
+     [
+      "isn't",
+      48.333
+     ],
+     [
+      "empty.",
+      48.708
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 49.538,
+   "t1": 52.123,
+   "lines": [
+    [
+     [
+      "It's",
+      49.538
+     ],
+     [
+      "a",
+      49.798
+     ],
+     [
+      "clue:",
+      49.903
+     ],
+     [
+      "the",
+      50.743
+     ]
+    ],
+    [
+     [
+      "universe",
+      50.773
+     ],
+     [
+      "has",
+      51.378
+     ],
+     [
+      "not",
+      51.538
+     ],
+     [
+      "been",
+      51.803
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 52.123,
+   "t1": 53.373,
+   "lines": [
+    [
+     [
+      "shining",
+      52.123
+     ],
+     [
+      "forever.",
+      52.598
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.653,
+   "t1": 56.778,
+   "lines": [
+    [
+     [
+      "Light",
+      53.653
+     ],
+     [
+      "time:",
+      53.943
+     ],
+     [
+      "from",
+      54.443
+     ],
+     [
+      "the",
+      54.493
+     ]
+    ],
+    [
+     [
+      "Sun,",
+      54.828
+     ],
+     [
+      "about 8 minutes.",
+      55.268
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.778,
+   "t1": 58.803,
+   "lines": [
+    [
+     [
+      "From",
+      56.778
+     ],
+     [
+      "the",
+      56.818
+     ],
+     [
+      "farthest",
+      57.083
+     ]
+    ],
+    [
+     [
+      "galaxies",
+      57.478
+     ],
+     [
+      "we",
+      58.158
+     ],
+     [
+      "see,",
+      58.438
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 58.803,
+   "t1": 60.173,
+   "lines": [
+    [
+     [
+      "billions",
+      58.803
+     ],
+     [
+      "of",
+      59.328
+     ],
+     [
+      "years.",
+      59.358
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.637,
+   "t1": 64.612,
+   "lines": [
+    [
+     [
+      "Next:",
+      60.637
+     ],
+     [
+      "where",
+      61.572
+     ],
+     [
+      "did",
+      61.857
+     ],
+     [
+      "the",
+      61.907
+     ],
+     [
+      "gold",
+      62.142
+     ]
+    ],
+    [
+     [
+      "in",
+      62.587
+     ],
+     [
+      "your",
+      62.822
+     ],
+     [
+      "ring",
+      63.027
+     ],
+     [
+      "come",
+      63.417
+     ],
+     [
+      "from?",
+      63.862
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.03333333333333333,
+   "dur": 2.707,
+   "file": "vo/01.wav",
+   "text": "Why is the night sky dark? Think hard."
+  },
+  {
+   "id": "vo02",
+   "t": 3.5,
+   "dur": 8.995,
+   "file": "vo/02.wav",
+   "text": "Say the universe has no edge or start. Then every line of sight would end on a star. Like a forest: every look hits a trunk."
+  },
+  {
+   "id": "vo03",
+   "t": 13.1,
+   "dur": 8.406,
+   "file": "vo/03.wav",
+   "text": "Far stars look fainter, but there are more of them. Those two effects cancel, so the whole sky should glow like a star's surface."
+  },
+  {
+   "id": "vo04",
+   "t": 22.166666666666668,
+   "dur": 9.719,
+   "file": "vo/04.wav",
+   "text": "The key here is time. Far starlight may not have had time to reach us yet. We now put the universe's age near thirteen point eight billion years."
+  },
+  {
+   "id": "vo05",
+   "t": 34.43333333333333,
+   "dur": 9.22,
+   "file": "vo/05.wav",
+   "text": "Past a certain distance, starlight is still on its way. So we can only see so far. The dark sky hints that the universe has a beginning."
+  },
+  {
+   "id": "vo06",
+   "t": 47.233333333333334,
+   "dur": 5.87,
+   "file": "vo/06.wav",
+   "text": "So tonight's dark isn't empty. It's a clue: the universe has not been shining forever."
+  },
+  {
+   "id": "vo07",
+   "t": 53.63333333333333,
+   "dur": 6.295,
+   "file": "vo/07.wav",
+   "text": "Light time: from the Sun, about eight minutes. From the farthest galaxies we see, billions of years."
+  },
+  {
+   "id": "vo08",
+   "t": 60.56666666666667,
+   "dur": 3.624,
+   "file": "vo/08.wav",
+   "text": "Next: where did the gold in your ring come from?"
+  }
+ ]
+}
