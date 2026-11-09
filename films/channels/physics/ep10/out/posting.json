@@ -1,0 +1,45 @@
+{
+ "generated": "2026-11-09",
+ "youtube": {
+  "title": "The coffee ring | Reality Rulebook Season 2 · Episode 4",
+  "caption": "Why does coffee leave a ring? Not blobs.\n\nThe edge of a drying drop is stuck to the paper. Water evaporates from that edge, so water from the middle flows out to replace it, and the flow carries the specks along. In our simple model, about nine in ten specks end up in the ring. Make the specks oval and the ring can vanish.\n\nSeason 2 · Episode 4.\n\nSources\n1. Deegan, Bakajin, Dupont, Huber, Nagel, Witten, 'Capillary flow as the cause of ring stains from dried liquid drops', Nature 389, 827 (1997) (search excerpt only, not opened): https://doi.org/10.1038/39827\n2. Yunker, Still, Lohr, Yodh, 'Suppression of the coffee-ring effect by shape-dependent capillary interactions', Nature 476, 308 (2011) (search excerpt only, not opened): https://doi.org/10.1038/nature10344\n3. OpenStax, University Physics Volume 1, 17.5 Sources of musical sound (for the next episode's teaser; not opened): https://openstax.org/books/university-physics-volume-1/pages/17-5-sources-of-musical-sound\n4. Our own simple model of the drying drop (compile.py and scene.mjs; made-up numbers; model-check.md): the numbers in the measure beat come from it: https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10\n\nNarration: synthetic voice (AI). Animation: code-rendered, no stock footage. The top drop is our own simple model with made-up numbers (drawn in 3-D); the lower drop with oval specks and the mug at the end are illustrations, not simulations. Sources have been seen only as search excerpts (none opened); a person has not yet opened them.\n\nReality Rulebook: Everyday things, slowed down until the physics shows.\n\n#Shorts #physics #science",
+  "hashtags": "#Shorts #physics #science",
+  "tags": [
+   "Reality Rulebook",
+   "physics",
+   "science",
+   "coffee ring",
+   "explainer",
+   "education"
+  ],
+  "pinnedComment": "Sources\n1. Deegan, Bakajin, Dupont, Huber, Nagel, Witten, 'Capillary flow as the cause of ring stains from dried liquid drops', Nature 389, 827 (1997) (search excerpt only, not opened): https://doi.org/10.1038/39827\n2. Yunker, Still, Lohr, Yodh, 'Suppression of the coffee-ring effect by shape-dependent capillary interactions', Nature 476, 308 (2011) (search excerpt only, not opened): https://doi.org/10.1038/nature10344\n3. OpenStax, University Physics Volume 1, 17.5 Sources of musical sound (for the next episode's teaser; not opened): https://openstax.org/books/university-physics-volume-1/pages/17-5-sources-of-musical-sound\n4. Our own simple model of the drying drop (compile.py and scene.mjs; made-up numbers; model-check.md): the numbers in the measure beat come from it: https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10\nSynthetic (AI) voice; code-rendered animation.",
+  "replies": [],
+  "warnings": [
+   "Claims are OPEN: a person must open the sources before posting.",
+   "Turn on the platform's AI / synthetic content label.",
+   "c1-c5, c7, c9, c11 are search excerpts or less (nature.com was unreachable from the builder session); c6, c8, c10 are our own model, not a published result."
+  ]
+ },
+ "tiktok": {
+  "title": "The coffee ring (Reality Rulebook S2 · E4)",
+  "caption": "Why does coffee leave a ring, not a blob? A stuck edge and a flow going out. #physics #science #learnontiktok #stem #coffee",
+  "hashtags": "#physics #science #learnontiktok #stem #coffee",
+  "tags": [],
+  "pinnedComment": "Sources: Deegan et al., Nature 389, 827 (1997); Yunker et al., Nature 476, 308 (2011). Synthetic (AI) voice; our own simple model and illustrations.",
+  "replies": [],
+  "warnings": [
+   "Claims are OPEN: a person must open the sources before posting."
+  ]
+ },
+ "instagram": {
+  "title": "The coffee ring (Reality Rulebook S2 · E4)",
+  "caption": "Why does coffee leave a ring, not a blob? The edge of the drop is stuck to the paper, and water flows out from the middle to replace what evaporates there, carrying the specks along.\n\nThe top drop is our own simple model; the oval-speck drop and the mug are illustrations.\n\nSeason 2 · Episode 4.\n\nSources in the first comment.\n\n#physics #science #stem #sciencefacts #learnsomethingnew #coffee #education #physicsfun",
+  "hashtags": "#physics #science #stem #sciencefacts #learnsomethingnew #coffee #education #physicsfun",
+  "tags": [],
+  "pinnedComment": "Sources\n1. Deegan, Bakajin, Dupont, Huber, Nagel, Witten, 'Capillary flow as the cause of ring stains from dried liquid drops', Nature 389, 827 (1997) (search excerpt only, not opened): https://doi.org/10.1038/39827\n2. Yunker, Still, Lohr, Yodh, 'Suppression of the coffee-ring effect by shape-dependent capillary interactions', Nature 476, 308 (2011) (search excerpt only, not opened): https://doi.org/10.1038/nature10344\n3. OpenStax, University Physics Volume 1, 17.5 Sources of musical sound (for the next episode's teaser; not opened): https://openstax.org/books/university-physics-volume-1/pages/17-5-sources-of-musical-sound\n4. Our own simple model of the drying drop (compile.py and scene.mjs; made-up numbers; model-check.md): the numbers in the measure beat come from it: https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10",
+  "replies": [],
+  "warnings": [
+   "Claims are OPEN: a person must open the sources before posting."
+  ]
+ }
+}
