@@ -19,3 +19,5 @@ One real 3-D world; the camera moves on every beat.
 | 63.0 | Next: do the Apollo footprints still last on the Moon? | End card; a dip, then frame 0's pose (SSIM 0.965) | end card |
 
 Measured: 69.3 s, render log 0 warnings, sound sync PASS, -14.1 LUFS. Badge 'thought experiment' for the whole experiment.
+
+Retitle (9 Nov): the film is now "Lighter than water" (S2E05): hook "Saturn: lighter than water? On average, yes."; "Saturn floats" appears only inside the badged thought experiment ("in the thought experiment") and the film says real Saturn is gas and would mix. Cover, thumb and posting pack use the new title. The series line sits in the title from frame 0 and the thought-experiment badge appears at 3.0 s.

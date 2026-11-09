@@ -599,7 +599,7 @@
   {
    "id": "b-thought",
    "text": "thought experiment",
-   "t0": 0.2,
+   "t0": 3.0,
    "t1": 54.7333,
    "slot": "tr"
   },
@@ -670,7 +670,7 @@
   {
    "id": "c-float",
    "label": "in the thought experiment",
-   "text": "floats (in the thought experiment)",
+   "text": "Saturn floats",
    "t0": 38.93333333333333,
    "t1": 41.6667,
    "at": [

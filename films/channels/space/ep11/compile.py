@@ -101,7 +101,7 @@ COUNTERS = [
     {"id": "c-wide", "label": "Saturn is about", "text": "9 Earths wide", "t0": CUE["nine"] - 0.2, "t1": CUE["hydrogen"] - 0.3},
     {"id": "c-mostly", "label": "mostly", "text": "hydrogen and helium", "t0": CUE["hydrogen"] - 0.1, "t1": t_why - 0.4},
     {"id": "c-weight", "label": "weight ÷ space", "text": "rock tight · gas thin", "t0": CUE["tight"] - 0.2, "t1": t_w - 0.4},
-    {"id": "c-float", "label": "in the thought experiment", "text": "floats (in the thought experiment)", "t0": CUE["floats"] - 0.1, "t1": CUE["mix"] - 0.2},
+    {"id": "c-float", "label": "in the thought experiment", "text": "Saturn floats", "t0": CUE["floats"] - 0.1, "t1": CUE["mix"] - 0.2},
     {"id": "c-piece", "label": "real Saturn", "text": "would not stay in one piece", "t0": CUE["mix"] - 0.1, "t1": t_tk - 0.2},
     {"id": "c-density", "label": "density tells you", "text": "who floats", "t0": CUE["who"] - 0.8, "t1": t_rd},
     {"id": "c-read", "label": "light time · Sun to Saturn", "text": "about 80 minutes", "read": True, "t0": CUE["eighty"] - 0.3, "t1": round(t_end - 0.45, 4)},
