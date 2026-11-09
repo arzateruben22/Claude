@@ -36,7 +36,7 @@ def cut(beat):
     return round({b["id"]: b for b in BEATS}[beat]["t0"] - HALF, 6)
 
 
-STICK = {"L": 25.0, "thetaMax": 1.12, "Y0": 118.0, "rad": 0.7, "g": 70.0, "fall": 9.0,
+STICK = {"L": 25.0, "thetaMax": 1.12, "Y0": 118.0, "rad": 0.9, "g": 70.0, "fall": 9.0,
          "casc": [[0.5, 0.0], [0.30, 0.29], [0.78, 0.40]], "single": [[0.5, 0.0]], "wave": 0.7}
 
 
@@ -83,7 +83,6 @@ LABELS = [
     {"id": "wo-2", "text": "two pieces", "color": "motion", "t0": A("vo05:pieces.") - 0.1, "t1": cut("measure") - 0.3, "at": "b1", "side": 1},
 ]
 BADGES = [
-    {"id": "slow1", "text": "Slow motion", "kind": "tag", "t0": A("vo03:Slowed"), "t1": cut("why") - 0.2, "slot": "tl"},
     {"id": "illus", "kind": "tag", "text": "Illustration, not a simulation", "t0": cut("takeaway") + 0.5, "t1": cut("tease"), "slot": "tr"},
 ]
 PIECES_BADGE = {"id": "pc", "t0": A("vo06:little"), "t1": cut("takeaway") - 0.1, "slot": "tr", "thr": 250, "phimax": 300}
@@ -98,17 +97,17 @@ def key(t, v, ease="p2"):
 
 
 Y0 = STICK["Y0"]
-WIDE = view([0.0, Y0 - 1.0, 0.0], 128.0)
-CLOSE = view([0.0, Y0 + 1.0, 0.0], 92.0)
+WIDE = view([0.0, Y0 - 7.0, 0.0], 118.0)
+CLOSE = view([0.0, Y0 - 3.0, 0.0], 90.0)
 CAM = {
     "hook": [key(0.0, CLOSE), key(cut("normal"), {**CLOSE, "dist": 84.0}, "sine")],
-    "normal": [key(cut("normal"), WIDE), key(cut("change"), {**WIDE, "dist": 118.0}, "sine")],
-    "change": [key(cut("change"), view([0.0, Y0, 0.0], 105.0)), key(cut("why"), view([0.0, Y0 - 2.0, 0.0], 118.0), "sine")],
-    "why": [key(cut("why"), CLOSE), key(A("vo04:sends"), WIDE, "p3"), key(cut("whoa"), {**WIDE, "dist": 118.0}, "sine")],
-    "whoa": [key(cut("whoa"), WIDE), key(A("vo05:Then"), {**WIDE, "dist": 112.0}, "p3"), key(cut("measure"), {**WIDE, "dist": 124.0}, "sine")],
-    "measure": [key(cut("measure"), view([0.0, Y0, 0.0], 100.0)), key(cut("takeaway"), view([0.0, Y0, 0.0], 92.0), "sine")],
-    "takeaway": [key(cut("takeaway"), WIDE), key(cut("tease"), {**WIDE, "dist": 138.0}, "sine")],
-    "tease": [key(cut("tease"), WIDE), key(DUR, {**WIDE, "dist": 142.0}, "sine")],
+    "normal": [key(cut("normal"), WIDE), key(cut("change"), {**WIDE, "dist": 112.0}, "sine")],
+    "change": [key(cut("change"), view([0.0, Y0 - 6.0, 0.0], 100.0)), key(cut("why"), view([0.0, Y0 - 7.0, 0.0], 112.0), "sine")],
+    "why": [key(cut("why"), CLOSE), key(A("vo04:sends"), WIDE, "p3"), key(cut("whoa"), {**WIDE, "dist": 108.0}, "sine")],
+    "whoa": [key(cut("whoa"), WIDE), key(A("vo05:Then"), {**WIDE, "dist": 104.0}, "p3"), key(A("vo05:pieces."), {**WIDE, "dist": 100.0, "yaw": 14.0}, "sine"), key(cut("measure"), {**WIDE, "dist": 112.0, "yaw": -12.0}, "sine")],
+    "measure": [key(cut("measure"), view([0.0, Y0 - 5.0, 0.0], 96.0, 0.0, 12.0)), key(cut("takeaway"), view([0.0, Y0 - 5.0, 0.0], 88.0, 0.0, -12.0), "sine")],
+    "takeaway": [key(cut("takeaway"), {**WIDE, "yaw": -20.0}), key(cut("tease"), {**WIDE, "dist": 124.0, "yaw": 20.0}, "sine")],
+    "tease": [key(cut("tease"), {**WIDE, "dist": 124.0, "yaw": 20.0}), key(DUR, {**WIDE, "dist": 130.0, "yaw": 8.0}, "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 TITLE = {"series": "Reality Rulebook · Season 2 · Episode 2", "title": "Spaghetti almost never breaks in *two*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}

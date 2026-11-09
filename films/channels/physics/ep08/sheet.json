@@ -99,12 +99,6 @@
    "t1": 20.2667
   },
   {
-   "t": 14.0,
-   "kind": "badge",
-   "tag": "slow1",
-   "text": "Slow motion"
-  },
-  {
    "t": 16.266666666666666,
    "kind": "label",
    "tag": "ch-1"

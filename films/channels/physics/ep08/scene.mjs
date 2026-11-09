@@ -31,7 +31,8 @@ scene.add(cyc.group, P.group);
 window.SCENE_READY = P.ready;
 
 // ── the stick ──
-const { L, thetaMax: TH, Y0, rad: RAD, g: GR, fall: FALL, wave: WV } = SK;
+const { L, thetaMax: TH, Y0, rad: RAD } = SK;
+const SHELF = Y0 - 16, GV = 260;                                  // the shelf the loose pieces land on (cm), the flight's gravity (cm per time unit squared)
 const arcPt = (s, th) => {                                     // a point on the held arc: bend angle th at each end
   if (th < 1e-4) return { x: s - L / 2, y: Y0, a: 0 };
   const R = L / (2 * th), phi = -th + s / R;
@@ -40,10 +41,11 @@ const arcPt = (s, th) => {                                     // a point on the
 const takeAt = (t) => FILM.takes.find((k) => t >= k.t0 && t < k.t1) || FILM.takes[FILM.takes.length - 1];
 const tauAt = (t) => keyed(takeAt(t).keys, t, "lin");
 const breaksOf = (tk) => (tk.breaks === "casc" ? SK.casc : SK.single);
-const bendOf = (tau) => Math.min(1, Math.max(0, tau)) ;
+const bendOf = (tau) => Math.min(1, Math.max(0, tau));
 const twistOf = (tk, tau) => (tk.phimax ? (tau < 0 ? tk.phimax * (1 + tau) : tk.phimax) : 0);    // degrees
+const normA = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 
-// pieces: split the held stick at each break, in time order; free pieces fly, end pieces stay in the hands
+// pieces: split the held stick at each break, in time order; loose pieces fly, the end pieces stay in the hands
 const relax = (dt) => 0.12 + 0.88 * Math.exp(-dt / 0.2);
 function pieceList(tk, tau) {
   const post = tau - 1;
@@ -57,124 +59,107 @@ function pieceList(tk, tau) {
   }
   return ps;
 }
-const wig = (u, dtp) => 0.5 * Math.exp(-dtp / 0.22) * Math.sin(9 * u + 22 * dtp);
-// the points of one piece at post-break time dtp (post = τ − 1), as {x, y, s}
-function shape(pc, tk, post) {
-  const n = Math.max(5, Math.round(((pc.s1 - pc.s0) / L) * 70)), out = [];
-  const l = pc.s1 - pc.s0, dtp = Math.max(0, post - pc.born), r = relax(Math.max(0, post));
-  const R = L / (2 * TH);
-  if (pc.endL || pc.endR) {                                   // in the hand: relaxes toward hanging
-    const dir = pc.endL ? 1 : -1, anchor = arcPt(pc.endL ? 0 : L, TH), e = 1 - Math.exp(-Math.max(0, post) / 0.25);
+const wig = (u, dtp) => 0.45 * Math.exp(-dtp / 0.2) * Math.sin(9 * u + 24 * dtp);
+function shape(pc, post) {
+  const l = pc.s1 - pc.s0, n = Math.max(6, Math.round((l / L) * 64)), du = l / n, out = [], dtp = Math.max(0, post - pc.born);
+  if (pc.endL || pc.endR) {                                    // in a hand: relaxes toward hanging
+    const anchor = arcPt(pc.endL ? 0 : L, TH), e = 1 - Math.exp(-Math.max(0, post) / 0.22);
     let x = anchor.x, y = anchor.y;
     for (let i = 0; i <= n; i++) {
-      const u = (i / n) * l, sg = pc.endL ? u : L - u;
-      const h0 = arcPt(sg, TH).a + (pc.endL ? 0 : Math.PI);
-      const h = h0 + (-Math.PI / 2 - h0 + (pc.endL ? 0 : -0)) * e * 0.0 + (((-Math.PI / 2 - ((h0 + Math.PI) % (2 * Math.PI) - Math.PI)) * e)) + wig(u / l, post);
+      const u = i * du, sg = pc.endL ? u : L - u, h0 = normA(arcPt(sg, TH).a + (pc.endL ? 0 : Math.PI));
+      const h = h0 + normA(-Math.PI / 2 - h0) * e + wig(u / l, post);
       out.push({ x, y, s: sg });
-      x += Math.cos(h) * (l / n); y += Math.sin(h) * (l / n);
+      x += Math.cos(h) * du; y += Math.sin(h) * du;
     }
     return out;
   }
-  // a free piece: an arc about its middle, moving and turning
-  const mA = arcPt(pc.mid, TH), kick = (pc.mid > L / 2 ? 1 : -1) * (0.6 + 0.9 * Math.abs(pc.mid - L / 2) / L) * 12;
-  const spin = (pc.mid > L / 2 ? -1 : 1) * 2.4 * (0.5 + Math.abs(pc.mid - L / 2) / L);
-  const cx = mA.x + kick * dtp, cy = Math.max(Y0 - FALL, mA.y + 14 * dtp - 0.5 * GR * dtp * dtp);
-  const ang = mA.a + spin * dtp;
-  let px = 0, py = 0; const pts = [];
-  for (let i = 0; i <= n; i++) {
-    const u = (i / n) * l - l / 2;
-    pts.push([u, -(1 / R) * r * u * 0 + 0]);
-  }
-  // integrate the heading about the middle: heading(u) = ang - kappa u + wiggle
-  const kap = (1 / R) * r; const hd = (u) => ang - kap * u + wig(u / l, dtp);
-  const half = []; let ax = 0, ay = 0; half[Math.floor(n / 2)] = [0, 0];
-  const mi = Math.floor(n / 2), du = l / n;
-  const xs = new Array(n + 1), ys = new Array(n + 1); xs[mi] = 0; ys[mi] = 0;
+  // a loose piece: flung outward, falling under gravity onto the shelf, turning, then lying flat
+  const m = arcPt(pc.mid, TH), sgn = pc.mid > L / 2 ? 1 : -1, off = Math.abs(pc.mid - L / 2) / L;
+  const vx = sgn * (12 + 30 * off), vy0 = 16, spin = -sgn * 4.2;
+  const yEnd = SHELF + RAD * 1.2, disc = vy0 * vy0 + 2 * GV * (m.y - yEnd), tl = (vy0 + Math.sqrt(Math.max(0, disc))) / GV, tt = Math.min(dtp, tl);
+  const cx = m.x + vx * tt, cy = m.y + vy0 * tt - 0.5 * GV * tt * tt;
+  const angL = m.a + spin * tl, tgt = Math.round(angL / Math.PI) * Math.PI;
+  const ang = dtp <= tl ? m.a + spin * dtp : angL + (tgt - angL) * (1 - Math.exp(-(dtp - tl) / 0.06));
+  const kap = (1 / (L / (2 * TH))) * relax(Math.max(0, post));
+  const hd = (u) => ang - kap * u + wig(u / l, dtp) * (dtp > tl ? 0.2 : 1);
+  const xs = new Array(n + 1), ys = new Array(n + 1), mi = Math.floor(n / 2); xs[mi] = 0; ys[mi] = 0;
   for (let i = mi + 1; i <= n; i++) { const u = ((i - 0.5) / n) * l - l / 2; xs[i] = xs[i - 1] + Math.cos(hd(u)) * du; ys[i] = ys[i - 1] + Math.sin(hd(u)) * du; }
   for (let i = mi - 1; i >= 0; i--) { const u = ((i + 0.5) / n) * l - l / 2; xs[i] = xs[i + 1] - Math.cos(hd(u)) * du; ys[i] = ys[i + 1] - Math.sin(hd(u)) * du; }
-  const mx = xs.reduce((a, b) => a + b, 0) / (n + 1), my = ys.reduce((a, b) => a + b, 0) / (n + 1);
-  for (let i = 0; i <= n; i++) out.push({ x: cx + xs[i] - mx, y: cy + ys[i] - my, s: pc.s0 + (i / n) * l });
+  const mx = xs.reduce((a, b2) => a + b2, 0) / (n + 1), my = ys.reduce((a, b2) => a + b2, 0) / (n + 1);
+  let lift = 0; if (dtp > tl) { const miny = Math.min(...ys.map((v) => cy + v - my)); lift = Math.max(0, yEnd - RAD * 1.2 - miny + RAD * 1.2); }
+  for (let i = 0; i <= n; i++) out.push({ x: cx + xs[i] - mx, y: cy + ys[i] - my + (dtp > tl ? lift * Math.min(1, (dtp - tl) / 0.06) : 0), s: pc.s0 + (i / n) * l });
   return out;
 }
-// the whole stick at (tk, τ): a list of polylines
 function sticks(tk, tau) {
   if (tau < 1) {
     const th = TH * bendOf(tau), n = 64, pts = [];
     for (let i = 0; i <= n; i++) { const s = (i / n) * L, p = arcPt(s, th); pts.push({ x: p.x, y: p.y, s }); }
     return [pts];
   }
-  return pieceList(tk, tau).map((pc) => shape(pc, tk, tau - 1));
+  return pieceList(tk, tau).map((pc) => shape(pc, tau - 1));
 }
 
-// ── drawing: a pool of cylinders for the segments, spheres along a helix for the twist stripe, clamps, break marks ──
+// ── drawing: lit cylinders for the segments, two helical stripes (tubes) for the twist, hands with a marker, break rings, the shelf ──
 const POOL = 190;
-const segGeo = new THREE.CylinderGeometry(1, 1, 1, 8, 1, false);
+const segGeo = new THREE.CylinderGeometry(1, 1, 1, 10, 1, false);
 const segs = [];
-for (let i = 0; i < POOL; i++) {
-  const m = new THREE.Mesh(segGeo, new THREE.MeshBasicMaterial({ color: flat(HEX.stick) }));
-  m.visible = false; scene.add(m); segs.push(m);
-}
+const woodMat = () => new THREE.MeshStandardMaterial({ color: flat(HEX.stick), roughness: 0.55, metalness: 0.0 });
+for (let i = 0; i < POOL; i++) { const m = new THREE.Mesh(segGeo, woodMat()); m.visible = false; scene.add(m); segs.push(m); }
 const up = new THREE.Vector3(0, 1, 0), v1 = new THREE.Vector3(), v2 = new THREE.Vector3(), dirv = new THREE.Vector3();
 const COL_STICK = flat(HEX.stick), COL_RIP = flat(HEX.energy), tmpc = new THREE.Color();
-const NST = 110, stripeGeo = new THREE.SphereGeometry(0.62, 8, 6), stripes = [];
-const stripeMat = new THREE.MeshBasicMaterial({ color: flat(HEX.force) });
-for (let i = 0; i < NST; i++) { const m = new THREE.Mesh(stripeGeo, stripeMat); m.visible = false; scene.add(m); stripes.push(m); }
-const clampMat = new THREE.MeshBasicMaterial({ color: flat(HEX.ink2) });
-const clampL = new THREE.Mesh(new THREE.BoxGeometry(3.4, 5.2, 3.4), clampMat), clampR = new THREE.Mesh(new THREE.BoxGeometry(3.4, 5.2, 3.4), clampMat);
-const tickL = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.55, 3.0), flat(HEX.force) && new THREE.MeshBasicMaterial({ color: flat(HEX.force) }));
+const STR = [0, 1].map((k) => { const m = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ color: flat(k ? HEX.energy : HEX.force) })); m.visible = false; scene.add(m); return m; });
+const stripePool = [];                                       // [piece][stripe] meshes, made on demand
+const stripeMesh = (i, k) => { const key = i * 2 + k; if (!stripePool[key]) { const m = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ color: flat(k ? HEX.energy : HEX.force) })); m.visible = false; scene.add(m); stripePool[key] = m; } return stripePool[key]; };
+const clampMat = new THREE.MeshStandardMaterial({ color: flat(HEX.ink2), roughness: 0.6 });
+const clampL = new THREE.Mesh(new THREE.BoxGeometry(3.6, 5.6, 4.2), clampMat), clampR = new THREE.Mesh(new THREE.BoxGeometry(3.6, 5.6, 4.2), clampMat);
 scene.add(clampL, clampR);
+const markGeo = new THREE.SphereGeometry(0.55, 12, 8), markL = new THREE.Mesh(markGeo, new THREE.MeshBasicMaterial({ color: flat(HEX.force) })), markR = new THREE.Mesh(markGeo, new THREE.MeshBasicMaterial({ color: flat(HEX.force) }));
+scene.add(markL, markR);
+const shelf = new THREE.Mesh(new THREE.BoxGeometry(70, 1.6, 14), new THREE.MeshStandardMaterial({ color: flat("#C9C2B2"), roughness: 0.8 })); shelf.position.set(0, SHELF - 0.8, 0); scene.add(shelf);
+const shelfEdge = new THREE.Mesh(new THREE.BoxGeometry(70, 0.3, 0.4), new THREE.MeshBasicMaterial({ color: flat(HEX.ink2) })); shelfEdge.position.set(0, SHELF, 7); scene.add(shelfEdge);
 const markMat = new THREE.MeshBasicMaterial({ color: flat(HEX.energy), transparent: true });
-const markGeo = new THREE.TorusGeometry(1.5, 0.2, 8, 28);
-const marks = [0, 1, 2].map(() => { const m = new THREE.Mesh(markGeo, markMat.clone()); m.visible = false; scene.add(m); return m; });
+const markRing = new THREE.TorusGeometry(1.5, 0.2, 8, 28);
+const marks = [0, 1, 2].map(() => { const m = new THREE.Mesh(markRing, markMat.clone()); m.visible = false; scene.add(m); return m; });
 
+function stripeTube(pts, tw, off, rr) {                      // a thin tube running round the stick: its angle about the stick's line grows with s
+  const P3 = pts.map((p, i) => {
+    const a = pts[Math.max(0, i - 1)], c = pts[Math.min(pts.length - 1, i + 1)], tx = c.x - a.x, ty = c.y - a.y, tl = Math.hypot(tx, ty) || 1, nx = -ty / tl, ny = tx / tl, ph = tw * (p.s / L) + off;
+    return new THREE.Vector3(p.x + nx * rr * Math.cos(ph), p.y + ny * rr * Math.cos(ph), rr * Math.sin(ph));
+  });
+  return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P3), Math.max(8, pts.length * 2), 0.3, 6, false);
+}
 function drawStick(t) {
-  const tk = takeAt(t), tau = tauAt(t), lines = sticks(tk, tau);
-  const post = tau - 1;
-  let k = 0; const allPts = [];
+  const tk = takeAt(t), tau = tauAt(t), lines = sticks(tk, tau), post = tau - 1;
+  let k = 0;
   for (const pts of lines) {
     for (let i = 0; i + 1 < pts.length && k < POOL; i++) {
       const a = pts[i], b = pts[i + 1], m = segs[k++];
       v1.set(a.x, a.y, 0); v2.set(b.x, b.y, 0); dirv.subVectors(v2, v1);
       const len = dirv.length(); if (len < 1e-6) { k--; continue; }
       m.visible = true; m.position.copy(v1).add(v2).multiplyScalar(0.5);
-      m.quaternion.setFromUnitVectors(up, dirv.normalize()); m.scale.set(RAD, len * 1.02, RAD);
-      // the ripple: a band of red running out from the first break
-      let amt = 0;
+      m.quaternion.setFromUnitVectors(up, dirv.normalize()); m.scale.set(RAD, len * 1.03, RAD);
+      let amt = 0;                                           // the ripple: a band of red running out from the first break
       if (tau > 1 && t >= CUE.ripple[0] - 0.2 && t < CUE.ripple[1]) {
-        const sMid = (a.s + b.s) / 2, d = Math.abs(sMid - L / 2), front = WV * L * Math.max(0, post);
+        const sMid = (a.s + b.s) / 2, d = Math.abs(sMid - L / 2), front = SK.wave * L * Math.max(0, post);
         amt = Math.max(0, 1 - Math.abs(d - front) / (0.06 * L)) * (post < 0.55 ? 1 : 0);
       }
       m.material.color.copy(tmpc.copy(COL_STICK).lerp(COL_RIP, amt));
     }
-    allPts.push(pts);
   }
   for (; k < POOL; k++) segs[k].visible = false;
-  // the twist stripe: spheres on a helix about the stick's own line
-  const tw = twistOf(tk, tau) * Math.PI / 180;
-  let n = 0;
-  if (tw > 0.02) {
-    for (let j = 0; j < NST; j++) {
-      const s = ((j + 0.5) / NST) * L;
-      let found = null;
-      for (const pts of allPts) { const i = pts.findIndex((p, ii) => ii + 1 < pts.length && s >= p.s - 1e-9 && s <= pts[ii + 1].s + 1e-9); if (i >= 0) { found = [pts[i], pts[i + 1]]; break; } }
-      const m = stripes[j];
-      if (!found) { m.visible = false; continue; }
-      const [a, b] = found, u = (s - a.s) / Math.max(1e-6, b.s - a.s);
-      const x = a.x + (b.x - a.x) * u, y = a.y + (b.y - a.y) * u;
-      const tx = b.x - a.x, ty = b.y - a.y, tl = Math.hypot(tx, ty) || 1, nx = -ty / tl, ny = tx / tl;
-      const ph = tw * (s / L) * 1.0, rr = RAD * 1.45;
-      m.visible = true; m.position.set(x + nx * rr * Math.cos(ph), y + ny * rr * Math.cos(ph), rr * Math.sin(ph));
-    }
-  } else stripes.forEach((m) => { m.visible = false; });
-  // the hands: they hold the ends (closer as the bend grows)
+  // the twist: two stripes winding round the stick (one turn = 360 degrees of twist over the whole length)
+  const tw = (twistOf(tk, tau) * Math.PI) / 180;
+  stripePool.forEach((m) => { m.visible = false; });
+  if (tw > 0.03) lines.forEach((pts, i) => [0, 1].forEach((kk) => { const m = stripeMesh(i, kk); m.geometry.dispose(); m.geometry = stripeTube(pts, tw, kk * Math.PI, RAD * 1.08); m.visible = true; }));
+  // the hands: they hold the ends; a marker on each shows how far the hand has turned
   const th = tau < 1 ? TH * bendOf(tau) : TH, eL = arcPt(0, th), eR = arcPt(L, th);
-  clampL.position.set(eL.x - 1.2, eL.y - 1.6, 0); clampR.position.set(eR.x + 1.2, eR.y - 1.6, 0);
-  // the break marks (rings that flash at the break and fade)
+  clampL.position.set(eL.x - 1.4, eL.y - 1.8, 0); clampR.position.set(eR.x + 1.4, eR.y - 1.8, 0);
+  { const ang = tw; markL.position.set(eL.x - 1.4, eL.y + 2.5, 0); markR.position.set(eR.x + 1.4, eR.y + 2.5 * Math.cos(ang), 2.5 * Math.sin(ang)); }
   const br = breaksOf(tk);
   marks.forEach((mk, i) => {
-    const b = br[i], on = b && tau > 1 && post >= b[1] && post - b[1] < 0.5 && t >= (tk.t0 + 0.0);
+    const b = br[i], on = b && tau > 1 && post >= b[1] && post - b[1] < 0.5;
     mk.visible = !!on;
-    if (on) { const p = arcPt(b[0] * L, TH), age = (post - b[1]) / 0.5; mk.position.set(p.x, p.y, 0.6); mk.scale.setScalar(1 + 1.6 * age); mk.material.opacity = 1 - age; }
+    if (on) { const p = arcPt(b[0] * L, TH), age = (post - b[1]) / 0.5; mk.position.set(p.x, p.y, 0.8); mk.scale.setScalar(1 + 1.8 * age); mk.material.opacity = 1 - age; }
   });
 }
 const piecesAt = (t) => { const tk = takeAt(t), tau = tauAt(t); return tau < 1 ? 1 : pieceList(tk, tau).length; };
@@ -200,13 +185,14 @@ const hud = createHud({ camera, captionY: FILM.captionY });
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
+hud.badge("slow", { kind: "tag", slot: "tl", t0: 0, t1: null, text: (t) => (t < CUE.cuts.takeaway && tauAt(t) > 1 ? "Slow motion" : null) });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const PB = FILM.piecesBadge;
 hud.badge(PB.id, { kind: "tag", slot: PB.slot, t0: PB.t0, t1: PB.t1, text: (t) => { const tk = takeAt(t); return twistOf(tk, tauAt(t)) >= PB.thr ? "Bend it now: two pieces" : "Bend it now: three or more"; } });
 const anchorFn = (an) => {
   if (an === "stick") return (t) => { const th = tauAt(t) < 1 ? TH * bendOf(tauAt(t)) : TH, p = arcPt(L / 2, th); return [p.x, p.y + 1, 0]; };
   if (an === "end") return (t) => { const th = TH * bendOf(tauAt(t)), p = arcPt(0, th); return [p.x - 1, p.y, 0]; };
-  if (an === "ripple") return (t) => { const post = tauAt(t) - 1, p = arcPt(Math.min(L, L / 2 - WV * L * Math.max(0, post)), TH); return [p.x, p.y + 1, 0]; };
+  if (an === "ripple") return (t) => { const post = tauAt(t) - 1, p = arcPt(Math.min(L, L / 2 - SK.wave * L * Math.max(0, post)), TH); return [p.x, p.y + 1, 0]; };
   const m = /^b(\d)$/.exec(an);
   if (m) { const b = SK.casc[+m[1] - 1], p = arcPt(b[0] * L, TH); return () => [p.x, p.y + 2, 0]; }
   return () => [0, Y0, 0];

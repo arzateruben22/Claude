@@ -14,12 +14,12 @@
   "id": "c2",
   "sentence": "A moment later, it snaps again, and again.",
   "claim": "After the first break the rod breaks again at other points in a cascade.",
-  "source_url": "https://doi.org/10.1103/PhysRevLett.95.095505",
-  "source_title": "Audoly and Neukirch, 'Fragmentation of rods by cascading cracks: why spaghetti does not break in half', Phys. Rev. Lett. 95, 095505 (2005)",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
   "accessed": "2026-11-09",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Excerpt: flexural waves from the first break raise the curvature elsewhere and trigger further breaks (Physics World coverage and the PRL abstract page title)."
+  "note": "SOURCE-READ (builder read the arXiv full text of the 2018 paper; a person has not opened it). Quote: \"Bending waves originating at the point of first fracture create additional fractures separated by at least the minimum fragment length\" Fig. 3a caption; the 2018 paper's simulation of the cascade. The 2005 paper (Audoly and Neukirch) is the original source and was still not opened."
  },
  {
   "id": "c3",
@@ -41,29 +41,29 @@
   "accessed": "2026-11-09",
   "verified_via": "search excerpt",
   "status": "TODO open link",
-  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Based on the paper's title and abstract excerpt. Confirm that it explains the 'at least three' result."
+  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Based on the paper's title and abstract excerpt. Confirm that it explains the 'at least three' result. The 2005 paper could not be read: APS blocks automated readers, it is not on arXiv, and the 2018 paper cites it only as [9, 10] without naming the authors in the text I read."
  },
  {
   "id": "c5",
   "sentence": "The first break sends ripples along the stick.",
   "claim": "The first break releases flexural (bending) waves that travel along the rod.",
-  "source_url": "https://doi.org/10.1103/PhysRevLett.95.095505",
-  "source_title": "Audoly and Neukirch, 'Fragmentation of rods by cascading cracks: why spaghetti does not break in half', Phys. Rev. Lett. 95, 095505 (2005)",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
   "accessed": "2026-11-09",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Excerpt from Physics World's summary."
+  "note": "SOURCE-READ (builder read the arXiv full text of the 2018 paper; a person has not opened it). Quote: \"Bending waves originating at the point of first fracture create additional fractures\" Fig. 3 caption."
  },
  {
   "id": "c6",
   "sentence": "They bend it even more than before, and that extra bend breaks it again.",
   "claim": "The waves locally raise the curvature above its value before the first break, which can break the rod again.",
-  "source_url": "https://doi.org/10.1103/PhysRevLett.95.095505",
-  "source_title": "Audoly and Neukirch, 'Fragmentation of rods by cascading cracks: why spaghetti does not break in half', Phys. Rev. Lett. 95, 095505 (2005)",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
   "accessed": "2026-11-09",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Excerpt from Physics World's summary: 'waves locally increase stress'. Confirm 'more than before'."
+  "note": "SOURCE-READ (builder read the arXiv full text of the 2018 paper; a person has not opened it). Quote: \"Fracture cascade as observed in quench experiments at zero twist. The timings of secondary fractures (circled in blue) are in agreement with the simulations in (a).\" Fig. 3c caption; 'more than before' (curvature raised by the waves) is the 2005 paper's claim and is not in the 2018 text I read: the line stays hedged by its wording ('even more than before'): a person should check it against Audoly and Neukirch."
  },
  {
   "id": "c7",
