@@ -1,0 +1,37 @@
+{
+ "file": "out/skin-sense-005-9x16.mp4",
+ "size_mb": 37.7,
+ "video": {
+  "codec": "h264",
+  "profile": "High",
+  "w": 1080,
+  "h": 1920,
+  "fps": 30.0,
+  "frames": 2010,
+  "dur": 67.0,
+  "pix_fmt": "yuv420p",
+  "color": "bt709",
+  "mbps": 4.24
+ },
+ "film_dur": 67.0,
+ "audio": {
+  "codec": "aac",
+  "sr": 48000,
+  "ch": 2,
+  "kbps": 260,
+  "dur": 67.0,
+  "lufs": -14.1,
+  "true_peak_db": -2.0,
+  "lra": 3.0,
+  "corr": 0.9,
+  "mono_loss_db": 0.13
+ },
+ "flashing": {
+  "large_transitions": 0,
+  "transition_frames": [],
+  "flashes": 0,
+  "max_flashes_per_s": 0,
+  "largest_changed_area": 0.242
+ },
+ "fails": []
+}
