@@ -954,7 +954,7 @@
   {
    "id": "l-merge",
    "text": "where the crash was",
-   "kind": "grav",
+   "kind": "body",
    "anchor": "merge",
    "t0": 60.4333,
    "t1": 68.5167,

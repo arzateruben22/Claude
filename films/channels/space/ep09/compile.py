@@ -84,7 +84,7 @@ LABELS = [
     {"id": "l-nsA", "text": "neutron star", "kind": "body", "anchor": "starA", "t0": round(CUE["spiral0"] + 0.5, 4), "t1": round(CUE["crashing"] + 1.5, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-nsB", "text": "neutron star", "kind": "body", "anchor": "starB", "t0": round(CUE["spiral0"] + 0.5, 4), "t1": round(CUE["crashing"] + 1.5, 4), "side": 1, "v": "below", "fixed": True},
     {"id": "l-bead", "text": "a bead of gold", "kind": "star", "anchor": "bead", "t0": round(CUE["tm"] + 0.8 + 6 * 0.18 + 2.3, 4), "t1": round(CUE["debate"] - 0.3, 4), "side": -1, "v": "above", "fixed": True},
-    {"id": "l-merge", "text": "where the crash was", "kind": "grav", "anchor": "merge", "t0": round(CUE["rip"] - 0.2, 4), "t1": round(t_end - 0.45, 4), "side": 1, "v": "above", "fixed": True},
+    {"id": "l-merge", "text": "where the crash was", "kind": "body", "anchor": "merge", "t0": round(CUE["rip"] - 0.2, 4), "t1": round(t_end - 0.45, 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-ring", "text": "your ring", "kind": "star", "anchor": "ring", "t0": round(CUE["ring"] - 0.2, 4), "t1": round(t_tk + 3.0, 4), "side": 1, "v": "above", "fixed": True},
 ]
 PILLS = [
