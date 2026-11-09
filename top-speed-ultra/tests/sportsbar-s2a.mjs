@@ -184,7 +184,15 @@ if (want('checks')) {
     return `${steps * 6} sim s to the hand-over (stages ${[...seen].join(' > ')}); you at frame (${pos.u}, ${pos.v}); thirst ${t0.toFixed(1)} -> ${n.thirst.toFixed(1)} in 2.5 min, sips left ${held.left} -> ${h2.left}; no new mesh`;
   });
   await check('order food at a table: a server comes, the food arrives, eating raises hunger', async () => {
-    const u = await H(page, `window.__onfoot.use('high-top-2', 'order-food', 'wings')`);
+    // (S3b: guests move between tables now, so the check takes a high-top with a stool free for you, high-top 2 first:
+    // one with every stool held or sat on refuses the order ("no free place right now") and the next is tried)
+    let u = null, ht = null;
+    for (const k of [2, 1, 3, 4, 5, 6]) {
+      u = await H(page, `window.__onfoot.use('high-top-${k}', 'order-food', 'wings')`);
+      const q = await H(page, 'window.__onfoot.queue()');
+      if (u.ok && q.some((a) => a.action === 'order-food')) { ht = `high-top-${k}`; break; }
+    }
+    summary.orderFoodTable = ht;
     const stages = [], dists = []; let food = null, k = 0;
     for (; k < 48 && !food; k++) {
       await H(page, 'window.__onfoot.fastForward(0.25)');
@@ -201,7 +209,7 @@ if (want('checks')) {
     const h0 = (await H(page, 'window.__onfoot.needs()')).hunger, n = await H(page, 'window.__onfoot.fastForward(1)');
     expect(near(n.hunger - h0, 9.2, 1.2), `hunger ${h0} -> ${n.hunger}`);
     summary.orderFood = { minutes: k * 0.25, stages, serverDistance: dists, hunger: [h0, n.hunger] };
-    return `${(k * 0.25).toFixed(2)} sim min to the food (stages ${stages.join(' > ')}; the server ${dists[0]} m -> ${Math.min(...dists)} m from you); seated at seat ${p.sitting}; hunger ${h0.toFixed(1)} -> ${n.hunger.toFixed(1)} in 1 min (eating +10 a minute, less 0.8)`;
+    return `${ht}: ${(k * 0.25).toFixed(2)} sim min to the food (stages ${stages.join(' > ')}; the server ${dists[0]} m -> ${Math.min(...dists)} m from you); seated at seat ${p.sitting}; hunger ${h0.toFixed(1)} -> ${n.hunger.toFixed(1)} in 1 min (eating +10 a minute, less 0.8)`;
   });
   await check('items: everything held, ordered or left as an empty is an instance in the six item meshes, each model within its row; no other new mesh', async () => {
     await H(page, 'window.__onfoot.fastForward(8)');
