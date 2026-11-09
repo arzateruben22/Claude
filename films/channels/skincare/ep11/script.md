@@ -9,7 +9,7 @@ every label and caption is drawn in code. Designed for 2.5-D parallax (foregroun
 vo: Why don't you dry *out*? {-} Your skin has a brick wall. {c1}
 
 ## normal {shot 2: the wall close up, pale bricks and golden mortar · labels: bricks · mortar · picture-only 0.8 s · energy: 0.45} (4.8–16.6 s)
-vo: Its outer layer, the stratum corneum, is the barrier. {c2} Flat dead cells are the bricks. {c3} Fats between them are the mortar. {c4} A scientist named Peter Elias called it that. {c5}
+vo: Its outer layer, the stratum corneum, is the barrier. {c2} Flat, tough cells are the bricks. {c3} Fats between them are the mortar. {c4} A scientist named Peter Elias called it that. {c5}
 
 ## change {shot 2: the sheets of fat wrapped round the cells · labels: fat sheets · picture-only 0.8 s · energy: 0.55} (16.6–26.8 s)
 vo: The mortar is stacked sheets of fat, wrapped around each cell. {c6} That makes a semi-permeable barrier, which is what lets life live on land. {c7}

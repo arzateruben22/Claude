@@ -1,13 +1,13 @@
 {
  "compose_s": 5.1,
- "master_s": 8.1,
+ "master_s": 7.9,
  "master": {
   "gain_db": 1.52,
   "iterations": 2,
   "lufs": -14.07,
   "true_peak_db": -2.0,
   "ceiling_db": -2.0,
-  "limiting_max_db": -3.6,
+  "limiting_max_db": -3.59,
   "aac": {
    "lufs": -14.1,
    "true_peak_db": -2.0,
@@ -18,14 +18,14 @@
  "sync": {
   "per_kind": {
    "label": {
-    "n": 6,
-    "max_ms": 0.0,
+    "n": 7,
+    "max_ms": 1.0,
     "median_ms": 0.0,
     "slow": false,
     "pass": true
    },
    "scale.jump": {
-    "n": 6,
+    "n": 7,
     "max_ms": 2.0,
     "median_ms": 0.0,
     "slow": true,
@@ -189,6 +189,20 @@
     "err_ms": 0.0
    },
    {
+    "kind": "scale.jump",
+    "tag": "c21",
+    "show": 53.8,
+    "method": "shape",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l7",
+    "show": 54.6,
+    "method": "rise",
+    "err_ms": -1.0
+   },
+   {
     "kind": "section",
     "tag": null,
     "show": 59.1667,
@@ -213,7 +227,7 @@
  },
  "phone": {
   "correlation": 0.91,
-  "mono_loss_db": -0.01,
+  "mono_loss_db": -0.0,
   "dialog_mono_loss_db": 0.09,
   "pass": true
  }

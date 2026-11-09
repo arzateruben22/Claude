@@ -229,6 +229,30 @@
   "pan": 0.0
  },
  {
+  "kind": "scale.jump",
+  "tag": "c21",
+  "t": 53.779,
+  "show": 53.8,
+  "sound": 53.8,
+  "place": 53.7815,
+  "anchor": 890,
+  "voice": "swell",
+  "gain": -19,
+  "pan": 0.0
+ },
+ {
+  "kind": "label",
+  "tag": "l7",
+  "t": 54.594,
+  "show": 54.6,
+  "sound": 54.6,
+  "place": 54.6,
+  "anchor": 0,
+  "voice": "reed",
+  "gain": -19,
+  "pan": 0.0
+ },
+ {
   "kind": "section",
   "tag": null,
   "t": 59.135,

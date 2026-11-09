@@ -165,6 +165,16 @@
    "tag": "c20"
   },
   {
+   "t": 53.779,
+   "kind": "scale.jump",
+   "tag": "c21"
+  },
+  {
+   "t": 54.594,
+   "kind": "label",
+   "tag": "l7"
+  },
+  {
    "t": 59.135,
    "kind": "section",
    "id": "tease",
