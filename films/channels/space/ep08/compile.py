@@ -92,7 +92,7 @@ PILLS = [
     {"id": "p-way", "text": "still on its way", "t0": CUE["way"], "t1": round(CUE["far"] + 2.0, 4), "at": [90 / 1080, 0.175]},
 ]
 BADGES = [
-    {"id": "b-illus", "text": "illustration", "t0": round(t_n - 0.3, 4), "t1": round(t_rd - 0.2, 4), "slot": "tr"},
+    {"id": "b-illus", "text": "illustration", "t0": round(t_n + 0.25, 4), "t1": round(t_rd - 0.2, 4), "slot": "tr"},
     {"id": "b-nts", "text": "not to scale", "t0": CUE["sun"], "t1": round(t_end - 0.45, 4), "slot": "tr"},
 ]
 COUNTERS = [

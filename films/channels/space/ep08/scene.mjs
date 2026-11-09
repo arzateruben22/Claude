@@ -54,10 +54,10 @@ const starMat = new THREE.ShaderMaterial({
 const field = new THREE.Points(sG, starMat); field.frustumCulled = false; scene.add(field);
 // the lane: stars strung along one line of sight; they pile up toward the far end and ramp to white
 const NL = 9000, lr = mul(8), lP = new Float32Array(NL * 3), lR = new Float32Array(NL);
-for (let i = 0; i < NL; i++) { const z = 5 + 165 * Math.pow(lr(), 0.55), sp = 0.035 * z; lP.set([(lr() + lr() + lr() - 1.5) * sp, 0.3 + (lr() + lr() + lr() - 1.5) * sp * 0.7, z], i * 3); lR[i] = lr(); }
+for (let i = 0; i < NL; i++) { const z = 5 + 165 * Math.pow(lr(), 0.55), sp = 0.075 * z; lP.set([(lr() + lr() + lr() - 1.5) * sp, 0.3 + (lr() + lr() + lr() - 1.5) * sp * 0.7, z], i * 3); lR[i] = lr(); }
 const lG = new THREE.BufferGeometry(); lG.setAttribute("position", new THREE.BufferAttribute(lP, 3)); lG.setAttribute("rnd", new THREE.BufferAttribute(lR, 1));
 const laneMat = new THREE.ShaderMaterial({
-  uniforms: { uPx: { value: 6.5 * S1 }, uGain: { value: 1 } },
+  uniforms: { uPx: { value: 8 * S1 }, uGain: { value: 1 } },
   vertexShader: `attribute float rnd; uniform float uPx, uGain; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = uPx * (0.8 + rnd); vA = uGain * (0.4 + 0.8 * smoothstep(20.0, 150.0, position.z)); }`,
   fragmentShader: `varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0) discard; float a = (1.0 - smoothstep(0.1, 1.0, r2)) * vA; gl_FragColor = vec4(vec3(1.0, 0.98, 0.95) * a * 2.4, a); }`,
   transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
@@ -195,7 +195,7 @@ window.seek = function (t) {
   // the shells: each lights in turn on the narration
   const sOn = [fadeIn(tt, CUE.fainter, 0.5), fadeIn(tt, CUE.fainter + 1.5, 0.5), fadeIn(tt, CUE.more, 0.5)], sOff = 1 - fadeIn(tt, CUE.glow - 0.2, 0.5);
   SH.forEach(([rad, rs3], k) => setSphere(rs3, rad, 0.75 * sOn[k] * sOff));
-  hzSphere.scale.setScalar(Math.max(0.01, hr)); hzSphere.material.opacity = hon && tt < CUE.begin + 2.5 ? 0.09 * fadeIn(tt, CUE.time + 0.3, 0.6) * (1 - fadeIn(tt, CUE.begin + 0.5, 1.5)) : 0;
+  hzSphere.scale.setScalar(Math.max(0.01, hr)); hzSphere.material.opacity = hon && tt < CUE.begin + 2.5 ? clamp01((Math.hypot(...cm.p) - hr * 1.05) / (hr * 0.7)) * 0.09 * fadeIn(tt, CUE.time + 0.3, 0.6) * (1 - fadeIn(tt, CUE.begin + 0.5, 1.5)) : 0;
   setSphere(HZ, hr, hon && tt < CUE.begin + 2.5 ? 0.95 * fadeIn(tt, CUE.time + 0.3, 0.6) * (1 - fadeIn(tt, CUE.begin + 0.5, 1.5)) : 0);
   S.near = [0, 31, 0]; S.mid = [0, 71, 0]; S.far = [0, -131, 0]; S.hz = [hr * Math.cos(0.55), 0, -hr * Math.sin(0.55)];
   // photons: crawl in from beyond the horizon (never arriving) and a flow of arriving light inside it

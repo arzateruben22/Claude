@@ -60,11 +60,6 @@
    "t1": 3.2
   },
   {
-   "t": 2.9,
-   "kind": "badge",
-   "tag": "b-illus"
-  },
-  {
    "t": 2.933333333333333,
    "kind": "signature",
    "tag": "title"
@@ -74,6 +69,11 @@
    "kind": "section",
    "id": "normal",
    "t1": 13.3333
+  },
+  {
+   "t": 3.45,
+   "kind": "badge",
+   "tag": "b-illus"
   },
   {
    "t": 6.533333333333333,
