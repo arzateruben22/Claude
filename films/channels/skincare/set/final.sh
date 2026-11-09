@@ -10,5 +10,9 @@ python3 -I films/channels/skincare/set/make_sheet.py $E
 python3 -I kits/cinema/studio/render.py --root $D $D/sheet.json $D/audio | tail -4
 node kits/cinema/film/render.mjs --film $D --tier final --plain
 node kits/cinema/film/render.mjs --film $D --tier final --plain --assemble --audio $D/audio/mix.m4a
-python3 -I kits/cinema/film/qa.py $D || true
+cp $D/out/skin-sense-0$N-9x16-final-plain.mp4 $D/out/skin-sense-0$N-9x16.mp4; cp $D/out/skin-sense-0$N-9x16-final-plain.jpg $D/out/skin-sense-0$N-9x16.jpg
+rm -f $D/out/skin-sense-0$N-9x16-final-plain.* $D/out/skin-sense-0$N-9x16-draft-plain.*
+cp $D/build/final-plain/9x16/contact-sheet.jpg $D/review/contact-sheet-final.jpg
+python3 -I kits/cinema/film/qa.py $D --file $D/out/skin-sense-0$N-9x16.mp4 --json $D/review/qa-delivery.json
+python3 -I kits/cinema/film/youtube1440.py $D
 ls -la $D/out
