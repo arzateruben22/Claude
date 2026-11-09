@@ -1,0 +1,79 @@
+{
+ "duration": 55.2,
+ "fps": 30,
+ "preset": "envelope-working",
+ "tail_s": 0.05,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.8,
+   "energy": 0.6
+  },
+  {
+   "id": "oceans",
+   "t0": 4.8,
+   "t1": 45.6,
+   "energy": 0.6
+  },
+  {
+   "id": "outro",
+   "t0": 45.6,
+   "t1": 49.8,
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 49.8,
+   "t1": 55.2,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.8
+  },
+  {
+   "t": 4.8,
+   "kind": "section",
+   "id": "oceans",
+   "t1": 45.6
+  },
+  {
+   "t": 45.6,
+   "kind": "section",
+   "id": "outro",
+   "t1": 49.8
+  },
+  {
+   "t": 49.93333333333333,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.3,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 5.1,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 45.9,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 50.1,
+   "file": "vo/04.wav"
+  }
+ ]
+}

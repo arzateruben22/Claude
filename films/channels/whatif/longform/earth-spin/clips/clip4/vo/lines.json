@@ -1,0 +1,95 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/longform/earth-spin/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "A two hour day, and you weigh half of what you did.",
+   "stars": [],
+   "phonemes": "ɐ tˈuː ˈaʊɚ dˈeɪ, ænd juː wˈeɪ hˈæf ʌv wʌt juː dˈɪd.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "01.wav",
+   "dur": 3.11,
+   "sha256": "5a3675e219d43d2f6b9c9ed49949810aa9e9d55c903122efaffe1d5cd8fc1b61"
+  },
+  {
+   "id": "vo02",
+   "beat": "two",
+   "text": "At two hours, you weigh half of what you did. Twenty thousand kilometers an hour; the Sun crosses the whole sky in an hour. Every object near the equator is half as heavy as it should be. Buildings, bridges and oceans are all being asked to hold on with half the force.",
+   "stars": [],
+   "phonemes": "æt tˈuː ˈaʊɚz, juː wˈeɪ hˈæf ʌv wʌt juː dˈɪd. twˈɛnti θˈaʊzənd kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ; ðə sˈʌn kɹˈɔsᵻz ðə hˈoʊl skˈaɪ ɪn ɐn ˈaʊɚ. ˈɛvɹi ˈɑːbdʒɛkt nˌɪɹ ðɪ ɪkwˈeɪɾɚɹ ɪz hˈæf æz hˈɛvi æz ɪt ʃˌʊd bˈiː. bˈɪldɪŋz, bɹˈɪdʒᵻz ænd ˈoʊʃənz ɑːɹ ˈɔːl bˌiːɪŋ ˈæskt tə hˈoʊld ˌɔn wɪð hˈæf ðə fˈɔːɹs.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     2.6088,
+     2.9888
+    ],
+    [
+     8.916,
+     9.296
+    ],
+    [
+     13.9241,
+     14.3041
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 20.263,
+   "sha256": "d938f5c83ee55e9c1f542a11fd30b242c2528559b789d97c183b2b0300594d81"
+  },
+  {
+   "id": "vo03",
+   "beat": "outro",
+   "text": "And in half an hour, you stop touching the ground.",
+   "stars": [],
+   "phonemes": "ænd ɪn hˈæf ɐn ˈaʊɚ, juː stˈɑːp tˈʌtʃɪŋ ðə ɡɹˈaʊnd.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "03.wav",
+   "dur": 3.104,
+   "sha256": "9796254a8afcd01a2fe891d860b101f61520bdad45c4a3ee2af53db40c438f8a"
+  },
+  {
+   "id": "vo04",
+   "beat": "tease",
+   "text": "Full video on YouTube.",
+   "stars": [],
+   "phonemes": "fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "04.wav",
+   "dur": 1.624,
+   "sha256": "8a6ecf042ba769f7d8a6a54bfa90334f1613184815c69dcfb334a4092dbeeb06"
+  }
+ ]
+}

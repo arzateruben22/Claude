@@ -1,0 +1,584 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "The ground is moving faster than sound, and the air hasn't noticed.",
+   "heard": "The ground is moving faster than sound, and the air hasn't noticed.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 0.215,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.66,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "moving",
+     "start": 0.865,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 1.325,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 1.97,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "sound,",
+     "start": 2.31,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.975,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.005,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 3.295,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "hasn't",
+     "start": 3.65,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "noticed.",
+     "start": 4.06,
+     "end": 4.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time. For the first hours, the air is left behind. At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound. Winds like that would strip the surface, and they would only be the beginning.",
+   "heard": "The ground speeds up at once. The atmosphere is pulled along only by friction and that takes time. For the first hours, the air is left behind. At a 12-hour day, the ground is moving through the air at about 460 meters a second, faster than the speed of sound. Winds like that would strip the surface, and they would only be the beginning.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 0.22,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "speeds",
+     "start": 0.68,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 1.22,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.47,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "once;",
+     "start": 1.67,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.345,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "atmosphere",
+     "start": 2.525,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.37,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "pulled",
+     "start": 3.615,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "along",
+     "start": 4.12,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 4.675,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 5.05,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "friction,",
+     "start": 5.355,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.155,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 6.26,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 6.585,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "time.",
+     "start": 7.35,
+     "end": 7.585,
+     "heard": true,
+     "end_asr": 7.92
+    },
+    {
+     "w": "For",
+     "start": 7.985,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.04,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 8.315,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "hours,",
+     "start": 8.67,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.225,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 9.39,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 9.77,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "left",
+     "start": 9.8,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "behind.",
+     "start": 10.3,
+     "end": 10.844,
+     "heard": true,
+     "end_asr": 11.2
+    },
+    {
+     "w": "At",
+     "start": 11.25,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 11.535,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "twelve",
+     "start": 11.6,
+     "end": 12.4,
+     "heard": false
+    },
+    {
+     "w": "hour",
+     "start": 11.63,
+     "end": 12.4,
+     "heard": false
+    },
+    {
+     "w": "day,",
+     "start": 12.43,
+     "end": 12.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 12.77,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 12.905,
+     "end": 13.36,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 13.385,
+     "end": 13.6,
+     "heard": true
+    },
+    {
+     "w": "moving",
+     "start": 13.58,
+     "end": 14.16,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 14.165,
+     "end": 14.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 14.48,
+     "end": 14.64,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 14.695,
+     "end": 15.2,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 15.145,
+     "end": 15.52,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 15.605,
+     "end": 15.76,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 15.695,
+     "end": 17.52,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 15.725,
+     "end": 17.52,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 15.76,
+     "end": 17.52,
+     "heard": false
+    },
+    {
+     "w": "sixty",
+     "start": 15.79,
+     "end": 17.52,
+     "heard": false
+    },
+    {
+     "w": "meters",
+     "start": 17.545,
+     "end": 18.08,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 18.1,
+     "end": 18.32,
+     "heard": true
+    },
+    {
+     "w": "second,",
+     "start": 18.375,
+     "end": 19.2,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 19.11,
+     "end": 19.76,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 19.855,
+     "end": 20.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 19.99,
+     "end": 20.16,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 20.3,
+     "end": 20.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 20.6,
+     "end": 20.88,
+     "heard": true
+    },
+    {
+     "w": "sound.",
+     "start": 20.775,
+     "end": 21.452,
+     "heard": true,
+     "end_asr": 21.76
+    },
+    {
+     "w": "Winds",
+     "start": 21.85,
+     "end": 22.32,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 22.29,
+     "end": 22.56,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 22.57,
+     "end": 22.8,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 22.815,
+     "end": 23.04,
+     "heard": true
+    },
+    {
+     "w": "strip",
+     "start": 22.995,
+     "end": 23.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 23.515,
+     "end": 23.68,
+     "heard": true
+    },
+    {
+     "w": "surface,",
+     "start": 23.76,
+     "end": 24.56,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 24.595,
+     "end": 24.72,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 24.625,
+     "end": 24.96,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 25.035,
+     "end": 25.28,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 25.16,
+     "end": 25.52,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 25.61,
+     "end": 25.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 25.86,
+     "end": 26.0,
+     "heard": true
+    },
+    {
+     "w": "beginning.",
+     "start": 26.015,
+     "end": 26.64,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "And then the oceans start to move.",
+   "heard": "and then the oceans start to move.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 0.2,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.46,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "oceans",
+     "start": 0.49,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "start",
+     "start": 1.145,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.385,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "move.",
+     "start": 1.43,
+     "end": 2.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Full video on YouTube.",
+   "heard": "Full video on YouTube.",
+   "words": [
+    {
+     "w": "Full",
+     "start": 0.03,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 0.37,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.795,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.01,
+     "end": 1.6,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/longform/earth-spin/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

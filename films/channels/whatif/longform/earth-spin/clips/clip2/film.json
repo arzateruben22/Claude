@@ -1,0 +1,654 @@
+{
+ "id": "possibility-lab-earth-spin-clip2",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 41.4,
+ "poster": 13.4,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "shoulder",
+   "beat": "hook"
+  },
+  {
+   "at": 5.4,
+   "name": "eye",
+   "beat": "wind"
+  },
+  {
+   "at": 33.0,
+   "name": "shoulder",
+   "beat": "outro"
+  },
+  {
+   "at": 36.13333333333333,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.4,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "wind",
+   "t0": 5.4,
+   "t1": 33.0,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "outro",
+   "t0": 33.0,
+   "t1": 36.0,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 36.0,
+   "t1": 41.4,
+   "line": "vo04",
+   "energy": 0.4
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    12.0
+   ],
+   [
+    33.0,
+    11.4
+   ],
+   [
+    41.4,
+    11.4
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    41.4,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWin": [
+   6.4,
+   32.8
+  ]
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   5.4,
+   33.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 36.13333333333333,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 41.2,
+   "slot": "bl"
+  },
+  {
+   "id": "b-ms",
+   "text": "wind through the air: ≈ 463 m/s at first",
+   "t0": 6.4,
+   "t1": 32.7,
+   "slot": "tr"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab · Part 2 of 5",
+  "title": "",
+  "t0": 0.2,
+  "t1": 2.4,
+  "sig": 0.3333
+ },
+ "endCard": 36.13333333333333,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster…*",
+  "follow": "Part 2 of 5 · Possibility Lab",
+  "next": "Narration: synthetic voice (AI)."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "captions": [
+  {
+   "t0": 0.185,
+   "t1": 3.275,
+   "lines": [
+    [
+     [
+      "The",
+      0.325
+     ],
+     [
+      "ground",
+      0.515
+     ],
+     [
+      "is",
+      0.96
+     ],
+     [
+      "moving",
+      1.165
+     ]
+    ],
+    [
+     [
+      "faster",
+      1.625
+     ],
+     [
+      "than",
+      2.27
+     ],
+     [
+      "sound,",
+      2.61
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.275,
+   "t1": 5.11,
+   "lines": [
+    [
+     [
+      "and",
+      3.275
+     ],
+     [
+      "the",
+      3.305
+     ],
+     [
+      "air",
+      3.595
+     ]
+    ],
+    [
+     [
+      "hasn't",
+      3.95
+     ],
+     [
+      "noticed.",
+      4.36
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.585,
+   "t1": 8.045,
+   "lines": [
+    [
+     [
+      "The",
+      5.725
+     ],
+     [
+      "ground",
+      5.92
+     ],
+     [
+      "speeds",
+      6.38
+     ]
+    ],
+    [
+     [
+      "up",
+      6.92
+     ],
+     [
+      "at",
+      7.17
+     ],
+     [
+      "once;",
+      7.37
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.045,
+   "t1": 11.805,
+   "lines": [
+    [
+     [
+      "the",
+      8.045
+     ],
+     [
+      "atmosphere",
+      8.225
+     ],
+     [
+      "is",
+      9.07
+     ],
+     [
+      "pulled",
+      9.315
+     ]
+    ],
+    [
+     [
+      "along",
+      9.82
+     ],
+     [
+      "only",
+      10.375
+     ],
+     [
+      "by",
+      10.75
+     ],
+     [
+      "friction,",
+      11.055
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.855,
+   "t1": 13.685,
+   "lines": [
+    [
+     [
+      "and",
+      11.855
+     ],
+     [
+      "that",
+      11.96
+     ],
+     [
+      "takes",
+      12.285
+     ],
+     [
+      "time.",
+      13.05
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.685,
+   "t1": 16.75,
+   "lines": [
+    [
+     [
+      "For",
+      13.685
+     ],
+     [
+      "the",
+      13.74
+     ],
+     [
+      "first",
+      14.015
+     ],
+     [
+      "hours,",
+      14.37
+     ]
+    ],
+    [
+     [
+      "the",
+      14.925
+     ],
+     [
+      "air",
+      15.09
+     ],
+     [
+      "is",
+      15.47
+     ],
+     [
+      "left",
+      15.5
+     ],
+     [
+      "behind.",
+      16.0
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.81,
+   "t1": 19.865,
+   "lines": [
+    [
+     [
+      "At",
+      16.95
+     ],
+     [
+      "a",
+      17.235
+     ],
+     [
+      "12",
+      17.3
+     ],
+     [
+      "hour",
+      17.33
+     ],
+     [
+      "day,",
+      18.13
+     ]
+    ],
+    [
+     [
+      "the",
+      18.47
+     ],
+     [
+      "ground",
+      18.605
+     ],
+     [
+      "is",
+      19.085
+     ],
+     [
+      "moving",
+      19.28
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.865,
+   "t1": 23.8,
+   "lines": [
+    [
+     [
+      "through",
+      19.865
+     ],
+     [
+      "the",
+      20.18
+     ],
+     [
+      "air",
+      20.395
+     ]
+    ],
+    [
+     [
+      "at",
+      20.845
+     ],
+     [
+      "about",
+      21.305
+     ],
+     [
+      "460",
+      21.395
+     ],
+     [
+      "meters",
+      23.245
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 23.8,
+   "t1": 27.225,
+   "lines": [
+    [
+     [
+      "a",
+      23.8
+     ],
+     [
+      "second,",
+      24.075
+     ],
+     [
+      "faster",
+      24.81
+     ]
+    ],
+    [
+     [
+      "than",
+      25.555
+     ],
+     [
+      "the",
+      25.69
+     ],
+     [
+      "speed",
+      26.0
+     ],
+     [
+      "of",
+      26.3
+     ],
+     [
+      "sound.",
+      26.475
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.41,
+   "t1": 30.21,
+   "lines": [
+    [
+     [
+      "Winds",
+      27.55
+     ],
+     [
+      "like",
+      27.99
+     ],
+     [
+      "that",
+      28.27
+     ],
+     [
+      "would",
+      28.515
+     ]
+    ],
+    [
+     [
+      "strip",
+      28.695
+     ],
+     [
+      "the",
+      29.215
+     ],
+     [
+      "surface,",
+      29.46
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.295,
+   "t1": 32.465,
+   "lines": [
+    [
+     [
+      "and",
+      30.295
+     ],
+     [
+      "they",
+      30.325
+     ],
+     [
+      "would",
+      30.735
+     ],
+     [
+      "only",
+      30.86
+     ]
+    ],
+    [
+     [
+      "be",
+      31.31
+     ],
+     [
+      "the",
+      31.56
+     ],
+     [
+      "beginning.",
+      31.715
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.18,
+   "t1": 35.48,
+   "lines": [
+    [
+     [
+      "And",
+      33.32
+     ],
+     [
+      "then",
+      33.5
+     ],
+     [
+      "the",
+      33.76
+     ],
+     [
+      "oceans",
+      33.79
+     ]
+    ],
+    [
+     [
+      "start",
+      34.445
+     ],
+     [
+      "to",
+      34.685
+     ],
+     [
+      "move.",
+      34.73
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.3,
+   "dur": 4.783,
+   "file": "vo/01.wav",
+   "text": "The ground is moving faster than sound, and the air hasn't noticed."
+  },
+  {
+   "id": "vo02",
+   "t": 5.7,
+   "dur": 26.712,
+   "file": "vo/02.wav",
+   "text": "The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time. For the first hours, the air is left behind. At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound. Winds like that would strip the surface, and they would only be the beginning."
+  },
+  {
+   "id": "vo03",
+   "t": 33.3,
+   "dur": 2.116,
+   "file": "vo/03.wav",
+   "text": "And then the oceans start to move."
+  },
+  {
+   "id": "vo04",
+   "t": 36.3,
+   "dur": 1.624,
+   "file": "vo/04.wav",
+   "text": "Full video on YouTube."
+  }
+ ]
+}

@@ -1,0 +1,757 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "At an hour and twenty-four minutes, you're in orbit, standing still.",
+   "heard": "At an hour and 24 minutes you're in orbit standing still.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 0.36,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.39,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.845,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "twenty-four",
+     "start": 1.02,
+     "end": 1.68,
+     "heard": false
+    },
+    {
+     "w": "minutes,",
+     "start": 1.73,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 2.05,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.575,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "orbit,",
+     "start": 2.605,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "standing",
+     "start": 3.25,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "still.",
+     "start": 3.895,
+     "end": 4.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "At a day of about an hour and twenty-four minutes, the ground under you moves at seven point nine kilometers a second. That is the speed of a satellite in a low orbit. At that speed, the push outward exactly cancels gravity. You weigh nothing. You are no longer standing on the Earth. You are orbiting it, one stride above the surface, with the whole equator going by beneath you.",
+   "heard": "At a day of about an hour and 24 minutes, the ground under you moves at 7.9 kilometers a second. That is the speed of a satellite in a low orbit. At that speed, the push outward exactly cancels gravity. You weigh nothing. You are no longer standing on the earth. You are orbiting it one stride above the surface, with the whole equator going by beneath you.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.03,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.335,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.365,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.705,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.835,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 1.22,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 1.265,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.85,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "twenty-four",
+     "start": 2.05,
+     "end": 2.8,
+     "heard": false
+    },
+    {
+     "w": "minutes,",
+     "start": 2.87,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.505,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 3.635,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 4.21,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 4.57,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 4.735,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 5.425,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "seven",
+     "start": 5.575,
+     "end": 7.04,
+     "heard": false
+    },
+    {
+     "w": "point",
+     "start": 5.605,
+     "end": 7.04,
+     "heard": false
+    },
+    {
+     "w": "nine",
+     "start": 5.755,
+     "end": 7.04,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 7.1,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.09,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 8.415,
+     "end": 8.829,
+     "heard": true,
+     "end_asr": 9.2
+    },
+    {
+     "w": "That",
+     "start": 9.23,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 9.495,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.73,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 9.995,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 10.255,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 10.285,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "satellite",
+     "start": 10.545,
+     "end": 11.2,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 11.32,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 11.35,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "low",
+     "start": 11.53,
+     "end": 11.92,
+     "heard": true
+    },
+    {
+     "w": "orbit.",
+     "start": 11.925,
+     "end": 12.553,
+     "heard": true,
+     "end_asr": 12.88
+    },
+    {
+     "w": "At",
+     "start": 12.955,
+     "end": 13.12,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 13.155,
+     "end": 13.36,
+     "heard": true
+    },
+    {
+     "w": "speed,",
+     "start": 13.37,
+     "end": 13.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 13.895,
+     "end": 14.0,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 14.015,
+     "end": 14.48,
+     "heard": true
+    },
+    {
+     "w": "outward",
+     "start": 14.48,
+     "end": 15.04,
+     "heard": true
+    },
+    {
+     "w": "exactly",
+     "start": 15.02,
+     "end": 15.68,
+     "heard": true
+    },
+    {
+     "w": "cancels",
+     "start": 15.745,
+     "end": 16.4,
+     "heard": true
+    },
+    {
+     "w": "gravity.",
+     "start": 16.46,
+     "end": 17.178,
+     "heard": true,
+     "end_asr": 17.52
+    },
+    {
+     "w": "You",
+     "start": 17.58,
+     "end": 17.68,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 17.61,
+     "end": 18.08,
+     "heard": true
+    },
+    {
+     "w": "nothing.",
+     "start": 18.17,
+     "end": 18.663,
+     "heard": true,
+     "end_asr": 18.96
+    },
+    {
+     "w": "You",
+     "start": 19.07,
+     "end": 19.12,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 19.1,
+     "end": 19.36,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 19.265,
+     "end": 19.52,
+     "heard": true
+    },
+    {
+     "w": "longer",
+     "start": 19.54,
+     "end": 19.92,
+     "heard": true
+    },
+    {
+     "w": "standing",
+     "start": 20.015,
+     "end": 20.4,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 20.485,
+     "end": 20.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 20.655,
+     "end": 20.88,
+     "heard": true
+    },
+    {
+     "w": "Earth.",
+     "start": 20.875,
+     "end": 21.39,
+     "heard": true,
+     "end_asr": 21.84
+    },
+    {
+     "w": "You",
+     "start": 21.79,
+     "end": 22.0,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 21.89,
+     "end": 22.32,
+     "heard": true
+    },
+    {
+     "w": "orbiting",
+     "start": 22.325,
+     "end": 23.04,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 23.06,
+     "end": 23.28,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 23.33,
+     "end": 23.68,
+     "heard": true
+    },
+    {
+     "w": "stride",
+     "start": 23.66,
+     "end": 24.24,
+     "heard": true
+    },
+    {
+     "w": "above",
+     "start": 24.33,
+     "end": 24.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 24.6,
+     "end": 24.8,
+     "heard": true
+    },
+    {
+     "w": "surface,",
+     "start": 24.855,
+     "end": 25.6,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 25.695,
+     "end": 25.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 25.875,
+     "end": 26.0,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 25.905,
+     "end": 26.4,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 26.505,
+     "end": 27.2,
+     "heard": true
+    },
+    {
+     "w": "going",
+     "start": 27.09,
+     "end": 27.52,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 27.57,
+     "end": 27.84,
+     "heard": true
+    },
+    {
+     "w": "beneath",
+     "start": 27.93,
+     "end": 28.4,
+     "heard": true
+    },
+    {
+     "w": "you.",
+     "start": 28.41,
+     "end": 28.8,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "And past that point, the equator can no longer keep its own rock. This is as far as a simple sum can honestly take us.",
+   "heard": "And past that point, the equator can no longer keep its own rock. This is as far as a simple sum can honestly take us.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "past",
+     "start": 0.26,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 0.725,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "point,",
+     "start": 1.015,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.54,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 1.735,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 2.315,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 2.495,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "longer",
+     "start": 2.825,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "keep",
+     "start": 3.22,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 3.51,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 4.005,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "rock.",
+     "start": 4.105,
+     "end": 4.672,
+     "heard": true,
+     "end_asr": 5.04
+    },
+    {
+     "w": "This",
+     "start": 5.075,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 5.35,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 5.535,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "far",
+     "start": 5.845,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 6.17,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.205,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "simple",
+     "start": 6.395,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "sum",
+     "start": 6.775,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 7.3,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "honestly",
+     "start": 7.585,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "take",
+     "start": 8.24,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "us.",
+     "start": 8.53,
+     "end": 8.96,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo04",
+   "text": "Watch how it ends, in the full video.",
+   "heard": "Watch how it ends in the full video.",
+   "words": [
+    {
+     "w": "Watch",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 0.295,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 0.635,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "ends,",
+     "start": 0.82,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.255,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.285,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "full",
+     "start": 1.43,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "video.",
+     "start": 1.78,
+     "end": 2.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Full video on YouTube.",
+   "heard": "Full video on YouTube.",
+   "words": [
+    {
+     "w": "Full",
+     "start": 0.03,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 0.37,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.795,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.01,
+     "end": 1.6,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/longform/earth-spin/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

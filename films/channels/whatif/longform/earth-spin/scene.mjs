@@ -15,6 +15,7 @@ import { unlit, ACES_INV_GLSL, hexRgb } from "../../set/aces.js";
 import { earthSurface } from "../../../space/set/planet.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, WD = FILM.world, CUE = FILM.cue;
+const PORT = H > W;                                                        // vertical clips use the same scene, framed natively for 9:16
 const TK = (window.THEME && window.THEME.tokens) || {};
 const canvas = document.getElementById("gl");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
@@ -121,17 +122,18 @@ const titleEl = hud.title(FILM.title);
 const tFlap = titleFlap(titleEl, { t0: FILM.title.t0 ?? 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 const beat = (id) => FILM.beats.find((b) => b.id === id);
-hud.badge("b-weight", { text: (t) => { const w = Math.max(0, weightFrac(Th(t))); return "you weigh " + (100 * w < 99.95 ? (100 * w).toFixed(100 * w < 10 ? 1 : 1) : "100") + " % of normal"; }, t0: beat("today").t0 + 19, t1: beat("break").t0 - 0.2, slot: "tl" });
-const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.3 });
+const WW = WD.weightWin || [beat("today").t0 + 19, beat("break").t0 - 0.2];
+hud.badge("b-weight", { text: (t) => { const w = Math.max(0, weightFrac(Th(t))); return "you weigh " + (100 * w < 99.95 ? (100 * w).toFixed(1) : "100") + " % of normal"; }, t0: WW[0], t1: WW[1], slot: "tl" });
+const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: PORT ? 0.34 : 0.3 });
 const endT = endEl.querySelector(".t"), endFo = endEl.querySelector(".fo"); if (endT) endT.style.fontSize = "7vmin"; if (endFo) endFo.style.marginTop = "2vmin";
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "70vmin", margin: "2vmin auto 0" });
 const dimEl = document.createElement("div"); dimEl.style.cssText = "position:absolute;inset:0;background:#171A1E;opacity:0;pointer-events:none;z-index:2"; document.body.appendChild(dimEl);
 // the one big live number: the length of a day, and your speed under it
 const roEl = document.createElement("div");
-roEl.style.cssText = "position:absolute;left:5vw;top:21vh;z-index:5;pointer-events:none;color:var(--hud-text);text-shadow:0 .2vmin 1.2vmin rgba(0,0,0,.55)";
-roEl.innerHTML = '<div style="font:700 2.1vh/1 var(--font-text);letter-spacing:.16em;color:var(--hud-text-2)">LENGTH OF A DAY</div><div id="roT" style="font:800 15vh/1.02 var(--font-display);letter-spacing:-.02em;font-variation-settings:\'wdth\' 85;margin-top:.8vh"></div>' +
-  '<div style="margin-top:2.4vh;font:700 2.1vh/1 var(--font-text);letter-spacing:.16em;color:var(--hud-text-2)">YOUR SPEED AT THE EQUATOR</div><div id="roV" style="font:700 5.4vh/1.1 var(--font-mono);color:' + AMB + ';margin-top:.8vh;font-variant-numeric:tabular-nums"></div>';
+roEl.style.cssText = "position:absolute;left:" + (PORT ? "6vw" : "5vw") + ";top:" + (PORT ? "15vh" : "21vh") + ";z-index:5;pointer-events:none;color:var(--hud-text);text-shadow:0 .2vmin 1.2vmin rgba(0,0,0,.55)";
+roEl.innerHTML = '<div style="font:700 2.1vh/1 var(--font-text);letter-spacing:.16em;color:var(--hud-text-2)">LENGTH OF A DAY</div><div id="roT" style="font:800 ' + (PORT ? 'min(9vh,17vw)' : '15vh') + '/1.02 var(--font-display);letter-spacing:-.02em;font-variation-settings:\'wdth\' 85;margin-top:.8vh"></div>' +
+  '<div style="margin-top:' + (PORT ? '1.4vh' : '2.4vh') + ';font:700 2.1vh/1 var(--font-text);letter-spacing:.16em;color:var(--hud-text-2)">YOUR SPEED AT THE EQUATOR</div><div id="roV" style="font:700 ' + (PORT ? 'min(3.6vh,7vw)' : '5.4vh') + '/1.1 var(--font-mono);color:' + AMB + ';margin-top:.8vh;font-variant-numeric:tabular-nums"></div>';
 document.body.appendChild(roEl);
 const roT = roEl.querySelector("#roT"), roV = roEl.querySelector("#roV");
 const fmtT = (T) => T >= 10 ? Math.round(T) + " h" : T >= 1.995 ? T.toFixed(1) + " h" : Math.floor(T + 1e-6) + " h " + String(Math.round((T - Math.floor(T + 1e-6)) * 60)).padStart(2, "0") + " min";
@@ -161,13 +163,13 @@ window.seek = function (t) {
   const shake = 0.0016 * spinU * Math.sin(t * 31) + 0.0008 * spinU * Math.sin(t * 17.3);
   if (shot === "eye") {
     const yaw = 0.05 * Math.sin(t * 0.21), pit = 0.19 + 0.03 * Math.sin(t * 0.17);
-    camera.fov = 56; camera.position.set(0, 1.7, 0.2); camera.rotation.set(pit + shake, yaw, 0, "YXZ");
+    camera.fov = PORT ? 70 : 56; camera.position.set(0, 1.7, 0.2); camera.rotation.set(pit + shake, yaw, 0, "YXZ");
   } else if (pov) {
     const a = 0.12 * Math.sin(t * 0.15);
-    camera.fov = 44; camera.position.set(1.1 + 0.4 * Math.sin(t * 0.13), 2.15 + 0.5 * liftU + rise * 0.9, 3.6 + 0.3 * rise);
+    camera.fov = PORT ? 62 : 44; camera.position.set(PORT ? 0.8 : 1.1 + 0.4 * Math.sin(t * 0.13), 2.15 + 0.5 * liftU + rise * 0.9, 3.6 + 0.3 * rise);
     camera.lookAt(-0.35 + a, 1.5 + rise * 0.85, -6); camera.rotation.z += shake;
   }
-  window.__focus = shot === "eye" ? [0, 1.7, -12] : shot === "globe" ? [-1.4, 0.1, 0] : shot === "tower" ? [0, 20, 0] : [0, 1.4 + rise * 0.6, 0];
+  window.__focus = shot === "eye" ? [0, 1.7, -12] : shot === "globe" ? [PORT ? 0 : -1.4, 0.1, 0] : shot === "tower" ? [0, 20, 0] : [0, 1.4 + rise * 0.6, 0];
   you.group.visible = shot === "shoulder" || shot === "lift" || shot === "end";
   if (you.group.visible) { you.set({ at: [0, 0.85 + rise, 0], arms: 0.06 + 0.5 * liftU, tilt: 0 }); you.group.rotation.y = Math.PI; }
 
@@ -186,7 +188,8 @@ window.seek = function (t) {
   if (gl) {
     const pulling = beatId === "break" ? E.inout2(seg(t, CUE.break[0] + 1.5, CUE.break[1] - 2)) : 0;
     camera.fov = 30; const cam = beatId === "break" ? 6.2 : 5.4;
-    camera.position.set(-1.6 + 0.0, 0.9 + 0.2 * Math.sin(t * 0.1), cam); camera.lookAt(-1.4, 0.1, 0);
+    if (PORT) { camera.position.set(0, 1.4 + 0.2 * Math.sin(t * 0.1), beatId === "break" ? 14.5 : 12.4); camera.lookAt(0, -0.72, 0); }
+    else { camera.position.set(-1.6 + 0.0, 0.9 + 0.2 * Math.sin(t * 0.1), cam); camera.lookAt(-1.4, 0.1, 0); }
     // markers and arrows (poles beat)
     const mo = beatId === "poles" ? E.inout2(seg(t, CUE.poles[0] + 5, CUE.poles[0] + 7)) * (1 - E.inout2(seg(t, CUE.poles[1] - 2, CUE.poles[1] - 0.5))) : 0;
     markers.visible = (beatId === "poles" || beatId === "premise") && (mo > 0.01 || beatId === "premise"); arrows.visible = mo > 0.01;

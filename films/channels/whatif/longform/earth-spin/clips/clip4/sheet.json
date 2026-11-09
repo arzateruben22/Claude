@@ -1,0 +1,79 @@
+{
+ "duration": 34.8,
+ "fps": 30,
+ "preset": "envelope-working",
+ "tail_s": 0.05,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.2,
+   "energy": 0.6
+  },
+  {
+   "id": "two",
+   "t0": 4.2,
+   "t1": 25.2,
+   "energy": 0.6
+  },
+  {
+   "id": "outro",
+   "t0": 25.2,
+   "t1": 29.4,
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 29.4,
+   "t1": 34.8,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.2
+  },
+  {
+   "t": 4.2,
+   "kind": "section",
+   "id": "two",
+   "t1": 25.2
+  },
+  {
+   "t": 25.2,
+   "kind": "section",
+   "id": "outro",
+   "t1": 29.4
+  },
+  {
+   "t": 29.533333333333335,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.3,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 4.5,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 25.5,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 29.7,
+   "file": "vo/04.wav"
+  }
+ ]
+}
