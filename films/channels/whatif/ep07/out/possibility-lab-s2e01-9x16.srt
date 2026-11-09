@@ -100,12 +100,3 @@ in about three days.
 00:01:01,460 --> 00:01:04,705
 The distance never
 changed, only the speed.
-
-22
-00:01:05,720 --> 00:01:06,935
-Next envelope:
-
-23
-00:01:07,055 --> 00:01:09,775
-what if everyone
-on Earth held hands?
