@@ -474,17 +474,6 @@
  },
  "labels": [
   {
-   "id": "l-hz",
-   "text": "event horizon",
-   "kind": "light",
-   "anchor": "hz",
-   "t0": 5.1333,
-   "t1": 17.4667,
-   "side": 1,
-   "v": "above",
-   "fixed": true
-  },
-  {
    "id": "l-probe",
    "text": "probe: falls back",
    "kind": "body",
@@ -497,56 +486,12 @@
   },
   {
    "id": "l-you",
-   "text": "you, far away",
+   "text": "you",
    "kind": "body",
    "anchor": "you",
    "t0": 19.2333,
    "t1": 26.7,
    "side": 1,
-   "v": "below",
-   "fixed": true
-  },
-  {
-   "id": "l-friend",
-   "text": "your friend (hovering)",
-   "kind": "star",
-   "anchor": "friend",
-   "t0": 20.4333,
-   "t1": 26.7,
-   "side": -1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-gps",
-   "text": "GPS satellite",
-   "kind": "body",
-   "anchor": "gps",
-   "t0": 27.2,
-   "t1": 31.55,
-   "side": 1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-far",
-   "text": "far: fast",
-   "kind": "body",
-   "anchor": "clockFar",
-   "t0": 32.15,
-   "t1": 36.1667,
-   "side": 1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-near",
-   "text": "near: slow",
-   "kind": "grav",
-   "anchor": "clockNear",
-   "t0": 32.4,
-   "t1": 36.1667,
-   "side": -1,
    "v": "below",
    "fixed": true
   }
@@ -567,107 +512,8 @@
    "slot": "tr"
   }
  ],
- "counters": [
-  {
-   "id": "c-hook",
-   "label": "the edge of a black hole",
-   "text": "?",
-   "t0": 0.0,
-   "t1": 3.2,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-esc",
-   "label": "past the edge, escape needs",
-   "text": "more than light speed",
-   "t0": 11.933333333333334,
-   "t1": 14.4,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-views",
-   "label": "compare the two views",
-   "text": "far away · hovering",
-   "t0": 37.0667,
-   "t1": 32.5333,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-slow",
-   "label": "close to a black hole",
-   "text": "clocks tick slower",
-   "t0": 32.93333333333334,
-   "t1": 37.766666666666666,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-gap",
-   "label": "the closer they hover",
-   "text": "the gap grows",
-   "t0": 49.36666666666667,
-   "t1": 51.2,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-both",
-   "label": "both views are",
-   "text": "true",
-   "t0": 52.43333333333333,
-   "t1": 57.6,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-read",
-   "label": "light time · first photo",
-   "text": "about 55 million years",
-   "read": true,
-   "t0": 63.1667,
-   "t1": 65.7833,
-   "at": [
-    0.5,
-    0.555
-   ]
-  }
- ],
+ "counters": [],
  "pills": [
-  {
-   "id": "p-probe",
-   "text": "any speed: falls back",
-   "t0": 6.5,
-   "t1": 14.2,
-   "at": [
-    0.08333333333333333,
-    0.2
-   ]
-  },
-  {
-   "id": "p-gps",
-   "text": "GPS clocks are corrected",
-   "t0": 27.1,
-   "t1": 31.65,
-   "at": [
-    0.08333333333333333,
-    0.2
-   ]
-  },
   {
    "id": "p-gap",
    "text": "bar = tick rate you see",

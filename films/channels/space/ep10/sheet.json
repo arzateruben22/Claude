@@ -76,19 +76,9 @@
    "tag": "b-illus"
   },
   {
-   "t": 5.1333,
-   "kind": "label",
-   "tag": "l-hz"
-  },
-  {
    "t": 7.0,
    "kind": "label",
    "tag": "l-probe"
-  },
-  {
-   "t": 11.933333333333334,
-   "kind": "counter.show",
-   "tag": "c-esc"
   },
   {
    "t": 14.4,
@@ -102,40 +92,10 @@
    "tag": "l-you"
   },
   {
-   "t": 20.4333,
-   "kind": "label",
-   "tag": "l-friend"
-  },
-  {
    "t": 24.0,
    "kind": "section",
    "id": "why",
    "t1": 38.9333
-  },
-  {
-   "t": 27.2,
-   "kind": "label",
-   "tag": "l-gps"
-  },
-  {
-   "t": 32.15,
-   "kind": "label",
-   "tag": "l-far"
-  },
-  {
-   "t": 32.4,
-   "kind": "label",
-   "tag": "l-near"
-  },
-  {
-   "t": 32.93333333333334,
-   "kind": "counter.show",
-   "tag": "c-slow"
-  },
-  {
-   "t": 37.0667,
-   "kind": "counter.show",
-   "tag": "c-views"
   },
   {
    "t": 38.9333,
@@ -144,20 +104,10 @@
    "t1": 51.2
   },
   {
-   "t": 49.36666666666667,
-   "kind": "counter.show",
-   "tag": "c-gap"
-  },
-  {
    "t": 51.2,
    "kind": "section",
    "id": "takeaway",
    "t1": 57.6
-  },
-  {
-   "t": 52.43333333333333,
-   "kind": "counter.show",
-   "tag": "c-both"
   },
   {
    "t": 57.6,
@@ -174,11 +124,6 @@
    "t": 59.333333333333336,
    "kind": "light.front",
    "tag": "photo-ring"
-  },
-  {
-   "t": 63.1667,
-   "kind": "counter.show",
-   "tag": "c-read"
   },
   {
    "t": 66.1333,
