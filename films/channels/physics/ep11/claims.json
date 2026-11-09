@@ -1,0 +1,123 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Pour water into a mug, and the sound climbs higher and higher.",
+  "claim": "As a vessel is filled with water, the sound of pouring has an increasing pitch.",
+  "source_url": "https://arxiv.org/abs/2411.11222",
+  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the source text; a person has not opened it). Quote: \"As the liquid (e.g. water) is filled, a sound consisting of an increasing pitch and some (odd) harmonics superimposed with whooshing, gurgling is observed\" (The paper quotes Berg and Stork.) A mug is not exactly the paper's cylinder; 'climbs' means the pitch trend."
+ },
+ {
+  "id": "c2",
+  "sentence": "A computer can even work out the water level from the sound alone.",
+  "claim": "A model trained to detect pitch can predict the height of the air column for cylindrical vessels from the sound, with an accuracy of about 0.6 cm.",
+  "source_url": "https://arxiv.org/abs/2411.11222",
+  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the source text; a person has not opened it). Quote: \"accuracy of ±0.60 cm in predicting the air column height for cylinders\" Cylinders; the paper gets the air column height, from which the water level follows."
+ },
+ {
+  "id": "c3",
+  "sentence": "The empty space above the water acts like a pipe, closed at the water end.",
+  "claim": "The air column above the water behaves like an organ pipe closed at one end.",
+  "source_url": "https://arxiv.org/abs/2411.11222",
+  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the source text; a person has not opened it). Quote: \"it pushes out air in the air column creating a frequency pattern that resembles blowing air in an organ pipe closed at one end\" 'Resembles' / 'acts like': a model."
+ },
+ {
+  "id": "c4",
+  "sentence": "Sound bounces up and down inside it.",
+  "claim": "The resonance is a standing wave in the air column, with a node at the water surface and a maximum at the top of the vessel.",
+  "source_url": "https://arxiv.org/abs/2411.11222",
+  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the source text; a person has not opened it). Quote: \"This expression arises from a standing wave of wavelength\" The node/maximum placement is from the paper's description of the standing wave; the film draws it."
+ },
+ {
+  "id": "c5",
+  "sentence": "A short pipe rings higher than a long one.",
+  "claim": "For a tube closed at one end the resonant frequencies are f_n = n v / 4L, so a shorter tube has a higher frequency.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-5-sources-of-musical-sound",
+  "source_title": "OpenStax University Physics Vol. 1, 17.5 Sources of Musical Sound (page text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the source text; a person has not opened it). Quote: \"The length L can be found from the relationship f_n = n v / 4L\" The film uses the n = 1 (lowest) resonance."
+ },
+ {
+  "id": "c6",
+  "sentence": "A flute player changes the note by changing the length of the pipe.",
+  "claim": "Players of instruments such as the flute or oboe vary the length of the tube by opening and closing finger holes.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-5-sources-of-musical-sound",
+  "source_title": "OpenStax University Physics Vol. 1, 17.5 Sources of Musical Sound (page text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the source text; a person has not opened it). Quote: \"Players of instruments such as the flute or oboe vary the length of the tube by opening and closing finger holes.\" The page also says changing the length of the air column changes the frequency of the note."
+ },
+ {
+  "id": "c7",
+  "sentence": "As the water rises, the empty space shrinks, and the pitch climbs.",
+  "claim": "As the water level increases, the vacant space for air to vibrate reduces and the frequency increases.",
+  "source_url": "https://arxiv.org/abs/2411.11222",
+  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the source text; a person has not opened it). Quote: \"As the water level increases, the vacant space for air molecules to vibrate reduces and hence the frequency increases.\""
+ },
+ {
+  "id": "c9",
+  "sentence": "With two centimeters left, the mug rings nearly three times higher than when empty.",
+  "claim": "For an illustrated mug 10 cm tall and R = 4 cm, the pitch at l = 2 cm is about 1,914 Hz against about 687 Hz at l = 10 cm: a ratio of 2.8.",
+  "source_url": "https://arxiv.org/abs/2411.11222",
+  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026) (formula, Eq. 2)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "OPEN: computed by us from the paper's Eq. 2, f = c / (4 (l + 0.62 R)), with c = 343 m/s and R = 4 cm. Real mugs differ (shape, handle, flow noise)."
+ },
+ {
+  "id": "c10",
+  "sentence": "Measure it: with ten centimeters of empty space, you hear about seven hundred vibrations a second.",
+  "claim": "For l = 10 cm, f = 34300 / (4 (10 + 2.48)) = about 687 Hz.",
+  "source_url": "https://arxiv.org/abs/2411.11222",
+  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026) (formula, Eq. 2)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "OPEN: computed by us from the paper's Eq. 2, f = c / (4 (l + 0.62 R)), with c = 343 m/s and R = 4 cm. 'Vibrations a second' is hertz, said in plain words."
+ },
+ {
+  "id": "c11",
+  "sentence": "With two centimeters, you hear nearly two thousand.",
+  "claim": "For l = 2 cm, f = 34300 / (4 (2 + 2.48)) = about 1,914 Hz.",
+  "source_url": "https://arxiv.org/abs/2411.11222",
+  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026) (formula, Eq. 2)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "OPEN: computed by us from the paper's Eq. 2, f = c / (4 (l + 0.62 R)), with c = 343 m/s and R = 4 cm. "
+ },
+ {
+  "id": "c12",
+  "sentence": "A shorter pipe makes a higher note.",
+  "claim": "Changing the length of the resonating air column changes the frequency of the note played.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-5-sources-of-musical-sound",
+  "source_title": "OpenStax University Physics Vol. 1, 17.5 Sources of Musical Sound (page text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the source text; a person has not opened it). Quote: \"Many wind instruments are modified tubes that have finger holes, valves, and other devices for changing the length of the resonating air column and hence, the frequency of the note played.\""
+ }
+]

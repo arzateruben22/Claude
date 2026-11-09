@@ -1,0 +1,104 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Can you hear a mug fill? Close… your eyes.",
+   "stars": [
+    "fill"
+   ],
+   "phonemes": "kæn juː hˈɪɹ ɐ mˈʌɡ fˈɪl? klˈoʊs… jʊɹ ˈaɪz.",
+   "file": "01.wav",
+   "dur": 2.721,
+   "sha256": "9e2255aa5d4c1990dad0fa7d380e3527952e2b32dbfbf980fd996d050f40db54"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Pour water into a mug, and the sound climbs higher and higher. A computer can even work out the water level from the sound alone.",
+   "stars": [],
+   "phonemes": "pˈɔːɹ wˈɔːɾɚɹ ˌɪntʊ ɐ mˈʌɡ, ænd ðə sˈaʊnd klˈaɪmz hˈaɪɚ ænd hˈaɪɚ. ɐ kəmpjˈuːɾɚ kæn ˈiːvən wˈɜːk ˈaʊt ðə wˈɔːɾɚ lˈɛvəl fɹʌmðə sˈaʊnd ɐlˈoʊn.",
+   "file": "02.wav",
+   "dur": 9.059,
+   "sha256": "e59fae4f3c52b10b3fe513c5f1a8d1ac72c3eca3eacf4f0542ca032a64fe09d7"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "The empty space above the water acts like a pipe, closed at the water end. Sound bounces up and down inside it.",
+   "stars": [],
+   "phonemes": "ðɪ ˈɛmpti spˈeɪs əbˌʌv ðə wˈɔːɾɚɹ ˈækts lˈaɪk ɐ pˈaɪp, klˈoʊzd æt ðə wˈɔːɾɚɹ ˈɛnd. sˈaʊnd bˈaʊnsᵻz ˌʌp ænd dˌaʊn ɪnsˈaɪd ɪt.",
+   "file": "03.wav",
+   "dur": 7.974,
+   "sha256": "891a909b34258b0fb393cb3520d890a02694f8c5a24d0002bcf849be72b57123"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "A short pipe rings higher than a long one. A flute player changes the note by changing the length of the pipe. As the water rises, the empty space shrinks, and the pitch climbs.",
+   "stars": [
+    "climbs"
+   ],
+   "phonemes": "ɐ ʃˈɔːɹt pˈaɪp ɹˈɪŋz hˈaɪɚ ðˌænə lˈɔŋ wˌʌn. ɐ flˈuːt plˈeɪɚ tʃˈeɪndʒᵻz ðə nˈoʊt baɪ tʃˈeɪndʒɪŋ ðə lˈɛŋθ ʌvðə pˈaɪp. æz ðə wˈɔːɾɚ ɹˈaɪzᵻz, ðɪ ˈɛmpti spˈeɪs ʃɹˈɪŋks, ænd ðə pˈɪtʃ klˈaɪmz.",
+   "file": "04.wav",
+   "dur": 12.88,
+   "sha256": "18773852c0415b190f027a4117451abd935c53ff693d407022971bd1bd20e7f9"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Less empty space, a higher pitch. With two centimeters left, the mug rings nearly three times higher than when empty.",
+   "stars": [
+    "pitch"
+   ],
+   "phonemes": "lˈɛs ˈɛmpti spˈeɪs, ɐ hˈaɪɚ pˈɪtʃ. wɪð tˈuː sˈɛntɪmˌiːɾɚz lˈɛft, ðə mˈʌɡ ɹˈɪŋz nˌɪɹli θɹˈiː tˈaɪmz hˈaɪɚ ðɐn wɛn ˈɛmpti.",
+   "file": "05.wav",
+   "dur": 8.49,
+   "sha256": "e57aa849f9e1865659979349e977e907b5f5b376a0e5feee4b11e91e4271892c"
+  },
+  {
+   "id": "vo06",
+   "beat": "measure",
+   "text": "Measure it: with ten centimeters of empty space, you hear about seven hundred vibrations a second. With two centimeters, you hear nearly two thousand.",
+   "stars": [
+    "Measure it"
+   ],
+   "phonemes": "mˈɛʒɚɹ ɪt: wɪð tˈɛn sˈɛntɪmˌiːɾɚz ʌv ˈɛmpti spˈeɪs, juː hˈɪɹ ɐbˌaʊt sˈɛvən hˈʌndɹɪd vˌaɪbɹˈeɪʃənz ɐ sˈɛkənd. wɪð tˈuː sˈɛntɪmˌiːɾɚz, juː hˈɪɹ nˌɪɹli tˈuː θˈaʊzənd.",
+   "file": "06.wav",
+   "dur": 10.613,
+   "sha256": "6a1b4caa5f42c2724189d2eb12a917e06c9f6a6ccea3382c3420346ef31ed2ae"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "A shorter pipe makes a higher note. Next time you pour, listen: the mug tells you how full it is.",
+   "stars": [
+    "listen"
+   ],
+   "phonemes": "ɐ ʃˈɔːɹɾɚ pˈaɪp mˌeɪks ɐ hˈaɪɚ nˈoʊt. nˈɛkst tˈaɪm juː pˈɔːɹ, lˈɪsən: ðə mˈʌɡ tˈɛlz juː hˌaʊ fˈʊl ɪɾ ˈɪz.",
+   "file": "07.wav",
+   "dur": 6.757,
+   "sha256": "7ca4e08db20acb0523ca86baee44d81d86f5f8c1083946422f0c26041d3c4a7e"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a raindrop falls a mile. Why doesn't it hurt?",
+   "stars": [
+    "hurt"
+   ],
+   "phonemes": "nˈɛkst: ɐ ɹˈeɪndɹɑːp fˈɔːlz ɐ mˈaɪl. wˌaɪ dˈʌzənt ɪt hˈɜːt?",
+   "file": "08.wav",
+   "dur": 3.437,
+   "sha256": "c9ecf20549ba8e8f3d2089515e253415fb6be54a5e1a1e7d203a920ef1a46f11"
+  }
+ ]
+}

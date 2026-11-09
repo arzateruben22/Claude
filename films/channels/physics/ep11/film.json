@@ -1,0 +1,1539 @@
+{
+ "id": "reality-rulebook-s2e05",
+ "fps": 30,
+ "bpm": 112.5,
+ "dur": 74.6667,
+ "poster": 0.0,
+ "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "hook"
+  },
+  {
+   "at": 3.450033,
+   "name": "normal"
+  },
+  {
+   "at": 14.650033,
+   "name": "change"
+  },
+  {
+   "at": 23.183333,
+   "name": "why"
+  },
+  {
+   "at": 38.383333,
+   "name": "whoa"
+  },
+  {
+   "at": 50.116633,
+   "name": "measure"
+  },
+  {
+   "at": 61.583333,
+   "name": "takeaway"
+  },
+  {
+   "at": 69.050033,
+   "name": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 3.4667,
+   "line": "vo01",
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 3.4667,
+   "t1": 14.6667,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 14.6667,
+   "t1": 23.2,
+   "line": "vo03",
+   "energy": 0.5
+  },
+  {
+   "id": "why",
+   "t0": 23.2,
+   "t1": 38.4,
+   "line": "vo04",
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 38.4,
+   "t1": 50.1333,
+   "line": "vo05",
+   "energy": 0.75
+  },
+  {
+   "id": "measure",
+   "t0": 50.1333,
+   "t1": 61.6,
+   "line": "vo06",
+   "energy": 0.5
+  },
+  {
+   "id": "takeaway",
+   "t0": 61.6,
+   "t1": 69.0667,
+   "line": "vo07",
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 69.0667,
+   "t1": 74.6667,
+   "line": "vo08",
+   "energy": 0.4
+  }
+ ],
+ "cue": {
+  "cuts": {
+   "hook": 0.0,
+   "normal": 3.450033,
+   "change": 14.650033,
+   "why": 23.183333,
+   "whoa": 38.383333,
+   "measure": 50.116633,
+   "takeaway": 61.583333,
+   "tease": 69.050033
+  },
+  "pipes": [
+   23.383333,
+   38.233333
+  ],
+  "chart": [
+   50.416633,
+   68.850033
+  ],
+  "mug": [
+   0.0,
+   23.083333
+  ],
+  "mug2": [
+   38.483333,
+   74.6667
+  ]
+ },
+ "spine": [
+  {
+   "t0": 0.3,
+   "t1": 23.183333,
+   "label": "pitch of the filling mug",
+   "unit": "Hz",
+   "dp": 0,
+   "kind": "mug"
+  },
+  {
+   "t0": 38.383333,
+   "t1": 68.750033,
+   "label": "pitch of the filling mug",
+   "unit": "Hz",
+   "dp": 0,
+   "kind": "mug",
+   "lit": [
+    59.53333333333333,
+    61.583333
+   ]
+  }
+ ],
+ "spineAt": [
+  [
+   -1000000000.0,
+   [
+    0.5,
+    0.235
+   ]
+  ]
+ ],
+ "mug": {
+  "R": 4.0,
+  "H": 10.0,
+  "c": 34300.0,
+  "beta": 0.62,
+  "slow": 300.0
+ },
+ "level": [
+  [
+   0.0,
+   0.0
+  ],
+  [
+   3.45,
+   0.6
+  ],
+  [
+   6.9,
+   2.4
+  ],
+  [
+   14.65,
+   4.0
+  ],
+  [
+   23.1833,
+   4.6
+  ],
+  [
+   38.3833,
+   5.4
+  ],
+  [
+   42.2667,
+   8.0
+  ],
+  [
+   50.0666,
+   8.0
+  ],
+  [
+   50.1166,
+   0.0
+  ],
+  [
+   51.4667,
+   0.0
+  ],
+  [
+   57.7333,
+   7.6
+  ],
+  [
+   59.5333,
+   8.0
+  ],
+  [
+   61.5833,
+   8.0
+  ],
+  [
+   74.6667,
+   8.0
+  ]
+ ],
+ "pipes": {
+  "left": {
+   "x": -6.0,
+   "R": 2.0,
+   "H": 10.0,
+   "level": 2.0
+  },
+  "right": {
+   "x": 6.0,
+   "R": 2.0,
+   "H": 10.0,
+   "level": 7.0
+  }
+ },
+ "labels": [
+  {
+   "id": "no-water",
+   "text": "water",
+   "color": "force",
+   "t0": 3.933333333333333,
+   "t1": 6.7,
+   "at": "water",
+   "side": -1
+  },
+  {
+   "id": "no-air",
+   "text": "empty space",
+   "color": "motion",
+   "t0": 5.933333333333334,
+   "t1": 11.799999999999999,
+   "at": "air",
+   "side": 1
+  },
+  {
+   "id": "ch-pipe",
+   "text": "a pipe, closed at the water",
+   "color": "ghost",
+   "t0": 14.950033000000001,
+   "t1": 20.099999999999998,
+   "at": "airtop",
+   "side": 1
+  },
+  {
+   "id": "ch-move",
+   "text": "air moving",
+   "color": "motion",
+   "t0": 20.2,
+   "t1": 22.883333,
+   "at": "air",
+   "side": 1
+  },
+  {
+   "id": "wy-long",
+   "text": "long pipe: lower note",
+   "color": "ghost",
+   "t0": 23.96666666666667,
+   "t1": 26.733333333333334,
+   "at": "pipeL",
+   "side": -1
+  },
+  {
+   "id": "wy-short",
+   "text": "short pipe: higher note",
+   "color": "energy",
+   "t0": 24.3,
+   "t1": 26.733333333333334,
+   "at": "pipeR",
+   "side": 1
+  },
+  {
+   "id": "me-ten",
+   "text": "10 cm: about 690 Hz",
+   "color": "ghost",
+   "t0": 51.46666666666667,
+   "t1": 51.06666666666666,
+   "at": "chart0",
+   "side": 1
+  },
+  {
+   "id": "me-two",
+   "text": "2 cm: nearly 1,900 Hz",
+   "color": "energy",
+   "t0": 59.53333333333333,
+   "t1": 62.083333,
+   "at": "chart1",
+   "side": -1
+  }
+ ],
+ "badges": [
+  {
+   "id": "slow",
+   "kind": "tag",
+   "text": "Air motion slowed 300×",
+   "t0": 14.650033,
+   "t1": 69.050033,
+   "slot": "tr"
+  },
+  {
+   "id": "ill",
+   "kind": "tag",
+   "text": "Illustrated mug: numbers from a formula",
+   "t0": 62.083333,
+   "t1": 69.050033,
+   "slot": "tl"
+  }
+ ],
+ "cam": {
+  "hook": [
+   {
+    "t": 0.0,
+    "look": [
+     0.0,
+     3.2,
+     0.0
+    ],
+    "dist": 56.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "p2"
+   },
+   {
+    "t": 3.45,
+    "look": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "dist": 62.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "sine"
+   }
+  ],
+  "normal": [
+   {
+    "t": 3.45,
+    "look": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "dist": 64.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "p2"
+   },
+   {
+    "t": 14.65,
+    "look": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "dist": 66.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "sine"
+   }
+  ],
+  "change": [
+   {
+    "t": 14.65,
+    "look": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "dist": 66.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "p2"
+   },
+   {
+    "t": 20.2,
+    "look": [
+     0.0,
+     4.5,
+     0.0
+    ],
+    "dist": 48.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "p3"
+   },
+   {
+    "t": 23.1833,
+    "look": [
+     0.0,
+     5.0,
+     0.0
+    ],
+    "dist": 52.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "sine"
+   }
+  ],
+  "why": [
+   {
+    "t": 23.1833,
+    "look": [
+     0.0,
+     5.0,
+     0.0
+    ],
+    "dist": 80.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "p2"
+   },
+   {
+    "t": 38.3833,
+    "look": [
+     0.0,
+     4.5,
+     0.0
+    ],
+    "dist": 72.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "sine"
+   }
+  ],
+  "whoa": [
+   {
+    "t": 38.3833,
+    "look": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "dist": 64.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "p2"
+   },
+   {
+    "t": 50.1166,
+    "look": [
+     0.0,
+     3.0,
+     0.0
+    ],
+    "dist": 70.0,
+    "yaw": 6.0,
+    "pitch": 4.0,
+    "fov": 32.0,
+    "ease": "sine"
+   }
+  ],
+  "measure": [
+   {
+    "t": 50.1166,
+    "look": [
+     0.5,
+     4.5,
+     0.0
+    ],
+    "dist": 80.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "p2"
+   },
+   {
+    "t": 61.5833,
+    "look": [
+     0.5,
+     5.0,
+     0.0
+    ],
+    "dist": 76.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "sine"
+   }
+  ],
+  "takeaway": [
+   {
+    "t": 61.5833,
+    "look": [
+     0.5,
+     5.0,
+     0.0
+    ],
+    "dist": 76.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "p2"
+   },
+   {
+    "t": 69.05,
+    "look": [
+     0.5,
+     6.0,
+     0.0
+    ],
+    "dist": 84.0,
+    "yaw": -8.0,
+    "pitch": 6.0,
+    "fov": 32.0,
+    "ease": "sine"
+   }
+  ],
+  "tease": [
+   {
+    "t": 69.05,
+    "look": [
+     0.5,
+     6.0,
+     0.0
+    ],
+    "dist": 84.0,
+    "yaw": -8.0,
+    "pitch": 6.0,
+    "fov": 32.0,
+    "ease": "p2"
+   },
+   {
+    "t": 74.6667,
+    "look": [
+     0.0,
+     5.0,
+     0.0
+    ],
+    "dist": 90.0,
+    "yaw": 0.0,
+    "pitch": 0.0,
+    "fov": 32.0,
+    "ease": "sine"
+   }
+  ]
+ },
+ "captionY": 0.632,
+ "title": {
+  "series": "Reality Rulebook · Season 2 · Episode 5",
+  "title": "Listen to the cup *fill*",
+  "t1": 3.0,
+  "y": 0.183,
+  "sig": -0.7
+ },
+ "captions": [
+  {
+   "t0": 0.125,
+   "t1": 1.62,
+   "lines": [
+    [
+     [
+      "Can",
+      0.125
+     ],
+     [
+      "you",
+      0.435
+     ],
+     [
+      "hear",
+      0.465
+     ],
+     [
+      "a",
+      0.625
+     ],
+     [
+      "mug",
+      0.655
+     ],
+     [
+      "fill?",
+      0.99
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.62,
+   "t1": 2.995,
+   "lines": [
+    [
+     [
+      "Close…",
+      1.62
+     ],
+     [
+      "your",
+      2.055
+     ],
+     [
+      "eyes.",
+      2.245
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.625,
+   "t1": 5.45,
+   "lines": [
+    [
+     [
+      "Pour",
+      3.625
+     ],
+     [
+      "water",
+      4.065
+     ],
+     [
+      "into",
+      4.4
+     ],
+     [
+      "a",
+      4.595
+     ],
+     [
+      "mug,",
+      4.7
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.64,
+   "t1": 8.485,
+   "lines": [
+    [
+     [
+      "and",
+      5.64
+     ],
+     [
+      "the",
+      5.67
+     ],
+     [
+      "sound",
+      5.925
+     ],
+     [
+      "climbs",
+      6.355
+     ]
+    ],
+    [
+     [
+      "higher",
+      6.89
+     ],
+     [
+      "and",
+      7.51
+     ],
+     [
+      "higher.",
+      7.735
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.915,
+   "t1": 11.4,
+   "lines": [
+    [
+     [
+      "A",
+      8.915
+     ],
+     [
+      "computer",
+      9.01
+     ],
+     [
+      "can",
+      9.65
+     ],
+     [
+      "even",
+      9.81
+     ]
+    ],
+    [
+     [
+      "work",
+      9.96
+     ],
+     [
+      "out",
+      10.315
+     ],
+     [
+      "the",
+      10.5
+     ],
+     [
+      "water",
+      10.64
+     ],
+     [
+      "level",
+      11.02
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.4,
+   "t1": 12.84,
+   "lines": [
+    [
+     [
+      "from",
+      11.4
+     ],
+     [
+      "the",
+      11.43
+     ],
+     [
+      "sound",
+      11.725
+     ],
+     [
+      "alone.",
+      12.09
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 14.787,
+   "t1": 16.732,
+   "lines": [
+    [
+     [
+      "The",
+      14.787
+     ],
+     [
+      "empty",
+      14.977
+     ],
+     [
+      "space",
+      15.522
+     ]
+    ],
+    [
+     [
+      "above",
+      15.832
+     ],
+     [
+      "the",
+      16.102
+     ],
+     [
+      "water",
+      16.242
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.732,
+   "t1": 20.202,
+   "lines": [
+    [
+     [
+      "acts",
+      16.732
+     ],
+     [
+      "like",
+      16.952
+     ],
+     [
+      "a",
+      17.182
+     ],
+     [
+      "pipe,",
+      17.332
+     ]
+    ],
+    [
+     [
+      "closed",
+      18.197
+     ],
+     [
+      "at",
+      18.692
+     ],
+     [
+      "the",
+      18.722
+     ],
+     [
+      "water",
+      18.937
+     ],
+     [
+      "end.",
+      20.172
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.202,
+   "t1": 23.027,
+   "lines": [
+    [
+     [
+      "Sound",
+      20.202
+     ],
+     [
+      "bounces",
+      20.622
+     ],
+     [
+      "up",
+      21.352
+     ]
+    ],
+    [
+     [
+      "and",
+      21.507
+     ],
+     [
+      "down",
+      21.652
+     ],
+     [
+      "inside",
+      22.002
+     ],
+     [
+      "it.",
+      22.277
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 23.42,
+   "t1": 26.68,
+   "lines": [
+    [
+     [
+      "A",
+      23.42
+     ],
+     [
+      "short",
+      23.665
+     ],
+     [
+      "pipe",
+      23.95
+     ],
+     [
+      "rings",
+      24.295
+     ],
+     [
+      "higher",
+      24.89
+     ]
+    ],
+    [
+     [
+      "than",
+      25.37
+     ],
+     [
+      "a",
+      25.4
+     ],
+     [
+      "long",
+      25.625
+     ],
+     [
+      "one.",
+      25.93
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.83,
+   "t1": 29.305,
+   "lines": [
+    [
+     [
+      "A",
+      26.83
+     ],
+     [
+      "flute",
+      26.925
+     ],
+     [
+      "player",
+      27.315
+     ],
+     [
+      "changes",
+      27.68
+     ]
+    ],
+    [
+     [
+      "the",
+      28.22
+     ],
+     [
+      "note",
+      28.36
+     ],
+     [
+      "by",
+      28.76
+     ],
+     [
+      "changing",
+      28.94
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.305,
+   "t1": 31.03,
+   "lines": [
+    [
+     [
+      "the",
+      29.305
+     ],
+     [
+      "length",
+      29.605
+     ],
+     [
+      "of",
+      30.07
+     ],
+     [
+      "the",
+      30.185
+     ],
+     [
+      "pipe.",
+      30.28
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.315,
+   "t1": 32.84,
+   "lines": [
+    [
+     [
+      "As",
+      31.315
+     ],
+     [
+      "the",
+      31.495
+     ],
+     [
+      "water",
+      31.57
+     ],
+     [
+      "rises,",
+      32.09
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.16,
+   "t1": 36.35,
+   "lines": [
+    [
+     [
+      "the",
+      33.16
+     ],
+     [
+      "empty",
+      33.31
+     ],
+     [
+      "space",
+      33.855
+     ],
+     [
+      "shrinks,",
+      34.2
+     ]
+    ],
+    [
+     [
+      "and",
+      35.09
+     ],
+     [
+      "the",
+      35.12
+     ],
+     [
+      "pitch",
+      35.305
+     ],
+     [
+      "climbs.",
+      35.6
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.553,
+   "t1": 41.563,
+   "lines": [
+    [
+     [
+      "Less",
+      38.553
+     ],
+     [
+      "empty",
+      38.898
+     ],
+     [
+      "space,",
+      39.453
+     ]
+    ],
+    [
+     [
+      "a",
+      40.238
+     ],
+     [
+      "higher",
+      40.408
+     ],
+     [
+      "pitch.",
+      40.813
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.878,
+   "t1": 43.618,
+   "lines": [
+    [
+     [
+      "With",
+      41.878
+     ],
+     [
+      "2",
+      42.083
+     ],
+     [
+      "centimeters",
+      42.388
+     ],
+     [
+      "left,",
+      42.973
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.618,
+   "t1": 46.068,
+   "lines": [
+    [
+     [
+      "the",
+      43.618
+     ],
+     [
+      "mug",
+      43.648
+     ],
+     [
+      "rings",
+      44.063
+     ]
+    ],
+    [
+     [
+      "nearly",
+      44.433
+     ],
+     [
+      "three",
+      44.903
+     ],
+     [
+      "times",
+      45.153
+     ],
+     [
+      "higher",
+      45.563
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.068,
+   "t1": 47.223,
+   "lines": [
+    [
+     [
+      "than",
+      46.068
+     ],
+     [
+      "when",
+      46.103
+     ],
+     [
+      "empty.",
+      46.473
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 50.353,
+   "t1": 52.578,
+   "lines": [
+    [
+     [
+      "Measure",
+      50.353
+     ],
+     [
+      "it:",
+      50.983
+     ]
+    ],
+    [
+     [
+      "with",
+      51.273
+     ],
+     [
+      "10",
+      51.478
+     ],
+     [
+      "centimeters",
+      51.843
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 52.578,
+   "t1": 56.238,
+   "lines": [
+    [
+     [
+      "of",
+      52.578
+     ],
+     [
+      "empty",
+      52.663
+     ],
+     [
+      "space,",
+      53.218
+     ],
+     [
+      "you",
+      54.068
+     ],
+     [
+      "hear",
+      54.098
+     ]
+    ],
+    [
+     [
+      "about",
+      54.483
+     ],
+     [
+      "700",
+      54.678
+     ],
+     [
+      "vibrations",
+      55.488
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.258,
+   "t1": 57.358,
+   "lines": [
+    [
+     [
+      "a",
+      56.258
+     ],
+     [
+      "second.",
+      56.608
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 57.513,
+   "t1": 60.738,
+   "lines": [
+    [
+     [
+      "With",
+      57.513
+     ],
+     [
+      "2",
+      57.733
+     ],
+     [
+      "centimeters,",
+      58.083
+     ]
+    ],
+    [
+     [
+      "you",
+      59.133
+     ],
+     [
+      "hear",
+      59.373
+     ],
+     [
+      "nearly",
+      59.533
+     ],
+     [
+      "2,000.",
+      59.958
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.887,
+   "t1": 64.627,
+   "lines": [
+    [
+     [
+      "A",
+      61.887
+     ],
+     [
+      "shorter",
+      62.132
+     ],
+     [
+      "pipe",
+      62.522
+     ]
+    ],
+    [
+     [
+      "makes",
+      62.872
+     ],
+     [
+      "a",
+      63.222
+     ],
+     [
+      "higher",
+      63.277
+     ],
+     [
+      "note.",
+      63.877
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 64.657,
+   "t1": 65.817,
+   "lines": [
+    [
+     [
+      "Next",
+      64.657
+     ],
+     [
+      "time",
+      64.827
+     ],
+     [
+      "you",
+      65.027
+     ],
+     [
+      "pour,",
+      65.347
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 65.817,
+   "t1": 69.102,
+   "lines": [
+    [
+     [
+      "listen:",
+      65.817
+     ],
+     [
+      "the",
+      66.617
+     ],
+     [
+      "mug",
+      66.647
+     ],
+     [
+      "tells",
+      67.087
+     ]
+    ],
+    [
+     [
+      "you",
+      67.417
+     ],
+     [
+      "how",
+      67.552
+     ],
+     [
+      "full",
+      67.872
+     ],
+     [
+      "it",
+      68.137
+     ],
+     [
+      "is.",
+      68.352
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 69.387,
+   "t1": 71.952,
+   "lines": [
+    [
+     [
+      "Next:",
+      69.387
+     ],
+     [
+      "a",
+      70.137
+     ],
+     [
+      "raindrop",
+      70.167
+     ]
+    ],
+    [
+     [
+      "falls",
+      70.797
+     ],
+     [
+      "a",
+      71.092
+     ],
+     [
+      "mile.",
+      71.367
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 71.952,
+   "t1": 72.867,
+   "lines": [
+    [
+     [
+      "Why",
+      71.952
+     ],
+     [
+      "doesn't",
+      72.107
+     ],
+     [
+      "it",
+      72.367
+     ],
+     [
+      "hurt?",
+      72.462
+     ]
+    ]
+   ]
+  }
+ ],
+ "endCard": 73.1667,
+ "end": {
+  "title": "Next drop: the slow raindrop",
+  "follow": "Follow Reality Rulebook",
+  "foot": "Bagad et al., arXiv 2411.11222 (2024)."
+ },
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "dur": 2.721,
+   "file": "vo/01.wav",
+   "text": "Can you hear a mug fill? Close… your eyes."
+  },
+  {
+   "id": "vo02",
+   "t": 3.6,
+   "dur": 9.059,
+   "file": "vo/02.wav",
+   "text": "Pour water into a mug, and the sound climbs higher and higher. A computer can even work out the water level from the sound alone."
+  },
+  {
+   "id": "vo03",
+   "t": 14.766666666666667,
+   "dur": 7.974,
+   "file": "vo/03.wav",
+   "text": "The empty space above the water acts like a pipe, closed at the water end. Sound bounces up and down inside it."
+  },
+  {
+   "id": "vo04",
+   "t": 23.4,
+   "dur": 12.88,
+   "file": "vo/04.wav",
+   "text": "A short pipe rings higher than a long one. A flute player changes the note by changing the length of the pipe. As the water rises, the empty space shrinks, and the pitch climbs."
+  },
+  {
+   "id": "vo05",
+   "t": 38.53333333333333,
+   "dur": 8.49,
+   "file": "vo/05.wav",
+   "text": "Less empty space, a higher pitch. With two centimeters left, the mug rings nearly three times higher than when empty."
+  },
+  {
+   "id": "vo06",
+   "t": 50.333333333333336,
+   "dur": 10.613,
+   "file": "vo/06.wav",
+   "text": "Measure it: with ten centimeters of empty space, you hear about seven hundred vibrations a second. With two centimeters, you hear nearly two thousand."
+  },
+  {
+   "id": "vo07",
+   "t": 61.86666666666667,
+   "dur": 6.757,
+   "file": "vo/07.wav",
+   "text": "A shorter pipe makes a higher note. Next time you pour, listen: the mug tells you how full it is."
+  },
+  {
+   "id": "vo08",
+   "t": 69.36666666666666,
+   "dur": 3.437,
+   "file": "vo/08.wav",
+   "text": "Next: a raindrop falls a mile. Why doesn't it hurt?"
+  }
+ ]
+}
