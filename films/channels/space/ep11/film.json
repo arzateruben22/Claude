@@ -546,7 +546,7 @@
    "anchor": "earthP",
    "t0": 13.9333,
    "t1": 16.8333,
-   "side": -1,
+   "side": 1,
    "v": "below",
    "fixed": true
   },

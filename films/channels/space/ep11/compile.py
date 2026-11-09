@@ -81,7 +81,7 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-sat", "text": "Saturn", "kind": "star", "anchor": "sat", "t0": round(CUE["weighs"] - 0.2, 4), "t1": round(CUE["tank"], 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-tank", "text": "tank of water", "kind": "light", "anchor": "tank", "t0": round(CUE["tank"], 4), "t1": round(t_c - 0.1, 4), "side": 1, "v": "above", "fixed": True},
-    {"id": "l-earth", "text": "Earth, same scale", "kind": "body", "anchor": "earthP", "t0": round(t_c + 0.6, 4), "t1": round(CUE["hydrogen"] - 0.2, 4), "side": -1, "v": "below", "fixed": True},
+    {"id": "l-earth", "text": "Earth, same scale", "kind": "body", "anchor": "earthP", "t0": round(t_c + 0.6, 4), "t1": round(CUE["hydrogen"] - 0.2, 4), "side": 1, "v": "below", "fixed": True},
     {"id": "l-gas", "text": "hydrogen + helium", "kind": "light", "anchor": "sat", "t0": round(CUE["hydrogen"], 4), "t1": round(t_why - 0.4, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-rock", "text": "rock and metal: tight", "kind": "body", "anchor": "rock", "t0": round(CUE["earth"], 4), "t1": round(CUE["gas"] - 0.1, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-gasb", "text": "gas: spread thin", "kind": "star", "anchor": "gasb", "t0": round(CUE["gas"], 4), "t1": round(t_w - 0.4, 4), "side": 1, "v": "above", "fixed": True},

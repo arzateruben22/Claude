@@ -194,7 +194,7 @@ window.seek = function (t) {
   const dk = fadeIn(tt, CUE.tank, 0.7) * (1 - fadeIn(tt, CUE.c - 0.3, 0.4));
   dimA.seg([sp[0] - R, sp[1] + 4.6, 0], [sp[0] + R, sp[1] + 4.6, 0]).set({ opacity: 0.95 * dk }); dimB.seg([TANKC[0] - 10, 4.9, 0], [TANKC[0] + 10, 4.9, 0]).set({ opacity: 0.95 * dk });
   // Earth at Saturn's scale
-  const ep = [sp[0] - 5.6, sp[1] - 8.2, 4.0]; earthP.position.fromArray(ep); S.earthP = ep; earth.set({ center: [0, 0, 0], sunDir: [0.5, 0.3, 0.8], sun: 1, rimNight: 0.5, spin: -0.9 + 0.1 * tt });
+  const ep = [sp[0] + 2.0, sp[1] + 5.0, 4.5]; earthP.position.fromArray(ep); S.earthP = ep; earth.set({ center: [0, 0, 0], sunDir: [0.5, 0.3, 0.8], sun: 1, rimNight: 0.5, spin: -0.9 + 0.1 * tt });
   // the balance: level at first; the rock ball sinks in the pool, the gas ball floats on it
   const u1 = E.inout3(seg(tt, CUE.tight - 0.4, CUE.tight + 1.4)), u2 = E.inout3(seg(tt, CUE.thin - 1.2, CUE.thin + 0.8));
   const rockY = 1.5 - 1.2 - 3.2 * u1, gasY = 1.5 - 2.6 * 0.1 + 1.0 - 0.9 * u2;
