@@ -44,7 +44,7 @@ AA = 2 * (XB - L1) / XI1 ** 2                    # a = mg/k, 350.6 cm
 TC = math.sqrt(AA * XI1 ** 3 / (3 * G))          # the whole collapse, ≈ 0.295 s
 TOP_Y = 238.0                                    # world y of the held top coil
 RING = 11.0                                      # coil radius
-SLINKY = {"xb": XB, "l1": L1, "xi1": XI1, "n": N, "a": round(AA, 4), "tc": round(TC, 5), "g": G, "topY": TOP_Y, "ring": RING}
+SLINKY = {"tland": 0.0, "xb": XB, "l1": L1, "xi1": XI1, "n": N, "a": round(AA, 4), "tc": round(TC, 5), "g": G, "topY": TOP_Y, "ring": RING}
 
 
 def X(xi):
@@ -65,15 +65,17 @@ def take(*keys):
 
 RATE = 0.05                                      # one slow-motion factor for the whole film: 20x slower
 D = TC / RATE                                    # 5.89 s of film for the whole collapse
-CAP, CAPW = 0.35, 0.40                           # the pile stays above the caption plate up to these τ
+TLAND = round(math.sqrt(2 * (TOP_Y - XCOM - L1 / 2) / G), 5)   # the pile reaches the floor at this τ (0.516)
+CAP = CAPW = TLAND
+SLINKY["tland"] = TLAND
 T_REL1 = A("vo02:go.") + 0.25
 T_END1 = T_REL1 + D
 T_END2 = A("vo03:second.") + 0.05
 T_REL2 = T_END2 - D
-T_END3 = A("vo04:Until") + 0.1
+T_END3 = A("vo04:move.") + 0.0
 T_REL3 = T_END3 - D
 T_REL4 = A("vo05:Its") + 0.1
-T_END4 = T_REL4 + CAPW / RATE
+T_END4 = T_REL4 + TLAND / RATE
 T_END5 = A("vo06:arrives,") + 0.05
 T_REL5 = T_END5 - D
 HOOK_TAU = (0.135, 0.135 + RATE * cut("normal"))
@@ -95,11 +97,11 @@ TAKES = [
     {"name": "why", "t0": cut("why"), "t1": cut("whoa"),
      "keys": take((cut("why"), 0.0), (T_REL3, 0.0), (T_END3, TC), (cut("whoa"), tail(T_END3, cut("whoa"))))},
     {"name": "whoa", "t0": cut("whoa"), "t1": cut("measure"),
-     "keys": take((cut("whoa"), 0.0), (T_REL4, 0.0), (T_END4, CAPW), (cut("measure"), CAPW))},
+     "keys": take((cut("whoa"), 0.0), (T_REL4, 0.0), (T_END4, CAPW), (cut("measure"), TLAND))},
     {"name": "measure", "t0": cut("measure"), "t1": cut("takeaway"),
-     "keys": take((cut("measure"), 0.0), (T_REL5, 0.0), (T_END5, TC), (cut("takeaway"), min(CAPW, TC + RATE * (cut("takeaway") - T_END5))))},
-    {"name": "takeaway", "t0": cut("takeaway"), "t1": cut("tease"), "keys": take((cut("takeaway"), min(CAPW, TC + RATE * (cut("takeaway") - T_END5))), (cut("tease"), min(CAPW, TC + RATE * (cut("takeaway") - T_END5))))},
-    {"name": "tease", "t0": cut("tease"), "t1": DUR + 1, "keys": take((cut("tease"), 0.0), (DUR + 1, 0.0))},
+     "keys": take((cut("measure"), 0.0), (T_REL5, 0.0), (T_END5, TC), (cut("takeaway"), min(TLAND, TC + RATE * (cut("takeaway") - T_END5))))},
+    {"name": "takeaway", "t0": cut("takeaway"), "t1": cut("tease"), "keys": take((cut("takeaway"), min(TLAND, TC + RATE * (cut("takeaway") - T_END5))), (cut("takeaway") + 1.8, TLAND), (cut("tease"), TLAND))},
+    {"name": "tease", "t0": cut("tease"), "t1": DUR + 1, "keys": take((cut("tease"), TLAND), (DUR + 1, TLAND))},
 ]
 # the speed note: one factor, 20x slower, wherever the slinky is moving in slow motion
 SPEED = [{"t0": 0.0, "t1": cut("normal"), "slow": 20}, {"t0": T_REL1, "t1": cut("change"), "slow": 20}, {"t0": T_REL2, "t1": cut("why"), "slow": 20},
@@ -110,12 +112,12 @@ BOTTOM_Y = TOP_Y - XB
 # ghosts: every 1/30 s of the slinky's own time, for the change and the measure; the ghosts of the top and bottom coils
 GH_DT = 1 / 30
 GH_N = int(TC / GH_DT) + 1
-GHOSTS = {"change": {"t0": T_REL2 + 0.05, "t1": cut("why"), "dt": GH_DT, "n": GH_N},
-          "measure": {"t0": T_REL5 + 0.05, "t1": cut("takeaway"), "dt": GH_DT, "n": GH_N}}
+GHOSTS = {"change": {"t0": T_REL2 + 0.05, "t1": cut("why") - 0.4, "dt": GH_DT, "n": GH_N},
+          "measure": {"t0": T_REL5 + 0.05, "t1": cut("takeaway") - 0.4, "dt": GH_DT, "n": GH_N}}
 FRONT_W = [A("vo04:travels"), A("vo04:Until") - 0.1]
 FRONT_W2 = [A("vo04:pull"), A("vo04:move.") + 0.3]
-MID_W = [A("vo05:balance"), cut("measure")]
-BALL_W = [A("vo05:dropped"), cut("measure")]
+MID_W = [cut("whoa") + 0.05, cut("measure")]
+BALL_W = [cut("whoa") + 0.05, cut("measure")]
 CUE = {"cuts": CUTS, "front": FRONT_W2, "mid": MID_W, "ball": BALL_W, "ghosts": GHOSTS, "tc": round(TC, 5)}
 
 # rule 8: what the caption is not about steps back to a third
@@ -144,9 +146,9 @@ LABELS = [
     {"id": "ch-gap", "text": "1/30 s apart", "color": "ghost", "t0": A("vo03:three") - 0.2, "t1": cut("why") - 0.3, "at": "ghost-top-change-4", "side": 1},
     {"id": "wy-no", "text": "no news yet", "color": "motion", "t0": A("vo04:Nothing"), "t1": A("vo04:The"), "at": "bottom", "side": 1},
     {"id": "wy-front", "text": "the news travels", "color": "force", "t0": A("vo04:travels"), "t1": A("vo04:Until") - 0.1, "at": "front", "side": 1},
-    {"id": "wy-arr", "text": "news arrives", "color": "force", "t0": A("vo04:move.") - 0.5, "t1": cut("whoa") - 0.3, "at": "bottom", "side": 1},
+    {"id": "wy-arr", "text": "news arrives", "color": "force", "t0": T_END3 - 0.15, "t1": cut("whoa") - 0.3, "at": "bottom", "side": 1},
     {"id": "wo-mid", "text": "balance point", "color": "energy", "t0": MID_W[0] + 0.2, "t1": cut("measure") - 0.3, "at": "mid", "side": 1},
-    {"id": "wo-ball", "text": "dropped ball", "color": "force", "t0": A("vo05:dropped"), "t1": cut("measure") - 0.3, "at": "ball", "side": 1, "fixed": True},
+    {"id": "wo-ball", "text": "dropped ball", "color": "force", "t0": cut("whoa") + 0.6, "t1": cut("measure") - 0.3, "at": "ball", "side": 1, "v": "below"},
     {"id": "ms-ghost", "text": "bottom's ghosts: one pile", "color": "motion", "t0": A("vo06:stack"), "t1": T_END5 + 0.5, "at": "ghost-bot-measure-4", "side": 1},
 ]
 BADGES = [
@@ -168,15 +170,16 @@ HOOKV = view([-76.0, 118.0, 0.0], 520.0, 5.0, 14.0)
 MIDV = view([0.0, 112.0, 0.0], 600.0, 5.0, 10.0)
 BOT = view([0.0, 108.0, 0.0], 430.0, 5.0, 10.0)
 FOLLOW = view([0.0, 70.0, 0.0], 520.0, 5.0, -10.0)
+FLOORV = view([-30.0, 20.0, 0.0], 300.0, 6.0, -10.0)
 CAM = {
     "hook": [key(0.0, HOOKV), key(cut("normal"), {**HOOKV, "dist": 480.0}, "sine")],
-    "normal": [key(cut("normal"), WIDE), key(T_END1 - 0.5, WIDE, "sine"), key(cut("change") - 0.1, view([0.0, 100.0, 0.0], 650.0, 5.0, 12.0), "sine")],
-    "change": [key(cut("change"), MIDV), key(T_END2, MIDV, "sine"), key(cut("why") - 0.1, view([0.0, 100.0, 0.0], 600.0, 5.0, 10.0), "sine")],
-    "why": [key(cut("why"), WIDE), key(A("vo04:Nothing"), BOT, "p3"), key(T_REL3 + 0.5, MIDV, "p3"), key(T_END3, MIDV, "sine"), key(cut("whoa") - 0.1, view([0.0, 100.0, 0.0], 600.0, 5.0, 10.0), "sine")],
-    "whoa": [key(cut("whoa"), MIDV), key(T_REL4 + 3.0, MIDV, "sine"), key(T_END4, FOLLOW, "p3"), key(cut("measure"), view([0.0, 64.0, 0.0], 430.0, 5.0, -24.0), "sine")],
+    "normal": [key(cut("normal"), view([0.0, 122.0, 0.0], 720.0, 5.0, 12.0)), key(T_REL1, view([0.0, 122.0, 0.0], 660.0, 5.0, 12.0), "sine"), key(T_END1 - 0.5, WIDE, "sine"), key(cut("change") - 0.1, view([0.0, 100.0, 0.0], 650.0, 5.0, 12.0), "sine")],
+    "change": [key(cut("change"), MIDV), key(T_END2, MIDV, "sine"), key(cut("why") - 0.1, view([0.0, 92.0, 0.0], 600.0, 5.0, 10.0), "sine")],
+    "why": [key(cut("why"), WIDE), key(A("vo04:Nothing"), BOT, "p3"), key(T_REL3 + 0.5, MIDV, "p3"), key(T_END3, MIDV, "sine"), key(cut("whoa") - 0.1, view([0.0, 70.0, 0.0], 560.0, 5.0, 10.0), "sine")],
+    "whoa": [key(cut("whoa"), MIDV), key(T_REL4 + 3.0, MIDV, "sine"), key(T_REL4 + 7.0, FOLLOW, "p3"), key(T_END4, view([-10.0, 30.0, 0.0], 420.0, 5.0, -16.0), "p3"), key(cut("measure"), FLOORV, "sine")],
     "measure": [key(cut("measure"), MIDV), key(T_END5 + 0.4, MIDV, "sine"), key(cut("takeaway"), view([0.0, 78.0, 0.0], 520.0, 5.0, -8.0), "sine")],
-    "takeaway": [key(cut("takeaway"), view([0.0, 72.0, 0.0], 480.0, 5.0, -8.0)), key(cut("tease"), view([0.0, 72.0, 0.0], 400.0, 5.0, 24.0), "sine")],
-    "tease": [key(cut("tease"), view([0.0, 100.0, 0.0], 520.0, 5.0, 18.0)), key(EC, view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0), "p3"), key(DUR, view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0), "sine")],
+    "takeaway": [key(cut("takeaway"), view([-14.0, 60.0, 0.0], 480.0, 5.0, -8.0)), key(cut("takeaway") + 1.8, FLOORV, "p3"), key(cut("tease"), view([-30.0, 8.0, 0.0], 270.0, 8.0, 26.0), "sine")],
+    "tease": [key(cut("tease"), view([-30.0, 8.0, 0.0], 270.0, 8.0, 26.0)), key(EC, view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0), "p3"), key(DUR, view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0), "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 TITLE = {"series": "Reality Rulebook · Season 2 · Episode 1", "title": "The slinky that *waits*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": -0.7}
@@ -188,7 +191,7 @@ film = {
     "dim": DIM, "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
     "noteSlots": {"speed": "tl", "hook": "tr"},
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
-    "end": {"title": "Next drop: spaghetti almost never breaks in *two*", "follow": "Follow Reality Rulebook",
+    "end": {"title": "Next drop: spaghetti rarely breaks in *two*", "follow": "Follow Reality Rulebook",
             "foot": "Real slinkies: about 0.3 s (Cross and Wheatland, 2012)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }

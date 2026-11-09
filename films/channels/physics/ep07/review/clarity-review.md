@@ -38,3 +38,10 @@ Changes, in the reviewer's order:
 9. scene-table.md rebuilt from this render; claims-table.md and script.md synced; the file id is reality-rulebook-s2e01 (out/reality-rulebook-s2e01-9x16-draft.mp4).
 10. c7, c10, c11 now carry their own quotes from the paper; all claims stay OPEN until a person opens the sources (SOURCE-READ is the builder's reading only).
 Lint: 0 errors, grade 2.3. Not done: a person's read-aloud pass, the final render, the person check of the claims.
+
+## Round 3 (9 Nov) - S2E01
+Front arrival and label/knock land on "move" (35.2 s); the dot and the dropped ball are on screen and level from 37.9 s and keep falling to the floor
+(about 48 s) with the camera following; the ball's label is on the opposite side (right, below) of "balance point"; the slinky pile lands on the floor
+and rests (59.7-64 s, camera orbiting low); the title's and end card's trailing copies are hidden; the end-card title wraps to 3 lines
+("spaghetti rarely breaks in two") so the footnote is inside the safe box (0 audit warnings); script.md and scene-table.md synced
+(20x badge, 71 s). Final render still waits for the gate.

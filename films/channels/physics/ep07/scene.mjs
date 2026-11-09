@@ -37,7 +37,7 @@ scene.add(cyc.group, P.group);
 window.SCENE_READY = P.ready;
 
 // ── the model (closed form, cm) ──
-const { a: AA, xi1: XI1, l1: L1, g: GG, tc: TC, n: N, xb: XB, topY: TOP_Y, ring: RING } = SL;
+const { a: AA, xi1: XI1, l1: L1, g: GG, tc: TC, n: N, xb: XB, topY: TOP_Y, ring: RING, tland: TLAND } = SL;
 const Xh = (xi) => (xi <= XI1 ? L1 * xi + AA * (XI1 * xi - xi * xi / 2) : L1 * XI1 + AA * XI1 * XI1 / 2 + L1 * (xi - XI1));
 const tOfFront = (xf) => Math.sqrt(Math.max(0, 2 * AA * (XI1 * xf * xf / 2 - xf * xf * xf / 3) / GG));
 const frontAt = (tau) => {
@@ -51,10 +51,11 @@ let XCOM = 0; for (let i = 0; i < 4000; i++) XCOM += Xh((i + 0.5) / 4000) / 4000
 const coilX = (xi, tau) => {                                  // distance below the release height, cm
   if (tau <= 0) return Xh(xi);
   if (tau < TC) { const xf = frontAt(tau); return xi > xf ? Xh(xi) : Xh(xf) - xf * L1 + xi * L1; }
-  return XCOM + 0.5 * GG * tau * tau - L1 / 2 + xi * L1;
+  const te = Math.min(tau, TLAND);                           // the pile rests on the floor from here
+  return XCOM + 0.5 * GG * te * te - L1 / 2 + xi * L1;
 };
 const coilY = (xi, tau) => TOP_Y - coilX(xi, tau);
-const comY = (tau) => TOP_Y - XCOM - 0.5 * GG * Math.max(0, tau) * Math.max(0, tau);
+const comY = (tau) => { const te = Math.min(Math.max(0, tau), TLAND); return TOP_Y - XCOM - 0.5 * GG * te * te; };
 
 // ── the clock: τ against film time, per take ──
 const TAKES = FILM.takes;
@@ -142,20 +143,20 @@ const anchorFn = (an) => {
   if (an === "top") return (t) => [RING, coilY(0, tauAt(t)), 0];
   if (an === "bottom") return (t) => [RING, coilY(1, tauAt(t)), 0];
   if (an === "front") return (t) => [RING + 2.2, TOP_Y - Xh(frontAt(tauAt(t))), 0];
-  if (an === "mid") return (t) => [3, comY(tauAt(t)), 0];
+  if (an === "mid") return (t) => [3, comY(tauAt(t)), 6];
   if (an === "ball") return (t) => [BALL_X + 3.4, comY(tauAt(t)), 0];
   const m = /^ghost-(top|bot)-(change|measure)-(\d+)$/.exec(an);
   if (m) return () => S.ghost(`${m[1]}-${m[2]}`, +m[3]);
   return () => [0, 0, 0];
 };
-for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: !!lb.fixed });
+for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: !!lb.fixed, v: lb.v });
 const SPN = FILM.spine;
 const spineAt = (t) => SPN.find((s) => t >= s.t0 && t < s.t1) || (t < SPN[0].t0 ? SPN[0] : SPN[SPN.length - 1]);
 const spineVal = (t) => {
   const s = spineAt(t), tau = Math.max(0, tauAt(t));
   if (s.kind === "bottom") return Math.max(0, coilX(1, tau) - XB);
   if (s.kind === "front") return (frontAt(tau) / XI1) * 100;
-  if (s.kind === "mid") return 0.5 * GG * tau * tau;
+  if (s.kind === "mid") { const te = Math.min(tau, TLAND); return 0.5 * GG * te * te; }
   if (s.kind === "wait") return Math.min(tau, TC);
   return s.v;
 };
@@ -167,6 +168,7 @@ const footEl = document.createElement("div"); footEl.className = "rf-foot"; foot
 { const st = document.createElement("style");
   st.textContent = SPINE_CSS + ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
   document.head.appendChild(st); }
+{ const st2 = document.createElement("style"); st2.textContent = ".rf-drop .rf-copy { display: none !important; }"; document.head.appendChild(st2); }
 const dropE = dropTitle(endEl, { sig: EC, fps: FILM.fps, head: ".t", fall: 90 });
 const win = (t, w, fin = 0.5, fout = 0.4) => (w ? Math.min(E.out2(seg(t, w[0], w[0] + fin)), 1 - E.in2(seg(t, w[1] - fout, w[1]))) : 0);
 

@@ -161,14 +161,14 @@
    "tag": "wy-front"
   },
   {
-   "t": 32.2667,
-   "kind": "reveal",
-   "tag": "arrive3"
-  },
-  {
-   "t": 34.7,
+   "t": 35.050000000000004,
    "kind": "label",
    "tag": "wy-arr"
+  },
+  {
+   "t": 35.2,
+   "kind": "reveal",
+   "tag": "arrive3"
   },
   {
    "t": 37.850033,
@@ -182,17 +182,17 @@
    "t1": 50.6667
   },
   {
+   "t": 38.100033,
+   "kind": "label",
+   "tag": "wo-mid"
+  },
+  {
    "t": 38.1333,
    "kind": "time.slow",
    "tag": "release4"
   },
   {
-   "t": 38.46666666666667,
-   "kind": "label",
-   "tag": "wo-mid"
-  },
-  {
-   "t": 42.03333333333333,
+   "t": 38.450033000000005,
    "kind": "label",
    "tag": "wo-ball"
   },
