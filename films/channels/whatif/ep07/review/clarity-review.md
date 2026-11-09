@@ -43,6 +43,13 @@ All beats are under the limit of 8. Several grades are low because the sentences
 - 41 to 52 s: the work beat now pushes in on the walkers at the Moon as 'slower adds years' is spoken (a time clock pops in as 'quicker' is spoken), pulls back to the lanes at the step-goal line, and follows the step walker up its lane. Vignettes sit on short chalk ledges.
 - Runtime is 72.0 s. c5's `source_url` in the ledger must be a web address for the linter (it errors on "none"); the table prints "none (assumption)".
 
+## Review round 3 changes (9 Nov 2026)
+- 47 to 65 s: the wide shots now frame all three walkers whole, with the Moon end at 54% of the frame height; the work card moved up (y 17%) clear of their heads; the "rounded" and day badges end when the card appears and the stride badge is gone (it is on the card).
+- 57 to 60 s: a real Apollo capsule climbs its own fourth lane and lands on "three" at 60.1 s, with day 1, day 2 and day 3 badges; after landing it orbits the Moon (62 to 65 s), so the last stretch changes too. The label that ended on the blue walker's legs is gone.
+- 31 to 38 s: the camera follows the walker every frame, so it is whole and sharp; a rest stop (a tent) at about 33.5 s.
+- 5.5 s: the "not to scale" badge waits until the title has gone.
+- 66 to 71 s: frame 0's picture is behind the end card from 67.6 s.
+
 ## Status (9 Nov 2026)
 - Word timings: aligned with the owner-approved Parakeet pin (8 word ends clamped to the pauses). `film.json` is built from real timings.
 - Draft render: `out/envelope-s2e01-9x16-draft.mp4` (540x960, 15 fps, 72.0 s, AAC -14.1 LUFS / -1.8 dBTP, sync PASS), 0 audit warnings. Final not rendered, awaiting the gate.

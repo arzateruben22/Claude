@@ -35,3 +35,14 @@ S2E01 (folder ep07). Timestamps are from `film.json` (real Parakeet word timings
 |  70.9 s | (pause) | The card fades out: the last frame is frame 0. |  |  |
 
 Loop check: PSNR of the last frame (71.93 s) against frame 0 is 50.8 dB over the whole frame (frame 0 is the bare picture; the title, badge and label arrive at 0.3 s).
+
+## Round 3 changes (9 Nov 2026), added rows
+| time | narration | visual | on-screen text | sound |
+|---|---|---|---|---|
+|  33.5 s | (picture only, end of the why/whoa stretch) | REST STOP: the walker sits one out and a tent pops in on a chalk ledge; the camera follows every frame, so the walker is whole and sharp (it was clipped at the bottom edge before) | badge 'a rest stop' | |
+|  57.0 s | Apollo eleven's crew | A real capsule (nose cone, window, fins, a trail) leaves the Earth end of its own fourth lane, to the right of the three walkers | badge 'Apollo 11: day 1', then 'day 2' | swell |
+|  60.1 s | the same trip in about three days | The capsule reaches the Moon on 'three' (60.1 s) | badge 'day 3: lunar orbit' | |
+|  61.3 s | The distance never changed, only the speed. | The capsule swings out and orbits the Moon end, with a thin orbit ring, while the camera pushes in toward the Moon (one more change at 62 to 65 s) | | |
+|  67.5 s | Next envelope | Frame 0's picture (you, the line, the little Moon) is behind the end card from here to the end, scrim at 45% | | |
+
+Framing check: the 0.5 s frames from 40 s to the end were looked at one by one for clipped heads and empty lower halves. The three walkers stand whole just above the spine plate in the wide shots (the Moon end at 54% of the frame height, the lane running down behind the HUD), low in the frame (79%) in the chases, and at the bottom in the follow shot. The only clipped frames are about 0.3 s of the camera's move at 53 s. The lower 35% of the wide shots shows the lanes, the capsule's climb and the HUD plates.
