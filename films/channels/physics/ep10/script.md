@@ -4,7 +4,7 @@ S2E04 (folder ep10).
 
 About 66 s, 9:16, narrated by a synthetic voice (af_bella at speed 0.85, labeled as AI), with an original score.
 
-- One world, seen from above: a drop of coffee on paper, brown specks inside. The specks' paths come from a simple closed-form
+- One world, seen from above and a little in front: a lit coffee drop on a sheet of paper, brown specks inside (drawn in 3-D, with the stain growing on the paper as it dries). The specks' paths come from a simple closed-form
   model of the drying drop (Deegan's pinned-edge picture: evaporation strongest at the edge, the edge stuck, flow from the middle
   outward), run in `scene.mjs`. It is our model with made-up round numbers, not a measurement, and it says so.
 - Facts from the 1997 Nature paper (Deegan et al.) and the 2011 Nature paper (Yunker et al.), both only from search excerpts: the
@@ -43,7 +43,7 @@ end card: "Next drop: listen to the cup fill" · "Follow Reality Rulebook" · fo
 ## Notes
 - All claims are OPEN. c3 and c5 come from the abstract excerpt of Deegan et al. ("Pinning of the contact line of the drying drop ensures
   that liquid evaporating from the edge is replenished by liquid from the interior"); c7 from the Yunker et al. abstract excerpt
-  ("ellipsoidal particles are deposited uniformly during evaporation"); c8 is our model.
+  ("ellipsoidal particles are deposited uniformly during evaporation"); c8 is our model (the readout counts 93% at the moment the voice says nine in ten: the model check in review/model-check.md gives 0.928 at s = 0.95). c9 is the next episode's tease (nothing opened).
 - Listen at T0: "ring", "outward", "oval", "hear".
 - TODO: the handle, a physicist's sign-off, the AI-voice label in the post. nature.com was not reachable from the builder session:
   a person should open both papers.

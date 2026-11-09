@@ -168,6 +168,12 @@
    "text": "Oval specks can spread evenly"
   },
   {
+   "t": 47.7166,
+   "kind": "badge",
+   "tag": "model",
+   "text": "A model: made-up numbers"
+  },
+  {
    "t": 47.7333,
    "kind": "section",
    "id": "measure",
@@ -185,19 +191,13 @@
    "t1": 62.4
   },
   {
-   "t": 53.0166,
-   "kind": "badge",
-   "tag": "model",
-   "text": "A model: made-up numbers"
-  },
-  {
    "t": 62.4,
    "kind": "section",
    "id": "tease",
    "t1": 69.6
   },
   {
-   "t": 68.1,
+   "t": 66.45,
    "kind": "signature",
    "tag": "end"
   }

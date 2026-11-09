@@ -39,7 +39,7 @@ def cut(beat):
 
 
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
-R, H0, NSP = 10.0, 3.2, 420
+R, H0, NSP = 10.0, 3.2, 1500
 RING = 0.95                                       # a speck counts as "in the ring" beyond 95% of the radius
 
 
@@ -93,6 +93,7 @@ TAKES = [
     {"name": "takeaway", "t0": cut("takeaway"), "t1": cut("tease"), "view": "top", "keys": take((cut("takeaway"), 0.999), (cut("tease"), 0.999))},
     {"name": "tease", "t0": cut("tease"), "t1": DUR + 1, "view": "top", "keys": take((cut("tease"), 0.999), (DUR + 1, 0.999))},
 ]
+ENDSHOW = round(A("vo08:You") - 0.15, 4)                  # the end card comes up as the last sentence starts and holds to the end
 TRAIL_W = [cut("change") + 0.4, cut("why") - 0.2]
 CUT_W = [cut("why") + 0.3, cut("whoa") - 0.2]               # the side view's arrows
 LABELS = [
@@ -106,12 +107,12 @@ LABELS = [
     {"id": "wo-pile", "text": "specks pile up", "color": "energy", "t0": A("vo05:pile"), "t1": cut("measure") - 0.3, "at": "edge", "side": 1},
 ]
 BADGES = [
-    {"id": "tl", "kind": "tag", "text": "Time-lapse model", "t0": cut("normal") + 0.3, "t1": None, "slot": "tr"},
-    {"id": "oval", "kind": "tag", "text": "Oval specks can spread evenly", "t0": A("vo05:Make"), "t1": cut("measure") - 0.1, "slot": "tr"},
-    {"id": "model", "kind": "tag", "text": "A model: made-up numbers", "t0": cut("takeaway") + 0.5, "t1": cut("tease"), "slot": "tr"},
+    {"id": "tl", "kind": "tag", "text": "Time-lapse model", "t0": cut("normal") + 0.3, "t1": round(A("vo05:Make") - 0.3, 4), "slot": "tr"},
+    {"id": "oval", "kind": "tag", "text": "Oval specks can spread evenly", "t0": A("vo05:Make"), "t1": round(cut("measure") - 0.5, 4), "slot": "tr"},
+    {"id": "model", "kind": "tag", "text": "A model: made-up numbers", "t0": cut("measure"), "t1": round(ENDSHOW - 0.3, 4), "slot": "tr"},
 ]
-SPINE = [{"t0": cut("change"), "t1": cut("tease") - 0.3, "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]}]
-SPINE_AT = [[-1e9, [0.27, 0.255]]]
+SPINE = [{"t0": cut("change"), "t1": round(ENDSHOW - 0.3, 4), "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]}]
+SPINE_AT = [[-1e9, [0.5, 0.262]]]
 
 
 def view(look, dist, pitch, yaw=0.0, fov=32.0):
@@ -122,18 +123,19 @@ def key(t, v, ease="p2"):
     return {"t": round(t, 4), **v, "ease": ease}
 
 
-TOP = view([0.0, 0.0, 3.4], 88.0, 88.0)
-TOPC = view([0.0, 0.0, 3.4], 74.0, 88.0)
+LK = [0.0, 0.0, -2.6]
+TOP = view(LK, 76.0, 63.0, 0.0)
+TOPC = view([0.0, 0.0, -6.0], 72.0, 60.0, -5.0)
 SIDE = view([0.0, 2.0, 0.0], 62.0, 9.0)
 CAM = {
-    "hook": [key(0.0, TOPC), key(cut("normal"), {**TOPC, "dist": 82.0}, "sine")],
-    "normal": [key(cut("normal"), TOP), key(cut("change"), {**TOP, "dist": 92.0}, "sine")],
-    "change": [key(cut("change"), view([0.0, 0.0, 3.4], 92.0, 88.0)), key(cut("why") - 0.2, view([0.0, 0.0, 3.4], 78.0, 88.0), "sine")],
-    "why": [key(cut("why"), view([0.0, 0.0, 3.4], 78.0, 88.0)), key(cut("why") + 1.6, SIDE, "p3"), key(cut("whoa") - 0.1, {**SIDE, "dist": 70.0, "yaw": -8.0}, "sine")],
-    "whoa": [key(cut("whoa"), view([0.0, 2.0, 3.0], 70.0, 20.0, -8.0)), key(cut("whoa") + 1.6, TOP, "p3"), key(cut("measure"), {**TOP, "dist": 80.0}, "sine")],
-    "measure": [key(cut("measure"), {**TOP, "dist": 90.0}), key(cut("takeaway"), {**TOP, "dist": 84.0}, "sine")],
-    "takeaway": [key(cut("takeaway"), view([0.0, 0.0, 3.4], 84.0, 88.0)), key(cut("tease"), view([0.0, 1.0, 2.0], 66.0, 52.0, 14.0), "sine")],
-    "tease": [key(cut("tease"), view([0.0, 1.0, 2.0], 66.0, 52.0, 14.0)), key(DUR, view([0.0, 0.0, 3.4], 88.0, 70.0, 6.0), "sine")],
+    "hook": [key(0.0, TOPC), key(cut("normal"), {**TOPC, "dist": 76.0, "yaw": 3.0}, "sine")],
+    "normal": [key(cut("normal"), {**TOP, "yaw": 3.0}), key(cut("change"), {**TOP, "dist": 78.0, "yaw": -5.0}, "sine")],
+    "change": [key(cut("change"), {**TOP, "dist": 78.0, "yaw": -5.0}), key(cut("why") - 0.2, {**TOP, "dist": 72.0, "yaw": 4.0}, "sine")],
+    "why": [key(cut("why"), {**TOP, "dist": 72.0, "yaw": 4.0}), key(cut("why") + 1.6, SIDE, "p3"), key(cut("whoa") - 0.1, {**SIDE, "dist": 66.0, "yaw": -8.0}, "sine")],
+    "whoa": [key(cut("whoa"), view([0.0, 2.0, 0.0], 66.0, 22.0, -8.0)), key(cut("whoa") + 1.6, TOP, "p3"), key(cut("measure"), {**TOP, "dist": 78.0, "yaw": 4.0}, "sine")],
+    "measure": [key(cut("measure"), {**TOP, "dist": 78.0, "yaw": 4.0}), key(cut("takeaway"), {**TOP, "dist": 74.0, "yaw": -4.0}, "sine")],
+    "takeaway": [key(cut("takeaway"), {**TOP, "dist": 74.0, "yaw": -4.0}), key(cut("tease"), view(LK, 76.0, 52.0, 12.0), "sine")],
+    "tease": [key(cut("tease"), view(LK, 76.0, 52.0, 12.0)), key(DUR, view(LK, 74.0, 60.0, 6.0), "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 TITLE = {"series": "Reality Rulebook · Season 2 · Episode 4", "title": "The ring a coffee drop *leaves*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": -0.7}
@@ -142,7 +144,7 @@ film = {
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "cue": {"cuts": CUTS, "trail": TRAIL_W, "cut": CUT_W, "ring": RING}, "spine": SPINE, "spineAt": SPINE_AT,
     "model": {"R": R, "H0": H0, "n": NSP, "ring": RING}, "takes": TAKES, "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
-    "captions": phrase_captions(f, max_chars=24, fix=[], until=EC - 0.3), "endCard": EC,
+    "captions": [pg for pg in phrase_captions(f, max_chars=24, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "endCard": EC,
     "end": {"title": "Next drop: listen to the cup fill", "follow": "Follow Reality Rulebook", "foot": "Deegan et al., Nature 389, 827 (1997)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
@@ -158,7 +160,7 @@ for bd in BADGES:
     ev.append({"t": round(bd["t0"], 4), "kind": "badge", "tag": bd["id"], "text": bd.get("text", "")})
 ev.append({"t": SPINE[0]["t0"], "kind": "counter.show", "tag": "spine"})
 ev.append({"t": 0.0, "kind": "signature", "tag": "title", "gain": -4.0})
-ev.append({"t": EC, "kind": "signature", "tag": "end"})
+ev.append({"t": ENDSHOW, "kind": "signature", "tag": "end"})
 sheet = {"duration": DUR, "fps": FPS, "preset": "restframe-bench", "duck_db": -9.0,
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
          "events": sorted(ev, key=lambda e: (e["t"], e["kind"])),
