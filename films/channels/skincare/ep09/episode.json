@@ -22,12 +22,12 @@
   },
   "q2": {
    "src": [
-    "art/s2e03-02.webp"
+    "art/s2e03-02m.webp"
    ],
    "layers": [
-    "art/s2e03-02-L0.webp",
-    "art/s2e03-02-L1.webp",
-    "art/s2e03-02-L2.webp"
+    "art/s2e03-02m-L0.webp",
+    "art/s2e03-02m-L1.webp",
+    "art/s2e03-02m-L2.webp"
    ],
    "par": [
     0,
@@ -38,12 +38,12 @@
   },
   "q3": {
    "src": [
-    "art/s2e03-03.webp"
+    "art/s2e03-03m.webp"
    ],
    "layers": [
-    "art/s2e03-03-L0.webp",
-    "art/s2e03-03-L1.webp",
-    "art/s2e03-03-L2.webp"
+    "art/s2e03-03m-L0.webp",
+    "art/s2e03-03m-L1.webp",
+    "art/s2e03-03m-L2.webp"
    ],
    "par": [
     0,
@@ -651,12 +651,13 @@
      0.2
     ]
    ],
-   "n": 8,
-   "r": 9,
+   "n": 10,
+   "r": 15,
    "color": "#EAF4F8",
    "rate": 0.25,
    "t0": 0,
-   "t1": "end:vo01"
+   "t1": "end:vo01",
+   "a": 1
   },
   {
    "type": "stream",
@@ -680,12 +681,13 @@
      0.2
     ]
    ],
-   "n": 6,
-   "r": 8,
+   "n": 10,
+   "r": 15,
    "color": "#EAF4F8",
    "rate": 0.2,
    "t0": "vo01:cool",
-   "t1": "end:vo01"
+   "t1": "end:vo01",
+   "a": 1
   },
   {
    "type": "stream",
@@ -709,12 +711,13 @@
      0.2
     ]
    ],
-   "n": 6,
-   "r": 8,
+   "n": 10,
+   "r": 15,
    "color": "#EAF4F8",
    "rate": 0.22,
    "t0": "vo01:cool",
-   "t1": "end:vo01"
+   "t1": "end:vo01",
+   "a": 1
   },
   {
    "type": "glow",
@@ -765,7 +768,7 @@
    "r": 9,
    "color": "#CDE9F5",
    "rate": 0.3,
-   "t0": "vo02:tube",
+   "t0": "start:vo02",
    "t1": "end:vo02"
   },
   {
@@ -798,7 +801,7 @@
      0.37
     ]
    ],
-   "t0": "vo02:heat",
+   "t0": "start:vo02",
    "t1": "end:vo02",
    "loop": 2.0
   },
@@ -922,12 +925,13 @@
      0.2
     ]
    ],
-   "n": 9,
-   "r": 9,
+   "n": 10,
+   "r": 15,
    "color": "#EAF4F8",
    "rate": 0.3,
    "t0": "start:vo03",
-   "t1": "end:vo03"
+   "t1": "end:vo03",
+   "a": 1
   },
   {
    "type": "stream",
@@ -951,12 +955,13 @@
      0.2
     ]
    ],
-   "n": 7,
-   "r": 8,
+   "n": 10,
+   "r": 15,
    "color": "#EAF4F8",
    "rate": 0.25,
    "t0": "start:vo03",
-   "t1": "end:vo03"
+   "t1": "end:vo03",
+   "a": 1
   },
   {
    "type": "chips",
@@ -1021,33 +1026,6 @@
    "t1": "vo04:clothing",
    "dir": 1,
    "rate": 0.25
-  },
-  {
-   "type": "glow",
-   "img": "q2",
-   "layer": 2,
-   "grad": "gW",
-   "pts": [
-    [
-     0.47,
-     0.5
-    ],
-    [
-     0.38,
-     0.44
-    ],
-    [
-     0.62,
-     0.5
-    ],
-    [
-     0.7,
-     0.42
-    ]
-   ],
-   "r": 36,
-   "t0": "vo04:clothing",
-   "t1": "vo04:Your"
   },
   {
    "type": "stream",
@@ -1130,12 +1108,13 @@
      0.2
     ]
    ],
-   "n": 9,
-   "r": 9,
+   "n": 10,
+   "r": 15,
    "color": "#EAF4F8",
    "rate": 0.3,
    "t0": "start:vo06",
-   "t1": "end:vo06"
+   "t1": "end:vo06",
+   "a": 1
   },
   {
    "type": "glow",
@@ -1151,6 +1130,286 @@
    "r": 46,
    "t0": "start:vo06",
    "t1": "end:vo06"
+  },
+  {
+   "type": "stream",
+   "img": "q1",
+   "layer": 1,
+   "path": [
+    [
+     0.45,
+     0.68
+    ],
+    [
+     0.52,
+     0.62
+    ],
+    [
+     0.6,
+     0.56
+    ],
+    [
+     0.6,
+     0.48
+    ],
+    [
+     0.59,
+     0.42
+    ],
+    [
+     0.6,
+     0.37
+    ]
+   ],
+   "n": 12,
+   "r": 10,
+   "color": "#CDE9F5",
+   "rate": 0.3,
+   "t0": "start:vo02",
+   "t1": "vo02:tube"
+  },
+  {
+   "type": "stream",
+   "img": "q1",
+   "layer": 2,
+   "path": [
+    [
+     0.6,
+     0.4
+    ],
+    [
+     0.62,
+     0.3
+    ],
+    [
+     0.6,
+     0.2
+    ],
+    [
+     0.62,
+     0.1
+    ]
+   ],
+   "n": 9,
+   "r": 13,
+   "color": "#F2A36B",
+   "rate": 0.3,
+   "t0": "vo04:Your",
+   "t1": "start:vo05"
+  },
+  {
+   "type": "ink",
+   "img": "q1",
+   "layer": 2,
+   "paths": [
+    [
+     [
+      0.45,
+      0.4
+     ],
+     [
+      0.45,
+      0.3
+     ],
+     [
+      0.45,
+      0.2
+     ]
+    ],
+    [
+     [
+      0.85,
+      0.4
+     ],
+     [
+      0.85,
+      0.3
+     ],
+     [
+      0.85,
+      0.2
+     ]
+    ]
+   ],
+   "color": "#E48B55",
+   "w0": 10,
+   "w1": 10,
+   "a": 0.7,
+   "reveal": true,
+   "cut": "vo04:move",
+   "dur": 1.2,
+   "t0": "vo04:Your",
+   "t1": "start:vo05"
+  },
+  {
+   "type": "stream",
+   "img": "q2",
+   "layer": 2,
+   "path": [
+    [
+     0.47,
+     0.5
+    ],
+    [
+     0.47,
+     0.4
+    ],
+    [
+     0.46,
+     0.28
+    ],
+    [
+     0.47,
+     0.15
+    ]
+   ],
+   "n": 10,
+   "r": 14,
+   "color": "#EAF4F8",
+   "rate": 0.3,
+   "t0": "vo04:clothing",
+   "t1": "vo04:Your"
+  },
+  {
+   "type": "stream",
+   "img": "q2",
+   "layer": 2,
+   "path": [
+    [
+     0.69,
+     0.47
+    ],
+    [
+     0.69,
+     0.36
+    ],
+    [
+     0.68,
+     0.25
+    ]
+   ],
+   "n": 8,
+   "r": 13,
+   "color": "#EAF4F8",
+   "rate": 0.28,
+   "t0": "vo04:clothing",
+   "t1": "vo04:Your"
+  },
+  {
+   "type": "stream",
+   "img": "q3",
+   "layer": 2,
+   "path": [
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.52,
+     0.4
+    ],
+    [
+     0.49,
+     0.3
+    ],
+    [
+     0.52,
+     0.2
+    ]
+   ],
+   "n": 12,
+   "r": 16,
+   "color": "#EAF4F8",
+   "rate": 0.35,
+   "t0": "start:vo06",
+   "t1": "end:vo06"
+  },
+  {
+   "type": "stream",
+   "img": "q3",
+   "layer": 2,
+   "path": [
+    [
+     0.38,
+     0.5
+    ],
+    [
+     0.4,
+     0.4
+    ],
+    [
+     0.37,
+     0.3
+    ],
+    [
+     0.4,
+     0.2
+    ]
+   ],
+   "n": 9,
+   "r": 14,
+   "color": "#EAF4F8",
+   "rate": 0.3,
+   "t0": "start:vo06",
+   "t1": "end:vo06"
+  },
+  {
+   "type": "stream",
+   "img": "q3",
+   "layer": 2,
+   "path": [
+    [
+     0.62,
+     0.5
+    ],
+    [
+     0.64,
+     0.4
+    ],
+    [
+     0.61,
+     0.3
+    ],
+    [
+     0.64,
+     0.2
+    ]
+   ],
+   "n": 9,
+   "r": 14,
+   "color": "#EAF4F8",
+   "rate": 0.32,
+   "t0": "start:vo06",
+   "t1": "end:vo06"
+  },
+  {
+   "type": "stream",
+   "img": "q3",
+   "layer": 2,
+   "path": [
+    [
+     0.5,
+     0.5
+    ],
+    [
+     0.52,
+     0.4
+    ],
+    [
+     0.49,
+     0.3
+    ],
+    [
+     0.52,
+     0.2
+    ]
+   ],
+   "n": 10,
+   "r": 15,
+   "color": "#EAF4F8",
+   "rate": 0.4,
+   "t0": "start:vo01",
+   "t1": "end:vo01"
   }
  ],
  "plates": [
@@ -1259,5 +1518,20 @@
   "e2": "Pigment can cap a cell's nucleus.",
   "chip": "Skin Sense · Season 2 · Episode 3",
   "e3": "Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code."
- }
+ },
+ "xforms": [
+  {
+   "img": "q3",
+   "layer": 2,
+   "pivot": [
+    0.5,
+    0.56
+   ],
+   "sc": 0.78,
+   "from": 0,
+   "to": 0,
+   "t0": "start:vo06",
+   "t1": "end:vo06"
+  }
+ ]
 }
