@@ -36,7 +36,7 @@ CUE = {
     "city": A("vo04:city"), "heavierS": A("vo04:heavier"), "crash": A("vo04:crash"), "throws": A("vo04:throws"), "debate": A("vo04:debated"),
     "zoom": A("vo05:Zoom"), "ring": A("vo05:ring"), "like": A("vo05:like"), "somewhere": A("vo05:somewhere"), "souv": A("vo05:souvenir"),
     "left": A("vo06:leftovers"), "chem": A("vo06:chemistry"),
-    "rip": A("vo07:ripples"), "first": A("vo07:first"), "vis": A("vo07:flash"), "glow": A("vo07:glow"), "sec": A("vo07:seconds"), "hours": A("vo07:hours"),
+    "rip": A("vo07:ripples"), "first": A("vo07:first"), "poem": A("vo06:poem"), "vis": A("vo07:flash"), "glow": A("vo07:glow"), "sec": A("vo07:seconds"), "hours": A("vo07:hours"),
 }
 CUE["spiral0"] = round(t_c + 0.4, 4)
 CUE["tm"] = CUE["crash"]                          # the merger happens as the narration says "A crash throws out hot matter"
@@ -55,16 +55,19 @@ SPACE = [key(0.0, target=MID, dist=66.0, az=-28.0, el=16.0),
          key(t_why, dist=46.0, az=-8.0, el=14.0, ease="sine"),
          key(CUE["tm"] - 0.2, dist=36.0, az=-4.0, ease="sine"),
          key(CUE["tm"] + 2.0, dist=44.0, az=8.0, el=22.0, ease="sine"),
-         key(CUE["debate"], target=[2, -0.6, 1.4], dist=48.0, az=16.0, el=24.0, ease="sine"),
-         key(CUE["zoom"] - 0.1, target=[2, -0.6, 1.4], dist=48.0, az=18.0, el=24.0, ease="sine"),
+         key(CUE["debate"], target=[5.5, -1.8, 3.2], dist=48.0, az=16.0, el=24.0, ease="sine"),
+         key(CUE["zoom"] - 0.1, target=[5.5, -1.8, 3.2], dist=48.0, az=18.0, el=24.0, ease="sine"),
          key(CUE["zoom"] + 2.9, target=RING, dist=22.0, az=36.0, el=20.0, ease="inout3"),
          key(CUE["ring"] + 1.8, target=RING, dist=19.0, az=52.0, el=18.0, ease="sine"),
-         key(CUE["somewhere"], target=RING, dist=13.5, az=62.0, el=20.0, ease="sine"),            # push in: the beads arrive and the ring glints
-         key(CUE["souv"], target=RING, dist=17.0, az=82.0, el=32.0, ease="sine"),                 # a higher angle for "souvenir"
-         key(t_tk, target=RING, dist=21.0, az=94.0, el=24.0, ease="sine"),
-         key(A("vo06:crash"), target=RING, dist=12.0, az=104.0, el=16.0, ease="sine"),            # close on the metal for "a star crash"
-         key(CUE["chem"], target=RING, dist=26.0, az=116.0, el=8.0, ease="sine"),                 # pull back low for "chemistry"
-         key(t_rd - 0.1, target=RING, dist=20.0, az=120.0, el=14.0, ease="sine"),
+         key(CUE["somewhere"], target=RING, dist=11.0, az=62.0, el=20.0, ease="sine"),            # push in: the beads arrive and the ring glints
+         key(CUE["somewhere"] + 2.4, target=RING, dist=7.5, az=72.0, el=5.0, ease="sine"),         # low, skimming the band
+         key(CUE["souv"], target=RING, dist=24.0, az=84.0, el=46.0, ease="sine"),                 # high and wide for "souvenir"
+         key(CUE["souv"] + 2.6, target=RING, dist=10.0, az=98.0, el=14.0, ease="sine"),
+         key(t_tk, target=RING, dist=21.0, az=108.0, el=26.0, ease="sine"),
+         key(A("vo06:crash"), target=RING, dist=9.0, az=120.0, el=12.0, ease="sine"),             # close on the metal for "a star crash"
+         key(A("vo06:poem") - 0.4, target=RING, dist=30.0, az=140.0, el=30.0, ease="sine"),       # wide, then in for the ring's reaction
+         key(CUE["chem"], target=RING, dist=14.0, az=150.0, el=10.0, ease="sine"),                 # in low for "chemistry"
+         key(t_rd - 0.1, target=RING, dist=22.0, az=156.0, el=16.0, ease="sine"),
          key(t_rd + 2.2, target=[6, -5, 4], dist=50.0, az=40.0, el=28.0, ease="inout3"),
          key(t_end, target=[6, -5, 4], dist=54.0, az=44.0, el=28.0, ease="sine"),
          key(f.duration, target=MID, dist=66.0, az=-28.0, el=16.0)]
@@ -77,12 +80,12 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-nsA", "text": "neutron star", "kind": "body", "anchor": "starA", "t0": round(CUE["spiral0"] + 0.5, 4), "t1": round(CUE["crashing"] + 1.5, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-nsB", "text": "neutron star", "kind": "body", "anchor": "starB", "t0": round(CUE["spiral0"] + 0.5, 4), "t1": round(CUE["crashing"] + 1.5, 4), "side": 1, "v": "below", "fixed": True},
-    {"id": "l-bead", "text": "a bead of gold", "kind": "star", "anchor": "bead", "t0": round(CUE["throws"] + 3.0, 4), "t1": round(CUE["debate"] - 0.3, 4), "side": -1, "v": "above", "fixed": True},
+    {"id": "l-bead", "text": "a bead of gold", "kind": "star", "anchor": "bead", "t0": round(CUE["tm"] + 0.4 + 0.8 + 6 * 0.18 + 0.7, 4), "t1": round(CUE["debate"] - 0.3, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-ring", "text": "your ring", "kind": "star", "anchor": "ring", "t0": round(CUE["ring"] - 0.2, 4), "t1": round(t_tk + 3.0, 4), "side": 1, "v": "above", "fixed": True},
 ]
 PILLS = [
     {"id": "p-table", "text": "neutron capture (illustration)", "t0": round(t_n + 0.4, 4), "t1": round(t_c - 0.3, 4), "at": [90 / 1080, 0.165]},
-    {"id": "p-city", "text": "Manhattan Island (length) = a neutron star (width)", "t0": round(CUE["city"] - 0.4, 4), "t1": round(CUE["tm"] - 0.3, 4), "at": [90 / 1080, 0.165]},
+    {"id": "p-city", "text": "star width ≈ Manhattan length", "t0": round(CUE["city"] - 0.4, 4), "t1": round(CUE["tm"] - 0.3, 4), "at": [90 / 1080, 0.165]},
     {"id": "p-debate", "text": "how much from crashes? debated", "t0": round(CUE["debate"] - 0.3, 4), "t1": round(CUE["zoom"] - 0.2, 4), "at": [90 / 1080, 0.165]},
     {"id": "p-hours", "text": "times not to scale", "t0": round(CUE["rip"] - 0.2, 4), "t1": round(t_end - 0.45, 4), "at": [90 / 1080, 0.165]},
 ]

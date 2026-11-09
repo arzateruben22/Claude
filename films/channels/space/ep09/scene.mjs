@@ -46,7 +46,8 @@ const XZ = { e1: [1, 0, 0], e2: [0, 0, -1] };
 const ripples = Array.from({ length: 5 }, () => ring({ color: pos(line("lilac", 0.9)), width: 3, opacity: 0 }));
 const ringGW = ring({ color: pos(line("lilac", 0.95)), width: 5, opacity: 0 });
 const ringLi = ring({ color: pos(line("teal", 0.95)), width: 5, opacity: 0 });
-for (const r of [...ripples, ringGW, ringLi]) scene.add(r.mesh);
+const ringGl = ring({ color: pos(hdr("lemon", 0.8)), width: 5, opacity: 0 });
+for (const r of [...ripples, ringGW, ringLi, ringGl]) scene.add(r.mesh);
 // the ejecta: hot matter thrown out at the merger; it cools from white to pale gold and fades
 const NE = 760, er = mul(11), eD = new Float32Array(NE * 3), eS = new Float32Array(NE), eR = new Float32Array(NE);
 for (let i = 0; i < NE; i++) {
@@ -83,7 +84,7 @@ const beadMat = new THREE.ShaderMaterial({
 const beads = new THREE.Points(bG, beadMat); beads.frustumCulled = false; scene.add(beads);
 // the jeweller's ring: a gold band (a torus) shaded as polished metal, in pale lemon
 const ringMat = new THREE.ShaderMaterial({
-  uniforms: { uCol: { value: V(pos(hdr("lemon", 0.5))) }, uGlint: { value: 0 }, uT: { value: 0 } },
+  uniforms: { uCol: { value: new THREE.Vector3(0.98, 0.93, 0.7) }, uGlint: { value: 0 }, uT: { value: 0 } },
   vertexShader: `varying vec3 vN, vV, vP; void main(){ vP = position; vec4 mv = modelViewMatrix * vec4(position, 1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }`,
   fragmentShader: `uniform vec3 uCol; uniform float uGlint, uT; varying vec3 vN, vV, vP;
     void main(){ vec3 n = normalize(vN), v = normalize(vV), L = normalize(vec3(0.45, 0.75, 0.55)); float f = pow(1.0 - abs(dot(n, v)), 1.5);
@@ -91,8 +92,9 @@ const ringMat = new THREE.ShaderMaterial({
       vec3 col = uCol * (0.2 + 0.7 * f + 0.3 * band) + vec3(1.0, 0.97, 0.88) * spec * (0.35 + 0.8 * uGlint) + uCol * uGlint * 0.35 * f;
       gl_FragColor = vec4(col, 1.0); }`,
 });
-const jewel = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.32, 28, 112), ringMat);
+const jewel = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.1, 24, 180), ringMat);
 jewel.position.fromArray(RING); jewel.rotation.set(1.05, 0.4, 0.2);
+const stone = new THREE.Mesh(new THREE.OctahedronGeometry(0.2, 0), ringMat); stone.position.set(0, 1.3, 0); jewel.add(stone);
 scene.add(jewel);
 const rig = createRig(FILM.cam);
 
@@ -119,6 +121,8 @@ function explainer(t, k) {
   if (k <= 0.01) return;
   ctx.fillStyle = rgba(VOID, 0.985 * k); ctx.fillRect(0, 0, W, H);
   const hK = fadeIn(t, CUE.heavier - 0.2, 0.7);
+  const zin = E.inout3(seg(t, CUE.heavier + 0.2, CUE.heavier + 1.2)) * (1 - E.inout3(seg(t, CUE.soak - 0.8, CUE.soak - 0.1))), zs = 1 + 0.75 * zin, zfx = 270 * zin + 540 * (1 - zin), zfy = 450 * zin + 450 * (1 - zin);
+  ctx.save(); ctx.translate(zfx * sx, zfy * sy); ctx.scale(zs, zs); ctx.translate(-zfx * sx, -zfy * sy);
   for (let r = 0; r < ROWS.length; r++) for (const c of ROWS[r]) {
     const [x, y] = cellXY(r, c), isFe = r === FE[0] && c === FE[1], isAu = r === AU[0] && c === AU[1];
     ctx.beginPath(); ctx.roundRect(x * sx - (CW / 2 - 2) * sx, y * sy - (CH / 2 - 2) * sy, (CW - 4) * sx, (CH - 4) * sy, 5 * S1);
@@ -127,6 +131,7 @@ function explainer(t, k) {
   label("Fe  iron", cellXY(FE[0], FE[1])[0], cellXY(FE[0], FE[1])[1] - 40, LILAC, k, 26);
   label("Au  gold", cellXY(AU[0], AU[1])[0] + 20, cellXY(AU[0], AU[1])[1] + 40, LEMON, k, 26);
   if (hK > 0.01) { const [x0, y0] = cellXY(...FE), [x1, y1] = cellXY(...AU); ctx.strokeStyle = rgba(LEMON, 0.9 * hK * k); lw(3.5); ctx.beginPath(); ctx.moveTo(x0 * sx, y0 * sy); ctx.lineTo((x0 + (x1 - x0) * hK) * sx, (y0 + (y1 - y0) * hK) * sy); ctx.stroke(); }
+  ctx.restore();
   // a nucleus soaking up neutrons (slowly at first, then a flood)
   const cx = 540, cy = 880, base = 54, soak = seg(t, CUE.soak - 0.3, CUE.fast), flood = seg(t, CUE.fast, CUE.n + (CUE.c - CUE.n));
   const nuc = base * (1 + 0.45 * E.inout3(soak) + 0.35 * flood);
@@ -235,17 +240,18 @@ window.seek = function (t) {
     ripples[i].arc({ center: [0, 0, 0], r: 0.8 + 15 * Math.max(age, 0), ...XZ }).set({ opacity: age >= 0 ? 0.7 * (1 - age) * Math.min(1, age * 6) * (tt < CUE.tm ? 1 : 1 - E.out3(seg(tt, CUE.tm + 0.5, CUE.tm + 3))) : 0 });
   }
   // the readout: the ripples (lilac) leave first, the light (teal) hours later (not to scale)
-  const rg = (tt - CUE.rip) * 2.6, rl = (tt - CUE.vis) * 2.6;
+  const rg = (tt - CUE.rip) * 2.6, rl = (tt - CUE.vis) * 2.6, rgl = (tt - CUE.glow) * 1.1;       // ripples, then the gamma flash 1.7 s behind, then the glow hours behind (not to scale)
   ringGW.arc({ center: [0, 0, 0], r: Math.max(0.01, rg), ...XZ }).set({ opacity: tt >= CUE.rip && rg < 30 ? 0.95 * (1 - rg / 40) : 0 });
   ringLi.arc({ center: [0, 0, 0], r: Math.max(0.01, rl), ...XZ }).set({ opacity: tt >= CUE.vis && rl < 30 ? 0.95 * (1 - rl / 40) : 0 });
+  ringGl.arc({ center: [0, 0, 0], r: Math.max(0.01, rgl), ...XZ }).set({ opacity: tt >= CUE.glow && rgl < 12 ? 0.9 * (1 - rgl / 16) : 0 });
   // the ejecta: cooling hot matter
   ejMat.uniforms.uT.value = Math.max(0, tt - CUE.tm); ejecta.visible = tt >= CUE.tm;
   // the beads: looping teaser in the hook; real flights after the merger (arrivals while the camera goes to the ring)
   let arrived = 0;
   BEAD.forEach((b, k) => {
     let u = -1;
-    if (tt < CUE.spiral0) u = (tt * 0.2 + k / NB) % 1;
-    else if (tt >= CUE.tm) u = clamp01((tt - CUE.tm - 0.8 - b.lag) / 9);
+    if (tt < CUE.spiral0) u = tt < CUE.dip[0] ? (tt * 0.2 + k / NB) % 1 : -1;      // the teaser streams only in the hook; no beads before the crash
+    else if (tt >= CUE.tm + 0.4) u = clamp01((tt - CUE.tm - 0.8 - b.lag) / 9);
     const live = u >= 0 && u < 1;
     if (u >= 1) arrived++;
     const p0 = new THREE.Vector3(b.off[0] * 1.6, b.off[1] * 1.6, b.off[2] * 1.6), p2 = RINGV.clone(), p1 = p0.clone().lerp(p2, 0.5).add(new THREE.Vector3(b.side * 0.6, b.up, b.side * 0.3));
@@ -257,8 +263,8 @@ window.seek = function (t) {
   });
   bG.attributes.position.needsUpdate = true; bG.attributes.alpha.needsUpdate = true; bG.attributes.size.needsUpdate = true;
   // the ring takes them: it glints as beads arrive; it turns slowly
-  ringMat.uniforms.uGlint.value = Math.min(1, arrived / NB * 1.1 + 0.15 * (tt < CUE.spiral0 ? 1 : 0)); ringMat.uniforms.uT.value = tt;
-  jewel.rotation.y = 0.4 + 0.12 * tt; jewel.rotation.z = 0.2 + 0.05 * tt;
+  const pp = (c) => Math.exp(-Math.pow((tt - c) / 0.4, 2)); ringMat.uniforms.uGlint.value = Math.min(1.6, arrived / NB * 1.1 + 0.15 * (tt < CUE.spiral0 ? 1 : 0) + 0.9 * (pp(CUE.poem) + pp(CUE.chem))); ringMat.uniforms.uT.value = tt;
+  jewel.scale.setScalar(1 + 0.12 * (pp(CUE.poem) + pp(CUE.chem))); jewel.rotation.y = 0.4 + 0.12 * tt; jewel.rotation.z = 0.2 + 0.05 * tt;
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 0.8, bandGain: 0.7 });
   overlay2d(t);
   hud.update(t); tRing.update(t); eRing.update(t);
