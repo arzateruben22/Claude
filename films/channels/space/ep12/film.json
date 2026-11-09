@@ -1,0 +1,1573 @@
+{
+ "loop0": 70.8667,
+ "id": "one-more-orbit-s2e06",
+ "fps": 30,
+ "bpm": 56.25,
+ "dur": 71.4667,
+ "poster": 41.1,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "space"
+  },
+  {
+   "at": 65.13333333333334,
+   "name": "end"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 3.7333,
+   "line": "vo01",
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 3.7333,
+   "t1": 14.9333,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 14.9333,
+   "t1": 23.4667,
+   "line": "vo03",
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 23.4667,
+   "t1": 37.8667,
+   "line": "vo04",
+   "energy": 0.62
+  },
+  {
+   "id": "whoa",
+   "t0": 37.8667,
+   "t1": 50.1333,
+   "line": "vo05",
+   "energy": 0.8
+  },
+  {
+   "id": "takeaway",
+   "t0": 50.1333,
+   "t1": 57.6,
+   "line": "vo06",
+   "energy": 0.3
+  },
+  {
+   "id": "readout",
+   "t0": 57.6,
+   "t1": 65.0667,
+   "line": "vo07",
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 65.0667,
+   "t1": 71.4667,
+   "line": "vo08",
+   "energy": 0.4
+  }
+ ],
+ "cam": {
+  "space": [
+   {
+    "t": 0,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "dist": 10
+   }
+  ],
+  "end": [
+   {
+    "t": 0,
+    "target": [
+     0,
+     0,
+     0
+    ],
+    "dist": 10
+   }
+  ]
+ },
+ "camk": [
+  {
+   "t": 0.0,
+   "p": [
+    1.9,
+    0.5,
+    2.5
+   ],
+   "l": [
+    0,
+    0.0,
+    0
+   ],
+   "fov": 38
+  },
+  {
+   "t": 3.5333,
+   "p": [
+    1.5,
+    0.45,
+    2.1
+   ],
+   "l": [
+    0,
+    0.0,
+    0
+   ],
+   "fov": 38
+  },
+  {
+   "t": 5.5667,
+   "p": [
+    4.6,
+    0.8,
+    2.2
+   ],
+   "l": [
+    3,
+    0,
+    0.4
+   ],
+   "fov": 38
+  },
+  {
+   "t": 8.1333,
+   "p": [
+    9,
+    1.0,
+    3.6
+   ],
+   "l": [
+    8,
+    0,
+    0.6
+   ],
+   "fov": 38
+  },
+  {
+   "t": 9.4333,
+   "p": [
+    5,
+    24,
+    20
+   ],
+   "l": [
+    2,
+    0,
+    0
+   ],
+   "fov": 38
+  },
+  {
+   "t": 11.5667,
+   "p": [
+    2,
+    52,
+    22
+   ],
+   "l": [
+    -2,
+    0,
+    -2
+   ],
+   "fov": 38
+  },
+  {
+   "t": 14.7333,
+   "p": [
+    2,
+    52,
+    22
+   ],
+   "l": [
+    -2,
+    0,
+    -2
+   ],
+   "fov": 38
+  },
+  {
+   "t": 15.1033,
+   "p": [
+    602.0,
+    0.55,
+    2.8
+   ],
+   "l": [
+    600,
+    0,
+    0
+   ],
+   "fov": 38
+  },
+  {
+   "t": 18.2,
+   "p": [
+    602.6,
+    0.9,
+    3.3
+   ],
+   "l": [
+    600.4,
+    0,
+    0
+   ],
+   "fov": 38
+  },
+  {
+   "t": 20.15,
+   "p": [
+    603.0,
+    1.2,
+    3.8
+   ],
+   "l": [
+    600.4,
+    0,
+    0
+   ],
+   "fov": 38
+  },
+  {
+   "t": 20.49,
+   "p": [
+    2.2,
+    0.7,
+    2.6
+   ],
+   "l": [
+    0,
+    0,
+    0
+   ],
+   "fov": 36
+  },
+  {
+   "t": 23.0667,
+   "p": [
+    1.6,
+    0.6,
+    2.1
+   ],
+   "l": [
+    0,
+    0,
+    0
+   ],
+   "fov": 36
+  },
+  {
+   "t": 23.4667,
+   "p": [
+    1.2,
+    0.35,
+    1.6
+   ],
+   "l": [
+    0,
+    0,
+    0
+   ],
+   "fov": 34
+  },
+  {
+   "t": 28.4,
+   "p": [
+    0.9,
+    0.3,
+    1.2
+   ],
+   "l": [
+    0.1,
+    0,
+    0
+   ],
+   "fov": 34
+  },
+  {
+   "t": 33.5667,
+   "p": [
+    1.4,
+    0.5,
+    1.5
+   ],
+   "l": [
+    0,
+    0,
+    0
+   ],
+   "fov": 34
+  },
+  {
+   "t": 37.7667,
+   "p": [
+    1.4,
+    0.5,
+    1.5
+   ],
+   "l": [
+    0,
+    0,
+    0
+   ],
+   "fov": 34
+  },
+  {
+   "t": 38.2,
+   "p": [
+    2.2,
+    0.8,
+    2.2
+   ],
+   "l": [
+    0,
+    0,
+    0
+   ],
+   "fov": 38
+  },
+  {
+   "t": 40.5,
+   "p": [
+    3,
+    14,
+    12
+   ],
+   "l": [
+    0,
+    0,
+    0
+   ],
+   "fov": 38
+  },
+  {
+   "t": 41.4333,
+   "p": [
+    -1,
+    36,
+    24
+   ],
+   "l": [
+    -4,
+    0,
+    -4
+   ],
+   "fov": 38
+  },
+  {
+   "t": 45.7333,
+   "p": [
+    -2,
+    46,
+    30
+   ],
+   "l": [
+    -4,
+    0,
+    -4
+   ],
+   "fov": 38
+  },
+  {
+   "t": 49.9333,
+   "p": [
+    -2,
+    46,
+    30
+   ],
+   "l": [
+    -4,
+    0,
+    -4
+   ],
+   "fov": 38
+  },
+  {
+   "t": 50.4833,
+   "p": [
+    -700,
+    1.7,
+    16
+   ],
+   "l": [
+    -700,
+    15,
+    -90
+   ],
+   "fov": 48
+  },
+  {
+   "t": 54.4333,
+   "p": [
+    -698.5,
+    1.7,
+    15
+   ],
+   "l": [
+    -700,
+    17,
+    -90
+   ],
+   "fov": 48
+  },
+  {
+   "t": 57.3,
+   "p": [
+    -698.0,
+    1.8,
+    14
+   ],
+   "l": [
+    -700,
+    20,
+    -90
+   ],
+   "fov": 48
+  },
+  {
+   "t": 57.9,
+   "p": [
+    14,
+    30,
+    -646
+   ],
+   "l": [
+    14,
+    0,
+    -700
+   ],
+   "fov": 40
+  },
+  {
+   "t": 64.9833,
+   "p": [
+    16,
+    34,
+    -642
+   ],
+   "l": [
+    14,
+    0,
+    -700
+   ],
+   "fov": 40
+  },
+  {
+   "t": 71.4667,
+   "p": [
+    1.9,
+    0.5,
+    2.5
+   ],
+   "l": [
+    0,
+    0.0,
+    0
+   ],
+   "fov": 38
+  }
+ ],
+ "cue": {
+  "n": 3.7333,
+  "c": 14.9333,
+  "why": 23.4667,
+  "w": 37.8667,
+  "tk": 50.1333,
+  "rd": 57.6,
+  "end": 65.13333333333334,
+  "apollo": 5.566666666666666,
+  "dust": 8.133333333333333,
+  "orbiters": 9.733333333333333,
+  "tracks": 11.066666666666666,
+  "still": 14.033333333333333,
+  "earth": 15.466666666666667,
+  "days": 18.2,
+  "air": 20.5,
+  "rain": 22.466666666666665,
+  "slow": 24.233333333333334,
+  "grains": 27.4,
+  "time": 30.466666666666665,
+  "sand": 31.266666666666666,
+  "mm": 33.56666666666667,
+  "pull": 38.2,
+  "site": 40.5,
+  "lander": 41.43333333333333,
+  "left": 44.733333333333334,
+  "beach": 50.833333333333336,
+  "tonight": 54.43333333333333,
+  "light": 57.93333333333333,
+  "quarter": 60.53333333333333,
+  "talk": 62.8,
+  "dip": [
+   14.7833,
+   20.15,
+   49.8833,
+   57.35,
+   64.9833
+  ]
+ },
+ "beach": [
+  600,
+  0,
+  0
+ ],
+ "street": [
+  -700,
+  0,
+  0
+ ],
+ "emp": [
+  0,
+  0,
+  -700
+ ],
+ "land": [
+  -9,
+  0,
+  -7
+ ],
+ "labels": [
+  {
+   "id": "l-print",
+   "text": "a boot print",
+   "kind": "body",
+   "anchor": "print",
+   "t0": 5.3667,
+   "t1": 8.7333,
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-trail",
+   "text": "tracks seen from orbit",
+   "kind": "star",
+   "anchor": "trail",
+   "t0": 10.0333,
+   "t1": 14.7333,
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-beach",
+   "text": "beach: gone in days",
+   "kind": "light",
+   "anchor": "beachP",
+   "t0": 15.2833,
+   "t1": 20.05,
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-moon",
+   "text": "Moon: no wind, no rain",
+   "kind": "body",
+   "anchor": "print",
+   "t0": 20.65,
+   "t1": 23.1667,
+   "side": 1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-land",
+   "text": "lander base",
+   "kind": "star",
+   "anchor": "lander",
+   "t0": 41.1333,
+   "t1": 49.7333,
+   "side": -1,
+   "v": "above",
+   "fixed": true
+  },
+  {
+   "id": "l-tr2",
+   "text": "the astronauts' tracks",
+   "kind": "body",
+   "anchor": "trail",
+   "t0": 41.8333,
+   "t1": 49.7333,
+   "side": 1,
+   "v": "below",
+   "fixed": true
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-illus",
+   "text": "illustration",
+   "t0": 3.4333,
+   "t1": 57.4,
+   "slot": "tr"
+  },
+  {
+   "id": "b-nts",
+   "text": "not to scale",
+   "t0": 57.6,
+   "t1": 64.6833,
+   "slot": "tr"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-hook",
+   "label": "footprints on the Moon",
+   "text": "still there?",
+   "t0": 0.0,
+   "t1": 3.7333,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-1969",
+   "label": "Apollo astronauts walked here",
+   "text": "1969",
+   "t0": 5.566666666666666,
+   "t1": 9.3333,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-still",
+   "label": "tracks from later missions",
+   "text": "still there",
+   "t0": 9.733333333333333,
+   "t1": 14.9333,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-days",
+   "label": "a beach footprint",
+   "text": "gone in days",
+   "t0": 15.466666666666667,
+   "t1": 20.1,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-air",
+   "label": "the Moon has almost no air",
+   "text": "no wind, no rain",
+   "t0": 20.5,
+   "t1": 23.2667,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-mm",
+   "label": "sandblasting wears the Moon",
+   "text": "1 mm per million years",
+   "t0": 27.4,
+   "t1": 37.4667,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-left",
+   "label": "the lander's base and the tracks",
+   "text": "still where they were left",
+   "t0": 41.43333333333333,
+   "t1": 49.933299999999996,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-up",
+   "label": "look up tonight",
+   "text": "some may still be there",
+   "t0": 54.03333333333333,
+   "t1": 57.6,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-read",
+   "label": "light time · Earth to the Moon",
+   "text": "about 1.25 seconds",
+   "read": true,
+   "t0": 59.733333333333334,
+   "t1": 64.6833,
+   "at": [
+    0.5,
+    0.555
+   ]
+  }
+ ],
+ "pills": [
+  {
+   "id": "p-grain",
+   "text": "grains hit the dust, one at a time",
+   "t0": 27.1,
+   "t1": 33.3667,
+   "at": [
+    0.08333333333333333,
+    0.175
+   ]
+  },
+  {
+   "id": "p-orb",
+   "text": "seen from orbit (illustration)",
+   "t0": 9.7333,
+   "t1": 14.6333,
+   "at": [
+    0.08333333333333333,
+    0.175
+   ]
+  }
+ ],
+ "title": {
+  "series": "One More Orbit · S2E06",
+  "title": "*Footprints*",
+  "t1": 3.2333,
+  "sig": 3.1666666666666665
+ },
+ "endCard": 65.13333333333334,
+ "end": {
+  "title": "That's *season two*",
+  "follow": "One More Orbit · Season 2 · Episode 6",
+  "next": "Apollo-era tracks and landers have been photographed from orbit (NASA)."
+ },
+ "captions": [
+  {
+   "t0": 0.103,
+   "t1": 2.128,
+   "lines": [
+    [
+     [
+      "Are",
+      0.103
+     ],
+     [
+      "the",
+      0.308
+     ],
+     [
+      "footprints",
+      0.503
+     ]
+    ],
+    [
+     [
+      "still",
+      1.123
+     ],
+     [
+      "there?",
+      1.378
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 2.133,
+   "t1": 3.373,
+   "lines": [
+    [
+     [
+      "On",
+      2.133
+     ],
+     [
+      "the",
+      2.428
+     ],
+     [
+      "Moon.",
+      2.468
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.053,
+   "t1": 7.393,
+   "lines": [
+    [
+     [
+      "In",
+      4.053
+     ],
+     [
+      "nineteen",
+      4.368
+     ],
+     [
+      "sixty-nine,",
+      4.398
+     ]
+    ],
+    [
+     [
+      "Apollo astronauts",
+      5.573
+     ],
+     [
+      "walked",
+      6.868
+     ],
+     [
+      "in",
+      7.243
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.393,
+   "t1": 8.778,
+   "lines": [
+    [
+     [
+      "the Moon's dust.",
+      7.393
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.778,
+   "t1": 12.008,
+   "lines": [
+    [
+     [
+      "Since",
+      8.778
+     ],
+     [
+      "then,",
+      9.158
+     ],
+     [
+      "orbiters",
+      9.718
+     ],
+     [
+      "have",
+      10.218
+     ]
+    ],
+    [
+     [
+      "photographed",
+      10.518
+     ],
+     [
+      "tracks left by",
+      11.073
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.008,
+   "t1": 13.193,
+   "lines": [
+    [
+     [
+      "later",
+      12.008
+     ],
+     [
+      "missions.",
+      12.403
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.193,
+   "t1": 14.893,
+   "lines": [
+    [
+     [
+      "The",
+      13.193
+     ],
+     [
+      "tracks",
+      13.293
+     ],
+     [
+      "are",
+      13.678
+     ],
+     [
+      "still there.",
+      14.023
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 15.253,
+   "t1": 19.033,
+   "lines": [
+    [
+     [
+      "On",
+      15.253
+     ],
+     [
+      "Earth,",
+      15.483
+     ],
+     [
+      "wind",
+      15.888
+     ],
+     [
+      "and",
+      16.268
+     ],
+     [
+      "rain",
+      16.488
+     ],
+     [
+      "wipe",
+      16.903
+     ]
+    ],
+    [
+     [
+      "a",
+      17.128
+     ],
+     [
+      "footprint",
+      17.328
+     ],
+     [
+      "out",
+      17.798
+     ],
+     [
+      "in",
+      17.968
+     ],
+     [
+      "days.",
+      18.193
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.033,
+   "t1": 23.213,
+   "lines": [
+    [
+     [
+      "The",
+      19.033
+     ],
+     [
+      "Moon",
+      19.063
+     ],
+     [
+      "has",
+      19.533
+     ],
+     [
+      "almost",
+      19.778
+     ],
+     [
+      "no",
+      20.198
+     ],
+     [
+      "air,",
+      20.513
+     ]
+    ],
+    [
+     [
+      "so",
+      21.148
+     ],
+     [
+      "no wind and no rain.",
+      21.348
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 23.787,
+   "t1": 26.522,
+   "lines": [
+    [
+     [
+      "Only",
+      23.787
+     ],
+     [
+      "slow",
+      24.227
+     ],
+     [
+      "things",
+      24.662
+     ]
+    ],
+    [
+     [
+      "wear",
+      24.957
+     ],
+     [
+      "a",
+      25.317
+     ],
+     [
+      "print",
+      25.347
+     ],
+     [
+      "down.",
+      25.852
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.522,
+   "t1": 31.117,
+   "lines": [
+    [
+     [
+      "Tiny",
+      26.522
+     ],
+     [
+      "space",
+      26.982
+     ],
+     [
+      "grains",
+      27.392
+     ],
+     [
+      "keep",
+      27.907
+     ],
+     [
+      "hitting",
+      28.172
+     ]
+    ],
+    [
+     [
+      "the",
+      28.577
+     ],
+     [
+      "dust,",
+      28.662
+     ],
+     [
+      "one",
+      29.487
+     ],
+     [
+      "at",
+      29.822
+     ],
+     [
+      "a",
+      30.052
+     ],
+     [
+      "time.",
+      30.452
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.117,
+   "t1": 33.432,
+   "lines": [
+    [
+     [
+      "That",
+      31.117
+     ],
+     [
+      "sandblasting",
+      31.257
+     ],
+     [
+      "wears",
+      32.177
+     ]
+    ],
+    [
+     [
+      "the",
+      32.462
+     ],
+     [
+      "Moon",
+      32.622
+     ],
+     [
+      "down",
+      32.982
+     ],
+     [
+      "about",
+      33.302
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.432,
+   "t1": 36.067,
+   "lines": [
+    [
+     [
+      "a millimeter every",
+      33.432
+     ]
+    ],
+    [
+     [
+      "million years.",
+      34.607
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.187,
+   "t1": 41.397,
+   "lines": [
+    [
+     [
+      "Pull",
+      38.187
+     ],
+     [
+      "back",
+      38.657
+     ],
+     [
+      "from",
+      38.687
+     ],
+     [
+      "one",
+      38.932
+     ],
+     [
+      "boot",
+      39.302
+     ]
+    ],
+    [
+     [
+      "print",
+      39.612
+     ],
+     [
+      "to",
+      39.912
+     ],
+     [
+      "the",
+      40.132
+     ],
+     [
+      "whole",
+      40.162
+     ],
+     [
+      "site.",
+      40.502
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.397,
+   "t1": 44.067,
+   "lines": [
+    [
+     [
+      "The",
+      41.397
+     ],
+     [
+      "lander's",
+      41.427
+     ],
+     [
+      "base",
+      42.052
+     ],
+     [
+      "and",
+      42.412
+     ],
+     [
+      "the",
+      42.642
+     ]
+    ],
+    [
+     [
+      "tracks",
+      42.672
+     ],
+     [
+      "are",
+      43.132
+     ],
+     [
+      "still",
+      43.472
+     ],
+     [
+      "where",
+      43.757
+     ],
+     [
+      "the",
+      44.012
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 44.067,
+   "t1": 47.327,
+   "lines": [
+    [
+     [
+      "astronauts",
+      44.067
+     ],
+     [
+      "left",
+      44.747
+     ],
+     [
+      "them,",
+      45.032
+     ]
+    ],
+    [
+     [
+      "as",
+      45.692
+     ],
+     [
+      "orbiters",
+      45.967
+     ],
+     [
+      "show.",
+      46.577
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 50.453,
+   "t1": 53.998,
+   "lines": [
+    [
+     [
+      "No",
+      50.453
+     ],
+     [
+      "beach",
+      50.843
+     ],
+     [
+      "on",
+      51.403
+     ],
+     [
+      "Earth",
+      51.518
+     ],
+     [
+      "keeps",
+      51.898
+     ]
+    ],
+    [
+     [
+      "a",
+      52.098
+     ],
+     [
+      "footprint",
+      52.403
+     ],
+     [
+      "like",
+      53.078
+     ],
+     [
+      "that.",
+      53.418
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.998,
+   "t1": 57.293,
+   "lines": [
+    [
+     [
+      "Look up tonight:",
+      53.998
+     ],
+     [
+      "some",
+      55.298
+     ],
+     [
+      "of",
+      55.413
+     ]
+    ],
+    [
+     [
+      "them",
+      55.603
+     ],
+     [
+      "may still be there.",
+      55.873
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 57.92,
+   "t1": 62.015,
+   "lines": [
+    [
+     [
+      "Light",
+      57.92
+     ],
+     [
+      "time",
+      58.29
+     ],
+     [
+      "to",
+      58.615
+     ],
+     [
+      "the",
+      58.665
+     ],
+     [
+      "Moon:",
+      58.89
+     ],
+     [
+      "about",
+      59.64
+     ]
+    ],
+    [
+     [
+      "one and a quarter seconds.",
+      59.92
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 62.015,
+   "t1": 64.76,
+   "lines": [
+    [
+     [
+      "Close",
+      62.015
+     ],
+     [
+      "enough",
+      62.315
+     ],
+     [
+      "to",
+      62.635
+     ],
+     [
+      "talk,",
+      62.79
+     ]
+    ],
+    [
+     [
+      "with",
+      63.37
+     ],
+     [
+      "a",
+      63.48
+     ],
+     [
+      "short",
+      63.745
+     ],
+     [
+      "wait.",
+      64.0
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 65.387,
+   "t1": 66.687,
+   "lines": [
+    [
+     [
+      "That's",
+      65.387
+     ],
+     [
+      "season",
+      65.622
+     ],
+     [
+      "two.",
+      65.957
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 66.687,
+   "t1": 69.987,
+   "lines": [
+    [
+     [
+      "Next:",
+      66.687
+     ],
+     [
+      "another orbit,",
+      67.267
+     ]
+    ],
+    [
+     [
+      "another",
+      68.087
+     ],
+     [
+      "question,",
+      68.462
+     ],
+     [
+      "same sky.",
+      69.007
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.03333333333333333,
+   "dur": 3.09,
+   "file": "vo/01.wav",
+   "text": "Are the footprints still there? On the Moon."
+  },
+  {
+   "id": "vo02",
+   "t": 4.033333333333333,
+   "dur": 10.574,
+   "file": "vo/02.wav",
+   "text": "In nineteen sixty-nine, Apollo astronauts walked in the Moon's dust. Since then, orbiters have photographed tracks left by later missions. The tracks are still there."
+  },
+  {
+   "id": "vo03",
+   "t": 15.233333333333333,
+   "dur": 7.707,
+   "file": "vo/03.wav",
+   "text": "On Earth, wind and rain wipe a footprint out in days. The Moon has almost no air, so no wind and no rain."
+  },
+  {
+   "id": "vo04",
+   "t": 23.766666666666666,
+   "dur": 12.059,
+   "file": "vo/04.wav",
+   "text": "Only slow things wear a print down. Tiny space grains keep hitting the dust, one at a time. That sandblasting wears the Moon down about a millimeter every million years."
+  },
+  {
+   "id": "vo05",
+   "t": 38.166666666666664,
+   "dur": 8.783,
+   "file": "vo/05.wav",
+   "text": "Pull back from one boot print to the whole site. The lander's base and the tracks are still where the astronauts left them, as orbiters show."
+  },
+  {
+   "id": "vo06",
+   "t": 50.43333333333333,
+   "dur": 6.623,
+   "file": "vo/06.wav",
+   "text": "No beach on Earth keeps a footprint like that. Look up tonight: some of them may still be there."
+  },
+  {
+   "id": "vo07",
+   "t": 57.9,
+   "dur": 6.633,
+   "file": "vo/07.wav",
+   "text": "Light time to the Moon: about one and a quarter seconds. Close enough to talk, with a short wait."
+  },
+  {
+   "id": "vo08",
+   "t": 65.36666666666666,
+   "dur": 4.374,
+   "file": "vo/08.wav",
+   "text": "That's season two. Next: another orbit, another question, same sky."
+  }
+ ]
+}
