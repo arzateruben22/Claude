@@ -26,6 +26,29 @@ export const SLATES: Record<string, { series: string; objective: string; titles:
   whatif: { series: "Season 1: Impossible, worked out", objective: "Take an impossible question, state every assumption, and land on a real number you can feel.", titles: ["Through the Earth", "Everyone, one place", "All the ants", "Count to a billion", "Everybody jump", "Every raindrop at once"] },
 };
 
+type Slate = { series: string; objective: string; titles: string[] };
+// Season 2: episode folders ep07-ep12, numbered "Season 2 · Episode 1-6" on screen. Titles are fallbacks: a delivered
+// film's own title (film.json) wins.
+export const SEASON2: Record<string, Slate> = {
+  physics: { series: "Season 2: Everyday surprises", objective: "Find the physics hiding in ordinary things, shown and measured on screen.", titles: ["The slinky that waits", "Spaghetti almost never breaks in two", "The nut that rises", "The ring a coffee drop leaves", "Listen to the cup fill", "Episode 6"] },
+  space: { series: "Season 2: Bigger than it looks", objective: "Turn the universe's biggest numbers into pictures you can feel.", titles: ["Trees or stars", "Dark sky", "Your gold", "The black hole's edge", "Episode 5", "Episode 6"] },
+  whatif: { series: "Season 2: Even more impossible", objective: "Take an impossible question, state every assumption, and land on a real number you can feel.", titles: ["Walking to the Moon", "Everyone holds hands", "A rope round the Earth", "Episode 4", "Episode 5", "Episode 6"] },
+  skincare: { series: "Season 2: What your skin does", objective: "See what your skin does on its own, with the evidence on the screen.", titles: ["Why goosebumps happen", "Why fingers wrinkle in water", "How sweat cools you", "What a tan really is", "The brick wall on your skin", "Fingerprints before birth"] },
+};
+
+/** Every season of a channel, with its season number and the folder number of its first episode (ep01, ep07, …). */
+export function seasonsFor(slug: string): { season: number; first: number; slate: Slate }[] {
+  const out = SLATES[slug] ? [{ season: 1, first: 1, slate: SLATES[slug] }] : [];
+  if (SEASON2[slug]) out.push({ season: 2, first: 7, slate: SEASON2[slug] });
+  return out;
+}
+
+/** The season slate and the 1-based place in it for an episode folder number (ep09 → season 2, episode 3). */
+export function slateForEpisode(slug: string, folderNumber: number) {
+  const s = seasonsFor(slug).filter((x) => folderNumber >= x.first && folderNumber < x.first + x.slate.titles.length).at(-1);
+  return s ? { ...s, order: folderNumber - s.first + 1 } : null;
+}
+
 const sha256File = (f: string) => createHash("sha256").update(fs.readFileSync(f)).digest("hex");
 const rel = (f: string) => path.relative(ROOT, f);
 const plain = (s: string) => s.replace(/\*/g, "");
@@ -46,7 +69,7 @@ export function scriptInfo(dir: string) {
 }
 
 /** Everything the metadata engine needs, from an episode folder and its channel. */
-export function metaInputFor(dir: string, ch: { name: string; label: string; tagline: string; topic: Topic }, ep: { number: number; title: string; durationS?: number | null; seriesTitle?: string | null; seriesOrder?: number | null; seriesTotal?: number | null }): MetaInput {
+export function metaInputFor(dir: string, ch: { name: string; label: string; tagline: string; topic: Topic }, ep: MetaInput["episode"]): MetaInput {
   const info = scriptInfo(dir);
   const claimsPath = path.join(dir, "claims.json");
   const claims: { id: string; claim: string; source_title?: string; source_url?: string }[] = fs.existsSync(claimsPath) ? JSON.parse(fs.readFileSync(claimsPath, "utf8")) : [];
@@ -61,25 +84,27 @@ export function metaInputFor(dir: string, ch: { name: string; label: string; tag
 
 export async function importEpisodes(d = db()) {
   const report: string[] = [];
-  for (const [slug, slate] of Object.entries(SLATES)) {
+  for (const slug of Object.keys(SLATES)) for (const { season: seasonNo, first, slate } of seasonsFor(slug)) {
     const [ch] = await d.select().from(S.channels).where(eq(S.channels.slug, slug));
     if (!ch?.filmsPath) continue;
+    // a later season is created only once its first episode folder exists, so plans don't show up as empty seasons
+    if (first > 1 && !fs.existsSync(path.join(ROOT, ch.filmsPath, `ep${String(first).padStart(2, "0")}`))) continue;
     let [se] = await d.select().from(S.series).where(and(eq(S.series.channelId, ch.id), eq(S.series.title, slate.series)));
     if (!se) [se] = await d.insert(S.series).values({ channelId: ch.id, title: slate.series, objective: slate.objective, audience: ch.editorial.audience, status: "active" }).returning();
-    await d.insert(S.seasons).values({ seriesId: se.id, number: 1, title: "Season 1" }).onConflictDoNothing();
-    const season = await d.select().from(S.seasons).where(and(eq(S.seasons.seriesId, se.id), eq(S.seasons.number, 1)));
+    await d.insert(S.seasons).values({ seriesId: se.id, number: seasonNo, title: `Season ${seasonNo}` }).onConflictDoNothing();
+    const season = await d.select().from(S.seasons).where(and(eq(S.seasons.seriesId, se.id), eq(S.seasons.number, seasonNo)));
     for (const [i, title] of slate.titles.entries()) {
-      const n = i + 1, dir = path.join(ROOT, ch.filmsPath, `ep${String(n).padStart(2, "0")}`);
+      const order = i + 1, n = first + i, dir = path.join(ROOT, ch.filmsPath, `ep${String(n).padStart(2, "0")}`);
       const exists = fs.existsSync(dir), info = exists ? scriptInfo(dir) : null;
       const film = exists && fs.existsSync(path.join(dir, "film.json")) ? JSON.parse(fs.readFileSync(path.join(dir, "film.json"), "utf8")) : null;
       const out = exists && fs.existsSync(path.join(dir, "out")) ? fs.readdirSync(path.join(dir, "out")).find((f) => /-9x16\.mp4$/.test(f)) : undefined;
       const state = out ? "ready_for_review" : info ? "script" : "idea";
       let [ep] = await d.select().from(S.episodes).where(and(eq(S.episodes.channelId, ch.id), eq(S.episodes.number, n)));
-      if (!ep) ep = await createEpisode(d, { channelId: ch.id, title, seriesId: se.id, seriesOrder: n, number: n, state, filmsPath: exists ? rel(dir) : null });
+      if (!ep) ep = await createEpisode(d, { channelId: ch.id, title, seriesId: se.id, seriesOrder: order, number: n, state, filmsPath: exists ? rel(dir) : null });
       const question = info?.vo[0]?.split("?")[0] ? info.vo[0].split("?")[0] + "?" : ep.question;
       const advance = ["idea", "research", "outline", "script"].includes(ep.state) ? state : ep.state;   // never move an episode backwards
       await d.update(S.episodes).set({
-        title: film?.title?.title ? plain(film.title.title) : title, question, seasonId: season[0].id, seriesId: se.id, seriesOrder: n,
+        title: film?.title?.title ? plain(film.title.title) : title, question, seasonId: season[0].id, seriesId: se.id, seriesOrder: order,
         script: info ? info.vo.join("\n\n") : ep.script, storyboard: info ? info.beats : ep.storyboard, durationS: film?.dur ?? ep.durationS,
         captionsSrt: film?.captions ? captionsToSrt(film.captions) : ep.captionsSrt,
         filmsPath: exists ? rel(dir) : ep.filmsPath, state: advance as typeof ep.state, updatedAt: new Date(),
@@ -104,7 +129,7 @@ export async function importEpisodes(d = db()) {
           width: 1080, height: 1920, durationS: film?.dur, label: "final", qa: fs.existsSync(qaPath) ? JSON.parse(fs.readFileSync(qaPath, "utf8")) : {} });
       }
       const meta = buildMetadata(metaInputFor(dir, { name: ch.name, label: ch.label, tagline: ch.tagline, topic: ch.topic as Topic },
-        { number: n, title: film?.title?.title ? plain(film.title.title) : title, durationS: film?.dur, seriesTitle: slate.series, seriesOrder: n, seriesTotal: slate.titles.length }));
+        { number: n, title: film?.title?.title ? plain(film.title.title) : title, durationS: film?.dur, seriesTitle: slate.series, seriesOrder: order, seriesTotal: slate.titles.length, season: seasonNo }));
       // the designed 9:16 cover (npm run covers) when it is newer than this render (the covers script's own rule), else
       // the film's poster: a cover drawn from an earlier render never rides on a re-rendered video
       const coverFile = file.replace(/-9x16\.mp4$/, "-cover.jpg");

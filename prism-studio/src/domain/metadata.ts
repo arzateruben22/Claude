@@ -10,7 +10,7 @@ export type Platform = "youtube" | "tiktok" | "instagram";
 
 export interface MetaInput {
   channel: { name: string; label: string; tagline: string; topic: Topic };
-  episode: { number: number; title: string; durationS?: number | null; seriesTitle?: string | null; seriesOrder?: number | null; seriesTotal?: number | null };
+  episode: { number: number; title: string; durationS?: number | null; seriesTitle?: string | null; seriesOrder?: number | null; seriesTotal?: number | null; season?: number | null };
   /** the script's beats in order, each with its spoken line(s); markers like {c1} and *stars* may still be present */
   beats: { beat: string; vo: string }[];
   sources: { key: string; claim: string; title?: string; publisher?: string; url?: string }[];
@@ -101,6 +101,8 @@ export function sourcesThread(items: string[], o: { limit: number; sep: string; 
 
 const channelName = (c: MetaInput["channel"]) => c.name.replace(/ \(name TBD\)$/, "");
 const padNo = (n: number) => `No. ${String(n).padStart(3, "0")}`;
+/** "No. 004" in Season 1 (unchanged, so approved Season 1 exports keep their text); "S2 · Ep 1" from Season 2 on. */
+const epLabel = (ep: MetaInput["episode"]) => ep.season && ep.season > 1 ? `S${ep.season} · Ep ${ep.seriesOrder ?? ep.number}` : padNo(ep.number);
 const host = (u?: string) => { try { return new URL(u ?? "").hostname.replace(/^www\./, ""); } catch { return ""; } };
 /** Short, recognisable names for the publishers the channels cite most; anything else shows its domain. */
 export const PUBLISHERS: Record<string, string> = {
@@ -129,8 +131,8 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   const series = ep.seriesTitle ? `${ep.seriesTitle}${ep.seriesOrder ? `, part ${ep.seriesOrder}${ep.seriesTotal ? ` of ${ep.seriesTotal}` : ""}` : ""}` : "";
   const next = input.next ? clean(input.next).replace(/^next:\s*/i, "") : "";
   const ai = input.disclosures.aiVoice || input.disclosures.aiVisuals
-    ? `Narration: synthetic voice (AI)${input.disclosures.aiVisuals ? "; AI-generated visuals" : ""}. Animation: code-rendered, no stock footage. Every number is checked against the sources.`
-    : "Animation: code-rendered, no stock footage. Every number is checked against the sources.";
+    ? `Narration: synthetic voice (AI)${input.disclosures.aiVisuals ? ". Illustrations: AI-generated, animated in code" : ". Animation: code-rendered"}, no stock footage. Sources for every number are listed below.`
+    : "Animation: code-rendered, no stock footage. Sources for every number are listed below.";
   const sourceLines = srcs.map((s, i) => `${i + 1}. ${clean(s.claim)} — ${sourceLabel(s)}${s.url ? `: ${s.url}` : ""}`);
   const sourceShort = srcs.map(sourceLabel).filter((v, i, a) => a.indexOf(v) === i);
   /** the numbered source lines as a thread of comments within `limit` ("Sources" / "Sources 1/2", one source per line) */
@@ -142,7 +144,7 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
 
   // ── YouTube (Shorts): a title and a full description ──────────────────────
   const yw: string[] = [];
-  let title = `${ep.title} | ${ch} ${padNo(ep.number)}`;
+  let title = `${ep.title} | ${ch} ${epLabel(ep)}`;
   if (title.length > LIMITS.youtube.title) title = `${ep.title} | ${ch}`;
   if (title.length > LIMITS.youtube.title) { title = cut(ep.title, LIMITS.youtube.title); yw.push("title cut to 100 characters"); }
   const ytTags = HASHTAG_SETS[topic].youtube;
@@ -195,8 +197,8 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   const [ytFirst = "", ...ytReplies] = ytThread, [ttFirst = "", ...ttReplies] = tt.comments, [igFirst = "", ...igReplies] = igThread;
   return {
     youtube: { title, caption: description, hashtags: ytTags.join(" "), tags, pinnedComment: ytFirst, replies: ytReplies, warnings: yw },
-    tiktok: { title: `${ep.title} (${ch} ${padNo(ep.number)})`, caption: ttCaption, hashtags: ttTags, tags: [], pinnedComment: ttFirst, replies: ttReplies, warnings: tw },
-    instagram: { title: `${ep.title} (${ch} ${padNo(ep.number)})`, caption: igCaption, hashtags: igTags.join(" "), tags: [], pinnedComment: igFirst, replies: igReplies, warnings: iw },
+    tiktok: { title: `${ep.title} (${ch} ${epLabel(ep)})`, caption: ttCaption, hashtags: ttTags, tags: [], pinnedComment: ttFirst, replies: ttReplies, warnings: tw },
+    instagram: { title: `${ep.title} (${ch} ${epLabel(ep)})`, caption: igCaption, hashtags: igTags.join(" "), tags: [], pinnedComment: igFirst, replies: igReplies, warnings: iw },
   };
 }
 
@@ -224,7 +226,7 @@ export function postingSheet(input: MetaInput, meta = buildMetadata(input)): str
       ...replies.flatMap((r, k) => ["", `**${replies.length > 1 ? `Reply ${k + 1}` : "Reply"}** (under the ${first.toLowerCase()})`, "", "```", r, "```"])];
   };
   return [
-    `# Posting sheet: ${ch} ${padNo(input.episode.number)}, "${input.episode.title}"`, "",
+    `# Posting sheet: ${ch} ${epLabel(input.episode)}, "${input.episode.title}"`, "",
     `Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).`, "",
     block("youtube", "YouTube Shorts", ["**Title**", "", meta.youtube.title, "", "**Description**", "", "```", meta.youtube.caption, "```", "", `**Tags**: ${meta.youtube.tags.join(", ")}`, "", "**Captions**: upload the .srt (English).", "", ...thread("youtube", "10,000")]),
     block("tiktok", "TikTok", ["**Caption**", "", "```", meta.tiktok.caption, "```", "", ...thread("tiktok", "150")]),

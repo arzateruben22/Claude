@@ -28,6 +28,16 @@ describe("captions", () => {
     const srt = captionsToSrt([{ t0: 0.12, t1: 1.685, lines: [[["Which", 0.12], ["*ball*", 0.3]]] }, { t0: 61.5, t1: 63, lines: [[["a", 61.5]], [["b", 62]]] }]);
     expect(srt).toBe("1\n00:00:00,120 --> 00:00:01,685\nWhich ball\n\n2\n00:01:01,500 --> 00:01:03,000\na\nb\n");
   });
+  it("turns word-timed captions into cues by narration line, and skips entries it can't read", () => {
+    const words = [
+      { w: "Who", t0: 0.1, t1: 0.3, line: "vo01" }, { w: "tells", t0: 0.3, t1: 0.6, line: "vo01" }, { w: "you?", t0: 0.6, t1: 0.9, line: "vo01" },
+      { w: "*Nerves*", t0: 2, t1: 2.5, line: "vo02" }, { w: "do.", t0: 2.5, t1: 2.8, line: "vo02" },
+    ];
+    const srt = captionsToSrt([...words, { junk: true }, null]);
+    expect(srt).toBe("1\n00:00:00,100 --> 00:00:00,900\nWho tells you?\n\n2\n00:00:02,000 --> 00:00:02,800\nNerves do.\n");
+    const long = Array.from({ length: 9 }, (_, k) => ({ w: `w${k}`, t0: k * 0.3, t1: k * 0.3 + 0.25, line: "a" }));
+    expect(captionsToSrt(long).split("-->").length - 1).toBe(2);   // at most 7 words a cue
+  });
 });
 
 describe("zip bundle", () => {

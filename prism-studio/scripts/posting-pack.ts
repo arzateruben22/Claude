@@ -5,7 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { CHANNELS } from "../src/domain/catalog";
 import { buildMetadata, postingSheet } from "../src/domain/metadata";
-import { metaInputFor, SLATES } from "./import-episodes";
+import { metaInputFor, slateForEpisode } from "./import-episodes";
 
 const ROOT = path.resolve(process.env.FILMS_REPO_ROOT || "..");
 const plain = (s: string) => s.replace(/\*/g, "");
@@ -16,10 +16,10 @@ for (const dir of dirs) {
   if (!fs.existsSync(out) || !fs.readdirSync(out).some((f) => /-9x16\.mp4$/.test(f))) continue;
   const slug = path.basename(path.dirname(dir)), ch = CHANNELS.find((c) => c.slug === slug);
   if (!ch) continue;
-  const n = Number(path.basename(dir).replace(/^ep0*/, "")), slate = SLATES[slug];
+  const n = Number(path.basename(dir).replace(/^ep0*/, "")), place = slateForEpisode(slug, n), slate = place?.slate;
   const film = fs.existsSync(path.join(dir, "film.json")) ? JSON.parse(fs.readFileSync(path.join(dir, "film.json"), "utf8")) : null;
   const input = metaInputFor(dir, { name: ch.name, label: ch.label, tagline: ch.tagline, topic: ch.topic },
-    { number: n, title: film?.title?.title ? plain(film.title.title) : slate?.titles[n - 1] ?? path.basename(dir), durationS: film?.dur, seriesTitle: slate?.series, seriesOrder: n, seriesTotal: slate?.titles.length });
+    { number: n, title: film?.title?.title ? plain(film.title.title) : slate?.titles[(place?.order ?? n) - 1] ?? path.basename(dir), durationS: film?.dur, seriesTitle: slate?.series, seriesOrder: place?.order ?? n, seriesTotal: slate?.titles.length, season: place?.season ?? 1 });
   const meta = buildMetadata(input);
   const name = fs.readdirSync(out).find((f) => /-9x16\.mp4$/.test(f))!.replace(/-9x16\.mp4$/, "");
   const art = [[`${name}-cover.jpg`, "9:16 cover: TikTok, Reels, Shorts"], [`${name}-thumb.jpg`, "16:9 YouTube thumbnail"]].filter(([f]) => fs.existsSync(path.join(out, f)));
