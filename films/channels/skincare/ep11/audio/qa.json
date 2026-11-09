@@ -1,6 +1,6 @@
 {
- "compose_s": 5.1,
- "master_s": 8.0,
+ "compose_s": 5.0,
+ "master_s": 7.6,
  "master": {
   "gain_db": 1.54,
   "iterations": 2,
@@ -121,9 +121,9 @@
    {
     "kind": "label",
     "tag": "l2",
-    "show": 33.2,
+    "show": 32.9333,
     "method": "rise",
-    "err_ms": 0.0
+    "err_ms": -0.0
    },
    {
     "kind": "scale.jump",
