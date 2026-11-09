@@ -33,7 +33,7 @@ import { RadioCard } from './RadioCard';
 import { Phone, PhoneApp } from './Phone';
 import { RadialMenu, RadialPick } from './RadialMenu';
 
-type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
+type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over' | 'foot';   // foot: walking a venue (its own page is up)
 type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'store' | 'map' | 'phone' | 'homes';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
@@ -45,6 +45,8 @@ const SET_SECTIONS: [string, string][] = [['graphics', 'Graphics'], ['hud', 'HUD
 // the mode cards' one-line subtitles (the menu)
 const MODE_SUB: Record<Mode, string> = { free: 'Explore Orange County', survival: 'Stay over 100 mph', race: 'Sprint / checkpoints / endurance', time: '60 s on the clock' };
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+// our own venues in the Go to sheet (src/game/venues.ts; the World Map's Places tab lists them too)
+const VENUE_LIST = [{ name: 'Lot 57', blurb: 'Taproom and yard · Orangewood Ave, Anaheim' }, { name: 'Stoppage Time', blurb: 'Sports bar · Claudina Way, Anaheim' }];
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
 const MODE_LIST = Object.keys(MODES) as Mode[];
 const LEAVE_MS = 380;      // the loading screen's fade into the menu (styles.css: .loading-screen.leaving)
@@ -84,6 +86,9 @@ export function App() {
   // Auto-drive (Game.setAutoDrive): offered with a route in Free Drive, and whether it drives; from the HUD's readouts,
   // set only when one of them changes
   const [autoDrive, setAutoDrive] = useState({ offer: false, on: false });
+  // the venues (Game.arriveVenue, getOut, drive): on a venue's ramp, its name for the prompt; parked there, its name
+  const [venueUi, setVenueUi] = useState({ prompt: '', parked: '', note: '' });
+  const getOutRef = useRef<HTMLButtonElement>(null);
   const [setSec, setSetSec] = useState('graphics');                  // the Settings rail's current section
   // the radial quick menu (U3): held open from the Pause button or Tab; holdT is the 300 ms timer, held says it opened
   const [radial, setRadial] = useState<{ x: number; y: number } | null>(null);
@@ -117,7 +122,8 @@ export function App() {
   const toast = useCallback((text: string, kind = 'info') => {
     const id = ++toastId.current;
     setToasts((t) => [...t.slice(-2), { id, text, kind }]);
-    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 1800);
+    // (a long one, the venues' arrival and drive-off, stays long enough to read)
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), text.length > 60 ? 4500 : 1800);
   }, []);
 
   const update = (patch: Partial<Settings>) => {
@@ -130,7 +136,8 @@ export function App() {
     let g: Game;
     try {
       g = new Game(host.current, settings, {
-        hud: (h) => { lastHud.current = h; hud.current?.set(h); setAutoDrive((a) => (a.offer === h.autoOffer && a.on === h.autoOn ? a : { offer: h.autoOffer, on: h.autoOn })); },
+        hud: (h) => { lastHud.current = h; hud.current?.set(h); setAutoDrive((a) => (a.offer === h.autoOffer && a.on === h.autoOn ? a : { offer: h.autoOffer, on: h.autoOn }));
+          setVenueUi((v) => (v.prompt === h.venuePrompt && v.parked === h.parked && v.note === h.parkedNote ? v : { prompt: h.venuePrompt, parked: h.parked, note: h.parkedNote })); },
         toast: (text, kind) => toast(text, kind),
         over: (r) => { setResult(r); setScreen('over'); },
         pause: (on) => setScreen((s) => (on ? (s === 'playing' ? 'paused' : s) : s === 'paused' ? 'playing' : s)),
@@ -138,6 +145,7 @@ export function App() {
         context: (l) => setLost(l),
         hudToggle: (on) => setHudOn(on),
         corner: (c) => update({ corner: c }),
+        foot: (on) => { setRadial(null); setRadioOpen(false); setPanel(null); setScreen(on ? 'foot' : 'playing'); },
       });
     } catch (e) {
       setError('This game needs WebGL 2, and this browser or device has it turned off. ' + String((e as Error).message || ''));
@@ -151,6 +159,9 @@ export function App() {
   }, []);
 
   useEffect(() => { game.current?.setMapCanvas(mapRef.current); });
+  // parked at a venue: the keyboard lands on Get out
+  // (and the route is done: the Go to button stops showing one)
+  useEffect(() => { if (venueUi.parked) { setNavTarget(null); getOutRef.current?.focus({ preventScroll: true }); } }, [venueUi.parked]);
   // owner mode from an open page's address: #owner on, #owner=0 off (settings.ts reads it at load)
   useEffect(() => {
     const h = () => { const o = ownerFromHash(); if (o !== null) update({ owner: o }); };
@@ -296,7 +307,15 @@ export function App() {
       case 'nav': return {
         cls: 'wide', body: <>
           <h2>Go to</h2>
-          <p className="fine">Pick a freeway and direction. The yellow line on the map, the card at the top and the blue chevrons on the road show the way through each interchange.</p>
+          <p className="fine">Pick a place, or a freeway and direction. The yellow line on the map, the card at the top and the blue chevrons on the road show the way through each interchange.</p>
+          <h3>Places</h3>
+          {/* our own venues: the route ends on the venue's exit ramp, where you park and can get out */}
+          <div className="grid places">
+            {VENUE_LIST.map((v) => (
+              <button key={v.name} className={'gcell place' + (navTarget === v.name ? ' on' : '')} onClick={() => navigate(v.name)}><b>{v.name}</b><span>{v.blurb}</span></button>
+            ))}
+          </div>
+          <h3>Freeways</h3>
           <div className="grid nav">
             {ROUTES.flatMap((r) => (game.current?.mainsLabels ?? []).filter((l) => l.startsWith(r + ' ')).map((l) => (
               <button key={l} className={'gcell' + (navTarget === l ? ' on' : '')} onClick={() => navigate(l)}><Shield label={l} /></button>
@@ -575,7 +594,20 @@ export function App() {
       )}
       {playing && radioOpen && game.current && <RadioCard game={game.current} settings={settings} update={update} onClose={() => setRadioOpen(false)} />}
       <div className="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast ' + t.kind}>{t.text}</div>)}</div>
-      {playing && (coarse || settings.showTouch) && game.current && (
+      {/* a venue's exit ramp: its prompt (tap to park there now); parked at the venue, Get out replaces the pedals */}
+      {playing && venueUi.prompt && !venueUi.parked && (
+        <button type="button" className="venue-prompt" onClick={() => game.current?.arriveVenue()} aria-label={`Park at ${venueUi.prompt}`}>
+          <small>Park at</small><b>{venueUi.prompt}</b><i aria-hidden="true">›</i>
+        </button>
+      )}
+      {playing && venueUi.parked && (
+        <div className="venue-park" role="group" aria-label={`Parked at ${venueUi.parked}`}>
+          <p className="venue-note">{venueUi.note}</p>
+          <button type="button" className="btn primary getout" ref={getOutRef} onClick={() => void game.current?.getOut()}>Get out</button>
+          <button type="button" className="btn driveon" onClick={() => void game.current?.drive()}>Drive on</button>
+        </div>
+      )}
+      {playing && !venueUi.parked && (coarse || settings.showTouch) && game.current && (
         <Touch input={game.current.input} manual={settings.transmission === 'manual'} onShift={(d) => game.current?.pushAction(d > 0 ? 'shiftUp' : 'shiftDown')} />
       )}
 

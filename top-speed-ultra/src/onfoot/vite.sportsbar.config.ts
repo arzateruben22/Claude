@@ -35,7 +35,7 @@ function singleFile(): Plugin {
 /** the bar's slice (OpenStreetMap via Overture, ODbL) as the page reads it: the connectors' positions, the building
  *  parts, the land cover and the key notes stay out (the page reads the segments' connector ids, not their points);
  *  the attribution, the licences and the slice's own description stay in. The source file isn't changed. */
-function trimSlice(): Plugin {
+export function trimSlice(): Plugin {
   return {
     name: 'sportsbar-trim-slice',
     enforce: 'pre',

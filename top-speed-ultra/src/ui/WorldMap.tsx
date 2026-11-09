@@ -25,7 +25,10 @@ const CITIES: [string, number, number][] = [
   ['Brea', 33.9167, -117.9001], ['Placentia', 33.8722, -117.8703], ['Dana Point', 33.4669, -117.6981],
 ];
 // our own places (fictional), at their real spots
-const PLACES = [{ id: 'lot57', name: 'Lot 57', blurb: 'Our own taproom and yard on Orangewood Avenue, Anaheim. On foot: coming later.', x: -5121, z: -8345 }];
+const PLACES = [
+  { id: 'lot57', name: 'Lot 57', blurb: 'Our own taproom and yard on Orangewood Avenue, Anaheim. Drive there and get out.', x: -5121, z: -8345 },
+  { id: 'stoppage', name: 'Stoppage Time', blurb: 'Our own sports bar on South Claudina Way, Anaheim. Drive there and get out.', x: -6622, z: -9343 },
+];
 
 type Tab = 'freeways' | 'races' | 'places';
 interface View { cx: number; cz: number; mpp: number }      // centre (world metres) and metres per CSS pixel
@@ -67,6 +70,7 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
   const cv = useRef<HTMLCanvasElement>(null), wrap = useRef<HTMLDivElement>(null);
   const fh = focusHome ? homeById(focusHome) : undefined, fxz = fh ? homeXZ(fh) : null;
   const [tab, setTab] = useState<Tab>(fh ? 'places' : 'freeways');
+  const [place, setPlace] = useState<string | null>(null);   // a venue picked on the Places tab (navigate there while driving)
   const [sel, setSel] = useState<string | null>(navTarget ?? (driving ? game.path.label || null : null));
   const [course, setCourse] = useState<string | null>(null);
   const [view, setView] = useState<View | null>(fxz ? { cx: fxz.x, cz: fxz.z, mpp: 14 } : null);
@@ -271,7 +275,7 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
             </button>
           ))}
           {tab === 'places' && <>
-            {PLACES.map((p) => <button key={p.id} type="button" className="wm-item race" onClick={() => { const el = wrap.current; if (el) setView({ cx: p.x, cz: p.z, mpp: 6 }); }}><b>{p.name}</b><small>{p.blurb}</small></button>)}
+            {PLACES.map((p) => <button key={p.id} type="button" className="wm-item race" onClick={() => { const el = wrap.current; if (el) setView({ cx: p.x, cz: p.z, mpp: 6 }); setPlace(p.name); }}><b>{p.name}</b><small>{p.blurb}</small></button>)}
             {[...HOMES].sort((a, b) => Number(owned.includes(b.id)) - Number(owned.includes(a.id))).map((hm) => {
               const q = homeXZ(hm), mine = owned.includes(hm.id);
               return <button key={hm.id} type="button" className={'wm-item race' + (focusHome === hm.id ? ' on' : '')} onClick={() => setView({ cx: q.x, cz: q.z, mpp: 8 })}>
@@ -291,6 +295,9 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
               {exits.map((e) => <button key={e.key} type="button" className="wm-exit" onClick={() => onStartExit(e.key)}>{e.text}<small>{e.mi.toFixed(1)} mi</small></button>)}
             </details>
           )}
+          {tab === 'places' && place && driving && (navTarget === place
+            ? <button type="button" className="btn" onClick={() => onNavigate(null)}>Clear route</button>
+            : <button type="button" className="btn primary" onClick={() => onNavigate(place)}>Navigate to {place}</button>)}
           {tab === 'races' && course && !driving && <button type="button" className="btn primary" onClick={() => onRace(course)}>Race here</button>}
           {tab === 'places' && fh && fxz && owned.includes(fh.id) && !driving && (() => { const ex = game.nearestExit(fxz.x, fxz.z); return ex && <button type="button" className="btn primary" onClick={() => onStartExit(ex.exit.key)}>Start from {fh.name}</button>; })()}
           <button type="button" className="btn" onClick={onClose}>Back</button>
