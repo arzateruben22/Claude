@@ -164,6 +164,26 @@
   @media (max-width: 520px) { #gamebar { max-width: calc(100% - 24px); bottom: calc(150px + var(--safe-b)); } }
   /* a short landscape phone: the bar in two tight lines, low over the credit, so more of the table shows */
   @media (max-height: 420px) { #gamebar { bottom: calc(52px + var(--safe-b)); padding: 4px 12px; gap: 0; } #gamebar b { font-size: 10.5px; } #gameScore { font-size: 12.5px; } #gameHint { font-size: 11.5px; } }
+  /* S3b: a person's card, the pick list, People here, the "i" in a person's menu, the sparks and puffs over heads */
+  #radial .info { min-height: 32px; min-width: 32px; padding: 0; border-radius: 50%; font: 800 15px var(--sans); font-style: italic; z-index: 1; }
+  #card .panel, #pick .panel, #peopleSheet .panel { width: min(420px, 100%); }
+  #card .cardTop { display: flex; align-items: center; gap: 12px; margin: 4px 0 10px; font-size: 15px; }
+  #card .cardTop .face { width: 40px; height: 40px; flex: none; }
+  #card .cardTop small { font-size: 13px; opacity: 0.9; }
+  #card .chip { display: inline-block; padding: 1px 8px; border-radius: 10px; background: rgba(195, 242, 58, 0.2); color: var(--lime); font-size: 12px; font-weight: 800; }
+  #card .chip.dim { background: rgba(241, 239, 231, 0.12); color: var(--chalk); }
+  #card .relbar { position: relative; height: 10px; border-radius: 5px; background: rgba(241, 239, 231, 0.16); margin: 4px 0 10px; overflow: hidden; }
+  #card .relbar i { position: absolute; top: 0; bottom: 0; }
+  #card .relbar i.pos { background: var(--lime); } #card .relbar i.neg { background: var(--coral); }
+  #card .relbar s { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; background: var(--chalk); }
+  #pickList, #peopleList { display: flex; flex-direction: column; gap: 8px; margin: 8px 0; }
+  #pickList button, #peopleList button { min-height: 48px; padding: 6px 14px; border-radius: 12px; border: 2px solid var(--line); background: rgba(241, 239, 231, 0.06); font-size: 15px; font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  #peopleList button span { font-size: 13px; font-weight: 600; opacity: 0.92; }
+  #sparks { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  #sparks .spark { position: absolute; display: none; transform: translate(-50%, -50%); font: 900 26px var(--sans); text-shadow: 0 0 6px rgba(10, 9, 22, 0.9), 0 0 2px rgba(10, 9, 22, 1); }
+  #sparks .spark.on { display: block; animation: spark 1.3s ease-out forwards; }
+  #sparks .spark.good { color: var(--lime); } #sparks .spark.bad { color: var(--coral); }
+  @keyframes spark { 0% { opacity: 0; transform: translate(-50%, -30%) scale(0.7); } 15% { opacity: 1; transform: translate(-50%, -60%) scale(1.1); } 100% { opacity: 0; transform: translate(-50%, -190%) scale(1); } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
   body.rm * { transition: none !important; animation: none !important; }
   @media (max-width: 520px) {
@@ -221,6 +241,7 @@
   <div id="reticle" aria-hidden="true"></div>
   <div id="radial" role="menu" aria-label="What you can do here"></div>
   <button id="cheer" aria-label="Cheer">CHEER</button>
+  <div id="sparks" aria-hidden="true"></div>
   <div id="credit">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0). Stoppage Time and everyone in it are fictional.</div>
 </div>
 <div id="about" class="sheet" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
@@ -244,9 +265,33 @@
     <div class="row"><span>Text</span><div class="seg" id="segText"><button data-t="0">Small</button><button data-t="1">Medium</button><button data-t="2">Large</button></div></div>
     <div class="row"><span>Motion</span><div class="seg" id="segMotion"><button data-m="full">Full</button><button data-m="reduced">Reduced</button></div></div>
     <div class="panel" id="pauseCard" style="padding:10px 12px;margin:8px 0;background:rgba(241,239,231,0.06)"><p class="tokens" id="pauseTokens"></p><p class="small" id="pauseTokenNote"></p><p class="small"><b>Tonight's three</b></p><ol class="three" id="pauseThree"></ol><p class="small" id="pauseSave"></p></div>
+    <button class="alt" id="peopleBtn">People here</button>
     <p class="small">The clock is simulated: it sets the sun and Stoppage Time's fictional hours and crowd. Reduced motion turns off the head bob, the camera moves and the transitions.</p>
     <p class="small">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0).</p>
     <button class="go" data-close>Resume</button>
+  </div>
+</div>
+<div id="card" class="sheet" role="dialog" aria-modal="true" aria-labelledby="cardTitle">
+  <div class="panel">
+    <h2 id="cardTitle">Someone</h2>
+    <div id="cardBody"></div>
+    <p class="small">Everyone here is simulated: nobody is a real person or another player.</p>
+    <button class="go" data-close>Close</button>
+  </div>
+</div>
+<div id="pick" class="sheet" role="dialog" aria-modal="true" aria-labelledby="pickTitle">
+  <div class="panel">
+    <h2 id="pickTitle">Pick</h2>
+    <div id="pickList" role="menu"></div>
+    <button class="go" data-close>Not now</button>
+  </div>
+</div>
+<div id="peopleSheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="peopleTitle">
+  <div class="panel">
+    <h2 id="peopleTitle">People here</h2>
+    <p class="small">Everyone here you've met, closest friends first. Simulated people, kept on this device only.</p>
+    <div id="peopleList"></div>
+    <button class="go" data-close>Close</button>
   </div>
 </div>
 <div id="order" class="sheet" role="dialog" aria-modal="true" aria-labelledby="orderTitle">

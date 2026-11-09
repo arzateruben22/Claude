@@ -46,6 +46,13 @@ export interface Cand {
   leavesMidTurn?: boolean;
   /** the joke advert's affinity is playful (S3b) */
   joke?: boolean;
+  /** S3b: a person's advert: the interaction, the trait its affinity reads, and whether a goal or a touchdown came in
+   *  the last 60 s (event: +30 on cheer, high-five and toast) */
+  inter?: string;
+  aff?: 'outgoing' | 'playful' | 'competitive' | 'fan';
+  goal60?: boolean;
+  /** S3b: the target and the acceptance probability its expected deltas were worked out with (for the log) */
+  target?: string; p?: number;
 }
 export interface Decider { needs: Needs; traits: Traits; emotion: Emotion }
 export interface Scored { c: Cand; score: number; terms: { needs: number; affinity: number; emotion: number; event: number; memory: number; urgent: number; walk: number; occupancy: number; wait: number; midTurn: number } }
@@ -55,7 +62,9 @@ const FUN_TAGS: AdvertTag[] = ['game', 'watch', 'dance', 'music'];
  *  dance: (active + playful) / 2; rest: 1 - active; drink, food and comfort 0), +0.25 for a favourite, capped at 1 */
 export function affinity(c: Cand, t: Traits) {
   let a = 0;
-  for (const tag of c.tags) {
+  // a person's advert reads one trait (social: outgoing; Joke: playful; Challenge: competitive; Cheer together: fan)
+  if (c.aff) a = t[c.aff];
+  else for (const tag of c.tags) {
     const v = tag === 'game' ? t.competitive : tag === 'watch' ? t.fan : tag === 'social' ? (c.joke ? t.playful : t.outgoing) : tag === 'music' ? t.playful
       : tag === 'dance' ? (t.active + t.playful) / 2 : tag === 'rest' ? 1 - t.active : 0;
     if (v > a) a = v;
@@ -63,11 +72,11 @@ export function affinity(c: Cand, t: Traits) {
   if (c.favourite) a += 0.25;
   return Math.min(1, a);
 }
-/** the emotion bonuses: Excited +15 on dance (and S3b's cheer and high-five); Bored +20 on fun-tagged adverts; Lonely
- *  +20 on social; Gutted -20 on dance */
+/** the emotion bonuses: Excited +15 on dance, cheer and high-five; Bored +20 on fun-tagged adverts; Lonely +20 on
+ *  social; Gutted -20 on dance */
 export function emotionTerm(c: Cand, e: Emotion) {
   const has = (t: AdvertTag) => c.tags.includes(t);
-  if (e === 'Excited' && has('dance')) return 15;
+  if (e === 'Excited' && (has('dance') || c.inter === 'cheer' || c.inter === 'high-five')) return 15;
   if (e === 'Bored' && FUN_TAGS.some(has)) return 20;
   if (e === 'Lonely' && has('social')) return 20;
   if (e === 'Gutted' && has('dance')) return -20;
@@ -90,7 +99,9 @@ export function score(c: Cand, d: Decider, plain = false): Scored {
   }
   const affinityT = plain ? 0 : 20 * affinity(c, d.traits);
   const emotionT = plain ? 0 : emotionTerm(c, d.emotion);
-  const eventT = plain ? 0 : c.featuredScreen && c.tags.includes('watch') ? 25 * d.traits.fan : 0;
+  // event: the featured match on the screen this advert watches (+25 fan); for 60 s after a goal or a touchdown, +30 on
+  // cheer, high-five and toast
+  const eventT = plain ? 0 : (c.featuredScreen && c.tags.includes('watch') ? 25 * d.traits.fan : 0) + (c.goal60 && (c.inter === 'cheer' || c.inter === 'high-five' || c.inter === 'toast') ? 30 : 0);
   const memoryT = c.memory ?? 0;
   const urgentT = URGENT * raisesUrgent(c, d.needs).length;
   const walkT = -0.6 * c.walk, occT = -15 * c.occupancy, waitT = -0.05 * c.wait, midT = c.leavesMidTurn ? -25 : 0;

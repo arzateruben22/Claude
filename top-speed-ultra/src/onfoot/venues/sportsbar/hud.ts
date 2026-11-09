@@ -5,7 +5,9 @@
 // onView('overhead')), the Ultra lock (an entitlement flag only: no price and no purchase path), and S2a's life-sim
 // layer: the needs strip with the mood face, the needs panel, the action queue's icons, the TV chip and guide card
 // with "Pick a side", the radial menu, the Cheer button, the tired prompt and the text size. Every need is shown with
-// a word and a number, never by colour alone.
+// a word and a number, never by colour alone. S3b adds a person's card (the "i" in their menu), the pick list (More…
+// and Introduce…), "People here" from the pause menu, and the sparks and puffs over heads: HTML in the HUD layer at a
+// head's screen position, so they cost no draw calls.
 import { Hud } from '../../engine/hud';
 import type { BarView } from './views';
 import { SHOWN, ShownNeed, band, needWord, NEED_LABEL, MoodLabel } from '../../engine/sim/needs';
@@ -52,6 +54,11 @@ export class BarHud {
   onLeave: () => void = () => {};
   onText: (size: 0 | 1 | 2) => void = () => {};
   onSheet: (open: boolean) => void = () => {};
+  /** S3b: "People here" (the pause menu's button) */
+  onPeople: () => void = () => {};
+  private onPick: ((key: string) => void) | null = null;
+  private onPerson: ((id: number) => void) | null = null;
+  private sparkEls: HTMLElement[] = []; private sparkI = 0;
   radialOpen = false; radialItems: RadialItem[] = [];
   private needsEl = $('needs'); private rings: Record<string, { el: HTMLElement; arc: SVGCircleElement; word: HTMLElement }> = {};
   private moodEl: HTMLElement; private lastNeeds = ''; private lastQueue = ''; private lastTv = '';
@@ -76,14 +83,19 @@ export class BarHud {
     $('sides').addEventListener('click', (e) => { const b = (e.target as HTMLElement).closest('button') as HTMLButtonElement | null; if (b) this.onSide(b.dataset.team || null); });
     $('tiredLeave').addEventListener('click', () => { this.sheet('tired', false); this.onLeave(); });
     $('segText').addEventListener('click', (e) => { const t = (e.target as HTMLElement).dataset.t; if (t !== undefined) this.onText(Number(t) as 0 | 1 | 2); });
-    for (const id of ['needsSheet', 'guide', 'tired']) {
+    // S3b: the pick list's and People here's rows, the pause menu's People here
+    $('pickList').addEventListener('click', (e) => { const b = (e.target as HTMLElement).closest('button') as HTMLButtonElement | null; if (!b?.dataset.key) return; const f = this.onPick; this.sheet('pick', false); f?.(b.dataset.key); });
+    $('peopleList').addEventListener('click', (e) => { const b = (e.target as HTMLElement).closest('button') as HTMLButtonElement | null; if (!b?.dataset.id) return; const f = this.onPerson; this.sheet('peopleSheet', false); f?.(Number(b.dataset.id)); });
+    $('peopleBtn').addEventListener('click', () => { this.hud.pause(false); this.onPeople(); });
+    for (let i = 0; i < 8; i++) { const e = document.createElement('i'); e.className = 'spark'; $('sparks').append(e); this.sparkEls.push(e); }
+    for (const id of ['needsSheet', 'guide', 'tired', 'card', 'pick', 'peopleSheet']) {
       const el = $(id);
       el.querySelector('[data-close]')?.addEventListener('click', () => this.sheet(id, false));
       el.addEventListener('click', (e) => { if (e.target === el) this.sheet(id, false); });
     }
     addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
-      for (const id of ['needsSheet', 'guide', 'tired']) if ($(id).classList.contains('on')) { e.stopPropagation(); this.sheet(id, false); return; }
+      for (const id of ['needsSheet', 'guide', 'tired', 'card', 'pick', 'peopleSheet']) if ($(id).classList.contains('on')) { e.stopPropagation(); this.sheet(id, false); return; }
       if (this.radialOpen) { e.stopPropagation(); this.closeRadial(); this.onRadialClose(); }
     }, true);
   }
@@ -115,7 +127,7 @@ export class BarHud {
     if (on) { const p = $(id).querySelector('.panel') as HTMLElement | null; if (p) p.scrollTop = 0; }
     this.onSheet(this.anySheet());
   }
-  anySheet() { return ['needsSheet', 'guide', 'tired', 'order', 'pause', 'about'].some((id) => $(id).classList.contains('on')); }
+  anySheet() { return ['needsSheet', 'guide', 'tired', 'order', 'pause', 'about', 'card', 'pick', 'peopleSheet'].some((id) => $(id).classList.contains('on')); }
   isOpen(id: string) { return $(id).classList.contains('on'); }
   /** the strip: each ring's fill and colour band, the low word under a ring under 30, the mood face and the emotion */
   setNeeds(n: Record<ShownNeed, number>, mood: { value: number; label: MoodLabel; emotion: string }) {
@@ -157,7 +169,7 @@ export class BarHud {
   }
   /** the radial menu round a point: up to 6 pills, clamped on screen and kept below the needs strip (so a menu opened
    *  high up, on the big screen, never covers it) and above the map credit; keys 1 to 6 pick */
-  radial(x: number, y: number, title: string, items: RadialItem[]) {
+  radial(x: number, y: number, title: string, items: RadialItem[], info = false) {
     const el = $('radial'), portrait = innerHeight > innerWidth, n = items.length;
     const strip = $('needs').getBoundingClientRect(), credit = $('credit').getBoundingClientRect();
     const top = (strip.height ? strip.bottom : 0) + 6, bottom = credit.height ? Math.min(innerHeight, credit.top) - 6 : innerHeight - 8, HALF = 34;
@@ -166,16 +178,56 @@ export class BarHud {
     const cx = Math.max(R + 60, Math.min(innerWidth - R - 60, x)), cy = Math.max(top + R + HALF, Math.min(bottom - R - HALF, y));
     this.radialItems = items; this.radialOpen = true;
     const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
-    el.innerHTML = `<span class="hub" style="left:${cx}px;top:${cy}px"></span><span class="title" style="left:${cx}px;top:${cy + (n > 1 ? 0 : -44)}px">${esc(title)}</span>` + items.map((it, i) => {
+    // a person's menu has the "i" for their card, beside the name (S3b)
+    const ty = cy + (n > 1 ? 0 : -44);
+    el.innerHTML = `<span class="hub" style="left:${cx}px;top:${cy}px"></span><span class="title" style="left:${cx}px;top:${ty}px">${esc(title)}</span>` + (info ? `<button class="info" data-key="card" aria-label="About ${esc(title)}" style="left:${cx}px;top:${ty + 26}px">i</button>` : '') + items.map((it, i) => {
       const a = -Math.PI / 2 + (n > 1 ? (i / n) * Math.PI * 2 : 0), px = cx + Math.cos(a) * R, py = cy + Math.sin(a) * R;
       return `<button role="menuitem" data-key="${esc(it.key)}" style="left:${px.toFixed(0)}px;top:${py.toFixed(0)}px">${esc(it.label)}${coarse ? '' : `<kbd>${i + 1}</kbd>`}</button>`;
     }).join('');
     el.classList.add('on');
     // measured: a pill that wraps to three lines is taller than the estimate; the whole ring moves down to clear the strip
-    let hi = Infinity; for (const b of el.querySelectorAll('button')) hi = Math.min(hi, b.getBoundingClientRect().top);
+    let hi = Infinity; for (const b of el.querySelectorAll('button[role=menuitem]')) hi = Math.min(hi, b.getBoundingClientRect().top);
     if (hi < top) for (const c of el.children) { const e2 = c as HTMLElement; e2.style.top = `${parseFloat(e2.style.top) + (top - hi)}px`; }
-    (el.querySelector('button') as HTMLElement | null)?.focus();
+    (el.querySelector('button[role=menuitem]') as HTMLElement | null)?.focus();
   }
+  // ------------------------------------------------------------------------------------------------ S3b
+  /** a person's card: first name, relationship level and bar, "Getting along", team if known, the mood face, their last
+   *  memory with you */
+  card(d: { name: string; level: string; friendship: number | null; gettingAlong: boolean; team: string | null; mood: string; emotion: string; regular: boolean; memory: string | null }) {
+    $('cardTitle').textContent = d.name;
+    const f = d.friendship ?? 0, w = Math.round(Math.abs(f) / 2), left = f >= 0 ? 50 : 50 - w;
+    $('cardBody').innerHTML = `<div class="cardTop"><span class="face">${moodFace(d.mood as MoodLabel)}</span><span><b>${esc(d.level)}</b>${d.gettingAlong ? ' <span class="chip">Getting along</span>' : ''}${d.regular ? ' <span class="chip dim">Regular</span>' : ''}<br><small>Mood: ${esc(d.mood)} · ${esc(d.emotion.toLowerCase())}</small></span></div>`
+      + `<div class="relbar" role="img" aria-label="Friendship ${d.friendship === null ? 'none yet' : Math.round(f)} of 100"><i class="${f >= 0 ? 'pos' : 'neg'}" style="left:${left}%;width:${w}%"></i><s></s></div>`
+      + `<p class="small">${d.team ? `Backs the ${esc(d.team)}` : 'Team: ask them'}</p>`
+      + `<p>${d.memory ? esc(d.memory) : 'Nothing yet'}</p>`;
+    this.sheet('card', true);
+  }
+  /** a list to pick from (More…, Introduce…) */
+  pick(title: string, items: RadialItem[], cb: (key: string) => void) {
+    $('pickTitle').textContent = title; this.onPick = cb;
+    $('pickList').innerHTML = items.map((it) => `<button data-key="${esc(it.key)}">${esc(it.label)}</button>`).join('');
+    this.sheet('pick', true);
+  }
+  /** People here: everyone present you've met, by friendship */
+  people(rows: { id: number; name: string; level: string; friendship: number; gettingAlong: boolean; regular: boolean }[], cb: (id: number) => void) {
+    this.onPerson = cb;
+    $('peopleList').innerHTML = rows.length ? rows.map((r) => `<button data-id="${r.id}"><b>${esc(r.name)}</b><span>${esc(r.level)}${r.gettingAlong ? ' · Getting along' : ''}${r.regular ? ' · Regular' : ''}</span></button>`).join('') : '<p class="small">Nobody you\'ve met is here yet. Tap people to talk.</p>';
+    this.sheet('peopleSheet', true);
+  }
+  get pickItems() { return [...$('pickList').querySelectorAll('button')].map((b) => ({ key: (b as HTMLElement).dataset.key, label: b.textContent })); }
+  /** a lime "+" rising over a head (good) or a coral "–" puff (bad), at a screen point; CSS animates it (reduced
+   *  motion: it fades in place) */
+  spark(x: number, y: number, good: boolean) {
+    const e = this.sparkEls[this.sparkI++ % this.sparkEls.length];
+    e.className = 'spark'; void e.offsetWidth;
+    e.textContent = good ? '+' : '–'; e.style.left = `${Math.round(x)}px`; e.style.top = `${Math.round(y)}px`;
+    e.className = `spark on ${good ? 'good' : 'bad'}`;
+    // (reduced motion has no animation: the timer takes it down either way)
+    const k = ++this.sparkSeq; e.dataset.seq = String(k);
+    setTimeout(() => { if (e.dataset.seq === String(k)) e.classList.remove('on'); }, 1300);
+    this.sparksShown++;
+  }
+  sparksShown = 0; private sparkSeq = 0;
   closeRadial() { this.radialOpen = false; this.radialItems = []; const el = $('radial'); el.classList.remove('on'); el.innerHTML = ''; }
   /** the big Cheer button takes the action button's place for 8 s after a moment */
   cheer(on: boolean) { $('cheer').classList.toggle('on', on); if (on) { this.hud.act.classList.remove('on'); this.hud.act2.classList.remove('on'); } }

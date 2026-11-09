@@ -4,7 +4,7 @@
 // the bar and draws the room:
 //   - the crowd: the target from the schedule (capacity x share), live guests up to the preset's cap (staff included),
 //     parties arriving from the lot and the drop-off, stays and leaving, the regulars' pool, held guests and fillers;
-//   - autonomy over the objects' adverts (S3b adds people's), reservations, the watchdog and the decision log;
+//   - autonomy over the objects' adverts and (S3b, social.ts) people's, reservations, the watchdog and the decision log;
 //   - the staff: two to four bartenders on the lane path by sections (the westmost one's flap trips at Low), one to
 //     three servers on the job queue, the host, the barback, the cooks' plates at the pass, restroom visits;
 //   - fillers and cards: the atlas eight, the cards' one instanced mesh and the blobs (cards.ts), where fillers go, the
@@ -24,10 +24,10 @@ import { pointInPoly } from '../../engine/geom';
 import { Needs, Traits, NEEDS, rates, advance, bump, Doing, FunKind, moodOf, moodLabel, Moodlets, emotionOf, Emotion, startNeeds } from '../../engine/sim/needs';
 import type { AdvertTag, Advert } from '../../engine/sim/objects';
 import { decide, Cand, Decision } from '../../engine/sim/autonomy';
-import { newGroup, stepGroup, TalkGroup } from '../../engine/sim/groups';
+import { Social, SGroup } from './social';
+import type { Opp } from './games';
 import { BuildScheduler, BuildJob, BuildReason } from '../../engine/sim/builds';
 import { regularsPool, Regular, RegularGroup, partySize, stayMinutes, traitsOf, teamAt, staffPlan, staffTotal, StaffPlan, MEAN_PARTY, DRINK_FAVES, FOOD_FAVES, GAME_FAVES } from '../../engine/sim/crowd';
-import { pickLine } from '../../engine/sim/lines';
 import { FIRST_NAMES } from '../../engine/sim/names';
 import { hash32, mulberry, Rnd } from '../../engine/sim/rng';
 import { fromAbs, TvEvent } from '../../engine/sim/tv';
@@ -68,13 +68,13 @@ type Slot = { id: string; zone: string; group?: string; kind: 'seat' | 'stand' |
 type DrawMode = 'lod1' | 'lod2' | 'card' | 'off';
 
 interface Hand { item: string; model: 'glass' | 'basket'; color: number; left: number; next: number }
-interface Act {
+export interface Act {
   action: string; object: string; slot: string | null; stage: 'walk' | 'do' | 'wait';
   t0: number; dur: number; continuous: boolean; tags: AdvertTag[]; score: number; screen: string | null; why: string;
 }
-interface Party {
+export interface Party {
   id: number; members: Npc[]; from: 'lot' | 'dropoff' | 'settled' | 'filler' | 'spare';
-  leaving: boolean; regularGroup: number | null; group: TalkGroup | null; arrivedT: number; stayUntil: number; yours: boolean;
+  leaving: boolean; regularGroup: number | null; group: SGroup | null; arrivedT: number; stayUntil: number; yours: boolean;
   /** the unit it was seated at (a table or the singles it took) */
   unit: string | null;
 }
@@ -97,6 +97,8 @@ export interface Npc {
   teamMomentAt?: number; teamLostAt?: number;
   draw: DrawMode; caster: number; dist: number; speedK: number; mood: number; label: string; emotion: Emotion;
   seatedSince: number; walkedM: number;
+  /** S3b: the talking group they're in (social.ts), and a game's walk: the way to face and what to do on arrival */
+  grp: SGroup | null; faceYaw: number | null; onArrive: (() => void) | null;
 }
 interface Filler { slot: string; unit: string; look: number; pose: CardPose; yaw: number; cheerUntil: number; x: number; y: number; z: number }
 interface Unit { id: string; kind: 'table' | 'single'; slots: string[]; zone: string; patio: boolean; fillerOk: boolean; object: string | null; x: number; z: number }
@@ -122,16 +124,16 @@ export interface CrowdReport { [k: string]: unknown }
 
 export class Crowd {
   npcs: Npc[] = [];
-  private byKey = new Map<string, Npc>();
+  byKey = new Map<string, Npc>();
   parties: Party[] = [];
   fillers = new Map<string, Filler>();
   staff: StaffRec[] = [];
   bartenders: Bartender[] = []; servers: Server[] = []; host!: Host; barback!: Barback;
   cards: Cards;
   sched = new BuildScheduler();
-  private units = new Map<string, Unit>();
-  private unitOf = new Map<string, Unit>();
-  private slots = new Map<string, Slot>();
+  units = new Map<string, Unit>();
+  unitOf = new Map<string, Unit>();
+  slots = new Map<string, Slot>();
   private sees = new Map<string, string[]>();
   private nextId = 1; private nextParty = 1; private seedN = 1;
   private pool: { regulars: Regular[]; groups: RegularGroup[] };
@@ -155,7 +157,6 @@ export class Crowd {
    *  order to the glass in hand (sim s), and once a sim minute how many live guests hold a drink or wait on one */
   private drinkLog = { bar: 0, table: 0, handed: 0, waits: [] as { via: 'bar' | 'table'; s: number }[], samples: [] as { t: number; live: number; holding: number; waiting: number }[], sampleT: 0 };
   private capT = 0;
-  private lastCaption = -1e9;
   private _v = new THREE.Vector3(); private _w = new THREE.Vector3();
   private tapFront: Npc | null = null;
   /** hand-overs that couldn't be made under the cap (the fillers there went home instead) */
@@ -165,10 +166,15 @@ export class Crowd {
     scene.add(this.cards.group);
     this.r = mulberry(hash32('crowd', 1));
     this.pool = regularsPool(life.save.regularsSeed || 1);
+    this.social = new Social(this, life);
   }
-  private get c() { return this.life.ctxRef; }
-  private get T() { return this.life.T * SECS; }
-  private get F() { return this.c.F; }
+  /** S3b: people with each other (social.ts): groups, the interactions, relationships, guests' games */
+  social: Social;
+  /** the regulars' pool's seed (the device keeps the regulars' friendships for this pool) */
+  get poolSeed() { return this.seedN; }
+  get c() { return this.life.ctxRef; }
+  get T() { return this.life.T * SECS; }
+  get F() { return this.c.F; }
 
   // ------------------------------------------------------------------------------------------------ set-up
   /** the slots, the units, who sees which screen; the staff; then the room settles and the atlas is painted (before the
@@ -343,11 +349,13 @@ export class Crowd {
       clip: null, clipUntil: 0, cheerCardUntil: 0, hiddenUntil: 0,
       stuckT: 0, maxStuck: 0, rescues: 0, lastX: 0, lastZ: 0,
       draw: 'card', caster: 0, dist: 0, speedK: 1, mood: 50, label: 'Fine', emotion: 'Fine', seatedSince: o.t, walkedM: 0,
+      grp: null, faceYaw: null, onArrive: null,
     };
     this.npcs.push(n); this.byKey.set(n.key, n); party.members.push(n);
     return n;
   }
   private removeNpc(n: Npc) {
+    this.social.gone(n, true);
     this.releaseAll(n);
     // a body kept as a spare forgets its draw state and its clip, so its next applyBody sets its visibility, LOD and
     // casting afresh (a stale 'card' signature would leave a reused body shown under a card)
@@ -436,7 +444,7 @@ export class Crowd {
     if (g) { party.regularGroup = g.id; for (const i of g.members) this.newNpc(party, { regular: this.pool.regulars[i], t }); }
     else for (let k = 0; k < size; k++) this.newNpc(party, { t });
     this.parties.push(party);
-    if (party.members.length >= 2) party.group = newGroup(party.id, party.members.map((m) => m.id), r);
+    this.social.partyGroup(party);
     return party;
   }
   /** seat a party at its slots now (a settled room, crowdAt, a filler unit handed over) */
@@ -449,14 +457,14 @@ export class Crowd {
       m.act = this.restAct(m, s); m.decideAt = this.T + this.r() * 20;
     });
   }
-  private placeAt(n: Npc, s: Slot) {
+  placeAt(n: Npc, s: Slot) {
     const seat = s.seatId !== undefined ? this.c.venue.seats[s.seatId] : null;
     if (seat) { n.x = seat.x; n.z = seat.z; n.y = Math.max(-0.1, seat.y - 0.47); n.heading = seat.face; }
     else { n.x = s.x; n.z = s.z; n.y = this.c.grid.height(s.x, s.z); n.heading = this.F.yawFromFrame(s.face[0], s.face[1]); }
     n.path = null; n.goal = null; n.lastX = n.x; n.lastZ = n.z; n.stuckT = 0;
   }
   /** what someone at a slot does by default: sit, stand and watch, or stand */
-  private restAct(_n: Npc, s: Slot): Act {
+  restAct(_n: Npc, s: Slot): Act {
     const seen = this.sees.get(s.id) ?? [];
     const watch = seen.length > 0 && this.c.clock().open;
     const seat = s.seatId !== undefined;
@@ -470,6 +478,7 @@ export class Crowd {
     this.pool = regularsPool(n);
     for (const x of [...this.npcs]) this.removeNpc(x);
     this.parties = []; this.fillers.clear(); this.empties = [];
+    this.social.reset();
     this.applyStaff();
     this.settle(true);
     if (first) this.paintAtlas('fill', true);
@@ -561,7 +570,7 @@ export class Crowd {
     const party = this.makeParty(ids.length, 'filler', this.T, r);
     while (party.members.length > ids.length) this.removeNpc(party.members[party.members.length - 1]);
     while (party.members.length < ids.length) this.newNpc(party, { t: this.T });
-    if (party.members.length >= 2 && !party.group) party.group = newGroup(party.id, party.members.map((m) => m.id), r);
+    this.social.partyGroup(party);
     // the spare bodies: each new guest takes one (and its look)
     for (const m of party.members) {
       const sp = this.spares.find((x) => x.q === this.pq);
@@ -614,7 +623,8 @@ export class Crowd {
       this.stepNpc(n, dS, now);
     }
     this.decisions(now);
-    this.stepGroups(dS);
+    this.social.stepGroups(dS);
+    this.social.step(dS);
     this.stepStaff(dS, dtReal);
     this.audit();
     // once a sim minute: how many live guests hold a drink or wait on one
@@ -676,6 +686,7 @@ export class Crowd {
     const r = mulberry(hash32('leave', p.id)), to: P2 = r() < 0.75 ? this.F.toLocal(...EXIT_LOT[Math.floor(r() * EXIT_LOT.length)]) : this.F.fromFrame(...fd(4.6, 6 + r() * 6));
     for (const m of p.members) {
       if (m.mode !== 'live') continue;
+      this.social.gone(m, false);
       this.releaseAll(m); m.slot = null; m.home = null; m.order.drink = m.order.food = false;
       m.act = { action: 'leave', object: 'door', slot: null, stage: 'walk', t0: this.T, dur: Infinity, continuous: false, tags: [], score: 0, screen: null, why: 'stay over' };
       m.leavingTo = to; this.walkTo(m, to);
@@ -695,7 +706,7 @@ export class Crowd {
       const party = this.makeParty(ids.length, 'filler', this.T, r);
       while (party.members.length > ids.length) this.removeNpc(party.members[party.members.length - 1]);
       while (party.members.length < ids.length) this.newNpc(party, { t: this.T });
-      if (party.members.length >= 2 && !party.group) party.group = newGroup(party.id, party.members.map((m) => m.id), r);
+      this.social.partyGroup(party);
       this.seatParty(party, ids, u);
       // the last unit overshot: the excess are held, from its seats farthest from the camera
       if (ids.length > room) { const ex = party.members.slice().sort((a, b) => Math.hypot(b.x - P.x, b.z - P.z) - Math.hypot(a.x - P.x, a.z - P.z)).slice(0, ids.length - room); for (const m of ex) m.mode = 'held'; }
@@ -746,7 +757,7 @@ export class Crowd {
     // mood, emotion, walk speed (x0.9 when Low, x1.05 when Excited)
     const mm = moodOf(n.needs, n.traits, n.moodlets.sum(now / SECS));
     n.mood = mm; n.label = moodLabel(mm);
-    n.emotion = emotionOf({ needs: n.needs, traits: n.traits, mood: mm, now: now / SECS, teamMomentAt: n.teamMomentAt, teamLostAt: n.teamLostAt });
+    n.emotion = emotionOf({ needs: n.needs, traits: n.traits, mood: mm, now: now / SECS, teamMomentAt: n.teamMomentAt, teamLostAt: n.teamLostAt, inGoodConversation: mm >= 45 && this.social.inConversation(n) });
     n.speedK = n.label === 'Low' ? 0.9 : n.emotion === 'Excited' ? 1.05 : 1;
     if (n.clip && now >= n.clipUntil) n.clip = null;
     // due a decision: at an action's end, or every 20 sim s in a continuous one
@@ -763,19 +774,14 @@ export class Crowd {
       else if (a.action === 'dance') fun = 'dance';
       else if (a.action === 'people-watch') fun = 'people-watch';
       else if (a.action === 'watch-freeway') fun = 'freeway';
-      else if (a.action === 'chat') fun = 'conversation';
+      else if (a.action === 'chat' || a.action === 'lean-chat' || a.action === 'group') fun = 'conversation';
       else if (a.action === 'song') fun = 'music';
+      else if (a.action === 'game') { const k = this.life.games?.kindOf(a.object); if (k) fun = k; }
     }
-    const inGroup = this.inGroup(n);
+    const inGroup = this.social.inConversation(n);
     if (!fun && inGroup) fun = 'conversation';
     d.fun = fun; d.inGroup = inGroup; d.eating = !!n.hand.food && n.hand.food.left > 0;
     return d;
-  }
-  /** at home with someone else from the party there */
-  private inGroup(n: Npc) {
-    if (n.path || n.slot !== n.home || !n.home || n.party.members.length < 2) return false;
-    for (const m of n.party.members) if (m !== n && m.mode === 'live' && !m.path && m.slot === m.home && Math.hypot(m.x - n.x, m.z - n.z) < 4) return true;
-    return false;
   }
   private rescue(n: Npc) {
     const f = this.c.grid.nearestFree(n.x, n.z, 6);
@@ -785,7 +791,7 @@ export class Crowd {
     const goal = n.goal; n.path = null;
     if (goal) this.walkTo(n, goal); else this.finish(n, 'watchdog');
   }
-  private walkTo(n: Npc, to: P2) {
+  walkTo(n: Npc, to: P2) {
     const p = this.c.grid.path(n.x, n.z, to[0], to[1]);
     n.path = p && p.length ? [...p, to] : [to]; n.pi = 0; n.goal = to; n.lastX = n.x; n.lastZ = n.z;
     // standing up from a seat
@@ -793,10 +799,11 @@ export class Crowd {
     n.slot = null;
     return !!p;
   }
-  private walkToSlot(n: Npc, s: Slot) { const seat = s.seatId !== undefined ? this.c.venue.seats[s.seatId] : null; return this.walkTo(n, seat ? [seat.ax, seat.az] : [s.x, s.z]); }
+  walkToSlot(n: Npc, s: Slot) { const seat = s.seatId !== undefined ? this.c.venue.seats[s.seatId] : null; return this.walkTo(n, seat ? [seat.ax, seat.az] : [s.x, s.z]); }
   private arrived(n: Npc) {
     const a = n.act;
     if (n.party.leaving) { this.removeNpc(n); return; }
+    if (a && (a.action === 'interact' || a.action === 'game')) { this.social.arrived(n); return; }
     if (!a || !a.slot) { if (a) this.finish(n, 'arrived'); return; }
     const s = this.slots.get(a.slot)!;
     this.placeAt(n, s); n.slot = s.id; this.life.res.use(s.id, n.key); n.seatedSince = this.T;
@@ -810,12 +817,13 @@ export class Crowd {
   }
   private finishTimed(n: Npc) {
     const a = n.act!;
+    if (a.action === 'interact') { this.social.resolve(n); return; }
     if (a.action === 'water') bump(n.needs, { thirst: 20 });
     if (a.action === 'song') bump(n.needs, { fun: 6 });
     this.finish(n, 'done');
   }
   /** the action's over: back to the queue (a decision comes next) */
-  private finish(n: Npc, why: string) {
+  finish(n: Npc, why: string) {
     const a = n.act;
     if (a && a.slot && a.slot !== n.home && n.slot !== a.slot) this.life.res.release(a.slot, n.key);
     if (a?.action === 'dance' && n.p) this.life.clips.stop(n.p);
@@ -872,8 +880,8 @@ export class Crowd {
       } else { const it = this.npcFood(n); this.kitchen(n, it.id, this.T + 8 + 60 + 120 * this.r()); }
     } });
   }
-  private beside(n: Npc): P2 { const s = n.slot ? this.slots.get(n.slot) : null, seat = s && s.seatId !== undefined ? this.c.venue.seats[s.seatId] : null; const [x, z] = seat ? [seat.ax, seat.az] : [n.x + 0.7, n.z]; const f = this.c.grid.nearestFree(x, z, 2); return f ? [f[0], f[1]] : [x, z]; }
-  private give(n: Npc, item: string, model: 'glass' | 'basket', color: number, sips: number, food = 45) {
+  beside(n: Npc): P2 { const s = n.slot ? this.slots.get(n.slot) : null, seat = s && s.seatId !== undefined ? this.c.venue.seats[s.seatId] : null; const [x, z] = seat ? [seat.ax, seat.az] : [n.x + 0.7, n.z]; const f = this.c.grid.nearestFree(x, z, 2); return f ? [f[0], f[1]] : [x, z]; }
+  give(n: Npc, item: string, model: 'glass' | 'basket', color: number, sips: number, food = 45) {
     if (model === 'glass') n.hand.drink = { item, model, color, left: sips, next: this.T + 20 }; else { n.hand.food = { item, model, color, left: food, next: this.T + 20 }; bump(n.needs, { energy: 5 }); if (item === n.favourites.food) n.moodlets.add('good-food', this.T / SECS); }
   }
   private leaveEmpty(n: Npc, model: 'glass' | 'basket') {
@@ -901,11 +909,10 @@ export class Crowd {
     const holdingDrink = !!n.hand.drink || n.order.drink, holdingFood = !!n.hand.food || n.order.food;
     const at = n.slot ? this.slots.get(n.slot) ?? null : null, seated = !!at && at.seatId !== undefined;
     const fanK = 0.6 + 0.8 * n.traits.fan;
+    // leaving a conversation mid-turn: the speaker's adverts elsewhere take -25
+    const midTurn = this.social.talking(n);
     // the current continuous action (walk 0)
-    if (cur && cur.continuous && cur.stage === 'do') {
-      const s = cur.slot ? this.slots.get(cur.slot) : null;
-      out.push({ key: 'current', action: cur.action, object: cur.object, slot: cur.slot, deltas: this.contDeltas(cur.action, n, cur.screen, !!s && s.seatId !== undefined), tags: cur.tags, walk: 0, occupancy: 0, wait: 0, current: true, continuous: true, featuredScreen: !!cur.screen && this.life.matchFactor(cur.screen) > 1 });
-    }
+    if (cur && cur.continuous && cur.stage === 'do') out.push(this.currentCand(n)!);
     const dist = (s: Slot) => (at && at.id === s.id ? 0 : Math.hypot(s.x - n.x, s.z - n.z) * 1.3);
     const nearestFree = (ids: string[], filter?: (s: Slot) => boolean): Slot | null => {
       let best: Slot | null = null, bd = Infinity;
@@ -915,10 +922,16 @@ export class Crowd {
     for (const T of Object.values(TYPES)) {
       const objs = this.life.objects.filter((o) => o.type === T.type);
       for (const A of T.adverts) {
-        if (A.action.startsWith('play-') || A.action === 'lean-chat') continue;            // S3b: invites and chat with people
         if (A.requires?.includes('open') && !open) continue;
         if (A.requires?.includes('gameNight') && !night) continue;
-        if (A.action === 'watch-pool' && !this.life.games?.mine) continue;                  // a game on at a table: yours (S3b brings NPC games)
+        // S3b: a play advert is for a free spot of its kind (the guest invites a partner when they choose it)
+        if (A.action.startsWith('play-')) {
+          const kind = A.action.slice(5) as 'pool' | 'darts' | 'shuffleboard', spot = this.social.games.freeFor(kind, false); if (!spot) continue;
+          const sp = this.life.games.spot(spot)!, [sx, sz] = sp.startW;
+          out.push({ key: `${spot}:${A.action}`, action: A.action, object: spot, slot: null, deltas: { ...A.deltas }, tags: A.tags, walk: Math.hypot(sx - n.x, sz - n.z) * 1.3, occupancy: 0, wait: 0, favourite: n.favourites.game === kind });
+          continue;
+        }
+        if (A.action === 'watch-pool' && !this.poolGameOn()) continue;                      // a game on at a table: yours or guests'
         const isOrder = A.action === 'order-drink' || A.action === 'order-food';
         if (isOrder && (A.action === 'order-drink' ? holdingDrink : holdingFood)) continue;
         if (A.action === 'eat' && !n.hand.food) continue;
@@ -958,14 +971,24 @@ export class Crowd {
         const occ = T.type === 'bar-counter' || T.type === 'standing-floor' || T.type === 'dance-spot' ? this.occupancy(objs[0]?.slots ?? [], n) : 0;
         const fav = (A.tags.includes('drink') && n.favourites.drink !== '') || false;
         const screen = slot ? this.sees.get(slot.id)?.[0] ?? null : null;
-        out.push({ key: `${obj}:${A.action}`, action: A.action, object: obj, slot: slot?.id ?? null, deltas, tags: A.tags, overlay, walk: overlay ? 0 : slot ? dist(slot) : 0, occupancy: occ, wait, favourite: fav && false, continuous: A.minutes === 'continuous', featuredScreen: (A.action === 'watch' || A.action === 'stand-watch') && !!screen && this.life.matchFactor(screen) > 1 });
+        out.push({ key: `${obj}:${A.action}`, action: A.action, object: obj, slot: slot?.id ?? null, deltas, tags: A.tags, overlay, walk: overlay ? 0 : slot ? dist(slot) : 0, occupancy: occ, wait, favourite: fav && false, continuous: A.minutes === 'continuous', featuredScreen: (A.action === 'watch' || A.action === 'stand-watch') && !!screen && this.life.matchFactor(screen) > 1, leavesMidTurn: midTurn && !!slot && slot.id !== n.slot });
         void fanK;
       }
     }
+    // S3b: the people present advertise (at most 8 of them, 6 interactions each)
+    this.social.personAdverts(n, out);
     return out;
   }
+  /** the current continuous action as an advert (walk 0): what it gives over the 5 sim-minute window */
+  currentCand(n: Npc): Cand | null {
+    const cur = n.act; if (!cur || !cur.continuous || cur.stage !== 'do') return null;
+    const s = cur.slot ? this.slots.get(cur.slot) : null;
+    return { key: 'current', action: cur.action, object: cur.object, slot: cur.slot, deltas: this.contDeltas(cur.action, n, cur.screen, !!s && s.seatId !== undefined), tags: cur.tags, walk: 0, occupancy: 0, wait: 0, current: true, continuous: true, featuredScreen: !!cur.screen && this.life.matchFactor(cur.screen) > 1 };
+  }
+  /** a pool game on at a table (yours or guests') */
+  private poolGameOn() { const G = this.life.games; if (!G) return false; for (const s of G.spots) if (s.kind === 'pool' && (s.mine || s.npcBusy)) return true; return false; }
   private inGroupAtHome(n: Npc) { if (!n.home) return false; for (const m of n.party.members) if (m !== n && m.mode === 'live' && m.slot === m.home && !m.path) return true; return false; }
-  private poolWatchSlots() { const t = this.life.games?.mine?.id; const u = t === 'pool-1' ? POOL_TABLES[0][0] : POOL_TABLES[1][0]; return [...this.slots.values()].filter((s) => s.zone === 'pool' && s.kind === 'stand' && s.id.startsWith('pool watcher') && Math.abs(s.at[0] - u) < 4.2).map((s) => s.id); }
+  private poolWatchSlots() { const G = this.life.games, t = G?.mine?.kind === 'pool' ? G.mine.id : G?.spots.find((s) => s.kind === 'pool' && s.npcBusy)?.id; const u = t === 'pool-1' ? POOL_TABLES[0][0] : POOL_TABLES[1][0]; return [...this.slots.values()].filter((s) => s.zone === 'pool' && s.kind === 'stand' && s.id.startsWith('pool watcher') && Math.abs(s.at[0] - u) < 4.2).map((s) => s.id); }
   private occupancy(ids: string[], n: Npc) { if (!ids.length) return 0; let k = 0; for (const id of ids) if (this.slotTaken(id, n.key)) k++; return k / ids.length; }
   /** a continuous advert's deltas in this person's terms over the 5 sim-minute window */
   private contDeltas(action: string, n: Npc, screen: string | null, seated: boolean): Partial<Record<'hunger' | 'thirst' | 'fun' | 'social' | 'energy' | 'bladder', number>> {
@@ -975,17 +998,24 @@ export class Crowd {
     if (action === 'people-watch') return { fun: 0.8 * W, energy: 0.8 * W };
     if (action === 'watch-freeway') return { fun: 1 * W, energy: 0.8 * W };
     if (action === 'stand') return { energy: -0.4 * W };
+    // S3b: standing (or sitting) in a group: a conversation's rates (social +4, fun +1 a minute)
+    if (action === 'group') return { social: 4 * W, fun: 1 * W, energy: (seated ? 0.8 : -0.4) * W };
     return {};
   }
   private decideFor(n: Npc, now: number) {
+    // S3b: a guest's own rule for buying a round comes first
+    if (this.social.npcRound(n)) { n.decideAt = now + 20; return; }
     const cs = this.cands(n);
     const r = mulberry(hash32('decide', n.id, Math.floor(now)));
     const dcs: Decision = decide(cs, { needs: n.needs, traits: n.traits, emotion: n.emotion }, r);
+    let objectAds = 0, personAds = 0; for (const c of cs) { if (c.inter || c.action === 'group') personAds++; else objectAds++; }
     n.decideAt = now + 20;
     const holdingDrink = !!n.hand.drink, waitingDrink = n.order.drink, waitingFood = n.order.food;
     this.logDecision({ t: +(now / SECS).toFixed(3), npc: n.key, name: n.name, needs: Object.fromEntries(NEEDS.map((k) => [k, +n.needs[k].toFixed(1)])), emotion: n.emotion, holdingDrink, waitingDrink, urgent: dcs.urgent,
       top: dcs.top.map((s) => ({ action: s.c.action, object: s.c.object, score: +s.score.toFixed(2), tags: s.c.tags })), chosen: dcs.chosen ? { action: dcs.chosen.c.action, object: dcs.chosen.c.object, tags: dcs.chosen.c.tags, score: +dcs.chosen.score.toFixed(2), raises: Object.keys(dcs.chosen.c.deltas).filter((k) => (dcs.chosen!.c.deltas[k as 'fun'] ?? 0) > 0) } : null, kept: dcs.kept,
-      overlay: dcs.overlay ? { action: dcs.overlay.c.action, object: dcs.overlay.c.object, score: +dcs.overlay.score.toFixed(2), tags: dcs.overlay.c.tags, raises: Object.keys(dcs.overlay.c.deltas).filter((k) => (dcs.overlay!.c.deltas[k as 'fun'] ?? 0) > 0) } : null, cands: cs.length, holdingFood: !!n.hand.food, waitingFood });
+      overlay: dcs.overlay ? { action: dcs.overlay.c.action, object: dcs.overlay.c.object, score: +dcs.overlay.score.toFixed(2), tags: dcs.overlay.c.tags, raises: Object.keys(dcs.overlay.c.deltas).filter((k) => (dcs.overlay!.c.deltas[k as 'fun'] ?? 0) > 0) } : null, cands: cs.length, holdingFood: !!n.hand.food, waitingFood,
+      people: this.social.lastAds.people, adverts: { objects: objectAds, people: personAds, total: cs.length }, inter: dcs.chosen?.c.inter ?? null, target: dcs.chosen?.c.target ?? null });
+    this.social.logAds(n, { objects: objectAds, people: personAds, total: cs.length });
     // the overlay first (table service, the counter's order)
     if (dcs.overlay) {
       const o = dcs.overlay.c;
@@ -999,6 +1029,9 @@ export class Crowd {
     this.start(n, ch.c, ch.score);
   }
   private start(n: Npc, c: Cand, score: number) {
+    if (c.action === 'interact') { this.social.begin(n, c, score); return; }
+    if (c.action.startsWith('play-')) { this.social.games.invite(n, c); return; }
+    this.social.leavingFor(n, c.slot);
     const A = this.advertOf(c.action);
     const r = this.r;
     const dur = A && A.minutes !== 'continuous' ? (A.minutes[0] + (A.minutes[1] - A.minutes[0]) * r()) * SECS : Infinity;
@@ -1017,34 +1050,14 @@ export class Crowd {
   private advertOf(action: string): Advert | null { for (const T of Object.values(TYPES)) { const a = T.adverts.find((x) => x.action === action); if (a) return a; } return null; }
   private logDecision(d: unknown) { this.decisionLog.push(d); if (this.decisionLog.length > 3000) this.decisionLog.shift(); }
 
-  // ------------------------------------------------------------------------------------------------ groups and lines
-  private _present: number[] = [];
-  private stepGroups(dS: number) {
-    const pl = this.c.player;
-    for (const p of this.parties) {
-      const g = p.group; if (!g || p.leaving) continue;
-      const pr = this._present; pr.length = 0;
-      for (const m of p.members) if (m.mode === 'live' && !m.path && m.slot === m.home && m.home && !m.hiddenUntil) pr.push(m.id);
-      const ev = stepGroup(g, pr, dS, this.r);
-      if (ev.started >= 0) {
-        const sp = p.members.find((m) => m.id === ev.started)!;
-        if (sp.p && sp.draw !== 'card' && sp.draw !== 'off' && this.slots.get(sp.slot!)?.seatId === undefined) sp.p.play('talk');
-        // a caption when you're within 3.5 m (one every 6 s at most)
-        if (Math.hypot(sp.x - pl.x, sp.z - pl.z) < 3.5 && this.T - this.lastCaption > 6) {
-          const night = this.c.clock().night > 0.5, matchOn = this.life.tv.bigChannel(this.life.T) !== 3;
-          const l = pickLine(hash32('line', sp.id, g.turns), night, matchOn);
-          this.lastCaption = this.T; this.life.sayCaption(sp.name, l.text, Math.min(5.5, 1.2 + l.text.length * 0.055));
-        }
-      }
-      if (ev.laugh) for (const m of p.members) if (m.p && pr.includes(m.id) && this.slots.get(m.slot!)?.seatId === undefined) { m.p.play('laugh'); this.laughs.push({ t: +(this.T / SECS).toFixed(3), npc: m.key, lod: m.draw, seated: false }); if (this.laughs.length > 300) this.laughs.shift(); }
-    }
-  }
-  private laughs: Record<string, unknown>[] = [];
+  // ------------------------------------------------------------------------------------------------ groups and lines (social.ts)
+  laughs: Record<string, unknown>[] = [];
 
   // ------------------------------------------------------------------------------------------------ the screens: reactions
   /** a moment on a screen: everyone who can see a screen on that channel reacts, after a staggered 0.2 to 0.7 s */
   moment(e: TvEvent, gameNightFinal: boolean) {
     const f = this.life.fixtureOf(e); if (!f) return;
+    this.social.moment(e);
     const ch = e.channel, now = this.T;
     // game night begins at this whistle: the dance floor's spots are cleared of fillers first
     if (gameNightFinal) this.relayFillers();
@@ -1103,8 +1116,8 @@ export class Crowd {
     return true;
   }
   private freeDanceSlot(n: Npc) { let best: string | null = null, bd = Infinity; for (const id of DANCE_SLOTS) { if (!this.freeFor(id, n)) continue; const s = this.slots.get(id)!; const d = Math.hypot(s.x - n.x, s.z - n.z); if (d < bd) { bd = d; best = id; } } return best; }
-  private play(n: Npc, clip: ClipName, seconds?: number) { if (!n.p) return; const seated = !!n.slot && this.slots.get(n.slot)?.seatId !== undefined; this.life.clips.play(n.p, clip, { upper: seated || clip === 'drink' || clip === 'eat', seconds: seconds && Number.isFinite(seconds) ? seconds / 1 : undefined }); this.clipLog.push({ t: +(this.T / SECS).toFixed(3), npc: n.key, clip, lod: n.p.stats().lod, draw: n.draw }); if (this.clipLog.length > 2000) this.clipLog.shift(); }
-  private clipLog: Record<string, unknown>[] = [];
+  play(n: Npc, clip: ClipName, seconds?: number) { if (!n.p) return; const seated = !!n.slot && this.slots.get(n.slot)?.seatId !== undefined; this.life.clips.play(n.p, clip, { upper: seated || clip === 'drink' || clip === 'eat', seconds: seconds && Number.isFinite(seconds) ? seconds / 1 : undefined }); this.clipLog.push({ t: +(this.T / SECS).toFixed(3), npc: n.key, clip, lod: n.p.stats().lod, draw: n.draw }); if (this.clipLog.length > 2000) this.clipLog.shift(); }
+  clipLog: Record<string, unknown>[] = [];
 
   // ------------------------------------------------------------------------------------------------ the staff's step
   private houseGame = false;
@@ -1227,13 +1240,14 @@ export class Crowd {
       const party = this.makeParty(ids.length, 'filler', this.T, r);
       while (party.members.length > ids.length) this.removeNpc(party.members[party.members.length - 1]);
       while (party.members.length < ids.length) this.newNpc(party, { t: this.T });
-      if (party.members.length >= 2 && !party.group) party.group = newGroup(party.id, party.members.map((m) => m.id), r);
+      this.social.partyGroup(party);
       this.seatParty(party, ids, u);
       if (ids.length > room) { const ex = party.members.slice().sort((a, b) => Math.hypot(b.x - P.x, b.z - P.z) - Math.hypot(a.x - P.x, a.z - P.z)).slice(0, ids.length - room); for (const m of ex) this.hold(m); }
     }
   }
   private hold(n: Npc) {
     if (n.mode === 'held') return;
+    this.social.gone(n, false);
     // someone walking is held at the slot they're walking to
     if (n.path && n.act?.slot) { const s = this.slots.get(n.act.slot); if (s) { this.placeAt(n, s); n.slot = s.id; this.life.res.use(s.id, n.key); } }
     else if (n.path && n.home) { const s = this.slots.get(n.home); if (s) { this.placeAt(n, s); n.slot = s.id; } }
@@ -1366,6 +1380,7 @@ export class Crowd {
     // a hand-over or a held guest's return near you changes who's live: the list again
     if (this.nearYou()) this.fillPeople();
     this.drawModes(state, avatarDrawn);
+    this.social.frame(dt);
     this.drawBodies(dt);
     // the crowd's own CPU this frame, less the build that landed in it (the build log has its own time)
     this.frameMs = performance.now() - t0 - (b ? b.dur : 0); this.frameBuildMs = b ? b.dur : 0;
@@ -1495,7 +1510,7 @@ export class Crowd {
     C.end();
   }
   private boneCache = new WeakMap<Person, { chest: THREE.Bone | null; head: THREE.Bone | null }>();
-  private talking(n: Npc) { const g = n.party.group; return !!g && g.speaker === n.id; }
+  private talking(n: Npc) { return this.social.talking(n); }
   /** a slump when Low: the chest and the head a little forward (the builder rewrote every bone this update) */
   private posture(n: Npc) {
     if (n.label !== 'Low' || !n.p) return;
@@ -1547,13 +1562,45 @@ export class Crowd {
   }
   /** you join a talking group (Lot 57's Join): that party is yours (never held) and you stand with them */
   join(n: Npc) {
-    for (const p of this.parties) p.yours = false;
-    n.party.yours = true;
-    const ms = n.party.members.filter((m) => m.mode === 'live');
-    let cx = 0, cz = 0; for (const m of ms) { cx += m.x; cz += m.z; } cx /= ms.length || 1; cz /= ms.length || 1;
-    const f = this.c.grid.nearestFree(cx + 0.9, cz + 0.4, 4);
-    if (f) this.c.player.place(f[0], f[1]);
-    return { party: n.party.id, members: n.party.members.map((m) => m.key) };
+    return this.social.joinYou(n);
+  }
+  // ------------------------------------------------------------------------------------------------ S3b: games and rounds
+  /** a guest's body now if they have none (an accepted Challenge: they play your game in front of you) */
+  ensureBody(n: Npc) { if (!n.p || n.q !== this.pq) this.sched.run(this.bodyJob(n, 1, 'tap'), -1, true); }
+  /** a guest as a game's player: walks on the walk grid (the game's own action, no decisions while it lasts), faces the
+   *  way the game asks on arrival, and goes back to deciding when the game sends them home */
+  oppFor(n: Npc): Opp {
+    const self = this;
+    return {
+      get p() { return n.p; }, get x() { return n.x; }, get z() { return n.z; }, get walking() { return !!n.path; },
+      walkTo(t: P2, yaw: number | null, done?: () => void) { self.gameWalk(n, t, yaw, done); },
+      home() { if (n.act?.action === 'game') self.finish(n, 'game over'); },
+    };
+  }
+  private gameWalk(n: Npc, t: P2, yaw: number | null, done?: () => void) {
+    if (!n.act || n.act.action !== 'game') n.act = { action: 'game', object: this.life.games?.mine?.id ?? 'game', slot: null, stage: 'do', t0: this.T, dur: Infinity, continuous: false, tags: ['game'], score: 0, screen: null, why: 'your game' };
+    n.faceYaw = yaw; n.onArrive = done ?? null;
+    if (Math.hypot(t[0] - n.x, t[1] - n.z) < 0.05) { if (yaw !== null) n.heading = yaw; const cb = n.onArrive; n.onArrive = null; cb?.(); return; }
+    this.walkTo(n, t);
+  }
+  /** a round brought by a server in about `inS` sim s (1 to 2 minutes): each guest their favourite drink (the plan's
+   *  "each person gets their favourite"; a guest holding one gets theirs when it's done, ours: in hand now), yours
+   *  alcohol-free */
+  deliverRound(g: { cx: number; cz: number }, members: Npc[], you: boolean, inS: number, done: () => void) {
+    const sv = this.serverFor(), pick = sv.pickup;
+    const to = (): P2 => { const f = this.c.grid.nearestFree(g.cx + 0.8, g.cz, 3); return f ? [f[0], f[1]] : [g.cx, g.cz]; };
+    const back = Math.hypot(to()[0] - pick[0], to()[1] - pick[1]) / 1.3;
+    const delay = Math.max(1, inS - sv.walkSeconds(pick) - back - 4);
+    const fav = members.length ? itemById(members[0].favourites.drink) : null;
+    sv.add({ kind: 'deliver', label: 'fetch a round', delay, to: () => pick, arrive: () => {
+      sv.carry = fav && fav.kind === 'drink' ? fav.id : DRINKS[0].id;
+      sv.add({ kind: 'deliver', label: 'bring a round', to, arrive: () => {
+        sv.carry = null;
+        for (const m of members) { if (!this.byKey.has(m.key) || m.mode !== 'live') continue; const it = itemById(m.favourites.drink); const d = it && it.kind === 'drink' ? it : DRINKS[0]; this.give(m, d.id, 'glass', d.color, 6); }
+        if (you) this.life.roundForYou();
+        done();
+      } }, true);
+    } });
   }
   /** crowdAt('outside', n): walk-ins seated on the patio and the front walk until n live people are outside the unit (the
    *  budget poses' stall and patio); crowdAt(<zone>, n) the same into that zone's free slots */
@@ -1622,7 +1669,7 @@ export class Crowd {
   statsBrief() {
     let seated = 0, walkers = 0;
     for (const n of this.npcs) if (n.mode === 'live') { if (n.path) walkers++; else if (n.slot && this.slots.get(n.slot)?.seatId !== undefined) seated++; }
-    return { npcs: this.live, groups: this.parties.filter((p) => p.group && p.members.length >= 2).length, seated, walkers, held: this.heldGuests, fillers: this.fillers.size, cards: this.cards.cards, blobs: this.cards.blobCount, peopleMeshes: this.stats.meshes, peopleLod1: this.stats.lod1, crowdStepMs: +this.stepMs.toFixed(3), crowdFrameMs: +this.frameMs.toFixed(3), crowdFrameBuildMs: +this.frameBuildMs.toFixed(1), decideMs: this.decideMs.length ? +(this.decideMs.reduce((a, b) => a + b, 0) / this.decideMs.length).toFixed(3) : null };
+    return { npcs: this.live, groups: this.social.groups.length, seated, walkers, held: this.heldGuests, fillers: this.fillers.size, cards: this.cards.cards, blobs: this.cards.blobCount, peopleMeshes: this.stats.meshes, peopleLod1: this.stats.lod1, crowdStepMs: +this.stepMs.toFixed(3), crowdFrameMs: +this.frameMs.toFixed(3), crowdFrameBuildMs: +this.frameBuildMs.toFixed(1), decideMs: this.decideMs.length ? +(this.decideMs.reduce((a, b) => a + b, 0) / this.decideMs.length).toFixed(3) : null };
   }
   /** vis()'s people: who's drawn how, who casts into which map (by their lod1: shown, or a hidden caster under a LOD 2),
    *  and any LOD 2 or LOD 0 mesh casting (there should be none) */

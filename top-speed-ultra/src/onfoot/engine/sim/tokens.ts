@@ -3,6 +3,7 @@
 // and no price anywhere. Saving is on this device only (localStorage, every read and write wrapped), and the page
 // works without storage.
 import { hash32, mulberry } from './rng';
+import type { SavedRel } from './relations';
 
 export const TOKENS_LABEL = "House tokens are part of the game. They can't be bought and have no cash value.";
 export const SAVE_LABEL = 'Saved on this device only';
@@ -33,6 +34,9 @@ export interface SaveData {
   settings: { autonomy: boolean; text: 0 | 1 | 2 };
   /** tonight's three for the visit in progress and which are done */
   tonight: { date: number; visit: number; goals: GoalId[]; done: GoalId[] } | null;
+  /** S3b: the friendships kept on the device (yours and the regulars', for the regulars' pool of this seed), whose team
+   *  you know, who you've had a Great chat with, and when it was saved (device ms: the fade per day apart) */
+  social?: { rels: SavedRel[]; known: string[]; chatted: string[]; seed: number; at: number };
 }
 export const SAVE_KEY = 'oc.onfoot.sportsbar.v1';
 
