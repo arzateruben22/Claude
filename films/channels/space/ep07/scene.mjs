@@ -98,18 +98,28 @@ const pulse = (t) => { let z = 0; for (const tp of CUE.pulses) { const x = t - t
 const SPILL = (() => { const r = mul(41); return Array.from({ length: 90 }, () => ({ a: r() * 6.2832, u: r(), v: 0.18 + r() * 0.22, s: r() < 0.5 ? 0 : 1 })); })();
 function clouds(t, k) {                                                       // two equal swirls that race round each other and spill dots (the answer is not shown)
   if (k <= 0.001) return;
-  for (const [pts, col, cx, dir] of [[CL_T, TEAL, 285, 1], [CL_S, LEMON, 795, -1]]) {
-    const w = dir * 0.95 * t, cs = Math.cos(w), sn = Math.sin(w), ox = Math.sin(t * 1.1 + (dir > 0 ? 0 : 2)) * 38, oy = Math.cos(t * 0.8 + dir) * 22;
+  const th = 3.1416 + 1.35 * t;                                                // trees start left, stars right; they swap places every 2.3 s
+  const lab = [];
+  for (const [pts, col, ph, dir, name] of [[CL_T, TEAL, th, 1, "trees"], [CL_S, LEMON, th + 3.1416, -1, "stars"]]) {
+    const cx = 540 + 255 * Math.cos(ph), cy = 700 + 85 * Math.sin(ph), sc = (1 + 0.16 * Math.sin(ph)) * 0.8;
+    const w = dir * 1.1 * t, cs = Math.cos(w), sn = Math.sin(w);
     for (const p of pts) {
-      const dx = p.x - cx, dy = p.y - 700, rx = dx * cs - dy * sn, ry = dx * sn + dy * cs;
-      circ(cx + rx + ox, 700 + ry + oy, 9 + 2.5 * Math.sin(t * 2.4 + p.ph));
+      const dx = (p.x - (dir > 0 ? 285 : 795)) * sc, dy = (p.y - 700) * sc, rx = dx * cs - dy * sn, ry = dx * sn + dy * cs;
+      circ(cx + rx, cy + ry, (9 + 2.5 * Math.sin(t * 2.4 + p.ph)) * sc);
       ctx.fillStyle = rgba(col, 0.88 * k); ctx.fill();
     }
+    lab.push([name, cx, cy - 235 * sc, col]);
+    for (const s of SPILL.filter((q) => q.s === (dir > 0 ? 0 : 1))) {            // dots spill out of each swirl
+      const u = (t * s.v + s.u) % 1, r = 60 + 330 * u, a = s.a + dir * t * 0.5;
+      circ(cx + Math.cos(a) * r * 0.9, cy + Math.sin(a) * r * 0.75, 5.5 * (1 - u * 0.7));
+      ctx.fillStyle = rgba(col, 0.8 * (1 - u) * k); ctx.fill();
+    }
   }
-  for (const s of SPILL) {                                                    // dots spill out of both swirls toward the middle and the edges
-    const cx = s.s ? 795 : 285, u = (t * s.v + s.u) % 1, r = 60 + 330 * u, a = s.a + (s.s ? -1 : 1) * t * 0.5;
-    circ(cx + Math.cos(a) * r * 0.9, 700 + Math.sin(a) * r * 0.75, 5.5 * (1 - u * 0.7));
-    ctx.fillStyle = rgba(s.s ? LEMON : TEAL, 0.8 * (1 - u) * k); ctx.fill();
+  ctx.font = `700 ${Math.round(34 * S1)}px Lexend, sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  for (const [name, x, y, col] of lab) {
+    const w = ctx.measureText(name).width + 40 * S1;
+    ctx.fillStyle = rgba([21, 26, 61], 0.9 * k); ctx.beginPath(); ctx.roundRect(x * sx - w / 2, y * sy - 24 * S1, w, 48 * S1, 24 * S1); ctx.fill();
+    ctx.fillStyle = rgba(col, k); ctx.fillText(name, x * sx, y * sy + 1 * S1);
   }
 }
 function person(x, y, a) {                                                      // a figure: head, body, and a cloud of trees above (illustration)
@@ -178,33 +188,38 @@ function draw(t) {
     ctx.save();
     { const pz = 1 + 0.07 * seg(t, CUE.why, CUE.est0), gx = 540 * sx, gy = 690 * sy; ctx.transform(pz, 0, 0, pz, gx * (1 - pz), gy * (1 - pz)); }
     ctx.fillStyle = rgba(VOID, 0.96 * pK); ctx.fillRect(-W * 0.2, -H * 0.2, W * 1.4, H * 1.4);
-    // (a) ground plots: a forest of dots, small squares counted one by one
-    ctx.strokeStyle = rgba(TXT2, 0.5 * pK); lw(2); ctx.strokeRect(90 * sx, 330 * sy, 810 * sx, 330 * sy);
-    for (let r = 0; r < 8; r++) for (let c = 0; c < 21; c++) { circ(116 + c * 38.5, 392 + r * 36, 6.5); ctx.fillStyle = rgba(TEAL, 0.5 * pK); ctx.fill(); }
+    // (a) ground plots: a forest of dots, small squares counted one by one. The panel is tall until the satellite map arrives, then makes room for it
+    const e1 = E.inout3(seg(t, CUE.sat0 - 0.5, CUE.sat0 + 0.2)), PH = 690 - 360 * e1, RS = (PH - 50) / 7.4;
+    ctx.strokeStyle = rgba(TXT2, 0.5 * pK); lw(2); ctx.strokeRect(90 * sx, 330 * sy, 810 * sx, PH * sy);
+    for (let r = 0; r < 8; r++) for (let c = 0; c < 21; c++) { circ(116 + c * 38.5, 355 + r * RS + 14, 7 + 1.5 * (1 - e1)); ctx.fillStyle = rgba(TEAL, 0.5 * pK); ctx.fill(); }
     const tp = seg(t, CUE.why, CUE.sat0);
     for (const p of PLOTS) { const on = clamp01((tp * 1.3 - p.u * 0.95) * 6); if (on <= 0.01) continue;
-      ctx.strokeStyle = rgba(ICE, 0.95 * on * pK); lw(3); ctx.strokeRect((101 + p.c * 38.5) * sx, (373 + p.r * 36) * sy, 116 * sx, 108 * sy);
-      for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { circ(116 + (p.c + c) * 38.5, 392 + (p.r + r) * 36, 7.5); ctx.fillStyle = rgba(LEMON, 0.95 * on * pK); ctx.fill(); } }
-    // (b) a satellite map: cells shaded by how dense the trees are, a sweep, a lattice
+      ctx.strokeStyle = rgba(ICE, 0.95 * on * pK); lw(3); ctx.strokeRect((101 + p.c * 38.5) * sx, (337 + p.r * RS) * sy, 116 * sx, (RS * 3 - 6) * sy);
+      for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) { circ(116 + (p.c + c) * 38.5, 355 + (p.r + r) * RS + 14, 7.5); ctx.fillStyle = rgba(LEMON, 0.95 * on * pK); ctx.fill(); } }
+    // (b) a satellite map: arrives only when it is used; cells shaded by how dense the trees are, a sweep, a lattice
     const sK = fadeIn(t, CUE.sat0 - 0.1, 0.4) * pK, sw = E.inout3(seg(t, CUE.sat0, CUE.est0 - 0.1));
-    ctx.strokeStyle = rgba(TXT2, 0.5 * Math.max(sK, 0.45 * pK)); lw(2); ctx.strokeRect(90 * sx, 720 * sy, 810 * sx, 300 * sy);
-    ctx.fillStyle = rgba(TXT2, 0.07 * pK * (1 - sK)); ctx.fillRect(90 * sx, 720 * sy, 810 * sx, 300 * sy);
-    for (let i = 0; i < SAT.length; i++) { const x = i % 36, y = (i / 36) | 0, px = 90 + x * 22.5;
-      if (px > 90 + 810 * sw) continue;
-      ctx.fillStyle = rgba(TEAL, (0.1 + 0.8 * SAT[i]) * 0.85 * sK); ctx.fillRect((px + 1) * sx, (722 + y * 27) * sy, 20.5 * sx, 25 * sy); }
-    ctx.strokeStyle = rgba(TXT, 0.8 * sK * (1 - sw * 0.0)); lw(3); const lx = (90 + 810 * sw) * sx; ctx.beginPath(); ctx.moveTo(lx, 720 * sy); ctx.lineTo(lx, 1020 * sy); ctx.stroke();
+    if (sK > 0.01) {
+      ctx.strokeStyle = rgba(TXT2, 0.5 * sK); lw(2); ctx.strokeRect(90 * sx, 720 * sy, 810 * sx, 300 * sy);
+      for (let i = 0; i < SAT.length; i++) { const x = i % 36, y = (i / 36) | 0, px = 90 + x * 22.5;
+        if (px > 90 + 810 * sw) continue;
+        ctx.fillStyle = rgba(TEAL, (0.1 + 0.8 * SAT[i]) * 0.85 * sK); ctx.fillRect((px + 1) * sx, (722 + y * 27) * sy, 20.5 * sx, 25 * sy); }
+      ctx.strokeStyle = rgba(TXT, 0.8 * sK); lw(3); const lx = (90 + 810 * sw) * sx; ctx.beginPath(); ctx.moveTo(lx, 720 * sy); ctx.lineTo(lx, 1020 * sy); ctx.stroke();
+    }
     ctx.restore();
   }
   // 5. the tally: stars (lemon) and trees (teal), each dot = ten billion
   ctx.save();
-  { const zr = 1 + 0.7 * E.inout3(seg(t, CUE.range - 0.1, CUE.range + 1.2)) * (1 - E.inout3(seg(t, CUE.flip0 - 0.2, CUE.flip0 + 0.9))), gx = 540 * sx, gy = 670 * sy; ctx.transform(zr, 0, 0, zr, gx * (1 - zr), gy * (1 - zr)); }
+  { const zp = 1 + 0.14 * E.inout3(seg(t, CUE.est0 + 0.3, CUE.range)) * (1 - E.inout3(seg(t, CUE.flip0 - 0.2, CUE.flip0 + 0.9))), zr = zp * (1 + 0.55 * E.inout3(seg(t, CUE.range - 0.1, CUE.range + 1.2)) * (1 - E.inout3(seg(t, CUE.flip0 - 0.2, CUE.flip0 + 0.9)))), gx = 540 * sx, gy = 670 * sy; ctx.transform(zr, 0, 0, zr, gx * (1 - zr), gy * (1 - zr)); }
   const tOn = fadeIn(t, CUE.est0 + 0.5, 0.6) * (1 - fadeIn(t, CUE.rd - 0.3, 0.5));
   if (tOn > 0.01) {
     const flip = (rk) => clamp01((t - CUE.flip0 - (rk / NS) * 1.6) / 0.15);
     const blockK = E.out3(seg(t, CUE.range - 0.05, CUE.range + 0.5));            // the range block appears when "range" is said
     const dimK = E.inout3(seg(t, CUE.flip0 - 0.2, CUE.flip0 + 0.4));
     const shrink = 1 - 0.5 * E.inout3(seg(t, CUE.pass - 0.5, CUE.pass + 1.2));        // pull back to one tree
-    const base = 0.3 * (1 - 0.6 * dimK), dimTk = 1 - 0.7 * E.inout3(seg(t, CUE.pass - 0.5, CUE.pass + 1.0));
+    const base = 0.3 * (1 - 0.6 * dimK), dimTk = (1 - 0.7 * E.inout3(seg(t, CUE.pass - 0.5, CUE.pass + 1.0))) * (1 - fadeIn(t, CUE.big - 0.2, 0.9));
+    const sweepX = (t > CUE.est0 + 0.4 && t < CUE.range - 0.1) ? ((t - CUE.est0 - 0.4) / 1.7) % 1 : -1;      // a counting sweep across the dim tally
+    const blk40 = (t > CUE.ratio + 0.5 && t < CUE.tk - 0.2) ? Math.floor((t - CUE.ratio - 0.5) / 0.34) : -1;   // blocks of 40 dots (the high end: about 8)
+    const blk10 = (t > CUE.ratio + 0.5 + 8 * 0.34 + 0.2 && t < CUE.tk - 0.2) ? Math.floor((t - CUE.ratio - 0.5 - 8 * 0.34 - 0.2) / 0.075) : -1;   // blocks of 10 dots (the low end: about 30)
     const cx0 = (GX0 + GX1) / 2, cy0 = (GY0 + GY1) / 2;
     for (let i = 0; i < TL.trees; i++) {
       const rk = RANK[i], isStar = rk < NS;
@@ -219,6 +234,10 @@ function draw(t) {
       } else {
         const fl = E.out3(seg(t, CUE.over + ((rk - NS) / (TL.trees - NS)) * 2.3, CUE.over + ((rk - NS) / (TL.trees - NS)) * 2.3 + 0.5));
         a = base + (1 - base) * fl; col = TEAL;
+        const colF = ((i % TL.cols) + 0.5) / TL.cols;
+        if (sweepX >= 0) a = Math.max(a, 0.95 * Math.exp(-Math.pow((colF - sweepX) * 9, 2)));
+        if (blk40 >= 0 && Math.floor(rk / NS) === Math.min(blk40, 7)) { a = 1; r *= 1.18; }
+        if (blk10 >= 0 && Math.floor(rk / 10) === Math.min(blk10, 30)) { a = 1; col = LEMON; r *= 1.18; }
         if (t > CUE.est0 && t < CUE.flip0 - 1.2 && rk > TL.trees - 34) a = base * (0.6 + 0.4 * Math.sin(t * 5 + rk));   // the edge flickers: "about"
       }
       circ(x, y, r); ctx.fillStyle = rgba(col, a * tOn * dimTk); ctx.fill();
@@ -283,7 +302,7 @@ const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
 
 function makeLoop() {                                                            // frame 0's title, '?' counter and pills, cloned as they look at 1.5 s
   hud.update(1.5); tRing.update(1.5);
-  LOOPEL = [titleEl, CEL["c-hook"], PEL["p-trees0"], PEL["p-stars0"]].filter(Boolean).map((el) => { const c = el.cloneNode(true); c.removeAttribute("id"); c.style.opacity = "0"; c.style.visibility = "hidden"; el.parentNode.appendChild(c); return c; });
+  LOOPEL = [titleEl, CEL["c-hook"]].filter(Boolean).map((el) => { const c = el.cloneNode(true); c.removeAttribute("id"); c.style.opacity = "0"; c.style.visibility = "hidden"; el.parentNode.appendChild(c); return c; });
 }
 window.seek = function (t) {
   if (!LOOPEL) makeLoop();

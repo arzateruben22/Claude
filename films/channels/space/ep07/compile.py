@@ -95,14 +95,12 @@ LABELS = [
     {"id": "l-sun2", "text": "the Sun", "kind": "star", "anchor": "sun", "t0": CUE["ring0"], "t1": round(t_end - 0.45, 4), "side": 1, "v": "below", "fixed": True},
 ]
 PILLS = [
-    {"id": "p-trees0", "text": "trees", "t0": 0.0, "t1": round(t_n - 0.5, 4), "at": [200 / 1080, 0.262]},
-    {"id": "p-stars0", "text": "stars", "t0": 0.0, "t1": round(t_n - 0.5, 4), "at": [715 / 1080, 0.262]},
-    {"id": "p-halo", "text": "dark matter (illustration)", "t0": round(CUE["most"] + 0.2, 4), "t1": round(t_c - 0.4, 4), "at": [90 / 1080, 0.222]},
-    {"id": "p-dot", "text": "each dot = 10 billion", "t0": round(CUE["range"] - 0.2, 4), "t1": round(CUE["pass"] - 0.4, 4), "at": [90 / 1080, 0.222]},
+    {"id": "p-halo", "text": "dark matter (illustration)", "t0": round(CUE["most"] + 0.2, 4), "t1": round(t_c - 0.4, 4), "at": [90 / 1080, 0.47]},
+    {"id": "p-dot", "text": "each dot = 10 billion", "t0": round(CUE["range"] - 0.2, 4), "t1": round(CUE["pass"] - 0.8, 4), "at": [90 / 1080, 0.16]},
     {"id": "p-plots", "text": "ground plots: trees counted by people", "t0": round(t_why, 4), "t1": round(CUE["est0"] - 0.1, 4), "at": [110 / 1080, 0.187]},
     {"id": "p-sat", "text": "satellite map: trees from space", "t0": CUE["sat0"], "t1": round(CUE["est0"] - 0.1, 4), "at": [110 / 1080, 0.385]},
-    {"id": "p-one", "text": "one tree", "t0": round(CUE["pass"] - 0.3, 4), "t1": round(CUE["big"] - 0.2, 4), "at": [440 / 1080, 0.222]},
-    {"id": "p-street", "text": "ordinary places", "t0": round(CUE["big"] + 0.6, 4), "t1": round(t_rd - 0.3, 4), "at": [380 / 1080, 0.222]},
+    {"id": "p-one", "text": "one tree", "t0": round(CUE["pass"] - 0.3, 4), "t1": round(CUE["big"] - 0.2, 4), "at": [90 / 1080, 0.16]},
+    {"id": "p-street", "text": "ordinary places", "t0": round(CUE["big"] + 0.6, 4), "t1": round(t_rd - 0.3, 4), "at": [90 / 1080, 0.16]},
     {"id": "p-blk", "text": "a city block", "t0": round(CUE["blk"] - 0.3, 4), "t1": round(t_end - 0.45, 4), "at": [90 / 1080, 0.385]},
 ]
 BADGES = [
@@ -116,7 +114,7 @@ COUNTERS = [
     {"id": "c-hook", "label": "trees or stars", "text": "?", "t0": 0.0, "t1": t_n},
     {"id": "c-stars", "label": "stars in the Milky Way", "text": "100 to 400 billion", "t0": t_n, "t1": t_c},
     {"id": "c-trees", "label": "trees on Earth", "text": "about 3 trillion", "t0": t_c, "t1": CUE["per"] - 0.1},
-    {"id": "c-per", "label": "trees for every person", "text": "about 420", "t0": CUE["per"], "t1": round(t_why - 0.1, 4)},
+    {"id": "c-per", "label": "trees for every person (2015)", "text": "about 420", "t0": CUE["per"], "t1": round(t_why - 0.6, 4)},
     {"id": "c-est", "label": "both are", "text": "estimates", "t0": CUE["est0"], "t1": t_w},
     {"id": "c-ratio", "label": "trees ÷ stars", "text": "roughly 8 to 30", "t0": CUE["ratio"], "t1": t_rd},
     {"id": "c-read-gal", "label": "light time · across the galaxy", "text": "100,000 years", "read": True, "t0": t_rd, "t1": round(CUE["ring1"] - 0.05, 4)},
@@ -133,9 +131,10 @@ TITLE = {"series": "One More Orbit · S2E01", "title": "Trees or *stars*", "t1":
 END = {"title": "Next orbit: the *dark* sky", "follow": "One More Orbit · S2 · Episode 2",
        "next": "Our galaxy probably holds 100 to 400\u00a0billion stars (NASA)."}   # footnote (c1)
 POSTER = A("vo05:thirty", 0.4)
-glue(f, {"vo02": ["hundreds of billions", "dark matter,"],
-         "vo03": ["twenty fifteen,", "three trillion."],
+glue(f, {"vo02": ["dark matter,"],
+         "vo03": ["at about three trillion."],
          "vo05": ["keep going.", "eight to thirty times."],
+         "vo06": ["stars in our galaxy."],
          "vo07": ["a millionth of a second."]})
 
 LOOP0 = round(f.duration - 0.6, 4)
@@ -146,7 +145,7 @@ film = {
     "tally": {"cols": COLS, "rows": ROWS, "unit_b": UNIT_B, "stars_lo": STARS_LO_B // UNIT_B, "stars_hi": STARS_HI_B // UNIT_B, "trees": TREES_B // UNIT_B},
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": PILLS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": hold(f, keep_units(f.captions(max_chars=24))),
+    "captions": hold(f, keep_units(f.captions(max_chars=24, written=False))),   # words in captions, figures on the counters: one style
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]
