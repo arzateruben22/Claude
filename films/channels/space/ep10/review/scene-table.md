@@ -21,3 +21,5 @@ One real 3-D world (black hole, probes, viewer and friend, three clocks, an Eart
 | 67.3 | Next: a planet that could float in a big enough tub. | End card; a dip, then frame 0's pose returns (SSIM 0.966) | end card |
 
 Measured: 73.6 s, render log 0 warnings, sound sync PASS, -14.1 LUFS. Nothing is claimed about the inside of a black hole.
+
+Round 2 (9 Nov): the friend is "hovering close" (a freely falling friend does not see the universe race by); "To someone hovering close, everyone else seems to speed up. The closer they hover, the bigger the gap."; the GPS satellite orbits at about 4.2 Earth radii; counters sit on dark plates; the "you · your friend" counter is gone; bar labels are 40 px with 36 px bars; clocks pulled toward the middle with the "clocks tick slower" counter held through "Now compare the two views"; tease "Next: a planet lighter than water."; the illustration badge appears at 3.2 s so it never touches the series line. Render log 0 warnings, sync PASS.

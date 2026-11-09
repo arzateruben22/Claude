@@ -92,7 +92,7 @@ PILLS = [
     {"id": "p-real", "text": "not real: gas would mix", "t0": round(CUE["mix"] - 0.1, 4), "t1": round(t_tk - 0.2, 4), "at": [90 / 1080, 0.175]},
 ]
 BADGES = [
-    {"id": "b-thought", "text": "thought experiment", "t0": 0.2, "t1": round(t_rd - 0.2, 4), "slot": "tr"},
+    {"id": "b-thought", "text": "thought experiment", "t0": 3.0, "t1": round(t_rd - 0.2, 4), "slot": "tr"},
     {"id": "b-nts", "text": "not to scale", "t0": round(t_rd, 4), "t1": round(t_end - 0.45, 4), "slot": "tr"},
 ]
 COUNTERS = [

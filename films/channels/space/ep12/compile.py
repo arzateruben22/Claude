@@ -88,7 +88,7 @@ PILLS = [
     {"id": "p-orb", "text": "seen from orbit (illustration)", "t0": round(CUE["orbiters"], 4), "t1": round(t_c - 0.3, 4), "at": [90 / 1080, 0.175]},
 ]
 BADGES = [
-    {"id": "b-illus", "text": "illustration", "t0": round(t_n - 0.3, 4), "t1": round(t_rd - 0.2, 4), "slot": "tr"},
+    {"id": "b-illus", "text": "illustration", "t0": round(t_n + 0.25, 4), "t1": round(t_rd - 0.2, 4), "slot": "tr"},
     {"id": "b-nts", "text": "not to scale", "t0": round(t_rd, 4), "t1": round(t_end - 0.45, 4), "slot": "tr"},
 ]
 COUNTERS = [
