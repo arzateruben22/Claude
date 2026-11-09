@@ -2966,7 +2966,7 @@ module from `claude/modes` merged in.
     2 and the party invites (S3a); the games' sounds (with S2a's audio); keyboard and gamepad shots (the drag, the
     flick and the swipe are pointer gestures; the hooks shoot for tests).
 
-### S3a: the crowd, staff, fillers and how people are drawn (built 2026-11-09, uncommitted; see PROJECT_OC_PROGRESS.md)
+### S3a: the crowd, staff, fillers and how people are drawn (done, committed 2026-11-09 after repair; see PROJECT_OC_PROGRESS.md)
 
 S3 is split, as S2 was: S3a fills the room and draws it within budget; S3b adds what people do with each other. Each
 ends with its own checks and its own budget run at the poses.
