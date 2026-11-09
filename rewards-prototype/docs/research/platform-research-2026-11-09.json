@@ -1,0 +1,1930 @@
+{
+ "generated": "2026-11-09",
+ "method": "One researcher per topic (official sources only) followed by an independent fact-checker per topic. Evidence tiers are recorded per claim.",
+ "topics": {
+  "yt_comments": {
+   "research": {
+    "claims": [
+     {
+      "id": "C1",
+      "question_index": 1,
+      "statement": "The comment resource identifies its author with snippet.authorDisplayName, snippet.authorProfileImageUrl, snippet.authorChannelUrl and snippet.authorChannelId.value; only authorChannelId.value is defined as the author's YouTube channel ID, and the authorChannelId object is documented as present only 'if any' (it can be absent).",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Contains the id of the author's YouTube channel, if any.",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "Match comments to members only by exact equality on snippet.authorChannelId.value, and treat a comment with no authorChannelId as unattributable (unverified)."
+     },
+     {
+      "id": "C2",
+      "question_index": 1,
+      "statement": "Google's 'Implementation: Comments' guide itself decides authorship by comparing a comment's snippet.authorChannelId.value with the authenticated user's channel ID; authorDisplayName is described only as 'The name of the user who posted the comment' and no official text seen calls it unique or immutable. (Guide wording seen only via search summary; display-name description read in the discovery document.)",
+      "source_url": "https://developers.google.com/youtube/data/guides/implementation/comments",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Channel-ID equality is the documented attribution test, so it can back a 'verified' label, while a display-name, avatar or URL-text match can never be more than 'unverified' or 'manually reviewed'."
+     },
+     {
+      "id": "C3",
+      "question_index": 2,
+      "statement": "The signed-in member's channel ID is obtained with channels.list and mine=true, which returns the channels owned by the authenticated user (the 'Work with Channel IDs' guide gives channels.list(part=\"id\", mine=true), per search summary); because it depends on the authenticated user it requires an OAuth token and cannot be done with an API key alone.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Return the ids of channels owned by the authenticated user.",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "A member's channel ID may only be treated as platform-attested when it comes from that member's own OAuth-authorized channels.list?mine=true response, not from a typed-in handle or URL."
+     },
+     {
+      "id": "C4",
+      "question_index": 2,
+      "statement": "channels.list accepts five OAuth scopes (youtube, youtube.force-ssl, youtube.readonly, youtubepartner, youtubepartner-channel-audit); youtube.readonly, described as 'View your YouTube account', is the narrowest read-only one, so it is the minimum scope for the mine=true lookup ('minimum' is a reading of the scope list, not a sentence in the docs).",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "View your YouTube account",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "Request only youtube.readonly at sign-in and use that token for nothing except the channel-ID lookup."
+     },
+     {
+      "id": "C5",
+      "question_index": 2,
+      "statement": "The docs seen do not define what mine=true returns for an account with no channel or with several channels: the response is described only as zero or more channel resources; the errors page documents 401 youtubeSignupRequired for an 'unlinked' Google Account that has no YouTube channel; YouTube Help says one Google Account can manage many Brand Account channels (up to 100) and that some third-party tools using API authentication do not support channel switching and fall back to a default channel.",
+      "source_url": "https://developers.google.com/youtube/v3/docs/errors",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "low",
+      "design_implication": "Handle empty items and youtubeSignupRequired as 'no channel linked, cannot verify', and show the returned channel to the member for confirmation instead of assuming it is the channel they comment from."
+     },
+     {
+      "id": "C6",
+      "question_index": 3,
+      "statement": "Neither commentThreads.list nor comments.list can filter by author channel: commentThreads.list accepts only part, allThreadsRelatedToChannelId, channelId, id, videoId, maxResults, moderationStatus, order, pageToken, searchTerms and textFormat; comments.list accepts only part, id, parentId, maxResults, pageToken and textFormat. The one content filter, searchTerms, matches key words, not authors, and cannot be combined with the id filter.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Limits the returned comment threads to those matching the specified key words. Not compatible with the 'id' filter.",
+      "basis": "inferred_from_absence",
+      "confidence": "high",
+      "design_implication": "To show that channel X commented on video V the app must page commentThreads.list?videoId=V (optionally narrowed by searchTerms on text the member supplies) and compare authorChannelId.value itself; an incomplete scan must be reported as 'not checked fully', never as 'did not comment'."
+     },
+     {
+      "id": "C7",
+      "question_index": 3,
+      "statement": "The replies part of a commentThread contains only 'a limited number of replies' (no number is documented) and is complete only when its count equals snippet.totalReplyCount; the full reply list is retrieved with comments.list using parentId set to the top-level comment ID (the commentThreads reference says to use comments.list with parentId, per search summary).",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "A limited number of replies. Unless the number of replies returned equals total_reply_count in the snippet the returned replies are only a subset of the total number of replies.",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "Reply-type activity can only be confirmed by an extra comments.list?parentId= call for every thread whose embedded replies are fewer than totalReplyCount."
+     },
+     {
+      "id": "C8",
+      "question_index": 3,
+      "statement": "comments.list has no videoId parameter: its parentId parameter returns replies to one specified comment, and YouTube is documented as having only one level of replies (replies to top-level comments), with a note that replies to replies may be supported in the future.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Returns replies to the specified comment. Note, currently YouTube features only one level of replies (ie replies to top level comments).",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "Finding a member's reply requires first enumerating the video's threads and then expanding each thread, so reply verification costs at least one extra call per expanded thread."
+     },
+     {
+      "id": "C9",
+      "question_index": 4,
+      "statement": "The API overview and authorization guide state the general rule that every request must carry either an API key or an OAuth 2.0 token, that API keys are for public data, and that OAuth is required for private user data and for insert/update/delete; reading published comments of a public video with an API key alone follows from that rule, but the comment reference pages were not seen stating it explicitly.",
+      "source_url": "https://developers.google.com/youtube/v3/getting-started",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Read comments server-side with the project's API key so that verification never depends on, or exposes, a member's token."
+     },
+     {
+      "id": "C10",
+      "question_index": 4,
+      "statement": "When commentThreads.list or comments.list is called with OAuth instead of an API key, the only scope listed for both methods is youtube.force-ssl, which grants 'See, edit, and permanently delete your YouTube videos, ratings, comments and captions'; youtube.readonly is not listed for these two methods.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "See, edit, and permanently delete your YouTube videos, ratings, comments and captions",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "Do not read comments with a member's OAuth token, because that would require asking three members for a write-and-delete scope the dashboard has no need for."
+     },
+     {
+      "id": "C11",
+      "question_index": 4,
+      "statement": "Documented errors (per search summaries): commentThreads.list returns 403 commentsDisabled when the video identified by videoId has disabled comments, 404 videoNotFound, 404 channelNotFound, 400 processingFailure and 400 operationNotSupported; comments.list returns 400 operationNotSupported, 403 forbidden (insufficient permissions or not properly authorized) and 404 commentNotFound. The errors index also lists 403 forbidden and 404 commentThreadNotFound for commentThreads.list, and the summaries disagree on whether the method page lists those two.",
+      "source_url": "https://developers.google.com/youtube/v3/docs/commentThreads/list",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Map each error to its own non-verified state (comments disabled, video not found, not permitted, retry later) and never collapse an error into 'member did not comment'."
+     },
+     {
+      "id": "C12",
+      "question_index": 5,
+      "statement": "commentThreads.list moderationStatus defaults to published (discovery document: default 'published', 'The comment is available for public display.'), so a normal listing returns only publicly displayed comments; per search summaries of the reference pages, the parameter 'can only be used in a properly authorized request' to fetch heldForReview or likelySpam threads, and snippet.moderationStatus is returned only when the request is authorized by the owner of the channel or video the comments are on.",
+      "source_url": "https://developers.google.com/youtube/v3/docs/commentThreads/list",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "A member's comment that is held for review or flagged as likely spam is invisible to this app, so 'not found' must be worded as 'no public comment found', not as proof that nothing was posted."
+     },
+     {
+      "id": "C13",
+      "question_index": 5,
+      "statement": "The docs describe no tombstone or 'deleted' state for comments: a video with comments disabled produces 403 commentsDisabled rather than an empty list, and a comment that is later deleted, rejected or held simply stops appearing in the default published listing (a lookup by ID is documented to return 404 commentNotFound when a comment cannot be found). The app cannot distinguish deleted from hidden from never-posted.",
+      "source_url": "https://developers.google.com/youtube/v3/docs/comments/list",
+      "quote": "",
+      "basis": "inferred_from_absence",
+      "confidence": "medium",
+      "design_implication": "Record a verification as a dated observation (comment ID, publishedAt, time checked) and on later disappearance show 'no longer publicly visible' instead of asserting deletion or silently keeping a live 'verified' badge."
+     },
+     {
+      "id": "C14",
+      "question_index": 6,
+      "statement": "The official API description does not address Shorts for comments: the only occurrence of 'Shorts' in the v3 discovery document (revision 20261106) is an image aspect-ratio description, commentThreads.list takes a generic videoId, and search of the reference pages found Shorts mentioned only for viewCount semantics. That Shorts use the same video IDs and the same comment endpoints as regular videos is therefore inferred, not stated.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Returns the comment threads of the specified video.",
+      "basis": "inferred_from_absence",
+      "confidence": "medium",
+      "design_implication": "Route Shorts through the same code path but confirm with a real request against a known Short before labelling Shorts comment activity 'verified'."
+     },
+     {
+      "id": "C15",
+      "question_index": 7,
+      "statement": "Default quota, per search summaries of the overview page and revision history: 10,000 units per day combined for all endpoints other than search.list and videos.insert, which since a June 1, 2026 'granular quota' change each have their own bucket of 100 calls per day; daily quota resets at midnight Pacific Time and the default is stated to be subject to change.",
+      "source_url": "https://developers.google.com/youtube/v3/getting-started",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "All comment, channel and video reads share one 10,000-unit daily bucket, so the app should avoid search.list entirely and budget thread scans against that bucket."
+     },
+     {
+      "id": "C16",
+      "question_index": 7,
+      "statement": "Per search summaries of the Quota Calculator and method pages, commentThreads.list, comments.list, channels.list and videos.list each cost 1 quota unit per call (each page is a call), every request including an invalid one costs at least one unit, and an exhausted quota returns HTTP 403 with reason quotaExceeded.",
+      "source_url": "https://developers.google.com/youtube/v3/determine_quota_cost",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "On quotaExceeded the app must stop and show 'check not completed, will retry after quota reset' rather than downgrading or upgrading any label."
+     },
+     {
+      "id": "C17",
+      "question_index": 7,
+      "statement": "maxResults limits read from the discovery document: commentThreads.list 1-100 (default 20), comments.list 1-100 (default 20), channels.list 0-50 (default 5), videos.list 1-50 (default 5, and not supported together with the id parameter).",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "The *maxResults* parameter specifies the maximum number of items that should be returned in the result set.",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "A full scan of a video with T top-level threads costs about ceil(T/100) units plus at least one unit per expanded reply thread, so scans of very large videos need a cap and an explicit 'scan incomplete' outcome."
+     },
+     {
+      "id": "C18",
+      "question_index": 8,
+      "statement": "Revision-history entries for 2025-2026 reported by search summaries: September 30, 2026 added snippet.imageUrl to the comments resource (the property is confirmed in the discovery document as a signed link that expires six hours after retrieval); March 31, 2025 changed Shorts view counting in videos/channels statistics.viewCount; an August 2026 entry (summaries give both August 24 and August 27) redefines viewCount to count a view when playback begins. No surfaced entry changes the author fields or the list parameters of comments, commentThreads or channels.",
+      "source_url": "https://developers.google.com/youtube/v3/revision_history",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "low",
+      "design_implication": "Attribution logic is unaffected, but imageUrl values must not be stored, image-only comments must be tolerated, and displayed view counts should be labelled 'as reported by YouTube on <date>' because their definition changed in 2025 and 2026."
+     }
+    ],
+    "unanswered": [
+     "Evidence limitation (applies to every claim marked search_summary_only): developers.google.com and support.google.com could not be opened from this session (host not resolvable under the sandbox network policy), so those pages were seen only as search summaries. Both hosts need to be allowed in the session's network settings to upgrade those claims to verbatim quotes. Verbatim quotes come from the official machine-readable API description at https://youtube.googleapis.com/$discovery/rest?version=v3 (revision 20261106), saved at /tmp/claude-0/-home-user-Claude/ad46d837-1ede-5250-ac38-5578aa78e1ef/scratchpad/yt_disc/youtube_v3_discovery.json.",
+     "Q2 (several channels / Brand Accounts): no official page seen states which channel, or how many, channels.list?mine=true returns when one Google Account manages several channels, nor whether the OAuth consent step binds the token to a single chosen channel. Needs a live test with a multi-channel account.",
+     "Q2 (no channel): not confirmed whether mine=true returns an empty items list or a 401 youtubeSignupRequired error for a Google Account without a channel; the docs seen only describe the response as zero or more channels and document the error generally.",
+     "Q3: the exact number of replies embedded in the commentThreads replies part is not documented; the docs say only 'a limited number'. Whether searchTerms also matches text inside replies is not stated.",
+     "Q4: whether the commentThreads.list and comments.list reference pages carry an explicit statement that an API key is sufficient was not confirmed; only the general API-key rule was seen. Search summaries also conflict on whether 403 forbidden and 404 commentThreadNotFound appear in the commentThreads.list error table or only in the errors index.",
+     "Q5: no documentation found on what the API returns for deleted comments beyond 404 commentNotFound on ID lookup, or on whether a member can see their own held-for-review comment through the API. Also unresolved: the discovery document lists a fourth moderationStatus enum value 'rejected' while its parameter description says valid values are published, heldForReview, likelySpam.",
+     "Q6: official docs do not address Shorts for comment endpoints at all; same-ID / same-endpoint behaviour is inference only.",
+     "Q7: the Quota Calculator table itself was not read; the 1-unit costs, the 10,000-unit default, the midnight Pacific reset and the June 1, 2026 granular-quota change come from consistent search summaries only. Which bucket a quotaExceeded error refers to after the granular change was not confirmed.",
+     "Q8: the revision history page was not read in full, so the list of 2025-2026 entries may be incomplete. Other entries surfaced by summaries (not comment-related): December 4, 2025 video upload cost reduced to about 100 units; June 3, 2026 new videos.batchGetStats method (method confirmed present in the discovery document); November 2, 2026 change for uploads from unverified projects. The August 2026 viewCount entry is dated August 24 in one summary and August 27 in another."
+    ]
+   },
+   "verification": {
+    "verdicts": [
+     {
+      "id": "C1",
+      "verdict": "confirmed",
+      "corrected_statement": "",
+      "evidence_quote": "Contains the id of the author's YouTube channel, if any.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "Verbatim in the CommentSnippetAuthorChannelId schema. The value property is described as 'The id of the author's YouTube channel.' The authorChannelId property is a $ref with no description of its own, so the 'if any' wording sits on the object. authorDisplayName is 'The name of the user who posted the comment.' authorChannelUrl is 'Link to the author's YouTube channel, if any.' The docs do not call any of these stable or unique."
+     },
+     {
+      "id": "C2",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "The name of the user who posted the comment.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The Implementation: Comments guide (developers.google.com) could not be fetched: getaddrinfo ENOTFOUND developers.google.com. The authorDisplayName description wording is confirmed verbatim in the discovery document. The guide's channel-ID comparison is not verified."
+     },
+     {
+      "id": "C3",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The channels.list method description and its mine parameter were not read verbatim. A model summary of the discovery document reports 'Return the ids of channels owned by the authenticated user.', but that is not verbatim text. The OAuth requirement and the Work with Channel IDs guide are not verified. The channels.list scope array was read verbatim (see C4)."
+     },
+     {
+      "id": "C4",
+      "verdict": "confirmed",
+      "corrected_statement": "",
+      "evidence_quote": "https://www.googleapis.com/auth/youtube.readonly",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "A verbatim scopes array, followed by flatPath youtube/v3/channels and then the update method, lists exactly five scopes: youtube, youtube.force-ssl, youtube.readonly, youtubepartner, youtubepartner-channel-audit. The description 'View your YouTube account' was not read verbatim. Calling youtube.readonly the minimum is an inference from the list."
+     },
+     {
+      "id": "C5",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The errors page (developers.google.com) could not be fetched (ENOTFOUND). The channels.list mine description was not read verbatim, so the docs' treatment of zero, one, or many channels is not verified."
+     },
+     {
+      "id": "C6",
+      "verdict": "partially_correct",
+      "corrected_statement": "Verbatim, commentThreads.list accepts exactly: part, allThreadsRelatedToChannelId, channelId, id, videoId, maxResults, moderationStatus, order, pageToken, searchTerms, textFormat. There is no author-channel filter. searchTerms is 'Limits the returned comment threads to those matching the specified key words. Not compatible with the 'id' filter.' The comments.list parameter list was not read verbatim (that method was not reached), so the claim about comments.list is unverified.",
+      "evidence_quote": "Limits the returned comment threads to those matching the specified key words. Not compatible with the 'id' filter.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The commentThreads.list parameter list in the claim matches the verbatim method block exactly. comments.list was not reached, and the commentThreads.list reference page could not be fetched."
+     },
+     {
+      "id": "C7",
+      "verdict": "partially_correct",
+      "corrected_statement": "The replies object 'contains a limited number of replies (if any) to the top level comment found in the snippet.' No number is given. The completeness test against totalReplyCount is not verified verbatim: it comes from a model summary of the CommentThreadReplies schema, not from the verbatim text. The comments.list parentId retrieval is also unverified.",
+      "evidence_quote": "The replies object contains a limited number of replies (if any) to the top level comment found in the snippet.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The limited-replies wording is confirmed verbatim in the CommentThread resource. The CommentThreadReplies schema and the comments.list method were not read verbatim."
+     },
+     {
+      "id": "C8",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The comments.list method and its parentId description were not read verbatim. The 'one level of replies' note is not verified. The verbatim CommentSnippet says only: 'The unique id of the top-level comment, only set for replies.' Also, the summary-only comments.list parameter list is not verified. The comments/list reference page was not reachable."
+     },
+     {
+      "id": "C9",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The getting-started page (developers.google.com) could not be fetched (ENOTFOUND). The discovery document has no statement about API keys versus OAuth. The API-key rule is not verified."
+     },
+     {
+      "id": "C10",
+      "verdict": "partially_correct",
+      "corrected_statement": "For commentThreads.list, the verbatim scopes array lists only https://www.googleapis.com/auth/youtube.force-ssl, so youtube.readonly is not listed for it. The comments.list scope list was not read verbatim. The description 'See, edit, and permanently delete your YouTube videos, ratings, comments and captions' was not read verbatim.",
+      "evidence_quote": "https://www.googleapis.com/auth/youtube.force-ssl",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "Verified for commentThreads.list only. The comments.list scope is not verified verbatim. The claim's description text was not read verbatim."
+     },
+     {
+      "id": "C11",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The commentThreads/list page (developers.google.com) could not be fetched (ENOTFOUND). The discovery document read did not include any error table or error-reason text for these methods, so none of the error codes are verified."
+     },
+     {
+      "id": "C12",
+      "verdict": "partially_correct",
+      "corrected_statement": "commentThreads.list moderationStatus defaults to 'published'. Its description reads 'Limits the returned comment threads to those with the specified moderation status. Not compatible with the 'id' filter. Valid values: published, heldForReview, likelySpam.' The enum also includes 'rejected'. The 'properly authorized request' condition does not appear in this parameter's description. The discovery document says of snippet.moderationStatus: 'Will not be set if the comments were requested through the id filter.' It does not say that owner authorization is required.",
+      "evidence_quote": "The comment's moderation status. Will not be set if the comments were requested through the id filter.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "Default 'published' and the per-value enumDescriptions are verbatim ('The comment is available for public display.', 'The comment is awaiting review by a moderator.', 'The comment is unfit for display.'). The owner-authorization and properly-authorized-request conditions are not in the discovery text read. The reference page could not be fetched."
+     },
+     {
+      "id": "C13",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The verbatim Comment and CommentSnippet schemas describe no deleted or tombstone state. The commentsDisabled and commentNotFound error docs (developers.google.com) could not be fetched, so the absence claim is not verified."
+     },
+     {
+      "id": "C14",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "The Shorts aspect ratio (9:16) image for this resource.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "Verbatim, the only Shorts text I read is in ThumbnailDetails.shortsAspectRatio, an image property. commentThreads.list videoId is verbatim: 'Returns the comment threads of the specified video.' I read only part of the 524 KB discovery document verbatim, so 'the only occurrence' cannot be confirmed. The reference pages were not reachable. Shorts equivalence is not stated in anything I read."
+     },
+     {
+      "id": "C15",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The determine_quota_cost and getting-started pages (developers.google.com) could not be fetched (ENOTFOUND). The discovery document gives no 10,000-unit default and no granular-quota text. The only quota figure I read verbatim for a comment method is commentThreads.insert, which costs 2 units (see missed_facts)."
+     },
+     {
+      "id": "C16",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The determine_quota_cost page (developers.google.com) could not be fetched (ENOTFOUND). Per-method costs for commentThreads.list, comments.list, channels.list and videos.list are not verified. The discovery document does not state them."
+     },
+     {
+      "id": "C17",
+      "verdict": "partially_correct",
+      "corrected_statement": "Verbatim: commentThreads.list maxResults minimum 1, maximum 100, default 20. videos.list maxResults minimum 1, maximum 50, default 5, and it is not supported with the id parameter. comments.list (1-100, default 20) and channels.list (0-50, default 5) were not read verbatim.",
+      "evidence_quote": "The *maxResults* parameter specifies the maximum number of items that should be returned in the result set.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The videos.list and commentThreads.list values are verbatim. The comments.list and channels.list values come from a model summary of the discovery document, not from verbatim text."
+     },
+     {
+      "id": "C18",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "Output only. The URL of the image or animated GIF attached to the comment, if any.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The revision-history page (developers.google.com) could not be fetched (ENOTFOUND). The discovery document's CommentSnippet.imageUrl verbatim text confirms the six-hour signed-link TTL. The discovery document's revision value (20261106) was not read verbatim. Dated entries for 2025-2026 are not verified."
+     }
+    ],
+    "missed_facts": [
+     {
+      "statement": "commentThreads.list moderationStatus enum includes 'rejected', but its description lists only published, heldForReview and likelySpam as valid values.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Valid values: published, heldForReview, likelySpam."
+     },
+     {
+      "statement": "The commentThreads.list moderationStatus description is 'Limits the returned comment threads to those with the specified moderation status.' with default 'published'.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Limits the returned comment threads to those with the specified moderation status."
+     },
+     {
+      "statement": "The comment resource's snippet.moderationStatus is documented as not set when comments are requested through the id filter; this is the only condition stated.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "The comment's moderation status. Will not be set if the comments were requested through the id filter."
+     },
+     {
+      "statement": "commentThreads.list accepts only one scope in the discovery document, youtube.force-ssl.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "https://www.googleapis.com/auth/youtube.force-ssl"
+     },
+     {
+      "statement": "commentThreads.list maxResults has minimum 1, maximum 100, default 20.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "The *maxResults* parameter specifies the maximum number of items that should be returned in the result set."
+     },
+     {
+      "statement": "The commentThreads.list videoId parameter is described as returning the threads of the specified video.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Returns the comment threads of the specified video."
+     },
+     {
+      "statement": "commentThreads.list has an allThreadsRelatedToChannelId parameter that returns threads for all videos of a channel plus channel comments; it is a channel-wide scan option, not an author filter.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Returns the comment threads of all videos of the channel and the channel comments as well."
+     },
+     {
+      "statement": "The replies object is limited (its count is not stated), so a thread's replies may be incomplete.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "The replies object contains a limited number of replies (if any) to the top level comment found in the snippet."
+     },
+     {
+      "statement": "The docs quote a quota cost of 2 units for commentThreads.insert with the snippet part. This is the only comment-method quota figure in the discovery document I read; it is not a list method.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "The snippet part has a quota cost of 2 units."
+     },
+     {
+      "statement": "videos.list maxResults is not supported in conjunction with the id parameter.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "it is not supported for use in conjunction with the"
+     },
+     {
+      "statement": "A Shorts reference in the discovery document is an image property (shortsAspectRatio, 9:16); it says nothing about comments or video IDs.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "The Shorts aspect ratio (9:16) image for this resource."
+     },
+     {
+      "statement": "channels.list accepts the youtube.readonly scope along with youtube, youtube.force-ssl, youtubepartner and youtubepartner-channel-audit.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "https://www.googleapis.com/auth/youtube.readonly"
+     },
+     {
+      "statement": "The comment imageUrl is a signed link with a six-hour time to live, which matters for not storing it.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "The URL is served as a signed link with a six-hour time to live (TTL) and expires six hours after retrieval."
+     }
+    ],
+    "pages_that_failed_to_load": [
+     "https://developers.google.com/youtube/v3/docs/comments (getaddrinfo ENOTFOUND developers.google.com; permanent DNS failure, not retried)",
+     "https://developers.google.com/youtube/v3/docs/comments/list (getaddrinfo ENOTFOUND developers.google.com; not retried)",
+     "https://developers.google.com/youtube/v3/docs/commentThreads (getaddrinfo ENOTFOUND developers.google.com; not retried)",
+     "https://developers.google.com/youtube/v3/docs/commentThreads/list (getaddrinfo ENOTFOUND developers.google.com; not retried)",
+     "https://developers.google.com/youtube/v3/docs/channels/list (getaddrinfo ENOTFOUND developers.google.com; not retried)",
+     "https://developers.google.com/youtube/v3/determine_quota_cost (getaddrinfo ENOTFOUND developers.google.com; not retried)",
+     "https://developers.google.com/youtube/v3/getting-started (getaddrinfo ENOTFOUND developers.google.com; not retried)",
+     "https://developers.google.com/youtube/v3/revision_history (getaddrinfo ENOTFOUND developers.google.com; not retried)",
+     "Also: the discovery document https://youtube.googleapis.com/$discovery/rest?version=v3 loaded (HTTP 200) but is 524,199 characters and was read verbatim only in chunks at offsets 0, 39927, 139927, 179854, 239927, 339927, 379854 and 419854; the rest of the text is model-extracted summary only. The unread verbatim ranges include roughly 219781-239927, 279854-339927 and 459781-524199."
+    ],
+    "webFetchSavedFiles": {
+     "dirs": [
+      "/root/.claude/projects/-home-user-Claude/ad46d837-1ede-5250-ac38-5578aa78e1ef/tool-results"
+     ],
+     "paths": []
+    }
+   }
+  },
+  "yt_likes": {
+   "research": {
+    "claims": [
+     {
+      "id": "C1",
+      "question_index": 1,
+      "statement": "No method in the YouTube Data API v3 returns the users who liked (or otherwise rated) a given video. The docs do not state this outright; it is inferred from absence: the official API discovery document (revision 20261108) lists exactly eight videos methods (batchGetStats, delete, getRating, insert, list, rate, reportAbuse, update) and, across all 89 methods of all resources, the only rating-read method is videos.getRating, which is scoped to the authorizing user.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Retrieves the ratings that the authorized user gave to a list of specified videos.",
+      "basis": "inferred_from_absence",
+      "confidence": "high",
+      "design_implication": "The app can never show or verify 'who liked video V' from the video side; any like attribution must come from each member's own authorization."
+     },
+     {
+      "id": "C2",
+      "question_index": 2,
+      "statement": "videos.getRating returns, for each requested video ID, the rating given by the user who authorized the request (response items of {videoId, rating}; rating enum in the discovery document is none / like / dislike). The developers.google.com reference page reportedly also lists a fourth value 'unspecified' (search summary only).",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Retrieves the ratings that the authorized user gave to a list of specified videos.",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "A 'like' result is an attestation about the consenting account only, and only 'like' (not none/unspecified/error) may map to a verified label."
+     },
+     {
+      "id": "C3",
+      "question_index": 2,
+      "statement": "As of discovery revision 20261108, videos.getRating accepts four OAuth scopes: youtube, youtube.force-ssl, youtube.readonly and youtubepartner (videos.rate, the write method, does not list youtube.readonly).",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "https://www.googleapis.com/auth/youtube.readonly",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "The app can request the read-only scope alone for like checks and never needs a scope that would let it rate, post or manage on the member's behalf."
+     },
+     {
+      "id": "C4",
+      "question_index": 2,
+      "statement": "The YouTube Data API revision history reportedly carries an entry dated September 1, 2026 stating that videos.getRating now accepts the youtube.readonly authorization scope (previously only youtube, youtube.force-ssl and youtubepartner). The date was seen in two independent search summaries, not in the page text; the resulting scope list itself is confirmed verbatim by the discovery document (C3).",
+      "source_url": "https://developers.google.com/youtube/v3/revision_history",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Older guidance saying a write-capable scope is required for getRating is outdated; design the consent screen around youtube.readonly but confirm the dated entry on the live page."
+     },
+     {
+      "id": "C5",
+      "question_index": 3,
+      "statement": "videos.list with myRating returns only videos liked/disliked by the authenticated (authorizing) user; the method has no parameter for naming another user (its full parameter set is chart, hl, id, locale, maxHeight, maxResults, maxWidth, myRating, onBehalfOfContentOwner, pageToken, part, regionCode, videoCategoryId). Search summaries of the reference page add that myRating can only be used in a properly authorized request and otherwise yields a 403 forbidden error.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Return videos liked/disliked by the authenticated user.",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "A member's liked-video list is readable only with that member's own token; the app cannot audit a non-consenting person's likes."
+     },
+     {
+      "id": "C6",
+      "question_index": 3,
+      "statement": "The liked-videos playlist (channel contentDetails.relatedPlaylists.likes, readable via playlistItems.list) is private to the account owner according to YouTube Help ('only you will be able to see this playlist'), and playlistItems.list documents a 403 playlistItemsNotAccessible error for requests not authorized to retrieve a playlist; so another user's liked playlist is not readable without that user's authorization. The API docs do not spell out which error a third-party request for someone else's likes playlist returns.",
+      "source_url": "https://support.google.com/youtube/answer/6336092",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "The playlist route offers no third-party visibility either; it is just a second way to read the consenting member's own likes."
+     },
+     {
+      "id": "C7",
+      "question_index": 4,
+      "statement": "statistics.likeCount, viewCount and commentCount on the video resource are aggregate totals only; the VideoStatistics schema contains just likeCount, dislikeCount, favoriteCount (deprecated), commentCount and viewCount, with no per-user breakdown. The same aggregate-only shape applies to the newer videos.batchGetStats method (up to 50 IDs per call).",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "The number of users who have indicated that they liked the video by giving it a positive rating.",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "Counts may be displayed as informational statistics but can never support a claim that a specific member contributed to them."
+     },
+     {
+      "id": "C8",
+      "question_index": 4,
+      "statement": "Setting status.publicStatsViewable to false does not remove view or like counts; it only governs the extended statistics on the watch page.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Note that the view count, likes, etc will still be visible if this is disabled.",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "Do not use publicStatsViewable as the signal for whether likeCount will be present; it is unrelated to like-count hiding."
+     },
+     {
+      "id": "C9",
+      "question_index": 4,
+      "statement": "YouTube Help ('Edit video settings', Comments and ratings section) documents a creator setting controlling whether viewers can see a video's like count, but no official API page that could be consulted states whether statistics.likeCount is then omitted from videos.list. The only documented owner-only statistic is dislikeCount (private since December 13, 2021, returned only when the request is authenticated by the video owner). Omission of likeCount when likes are hidden is reported in practice by third-party sources only.",
+      "source_url": "https://support.google.com/youtube/answer/57404",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "low",
+      "design_implication": "Treat likeCount as an optional field and render 'hidden by owner / unavailable' rather than 0 when it is absent."
+     },
+     {
+      "id": "C10",
+      "question_index": 4,
+      "statement": "The Data API revision history reportedly has an August 2026 entry (dated August 27, 2026 in the revision history; the videos and channels reference pages reportedly cite August 24, 2026) saying YouTube aligns public view counting across long-form, Live and Shorts so a public view is counted when a video begins to play; no 2025-2026 entry changing statistics.likeCount was found.",
+      "source_url": "https://developers.google.com/youtube/v3/revision_history",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "low",
+      "design_implication": "viewCount is a platform-defined aggregate whose definition changed in 2026, so label it as YouTube's public view count and avoid comparing pre- and post-change figures as like-for-like."
+     },
+     {
+      "id": "C11",
+      "question_index": 5,
+      "statement": "With a member's own OAuth 2.0 consent the app can check that member's rating of video V by calling videos.getRating with id=V using that member's access token; it requires user authorization (an API key alone is insufficient) under one of the scopes youtube, youtube.force-ssl, youtube.readonly or youtubepartner, and the result reflects the consenting Google account's rating at the moment of the call.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Retrieves the ratings that the authorized user gave to a list of specified videos.",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "'Verified' is honest only as 'the YouTube account this member connected had rating=like on V when checked at <timestamp>'; it must be re-checked or time-stamped because a like can be removed later."
+     },
+     {
+      "id": "C12",
+      "question_index": 5,
+      "statement": "Google's OAuth documentation says a project whose publishing status is 'Testing' is limited to 100 listed test users and that test-user authorizations (including refresh tokens) expire seven days after consent when the app requests scopes beyond openid/email/profile; public apps requesting sensitive or restricted scopes require Google verification.",
+      "source_url": "https://support.google.com/cloud/answer/15549945",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "A three-member app can run unverified in Testing mode but members must re-consent weekly, so stale verifications must degrade to 'unverified / needs re-check' instead of remaining 'verified'."
+     },
+     {
+      "id": "C13",
+      "question_index": 6,
+      "statement": "subscriptions.list with mine=true plus forChannelId=<channel ID> returns the authorizing user's subscription(s) to those channels, so the app can check whether a consenting member is subscribed to a given channel; the method accepts the scopes youtube, youtube.force-ssl, youtube.readonly and youtubepartner. That an empty items list (rather than an error) means 'not subscribed' is inferred from the parameter description, not stated explicitly.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Return the subscriptions to the subset of these channels that the authenticated user is subscribed to.",
+      "basis": "stated_in_docs",
+      "confidence": "high",
+      "design_implication": "Subscription can be labelled verified only for a member who connected their own account, and only as of the check time; test the empty-result case against a known non-subscribed channel before relying on it."
+     },
+     {
+      "id": "C14",
+      "question_index": 6,
+      "statement": "A third party can query another channel's subscriptions with the channelId filter only if that channel publicly exposes its subscriptions; per the Subscriptions implementation guide the API returns 403 (subscriptionForbidden) when the specified channel does not publicly expose its subscriptions and the request is not authorized by the channel's owner.",
+      "source_url": "https://developers.google.com/youtube/v3/guides/implementation/subscriptions",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Without the member's own consent a subscription is at best 'unverified' (or observable only if they chose to make subscriptions public); a 403 must not be read as 'not subscribed'."
+     },
+     {
+      "id": "C15",
+      "question_index": 7,
+      "statement": "The videos.getRating reference page states a quota cost of 1 unit per call.",
+      "source_url": "https://developers.google.com/youtube/v3/docs/videos/getRating",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Per-member like checks are cheap enough to re-run on a schedule within the default 10,000 units/day allocation."
+     },
+     {
+      "id": "C16",
+      "question_index": 7,
+      "statement": "The videos.list reference page states a quota cost of 1 unit per call (a June 2026 revision reportedly moved only videos.insert and search.list into separate quota buckets; all other methods still draw on the existing shared bucket).",
+      "source_url": "https://developers.google.com/youtube/v3/docs/videos/list",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Refreshing aggregate statistics for a small set of videos is negligible quota-wise, so avoid search.list (far more expensive) for stats refreshes."
+     },
+     {
+      "id": "C17",
+      "question_index": 7,
+      "statement": "The subscriptions.list reference page states a quota cost of 1 unit per call.",
+      "source_url": "https://developers.google.com/youtube/v3/docs/subscriptions/list",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Subscription re-checks for three members cost a handful of units per day and need no quota extension or compliance audit."
+     },
+     {
+      "id": "C18",
+      "question_index": 8,
+      "statement": "The YouTube Analytics API (reports.query) returns result tables of metrics grouped by dimensions such as ageGroup, gender, country, video and subscribedStatus; no viewer-identity dimension appears in the API description or in the dimension lists seen via search summaries, so likes and views are not attributable to identifiable viewers. This is inferred from absence; the documentation pages describe dimensions as criteria used to aggregate data and were seen only as search summaries.",
+      "source_url": "https://youtubeanalytics.googleapis.com/$discovery/rest?version=v2",
+      "quote": "A comma-separated list of YouTube Analytics dimensions, such as `views` or `ageGroup,gender`.",
+      "basis": "inferred_from_absence",
+      "confidence": "medium",
+      "design_implication": "Analytics is usable only for channel-owner aggregate reporting (with a reportedly documented 48-72 hour data lag) and never as evidence that a particular member liked or viewed anything."
+     }
+    ],
+    "unanswered": [
+     "Evidence limitation: developers.google.com could not be opened from this session (WebFetch failed with getaddrinfo ENOTFOUND; the host has to be allowed in the session's network settings). Every claim sourced to developers.google.com or support.google.com therefore rests on search-engine summaries and carries an empty quote. Verbatim quotes come from the official machine-readable API descriptions that were reachable and read in full: https://youtube.googleapis.com/$discovery/rest?version=v3 and https://youtubeanalytics.googleapis.com/$discovery/rest?version=v2 (both revision 20261108), saved at /tmp/claude-0/-home-user-Claude/ad46d837-1ede-5250-ac38-5578aa78e1ef/scratchpad/yt_discovery/youtube_v3.json and /tmp/claude-0/-home-user-Claude/ad46d837-1ede-5250-ac38-5578aa78e1ef/scratchpad/yta_discovery/yta_v2.json.",
+     "Q4 (partly unanswered): whether statistics.likeCount is omitted from the API response when the owner hides the like count. No official API page seen states this; only dislikeCount is documented as owner-only. The field's absence when hidden is known from third-party reports only.",
+     "Q2: the exact wording and date of the 2026 revision-history entry adding youtube.readonly to videos.getRating (reported as September 1, 2026 by two search summaries) could not be read on the page itself; only the resulting scope list is confirmed verbatim.",
+     "Q2: the meaning of the 'unspecified' rating value reportedly listed on the getRating reference page is not explained in anything seen; the discovery document enumerates only none, like and dislike.",
+     "Q3: which specific error (403 playlistItemsNotAccessible, 404 playlistNotFound, or an empty list) a third-party request for another user's liked-videos playlist returns is not documented in anything seen.",
+     "Q4: the revision history and the reference pages reportedly give different dates (August 27 vs August 24, 2026) for the public view-counting change; not resolved.",
+     "Q5: whether videos.getRating works for a Google account that has no YouTube channel, and how brand-account / channel selection at consent affects whose rating is returned, was not found in official docs.",
+     "Q6: the docs do not explicitly say that mine=true with forChannelId returns an empty items list (rather than an error) when the member is not subscribed; this should be confirmed by a live test before a 'not subscribed' state is displayed.",
+     "Q7: the 1-unit quota costs for videos.getRating, videos.list and subscriptions.list were seen only in search summaries of the reference pages, not in page text; the docs also reportedly warn that quota costs can change without notice."
+    ]
+   },
+   "verification": {
+    "verdicts": [
+     {
+      "id": "C1",
+      "verdict": "partially_correct",
+      "corrected_statement": "The videos resource in the served v3 discovery document lists eight methods: list, rate, update, insert, batchGetStats, getRating, reportAbuse, delete. None of them lists the users who liked a video. But videos.list with myRating is also a rating-read method, scoped to the authorizing user, so 'the only rating-read method is videos.getRating' is wrong. The total of 89 methods was not verified, because only part of the discovery document was read.",
+      "evidence_quote": "Return videos liked/disliked by the authenticated user.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "Absence of a who-liked-this method is confirmed for the videos resource. The developers.google.com docs could not be read, so the docs' own wording on this point is unverified. The 89-method count and revision 20261108 were not checked against the v3 document."
+     },
+     {
+      "id": "C2",
+      "verdict": "partially_correct",
+      "corrected_statement": "videos.getRating returns, per video ID, the rating given by the authorizing user. The VideoRating schema enum is none, like, dislike, with enumDescriptions 'The entity is liked.' for like. The 'unspecified' fourth value on the reference page could not be checked because developers.google.com did not resolve.",
+      "evidence_quote": "\"enum\": [\"none\", \"like\", \"dislike\"]",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The getRating description 'Retrieves the ratings that the authorized user gave to a list of specified videos.' is verbatim. The VideoRating enum was read verbatim from the discovery document, in the chunk at offset 139927. The 'unspecified' value is unverifiable."
+     },
+     {
+      "id": "C3",
+      "verdict": "partially_correct",
+      "corrected_statement": "The videos.getRating scopes array in the served discovery document lists youtube, youtube.force-ssl, youtube.readonly and youtubepartner. videos.rate lists youtube, youtube.force-ssl and youtubepartner, without youtube.readonly. The discovery revision of the v3 document was not found in the read portions, so 'as of revision 20261108' is unverified for v3.",
+      "evidence_quote": "\"https://www.googleapis.com/auth/youtube.readonly\"",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "Scopes confirmed from the getRating and rate blocks at offset 340000. The revision 20261108 appears only in the YouTube Analytics v2 discovery document, not in the v3 document. The 2026 revision-history entry for getRating scopes could not be read."
+     },
+     {
+      "id": "C4",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "",
+      "note": "The revision history at developers.google.com/youtube/v3/revision_history failed to resolve (getaddrinfo ENOTFOUND). The dated September 1, 2026 entry could not be checked."
+     },
+     {
+      "id": "C5",
+      "verdict": "partially_correct",
+      "corrected_statement": "videos.list accepts myRating, which returns videos liked or disliked by the authenticated user. The description adds that it does not support RATED_TYPE_NONE. The parameter set matches the claim. The claim that a request without authorization yields a 403 is not confirmed from any page read.",
+      "evidence_quote": "Return videos liked/disliked by the authenticated user. Does not support RateType.RATED_TYPE_NONE.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The myRating description and parameter list were read verbatim at offset 340000. The 403 statement is unverifiable because the developers.google.com reference page did not load. The scopes for videos.list (youtube, youtube.force-ssl, youtube.readonly, youtubepartner) were also confirmed."
+     },
+     {
+      "id": "C6",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "",
+      "note": "Neither the YouTube Help page (support.google.com/youtube/answer/6336092) nor the playlistItems.list reference page (developers.google.com) could be read. Both hosts failed to resolve. The playlistItemsNotAccessible error and the privacy statement are unverified."
+     },
+     {
+      "id": "C7",
+      "verdict": "confirmed",
+      "corrected_statement": "",
+      "evidence_quote": "The number of IDs specified cannot exceed 50.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The batchGetStats 50-ID cap is verbatim. The likeCount description ('The number of users who have indicated that they liked the video by giving it a positive rating.') came from the model-extracted summary of the discovery document, not from verbatim text. The full VideoStatistics schema was not read verbatim."
+     },
+     {
+      "id": "C8",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "",
+      "note": "The status.publicStatsViewable description, including the 'view count, likes, etc will still be visible' sentence, was not reached in the read portions of the v3 discovery document. The developers.google.com videos resource page did not load."
+     },
+     {
+      "id": "C9",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "",
+      "note": "support.google.com/youtube/answer/57404 failed to resolve (ENOTFOUND). The claim that statistics.likeCount is omitted when likes are hidden, and the dislikeCount owner-only claim, could not be checked."
+     },
+     {
+      "id": "C10",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "",
+      "note": "The revision history (developers.google.com/youtube/v3/revision_history) failed to resolve, so the August 2026 view-counting entry could not be checked. The videos and channels reference pages also failed."
+     },
+     {
+      "id": "C11",
+      "verdict": "confirmed",
+      "corrected_statement": "",
+      "evidence_quote": "Retrieves the ratings that the authorized user gave to a list of specified videos.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The getRating description is verbatim. Its four OAuth scopes are listed and no API-key option appears in the method's scopes. 'Reflects the rating at the moment of the call' is an inference from the description, not stated by the page."
+     },
+     {
+      "id": "C12",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "",
+      "note": "support.google.com/cloud/answer/15549945 failed to resolve (ENOTFOUND). The 100-test-user limit and seven-day expiry could not be checked."
+     },
+     {
+      "id": "C13",
+      "verdict": "confirmed",
+      "corrected_statement": "",
+      "evidence_quote": "Return the subscriptions to the subset of these channels that the authenticated user is subscribed to.",
+      "evidence_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "note": "The forChannelId description came from the model-extracted summary of the discovery document at offset 340000, not from verbatim text. The four scopes are listed there. The claim that an empty list means 'not subscribed' is correctly marked as inferred. The developers.google.com subscriptions reference page did not load."
+     },
+     {
+      "id": "C14",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "",
+      "note": "The Subscriptions implementation guide sits on developers.google.com, which did not resolve. The 403 subscriptionForbidden behaviour could not be checked."
+     },
+     {
+      "id": "C15",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "",
+      "note": "The getRating quota cost is not in the discovery document portions read (no quota fields found), and the developers.google.com reference page did not resolve. Neither the 1-unit figure nor a different figure was confirmed."
+     },
+     {
+      "id": "C16",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "",
+      "note": "The videos.list quota cost and the June 2026 quota-bucket revision are on developers.google.com pages that did not resolve. Not checked."
+     },
+     {
+      "id": "C17",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "",
+      "note": "The subscriptions.list quota cost is on developers.google.com, which did not resolve. Not checked."
+     },
+     {
+      "id": "C18",
+      "verdict": "partially_correct",
+      "corrected_statement": "The Analytics v2 discovery document describes dimensions only by example ('views' or 'ageGroup,gender') and points to external Available Reports and Dimensions documents. It does not list the dimensions, so the absence of any viewer-identity dimension is inferred and not confirmed here. The 48-72 hour latency figure is unverified.",
+      "evidence_quote": "A comma-separated list of YouTube Analytics dimensions, such as `views` or `ageGroup,gender`.",
+      "evidence_url": "https://youtubeanalytics.googleapis.com/$discovery/rest?version=v2",
+      "note": "The dimensions quote is verbatim from the fully read v2 discovery document (revision 20261108). The reports.query description is 'Retrieve your YouTube Analytics reports.' The dimension list itself was not in the document."
+     }
+    ],
+    "missed_facts": [
+     {
+      "statement": "videos.list myRating parameter also states it does not support RATED_TYPE_NONE; relevant to C1 since videos.list is a second rating-read route for the authorizing user.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Does not support RateType.RATED_TYPE_NONE."
+     },
+     {
+      "statement": "videos.list pageToken and maxResults only work with myRating and chart, not with id.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "This parameter is supported for use in conjunction with the"
+     },
+     {
+      "statement": "videos.batchGetStats is documented as intentionally non-atomic and caps requests at 50 IDs, with scopes including youtube.readonly.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "BatchGetStats is intentionally not atomic to provide a better user experience."
+     },
+     {
+      "statement": "videos.rate (write method) scopes are youtube, youtube.force-ssl and youtubepartner, with no youtube.readonly scope, and it both adds and removes ratings.",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "Adds a like or dislike rating to a video or removes a rating from a video."
+     },
+     {
+      "statement": "The VideoRating enum descriptions define like as 'The entity is liked.' and dislike as 'The entity is disliked.'",
+      "source_url": "https://youtube.googleapis.com/$discovery/rest?version=v3",
+      "quote": "The entity is liked."
+     },
+     {
+      "statement": "The YouTube Analytics v2 reports.query scopes include yt-analytics.readonly and youtube.readonly; the revision is 20261108 for this API, which is not the v3 Data API revision.",
+      "source_url": "https://youtubeanalytics.googleapis.com/$discovery/rest?version=v2",
+      "quote": "https://www.googleapis.com/auth/yt-analytics.readonly"
+     },
+     {
+      "statement": "The Analytics reports.query ids parameter restricts channel-level data by channel==CHANNEL_ID or contentOwner==OWNER_NAME; the API describes no per-viewer identifiers.",
+      "source_url": "https://youtubeanalytics.googleapis.com/$discovery/rest?version=v2",
+      "quote": "To request data for a YouTube user, set the `ids` parameter value to `channel==CHANNEL_ID`"
+     },
+     {
+      "statement": "Analytics query responses for the day dimension omit the most recent days, which bears on data freshness for C18's latency claim.",
+      "source_url": "https://youtubeanalytics.googleapis.com/$discovery/rest?version=v2",
+      "quote": "The response for a query with the `day` dimension will not contain rows for the most recent days."
+     }
+    ],
+    "pages_that_failed_to_load": [
+     "https://developers.google.com/youtube/v3/docs/videos/getRating (getaddrinfo ENOTFOUND developers.google.com; permanent, not retried)",
+     "https://developers.google.com/youtube/v3/docs/videos/list (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/youtube/v3/docs/videos (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/youtube/data/guides/implementation/ratings (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/youtube/v3/docs/subscriptions/list (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/youtube/v3/docs/playlistItems/list (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/youtube/v3/revision_history (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/youtube/analytics/data_model (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/youtube/v3/guides/implementation/subscriptions (not attempted; same host as the failed developers.google.com pages)",
+     "https://support.google.com/youtube/answer/6336092 (getaddrinfo ENOTFOUND support.google.com)",
+     "https://support.google.com/youtube/answer/57404 (getaddrinfo ENOTFOUND support.google.com)",
+     "https://support.google.com/cloud/answer/15549945 (getaddrinfo ENOTFOUND support.google.com)",
+     "https://youtube.googleapis.com/$discovery/rest?version=v3 (fetched only in part: about 40k-character verbatim windows at offsets 0, 139927, 340000 and 440000, plus model summaries of the remainder; the v3 revision value and the 89-method total were not reached)"
+    ],
+    "webFetchSavedFiles": {
+     "dirs": [
+      "/root/.claude/projects/-home-user-Claude/ad46d837-1ede-5250-ac38-5578aa78e1ef/tool-results"
+     ],
+     "paths": []
+    }
+   }
+  },
+  "yt_policy": {
+   "research": {
+    "claims": [
+     {
+      "id": "C1",
+      "question_index": 1,
+      "statement": "YouTube's Fake engagement policy prohibits artificially increasing views, likes, comments or other metrics, and (as relayed by search-index excerpts of the page, not verified against the live page) states that content that solely exists to incentivize viewers for engagement (views, likes, comments, etc) is prohibited, and that engagement is illegitimate when it results from coercion or deception or when its sole purpose is financial gain.",
+      "source_url": "https://support.google.com/youtube/answer/3399767?hl=en",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "The dashboard must not award money, points or prizes in exchange for YouTube likes, comments, views or subscriptions; YouTube numbers should be shown as information only, never as a reward trigger."
+     },
+     {
+      "id": "C2",
+      "question_index": 1,
+      "statement": "The Fake engagement policy explicitly allows simply asking for engagement: search-index excerpts relay a note that creators are allowed to encourage viewers to subscribe, hit the like button, share or leave a comment, while offering to subscribe to another channel only if they subscribe back ('sub4sub') is prohibited.",
+      "source_url": "https://support.google.com/youtube/answer/3399767?hl=en",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "The app may remind members to ask their audience to like or comment, but must not build reciprocal or conditional engagement exchanges between members."
+     },
+     {
+      "id": "C3",
+      "question_index": 1,
+      "statement": "No carve-out permitting rewards in exchange for engagement was found in the Fake engagement or Spam policy excerpts, and the excerpts did not show the words money, points or prizes itemized individually; the prohibition is expressed generically as 'rewards', 'incentivize' and 'financial gain'.",
+      "source_url": "https://support.google.com/youtube/answer/3399767?hl=en",
+      "quote": "",
+      "basis": "inferred_from_absence",
+      "confidence": "low",
+      "design_implication": "Treat any reward type, including internal points, as covered by the generic prohibition rather than assuming non-cash rewards are exempt."
+     },
+     {
+      "id": "C4",
+      "question_index": 2,
+      "statement": "The Spam policy page, as currently indexed, lists 'Engagement manipulation: Repetitive or templated content aimed at artificially inflating engagement through bots, coercion or offering rewards in exchange for likes, views or subscribers', gives coordinated sub-for-sub schemes as an example, and says it is okay to ask viewers to like, comment or subscribe; the heading 'Incentivization Spam' was not found in the indexed text.",
+      "source_url": "https://support.google.com/youtube/answer/2801973?hl=en",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "A points-for-engagement mechanic maps directly onto the 'offering rewards in exchange for likes, views or subscribers' wording and should be excluded from the product."
+     },
+     {
+      "id": "C5",
+      "question_index": 3,
+      "statement": "YouTube permits contests subject to its contest policies: per search-index excerpts the contest must be free of charge to enter, and the organizer and any third party may not manipulate metrics on the YouTube service (views, likes, dislikes or subscribers) to misrepresent genuine viewer engagement.",
+      "source_url": "https://support.google.com/youtube/answer/1620498?hl=en",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Even a properly run contest cannot use likes, views or subscriber counts as the entry or winning mechanism, so contest status must not be tied to YouTube metrics in the dashboard."
+     },
+     {
+      "id": "C6",
+      "question_index": 3,
+      "statement": "The contest policy requires 'official rules' that link to the YouTube Community Guidelines and disqualify non-compliant entries, state that YouTube is not a sponsor, require entrants to release YouTube from liability, and include a legally compliant privacy notice; the organizer is solely responsible, may not associate YouTube with the contest without prior written consent, may not run it through ad units, and may not require entrants to transfer all rights in their entries.",
+      "source_url": "https://support.google.com/youtube/answer/1620498?hl=en",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Any contest surfaced in the app needs its own published rules and a YouTube non-sponsorship disclaimer, and the app must never imply YouTube verified or endorsed the contest."
+     },
+     {
+      "id": "C7",
+      "question_index": 4,
+      "statement": "Developer Policies section III.E.4 limits Non-Authorized Data to temporary storage of limited amounts for no longer than 30 calendar days, after which the client must delete or refresh it, and states that statistics retrieved as Non-Authorized Data (for example a channel's subscriber count without the channel owner's authorization) must not be stored for more than 30 days.",
+      "source_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Public YouTube statistics shown in the dashboard need a stored fetch timestamp and an automatic refresh-or-delete job at 30 days or sooner, and no long-term history of public counts."
+     },
+     {
+      "id": "C8",
+      "question_index": 4,
+      "statement": "Per search-index excerpts of the Developer Policies, when a user asks the API client to delete their stored data it must be deleted as soon as possible and within 7 calendar days, and when a user revokes consent through the client's own revocation mechanism the client must programmatically revoke the token right away and delete all Authorized Data obtained under that consent within 7 calendar days; the companion guide page is summarized as saying 30 days, which conflicts.",
+      "source_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Build a disconnect-and-delete action that revokes the Google token immediately and purges that member's YouTube data within 7 days, using the stricter figure."
+     },
+     {
+      "id": "C9",
+      "question_index": 4,
+      "statement": "Per search-index excerpts, when a user revokes access through Google's security settings page rather than in the app, the client must detect this (for example by failing token refresh) and delete the associated data as soon as possible and within 30 calendar days of the revocation; one search summary gave 7 calendar days for this case, so the exact figure is unconfirmed.",
+      "source_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "low",
+      "design_implication": "Run a periodic token-validity check and purge data for any member whose token no longer refreshes, targeting 7 days to be safe under either reading."
+     },
+     {
+      "id": "C10",
+      "question_index": 4,
+      "statement": "A 2026 amendment (revision history entries dated May 4, 2026 and June 1, 2026) lets API clients that are audited, have an accepted Analytics & Reporting use case and applied through the quota extension form store statistical metrics such as views, likes, subscriber and comment counts for up to 36 calendar months, while titles, descriptions and comment text stay under the 30-day refresh-and-delete rule.",
+      "source_url": "https://developers.google.com/youtube/terms/derived-metrics-policy",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "An unaudited small app does not get the 36-month allowance, so it must not keep historical YouTube statistics beyond 30 days unless it later passes an audit for that use case."
+     },
+     {
+      "id": "C11",
+      "question_index": 5,
+      "statement": "Authorized and Non-Authorized Data have different retention rules: certain Authorized Data types named in section III.E.4.b may be stored longer than 30 days provided the client re-verifies every 30 days that the user's authorization still stands (and that the video has not been deleted), all other Authorized Data is capped at 30 calendar days then delete or refresh, and Non-Authorized statistics have a flat 30-day cap with no longer-storage option.",
+      "source_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Tag every stored YouTube value with whether it came from a member's OAuth consent or from public access, and apply the stricter rule when the tag is missing."
+     },
+     {
+      "id": "C12",
+      "question_index": 6,
+      "statement": "Developer Policies section III.A requires each API client to have users agree to a privacy policy before they can access its features, and that policy must clearly and comprehensively explain what user information, including API Data relating to users, the client accesses, collects, stores and otherwise uses.",
+      "source_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "The sign-in gate needs an explicit privacy-policy acceptance step before any YouTube data is shown or connected, even for a three-member private app."
+     },
+     {
+      "id": "C13",
+      "question_index": 6,
+      "statement": "Per search-index excerpts, API clients must display a link to YouTube's Terms of Service (https://www.youtube.com/t/terms) and state in their own terms that users agree to be bound by them, and the privacy policy must notify users that the client uses YouTube API Services, link to the Google Privacy Policy, and explain that users can revoke access via the Google security settings page at https://security.google.com/settings/security/permissions; the Google Privacy Policy link requirement was confirmed by only one summary.",
+      "source_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Add the three links (YouTube Terms, Google Privacy Policy, Google security settings) to the app's terms and privacy pages before enabling any YouTube connection."
+     },
+     {
+      "id": "C14",
+      "question_index": 7,
+      "statement": "By default the Developer Policies forbid API clients from replacing API Data with similar independently calculated data or using API Data to create new or derived data or metrics, with the excerpted example that a client may not calculate a score that factors in likes, total views or any other API Data.",
+      "source_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "The dashboard should show raw YouTube figures as returned and must not compute a member score, rank or 'verified activity' rating that is derived from YouTube metrics."
+     },
+     {
+      "id": "C15",
+      "question_index": 7,
+      "statement": "The Developer Policies and the compliance guide allow non-YouTube data to appear alongside YouTube API data only with a clear and prominent disclosure that it is not from YouTube, and the guide lists as not permitted a 'user engagement' metric that combines YouTube engagement with other platforms and showing YouTube data next to other platforms' data without clarifying the types and sources.",
+      "source_url": "https://developers.google.com/youtube/terms/developer-policies-guide",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "YouTube and TikTok (or manual) figures must sit in separately labelled sections with their source named, and must never be summed into one cross-platform total or score."
+     },
+     {
+      "id": "C16",
+      "question_index": 7,
+      "statement": "The 'Additional policies for derived metrics and data storage' page permits custom scores and leaderboards (examples excerpted include a 'Top YouTuber by View Growth' leaderboard) only for audited developers who selected the Analytics & Reporting use case and applied through the quota extension form, effective June 1, 2026, and requires those metrics to be distinguished from metrics sourced from API Data.",
+      "source_url": "https://developers.google.com/youtube/terms/derived-metrics-policy",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "A leaderboard built on YouTube metrics is off limits for an unaudited app; any ranking shown must be based on the app's own non-YouTube data and labelled as such."
+     },
+     {
+      "id": "C17",
+      "question_index": 8,
+      "statement": "A compliance audit via the Audit and Quota Extension Form is required only to be granted more than the default quota (10,000 units per day, with separate default buckets of 100 search.list calls and 100 videos.insert calls since June 2026), but the Terms of Service separately let YouTube monitor and audit any API client at any time without further notice.",
+      "source_url": "https://developers.google.com/youtube/data/guides/quota_and_compliance_audits",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "A three-member app can run on default quota with no audit application, but must be fully policy-compliant from day one and should avoid search.list-heavy designs given the 100-call bucket."
+     },
+     {
+      "id": "C18",
+      "question_index": 5,
+      "statement": "None of the Developer Policies, compliance guide or Terms of Service excerpts retrieved showed any exemption from the storage, deletion, disclosure or derived-metric rules for small, private, sign-in-gated or non-commercial API clients.",
+      "source_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "quote": "",
+      "basis": "inferred_from_absence",
+      "confidence": "low",
+      "design_implication": "Do not assume the app's small size or private access relaxes any YouTube data-handling duty; design to the full policy."
+     }
+    ],
+    "unanswered": [
+     "ALL QUESTIONS - verbatim quotes: no official page could be read directly. WebFetch failed with ENOTFOUND for both support.google.com and developers.google.com because those hosts are outside this session's allowed network domains, so every claim rests on search-index excerpts (quote left empty, no 'high' confidence). To upgrade these to verbatim quotes, support.google.com and developers.google.com have to be allowed in the session's network settings and the seven start pages re-read.",
+     "Q2 - the exact 'Incentivization Spam' heading and wording could not be located; the indexed Spam policy text uses 'Engagement manipulation ... offering rewards in exchange for likes, views or subscribers' instead. Whether the heading was renamed, removed or simply not indexed is unconfirmed.",
+     "Q1/Q2 - whether the Fake engagement or Spam policy wording changed during 2025-2026 could not be determined; the search index holds several differently worded cached versions and no dated revision note was found (only a September 2026 Transparency Report reporting change that moved impersonation enforcement under Spam policies).",
+     "Q4 - the deletion deadline after revocation through Google's security settings page is unresolved: most excerpts say within 30 calendar days of the revocation, one summary said 7 calendar days. Likewise the compliance guide is summarized as 'within 30 days' for user deletion requests while the Developer Policies excerpt says 'within 7 calendar days'. The live policy text is needed to settle both.",
+     "Q5 - the exact list of Authorized Data types in section III.E.4.b that may be stored longer than 30 days was not shown in any excerpt (only a view-count example).",
+     "Q6 - the exact wording and section number of the requirement to link to the Google Privacy Policy was not seen; one summary affirmed it and an earlier one could not confirm it.",
+     "Q7 - the full conditions of the derived-metrics amendment were not visible, and no excerpt addressed whether an unaudited default-quota client may simply sort members by a raw, unmodified YouTube count (a ranking without a computed score). Treat that as not permitted until the live text is read.",
+     "Q8 - the audit criteria themselves and whether keeping an OAuth app in Google's unverified/testing state has separate consequences for a three-user app were not covered by the pages reachable through search."
+    ]
+   },
+   "verification": {
+    "verdicts": [
+     {
+      "id": "C1",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://support.google.com/youtube/answer/3399767?hl=en",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND support.google.com (DNS resolution failure, permanent for this session; not retried). Claim not checked against the live page and not confirmed from memory."
+     },
+     {
+      "id": "C2",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://support.google.com/youtube/answer/3399767?hl=en",
+      "note": "Same host failure as C1 (support.google.com did not resolve). Sub4sub and permitted-ask wording not checked."
+     },
+     {
+      "id": "C3",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://support.google.com/youtube/answer/3399767?hl=en",
+      "note": "Same host failure as C1. Absence of a reward carve-out could not be tested because the page was not read."
+     },
+     {
+      "id": "C4",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://support.google.com/youtube/answer/2801973?hl=en",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND support.google.com (permanent, not retried). Spam policy wording, sub-for-sub example and 'Incentivization Spam' heading not checked."
+     },
+     {
+      "id": "C5",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://support.google.com/youtube/answer/1620498?hl=en",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND support.google.com (permanent, not retried). Contest eligibility and metric-manipulation rules not checked."
+     },
+     {
+      "id": "C6",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://support.google.com/youtube/answer/1620498?hl=en",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND support.google.com (permanent, not retried). Official-rules, non-sponsor and related contest requirements not checked."
+     },
+     {
+      "id": "C7",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). Section III.E.4 30-day rule not checked."
+     },
+     {
+      "id": "C8",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). The 7-day user-request and consent-revocation deletion figures and the 30-day guide conflict could not be checked."
+     },
+     {
+      "id": "C9",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). Google security-settings revocation timeline (7 vs 30 days) is unresolved."
+     },
+     {
+      "id": "C10",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/derived-metrics-policy",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). The 36-month allowance and May 4 / June 1, 2026 revision dates were not checked."
+     },
+     {
+      "id": "C11",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). Authorized vs non-authorized retention rules not checked."
+     },
+     {
+      "id": "C12",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). Section III.A privacy-policy requirement not checked."
+     },
+     {
+      "id": "C13",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). Required YouTube ToS, Google Privacy Policy and security-settings links not checked."
+     },
+     {
+      "id": "C14",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). Derived-data prohibition and the score example not checked."
+     },
+     {
+      "id": "C15",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/developer-policies-guide",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). Non-YouTube data disclosure and 'user engagement' metric rules not checked."
+     },
+     {
+      "id": "C16",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/derived-metrics-policy",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). Custom score/leaderboard rules and the June 1, 2026 effective date not checked."
+     },
+     {
+      "id": "C17",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/data/guides/quota_and_compliance_audits",
+      "note": "Not attempted. This page is on developers.google.com, which already failed with ENOTFOUND for every page tried, so per the failure rules it was skipped. Quota figures and audit requirement not checked."
+     },
+     {
+      "id": "C18",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (permanent, not retried). Absence of a small-app exemption could not be tested against the page."
+     }
+    ],
+    "missed_facts": [],
+    "pages_that_failed_to_load": [
+     "https://support.google.com/youtube/answer/3399767?hl=en (getaddrinfo ENOTFOUND support.google.com; permanent, not retried)",
+     "https://support.google.com/youtube/answer/2801973?hl=en (getaddrinfo ENOTFOUND support.google.com; permanent, not retried)",
+     "https://support.google.com/youtube/answer/1620498?hl=en (getaddrinfo ENOTFOUND support.google.com; permanent, not retried)",
+     "https://developers.google.com/youtube/terms/developer-policies (getaddrinfo ENOTFOUND developers.google.com; permanent, not retried)",
+     "https://developers.google.com/youtube/terms/developer-policies-guide (getaddrinfo ENOTFOUND developers.google.com; permanent, not retried)",
+     "https://developers.google.com/youtube/terms/derived-metrics-policy (getaddrinfo ENOTFOUND developers.google.com; permanent, not retried)",
+     "https://developers.google.com/youtube/terms/api-services-terms-of-service (getaddrinfo ENOTFOUND developers.google.com; permanent, not retried)"
+    ],
+    "webFetchSavedFiles": {
+     "dirs": [
+      "/root/.claude/projects/-home-user-Claude/ad46d837-1ede-5250-ac38-5578aa78e1ef/tool-results"
+     ],
+     "paths": []
+    }
+   }
+  },
+  "tiktok": {
+   "research": {
+    "claims": [
+     {
+      "id": "C1",
+      "question_index": 1,
+      "statement": "user.info.basic is added by default to every app with Login Kit and is limited to open_id, union_id, avatar URLs and display_name; any further scope needs pre-approval in the app configuration and each user can grant or deny any subset of requested scopes. (Search summary only; page text not read.)",
+      "source_url": "https://developers.tiktok.com/docs/en/scopes-overview",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Sign-in alone proves only that a member controls a TikTok account (identity link), so the app must handle members who decline the extra scopes and show their stats as unavailable rather than zero."
+     },
+     {
+      "id": "C2",
+      "question_index": 1,
+      "statement": "On GET /v2/user/info/, user.info.profile covers username, bio_description, profile_deep_link and is_verified, and user.info.stats covers follower_count, following_count, likes_count and video_count; since the 2024 scope migration these fields are no longer returned under user.info.basic. (Search summary only.)",
+      "source_url": "https://developers.tiktok.com/docs/en/tiktok-api-v2-get-user-info",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Profile stats are account-level aggregates suitable for informational display only; they attest nothing about any specific like, comment or action a member took."
+     },
+     {
+      "id": "C3",
+      "question_index": 2,
+      "statement": "In the portions of the Scopes Reference surfaced by search, no Login Kit / Display API scope returns (a) the list of videos a user liked, (b) the list of users who liked a given video, or (c) comments a user wrote on another person's video; the scopes seen were user.info.basic, user.info.profile, user.info.stats, video.list, video.publish, video.upload, video.manage, research.data.basic and portability.*. The full table was not read, so this is inferred from absence.",
+      "source_url": "https://developers.tiktok.com/docs/en/tiktok-api-scopes",
+      "quote": "",
+      "basis": "inferred_from_absence",
+      "confidence": "medium",
+      "design_implication": "Member-to-member likes and comments cannot be platform-attested through consumer scopes, so such activity must never be labelled 'verified' and can at most be 'manually reviewed' or 'unverified'."
+     },
+     {
+      "id": "C4",
+      "question_index": 3,
+      "statement": "The video.list scope gives read-only access to the authorizing user's own public videos: POST /v2/video/list/ returns a paginated list of that user's public posts sorted by create_time descending (max_count default 10, max 20), and POST /v2/video/query/ verifies that the supplied video IDs (up to 20) belong to the authorized user before returning details. (Search summary only.)",
+      "source_url": "https://developers.tiktok.com/docs/en/tiktok-api-v2-video-query",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "The app can only read videos of members who have each personally authorized it, and cannot look up arbitrary third-party videos through the Display API."
+     },
+     {
+      "id": "C5",
+      "question_index": 3,
+      "statement": "The v2 Video Object exposes like_count, comment_count and share_count (int32) and view_count (int64) as opt-in fields requested via the fields parameter, alongside id, create_time, cover_image_url (6-hour TTL), share_url, video_description, duration, embed_link and title. (Search summary only.)",
+      "source_url": "https://developers.tiktok.com/docs/en/tiktok-api-v2-video-object",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Per-video numbers are counts with no identities attached, so a rising like_count can be shown as a statistic but cannot verify which member liked or commented."
+     },
+     {
+      "id": "C6",
+      "question_index": 2,
+      "statement": "The only documented endpoint that lists a specific user's liked videos is the Research API's POST /v2/research/user/liked_videos/ (scope research.data.basic, client access token), and the Research codebook limits it to users who have set their account to public and are aged 18 or over; results may be incomplete due to moderation, deletion or privacy settings. (Search summary only.)",
+      "source_url": "https://developers.tiktok.com/docs/en/research-api-specs-query-user-liked-videos",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Liked-video lookups exist only behind researcher-only access, so a small private dashboard has no supported way to confirm a member's likes."
+     },
+     {
+      "id": "C7",
+      "question_index": 4,
+      "statement": "The Research API's POST /v2/research/video/comment/list/ (scope research.data.basic) is keyed by video_id or comment_id, not by commenter, and its documented fields are id, video_id, text, like_count, reply_count, parent_comment_id and create_time, with display_name added per changelog entries dated April 17, 2025 and May 21, 2026; no stable commenter user ID or username was listed in what search surfaced. (Search summary only.)",
+      "source_url": "https://developers.tiktok.com/docs/en/research-api-specs-query-video-comments",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Even with Research access a comment could be matched to a member only by a non-unique display name, which is not a sound basis for a 'verified' label."
+     },
+     {
+      "id": "C8",
+      "question_index": 4,
+      "statement": "Research API eligibility is restricted to applicants affiliated with academic institutions in the U.S., EEA, UK, Canada or Switzerland, or not-for-profit/independent research bodies in the EU (plus a Brazil youth-safety track), who are independent of commercial interests, and access is approved per specific research project; a developer account alone does not grant access. (Search summary only; regional list varied between page versions.)",
+      "source_url": "https://developers.tiktok.com/products/research-api/",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "A private member dashboard is not an eligible Research API applicant, so no feature should be designed around Research endpoints."
+     },
+     {
+      "id": "C9",
+      "question_index": 4,
+      "statement": "The TikTok Research Tools Terms of Service (reported effective January 22, 2026) prohibit using the Research Tools or platform content for any commercial or unauthorized purpose beyond the scope of the approved research, with a carve-out only for publishing papers about that research. (Search summary only.)",
+      "source_url": "https://www.tiktok.com/legal/page/global/terms-of-service-research-api/en",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Using Research API data to score, reward or verify member engagement would be an unauthorized purpose and must be ruled out."
+     },
+     {
+      "id": "C10",
+      "question_index": 5,
+      "statement": "Outside sandbox, an app has no API access until its submission is approved; review covers the requested products and scopes plus app name, description, website and privacy policy, and requires at least one demo video of the full end-to-end flow (up to 5 videos, 50 MB each). (Search summary only; FAQ says several days to two weeks, Developer Guidelines give no guaranteed timeline.)",
+      "source_url": "https://developers.tiktok.com/docs/en/getting-started-faq",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Any TikTok-sourced statistic in production depends on passing app review for Login Kit plus the specific Display API scopes, so the feature must degrade gracefully if approval is not granted."
+     },
+     {
+      "id": "C11",
+      "question_index": 5,
+      "statement": "The App Review Guidelines list as grounds for non-approval that an app is for private or personal use, and that an app is still in development or testing. (Search summary only; the App Review FAQ softens this to 'in most cases' at TikTok's discretion.)",
+      "source_url": "https://developers.tiktok.com/docs/en/app-review-guidelines",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "A sign-in-gated dashboard for about three members risks rejection as a private/personal-use app, so production Display API access should be treated as uncertain rather than assumed."
+     },
+     {
+      "id": "C12",
+      "question_index": 5,
+      "statement": "Sandbox mode lets a developer test integrations without app review, with up to 5 sandboxes per app and up to 10 TikTok accounts added as target users per sandbox, and it does not offer the Content Posting API for public videos or the Data Portability API. (Search summary only; docs do not say whether sandbox may be used indefinitely as a real private deployment or which Display scopes it exposes.)",
+      "source_url": "https://developers.tiktok.com/docs/en/add-a-sandbox",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Three members fit numerically inside the 10-target-user sandbox cap, but sandbox is documented as a test environment, so relying on it permanently is an unconfirmed assumption that must be flagged to the owner."
+     },
+     {
+      "id": "C13",
+      "question_index": 6,
+      "statement": "The Data Portability API is open to qualified applicants globally but currently covers data only for TikTok users in the EEA and UK, and requires a separate Data Portability application (defined use case, ability to identify EEA/UK users, privacy and security review with high-fidelity UX mockups, typically 3-4 weeks) in addition to Login Kit approval. (Search summary only.)",
+      "source_url": "https://developers.tiktok.com/docs/en/data-portability-api-get-started",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "For members outside the EEA/UK this route is unavailable, and even inside those regions the approval burden makes it unrealistic for a three-member private dashboard."
+     },
+     {
+      "id": "C14",
+      "question_index": 6,
+      "statement": "The Data Portability Data Types page lists a 'Like List' (date, video landing page link) and 'Comments' (date, comment content, original post landing page link) under the Full Archive (portability.all.single / .ongoing), whereas the narrower Activity category covers searches, share history, status and watch history. (Search summary only; category mapping was read from a flattened snippet.)",
+      "source_url": "https://developers.tiktok.com/docs/en/data-portability-data-types",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "low",
+      "design_implication": "A consenting EEA/UK member's own export is the only official source that contains their likes and comments, so any 'verified' tier would have to be scoped to that route and never implied for other members."
+     },
+     {
+      "id": "C15",
+      "question_index": 7,
+      "statement": "TikTok's Community Guidelines (version reported as released 25 August 2026, effective 24 September 2026) state under Deceptive Behaviour and Fake Engagement that TikTok does not allow accounts that mislead or try to manipulate the platform, or the trade of services that artificially boost engagement or trick the recommendation system; earlier versions add selling followers or likes and providing instructions on how to artificially increase engagement, and say 'like-for-like' style content is ineligible for the For You feed. Wording is as reported in search snippets, not verified against the page.",
+      "source_url": "https://www.tiktok.com/community-guidelines/en/integrity-authenticity",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "The dashboard must not reward, score or coordinate members liking or commenting on each other's posts, because an engagement-exchange mechanic falls within the fake-engagement prohibition."
+     },
+     {
+      "id": "C16",
+      "question_index": 7,
+      "statement": "No clause specifically about fake or incentivized engagement was surfaced from the general Developer Guidelines page (search returned only principles on user data ownership, consent, throttling limits and anti-spam); the nearest developer-docs language found was in the Media Asset Management doc, which prohibits artificially generating fake traffic such as buying likes, followers or views through third-party services. Inferred from absence in search results, page not read.",
+      "source_url": "https://developers.tiktok.com/docs/en/our-guidelines-developer-guidelines",
+      "quote": "",
+      "basis": "inferred_from_absence",
+      "confidence": "low",
+      "design_implication": "Absence of a developer-specific clause is not permission, so the Community Guidelines prohibition should be treated as the governing rule for any engagement-related feature."
+     },
+     {
+      "id": "C17",
+      "question_index": 8,
+      "statement": "The current user access token documentation gives access_token a lifetime of 24 hours (expires_in 86400) and refresh_token 365 days (refresh_expires_in 31536000), and a refresh may return a new refresh_token that must replace the old one; a separate, apparently older official page states 2 hours and 180 days, so the two pages conflict. (Search summary only.)",
+      "source_url": "https://developers.tiktok.com/docs/en/login-kit-manage-user-access-tokens",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "The app must read expires_in and refresh_expires_in from each token response rather than hard-coding lifetimes, and mark a member's stats stale or 'reconnect required' when refresh fails."
+     },
+     {
+      "id": "C18",
+      "question_index": 8,
+      "statement": "The v2 rate-limit page lists a default limit of 600 requests per one-minute sliding window for each of /v2/user/info/, /v2/video/list/ and /v2/video/query/, enforced separately per API, with HTTP 429 and error code rate_limit_exceeded when exceeded. (Search summary only.)",
+      "source_url": "https://developers.tiktok.com/docs/en/tiktok-api-v2-rate-limit",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Three members polled a few times a day is far below the limit, so stats should be cached with a visible 'last updated' timestamp instead of fetched live on every page view."
+     }
+    ],
+    "unanswered": [
+     "BLOCKER affecting every claim: neither developers.tiktok.com nor www.tiktok.com could be read. WebFetch failed with getaddrinfo ENOTFOUND for both hosts, meaning they are outside this session's allowed network domains. All 18 claims therefore rest on WebSearch summaries of the official pages, every quote field is empty, and no claim is rated high. To upgrade these to verbatim-quoted evidence, developers.tiktok.com and www.tiktok.com must be allowed in the session's network settings and the pages re-read.",
+     "Q1 (complete scope list): the Scopes Reference table was only partially surfaced by search, so the full set of scopes could not be enumerated and the absence of a likes/comments scope (C3) is not confirmed against the whole page. Whether likes_count means likes received by the user was also not confirmed.",
+     "Q2 nuance: the separate TikTok API for Business (business-api.tiktok.com) documents a 'Get comments on an owned video' endpoint (/business/comment/list/) for owned business accounts; its required permission scope and eligibility were not confirmed, and it is not part of Login Kit / Display API.",
+     "Q5 (sandbox and unaudited limits for Display API): official docs surfaced did not say which Display API scopes (video.list, user.info.profile, user.info.stats) work in sandbox without review, whether sandbox may be used indefinitely for a real private deployment, or whether rate limits differ in sandbox. The documented 'unaudited client' caps found (5 users per 24h, self-only visibility) apply to the Content Posting API, not the Display API.",
+     "Q6 (Data Portability practicalities): processing time for a data request, how long an export archive stays downloadable, and the exact mapping of Like List and Comments to request categories (all_data vs activity) could not be confirmed from the page text.",
+     "Q7 (verbatim language): the task asked for quoted language, but the current Community Guidelines fake-engagement section (August 2026 version, effective 24 September 2026) could not be read directly; wording in C15 is as relayed by search snippets and mixes current and older versions. The exact text of the Developer Guidelines page on engagement or incentives was not surfaced at all.",
+     "Q8 (token lifetime conflict): two official pages disagree (24 hours / 365 days on the Login Kit and User Access Token Management pages versus 2 hours / 180 days on a 'Manage OAuth Access Tokens' page); which one is current could not be resolved without reading the pages.",
+     "2025-2026 revision history: the changelog was only partly surfaced. Entries seen concerned the Research API (April 17, 2025; February 26, 2026; May 21, 2026) and Data Portability documentation (June and August 2026); no dated 2025-2026 entry adding or removing a Login Kit / Display API scope was found, but this is not confirmed against the full changelog.",
+     "Q4 (Research API quota): a daily limit of 1,000 requests (up to 100,000 records, reset 12 AM UTC) was reported from the Research API FAQ by search summary only and may have changed."
+    ]
+   },
+   "verification": {
+    "verdicts": [
+     {
+      "id": "C1",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/scopes-overview",
+      "note": "Host developers.tiktok.com failed DNS resolution (getaddrinfo ENOTFOUND) on the reference page https://developers.tiktok.com/doc/scopes-overview and on https://developers.tiktok.com/doc/tiktok-api-scopes. The claim's own source_url was not fetched because it is on the same unreachable host. Not confirmed from memory."
+     },
+     {
+      "id": "C2",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/tiktok-api-v2-get-user-info",
+      "note": "developers.tiktok.com did not resolve, so the user info page and the claim's source_url were not read. Not confirmed from memory."
+     },
+     {
+      "id": "C3",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/tiktok-api-scopes",
+      "note": "The scope reference https://developers.tiktok.com/doc/tiktok-api-scopes failed DNS resolution (getaddrinfo ENOTFOUND developers.tiktok.com). The absence claim could not be checked against the table."
+     },
+     {
+      "id": "C4",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/tiktok-api-v2-video-query",
+      "note": "developers.tiktok.com did not resolve. The video list page https://developers.tiktok.com/doc/tiktok-api-v2-video-list also failed, so the max_count, sort order and ownership claims are unchecked."
+     },
+     {
+      "id": "C5",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/tiktok-api-v2-video-object",
+      "note": "developers.tiktok.com did not resolve. The video field list and the 6-hour cover TTL could not be checked."
+     },
+     {
+      "id": "C6",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/research-api-specs-query-user-liked-videos",
+      "note": "developers.tiktok.com did not resolve. The Research API pages https://developers.tiktok.com/doc/about-research-api and https://developers.tiktok.com/doc/research-api-faq also failed."
+     },
+     {
+      "id": "C7",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/research-api-specs-query-video-comments",
+      "note": "developers.tiktok.com did not resolve. The comment endpoint fields and changelog dates were not checked."
+     },
+     {
+      "id": "C8",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/products/research-api/",
+      "note": "developers.tiktok.com did not resolve. The Research eligibility and regional list were not checked, including the https://developers.tiktok.com/doc/about-research-api and https://developers.tiktok.com/doc/research-api-faq pages."
+     },
+     {
+      "id": "C9",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://www.tiktok.com/legal/page/global/terms-of-service-research-api/en",
+      "note": "www.tiktok.com failed DNS resolution (getaddrinfo ENOTFOUND www.tiktok.com), so the Research Tools Terms of Service and the Community Guidelines page were not read."
+     },
+     {
+      "id": "C10",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/getting-started-faq",
+      "note": "developers.tiktok.com did not resolve. The app review and demo video requirements were not checked."
+     },
+     {
+      "id": "C11",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/app-review-guidelines",
+      "note": "developers.tiktok.com did not resolve. The private/personal-use rejection ground was not checked."
+     },
+     {
+      "id": "C12",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/add-a-sandbox",
+      "note": "developers.tiktok.com did not resolve. The sandbox limits and the excluded products were not checked."
+     },
+     {
+      "id": "C13",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/data-portability-api-get-started",
+      "note": "developers.tiktok.com did not resolve on https://developers.tiktok.com/doc/data-portability-api-get-started. The regional coverage and approval steps were not checked."
+     },
+     {
+      "id": "C14",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/data-portability-data-types",
+      "note": "developers.tiktok.com did not resolve. The Like List and Comments category mapping was not checked."
+     },
+     {
+      "id": "C15",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://www.tiktok.com/community-guidelines/en/integrity-authenticity",
+      "note": "www.tiktok.com failed DNS resolution (getaddrinfo ENOTFOUND www.tiktok.com) on the page itself. The fake-engagement wording and the version and effective dates in the claim were not checked."
+     },
+     {
+      "id": "C16",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/our-guidelines-developer-guidelines",
+      "note": "developers.tiktok.com did not resolve on https://developers.tiktok.com/doc/our-guidelines-developer-guidelines. The absence claim and the Media Asset Management wording were not checked."
+     },
+     {
+      "id": "C17",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/login-kit-manage-user-access-tokens",
+      "note": "developers.tiktok.com did not resolve on https://developers.tiktok.com/doc/login-kit-manage-user-access-tokens. The 24-hour and 365-day token lifetimes and the conflicting older page were not checked."
+     },
+     {
+      "id": "C18",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.tiktok.com/docs/en/tiktok-api-v2-rate-limit",
+      "note": "developers.tiktok.com did not resolve. The 600 requests per minute limit and the 429 error code were not checked."
+     }
+    ],
+    "missed_facts": [],
+    "pages_that_failed_to_load": [
+     "https://developers.tiktok.com/doc/tiktok-api-scopes (getaddrinfo ENOTFOUND developers.tiktok.com)",
+     "https://developers.tiktok.com/doc/scopes-overview (getaddrinfo ENOTFOUND developers.tiktok.com)",
+     "https://developers.tiktok.com/doc/display-api-overview (getaddrinfo ENOTFOUND developers.tiktok.com)",
+     "https://developers.tiktok.com/doc/tiktok-api-v2-video-list (getaddrinfo ENOTFOUND developers.tiktok.com)",
+     "https://developers.tiktok.com/doc/login-kit-manage-user-access-tokens (getaddrinfo ENOTFOUND developers.tiktok.com)",
+     "https://developers.tiktok.com/doc/about-research-api (getaddrinfo ENOTFOUND developers.tiktok.com)",
+     "https://developers.tiktok.com/doc/research-api-faq (getaddrinfo ENOTFOUND developers.tiktok.com)",
+     "https://developers.tiktok.com/doc/data-portability-api-get-started (getaddrinfo ENOTFOUND developers.tiktok.com)",
+     "https://developers.tiktok.com/doc/our-guidelines-developer-guidelines (getaddrinfo ENOTFOUND developers.tiktok.com)",
+     "https://www.tiktok.com/community-guidelines/en/integrity-authenticity (getaddrinfo ENOTFOUND www.tiktok.com)"
+    ],
+    "webFetchSavedFiles": {
+     "dirs": [
+      "/root/.claude/projects/-home-user-Claude/ad46d837-1ede-5250-ac38-5578aa78e1ef/tool-results"
+     ],
+     "paths": []
+    }
+   }
+  },
+  "google_auth": {
+   "research": {
+    "claims": [
+     {
+      "id": "C1",
+      "question_index": 1,
+      "statement": "Google's server-side checklist for a Sign in with Google ID token is: verify the signature with Google's public keys, check that aud equals one of the app's client IDs, check that iss equals accounts.google.com or https://accounts.google.com, and check that exp has not passed (an hd check is added only when restricting sign-in to a Workspace/Cloud organization).",
+      "source_url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Treat a sign-in as authenticated only after all four checks pass on the server; a token merely decoded in the browser attests nothing."
+     },
+     {
+      "id": "C2",
+      "question_index": 1,
+      "statement": "The sub claim is the stable user identifier: Google describes it as unique among all Google Accounts and never reused (up to 255 case-sensitive ASCII characters) and says to key accounts on sub rather than email, because an email value may not be unique to the account and can change over time.",
+      "source_url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Key each member record on sub; the strongest identity statement the app can honestly make is 'this Google Account (sub) signed in', not anything about the person's social accounts."
+     },
+     {
+      "id": "C3",
+      "question_index": 1,
+      "statement": "Google says email, email_verified and hd together show whether Google is authoritative for an address: an @gmail.com address is Google-authoritative, email_verified true with hd present indicates a Google Workspace account, and when the email is not @gmail.com and hd is absent Google is not authoritative (email_verified can be true even though ownership of the third-party mailbox may have since changed).",
+      "source_url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Do not present an email as 'verified' on the strength of email_verified alone for non-Gmail, non-Workspace addresses; gate membership on an allowlist of sub values captured at enrollment."
+     },
+     {
+      "id": "C4",
+      "question_index": 2,
+      "statement": "The ID token reaches the backend by one of two routes: a JavaScript callback (required for One Tap and for the popup-mode button; the page's own code must then forward the credential) or an HTTP POST to login_uri carrying the token in a field named credential (redirect mode; login_uri must exactly match an authorized redirect URI of the OAuth client). callback and login_uri cannot both be set, and an optional nonce configuration value is embedded in the ID token for replay protection.",
+      "source_url": "https://developers.google.com/identity/gsi/web/reference/js-reference",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Either route delivers the same JWT, so the server-side verification in C1 is the only trust boundary; generate a per-request nonce and compare it to the nonce claim to reject replayed tokens."
+     },
+     {
+      "id": "C5",
+      "question_index": 2,
+      "statement": "For the login_uri POST, the Google library sets a g_csrf_token cookie and sends the same value as a g_csrf_token body parameter; the server must reject the request if either is missing or the two do not match (double-submit-cookie pattern), and this check comes in addition to, not instead of, ID-token verification.",
+      "source_url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Enforce g_csrf_token on the login endpoint; if the JavaScript-callback route is used instead, Google supplies no CSRF token for the app's own token-forwarding request (inferred), so the app must add its own CSRF protection there."
+     },
+     {
+      "id": "C6",
+      "question_index": 2,
+      "statement": "The setup guide's Content-Security-Policy guidance is to allow https://accounts.google.com/gsi/ in connect-src and frame-src and https://accounts.google.com/gsi/client in script-src; its Cross-Origin-Opener-Policy guidance is that no change is needed when FedCM renders the popups, but when FedCM is not used the page must send same-origin-allow-popups (a strict same-origin policy breaks the sign-in popup).",
+      "source_url": "https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "A hardened dashboard must ship these exact CSP allowances and COOP same-origin-allow-popups, otherwise sign-in silently fails and members cannot be authenticated at all."
+     },
+     {
+      "id": "C7",
+      "question_index": 3,
+      "statement": "In the current JavaScript and HTML references use_fedcm_for_prompt / data-use_fedcm_for_prompt is marked deprecated and 'ignored if used' (the integrator can no longer opt One Tap in or out of FedCM), while use_fedcm_for_button is an optional flag defaulting to false (Chrome desktop M125+, Android M128+). The migration guide tells integrators to stop relying on One Tap display-moment and skipped-reason methods, drop custom One Tap positioning, add allow=\"identity-credentials-get\" on cross-origin parent iframes and allow the FedCM origins in CSP. No GIS-specific mandatory date was found: the 'mandatory from August 2025' date located belongs to the legacy Google Sign-In platform library page.",
+      "source_url": "https://developers.google.com/identity/gsi/web/guides/fedcm-migration",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Use the plain Sign in with Google button as the primary path and treat One Tap as optional, since One Tap display is now browser-controlled through FedCM and cannot be reliably detected or forced."
+     },
+     {
+      "id": "C8",
+      "question_index": 4,
+      "statement": "The Sign in with Google ID token is not a credential for Google APIs: Google Identity Services' authentication API returns only ID tokens used to sign in, while a separate authorization request returns the authorization code or access token needed for data access, and the two must be invoked at separate moments.",
+      "source_url": "https://developers.google.com/identity/gsi/web/guides/overview",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Signing in with Google proves nothing about a member's YouTube channel; channel ownership can only be labelled verified after a separate OAuth grant followed by an authorized API call."
+     },
+     {
+      "id": "C9",
+      "question_index": 4,
+      "statement": "For server-side YouTube access the YouTube guide uses the OAuth 2.0 authorization-code (web server) flow, recommending access_type=offline to obtain a refresh token, include_granted_scopes=true for incremental authorization, and a state value that the callback compares with the value stored in the user's session; channels.list with mine=true is the documented authorized call that returns the authenticated user's own channel, whose id property is the channel ID.",
+      "source_url": "https://developers.google.com/youtube/v3/guides/auth/server-side-web-apps",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "A 'verified YouTube channel' label is honest only when the channel ID came from an authorized channels.list mine=true response obtained in that member's own consent flow, never from a typed or pasted ID."
+     },
+     {
+      "id": "C10",
+      "question_index": 4,
+      "statement": "Google's redirect-URI validation rules require the HTTPS scheme except for localhost URIs (including localhost IP addresses), forbid raw IP hosts other than localhost, and forbid fragments, wildcards, userinfo, path traversal and open redirects; the redirect_uri sent must exactly match a registered URI including scheme, case and trailing slash or the request fails with redirect_uri_mismatch.",
+      "source_url": "https://developers.google.com/identity/protocols/oauth2/web-server",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Register one exact HTTPS callback per deployed origin plus an http://localhost callback for development; preview deployments on changing hostnames cannot complete the YouTube link flow."
+     },
+     {
+      "id": "C11",
+      "question_index": 5,
+      "statement": "The YouTube Data API scopes documented are youtube, youtube.readonly, youtube.force-ssl, youtube.upload, youtube.channel-memberships.creator, youtubepartner and youtubepartner-channel-audit, with advice to request the narrowest one; the documentation pages located do not publish a per-scope sensitive-versus-restricted classification (they say sensitivity is indicated in the Google Cloud Console), although Google's sensitive-scope verification page uses 'deleting a YouTube video' as an example of sensitive-scope access.",
+      "source_url": "https://developers.google.com/youtube/v3/guides/auth/server-side-web-apps",
+      "quote": "",
+      "basis": "inferred_from_absence",
+      "confidence": "low",
+      "design_implication": "Request only youtube.readonly and confirm its classification in the Cloud Console scope picker before designing around it; do not assume from documentation alone that it avoids verification."
+     },
+     {
+      "id": "C12",
+      "question_index": 5,
+      "statement": "An External app that requests sensitive scopes must pass Google's sensitive-scope verification before unrestricted production use; reported requirements include domains the developer owns, a home page, a privacy policy, a least-privilege scope justification and an unlisted YouTube demo video of the consent flow and scope usage (Google's estimate about 10 business days; restricted scopes add a security assessment). Until verified, the app shows the unverified-app screen and is capped at 100 users over the lifetime of the project, a cap that cannot be reset.",
+      "source_url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/sensitive-scope-verification",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "For three members, full verification is disproportionate; the YouTube link should stay optional so the dashboard works without it and never depends on a verified OAuth app."
+     },
+     {
+      "id": "C13",
+      "question_index": 6,
+      "statement": "With an External user type and publishing status Testing, only up to 100 listed test users can authorize, and their authorizations, including any refresh token, expire 7 days after consent; the sole exception is an app requesting nothing beyond name, email address and user profile (userinfo.email, userinfo.profile, openid), where users need not be listed, see no warning and authorizations do not expire. Google's OAuth 2.0 overview page lists the same 7-day refresh-token rule and exception.",
+      "source_url": "https://support.google.com/cloud/answer/15549945?hl=en",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Plain Sign in with Google is unaffected by Testing status, but a YouTube grant made in Testing goes stale after 7 days, so any YouTube-derived label needs a last-attested timestamp and must downgrade when the grant lapses."
+     },
+     {
+      "id": "C14",
+      "question_index": 6,
+      "statement": "Google's help pages state no time limit on remaining in Testing status and say an app in Testing does not need verification, so a tiny private app can stay in Testing indefinitely at the cost of re-consenting YouTube scopes every 7 days; the documented alternative is the personal-use exception, where an In-production unverified app used by fewer than 100 users personally known to the developer may continue with users clicking through the unverified-app warning.",
+      "source_url": "https://support.google.com/cloud/answer/13464323?hl=en",
+      "quote": "",
+      "basis": "inferred_from_absence",
+      "confidence": "medium",
+      "design_implication": "Either mode is workable for three members, but both mean the YouTube attestation is periodic or warning-gated, so the UI should show 'verified as of <date>' instead of a permanent verified badge."
+     },
+     {
+      "id": "C15",
+      "question_index": 7,
+      "statement": "The Google API Services User Data Policy (reported last updated February 15, 2024) applies Limited Use requirements to data from sensitive and restricted scopes: use only to provide or improve user-facing features, no transfers except for narrow reasons (user-consented features, security, legal compliance, merger or acquisition), no use for advertising, and no human reading except with explicit user consent, for security, for legal compliance or on aggregated data; the rules also cover data aggregated, anonymized or derived from those scopes, and the app must publicly disclose its compliance.",
+      "source_url": "https://developers.google.com/terms/api-services-user-data-policy",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "A stored YouTube channel ID and anything derived from it may be shown only for the member-facing dashboard feature the member consented to, and the privacy notice must say so."
+     },
+     {
+      "id": "C16",
+      "question_index": 7,
+      "statement": "Concrete deletion deadlines for stored YouTube data come from the YouTube API Services Developer Policies, not from the base User Data Policy (whose summarized text showed no standalone deletion deadline): delete a user's Authorized Data within 7 calendar days when they revoke through the app, within 30 calendar days when access is revoked through Google's security settings, and delete or re-verify stored data when a user requests deletion or authorization can no longer be confirmed (30 days).",
+      "source_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "The app needs an unlink action that revokes the token and deletes the stored channel ID, plus a periodic job that removes the channel ID and its verified label once the grant can no longer be refreshed."
+     },
+     {
+      "id": "C17",
+      "question_index": 8,
+      "statement": "Google's ID-token signing keys are published as a JWK set at https://www.googleapis.com/oauth2/v3/certs (the jwks_uri of the OpenID Connect discovery document; a PEM form also exists), are rotated regularly and should be re-fetched according to the response's Cache-Control header; Google recommends its API client libraries over hand-written validation, which for Node.js is google-auth-library's OAuth2Client.verifyIdToken with an audience argument (it checks signature, aud, exp and iss), and describes the tokeninfo endpoint as suitable for debugging only.",
+      "source_url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Use google-auth-library on the server and never pin or hardcode keys; a hand-rolled verifier that caches keys past Cache-Control will start rejecting or mis-accepting tokens after rotation."
+     },
+     {
+      "id": "C18",
+      "question_index": 6,
+      "statement": "Two 2025 changes affect small OAuth projects: client secrets are viewable and downloadable only at creation (new clients from June 2025, extended to existing clients from November 2025), and under an OAuth 2.0 policy entry dated October 27, 2025 Google may delete OAuth clients unused for 6 months (no token exchanges or configuration edits), with an email warning 30 days beforehand and roughly 30 days of recoverability after deletion.",
+      "source_url": "https://support.google.com/cloud/answer/15549257?hl=en",
+      "quote": "",
+      "basis": "search_summary_only",
+      "confidence": "medium",
+      "design_implication": "Store the client secret securely at creation and monitor the project owner's mailbox, because a deleted client breaks sign-in and invalidates every existing YouTube grant and any label that depends on it."
+     }
+    ],
+    "unanswered": [
+     "ACCESS LIMITATION (affects every claim): developers.google.com and support.google.com are outside this session's allowed network domains - WebFetch failed with ENOTFOUND on both - so no official page text was read. All 18 claims rest on WebSearch summaries restricted to those official domains; no verbatim quotes could be captured and no claim is rated high. Both hosts must be allowed in the session's network settings and the pages re-read before any claim is treated as confirmed.",
+     "Q3 (partly unanswered): the exact GIS-specific date on which FedCM became mandatory for One Tap, and whether the Sign in with Google button will be forced onto FedCM, could not be established. The only explicit date found (mandatory adoption August 2025) is on the legacy Google Sign-In platform library page (developers.google.com/identity/sign-in/web/gsi-with-fedcm), and the GIS release notes' latest entry seen in summaries was 2025-03-17.",
+     "Q5 (partly unanswered): no official page located gives a per-scope sensitive/restricted classification for youtube.readonly, youtube.force-ssl or youtube; the docs defer to the Google Cloud Console scope picker, which this session cannot view.",
+     "Q6 (partly unanswered): whether removing a test user frees a slot under the 100-test-user cap, and the exact wording of the consent warning shown to test users, were not found.",
+     "Q7 (partly unanswered): whether the base Google API Services User Data Policy itself contains an explicit user-deletion-request deadline could not be confirmed from page text; the 7-day and 30-day deadlines found come from the YouTube API Services Developer Policies, and the summary of that page was reported as truncated.",
+     "Q8 (partly unanswered): the PEM certificate endpoint URL (believed to be https://www.googleapis.com/oauth2/v1/certs) was not confirmed by any search result; only the JWK endpoint was.",
+     "Q2 (partly unanswered): whether the setup guide also requires a style-src entry for https://accounts.google.com/gsi/style, and the exact Referrer-Policy note for localhost, were not confirmed.",
+     "Revision-history check: page 'Last updated' dates and change logs for 2025-2026 could not be read for any page; the only dated 2025 changes surfaced are those in C18 and the February 15, 2024 date reported for the User Data Policy."
+    ]
+   },
+   "verification": {
+    "verdicts": [
+     {
+      "id": "C1",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com (DNS failure; host not resolvable from this session). Not read, so neither confirmed nor refuted. Re-fetching would fail the same way."
+     },
+     {
+      "id": "C2",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; sub-claim wording and 255-character limit unverified."
+     },
+     {
+      "id": "C3",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; email / email_verified / hd semantics unverified."
+     },
+     {
+      "id": "C4",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/gsi/web/reference/js-reference",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; callback/login_uri exclusivity and nonce behaviour unverified."
+     },
+     {
+      "id": "C5",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; g_csrf_token requirement unverified."
+     },
+     {
+      "id": "C6",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; CSP origins and COOP value unverified."
+     },
+     {
+      "id": "C7",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/gsi/web/guides/fedcm-migration",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; FedCM status and deprecation claims unverified."
+     },
+     {
+      "id": "C8",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/gsi/web/guides/overview",
+      "note": "Not fetched: the host developers.google.com failed DNS resolution on every attempt, so this page was not read."
+     },
+     {
+      "id": "C9",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/v3/guides/auth/server-side-web-apps",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; access_type, state, and channels.list mine=true text unverified."
+     },
+     {
+      "id": "C10",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/protocols/oauth2/web-server",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; redirect-URI rules and redirect_uri_mismatch wording unverified."
+     },
+     {
+      "id": "C11",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/v3/guides/auth/server-side-web-apps",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; scope list and sensitivity classification unverified."
+     },
+     {
+      "id": "C12",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/protocols/oauth2/production-readiness/sensitive-scope-verification",
+      "note": "Not fetched: developers.google.com failed DNS resolution, so this page was not read. Verification steps, 100-user cap and timing unverified."
+     },
+     {
+      "id": "C13",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://support.google.com/cloud/answer/15549945?hl=en",
+      "note": "Not fetched: support.google.com failed DNS resolution (getaddrinfo ENOTFOUND) on the one attempt made, so this page was not read. 7-day expiry and exceptions unverified."
+     },
+     {
+      "id": "C14",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://support.google.com/cloud/answer/13464323?hl=en",
+      "note": "Not fetched: support.google.com failed DNS resolution. No time limit on Testing and personal-use exception unverified."
+     },
+     {
+      "id": "C15",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/terms/api-services-user-data-policy",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; Limited Use and last-updated date unverified."
+     },
+     {
+      "id": "C16",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/youtube/terms/developer-policies",
+      "note": "Not fetched: developers.google.com failed DNS resolution, so this page was not read. 7/30-day deletion deadlines unverified."
+     },
+     {
+      "id": "C17",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token",
+      "note": "Fetch failed: getaddrinfo ENOTFOUND developers.google.com. Not read; JWKS endpoint, Cache-Control guidance and library recommendation unverified."
+     },
+     {
+      "id": "C18",
+      "verdict": "unverifiable",
+      "corrected_statement": "",
+      "evidence_quote": "",
+      "evidence_url": "https://support.google.com/cloud/answer/15549257?hl=en",
+      "note": "Not fetched: support.google.com failed DNS resolution. Client-secret and 6-month deletion policy unverified."
+     }
+    ],
+    "missed_facts": [],
+    "pages_that_failed_to_load": [
+     "https://developers.google.com/identity/gsi/web/guides/verify-google-id-token (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/identity/gsi/web/reference/js-reference (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/identity/gsi/web/reference/html-reference (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/identity/gsi/web/guides/fedcm-migration (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/identity/protocols/oauth2 (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/identity/protocols/oauth2/web-server (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://developers.google.com/youtube/v3/guides/auth/server-side-web-apps (getaddrinfo ENOTFOUND developers.google.com)",
+     "https://support.google.com/cloud/answer/13463073?hl=en (getaddrinfo ENOTFOUND support.google.com)",
+     "Not attempted because the host failed DNS resolution: https://developers.google.com/identity/gsi/web/guides/overview, https://developers.google.com/identity/protocols/oauth2/production-readiness/sensitive-scope-verification, https://developers.google.com/terms/api-services-user-data-policy (attempted, failed), https://developers.google.com/youtube/terms/developer-policies, https://support.google.com/cloud/answer/10311615?hl=en, https://support.google.com/cloud/answer/15549945?hl=en, https://support.google.com/cloud/answer/13464323?hl=en, https://support.google.com/cloud/answer/15549257?hl=en"
+    ],
+    "webFetchSavedFiles": {
+     "dirs": [
+      "/root/.claude/projects/-home-user-Claude/ad46d837-1ede-5250-ac38-5578aa78e1ef/tool-results"
+     ],
+     "paths": []
+    }
+   }
+  }
+ }
+}
