@@ -10,7 +10,7 @@ Chapters
 4:46 Lighter than water
 5:51 Footprints
 
-Sources (every number in these episodes is checked against a source)
+Sources (every number's source is listed below)
 01 Trees or stars
 - Our Milky Way Galaxy: How Big is Space? (NASA Science): https://science.nasa.gov/universe/exoplanets/our-milky-way-galaxy-how-big-is-space/
 - Seeing the forest and the trees, all 3 trillion of them (Yale News, 2 Sep 2015, on Crowther et al., Nature): https://news.yale.edu/2015/09/02/seeing-forest-and-trees-all-3-trillion-them
