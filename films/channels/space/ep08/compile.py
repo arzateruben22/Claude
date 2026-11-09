@@ -79,7 +79,7 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "light", "anchor": "you", "t0": round(CUE["spokes0"] + 0.9, 4), "t1": round(CUE["dip"][0], 4), "side": 1, "v": "below", "fixed": True},
     {"id": "l-near", "text": "near: few, bright", "kind": "star", "anchor": "near", "t0": CUE["fainter"], "t1": round(CUE["more"] + 1.2, 4), "side": -1, "v": "above", "fixed": True},
-    {"id": "l-mid", "text": "middle: more, fainter", "kind": "body", "anchor": "mid", "t0": round(CUE["fainter"] + 1.4, 4), "t1": round(CUE["cancel"] - 0.2, 4), "side": 1, "v": "below", "fixed": True},
+    {"id": "l-mid", "text": "middle: more, fainter", "kind": "body", "anchor": "mid", "t0": round(CUE["more"] + 0.6, 4), "t1": round(CUE["cancel"] - 0.2, 4), "side": 1, "v": "below", "fixed": True},
     {"id": "l-far", "text": "far: most, faintest", "kind": "grav", "anchor": "far", "t0": CUE["more"], "t1": round(CUE["cancel"] + 0.2, 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-hz", "text": "light-travel time (not to scale)", "kind": "light", "anchor": "hz", "t0": round(CUE["age0"] - 0.2, 4), "t1": round(CUE["way"] - 0.4, 4), "side": -1, "v": "above", "fixed": True},
 ]

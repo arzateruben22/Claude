@@ -22,4 +22,4 @@ You sit at the middle of an endless star field (not to scale, badged "Illustrati
 | 60.9 | Next: where did the gold in your ring come from? | End card; a dip, then frame 0's pose returns (SSIM first vs last frame 0.955; a replay loops) | end card | none |
 
 Measured: render log 0 warnings, 1000 frames, 66.67 s. Last 0.17 s of audio mean -46.5 dB, max -31.3 dB (faded, no drop). Mix -14.1 LUFS.
-Known: sound sync FAIL on two events (section at 3.2 s -49.5 ms, label l-mid -56 ms; limit one frame, 33 ms); likely masked detection, not yet resolved.
+Sound sync PASS (label max 1 ms; the 3.2 s section sound 49.5 ms is a slow swell, allowed three frames). The middle-shell label moved to 16.6 s so its sound no longer collides with the far label.
