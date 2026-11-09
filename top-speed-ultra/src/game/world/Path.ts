@@ -156,6 +156,16 @@ export class Path {
 
   // the next way off this path after s (a diverge or the end), if any
   nextExit(s: number) { for (const j of this.out) if (j.s > s) return j; return null; }
+
+  // raise or lower the centreline by dy per sample (the network levels a road with the one it overlaps), and redo the grades
+  lift(dy: Float32Array) {
+    const n = this.n;
+    for (let i = 0; i < n; i++) this.ys[i] += dy[i];
+    for (let i = 0; i < n; i++) {
+      const a = Math.max(0, i - 1), b = Math.min(n - 1, i + 1);
+      this.ss[i] = (this.ys[b] - this.ys[a]) / Math.max(1e-3, (b - a) * STEP);
+    }
+  }
 }
 const tmpP: RoadPoint = { x: 0, y: 0, z: 0, h: 0, k: 0, slope: 0 };
 const tmpA: RoadPoint = { x: 0, y: 0, z: 0, h: 0, k: 0, slope: 0 };
