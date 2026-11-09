@@ -29,6 +29,11 @@ All beats are under the limit of 8. Several grades are low because the sentences
 - The "why" beat of the first draft was thin (18 words, two ideas); it is now three short sentences, one idea each (nobody walks day and night; you sleep, eat, stop; so a working day).
 - Open: the whoa beat still holds two big numbers back to back (26 and 140). If the reviewer finds it overwhelming, move 140 to the work beat.
 
+## Review round 1 changes (9 Nov 2026)
+- Script: the 140 moved to the work beat with its reason ("ten thousand steps a day ... is only about seven and a half kilometers", against 40 km a day), so 26 and 140 are no longer spoken back to back; "years" is said after 140; "Apollo eleven's crew" replaces "The Apollo crews"; the quarter-century line and the shoes line were cut (runtime 72.0 s).
+- Picture: shaded 3D Earth and Moon, a blue walker figure in stop-and-go steps (8 hours a day: it stops to sleep, eat, tie a shoe), a camera pan up the line in the normal beat, labels staged one at a time, the work card's sum on one line, the end card showing "≈ 26 years" with the line cleared, and the last frame equal to frame 0.
+- Claims: c4, c6, c8, c10 relabelled as calculations; c5 as an assumption; the Bohannon link removed from them; the footnote names "NASA Science, Moon Facts".
+
 ## Status (9 Nov 2026)
 - Word timings: aligned with the owner-approved Parakeet pin (8 word ends clamped to the pauses). `film.json` is built from real timings.
 - Draft render: `out/envelope-007-9x16-draft.mp4` (540x960, 15 fps, 73.8 s, AAC -14.1 LUFS / -1.6 dBTP, sync PASS), 0 audit warnings. Final not rendered, awaiting the gate.

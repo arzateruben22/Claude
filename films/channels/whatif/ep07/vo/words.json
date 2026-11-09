@@ -90,8 +90,8 @@
   },
   {
    "id": "vo02",
-   "text": "The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between. That is a very long way for a pair of shoes.",
-   "heard": "The moon sits about thirty earths away, lined up side by side with nothing but dark between. That is a very long way for a pair of shoes.",
+   "text": "The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between.",
+   "heard": "The moon sits about thirty earths away, lined up side by side with nothing but dark between.",
    "words": [
     {
      "w": "The",
@@ -144,12 +144,12 @@
     {
      "w": "up",
      "start": 3.865,
-     "end": 4.0,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "side",
-     "start": 3.895,
+     "start": 4.06,
      "end": 4.4,
      "heard": true
     },
@@ -162,25 +162,25 @@
     {
      "w": "side,",
      "start": 4.81,
-     "end": 5.12,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "with",
      "start": 5.285,
-     "end": 5.6,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "nothing",
-     "start": 5.49,
+     "start": 5.475,
      "end": 6.0,
      "heard": true
     },
     {
      "w": "but",
      "start": 6.08,
-     "end": 6.32,
+     "end": 6.24,
      "heard": true
     },
     {
@@ -192,78 +192,10 @@
     {
      "w": "between.",
      "start": 6.935,
-     "end": 7.583,
-     "heard": true,
-     "end_asr": 7.92
-    },
-    {
-     "w": "That",
-     "start": 7.98,
-     "end": 8.16,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 8.04,
-     "end": 8.32,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 8.415,
-     "end": 8.56,
-     "heard": true
-    },
-    {
-     "w": "very",
-     "start": 8.445,
-     "end": 8.88,
-     "heard": true
-    },
-    {
-     "w": "long",
-     "start": 8.825,
-     "end": 9.12,
-     "heard": true
-    },
-    {
-     "w": "way",
-     "start": 9.17,
-     "end": 9.36,
-     "heard": true
-    },
-    {
-     "w": "for",
-     "start": 9.485,
-     "end": 9.68,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 9.78,
-     "end": 9.84,
-     "heard": true
-    },
-    {
-     "w": "pair",
-     "start": 9.81,
-     "end": 10.08,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 10.125,
-     "end": 10.24,
-     "heard": true
-    },
-    {
-     "w": "shoes.",
-     "start": 10.155,
-     "end": 10.8,
+     "end": 7.52,
      "heard": true
     }
-   ],
-   "clamped": true
+   ]
   },
   {
    "id": "vo03",
@@ -575,8 +507,8 @@
   },
   {
    "id": "vo05",
-   "text": "A working day of walking gets you there in about twenty-six years. Stick to the popular daily step goal, and it is closer to a hundred and forty.",
-   "heard": "A working day of walking gets you there in about twenty six years. Stick to the popular daily step goal and it is closer to a hundred and forty.",
+   "text": "A working day of walking gets you there in about twenty-six years.",
+   "heard": "A working day of walking gets you there in about 26 years.",
    "words": [
     {
      "w": "A",
@@ -592,7 +524,7 @@
     },
     {
      "w": "day",
-     "start": 0.78,
+     "start": 0.775,
      "end": 1.04,
      "heard": true
     },
@@ -604,343 +536,374 @@
     },
     {
      "w": "walking",
-     "start": 1.205,
+     "start": 1.235,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "gets",
-     "start": 1.905,
-     "end": 2.24,
+     "start": 1.86,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "you",
-     "start": 2.125,
-     "end": 2.48,
+     "start": 2.1,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "there",
-     "start": 2.385,
+     "start": 2.355,
      "end": 2.72,
      "heard": true
     },
     {
      "w": "in",
-     "start": 2.825,
+     "start": 2.8,
      "end": 2.96,
      "heard": true
     },
     {
      "w": "about",
-     "start": 3.015,
-     "end": 3.28,
+     "start": 2.955,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "twenty-six",
-     "start": 3.33,
-     "end": 4.48,
+     "start": 3.28,
+     "end": 4.08,
      "heard": false
     },
     {
      "w": "years.",
-     "start": 4.525,
-     "end": 4.776,
-     "heard": true,
-     "end_asr": 5.12
-    },
+     "start": 4.04,
+     "end": 4.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Slower adds years, quicker trims a few. Ten thousand steps a day, the popular goal, is only about seven and a half kilometers. So that trip takes about a hundred and forty years.",
+   "heard": "Slower adds years, quicker trims a few. 10,000 steps a day, the popular goal, is only about 7.5 kilometers. So that trip takes about 140 years.",
+   "words": [
     {
-     "w": "Stick",
-     "start": 5.425,
-     "end": 5.68,
+     "w": "Slower",
+     "start": 0.025,
+     "end": 0.48,
      "heard": true
     },
     {
-     "w": "to",
-     "start": 5.73,
-     "end": 5.84,
+     "w": "adds",
+     "start": 0.45,
+     "end": 0.8,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 5.76,
-     "end": 6.08,
+     "w": "years,",
+     "start": 0.72,
+     "end": 1.12,
      "heard": true
     },
     {
-     "w": "popular",
-     "start": 6.015,
-     "end": 6.72,
+     "w": "quicker",
+     "start": 1.13,
+     "end": 1.52,
      "heard": true
     },
     {
-     "w": "daily",
-     "start": 6.785,
-     "end": 7.28,
-     "heard": true
-    },
-    {
-     "w": "step",
-     "start": 7.38,
-     "end": 7.6,
-     "heard": true
-    },
-    {
-     "w": "goal,",
-     "start": 7.735,
-     "end": 8.16,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 8.33,
-     "end": 8.48,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 8.36,
-     "end": 8.64,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 8.6,
-     "end": 8.88,
-     "heard": true
-    },
-    {
-     "w": "closer",
-     "start": 8.89,
-     "end": 9.36,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 9.405,
-     "end": 9.6,
+     "w": "trims",
+     "start": 1.465,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "a",
-     "start": 9.48,
-     "end": 9.84,
+     "start": 1.9,
+     "end": 2.08,
      "heard": true
     },
     {
-     "w": "hundred",
-     "start": 9.825,
+     "w": "few.",
+     "start": 1.96,
+     "end": 2.361,
+     "heard": true,
+     "end_asr": 2.72
+    },
+    {
+     "w": "Ten",
+     "start": 2.76,
+     "end": 3.6,
+     "heard": false
+    },
+    {
+     "w": "thousand",
+     "start": 2.79,
+     "end": 3.6,
+     "heard": false
+    },
+    {
+     "w": "steps",
+     "start": 3.725,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.155,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "day,",
+     "start": 4.215,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.76,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "popular",
+     "start": 4.88,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "goal,",
+     "start": 5.54,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.105,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 6.315,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.775,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "seven",
+     "start": 7.02,
+     "end": 8.0,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 7.05,
+     "end": 8.0,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 7.08,
+     "end": 8.0,
+     "heard": false
+    },
+    {
+     "w": "half",
+     "start": 7.11,
+     "end": 8.0,
+     "heard": false
+    },
+    {
+     "w": "kilometers.",
+     "start": 7.97,
+     "end": 8.977,
+     "heard": true,
+     "end_asr": 9.36
+    },
+    {
+     "w": "So",
+     "start": 9.385,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 9.465,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "trip",
+     "start": 9.77,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 10.11,
      "end": 10.4,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 10.405,
-     "end": 10.64,
+     "w": "about",
+     "start": 10.355,
+     "end": 10.72,
      "heard": true
     },
     {
-     "w": "forty.",
-     "start": 10.73,
-     "end": 11.44,
+     "w": "a",
+     "start": 10.78,
+     "end": 12.0,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 10.81,
+     "end": 12.0,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 10.84,
+     "end": 12.0,
+     "heard": false
+    },
+    {
+     "w": "forty",
+     "start": 10.87,
+     "end": 12.0,
+     "heard": false
+    },
+    {
+     "w": "years.",
+     "start": 11.96,
+     "end": 12.48,
      "heard": true
     }
    ],
    "clamped": true
   },
   {
-   "id": "vo06",
-   "text": "Slower adds years, quicker trims a few, but it never gets close.",
-   "heard": "Slower adds years, quicker trims a few, but it never gets close.",
-   "words": [
-    {
-     "w": "Slower",
-     "start": 0.025,
-     "end": 0.56,
-     "heard": true
-    },
-    {
-     "w": "adds",
-     "start": 0.59,
-     "end": 1.04,
-     "heard": true
-    },
-    {
-     "w": "years,",
-     "start": 1.005,
-     "end": 1.6,
-     "heard": true
-    },
-    {
-     "w": "quicker",
-     "start": 1.61,
-     "end": 2.0,
-     "heard": true
-    },
-    {
-     "w": "trims",
-     "start": 2.02,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 2.555,
-     "end": 2.64,
-     "heard": true
-    },
-    {
-     "w": "few,",
-     "start": 2.585,
-     "end": 3.04,
-     "heard": true
-    },
-    {
-     "w": "but",
-     "start": 3.01,
-     "end": 3.2,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 3.26,
-     "end": 3.44,
-     "heard": true
-    },
-    {
-     "w": "never",
-     "start": 3.52,
-     "end": 3.68,
-     "heard": true
-    },
-    {
-     "w": "gets",
-     "start": 3.735,
-     "end": 4.08,
-     "heard": true
-    },
-    {
-     "w": "close.",
-     "start": 4.105,
-     "end": 4.72,
-     "heard": true
-    }
-   ]
-  },
-  {
    "id": "vo07",
-   "text": "The Apollo crews made the same trip in about three days. The distance never changed, only the speed.",
-   "heard": "The Apollo crews made the same trip in about three days. The distance never changed, only the speed.",
+   "text": "Apollo eleven's crew made the same trip in about three days. The distance never changed, only the speed.",
+   "heard": "Apollo 11's crew made the same trip in about three days. The distance never changed, only the speed.",
    "words": [
-    {
-     "w": "The",
-     "start": 0.025,
-     "end": 0.24,
-     "heard": true
-    },
     {
      "w": "Apollo",
-     "start": 0.335,
-     "end": 0.96,
+     "start": 0.02,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "crews",
-     "start": 0.92,
-     "end": 1.44,
+     "w": "eleven's",
+     "start": 0.665,
+     "end": 1.36,
+     "heard": false
+    },
+    {
+     "w": "crew",
+     "start": 1.335,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "made",
-     "start": 1.41,
-     "end": 1.68,
+     "start": 1.825,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.695,
-     "end": 1.92,
+     "start": 2.045,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "same",
-     "start": 1.905,
-     "end": 2.16,
+     "start": 2.245,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "trip",
-     "start": 2.26,
-     "end": 2.64,
+     "start": 2.58,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "in",
-     "start": 2.65,
-     "end": 2.88,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 2.88,
+     "start": 2.98,
      "end": 3.2,
      "heard": true
     },
     {
+     "w": "about",
+     "start": 3.19,
+     "end": 3.52,
+     "heard": true
+    },
+    {
      "w": "three",
-     "start": 3.225,
-     "end": 3.44,
+     "start": 3.525,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "days.",
-     "start": 3.52,
-     "end": 4.093,
+     "start": 3.82,
+     "end": 4.357,
      "heard": true,
-     "end_asr": 4.4
+     "end_asr": 4.72
     },
     {
      "w": "The",
-     "start": 4.49,
-     "end": 4.64,
+     "start": 4.76,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "distance",
-     "start": 4.69,
-     "end": 5.28,
+     "start": 4.94,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "never",
-     "start": 5.23,
-     "end": 5.6,
+     "start": 5.475,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "changed,",
-     "start": 5.64,
-     "end": 6.4,
+     "start": 5.885,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "only",
-     "start": 6.395,
-     "end": 6.72,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 6.745,
+     "start": 6.615,
      "end": 6.88,
      "heard": true
     },
     {
+     "w": "the",
+     "start": 6.95,
+     "end": 7.12,
+     "heard": true
+    },
+    {
      "w": "speed.",
-     "start": 6.975,
-     "end": 7.6,
+     "start": 7.255,
+     "end": 7.76,
      "heard": true
     }
    ],

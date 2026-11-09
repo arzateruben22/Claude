@@ -46,9 +46,10 @@ t_rings = [A("vo02:lined", -0.1), A("vo02:between", -0.3)]   # thirty Earths app
 t_walk0 = A("vo03:Walk", -0.05)
 t_nine = A("vo03:years", -0.05)
 t_rw = A("vo04:But", 0.1)                                  # the clock rewinds: "nobody walks day and night"
-t_b0 = A("vo04:working", -0.1)                             # the race begins: a working day of walking
+t_b0 = t_rw + 0.9                                          # the race begins at once: a walker who stops to sleep, eat and tie a shoe
 t_26 = A("vo05:years", -0.05)                              # the 8 h walker arrives on "twenty-six years"
-t_140 = A("vo05:forty", 0.15)                              # the clock runs on to 140
+t_steps = A("vo06:steps", -0.1)                           # the popular goal: the grey walker takes over
+t_140 = A("vo06:forty", 0.1)                               # the clock runs on to 140
 t_box = t_26
 t_work0, t_home, t_end = B["work"]["t0"], B["takeaway"]["t0"], A("vo08:Next", -0.25)
 t_apollo = [A("vo07:Apollo", 0.3), A("vo07:days", 0.1)]    # the capsule crosses the gap
@@ -56,8 +57,8 @@ t_spread = [A("vo03:Walk", -0.3), A("vo03:Walk", 0.8)]      # the lanes open out
 
 # the clocks, in years
 CLOCK_A = [[t_walk0, 0.0], [t_nine, YN]]                                     # nonstop
-CLOCK_B = [[t_b0, 0.0], [t_26, Y8], [t_140, YS], [B["work"]["t0"], YS]]      # the race
-COUNT = [[t_walk0, 0.0], [t_nine, YN], [t_rw, YN], [t_rw + 0.6, 0.0], [t_b0, 0.0], [t_26, Y8], [t_26 + 1.6, Y8], [t_140, YS]]
+CLOCK_B = [[t_b0, 0.0], [t_26, Y8], [t_steps, Y8], [t_140, YS], [B["work"]["t0"] + 20, YS]]      # the race
+COUNT = [[t_walk0, 0.0], [t_nine, YN], [t_rw, YN], [t_rw + 0.6, 0.0], [t_b0, 0.0], [t_26, Y8], [t_steps, Y8], [t_140, YS]]
 
 # ── shots ──
 SHOTS = [
@@ -77,9 +78,17 @@ CAM = {
         {"t": t_pull0 + (t_pull1 - t_pull0) * 0.45, **k(1.5e2, 3.0e3, 6.5, 0.40), "ease": "linear"},
         {"t": t_pull0 + (t_pull1 - t_pull0) * 0.75, **k(1.0e6, 2.0e7, 4.5, 0.40), "ease": "linear"},
         {"t": t_pull1, **SPACE, "ease": "inout2"},
+        {"t": A("vo02:lined", 0.1), **SPACE, "ease": "sine"},
+        {"t": B["change"]["t0"] - 1.8, **k(3.2e8, 9.0e8, 2, 0.40), "ease": "inout2"},      # up the line toward the Moon: how far it is
+        {"t": B["change"]["t0"], **SPACE, "ease": "inout2"},
     ],
     "space": [{"t": B["change"]["t0"], **SPACE}, {"t": t_end - 0.1, **SPACE2, "ease": "sine"}, {"t": t_end, **SPACE2}],
-    "end": [{"t": t_end, **SPACE2}, {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"}],
+    "end": [                                                                      # back down to frame 0, by the same log steps as the pull-back, so the loop closes exactly
+        {"t": t_end, **SPACE2},
+        {"t": t_end + (B["tease"]["t1"] - t_end) * 0.45, **k(1.0e6, 2.0e7, 4.5, 0.40), "ease": "sine"},
+        {"t": t_end + (B["tease"]["t1"] - t_end) * 0.75, **k(1.5e2, 3.0e3, 6.5, 0.40), "ease": "linear"},
+        {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"},
+    ],
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
@@ -97,9 +106,9 @@ SPINE = [
     sp_(t_walk0, "an easy pace, nonstop", [["in", f"{R['moon_km']:,} km"], ["op", "÷"], ["in", "5 km/h"]]),
     sp_(A("vo03:nine", -0.05), "nonstop, day and night", [["in", f"{R['hours']:,} h"], ["op", "≈"], ["ans", f"{R['years_nonstop']} years"]]),
     sp_(t_b0, "walking 8 hours a day", [["in", f"{R['hours']:,} h ÷ 8 h"], ["op", "≈"], ["ans", "? years"]]),
-    sp_(t_box, "a working day of walking", [["op", "≈"], ["ans", f"{R['years_8h']} years"]], box=True),
-    sp_(A("vo05:popular", 0.0), "a working day of walking", [["op", "≈"], ["ans", f"{R['years_8h']} years"]], box=True, keep=True),
-    sp_(t_home, "to the Moon on foot", [["op", "≈"], ["ans", f"{R['years_8h']} years"]], box=True, keep=True),
+    sp_(t_box, "a working day of walking", [["ans", f"≈ {R['years_8h']} years"]], box=True),
+    sp_(A("vo05:years", 0.9), "a working day of walking", [["ans", f"≈ {R['years_8h']} years"]], box=True, keep=True),
+    sp_(t_home, "to the Moon on foot", [["ans", f"≈ {R['years_8h']} years"]], box=True, keep=True),
 ]
 SPINE_OUT = t_end
 
@@ -107,7 +116,7 @@ s = R["sens_years_8h"]
 WORK = {
     "t0": t_work0, "t1": t_home - 0.3, "title": "Show your work",
     "rows": [
-        {"t": t_work0 + 0.15, "k": "384,400 km ÷ 5 km/h ÷ 8 h ÷ 365", "v": f"≈ {s[1]} yr", "lit": False},
+        {"t": t_work0 + 0.15, "k": "76,880 h ÷ 8 ÷ 365", "v": f"≈ {s[1]} yr", "lit": False},
         {"t": A("vo06:Slower", -0.05), "k": "slower: 4 km/h", "v": f"≈ {s[0]} yr", "lit": True},
         {"t": A("vo06:quicker", -0.05), "k": "quicker: 6 km/h", "v": f"≈ {s[2]} yr", "lit": True},
     ],
@@ -118,9 +127,9 @@ WORK = {
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "shot": "front", "side": 1},
     {"id": "l-earth", "text": "Earth", "kind": "part", "anchor": "earth", "t0": t_rings[0], "t1": t_end, "shot": "space", "side": 1},
-    {"id": "l-moon", "text": "the Moon · 384,400 km", "kind": "part", "anchor": "moon", "t0": A("vo02:Moon", 0.2), "t1": t_end, "shot": "space", "side": -1},
+    {"id": "l-moon", "text": "the Moon · 384,400 km", "kind": "part", "anchor": "moon", "t0": A("vo02:Moon", 0.2), "t1": t_b0 - 0.2, "shot": "space", "side": -1},
     {"id": "l-nonstop", "text": "nonstop: ≈ 9 yr", "kind": "part", "anchor": "laneA", "t0": t_nine, "t1": t_rw, "shot": "space", "side": -1},
-    {"id": "l-steps", "text": "10,000 steps a day: ≈ 140 yr", "kind": "calc", "anchor": "laneS", "t0": A("vo05:popular", 0.0), "t1": t_work0 - 0.3, "shot": "space", "side": -1},
+    {"id": "l-steps", "text": "10,000 steps a day: ≈ 140 yr", "kind": "calc", "anchor": "laneS", "t0": t_steps, "t1": t_work0 + 20, "shot": "space", "side": -1},
     {"id": "l-apollo", "text": "Apollo: about 3 days", "kind": "anchor", "anchor": "capsule", "t0": t_apollo[0], "t1": t_end - 0.3, "shot": "space", "side": 1},
 ]
 BADGES = [
@@ -128,21 +137,21 @@ BADGES = [
     {"id": "b-scale", "text": "not to scale until the Moon", "t0": t_pull0, "t1": t_pull1 - 0.3, "slot": "tr"},
     {"id": "b-pace", "text": "∵ an easy pace, 5 km/h", "t0": t_walk0, "t1": t_rw - 0.2, "slot": "tl"},
     {"id": "b-road", "text": "∵ no road, no rest", "t0": t_nine + 0.3, "t1": t_rw, "slot": "tr"},
-    {"id": "b-day", "text": "∵ 8 hours a day", "t0": t_b0, "t1": t_work0 - 0.3, "slot": "tl"},
-    {"id": "b-stride", "text": "∵ 0.75 m a step", "t0": A("vo05:popular", 0.0), "t1": t_work0 - 0.3, "slot": "tr"},
-    {"id": "b-rounded", "text": "rounded", "t0": t_box + 0.3, "t1": t_work0 - 0.3, "slot": "bl"},
+    {"id": "b-day", "text": "∵ 8 hours a day", "t0": t_b0, "t1": t_steps - 0.1, "slot": "tl"},
+    {"id": "b-stride", "text": "∵ 0.75 m a step", "t0": t_steps, "t1": B["takeaway"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-rounded", "text": "rounded", "t0": t_box + 0.3, "t1": t_steps - 0.1, "slot": "bl"},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 for b in BADGES:
     if any(abs(b["t1"] - c) < 1e-6 for c in CUTS):
         b["t1"] = round(b["t1"] - 0.3, 4)
 COUNTERS = [
-    {"id": "c-years", "label": "years of walking", "t0": t_walk0, "t1": t_work0 - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
+    {"id": "c-years", "label": "years of walking", "t0": t_walk0, "t1": B["takeaway"]["t0"] - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
 ]
 
 TITLE = {"series": "Possibility Lab · No. 007", "title": "Walking to the *Moon*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next envelope: *everyone, holding hands*", "follow": "Possibility Lab · No. 007",
-       "next": "NASA Moon fact sheet: mean distance about 384,400 km."}
+       "next": "NASA Science, Moon Facts: average distance 384,400 km."}
 
 CUE = {"pull": [t_pull0, t_pull1], "rings": t_rings, "spread": t_spread, "clockA": CLOCK_A, "clockB": CLOCK_B, "box": t_box, "nine": t_nine,
        "apollo": t_apollo, "home": t_home}
@@ -153,7 +162,7 @@ film = {
     "cam": CAM, "cue": CUE, "spine": SPINE, "spineOut": SPINE_OUT, "work": WORK,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": f.captions(max_chars=24, balance=True, keep=("thirty Earths", "side by side", "nine years", "twenty-six years", "a hundred and forty", "an easy pace", "the Apollo crews", "about three days", "never gets close", "the Moon")),
+    "captions": f.captions(max_chars=24, balance=True, keep=("thirty Earths", "side by side", "nine years", "twenty-six years", "a hundred and forty", "an easy pace", "Apollo eleven's crew", "about three days", "the Moon")),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

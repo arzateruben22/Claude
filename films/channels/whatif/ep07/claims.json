@@ -42,42 +42,42 @@
   "id": "c4",
   "sentence": "You would arrive in about nine years.",
   "claim": "384,400 km / 5 km/h = 76,880 h = 3,203 days = 8.8 years: 'about nine years' (nonstop, a thought experiment with no road, rest or air).",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
-  "source_title": "Arithmetic (calc.py: years_nonstop)",
+  "source_url": "https://science.nasa.gov/moon/facts/",
+  "source_title": "Arithmetic (calc.py: years_nonstop); inputs are c1 (NASA Moon Facts, read) and c3 (Bohannon, read)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "calculation",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Computed, not a sourced claim; its inputs are c1 and c3."
+  "note": "Computed in calc.py from the rows named; not a sourced fact. Stays OPEN until a person re-does the sum. 384,400 km / 5 km/h = 76,880 h = 8.8 years; 'about nine' said."
  },
  {
   "id": "c5",
   "sentence": "So give yourself a working day of walking.",
   "claim": "ASSUMPTION: 8 hours of walking a day (the rest eating, sleeping, resting). Shown as a green '∵ eight hours a day' badge.",
-  "source_url": "https://doi.org/10.1093/ageing/26.1.15",
-  "source_title": "Assumption (no source needed; labelled on screen)",
+  "source_url": "https://science.nasa.gov/moon/facts/",
+  "source_title": "Assumption (no source): 8 hours of walking a day",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "assumption",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. A modelling choice, not a measurement. Sensitivity: 4 h a day doubles the years."
+  "note": "ASSUMPTION, labelled '∵ 8 hours a day' on screen. The URL is only the distance source the sum builds on; nothing here is a sourced claim. Stays OPEN."
  },
  {
   "id": "c6",
   "sentence": "A working day of walking gets you there in about twenty-six years.",
   "claim": "76,880 h / 8 h a day = 9,610 days = 26.3 years: 'about twenty-six years' (shown '≈ 26 yr', boxed).",
-  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
-  "source_title": "Arithmetic (calc.py: years_8h)",
+  "source_url": "https://science.nasa.gov/moon/facts/",
+  "source_title": "Arithmetic (calc.py: years_8h); inputs c1, c3 and the assumption c5",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "calculation",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Computed; inputs c1, c3, c5."
+  "note": "Computed in calc.py from the rows named; not a sourced fact. Stays OPEN until a person re-does the sum. 76,880 h / 8 h = 9,610 days = 26.3 years; 'about twenty-six' said, boxed as '≈ 26 years'."
  },
  {
   "id": "c7",
-  "sentence": "Stick to the popular daily step goal, and it is closer to a hundred and forty.",
-  "claim": "10,000 steps a day is the popular goal; at an assumed 0.75 m a step that is 7.5 km a day, so 384,400 / 7.5 = 51,253 days = 140 years: 'closer to a hundred and forty'.",
+  "sentence": "Ten thousand steps a day, the popular goal, is only about seven and a half kilometers.",
+  "claim": "10,000 steps a day is the popular goal; at an assumed 0.75 m a step that is about 7.5 km a day (against 40 km a day at 5 km/h for 8 hours).",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/14715035/",
   "source_title": "Tudor-Locke & Bassett, How many steps/day are enough? Sports Medicine 34 (2004) (abstract via PubMed E-utilities)",
   "accessed": "2026-11-08",
@@ -89,20 +89,20 @@
  },
  {
   "id": "c8",
-  "sentence": "Slower adds years, quicker trims a few, but it never gets close.",
+  "sentence": "Slower adds years, quicker trims a few.",
   "claim": "At 8 h a day: 4 km/h gives about 33 years, 6 km/h about 22 (shown on the work card).",
-  "source_url": "https://doi.org/10.1093/ageing/26.1.15",
-  "source_title": "Arithmetic (calc.py: SENS)",
+  "source_url": "https://science.nasa.gov/moon/facts/",
+  "source_title": "Arithmetic (calc.py: SENS); inputs c1, c3, c5",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
   "kind": "calculation",
-  "note": "OPEN: NOT opened by a person, and not yet read even as a search excerpt: the figure is a candidate from memory. Computed; the sensitivity rows on the work card."
+  "note": "Computed in calc.py from the rows named; not a sourced fact. Stays OPEN until a person re-does the sum. At 8 h a day: 4 km/h about 33 years, 6 km/h about 22."
  },
  {
   "id": "c9",
-  "sentence": "The Apollo crews made the same trip in about three days.",
-  "claim": "Apollo 11 left Earth on 16 July 1969 and entered lunar orbit on 19 July: about three days.",
+  "sentence": "Apollo eleven's crew made the same trip in about three days.",
+  "claim": "Apollo 11 reached lunar orbit about 75 h 50 min after launch (July 1969): about three days. The plural 'crews' was dropped: only Apollo 11 is sourced.",
   "source_url": "https://www.nasa.gov/history/apollo-11-mission-overview/",
   "source_title": "NASA, Apollo 11 Mission Overview",
   "accessed": "2026-11-08",
@@ -111,5 +111,17 @@
   "kind": "source",
   "note": "OPEN until a person opens the page (builder read it, quote in builder_read). 75 h 50 min is about 3.2 days to lunar orbit: \"about three days\" is a fair rounding. Landing was a day later.",
   "builder_read": "\"Apollo 11 launched from Cape Kennedy on July 16, 1969 ... On July 19 ... came the first lunar orbit insertion maneuver. At about 75 hours, 50 minutes into the flight ...\""
+ },
+ {
+  "id": "c10",
+  "sentence": "So that trip takes about a hundred and forty years.",
+  "claim": "384,400 km / 7.5 km a day = 51,253 days = 140 years (calc.py: years_steps).",
+  "source_url": "https://science.nasa.gov/moon/facts/",
+  "source_title": "Arithmetic (calc.py: years_steps); inputs c1, c7 and the stride assumption",
+  "accessed": "2026-11-08",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "kind": "calculation",
+  "note": "Computed in calc.py from the rows named; not a sourced fact. Stays OPEN until a person re-does the sum. Stride 0.75 m is an assumption."
  }
 ]

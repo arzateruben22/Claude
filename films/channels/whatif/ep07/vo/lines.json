@@ -39,28 +39,19 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between. That is a very long way for a pair of shoes.",
+   "text": "The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between.",
    "stars": [
-    "side",
-    "shoes"
+    "side"
    ],
-   "phonemes": "ðə mˈuːn sˈɪts ɐbˌaʊt θˈɜːɾi ˈɜːθs ɐwˈeɪ, lˈaɪnd ˌʌp sˈaɪd baɪ sˈaɪd, wɪð nˈʌθɪŋ bˌʌt dˈɑːɹk bᵻtwˈiːn. ðæt ɪz ɐ vˈɛɹi lˈɔŋ wˈeɪ fɚɹə pˈɛɹ ʌv ʃˈuːz.",
+   "phonemes": "ðə mˈuːn sˈɪts ɐbˌaʊt θˈɜːɾi ˈɜːθs ɐwˈeɪ, lˈaɪnd ˌʌp sˈaɪd baɪ sˈaɪd, wɪð nˈʌθɪŋ bˌʌt dˈɑːɹk bᵻtwˈiːn.",
    "speeds": [
-    0.76,
     0.76
    ],
-   "gaps": [
-    0.38
-   ],
-   "silences": [
-    [
-     7.583,
-     7.963
-    ]
-   ],
+   "gaps": [],
+   "silences": [],
    "file": "02.wav",
-   "dur": 10.807,
-   "sha256": "1bf77e527ee017fec0b00fd77ce054ce6753f7a3d1fc2c343db07ad19fee6e30"
+   "dur": 7.583,
+   "sha256": "be583c8f14797a9d35cc2e11038beb59481f8e19ae3aa50c5d4bfc66e630f814"
   },
   {
    "id": "vo03",
@@ -127,71 +118,77 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "A working day of walking gets you there in about twenty-six years. Stick to the popular daily step goal, and it is closer to a hundred and forty.",
+   "text": "A working day of walking gets you there in about twenty-six years.",
    "stars": [
-    "years",
-    "forty"
+    "years"
    ],
-   "phonemes": "ɐ wˈɜːkɪŋ dˈeɪ ʌv wˈɔːkɪŋ ɡˈɛts juː ðɛɹ ɪn ɐbˌaʊt twˈɛntisˈɪks jˈɪɹz. stˈɪk tə ðə pˈɑːpjʊlɚ dˈeɪli stˈɛp ɡˈoʊl, ænd ɪɾ ɪz klˈoʊsɚ tʊ ɐ hˈʌndɹɪd ænd fˈɔːɹɾi.",
-   "speeds": [
-    0.72,
-    0.7
-   ],
-   "gaps": [
-    0.38
-   ],
-   "silences": [
-    [
-     4.7764,
-     5.1564
-    ]
-   ],
-   "file": "05.wav",
-   "dur": 11.483,
-   "sha256": "b9a7a336ffc3cc9281d27ffc0cddc810d95630556677b11b226b317afa44a525"
-  },
-  {
-   "id": "vo06",
-   "beat": "work",
-   "text": "Slower adds years, quicker trims a few, but it never gets close.",
-   "stars": [
-    "close"
-   ],
-   "phonemes": "slˈoʊɚɹ ˈædz jˈɪɹz, kwˈɪkɚ tɹˈɪmz ɐ fjˈuː, bˌʌt ɪt nˈɛvɚ ɡˈɛts klˈoʊs.",
+   "phonemes": "ɐ wˈɜːkɪŋ dˈeɪ ʌv wˈɔːkɪŋ ɡˈɛts juː ðɛɹ ɪn ɐbˌaʊt twˈɛntisˈɪks jˈɪɹz.",
    "speeds": [
     0.74
    ],
    "gaps": [],
    "silences": [],
+   "file": "05.wav",
+   "dur": 4.669,
+   "sha256": "06853a4259f82dff255028fc82dc99c2668bbdc7931e9d97ee66fa6a52f6fd1a"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Slower adds years, quicker trims a few. Ten thousand steps a day, the popular goal, is only about seven and a half kilometers. So that trip takes about a hundred and forty years.",
+   "stars": [
+    "kilometers",
+    "years"
+   ],
+   "phonemes": "slˈoʊɚɹ ˈædz jˈɪɹz, kwˈɪkɚ tɹˈɪmz ɐ fjˈuː. tˈɛn θˈaʊzənd stˈɛps ɐ dˈeɪ, ðə pˈɑːpjʊlɚ ɡˈoʊl, ɪz ˈoʊnli ɐbˌaʊt sˈɛvən ænd ɐ hˈæf kɪlˈɑːmɪɾɚz. sˌoʊ ðæt tɹˈɪp tˈeɪks ɐbˌaʊt ɐ hˈʌndɹɪd ænd fˈɔːɹɾi jˈɪɹz.",
+   "speeds": [
+    0.82,
+    0.8,
+    0.8
+   ],
+   "gaps": [
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     2.3615,
+     2.7415
+    ],
+    [
+     8.9772,
+     9.3572
+    ]
+   ],
    "file": "06.wav",
-   "dur": 4.727,
-   "sha256": "f8b81d855c88543787b36e8eeb5a5194971e2e257272f80aa68bcdf48ddb2a9d"
+   "dur": 12.514,
+   "sha256": "6be621b43ae393fd45d9f8ddf08be1c897257eb8c0c9383cee0e483dd3687583"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "The Apollo crews made the same trip in about three days. The distance never changed, only the speed.",
+   "text": "Apollo eleven's crew made the same trip in about three days. The distance never changed, only the speed.",
    "stars": [
     "days",
     "speed"
    ],
-   "phonemes": "ðɪ ɐpˈɑːloʊ kɹˈuːz mˌeɪd ðə sˈeɪm tɹˈɪp ɪn ɐbˌaʊt θɹˈiː dˈeɪz. ðə dˈɪstəns nˈɛvɚ tʃˈeɪndʒd, ˈoʊnli ðə spˈiːd.",
+   "phonemes": "ɐpˈɑːloʊ ᵻlˈɛvənz kɹˈuː mˌeɪd ðə sˈeɪm tɹˈɪp ɪn ɐbˌaʊt θɹˈiː dˈeɪz. ðə dˈɪstəns nˈɛvɚ tʃˈeɪndʒd, ˈoʊnli ðə spˈiːd.",
    "speeds": [
-    0.74,
-    0.7
+    0.78,
+    0.74
    ],
    "gaps": [
     0.38
    ],
    "silences": [
     [
-     4.0925,
-     4.4725
+     4.3567,
+     4.7367
     ]
    ],
    "file": "07.wav",
-   "dur": 7.634,
-   "sha256": "7e73d6486c40b10e408fe789ab5c44d9c3eb5acc1bd2543d04fe41830b4302f1"
+   "dur": 7.804,
+   "sha256": "de9cc0cb1247a6c2aa78b7d71885369f372bd6c5aefb7e6bb0af4b1549567972"
   },
   {
    "id": "vo08",

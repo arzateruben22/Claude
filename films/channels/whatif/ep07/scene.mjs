@@ -18,7 +18,7 @@ import { titleFlap, endBox, workCard, injectCss } from "../set/motif.js";
 import { createRig } from "../set/rig.js";
 import { tok } from "../set/look.js";
 import { createPlanet } from "../set/ladder05.js";
-import { unlit } from "../set/aces.js";
+import { unlit, ACES_INV_GLSL, hexRgb } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, WD = FILM.world, CUE = FILM.cue;
 const TK = (window.THEME && window.THEME.tokens) || {};
@@ -59,7 +59,32 @@ const bead = { A: mk(new THREE.CircleGeometry(1, 28), CHALK, 7), B: mk(new THREE
 const rings = new THREE.InstancedMesh(new THREE.RingGeometry(0.86, 1, 48), basic(CHALK2, 0.9), WD.n - 1);
 rings.frustumCulled = false; rings.renderOrder = 2; rings.userData.noProbe = true;
 scene.add(rings);
-const ringE = mk(new THREE.CircleGeometry(1, 64), CHALK2, 6), ringM = mk(new THREE.CircleGeometry(1, 64), CHALK, 6);   // the Earth and the Moon, outlined
+// shaded globes: a half-Lambert chalk sphere, the Earth with a pencil graticule, the Moon with a few darker craters
+const SVS = `varying vec3 vN; void main() { vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
+const SFS = `precision highp float;
+uniform vec3 uCol, uDark, uLight; uniform float uExposure, uOpacity, uGrat, uCrat; varying vec3 vN;
+${ACES_INV_GLSL}
+float hh(vec3 p) { return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453); }
+void main() {
+  vec3 n = normalize(vN); float lam = 0.5 + 0.5 * dot(n, normalize(uLight));
+  vec3 col = mix(uDark, uCol, lam);
+  if (uGrat > 0.0) { vec2 q = vec2(asin(clamp(n.y, -1.0, 1.0)), atan(n.z, n.x)) / radians(30.0); vec2 f = abs(fract(q + 0.5) - 0.5) / max(fwidth(q), vec2(1e-4)); col = mix(col, uDark * 0.45, 0.55 * (1.0 - smoothstep(0.6, 1.6, min(f.x, f.y)))); }
+  if (uCrat > 0.0) { vec3 c = floor(n * 3.0); vec3 cc = normalize((c + 0.5) / 3.0); col *= 1.0 - 0.28 * step(0.7, hh(c)) * smoothstep(0.38, 0.2, length(n - cc)); }
+  gl_FragColor = vec4(acesInv(srgbToLinear(clamp(col, 0.0, 1.0)), uExposure), uOpacity);
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+}`;
+const globe = (hex, grat, crat) => {
+  const c = hexRgb(hex), u = { uCol: { value: new THREE.Vector3(...c) }, uDark: { value: new THREE.Vector3(...c.map((v) => v * 0.28)) }, uLight: { value: new THREE.Vector3(-0.55, 0.45, 0.8) },
+    uExposure: { value: 1 }, uOpacity: { value: 1 }, uGrat: { value: grat }, uCrat: { value: crat } };
+  const m = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), new THREE.ShaderMaterial({ uniforms: u, vertexShader: SVS, fragmentShader: SFS, transparent: true, depthTest: false, depthWrite: false, extensions: { derivatives: true } }));
+  m.renderOrder = 5; m.frustumCulled = false; m.userData.noProbe = true; scene.add(m);
+  return { mesh: m, set: (o) => { m.visible = o > 0.01; u.uOpacity.value = o; } };
+};
+const ringE = globe(CHALK2, 1, 0), ringM = globe(CHALK, 0, 1);
+const walker = createFigure({ tokens: TK, height: WD.fig });          // you, walking: the blue figure at the head of your lane
+walker.set({ at: [0, WD.fig / 2, 0] });
+scene.add(walker.group);   // the Earth and the Moon, outlined
 const limbO = mk(new THREE.CircleGeometry(1, 128), CHALK2, 1), limbI = mk(new THREE.CircleGeometry(1, 128), TK.graphite || "#171A1E", 2);   // the Earth's edge in section, a thin chalk arc
 const mark = mk(new THREE.CircleGeometry(1, 48), CHALK, 7);
 const craters = [[-0.32, 0.28, 0.2], [0.30, -0.05, 0.28], [-0.1, -0.42, 0.15]].map(([x, y, r]) => ({ x, y, r, m: mk(new THREE.CircleGeometry(1, 24), CHALK2, 8) }));                   // the hook's small Moon, "not to scale", on the line above you
@@ -78,7 +103,13 @@ function lerpKeys(K, t) {
   return K[K.length - 1][1];
 }
 const YN = WD.years || 8.77, Y8 = 26.31, YS = 140.32;
-const frac = { A: (t) => Math.min(1, yA(t) / YN), B: (t) => Math.min(1, yB(t) / Y8), S: (t) => Math.min(1, yB(t) / YS) };
+const stairs = (t) => {                      // 8 hours a day: the blue walker walks a third of the time and stops (sleep, food, a shoe), same average pace
+  const t0 = CUE.clockB[0][0], t1 = CUE.clockB[1][0], N = Math.max(1, Math.round(2 * (t1 - t0)));
+  if (t <= t0) return 0; if (t >= t1) return 1;
+  const ph = (t - t0) * 2, n = Math.floor(ph), f = ph - n, s = Math.min(1, f / 0.34), e = s * s * (3 - 2 * s);
+  return Math.min(1, (n + e) / N);
+};
+const frac = { A: (t) => Math.min(1, yA(t) / YN), B: (t) => stairs(t), S: (t) => Math.min(1, yB(t) / YS) };
 const AN = {
   you: () => [0, WD.fig, 0], earth: () => [WD.rE * 0.0, -WD.rE * 0.6, 0], moon: () => [-WD.rM * 0.0, WD.yMoon + WD.rM * 1.25, 0],
   laneA: () => [LANE_X.A * off, WD.top, 0], laneS: () => [LANE_X.S * off, WD.top * frac.S(window.__t || 0), 0],
@@ -125,7 +156,7 @@ window.seek = function (t) {
   moon.set({ opacity: 0, cam: camera.position.toArray(), grid: 1 });
   desk.group.visible = d < 90;
   desk.update({ grid: 1 - seg(Math.log10(d), 1.3, 1.9), pool: [pose.target[0], pose.target[2]], casters: [[0, WD.fig, 0, 0.35]], span: Math.max(800, d * 8) });
-  you.group.visible = d < 4e3;
+  you.group.visible = d < 4e3 && (shot !== "end" || t > beat("tease").t1 - 0.45);
 
   // the lanes spread as the walk begins, then rest
   const spread = E.inout2(seg(t, CUE.spread[0], CUE.spread[1]));
@@ -133,16 +164,19 @@ window.seek = function (t) {
   const fA = frac.A(t), fB = frac.B(t), fS = frac.S(t);
   const started = seg(t, CUE.clockA[0][0] - 0.05, CUE.clockA[0][0] + 0.3);
   const raceOn = seg(t, CUE.clockB[0][0] - 0.05, CUE.clockB[0][0] + 0.3);
-  const top = WD.top, pre = shot === "front" || shot === "pull" || t < CUE.clockA[0][0];
+  const top = WD.top, pre = shot === "front" || t < CUE.clockA[0][0];
   // before the walk: a single thin line up from you (the road to the Moon), blue, full height
   const hookLine = pre ? 1 : 0;
   const setLane = (k, x, f, w, o) => { const l = lane[k]; l.visible = o > 0.003; l.material.opacity = o; place(l, x, 0, w, Math.max(1e-6, top * f)); };
-  setLane("B", LANE_X.B * off, hookLine ? 1 : fB * raceOn + (1 - raceOn) * 0, px * (hookLine ? 0.6 : 1.1), hookLine ? 0.8 : raceOn);
+  const endLine = shot === "end" ? E.inout2(seg(t, beat("tease").t1 - 0.45, beat("tease").t1 - 0.05)) : 0;   // the loop: the line and the little Moon return once the card has lifted
+  setLane("B", LANE_X.B * off, hookLine || endLine > 0 ? 1 : fB * raceOn, px * (hookLine || endLine > 0 ? 0.6 : 1.1), hookLine ? 0.8 : shot === "end" ? Math.max(raceOn * gate, 0.8 * endLine) : raceOn);
   setLane("A", LANE_X.A * off, fA, px * 0.9, started * (shot === "end" ? gate : 1));
   setLane("S", LANE_X.S * off, fS, px * 0.7, raceOn * (shot === "end" ? gate : 1));
   const bd = (k, x, f, r, o, y0 = 0) => { const b = bead[k]; b.visible = o > 0.003; b.material.opacity = o; b.position.set(x, y0 + (top - y0) * f, 0); b.scale.set(r, r, 1); };
   bd("A", LANE_X.A * off, fA, px * 2.4, started);
-  bd("B", LANE_X.B * off, hookLine ? 0 : fB, px * 2.8, raceOn * (hookLine ? 0 : 1));
+  bead.B.visible = false;
+  const wk = space && !hookLine ? raceOn * (shot === "end" ? gate : 1) : 0, hs = d * 0.026 / WD.fig;
+  walker.group.visible = wk > 0.02; walker.group.scale.setScalar(hs); walker.group.position.set(LANE_X.B * off, top * fB, 0);
   bd("S", LANE_X.S * off, fS, px * 2.2, raceOn);
   // the Apollo capsule: a small marker bead up the line in three days, trailing a short streak, beside the others
   const cap = E.inout2(seg(t, CUE.apollo[0], CUE.apollo[1]));
@@ -160,16 +194,17 @@ window.seek = function (t) {
   rings.instanceMatrix.needsUpdate = true;
   rings.visible = space;
   const pl = seg(Math.log10(d), 5.2, 6.8) * (shot === "end" ? gate : 1);
-  ringE.visible = ringM.visible = pl > 0.01; ringE.material.opacity = ringM.material.opacity = 0.9 * pl;
+  ringE.set(pl); ringM.set(pl);
   const lm = seg(d, 80, 120) * (1 - seg(Math.log10(d), 6.2, 6.6)) * (shot === "end" ? gate : 1);
   limbO.visible = limbI.visible = lm > 0.01; limbO.material.opacity = 0.9 * lm; limbI.material.opacity = 1;
   place(limbO, 0, -WD.rE, WD.rE + px * 0.9, WD.rE + px * 0.9); place(limbI, 0, -WD.rE, WD.rE - px * 0.9, WD.rE - px * 0.9);
-  const rE = Math.max(WD.rE, px * 2.6), rM = Math.max(WD.rM, px * 2.2);
-  place(ringE, 0, -rE, rE, rE); place(ringM, 0, WD.yMoon, rM, rM);
+  const rE = Math.max(WD.rE, px * 3.4), rM = Math.max(WD.rM, px * 3.0);
+  ringE.mesh.position.set(0, -rE, 0); ringE.mesh.scale.set(rE, rE, rE);
+  ringM.mesh.position.set(0, WD.yMoon, 0); ringM.mesh.scale.set(rM, rM, rM);
   // the hook's small moon on the line above you: fades once the real one is findable
   const mk0 = 1 - E.inout2(seg(Math.log10(d), 1.5, 2.3));
-  mark.visible = mk0 > 0.01 && d < 4e3; mark.material.opacity = 0.9 * mk0;
-  const mr = 0.26 + Math.max(0, d - 17) * 0.012, my = 3.0 + Math.max(0, d - 17) * 0.2;
+  mark.visible = mk0 > 0.01 && d < 4e3 && (shot !== "end" || endLine > 0.01); mark.material.opacity = 0.9 * mk0 * (shot === "end" ? endLine : 1);
+  const mr = 0.26 + Math.max(0, d - 17) * 0.012, my = 3.75 + Math.max(0, d - 17) * 0.2;
   mark.position.set(0, my, 0); mark.scale.set(mr, mr, 1);
   for (const c of craters) { c.m.visible = mark.visible; c.m.material.opacity = 0.9 * mk0; c.m.position.set(c.x * mr, my + c.y * mr, 0); c.m.scale.set(c.r * mr, c.r * mr, 1); }
 

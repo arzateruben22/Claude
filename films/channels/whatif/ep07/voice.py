@@ -49,12 +49,12 @@ LANG = "en-us"
 # brisk so it is spoken by 2.0 s; its answer slows.
 SPEEDS = {
     "vo01": [0.84, 0.62],
-    "vo02": [0.76, 0.76],
+    "vo02": [0.76],
     "vo03": [0.76, 0.76, 0.72],
     "vo04": [0.8, 0.76, 0.74],
-    "vo05": [0.72, 0.7],
-    "vo06": [0.74],
-    "vo07": [0.74, 0.7],
+    "vo05": [0.74],
+    "vo06": [0.82, 0.8, 0.8],
+    "vo07": [0.78, 0.74],
     "vo08": [0.72],
 }
 GAP, GAP_Q = 0.38, 0.60          # real pauses at the turns (WRITING.md, Flow 7)          # seconds of silence after a sentence, after a question
