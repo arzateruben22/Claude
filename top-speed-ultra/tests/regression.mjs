@@ -2108,6 +2108,41 @@ await group('phone', async (use) => {
     await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
     return out.join('; ');
   });
+  // the sport steering wheel (owner, 2026-11-09: "looks all fresh ... with the button widgets attached"): the Rossini GT,
+  // the Corsa and the OC Hypercar carry its named parts (the two dials' displays, the knurled rotary rings, the thumb
+  // pads, the 12 o'clock stripe, carbon, Alcantara, stitching, shift lights); the Brio and the Vela E keep their own
+  // wheels with the thumb pads and no dials. The left dial shows the handling profile and is drawn only when it
+  // changes: Arcade, Sport, Sim and Custom (the suite's own value) in turn, then nothing new while it stays put.
+  await check('steering wheel: each car\'s parts by name; the left dial follows the profile and redraws only on a change', async () => {
+    const SPORT = ['wheel-dial-left', 'wheel-dial-right', 'wheel-knurl', 'wheel-thumb-pads', 'wheel-stripe', 'carbon', 'alcW', 'stitch', 'led'];
+    const out = [];
+    for (const car of ['rossini-gt', 'rossini-corsa', 'oc-hyper', 'rossini-brio', 'vela-e']) {
+      const names = await game(page, (c) => { const g = window.__game; g.car.configure({ ...g.car.config, car: c }); const n = []; g.car.interior.wheel.traverse((o) => { if (o.isMesh) n.push(o.name); }); return n; }, car);
+      const own = car === 'rossini-brio' || car === 'vela-e', want = own ? ['wheel-thumb-pads'] : SPORT;
+      const missing = want.filter((k) => !names.includes(k));
+      expect(!missing.length, `${car}: no ${missing.join(', ')} (has ${names.join(', ')})`);
+      expect(!own || !names.includes('wheel-dial-left'), `${car}: carries the sport wheel's dials`);
+      out.push(`${car} ${names.length} meshes`);
+    }
+    await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); });
+    const dialState = () => game(page, () => {
+      const w = window.__game.car.interior.wheel, d = w.userData.dials, m = w.getObjectByName('wheel-dial-left');
+      return { left: d?.left, right: d?.right, draws: d?.draws, ver: m?.material.emissiveMap.version };
+    });
+    const seen = [];
+    for (const [h, word] of [[0.15, 'ARCADE'], [0.5, 'SPORT'], [0.9, 'SIM'], [HANDLING, profileName(HANDLING).replace('Simulation', 'Sim').toUpperCase()]]) {
+      const before = await dialState();
+      await game(page, (v) => { const g = window.__game; g.updateSettings({ ...g.settings, handling: v }); }, h);
+      await page.waitForFunction((w) => window.__game.car.interior.wheel.userData.dials?.left === w, word, { timeout: FRAMES_MS, polling: 200 });
+      const after = await dialState();
+      expect(after.ver > before.ver, `handling ${h}: the display was not redrawn (${JSON.stringify({ before, after })})`);
+      seen.push(`${h} ${after.left}`);
+    }
+    // nothing changes: a few frames later the left display has not been drawn again (the right one follows the gear)
+    const a = await dialState(); await frames(page, 6); const b = await dialState();
+    expect(b.ver === a.ver, `the left display redrawn with nothing changed: version ${a.ver} -> ${b.ver}`);
+    return `${out.join(', ')}; left dial ${seen.join(', ')}; right "${b.right}"; no redraw while unchanged`;
+  });
   await check('Go to lists all twenty carriageways', async () => {
     await page.getByRole('button', { name: 'Go to' }).click();
     const n = await page.locator('.grid.nav .gcell').count();

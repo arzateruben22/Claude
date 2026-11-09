@@ -48,12 +48,13 @@ import * as G from './car-gauges';
 import { windscreenDust, badgeTex, plaqueTex, once } from './car-tex';
 import { plaqueNumber } from '../game/founder';
 import { CarMirror } from './car-mirror';
+import { sportRimAt, addSportSpokes, addThumbPads, wheelDials, knurlMat, padMat, WheelDials } from './wheel-sport';
 
 export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number; plaque?: string }
 // each car's trim: seat colour and kind, thread, the dash top's material, the fascia band, the wheel, the binnacle
 interface Theme { seat: number; seatKind: 'leather' | 'buckets'; stitch: number; dash: 'alc' | 'nappa'; band: 'carbon' | 'alu'; wheel: 'gt' | 'brio' | 'corsa' | 'vela'; binnacle: 'tach' | 'screen'; door: 'nappa' | 'carbon'; head: number; stripe?: number; belt?: number }
 const THEMES: Record<string, Theme> = {
-  gt: { seat: 0x7a3f1c, seatKind: 'leather', stitch: 0xc58a52, dash: 'alc', band: 'carbon', wheel: 'gt', binnacle: 'tach', door: 'nappa', head: 0x3a3a3e },
+  gt: { seat: 0x7a3f1c, seatKind: 'leather', stitch: 0xc58a52, dash: 'alc', band: 'carbon', wheel: 'gt', binnacle: 'tach', door: 'nappa', head: 0x3a3a3e, stripe: 0xb8773f },
   brio: { seat: 0x1c2740, seatKind: 'leather', stitch: 0x8fb0e0, dash: 'nappa', band: 'alu', wheel: 'brio', binnacle: 'tach', door: 'nappa', head: 0x55565b },
   corsa: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0xe8b81c, dash: 'alc', band: 'carbon', wheel: 'corsa', binnacle: 'tach', door: 'carbon', head: 0x29292b },
   vela: { seat: 0xbdb5a5, seatKind: 'leather', stitch: 0x7d7870, dash: 'nappa', band: 'alu', wheel: 'vela', binnacle: 'screen', door: 'nappa', head: 0xa39e93 },
@@ -70,7 +71,8 @@ export interface Cockpit {
   wheel: THREE.Object3D;
   update?(dt: number): void;
   // rpm moves the tachometer's needle; the hypercar's live display takes the rest (car-gauges hyperScreen)
-  setInstruments?(o: { rpm?: number } & Partial<G.HyperReadout>): void;
+  // profile (settings profileOf), tank (0..1) and tcs feed the sport wheel's two displays (wheel-sport wheelDials)
+  setInstruments?(o: { rpm?: number; profile?: string; tank?: number; tcs?: boolean } & Partial<G.HyperReadout>): void;
   rearView?: { at: THREE.Vector3; normal: THREE.Vector3; w: number; h: number };   // the rear-view mirror's face: centre, normal, size
   mirrors: CarMirror[];
   // the hypercar's gauge pod on the dash, kept for M5's Cold Thrust tank gauge: the face's centre, its normal (toward
@@ -124,11 +126,12 @@ function reflectMatrix(p0: V3, n: V3) {
 const clean = (g: THREE.BufferGeometry) => { const x = g.index ? g.toNonIndexed() : g.clone(); for (const k of Object.keys(x.attributes)) if (k !== 'position' && k !== 'normal') x.deleteAttribute(k); return x; };
 
 // rim frames (as the game's cockpit): path, outward normal in the wheel plane, +z toward the driver
-function rimFrames(a0: number, a1: number, n: number) {
+// (at: the rim's path, spec.ts rimAt or the sport wheel's flatter-bottomed sportRimAt, the same wherever the hands are)
+function rimFrames(a0: number, a1: number, n: number, at: (a: number) => V3 = rimAt) {
   const path: V3[] = [], N: V3[] = [], B: V3[] = [], as: number[] = [];
   for (let i = 0; i < n; i++) {
     const a = a0 + (a1 - a0) * (i / (n - 1));
-    const p = rimAt(a), t = rimAt(a + 0.002).sub(rimAt(a - 0.002)).normalize();
+    const p = at(a), t = at(a + 0.002).sub(at(a - 0.002)).normalize();
     N.push(p.clone().sub(t.clone().multiplyScalar(p.dot(t))).normalize()); path.push(p); B.push(v3(0, 0, 1)); as.push(a);
   }
   return { path, N, B, as };
@@ -186,7 +189,6 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     tach: once('m.tach' + q + P.brand, () => new THREE.MeshStandardMaterial({ map: tachT.map, emissiveMap: tachT.emissiveMap, emissive: 0xffffff, emissiveIntensity: 0.85, roughness: 0.55 })),
     screenL: once('m.scrL', () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: G.leftScreenTex(), emissiveIntensity: 0.9, roughness: 0.18 })),
     screenR: once('m.scrR', () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: G.rightScreenTex(), emissiveIntensity: 0.9, roughness: 0.18 })),
-    icons: once('m.icons', () => new THREE.MeshStandardMaterial({ map: G.iconAtlas(), roughness: 0.35 })),
     start: once('m.start', () => new THREE.MeshPhysicalMaterial({ map: G.startTex(), roughness: 0.3, clearcoat: 0.6 })),
     red: once('m.red', () => new THREE.MeshPhysicalMaterial({ color: 0xb3151b, roughness: 0.35, clearcoat: 0.5 })),
     dial: once('m.dial', () => new THREE.MeshStandardMaterial({ map: G.modeDialTex(), transparent: true, alphaTest: 0.4, roughness: 0.5 })),
@@ -203,6 +205,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   mats.band = T.band === 'carbon' ? mats.carbon : mats.alu;
   mats.doorLow = T.door === 'carbon' ? mats.carbon : mats.nappa;
   mats.alcW = M.alcantara(q, 0x2a2a2d, 0.05);
+  // the steering wheel's knurled rotary rings and its thumb pads (wheel-sport.ts); the dials' displays are added with the wheel
+  mats.swKnurl = knurlMat(q); mats.swPad = padMat(q);
   // the headliner, pillars and visors: one Alcantara per car (dark grey, grey, black, ivory)
   mats.head = M.alcantara(q, T.head, 0.08); (mats.head as THREE.Material).side = THREE.DoubleSide;
   // the hypercar's ambient line: its LED, dimmed to a cabin accent
@@ -390,31 +394,37 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   wheelMount.position.copy(wheelAt); wheelMount.rotation.x = WHEEL_TILT;
   group.add(wheelMount);
   const wheelM = mat(wheelAt.x, wheelAt.y, wheelAt.z, WHEEL_TILT);
+  let dials: WheelDials | null = null;
   {
     const segs = high ? 22 : 12;
+    // each car's wheel. GT, Corsa and the OC Hypercar: the premium sport wheel (wheel-sport.ts), a flat bottom, 2x2
+    // twill carbon top and bottom with brushed rings at the joins, black Alcantara grips with double contrast
+    // stitching and a 12 o'clock stripe in the car's trim colour (GT cognac, Corsa yellow, Hypercar ice blue), slim
+    // gloss-black spokes with brushed edges and a thumb pad each, twin lower legs each carrying a rotary dial round a
+    // live display and a toggle, shift lights across the top. Brio: all Nappa (perforated grips) with aluminium
+    // spokes, its start button and mode dial, and the thumb pads; Vela: smooth Nappa on a round hub with two slim
+    // brushed spokes, the V badge and the thumb pads.
+    const ws = T.wheel, sport = ws === 'gt' || ws === 'corsa';
+    const at = sport ? sportRimAt : rimAt;
     const zone = (a0: number, a1: number, key: string, n: number, grow = 1) => {
-      const f = rimFrames(a0, a1, n);
+      const f = rimFrames(a0, a1, n, at);
       wk.add(key, sweepGeo(f.path, f.N, f.B, (i) => rimA(f.as[i]) * grow, (i) => rimB(f.as[i]) * grow, segs, { around: 0.13, flip: true }));
       return f;
     };
-    // each car's wheel: GT carbon top and bottom, perforated Nappa grips, carbon spokes, shift lights; Brio all
-    // Nappa with aluminium spokes; Corsa all Alcantara with a yellow stripe at 12 o'clock, carbon spokes, shift
-    // lights; Vela smooth Nappa on a round hub with two slim brushed spokes and the V badge
-    const ws = T.wheel;
-    const rimTop = ws === 'gt' ? 'carbon' : ws === 'corsa' ? 'alcW' : 'wheelNappa';
-    const gripK = ws === 'corsa' ? 'alcW' : ws === 'vela' ? 'wheelNappa' : 'nappaPerf';
-    const spokeK = ws === 'brio' || ws === 'vela' ? 'alu' : 'carbon';
-    // The grips are perforated Nappa from 46 degrees below to 52 above each side, so a hand at spec GRIP (32 and
-    // 148 degrees, about +-16 degrees of rim under the palm and fingers) sits wholly on leather: no seam, ring or
-    // step under the fingers. Carbon only across the top (the shift lights) and the bottom.
+    const rimTop = sport ? 'carbon' : 'wheelNappa';
+    const gripK = sport ? 'alcW' : ws === 'vela' ? 'wheelNappa' : 'nappaPerf';
+    const spokeK = 'alu';
+    // The grips run from 46 degrees below to 52 above each side, so a hand at spec GRIP (32 and 148 degrees, about
+    // +-16 degrees of rim under the palm and fingers) sits wholly on leather or Alcantara: no seam, ring or step
+    // under the fingers. Carbon only across the top (the shift lights) and the bottom (the sport wheel's flat).
     const G0 = 0.91, G1 = Math.PI - G0, B0 = Math.PI + 0.8, B1 = Math.PI * 2 - 0.8;
     zone(G0, G1, rimTop, high ? 56 : 30);
     zone(B0, B1, rimTop, high ? 52 : 28);
     const grips = [zone(B1 - Math.PI * 2, G0, gripK, high ? 64 : 34), zone(G1, B0, gripK, high ? 64 : 34)];
-    // the perforation stops short of the edges: a plain Nappa band where each grip meets the carbon
+    // the perforation stops short of the edges: a plain Nappa band where each grip meets the top and bottom
     if (gripK === 'nappaPerf') for (const [a0, a1] of [[G0 - 0.09, G0], [B1 - Math.PI * 2, B1 - Math.PI * 2 + 0.09], [G1, G1 + 0.09], [B0 - 0.09, B0]]) zone(a0 - 0.002, a1 + 0.002, 'wheelNappa', 8);
-    // the Corsa's centre marker: a 25 mm yellow band at the top, a hair proud
-    if (ws === 'corsa') zone(Math.PI / 2 - 0.07, Math.PI / 2 + 0.07, 'stripe', 8, 1.03);
+    // the centre marker: a 25 mm band at the top in the trim colour, a hair proud
+    if (sport) zone(Math.PI / 2 - 0.07, Math.PI / 2 + 0.07, 'stripe', 8, 1.03);
     // double stitching on the inside of each grip, toward the driver
     for (const f of grips) for (const th of [Math.PI * 0.69, Math.PI * 0.81]) {
       const path: V3[] = [], across: V3[] = [], lift: V3[] = [];
@@ -427,24 +437,24 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       });
       wk.add('stitch', stitchRow(path, across, lift, 0.0016));
     }
-    // brushed rings where leather meets carbon
-    if (ws === 'gt') for (const a of [G0, G1, B0, B1]) {
+    // brushed rings where the grips meet the carbon (at the joins sportRimAt is spec rimAt)
+    if (sport) for (const a of [G0, G1, B0, B1]) {
       const p = rimAt(a), t = rimAt(a + 0.002).sub(rimAt(a - 0.002)).normalize();
       // a 3 mm band, 0.8 mm proud of the rim (the torus's tube is scaled along the rim to 2.6 mm)
-      const ring = new THREE.TorusGeometry(1, 0.075, 8, 40); ring.scale(rimA(a) * 0.97, rimB(a) * 0.97, 0.035);
+      const ring = new THREE.TorusGeometry(1, 0.075, 8, high ? 40 : 24); ring.scale(rimA(a) * 0.97, rimB(a) * 0.97, 0.035);
       // the torus's ring plane: x along the outward normal, y toward the driver, axis along the rim
       const N = p.clone().sub(t.clone().multiplyScalar(p.dot(t))).normalize();
       ring.applyMatrix4(new THREE.Matrix4().makeBasis(N, v3(0, 0, 1), t).setPosition(p));
       wk.add('alu', ring, null, 0.02);
     }
     // shift lights across the top, on the driver's face of the rim
-    if (ws === 'gt' || ws === 'corsa') for (let i = 0; i < 10; i++) {
+    if (sport) for (let i = 0; i < 10; i++) {
       const a = 2.0 - (i / 9) * 0.88, p = rimAt(a);
       const led = new RoundedBoxGeometry(0.0085, 0.0042, 0.003, 1, 0.001);
       led.rotateZ(a - Math.PI / 2); led.translate(p.x - Math.cos(a) * 0.004, p.y - Math.sin(a) * 0.004, rimB(a) + 0.0006);
       wk.add('led', led, null, 0.02);
     }
-    // hub: a Nappa airbag cover with the badge, three carbon spokes with aluminium inlays and button pods
+    // hub: a Nappa airbag cover with the badge (R, V or the OC mark) in a chrome ring
     const hub = ws === 'vela' ? extrude(roundRect(0.13, 0.13, 0.065, 0, -0.004), 0.034, 0.012) : extrude(roundRect(0.19, 0.122, 0.04, 0, -0.004), 0.034, 0.012);
     hub.translate(0, 0, -0.036);
     wk.add('wheelNappa', hub);
@@ -453,22 +463,22 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const badge = new THREE.CircleGeometry(0.022, 40); badge.translate(0, 0.004, -0.0005);
     wk.add('badgeHub', badge);
     const bring = new THREE.TorusGeometry(0.0228, 0.0016, 8, 48); bring.translate(0, 0.004, -0.0005); wk.add('chrome', bring, null, 0.02);
-    for (const sd of [-1, 1]) {
-      const sp = ws === 'vela' ? new RoundedBoxGeometry(0.11, 0.03, 0.016, 3, 0.007) : new RoundedBoxGeometry(0.082, 0.052, 0.02, 3, 0.008);
-      sp.translate(sd * (ws === 'vela' ? 0.12 : 0.13), -0.006, -0.012); wk.add(spokeK, sp);
-      const inlay = new THREE.BoxGeometry(0.07, 0.003, 0.002); inlay.translate(sd * 0.13, -0.03, -0.0015); wk.add('alu', inlay, null, 0.02);
-      const pod = new RoundedBoxGeometry(0.058, 0.04, 0.008, 2, 0.004); pod.translate(sd * 0.128, -0.004, 0.0); wk.add('gloss', pod, null, 0.05);
-      // three buttons a side, each a cell of the icon atlas
-      const cells = sd < 0 ? [0, 2, 3] : [1, 4, 5];
-      [[-0.013, 0.007], [0.013, 0.007], [0, -0.01]].forEach(([bx, by], k) => {
-        const b = new THREE.CylinderGeometry(0.0072, 0.0076, 0.004, 24, 1, false); b.rotateX(Math.PI / 2);
-        b.translate(sd * 0.128 + bx, -0.004 + by, 0.005); wk.add('gloss', b, null, 0.05);
-        const face = new THREE.CircleGeometry(0.0066, 24); const uv = face.attributes.uv as THREE.BufferAttribute;
-        for (let i = 0; i < uv.count; i++) uv.setX(i, (cells[k] + uv.getX(i)) / 8);
-        face.translate(sd * 0.128 + bx, -0.004 + by, 0.0071); wk.add('icons', face);
-      });
+    if (sport) {
+      // the sport wheel's spokes, legs, widget sets and chin, its thumb pads, and its two live displays
+      addSportSpokes(wk, { high });
+      addThumbPads(wk, 0.122, -0.006, 0.0012);
+      dials = wheelDials(hyper ? 'hyper' : 'std', hyper ? 0x5eb8ff : ws === 'corsa' ? 0xf0c020 : 0xe0a060, q);
+      mats.swDialL = dials.left; mats.swDialR = dials.right;
+    } else {
+      // the Brio's three and the Vela's two: the car's own spokes, each with a thumb pad
+      for (const sd of [-1, 1]) {
+        const sp = ws === 'vela' ? new RoundedBoxGeometry(0.11, 0.03, 0.016, 3, 0.007) : new RoundedBoxGeometry(0.082, 0.052, 0.02, 3, 0.008);
+        sp.translate(sd * (ws === 'vela' ? 0.12 : 0.13), -0.006, -0.012); wk.add(spokeK, sp);
+        const inlay = new THREE.BoxGeometry(0.07, 0.003, 0.002); inlay.translate(sd * 0.13, -0.03, -0.0015); wk.add('alu', inlay, null, 0.02);
+      }
+      addThumbPads(wk, ws === 'vela' ? 0.12 : 0.128, -0.006, ws === 'vela' ? -0.0038 : -0.0012);
     }
-    if (ws !== 'vela') {
+    if (ws === 'brio') {
     const bot = new RoundedBoxGeometry(0.058, 0.07, 0.02, 3, 0.008); bot.translate(0, -0.102, -0.012); wk.add(spokeK, bot);
     const binl = new THREE.BoxGeometry(0.003, 0.05, 0.002); binl.translate(0, -0.104, -0.0015); wk.add('alu', binl, null, 0.02);
     // engine start (lower left) and the drive-mode dial (lower right)
@@ -495,7 +505,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       if (sd < 0) p.applyMatrix4(new THREE.Matrix4().makeScale(-1, 1, 1));
       p.translate(sd * 0.045, 0.028, -0.052);
       const bu = p.attributes.uv as THREE.BufferAttribute, bp = p.attributes.position; for (let i = 0; i < bu.count; i++) bu.setXY(i, bp.getX(i) / 0.12, bp.getY(i) / 0.12);
-      kit.add('anod', p, wheelM.clone().multiply(mat(0, 0, 0, 0, 0, sd * 0.1)));
+      // (the sport wheel's in brushed aluminium, the Brio's and the Vela's anodised dark)
+      kit.add(T.wheel === 'gt' || T.wheel === 'corsa' ? 'alu' : 'anod', p, wheelM.clone().multiply(mat(0, 0, 0, 0, 0, sd * 0.1)));
     }
   }
 
@@ -788,7 +799,12 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
 
   // ---------------------------------------------------------------- build
   kit.build(mats, group, { shadow: (k) => ['alc', 'nappa', 'tan', 'paint', 'carbon', 'plastic'].includes(k) });
-  wk.build(mats, wheelMount, { shadow: (k) => ['nappaPerf', 'wheelNappa', 'carbon'].includes(k) });
+  wk.build(mats, wheelMount, { shadow: (k) => ['nappaPerf', 'wheelNappa', 'carbon', 'alcW'].includes(k) });
+  // the sport wheel's parts by name (the suite looks for them): the dials' displays, the knurled rings, the thumb pads,
+  // the 12 o'clock stripe
+  for (const [k, n] of [['swDialL', 'wheel-dial-left'], ['swDialR', 'wheel-dial-right'], ['swKnurl', 'wheel-knurl'], ['swPad', 'wheel-thumb-pads'], ['stripe', 'wheel-stripe']]) {
+    const m = wheelMount.getObjectByName(k); if (m) m.name = n;
+  }
   const outside = new THREE.Group(); outside.name = 'body'; group.add(outside);
   bk.build(mats, outside, { shadow: (k) => k === 'paint' || k === 'mirrorPaint' || k === 'dark' });
   for (const k of ['glass', 'sideGlass', 'gaugeGlass', 'dust']) { const m = group.getObjectByName(k); if (m) { m.renderOrder = k === 'dust' ? 4 : 2; m.castShadow = false; } }
@@ -843,9 +859,24 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // the hypercar's display: the latest readout, repainted at most 15 times a second and only when it changed
   const disp: G.HyperReadout = { mph: 0, gear: 'N', kw: 0, kwMax: 1500, rpm: 0, rpmFrac: 0, mode: 'SPORT' };
   let liveT = 0, liveKey = '';
-  const setInstruments = (s: { rpm?: number } & Partial<G.HyperReadout>) => { if (s.rpm !== undefined) rpm = s.rpm; if (hyper) Object.assign(disp, s); };
+  // the sport wheel's displays: the latest profile, gear, TCS, tank and tune, looked at 10 times a second and drawn
+  // only when one of them changed (wheel-sport wheelDials)
+  const wd = { profile: 'sport', gear: 'N', tcs: true, tank: 1, tune: 'UNLEASHED', t: 1 };
+  wheelMount.userData.dials = dials?.shown ?? null;
+  const setInstruments = (s: { rpm?: number; profile?: string; tank?: number; tcs?: boolean } & Partial<G.HyperReadout>) => {
+    if (s.rpm !== undefined) rpm = s.rpm;
+    if (hyper) Object.assign(disp, s);
+    if (dials) {
+      if (s.profile !== undefined) wd.profile = s.profile;
+      if (s.gear !== undefined) wd.gear = s.gear;
+      if (s.tcs !== undefined) wd.tcs = s.tcs;
+      if (s.tank !== undefined) wd.tank = s.tank;
+      if (s.mode !== undefined) wd.tune = s.mode;
+    }
+  };
   const update = (dt: number) => {
     flutter += dt;
+    if (dials && (wd.t += dt) >= 0.1) { wd.t = 0; dials.set(wd.profile, wd.gear, wd.tcs, wd.tank, wd.tune); }
     if (hyper && (liveT += dt) >= 1 / 15) {
       liveT = 0;
       const key = `${Math.round(disp.mph)}|${disp.gear}|${Math.round(disp.kw / 10)}|${Math.round(disp.rpmFrac * 12)}|${(disp.rpm / 1000).toFixed(1)}|${disp.mode}`;
