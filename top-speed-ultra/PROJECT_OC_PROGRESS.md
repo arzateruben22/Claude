@@ -4,6 +4,158 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-08: the venues in the game: drive to Lot 57 or Stoppage Time, get out, walk, drive away (claude/venues-in-game)
+
+- **Reviewers' outcome: kept by the play and code reviews (2026-11-09).** After fix r1 the play review drove to Lot 57 (ramp 1142) and Stoppage Time (ramp 124) at 390 x 844 touch, got out, walked, and drove away by each venue's own Car then Drive, back on an on-ramp at 0 mph and merging at 62-63 mph; three Stoppage Time round trips held one host, heap 104 MB, programs 57, hosts 0; 844 x 390 and 1440 x 900 also checked; no page errors.
+- **Review fix r1 (2026-11-09): Stoppage Time had no way back in.** The reviewers played both venues from the artifact
+  page at 390 x 844, 844 x 390 and 1440 x 900: Lot 57 did what the owner asked, Stoppage Time did not. The bar offered
+  Drive only within 1.8 m of the car door, but you get out 1.94 m from it and Car's walk ends 2.05 m from it, so Drive
+  never appeared (in the game or on the bar's own page), and the game's Drive on is hidden on foot. The earlier claim
+  below that "the venue's own Drive" was proven for both venues was wrong: the suite and the proof frames had called
+  `window.__game.drive()`, not the button. Fixed:
+  - `src/onfoot/venues/sportsbar/main.ts` line 471 (one line, the sports-bar lane edits this file too): `nearCar` is
+    now within 2.6 m. Drive is offered where you get out (1.94 m) and where Car's walk ends (2.05 m). The standalone
+    page, probed at 390 x 844 touch: spawn ["Drive"] at 1.94 m; inside the front door [none] at 36.84 m; tap Car, then
+    ["Drive"] at 2.05 m; a tap on Drive gives its own-page toast ("...Driving out comes when it joins the game."); no
+    errors. `node tests/sportsbar.mjs --only=seats,honesty`: 8 of 8 pass.
+  - The suite's `venues` group now drives away the way a player does: right after Get out it asserts the venue offers
+    Drive where you stand; after the walk it taps Car (`#car`), runs the walk ahead with the venue's sim, waits for the
+    venue's HUD to put Drive on `#act`, taps it, and checks you're back on an on-ramp at 0 mph with the venue gone. The
+    round trips go back the same way, and the phone check taps Drive on instead of calling the hook.
+  - The round-trip geometry check was flaky (the reviewers' run: 215, 215, 405; mine before the change: the same). A
+    probe of 5 trips showed the game renderer's count steps up once by about 185, on whichever trip back its first
+    frames draw scene objects not drawn before (the scene graph itself grew by 6), and then holds flat: 220, 220, 405,
+    405, 405, while a second probe of 4 get-outs stayed at 220 throughout. The renderer's count is a high-water mark of
+    the scene's geometries it has drawn, so the check now reads the game's scene graph (distinct geometries, at most
+    +16 from trip 2 to 3; no venue object left in it) and that the renderer holds no more than the scene has (+24),
+    with textures and programs as before.
+  - The phone part of the group booted a second game beside the first, still drawing; it timed out twice (300 s, then
+    600 s) at a load average of about 20. It now runs in a context of its own after the first closes.
+  - `tests/venues-shoot.mjs` taps Get out (phone) or clicks it (desktop) instead of calling the hook, then taps Car and
+    Drive, shoots the Drive button by your car, the cockpit back on the on-ramp, and the car after a 40 s cruise. Frames
+    carry `-r1`.
+- **r1 results (2026-11-09, load average 13 to 20 from other lanes).** `npx tsc --noEmit` and
+  `npx tsc --noEmit -p tsconfig.game.json` clean. `npm run build`: dist/artifact.html 4,868,737 bytes (the same size as
+  before the fix: 1.8 and 2.6 are the same length), 5 chunks folded in, only artifact.html marked owner-test. Standalone
+  builds: dist/onfoot/index.html 1,207,092 bytes, dist/sportsbar/sportsbar.html 1,428,999 bytes.
+  - `npm test -- --only=boot,race,phone,progression,venues`: **49/50 passed**; the one failure was race's "racing slowly
+    ends Too far behind" (a 10 s wait timed out under load; the group untouched by this work), which passed on a rerun of
+    `--only=race` (7/7). Earlier r1 runs: 46/48 (the round-trip geometry flake and the phone boot timeout, both fixed
+    above; also once the owner-test check read the chip as "Owner mode Â· test build": dist/artifact.html has no charset
+    meta, since the artifact host adds the shell, so Chromium opening it from disk sometimes guesses Windows-1252; it
+    passed on the other two runs; the marking is another lane's and was not changed).
+  - The venues lines: Lot 57 parked on ramp 1142 at 276 m after 89 s of Auto-drive; ready in 31.1 s, 0 game frames on
+    foot, 27 people, standing 0.55 m from the door with Drive on offer; walked 60.7 m to the bar and ordered; Car walked
+    you to 0.57 m, Drive (76 x 76) tapped: on the ramp to CA-57 North (path 233) at 4 m, 0 mph. Stoppage Time parked on
+    ramp 124 at 285.7 m after 90 s; ready in 57.8 s, 0 game frames, standing 1.94 m from the door with Drive on offer;
+    walked 34.9 m in through the front door (indoors); Car walked you to 2.05 m, Drive tapped: on the ramp to I-5 North
+    (path 1101) at 4 m, 0 mph. Three Lot 57 round trips, each back by the venue's Drive: heap 174.6 MB before, then
+    169.2, 169.5, 169.6 MB; game renderer geometries 215/215/215 (scene graph 548/548/548), textures 92/92/92, programs
+    57/57/57; the venue's renderer at ready 164 geometries and 96 textures each time. Phone (own context): prompt
+    168 x 48 "Park at Lot 57"; Get out 168 x 52, focused; Drive on 127 x 52; a tap on Drive on: on the ramp to CA-57
+    North. No page errors.
+  - **The replay** (`node tests/venues-shoot.mjs`, the artifact page with the viewport meta injected, 390 x 844, touch,
+    DPR 3; then 844 x 390 and 1440 x 900): Stoppage Time: tapped Get out ([Drive] offered at 1.94 m), walked in through
+    the front door (indoors, 36.84 m from the car), tapped Car (2.05 m, [Drive]), tapped Drive: on the ramp to I-5 North
+    (path 1101) at 4 m, 0 mph, no venue styles left; a 40 s cruise: I-5 North main road at 59 mph. Lot 57 the same way:
+    Get out ([Drive] at 0.55 m), into the yard by a group (27 people, Lively), Car (0.55 m), Drive: CA-57 North on-ramp
+    at 0 mph, then CA-57 North main road at 59 mph. Desktop 1440 x 900 by click: Lot 57 back to CA-57 North (59 mph after
+    the cruise), Stoppage Time back to I-5 North (60 mph). No page errors on either page.
+  - Frames (tests/out/venues/, each looked at): `phone-stoppage-5-drive-by-your-car-r1.png` (third person by your red
+    car in the bar's lot at night, Drive on the action button, the chip and the credit on screen),
+    `phone-stoppage-6-back-on-the-ramp-r1.png` (cockpit, 0 mph, "To I-5 North"), `phone-stoppage-7-merged-r1.png`
+    (61 mph on I-5 North, gantries ahead), `phone-stoppage-4-inside-r1.png` (pool tables, booths, the bar),
+    `phone-stoppage-2-arrival-r1.png` ("Drove Anaheim Way to Stoppage Time · street driving isn't built yet", Get out /
+    Drive on), `phone-lot57-5-drive-by-your-car-r1.png`, `phone-lot57-6-back-on-the-ramp-r1.png`,
+    `phone-lot57-7-merged-r1.png` (62 mph on CA-57 North), `phone-landscape-844x390-getout-r1.png`, and the desk
+    `-r1` set (`desk-stoppage-5-drive-by-your-car-r1.png` and the rest), 24 in all.
+  - Still true: Stoppage Time's chip says "Simulated crowd · Lively" while S1 has no people yet (its S2 brings them).
+
+- **The owner (2026-11-08, about 2:40 PM PT):** "Wait so is everything connect now? Like can I drive OC ultra and then go
+  to either sports bar?" (not yet: they were separate pages), then "keep going and rendering and dont stop, lets finish
+  this by tonight as soon as possible". Built: phase 3a of PROJECT_OC_ON_FOOT.md and J1 of PROJECT_OC_SPORTS_BAR.md,
+  with the fade. Real surface-street driving (3b, J2) is still a later phase, and the game says so.
+- **Destinations.** "Lot 57" and "Stoppage Time" are places in the Go to sheet (a Places row above the freeways) and on
+  the World Map's Places tab (with Navigate to while driving). `navigateTo('Lot 57')` routes to ramp 1142 (CA-57 South,
+  Orangewood Avenue); `navigateTo('Stoppage Time')` to ramp 124 (I-5 North, Disney Way / Katella Avenue), from the
+  freeway-link files (another of the venue's exits if the default can't be reached). The corner-map route, the lane
+  hint, the chevrons and Auto-drive work unchanged; the card names the exit and the venue ("Keep right for Orangewood
+  Ave exit to Lot 57", destination "Lot 57"), and the route carries on down the ramp.
+- **Arrival** (`src/game/venues.ts`, `Game.arriveVenue`). On any of the plans' ramps (Lot 57: 1142, 1264, 562;
+  Stoppage Time: 124 and 791 to 573), route or not, in Free Drive: 80 m before the ramp meets the street (where the data's
+  terminal projects onto the ramp; on 1142 and 562 that is mid-ramp, at 356 m and 410 m), or on a tap of the "Park at
+  Lot 57" prompt shown on those ramps, the screen fades for about a second and the car is parked: the game stops
+  driving, the toast says "Drove Orangewood Ave to Lot 57 · street driving isn't built yet" (State College Blvd from
+  1264; "Drove Anaheim Way to Stoppage Time ·…", Katella Ave from the I-5 South exit), the same words stay above the
+  controls, and Get out and Drive on replace the pedals (52 px tall, labelled buttons; Get out takes the keyboard focus).
+  Auto-drive arriving this way hands back in the same toast ("Auto-drive off: you have control").
+- **Get out** (`Game.getOut`, `src/game/onfoot.ts`). A fade; the game's loop stops (no rAF, no frames drawn: the suite
+  counts 0 game frames on foot), its sound is suspended and its input detached; the venue's code loads (a dynamic
+  import) and mounts in the page: you stand by the driver's door in first person with your car (its model and paint,
+  the hypercar included) in your stall, the venue's own HUD, loading screen, controls and hooks (`window.__onfoot`).
+  Lot 57 has everything its page has (tap to go, Sit, Order, Join, Leave, the people); Stoppage Time its S1 venue and
+  avatar. The clock follows the game's time (a preset's hour today, or Live); the quality maps Low to Low, High to High
+  (Stoppage Time's HD), Ultra to Ultra, Medium to Low on a touch screen and High on a desktop.
+- **Drive.** The venue's own Drive (at the driver's door; Car walks you there; at Stoppage Time only since r1, above) or
+  the car's Drive on: a fade, the
+  cockpit, the engine, and the car on the nearest on-ramp back to the freeway (preferring the one onto the freeway you
+  left by) at 0 mph, with a toast ("On the ramp to CA-57 North · street driving isn't built yet"). The venue is disposed
+  completely: its frame loop stops, the listeners it put on window and document come off, the people, parked cars and
+  composer are disposed, every geometry, material and texture in its scene is released, the renderer is disposed and its
+  context dropped, `window.__onfoot` goes, and the game's stylesheets come back. On foot the game's UI (pause, the
+  radial menu, Menu, Garage) is hidden and cleanly unavailable; the venue's own pause works.
+- **Architecture.** `src/onfoot/embed.ts` (new): `mountPage` and the `Embed` (track listeners, release, stop). Each page's
+  main now exports `mount(host, { car, paint, quality, clock, reducedMotion, onDrive, html })` returning `{ ready,
+  dispose }`; the standalone pages boot through the same `mount(document.body)`, and keep their own Vite configs. The
+  diff in `src/onfoot/main.ts` and `src/onfoot/venues/sportsbar/main.ts` is small (+28/-9 and +31/-9 lines: the options,
+  `track(() => new Hud())`, a `dead` check in the loop, the Drive hook, a cleanup block, the exported mount). In the game
+  the page's index.html goes into a host div with its own style, and the game's stylesheets are switched off while it's
+  up (the two share class names such as `.panel`). The venues' code is three dynamic chunks (979 KB); `vite.config.ts`
+  no longer inlines dynamic imports and trims the venues' map slices with their own plugins; `scripts/single-file.mjs`
+  folds every chunk into the page (each a function in a second module script, run on its first import; the
+  owner-test marking unchanged), so the single file still opens from disk with the venues in it.
+  **dist/artifact.html: 3,828,392 bytes before, 4,868,737 after** (limit 16 MB).
+- **Repairs the merge needed (venue internals, minimal):** Lot 57's `mats.ts` read `P.mats.facade`, which the live
+  game's props no longer have (W1 buildings): the block's buildings fall back to Lot 57's own tilt-up texture (one line;
+  the standalone page threw at load in this merge). Stoppage Time's page lacked the ids Lot 57's P1b/P1c HUD binds
+  (caption, chips, order sheet): added as one hidden div in `sportsbar.html` (its page threw "reading 'addEventListener'"
+  at load in this merge). Both cars lists accept `oc-hyper`.
+- **Hooks:** `__game.venue()` (id, name, phase parked/leaving/foot/returning, ramp, street), `__game.getOut()`,
+  `__game.drive()`, `__game.arriveVenue()`, `__game.routeName`; `window.__onfoot` while on foot.
+- **Checks: a new suite group `venues`** (tests/regression.mjs): both venues end to end, three Lot 57 round trips with the
+  JS heap (with gc) and the game renderer read after each, and the phone layout of Get out in a 390 x 844 context.
+- **Suite (before r1; its Drive steps called `window.__game.drive()`, not the venue's button, so they did not prove
+  the venue's Drive):** `npm test -- --only=boot,race,phone,progression,venues`: **50/50 passed** (2026-11-09 01:25,
+  load average about 16 from other lanes). The venues lines:
+  - Lot 57: 89 s of Auto-drive, parked on ramp 1142 at 276 m; ready in 31.8 s, the game drew 0 frames on foot, low, 27
+    people, clock Sun 19:30, standing 0.6 m from the driver's door; walked 60.7 m (straight line) to the bar, Order opened
+    the sheet, ordered an agua fresca (making); Drive: on the ramp to CA-57 North (path 233) at 4 m, 0 mph.
+  - Stoppage Time: 99 s of Auto-drive, parked on ramp 124 at 285.6 m; ready in 40.6 s, 0 game frames, 0 people (S1);
+    walked 34.9 m to the front door and in (indoors: true); Drive: on the ramp to I-5 North (path 1101) at 4 m, 0 mph.
+  - Three round trips: heap 174.1 MB before, then 169, 169.7, 169.8 MB; game renderer geometries 215/405/405 (the first
+    trip back brings in traffic models not drawn before, then flat), textures 92/92/92, programs 57/57/57; the venue's
+    renderer at ready 164 geometries and 96 textures each time. No page errors.
+  - Phone 390 x 844: prompt 168 x 48 "Park at Lot 57"; Get out 168 x 52, focused; Drive on 127 x 52; no pedals.
+  - (The first run of the new group found a 22-carriageway count in the phone group's Go to check, from the places
+    row's class: renamed; and its own walk timing: fixed.)
+- **Standalone pages:** both build (`dist/onfoot/index.html` 1,207,092 bytes, `dist/sportsbar/sportsbar.html` 1,428,999
+  bytes; still no exports in the inlined script, so Lot 57's worker trick holds). `node tests/onfoot.mjs --only=portrait`
+  3 passed, 0 failed; `node tests/sportsbar.mjs --only=seats,honesty` 8 of 8 pass. Note: `npm run build` empties dist/,
+  so build the venue pages after the game.
+- **Proof frames** (tests/out/venues/, read one by one; phone frames from dist/artifact.html with a viewport meta
+  injected, 390 x 844, touch, DPR 3, Sunset, Low): `phone-lot57-1-route.png` (the route on the corner map, "1.0 mi Keep
+  right Orangewood Ave…", Lot 57 on the card, AUTO), `phone-lot57-2-arrival.png` (parked, the words and Get out / Drive
+  on), `phone-lot57-3-by-your-car.png` (third person by your car in the lot, the yard behind), `phone-lot57-4-inside-people.png`
+  (in the yard by a group of regulars), `phone-lot57-5-back-on-freeway.png` (cockpit on the CA-57 North on-ramp, 0 mph),
+  `phone-stoppage-1-route.png`, `phone-stoppage-2-arrival.png`, `phone-stoppage-3-by-your-car.png`,
+  `phone-stoppage-4-inside.png` (inside the bar: pool tables, booths, the bar), `phone-stoppage-5-back-on-freeway.png`;
+  `phone-landscape-844x390-getout.png`; desktop 1440 x 900: `desk-1440x900-getout.png`, `desk-lot57-1440x900.png`,
+  `desk-stoppage-1440x900.png`. No page errors on either page (shoot-log.txt).
+- **Known limits:** in the game Lot 57's patio bodies are built on the main thread (its page's worker reruns the page's
+  own script, which the game's can't be), so Get out takes about 20 to 40 s in SwiftShader; the venue loading screen shows
+  the progress. Your parked car isn't saved in the profile yet (a v2 migration for profile.ts's owner). Stoppage Time has
+  no people until its S2.
+
 ## 2026-11-02: GPS "follow it": route on the corner map, lane hints, Auto-drive (claude/gps-follow, r4 kept by the play and code reviews)
 
 - **Reviewers' outcome: kept by the play and code reviews.** tsc and build exit 0; a 390x760 drive took a hand-off
