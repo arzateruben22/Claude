@@ -63,3 +63,11 @@ Method: a 0.25 s step check over the whole film (a script projects every frame w
 - 65.5 s: the walkers no longer re-appear over the card (they were re-gated by the end card).
 - 67.5 to 71 s: the end card is smaller (headline 5.6 vmin, footnote 2.8 vmin) and sits above the blue figure's head, so neither the footnote nor the pill touches the figure, and the Moon marker is clear of the boxed answer.
 - Audio: the studio's own 0.6 s tail fade left the last 2 s about 6 dB under the opening. `loopfix.sh` lifts the music tail to the opening's level (opening -12.3 LUFS short-term, last second -13.1) and ends on a 0.3 s fade; the film's loudness stays -14.0 LUFS, sample peak -1.7 dBFS.
+
+## Round 7 notes (S2E01, folder ep07)
+- The checker now also tests figure-vs-Moon (projected circle against each walker's box) and beam-vs-end-card (every visible lane column against the card's text boxes, plus the little Moon marker while the card is up). 0 hits at 0.25 s steps.
+- 38 to 56 s: the Moon sits over the capsule lane, to the right of the three walkers, so it is never behind a figure; in the Apollo beat it slides to the centre line (after the walkers have gone) and the capsule climbs that line and orbits it. The capsule-lane line no longer shows at the right edge (60.5 to 65 s).
+- 14.4 to 15 s and 24 s: the Earth now has the Space channel's baked continents-and-ocean texture, no lat/long wireframe.
+- 22.5 to 24.5 s: the years counter is two counters: the nonstop walker's counts 0 up to 9 and leaves; the 8-hour walker's counts 0 up to 26 (then 140). It never counts down.
+- 44.4 to 45.6 s: the "stray black disc" was the time-clock dial, whose face went black in the finished picture. The clock is dropped.
+- 67.5 to 71.5 s: the blue beam and the little Moon marker are off while the end card is up (they return in the last 0.7 s, as the card lifts, for the loop).

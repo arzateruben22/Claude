@@ -98,7 +98,7 @@
   {
    "t": 15.8,
    "kind": "counter.show",
-   "tag": "c-years"
+   "tag": "c-years-a"
   },
   {
    "t": 16.0,
@@ -116,6 +116,11 @@
    "kind": "section",
    "id": "why",
    "t1": 34.2
+  },
+  {
+   "t": 24.583333333333332,
+   "kind": "counter.show",
+   "tag": "c-years"
   },
   {
    "t": 24.683333333333334,

@@ -75,7 +75,8 @@ assert t_zo1 + 1.15 < t_sleep + 0.2, (t_zo1, t_sleep)
 # the clocks, in years
 CLOCK_A = [[t_run0, 0.0], [t_nine, YN]]                                      # nonstop
 CLOCK_B = [[t_b1, 0.0], [t_26, Y8], [t_steps, Y8], [t_140, YS], [B["work"]["t0"] + 20, YS]]      # the race
-COUNT = [[t_run0, 0.0], [t_nine, YN], [t_zo1, YN], [t_zo1 + 0.5, 0.0], [t_b1, 0.0], [t_26, Y8], [t_steps, Y8], [t_140, YS]]
+COUNT_A = [[t_run0, 0.0], [t_nine, YN], [t_zo1 + 0.3, YN]]                    # the nonstop walker: 0 up to 9, then the counter leaves
+COUNT = [[t_b1, 0.0], [t_26, Y8], [t_steps, Y8], [t_140, YS]]                 # the 8-hour walker: 0 up to 26, then the steps walker takes it on to 140
 
 # the walkers' places along the line (0 at the Earth, 1 at the Moon), sampled every frame
 import math
@@ -240,7 +241,8 @@ for b in BADGES:
     if any(abs(b["t1"] - c) < 1e-6 for c in CUTS):
         b["t1"] = round(b["t1"] - 0.3, 4)
 COUNTERS = [
-    {"id": "c-years", "label": "years of walking", "t0": t_run0 - 0.2, "t1": t_work0 - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
+    {"id": "c-years-a", "label": "years of walking", "t0": t_run0 - 0.2, "t1": t_zo1 + 0.3, "at": [0.66, 0.33], "keys": COUNT_A, "end": YN},
+    {"id": "c-years", "label": "years of walking", "t0": t_b1 - 0.1, "t1": t_work0 - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
 ]
 
 TITLE = {"series": "Possibility Lab · Season 2 · Episode 1", "title": "Walking to the *Moon*", "t0": 0.3, "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}

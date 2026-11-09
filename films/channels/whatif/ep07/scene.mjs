@@ -20,6 +20,7 @@ import { createRig } from "../set/rig.js";
 import { tok } from "../set/look.js";
 import { createPlanet } from "../set/ladder05.js";
 import { moonSurface } from "../../space/set/moon.js";
+import { earthSurface } from "../../space/set/planet.js";
 import { unlit, ACES_INV_GLSL, hexRgb } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, WD = FILM.world, CUE = FILM.cue;
@@ -30,7 +31,7 @@ renderer.setPixelRatio(1); renderer.setSize(W, H, false);
 renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
 const bg = tok("graphite");
 renderer.setClearColor(new THREE.Color(bg[0], bg[1], bg[2]), 1);
-const scene = new THREE.Scene();
+const scene = new THREE.Scene(); window.__scene = scene;
 const camera = new THREE.PerspectiveCamera(24, W / H, 0.05, 2000);
 if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 10, threshold: 0.95, bloom: 0.15 });
 window.CINEMA_FOCUS = () => ({ point: [0, 0, 0], fstop: 0 });
@@ -72,20 +73,21 @@ void main() {
   vec3 col = mix(uDark, uCol, lam);
   if (uGrat > 0.0) { vec2 q = vec2(asin(clamp(n.y, -1.0, 1.0)), atan(n.z, n.x)) / radians(30.0); vec2 f = abs(fract(q + 0.5) - 0.5) / max(fwidth(q), vec2(1e-4)); col = mix(col, uDark * 0.45, 0.55 * (1.0 - smoothstep(0.6, 1.6, min(f.x, f.y)))); }
   if (uCrat > 0.0) { vec3 c = floor(n * 3.0); vec3 cc = normalize((c + 0.5) / 3.0); col *= 1.0 - 0.28 * step(0.7, hh(c)) * smoothstep(0.38, 0.2, length(n - cc)); }
-  if (uUseMap > 0.0) { float lon = atan(n.x, n.z), lat = asin(clamp(n.y, -1.0, 1.0)); vec3 tx = texture2D(uMap, vec2(lon / 6.2831853 + 0.5, lat / 3.1415927 + 0.5)).rgb; col *= tx / 0.6; }
+  if (uUseMap > 0.0) { float lon = atan(n.x, n.z), lat = asin(clamp(n.y, -1.0, 1.0)); vec3 tx = texture2D(uMap, vec2(lon / 6.2831853 + 0.5, lat / 3.1415927 + 0.5)).rgb; if (uUseMap > 1.5) col = mix(col, tx * (0.3 + 0.9 * lam) * 1.1, 0.7); else col *= tx / 0.6; }
   gl_FragColor = vec4(acesInv(srgbToLinear(clamp(col, 0.0, 1.0)), uExposure), uOpacity);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`;
 const moonTex = new THREE.CanvasTexture(moonSurface({ width: 512, seed: 9 })); moonTex.wrapS = THREE.RepeatWrapping; moonTex.anisotropy = 4;
-const globe = (hex, grat, crat) => {
+const earthTex = new THREE.CanvasTexture(earthSurface({ width: 1024 })); earthTex.wrapS = THREE.RepeatWrapping; earthTex.anisotropy = 4;
+const globe = (hex, grat, crat, earthMap) => {
   const c = hexRgb(hex), u = { uCol: { value: new THREE.Vector3(...c) }, uDark: { value: new THREE.Vector3(...c.map((v) => v * 0.28)) }, uLight: { value: new THREE.Vector3(-0.55, 0.45, 0.8) },
-    uExposure: { value: 1 }, uOpacity: { value: 1 }, uGrat: { value: grat }, uCrat: { value: 0 }, uUseMap: { value: crat ? 1 : 0 }, uMap: { value: moonTex } };
+    uExposure: { value: 1 }, uOpacity: { value: 1 }, uGrat: { value: grat }, uCrat: { value: 0 }, uUseMap: { value: earthMap ? 2 : crat ? 1 : 0 }, uMap: { value: earthMap ? earthTex : moonTex } };
   const m = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), new THREE.ShaderMaterial({ uniforms: u, vertexShader: SVS, fragmentShader: SFS, transparent: true, depthTest: true, depthWrite: false, extensions: { derivatives: true } }));
   m.renderOrder = 5; m.frustumCulled = false; m.userData.noProbe = true; scene.add(m);
   return { mesh: m, set: (o) => { m.visible = o > 0.01; u.uOpacity.value = o; } };
 };
-const ringE = globe(CHALK2, 1, 0), ringM = globe(CHALK, 0, 1);
+const ringE = globe(CHALK2, 0, 0, true), ringM = globe(CHALK, 0, 1);
 const figTk = (hex) => ({ ...TK, anchor: hex });
 const wkA = createFigure({ tokens: figTk(CHALK2), height: WD.fig }), wkB = createFigure({ tokens: TK, height: WD.fig }), wkS = createFigure({ tokens: figTk("#8A8D96"), height: WD.fig });
 for (const w of [wkA, wkB, wkS]) { w.set({ at: [0, WD.fig / 2, 0] }); w.group.visible = false; scene.add(w.group); }
@@ -193,17 +195,18 @@ window.seek = function (t) {
   const spread = E.inout2(seg(t, CUE.spread[0], CUE.spread[1]));
   off = d * 0.05 * (space ? spread : 0) * (shot === "end" ? 1 - E.inout2(seg(t, FILM.endCard + 0.3, FILM.endCard + 1.6)) : 1);
   if (d < 3e5) off = d * 0.05 * spread;                                           // in a chase the lanes sit a body apart
+  const afterHome = E.inout2(seg(t, CUE.home, CUE.home + 0.3)), moonSlide = E.inout2(seg(t, CUE.home + 0.35, CUE.home + 1.0));
   figH = 0.055 * d;
   const hs = figH / WD.fig, outG = shot === "end" ? gate : 1;
   const moonScale = 0.3 + 0.7 * seg(Math.log10(d), 8.5, 9.3);                      // the Moon is drawn smaller near it, so it never climbs behind the caption
   const bigMoon = seg(t, CUE.bigMoon[0], CUE.bigMoon[0] + 0.6) * (1 - E.inout2(seg(t, CUE.bigMoon[1], CUE.bigMoon[1] + 0.6)));
+  const moonX = CUE.lane * off * (1 - moonSlide);                                  // the Moon sits over the capsule lane (right of the three walkers) while the walkers stand at its foot: never behind a figure
   const rE = Math.max(WD.rE, px * 3.4), rM = Math.max(WD.rM * moonScale, px * 3.0, 0.021 * d * bigMoon);
   const moonCy = rM < WD.rM ? WD.top + rM : Math.max(WD.yMoon, WD.top + rM * bigMoon);
   const fA = frac.A(t), fB = frac.B(t), fS = frac.S(t);
   const top = WD.top, pre = shot === "front" || shot === "pull" || t < CUE.spread[0];
-  const endLine = shot === "end" ? E.inout2(seg(t, FILM.endCard + 1.4, FILM.endCard + 2.1)) : 0;   // the loop: the line and the little Moon return once the card has lifted
+  const endLine = shot === "end" ? E.inout2(seg(t, FILM.dur - 0.7, FILM.dur - 0.45)) : 0;   // the loop: the line and the little Moon return once the card has lifted
   const setLane = (k, x, f, w, o) => { const l = lane[k]; l.visible = o > 0.003; l.material.opacity = o; place(l, x, 0, w, Math.max(1e-6, top * f)); };
-  const afterHome = E.inout2(seg(t, CUE.home, CUE.home + 0.6));
   const hookLine = pre ? 1 : 0, lanesOn = !pre && shot !== "end" ? (1 - afterHome) : 0;
   setLane("B", LANE_X.B * off, hookLine || endLine > 0 ? 1 : fB, px * (hookLine || endLine > 0 ? 0.6 : 1.0), hookLine ? 0.8 : shot === "end" ? Math.max(0.0, 0.8 * endLine) : seg(t, CUE.run[2] - 0.2, CUE.run[2] + 0.3) * lanesOn);
   setLane("A", LANE_X.A * off, fA, px * 0.9, seg(t, CUE.spread[1], CUE.run[0]) * lanesOn);
@@ -235,16 +238,17 @@ window.seek = function (t) {
     o.visible = g.visible; o.material.opacity = 0.45 * Math.min(1, u); o.position.set(p[0] + PROPX[nm] * figH, p[1] - 0.012 * figH, 0); o.scale.set(2.5 * hs, 0.05 * hs, 1);
   });
   { const u = Math.max(0, popU(CUE.clock[0], CUE.clock[1])), p = wpos("B"), on = u > 0.01 && t > CUE.clock[0] && t < CUE.clock[1];
-    dial.visible = on; dial.scale.setScalar(hs * 0.95 * u); dial.position.set(p[0] + 1.55 * figH, p[1] + 0.75 * figH, 0);
+    dial.visible = false;   // the time clock is dropped: in the finished picture its face went black at the left edge (coordinator round 7)
+     dial.scale.setScalar(hs * 0.95 * u); dial.position.set(-(off + 0.72 * figH), p[1] + 0.75 * figH, 0);
     const sw = E.inout2(seg(t, CUE.clock[0] + 0.1, CUE.clock[1] - 0.3)); dial.userData.hp.rotation.z = -sw * Math.PI * 2 * 8 / 12; dial.userData.mp.rotation.z = -sw * Math.PI * 2 * 8; }
   // the Apollo capsule: a real capsule in its own fourth lane, climbing in three "days" and landing on "three", then orbiting the Moon
   const cap = seg(t, CUE.apollo[0], CUE.apollo[1]), capE = cap, capOn = seg(t, CUE.apollo[0] - 0.1, CUE.apollo[0] + 0.15) * (1 - E.in3(seg(t, FILM.endCard - 0.7, FILM.endCard - 0.1)));
-  const orb = seg(t, CUE.orbit[0], CUE.orbit[1]), Ro = 1.55 * rM, cx = CUE.lane * off, moonY = moonCy, ang0 = -Math.PI / 2 + 0.2, ang = ang0 + orb * Math.PI * 2 * 1.4;
+  const orb = seg(t, CUE.orbit[0], CUE.orbit[1]), Ro = 1.55 * rM, cx = CUE.lane * off * (1 - moonSlide), moonY = moonCy, ang0 = -Math.PI / 2 + 0.2, ang = ang0 + orb * Math.PI * 2 * 1.4;
   let cxp = cx, cyp = top * capE, rot = 0;
-  if (t > CUE.apollo[1]) { const o2 = E.inout2(seg(t, CUE.apollo[1], CUE.orbit[0])), px0 = Ro * Math.cos(ang), py0 = moonY + Ro * Math.sin(ang), sx = Ro * Math.cos(ang0), sy = moonY + Ro * Math.sin(ang0);
+  if (t > CUE.apollo[1]) { const o2 = E.inout2(seg(t, CUE.apollo[1], CUE.orbit[0])), px0 = moonX + Ro * Math.cos(ang), py0 = moonY + Ro * Math.sin(ang), sx = moonX + Ro * Math.cos(ang0), sy = moonY + Ro * Math.sin(ang0);
     const bx0 = cx + (sx - cx) * o2, by0 = top + (sy - top) * o2; cxp = t < CUE.orbit[0] ? bx0 : px0; cyp = t < CUE.orbit[0] ? by0 : py0; rot = t < CUE.orbit[0] ? 0 : ang; }
-  orbitRing.visible = capOn > 0.02 && t > CUE.apollo[1] + 0.2 && shot !== "end"; orbitRing.material.opacity = 0.35 * E.out3(seg(t, CUE.apollo[1], CUE.orbit[0])) * capOn; orbitRing.position.set(0, moonY, 0); orbitRing.scale.set(Ro, Ro, 1);
-  setLane("C", cx, cap, px * 1.0, 0.45 * capOn * (t < CUE.apollo[1] + 0.2 ? 1 : 0.4));
+  orbitRing.visible = capOn > 0.02 && t > CUE.apollo[1] + 0.2 && shot !== "end"; orbitRing.material.opacity = 0.35 * E.out3(seg(t, CUE.apollo[1], CUE.orbit[0])) * capOn; orbitRing.position.set(moonX, moonY, 0); orbitRing.scale.set(Ro, Ro, 1);
+  setLane("C", cx, cap, px * 1.0, 0.45 * capOn * (1 - seg(t, CUE.apollo[1] - 0.1, CUE.apollo[1] + 0.4)));
   capsule.visible = capOn > 0.02 && shot !== "end"; capsule.scale.setScalar(figH * 0.4); capsule.position.set(cxp, cyp, 0); capsule.rotation.z = rot;
   trail.visible = capsule.visible && t < CUE.apollo[1] + 0.3; trail.material.opacity = 0.5 * capOn; trail.scale.set(figH * 0.22, Math.min(top * capE, figH * 5), 1); trail.position.set(cx, top * capE - figH * 0.4, 0);
   for (const k of ["A", "B", "S", "C"]) bead[k].visible = false;
@@ -261,14 +265,14 @@ window.seek = function (t) {
   dust.visible = near > 0.02 && shot !== "front" && shot !== "pull" && shot !== "end"; dust.material.opacity = 0.5 * near;
   rings.visible = space && (shot === "pull" || shot === "end"); rings.material.opacity = 0.9 * seg(Math.log10(d), 8.2, 8.6);
   const pl = seg(Math.log10(d), 5.2, 6.8) * (shot === "end" ? gate : 1) * (1 - hideMoon);
-  const mv = new THREE.Vector3(0, moonCy, 0).project(camera), mq = (1 - mv.y) / 2;           // where the Moon is on screen, from the top
+  const mv = new THREE.Vector3(moonX, moonCy, 0).project(camera), mq = (1 - mv.y) / 2;           // where the Moon is on screen, from the top
   const bandFade = 1 - E.inout2(seg(mq, 0.49, 0.57)) * (1 - E.inout2(seg(mq, 0.69, 0.77)));   // the Moon never sits in the caption and plate band: it fades while it passes
   ringE.set(pl * seg(Math.log10(d), 7.5, 8.3)); ringM.set(pl * bandFade);
   const lm = seg(d, 80, 120) * (1 - seg(Math.log10(d), 6.2, 6.6)) * (shot === "end" ? gate : 1);
   limbO.visible = limbI.visible = lm > 0.01; limbO.material.opacity = 0.3 * lm; limbI.material.opacity = 1;
   place(limbO, 0, -WD.rE, WD.rE + px * 0.9, WD.rE + px * 0.9); place(limbI, 0, -WD.rE, WD.rE - px * 0.9, WD.rE - px * 0.9);
   ringE.mesh.position.set(0, -rE, -1.35 * rE); ringE.mesh.scale.set(rE, rE, rE);
-  ringM.mesh.position.set(0, moonCy, -1.35 * rM); ringM.mesh.scale.set(rM, rM, rM);
+  ringM.mesh.position.set(moonX, moonCy, -0.15 * rM); ringM.mesh.scale.set(rM, rM, rM);
   // the hook's small moon on the line above you: fades once the real one is findable
   const mk0 = 1 - E.inout2(seg(Math.log10(d), 1.5, 2.3));
   mark.visible = mk0 > 0.01 && d < 4e3 && (shot !== "end" || endLine > 0.01); mark.material.opacity = 0.9 * mk0 * (shot === "end" ? endLine : 1);
@@ -276,6 +280,12 @@ window.seek = function (t) {
   mark.position.set(0, my, 0); mark.scale.set(mr, mr, 1);
   for (const c of craters) { c.m.visible = mark.visible; c.m.material.opacity = 0.9 * mk0; c.m.position.set(c.x * mr, my + c.y * mr, 0); c.m.scale.set(c.r * mr, c.r * mr, 1); }
 
+  // debug hook for the overlap checker (screen pixels: figures as boxes, the Moon as a circle, lanes as columns)
+  { const P = (x, y) => { const v = new THREE.Vector3(x, y, 0).project(camera); return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * H]; };
+    const figs = []; for (const [k, w, on] of [["A", wkA, wkAOn], ["B", wkB, wkBOn], ["S", wkS, seg(t, CUE.run[2], CUE.run[1]) * lanesOn]]) if (on > 0.3) { const p = wpos(k), a = P(p[0], p[1] - 0.5 * figH), b = P(p[0], p[1] + 0.5 * figH), wd = Math.abs(b[1] - a[1]) * 0.28; figs.push([a[0] - wd, Math.min(a[1], b[1]), a[0] + wd, Math.max(a[1], b[1]), k]); }
+    const mc = P(moonX, moonCy), me = P(moonX + rM, moonCy);
+    const lanes = []; for (const [k, l] of Object.entries(lane)) if (l.visible && l.material.opacity > 0.15) lanes.push([P(l.position.x, 0)[0], l.material.opacity, k]);
+    window.__dbg = { figs, moon: ringM.mesh.visible && ringM.mesh.material.uniforms.uOpacity.value > 0.2 ? [mc[0], mc[1], Math.abs(me[0] - mc[0])] : null, lanes, shot, mark: mark.visible ? [mark.material.opacity] : null }; }
   hud.update(t);
   const tail = E.inout2(seg(t, beat("tease").t1 - 1.1, beat("tease").t1 - 0.35));
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
