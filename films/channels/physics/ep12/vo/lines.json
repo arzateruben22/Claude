@@ -1,0 +1,108 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How fast is rain? It starts far above, in clouds.",
+   "stars": [
+    "rain"
+   ],
+   "phonemes": "hˌaʊ fˈæst ɪz ɹˈeɪn? ɪt stˈɑːɹts fˈɑːɹ əbˈʌv, ɪn klˈaʊdz.",
+   "file": "01.wav",
+   "dur": 3.429,
+   "sha256": "7750c77f4e590e3b7f6889829b6362dbf9739051b76da956767ea3a26bf7d9c2"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "A stone dropped from a roof keeps speeding up until it lands. A raindrop doesn't. Watch the ghosts: the gaps grow, then stop growing. It reaches its top speed almost at once.",
+   "stars": [
+    "once"
+   ],
+   "phonemes": "ɐ stˈoʊn dɹˈɑːpt fɹʌm ɐ ɹˈuːf kˈiːps spˈiːdɪŋ ˌʌp ʌntˈɪl ɪt lˈændz. ɐ ɹˈeɪndɹɑːp dˈʌzənt. wˈɑːtʃ ðə ɡˈoʊsts: ðə ɡˈæps ɡɹˈoʊ, ðˈɛn stˈɑːp ɡɹˈoʊɪŋ. ɪt ɹˈiːtʃᵻz ɪts tˈɑːp spˈiːd ˈɔːlmoʊst ɐtwˈʌns.",
+   "file": "02.wav",
+   "dur": 12.984,
+   "sha256": "46e39e150308a145b6877bf6e9bed11340681d6111a3fc162d235fbbe4e9c937"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "The air pushes back. You feel it with a hand out of a car window. The faster the drop falls, the harder the air pushes.",
+   "stars": [
+    "pushes"
+   ],
+   "phonemes": "ðɪ ˈɛɹ pˈʊʃᵻz bˈæk. juː fˈiːl ɪt wɪð ɐ hˈænd ˌaʊɾəv ɐ kˈɑːɹ wˈɪndoʊ. ðə fˈæstɚ ðə dɹˈɑːp fˈɔːlz, ðə hˈɑːɹdɚ ðɪ ˈɛɹ pˈʊʃᵻz.",
+   "file": "03.wav",
+   "dur": 8.332,
+   "sha256": "3d880353dc5aa0d7b175234b18162863338afd4f59392bbb2818a07cdc2aaf47"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "It's a tug of war between the weight pulling down and the air pushing up. At some speed, the push of the air matches the drop's weight. After that, the speed stays the same.",
+   "stars": [
+    "same"
+   ],
+   "phonemes": "ɪts ɐ tˈʌɡ ʌv wˈɔːɹ bᵻtwˌiːn ðə wˈeɪt pˈʊlɪŋ dˌaʊn ænd ðɪ ˈɛɹ pˈʊʃɪŋ ˈʌp. æt sˌʌm spˈiːd, ðə pˈʊʃ ʌvðɪ ˈɛɹ mˈætʃᵻz ðə dɹˈɑːps wˈeɪt. ˈæftɚ ðˈæt, ðə spˈiːd stˈeɪz ðə sˈeɪm.",
+   "file": "04.wav",
+   "dur": 11.703,
+   "sha256": "ff88150835559283a06a1601aa39fb5496e3a75e55c36a73665f869403cb8af6"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Big drops fall faster than small ones. Raindrops are never teardrops. Small ones are round, and the biggest flatten like a bun, and then break apart.",
+   "stars": [
+    "teardrops"
+   ],
+   "phonemes": "bˈɪɡ dɹˈɑːps fˈɔːl fˈæstɚ ðɐn smˈɔːl wˌʌnz. ɹˈeɪndɹɑːps ɑːɹ nˈɛvɚ tˈɪɹdɹɑːps. smˈɔːl wˈʌnz ɑːɹ ɹˈaʊnd, ænd ðə bˈɪɡɪst flˈæʔn lˈaɪk ɐ bˈʌn, ænd ðˈɛn bɹˈeɪk ɐpˈɑːɹt.",
+   "file": "05.wav",
+   "dur": 10.893,
+   "sha256": "59619958e04ba29c7711ecc5a65d9a64e771271a991585da6fd8bbade304c729"
+  },
+  {
+   "id": "vo06",
+   "beat": "measure",
+   "text": "Measure it: in this model, a one-millimeter drop tops out near five meters a second. A five-millimeter drop, near ten.",
+   "stars": [
+    "Measure it"
+   ],
+   "phonemes": "mˈɛʒɚɹ ɪt: ɪn ðɪs mˈɑːdəl, ɐ wˈʌnmˈɪlɪmˌiːɾɚ dɹˈɑːp tˈɑːps ˈaʊt nˌɪɹ fˈaɪv mˈiːɾɚz ɐ sˈɛkənd. ɐ fˈaɪvmˈɪlɪmˌiːɾɚ dɹˈɑːp, nˌɪɹ tˈɛn.",
+   "file": "06.wav",
+   "dur": 8.979,
+   "sha256": "7c70ddd8b266a93c37952e957ac6aaf2f416087e8d6ce01bc56bb84852df5ebd"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "The air gives every drop a speed limit. So rain from way up high lands gently.",
+   "stars": [
+    "gently"
+   ],
+   "phonemes": "ðɪ ˈɛɹ ɡˈɪvz ˈɛvɹi dɹˈɑːp ɐ spˈiːd lˈɪmɪt. sˌoʊ ɹˈeɪn fɹʌm wˈeɪ ˌʌp hˈaɪ lˈændz dʒˈɛntli.",
+   "file": "07.wav",
+   "dur": 5.503,
+   "sha256": "dc654e7581f7678caa4bafa868d57270a8681036a0ae8dce97c033419c6fdf49"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "That's season two. Thanks for watching, and see you next time.",
+   "stars": [
+    "two"
+   ],
+   "phonemes": "ðæts sˈiːzən tˈuː. θˈæŋks fɔːɹ wˈɑːtʃɪŋ, ænd sˈiː juː nˈɛkst tˈaɪm.",
+   "file": "08.wav",
+   "dur": 3.887,
+   "sha256": "5eb2b76ea9dbf7681e03893afeb77aeb70e3009836dbd66b5d33f4fe34843865"
+  }
+ ]
+}

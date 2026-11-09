@@ -1,0 +1,1105 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "How fast is rain? It starts far above, in clouds.",
+   "heard": "How fast is rain? It starts far above in clouds.",
+   "words": [
+    {
+     "w": "How",
+     "start": 0.03,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 0.255,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.545,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "rain?",
+     "start": 0.69,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 1.56,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 1.75,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "far",
+     "start": 1.93,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "above,",
+     "start": 2.31,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.555,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "clouds.",
+     "start": 2.835,
+     "end": 3.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "A stone dropped from a roof keeps speeding up until it lands. A raindrop doesn't. Watch the ghosts: the gaps grow, then stop growing. It reaches its top speed almost at once.",
+   "heard": "A stone dropped from a roof keeps speeding up until it lands. A raindrop doesn't. Watch the ghosts. The gaps grow, then stop growing. It reaches its top speed almost at once.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "stone",
+     "start": 0.29,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "dropped",
+     "start": 0.685,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 0.985,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.28,
+     "end": 1.33,
+     "heard": true
+    },
+    {
+     "w": "roof",
+     "start": 1.31,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 1.685,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "speeding",
+     "start": 2.135,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 2.595,
+     "end": 2.645,
+     "heard": true
+    },
+    {
+     "w": "until",
+     "start": 2.625,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 2.92,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "lands.",
+     "start": 3.21,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 4.13,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "raindrop",
+     "start": 4.16,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "doesn't.",
+     "start": 5.02,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "Watch",
+     "start": 5.985,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.425,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "ghosts:",
+     "start": 6.53,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.445,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "gaps",
+     "start": 7.545,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "grow,",
+     "start": 7.96,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 8.515,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "stop",
+     "start": 8.895,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "growing.",
+     "start": 9.195,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 10.325,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "reaches",
+     "start": 10.405,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 10.83,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "top",
+     "start": 11.065,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 11.56,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "almost",
+     "start": 11.9,
+     "end": 12.32,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 12.305,
+     "end": 12.48,
+     "heard": true
+    },
+    {
+     "w": "once.",
+     "start": 12.44,
+     "end": 12.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "The air pushes back. You feel it with a hand out of a car window. The faster the drop falls, the harder the air pushes.",
+   "heard": "The air pushes back. You feel it with a hand out of a car window. The faster the drop falls, the harder the air pushes.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 0.205,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "pushes",
+     "start": 0.57,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "back.",
+     "start": 1.265,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 1.885,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 2.08,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 2.23,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 2.405,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.515,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "hand",
+     "start": 2.7,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 3.04,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.345,
+     "end": 3.395,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.375,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "car",
+     "start": 3.435,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "window.",
+     "start": 3.68,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 4.845,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 4.875,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.32,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 5.59,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "falls,",
+     "start": 6.055,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.785,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "harder",
+     "start": 6.815,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.24,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 7.405,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "pushes.",
+     "start": 7.72,
+     "end": 8.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "It's a tug of war between the weight pulling down and the air pushing up. At some speed, the push of the air matches the drop's weight. After that, the speed stays the same.",
+   "heard": "It's a tug of war between the weight pulling down and the air pushing up. At some speed, the push of the air matches the drop's weight. After that, the speed stays the same.",
+   "words": [
+    {
+     "w": "It's",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.29,
+     "end": 0.34,
+     "heard": true
+    },
+    {
+     "w": "tug",
+     "start": 0.32,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.655,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "war",
+     "start": 0.685,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "between",
+     "start": 1.175,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.24,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "weight",
+     "start": 1.515,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "pulling",
+     "start": 1.845,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "down",
+     "start": 2.205,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.655,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.89,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 2.92,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "pushing",
+     "start": 3.315,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 3.935,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 4.65,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "some",
+     "start": 4.765,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "speed,",
+     "start": 5.18,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.91,
+     "end": 5.96,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 6.035,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 6.305,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.335,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 6.56,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "matches",
+     "start": 6.96,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.37,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "drop's",
+     "start": 7.47,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "weight.",
+     "start": 8.21,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "After",
+     "start": 8.965,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "that,",
+     "start": 9.275,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.98,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 10.01,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "stays",
+     "start": 10.67,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.055,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "same.",
+     "start": 11.25,
+     "end": 11.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Big drops fall faster than small ones. Raindrops are never teardrops. Small ones are round, and the biggest flatten like a bun, and then break apart.",
+   "heard": "Big drops fall faster than small ones. Raindrops are never teardrops. Small ones are round, and the biggest flatten like a bun and then break apart.",
+   "words": [
+    {
+     "w": "Big",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "drops",
+     "start": 0.335,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "fall",
+     "start": 0.81,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 1.09,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 1.645,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "small",
+     "start": 1.925,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "ones.",
+     "start": 2.23,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "Raindrops",
+     "start": 3.17,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 3.89,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 4.175,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "teardrops.",
+     "start": 4.34,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "Small",
+     "start": 5.755,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "ones",
+     "start": 6.165,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 6.415,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "round,",
+     "start": 6.605,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.495,
+     "end": 7.545,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.525,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "biggest",
+     "start": 7.74,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "flatten",
+     "start": 8.13,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 8.82,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.015,
+     "end": 9.065,
+     "heard": true
+    },
+    {
+     "w": "bun,",
+     "start": 9.045,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 9.64,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 9.67,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "break",
+     "start": 10.015,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "apart.",
+     "start": 10.395,
+     "end": 10.88,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Measure it: in this model, a one-millimeter drop tops out near five meters a second. A five-millimeter drop, near ten.",
+   "heard": "Measure it. In this model, a 1mm drop tops out near 5 meters a second. A 5mm drop near 10.",
+   "words": [
+    {
+     "w": "Measure",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "it:",
+     "start": 0.65,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.13,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 1.375,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "model,",
+     "start": 1.51,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.265,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "one-millimeter",
+     "start": 2.295,
+     "end": 3.2,
+     "heard": false
+    },
+    {
+     "w": "drop",
+     "start": 3.23,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "tops",
+     "start": 3.665,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 3.905,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 4.165,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "five",
+     "start": 4.52,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "meters",
+     "start": 4.895,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.31,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 5.62,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 6.545,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "five-millimeter",
+     "start": 6.575,
+     "end": 7.6,
+     "heard": false
+    },
+    {
+     "w": "drop,",
+     "start": 7.55,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 8.21,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "ten.",
+     "start": 8.47,
+     "end": 8.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "The air gives every drop a speed limit. So rain from way up high lands gently.",
+   "heard": "The air gives every drop a speed limit, so rain from way up high lands gently.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 0.19,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "gives",
+     "start": 0.49,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 0.835,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 1.135,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.44,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 1.725,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "limit.",
+     "start": 1.925,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "So",
+     "start": 2.84,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "rain",
+     "start": 2.93,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 3.535,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 3.72,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 4.025,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "high",
+     "start": 4.055,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "lands",
+     "start": 4.4,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "gently.",
+     "start": 4.935,
+     "end": 5.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "That's season two. Thanks for watching, and see you next time.",
+   "heard": "That's season two. Thanks for watching and see you next time.",
+   "words": [
+    {
+     "w": "That's",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "season",
+     "start": 0.345,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "two.",
+     "start": 0.695,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "Thanks",
+     "start": 1.59,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 1.855,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "watching,",
+     "start": 1.99,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.365,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "see",
+     "start": 2.755,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.96,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "next",
+     "start": 3.245,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "time.",
+     "start": 3.38,
+     "end": 3.84,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
