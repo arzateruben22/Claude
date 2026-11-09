@@ -144,7 +144,7 @@ export const earthSurface = (o = {}) => {
       const L = md[i] / 255 + (n - 0.5) * 0.42;
       let c;
       if (L > 0.5) {
-        const dry = Math.max(0, Math.min(1, (n2 - 0.45) * 2.4 + (Math.abs(Math.abs(lat) - 24) < 10 ? 0.45 : 0) - (Math.abs(lat) > 50 ? 0.4 : 0)));
+        const dry = Math.max(0, Math.min(1, (n2 - 0.45) * 2.4 + 0.45 * Math.max(0, 1 - Math.max(0, Math.abs(Math.abs(lat) - 24) - 3) / 9) - (Math.abs(lat) > 50 ? 0.4 : 0)));
         const a = land[0], b = land[1], e = land[2];
         c = dry < 0.5 ? a.map((v, k) => v + (b[k] - v) * dry * 2) : b.map((v, k) => v + (e[k] - v) * (dry - 0.5) * 2);
         if (Math.abs(lat) > 68 || (lat > 59 && x / W > 0.28 && x / W < 0.45 && lon(x, W) < -15 && lon(x, W) > -75)) c = ice;

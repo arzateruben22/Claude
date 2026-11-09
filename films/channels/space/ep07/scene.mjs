@@ -53,6 +53,7 @@ const NF = TL.trees, fr = mul(5), fp = new Float32Array(NF * 3), fo = new Float3
 for (let i = 0, guard = 0; i < NF && guard < 200000; guard++) {
   const u = fr(), lat = u < 0.42 ? (fr() - 0.5) * 46 : u < 0.62 ? 34 + fr() * 16 : u < 0.88 ? 50 + fr() * 17 : -(10 + fr() * 28), lon = fr() * 360 - 180;
   if (!isLand(lon, lat)) continue;
+  if (lon > -18 && lon < 42 && lat > 9 && lat < 32) continue;                     // no dots in the Sahara and Sahel (deserts)
   const la = (lat * Math.PI) / 180, lo = (lon * Math.PI) / 180;                  // the sphere's own mapping: (cos lat cos lon, sin lat, -cos lat sin lon)
   fp.set([ER * 1.012 * Math.cos(la) * Math.cos(lo), ER * 1.012 * Math.sin(la), -ER * 1.012 * Math.cos(la) * Math.sin(lo)], i * 3);
   fo[i] = fr(); i++;
@@ -61,7 +62,7 @@ const fg = new THREE.BufferGeometry();
 fg.setAttribute("position", new THREE.BufferAttribute(fp, 3)); fg.setAttribute("ord", new THREE.BufferAttribute(fo, 1));
 const forestMat = new THREE.ShaderMaterial({
   uniforms: { uFill: { value: 0 }, uPx: { value: 12 * S1 }, uOp: { value: 1 } },
-  vertexShader: `attribute float ord; uniform float uFill, uPx; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = uPx * smoothstep(ord - 0.02, ord + 0.04, uFill); vA = step(ord, uFill); }`,
+  vertexShader: `attribute float ord; uniform float uFill, uPx; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; vec3 wp = (modelMatrix * vec4(position, 1.0)).xyz; vec3 nn = normalize((modelMatrix * vec4(position, 0.0)).xyz); float face = smoothstep(0.38, 0.6, dot(nn, normalize(cameraPosition - wp))); gl_PointSize = uPx * smoothstep(ord - 0.02, ord + 0.04, uFill) * face; vA = step(ord, uFill) * step(0.01, face); }`,
   fragmentShader: `uniform float uOp; varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0 || vA < 0.5) discard; float a = (1.0 - smoothstep(0.55, 1.0, r2)) * uOp; gl_FragColor = vec4(vec3(0.31, 0.89, 0.78) * a * 1.6, a); }`,
   transparent: true, depthWrite: false, depthTest: true, blending: THREE.AdditiveBlending,
 });
@@ -219,8 +220,9 @@ function draw(t) {
     const shrink = 1 - 0.5 * E.inout3(seg(t, CUE.pass - 0.5, CUE.pass + 1.2));        // pull back to one tree
     const base = 0.3 * (1 - 0.6 * dimK), dimTk = (1 - 0.7 * E.inout3(seg(t, CUE.pass - 0.5, CUE.pass + 1.0))) * (1 - fadeIn(t, CUE.big - 0.2, 0.9));
     const sweepX = (t > CUE.est0 + 0.4 && t < CUE.range - 0.1) ? ((t - CUE.est0 - 0.4) / 1.7) % 1 : -1;      // a counting sweep across the dim tally
-    const blk40 = (t > CUE.ratio + 0.5 && t < CUE.tk - 0.2) ? Math.floor((t - CUE.ratio - 0.5) / 0.34) : -1;   // blocks of 40 dots (the high end: about 8)
-    const blk10 = (t > CUE.ratio + 0.5 + 8 * 0.34 + 0.2 && t < CUE.tk - 0.2) ? Math.floor((t - CUE.ratio - 0.5 - 8 * 0.34 - 0.2) / 0.075) : -1;   // blocks of 10 dots (the low end: about 30)
+    const B40 = 0.25, G10 = 0.45, T10 = CUE.ratio + 0.5 + 8 * B40 + 0.1;       // 8 blocks of 40 at 0.25 s; then the blocks of 10 in 7 steps of 5, 0.45 s each (3.15 s)
+    const blk40 = (t > CUE.ratio + 0.5 && t < T10 - 0.1) ? Math.min(7, Math.floor((t - CUE.ratio - 0.5) / B40)) : -1;
+    const blk10 = (t > T10 && t < CUE.tk - 0.15) ? Math.min(6, Math.floor((t - T10) / G10)) : -1;      // group of five tiles of 10
     const cx0 = (GX0 + GX1) / 2, cy0 = (GY0 + GY1) / 2;
     for (let i = 0; i < TL.trees; i++) {
       const rk = RANK[i], isStar = rk < NS;
@@ -240,7 +242,7 @@ function draw(t) {
         { const cc = i % TL.cols, rr = (i / TL.cols) | 0;
           const t40 = Math.floor(rr / 8) * 4 + Math.floor(cc / 5), t10 = Math.floor(rr / 2) * 4 + Math.floor(cc / 5);
           if (blk40 >= 0 && t40 === Math.min(blk40, 7)) { a = 1; col = LEMON; r *= 1.12; }
-          if (blk10 >= 0 && t10 === Math.min(blk10, 31)) { a = 1; col = LEMON; r *= 1.12; } }
+          if (blk10 >= 0 && Math.floor(t10 / 5) === blk10) { a = 1; col = LEMON; r *= 1.12; } }
         if (t > CUE.est0 && t < CUE.flip0 - 1.2 && rk > TL.trees - 34) a = base * (0.6 + 0.4 * Math.sin(t * 5 + rk));   // the edge flickers: "about"
       }
       circ(x, y, r); ctx.fillStyle = rgba(col, a * tOn * dimTk); ctx.fill();
@@ -251,8 +253,8 @@ function draw(t) {
     const outline = (rc, al, wd) => { ctx.strokeStyle = rgba(LEMON, al * tOn * dimTk); ctx.lineWidth = wd; ctx.beginPath(); ctx.roundRect(cx0 + (rc[0] - cx0) * shrink, cy0 + (rc[1] - cy0) * shrink, rc[2] * shrink, rc[3] * shrink, 8 * S1); ctx.stroke(); };
     // (the rect is in 1080 units; canvas scale below)
     ctx.save(); ctx.scale(sx, sy);
-    if (blk40 >= 0) { const nb = Math.min(blk40, 7); for (let k = 0; k <= nb; k++) { const rc = tileRect(5, 8, k, 4); outline(rc, k === nb ? 1 : 0.5, k === nb ? 4 : 2.2); } }
-    if (blk10 >= 0) { const nb = Math.min(blk10, 31); for (let k = 0; k <= nb; k++) { const rc = tileRect(5, 2, k, 4); outline(rc, k === nb ? 1 : 0.3, k === nb ? 3.5 : 1.6); } }
+    if (blk40 >= 0) { const nb = blk40; for (let k = 0; k <= nb; k++) { const rc = tileRect(5, 8, k, 4); outline(rc, k === nb ? 1 : 0.5, k === nb ? 4 : 2.2); } }
+    if (blk10 >= 0) { const nb = Math.min(blk10 * 5 + 4, 31); for (let k = 0; k <= nb; k++) { const rc = tileRect(5, 2, k, 4); const cur = Math.floor(k / 5) === blk10; outline(rc, cur ? 1 : 0.3, cur ? 3.5 : 1.6); } }
     ctx.restore();
   }
   ctx.restore();

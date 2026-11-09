@@ -91,16 +91,16 @@ CUE["cut1"], CUE["cut2"] = t_cut1, t_cut2
 # ── overlay ──────────────────────────────────────────────────────────────────
 SPINE = [0.5, 0.555]
 LABELS = [
-    {"id": "l-sun", "text": "the Sun", "kind": "star", "anchor": "sun", "t0": round(CUE["billions"] + 0.2, 4), "t1": round(t_c - 0.4, 4), "side": -1, "v": "above", "fixed": True},
+    {"id": "l-sun", "text": "the Sun", "kind": "star", "anchor": "sun", "t0": round(CUE["billions"] + 0.2, 4), "t1": round(t_c - 0.7, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-sun2", "text": "the Sun", "kind": "star", "anchor": "sun", "t0": CUE["ring0"], "t1": round(t_end - 0.45, 4), "side": 1, "v": "below", "fixed": True},
 ]
 PILLS = [
     {"id": "p-halo", "text": "dark matter (illustration)", "t0": round(CUE["most"] + 0.2, 4), "t1": round(t_c - 0.4, 4), "at": [90 / 1080, 0.47]},
-    {"id": "p-dot", "text": "each dot = 10 billion", "t0": round(CUE["range"] - 0.2, 4), "t1": round(CUE["pass"] - 0.8, 4), "at": [90 / 1080, 0.16]},
+    {"id": "p-dot", "text": "each dot = 10 billion", "t0": round(CUE["range"] - 0.2, 4), "t1": round(CUE["pass"] - 0.8, 4), "at": [90 / 1080, 0.135]},
     {"id": "p-plots", "text": "ground plots: trees counted by people", "t0": round(t_why, 4), "t1": round(CUE["est0"] - 0.1, 4), "at": [110 / 1080, 0.187]},
     {"id": "p-sat", "text": "satellite map: trees from space", "t0": CUE["sat0"], "t1": round(CUE["est0"] - 0.1, 4), "at": [110 / 1080, 0.385]},
-    {"id": "p-one", "text": "one tree", "t0": round(CUE["pass"] - 0.3, 4), "t1": round(CUE["big"] - 0.2, 4), "at": [90 / 1080, 0.16]},
-    {"id": "p-street", "text": "ordinary places", "t0": round(CUE["big"] + 0.6, 4), "t1": round(t_rd - 0.3, 4), "at": [90 / 1080, 0.16]},
+    {"id": "p-one", "text": "one tree", "t0": round(CUE["pass"] - 0.3, 4), "t1": round(CUE["big"] - 0.2, 4), "at": [90 / 1080, 0.135]},
+    {"id": "p-street", "text": "ordinary places", "t0": round(CUE["big"] + 0.6, 4), "t1": round(t_rd - 0.3, 4), "at": [90 / 1080, 0.135]},
     {"id": "p-blk", "text": "a city block", "t0": round(CUE["blk"] - 0.3, 4), "t1": round(t_end - 0.45, 4), "at": [90 / 1080, 0.385]},
 ]
 BADGES = [
@@ -132,7 +132,7 @@ END = {"title": "Next orbit: the *dark* sky", "follow": "One More Orbit · S2 ·
        "next": "Our galaxy probably holds 100 to 400\u00a0billion stars (NASA)."}   # footnote (c1)
 POSTER = A("vo05:thirty", 0.4)
 glue(f, {"vo02": ["dark matter,"],
-         "vo03": ["three trillion."],
+         "vo03": ["three trillion.", "a team put Earth's"], "vo04": ["not exact counts,"],
          "vo05": ["keep going.", "eight to thirty times."],
          
          "vo07": ["a millionth of a second."]})
