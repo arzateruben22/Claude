@@ -173,14 +173,15 @@ function makeLoop() { hud.update(1.5); tRing.update(1.5); LOOPEL = [titleEl, CEL
 const lerp = (a, b, u) => a + (b - a) * u;
 function camAt(t) {
   let i = CAMK.findIndex((k) => k.t > t); if (i < 0) i = CAMK.length - 1; if (i < 1) i = 1;
-  const a = CAMK[i - 1], b = CAMK[i], u = b.t === a.t ? 1 : E.inout3(clamp01((t - a.t) / (b.t - a.t)));
+  const a = CAMK[i - 1], b = CAMK[i], u = b.t === a.t ? 1 : (() => { const x = clamp01((t - a.t) / (b.t - a.t)); return 0.55 * E.inout3(x) + 0.45 * x; })();
   return { p: a.p.map((v, k) => lerp(v, b.p[k], u)), l: a.l.map((v, k) => lerp(v, b.l[k], u)), fov: lerp(a.fov, b.fov, u) };
 }
 
 window.seek = function (t) {
   if (!LOOPEL) makeLoop();
   const dipT = CUE.dip[2] + 0.15, tt = t >= dipT ? 0 : t;
-  const cm = camAt(tt); camera.position.fromArray(cm.p); camera.fov = cm.fov; camera.updateProjectionMatrix(); camera.lookAt(...cm.l); camera.updateMatrixWorld();
+  const cm = camAt(tt); { const dd = Math.hypot(cm.p[0] - cm.l[0], cm.p[1] - cm.l[1], cm.p[2] - cm.l[2]) * 0.03; cm.p = [cm.p[0] + Math.sin(tt * 0.9) * dd, cm.p[1] + Math.sin(tt * 0.65 + 1.0) * dd * 0.6, cm.p[2] + Math.sin(tt * 0.5 + 2.0) * dd * 0.5]; }   // a slow drift: the picture is never still
+  camera.position.fromArray(cm.p); camera.fov = cm.fov; camera.updateProjectionMatrix(); camera.lookAt(...cm.l); camera.updateMatrixWorld();
   const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0), up = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1);
   const bb = (c, r) => ({ center: c, r, e1: right.toArray(), e2: up.toArray() });
   const inGPS = tt >= CUE.dip[0] + 0.1 && tt < CUE.dip[1] + 0.1;

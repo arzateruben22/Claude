@@ -21,10 +21,10 @@ vo: Say the universe has no edge or start. {-} Then every line of sight would en
 ## change {shot: stars at 1x, 2x, 3x distance: fainter but more of them; the two effects cancel; the whole sky glows white · spine "fainter, but more: they cancel" · picture-only 0.2 s · energy: 0.55} (13–21.5 s)
 vo: Far stars look fainter, but there are more of them. {c2} Those two effects cancel, so the whole sky should *glow* like a star's surface. {c3}
 
-## why {shot: a timeline from now back to the start; light from far stars drawn as dashes still on the way · spine "light needs time to arrive" · picture-only 2 s · energy: 0.62} (21.5–36 s)
+## why {shot: a timeline from now back to the start; light from far stars drawn as dashes still on the way · spine "light needs time to arrive" · picture-only 0.6 s · energy: 0.62} (21.5–36 s)
 vo: The key here is *time*. {-} Far starlight may not have had time to reach us *yet*. {c5} We now put the universe's age near thirteen point eight billion *years*. {c6}
 
-## whoa {shot: the sightline stops at a horizon; beyond it the stars are switched off, "still on the way" · spine "the dark is a clue" · picture-only 3 s · energy: 0.8} (36–50 s)
+## whoa {shot: the sightline stops at a horizon; beyond it the stars are switched off, "still on the way" · spine "the dark is a clue" · picture-only 0.6 s · energy: 0.8} (36–50 s)
 vo: Past a certain distance, starlight is still on its *way*. {c20} So we can only see so *far*. {c21} The dark sky hints that the universe has a *beginning*. {c7}
 
 ## takeaway {shot: hold on the dark sky with one star lit · picture-only 0.2 s · energy: 0.3} (50–57 s)

@@ -21,10 +21,10 @@ vo: Gold is heavier than iron. {c1} Atoms that heavy are built by soaking up *ne
 ## change {shot: two neutron stars spiral together; the 2017 signal arrives · spine "2017: a merger seen" · picture-only 0.2 s · energy: 0.55} (13–22.5 s)
 vo: One place that does that: two neutron stars *crashing* together. {c3} In twenty seventeen, astronomers saw one happen, as ripples in space and as *light*. {c4}
 
-## why {shot: a city-sized ball with more mass than the Sun; the crash flings out hot matter that cools into new atoms · spine "the crash makes heavy atoms" · picture-only 2 s · energy: 0.62} (22.5–37 s)
+## why {shot: a city-sized ball with more mass than the Sun; the crash flings out hot matter that cools into new atoms · spine "the crash makes heavy atoms" · picture-only 0.6 s · energy: 0.62} (22.5–37 s)
 vo: A neutron star is about as wide as a *city*, yet heavier than the Sun. {c5} A crash throws out hot matter, and some becomes heavy atoms. {c6} How much gold comes from crashes is still *debated*. {c7}
 
-## whoa {shot: zoom from the cloud into a ring on a hand; one gold bead settles into it · spine "your ring: older than the Sun" · picture-only 3 s · energy: 0.8} (37–51 s)
+## whoa {shot: zoom from the cloud into a ring on a hand; one gold bead settles into it · spine "your ring: older than the Sun" · picture-only 0.6 s · energy: 0.8} (37–51 s)
 vo: Zoom in on your *ring*. {-} Some of its gold may have been made in a crash like that, *somewhere* in space. {c8} Think of it as a *souvenir*. {-}
 
 ## takeaway {shot: hold on the ring with the galaxy behind · picture-only 0.2 s · energy: 0.3} (51–58 s)

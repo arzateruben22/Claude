@@ -21,10 +21,10 @@ vo: The edge is called the event *horizon*. {c1} Escape speed is the speed neede
 ## change {shot: split screen; left a watcher far away, right a faller approaching the ring · spine "two views of one fall" · picture-only 0.2 s · energy: 0.55} (14.4–24 s)
 vo: Nothing travels faster than light, so nothing gets out from there. {c3} Now picture a friend, *hovering* close to it, while you watch from far away. {-}
 
-## why {shot: clocks tick slower near a mass; a GPS satellite corrected each day · spine "gravity slows clocks" · picture-only 1.2 s · energy: 0.62} (24–38.9 s)
+## why {shot: clocks tick slower near a mass; a GPS satellite corrected each day · spine "gravity slows clocks" · picture-only 0.6 s · energy: 0.62} (24–38.9 s)
 vo: Gravity really does slow clocks. {c4} GPS satellites must correct for *relativity* to keep good time. {c5} The closer to a black hole, the slower a clock *ticks*. {c20} Now compare the two views. {-}
 
-## whoa {shot: split screen: the faller's clock runs on normally; the watcher's view slows down · spine "faller: normal · watcher: frozen" · picture-only 1.2 s · energy: 0.8} (38.9–51.2 s)
+## whoa {shot: split screen: the faller's clock runs on normally; the watcher's view slows down · spine "faller: normal · watcher: frozen" · picture-only 0.6 s · energy: 0.8} (38.9–51.2 s)
 vo: To *you*, far away, your friend's clock seems to tick *slower*. {c6} To someone hovering close, everyone else seems to speed *up*. {c13} The closer they hover, the bigger the *gap*. {c21}
 
 ## takeaway {shot: the two panels merge into one ring · picture-only 0.2 s · energy: 0.3} (51.2–57.6 s)
