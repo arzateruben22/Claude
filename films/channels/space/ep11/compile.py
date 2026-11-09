@@ -109,6 +109,10 @@ COUNTERS = [
     {"id": "c-density", "label": "density tells you", "text": "who floats, who sinks", "t0": CUE["who"] - 0.8, "t1": t_rd},
     {"id": "c-read", "label": "light time · Sun to Saturn", "text": "about 80 minutes", "read": True, "t0": CUE["eighty"] - 0.3, "t1": round(t_end - 0.45, 4)},
 ]
+# declutter rule (owner, 9 Nov 2026): one text element per idea; the caption carries the sentence.
+COUNTERS = [c for c in COUNTERS if c["id"] in ('c-dens',)]
+LABELS = [x for x in LABELS if x["id"] in ()]
+PILLS = [x for x in PILLS if x["id"] in ()]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
 spine = [c for c in COUNTERS if c["at"] == SPINE]

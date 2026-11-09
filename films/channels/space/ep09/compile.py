@@ -110,6 +110,10 @@ COUNTERS = [
     {"id": "c-read-gr", "label": "light time · the gamma-ray flash", "text": "1.7 seconds later", "read": True, "t0": CUE["vis"], "t1": round(CUE["glow"] - 0.05, 4)},
     {"id": "c-read-li", "label": "light time · the glow", "text": "hours later", "read": True, "t0": CUE["glow"], "t1": round(t_end - 0.45, 4)},
 ]
+# declutter rule (owner, 9 Nov 2026): one text element per idea; the caption carries the sentence.
+COUNTERS = [c for c in COUNTERS if c["id"] in ('c-2017',)]
+LABELS = [x for x in LABELS if x["id"] in ('l-merge',)]
+PILLS = [x for x in PILLS if x["id"] in ('p-table', 'p-hours')]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
 spine = [c for c in COUNTERS if c["at"] == SPINE]

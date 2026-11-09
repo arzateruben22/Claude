@@ -120,6 +120,12 @@ COUNTERS = [
     {"id": "c-read-gal", "label": "light time · across the galaxy", "text": "100,000 years", "read": True, "t0": t_rd, "t1": round(CUE["ring1"] - 0.05, 4)},
     {"id": "c-read-blk", "label": "light time · across a city block", "text": "1 millionth of a second", "read": True, "t0": CUE["ring1"], "t1": round(t_end - 0.45, 4)},
 ]
+# declutter rule (owner, 9 Nov 2026): one text element per idea; the caption carries the sentence.
+COUNTERS = [c for c in COUNTERS if c["id"] in ('c-stars', 'c-trees', 'c-per', 'c-ratio')]
+LABELS = [x for x in LABELS if x["id"] in ()]
+PILLS = [x for x in PILLS if x["id"] in ('p-dot',)]
+for c in COUNTERS:
+    if c["id"] == "c-ratio": c["t0"] = max(c["t0"], 48.6)
 for c in COUNTERS:
     c.setdefault("at", SPINE)
 spine = [c for c in COUNTERS if c["at"] == SPINE]

@@ -104,6 +104,10 @@ COUNTERS = [
     {"id": "c-read-sun", "label": "light time · the Sun", "text": "8 minutes", "read": True, "t0": t_rd, "t1": round(CUE["farthest"] - 0.4, 4)},
     {"id": "c-read-far", "label": "light time · far galaxies", "text": "billions of years", "read": True, "t0": CUE["farthest"], "t1": round(t_end - 0.45, 4)},
 ]
+# declutter rule (owner, 9 Nov 2026): one text element per idea; the caption carries the sentence.
+COUNTERS = [c for c in COUNTERS if c["id"] in ('c-age',)]
+LABELS = [x for x in LABELS if x["id"] in ('l-you', 'l-hz')]
+PILLS = [x for x in PILLS if x["id"] in ('p-lane',)]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
 spine = [c for c in COUNTERS if c["at"] == SPINE]

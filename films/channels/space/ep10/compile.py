@@ -98,6 +98,12 @@ COUNTERS = [
     {"id": "c-both", "label": "both views are", "text": "true", "t0": CUE["true"], "t1": t_rd},
     {"id": "c-read", "label": "light time · first photo", "text": "about 55 million years", "read": True, "t0": round(CUE["fifty"] - 0.6, 4), "t1": round(t_end - 0.45, 4)},
 ]
+# declutter rule (owner, 9 Nov 2026): one text element per idea; the caption carries the sentence.
+COUNTERS = [c for c in COUNTERS if c["id"] in ()]
+LABELS = [x for x in LABELS if x["id"] in ('l-you', 'l-probe')]
+PILLS = [x for x in PILLS if x["id"] in ('p-gap',)]
+for x in LABELS:
+    if x["id"] == "l-you": x["text"] = "you"
 for c in COUNTERS:
     c.setdefault("at", SPINE)
 spine = [c for c in COUNTERS if c["at"] == SPINE]
