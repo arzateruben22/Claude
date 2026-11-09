@@ -1026,3 +1026,18 @@ h1 + :is(.card, section, form, .stack, .stack-lg) { margin-top: var(--s4); }
 .ig-cap-title { font-weight: 600; color: var(--text); }
 .ig-cap-text { white-space: pre-line; margin: 6px 0; color: var(--text-2); overflow-wrap: anywhere; }
 .ig-cap-tags { margin: 0 0 6px; color: var(--text-3); font-size: 13.5px; overflow-wrap: anywhere; }
+
+/* Get paid */
+.earn-attn { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 16px; }
+.earn-attn li.good { color: var(--good); font-weight: 600; }
+.earn-row { padding-top: var(--s4); border-top: 1px solid var(--line); }
+.earn-row:first-of-type { border-top: 0; padding-top: 0; }
+.earn-pill { display: inline-block; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line-3); font: 600 13px/1.3 var(--ui); color: var(--text-2); }
+.earn-pill.info { color: var(--info); border-color: var(--info); } .earn-pill.warn { color: var(--warn); border-color: var(--warn); } .earn-pill.good { color: var(--good); border-color: var(--good); }
+.earn-req { display: grid; gap: 4px; font-size: 14.5px; }
+.earn-req .bar { height: 8px; }
+.earn-left { font-size: 12.5px; }
+.earn-tier { font-size: 14px; }
+.earn-or { padding-left: 4px; }
+.earn-stale { margin: 0; color: var(--warn); font-weight: 600; }
+.earn-notes { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; }

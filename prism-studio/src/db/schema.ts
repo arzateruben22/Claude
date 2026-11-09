@@ -3,7 +3,7 @@
 // Money is integer cents. Demo rows carry is_demo = true and never reserve real rewards or count as real progress.
 import { sql } from "drizzle-orm";
 import {
-  pgTable, pgEnum, uuid, text, integer, boolean, timestamp, jsonb, real, uniqueIndex, index, primaryKey, bigint, date, check,
+  pgTable, pgEnum, uuid, text, integer, boolean, timestamp, jsonb, real, doublePrecision, uniqueIndex, index, primaryKey, bigint, date, check,
 } from "drizzle-orm/pg-core";
 
 const id = () => uuid("id").primaryKey().defaultRandom();
@@ -348,6 +348,18 @@ export const metricSnapshots = pgTable("metric_snapshots", {
   index("metrics_pub_metric").on(t.publicationId, t.metric),
   uniqueIndex("metrics_api_daily").on(t.publicationId, t.metric, t.utcDay).where(sql`${t.source} = 'api'`),
 ]);
+
+// Account-level numbers (subscribers, watch hours, followers…): payout eligibility is per account, not per post.
+// Append-only: the latest row per (destination, metric) counts, and only api/csv/manual rows (QUALIFYING_SOURCES).
+// An unread number is simply no row, never 0.
+export const accountSnapshots = pgTable("account_snapshots", {
+  id: id(),
+  destinationId: uuid("destination_id").references(() => destinations.id, { onDelete: "cascade" }).notNull(),
+  metric: text("metric").notNull(),            // subscribers, watch_hours_12m, shorts_views_90d, uploads_90d, followers, views_30d
+  value: doublePrecision("value").notNull(),
+  source: metricSourceEnum("source").notNull(),
+  recordedAt: timestamp("recorded_at", { withTimezone: true }).notNull().defaultNow(),
+}, (t) => [index("account_snapshots_dest_metric").on(t.destinationId, t.metric, t.recordedAt)]);
 
 // API analytics pull state, one row per publication: when Prism last asked the platform (success or not) and what
 // happened. The cadence (daily for 30 days after publication, then weekly) counts from the last attempt, so a

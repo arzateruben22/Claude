@@ -14,6 +14,7 @@ import { approve } from "@/domain/approvals";
 import { markHandedOff, markUploaded, undoUploaded } from "@/domain/publications";
 import { addFunding, claimReward, recordMetric, releaseReward, setMonthlyCap } from "@/domain/rewards";
 import { chooseCosmetic, completeChallenge, evolve, markEvolutionSeen, onPublicationReported } from "@/domain/living";
+import { recordAccountMetrics, TT_METRICS, YT_METRICS } from "@/domain/earn";
 import { planDays, unschedule } from "@/domain/schedule";
 import { enqueue, requestCancel, retry } from "@/domain/jobs";
 import { addCost, editCost, paidSwitch, parseMoney, setBudget, voidCost, type CostInput } from "@/domain/costs";
@@ -261,6 +262,23 @@ export async function addMetric(_: Result, fd: FormData) {
     const titles = r.unlocked.length ? (await db().select().from(S.milestoneRules)).filter((m) => r.unlocked.some((u) => u.ruleId === m.id)).map((m) => m.title) : [];
     refresh("/analytics", "/rewards");
     return ok(titles.length ? `Logged. Unlocked: ${titles.join(", ")}${source === "demo" ? " (demo)" : ""}.` : "Logged.");
+  });
+}
+
+/** Account-level numbers for "Get paid": the owner read them in YouTube Studio → Earn or TikTok Studio. Blank = not logged. */
+export async function addAccountMetrics(_: Result, fd: FormData) {
+  return run(async () => {
+    const destinationId = z.string().uuid().parse(fd.get("destinationId"));
+    const source = z.enum(["manual", "estimate", "demo"]).parse(fd.get("source") ?? "manual");
+    const values: Record<string, number> = {};
+    for (const m of [...YT_METRICS, ...TT_METRICS]) {
+      const raw = str(fd, m).replace(/[, ]/g, "");
+      if (raw === "") continue;
+      values[m] = z.coerce.number({ message: "Enter numbers only" }).min(0, "Numbers can't be negative").parse(raw);
+    }
+    const r = await recordAccountMetrics(db(), { destinationId, values, source });
+    refresh("/earn");
+    return ok(source === "manual" ? `Logged ${r.count} number${r.count === 1 ? "" : "s"}.` : `Saved, but ${source === "demo" ? "demo" : "estimated"} numbers never count toward getting paid.`);
   });
 }
 

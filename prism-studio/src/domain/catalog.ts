@@ -6,8 +6,8 @@ export type Topic = "skincare" | "physics" | "body" | "space" | "whatif";
 
 export const OFFICIAL = {
   // verified 2026-10-24 by search (INTEGRATIONS.md): generic official pages; account-specific links need a real ID
-  youtube: { studio: "https://studio.youtube.com", upload: "https://studio.youtube.com", help: "https://support.google.com/youtube/answer/3046356", uploadHelp: "https://support.google.com/youtube/answer/57407" },
-  tiktok: { studio: "https://www.tiktok.com/tiktokstudio", upload: "https://www.tiktok.com/tiktokstudio", help: "https://support.tiktok.com/en/using-tiktok/creating-videos/creator-tools-on-tiktok" },
+  youtube: { studio: "https://studio.youtube.com", upload: "https://studio.youtube.com", help: "https://support.google.com/youtube/answer/3046356", uploadHelp: "https://support.google.com/youtube/answer/57407", partnerProgram: "https://support.google.com/youtube/answer/72851" },
+  tiktok: { studio: "https://www.tiktok.com/tiktokstudio", upload: "https://www.tiktok.com/tiktokstudio", help: "https://support.tiktok.com/en/using-tiktok/creating-videos/creator-tools-on-tiktok", creatorRewards: "https://www.tiktok.com/creator-academy" },
   instagram: { studio: "https://business.facebook.com/", upload: "https://www.instagram.com/", help: "https://help.instagram.com/" },
 } as const;
 
