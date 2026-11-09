@@ -66,7 +66,7 @@ COUNTERS = [
     {"id": "c-age", "label": "the universe's age", "text": "13.8 billion years", "t0": CUE["age0"], "t1": t_w},
     {"id": "c-dark", "label": "so the sky is", "text": "dark: a clue", "t0": CUE["begin"], "t1": t_rd},
     {"id": "c-read-sun", "label": "light time · the Sun", "text": "8 minutes", "read": True, "t0": t_rd, "t1": round(CUE["farthest"] - 0.05, 4)},
-    {"id": "c-read-far", "label": "light time · the farthest galaxies", "text": "billions of years", "read": True, "t0": CUE["farthest"], "t1": round(t_end - 0.45, 4)},
+    {"id": "c-read-far", "label": "light time · far galaxies", "text": "billions of years", "read": True, "t0": CUE["farthest"], "t1": round(t_end - 0.45, 4)},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)

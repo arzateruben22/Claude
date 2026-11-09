@@ -35,7 +35,7 @@ vo: Researchers counted trees in *ground* plots, then scaled up with satellite m
 vo: Now turn every star into a *tree*. {-} The stars run out, and Earth's forests keep *going*. {-} Trees win, by roughly eight to *thirty* times. {c7}
 
 ## takeaway {shot: hold on the overflow · picture-only 0.2 s · energy: 0.3} (51–58.5 s)
-vo: Every tree you pass is one of *more* trees than our galaxy has stars. {c12} Big numbers hide in ordinary places. {-}
+vo: There are *more* trees on Earth than stars in our galaxy. {c12} Big numbers hide in ordinary places. {-}
 
 ## readout {segment: readout · the closing light-time readout: "100,000 years" on screen across the galaxy; "1 millionth of a second" across a city block · a ping per line · picture-only 0.2 s · energy: 0.45} (58.5–66 s)
 vo: *Light time* across our galaxy: longer than all of written history. {c8} Across a city block: about a *millionth* of a second. {c9}

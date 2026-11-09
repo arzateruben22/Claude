@@ -19,6 +19,15 @@ def run(via):
 
 
 bad = []
+for st in ("OPEN", "SOURCE-READ", "bogus"):
+    with tempfile.TemporaryDirectory() as d:
+        Path(d, "script.md").write_text(SCRIPT)
+        Path(d, "claims.json").write_text(json.dumps([{**CLAIM, "verified_via": "page", "status": st}]))
+        out = subprocess.run([sys.executable, "-I", str(LINT), d], capture_output=True, text=True).stdout
+    has = "status must be one of" in out
+    print(f"status {st!r}: {'rejected' if has else 'accepted'}")
+    if has != (st == "bogus"):
+        bad.append(st)
 for via, want_error in (("not read", False), ("page", False), ("search excerpt", False), ("guessed", True)):
     out = run(via)
     has = "verified_via must be one of" in out

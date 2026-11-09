@@ -84,15 +84,15 @@
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "Every tree you pass is one of more trees than our galaxy has stars. Big numbers hide in ordinary places.",
+   "text": "There are more trees on Earth than stars in our galaxy. Big numbers hide in ordinary places.",
    "stars": [
     "more"
    ],
-   "phonemes": "ˈɛvɹi tɹˈiː juː pˈæs ɪz wˈʌn ʌv mˈɔːɹ tɹˈiːz ðɐn ˌaʊɚ ɡˈælɐksi hɐz stˈɑːɹz. bˈɪɡ nˈʌmbɚz hˈaɪd ɪn ˈɔːɹdɪnˌɛɹi plˈeɪsᵻz.",
+   "phonemes": "ðɛɹˌɑːɹ mˈɔːɹ tɹˈiːz ˌɔn ˈɜːθ ðɐn stˈɑːɹz ɪn ˌaʊɚ ɡˈælɐksi. bˈɪɡ nˈʌmbɚz hˈaɪd ɪn ˈɔːɹdɪnˌɛɹi plˈeɪsᵻz.",
    "speed": 0.95,
    "file": "06.wav",
-   "dur": 7.638,
-   "sha256": "a25018d09d2c246d73a191c771f4d3b0cb3f32d90acc7fef621994f28615fc5e"
+   "dur": 6.495,
+   "sha256": "dd59cc1f4c2bb6c84ae16f1689027a34d6072b2ee6c24f6a26fed00c6db5b33a"
   },
   {
    "id": "vo07",

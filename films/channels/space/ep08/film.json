@@ -268,7 +268,7 @@
   },
   {
    "id": "c-read-far",
-   "label": "light time · the farthest galaxies",
+   "label": "light time · far galaxies",
    "text": "billions of years",
    "read": true,
    "t0": 57.06666666666667,

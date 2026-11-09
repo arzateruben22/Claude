@@ -27,7 +27,7 @@ run. What it checks:
   by eye and ear at T0 (voice/README.md, "How accurate").
 - **Claims.** Every factual-looking sentence carries `{c1}` / `{c1,c2}` (or `{-}`: states nothing
   outside the film); every id is in claims.json with the sentence exactly as spoken, a source, an
-  access date, how it was verified and a status. "needs-wording" fails; "TODO open link" warns.
+  access date, how it was verified and a status. "needs-wording" fails; "TODO open link", "OPEN" and "SOURCE-READ" warn (a person has not opened the page).
 
 Exit status 1 when there are errors. Warnings never fail the lint.
 """
@@ -72,7 +72,7 @@ SYL_RATE = 3.8           # syllables a second for the estimate: median of Skin S
 PRE, HOLD = 0.3, 0.4     # timeline.layout's defaults: lead-in before a line, hold after it
 
 FIELDS = ("id", "sentence", "claim", "source_url", "source_title", "accessed", "verified_via", "status")
-STATUS = ("ok", "needs-wording", "TODO open link")
+STATUS = ("ok", "needs-wording", "TODO open link", "OPEN", "SOURCE-READ")   # OPEN = nobody has read it; SOURCE-READ = the builder read the page (a person still opens it before ok)
 VIA = ("search excerpt", "page", "not read")   # "not read": nobody has opened the source yet (the honest default for a candidate link)
 
 NUMBER_WORDS = set("""zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen
@@ -347,8 +347,8 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
                 r.error(f"claim {cid}", f"status must be one of {STATUS}")
             elif c["status"] == "needs-wording":
                 r.error(f"claim {cid}", "status 'needs-wording': fix the sentence, re-check, then mark it ok")
-            elif c["status"] == "TODO open link":
-                r.warn(f"claim {cid}", f"TODO open link: {c.get('source_url')}")
+            elif c["status"] in ("TODO open link", "OPEN", "SOURCE-READ"):
+                r.warn(f"claim {cid}", f"{c['status']}: {c.get('source_url')}")
             if c.get("verified_via") not in VIA:
                 r.error(f"claim {cid}", f"verified_via must be one of {VIA}")
             if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(c.get("accessed", ""))):

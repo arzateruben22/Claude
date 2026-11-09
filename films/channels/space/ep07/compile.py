@@ -46,12 +46,12 @@ CUE = {
     "ring0": A("vo07:Light"), "ring1": A("vo07:Across#2"), "blk": A("vo07:millionth"),
     "n": t_n, "c": t_c, "why": t_why, "w": t_w, "tk": t_tk, "rd": t_rd, "end": t_end,
     "stars": A("vo02:hundreds"), "nobody": A("vo02:Nobody"), "guess": A("vo01:Guess"), "billions": A("vo02:billions"), "most": A("vo02:Most"),
-    "trees": A("vo03:trees"), "alive": A("vo03:alive"), "per": A("vo03:hundreds"), "range": A("vo04:range"), "pass": A("vo06:pass"), "city": A("vo07:city"),
+    "trees": A("vo03:trees"), "alive": A("vo03:alive"), "per": A("vo03:hundreds"), "range": A("vo04:range"), "pass": A("vo06:more"), "big": A("vo06:Big"), "ordinary": A("vo06:ordinary"), "city": A("vo07:city"),
 }
 assert CUE["fill0"] < CUE["fill1"] <= t_why and CUE["flip0"] < CUE["flip1"] < CUE["over"] < CUE["ratio"] <= t_tk + 0.01, CUE
 
 # ── camera: a telescope mount moving between a few places (galaxy, the Sun, Earth), cuts hidden under dips and panels ──
-GALAXY, SUN_P, EARTH = [0, 0, 0], [10.7, 0, -15.6], [1000, 0, 0]       # SUN_P: 70% of the way to the Sun (27 units out at -0.97 rad)
+GALAXY, SUN_P, EARTH = [0, 0, 0], [6.9, 0, -10.0], [1000, 0, 0]         # SUN_P: 45% of the way to the Sun (27 units out at -0.97 rad): the core stays in frame
 POSE = {"target": GALAXY, "el": 48.0, "fov": 24, "fx": 0.5, "fy": 0.36}
 key = lambda t, **k: {"t": round(t, 4), **POSE, **k}
 EPS = 0.03
@@ -60,22 +60,22 @@ t_cut2 = round(CUE["est0"] - 0.1, 4)                # Earth → galaxy, under th
 SPACE = [key(0.0, dist=230.0, az=0.0),
          key(t_n, dist=224.0, az=1.0, ease="sine"),
          key(CUE["billions"] - 0.3, dist=218.0, az=2.0, ease="sine"),
-         key(CUE["billions"] + 1.4, target=SUN_P, dist=148.0, az=3.5, ease="sine"),          # lands on the Sun pin
-         key(CUE["most"] - 0.2, target=SUN_P, dist=150.0, az=4.0, ease="sine"),
-         key(CUE["most"] + 1.6, dist=232.0, az=5.0, ease="sine"),                              # pulls out for the dark-matter halo
-         key(t_cut1, dist=236.0, az=5.5, ease="sine"),
+         key(CUE["billions"] + 1.4, target=SUN_P, dist=176.0, az=3.5, ease="sine"),          # lands on the Sun pin
+         key(CUE["most"] - 0.2, target=SUN_P, dist=178.0, az=4.0, ease="sine"),
+         key(CUE["most"] + 1.6, dist=232.0, az=4.0, ease="sine"),                              # pulls out for the dark-matter halo
+         key(t_cut1, dist=236.0, az=4.5, ease="sine"),
          key(t_cut1 + EPS, target=EARTH, el=20.0, dist=76.0, az=0.0, fy=0.34),
          key(CUE["fill1"], target=EARTH, el=20.0, dist=70.0, az=3.0, fy=0.34, ease="sine"),
          key(CUE["per"] - 0.3, target=EARTH, el=20.0, dist=70.0, az=4.0, fy=0.34, ease="sine"),
          key(CUE["per"] + 1.0, target=EARTH, el=20.0, dist=106.0, az=5.0, fy=0.25, ease="sine"),      # Earth steps back for the crowd
          key(t_cut2, target=EARTH, el=20.0, dist=108.0, az=7.0, fy=0.25, ease="sine"),
-         key(t_cut2 + EPS, dist=215.0, az=6.0),
-         key(t_w, dist=210.0, az=7.0, ease="sine"),
-         key(CUE["over"] + 1.5, dist=232.0, az=8.5, ease="sine"),
-         key(t_tk, dist=240.0, az=9.5, ease="sine"),
-         key(t_rd, dist=196.0, az=10.5, ease="sine"),
-         key(t_end, dist=190.0, az=12.0, ease="sine"),
-         key(t_end + 3, dist=194.0, az=13.0, ease="sine")]
+         key(t_cut2 + EPS, dist=215.0, az=3.0),
+         key(t_w, dist=210.0, az=4.0, ease="sine"),
+         key(CUE["over"] + 1.5, dist=232.0, az=4.5, ease="sine"),
+         key(t_tk, dist=240.0, az=5.0, ease="sine"),
+         key(t_rd, dist=196.0, az=5.5, ease="sine"),
+         key(t_end, dist=190.0, az=5.0, ease="sine"),
+         key(f.duration, dist=230.0, az=0.0, ease="sine")]          # the last frame is frame 0's pose
 CAM = {"space": SPACE, "end": SPACE}
 for a, b in zip(SPACE, SPACE[1:]):
     if b["t"] - a["t"] > 0.1:
@@ -98,10 +98,11 @@ PILLS = [
     {"id": "p-trees0", "text": "trees", "t0": 0.0, "t1": round(t_n - 0.5, 4), "at": [200 / 1080, 0.262]},
     {"id": "p-stars0", "text": "stars", "t0": 0.0, "t1": round(t_n - 0.5, 4), "at": [715 / 1080, 0.262]},
     {"id": "p-halo", "text": "dark matter (illustration)", "t0": round(CUE["most"] + 0.2, 4), "t1": round(t_c - 0.4, 4), "at": [90 / 1080, 0.222]},
-    {"id": "p-dot", "text": "each dot = 10 billion", "t0": round(CUE["flip0"] - 1.2, 4), "t1": round(CUE["pass"] - 0.4, 4), "at": [90 / 1080, 0.222]},
+    {"id": "p-dot", "text": "each dot = 10 billion", "t0": round(CUE["range"] - 0.2, 4), "t1": round(CUE["pass"] - 0.4, 4), "at": [90 / 1080, 0.222]},
     {"id": "p-plots", "text": "ground plots: trees counted by people", "t0": round(t_why, 4), "t1": round(CUE["est0"] - 0.1, 4), "at": [110 / 1080, 0.187]},
     {"id": "p-sat", "text": "satellite map: trees from space", "t0": CUE["sat0"], "t1": round(CUE["est0"] - 0.1, 4), "at": [110 / 1080, 0.385]},
-    {"id": "p-one", "text": "one tree", "t0": round(CUE["pass"] - 0.3, 4), "t1": round(t_rd - 0.3, 4), "at": [440 / 1080, 0.222]},
+    {"id": "p-one", "text": "one tree", "t0": round(CUE["pass"] - 0.3, 4), "t1": round(CUE["big"] - 0.2, 4), "at": [440 / 1080, 0.222]},
+    {"id": "p-street", "text": "ordinary places", "t0": round(CUE["big"] + 0.6, 4), "t1": round(t_rd - 0.3, 4), "at": [380 / 1080, 0.222]},
     {"id": "p-blk", "text": "a city block", "t0": round(CUE["blk"] - 0.3, 4), "t1": round(t_end - 0.45, 4), "at": [90 / 1080, 0.385]},
 ]
 BADGES = [
@@ -115,7 +116,7 @@ COUNTERS = [
     {"id": "c-hook", "label": "trees or stars", "text": "?", "t0": 0.0, "t1": t_n},
     {"id": "c-stars", "label": "stars in the Milky Way", "text": "100 to 400 billion", "t0": t_n, "t1": t_c},
     {"id": "c-trees", "label": "trees on Earth", "text": "about 3 trillion", "t0": t_c, "t1": CUE["per"] - 0.1},
-    {"id": "c-per", "label": "trees for every person", "text": "about 420", "t0": CUE["per"], "t1": CUE["plots0"] - 0.3},
+    {"id": "c-per", "label": "trees for every person", "text": "about 420", "t0": CUE["per"], "t1": round(t_why - 0.1, 4)},
     {"id": "c-est", "label": "both are", "text": "estimates", "t0": CUE["est0"], "t1": t_w},
     {"id": "c-ratio", "label": "trees ÷ stars", "text": "roughly 8 to 30", "t0": CUE["ratio"], "t1": t_rd},
     {"id": "c-read-gal", "label": "light time · across the galaxy", "text": "100,000 years", "read": True, "t0": t_rd, "t1": round(CUE["ring1"] - 0.05, 4)},
@@ -134,9 +135,12 @@ END = {"title": "Next orbit: the *dark* sky", "follow": "One More Orbit · S2 ·
 POSTER = A("vo05:thirty", 0.4)
 glue(f, {"vo02": ["hundreds of billions", "dark matter,"],
          "vo03": ["twenty fifteen,", "three trillion."],
-         "vo05": ["eight to thirty times."]})
+         "vo05": ["keep going.", "eight to thirty times."],
+         "vo07": ["a millionth of a second."]})
 
+LOOP0 = round(f.duration - 0.6, 4)
 film = {
+    "loop0": LOOP0,
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS, "cam": CAM, "cue": CUE,
     "tally": {"cols": COLS, "rows": ROWS, "unit_b": UNIT_B, "stars_lo": STARS_LO_B // UNIT_B, "stars_hi": STARS_HI_B // UNIT_B, "trees": TREES_B // UNIT_B},
