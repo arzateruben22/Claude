@@ -18,7 +18,8 @@ for L in lines:
         caps.append({"w": w["w"], "t0": round(s + w["start"], 3), "t1": round(s + w["end"], 3), "line": L["id"], "beat": L["beat"]})
     T = END[L["id"]] + (hold(L["beat"]) if L["beat"] != "tease" else 0.0)
 DUR = round(round((END[lines[-1]["id"]] + hold("tease")) * 15) / 15, 3)
-film = {"id": f"skin-sense-{sys.argv[1][2:].zfill(3)}", "fps": 30, "dur": DUR, "poster": float(sys.argv[2]) if len(sys.argv) > 2 else round(DUR * 0.55, 2),
+EPJ = json.load(open(d / "episode.json"))
+film = {"id": f"skin-sense-{sys.argv[1][2:].zfill(3)}", "title": {"series": f"Skin Sense · No. {sys.argv[1][2:].zfill(3)}", "title": EPJ.get("name") or re.sub(r"<br>", " ", EPJ["title"]).replace("*", "").capitalize()}, "fps": 30, "dur": DUR, "poster": float(sys.argv[2]) if len(sys.argv) > 2 else round(DUR * 0.55, 2),
         "theme": "../theme.json", "shots": [{"at": 0.0, "name": "main"}], "captions": caps, "lines": {l["id"]: [START[l["id"]], END[l["id"]], l["beat"]] for l in lines}}
 json.dump(film, open(d / "film.json", "w"), indent=1)
 cmd = ["ffmpeg", "-y", "-loglevel", "error"]

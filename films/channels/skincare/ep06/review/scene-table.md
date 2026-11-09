@@ -1,7 +1,7 @@
 # Scene table: Skin Sense No. 06, Same list as cigarettes (68.1 s)
 
 Times are film seconds (voice `vo/lines.json`, word times `vo/words.json`, Parakeet). Each row is a visual change; the bracket is the time since the last one. The "art" is a **procedural placeholder** (`set/gen_art.py`, marked on screen); plates, charts, pills, the scan line and every caption are drawn in code. Footers on every frame: "Conceptual illustration · not to scale", "Education, not medical advice". No disease or risk line is shown over skin or a person.
-Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm, not the studio mixer or `qa.py`). Longest gap between changes: 5.6 s (6 gaps over 4 s).
+Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm, not the studio mixer or `qa.py`). Longest gap between changes: 8.2 s (6 gaps over 4 s).
 
 | time | narration | visual change (and on-screen text) | sound |
 |---|---|---|---|
@@ -13,11 +13,9 @@ Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm,
 | 14.1 (+4.3) | Tanning beds give off mostly | camera: q1 art, close-up ×1.05; supporting line: UVA: the long rays.; badge: Simplified · no person shown | voice |
 | 15.5 (+1.3) | UVA, the long rays. In big, powerful units it may be | camera: q2 art, close-up ×1.2; pill draws on: UVA: the long rays | voice |
 | 19.8 (+4.3) | ten to fifteen times as strong as midday sun. | camera: q3 art, close-up ×1.1; pill draws on: May be 10–15× midday sun | voice |
-| 23.6 (+3.8) | When beds joined the list, the clearest signal came from people who started young. | camera: q5 art, close-up ×1.1; plate (art quiets): Melanoma risk compared with never using (relative risk, pooled studies) | voice |
-| 28.3 (+4.8) | Studies that pooled results | bar grows: Never used a tanning bed · 1.0 | voice |
-| 29.8 (+1.4) | found first use before thirty-five | bar grows: First use before 35 · 1.59 | voice |
-| 31.8 (+2.0) | raised melanoma risk by more than | bar grows: First use before 35 · 1.75 (another study) | voice |
-| 33.6 (+1.8) | than half. | note: Group results, not a prediction for any one person. | voice |
+| 23.6 (+3.8) | When beds joined the list, the clearest signal came from people who started young. Studies that … | camera: q5 art, close-up ×1.1; plate (art quiets): Melanoma risk, first use before 35 (pooled studies) | voice |
+| 31.8 (+8.2) | raised melanoma risk by more than | bar grows: More than half again as high as for people who never used a bed | voice |
+| 33.6 (+1.8) | than half. | note: Group results, not a prediction for any one person. Boniol et al., BMJ 2012. | voice |
 | 36.7 (+3.1) | Whole countries acted. | plate (art quiets): Countries that acted | voice |
 | 38.5 (+1.8) | Australia switched off every commercial tanning bed, and | row lights: Australia · commercial beds | voice |
 | 41.7 (+3.1) | Brazil banned them too. | row lights: Brazil · tanning equipment | voice |

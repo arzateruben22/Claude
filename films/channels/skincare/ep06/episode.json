@@ -664,31 +664,17 @@
    "t0": "start:vo04",
    "t1": "end:vo04+2.4",
    "top": 650,
-   "title": "Melanoma risk compared with never using<br>(relative risk, pooled studies)",
+   "title": "Melanoma risk,<br>first use before 35 (pooled studies)",
    "bars": [
     {
-     "label": "Never used a tanning bed · 1.0",
-     "value": 1.0,
-     "max": 1.8,
-     "t": "vo04:Studies",
-     "color": "#9AA6C0"
-    },
-    {
-     "label": "First use before 35 · 1.59",
-     "value": 1.59,
-     "max": 1.8,
-     "t": "vo04:found",
-     "color": "#2F8F86"
-    },
-    {
-     "label": "First use before 35 · 1.75 (another study)",
-     "value": 1.75,
-     "max": 1.8,
+     "label": "More than half again as high as for people who never used a bed",
+     "value": 1,
+     "max": 1,
      "t": "vo04:raised",
-     "color": "#0E1B3D"
+     "color": "#2F8F86"
     }
    ],
-   "note": "Group results, not a prediction for any one person.",
+   "note": "Group results, not a prediction for any one person. Boniol et al., BMJ 2012.",
    "noteT": "vo04:half"
   },
   {
@@ -791,5 +777,6 @@
   "e1": "Next season:<br>more skin questions",
   "e2": "answered with the evidence.",
   "chip": "Skin Sense · season 2"
- }
+ },
+ "name": "Same List as Cigarettes"
 }

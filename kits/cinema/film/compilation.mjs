@@ -3,6 +3,9 @@
 //   node kits/cinema/film/compilation.mjs --channel films/channels/physics --episodes ep01,ep02,ep03,ep04 \
 //        [--title "Everyday physics, slowed down"] [--thumb "Short thumbnail text"] [--name vol01]
 //        [--out <channel>/compilations] [--cards-only]   (draws the cards and the thumbnail, then stops)
+//        [--max-sources <n>]   at most n sources per episode in the description (default: all); [--max-desc <chars>] fails QA if the description is longer (YouTube allows 5000)
+//        [--bridge <seconds>]   a short "Next:" card between episodes (default 0: none; the chapter it follows owns it)
+//        [--theme <file>]   a theme file to draw the cards in, instead of <channel>/theme.json (its fonts resolve from the channel folder)
 //        [--height 1440|1080] (default 1440) [--crf 15] [--max-mb 90]
 //
 // Each episode's delivered 9:16 file (<episode>/out/*-9x16.mp4) plays whole, full height, in the middle
@@ -30,11 +33,11 @@ const argv = process.argv.slice(2), A = {};
 for (let i = 0; i < argv.length; i++) if (argv[i].startsWith("--")) A[argv[i].slice(2)] = argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[++i] : true;
 const die = (m) => { console.error("compilation: " + m); process.exit(2); };
 if (!A.channel || !A.episodes) die("usage: --channel <dir> --episodes ep01,ep02,… [--title T] [--name vol01] [--out DIR]");
-const chan = path.resolve(A.channel), theme = JSON.parse(fs.readFileSync(path.join(chan, "theme.json"), "utf8"));
+const chan = path.resolve(A.channel), theme = JSON.parse(fs.readFileSync(A.theme ? path.resolve(A.theme) : path.join(chan, "theme.json"), "utf8"));
 const W = 1920, H = 1080, FPS = 30, SLOT = { x: 656, w: 608 }, INTRO = 4.0, OUTRO = 8.0;     // the layout, in CSS px at 1080
 const OH = Number(A.height || 1440), S = OH / H, OW = Math.round(W * S);                      // the delivered frame
 if (![1080, 1440].includes(OH)) die("--height is 1080 or 1440");
-const CRF = Number(A.crf ?? 15), MAX_MB = Number(A["max-mb"] || 90);
+const BR = Number(A.bridge || 0), CRF = Number(A.crf ?? 15), MAX_MB = Number(A["max-mb"] || 90);
 const SLOT_PX = { x: Math.round(SLOT.x * S), w: 2 * Math.round((OH * 9) / 16 / 2) };            // the episode, full height, 9:16
 const run = (cmd, args, o = {}) => { const r = spawnSync(cmd, args, { encoding: "utf8", maxBuffer: 1 << 26, ...o }); if (r.status !== 0) die(`${cmd} failed: ${(r.stderr || "").slice(-800)}`); return r.stdout; };
 const probe = (f) => JSON.parse(run("ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", f]));
@@ -96,7 +99,7 @@ body { background: radial-gradient(1400px 900px at 50% 40%, ${tok["bg-hi"] || to
 .thumb .posters img:nth-child(2) { transform: translateY(-26px); }
 `;
 const rows = (k) => eps.map((e, i) => `<div class="row ${i < k ? "past" : i === k ? "now" : ""}"><b>${String(i + 1).padStart(2, "0")}</b><span>${esc(e.title)}</span></div>`).join("");
-const minutes = Math.round((INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0)) / 60);
+const minutes = Math.round((INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0) + BR * (eps.length - 1)) / 60);
 const posters = (n) => `<div class="posters">${eps.slice(0, n).filter((e) => fs.existsSync(e.poster)).map((e) => `<img src="${pathToFileURL(e.poster).href}">`).join("")}</div>`;
 const pages = {
   intro: `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="big" style="margin-top:22px">${esc(title)}</p><p class="prom"${theme.compilation && theme.compilation.introPromiseWidth ? ` style="max-width:${+theme.compilation.introPromiseWidth}px"` : ""}>${esc(theme.promise || "")}</p><p class="meta">${eps.length} episodes · about ${minutes} min</p></div>${posters(3)}`,
@@ -105,6 +108,7 @@ const pages = {
 };
 eps.forEach((e, k) => { pages[`ep${k}`] = `<div class="slot"></div><div class="left"><p class="kick">${esc(theme.name)}</p><p class="num">${esc(e.num)}</p><p class="t">${esc(e.title)}</p><p class="of">Episode ${k + 1} of ${eps.length}</p></div><div class="right"><p class="hd">In this video</p>${rows(k)}</div><p class="foot">Narration: synthetic voice (AI)</p>`; });
 
+if (BR > 0) eps.forEach((e, k) => { if (k > 0) pages[`bridge${k}`] = `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="prom" style="margin-top:22px">Next · ${esc(e.num)}</p><p class="big" style="margin-top:14px;font-size:96px;max-width:1500px">${esc(e.title)}</p></div>`; });
 const pwDir = process.env.PLAYWRIGHT_DIR || path.dirname(run("npm", ["root", "-g"]).trim());
 const { chromium } = createRequire(path.join(pwDir, "x.js"))("playwright");
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || (fs.existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined) });
@@ -133,7 +137,7 @@ const cardSound = (k, dur, energy, sigAt) => {
 const introWav = preset ? cardSound("intro", INTRO, 0.6, 0.5) : null, outroWav = preset ? cardSound("outro", OUTRO, 0.4, 0.6) : null;
 
 // ── the picture: segments encoded alike (picture only), then joined without re-encoding ──
-const total = INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0);
+const total = INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0) + BR * (eps.length - 1);
 const capK = Math.floor((MAX_MB * 8e6) / total / 1000 - 400);                                 // kbps for the picture, room left for sound
 const V = ["-c:v", "libx264", "-preset", "slow", "-crf", String(CRF), "-maxrate", `${capK}k`, "-bufsize", `${capK * 2}k`, "-x264-params", "aq-mode=3:deblock=-1,-1",
   "-pix_fmt", "yuv420p", "-profile:v", "high", "-r", String(FPS), "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-color_range", "tv"];
@@ -150,6 +154,7 @@ eps.forEach((e, k) => {
     `[0:v]fps=${FPS},format=yuv420p[bg];[1:v]scale=${SLOT_PX.w}:${OH}:flags=lanczos+accurate_rnd+full_chroma_int[ep];[bg][ep]overlay=${SLOT_PX.x}:0:shortest=1,format=yuv420p[v]`,
     "-map", "[v]", "-an", "-t", e.dur.toFixed(3), ...V, o]);
   segs.push(o);
+  if (BR > 0 && k < eps.length - 1) segs.push(card(`bridge${k + 1}`, BR));
 });
 segs.push(card("outro", OUTRO));
 const list = path.join(work, "concat.txt"), final = path.join(outDir, `${name}-16x9.mp4`);
@@ -166,7 +171,7 @@ const part = (src, dur, card) => {                     // src: a file, or a lavf
   parts.push(`[${i}:a:0]aformat=sample_rates=48000:channel_layouts=stereo${card ? `,volume=-4dB,afade=t=out:st=${dur - 0.5}:d=0.5` : ""},apad=whole_dur=${dur},atrim=0:${dur},asetpts=N/SR/TB[a${i}]`);
 };
 part(introWav || `anullsrc=r=48000:cl=stereo:d=${INTRO}`, INTRO, true);
-eps.forEach((e) => part(e.file, +e.dur.toFixed(3), false));
+eps.forEach((e, k) => { part(e.file, +e.dur.toFixed(3), false); if (BR > 0 && k < eps.length - 1) part(`anullsrc=r=48000:cl=stereo:d=${BR}`, BR, false); });
 part(outroWav || `anullsrc=r=48000:cl=stereo:d=${OUTRO}`, OUTRO, true);
 const wavAll = path.join(work, "sound.wav"), m4a = path.join(work, "sound.m4a");
 run("ffmpeg", ["-v", "error", "-y", ...inputs, "-filter_complex", `${parts.join(";")};${parts.map((_, j) => `[a${j}]`).join("")}concat=n=${parts.length}:v=0:a=1[a]`,
@@ -185,13 +190,13 @@ run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", list, "-
 // ── chapters, description, QA ──────────────────────────────────────────────────
 const starts = [];
 let t = INTRO;
-for (const e of eps) { starts.push(t); t += e.dur; }
+for (const [k, e] of eps.entries()) { starts.push(t); t += e.dur + (BR > 0 && k < eps.length - 1 ? BR : 0); }
 starts[0] = 0;   // YouTube: the first chapter starts at 0:00 (the intro belongs to it); the outro belongs to the last
 const chapters = eps.map((e, k) => `${ts(starts[k])} ${e.title}`).join("\n");
 fs.writeFileSync(path.join(outDir, "chapters.txt"), chapters + "\n");
 const srcs = eps.map((e, k) => {
   const seen = new Set(), items = [];
-  for (const c of e.claims) if (c.source_url && !seen.has(c.source_url)) { seen.add(c.source_url); items.push(`- ${c.source_title}: ${c.source_url}`); }
+  for (const c of e.claims) if (c.source_url && !seen.has(c.source_url) && !(A["max-sources"] && items.length >= Number(A["max-sources"]))) { seen.add(c.source_url); items.push(`- ${c.source_title}: ${c.source_url}`); }
   return `${String(k + 1).padStart(2, "0")} ${e.title}\n${items.join("\n") || "- (no claims ledger)"}`;
 }).join("\n\n");
 const families = [...new Set(theme.fonts.map((f) => f.family))].join(", ");
@@ -211,11 +216,12 @@ TODO before posting: the channel handle and links, the expert sign-offs listed i
 const pj = probe(final), vv = pj.streams.find((s) => s.codec_type === "video"), aa = pj.streams.find((s) => s.codec_type === "audio");
 const loud = JSON.parse(run("python3", ["-I", "-c", `import sys, json; sys.path.insert(0, ${JSON.stringify(path.join(repo, "kits/cinema"))}); from studio.master import measure_file; print(json.dumps(measure_file(${JSON.stringify(final)})))`]));
 const dur = Number(pj.format.duration), short = eps.map((e, k) => (k + 1 < eps.length ? starts[k + 1] : dur) - starts[k]).filter((d) => d < 10);
+const descChars = fs.readFileSync(path.join(outDir, "description.md"), "utf8").length;
 const qa = { file: path.relative(repo, final), w: vv.width, h: vv.height, fps: vv.r_frame_rate, dur: +dur.toFixed(3), video_s: +Number(vv.duration).toFixed(3), audio_s: +Number(aa.duration).toFixed(3),
-  size_mb: +(fs.statSync(final).size / 1e6).toFixed(1), ...loud, chapters: eps.length, chapters_under_10s: short.length,
+  size_mb: +(fs.statSync(final).size / 1e6).toFixed(1), ...(A["max-desc"] ? { description_chars: descChars } : {}), ...loud, chapters: eps.length, chapters_under_10s: short.length,
   fails: [vv.width !== OW || vv.height !== OH ? `not ${OW}x${OH}` : null, fs.statSync(final).size > 95e6 ? "over 95 MB" : null, dur < 300 || dur > 660 ? `length ${ts(dur)} outside 5–11 min` : null,
     Math.abs(loud.lufs + 14) > 1.5 ? `loudness ${loud.lufs} LUFS` : null, loud.true_peak_db > -1 ? `true peak ${loud.true_peak_db} dBTP` : null,
-    short.length ? "a chapter under 10 s" : null, Math.abs(Number(vv.duration) - Number(aa.duration)) > 0.1 ? "picture and sound lengths differ" : null].filter(Boolean) };
+    short.length ? "a chapter under 10 s" : null, A["max-desc"] && descChars > Number(A["max-desc"]) ? `description ${descChars} chars (max ${A["max-desc"]})` : null, Math.abs(Number(vv.duration) - Number(aa.duration)) > 0.1 ? "picture and sound lengths differ" : null].filter(Boolean) };
 fs.writeFileSync(path.join(outDir, "qa.json"), JSON.stringify(qa, null, 1));
 console.log(`${qa.file}: ${OW}×${OH}, ${ts(dur)} (${eps.length} episodes), ${qa.size_mb} MB · ${loud.lufs} LUFS, ${loud.true_peak_db} dBTP · ${qa.fails.length ? "FAIL: " + qa.fails.join("; ") : "PASS"}`);
 console.log(chapters);

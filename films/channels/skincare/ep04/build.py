@@ -17,7 +17,7 @@ for L in lines:
 DUR = round(END[lines[-1]["id"]] + END_CARD, 2)
 # a 15 fps draft and a 30 fps final both land on whole frames when the length is a multiple of 2/30 s
 DUR = round(round(DUR * 15) / 15, 3)
-film = {"id": "skin-sense-004", "fps": 30, "dur": DUR, "poster": round(START["vo03"] + 5.2, 2), "theme": "../theme.json",
+film = {"id": "skin-sense-004", "title": {"series": "Skin Sense · No. 004", "title": "The Message Behind a Frown"}, "fps": 30, "dur": DUR, "poster": round(START["vo03"] + 5.2, 2), "theme": "../theme.json",
         "shots": [{"at": 0.0, "name": "main"}], "captions": caps,
         "lines": {l["id"]: [START[l["id"]], END[l["id"]], l["beat"]] for l in lines}}
 json.dump(film, open(HERE / "film.json", "w"), indent=1)
