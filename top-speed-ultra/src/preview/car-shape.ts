@@ -97,6 +97,18 @@ export interface ShapeParams {
   seatFwd?: number;                      // how far this car's driver sits ahead of the shared frame: the eye, the wheel, the hands, the
                                          // seats and the dash move forward (-z) by it (seatOffset); the dash's front edge stays on the glass
   deckRibs?: { x: [number, number]; z: number[] };   // silver ribs across the rear deck's openings (the structure seen under the wing)
+  // M1b, the hypercar's face: below a lip line (|x|, y; a polyline from the centre out) the nose is set back `recess`
+  // metres inside the fangs (|x| < xf), so a crisp silver lip overhangs a dark intake zone; fins: vertical carbon
+  // fins standing in it (x, and how far the top leans in), from the splitter up under the lip
+  face?: { lip: [number, number][]; xf: number; recess: number; fins: [number, number][] };
+  // M1b, the hypercar's tail: the face between the valance (y0) and the bar (y1) is a recess `depth` deep, inset
+  // `inset` from the tail's sides, so the silver haunches wrap round it; the red bar runs along its top edge and
+  // round the tail's corners
+  tailRecess?: { depth: number; inset: number; y0: number; y1: number };
+  archRound?: boolean;                   // the wheel arches follow the circle down to the axle (not cut square at the sill's chord)
+  carbonTint?: number;                   // the exterior carbon's colour (a darker weave that stays black in a warm sky)
+  glassTint?: [number, number];          // the exterior glass: [absorption, reflection strength] (default 0.62, 1.0)
+  deckVents?: { x: [number, number]; z: [number, number]; n: number };   // louvred vents on the rear deck either side of the spine, under the wing
 }
 
 const GT: ShapeParams = {
@@ -239,7 +251,9 @@ const HYPER: ShapeParams = {
   // 3.00 m wheelbase; 0.70 / 0.74 m tyres; tracks 1.72 / 1.69 m
   axle: { zF: -1.52, zR: 1.48, r: 0.35, rR: 0.37, trackF: 0.86, trackR: 0.845, wF: 0.275, wR: 0.345 },
   arch: [0.4, 0.42],
-  WP: [[-2.43, 0.88], [-2.2, 0.955], [-1.9, 0.99], [-1.52, 1.0], [-1.1, 0.975], [-0.6, 0.94], [0.0, 0.925], [0.5, 0.955], [1.0, 1.0], [1.48, 1.02], [1.9, 1.01], [2.15, 0.99], [2.29, 0.96]],
+  // (M1b: the coke-bottle of the sheet's TOP: the front fenders and the rear haunches stand out as pods round a
+  // waist of 0.845 m at the cabin; the haunches 1.045 m)
+  WP: [[-2.43, 0.88], [-2.2, 0.955], [-1.9, 0.99], [-1.52, 1.0], [-1.15, 0.975], [-0.85, 0.93], [-0.55, 0.875], [-0.2, 0.845], [0.15, 0.845], [0.45, 0.88], [0.8, 0.96], [1.15, 1.025], [1.48, 1.045], [1.9, 1.035], [2.15, 1.015], [2.29, 0.985]],
   FH: [[-2.43, 0.37], [-2.27, 0.43], [-2.1, 0.53], [-1.9, 0.65], [-1.7, 0.745], [-1.52, 0.79], [-1.25, 0.77], [-0.9, 0.74], [-0.4, 0.72], [0.2, 0.77], [0.8, 0.84], [1.2, 0.87], [1.48, 0.875], [1.9, 0.84], [2.15, 0.79], [2.29, 0.75]],
   // the deck's centre: low between the front fenders (the sunken bonnet) and between the rear haunches (the recess
   // the spine and the openings sit in), up to a lip across the tail that carries the red bar
@@ -269,7 +283,10 @@ const HYPER: ShapeParams = {
   // and hero views is below the roof, so they still see the silver flanks (the sheet's SIDE and FRONT)
   // (it starts 0.04 m behind the windscreen's top, as before the windscreen grew)
   roofGlass: { z0: -0.06, z1: 0.47, x: 0.6 }, carbonRoof: false,
-  intake: null, intakeQ: [[0.3, 0.25], [0.56, 0.25], [0.2, 0.63], [0.06, 0.63]],
+  // (M1b: the sheet's big scoop behind the door: a dark wedge from the door's rear edge down and back to the sill,
+  // its front edge upright along the door, its rear edge the diagonal into the skirt; 0.179 m2 in side view, 1.8x
+  // the first cut's 0.099)
+  intake: null, intakeQ: [[0.17, 0.3], [0.98, 0.3], [0.4, 0.65], [0.19, 0.65]],
   louvre: null,
   door: [[-0.56, 0.29], [0.1, 0.29], [0.14, 0.82], [-0.98, 0.8]],   // its front and lower edges lie along the scoop's creases
   frontLid: [[-0.5, -2.25], [0.5, -2.25], [0.55, -1.25], [-0.55, -1.25]],
@@ -286,13 +303,15 @@ const HYPER: ShapeParams = {
   noseStyle: 'hyper', tailStyle: 'hyper',
   noseIntake: [[-0.48, 0.09], [0.48, 0.09], [0.43, 0.26], [-0.43, 0.26]],
   // the 'fang': a tall corner intake under the blade's outer half, an LED down its outer edge into the splitter
-  cornerIntake: [[0.6, 0.1], [0.8, 0.1], [0.84, 0.3], [0.67, 0.27]],
-  rearMesh: { w: 1.2, h: 0.22, cy: 0.5 },
+  // (M1b: inside the fang, so its LED runs down the fang's inner edge)
+  cornerIntake: [[0.58, 0.1], [0.75, 0.1], [0.77, 0.33], [0.62, 0.3]],
+  rearMesh: { w: 1.3, h: 0.15, cy: 0.47 },
   exhaust: 'none',
   // the diffuser's mouth: a wide trapezoid under the plate (the sheet's REAR: its LED outline runs across at about
   // half the tail's width and angles down and out to the tail's lower corners)
   diffuser: { half: 0.67, h: 0.36, z0: 1.75, fins: [-0.6, -0.43, -0.26, -0.09, 0.09, 0.26, 0.43, 0.6], top: 0.47 },
-  splitter: { w: 1.94, d: 0.66, proud: 0.24, canards: false },
+  // (M1b: proud 0.24 -> 0.12, so the blade tucks under the nose: its leading edge 3 cm ahead of the lip's point)
+  splitter: { w: 1.94, d: 0.66, proud: 0.12, canards: false },
   wing: { span: 1.71, chord: 0.36, y: 0.98, z: 1.98, mountX: 0.42, plate: [0.55, 0.25] },
   scoop: true, bonnetVent: false, fenderVents: false, handles: 'hidden',
   mirrorAt: [0.98, 0.86, -0.92], cabinW: 0.8,
@@ -317,47 +336,54 @@ const HYPER: ShapeParams = {
   // to this car (src/game/founder.ts holds these three colours)
   led: { color: FOUNDER_ICE.core, halo: FOUNDER_ICE.halo, edge: FOUNDER_ICE.edge },
   bar: { len: 1.66, h: 0.02 },
-  fins: { x: [0.68, 0.62], z: [0.95, 2.08], h: 0.08 },
+  // (M1b: along the haunches' crests, outboard of the teardrop openings)
+  fins: { x: [0.8, 0.74], z: [1.0, 2.06], h: 0.06 },
   // two long vents along the front fenders' inner walls, by the cowl
   ventsQ: [[[0.37, -1.86], [0.47, -1.88], [0.6, -1.24], [0.47, -1.22]]],
   plate: { w: 0.52, h: 0.11, y: 0.46 },
   splitterStep: { w: 1.6, d: 0.5, h: 0.035 },
   thrusters: { x: 0.2, y: 0.26, r: 0.03 },
-  lowCarbon: [0.62, 0.7],
+  // (M1b: lower, so the fangs come down silver at the nose and the haunches wrap the tail down to the valance)
+  lowCarbon: [0.3, 0.53],
   // a light, cool silver: at metalness 0.3 the faces turned away from the sun take the sky's light and still read
   // light (the front and rear views), and a warm sky doesn't turn the paint bronze
-  paintFinish: { metal: 0.3, rough: 0.27 },
+  // (M1b: metalness 0.3 -> 0.15: the front and rear faces, turned from the sun, read the sheet's light silver)
+  paintFinish: { metal: 0.15, rough: 0.28 },
   tyreTint: 0x7a818e, discTint: 0x5c6068,
-  deckRibs: { x: [0.3, 0.74], z: [1.12, 1.32, 1.52] },
-  // the gloss-black two-tone (x, z in plan; mirrored): the V from the badge to the cowl, the spine from the rear
-  // screen to the tail, the openings either side of it, and a channel along each side of the cowl
+  // (M1b: the silver cross-ribs over the openings are gone, they read as wires; under the wing, between the swan
+  // necks, two louvred vents either side of the spine are the structure the sheet's REAR shows there)
+  deckVents: { x: [0.15, 0.37], z: [1.74, 2.12], n: 6 },
+  // M1b, the face (the sheet's FRONT and hero): the lip runs from 0.33 m at the centre (the nose's blunt point at the
+  // badge) up to the blades' inner tips and on under each blade to the fang; below it, inside the fangs, the nose
+  // is set back 0.10 m into a dark intake zone with a central divider and angular fins
+  face: { lip: [[0, 0.33], [0.45, 0.372], [0.585, 0.402], [0.675, 0.437], [0.72, 0.458], [0.81, 0.49]], xf: 0.8, recess: 0.1, fins: [[0, 0], [0.23, 0.02], [0.47, 0.06]] },
+  // M1b, the tail: recessed 0.10 m between the valance and the bar, the haunches wrapping round it
+  tailRecess: { depth: 0.1, inset: 0.075, y0: 0.38, y1: 0.585 },
+  archRound: true,
+  carbonTint: 0x8c929c,
+  glassTint: [0.86, 0.7],
+  // the gloss-black two-tone (x, z in plan; mirrored)
   masks: [
-    { plane: 'top', mirror: true, pts: [[-0.05, -2.2], [0.03, -2.2], [0.35, -1.1], [-0.05, -1.1]], soft: 0.006 },
-    // below each blade: the nose's front slope and its rounding turn black out to the corner (the blade then sits on
-    // the fender's lower edge, silver above it, the dark corner and its fang intake below)
-    // (in five convex pieces whose edges follow the swept blade's front edge, 5 mm under the lamp; each overlaps the
-    // next by 3 to 6 cm along its own chord, so no half-tone seam shows where two pieces meet)
-    { plane: 'top', mirror: true, pts: [[0.4, -2.6], [0.66, -2.6], [0.66, -2.2507], [0.45, -2.33]], soft: 0.004 },
-    { plane: 'top', mirror: true, pts: [[0.6, -2.6], [0.795, -2.6], [0.795, -2.1642], [0.6, -2.2798]], soft: 0.004 },
-    { plane: 'top', mirror: true, pts: [[0.735, -2.6], [0.876, -2.6], [0.876, -2.0874], [0.735, -2.2076]], soft: 0.004 },
-    { plane: 'top', mirror: true, pts: [[0.816, -2.6], [0.9, -2.6], [0.9, -2.055], [0.816, -2.1452]], soft: 0.004 },
-    { plane: 'top', mirror: true, pts: [[0.87, -2.6], [1.05, -2.6], [1.05, -2.055], [0.87, -2.055]], soft: 0.004 },
-    { plane: 'front', mirror: true, side: -1, pts: [[0.4, 0.0], [1.05, 0.0], [1.05, 0.44], [0.45, 0.383]], soft: 0.004, range: [-3, -2.2] },
-    // and across the middle: the whole lower nose below the bonnet's leading edge is black (the sheet's FRONT), so
-    // the silver bonnet comes down to a gentle V at the badge and the blades sit on one dark band, not in two
-    // 'eyes' with a silver bumper between them (it overlaps the corner's region, so no seam where they meet)
-    { plane: 'front', mirror: true, side: -1, pts: [[-0.05, 0.0], [0.5, 0.0], [0.5, 0.388], [-0.05, 0.35]], soft: 0.004, range: [-3, -2.3] },
+    // M1b: the bonnet's spine, a narrow dark strip from the badge to the cowl (10 cm wide there) with an arrow tip
+    // just behind the badge, so the bonnet reads silver
+    { plane: 'top', mirror: true, pts: [[-0.05, -2.2], [0.01, -2.2], [0.05, -1.15], [-0.05, -1.15]], soft: 0.005 },
+    { plane: 'top', mirror: true, pts: [[-0.05, -2.275], [0.0, -2.275], [0.045, -2.19], [-0.05, -2.165]], soft: 0.004 },
+    // and a dark socket round each cowl vent (the two hood vents either side of the spine)
+    { plane: 'top', mirror: true, pts: [[0.32, -1.93], [0.49, -1.96], [0.66, -1.19], [0.43, -1.15]], soft: 0.008 },
+    // the intake zone under the lip (front-facing faces only; the lip's own front stays silver), in three pieces
+    // that follow the lip's polyline and overlap
+    { plane: 'front', mirror: true, side: -1, pts: [[-0.05, 0.0], [0.46, 0.0], [0.46, 0.366], [-0.05, 0.322]], soft: 0.004, range: [-3, -1.9] },
+    { plane: 'front', mirror: true, side: -1, pts: [[0.44, 0.0], [0.69, 0.0], [0.69, 0.437], [0.44, 0.364]], soft: 0.004, range: [-3, -1.9] },
+    { plane: 'front', mirror: true, side: -1, pts: [[0.67, 0.0], [0.805, 0.0], [0.805, 0.484], [0.67, 0.425]], soft: 0.004, range: [-3, -1.9] },
     // the spine: the top of the canopy's tail behind the rear screen, tapering to the wing (its steep flanks stay
     // silver: the buttresses), and the deck's centre over the tail
     { plane: 'top', mirror: true, pts: [[-0.05, 0.98], [0.16, 0.98], [0.07, 2.05], [-0.05, 2.05]], soft: 0.006 },
     { plane: 'top', mirror: true, pts: [[-0.05, 1.86], [0.42, 1.86], [0.5, 2.4], [-0.05, 2.4]], soft: 0.008, range: [0, 0.8] },
-    // a dark channel along each side of the canopy's base, from the cowl vents back into the openings, so the
-    // front fenders and the rear haunches read as separate silver pods (the sheet's TOP); two halves that overlap
-    { plane: 'top', mirror: true, pts: [[0.47, -1.26], [0.6, -1.26], [0.625, -0.05], [0.5, -0.05]], soft: 0.008 },
-    { plane: 'top', mirror: true, pts: [[0.5, -0.15], [0.625, -0.15], [0.625, 0.9], [0.44, 0.9]], soft: 0.008 },
-    // (each opening is a lens, as two convex halves)
-    { plane: 'top', mirror: true, pts: [[0.44, 0.84], [0.62, 0.82], [0.76, 1.25], [0.33, 1.25]], soft: 0.008 },
-    { plane: 'top', mirror: true, pts: [[0.33, 1.249], [0.76, 1.249], [0.66, 1.72], [0.45, 1.74]], soft: 0.008 },
+    // M1b: each haunch opening is one of the sheet's large dark teardrops, its point forward and in by the canopy,
+    // its round end over the rear wheel (three convex pieces)
+    { plane: 'top', mirror: true, pts: [[0.38, 0.62], [0.45, 0.65], [0.75, 1.16], [0.22, 1.16]], soft: 0.008 },
+    { plane: 'top', mirror: true, pts: [[0.22, 1.155], [0.75, 1.155], [0.73, 1.44], [0.24, 1.44]], soft: 0.008 },
+    { plane: 'top', mirror: true, pts: [[0.24, 1.435], [0.73, 1.435], [0.6, 1.68], [0.36, 1.68]], soft: 0.008 },
   ],
 };
 

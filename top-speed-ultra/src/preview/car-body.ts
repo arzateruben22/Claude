@@ -69,7 +69,9 @@ function glassPanel(kit: Kit, rows: V3[][], border: number, flip: boolean, keyGl
 function makeBody(P: ShapeParams) {
   const { ZF, ZR, YSILL } = P;
   const AXLE = P.axle;
-  const mkArch = (z: number, R: number, r: number): Arch => ({ z, yc: r, R, cut: Math.sqrt(R * R - (r - YSILL) ** 2) });
+  // (archRound, the hypercar: the opening follows the circle down to the axle and drops straight to the sill from
+  // there, so it reads round; the others cut it at the circle's chord through the sill, a flatter, squarer opening)
+  const mkArch = (z: number, R: number, r: number): Arch => ({ z, yc: r, R, cut: P.archRound ? R : Math.sqrt(R * R - (r - YSILL) ** 2) });
   const ARCHES = [mkArch(AXLE.zF, P.arch[0], AXLE.r), mkArch(AXLE.zR, P.arch[1], rearR(P))];
   const WP = curve(P.WP), FH = curve(P.FH), CC = curve(P.CC), RH = curve(P.RH), GB = curve(P.GB);
   const { ZC0, ZC1, DROP, ROLL } = P;
@@ -123,7 +125,7 @@ function makeBody(P: ShapeParams) {
     // where the body's side starts: the sill, or the arch edge over a wheel
     yStart(z: number) {
       let y = YSILL;
-      for (const A of ARCHES) { const dz = Math.abs(z - A.z); if (dz < A.cut) y = Math.max(y, A.yc + Math.sqrt(A.R * A.R - dz * dz)); }
+      for (const A of ARCHES) { const dz = Math.abs(z - A.z); if (dz < A.cut) y = Math.max(y, A.yc + Math.sqrt(Math.max(0, A.R * A.R - dz * dz))); }
       return y;
     },
     // half-width of the canopy flank at height y (for side glass), by bisection
@@ -157,11 +159,28 @@ function makeBody(P: ShapeParams) {
 
   // the ends' lean: the nose's chin and the tail's lower half are set back (a smooth warp of everything filed in the
   // body's kit; the wheels are added rigid)
+  // (the hypercar's face, M1b: below its lip line and inside the fangs the nose is set back FACE.recess, over a 2.4 cm
+  // step under the lip, so the lip overhangs a dark intake zone; the splitter (under YSILL + 1 cm) stays where it is)
+  const FACE = P.face ?? null;
+  const lipY = (ax: number) => {
+    const L = FACE!.lip; if (ax <= L[0][0]) return L[0][1];
+    for (let i = 1; i < L.length; i++) if (ax <= L[i][0]) return L[i - 1][1] + (L[i][1] - L[i - 1][1]) * (ax - L[i - 1][0]) / (L[i][0] - L[i - 1][0]);
+    return L[L.length - 1][1];
+  };
+  const recessAt = (x: number, y: number, z: number) => {
+    if (!FACE || z > ZF + 0.6) return 0;
+    const ax = Math.abs(x), wx = 1 - sstep(FACE.xf - 0.03, FACE.xf + 0.004, ax);
+    if (wx <= 0) return 0;
+    const yl = lipY(ax), wy = (1 - sstep(yl - 0.03, yl - 0.006, y)) * sstep(YSILL + 0.01, YSILL + 0.03, y);
+    return FACE.recess * wx * wy * (1 - sstep(ZF + 0.35, ZF + 0.6, z));
+  };
   const warp = (p: V3) => {
     let moved = false;
     const n = P.nose, t = P.tail;
     const wn = 1 - sstep(ZF, ZF + 0.55, p.z);
+    const rc = FACE ? recessAt(p.x, p.y, p.z) : 0;
     if (wn > 0 && n.tuck > 0 && p.y < n.tuckY) { p.z += n.tuck * wn * Math.pow(1 - sstep(YSILL - 0.03, n.tuckY, p.y), 1.6); moved = true; }
+    if (rc > 0) { p.z += rc; moved = true; }
     const wt = sstep(ZR - 0.55, ZR, p.z);
     if (wt > 0 && t.tuck > 0 && p.y < t.tuckY) { p.z -= t.tuck * wt * Math.pow(1 - sstep(YSILL - 0.03, t.tuckY, p.y), 1.6); moved = true; }
     return moved;
@@ -209,6 +228,21 @@ function makeBody(P: ShapeParams) {
   const RF_Q = RF ? ccw([[rfPoint(-1, 0).x, RF.z0], [rfPoint(1, 0).x, RF.z0], [rfPoint(1, 1).x, RF.z1], [rfPoint(-1, 1).x, RF.z1]]) : null;
   const INTAKE = P.intake, LOUVRE = P.louvre;
   const IQ = P.intakeQ ?? null;
+  // the hypercar's recessed tail (M1b): its opening in the tail face (x, y), shrunk by g metres (the recess's floor
+  // is the opening shrunk, so its walls lean in), corners rounded
+  const TRC = P.tailRecess ?? null;
+  const tailRecessOutline = (g: number): THREE.Vector2[] => {
+    const T = TRC!, y0 = T.y0 + g * 0.5, y1 = T.y1 - g * 0.5, n = 10, r = 0.035, out: THREE.Vector2[] = [];
+    const hx = (y: number) => body.side(ZR, Math.min(y, body.shoulder(ZR).Ys - 0.005)) - T.inset - g;
+    // right side, bottom to top, then the left side top to bottom (counter-clockwise seen from behind, +z)
+    const right: THREE.Vector2[] = [];
+    for (let k = 0; k <= n; k++) { const y = y0 + (y1 - y0) * (k / n); right.push(new THREE.Vector2(hx(y), y)); }
+    // round the four corners by pulling the end samples in
+    right[0].x -= r * 0.6; right[n].x -= r * 0.6; right[1].x -= r * 0.15; right[n - 1].x -= r * 0.15;
+    out.push(...right);
+    for (let k = n; k >= 0; k--) out.push(new THREE.Vector2(-right[k].x, right[k].y));
+    return out;
+  };
 
   // ---------------------------------------------------------------------------------------------- shut lines
   const shutLines = (): ShutLine[] => {
@@ -371,7 +405,9 @@ function makeBody(P: ShapeParams) {
       kit.add(LOWC ? 'carbon' : 'paint', g, null, LOWC ? 0.15 : 1);
     }
     if (keep(v3(0, 0.3, ZR))) {
-      const s = capShape(ZR, true); if (meshR) s.holes.push(meshR);
+      const s = capShape(ZR, true);
+      if (TRC) s.holes.push(new THREE.Path(tailRecessOutline(0)));
+      else if (meshR) s.holes.push(meshR);
       const g = new THREE.ShapeGeometry(s, 6); g.translate(0, 0, ZR);
       kit.add('paint', g, null, 1);
     }
@@ -389,7 +425,7 @@ function makeBody(P: ShapeParams) {
         // the vertical edges either side, from the sill to the arch
         const edge = (z: number, s2: number) => {
           const rowsE: V3[][] = [];
-          for (let k = 0; k <= 8; k++) { const y = YSILL + (A.yc + Math.sqrt(A.R * A.R - A.cut * A.cut) - YSILL) * (k / 8), x = body.side(z, y) * sd; rowsE.push([v3(x, y, z), v3(x - sd * 0.04, y, z + s2 * 0.006)]); }
+          for (let k = 0; k <= 8; k++) { const y = YSILL + (A.yc + Math.sqrt(Math.max(0, A.R * A.R - A.cut * A.cut)) - YSILL) * (k / 8), x = body.side(z, y) * sd; rowsE.push([v3(x, y, z), v3(x - sd * 0.04, y, z + s2 * 0.006)]); }
           return rowsE;
         };
         const add = (r: V3[][], flip: boolean) => kit.add('paint', gridGeo(r, { flip }), null, 1);
@@ -898,9 +934,36 @@ function makeBody(P: ShapeParams) {
           const ring = new THREE.TorusGeometry(r + 0.004, 0.005, 6, 32); ring.translate(x, y, ZR + 0.004); kit.add('chrome', ring, null, 0.05);
           const cupG = latheGeo([[r + 0.004, -0.02], [r + 0.004, 0.004]], 32, 'z'); cupG.translate(x, y, ZR); kit.add('dark', cupG, null, 0.05);
         }
+      } else if (P.tailStyle === 'hyper' && TRC) {
+        // the hypercar (M1b): the tail between the valance and the bar is a recess TRC.depth deep: the silver haunches
+        // wrap round its sides and over its top, its walls lean in to a gloss-black floor that carries the mesh, the
+        // plate and the reversing lamps. The red bar (the tail material, so it brightens on the brakes) runs along
+        // the opening's top edge and on round each of the tail's corners onto the haunch
+        const zb = ZR - TRC.depth, o0 = tailRecessOutline(0), o1 = tailRecessOutline(0.03);
+        const wall: V3[][] = [[...o0, o0[0]].map((q) => v3(q.x, q.y, ZR + 0.001)), [...o1, o1[0]].map((q) => v3(q.x, q.y, zb))];
+        kit.add('paint', gridGeo(wall, { flip: true }), null, 1);
+        const floor = new THREE.Shape(o1);
+        const fg = new THREE.ShapeGeometry(floor, 4); fg.translate(0, 0, zb); kit.add('trim', fg, null, 0.2);
+        // the bar: a ribbon Bh tall whose lower edge sits 4 mm over the opening's top edge, out to the tail's side, then
+        // round the corner on the haunch's skin for 9 cm, narrowing to a point
+        const Bh = P.bar?.h ?? 0.02, yb = TRC.y1 + 0.004 + Bh / 2, hw = tailX(yb) - 0.008;
+        const path: { p: V3; n: V3; h: number }[] = [], wrap = 0.09;
+        for (let k = 6; k >= 1; k--) { const z = ZR - wrap * (k / 6), x = body.side(z, yb) + 0.0025; path.push({ p: v3(-x, yb, z), n: v3(-1, 0, 0.25).normalize(), h: Bh * (0.35 + 0.65 * (1 - (k - 1) / 6)) }); }
+        for (let k = 0; k <= 24; k++) { const x = -hw + 2 * hw * (k / 24); path.push({ p: v3(x, yb, ZR + 0.005), n: v3(0, 0, 1), h: Bh }); }
+        for (let k = 1; k <= 6; k++) { const z = ZR - wrap * (k / 6), x = body.side(z, yb) + 0.0025; path.push({ p: v3(x, yb, z), n: v3(1, 0, 0.25).normalize(), h: Bh * (0.35 + 0.65 * (1 - (k - 1) / 6)) }); }
+        const ribbon = (pts: typeof path, lift: number, key: string, u0: number, u1: number) => {
+          const rows = pts.map((q) => { const c = q.p.clone().addScaledVector(q.n, lift); return [c.clone().add(v3(0, -q.h / 2, 0)), c.clone().add(v3(0, q.h / 2, 0))]; });
+          const g = gridGeo(rows, { flip: true }), uvA = g.attributes.uv as THREE.BufferAttribute;
+          for (let i = 0; i < rows.length; i++) for (let j = 0; j < 2; j++) uvA.setXY(i * 2 + j, u0 + (u1 - u0) * (i / (rows.length - 1)), j ? 0.7 : 0.3);
+          kit.add(key, g);
+        };
+        ribbon(path, 0, 'tail', 0, 0.5);
+        // the rear turn signals: the bar's outer 0.26 m each side and its wrap, amber, a hair proud (PlayerCar shows them)
+        const outer = (sd: number) => path.filter((q) => (sd > 0 ? q.p.x : -q.p.x) > hw - 0.26);
+        ribbon(outer(-1), 0.0012, 'sigL', 0, 0.5); ribbon(outer(1), 0.0012, 'sigR', 0, 0.5);
+        // the stop light's haze (PlayerCar shows it on the brakes): a soft quad 0.11 m tall over the bar
+        const gw = new THREE.PlaneGeometry(hw * 2 + 0.12, 0.11); gw.translate(0, yb, ZR + 0.008); kit.add('brakeGlow', gw);
       } else if (P.tailStyle === 'hyper') {
-        // the hypercar: one thin, full-width red bar under the deck's trailing edge (the tail material, so it
-        // brightens on the brakes), tapered at its ends, in a gloss-black channel
         const Bh = P.bar?.h ?? 0.02, yb = yTop - 0.045, hw = Math.min((P.bar?.len ?? 1.66) / 2, tailX(yb) - 0.03);
         const ch = new THREE.ShapeGeometry(roundRect(hw * 2 + 0.04, Bh + 0.026, 0.013, 0, yb), 4); ch.translate(0, 0, ZR + 0.002);
         kit.add('trim', ch, null, 0.2);
@@ -935,7 +998,11 @@ function makeBody(P: ShapeParams) {
           kit.add('tail', wg);
         }
       }
-      if (meshR) {
+      if (meshR && TRC) {
+        // (the recessed tail: the mesh lies on the floor, a hair proud, in a gloss frame)
+        const zb = ZR - TRC.depth;
+        const hc = new THREE.ShapeGeometry(meshR, 6); hc.translate(0, 0, zb + 0.004); kit.add('grille', hc, null, 1);
+      } else if (meshR) {
         const pts = meshR.getPoints(6), M = P.rearMesh!;
         kit.add('dark', gridGeo([pts.map((p) => v3(p.x, p.y, ZR)), pts.map((p) => v3(p.x, p.y, ZR - 0.1))], { flip: true }), null, 0.2);
         const back = new THREE.ShapeGeometry(meshR, 6); back.translate(0, 0, ZR - 0.1); kit.add('dark', back, null, 0.2);
@@ -973,7 +1040,7 @@ function makeBody(P: ShapeParams) {
           kit.add(P.tailStyle === 'brio' || P.tailStyle === 'vela' ? 'trim' : 'carbon', g, null, 0.2);
           // the hypercar: the tail between the valance and the bar is gloss black, framed by the silver, with the
           // mesh and the plate set in it
-          if (hyper) {
+          if (hyper && !TRC) {
             const yt = yTop - 0.045 - (P.bar?.h ?? 0.02) / 2 - 0.013, inset = 0.045, side: [number, number][] = [];
             for (const p of tailSec) if (p.x > 0 && p.y > yv && p.y < yt) side.push([p.x - inset, p.y]);
             side.sort((a, b) => a[1] - b[1]);
@@ -1008,16 +1075,18 @@ function makeBody(P: ShapeParams) {
         // the plate (the OC mark), an LED outlining the diffuser's mouth and a small lit centre accent in it, and
         // two small cold-gas nozzles set into the diffuser between its centre strakes (dark: unseen at a glance)
         if (P.plate) {
-          const pl = new THREE.PlaneGeometry(P.plate.w, P.plate.h); pl.translate(0, P.plate.y, ZR + 0.014);
+          // (on the recess's floor when the tail is recessed)
+          const zp = TRC ? ZR - TRC.depth + 0.004 : ZR;
+          const pl = new THREE.PlaneGeometry(P.plate.w, P.plate.h); pl.translate(0, P.plate.y, zp + 0.014);
           kit.add('plate', pl);
-          const pb = new RoundedBoxGeometry(P.plate.w + 0.02, P.plate.h + 0.02, 0.012, 2, 0.004); pb.translate(0, P.plate.y, ZR + 0.007);
+          const pb = new RoundedBoxGeometry(P.plate.w + 0.02, P.plate.h + 0.02, 0.012, 2, 0.004); pb.translate(0, P.plate.y, zp + 0.007);
           kit.add('trim', pb, null, 0.1);
           // the reversing lamps: a slim lens either side of the plate in a gloss-black housing; the lit face
           // ('reverse') is shown by PlayerCar while the car is in reverse
           for (const sd of [-1, 1]) {
             const x = sd * (P.plate.w / 2 + 0.11);
-            const hb = new RoundedBoxGeometry(0.15, 0.034, 0.012, 2, 0.005); hb.translate(x, P.plate.y, ZR + 0.007); kit.add('trim', hb, null, 0.1);
-            const lf = new THREE.PlaneGeometry(0.13, 0.016); lf.translate(x, P.plate.y, ZR + 0.0135); kit.add('reverse', lf);
+            const hb = new RoundedBoxGeometry(0.15, 0.034, 0.012, 2, 0.005); hb.translate(x, P.plate.y, zp + 0.007); kit.add('trim', hb, null, 0.1);
+            const lf = new THREE.PlaneGeometry(0.13, 0.016); lf.translate(x, P.plate.y, zp + 0.0135); kit.add('reverse', lf);
           }
         }
         // the LED outlines the mouth on the valance just outside it: across its top, down its slanted sides, and out
