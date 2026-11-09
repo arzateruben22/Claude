@@ -220,9 +220,9 @@ function draw(t) {
     const shrink = 1 - 0.5 * E.inout3(seg(t, CUE.pass - 0.5, CUE.pass + 1.2));        // pull back to one tree
     const base = 0.3 * (1 - 0.6 * dimK), dimTk = (1 - 0.7 * E.inout3(seg(t, CUE.pass - 0.5, CUE.pass + 1.0))) * (1 - fadeIn(t, CUE.big - 0.2, 0.9));
     const sweepX = (t > CUE.est0 + 0.4 && t < CUE.range - 0.1) ? ((t - CUE.est0 - 0.4) / 1.7) % 1 : -1;      // a counting sweep across the dim tally
-    const B40 = 0.25, G10 = 0.45, T10 = CUE.ratio + 0.5 + 8 * B40 + 0.1;       // 8 blocks of 40 at 0.25 s; then the blocks of 10 in 7 steps of 5, 0.45 s each (3.15 s)
+    const B40 = 0.25, G10 = 0.4, T10 = CUE.ratio + 0.5 + 8 * B40 + 0.1;       // 8 blocks of 40 at 0.25 s; then the blocks of 10 in 8 steps of one tile row (4 tiles), 0.4 s each (3.2 s)
     const blk40 = (t > CUE.ratio + 0.5 && t < T10 - 0.1) ? Math.min(7, Math.floor((t - CUE.ratio - 0.5) / B40)) : -1;
-    const blk10 = (t > T10 && t < CUE.tk - 0.15) ? Math.min(6, Math.floor((t - T10) / G10)) : -1;      // group of five tiles of 10
+    const blk10 = (t > T10 && t < CUE.tk - 0.15) ? Math.min(7, Math.floor((t - T10) / G10)) : -1;      // group of five tiles of 10
     const cx0 = (GX0 + GX1) / 2, cy0 = (GY0 + GY1) / 2;
     for (let i = 0; i < TL.trees; i++) {
       const rk = RANK[i], isStar = rk < NS;
@@ -242,7 +242,7 @@ function draw(t) {
         { const cc = i % TL.cols, rr = (i / TL.cols) | 0;
           const t40 = Math.floor(rr / 8) * 4 + Math.floor(cc / 5), t10 = Math.floor(rr / 2) * 4 + Math.floor(cc / 5);
           if (blk40 >= 0 && t40 === Math.min(blk40, 7)) { a = 1; col = LEMON; r *= 1.12; }
-          if (blk10 >= 0 && Math.floor(t10 / 5) === blk10) { a = 1; col = LEMON; r *= 1.12; } }
+          if (blk10 >= 0 && Math.floor(t10 / 4) === blk10) { a = 1; col = LEMON; r *= 1.12; } }
         if (t > CUE.est0 && t < CUE.flip0 - 1.2 && rk > TL.trees - 34) a = base * (0.6 + 0.4 * Math.sin(t * 5 + rk));   // the edge flickers: "about"
       }
       circ(x, y, r); ctx.fillStyle = rgba(col, a * tOn * dimTk); ctx.fill();
@@ -254,7 +254,7 @@ function draw(t) {
     // (the rect is in 1080 units; canvas scale below)
     ctx.save(); ctx.scale(sx, sy);
     if (blk40 >= 0) { const nb = blk40; for (let k = 0; k <= nb; k++) { const rc = tileRect(5, 8, k, 4); outline(rc, k === nb ? 1 : 0.5, k === nb ? 4 : 2.2); } }
-    if (blk10 >= 0) { const nb = Math.min(blk10 * 5 + 4, 31); for (let k = 0; k <= nb; k++) { const rc = tileRect(5, 2, k, 4); const cur = Math.floor(k / 5) === blk10; outline(rc, cur ? 1 : 0.3, cur ? 3.5 : 1.6); } }
+    if (blk10 >= 0) { const nb = Math.min(blk10 * 4 + 3, 31); for (let k = 0; k <= nb; k++) { const rc = tileRect(5, 2, k, 4); const cur = Math.floor(k / 4) === blk10; outline(rc, cur ? 1 : 0.3, cur ? 3.5 : 1.6); } }
     ctx.restore();
   }
   ctx.restore();
@@ -280,8 +280,9 @@ function draw(t) {
 const hud = createHud({ camera, shots: FILM.shots });
 const S = {};
 const KIND = { star: { color: "lemon", glyph: "✦", mark: "none" } };
+FILM.captions[0].t0 -= 0.3;                                                       // frame 0's caption is fully on (no fade-in blink at the loop)
 const cap0 = FILM.captions[0], capShift = FILM.loop0 - 0.05 - cap0.t0;
-const capLoop = { t0: FILM.loop0 - 0.05, t1: FILM.dur + 5, lines: cap0.lines.map((ln) => ln.map(([w, tw]) => [w, tw + capShift])) };
+const capLoop = { t0: FILM.loop0 - 0.05, t1: FILM.dur + 5, lines: cap0.lines.map((ln) => ln.map(([w, tw]) => [w, tw + FILM.dur - 1 / FPS])) };   // at the last frame the words stand exactly as on frame 0
 hud.captions([...FILM.captions, capLoop]);
 const titleEl = hud.title(FILM.title);
 const tRing = titleRing(titleEl, { t0: 0, sig: FILM.title.sig });
@@ -315,8 +316,8 @@ let LOOPEL = null;
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
 
 function makeLoop() {                                                            // frame 0's title, '?' counter and pills, cloned as they look at 1.5 s
-  hud.update(1.5); tRing.update(1.5);
-  LOOPEL = [titleEl, CEL["c-hook"]].filter(Boolean).map((el) => { const c = el.cloneNode(true); c.removeAttribute("id"); c.style.opacity = "0"; c.style.visibility = "hidden"; el.parentNode.appendChild(c); return c; });
+  hud.update(0); tRing.update(0);
+  LOOPEL = [titleEl.previousElementSibling && titleEl.previousElementSibling.classList.contains("lm-band") ? titleEl.previousElementSibling : null, titleEl, CEL["c-hook"]].filter(Boolean).map((el) => { const c = el.cloneNode(true); c.removeAttribute("id"); c.style.opacity = "0"; c.style.visibility = "hidden"; el.parentNode.appendChild(c); return c; });
 }
 window.seek = function (t) {
   if (!LOOPEL) makeLoop();

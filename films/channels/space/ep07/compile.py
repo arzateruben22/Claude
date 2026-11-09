@@ -132,7 +132,7 @@ END = {"title": "Next orbit: the *dark* sky", "follow": "One More Orbit · S2 ·
        "next": "Our galaxy probably holds 100 to 400\u00a0billion stars (NASA)."}   # footnote (c1)
 POSTER = A("vo05:thirty", 0.4)
 glue(f, {"vo02": ["dark matter,"],
-         "vo03": ["three trillion.", "a team put Earth's"], "vo04": ["not exact counts,"],
+         "vo03": ["at about three trillion.", "a team put Earth's"], "vo04": ["not exact counts,"],
          "vo05": ["keep going.", "eight to thirty times."],
          
          "vo07": ["a millionth of a second."]})
