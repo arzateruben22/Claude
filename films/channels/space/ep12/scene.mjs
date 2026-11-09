@@ -183,7 +183,7 @@ window.seek = function (t) {
     gP[k * 3] = hx + (fall ? (1 - u) * 1.4 : 0); gP[k * 3 + 1] = fall ? 0.05 + (1 - u) * 1.8 : 0.03 + 0.12 * u; gP[k * 3 + 2] = hz; gA[k] = onMoon && tt > CUE.grains - 0.6 && tt < CUE.mm + 1.4 ? gOn * (fall ? 0.9 * u : 0.8 * (1 - u)) : 0; });
   gG.attributes.position.needsUpdate = true; gG.attributes.alpha.needsUpdate = true;
   // the street Moon rises; the Earth and Moon readout
-  mgU.position.y = 17 + 7 * (0.5 * E.inout3(seg(tt, CUE.tk, CUE.rd)) + 0.5 * seg(tt, CUE.tk, CUE.rd)); moonUp.set({ center: [0, 0, 0], sunDir: [-0.4, 0.2, 0.9], sun: 1, rimNight: 0.4, spin: 0.3 + 0.02 * tt });
+  mgU.position.y = 17 + 11 * (0.5 * E.inout3(seg(tt, CUE.tk, CUE.rd)) + 0.5 * seg(tt, CUE.tk, CUE.rd)); moonUp.set({ center: [0, 0, 0], sunDir: [-0.4, 0.2, 0.9], sun: 1, rimNight: 0.4, spin: 0.3 + 0.35 * tt });
   emE.set({ center: [0, 0, 0], sunDir: [0.6, 0.3, 0.7], sun: 1, rimNight: 0.5, spin: -0.9 + 0.45 * tt }); emM.set({ center: [0, 0, 0], sunDir: [-0.6, 0.3, 0.7], sun: 1, rimNight: 0.4, spin: 0.2 });
   earthSky.set({ center: [0, 0, 0], sunDir: [0.5, 0.2, 0.85], sun: 1, rimNight: 0.5, spin: -0.9 + 0.03 * tt });
   const u = E.inout3(seg(tt, CUE.light + 0.1, CUE.quarter + 1.0)), rr = 28 * u;
