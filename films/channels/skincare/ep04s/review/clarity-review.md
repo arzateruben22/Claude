@@ -15,5 +15,5 @@ Why the two warnings stay: they are short sentences whose grade is lifted only b
 
 **Pacing:** a visual change at 0, 2.7, 4.8, 8.8, 11.8, 15.3, 18.7, 21.0 s (2.0–4.4 s apart). The first frame already shows the nerve ending; the question is spoken by 2.4 s.
 
-**Still blocked / not done:** clean text-free art (the owner's image-model key is pending); caption word times (estimated); score and effects; a first-listen test with a real listener; person-checked sources; final-tier render.
+**Still blocked / not done:** clean text-free art (the owner's image-model key is pending); score and effects; a first-listen test with a real listener; person-checked sources; final-tier render.
 **Owner's preview commit** (`746bc09`, `Skin-Sense-Episode-4-Preview.png`): the same 941×1672 image as the reference, with text baked in. It is a reference/poster, not usable as clean art.

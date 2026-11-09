@@ -1,0 +1,457 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "What tells your forehead to frown?",
+   "heard": "What tells your forehead to frown?",
+   "words": [
+    {
+     "w": "What",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "tells",
+     "start": 0.275,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.64,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "forehead",
+     "start": 0.9,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.315,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "frown?",
+     "start": 1.465,
+     "end": 1.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "It starts at the end of a nerve.",
+   "heard": "It starts at the end of a nerve.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 0.29,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.535,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.715,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "end",
+     "start": 0.855,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.885,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.14,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "nerve.",
+     "start": 1.17,
+     "end": 1.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "The nerve lets out a chemical messenger called acetylcholine.",
+   "heard": "The nerve lets out a chemical messenger called acetylcholine.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "nerve",
+     "start": 0.075,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "lets",
+     "start": 0.405,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 0.715,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.09,
+     "end": 1.14,
+     "heard": true
+    },
+    {
+     "w": "chemical",
+     "start": 1.12,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "messenger",
+     "start": 1.415,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "called",
+     "start": 2.32,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "acetylcholine.",
+     "start": 2.375,
+     "end": 3.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "The muscle fibre gets the message, and pulls.",
+   "heard": "The muscle fiber gets the message and pulls.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "muscle",
+     "start": 0.05,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "fibre",
+     "start": 0.56,
+     "end": 0.96,
+     "heard": false
+    },
+    {
+     "w": "gets",
+     "start": 0.945,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.235,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "message,",
+     "start": 1.265,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.915,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "pulls.",
+     "start": 2.155,
+     "end": 2.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Botulinum toxin gets inside the nerve ending.",
+   "heard": "botulinum toxin gets inside the nerve ending.",
+   "words": [
+    {
+     "w": "Botulinum",
+     "start": 0.02,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "toxin",
+     "start": 1.005,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 1.465,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 1.64,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.965,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "nerve",
+     "start": 2.23,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "ending.",
+     "start": 2.62,
+     "end": 3.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "It blocks proteins the nerve needs to send the message.",
+   "heard": "It blocks proteins the nerve needs to send the message.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "blocks",
+     "start": 0.195,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "proteins",
+     "start": 0.525,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.155,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "nerve",
+     "start": 1.185,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "needs",
+     "start": 1.585,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.94,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "send",
+     "start": 1.97,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.125,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "message.",
+     "start": 2.495,
+     "end": 3.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So, for a while, the message is not sent.",
+   "heard": "So for a while the message is not sent.",
+   "words": [
+    {
+     "w": "So,",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 0.335,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.385,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "while,",
+     "start": 0.585,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.03,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "message",
+     "start": 1.06,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.44,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 1.63,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "sent.",
+     "start": 1.875,
+     "end": 2.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "The skin was never the target. The message was.",
+   "heard": "The skin was never the target. The message was.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 0.285,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "was",
+     "start": 0.68,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 0.71,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.155,
+     "end": 1.205,
+     "heard": true
+    },
+    {
+     "w": "target.",
+     "start": 1.185,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 1.975,
+     "end": 2.025,
+     "heard": true
+    },
+    {
+     "w": "message",
+     "start": 2.005,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "was.",
+     "start": 2.41,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

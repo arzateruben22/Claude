@@ -13,7 +13,7 @@ Build: `python3 -I build.py` (film.json + mix.m4a), then `node kits/cinema/film/
 ## Claims: see review/claims-table.md (s1-s7; SOURCE-READ where the PMC page supports the wording, OPEN otherwise; none person-checked).
 
 ## TODO / known gaps
-- Word timings for captions are **estimated** (character-weighted): the Parakeet model failed its SHA256 check in this session. Re-run `align.py` and `build.py`.
+- Word timings now come from align.py (Parakeet, new pin from ed2fe36f; `vo/words.json`).
 - Voice only, no score or sound effects yet. Loudness set by ffmpeg loudnorm (-14 LUFS), not the studio mixer or qa.py.
 - Footers sit at y 1776–1860, inside the bottom platform UI zone (as specified); confirm.
 - "SNAP-25 · cut" pin is placed by eye on the placeholder; not an anatomical authority.

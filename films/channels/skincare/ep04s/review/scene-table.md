@@ -17,4 +17,4 @@ Sound: voice only for now (no score or effects yet); loudness −14.7 LUFS / −
 | 24.0–25.6 | (none) | Held final frame | footers | silence |
 
 Fixed on every frame: "Conceptual illustration · not to scale" and "Education, not medical advice". The art is a placeholder (marked on screen).
-Captions: word-lit, ≤ 3 words; **word times are estimated** (Parakeet checksum failed), so caption highlight may drift by a few tenths of a second.
+Captions: word-lit, ≤ 3 words; word times from Parakeet (`vo/words.json`, align.py, new pin ed2fe36f).

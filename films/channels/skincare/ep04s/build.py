@@ -1,6 +1,5 @@
 """Build the film.json and the audio for the Skin Sense No. 004 sample (new art direction).
-Word times are ESTIMATED from the voice's own line lengths (character-weighted): the word-timing model
-(Parakeet) could not be fetched in this session. Replace with align.py output when available."""
+Word times come from vo/words.json (align.py, Parakeet) when present, else are estimated by character weight."""
 import json, re, subprocess
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
@@ -11,8 +10,15 @@ for L in lines:
     START[L["id"]] = round(T, 3); T += L["dur"] + GAP
 DUR = round(T + 1.4, 2)          # the last line, then a held end frame
 caps, words_at = [], {}
+WJ = HERE / "vo/words.json"
+real = {l["id"]: l["words"] for l in json.load(open(WJ))["lines"]} if WJ.exists() else None
 for L in lines:
     t0, d = START[L["id"]], L["dur"]
+    if real:   # the recognizer's own word times (align.py)
+        for w in real[L["id"]]:
+            a_, b_ = round(t0 + w["start"], 3), round(t0 + w["end"], 3)
+            words_at[(L["id"], w["w"])] = (a_, b_); caps.append({"w": w["w"], "t0": a_, "t1": b_, "line": L["id"]})
+        continue
     toks = L["text"].replace("*", "").split()
     wts = [len(w) + (3 if w[-1] in ",.?" else 0) + 1 for w in toks]
     tot = sum(wts); t = t0
