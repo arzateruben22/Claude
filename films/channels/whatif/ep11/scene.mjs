@@ -199,6 +199,7 @@ window.seek = function (t) {
   dimEl.style.opacity = String((0.88 * seg(t, FILM.endCard - 0.25, FILM.endCard + 0.3) * (1 - seg(t, beat("tease").t1 - 0.75, beat("tease").t1 - 0.05))).toFixed(3));
 
   hud.update(t);
+  endEl.style.transform = "scale(" + (1 + 0.03 * seg(t, FILM.endCard, FILM.dur)).toFixed(4) + ")";   // the held end card drifts slowly: never a still picture
   const tail = E.inout2(seg(t, beat("tease").t1 - 1.35, beat("tease").t1 - 0.8));
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);

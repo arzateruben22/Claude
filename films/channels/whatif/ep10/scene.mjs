@@ -188,6 +188,7 @@ window.seek = function (t) {
     barsEl.style.opacity = String(on.toFixed(3)); document.getElementById("b2").style.height = (100 * grow).toFixed(1) + "%"; document.getElementById("b2t").style.opacity = String(seg(t, CUE.bigbar[1], CUE.bigbar[1] + 0.6).toFixed(3)); }
 
   hud.update(t);
+  endEl.style.transform = "scale(" + (1 + 0.03 * seg(t, FILM.endCard, FILM.dur)).toFixed(4) + ")";   // the held end card drifts slowly: never a still picture
   const tail = E.inout2(seg(t, beat("tease").t1 - 1.35, beat("tease").t1 - 0.8));   // the card text is gone while the deck is still dimmed; then the dim lifts on the bare deck
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);

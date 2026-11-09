@@ -221,6 +221,7 @@ window.seek = function (t) {
   void paper; void endTail; void place; void tEnd1; void gate;
 
   hud.update(t);
+  endEl.style.transform = "scale(" + (1 + 0.03 * seg(t, FILM.endCard, FILM.dur)).toFixed(4) + ")";   // the held end card drifts slowly: never a still picture
   const tail = E.inout2(seg(t, beat("tease").t1 - 1.1, beat("tease").t1 - 0.35));
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);
