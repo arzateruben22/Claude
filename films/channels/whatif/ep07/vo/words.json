@@ -1,0 +1,1012 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "How long to walk to the Moon? Starting at your own front door.",
+   "heard": "How long to walk to the moon? Starting at your own front door.",
+   "words": [
+    {
+     "w": "How",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 0.265,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 0.525,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "walk",
+     "start": 0.555,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 0.855,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.885,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "Moon?",
+     "start": 1.205,
+     "end": 1.553,
+     "heard": true,
+     "end_asr": 2.08
+    },
+    {
+     "w": "Starting",
+     "start": 2.375,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 2.89,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.92,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 3.165,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "front",
+     "start": 3.565,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "door.",
+     "start": 3.94,
+     "end": 4.64,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between. That is a very long way for a pair of shoes.",
+   "heard": "The moon sits about thirty earths away, lined up side by side with nothing but dark between. That is a very long way for a pair of shoes.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "Moon",
+     "start": 0.135,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "sits",
+     "start": 0.72,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.92,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "thirty",
+     "start": 1.32,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "Earths",
+     "start": 1.915,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "away,",
+     "start": 2.36,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "lined",
+     "start": 3.125,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 3.865,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "side",
+     "start": 3.895,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 4.44,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "side,",
+     "start": 4.81,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 5.285,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "nothing",
+     "start": 5.49,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 6.08,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "dark",
+     "start": 6.355,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "between.",
+     "start": 6.935,
+     "end": 7.583,
+     "heard": true,
+     "end_asr": 7.92
+    },
+    {
+     "w": "That",
+     "start": 7.98,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 8.04,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.415,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "very",
+     "start": 8.445,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 8.825,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 9.17,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 9.485,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.78,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "pair",
+     "start": 9.81,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 10.125,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "shoes.",
+     "start": 10.155,
+     "end": 10.8,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "Walk at an easy pace, the kind you could chat through. Never stop, not even to sleep. You would arrive in about nine years.",
+   "heard": "Walk at an easy pace, the kind you could chat through. Never stop, not even to sleep. You would arrive in about nine years.",
+   "words": [
+    {
+     "w": "Walk",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.355,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 0.645,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "easy",
+     "start": 0.68,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "pace,",
+     "start": 1.065,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.63,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "kind",
+     "start": 1.735,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.09,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 2.295,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "chat",
+     "start": 2.325,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "through.",
+     "start": 2.775,
+     "end": 3.328,
+     "heard": true,
+     "end_asr": 3.68
+    },
+    {
+     "w": "Never",
+     "start": 3.73,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "stop,",
+     "start": 3.97,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 4.605,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "even",
+     "start": 4.875,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.005,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "sleep.",
+     "start": 5.23,
+     "end": 5.805,
+     "heard": true,
+     "end_asr": 6.16
+    },
+    {
+     "w": "You",
+     "start": 6.21,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 6.24,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "arrive",
+     "start": 6.61,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 6.965,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 7.16,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "nine",
+     "start": 7.415,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "years.",
+     "start": 7.99,
+     "end": 8.48,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo04",
+   "text": "But nobody walks day and night. You sleep, you eat, you stop to tie a shoe. So give yourself a working day of walking.",
+   "heard": "But nobody walks day and night. You sleep, you eat, you stop to tie a shoe. So give yourself a working day of walking.",
+   "words": [
+    {
+     "w": "But",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "nobody",
+     "start": 0.135,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "walks",
+     "start": 0.62,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.975,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.245,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "night.",
+     "start": 1.52,
+     "end": 1.843,
+     "heard": true,
+     "end_asr": 2.16
+    },
+    {
+     "w": "You",
+     "start": 2.245,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "sleep,",
+     "start": 2.3,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.795,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "eat,",
+     "start": 2.965,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 3.3,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "stop",
+     "start": 3.525,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.765,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "tie",
+     "start": 3.89,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.325,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "shoe.",
+     "start": 4.47,
+     "end": 4.979,
+     "heard": true,
+     "end_asr": 5.28
+    },
+    {
+     "w": "So",
+     "start": 5.38,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "give",
+     "start": 5.585,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "yourself",
+     "start": 5.73,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.265,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "working",
+     "start": 6.295,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 6.97,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.29,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "walking.",
+     "start": 7.32,
+     "end": 8.08,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "A working day of walking gets you there in about twenty-six years. Stick to the popular daily step goal, and it is closer to a hundred and forty.",
+   "heard": "A working day of walking gets you there in about twenty six years. Stick to the popular daily step goal and it is closer to a hundred and forty.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "working",
+     "start": 0.225,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.78,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.13,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "walking",
+     "start": 1.205,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 1.905,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.125,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "there",
+     "start": 2.385,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.825,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.015,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "twenty-six",
+     "start": 3.33,
+     "end": 4.48,
+     "heard": false
+    },
+    {
+     "w": "years.",
+     "start": 4.525,
+     "end": 4.776,
+     "heard": true,
+     "end_asr": 5.12
+    },
+    {
+     "w": "Stick",
+     "start": 5.425,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.73,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.76,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "popular",
+     "start": 6.015,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "daily",
+     "start": 6.785,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "step",
+     "start": 7.38,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "goal,",
+     "start": 7.735,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.33,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 8.36,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 8.6,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "closer",
+     "start": 8.89,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 9.405,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.48,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 9.825,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 10.405,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "forty.",
+     "start": 10.73,
+     "end": 11.44,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "Slower adds years, quicker trims a few, but it never gets close.",
+   "heard": "Slower adds years, quicker trims a few, but it never gets close.",
+   "words": [
+    {
+     "w": "Slower",
+     "start": 0.025,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "adds",
+     "start": 0.59,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "years,",
+     "start": 1.005,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "quicker",
+     "start": 1.61,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "trims",
+     "start": 2.02,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.555,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "few,",
+     "start": 2.585,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 3.01,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.26,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 3.52,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 3.735,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "close.",
+     "start": 4.105,
+     "end": 4.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "The Apollo crews made the same trip in about three days. The distance never changed, only the speed.",
+   "heard": "The Apollo crews made the same trip in about three days. The distance never changed, only the speed.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "Apollo",
+     "start": 0.335,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "crews",
+     "start": 0.92,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "made",
+     "start": 1.41,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.695,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 1.905,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "trip",
+     "start": 2.26,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.65,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.88,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 3.225,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "days.",
+     "start": 3.52,
+     "end": 4.093,
+     "heard": true,
+     "end_asr": 4.4
+    },
+    {
+     "w": "The",
+     "start": 4.49,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "distance",
+     "start": 4.69,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 5.23,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "changed,",
+     "start": 5.64,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 6.395,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.745,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "speed.",
+     "start": 6.975,
+     "end": 7.6,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo08",
+   "text": "Next envelope: what if everyone on Earth held hands?",
+   "heard": "Next envelope, what if everyone on earth held hands?",
+   "words": [
+    {
+     "w": "Next",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "envelope:",
+     "start": 0.485,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 1.355,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 1.825,
+     "end": 1.875,
+     "heard": true
+    },
+    {
+     "w": "everyone",
+     "start": 1.855,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.455,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 2.575,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "held",
+     "start": 2.845,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "hands?",
+     "start": 3.325,
+     "end": 3.92,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/ep07/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}

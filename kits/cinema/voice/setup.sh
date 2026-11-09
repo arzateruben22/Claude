@@ -24,7 +24,7 @@ fetch() {   # url file sha256
 }
 fetch $K/kokoro-v1.0.onnx "$DIR/models/kokoro-v1.0.onnx" 7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5
 fetch $K/voices-v1.0.bin "$DIR/models/voices-v1.0.bin" bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d
-fetch $S/sherpa-onnx-nemo-parakeet-tdt-0.6b-v2-int8.tar.bz2 "$DIR/models/parakeet.tar.bz2" 157c157bc51155e03e37d2466522a3a737dd9c72bb25f36eb18912964161e1ad
+fetch $S/sherpa-onnx-nemo-parakeet-tdt-0.6b-v2-int8.tar.bz2 "$DIR/models/parakeet.tar.bz2" 6fc4426b54aa549a0019b8a75b8dea59164e71790a37ac56a045ad57f915f714
 fetch $S/silero_vad.onnx "$DIR/models/silero_vad.onnx" 9e2449e1087496d8d4caba907f23e0bd3f78d91fa552479bb9c23ac09cbb1fd6
 [ -d "$DIR/models/parakeet" ] || { mkdir -p "$DIR/models/parakeet" && tar -xjf "$DIR/models/parakeet.tar.bz2" -C "$DIR/models/parakeet" --strip-components 1; }
 
