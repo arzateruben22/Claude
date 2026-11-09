@@ -76,11 +76,6 @@
    "t1": 13.3333
   },
   {
-   "t": 4.566666666666666,
-   "kind": "counter.show",
-   "tag": "c-dens"
-  },
-  {
    "t": 13.3333,
    "kind": "section",
    "id": "change",

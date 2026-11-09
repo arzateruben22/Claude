@@ -561,19 +561,7 @@
    "slot": "tr"
   }
  ],
- "counters": [
-  {
-   "id": "c-dens",
-   "label": "density: Saturn · water",
-   "text": "0.69 · 1.0",
-   "t0": 4.566666666666666,
-   "t1": 10.233333333333333,
-   "at": [
-    0.5,
-    0.555
-   ]
-  }
- ],
+ "counters": [],
  "pills": [],
  "title": {
   "series": "One More Orbit · Season 2 · Episode 5",
