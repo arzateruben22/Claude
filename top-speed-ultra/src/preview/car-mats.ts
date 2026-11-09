@@ -19,12 +19,14 @@ function tiled(maps: X.SurfaceMaps, tile: number) {
 const S = (q: Quality, high: number, phone: number) => (q === 'high' ? high : phone);
 
 // ------------------------------------------------------------------------------------------------ interior
-export function carbon(q: Quality, tile = 0.064) {
-  return once('carbon' + q + tile, () => {
+// tint (the OC Hypercar's outside carbon, M1b): a darker, less metallic weave, so it reads black, not tan, under a
+// warm sky; without it the material is exactly the one every other car has
+export function carbon(q: Quality, tile = 0.064, tint?: number) {
+  return once('carbon' + q + tile + (tint === undefined ? '' : 't' + tint), () => {
     const t = tiled(X.carbonMaps(S(q, 512, 256)), tile);
     const m = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(1.9, 1.9, 2.0), map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.5, 0.5),
-      roughnessMap: t.roughnessMap, roughness: 1, metalness: 0.55, clearcoat: 1, clearcoatRoughness: 0.035,
+      color: tint === undefined ? new THREE.Color(1.9, 1.9, 2.0) : new THREE.Color(tint), map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.5, 0.5),
+      roughnessMap: t.roughnessMap, roughness: 1, metalness: tint === undefined ? 0.55 : 0.25, clearcoat: tint === undefined ? 1 : 0.55, clearcoatRoughness: tint === undefined ? 0.035 : 0.09,
       anisotropy: q === 'high' ? 0.75 : 0, anisotropyMap: q === 'high' ? t.anisotropyMap : null, envMapIntensity: 1,
     });
     m.name = 'carbon';
@@ -247,11 +249,11 @@ void paintMasks(float pix) {
 `;
 // metallic paint: a base coat with flakes under a clear coat; the flakes are a per-pixel random tilt of the base
 // layer's normal, hashed in the car's own space (so they stay put as you move) at about the size of a pixel
-export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; key?: string; masks?: PaintMask[] } = {}) {
+export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; key?: string; masks?: PaintMask[]; env?: number } = {}) {
   const key = 'paint' + hex + q + (o.key ?? '') + JSON.stringify(lines) + JSON.stringify(o);
   return once(key, () => {
     const m = new THREE.MeshPhysicalMaterial({
-      color: hex, metalness: o.metal ?? 0.62, roughness: o.rough ?? 0.36, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 1,
+      color: hex, metalness: o.metal ?? 0.62, roughness: o.rough ?? 0.36, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: o.env ?? 1,
       clearcoatNormalMap: X.peelNormal(S(q, 256, 128)), clearcoatNormalScale: new THREE.Vector2(0.05, 0.05),
     });
     const peel = m.clearcoatNormalMap!.clone(); peel.repeat.set(4, 4); peel.needsUpdate = true; m.clearcoatNormalMap = peel;
