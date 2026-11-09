@@ -14,7 +14,7 @@ export interface CarDef {
   Cf?: number; Cr?: number; steerGain?: number; brakeG?: number; brakeBias?: number; halfL?: number; halfW?: number;
   track?: number; rollF?: number; loadSens?: number; kx?: number; IwF?: number; IwR?: number; Ieng?: number;
   driveFront?: number; vector?: number; steerRate?: number; csRate?: number; hbKick?: number;
-  // the hypercar's race tune: what changes in the scored modes (Races, Time Trial, Speed Survival); Free Drive runs the
+  // the hypercar's race tune: what changes in the scored mode (Speed Survival); Free Drive runs the
   // Unleashed numbers above. A field set to undefined falls back to the physics' default.
   race?: Partial<CarDef>;
   founder?: boolean;                 // the OC Hypercar Founder Edition: never bought or sold for credits
@@ -35,7 +35,7 @@ export const CARS: CarDef[] = [
   // The OC Hypercar Prototype 01, Founder Edition (PROJECT_OC_HYPERCAR.md section 5): Unleashed in Free Drive, the
   // fastest, best-gripping and best-braking car in the game (all-wheel drive, torque vectoring, fan-assisted
   // downforce, stiffer tyres, 2 g brakes); in every scored mode it runs the race tune, at or under the Corsa.
-  { id: 'oc-hyper', name: 'OC Hypercar', blurb: 'Prototype 01, Founder Edition. Unleashed in Free Drive: 2,012 hp, all-wheel drive and fan downforce. Races, Time Trial and Survival run its race tune, at the Corsa\'s level.', price: 0, level: 1, founder: true,
+  { id: 'oc-hyper', name: 'OC Hypercar', blurb: 'Prototype 01, Founder Edition. Unleashed in Free Drive: 2,012 hp, all-wheel drive and fan downforce. Speed Survival runs its race tune, at the Corsa\'s level.', price: 0, level: 1, founder: true,
     mass: 1690, power: 1500000, torque: 2000, redline: 9000, CdA: 0.62, ClA: 2.2, grip: 1.3, paint: 0xc8d3e8, final: 3.0,
     Cf: 225000, Cr: 333000, steerGain: 1.25, brakeG: 2.0, halfL: 2.36, halfW: 1.02, driveFront: 0.4, vector: 0.6,
     atmosphere: { time: 'night', weather: 'clear' },   // the owner's reference: the hypercar at night
@@ -86,7 +86,7 @@ export function garageCars(owner: boolean, owned: string[]) {
 }
 
 // put a car's numbers into the physics (one car drives at a time)
-// the tune a run uses: the hypercar's race tune in every scored mode, its Unleashed numbers in Free Drive (and on the
+// the tune a run uses: the hypercar's race tune in Speed Survival (the scored mode), its Unleashed numbers in Free Drive (and on the
 // menu's attract drive); every other car has one tune
 export function tuneFor(c: CarDef, mode?: string): CarDef { return c.race && mode && mode !== 'free' ? { ...c, ...c.race } : c; }
 export function applyCar(car: CarDef, mode?: string) {

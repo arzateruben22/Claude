@@ -78,7 +78,7 @@ traffic code.
     merges; the move over is a smoothstep from your lane. Because OSM ramps leave from the middle of the carriageway
     (below), a leg ends where the ramp line is further out than the exit lane, not at the junction. The blend is
     premultiplied (`src + dst * (1 - core)`): the glow adds light, the core also covers the road a little so the blue
-    reads on sunlit concrete. Hidden in the attract drive, in races and in the corner's sky camera.
+    reads on sunlit concrete. Hidden in the attract drive and in the corner's sky camera.
 
 **OSM quirk to know about.** Ramp lines leave from the middle of the carriageway; that's where OSM puts the node.
 For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavement. Two things depend on this:
@@ -266,6 +266,13 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 
 ## Modes and scoring
 
+Two modes (owner, 2026-11-08: "only stick to free drive and try to stay over 100mph"): `Mode` is `'free' | 'survival'`.
+Races and Time Trial were removed with all their code (`race.ts`, the AI racers in `Traffic`, the countdown, the race
+and Time Trial HUD, results and bests). `settings.modeOf()` reads any other saved or passed mode (an older `'race'` or
+`'time'`) as Free Drive; `Game.start()` runs it. `readSettings()` drops an older save's `mode` and `course` keys, and
+`profile.migrate()` drops `racesWon`. Old `tsu.best.time`, `tsu.race.<course>` and the `time` and `race` lists in
+`tsu.runs.v1` stay on the device unread.
+
 - **Free Drive.** Start on any of 12 carriageway points. Navigate anywhere.
 - **Speed Survival.**
   - Score is distance times a speed band (×1 at 100 mph, more above), times a streak multiplier of up to ×3 after
@@ -274,7 +281,6 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   - Each car scores once. Cars under 10 m/s don't score. Nothing scores while wrong-way.
   - Hitting a wall above 3 m/s, or any contact, resets the streak.
   - A crash ends the run: a car above 7 m/s, or a wall above 17 m/s.
-- **Time Trial.** Fixed start and seed. 60 s, plus 25 s every 2 km.
 - **Runs.** Stored per mode, top ten, in `localStorage` under `tsu.runs.v1`. Always labelled local.
 
 ## Testing hooks
@@ -297,9 +303,9 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 
 - `tests/regression.mjs` drives the built `dist/top-speed-ultra.html` through `window.__game` and prints PASS or FAIL
   with the numbers each check saw. Run `npm run build` first. It takes about 10 minutes here.
-- Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`, `store`,
-  `store-live`. Run some with
-  `npm test -- --only=race,survival`. Add `--slow` to render the High and Ultra presets too.
+- Groups: `boot`, `interchanges`, `survival`, `modes`, `abilities`, `progression`, `render`, `phone`, `launch`, `store`,
+  `store-live`, `venues`. Run some with
+  `npm test -- --only=modes,survival`. Add `--slow` to render the High and Ultra presets too.
 - `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
 - Every group opens a fresh browser context, so each starts with an empty profile. Screenshots go to `tests/out/`
   (git-ignored).
@@ -314,7 +320,7 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 
 - **`profile.ts`.** `ProfileBook.add()` takes small increments (time, distance, passes, freeways, interchanges) and
   returns level-ups and unlocks. It saves when there's something worth saving. `buy`, `sell` and `choose` handle the
-  garage; `reward` handles race payouts. Migration lives in `migrate()`.
+  garage; `reward` pays story jobs. Migration lives in `migrate()`.
 - **`drivers.ts`.** `DRIVERS`, `ABILITIES`, `lookFor()`, which gives the cockpit's cosmetic look, and `Ability`,
   which does duration and cooldown.
   - Clear Path sets `Traffic.scale = 0.65` (fewer spawns), `Traffic.thin()` (out of view only) and
@@ -339,11 +345,13 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   must be bumped with `package.json`.
 - **`cars.ts`.** `applyCar()` writes a car's numbers into the physics `SPEC`. `figures()` gives the showroom's
   estimates, calibrated to the GT's measured 3.3 s and 211 mph.
-- **`race.ts`.**
-  - Courses are stretches of one carriageway.
-  - Rivals are `Traffic` cars with a `racer` record. They're never despawned or thinned, are held during the
-    countdown, run flat out up to √(11/k) in curves, and are set against your car's computed top speed.
-  - Progress means projecting onto the course path.
+- **The `modes` group** (2026-11-08) checks the two modes: the menu's cards are exactly 01 Free Drive and 02 Speed
+  Survival; a saved mode `'race'` (first load) and `'time'` (second load, with an old profile's `racesWon`, Time Trial
+  and race runs and bests) both open on Free Drive, and the old keys are dropped or ignored; `start('race')` and
+  `start('time')` run Free Drive; the phone and the World Map have no Races; Speed Survival scores over 100 mph and a
+  crash into a stopped car ends it; Auto-drive isn't offered in Speed Survival; the hypercar is Unleashed in Free Drive
+  and on its race tune in Speed Survival. A stopped car is an existing traffic car moved into your lane and held by its
+  own stop timer (`stoppedCarAhead` in the suite), since `Traffic.addRacer` went with the races.
 - **`env/Environment.ts`.**
   - `sunPosition()` is an astronomical sun position for 33.72° N, 117.83° W.
   - Weather presets come from the `WX` table. The state eases toward its target over about 2.5 s.

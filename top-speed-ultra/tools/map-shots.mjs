@@ -1,4 +1,4 @@
-// Screenshot the World Map: from the menu (the county, a freeway picked, a race picked) and while driving (paused,
+// Screenshot the World Map: from the menu (the county, a freeway picked) and while driving (paused,
 // you and your route), at desktop and phone size.   npm run build && node tools/map-shots.mjs [outDir]
 import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
@@ -24,9 +24,6 @@ for (const [size, o] of Object.entries({ desktop: { viewport: { width: 1280, hei
     await shot('menu-county');
     await page.locator('.wm-item', { hasText: 'North' }).filter({ has: page.locator('.shield', { hasText: /^405$/ }) }).click();
     await shot('menu-405');
-    await page.getByRole('button', { name: 'Races', exact: true }).click();
-    await page.locator('.wm-item', { hasText: 'Santa Ana Checkpoints' }).click();
-    await shot('menu-race');
     await page.getByRole('button', { name: 'Back', exact: true }).click();
     await page.getByRole('radio', { name: /Free Drive/ }).click();
     await page.getByRole('button', { name: 'Drive', exact: true }).click();

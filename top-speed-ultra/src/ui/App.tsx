@@ -15,7 +15,6 @@ import { Settings, loadSettings, saveSettings, ownerFromHash, ownerTestBuild, QU
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
-import { COURSES, bestTime, fmtTime } from '../game/race';
 import { carById, figures, garageCars, PAINTS, paintFor, WHEELS, wheelFor } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
@@ -34,7 +33,7 @@ import { Phone, PhoneApp } from './Phone';
 import { RadialMenu, RadialPick } from './RadialMenu';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over' | 'foot';   // foot: walking a venue (its own page is up)
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'store' | 'map' | 'phone' | 'homes';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'garage' | 'feedback' | 'store' | 'map' | 'phone' | 'homes';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -42,8 +41,9 @@ const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced
 const TEST_BUILD = ownerTestBuild();
 // the Settings rail (U8): the sections in the library's order; every control keeps its label, so all stay on one page
 const SET_SECTIONS: [string, string][] = [['graphics', 'Graphics'], ['hud', 'HUD and map'], ['world', 'World'], ['driving', 'Driving'], ['sound', 'Sound'], ['testing', 'Testing']];
-// the mode cards' one-line subtitles (the menu)
-const MODE_SUB: Record<Mode, string> = { free: 'Explore Orange County', survival: 'Stay over 100 mph', race: 'Sprint / checkpoints / endurance', time: '60 s on the clock' };
+// the mode cards' one-line subtitles (the menu). Two modes only (owner, 2026-11-08: "lets get rid of these play modes
+// all entirely and only stick to free drive and try to stay over 100mph game mode"): Races and Time Trial are gone.
+const MODE_SUB: Record<Mode, string> = { free: 'Explore Orange County', survival: 'Stay over 100 mph' };
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 // our own venues in the Go to sheet (src/game/venues.ts; the World Map's Places tab lists them too)
 const VENUE_LIST = [{ name: 'Lot 57', blurb: 'Taproom and yard · Orangewood Ave, Anaheim' }, { name: 'Stoppage Time', blurb: 'Sports bar · Claudina Way, Anaheim' }];
@@ -195,7 +195,7 @@ export function App() {
   const drive = (m: Mode = mode) => {
     setMode(m); setPanel(null); setResult(null); setNavTarget(null);
     setScreen('playing');
-    void game.current?.start(m, settings.start, settings.course);
+    void game.current?.start(m, settings.start);
     // the quick menu is the way to the radio and the garage on a phone: say once how to open it
     if (coarse) {
       let seen = true;
@@ -243,8 +243,7 @@ export function App() {
     setMode(MODE_LIST[i]);
     e.currentTarget.querySelectorAll<HTMLElement>('[role="radio"]')[i]?.focus();
   };
-  const modeStat = (m: Mode) => m === 'survival' ? `Best ${loadBest(m).toLocaleString()}` : m === 'time' ? `Best ${(loadBest(m) / 1609.344).toFixed(2)} mi`
-    : m === 'race' ? `${game.current?.profile.p.racesWon ?? 0} won` : 'No clock';
+  const modeStat = (m: Mode) => m === 'survival' ? `Best ${loadBest(m).toLocaleString()}` : 'No clock';
 
   const playing = screen === 'playing';
   // the adaptive HUD (U1): in Minimal, true once a drive has gone IDLE_MS without a tap, mouse move, key or pad button
@@ -257,7 +256,6 @@ export function App() {
   const myExit = settings.exit ? game.current?.exitsFor(exitRoadOf).find((e) => e.key === settings.exit) ?? null : null;
   const driver = DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0];
   const car = carById(game.current?.carId ?? 'rossini-gt');
-  const course = COURSES.find((c) => c.id === settings.course) ?? COURSES[0];
   // the drive HUD's chips under the speed: the handling profile (where the slider sits), the assists the physics runs
   // at every setting (ABS and traction control), and the hypercar's tune when it is off the leash
   const chips = [settings.handling < 0.35 ? 'Arcade' : settings.handling < 0.75 ? 'Sport' : 'Sim', 'ABS', 'TCS', ...(car.race && mode === 'free' ? ['Unleashed'] : [])];
@@ -341,23 +339,6 @@ export function App() {
       };
       case 'profile': return game.current ? { cls: 'profile', body: <ProfilePanel game={game.current} onClose={() => setPanel(null)} /> } : null;
       case 'garage': return game.current ? { cls: 'profile', body: <GaragePanel game={game.current} settings={settings} update={update} onClose={() => setPanel(null)} onPick={() => rerender((n) => n + 1)} /> } : null;
-      case 'course': return {
-        cls: '', body: <>
-          <h2>Races</h2>
-          <div className="drivers">
-            {COURSES.map((c) => {
-              const b = bestTime(c.id);
-              return (
-                <button key={c.id} className={'gcell driver' + (settings.course === c.id ? ' on' : '')} onClick={() => { update({ course: c.id }); setPanel(null); }}>
-                  <b>{c.name}</b><small>{c.kind} · {(c.length / 1609.344).toFixed(1)} mi · <Shield label={c.road} /></small><span>{c.blurb}</span>
-                  <em>Win {c.reward[0].toLocaleString()} credits{b ? ` · best ${fmtTime(b)}` : ''}</em>
-                </button>
-              );
-            })}
-          </div>
-          <div className="row"><button className="btn" onClick={() => setPanel(null)}>Back</button></div>
-        </>,
-      };
       case 'driver': return {
         cls: '', body: <>
           <h2>Driver</h2>
@@ -383,7 +364,7 @@ export function App() {
       case 'board': return {
         cls: '', body: <>
           <h2>Personal bests</h2>
-          <Seg label="Mode" value={boardMode} options={['survival', 'time', 'free'] as Mode[]} labels={(m) => MODES[m].label} onChange={setBoardMode} />
+          <Seg label="Mode" value={boardMode} options={['survival', 'free'] as Mode[]} labels={(m) => MODES[m].label} onChange={setBoardMode} />
           <Board runs={board(boardMode)} mode={boardMode} highlight={0} />
           <div className="row"><button className="btn" onClick={() => setPanel(null)}>Back</button></div>
         </>,
@@ -470,7 +451,7 @@ export function App() {
   const pv = panelView();
 
   // the main menu's own screen (the owner's 2026-10-21 reference): a glass rail on the left (the brand, the loadout, the
-  // rest of the menu), the player card top right, the live scene as the hero in the middle, and the four mode cards
+  // rest of the menu), the player card top right, the live scene as the hero in the middle, and the two mode cards
   // along the bottom. It is the sheet's home: Drive, Settings, Bests and Profile are the sheet's dock, which stays put
   // under the rail while the sheet changes what it shows. On a phone it is one column (styles.css .menu-grid).
   const home = (
@@ -493,16 +474,9 @@ export function App() {
           <button type="button" className="pick drv" onClick={() => setPanel('driver')}>
             <Ico name="driver" /><small>Driver</small><b>{driver.name}</b><span>{ABILITIES[driver.ability].name}</span><i aria-hidden="true">›</i>
           </button>
-          {mode === 'race' && (
-            <button type="button" className="pick" onClick={() => setPanel('course')}>
-              <Ico name="bests" /><small>Race</small><b>{course.name}</b><span>{course.road}</span><i aria-hidden="true">›</i>
-            </button>
-          )}
-          {mode !== 'time' && mode !== 'race' && (
-            <button type="button" className="pick" onClick={() => { setExitRoadState(null); roadNow.current = null; setPanel('start'); }}>
-              <Ico name="map" /><small>Start on</small><Shield label={myExit ? exitRoadOf : start.label} /><span>{myExit ? `${myExit.text} exit` : start.blurb}</span><i aria-hidden="true">›</i>
-            </button>
-          )}
+          <button type="button" className="pick" onClick={() => { setExitRoadState(null); roadNow.current = null; setPanel('start'); }}>
+            <Ico name="map" /><small>Start on</small><Shield label={myExit ? exitRoadOf : start.label} /><span>{myExit ? `${myExit.text} exit` : start.blurb}</span><i aria-hidden="true">›</i>
+          </button>
         </div>
         <div className="field traffic"><label>Traffic · simulated</label><Seg label="Traffic" value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
         <button type="button" className="rail-btn" onClick={() => setPanel('map')}><Ico name="map" />World Map</button>
@@ -673,15 +647,8 @@ export function App() {
           <div className="panel narrow result">
             <div className="panel-head"><OcLockup size="md" /><p className="eyebrow">{MODES[result.mode].label}</p></div>
             <h2>{result.reason}</h2>
-            {result.race ? <>
-              <div className="big">P{result.race.position}<small>of {result.race.of} · {result.race.time}</small></div>
-              {result.newBest ? <p className="good">New best time on {result.race.course}</p> : result.race.best ? <p className="muted">Best {result.race.best}</p> : null}
-              <p className="good">+{result.race.credits.toLocaleString()} credits · +{result.race.xp.toLocaleString()} XP</p>
-              <ol className="order">{result.race.order.map((n, i) => <li key={n} className={n === 'You' ? 'me' : ''}><b>{i + 1}</b>{n}</li>)}</ol>
-            </> : <>
-              <div className="big">{result.mode === 'time' ? (result.distance / 1609.344).toFixed(2) : result.score.toLocaleString()}<small>{result.mode === 'time' ? 'miles' : 'points'}</small></div>
-              {result.newBest ? <p className="good">New personal best</p> : <p className="muted">Best {result.mode === 'time' ? (result.best / 1609.344).toFixed(2) + ' mi' : result.best.toLocaleString()}</p>}
-            </>}
+            <div className="big">{result.score.toLocaleString()}<small>points</small></div>
+            {result.newBest ? <p className="good">New personal best</p> : <p className="muted">Best {result.best.toLocaleString()}</p>}
             <dl className="stats">
               <div><dt>Distance</dt><dd>{(result.distance / 1609.344).toFixed(2)} mi</dd></div>
               <div><dt>Top speed</dt><dd>{Math.round(result.top * 2.236936)} mph</dd></div>
@@ -697,7 +664,7 @@ export function App() {
                 {result.jobs.map((j) => <li key={j.from + j.job}><b>Job done for {j.from}</b><span>{j.job} · +{j.credits.toLocaleString()} credits</span></li>)}
               </ul>
             )}
-            {!result.race && <Board runs={result.board.runs} mode={result.mode} highlight={result.board.rank} />}
+            <Board runs={result.board.runs} mode={result.mode} highlight={result.board.rank} />
             <div className="row">
               <button className="btn primary" onClick={() => drive(result.mode)}>Drive again</button>
               <button className="btn" onClick={() => void shareRunCard(result, game.current?.profile.p.username ?? 'Driver').then((r) => toast({ shared: 'Shared', saved: 'Run card saved', declined: 'Not saved', failed: 'Could not save the card' }[r], r === 'failed' ? 'bad' : r === 'declined' ? 'info' : 'good'))}>Share run</button>
@@ -715,11 +682,10 @@ export function App() {
       {panel === 'phone' && game.current && (
         <Phone clock={() => lastHud.current?.clock ?? ''} name={game.current.profile.p.username || 'Driver'} credits={game.current.profile.p.credits} level={levelOf(game.current.profile.p.xp)} book={game.current.profile} onClose={() => setPanel(null)}
           onJob={(j) => {
-            // a story job: back to the menu with its mode (and course or freeway) chosen, ready to Drive
-            if (j.kind === 'race') update({ course: j.course });
+            // a story job: back to the menu with its mode (and freeway) chosen, ready to Drive
             if (j.kind === 'drive' || j.kind === 'errand') update({ start: j.road, exit: '' });
             game.current?.setErrand(j.kind === 'errand' ? j : null);   // an errand rides on the next Free Drive
-            setMode(j.kind === 'survival' ? 'survival' : j.kind === 'time' ? 'time' : j.kind === 'race' ? 'race' : 'free');
+            setMode(j.kind === 'survival' ? 'survival' : 'free');
             toMenu();
           }}
           onOpen={(a: PhoneApp) => {
@@ -733,8 +699,7 @@ export function App() {
         <WorldMap game={game.current} driving={screen !== 'menu'} navTarget={navTarget} focusHome={mapHome} onClose={() => { setMapHome(undefined); setPanel(null); }}
           onNavigate={(l) => navigate(l)}
           onStartFreeway={(l) => { update({ start: l, exit: '' }); setPanel(null); }}
-          onStartExit={(k) => { update({ exit: k }); setMapHome(undefined); setPanel(null); }}
-          onRace={(id) => { update({ course: id }); setMode('race'); setPanel(null); }} />
+          onStartExit={(k) => { update({ exit: k }); setMapHome(undefined); setPanel(null); }} />
       )}
 
       {panel === 'homes' && game.current && (
@@ -849,9 +814,7 @@ function useHudLayout(): HudLayout {
 // the run's numbers for the pause screen (the phone's plate shows two of them; here they all are)
 function runLine(h: HudData): string {
   const mi = (m: number) => (m / 1609.344).toFixed(2) + ' mi';
-  if (h.mode === 'race') return `P${h.racePos || '–'} of ${h.raceOf} · ${h.raceTime} · ${mi(Math.max(0, h.raceLeft))} to go`;
   if (h.mode === 'survival') return `${h.score.toLocaleString()} points · ${h.streak.toFixed(1)} s over 100 · ${h.nearMisses} near misses`;
-  if (h.mode === 'time') return `${h.timeLeft.toFixed(1)} s left · ${mi(h.distance)}`;
   return `${mi(h.distance)} · Top ${h.top} mph` + (h.errand ? ` · Errand ${Math.floor(Math.ceil(h.errand.left) / 60)}:${String(Math.ceil(h.errand.left) % 60).padStart(2, '0')} left` : '');
 }
 
@@ -883,7 +846,7 @@ function Board({ runs, mode, highlight }: { runs: { score: number; distance: num
       {runs.length === 0 ? <p className="muted">No runs yet.</p> : (
         <ol>{runs.slice(0, 5).map((r, i) => (
           <li key={r.when + ':' + i} className={i + 1 === highlight ? 'me' : ''}>
-            <b>{mode === 'time' ? (r.distance / 1609.344).toFixed(2) + ' mi' : r.score.toLocaleString()}</b>
+            <b>{r.score.toLocaleString()}</b>
             <span>{r.top} mph{mode === 'survival' ? ` · ${r.streak.toFixed(1)} s streak` : ''}</span>
             <time>{new Date(r.when).toLocaleDateString()}</time>
           </li>
@@ -1024,7 +987,6 @@ function ProfilePanel({ game, onClose }: { game: Game; onClose: () => void }) {
       <div><dt>Clean passes</dt><dd>{p.cleanPasses}</dd></div>
       <div><dt>Interchanges</dt><dd>{p.interchanges}</dd></div>
       <div><dt>Runs</dt><dd>{p.runs}</dd></div>
-      <div><dt>Races won</dt><dd>{p.racesWon}</dd></div>
       <div><dt>Cars</dt><dd>{p.vehicles.length}</dd></div>
     </dl>
     <p className="eyebrow">Freeways driven · {routes.size} of 10</p>
