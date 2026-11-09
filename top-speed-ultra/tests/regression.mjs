@@ -11,7 +11,7 @@
 // Every group opens a fresh browser context, so each starts with an empty profile.
 
 import { chromium } from 'playwright';
-import { existsSync, mkdirSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createServer } from 'node:http';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -44,7 +44,8 @@ async function check(name, fn) {
 }
 
 const browser = await chromium.launch({
-  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'],
+  // (gc and precise heap numbers: the venues group reads the JS heap after each round trip)
+  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required', '--js-flags=--expose-gc', '--enable-precise-memory-info'],
 });
 
 // how long a page may take to boot to the menu: about 13 s on an idle machine, but other passes' renders and builds
@@ -2218,6 +2219,214 @@ await group('store-live', async () => {
     server.close();
   }
 });
+
+// The venues (PROJECT_OC_ON_FOOT.md Phase 3a, PROJECT_OC_SPORTS_BAR.md J1): Lot 57 and Stoppage Time from the driving
+// game. For each: Free Drive on the carriageway its default exit leaves, navigateTo the venue, Auto-drive (fastForward)
+// down to the exit; arriving parks you (the toast says street driving isn't built yet); Get out mounts the venue's own
+// page (window.__onfoot) over the paused game, with the venue's own Drive on offer where you stand; a short walk and
+// one action; then Car walks you back and the venue's own Drive (tapped, not __game.drive()) puts you on an on-ramp at
+// 0 mph with the venue gone. Then three Lot 57 round trips with the memory read after each, and the phone layout of Get out.
+// The game's time is Sunset (7:30 PM on the game's clock), when both venues are open every day.
+const VENUE_MS = 600000;   // a venue's build under SwiftShader on a shared machine (about 30-60 s idle)
+async function heap(page) {
+  return game(page, () => { if (typeof gc === 'function') { gc(); gc(); } const g = window.__game, m = g.renderer.info.memory;
+    // sceneGeo: the distinct geometries in the game's scene graph (drawn or not); the renderer's count is those it has
+    // drawn at least once and not had disposed, so it can only exceed sceneGeo by what other passes hold
+    const seen = new Set(); g.scene.traverse((o) => { if (o.geometry) seen.add(o.geometry); });
+    return { heapMB: performance.memory ? +(performance.memory.usedJSHeapSize / 1048576).toFixed(1) : null, geometries: m.geometries, sceneGeo: seen.size, textures: m.textures, programs: g.renderer.info.programs?.length ?? 0 }; });
+}
+// Free Drive on the carriageway the venue's default exit leaves, `before` metres ahead of it, then route there and
+// let Auto-drive take it down to the exit (fastForward: the simulation without rendering)
+async function autoDriveTo(page, venue, before = 2500) {
+  return game(page, ({ venue, before }) => {
+    const g = window.__game, ramp = g.net.paths[venue === 'Lot 57' ? 1142 : 124], j = ramp.inc[0];
+    g.placeCar(j.to, Math.max(5, j.toS - before), 1, 28);
+    const nav = g.navigateTo(venue), auto = g.setAutoDrive(true);
+    const route = g.route.map((r) => r.to.id), dest = g.routeName;
+    let t = 0, minV = 99;
+    while (t < 400 && !g.venue()) { g.fastForward(1); t++; }
+    return { nav, auto, route, dest, t, venue: g.venue(), autoOn: g.autoDriving, v: g.phys.vx, path: g.path.id, s: +g.phys.s.toFixed(1), toast: g.lastVenueToast };
+  }, { venue, before });
+}
+async function getOut(page) {
+  const t0 = Date.now();
+  const ok = await page.evaluate(() => window.__game.getOut());
+  const st = await page.evaluate(() => ({ venue: window.__game.venue(), ready: !!window.__onfoot?.ready, err: window.__onfootError ?? null, host: !!document.getElementById('onfoot-host'),
+    gameHidden: getComputedStyle(window.__game.renderer.domElement.closest('.app')).display === 'none', frames0: window.__game.frames }));
+  return { ok, s: (Date.now() - t0) / 1000, ...st };
+}
+async function driveBack(page) {
+  const f0 = await game(page, () => window.__game.frames);
+  const ok = await page.evaluate(() => window.__game.drive());
+  await frames(page, 3);
+  return { ok, ...(await backState(page, f0)) };
+}
+// the venue's own way back, as a player does it (not __game.drive()): where you stand, if Drive isn't on the action
+// button, tap Car (it walks you to the driver's door; the walk is run ahead with the venue's sim), wait for the venue's
+// HUD to put Drive on the action button, and tap it. `spot` is what was offered before (and how far from the door).
+async function driveByButton(page, touch = false) {
+  const press = (sel) => (touch ? page.tap(sel) : page.click(sel));
+  const where = () => game(page, () => { const o = window.__onfoot, p = o.pos(), d = o.yourCar().door; return { actions: o.actions(), m: +Math.hypot(p.x - d.x, p.z - d.z).toFixed(2) }; });
+  const spot = await where();
+  let walk = null;
+  if (spot.actions[0] !== 'Drive') {
+    await press('#onfoot-host #car');
+    await page.waitForFunction(() => window.__onfoot.pos().moving || window.__onfoot.actions()[0] === 'Drive', null, { timeout: VENUE_MS });
+    await game(page, () => window.__onfoot.sim(90, true, true));
+    walk = await where();
+  }
+  await page.waitForFunction(() => { const b = document.querySelector('#onfoot-host #act'); return b && b.classList.contains('on') && b.textContent === 'Drive' && getComputedStyle(b).visibility !== 'hidden'; }, null, { timeout: VENUE_MS });
+  const btn = await game(page, () => { const b = document.querySelector('#onfoot-host #act').getBoundingClientRect(); return { w: Math.round(b.width), h: Math.round(b.height) }; });
+  const f0 = await game(page, () => window.__game.frames);
+  await press('#onfoot-host #act');
+  await page.waitForFunction(() => !window.__game.venue() && !window.__onfoot && !document.getElementById('onfoot-host'), null, { timeout: VENUE_MS });
+  await frames(page, 3);
+  return { ok: true, spot, walk, btn, ...(await backState(page, f0)) };
+}
+async function backState(page, f0) {
+  return game(page, (f0) => { const g = window.__game, st = g.stats;
+    return { venue: g.venue(), onfoot: !!window.__onfoot, host: !!document.getElementById('onfoot-host'), path: st.id, main: st.main, leads: g.net.leadsTo(g.path), s: +st.s.toFixed(1), mph: Math.round(Math.abs(st.v) * 2.236936), framesAfter: g.frames - f0,
+      venueStyles: document.querySelectorAll('style[data-onfoot]').length, offSheets: [...document.querySelectorAll('style, link[rel=stylesheet]')].filter((x) => x.disabled).length,
+      toast: [...document.querySelectorAll('.toast')].map((t) => t.textContent).join(' | '), screen: !!document.querySelector('.tbar') }; }, f0);
+}
+await group('venues', async (use) => {
+  const { page } = await use({ settings: { time: 'sunset' } });
+  await drive(page, 'Free Drive');
+  await check('venues: Lot 57 and Stoppage Time are places in the Go to sheet', async () => {
+    await page.getByRole('button', { name: 'Go to', exact: true }).click();
+    const places = await page.locator('.grid.places .gcell b').allTextContents();
+    await page.getByRole('button', { name: 'Back', exact: true }).click();
+    expect(places.join() === 'Lot 57,Stoppage Time', places.join());
+    return places.join(', ');
+  });
+  const trips = [];
+  for (const [venue, rampId] of [['Lot 57', 1142], ['Stoppage Time', 124]]) {
+    const tag = venue === 'Lot 57' ? 'Lot 57' : 'Stoppage Time';
+    let arrived = null;
+    await check(`venues: ${tag}: navigateTo routes to its exit ramp, Auto-drive takes it there and the fade parks you`, async () => {
+      const r = await autoDriveTo(page, venue);
+      arrived = r;
+      expect(r.nav && r.auto && r.dest === venue && r.route.at(-1) === rampId, `route ${JSON.stringify(r)}`);
+      expect(r.venue && r.venue.phase === 'parked' && r.venue.name === venue && r.venue.ramp === rampId, `not parked: ${JSON.stringify(r)}`);
+      expect(Math.abs(r.v) < 0.01 && !r.autoOn, `still moving or Auto-drive on: ${JSON.stringify(r)}`);
+      expect(/^Drove .+ to .+ · street driving isn't built yet\. Auto-drive off: you have control$/.test(r.toast), r.toast);
+      await page.waitForFunction(() => document.querySelector('.venue-park .getout') && [...document.querySelectorAll('.toast')].some((t) => /street driving isn't built yet/.test(t.textContent)), null, { timeout: 120000 });
+      const ui = await game(page, () => ({ pedals: !!document.querySelector('.touch-pedals'), focus: document.activeElement?.textContent }));
+      expect(ui.focus === 'Get out', `focus on ${ui.focus}`);
+      return `${r.t} s of Auto-drive on ${r.route.length} hand-offs; parked on ramp ${r.venue.ramp} at ${r.s} m; "${r.toast}"`;
+    });
+    let out = null;
+    await check(`venues: ${tag}: Get out pauses the game and mounts the venue (window.__onfoot ready, your car in the stall)`, async () => {
+      expect(arrived?.venue, 'did not arrive');
+      out = await getOut(page);
+      expect(out.ok && out.ready && out.venue?.phase === 'foot' && out.host && out.gameHidden, JSON.stringify(out));
+      const f = await game(page, () => window.__game.frames); await page.waitForTimeout(1500);
+      const f2 = await game(page, () => window.__game.frames);
+      const st = await game(page, () => { const o = window.__onfoot, s = o.stats(); return { frames: o.frames, quality: s.quality, npcs: s.npcs ?? null, car: o.yourCar(), pos: o.pos(), clock: o.clock(), actions: o.actions() }; });
+      expect(f2 === f, `the game drew ${f2 - f} frames while on foot`);
+      // where you stand when you get out, the venue's own Drive is on offer (the way back in)
+      expect(st.actions[0] === 'Drive', `no Drive where you get out: ${JSON.stringify(st.actions)} at ${Math.hypot(st.pos.x - st.car.door.x, st.pos.z - st.car.door.z).toFixed(2)} m from the door`);
+      expect(Math.hypot(st.pos.x - st.car.door.x, st.pos.z - st.car.door.z) < 6, `not by the car: ${JSON.stringify(st.pos)} door ${JSON.stringify(st.car.door)}`);
+      trips.push({ venue, getOutS: out.s, quality: st.quality, npcs: st.npcs });
+      return `ready in ${out.s.toFixed(1)} s; the game drew 0 frames on foot; ${st.quality}; ${st.npcs ?? 0} people; clock ${st.clock.label}; standing ${Math.hypot(st.pos.x - st.car.door.x, st.pos.z - st.car.door.z).toFixed(2)} m from the driver's door, Drive on offer`;
+    });
+    await check(`venues: ${tag}: a short walk and ${venue === 'Lot 57' ? 'an Order at the bar' : 'in through the front door'}`, async () => {
+      expect(out?.ready, 'not on foot');
+      if (venue === 'Lot 57') {
+        const r = await game(page, () => { const o = window.__onfoot, c = o.counters().find((x) => x.id === 'bar'), p0 = o.pos();
+          const tap = o.tap(c.stand.x, c.stand.z); o.sim(120, true, true); const p1 = o.pos(); o.look(90, -8);
+          const press = o.press('Order'), sheet = o.sheet(), pick = o.pick('agua'); o.sim(1, false, true);
+          return { walked: Math.hypot(p1.x - p0.x, p1.z - p0.z), tap: !!tap, press, sheetOpen: sheet.open, pick, state: o.state() }; });
+        expect(r.tap && r.walked > 5 && r.press?.did && r.pick && r.state.order, JSON.stringify(r).slice(0, 400));
+        return `walked ${r.walked.toFixed(1)} m (straight line) to the bar; Order opened the sheet; ordered an agua fresca (${r.state.order.stage})`;
+      }
+      // (tap to go to the point just inside the front door the bar's own page starts you at: the walk opens the door)
+      const r = await game(page, () => { const o = window.__onfoot, p0 = o.pos(), d = o.startAt().door;
+        const tap = o.tap(d.x, d.z); o.sim(60, true); const p1 = o.pos();
+        return { walked: Math.hypot(p1.x - p0.x, p1.z - p0.z), tap: !!tap, end: p1, doors: o.doors() }; });
+      expect(r.walked > 5 && r.end.indoors, JSON.stringify(r).slice(0, 400));
+      return `walked ${r.walked.toFixed(1)} m to the front door and in (indoors: ${r.end.indoors})`;
+    });
+    await check(`venues: ${tag}: tap Car, then the venue's own Drive: back in the cockpit on an on-ramp at 0 mph, the venue gone`, async () => {
+      expect(out?.ready, 'not on foot');
+      const r = await driveByButton(page);
+      expect(r.walk && r.walk.actions[0] === 'Drive', `Car's walk ended without Drive: ${JSON.stringify(r.walk)}`);
+      expect(r.ok && !r.venue && !r.onfoot && !r.host && !r.main && /^(I|CA)-/.test(r.leads) && r.s < 10 && r.mph === 0, JSON.stringify(r));
+      expect(r.venueStyles === 0 && r.offSheets === 0 && r.framesAfter >= 3 && r.screen, `styles or loop: ${JSON.stringify(r)}`);
+      await page.screenshot({ path: path.join(OUT, `venues-${venue === 'Lot 57' ? 'lot57' : 'stoppage'}-back.png`) });
+      return `Car walked you to ${r.walk.m} m from the door, Drive (${r.btn.w}x${r.btn.h}) tapped: on the ramp to ${r.leads} (path ${r.path}) at ${r.s} m, ${r.mph} mph; "${r.toast}"`;
+    });
+  }
+  await check('venues: three Lot 57 round trips: no growth in the game renderer or the JS heap, no errors', async () => {
+    const rows = [], base = await heap(page);
+    for (let i = 0; i < 3; i++) {
+      const a = await game(page, () => { const g = window.__game; g.placeCar(g.net.paths[1142], 290, 0, 0); return g.arriveVenue(); });
+      expect(a, `trip ${i + 1}: no arrival`);
+      await page.waitForTimeout(1500);
+      const o = await getOut(page);
+      expect(o.ok && o.ready, `trip ${i + 1}: ${JSON.stringify(o)}`);
+      const v = await game(page, () => { const s = window.__onfoot.stats(); return { calls: s.calls, tris: s.triangles, textures: s.textures, geometries: s.geometries }; });
+      const d = await driveByButton(page);
+      expect(d.ok && !d.venue && !d.onfoot && d.spot.actions[0] === 'Drive', `trip ${i + 1} back: ${JSON.stringify(d)}`);
+      // the roads, scenery and traffic round the on-ramp stream in over frames, slower the busier the machine: read the
+      // game renderer once its geometry count has held still over two 20-frame stretches (at most 8)
+      let last = -1, still = 0, rd = null;
+      for (let k = 0; k < 8 && still < 2; k++) { await frames(page, 20); rd = await heap(page); still = rd.geometries === last ? still + 1 : 0; last = rd.geometries; }
+      rows.push({ trip: i + 1, venue: v, game: rd });
+    }
+    const h = rows.map((r) => r.game.heapMB), g = rows.map((r) => r.game);
+    // (the heap from trip 1 to trip 3. The game renderer's geometry count is a high-water mark of the scene's
+    // geometries it has drawn: once, on some trip back, it steps up by about 185 (215 -> 405) as the return's first frames
+    // draw scene objects not drawn before (as far as the probes show: the scene graph itself grew by 6), then holds flat over later trips;
+    // which trip it lands on varies with the machine's load (2026-11-09 probes: the 2nd mount in one, never in four
+    // others). So the geometry check is on the game's scene graph (no venue object left in it, nothing growing) and on
+    // the renderer holding nothing the scene doesn't have; textures and programs as counted.)
+    expect(h[2] !== null && h[2] - h[0] < 24, `heap ${base.heapMB} -> ${h.join(' -> ')} MB`);
+    expect(g[2].sceneGeo - g[1].sceneGeo <= 16 && g.every((x) => x.geometries <= x.sceneGeo + 24) && g[2].textures - g[1].textures <= 4 && g[2].programs - g[1].programs <= 2, `game renderer ${JSON.stringify(g)}`);
+    const left = await game(page, () => { let n = 0; window.__game.scene.traverse((o) => { if (/^(lot57|venue|onfoot|sportsbar|your-car)/i.test(o.name) || o.userData?.group === 'your-car') n++; }); return n; });
+    expect(left === 0, `${left} venue objects left in the game's scene`);
+    trips.push(...rows);
+    return `heap ${base.heapMB} MB before, then ${h.join(', ')} MB after each trip; game renderer geometries ${g.map((x) => x.geometries).join('/')} (scene graph ${g.map((x) => x.sceneGeo).join('/')}), textures ${g.map((x) => x.textures).join('/')}, programs ${g.map((x) => x.programs).join('/')}; venue renderer at ready ${rows.map((r) => `${r.venue.geometries} geo ${r.venue.textures} tex`).join(', ')}`;
+  });
+  writeFileSync(path.join(OUT, 'venues-trips.json'), JSON.stringify(trips, null, 1));
+});
+// the phone, in a context of its own once the first has closed (booting a second game beside the first, still drawing,
+// timed out twice at a load of about 20: both share the one software GPU process)
+await group('venues', async (use) => {
+  const { page } = await use({ phone: true, settings: { time: 'sunset', hudStyle: 'modern' } });
+  await venuesPhone(page);
+});
+async function venuesPhone(page) {
+  await drive(page, 'Free Drive');
+  await check('venues phone: on the exit ramp the venue prompt shows; a tap parks you; Get out replaces the pedals (44 px or more, labelled, focusable)', async () => {
+    await game(page, () => { const g = window.__game; g.placeCar(g.net.paths[1142], 120, 0, 8); });
+    await page.waitForSelector('.venue-prompt', { timeout: 120000 });
+    const pr = await game(page, () => { const b = document.querySelector('.venue-prompt').getBoundingClientRect(); return { w: b.width, h: b.height, label: document.querySelector('.venue-prompt').getAttribute('aria-label') }; });
+    await page.tap('.venue-prompt');
+    await page.waitForSelector('.venue-park .getout', { timeout: 120000 });
+    await page.waitForTimeout(1500);
+    const r = await game(page, () => {
+      const b = document.querySelector('.venue-park .getout'), d = document.querySelector('.venue-park .driveon'), rb = b.getBoundingClientRect(), rd = d.getBoundingClientRect();
+      return { getOut: { w: rb.width, h: rb.height, x: rb.x, y: rb.y, text: b.textContent, tab: b.tabIndex, focused: document.activeElement === b }, driveOn: { w: rd.width, h: rd.height, x: rd.x, y: rd.y },
+        pedals: !!document.querySelector('.touch-pedals'), steer: !!document.querySelector('.touch-steer'), venue: window.__game.venue(), vw: innerWidth, vh: innerHeight };
+    });
+    await page.screenshot({ path: path.join(OUT, 'venues-phone-getout.png') });
+    const inView = (b) => b.x >= 0 && b.y >= 0 && b.x + b.w <= r.vw && b.y + b.h <= r.vh;
+    expect(pr.w >= 44 && pr.h >= 44 && /Park at Lot 57/.test(pr.label), `prompt ${JSON.stringify(pr)}`);
+    expect(r.venue?.phase === 'parked' && !r.pedals && !r.steer, JSON.stringify(r));
+    expect(r.getOut.w >= 44 && r.getOut.h >= 44 && r.driveOn.h >= 44 && inView(r.getOut) && inView(r.driveOn) && r.getOut.text === 'Get out' && r.getOut.tab >= 0 && r.getOut.focused, JSON.stringify(r));
+    return `prompt ${Math.round(pr.w)}x${Math.round(pr.h)} "${pr.label}"; Get out ${Math.round(r.getOut.w)}x${Math.round(r.getOut.h)} at (${Math.round(r.getOut.x)}, ${Math.round(r.getOut.y)}), focused; Drive on ${Math.round(r.driveOn.w)}x${Math.round(r.driveOn.h)}; no pedals`;
+  });
+  await check('venues phone: a tap on Drive on goes straight back to an on-ramp', async () => {
+    const f0 = await game(page, () => window.__game.frames);
+    await page.tap('.venue-park .driveon');
+    await page.waitForFunction(() => !window.__game.venue(), null, { timeout: 120000 });
+    await frames(page, 3);
+    const r = { ok: true, ...(await backState(page, f0)) };
+    expect(r.ok && !r.venue && !r.main && r.mph === 0, JSON.stringify(r));
+    return `on the ramp to ${r.leads}`;
+  });
+}
 
 await browser.close();
 

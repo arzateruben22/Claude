@@ -38,7 +38,7 @@ function singleFile(): Plugin {
  * cover, the place keys and every name but the street names of the segments kept stay out of the page. The
  * attribution and licence records stay in. The source file isn't changed.
  */
-function trimSlice(): Plugin {
+export function trimSlice(): Plugin {
   return {
     name: 'lot57-trim-slice',
     enforce: 'pre',

@@ -59,7 +59,7 @@ export function makeMats(board: Parameters<typeof T.labelsAtlas>[0]) {
     parkway: offset(std({ map: turfMap, roughness: 1 }), -0.5),
     dirt: offset(std({ map: T.dirtTex(), roughness: 1 }), -1),
     marking: offset(std({ roughness: 0.65 }), -4),
-    facade: std({ map: P.mats.facade(0).map, roughness: 0.85, emissiveMap: facadeLit, emissive: 0xffffff, emissiveIntensity: 0 }),
+    facade: std({ map: (P.mats as unknown as { facade?: (k: 0) => THREE.MeshStandardMaterial }).facade?.(0).map ?? T.tiltupTex(), roughness: 0.85, emissiveMap: facadeLit, emissive: 0xffffff, emissiveIntensity: 0 }),
     roof: std({ roughness: 0.92 }),
     tilt: std({ map: T.tiltupTex(), roughness: 0.88 }),
     shedFloor: offset(std({ map: T.polishedTex(), roughness: 0.3, metalness: 0.0, envMapIntensity: 0.8 }), -2),
