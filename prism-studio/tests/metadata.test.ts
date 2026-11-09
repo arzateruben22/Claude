@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildMetadata, captionBody, clean, composePostText, cut, handOffText, LIMITS, parsePostingNotes, postingNotesFor, postingSheet, sourcesThread, type MetaInput } from "../src/domain/metadata";
+import { buildMetadata, captionBody, withFyp, clean, composePostText, cut, handOffText, LIMITS, parsePostingNotes, postingNotesFor, postingSheet, sourcesThread, type MetaInput } from "../src/domain/metadata";
 
 const input: MetaInput = {
   channel: { name: "Rest Frame", label: "PHYSICS", tagline: "Everyday things, slowed down until the physics shows.", topic: "physics" },
@@ -21,6 +21,17 @@ const input: MetaInput = {
 };
 
 describe("metadata", () => {
+  it("#fyp leads the TikTok and Instagram hashtags on every channel, once; never on YouTube", () => {
+    for (const topic of ["physics", "space", "skincare", "whatif"] as const) {
+      const m = buildMetadata({ ...input, channel: { ...input.channel, topic } });
+      for (const p of ["tiktok", "instagram"] as const) {
+        expect(m[p].hashtags.split(" ")[0], `${topic} ${p}`).toBe("#fyp");
+        expect((m[p].caption.match(/#fyp\b/gi) ?? []).length, `${topic} ${p}`).toBe(1);
+      }
+      expect(m.youtube.hashtags).not.toContain("#fyp");
+    }
+    expect(withFyp(["#a", "#FYP", "#b"])).toEqual(["#fyp", "#a", "#b"]);
+  });
   it("strips the script's markup", () => {
     expect(clean("Which ball lands *first*? {-} Both {c1,c2} sit at the *same height* .")).toBe("Which ball lands first? Both sit at the same height.");
   });
@@ -68,14 +79,14 @@ describe("metadata", () => {
   });
   it("TikTok: the question, one takeaway sentence, five hashtags; sources in a 150-character comment", () => {
     const t = buildMetadata(input).tiktok;
-    expect(t.caption).toBe("Which ball lands first? Speed decides where a ball lands. #physics #science #learnontiktok #stem #slowmotion");
+    expect(t.caption).toBe("Which ball lands first? Speed decides where a ball lands. #fyp #physics #science #learnontiktok #stem #slowmotion");
     expect(t.pinnedComment).toBe("Sources: OpenStax; IOP Spark. Synthetic (AI) voice; code-rendered animation.");
   });
   it("Instagram: hook, a line of why/takeaway, 'sources in the first comment', hashtags after a gap; the comment lists sources", () => {
     const i = buildMetadata(input).instagram;
     expect(i.caption).toContain("Which ball lands first?");
     expect(i.caption).toContain("Sources in the first comment. AI voice; animation made in code.");
-    expect(i.caption.endsWith("\n\n#physics #science #stem #sciencefacts #learnsomethingnew #slowmotion #education #physicsfun")).toBe(true);
+    expect(i.caption.endsWith("\n\n#fyp #physics #science #stem #sciencefacts #learnsomethingnew #slowmotion #education #physicsfun")).toBe(true);
     expect(i.pinnedComment.startsWith("Sources\n1. ")).toBe(true);
   });
   it("long titles are cut with a warning, never silently; many sources become a thread, not a cut", () => {

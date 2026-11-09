@@ -158,7 +158,7 @@ describe("written forms in the posting text", () => {
   it("descriptions and captions use written forms; titles, the next line, sources and hashtags are untouched", () => {
     const m = buildMetadata(input);
     expect(m.youtube.caption).toContain("In 2017, we caught two neutron stars colliding. Their light crossed 130 million light-years.");
-    expect(m.tiktok.caption).toBe("What if the Sun vanished? About 50% of it arrived in 2017, 130 million years late. #space #astronomy #learnontiktok #science #cosmos");
+    expect(m.tiktok.caption).toBe("What if the Sun vanished? About 50% of it arrived in 2017, 130 million years late. #fyp #space #astronomy #learnontiktok #science #cosmos");
     expect(m.instagram.caption).toContain("In 2017, we caught two neutron stars colliding. About 50% of it arrived in 2017, 130 million years late.");
     expect(m.youtube.title).toBe("In *twenty seventeen*, a hundred percent | Light Minute No. 001");
     expect(m.tiktok.title.startsWith("In *twenty seventeen*, a hundred percent")).toBe(true);

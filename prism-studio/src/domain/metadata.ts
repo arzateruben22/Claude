@@ -46,6 +46,12 @@ export const LIMITS = {
 export const HEALTH_NOTE: Partial<Record<Topic, string>> = { skincare: "Education, not medical advice. See a dermatologist about your own skin." };
 export const HEALTH_NOTE_SHORT: Partial<Record<Topic, string>> = { skincare: "Education, not medical advice." };
 
+/** "#fyp" leads every TikTok and Instagram hashtag line (the owner's call, 9 Nov 2026); never doubled. */
+export const FYP_TAG = "#fyp";
+export function withFyp(tags: string[]): string[] {
+  return [FYP_TAG, ...tags.filter((t) => t.toLowerCase() !== FYP_TAG)];
+}
+
 export const HASHTAG_SETS: Record<Topic, Record<Platform, string[]>> = {
   physics: { youtube: ["#Shorts", "#physics", "#science"], tiktok: ["#physics", "#science", "#learnontiktok", "#stem", "#slowmotion"], instagram: ["#physics", "#science", "#stem", "#sciencefacts", "#learnsomethingnew", "#slowmotion", "#education", "#physicsfun"] },
   space: { youtube: ["#Shorts", "#space", "#astronomy"], tiktok: ["#space", "#astronomy", "#learnontiktok", "#science", "#cosmos"], instagram: ["#space", "#astronomy", "#cosmos", "#science", "#universe", "#sciencefacts", "#stem", "#spacefacts"] },
@@ -169,7 +175,7 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
 
   // ── TikTok: a short caption with hashtags; the sources go in a pinned comment ────────────
   const tw: string[] = [];
-  const ttTags = HASHTAG_SETS[topic].tiktok.join(" ");
+  const ttTags = withFyp(HASHTAG_SETS[topic].tiktok).join(" ");
   const ttBody = [question || cut(hook, 120), oneLiner].filter(Boolean).join(" ");
   const ttHealth = HEALTH_NOTE_SHORT[topic] ?? "";
   const ttRoom = LIMITS.tiktok.captionTarget - ttTags.length - 1 - (ttHealth ? ttHealth.length + 1 : 0);
@@ -186,7 +192,7 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
 
   // ── Instagram: caption with line breaks, hashtags after a gap; sources in the first comment ─
   const iw: string[] = [];
-  const igTags = HASHTAG_SETS[topic].instagram.slice(0, LIMITS.instagram.hashtags);
+  const igTags = withFyp(HASHTAG_SETS[topic].instagram).slice(0, LIMITS.instagram.hashtags);
   // a short AI line in the caption as well as Instagram's own AI label (the owner's call, 9 Nov 2026)
   const igNote = input.disclosures.aiVisuals ? "AI voice and AI-generated illustrations." : input.disclosures.aiVoice ? "AI voice; animation made in code." : "Animation made in code.";
   const igText = [hook, [why ? firstSentence(why) : "", oneLiner].filter(Boolean).join(" "), series ? `${series}.` : "", srcs.length ? `Sources in the first comment. ${igNote}` : igNote, HEALTH_NOTE[topic] ?? ""].filter(Boolean).join("\n\n");
