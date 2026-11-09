@@ -2,7 +2,7 @@
 //
 //   node kits/cinema/film/compilation.mjs --channel films/channels/physics --episodes ep01,ep02,ep03,ep04 \
 //        [--title "Everyday physics, slowed down"] [--thumb "Short thumbnail text"] [--name vol01]
-//        [--out <channel>/compilations] [--cards-only]   (draws the cards and the thumbnail, then stops)
+//        [--out <channel>/compilations] [--season N]  [--cards-only]   (draws the cards and the thumbnail, then stops)
 //        [--height 1440|1080] (default 1440) [--crf 15] [--max-mb 90]
 //
 // Each episode's delivered 9:16 file (<episode>/out/*-9x16.mp4) plays whole, full height, in the middle
@@ -50,7 +50,7 @@ const eps = String(A.episodes).split(",").map((id, k) => {
   const file = path.join(out, mp4), j = probe(file), v = j.streams.find((s) => s.codec_type === "video");
   if (v.width !== 1080 || v.height !== 1920) die(`${id}: ${mp4} is ${v.width}×${v.height}, not 1080×1920`);
   const claims = fs.existsSync(path.join(dir, "claims.json")) ? JSON.parse(fs.readFileSync(path.join(dir, "claims.json"), "utf8")) : [];
-  const series = plain(film.title && film.title.series) || "", num = (series.match(/No\.\s*\d+/) || [`No. ${String(k + 1).padStart(3, "0")}`])[0];
+  const series = plain(film.title && film.title.series) || "", num = A.season ? `Season ${A.season} · Episode ${k + 1}` : (series.match(/No\.\s*\d+/) || [`No. ${String(k + 1).padStart(3, "0")}`])[0];
   return { id, dir, file, dur: Number(j.format.duration), title: plain(film.title && film.title.title) || id, num, claims,
     poster: path.join(out, mp4.replace(/\.mp4$/, ".jpg")) };
 });
@@ -202,7 +202,7 @@ ${theme.promise || ""}
 Chapters
 ${chapters}
 
-Sources (every number in these episodes is checked against a source)
+Sources (every number's source is listed below)
 ${srcs}
 
 Narration is a synthetic voice (AI-generated). Music and sound design are original, made for ${theme.name}. Type: ${families} (SIL Open Font License).
