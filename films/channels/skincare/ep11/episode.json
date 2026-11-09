@@ -170,7 +170,10 @@
      0.55,
      0.54
     ]
-   }
+   },
+   "d": 0.35,
+   "zin": 0.16,
+   "zout": 0.14
   },
   {
    "t": "vo02:Fats",
@@ -285,7 +288,10 @@
     0
    ],
    "dolly": 0,
-   "rack": 1
+   "rack": 1,
+   "d": 0.35,
+   "zin": 0.16,
+   "zout": 0.14
   },
   {
    "t": "vo04:Water",
@@ -336,7 +342,10 @@
      0.5,
      0.55
     ]
-   }
+   },
+   "d": 0.35,
+   "zin": 0.16,
+   "zout": 0.14
   },
   {
    "t": "vo05:Most",
@@ -372,7 +381,10 @@
     0
    ],
    "dolly": 0,
-   "rack": 1
+   "rack": 1,
+   "d": 0.35,
+   "zin": 0.16,
+   "zout": 0.14
   },
   {
    "t": "vo06:fats",
@@ -524,5 +536,371 @@
   "e1": "Next:<br>fingerprints, before birth",
   "e2": "The pattern spreads in waves.",
   "chip": "Skin Sense · Season 2 · Episode 5"
- }
+ },
+ "fx": [
+  {
+   "type": "stream",
+   "img": "q1",
+   "layer": 2,
+   "path": [
+    [
+     0.3,
+     0.85
+    ],
+    [
+     0.3,
+     0.42
+    ]
+   ],
+   "n": 7,
+   "r": 7,
+   "color": "#8CCBE4",
+   "rate": 0.35,
+   "t0": 0,
+   "t1": "end:vo01"
+  },
+  {
+   "type": "stream",
+   "img": "q1",
+   "layer": 2,
+   "path": [
+    [
+     0.6,
+     0.85
+    ],
+    [
+     0.6,
+     0.42
+    ]
+   ],
+   "n": 7,
+   "r": 7,
+   "color": "#8CCBE4",
+   "rate": 0.3,
+   "t0": 0,
+   "t1": "end:vo01"
+  },
+  {
+   "type": "glow",
+   "img": "q1",
+   "layer": 2,
+   "grad": "gW",
+   "pts": [
+    [
+     0.3,
+     0.44
+    ],
+    [
+     0.6,
+     0.44
+    ]
+   ],
+   "r": 34,
+   "t0": "vo01:brick",
+   "t1": "end:vo01"
+  },
+  {
+   "type": "ink",
+   "img": "q2",
+   "layer": 2,
+   "paths": [
+    [
+     [
+      0.05,
+      0.55
+     ],
+     [
+      0.3,
+      0.53
+     ],
+     [
+      0.55,
+      0.55
+     ],
+     [
+      0.8,
+      0.52
+     ],
+     [
+      0.95,
+      0.54
+     ]
+    ],
+    [
+     [
+      0.06,
+      0.47
+     ],
+     [
+      0.3,
+      0.45
+     ],
+     [
+      0.55,
+      0.47
+     ],
+     [
+      0.8,
+      0.45
+     ],
+     [
+      0.94,
+      0.47
+     ]
+    ]
+   ],
+   "color": "#E5B13B",
+   "w0": 6,
+   "w1": 6,
+   "a": 0.7,
+   "reveal": true,
+   "cut": "vo02:Fats",
+   "dur": 1.6,
+   "t0": "vo02:Fats",
+   "t1": "end:vo03"
+  },
+  {
+   "type": "chips",
+   "y": 1470,
+   "t0": "start:vo02",
+   "t1": "start:vo04",
+   "items": [
+    {
+     "text": "Bricks: flat cells",
+     "t": "vo02:bricks"
+    },
+    {
+     "text": "Mortar: fats",
+     "t": "vo02:mortar"
+    },
+    {
+     "text": "Sealed barrier",
+     "t": "vo03:semi-permeable"
+    }
+   ],
+   "spike": "vo02:Fats"
+  },
+  {
+   "type": "glow",
+   "img": "q3",
+   "layer": 2,
+   "grad": "gW",
+   "pts": [
+    [
+     0.46,
+     0.66
+    ],
+    [
+     0.77,
+     0.67
+    ],
+    [
+     0.2,
+     0.62
+    ]
+   ],
+   "r": 34,
+   "t0": "start:vo04",
+   "t1": "vo04:system"
+  },
+  {
+   "type": "stream",
+   "img": "q3",
+   "layer": 2,
+   "path": [
+    [
+     0.5,
+     0.85
+    ],
+    [
+     0.5,
+     0.5
+    ]
+   ],
+   "n": 6,
+   "r": 6,
+   "color": "#8CCBE4",
+   "rate": 0.3,
+   "t0": "vo04:Water",
+   "t1": "vo04:It"
+  },
+  {
+   "type": "stream",
+   "img": "q3",
+   "layer": 2,
+   "path": [
+    [
+     0.25,
+     0.2
+    ],
+    [
+     0.25,
+     0.48
+    ]
+   ],
+   "n": 6,
+   "r": 6,
+   "color": "#6E5E50",
+   "rate": 0.3,
+   "t0": "vo04:Water",
+   "t1": "vo04:It"
+  },
+  {
+   "type": "stream",
+   "img": "q3",
+   "layer": 2,
+   "path": [
+    [
+     0.75,
+     0.2
+    ],
+    [
+     0.75,
+     0.48
+    ]
+   ],
+   "n": 6,
+   "r": 6,
+   "color": "#6E5E50",
+   "rate": 0.35,
+   "t0": "vo04:Water",
+   "t1": "vo04:It"
+  },
+  {
+   "type": "stream",
+   "img": "q4",
+   "layer": 2,
+   "path": [
+    [
+     0.2,
+     0.75
+    ],
+    [
+     0.22,
+     0.6
+    ],
+    [
+     0.2,
+     0.4
+    ]
+   ],
+   "n": 8,
+   "r": 6,
+   "color": "#8CCBE4",
+   "rate": 0.45,
+   "t0": "start:vo05",
+   "t1": "vo05:Most"
+  },
+  {
+   "type": "stream",
+   "img": "q4",
+   "layer": 2,
+   "path": [
+    [
+     0.55,
+     0.75
+    ],
+    [
+     0.57,
+     0.6
+    ],
+    [
+     0.55,
+     0.4
+    ]
+   ],
+   "n": 8,
+   "r": 6,
+   "color": "#8CCBE4",
+   "rate": 0.45,
+   "t0": "start:vo05",
+   "t1": "vo05:Most"
+  },
+  {
+   "type": "stream",
+   "img": "q4b",
+   "layer": 2,
+   "path": [
+    [
+     0.3,
+     0.7
+    ],
+    [
+     0.33,
+     0.55
+    ],
+    [
+     0.31,
+     0.4
+    ]
+   ],
+   "n": 10,
+   "r": 6,
+   "color": "#8CCBE4",
+   "rate": 0.8,
+   "t0": "vo05:Most",
+   "t1": "end:vo05"
+  },
+  {
+   "type": "stream",
+   "img": "q4b",
+   "layer": 2,
+   "path": [
+    [
+     0.7,
+     0.7
+    ],
+    [
+     0.7,
+     0.6
+    ]
+   ],
+   "n": 4,
+   "r": 6,
+   "color": "#8CCBE4",
+   "rate": 0.12,
+   "t0": "vo05:Most",
+   "t1": "end:vo05"
+  },
+  {
+   "type": "chips",
+   "y": 1470,
+   "t0": "start:vo05",
+   "t1": "end:vo05",
+   "items": [
+    {
+     "text": "Through the cells: easier",
+     "t": "vo05:Most"
+    },
+    {
+     "text": "Through the fats: harder",
+     "t": "vo05:fats"
+    }
+   ],
+   "spike": "vo05:Most"
+  },
+  {
+   "type": "glow",
+   "img": "q5",
+   "layer": 2,
+   "grad": "gW",
+   "pts": [
+    [
+     0.3,
+     0.55
+    ],
+    [
+     0.6,
+     0.5
+    ],
+    [
+     0.75,
+     0.6
+    ]
+   ],
+   "r": 36,
+   "t0": "start:vo06",
+   "t1": "vo06:fats"
+  }
+ ]
 }
