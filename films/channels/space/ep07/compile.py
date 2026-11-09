@@ -132,9 +132,9 @@ END = {"title": "Next orbit: the *dark* sky", "follow": "One More Orbit · S2 ·
        "next": "Our galaxy probably holds 100 to 400\u00a0billion stars (NASA)."}   # footnote (c1)
 POSTER = A("vo05:thirty", 0.4)
 glue(f, {"vo02": ["dark matter,"],
-         "vo03": ["at about three trillion."],
+         "vo03": ["three trillion."],
          "vo05": ["keep going.", "eight to thirty times."],
-         "vo06": ["stars in our galaxy."],
+         
          "vo07": ["a millionth of a second."]})
 
 LOOP0 = round(f.duration - 0.6, 4)
@@ -145,7 +145,7 @@ film = {
     "tally": {"cols": COLS, "rows": ROWS, "unit_b": UNIT_B, "stars_lo": STARS_LO_B // UNIT_B, "stars_hi": STARS_HI_B // UNIT_B, "trees": TREES_B // UNIT_B},
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": PILLS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": hold(f, keep_units(f.captions(max_chars=24, written=False))),   # words in captions, figures on the counters: one style
+    "captions": hold(f, keep_units(f.captions(max_chars=36, written=False))),   # words in captions, figures on the counters: one style
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]

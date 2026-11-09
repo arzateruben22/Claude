@@ -164,3 +164,7 @@ export const earthSurface = (o = {}) => {
   return out;
 };
 const lon = (x, W) => (x / W) * 360 - 180;
+
+// isLand(lon, lat): is a point on the baked map's land (Antarctica excluded, inland water cut out)? Used to put things on land (ep07's forests).
+const inPoly = (pts, lon, lat) => { let c = false; for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) { const [xi, yi] = pts[i], [xj, yj] = pts[j]; if ((yi > lat) !== (yj > lat) && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) c = !c; } return c; };
+export const isLand = (lon, lat) => LAND.slice(0, -1).some((p) => inPoly(p, lon, lat)) && !WATER.some((p) => inPoly(p, lon, lat));

@@ -11,7 +11,7 @@ import { createHud } from "cinema/sci/hud.js";
 import { ring } from "cinema/sci/front.js";
 import { createSky } from "../set/sky.js";
 import { createGalaxy, SUN_LY } from "../set/galaxy.js";
-import { createPlanet, earthSurface } from "../set/planet.js";
+import { createPlanet, earthSurface, isLand } from "../set/planet.js";
 import { createBeacon } from "../set/beacon.js";
 import { createRig } from "../set/rig.js";
 import { hdr, line } from "../set/look.js";
@@ -48,19 +48,19 @@ const ER = 5.5;
 const earth = createPlanet({ radius: ER, surface: earthSurface({ width: W >= 1000 ? 2048 : 1024 }), tilt: 0, pin: 0, rimDay: 0.5, rimNight: 0.5, segments: 96 });
 gE.add(earth.group);
 const mul = (s) => () => { s |= 0; s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-// forests: 304 dots (each = ten billion trees) in the forest belts (tropics, temperate, boreal), clumped into "continents"
+// forests: 304 dots (each = ten billion trees) on LAND only (the map's own coastlines), in the tropics, temperate and boreal belts
 const NF = TL.trees, fr = mul(5), fp = new Float32Array(NF * 3), fo = new Float32Array(NF);
-for (let i = 0; i < NF; ) {
-  const u = fr(), lat = (u < 0.5 ? 0 + (fr() + fr() - 1) * 26 : u < 0.72 ? 58 + (fr() + fr() - 1) * 10 : u < 0.9 ? 42 + (fr() + fr() - 1) * 9 : -34 + (fr() + fr() - 1) * 9) * Math.PI / 180;
-  const lon = fr() * 6.2832;
-  if (Math.sin(lon * 2 + lat * 3) + Math.sin(lon * 3 - 1) * 0.6 < -0.2) continue;                   // ocean gaps
-  fp.set([ER * 1.012 * Math.cos(lat) * Math.cos(lon), ER * 1.012 * Math.sin(lat), ER * 1.012 * Math.cos(lat) * Math.sin(lon)], i * 3);
+for (let i = 0, guard = 0; i < NF && guard < 200000; guard++) {
+  const u = fr(), lat = u < 0.42 ? (fr() - 0.5) * 46 : u < 0.62 ? 34 + fr() * 16 : u < 0.88 ? 50 + fr() * 17 : -(10 + fr() * 28), lon = fr() * 360 - 180;
+  if (!isLand(lon, lat)) continue;
+  const la = (lat * Math.PI) / 180, lo = (lon * Math.PI) / 180;                  // the sphere's own mapping: (cos lat cos lon, sin lat, -cos lat sin lon)
+  fp.set([ER * 1.012 * Math.cos(la) * Math.cos(lo), ER * 1.012 * Math.sin(la), -ER * 1.012 * Math.cos(la) * Math.sin(lo)], i * 3);
   fo[i] = fr(); i++;
 }
 const fg = new THREE.BufferGeometry();
 fg.setAttribute("position", new THREE.BufferAttribute(fp, 3)); fg.setAttribute("ord", new THREE.BufferAttribute(fo, 1));
 const forestMat = new THREE.ShaderMaterial({
-  uniforms: { uFill: { value: 0 }, uPx: { value: 9 * S1 }, uOp: { value: 1 } },
+  uniforms: { uFill: { value: 0 }, uPx: { value: 12 * S1 }, uOp: { value: 1 } },
   vertexShader: `attribute float ord; uniform float uFill, uPx; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = uPx * smoothstep(ord - 0.02, ord + 0.04, uFill); vA = step(ord, uFill); }`,
   fragmentShader: `uniform float uOp; varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0 || vA < 0.5) discard; float a = (1.0 - smoothstep(0.55, 1.0, r2)) * uOp; gl_FragColor = vec4(vec3(0.31, 0.89, 0.78) * a * 1.6, a); }`,
   transparent: true, depthWrite: false, depthTest: true, blending: THREE.AdditiveBlending,
@@ -209,7 +209,8 @@ function draw(t) {
   }
   // 5. the tally: stars (lemon) and trees (teal), each dot = ten billion
   ctx.save();
-  { const zp = 1 + 0.14 * E.inout3(seg(t, CUE.est0 + 0.3, CUE.range)) * (1 - E.inout3(seg(t, CUE.flip0 - 0.2, CUE.flip0 + 0.9))), zr = zp * (1 + 0.55 * E.inout3(seg(t, CUE.range - 0.1, CUE.range + 1.2)) * (1 - E.inout3(seg(t, CUE.flip0 - 0.2, CUE.flip0 + 0.9)))), gx = 540 * sx, gy = 670 * sy; ctx.transform(zr, 0, 0, zr, gx * (1 - zr), gy * (1 - zr)); }
+  ctx.beginPath(); ctx.rect(60 * sx, 300 * sy, 960 * sx, 700 * sy); ctx.clip();            // nothing of the tally goes behind the counters or captions
+  { const zp = 1 + 0.14 * E.inout3(seg(t, CUE.est0 + 0.3, CUE.range)) * (1 - E.inout3(seg(t, CUE.flip0 - 0.2, CUE.flip0 + 0.9))), zr = zp * (1 + 0.42 * E.inout3(seg(t, CUE.range - 0.1, CUE.range + 1.2)) * (1 - E.inout3(seg(t, CUE.flip0 - 0.2, CUE.flip0 + 0.9)))), gx = 540 * sx, gy = 670 * sy; ctx.transform(zr, 0, 0, zr, gx * (1 - zr), gy * (1 - zr)); }
   const tOn = fadeIn(t, CUE.est0 + 0.5, 0.6) * (1 - fadeIn(t, CUE.rd - 0.3, 0.5));
   if (tOn > 0.01) {
     const flip = (rk) => clamp01((t - CUE.flip0 - (rk / NS) * 1.6) / 0.15);
@@ -236,12 +237,23 @@ function draw(t) {
         a = base + (1 - base) * fl; col = TEAL;
         const colF = ((i % TL.cols) + 0.5) / TL.cols;
         if (sweepX >= 0) a = Math.max(a, 0.95 * Math.exp(-Math.pow((colF - sweepX) * 9, 2)));
-        if (blk40 >= 0 && Math.floor(rk / NS) === Math.min(blk40, 7)) { a = 1; r *= 1.18; }
-        if (blk10 >= 0 && Math.floor(rk / 10) === Math.min(blk10, 30)) { a = 1; col = LEMON; r *= 1.18; }
+        { const cc = i % TL.cols, rr = (i / TL.cols) | 0;
+          const t40 = Math.floor(rr / 8) * 4 + Math.floor(cc / 5), t10 = Math.floor(rr / 2) * 4 + Math.floor(cc / 5);
+          if (blk40 >= 0 && t40 === Math.min(blk40, 7)) { a = 1; col = LEMON; r *= 1.12; }
+          if (blk10 >= 0 && t10 === Math.min(blk10, 31)) { a = 1; col = LEMON; r *= 1.12; } }
         if (t > CUE.est0 && t < CUE.flip0 - 1.2 && rk > TL.trees - 34) a = base * (0.6 + 0.4 * Math.sin(t * 5 + rk));   // the edge flickers: "about"
       }
       circ(x, y, r); ctx.fillStyle = rgba(col, a * tOn * dimTk); ctx.fill();
     }
+    // whole blocks outlined as they are counted off: blocks of 40 dots (about 8 of them), then blocks of 10 (about 30)
+    const tileRect = (cw, ch, k, perRow) => { const c0 = (k % perRow) * cw, r0 = Math.floor(k / perRow) * ch, c1 = Math.min(c0 + cw - 1, TL.cols - 1), r1 = Math.min(r0 + ch - 1, TL.rows - 1);
+      const [xa, ya] = cell(r0 * TL.cols + c0), [xb, yb] = cell(r1 * TL.cols + c1); return [xa - PXD / 2, ya - PYD / 2, xb - xa + PXD, yb - ya + PYD]; };
+    const outline = (rc, al, wd) => { ctx.strokeStyle = rgba(LEMON, al * tOn * dimTk); ctx.lineWidth = wd; ctx.beginPath(); ctx.roundRect(cx0 + (rc[0] - cx0) * shrink, cy0 + (rc[1] - cy0) * shrink, rc[2] * shrink, rc[3] * shrink, 8 * S1); ctx.stroke(); };
+    // (the rect is in 1080 units; canvas scale below)
+    ctx.save(); ctx.scale(sx, sy);
+    if (blk40 >= 0) { const nb = Math.min(blk40, 7); for (let k = 0; k <= nb; k++) { const rc = tileRect(5, 8, k, 4); outline(rc, k === nb ? 1 : 0.5, k === nb ? 4 : 2.2); } }
+    if (blk10 >= 0) { const nb = Math.min(blk10, 31); for (let k = 0; k <= nb; k++) { const rc = tileRect(5, 2, k, 4); outline(rc, k === nb ? 1 : 0.3, k === nb ? 3.5 : 1.6); } }
+    ctx.restore();
   }
   ctx.restore();
   // 6. one tree, then a street of trees ("ordinary places")
@@ -318,14 +330,14 @@ window.seek = function (t) {
   const readK = fadeIn(t, CUE.rd - 0.3, 0.5);
   galaxy.set({ angle: -0.003 * t, gain: Math.max(0.0, (t < CUE.cut1 ? 1.1 * gGain : Math.max(0.55 * gGain * tallyDim, 1.1 * readK))) * (1 - kEnd) });
   const sp = galaxy.sunAt();
-  sunG.set({ center: sp, camera, opacity: (1 - kEnd) * (galOn ? 1 : 0) * (1 - 0.85 * fadeIn(t, CUE.est0 + 0.5, 0.6) * (1 - readK)) });
+  sunG.set({ center: sp, camera, opacity: (1 - kEnd) * (galOn ? 1 : 0) * (1 - fadeIn(t, CUE.est0 + 0.5, 0.6) * (1 - readK)) });
   S.sun = sp;
   const u1 = seg(t, CUE.ring0, CUE.ring1 - 0.2);
   ringG.arc({ center: sp, r: Math.max(0.01, 100 * u1), ...XZ }).set({ opacity: galOn && u1 > 0.002 && u1 < 0.999 ? (1 - 0.6 * u1) * (1 - kEnd) : 0 });
   // Earth: it turns slowly; the forests arrive dot by dot on "three trillion"
-  const psi = 1.2 + 0.05 * (t - CUE.cut1);
+  const psi = -1.13 + 0.03 * (t - CUE.cut1);                                  // the Atlantic faces the camera (centre longitude about 25 W: Africa, Europe, then the Amazon), turning slowly
   earth.set({ center: [0, 0, 0], sunDir: [0.52, 0.2, 0.83], sun: 1, rimNight: 0.5, spin: psi });
-  forest.rotation.y = -psi;
+  forest.rotation.y = psi;
   forestMat.uniforms.uFill.value = clamp01((t - CUE.fill0) / (CUE.fill1 - CUE.fill0)) * 1.05;
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 0.35, bandGain: 0.6 });
   draw(t);
