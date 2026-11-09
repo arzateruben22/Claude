@@ -26,6 +26,7 @@ export const ICONS: Record<string, string> = {
   water: '<path d="M12 3c3 4.5 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-6.5 6-11z"/>',
   sit: '<path d="M6 21V11h12v10M6 15h12M8 11V4h8v7"/>',
   cheer: '<path d="M5 11l-2-7M19 11l2-7M8 21l4-9 4 9M12 12V8"/><circle cx="12" cy="5" r="2"/>',
+  game: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',
 };
 export const svgIcon = (k: string, cls = 'ico') => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k] ?? ICONS.sit}</svg>`;
 const BAND_HEX = { good: '#6cc24a', fair: '#e8b931', low: '#ff6b4a' };
@@ -60,6 +61,13 @@ export class BarHud {
     this.needsEl.innerHTML = SHOWN.map((k) => `<span class="ring" data-k="${k}"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12" fill="rgba(10,9,22,0.6)" stroke="rgba(241,239,231,0.22)" stroke-width="3"/><circle class="arc" cx="14" cy="14" r="12" fill="none" stroke="#6cc24a" stroke-width="3" stroke-linecap="round" transform="rotate(-90 14 14)" stroke-dasharray="75.4" stroke-dashoffset="0"/></svg>${svgIcon(k)}<b></b></span>`).join('') + '<span id="mood"></span>';
     for (const el of this.needsEl.querySelectorAll<HTMLElement>('.ring')) this.rings[el.dataset.k!] = { el, arc: el.querySelector('.arc') as SVGCircleElement, word: el.querySelector('b')! };
     this.moodEl = $('mood');
+    // S2b's repair: the toasts sit under the top centre column (the needs, the place and the crowd chip) and the screens
+    // chip, never over the "Simulated crowd" chip: their lowest bottom edge is measured whenever either changes size
+    // or the window does (sportsbar.html's #toast reads --tcb), never per frame
+    const tc = $('tc'), tv = $('tvchip'), hudEl = $('hud');
+    const mark = () => { const a = tc.getBoundingClientRect(), b = tv.getBoundingClientRect(); if (a.height > 0) hudEl.style.setProperty('--tcb', `${Math.round(Math.max(a.bottom, b.height > 0 ? b.bottom : 0))}px`); };
+    if (typeof ResizeObserver !== 'undefined') { const ro = new ResizeObserver(mark); ro.observe(tc); ro.observe(tv); }
+    addEventListener('resize', mark);
     this.needsEl.addEventListener('click', () => this.onNeeds());
     $('tvchip').addEventListener('click', () => this.onGuide());
     $('cheer').addEventListener('click', () => this.onCheer());

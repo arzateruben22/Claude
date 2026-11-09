@@ -10,11 +10,13 @@
 import * as THREE from 'three';
 import type { Person } from '../../people';
 
-export type ClipName = 'drink' | 'eat' | 'sway' | 'two-step' | 'arm-pump' | 'cheer' | 'groan' | 'clap' | 'wipe';
+export type ClipName = 'drink' | 'eat' | 'sway' | 'two-step' | 'arm-pump' | 'cheer' | 'groan' | 'clap' | 'wipe' | 'pool-stance' | 'pool-shot' | 'dart-throw' | 'shuffle-slide';
 export const CLIPS: ClipName[] = ['drink', 'eat', 'sway', 'two-step', 'arm-pump', 'cheer', 'groan', 'clap'];
 export const DANCES: ClipName[] = ['sway', 'two-step', 'arm-pump'];
 /** how long each runs (seconds), or a loop */
-export const CLIP_SECONDS: Record<ClipName, number | 'loop'> = { drink: 2.4, eat: 2.2, sway: 'loop', 'two-step': 'loop', 'arm-pump': 'loop', cheer: 1.8, groan: 1.6, clap: 2.2, wipe: 'loop' };
+export const CLIP_SECONDS: Record<ClipName, number | 'loop'> = { drink: 2.4, eat: 2.2, sway: 'loop', 'two-step': 'loop', 'arm-pump': 'loop', cheer: 1.8, groan: 1.6, clap: 2.2, wipe: 'loop', 'pool-stance': 'loop', 'pool-shot': 1.1, 'dart-throw': 1.0, 'shuffle-slide': 1.3 };
+/** S2b's game clips: the pool stance (a loop while aiming) and shot, the dart throw and the shuffleboard slide */
+export const GAME_CLIPS: ClipName[] = ['pool-stance', 'pool-shot', 'dart-throw', 'shuffle-slide'];
 /** the staff's work pose (wiping down, pouring): not one of the plan's guest clips, the bar's own for its staff */
 export const STAFF_CLIPS: ClipName[] = ['wipe'];
 
@@ -147,6 +149,41 @@ export class ClipLayer {
         set('armR', arm(1, 12 + 4 * Math.sin(w), 40 + 7 * Math.sin(w), 22 + 9 * Math.cos(w))); set('foreR', fore(1, 52 + 6 * Math.cos(w)));
         set('armL', arm(-1, 10, 32, 12)); set('foreL', fore(-1, 62));
         mul('chest', 1, 0, 0, 5 * DEG); mul('head', 1, 0, 0, 8 * DEG);
+        break;
+      }
+      case 'pool-stance': case 'pool-shot': {
+        // bent over the rail: the hips and chest forward, the head up along the cue; the left (bridge) arm forward on
+        // the cloth, the right (cue) arm's upper arm back and up with the forearm hanging. The shot swings the
+        // forearm through (back over 0.35 s, through by 0.55 s, held, then up out of the stance over the last 0.3 s)
+        let swing = 0;
+        if (c.name === 'pool-shot') { const t = c.t; swing = t < 0.35 ? -0.5 * smooth(t / 0.35) : t < 0.55 ? -0.5 + 1.5 * smooth((t - 0.35) / 0.2) : 1; }
+        const up = c.name === 'pool-shot' ? 1 - smooth((c.t - (c.dur - 0.3)) / 0.3) : 1;
+        mul('hips', 1, 0, 0, 22 * DEG * up); mul('thighL', 1, 0, 0, -22 * DEG * up); mul('thighR', 1, 0, 0, -22 * DEG * up); mul('spine', 1, 0, 0, 18 * DEG * up); mul('chest', 1, 0, 0, 16 * DEG * up);
+        mul('neck', 1, 0, 0, -20 * DEG * up); mul('head', 1, 0, 0, -26 * DEG * up);
+        set('armL', arm(-1, 14, 70 * up, 18 * up)); set('foreL', fore(-1, 18 + 30 * (1 - up)));
+        set('armR', arm(1, 16, -18 * up + 10, -6)); set('foreR', fore(1, 96 - 40 * swing * up));
+        if (!c.upper) { legs(B, a, 10 * up, 4 * up, k); mul('thighL', 1, 0, 0, -6 * DEG * up); }
+        break;
+      }
+      case 'dart-throw': {
+        // the dart up by the eye, the elbow up and still; the forearm cocks back and snaps forward at 0.45 s, then the
+        // follow-through and down
+        const t = c.t, cock = t < 0.3 ? smooth(t / 0.3) : t < 0.45 ? 1 : Math.max(0, 1 - (t - 0.45) / 0.12);
+        const down = smooth((t - 0.7) / 0.3);
+        set('armR', arm(1, 14, 82 - 30 * down, 4)); set('foreR', fore(1, (40 + 85 * cock) * (1 - 0.5 * down)));
+        set('armL', arm(-1, 18, 12, 10)); set('foreL', fore(-1, 40));
+        mul('chest', 1, 0, 0, 5 * DEG); mul('spine', 0, 1, 0, 8 * DEG); mul('head', 1, 0, 0, -3 * DEG);
+        if (!c.upper) legs(B, a, 6, 0, k);
+        break;
+      }
+      case 'shuffle-slide': {
+        // a lean over the near end and a long push: the right arm forward and down along the board, the forearm
+        // straightening through the release at 0.6 s, then holding the follow-through and standing up
+        const t = c.t, push = smooth(t / 0.6), up = 1 - smooth((t - 0.95) / 0.35);
+        mul('hips', 1, 0, 0, 14 * DEG * up); mul('thighL', 1, 0, 0, -14 * DEG * up); mul('thighR', 1, 0, 0, -14 * DEG * up); mul('spine', 1, 0, 0, 12 * DEG * up); mul('chest', 1, 0, 0, 10 * DEG * up); mul('head', 1, 0, 0, -18 * DEG * up);
+        set('armR', arm(1, 8, (30 + 42 * push) * up, 6)); set('foreR', fore(1, (60 - 52 * push) * up + 10));
+        set('armL', arm(-1, 16, 20 * up, 8)); set('foreL', fore(-1, 50));
+        if (!c.upper) legs(B, a, 16 * up, 8 * up, k);
         break;
       }
       case 'arm-pump': {

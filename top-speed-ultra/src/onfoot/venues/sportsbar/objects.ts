@@ -2,9 +2,9 @@
 // adverts (the deltas are the expected total over the action; a continuous advert's are its rates over the 5 sim-minute
 // window), and every placed object with the layout slots it's used from. 41 adverts across the types, as the plan
 // counts them: bar counter 4, booth 6, high-top 6, window rail 3, screens 1, standing floor 1, pool table 2, dartboard
-// 1, shuffleboard 1, jukebox 1, water station 1, restroom 1, dance spot 1, patio table 7, patio rail 5. The pool
-// tables, the dartboards and the shuffleboard stay static props until S2b makes them playable, so their adverts are in
-// the catalogue but not offered yet (`later`).
+// 1, shuffleboard 1, jukebox 1, water station 1, restroom 1, dance spot 1, patio table 7, patio rail 5. S2b makes the
+// pool tables, the dartboards and the shuffleboard playable against the house player; Watch pool waits for other
+// people's games (S3a's crowd), so it's in the catalogue but not offered yet (`later`).
 import type { Advert, SmartObjectType, SmartObject } from '../../engine/sim/objects';
 import { HIGHTOPS, PATIO_TABLES, RAIL_V, SCREENS, POOL_TABLES, DART_BOARDS, JUKEBOX } from './layout';
 import type { P2 } from '../../engine/venue-def';
@@ -29,9 +29,9 @@ export const TYPES: Record<string, SmartObjectType & { later?: string[] }> = {
   'window-rail': { type: 'window-rail', label: 'The window rail', adverts: [sit, eat, peopleWatch] },
   screen: { type: 'screen', label: 'A screen', adverts: [watch()] },
   'standing-floor': { type: 'standing-floor', label: 'The standing floor', adverts: [A('stand-watch', 'Stand and watch', { fun: 2.5 * W, energy: -0.4 * W }, 'continuous', ['watch'], { requires: ['open'] })] },
-  'pool-table': { type: 'pool-table', label: 'A pool table', later: ['play-pool', 'watch-pool'], adverts: [A('play-pool', 'Play pool', { fun: 40, social: 15, energy: -4 }, [5, 8], ['game'], { party: [2, 4] }), A('watch-pool', 'Watch pool', { fun: 8 }, [4, 4], ['watch'])] },
-  dartboard: { type: 'dartboard', label: 'A dartboard', later: ['play-darts'], adverts: [A('play-darts', 'Play darts', { fun: 30, social: 10 }, [3, 5], ['game'], { party: [1, 2] })] },
-  shuffleboard: { type: 'shuffleboard', label: 'The shuffleboard', later: ['play-shuffleboard'], adverts: [A('play-shuffleboard', 'Play shuffleboard', { fun: 35, social: 12 }, [5, 7], ['game'], { party: [2, 4] })] },
+  'pool-table': { type: 'pool-table', label: 'A pool table', later: ['watch-pool'], adverts: [A('play-pool', 'Play pool', { fun: 40, social: 15, energy: -4 }, [5, 8], ['game'], { party: [2, 4], requires: ['open'] }), A('watch-pool', 'Watch pool', { fun: 8 }, [4, 4], ['watch'])] },
+  dartboard: { type: 'dartboard', label: 'A dartboard', adverts: [A('play-darts', 'Play darts', { fun: 30, social: 10 }, [3, 5], ['game'], { party: [1, 2], requires: ['open'] })] },
+  shuffleboard: { type: 'shuffleboard', label: 'The shuffleboard', adverts: [A('play-shuffleboard', 'Play shuffleboard', { fun: 35, social: 12 }, [5, 7], ['game'], { party: [2, 4], requires: ['open'] })] },
   jukebox: { type: 'jukebox', label: 'The jukebox', adverts: [A('song', 'Pick a song', { fun: 6 }, [20 / 60, 20 / 60], ['music'], { requires: ['open'] })] },
   'water-station': { type: 'water-station', label: 'The water station', adverts: [A('water', 'Get water', { thirst: 20 }, [15 / 60, 15 / 60], ['drink'], { requires: ['open'] })] },
   restroom: { type: 'restroom', label: 'The restrooms', adverts: [A('restroom', 'Restroom', { bladder: 100 }, [1, 2], ['comfort'], { requires: ['npcOnly'] })] },

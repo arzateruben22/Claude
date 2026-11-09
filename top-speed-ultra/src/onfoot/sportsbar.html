@@ -41,8 +41,11 @@
   #stick { position: absolute; left: 0; top: 0; width: 128px; height: 128px; border-radius: 50%; border: 2px solid rgba(241, 239, 231, 0.55); background: rgba(20, 18, 40, 0.28); display: none; pointer-events: none; }
   #knob { position: absolute; left: 36px; top: 36px; width: 56px; height: 56px; border-radius: 50%; background: rgba(241, 239, 231, 0.85); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
   #hint { position: absolute; left: 50%; bottom: calc(126px + var(--safe-b)); transform: translateX(-50%); padding: 10px 16px; font-size: 15px; font-weight: 600; text-align: center; max-width: calc(100% - 40px); transition: opacity 0.6s; pointer-events: none; }
-  #toast { position: absolute; left: 50%; top: calc(98px + var(--safe-t)); transform: translateX(-50%); padding: 10px 16px; font-size: 14px; font-weight: 600; max-width: calc(100% - 40px); text-align: center; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  /* the toasts sit under the top centre column and the screens chip (--tcb, their measured bottom: hud.ts), never over
+     the "Simulated crowd" chip; in a game they sit just above the game's bar (--gbt, measured by games.ts) */
+  #toast { position: absolute; left: 50%; top: calc(var(--tcb, 128px) + 6px); transform: translateX(-50%); padding: 10px 16px; font-size: 14px; font-weight: 600; max-width: calc(100% - 40px); text-align: center; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
   #toast.on { opacity: 1; }
+  #hud.gaming #toast { top: auto; bottom: var(--gbt, 120px); padding: 6px 14px; font-size: 13px; }
   #credit { position: absolute; left: calc(8px + var(--safe-l)); bottom: calc(6px + var(--safe-b)); max-width: min(780px, calc(100% - 120px)); padding: 4px 8px; border-radius: 8px; background: rgba(20, 18, 40, 0.84); color: #f1efe7; font-size: 10.5px; line-height: 1.35; pointer-events: none; }
   #loading { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: radial-gradient(ellipse at 50% 40%, #2c2858 0%, var(--violet) 45%, var(--violet-2) 100%); z-index: 6; text-align: center; padding: 24px; }
   #loading h1 { margin: 0; font-family: var(--wide); font-weight: 900; font-size: clamp(34px, 7vw, 76px); letter-spacing: 0.06em; line-height: 0.95; transform: scaleX(1.25); text-shadow: 0 0 18px rgba(195, 242, 58, 0.45); }
@@ -146,6 +149,21 @@
   #tired .row button { min-width: 120px; }
   .sheet .alt { margin-top: 8px; min-height: 46px; width: 100%; border-radius: 12px; border: 2px solid var(--line); background: transparent; color: var(--chalk); font-weight: 800; font-size: 16px; }
   html.t0 #hud { font-size: 0.9em; } html.t2 #hud .panel, html.t2 #hud button, html.t2 .sheet p, html.t2 .needrow { font-size: 1.15em; }
+  /* S2b: the games' bar (the score, whose turn, how to play), the dart's swaying aim and the cue's power */
+  #gamebar { position: absolute; left: 50%; bottom: calc(60px + var(--safe-b)); transform: translateX(-50%); display: none; flex-direction: column; align-items: center; gap: 2px; padding: 7px 14px; max-width: min(560px, calc(100% - 360px)); text-align: center; pointer-events: none; }
+  #gamebar.on { display: flex; }
+  #gamebar b { font-family: var(--wide); font-weight: 900; font-size: 12px; letter-spacing: 0.08em; color: var(--lime); }
+  #gameScore { font-size: 14px; font-weight: 700; }
+  #gameHint { font-size: 12.5px; font-weight: 600; opacity: 0.92; }
+  #gamePower { display: none; width: 180px; height: 8px; border-radius: 4px; background: rgba(241, 239, 231, 0.22); overflow: hidden; margin-top: 3px; }
+  #gamePower.on { display: block; }
+  #gamePower s { display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: linear-gradient(90deg, var(--lime), var(--coral)); }
+  #reticle { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; border: 2px solid var(--lime); box-shadow: 0 0 0 1px rgba(20, 18, 40, 0.8), inset 0 0 0 1px rgba(20, 18, 40, 0.8); display: none; pointer-events: none; }
+  #reticle::after { content: ""; position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: var(--lime); }
+  #reticle.on { display: block; }
+  @media (max-width: 520px) { #gamebar { max-width: calc(100% - 24px); bottom: calc(150px + var(--safe-b)); } }
+  /* a short landscape phone: the bar in two tight lines, low over the credit, so more of the table shows */
+  @media (max-height: 420px) { #gamebar { bottom: calc(52px + var(--safe-b)); padding: 4px 12px; gap: 0; } #gamebar b { font-size: 10.5px; } #gameScore { font-size: 12.5px; } #gameHint { font-size: 11.5px; } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
   body.rm * { transition: none !important; animation: none !important; }
   @media (max-width: 520px) {
@@ -155,7 +173,6 @@
     #status2 { top: auto; bottom: calc(96px + var(--safe-b)); }
     #caption { top: calc(240px + var(--safe-t)); bottom: auto; max-width: calc(100% - 24px); }
     .needrow { grid-template-columns: 22px 62px 1fr 90px 30px; font-size: 13px; }
-    #toast { top: calc(140px + var(--safe-t)); }
     #place { font-size: 12px; }
   }
   /* a narrow landscape screen (640 to 760 wide): the pill drops the bar's name (it's on the facade and the loading
@@ -174,7 +191,6 @@
     #act { bottom: calc(30px + var(--safe-b)); }
     #act2 { bottom: calc(38px + var(--safe-b)); }
     #hint { bottom: calc(96px + var(--safe-b)); }
-    #toast { top: calc(88px + var(--safe-t)); }
   }
 </style>
 </head>
@@ -201,6 +217,8 @@
   <div id="caption" class="panel" role="status" aria-live="polite"></div>
   <div id="chips" role="group" aria-label="Your reply"><button id="reply0" data-r="0"></button><button id="reply1" data-r="1"></button></div>
   <div id="status2" class="panel" role="status" aria-live="polite"><i aria-hidden="true"></i><span id="status2Text"></span></div>
+  <div id="gamebar" class="panel" role="status" aria-live="polite"><b id="gameTitle"></b><span id="gameScore"></span><span id="gameHint"></span><i id="gamePower" aria-hidden="true"><s></s></i></div>
+  <div id="reticle" aria-hidden="true"></div>
   <div id="radial" role="menu" aria-label="What you can do here"></div>
   <button id="cheer" aria-label="Cheer">CHEER</button>
   <div id="credit">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0). Stoppage Time and everyone in it are fictional.</div>

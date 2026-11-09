@@ -117,16 +117,25 @@ export function signsAtlas() {
     g.font = `600 18px ${SANS}`; g.fillText('Restroom', 592, 352);
     // the exit sign
     g.fillStyle = '#0a2a12'; g.fillRect(672, 200, 200, 90); g.fillStyle = '#4dff7a'; g.font = `800 48px ${SANS}`; g.fillText('EXIT', 772, 262);
-    // a dartboard face: the standard generic segment layout, no maker's marks
-    const cx = 128, cy = 488, Rr = 120;
-    g.fillStyle = '#111'; g.beginPath(); g.arc(cx, cy, Rr + 6, 0, Math.PI * 2); g.fill();
+    // a dartboard face: the standard generic segment layout, no maker's marks. S2b: drawn at the standard radii (the
+    // 0.46 m panel is 256 px, 556.5 px a metre: bull 6.35 mm, outer bull 15.9, treble 99 to 107, double 162 to 170,
+    // the numbers' ring outside), so the face is the board engine/sim/darts.ts scores
+    const cx = 128, cy = 488, PX = 256 / 0.46, ORDER = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5];
+    const rr = (m: number) => m * PX;
+    g.fillStyle = '#111'; g.beginPath(); g.arc(cx, cy, 127, 0, Math.PI * 2); g.fill();
     for (let i = 0; i < 20; i++) {
       const a0 = ((i - 0.5) / 20) * Math.PI * 2 - Math.PI / 2, a1 = ((i + 0.5) / 20) * Math.PI * 2 - Math.PI / 2;
-      const ring = (r0: number, r1: number, c: string) => { g.fillStyle = c; g.beginPath(); g.arc(cx, cy, r1, a0, a1); g.arc(cx, cy, r0, a1, a0, true); g.closePath(); g.fill(); };
-      ring(14, Rr * 0.95, i % 2 ? '#e8dcc0' : '#151515');
-      ring(Rr * 0.55, Rr * 0.6, i % 2 ? '#2c7a3a' : '#b0262a'); ring(Rr * 0.9, Rr * 0.95, i % 2 ? '#2c7a3a' : '#b0262a');
+      const ring = (r0: number, r1: number, c: string) => { g.fillStyle = c; g.beginPath(); g.arc(cx, cy, rr(r1), a0, a1); g.arc(cx, cy, rr(r0), a1, a0, true); g.closePath(); g.fill(); };
+      ring(0.0159, 0.17, i % 2 ? '#e8dcc0' : '#151515');
+      ring(0.099, 0.107, i % 2 ? '#2c7a3a' : '#b0262a'); ring(0.162, 0.17, i % 2 ? '#2c7a3a' : '#b0262a');
+      // the wire between the beds, and the number outside the double ring
+      g.strokeStyle = '#9a9a9a'; g.lineWidth = 0.6; g.beginPath(); g.moveTo(cx + Math.cos(a0) * rr(0.0159), cy + Math.sin(a0) * rr(0.0159)); g.lineTo(cx + Math.cos(a0) * rr(0.17), cy + Math.sin(a0) * rr(0.17)); g.stroke();
+      const am = (i / 20) * Math.PI * 2 - Math.PI / 2;
+      g.save(); g.translate(cx + Math.cos(am) * rr(0.192), cy + Math.sin(am) * rr(0.192)); g.rotate(am + Math.PI / 2);
+      g.fillStyle = '#f1efe7'; g.font = `700 15px ${SANS}`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(ORDER[i]), 0, 0); g.restore();
     }
-    g.fillStyle = '#2c7a3a'; g.beginPath(); g.arc(cx, cy, 14, 0, Math.PI * 2); g.fill(); g.fillStyle = '#b0262a'; g.beginPath(); g.arc(cx, cy, 6, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#2c7a3a'; g.beginPath(); g.arc(cx, cy, rr(0.0159), 0, Math.PI * 2); g.fill(); g.fillStyle = '#b0262a'; g.beginPath(); g.arc(cx, cy, rr(0.00635), 0, Math.PI * 2); g.fill();
+    g.textBaseline = 'alphabetic';
     // the kitchen seen through the pass: warm, steel, a ticket rail
     const kg = g.createLinearGradient(0, 360, 0, 560); kg.addColorStop(0, '#ffe3b0'); kg.addColorStop(1, '#a8743a');
     g.fillStyle = kg; g.fillRect(256, 360, 384, 200);

@@ -4,6 +4,250 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-09: Stoppage Time S2b committed (pool, darts, shuffleboard)
+
+S2b, as repaired after review (the entry below), was kept by the follow-up review and is committed on
+`claude/sports-bar`. Built: pool on both tables (the house player Rocío, ball in hand anywhere after a scratch), darts
+on the three boards, and the shuffleboard, with their game cameras, HUD hints and the game clips (pool stance and shot,
+dart throw, shuffleboard slide).
+
+- **Checks, re-run by the reviewer:** `npx tsc --noEmit` passes (re-run again before this commit).
+  `node tests/sportsbar-games.mjs` passes 15 of 15: energy never rose, no ball left the bed, the slowest break settled
+  in 6.82 s, the house chose 189 pots and 11 safeties, a puck at 3.0 m/s stopped 6.5468 m away. The builder's final
+  page run (`tests/sportsbar-s2b.mjs`) passed 21 of 21 page checks and controls and 8 of 8 screenshots. The reviewer's
+  own probe at 1280 x 720 (14 random hard pool shots, both scratch paths) found no ball off the bed and no overlap, and
+  no console or page error. `lot57/`, `people/`, `src/onfoot/main.ts` and `src/onfoot/index.html` are unchanged.
+- **Budgets:** the game pieces in play cost 4 calls and 1.4k triangles at Low, 4.7k at HD and Ultra, inside their rows;
+  every budget pose stays within its sums (details in O4 of the plan and the S2b entries below).
+- **Images:** `tests/out/sportsbar/s2b-pool-aim-*-r2.png`, `s2b-pool-shot-*-r2.png`, `s2b-darts-oche-*-r2.png`,
+  `s2b-darts-throw-*-r2.png`, `s2b-shuffle-slide-*-r2.png`, `s2b-shuffle-rest-*-r2.png` (844 x 390 and 1280 x 720),
+  and `s2b-clip-*-r2.png`.
+- **Still open:** the pool stance and shot clips go to the design review queue (`PROJECT_OC_HANDOFF.md`). S3a is next.
+
+## 2026-11-09: Stoppage Time S2b repaired after review
+
+Two reviews of S2b: one kept it with fixes, one rejected it (your ball in hand wasn't "anywhere", and the games'
+per-frame drawing allocated memory). Both lists are done on `claude/sports-bar`, uncommitted; what was good is kept.
+`lot57/`, `people/`, `src/onfoot/main.ts` and `src/onfoot/index.html` still show an empty `git status` and `git diff`.
+`npx tsc --noEmit` passes. The page is 1,573.5 KB (525.9 KB gzipped) by Vite's count.
+
+- **Two claims in S2b's summary were wrong, and are corrected here and in the plan:**
+  - The near-black people over the pool table were not Low's missing lights. They were your own avatar, drawn in the
+    game view, standing just under the pool camera (its eye about 0.25 m below the camera's): its arms and shoulders
+    showed as black shapes at the frame's left edge at Low and at HD (`s2b-pool-aim-1280x720-r2.png` of the first
+    round was HD).
+  - The darts "mid-throw" screenshot had no dart in the air: its own log said "0 in the air" and the check passed
+    anyway.
+- **What changed:**
+  - **Ball in hand for you** (the plan's "a scratch gives ball in hand anywhere"): after the house scratches, your cue
+    ball starts on the head spot and stays in hand; a drag that starts on it (within 8 cm on the cloth) moves it
+    anywhere on the bed, to the nearest free spot (`PoolGame.place(x, y, keep)` through `freeSpot`); the shot ends it.
+    The hint says "Ball in hand: drag the cue ball to place it anywhere · then drag back from it to aim · release to
+    shoot". Hooks: `shoot(id, { place: [x, y], ... })` (refused without ball in hand), `placeCue`, and
+    `houseShot(id, 'scratch' | { angle, speed })`, which scripts the house's next shot so a check can have it scratch.
+  - **Your avatar is hidden in the pool view** (a hidden caster at HD and Ultra), from the move in to the move back;
+    darts and shuffleboard still show it over your shoulder.
+  - **The toasts no longer cover the "Simulated crowd" chip.** Outside a game they sit under the top centre column and
+    the screens chip (their bottom measured by a `ResizeObserver`, not per frame); in a game, just above the game's
+    bar.
+  - **The darts throw screenshot** is taken with the third dart in the air. A frame here (0.5 to 3 s) is longer than
+    the whole 0.44 s throw, so a hook, `holdDart(id, k)`, holds the dart at 12% of its flight, and the check fails if
+    no dart is in the air.
+  - **The shuffleboard's zones read.** The lines are 4 cm wide (they were 2 cm) and cream (they were near black), the
+    foul line bright red, and the numbers 1, 2 and 3 are painted in the zones (12 strokes in the markings batch, about
+    0.2k triangles, no call). From the throwing end the zones are 6 m off and nearly edge-on, so no paint makes them
+    legible from there. While your puck slides and in the pause after, the camera now follows it, 1.7 m behind and
+    over its line. The new `s2b-shuffle-rest-*` screenshots show it.
+  - **A bug found on the way:** the shuffleboard's sideways sign took the screen's left for its right. A swipe drifting
+    right sent the puck left, and the camera stood on your left. Fixed: a right drift goes right (checked on screen
+    below).
+  - **The scripted shots refuse non-numbers** instead of clamping them: a NaN, infinite, zero or negative speed, a NaN
+    angle, a bad place, and the darts' and shuffleboard's values. `PoolGame.shoot` and `ShuffleGame.slide` refuse them
+    too. Before, a NaN angle left the table rolling until the 60 s settle limit.
+  - **No allocations in the per-frame paths** (the code review's list):
+    - Pool: the drawing and `toW` write into a scratch pair or inline math with the cached axes, and `guide()` fills
+      one result object.
+    - Shuffleboard: pucks are drawn through a private method with the cached bed axes, and the substep keeps one event
+      object.
+    - Darts: the sway and the reticle write into scratch pairs (`swayInto`).
+    - Places worked out once at construction: the oche, the aside spots, the thrower's place, the house's places, the
+      darts and shuffleboard camera eyes, and the walk-away anchor.
+    - The game bar's text is rebuilt only when the game's version changes, and the balls and pucks left are fields
+      (`PoolGame.leftN`, `ShuffleGame.bySide`). The power meter and the reticle are written only when their values
+      change.
+    - The house's ball-in-hand search passes the skipped ids to `clearPath` as numbers and reads its targets once.
+- **Checks** (headless Chromium with SwiftShader, one browser at a time; other lanes' suites were running, and the
+  load was about 9 to 11):
+  - `node tests/sportsbar-games.mjs`: **15 of 15** (`tests/out/sportsbar/logs/s2b-r-games-unit.log`). The 13 as
+    before, with the same numbers: no energy rise over 500 breaks, the slowest settling in 6.82 s; 189 pots and 11
+    safeties; the 3.0 m/s puck stopping 6.5468 m away. Two are new:
+    - Ball in hand: placing at (0.2, -0.3) keeps the ball in hand there. Asking for (9, 0.3), off the bed, puts it at
+      (0.467, 0.300), on the cushion's line. Asking for the 5 ball's spot moves it 60 mm off that centre. Five bad
+      shots are refused. A good shot leaves from (0.20, -0.30) and ends the ball in hand.
+    - The house's ball-in-hand search (`bestPlacement`), timed in Node over 200 seeded layouts: median 1.11 ms, 95th
+      percentile 4.53 ms, worst 8.47 ms. The worst includes the first call's warm-up. The previous version wasn't
+      timed, so there's no before figure.
+  - `node tests/sportsbar-s2b.mjs --only=checks,controls` on the final build: **21 of 21**
+    (`s2b-r-final-checks.log`). The S2b checks pass with the same numbers as before: the three games and the close
+    loss, the clips at each LOD with `people/` clean, the breakdown, and the cameras (in over 5 frames and back over 6,
+    0.000 m from your eye, 2 cuts with reduced motion). The breakdown's base is now 110 calls and 162.7k triangles: the
+    painted numbers. The new checks:
+    - Ball in hand after the house's scripted scratch: the house's log says "Rocío scratched: ball in hand". The cue
+      ball sat at (0, -0.495), the head spot, still in hand, with the hint shown. `shoot` with
+      `place: [0.3, -0.25]` struck from (0.3, -0.25), and the ball in hand ended.
+    - Twelve bad scripted values refused, each with its reason, and nothing moved.
+    - The toasts at 844 x 390: "You: nothing down" at y 264 to 294, just over the bar (from y 300). After you leave,
+      the toast is at y 132 to 171, under the chip (y 92 to 126). No overlap either time.
+    - The bar rebuilt 0 times over 4 frames of your turn, and once after a shot. In third person at Low your avatar
+      isn't drawn in the pool view, and is drawn in the darts view.
+    - By pointer at 1280 x 720: a 190 px drag from the cue ball moved it from the head spot to (0.1024, -0.125), still
+      in hand. A drag back from it then shot from there.
+    - A swipe drifting 20 px right gave a line of +0.954 degrees. On screen the bed's +y lies to the right (x 672 px
+      against 649), and the puck stopped at y +0.107 m.
+    - The toasts at 1280 x 720: "You: 20 · 20 · 281 to go" at y 557 to 587, over the bar (from 593); after leaving, at
+      y 132 to 171; the chip at y 92 to 126.
+
+    The earlier checks: the pool drag (74.05 degrees, power 0.327) and the darts flick (T20). The straight swipe gave
+    2.98 m/s and stopped at 6.5497 m. In one earlier run the same gesture measured 2.56 m/s, because the page's timed
+    events stretched under load; the check's band (2.4 to 3.6) held.
+  - `--only=shots --tag=r2`: **8 of 8** (`s2b-r-shots-3.log`). I looked at every image:
+    - `s2b-pool-aim-*-r2.png` and `s2b-pool-shot-*-r2.png` (844 x 390 Low, 1280 x 720 HD): the table, the cue, the
+      guide, the ghost ball and the power. No black shapes at the edges, only the pockets. Your avatar was not drawn
+      (Low) or a hidden caster only (HD).
+    - `s2b-darts-oche-*-r2.png`: the aim held on the treble 20, its sway putting the reticle by the treble 1 at that
+      instant. The toast "You: 20 · 20 · 221 to go" sits above the
+      game bar, and the chip reads.
+    - `s2b-darts-throw-*-r2.png`: the third dart in the air, just out of your hand, lower left of the board (1 in the
+      air, at 12% of its flight).
+    - `s2b-shuffle-slide-*-r2.png`: your puck on its way, the camera following.
+    - `s2b-shuffle-rest-*-r2.png`, new: your puck at rest in zone 3, with the zone lines and the painted 1, 2 and 3
+      legible ahead, and the toast "Your puck: zone 3" over the bar.
+  - Not re-run: the budget poses, and S1's and S2a's groups. The repair adds no draw call. The venue gains about 0.2k
+    triangles, and in S2b's budget run the closest any pose came to a row was 3 calls and 31.8k triangles under it.
+    The toasts' new place isn't checked by any S1 or S2a check.
+- **Left open:** the cue is drawn on its own, not in your or Rocío's hands. It's written up with the pool stance and
+  shot clips for the design review queue (`PROJECT_OC_HANDOFF.md`, O33). Watch pool, other people's games, the
+  unwatched games' statistics (S3a), keyboard and gamepad shots, and the games' sounds are still not built. Frame rates
+  on real phones were not measured.
+
+## 2026-11-09: Stoppage Time S2b built: pool, darts and shuffleboard
+
+S2b (`PROJECT_OC_SPORTS_BAR.md`, "### S2b: the games") is built on `claude/sports-bar`, uncommitted: pool on both
+tables, darts on the three boards and the shuffleboard, each played against the scripted house player, with the plan's
+physics, rules and controls, the house's shot selection and aim error, the game cameras, the results and the four game
+clips. `people/`, `lot57/`, `src/onfoot/main.ts` and `src/onfoot/index.html` are untouched (`git status` on each
+empty); the bar's own `venues/sportsbar/main.ts` changed in five lines (the game view's camera hook and your avatar
+drawn in it). `npx tsc --noEmit` passes. The page is about 1,565 KB (523 KB gzipped) by Vite's count, 56 KB more
+than S2a's.
+
+- **What's new:**
+  - `engine/sim/pool.ts`, `darts.ts`, `shuffle.ts` and `games.ts` (no three.js): the plan's pool physics (r 0.028 m,
+    1.98 x 0.99 m bed, restitution 0.95 and 0.75, 0.25 m/s², pockets r 0.055, 240 Hz, no spin), simplified 8-ball, the
+    house's shot selection exactly as the plan's six steps and its aim error; the standard dartboard, 301 straight out
+    with the bust, your sway; the shuffleboard (mu 0.07, 0.8, 0.6, 240 Hz, zones and frames to 15); the results'
+    numbers. Also the unwatched games' statistical pool turn and seeded layout (not wired: S3a's).
+  - `venues/sportsbar/games.ts` (the six game spots, your drag, flick and swipe, the pieces, the house's turns),
+    `gamecams.ts` (above the table, behind the oche, behind the puck; 0.5 s, a cut with reduced motion) and `house.ts`
+    (the house player, Rocío, one of our staff, built at LOD 1 with the crew at load). `life.ts` wires them: Play pool,
+    Play darts and Play shuffleboard on the radial menus, the games' need rates while you play, the results (the
+    "Won a game" moodlet at 12 x (0.6 + 0.8 x competitive) and 5 house tokens, or "Lost a close one"), three of
+    tonight's goals, and the hooks `game(id)`, `shoot(id, params)`, `games()`, `playHere`, `playOut`, `leaveGame`,
+    `gamecam`, `house`. The game bar, the cue's power meter and the dart's reticle are HTML (`sportsbar.html`).
+  - The venue: the pool tables redrawn to the plan's playing bed (the same boxes moved: 684 triangles a table and lamp,
+    as before), the shuffleboard's bed to 6.7 x 0.51 m with side rails and its four lines, and the dartboard's face
+    redrawn at the standard radii with its numbers, so the face is the board the scoring reads.
+  - The clips: pool stance, pool shot, dart throw and shuffleboard slide on S2a's clip layer.
+- **Bugs found and fixed while building:** the dart reticle sat about 0.4 m off the board: after the game view moves
+  the camera, its world matrix was still the one Lot 57's `lookAt` left at your eye, so projections that frame used
+  your eye (the game view now updates the matrix; handoff item 10). A dart thrown during a fast-forward's one-second
+  step spent its wind-up and stayed in the air (the step now carries the remainder into the flight). The budget
+  poses' first run measured the pool camera, not the poses, because staging the games made a game yours (staged games
+  now leave the camera and the walking-away rule alone, and a test's fixed camera wins over a game view).
+- **Checks** (headless Chromium with SwiftShader, one browser at a time; other lanes' browsers were running throughout
+  and the machine was at a load of about 16 to 20):
+  - `node tests/sportsbar-games.mjs` (no browser): **13 of 13 passed** (`tests/out/sportsbar/logs/s2b-games-unit.log`):
+    - pool physics over 500 random breaks (the cue ball behind the head string, within 3 degrees of the apex, 3.5 to
+      5.5 m/s), every 240 Hz substep: the largest rise in kinetic energy over a substep 0 (energy never grew); no ball
+      ever off the bed, and every ball off the table one that was potted; the slowest break settled in 6.82 s (median
+      4.93 s), 0.74 balls potted a break;
+    - the house's pool shots in 200 seeded layouts (2 to 15 object balls scattered, groups or an open table): 189 pots,
+      each passing both clear-path tests with a cut under 70 degrees (side pockets within 50 degrees), and 11 safeties;
+    - 40 whole pool games with the house's selection on both sides all ended with a winner (the longest 197 shots);
+    - darts: the board (T20 60, D20 40, 1 right of 20, 6, 3 and 11 at 3, 6 and 9 o'clock, bull 50, 25, off 0); from
+      40, a single 20 leaves 20, a treble 20 then busts back to 40 and passes the turn; a single 20 from 40 then 20
+      wins (no double); 40 whole games all ended (the longest 12 turns); the sway 30, 19.5, 9.0, 19.1 and 31.7 mm at 0,
+      0.6, 1.2, 2 and 3 s held, 12.8 mm at 1.2 s with energy 5;
+    - shuffleboard: a puck released at 3.0 m/s stopped **6.5468 m** away (v² / 2 mu g = 6.5531 m), in zone 3; a puck slid
+      into another knocked it on; 40 whole games to 15 all ended (4.0 frames a game on average).
+  - `node tests/sportsbar-s2b.mjs --only=checks,controls` on the final build: **14 of 14 passed**
+    (`tests/out/sportsbar/logs/s2b-final-checks.log`; the same checks passed before the last two fixes in
+    `s2b-checks-2.log` and `s2b-controls-3.log`). The checks (844 x 390, Low, Saturday 21:00, week 43):
+    - the house player built at load (LOD 1, 7.3k triangles at phone quality) with the bartender and the server;
+    - a pool game completed: you won (your shots by the hook: the break, then the house's own selection for your balls
+      with no aim error; the house at its 3.3 degree error), 18 shots in all, "Won a game" +11.99 (12 x
+      (0.6 + 0.8 x 0.5) = 12.00), tokens +5 from the game (+5 more from "Pot two balls in one pool turn"), the emotion
+      Confident; while playing, the needs ran at pool's rates;
+    - a darts game at competitive 0.9: you won, "Won a game" +15.82 (15.84), +5 from the game and +5 for "Win a game
+      of darts";
+    - a shuffleboard game (your slides at zone 3's speed, straight): you won 15-0 in two frames, +11.99, +5 from the
+      game and +5 for "Land a 3 at shuffleboard";
+    - a close loss: you stalled at 1 to go and the house checked out: "Lost a close one" -3.97, no tokens from the game
+      (the one token that came was the time in the bar);
+    - with a game of each kind set up, `breakdown()` (a fixed camera over the games, the loop frozen) changed only in
+      the item meshes: 110 calls and 162.5k without pieces, 114 and 163.9k with them (balls 31 x 32, bands 14 x 16,
+      sticks 8 x 12, discs 5 x 16: 4 calls, 1.4k);
+    - the game cameras: for each game, in over 6 frames and back to your view over 6 frames once the turn passed,
+      the camera 0.000 m from your eye in first person; with reduced motion a cut each way (the blend 1 on the first
+      frame of your turn and 0 on the first frame after);
+    - the four game clips play on a person built at LOD 2, 1 and 0 (weight 1; the right arm turned 0.25 rad in the pool
+      stance and shot, 1.36 in the dart throw, 1.01 in the slide), and `git status` and `git diff` on `people/` empty.
+  - The controls (1280 x 720, Low; the loop frozen during each gesture so the events are quick; the darts' and the
+    shuffleboard's gestures dispatched as timed touch events in the page, since mouse events over the test's connection
+    arrived up to a frame apart on this loaded machine): a 91 px drag back from the cue ball set the aim (74.05 degrees) and the power (0.327, the
+    meter showing it) and the release shot; at the darts a press and a slow release threw nothing, and a 1.2 s hold
+    then a flick up (240 px in 64 ms) threw one dart, a treble 20; a swipe of 360 px in 0.2 s slid the puck at
+    2.98 m/s to 6.558 m, zone 3.
+  - `--only=shots,clipshots --tag=r2`: **9 of 9** (`s2b-shots-2.log`), every image looked at:
+    `tests/out/sportsbar/s2b-pool-aim-*-r2.png` and `s2b-pool-shot-*-r2.png` (overhead: the cue drawn back, the guide
+    to the ghost ball and the object ball's line, the power meter; then the break spreading), `s2b-darts-oche-*-r2.png`
+    and `s2b-darts-throw-*-r2.png` (behind the oche: the numbered board, two darts in the 20, the reticle swaying round
+    the treble 20), `s2b-shuffle-slide-*-r2.png` (down the board, a puck on its way and one in the scoring end), each at
+    844 x 390 (Low) and 1280 x 720 (HD); and `s2b-clip-*-r2.png`. The first round of shots (`s2b-shots-1.log`) showed the
+    reticle off the board and your own head and back filling the darts and shuffleboard views: fixed (the matrix above,
+    and the two cameras moved over the shoulder and ahead of your body).
+  - `--only=budgets` (844 x 390; at each preset the five budget poses with a game of each kind set up, the pieces in
+    play, then every item model at its cap): **16 of 16** (`s2b-budgets-2.log`). The pieces in play: 31 balls, 14 bands,
+    5 discs, 5 sticks, 4 calls, 1.4k at Low and 4.7k at HD and Ultra; at the caps 6 calls, 5.7k and 13.9k. The pass
+    (calls/triangles; at the caps; the sums' column) and the pass less the people and items (its row):
+    - Low: door 72/92.4k (74/96.8k of 118/203.9k; less 65/69.3k of 74/101.4k), tv-east 79/100.6k, stall (outside)
+      107/169.9k (of 139/244.3k; less 99/138.9k of 119/177.8k), patio 73/99.6k, overhead 75/98.5k (of 118/197.9k);
+    - HD: door 73/113.5k (of 177/465.7k), tv-east 79/125.6k, stall 111/267.1k (of 176/449.5k; less 103/217.3k of
+      139/328.2k), patio 85/155.0k, overhead 119/274.3k (of 222/609.4k); the whole frame 121 to 198 calls;
+    - Ultra: door 84/153.1k (of 302/1,202.6k), tv-east 127/422.4k, stall 145/621.0k (of 246/1,086.4k; less 117/424.6k of
+      159/611.4k), patio 123/507.3k, overhead 128/477.0k (of 302/1,180.0k); the whole frame 290 to 381 calls and up to
+      1,612k.
+    The staff are three now (the house player is the third): 3 calls and 21.8k at Low, 33.3k at HD and Ultra. The page's
+    own CPU per frame at the poses was 1.5 to 12.3 ms (the machine loaded).
+  - `node tests/sportsbar-sim.mjs`: 32 of 32, as before (`s2b-s2a-sim.log`).
+  - S2a's page checks on the S2b page (`node tests/sportsbar-s2a.mjs --only=checks`): **22 of 22 passed**
+    (`s2b-s2a-checks.log`): ordering, sips, watching, the jukebox and water, dancing, the screens, the items, the
+    honesty and menu checks and the clip layer (which now probes the game clips too) all as before.
+  - S1's groups on the S2b page (`node tests/sportsbar.mjs --only=data,honesty,shadows,memory --tag=s2b`): **37 of 37
+    passed** (`s2b-s1-regress.log`): the frame, the street sets, the I-5, the trees, the front, the zones and slots,
+    walking on the real grid, the lane path, the stalls, the darts' faces (a ray from each oche meets the face at 2.31
+    m), tap to go from the customer side; the real name in none of the 176 files under `src/` or the built page, and no
+    "live", odds, bet or currency word on any canvas or in the UI with every sheet open; at Ultra both pool spots' maps
+    frozen and drawn once, and your avatar's caster dropping the sun's map by 11.8k in first and third person
+    (`s1-shadow-ultra-third-lot-noon-s2b.png` looked at); and Low, HD, Ultra, HD, Low twice coming back to the same
+    counts round after round (low 25 textures and 105 geometries at the start, one of each more than S2a's page: the
+    house player; the second round adds 0 and 0).
+- **Left open:** the pool stance and shot read as a lean over the table rather than a cue drawn back (written up for
+  the design review queue in `PROJECT_OC_HANDOFF.md`); Watch pool, other people's games and the unwatched games'
+  statistics wired to them (S3a); teams of 2 and invites (S3a); the games' sounds; keyboard and gamepad shots. (This
+  entry also said the people seen from above the pool table were near black because Low has no real lights. That was
+  wrong: it was your own avatar under the pool camera, at Low and HD alike, fixed in the repair above.)
+  Frame rates on real phones were not measured.
+
 ## 2026-11-09: Stoppage Time S2a committed
 
 S2a (needs, objects, ordering and the screens), with its repair after review, is committed on `claude/sports-bar`.

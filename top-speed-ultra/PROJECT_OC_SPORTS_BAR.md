@@ -11,6 +11,16 @@ at that real site**. It has our name, our look, our interior and our menu. In th
 real bar". Its name appears only in the data tooling, as the lookup key that finds the point, never in `src/` or in
 shipped data.
 
+**Status (2026-11-09): S2b built** on `claude/sports-bar`, uncommitted: pool on both tables, darts on the three
+boards and the shuffleboard, each against the scripted house player (Rocío, one of our staff), with the plan's
+physics, rules, controls, the house's shot selection and aim error, the game cameras, the results (the moodlet, the
+tokens, "Lost a close one") and the four game clips; the pieces are instances of S2a's six item meshes. Its checks
+pass (`PROJECT_OC_PROGRESS.md`; the as-built notes are under S2b). **S2b was repaired after review the same day**
+(your ball in hand anywhere on the bed, your avatar hidden under the pool view, the toasts clear of the crowd chip, a
+dart caught in the air, the shuffleboard's zones and numbers and its swipe's sideways sign, the hooks refusing values
+that aren't numbers, and no allocations in the games' per-frame drawing and bar: see the progress log and the as-built
+notes under S2b). S3a is next.
+
 **Status (2026-11-02): S1 built** on `claude/sports-bar`, uncommitted (only the merge of Lot 57's P1a, ce67d8f, is
 committed): the standalone page `src/onfoot/sportsbar.html` with the venue, the lot, the streets and your avatar,
 no people yet. `PROJECT_OC_PROGRESS.md` has what was checked and what's left; the open items below carry S1's
@@ -52,7 +62,7 @@ closes it, logs the result in `PROJECT_OC_PROGRESS.md`, and updates this table a
 | O1 | Lot 57's numbers (L1 to L21) and its contracts move while this plan waits | Measured at the `tsu-foot` worktree over `022f988` on 2026-10-21, about 06:00 UTC (L14, L20 and L21 about 10:33). Since then `main.ts` has moved again (3ab822eb73 at 11:09 UTC, where your avatar's LOD 0 is now built at High as well as Ultra), `style.ts` too (e606208d78, 10:53), and `lot57/wheels.ts` is new | The S1 builder's first step: re-measure every row, the contracts table and the Retro API; update this plan wherever a moved row is cited; re-run the sums and both scripts; log the changes | S1 (and S4 for `PRESET`) | **S2a (2026-11-08): done again** at 47c71a6 (merged at a5ac3fd): L17 moved (Lot 57's `Hud` binds P1b's ids without null checks, so S1's page would throw at `new Hud()`; S2a's `sportsbar.html` carries them), L3 and L12 gained additive members, the rest unchanged; the contracts additive; `people/` unchanged; the Retro module still uncommitted. No sum moved. **S1 (2026-11-02): done.** Re-measured at `claude/onfoot` ab9fbe1 (merged at ce67d8f): L2, L3, L5, L7, L9, L11 and L20 moved and are updated in their rows; the rest, the contracts (additive changes only) and the Retro API (RS1 still uncommitted; `RetroWorld` gains `sun`) hold. No sum moved. Both scripts re-run (they now compute the frame from building 61 as the page does: 39 near points, one more than before). Logged in `PROJECT_OC_PROGRESS.md`. `PRESET` is re-synced again at S4. |
 | O2 | The `people/` internals the bar relies on, which aren't API: the `lod1` and `lod2` mesh names, `setLod` hiding the other levels with `visible = false`, one shared skeleton, `frustumCulled = false` and `castShadow` per level (`person.ts` lines 447 and 538), the hair meshes' names and program keys | Read in `person.ts` on 2026-10-21 | S1's re-measure reads them again. If they've moved, `visibility.ts` follows them; if a hidden caster can't be made, the costed fallback under "Shadows in three.js 0.160.1" applies | S1 | **S1: closed.** Read again at ab9fbe1, unchanged; the hidden casters stand on them (S1's shadow checks). |
 | O3 | The people builder's costs and build times | Lot 57's plan's desktop measurements of 14 October; HD's LOD 2 cost (1.5k) and build time (0.4 s) are **assumed** | S1 builds a person at each level and quality, reads `stats()` and times each build; the costs, the sums, the fill table and owner question 2 follow | S1 | **S1: measured** (the table after "What things cost"): LOD 2 at high quality 1.1k to 1.5k and 0.2 to 0.3 s; every LOD 0 inside 210k and 20 calls; your driver's high LOD 1 11.8k (0.2k over the 11.6k the sums use, inside every margin). Owner question 2's figures stand. |
-| O4 | The allocations: the venue, the streets, HD's and Ultra's sky, the six item models, Ultra's pool tables and lamps | Allocations with headroom; the streets stand on the script's cost model | S1 measures the venue, streets, trees and sky with `breakdown()`; S2a and S2b the items; S4 the pool spots; an overrun takes its preset's listed fallbacks in order | S1, S2a, S2b, S4 | **S1: measured** (`breakdown()` at the five poses, the worst of each): the venue 35 to 39 calls and 16.2k to 16.5k at every preset (allocated 40/50k, 50/90k, 60/150k); the near streets 11 to 14 calls and 14.6k to 15.9k with the streams (allocated 11k at Low, 15k at HD and 25k at Ultra: 3.7k over at Low and 0.1k over at HD); all the streets 18 calls and 38.1k at Low (3.1k over its 35k), 18 and 38.5k at HD, 29 and 78.2k at Ultra; the trees 4 calls, 3.7k and 9.5k; the sky 4 calls, 2.0k. The streets' Low overrun is far smaller than the venue's underrun (33.5k), so every pose's pass stays inside its "without people or items" row (the progress log has every pose) and no fallback was taken. The items wait for S2a and S2b; the pool spots' tables and lamps are 228 triangles each. **S1's repair:** Low's rows re-allocated (the venue 50k to 45k, all the streets 35k to 40k; the near set's row at Low and HD 11k and 15k to 16k), the sums unchanged (see under "The allocations"); with the repair's ceiling and pool tables the venue is 35 to 39 calls and 17.1k to 19.1k at every preset, and each pool spot's table and lamp 684 triangles. The suite checks all the streets as built at every preset and the venue, the streets and the trees as drawn at every budget pose against these rows. **S2a: the items measured** (`tests/sportsbar-s2a.mjs`): per instance glass 19, basket 20, disc 16, ball 32, band 16, stick 12 at Low and 40, 44, 31, 128, 32, 24 at HD and Ultra, all within their rows; with every model at its cap, 6 calls and 5.7k at Low and 13.9k at HD and Ultra (rows 6.0k and 14.1k) at every budget pose. S2b measures them in play. |
+| O4 | The allocations: the venue, the streets, HD's and Ultra's sky, the six item models, Ultra's pool tables and lamps | Allocations with headroom; the streets stand on the script's cost model | S1 measures the venue, streets, trees and sky with `breakdown()`; S2a and S2b the items; S4 the pool spots; an overrun takes its preset's listed fallbacks in order | S1, S2a, S2b, S4 | **S1: measured** (`breakdown()` at the five poses, the worst of each): the venue 35 to 39 calls and 16.2k to 16.5k at every preset (allocated 40/50k, 50/90k, 60/150k); the near streets 11 to 14 calls and 14.6k to 15.9k with the streams (allocated 11k at Low, 15k at HD and 25k at Ultra: 3.7k over at Low and 0.1k over at HD); all the streets 18 calls and 38.1k at Low (3.1k over its 35k), 18 and 38.5k at HD, 29 and 78.2k at Ultra; the trees 4 calls, 3.7k and 9.5k; the sky 4 calls, 2.0k. The streets' Low overrun is far smaller than the venue's underrun (33.5k), so every pose's pass stays inside its "without people or items" row (the progress log has every pose) and no fallback was taken. The items wait for S2a and S2b; the pool spots' tables and lamps are 228 triangles each. **S1's repair:** Low's rows re-allocated (the venue 50k to 45k, all the streets 35k to 40k; the near set's row at Low and HD 11k and 15k to 16k), the sums unchanged (see under "The allocations"); with the repair's ceiling and pool tables the venue is 35 to 39 calls and 17.1k to 19.1k at every preset, and each pool spot's table and lamp 684 triangles. The suite checks all the streets as built at every preset and the venue, the streets and the trees as drawn at every budget pose against these rows. **S2a: the items measured** (`tests/sportsbar-s2a.mjs`): per instance glass 19, basket 20, disc 16, ball 32, band 16, stick 12 at Low and 40, 44, 31, 128, 32, 24 at HD and Ultra, all within their rows; with every model at its cap, 6 calls and 5.7k at Low and 13.9k at HD and Ultra (rows 6.0k and 14.1k) at every budget pose. **S2b: the game pieces measured in play** (`tests/sportsbar-s2b.mjs`, the budgets group at 844 x 390, the five budget poses at each preset, with a game of each kind set up: pool table 1 broken and aiming, dartboard 1 with two darts in, the shuffleboard with three pucks down and the next waiting, pool table 2 racked): 31 balls, 14 bands, 5 discs and 5 sticks, in 4 of the six meshes, 4 calls and 1.4k at Low and 4.7k at HD and Ultra (the glass and basket meshes, at count 0, draw nothing); at their caps again 6 calls, 5.7k and 13.9k. Every pose's pass is within the sums' column with the pieces in play and with every model at its cap, and less the people and items within its "without people or items" row (Low inside 72 to 79 calls and 92k to 101k of 118 and 203.9k; HD outside at the stall 111 and 267k of 176 and 449.5k; Ultra outside at the stall 145 and 621k of 246 and 1,086k: the progress log has every pose). With the three games set up, `breakdown()` changes only in the item meshes (a fixed camera over the games: 110 calls and 162.5k without the pieces, 114 and 163.9k with them). The house player is S2b's third staff body, built at load: staff 3 calls and 21.8k at Low, 33.3k at HD and Ultra, within the people the sums count. **S2b's repair:** the shuffleboard's painted zone numbers (12 strokes in the markings batch) add about 0.2k triangles to the venue and no call (the same fixed camera: 110 calls and 162.7k without the pieces, 162.5k before); the budget poses weren't re-run for it (in S2b's budget run the closest any pose came to a row was 3 calls and 31.8k triangles under it, Low at `tv-east` less the people and items, and the numbers add no call). |
 | O5 | The street triangles | `sportsbar_sets.py`'s cost model: near 9,850, far 23,522 simple and 61,630 full (9,862, 23,522 and 61,612 with the frame computed from building 61, S1). It counts every pier, the ones the pier rule leaves out included, so it's high by 32 triangles a skipped pier (the script prints how many) | S1's `breakdown()` of the built near and far sets | S1 | **S1: measured.** The built near set is 14.6k to 15.9k (the cost model said 9.9k plus 0.4k to 1.6k of streams: the ramps are sampled every 8 m and the raised pieces carry their own marking ribbons), the far set 23.4k simple and 62.3k in full (the model: 23.5k and 61.6k). |
 | O6 | The post quads (bloom 13, output 1, GTAO 3 besides its normal pass) | Read from three.js 0.160.1's passes, not measured | S4 measures the final post chains | S4 | **S1: measured on S1's chains** (`tests/sportsbar.mjs`, the budgets group: one frame's `renderer.info` less the pass, the AO pass and the maps): 14 calls at HD (bloom 13, output 1, as read) and 18 at Ultra at every pose (GTAO 4 besides its normal pass, one more than read). S4 measures the final chains again. |
 | O7 | Frame rates here: about 2 fps at Low and 0.3 fps at HD and Ultra under SwiftShader, and the 3 slow warm-up frames after a load or a switch (108 s for three frames on High, 271 s on Ultra) | The game's figures in `PROJECT_OC_PROGRESS.md`, **assumed** for the bar's page, which isn't built | S1 logs the page's own rates and warm-up at each preset; S3a's marks are taken from its own logged frames, never from these figures | S1, S3a | **S1: logged** (`node tests/sportsbar.mjs --only=rates`, 844 x 390, the `door` pose, this machine at a load of about 15): after a switch, the 3 warm-up frames took 6.4 s at Low, 8.6 s at HD and 19.0 s at Ultra; then 0.94, 1.81 and 3.35 s a frame (1.06, 0.55 and 0.30 fps); the page's own CPU per frame 1.5, 4.1 and 9.2 ms. S1's repair, on its final build (a load of about 8): the 3 warm-up frames 2.0, 2.8 and 4.5 s, then 1.04, 0.76 and 0.39 fps, the page's CPU 1.6, 7.6 and 7.1 ms a frame (`tests/out/sportsbar/logs/s1-r2-final.log`). The game's figures above stand for the game; S3a's marks use the bar's own logs. |
@@ -81,7 +91,7 @@ closes it, logs the result in `PROJECT_OC_PROGRESS.md`, and updates this table a
 | O30 | Phones | Nothing in this plan has run on a phone | The budgets stay targets until the owner runs one; the handoff asks for it | (the owner) |
 | O31 | The exits and routes ("Joining the game later") | S0-data's `sportsbar-freeway-link.json`, still being refined when this was written | The file is authoritative; J1, in the game's workflow, reads it as it then stands | J1 (after S4) |
 | O32 | Cards (fillers, held guests and unbuilt people) reading as people through the glazing and from above | A design claim, unseen | S3a's `door`, `stall`, `patio` and overhead screenshots are looked at; the mitigations are under "Risks" (8 directions, three poses, the promotion radius) | S3a |
-| O33 | The bar's new clips (drink, eat, dances, cheer, groan, clap, the game clips) looking right on a rig built for talking, walking and sitting | Procedural, unmade | S2a and S2b ship the clips that read well and write any that don't up in the handoff for the design review queue | S2a, S2b | **S2a's part: shipped, looked at** (`tests/out/sportsbar/s2a-clip-*.png`): cheer and arm pump read clearly, clap reads (the hands meet a little high), drink and eat bring the hand to the chin; sway and two-step read only in motion; groan reads more as hands behind the head than on it. The groan and the two quiet dances are written up in `PROJECT_OC_HANDOFF.md` for the design review queue. The game clips are S2b's. |
+| O33 | The bar's new clips (drink, eat, dances, cheer, groan, clap, the game clips) looking right on a rig built for talking, walking and sitting | Procedural, unmade | S2a and S2b ship the clips that read well and write any that don't up in the handoff for the design review queue | S2a, S2b | **S2a's part: shipped, looked at** (`tests/out/sportsbar/s2a-clip-*.png`): cheer and arm pump read clearly, clap reads (the hands meet a little high), drink and eat bring the hand to the chin; sway and two-step read only in motion; groan reads more as hands behind the head than on it. The groan and the two quiet dances are written up in `PROJECT_OC_HANDOFF.md` for the design review queue. **S2b's part: shipped, looked at** (`tests/out/sportsbar/s2b-clip-*-r2.png`, from the side): the dart throw (the dart up by the eye, the elbow up) and the shuffleboard slide (a lean and a long forward reach) read well; the pool stance reads as a lean over the table but the cue arm hangs rather than drawing back, and the pool shot's forearm swing barely shows from the side (S2b's repair hides your own avatar in the pool camera's view, where it stood just under the camera; Rocío's are seen from your own view on her turns; the cue is drawn on its own, not in either player's hands, and goes to the same design pass). Each plays at LOD 0, 1 and 2 (`tests/sportsbar-s2b.mjs`), `people/` untouched. The pool stance and shot are written up in `PROJECT_OC_HANDOFF.md` for the design review queue. |
 | O34 | GTAO and the ground's depth (found in S1's screenshots) | At Ultra, GTAO's normal pass drew the lot lights' pools and the game's mountain ring, which carry no normals, as surfaces facing nowhere: the lot under the pools went near black at noon and the mountains dark slate. At 844 x 390 on Low, the 3200 m ground quad drew over the lot's asphalt 4.2 cm above it from the spawn | Fixed on the bar's page in S1: the AO pass leaves out every mesh with no normals or no depth write (`applyQuality`), and the ground's material has a polygon offset pushing it back (`mats.ts`); `stats().ao` measures the AO pass as drawn, and the budgets check uses it. Lot 57's page shares both: the handoff tells its owners | S1 | **S1: closed** on the bar's page (`tests/out/sportsbar/probe/`, before and after); Lot 57's copy is its owners' (`PROJECT_OC_HANDOFF.md`, "For Lot 57's owners", items 3 and 4). |
 
 ## Ground rules
@@ -1913,7 +1923,7 @@ servers' trays, the pool balls and cues, the darts and the shuffleboard pucks.
   cards and the blob shadows. The ones whose instances are placed once (the trees) compute their sphere after
   placing, as Lot 57's `plantTrees` does (L11), and `ParkedCars.update` recomputes its own (the contract).
 
-| Model (ours: the triangles are allocations, measured in S2a and S2b; S2a built 19, 20, 16, 32, 16 and 12 at Low and 40, 44, 31, 128, 32 and 24 at HD and Ultra) | Cap | Low | HD and Ultra |
+| Model (ours: the triangles are allocations, measured in S2a and S2b; S2a built 19, 20, 16, 32, 16 and 12 at Low and 40, 44, 31, 128, 32 and 24 at HD and Ultra; S2b's pieces in play with a game of each kind set up: 31 balls, 14 bands, 5 discs and 5 sticks, 4 calls and 1.4k at Low, 4.7k at HD and Ultra, see O4) | Cap | Low | HD and Ultra |
 | --- | --- | --- | --- |
 | Glass: drinks in hands and on tables, and the empties | 132, a place each | 20 | 40 |
 | Basket: food in hands and on tables | 40 | 24 | 48 |
@@ -2816,7 +2826,7 @@ module from `claude/modes` merged in.
     and the suite says which.)
   - A `gameNight` dance at 1280 × 720, Saturday 21:00.
 
-### S2b: the games
+### S2b: the games (done, committed 2026-11-09 after repair; see PROJECT_OC_PROGRESS.md)
 
 - **Brief.**
   - **Playable pool, darts and shuffleboard** against the scripted house opponent: the physics, the rules, the
@@ -2840,6 +2850,96 @@ module from `claude/modes` merged in.
   - Each game clip plays on a person built at each LOD, and `git diff` on `people/` is still empty.
 - **Screenshots.**
   - A pool shot overhead, darts behind the oche, and a shuffleboard slide, at 844 × 390 and 1280 × 720.
+- **As built (S2b, 2026-11-09), where the build chose within or beside the brief:**
+  - **Engine first.** `engine/sim/pool.ts` (the physics, simplified 8-ball, the house's shot selection, and the
+    unwatched games' statistical turn and seeded layout), `engine/sim/darts.ts` (the standard board, 301 straight out,
+    your sway, the house's throws), `engine/sim/shuffle.ts` (the physics, the zones, frames to 15, the house's slides)
+    and `engine/sim/games.ts` (the results' numbers). No three.js in any of them; `tests/sportsbar-games.mjs` runs
+    them in Node. The venue's side is `venues/sportsbar/games.ts` (the six game spots, your controls, the pieces, the
+    house's turns), `gamecams.ts` and `house.ts`.
+  - **The house opponent** is one of our staff, Rocío (fictional), in the house uniform, built at LOD 1 with the
+    bartender and the server at load, so setting up a game adds no person and no draw call. Between games she waits by
+    the darts; in a game she walks to her place on the walk grid for each turn and plays the game clips. Her
+    competitiveness is 0.6 (pool: an aim error of 3.3 degrees). One house player serves one game turn at a time.
+  - **Pool, as built.** The plan's numbers exactly (r 0.028 m, the 1.98 x 0.99 m bed, 0.95, 0.75, 0.25 m/s², six
+    pockets r 0.055, 240 Hz, no spin); cushions are the bed's edges (a ball's centre is held 0.028 m in) and a ball whose
+    centre comes within 0.055 m of a pocket's point (the bed's corners and the long sides' middles) drops. The venue's
+    pool tables were redrawn to that bed (the same boxes moved, so the same 684 triangles a table and lamp). Rules beyond
+    the plan's (ours): the 8 on the break is spotted; the break assigns no groups; your ball in hand starts on the head
+    spot and stays in hand until you shoot: a drag that starts on the cue ball (within 8 cm of it on the cloth) moves it
+    anywhere on the bed, to the nearest free spot (`PoolGame.place(x, y, keep)` through `freeSpot`; the repair: S2b put
+    it on the head spot only, which missed the plan's "ball in hand anywhere"), and the hint says so; the house places
+    it where its best shot scores most; potting the 8 before your group is cleared, or
+    scratching on it, loses; no foul for hitting nothing. Your shot's speed is 0.25 to 5.5 m/s by the drag (0.55 m of
+    drag on the table's plane is full power). The guide line is a stick instance on the cloth to the first contact, a
+    disc at the ghost ball and a short lime stick along the object ball's line.
+  - **Darts, as built.** The board's face was redrawn at the standard radii with the numbers round it (the texture is
+    the board the scoring reads). Your aim starts on the treble 20; a slow drag moves it 0.4 mm a pixel; the sway is 30
+    mm, steadies to 9 mm at 1.2 s, then grows (up to 80 mm), up to 1.5 times wider under 30 energy; a flick is an
+    upward stroke faster than one screen height a second over its last 0.15 s, and the dart lands at the aim plus the
+    sway at the flick's start plus up to 4 mm of release scatter. The house aims at the bed its score needs (the treble
+    20 above 60) with a per-axis error of 0.03 - 0.02 x competitive m (ours).
+  - **Shuffleboard, as built.** The bed was redrawn to 6.7 x 0.51 m between two low side rails, with the far foul line
+    (1.83 m from the end, red) and the zone lines 1.3, 0.9 and 0.5 m from the end. Ours: the puck leaves 0.10 m onto the
+    bed (so 3.0 m/s stops in zone 3, 0.02 m short of hanging); since the repair the lines are 4 cm wide and cream (the
+    foul line a bright red), and the numbers 1, 2 and 3 are painted upright for the thrower in the middle of each zone
+    (18 cm strokes in the same markings batch: no new call), so the zones read from the game camera; a puck short of
+    the foul line is taken off; frames are
+    scored the standard way (only the side with the farthest puck scores); the scorer throws first in the next frame.
+    The house aims at the middle of zone 3, or 0.9 m past your leading puck to knock it off when it's ahead of hers. A
+    swipe's speed over its last 0.18 s sets the puck's: 1.2 m/s per screen height a second (0.4 to 4.6 m/s), its
+    sideways drift the line (within 3 degrees), where it starts the lateral release. (The repair fixed the sideways
+    sign: S2b took the screen's left for its right, so a swipe drifting right sent the puck left and the camera stood
+    on your left; now a drift to the right goes right, and the camera stands on your right.)
+  - **Results.** A win adds "Won a game" at 12 x (0.6 + 0.8 x competitive) and 5 house tokens; a loss is "Lost a close
+    one" when it was close (ours: pool, 2 or fewer of your balls left; darts, 40 or fewer to go; shuffleboard, 11 or
+    more points). Tonight's three gain "Win a game of darts", "Land a 3 at shuffleboard" and "Pot two balls in one pool
+    turn". The relationship deltas (+6 and +4) are recorded in `engine/sim/games.ts` for S3b; nothing is wagered.
+  - **The game cameras** blend from your view (Lot 57's camera, or the overhead) to the game's over 0.5 s, or cut with
+    reduced motion, and stay through your turn: the shot rolling, the darts in the board, the pause after; they return
+    when the turn passes. Pool: straight down over the bed, under the lamp (at most 1.08 m above the cloth, the field
+    widened to fit), the long side across a landscape screen. Darts: over your right shoulder, 0.6 m behind and 0.46 m to the
+    right of where you stand at the oche, 1.84 m up, a 24 degree field. Shuffleboard: over the release point, beside the bed, down the board while you aim;
+    since the repair, while your puck slides and in the pause after it the camera follows it down the board, 1.7 m
+    behind it and over its line (eye 1.52 to 1.72 m up), so where it stops reads against the zones' lines and numbers,
+    which from the throwing end are 6 m off and nearly edge-on. In the
+    darts and shuffleboard views your avatar is drawn (LOD 1), whatever your view. In the pool view it's hidden (a
+    hidden caster at HD and Ultra), from the move in to the move back: it stands just under that camera (its eye about
+    0.25 m below the camera's), so S2b's build showed its arms and shoulders as near-black shapes at the frame's edge
+    at Low and at HD alike; S2b's note that only Low's missing lights did that was wrong. The bar's `main.ts` changed in
+    a few lines only (the camera hook, and your avatar's rule in a game view).
+  - **Your place.** For each of your shots you're stood where you shoot from (behind the cue ball clear of the table,
+    on the oche, at the board's end), and beside the game on the house's turn. Walking 8 m from the game, or Leave
+    (the second action button on the house's turn), leaves it, with no result.
+  - **Repaired after review (2026-11-09).**
+    - **Ball in hand** for you, as above; the hooks `shoot(id, { place: [x, y], ... })` (refused without ball in hand),
+      `placeCue`, and `houseShot(id, 'scratch' | { angle, speed })` (the house's next shot scripted, for the check
+      that needs a house scratch).
+    - **Your avatar under the pool view**, as above.
+    - **The toasts** sit under the top centre column and the screens chip (their bottom measured by a
+      `ResizeObserver`, never per frame), and in a game just above the game's bar, so no toast covers the "Simulated
+      crowd" chip.
+    - **The darts throw screenshot** is taken while the third dart is in the air: a frame here is longer than the
+      0.44 s throw, so the hook `holdDart(id, k)` holds a dart at that share of its flight (the screenshots: 12%, just
+      out of your hand), and the check fails when no dart is in the air.
+    - **The shuffleboard's zones and numbers**, its following camera and its sideways sign, as above.
+    - **The scripted shots** refuse a direction, speed, place, aim or line that isn't a finite number, and a speed of
+      0 or less, instead of clamping it (a NaN angle had left the table rolling to the 60 s settle limit); the engine's
+      `PoolGame.shoot` and `ShuffleGame.slide` refuse them too.
+    - **No allocations in the per-frame paths:** the pool spot's drawing and `toW` write table-to-local points into a
+      scratch pair or inline math with the cached axes; `guide()` fills one result object; the shuffleboard draws
+      pucks through a private method with the cached bed axes; the darts' sway and reticle write into scratch pairs
+      (`swayInto`); the oche, aside, thrower and house places, the darts and shuffleboard cameras' eyes and the
+      walk-away anchor are worked out once at construction; the game bar's text is rebuilt only when the game's
+      version changes (bumped by shots, landings, turns, pauses' ends and placing), the balls and pucks left kept as
+      fields (`PoolGame.leftN`, `ShuffleGame.bySide`); the shuffleboard's substep loop keeps one event object. The
+      house's ball-in-hand search passes the skipped ids to `clearPath` as numbers and gets its targets once.
+    - **Left as it was:** the cue is drawn on its own, not in your or Rocío's hands (written up for the design review
+      queue with the pool clips, O33).
+  - **Not built in S2b:** Watch pool and other people's games (S3a's crowd; the statistical turn and the seeded layout
+    are in `engine/sim/pool.ts`, not yet wired, and darts' and shuffleboard's per-throw draws aren't written); teams of
+    2 and the party invites (S3a); the games' sounds (with S2a's audio); keyboard and gamepad shots (the drag, the
+    flick and the swipe are pointer gestures; the hooks shoot for tests).
 
 ### S3a: the crowd, staff, fillers and how people are drawn
 

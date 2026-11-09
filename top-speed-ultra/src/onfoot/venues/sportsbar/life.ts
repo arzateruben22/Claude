@@ -21,7 +21,10 @@ import { Reservations, ActionQueue, QueuedAction, SmartObject } from '../../engi
 import { Tv, absMinute, fromAbs, hhmm, DAY_NAMES, TvEvent, Fixture } from '../../engine/sim/tv';
 import { Broadcast } from '../../engine/sim/broadcast';
 import { HeldItems, ALLOC_TRIS, MODELS, CAPS } from '../../engine/sim/held';
-import { ClipLayer, CLIPS, ClipName, DANCES, STAFF_CLIPS } from '../../engine/sim/clips';
+import { ClipLayer, CLIPS, ClipName, DANCES, STAFF_CLIPS, GAME_CLIPS } from '../../engine/sim/clips';
+import { wonGameValue, GAME_TOKENS, NO_STAKES } from '../../engine/sim/games';
+import { Games, GameOutcome } from './games';
+import { HousePlayer, HOUSE_NAME } from './house';
 import { loadSave, writeSave, SaveData, TOKENS_LABEL, SAVE_LABEL, GOALS, GoalId, tonightsThree, EARN } from '../../engine/sim/tokens';
 import { hash32, mulberry } from '../../engine/sim/rng';
 import { LEAGUES, teamByAbbr, crestSvg, CHANNEL_NAMES } from '../../engine/sim/leagues';
@@ -109,6 +112,10 @@ export class BarLife {
   private slots = new Map<string, Slot>();
   items!: HeldItems; clips = new ClipLayer(); broadcast!: Broadcast;
   bartender!: Bartender; server!: Server;
+  /** S2b: the house player and the games */
+  house!: HousePlayer; games!: Games;
+  private wonGameAt?: number;
+  gameResults: (GameOutcome & { t: number; moodlet: string | null; tokens: number })[] = [];
   private screenMesh!: THREE.Mesh;
   private surfaces = surfaces();
   private cheerT = 0; private lastMoment: TvEvent | null = null; private teamMomentAt?: number; private teamLostAt?: number;
@@ -162,8 +169,19 @@ export class BarLife {
     this.broadcast = new Broadcast(this.tv, { title: BAR_NAME, line: 'Fictional leagues · simulated matches' });
     this.broadcast.setQuality(q); this.broadcast.reduced = ctx.reduced();
     this.buildScreens();
-    // the staff
+    // the staff (and S2b's house player)
     this.buildCrew(q);
+    // S2b: the games, each against the house player; where you stand to begin each is a slot of its own
+    this.games = new Games({
+      F: ctx.F, camera: ctx.camera, canvas: ctx.canvas, grid: ctx.grid, player: ctx.player, person: ctx.person, house: () => this.house, clips: this.clips,
+      reduced: ctx.reduced, input: ctx.input, overhead: () => ctx.view() === 'overhead', blocked: () => ctx.hud.paused || ctx.barHud.anySheet() || ctx.barHud.radialOpen,
+      competitive: () => this.traits.competitive, energy: () => this.needs.energy,
+      tell: (t, sec) => this.tell(t, sec), result: (o) => this.gameResult(o),
+    });
+    for (const sp of this.games.spots) {
+      const [gx, gz] = ctx.F.fromFrame(sp.start[0], sp.start[1]);
+      this.slots.set(`${sp.id} player`, { id: `${sp.id} player`, zone: sp.kind, kind: 'stand', at: sp.start, face: sp.startFace, y: 0, stand: sp.start, r: 0.3, x: gx, z: gz, sx: gx, sz: gz });
+    }
     ctx.player.onArrive = (g) => this.arrived(g.spot ?? '');
     // the HUD
     const bh = ctx.barHud;
@@ -189,14 +207,16 @@ export class BarLife {
   }
   private buildCrew(q: Quality) {
     const pq = q === 'low' ? 'phone' : 'high', c = this.ctx;
-    const old = [this.bartender?.p, this.server?.p].filter(Boolean) as Person[];
-    const keepB = this.bartender, keepS = this.server;
+    const old = [this.bartender?.p, this.server?.p, this.house?.p].filter(Boolean) as Person[];
+    const keepB = this.bartender, keepS = this.server, keepH = this.house;
     this.bartender = new Bartender(c.F, this.clips, pq);
     this.server = new Server(c.F, c.grid, this.clips, pq);
+    this.house = new HousePlayer(c.F, c.grid, this.clips, pq);
+    if (keepH) { this.house.x = keepH.x; this.house.z = keepH.z; this.house.heading = keepH.heading; if (keepH.goal) this.house.walkTo(keepH.goal, null); }
     // a rebuilt crew keeps its jobs and where it was
     if (keepB) { this.bartender.s = keepB.s; this.bartender.job = keepB.job; this.bartender.queue = keepB.queue; }
     if (keepS) { this.server.x = keepS.x; this.server.z = keepS.z; this.server.job = keepS.job; this.server.queue = keepS.queue; }
-    for (const p of [this.bartender.p, this.server.p]) {
+    for (const p of [this.bartender.p, this.server.p, this.house.p]) {
       // inside the unit nobody but your avatar casts into the sun's map (the roof's shadow covers them)
       p.group.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = false; m.receiveShadow = true; } });
       c.scene.add(p.group);
@@ -316,6 +336,7 @@ export class BarLife {
       this.simulate(T1 - this.T, dt);
     }
     this.afterAvatar(dt, hideAvatar);
+    this.games.frame(dt);
     this.drawItems();
     this.broadcast.reduced = c.reduced();
     if (c.clock().open) this.broadcast.update(this.T, realNow);
@@ -334,7 +355,9 @@ export class BarLife {
     this.stepOrders(dMin * SECS);
     // the staff walk on real time at 1x, sim time when sped up or fast-forwarding
     const staffDt = Math.max(dtReal, dMin * SECS);
-    this.bartender.update(staffDt); this.server.update(staffDt);
+    this.bartender.update(staffDt); this.server.update(staffDt); this.house.update(staffDt);
+    // S2b: the games' physics and the house's turns, in sim seconds
+    this.games.update(dMin * SECS);
     for (const e of this.tv.eventsBetween(T0, T1)) this.moment(e);
     this.time(dMin);
   }
@@ -358,6 +381,12 @@ export class BarLife {
     return this.hooks().needs();
   }
 
+  /** S2b: the page's camera hook (after your own view is placed): a game's own view on your turn; true while it shows */
+  gameCamera(cam: THREE.PerspectiveCamera, dt: number) { return this.games ? this.games.camera(cam, dt) : false; }
+  get gameCamOn() { return !!this.games && this.games.camOn; }
+  /** the pool table's overhead view is showing (blending in, on, or blending back): your avatar would stand just under
+   *  its camera, at the frame's edge, so the page hides it then (darts and shuffleboard show it over your shoulder) */
+  get gameHidesYou() { return !!this.games && this.games.camOn && this.games.cams.shown === 'pool'; }
   /** take every toast and caption down (the clock was set, or a fast-forward starts) */
   clearMessages() { if (!this.ctx) return; this.ctx.hud.clearToast(/[\s\S]/); this.ctx.hud.caption(null, ''); this.toastAt = this.capAt = -1; }
   /** a toast from the life layer (its sim time noted, for the fast-forward) */
@@ -377,6 +406,8 @@ export class BarLife {
       else if (a.action === 'people-watch') fun = 'people-watch';
       else if (a.action === 'watch-freeway') fun = 'freeway';
     }
+    // S2b: in a game (your turn or the house's), the game's rates
+    const gm = this.games?.mine; if (gm) fun = gm.kind;
     // one object, filled in place (this runs every frame)
     const d = this._doing; d.posture = posture; d.fun = fun; d.match = match; d.eating = !!this.held.food && this.held.food.left > 0; d.watchers = 0;
     return d;
@@ -418,7 +449,7 @@ export class BarLife {
   }
   moodNow() {
     const m = moodOf(this.needs, this.traits, this.moodlets.sum(this.T)), label = moodLabel(m);
-    const emotion = emotionOf({ needs: this.needs, traits: this.traits, mood: m, now: this.T, teamMomentAt: this.teamMomentAt, teamLostAt: this.teamLostAt });
+    const emotion = emotionOf({ needs: this.needs, traits: this.traits, mood: m, now: this.T, teamMomentAt: this.teamMomentAt, teamLostAt: this.teamLostAt, wonGameAt: this.wonGameAt });
     return { value: m, label, emotion, average: needsAverage(this.needs, this.traits) };
   }
   /** a moment on a screen: the GOAL banner is the broadcast's; here the Cheer button, the moodlets for your team */
@@ -500,7 +531,8 @@ export class BarLife {
     const T = TYPES[o.type]; if (!T) return [];
     const out: { action: string; label: string }[] = [];
     for (const a of T.adverts) {
-      if (T.later?.includes(a.action)) continue;                                   // S2b's games
+      if (T.later?.includes(a.action)) continue;                                   // Watch pool: S3a's crowd
+      if (a.action.startsWith('play-') && this.games.spot(o.id)?.mine) continue;   // you're playing here already
       if (a.action === 'chat' || a.action === 'lean-chat' || a.action === 'eat') continue;   // S3b: nobody to chat with yet; eating is automatic
       if (a.action === 'watch' && o.type !== 'screen' && !this.screenFrom(o)) continue;
       if (!(a.requires ?? []).every((r) => this.allowed(r, o))) continue;
@@ -575,12 +607,13 @@ export class BarLife {
     const o = this.objectById(oid); if (!o) return { ok: false, why: 'no such object: ' + oid };
     const T = TYPES[o.type], adv = T?.adverts.find((a) => a.action === act);
     if (!adv) return { ok: false, why: `${oid} offers no ${act}` };
-    if (T.later?.includes(act)) return { ok: false, why: `${adv.label} comes in S2b` };
+    if (T.later?.includes(act)) return { ok: false, why: `${adv.label} comes with the crowd (S3a)` };
+    if (act.startsWith('play-') && this.games.spot(oid)?.mine) return { ok: false, why: 'you are playing here already' };
     for (const r of adv.requires ?? []) if (!this.allowed(r, o)) return { ok: false, why: `needs ${r}` };
     // a continuous action you're in gives way to the next one queued
     const cur = this.queue.current;
     if (cur && cur.stage === 'doing' && this.isContinuous(cur.action)) this.finish(cur, 'next');
-    const icon = act.startsWith('order-drink') || act === 'water' ? (act === 'water' ? 'water' : 'drink') : act === 'order-food' ? 'food' : act === 'dance' ? 'dance' : act === 'song' ? 'music' : act.includes('watch') ? 'watch' : 'sit';
+    const icon = act.startsWith('order-drink') || act === 'water' ? (act === 'water' ? 'water' : 'drink') : act === 'order-food' ? 'food' : act === 'dance' ? 'dance' : act === 'song' ? 'music' : act.startsWith('play-') ? 'game' : act.includes('watch') ? 'watch' : 'sit';
     const q = this.queue.add({ action: act, object: oid, label: `${adv.label} · ${o.label}`, icon, item });
     if (!q) return { ok: false, why: 'the queue is full (3)' };
     this.note(`queued ${act} at ${oid}`);
@@ -588,6 +621,7 @@ export class BarLife {
     return { ok: true, id: q.id };
   }
   private isContinuous(a: string) { return a === 'watch' || a === 'stand-watch' || a === 'sit' || a === 'people-watch' || a === 'watch-freeway'; }
+  private isGame(a: string) { return a === 'play-pool' || a === 'play-darts' || a === 'play-shuffleboard'; }
   private walkTo(a: QueuedAction, s: Slot) {
     const p = this.ctx.player, seat = this.seatOf(s.id);
     if (!this.res.free(s.id, 'you')) return false;
@@ -624,6 +658,8 @@ export class BarLife {
       case 'water': { const s = this.slot('water')!; if (Math.hypot(s.x - p.x, s.z - p.z) < 0.7 && !p.seat) this.doNow(a); else ok = this.walkTo(a, s); break; }
       case 'song': { const s = this.slot('jukebox spot')!; if (Math.hypot(s.x - p.x, s.z - p.z) < 0.7 && !p.seat) this.doNow(a); else ok = this.walkTo(a, s); break; }
       case 'sit': case 'people-watch': case 'watch-freeway': { const at = this.atSlotOf(o); if (at && this.seatOf(at.id)) { a.slot = at.id; this.doNow(a); } else { const s = this.freeSlotOf(o, (x) => x.kind === 'seat'); ok = !!s && this.walkTo(a, s); } break; }
+      // S2b: walk to where the game begins (the head of the table, the oche, the shuffleboard's end), then play
+      case 'play-pool': case 'play-darts': case 'play-shuffleboard': { const s = this.slot(`${o.id} player`)!; if (Math.hypot(s.x - p.x, s.z - p.z) < 0.7 && !p.seat) { a.slot = s.id; this.doNow(a); } else ok = this.walkTo(a, s); break; }
       default: ok = false;
     }
     if (!ok) { this.tell(`${a.label.split(' · ')[0]}: no free place right now`, 2.5); this.queue.cancel(a.id); this.next(); }
@@ -665,6 +701,12 @@ export class BarLife {
       case 'water': a.dur = 15; return;
       case 'song': a.dur = 20; return;
       case 'sit': case 'people-watch': case 'watch-freeway': a.dur = Infinity; return;
+      case 'play-pool': case 'play-darts': case 'play-shuffleboard': {
+        // the queue's other actions wait: a game runs until someone wins or you leave it
+        a.dur = Infinity; if (a.slot) this.res.release(a.slot, 'you');
+        this.games.begin(a.object); this.note(`game ${a.object} begun`);
+        return;
+      }
     }
   }
   private faceScreen(scr: string) {
@@ -713,6 +755,7 @@ export class BarLife {
     const s = a.slot ? this.slot(a.slot) : null, seat = a.slot ? this.seatOf(a.slot) : null;
     const sp = this.startPos.get(a.id);
     const left = seat ? p.seat !== seat : s ? Math.hypot(s.x - p.x, s.z - p.z) > 0.9 : sp ? Math.hypot(sp[0] - p.x, sp[1] - p.z) > 0.9 : false;
+    if (this.isGame(a.action)) { const sp = this.games.spot(a.object); if (!sp?.mine) this.finish(a, sp?.outcome ? 'done' : 'left'); return; }
     if (left && a.action !== 'order-drink' && a.action !== 'order-food') { this.finish(a, 'left'); return; }
     switch (a.action) {
       case 'water': if (t >= (a.dur ?? 15)) { bump(this.needs, { thirst: 20 }); this.clipYou('drink'); this.finish(a, 'done'); } break;
@@ -733,6 +776,7 @@ export class BarLife {
     if (a.slot) this.res.release(a.slot, 'you');
     this.startPos.delete(a.id);
     if (a.action === 'watch' || a.action === 'stand-watch') this.watching = null;
+    if (this.isGame(a.action) && why === 'cancelled' && this.games.spot(a.object)?.mine) this.games.leave('cancelled');
     if (a.action === 'dance') { this.dancing = null; const p = this.ctx.person(); if (p && DANCES.includes(this.clips.playing(p) as ClipName)) this.clips.stop(p); }
     this.queue.cancel(a.id);
     this.note(`${a.action} ${why}`);
@@ -931,6 +975,8 @@ export class BarLife {
     }
     // staff carrying
     this.drawCarry(this.bartender); this.drawCarry(this.server);
+    // S2b: the games' pieces (balls, bands, cues, darts, pucks) and the guide line
+    this.games.draw(I);
     for (const e of this.empties) I.putAt(e.model, e.x, e.y, e.z, e.yaw, 1, e.model === 'glass' ? EMPTY.glass : EMPTY.basket);
     // the budget check's worst case: every model at its cap ("The sums" count the items so), set on the room's surfaces
     if (this.itemsAtCap) {
@@ -1054,6 +1100,7 @@ export class BarLife {
   }
   /** the second action button: Sip while holding something; Order at the counter */
   second(): string | null {
+    if (this.games?.mine && !this.games.mine.yourTurn()) return 'Leave';
     if (this.held.drink && this.held.drink.left > 0) return 'Sip';
     if (this.held.food && this.held.food.left > 0) return 'Bite';
     const bar = this.objectById('bar')!;
@@ -1065,7 +1112,27 @@ export class BarLife {
     if (s === 'Sip') { this.sip('drink'); return 'sip'; }
     if (s === 'Bite') { this.sip('food'); return 'bite'; }
     if (s === 'Order') { this.openRadial('bar'); return 'order'; }
+    if (s === 'Leave') { this.games.leave('you left'); return 'leave'; }
     return null;
+  }
+  /** a game's result (S2b): the winner's moodlet scaled by competitive and 5 house tokens, or "Lost a close one";
+   *  tonight's three where they apply. Nothing is wagered. */
+  private gameResult(o: GameOutcome) {
+    let moodlet: string | null = null, tokens = 0;
+    if (o.won) {
+      this.moodlets.add('won-game', this.T, wonGameValue(this.traits.competitive)); moodlet = 'won-game';
+      this.save.tokens += GAME_TOKENS; tokens = GAME_TOKENS; this.wonGameAt = this.T; this.dirty = true;
+      this.tell(`You won at ${o.kind}! +${GAME_TOKENS} house tokens · ${o.detail}`, 4);
+      if (o.kind === 'darts') this.goal('darts-win');
+    } else {
+      if (o.close) { this.moodlets.add('lost-close', this.T); moodlet = 'lost-close'; }
+      this.tell(`${HOUSE_NAME} wins this one${o.close ? ' (close!)' : ''} · ${o.detail}`, 4);
+    }
+    if (o.potTwo) this.goal('pool-two');
+    if (o.landedThree) this.goal('shuffle-three');
+    this.gameResults.push({ ...o, t: +this.T.toFixed(4), moodlet, tokens });
+    this.note(`game ${o.id} ${o.won ? 'won' : 'lost'}${o.close ? ' (close)' : ''}`);
+    const p = this.ctx.person(); if (p && o.won) this.clips.play(p, 'cheer', { upper: false });
   }
   private persist() { this.dirty = false; this.savedAt = performance.now() / 1000; if (this.save.tonight) this.save.tonight.done = this.tonight.done; writeSave(this.save); }
 
@@ -1130,7 +1197,9 @@ export class BarLife {
         const p = buildPerson({ ...randomPerson(5150), quality: 'phone', lod: 2 });
         for (const lod of levels) {
           const t0 = performance.now(); p.setLod(lod); const ms = performance.now() - t0;
-          const probes = [...CLIPS, ...STAFF_CLIPS].map((n) => ({ ...self.clips.probe(p, n, 1.0), upper: self.clips.probe(p, n, 1.0, true).armR }));
+          // S2a's clips at 1.0 s as before; S2b's game clips in their swing (the shot, the throw and the push at 0.4 s)
+          const at = (n: ClipName) => (n === 'pool-shot' || n === 'dart-throw' || n === 'shuffle-slide' ? 0.4 : 1.0);
+          const probes = [...CLIPS, ...STAFF_CLIPS, ...GAME_CLIPS].map((n) => ({ ...self.clips.probe(p, n, at(n)), upper: self.clips.probe(p, n, at(n), true).armR }));
           out.push({ lod, buildMs: Math.round(ms), tris: p.stats().tris, probes });
         }
         // the people builder's dispose() leaves the skeleton's bone texture (handoff item 6): freed here too
@@ -1148,6 +1217,58 @@ export class BarLife {
       setTonight(goals: GoalId[]) { self.tonight = { goals: [...goals], done: [] }; if (self.save.tonight) { self.save.tonight.goals = self.tonight.goals; self.save.tonight.done = self.tonight.done; } return { ...self.tonight }; },
       setTeam(abbr: string | null) { self.team = abbr; self.save.team = abbr; self.dirty = true; return self.team; },
       words() { return SHOWN.map((k) => ({ k, word: needWord(k, self.needs[k]) })); },
+      // ---- S2b: the games
+      /** a table's or a board's state (pool-1, pool-2, darts-1 to darts-3, shuffleboard) */
+      game(id: string) { return self.games.state(id); },
+      /** every game spot */
+      games() { return { spots: self.games.list(), mine: self.games.mine?.id ?? null, houseAt: self.games.houseAt?.id ?? null, results: self.gameResults, note: NO_STAKES }; },
+      /** a scripted shot on your turn: pool { angle, speed } or { auto } or { break }; darts { seg, mult } or { x, y } (held: with the sway); shuffleboard
+       *  { speed, line, y0 } or { zone }; settle: true runs it to rest at once */
+      shoot(id: string, p: Record<string, unknown> = {}) { return self.games.shoot(id, p); },
+      /** start a game against the house where you stand (the hooks' shortcut past the walk; the radial menu walks you there) */
+      playHere(id: string) { const st = self.games.startOf(id); if (!st) return null; const [x, z] = self.ctx.F.fromFrame(st.at[0], st.at[1]); self.ctx.player.place(x, z); return self.use(id, `play-${self.games.kindOf(id) === 'pool' ? 'pool' : self.games.kindOf(id)}`); },
+      leaveGame() { return self.games.leave('you left'); },
+      gamecam() { return { ...self.games.cams.report(), camOn: self.games.camOn }; },
+      gameScreen(id: string, at?: [number, number]) { return self.games.screen(id, at); },
+      lastSlide() { const sp = self.games.spot('shuffleboard') as unknown as { lastSpeed: number } | null; return sp ? +sp.lastSpeed.toFixed(3) : null; },
+      /** your last slide's line (degrees; + is toward the bed's +y) and the spot's screen side */
+      lastLine() { const sp = self.games.spot('shuffleboard') as unknown as { lastLine: number; side: number } | null; return sp ? { line: +sp.lastLine.toFixed(3), side: sp.side } : null; },
+      gameAim(id: string, a: number | null, b: number, c?: boolean) { return self.games.setAim(id, a, b, c); },
+      /** pool, ball in hand: move the cue ball (table metres; it goes to the nearest free spot and stays in hand) */
+      placeCue(id: string, x: number, y: number) { const s = self.games.spot(id) as unknown as { game: { ballInHand: boolean } | null; placeCue(x: number, y: number): void; yourTurn(): boolean } | null; if (!s || s.game === undefined || !s.game?.ballInHand || !s.yourTurn()) return { ok: false }; s.placeCue(x, y); return { ok: true, state: self.games.state(id) }; },
+      /** pool: script the house's next shot ({ angle (degrees, table), speed } with no aim error, or 'scratch': the cue
+       *  ball into the nearest pocket it can reach), for a check that needs one (ball in hand after the house's scratch) */
+      houseShot(id: string, p: { angle: number; speed: number } | 'scratch') { const s = self.games.spot(id) as unknown as { kind: string; houseNext: unknown } | null; if (!s || s.kind !== 'pool') return false; s.houseNext = p === 'scratch' ? 'scratch' : { angle: (p.angle * Math.PI) / 180, speed: p.speed }; return true; },
+      /** darts: hold a dart in the air at this share of its flight (0 to 1; null lets it fly), so a screenshot can catch
+       *  the throw (a frame here takes longer than the 0.44 s throw) */
+      holdDart(id: string, k: number | null) { const s = self.games.spot(id) as unknown as { kind: string; holdAt: number | null } | null; if (!s || s.kind !== 'darts') return false; s.holdAt = k === null ? null : Math.max(0, Math.min(0.98, k)); return true; },
+      /** the game bar's rebuild count and the game's version (the bar's text is rebuilt only when the game changes) */
+      gamebar() { const m = self.games.mine; return { builds: self.games.barBuilds, ver: m ? m.ver : null, gaming: document.getElementById('hud')?.classList.contains('gaming') ?? false }; },
+      /** the toast and the crowd chip on screen: their boxes and whether they overlap */
+      hudBoxes() { const r = (id: string) => { const e = document.getElementById(id); if (!e) return null; const b = e.getBoundingClientRect(); return { x: Math.round(b.left), y: Math.round(b.top), w: Math.round(b.width), h: Math.round(b.height), shown: getComputedStyle(e).display !== 'none' && (id !== 'toast' || e.classList.contains('on')) }; }; const t = r('toast'), c = r('crowd'), gb = r('gamebar'); const over = !!t && !!c && t.x < c.x + c.w && c.x < t.x + t.w && t.y < c.y + c.h && c.y < t.y + t.h; return { toast: t, crowd: c, gamebar: gb, toastText: self.ctx.hud.toastText, overlap: over }; },
+      /** the pieces check: draw no game pieces (true), or all of them again (false) */
+      piecesOff(on: boolean) { self.games.piecesOff = on; self.drawItems(); return self.items.counts(); },
+      stageGames() { const r = self.games.stageAll(); self.drawItems(); return { states: r.map((x) => ({ id: x.id, playing: x.playing })), counts: self.items.counts() }; },
+      house() { const h = self.house, [u, v] = self.ctx.F.toFrame(h.x, h.z); return { name: HOUSE_NAME, u: +u.toFixed(2), v: +v.toFixed(2), walking: h.walking, clip: self.clips.playing(h.p), lod: h.p.stats().lod, tris: h.p.stats().tris }; },
+      gameResults() { return self.gameResults; },
+      /** play a game out to its end in sim time: your turns by a strategy, the house's by its own; best: your best pot,
+       *  the bed you need, zone 3 (no error); stall: darts down to 20 or less, then off the board; returns the outcome */
+      playOut(id: string, strategy: 'best' | 'stall' = 'best', maxMin = 90) {
+        const sp = self.games.spot(id); if (!sp) return null;
+        let turns = 0, guard = 0; const t0 = self.T;
+        while (sp.mine && guard++ < 20000 && self.T - t0 < maxMin) {
+          if (sp.yourTurn()) {
+            turns++;
+            if (sp.kind === 'pool') sp.shoot({ auto: true, settle: true });
+            else if (sp.kind === 'darts') {
+              const left = (sp.state().left as number[])[0];
+              if (strategy === 'stall' && left <= 40) sp.shoot({ x: 0.3, y: 0.3, settle: true });
+              else { const tg = left > 60 ? { seg: 20, mult: 3 } : left === 50 ? { seg: 25, mult: 2 } : left === 25 ? { seg: 25, mult: 1 } : left <= 20 ? { seg: left, mult: 1 } : left % 3 === 0 && left / 3 <= 20 ? { seg: left / 3, mult: 3 } : left % 2 === 0 && left / 2 <= 20 ? { seg: left / 2, mult: 2 } : { seg: Math.min(20, left - 1), mult: 1 }; sp.shoot({ ...tg, settle: true }); }
+            } else sp.shoot({ zone: 3, settle: true });
+          } else self.fastForward(2 / 60);
+        }
+        return { outcome: sp.outcome, yourTurns: turns, simMinutes: +(self.T - t0).toFixed(2), state: sp.state() };
+      },
     };
   }
 }

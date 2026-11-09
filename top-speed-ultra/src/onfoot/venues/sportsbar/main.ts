@@ -244,7 +244,7 @@ async function main() {
   const personOpts = driverPerson(choice);
   let person: Person | null = null, lod0Ready = false, avDirty = true;
   /** what applyAvatar last ran for (compared field by field each frame; no string is built) */
-  const avLast = { view: '', lod0: false, quality: '', hide: false };
+  const avLast = { view: '', lod0: false, quality: '', hide: false, game: '' };
   const buildAvatar = (qq: Quality) => {
     const old = person;
     person = buildPerson({ ...personOpts, quality: PRESET[qq].people, lod: 1 as const });
@@ -607,7 +607,9 @@ async function main() {
   /** your avatar's level of detail and caster, only when the view, the preset or the build changes */
   const applyAvatar = (hideThird: boolean) => {
     const p = person; if (!p) return;
-    const third = view !== 'first' && !(view === 'third' && hideThird), ultra = quality === 'ultra', low = quality === 'low';
+    // S2b: a game's view shows your avatar over your shoulder (darts, shuffleboard), except the pool table's overhead
+    // view, which hides it (it stands just under that camera: a dark shape at the frame's edge, at every preset)
+    const third = life.gameCamOn ? !life.gameHidesYou : view !== 'first' && !(view === 'third' && hideThird), ultra = quality === 'ultra', low = quality === 'low';
     const close = view === 'third' && third && ultra && lod0Ready;
     p.setLod(close ? 0 : 1);
     const lod1 = p.group.getObjectByName('lod1') as THREE.Mesh | undefined;
@@ -628,8 +630,9 @@ async function main() {
     p.play(player.seat ? 'sit' : sp > 0.15 ? 'walk' : 'idle');
     const k = sp > 0.15 && !player.seat ? clamp(sp / 1.25, 0.6, 2.2) : 1;
     p.update(dt * k);
-    if (avDirty || avLast.view !== view || avLast.lod0 !== lod0Ready || avLast.quality !== quality || avLast.hide !== hide) {
-      avDirty = false; avLast.view = view; avLast.lod0 = lod0Ready; avLast.quality = quality; avLast.hide = hide;
+    const gameShow = !life.gameCamOn ? '' : life.gameHidesYou ? 'hide' : 'show';
+    if (avDirty || avLast.view !== view || avLast.lod0 !== lod0Ready || avLast.quality !== quality || avLast.hide !== hide || avLast.game !== gameShow) {
+      avDirty = false; avLast.view = view; avLast.lod0 = lod0Ready; avLast.quality = quality; avLast.hide = hide; avLast.game = gameShow;
       applyAvatar(hide);
     }
   };
@@ -659,6 +662,7 @@ async function main() {
     if (fixedCam) { camera.position.copy(fixedCam.p); camera.lookAt(fixedCam.t); hide = false; }
     else if (view === 'overhead') { overhead.update(camera, dt); hide = false; }
     else { const c = player.camera(camera); hide = c.hide; }
+    if (!fixedCam && life.gameCamera(camera, dt)) hide = false;       // S2b: a game's own view on your turn (gamecams.ts)
     return hide;
   };
   const frame = (now: number) => {

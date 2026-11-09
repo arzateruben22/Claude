@@ -336,6 +336,28 @@ cheer, arm pump and clap read; drink and eat bring the hand to the chin. Three n
 hands behind the head rather than on top of it with the head bowed; **sway** and **two-step** read only in motion (a
 still shows bent arms and little else). They ship as they are in S2a.
 
+### From the sports bar's S2b (2026-11-09; `PROJECT_OC_SPORTS_BAR.md` open items O4 and O33)
+
+10. **A camera moved after `Player.camera()` keeps a stale world matrix.** `lot57/player.ts`'s camera ends with
+    `lookAt`, which updates the camera's world matrix at your eye before it turns it; anything that moves the camera
+    after that in the same frame (the bar's game views, an overhead or photo camera) must call
+    `camera.updateMatrixWorld()` before projecting a point that frame, or the projection uses your eye's pose (the bar's
+    S2b dart reticle sat 0.4 m off the board until it did). The renderer fixes it for the render itself; tap rays and
+    `Vector3.project` in the same frame don't.
+
+**For the design review queue (O33, S2b's game clips).** The game clips (`src/onfoot/engine/sim/clips.ts`, the same
+external pose layer, `people/` untouched) were looked at on your avatar from the side
+(`tests/out/sportsbar/s2b-clip-*-r2.png`): the **dart throw** (the dart up by the eye, the elbow up) and the
+**shuffleboard slide** (a lean and a long forward reach) read well. The **pool stance** reads as a lean over the
+table, but the cue arm hangs instead of drawing back along the cue, and the **pool shot** only swings that forearm, so
+from the side it hardly differs from the stance. The cue arm wants its upper arm drawn back and up with the forearm
+hanging (as a stroke), and the shot a visible swing from the elbow. They ship as they are in S2b. (Since S2b's repair
+your own avatar isn't drawn in the pool camera's view at all: it stood just under that camera and showed as dark
+shapes at the frame's edge; Rocío's stance and shot are seen from your own view on her turns.) **The cue is drawn on
+its own** (an instance of the stick mesh behind the cue ball, 8 degrees up), not in your or Rocío's hands: with the
+stance reworked, the cue's butt wants to follow the right hand (`handR`'s world position) and the stand point to put
+that hand on the aim line. Both are for the same design pass.
+
 ## Owner questions (open)
 
 - **The sports bar's Low and the sun map** (`PROJECT_OC_SPORTS_BAR.md`, "Owner questions", 1). Decision 15 lists
