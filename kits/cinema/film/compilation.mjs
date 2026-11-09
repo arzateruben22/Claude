@@ -2,7 +2,7 @@
 //
 //   node kits/cinema/film/compilation.mjs --channel films/channels/physics --episodes ep01,ep02,ep03,ep04 \
 //        [--title "Everyday physics, slowed down"] [--thumb "Short thumbnail text"] [--name vol01]
-//        [--out <channel>/compilations] [--cards-only]   (draws the cards and the thumbnail, then stops)
+//        [--out <channel>/compilations] [--cards-only] [--bridge 2]   (--bridge S: an S-second "Next: …" card between episodes, silent; default none)   (draws the cards and the thumbnail, then stops)
 //        [--height 1440|1080] (default 1440) [--crf 15] [--max-mb 90]
 //
 // Each episode's delivered 9:16 file (<episode>/out/*-9x16.mp4) plays whole, full height, in the middle
@@ -34,6 +34,7 @@ const chan = path.resolve(A.channel), theme = JSON.parse(fs.readFileSync(path.jo
 const W = 1920, H = 1080, FPS = 30, SLOT = { x: 656, w: 608 }, INTRO = 4.0, OUTRO = 8.0;     // the layout, in CSS px at 1080
 const OH = Number(A.height || 1440), S = OH / H, OW = Math.round(W * S);                      // the delivered frame
 if (![1080, 1440].includes(OH)) die("--height is 1080 or 1440");
+const BR = Number(A.bridge || 0);                                                               // seconds of the card between two episodes (0: none)
 const CRF = Number(A.crf ?? 15), MAX_MB = Number(A["max-mb"] || 90);
 const SLOT_PX = { x: Math.round(SLOT.x * S), w: 2 * Math.round((OH * 9) / 16 / 2) };            // the episode, full height, 9:16
 const run = (cmd, args, o = {}) => { const r = spawnSync(cmd, args, { encoding: "utf8", maxBuffer: 1 << 26, ...o }); if (r.status !== 0) die(`${cmd} failed: ${(r.stderr || "").slice(-800)}`); return r.stdout; };
@@ -50,7 +51,7 @@ const eps = String(A.episodes).split(",").map((id, k) => {
   const file = path.join(out, mp4), j = probe(file), v = j.streams.find((s) => s.codec_type === "video");
   if (v.width !== 1080 || v.height !== 1920) die(`${id}: ${mp4} is ${v.width}×${v.height}, not 1080×1920`);
   const claims = fs.existsSync(path.join(dir, "claims.json")) ? JSON.parse(fs.readFileSync(path.join(dir, "claims.json"), "utf8")) : [];
-  const series = plain(film.title && film.title.series) || "", num = (series.match(/No\.\s*\d+/) || [`No. ${String(k + 1).padStart(3, "0")}`])[0];
+  const series = plain(film.title && film.title.series) || "", num = (series.match(/(?:No\.|Season 2 · Episode)\s*\d+/) || [`No. ${String(k + 1).padStart(3, "0")}`])[0];
   return { id, dir, file, dur: Number(j.format.duration), title: plain(film.title && film.title.title) || id, num, claims,
     poster: path.join(out, mp4.replace(/\.mp4$/, ".jpg")) };
 });
@@ -96,14 +97,14 @@ body { background: radial-gradient(1400px 900px at 50% 40%, ${tok["bg-hi"] || to
 .thumb .posters img:nth-child(2) { transform: translateY(-26px); }
 `;
 const rows = (k) => eps.map((e, i) => `<div class="row ${i < k ? "past" : i === k ? "now" : ""}"><b>${String(i + 1).padStart(2, "0")}</b><span>${esc(e.title)}</span></div>`).join("");
-const minutes = Math.round((INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0)) / 60);
+const minutes = Math.round((INTRO + OUTRO + BR * (eps.length - 1) + eps.reduce((a, e) => a + e.dur, 0)) / 60);
 const posters = (n) => `<div class="posters">${eps.slice(0, n).filter((e) => fs.existsSync(e.poster)).map((e) => `<img src="${pathToFileURL(e.poster).href}">`).join("")}</div>`;
 const pages = {
   intro: `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="big" style="margin-top:22px">${esc(title)}</p><p class="prom"${theme.compilation && theme.compilation.introPromiseWidth ? ` style="max-width:${+theme.compilation.introPromiseWidth}px"` : ""}>${esc(theme.promise || "")}</p><p class="meta">${eps.length} episodes · about ${minutes} min</p></div>${posters(3)}`,
   outro: `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="big" style="margin-top:22px;max-width:900px">A new one every day.</p><p class="prom" style="max-width:820px">${esc(theme.promise || "")}</p><span class="pill">Subscribe</span></div>`,
   thumb: `<div class="card thumb"><p class="kick">${esc(theme.name)}</p><p class="big" style="margin-top:20px">${esc(A.thumb || title)}</p></div>${posters(3)}`,
 };
-eps.forEach((e, k) => { pages[`ep${k}`] = `<div class="slot"></div><div class="left"><p class="kick">${esc(theme.name)}</p><p class="num">${esc(e.num)}</p><p class="t">${esc(e.title)}</p><p class="of">Episode ${k + 1} of ${eps.length}</p></div><div class="right"><p class="hd">In this video</p>${rows(k)}</div><p class="foot">Narration: synthetic voice (AI)</p>`; });
+eps.forEach((e, k) => { if (BR && k > 0) pages[`bridge${k}`] = `<div class="card"><p class="kick">${esc(theme.name)} · ${esc(e.num)}</p><p class="big" style="margin-top:22px;font-size:96px">${esc(e.title)}</p><p class="prom">Episode ${k + 1} of ${eps.length}</p></div>`; pages[`ep${k}`] = `<div class="slot"></div><div class="left"><p class="kick">${esc(theme.name)}</p><p class="num">${esc(e.num)}</p><p class="t">${esc(e.title)}</p><p class="of">Episode ${k + 1} of ${eps.length}</p></div><div class="right"><p class="hd">In this video</p>${rows(k)}</div><p class="foot">Narration: synthetic voice (AI)</p>`; });
 
 const pwDir = process.env.PLAYWRIGHT_DIR || path.dirname(run("npm", ["root", "-g"]).trim());
 const { chromium } = createRequire(path.join(pwDir, "x.js"))("playwright");
@@ -133,7 +134,7 @@ const cardSound = (k, dur, energy, sigAt) => {
 const introWav = preset ? cardSound("intro", INTRO, 0.6, 0.5) : null, outroWav = preset ? cardSound("outro", OUTRO, 0.4, 0.6) : null;
 
 // ── the picture: segments encoded alike (picture only), then joined without re-encoding ──
-const total = INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0);
+const total = INTRO + OUTRO + BR * (eps.length - 1) + eps.reduce((a, e) => a + e.dur, 0);
 const capK = Math.floor((MAX_MB * 8e6) / total / 1000 - 400);                                 // kbps for the picture, room left for sound
 const V = ["-c:v", "libx264", "-preset", "slow", "-crf", String(CRF), "-maxrate", `${capK}k`, "-bufsize", `${capK * 2}k`, "-x264-params", "aq-mode=3:deblock=-1,-1",
   "-pix_fmt", "yuv420p", "-profile:v", "high", "-r", String(FPS), "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-color_range", "tv"];
@@ -150,6 +151,7 @@ eps.forEach((e, k) => {
     `[0:v]fps=${FPS},format=yuv420p[bg];[1:v]scale=${SLOT_PX.w}:${OH}:flags=lanczos+accurate_rnd+full_chroma_int[ep];[bg][ep]overlay=${SLOT_PX.x}:0:shortest=1,format=yuv420p[v]`,
     "-map", "[v]", "-an", "-t", e.dur.toFixed(3), ...V, o]);
   segs.push(o);
+  if (BR && k < eps.length - 1) segs.push(card(`bridge${k + 1}`, BR));
 });
 segs.push(card("outro", OUTRO));
 const list = path.join(work, "concat.txt"), final = path.join(outDir, `${name}-16x9.mp4`);
@@ -166,7 +168,7 @@ const part = (src, dur, card) => {                     // src: a file, or a lavf
   parts.push(`[${i}:a:0]aformat=sample_rates=48000:channel_layouts=stereo${card ? `,volume=-4dB,afade=t=out:st=${dur - 0.5}:d=0.5` : ""},apad=whole_dur=${dur},atrim=0:${dur},asetpts=N/SR/TB[a${i}]`);
 };
 part(introWav || `anullsrc=r=48000:cl=stereo:d=${INTRO}`, INTRO, true);
-eps.forEach((e) => part(e.file, +e.dur.toFixed(3), false));
+eps.forEach((e, k) => { part(e.file, +e.dur.toFixed(3), false); if (BR && k < eps.length - 1) part(`anullsrc=r=48000:cl=stereo:d=${BR}`, BR, true); });
 part(outroWav || `anullsrc=r=48000:cl=stereo:d=${OUTRO}`, OUTRO, true);
 const wavAll = path.join(work, "sound.wav"), m4a = path.join(work, "sound.m4a");
 run("ffmpeg", ["-v", "error", "-y", ...inputs, "-filter_complex", `${parts.join(";")};${parts.map((_, j) => `[a${j}]`).join("")}concat=n=${parts.length}:v=0:a=1[a]`,
@@ -185,7 +187,7 @@ run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", list, "-
 // ── chapters, description, QA ──────────────────────────────────────────────────
 const starts = [];
 let t = INTRO;
-for (const e of eps) { starts.push(t); t += e.dur; }
+for (const e of eps) { starts.push(t); t += e.dur + BR; }
 starts[0] = 0;   // YouTube: the first chapter starts at 0:00 (the intro belongs to it); the outro belongs to the last
 const chapters = eps.map((e, k) => `${ts(starts[k])} ${e.title}`).join("\n");
 fs.writeFileSync(path.join(outDir, "chapters.txt"), chapters + "\n");
