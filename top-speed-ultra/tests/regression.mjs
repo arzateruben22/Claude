@@ -1339,6 +1339,68 @@ await group('progression', async (use) => {
       + `${Math.round(s0.credits).toLocaleString()} credits, ${s0.vehicles.length} slots used: top ${Math.round(s0.top * MPH)} → ${Math.round(s1.top * MPH)} mph, run in ${run.built}; `
       + `profile unchanged (${s1.vehicles.join(', ')}, driving ${s1.chosen}); off: back to ${s2.car}; #owner on/off: ${hash.a.on}/${hash.b.on}`;
   });
+  // the Founder Edition's exclusives (hypercar M6, PROJECT_OC_HYPERCAR.md section 7): no serial until the store assigns
+  // one, so every plaque reads No. 0000 · TEST; Glacier Silver and the Founder Ice LEDs on the hypercar only
+  await check('Founder Edition: the plaque reads "FOUNDER EDITION · No. 0000 · TEST" with no serial; Glacier Silver and Founder Ice on the hypercar only; still never bought or sold for credits', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, f = g.founder;
+      return { ...f, buy: g.profile.buy('oc-hyper', 0, 1, 6), sell: g.profile.sell('oc-hyper', 0), owned: g.profile.p.vehicles.includes('oc-hyper') };
+    });
+    expect(r.serial === null && r.number === 'No. 0000 · TEST' && r.plaque === 'FOUNDER EDITION · No. 0000 · TEST', `serial ${r.serial}, plaque "${r.plaque}"`);
+    expect(r.paint.name === 'Glacier Silver' && r.led.name === 'Founder Ice' && r.until === '2026-12-31T23:59:59-08:00', `${r.paint.name}, ${r.led.name}, until ${r.until}`);
+    const wrong = Object.entries(r.finishes).filter(([id, names]) => names.includes('Glacier Silver') !== (id === 'oc-hyper'));
+    expect(!wrong.length, `Glacier Silver offered on: ${JSON.stringify(r.finishes)}`);
+    expect(r.ledCars.join() === 'oc-hyper', `cars with the Founder Ice LED strips: ${r.ledCars.join(', ')}`);
+    const asked = Object.entries(r.paints).filter(([id, hex]) => (hex === r.paint.hex) !== (id === 'oc-hyper'));
+    expect(!asked.length, `Glacier Silver asked for on every car gives: ${JSON.stringify(r.paints)}`);
+    expect(/never sold for credits/.test(r.buy) && /can't be sold/.test(r.sell) && !r.owned, `buy "${r.buy}", sell "${r.sell}", owned ${r.owned}`);
+    return `"${r.plaque}" (serial ${r.serial}); ${r.paint.name} offered only on ${Object.entries(r.finishes).filter(([, n]) => n.includes('Glacier Silver')).map(([id]) => id).join(', ')}, asked for elsewhere gives the car's own paint; LED strips on ${r.ledCars.join(', ')}; buy "${r.buy}"`;
+  });
+  // its garage card: the reveal stage plays by itself once on this device, keeps its last frame for the session, plays
+  // again on demand; choosing the car wakes its lights on the stage and on the car; reduced motion: nothing moves
+  await check('the hypercar\'s garage card: the reveal stage plays once, keeps its last frame, Replay plays it again; choosing the car wakes its lights; reduced motion shows it still', async () => {
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, owner: true }); localStorage.removeItem('tsu.founderReveal'); });
+    const lit = () => game(page, () => {
+      const c = document.querySelector('.gcell.car.founder .fe-stage canvas'); if (!c) return null;
+      const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let sum = 0, max = 0, ice = 0;
+      for (let i = 0; i < d.length; i += 16) { const l = (d[i] + d[i + 1] + d[i + 2]) / 3; sum += l; max = Math.max(max, l); if (d[i + 2] > 180 && d[i + 2] > d[i] + 40) ice++; }
+      return { mean: sum / (d.length / 16), max, ice, w: c.width, h: c.height };
+    });
+    const open = async () => { await page.locator('.pick', { hasText: 'Car' }).first().click(); await page.waitForSelector('.gcell.car.founder .fe-stage canvas'); };
+    const done = async () => { await page.locator('.panel').getByRole('button', { name: 'Done' }).click(); await page.waitForSelector('.overlay.menu', { timeout: 120000 }); };
+    await open();
+    await page.waitForFunction(() => window.__game.revealState.frames > 0, null, { timeout: 900000, polling: 500 });
+    const t1 = await game(page, () => window.__game.revealState);
+    await page.waitForFunction(() => { const s = window.__game.revealState; return s.frames > 1 && !s.playing; }, null, { timeout: 900000, polling: 500 });
+    const end = await game(page, () => ({ ...window.__game.revealState, seen: localStorage.getItem('tsu.founderReveal') }));
+    const px = await lit();
+    await done();
+    await open();
+    await page.waitForTimeout(600);
+    const again = await game(page, () => window.__game.revealState), px2 = await lit();
+    // Drive: the car is chosen, its lights wake (the player's car and the stage's)
+    await page.locator('.gcell.car.founder').getByRole('button', { name: 'Drive' }).click();
+    await page.waitForFunction(() => window.__game.carId === 'oc-hyper');
+    const woke = await game(page, () => ({ car: window.__game.car.config?.car, wake: window.__game.founder.wake, stage: window.__game.revealState }));
+    // reduced motion: Replay shows the last frame at once, and the car's lights are on at once
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.locator('.gcell.car.founder').getByRole('button', { name: 'Replay reveal' }).click();
+    const still = await game(page, () => { const g = window.__game; g.wakeFounder(); return { stage: g.revealState, wake: g.founder.wake }; });
+    await frames(page, 2, 400000);                         // the car's lights take the new state on its next frame
+    still.after = await game(page, () => window.__game.founder.wake.value);
+    await page.emulateMedia({ reducedMotion: null });
+    await done();
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, owner: false }); });
+    expect(t1.built && t1.kind === 'reveal' && (t1.playing || t1.t > 0), `first open: ${JSON.stringify(t1)}`);
+    expect(!end.playing && end.t >= 6 && end.frames > 1 && end.still && end.seen === '1', `after the reveal: ${JSON.stringify(end)}`);
+    expect(end.calls > 0 && end.calls <= 40 && end.tris > 1000 && end.tris <= 260000, `the stage frame: ${end.calls} calls, ${end.tris} triangles`);
+    expect(px && px.mean > 4 && px.max > 150 && px.ice > 0, `the stage's last frame: ${JSON.stringify(px)}`);
+    expect(!again.built && !again.playing && px2 && Math.abs(px2.mean - px.mean) < 3, `opened again: ${JSON.stringify(again)}, pixels ${JSON.stringify(px2)}`);
+    expect(woke.car === 'oc-hyper' && woke.wake.t < 3 && woke.stage.kind === 'wake', `chosen: ${JSON.stringify(woke)}`);
+    expect(!still.stage.playing && still.stage.t >= 6 && !still.wake.waking && still.wake.t >= 99 && still.after === 9, `reduced motion: ${JSON.stringify(still)}`);
+    return `played ${end.frames} frames to ${fmt(end.t)} s (build ${end.buildMs} ms; a stage frame ${end.calls} calls, ${end.tris.toLocaleString()} triangles), last frame mean ${fmt(px.mean)}, ${px.ice} ice-blue samples; `
+      + `reopened from the session's frame without building; chosen: lights at ${fmt(woke.wake.t)} s into the wake; reduced motion: stage at ${fmt(still.stage.t)} s, lights steady`;
+  });
 });
 
 // SwiftShader here manages under 2 fps on Low and well under 1 fps on High and Ultra (a frame there can take over a
@@ -1463,6 +1525,37 @@ await group('render', async (use) => {
     }
     return out.join('; ');
   });
+  // hypercar M6: the Founder Edition's lights wake on the start line (the race grid, through the countdown): dark, then
+  // the sweep (car-wake.ts: one progress uniform, 0 to 1.1 over 1.2 s), then steady; only its LED strips, headlamp
+  // blades and red bar take part (the GT's tail material has no wake in its shader); reduced motion: on at once
+  await check('the Founder Edition\'s lights wake on the start line: dark, a 1.2 s sweep, then steady; only its own lights take part; at once with reduced motion', async () => {
+    const gt = await game(page, () => { const g = window.__game, m = g.car.mats; return { car: g.car.config?.car, tail: m.tail.customProgramCacheKey(), led: !!m.led }; });
+    await hyperIn(page, 'race');
+    const keys = await game(page, () => { const m = window.__game.car.mats; return { led: m.led.customProgramCacheKey(), lamp: m.lamp.customProgramCacheKey(), tail: m.tail.customProgramCacheKey(), wake: window.__game.founder.wake }; });
+    // sample the sweep on real frames from a fresh wake
+    await game(page, () => {
+      const g = window.__game; window.__wk = [];
+      g.setPaused(false); g.wakeFounder();
+      const tick = () => { const w = g.founder.wake; window.__wk.push(w.value); if (w.waking || window.__wk.length < 3) requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    });
+    await page.waitForFunction(() => !window.__game.founder.wake.waking && window.__wk.length >= 3, null, { timeout: 900000, polling: 500 });
+    const wk = await game(page, () => { window.__game.setPaused(true); return window.__wk; });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const reduced = await game(page, () => { const g = window.__game; g.wakeFounder(); return g.founder.wake; });
+    await page.emulateMedia({ reducedMotion: null });
+    await frames(page, 1, 400000);
+    const after = await game(page, () => window.__game.founder.wake.value);
+    const mid = wk.filter((v) => v > 0.02 && v < 1.1);
+    const rising = wk.every((v, i) => i === 0 || v >= wk[i - 1] - 1e-9);
+    expect(gt.car === 'rossini-gt' && !gt.led && !/wake/.test(gt.tail), `the GT: ${JSON.stringify(gt)}`);
+    expect(/wake-ice/.test(keys.led) && /wake-ice/.test(keys.lamp) && /wake-bar/.test(keys.tail), `the hypercar's lights: ${JSON.stringify(keys)}`);
+    expect(wk[0] < 0.3 && mid.length >= 2 && rising && wk[wk.length - 1] === 9, `the sweep's progress frame by frame: ${wk.map(fmt).join(', ')}`);
+    expect(!reduced.waking && reduced.t >= 99 && after === 9, `reduced motion: ${JSON.stringify(reduced)}, then ${after}`);
+    await page.getByRole('button', { name: 'Main menu' }).click().catch(() => game(page, () => window.__game.quitToMenu()));
+    const dark = wk.findIndex((v) => v > 0), last = wk.length - 2;
+    return `GT tail shader without the wake; the hypercar's LEDs, blades and red bar with it; over ${wk.length} frames: dark for ${dark}, then ${fmt(wk[dark])} → ${fmt(wk[Math.floor((dark + last) / 2)])} → ${fmt(wk[last])} (${mid.length} frames mid-sweep), then steady (${wk[wk.length - 1]}); reduced motion: steady at once`;
+  });
 });
 
 await group('phone', async (use) => {
@@ -1480,6 +1573,27 @@ await group('phone', async (use) => {
     const text = await page.locator('.overlay').last().innerText();
     expect(/level/i.test(text), 'no level shown');
     await page.keyboard.press('Escape');
+  });
+  // hypercar M6: the Founder Edition's garage card at phone size: its reveal stage sits inside the card at 16:9 and plays,
+  // the caption and the Replay button don't collide, and nothing scrolls sideways
+  await check('the Founder Edition card at 390 × 844: the reveal stage fits the card at 16:9 and plays; caption and Replay apart; no sideways scroll', async () => {
+    await page.locator('.pick', { hasText: 'Car' }).first().click();
+    await page.waitForSelector('.gcell.car.founder .fe-stage canvas');
+    await page.waitForFunction(() => window.__game.revealState.frames > 0, null, { timeout: 900000, polling: 500 });
+    await game(page, () => document.querySelector('.gcell.car.founder').scrollIntoView({ block: 'start' }));
+    await frames(page, 2, 400000);
+    await page.screenshot({ path: path.join(OUT, 'phone-garage-founder.png') });
+    const r = await game(page, () => {
+      const box = (q) => { const b = document.querySelector(q).getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom }; };
+      return { stage: box('.fe-stage'), card: box('.gcell.car.founder'), cap: box('.fe-cap'), btn: box('.fe-replay'), w: innerWidth, side: document.documentElement.scrollWidth > innerWidth, state: window.__game.revealState };
+    });
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    const { stage: st, card, cap, btn } = r, hit = (a, b) => !(a.r <= b.l || b.r <= a.l || a.b <= b.t || b.b <= a.t);
+    expect(st.l >= card.l && st.r <= card.r && st.l >= 0 && st.r <= r.w && Math.abs((st.r - st.l) / (st.b - st.t) - 16 / 9) < 0.03, `stage ${JSON.stringify(st)} in card ${JSON.stringify(card)}`);
+    expect(!hit(cap, btn) && btn.b - btn.t >= 36 && btn.r <= st.r && cap.l >= st.l, `caption ${JSON.stringify(cap)}, Replay ${JSON.stringify(btn)}`);
+    expect(!r.side, 'the page scrolls sideways');
+    expect(r.state.built && r.state.frames > 0 && r.state.calls > 0, `stage: ${JSON.stringify(r.state)}`);
+    return `stage ${Math.round(st.r - st.l)} × ${Math.round(st.b - st.t)} px in a ${Math.round(card.r - card.l)} px card; a stage frame ${r.state.calls} calls, ${r.state.tris.toLocaleString()} triangles (the phone build), ${r.state.frames} frames so far`;
   });
   // the driving profiles at 390 x 844: each button puts the one handling value (Settings, the save and the physics) on
   // its point, the slider moved off a point reads Custom with its own line, and the page never scrolls sideways

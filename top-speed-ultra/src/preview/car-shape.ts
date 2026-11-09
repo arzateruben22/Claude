@@ -15,6 +15,7 @@
 // Every car shares the driver's frame (spec.ts EYE, WHEEL_AT): the cabin stays where the driver sits; the body
 // changes round it. Lengths in metres, car frame (x right, y up, the car faces -z, origin under the middle).
 import type { PaintMask } from './car-mats';
+import { GLACIER_SILVER, FOUNDER_ICE } from '../game/founder';
 export type CarId = 'rossini-gt' | 'rossini-brio' | 'rossini-corsa' | 'vela-e' | 'oc-hyper';
 export const CAR_IDS: CarId[] = ['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e', 'oc-hyper'];
 type K = [number, number][];
@@ -220,7 +221,7 @@ const VELA: ShapeParams = {
 // on the SIDE panel, anchored on the tyres; the width from the plate on the REAR panel). Its roof is 1.12 m, not the
 // sheet's 1.05 m: the shared driver's frame needs room (section 3, "What the game's shared frame forces").
 const HYPER: ShapeParams = {
-  ...CORSA, id: 'oc-hyper', name: 'OC Hypercar Prototype 01', brand: 'oc', paint: 0xc8d3e8,
+  ...CORSA, id: 'oc-hyper', name: 'OC Hypercar Prototype 01', brand: 'oc', paint: GLACIER_SILVER.hex,   // Glacier Silver: the Founder Edition's own paint (src/game/founder.ts)
   ZF: -2.43, ZR: 2.29, YSILL: 0.07,
   // 3.00 m wheelbase; 0.70 / 0.74 m tyres; tracks 1.72 / 1.69 m
   axle: { zF: -1.52, zR: 1.48, r: 0.35, rR: 0.37, trackF: 0.86, trackR: 0.845, wF: 0.275, wR: 0.345 },
@@ -273,7 +274,7 @@ const HYPER: ShapeParams = {
   wheel: 'multi', rimColor: 0x101318, caliper: 0x1f4fd8,
   interior: 'corsa',
   sidewall: 0.75, seatDrop: 0.15, seatX: 0.27,
-  led: { color: 0xa6dcff, halo: 0x2f8fe8 },
+  led: { color: FOUNDER_ICE.core, halo: FOUNDER_ICE.halo },   // Founder Ice: reserved to this car (src/game/founder.ts)
   bar: { len: 1.66, h: 0.02 },
   fins: { x: [0.68, 0.62], z: [0.95, 2.08], h: 0.08 },
   // two long vents along the front fenders' inner walls, by the cowl

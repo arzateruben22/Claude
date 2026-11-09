@@ -17,6 +17,8 @@
 //       builds the body separately), so it draws over it.
 //     body: include the front of the car's body seen through the windscreen and the door mirrors (default true).
 //     stitch: thread colour (default cognac).
+//     plaque: the OC Hypercar's Founder Edition plaques' number line (default src/game/founder.ts plaqueNumber(): "No. 0000 ·
+//       TEST" until the store assigns real numbers); one on the driver's door sill cap, one on the console lid.
 //   returns { group, wheel, update(dt), setInstruments({ rpm }), mirrors }
 //     group: the interior in the car's frame. wheel: the steering-wheel mount at spec WHEEL_AT, rotation.x =
 //     WHEEL_TILT; its rotation.z steers, and hands added to it turn with it (the rim follows spec rimAt/rimA/rimB).
@@ -38,10 +40,11 @@ import { carMaterials, aoFor } from './car';
 import { CarId, shapeFor } from './car-shape';
 import { EYE, WHEEL_AT, WHEEL_TILT, rimAt, rimA, rimB } from './spec';
 import * as G from './car-gauges';
-import { windscreenDust, badgeTex, once } from './car-tex';
+import { windscreenDust, badgeTex, plaqueTex, once } from './car-tex';
+import { plaqueNumber } from '../game/founder';
 import { CarMirror } from './car-mirror';
 
-export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number }
+export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number; plaque?: string }
 // each car's trim: seat colour and kind, thread, the dash top's material, the fascia band, the wheel, the binnacle
 interface Theme { seat: number; seatKind: 'leather' | 'buckets'; stitch: number; dash: 'alc' | 'nappa'; band: 'carbon' | 'alu'; wheel: 'gt' | 'brio' | 'corsa' | 'vela'; binnacle: 'tach' | 'screen'; door: 'nappa' | 'carbon'; head: number }
 const THEMES: Record<string, Theme> = {
@@ -607,6 +610,28 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const bridge = new RoundedBoxGeometry(0.08, 0.04, 0.3, 4, 0.016); bridge.translate(0, 0.475, -0.38); kit.add('alu', bridge);
     const floor = new THREE.PlaneGeometry(1.74, 1.6); floor.rotateX(-Math.PI / 2); floor.translate(0, 0.12, -0.25); kit.add('carpet', floor);
     const toe = new THREE.PlaneGeometry(1.74, 0.42); toe.rotateX(-0.85); toe.translate(0, 0.27, -1.12); kit.add('carpet', toe);
+  }
+
+  // ---------------------------------------------------------------- the Founder Edition's numbered plaques
+  // (the OC Hypercar only): brushed aluminium, engraved, on a thin carbon plinth; one material for both, so one draw
+  // call. The console's sits on the lid behind the bridge, its lettering reading from the driver's seat and tilted to
+  // it; the sill's lies on the driver's door sill cap ahead of the shoulder, reading front to back as the driver looks
+  // down to the left. Both carry the same number line.
+  if (P.brand === 'oc') {
+    const number = o.plaque ?? plaqueNumber();
+    mats.plaque = once('m.plaque' + number + q, () => new THREE.MeshPhysicalMaterial({ map: plaqueTex(number, high ? 1024 : 512), metalness: 0.65, roughness: 0.38, clearcoat: 0.5, clearcoatRoughness: 0.08, envMapIntensity: 0.9 }));
+    const put = (w: number, m: THREE.Matrix4) => {
+      const face = new THREE.PlaneGeometry(w, w / 4); face.translate(0, 0, 0.0052); kit.add('plaque', face, m);
+      const base = new RoundedBoxGeometry(w + 0.01, w / 4 + 0.01, 0.006, 2, 0.002); base.translate(0, 0, 0.002); kit.add('carbon', base, m, 0.05);
+    };
+    // the console: the plate's normal tilted 0.3 rad back toward the driver, its lettering's top toward the nose
+    put(0.18, mat(0, 0.467, -0.1, -Math.PI / 2 + 0.3));
+    // the sill cap at z -0.3: across the cap, laid on it and tilted 0.25 rad inboard; the lettering runs forward, its top outboard
+    const zs = -0.3, ys = sill(zs), gx = body.canopyX(zs, ys + 0.012) - 0.008, xm = (0.845 + gx) / 2;
+    const sm = new THREE.Matrix4().makeTranslation(-xm, ys + 0.006, zs)
+      .multiply(new THREE.Matrix4().makeRotationZ(-0.25)).multiply(new THREE.Matrix4().makeRotationY(Math.PI / 2)).multiply(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+    put(0.14, sm);
+    group.userData.plaques = { number, sill: { x: -xm, y: ys + 0.006, z: zs, capW: 0.845 - gx }, console: { x: 0, y: 0.459, z: -0.1 } };
   }
 
   // ---------------------------------------------------------------- the car's body seen through the glass

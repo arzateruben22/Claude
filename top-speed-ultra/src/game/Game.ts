@@ -18,7 +18,11 @@ import { CarPhysics, SPEC } from './vehicle/Physics';
 import { PlayerCar } from './vehicle/PlayerCar';
 import { HyperAbility, planHop, HOP, TANK, HopVehicle } from './vehicle/HyperAbility';
 import { ThrustJets } from './vehicle/ThrustJets';
+import { CAR_IDS, shapeFor } from '../preview/car-shape';
 import type { CarId } from '../preview/car-shape';
+import { buildReveal, RevealStage, RevealKind, REVEAL_SECONDS, WAKE_ONLY_SECONDS } from '../preview/reveal';
+import { WAKE } from '../preview/car-wake';
+import { FOUNDER_CAR, FOUNDER_UNTIL, GLACIER_SILVER, FOUNDER_ICE, founderSerial, plaqueLine, plaqueNumber, finishesFor, paintFor } from './founder';
 import { Traffic, PlayerView } from './traffic/Traffic';
 import { Environment } from './env/Environment';
 import { AudioEngine } from './audio/AudioEngine';
@@ -40,6 +44,8 @@ const OWNER_CAR = 'tsu.ownerCar';  // owner mode's car (localStorage), never par
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
 export const CORNER_PX = [112, 150, 196];
 const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+// read when it's needed (the Founder Edition's wake-up and reveal), so a change in the system setting is honoured
+const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NO_STANDINGS: Standing[] = [];
 
 export interface Hud {
@@ -65,6 +71,9 @@ export interface Report {
 export interface Result {
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
+  // the car the run was in and, for the OC Hypercar, its tune ('Unleashed' in Free Drive, 'Race tune' in the scored
+  // modes; '' for every other car): the run card marks the Founder Edition's runs
+  car: string; tune: string;
   race?: { course: string; position: number; of: number; time: string; best: string; credits: number; xp: number; order: string[] };
 }
 interface RaceState {
@@ -329,6 +338,7 @@ export class Game {
     await this.prebuild('Merging onto ' + m.label);
     this.setPaused(false);
     this.ev.loading(false);
+    if (this.driving === FOUNDER_CAR) this.wakeFounder();          // the Founder Edition's lights wake on the line
     this.last = performance.now();
     const what = (mode === 'survival' ? 'stay over 100 mph' : mode === 'time' ? 'Time Trial' : 'Free Drive') + (this.driving === 'oc-hyper' ? (mode === 'free' ? ' · Unleashed' : ' · race tune') : '');
     this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
@@ -370,6 +380,7 @@ export class Game {
     await this.prebuild(course.name);
     this.setPaused(false);
     this.ev.loading(false);
+    if (this.driving === FOUNDER_CAR) this.wakeFounder();          // on the grid, through the countdown
     this.last = performance.now();
     this.ev.toast(`${course.name} · ${(L / 1609.344).toFixed(1)} mi`, 'info');
   }
@@ -435,7 +446,7 @@ export class Game {
     setTimeout(() => this.ev.over({
       mode: 'race', score: credits, distance: r.progress, overtakes: this.overtakes, top: this.top, reason: why ?? (position === 1 ? 'You won' : `You finished ${ordinal}`),
       road: r.course.road, best, newBest, time: r.t, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions,
-      board: { mode: 'race', runs: [], rank: 0 },
+      board: { mode: 'race', runs: [], rank: 0 }, ...this.runCar(),
       race: { course: r.course.name, position, of: r.racers.length + 1, time: fmtTime(r.t), best: best ? fmtTime(best) : '', credits, xp, order: [...r.order, ...r.racers.filter((c) => !c.racer!.done).map((c) => c.racer!.name)] },
     }), 1400);
   }
@@ -485,13 +496,118 @@ export class Game {
   }
   // the car from your garage: its numbers into the physics, its body and cockpit into the scene
   applyCarChoice(mode: string = this.mode) {
-    const c = carById(this.carId);
+    const c = carById(this.carId), was = this.driving;
     this.driving = c.id;
     this.carGrip = applyCar(c, mode);
     // a car whose tune has no ability of its own never keeps the hypercar's (it is latched again at the next start)
     if (this.hyper.live && tuneFor(c, mode).ability !== 'hyper') this.setHyper(false);
     this.configureCar();
+    // chosen in the garage: the Founder Edition's lights wake
+    if (c.id === FOUNDER_CAR && was !== c.id) this.wakeFounder();
     return c;
+  }
+  // the Founder Edition's LED wake-up on the player's car (reduced motion: on at once)
+  wakeFounder() { this.car.wake(reducedMotion()); }
+  // what a run's result says about its car
+  private runCar() {
+    return { car: this.driving, tune: this.driving === FOUNDER_CAR ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '' };
+  }
+
+  // ------------------------------------------------------------------- the Founder Edition's reveal stage
+  // The OC Hypercar's garage card shows it on a stage (src/preview/reveal.ts). The stage renders with the game's own
+  // renderer, into a corner of the game's canvas just before the frame's own render covers it, and is copied into the
+  // card's canvas; it renders only while it moves (then the card keeps the last frame, and so does the session, so
+  // opening the garage again shows it without building anything). openReveal plays it once if asked (the first time
+  // on this device); reduced motion shows the last frame, still. Test hooks: revealState, revealHold.
+  private rv: { stage: RevealStage | null; canvas: HTMLCanvasElement; t: number; kind: RevealKind; playing: boolean; dirty: boolean; hold: number | null;
+    calls: number; tris: number; frames: number; buildMs: number; compiled: boolean } | null = null;
+  private revealStill: HTMLCanvasElement | null = null;
+  openReveal(canvas: HTMLCanvasElement, autoplay: boolean): 'playing' | 'still' {
+    this.closeReveal();
+    this.rv = { stage: null, canvas, t: REVEAL_SECONDS, kind: 'reveal', playing: false, dirty: true, hold: null, calls: 0, tris: 0, frames: 0, buildMs: 0, compiled: false };
+    if (this.revealStill && !autoplay) { this.rv.dirty = false; this.drawStill(); return 'still'; }
+    if (autoplay && !reducedMotion()) { this.playReveal('reveal'); return 'playing'; }
+    this.buildRevealStage();
+    return 'still';
+  }
+  // play the reveal from the start, or only the lights' wake-up ('wake': when the car is chosen in the garage)
+  playReveal(kind: RevealKind = 'reveal') {
+    const r = this.rv; if (!r) return;
+    this.buildRevealStage();
+    r.kind = kind; r.dirty = true;
+    if (reducedMotion()) { r.t = kind === 'wake' ? WAKE_ONLY_SECONDS : REVEAL_SECONDS; r.playing = false; } else { r.t = 0; r.playing = true; }
+  }
+  closeReveal() { if (this.rv?.stage) this.rv.stage.dispose(); this.rv = null; }
+  revealHold(t: number | null) { if (this.rv) { this.rv.hold = t; this.rv.dirty = true; } }
+  get revealState() {
+    const r = this.rv;
+    return r ? { open: true, built: !!r.stage, t: r.hold ?? r.t, kind: r.kind, playing: r.playing, calls: r.calls, tris: r.tris, frames: r.frames, buildMs: r.buildMs, compiled: r.compiled, still: !!this.revealStill }
+      : { open: false, built: false, t: 0, kind: 'reveal', playing: false, calls: 0, tris: 0, frames: 0, buildMs: 0, compiled: false, still: !!this.revealStill };
+  }
+  private buildRevealStage() {
+    const r = this.rv; if (!r || r.stage) return;
+    const q = this.settings.quality === 'high' || this.settings.quality === 'ultra' ? 'high' : 'phone';
+    r.stage = buildReveal(this.renderer, q);
+    r.buildMs = r.stage.buildMs;
+    // its shaders compile off the main thread where the browser can; until then it waits (the card shows its dark stage)
+    const st = r.stage;
+    this.renderer.compileAsync(st.scene, st.camera).catch(() => undefined).then(() => { if (this.rv?.stage === st) { this.rv.compiled = true; this.rv.dirty = true; } });
+  }
+  private drawStill() {
+    const r = this.rv, s = this.revealStill; if (!r || !s) return;
+    const g = r.canvas.getContext('2d'); if (!g) return;
+    g.drawImage(s, 0, 0, r.canvas.width, r.canvas.height);
+  }
+  private tmpSize = new THREE.Vector2();
+  private renderReveal(dt: number) {
+    const r = this.rv;
+    if (!r || !r.stage || !r.compiled) return;
+    const T = r.kind === 'wake' ? WAKE_ONLY_SECONDS : REVEAL_SECONDS;
+    if (r.playing && r.hold === null) { r.t += dt; if (r.t >= T) { r.t = T; r.playing = false; r.dirty = true; } }
+    if (!r.playing && !r.dirty) return;
+    const cv = r.canvas, g = cv.getContext('2d');
+    if (!g || !cv.width || !cv.height || !cv.isConnected) return;
+    const buf = this.renderer.getDrawingBufferSize(this.tmpSize), k = Math.min(1, buf.x / cv.width, buf.y / cv.height);
+    const w = Math.max(1, Math.floor(cv.width * k)), h = Math.max(1, Math.floor(cv.height * k)), bh = buf.y;
+    const pose = r.stage.pose(r.hold ?? r.t, r.kind);
+    const wake = WAKE.value, exposure = this.renderer.toneMappingExposure, pr = this.renderer.getPixelRatio();
+    WAKE.value = pose.wake; this.renderer.toneMappingExposure = pose.exposure;
+    r.stage.camera.aspect = w / h; r.stage.camera.updateProjectionMatrix();
+    this.renderer.setScissorTest(true);
+    this.renderer.setScissor(0, 0, w / pr, h / pr); this.renderer.setViewport(0, 0, w / pr, h / pr);
+    this.renderer.render(r.stage.scene, r.stage.camera);
+    r.calls = this.renderer.info.render.calls; r.tris = this.renderer.info.render.triangles; r.frames++;
+    this.renderer.setScissorTest(false);
+    const size = this.renderer.getSize(this.tmpSize);
+    this.renderer.setViewport(0, 0, size.x, size.y);
+    WAKE.value = wake; this.renderer.toneMappingExposure = exposure;
+    g.drawImage(this.renderer.domElement, 0, bh - h, w, h, 0, 0, cv.width, cv.height);
+    // the light sweep's band across the card as the light passes (none with reduced motion: nothing moves then)
+    if (pose.band !== null) {
+      const x = (pose.band * 1.4 - 0.2) * cv.width, bw = cv.width * 0.12, a = Math.sin(Math.PI * pose.band);
+      const gr = g.createLinearGradient(x - bw, 0, x + bw, cv.height * 0.3);
+      gr.addColorStop(0, 'rgba(200,230,255,0)'); gr.addColorStop(0.42, `rgba(200,230,255,${0.12 * a})`); gr.addColorStop(0.5, `rgba(225,242,255,${0.36 * a})`);
+      gr.addColorStop(0.58, `rgba(200,230,255,${0.12 * a})`); gr.addColorStop(1, 'rgba(200,230,255,0)');
+      g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = gr; g.fillRect(0, 0, cv.width, cv.height); g.restore();
+    }
+    r.dirty = false;
+    if (!r.playing && r.hold === null) {
+      // the last frame, for the session
+      const s = this.revealStill ?? document.createElement('canvas');
+      s.width = cv.width; s.height = cv.height; s.getContext('2d')?.drawImage(cv, 0, 0);
+      this.revealStill = s;
+    }
+  }
+  // the Founder Edition's rules as the game holds them (for the suite): the plaque, the reserved paint and LEDs
+  get founder() {
+    return {
+      car: FOUNDER_CAR, until: FOUNDER_UNTIL, serial: founderSerial(), plaque: plaqueLine(), number: plaqueNumber(),
+      paint: GLACIER_SILVER, led: FOUNDER_ICE,
+      finishes: Object.fromEntries(CARS.map((c) => [c.id, finishesFor(c.id).map((f) => f.name)])),
+      ledCars: CAR_IDS.filter((id) => !!shapeFor(id).led),
+      paints: Object.fromEntries(CARS.map((c) => [c.id, paintFor(c.id, GLACIER_SILVER.hex, c.paint)])),
+      wake: { value: WAKE.value, t: this.car.wakeTime, waking: this.car.waking },
+    };
   }
   // the car, its paint, the graphics quality and the driver's look: PlayerCar rebuilds only what changed. Live
   // mirrors (the road and the traffic behind, one extra low-resolution render a frame) come with High and Ultra on
@@ -502,7 +618,7 @@ export class Game {
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.jets?.setPerNozzle(high ? 24 : 12);       // Cold Thrust's jets: half the sprites on the phone build
     this.car.configure({
-      car: c.id as CarId, paint: c.paint, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
+      car: c.id as CarId, paint: paintFor(c.id, c.paint, shapeFor(c.id as CarId).paint), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
     });
   }
@@ -983,6 +1099,7 @@ export class Game {
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
     this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
     if (this.outputSat) this.outputSat.value = this.env.saturation;
+    this.renderReveal(dt);                                        // the garage's reveal stage, under this frame's own render
     if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
     this.env.renderFlare();
     this.renderCorner(dt);
@@ -1164,7 +1281,7 @@ export class Game {
     if (newBest) saveBest(this.mode, score);
     const run: Run = { mode: this.mode, score, distance: Math.round(this.distance), top: Math.round(this.top * MPH), streak: Math.round(this.bestStreak * 10) / 10, nearMisses: this.nearMisses, overtakes: this.overtakes, collisions: this.collisions, when: Date.now(), road: this.lastMain?.label ?? '' };
     const board = recordRun(run);
-    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board }), 1200);
+    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, ...this.runCar() }), 1200);
   }
 
   // Free Drive has no ending of its own: this one files the drive (distance, top speed) and shows the summary

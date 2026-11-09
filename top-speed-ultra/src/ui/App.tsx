@@ -12,6 +12,7 @@ import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } fr
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
 import { COURSES, bestTime, fmtTime } from '../game/race';
 import { carById, figures, slotsFor, garageCars } from '../game/cars';
+import { GLACIER_SILVER, FOUNDER_ICE, plaqueNumber, founderWindowText } from '../game/founder';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
@@ -501,14 +502,23 @@ function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
         <div className="drivers">
           {garageCars(owner, p.vehicles).map((c) => {
             const f = figures(c), owned = p.vehicles.includes(c.id), driving = game.carId === c.id, locked = level < c.level;
+            // chosen: the Founder Edition's lights wake, on its stage and on the car (Game.applyCarChoice)
+            const chosen = () => { if (c.founder) game.playReveal('wake'); };
             return (
-              <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '')}>
-                <div className="carhead"><span className="paint" style={{ background: '#' + c.paint.toString(16).padStart(6, '0') }} /><b>{c.name}</b></div>
+              <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '') + (c.founder ? ' founder' : '')}>
+                {c.founder && <FounderStage game={game} />}
+                <div className="carhead"><span className="paint" title={c.founder ? GLACIER_SILVER.name : undefined} style={{ background: '#' + c.paint.toString(16).padStart(6, '0') }} /><b>{c.name}</b>{c.founder && <span className="chip ice">Founder Edition</span>}</div>
                 <small>{f.hp} hp · {f.zeroSixty} s 0-60 · {f.topMph} mph · {c.mass.toLocaleString()} kg</small>
                 <span>{c.blurb}</span>
+                {c.founder && <ul className="fe-list">
+                  <li><b>{GLACIER_SILVER.name}</b> paint and <b>{FOUNDER_ICE.name}</b> lights, on this car only</li>
+                  <li>A numbered plaque on the door sill and the console: <b>{plaqueNumber()}</b> until the store assigns real numbers</li>
+                  <li>Its lights wake in a sweep when you choose it and on the start line</li>
+                  <li>{founderWindowText()} (Pacific)</li>
+                </ul>}
                 <div className="row">
-                  {owner ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`)}>Drive</button>)
-                    : owned ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => act(() => { book.choose(c.id); return null; }, `${c.name} selected`)}>Drive</button>)
+                  {owner ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => { act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`); chosen(); }}>Drive</button>)
+                    : owned ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => { act(() => { book.choose(c.id); return null; }, `${c.name} selected`); chosen(); }}>Drive</button>)
                     : c.founder ? <em>Founder Edition · not on sale yet (test build)</em>
                     : locked ? <em>Opens at level {c.level}</em>
                     : <button className="btn primary" onClick={() => act(() => book.buy(c.id, c.price, c.level, slots), `${c.name} is yours`)}>Buy · {c.price.toLocaleString()}</button>}
@@ -521,6 +531,34 @@ function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
         <p className="fine">The makes are our own. Each has its own body and interior, and its own numbers underneath.</p>
         <div className="row"><button className="btn primary" onClick={onClose}>Done</button></div>
       </div>
+    </div>
+  );
+}
+
+// the OC Hypercar's reveal stage, at the top of its garage card (Game.openReveal: the car on a turntable in a dark
+// showroom while its lights wake and a light sweeps over it). It plays by itself the first time on this device, then
+// shows its last frame with a button to play it again; with reduced motion it shows the last frame and nothing moves.
+const REVEAL_SEEN = 'tsu.founderReveal';
+function FounderStage({ game }: { game: Game }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const cv = ref.current; if (!cv) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.max(16, Math.round(cv.clientWidth * dpr)); cv.height = Math.max(9, Math.round(cv.clientHeight * dpr));
+    let seen = false;
+    try { seen = localStorage.getItem(REVEAL_SEEN) === '1'; } catch { /* a convenience */ }
+    // a moment for the panel to paint first: building the stage takes a beat
+    const id = window.setTimeout(() => {
+      game.openReveal(cv, !seen);
+      if (!seen) try { localStorage.setItem(REVEAL_SEEN, '1'); } catch { /* a convenience */ }
+    }, 60);
+    return () => { window.clearTimeout(id); game.closeReveal(); };
+  }, [game]);
+  return (
+    <div className="fe-stage">
+      <canvas ref={ref} role="img" aria-label="The OC Hypercar Founder Edition on its reveal stage, turning on a turntable while its lights wake. A procedural model built in code." />
+      <p className="fe-cap" aria-hidden="true"><b>Founder Edition</b><span>{plaqueNumber()}</span></p>
+      <button className="btn fe-replay" onClick={() => game.playReveal('reveal')}>Replay reveal</button>
     </div>
   );
 }

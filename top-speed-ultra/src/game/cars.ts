@@ -3,6 +3,7 @@
 // real money. Garage slots open up as you level.
 
 import { SPEC } from './vehicle/Physics';
+import { GLACIER_SILVER } from './founder';
 
 export interface CarDef {
   id: string; name: string; blurb: string; price: number; level: number;
@@ -34,7 +35,7 @@ export const CARS: CarDef[] = [
   // fastest, best-gripping and best-braking car in the game (all-wheel drive, torque vectoring, fan-assisted
   // downforce, stiffer tyres, 2 g brakes); in every scored mode it runs the race tune, at or under the Corsa.
   { id: 'oc-hyper', name: 'OC Hypercar', blurb: 'Prototype 01, Founder Edition. Unleashed in Free Drive: 2,012 hp, all-wheel drive and fan downforce. Races, Time Trial and Survival run its race tune, at the Corsa\'s level.', price: 0, level: 1, founder: true,
-    mass: 1690, power: 1500000, torque: 2000, redline: 9000, CdA: 0.62, ClA: 2.2, grip: 1.3, paint: 0xc8d3e8, final: 3.0,
+    mass: 1690, power: 1500000, torque: 2000, redline: 9000, CdA: 0.62, ClA: 2.2, grip: 1.3, paint: GLACIER_SILVER.hex, final: 3.0,
     Cf: 225000, Cr: 333000, steerGain: 1.25, brakeG: 2.0, halfL: 2.36, halfW: 1.02, driveFront: 0.4, vector: 0.6, ability: 'hyper',
     race: { mass: 1500, power: 620000, torque: 1000, final: 4.0, CdA: 0.8, ClA: 1.0, grip: 1.04,
       Cf: undefined, Cr: undefined, steerGain: undefined, brakeG: undefined, driveFront: undefined, vector: undefined, ability: undefined } },

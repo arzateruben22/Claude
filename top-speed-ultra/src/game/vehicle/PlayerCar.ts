@@ -21,6 +21,7 @@ import { bodyFor } from '../../preview/car-body';
 import type { CarBody } from '../../preview/car-body';
 import { CarId, shapeFor, rearR } from '../../preview/car-shape';
 import { EYE } from '../../preview/spec';
+import { WAKE, WAKE_SECONDS, wakeAt } from '../../preview/car-wake';
 const HYPER_EYE = new THREE.Vector3(0.07, -0.13, -0.02);
 // the hypercar's air-pressure gauge (the cockpit's frame): in the binnacle beside the tachometer, over its left-hand
 // display (cockpit.ts: the binnacle at (-0.37, 0.835, -0.62) tilted -0.41, the display 0.158 m left of the tach and
@@ -75,6 +76,10 @@ export class PlayerCar {
   // (`step`: the bar it counts in; `period`: the least time between redraws. The phone build counts in 10 bar at most 4
   // times a second, High in 5 bar at most 10 times)
   private gauge: { mesh: THREE.Mesh; canvas: HTMLCanvasElement; tex: THREE.CanvasTexture; key: number; wait: number; draws: number; step: number; period: number } | null = null;
+  // the OC Hypercar's LED wake-up (Founder Edition): seconds into the sweep (car-wake.ts; steady past WAKE_SECONDS).
+  // wakeHold (tests and proof frames): hold the sweep at that time instead of running it
+  private wakeT = 99;
+  wakeHold: number | null = null;
   private wheelAngle = 0;
   private sus = { p: 0, pv: 0, r: 0, rv: 0, h: 0, hv: 0 };
   private lastJoint = 0;
@@ -265,6 +270,11 @@ export class PlayerCar {
     if (m) m.color.setHex(hex);
   }
 
+  // the Founder Edition's LED wake-up: a quarter second dark, then the sweep (reduced motion: the lights are on at once)
+  wake(reduced = false) { this.wakeT = reduced ? 99 : -0.25; }
+  get waking() { return this.wakeT < WAKE_SECONDS; }
+  get wakeTime() { return this.wakeT; }
+
   // the driver's look (sleeves, gloves, watch, ring, bracelet, skin) without rebuilding the car
   setLook(look: DriverLook) { if (this.cfg) this.configure({ ...this.cfg, look }); }
   // the ability's hand animation: the left hand waves (Clear Path), the left wrist comes up for a watch check (Focus
@@ -368,6 +378,10 @@ export class PlayerCar {
     }
     const tail = this.mats.tail as THREE.MeshPhysicalMaterial | undefined;
     if (tail) tail.emissiveIntensity = braking ? 5 : 1.6;
+    // the hypercar's lights: where the wake-up sweep is (one shared uniform; the garage's reveal stage sets its own
+    // round its render and puts this back)
+    this.wakeT = Math.min(99, this.wakeT + dt);
+    if (this.cfg?.car === 'oc-hyper') WAKE.value = wakeAt(this.wakeHold ?? this.wakeT);
     void now;
   }
 

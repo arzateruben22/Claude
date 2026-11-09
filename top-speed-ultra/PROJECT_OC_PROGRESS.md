@@ -4,6 +4,52 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-09: the Founder Edition's exclusives (hypercar M6, committed)
+
+Branch `claude/hypercar-drive`, committed. The OC Hypercar is a procedural model built in code (no downloaded
+asset). What only it has, as built (`PROJECT_OC_HYPERCAR.md` §8.2): numbered plaques on the driver's door sill cap and
+the console reading **"FOUNDER EDITION · No. 0000 · TEST"** (the number comes from one function, `founderSerial()` in
+`src/game/founder.ts`, which returns null until the store's entitlement exists; no number is made up on the device);
+**Glacier Silver** paint and **Founder Ice** LEDs offered on no other car; an LED wake-up sweep (strips, blades, then the
+red bar) when it is chosen in the garage and on the start line; a reveal stage at the top of its garage card (a
+turntable in a dark showroom, the lights waking and a light sweeping over it, played once per device and then on
+demand, still under reduced motion); and a Founder Edition badge on its run cards. No purchase flow; no "limited", no
+countdown, no owner counts; the card shows only the founder window's date from `FOUNDER_UNTIL`.
+
+**Verified** (headless Chromium, SwiftShader, a shared 4-core machine with other passes running; frame rates on real
+hardware not measured):
+- `npx tsc --noEmit` on `tsconfig.json` and `tsconfig.game.json`: clean. `npm run build`: 3,545 KB js, 69.8 KB css.
+- Suite, final build: `--only=progression` **8/8** (new: "Founder Edition: the plaque reads …" and "the hypercar's
+  garage card: the reveal stage plays once …": 65 stage frames to 6.2 s, last frame mean 41.6 with 1,218 ice-blue
+  samples, reopened from the session's frame without building, chosen: lights 0.08 s into the wake, reduced motion
+  still); `--only=render` **14/14** (new: "the Founder Edition's lights wake on the start line …": over 92 frames dark
+  for 16, then 0.01 → 0.56 → 1.1, then steady; the GT's tail shader has no wake; reduced motion steady at once);
+  `--only=phone` **9/9** in the combined run (new: "the Founder Edition card at 390 × 844 …": stage 318 × 179 px in a
+  350 px card, no sideways scroll; `tests/out/phone-garage-founder.png`). That combined run (`progression,phone,render`)
+  was 29/31: the radio check failed once with "audio suspended" (a 300 ms wait for the audio context under load; it
+  passed on the rerun, untouched by M6) and my own reduced-motion check read the shared uniform a frame early (the
+  check was fixed to wait a frame; it passed on the rerun).
+- `node tests/dynamics.mjs`: 1,742 passed, 0 failed (no physics changed).
+- Cost. The reveal stage's frame (renderer info of its own render, no shadow pass): **31 draw calls, 135,320
+  triangles** with the High build of the car, **31 / 74,063** with the phone build; it renders only while it moves.
+  Its build took 0.6 s (1440 × 900 run) to 2.0 s (phone run) on a quieter machine, 3.4-17 s while other passes ran.
+  The cockpit's plaques: one more draw call (their material; the plinths merge into the carbon mesh) and 604 triangles;
+  the hypercar's interior from the console camera: 47 calls, 155,363 triangles. No other car's materials or shaders
+  change (the wake patch is applied to the OC brand only; the render check reads the GT's shader key).
+- Images (read by eye): the garage card mid-reveal and settled at 1440 × 900 (`tests/out/founder/garage-1440-mid-r3.png`,
+  `garage-1440-end-r3.png`) and 390 × 844 (`garage-390-mid-r3.png`, `garage-390-end-r3.png`); the plaques
+  (`plaque-console-r2.png`, `plaque-sill-r1.png`, preview page at 960 × 540); the start-line wake from the front right
+  on a race grid at night, front strips waking then the sills (`startline-a-r3.png` at 0.25 s, `startline-b-r3.png` at
+  0.75 s, `startline-steady-r3.png`) and the game's chase camera with the START gate (`startline-chase-r3.png`; the
+  front camera is a proof camera, the chase camera sees only the tail); the run card from a Free Drive in it
+  (`runcard-r1.png`, 1080 × 1350, "No. 0000 · TEST · Unleashed"). Script: `tests/out/founder/proof.mjs`; the stage's
+  preview page: `src/preview/test-reveal.ts`.
+
+**Not done, honestly.** There is no paint picker, so "reserved" is held by the finishes list and `paintFor` and
+checked by the suite. The stage's light sweep shows mostly as a glint drawn across the card (a moving reflection would
+need its environment re-filtered every frame). The canvas copy into the card was only tried in Chromium. The car on
+the stage still shows M1's dark lower nose (M1b queued).
+
 ## 2026-11-09: driving profiles in Settings: Arcade, Sport, Simulation (hypercar M4, committed)
 
 Branch `claude/hypercar-drive`, committed. The OC Hypercar is a procedural model built in code (no downloaded asset). Settings → Driving → Handling now has three named

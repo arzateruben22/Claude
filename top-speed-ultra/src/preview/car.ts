@@ -21,6 +21,7 @@ import { bodyFor, lampMaterials, CarBody } from './car-body';
 import { addWheel, TREAD_V } from './car-wheel';
 import { badgeTex, wordmarkTex, ocMarkTex, plateTex, contactShadow, once } from './car-tex';
 import { CarId, shapeFor, rearR } from './car-shape';
+import { wakeable } from './car-wake';
 
 export type Quality = 'phone' | 'high';
 export type { CarId } from './car-shape';
@@ -42,6 +43,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   const word = (w: number, h: number) => (oc ? ocMarkTex(w / 2, h * 1.5) : wordmarkTex(vela ? 'VELA' : 'ROSSINI', w, h));
   const extra: Record<string, THREE.Material> = {};
   if (P.led) extra.led = M.led(P.led.color, P.led.halo, q);
+  // the Founder Edition's LED wake-up (car-wake.ts): the strips, the blades and the red bar light in a sweep. The
+  // 'blade' lamps and their tail material are the hypercar's own, so no other car's lights take part
+  if (oc && extra.led) { wakeable(extra.led, 'ice', B.ZF, B.ZR); wakeable(lamps.lamp, 'ice', B.ZF, B.ZR); wakeable(lamps.tail, 'bar', B.ZF, B.ZR); }
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));
   return {
     ...extra,

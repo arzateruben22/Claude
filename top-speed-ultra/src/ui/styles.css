@@ -340,6 +340,26 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   font: 600 11px/1.2 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--night); white-space: nowrap; }
 .chip::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--amber); }
 
+/* the OC Hypercar's Founder Edition card: its own ice-blue edge, its reveal stage on top (a canvas the game draws its
+   stage into), a chip, and the list of what only it has. --ice on the card's dark is 11:1; black on --ice 13:1 */
+.gcell.car.founder { background: linear-gradient(165deg, var(--ice-wash), var(--clear) 55%), var(--cell); box-shadow: inset 0 0 0 1px var(--ice-line); }
+.fe-stage { position: relative; justify-self: stretch; aspect-ratio: 16 / 9; margin: -2px 0 8px; overflow: hidden;
+  background: radial-gradient(60% 55% at 50% 70%, #151a21 0%, #050608 70%, #020305 100%); box-shadow: inset 0 0 0 1px var(--ice-line); }
+.fe-stage canvas { display: block; width: 100%; height: 100%; }
+.fe-stage::after { content: ""; position: absolute; inset: 55% 0 0; pointer-events: none; background: linear-gradient(180deg, rgba(2, 3, 5, 0), rgba(2, 3, 5, 0.78)); }
+.fe-cap, .fe-replay.btn { z-index: 1; }
+.gcell.car.founder .carhead { flex-wrap: wrap; row-gap: 6px; }
+.gcell.car.founder .carhead b { white-space: nowrap; }
+.gcell .fe-cap { position: absolute; left: 12px; bottom: 10px; margin: 0; display: grid; gap: 3px; pointer-events: none; text-shadow: 0 1px 6px #000; }
+.gcell.driver .fe-cap b { font: 800 15px/1 var(--f-display); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ice); }
+.gcell .fe-cap span:not(.shield) { font: 500 10.5px/1.2 var(--f-mono); letter-spacing: 0.14em; color: #dbe6f2; }
+.fe-replay.btn { position: absolute; right: 12px; bottom: 8px; min-height: 36px; padding: 0 12px; font-size: 11px; letter-spacing: 0.12em; }
+.gcell .carhead span.chip.ice { color: var(--night); font: 600 10.5px/1.2 var(--f-mono); letter-spacing: 0.16em; margin-left: 4px; vertical-align: 0; }
+.chip.ice::before { background: var(--ice); }
+.fe-list { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 5px; }
+.fe-list li { padding-left: 10px; border-left: 2px solid var(--ice-line); font-size: 13px; line-height: 1.4; color: var(--dim); }
+.gcell.driver .fe-list b { font: 600 13px/1.4 var(--f-ui); letter-spacing: 0; text-transform: none; color: var(--ice); }
+
 /* route shields: the real sign shapes, sharpened */
 .shield-row { display: inline-flex; gap: 8px; align-items: center; }
 .shield-row b { font: 600 16px/1 var(--f-ui); letter-spacing: 0.02em; }
