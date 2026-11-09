@@ -21,6 +21,12 @@ export class AudioEngine {
   private scrapeG!: GainNode;
   private noise!: AudioBuffer;
   private rainG: GainNode | null = null;
+  // the OC Hypercar's systems: Cold Thrust's hiss and roar, Ground Lock's fan whine, the compressor's hum
+  private hissG: GainNode | null = null; private roarG: GainNode | null = null; private roarF: BiquadFilterNode | null = null;
+  private fanG: GainNode | null = null; private fanOsc: OscillatorNode | null = null; private fanNoiseF: BiquadFilterNode | null = null; private fanNoiseG: GainNode | null = null;
+  private compG: GainNode | null = null;
+  private thrustWas = 0;
+  private thrustQuiet = true;      // the last values setThrust applied were all zero (so every other car costs nothing)
   private muffleF: BiquadFilterNode | null = null;
   musicBus: GainNode | null = null;
   get context() { return this.ctx; }
@@ -84,6 +90,25 @@ export class AudioEngine {
     this.applyVolumes();
   }
 
+  // the OC Hypercar's sounds, built the first time setThrust has something to play (so no other car pays for them):
+  // Cold Thrust, a sharp band-passed hiss (2-6 kHz) over a low roar; Ground Lock, a whine that rises with the fans'
+  // spin, with a breath of noise; the compressor, a faint hum while it recharges
+  private buildThrust(ctx: AudioContext) {
+    const loop = (filter: BiquadFilterNode, bus: AudioNode) => {
+      const src = ctx.createBufferSource(); src.buffer = this.noise; src.loop = true; src.playbackRate.value = 0.8 + Math.random() * 0.4;
+      const g = ctx.createGain(); g.gain.value = 0; src.connect(filter); filter.connect(g); g.connect(bus); src.start(); return g;
+    };
+    const hf2 = ctx.createBiquadFilter(); hf2.type = 'bandpass'; hf2.frequency.value = 3600; hf2.Q.value = 0.9; this.hissG = loop(hf2, this.engineBus);
+    this.roarF = ctx.createBiquadFilter(); this.roarF.type = 'lowpass'; this.roarF.frequency.value = 320; this.roarF.Q.value = 0.7; this.roarG = loop(this.roarF, this.engineBus);
+    this.fanOsc = ctx.createOscillator(); this.fanOsc.type = 'sawtooth'; this.fanOsc.frequency.value = 400;
+    const ff = ctx.createBiquadFilter(); ff.type = 'lowpass'; ff.frequency.value = 1800; ff.Q.value = 2;
+    this.fanG = ctx.createGain(); this.fanG.gain.value = 0; this.fanOsc.connect(ff); ff.connect(this.fanG); this.fanG.connect(this.engineBus); this.fanOsc.start();
+    this.fanNoiseF = ctx.createBiquadFilter(); this.fanNoiseF.type = 'bandpass'; this.fanNoiseF.frequency.value = 900; this.fanNoiseF.Q.value = 1.2; this.fanNoiseG = loop(this.fanNoiseF, this.engineBus);
+    const cf = ctx.createBiquadFilter(); cf.type = 'bandpass'; cf.frequency.value = 120; cf.Q.value = 3; this.compG = loop(cf, this.engineBus);
+  }
+  // whether the hypercar's sound nodes exist yet (for the tests)
+  get thrustBuilt() { return !!this.hissG; }
+
   applyVolumes() {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
@@ -94,7 +119,43 @@ export class AudioEngine {
 
   suspend() { void this.ctx?.suspend(); }
   resume() { void this.ctx?.resume(); }
-  silence() { if (!this.ctx) return; const t = this.ctx.currentTime; for (const g of [this.eng, this.roll, this.screech, this.wind, this.scrapeG, this.turboGain, this.intakeGain]) g.gain.setTargetAtTime(0, t, 0.05); }
+  silence() {
+    if (!this.ctx) return; const t = this.ctx.currentTime;
+    for (const g of [this.eng, this.roll, this.screech, this.wind, this.scrapeG, this.turboGain, this.intakeGain, this.hissG, this.roarG, this.fanG, this.fanNoiseG, this.compG]) g?.gain.setTargetAtTime(0, t, 0.05);
+    this.thrustQuiet = true; this.thrustWas = 0;
+  }
+
+  // the hypercar's systems, every frame while driving: the valve's opening and the fans' spin (0..1), and whether the
+  // compressor is filling the tank. A valve that opens clicks and thumps. All zero again after all zero (every car but
+  // the hypercar in Free Drive, and the hypercar idling full): nothing is sent, and nothing is built until there is
+  setThrust(thrust: number, fan: number, charging: boolean) {
+    const ctx = this.ctx; if (!ctx || ctx.state !== 'running') return;
+    const th = clamp(Number.isFinite(thrust) ? thrust : 0, 0, 1), fn = clamp(Number.isFinite(fan) ? fan : 0, 0, 1);
+    const quiet = th === 0 && fn === 0 && !charging;
+    if (quiet && this.thrustQuiet) return;
+    if (!this.hissG) this.buildThrust(ctx);
+    this.thrustQuiet = quiet;
+    const t = ctx.currentTime;
+    if (th > 0.15 && this.thrustWas <= 0.15) { this.burst(0.03, 'highpass', 4200, 0.22, 0.8, undefined, this.engineBus); this.tone(62, 0.16, 0.32, 'sine', this.engineBus); }
+    this.thrustWas = th;
+    this.hissG!.gain.setTargetAtTime(th * 0.34, t, 0.03);
+    this.roarG!.gain.setTargetAtTime(th * 0.5, t, 0.05);
+    this.roarF!.frequency.setTargetAtTime(220 + th * 260, t, 0.08);
+    this.fanOsc!.frequency.setTargetAtTime(400 + fn * 800, t, 0.12);
+    this.fanG!.gain.setTargetAtTime(fn * 0.035, t, 0.08);
+    this.fanNoiseF!.frequency.setTargetAtTime(600 + fn * 900, t, 0.12);
+    this.fanNoiseG!.gain.setTargetAtTime(fn * 0.06, t, 0.08);
+    this.compG!.gain.setTargetAtTime(charging ? 0.03 : 0, t, 0.3);
+  }
+  // the tank reaching full: a soft tick
+  tankFull() { this.tone(1900, 0.05, 0.05, 'sine', this.engineBus); }
+  // Thrust Hop: the jets' whoosh at take-off; the landing: a thump through the springs and a tyre chirp
+  hop() { this.burst(0.55, 'bandpass', 700, 0.55, 0.7, 180, this.engineBus); this.tone(48, 0.25, 0.4, 'sine', this.engineBus); }
+  land(vz: number, speed: number) {
+    const k = clamp(vz / 8, 0.2, 1);
+    this.tone(70, 0.22, 0.55 * k); this.burst(0.18, 'lowpass', 900, 0.5 * k, 0.8);
+    if (speed > 3) this.burst(0.22, 'bandpass', 1900, clamp(0.12 + speed / 200, 0.12, 0.4) * k, 5);
+  }
 
   update(dt: number, s: AudioState) {
     const ctx = this.ctx; if (!ctx || ctx.state !== 'running') return;

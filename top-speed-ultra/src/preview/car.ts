@@ -21,6 +21,7 @@ import { bodyFor, lampMaterials, CarBody } from './car-body';
 import { addWheel, TREAD_V, type WheelStyle } from './car-wheel';
 import { badgeTex, wordmarkTex, ocMarkTex, plateTex, contactShadow, glowTex, once } from './car-tex';
 import { CarId, shapeFor, rearR } from './car-shape';
+import { wakeable } from './car-wake';
 
 export type Quality = 'phone' | 'high';
 export type { CarId } from './car-shape';
@@ -55,6 +56,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   // the tail bar's haze on the brakes (additive, unlit): the bar is 2 cm tall, a pixel or two from the chase camera, so
   // its own brake level hardly shows there; the haze spreads the stop light over the black channel round it
   if (P.bar) extra.brakeGlow = once('m.brakeGlow', () => Object.assign(new THREE.MeshBasicMaterial({ color: new THREE.Color(1, 0.07, 0.05).multiplyScalar(1.1), map: glowTex(), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }), { name: 'brakeGlow' }));
+  // the Founder Edition's LED wake-up (car-wake.ts): the strips, the blades and the red bar light in a sweep. The
+  // 'blade' lamps and their tail material are the hypercar's own, so no other car's lights take part
+  if (oc && extra.led) { wakeable(extra.led, 'ice', B.ZF, B.ZR); wakeable(lamps.lamp, 'ice', B.ZF, B.ZR); wakeable(lamps.tail, 'bar', B.ZF, B.ZR); }
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));
   return {
     ...extra,

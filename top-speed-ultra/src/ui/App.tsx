@@ -6,12 +6,13 @@ import type { CSSProperties } from 'react';
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
-import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, Look, loadBest } from '../game/settings';
+import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, Look, loadBest, PROFILES, PROFILE_IDS, profileOf, customLine } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
 import { COURSES, bestTime, fmtTime } from '../game/race';
 import { carById, figures, garageCars, PAINTS, paintFor, WHEELS, wheelFor } from '../game/cars';
+import { GLACIER_SILVER, FOUNDER_ICE, plaqueNumber, founderWindowText } from '../game/founder';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
@@ -146,11 +147,13 @@ export function App() {
   // "start at your exit": the key names the carriageway; the exit list gives its sign text
   const exitRoadOf = settings.exit.split(' @ ')[0];
   const myExit = settings.exit ? game.current?.exitsFor(exitRoadOf).find((e) => e.key === settings.exit) ?? null : null;
-  // the drive HUD's chips under the speed: the handling profile (where the slider sits), the assists the physics runs
-  // at every setting (ABS and traction control), and while the hypercar is driven its tune (cars.ts tuneFor):
-  // Unleashed in Free Drive, the race tune in every scored mode
+  // the drive HUD's chips under the speed: the driving profile the handling slider sits on (settings.ts PROFILES, or
+  // Custom between them) and the assists the physics runs at every setting (ABS and traction control). While the
+  // hypercar is driven the HUD adds its tune's chip from the run itself (Game.hud.tune, cars.ts tuneFor): Unleashed in
+  // Free Drive, the race tune in every scored mode
   const carNow = carById(game.current?.carId ?? 'rossini-gt');
-  const chips = [settings.handling < 0.35 ? 'Arcade' : settings.handling < 0.75 ? 'Sport' : 'Sim', 'ABS', 'TCS', ...(carNow.race ? [mode === 'free' ? 'Unleashed' : 'Race tune'] : [])];
+  const prof0 = profileOf(settings.handling);
+  const chips = [prof0 === 'custom' ? 'Custom' : prof0 === 'sim' ? 'Sim' : PROFILES[prof0].label, 'ABS', 'TCS'];
   // the player card on the menu
   const prof = game.current?.profile.p, level = prof ? levelOf(prof.xp) : 1, xpLo = xpFor(level), xpHi = xpFor(level + 1);
   const av = AVATARS[prof?.avatar ?? 0];
@@ -163,7 +166,7 @@ export function App() {
   return (
     <div className="app">
       <div className="stage" ref={host} />
-      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} chips={chips} onAbility={() => game.current?.useAbility()} />
+      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} chips={chips} onAbility={() => game.current?.useAbility()} onThrust={(on) => game.current?.input.setThrust('touch', on)} />
       {playing && settings.corner !== 'off' && (
         <button type="button" className={'corner ' + settings.corner} style={{ width: cornerPx, height: cornerPx }} onClick={() => game.current?.cycleCorner()}
           aria-label={settings.corner === 'map' ? 'Road map. Tap for the sky camera.' : 'Sky camera. Tap to hide.'}>
@@ -534,9 +537,7 @@ export function App() {
                 <section className="sgroup" id="set-driving">
                   <h3 className="sect">Driving</h3>
                   <div className="field"><label>Gearbox</label><Seg value={settings.transmission} options={['auto', 'manual']} labels={(t) => (t === 'auto' ? 'Automatic' : 'Manual')} onChange={(t) => update({ transmission: t })} /></div>
-                  <div className="field"><label htmlFor="handling">Handling</label>
-                  <div className="slider"><span>Arcade</span><input id="handling" type="range" min={0} max={1} step={0.05} value={settings.handling} style={fill(settings.handling, 0, 1)} onChange={(e) => update({ handling: Number(e.target.value) })} /><span>Sim</span></div>
-                  </div>
+                  <Handling value={settings.handling} onChange={(h) => update({ handling: h })} />
                   <div className="field"><label>Ultra Realism</label>
                   {game.current?.ultraOpen ? <>
                   <Toggle label="On: the world closes in at speed" value={settings.ultra} onChange={(v) => update({ ultra: v })} />
@@ -563,7 +564,8 @@ export function App() {
               </div>
             </div>
             </div>
-            {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause.</p>}
+            {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause. OC Hypercar in Free Drive: hold Left Shift for Cold Thrust, double-tap it (or press J) for Thrust Hop; gamepad: D-pad up.</p>}
+            {coarse && <p className="fine keys">OC Hypercar in Free Drive: hold THRUST (beside your ability) for Cold Thrust, double-tap it for Thrust Hop.</p>}
             <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div>
           </div>
         </div>
@@ -680,14 +682,23 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
         {tab === 'cars' && <div className="drivers">
           {garageCars(owner, p.vehicles).map((c) => {
             const f = figures(c), owned = p.vehicles.includes(c.id), driving = game.carId === c.id, locked = level < c.level;
+            // chosen: the Founder Edition's lights wake, on its stage and on the car (Game.applyCarChoice)
+            const chosen = () => { if (c.founder) game.playReveal('wake'); };
             return (
-              <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '')}>
-                <div className="carhead"><span className="paint" style={{ background: '#' + paintFor(c, settings.paints).toString(16).padStart(6, '0') }} /><b>{c.name}</b></div>
+              <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '') + (c.founder ? ' founder' : '')}>
+                {c.founder && <FounderStage game={game} />}
+                <div className="carhead"><span className="paint" title={c.founder ? GLACIER_SILVER.name : undefined} style={{ background: '#' + paintFor(c, settings.paints).toString(16).padStart(6, '0') }} /><b>{c.name}</b>{c.founder && <span className="chip ice">Founder Edition</span>}</div>
                 <small>{f.hp} hp · {f.zeroSixty} s 0-60 · {f.topMph} mph · {c.mass.toLocaleString()} kg</small>
                 <span>{c.blurb}</span>
+                {c.founder && <ul className="fe-list">
+                  <li><b>{GLACIER_SILVER.name}</b> paint and <b>{FOUNDER_ICE.name}</b> lights, on this car only</li>
+                  <li>A numbered plaque on the door sill and the console: <b>{plaqueNumber()}</b> until the store assigns real numbers</li>
+                  <li>Its lights wake in a sweep when you choose it and on the start line</li>
+                  <li>{founderWindowText()} (Pacific)</li>
+                </ul>}
                 <div className="row">
-                  {owner ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`)}>Drive</button>)
-                    : owned ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => act(() => { book.choose(c.id); return null; }, `${c.name} selected`)}>Drive</button>)
+                  {owner ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => { act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`); chosen(); }}>Drive</button>)
+                    : owned ? (driving ? <em>Driving it</em> : <button className="btn" onClick={() => { act(() => { book.choose(c.id); return null; }, `${c.name} selected`); chosen(); }}>Drive</button>)
                     : c.founder ? <em>Founder Edition · not on sale yet (test build)</em>
                     : locked ? <em>Opens at level {c.level}</em>
                     : <button className="btn primary" onClick={() => act(() => book.buy(c.id, c.price, c.level, slots), `${c.name} is yours`)}>Buy · {c.price.toLocaleString()}</button>}
@@ -700,6 +711,34 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
         <p className="fine">The makes are our own. Each has its own body and interior, and its own numbers underneath.</p>
         <div className="row"><button className="btn primary" onClick={onClose}>Done</button></div>
       </div>
+    </div>
+  );
+}
+
+// the OC Hypercar's reveal stage, at the top of its garage card (Game.openReveal: the car on a turntable in a dark
+// showroom while its lights wake and a light sweeps over it). It plays by itself the first time on this device, then
+// shows its last frame with a button to play it again; with reduced motion it shows the last frame and nothing moves.
+const REVEAL_SEEN = 'tsu.founderReveal';
+function FounderStage({ game }: { game: Game }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const cv = ref.current; if (!cv) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.max(16, Math.round(cv.clientWidth * dpr)); cv.height = Math.max(9, Math.round(cv.clientHeight * dpr));
+    let seen = false;
+    try { seen = localStorage.getItem(REVEAL_SEEN) === '1'; } catch { /* a convenience */ }
+    // a moment for the panel to paint first: building the stage takes a beat
+    const id = window.setTimeout(() => {
+      game.openReveal(cv, !seen);
+      if (!seen) try { localStorage.setItem(REVEAL_SEEN, '1'); } catch { /* a convenience */ }
+    }, 60);
+    return () => { window.clearTimeout(id); game.closeReveal(); };
+  }, [game]);
+  return (
+    <div className="fe-stage">
+      <canvas ref={ref} role="img" aria-label="The OC Hypercar Founder Edition on its reveal stage, turning on a turntable while its lights wake. A procedural model built in code." />
+      <p className="fe-cap" aria-hidden="true"><b>Founder Edition</b><span>{plaqueNumber()}</span></p>
+      <button className="btn fe-replay" onClick={() => game.playReveal('reveal')}>Replay reveal</button>
     </div>
   );
 }
@@ -764,6 +803,32 @@ function fill(v: number, min: number, max: number): CSSProperties {
 }
 function Seg<T extends string>({ value, options, labels, onChange }: { value: T; options: T[]; labels: (v: T) => string; onChange: (v: T) => void }) {
   return <div className="seg" role="group">{options.map((o) => <button key={o} aria-pressed={o === value} onClick={() => onChange(o)}>{labels(o)}</button>)}</div>;
+}
+// the handling slider (0 arcade .. 1 simulation, the one saved value the physics reads) with its named profiles: each
+// button puts the slider on its point (settings.ts PROFILES), anywhere else on the slider reads Custom, and one line each
+// says what that point changes (a Custom line joins them, lit, with no profile pressed). The ticks under the track mark
+// the three points.
+function Handling({ value, onChange }: { value: number; onChange: (h: number) => void }) {
+  const cur = profileOf(value);
+  const name = cur === 'custom' ? 'Custom' : PROFILES[cur].label;
+  return (
+    <div className="field handling">
+      <label htmlFor="handling">Handling <output>{name} · {value.toFixed(2)}</output></label>
+      <div className="seg" role="group" aria-label="Handling profile">
+        {PROFILE_IDS.map((id) => <button key={id} aria-pressed={cur === id} onClick={() => onChange(PROFILES[id].h)}>{PROFILES[id].label}</button>)}
+      </div>
+      <div className="slider"><span>Arcade</span>
+        <div className="htrack">
+          <input id="handling" type="range" min={0} max={1} step={0.05} value={value} style={fill(value, 0, 1)} aria-valuetext={`${name}, ${value.toFixed(2)}`} onChange={(e) => onChange(Number(e.target.value))} />
+          {PROFILE_IDS.map((id) => <i key={id} aria-hidden="true" className={cur === id ? 'on' : ''} style={{ '--at': PROFILES[id].h } as CSSProperties} />)}
+        </div>
+        <span>Sim</span></div>
+      <dl className="profiles">
+        {PROFILE_IDS.map((id) => <div key={id} className={cur === id ? 'on' : ''}><dt>{PROFILES[id].label}</dt><dd>{PROFILES[id].line}</dd></div>)}
+        {cur === 'custom' && <div className="on"><dt>Custom</dt><dd>{customLine(value)}</dd></div>}
+      </dl>
+    </div>
+  );
 }
 function Toggle({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
   return <label className="toggle"><input type="checkbox" checked={value} onChange={(e) => onChange(e.target.checked)} /><span>{label}</span></label>;

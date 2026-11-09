@@ -23,7 +23,9 @@ function overlap(ax: number, az: number, dx: number, dz: number, hl: number, hw:
 // motion is its pose change since the last step (px, pz, ppsi); `dtCar` is the time the traffic car moved by this step
 // (the world's rate, shorter than the player's under Focus Time), so its start point is where it really was.
 export function sweptContact(P: ContactPlayer, c: ContactBody, cLen: number, cWid: number, height: number, dtCar: number, out: ContactOut) {
-  if (Math.abs(c.y - P.y) > 2.5 || P.altitude > height + 0.3) return false;
+  // another level of road (a bridge above or below) is 2.5 m away, measured from the road under the car (a hop's
+  // altitude is not another level: a semi's trailer stands 4.1 m tall); a hop whose underside clears the roof passes over
+  if (Math.abs(c.y - (P.y - P.altitude)) > 2.5 || P.altitude > height + 0.3) return false;
   const dtc = Math.max(dtCar, 1e-6);
   const dxr = P.x - P.px - Math.sin(c.h) * c.v * dtc, dzr = P.z - P.pz - Math.cos(c.h) * c.v * dtc;
   const dist = Math.sqrt(dxr * dxr + dzr * dzr);

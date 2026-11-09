@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Path, STEP, LANE_W, ORIGIN } from './Path';
-import { Network, Overpass, Sign, DIR_WORD, ROUTE_LABEL } from './Network';
+import { Network, Overpass, Sign, DIR_WORD, ROUTE_LABEL, GANTRY_AHEAD, GANTRY_MIN_S } from './Network';
 import * as P from '../road/props';
 import * as T from '../textures';
 import { fbm2, rng, clamp } from '../util';
@@ -234,9 +234,9 @@ export class Roads {
 
     // -------------------------------------------------------------- guide signs ahead of each exit
     for (const sg of this.signsBy.get(p.id) ?? []) {
-      for (const [ahead, sub] of [[800, '1/2 MILE'], [260, sg.side === 'R' ? 'EXIT ONLY' : 'LEFT EXIT']] as const) {
-        const s = sg.s - ahead;
-        if (s < s0 || s >= s1 || s < 30) continue;
+      for (let i = 0; i < GANTRY_AHEAD.length; i++) {
+        const s = sg.s - GANTRY_AHEAD[i], sub = i === 0 ? '1/2 MILE' : sg.side === 'R' ? 'EXIT ONLY' : 'LEFT EXIT';
+        if (s < s0 || s >= s1 || s < GANTRY_MIN_S) continue;
         this.gantry(group, p, s, ox, oz, sg, sub);
       }
     }
