@@ -124,6 +124,7 @@ const cap0 = FILM.captions[0], capShift = FILM.loop0 - 0.05 - cap0.t0;
 const capLoop = { t0: FILM.loop0 - 0.05, t1: FILM.dur + 5, lines: cap0.lines.map((ln) => ln.map(([w, tw]) => [w, tw + capShift])) };
 hud.captions([...FILM.captions, capLoop]);
 const titleEl = hud.title(FILM.title);
+{ const se = titleEl.querySelector(".hud-series"), m = /Episode (\d+)/.exec(FILM.title.series || ""); if (se && m) { se.innerHTML = 'ONE MORE ORBIT · SEASON <b style="color:var(--teal,#4fe3c6)">2</b> · EPISODE <b style="color:var(--teal,#4fe3c6)">' + m[1] + "</b>"; Object.assign(se.style, { color: "var(--text-2)", whiteSpace: "nowrap", fontSize: "2.1vmin", letterSpacing: ".1em" }); } }
 const tRing = titleRing(titleEl, { t0: 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 const CEL = {};

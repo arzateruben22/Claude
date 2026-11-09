@@ -53,11 +53,13 @@ SPACE = [key(0.0, target=MID, dist=66.0, az=-28.0, el=16.0),
          key(t_c, target=ORIGIN, dist=74.0, az=-22.0, el=18.0),
          key(CUE["crashing"], dist=56.0, az=-17.0, ease="sine"),
          key(CUE["y2017"] + 1.0, dist=72.0, az=-12.0, ease="sine"),
+         key(CUE["y2017"] + 2.6, dist=54.0, az=-17.0, el=8.0, ease="sine"),
+         key(CUE["light"] - 0.4, dist=64.0, az=-3.0, el=26.0, ease="sine"),
          key(t_why, dist=46.0, az=-8.0, el=14.0, ease="sine"),
          key(CUE["tm"] - 0.2, dist=36.0, az=-4.0, ease="sine"),
          key(CUE["tm"] + 2.0, dist=44.0, az=8.0, el=22.0, ease="sine"),
-         key(CUE["debate"], target=[5.5, -1.8, 3.2], dist=48.0, az=16.0, el=24.0, ease="sine"),
-         key(CUE["zoom"] - 0.1, target=[5.5, -1.8, 3.2], dist=48.0, az=18.0, el=24.0, ease="sine"),
+         key(CUE["debate"], target=[7.5, -4.6, 4.6], dist=48.0, az=16.0, el=24.0, ease="sine"),
+         key(CUE["zoom"] - 0.1, target=[7.5, -4.6, 4.6], dist=48.0, az=18.0, el=24.0, ease="sine"),
          key(CUE["zoom"] + 2.9, target=RING, dist=22.0, az=36.0, el=20.0, ease="inout3"),
          key(CUE["ring"] + 1.8, target=RING, dist=19.0, az=52.0, el=18.0, ease="sine"),
          key(CUE["somewhere"], target=RINGT, dist=15.0, az=62.0, el=20.0, ease="sine"),            # push in: the beads arrive and the ring glints
@@ -69,8 +71,8 @@ SPACE = [key(0.0, target=MID, dist=66.0, az=-28.0, el=16.0),
          key(A("vo06:poem") - 0.4, target=RINGT, dist=30.0, az=140.0, el=30.0, ease="sine"),       # wide, then in for the ring's reaction
          key(CUE["chem"], target=RINGT, dist=18.0, az=150.0, el=10.0, ease="sine"),                 # in low for "chemistry"
          key(t_rd - 0.1, target=RINGT, dist=22.0, az=156.0, el=16.0, ease="sine"),
-         key(t_rd + 2.2, target=[6, -5, 4], dist=50.0, az=40.0, el=28.0, ease="inout3"),
-         key(t_end, target=[6, -5, 4], dist=54.0, az=44.0, el=28.0, ease="sine"),
+         key(t_rd + 2.2, target=[0, 0, 0], dist=44.0, az=40.0, el=30.0, ease="inout3"),
+         key(t_end, target=[0, 0, 0], dist=48.0, az=44.0, el=30.0, ease="sine"),
          key(f.duration, target=MID, dist=66.0, az=-28.0, el=16.0)]
 CAM = {"space": SPACE, "end": SPACE}
 SHOTS = [{"at": 0.0, "name": "space"}, {"at": t_end, "name": "end"}]
@@ -81,7 +83,8 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-nsA", "text": "neutron star", "kind": "body", "anchor": "starA", "t0": round(CUE["spiral0"] + 0.5, 4), "t1": round(CUE["crashing"] + 1.5, 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-nsB", "text": "neutron star", "kind": "body", "anchor": "starB", "t0": round(CUE["spiral0"] + 0.5, 4), "t1": round(CUE["crashing"] + 1.5, 4), "side": 1, "v": "below", "fixed": True},
-    {"id": "l-bead", "text": "a bead of gold", "kind": "star", "anchor": "bead", "t0": round(CUE["tm"] + 0.4 + 0.8 + 6 * 0.18 + 0.7, 4), "t1": round(CUE["debate"] - 0.3, 4), "side": -1, "v": "above", "fixed": True},
+    {"id": "l-bead", "text": "a bead of gold", "kind": "star", "anchor": "bead", "t0": round(CUE["tm"] + 0.8 + 6 * 0.18 + 2.3, 4), "t1": round(CUE["debate"] - 0.3, 4), "side": -1, "v": "above", "fixed": True},
+    {"id": "l-merge", "text": "where the crash was", "kind": "grav", "anchor": "merge", "t0": round(CUE["rip"] - 0.2, 4), "t1": round(t_end - 0.45, 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-ring", "text": "your ring", "kind": "star", "anchor": "ring", "t0": round(CUE["ring"] - 0.2, 4), "t1": round(t_tk + 3.0, 4), "side": 1, "v": "above", "fixed": True},
 ]
 PILLS = [
@@ -114,11 +117,11 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "One More Orbit · S2E03", "title": "Your *gold*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "One More Orbit · Season 2 · Episode 3", "title": "Your *gold*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next orbit: the *black hole* edge", "follow": "One More Orbit · S2 · Episode 4",
        "next": "GW170817 (2017): the first merger seen in both ripples and light (NASA)."}
 POSTER = A("vo05:ring", 1.0)
-glue(f, {"vo02": ["soaking up neutrons."], "vo03": ["twenty seventeen,"], "vo04": ["about as wide as a city,", "still debated."], "vo06": ["a star crash."], "vo07": ["came first.", "seven seconds later.", "hours after."], "vo08": ["Next: what happens", "at the edge of", "a black hole?"]})
+glue(f, {"vo02": ["soaking up neutrons."], "vo03": ["twenty seventeen,", "saw one happen,"], "vo05": ["like that,"], "vo04": ["about as wide as a city,", "still debated."], "vo06": ["a star crash."], "vo07": ["came first.", "seven seconds later.", "hours after."], "vo08": ["Next: what happens", "at the edge of", "a black hole?"]})
 LOOP0 = round(f.duration - 0.6, 4)
 film = {
     "loop0": LOOP0, "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,

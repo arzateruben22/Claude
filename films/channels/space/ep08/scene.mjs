@@ -53,11 +53,11 @@ const starMat = new THREE.ShaderMaterial({
 });
 const field = new THREE.Points(sG, starMat); field.frustumCulled = false; scene.add(field);
 // the lane: stars strung along one line of sight; they pile up toward the far end and ramp to white
-const NL = 7000, lr = mul(8), lP = new Float32Array(NL * 3), lR = new Float32Array(NL);
+const NL = 9000, lr = mul(8), lP = new Float32Array(NL * 3), lR = new Float32Array(NL);
 for (let i = 0; i < NL; i++) { const z = 5 + 165 * Math.pow(lr(), 0.55), sp = 0.035 * z; lP.set([(lr() + lr() + lr() - 1.5) * sp, 0.3 + (lr() + lr() + lr() - 1.5) * sp * 0.7, z], i * 3); lR[i] = lr(); }
 const lG = new THREE.BufferGeometry(); lG.setAttribute("position", new THREE.BufferAttribute(lP, 3)); lG.setAttribute("rnd", new THREE.BufferAttribute(lR, 1));
 const laneMat = new THREE.ShaderMaterial({
-  uniforms: { uPx: { value: 5.2 * S1 }, uGain: { value: 1 } },
+  uniforms: { uPx: { value: 6.5 * S1 }, uGain: { value: 1 } },
   vertexShader: `attribute float rnd; uniform float uPx, uGain; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = uPx * (0.8 + rnd); vA = uGain * (0.4 + 0.8 * smoothstep(20.0, 150.0, position.z)); }`,
   fragmentShader: `varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0) discard; float a = (1.0 - smoothstep(0.1, 1.0, r2)) * vA; gl_FragColor = vec4(vec3(1.0, 0.98, 0.95) * a * 2.4, a); }`,
   transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
@@ -82,23 +82,24 @@ const fRayMesh = FRAYS.map(() => segment({ color: pos(line("teal", 0.95)), width
 // three shells (near, middle, far) and the horizon sphere: each three great circles
 const mkSphere = (col, w) => [XZ, XY, YZ].map(() => ring({ color: col, width: w, opacity: 0 }));
 const SH = [[30, mkSphere(pos(line("lemon", 0.9)), 3)], [70, mkSphere(pos(line("ice", 0.9)), 3)], [130, mkSphere(pos(line("lilac", 0.9)), 3)]];
-const hzSphere = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), new THREE.MeshBasicMaterial({ color: 0x2fd0b5, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending })); scene.add(hzSphere);
+const hzSphere = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), new THREE.MeshBasicMaterial({ color: 0x2fd0b5, transparent: true, opacity: 0, depthWrite: false, side: THREE.FrontSide, blending: THREE.AdditiveBlending })); scene.add(hzSphere);
 const HZ = mkSphere(pos(line("teal", 0.95)), 4.5);
 for (const [, rs3] of SH) rs3.forEach((r) => scene.add(r.mesh)); HZ.forEach((r) => scene.add(r.mesh));
 const setSphere = (set, r, op) => set.forEach((rg, i) => rg.arc({ center: [0, 0, 0], r: Math.max(0.01, r), ...[XZ, XY, YZ][i] }).set({ opacity: op }));
 // photons crawling in from beyond the horizon, and a flow of light arriving from inside it
-const NPH = 200, pr = mul(37), PH = Array.from({ length: NPH }, (_, i) => { const th = Math.acos(2 * pr() - 1), ph = pr() * 6.2832; return { d: [Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)], r0: i < 130 ? 104 + pr() * 60 : 14 + pr() * 80, v: i < 80 ? 0.9 + pr() * 1.2 : 7 + pr() * 6, ph: pr() }; });
+const NPH = 200, pr = mul(37), PH = Array.from({ length: NPH }, (_, i) => { const th = Math.acos(2 * pr() - 1), ph = pr() * 6.2832; return { d: [Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)], r0: i < 130 ? 104 + pr() * 60 : 14 + pr() * 80, v: i < 130 ? 3.5 + pr() * 3.5 : 7 + pr() * 6, ph: pr() }; });
 const phP = new Float32Array(NPH * 3), phA = new Float32Array(NPH), phG = new THREE.BufferGeometry();
 phG.setAttribute("position", new THREE.BufferAttribute(phP, 3)); phG.setAttribute("alpha", new THREE.BufferAttribute(phA, 1));
 const phMat = new THREE.ShaderMaterial({
-  uniforms: { uPx: { value: 15 * S1 } },
+  uniforms: { uPx: { value: 7 * S1 } },
   vertexShader: `attribute float alpha; uniform float uPx; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = uPx * clamp(40.0 / length(mv.xyz), 0.8, 5.0); vA = alpha; }`,
-  fragmentShader: `varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0 || vA < 0.01) discard; float a = (1.0 - smoothstep(0.1, 1.0, r2)) * vA; gl_FragColor = vec4(vec3(0.31, 0.89, 0.78) * a * 1.6, a); }`,
+  fragmentShader: `varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0 || vA < 0.01) discard; float a = (1.0 - smoothstep(0.1, 1.0, r2)) * vA; gl_FragColor = vec4(vec3(0.18, 0.78, 0.68) * a * 1.1, a); }`,
   transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
 });
 const photons = new THREE.Points(phG, phMat); photons.frustumCulled = false; scene.add(photons);
-const LITS = Array.from({ length: 16 }, (_, k) => { const a = -0.85 + 1.7 * ((k * 0.618) % 1), e = -0.3 + 0.6 * ((k * 0.381) % 1), r = 36 + 48 * ((k * 0.733) % 1); return { c: [r * Math.sin(a) * Math.cos(e), r * Math.sin(e), r * Math.cos(a) * Math.cos(e)], b: createBeacon({ color: pos(hdr(k % 2 ? "ice" : "lemon", 0.9)), px: 14, core: 0.7 }) }; });
-LITS.forEach((l) => scene.add(l.b.mesh));
+const LITS = Array.from({ length: 16 }, (_, k) => ({ b: createBeacon({ color: pos(hdr(k % 2 ? "ice" : "lemon", 1.1)), px: 18, core: 0.6 }), ring: ring({ color: pos(line(k % 2 ? "ice" : "lemon", 0.95)), width: 3, opacity: 0 }), c: [0, 0, 0], t0: 0 }));
+const lr2 = mul(53);
+LITS.forEach((l) => { scene.add(l.b.mesh); scene.add(l.ring.mesh); });
 const you = createBeacon({ color: pos(hdr("teal", 1.3)), px: 26, core: 0.5 }); scene.add(you.mesh);
 const ringSun = ring({ color: pos(line("teal", 0.95)), width: 5, opacity: 0 }), ringFar = ring({ color: pos(line("teal", 0.95)), width: 5, opacity: 0 });
 scene.add(ringSun.mesh, ringFar.mesh);
@@ -112,10 +113,14 @@ const ctx = tc.getContext("2d");
 const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${Math.max(0, Math.min(1, a)).toFixed(3)})`;
 function overlay2d(t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
-  const wash = 0.94 * E.inout3(seg(t, CUE.cancel, CUE.surface + 0.8)) * (1 - E.inout3(seg(t, CUE.time + 0.2, CUE.time + 1.6)));           // the whole sky should glow (a slow ramp), warm star-surface white
+  const wash = 0.97 * E.inout3(seg(t, CUE.cancel, CUE.glow)) * (1 - E.inout3(seg(t, CUE.surface + 0.1, CUE.surface + 1.9)));           // the whole sky should glow (a slow ramp), warm star-surface white
   if (wash > 0.002) { const g = ctx.createRadialGradient(W / 2, 0.38 * H, 20 * sx, W / 2, 0.38 * H, 900 * sx); g.addColorStop(0, rgba([255, 255, 250], wash)); g.addColorStop(1, rgba([255, 250, 234], wash * 0.96)); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
   const lk0 = E.out3(seg(t, FILM.loop0, FILM.loop0 + 0.45)), w0 = Math.max(1 - E.inout3(seg(t, 1.0, 3.0)), lk0) * (t < CUE.spokes0 || lk0 > 0 ? 1 : 0);        // frame 0: the lane's far end ramps to white (and again at the loop)
-  if (w0 > 0.002) { const gy = 0.43 * H, g = ctx.createRadialGradient(W / 2, gy, 10 * sx, W / 2, gy, 520 * sx); g.addColorStop(0, rgba([255, 253, 244], 0.78 * w0)); g.addColorStop(0.35, rgba([255, 246, 224], 0.42 * w0)); g.addColorStop(1, rgba([255, 240, 210], 0)); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+  if (w0 > 0.002) { const gy = 0.43 * H, g = ctx.createRadialGradient(W / 2, gy, 10 * sx, W / 2, gy, 380 * sx); g.addColorStop(0, rgba([255, 255, 250], 0.95 * w0)); g.addColorStop(0.16, rgba([255, 250, 236], 0.55 * w0)); g.addColorStop(0.5, rgba([255, 244, 220], 0.12 * w0)); g.addColorStop(1, rgba([255, 240, 210], 0)); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+  const kc = fadeIn(t, CUE.surface + 0.7, 0.6) * (1 - fadeIn(t, CUE.age0 - 0.7, 0.5));             // "the key here is time": a clock ring over the darkening sky
+  if (kc > 0.01) { const cx = W / 2, cy = 0.36 * H, R = 250 * sx; ctx.lineWidth = 6 * S1; ctx.strokeStyle = rgba([79, 227, 198], 0.9 * kc); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 6.2832); ctx.stroke();
+    for (let i = 0; i < 12; i++) { const a = i * 0.5236; ctx.lineWidth = 4 * S1; ctx.beginPath(); ctx.moveTo(cx + Math.sin(a) * R * 0.86, cy - Math.cos(a) * R * 0.86); ctx.lineTo(cx + Math.sin(a) * R * 0.97, cy - Math.cos(a) * R * 0.97); ctx.stroke(); }
+    const h = (t - CUE.surface) * 2.4; ctx.lineWidth = 9 * S1; ctx.lineCap = "round"; ctx.strokeStyle = rgba([238, 240, 255], kc); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.sin(h) * R * 0.72, cy - Math.cos(h) * R * 0.72); ctx.stroke(); ctx.lineCap = "butt"; }
   const [d0, d1, d2] = CUE.dip;
   const dip = Math.max(E.inout3(seg(t, d0 - 0.1, d0 + 0.2)) * (1 - E.inout3(seg(t, d0 + 0.2, d0 + 0.45))), E.inout3(seg(t, d1 - 0.05, d1 + 0.2)) * (1 - E.inout3(seg(t, d1 + 0.2, d1 + 0.45))), E.inout3(seg(t, d2 - 0.1, d2 + 0.15)) * (1 - E.inout3(seg(t, d2 + 0.15, d2 + 0.4))));
   if (dip > 0.001) { ctx.fillStyle = rgba([8, 10, 28], dip); ctx.fillRect(0, 0, W, H); }
@@ -129,12 +134,14 @@ const cap0 = FILM.captions[0], capShift = FILM.loop0 - 0.05 - cap0.t0;
 const capLoop = { t0: FILM.loop0 - 0.05, t1: FILM.dur + 5, lines: cap0.lines.map((ln) => ln.map(([w, tw]) => [w, tw + capShift])) };
 hud.captions([...FILM.captions, capLoop]);
 const titleEl = hud.title(FILM.title);
+{ const se = titleEl.querySelector(".hud-series"), m = /Episode (\d+)/.exec(FILM.title.series || ""); if (se && m) { se.innerHTML = 'ONE MORE ORBIT · SEASON <b style="color:var(--teal,#4fe3c6)">2</b> · EPISODE <b style="color:var(--teal,#4fe3c6)">' + m[1] + "</b>"; Object.assign(se.style, { color: "var(--text-2)", whiteSpace: "nowrap", fontSize: "2.1vmin", letterSpacing: ".1em" }); } }
 const tRing = titleRing(titleEl, { t0: 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 const CEL = {};
 for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, lit: () => true, value: () => 0, fmt: () => c.text });
   CEL[c.id] = el; el.classList.add(c.read ? "lm-read" : "lm-clock");
+  if (c.id === "c-hook" || c.id === "c-cancel" || c.id === "c-age" || c.id === "c-dark") Object.assign(el.style, { background: "rgba(8,10,28,.82)", borderRadius: "2vmin", padding: "1.2vmin 2.4vmin" });
   const lb = el.querySelector(".lb");
   if (lb) lb.style.textShadow = "0 0 1.2vmin rgba(8,10,28,.95), 0 0 2.6vmin rgba(8,10,28,.85)";
   const v = el.querySelector(".v");
@@ -167,7 +174,8 @@ const HF = 95;
 window.seek = function (t) {
   if (!LOOPEL) makeLoop();
   const dipT = CUE.dip[2] + 0.15, tt = t >= dipT ? 0 : t;
-  const cm = camAt(tt); camera.position.fromArray(cm.p); camera.fov = cm.fov; camera.updateProjectionMatrix(); camera.lookAt(...cm.l);
+  const cm = camAt(tt); camera.position.fromArray(cm.p); camera.fov = cm.fov; camera.updateProjectionMatrix(); camera.lookAt(...cm.l); camera.updateMatrixWorld();
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0), up = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1);
   const inForest = tt >= CUE.dip[0] + 0.1 && tt < CUE.dip[1] + 0.1;
   field.visible = !inForest; lane.visible = !inForest; trunks.visible = inForest;
   // the horizon: the universe's age (as light-travel time) grows round you; stars beyond it have not arrived
@@ -204,7 +212,15 @@ window.seek = function (t) {
   const u1 = E.out3(seg(tt, CUE.sun, CUE.sun + 1.6)), u2 = E.out3(seg(tt, CUE.farthest, CUE.farthest + 2.6));
   ringSun.arc({ center: [0, 0, 0], r: Math.max(0.01, 5 * u1), ...XZ }).set({ opacity: u1 > 0.002 && tt < CUE.farthest + 0.2 ? 0.95 * (1 - 0.5 * u1) : 0 });
   ringFar.arc({ center: [0, 0, 0], r: Math.max(0.01, HF * u2), ...XZ }).set({ opacity: u2 > 0.002 ? 0.95 * (1 - 0.6 * u2) : 0 });
-  LITS.forEach((l, k) => { const t0 = k < 8 ? CUE.age1 + 0.3 + k * 0.62 : CUE.begin + 1.2 + (k - 8) * 0.9, on = k < 8 ? tt >= t0 && tt < CUE.begin + 1.5 : tt >= t0 && tt < CUE.rd + 0.6; l.b.set({ center: l.c, camera, opacity: on ? fadeIn(tt, t0, 0.45) * (1 - fadeIn(tt, k < 8 ? CUE.begin + 0.8 : CUE.rd, 0.6)) : 0 }); });
+  LITS.forEach((l, k) => {
+    const t0 = k < 6 ? CUE.age1 + 0.3 + k * 1.25 : CUE.begin + 1.1 + (k - 6) * 1.05, tEnd = k < 6 ? CUE.begin + 0.8 : CUE.rd + 0.8;
+    if (l.t0 !== t0) { l.t0 = t0; const cmK = camAt(t0 + 0.5), inside = Math.hypot(...cmK.p) < 20; const rnd = () => lr2() - 0.5;
+      if (inside) { const d = [cmK.l[0] - cmK.p[0], cmK.l[1] - cmK.p[1], cmK.l[2] - cmK.p[2]], n = Math.hypot(...d), r = 34 + 40 * lr2(); l.c = [cmK.p[0] + d[0] / n * r + rnd() * 26, cmK.p[1] + d[1] / n * r + rnd() * 22, cmK.p[2] + d[2] / n * r + rnd() * 10]; }
+      else { const th = Math.acos(2 * lr2() - 1), ph = lr2() * 6.2832, r = 20 + 55 * lr2(); l.c = [r * Math.sin(th) * Math.cos(ph), r * Math.cos(th), r * Math.sin(th) * Math.sin(ph)]; } }
+    const on = tt >= t0 && tt < tEnd, age = tt - t0, pulse = on ? 0.55 + 0.45 * Math.exp(-age * 2.2) : 0;
+    l.b.set({ center: l.c, camera, opacity: on ? Math.min(1, age * 5) * (1 - fadeIn(tt, tEnd - 0.6, 0.6)) * (0.8 + 0.2 * pulse) : 0 });
+    l.ring.arc({ center: l.c, r: Math.max(0.01, 1 + 9 * Math.min(1, age / 0.9)), e1: right.toArray(), e2: up.toArray() }).set({ opacity: on && age < 0.9 ? 0.9 * (1 - age / 0.9) : 0 });
+  });
   overlay2d(t);
   hud.update(t); tRing.update(t); eRing.update(t);
   const lk = fadeIn(t, FILM.loop0, 0.45);

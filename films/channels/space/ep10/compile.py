@@ -105,7 +105,7 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "One More Orbit · S2E04", "title": "Black-hole *edge*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "One More Orbit · Season 2 · Episode 4", "title": "Black-hole *edge*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next orbit: a planet that *floats*", "follow": "One More Orbit · S2 · Episode 5",
        "next": "In 2019 the Event Horizon Telescope imaged a black hole about 55 million light-years away."}
 POSTER = A("vo05:gap", 0.5)

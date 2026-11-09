@@ -128,7 +128,7 @@
    "tag": "merger"
   },
   {
-   "t": 32.5133,
+   "t": 33.7133,
    "kind": "label",
    "tag": "l-bead"
   },
@@ -169,6 +169,11 @@
    "kind": "section",
    "id": "readout",
    "t1": 68.8
+  },
+  {
+   "t": 60.4333,
+   "kind": "label",
+   "tag": "l-merge"
   },
   {
    "t": 60.63333333333333,

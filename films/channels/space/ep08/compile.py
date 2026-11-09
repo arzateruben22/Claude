@@ -80,9 +80,9 @@ SHOTS = [{"at": 0.0, "name": "space"}, {"at": t_end, "name": "end"}]
 SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "light", "anchor": "you", "t0": round(CUE["spokes0"] + 0.9, 4), "t1": round(CUE["dip"][0], 4), "side": 1, "v": "below", "fixed": True},
-    {"id": "l-near", "text": "near: few, bright", "kind": "star", "anchor": "near", "t0": CUE["fainter"], "t1": round(CUE["more"] + 1.2, 4), "side": -1, "v": "above", "fixed": True},
-    {"id": "l-mid", "text": "middle: more, fainter", "kind": "body", "anchor": "mid", "t0": round(CUE["more"] + 0.6, 4), "t1": round(CUE["cancel"] - 0.2, 4), "side": 1, "v": "above", "fixed": True},
-    {"id": "l-far", "text": "far: most, faintest", "kind": "grav", "anchor": "far", "t0": CUE["more"], "t1": round(CUE["cancel"] + 0.2, 4), "side": 1, "v": "below", "fixed": True},
+    {"id": "l-near", "text": "near: few, bright", "kind": "star", "anchor": "near", "t0": CUE["fainter"], "t1": round(CUE["cancel"] - 0.5, 4), "side": -1, "v": "above", "fixed": True},
+    {"id": "l-mid", "text": "middle: more, fainter", "kind": "body", "anchor": "mid", "t0": round(CUE["more"] + 0.6, 4), "t1": round(CUE["cancel"] - 0.5, 4), "side": 1, "v": "above", "fixed": True},
+    {"id": "l-far", "text": "far: most, faintest", "kind": "grav", "anchor": "far", "t0": CUE["more"], "t1": round(CUE["cancel"] - 0.5, 4), "side": 1, "v": "below", "fixed": True},
     {"id": "l-hz", "text": "light-travel time (not to scale)", "kind": "light", "anchor": "hz", "t0": round(CUE["age0"] - 0.2, 4), "t1": round(CUE["way"] - 0.4, 4), "side": -1, "v": "above", "fixed": True},
 ]
 PILLS = [
@@ -99,6 +99,7 @@ COUNTERS = [
     {"id": "c-hook", "label": "the night sky", "text": "dark?", "t0": 0.0, "t1": t_n},
     {"id": "c-endless", "label": "an endless, eternal universe", "text": "a star every way", "t0": CUE["spokes0"], "t1": CUE["dip"][0]},
     {"id": "c-cancel", "label": "each shell adds the same light", "text": "the sky glows", "t0": CUE["cancel"], "t1": t_why},
+    {"id": "c-age", "label": "the universe's age, about", "text": "13.8 billion years", "t0": round(CUE["age0"] - 0.3, 4), "t1": round(CUE["way"] - 0.5, 4)},
     {"id": "c-dark", "label": "so the sky is", "text": "dark: a clue", "t0": CUE["begin"], "t1": t_rd},
     {"id": "c-read-sun", "label": "light time · the Sun", "text": "8 minutes", "read": True, "t0": t_rd, "t1": round(CUE["farthest"] - 0.05, 4)},
     {"id": "c-read-far", "label": "light time · far galaxies", "text": "billions of years", "read": True, "t0": CUE["farthest"], "t1": round(t_end - 0.45, 4)},
@@ -110,7 +111,7 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "One More Orbit · S2E02", "title": "Dark *sky*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "One More Orbit · Season 2 · Episode 2", "title": "Dark *sky*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next orbit: your *gold*", "follow": "One More Orbit · S2 · Episode 3",
        "next": "Planck (ESA): the universe is about 13.8 billion years old."}
 POSTER = A("vo04:years", 0.6)

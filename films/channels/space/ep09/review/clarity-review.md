@@ -17,7 +17,7 @@ Lint: 0 errors, voiced 73.1 s, hook spoken by 1.7 s (hook line slowed to speed 0
 Claims dropped for lack of a reachable source: 'before our Sun was born', 'older than our planet', the 130-million-light-year distance.
 
 ## Still open (9 Nov)
-- c7 now rests on a 2018 review (Côté et al., arXiv 1809.03525, read as the ar5iv copy) that finds mergers alone do not fit the Milky Way's heavy-element record and names collapsars as another proposed site; it supports "how much comes from crashes is still debated", NOT any percentage. A person opens it before OK.
+- c7 now rests on a 2018 research paper (Côté et al., arXiv 1809.03525, read as the ar5iv copy) that finds mergers alone do not fit the Milky Way's heavy-element record and names collapsars as another proposed site; it supports "how much comes from crashes is still debated", NOT any percentage. A person opens it before OK.
 - c3 now reads "one place heavy elements form" (NASA says "astronomers think"); it no longer says "confirmed".
 - c22 (gamma-ray flash about 1.7 s after the ripples) rests on the arXiv abstract of LIGO/Virgo/Fermi GBM/INTEGRAL (+1.74 ± 0.05 s). A person opens it before OK.
 - c13 (glow found hours later) is worded "telescopes found its glow hours after", since telescopes had to search for it.

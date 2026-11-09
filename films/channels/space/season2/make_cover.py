@@ -18,6 +18,14 @@ def grade(im, strength):
     ov = Image.new("RGB", im.size, (8, 10, 28)); w, h = im.size
     mask = Image.linear_gradient("L").resize((w, h)); mask = mask.point(lambda v: int(v * strength))
     return Image.composite(ov, im, mask)
+def series_line(d, x, y, series, size):
+    # 'One More Orbit · Season 2 · Episode N': text-2 colour, teal on the numbers, Lexend
+    import re
+    f = font(size, 600); parts = re.split(r"(?<=Season )(\d)|(?<=Episode )(\d+)", series.upper()); txt = series.upper()
+    cur = x
+    for tok in re.findall(r"\d+|[^\d]+", txt):
+        col = TEAL if tok.isdigit() else (169, 176, 217)
+        d.text((cur, y), tok, font=f, fill=col); cur += d.textlength(tok, font=f)
 def words(d, text, accent, f, x, y, maxw, line_gap=1.08):
     ws = text.split(); lines, cur = [], ""
     for w in ws:
@@ -40,7 +48,7 @@ big = hero.resize((1350, int(hh * 1.25)), Image.LANCZOS).crop((135, 0, 1215, int
 vf = Image.linear_gradient("L").rotate(180).resize(big.size).point(lambda v: 255 if v > 90 else int(v * 255 / 90)).filter(ImageFilter.GaussianBlur(4))
 c.paste(big, (0, 190), vf)
 d = ImageDraw.Draw(c)
-d.text((70, 90), series.upper(), font=font(38, 600), fill=TEAL)
+series_line(d, 70, 90, series, 38)
 words(d, title, accent, font(176, 800), 70, 1130, 940)
 c.save(os.path.join(out, f"{name}-cover.jpg"), quality=92)
 c.resize((480, 853), Image.LANCZOS).save(os.path.join(out, f"{name}-cover-480.jpg"), quality=88)
@@ -50,6 +58,6 @@ hm = Image.linear_gradient("L").rotate(90).resize(hs.size).point(lambda v: 255 i
 t.paste(hs, (0, 10), hm); d = ImageDraw.Draw(t)
 d.rectangle((0, 0, 1280, 6), fill=TEAL)
 words(d, thumb, accent, font(104, 800), 690, 270, 560)
-d.text((690, 170), series.upper().replace(" · ", "\n"), font=font(28, 600), fill=TEAL)
+series_line(d, 690, 150, "One More Orbit", 26); series_line(d, 690, 186, "Season 2 · Episode " + series.split(" ")[-1], 26)
 t.save(os.path.join(out, f"{name}-thumb.jpg"), quality=92)
 print("covers:", [f for f in os.listdir(out) if f.startswith(name) and f.endswith(".jpg")])

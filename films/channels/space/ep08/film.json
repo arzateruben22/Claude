@@ -546,7 +546,7 @@
    "kind": "star",
    "anchor": "near",
    "t0": 14.666666666666666,
-   "t1": 17.0667,
+   "t1": 17.7,
    "side": -1,
    "v": "above",
    "fixed": true
@@ -557,7 +557,7 @@
    "kind": "body",
    "anchor": "mid",
    "t0": 16.4667,
-   "t1": 18.0,
+   "t1": 17.7,
    "side": 1,
    "v": "above",
    "fixed": true
@@ -568,7 +568,7 @@
    "kind": "grav",
    "anchor": "far",
    "t0": 15.866666666666667,
-   "t1": 18.4,
+   "t1": 17.7,
    "side": 1,
    "v": "below",
    "fixed": true
@@ -630,6 +630,17 @@
    "text": "the sky glows",
    "t0": 18.2,
    "t1": 22.4,
+   "at": [
+    0.5,
+    0.555
+   ]
+  },
+  {
+   "id": "c-age",
+   "label": "the universe's age, about",
+   "text": "13.8 billion years",
+   "t0": 29.9,
+   "t1": 37.8333,
    "at": [
     0.5,
     0.555
@@ -714,7 +725,7 @@
   }
  ],
  "title": {
-  "series": "One More Orbit · S2E02",
+  "series": "One More Orbit · Season 2 · Episode 2",
   "title": "Dark *sky*",
   "t1": 2.7,
   "sig": 2.933333333333333

@@ -118,6 +118,11 @@
    "t1": 34.6667
   },
   {
+   "t": 29.9,
+   "kind": "counter.show",
+   "tag": "c-age"
+  },
+  {
    "t": 30.0,
    "kind": "label",
    "tag": "l-hz"

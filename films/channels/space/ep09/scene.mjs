@@ -89,12 +89,13 @@ const ringMat = new THREE.ShaderMaterial({
   fragmentShader: `uniform vec3 uCol; uniform float uGlint, uT; varying vec3 vN, vV, vP;
     void main(){ vec3 n = normalize(vN), v = normalize(vV), L = normalize(vec3(0.45, 0.75, 0.55)); float f = pow(1.0 - abs(dot(n, v)), 1.5);
       float band = 0.5 + 0.5 * sin(vP.x * 7.0 + vP.y * 5.0 + vP.z * 3.0 + uT * 0.5); float spec = pow(max(dot(reflect(-L, n), v), 0.0), 26.0);
-      vec3 col = uCol * (0.2 + 0.7 * f + 0.3 * band) + vec3(1.0, 0.97, 0.88) * spec * (0.35 + 0.8 * uGlint) + uCol * uGlint * 0.35 * f;
+      vec3 col = uCol * (0.2 + 0.7 * f + 0.3 * band) + vec3(1.0, 0.97, 0.88) * spec * (0.22 + 0.4 * uGlint) + uCol * uGlint * 0.2 * f;
       gl_FragColor = vec4(col, 1.0); }`,
 });
+const mergeB = createBeacon({ color: pos(hdr("lilac", 1.4)), px: 26, core: 0.5 }); scene.add(mergeB.mesh);
 const jewel = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.1, 24, 180), ringMat);
 jewel.position.fromArray(RING); jewel.rotation.set(1.05, 0.4, 0.2);
-const stone = new THREE.Mesh(new THREE.OctahedronGeometry(0.13, 1), ringMat); stone.position.set(0, 1.3, 0); jewel.add(stone);
+const stone = new THREE.Mesh(new THREE.OctahedronGeometry(0.19, 1), new THREE.MeshBasicMaterial({ color: 0xcfeeff })); stone.position.set(0, 1.3, 0); jewel.add(stone);
 scene.add(jewel);
 const rig = createRig(FILM.cam);
 
@@ -108,7 +109,10 @@ const TEAL = [79, 227, 198], LEMON = [242, 237, 166], ICE = [143, 208, 255], LIL
 const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${Math.max(0, Math.min(1, a)).toFixed(3)})`;
 const circ = (x, y, r) => { ctx.beginPath(); ctx.arc(x * sx, y * sy, r * sx, 0, 6.2832); };
 const lw = (w) => { ctx.lineWidth = w * S1; };
-const pulse = (t) => { let z = 0; for (const tp of CUE.pulses) { const x = t - tp; if (x > 0 && x < 2.2) z += 0.035 * (x < 0.25 ? Math.sin((x / 0.25) * 1.5708) : Math.exp(-(x - 0.25) / 0.55)); } return z; };
+const EXPL = [CUE.soak, CUE.neutrons, CUE.fast, CUE.packed];
+const pulse = (t) => { for (const tp of EXPL) { const x = t - tp; if (x > 0 && x < 1.6 && t < CUE.c) return 0.075 * (x < 0.3 ? Math.sin((x / 0.3) * 1.5708) : Math.exp(-(x - 0.3) / 0.6)); }
+  return pulse0(t); };
+const pulse0 = (t) => { let z = 0; for (const tp of CUE.pulses) { const x = t - tp; if (x > 0 && x < 2.2) z += 0.035 * (x < 0.25 ? Math.sin((x / 0.25) * 1.5708) : Math.exp(-(x - 0.25) / 0.55)); } return z; };
 // a periodic table (simplified): 18 columns, 7 rows; iron and gold lit
 const ROWS = [[0, 17], [0, 1, 12, 13, 14, 15, 16, 17], [0, 1, 12, 13, 14, 15, 16, 17], Array.from({ length: 18 }, (_, i) => i), Array.from({ length: 18 }, (_, i) => i), Array.from({ length: 18 }, (_, i) => i), Array.from({ length: 18 }, (_, i) => i)];
 const TX0 = 180, TY0 = 340, CW = 40, CH = 35, FE = [3, 7], AU = [5, 10];
@@ -140,7 +144,7 @@ function explainer(t, k) {
   const rate = (t < CUE.fast ? 0.7 : 5.0); const gate = fadeIn(t, CUE.soak - 0.3, 0.4);
   for (const n of NEUT) {
     const ph = ((t - CUE.soak) * n.v * rate * 0.35 + n.u) % 1; if (t < CUE.soak - 0.3 || ph < 0 || (t < CUE.fast && n.u > 0.12)) continue;
-    const d = 470 * (1 - ph), a = n.a;
+    const d = 470 * (1 - ph), a = n.a; if (Math.sin(a) > -0.05) continue;          // neutrons arrive from above and the sides only: never across the counter
     circ(cx + Math.cos(a) * d, cy + Math.sin(a) * d * 0.78, 6.5 + 2 * ph); ctx.fillStyle = rgba(TEAL, 0.95 * gate * k * Math.min(1, ph * 5)); ctx.fill();
   }
 }
@@ -180,6 +184,7 @@ const cap0 = FILM.captions[0], capShift = FILM.loop0 - 0.05 - cap0.t0;
 const capLoop = { t0: FILM.loop0 - 0.05, t1: FILM.dur + 5, lines: cap0.lines.map((ln) => ln.map(([w, tw]) => [w, tw + capShift])) };
 hud.captions([...FILM.captions, capLoop]);
 const titleEl = hud.title(FILM.title);
+{ const se = titleEl.querySelector(".hud-series"), m = /Episode (\d+)/.exec(FILM.title.series || ""); if (se && m) { se.innerHTML = 'ONE MORE ORBIT · SEASON <b style="color:var(--teal,#4fe3c6)">2</b> · EPISODE <b style="color:var(--teal,#4fe3c6)">' + m[1] + "</b>"; Object.assign(se.style, { color: "var(--text-2)", whiteSpace: "nowrap", fontSize: "2.1vmin", letterSpacing: ".1em" }); } }
 const tRing = titleRing(titleEl, { t0: 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 const CEL = {};
@@ -215,7 +220,7 @@ function makeLoop() {                                                           
 // ── the orbit, the merger, the beads ─────────────────────────────────────────────────────────────
 const TILT = new THREE.Vector3(0.2, 1, 0.1).normalize(), E1 = new THREE.Vector3(1, 0, 0), E2 = new THREE.Vector3().crossVectors(TILT, E1).normalize();
 function orbit(t) {                                                              // {r, th}: tight in the hook, spiralling in from the change to the merger
-  if (t < CUE.spiral0) return { r: 1.5, th: 2.1 * t };
+  if (t < CUE.spiral0) return { r: 1.5 + 4.5 * E.inout3(seg(t, CUE.n + 0.3, CUE.c - 0.4)), th: 2.1 * t };           // the pair widens behind the explainer, so the 3-D cut is continuous
   const u = clamp01((t - CUE.spiral0) / (CUE.tm - CUE.spiral0));
   return { r: Math.max(0.8, 6.0 * Math.pow(1 - u, 0.55)), th: 2.1 * CUE.spiral0 + 30 * (1 - Math.pow(1 - u, 0.4)) };
 }
@@ -240,6 +245,7 @@ window.seek = function (t) {
     ripples[i].arc({ center: [0, 0, 0], r: 0.8 + 15 * Math.max(age, 0), ...XZ }).set({ opacity: age >= 0 ? 0.7 * (1 - age) * Math.min(1, age * 6) * (tt < CUE.tm ? 1 : 1 - E.out3(seg(tt, CUE.tm + 0.5, CUE.tm + 3))) : 0 });
   }
   // the readout: the ripples (lilac) leave first, the light (teal) hours later (not to scale)
+  mergeB.set({ center: [0, 0, 0], camera, opacity: tt >= CUE.rip - 0.6 ? fadeIn(tt, CUE.rip - 0.6, 0.5) * (1 - fadeIn(tt, CUE.end - 0.3, 0.3)) : 0 }); S.merge = [0, 0, 0];
   const rg = (tt - CUE.rip) * 2.6, rl = (tt - CUE.vis) * 2.6, rgl = (tt - CUE.glow) * 1.1;       // ripples, then the gamma flash 1.7 s behind, then the glow hours behind (not to scale)
   ringGW.arc({ center: [0, 0, 0], r: Math.max(0.01, rg), ...XZ }).set({ opacity: tt >= CUE.rip && rg < 30 ? 0.95 * (1 - rg / 40) : 0 });
   ringLi.arc({ center: [0, 0, 0], r: Math.max(0.01, rl), ...XZ }).set({ opacity: tt >= CUE.vis && rl < 30 ? 0.95 * (1 - rl / 40) : 0 });
@@ -263,7 +269,7 @@ window.seek = function (t) {
   });
   bG.attributes.position.needsUpdate = true; bG.attributes.alpha.needsUpdate = true; bG.attributes.size.needsUpdate = true;
   // the ring takes them: it glints as beads arrive; it turns slowly
-  const pp = (c) => Math.exp(-Math.pow((tt - c) / 0.4, 2)); ringMat.uniforms.uGlint.value = Math.min(1.6, arrived / NB * 1.1 + 0.15 * (tt < CUE.spiral0 ? 1 : 0) + 0.9 * (pp(CUE.poem) + pp(CUE.chem))); ringMat.uniforms.uT.value = tt;
+  const pp = (c) => Math.exp(-Math.pow((tt - c) / 0.4, 2)); ringMat.uniforms.uGlint.value = Math.min(1.6, arrived / NB * 1.1 + 0.15 * (tt < CUE.spiral0 ? 1 : 0) + 0.5 * (pp(CUE.poem) + pp(CUE.chem))); ringMat.uniforms.uT.value = tt;
   jewel.scale.setScalar(1 + 0.12 * (pp(CUE.poem) + pp(CUE.chem))); jewel.rotation.y = 0.4 + 0.12 * tt; jewel.rotation.z = 0.2 + 0.05 * tt;
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 0.8, bandGain: 0.7 });
   overlay2d(t);
