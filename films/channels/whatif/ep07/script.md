@@ -1,4 +1,6 @@
-# Possibility Lab No. 007: "Walking to the Moon" (draft; fact-check before posting)
+# Possibility Lab Season 2 · Episode 1: "Walking to the Moon" (draft; fact-check before posting)
+
+S2E01 (folder ep07): Season 2 numbers its episodes from 1 again; the folder name stays ep07 so the pipeline and Prism imports keep working.
 
 About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 The destination No. 006's end card promised. Every number comes from `calc.py` (NASA's mean Moon distance, an easy
@@ -33,7 +35,7 @@ vo: Apollo eleven's crew made the same trip in about three *days*. {c9} The dist
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (65–70.5 s)
 vo: Next envelope: what if everyone on Earth held *hands*? {-}
-end card: "Next envelope: *everyone, holding hands*" · "Possibility Lab · No. 007" · footnote: "NASA Science, Moon Facts: average distance 384,400 km." (c1)
+end card: "Next envelope: *everyone, holding hands*" · "Possibility Lab · Season 2 · Episode 1" · footnote: "NASA Science, Moon Facts: average distance 384,400 km." (c1)
 
 ## Notes
 - Every number is `calc.py`'s; the answer is a thought experiment, badged: no road, no air, no rest stops.

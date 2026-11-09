@@ -1,4 +1,6 @@
-# Possibility Lab No. 010: "Every shuffle is new" (draft; fact-check before posting)
+# Possibility Lab Season 2 · Episode 4: "Every shuffle is new" (draft; fact-check before posting)
+
+S2E04 (folder ep10): Season 2 numbers its episodes from 1 again; the folder name stays ep10 so the pipeline and Prism imports keep working.
 
 About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 The destination No. 009's end card promised. Every number comes from `calc.py` (exact 52 factorial; UN population;
@@ -33,7 +35,7 @@ vo: Shuffle well, and your order has almost certainly never existed before. {c9}
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (68–73.5 s)
 vo: Next envelope: all the water on Earth, in one *ball*. {-}
-end card: "Next envelope: *all the water, one ball*" · "Possibility Lab · No. 010" · footnote: "52! = 80,658,175,170,943,878,571,660,636,856,403,766,975,289,505,440,883,277,824,000,000,000,000." (c2)
+end card: "Next envelope: *all the water, one ball*" · "Possibility Lab · Season 2 · Episode 4" · footnote: "52! = 80,658,175,170,943,878,571,660,636,856,403,766,975,289,505,440,883,277,824,000,000,000,000." (c2)
 
 ## Notes
 - Every number is `calc.py`'s; "almost certainly" is a probability statement, said as one. Real shuffles are imperfect: the film says "shuffle well".

@@ -1,5 +1,7 @@
 # ep11 claims table (Possibility Lab No. 011, All the water in one ball)
 
+S2E05 (folder ep11)
+
 Status key: **OPEN** = nobody has opened the source. **SOURCE-READ** = the builder read the page (8 Nov 2026) and it supports the wording, quote given; it still needs a person to open it (OK).
 Calculations are checked by `calc.py`, not by a source; their inputs are the sourced rows.
 

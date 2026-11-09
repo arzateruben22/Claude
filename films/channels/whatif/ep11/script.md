@@ -1,4 +1,6 @@
-# Possibility Lab No. 011: "All the water in one ball" (draft; fact-check before posting)
+# Possibility Lab Season 2 · Episode 5: "All the water in one ball" (draft; fact-check before posting)
+
+S2E05 (folder ep11): Season 2 numbers its episodes from 1 again; the folder name stays ep11 so the pipeline and Prism imports keep working.
 
 About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 The destination No. 010's end card promised. Every number comes from `calc.py` (USGS's total of Earth's water, NASA's
@@ -33,7 +35,7 @@ vo: Earth looks like a water world from space. {-} But its water is only about a
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (69–74.5 s)
 vo: Next envelope: could we catch all the world's *lightning*? {-}
-end card: "Next envelope: *catching all the lightning*" · "Possibility Lab · No. 011" · footnote: "USGS Water Science School: about 1.386 billion km³ of water on Earth." (c2)
+end card: "Next envelope: *catching all the lightning*" · "Possibility Lab · Season 2 · Episode 5" · footnote: "USGS Water Science School: about 1.386 billion km³ of water on Earth." (c2)
 
 ## Notes
 - Every number is `calc.py`'s. The answer is about 1,400 km (1,383 km computed), badged "liquid, ice and vapor counted together": all water, not only the sea.

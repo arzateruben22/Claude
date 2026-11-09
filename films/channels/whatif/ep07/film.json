@@ -1,5 +1,5 @@
 {
- "id": "envelope-007",
+ "id": "envelope-s2e01",
  "fps": 30,
  "bpm": 50,
  "dur": 72.0,
@@ -664,7 +664,7 @@
   }
  ],
  "title": {
-  "series": "Possibility Lab · No. 007",
+  "series": "Possibility Lab · Season 2 · Episode 1",
   "title": "Walking to the *Moon*",
   "t1": 5.2,
   "sig": 4.9
@@ -672,7 +672,7 @@
  "endCard": 65.46666666666667,
  "end": {
   "title": "Next envelope: *everyone, holding hands*",
-  "follow": "Possibility Lab · No. 007",
+  "follow": "Possibility Lab · Season 2 · Episode 1",
   "next": "NASA Science, Moon Facts: average distance 384,400 km."
  },
  "captions": [

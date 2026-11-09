@@ -1,5 +1,7 @@
 # ep07 scene table (Possibility Lab No. 007, Walking to the Moon)
 
+S2E01 (folder ep07)
+
 Timestamps are from `film.json` (real Parakeet word timings, 9 Nov 2026, after review round 1). One row per visual change. Between rows the picture is never still: walkers climb, the counter runs, and the camera pushes in slowly through the walk.
 
 | time | narration | visual | on-screen text | sound |

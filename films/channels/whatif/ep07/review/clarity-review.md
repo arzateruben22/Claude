@@ -1,5 +1,7 @@
 # ep07 clarity and pacing review (STANDARDS-v2, section 1, 5, 6)
 
+S2E01 (folder ep07)
+
 Tool: `kits/cinema/script/lint.py` (from made-with-claude-film 3108849). Run 8 Nov 2026 after the last script edit.
 Result: 0 errors; whole script grade 3.0 (target 7 or below); no sentence over 22 words (longest: 20).
 Lint is a guide: it is blind to the pictures and to how a number sounds. The real test is reading it aloud once.

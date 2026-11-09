@@ -1,4 +1,6 @@
-# Possibility Lab No. 009: "A rope around the Earth" (draft; fact-check before posting)
+# Possibility Lab Season 2 · Episode 3: "A rope around the Earth" (draft; fact-check before posting)
+
+S2E03 (folder ep09): Season 2 numbers its episodes from 1 again; the folder name stays ep09 so the pipeline and Prism imports keep working.
 
 About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 The destination No. 008's end card promised. Every number comes from `calc.py` (NASA's Earth diameter; circle
@@ -33,7 +35,7 @@ vo: The planet's size cancels out, and only the height of the lift *matters*. {c
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (69–74.5 s)
 vo: Next envelope: a shuffled deck, and a very rare *order*. {-}
-end card: "Next envelope: *a shuffled deck*" · "Possibility Lab · No. 009" · footnote: "NASA Earth Facts: equatorial diameter 12,756 km." (c1)
+end card: "Next envelope: *a shuffled deck*" · "Possibility Lab · Season 2 · Episode 3" · footnote: "NASA Earth Facts: equatorial diameter 12,756 km." (c1)
 
 ## Notes
 - Every number is `calc.py`'s; the answer is a thought experiment, badged: a perfect sphere, a smooth rope, no sag.

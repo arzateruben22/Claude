@@ -1,4 +1,4 @@
-"""Compile Possibility Lab No. 007, "Walking to the Moon": script + voice timings + this direction →
+"""Compile Possibility Lab Season 2, Episode 1 (S2E01, folder ep07), "Walking to the Moon": script + voice timings + this direction →
 film.json (the scene's clock: shots, camera keys, the three walkers' clocks, the thirty-Earths ruler, the Apollo
 capsule, the spine readout's states, the show-your-work card, labels, badges, counters, captions, title and end
 card) and sheet.json (the studio's cue sheet). Every moment hangs on a beat or a spoken word; every number comes
@@ -23,7 +23,7 @@ from timeline import Film   # noqa: E402
 from calc import V, RESULTS, SENS, MOON_KM, EARTH_D_KM, YEAR   # noqa: E402
 
 FPS, BPM = 30, 50
-ID = "envelope-007"
+ID = "envelope-s2e01"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
@@ -149,8 +149,8 @@ COUNTERS = [
     {"id": "c-years", "label": "years of walking", "t0": t_walk0, "t1": B["takeaway"]["t0"] - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
 ]
 
-TITLE = {"series": "Possibility Lab · No. 007", "title": "Walking to the *Moon*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next envelope: *everyone, holding hands*", "follow": "Possibility Lab · No. 007",
+TITLE = {"series": "Possibility Lab · Season 2 · Episode 1", "title": "Walking to the *Moon*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next envelope: *everyone, holding hands*", "follow": "Possibility Lab · Season 2 · Episode 1",
        "next": "NASA Science, Moon Facts: average distance 384,400 km."}
 
 CUE = {"pull": [t_pull0, t_pull1], "rings": t_rings, "spread": t_spread, "clockA": CLOCK_A, "clockB": CLOCK_B, "box": t_box, "nine": t_nine,

@@ -1,4 +1,6 @@
-# Possibility Lab No. 008: "Everyone holds hands" (draft; fact-check before posting)
+# Possibility Lab Season 2 · Episode 2: "Everyone holds hands" (draft; fact-check before posting)
+
+S2E02 (folder ep08): Season 2 numbers its episodes from 1 again; the folder name stays ep08 so the pipeline and Prism imports keep working.
 
 About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 The destination No. 007's end card promised. Every number comes from `calc.py` (UN population, one assumed arm span,
@@ -33,7 +35,7 @@ vo: The same line would reach the Moon again and *again*. {c8} We are each small
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (66.5–72 s)
 vo: Next envelope: a rope round the Earth, lifted one *meter*. {-}
-end card: "Next envelope: *a rope round the Earth*" · "Possibility Lab · No. 008" · footnote: "UN World Population Prospects 2024: about 8.2 billion people." (c3)
+end card: "Next envelope: *a rope round the Earth*" · "Possibility Lab · Season 2 · Episode 2" · footnote: "UN World Population Prospects 2024: about 8.2 billion people." (c3)
 
 ## Notes
 - Every number is `calc.py`'s; the answer is a thought experiment, badged: no oceans in the way, nobody left out.

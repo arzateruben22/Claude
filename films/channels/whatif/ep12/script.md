@@ -1,4 +1,6 @@
-# Possibility Lab No. 012: "Catch all the lightning" (draft; fact-check before posting)
+# Possibility Lab Season 2 · Episode 6: "Catch all the lightning" (draft; fact-check before posting)
+
+S2E06 (folder ep12): Season 2 numbers its episodes from 1 again; the folder name stays ep12 so the pipeline and Prism imports keep working.
 
 About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 The destination No. 011's end card promised. Every number comes from `calc.py` (a worldwide flash rate, an
@@ -33,7 +35,7 @@ vo: And catching it is the real problem. {-} The bolts are everywhere, and each 
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (69–74.5 s)
 vo: Next envelope: a what-if that you ask us *next*. {-}
-end card: "Next envelope: *your what-if*" · "Possibility Lab · No. 012" · footnote: "About 44 flashes a second: Christian et al., J. Geophys. Res. 108 (2003)." (c1)
+end card: "Next envelope: *your what-if*" · "Possibility Lab · Season 2 · Episode 6" · footnote: "About 44 flashes a second: Christian et al., J. Geophys. Res. 108 (2003)." (c1)
 
 ## Notes
 - Every number is `calc.py`'s and an order of magnitude: the energy of a flash varies a lot, so the film gives a range and says "roughly".
