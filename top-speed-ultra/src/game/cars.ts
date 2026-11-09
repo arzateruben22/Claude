@@ -5,6 +5,7 @@
 import { SPEC } from './vehicle/Physics';
 import type { TimeOfDay, Weather } from './settings';
 import type { WheelStyle } from '../preview/car-wheel';
+import { GLACIER_SILVER } from './founder';
 
 export interface CarDef {
   id: string; name: string; blurb: string; price: number; level: number;
@@ -21,6 +22,9 @@ export interface CarDef {
   // every car is its own atmosphere (owner, 2026-10-21): the time and weather the menu's attract drive runs in while
   // this car is chosen. A run keeps the player's own time and weather settings.
   atmosphere: { time: TimeOfDay; weather: Weather };
+  // the car's own ability, part of a tune: the hypercar's Cold Thrust, Ground Lock and Thrust Hop ('hyper') come with
+  // its Unleashed tune only, so its race tune clears it and the scored modes have no THRUST control
+  ability?: 'hyper';
 }
 
 export const CARS: CarDef[] = [
@@ -36,22 +40,22 @@ export const CARS: CarDef[] = [
   // fastest, best-gripping and best-braking car in the game (all-wheel drive, torque vectoring, fan-assisted
   // downforce, stiffer tyres, 2 g brakes); in every scored mode it runs the race tune, at or under the Corsa.
   { id: 'oc-hyper', name: 'OC Hypercar', blurb: 'Prototype 01, Founder Edition. Unleashed in Free Drive: 2,012 hp, all-wheel drive and fan downforce. Races, Time Trial and Survival run its race tune, at the Corsa\'s level.', price: 0, level: 1, founder: true,
-    mass: 1690, power: 1500000, torque: 2000, redline: 9000, CdA: 0.62, ClA: 2.2, grip: 1.3, paint: 0xc8d3e8, final: 3.0,
-    Cf: 225000, Cr: 333000, steerGain: 1.25, brakeG: 2.0, halfL: 2.36, halfW: 1.02, driveFront: 0.4, vector: 0.6,
+    mass: 1690, power: 1500000, torque: 2000, redline: 9000, CdA: 0.62, ClA: 2.2, grip: 1.3, paint: GLACIER_SILVER.hex, final: 3.0,
+    Cf: 225000, Cr: 333000, steerGain: 1.25, brakeG: 2.0, halfL: 2.36, halfW: 1.02, driveFront: 0.4, vector: 0.6, ability: 'hyper',
     atmosphere: { time: 'night', weather: 'clear' },   // the owner's reference: the hypercar at night
     race: { mass: 1500, power: 620000, torque: 1000, final: 4.0, CdA: 0.8, ClA: 1.0, grip: 1.04,
-      Cf: undefined, Cr: undefined, steerGain: undefined, brakeG: undefined, driveFront: undefined, vector: undefined } },
+      Cf: undefined, Cr: undefined, steerGain: undefined, brakeG: undefined, driveFront: undefined, vector: undefined, ability: undefined } },
 ];
 
 // Paints (U5, the garage's Paint tab): six per car, our own names (no carmaker's colour names), the first the car's own.
-// A paint is only ever applied to a car whose list has it, so the hypercar's Founder Silver never reaches another car.
+// A paint is only ever applied to a car whose list has it, so the hypercar's Glacier Silver (founder.ts) never reaches another car.
 export interface Paint { name: string; hex: number }
 export const PAINTS: Record<string, Paint[]> = {
   'rossini-gt': [{ name: 'Rossini Red', hex: 0xa80d10 }, { name: 'Sunset Orange', hex: 0xe5620b }, { name: 'Laguna Blue', hex: 0x1d4f9c }, { name: 'Canyon Bronze', hex: 0x8a5a2b }, { name: 'Bianco', hex: 0xf1f0ec }, { name: 'Nero', hex: 0x111214 }],
   'rossini-brio': [{ name: 'Coast Blue', hex: 0x1d4f9c }, { name: 'Seafoam', hex: 0x2fa99a }, { name: 'Dune', hex: 0xd8c7a0 }, { name: 'Rossini Red', hex: 0xa80d10 }, { name: 'Pearl', hex: 0xeeeae2 }, { name: 'Nero', hex: 0x111214 }],
   'rossini-corsa': [{ name: 'Track Yellow', hex: 0xf5c518 }, { name: 'Pit Orange', hex: 0xff6a13 }, { name: 'Graphite', hex: 0x3a3d42 }, { name: 'Rossini Red', hex: 0xa80d10 }, { name: 'Bianco', hex: 0xf1f0ec }, { name: 'Matte Black', hex: 0x161616 }],
   'vela-e': [{ name: 'Glacier White', hex: 0xf3f1ec }, { name: 'Volt Violet', hex: 0x6a3fcf }, { name: 'Electric Blue', hex: 0x2a6fdc }, { name: 'Silver', hex: 0xb9bfc8 }, { name: 'Graphite', hex: 0x3a3d42 }, { name: 'Nero', hex: 0x111214 }],
-  'oc-hyper': [{ name: 'Founder Silver', hex: 0xc8d3e8 }, { name: 'Ice Blue', hex: 0x9cc8ff }, { name: 'Platinum', hex: 0xe6e8ea }, { name: 'Titanium', hex: 0x7d828a }, { name: 'Midnight', hex: 0x111a33 }, { name: 'Obsidian', hex: 0x0e1116 }],
+  'oc-hyper': [{ name: GLACIER_SILVER.name, hex: GLACIER_SILVER.hex }, { name: 'Ice Blue', hex: 0x9cc8ff }, { name: 'Platinum', hex: 0xe6e8ea }, { name: 'Titanium', hex: 0x7d828a }, { name: 'Midnight', hex: 0x111a33 }, { name: 'Obsidian', hex: 0x0e1116 }],
 };
 // the paint a car wears: the saved choice if it is one of that car's paints, else the car's own
 export function paintFor(c: CarDef, saved?: Record<string, number>) {

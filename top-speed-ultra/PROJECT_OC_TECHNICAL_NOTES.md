@@ -186,6 +186,12 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
     Ground Lock) are the caller's to write every step; `driveFront`, `vector` (torque vectoring on the rear), `hop()`
     and the `airborne` state (a scripted parabola bound to the road, `altitude` for the car's mesh, a `'land'` impact).
     Every optional `CarDef` field is copied by `applyCar` with a default that changes nothing for the earnable cars.
+  - **Driving profiles** (hypercar M4, Settings): Arcade, Sport and Simulation are named points on the handling slider
+    (0.15, 0.5, 0.9; `PROFILES`, `profileOf`, `customLine` in `settings.ts`). The slider value (`Settings.handling`,
+    read by `CarPhysics.handling`) stays the only saved value, so older saves load as they were; any other value reads
+    Custom. A new player starts in Arcade (0.15; the default was 0.35 before the profiles, which a save made then
+    still holds and Settings shows as Custom). The profiles change no physics: every term is the dynamics model's
+    function of `h` (`PROJECT_OC_DYNAMICS.md` §3.9).
   - Nothing in the step depends on the step size (exact exponentials for every filter, the velocity turned through
     the step's yaw exactly, the implicit wheel update). `tests/dynamics.mjs` runs the whole matrix at 120 and 240 Hz.
   - Allocation: the step holds no object, array or closure of its own (the tyre law writes into module-level records,
@@ -260,11 +266,16 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - Groups: `boot`, `interchanges`, `survival`, `race`, `abilities`, `progression`, `render`, `phone`, `launch`. Run some with
   `npm test -- --only=race,survival`. Add `--slow` to render the High and Ultra presets too.
 - `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
+- `SUITE_HANDLING=0.9 npm test` drives every group at that handling value (Arcade 0.15, Sport 0.5, Simulation 0.9).
+  Without it the suite drives at 0.35, the value its checks were tuned at. The survival and race groups run the OC
+  Hypercar's race tune too, and check that the run drove at the suite's value.
 - Every group opens a fresh browser context, so each starts with an empty profile. Screenshots go to `tests/out/`
   (git-ignored).
 - Free Drive and Speed Survival seed their traffic at random. The suite puts the car back on its mark and seeds the
   traffic (`traffic.reseed(n)` and `fill()`), so every run is the same drive. The autopilot isn't a perfect driver:
-  in Heavy traffic it crashed in 2 of 12 seeded two-minute Survival runs.
+  in Heavy traffic it crashed in 2 of 12 seeded two-minute Survival runs. Since hypercar M4 it lifts the throttle in a
+  slide (from 1.4° of body slip, nearly off by 3.4°): in Simulation, 0.85 throttle out of a slow-down stepped the tail
+  out of torquey cars and walked them across a lane.
 
 ## Game systems added after the network
 

@@ -18,6 +18,7 @@
 // under the middle).
 import type { PaintMask } from './car-mats';
 import type { WheelStyle } from './car-wheel';
+import { GLACIER_SILVER, FOUNDER_ICE } from '../game/founder';
 export type CarId = 'rossini-gt' | 'rossini-brio' | 'rossini-corsa' | 'vela-e' | 'oc-hyper';
 export const CAR_IDS: CarId[] = ['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e', 'oc-hyper'];
 type K = [number, number][];
@@ -233,7 +234,7 @@ const VELA: ShapeParams = {
 // on the SIDE panel, anchored on the tyres; the width from the plate on the REAR panel). Its roof is 1.12 m, not the
 // sheet's 1.05 m: the shared driver's frame needs room (section 3, "What the game's shared frame forces").
 const HYPER: ShapeParams = {
-  ...CORSA, id: 'oc-hyper', name: 'OC Hypercar Prototype 01', brand: 'oc', paint: 0xc8d3e8,
+  ...CORSA, id: 'oc-hyper', name: 'OC Hypercar Prototype 01', brand: 'oc', paint: GLACIER_SILVER.hex,   // Glacier Silver: the Founder Edition's own paint (src/game/founder.ts)
   ZF: -2.43, ZR: 2.29, YSILL: 0.07,
   // 3.00 m wheelbase; 0.70 / 0.74 m tyres; tracks 1.72 / 1.69 m
   axle: { zF: -1.52, zR: 1.48, r: 0.35, rR: 0.37, trackF: 0.86, trackR: 0.845, wF: 0.275, wR: 0.345 },
@@ -312,8 +313,9 @@ const HYPER: ShapeParams = {
   // the LED family, as material colours: under ACES at the strip's 2.8x emissive a pale ice (the old 0xa6dcff) tone-maps
   // to white, so the strip's body is a deeper blue (0x1e6fd8 reads about (121,188,241) on screen), its outer glow
   // deeper still (0x0c4fb8, about (65,140,234)) and only a narrow hot centre is the pale ice (0x5eb8ff, about
-  // (205,233,245)): the reference's strips sample about (122,152,190) with a (176,219,245) core
-  led: { color: 0x5eb8ff, halo: 0x1e6fd8, edge: 0x0c4fb8 },
+  // (205,233,245)): the reference's strips sample about (122,152,190) with a (176,219,245) core. Founder Ice: reserved
+  // to this car (src/game/founder.ts holds these three colours)
+  led: { color: FOUNDER_ICE.core, halo: FOUNDER_ICE.halo, edge: FOUNDER_ICE.edge },
   bar: { len: 1.66, h: 0.02 },
   fins: { x: [0.68, 0.62], z: [0.95, 2.08], h: 0.08 },
   // two long vents along the front fenders' inner walls, by the cowl

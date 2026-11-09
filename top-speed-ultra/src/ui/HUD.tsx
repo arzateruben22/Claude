@@ -10,7 +10,7 @@ const miles = (m: number) => (m / 1609.344).toFixed(m < 1609 ? 2 : 1) + ' mi';
 
 const MODE_LABEL: Record<string, string> = { free: 'Free Drive', survival: 'Speed Survival', race: 'Race', time: 'Time Trial' };
 
-export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void }>(function HUD({ showFps, visible, chips, onAbility }, ref) {
+export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void; onThrust: (on: boolean) => void }>(function HUD({ showFps, visible, chips, onAbility, onThrust }, ref) {
   const speed = useRef<HTMLSpanElement>(null), gear = useRef<HTMLSpanElement>(null), bar = useRef<HTMLDivElement>(null);
   const k1 = useRef<HTMLElement>(null), v1 = useRef<HTMLElement>(null), k2 = useRef<HTMLElement>(null), v2 = useRef<HTMLElement>(null);
   const k3 = useRef<HTMLElement>(null), v3 = useRef<HTMLElement>(null), fps = useRef<HTMLSpanElement>(null), cam = useRef<HTMLSpanElement>(null);
@@ -20,6 +20,10 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
   // the race HUD: the position box with the race timer beside the position, the standings, and the rev lights over the gear
   const race = useRef<HTMLDivElement>(null), pos = useRef<HTMLElement>(null), posOf = useRef<HTMLElement>(null), prog = useRef<HTMLElement>(null);
   const timer = useRef<HTMLElement>(null), rows = useRef<HTMLOListElement>(null), revs = useRef<HTMLDivElement>(null);
+  // the OC Hypercar: its tune's chip (from the run itself, Game.hud: Unleashed in Free Drive, Race tune in the scored
+  // modes), and its own systems' panel (the tank, Ground Lock, the hop) and THRUST button
+  const tune = useRef<HTMLElement>(null), thr = useRef<HTMLDivElement>(null), thrPct = useRef<HTMLElement>(null), thrBar = useRef<HTMLElement>(null);
+  const thrLock = useRef<HTMLElement>(null), thrHop = useRef<HTMLElement>(null), thrBtn = useRef<HTMLButtonElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
   useImperativeHandle(ref, () => ({
@@ -91,6 +95,26 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
         b.setAttribute('aria-label', on ? `${h.ability} active` : cool > 0 ? `${h.ability} recharging` : `Use ${h.ability}`);
       }
       put(cam.current, 'cam', h.cam);
+      if (tune.current) {
+        const el = tune.current; put(el, 'tune', h.tune);
+        el.style.display = h.tune ? '' : 'none'; el.className = h.tune === 'Unleashed' ? 'hot' : h.tune ? 'tune' : '';
+      }
+      if (thr.current && thrBtn.current) {
+        thr.current.hidden = !h.thrustLive; thrBtn.current.hidden = !h.thrustLive;
+        if (h.thrustLive) {
+          const pct = Math.round(h.tank * 100);
+          put(thrPct.current, 'thrPct', `${pct} %`);
+          if (thrBar.current) thrBar.current.style.transform = `scaleX(${h.tank.toFixed(3)})`;
+          thr.current.classList.toggle('low', h.tank < 0.1); thr.current.classList.toggle('on', h.thrustOn > 0.1);
+          thrLock.current?.classList.toggle('on', h.groundLock);
+          put(thrHop.current, 'thrHop', h.hop);
+          thrHop.current?.classList.toggle('ready', h.hop === 'Hop ready');
+          const b = thrBtn.current;
+          b.style.setProperty('--p', h.tank.toFixed(3));
+          b.classList.toggle('on', h.thrustOn > 0.1); b.classList.toggle('low', h.tank < 0.1);
+          if (last.thrAria !== String(pct)) { last.thrAria = String(pct); b.setAttribute('aria-label', `Cold Thrust: hold. Double-tap for Thrust Hop. Tank ${pct} %`); }
+        }
+      }
     },
   }));
   return (
@@ -112,14 +136,26 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
       </div>
       {showFps && <span className="hud-fps" ref={fps}>-- fps</span>}
       <button type="button" className="hud-ability" ref={abil} onClick={onAbility}><span ref={abilName}>Ability</span></button>
+      <div className="hud-thrust" ref={thr} hidden>
+        <div className="hud-thrust-top"><b>Thrust</b><em ref={thrPct as React.RefObject<HTMLElement>}>100 %</em></div>
+        <div className="hud-thrust-bar"><i ref={thrBar as React.RefObject<HTMLElement>} /><s /></div>
+        <div className="hud-thrust-low"><span className="hud-lock" ref={thrLock as React.RefObject<HTMLElement>}>Ground Lock</span><span className="hud-hop" ref={thrHop as React.RefObject<HTMLElement>} /></div>
+      </div>
+      {/* hold for Cold Thrust, double-tap for Thrust Hop (the ring is the tank) */}
+      <button type="button" className="hud-thrustbtn" ref={thrBtn} hidden
+        onPointerDown={(e) => { e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* fine */ } onThrust(true); }}
+        onPointerUp={() => onThrust(false)} onPointerCancel={() => onThrust(false)} onContextMenu={(e) => e.preventDefault()}>
+        <span>Thrust</span>
+      </button>
       {/* the speed block (owner's reference, 2026-10-21): the revs as a slanted ice bar on the left, big light numerals,
-          the gear in an outlined box, and chips for the handling profile and the assists under it */}
+          the gear in an outlined box, and chips for the handling profile and the assists under it (and, in the OC
+          Hypercar, its tune: Unleashed or Race tune) */}
       <div className="hud-speed">
         <div className="hud-rpm"><div ref={bar} /></div>
         <div className="hud-main">
           <div className="hud-revs" ref={revs}>{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</div>
           <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-gear" ref={gear}>1</span></div>
-          <div className="hud-chips">{chips.map((c) => <i key={c} className={c === 'Unleashed' ? 'hot' : c === 'Race tune' ? 'tune' : ''}>{c}</i>)}</div>
+          <div className="hud-chips">{chips.map((c) => <i key={c}>{c}</i>)}<i ref={tune} style={{ display: 'none' }} /></div>
           <span className="hud-cam" ref={cam} />
         </div>
       </div>

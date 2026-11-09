@@ -6,6 +6,7 @@
 import type { Result } from '../game/Game';
 import { MODES } from '../game/settings';
 import { OC_LOGO_480 } from './Mark';
+import { FOUNDER_CAR, plaqueNumber } from '../game/founder';
 
 const W = 1080, H = 1350;                 // 4:5, the portrait size feeds like
 const FONT = '"Saira Semi Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif';
@@ -21,6 +22,8 @@ function palette(): Palette {
     base: [v('--night-1', '#0b0812'), v('--night-2', '#120c1e'), v('--night-3', '#1b1329')] };
 }
 const rgba = (hex: string, a: number) => `rgba(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)}, ${a})`;
+// the Founder Edition badge's own ice blue: fixed, whatever the atmosphere's accent
+const ICE = '#8fd0ff';
 const DISPLAY = '"Big Shoulders Display", "Arial Narrow", Impact, sans-serif';
 const MARK_W = 330, MARK_H = MARK_W * 171 / 480;   // the 480 px cut-out, drawn smaller for a crisp edge, never stretched
 // inside the cut-out the letters start 2 % in and end at 85 % of its height (the speed streaks run below)
@@ -61,6 +64,23 @@ function shield(g: CanvasRenderingContext2D, label: string, x: number, y: number
   g.textAlign = 'left';
   if (m[3]) { g.fillStyle = '#f3f1ec'; g.font = `700 ${h * 0.62}px ${FONT}`; g.fillText(m[3], x + w + h * 0.3, y + h / 2); return w + h * 0.3 + g.measureText(m[3]).width; }
   return w;
+}
+
+// the Founder Edition's badge, right-aligned at x from the top y: the car's name, an ice-blue badge (black on ice,
+// skewed like the menus' chips), and under it the plaque's number and the tune the run used
+function founderBadge(g: CanvasRenderingContext2D, x: number, y: number, tune: string) {
+  const sp = (t: string, k = 8202) => t.toUpperCase().split('').join(String.fromCharCode(k));
+  g.save();
+  g.textAlign = 'right'; g.textBaseline = 'alphabetic';
+  g.fillStyle = '#f3f1ec'; g.font = `700 30px ${FONT}`; g.fillText(sp('OC Hypercar'), x, y + 26);
+  g.font = `800 25px ${FONT}`;
+  const label = sp('Founder Edition'), tw = g.measureText(label).width, bw = tw + 40, bh = 44, by = y + 38;
+  g.save(); g.translate(x - bw / 2, by + bh / 2); g.transform(1, 0, -Math.tan(14 * Math.PI / 180), 1, 0, 0);
+  g.fillStyle = ICE; g.fillRect(-bw / 2, -bh / 2, bw, bh); g.restore();
+  g.fillStyle = '#05030a'; g.textAlign = 'center'; g.fillText(label, x - bw / 2, by + 31);
+  g.textAlign = 'right'; g.fillStyle = ICE; g.font = `600 24px ${FONT}`;
+  g.fillText(sp(plaqueNumber() + (tune ? ` · ${tune}` : '')), x, by + bh + 34);
+  g.restore();
 }
 
 export function drawRunCard(r: Result, name: string, logo: HTMLImageElement | null = null): HTMLCanvasElement {
@@ -117,6 +137,8 @@ export function drawRunCard(r: Result, name: string, logo: HTMLImageElement | nu
   // the road
   let y = pad + 156;
   if (r.road) shield(g, r.road, pad, y, 92);
+  // a run in the OC Hypercar: its name, the Founder Edition badge with the plaque's number, and its tune, on the right
+  if (r.car === FOUNDER_CAR) founderBadge(g, W - pad, y, r.tune);
   y += 92;
   // the big number
   const big = r.race ? `P${r.race.position}` : r.mode === 'time' || r.mode === 'free' ? (r.distance / MI).toFixed(2) : Math.round(r.score).toLocaleString();
