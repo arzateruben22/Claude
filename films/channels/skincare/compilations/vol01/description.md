@@ -43,5 +43,5 @@ Sources (every number in these episodes is checked against a source)
 
 Educational only, not medical advice. No products, doses or treatments are recommended; talk to a clinician about your own skin.
 
-Narration is a synthetic voice (AI-generated). Music and sound design are original, made for Skin Sense. Type: Red Hat Text, Red Hat Mono, Newsreader (SIL Open Font License).
+Narration is a synthetic voice (AI-generated). Illustrations in episodes 4–6 are AI-generated and animated in code. Music and sound design are original, made for Skin Sense. Type: Red Hat Text, Red Hat Mono, Newsreader (SIL Open Font License).
 TODO before posting: the channel handle and links, the expert sign-offs listed in each episode's review/HUMAN-REVIEW.md, and YouTube's altered/synthetic content setting.

@@ -8,4 +8,4 @@ export PLAYWRIGHT_DIR="${PLAYWRIGHT_DIR:-$(dirname "$(npm root -g)")}" CHROMIUM=
 for n in 1 2 3 4 5 6; do f="films/channels/skincare/ep0$n/out/skin-sense-00$n-9x16.mp4"; [ -f "$f" ] || { echo "missing final: $f" >&2; exit 2; }; done
 node kits/cinema/film/compilation.mjs --channel films/channels/skincare --theme films/channels/skincare/theme-ivory.json \
   --episodes ep01,ep02,ep03,ep04,ep05,ep06 --name vol01 --title "The organ you live inside" --thumb "Skin Sense: Season 1" \
-  --bridge 2 --max-sources 3 --max-desc 5000 "$@"      # add --cards-only to draw only the cards and the thumbnail
+  --bridge 2 --card-bg films/channels/skincare/library/skin-layers-section-a.webp --max-sources 3 --max-desc 5000 "$@"      # add --cards-only to draw only the cards and the thumbnail

@@ -1,0 +1,492 @@
+{
+ "num": "S2·E1",
+ "title": "Why goosebumps<br>happen",
+ "placeholder": "Placeholder art",
+ "titleSize": 84,
+ "images": {
+  "q1": {
+   "src": [
+    "art/s2e01-01.webp"
+   ],
+   "layers": [
+    "art/s2e01-01-L0.webp",
+    "art/s2e01-01-L1.webp",
+    "art/s2e01-01-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q2": {
+   "src": [
+    "art/s2e01-02.webp"
+   ],
+   "layers": [
+    "art/s2e01-02-L0.webp",
+    "art/s2e01-02-L1.webp",
+    "art/s2e01-02-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q3": {
+   "src": [
+    "art/s2e01-03.webp"
+   ],
+   "layers": [
+    "art/s2e01-03-L0.webp",
+    "art/s2e01-03-L1.webp",
+    "art/s2e01-03-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q4": {
+   "src": [
+    "art/s2e01-04.webp"
+   ],
+   "layers": [
+    "art/s2e01-04-L0.webp",
+    "art/s2e01-04-L1.webp",
+    "art/s2e01-04-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q5": {
+   "src": [
+    "art/s2e01-05.webp"
+   ],
+   "layers": [
+    "art/s2e01-05-L0.webp",
+    "art/s2e01-05-L1.webp",
+    "art/s2e01-05-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  }
+ },
+ "camera": [
+  {
+   "t": 0,
+   "img": "q1",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1
+  },
+  {
+   "t": "vo01:tiny",
+   "img": "q1",
+   "s": 1.08,
+   "f": [
+    0.5,
+    0.52
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.05,
+   "rack": 2
+  },
+  {
+   "t": "start:vo02",
+   "img": "q2",
+   "s": 1.04,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1
+  },
+  {
+   "t": "vo02:That",
+   "img": "q2",
+   "s": 1.1,
+   "f": [
+    0.5,
+    0.48
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0.05,
+   "rack": 2
+  },
+  {
+   "t": "start:vo03",
+   "img": "q3",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.01,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1,
+   "anchors": {
+    "follicle": [
+     0.2,
+     0.74
+    ],
+    "muscle": [
+     0.58,
+     0.56
+    ],
+    "nerve": [
+     0.62,
+     0.72
+    ]
+   }
+  },
+  {
+   "t": "vo03:each",
+   "img": "q3",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 1,
+   "anchors": {
+    "follicle": [
+     0.2,
+     0.74
+    ],
+    "muscle": [
+     0.58,
+     0.56
+    ],
+    "nerve": [
+     0.62,
+     0.72
+    ]
+   }
+  },
+  {
+   "t": "vo03:At",
+   "img": "q3",
+   "s": 1.06,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2,
+   "anchors": {
+    "follicle": [
+     0.2,
+     0.74
+    ],
+    "muscle": [
+     0.58,
+     0.56
+    ],
+    "nerve": [
+     0.62,
+     0.72
+    ]
+   }
+  },
+  {
+   "t": "vo04:shortens",
+   "img": "q4",
+   "s": 1.06,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2,
+   "anchors": {
+    "follicle": [
+     0.3,
+     0.76
+    ],
+    "muscle": [
+     0.7,
+     0.54
+    ],
+    "tip": [
+     0.465,
+     0.3
+    ],
+    "nerve": [
+     0.6,
+     0.68
+    ]
+   }
+  },
+  {
+   "t": "vo04:In",
+   "img": "q4",
+   "s": 1.06,
+   "f": [
+    0.5,
+    0.48
+   ],
+   "trk": [
+    -0.01,
+    0
+   ],
+   "dolly": 0.03,
+   "rack": 1,
+   "anchors": {
+    "follicle": [
+     0.3,
+     0.76
+    ],
+    "muscle": [
+     0.7,
+     0.54
+    ],
+    "tip": [
+     0.465,
+     0.3
+    ],
+    "nerve": [
+     0.6,
+     0.68
+    ]
+   }
+  },
+  {
+   "t": "start:vo05",
+   "img": "q5",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "trk": [
+    0.015,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1
+  },
+  {
+   "t": "vo05:stem",
+   "img": "q5",
+   "s": 1.08,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0.05,
+   "rack": 2
+  },
+  {
+   "t": "start:vo06",
+   "img": "q1",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1
+  },
+  {
+   "t": "vo06:small",
+   "img": "q1",
+   "s": 1.06,
+   "f": [
+    0.5,
+    0.52
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2
+  }
+ ],
+ "labels": [
+  {
+   "text": "Muscle",
+   "a": "muscle",
+   "img": "q3",
+   "layer": 2,
+   "t0": "vo03:muscle",
+   "t1": "vo03:nerve",
+   "off": [
+    120,
+    -130
+   ]
+  },
+  {
+   "text": "Nerve fibres",
+   "a": "nerve",
+   "img": "q3",
+   "layer": 1,
+   "t0": "vo03:nerve",
+   "t1": "vo03:At",
+   "off": [
+    110,
+    150
+   ]
+  },
+  {
+   "text": "Hair follicle",
+   "a": "follicle",
+   "img": "q3",
+   "layer": 2,
+   "t0": "vo03:follicle",
+   "t1": "end:vo03+0.3",
+   "off": [
+    130,
+    -150
+   ]
+  },
+  {
+   "text": "Muscle shortens",
+   "a": "muscle",
+   "img": "q4",
+   "layer": 2,
+   "t0": "vo04:shortens",
+   "t1": "vo04:upright",
+   "off": [
+    -100,
+    -150
+   ]
+  },
+  {
+   "text": "Hair stands up",
+   "a": "tip",
+   "img": "q4",
+   "layer": 2,
+   "t0": "vo04:upright",
+   "t1": "end:vo04+0.3",
+   "off": [
+    130,
+    -40
+   ]
+  }
+ ],
+ "sweeps": [
+  {
+   "img": "q2",
+   "t0": "vo02:signal",
+   "t1": "vo02:tighten+0.8",
+   "a": 0.55,
+   "w": 0.1
+  },
+  {
+   "img": "q4",
+   "t0": "vo04:fires",
+   "t1": "vo04:upright+0.8",
+   "a": 0.55,
+   "w": 0.1
+  },
+  {
+   "img": "q5",
+   "t0": "vo05:In",
+   "t1": "vo05:stem+1.0",
+   "a": 0.5,
+   "w": 0.12
+  }
+ ],
+ "particles": [
+  {
+   "img": "q5",
+   "n": 16,
+   "a": 0.5
+  },
+  {
+   "img": "q1",
+   "n": 10,
+   "a": 0.35
+  }
+ ],
+ "sup": [
+  [
+   "start:vo03",
+   "Muscle, nerve<br>and follicle."
+  ],
+  [
+   "start:vo05",
+   "In mice,<br>stem cells too."
+  ],
+  [
+   "start:vo06",
+   ""
+  ]
+ ],
+ "badges": [
+  [
+   "start:vo03",
+   "start:vo05",
+   "Simplified section · not to scale"
+  ],
+  [
+   "start:vo05",
+   "start:vo06",
+   "Mouse study · hair stem cells"
+  ]
+ ],
+ "end": {
+  "t": "start:vo07-0.3",
+  "e1": "Next:<br>why fingers wrinkle in water",
+  "e2": "Your nerves are in charge.",
+  "chip": "Skin Sense · Season 2 · Episode 2"
+ }
+}

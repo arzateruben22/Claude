@@ -68,6 +68,11 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
     const r = await loadImg([].concat(im.src)); if (!r) throw new Error("no picture for " + k);
     const el = r.el, h = AW * el.naturalHeight / el.naturalWidth; el.style.cssText = `${im.filter ? "filter:" + im.filter + ";" : ""}position:absolute;left:0;transform-origin:0 0;max-width:none;width:${AW}px;height:${h}px;top:0;opacity:0`; artbox.appendChild(el);
     IM[k] = { el, AH: h, TOP0: (BH - h) / 2, fb: r.idx >= (im.real || 2) };
+    // motion control (kits/cinema/motion): three depth layers in one wrapper; the wrapper takes the camera, each layer its own parallax
+    if (im.layers) { const ls = await Promise.all(im.layers.map((x) => loadImg([x]))); if (ls.every(Boolean)) {
+      const w = document.createElement("div"); w.style.cssText = `${im.filter ? "filter:" + im.filter + ";" : ""}position:absolute;left:0;top:0;transform-origin:0 0;width:${AW}px;height:${h}px;opacity:0`;
+      el.remove(); ls.forEach((x) => { x.el.style.cssText = "position:absolute;left:0;top:0;width:100%;height:100%;max-width:none"; w.appendChild(x.el); }); artbox.appendChild(w);
+      Object.assign(IM[k], { el: w, lay: ls.map((x) => x.el), par: im.par || [0, 0.55, 1], blur: im.blur || 9 }); } }
   }
   if (EP.placeholder && Object.values(IM).some((g) => g.fb)) $("#ph").style.display = "block";
   const KF = EP.camera.map((k) => { const fbk = IM[k.img].fb; const u2 = fbk && k.fb ? k.fb : k; return { ...k, s: u2.s, f: u2.f, t: R(k.t), anchors: (fbk && k.fbAnchors) ? k.fbAnchors : (k.anchors || EP.anchors || {}) }; });
@@ -78,14 +83,21 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
     const a = KF[Math.max(0, i - 1)], b = KF[i], m = i ? ease(seg(t, b.t - 0.05, b.t + 0.9)) : 1, P = {};
     if (!i || a.img === b.img) P[b.img] = { s: (a.s + (b.s - a.s) * m) * drift(t, b), fx: a.f[0] + (b.f[0] - a.f[0]) * m, fy: a.f[1] + (b.f[1] - a.f[1]) * m, op: 1 };
     else { P[a.img] = { s: a.s * drift(t, b), fx: a.f[0], fy: a.f[1], op: 1 - m }; P[b.img] = { s: b.s * (1.05 - 0.05 * m) * drift(t, b), fx: b.f[0], fy: b.f[1], op: m }; }
-    return { b, m, P, img: b.img };
+    const iv = (x, y) => x + (y - x) * m;
+    for (const n in P) { const A = n === b.img && a.img === b.img ? a : b, B2 = b; P[n].trk = [iv(A.trk ? A.trk[0] : 0, B2.trk ? B2.trk[0] : 0), iv(A.trk ? A.trk[1] : 0, B2.trk ? B2.trk[1] : 0)]; P[n].dolly = iv(A.dolly || 0, B2.dolly || 0); P[n].rack = B2.rack === undefined ? null : (A.rack === undefined ? B2.rack : iv(A.rack, B2.rack)); }
+    return { b, m, P, img: b.img, t };
   };
-  const scr = (name, nx, ny, c) => { const p = c.P[name], g = IM[name]; return [AW / 2 + (nx - p.fx) * AW * p.s, BTOP + BH / 2 + (ny - p.fy) * g.AH * p.s]; };
+  const layerX = (p, g, i, t) => { const par = g.par[i]; return { tx: p.trk[0] * AW * par + Math.sin(t * 0.9 + i * 1.7) * 1.5 * u * i, ty: p.trk[1] * g.AH * par + Math.cos(t * 0.7 + i) * 1.3 * u * i, sc: 1 + p.dolly * par + 0.002 * Math.sin(t * 0.5 + i) }; };
+  const scr = (name, nx, ny, c, layer) => { const p = c.P[name], g = IM[name]; let X = nx * AW, Y = ny * g.AH; const FX = p.fx * AW, FY = p.fy * g.AH;
+    if (layer != null && g.lay) { const q = layerX(p, g, layer, c.t); X = FX + (X - FX) * q.sc + q.tx; Y = FY + (Y - FY) * q.sc + q.ty; }
+    return [AW / 2 + (X - FX) * p.s, BTOP + BH / 2 + (Y - FY) * p.s]; };
   const NS = "http://www.w3.org/2000/svg", mk = (tag, at, par = lead, first) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); first ? par.insertBefore(e, par.firstChild) : par.appendChild(e); return e; };
   await document.fonts.ready;
   const defs = mk("defs", {}, fxs); defs.innerHTML = `<radialGradient id="gT"><stop offset="0" stop-color="#48BFB0" stop-opacity=".95"/><stop offset=".55" stop-color="#48BFB0" stop-opacity=".45"/><stop offset="1" stop-color="#48BFB0" stop-opacity="0"/></radialGradient>
 <radialGradient id="gD"><stop offset="0" stop-color="#2A2060" stop-opacity=".95"/><stop offset=".6" stop-color="#2A2060" stop-opacity=".6"/><stop offset="1" stop-color="#3B2F72" stop-opacity="0"/></radialGradient>
 <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${(1.3 * u).toFixed(2)}"/></filter><filter id="soft2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${(3 * u).toFixed(2)}"/></filter>`;
+  const SWEEPS = (EP.sweeps || []).map((w) => { const d = document.createElement("div"); d.style.cssText = `position:absolute;left:-30%;top:-10%;width:160%;height:120%;pointer-events:none;mix-blend-mode:soft-light;opacity:0;background:linear-gradient(${w.ang || 105}deg,rgba(255,250,238,0) ${50 - 100 * (w.w || 0.12)}%,rgba(255,252,242,1) 50%,rgba(255,250,238,0) ${50 + 100 * (w.w || 0.12)}%)`; artbox.appendChild(d); return { ...w, t0: R(w.t0), t1: R(w.t1), d }; });
+  const PART = (EP.particles || []).map((g) => { const els = Array.from({ length: g.n || 14 }, (_, i) => { const e = document.createElement("div"), fr = (x) => { const v = Math.sin(x) * 43758.5453; return v - Math.floor(v); }; e.dataset.k = JSON.stringify([fr(i * 91.7), fr(i * 17.3), 0.5 + fr(i * 5.1), 2 + 5 * fr(i * 3.3)]); e.style.cssText = `position:absolute;border-radius:50%;pointer-events:none;background:rgba(244,214,150,.75);filter:blur(${(0.6 + 1.4 * fr(i * 7.7)).toFixed(1)}px)`; artbox.appendChild(e); return e; }); return { ...g, els }; });
   const LABELS = EP.labels.map((L) => ({ ...L, t0: R(L.t0), t1: R(L.t1) }));
   for (const L of LABELS) { L.pill = document.createElement("div"); L.pill.className = "pill"; L.pill.innerHTML = L.text.replace(/µm/g, '<span style="text-transform:none">µm</span>'); pills.appendChild(L.pill); const r = L.pill.getBoundingClientRect(); L.pw = r.width; L.ph = r.height;
     L.line = mk("path", { stroke: NAVY, "stroke-width": 2 * u, fill: "none", "stroke-linecap": "round" }); L.dot = mk("circle", { r: 7 * u, fill: IVORY, stroke: NAVY, "stroke-width": 2 * u }); }
@@ -134,7 +146,8 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
     let q = 0; for (const [a, z] of QUIET) q = Math.max(q, Math.min(a <= 0.1 ? 1 : eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z))));
     let eg = 0; for (const [a, z] of ENGR) eg = Math.max(eg, Math.min(eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z)))); engr.style.opacity = eg.toFixed(3);
     for (const [k, g] of Object.entries(IM)) { const p = c.P[k]; if (!p) { g.el.style.opacity = "0"; continue; } const FX0 = p.fx * AW, FY0 = p.fy * g.AH;
-      g.el.style.transform = `translate(${AW / 2 - FX0 * p.s}px,${BH / 2 - FY0 * p.s}px) scale(${p.s})`; g.el.style.opacity = p.op.toFixed(3); }
+      g.el.style.transform = `translate(${AW / 2 - FX0 * p.s}px,${BH / 2 - FY0 * p.s}px) scale(${p.s})`; g.el.style.opacity = p.op.toFixed(3);
+      if (g.lay) g.lay.forEach((le, i) => { const q = layerX(p, g, i, t); le.style.transformOrigin = `${FX0}px ${FY0}px`; le.style.transform = `translate(${q.tx}px,${q.ty}px) scale(${q.sc})`; le.style.filter = p.rack == null ? "none" : `blur(${(g.blur * u * Math.min(1, Math.max(0, Math.abs(i - p.rack) - 0.4))).toFixed(2)}px)`; }); }
     artbox.style.opacity = ((1 - q) * (1 - eo(seg(t, NEXT - 0.5, NEXT)))).toFixed(3);
     drawFx(t, c);
     const ev = eo(seg(t, NEXT - 0.1, NEXT + 0.4)), ev2 = eo(seg(t, NEXT - 0.5, NEXT - 0.1));
@@ -151,10 +164,12 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
       P.rows.forEach((r, j) => { rows[nl + j].style.opacity = (0.18 + 0.82 * eo(seg(t, r.t, r.t + 0.4))).toFixed(3); rows[nl + j].style.fontWeight = t >= r.t ? "700" : "500"; });
       P.bars.forEach((bb, j) => { const p = eo(seg(t, bb.t, bb.t + 0.9)); bl[j].style.opacity = eo(seg(t, bb.t - 0.1, bb.t + 0.3)).toFixed(3); const vv = bb.v2 ? bb.value + (bb.v2 - bb.value) * eo(seg(t, bb.t2, bb.t2 + 1.0)) : bb.value; bars[j].style.width = `${(vv / bb.max * 100 * p).toFixed(1)}%`; });
       const nt = d.querySelector(".note"); if (nt) nt.style.opacity = eo(seg(t, P.noteT, P.noteT + 0.4)).toFixed(3); });
+    for (const w of SWEEPS) { const k = seg(t, w.t0, w.t1), on = c.P[w.img] ? c.P[w.img].op : 0; w.d.style.opacity = (Math.sin(Math.PI * k) * (w.a || 0.5) * on).toFixed(3); w.d.style.transform = `translateX(${((k - 0.5) * 70).toFixed(1)}%)`; }
+    for (const g of PART) { const pp = c.P[g.img], on = pp ? pp.op : 0, tr = pp ? pp.trk[0] : 0; g.els.forEach((e) => { const [fx, fy, sp, sz] = JSON.parse(e.dataset.k), y = ((fy * BH - t * (14 + 22 * sp) * u) % BH + BH) % BH; e.style.width = e.style.height = (sz * u).toFixed(1) + "px"; e.style.transform = `translate(${(fx * AW + tr * AW * 1.4 + Math.sin(t * 0.6 + fx * 9) * 14 * u).toFixed(1)}px,${y.toFixed(1)}px)`; e.style.opacity = (on * (g.a || 0.45) * Math.min(1, y / (BH * 0.15)) * Math.min(1, (BH - y) / (BH * 0.15))).toFixed(3); }); }
     let chg = 1; for (const cc of CH) chg *= t < cc ? 1 - eo(seg(t, cc - 0.35, cc)) : eo(seg(t, cc + 0.35, cc + 0.95));
     for (const L of LABELS) {
       const an = c.b.anchors[L.a]; if (!an || (L.img && L.img !== c.img)) { L.pill.style.opacity = "0"; L.line.setAttribute("opacity", "0"); L.dot.setAttribute("opacity", "0"); continue; }
-      const [ax, ay] = scr(c.img, an[0], an[1], c);
+      const [ax, ay] = scr(c.img, an[0], an[1], c, L.layer);
       const inside = eo(seg(ay, BTOP + 10 * u, BTOP + 90 * u)) * (1 - eo(seg(ay, BTOP + BH - 150 * u, BTOP + BH - 80 * u))) * eo(seg(ax, -10 * u, 60 * u)) * (1 - eo(seg(ax, W - 60 * u, W + 10 * u)));
       const p = eo(seg(t, L.t0, L.t0 + 0.5)), out = (1 - eo(seg(t, L.t1, L.t1 + 0.3))) * inside * chg * (1 - 0.95 * Math.max(q, eg)), vis = p * out, pw = L.pw, ph = L.ph, left = L.off[0] >= 0;
       let px0 = ax + L.off[0] * u, py0 = ay + L.off[1] * u;

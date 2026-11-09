@@ -1,0 +1,1152 @@
+{
+ "id": "skin-sense-007",
+ "title": {
+  "series": "Skin Sense \u00b7 No. 007",
+  "title": "Why goosebumps happen"
+ },
+ "fps": 30,
+ "dur": 71.667,
+ "poster": 39.42,
+ "theme": "../theme.json",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "main"
+  }
+ ],
+ "disclosures": {
+  "aiVoice": true,
+  "aiVisuals": true
+ },
+ "captions": [
+  {
+   "w": "Why",
+   "t0": 0.07,
+   "t1": 0.29,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "do",
+   "t0": 0.305,
+   "t1": 0.45,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "you",
+   "t0": 0.535,
+   "t1": 0.585,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "get",
+   "t0": 0.565,
+   "t1": 0.69,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "goosebumps?",
+   "t0": 0.775,
+   "t1": 1.73,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "A",
+   "t0": 1.825,
+   "t1": 1.89,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "tiny",
+   "t0": 1.945,
+   "t1": 2.29,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "muscle",
+   "t0": 2.29,
+   "t1": 2.77,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "on",
+   "t0": 2.88,
+   "t1": 2.93,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "every",
+   "t0": 3.0,
+   "t1": 3.09,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "hair",
+   "t0": 3.03,
+   "t1": 3.49,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "pulls.",
+   "t0": 3.45,
+   "t1": 4.05,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "Cold",
+   "t0": 4.824,
+   "t1": 5.329,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "makes",
+   "t0": 5.349,
+   "t1": 5.649,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "nerves",
+   "t0": 5.549,
+   "t1": 6.129,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "in",
+   "t0": 6.044,
+   "t1": 6.289,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "your",
+   "t0": 6.384,
+   "t1": 6.529,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "skin",
+   "t0": 6.584,
+   "t1": 7.009,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "send",
+   "t0": 6.954,
+   "t1": 7.329,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "a",
+   "t0": 7.309,
+   "t1": 7.489,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "signal.",
+   "t0": 7.519,
+   "t1": 8.529,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "That",
+   "t0": 8.649,
+   "t1": 8.769,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "signal",
+   "t0": 8.874,
+   "t1": 9.489,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "tells",
+   "t0": 9.504,
+   "t1": 9.889,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "a",
+   "t0": 10.029,
+   "t1": 10.079,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "tiny",
+   "t0": 10.144,
+   "t1": 10.449,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "muscle",
+   "t0": 10.499,
+   "t1": 11.089,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "beside",
+   "t0": 11.014,
+   "t1": 11.489,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "each",
+   "t0": 11.584,
+   "t1": 11.809,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "hair",
+   "t0": 11.769,
+   "t1": 12.209,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "to",
+   "t0": 12.224,
+   "t1": 12.369,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "tighten.",
+   "t0": 12.379,
+   "t1": 13.009,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Under",
+   "t0": 13.842,
+   "t1": 14.222,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "the",
+   "t0": 14.222,
+   "t1": 14.462,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "skin,",
+   "t0": 14.542,
+   "t1": 14.862,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "each",
+   "t0": 15.127,
+   "t1": 15.422,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "tiny",
+   "t0": 15.552,
+   "t1": 15.982,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "muscle",
+   "t0": 15.952,
+   "t1": 16.542,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "is",
+   "t0": 16.532,
+   "t1": 16.702,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "woven",
+   "t0": 16.667,
+   "t1": 17.262,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "through",
+   "t0": 17.242,
+   "t1": 17.582,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "with",
+   "t0": 17.597,
+   "t1": 17.822,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "nerve",
+   "t0": 17.777,
+   "t1": 18.302,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "fibres.",
+   "t0": 18.287,
+   "t1": 19.582,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "At",
+   "t0": 19.677,
+   "t1": 19.822,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "its",
+   "t0": 19.917,
+   "t1": 20.142,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "other",
+   "t0": 20.042,
+   "t1": 20.462,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "end,",
+   "t0": 20.397,
+   "t1": 20.942,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "it",
+   "t0": 21.092,
+   "t1": 21.182,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "is",
+   "t0": 21.187,
+   "t1": 21.422,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "attached",
+   "t0": 21.567,
+   "t1": 21.982,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "to",
+   "t0": 22.072,
+   "t1": 22.142,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "the",
+   "t0": 22.187,
+   "t1": 22.302,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "bulge",
+   "t0": 22.362,
+   "t1": 22.782,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "of",
+   "t0": 22.707,
+   "t1": 22.862,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "the",
+   "t0": 22.942,
+   "t1": 23.022,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "hair",
+   "t0": 22.972,
+   "t1": 23.422,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "follicle,",
+   "t0": 23.447,
+   "t1": 24.462,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "the",
+   "t0": 24.547,
+   "t1": 24.622,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "pocket",
+   "t0": 24.697,
+   "t1": 25.182,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "the",
+   "t0": 25.222,
+   "t1": 25.342,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "hair",
+   "t0": 25.252,
+   "t1": 25.742,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "grows",
+   "t0": 25.717,
+   "t1": 26.142,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "from.",
+   "t0": 26.237,
+   "t1": 26.542,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "When",
+   "t0": 27.499,
+   "t1": 27.719,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 27.719,
+   "t1": 27.799,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "nerve",
+   "t0": 27.799,
+   "t1": 28.199,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "fires,",
+   "t0": 28.184,
+   "t1": 28.839,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 28.904,
+   "t1": 28.999,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "muscle",
+   "t0": 28.934,
+   "t1": 29.479,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "shortens",
+   "t0": 29.569,
+   "t1": 30.199,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "and",
+   "t0": 30.229,
+   "t1": 30.359,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "pulls",
+   "t0": 30.449,
+   "t1": 30.839,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 30.924,
+   "t1": 30.999,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "hair",
+   "t0": 30.954,
+   "t1": 31.399,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "upright.",
+   "t0": 31.394,
+   "t1": 32.599,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "In",
+   "t0": 32.659,
+   "t1": 32.839,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "people,",
+   "t0": 32.869,
+   "t1": 33.399,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "that",
+   "t0": 33.449,
+   "t1": 33.639,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "no",
+   "t0": 33.594,
+   "t1": 33.879,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "longer",
+   "t0": 33.844,
+   "t1": 34.279,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "helps",
+   "t0": 34.264,
+   "t1": 34.759,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "keep",
+   "t0": 34.764,
+   "t1": 34.999,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "us",
+   "t0": 34.994,
+   "t1": 35.239,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "warm.",
+   "t0": 35.204,
+   "t1": 36.279,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "Yet",
+   "t0": 36.364,
+   "t1": 36.439,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 36.594,
+   "t1": 36.679,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "muscle,",
+   "t0": 36.624,
+   "t1": 37.319,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 37.429,
+   "t1": 37.479,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "nerve",
+   "t0": 37.459,
+   "t1": 37.959,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "and",
+   "t0": 37.904,
+   "t1": 38.039,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 38.124,
+   "t1": 38.199,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "follicle",
+   "t0": 38.194,
+   "t1": 38.759,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "are",
+   "t0": 38.774,
+   "t1": 38.999,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "still",
+   "t0": 39.039,
+   "t1": 39.319,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "wired",
+   "t0": 39.354,
+   "t1": 39.879,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "together",
+   "t0": 39.854,
+   "t1": 40.359,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "across",
+   "t0": 40.504,
+   "t1": 40.759,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "mammals.",
+   "t0": 40.869,
+   "t1": 41.479,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "And",
+   "t0": 44.059,
+   "t1": 44.279,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "this",
+   "t0": 44.249,
+   "t1": 44.519,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "wiring",
+   "t0": 44.484,
+   "t1": 45.159,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "does",
+   "t0": 45.129,
+   "t1": 45.399,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "more",
+   "t0": 45.344,
+   "t1": 45.559,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "than",
+   "t0": 45.644,
+   "t1": 45.799,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "raise",
+   "t0": 45.834,
+   "t1": 46.279,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "hair.",
+   "t0": 46.174,
+   "t1": 46.999,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "In",
+   "t0": 47.144,
+   "t1": 47.239,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "mice,",
+   "t0": 47.174,
+   "t1": 47.799,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 47.854,
+   "t1": 47.959,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "nerve",
+   "t0": 47.884,
+   "t1": 48.439,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "talks",
+   "t0": 48.414,
+   "t1": 48.759,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "to",
+   "t0": 48.784,
+   "t1": 48.919,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 48.889,
+   "t1": 48.999,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "stem",
+   "t0": 49.124,
+   "t1": 49.479,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "cells",
+   "t0": 49.514,
+   "t1": 49.799,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "that",
+   "t0": 49.904,
+   "t1": 50.039,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "regrow",
+   "t0": 50.034,
+   "t1": 50.679,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "hair.",
+   "t0": 50.569,
+   "t1": 51.399,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "The",
+   "t0": 51.564,
+   "t1": 51.614,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "muscle",
+   "t0": 51.594,
+   "t1": 52.119,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "keeps",
+   "t0": 52.144,
+   "t1": 52.439,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "that",
+   "t0": 52.514,
+   "t1": 52.679,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "nerve",
+   "t0": 52.679,
+   "t1": 53.079,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "in",
+   "t0": 53.059,
+   "t1": 53.239,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "place.",
+   "t0": 53.249,
+   "t1": 53.719,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "So",
+   "t0": 57.193,
+   "t1": 57.413,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "goosebumps",
+   "t0": 57.573,
+   "t1": 58.293,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "are",
+   "t0": 58.193,
+   "t1": 58.453,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "a",
+   "t0": 58.453,
+   "t1": 58.533,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "muscle,",
+   "t0": 58.628,
+   "t1": 59.173,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "a",
+   "t0": 59.253,
+   "t1": 59.413,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "nerve",
+   "t0": 59.413,
+   "t1": 59.733,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "and",
+   "t0": 59.813,
+   "t1": 59.973,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "a",
+   "t0": 59.853,
+   "t1": 60.133,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "hair,",
+   "t0": 60.128,
+   "t1": 60.613,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "working",
+   "t0": 60.528,
+   "t1": 61.093,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "together.",
+   "t0": 61.203,
+   "t1": 62.133,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "A",
+   "t0": 62.228,
+   "t1": 62.373,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "small",
+   "t0": 62.308,
+   "t1": 62.853,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "reflex",
+   "t0": 62.903,
+   "t1": 63.573,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "with",
+   "t0": 63.498,
+   "t1": 63.733,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "a",
+   "t0": 63.743,
+   "t1": 63.893,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "bigger",
+   "t0": 63.903,
+   "t1": 64.293,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "job.",
+   "t0": 64.248,
+   "t1": 64.773,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Next:",
+   "t0": 65.608,
+   "t1": 65.908,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "why",
+   "t0": 66.023,
+   "t1": 66.228,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "fingers",
+   "t0": 66.353,
+   "t1": 66.788,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "wrinkle",
+   "t0": 66.703,
+   "t1": 67.188,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "in",
+   "t0": 67.093,
+   "t1": 67.348,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "water.",
+   "t0": 67.443,
+   "t1": 68.148,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "Your",
+   "t0": 68.173,
+   "t1": 68.308,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "nerves",
+   "t0": 68.203,
+   "t1": 68.788,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "are",
+   "t0": 68.678,
+   "t1": 68.948,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "in",
+   "t0": 69.043,
+   "t1": 69.108,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "charge.",
+   "t0": 69.073,
+   "t1": 69.668,
+   "line": "vo07",
+   "beat": "tease"
+  }
+ ],
+ "lines": {
+  "vo01": [
+   0.05,
+   4.069,
+   "hook"
+  ],
+  "vo02": [
+   4.769,
+   13.022,
+   "normal"
+  ],
+  "vo03": [
+   13.822,
+   26.579,
+   "change"
+  ],
+  "vo04": [
+   27.479,
+   41.539,
+   "why"
+  ],
+  "vo05": [
+   44.039,
+   53.773,
+   "whoa"
+  ],
+  "vo06": [
+   57.173,
+   64.788,
+   "takeaway"
+  ],
+  "vo07": [
+   65.588,
+   69.673,
+   "tease"
+  ]
+ }
+}

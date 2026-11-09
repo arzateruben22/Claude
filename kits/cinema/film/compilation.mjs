@@ -5,6 +5,7 @@
 //        [--out <channel>/compilations] [--cards-only]   (draws the cards and the thumbnail, then stops)
 //        [--max-sources <n>]   at most n sources per episode in the description (default: all); [--max-desc <chars>] fails QA if the description is longer (YouTube allows 5000)
 //        [--bridge <seconds>]   a short "Next:" card between episodes (default 0: none; the chapter it follows owns it)
+//        [--card-bg <image>]   a picture, softly blurred behind the intro, bridge and outro cards (opt-in)
 //        [--theme <file>]   a theme file to draw the cards in, instead of <channel>/theme.json (its fonts resolve from the channel folder)
 //        [--height 1440|1080] (default 1440) [--crf 15] [--max-mb 90]
 //
@@ -115,7 +116,8 @@ const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || 
 for (const [k, body] of Object.entries(pages)) {
   const thumb = k === "thumb", page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: S });   // drawn at the delivered size
   const html = path.join(work, `${k}.html`);
-  fs.writeFileSync(html, `<!doctype html><meta charset="utf-8"><style>${css}</style><body>${body}</body>`);
+  const bg = A["card-bg"] && /^(intro|outro|bridge\d+)$/.test(k) ? `<div style="position:fixed;inset:-60px;z-index:-2;background:url(${pathToFileURL(path.resolve(A["card-bg"])).href}) center/cover;filter:blur(30px);opacity:.5"></div><div style="position:fixed;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(248,242,231,.9),rgba(248,242,231,.55))"></div>` : "";   // opt-in: a softly blurred picture behind the intro, bridge and outro cards
+  fs.writeFileSync(html, `<!doctype html><meta charset="utf-8"><style>${css}</style><body>${bg}${body}</body>`);
   await page.goto(pathToFileURL(html).href);
   await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].map((i) => i.decode().catch(() => {}))); });
   await page.screenshot({ path: path.join(work, `${k}.png`) });
