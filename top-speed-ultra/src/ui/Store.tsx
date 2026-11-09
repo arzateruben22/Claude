@@ -19,11 +19,11 @@ import { ownedPaints, equippedPaintId, equipPaint, inGame } from '../store/locke
 import { onStoreChange } from '../store/bus';
 
 const LOOKS_ONLY = 'Looks only: it changes nothing about how any car drives or scores.';
-// the owner's two-tune rule (PROJECT_OC_MONETIZATION.md rule 3a), in the store's words. Free Drive has no clock and
-// no rivals, but it does keep a score (the distance), a best and a device-only board: hence "stay on your device" and
+// the owner's two-tune rule (PROJECT_OC_MONETIZATION.md rule 3a), in the store's words. Free Drive has no clock,
+// but it does keep a score (the distance), a best and a device-only board: hence "stay on your device" and
 // "marked", which the car must do before it is sold (its `needs` in cosmetics.json)
-const FREE_DRIVE_ONLY = 'no clock and no rivals, your Free Drive bests stay on your device, and its Unleashed runs and run cards are marked';
-const TWO_TUNE = `Unleashed in Free Drive only: ${FREE_DRIVE_ONLY}. In Races, Time Trial and Speed Survival it runs a race tune at or under the Rossini Corsa, with its ability off.`;
+const FREE_DRIVE_ONLY = 'no clock, your Free Drive bests stay on your device, and its Unleashed runs and run cards are marked';
+const TWO_TUNE = `Unleashed in Free Drive only: ${FREE_DRIVE_ONLY}. In Speed Survival it runs a race tune at or under the Rossini Corsa, with its ability off.`;
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 interface StoreHooks { open: (sku: string) => void; preview: (sku: string) => void; close: () => void }
@@ -340,7 +340,7 @@ function Terms() {
       <summary>Store terms (draft)</summary>
       <ul>
         <li>You get a licence to use the items in OC Ultra, not ownership of them. A refund takes the items back, and the game can change.</li>
-        <li>Looks only: no item changes speed, grip, handling, score, credits or XP. The one exception is the OC Hypercar Founder Edition: it is faster than any car you can earn in Free Drive only ({FREE_DRIVE_ONLY}). In Races, Time Trial and Speed Survival it runs a race tune at or under the best car you can earn, with its ability off, and its Free Drive earnings are capped at that tune's top speed. Credits are never sold. No loot boxes and no premium currency.</li>
+        <li>Looks only: no item changes speed, grip, handling, score, credits or XP. The one exception is the OC Hypercar Founder Edition: it is faster than any car you can earn in Free Drive only ({FREE_DRIVE_ONLY}). In Speed Survival it runs a race tune at or under the best car you can earn, with its ability off, and its Free Drive earnings are capped at that tune's top speed. Credits are never sold. No loot boxes and no premium currency.</li>
         <li>For players 13 and over. Under 18, a parent or guardian must say yes first.</li>
         <li>Refunds: ask within 14 days if you haven't used the item in a drive. An accidental purchase, or a minor's purchase without permission, is refunded any time. Email (TODO: support email).</li>
         <li>Your items are saved to your account: sign in with the same email on any device and tap Restore purchases.</li>

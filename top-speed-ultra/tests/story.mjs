@@ -4,7 +4,7 @@ import { inbox, unread, settle, MESSAGES, EVENTS, meets } from '../src/game/stor
 
 let fails = 0;
 const ok = (c, msg) => { console.log(`  ${c ? 'PASS' : 'FAIL'}  ${msg}`); if (!c) fails++; };
-const profile = (o = {}) => ({ homes: [], racesWon: 0, story: { done: [], read: [] }, ...o });
+const profile = (o = {}) => ({ homes: [], distance: 0, story: { done: [], read: [] }, ...o });
 const sat9 = new Date(2026, 9, 24, 9, 0), sat12 = new Date(2026, 9, 24, 12, 0), fri20 = new Date(2026, 9, 23, 20, 30), sun9 = new Date(2026, 9, 25, 9, 0), nextSat9 = new Date(2026, 9, 31, 9, 0);
 const tue = new Date(2026, 9, 20, 15, 0);
 
@@ -38,8 +38,17 @@ const a = settle(p2, 5, run, sat9).map((m) => m.id.split('@')[0]);
 const b = settle(p2, 5, run, sat9).length;
 const c = settle(p2, 5, run, nextSat9).map((m) => m.id.split('@')[0]);
 ok(a.join() === 'cars-coffee' && b === 0 && c.join() === 'cars-coffee', `Cars & Coffee paid: this week ${a.join()}, again ${b}, next week ${c.join()}`);
-// meets: the race needs the course and the place
-ok(meets({ kind: 'race', course: 'irvine', place: 2 }, { mode: 'race', courseId: 'irvine', position: 2 }) && !meets({ kind: 'race', course: 'irvine', place: 2 }, { mode: 'race', courseId: 'irvine', position: 3 }), 'a race job needs the course and the place');
+// Races and Time Trial are gone (owner, 2026-11-08): no job asks for either, the jobs that were races are Free Drive
+// miles on the same freeways, and Dee's demo opens on 100 lifetime miles instead of five race wins
+const kinds = [...MESSAGES, ...EVENTS].map((m) => m.job?.kind).filter(Boolean);
+ok(!kinds.includes('race') && !kinds.includes('time'), `job kinds: ${[...new Set(kinds)].join(', ')}`);
+ok(MESSAGES.every((m) => !('racesWon' in (m.unlock ?? {}))), 'nothing unlocks on race wins');
+const jun1 = MESSAGES.find((m) => m.id === 'jun-1').job;
+ok(meets(jun1, { mode: 'free', score: 0, distance: 8.1 * 1609.344, top: 40, road: 'I-405 North' }) && !meets(jun1, { mode: 'survival', score: 0, distance: 8.1 * 1609.344, top: 40, road: 'I-405 North' })
+  && !meets(jun1, { mode: 'free', score: 0, distance: 7 * 1609.344, top: 40, road: 'I-405 North' }), `jun-1 is a Free Drive job: ${JSON.stringify(jun1)}`);
+const dee = (mi) => inbox(profile({ homes: ['orangewood'], distance: mi * 1609.344, story: { done: ['dee-1'], read: ['dee-1'] } }), 1, tue).some((m) => m.id === 'dee-2');
+ok(!dee(99) && dee(100), `Dee's demo at 99 mi ${dee(99)}, at 100 mi ${dee(100)}`);
+ok(!meets({ kind: 'drive', road: 'I-5 North', miles: 1 }, { mode: 'race', score: 0, distance: 1e5, top: 0, road: 'I-5 North' }), 'a run saved as mode race meets no Free Drive job');
 
 console.log(fails ? `\n${fails} failed` : '\nall passed');
 process.exit(fails ? 1 : 0);

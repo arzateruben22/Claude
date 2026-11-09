@@ -4,6 +4,96 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-09: two modes only: Free Drive and Speed Survival (claude/modes-trim, not committed)
+
+- **The owner (2026-11-08, about 9:05 PM PT, with a screenshot of the menu's "03 RACES" and "04 TIME TRIAL" cards):**
+  "lets get rid of these play modes all entirely and only stick to free drive and try to stay over 100mph game mode".
+  The game now offers exactly two modes, Free Drive (`'free'`) and Speed Survival (`'survival'`, "Stay over 100 mph").
+- **Removed.**
+  - `src/game/race.ts` (deleted): the four courses, the three rivals, standings, gates, race best times.
+  - `Game.ts`: `startRace`, `raceTick`, `finishRace`, `endRace`, the race state, the countdown (only Races and Time
+    Trial used it), Time Trial's clock, checkpoints and fixed seed, and the race and clock fields of the HUD data and the
+    result. `carTop()` stays: Auto-drive's cruise uses it.
+  - `Traffic.ts`: the AI racer (`racer`, `addRacer`, `removeRacers`, `clearStretch` and the racer branches in the
+    car-following, lane-change, despawn, `clearAround` and `thin` code). Ordinary traffic runs the same code paths and
+    draws the same random numbers as before.
+  - `settings.ts`: `Mode` is `'free' | 'survival'`; `MODES` lists two; `Settings.course` is gone. New `modeOf()` reads
+    any other mode as Free Drive.
+  - UI: the menu's Races and Time Trial cards (the menu shows 01 Free Drive and 02 Speed Survival, `.modes` two
+    columns at every size), their `ModeArt` scenes, the Race pick, the Races sheet (course picker), the race HUD box and
+    its CSS, Time Trial's HUD numbers and its last-10-s warning and wake, the race and Time Trial results, run-card
+    variants and bests (the Bests panel offers Speed Survival and Free Drive), the phone's Races app, the World Map's
+    Races tab, course line and "Race here" (its Places rows keep their layout under a renamed class), and "Races won" on
+    the profile.
+  - Copy: the hypercar's blurb, the Store's two-tune text and terms, `catalog.json`'s hypercar description and
+    `cosmetics.json` (the free list and the tunes) now name Speed Survival only. README's Modes, `tools/map-shots.mjs`
+    and `tools/ui-shots.mjs` lose their race shots.
+  - In short landscape windows the rail's "Orange County · California" line is hidden: with two cards the grid is
+    shorter and it rose from below the fold (y 477 of 390) to under the Drive dock (y 354). Seen in a baseline-vs-new
+    frame pair at 844 x 390.
+- **Old saves.** `readSettings()` drops a saved `mode` and `course`; the menu always opens on Free Drive (it never
+  remembered a mode). `migrate()` drops `racesWon`. `Game.start('race' | 'time')` from any old caller runs Free Drive.
+  `tsu.best.time`, `tsu.race.<course>` and the `time`/`race` lists in `tsu.runs.v1` stay on the device, unread.
+- **Decisions.**
+  - Story jobs that were races or Time Trial became Free Drive mileage jobs on the same freeways, under the same ids (a
+    job already done stays done; pay unchanged): jun-1 8 mi ending on I-405 North (was the Irvine Sprint top two);
+    jun-2 12 mi ending on I-5 South (was Time Trial 12 mi); dee-1 6 mi on CA-241 North (was win the Foothill Sprint);
+    sal-3 8 mi on I-5 North (was Santa Ana Checkpoints top three); nina-1 15 mi ending on CA-91 East (was Riverside
+    Endurance podium). Their texts say Free Drive.
+  - Unlocked by race wins: only dee-2 ("Five wins", the 25,000 Survival demo). It is re-tied to **miles driven**:
+    100 lifetime miles (`Unlock.miles`, the profile's distance), after dee-1 as before.
+  - "Races won" is gone from the profile screen and the profile.
+  - Store: no item was race- or Time-Trial-only. Only copy changed (above); the store stays in test mode, the server
+    catalog copy is unchanged (`store:sync --check`: in sync, 22 skus).
+  - The hypercar: Unleashed in Free Drive, its race tune (the name of the tune, unchanged) in Speed Survival, as
+    `tuneFor()` already did for every non-free mode. The cluster's "RACE TUNE" label and the cockpit's drive-mode dial
+    ("RACE" among WET/SPORT) are the car's, not a game mode, and stay.
+  - Left as is: `Physics.ts` keeps its `hold` flag (the countdown's), now unused by the game: that file is another
+    session's. `tests/dynamics.mjs` still checks the launch from a hold; it is physics, not a mode.
+- **Tests.** The `race` group and the Time Trial determinism check are gone. New `modes` group (7 checks): two cards,
+  01 Free Drive and 02 Speed Survival, no Races or Time Trial text on the menu; a saved `'race'` (first load) and
+  `'time'` (second load, with an old profile's `racesWon`, Time Trial and race runs and bests) both open on Free Drive,
+  settings drop `mode`/`course`, the profile drops `racesWon` and keeps its credits and story, Bests offers Speed
+  Survival / Free Drive; `start('race')`/`start('time')` run Free Drive; no Races in the phone or the World Map; Speed
+  Survival at 104 mph with a 17 s streak, then a crash into a stopped car ends it; Auto-drive not offered in Speed
+  Survival; the hypercar 341 mph flat out in Free Drive, 234 mph in Speed Survival. The survival group's stopped car is
+  now an existing traffic car held by its own stop timer (`stoppedCarAhead`), since `addRacer` went. `tests/story.mjs`
+  checks no job is a race or Time Trial, jun-1 is a Free Drive job, and dee-2 opens at 100 miles, not 99.
+- **Results (load average 5 to 20 from other lanes).** `npx tsc --noEmit` and the game tsconfig clean. `npm run build`:
+  dist/artifact.html 4,847,325 bytes, only it marked owner-test. `npm run store:check`: the same 2 wheel-style problems
+  as origin/local/live-preview (src/preview/car-wheel.ts, not ours); the server catalog in sync.
+  - `npm test -- --only=boot,survival,phone,progression,modes`: boot 19 s, survival 24 s, modes 55 s, progression
+    713 s, phone 604 s; **44/44 passed**. After the landscape CSS fix, `--only=boot,modes`: **14/14 passed**.
+  - `node tests/story.mjs`: all passed. `node tests/dynamics.mjs`: **1742 passed, 0 failed**.
+- **Proof** (a copy of dist/artifact.html with a charset and viewport meta prepended; 390 x 844 and 844 x 390 touch at
+  DPR 3, 1440 x 900; frames in tests/out/modes-trim/, each looked at): the menu at all three sizes shows two cards,
+  01 Free Drive and 02 Speed Survival, side by side, no gaps, no sideways scroll, no Races or Time Trial text; Free
+  Drive driven on I-405 North (76 mph, 0.39 mi); Speed Survival held at 115-116 mph with the HUD showing the streak
+  (16.2 s on the phone, "Over 100 15.8 s" on the desktop), then "Crashed into a sedan" with the Speed Survival result;
+  a saved `{mode: 'race', course: 'irvine'}` and a profile with `racesWon: 3` load on Free Drive (4,200 credits kept,
+  `racesWon` gone) and drive. No page errors in any of them. The desktop crash frame caught the results card mid
+  fade-in (the DOM read shows "Speed Survival", "Crashed into a sedan", 952 points); the phone frame shows it whole.
+- **Review round 1 (fixes).** The review found one player-visible mention of races: the phone's Credits app said
+  "Earned by driving: distance, clean passes, near misses, races and records." It now says "... near misses and
+  records." (`Phone.tsx`). With races gone, the hypercar's "no clock and no rivals" for Free Drive implied rivals
+  elsewhere, so "and no rivals" is dropped from `FREE_DRIVE_ONLY` (`Store.tsx`, and its comment), the hypercar
+  description in `catalog.json` and the `about` text in `cosmetics.json`; `npm run store:sync` rewrote the server copy
+  (no change in its file: it carries no descriptions) and `store:sync --check` reports in sync, 22 skus.
+  - Checks: `tsc --noEmit` clean; `npm run build` clean (dist/artifact.html 4,847,276 bytes, owner-test marked);
+    `test:story` all passed; `npm test -- --only=boot,survival,phone,progression,modes`: **44/44 passed**;
+    `store:check`: the same 2 wheel-style problems from `src/preview/car-wheel.ts` (another session's file).
+  - `grep -oiE '\braces?\b' dist/artifact.html`: 14 hits, none of them copy about races: `Promise.race`, the cars'
+    `race` tune config and `tuneFor`, and the hypercar's tune name ("RACE TUNE" on its cluster, "race tune" in the
+    Store and garage text for Speed Survival). "no rivals" and "races and records" are gone from the page.
+  - Proof (frames `*-r1.png` in tests/out/modes-trim/, looked at): the Credits app at 390 x 844, 844 x 390 and
+    1440 x 900 reads the new line; the Store's lede reads "(no clock, your Free Drive bests stay on your device, ...)"
+    under the "Test mode · Nothing is charged. Use 4242 4242 4242 4242." banner; no line on either screen names races,
+    rivals, courses or Time Trial. Menu, Free Drive, Speed Survival (116 mph, 15.4 s streak, then "Crashed into a
+    sedan", Speed Survival result) and a save with mode 'race', course 'irvine', `racesWon: 7` and `tsu.mode` 'time'
+    (opens on Free Drive, 4,200 credits kept, `racesWon` gone) re-run with the same results as above. No page or console
+    errors. The desktop crash frame again caught the result card mid fade-in (DOM read: "Speed Survival", "Crashed
+    into a sedan", 1,103 points); the phone frame shows it whole.
+
 ## 2026-11-08: the venues in the game: drive to Lot 57 or Stoppage Time, get out, walk, drive away (claude/venues-in-game)
 
 - **Reviewers' outcome: kept by the play and code reviews (2026-11-09).** After fix r1 the play review drove to Lot 57 (ramp 1142) and Stoppage Time (ramp 124) at 390 x 844 touch, got out, walked, and drove away by each venue's own Car then Drive, back on an on-ramp at 0 mph and merging at 62-63 mph; three Stoppage Time round trips held one host, heap 104 MB, programs 57, hosts 0; 844 x 390 and 1440 x 900 also checked; no page errors.
