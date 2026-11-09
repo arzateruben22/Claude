@@ -8,21 +8,21 @@ every label and caption is drawn in code. Designed for 2.5-D parallax (foregroun
 ## hook {shot 3: one skin cell, a brown cap over its nucleus, pale-violet light · labels: title · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0.0–4.5 s)
 vo: What is a tan, *really*? {-} Pigment, parked over each cell's nucleus. {c1}
 
-## normal {shot 1/2: the top layer, star-shaped pigment cell passing granules · labels: melanin · picture-only 0.5 s · energy: 0.45} (4.5–14.7 s)
-vo: Brown pigment called melanin sits inside your skin's cells. {c2} After ultraviolet light, it can move to sit over each cell's nucleus, like a small cap. {c3}
+## normal {shot 1/2: the top layer, star-shaped pigment cell passing granules · labels: melanin · picture-only 0.5 s · energy: 0.45} (4.5–16.8 s)
+vo: Brown melanin is made in special pigment cells. {c2} Their arms hand it to the skin cells around them. {c13} After ultraviolet light, it can gather over each cell's nucleus, like a small cap. {c3}
 
-## change {shot 4: a row of capped cells, violet rays partly blocked · labels: melanin cap · picture-only 0.6 s · energy: 0.55} (14.7–26.4 s)
-vo: That cap works like a natural sunscreen, absorbing and scattering ultraviolet light. {c4} In skin samples exposed to UVB, cells with a cap had less DNA damage. {c5}
+## change {shot 4: a row of capped cells, violet rays partly blocked · labels: melanin cap · picture-only 0.6 s · energy: 0.55} (16.8–28.3 s)
+vo: That cap works like a tiny parasol, absorbing and scattering ultraviolet light. {c4} In skin samples exposed to UVB, cells with a cap had less DNA damage. {c5}
 
-## why {a plain plate on ivory: two bars, cells with a cap vs without (no skin, no number) · labels: more melanin · more protection · picture-only 2.2 s · energy: 0.5} (26.4–44.7 s)
+## why {a plain plate on ivory: two bars, cells with a cap vs without (no skin, no number) · labels: more melanin · more protection · picture-only 2.2 s · energy: 0.5} (28.3–46.7 s)
 vo: The more melanin a cell held, the more protection it had. {c6} So the shield is real, but its strength varies from cell to cell. {c7} In lab-grown skin cells, the long rays, UVA, set off cap-building through a light sensor. {c8}
 
-## whoa {shot 3: the cap over the nucleus, calm · labels: less, not none · picture-only 3.1 s · energy: 0.8} (44.7–57.4 s)
+## whoa {shot 3: the cap over the nucleus, calm · labels: less, not none · picture-only 3.1 s · energy: 0.8} (46.7–59.4 s)
 vo: Here is the twist. {-} Caps lower the damage, but do not *erase* it. {c9} The effect depends on how much melanin a cell holds. {c10}
 
-## takeaway {shot 5: two medium-tone patches side by side, even, no redness · labels: none · picture-only 0.5 s · energy: 0.3} (57.4–65.7 s)
+## takeaway {shot 5: two medium-tone patches side by side, even, no redness · labels: none · picture-only 0.5 s · energy: 0.3} (59.4–67.7 s)
 vo: So a tan is pigment gathered over each cell's nucleus. {c11} It lowers damage, but does not *erase* it. {c12}
 
-## tease {end card held ≥ 2 s · energy: 0.35} (65.7–72.9 s)
+## tease {end card held ≥ 2 s · energy: 0.35} (67.7–74.9 s)
 vo: Next: the brick wall on your skin. {-} Which part holds water *in*? {-}
 end card: "Next: the brick wall on your skin" · "Skin Sense · Season 2" · footnote: "Narration: synthetic voice (AI)."

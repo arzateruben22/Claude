@@ -25,24 +25,24 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Brown pigment called melanin sits inside your skin's cells. After ultraviolet light, it can move to sit over each cell's nucleus, like a small cap.",
+   "text": "Brown melanin is made in special pigment cells. Their arms hand it to the skin cells around them. After ultraviolet light, it can gather over each cell's nucleus, like a small cap.",
    "stars": [],
-   "phonemes": "bɹˈaʊn pˈɪɡmənt kˈɔːld mˈɛlənɪn sˈɪts ɪnsˈaɪd jɔː skˈɪnz sˈɛlz. ˈaftəɹ ˌʊltɹɐvˈaɪəlɪt lˈaɪt, ɪt kan mˈuːv tə sˈɪt ˌəʊvəɹ ˈiːtʃ sˈɛlz njˈuːklɪəs, lˈaɪk ɐ smˈɔːl kˈap.",
+   "phonemes": "bɹˈaʊn mˈɛlənɪn ɪz mˌeɪd ɪn spˈɛʃəl pˈɪɡmənt sˈɛlz. ðeəɹ ˈɑːmz hˈand ɪt tə ðə skˈɪn sˈɛlz ɐɹˈaʊnd ðˌɛm. ˈaftəɹ ˌʊltɹɐvˈaɪəlɪt lˈaɪt, ɪt kan ɡˈaðəɹ ˌəʊvəɹ ˈiːtʃ sˈɛlz njˈuːklɪəs, lˈaɪk ɐ smˈɔːl kˈap.",
    "speed": 0.88,
    "file": "02.wav",
-   "dur": 9.321,
-   "sha256": "3b811deaa2d50b9be6331c0f6370815b1a797b30474d7f84051bf9c70ac4b1c7"
+   "dur": 11.418,
+   "sha256": "4315a659c6f41a0b9cd3bb69b3e5240ad8879c1c0f031857a9f34004b5446378"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "That cap works like a natural sunscreen, absorbing and scattering ultraviolet light. In skin samples exposed to UVB, cells with a cap had less DNA damage.",
+   "text": "That cap works like a tiny parasol, absorbing and scattering ultraviolet light. In skin samples exposed to UVB, cells with a cap had less DNA damage.",
    "stars": [],
-   "phonemes": "ðat kˈap wˈɜːks lˈaɪk ɐ nˈatʃəɹəl sˈʌnskɹiːn, ɐbsˈɔːbɪŋ and skˈatəɹɪŋ ˌʊltɹɐvˈaɪəlɪt lˈaɪt. ɪn skˈɪn sˈampəlz ɛkspˈəʊzd tuː jˌuːvˌiːbˈiː , sˈɛlz wɪð ɐ kˈap had lˈɛs dˌiːˌɛnˈeɪ dˈamɪdʒ.",
+   "phonemes": "ðat kˈap wˈɜːks lˈaɪk ɐ tˈaɪni pˈaɹəsˌɒl, ɐbsˈɔːbɪŋ and skˈatəɹɪŋ ˌʊltɹɐvˈaɪəlɪt lˈaɪt. ɪn skˈɪn sˈampəlz ɛkspˈəʊzd tuː jˌuːvˌiːbˈiː , sˈɛlz wɪð ɐ kˈap had lˈɛs dˌiːˌɛnˈeɪ dˈamɪdʒ.",
    "speed": 0.88,
    "file": "03.wav",
-   "dur": 10.808,
-   "sha256": "800d4c07079fd903e2aff534076d0803ff9ecf0e1a49029b73bbb81c9a2dee5a"
+   "dur": 10.665,
+   "sha256": "aafa30052351205191fa24e97d9ef5f3730b333c65209d3944ecfee5c9606067"
   },
   {
    "id": "vo04",

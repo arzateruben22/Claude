@@ -14,15 +14,15 @@ vo: After about fifteen minutes in water, the hairless skin on your hands and fe
 ## change {shot 3: cross-section, narrowed vessels, skin folding · labels: narrowed vessels · picture-only 0.6 s · energy: 0.55} (16.4–26.8 s)
 vo: When nerves tell the tiny blood vessels in your fingertips to narrow, the tissue below shrinks a little. {c5} Scientists think the skin above then folds into ridges. {c6}
 
-## why {shot 4: a nerve fibre carrying a signal toward vessels · labels: sympathetic nerve · picture-only 2.2 s · energy: 0.5} (26.8–43.3 s)
-vo: Doctors have used this to test nerves for over eighty years. {c7} When the nerves to a finger are damaged, the finger does not wrinkle. {c8} So the wrinkles are a sign of working nerves, not just soaking. {c9}
+## why {shot 4: a nerve fibre carrying a signal toward vessels · labels: sympathetic nerve · picture-only 2.2 s · energy: 0.5} (26.8–43.5 s)
+vo: Doctors have used this to test nerves for over eighty years. {c7} When the nerves to a finger stop working, the finger does not wrinkle. {c8} So the wrinkles are a sign of working nerves, not just soaking. {c9}
 
-## whoa {shot 5: a wrinkled fingertip on a wet pebble · labels: grip? · one study · a later study · picture-only 3.1 s · energy: 0.8} (43.3–56.2 s)
+## whoa {shot 5: a wrinkled fingertip on a wet pebble · labels: grip? · one study · a later study · picture-only 3.1 s · energy: 0.8} (43.5–56.4 s)
 vo: Why would the body do this? {-} One idea is grip. {c10} In one study, people handled wet objects faster with wrinkled fingers. {c11} A later study found no *difference*. {c12}
 
-## takeaway {shot 1: the two fingertips again · labels: none · picture-only 0.5 s · energy: 0.3} (56.2–63.4 s)
+## takeaway {shot 1: the two fingertips again · labels: none · picture-only 0.5 s · energy: 0.3} (56.4–63.6 s)
 vo: So wrinkled fingers are your nerves at work. {c13} Whether they help you grip is still *debated*. {c14,c15}
 
-## tease {end card held ≥ 2 s · energy: 0.35} (63.4–70.0 s)
+## tease {end card held ≥ 2 s · energy: 0.35} (63.6–70.2 s)
 vo: Next: how sweat really cools you. {-} Cooling happens when sweat *dries*. {c16}
 end card: "Next: how sweat really cools you" · "Skin Sense · Season 2" · footnote: "Narration: synthetic voice (AI)."

@@ -1,7 +1,7 @@
-# Scene table: Skin Sense No. S2·E2, Why fingers wrinkle in water (70.0 s)
+# Scene table: Skin Sense No. S2·E2, Why fingers wrinkle in water (70.1 s)
 
 Times are film seconds (voice `vo/lines.json`, word times `vo/words.json`, Parakeet). Each row is a visual change; the bracket is the time since the last one. The pictures are the owner's art (`art/ep0N-0M.webp`) where present, else marked procedural placeholders (`set/gen_art.py`); plates, charts, pills, the scan line, soft overlays and every caption are drawn in code. Footers on every frame: "Conceptual illustration · not to scale", "Education, not medical advice". No disease or risk line is shown over skin or a person.
-Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm, not the studio mixer or `qa.py`). Longest gap between changes: 11.8 s (6 gaps over 4 s).
+Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm, not the studio mixer or `qa.py`). Longest gap between changes: 12.0 s (6 gaps over 4 s).
 
 | time | narration | visual change (and on-screen text) | sound |
 |---|---|---|---|
@@ -16,11 +16,11 @@ Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm,
 | 21.6 (+1.8) | shrinks a little. | pill draws on: Vessels narrowed | voice |
 | 22.9 (+1.3) | Scientists think the skin above then folds into ridges. | camera: q3 art, close-up ×1.14 | voice |
 | 27.1 (+4.2) | Doctors have used this to test | camera: q4 art, close-up ×1.0; supporting line: Working nerves. | voice |
-| 29.0 (+2.0) | nerves for over eighty years. | pill draws on: Nerve signal | voice |
-| 31.8 (+2.8) | When the nerves to a finger are damaged, the finger does not wrinkle. So the wrinkles … | camera: q4 art, close-up ×1.1 | voice |
-| 43.6 (+11.8) | Why would the body do this? One idea is | camera: q5 art, close-up ×1.0; supporting line: Grip? Studies disagree.; badge: Two studies, mixed results | voice |
-| 46.0 (+2.4) | grip. In one study, people | pill draws on: Grip? | voice |
-| 47.9 (+1.9) | handled wet objects faster with wrinkled fingers. A later study found no difference. | camera: q5 art, close-up ×1.1 | voice |
-| 56.5 (+8.7) | So wrinkled fingers are your | camera: q1 art, close-up ×1.0; supporting line:  | voice |
-| 58.4 (+1.9) | nerves at work. Whether they help you grip is still debated. | camera: q1 art, close-up ×1.06 | voice |
-| 63.4 (+5.0) | Next: how sweat really cools you. Cooling happens when sweat dries. | end card: Next: how sweat really cools you · Skin Sense · Season 2 · Episode 2 · Narration: synthetic voice (AI) | voice |
+| 29.1 (+2.0) | nerves for over eighty years. | pill draws on: Nerve signal | voice |
+| 31.8 (+2.7) | When the nerves to a finger stop working, the finger does not wrinkle. So the wrinkles … | camera: q4 art, close-up ×1.1 | voice |
+| 43.8 (+12.0) | Why would the body do this? One idea is | camera: q5 art, close-up ×1.0; supporting line: Grip? Studies disagree.; badge: Two studies, mixed results | voice |
+| 46.1 (+2.4) | grip. In one study, people | pill draws on: Grip? | voice |
+| 48.0 (+1.9) | handled wet objects faster with wrinkled fingers. A later study found no difference. | camera: q5 art, close-up ×1.1 | voice |
+| 56.7 (+8.7) | So wrinkled fingers are your | camera: q1 art, close-up ×1.0; supporting line:  | voice |
+| 58.6 (+1.9) | nerves at work. Whether they help you grip is still debated. | camera: q1 art, close-up ×1.06 | voice |
+| 63.6 (+5.0) | Next: how sweat really cools you. Cooling happens when sweat dries. | end card: Next: how sweat really cools you · Skin Sense · Season 2 · Episode 2 · Narration: synthetic voice (AI) | voice |

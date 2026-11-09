@@ -76,165 +76,207 @@
   },
   {
    "id": "vo02",
-   "text": "Brown pigment called melanin sits inside your skin's cells. After ultraviolet light, it can move to sit over each cell's nucleus, like a small cap.",
-   "heard": "Brown pigment called melanin sits inside your skin's cells. After ultraviolet light, it can move to sit over each cell's nucleus, like a small cap.",
+   "text": "Brown melanin is made in special pigment cells. Their arms hand it to the skin cells around them. After ultraviolet light, it can gather over each cell's nucleus, like a small cap.",
+   "heard": "Brown melanin is made in special pigment cells. Their arms hand it to the skin cells around them. After ultraviolet light, it can gather over each cell's nucleus like a small cap.",
    "words": [
     {
      "w": "Brown",
-     "start": 0.04,
+     "start": 0.02,
      "end": 0.32,
      "heard": true
     },
     {
-     "w": "pigment",
-     "start": 0.535,
+     "w": "melanin",
+     "start": 0.32,
      "end": 0.88,
      "heard": true
     },
     {
-     "w": "called",
-     "start": 0.84,
+     "w": "is",
+     "start": 0.9,
      "end": 1.04,
      "heard": true
     },
     {
-     "w": "melanin",
-     "start": 1.035,
-     "end": 1.6,
+     "w": "made",
+     "start": 1.135,
+     "end": 1.2,
      "heard": true
     },
     {
-     "w": "sits",
-     "start": 1.785,
-     "end": 2.0,
+     "w": "in",
+     "start": 1.185,
+     "end": 1.36,
      "heard": true
     },
     {
-     "w": "inside",
-     "start": 2.095,
+     "w": "special",
+     "start": 1.47,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "pigment",
+     "start": 1.83,
      "end": 2.32,
      "heard": true
     },
     {
-     "w": "your",
-     "start": 2.31,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "skin's",
-     "start": 2.575,
-     "end": 2.96,
-     "heard": true
-    },
-    {
      "w": "cells.",
-     "start": 2.945,
-     "end": 3.84,
+     "start": 2.205,
+     "end": 3.12,
      "heard": true
     },
     {
-     "w": "After",
-     "start": 3.955,
-     "end": 4.16,
+     "w": "Their",
+     "start": 3.235,
+     "end": 3.36,
      "heard": true
     },
     {
-     "w": "ultraviolet",
-     "start": 4.145,
-     "end": 5.12,
+     "w": "arms",
+     "start": 3.435,
+     "end": 3.76,
      "heard": true
     },
     {
-     "w": "light,",
-     "start": 5.01,
-     "end": 5.68,
+     "w": "hand",
+     "start": 3.8,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "it",
-     "start": 5.815,
-     "end": 5.865,
-     "heard": true
-    },
-    {
-     "w": "can",
-     "start": 5.955,
-     "end": 6.08,
-     "heard": true
-    },
-    {
-     "w": "move",
-     "start": 5.985,
-     "end": 6.32,
+     "start": 4.03,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "to",
-     "start": 6.38,
+     "start": 4.19,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.295,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 4.54,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 4.85,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "around",
+     "start": 5.1,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "them.",
+     "start": 5.5,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "After",
+     "start": 6.255,
      "end": 6.48,
      "heard": true
     },
     {
-     "w": "sit",
-     "start": 6.57,
-     "end": 6.72,
+     "w": "ultraviolet",
+     "start": 6.44,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "light,",
+     "start": 7.33,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 8.055,
+     "end": 8.105,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 8.18,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "gather",
+     "start": 8.37,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "over",
-     "start": 6.655,
-     "end": 6.88,
+     "start": 8.545,
+     "end": 8.88,
      "heard": true
     },
     {
      "w": "each",
-     "start": 6.915,
-     "end": 7.12,
+     "start": 8.97,
+     "end": 9.12,
      "heard": true
     },
     {
      "w": "cell's",
-     "start": 7.085,
-     "end": 7.6,
+     "start": 9.135,
+     "end": 9.6,
      "heard": true
     },
     {
      "w": "nucleus,",
-     "start": 7.72,
-     "end": 8.24,
+     "start": 9.535,
+     "end": 10.16,
      "heard": true
     },
     {
      "w": "like",
-     "start": 8.32,
-     "end": 8.4,
+     "start": 10.335,
+     "end": 10.48,
      "heard": true
     },
     {
      "w": "a",
-     "start": 8.455,
-     "end": 8.56,
+     "start": 10.48,
+     "end": 10.64,
      "heard": true
     },
     {
      "w": "small",
-     "start": 8.63,
-     "end": 8.8,
+     "start": 10.7,
+     "end": 10.88,
      "heard": true
     },
     {
      "w": "cap.",
-     "start": 8.885,
-     "end": 9.28,
+     "start": 10.985,
+     "end": 11.36,
      "heard": true
     }
    ]
   },
   {
    "id": "vo03",
-   "text": "That cap works like a natural sunscreen, absorbing and scattering ultraviolet light. In skin samples exposed to UVB, cells with a cap had less DNA damage.",
-   "heard": "That cap works like a natural sunscreen, absorbing and scattering ultraviolet light. In skin samples exposed to UVB, cells with a cap had less DNA damage.",
+   "text": "That cap works like a tiny parasol, absorbing and scattering ultraviolet light. In skin samples exposed to UVB, cells with a cap had less DNA damage.",
+   "heard": "That cap works like a tiny parasol, absorbing and scattering ultraviolet light. In skin samples exposed to UVB, cells with a cap had less DNA damage.",
    "words": [
     {
      "w": "That",
@@ -244,152 +286,152 @@
     },
     {
      "w": "cap",
-     "start": 0.225,
+     "start": 0.23,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "works",
-     "start": 0.535,
+     "start": 0.75,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "like",
-     "start": 0.985,
+     "start": 0.99,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.015,
-     "end": 1.12,
+     "start": 1.11,
+     "end": 1.16,
      "heard": true
     },
     {
-     "w": "natural",
-     "start": 1.215,
-     "end": 1.52,
+     "w": "tiny",
+     "start": 1.195,
+     "end": 1.44,
      "heard": true
     },
     {
-     "w": "sunscreen,",
-     "start": 1.615,
-     "end": 2.48,
+     "w": "parasol,",
+     "start": 1.5,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "absorbing",
-     "start": 2.555,
-     "end": 3.12,
+     "start": 2.42,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "and",
-     "start": 3.005,
-     "end": 3.28,
+     "start": 3.04,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "scattering",
-     "start": 3.4,
-     "end": 3.76,
+     "start": 3.275,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "ultraviolet",
-     "start": 3.815,
-     "end": 4.72,
+     "start": 3.695,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "light.",
-     "start": 4.885,
-     "end": 5.44,
+     "start": 4.655,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "In",
-     "start": 5.58,
-     "end": 5.68,
+     "start": 5.455,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 5.61,
-     "end": 6.16,
+     "start": 5.485,
+     "end": 6.0,
      "heard": true
     },
     {
      "w": "samples",
-     "start": 6.21,
-     "end": 6.64,
+     "start": 6.09,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "exposed",
-     "start": 6.71,
-     "end": 7.12,
+     "start": 6.59,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "to",
-     "start": 7.205,
-     "end": 7.28,
+     "start": 7.08,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "UVB,",
-     "start": 7.245,
-     "end": 8.32,
+     "start": 7.125,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "cells",
-     "start": 8.38,
-     "end": 8.64,
+     "start": 8.205,
+     "end": 8.56,
      "heard": true
     },
     {
      "w": "with",
-     "start": 8.735,
-     "end": 8.8,
+     "start": 8.61,
+     "end": 8.66,
      "heard": true
     },
     {
      "w": "a",
-     "start": 8.765,
-     "end": 8.96,
+     "start": 8.64,
+     "end": 8.8,
      "heard": true
     },
     {
      "w": "cap",
-     "start": 8.97,
-     "end": 9.28,
+     "start": 8.825,
+     "end": 9.2,
      "heard": true
     },
     {
      "w": "had",
-     "start": 9.27,
-     "end": 9.52,
+     "start": 9.12,
+     "end": 9.36,
      "heard": true
     },
     {
      "w": "less",
-     "start": 9.46,
-     "end": 9.76,
+     "start": 9.315,
+     "end": 9.6,
      "heard": true
     },
     {
      "w": "DNA",
-     "start": 9.8,
-     "end": 10.24,
+     "start": 9.655,
+     "end": 10.08,
      "heard": true
     },
     {
      "w": "damage.",
-     "start": 10.28,
-     "end": 10.8,
+     "start": 10.13,
+     "end": 10.64,
      "heard": true
     }
    ]
