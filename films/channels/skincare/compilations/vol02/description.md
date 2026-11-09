@@ -1,6 +1,6 @@
 What your skin does
 
-Skin biology, ingredients and routines, with the evidence on the screen.
+How your skin works, with the evidence on the screen.
 
 Chapters
 0:00 Why goosebumps happen
@@ -37,5 +37,5 @@ Sources (every number in these episodes is checked against a source)
 06 Fingerprints form before you're born
 - Glover et al., Cell 2023 (PubMed 36764291): https://pubmed.ncbi.nlm.nih.gov/36764291/
 
-Narration is a synthetic voice (AI-generated). Music and sound design are original, made for Skin Sense. Type: Red Hat Text, Red Hat Mono, Newsreader (SIL Open Font License).
+Narration is a synthetic voice (AI-generated). Illustrations are AI-generated and animated in code. Music and sound design are original, made for Skin Sense. Type: Red Hat Text, Red Hat Mono, Newsreader (SIL Open Font License).
 TODO before posting: the channel handle and links, the expert sign-offs listed in each episode's review/HUMAN-REVIEW.md, and YouTube's altered/synthetic content setting.
