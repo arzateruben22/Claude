@@ -1,0 +1,16 @@
+{
+ "file": "films/channels/physics/compilations/s2/s2-16x9.mp4",
+ "w": 2560,
+ "h": 1440,
+ "fps": "30/1",
+ "dur": 447.867,
+ "video_s": 447.867,
+ "audio_s": 447.867,
+ "size_mb": 79.8,
+ "lufs": -14.2,
+ "true_peak_db": -1.8,
+ "lra": 4.4,
+ "chapters": 6,
+ "chapters_under_10s": 0,
+ "fails": []
+}
