@@ -39,7 +39,7 @@ import { BarPlayer } from './player';
 import { BarInput, BarAction } from './input';
 import { BarHud } from './hud';
 import { BarView, nextView } from './views';
-import { PRESET } from './quality';
+import { PRESET, LABEL } from './quality';
 import { Visibility, setHiddenCaster } from './visibility';
 import { laneTest, pathAt, pathLength } from './staff';
 import { BAR_NAME } from './brand';
@@ -469,7 +469,7 @@ async function main() {
   };
   const nearSeat = () => {
     let best: Seat | null = null, bd = 1.4;
-    for (const s of venue.seats) { if (player.seat === s) continue; const d = Math.min(Math.hypot(s.ax - player.x, s.az - player.z), Math.hypot(s.x - player.x, s.z - player.z) + 0.2); if (d < bd) { bd = d; best = s; } }
+    for (const s of venue.seats) { if (player.seat === s || life.crowd?.seatTaken(s.id)) continue; const d = Math.min(Math.hypot(s.ax - player.x, s.az - player.z), Math.hypot(s.x - player.x, s.z - player.z) + 0.2); if (d < bd) { bd = d; best = s; } }
     return best;
   };
   const nearCar = () => Math.hypot(lot.door.x - player.x, lot.door.z - player.z) < 1.8;
@@ -507,13 +507,11 @@ async function main() {
   const switchQuality = (qq: Quality) => {
     if (qq === quality) return;
     const rebuild = PRESET[qq].people !== PRESET[quality].people;
-    if (qq === 'ultra' && (rebuild || !lod0Ready)) {
-      // your avatar's close-up is built behind a still, labelled sheet that the player asked for, never mid-walk
-      preparingUltra = true; barHud.busy('Preparing Ultra…');
-      requestAnimationFrame(() => requestAnimationFrame(() => { applyQuality(qq, rebuild); buildLod0(); barHud.busy(null); preparingUltra = false; }));
-      return;
-    }
-    applyQuality(qq, rebuild);
+    // every switch behind a still, labelled sheet, painted first (S3a: the live count moves and bodies are rebuilt
+    // behind it); your avatar's close-up at Ultra too, never mid-walk
+    const ultraNow = qq === 'ultra' && (rebuild || !lod0Ready);
+    preparingUltra = true; barHud.busy(ultraNow ? 'Preparing Ultra…' : `Switching to ${LABEL[qq]}…`);
+    requestAnimationFrame(() => requestAnimationFrame(() => { applyQuality(qq, rebuild); if (qq === 'ultra') buildLod0(); barHud.busy(null); preparingUltra = false; }));
   };
   hud.onQuality = (qq) => { if (qq === 'ultra' && !ultraUnlocked) { hud.toast('Ultra is locked on this device.', 3); return; } switchQuality(qq); };
   hud.onClock = (c) => { live = c.live; if (!c.live) clock = { day: c.day, hour: c.hour }; applyClock(); };
@@ -527,6 +525,7 @@ async function main() {
     let seat: Seat | null = null, sd = 0.45;
     const o = ray.ray.origin, d = ray.ray.direction, v = new THREE.Vector3();
     for (const s of venue.seats) {
+      if (life.crowd?.seatTaken(s.id)) continue;
       v.set(s.x - o.x, s.y + 0.15 - o.y, s.z - o.z); const t = v.dot(d); if (t < 0.3 || t > 60) continue;
       const dist = v.addScaledVector(d, -t).length(); if (dist < sd * (1 + t * 0.02)) { sd = dist; seat = s; }
     }
@@ -641,7 +640,7 @@ async function main() {
   const updateDoors = (dt: number) => {
     let moved = false;
     for (let i = 0; i < venue.doors.length; i++) {
-      const d = venue.doors[i], c = doorAt[i], want = open && Math.hypot(player.x - c[0], player.z - c[1]) < 2.6 ? 1 : 0;
+      const d = venue.doors[i], c = doorAt[i], want = open && (Math.hypot(player.x - c[0], player.z - c[1]) < 2.6 || life.someoneNear(c[0], c[1], 2.2)) ? 1 : 0;
       if (d.open !== want) { d.open = reduced ? want : clamp(d.open + Math.sign(want - d.open) * dt * 2.2, 0, 1); moved = true; }
     }
     if (moved || view === 'overhead') venue.poseDoors(cutNow);
@@ -735,7 +734,9 @@ async function main() {
   // the clock as the life layer reads it, one object filled in place (it's read several times a frame)
   const lifeClock = { day: 0, hour: 0, live: false, open: false, night: 0, share: 0 };
   life.attach({ scene, camera, F, def, venue, mats, grid, set, player, hud, barHud, person: () => person, view: () => view, quality: () => quality, reduced: () => reduced,
-    clock: () => { lifeClock.day = clock.day; lifeClock.hour = clock.hour; lifeClock.live = live; lifeClock.open = open; lifeClock.night = night; lifeClock.share = share; return lifeClock; }, worldMeshes, shadowHooks: { before: vis.before, after: vis.after }, input, walkToCar: () => walkToCar(false), canvas });
+    clock: () => { lifeClock.day = clock.day; lifeClock.hour = clock.hour; lifeClock.live = live; lifeClock.open = open; lifeClock.night = night; lifeClock.share = share; return lifeClock; }, worldMeshes, shadowHooks: { before: vis.before, after: vis.after }, input, walkToCar: () => walkToCar(false), canvas,
+    // S3a: the crowd's own needs from the page
+    renderer, overheadTarget: () => overhead.target, visState: () => vis.state, avatarDrawn: () => (avLast.view === 'first' || avLast.hide || (life.gameCamOn && life.gameHidesYou) ? 0 : quality === 'ultra' && lod0Ready && view === 'third' ? 2 : view === 'overhead' || view === 'third' ? 1 : 0) });
   applyQuality(quality, false);
 
   // ------------------------------------------------------------------------------------------ measuring (the budgets)
@@ -818,7 +819,8 @@ async function main() {
       state: vis.state, view, quality,
       parked: { near: parked.near, count: parked.count, detailed: parkedDetailed, standins: parkedStandins },
       yourCar: vis.yours, streets: { near: sets[0], far: sets[1] }, trees,
-      casters: renderer.shadowMap.enabled ? vis.members([world, streets.near.group, streets.far.group, treeGroup, parked.group, mine.group, standin, ...(person ? [person.group] : [])]) : null,
+      casters: renderer.shadowMap.enabled ? vis.members([world, streets.near.group, streets.far.group, treeGroup, parked.group, mine.group, standin, ...(person ? [person.group] : []), ...life.peopleRoots(), life.items.group]) : null,
+      people: life.visPeople(),
       avatar: person ? { lod: person.stats().lod, caster: lod1 ? { name: lod1.name, hidden: !!lod1.userData.hiddenCaster, castShadow: lod1.castShadow, visible: drawn(lod1) } : null, lod0CastShadow: (() => { let c = false; const g0 = person!.group.children.find((g) => g.getObjectByName('hair-cap') || g.getObjectByName('lod0')); g0?.traverse((m) => { if ((m as THREE.Mesh).isMesh && m.castShadow) c = true; }); return c; })() } : null,
       poolSpots: poolSpots.map((l) => (l ? { castShadow: l.castShadow, updating: l.shadow.autoUpdate, drawn: l.shadow.map !== null } : null)),
       poolTris: venue.pool.map((p) => [p.table, p.light].reduce((a, m) => a + (m.geometry.index ? m.geometry.index.count : m.geometry.attributes.position.count) / 3, 0)),
@@ -872,7 +874,7 @@ async function main() {
       const pass = measurePass(), maps = measureMaps(pass), ao = measureAo();
       // the frame's own count again (the measuring renders above don't touch the last frame's figures)
       return {
-        npcs: 0, groups: 0, seated: 0, walkers: 0,
+        ...life.crowdStats(),
         pass, frame: { ...frameStats }, maps, ao,
         drawCalls: frameStats.calls, calls: frameStats.calls, triangles: frameStats.tris, simMs: +simMs.toFixed(3), frameMs: +frameMs.toFixed(1),
         quality, view, state: vis.state, frames, open, crowd: level, share: +share.toFixed(3),
@@ -947,7 +949,7 @@ async function main() {
         furniture: furniture(), lot: site.lot, stalls: def.parking.stalls.map((s) => ({ ...G(s.x, s.z), face: s.face, row: s.row, mine: s.mine })), fillBias: +site.fillBias.toFixed(4),
       };
     },
-    pose(name: string) { const f = POSES[name]; if (!f) throw new Error('poses: ' + Object.keys(POSES).join(', ')); hooks.setClock('Sat', 21); fixedCam = null; f(); placeCamera(0); vis.update(camera, view, quality, nearPoint(), true); cutNow = setOverheadCut(); updateAvatar(0, view === 'first'); return { pose: name, state: vis.state, view, camera: { ...G(camera.position.x, camera.position.z), y: +camera.position.y.toFixed(2) } }; },
+    pose(name: string) { const f = POSES[name]; if (!f) throw new Error('poses: ' + Object.keys(POSES).join(', ')); hooks.setClock('Sat', 21); fixedCam = null; f(); life.crowd.buildAll(); placeCamera(0); vis.update(camera, view, quality, nearPoint(), true); cutNow = setOverheadCut(); updateAvatar(0, view === 'first'); return { pose: name, state: vis.state, view, camera: { ...G(camera.position.x, camera.position.z), y: +camera.position.y.toFixed(2) } }; },
     vis() { return visReport(); },
     /** S1's check budget for the pass without people or items, at this preset and state */
     budget() { return { noPeople: NO_PEOPLE[quality][vis.state], budget: def.budgets[quality], alloc: ALLOC[quality] }; },
@@ -1110,7 +1112,10 @@ async function main() {
       for (const k of Object.values(kinds)) k.colours.sort();
       return { count: parked.count, quality: parked.quality, kinds };
     },
-    buildAll() { if (quality === 'ultra') buildLod0(); return true; },
+    buildAll() { if (quality === 'ultra') buildLod0(); return life.crowd.buildAll(); },
+    /** a change of graphics as the pause sheet makes it: the switch sheet painted first, the switch behind it; resolves
+     *  when it's done, with the sheet's text */
+    switchSheet(qq: Quality) { if (qq === 'ultra') { ultraUnlocked = true; barHud.setUltra(true); } const shown: string[] = []; const o = barHud.busy.bind(barHud); barHud.busy = (t: string | null) => { if (t) shown.push(t); o(t); }; switchQuality(qq); return new Promise((res) => { const w = () => { if (!preparingUltra) { barHud.busy = o; res({ quality, sheet: shown }); } else requestAnimationFrame(w); }; w(); }); },
   };
   Object.assign(hooks, life.hooks());
   Object.defineProperty(hooks, 'frames', { get: () => frames });
