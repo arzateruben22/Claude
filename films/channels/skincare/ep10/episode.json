@@ -746,7 +746,7 @@
    "t0": "start:vo05",
    "t1": "start:vo06+0.3",
    "top": 640,
-   "drift": 1.6,
+   "drift": 2.4,
    "title": "Melanin caps and<br>DNA damage",
    "ghost": 0,
    "rows": [
@@ -765,8 +765,28 @@
    ],
    "notes": [
     {
+     "text": "Illustrative only: not to scale.",
+     "t": "vo05:lower+1.0"
+    },
+    {
      "text": "More melanin in a cell: more protection.",
      "t": "vo05:effect"
+    }
+   ],
+   "bars": [
+    {
+     "label": "Cells without a cap",
+     "value": 1.0,
+     "max": 1.0,
+     "t": "vo05:lower",
+     "color": "#9AA6C0"
+    },
+    {
+     "label": "Cells with a cap",
+     "value": 0.55,
+     "max": 1.0,
+     "t": "vo05:lower+0.4",
+     "color": "#2F8F86"
     }
    ]
   },
@@ -1515,5 +1535,6 @@
    "t1": "end:vo06"
   }
  ],
- "eyebrow": "SKIN SENSE · SEASON 2 · EPISODE 4"
+ "eyebrow": "SKIN SENSE · SEASON 2 · EPISODE 4",
+ "riskWords": "damage|DNA"
 }
