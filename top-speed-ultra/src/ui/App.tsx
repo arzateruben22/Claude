@@ -147,9 +147,10 @@ export function App() {
   const exitRoadOf = settings.exit.split(' @ ')[0];
   const myExit = settings.exit ? game.current?.exitsFor(exitRoadOf).find((e) => e.key === settings.exit) ?? null : null;
   // the drive HUD's chips under the speed: the handling profile (where the slider sits), the assists the physics runs
-  // at every setting (ABS and traction control), and the hypercar's tune when it is off the leash
+  // at every setting (ABS and traction control), and while the hypercar is driven its tune (cars.ts tuneFor):
+  // Unleashed in Free Drive, the race tune in every scored mode
   const carNow = carById(game.current?.carId ?? 'rossini-gt');
-  const chips = [settings.handling < 0.35 ? 'Arcade' : settings.handling < 0.75 ? 'Sport' : 'Sim', 'ABS', 'TCS', ...(carNow.race && mode === 'free' ? ['Unleashed'] : [])];
+  const chips = [settings.handling < 0.35 ? 'Arcade' : settings.handling < 0.75 ? 'Sport' : 'Sim', 'ABS', 'TCS', ...(carNow.race ? [mode === 'free' ? 'Unleashed' : 'Race tune'] : [])];
   // the player card on the menu
   const prof = game.current?.profile.p, level = prof ? levelOf(prof.xp) : 1, xpLo = xpFor(level), xpHi = xpFor(level + 1);
   const av = AVATARS[prof?.avatar ?? 0];
