@@ -40,26 +40,88 @@ traffic code.
     - `continue`: end-to-start.
   - `next` is where the travel lanes carry on past the end, if anywhere. `prev` is the reverse.
   - Junction positions are control points, so they're exact on both paths.
-- **Spatial grid.** Cells are 50 m, with a path id and sample index every 8 m.
-  - `near(x, z, r)` gives one hit per path stretch, with its projection.
+- **Heights at load.** Two passes change the map's heights after the grid is built, before anything uses them. The
+  build runs them once (`scripts/levels.mjs`, the first step of `npm run build`, or `npm run levels`) and bakes the
+  result into `src/data/oc-levels.json`: each moved road's offsets from its map heights in millimetres, as gzipped
+  int16 steps (about 85 KB). `Network.load()` applies that file (about 20 ms) when its `version` is `LEVELS` and its
+  `sig` matches the data (the roads' sample counts, their ends' map heights, the junction count), and otherwise runs
+  the passes (`load(true)` always does). The passes took 0.3 to 0.5 s of a desktop boot here, cold. Bump `LEVELS`
+  whenever the passes change; `npm test` checks the baked heights against a fresh run of the passes (within 1 mm).
+  - `bridgeSags()`: a road crossing another (more than 25° off) within 4 m of it, but 5 m or more above it (or below
+    it) on both sides within 60 m, is a bridge whose middle the map brought down to the road under it. Its heights are
+    taken straight across, from the top of the climb on one side to the top on the other. Only ramp 1203 (a loop over
+    the I-5 by the CA-55, 117% grades, its surface 2 m over the I-5 North's left lanes) matches today. Only samples
+    within 60 m of an 8% grade are looked at, every other one (the narrowest pavement is 7 m across).
+  - `levelOverlaps()`: where a road's pavement lies along a better-ranked road's (within about 25°) with the two
+    within `GIVE_WAY`, it takes that road's heights, eased back to its own over 100 m or at 4% added grade, smoothed
+    over ±20 m. Mains go first in rank order, so a ramp follows a freeway's final heights. Then, at every junction node
+    in the data, the road keeps level with the roads there that settled before it (their offsets, the change eased in
+    from either side): without that, a ramp piece that followed a freeway while the piece it carries on from didn't
+    stood up to 2.8 m above or below it, a step across the lanes. `npm test` checks every junction node's roads are
+    within 0.35 m of each other (the map's own worst is 0.30 m).
+  - `limitProfile()` (`world/Profile.ts`) then keeps each moved road within limits measured over 10 m: no crest a car
+    leaves the ground on, and no dip that doubles its weight, below 90 m/s on a main or 50 m/s on a ramp, and no grade
+    over 8% (main) or 10% (ramp), unless the map's own heights within 20 m already go that far (then up to them, or 95%
+    of the map's speed). It works to a 3% margin inside those. Where the heights the levelling wants break a limit, it
+    takes the nearest profile that doesn't: weighted least squares (where the road follows another, the lanes of
+    pavement they share, at least 0.1, and 10,000 where the other's pavement reaches its travel lanes, so a step stays
+    out of them; 0.02 elsewhere; junctions held), a smoothness term on the change, and each broken
+    limit as a stiff penalty, solved by a generalised Newton method with a line search on a banded (±10 sample)
+    Cholesky, over a window 300 m past the trouble. So where following the other road and easing back to a junction's
+    level made a hump (the CA-55 North ending in the CA-91 East, ramps 970 and 819), a 12% drop (the CA-241 North into
+    the 91 West) or a sharp dip, the road follows it less or more gently. 42 roads need it today, at most 46 steps
+    each. The first version had 32 such spots; `npm test` checks every moved road against the map's heights (a fresh
+    `Path` from the same control points). Humps the limits allow remain where a road follows another that falls away:
+    the CA-55 North climbs up to 4.1 m over the map's heights to the CA-91 East's and falls 3.2 m with it (grades
+    within 5%, a crest a car leaves only at 93 m/s). Where the limits stop a road reaching another's height, its lanes
+    are left out over the other's pavement while it's up to 2.5 m off (the CA-241 North over the 91 West for 44 m, up to
+    2.5 m above it, as at HEAD; the first version levelled it there with a 12.4% grade and a dip).
+  - The passes' working arrays are allocated once at the longest road's length. `net.loadMs` has the time of the
+    last load: `baked`, or `sags` and `level`.
+- **Spatial grid.** Cells are 50 m, with a path id and sample index every 8 m, one entry each time a path enters a cell
+  (a ramp that curls back into a cell is listed there twice).
+  - `near(x, z, r)` gives one hit per path stretch, with its projection: every path whose centreline (ends included)
+    comes within r + its paved half-width. It searches r plus the widest pavement plus 5 m, so a small r is complete
+    (it used to search only r, and scenery "clear of the roads" stood on wide freeways' outer lanes). A projection that
+    doesn't land back on the point is stepped on, and if it still doesn't, kept at its true distance (an overstatement).
+  - `pavedAt(x, z, y0, y1, self, margin)` gives the road whose pavement is under a point with its surface between two
+    heights: posts, poles and columns check it before they're placed.
   - `surfaces(x, z, y)` gives the paved surfaces under a point at that height. Bridges don't count.
-  - `covered()` asks whether a point is on another road. Both use it.
-- **Barriers.** A path has a barrier along each paved edge wherever that edge point isn't on another road (within
-  2.5 m of height).
+  - `covered()` asks whether a point is on another road: over its pavement, from 2.5 m below its surface to `LEVEL`
+    (2.5 m) above it (`onTop()`). A road's surface, paint, barriers and crash cushion give way there. What hangs under
+    a deck goes further, over any road up to `GIVE_WAY` (4 m) below (`pavedAt()` in `Roads`): a deck hangs 1.5 m under
+    its surface, so where the map's heights have a ramp 2.5 to 4 m over a freeway's lanes (climbing away alongside it,
+    or settling onto it), it hung across those lanes 1 to 2.5 m up. A surface isn't left out above `LEVEL`: a sheet
+    with nothing under it isn't drawn from below, and leaving it out as well cut holes in 25 stretches of 10 to 80 m
+    under anyone driving them. Nor is a barrier: one version left them out up to 4 m too, which opened 926 m of edges
+    (58 m on the mains) with a 2.5 to 4 m drop and nothing at the edge.
+- **Barriers.** A path has a barrier along each paved edge wherever that edge point isn't on another road (from 2.5 m
+  below it to 2.5 m above it). Where a barrier's back is over another road less than 4.5 m below, `Roads` cuts it to
+  0.35 m (it hangs 1.4 m), so it stays over that road's roofs.
   - This one rule produces gaps where ramps split off, gore noses, merges, and Y junctions where one freeway ends in
     another. It's computed lazily per sample and cached, a window of ±32 samples at a time.
   - A ramp that starts at another road has no barrier for its first three samples. They're set outright, because the
     first look at a ramp can come from further along it, before those samples are worked out.
   - The physics collides with the actual barrier segments (`wallsNear`). Run ends (`capA`/`capB`) act as posts, so
     you can hit a gore nose.
-  - The physics only takes barrier segments within 2 m of the car's height. A ramp climbing past your road gets
-    barriers once it's 2.5 m clear of it, and those are over your roof.
-  - A path with no `next` gets a wall across its end (and a crash cushion), unless it ends on another road
-    (`hasEndWall`). The game turns you around or rejoins you before you reach it.
+  - The physics only takes barrier segments of roads within `LEVEL` (2.5 m) of the car's road (it was 3.5 m), the
+    same roads `surfaces()` lets you drive onto. A ramp climbing past your road gets barriers once it's 2.5 m clear of
+    it, and those are over your roof, not walls in your lanes.
+  - A path with no `next` gets a wall across its end (and a crash cushion) over the widest part of the end that isn't
+    on another road, if that's a lane wide (`endSpan`): a ramp cut off at the map's edge inside a freeway gets none,
+    and one ending with an edge on another road's shoulder gets one over the rest of its width. The game turns you
+    around or rejoins you before you reach it.
   - `wallsNear` copies each segment's end before checking its neighbours, because `hasWall` can reuse the shared
     `AT` buffer while it works out more of the road.
   - `npm test` scans every travel lane of the 20 carriageways for a barrier within 1 m of the lane's centre line, and
-    checks that the barriers come out the same on a first look as on a second.
+    checks that the barriers come out the same on a first look as on a second. It also checks that `near()` finds the
+    road under points across every road's pavement, and builds every third terrain tile along the 20 carriageways (both
+    levels of detail) to check that no plant or building stands on any pavement and no ground comes up through it, and
+    builds every third road chunk and street bridge near the 20 carriageways to check that nothing in them is inside a
+    carriageway's travel lanes (where they're drawn) from 5 cm to 2 m up, and no other road's surface from 0.3 m up.
+    And it checks the heights the load-time passes move: every junction level within 0.35 m, no crest, dip or grade
+    beyond `limitProfile()`'s limits that the map's own heights don't have, and the baked heights equal to a fresh run
+    of the passes.
 - **Routing.** `route(from, s, to)` is a small Dijkstra over (path, entry s) states. Its cost is distance plus 30 m
   for each ramp piece. It returns the list of junctions to take, or null if there's no way.
   - Turnarounds and street exits aren't edges, so from the far south of the 405 and the 5 (past about 42.6 km and
@@ -90,11 +152,27 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - **Roads (`world/Roads.ts`).** Chunks are 160 m per path, plus one per street overpass. They're built nearest and
   ahead first, with a budget per frame.
   - Each chunk has lane and shoulder strips. Quads covered by a better-ranked road (mains before ramps, then lower
-    id) are dropped.
+    id) are dropped: a quad covered at both sides of both ends goes, one covered nowhere stays, and one the other road's
+    edge runs through is cut into strips about 0.6 m wide that go or stay on their own (whole quads by their centre left
+    trenches of ground along junctions). The test is skipped where no better-ranked road is within 40 m.
   - Each chunk also has paint (lane dashes, edge lines, reflectors), barrier runs (Jersey, or a 4.6 m block sound
     wall in town), light standards, and guide-sign gantries 800 m and 260 m before each exit.
-  - Elevated sections (more than 2 m above ground) get a deck underside and columns. Columns are never placed on
-    another road.
+  - Elevated sections (more than 2 m above ground) get a deck underside and columns. The deck goes only under the
+    road's own surface: its soffit is cut by the same overlap test as the lanes (a ramp climbing along the top of the
+    I-5 North had its surface dropped but its soffit kept, a slab lying on the freeway's lanes), and a side goes where
+    the edge above it is dropped or where it would stand on another road. Soffit and sides also go over any road from
+    4 m under the surface up to 2.5 m under it, and nearer than that along the road's edges and past them (a freeway
+    ending in another passed under its edge). Columns are never placed on another road at any height under the deck.
+    Light standards and sign-bridge posts skip another road's pavement too (a post moves out past it and the truss
+    spans it); a sound wall becomes a Jersey barrier where a road passes over it lower than its top; a street
+    overpass's approaches are left out where they'd pass over another road with less than 5 m to spare.
+  - A sign bridge with no room where it should stand (a post on another road within 40 m, a road's deck through its
+    truss or panels, up to 1.5 m over their tops, or a street bridge's deck, `overpassAt()`) moves along the road in
+    10 m steps, up to 120 m either way and never within 60 m of the exit (`gantrySpot`). 28 of the 827 move, by 10 to
+    70 m; none is left out. (12 had been left out; 16 more stood with their panels through a street bridge's deck.)
+  - The tests against other roads are skipped where no other road is within 40 m of the chunk (`crowded`), and the
+    overlap test for surfaces keeps each row's nearby roads in flat lists shared by every chunk, so it allocates
+    nothing a row. `keepUnder()` in `Terrain` allocates nothing a point either.
 - **Road surfaces.** `Roads` picks the lane material per path: `pcc` (concrete slabs, `textures.ts` `pcc()`, tiled one
   lane wide by `SLAB` = 4.57 m along, so `vRow` uses `SLAB` for those paths) for mains that are not toll roads
   (`TOLL` set), `asphalt` otherwise. `setWet` darkens and glosses both. Lane lines are Botts' dots: four 0.11 m
@@ -103,10 +181,14 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
 - **Terrain (`world/Terrain.ts`).** Tiles are 480 m. LOD 0 has a 12 m grid within about 520 m; LOD 1 has a 40 m
   grid.
   - Heights are the 60 m elevation grid plus noise. Every road sample then pulls nearby vertices toward the road's
-    height, so embankments and cuts form.
+    height (level with the vertex, along the road's grade), so embankments and cuts form. Last, `keepUnder()` puts
+    every corner of every triangle that a road's pavement crosses 0.25 m under that pavement, from the roads alone so
+    two tiles agree on their shared corners: a 12 m (or 40 m) triangle with a corner up a cut's slope leaned up
+    through the lanes.
   - Bridges cap the ground below the deck instead of pulling it up. Vertex colours show dry grass, chaparral on
     slopes, irrigated green in town, and sand at sea level.
-  - Scenery sits on a jittered grid and is always clear of roads. On the flats it's stucco houses with tile roofs
+  - Scenery sits on a jittered grid and is always clear of roads: shrubs and street trees by their own footprint
+    (`footprint()`), houses by 16 m, offices by 30 m, all through `near()`. On the flats it's stucco houses with tile roofs
     and office blocks; elsewhere, palms, trees and shrubs.
   - Palms (`road/props.ts` `palmTrunk()`, `palmCrown(detail)`; `textures.ts` `bark()`, `frond()`) are one
     InstancedMesh per part per tile. The crown is frond cards folded along the midrib and cut out by the frond
