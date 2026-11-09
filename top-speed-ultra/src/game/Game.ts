@@ -37,6 +37,9 @@ import type { TrafficCar } from './traffic/Traffic';
 import { equippedPaint } from '../store/locker';
 import { onStoreChange } from '../store/bus';
 import { syncGarage } from '../store/entitlements';
+import { VENUES, Venue, VenueExit, VenueRamp, venueByName, venueRamps, toStreet, venueQuality, venueClock } from './venues';
+import { mountVenue, fade } from './onfoot';
+import type { Mounted } from '../onfoot/embed';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free' | 'cinematic';
 const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free', 'cinematic'];
@@ -62,6 +65,8 @@ const OWNER_CAR = 'tsu.ownerCar';  // owner mode's car (localStorage), never par
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
 export const CORNER_PX = [112, 150, 196];
 const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const COARSE = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+const ARRIVE_M = 80;               // a venue's ramp: how far before the street the fade parks you (the plans' 80 m)
 const NO_STANDINGS: Standing[] = [];
 // the seat view on a portrait screen: its horizontal field of view (degrees) and where the horizon sits (from the top)
 const SEAT_HFOV_P = 50, SEAT_HORIZON_P = 0.37, DEG = Math.PI / 180;
@@ -92,6 +97,11 @@ export interface Hud {
   // following the route (owner, 2026-11-01): Auto-drive offered (a route in Free Drive) and on; and the lane hint
   // before a hand-off: the current road's lanes left to right, '1' for each one the route leaves from ('' with none)
   autoOffer: boolean; autoOn: boolean; lanes: string;
+  // the venues (Phase 3a): on one of a venue's exit ramps, its name for the prompt (tap to park there); parked at a
+  // venue, its name (Get out replaces the pedals); '' otherwise
+  venuePrompt: string; parked: string;
+  // parked: what happened, plainly ("Drove Orangewood Ave to Lot 57 · street driving isn't built yet"), kept on screen
+  parkedNote: string;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
@@ -124,6 +134,8 @@ export interface GameEvents {
   context: (lost: boolean) => void;
   hudToggle: (show: boolean) => void;
   corner: (mode: Settings['corner']) => void;
+  /** on foot at a venue (the game's UI hides; the venue's page is up) or back in the car */
+  foot?: (on: boolean) => void;
 }
 
 export class Game {
@@ -361,6 +373,7 @@ export class Game {
   }
 
   async start(mode: Mode, startLabel = this.settings.start, courseId = this.settings.course) {
+    this.leaveVenue();
     this.endRace();
     this.applyCarChoice(mode);
     if (mode === 'race') return this.startRace(COURSES.find((c) => c.id === courseId) ?? COURSES[0]);
@@ -394,7 +407,7 @@ export class Game {
     this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
   }
 
-  quitToMenu() { this.errand = null; this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
+  quitToMenu() { this.leaveVenue(); this.errand = null; this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
   cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
   // tune a station directly (the radio card), -1 for off
   tuneRadio(i: number) { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.radio.tune(i); }
@@ -629,15 +642,35 @@ export class Game {
   // navigation: head for a freeway (by label), or clear it
   navigateTo(label: string | null) {
     if (!label) { this.setRoute(null); return true; }
+    if (this.venueState) return false;                          // parked or on foot: you're there
+    // a venue (Lot 57, Stoppage Time): the route ends on its default exit ramp (another of its exits if that one can't
+    // be reached from here), and Auto-drive and the guidance carry on down the ramp to where the fade parks you
+    const v = venueByName(label);
+    if (v) {
+      for (const exit of v.exits) {
+        const target = this.net.paths[exit.ramps[0]];
+        if (!target) continue;
+        const r = target === this.path || this.vramps().get(this.path)?.exit === exit ? [] : this.net.route(this.path, Math.max(0, this.phys.s), target);
+        if (!r) continue;
+        this.route = r; this.routeTarget = r.length ? target : this.path; this.routeVenue = { venue: v, exit }; this.navNow();
+        if (!r.length) this.ev.toast(`${v.name} is down this ramp`, 'info');
+        return true;
+      }
+      this.ev.toast(`No way to ${label} from here`, 'bad'); return false;
+    }
     const target = this.net.mains.find((m) => m.label === label);
     if (!target) return false;
     if (target === this.path) { this.setRoute(null); this.ev.toast(`You're on ${label}`, 'info'); return true; }
     const r = this.net.route(this.path, Math.max(0, this.phys.s), target);
     if (!r) { this.ev.toast(`No way to ${label} from here`, 'bad'); return false; }
-    this.route = r; this.routeTarget = target; this.navNow();
+    this.route = r; this.routeTarget = target; this.routeVenue = null; this.navNow();
     return true;
   }
-  private setRoute(target: Path | null) { this.route = []; this.routeTarget = target; if (!target) this.autoDrive = false; this.navNow(); }
+  private setRoute(target: Path | null) { this.route = []; this.routeTarget = target; if (!target) { this.autoDrive = false; this.routeVenue = null; } this.navNow(); }
+  // a route to a venue: the venue and the exit it takes (null for a freeway)
+  routeVenue: { venue: Venue; exit: VenueExit } | null = null;
+  /** what the route is to: a venue's name or a freeway's label */
+  get routeName() { return this.routeVenue?.venue.name ?? this.routeTarget?.label ?? ''; }
   // a route set or cleared, or Auto-drive switched: the HUD (the guidance, the AUTO tag, the Auto-drive button) and
   // the corner map hear it on the next frame, not up to one 0.1 s tick of each later
   private navNow() { this.hudT = 0; this.mapT = 0; }
@@ -658,12 +691,12 @@ export class Game {
     if (on) {
       // a hand-off already behind the car (or no plan from the last road): plan again from here before driving it.
       // Planned before switching on, so no plan from here says so once ("No way to X from here"), not twice
-      if ((!this.route.length || this.missedHandOff()) && !this.replan()) { this.ev.toast(`No way to ${this.routeTarget!.label} from here`, 'bad'); return false; }
+      if ((!this.route.length || this.missedHandOff()) && !this.replan()) { this.ev.toast(`No way to ${this.routeName} from here`, 'bad'); return false; }
       this.autoDrive = true;
       // from the lane you're in, so it doesn't swerve to its own
       const p = this.path; this.apLane = p.laneOf(clamp(this.phys.d, p.edgeL, p.edgeR));
       this.autoCruise = Math.min(AUTO_CRUISE, this.carTop() * 0.85);   // the car's tune as it is now (never above its limit)
-      this.ev.toast(`Auto-drive to ${this.routeTarget!.label}. Steer or brake to take over`, 'info');
+      this.ev.toast(`Auto-drive to ${this.routeName}. Steer or brake to take over`, 'info');
     } else { this.autoDrive = false; this.ev.toast(why || 'Auto-drive off. You have control', 'info'); }
     return true;
   }
@@ -684,6 +717,7 @@ export class Game {
   // plan again from where the car is (Rerouting); with no way from here keep the destination, as followRoute does,
   // and hand Auto-drive back
   private replan() {
+    if (this.routeVenue && this.path === this.routeTarget) { this.route = []; return true; }   // on the venue's ramp: drive on down it
     const r = this.net.route(this.path, Math.max(0, this.phys.s), this.routeTarget!);
     if (r && r.length) { this.route = r; if (!this.attract) this.ev.toast('Rerouting', 'info'); return true; }
     this.route = [];
@@ -785,7 +819,7 @@ export class Game {
   private onStageResize = () => {
     if (this.resize() && this.raf && !this.ctxLost) this.draw(performance.now(), 0);
   };
-  private onVisibility = () => { if (document.hidden && !this.attract) this.setPaused(true); };
+  private onVisibility = () => { if (document.hidden && !this.attract && !this.foot) this.setPaused(true); };
 
   // ----------------------------------------------------------------------------------------- input actions
   private actions() {
@@ -885,7 +919,8 @@ export class Game {
       this.route = r ?? [];
       if (r && !this.attract) this.ev.toast('Rerouting', 'info');
     }
-    if (this.routeTarget === path) {
+    if (this.routeTarget === path && this.routeVenue) this.route = [];   // a venue's ramp: on down it to the street
+    else if (this.routeTarget === path) {
       this.route = []; this.routeTarget = null;
       // Auto-drive hands back on arrival, in the same toast
       if (!this.attract) this.ev.toast(`You made it: ${path.label}` + (this.autoDrive ? '. Auto-drive off: you have control' : ''), 'good');
@@ -1110,6 +1145,7 @@ export class Game {
   private simulate(dt: number) {
     const p = this.phys;
     this.steps++;
+    if (this.venueState) { this.car.snapshot(p); return; }        // parked at a venue (or on foot): the car stays put
     if (this.countdown > 0) {
       const before = Math.ceil(this.countdown);
       this.countdown -= dt;
@@ -1125,6 +1161,8 @@ export class Game {
     p.grip = this.env.grip * this.gripBoost * this.carGrip;
     p.step(dt, this.over ? { ...c, throttle: 0, brake: 0.3 } : c, this.path, this.net);
     if (!p.airborne) this.trackPath();                            // a hop always lands on the road it left
+    // a venue's exit ramp, ARRIVE_M before it meets the street: the fade parks you there (street driving isn't built)
+    if (this.venueAllowed) { const vr = this.vramps().get(this.path); if (vr && toStreet(this.vramps(), vr, p.s) <= ARRIVE_M) { this.arriveVenue(vr); return; } }
     // the end of the road: turned around or put back on, and the route planned again from there
     if (!this.path.next && p.s > this.path.len - 30 && p.vx > 0.5) { this.rejoin(); this.route = []; this.followRoute(this.path, this.phys.s); }
     // a missed hand-off on this road: plan again from here (four times a second)
@@ -1682,7 +1720,8 @@ export class Game {
     const turn: Turn = fork ? (this.exitSide(this.path, j) === 'R' ? 'right' : 'left') : 'ahead';
     const side = turn === 'right' ? 'Keep right' : turn === 'left' ? 'Keep left' : 'Continue';
     const main = this.route.find((r) => r.to.main);
-    const to = main ? main.to.label : this.net.leadsTo(j.to) || 'the ramp';
+    const rv = this.routeVenue;
+    const to = rv && j.to === this.routeTarget ? `${rv.exit.sign} exit to ${rv.venue.name}` : main ? main.to.label : this.net.leadsTo(j.to) || 'the ramp';
     return [`${side} for ${to}`, Math.max(0, j.s - this.phys.s), turn, side, to];
   }
   // which side a hand-off leaves from: the network's own data for that ramp (the side its guide sign stands for, from
@@ -1734,10 +1773,15 @@ export class Game {
     const [next, nextDist, turn, navAct, navTo] = this.nextManoeuvre();
     // the navigation card (U2): the next exit along this road, the destination, how far it is along the route and how
     // long that takes at your pace
-    const routed = this.route.length > 0 && !!this.routeTarget;
+    const onVenueRamp = !!this.routeVenue && this.path === this.routeTarget;
+    const routed = (this.route.length > 0 || onVenueRamp) && !!this.routeTarget;
     const exit = routed ? this.exitsAlong(this.path).find((e) => e.s > p.s) : undefined;
     let destDist = 0;
-    if (routed) { let s = p.s; for (const j of this.route) { destDist += Math.max(0, j.s - s); s = j.toS; } }
+    if (routed) {
+      let s = p.s; for (const j of this.route) { destDist += Math.max(0, j.s - s); s = j.toS; }
+      const vr = this.routeVenue ? this.vramps().get(this.routeTarget!) : undefined;   // and down the venue's ramp
+      if (vr) destDist += Math.max(0, toStreet(this.vramps(), vr, s) - ARRIVE_M);
+    }
     // world x runs east and z south (tools/oc-network/common.py), and the car points along (sin psi, cos psi): its
     // bearing from north is pi - psi
     const heading = ((((Math.PI - p.psi) * 180) / Math.PI) % 360 + 360) % 360;
@@ -1754,11 +1798,14 @@ export class Game {
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
       heading, tempF: this.env.tempF(), turn,
       navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
-      dest: routed ? this.routeTarget!.label : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
+      dest: routed ? this.routeName : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
       traffic: DENSITY[this.settings.density].label,
       view: this.input.c.lookBack && !this.attract ? 'back' : this.view3(), liveCluster: this.car.liveCluster,
       brake: this.input.c.brake, clock: this.env.clockText(), tempNote: 'simulated',
       autoOffer: this.autoDriveOffered, autoOn: this.autoDrive, lanes: this.laneHint(turn, nextDist),
+      venuePrompt: !this.venueState && this.venueAllowed ? this.vramps().get(this.path)?.venue.name ?? '' : '',
+      parked: this.venueState?.phase === 'parked' ? this.venueState.vr.venue.name : '',
+      parkedNote: this.venueState?.phase === 'parked' ? `Drove ${this.venueState.vr.exit.street} to ${this.venueState.vr.venue.name} · street driving isn't built yet` : '',
       errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
     });
   }
@@ -1782,6 +1829,126 @@ export class Game {
       time: this.settings.time, weather: this.settings.weather, ultra: this.ultraOn(),
     };
   }
+  // ----------------------------------------------------------------------------------------- the venues (Phase 3a)
+  // Lot 57 and Stoppage Time (venues.ts). On one of a venue's exit ramps in Free Drive, ARRIVE_M before the street (or
+  // on a tap of the venue's prompt), the screen fades and the car is parked at the venue: the game stops driving and
+  // says plainly that street driving isn't built yet. Get out mounts the venue's own page over the paused game (its
+  // loop, sound and renderer stop: no frames drawn, no hidden GPU work); its Drive (or Drive on, from the car) fades
+  // back to the cockpit on the nearest on-ramp to the freeway, the venue disposed completely.
+  private vr: Map<Path, VenueRamp> | null = null;
+  private vramps() { return (this.vr ??= venueRamps(this.net)); }
+  private get venueAllowed() { return !this.attract && !this.over && this.mode === 'free' && !this.race; }
+  venueState: { vr: VenueRamp; phase: 'parked' | 'leaving' | 'foot' | 'returning' } | null = null;
+  private foot: Mounted | null = null;
+  private footHost: HTMLDivElement | null = null;
+  /** where you are: null driving; else the venue, the ramp you came by and parked, getting out, on foot or driving off */
+  venue() { const v = this.venueState; return v ? { id: v.vr.venue.id, name: v.vr.venue.name, phase: v.phase, ramp: v.vr.path.id, street: v.vr.exit.street, from: v.vr.exit.from } : null; }
+  get venues() { return VENUES.map((v) => v.name); }
+  /** park at the venue whose ramp you're on (the trigger, or a tap on the prompt) */
+  arriveVenue(vr = this.vramps().get(this.path)) {
+    if (!vr || this.venueState || !this.venueAllowed || this.paused) return false;
+    const auto = this.autoDrive;
+    this.venueState = { vr, phase: 'parked' };
+    this.route = []; this.routeTarget = null; this.routeVenue = null; this.autoDrive = false;
+    this.input.clear();
+    this.placeCar(this.path, clamp(this.phys.s, 2, this.path.len - 2), 0, 0);
+    this.navNow();
+    // (Auto-drive hands back on arrival as at any destination, in the same toast)
+    const text = `Drove ${vr.exit.street} to ${vr.venue.name} · street driving isn't built yet` + (auto ? '. Auto-drive off: you have control' : '');
+    this.lastVenueToast = text;
+    void fade(true).then(() => new Promise((r) => setTimeout(r, 240))).then(() => { this.ev.toast(text, 'good'); return fade(false, 420); });
+    return true;
+  }
+  lastVenueToast = '';
+  // the car's paint as it is drawn (a store paint if one is on), for your car in the venue's lot
+  private paintNow() { const c = carById(this.driving); return equippedPaint(c.id)?.hex ?? paintFor(c, this.settings.paints); }
+  // the game stops for the walk (its loop, its sound, its input) and starts again
+  private hold(on: boolean) {
+    if (on) { cancelAnimationFrame(this.raf); this.raf = 0; this.audio.suspend(); this.input.detach(); this.input.clear(); this.input.takeActions(); return; }
+    this.input.attach(); this.input.clear(); this.input.takeActions();
+    this.audio.start(); this.audio.resume();
+    this.last = performance.now(); this.acc = 0;
+    if (!this.raf) this.raf = requestAnimationFrame(this.frame);
+  }
+  /** Get out: fade, the game stops, and the venue's page loads over it; resolves true once you're standing there */
+  async getOut(): Promise<boolean> {
+    const vs = this.venueState;
+    if (!vs || vs.phase !== 'parked' || this.paused) return false;
+    vs.phase = 'leaving'; this.navNow();
+    this.audio.thump(3);                                          // the door
+    await fade(true);
+    this.hold(true);
+    const host = document.createElement('div'); host.id = 'onfoot-host'; document.body.appendChild(host); this.footHost = host;
+    const app = this.host.parentElement; if (app) app.style.display = 'none';
+    this.ev.foot?.(true);
+    try {
+      this.foot = await mountVenue(vs.vr.venue.id, host, {
+        car: this.driving, paint: this.paintNow(), quality: venueQuality(this.settings.quality, COARSE), clock: venueClock(this.settings.time),
+        reducedMotion: REDUCED_MOTION, onDrive: () => { void this.drive(); },
+      });
+      void fade(false, 300);                                      // the venue's own loading screen shows its progress
+      await this.foot.ready;
+      if (this.venueState === vs) vs.phase = 'foot';
+      return true;
+    } catch (e) {
+      this.leaveFoot(); this.hold(false);
+      if (this.venueState === vs) vs.phase = 'parked';
+      this.navNow();
+      this.ev.toast(`Couldn't open ${vs.vr.venue.name}: ${String((e as Error)?.message ?? e).slice(0, 120)}`, 'bad');
+      await fade(false);
+      return false;
+    }
+  }
+  // the venue's page off (disposed: its renderer, people, listeners and hooks), the game's UI back
+  private leaveFoot() {
+    const f = this.foot; this.foot = null;
+    try { f?.dispose(); } catch (e) { console.warn('venue dispose', e); }
+    this.footHost?.remove(); this.footHost = null;
+    const app = this.host.parentElement; if (app) app.style.display = '';
+    configureTextures(QUALITY[this.settings.quality].texture, this.renderer.capabilities.getMaxAnisotropy());
+    this.ev.foot?.(false);
+    this.resize(true);
+  }
+  // a quit or a new drive while parked or on foot: no fade, nothing to drive back to
+  private leaveVenue() { if (!this.venueState) return; const foot = !!this.foot || this.venueState.phase === 'foot'; this.venueState = null; if (foot) { this.leaveFoot(); this.hold(false); } }
+  /** the on-ramp nearest where the exit met the street, preferring one back onto the freeway you left by */
+  private onRampNear(exit: VenueExit): Path | null {
+    let best: Path | null = null, bs = Infinity;
+    for (const q of this.net.paths) {
+      if (q.main || q.prev || q.inc.length) continue;
+      const d = Math.hypot(q.xs[0] - exit.x, q.zs[0] - exit.z);
+      if (d > 1500) continue;
+      const lead = this.net.leadsTo(q);
+      if (!lead) continue;
+      const sc = d + (lead === exit.from ? 0 : 350);
+      if (sc < bs) { bs = sc; best = q; }
+    }
+    return best;
+  }
+  /** Drive: from the venue's Drive (or the car's Drive on): fade, the cockpit, the engine, the nearest on-ramp */
+  async drive(): Promise<boolean> {
+    const vs = this.venueState;
+    if (!vs || (vs.phase !== 'foot' && vs.phase !== 'parked')) return false;
+    const fromFoot = vs.phase === 'foot';
+    vs.phase = 'returning'; this.navNow();
+    await fade(true);
+    if (fromFoot) this.leaveFoot();
+    const ramp = this.onRampNear(vs.vr.exit);
+    if (ramp) this.placeCar(ramp, 4, 0, 0);
+    else { const m = this.lastMain ?? this.net.mains[0], pr = m.project(vs.vr.exit.x, vs.vr.exit.z, 0); this.placeCar(m, clamp(pr.s, 5, m.len - 5), 1, 0); }
+    this.venueState = null;
+    this.cam = 'cockpit'; this.camBlend = 1; this.input.freeLook = false;
+    const p = this.phys;
+    for (let i = 0; i < 300 && this.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + this.terrain.update(p.x, p.z, 3) > 0; i++) { /* build what's in view */ }
+    this.traffic.fill(this.view());
+    if (fromFoot) this.hold(false);
+    this.audio.start();
+    this.navNow();
+    this.ev.toast(`${ramp ? `On the ramp to ${this.net.leadsTo(ramp)}` : `Back on ${this.path.label}`} · street driving isn't built yet`, 'info');
+    await fade(false, 420);
+    return true;
+  }
+
   // testing aids: run the simulation ahead with fixed controls (or the autopilot), without waiting for frames
   fastForward(seconds: number, c: Partial<Controls> = {}, cruise = 0) {
     Object.assign(this.input.c, c);
@@ -1800,6 +1967,7 @@ export class Game {
   }
 
   dispose() {
+    this.leaveVenue();
     cancelAnimationFrame(this.raf);
     this.offStore();
     removeEventListener('resize', this.onResize);
