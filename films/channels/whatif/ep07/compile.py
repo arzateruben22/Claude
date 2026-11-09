@@ -137,7 +137,7 @@ def chase_keys(t0, t1, path, az_fn=lambda t: 0.0, step=1.0 / 30):
     return out
 def dive(t0, t1, P_to, az=0, start=None):                            # wide → mid → chase, in log steps (the same trick as the pull-back)
     mid = pose(P_to, 0.86, 2.4e8, 0.86)
-    return [{"t": t0, **(start or SPACE)}, {"t": round(t0 + (t1 - t0) * 0.5, 4), **mid, "ease": "sine"}, {"t": t1, **chase(P_to, az), "ease": "inout2"}]
+    return [{"t": t0, **(start or SPACE)}, {"t": round(t0 + (t1 - t0) * 0.5, 4), **mid, "ease": "inout2"}, {"t": t1, **chase(P_to, az), "ease": "inout2"}]
 def zoom_out(t0, t1, P_from, end=None):                  # chase → mid (the Moon near the top) → wide
     mid = pose(P_from + 2.0e6, 0.86, 2.4e8, 0.86)
     return [{"t": t0, **chase(P_from)}, {"t": round(t0 + (t1 - t0) * 0.5, 4), **mid, "ease": "linear"}, {"t": t1, **(end or SPACE), "ease": "inout2"}]
@@ -161,7 +161,7 @@ CAM = {
                + [{"t": round(t_zo0, 4), **chase(LINE_TOP)}] + zoom_out(t_zo0, t_zo1, LINE_TOP, SPACE3)[1:],
     "chase-b": dive(t_zo1, t_b1, 0.0, 0, SPACE3)[:-1] + [{"t": t_b1, **chase(0.0), "ease": "inout2"}] + chase_keys(t_b1 + 1.0 / 30, t_26, fB, swing(A("vo04:you", -0.3) + 2.0, A("vo04:you", -0.3) + 6.5, 10.0))
                + [{"t": round(t_zo2, 4), **chase(LINE_TOP)}] + zoom_out(t_zo2, t_zo3, LINE_TOP, SPACE2)[1:],
-    "space": [{"t": t_zo3, **SPACE2}, {"t": t_slower, **SPACE2, "ease": "sine"}],
+    "space": [{"t": t_zo3, **SPACE2}, {"t": round((t_zo3 + t_slower) / 2, 4), **pose(LINE_TOP, 0.92, 1.55e9, 0.92, el=3), "ease": "sine"}, {"t": t_slower, **SPACE2, "ease": "sine"}],   # a slow lean in toward the arrived walkers and back out
     "work-a": [{"t": t_slower, **SPACE2}, {"t": round(t_slower + 0.8, 4), **pose(LINE_TOP, 0.86, 2.4e8, 0.86), "ease": "sine"}, {"t": round(t_slower + 1.7, 4), **NEAR, "ease": "inout2"}, {"t": t_pb, **NEAR, "ease": "sine"}],
     "work-b": [{"t": t_pb, **NEAR}, {"t": round(t_pb + 0.8, 4), **pose(LINE_TOP, 0.86, 2.4e8, 0.86), "ease": "linear"}, {"t": round(t_pb + 1.7, 4), **SPACE3, "ease": "inout2"}, {"t": t_gf, **SPACE3, "ease": "sine"}],
     "work-c": [{"t": t_gf, **SPACE3}, {"t": round(t_gf + 0.5, 4), **pose(LINE_TOP * fS(t_gf + 0.5) + 2.0e7, 0.80, 4.5e8, 0.60, x=0.05 * 4.5e8), "ease": "sine"}, {"t": round(t_gf + 1.0, 4), **follow(t_gf + 1.0), "ease": "inout2"}] + [{"t": round(t_gf + 1.0 + 0.15 * i, 4), **follow(t_gf + 1.0 + 0.15 * i), "ease": "linear"} for i in range(1, int((t_140 + 0.2 - t_gf - 1.0) / 0.15) + 1)]
@@ -242,7 +242,7 @@ for b in BADGES:
         b["t1"] = round(b["t1"] - 0.3, 4)
 COUNTERS = [
     {"id": "c-years-a", "label": "years of walking", "t0": t_run0 - 0.2, "t1": t_zo1 + 0.3, "at": [0.66, 0.33], "keys": COUNT_A, "end": YN},
-    {"id": "c-years", "label": "years of walking", "t0": t_b1 - 0.1, "t1": t_work0 - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
+    {"id": "c-years", "label": "years at 8 h a day", "t0": t_b1 - 0.1, "t1": t_work0 - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
 ]
 
 TITLE = {"series": "Possibility Lab · Season 2 · Episode 1", "title": "Walking to the *Moon*", "t0": 0.3, "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
@@ -280,7 +280,7 @@ ev += [
     {"t": t_apollo[0], "kind": "swell", "tag": "apollo", "t1": t_apollo[1]},
     {"t": round(f.duration - 4.0, 3), "kind": "swell", "tag": "loop", "t1": round(f.duration - 0.35, 3)},          # a riser into the loop: the last seconds are as full as the first
 ]
-sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working",
+sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working", "tail_s": 0.05,
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
          "events": sorted(ev, key=lambda e: e["t"]),
          "voice": [{"id": v["id"], "t": v["t"], "file": v["file"]} for v in film["voice"]]}

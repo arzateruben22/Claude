@@ -104,9 +104,10 @@ const propTable = prop([bx(1.5, 0.12, 0.95, MC, 0, 0.95, 0), ...[[-0.62, -0.38],
 const propShoe = prop([bx(1.2, 0.14, 0.46, MC2, 0, 0.07, 0), el(0.5, 0.3, 0.26, MC, -0.25, 0.3, 0), el(0.38, 0.2, 0.25, MC, 0.35, 0.2, 0), bx(0.5, 0.04, 0.05, MM, 0.0, 0.5, 0.0)]);
 const tentG = new THREE.ConeGeometry(1.05, 1.3, 4); tentG.rotateY(Math.PI / 4); tentG.translate(0, 0.65, 0);
 const propTent = prop([new THREE.Mesh(tentG, MC), bx(0.36, 0.62, 0.05, MC2, 0, 0.3, 0.62), bx(2.0, 0.05, 1.3, MC2, 0, 0.02, 0)]);
-const capsule = (() => { const g = new THREE.Group(); const body = cy(0.3, 0.95, MC, 0, 0.5, 0), nose = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.55, 20), MM), ring = cy(0.31, 0.08, MC2, 0, 0.1, 0);
-  nose.position.set(0, 1.27, 0); const win = el(0.1, 0.1, 0.06, MB, 0, 0.75, 0.28); const fl = bx(0.1, 0.4, 0.5, MC2, 0.34, 0.0, 0), fr = bx(0.1, 0.4, 0.5, MC2, -0.34, 0.0, 0);
-  g.add(body, nose, ring, win, fl, fr); g.visible = false; g.userData.noProbe = true; scene.add(g); return g; })();
+const capsule = (() => { const g = new THREE.Group();   // an Apollo command module: a blunt cone with a dark heat-shield base and a docking tip, no fins
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.36, 0.78, 28), MC), shield = cy(0.37, 0.07, MM, 0, 0.02, 0), tip = cy(0.1, 0.14, MC2, 0, 0.9, 0), ring = cy(0.2, 0.05, MC2, 0, 0.82, 0);
+  body.position.set(0, 0.43, 0); const win = el(0.09, 0.09, 0.05, MB, 0, 0.5, 0.2);
+  g.add(body, shield, tip, ring, win); g.visible = false; g.userData.noProbe = true; scene.add(g); return g; })();
 const dial = (() => { const g = new THREE.Group(); const face = cy(0.75, 0.08, MC, 0, 0, 0), rim = cy(0.84, 0.06, MC2, 0, 0, -0.04); face.rotation.x = rim.rotation.x = Math.PI / 2;
   const hrH = bx(0.09, 0.42, 0.04, MB, 0, 0.21, 0.07), mnH = bx(0.06, 0.62, 0.04, MM, 0, 0.31, 0.09); hrH.geometry.translate(0, 0, 0); g.add(rim, face);
   const hp = new THREE.Group(), mp = new THREE.Group(); hp.add(hrH); mp.add(mnH); g.add(hp, mp);
@@ -165,7 +166,7 @@ const work = workCard(FILM.work, { safe: hud.safe, W, H, capTop: 0.61, y: 0.17 }
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.14 });
 const endT = endEl.querySelector(".t"), endFo = endEl.querySelector(".fo"); if (endT) endT.style.fontSize = "5.6vmin"; if (endFo) endFo.style.marginTop = "1.6vmin";
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "2.8vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "1.6vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "3.7vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "1.6vmin auto 0" });
 const box = endBox(endEl, { t0: FILM.endCard, answer: FILM.spine[FILM.spine.length - 1].terms.find((x) => x[0] === "ans")[1], S1: Math.min(W, H) / 1080 });
 
 // ── staging ─────────────────────────────────────────────────────────────────
@@ -250,7 +251,7 @@ window.seek = function (t) {
   orbitRing.visible = capOn > 0.02 && t > CUE.apollo[1] + 0.2 && shot !== "end"; orbitRing.material.opacity = 0.35 * E.out3(seg(t, CUE.apollo[1], CUE.orbit[0])) * capOn; orbitRing.position.set(moonX, moonY, 0); orbitRing.scale.set(Ro, Ro, 1);
   setLane("C", cx, cap, px * 1.0, 0.45 * capOn * (1 - seg(t, CUE.apollo[1] - 0.1, CUE.apollo[1] + 0.4)));
   capsule.visible = capOn > 0.02 && shot !== "end"; capsule.scale.setScalar(figH * 0.4); capsule.position.set(cxp, cyp, 0); capsule.rotation.z = rot;
-  trail.visible = capsule.visible && t < CUE.apollo[1] + 0.3; trail.material.opacity = 0.5 * capOn; trail.scale.set(figH * 0.22, Math.min(top * capE, figH * 5), 1); trail.position.set(cx, top * capE - figH * 0.4, 0);
+  trail.visible = capsule.visible && t < CUE.apollo[1] - 0.05; trail.material.opacity = 0.5 * capOn; trail.scale.set(figH * 0.22, Math.min(top * capE, figH * 5), 1); trail.position.set(cx, top * capE - figH * 0.4, 0);
   for (const k of ["A", "B", "S", "C"]) bead[k].visible = false;
 
   // the ruler: thirty Earths, 29 rings between you and the Moon, each appearing in turn

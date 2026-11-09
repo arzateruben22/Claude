@@ -2,6 +2,7 @@
  "duration": 72.0,
  "fps": 30,
  "preset": "envelope-working",
+ "tail_s": 0.05,
  "sections": [
   {
    "id": "hook",

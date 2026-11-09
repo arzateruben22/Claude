@@ -32,3 +32,6 @@ renamed to `graphite`), `set/aces.js` (Rest Frame's). The originals are untouche
   them. Themes without the key render byte-identically. This channel sets 860. Note for the coordinator: the
   intro lays out at 1920 px with the posters from x ≈ 1036, while the promise may run to 1240, so any promise wider
   than ~900 px slides under the posters. Space's promise (64 characters) is likely affected in its vol01.
+- kits/cinema/studio/compose.py (shared, additive, 9 Nov): an optional cue-sheet key `tail_s` sets the length of the
+  fade the studio puts on the last seconds of every stem (default 0.6, so every existing film's audio is
+  byte-identical). A film that loops (S2E01) sets 0.05 so the end lands at the opening's level.

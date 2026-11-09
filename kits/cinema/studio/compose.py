@@ -356,7 +356,7 @@ def build(sheet, root="."):
         music = music * duck_curve(spans, n, sheet.get("duck_db", P.get("duck_db", -9.0)))[:, None]
         effects = effects * duck_curve(spans, n, -3.0)[:, None]
     # the film ends on its last frame: a short fade so nothing is cut mid-ring
-    tail = int(0.6 * SR)
+    tail = max(1, int(float(sheet.get("tail_s", 0.6)) * SR))        # a film that loops asks for a short one ("tail_s")
     for x in (music, effects, voice):
         x[-tail:] *= (np.linspace(1, 0, tail, dtype=np.float32) ** 2)[:, None]
     return {"dialog": voice.astype(np.float32), "music": music.astype(np.float32), "effects": effects.astype(np.float32)}, placed, spans
