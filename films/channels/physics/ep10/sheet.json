@@ -147,7 +147,7 @@
    "tag": "wy-evap"
   },
   {
-   "t": 25.55,
+   "t": 25.883333,
    "kind": "label",
    "tag": "wy-flow"
   },
@@ -190,6 +190,12 @@
    "tag": "pr-oval"
   },
   {
+   "t": 42.9166,
+   "kind": "badge",
+   "tag": "model",
+   "text": "Replay · made-up numbers"
+  },
+  {
    "t": 42.916633,
    "kind": "counter.show",
    "tag": "spine"
@@ -204,6 +210,18 @@
    "t": 46.4667,
    "kind": "counter.end",
    "tag": "ninety"
+  },
+  {
+   "t": 47.7166,
+   "kind": "badge",
+   "tag": "rep2",
+   "text": "Replay"
+  },
+  {
+   "t": 47.7166,
+   "kind": "badge",
+   "tag": "oval2",
+   "text": "Lower drop: illustration"
   },
   {
    "t": 47.7333,
@@ -234,7 +252,7 @@
    "t1": 65.0667
   },
   {
-   "t": 61.9167,
+   "t": 63.5657,
    "kind": "signature",
    "tag": "end"
   }

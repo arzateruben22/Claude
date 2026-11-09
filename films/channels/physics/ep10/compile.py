@@ -71,6 +71,7 @@ def share(s):
     return c / len(r0s)
 
 
+SHARE_TAB = [[round(0.005 * k, 4), round(100 * share(0.005 * k), 2)] for k in range(0, 192)]   # the readout reads this (the python model), so the screen, model-check.md and c8 agree
 CHECK = [(s, share(s)) for s in (0.0, 0.3, 0.5, 0.8, 0.9, 0.95, 0.955, 0.99)]
 S_MEASURE = S_STICK
 assert 0.88 < share(S_MEASURE) < 0.95, share(S_MEASURE)
@@ -80,7 +81,8 @@ def take(*keys):
     return [[round(t, 4), round(v, 5)] for t, v in keys]
 
 
-ENDSHOW = round(A("vo08:You") - 0.15, 4)                  # the end card comes up as the last sentence starts and holds to the end
+_v8 = [x for x in f.lines if x["id"] == "vo08"][0]
+ENDSHOW = round(max(_v8["t"] + _v8["dur"] + 0.3, DUR - 2.0), 4)                  # the end card comes up as the last sentence starts and holds to the end
 T_DRY = A("vo02:dry.") + 0.3
 FRESH_T = round(A("vo02:Coffee#2") - 0.25, 4)       # "Coffee is mostly water, with tiny brown specks in it": a fresh drop, close up
 PAIR0 = round(A("vo05:Make") - 0.4, 4)             # "Make the specks oval": a second drop (an illustration) comes in beside the first
@@ -114,7 +116,7 @@ LABELS = [
     {"id": "ch-edge", "text": "the edge", "color": "ghost", "t0": A("vo03:toward"), "t1": cut("why") - 0.3, "at": "edge", "side": 1},
     {"id": "wy-stuck", "text": "edge stuck to the paper", "color": "ghost", "t0": cut("why") + 0.2, "t1": A("vo04:Water") - 0.1, "at": "edgeHi", "side": -1},
     {"id": "wy-evap", "text": "water evaporates here", "color": "energy", "t0": A("vo04:Water"), "t1": A("vo04:so") - 0.1, "at": "evap", "side": -1},
-    {"id": "wy-flow", "text": "flow replaces it", "color": "force", "t0": A("vo04:so"), "t1": A("vo04:The") - 0.1, "at": "flow", "side": -1},
+    {"id": "wy-flow", "text": "flow replaces it", "color": "force", "t0": A("vo04:so") + 0.35, "t1": A("vo04:carries") - 0.4, "at": "flow", "side": -1},
     {"id": "wo-pile", "text": "specks pile up", "color": "energy", "t0": A("vo05:pile"), "t1": PAIR0 - 0.1, "at": "edge", "side": 1},
     {"id": "pr-round", "text": "round specks", "color": "energy", "t0": PAIR0 + 0.3, "t1": cut("measure") - 0.3, "at": "pairA", "side": 1},
     {"id": "pr-oval", "text": "oval specks", "color": "force", "t0": PAIR0 + 0.4, "t1": cut("measure") - 0.3, "at": "pairB", "side": 1},
@@ -127,7 +129,10 @@ BADGES = [
     {"id": "tl", "kind": "tag", "text": "Time-lapse model", "t0": cut("normal") + 0.3, "t1": round(cut("why") - 0.3, 4), "slot": "tr"},
     {"id": "yx", "kind": "tag", "text": "Height stretched 2×", "t0": round(cut("why") + 0.2, 4), "t1": round(cut("whoa") - 0.5, 4), "slot": "tr"},
     {"id": "tl2", "kind": "tag", "text": "Time-lapse model", "t0": cut("whoa"), "t1": round(PAIR0 - 0.3, 4), "slot": "tr"},
-    {"id": "oval", "kind": "tag", "text": "Lower drop: illustration", "t0": PAIR0, "t1": round(cut("tease") - 0.5, 4), "slot": "tr"},
+    {"id": "oval", "kind": "tag", "text": "Lower drop: illustration", "t0": PAIR0, "t1": round(cut("measure") - 0.5, 4), "slot": "tr"},
+    {"id": "model", "kind": "tag", "text": "Replay · made-up numbers", "t0": cut("measure"), "t1": round(cut("takeaway") - 0.5, 4), "slot": "tr"},
+    {"id": "rep2", "kind": "tag", "text": "Replay", "t0": cut("takeaway"), "t1": round(cut("tease") - 0.5, 4), "slot": "tr"},
+    {"id": "oval2", "kind": "tag", "text": "Lower drop: illustration", "t0": cut("takeaway"), "t1": round(cut("tease") - 0.5, 4), "slot": "tr"},
     {"id": "mug", "kind": "tag", "text": "Illustration", "t0": cut("tease"), "t1": round(ENDSHOW - 0.3, 4), "slot": "tr"},
 ]
 SPINE = [{"t0": cut("measure"), "t1": round(cut("takeaway") - 0.35, 4), "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]}]
@@ -165,7 +170,7 @@ film = {
     "id": "reality-rulebook-s2e04", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "cue": {"cuts": CUTS, "trail": TRAIL_W, "cut": CUT_W, "ring": RING}, "spine": SPINE, "spineAt": SPINE_AT,
-    "model": {"R": R, "H0": H0, "n": NSP, "ring": RING, "stick": S_STICK}, "takes": TAKES, "takesB": TAKE_B, "pair": {"t0": PAIR0, "ramp": 0.0, "tease": cut("tease"), "capY": 0.482}, "pulse": PULSE_W, "yx": YX, "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
+    "model": {"R": R, "H0": H0, "n": NSP, "ring": RING, "stick": S_STICK, "shareTab": SHARE_TAB}, "takes": TAKES, "takesB": TAKE_B, "pair": {"t0": PAIR0, "ramp": 0.0, "tease": cut("tease"), "capY": 0.482}, "pulse": PULSE_W, "yx": YX, "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
     "captions": [pg for pg in phrase_captions(f, max_chars=24, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "endCard": EC,
     "end": {"title": "Next drop: listen to the cup fill", "follow": "Follow Reality Rulebook", "foot": "Deegan et al., Nature 389, 827 (1997)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
@@ -190,7 +195,7 @@ sheet = {"duration": DUR, "fps": FPS, "preset": "restframe-bench", "duck_db": -9
 (HERE / "film.json").write_text(json.dumps(film, indent=1, ensure_ascii=False, allow_nan=False))
 (HERE / "sheet.json").write_text(json.dumps(sheet, indent=1, ensure_ascii=False))
 (HERE / "review").mkdir(exist_ok=True)
-(HERE / "review" / "model-check.md").write_text("# S2E04 model check (for claims c6, c8, c10)\n\nShare of 20,000 specks, placed uniformly over the drop, that are beyond 0.95 R of the centre when the drop is a share s of the way through its drying time (compile.py; model in its docstring):\n\n| s | share |\n|---|---|\n" + "\n".join(f"| {s} | {v:.3f} |" for s, v in CHECK) + "\n\nAbout 6.4% of the specks start in that outer band; from s = 0.955 on the share stays where it is. The film's measure beat reads this number: specks still in the middle when the film gets thinner than a speck (s = 0.955) stay there, so the model ends with about nine in ten specks in the ring and the rest in the middle.\n")
+(HERE / "review" / "model-check.md").write_text("# S2E04 model check (for claims c6, c8, c10)\n\nShare of 20,000 specks, placed uniformly over the drop, that are beyond 0.95 R of the centre when the drop is a share s of the way through its drying time (compile.py; model in its docstring):\n\n| s | share |\n|---|---|\n" + "\n".join(f"| {s} | {v:.3f} |" for s, v in CHECK) + "\n\nAbout 10% of the specks start in that outer band (the table at s = 0.0); from s = 0.955 on the share stays where it is. The film's measure beat reads this number from the table (SHARE_TAB, the same model), so the screen, this file and c8 agree: specks still in the middle when the film gets thinner than a speck (s = 0.955) stay there, so the model ends with about nine in ten specks in the ring and the rest in the middle.\n")
 print(f"film.json: {len(SHOTS)} shots, {len(LABELS)} labels, {len(film['captions'])} caption pages, end card {EC} s, {DUR} s; share at 0.95: {share(0.95):.3f}")
 for b in BEATS:
     print(f"  {b['id']:<9} {b['t0']:6.2f}–{b['t1']:6.2f}")

@@ -15,28 +15,28 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}
 compiler. In a vo line, `{c1,c2}` after a sentence ties it to `claims.json` and `{-}` marks a sentence that states nothing
 outside the film; neither is spoken. Check it with `python3 -I kits/cinema/script/lint.py films/channels/physics/ep10 --segment measure`.
 
-## hook {shot: top view, close on a drop of coffee on paper, specks inside · title drop: "The ring a coffee drop leaves" · pre: 0.1 · energy: 0.7} (0–3.7 s)
+## hook {shot: top view, close on a drop of coffee on paper, specks inside · title drop: "The ring a coffee drop leaves" · pre: 0.1 · energy: 0.7} (0.0–3.7 s)
 vo: Why does coffee leave a *ring*? {-} Not… blobs. {-}
 
-## normal {shot: top view, the drop, then the dried stain beside it, darker at the edge · labels: "coffee drop", "dark ring" · picture-only 0.7 s · pre: 0.12 · energy: 0.45} (3.7–16 s)
+## normal {shot: top view, the drop, then the dried stain beside it, darker at the edge · labels: "coffee drop", "dark ring" · picture-only 0.7 s · pre: 0.12 · energy: 0.45} (3.7–14.7 s)
 vo: Spill a drop of coffee and let it dry. {-} It leaves a dark ring, with a paler middle. {c1} Coffee is mostly water, with tiny brown specks in it. {-}
 
-## change {shot: the drying drop, the specks' paths drawn as faint trails streaming outward · labels: "specks", "edge" · pre: 0.1 · energy: 0.5} (16–21.3 s)
+## change {shot: the drying drop, the specks' paths drawn as faint trails streaming outward · labels: "specks", "edge" · pre: 0.1 · energy: 0.5} (14.7–20.0 s)
 vo: Watch the specks. {-} They don't stay put. {-} They stream *outward*, toward the edge. {c2}
 
-## why {shot: side cutaway of the drop: a lens of water, the edge stuck to the paper, arrows from the middle to the edge · picture-only 0.7 s · pre: 0.2 · energy: 0.55} (21.3–34.7 s)
+## why {shot: side cutaway of the drop: a lens of water, the edge stuck to the paper, arrows from the middle to the edge · picture-only 0.7 s · pre: 0.2 · energy: 0.55} (20.0–32.3 s)
 vo: The edge of the drop is stuck to the paper. {c3} Water evaporates from that edge, so water from the middle flows out to replace it. {c4} The flow carries the specks *along*. {c5}
 
-## whoa {shot: top view again: the drop thins, the specks rush to the edge and pile up into a ring · picture-only 0.55 s · pre: 0.15 · energy: 0.75} (34.7–47.7 s)
+## whoa {shot: top view again: the drop thins, the specks rush to the edge and pile up into a ring · picture-only 0.55 s · pre: 0.15 · energy: 0.75} (32.3–42.9 s)
 vo: As the drop thins, the flow speeds up. {c6} In the last moments, the specks pile up at the edge. {c10} Make the specks oval, and the ring can *vanish*. {c7}
 
-## measure {segment: measure · the share of specks in the ring counts up while the drop dries · pre: 0.2 · energy: 0.5} (47.7–52.5 s)
+## measure {segment: measure · the share of specks in the ring counts up while the drop dries · pre: 0.2 · energy: 0.5} (42.9–47.7 s)
 vo: *Measure it*: in this model, nine in ten specks reach the ring. {c8}
 
-## takeaway {shot: hold on the finished ring · badge: "A model, not a measurement" · pre: 0.25 · energy: 0.45} (52.5–62.4 s)
+## takeaway {shot: hold on the finished ring · badge: "A model, not a measurement" · pre: 0.25 · energy: 0.45} (47.7–57.9 s)
 vo: Oval specks cling together at the surface, which can hold them back from the *edge*. {c11} A stuck edge and an outward flow: that's all a ring takes. {-}
 
-## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (62.4–69.6 s)
+## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (57.9–65.1 s)
 vo: Next: listen carefully to a mug filling with water. {-} You can *hear* it rise. {c9}
 end card: "Next drop: listen to the cup fill" · "Follow Reality Rulebook" · footnote: "Deegan et al., Nature 389, 827 (1997)"
 

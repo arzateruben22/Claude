@@ -85,7 +85,7 @@
   "accessed": "2026-11-09",
   "verified_via": "own model",
   "status": "TODO open link",
-  "note": "OWN MODEL, OPEN: our model with made-up numbers (review/model-check.md: 0.928 at the freeze point, s = 0.955). A person should re-run compile.py and check the number. Not a published result."
+  "note": "OWN MODEL, OPEN: our model with made-up numbers (review/model-check.md: 0.934 of 20,000 simulated specks at the freeze point s = 0.955, and the film's readout shows that table's value, 93). A person should re-run compile.py and check the number. Not a published result."
  },
  {
   "id": "c9",

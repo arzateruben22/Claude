@@ -131,14 +131,14 @@ const anchorFn = (an) => {
   if (an === "speck") return (t) => { const p = speckPos(7, sAt(t), 0, YXf(t)); return worldOf(dA, p[0], p[1], p[2]); };
   if (an === "edgeHi") return () => worldOf(dA, R - 0.2, 6.9, 0);
   if (an === "evap") return () => worldOf(dA, R - 1.8, 6.9, 0);
-  if (an === "flow") return () => worldOf(dA, 3.0, 5.2, 0);
+  if (an === "flow") return () => worldOf(dA, 3.0, 7.0, 0);
   if (an === "pairA") return () => worldOf(dA, R * 0.78, 0.3, R * 0.62);
   if (an === "pairB") return () => worldOf(dB, R * 0.78, 0.3, R * 0.62);
   return () => [0, 0, 0];
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: false });
 const shareAt = (s) => { let c = 0; for (let i = 0; i < N; i++) if (radiusAt(SP[i], s) >= RINGF) c++; return (100 * c) / N; };
-const spineVal = (t) => shareAt(sAt(t));
+const spineVal = (t) => { const tab = M.shareTab, x = Math.min(sAt(t), M.stick) / 0.005, i = Math.min(tab.length - 2, Math.floor(x)); return tab[i][1] + (tab[i + 1][1] - tab[i][1]) * (x - i); };   // the python model's share (compile.py), clamped at the freeze point
 FILM.spine.forEach((SPN, i) => { const o = { value: spineVal, fmt: (v) => v.toFixed(0), unit: "%", label: SPN.label, t0: SPN.t0, t1: SPN.t1, minCh: 2 }, el = hud.counter(i ? "spine" + (i + 1) : "spine", o); placeSpine(o, el, hud, W, H, FILM.spineAt); });
 const ES = FILM.endShow, endEl = hud.end({ t0: ES - 0.3, d: 0.3, ...FILM.end });
 const footEl = document.createElement("div"); footEl.className = "rf-foot"; footEl.textContent = FILM.end.foot; endEl.appendChild(footEl);
