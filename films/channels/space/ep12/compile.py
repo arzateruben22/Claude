@@ -66,8 +66,8 @@ CAMK = [
     (t_tk + 0.35, [ST[0], 1.7, 16], [ST[0], 15, -90], 48),                          # the Moon over a street (cut under a dip)
     (CUE["tonight"], [ST[0] + 1.5, 1.7, 15], [ST[0], 17, -90], 48),
     (t_rd - 0.3, [ST[0] + 2.0, 1.8, 14], [ST[0], 20, -90], 48),
-    (t_rd + 0.3, [EMP[0] + 14, 70, EMP[2] + 120], [EMP[0] + 14, 0, EMP[2]], 40),     # Earth and Moon, from above
-    (t_end - 0.15, [EMP[0] + 16, 74, EMP[2] + 124], [EMP[0] + 14, 0, EMP[2]], 40),
+    (t_rd + 0.3, [EMP[0] + 14, 70, EMP[2] + 120], [EMP[0] + 14, 0, EMP[2] + 50], 40),     # Earth and Moon, from above
+    (t_end - 0.15, [EMP[0] + 16, 74, EMP[2] + 124], [EMP[0] + 14, 0, EMP[2] + 50], 40),
     (f.duration, [1.5, 0.75, 2.2], [0, 0.0, 0], 38),
 ]
 CAMK = [{"t": round(t, 4), "p": p, "l": l, "fov": fv} for t, p, l, fv in CAMK]

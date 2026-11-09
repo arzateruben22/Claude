@@ -18,3 +18,5 @@ One real 3-D world; the camera moves on every beat.
 | 65.1 | That's season two. Next: another orbit, another question, same sky. | End card; a dip, then frame 0's pose (SSIM 0.936) | end card |
 
 Measured: 71.5 s, render log 0 warnings, sound sync PASS, -14.1 LUFS. The Moon surface is a height-field of this film's own making (an illustration), not a map.
+
+Round 2 (9 Nov): voiceless gaps <= 1.2 s (picture-only holds 1.2 s; film is 69.9 s); the read-out says and shows "about 1.3 seconds" (c6 is now a derivation: 384,400 km / 299,792 km/s = 1.28 s, no URL); c2 is worded for the Apollo 11 site that the cited NASA page shows ("an orbiter has photographed the Apollo 11 landing site"), the counter reads "the Apollo 11 site, from orbit"; c22 is a derivation from c5; end card ring clears the chip (shorter footnote, smaller headline); Earth and Moon sit high in the frame so the ring clears the read-out label.
