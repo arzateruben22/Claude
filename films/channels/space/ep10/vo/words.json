@@ -384,8 +384,8 @@
   },
   {
    "id": "vo04",
-   "text": "Gravity really does slow clocks. GPS satellites must correct for that to keep good time. The closer to a black hole, the slower a clock ticks. Now compare the two views.",
-   "heard": "Gravity really does slow clocks. GPS satellites must correct for that to keep good time. The closer to a black hole, the slower a clock ticks. Now compare the two views.",
+   "text": "Gravity really does slow clocks. GPS satellites must correct for relativity to keep good time. The closer to a black hole, the slower a clock ticks. Now compare the two views.",
+   "heard": "Gravity really does slow clocks. GPS satellites must correct for relativity to keep good time. The closer to a black hole, the slower a clock ticks. Now compare the two views.",
    "words": [
     {
      "w": "Gravity",
@@ -395,182 +395,182 @@
     },
     {
      "w": "really",
-     "start": 0.55,
+     "start": 0.57,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "does",
-     "start": 0.935,
-     "end": 1.12,
+     "start": 0.955,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "slow",
-     "start": 1.07,
-     "end": 1.6,
+     "start": 1.285,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "clocks.",
-     "start": 1.625,
-     "end": 2.56,
+     "start": 1.645,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "GPS",
-     "start": 2.63,
+     "start": 2.685,
      "end": 3.44,
      "heard": true
     },
     {
      "w": "satellites",
-     "start": 3.53,
+     "start": 3.535,
      "end": 4.16,
      "heard": true
     },
     {
      "w": "must",
-     "start": 4.13,
-     "end": 4.4,
+     "start": 4.16,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "correct",
-     "start": 4.405,
-     "end": 4.8,
-     "heard": true
-    },
-    {
-     "w": "for",
-     "start": 4.755,
+     "start": 4.49,
      "end": 4.96,
      "heard": true
     },
     {
-     "w": "that",
-     "start": 4.85,
-     "end": 5.2,
+     "w": "for",
+     "start": 4.89,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "relativity",
+     "start": 5.0,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "to",
-     "start": 5.175,
-     "end": 5.36,
+     "start": 5.99,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "keep",
-     "start": 5.295,
-     "end": 5.68,
+     "start": 6.215,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "good",
-     "start": 5.79,
-     "end": 6.0,
+     "start": 6.485,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "time.",
-     "start": 6.085,
-     "end": 6.64,
+     "start": 6.905,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "The",
-     "start": 6.795,
-     "end": 6.88,
+     "start": 7.57,
+     "end": 7.62,
      "heard": true
     },
     {
      "w": "closer",
-     "start": 6.925,
-     "end": 7.36,
+     "start": 7.695,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "to",
-     "start": 7.395,
-     "end": 7.52,
+     "start": 8.165,
+     "end": 8.32,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.45,
-     "end": 7.68,
+     "start": 8.225,
+     "end": 8.48,
      "heard": true
     },
     {
      "w": "black",
-     "start": 7.675,
-     "end": 8.0,
+     "start": 8.445,
+     "end": 8.8,
      "heard": true
     },
     {
      "w": "hole,",
-     "start": 7.97,
-     "end": 8.56,
+     "start": 8.74,
+     "end": 9.36,
      "heard": true
     },
     {
      "w": "the",
-     "start": 8.605,
-     "end": 8.72,
+     "start": 9.415,
+     "end": 9.52,
      "heard": true
     },
     {
      "w": "slower",
-     "start": 8.635,
-     "end": 9.28,
+     "start": 9.445,
+     "end": 10.08,
      "heard": true
     },
     {
      "w": "a",
-     "start": 9.4,
-     "end": 9.45,
+     "start": 10.2,
+     "end": 10.25,
      "heard": true
     },
     {
      "w": "clock",
-     "start": 9.49,
-     "end": 9.84,
-     "heard": true
-    },
-    {
-     "w": "ticks.",
-     "start": 9.825,
+     "start": 10.295,
      "end": 10.64,
      "heard": true
     },
     {
-     "w": "Now",
-     "start": 10.695,
-     "end": 10.96,
-     "heard": true
-    },
-    {
-     "w": "compare",
-     "start": 11.06,
+     "w": "ticks.",
+     "start": 10.625,
      "end": 11.44,
      "heard": true
     },
     {
+     "w": "Now",
+     "start": 11.495,
+     "end": 11.76,
+     "heard": true
+    },
+    {
+     "w": "compare",
+     "start": 11.86,
+     "end": 12.24,
+     "heard": true
+    },
+    {
      "w": "the",
-     "start": 11.535,
-     "end": 11.6,
+     "start": 12.335,
+     "end": 12.4,
      "heard": true
     },
     {
      "w": "two",
-     "start": 11.595,
-     "end": 11.84,
+     "start": 12.39,
+     "end": 12.64,
      "heard": true
     },
     {
      "w": "views.",
-     "start": 11.85,
-     "end": 12.32,
+     "start": 12.585,
+     "end": 13.12,
      "heard": true
     }
    ]

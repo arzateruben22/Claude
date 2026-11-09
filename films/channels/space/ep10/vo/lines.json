@@ -53,16 +53,16 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Gravity really does slow clocks. GPS satellites must correct for that to keep good time. The closer to a black hole, the slower a clock ticks. Now compare the two views.",
+   "text": "Gravity really does slow clocks. GPS satellites must correct for relativity to keep good time. The closer to a black hole, the slower a clock ticks. Now compare the two views.",
    "stars": [
-    "time",
+    "relativity",
     "ticks"
    ],
-   "phonemes": "ɡɹˈævᵻɾi ɹˈiəli dˈʌz slˈoʊ klˈɑːks. dʒˌiːpˌiːˈɛs sˈæɾəlˌaɪts mˈʌst kɚɹˈɛkt fɔːɹ ðæt tə kˈiːp ɡˈʊd tˈaɪm. ðə klˈoʊsɚ tʊ ɐ blˈæk hˈoʊl, ðə slˈoʊɚɹ ɐ klˈɑːk tˈɪks. nˈaʊ kəmpˈɛɹ ðə tˈuː vjˈuːz.",
+   "phonemes": "ɡɹˈævᵻɾi ɹˈiəli dˈʌz slˈoʊ klˈɑːks. dʒˌiːpˌiːˈɛs sˈæɾəlˌaɪts mˈʌst kɚɹˈɛkt fɔːɹ ɹˌɛlətˈɪvᵻɾi tə kˈiːp ɡˈʊd tˈaɪm. ðə klˈoʊsɚ tʊ ɐ blˈæk hˈoʊl, ðə slˈoʊɚɹ ɐ klˈɑːk tˈɪks. nˈaʊ kəmpˈɛɹ ðə tˈuː vjˈuːz.",
    "speed": 0.95,
    "file": "04.wav",
-   "dur": 12.369,
-   "sha256": "04e2997470319b10092931cfc8770dbb2f6c1e33c0590891728c9c4fde30cf7a"
+   "dur": 13.168,
+   "sha256": "877b4bfdfb89a20f5c1785a4136eb42b9d2d5cfbe5aafe515370bc63ae5af82e"
   },
   {
    "id": "vo05",

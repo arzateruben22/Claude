@@ -49,14 +49,14 @@ CAMK = [
     (CUE["friend"], [-16, 2.5, 26], [-2, 0, 0], 40),                                  # you, far away, and the friend
     (CUE["falling"] + 1.6, [-18, 3, 28], [-4, 0, 0], 40),
     (t_why - 0.2, [-9, 4, 21], [0, 0, 0], 38),
-    (CUE["dip"][0], [-9, 4, 21], [0, 0, 0], 38),
-    (CUE["dip"][0] + 0.32, [400, 6, 24], [400, 0, 0], 38),                                 # Earth and a GPS satellite (cut under a dip)
-    (CUE["dip"][1], [410, 8, 22], [400, 0, 0], 38),
-    (CUE["dip"][1] + 0.34, [-2, 8, 40], [0, 0, 0], 42),                               # three clocks near the hole
+    (CUE["dip"][0] + 0.19, [-9, 4, 21], [0, 0, 0], 38),
+    (CUE["dip"][0] + 0.21, [400, 6, 24], [400, 0, 0], 38),                                 # Earth and a GPS satellite (cut under a dip)
+    (CUE["dip"][1] + 0.19, [410, 8, 22], [400, 0, 0], 38),
+    (CUE["dip"][1] + 0.21, [-2, 8, 40], [0, 0, 0], 42),                               # three clocks near the hole
     (CUE["slower"], [8, 6, 38], [0, 0, 0], 42),
     (CUE["compare"], [18, 6, 30], [0, 0, 0], 42),
-    (CUE["toyou"] - 0.2, [-22, 4, 25], [-4, 0, 0], 40),                               # to you, far away
-    (CUE["tick"] + 1.0, [-22, 3, 24], [-3, 0, 0], 38),
+    (CUE["toyou"] - 0.2, [-36, 6, 42], [-4, 0, 0], 44),                               # to you, far away
+    (CUE["tick"] + 1.0, [-34, 5, 40], [-3, 0, 0], 44),
     (CUE["them"], [-1, 1.2, 8], [0, 0, 0], 52),                                       # to them: from the friend's side
     (CUE["gap"], [-3, 4, 18], [0, 0, 0], 44),
     (t_tk, [8, 7, 24], [0, 0, 0], 42),
@@ -81,9 +81,9 @@ LABELS = [
     {"id": "l-near", "text": "near: slow", "kind": "grav", "anchor": "clockNear", "t0": round(CUE["closer"] + 0.4, 4), "t1": round(CUE["compare"], 4), "side": -1, "v": "below", "fixed": True},
 ]
 PILLS = [
-    {"id": "p-probe", "text": "any speed: falls back", "t0": round(CUE["escape"] + 0.3, 4), "t1": round(t_c - 0.2, 4), "at": [90 / 1080, 0.175]},
-    {"id": "p-gps", "text": "GPS clocks are corrected", "t0": round(CUE["dip"][0] + 0.4, 4), "t1": round(CUE["dip"][1], 4), "at": [90 / 1080, 0.175]},
-    {"id": "p-gap", "text": "bar = tick rate you see", "t0": round(CUE["toyou"], 4), "t1": round(t_tk - 0.2, 4), "at": [90 / 1080, 0.175]},
+    {"id": "p-probe", "text": "any speed: falls back", "t0": round(CUE["escape"] + 0.3, 4), "t1": round(t_c - 0.2, 4), "at": [90 / 1080, 0.2]},
+    {"id": "p-gps", "text": "GPS clocks are corrected", "t0": round(CUE["dip"][0] + 0.4, 4), "t1": round(CUE["dip"][1], 4), "at": [90 / 1080, 0.2]},
+    {"id": "p-gap", "text": "bar = tick rate you see", "t0": round(CUE["toyou"], 4), "t1": round(t_tk - 0.2, 4), "at": [90 / 1080, 0.2]},
 ]
 BADGES = [
     {"id": "b-illus", "text": "illustration", "t0": round(t_n + 0.25, 4), "t1": round(t_rd - 0.2, 4), "slot": "tr"},
@@ -92,6 +92,7 @@ BADGES = [
 COUNTERS = [
     {"id": "c-hook", "label": "the edge of a black hole", "text": "?", "t0": 0.0, "t1": t_n},
     {"id": "c-esc", "label": "past the edge, escape needs", "text": "more than light speed", "t0": CUE["more"] - 0.4, "t1": t_c},
+    {"id": "c-views", "label": "compare the two views", "text": "far away · hovering", "t0": round(CUE["compare"] + 0.9, 4), "t1": round(CUE["toyou"] + 0.2, 4)},
     {"id": "c-slow", "label": "close to a black hole", "text": "clocks tick slower", "t0": CUE["slower"] - 0.8, "t1": CUE["compare"] + 1.6},
     {"id": "c-gap", "label": "the closer they hover", "text": "the gap grows", "t0": CUE["gap"], "t1": t_tk},
     {"id": "c-both", "label": "both views are", "text": "true", "t0": CUE["true"], "t1": t_rd},
@@ -105,7 +106,7 @@ for a, b in zip(spine, spine[1:]):
         a["t1"] = round(b["t0"] - 0.4, 4)
 
 TITLE = {"series": "One More Orbit · Season 2 · Episode 4", "title": "Black-hole *edge*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next orbit: a planet *lighter* than water", "follow": "One More Orbit · S2 · Episode 5",
+END = {"title": "Next orbit: *Saturn*", "follow": "One More Orbit · S2 · Episode 5",
        "next": "In 2019 the Event Horizon Telescope imaged a black hole about 55 million light-years away."}
 POSTER = A("vo05:gap", 0.5)
 glue(f, {"vo02": ["event horizon."], "vo05": ["the bigger the gap."], "vo07": ["fifty-five million years."], "vo03": ["hovering close to it,"]})

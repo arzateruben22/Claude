@@ -69,7 +69,7 @@
  },
  {
   "id": "c5",
-  "sentence": "GPS satellites must correct for that to keep good time.",
+  "sentence": "GPS satellites must correct for relativity to keep good time.",
   "claim": "GPS satellite clocks are corrected for relativity (gravity and speed), every day in the system's design.",
   "source_url": "https://www.nist.gov/atomic-clocks/a-powerful-tool-for-science/putting-einstein-test",
   "source_title": "Putting Einstein to the Test (NIST)",
@@ -87,11 +87,11 @@
  {
   "id": "c6",
   "sentence": "To you, far away, your friend's clock seems to tick slower.",
-  "claim": "Seen from afar, an infalling object appears to slow, redden, fade and freeze at the horizon; the faller notices nothing special locally.",
+  "claim": "Clocks closer to a mass tick more slowly than distant ones; so to a far-away watcher a clock hovering near a black hole runs slow, and the nearer it hovers, the bigger the difference (NASA brochure and NIST on gravitational time dilation).",
   "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
   "source_title": "Black hole safety information card (NASA SVS)",
   "accessed": "2026-11-08",
-  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. 'Slower and slower' follows 'as you get closer'.",
+  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. 'Slower and slower' follows 'as you get closer'. 9 Nov: claim text reworded to the hovering case; the earlier 'infalling object freezes at the horizon' wording is dropped.",
   "verified_via": "page",
   "status": "SOURCE-READ",
   "source_read": {
@@ -189,11 +189,11 @@
  {
   "id": "c21",
   "sentence": "The closer they hover, the bigger the gap.",
-  "claim": "Seen from afar, an infalling object appears to slow, redden, fade and freeze at the horizon; the faller notices nothing special locally.",
+  "claim": "Clocks closer to a mass tick more slowly than distant ones; so to a far-away watcher a clock hovering near a black hole runs slow, and the nearer it hovers, the bigger the difference (NASA brochure and NIST on gravitational time dilation).",
   "source_url": "https://svs.gsfc.nasa.gov/vis/a010000/a013300/a013322/black_hole_safety_brochure_web_final.pdf",
   "source_title": "Black hole safety information card (NASA SVS)",
   "accessed": "2026-11-08",
-  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Matches.",
+  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Matches. 9 Nov: claim text reworded to the hovering case; the earlier 'infalling object freezes at the horizon' wording is dropped.",
   "verified_via": "page",
   "status": "SOURCE-READ",
   "source_read": {

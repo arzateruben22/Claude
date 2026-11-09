@@ -143,7 +143,7 @@ hud.captions([...FILM.captions, capLoop]);
 const titleEl = hud.title(FILM.title);
 { const se = titleEl.querySelector(".hud-series"), m = /Episode (\d+)/.exec(FILM.title.series || ""); if (se && m) { se.innerHTML = 'ONE MORE ORBIT · SEASON <b style="color:var(--teal,#4fe3c6)">2</b> · EPISODE <b style="color:var(--teal,#4fe3c6)">' + m[1] + "</b>"; Object.assign(se.style, { color: "var(--text-2)", whiteSpace: "nowrap", fontSize: "2.1vmin", letterSpacing: ".1em" }); } }
 const tRing = titleRing(titleEl, { t0: 0, sig: FILM.title.sig });
-for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
+for (const b of FILM.badges) { const be = hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot }); if (be && be.style) be.style.marginTop = "6.4vmin"; }
 const CEL = {};
 for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, lit: () => true, value: () => 0, fmt: () => c.text });
@@ -222,12 +222,12 @@ window.seek = function (t) {
   S.clockFar = cf; S.clockNear = cn;
   clk("far", cf, 1.3, cOn && bhOn && tt > CUE.closer - 3.5); clk("mid", cm2, 1.3, cOn && bhOn && tt > CUE.closer - 2.2); clk("near", cn, 1.3, cOn && bhOn && tt > CUE.closer);
   const wOn = tt >= CUE.toyou - 0.1 && tt < CUE.tk + 0.4 && bhOn;
-  clk("you", [YOU[0], YOU[1] + 2.6, YOU[2]], 1.3, wOn); clk("fr", [fp[0], fp[1] + 1.7, fp[2]], 0.9, wOn);
+  clk("you", [YOU[0], YOU[1] + 2.4, YOU[2]], 1.0, wOn); clk("fr", [fp[0], fp[1] + 1.5, fp[2]], 0.7, wOn);
   // Earth and a GPS satellite
   earth.set({ center: [0, 0, 0], sunDir: [0.5, 0.2, 0.85], sun: 1, rimNight: 0.5, spin: -0.9 + 0.06 * tt });
-  const ga = 1.2 + 0.45 * (tt - CUE.gps), gp = [EARTH[0] + 9.2 * Math.cos(ga), EARTH[1] + 1.2 * Math.sin(ga), EARTH[2] + 9.2 * Math.sin(ga)];
+  const ga = 0.5 + 0.3 * (tt - CUE.gps), gp = [EARTH[0] + 9.2 * Math.cos(ga), EARTH[1] + 9.2 * Math.sin(ga) * 0.55, EARTH[2] + 3.0 * Math.sin(ga)];
   S.gps = gp; gpsB.set({ center: gp, camera, opacity: inGPS ? 1 : 0 });
-  gpsOrb.arc({ center: EARTH, r: 9.2, e1: [1, 0, 0], e2: [0, 0.14, 1] }).set({ opacity: inGPS ? 0.6 : 0 });
+  gpsOrb.arc({ center: EARTH, r: 9.2, e1: [1, 0, 0], e2: [0, 0.55, 0.3] }).set({ opacity: inGPS ? 0.6 : 0 });
   // the readout ring: from the hole outward; a dot for us at its edge
   const u = E.inout3(seg(tt, CUE.photo + 0.2, CUE.years + 0.5)), rr = 40 * u;
   ringR.arc({ center: [0, 0, 0], r: Math.max(0.01, rr), ...XZ }).set({ opacity: u > 0.002 ? 0.95 * (1 - 0.35 * u) * (1 - fadeIn(tt, CUE.end - 0.3, 0.3)) : 0 });
