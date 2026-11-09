@@ -83,7 +83,7 @@ const ringQ = (() => { const g = new THREE.PlaneGeometry(2.4, 2.4);
 const dustLayer = (n, cube, r0, r1, seed) => { const m = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 8), basic(CHALK2, 0.5, false), n); m.frustumCulled = false; m.userData.noProbe = true; m.renderOrder = 2; scene.add(m);
   let sd = seed; const rn = () => (sd = (sd * 16807) % 2147483647) / 2147483647; const Mt = new THREE.Matrix4(), Pp = new THREE.Vector3(), Ss = new THREE.Vector3(), Qq = new THREE.Quaternion();
   for (let i = 0; i < n; i++) { const r = r0 + rn() * rn() * (r1 - r0); Ss.set(r, r, 1); Pp.set((rn() - 0.5) * cube, (rn() - 0.15) * cube * 0.5, (rn() - 0.5) * cube * 0.6); Mt.compose(Pp, Qq, Ss); m.setMatrixAt(i, Mt); } m.instanceMatrix.needsUpdate = true; return m; };
-const dust0 = dustLayer(1400, 140, 0.05, 0.16, 11), dust1 = dustLayer(1400, 4e3, 1.5, 5, 23), dust2 = dustLayer(1400, 5e5, 200, 700, 37);
+const dust0 = dustLayer(3600, 140, 0.05, 0.17, 11), dust1 = dustLayer(1400, 4e3, 1.5, 5, 23), dust2 = dustLayer(1400, 5e5, 200, 700, 37);
 // the rope near you: a long box along x, the lifted rope on poles; a meter rod
 const rope = box(CHALK, 1, 6); rope.scale.set(4000, 0.05, 0.05);
 const NPOLE = 81, poles = new THREE.InstancedMesh(cyl(0.025, 1), basic(CHALK2, 0.9), NPOLE); poles.frustumCulled = false; poles.renderOrder = 5; poles.userData.noProbe = true; scene.add(poles);
@@ -96,11 +96,13 @@ const torus = (hex, order) => { const m = new THREE.Mesh(new THREE.TorusGeometry
 const diaIn = torus(CHALK, 6), diaOut = torus(MARK, 7); const DRAW = 8 * 6 * 160;
 const diaRad = box(MARK, 1, 8), diaDot = new THREE.Mesh(new THREE.CircleGeometry(1, 20), basic(CHALK, 1, false)); diaDot.rotation.x = -Math.PI / 2; diaDot.renderOrder = 8; diaDot.visible = false; diaDot.userData.noProbe = true; scene.add(diaDot);
 const RDIA = 1.0, RDIA2 = 1.28;
+const diaDot2 = new THREE.Mesh(new THREE.CircleGeometry(1, 20), basic(MARK, 1, false)); diaDot2.rotation.x = -Math.PI / 2; diaDot2.renderOrder = 9; diaDot2.visible = false; diaDot2.userData.noProbe = true; scene.add(diaDot2);
 
 // the extra rope laid out, and four of you lying head to toe
 const layRope = box(CHALK, 1, 6);
 const figTk = (hex) => ({ ...TK, anchor: hex });
-const lying = [0, 1, 2, 3].map(() => { const f = createFigure({ tokens: figTk("#8A8D96"), height: 1.7 }); f.set({ at: [0, 0, 0], arms: 0.08, tilt: 0 }); const w = new THREE.Group(); w.add(f.group); w.rotation.z = -Math.PI / 2; w.visible = false; scene.add(w); return { f, w }; });
+const LCOL = ["#4DA3FF", "#7FD0C4", "#E8A356", "#C79BFF"];
+const lying = LCOL.map((hex) => { const f = createFigure({ tokens: figTk(hex), height: 1.7 }); f.set({ at: [0, 0, 0], arms: 0.42, tilt: 0 }); const inner = new THREE.Group(); inner.add(f.group); inner.rotation.x = -Math.PI / 2; const w = new THREE.Group(); w.add(inner); w.rotation.y = -Math.PI / 2; w.visible = false; scene.add(w); return { f, w }; });
 const layTicks = [1, 2, 3, 4, 5, 6].map(() => { const m = box(MARK, 1, 8); m.scale.set(0.05, 0.4, 0.05); return m; });
 const layEnd = box(MARK, 1, 8); layEnd.scale.set(0.05, 0.5, 0.05);
 
@@ -116,9 +118,9 @@ const rig = createRig(FILM.cam);
 const hud = createHud({ camera, shots: FILM.shots });
 let youX = 0;
 const AN = {
-  you: () => [youX, 1.95, 0], rope: () => [-3.5, 0.15, -0.45], rod: () => [1.85, 0.62, 0.6],
+  you: () => [youX, 1.95, 0], rope: () => [-3.5, 0.15, -0.45], rod: () => [1.85, 0.12, 0.6],
   rad: () => [DIA[0] + 0.5 * RDIA * Math.cos(TH), 0.05, DIA[2] - 0.5 * RDIA * Math.sin(TH)], gap: () => [DIA[0] + 1.15 * RDIA * Math.cos(TH0 + 2.6), 0.05, DIA[2] - 1.15 * RDIA * Math.sin(TH0 + 2.6)],
-  "lay-end": () => [LAY[0] + EXTRA, 0.15, 0], "ten-top": () => [TEN[0] + 5, 9.6, 0], "long-end": () => [TEN[0] + 63, 0.2, 3.0],
+  "lay-end": () => [LAY[0] + EXTRA, 0.15, 0], "ten-top": () => [TEN[0] - 1.3, 9.4, 0], "long-end": () => [TEN[0] + 63, 0.2, 3.0],
 };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
@@ -161,9 +163,9 @@ window.seek = function (t) {
   // the paper (darkened before it is hidden: no bright slab) and you
   desk.group.visible = d < 4e4;
   desk.update({ grid: 1 - seg(ld, 2.0, 2.5), pool: [pose.target[0], pose.target[2]], casters: [[youX, 1.7, 0, 0.35]], span: Math.max(800, d * 8) });
-  { const wash = 1 + 3 * seg(ld, 3.4, 4.6); desk.uniforms.uExposure.value = wash; earthB.material.uniforms.uExposure.value = 1 + 4 * (1 - seg(ld, 6.9, 7.6)); }
+  { const wash = 1 + 1.0 * seg(ld, 2.9, 4.2); desk.uniforms.uExposure.value = wash; earthB.material.uniforms.uExposure.value = 1 + 4 * (1 - seg(ld, 6.9, 7.6)); }
   const lifted = seg(t, CUE.lift, CUE.lift + 1.2) * (1 - seg(t, CUE.why, CUE.why + 0.01));
-  const ropeOn = (shot === "lift" || (shot === "why" && t < CUE.why + 1.6)) && d < 6e3;
+  const ropeOn = (shot === "lift" || (shot === "why" && t < CUE.why + 0.4)) && d < 6e3;
   const ropeY = 0.03 + 0.97 * lifted;
   rope.visible = ropeOn; rope.position.set(0, ropeY, -0.45); rope.material.opacity = 1 - seg(ld, 3.3, 3.78);
   poles.visible = ropeOn && lifted > 0.01; poles.material.opacity = 0.9 * (1 - seg(ld, 2.7, 3.4));
@@ -171,15 +173,15 @@ window.seek = function (t) {
   const rodOn = shot === "lift" && t > CUE.dive[1] - 0.8 ? E.out3(seg(t, CUE.dive[1] - 0.8, CUE.dive[1] - 0.2)) * (1 - E.in3(seg(t, CUE.why - 0.2, CUE.why + 0.1))) : 0;
   rod.visible = rodOn > 0.02; rod.material.opacity = rodOn; for (const m of rodTicks) { m.visible = rodOn > 0.02; m.material.opacity = rodOn; }
   const onTen = t >= CUE.home - 0.2 && shot === "take";
-  youX = onTen ? TEN[0] - 3.2 : 0;
-  you.group.visible = d < 500 && ((shot === "lift" && t > CUE.dive[1] - 1.6) || shot === "why" && t < CUE.why + 1.4 || onTen);
+  youX = onTen ? TEN[0] - 1.6 : 0;
+  you.group.visible = d < 500 && ((shot === "lift" && t > CUE.dive[1] - 1.6) || shot === "why" && t < CUE.why + 0.5 || onTen);
   const armsU = 0.05;
   you.set({ at: [youX, 0.85, onTen ? 1.0 : 0], arms: armsU, tilt: 0 }); if (!onTen) you.set({ at: [0.15, 0.85, 0.2], arms: 0.06, tilt: 0 });
 
   // the planet and its rope ring
   const planet = d > 1500 && (shot === "planet" || shot === "lift" || shot === "end");
   const pl = seg(ld, 3.3, 4.4);
-  earthB.visible = planet && pl > 0.01; earthB.position.set(0, -R_E, 0); earthB.scale.setScalar(R_E); const endE = shot === "end" ? seg(t, beat("tease").t1 - 1.2, beat("tease").t1 - 0.5) : 1; earthB.material.uniforms.uOpacity.value = pl * endE * (1 - 0.7 * seg(ld, 3.6, 4.6) * (1 - seg(ld, 6.6, 7.1))); earthB.material.uniforms.uSpin.value = 2 * Math.PI * t / FILM.dur; ringQ.material.uniforms.uPulse.value = 2 * Math.PI * 13 * t / FILM.dur;
+  earthB.visible = planet && pl > 0.01; earthB.position.set(0, -R_E, 0); earthB.scale.setScalar(R_E); const endE = shot === "end" ? seg(t, beat("tease").t1 - 0.55, beat("tease").t1 - 0.12) : 1; earthB.material.uniforms.uOpacity.value = pl * endE * (1 - 0.85 * seg(ld, 3.9, 4.7) * (1 - seg(ld, 7.2, 7.7))); earthB.material.uniforms.uSpin.value = 2 * Math.PI * t / FILM.dur; ringQ.material.uniforms.uPulse.value = 2 * Math.PI * 13 * t / FILM.dur;
   const lu = E.inout2(seg(t, CUE.lift, CUE.lift + 1.4)) * (t < CUE.why ? 1 : 0);
   ringQ.visible = planet; ringQ.position.set(0, -R_E, 0); ringQ.scale.setScalar(R_E * 1.0);
   const w = px * 1.6 / R_E;
@@ -187,7 +189,7 @@ window.seek = function (t) {
   ringQ.material.uniforms.uO1.value = seg(ld, 3.1, 3.5) * (1 - 0.35 * lu) * endE; ringQ.material.uniforms.uO2.value = lu * seg(ld, 3.1, 3.5) * endE;
 
   { const nearPan = shot === "why" || shot === "whoa" || shot === "work" || shot === "take" || shot === "lift";
-    dust0.visible = nearPan && d < 160; dust0.material.opacity = 0.5 * (1 - seg(ld, 1.8, 2.2));
+    dust0.visible = nearPan && d < 160; dust0.material.opacity = 0.32 * (1 - seg(ld, 1.8, 2.2));
     dust1.visible = (shot === "lift" || shot === "planet" || shot === "end" || shot === "take") && d > 200 && d < 4e4; dust1.material.opacity = 0.5 * seg(ld, 2.2, 2.7) * (1 - seg(ld, 3.9, 4.4));
     dust2.visible = (shot === "lift" || shot === "planet" || shot === "end") && d > 2e3 && d < 4e6; dust2.material.opacity = 0.5 * seg(ld, 3.4, 3.9) * (1 - seg(ld, 6.0, 6.5)); }
   // the guess bar
@@ -202,6 +204,7 @@ window.seek = function (t) {
   diaIn.visible = diaOn && dIn > 0.001; diaIn.position.set(DIA[0], 0.03, DIA[2]); diaIn.scale.setScalar(RDIA); diaIn.geometry.setDrawRange(0, Math.max(6, Math.floor(E.inout2(dIn) * DRAW)));
   diaDot.visible = diaOn && dIn > 0.001; diaDot.position.set(DIA[0], 0.04, DIA[2]); diaDot.scale.setScalar(0.09);
   diaRad.visible = diaOn && dRad > 0.01; diaRad.scale.set(RDIA * dRad, 0.03, 0.035); diaRad.rotation.y = TH; diaRad.position.set(DIA[0] + 0.5 * RDIA * dRad * Math.cos(TH), 0.04, DIA[2] - 0.5 * RDIA * dRad * Math.sin(TH));
+  { const ang = TH0 + 2 * Math.PI * E.inout2(seg(t, c[3], CUE.whoa)); diaDot2.visible = diaOn && dOut > 0.9 && t < CUE.whoa + 0.4; diaDot2.position.set(DIA[0] + RDIA2 * Math.cos(ang), 0.05, DIA[2] - RDIA2 * Math.sin(ang)); diaDot2.scale.setScalar(0.1); }
   diaOut.visible = diaOn && dOut > 0.001; diaOut.position.set(DIA[0], 0.03, DIA[2]); diaOut.scale.setScalar(RDIA + (RDIA2 - RDIA) * dOut); diaOut.material.opacity = dOut;
 
   // the extra rope, laid out beside four of you
@@ -209,18 +212,19 @@ window.seek = function (t) {
   layRope.visible = layOn && lu2 > 0.001; layRope.scale.set(Math.max(0.01, EXTRA * lu2), 0.06, 0.06); layRope.position.set(LAY[0] + EXTRA * lu2 / 2, 0.04, LAY[2]);
   layTicks.forEach((m, i) => { m.visible = layOn && lu2 * EXTRA > i + 1; m.position.set(LAY[0] + i + 1, 0.2, LAY[2]); });
   layEnd.visible = layOn && lu2 > 0.99; layEnd.position.set(LAY[0] + EXTRA, 0.25, LAY[2]);
-  lying.forEach((o, i) => { const u = layOn ? E.back(seg(t, CUE.four + 0.28 * i, CUE.four + 0.28 * i + 0.4)) : 0; o.w.visible = layOn && u > 0.01; o.w.scale.setScalar(Math.max(0.01, u)); o.w.position.set(LAY[0] + 0.85 + 1.7 * i, 0.22, -0.65); });
+  lying.forEach((o, i) => { const u = layOn ? E.back(seg(t, CUE.four + 0.28 * i, CUE.four + 0.28 * i + 0.4)) : 0; o.w.visible = layOn && u > 0.01; o.w.scale.setScalar(Math.max(0.01, u)); o.w.position.set(LAY[0] + 0.85 + 1.7 * i, 0.3, -0.75); });
 
   // ten meters
   const tenOn = shot === "take" || (shot === "end" && t < FILM.endCard + 1.0);
   const grow = E.inout2(seg(t, CUE.home + 0.2, CUE.home + 2.0)), hh = 1 + 9 * grow;
-  tenPoles.visible = tenOn; tenRope.visible = tenOn;
-  for (let i = 0; i < NT; i++) { S3.set(1, hh, 1); P3.set(TEN[0] - 30 + i * 12, 0, 0); Mx.compose(P3, Q0, S3); tenPoles.setMatrixAt(i, Mx); } tenPoles.instanceMatrix.needsUpdate = true;
+  const tenFade = 1 - seg(t, CUE.ph2 + 0.2, CUE.ph2 + 1.0) + seg(t, FILM.endCard + 0.4, FILM.endCard + 0.41);
+  tenPoles.visible = tenOn && tenFade > 0.02; tenRope.visible = tenOn && tenFade > 0.02; tenPoles.material.opacity = 0.9 * tenFade; tenRope.material.opacity = tenFade;
+  for (let i = 0; i < NT; i++) { S3.set(1, hh, 1); P3.set(TEN[0] - 2.7 + (i - 2) * 12, 0, 0); Mx.compose(P3, Q0, S3); tenPoles.setMatrixAt(i, Mx); } tenPoles.instanceMatrix.needsUpdate = true;
   tenRope.scale.set(160, 0.06, 0.06); tenRope.position.set(TEN[0] + 40, hh, 0);
   pieces.forEach((m, i) => { const u = seg(t, CUE.ph2 + 0.9 + 0.22 * i, CUE.ph2 + 1.25 + 0.22 * i); m.visible = tenOn && u > 0.01; m.scale.set(Math.max(0.01, (EXTRA - 0.15) * u), 0.9, 0.9); m.position.set(TEN[0] + EXTRA * i + (EXTRA - 0.15) * u / 2, 0.45, 3.0); });
 
   hud.update(t);
-  const tail = E.inout2(seg(t, beat("tease").t1 - 1.1, beat("tease").t1 - 0.35));
+  const tail = E.inout2(seg(t, beat("tease").t1 - 1.5, beat("tease").t1 - 0.75));
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);
   spine.update(t, gate);

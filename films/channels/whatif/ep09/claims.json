@@ -52,12 +52,12 @@
     "id": "c5",
     "sentence": "That is about four of you, lying head to toe.",
     "claim": "6.28 m / 1.7 m (an adult's height, assumption) = 3.7: 'about four of you'.",
-    "source_url": "https://science.nasa.gov/earth/facts/",
-    "source_title": "Arithmetic (calc.py: people); height 1.7 m is an assumption",
+    "source_url": "https://en.wikipedia.org/wiki/Circle",
+    "source_title": "Arithmetic: the extra rope 2π × 1 m divided by an assumed 1.7 m person; definition reference: Wikipedia, Circle",
     "accessed": "2026-11-08",
     "verified_via": "search excerpt",
     "status": "TODO open link",
-    "kind": "calculation",
+    "kind": "derivation",
     "note": "OPEN until a person opens the page. Anchor figure; a person's height varies (the film says 'about')."
   },
   {

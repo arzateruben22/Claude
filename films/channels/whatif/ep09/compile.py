@@ -33,9 +33,9 @@ assert R["extra_m"] == 6.3 and R["people"] == 4 and R["extra_10m"] == 63
 
 R_E = 6.378e6
 # places on the paper (metres): the diagram, the laid-out rope, the ten-meter lift
-DIA = (20.0, 0.0, -3.0)
-LAY = (43.0, 0.0, 0.0)
-TEN = (75.0, 0.0, 0.0)
+DIA = (3.2, 0.0, -1.3)
+LAY = (12.0, 0.0, 0.0)
+TEN = (40.0, 0.0, 0.0)
 EXTRA = V["extra_m"]
 
 # ── times ──
@@ -84,11 +84,11 @@ t_arrive = t_nor + 2.0
 k_dive = path_keys(t_dive0, t_dive0 + 3.9, 1.25e8, 18.0, 14)
 k_dive[0] = {"t": round(t_dive0, 4), **PL, "ease": "linear"}
 k_dive[-1] = {"t": round(t_dive0 + 3.9, 4), **LIFT, "ease": "inout2"}
-DIAP = T(DIA[0], 0.0, DIA[2], 13.0, 68.0, 0.0, 0.26)
+DIAP = T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31)
 LAYP = T(LAY[0] + 3.14, 0.0, -0.3, 40.0, 60.0, 0.0, 0.26)
 LAYQ = T(LAY[0] + 3.14, 0.0, -0.3, 36.0, 56.0, 8.0, 0.26)
-WORKP = T(LAY[0] + 3.14, 0.0, -0.3, 40.0, 46.0, 12.0, 0.86)
-WORKP2 = T(LAY[0] + 3.14, 0.0, -0.3, 40.0, 46.0, 28.0, 0.86)
+WORKP = T(LAY[0] + 3.14, 0.0, -0.3, 40.0, 46.0, 6.0, 0.90)
+WORKP2 = T(LAY[0] + 3.14, 0.0, -0.3, 40.0, 46.0, 18.0, 0.90)
 TENP = T(TEN[0], 5.0, 0.0, 27.0, 8.0, 0.0, 0.56)
 LONGP = T(TEN[0] + 31.5, 0.0, 1.5, 190.0, 32.0, 0.0, 0.80)
 LONGP2 = T(TEN[0] + 31.5, 0.0, 1.5, 175.0, 30.0, 18.0, 0.80)
@@ -98,8 +98,8 @@ CAM = {
     "planet": [{"t": 0.0, **PL}, {"t": round(t_nor + 3.0, 4), **T(0.0, -R_E, 0.0, 1.25e8, 14.0, 16.0, 0.34), "ease": "sine"}, {"t": t_dive0, **PL, "ease": "sine"}],
     "lift": k_dive + [{"t": t_why, **T(1.0, 0.9, 0.0, 18.0, 5.0, 10.0, 0.84), "ease": "sine"}],
     "why": [{"t": t_why, **T(1.0, 0.9, 0.0, 18.0, 5.0, 10.0, 0.84)}, {"t": round(t_why + 2.6, 4), **DIAP, "ease": "inout2"}, {"t": round(t_lift4 + 0.5, 4), **DIAP, "ease": "sine"},
-            {"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 11.5, 68.0, 0.0, 0.26), "ease": "sine"}],
-    "whoa": [{"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 11.5, 68.0, 0.0, 0.26)}, {"t": round(t_whoa + 1.8, 4), **LAYP, "ease": "inout2"}, {"t": round(t_work0 - 2.0, 4), **LAYQ, "ease": "sine"}, {"t": t_work0, **WORKP, "ease": "inout2"}],
+            {"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31), "ease": "sine"}],
+    "whoa": [{"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31)}, {"t": round(t_whoa + 1.8, 4), **LAYP, "ease": "inout2"}, {"t": round(t_work0 - 3.6, 4), **LAYQ, "ease": "sine"}, {"t": round(t_work0 - 1.4, 4), **WORKP, "ease": "inout2"}, {"t": t_work0, **WORKP, "ease": "linear"}],
     "work": [{"t": t_work0, **WORKP}, {"t": t_home, **WORKP2, "ease": "sine"}],
     "take": [{"t": t_home, **WORKP2}, {"t": round(t_home + 2.2, 4), **TENP, "ease": "inout2"}, {"t": round(t_ph2 - 0.1, 4), **TENP, "ease": "sine"},
              {"t": round(t_ph2 + 2.6, 4), **LONGP, "ease": "inout2"}, {"t": t_end, **LONGP2, "ease": "sine"}],
@@ -142,7 +142,7 @@ WORK = {
 
 # ── labels, badges, counters ──
 LABELS = [
-    {"id": "l-rod", "text": "1 m", "kind": "part", "anchor": "rod", "t0": t_dive0 + 3.2, "t1": t_why - 0.2, "side": 1},
+    {"id": "l-rod", "text": "1 m", "kind": "part", "anchor": "rod", "t0": t_dive0 + 3.3, "t1": t_why - 0.2, "side": 1},
     {"id": "l-rad", "text": "radius", "kind": "part", "anchor": "rad", "t0": t_radius, "t1": t_lift4 - 0.2, "side": 1},
     {"id": "l-gap", "text": "+ 1 m", "kind": "calc", "anchor": "gap", "t0": t_lift4 + 0.3, "t1": t_whoa - 0.2, "side": -1},
     {"id": "l-ten", "text": "10 m", "kind": "part", "anchor": "ten-top", "t0": t_home + 2.4, "t1": t_ph2 + 0.8, "side": 1},
@@ -161,7 +161,7 @@ BADGES = [
     {"id": "b-x10", "text": "10 × the lift: 10 × the rope", "t0": t_ph2 + 1.0, "t1": t_end - 0.3, "slot": "tl"},
 ]
 COUNTERS = [
-    {"id": "c-extra", "label": "extra rope", "t0": t_grows - 0.2, "t1": t_work0 - 2.4, "at": [0.5, 0.40], "keys": [[t_grows, 0.0], [t_six, EXTRA], [t_work0, EXTRA]], "end": EXTRA, "unit": "m"},
+    {"id": "c-extra", "label": "extra rope", "t0": t_grows, "t1": t_work0 - 3.7, "at": [0.5, 0.40], "keys": [[t_grows, 0.0], [t_six, EXTRA], [t_work0, EXTRA]], "end": EXTRA, "unit": "m"},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 for b in BADGES:

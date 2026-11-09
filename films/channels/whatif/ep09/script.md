@@ -1,8 +1,8 @@
-# Possibility Lab Season 2 · Episode 3: "A rope around the Earth" (draft; fact-check before posting)
+# Possibility Lab Season 2 · Episode 3: "A rope round the Earth" (draft; fact-check before posting)
 
 S2E03 (folder ep09): Season 2 numbers its episodes from 1 again; the folder name stays ep09 so the pipeline and Prism imports keep working.
 
-About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
+About 75 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 The destination No. 008's end card promised. Every number comes from `calc.py` (NASA's Earth diameter; circle
 geometry); `compile.py` reads its `RESULTS`. The voice says four figures (forty thousand kilometers, one meter, six
 meters, four of you); the running sum, labels and footnote carry the rest (2 x pi x 1 m = 6.28 m, 63 m at ten meters,
@@ -12,7 +12,7 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. `{c1,c
 it to `claims.json`; `{-}` marks a sentence that states nothing outside the film.
 Check it with `python3 -I kits/cinema/script/lint.py films/channels/whatif/ep09 --segment work`.
 
-## hook {shot: a rope hugging the whole Earth, a thin chalk ring; you, one blue figure, stand on the graph paper beside the rope's near edge · badge: thought experiment · title: "A rope around the Earth" · pre: 0.1 · picture-only 0.3 s · energy: 0.6} (0–6.2 s)
+## hook {shot: a rope hugging the whole Earth, a thin chalk ring; you, one blue figure, stand on the graph paper beside the rope's near edge · badge: thought experiment · title: "A rope round the Earth" · pre: 0.1 · picture-only 0.3 s · energy: 0.6} (0–6.2 s)
 vo: How much more *rope*? Round the whole Earth, lifted one meter off the ground. {-}
 
 ## normal {shot: the rope runs off both ways along the paper; the counter shows its length · spine "40,000 km of rope" · picture-only 0.3 s · energy: 0.45} (6.2–16.6 s)
