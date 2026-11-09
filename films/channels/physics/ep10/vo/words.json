@@ -1,0 +1,1021 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Why does coffee leave a ring? Not… blobs.",
+   "heard": "Why does coffee leave a ring? Not blobs.",
+   "words": [
+    {
+     "w": "Why",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 0.43,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "coffee",
+     "start": 0.46,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "leave",
+     "start": 0.715,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.96,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "ring?",
+     "start": 1.05,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "Not…",
+     "start": 1.785,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "blobs.",
+     "start": 2.44,
+     "end": 3.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Spill a drop of coffee and let it dry. It leaves a dark ring, with a paler middle. Coffee is mostly water, with tiny brown specks in it.",
+   "heard": "Spill a drop of coffee and let it dry. It leaves a dark ring with a paler middle. Coffee is mostly water with tiny brown specks in it.",
+   "words": [
+    {
+     "w": "Spill",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.47,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 0.5,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.79,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "coffee",
+     "start": 0.95,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.545,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "let",
+     "start": 1.775,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.915,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "dry.",
+     "start": 2.17,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 2.98,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "leaves",
+     "start": 3.01,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.38,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "dark",
+     "start": 3.53,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "ring,",
+     "start": 3.84,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 4.46,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.685,
+     "end": 4.735,
+     "heard": true
+    },
+    {
+     "w": "paler",
+     "start": 4.715,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "middle.",
+     "start": 5.2,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "Coffee",
+     "start": 6.11,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.62,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "mostly",
+     "start": 6.75,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "water,",
+     "start": 7.275,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 8.025,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 8.215,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "brown",
+     "start": 8.785,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "specks",
+     "start": 9.205,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 9.535,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 9.845,
+     "end": 10.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Watch the specks. They don't stay put. They stream outward, toward the edge.",
+   "heard": "Watch the specks. They don't stay put. They stream outward toward the edge.",
+   "words": [
+    {
+     "w": "Watch",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.455,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "specks.",
+     "start": 0.675,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 1.49,
+     "end": 1.54,
+     "heard": true
+    },
+    {
+     "w": "don't",
+     "start": 1.52,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "stay",
+     "start": 1.84,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "put.",
+     "start": 2.08,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 2.87,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "stream",
+     "start": 2.9,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "outward,",
+     "start": 3.37,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "toward",
+     "start": 3.91,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.185,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "edge.",
+     "start": 4.315,
+     "end": 4.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "The edge of the drop is stuck to the paper. Water evaporates from that edge, so water from the middle flows out to replace it. The flow carries the specks along.",
+   "heard": "The edge of the drop is stuck to the paper. Water evaporates from that edge, so water from the middle flows out to replace it. The flow carries the specks along.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "edge",
+     "start": 0.195,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.54,
+     "end": 0.59,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.57,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 0.68,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.085,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "stuck",
+     "start": 1.445,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.705,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.9,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "paper.",
+     "start": 1.93,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "Water",
+     "start": 3.015,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "evaporates",
+     "start": 3.27,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 4.1,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 4.22,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "edge,",
+     "start": 4.565,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 5.345,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 5.43,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 6.015,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.07,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "middle",
+     "start": 6.24,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "flows",
+     "start": 6.705,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 7.21,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.29,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "replace",
+     "start": 7.555,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 8.835,
+     "end": 8.885,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 8.865,
+     "end": 8.915,
+     "heard": true
+    },
+    {
+     "w": "flow",
+     "start": 8.975,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "carries",
+     "start": 9.53,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.005,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "specks",
+     "start": 10.035,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "along.",
+     "start": 10.555,
+     "end": 11.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "As the drop thins, the flow speeds up. In the last moments, the specks pile up at the edge. Make the specks oval, and the ring can vanish.",
+   "heard": "As the drop thins, the flow speeds up. In the last moments, the specks pile up at the edge, make the specks oval, and the ring can vanish.",
+   "words": [
+    {
+     "w": "As",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.29,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 0.32,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "thins,",
+     "start": 0.895,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.605,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "flow",
+     "start": 1.75,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "speeds",
+     "start": 2.28,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 2.8,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 3.455,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.485,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "last",
+     "start": 3.675,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "moments,",
+     "start": 4.025,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.555,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "specks",
+     "start": 4.825,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "pile",
+     "start": 5.215,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 5.66,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 5.77,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.88,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "edge.",
+     "start": 6.005,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "Make",
+     "start": 6.99,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.205,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "specks",
+     "start": 7.235,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "oval,",
+     "start": 7.81,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.425,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.65,
+     "end": 8.7,
+     "heard": true
+    },
+    {
+     "w": "ring",
+     "start": 8.695,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 8.955,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "vanish.",
+     "start": 9.175,
+     "end": 9.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Measure it: in this model, nine in ten specks reach the ring.",
+   "heard": "Measure it. In this model, nine in ten specks reach the ring.",
+   "words": [
+    {
+     "w": "Measure",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "it:",
+     "start": 0.64,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.14,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 1.17,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "model,",
+     "start": 1.46,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "nine",
+     "start": 2.01,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.345,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 2.515,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "specks",
+     "start": 2.975,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 3.33,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.65,
+     "end": 3.7,
+     "heard": true
+    },
+    {
+     "w": "ring.",
+     "start": 3.68,
+     "end": 4.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Oval specks cling together at the surface, so they rarely reach the edge. A stuck edge and a flow going out: that's all a ring takes.",
+   "heard": "Oval specks cling together at the surface, so they rarely reach the edge. A stuck edge and a flow going out, that's all a ring takes.",
+   "words": [
+    {
+     "w": "Oval",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "specks",
+     "start": 0.57,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "cling",
+     "start": 0.985,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "together",
+     "start": 1.355,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.73,
+     "end": 1.78,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.76,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "surface,",
+     "start": 1.885,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 2.725,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 2.785,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "rarely",
+     "start": 3.12,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 3.6,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.93,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "edge.",
+     "start": 4.055,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 5.21,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "stuck",
+     "start": 5.24,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "edge",
+     "start": 5.72,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.125,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.325,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "flow",
+     "start": 6.455,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "going",
+     "start": 6.72,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "out:",
+     "start": 7.12,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "that's",
+     "start": 7.755,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 7.94,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.05,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "ring",
+     "start": 8.325,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "takes.",
+     "start": 8.55,
+     "end": 8.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: listen carefully to a mug filling with water. You can hear it rise.",
+   "heard": "Next, listen carefully to a mug filling with water. You can hear it rise.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "listen",
+     "start": 0.895,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "carefully",
+     "start": 1.235,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.78,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.835,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "mug",
+     "start": 2.0,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "filling",
+     "start": 2.48,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 2.975,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "water.",
+     "start": 3.005,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 3.91,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 4.03,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "hear",
+     "start": 4.195,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.44,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "rise.",
+     "start": 4.47,
+     "end": 5.04,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

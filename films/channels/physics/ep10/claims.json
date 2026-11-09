@@ -1,0 +1,123 @@
+[
+ {
+  "id": "c1",
+  "sentence": "It leaves a dark ring, with a paler middle.",
+  "claim": "A dried drop of a suspension leaves a ring stain: the solids collect at the drop's edge.",
+  "source_url": "https://doi.org/10.1038/39827",
+  "source_title": "Deegan, Bakajin, Dupont, Huber, Nagel, Witten, 'Capillary flow as the cause of ring stains from dried liquid drops', Nature 389, 827 (1997)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nature.com was unreachable from the builder session. The paper's title and abstract are about 'ring stains from dried liquid drops'."
+ },
+ {
+  "id": "c2",
+  "sentence": "They stream outward, toward the edge.",
+  "claim": "Within the drying drop an outward flow carries the suspended particles to the edge.",
+  "source_url": "https://doi.org/10.1038/39827",
+  "source_title": "Deegan, Bakajin, Dupont, Huber, Nagel, Witten, 'Capillary flow as the cause of ring stains from dried liquid drops', Nature 389, 827 (1997)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nature.com was unreachable from the builder session. Secondary summary of the abstract; the abstract's own sentence about carrying the material to the edge has not been seen."
+ },
+ {
+  "id": "c3",
+  "sentence": "The edge of the drop is stuck to the paper.",
+  "claim": "The contact line of the drying drop is pinned.",
+  "source_url": "https://doi.org/10.1038/39827",
+  "source_title": "Deegan, Bakajin, Dupont, Huber, Nagel, Witten, 'Capillary flow as the cause of ring stains from dried liquid drops', Nature 389, 827 (1997)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nature.com was unreachable from the builder session. Excerpt of the abstract: 'Pinning of the contact line of the drying drop ensures that liquid evaporating from the edge is replenished by liquid from the interior.' Also: 'Line pinning is produced by surface irregularities and is much stronger with the solute than without it.'"
+ },
+ {
+  "id": "c4",
+  "sentence": "Water evaporates from that edge, so water from the middle flows out to replace it.",
+  "claim": "Liquid evaporating from the edge is replenished by liquid from the interior.",
+  "source_url": "https://doi.org/10.1038/39827",
+  "source_title": "Deegan, Bakajin, Dupont, Huber, Nagel, Witten, 'Capillary flow as the cause of ring stains from dried liquid drops', Nature 389, 827 (1997)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nature.com was unreachable from the builder session. Excerpt of the abstract (same sentence as c3)."
+ },
+ {
+  "id": "c5",
+  "sentence": "The flow carries the specks along.",
+  "claim": "The outward flow carries the dispersed particles with it to the edge.",
+  "source_url": "https://doi.org/10.1038/39827",
+  "source_title": "Deegan, Bakajin, Dupont, Huber, Nagel, Witten, 'Capillary flow as the cause of ring stains from dried liquid drops', Nature 389, 827 (1997)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nature.com was unreachable from the builder session. Secondary summary; the abstract's wording has not been seen."
+ },
+ {
+  "id": "c6",
+  "sentence": "As the drop thins, the flow speeds up.",
+  "claim": "In our closed-form model of a pinned drop, the outward speed of the flow grows without limit as the drop thins.",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10",
+  "source_title": "Our model (scene.mjs, after Deegan et al. 1997)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "OPEN: our model, with round numbers; the paper predicts a power-law growth of the ring mass with time (search excerpt). A person should check the model's flux and flow formulas against the paper."
+ },
+ {
+  "id": "c7",
+  "sentence": "Make the specks oval, and the ring can vanish.",
+  "claim": "Ellipsoidal particles are deposited uniformly during evaporation instead of forming a ring (and surfactant restores the ring).",
+  "source_url": "https://doi.org/10.1038/nature10344",
+  "source_title": "Yunker, Still, Lohr, Yodh, 'Suppression of the coffee-ring effect by shape-dependent capillary interactions', Nature 476, 308 (2011)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nature.com was unreachable from the builder session. Excerpt of the abstract: 'ellipsoidal particles are deposited uniformly during evaporation'; a news summary adds that the trick does not always work with mixtures. Hedged with 'can'."
+ },
+ {
+  "id": "c8",
+  "sentence": "Measure it: in this model, nine in ten specks reach the ring.",
+  "claim": "In our closed-form model, about nine in ten of the specks (initially uniform over the drop) end up within 5% of the drop's radius from its edge.",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10",
+  "source_title": "Our model (scene.mjs, compile.py)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "OPEN: our model, to be re-run by a person; the number is set by the model's parameters and is checked in compile.py (review/model-check.md)."
+ },
+ {
+  "id": "c9",
+  "sentence": "You can hear it rise.",
+  "claim": "The pitch of the sound of a filling cup rises as the air column above the water shortens.",
+  "source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-5-sources-of-musical-sound",
+  "source_title": "OpenStax University Physics Vol. 1, 17.5 Sources of Musical Sound",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: tease for ep11; not yet searched or read."
+ },
+ {
+  "id": "c10",
+  "sentence": "In the last moments, the specks pile up at the edge.",
+  "claim": "In our closed-form model, most specks reach the edge in the last moments of drying.",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10",
+  "source_title": "Our model (scene.mjs, after Deegan et al. 1997)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "OPEN: our model, with round numbers; the paper predicts a power-law growth of the ring mass with time (search excerpt). A person should check the model's flux and flow formulas against the paper."
+ },
+ {
+  "id": "c11",
+  "sentence": "Oval specks cling together at the surface, so they rarely reach the edge.",
+  "claim": "Ellipsoidal particles are carried to the air-water surface by the outward flow, where their shape deforms the surface and produces attractions between particles, so they form loose clumps instead of a ring.",
+  "source_url": "https://doi.org/10.1038/nature10344",
+  "source_title": "Yunker, Still, Lohr, Yodh, Nature 476, 308 (2011)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only (abstract: 'anisotropic shape of the particles significantly deforms interfaces, producing strong interparticle capillary interactions'; news summaries add that ellipsoids are captured at the interface). The line says 'rarely reach the edge': a person should check that against the paper."
+ }
+]

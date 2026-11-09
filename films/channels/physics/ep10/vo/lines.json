@@ -1,0 +1,106 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why does coffee leave a ring? Not… blobs.",
+   "stars": [
+    "ring"
+   ],
+   "phonemes": "wˌaɪ dˈʌz kˈɔfi lˈiːv ɐ ɹˈɪŋ? nˈɑːt… blˈɑːbz.",
+   "file": "01.wav",
+   "dur": 3.1,
+   "sha256": "37858ec226dc1881afa180046cdb9a8e6f06a62981082ecdb3ac0f232ffab465"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Spill a drop of coffee and let it dry. It leaves a dark ring, with a paler middle. Coffee is mostly water, with tiny brown specks in it.",
+   "stars": [],
+   "phonemes": "spˈɪl ɐ dɹˈɑːp ʌv kˈɔfi ænd lˈɛt ɪt dɹˈaɪ. ɪt lˈiːvz ɐ dˈɑːɹk ɹˈɪŋ, wɪð ɐ pˈeɪlɚ mˈɪdəl. kˈɔfi ɪz mˈoʊstli wˈɔːɾɚ, wɪð tˈaɪni bɹˈaʊn spˈɛks ɪn ɪt.",
+   "file": "02.wav",
+   "dur": 10.008,
+   "sha256": "8d69233592a9a4318e63fd42aa8e42cb3771d925de68bde9b0a41ee6d36e4dbe"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Watch the specks. They don't stay put. They stream outward, toward the edge.",
+   "stars": [
+    "outward"
+   ],
+   "phonemes": "wˈɑːtʃ ðə spˈɛks. ðeɪ dˈoʊnt stˈeɪ pˈʊt. ðeɪ stɹˈiːm ˈaʊtwɚd, təwˈɔːɹd ðɪ ˈɛdʒ.",
+   "file": "03.wav",
+   "dur": 4.822,
+   "sha256": "857f29c9970912a07b0dead4dea67234e6494b3e035bff1f114bfd725f7dfdd0"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "The edge of the drop is stuck to the paper. Water evaporates from that edge, so water from the middle flows out to replace it. The flow carries the specks along.",
+   "stars": [
+    "along"
+   ],
+   "phonemes": "ðɪ ˈɛdʒ ʌvðə dɹˈɑːp ɪz stˈʌk tə ðə pˈeɪpɚ. wˈɔːɾɚɹ ɪvˈæpɚɹˌeɪts fɹʌm ðæt ˈɛdʒ, sˌoʊ wˈɔːɾɚ fɹʌmðə mˈɪdəl flˈoʊz ˈaʊt tə ɹᵻplˈeɪs ɪt. ðə flˈoʊ kˈæɹiz ðə spˈɛks ɐlˈɔŋ.",
+   "file": "04.wav",
+   "dur": 11.126,
+   "sha256": "f9c1c0ee39acf2adb63177d57a012368c504f45d48fa3e1cf9ec6a26f463a570"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "As the drop thins, the flow speeds up. In the last moments, the specks pile up at the edge. Make the specks oval, and the ring can vanish.",
+   "stars": [
+    "vanish"
+   ],
+   "phonemes": "æz ðə dɹˈɑːp θˈɪnz, ðə flˈoʊ spˈiːdz ˈʌp. ɪnðə lˈæst mˈoʊmənts, ðə spˈɛks pˈaɪl ˌʌp æt ðɪ ˈɛdʒ. mˌeɪk ðə spˈɛks ˈoʊvəl, ænd ðə ɹˈɪŋ kæn vˈænɪʃ.",
+   "file": "05.wav",
+   "dur": 9.745,
+   "sha256": "8165ed9cd86d334089a7e816ddacc7203c7c2299d2ced5b079f9e89788fb5377"
+  },
+  {
+   "id": "vo06",
+   "beat": "measure",
+   "text": "Measure it: in this model, nine in ten specks reach the ring.",
+   "stars": [
+    "Measure it"
+   ],
+   "phonemes": "mˈɛʒɚɹ ɪt: ɪn ðɪs mˈɑːdəl, nˈaɪn ɪn tˈɛn spˈɛks ɹˈiːtʃ ðə ɹˈɪŋ.",
+   "file": "06.wav",
+   "dur": 4.13,
+   "sha256": "7663b490b98c4c281d2abcb4aa290b5401f4ce4e1ee2f9ccadfbfe47599f596d"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Oval specks cling together at the surface, so they rarely reach the edge. A stuck edge and a flow going out: that's all a ring takes.",
+   "stars": [
+    "edge"
+   ],
+   "phonemes": "ˈoʊvəl spˈɛks klˈɪŋ təɡˌɛðɚɹ æt ðə sˈɜːfɪs, sˌoʊ ðeɪ ɹˈɛɹli ɹˈiːtʃ ðɪ ˈɛdʒ. ɐ stˈʌk ˈɛdʒ ænd ɐ flˈoʊ ɡˌoʊɪŋ ˈaʊt: ðæts ˈɔːl ɐ ɹˈɪŋ tˈeɪks.",
+   "file": "07.wav",
+   "dur": 9.012,
+   "sha256": "99b49ff01debe6c5588f7d4f82b87f87a6a9fd2cc3b887c779e3a3da2c1ac247"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: listen carefully to a mug filling with water. You can hear it rise.",
+   "stars": [
+    "hear"
+   ],
+   "phonemes": "nˈɛkst: lˈɪsən kˈɛɹfəli tʊ ɐ mˈʌɡ fˈɪlɪŋ wɪð wˈɔːɾɚ. juː kæn hˈɪɹ ɪt ɹˈaɪz.",
+   "file": "08.wav",
+   "dur": 5.099,
+   "sha256": "142d78d6cd4981ac0542cba53f1edee5fa0fa13156adde394137cbdac7607ecc"
+  }
+ ]
+}
