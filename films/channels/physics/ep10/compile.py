@@ -79,39 +79,56 @@ def take(*keys):
     return [[round(t, 4), round(v, 5)] for t, v in keys]
 
 
+ENDSHOW = round(A("vo08:You") - 0.15, 4)                  # the end card comes up as the last sentence starts and holds to the end
 T_DRY = A("vo02:dry.") + 0.3
+FRESH_T = round(A("vo02:Coffee#2") - 0.25, 4)       # "Coffee is mostly water, with tiny brown specks in it": a fresh drop, close up
+PAIR0 = round(A("vo05:Make") - 0.4, 4)             # "Make the specks oval": a second drop (an illustration) comes in beside the first
 TAKES = [
     {"name": "hook", "t0": 0.0, "t1": cut("normal"), "view": "top", "keys": take((0.0, 0.0), (cut("normal"), 0.3))},
-    {"name": "normal", "t0": cut("normal"), "t1": cut("change"), "view": "top",
-     "keys": take((cut("normal"), 0.0), (A("vo02:Spill") + 0.3, 0.0), (T_DRY, 0.985), (A("vo02:ring,") + 0.4, 0.999), (cut("change"), 0.999))},
+    {"name": "normal", "t0": cut("normal"), "t1": FRESH_T, "view": "top",
+     "keys": take((cut("normal"), 0.0), (A("vo02:Spill") + 0.3, 0.0), (T_DRY, 0.985), (A("vo02:ring,") + 0.4, 0.999), (FRESH_T, 0.999))},
+    {"name": "fresh", "t0": FRESH_T, "t1": cut("change"), "view": "top", "keys": take((FRESH_T, 0.0), (cut("change"), 0.09))},
     {"name": "change", "t0": cut("change"), "t1": cut("why"), "view": "top", "keys": take((cut("change"), 0.02), (cut("why"), 0.6))},
     {"name": "why", "t0": cut("why"), "t1": cut("whoa"), "view": "side", "keys": take((cut("why"), 0.3), (cut("whoa"), 0.56))},
     {"name": "whoa", "t0": cut("whoa"), "t1": cut("measure"), "view": "top",
-     "keys": take((cut("whoa"), 0.5), (A("vo05:speeds") + 0.2, 0.86), (A("vo05:edge.") + 0.2, 0.995), (cut("measure"), 0.999))},
+     "keys": take((cut("whoa"), 0.5), (A("vo05:speeds") + 0.2, 0.86), (A("vo05:edge.") + 0.2, 0.995), (PAIR0, 0.999), (cut("measure"), 0.999))},
     {"name": "measure", "t0": cut("measure"), "t1": cut("takeaway"), "view": "top",
      "keys": take((cut("measure"), 0.0), (A("vo06:nine"), 0.9), (A("vo06:reach"), S_MEASURE), (cut("takeaway"), 0.999))},
-    {"name": "takeaway", "t0": cut("takeaway"), "t1": cut("tease"), "view": "top", "keys": take((cut("takeaway"), 0.999), (cut("tease"), 0.999))},
+    {"name": "takeaway", "t0": cut("takeaway"), "t1": cut("tease"), "view": "top",
+     "keys": take((cut("takeaway"), 0.0), (A("vo07:A") - 0.3, 0.999), (cut("tease"), 0.999))},
     {"name": "tease", "t0": cut("tease"), "t1": DUR + 1, "view": "top", "keys": take((cut("tease"), 0.999), (DUR + 1, 0.999))},
 ]
-ENDSHOW = round(A("vo08:You") - 0.15, 4)                  # the end card comes up as the last sentence starts and holds to the end
+# the second drop (oval specks): our model has no capillary forces, so this is an illustration: specks stay spread out
+TAKE_B = take((0.0, 0.0), (PAIR0, 0.0), (cut("measure") - 0.02, 0.999), (cut("measure") - 0.01, 0.0), (A("vo06:reach"), S_MEASURE), (cut("takeaway"), 0.999),
+              (cut("takeaway") + 0.01, 0.0), (A("vo07:A") - 0.3, 0.999), (DUR + 1, 0.999))
 TRAIL_W = [cut("change") + 0.4, cut("why") - 0.2]
 CUT_W = [cut("why") + 0.3, cut("whoa") - 0.2]               # the side view's arrows
+PULSE_W = [A("vo07:A") - 0.3, cut("tease") - 0.2]           # the arrows come back, pulsing, on the finished ring
+YX = [cut("why"), cut("whoa")]                              # the side view stretches the drop's height (a tag says so)
 LABELS = [
     {"id": "no-drop", "text": "coffee drop", "color": "ghost", "t0": cut("normal") + 0.2, "t1": A("vo02:dry."), "at": "edge", "side": 1},
-    {"id": "no-ring", "text": "dark ring", "color": "energy", "t0": A("vo02:dark"), "t1": cut("change") - 0.3, "at": "edge", "side": 1},
+    {"id": "no-ring", "text": "dark ring", "color": "energy", "t0": A("vo02:dark"), "t1": FRESH_T - 0.2, "at": "edge", "side": 1},
+    {"id": "fr-speck", "text": "a speck", "color": "motion", "t0": FRESH_T + 0.5, "t1": cut("change") - 0.3, "at": "speck", "side": -1},
     {"id": "ch-speck", "text": "a speck", "color": "motion", "t0": cut("change") + 0.3, "t1": A("vo03:outward,") - 0.2, "at": "speck", "side": -1},
     {"id": "ch-edge", "text": "the edge", "color": "ghost", "t0": A("vo03:toward"), "t1": cut("why") - 0.3, "at": "edge", "side": 1},
     {"id": "wy-stuck", "text": "edge stuck to the paper", "color": "ghost", "t0": cut("why") + 0.2, "t1": A("vo04:Water") - 0.1, "at": "edge", "side": 1},
-    {"id": "wy-evap", "text": "water evaporates here", "color": "energy", "t0": A("vo04:Water"), "t1": A("vo04:so") - 0.1, "at": "evap", "side": 1},
-    {"id": "wy-flow", "text": "flow replaces it", "color": "force", "t0": A("vo04:so"), "t1": A("vo04:The") - 0.1, "at": "flow", "side": -1},
-    {"id": "wo-pile", "text": "specks pile up", "color": "energy", "t0": A("vo05:pile"), "t1": cut("measure") - 0.3, "at": "edge", "side": 1},
+    {"id": "wy-evap", "text": "water evaporates here", "color": "energy", "t0": A("vo04:Water"), "t1": A("vo04:so") - 0.1, "at": "evap", "side": -1},
+    {"id": "wy-flow", "text": "flow replaces it", "color": "force", "t0": A("vo04:so"), "t1": A("vo04:The") - 0.1, "at": "flow", "side": 1},
+    {"id": "wo-pile", "text": "specks pile up", "color": "energy", "t0": A("vo05:pile"), "t1": PAIR0 - 0.1, "at": "edge", "side": 1},
+    {"id": "pr-round", "text": "round specks", "color": "energy", "t0": PAIR0 + 0.9, "t1": cut("tease") - 0.3, "at": "pairA", "side": 1},
+    {"id": "pr-oval", "text": "oval specks", "color": "force", "t0": PAIR0 + 1.0, "t1": cut("tease") - 0.3, "at": "pairB", "side": 1},
 ]
+for _lb in LABELS:
+    _lb["t0"] = round((math.floor(_lb["t0"] * FPS) + 0.5) / FPS, 6)
 BADGES = [
-    {"id": "tl", "kind": "tag", "text": "Time-lapse model", "t0": cut("normal") + 0.3, "t1": round(A("vo05:Make") - 0.3, 4), "slot": "tr"},
-    {"id": "oval", "kind": "tag", "text": "Oval specks can spread evenly", "t0": A("vo05:Make"), "t1": round(cut("measure") - 0.5, 4), "slot": "tr"},
-    {"id": "model", "kind": "tag", "text": "A model: made-up numbers", "t0": cut("measure"), "t1": round(ENDSHOW - 0.3, 4), "slot": "tr"},
+    {"id": "tl", "kind": "tag", "text": "Time-lapse model", "t0": cut("normal") + 0.3, "t1": round(cut("why") - 0.3, 4), "slot": "tr"},
+    {"id": "yx", "kind": "tag", "text": "Height stretched 2×", "t0": round(cut("why") + 0.2, 4), "t1": round(cut("whoa") - 0.5, 4), "slot": "tr"},
+    {"id": "tl2", "kind": "tag", "text": "Time-lapse model", "t0": cut("whoa"), "t1": round(PAIR0 - 0.3, 4), "slot": "tr"},
+    {"id": "oval", "kind": "tag", "text": "Lower drop: illustration", "t0": PAIR0, "t1": round(cut("tease") - 0.5, 4), "slot": "tr"},
+    {"id": "mug", "kind": "tag", "text": "Illustration", "t0": cut("tease"), "t1": round(ENDSHOW - 0.3, 4), "slot": "tr"},
 ]
-SPINE = [{"t0": cut("change"), "t1": round(ENDSHOW - 0.3, 4), "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]}]
+SPINE = [{"t0": cut("change"), "t1": round(PAIR0 - 0.2, 4), "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]},
+         {"t0": cut("measure"), "t1": round(cut("takeaway") - 0.35, 4), "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]}]
 SPINE_AT = [[-1e9, [0.5, 0.262]]]
 
 
@@ -126,16 +143,18 @@ def key(t, v, ease="p2"):
 LK = [0.0, 0.0, -2.6]
 TOP = view(LK, 76.0, 63.0, 0.0)
 TOPC = view([0.0, 0.0, -6.0], 72.0, 60.0, -5.0)
-SIDE = view([0.0, 2.0, 0.0], 62.0, 9.0)
+EDGE = view([0.0, 2.6, 0.0], 76.0, 18.0, 0.0)                # the cross-section at the drop's edge: the stuck edge, the slope, the arrows
+PAIRV = view([0.0, 0.0, -2.0], 60.0, 58.0, 0.0)
+MUG = view([0.0, 5.6, 0.0], 47.0, 14.0, 8.0)
 CAM = {
     "hook": [key(0.0, TOPC), key(cut("normal"), {**TOPC, "dist": 76.0, "yaw": 3.0}, "sine")],
-    "normal": [key(cut("normal"), {**TOP, "yaw": 3.0}), key(cut("change"), {**TOP, "dist": 78.0, "yaw": -5.0}, "sine")],
-    "change": [key(cut("change"), {**TOP, "dist": 78.0, "yaw": -5.0}), key(cut("why") - 0.2, {**TOP, "dist": 72.0, "yaw": 4.0}, "sine")],
-    "why": [key(cut("why"), {**TOP, "dist": 72.0, "yaw": 4.0}), key(cut("why") + 1.6, SIDE, "p3"), key(cut("whoa") - 0.1, {**SIDE, "dist": 66.0, "yaw": -8.0}, "sine")],
-    "whoa": [key(cut("whoa"), view([0.0, 2.0, 0.0], 66.0, 22.0, -8.0)), key(cut("whoa") + 1.6, TOP, "p3"), key(cut("measure"), {**TOP, "dist": 78.0, "yaw": 4.0}, "sine")],
+    "normal": [key(cut("normal"), {**TOP, "yaw": 3.0}), key(FRESH_T, {**TOP, "dist": 78.0, "yaw": -4.0}, "sine"), key(FRESH_T + 0.01, {**TOP, "dist": 78.0, "yaw": -4.0}), key(cut("change"), {**TOP, "dist": 68.0, "yaw": 5.0}, "p3")],
+    "change": [key(cut("change"), {**TOP, "dist": 68.0, "yaw": 5.0}), key(cut("change") + 1.6, {**TOP, "dist": 76.0, "yaw": -5.0}, "p3"), key(cut("why") - 0.2, {**TOP, "dist": 72.0, "yaw": 4.0}, "sine")],
+    "why": [key(cut("why"), {**EDGE, "yaw": -6.0}), key(cut("whoa") - 0.1, {**EDGE, "dist": 72.0, "yaw": 6.0}, "sine")],
+    "whoa": [key(cut("whoa"), view(LK, 70.0, 40.0, -8.0)), key(cut("whoa") + 1.6, {**TOP, "yaw": 0.0}, "p3"), key(PAIR0, {**TOP, "dist": 76.0, "yaw": 4.0}, "sine"), key(PAIR0 + 1.2, {**PAIRV, "yaw": 5.0}, "p3"), key(cut("measure"), {**PAIRV, "yaw": -3.0}, "sine")],
     "measure": [key(cut("measure"), {**TOP, "dist": 78.0, "yaw": 4.0}), key(cut("takeaway"), {**TOP, "dist": 74.0, "yaw": -4.0}, "sine")],
-    "takeaway": [key(cut("takeaway"), {**TOP, "dist": 74.0, "yaw": -4.0}), key(cut("tease"), view(LK, 76.0, 52.0, 12.0), "sine")],
-    "tease": [key(cut("tease"), view(LK, 76.0, 52.0, 12.0)), key(DUR, view(LK, 74.0, 60.0, 6.0), "sine")],
+    "takeaway": [key(cut("takeaway"), {**PAIRV, "dist": 60.0, "yaw": 4.0}), key(cut("tease"), {**PAIRV, "dist": 64.0, "yaw": -7.0}, "sine")],
+    "tease": [key(cut("tease"), {**MUG, "yaw": 8.0}), key(DUR, {**MUG, "dist": 43.0, "yaw": -6.0}, "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 TITLE = {"series": "Reality Rulebook · Season 2 · Episode 4", "title": "The ring a coffee drop *leaves*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": -0.7}
@@ -143,7 +162,7 @@ film = {
     "id": "reality-rulebook-s2e04", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "cue": {"cuts": CUTS, "trail": TRAIL_W, "cut": CUT_W, "ring": RING}, "spine": SPINE, "spineAt": SPINE_AT,
-    "model": {"R": R, "H0": H0, "n": NSP, "ring": RING}, "takes": TAKES, "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
+    "model": {"R": R, "H0": H0, "n": NSP, "ring": RING}, "takes": TAKES, "takesB": TAKE_B, "pair": {"t0": PAIR0, "ramp": 1.0, "tease": cut("tease")}, "pulse": PULSE_W, "yx": YX, "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
     "captions": [pg for pg in phrase_captions(f, max_chars=24, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "endCard": EC,
     "end": {"title": "Next drop: listen to the cup fill", "follow": "Follow Reality Rulebook", "foot": "Deegan et al., Nature 389, 827 (1997)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
