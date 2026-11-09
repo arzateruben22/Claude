@@ -65,7 +65,7 @@
     "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "DERIVATION (calc.py: sens_m): 2 x pi x 1 m is the same for any radius (a basketball, the Earth, the Sun). Inputs: the radii of the three bodies; the Earth and Sun sizes are claim c9 and c1. Not taken from any page."
+    "note": "DERIVATION (calc.py: sens_m): 2 x pi x 1 m is the same for any radius (a basketball, the Earth, the Sun). Inputs: the radii of the three bodies; Earth is c1, Sun is c9. Not taken from any page."
   },
   {
     "id": "c7",

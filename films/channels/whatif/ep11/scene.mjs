@@ -109,7 +109,7 @@ const rig = createRig(FILM.cam);
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
 const AN = {
-  "ruler-end": () => [BALL_R, 0, 0], "moon-top": () => [MOON_X - 0.7 * MOON_R, 0.7 * MOON_R, 0], "ball-top": () => [0, BALL_R, 0],
+  "ruler-end": () => [BALL_R, 0, 0], "moon-top": () => [MOON_X - 0.7 * MOON_R, 0.7 * MOON_R, 0], "ball-top": () => [0, BALL_R, 0], "ball-bottom": () => [0, -BALL_R, 0],
   "earth-top": () => [EARTH_X - 0.7 * EARTH_R, 0.7 * EARTH_R, 0], "fresh-top": () => [FRESH_X, FRESH_R, 0], "fresh-bottom": () => [FRESH_X, -FRESH_R, 0],
 };
 NODEP.forEach((p, i) => { AN["node" + i] = () => [p[0], p[1] + 120, 0]; });
