@@ -60,10 +60,13 @@ const mul = (s) => () => { s |= 0; s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s
 const PLOTS = (() => { const r = mul(7), p = []; for (let k = 0; k < 42; k++) p.push({ c: Math.floor(r() * (TL.cols - 3)), r: Math.floor(r() * (TL.rows - 3)), u: r() }); return p; })();
 
 // per-cell state: colour and alpha as functions of t
+// "Nobody counted them": a bright cursor sweeps the star cells and stutters (counting is not what this is)
+const scanPos = (t) => TL.stars_hi * E.inout3(seg(t, CUE.nobody, CUE.nobody + 1.9));
+const scanHit = (i, t) => t >= CUE.nobody && t <= CUE.nobody + 2.4 && Math.abs(i - scanPos(t)) < 9 + 6 * Math.sin(t * 23) ** 2 * (t < CUE.nobody + 1.9 ? 1 : 0);
 const T = { n: CUE.n, c: CUE.c, why: CUE.why, w: CUE.w, tk: CUE.tk, rd: CUE.rd };
 function drawTally(t) {
   ctx.clearRect(0, 0, W, H);
-  const kIn = fadeIn(t, 0.0, 0.5);
+  const kIn = 1;                                                                    // frame 0 is the payoff: the tally is already there
   const kOut = 1 - fadeIn(t, CUE.rd - 0.3, 0.5) * 1;                              // gone for the readout
   if (kIn * kOut <= 0.001 || t >= CUE.end - 0.45) return;
   const fillK = (i) => clamp01((t - CUE.fill0 - (i / TL.trees) * (CUE.fill1 - CUE.fill0)) / 0.25);   // trees arrive row by row on "three trillion"
@@ -77,25 +80,26 @@ function drawTally(t) {
     const x = (GX0 + (col + 0.5) * PX) * (W / 1080), y = (GY0 + (row + 0.5) * PY) * (H / 1920);
     const isStar = i < TL.stars_hi, solid = i < TL.stars_lo;
     let c, a;
-    // trees (teal): the hook's payoff, then off while the stars have the stage, then filling, then lit again on the whoa
-    const treeA = Math.max(0.55 * hookK, 0.9 * (t >= CUE.fill0 ? fillK(i) : 0) * (t < CUE.flip0 ? 1 : 0.55 + 0.35 * overK));
+    // trees (teal): the hook's payoff, then off while the stars have the stage, filling on "three trillion", dimmed while the
+    // stars turn into trees (so the swap reads), then surging past them on "the forests keep going"
+    const dimK = E.inout3(seg(t, CUE.flip0 - 0.2, CUE.flip0 + 0.4)), upK = E.out3(seg(t, CUE.over, CUE.over + 0.9));
+    const treeA = t < CUE.fill0 ? 0.55 * hookK : fillK(i) * (0.9 - 0.62 * dimK + 0.72 * upK);
+    let rr = r;
     if (isStar) {
       const f = flipK(i);
-      const starA = solid ? 1 : 0.42;
-      c = f > 0.5 ? TEAL : LEMON;                                                    // lemon: a star (the ✦ colour); teal once it is a tree
-      a = f > 0.5 ? 1 : starA;
-      a = Math.max(a * (t < CUE.fill0 ? 1 : 0.9), treeA * 0.0);
-      if (!solid && f <= 0.5) {                                                      // hollow dots: the range, "100 to 400 billion"
-        ctx.strokeStyle = rgba(LEMON, 0.8 * kIn * kOut * dim); ctx.lineWidth = 1.3 * S1 * (W / 1080);
-        ctx.beginPath(); ctx.arc(x, y, r * 0.85, 0, 6.2832); ctx.stroke(); continue;
+      if (f > 0.5) { c = TEAL; a = 1; rr = r * 1.3; }                                // a star turned into a tree
+      else if (solid) { c = LEMON; a = 1; }
+      else {                                                                         // hollow dots: the range, "100 to 400 billion"
+        ctx.strokeStyle = rgba(LEMON, 0.8 * kOut * dim); ctx.lineWidth = 1.3 * S1 * (W / 1080);
+        ctx.beginPath(); ctx.arc(x, y, r * 0.85, 0, 6.2832); ctx.stroke();
+        if (!scanHit(i, t)) continue; c = LEMON; a = 1;
       }
-    } else {
-      c = TEAL; a = treeA;
-      if (t >= CUE.flip0) a = Math.max(a, 0.5 * overK + 0.9 * (t >= CUE.fill1 ? 1 : 0) * overK);
-    }
+      if (solid && scanHit(i, t)) rr = r * 1.7;
+      if (!(solid || scanHit(i, t) || f > 0.5)) continue;
+    } else { c = TEAL; a = treeA; }
     if (a <= 0.01) continue;
     ctx.fillStyle = rgba(c, a * kIn * kOut * dim);
-    ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832); ctx.fill();
+    ctx.beginPath(); ctx.arc(x, y, rr, 0, 6.2832); ctx.fill();
   }
   // the methods (why): ground plots flash as small squares, then a satellite lattice sweeps across
   const tPlots = seg(t, CUE.plots0, CUE.sat0), tSat = seg(t, CUE.sat0, CUE.est0);
@@ -134,7 +138,7 @@ for (const c of FILM.counters) {
   const lb = el.querySelector(".lb");
   if (lb) lb.style.textShadow = "0 0 1.2vmin rgba(8,10,28,.95), 0 0 2.6vmin rgba(8,10,28,.85)";
   const v = el.querySelector(".v");
-  if (v && c.text.length > 12) v.style.fontSize = "5.5vmin";                      // "100 to 400 billion", "1 millionth of a second"
+  if (v && c.text.length > 12) v.style.fontSize = c.read ? "4.2vmin" : "5.5vmin";                      // "100 to 400 billion", "1 millionth of a second"
   else if (v && c.text.length > 10 && !c.read) v.style.fontSize = "8.5vmin";
 }
 for (const L of FILM.labels) {

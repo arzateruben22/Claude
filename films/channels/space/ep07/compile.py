@@ -43,7 +43,7 @@ CUE = {
     "over": A("vo05:forests"), "ratio": A("vo05:Trees"),             # the trees keep going; the ratio
     "ring0": A("vo07:Light"), "ring1": A("vo07:Across#2"), "blk": A("vo07:millionth"),
     "n": t_n, "c": t_c, "why": t_why, "w": t_w, "tk": t_tk, "rd": t_rd, "end": t_end,
-    "stars": A("vo02:hundreds"), "guess": A("vo01:Guess"),
+    "stars": A("vo02:hundreds"), "nobody": A("vo02:Nobody"), "guess": A("vo01:Guess"),
 }
 assert CUE["fill0"] < CUE["fill1"] <= t_why and CUE["flip0"] < CUE["flip1"] < CUE["over"] < CUE["ratio"] <= t_tk + 0.01, CUE
 
