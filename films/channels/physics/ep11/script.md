@@ -16,28 +16,28 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}
 compiler. In a vo line, `{c1,c2}` after a sentence ties it to `claims.json` and `{-}` marks a sentence that states nothing
 outside the film; neither is spoken. Check it with `python3 -I kits/cinema/script/lint.py films/channels/physics/ep11 --segment measure`.
 
-## hook {shot: a mug in cross-section, water just starting to pour in · title drop: "Listen to the cup fill" · pre: 0.1 · energy: 0.7} (0.0–4.3 s)
-vo: Can you hear a mug *fill*? {-} Eyes closed, just listening. {-}
+## hook {shot: a mug in cross-section, water just starting to pour in · title drop: "Listen to the cup fill" · pre: 0.1 · energy: 0.7} (0.0–4.0 s)
+vo: Can you hear a cup *fill*? {-} Eyes closed, just listening. {-}
 
-## normal {shot: wide: the stream pours, the water climbs; a pitch readout rises · labels: "water", "empty space" · picture-only 0.7 s · pre: 0.12 · energy: 0.45} (4.3–14.4 s)
-vo: Pour water into a mug, and the sound climbs higher and higher. {c1} A computer can even work out the water level from the sound alone. {c2}
+## normal {shot: wide: the stream pours, the water climbs; a pitch readout rises · labels: "water", "empty space" · picture-only 0.7 s · pre: 0.12 · energy: 0.45} (4.0–13.9 s)
+vo: Pour water into a cup, and the sound climbs higher and higher. {c1} A computer can even work out the water level from the sound alone. {c2}
 
-## change {shot: close on the empty space above the water: a pipe, its air drawn as layers moving up and down · labels: "a pipe, closed at the water", "air moving" · badge: "air motion slowed 300×" · pre: 0.1 · energy: 0.5} (14.4–22.9 s)
+## change {shot: close on the empty space above the water: a pipe, its air drawn as layers moving up and down · labels: "a pipe, closed at the water", "air moving" · badge: "air motion slowed 300×" · pre: 0.1 · energy: 0.5} (13.9–22.4 s)
 vo: The empty space above the water acts like a pipe, closed at the water end. {c3} Sound bounces up and down inside it. {c4}
 
-## why {shot: two pipes side by side, a short one and a long one; the short one's air moves faster · picture-only 0.7 s · pre: 0.2 · energy: 0.55} (22.9–36.8 s)
+## why {shot: two pipes side by side, a short one and a long one; the short one's air moves faster · picture-only 0.7 s · pre: 0.2 · energy: 0.55} (22.4–36.3 s)
 vo: A short pipe rings higher than a long one. {c5} A flute player changes the note by changing the length of the pipe. {c6} As the water rises, the empty space shrinks, and the pitch *climbs*. {c7}
 
-## whoa {shot: the mug fills to the brim line; the pitch readout and the empty-space bracket shrink together · picture-only 0.55 s · pre: 0.15 · energy: 0.75} (36.8–46.1 s)
-vo: Less empty space, a higher *pitch*. {-} With two centimeters left, the mug rings nearly three times higher than when empty. {c9}
+## whoa {shot: the mug fills to the brim line; the pitch readout and the empty-space bracket shrink together · picture-only 0.55 s · pre: 0.15 · energy: 0.75} (36.3–45.6 s)
+vo: Less empty space, a higher *pitch*. {-} With two centimeters left, the cup rings nearly three times higher than when empty. {c9}
 
-## measure {segment: measure · the mug fills while a pitch trace is drawn, with the two readings marked · pre: 0.2 · energy: 0.5} (46.1–57.6 s)
+## measure {segment: measure · the mug fills while a pitch trace is drawn, with the two readings marked · pre: 0.2 · energy: 0.5} (45.6–57.1 s)
 vo: *Measure it*: with ten centimeters of empty space, you hear about seven hundred vibrations a second. {c10} With two centimeters, you hear nearly two thousand. {c11}
 
-## takeaway {shot: hold on the full mug and the trace · badge: "An illustrated mug: numbers computed from a formula" · pre: 0.25 · energy: 0.45} (57.6–65.1 s)
-vo: A shorter pipe makes a higher note. {c12} Next time you pour, *listen*: the mug tells you how full it is. {-}
+## takeaway {shot: hold on the full mug and the trace · badge: "An illustrated mug: numbers computed from a formula" · pre: 0.25 · energy: 0.45} (57.1–64.0 s)
+vo: A shorter pipe makes a higher note. {c12} Next time you pour, *listen*: the cup tells you its level. {-}
 
-## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (65.1–70.7 s)
+## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (64.0–69.6 s)
 vo: Next: a raindrop falls a mile. {-} Why doesn't it *hurt*? {-}
 end card: "Next drop: the slow raindrop" · "Follow Reality Rulebook" · footnote: "Bagad et al., arXiv 2411.11222 (2024)"
 

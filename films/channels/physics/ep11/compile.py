@@ -65,22 +65,23 @@ LABELS = [
     {"id": "no-air", "text": "empty space", "color": "motion", "t0": A("vo02:sound"), "t1": A("vo02:alone.") - 0.3, "at": "air", "side": 1},
     {"id": "ch-pipe", "text": "a pipe, closed at the water", "color": "ghost", "t0": cut("change") + 0.3, "t1": A("vo03:Sound") - 0.1, "at": "airtop", "side": 1},
     {"id": "ch-move", "text": "air moving", "color": "motion", "t0": A("vo03:Sound"), "t1": cut("why") - 0.3, "at": "air", "side": 1},
-    {"id": "wy-long", "text": "long pipe: lower note", "color": "ghost", "t0": cut("why") + 0.5, "t1": A("vo04:flute") - 0.2, "at": "pipeL", "side": -1},
-    {"id": "wy-short", "text": "short pipe: higher note", "color": "energy", "t0": cut("why") + 0.9, "t1": A("vo04:flute") - 0.2, "at": "pipeR", "side": 1},
-    {"id": "wy-flute", "text": "shorter: higher", "color": "energy", "t0": A("vo04:flute") + 0.3, "t1": RISE_T - 0.2, "at": "pipeL", "side": -1},
+    {"id": "wy-long", "text": "long pipe: lower note", "color": "ghost", "t0": cut("why") + 0.5, "t1": A("vo04:flute") - 0.2, "at": "pipeL", "side": 1},
+    {"id": "wy-short", "text": "short pipe: higher note", "color": "energy", "t0": cut("why") + 0.9, "t1": A("vo04:flute") - 0.2, "at": "pipeR", "side": -1},
+    {"id": "wy-flute", "text": "shorter: higher", "color": "energy", "t0": A("vo04:flute") + 0.3, "t1": RISE_T - 0.2, "at": "pipeL", "side": 1},
 ]
 for _lb in LABELS:
     _lb["t0"] = round((math.floor(_lb["t0"] * FPS) + 0.5) / FPS, 6)
 BADGES = [
     {"id": "pour", "kind": "tag", "text": "Pour slowed down", "t0": cut("normal") + 0.3, "t1": round(cut("change") - 0.3, 4), "slot": "tr"},
-    {"id": "slow", "kind": "tag", "text": "Air motion slowed 300×", "t0": cut("change"), "t1": round(cut("tease") - 0.5, 4), "slot": "tr"},
+    {"id": "slow", "kind": "tag", "text": "Air motion slowed 300×", "t0": cut("change"), "t1": round(cut("tease") - 0.3, 4), "slot": "tr"},
     {"id": "rep", "kind": "tag", "text": "Replay · formula numbers", "t0": cut("measure"), "t1": round(cut("takeaway") - 0.3, 4), "slot": "tr"},
-    {"id": "frm", "kind": "tag", "text": "Numbers from a formula", "t0": cut("takeaway"), "t1": round(cut("tease") - 0.5, 4), "slot": "tr"},
+    {"id": "frm", "kind": "tag", "text": "Numbers from a formula", "t0": cut("takeaway"), "t1": round(cut("tease") - 0.7, 4), "slot": "tr"},
+    {"id": "icup", "kind": "tag", "text": "An illustrated cup", "t0": round(cut("whoa") + 0.2, 4), "t1": round(cut("tease") - 0.7, 4), "slot": "tl"},
     {"id": "ill", "kind": "tag", "text": "Illustration", "t0": cut("tease"), "t1": round(ENDSHOW - 0.3, 4), "slot": "tr"},
 ]
-SPINE = [{"t0": round(cut("normal") + 0.2, 4), "t1": round(cut("why") - 0.35, 4), "label": "pitch of the filling mug", "unit": "Hz", "dp": 0, "kind": "mug"},
-         {"t0": RISE_T, "t1": round(cut("measure") - 0.3, 4), "label": "pitch of the filling mug", "unit": "Hz", "dp": 0, "kind": "mug"},
-         {"t0": cut("measure"), "t1": round(cut("tease") - 0.3, 4), "label": "pitch of the filling mug", "unit": "Hz", "dp": 0, "kind": "mug", "lit": [A("vo06:nearly"), cut("takeaway")]}]
+SPINE = [{"t0": round(cut("normal") + 0.2, 4), "t1": round(cut("why") - 0.35, 4), "label": "pitch of the filling cup", "unit": "Hz", "dp": 0, "kind": "mug"},
+         {"t0": RISE_T, "t1": round(cut("measure") - 0.3, 4), "label": "pitch of the filling cup", "unit": "Hz", "dp": 0, "kind": "mug"},
+         {"t0": cut("measure"), "t1": round(cut("tease") - 0.3, 4), "label": "pitch of the filling cup", "unit": "Hz", "dp": 0, "kind": "mug", "lit": [A("vo06:nearly"), cut("takeaway")]}]
 SPINE_AT = [[-1e9, [0.5, 0.262]]]
 
 

@@ -1,5 +1,5 @@
 {
- "duration": 70.6667,
+ "duration": 69.6,
  "fps": 30,
  "preset": "restframe-bench",
  "duck_db": -9.0,
@@ -7,49 +7,49 @@
   {
    "id": "hook",
    "t0": 0.0,
-   "t1": 4.2667,
+   "t1": 4.0,
    "energy": 0.7
   },
   {
    "id": "normal",
-   "t0": 4.2667,
-   "t1": 14.4,
+   "t0": 4.0,
+   "t1": 13.8667,
    "energy": 0.45
   },
   {
    "id": "change",
-   "t0": 14.4,
-   "t1": 22.9333,
+   "t0": 13.8667,
+   "t1": 22.4,
    "energy": 0.5
   },
   {
    "id": "why",
-   "t0": 22.9333,
-   "t1": 36.8,
+   "t0": 22.4,
+   "t1": 36.2667,
    "energy": 0.55
   },
   {
    "id": "whoa",
-   "t0": 36.8,
-   "t1": 46.1333,
+   "t0": 36.2667,
+   "t1": 45.6,
    "energy": 0.75
   },
   {
    "id": "measure",
-   "t0": 46.1333,
-   "t1": 57.6,
+   "t0": 45.6,
+   "t1": 57.0667,
    "energy": 0.5
   },
   {
    "id": "takeaway",
-   "t0": 57.6,
-   "t1": 65.0667,
+   "t0": 57.0667,
+   "t1": 64.0,
    "energy": 0.45
   },
   {
    "id": "tease",
-   "t0": 65.0667,
-   "t1": 70.6667,
+   "t0": 64.0,
+   "t1": 69.6,
    "energy": 0.4
   }
  ],
@@ -58,7 +58,7 @@
    "t": 0.0,
    "kind": "section",
    "id": "hook",
-   "t1": 4.2667
+   "t1": 4.0
   },
   {
    "t": 0.0,
@@ -67,154 +67,160 @@
    "gain": -4.0
   },
   {
-   "t": 4.2667,
+   "t": 4.0,
    "kind": "section",
    "id": "normal",
-   "t1": 14.4
+   "t1": 13.8667
   },
   {
-   "t": 4.4333,
+   "t": 4.1667,
    "kind": "time.slow",
    "tag": "pour"
   },
   {
-   "t": 4.45,
+   "t": 4.1833,
    "kind": "counter.show",
    "tag": "spine"
   },
   {
-   "t": 4.55,
+   "t": 4.2833,
    "kind": "badge",
    "tag": "pour",
    "text": "Pour slowed down"
   },
   {
-   "t": 4.75,
+   "t": 4.483333,
    "kind": "label",
    "tag": "no-water"
   },
   {
-   "t": 6.75,
+   "t": 6.35,
    "kind": "label",
    "tag": "no-air"
   },
   {
-   "t": 14.3833,
+   "t": 13.85,
    "kind": "badge",
    "tag": "slow",
    "text": "Air motion slowed 300×"
   },
   {
-   "t": 14.4,
+   "t": 13.8667,
    "kind": "section",
    "id": "change",
-   "t1": 22.9333
+   "t1": 22.4
   },
   {
-   "t": 14.683333,
+   "t": 14.15,
    "kind": "label",
    "tag": "ch-pipe"
   },
   {
-   "t": 19.9333,
+   "t": 19.4,
    "kind": "wave.on",
    "tag": "air"
   },
   {
-   "t": 19.95,
+   "t": 19.416667,
    "kind": "label",
    "tag": "ch-move"
   },
   {
-   "t": 22.9333,
+   "t": 22.4,
    "kind": "section",
    "id": "why",
-   "t1": 36.8
+   "t1": 36.2667
   },
   {
-   "t": 23.416667,
+   "t": 22.883333,
    "kind": "label",
    "tag": "wy-long"
   },
   {
-   "t": 23.816667,
+   "t": 23.283333,
    "kind": "label",
    "tag": "wy-short"
   },
   {
-   "t": 26.6667,
+   "t": 26.1333,
    "kind": "reveal",
    "tag": "flute"
   },
   {
-   "t": 26.983333,
+   "t": 26.45,
    "kind": "label",
    "tag": "wy-flute"
   },
   {
-   "t": 30.9833,
+   "t": 30.45,
    "kind": "counter.show",
    "tag": "spine2"
   },
   {
-   "t": 36.8,
+   "t": 36.2667,
    "kind": "section",
    "id": "whoa",
-   "t1": 46.1333
+   "t1": 45.6
   },
   {
-   "t": 40.4667,
+   "t": 36.45,
+   "kind": "badge",
+   "tag": "icup",
+   "text": "An illustrated cup"
+  },
+  {
+   "t": 39.9667,
    "kind": "swell",
    "tag": "two"
   },
   {
-   "t": 46.1166,
+   "t": 45.5833,
    "kind": "badge",
    "tag": "rep",
    "text": "Replay · formula numbers"
   },
   {
-   "t": 46.116633,
+   "t": 45.583333,
    "kind": "counter.show",
    "tag": "spine3"
   },
   {
-   "t": 46.1333,
+   "t": 45.6,
    "kind": "section",
    "id": "measure",
-   "t1": 57.6
+   "t1": 57.0667
   },
   {
-   "t": 55.5333,
+   "t": 55.0,
    "kind": "counter.end",
    "tag": "two-k"
   },
   {
-   "t": 57.5833,
+   "t": 57.05,
    "kind": "badge",
    "tag": "frm",
    "text": "Numbers from a formula"
   },
   {
-   "t": 57.6,
+   "t": 57.0667,
    "kind": "section",
    "id": "takeaway",
-   "t1": 65.0667
+   "t1": 64.0
   },
   {
-   "t": 65.05,
+   "t": 63.9833,
    "kind": "badge",
    "tag": "ill",
    "text": "Illustration"
   },
   {
-   "t": 65.0667,
+   "t": 64.0,
    "kind": "section",
    "id": "tease",
-   "t1": 70.6667
+   "t1": 69.6
   },
   {
-   "t": 69.1037,
+   "t": 68.037,
    "kind": "signature",
    "tag": "end"
   }
@@ -227,37 +233,37 @@
   },
   {
    "id": "vo02",
-   "t": 4.4,
+   "t": 4.133333333333334,
    "file": "vo/02.wav"
   },
   {
    "id": "vo03",
-   "t": 14.5,
+   "t": 13.966666666666667,
    "file": "vo/03.wav"
   },
   {
    "id": "vo04",
-   "t": 23.133333333333333,
+   "t": 22.6,
    "file": "vo/04.wav"
   },
   {
    "id": "vo05",
-   "t": 36.93333333333333,
+   "t": 36.4,
    "file": "vo/05.wav"
   },
   {
    "id": "vo06",
-   "t": 46.333333333333336,
+   "t": 45.8,
    "file": "vo/06.wav"
   },
   {
    "id": "vo07",
-   "t": 57.86666666666667,
+   "t": 57.333333333333336,
    "file": "vo/07.wav"
   },
   {
    "id": "vo08",
-   "t": 65.36666666666666,
+   "t": 64.3,
    "file": "vo/08.wav"
   }
  ]

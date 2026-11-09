@@ -106,7 +106,7 @@ const setRibbon = (rb, pts, w) => { for (let i = 0; i < rb.n; i++) { const [x, y
 const NW = 220, wave1 = mkRibbon(NW, flat("#0B7A5C")), wave2 = mkRibbon(NW, flat("#B8321A"));
 const chartCurve = mkRibbon(120, flat("#1B1E24"));
 // chart: x = water level 0..8 cm (left to right), y = pitch 600..2000 Hz
-const CX0 = -6.8, CX1 = 7.4, CY0 = -2.2, CY1 = 2.3, LV1 = 8.0, F0 = 600, F1 = 2000;
+const CX0 = -6.8, CX1 = 7.4, CY0 = -2.2, CY1 = 1.3, LV1 = 8.0, F0 = 600, F1 = 2000;
 const cxOf = (lv) => CX0 + (CX1 - CX0) * lv / LV1, cyOf = (f) => CY0 + (CY1 - CY0) * (f - F0) / (F1 - F0);
 const axisMat = new THREE.MeshBasicMaterial({ color: flat(HEX.ink2) });
 const axes = new THREE.Group(); panel.add(axes);
@@ -120,7 +120,7 @@ const mkTag = (text, w, h, x, y) => { const cv = document.createElement("canvas"
   const draw = () => { const g = cv.getContext("2d"); g.clearRect(0, 0, cv.width, cv.height); g.fillStyle = "#1B1E24"; g.font = `600 ${Math.round(cv.height * 0.55)}px "IBM Plex Sans", sans-serif`; g.textBaseline = "middle"; g.fillText(text, 8, cv.height / 2); tex.needsUpdate = true; };
   if (window.FONTS_READY) window.FONTS_READY.then(draw); else draw(); return m; };
 const tagSound = mkTag("sound", 4.6, 1.1, -6.2, 2.35), tagTen = mkTag("10 cm of space: 687 Hz", 7.4, 1.1, 0, 0), tagTwo = mkTag("2 cm: 1,914 Hz", 5.6, 1.1, 0, 0);
-tagTen.position.set(cxOf(0) + 3.9, cyOf(pitchOf(0)) + 0.9, 0.08); tagTwo.position.set(cxOf(8) - 3.2, cyOf(pitchOf(8)) - 0.6, 0.08);
+tagTen.position.set(-3.9, 1.45, 0.08); tagTwo.position.set(cxOf(8) - 3.2, 2.45, 0.08);
 
 // ── the rain (tease): a cloud and drops falling past a height ruler ──
 const rain = new THREE.Group(); scene.add(rain); rain.visible = false;
@@ -130,8 +130,8 @@ const dropMat = new THREE.MeshPhysicalMaterial({ color: 0x7db4e6, transparent: t
 const drops = [0, 1, 2, 3].map((k) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.55, 20, 14), dropMat); rain.add(m); return m; });
 const streaks = [0, 1, 2, 3].map(() => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1, 6), new THREE.MeshBasicMaterial({ color: 0xcfe2f4, transparent: true, opacity: 0.55 })); rain.add(m); return m; });
 const ruler = new THREE.Group(); rain.add(ruler);
-{ const bar = new THREE.Mesh(new THREE.BoxGeometry(0.1, 24, 0.1), axisMat); bar.position.set(-9.0, 4, 0); ruler.add(bar);
-  for (let y = -8; y <= 16; y += 2) { const t = new THREE.Mesh(new THREE.BoxGeometry(y % 4 === 0 ? 1.2 : 0.7, 0.08, 0.1), axisMat); t.position.set(-9.0 + (y % 4 === 0 ? 0.6 : 0.35), y, 0); ruler.add(t); } }
+{ const bar = new THREE.Mesh(new THREE.BoxGeometry(0.1, 24, 0.1), axisMat); bar.position.set(-8.3, 4, 0); ruler.add(bar);
+  for (let y = -8; y <= 16; y += 2) { const t = new THREE.Mesh(new THREE.BoxGeometry(y % 4 === 0 ? 1.0 : 0.6, 0.08, 0.1), axisMat); t.position.set(-8.3 + (y % 4 === 0 ? 0.5 : 0.3), y, 0); ruler.add(t); } }
 
 // ── camera ──
 const lerp = (a, b, u) => a + (b - a) * u;
@@ -160,8 +160,8 @@ const anchorFn = (an) => {
   if (an === "water") return (t) => worldOfMug(-1.5, levelAt(t) + 0.5);
   if (an === "air") return (t) => worldOfMug(3.2, levelAt(t) + (HH - levelAt(t)) / 2);
   if (an === "airtop") return () => worldOfMug(0, 9.9);
-  if (an === "pipeL") return (t) => worldOfMug(-4.8, plugAt(t) + pipeL(t) * 0.5);
-  if (an === "pipeR") return () => worldOfMug(4.8, 8.2);
+  if (an === "pipeL") return (t) => worldOfMug(-3.1, plugAt(t) + pipeL(t) * 0.5);
+  if (an === "pipeR") return () => worldOfMug(3.1, 7.6);
   return () => [0, 0, 0];
 };
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: false });
@@ -215,7 +215,7 @@ window.seek = function (t) {
   }
   // the rain
   if (inRain) {
-    drops.forEach((m, k) => { const q = ((t - T.tease) * 0.42 + k / 4) % 1, y = 8.6 - 20 * Math.pow(q, 1.35), x = [-7.6, -6.2, 6.2, 7.6][k];
+    drops.forEach((m, k) => { const q = ((t - T.tease) * 0.42 + k / 4) % 1, y = 8.6 - 20 * Math.pow(q, 1.35), x = [-6.6, -5.9, 6.5, 7.4][k];
       m.position.set(x, y, 0); m.scale.set(1, 1.25, 1); const s = streaks[k]; const len = 1.5 + 4.5 * q; s.scale.set(1, len, 1); s.position.set(x, y + 0.6 + len / 2, 0); s.visible = q > 0.02; });
   }
   cyc.update({ grid: 1, casters: [] });

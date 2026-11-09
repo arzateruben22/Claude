@@ -11,24 +11,24 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Can you hear a mug fill? Eyes closed, just listening.",
+   "text": "Can you hear a cup fill? Eyes closed, just listening.",
    "stars": [
     "fill"
    ],
-   "phonemes": "kæn juː hˈɪɹ ɐ mˈʌɡ fˈɪl? ˈaɪz klˈoʊzd, dʒˈʌst lˈɪsənɪŋ.",
+   "phonemes": "kæn juː hˈɪɹ ɐ kˈʌp fˈɪl? ˈaɪz klˈoʊzd, dʒˈʌst lˈɪsənɪŋ.",
    "file": "01.wav",
-   "dur": 3.57,
-   "sha256": "da6fbf16e02543c202a4f64d0b57ad925f4b9b860fbf026611a02c49aefa8386"
+   "dur": 3.495,
+   "sha256": "57f8d2fb0fff85570c3084b7b09208378cb2c477303d7fd76bcce191a2d5005d"
   },
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Pour water into a mug, and the sound climbs higher and higher. A computer can even work out the water level from the sound alone.",
+   "text": "Pour water into a cup, and the sound climbs higher and higher. A computer can even work out the water level from the sound alone.",
    "stars": [],
-   "phonemes": "pˈɔːɹ wˈɔːɾɚɹ ˌɪntʊ ɐ mˈʌɡ, ænd ðə sˈaʊnd klˈaɪmz hˈaɪɚ ænd hˈaɪɚ. ɐ kəmpjˈuːɾɚ kæn ˈiːvən wˈɜːk ˈaʊt ðə wˈɔːɾɚ lˈɛvəl fɹʌmðə sˈaʊnd ɐlˈoʊn.",
+   "phonemes": "pˈɔːɹ wˈɔːɾɚɹ ˌɪntʊ ɐ kˈʌp, ænd ðə sˈaʊnd klˈaɪmz hˈaɪɚ ænd hˈaɪɚ. ɐ kəmpjˈuːɾɚ kæn ˈiːvən wˈɜːk ˈaʊt ðə wˈɔːɾɚ lˈɛvəl fɹʌmðə sˈaʊnd ɐlˈoʊn.",
    "file": "02.wav",
-   "dur": 9.059,
-   "sha256": "e59fae4f3c52b10b3fe513c5f1a8d1ac72c3eca3eacf4f0542ca032a64fe09d7"
+   "dur": 8.881,
+   "sha256": "a72cc6721ee5664439e7615acd6fc0807077467a95fdb15f9b14f1f2cda4b37b"
   },
   {
    "id": "vo03",
@@ -55,14 +55,14 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Less empty space, a higher pitch. With two centimeters left, the mug rings nearly three times higher than when empty.",
+   "text": "Less empty space, a higher pitch. With two centimeters left, the cup rings nearly three times higher than when empty.",
    "stars": [
     "pitch"
    ],
-   "phonemes": "lˈɛs ˈɛmpti spˈeɪs, ɐ hˈaɪɚ pˈɪtʃ. wɪð tˈuː sˈɛntɪmˌiːɾɚz lˈɛft, ðə mˈʌɡ ɹˈɪŋz nˌɪɹli θɹˈiː tˈaɪmz hˈaɪɚ ðɐn wɛn ˈɛmpti.",
+   "phonemes": "lˈɛs ˈɛmpti spˈeɪs, ɐ hˈaɪɚ pˈɪtʃ. wɪð tˈuː sˈɛntɪmˌiːɾɚz lˈɛft, ðə kˈʌp ɹˈɪŋz nˌɪɹli θɹˈiː tˈaɪmz hˈaɪɚ ðɐn wɛn ˈɛmpti.",
    "file": "05.wav",
-   "dur": 8.49,
-   "sha256": "e57aa849f9e1865659979349e977e907b5f5b376a0e5feee4b11e91e4271892c"
+   "dur": 8.398,
+   "sha256": "7bdcbe3f14eec4d2a8d45f35e0c584cbaa3209656829a74d6d03ff5d6de3bee5"
   },
   {
    "id": "vo06",
@@ -79,14 +79,14 @@
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "A shorter pipe makes a higher note. Next time you pour, listen: the mug tells you how full it is.",
+   "text": "A shorter pipe makes a higher note. Next time you pour, listen: the cup tells you its level.",
    "stars": [
     "listen"
    ],
-   "phonemes": "ɐ ʃˈɔːɹɾɚ pˈaɪp mˌeɪks ɐ hˈaɪɚ nˈoʊt. nˈɛkst tˈaɪm juː pˈɔːɹ, lˈɪsən: ðə mˈʌɡ tˈɛlz juː hˌaʊ fˈʊl ɪɾ ˈɪz.",
+   "phonemes": "ɐ ʃˈɔːɹɾɚ pˈaɪp mˌeɪks ɐ hˈaɪɚ nˈoʊt. nˈɛkst tˈaɪm juː pˈɔːɹ, lˈɪsən: ðə kˈʌp tˈɛlz juː ɪts lˈɛvəl.",
    "file": "07.wav",
-   "dur": 6.757,
-   "sha256": "7ca4e08db20acb0523ca86baee44d81d86f5f8c1083946422f0c26041d3c4a7e"
+   "dur": 6.106,
+   "sha256": "f07b9f9d35de25b501efabdbf8427fa52da95b872f614b3e6f0c1304c4edec00"
   },
   {
    "id": "vo08",

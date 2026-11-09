@@ -3,8 +3,8 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Can you hear a mug fill? Eyes closed, just listening.",
-   "heard": "Can you hear a mug fill? Eyes closed, just listening.",
+   "text": "Can you hear a cup fill? Eyes closed, just listening.",
+   "heard": "Can you hear a cup fill? Eyes closed, just listening.",
    "words": [
     {
      "w": "Can",
@@ -14,213 +14,213 @@
     },
     {
      "w": "you",
-     "start": 0.33,
-     "end": 0.38,
+     "start": 0.335,
+     "end": 0.385,
      "heard": true
     },
     {
      "w": "hear",
-     "start": 0.36,
+     "start": 0.365,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.39,
-     "end": 0.56,
+     "start": 0.58,
+     "end": 0.63,
      "heard": true
     },
     {
-     "w": "mug",
-     "start": 0.655,
-     "end": 0.8,
+     "w": "cup",
+     "start": 0.61,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "fill?",
-     "start": 0.92,
+     "start": 0.77,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "Eyes",
-     "start": 1.71,
+     "start": 1.66,
      "end": 2.08,
      "heard": true
     },
     {
      "w": "closed,",
-     "start": 2.11,
-     "end": 2.72,
+     "start": 2.055,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "just",
-     "start": 2.715,
-     "end": 2.96,
+     "start": 2.655,
+     "end": 2.88,
      "heard": true
     },
     {
      "w": "listening.",
-     "start": 2.965,
-     "end": 3.52,
+     "start": 2.87,
+     "end": 3.44,
      "heard": true
     }
    ]
   },
   {
    "id": "vo02",
-   "text": "Pour water into a mug, and the sound climbs higher and higher. A computer can even work out the water level from the sound alone.",
-   "heard": "Pour water into a mug, and the sound climbs higher and higher. A computer can even work out the water level from the sound alone.",
+   "text": "Pour water into a cup, and the sound climbs higher and higher. A computer can even work out the water level from the sound alone.",
+   "heard": "Pour water into a cup, and the sound climbs higher and higher. A computer can even work out the water level from the sound alone.",
    "words": [
     {
      "w": "Pour",
-     "start": 0.025,
+     "start": 0.02,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "water",
-     "start": 0.465,
+     "start": 0.41,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "into",
-     "start": 0.8,
+     "start": 0.87,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.995,
+     "start": 1.13,
      "end": 1.2,
      "heard": true
     },
     {
-     "w": "mug,",
-     "start": 1.1,
-     "end": 1.92,
+     "w": "cup,",
+     "start": 1.16,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.04,
-     "end": 2.09,
+     "start": 1.915,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "the",
-     "start": 2.07,
-     "end": 2.24,
+     "start": 1.945,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "sound",
-     "start": 2.325,
-     "end": 2.64,
+     "start": 2.2,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "climbs",
-     "start": 2.755,
-     "end": 3.28,
+     "start": 2.625,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "higher",
-     "start": 3.29,
-     "end": 3.92,
+     "start": 3.025,
+     "end": 3.76,
      "heard": true
     },
     {
      "w": "and",
-     "start": 3.91,
-     "end": 4.16,
+     "start": 3.785,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "higher.",
-     "start": 4.135,
-     "end": 5.12,
+     "start": 4.005,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "A",
-     "start": 5.315,
-     "end": 5.365,
+     "start": 5.16,
+     "end": 5.21,
      "heard": true
     },
     {
      "w": "computer",
-     "start": 5.41,
-     "end": 6.0,
+     "start": 5.26,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "can",
-     "start": 6.05,
-     "end": 6.24,
+     "start": 5.9,
+     "end": 6.08,
      "heard": true
     },
     {
      "w": "even",
-     "start": 6.21,
-     "end": 6.48,
+     "start": 6.03,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "work",
-     "start": 6.36,
-     "end": 6.72,
+     "start": 6.375,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "out",
-     "start": 6.715,
+     "start": 6.54,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.725,
      "end": 6.88,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 6.9,
-     "end": 7.04,
-     "heard": true
-    },
-    {
      "w": "water",
-     "start": 7.04,
-     "end": 7.36,
+     "start": 6.86,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "level",
-     "start": 7.42,
-     "end": 7.76,
+     "start": 7.24,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "from",
-     "start": 7.8,
-     "end": 7.92,
+     "start": 7.62,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.83,
-     "end": 8.08,
+     "start": 7.655,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "sound",
-     "start": 8.125,
-     "end": 8.48,
+     "start": 7.95,
+     "end": 8.32,
      "heard": true
     },
     {
      "w": "alone.",
-     "start": 8.49,
-     "end": 9.04,
+     "start": 8.31,
+     "end": 8.8,
      "heard": true
     }
    ]
@@ -577,8 +577,8 @@
   },
   {
    "id": "vo05",
-   "text": "Less empty space, a higher pitch. With two centimeters left, the mug rings nearly three times higher than when empty.",
-   "heard": "Less empty space, a higher pitch. With two centimeters left, the mug rings nearly three times higher than when empty.",
+   "text": "Less empty space, a higher pitch. With two centimeters left, the cup rings nearly three times higher than when empty.",
+   "heard": "Less empty space, a higher pitch. With two centimeters left, the cup rings nearly three times higher than when empty.",
    "words": [
     {
      "w": "Less",
@@ -588,13 +588,13 @@
     },
     {
      "w": "empty",
-     "start": 0.365,
+     "start": 0.37,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "space,",
-     "start": 0.92,
+     "start": 0.925,
      "end": 1.6,
      "heard": true
     },
@@ -606,31 +606,31 @@
     },
     {
      "w": "higher",
-     "start": 1.875,
+     "start": 1.88,
      "end": 2.24,
      "heard": true
     },
     {
      "w": "pitch.",
-     "start": 2.28,
+     "start": 2.285,
      "end": 3.2,
      "heard": true
     },
     {
      "w": "With",
-     "start": 3.345,
+     "start": 3.35,
      "end": 3.44,
      "heard": true
     },
     {
      "w": "two",
-     "start": 3.55,
-     "end": 3.6,
+     "start": 3.555,
+     "end": 3.605,
      "heard": true
     },
     {
      "w": "centimeters",
-     "start": 3.855,
+     "start": 3.825,
      "end": 4.48,
      "heard": true
     },
@@ -642,62 +642,62 @@
     },
     {
      "w": "the",
-     "start": 5.085,
-     "end": 5.135,
+     "start": 5.09,
+     "end": 5.14,
      "heard": true
     },
     {
-     "w": "mug",
-     "start": 5.115,
+     "w": "cup",
+     "start": 5.2,
      "end": 5.52,
      "heard": true
     },
     {
      "w": "rings",
-     "start": 5.53,
-     "end": 6.0,
+     "start": 5.455,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "nearly",
-     "start": 5.9,
-     "end": 6.32,
+     "start": 5.8,
+     "end": 6.24,
      "heard": true
     },
     {
      "w": "three",
-     "start": 6.37,
-     "end": 6.48,
+     "start": 6.245,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "times",
-     "start": 6.62,
-     "end": 7.04,
+     "start": 6.525,
+     "end": 6.96,
      "heard": true
     },
     {
      "w": "higher",
      "start": 7.03,
-     "end": 7.44,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "than",
-     "start": 7.535,
-     "end": 7.68,
+     "start": 7.455,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "when",
-     "start": 7.57,
-     "end": 7.92,
+     "start": 7.485,
+     "end": 7.84,
      "heard": true
     },
     {
      "w": "empty.",
-     "start": 7.94,
-     "end": 8.48,
+     "start": 7.84,
+     "end": 8.32,
      "heard": true
     }
    ]
@@ -855,127 +855,115 @@
   },
   {
    "id": "vo07",
-   "text": "A shorter pipe makes a higher note. Next time you pour, listen: the mug tells you how full it is.",
-   "heard": "A shorter pipe makes a higher note. Next time you pour, listen. The mug tells you how full it is.",
+   "text": "A shorter pipe makes a higher note. Next time you pour, listen: the cup tells you its level.",
+   "heard": "A shorter pipe makes a higher note. Next time you pour, listen. The cup tells you its level.",
    "words": [
     {
      "w": "A",
-     "start": 0.02,
+     "start": 0.03,
      "end": 0.24,
      "heard": true
     },
     {
      "w": "shorter",
-     "start": 0.265,
+     "start": 0.28,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "pipe",
-     "start": 0.655,
-     "end": 1.04,
+     "start": 0.6,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "makes",
-     "start": 1.005,
-     "end": 1.28,
+     "start": 0.955,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.355,
-     "end": 1.44,
+     "start": 1.12,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "higher",
-     "start": 1.41,
-     "end": 1.92,
+     "start": 1.38,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "note.",
-     "start": 2.01,
-     "end": 2.72,
+     "start": 1.84,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "Next",
-     "start": 2.79,
-     "end": 3.04,
+     "start": 2.73,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "time",
-     "start": 2.96,
-     "end": 3.28,
+     "start": 2.905,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "you",
-     "start": 3.16,
-     "end": 3.44,
+     "start": 3.08,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "pour,",
-     "start": 3.48,
-     "end": 3.92,
+     "start": 3.425,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "listen:",
-     "start": 3.95,
-     "end": 4.64,
+     "start": 3.895,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "the",
-     "start": 4.75,
-     "end": 4.8,
+     "start": 4.655,
+     "end": 4.72,
      "heard": true
     },
     {
-     "w": "mug",
-     "start": 4.78,
-     "end": 5.28,
+     "w": "cup",
+     "start": 4.75,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "tells",
-     "start": 5.22,
-     "end": 5.52,
+     "start": 5.01,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "you",
-     "start": 5.55,
-     "end": 5.68,
+     "start": 5.335,
+     "end": 5.44,
      "heard": true
     },
     {
-     "w": "how",
-     "start": 5.685,
-     "end": 5.92,
+     "w": "its",
+     "start": 5.535,
+     "end": 5.585,
      "heard": true
     },
     {
-     "w": "full",
-     "start": 6.005,
-     "end": 6.24,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 6.27,
-     "end": 6.4,
-     "heard": true
-    },
-    {
-     "w": "is.",
-     "start": 6.485,
-     "end": 6.72,
+     "w": "level.",
+     "start": 5.565,
+     "end": 6.08,
      "heard": true
     }
    ]
