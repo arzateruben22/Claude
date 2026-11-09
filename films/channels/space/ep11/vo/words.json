@@ -1,0 +1,973 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Could the planet Saturn float? On paper, yes.",
+   "heard": "Could the planet Saturn float? On paper, yes.",
+   "words": [
+    {
+     "w": "Could",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.265,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 0.295,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "Saturn",
+     "start": 0.605,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "float?",
+     "start": 1.225,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "On",
+     "start": 1.935,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "paper,",
+     "start": 2.145,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "yes.",
+     "start": 2.62,
+     "end": 3.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Saturn weighs less than the same amount of water, space for space. Here's a thought experiment: a tank of water wider than Saturn.",
+   "heard": "Saturn weighs less than the same amount of water, space for space. Here's a thought experiment, a tank of water wider than Saturn.",
+   "words": [
+    {
+     "w": "Saturn",
+     "start": 0.03,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "weighs",
+     "start": 0.545,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "less",
+     "start": 0.845,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 1.215,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.265,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 1.54,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "amount",
+     "start": 1.815,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.165,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "water,",
+     "start": 2.205,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "space",
+     "start": 2.88,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 3.405,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "space.",
+     "start": 3.66,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "Here's",
+     "start": 4.61,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.895,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "thought",
+     "start": 5.05,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "experiment:",
+     "start": 5.36,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.38,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "tank",
+     "start": 6.505,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 6.765,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 6.88,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "wider",
+     "start": 7.405,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 7.885,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "Saturn.",
+     "start": 8.155,
+     "end": 8.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Saturn is about nine Earths wide. But it's mostly hydrogen and helium, the two lightest gases. Picture a giant ball of cloud.",
+   "heard": "Saturn is about nine Earths wide, but it's mostly hydrogen and helium, the two lightest gases. Picture a giant ball of cloud.",
+   "words": [
+    {
+     "w": "Saturn",
+     "start": 0.025,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.57,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.76,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "nine",
+     "start": 0.975,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "Earths",
+     "start": 1.535,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "wide.",
+     "start": 1.885,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 2.865,
+     "end": 2.915,
+     "heard": true
+    },
+    {
+     "w": "it's",
+     "start": 2.895,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "mostly",
+     "start": 3.09,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "hydrogen",
+     "start": 3.405,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.125,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "helium,",
+     "start": 4.535,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.38,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 5.515,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "lightest",
+     "start": 5.76,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "gases.",
+     "start": 6.325,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "Picture",
+     "start": 7.45,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.72,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "giant",
+     "start": 7.995,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "ball",
+     "start": 8.445,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.895,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "cloud.",
+     "start": 9.015,
+     "end": 9.52,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Density means how much stuff is packed into a space. Earth is rock and metal, packed tight, so it sinks. Saturn is mostly gas, so its weight is spread thin.",
+   "heard": "Density means how much stuff is packed into a space. Earth is rock and metal, packed tight so it sinks. Saturn is mostly gas, so its weight is spread thin.",
+   "words": [
+    {
+     "w": "Density",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "means",
+     "start": 0.525,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 0.855,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "much",
+     "start": 1.235,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "stuff",
+     "start": 1.465,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.7,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "packed",
+     "start": 1.905,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 2.215,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.375,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "space.",
+     "start": 2.72,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 3.725,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.02,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "rock",
+     "start": 4.21,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.63,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "metal,",
+     "start": 4.685,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "packed",
+     "start": 5.51,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "tight,",
+     "start": 5.865,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 6.255,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.545,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "sinks.",
+     "start": 6.575,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "Saturn",
+     "start": 7.64,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 8.19,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "mostly",
+     "start": 8.31,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "gas,",
+     "start": 8.795,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 9.29,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 9.39,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "weight",
+     "start": 9.565,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 10.015,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "spread",
+     "start": 10.27,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "thin.",
+     "start": 10.515,
+     "end": 10.88,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "In the thought experiment, Saturn floats. But real Saturn is gas, and it would mix with water. It would never stay in one piece.",
+   "heard": "In the thought experiment, Saturn floats. But real Saturn is gas and it would mix with water. It would never stay in one piece.",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.235,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "thought",
+     "start": 0.33,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "experiment,",
+     "start": 0.64,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "Saturn",
+     "start": 1.305,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "floats.",
+     "start": 1.92,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 2.77,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "real",
+     "start": 2.925,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "Saturn",
+     "start": 3.32,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.865,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "gas,",
+     "start": 4.125,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.74,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.885,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 4.915,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "mix",
+     "start": 5.065,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 5.44,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "water.",
+     "start": 5.56,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 6.53,
+     "end": 6.58,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 6.56,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 6.73,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "stay",
+     "start": 6.945,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.385,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 7.6,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "piece.",
+     "start": 7.875,
+     "end": 8.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Size alone doesn't tell you what's inside. Density tells you who floats and who sinks.",
+   "heard": "Size alone doesn't tell you what's inside. Density tells you who floats and who sinks.",
+   "words": [
+    {
+     "w": "Size",
+     "start": 0.03,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "alone",
+     "start": 0.36,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "doesn't",
+     "start": 0.91,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "tell",
+     "start": 1.2,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.4,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "what's",
+     "start": 1.715,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "inside.",
+     "start": 1.94,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "Density",
+     "start": 3.005,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "tells",
+     "start": 3.565,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 3.92,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "who",
+     "start": 4.08,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "floats",
+     "start": 4.265,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.69,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "who",
+     "start": 4.77,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "sinks.",
+     "start": 5.03,
+     "end": 5.52,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Light time: sunlight takes about eighty minutes to reach Saturn. That's a long way for the fastest thing there is.",
+   "heard": "Light time, sunlight takes about 80 minutes to reach Saturn. That's a long way for the fastest thing there is.",
+   "words": [
+    {
+     "w": "Light",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "time:",
+     "start": 0.65,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "sunlight",
+     "start": 1.18,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 1.695,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.89,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "eighty",
+     "start": 2.34,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "minutes",
+     "start": 2.71,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.96,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 2.99,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "Saturn.",
+     "start": 3.27,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "That's",
+     "start": 4.43,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.585,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 4.78,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 5.175,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 5.415,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.49,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "fastest",
+     "start": 5.735,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "thing",
+     "start": 6.29,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "there",
+     "start": 6.5,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "is.",
+     "start": 6.8,
+     "end": 7.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: do the Apollo footprints still last on the Moon?",
+   "heard": "Next, do the Apollo footprints still last on the moon?",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 0.87,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.025,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Apollo",
+     "start": 1.325,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "footprints",
+     "start": 2.0,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 2.57,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "last",
+     "start": 2.81,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 3.27,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.525,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "Moon?",
+     "start": 3.755,
+     "end": 4.16,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

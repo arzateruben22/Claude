@@ -1,0 +1,123 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/space/ep12/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Are the footprints still there? On the Moon.",
+   "stars": [
+    "there",
+    "Moon"
+   ],
+   "phonemes": "ɑːɹ ðə fˈʊtpɹɪnts stˈɪl ðˈɛɹ? ɔnðə mˈuːn.",
+   "speed": 0.8,
+   "file": "01.wav",
+   "dur": 3.09,
+   "sha256": "f8c56c7b50ddaac540fe0753093750541bcfbd3b04e0c0585f9b194b183e5695"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "In nineteen sixty-nine, Apollo astronauts walked in the Moon's dust. Since then, orbiters have photographed tracks left by later missions. The tracks are still there.",
+   "stars": [
+    "dust",
+    "there"
+   ],
+   "phonemes": "ɪn nˈaɪntiːn sˈɪkstinˈaɪn, ɐpˈɑːloʊ ˈæstɹənˌɔːts wˈɔːkt ɪnðə mˈuːnz dˈʌst. sˈɪns ðˈɛn, ˈɔːɹbɪɾɚz hæv fˈoʊɾəɡɹˌæft tɹˈæks lˈɛft baɪ lˈeɪɾɚ mˈɪʃənz. ðə tɹˈæks ɑːɹ stˈɪl ðˈɛɹ.",
+   "speed": 1.1,
+   "file": "02.wav",
+   "dur": 10.574,
+   "sha256": "531ef755559117e22a4915630af560b5e0c3132e017aa9fd141b36858d6cd9b0"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "On Earth, wind and rain wipe a footprint out in days. The Moon has almost no air, so no wind and no rain.",
+   "stars": [
+    "days",
+    "rain"
+   ],
+   "phonemes": "ˌɔn ˈɜːθ, wˈɪnd ænd ɹˈeɪn wˈaɪp ɐ fˈʊtpɹɪnt ˈaʊt ɪn dˈeɪz. ðə mˈuːn hɐz ˈɔːlmoʊst nˈoʊ ˈɛɹ, sˌoʊ nˈoʊ wˈɪnd ænd nˈoʊ ɹˈeɪn.",
+   "speed": 0.95,
+   "file": "03.wav",
+   "dur": 7.707,
+   "sha256": "c8ae91f9ba310959d46782741610004a219c1494a2903dac03089fe42546b3ef"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Only slow things wear a print down. Tiny space grains keep hitting the dust, one at a time. That sandblasting wears the Moon down about a millimeter every million years.",
+   "stars": [
+    "time",
+    "millimeter"
+   ],
+   "phonemes": "ˈoʊnli slˈoʊ θˈɪŋz wˈɛɹ ɐ pɹˈɪnt dˈaʊn. tˈaɪni spˈeɪs ɡɹˈeɪnz kˈiːp hˈɪɾɪŋ ðə dˈʌst, wˈʌn æɾə tˈaɪm. ðæt sˈændblæstɪŋ wˈɛɹz ðə mˈuːn dˌaʊn ɐbˌaʊt ɐ mˈɪlɪmˌiːɾɚɹ ˈɛvɹi mˈɪliən jˈɪɹz.",
+   "speed": 0.98,
+   "file": "04.wav",
+   "dur": 12.059,
+   "sha256": "8539b617cf799e49b8440f48b2d82dd1d19e7e3fdb7199f3776cfc6a194e0a54"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Pull back from one boot print to the whole site. The lander's base and the tracks are still where the astronauts left them, as orbiters show.",
+   "stars": [
+    "site",
+    "still"
+   ],
+   "phonemes": "pˈʊl bˈæk fɹʌm wˈʌn bˈuːt pɹˈɪnt tə ðə hˈoʊl sˈaɪt. ðə lˈændɚz bˈeɪs ænd ðə tɹˈæks ɑːɹ stˈɪl wˌɛɹ ðɪ ˈæstɹənˌɔːts lˈɛft ðˌɛm, æz ˈɔːɹbɪɾɚz ʃˈoʊ.",
+   "speed": 0.95,
+   "file": "05.wav",
+   "dur": 8.783,
+   "sha256": "d403290d09bc7a91d9323ded20b4db5b21461ba737f9405a321e16b7067a2bee"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "No beach on Earth keeps a footprint like that. Look up tonight: some of them may still be there.",
+   "stars": [
+    "still"
+   ],
+   "phonemes": "nˈoʊ bˈiːtʃ ˌɔn ˈɜːθ kˈiːps ɐ fˈʊtpɹɪnt lˈaɪk ðˈæt. lˈʊk ˌʌp tənˈaɪt: sˌʌm ʌv ðˌɛm mˈeɪ stˈɪl biː ðˈɛɹ.",
+   "speed": 0.86,
+   "file": "06.wav",
+   "dur": 6.623,
+   "sha256": "61b9920cbdc9f2e032dfa515ac01f9e12c3a969b73d329b65be8f3d93a2731c3"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time to the Moon: about one and a quarter seconds. Close enough to talk, with a short wait.",
+   "stars": [
+    "Light time",
+    "seconds"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm tə ðə mˈuːn: ɐbˌaʊt wˈʌn ænd ɐ kwˈɔːɹɾɚ sˈɛkəndz. klˈoʊs ɪnˈʌf tə tˈɔːk, wɪð ɐ ʃˈɔːɹt wˈeɪt.",
+   "speed": 0.86,
+   "file": "07.wav",
+   "dur": 6.633,
+   "sha256": "643de6a68c2de4e6f477ee4f04e81329df5733d981fddfa6ce1a71298ccffea1"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "That's season two. Next: another orbit, another question, same sky.",
+   "stars": [
+    "another"
+   ],
+   "phonemes": "ðæts sˈiːzən tˈuː. nˈɛkst: ɐnˈʌðɚɹ ˈɔːɹbɪt, ɐnˈʌðɚ kwˈɛstʃən, sˈeɪm skˈaɪ.",
+   "speed": 1.12,
+   "file": "08.wav",
+   "dur": 4.374,
+   "sha256": "986d8ae41bf76a4aa44d9edaf745eb7d920c83b609fc0fce6c4d9c3b3a9d2603"
+  }
+ ]
+}

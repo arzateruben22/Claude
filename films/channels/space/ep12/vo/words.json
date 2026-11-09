@@ -1,0 +1,1021 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Are the footprints still there? On the Moon.",
+   "heard": "Are the footprints still there on the moon?",
+   "words": [
+    {
+     "w": "Are",
+     "start": 0.07,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.275,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "footprints",
+     "start": 0.47,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 1.09,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "there?",
+     "start": 1.345,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "On",
+     "start": 2.1,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.395,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "Moon.",
+     "start": 2.435,
+     "end": 3.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "In nineteen sixty-nine, Apollo astronauts walked in the Moon's dust. Since then, orbiters have photographed tracks left by later missions. The tracks are still there.",
+   "heard": "In 1969, Apollo astronauts walked in the moon's dust. Since then, orbiters have photographed tracks left by later missions. The tracks are still there.",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "nineteen",
+     "start": 0.335,
+     "end": 1.52,
+     "heard": false
+    },
+    {
+     "w": "sixty-nine,",
+     "start": 0.365,
+     "end": 1.52,
+     "heard": false
+    },
+    {
+     "w": "Apollo",
+     "start": 1.54,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "astronauts",
+     "start": 2.2,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "walked",
+     "start": 2.835,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 3.21,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.36,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "Moon's",
+     "start": 3.54,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "dust.",
+     "start": 4.1,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "Since",
+     "start": 4.745,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "then,",
+     "start": 5.125,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "orbiters",
+     "start": 5.685,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 6.185,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "photographed",
+     "start": 6.485,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "tracks",
+     "start": 7.04,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "left",
+     "start": 7.43,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 7.75,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "later",
+     "start": 7.975,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "missions.",
+     "start": 8.37,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 9.16,
+     "end": 9.21,
+     "heard": true
+    },
+    {
+     "w": "tracks",
+     "start": 9.26,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 9.645,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 9.99,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "there.",
+     "start": 10.2,
+     "end": 10.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "On Earth, wind and rain wipe a footprint out in days. The Moon has almost no air, so no wind and no rain.",
+   "heard": "On Earth, wind and rain wipe a footprint out in days. The moon has almost no air, so no wind and no rain.",
+   "words": [
+    {
+     "w": "On",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 0.25,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "wind",
+     "start": 0.655,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.035,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "rain",
+     "start": 1.255,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "wipe",
+     "start": 1.67,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.895,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "footprint",
+     "start": 2.095,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 2.565,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.735,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "days.",
+     "start": 2.96,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.8,
+     "end": 3.85,
+     "heard": true
+    },
+    {
+     "w": "Moon",
+     "start": 3.83,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 4.3,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "almost",
+     "start": 4.545,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 4.965,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "air,",
+     "start": 5.28,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 5.915,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 6.115,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "wind",
+     "start": 6.425,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.835,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 6.92,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "rain.",
+     "start": 7.245,
+     "end": 7.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Only slow things wear a print down. Tiny space grains keep hitting the dust, one at a time. That sandblasting wears the Moon down about a millimeter every million years.",
+   "heard": "Only slow things wear a print down. Tiny space grains keep hitting the dust, one at a time. That sandblasting wears the moon down about a millimeter every million years.",
+   "words": [
+    {
+     "w": "Only",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "slow",
+     "start": 0.46,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "things",
+     "start": 0.895,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "wear",
+     "start": 1.19,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.55,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "print",
+     "start": 1.58,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "down.",
+     "start": 2.085,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "Tiny",
+     "start": 2.755,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "space",
+     "start": 3.215,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "grains",
+     "start": 3.625,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "keep",
+     "start": 4.14,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "hitting",
+     "start": 4.405,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.81,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "dust,",
+     "start": 4.895,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 5.72,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 6.055,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.285,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "time.",
+     "start": 6.685,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "That",
+     "start": 7.35,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "sandblasting",
+     "start": 7.49,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "wears",
+     "start": 8.41,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.695,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "Moon",
+     "start": 8.855,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "down",
+     "start": 9.215,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 9.535,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.665,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "millimeter",
+     "start": 9.805,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 10.68,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "million",
+     "start": 10.84,
+     "end": 11.52,
+     "heard": true
+    },
+    {
+     "w": "years.",
+     "start": 11.52,
+     "end": 12.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Pull back from one boot print to the whole site. The lander's base and the tracks are still where the astronauts left them, as orbiters show.",
+   "heard": "Pull back from one boot print to the whole site. The lander's base and the tracks are still where the astronauts left them, as orbiters show.",
+   "words": [
+    {
+     "w": "Pull",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 0.49,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 0.52,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.765,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "boot",
+     "start": 1.135,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "print",
+     "start": 1.445,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.745,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.965,
+     "end": 2.015,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 1.995,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "site.",
+     "start": 2.335,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.23,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "lander's",
+     "start": 3.26,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "base",
+     "start": 3.885,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.245,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.475,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "tracks",
+     "start": 4.505,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 4.965,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 5.305,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "where",
+     "start": 5.59,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.845,
+     "end": 5.895,
+     "heard": true
+    },
+    {
+     "w": "astronauts",
+     "start": 5.9,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "left",
+     "start": 6.58,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "them,",
+     "start": 6.865,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 7.525,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "orbiters",
+     "start": 7.8,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "show.",
+     "start": 8.41,
+     "end": 8.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "No beach on Earth keeps a footprint like that. Look up tonight: some of them may still be there.",
+   "heard": "No beach on earth keeps a footprint like that. Look up tonight. Some of them may still be there.",
+   "words": [
+    {
+     "w": "No",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "beach",
+     "start": 0.41,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.97,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 1.085,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 1.465,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.665,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "footprint",
+     "start": 1.97,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.645,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "that.",
+     "start": 2.985,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "Look",
+     "start": 3.565,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 3.77,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "tonight:",
+     "start": 3.995,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "some",
+     "start": 4.865,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.98,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "them",
+     "start": 5.17,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "may",
+     "start": 5.44,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 5.765,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 5.995,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "there.",
+     "start": 6.17,
+     "end": 6.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Light time to the Moon: about one and a quarter seconds. Close enough to talk, with a short wait.",
+   "heard": "Light time to the moon, about one and a quarter seconds. Close enough to talk with a short wait.",
+   "words": [
+    {
+     "w": "Light",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "time",
+     "start": 0.39,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 0.715,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.765,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "Moon:",
+     "start": 0.99,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.74,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 2.02,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.41,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.575,
+     "end": 2.625,
+     "heard": true
+    },
+    {
+     "w": "quarter",
+     "start": 2.625,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "seconds.",
+     "start": 3.285,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "Close",
+     "start": 4.115,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "enough",
+     "start": 4.415,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 4.735,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "talk,",
+     "start": 4.89,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 5.47,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.58,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "short",
+     "start": 5.845,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "wait.",
+     "start": 6.1,
+     "end": 6.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "That's season two. Next: another orbit, another question, same sky.",
+   "heard": "That's season two. Next, another orbit, another question, same sky.",
+   "words": [
+    {
+     "w": "That's",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "season",
+     "start": 0.255,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "two.",
+     "start": 0.59,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "Next:",
+     "start": 1.32,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "another",
+     "start": 1.9,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "orbit,",
+     "start": 2.295,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "another",
+     "start": 2.72,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "question,",
+     "start": 3.095,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 3.64,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "sky.",
+     "start": 4.01,
+     "end": 4.32,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

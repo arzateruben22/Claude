@@ -1,0 +1,122 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/space/ep11/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Could the planet Saturn float? On paper, yes.",
+   "stars": [
+    "Saturn",
+    "yes"
+   ],
+   "phonemes": "kʊd ðə plˈænɪt sˈæɾɜːn flˈoʊt? ˌɔn pˈeɪpɚ, jˈɛs.",
+   "speed": 0.9,
+   "file": "01.wav",
+   "dur": 3.14,
+   "sha256": "8c14a9f13ea3e75bac73c1762d9560508f92ae7601b71d9025bb688ba6296258"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Saturn weighs less than the same amount of water, space for space. Here's a thought experiment: a tank of water wider than Saturn.",
+   "stars": [
+    "Saturn"
+   ],
+   "phonemes": "sˈæɾɜːn wˈeɪz lˈɛs ðɐn ðə sˈeɪm ɐmˈaʊnt ʌv wˈɔːɾɚ, spˈeɪs fɔːɹ spˈeɪs. hˈɪɹz ɐ θˈɔːt ɛkspˈɛɹɪmənt: ɐ tˈæŋk ʌv wˈɔːɾɚ wˈaɪdɚ ðɐn sˈæɾɜːn.",
+   "speed": 0.95,
+   "file": "02.wav",
+   "dur": 8.647,
+   "sha256": "8e9e842e2462e9625b1f836d44b91c160c273408ab09ce2a9d40fe99539fc7cd"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Saturn is about nine Earths wide. But it's mostly hydrogen and helium, the two lightest gases. Picture a giant ball of cloud.",
+   "stars": [
+    "wide",
+    "gases"
+   ],
+   "phonemes": "sˈæɾɜːn ɪz ɐbˌaʊt nˈaɪn ˈɜːθs wˈaɪd. bˌʌt ɪts mˈoʊstli hˈaɪdɹədʒən ænd hˈiːliəm, ðə tˈuː lˈaɪɾɪst ɡˈæsᵻz. pˈɪktʃɚɹ ɐ dʒˈaɪənt bˈɔːl ʌv klˈaʊd.",
+   "speed": 0.95,
+   "file": "03.wav",
+   "dur": 9.596,
+   "sha256": "cfe1cc16da4d1f67f091f83e1bd45a7e7044e51986cb58ba468ff4a1c3ffae56"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Density means how much stuff is packed into a space. Earth is rock and metal, packed tight, so it sinks. Saturn is mostly gas, so its weight is spread thin.",
+   "stars": [
+    "tight",
+    "thin"
+   ],
+   "phonemes": "dˈɛnsᵻɾi mˈiːnz hˌaʊ mˈʌtʃ stˈʌf ɪz pˈækt ˌɪntʊ ɐ spˈeɪs. ˈɜːθ ɪz ɹˈɑːk ænd mˈɛɾəl, pˈækt tˈaɪt, sˌoʊ ɪt sˈɪŋks. sˈæɾɜːn ɪz mˈoʊstli ɡˈæs, sˌoʊ ɪts wˈeɪt ɪz spɹˈɛd θˈɪn.",
+   "speed": 0.95,
+   "file": "04.wav",
+   "dur": 10.916,
+   "sha256": "1fcfc1c7a0225a5f1bb1fff7821c28d0c06353688351bfec4ae5e1b16a2c0711"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "In the thought experiment, Saturn floats. But real Saturn is gas, and it would mix with water. It would never stay in one piece.",
+   "stars": [
+    "floats",
+    "piece"
+   ],
+   "phonemes": "ɪnðə θˈɔːt ɛkspˈɛɹɪmənt, sˈæɾɜːn flˈoʊts. bˌʌt ɹˈiːəl sˈæɾɜːn ɪz ɡˈæs, ænd ɪt wʊd mˈɪks wɪð wˈɔːɾɚ. ɪt wʊd nˈɛvɚ stˈeɪ ɪn wˈʌn pˈiːs.",
+   "speed": 0.95,
+   "file": "05.wav",
+   "dur": 8.33,
+   "sha256": "e61734fa21e30bd730575ae71508c5981123e64409be8e66128be3301d5cb5e8"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "Size alone doesn't tell you what's inside. Density tells you who floats and who sinks.",
+   "stars": [
+    "Density"
+   ],
+   "phonemes": "sˈaɪz ɐlˈoʊn dˈʌzənt tˈɛl juː wʌts ɪnsˈaɪd. dˈɛnsᵻɾi tˈɛlz juː hˌuː flˈoʊts ænd hˌuː sˈɪŋks.",
+   "speed": 0.95,
+   "file": "06.wav",
+   "dur": 5.579,
+   "sha256": "57dc8ae211061df591276fb723033f92bd9cb941c894a4b27815d8d2d998a759"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time: sunlight takes about eighty minutes to reach Saturn. That's a long way for the fastest thing there is.",
+   "stars": [
+    "Light time",
+    "Saturn"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm: sˈʌnlaɪt tˈeɪks ɐbˌaʊt ˈeɪɾi mˈɪnɪts tə ɹˈiːtʃ sˈæɾɜːn. ðæts ɐ lˈɔŋ wˈeɪ fɚðə fˈæstɪst θˈɪŋ ðɛɹˈɪz.",
+   "speed": 0.95,
+   "file": "07.wav",
+   "dur": 7.085,
+   "sha256": "d89a531c445b5934b5bcc0bfc818ca92011142c5ca37bdd579392d57319f1d3f"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: do the Apollo footprints still last on the Moon?",
+   "stars": [
+    "last"
+   ],
+   "phonemes": "nˈɛkst: dˈuː ðɪ ɐpˈɑːloʊ fˈʊtpɹɪnts stˈɪl lˈæst ɔnðə mˈuːn?",
+   "speed": 0.78,
+   "file": "08.wav",
+   "dur": 4.216,
+   "sha256": "2931cf8157e59b430add2b66c30c43e69a7843b353ae8446860ae13c6aa6c8e9"
+  }
+ ]
+}
