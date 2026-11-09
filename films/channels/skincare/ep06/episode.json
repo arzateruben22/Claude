@@ -664,18 +664,28 @@
    "t0": "start:vo04",
    "t1": "end:vo04+2.4",
    "top": 650,
-   "title": "Melanoma risk,<br>first use before 35 (pooled studies)",
+   "title": "Melanoma risk,<br>people who started using beds before 35",
    "bars": [
     {
-     "label": "More than half again as high as for people who never used a bed",
+     "label": "Started before 35: more than half again as high as for people who never used a bed",
      "value": 1,
      "max": 1,
-     "t": "vo04:raised",
+     "t": "vo04:found",
      "color": "#2F8F86"
     }
    ],
-   "note": "Group results, not a prediction for any one person. Boniol et al., BMJ 2012.",
-   "noteT": "vo04:half"
+   "note": "Group results, not a prediction for any one person. Not the same as ever using a bed (a much smaller rise). Boniol et al., BMJ 2012.",
+   "noteT": "vo04:half",
+   "tags": [
+    {
+     "text": "The clearest signal",
+     "t": "vo04:clearest"
+    },
+    {
+     "text": "People who started young",
+     "t": "vo04:started"
+    }
+   ]
   },
   {
    "t0": "start:vo05",
@@ -777,6 +787,5 @@
   "e1": "Next season:<br>more skin questions",
   "e2": "answered with the evidence.",
   "chip": "Skin Sense · season 2"
- },
- "name": "Same List as Cigarettes"
+ }
 }

@@ -396,187 +396,211 @@
   },
   {
    "id": "vo04",
-   "text": "When beds joined the list, the clearest signal came from people who started young. Studies that pooled results found first use before thirty-five raised melanoma risk by more than half.",
-   "heard": "When beds joined the list, the clearest signal came from people who started young. Studies that pooled results found first use before 35 raised melanoma risk by more than half.",
+   "text": "When beds joined the list, the clearest signal came from people who started young. Pooled studies found that people who started using beds before thirty-five had a melanoma risk raised by more than half.",
+   "heard": "When beds joined the list, the clearest signal came from people who started young. Pooled studies found that people who started using beds before 35 had a melanoma risk raised by more than half.",
    "words": [
     {
      "w": "When",
      "start": 0.02,
-     "end": 0.16,
+     "end": 0.24,
      "heard": true
     },
     {
      "w": "beds",
-     "start": 0.19,
+     "start": 0.22,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "joined",
-     "start": 0.46,
+     "start": 0.485,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.71,
-     "end": 0.88,
+     "start": 0.76,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "list,",
-     "start": 0.96,
-     "end": 1.36,
+     "start": 1.015,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.47,
-     "end": 1.52,
+     "start": 1.55,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "clearest",
-     "start": 1.58,
-     "end": 2.0,
+     "start": 1.66,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "signal",
-     "start": 2.095,
-     "end": 2.48,
+     "start": 2.175,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "came",
-     "start": 2.43,
-     "end": 2.72,
+     "start": 2.51,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "from",
-     "start": 2.7,
-     "end": 2.96,
+     "start": 2.785,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "people",
-     "start": 2.9,
-     "end": 3.2,
+     "start": 3.0,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "who",
-     "start": 3.095,
-     "end": 3.44,
+     "start": 3.2,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "started",
-     "start": 3.435,
-     "end": 3.84,
+     "start": 3.54,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "young.",
-     "start": 3.775,
-     "end": 4.64,
+     "start": 3.88,
+     "end": 4.72,
      "heard": true
     },
     {
-     "w": "Studies",
-     "start": 4.775,
-     "end": 5.12,
-     "heard": true
-    },
-    {
-     "w": "that",
-     "start": 5.24,
+     "w": "Pooled",
+     "start": 4.9,
      "end": 5.36,
      "heard": true
     },
     {
-     "w": "pooled",
-     "start": 5.435,
-     "end": 5.76,
-     "heard": true
-    },
-    {
-     "w": "results",
-     "start": 5.675,
-     "end": 6.24,
+     "w": "studies",
+     "start": 5.275,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "found",
-     "start": 6.2,
-     "end": 6.48,
+     "start": 5.645,
+     "end": 5.92,
      "heard": true
     },
     {
-     "w": "first",
-     "start": 6.56,
-     "end": 6.64,
+     "w": "that",
+     "start": 6.08,
+     "end": 6.13,
      "heard": true
     },
     {
-     "w": "use",
+     "w": "people",
+     "start": 6.125,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "who",
+     "start": 6.29,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "started",
+     "start": 6.61,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "using",
      "start": 6.82,
-     "end": 7.04,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "beds",
+     "start": 7.335,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "before",
-     "start": 7.13,
-     "end": 7.36,
+     "start": 7.685,
+     "end": 8.0,
      "heard": true
     },
     {
      "w": "thirty-five",
-     "start": 7.5,
-     "end": 8.16,
+     "start": 8.02,
+     "end": 8.96,
      "heard": false
     },
     {
-     "w": "raised",
-     "start": 8.19,
-     "end": 8.48,
+     "w": "had",
+     "start": 9.16,
+     "end": 9.21,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.19,
+     "end": 9.36,
      "heard": true
     },
     {
      "w": "melanoma",
-     "start": 8.56,
-     "end": 9.28,
+     "start": 9.275,
+     "end": 10.16,
      "heard": true
     },
     {
      "w": "risk",
-     "start": 9.285,
-     "end": 9.6,
+     "start": 10.25,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "raised",
+     "start": 10.285,
+     "end": 10.72,
      "heard": true
     },
     {
      "w": "by",
-     "start": 9.61,
-     "end": 9.76,
+     "start": 10.76,
+     "end": 10.88,
      "heard": true
     },
     {
      "w": "more",
-     "start": 9.69,
-     "end": 9.92,
+     "start": 10.79,
+     "end": 11.04,
      "heard": true
     },
     {
      "w": "than",
-     "start": 10.0,
-     "end": 10.08,
+     "start": 11.13,
+     "end": 11.28,
      "heard": true
     },
     {
      "w": "half.",
-     "start": 10.03,
-     "end": 10.56,
+     "start": 11.32,
+     "end": 11.68,
      "heard": true
     }
    ]

@@ -10,9 +10,9 @@ Total ≈ 7.3 min (7:18). Intro 4 s (belongs to chapter 1), bridges 2 s (belong 
 | 0:00 | The fight you never saw | 4.0 s | 73.7 s |
 | 1:19 | Where a glow comes from | 79.7 s | 70.0 s |
 | 2:31 | What's in a scar | 151.7 s | 70.0 s |
-| 3:43 | The Message Behind a Frown | 223.7 s | 66.5 s |
-| 4:52 | The Sunscreen Experiment | 292.3 s | 67.8 s |
-| 6:02 | Same List as Cigarettes | 362.1 s | 68.1 s |
+| 3:43 | The message behind a frown | 223.7 s | 66.5 s |
+| 4:52 | The sunscreen experiment | 292.3 s | 67.8 s |
+| 6:02 | Same list as cigarettes | 362.1 s | 68.1 s |
 
 ## Layout (the new ivory look)
 - Cards are drawn by `compilation.mjs` from `films/channels/skincare/theme-ivory.json` (new `--theme` option): ivory ground, navy Newsreader headline, Red Hat Text supporting text, dark-teal accent (contrast: navy/ivory 15:1, secondary text 6.7:1, accent 5.3:1). Preview: `cards-preview.jpg` (intro, a bridge, a chapter frame, the outro; drawn from draft stand-ins).
@@ -23,7 +23,7 @@ Total ≈ 7.3 min (7:18). Intro 4 s (belongs to chapter 1), bridges 2 s (belong 
 ## Before it runs (finals drop straight in)
 1. `films/channels/skincare/ep01..ep06/out/skin-sense-00N-9x16.mp4` (1080 × 1920, delivered at -14 LUFS) plus the `.jpg` poster of each; each `film.json` has `title.series` ("Skin Sense · No. 00N") and `title.title`; each `claims.json` exists (ep04-06 do).
 2. Then: `films/channels/skincare/compilations/vol01/build-vol01.sh` (add `--cards-only` first to look at the cards and the thumbnail). QA gates: 2560 × 1440, 5-11 min, -14 LUFS ±1.5, ≤ -1 dBTP, every chapter ≥ 10 s, picture and sound lengths equal, description ≤ 5,000 characters.
-3. Episodes 001-003 titles read in sentence case in the sidebar ("The fight you never saw"); 004-006 in title case; one style is a taste call for the owner (the film.json title fields).
+3. All six chapter titles are in sentence case (001-003 already were; 004-006 changed 9 Nov at the coordinator's request).
 
 ## Open (list in every handoff)
 - The finals (004-006 need the owner's pictures, score and effects, a final-tier render and `qa.py`); the Opus score; every claim still OPEN or SOURCE-READ but not person-checked; dermatologist sign-off for 004-006 (and the earlier episodes' own HUMAN-REVIEW files); the channel handle, links and YouTube's altered/synthetic-content setting (the description's TODO line).

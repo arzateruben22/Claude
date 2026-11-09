@@ -15,18 +15,18 @@ vo: All three are in the top group of the World Health Organization's cancer age
 ## change {shot: a tanning bed drawn as a canopy of glowing tubes, no person; the tubes flare · labels: UVA · picture-only 0.6 s · energy: 0.55} (13.8–23.3 s)
 vo: Tanning beds give off mostly UVA, the long rays. {c4} In big, powerful units it may be ten to fifteen times as strong as midday *sun*. {c5}
 
-## why {shot: a chart plate: two bars above a baseline, no skin · labels: first use before 35 · picture-only 2.2 s · energy: 0.5} (23.3–36.4 s)
-vo: When beds joined the list, the clearest signal came from people who started young. {c6} Studies that pooled results found first use before thirty-five raised melanoma risk by more than *half*. {c7}
+## why {shot: a chart plate: two bars above a baseline, no skin · labels: first use before 35 · picture-only 2.2 s · energy: 0.5} (23.3–37.5 s)
+vo: When beds joined the list, the clearest signal came from people who started young. {c6} Pooled studies found that people who started using beds before thirty-five had a melanoma risk raised by more than *half*. {c7}
 
-## whoa {shot: two plates: Australia 2015, Brazil 2009, each switching a bed off · labels: Australia · Brazil · picture-only 3.1 s · energy: 0.8} (36.4–46.0 s)
+## whoa {shot: two plates: Australia 2015, Brazil 2009, each switching a bed off · labels: Australia · Brazil · picture-only 3.1 s · energy: 0.8} (37.5–47.2 s)
 vo: Whole countries acted. {-} Australia switched off every commercial tanning bed, and Brazil banned them *too*. {c8,c9}
 
-## toscale {segment: toscale · a section of skin, rays passing the thin top layer, beside a sheet of paper · labels: about 100 µm · paper 100 µm · picture-only 0.5 s · energy: 0.4} (46.0–54.5 s)
+## toscale {segment: toscale · a section of skin, rays passing the thin top layer, beside a sheet of paper · labels: about 100 µm · paper 100 µm · picture-only 0.5 s · energy: 0.4} (47.2–55.7 s)
 vo: Those long rays go through the top layer of skin, which on most of us is about as thin as *paper*. {c10,c11}
 
-## takeaway {shot: back to the list plate; the sun's row lights, dated 1992 · picture-only 0.5 s · energy: 0.3} (54.5–62.6 s)
+## takeaway {shot: back to the list plate; the sun's row lights, dated 1992 · picture-only 0.5 s · energy: 0.3} (55.7–63.7 s)
 vo: The sun joined that list years before the beds. {c12} Same list as cigarettes means the same certainty, not the same *harm*. {c13}
 
-## tease {end card held ≥ 2 s · energy: 0.35} (62.6–68.1 s)
+## tease {end card held ≥ 2 s · energy: 0.35} (63.7–69.2 s)
 vo: Next: more skin questions, answered with the evidence. {-}
 end card: "More skin questions, answered with the evidence." · "Skin Sense · season 2" · footnote: "Narration: synthetic voice (AI)."
