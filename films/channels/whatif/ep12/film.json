@@ -2,8 +2,8 @@
  "id": "envelope-s2e06",
  "fps": 30,
  "bpm": 50,
- "dur": 75.0,
- "poster": 30.3,
+ "dur": 73.2,
+ "poster": 30.1667,
  "shots": [
   {
    "at": 0.0,
@@ -22,15 +22,15 @@
    "name": "tank"
   },
   {
-   "at": 41.4,
+   "at": 39.6,
    "name": "tower"
   },
   {
-   "at": 51.6,
+   "at": 49.8,
    "name": "work"
   },
   {
-   "at": 60.6,
+   "at": 58.8,
    "name": "take"
   },
   {
@@ -63,27 +63,27 @@
   {
    "id": "why",
    "t0": 28.2,
-   "t1": 41.4,
+   "t1": 39.6,
    "line": "vo04",
    "energy": 0.55
   },
   {
    "id": "whoa",
-   "t0": 41.4,
-   "t1": 51.6,
+   "t0": 39.6,
+   "t1": 49.8,
    "line": "vo05",
    "energy": 0.75
   },
   {
    "id": "work",
-   "t0": 51.6,
-   "t1": 60.6,
+   "t0": 49.8,
+   "t1": 58.8,
    "line": "vo06",
    "energy": 0.5
   },
   {
    "id": "takeaway",
-   "t0": 60.6,
+   "t0": 58.8,
    "t1": 69.0,
    "line": "vo07",
    "energy": 0.45
@@ -91,7 +91,7 @@
   {
    "id": "tease",
    "t0": 69.0,
-   "t1": 75.0,
+   "t1": 73.2,
    "line": "vo08",
    "energy": 0.4
   }
@@ -212,7 +212,7 @@
     "fy": 0.34
    },
    {
-    "t": 41.4,
+    "t": 39.6,
     "target": [
      -5.0,
      0.5,
@@ -228,36 +228,36 @@
   ],
   "tower": [
    {
-    "t": 41.4,
+    "t": 39.6,
     "target": [
      0.0,
      0.0,
      0.0
     ],
-    "dist": 470.0,
+    "dist": 520.0,
     "el": 4.0,
     "az": 0.0,
     "fov": 24,
-    "fy": 0.48
+    "fy": 0.5
    },
    {
-    "t": 51.6,
+    "t": 49.8,
     "target": [
      0.0,
      0.0,
      0.0
     ],
-    "dist": 450.0,
-    "el": 4.0,
-    "az": 0.0,
+    "dist": 500.0,
+    "el": 10.0,
+    "az": 8.0,
     "fov": 24,
-    "fy": 0.48,
+    "fy": 0.5,
     "ease": "sine"
    }
   ],
   "work": [
    {
-    "t": 51.6,
+    "t": 49.8,
     "target": [
      0.0,
      0.0,
@@ -270,7 +270,7 @@
     "fy": 0.91
    },
    {
-    "t": 60.6,
+    "t": 58.8,
     "target": [
      0.0,
      0.0,
@@ -286,7 +286,7 @@
   ],
   "take": [
    {
-    "t": 60.6,
+    "t": 58.8,
     "target": [
      0.0,
      0.0,
@@ -328,7 +328,7 @@
     "fy": 0.35
    },
    {
-    "t": 75.0,
+    "t": 73.2,
     "target": [
      0.3,
      1.0,
@@ -354,18 +354,18 @@
   "range": 22.966666666666665,
   "mult": 24.5,
   "fill": [
-   29.3,
-   32.46666666666667
+   29.166666666666668,
+   32.4
   ],
   "why": 28.2,
-  "whoa": 41.4,
-  "eighty": 43.266666666666666,
-  "all": 46.7,
-  "five": 49.53333333333333,
-  "work0": 51.6,
-  "ten": 53.3,
-  "home": 60.6,
-  "blink": 67.1,
+  "whoa": 39.6,
+  "eighty": 41.46666666666667,
+  "all": 44.9,
+  "five": 47.733333333333334,
+  "work0": 49.8,
+  "ten": 51.5,
+  "home": 58.8,
+  "blink": 67.4,
   "end": 69.06666666666666,
   "seed": 6
  },
@@ -411,7 +411,7 @@
    ]
   },
   {
-   "t": 29.3,
+   "t": 29.166666666666668,
    "label": "the same, in kilowatt-hours",
    "terms": [
     [
@@ -421,7 +421,7 @@
    ]
   },
   {
-   "t": 43.266666666666666,
+   "t": 41.46666666666667,
    "label": "as days of the world's electricity",
    "terms": [
     [
@@ -431,7 +431,7 @@
    ]
   },
   {
-   "t": 46.7,
+   "t": 44.9,
    "label": "as days of the world's electricity",
    "terms": [
     [
@@ -442,7 +442,7 @@
    "box": true
   },
   {
-   "t": 51.6,
+   "t": 49.8,
    "label": "as days of the world's electricity",
    "terms": [
     [
@@ -454,7 +454,7 @@
    "keep": true
   },
   {
-   "t": 60.6,
+   "t": 58.8,
    "label": "can we catch it?",
    "terms": [
     [
@@ -466,30 +466,30 @@
  ],
  "spineOut": 68.61666666666666,
  "work": {
-  "t0": 51.6,
-  "t1": 60.3333,
+  "t0": 49.8,
+  "t1": 58.5333,
   "title": "Show your work",
   "rows": [
    {
-    "t": 51.75,
+    "t": 49.949999999999996,
     "k": "44 /s × 1 year × 1 GJ",
     "v": "≈ 1.4 × 10¹⁸ J",
     "lit": false
    },
    {
-    "t": 52.15,
+    "t": 50.349999999999994,
     "k": "÷ 30,000 TWh",
     "v": "≈ 1.3 % ≈ 5 days",
     "lit": false
    },
    {
-    "t": 53.3,
+    "t": 51.5,
     "k": "10 × less per flash",
     "v": "≈ 0.5 days",
     "lit": true
    },
    {
-    "t": 54.3,
+    "t": 52.5,
     "k": "10 × more per flash",
     "v": "≈ 47 days",
     "lit": true
@@ -504,10 +504,20 @@
  "labels": [
   {
    "id": "l-j",
-   "text": "≈ 1 billion J",
+   "text": "1 billion J",
    "kind": "calc",
    "anchor": "meter-mid",
    "t0": 20.333333333333332,
+   "t1": 27.9,
+   "side": 1,
+   "shot": "bolt"
+  },
+  {
+   "id": "l-rough",
+   "text": "a rough guess",
+   "kind": "assume",
+   "anchor": "meter-range",
+   "t0": 22.966666666666665,
    "t1": 27.9,
    "side": 1,
    "shot": "bolt"
@@ -537,8 +547,8 @@
    "text": "390 billion kWh",
    "kind": "calc",
    "anchor": "tank1-top",
-   "t0": 30.1,
-   "t1": 41.1,
+   "t0": 29.96666666666667,
+   "t1": 39.300000000000004,
    "side": 1,
    "shot": "tank"
   },
@@ -547,8 +557,8 @@
    "text": "all the lightning",
    "kind": "anchor",
    "anchor": "tank1-top-w",
-   "t0": 46.5,
-   "t1": 51.300000000000004,
+   "t0": 44.699999999999996,
+   "t1": 49.5,
    "side": -1,
    "shot": "tower"
   },
@@ -557,8 +567,8 @@
    "text": "a year of world electricity",
    "kind": "part",
    "anchor": "tank2-top",
-   "t0": 43.06666666666666,
-   "t1": 51.300000000000004,
+   "t0": 41.266666666666666,
+   "t1": 49.5,
    "side": -1,
    "shot": "tower"
   }
@@ -579,39 +589,39 @@
    "slot": "tl"
   },
   {
-   "id": "b-rough",
-   "text": "a rough guess: 100 million to 10 billion",
-   "t0": 22.966666666666665,
-   "t1": 27.9,
-   "slot": "tr"
-  },
-  {
    "id": "b-every",
    "text": "∵ every bolt caught, nothing lost",
    "t0": 28.4,
-   "t1": 41.1,
+   "t1": 39.300000000000004,
    "slot": "tl"
   },
   {
    "id": "b-times",
    "text": "≈ 80 × more",
-   "t0": 43.266666666666666,
-   "t1": 51.300000000000004,
+   "t0": 41.46666666666667,
+   "t1": 49.5,
    "slot": "tr"
   },
   {
    "id": "b-bars",
    "text": "bars: a year = the full bar",
-   "t0": 53.099999999999994,
-   "t1": 60.300000000000004,
+   "t0": 51.3,
+   "t1": 58.5,
+   "slot": "tl"
+  },
+  {
+   "id": "b-heat",
+   "text": "most of it: heat, light, sound, radio",
+   "t0": 61.6,
+   "t1": 68.76666666666667,
    "slot": "tl"
   },
   {
    "id": "b-blink",
-   "text": "each flash: a fraction of a second",
-   "t0": 67.1,
+   "text": "random places, a split second",
+   "t0": 67.4,
    "t1": 68.76666666666667,
-   "slot": "tl"
+   "slot": "tr"
   }
  ],
  "counters": [
@@ -995,7 +1005,7 @@
   },
   {
    "t0": 28.38,
-   "t1": 30.865,
+   "t1": 30.79,
    "lines": [
     [
      [
@@ -1004,498 +1014,500 @@
      ],
      [
       "is",
-      28.85
+      28.815
      ],
      [
       "about",
-      29.13
+      29.04
      ]
     ],
     [
      [
       "400 billion",
-      29.39
+      29.265
      ]
     ]
    ]
   },
   {
-   "t0": 30.865,
-   "t1": 34.275,
+   "t0": 30.79,
+   "t1": 31.54,
    "lines": [
     [
      [
-      "kilowatt-hours,",
-      30.865
-     ]
-    ],
-    [
-     [
-      "a",
-      32.4
-     ],
-     [
-      "very",
-      32.595
-     ],
-     [
-      "big",
-      33.01
-     ],
-     [
-      "number.",
-      33.525
+      "kilowatt-hours.",
+      30.79
      ]
     ]
    ]
   },
   {
-   "t0": 34.38,
-   "t1": 36.45,
+   "t0": 32.355,
+   "t1": 34.515,
    "lines": [
     [
      [
       "But",
-      34.38
+      32.495
      ],
      [
       "a",
-      34.46
+      32.555
      ],
      [
       "number",
-      34.74
+      32.9
      ],
      [
       "only",
-      35.21
+      33.295
      ],
      [
       "means",
-      35.735
+      33.875
      ]
     ]
    ]
   },
   {
-   "t0": 36.45,
-   "t1": 37.93,
+   "t0": 34.515,
+   "t1": 36.025,
    "lines": [
     [
      [
       "something",
-      36.45
+      34.515
      ]
     ],
     [
      [
       "beside",
-      36.715
+      34.835
      ],
      [
       "another,",
-      37.18
+      35.275
      ]
     ]
    ]
   },
   {
-   "t0": 37.94,
-   "t1": 40.77,
+   "t0": 36.055,
+   "t1": 38.885,
    "lines": [
     [
      [
       "so",
-      37.94
+      36.055
      ],
      [
       "let's",
-      38.07
+      36.315
      ],
      [
       "compare",
-      38.57
+      36.685
      ]
     ],
     [
      [
       "it",
-      39.18
+      37.295
      ],
      [
       "with",
-      39.36
+      37.475
      ],
      [
       "what",
-      39.595
+      37.71
      ],
      [
       "we",
-      39.785
+      37.9
      ],
      [
       "use.",
-      40.02
+      38.135
      ]
     ]
    ]
   },
   {
-   "t0": 41.585,
-   "t1": 44.36,
+   "t0": 39.785,
+   "t1": 42.56,
    "lines": [
     [
      [
       "The",
-      41.725
+      39.925
      ],
      [
       "world",
-      41.925
+      40.125
      ],
      [
       "uses",
-      42.36
+      40.56
      ]
     ],
     [
      [
       "nearly",
-      42.83
+      41.03
      ],
      [
       "80",
-      43.365
+      41.565
      ],
      [
       "times",
-      43.81
+      42.01
      ]
     ]
    ]
   },
   {
-   "t0": 44.36,
-   "t1": 46.805,
+   "t0": 42.56,
+   "t1": 45.005,
    "lines": [
     [
      [
       "more",
-      44.36
+      42.56
      ],
      [
       "electricity",
-      44.52
+      42.72
      ]
     ],
     [
      [
       "in",
-      45.65
+      43.85
      ],
      [
       "a",
-      45.91
+      44.11
      ],
      [
       "year.",
-      46.195
+      44.395
      ]
     ]
    ]
   },
   {
-   "t0": 46.805,
-   "t1": 48.545,
+   "t0": 45.005,
+   "t1": 46.745,
    "lines": [
     [
      [
       "All",
-      46.805
+      45.005
      ],
      [
       "the",
-      47.13
+      45.33
      ],
      [
       "lightning",
-      47.27
+      45.47
      ]
     ],
     [
      [
       "on",
-      47.87
+      46.07
      ],
      [
       "Earth",
-      48.105
+      46.305
      ]
     ]
    ]
   },
   {
-   "t0": 48.545,
-   "t1": 50.94,
+   "t0": 46.745,
+   "t1": 49.14,
    "lines": [
     [
      [
       "would",
-      48.545
+      46.745
      ],
      [
       "run",
-      48.77
+      46.97
      ]
     ],
     [
      [
       "it",
-      49.16
+      47.36
      ],
      [
       "for",
-      49.19
+      47.39
      ],
      [
       "about",
-      49.41
+      47.61
      ],
      [
       "five",
-      49.63
+      47.83
      ],
      [
       "days.",
-      50.19
+      48.39
      ]
     ]
    ]
   },
   {
-   "t0": 51.78,
-   "t1": 54.695,
+   "t0": 49.98,
+   "t1": 52.895,
    "lines": [
     [
      [
       "If",
-      51.92
+      50.12
      ],
      [
       "a",
-      52.1
+      50.3
      ],
      [
       "flash",
-      52.385
+      50.585
      ],
      [
       "holds",
-      52.895
+      51.095
      ]
     ],
     [
      [
       "10",
-      53.405
+      51.605
      ],
      [
       "times",
-      53.76
+      51.96
      ],
      [
       "less",
-      54.27
+      52.47
      ]
     ]
    ]
   },
   {
-   "t0": 54.695,
-   "t1": 57.225,
+   "t0": 52.895,
+   "t1": 55.425,
    "lines": [
     [
      [
       "or",
-      54.695
+      52.895
      ],
      [
       "10",
-      54.865
+      53.065
      ],
      [
       "times",
-      55.245
+      53.445
      ],
      [
       "more,",
-      55.71
+      53.91
      ]
     ],
     [
      [
       "it",
-      56.395
+      54.595
      ],
      [
       "swings",
-      56.545
+      54.745
      ]
     ]
    ]
   },
   {
-   "t0": 57.225,
-   "t1": 59.975,
+   "t0": 55.425,
+   "t1": 58.175,
    "lines": [
     [
      [
       "from",
-      57.225
+      55.425
      ],
      [
       "half",
-      57.45
+      55.65
      ],
      [
       "a",
-      57.9
+      56.1
      ],
      [
       "day",
-      58.125
+      56.325
      ]
     ],
     [
      [
       "to",
-      58.225
+      56.425
      ],
      [
       "about",
-      58.53
+      56.73
      ],
      [
       "seven",
-      58.85
+      57.05
      ],
      [
       "weeks.",
-      59.225
+      57.425
      ]
     ]
    ]
   },
   {
-   "t0": 60.78,
-   "t1": 63.75,
+   "t0": 59.005,
+   "t1": 61.67,
    "lines": [
     [
      [
-      "And",
-      60.92
-     ],
-     [
-      "catching",
-      61.105
+      "Catching",
+      59.145
      ]
     ],
     [
      [
       "it",
-      61.6
+      59.835
      ],
      [
       "is",
-      61.905
+      59.9
      ],
      [
       "the",
-      62.085
+      60.08
      ],
      [
       "real",
-      62.515
+      60.55
      ],
      [
       "problem.",
-      63.155
+      60.92
      ]
     ]
    ]
   },
   {
-   "t0": 63.75,
-   "t1": 65.52,
+   "t0": 61.71,
+   "t1": 65.605,
    "lines": [
     [
      [
-      "The",
-      63.75
+      "Most",
+      61.71
      ],
      [
-      "bolts",
-      63.78
+      "of",
+      62.105
+     ],
+     [
+      "a",
+      62.135
+     ],
+     [
+      "flash",
+      62.43
+     ],
+     [
+      "becomes",
+      62.95
      ]
     ],
     [
      [
-      "are",
-      64.675
+      "heat,",
+      63.45
      ],
      [
-      "everywhere,",
-      64.77
+      "light",
+      64.065
+     ],
+     [
+      "and",
+      64.615
+     ],
+     [
+      "sound,",
+      64.92
      ]
     ]
    ]
   },
   {
-   "t0": 65.67,
-   "t1": 68.355,
+   "t0": 65.605,
+   "t1": 68.54,
    "lines": [
     [
      [
       "and",
-      65.67
+      65.605
      ],
      [
       "each",
-      65.86
+      65.725
+     ],
+     [
+      "bolt",
+      66.035
      ],
      [
       "is",
-      66.205
+      66.45
      ],
      [
       "over",
-      66.445
+      66.705
      ]
     ],
     [
      [
       "in",
-      66.705
+      67.17
      ],
      [
       "a",
-      66.86
+      67.2
      ],
      [
       "split",
-      67.215
+      67.51
      ],
      [
       "second.",
-      67.605
+      67.79
      ]
     ]
    ]
   },
   {
    "t0": 69.18,
-   "t1": 72.765,
+   "t1": 71.135,
    "lines": [
     [
      [
@@ -1504,37 +1516,17 @@
      ],
      [
       "envelope:",
-      69.75
-     ],
-     [
-      "a",
-      70.65
-     ],
-     [
-      "what-if",
-      70.79
+      69.73
      ]
     ],
     [
      [
-      "that",
-      71.225
+      "your",
+      70.315
      ],
      [
-      "you",
-      71.33
-     ],
-     [
-      "ask",
-      71.505
-     ],
-     [
-      "us",
-      71.78
-     ],
-     [
-      "next.",
-      72.015
+      "what-if.",
+      70.385
      ]
     ]
    ]
@@ -1565,37 +1557,37 @@
   {
    "id": "vo04",
    "t": 28.5,
-   "dur": 12.252,
+   "dur": 10.367,
    "file": "vo/04.wav",
-   "text": "That is about four hundred billion kilowatt-hours, a very big number. But a number only means something beside another, so let's compare it with what we use."
+   "text": "That is about four hundred billion kilowatt-hours. But a number only means something beside another, so let's compare it with what we use."
   },
   {
    "id": "vo05",
-   "t": 41.7,
+   "t": 39.9,
    "dur": 9.124,
    "file": "vo/05.wav",
    "text": "The world uses nearly eighty times more electricity in a year. All the lightning on Earth would run it for about five days."
   },
   {
    "id": "vo06",
-   "t": 51.9,
+   "t": 50.1,
    "dur": 8.071,
    "file": "vo/06.wav",
    "text": "If a flash holds ten times less or ten times more, it swings from half a day to about seven weeks."
   },
   {
    "id": "vo07",
-   "t": 60.9,
-   "dur": 7.37,
+   "t": 59.1,
+   "dur": 9.503,
    "file": "vo/07.wav",
-   "text": "And catching it is the real problem. The bolts are everywhere, and each is over in a split second."
+   "text": "Catching it is the real problem. Most of a flash becomes heat, light and sound, and each bolt is over in a split second."
   },
   {
    "id": "vo08",
    "t": 69.3,
-   "dur": 3.409,
+   "dur": 1.967,
    "file": "vo/08.wav",
-   "text": "Next envelope: a what-if that you ask us next."
+   "text": "Next envelope: your what-if."
   }
  ]
 }

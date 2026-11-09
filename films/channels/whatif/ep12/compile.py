@@ -58,8 +58,9 @@ t_ten = A("vo06:ten", -0.1)
 t_half = A("vo06:half", -0.1)
 t_seven = A("vo06:seven", -0.1)
 t_prob = A("vo07:problem.", -0.4)
-t_every = A("vo07:everywhere,", -0.1)
+t_every = A("vo07:sound,", -0.1)
 t_blink = A("vo07:split", -0.1)
+t_heat = A("vo07:Most", -0.1)
 t_bolt = 0.9                                          # the hook's bolt: a short flash while the voice asks (frame 0 is the calm before)
 
 # ── the camera ──
@@ -72,8 +73,8 @@ BOLTP = T(0.8, 1.0, 0.0, 14.0, 14.0, 0.0, 0.35)
 BOLTQ = T(0.8, 1.0, 0.0, 13.0, 14.0, 6.0, 0.35)
 TANKP = T(TANK1X, 0.5, 0.0, 58.0, 28.0, 0.0, 0.34)
 TANKQ = T(TANK1X, 0.5, 0.0, 54.0, 28.0, 5.0, 0.34)
-TOWER = T(0.0, 0.0, 0.0, 470.0, 4.0, 0.0, 0.48)
-TOWER2 = T(0.0, 0.0, 0.0, 450.0, 4.0, 0.0, 0.48)
+TOWER = T(0.0, 0.0, 0.0, 520.0, 4.0, 0.0, 0.50)
+TOWER2 = T(0.0, 0.0, 0.0, 500.0, 10.0, 8.0, 0.50)
 WORKG = T(0.0, 0.0, 0.0, 34.0, 14.0, 0.0, 0.91)
 WORKG2 = T(0.0, 0.0, 0.0, 32.0, 14.0, 5.0, 0.91)
 def lead(pages, by=0.14):
@@ -132,7 +133,8 @@ WORK = {
 
 # ── labels, badges, counters ──
 LABELS = [
-    {"id": "l-j", "text": "≈ 1 billion J", "kind": "calc", "anchor": "meter-mid", "t0": t_J, "t1": t_why - 0.3, "side": 1, "shot": "bolt"},
+    {"id": "l-j", "text": "1 billion J", "kind": "calc", "anchor": "meter-mid", "t0": t_J, "t1": t_why - 0.3, "side": 1, "shot": "bolt"},
+    {"id": "l-rough", "text": "a rough guess", "kind": "assume", "anchor": "meter-range", "t0": t_range, "t1": t_why - 0.3, "side": 1, "shot": "bolt"},
     {"id": "l-lo", "text": "100 million J", "kind": "part", "anchor": "meter-lo", "t0": t_J + 0.2, "t1": t_why - 0.3, "side": 1, "shot": "bolt"},
     {"id": "l-hi", "text": "10 billion J", "kind": "part", "anchor": "meter-hi", "t0": t_J + 0.2, "t1": t_why - 0.3, "side": 1, "shot": "bolt"},
     {"id": "l-mark", "text": "390 billion kWh", "kind": "calc", "anchor": "tank1-top", "t0": t_390 + 0.8, "t1": t_whoa - 0.3, "side": 1, "shot": "tank"},
@@ -142,11 +144,11 @@ LABELS = [
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.3, "t1": t_title_out, "slot": "br"},
     {"id": "b-rate", "text": "worldwide, all kinds of flash", "t0": t_44, "t1": t_chg - 0.3, "slot": "tl"},
-    {"id": "b-rough", "text": "a rough guess: 100 million to 10 billion", "t0": t_range, "t1": t_why - 0.3, "slot": "tr"},
     {"id": "b-every", "text": "∵ every bolt caught, nothing lost", "t0": t_why + 0.2, "t1": t_whoa - 0.3, "slot": "tl"},
     {"id": "b-times", "text": "≈ 80 × more", "t0": t_80, "t1": t_work0 - 0.3, "slot": "tr"},
     {"id": "b-bars", "text": "bars: a year = the full bar", "t0": t_ten - 0.2, "t1": t_home - 0.3, "slot": "tl"},
-    {"id": "b-blink", "text": "each flash: a fraction of a second", "t0": t_blink, "t1": t_end - 0.3, "slot": "tl"},
+    {"id": "b-heat", "text": "most of it: heat, light, sound, radio", "t0": t_heat, "t1": t_end - 0.3, "slot": "tl"},
+    {"id": "b-blink", "text": "random places, a split second", "t0": t_blink, "t1": t_end - 0.3, "slot": "tr"},
 ]
 COUNTERS = [
     {"id": "c-flash", "label": "flashes since the film began", "t0": t_now, "t1": t_year2 + 0.2, "at": [0.5, 0.30], "keys": [[t_now, 0.0], [t_year2, 44.0 * (t_year2 - t_now)]], "end": 44.0 * (t_year2 - t_now), "unit": ""},

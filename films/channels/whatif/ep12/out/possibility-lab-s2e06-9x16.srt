@@ -51,80 +51,79 @@ Multiply it by every
 flash in the year.
 
 12
-00:00:28,380 --> 00:00:30,865
+00:00:28,380 --> 00:00:30,790
 That is about
 400 billion
 
 13
-00:00:30,865 --> 00:00:34,275
-kilowatt-hours,
-a very big number.
+00:00:30,790 --> 00:00:31,540
+kilowatt-hours.
 
 14
-00:00:34,380 --> 00:00:36,450
+00:00:32,355 --> 00:00:34,515
 But a number only means
 
 15
-00:00:36,450 --> 00:00:37,930
+00:00:34,515 --> 00:00:36,025
 something
 beside another,
 
 16
-00:00:37,940 --> 00:00:40,770
+00:00:36,055 --> 00:00:38,885
 so let's compare
 it with what we use.
 
 17
-00:00:41,585 --> 00:00:44,360
+00:00:39,785 --> 00:00:42,560
 The world uses
 nearly 80 times
 
 18
-00:00:44,360 --> 00:00:46,805
+00:00:42,560 --> 00:00:45,005
 more electricity
 in a year.
 
 19
-00:00:46,805 --> 00:00:48,545
+00:00:45,005 --> 00:00:46,745
 All the lightning
 on Earth
 
 20
-00:00:48,545 --> 00:00:50,940
+00:00:46,745 --> 00:00:49,140
 would run
 it for about five days.
 
 21
-00:00:51,780 --> 00:00:54,695
+00:00:49,980 --> 00:00:52,895
 If a flash holds
 10 times less
 
 22
-00:00:54,695 --> 00:00:57,225
+00:00:52,895 --> 00:00:55,425
 or 10 times more,
 it swings
 
 23
-00:00:57,225 --> 00:00:59,975
+00:00:55,425 --> 00:00:58,175
 from half a day
 to about seven weeks.
 
 24
-00:01:00,780 --> 00:01:03,750
-And catching
+00:00:59,005 --> 00:01:01,670
+Catching
 it is the real problem.
 
 25
-00:01:03,750 --> 00:01:05,520
-The bolts
-are everywhere,
+00:01:01,710 --> 00:01:05,605
+Most of a flash becomes
+heat, light and sound,
 
 26
-00:01:05,670 --> 00:01:08,355
-and each is over
+00:01:05,605 --> 00:01:08,540
+and each bolt is over
 in a split second.
 
 27
-00:01:09,180 --> 00:01:12,765
-Next envelope: a what-if
-that you ask us next.
+00:01:09,180 --> 00:01:11,135
+Next envelope:
+your what-if.

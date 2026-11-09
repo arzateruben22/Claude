@@ -69,7 +69,7 @@ scene.add(you.group);
 const bulbM = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 18), new THREE.MeshBasicMaterial({ color: unlit("#6B6F78"), transparent: true, opacity: 1, depthWrite: false })); bulbM.renderOrder = 6; bulbM.userData.noProbe = true; scene.add(bulbM);
 const bulbHalo = new THREE.Mesh(new THREE.CircleGeometry(1, 28), basic(BOLT, 0.0, false)); bulbHalo.renderOrder = 5; bulbHalo.userData.noProbe = true; scene.add(bulbHalo);
 const bulbBase = box("#4A4E57", 1, 6); bulbBase.scale.set(0.2, 0.14, 0.2);
-const BX = 0.45, BY = 2.0;
+const BX = 0.45, BY = 1.35;
 
 // bolts: a zigzag of boxes (an instanced mesh per bolt)
 const BOLTBOX = new THREE.BoxGeometry(1, 1, 1);
@@ -83,7 +83,7 @@ const setBolt = (m, pts, w, grow = 1, hdr = 0) => { const n = pts.length - 1, up
 const Mx = new THREE.Matrix4(), Q0 = new THREE.Quaternion(), S3 = new THREE.Vector3(), P3 = new THREE.Vector3();
 const hookPts = zig(1.3, 5.8, 0.0, -2.5, 9, 0.35, 3), hookBolt = mkBolt(9, "#FFF1C2", 1, 9);
 const bigPts = zig(0.0, 2.0, 0.0, 0, 9, 0.26, 8), bigBolt = mkBolt(9, "#FFF1C2", 1, 9), bigGlow = mkBolt(9, BOLT, 0.35, 8);
-const NM = 66, miniB = mkBolt(NM * 3, BOLT, 0.95, 9);
+const NM = 55, miniB = mkBolt(NM * 3, BOLT, 0.95, 9), MCOLS = [-0.85, -0.55, 0.45, 0.75, 1.05];
 const flashOverlay = document.createElement("div"); flashOverlay.style.cssText = "position:absolute;inset:0;background:#FFE9A8;opacity:0;pointer-events:none;z-index:1;mix-blend-mode:screen"; document.body.appendChild(flashOverlay);
 
 // the meter: a log scale from 10^8 to 10^10 J beside the bolt
@@ -114,7 +114,7 @@ const dustT = (() => { const n = 500, m = new THREE.InstancedMesh(new THREE.Circ
 const barsEl = document.createElement("div");
 barsEl.style.cssText = "position:absolute;left:9%;width:82%;top:73%;opacity:0;pointer-events:none;z-index:4;font:600 2.4vmin/1.2 var(--font-text);color:var(--hud-text)";
 const BARD = [["10 × less per flash", WD.sens[0], "0.5 days"], ["as modelled", WD.sens[1], "5 days"], ["10 × more per flash", WD.sens[2], "47 days"]];
-barsEl.innerHTML = BARD.map((b, i) => `<div style="display:flex;align-items:center;gap:2vmin;margin-bottom:0.7vmin;opacity:0" id="br${i}"><div style="width:30%;color:var(--hud-text-2)">${b[0]}</div><div style="flex:1;height:2.2vmin;border:.3vmin solid var(--hud-text-2);border-radius:99px;overflow:hidden;position:relative"><div style="height:100%;width:${Math.max(0.8, 100 * b[1]).toFixed(2)}%;background:${BOLT}"></div></div><div style="width:15%;font:700 2.4vmin/1 var(--font-mono);color:${BOLT}">${b[2]}</div></div>`).join("");
+barsEl.innerHTML = BARD.map((b, i) => `<div style="display:flex;align-items:center;gap:2vmin;margin-bottom:0.7vmin;opacity:0" id="br${i}"><div style="width:30%;color:var(--hud-text-2)">${b[0]}</div><div style="flex:1;height:2.2vmin;border:.3vmin solid var(--hud-text-2);border-radius:99px;overflow:hidden;position:relative"><div style="height:100%;width:${Math.max(2.2, 100 * b[1]).toFixed(2)}%;background:${BOLT}"></div></div><div style="width:15%;font:700 2.4vmin/1 var(--font-mono);color:${BOLT}">${b[2]}</div></div>`).join("");
 document.body.appendChild(barsEl);
 
 // ── the camera ──────────────────────────────────────────────────────────────
@@ -122,8 +122,8 @@ const rig = createRig(FILM.cam);
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
-const AN = { "meter-mid": () => [MX_, MID, 0], "meter-lo": () => [MX_, MY0, 0], "meter-hi": () => [MX_, MY1, 0],
-  "tank1-top": () => [T1X + TW / 2, H1, 0], "tank1-top-w": () => [T1X, H1, 0], "tank2-top": () => [T2X, H2, 0] };
+const AN = { "meter-mid": () => [MX_, MID, 0], "meter-lo": () => [MX_, MY0, 0], "meter-range": () => [MX_ + 0.16, MY0 + 0.55, 0], "meter-hi": () => [MX_, MY1, 0],
+  "tank1-top": () => [T1X + TW / 2, H1, 0], "tank1-top-w": () => [T1X, H1, 0], "tank2-top": () => [T2X - TW / 2, H2, 0] };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
 hud.captions(FILM.captions);
@@ -139,7 +139,7 @@ for (const L of FILM.labels) {
 }
 const spine = createSpine({ states: FILM.spine, t1: FILM.spineOut, y: 0.565, safe: hud.safe, W, H });
 const work = workCard(FILM.work, { safe: hud.safe, W, H, capTop: 0.61, y: 0.2 });
-const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.14 });
+const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.215 });
 const endT = endEl.querySelector(".t"), endFo = endEl.querySelector(".fo"); if (endT) endT.style.fontSize = "5.6vmin"; if (endFo) endFo.style.marginTop = "1.6vmin";
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.7vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "1.6vmin auto 0" });
@@ -203,7 +203,7 @@ window.seek = function (t) {
   meterRange.visible = ru > 0.01; meterRange.scale.set(0.07, (MY1 - MY0) * ru, 0.04); meterRange.position.set(MX_ + 0.16, MID, 0);
   meterMark.visible = boltS && mu > 0.9; meterMark.position.set(MX_, MID, 0.02); meterMark.scale.setScalar(0.07);
   { const mu2 = boltS ? seg(t, CUE.mult, CUE.mult + 1.8) : 0; miniB.visible = mu2 > 0;
-    for (let i = 0; i < NM; i++) { const u = E.out3(seg(mu2, i / NM * 0.8, i / NM * 0.8 + 0.2)), gx = (i % 11 - 5) * 0.34 + 0.8, gy = (Math.floor(i / 11)) * 0.3 + 0.1;
+    for (let i = 0; i < NM; i++) { const u = E.out3(seg(mu2, i / NM * 0.8, i / NM * 0.8 + 0.2)), gx = MCOLS[i % 5], gy = Math.floor(i / 5) * 0.17 + 0.1;
       const pts = zig(gx, gy + 0.22, gy, 0.1, 3, 0.04, 20 + i); setBolt(miniB, pts, 0.03 * (u > 0 ? 1 : 0.0001), Math.max(0.0001, u), i * 3); } }
 
   // the tanks

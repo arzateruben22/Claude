@@ -396,8 +396,8 @@
   },
   {
    "id": "vo04",
-   "text": "That is about four hundred billion kilowatt-hours, a very big number. But a number only means something beside another, so let's compare it with what we use.",
-   "heard": "That is about 400 billion kilowatt hours, a very big number. But a number only means something beside another, so let's compare it with what we use.",
+   "text": "That is about four hundred billion kilowatt-hours. But a number only means something beside another, so let's compare it with what we use.",
+   "heard": "That is about 400 billion kilowatt hours. But a number only means something beside another. So let's compare it with what we use.",
    "words": [
     {
      "w": "That",
@@ -407,159 +407,135 @@
     },
     {
      "w": "is",
-     "start": 0.35,
-     "end": 0.64,
+     "start": 0.315,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "about",
-     "start": 0.63,
-     "end": 0.96,
+     "start": 0.54,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "four",
-     "start": 0.89,
-     "end": 1.76,
+     "start": 0.765,
+     "end": 1.68,
      "heard": false
     },
     {
      "w": "hundred",
-     "start": 0.92,
-     "end": 1.76,
+     "start": 0.8,
+     "end": 1.68,
      "heard": false
     },
     {
      "w": "billion",
-     "start": 1.885,
-     "end": 2.32,
+     "start": 1.8,
+     "end": 2.24,
      "heard": true
     },
     {
-     "w": "kilowatt-hours,",
-     "start": 2.365,
-     "end": 3.92,
-     "heard": false
+     "w": "kilowatt-hours.",
+     "start": 2.29,
+     "end": 3.596,
+     "heard": false,
+     "end_asr": 4.0
     },
     {
-     "w": "a",
-     "start": 3.9,
+     "w": "But",
+     "start": 3.995,
      "end": 4.16,
      "heard": true
     },
     {
-     "w": "very",
-     "start": 4.095,
-     "end": 4.48,
-     "heard": true
-    },
-    {
-     "w": "big",
-     "start": 4.51,
-     "end": 4.72,
-     "heard": true
-    },
-    {
-     "w": "number.",
-     "start": 5.025,
-     "end": 5.481,
-     "heard": true,
-     "end_asr": 5.84
-    },
-    {
-     "w": "But",
-     "start": 5.88,
-     "end": 6.08,
-     "heard": true
-    },
-    {
      "w": "a",
-     "start": 5.96,
-     "end": 6.24,
+     "start": 4.055,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "number",
-     "start": 6.24,
-     "end": 6.48,
+     "start": 4.4,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "only",
-     "start": 6.71,
-     "end": 7.04,
+     "start": 4.795,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "means",
-     "start": 7.235,
-     "end": 7.84,
+     "start": 5.375,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "something",
-     "start": 7.95,
-     "end": 8.16,
+     "start": 6.015,
+     "end": 6.24,
      "heard": true
     },
     {
      "w": "beside",
-     "start": 8.215,
-     "end": 8.8,
+     "start": 6.335,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "another,",
-     "start": 8.68,
-     "end": 9.44,
+     "start": 6.775,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "so",
-     "start": 9.44,
-     "end": 9.68,
+     "start": 7.555,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "let's",
-     "start": 9.57,
-     "end": 10.16,
+     "start": 7.815,
+     "end": 8.24,
      "heard": true
     },
     {
      "w": "compare",
-     "start": 10.07,
-     "end": 10.64,
+     "start": 8.185,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "it",
-     "start": 10.68,
-     "end": 10.88,
+     "start": 8.795,
+     "end": 8.96,
      "heard": true
     },
     {
      "w": "with",
-     "start": 10.86,
-     "end": 11.12,
+     "start": 8.975,
+     "end": 9.2,
      "heard": true
     },
     {
      "w": "what",
-     "start": 11.095,
-     "end": 11.36,
+     "start": 9.21,
+     "end": 9.44,
      "heard": true
     },
     {
      "w": "we",
-     "start": 11.285,
-     "end": 11.6,
+     "start": 9.4,
+     "end": 9.68,
      "heard": true
     },
     {
      "w": "use.",
-     "start": 11.52,
-     "end": 12.24,
+     "start": 9.635,
+     "end": 10.32,
      "heard": true
     }
    ],
@@ -847,122 +823,152 @@
   },
   {
    "id": "vo07",
-   "text": "And catching it is the real problem. The bolts are everywhere, and each is over in a split second.",
-   "heard": "And catching it is the real problem. The bolts are everywhere and each is over in a split second.",
+   "text": "Catching it is the real problem. Most of a flash becomes heat, light and sound, and each bolt is over in a split second.",
+   "heard": "Catching it is the real problem. Most of a flash becomes heat, light, and sound, and each bolt is over in a split second.",
    "words": [
     {
-     "w": "And",
-     "start": 0.02,
-     "end": 0.24,
-     "heard": true
-    },
-    {
-     "w": "catching",
-     "start": 0.205,
-     "end": 0.72,
+     "w": "Catching",
+     "start": 0.045,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "it",
-     "start": 0.7,
-     "end": 0.96,
+     "start": 0.735,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "is",
-     "start": 1.005,
-     "end": 1.2,
+     "start": 0.8,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.185,
-     "end": 1.52,
+     "start": 0.98,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "real",
-     "start": 1.615,
-     "end": 1.84,
+     "start": 1.45,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "problem.",
-     "start": 2.255,
-     "end": 2.449,
+     "start": 1.82,
+     "end": 2.208,
      "heard": true,
-     "end_asr": 2.8
+     "end_asr": 2.56
     },
     {
-     "w": "The",
-     "start": 2.85,
+     "w": "Most",
+     "start": 2.61,
      "end": 2.96,
      "heard": true
     },
     {
-     "w": "bolts",
-     "start": 2.88,
-     "end": 3.68,
-     "heard": true
-    },
-    {
-     "w": "are",
-     "start": 3.775,
-     "end": 3.92,
-     "heard": true
-    },
-    {
-     "w": "everywhere,",
-     "start": 3.87,
-     "end": 4.56,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 4.77,
-     "end": 4.96,
-     "heard": true
-    },
-    {
-     "w": "each",
-     "start": 4.96,
-     "end": 5.36,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 5.305,
-     "end": 5.6,
-     "heard": true
-    },
-    {
-     "w": "over",
-     "start": 5.545,
-     "end": 5.92,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 5.805,
-     "end": 6.08,
+     "w": "of",
+     "start": 3.005,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.96,
-     "end": 6.24,
+     "start": 3.035,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "flash",
+     "start": 3.33,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "becomes",
+     "start": 3.85,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "heat,",
+     "start": 4.35,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 4.965,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.515,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "sound,",
+     "start": 5.82,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.505,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 6.625,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "bolt",
+     "start": 6.935,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 7.35,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 7.605,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 8.07,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.1,
+     "end": 8.32,
      "heard": true
     },
     {
      "w": "split",
-     "start": 6.315,
-     "end": 6.72,
+     "start": 8.41,
+     "end": 8.8,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 6.705,
-     "end": 7.36,
+     "start": 8.69,
+     "end": 9.44,
      "heard": true
     }
    ],
@@ -970,8 +976,8 @@
   },
   {
    "id": "vo08",
-   "text": "Next envelope: a what-if that you ask us next.",
-   "heard": "Next envelope, a what if that you ask us next.",
+   "text": "Next envelope: your what-if.",
+   "heard": "Next envelope your what if.",
    "words": [
     {
      "w": "Next",
@@ -981,51 +987,21 @@
     },
     {
      "w": "envelope:",
-     "start": 0.45,
-     "end": 1.28,
+     "start": 0.43,
+     "end": 1.04,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 1.35,
-     "end": 1.52,
+     "w": "your",
+     "start": 1.015,
+     "end": 1.2,
      "heard": true
     },
     {
-     "w": "what-if",
-     "start": 1.49,
-     "end": 1.92,
+     "w": "what-if.",
+     "start": 1.085,
+     "end": 1.5,
      "heard": false
-    },
-    {
-     "w": "that",
-     "start": 1.925,
-     "end": 2.08,
-     "heard": true
-    },
-    {
-     "w": "you",
-     "start": 2.03,
-     "end": 2.32,
-     "heard": true
-    },
-    {
-     "w": "ask",
-     "start": 2.205,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "us",
-     "start": 2.48,
-     "end": 2.8,
-     "heard": true
-    },
-    {
-     "w": "next.",
-     "start": 2.715,
-     "end": 3.36,
-     "heard": true
     }
    ]
   }

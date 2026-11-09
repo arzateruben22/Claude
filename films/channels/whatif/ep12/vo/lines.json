@@ -91,11 +91,11 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "That is about four hundred billion kilowatt-hours, a very big number. But a number only means something beside another, so let's compare it with what we use.",
+   "text": "That is about four hundred billion kilowatt-hours. But a number only means something beside another, so let's compare it with what we use.",
    "stars": [
     "use"
    ],
-   "phonemes": "ðæt ɪz ɐbˌaʊt fˈɔːɹ hˈʌndɹɪd bˈɪliən kˈɪləwˌɑːtˈaʊɚz, ɐ vˈɛɹi bˈɪɡ nˈʌmbɚ. bˌʌt ɐ nˈʌmbɚɹ ˈoʊnli mˈiːnz sˈʌmθɪŋ bᵻsˌaɪd ɐnˈʌðɚ, sˌoʊ lˈɛts kəmpˈɛɹ ɪt wɪð wʌt wiː jˈuːz.",
+   "phonemes": "ðæt ɪz ɐbˌaʊt fˈɔːɹ hˈʌndɹɪd bˈɪliən kˈɪləwˌɑːtˈaʊɚz. bˌʌt ɐ nˈʌmbɚɹ ˈoʊnli mˈiːnz sˈʌmθɪŋ bᵻsˌaɪd ɐnˈʌðɚ, sˌoʊ lˈɛts kəmpˈɛɹ ɪt wɪð wʌt wiː jˈuːz.",
    "speeds": [
     0.76,
     0.74
@@ -105,13 +105,13 @@
    ],
    "silences": [
     [
-     5.4813,
-     5.8613
+     3.5965,
+     3.9765
     ]
    ],
    "file": "04.wav",
-   "dur": 12.252,
-   "sha256": "979fa156b5478675f4328615f514406e0e32f3f2f5326d25e2bde38b48b26cef"
+   "dur": 10.367,
+   "sha256": "c50bca782693c1fa434c5081c951d9dee8a09e6c3727295e4fade1fa5eb645bf"
   },
   {
    "id": "vo05",
@@ -158,11 +158,11 @@
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "And catching it is the real problem. The bolts are everywhere, and each is over in a split second.",
+   "text": "Catching it is the real problem. Most of a flash becomes heat, light and sound, and each bolt is over in a split second.",
    "stars": [
     "second"
    ],
-   "phonemes": "ænd kˈætʃɪŋ ɪɾ ɪz ðə ɹˈiːəl pɹˈɑːbləm. ðə bˈoʊlts ɑːɹ ˈɛvɹɪwˌɛɹ, ænd ˈiːtʃ ɪz ˌoʊvɚɹ ɪn ɐ splˈɪt sˈɛkənd.",
+   "phonemes": "kˈætʃɪŋ ɪɾ ɪz ðə ɹˈiːəl pɹˈɑːbləm. mˈoʊst əv ɐ flˈæʃ bɪkˌʌmz hˈiːt, lˈaɪt ænd sˈaʊnd, ænd ˈiːtʃ bˈoʊlt ɪz ˌoʊvɚɹ ɪn ɐ splˈɪt sˈɛkənd.",
    "speeds": [
     0.76,
     0.72
@@ -172,30 +172,30 @@
    ],
    "silences": [
     [
-     2.4488,
-     2.8288
+     2.2085,
+     2.5885
     ]
    ],
    "file": "07.wav",
-   "dur": 7.37,
-   "sha256": "8180b7511545888f3800f3a9b7ee3f88b475e87a347c61e815101f67c591a82e"
+   "dur": 9.503,
+   "sha256": "f838321a4fad6e6e3ff0c16577a8af0d0c964dbe2ac8ea6074e716f19ae6894b"
   },
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next envelope: a what-if that you ask us next.",
+   "text": "Next envelope: your what-if.",
    "stars": [
-    "next"
+    "your"
    ],
-   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: ɐ wʌɾɪf ðæt juː ˈæsk ˌʌs nˈɛkst.",
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: jʊɹ wʌɾɪf.",
    "speeds": [
     0.72
    ],
    "gaps": [],
    "silences": [],
    "file": "08.wav",
-   "dur": 3.409,
-   "sha256": "01de5e85986f596f61b7ff4d1a421e7c0a1a31630eb12f46a3f481da760d4622"
+   "dur": 1.967,
+   "sha256": "c662889ccbed70f1c4b7ca9cce25f5b6f7243f1a56c12fe3b583b43fb208d3da"
   }
  ]
 }
