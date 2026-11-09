@@ -1,0 +1,1030 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "How long is a chain of us? Everyone on Earth, holding hands.",
+   "heard": "How long is a chain of us? Everyone on earth holding hands.",
+   "words": [
+    {
+     "w": "How",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 0.2,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.49,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.595,
+     "end": 0.645,
+     "heard": true
+    },
+    {
+     "w": "chain",
+     "start": 0.625,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.96,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "us?",
+     "start": 1.19,
+     "end": 1.452,
+     "heard": true,
+     "end_asr": 1.84
+    },
+    {
+     "w": "Everyone",
+     "start": 2.165,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.78,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 3.02,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "holding",
+     "start": 3.345,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "hands.",
+     "start": 3.955,
+     "end": 4.64,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "Stretch your arms out wide. You are about as wide as you are tall. Call it a meter and a half, for grown-ups and kids together.",
+   "heard": "Stretch your arms out wide. You are about as wide as you are tall. Call it a meter and a half for grown-ups and kids together.",
+   "words": [
+    {
+     "w": "Stretch",
+     "start": 0.025,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.375,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "arms",
+     "start": 0.575,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 1.07,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "wide.",
+     "start": 1.37,
+     "end": 1.772,
+     "heard": true,
+     "end_asr": 2.16
+    },
+    {
+     "w": "You",
+     "start": 2.175,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 2.21,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.54,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.715,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "wide",
+     "start": 2.885,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 3.315,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 3.49,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 3.75,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "tall.",
+     "start": 3.78,
+     "end": 4.414,
+     "heard": true,
+     "end_asr": 4.72
+    },
+    {
+     "w": "Call",
+     "start": 4.815,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.935,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.2,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "meter",
+     "start": 5.42,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.74,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.905,
+     "end": 5.955,
+     "heard": true
+    },
+    {
+     "w": "half,",
+     "start": 5.935,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 6.43,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "grown-ups",
+     "start": 6.64,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.365,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "kids",
+     "start": 7.53,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "together.",
+     "start": 7.965,
+     "end": 8.64,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "Now add all eight billion people, one after another, hand in hand. Out past the horizon it goes, until the line is about thirteen million kilometers long.",
+   "heard": "Now add all eight billion people one after another, hand in hand. Out past the horizon it goes, until the line is about thirteen million kilometers long.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "add",
+     "start": 0.385,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 0.69,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 0.995,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "billion",
+     "start": 1.265,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "people,",
+     "start": 1.75,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 2.34,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "after",
+     "start": 2.625,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "another,",
+     "start": 2.825,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "hand",
+     "start": 3.4,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 3.765,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "hand.",
+     "start": 4.01,
+     "end": 4.524,
+     "heard": true,
+     "end_asr": 4.88
+    },
+    {
+     "w": "Out",
+     "start": 4.92,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "past",
+     "start": 5.275,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.7,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "horizon",
+     "start": 5.73,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.705,
+     "end": 6.755,
+     "heard": true
+    },
+    {
+     "w": "goes,",
+     "start": 6.735,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "until",
+     "start": 7.365,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.7,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "line",
+     "start": 7.86,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 8.295,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 8.54,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "thirteen",
+     "start": 8.815,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "million",
+     "start": 9.52,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "kilometers",
+     "start": 10.03,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "long.",
+     "start": 10.875,
+     "end": 11.36,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo04",
+   "text": "That number is too big to picture. So let's wrap the line around something we all know: the Earth. Pull it tight, like a thread.",
+   "heard": "That number is too big to picture. So let's wrap the line around something we all know: the Earth. Pull it tight like a thread.",
+   "words": [
+    {
+     "w": "That",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 0.185,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.575,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "too",
+     "start": 0.63,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "big",
+     "start": 0.83,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.06,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "picture.",
+     "start": 1.38,
+     "end": 1.888,
+     "heard": true,
+     "end_asr": 2.24
+    },
+    {
+     "w": "So",
+     "start": 2.29,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "let's",
+     "start": 2.32,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "wrap",
+     "start": 2.665,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.17,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "line",
+     "start": 3.325,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "around",
+     "start": 3.75,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "something",
+     "start": 4.07,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 4.595,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 4.78,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "know:",
+     "start": 5.04,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.685,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "Earth.",
+     "start": 5.865,
+     "end": 6.402,
+     "heard": true,
+     "end_asr": 6.72
+    },
+    {
+     "w": "Pull",
+     "start": 6.805,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 7.135,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "tight,",
+     "start": 7.175,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 7.7,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.815,
+     "end": 7.865,
+     "heard": true
+    },
+    {
+     "w": "thread.",
+     "start": 7.845,
+     "end": 8.4,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "It circles the Earth about three hundred and thirty times. And one lap needs only one person in three hundred of us.",
+   "heard": "It circles the earth about 330 times, and one lap needs only one person in 300 of us.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "circles",
+     "start": 0.205,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.91,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 1.1,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.53,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 1.87,
+     "end": 3.44,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 1.915,
+     "end": 3.44,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 1.96,
+     "end": 3.44,
+     "heard": false
+    },
+    {
+     "w": "thirty",
+     "start": 1.99,
+     "end": 3.44,
+     "heard": false
+    },
+    {
+     "w": "times.",
+     "start": 3.345,
+     "end": 4.077,
+     "heard": true,
+     "end_asr": 4.48
+    },
+    {
+     "w": "And",
+     "start": 4.475,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 4.725,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "lap",
+     "start": 5.05,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "needs",
+     "start": 5.49,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 6.005,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 6.295,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "person",
+     "start": 6.66,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.28,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 7.495,
+     "end": 8.16,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 7.57,
+     "end": 8.16,
+     "heard": false
+    },
+    {
+     "w": "of",
+     "start": 8.255,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "us.",
+     "start": 8.285,
+     "end": 8.72,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "Make everyone a little shorter or taller, and the chain still wraps the Earth hundreds of times.",
+   "heard": "make every one a little shorter or taller, and the chain still wraps the earth hundreds of times.",
+   "words": [
+    {
+     "w": "Make",
+     "start": 0.045,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "everyone",
+     "start": 0.425,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 1.115,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 1.155,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "shorter",
+     "start": 1.59,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 2.065,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "taller,",
+     "start": 2.28,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.15,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.18,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "chain",
+     "start": 3.38,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 4.03,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "wraps",
+     "start": 4.325,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.79,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 4.97,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "hundreds",
+     "start": 5.33,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.935,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "times.",
+     "start": 5.965,
+     "end": 6.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "The same line would reach the Moon again and again. We are each small, but together we are very long.",
+   "heard": "the same line would reach the moon again and again. We are each small, but together we are very long.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 0.295,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "line",
+     "start": 0.63,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 1.045,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 1.155,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.57,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "Moon",
+     "start": 1.6,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "again",
+     "start": 2.035,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.39,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "again.",
+     "start": 2.635,
+     "end": 3.142,
+     "heard": true,
+     "end_asr": 3.52
+    },
+    {
+     "w": "We",
+     "start": 3.54,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 3.57,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 3.86,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "small,",
+     "start": 4.225,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 4.81,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "together",
+     "start": 4.92,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 5.485,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 5.775,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "very",
+     "start": 5.86,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "long.",
+     "start": 6.225,
+     "end": 6.88,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo08",
+   "text": "Next envelope: a rope round the Earth, lifted one meter.",
+   "heard": "Next envelope, a rope round the earth lifted one meter.",
+   "words": [
+    {
+     "w": "Next",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "envelope:",
+     "start": 0.48,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.45,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "rope",
+     "start": 1.56,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "round",
+     "start": 1.92,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.325,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 2.395,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "lifted",
+     "start": 2.88,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 3.425,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "meter.",
+     "start": 3.77,
+     "end": 4.4,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/ep08/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}
