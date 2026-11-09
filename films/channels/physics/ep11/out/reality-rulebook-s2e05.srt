@@ -1,0 +1,124 @@
+1
+00:00:00,120 --> 00:00:01,620
+Can you hear a cup fill?
+
+2
+00:00:01,760 --> 00:00:03,720
+Eyes closed,
+just listening.
+
+3
+00:00:04,153 --> 00:00:06,043
+Pour water into a cup,
+
+4
+00:00:06,048 --> 00:00:08,888
+and the sound climbs
+higher and higher.
+
+5
+00:00:09,293 --> 00:00:11,753
+A computer can even
+work out the water level
+
+6
+00:00:11,753 --> 00:00:13,193
+from the sound alone.
+
+7
+00:00:13,987 --> 00:00:15,932
+The empty space
+above the water
+
+8
+00:00:15,932 --> 00:00:19,402
+acts like a pipe,
+closed at the water end.
+
+9
+00:00:19,402 --> 00:00:22,227
+Sound bounces up
+and down inside it.
+
+10
+00:00:22,620 --> 00:00:25,880
+A short pipe rings higher
+than a long one.
+
+11
+00:00:26,030 --> 00:00:28,505
+A flute player changes
+the note by changing
+
+12
+00:00:28,505 --> 00:00:30,230
+the length of the pipe.
+
+13
+00:00:30,515 --> 00:00:32,040
+As the water rises,
+
+14
+00:00:32,360 --> 00:00:35,550
+the empty space shrinks,
+and the pitch climbs.
+
+15
+00:00:36,420 --> 00:00:39,435
+Less empty space,
+a higher pitch.
+
+16
+00:00:39,750 --> 00:00:41,490
+With 2 centimeters left,
+
+17
+00:00:41,490 --> 00:00:43,855
+the cup rings
+nearly three times higher
+
+18
+00:00:43,855 --> 00:00:44,990
+than when empty.
+
+19
+00:00:45,820 --> 00:00:48,045
+Measure it:
+with 10 centimeters
+
+20
+00:00:48,045 --> 00:00:51,705
+of empty space, you hear
+about 700 vibrations
+
+21
+00:00:51,725 --> 00:00:52,825
+a second.
+
+22
+00:00:52,980 --> 00:00:56,205
+With 2 centimeters,
+you hear nearly 2,000.
+
+23
+00:00:57,363 --> 00:00:59,923
+A shorter pipe
+makes a higher note.
+
+24
+00:01:00,063 --> 00:01:01,228
+Next time you pour,
+
+25
+00:01:01,228 --> 00:01:03,648
+listen: the cup
+tells you its level.
+
+26
+00:01:04,320 --> 00:01:06,885
+Next: a raindrop
+falls a mile.
+
+27
+00:01:06,885 --> 00:01:07,737
+Why doesn't it hurt?

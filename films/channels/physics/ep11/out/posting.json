@@ -1,0 +1,47 @@
+{
+ "generated": "2026-11-09",
+ "youtube": {
+  "title": "Listen to the cup fill | Reality Rulebook Season 2 · Episode 5",
+  "caption": "Can you hear a cup fill? Eyes closed, just listening.\n\nThe empty space above the water acts like a pipe closed at the water end. Sound bounces up and down inside it, and a short pipe rings higher than a long one. So as the water rises, the pitch climbs. In our simple model, ten centimeters of air rings near 690 vibrations a second and two centimeters near 1,900.\n\nSeason 2 · Episode 5.\n\nSources\n1. Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (text read by the builder, not yet by a person): https://arxiv.org/abs/2411.11222\n2. OpenStax University Physics Vol. 1, 17.5 Sources of Musical Sound (text read by the builder, not yet by a person): https://openstax.org/books/university-physics-volume-1/pages/17-5-sources-of-musical-sound\n3. Our own computation from the paper's formula (compile.py): f = c / (4 (l + 0.62 R)), c = 343 m/s, R = 4 cm; the paper is Bagad et al., arXiv:2411.11222 (read in full by the builder) (compile.py, scene.mjs; made-up cup; model-check): https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep11\n\nNarration: synthetic voice (AI). Animation: code-rendered, no stock footage. The cup, the pipe and the numbers are our own simple model (an illustrated cup with made-up size); the pouring is an illustration, not a recording. The sources were read by the builder, not yet opened by a person.\n\nReality Rulebook: Everyday things, slowed down until the physics shows.\n\n#Shorts #physics #science",
+  "hashtags": "#Shorts #physics #science",
+  "tags": [
+   "Reality Rulebook",
+   "physics",
+   "science",
+   "sound",
+   "explainer",
+   "education"
+  ],
+  "pinnedComment": "Sources\n1. Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (text read by the builder, not yet by a person): https://arxiv.org/abs/2411.11222\n2. OpenStax University Physics Vol. 1, 17.5 Sources of Musical Sound (text read by the builder, not yet by a person): https://openstax.org/books/university-physics-volume-1/pages/17-5-sources-of-musical-sound\n3. Our own computation from the paper's formula (compile.py): f = c / (4 (l + 0.62 R)), c = 343 m/s, R = 4 cm; the paper is Bagad et al., arXiv:2411.11222 (read in full by the builder) (compile.py, scene.mjs; made-up cup; model-check): https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep11\nSynthetic (AI) voice; code-rendered animation.",
+  "replies": [],
+  "warnings": [
+   "Claims are OPEN: a person must open the sources before posting.",
+   "Turn on the platform's AI / synthetic content label.",
+   "c1-c8, c12 were read by the builder (arXiv 2411.11222; OpenStax 17.5) but not yet opened by a person; c9-c11 are our own computation from the paper's formula, not a published result.",
+   "The cup and pipe are an illustration with a simple model (c = 343 m/s, R = 4 cm); the film badges it.",
+   "TODO: the handle, a physicist's sign-off, the AI-voice label in the post."
+  ]
+ },
+ "tiktok": {
+  "title": "Listen to the cup fill (Reality Rulebook S2 · E5)",
+  "caption": "Can you hear a cup fill? A pipe of air gets shorter, so the pitch climbs. #physics #science #learnontiktok #stem #sound",
+  "hashtags": "#physics #science #learnontiktok #stem #sound",
+  "tags": [],
+  "pinnedComment": "Sources: Bagad et al., arXiv 2411.11222; OpenStax University Physics Vol. 1, 17.5. Synthetic (AI) voice; our own simple model and illustration.",
+  "replies": [],
+  "warnings": [
+   "Claims are OPEN: a person must open the sources before posting."
+  ]
+ },
+ "instagram": {
+  "title": "Listen to the cup fill (Reality Rulebook S2 · E5)",
+  "caption": "Can you hear a cup fill? Eyes closed, just listening.\n\nThe empty space above the water acts like a pipe closed at the water end. Sound bounces up and down inside it, and a short pipe rings higher than a long one. So as the water rises, the pitch climbs. In our simple model, ten centimeters of air rings near 690 vibrations a second and two centimeters near 1,900.\n\nThe cup is an illustration; the numbers are our own simple model.\n\nSeason 2 · Episode 5.\n\nSources in the first comment.\n\n#physics #science #stem #sciencefacts #learnsomethingnew #sound #education #physicsfun",
+  "hashtags": "#physics #science #stem #sciencefacts #learnsomethingnew #sound #education #physicsfun",
+  "tags": [],
+  "pinnedComment": "Sources\n1. Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (text read by the builder, not yet by a person): https://arxiv.org/abs/2411.11222\n2. OpenStax University Physics Vol. 1, 17.5 Sources of Musical Sound (text read by the builder, not yet by a person): https://openstax.org/books/university-physics-volume-1/pages/17-5-sources-of-musical-sound\n3. Our own computation from the paper's formula (compile.py): f = c / (4 (l + 0.62 R)), c = 343 m/s, R = 4 cm; the paper is Bagad et al., arXiv:2411.11222 (read in full by the builder) (compile.py, scene.mjs; made-up cup; model-check): https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep11\nSynthetic (AI) voice; code-rendered animation.",
+  "replies": [],
+  "warnings": [
+   "Claims are OPEN: a person must open the sources before posting."
+  ]
+ }
+}

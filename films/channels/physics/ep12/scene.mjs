@@ -50,7 +50,7 @@ const laneState = (lane, t) => {
 // ── the stage: cloud, ground, a height ladder, lane guides ──
 const stageG = new THREE.Group(); scene.add(stageG);
 const cloudMat = new THREE.MeshStandardMaterial({ color: 0xf6f4f0, roughness: 0.95 });
-for (const [x, y, s] of [[-7.4, 9.75, 0.9], [-5.2, 10.0, 1.1], [-2.6, 9.8, 1.0], [0, 10.1, 1.15], [2.7, 9.8, 1.0], [5.3, 10.0, 1.1], [7.5, 9.7, 0.9]]) { const m = new THREE.Mesh(new THREE.SphereGeometry(s, 20, 14), cloudMat); m.position.set(x, y, -0.5); m.scale.set(1.25, 0.62, 0.8); stageG.add(m); }
+for (const [x, y, s] of [[-7.4, 9.0, 0.9], [-5.2, 9.25, 1.1], [-2.6, 9.05, 1.0], [0, 9.35, 1.15], [2.7, 9.05, 1.0], [5.3, 9.25, 1.1], [7.5, 8.95, 0.9]]) { const m = new THREE.Mesh(new THREE.SphereGeometry(s, 20, 14), cloudMat); m.position.set(x, y, -0.5); m.scale.set(1.25, 0.62, 0.8); stageG.add(m); }
 const groundMat = new THREE.MeshStandardMaterial({ color: 0x8a7a64, roughness: 0.9 });
 const ground = new THREE.Mesh(new THREE.BoxGeometry(18, 0.4, 2.2), groundMat); ground.position.set(0, -0.2, 0); stageG.add(ground);
 const inkMat = new THREE.MeshBasicMaterial({ color: flat(HEX.ink2) });
@@ -188,7 +188,7 @@ window.seek = function (t) {
 window.OBJ_RECTS = () => {
   const out = [], V = new THREE.Vector3();
   const box = (n, pts) => { let l = 1e9, r = -1e9, tp = 1e9, b = -1e9; for (const [x, y, z] of pts) { V.set(x, y, z).project(camera); const px = (V.x * 0.5 + 0.5) * W, py = (1 - (V.y * 0.5 + 0.5)) * H; l = Math.min(l, px); r = Math.max(r, px); tp = Math.min(tp, py); b = Math.max(b, py); } out.push({ n, l, r, t: tp, b }); };
-  box("stage", [[-8.7, 0, 0], [8.7, 0, 0], [-8.7, 10.9, 0], [8.7, 10.9, 0]]);
+  box("stage", [[-8.7, 0, 0], [8.7, 0, 0], [-8.7, 10.0, 0], [8.7, 10.0, 0]]);
   if (panel.visible) box("panel", [[-8.9, -11.3, 1.2], [8.9, -11.3, 1.2], [-8.9, -5.1, 1.2], [8.9, -5.1, 1.2]]);
   for (const k in lanes) if (lanes[k].g.visible) { const p = lanes[k].g.position, r = LANES[k].r * 1.2 + 0.2; box("drop-" + k, [[p.x - r, p.y - r, 0], [p.x + r, p.y + r, 0]]); }
   return out;
