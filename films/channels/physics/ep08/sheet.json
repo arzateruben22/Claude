@@ -162,6 +162,11 @@
    "text": "Feynman asked why"
   },
   {
+   "t": 22.250033,
+   "kind": "label",
+   "tag": "wy-bent"
+  },
+  {
    "t": 28.400000000000002,
    "kind": "label",
    "tag": "wy-1"
@@ -198,7 +203,7 @@
    "tag": "wo-tw"
   },
   {
-   "t": 42.8667,
+   "t": 46.3667,
    "kind": "impact",
    "tag": "snap5"
   },
@@ -206,6 +211,16 @@
    "t": 46.5,
    "kind": "label",
    "tag": "wo-2"
+  },
+  {
+   "t": 48.2,
+   "kind": "label",
+   "tag": "wo-shat"
+  },
+  {
+   "t": 48.2,
+   "kind": "label",
+   "tag": "wo-tw2"
   },
   {
    "t": 50.4,
@@ -225,20 +240,30 @@
    "t1": 65.8667
   },
   {
+   "t": 61.3333,
+   "kind": "impact",
+   "tag": "snap6"
+  },
+  {
    "t": 63.73333333333333,
    "kind": "label",
    "tag": "tk-shat"
+  },
+  {
+   "t": 64.9333,
+   "kind": "impact",
+   "tag": "snap7"
+  },
+  {
+   "t": 65.23333333333333,
+   "kind": "label",
+   "tag": "tk-two"
   },
   {
    "t": 65.8667,
    "kind": "section",
    "id": "tease",
    "t1": 72.0
-  },
-  {
-   "t": 66.19999999999999,
-   "kind": "label",
-   "tag": "tk-two"
   },
   {
    "t": 70.5,

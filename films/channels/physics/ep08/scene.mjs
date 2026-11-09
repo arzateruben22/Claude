@@ -42,7 +42,7 @@ const arcPt = (s, th) => {                                     // a point on the
 const takeAt = (t) => FILM.takes.find((k) => t >= k.t0 && t < k.t1) || FILM.takes[FILM.takes.length - 1];
 const instsAt = (t) => {
   const tk = takeAt(t);
-  if (tk.pair) return tk.pair.map((p, i) => ({ tk: p, tau: keyed(p.keys, t, "lin"), xo: p.xo, yo: p.yo || 0, i }));
+  if (tk.pair) return tk.pair.map((p, i) => (p.show && (t < p.show[0] || t >= p.show[1]) ? null : { tk: p, tau: keyed(p.keys, t, "lin"), xo: p.xo, yo: p.yoKeys ? keyed(p.yoKeys, t, "inout2") : p.yo || 0, i }));
   return [{ tk, tau: keyed(tk.keys, t, "lin"), xo: 0, yo: 0, i: 0 }];
 };
 const tauAt = (t) => instsAt(t)[0].tau;
@@ -211,15 +211,15 @@ const hud = createHud({ camera, captionY: FILM.captionY });
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
-hud.badge("slow", { kind: "tag", slot: "tl", t0: 0, t1: null, text: (t) => (instsAt(t).some((x) => x.tau > 1 && x.tau < 1.9) ? "Slow motion" : null) });
+hud.badge("slow", { kind: "tag", slot: "tl", t0: 0, t1: null, text: (t) => (instsAt(t).some((x) => x && x.tau > 1 && x.tau < 1.9) ? "Slow motion" : null) });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const PB = FILM.piecesBadge;
 hud.badge(PB.id, { kind: "tag", slot: PB.slot, t0: PB.t0, t1: PB.t1, text: (t) => { const tk = takeAt(t); return twistOf(tk, tauAt(t)) >= PB.thr ? "Bend it now: two pieces" : "Bend it now: three or more"; } });
 const anchorFn = (an) => {
   if (an === "stick") return (t) => { const th = tauAt(t) < 1 ? TH * bendOf(tauAt(t)) : TH, p = arcPt(L / 2, th); return [p.x, p.y + 1, 0]; };
   if (an === "hang") return () => [10, Y0 - 9, 0];
-  if (an === "shat") return (t) => [instsAt(t)[0].xo, Y0 - 10 + instsAt(t)[0].yo, 0];
-  if (an === "twist2") return (t) => { const s = instsAt(t); return [s[1] ? s[1].xo : 0, Y0 - 10 + (s[1] ? s[1].yo : 0), 0]; };
+  if (an === "shat") return (t) => { const x = instsAt(t).find((q) => q && q.tk.breaks === "casc"); return x ? [x.xo, Y0 - 10 + x.yo, 0] : [0, Y0 - 10, 0]; };
+  if (an === "twist2") return (t) => { const x = instsAt(t).find((q) => q && q.tk.breaks === "single"); return x ? [x.xo, Y0 - 10 + x.yo, 0] : [0, Y0 - 10, 0]; };
   { const pm = /^pc(\d)$/.exec(an); if (pm) return (t) => pieceCentre(t, +pm[1] - 1); }
   if (an === "end") return (t) => { const th = TH * bendOf(tauAt(t)), p = arcPt(0, th); return [p.x - 1, p.y, 0]; };
   if (an === "ripple") return (t) => { const post = tauAt(t) - 1, p = arcPt(Math.min(L, L / 2 - SK.wave * L * Math.max(0, post)), TH); return [p.x, p.y + 1, 0]; };
@@ -239,13 +239,14 @@ const footEl = document.createElement("div"); footEl.className = "rf-foot"; foot
 { const st = document.createElement("style");
   st.textContent = SPINE_CSS + ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
   document.head.appendChild(st); }
+{ const st2 = document.createElement("style"); st2.textContent = ".rf-drop .rf-copy { display: none !important; }"; document.head.appendChild(st2); }
 const dropE = dropTitle(endEl, { sig: EC, fps: FILM.fps, head: ".t", fall: 90 });
 
 window.seek = function (t) {
   stage(t);
   placeCam(t);
   drawStick(t);
-  { const pr = takeAt(t).pair; shelf2.visible = shelfEdge2.visible = !!pr; if (pr) { const y2 = pr[1].yo || 0, y1 = pr[0].yo || 0; shelf.position.y = SHELF + y1 - 0.8; shelfEdge.position.y = SHELF + y1; shelf2.position.set(0, SHELF + y2 - 0.8, 0); shelfEdge2.position.set(0, SHELF + y2, 7); } else { shelf.position.y = SHELF - 0.8; shelfEdge.position.y = SHELF; } }
+  { const st = instsAt(t), y1 = st[0] ? st[0].yo : 0; shelf.position.y = SHELF + y1 - 0.8; shelfEdge.position.y = SHELF + y1; const two = !!st[1]; shelf2.visible = shelfEdge2.visible = two; if (two) { shelf2.position.set(0, SHELF + st[1].yo - 0.8, 0); shelfEdge2.position.set(0, SHELF + st[1].yo, 7); } }
   cyc.update({ grid: 1, casters: [[0, Y0 - 20, 0, 26]] });
   dropT(t); dropE(t);
   { const s = spineAt(t); counterLb.textContent = s.label; counterU.textContent = s.unit; counterV.textContent = spineVal(t).toFixed(s.dp); }
