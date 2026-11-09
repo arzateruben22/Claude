@@ -72,7 +72,7 @@ async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
   // software rendering shares the CPU with other renders and builds here: a click or a screenshot can wait a while
   // for a frame, so actions get four minutes instead of Playwright's 30 s (a check still fails on what it asserts)
   page.setDefaultTimeout(240000);
-  const errors = [];
+  const errors = [], requests = [];
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('request', (r) => requests.push(r.url()));               // the store group checks test mode sends nothing
   page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
