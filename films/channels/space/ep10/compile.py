@@ -50,8 +50,8 @@ CAMK = [
     (CUE["falling"] + 1.6, [-18, 3, 28], [-4, 0, 0], 40),
     (t_why - 0.2, [-9, 4, 21], [0, 0, 0], 38),
     (CUE["dip"][0] + 0.19, [-9, 4, 21], [0, 0, 0], 38),
-    (CUE["dip"][0] + 0.21, [400, 6, 24], [400, 0, 0], 38),                                 # Earth and a GPS satellite (cut under a dip)
-    (CUE["dip"][1] + 0.19, [410, 8, 22], [400, 0, 0], 38),
+    (CUE["dip"][0] + 0.21, [400, 8, 62], [400, 0, 0], 38),                                 # Earth and a GPS satellite (cut under a dip)
+    (CUE["dip"][1] + 0.19, [404, 10, 60], [400, 0, 0], 38),
     (CUE["dip"][1] + 0.21, [-2, 8, 40], [0, 0, 0], 42),                               # three clocks near the hole
     (CUE["slower"], [8, 6, 38], [0, 0, 0], 42),
     (CUE["compare"], [18, 6, 30], [0, 0, 0], 42),
@@ -107,7 +107,7 @@ for a, b in zip(spine, spine[1:]):
 
 TITLE = {"series": "One More Orbit · Season 2 · Episode 4", "title": "Black-hole *edge*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next orbit: *Saturn*", "follow": "One More Orbit · S2 · Episode 5",
-       "next": "In 2019 the Event Horizon Telescope imaged a black hole about 55 million light-years away."}
+       "next": "Event Horizon Telescope, 2019."}
 POSTER = A("vo05:gap", 0.5)
 glue(f, {"vo02": ["event horizon."], "vo05": ["the bigger the gap."], "vo07": ["fifty-five million years."], "vo03": ["hovering close to it,"]})
 LOOP0 = round(f.duration - 0.6, 4)

@@ -242,8 +242,8 @@
    "t": 26.91,
    "p": [
     400,
-    6,
-    24
+    8,
+    62
    ],
    "l": [
     400,
@@ -255,9 +255,9 @@
   {
    "t": 31.84,
    "p": [
-    410,
-    8,
-    22
+    404,
+    10,
+    60
    ],
    "l": [
     400,
@@ -689,7 +689,7 @@
  "end": {
   "title": "Next orbit: *Saturn*",
   "follow": "One More Orbit · S2 · Episode 5",
-  "next": "In 2019 the Event Horizon Telescope imaged a black hole about 55 million light-years away."
+  "next": "Event Horizon Telescope, 2019."
  },
  "captions": [
   {

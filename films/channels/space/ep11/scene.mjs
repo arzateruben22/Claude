@@ -151,7 +151,7 @@ const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "2.5vmin auto 0", textWrap: "balance" });
 const endT = endEl.querySelector(".t");
-if (endT) endT.style.fontSize = "6.4vmin";
+if (endT) endT.style.fontSize = "5.2vmin";
 const fo2 = endEl.querySelector(".fo");
 if (fo2) fo2.style.marginTop = "1.8vmin";
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
