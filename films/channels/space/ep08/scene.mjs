@@ -1,202 +1,208 @@
 import * as THREE from "three";
-// One More Orbit No. 008, "Dark sky" (films/channels/space/ep08). The picture as a pure function of t.
+// One More Orbit, Season 2 · Episode 2 (folder ep08), "Dark sky". The picture as a pure function of t.
 //
-// One flat picture drawn over the channel's night sky: a top-down DISTANCE MAP (you in the middle, stars at their distances,
-// equal density) and a strip above it: "the night sky" as you would see it. Far stars are fainter but more numerous, so each
-// ring of distance adds the same light and the strip climbs to white (an endless, eternal universe). Light needs time: a
-// horizon (the universe's age) closes in, the stars beyond it have not arrived, and the strip falls back to dark. The readout
-// sends light 8 minutes (the Sun) and then "billions of years" (the farthest galaxies).
-// Set: ../set (sky, rig, look, motif). Kit: hud.
+// One 3-D world, you at the origin in an endless field of stars (not to scale, badged). A lane of stars running away from you ramps to white
+// where they pile up (frame 0); the camera drives through the field ("no edge or start"); a ray runs from you to a star in 36 directions;
+// a forest of trunks is the comparison; three shells (near, middle, far) show fainter stars are more numerous and the sky whitens; a horizon
+// sphere (light-travel time) grows round you, the stars beyond it have not arrived, photons crawl in, and the sky falls dark. Readout: a ring
+// for 8 minutes and a big one for billions of years. The last frame is frame 0's pose (a replay loops).
+// Set: ../set (motif). Kit: hud, front.
 import { stage, seg, E, clamp01 } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
-import { createSky } from "../set/sky.js";
-import { createRig } from "../set/rig.js";
+import { ring, segment } from "cinema/sci/front.js";
+import { createBeacon } from "../set/beacon.js";
+import { hdr, line } from "../set/look.js";
 import { titleRing, endRing, injectCss } from "../set/motif.js";
 
-const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, FPS = FILM.fps || 30;
+const FILM = window.FILM, W = window.W, H = window.H, CUE = FILM.cue, FPS = FILM.fps || 30, FP = FILM.forest, CAMK = FILM.camk;
 const S1 = Math.min(W, H) / 1080, sx = W / 1080, sy = H / 1920;
 const canvas = document.getElementById("gl");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
-renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 1);
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x080a1c, 1);
 renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(24, W / H, 0.5, 4000);
+scene.fog = new THREE.Fog(0x080a1c, 8, 80);
+const camera = new THREE.PerspectiveCamera(56, W / H, 0.05, 4000);
 if (window.CINEMA) Object.assign(window.CINEMA, { kMax: 12, threshold: 0.9, bloom: 0.55 });
 window.CINEMA_FOCUS = () => ({ point: [0, 0, 0], fstop: 0 });
 injectCss();
 const fadeIn = (t, t0, d = 0.4) => E.out3(seg(t, t0, t0 + d));
-const sky = createSky({ stars: 6000, seed: 81 });
-scene.add(sky.group);
-const rig = createRig(FILM.cam);
+const pos = (c) => c.map((v) => Math.max(0, v));
+const mul = (s) => () => { s |= 0; s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+const V = (a) => new THREE.Vector3(...a);
+const XZ = { e1: [1, 0, 0], e2: [0, 0, -1] }, XY = { e1: [1, 0, 0], e2: [0, 1, 0] }, YZ = { e1: [0, 0, 1], e2: [0, 1, 0] };
 
-// ── the picture (a 2-D canvas over the 3-D sky; a pure function of t) ──────────────────────────────
+// ── the star field: uniform in a sphere round you; size and brightness fall with distance from you; shells colour it; a horizon dims the rest ──
+const RF = 170, NSTAR = 7000, rs = mul(3), sP = new Float32Array(NSTAR * 3), sR = new Float32Array(NSTAR);
+for (let i = 0; i < NSTAR; i++) {
+  const r = Math.max(6, RF * Math.cbrt(rs())), th = Math.acos(2 * rs() - 1), ph = rs() * 6.2832;
+  sP.set([r * Math.sin(th) * Math.cos(ph), r * Math.cos(th), r * Math.sin(th) * Math.sin(ph)], i * 3); sR[i] = rs();
+}
+const sG = new THREE.BufferGeometry();
+sG.setAttribute("position", new THREE.BufferAttribute(sP, 3)); sG.setAttribute("rnd", new THREE.BufferAttribute(sR, 1));
+const starMat = new THREE.ShaderMaterial({
+  uniforms: { uPx: { value: 6 * S1 }, uH: { value: 1e4 }, uSh: { value: 0 }, uGain: { value: 1 } },
+  vertexShader: `attribute float rnd; uniform float uPx, uH, uSh, uGain; varying vec3 vC; varying float vA;
+    void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; float r = length(position), d = length(mv.xyz);
+      float size = clamp(30.0 / d, 0.9, 6.0) * (0.7 + rnd); gl_PointSize = uPx * size * (0.75 + 1.5 * (1.0 - smoothstep(0.0, 90.0, r)));
+      float b = (0.25 + 0.75 * rnd) / (1.0 + pow(r / 38.0, 1.3)); float lit = 1.0 - 0.93 * smoothstep(uH - 5.0, uH + 5.0, r);
+      vec3 c = vec3(0.93, 0.94, 1.0); if (uSh > 0.5) c = r < 36.0 ? vec3(0.95, 0.93, 0.65) : (r < 86.0 ? vec3(0.56, 0.82, 1.0) : vec3(0.73, 0.65, 1.0));
+      vC = c; vA = b * lit * uGain * (1.0 + 2.5 * uSh * (1.0 - smoothstep(0.0, 60.0, r))) * 3.0; }`,
+  fragmentShader: `varying vec3 vC; varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0) discard; float a = (1.0 - smoothstep(0.15, 1.0, r2)) * min(vA, 1.4); gl_FragColor = vec4(vC * a * 1.5, a); }`,
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+});
+const field = new THREE.Points(sG, starMat); field.frustumCulled = false; scene.add(field);
+// the lane: stars strung along one line of sight; they pile up toward the far end and ramp to white
+const NL = 2600, lr = mul(8), lP = new Float32Array(NL * 3), lR = new Float32Array(NL);
+for (let i = 0; i < NL; i++) { const z = 5 + 165 * Math.pow(lr(), 0.55), sp = 0.035 * z; lP.set([(lr() + lr() + lr() - 1.5) * sp, 0.3 + (lr() + lr() + lr() - 1.5) * sp * 0.7, z], i * 3); lR[i] = lr(); }
+const lG = new THREE.BufferGeometry(); lG.setAttribute("position", new THREE.BufferAttribute(lP, 3)); lG.setAttribute("rnd", new THREE.BufferAttribute(lR, 1));
+const laneMat = new THREE.ShaderMaterial({
+  uniforms: { uPx: { value: 3.2 * S1 }, uGain: { value: 1 } },
+  vertexShader: `attribute float rnd; uniform float uPx, uGain; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = uPx * (0.8 + rnd); vA = uGain * (0.22 + 0.5 * smoothstep(20.0, 150.0, position.z)); }`,
+  fragmentShader: `varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0) discard; float a = (1.0 - smoothstep(0.1, 1.0, r2)) * vA; gl_FragColor = vec4(vec3(1.0, 0.98, 0.95) * a * 1.5, a); }`,
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+});
+const lane = new THREE.Points(lG, laneMat); lane.frustumCulled = false; scene.add(lane);
+// rays from you to 36 stars (the nearest to 36 directions)
+const rr = mul(17), RAYS = [];
+for (let k = 0; k < 36; k++) {
+  const th = Math.acos(2 * rr() - 1), ph = rr() * 6.2832, d = V([Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)]);
+  let best = -1, bs = 9; for (let i = 0; i < NSTAR; i += 1) { const r = Math.hypot(sP[i * 3], sP[i * 3 + 1], sP[i * 3 + 2]); if (r < 30 || r > 120) continue; const c = (sP[i * 3] * d.x + sP[i * 3 + 1] * d.y + sP[i * 3 + 2] * d.z) / r; const sc = 1 - c; if (sc < bs) { bs = sc; best = i; } }
+  RAYS.push({ end: [sP[best * 3], sP[best * 3 + 1], sP[best * 3 + 2]], dly: k * 0.045 });
+}
+const rayMesh = RAYS.map(() => segment({ color: pos(line("teal", 0.9)), width: 2.4, opacity: 0 }));
+const rayEnd = RAYS.map(() => createBeacon({ color: pos(hdr("lemon", 1.4)), px: 14, core: 0.5 }));
+rayMesh.forEach((r) => scene.add(r.mesh)); rayEnd.forEach((b) => scene.add(b.mesh));
+// the forest (far off to the side): trunks, and rays that each stop at a trunk
+const NT = 150, tr = mul(29), trunks = new THREE.InstancedMesh(new THREE.BoxGeometry(0.22, 18, 0.22), new THREE.MeshBasicMaterial({ color: 0xa9b0d9, transparent: true, opacity: 0.55, fog: true }), NT), TP = [];
+{ const m = new THREE.Matrix4(); for (let i = 0; i < NT; i++) { const x = (tr() - 0.5) * 60, z = -6 + tr() * 70, s = 0.6 + tr() * 1.4; TP.push([x, z]); m.compose(new THREE.Vector3(FP[0] + x, 7, FP[2] + z), new THREE.Quaternion(), new THREE.Vector3(s, 1, s)); trunks.setMatrixAt(i, m); } }
+trunks.frustumCulled = false; scene.add(trunks);
+const FRAYS = Array.from({ length: 9 }, (_, k) => { const ang = -0.6 + k * 0.15, cand = TP.map((p, i) => [i, Math.abs(Math.atan2(p[0] + 2, p[1] + 3) - ang)]).sort((a, b) => a[1] - b[1])[0][0]; return { to: [FP[0] + TP[cand][0], 1.8, FP[2] + TP[cand][1] - 0.5], dly: k * 0.12 }; });
+const fRayMesh = FRAYS.map(() => segment({ color: pos(line("teal", 0.95)), width: 3, opacity: 0 })); fRayMesh.forEach((r) => scene.add(r.mesh));
+// three shells (near, middle, far) and the horizon sphere: each three great circles
+const mkSphere = (col, w) => [XZ, XY, YZ].map(() => ring({ color: col, width: w, opacity: 0 }));
+const SH = [[30, mkSphere(pos(line("lemon", 0.9)), 3)], [70, mkSphere(pos(line("ice", 0.9)), 3)], [130, mkSphere(pos(line("lilac", 0.9)), 3)]];
+const HZ = mkSphere(pos(line("teal", 0.95)), 4.5);
+for (const [, rs3] of SH) rs3.forEach((r) => scene.add(r.mesh)); HZ.forEach((r) => scene.add(r.mesh));
+const setSphere = (set, r, op) => set.forEach((rg, i) => rg.arc({ center: [0, 0, 0], r: Math.max(0.01, r), ...[XZ, XY, YZ][i] }).set({ opacity: op }));
+// photons crawling in from beyond the horizon, and a flow of light arriving from inside it
+const NPH = 130, pr = mul(37), PH = Array.from({ length: NPH }, (_, i) => { const th = Math.acos(2 * pr() - 1), ph = pr() * 6.2832; return { d: [Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)], r0: i < 80 ? 104 + pr() * 60 : 14 + pr() * 80, v: i < 80 ? 0.9 + pr() * 1.2 : 7 + pr() * 6, ph: pr() }; });
+const phP = new Float32Array(NPH * 3), phA = new Float32Array(NPH), phG = new THREE.BufferGeometry();
+phG.setAttribute("position", new THREE.BufferAttribute(phP, 3)); phG.setAttribute("alpha", new THREE.BufferAttribute(phA, 1));
+const phMat = new THREE.ShaderMaterial({
+  uniforms: { uPx: { value: 8 * S1 } },
+  vertexShader: `attribute float alpha; uniform float uPx; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = uPx * clamp(40.0 / length(mv.xyz), 0.8, 5.0); vA = alpha; }`,
+  fragmentShader: `varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0 || vA < 0.01) discard; float a = (1.0 - smoothstep(0.1, 1.0, r2)) * vA; gl_FragColor = vec4(vec3(0.31, 0.89, 0.78) * a * 1.6, a); }`,
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+});
+const photons = new THREE.Points(phG, phMat); photons.frustumCulled = false; scene.add(photons);
+const you = createBeacon({ color: pos(hdr("teal", 1.3)), px: 26, core: 0.5 }); scene.add(you.mesh);
+const ringSun = ring({ color: pos(line("teal", 0.95)), width: 5, opacity: 0 }), ringFar = ring({ color: pos(line("teal", 0.95)), width: 5, opacity: 0 });
+scene.add(ringSun.mesh, ringFar.mesh);
+
+// ── the 2-D layer: the glow wash, dips, nothing else ─────────────────────────────────────────────────────
 const tc = document.createElement("canvas");
 tc.width = W; tc.height = H;
 Object.assign(tc.style, { position: "absolute", left: 0, top: 0, width: `${W}px`, height: `${H}px`, zIndex: 1, pointerEvents: "none" });
 document.getElementById("hud").appendChild(tc);
 const ctx = tc.getContext("2d");
-const CX = 540, CY = 752, R = 262;                                           // the distance map (1080 × 1920 units)
-const SX0 = 90, SX1 = 900, SY0 = 400, SY1 = 480;                              // the night-sky strip
-const TEAL = [79, 227, 198], LEMON = [242, 237, 166], LILAC = [185, 166, 255], TXT = [238, 240, 255], TXT2 = [169, 176, 217];
 const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${Math.max(0, Math.min(1, a)).toFixed(3)})`;
-const mul = (s) => () => { s |= 0; s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-const rnd = mul(21);
-const STARS = Array.from({ length: 520 }, () => { const a = rnd() * 6.2832, d = Math.sqrt(rnd()) * 0.97 + 0.03; return { a, d, x: Math.cos(a) * d, y: Math.sin(a) * d, tw: rnd() }; });
-const SPOKES = Array.from({ length: 30 }, (_, k) => ({ a: (k / 30) * 6.2832 + rnd() * 0.15, u: rnd() }));
-const STRIPDOTS = Array.from({ length: 70 }, () => ({ x: rnd(), y: rnd(), m: rnd() }));
-const FRONTS = [0, 0.5];
-
-const lw = (w) => { ctx.lineWidth = w * S1; };
-const pulse = (t) => { let z = 0; for (const tp of CUE.pulses) { const x = t - tp; if (x > 0 && x < 2.2) z += 0.04 * (x < 0.25 ? Math.sin((x / 0.25) * 1.5708) : Math.exp(-(x - 0.25) / 0.55)); } return z; };
-const FR = mul(77);
-const TRUNKS = Array.from({ length: 34 }, () => ({ x: FR() * 810, w: 16 + FR() * 40, a: 0.35 + FR() * 0.4 }));
-function forest(t, k) {                                                         // "like a forest": every look hits a trunk
-  if (k <= 0.001) return;
-  const x0 = 90 * sx, y0 = 540 * sy, w = 810 * sx, h = 470 * sy;
-  ctx.fillStyle = rgba([14, 17, 44], 0.97 * k); ctx.fillRect(x0, y0, w, h);
-  for (const tr of TRUNKS) { ctx.fillStyle = rgba(TXT2, tr.a * 0.55 * k); ctx.fillRect(x0 + tr.x * sx, y0, tr.w * sx, h); }
-  const u = E.inout3(seg(t, CUE.forest0, CUE.trunk + 0.4));
-  for (let j = 0; j < 7; j++) {                                                 // lines of sight from you, each stopped by a trunk
-    const y = (590 + j * 62) * sy, L = (120 + 690 * ((j * 0.37) % 1) * 0.0 + 60 * j % 300 + 190) * sx * u;
-    ctx.strokeStyle = rgba(TEAL, 0.9 * k); lw(3.5); ctx.beginPath(); ctx.moveTo(x0 + 6 * sx, y); ctx.lineTo(x0 + 6 * sx + L, y); ctx.stroke();
-    if (u > 0.95) { ctx.fillStyle = rgba(LEMON, k); ctx.beginPath(); ctx.arc(x0 + 6 * sx + L, y, 7 * S1, 0, 6.2832); ctx.fill(); }
-  }
-  ctx.fillStyle = rgba(TEAL, k); ctx.beginPath(); ctx.arc(x0 + 6 * sx, 590 * sy + 186 * sy, 9 * S1, 0, 6.2832); ctx.fill();
-  ctx.strokeStyle = rgba(TXT2, 0.6 * k); lw(2); ctx.strokeRect(x0, y0, w, h);
-}
-function bar(t, S, ramp) {                                                      // the night sky: S = 0 (dark) … 1 (white); ramp = the hook's payoff
-  const x0 = SX0 * sx, x1 = SX1 * sx, y0 = SY0 * sy, y1 = SY1 * sy, w = x1 - x0, h = y1 - y0;
-  ctx.save();
-  ctx.beginPath(); ctx.roundRect(x0, y0, w, h, 10 * S1); ctx.clip();
-  ctx.fillStyle = "rgba(14,17,44,0.95)"; ctx.fillRect(x0, y0, w, h);
-  if (ramp > 0.001) {
-    const g = ctx.createLinearGradient(x0, 0, x1, 0);
-    g.addColorStop(0, "rgba(14,17,44,0)"); g.addColorStop(1, rgba(TXT, 0.95 * ramp));
-    ctx.fillStyle = g; ctx.fillRect(x0, y0, w, h);
-  }
-  if (S > 0.001) { ctx.fillStyle = rgba(TXT, S * 0.95 * (1 - ramp)); ctx.fillRect(x0, y0, w, h); }
-  const dark = (1 - S) * (1 - ramp);
-  for (const d of STRIPDOTS) {                                                  // stars in a dark sky
-    if (d.m > dark * 0.9) continue;
-    ctx.fillStyle = rgba(TXT, 0.35 + 0.6 * d.m * dark);
-    ctx.beginPath(); ctx.arc(x0 + d.x * w, y0 + 4 * sy + d.y * (h - 8 * sy), (1.1 + 1.4 * d.m) * S1, 0, 6.2832); ctx.fill();
-  }
-  ctx.restore();
-  ctx.strokeStyle = rgba(TXT2, 0.5); ctx.lineWidth = 1.6 * S1;
-  ctx.beginPath(); ctx.roundRect(x0, y0, w, h, 10 * S1); ctx.stroke();
-}
-
-function draw(t) {
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.clearRect(0, 0, W, H);
-  const kLoop = fadeIn(t, CUE.end - 0.45, 0.45);                                // the end card sits on frame 0 (a replay loops)
-  const z = 1 + pulse(t), fcy = 0.36 * H;
-  ctx.setTransform(z, 0, 0, z, (W / 2) * (1 - z), fcy * (1 - z));
-  const kOut = 1 - kLoop;
-  const kRd = fadeIn(t, CUE.rd, 0.6);                                           // the readout: the strip leaves, the map stays quietly
-  // the horizon: the universe's age closes in on "thirteen point eight billion years"
-  const hz = E.inout3(seg(t, CUE.age0, CUE.age1 + 0.6)), Hr = R * (1.03 - 0.75 * hz);
-  // the night sky: ramp (hook) → dark → climbs to white (fainter, but more) → falls with the horizon → dark, one star lit
-  const ramp = Math.max(1 - E.inout3(seg(t, CUE.n - 0.4, CUE.n + 0.3)), kLoop);
-  const climb = E.inout3(seg(t, CUE.fainter, CUE.surface));
-  const fall = Math.pow(Math.min(1, Hr / (R * 1.03)), 2);
-  let S = 0.08 + 0.92 * climb * (t < CUE.age0 ? 1 : fall) + (t >= CUE.age0 ? 0 : 0);
-  if (t >= CUE.age0) S = 0.08 + 0.92 * climb * fall;
-  S *= 1 - 0.55 * fadeIn(t, CUE.clue, 0.6);
-  if (t < CUE.rd || kLoop > 0.01) bar(t, kLoop > 0.01 ? 0 : S, ramp);
-  // the distance map
-  const cx = CX * sx, cy = CY * sy, r0 = R * sx;
-  const mapA = 1;
-  ctx.strokeStyle = rgba(LILAC, 0.55 * mapA); ctx.lineWidth = 2 * S1;
-  ctx.beginPath(); ctx.arc(cx, cy, r0, 0, 6.2832); ctx.stroke();
-  ctx.setLineDash([4 * S1, 8 * S1]); ctx.strokeStyle = rgba(TXT2, 0.28 * mapA);
-  for (const f of [1 / 3, 2 / 3]) { ctx.beginPath(); ctx.arc(cx, cy, r0 * f, 0, 6.2832); ctx.stroke(); }
-  ctx.setLineDash([]);
-  // stars: fainter and smaller with distance, more of them; beyond the horizon they have not arrived
-  const lit = (d) => (d * R < Hr ? 1 : 0.1);
-  const starsOn = fadeIn(t, 0.0, 0.01);
-  for (const s of STARS) {
-    const near = 1 - s.d;
-    const k = lit(s.d) * (t < CUE.n ? 0.55 : 1 - 0.45 * kLoop) * mapA * starsOn;
-    const a = (0.28 + 0.72 * near * near + 0.05 * Math.sin(t * 1.3 + s.tw * 9) * 0) * k;
-    ctx.fillStyle = rgba(s.d * R < Hr ? LEMON : TXT2, a);
-    ctx.beginPath(); ctx.arc(cx + s.x * r0, cy + s.y * r0, (0.9 + 3.8 * near * near) * S1 * (W / 1080 > 0.7 ? 1 : 1.2), 0, 6.2832); ctx.fill();
-  }
-  // lines of sight: each ends on a star (the forest)
-  const sp = E.inout3(seg(t, CUE.spokes0, CUE.spokes1));
-  if (sp > 0.001) {
-    for (const s of SPOKES) {
-      const L = r0 * 0.97 * sp;
-      ctx.strokeStyle = rgba(TEAL, 0.55 * mapA * (1 - 0.7 * kRd) * (1 - fadeIn(t, CUE.fainter, 0.8)));
-      ctx.lineWidth = 1.5 * S1;
-      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(s.a) * L, cy + Math.sin(s.a) * L); ctx.stroke();
-      if (sp > 0.95) { ctx.fillStyle = rgba(LEMON, 0.95 * (1 - fadeIn(t, CUE.fainter, 0.8))); ctx.beginPath(); ctx.arc(cx + Math.cos(s.a) * L, cy + Math.sin(s.a) * L, 4 * S1, 0, 6.2832); ctx.fill(); }
-    }
-  }
-  // the rings of "fainter, but more": near / middle / far bands light in turn
-  for (let k = 0; k < 3; k++) {
-    const on = fadeIn(t, CUE.fainter + k * 0.9, 0.5) * (1 - fadeIn(t, CUE.cancel + 1.0, 0.8));
-    if (on <= 0.01) continue;
-    ctx.strokeStyle = rgba(TEAL, 0.8 * on * mapA); ctx.lineWidth = (3 - 0.6 * k) * S1;
-    ctx.beginPath(); ctx.arc(cx, cy, r0 * ((k + 1) / 3), 0, 6.2832); ctx.stroke();
-  }
-  // the horizon, and light still on its way
-  if (t >= CUE.age0 - 0.2 && kLoop < 0.5) {
-    ctx.strokeStyle = rgba(TEAL, 0.95 * mapA * fadeIn(t, CUE.age0 - 0.2, 0.5)); ctx.lineWidth = 3.4 * S1;
-    ctx.beginPath(); ctx.arc(cx, cy, Hr * sx, 0, 6.2832); ctx.stroke();
-  }
-  if (t >= CUE.way) {
-    ctx.setLineDash([10 * S1, 10 * S1]);
-    for (const ph of FRONTS) {
-      const u = (((t - CUE.way) * 0.16 + ph) % 1), rr = (R * 1.0 - (R - Hr) * 0 - (R * 1.0 - Hr) * u * 0.9);
-      if (rr <= Hr + 4) continue;
-      ctx.strokeStyle = rgba(TEAL, 0.6 * (1 - u) * mapA * (1 - fadeIn(t, CUE.rd, 0.4)));
-      ctx.lineWidth = 2 * S1; ctx.beginPath(); ctx.arc(cx, cy, rr * sx, 0, 6.2832); ctx.stroke();
-    }
-    ctx.setLineDash([]);
-  }
-  forest(t, fadeIn(t, CUE.forest0 - 0.3, 0.4) * (1 - fadeIn(t, CUE.c - 0.4, 0.4)));
-  // you (the observer)
-  ctx.fillStyle = rgba(TEAL, mapA); ctx.beginPath(); ctx.arc(cx, cy, 6.5 * S1, 0, 6.2832); ctx.fill();
-  ctx.strokeStyle = rgba(TEAL, 0.7 * mapA); ctx.lineWidth = 2 * S1; ctx.beginPath(); ctx.arc(cx, cy, 13 * S1, 0, 6.2832); ctx.stroke();
-  // the readout: light crosses 8 minutes (the Sun, near), then "billions of years" (the farthest galaxies, the map's edge)
-  const u1 = E.out3(seg(t, CUE.sun, CUE.sun + 1.6)), u2 = E.out3(seg(t, CUE.farthest, CUE.farthest + 2.6));
-  if (u1 > 0.002 && t < CUE.farthest + 0.1) { ctx.strokeStyle = rgba(TEAL, 0.9 * (1 - u1 * 0.6) * kOut); ctx.lineWidth = 3.4 * S1; ctx.beginPath(); ctx.arc(cx, cy, r0 * 0.1 * u1, 0, 6.2832); ctx.stroke(); }
-  if (u2 > 0.002) { ctx.strokeStyle = rgba(TEAL, 0.9 * (1 - 0.7 * u2) * kOut); ctx.lineWidth = 3.4 * S1; ctx.beginPath(); ctx.arc(cx, cy, r0 * u2, 0, 6.2832); ctx.stroke(); }
+function overlay2d(t) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
+  const wash = 0.62 * E.inout3(seg(t, CUE.cancel, CUE.surface + 0.8)) * (1 - E.inout3(seg(t, CUE.time + 0.2, CUE.time + 1.6)));           // the whole sky should glow (a slow ramp)
+  if (wash > 0.002) { const g = ctx.createRadialGradient(W / 2, 0.38 * H, 20 * sx, W / 2, 0.38 * H, 900 * sx); g.addColorStop(0, rgba([245, 246, 255], wash)); g.addColorStop(1, rgba([200, 205, 240], wash * 0.8)); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+  const [d0, d1, d2] = CUE.dip;
+  const dip = Math.max(E.inout3(seg(t, d0 - 0.1, d0 + 0.2)) * (1 - E.inout3(seg(t, d0 + 0.2, d0 + 0.45))), E.inout3(seg(t, d1 - 0.05, d1 + 0.2)) * (1 - E.inout3(seg(t, d1 + 0.2, d1 + 0.45))), E.inout3(seg(t, d2 - 0.1, d2 + 0.15)) * (1 - E.inout3(seg(t, d2 + 0.15, d2 + 0.4))));
+  if (dip > 0.001) { ctx.fillStyle = rgba([8, 10, 28], dip); ctx.fillRect(0, 0, W, H); }
 }
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
-hud.captions(FILM.captions);
+const S = { you: [0, 0, 0], near: [26, 0, 15], mid: [-36, 0, 60], far: [100, 0, -83], hz: [60, 0, -40] };
+const KIND = { star: { color: "lemon", glyph: "✦", mark: "none" }, body: { color: "ice", glyph: "●", mark: "none" }, light: { color: "teal", glyph: "◯", mark: "none" }, grav: { color: "lilac", glyph: "", mark: "dashed" } };
+const cap0 = FILM.captions[0], capShift = FILM.loop0 - 0.05 - cap0.t0;
+const capLoop = { t0: FILM.loop0 - 0.05, t1: FILM.dur + 5, lines: cap0.lines.map((ln) => ln.map(([w, tw]) => [w, tw + capShift])) };
+hud.captions([...FILM.captions, capLoop]);
 const titleEl = hud.title(FILM.title);
 const tRing = titleRing(titleEl, { t0: 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
+const CEL = {};
 for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, lit: () => true, value: () => 0, fmt: () => c.text });
-  el.classList.add(c.read ? "lm-read" : "lm-clock");
+  CEL[c.id] = el; el.classList.add(c.read ? "lm-read" : "lm-clock");
   const lb = el.querySelector(".lb");
   if (lb) lb.style.textShadow = "0 0 1.2vmin rgba(8,10,28,.95), 0 0 2.6vmin rgba(8,10,28,.85)";
   const v = el.querySelector(".v");
-  if (v && c.text.length > 12) v.style.fontSize = c.read ? "4.6vmin" : "5.2vmin";
-  else if (v && c.text.length > 10 && !c.read) v.style.fontSize = "8.5vmin";
+  if (v && c.text.length > 12) v.style.fontSize = c.read ? "4.4vmin" : "5.4vmin";
+  else if (v && c.text.length > 8 && !c.read) v.style.fontSize = "7.5vmin";
 }
+for (const L of FILM.labels) { const k = KIND[L.kind]; hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: () => S[L.anchor] || [0, 0, 0], t0: L.t0, t1: L.t1, side: L.side, v: L.v, fixed: L.fixed }); }
 for (const p of FILM.pills || []) hud.scale(p.id, { text: p.text, bar: null, t0: p.t0, t1: p.t1, at: p.at });
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end });
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "2.5vmin auto 0", textWrap: "balance" });
 const endT = endEl.querySelector(".t");
 if (endT) endT.style.fontSize = "6.4vmin";
-const fo = endEl.querySelector(".fo");
-if (fo) fo.style.marginTop = "1.8vmin";
+const fo2 = endEl.querySelector(".fo");
+if (fo2) fo2.style.marginTop = "1.8vmin";
 const eRing = endRing(endEl, { t0: FILM.endCard, d: 0.9, safe: hud.safe, S1 });
+const scrimEl = document.querySelector(".hud-scrim");
+let LOOPEL = null;
+function makeLoop() { hud.update(1.5); tRing.update(1.5); LOOPEL = [titleEl, CEL["c-hook"]].filter(Boolean).map((el) => { const c = el.cloneNode(true); c.removeAttribute("id"); c.style.opacity = "0"; c.style.visibility = "hidden"; el.parentNode.appendChild(c); return c; }); }
+
+// ── the camera: own keyframes (position, look-at, field of view), eased ──────────────────────────────
+const lerp = (a, b, u) => a + (b - a) * u;
+function camAt(t) {
+  let i = CAMK.findIndex((k) => k.t > t); if (i < 0) i = CAMK.length - 1; if (i < 1) i = 1;
+  const a = CAMK[i - 1], b = CAMK[i], u = b.t === a.t ? 1 : E.inout3(clamp01((t - a.t) / (b.t - a.t)));
+  return { p: a.p.map((v, k) => lerp(v, b.p[k], u)), l: a.l.map((v, k) => lerp(v, b.l[k], u)), fov: lerp(a.fov, b.fov, u) };
+}
+const HF = 95;
 
 window.seek = function (t) {
-  const st = stage(t), shot = st.name, tr = Math.round(t * FPS) / FPS;
-  rig.place(camera, shot, t);
-  sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 0.3, bandGain: 0.5 });
-  draw(t);
-  hud.update(t);
-  tRing.update(t);
-  eRing.update(t);
+  if (!LOOPEL) makeLoop();
+  const dipT = CUE.dip[2] + 0.15, tt = t >= dipT ? 0 : t;
+  const cm = camAt(tt); camera.position.fromArray(cm.p); camera.fov = cm.fov; camera.updateProjectionMatrix(); camera.lookAt(...cm.l);
+  const inForest = tt >= CUE.dip[0] + 0.1 && tt < CUE.dip[1] + 0.1;
+  field.visible = !inForest; lane.visible = !inForest; trunks.visible = inForest;
+  // the horizon: the universe's age (as light-travel time) grows round you; stars beyond it have not arrived
+  const hg = E.inout3(seg(tt, CUE.time + 0.4, CUE.age1 + 0.6)), hr = 8 + (HF - 8) * hg, hon = tt >= CUE.time + 0.3;
+  starMat.uniforms.uH.value = hon ? hr : 1e4;
+  starMat.uniforms.uSh.value = tt >= CUE.fainter - 0.3 && tt < CUE.cancel + 1.5 ? 1 : 0;
+  const dark = 1 - 0.55 * E.inout3(seg(tt, CUE.begin, CUE.begin + 2.0));
+  starMat.uniforms.uGain.value = (tt >= CUE.begin ? dark : 1);
+  laneMat.uniforms.uGain.value = (tt < CUE.n + 1.2 ? 1 : 0.35 * fadeIn(tt, CUE.n + 1.2, 0)) * (tt < CUE.spokes0 ? 1 : 1 - E.out3(seg(tt, CUE.spokes0, CUE.spokes0 + 1.0)) * 0.7);
+  // rays: one from you to each of 36 stars; ends are beacons
+  RAYS.forEach((r, k) => {
+    const g = E.out3(seg(tt, CUE.spokes0 + 0.2 + r.dly, CUE.spokes0 + 1.4 + r.dly)), fade = 1 - fadeIn(tt, CUE.dip[0] - 0.4, 0.4);
+    rayMesh[k].seg([0, 0, 0], r.end.map((v) => v * g)).set({ opacity: g > 0.002 ? 0.8 * fade : 0 });
+    rayEnd[k].set({ center: r.end, camera, opacity: g > 0.95 ? fade : 0 });
+  });
+  FRAYS.forEach((r, k) => { const g = E.out3(seg(tt, CUE.dip[0] + 0.5 + r.dly, CUE.dip[0] + 1.6 + r.dly)), o = [FP[0] - 1, 1.8, FP[2] - 3]; fRayMesh[k].seg(o, o.map((v, i) => v + (r.to[i] - v) * g)).set({ opacity: inForest && g > 0.002 ? 0.9 : 0 }); });
+  // the shells: each lights in turn on the narration
+  const sOn = [fadeIn(tt, CUE.fainter, 0.5), fadeIn(tt, CUE.fainter + 1.5, 0.5), fadeIn(tt, CUE.more, 0.5)], sOff = 1 - fadeIn(tt, CUE.glow - 0.2, 0.5);
+  SH.forEach(([rad, rs3], k) => setSphere(rs3, rad, 0.75 * sOn[k] * sOff));
+  setSphere(HZ, hr, hon && tt < CUE.begin + 2.5 ? 0.95 * fadeIn(tt, CUE.time + 0.3, 0.6) * (1 - fadeIn(tt, CUE.begin + 0.5, 1.5)) : 0);
+  S.near = [26 * Math.cos(0.4), 0, -26 * Math.sin(0.4) - 6]; S.mid = [-52, 0, 46]; S.far = [118, 0, -38]; S.hz = [hr * Math.cos(0.55), 0, -hr * Math.sin(0.55)];
+  // photons: crawl in from beyond the horizon (never arriving) and a flow of arriving light inside it
+  PH.forEach((p, k) => {
+    const on = tt >= CUE.way - 3.0 && tt < CUE.begin + 1.0;
+    let r, a = 0;
+    if (k < 80) { r = p.r0 - p.v * Math.max(0, tt - (CUE.way - 3.0)); a = on && r > hr + 6 ? 0.9 * fadeIn(tt, CUE.way - 3.0, 0.8) * (1 - fadeIn(tt, CUE.begin, 1.0)) : 0; }
+    else { const cyc = ((tt * 0.16 + p.ph) % 1); r = Math.max(4, hr * 0.95 * (1 - cyc)); a = on && hon && tt < CUE.way + 4 ? 0.95 * Math.min(1, cyc * 6) * (r > 6 ? 1 : 0.2) * fadeIn(tt, CUE.age0, 0.5) : 0; }
+    phP.set([p.d[0] * r, p.d[1] * r, p.d[2] * r], k * 3); phA[k] = a;
+  });
+  phG.attributes.position.needsUpdate = true; phG.attributes.alpha.needsUpdate = true;
+  you.set({ center: [0, 0, 0], camera, opacity: Math.min(1, cm.p[2] < -20 || Math.abs(cm.p[1]) > 15 ? 1 : 0.0) * (tt >= CUE.spokes0 + 0.2 ? 1 : 0) });
+  // the readout: light crosses 8 minutes (small) then billions of years (to the horizon), not to scale
+  const u1 = E.out3(seg(tt, CUE.sun, CUE.sun + 1.6)), u2 = E.out3(seg(tt, CUE.farthest, CUE.farthest + 2.6));
+  ringSun.arc({ center: [0, 0, 0], r: Math.max(0.01, 5 * u1), ...XZ }).set({ opacity: u1 > 0.002 && tt < CUE.farthest + 0.2 ? 0.95 * (1 - 0.5 * u1) : 0 });
+  ringFar.arc({ center: [0, 0, 0], r: Math.max(0.01, HF * u2), ...XZ }).set({ opacity: u2 > 0.002 ? 0.95 * (1 - 0.6 * u2) : 0 });
+  overlay2d(t);
+  hud.update(t); tRing.update(t); eRing.update(t);
+  const lk = fadeIn(t, FILM.loop0, 0.45);
+  endEl.style.opacity = String(1 - lk);
+  if (scrimEl) scrimEl.style.opacity = String(parseFloat(scrimEl.style.opacity || "0") * (1 - lk));
+  for (const c of LOOPEL) { c.style.visibility = lk > 0.01 ? "visible" : "hidden"; c.style.opacity = String(lk); }
   renderer.render(scene, camera);
 };

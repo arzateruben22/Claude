@@ -10,7 +10,7 @@ Lint (kits/cinema/script/lint.py, STANDARDS-v2): 161 words, whole script about g
 - Any figure beyond about four spoken numbers moved to on-screen text or became a comparison.
 
 ## Source-pass changes (8 Nov)
-- Poe 1848 line cut (no primary source found); replaced by 'The key here is time.'. The 'more than thirteen billion years' galaxy line softened to 'billions of years'. ESA confirms 13.8 billion years. NASA's Night Sky Notes page (forest analogy, finite age and size) now supports the Olbers lines; only 'far stars look fainter but there are more of them, so they cancel' (c2, c3) has no page read yet.
+- Poe 1848 line cut (no primary source found) and the "Think hard." line cut; hook is now "Why is the night sky dark? Look closely.". The "more than thirteen billion years" galaxy line softened to "billions of years".
 
 ## After voicing
 Lint: 0 errors, voiced 66.1 s, hook spoken by 1.95 s (the hook line was slowed to speed 0.855 so the question ends before 2 s). Per-line speeds were tuned from the measured pace: 2.0 to 2.9 words a second. Picture changes (forest shot, rings, horizon, strip) happen every 2 to 4 s; see review/scene-table.md.
@@ -18,5 +18,5 @@ Lessons from the S2E01 review applied before the first draft: the picture pushes
 
 ## Still open
 - Needs a listen after voicing (blocked on the Parakeet pin approval). Hook timing is an estimate until then.
-- The Poe sentence (c4) has no source yet: cut it if none is found.
-- Every claim is OPEN; sources marked TO FIND in claims.json point at https://todo.invalid/find-source until a person finds a real page.
+- The Poe sentence is cut.
+- Claims stay OPEN until a person opens each source; any claim with no real page still points at https://todo.invalid/find-source (a placeholder, not a source).

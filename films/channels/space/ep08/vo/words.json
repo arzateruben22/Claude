@@ -3,55 +3,55 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Why is the night sky dark? Think hard.",
-   "heard": "Why is the night sky dark? Think hard.",
+   "text": "Why is the night sky dark? Look closely.",
+   "heard": "Why is the night sky dark? Look closely.",
    "words": [
     {
      "w": "Why",
-     "start": 0.095,
-     "end": 0.4,
+     "start": 0.02,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "is",
-     "start": 0.47,
-     "end": 0.56,
+     "start": 0.35,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.56,
-     "end": 0.72,
+     "start": 0.505,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "night",
-     "start": 0.6,
-     "end": 1.04,
+     "start": 0.535,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "sky",
-     "start": 1.09,
+     "start": 1.04,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "dark?",
-     "start": 1.405,
+     "start": 1.345,
      "end": 1.92,
      "heard": true
     },
     {
-     "w": "Think",
-     "start": 1.955,
+     "w": "Look",
+     "start": 1.96,
      "end": 2.24,
      "heard": true
     },
     {
-     "w": "hard.",
-     "start": 2.155,
-     "end": 2.64,
+     "w": "closely.",
+     "start": 2.18,
+     "end": 2.8,
      "heard": true
     }
    ]
@@ -63,158 +63,158 @@
    "words": [
     {
      "w": "Say",
-     "start": 0.025,
+     "start": 0.02,
      "end": 0.32,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.275,
+     "start": 0.28,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "universe",
-     "start": 0.37,
+     "start": 0.38,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "has",
-     "start": 0.885,
+     "start": 0.895,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "no",
-     "start": 1.05,
+     "start": 1.045,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "edge",
-     "start": 1.395,
+     "start": 1.405,
      "end": 1.92,
      "heard": true
     },
     {
      "w": "or",
-     "start": 1.92,
+     "start": 1.925,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "start.",
-     "start": 2.095,
+     "start": 2.1,
      "end": 2.96,
      "heard": true
     },
     {
      "w": "Then",
-     "start": 3.0,
-     "end": 3.28,
+     "start": 3.03,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "every",
-     "start": 3.31,
-     "end": 3.52,
+     "start": 3.34,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "line",
-     "start": 3.43,
-     "end": 3.84,
+     "start": 3.48,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "of",
-     "start": 3.735,
-     "end": 4.0,
+     "start": 4.005,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "sight",
-     "start": 3.97,
+     "start": 4.165,
      "end": 4.4,
      "heard": true
     },
     {
      "w": "would",
-     "start": 4.37,
+     "start": 4.4,
      "end": 4.64,
      "heard": true
     },
     {
      "w": "end",
-     "start": 4.625,
+     "start": 4.655,
      "end": 4.88,
      "heard": true
     },
     {
      "w": "on",
-     "start": 4.83,
-     "end": 5.04,
+     "start": 4.895,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.04,
-     "end": 5.28,
+     "start": 5.095,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "star.",
-     "start": 5.22,
-     "end": 6.08,
+     "start": 5.3,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "Like",
-     "start": 6.16,
-     "end": 6.32,
+     "start": 6.265,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.31,
-     "end": 6.48,
+     "start": 6.415,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "forest:",
-     "start": 6.54,
-     "end": 7.44,
+     "start": 6.65,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "every",
-     "start": 7.515,
-     "end": 7.76,
+     "start": 7.67,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "look",
-     "start": 7.645,
-     "end": 8.08,
+     "start": 7.815,
+     "end": 8.24,
      "heard": true
     },
     {
      "w": "hits",
-     "start": 8.05,
-     "end": 8.32,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 8.275,
+     "start": 8.205,
      "end": 8.48,
      "heard": true
     },
     {
+     "w": "a",
+     "start": 8.43,
+     "end": 8.64,
+     "heard": true
+    },
+    {
      "w": "trunk.",
-     "start": 8.46,
-     "end": 8.96,
+     "start": 8.615,
+     "end": 9.12,
      "heard": true
     }
    ]

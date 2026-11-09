@@ -12,16 +12,16 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Why is the night sky dark? Think hard.",
+   "text": "Why is the night sky dark? Look closely.",
    "stars": [
     "sky",
-    "hard"
+    "closely"
    ],
-   "phonemes": "wˌaɪ ɪz ðə nˈaɪt skˈaɪ dˈɑːɹk? θˈɪŋk hˈɑːɹd.",
+   "phonemes": "wˌaɪ ɪz ðə nˈaɪt skˈaɪ dˈɑːɹk? lˈʊk klˈoʊsli.",
    "speed": 0.855,
    "file": "01.wav",
-   "dur": 2.707,
-   "sha256": "329574d550f130b5bee9757f9d3a8b0248bea9cba42fc4b0bc39fd465041a50a"
+   "dur": 2.836,
+   "sha256": "479d549bbd0a7205f75ff44af6e411c0cbbd86bb0b590760696bf535a7b660b7"
   },
   {
    "id": "vo02",
@@ -31,10 +31,10 @@
     "star"
    ],
    "phonemes": "sˈeɪ ðə jˈuːnɪvˌɜːs hɐz nˈoʊ ˈɛdʒ ɔːɹ stˈɑːɹt. ðˈɛn ˈɛvɹi lˈaɪn ʌv sˈaɪt wʊd ˈɛnd ˌɔn ɐ stˈɑːɹ. lˈaɪk ɐ fˈɔːɹɪst: ˈɛvɹi lˈʊk hˈɪts ɐ tɹˈʌŋk.",
-   "speed": 0.92,
+   "speed": 0.9,
    "file": "02.wav",
-   "dur": 8.995,
-   "sha256": "e60986564f9c747c0d175d94ce94d1889b0d437c2a4457dd85002cd061dd1a37"
+   "dur": 9.161,
+   "sha256": "585d7d38c50c7394a904488069efab0b56c5d93754ab19c4582bae6019e9889d"
   },
   {
    "id": "vo03",
