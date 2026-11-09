@@ -20,3 +20,5 @@
 **Pacing** (`scene-table.md`): 23 visual changes in 68 s; longest gap 5.6 s (six gaps over 4 s: the chart plates and the list plate need reading time).
 
 **First-listen check:** not done with a real listener. **Still blocked / not done:** clean text-free art (procedural placeholder, marked); score and effects; final-tier render; every source OPEN (none page-read, none person-checked); dermatologist sign-off.
+
+- Round 5b (coordinator f=3): the countries plate now has a 'Two examples' tag on "Whole countries", Australia's row lights on "By twenty sixteen", and a note (IARC listed tanning devices in 2009; Brazil banned them that year) fills the gap after "them too". The opening list plate holds until the bed art fades in (no blank beat at 13.5–14.0 s).

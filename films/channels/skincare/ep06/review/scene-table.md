@@ -1,8 +1,7 @@
 # Scene table: Skin Sense No. 06, Same list as cigarettes (69.5 s)
-Tone: deep-medium (one level throughout).
 
 Times are film seconds (voice `vo/lines.json`, word times `vo/words.json`, Parakeet). Each row is a visual change; the bracket is the time since the last one. The pictures are the owner's art (`art/ep0N-0M.webp`) where present, else marked procedural placeholders (`set/gen_art.py`); plates, charts, pills, the scan line, soft overlays and every caption are drawn in code. Footers on every frame: "Conceptual illustration · not to scale", "Education, not medical advice". No disease or risk line is shown over skin or a person.
-Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm, not the studio mixer or `qa.py`). Longest gap between changes: 7.8 s (3 gaps over 4 s).
+Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm, not the studio mixer or `qa.py`). Longest gap between changes: 7.8 s (2 gaps over 4 s).
 
 | time | narration | visual change (and on-screen text) | sound |
 |---|---|---|---|
@@ -23,10 +22,12 @@ Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm,
 | 26.7 (+1.9) | started young. Pooled studies found that people who started using beds before thirty-five had a melanoma … | tag appears: People who started young; bar grows: People who started using beds before 35 | voice |
 | 34.5 (+7.8) | half. | tag appears: More than half again as high; note: Group results, not a prediction for any one person. Not the same as ever using a bed (a much smaller rise). Boniol et al., BMJ 2012. | voice |
 | 36.1 (+1.6) | (picture only) | plate (art quiets): Countries that acted | silence |
-| 37.2 (+1.1) | Whole countries acted. By twenty sixteen, every | camera: q4 art, close-up ×1.0 | voice |
-| 40.2 (+2.9) | Australian state had banned commercial tanning beds, and | row lights: Australia · commercial beds; tag appears: Most states 2015 · Western Australia 2016 | voice |
-| 43.4 (+3.2) | Brazil banned them too. | row lights: Brazil · tanning equipment; tag appears: Brazil: months after IARC’s 2009 call | voice |
-| 47.9 (+4.5) | Those long rays go | supporting line: About as thin as paper.; badge: Simplified section · rays not to scale | voice |
+| 37.2 (+1.1) | Whole countries acted. | camera: q4 art, close-up ×1.0; tag appears: Two examples | voice |
+| 39.0 (+1.7) | By twenty sixteen, every Australian | row lights: Australia · commercial beds | voice |
+| 40.5 (+1.5) | state had banned commercial tanning beds, and | tag appears: Most states 2015 · Western Australia 2016 | voice |
+| 43.4 (+2.9) | Brazil banned them too. | row lights: Brazil · tanning equipment; tag appears: Brazil: months after IARC’s 2009 call | voice |
+| 45.0 (+1.6) | (picture only) | note: IARC listed tanning devices in 2009; Brazil banned them that year. | silence |
+| 47.9 (+2.9) | Those long rays go | supporting line: About as thin as paper.; badge: Simplified section · rays not to scale | voice |
 | 49.7 (+1.7) | through the top layer of skin, | camera: q4 art, close-up ×1.3; scan line sweeps the picture (illustration); pill draws on: Top layer · about 100 µm | voice |
 | 52.2 (+2.5) | which on most of us is | camera: q6 art, close-up ×1.1 | voice |
 | 53.8 (+1.6) | about as thin as | pill draws on: Paper · about 100 µm | voice |

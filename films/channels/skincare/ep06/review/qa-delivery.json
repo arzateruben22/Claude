@@ -1,6 +1,6 @@
 {
  "file": "films/channels/skincare/ep06/out/skin-sense-006-9x16.mp4",
- "size_mb": 18.5,
+ "size_mb": 19.1,
  "video": {
   "codec": "h264",
   "profile": "High",
@@ -11,7 +11,7 @@
   "dur": 69.533333,
   "pix_fmt": "yuv420p",
   "color": "bt709",
-  "mbps": 1.86
+  "mbps": 1.93
  },
  "film_dur": 69.533,
  "audio": {

@@ -14,6 +14,10 @@
    "name": "main"
   }
  ],
+ "disclosures": {
+  "aiVoice": true,
+  "aiVisuals": true
+ },
  "captions": [
   {
    "w": "Same",

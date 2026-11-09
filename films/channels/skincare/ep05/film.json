@@ -1,7 +1,7 @@
 {
  "id": "skin-sense-005",
  "title": {
-  "series": "Skin Sense \u00b7 No. 005",
+  "series": "Skin Sense · No. 005",
   "title": "The sunscreen experiment"
  },
  "fps": 30,
@@ -1149,5 +1149,9 @@
    64.969,
    "tease"
   ]
+ },
+ "disclosures": {
+  "aiVoice": true,
+  "aiVisuals": true
  }
 }

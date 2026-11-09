@@ -8,7 +8,7 @@ export PLAYWRIGHT_DIR="${PLAYWRIGHT_DIR:-$(dirname "$(npm root -g)")}" CHROMIUM=
 python3 -I films/channels/skincare/set/build_ep.py $E >/dev/null
 python3 -I films/channels/skincare/set/make_sheet.py $E
 python3 -I kits/cinema/studio/render.py --root $D $D/sheet.json $D/audio | tail -4
-node kits/cinema/film/render.mjs --film $D --tier final --plain
+node kits/cinema/film/render.mjs --film $D --tier final --plain --fresh
 node kits/cinema/film/render.mjs --film $D --tier final --plain --assemble --audio $D/audio/mix.m4a
 cp $D/out/skin-sense-0$N-9x16-final-plain.mp4 $D/out/skin-sense-0$N-9x16.mp4; cp $D/out/skin-sense-0$N-9x16-final-plain.jpg $D/out/skin-sense-0$N-9x16.jpg
 rm -f $D/out/skin-sense-0$N-9x16-final-plain.* $D/out/skin-sense-0$N-9x16-draft-plain.*
