@@ -1075,6 +1075,9 @@ export class Game {
       this.route = []; this.routeTarget = null;
       // Auto-drive hands back on arrival, in the same toast
       if (!this.attract) this.ev.toast(`You made it: ${path.label}` + (this.autoDrive ? '. Auto-drive off: you have control' : ''), 'good');
+      // its pedal lifts as it hands back (the driver's own input sets it from the next frame; a fast-forward with no
+      // input of its own would otherwise hold the autopilot's last throttle)
+      if (this.autoDrive) this.input.c.throttle = 0;
       this.autoDrive = false; this.navNow();                                 // the button and the AUTO tag go at once
     }
   }

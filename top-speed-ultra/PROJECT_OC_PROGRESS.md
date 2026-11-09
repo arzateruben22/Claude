@@ -4,6 +4,48 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-09: the final live merge (`claude/final-live`): what the main link now carries
+
+Built on `origin/local/live-preview` (a29015a: GPS follow, the venues in the game, the two modes) and merged, one at a
+time: `origin/claude/onfoot` (3386549, Lot 57 P1d maximum graphics), `origin/claude/sports-bar` (c76046e, Stoppage
+Time S2a needs, ordering and screens; S2b pool, darts and shuffleboard; S3a crowd and staff; S3b interactions,
+relationships and conversations) and `origin/claude/hypercar` (b49f7f3, which carries `claude/hypercar-drive`: M5 Cold
+Thrust, Ground Lock and Thrust Hop; M4 Arcade, Sport and Simulation profiles; M6 Founder Edition plaques, reveal stage
+and wake-up sweep; M2 lights and cockpit; SEAT). Not merged: the road debris fix (`claude/fix-road`, under its own
+review). Stoppage Time ends at S3b and the hypercar's lane A at SEAT, as the owner chose.
+
+What is on the live link now:
+- **Modes.** Exactly Free Drive and Speed Survival. The hypercar branch's race code (rivals, countdown, race tune in
+  Races and Time Trial) was not brought back; its race tune runs in Speed Survival, and its checks that drove a race
+  now drive Free Drive or Speed Survival.
+- **Lot 57** in the game is the P1d page: Low (the retro look), HD and Ultra, inside the game's mount layer (the game's
+  'high' is read as HD).
+- **Stoppage Time** in the game is the S3b page: the needs strip and mood, ordering at the bar and at a table, the
+  screens (simulated matches), the games, the crowd with its conversations.
+- **The OC Hypercar** is in the garage out of the box on the owner test build (`dist/artifact.html`, owner mode on):
+  Unleashed in Free Drive with THRUST beside FOCUS TIME on the phone, the tank panel, Ground Lock and Thrust Hop; its
+  Founder Edition card with the reveal stage; the profiles in Settings.
+
+Fixes the merge needed (one follow-up commit):
+- Leaving Lot 57 kept the whole venue alive (about 70 MB of heap a round trip): on Low the venue's toon look had swapped
+  the meshes' materials, so the release disposed the toon copies and left the venue renderer on the game's shared car
+  paint's dispose listeners. `Look.dispose()` now gives the meshes their own materials back first. Three round trips:
+  heap 215, 210, 211, 212 MB (was 216, 280, 349, 418).
+- Auto-drive's last throttle stayed on after it handed back on arrival in a fast-forward (the suite saw 78 mph against
+  its 72): the pedal now lifts as it hands back.
+- `tests/regression.mjs`: the request log the store checks read was lost in the merge; restored.
+
+Checked (headless Chromium, SwiftShader): `npx tsc --noEmit` clean; `npm run build` (artifact 5.3 MB, marked
+owner-test); both standalone builds; regression groups boot 6/6, survival 8/8, modes 9/9, progression 13/13, phone
+17/17, venues 14/14; `tests/onfoot.mjs --only=desktop` 19/19; `tests/onfoot-p1d.mjs` Low/HD/Ultra at golden hour;
+`tests/sportsbar.mjs --only=data` 19/19; `tests/sportsbar-s2a.mjs --only=checks` 22/22; `tests/sportsbar-s3b.mjs
+--only=smoke` 1/1. Phone proof (the artifact with a viewport meta, 390 x 844, touch, DPR 3; also 844 x 390 and one
+1440 x 900 look) in `tests/out/final-live/`: the two-mode menu; Go to Lot 57, Auto-drive, Get out, Order an agua
+fresca, HD, Drive back; the same for Stoppage Time (the TV, a tamarindo at the bar, the needs strip); the garage's OC
+Hypercar, driven Unleashed on I-405 North, Cold Thrust held (tank 100 to 73 %) and a Thrust Hop. No page errors.
+Not measured on a real phone or GPU. Seen on both this build and `local/live-preview`: after driving back from a
+venue the cockpit's wheel pad reads paler than before the trip (not caused by this merge).
+
 ## 2026-11-09: two modes only: Free Drive and Speed Survival (claude/modes-trim, not committed)
 
 - **The owner (2026-11-08, about 9:05 PM PT, with a screenshot of the menu's "03 RACES" and "04 TIME TRIAL" cards):**

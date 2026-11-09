@@ -96,10 +96,13 @@ export class Look {
     if (env) { this.sky = new SkyDress(env); this.hemi = env.hemi; }
   }
 
-  /** in the game (embed.ts): release the frame's passes and their targets when the venue is taken off */
+  /** in the game (embed.ts): release the frame's passes and their targets when the venue is taken off, and give every
+   *  mesh back the material it wore before Low's toon look, so the release that follows disposes those (the game's car
+   *  paint among them, shared with the game: left on, the venue's renderer stayed on its dispose listeners) */
   dispose() {
     this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null; this.grade = null;
     this.retro?.dispose(); this.retro = null;
+    this.toon.dispose();
   }
 
   /** build the frame for a preset; pr is the pixel ratio the page chose */
