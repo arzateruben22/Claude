@@ -108,23 +108,7 @@ TRAIL_W = [cut("change") + 0.4, cut("why") - 0.2]
 CUT_W = [cut("why") + 0.3, cut("whoa") - 0.2]               # the side view's arrows
 PULSE_W = [A("vo07:A") - 0.3, cut("tease") - 0.2]           # the arrows come back, pulsing, on the finished ring
 YX = [cut("why"), cut("whoa")]                              # the side view stretches the drop's height (a tag says so)
-LABELS = [
-    {"id": "no-drop", "text": "coffee drop", "color": "ghost", "t0": cut("normal") + 0.2, "t1": A("vo02:dry."), "at": "edge", "side": 1},
-    {"id": "no-ring", "text": "dark ring", "color": "energy", "t0": A("vo02:dark"), "t1": FRESH_T - 0.2, "at": "edge", "side": 1},
-    {"id": "fr-speck", "text": "a speck", "color": "motion", "t0": FRESH_T + 0.5, "t1": cut("change") - 0.3, "at": "speck", "side": -1},
-    {"id": "ch-speck", "text": "a speck", "color": "motion", "t0": cut("change") + 0.3, "t1": A("vo03:outward,") - 0.2, "at": "speck", "side": -1},
-    {"id": "ch-edge", "text": "the edge", "color": "ghost", "t0": A("vo03:toward"), "t1": cut("why") - 0.3, "at": "edge", "side": 1},
-    {"id": "wy-stuck", "text": "edge stuck to the paper", "color": "ghost", "t0": cut("why") + 0.2, "t1": A("vo04:Water") - 0.1, "at": "edgeHi", "side": -1},
-    {"id": "wy-evap", "text": "water evaporates here", "color": "energy", "t0": A("vo04:Water"), "t1": A("vo04:so") - 0.1, "at": "evap", "side": -1},
-    {"id": "wy-flow", "text": "flow replaces it", "color": "force", "t0": A("vo04:so") + 0.35, "t1": A("vo04:carries") - 0.4, "at": "flow", "side": -1},
-    {"id": "wo-pile", "text": "specks pile up", "color": "energy", "t0": A("vo05:pile"), "t1": PAIR0 - 0.1, "at": "edge", "side": 1},
-    {"id": "pr-round", "text": "round specks", "color": "energy", "t0": PAIR0 + 0.3, "t1": cut("measure") - 0.3, "at": "pairA", "side": 1},
-    {"id": "pr-oval", "text": "oval specks", "color": "force", "t0": PAIR0 + 0.4, "t1": cut("measure") - 0.3, "at": "pairB", "side": 1},
-    {"id": "pr2-round", "text": "round specks", "color": "energy", "t0": cut("takeaway") + 0.3, "t1": cut("tease") - 0.3, "at": "pairA", "side": 1},
-    {"id": "pr2-oval", "text": "oval specks", "color": "force", "t0": cut("takeaway") + 0.4, "t1": cut("tease") - 0.3, "at": "pairB", "side": 1},
-]
-for _lb in LABELS:
-    _lb["t0"] = round((math.floor(_lb["t0"] * FPS) + 0.5) / FPS, 6)
+LABELS = []          # owner rule (one text element per idea): the caption names things, the readout carries the number; no on-art labels
 BADGES = [
     {"id": "tl", "kind": "tag", "text": "Time-lapse model", "t0": cut("normal") + 0.3, "t1": round(cut("why") - 0.3, 4), "slot": "tr"},
     {"id": "yx", "kind": "tag", "text": "Height stretched 2×", "t0": round(cut("why") + 0.2, 4), "t1": round(cut("whoa") - 0.5, 4), "slot": "tr"},
@@ -135,7 +119,7 @@ BADGES = [
     {"id": "oval2", "kind": "tag", "text": "Lower drop: illustration", "t0": cut("takeaway"), "t1": round(cut("tease") - 0.5, 4), "slot": "tr"},
     {"id": "mug", "kind": "tag", "text": "Illustration", "t0": cut("tease"), "t1": round(ENDSHOW - 0.3, 4), "slot": "tr"},
 ]
-SPINE = [{"t0": cut("measure"), "t1": round(cut("takeaway") - 0.35, 4), "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]}]
+SPINE = [{"t0": cut("measure"), "t1": round(cut("takeaway") - 0.35, 4), "label": "share in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]}]
 SPINE_AT = [[-1e9, [0.5, 0.262]]]
 
 

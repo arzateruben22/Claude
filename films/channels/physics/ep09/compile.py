@@ -50,18 +50,7 @@ REV = {"t0": round(A("vo05:And") + 0.5, 4), "t1": round(cut("measure") - 0.5, 4)
        "snap": 33 * PR["fps"]}
 RP = 1.6                                         # the replay (measure beat on): the climb again from the bottom, 1.6x faster than the 2x-slower main run
 ENDSHOW = round(A("vo08:Why") - 0.15, 4)           # the end card comes up as the last question is asked and holds to the end                      # the illustration: the snapshot of the bed at 33 s of simulated shaking, the lighter ball sunk by hand
-LABELS = [
-    {"id": "no-small", "text": "small grains", "color": "ghost", "t0": cut("normal") + 0.3, "t1": A("vo02:rise") - 0.4, "at": "small", "side": 1},
-    {"id": "no-big", "text": "one big ball", "color": "force", "t0": cut("normal") + 0.2, "t1": cut("change") - 0.3, "at": "ball", "side": -1},
-    {"id": "ch-ball", "text": "big ball", "color": "force", "t0": A("vo03:Yet") - 0.2, "t1": cut("why") - 0.3, "at": "ball", "side": -1},
-    {"id": "wy-gap", "text": "small grains drop under it", "color": "motion", "t0": A("vo04:tumble") + 0.12, "t1": cut("whoa") - 0.5, "at": "under", "side": 1},
-    {"id": "wo-up", "text": "up the walls", "color": "energy", "t0": A("vo05:up"), "t1": A("vo05:And") - 0.1, "at": "wallL", "side": 1},
-    {"id": "wo-down", "text": "down the middle", "color": "force", "t0": A("vo05:down"), "t1": A("vo05:And") - 0.1, "at": "mid", "side": 1},
-    {"id": "wo-light", "text": "bigger but lighter", "color": "force", "t0": A("vo05:sink") - 0.6, "t1": cut("measure") - 0.3, "at": "lball", "side": 1},
-    {"id": "ms-gh", "text": "start", "color": "ghost", "t0": A("vo06:climbs"), "t1": A("vo06:takes"), "at": "ghost0", "side": 1},
-]
-for _lb in LABELS:                                   # first visible frame = the next frame boundary (half-frame grid, as the kit's cues expect)
-    _lb["t0"] = round((math.floor(_lb["t0"] * FPS) + 0.5) / FPS, 6)
+LABELS = []          # owner rule (one text element per idea): the caption names things, the readout carries the number; no on-art labels
 BADGES = [
     {"id": "sim", "kind": "tag", "text": "2D model, drawn in 3-D", "t0": cut("normal") + 0.3, "t1": round(A("vo05:And") - 0.3, 4), "slot": "tr"},
     {"id": "illus", "kind": "tag", "text": "Illustration, not a simulation", "t0": round(A("vo05:And") + 0.2, 4), "t1": round(cut("measure") - 0.5, 4), "slot": "tr"},
@@ -69,9 +58,9 @@ BADGES = [
     {"id": "sim3", "kind": "tag", "text": "Simulation, sped up", "t0": cut("takeaway"), "t1": ENDSHOW - 0.3, "slot": "tr"},
 ]
 SPINE = [
-    {"t0": cut("normal"), "t1": round(cut("why") - 0.1, 4), "label": "ball centre height", "unit": "cm", "dp": 0},
-    {"t0": cut("whoa"), "t1": round(A("vo05:And") - 0.2, 4), "label": "ball centre height", "unit": "cm", "dp": 0},
-    {"t0": cut("measure"), "t1": round(ENDSHOW - 0.3, 4), "label": "ball centre height", "unit": "cm", "dp": 0},
+    {"t0": cut("normal"), "t1": round(cut("why") - 0.1, 4), "label": "centre height", "unit": "cm", "dp": 0},
+    {"t0": cut("whoa"), "t1": round(A("vo05:And") - 0.2, 4), "label": "centre height", "unit": "cm", "dp": 0},
+    {"t0": cut("measure"), "t1": round(ENDSHOW - 0.3, 4), "label": "centre height", "unit": "cm", "dp": 0},
 ]
 SPINE_AT = [[-1e9, [0.5, 0.262]]]
 ARROWS_W = [A("vo05:Grains"), A("vo05:And") + 0.2]

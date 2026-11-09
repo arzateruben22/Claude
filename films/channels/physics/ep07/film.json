@@ -140,7 +140,7 @@
   {
    "t0": 3.183333,
    "t1": 22.116633,
-   "label": "bottom coil: fallen so far",
+   "label": "bottom coil: fallen",
    "unit": "cm",
    "dp": 1,
    "kind": "bottom"
@@ -148,7 +148,7 @@
   {
    "t0": 22.116633,
    "t1": 37.850033,
-   "label": "news has travelled down",
+   "label": "news reached",
    "unit": "%",
    "dp": 0,
    "kind": "front"
@@ -156,7 +156,7 @@
   {
    "t0": 37.850033,
    "t1": 50.650033,
-   "label": "balance point: fallen",
+   "label": "centre: fallen",
    "unit": "cm",
    "dp": 0,
    "kind": "mid"
@@ -164,7 +164,7 @@
   {
    "t0": 50.650033,
    "t1": 59.716633,
-   "label": "bottom waited",
+   "label": "waited",
    "unit": "s",
    "dp": 1,
    "kind": "wait",
@@ -176,7 +176,7 @@
   {
    "t0": 59.716633,
    "t1": 63.683333000000005,
-   "label": "bottom waited",
+   "label": "waited",
    "unit": "s",
    "dp": 1,
    "kind": "const",
@@ -444,118 +444,7 @@
    ]
   ]
  },
- "labels": [
-  {
-   "id": "no-held",
-   "text": "held at the top",
-   "color": "ghost",
-   "t0": 3.483333,
-   "t1": 7.083333333333333,
-   "at": "top0",
-   "side": 1
-  },
-  {
-   "id": "no-ruler",
-   "text": "hung about 1.5 m",
-   "color": "ghost",
-   "t0": 3.483333,
-   "t1": 7.083333333333333,
-   "at": "ruler",
-   "side": -1
-  },
-  {
-   "id": "no-still",
-   "text": "bottom: still",
-   "color": "motion",
-   "t0": 9.433333333333334,
-   "t1": 13.227403333094069,
-   "at": "bottom",
-   "side": 1
-  },
-  {
-   "id": "ch-top",
-   "text": "top: falling",
-   "color": "energy",
-   "t0": 15.966666666666667,
-   "t1": 19.566666666666666,
-   "at": "top",
-   "side": 1
-  },
-  {
-   "id": "ch-bot",
-   "text": "bottom: still",
-   "color": "motion",
-   "t0": 18.233333333333334,
-   "t1": 21.183333333333334,
-   "at": "bottom",
-   "side": 1
-  },
-  {
-   "id": "ch-gap",
-   "text": "1/30 s apart",
-   "color": "ghost",
-   "t0": 20.166666666666668,
-   "t1": 21.816633,
-   "at": "ghost-top-change-4",
-   "side": 1
-  },
-  {
-   "id": "wy-no",
-   "text": "no news yet",
-   "color": "motion",
-   "t0": 23.833333333333332,
-   "t1": 26.233333333333334,
-   "at": "bottom",
-   "side": 1
-  },
-  {
-   "id": "wy-front",
-   "text": "the news travels",
-   "color": "force",
-   "t0": 29.333333333333332,
-   "t1": 32.06666666666666,
-   "at": "front",
-   "side": 1
-  },
-  {
-   "id": "wy-arr",
-   "text": "news arrives",
-   "color": "force",
-   "t0": 35.050000000000004,
-   "t1": 37.550033000000006,
-   "at": "bottom",
-   "side": 1
-  },
-  {
-   "id": "wo-mid",
-   "text": "balance point",
-   "color": "energy",
-   "t0": 38.100033,
-   "t1": 50.350033,
-   "at": "mid",
-   "side": -1,
-   "fixed": true
-  },
-  {
-   "id": "wo-ball",
-   "text": "dropped ball",
-   "color": "force",
-   "t0": 38.450033000000005,
-   "t1": 50.350033,
-   "at": "ball",
-   "side": 1,
-   "fixed": true
-  },
-  {
-   "id": "ms-ghost",
-   "text": "bottom's ghosts: one pile",
-   "color": "motion",
-   "t0": 53.3,
-   "t1": 57.48333333333333,
-   "at": "ghost-bot-measure-4",
-   "side": 1
-  }
- ],
+ "labels": [],
  "badges": [
   {
    "id": "ideal",

@@ -60,17 +60,7 @@ RISE_T = round(A("vo04:As") - 0.05, 4)                              # "As the wa
 PIPE_W = [cut("why"), RISE_T]
 FLUTE_T = [round(A("vo04:flute"), 4), round(A("vo04:pipe.") if False else A("vo04:length") + 0.3, 4)]   # the long pipe is shortened, as a flute player does
 CHART_W = [cut("measure") + 0.2, cut("takeaway") + 2.0]
-LABELS = [
-    {"id": "no-water", "text": "water", "color": "force", "t0": A("vo02:Pour") + 0.3, "t1": A("vo02:higher") - 0.2, "at": "water", "side": -1},
-    {"id": "no-air", "text": "empty space", "color": "motion", "t0": A("vo02:sound"), "t1": A("vo02:alone.") - 0.3, "at": "air", "side": 1},
-    {"id": "ch-pipe", "text": "a pipe, closed at the water", "color": "ghost", "t0": cut("change") + 0.3, "t1": A("vo03:Sound") - 0.1, "at": "airtop", "side": 1},
-    {"id": "ch-move", "text": "air moving", "color": "motion", "t0": A("vo03:Sound"), "t1": cut("why") - 0.3, "at": "air", "side": 1},
-    {"id": "wy-long", "text": "long pipe: lower note", "color": "ghost", "t0": cut("why") + 0.5, "t1": A("vo04:flute") - 0.2, "at": "pipeL", "side": 1},
-    {"id": "wy-short", "text": "short pipe: higher note", "color": "energy", "t0": cut("why") + 0.9, "t1": A("vo04:flute") - 0.2, "at": "pipeR", "side": -1},
-    {"id": "wy-flute", "text": "shorter: higher", "color": "energy", "t0": A("vo04:flute") + 0.3, "t1": RISE_T - 0.2, "at": "pipeL", "side": 1},
-]
-for _lb in LABELS:
-    _lb["t0"] = round((math.floor(_lb["t0"] * FPS) + 0.5) / FPS, 6)
+LABELS = []          # owner rule (one text element per idea): the caption names things, the readout carries the number; no on-art labels
 BADGES = [
     {"id": "pour", "kind": "tag", "text": "Pour slowed down", "t0": cut("normal") + 0.3, "t1": round(cut("change") - 0.3, 4), "slot": "tr"},
     {"id": "slow", "kind": "tag", "text": "Air motion slowed 300×", "t0": cut("change"), "t1": round(cut("tease") - 0.3, 4), "slot": "tr"},
@@ -79,9 +69,9 @@ BADGES = [
     {"id": "icup", "kind": "tag", "text": "An illustrated cup", "t0": round(cut("whoa") + 0.2, 4), "t1": round(cut("tease") - 0.7, 4), "slot": "tl"},
     {"id": "ill", "kind": "tag", "text": "Illustration", "t0": cut("tease"), "t1": round(ENDSHOW - 0.3, 4), "slot": "tr"},
 ]
-SPINE = [{"t0": round(cut("normal") + 0.2, 4), "t1": round(cut("why") - 0.35, 4), "label": "pitch of the filling cup", "unit": "Hz", "dp": 0, "kind": "mug"},
-         {"t0": RISE_T, "t1": round(cut("measure") - 0.3, 4), "label": "pitch of the filling cup", "unit": "Hz", "dp": 0, "kind": "mug"},
-         {"t0": cut("measure"), "t1": round(cut("tease") - 0.3, 4), "label": "pitch of the filling cup", "unit": "Hz", "dp": 0, "kind": "mug", "lit": [A("vo06:nearly"), cut("takeaway")]}]
+SPINE = [{"t0": round(cut("normal") + 0.2, 4), "t1": round(cut("why") - 0.35, 4), "label": "pitch", "unit": "Hz", "dp": 0, "kind": "mug"},
+         {"t0": RISE_T, "t1": round(cut("measure") - 0.3, 4), "label": "pitch", "unit": "Hz", "dp": 0, "kind": "mug"},
+         {"t0": cut("measure"), "t1": round(cut("tease") - 0.3, 4), "label": "pitch", "unit": "Hz", "dp": 0, "kind": "mug", "lit": [A("vo06:nearly"), cut("takeaway")]}]
 SPINE_AT = [[-1e9, [0.5, 0.262]]]
 
 
@@ -113,7 +103,7 @@ film = {
     "shots": SHOTS, "beats": BEATS, "cue": {"cuts": CUTS, "pipes": PIPE_W, "chart": CHART_W}, "spine": SPINE, "spineAt": SPINE_AT,
     "mug": {"R": MUG_R, "H": MUG_H, "c": C_CM, "beta": BETA, "slow": SLOW}, "level": LEVEL, "pipes": PIPES,
     "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.655, "title": TITLE,
-    "captions": [pg for pg in phrase_captions(f, max_chars=24, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "tagT": [round(A("vo06:ten"), 4), round(A("vo06:nearly"), 4)], "riseT": RISE_T, "fluteT": FLUTE_T, "endCard": EC,
+    "captions": [pg for pg in phrase_captions(f, max_chars=24, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "tagT": [1e6, 1e6], "riseT": RISE_T, "fluteT": FLUTE_T, "endCard": EC,
     "end": {"title": "Next drop: the slow raindrop", "follow": "Follow Reality Rulebook", "foot": "Bagad et al., arXiv 2411.11222 (2024)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }

@@ -129,28 +129,15 @@ DIM = {
 
 # ── the spine: how far the bottom coil has fallen (cm) ... the front (% of the way down) ... the middle (cm) ... the wait (s) ──
 SPINE = [
-    {"t0": cut("normal"), "t1": cut("why"), "label": "bottom coil: fallen so far", "unit": "cm", "dp": 1, "kind": "bottom"},
-    {"t0": cut("why"), "t1": cut("whoa"), "label": "news has travelled down", "unit": "%", "dp": 0, "kind": "front"},
-    {"t0": cut("whoa"), "t1": cut("measure"), "label": "balance point: fallen", "unit": "cm", "dp": 0, "kind": "mid"},
-    {"t0": cut("measure"), "t1": cut("takeaway"), "label": "bottom waited", "unit": "s", "dp": 1, "kind": "wait", "lit": [T_END5, cut("takeaway")]},
-    {"t0": cut("takeaway"), "t1": cut("tease") - 0.3, "label": "bottom waited", "unit": "s", "dp": 1, "kind": "const", "v": round(TC, 1), "lit": [cut("takeaway"), cut("tease")]},
+    {"t0": cut("normal"), "t1": cut("why"), "label": "bottom coil: fallen", "unit": "cm", "dp": 1, "kind": "bottom"},
+    {"t0": cut("why"), "t1": cut("whoa"), "label": "news reached", "unit": "%", "dp": 0, "kind": "front"},
+    {"t0": cut("whoa"), "t1": cut("measure"), "label": "centre: fallen", "unit": "cm", "dp": 0, "kind": "mid"},
+    {"t0": cut("measure"), "t1": cut("takeaway"), "label": "waited", "unit": "s", "dp": 1, "kind": "wait", "lit": [T_END5, cut("takeaway")]},
+    {"t0": cut("takeaway"), "t1": cut("tease") - 0.3, "label": "waited", "unit": "s", "dp": 1, "kind": "const", "v": round(TC, 1), "lit": [cut("takeaway"), cut("tease")]},
 ]
 SPINE_AT = [[-1e9, [0.76, 0.34]]]
 
-LABELS = [
-    {"id": "no-held", "text": "held at the top", "color": "ghost", "t0": cut("normal") + 0.3, "t1": T_REL1 - 0.4, "at": "top0", "side": 1},
-    {"id": "no-ruler", "text": "hung about 1.5 m", "color": "ghost", "t0": cut("normal") + 0.3, "t1": T_REL1 - 0.4, "at": "ruler", "side": -1},
-    {"id": "no-still", "text": "bottom: still", "color": "motion", "t0": A("vo02:bottom"), "t1": T_END1 - 0.15, "at": "bottom", "side": 1},
-    {"id": "ch-top", "text": "top: falling", "color": "energy", "t0": A("vo03:coils"), "t1": A("vo03:there.") + 0.3, "at": "top", "side": 1},
-    {"id": "ch-bot", "text": "bottom: still", "color": "motion", "t0": A("vo03:bottom"), "t1": T_END2 - 0.3, "at": "bottom", "side": 1},
-    {"id": "ch-gap", "text": "1/30 s apart", "color": "ghost", "t0": A("vo03:three") - 0.2, "t1": cut("why") - 0.3, "at": "ghost-top-change-4", "side": 1},
-    {"id": "wy-no", "text": "no news yet", "color": "motion", "t0": A("vo04:Nothing"), "t1": A("vo04:The"), "at": "bottom", "side": 1},
-    {"id": "wy-front", "text": "the news travels", "color": "force", "t0": A("vo04:travels"), "t1": A("vo04:Until") - 0.1, "at": "front", "side": 1},
-    {"id": "wy-arr", "text": "news arrives", "color": "force", "t0": T_END3 - 0.15, "t1": cut("whoa") - 0.3, "at": "bottom", "side": 1},
-    {"id": "wo-mid", "text": "balance point", "color": "energy", "t0": MID_W[0] + 0.2, "t1": cut("measure") - 0.3, "at": "mid", "side": -1, "fixed": True},
-    {"id": "wo-ball", "text": "dropped ball", "color": "force", "t0": cut("whoa") + 0.6, "t1": cut("measure") - 0.3, "at": "ball", "side": 1, "fixed": True},
-    {"id": "ms-ghost", "text": "bottom's ghosts: one pile", "color": "motion", "t0": A("vo06:stack"), "t1": T_END5 + 0.5, "at": "ghost-bot-measure-4", "side": 1},
-]
+LABELS = []          # owner rule (one text element per idea): the caption names things, the readout carries the number; no on-art labels
 BADGES = [
     {"id": "ideal", "title": "Illustrated slinky", "text": "Its fall is modeled, with no air. Sized to the paper's typical 0.3 s.", "t0": cut("takeaway") + 0.6, "t1": cut("tease"), "slot": "tr"},
     {"id": "model", "text": "Model slinky", "t0": cut("normal") + 0.4, "t1": T_REL1 + 0.5, "slot": "tr"},

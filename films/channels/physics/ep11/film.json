@@ -125,7 +125,7 @@
   {
    "t0": 4.1833,
    "t1": 22.0333,
-   "label": "pitch of the filling cup",
+   "label": "pitch",
    "unit": "Hz",
    "dp": 0,
    "kind": "mug"
@@ -133,7 +133,7 @@
   {
    "t0": 30.45,
    "t1": 45.2833,
-   "label": "pitch of the filling cup",
+   "label": "pitch",
    "unit": "Hz",
    "dp": 0,
    "kind": "mug"
@@ -141,7 +141,7 @@
   {
    "t0": 45.583333,
    "t1": 63.6833,
-   "label": "pitch of the filling cup",
+   "label": "pitch",
    "unit": "Hz",
    "dp": 0,
    "kind": "mug",
@@ -239,71 +239,7 @@
    "level": 7.0
   }
  },
- "labels": [
-  {
-   "id": "no-water",
-   "text": "water",
-   "color": "force",
-   "t0": 4.483333,
-   "t1": 6.966666666666667,
-   "at": "water",
-   "side": -1
-  },
-  {
-   "id": "no-air",
-   "text": "empty space",
-   "color": "motion",
-   "t0": 6.35,
-   "t1": 12.133333333333333,
-   "at": "air",
-   "side": 1
-  },
-  {
-   "id": "ch-pipe",
-   "text": "a pipe, closed at the water",
-   "color": "ghost",
-   "t0": 14.15,
-   "t1": 19.299999999999997,
-   "at": "airtop",
-   "side": 1
-  },
-  {
-   "id": "ch-move",
-   "text": "air moving",
-   "color": "motion",
-   "t0": 19.416667,
-   "t1": 22.083333,
-   "at": "air",
-   "side": 1
-  },
-  {
-   "id": "wy-long",
-   "text": "long pipe: lower note",
-   "color": "ghost",
-   "t0": 22.883333,
-   "t1": 25.933333333333334,
-   "at": "pipeL",
-   "side": 1
-  },
-  {
-   "id": "wy-short",
-   "text": "short pipe: higher note",
-   "color": "energy",
-   "t0": 23.283333,
-   "t1": 25.933333333333334,
-   "at": "pipeR",
-   "side": -1
-  },
-  {
-   "id": "wy-flute",
-   "text": "shorter: higher",
-   "color": "energy",
-   "t0": 26.45,
-   "t1": 30.25,
-   "at": "pipeL",
-   "side": 1
-  }
- ],
+ "labels": [],
  "badges": [
   {
    "id": "pour",
@@ -1514,8 +1450,8 @@
  ],
  "endShow": 68.037,
  "tagT": [
-  46.9333,
-  55.0
+  1000000.0,
+  1000000.0
  ],
  "riseT": 30.45,
  "fluteT": [

@@ -72,28 +72,10 @@ TWIST_W = [A("vo05:Twist"), cut("measure")]
 
 SPINE = [
     {"t0": cut("normal"), "t1": cut("whoa"), "label": "pieces so far", "unit": " ", "dp": 0, "kind": "pieces"},
-    {"t0": cut("whoa"), "t1": cut("takeaway") - 0.35, "label": "twist angle", "unit": "°", "dp": 0, "kind": "twist", "lit": [A("vo06:fifty"), cut("takeaway")]},
+    {"t0": cut("whoa"), "t1": cut("takeaway") - 0.35, "label": "angle", "unit": "°", "dp": 0, "kind": "twist", "lit": [A("vo06:fifty"), cut("takeaway")]},
 ]
 SPINE_AT = [[-1e9, [0.74, 0.25]]]
-LABELS = [
-    {"id": "no-stick", "text": "dry spaghetti", "color": "ghost", "t0": cut("normal") + 0.2, "t1": A("vo02:snaps.") - 0.3, "at": "stick", "side": 1},
-    {"id": "no-bend", "text": "bend slowly", "color": "motion", "t0": A("vo02:curves,") - 0.6, "t1": A("vo02:snaps.") - 0.3, "at": "end", "side": -1},
-    {"id": "ch-1", "text": "first break", "color": "energy", "t0": A("vo03:end.") - 0.2, "t1": A("vo03:snaps") - 0.2, "at": "b1", "side": 1},
-    {"id": "ch-2", "text": "second break", "color": "energy", "t0": A("vo03:snaps") + 0.1, "t1": A("vo03:again.") + 0.1, "at": "b2", "side": -1},
-    {"id": "ch-3", "text": "third break", "color": "energy", "t0": A("vo03:again.") + 0.2, "t1": cut("why") - 0.2, "at": "b3", "side": 1},
-    {"id": "wy-1", "text": "first break", "color": "energy", "t0": A("vo04:sends") - 0.2, "t1": A("vo04:They"), "at": "b1", "side": 1},
-    {"id": "wy-rip", "text": "ripples", "color": "force", "t0": A("vo04:ripples"), "t1": A("vo04:They") + 0.3, "at": "ripple", "side": -1},
-    {"id": "wy-2", "text": "breaks again", "color": "energy", "t0": A("vo04:extra"), "t1": cut("whoa") - 0.3, "at": "b2", "side": -1},
-    {"id": "wo-tw", "text": "twist first", "color": "force", "t0": A("vo05:Twist") + 0.3, "t1": A("vo05:Then") - 0.3, "at": "stick", "side": 1},
-    {"id": "wo-2", "text": "two pieces", "color": "motion", "t0": A("vo05:pieces.") - 0.1, "t1": A("vo05:pieces.") + 1.0, "at": "hang", "side": 1, "fixed": True},
-]
-for _i in range(4):
-    LABELS.append({"id": f"pc{_i+1}", "text": f"piece {_i+1}", "color": "ghost", "t0": A("vo02:almost") + 0.35 * _i, "t1": cut("change") - 0.3, "at": f"pc{_i+1}", "side": 1 if _i % 2 else -1, "fixed": False})
-LABELS.append({"id": "tk-shat", "text": "shattered: 4 pieces", "color": "energy", "t0": A("vo07:chain") + 2.3, "t1": EC - 0.7, "at": "shat", "side": 1, "fixed": True})
-LABELS.append({"id": "tk-two", "text": "twisted first: 2 pieces", "color": "motion", "t0": A("vo07:break#2") + 0.3, "t1": EC - 0.7, "at": "twist2", "side": 1, "fixed": True})
-LABELS.append({"id": "wy-bent", "text": "most bent: breaks here", "color": "energy", "t0": cut("why") + 2.0, "t1": A("vo04:explained") - 0.2, "at": "b1", "side": -1, "fixed": True})
-LABELS.append({"id": "wo-shat", "text": "earlier: 4 pieces", "color": "energy", "t0": A("vo05:pieces.") + 1.6, "t1": cut("measure") - 0.3, "at": "shat", "side": 1, "fixed": True})
-LABELS.append({"id": "wo-tw2", "text": "twisted: 2 pieces", "color": "motion", "t0": A("vo05:pieces.") + 1.6, "t1": cut("measure") - 0.3, "at": "twist2", "side": 1, "fixed": True})
+LABELS = []          # owner rule (one text element per idea): the caption names things, the readout carries the number; no on-art labels
 BADGES = [
     {"id": "fey", "kind": "tag", "text": "Feynman asked why", "t0": A("vo04:Feynman"), "t1": A("vo04:Years"), "slot": "tr"},
     {"id": "illus", "kind": "tag", "text": "Illustration, not a simulation", "t0": A("vo02:snaps."), "t1": EC - 0.2, "slot": "tl"},

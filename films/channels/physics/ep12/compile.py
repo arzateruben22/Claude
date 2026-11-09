@@ -72,16 +72,7 @@ FOCUS = [                                           # which drop the readout fol
     {"t0": cut("measure"), "t1": A("vo06:four-millimeter") - 0.1, "lane": "small"},
     {"t0": A("vo06:four-millimeter") - 0.1, "t1": cut("takeaway") - 0.3, "lane": "big"},
 ]
-LABELS = [
-    {"id": "no-speed", "text": "speeding up", "color": "energy", "t0": _M0 + 0.8, "t1": A("vo02:Watch") - 0.3, "at": "lane-medium", "side": 1},
-    {"id": "no-steady", "text": "steady speed", "color": "motion", "t0": A("vo02:Watch") + 1.2, "t1": min(cut("change") - 0.3, _M0 + FALLT["medium"] - 0.4), "at": "lane-medium", "side": 1},
-    {"id": "ch-weight", "text": "weight", "color": "force", "t0": _F2 + 1.0, "t1": cut("why") - 0.3, "at": "w-arrow", "side": -1},
-    {"id": "ch-drag", "text": "air push", "color": "energy", "t0": A("vo03:harder") - 0.4, "t1": cut("why") - 0.3, "at": "d-arrow", "side": 1},
-    {"id": "wy-tie", "text": "a tie", "color": "ghost", "t0": A("vo04:matches"), "t1": A("vo04:weight#2") + 0.5, "at": "lane-medium", "side": 1},
-    {"id": "wo-small", "text": "round", "color": "ghost", "t0": A("vo05:Small"), "t1": A("vo05:biggest") - 0.1, "at": "lane-small", "side": 1},
-    {"id": "wo-big", "text": "a bun", "color": "energy", "t0": A("vo05:flatten") - 0.1, "t1": A("vo05:break") - 0.1, "at": "big-top", "side": -1, "v": "above"},
-    {"id": "wo-split", "text": "breaks apart", "color": "force", "t0": SPLIT_T + 0.1, "t1": cut("measure") - 0.3, "at": "split", "side": 1, "v": "below"},
-]
+LABELS = []          # owner rule (one text element per idea): the caption names things, the readout carries the number; no on-art labels
 for _lb in LABELS:
     _lb["t0"] = round((math.floor(_lb["t0"] * FPS) + 0.5) / FPS, 6)
     assert _lb["t1"] > _lb["t0"] + 0.8, ("label never shows", _lb["id"], _lb["t0"], _lb["t1"])
@@ -91,8 +82,8 @@ BADGES = [
     {"id": "bun", "kind": "tag", "text": "Flattening: illustration", "t0": round(A("vo05:flatten") - 0.2, 4), "t1": round(cut("measure") - 0.3, 4), "slot": "tr"},
     {"id": "ill", "kind": "tag", "text": "Illustration", "t0": cut("tease"), "t1": round(ENDSHOW - 0.3, 4), "slot": "tr"},
 ]
-SPINE = [{"t0": _M0, "t1": round(cut("whoa") - 0.3, 4), "label": "speed of the drop", "unit": "m/s", "dp": 1},
-         {"t0": cut("measure"), "t1": round(cut("takeaway") - 0.3, 4), "label": "speed of the drop", "unit": "m/s", "dp": 1}]
+SPINE = [{"t0": _M0, "t1": round(cut("whoa") - 0.3, 4), "label": "speed", "unit": "m/s", "dp": 1},
+         {"t0": cut("measure"), "t1": round(cut("takeaway") - 0.3, 4), "label": "speed", "unit": "m/s", "dp": 1}]
 SPINE_AT = [[-1e9, [0.5, 0.262]]]
 
 
@@ -112,7 +103,7 @@ film = {
     "id": "reality-rulebook-s2e06", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "cue": {"cuts": CUTS, "arrows": ARROWS_W}, "spine": SPINE, "spineAt": SPINE_AT,
-    "model": {"g": G, "rhoW": RHO_W, "rhoA": RHO_A, "C": CD, "slow": SLOWF, "hstage": HSTAGE, "radii": RADII, "vT": VT}, "falls": FALLS, "pause": PAUSE, "split": SPLIT_T, "focus": FOCUS, "bun": [round(A("vo05:flatten") - 0.1, 4), cut("measure")], "ghostT": [round(A("vo02:Watch") - 0.2, 4), cut("tease")], "tagT": [round(A("vo06:tops"), 4), round(A("vo06:four-millimeter") + 0.3, 4), round(cut("takeaway") - 0.2, 4)],
+    "model": {"g": G, "rhoW": RHO_W, "rhoA": RHO_A, "C": CD, "slow": SLOWF, "hstage": HSTAGE, "radii": RADII, "vT": VT}, "falls": FALLS, "pause": PAUSE, "split": SPLIT_T, "focus": FOCUS, "bun": [round(A("vo05:flatten") - 0.1, 4), cut("measure")], "ghostT": [round(A("vo02:Watch") - 0.2, 4), cut("tease")], "tagT": [1e6, 1e6, 2e6],
     "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.655, "title": TITLE,
     "captions": [pg for pg in phrase_captions(f, max_chars=24, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "endCard": EC,
     "end": {"title": "That's season *two*", "follow": "Follow Reality Rulebook", "foot": "Loftus and Wordsworth, arXiv 2102.09570 (2021)."},

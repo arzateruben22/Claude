@@ -78,16 +78,6 @@
    "t1": 13.8667
   },
   {
-   "t": 4.183333,
-   "kind": "label",
-   "tag": "no-stick"
-  },
-  {
-   "t": 7.2,
-   "kind": "label",
-   "tag": "no-bend"
-  },
-  {
    "t": 8.8,
    "kind": "badge",
    "tag": "illus",
@@ -99,35 +89,10 @@
    "tag": "snap1"
   },
   {
-   "t": 11.466666666666667,
-   "kind": "label",
-   "tag": "pc1"
-  },
-  {
-   "t": 11.816666666666666,
-   "kind": "label",
-   "tag": "pc2"
-  },
-  {
-   "t": 12.166666666666666,
-   "kind": "label",
-   "tag": "pc3"
-  },
-  {
-   "t": 12.516666666666666,
-   "kind": "label",
-   "tag": "pc4"
-  },
-  {
    "t": 13.8667,
    "kind": "section",
    "id": "change",
    "t1": 20.2667
-  },
-  {
-   "t": 16.266666666666666,
-   "kind": "label",
-   "tag": "ch-1"
   },
   {
    "t": 16.4667,
@@ -138,16 +103,6 @@
    "t": 18.1667,
    "kind": "impact",
    "tag": "snap3"
-  },
-  {
-   "t": 18.26666666666667,
-   "kind": "label",
-   "tag": "ch-2"
-  },
-  {
-   "t": 18.966666666666665,
-   "kind": "label",
-   "tag": "ch-3"
   },
   {
    "t": 20.2667,
@@ -162,34 +117,14 @@
    "text": "Feynman asked why"
   },
   {
-   "t": 22.250033,
-   "kind": "label",
-   "tag": "wy-bent"
-  },
-  {
-   "t": 28.400000000000002,
-   "kind": "label",
-   "tag": "wy-1"
-  },
-  {
    "t": 28.6,
    "kind": "impact",
    "tag": "snap4"
   },
   {
-   "t": 29.0,
-   "kind": "label",
-   "tag": "wy-rip"
-  },
-  {
-   "t": 33.266666666666666,
-   "kind": "label",
-   "tag": "wy-2"
-  },
-  {
    "t": 37.050033,
    "kind": "counter.tick",
-   "tag": "spine:twist angle"
+   "tag": "spine:angle"
   },
   {
    "t": 37.0667,
@@ -198,29 +133,9 @@
    "t1": 50.4
   },
   {
-   "t": 41.5,
-   "kind": "label",
-   "tag": "wo-tw"
-  },
-  {
    "t": 46.3667,
    "kind": "impact",
    "tag": "snap5"
-  },
-  {
-   "t": 46.5,
-   "kind": "label",
-   "tag": "wo-2"
-  },
-  {
-   "t": 48.2,
-   "kind": "label",
-   "tag": "wo-shat"
-  },
-  {
-   "t": 48.2,
-   "kind": "label",
-   "tag": "wo-tw2"
   },
   {
    "t": 50.4,
@@ -245,19 +160,9 @@
    "tag": "snap6"
   },
   {
-   "t": 63.73333333333333,
-   "kind": "label",
-   "tag": "tk-shat"
-  },
-  {
    "t": 64.9333,
    "kind": "impact",
    "tag": "snap7"
-  },
-  {
-   "t": 65.23333333333333,
-   "kind": "label",
-   "tag": "tk-two"
   },
   {
    "t": 65.8667,

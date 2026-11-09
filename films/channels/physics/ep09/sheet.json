@@ -78,20 +78,10 @@
    "t1": 16.5333
   },
   {
-   "t": 4.183333,
-   "kind": "label",
-   "tag": "no-big"
-  },
-  {
    "t": 4.2833,
    "kind": "badge",
    "tag": "sim",
    "text": "2D model, drawn in 3-D"
-  },
-  {
-   "t": 4.283333,
-   "kind": "label",
-   "tag": "no-small"
   },
   {
    "t": 9.7667,
@@ -103,11 +93,6 @@
    "kind": "section",
    "id": "change",
    "t1": 22.6667
-  },
-  {
-   "t": 19.083333,
-   "kind": "label",
-   "tag": "ch-ball"
   },
   {
    "t": 21.6667,
@@ -126,11 +111,6 @@
    "tag": "tumble"
   },
   {
-   "t": 27.55,
-   "kind": "label",
-   "tag": "wy-gap"
-  },
-  {
    "t": 35.183333,
    "kind": "counter.show",
    "tag": "spine2"
@@ -142,25 +122,10 @@
    "t1": 49.6
   },
   {
-   "t": 41.183333,
-   "kind": "label",
-   "tag": "wo-up"
-  },
-  {
-   "t": 42.216667,
-   "kind": "label",
-   "tag": "wo-down"
-  },
-  {
    "t": 42.2333,
    "kind": "badge",
    "tag": "illus",
    "text": "Illustration, not a simulation"
-  },
-  {
-   "t": 44.883333,
-   "kind": "label",
-   "tag": "wo-light"
   },
   {
    "t": 49.5833,
@@ -183,11 +148,6 @@
    "t": 53.2667,
    "kind": "swell",
    "tag": "climb"
-  },
-  {
-   "t": 53.283333,
-   "kind": "label",
-   "tag": "ms-gh"
   },
   {
    "t": 58.9166,

@@ -90,35 +90,15 @@
    "tag": "spine"
   },
   {
-   "t": 6.216667,
-   "kind": "label",
-   "tag": "no-speed"
-  },
-  {
    "t": 10.1333,
    "kind": "reveal",
    "tag": "ghosts"
-  },
-  {
-   "t": 11.316667,
-   "kind": "label",
-   "tag": "no-steady"
   },
   {
    "t": 17.8667,
    "kind": "section",
    "id": "change",
    "t1": 26.9333
-  },
-  {
-   "t": 23.75,
-   "kind": "label",
-   "tag": "ch-weight"
-  },
-  {
-   "t": 24.383333,
-   "kind": "label",
-   "tag": "ch-drag"
   },
   {
    "t": 26.9333,
@@ -132,20 +112,10 @@
    "tag": "tie"
   },
   {
-   "t": 34.116667,
-   "kind": "label",
-   "tag": "wy-tie"
-  },
-  {
    "t": 39.7333,
    "kind": "section",
    "id": "whoa",
    "t1": 51.4667
-  },
-  {
-   "t": 41.816667,
-   "kind": "label",
-   "tag": "wo-small"
   },
   {
    "t": 47.8,
@@ -154,19 +124,9 @@
    "text": "Flattening: illustration"
   },
   {
-   "t": 47.916667,
-   "kind": "label",
-   "tag": "wo-big"
-  },
-  {
    "t": 49.9667,
    "kind": "contact",
    "tag": "split"
-  },
-  {
-   "t": 50.083333,
-   "kind": "label",
-   "tag": "wo-split"
   },
   {
    "t": 51.450033,

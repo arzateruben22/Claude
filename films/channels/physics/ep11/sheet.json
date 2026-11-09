@@ -89,16 +89,6 @@
    "text": "Pour slowed down"
   },
   {
-   "t": 4.483333,
-   "kind": "label",
-   "tag": "no-water"
-  },
-  {
-   "t": 6.35,
-   "kind": "label",
-   "tag": "no-air"
-  },
-  {
    "t": 13.85,
    "kind": "badge",
    "tag": "slow",
@@ -111,19 +101,9 @@
    "t1": 22.4
   },
   {
-   "t": 14.15,
-   "kind": "label",
-   "tag": "ch-pipe"
-  },
-  {
    "t": 19.4,
    "kind": "wave.on",
    "tag": "air"
-  },
-  {
-   "t": 19.416667,
-   "kind": "label",
-   "tag": "ch-move"
   },
   {
    "t": 22.4,
@@ -132,24 +112,9 @@
    "t1": 36.2667
   },
   {
-   "t": 22.883333,
-   "kind": "label",
-   "tag": "wy-long"
-  },
-  {
-   "t": 23.283333,
-   "kind": "label",
-   "tag": "wy-short"
-  },
-  {
    "t": 26.1333,
    "kind": "reveal",
    "tag": "flute"
-  },
-  {
-   "t": 26.45,
-   "kind": "label",
-   "tag": "wy-flute"
   },
   {
    "t": 30.45,

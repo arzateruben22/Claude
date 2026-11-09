@@ -126,7 +126,7 @@
   {
    "t0": 42.916633,
    "t1": 47.3666,
-   "label": "specks in the ring",
+   "label": "share in the ring",
    "unit": "%",
    "dp": 0,
    "lit": [
@@ -1167,125 +1167,7 @@
   19.983333,
   32.250033
  ],
- "labels": [
-  {
-   "id": "no-drop",
-   "text": "coffee drop",
-   "color": "ghost",
-   "t0": 3.916667,
-   "t1": 6.033333333333333,
-   "at": "edge",
-   "side": 1
-  },
-  {
-   "id": "no-ring",
-   "text": "dark ring",
-   "color": "energy",
-   "t0": 7.416667,
-   "t1": 9.5167,
-   "at": "edge",
-   "side": 1
-  },
-  {
-   "id": "fr-speck",
-   "text": "a speck",
-   "color": "motion",
-   "t0": 10.216667,
-   "t1": 14.350033,
-   "at": "speck",
-   "side": -1
-  },
-  {
-   "id": "ch-speck",
-   "text": "a speck",
-   "color": "motion",
-   "t0": 14.95,
-   "t1": 17.933333333333334,
-   "at": "speck",
-   "side": -1
-  },
-  {
-   "id": "ch-edge",
-   "text": "the edge",
-   "color": "ghost",
-   "t0": 18.683333,
-   "t1": 19.683332999999998,
-   "at": "edge",
-   "side": 1
-  },
-  {
-   "id": "wy-stuck",
-   "text": "edge stuck to the paper",
-   "color": "ghost",
-   "t0": 20.183333,
-   "t1": 23.099999999999998,
-   "at": "edgeHi",
-   "side": -1
-  },
-  {
-   "id": "wy-evap",
-   "text": "water evaporates here",
-   "color": "energy",
-   "t0": 23.216667,
-   "t1": 25.433333333333334,
-   "at": "evap",
-   "side": -1
-  },
-  {
-   "id": "wy-flow",
-   "text": "flow replaces it",
-   "color": "force",
-   "t0": 25.883333,
-   "t1": 29.333333333333336,
-   "at": "flow",
-   "side": -1
-  },
-  {
-   "id": "wo-pile",
-   "text": "specks pile up",
-   "color": "energy",
-   "t0": 37.616667,
-   "t1": 38.9,
-   "at": "edge",
-   "side": 1
-  },
-  {
-   "id": "pr-round",
-   "text": "round specks",
-   "color": "energy",
-   "t0": 39.316667,
-   "t1": 42.616633,
-   "at": "pairA",
-   "side": 1
-  },
-  {
-   "id": "pr-oval",
-   "text": "oval specks",
-   "color": "force",
-   "t0": 39.416667,
-   "t1": 42.616633,
-   "at": "pairB",
-   "side": 1
-  },
-  {
-   "id": "pr2-round",
-   "text": "round specks",
-   "color": "energy",
-   "t0": 48.016667,
-   "t1": 57.550033000000006,
-   "at": "pairA",
-   "side": 1
-  },
-  {
-   "id": "pr2-oval",
-   "text": "oval specks",
-   "color": "force",
-   "t0": 48.116667,
-   "t1": 57.550033000000006,
-   "at": "pairB",
-   "side": 1
-  }
- ],
+ "labels": [],
  "badges": [
   {
    "id": "tl",

@@ -73,11 +73,6 @@
    "t1": 14.6667
   },
   {
-   "t": 3.916667,
-   "kind": "label",
-   "tag": "no-drop"
-  },
-  {
    "t": 4.0166,
    "kind": "badge",
    "tag": "tl",
@@ -89,35 +84,15 @@
    "tag": "spill"
   },
   {
-   "t": 7.416667,
-   "kind": "label",
-   "tag": "no-ring"
-  },
-  {
    "t": 7.7,
    "kind": "reveal",
    "tag": "ring"
-  },
-  {
-   "t": 10.216667,
-   "kind": "label",
-   "tag": "fr-speck"
   },
   {
    "t": 14.6667,
    "kind": "section",
    "id": "change",
    "t1": 20.0
-  },
-  {
-   "t": 14.95,
-   "kind": "label",
-   "tag": "ch-speck"
-  },
-  {
-   "t": 18.683333,
-   "kind": "label",
-   "tag": "ch-edge"
   },
   {
    "t": 20.0,
@@ -132,24 +107,9 @@
    "text": "Height stretched 2×"
   },
   {
-   "t": 20.183333,
-   "kind": "label",
-   "tag": "wy-stuck"
-  },
-  {
    "t": 23.2,
    "kind": "heat",
    "tag": "evap"
-  },
-  {
-   "t": 23.216667,
-   "kind": "label",
-   "tag": "wy-evap"
-  },
-  {
-   "t": 25.883333,
-   "kind": "label",
-   "tag": "wy-flow"
   },
   {
    "t": 32.25,
@@ -169,25 +129,10 @@
    "tag": "pile"
   },
   {
-   "t": 37.616667,
-   "kind": "label",
-   "tag": "wo-pile"
-  },
-  {
    "t": 39.0,
    "kind": "badge",
    "tag": "oval",
    "text": "Lower drop: illustration"
-  },
-  {
-   "t": 39.316667,
-   "kind": "label",
-   "tag": "pr-round"
-  },
-  {
-   "t": 39.416667,
-   "kind": "label",
-   "tag": "pr-oval"
   },
   {
    "t": 42.9166,
@@ -228,16 +173,6 @@
    "kind": "section",
    "id": "takeaway",
    "t1": 57.8667
-  },
-  {
-   "t": 48.016667,
-   "kind": "label",
-   "tag": "pr2-round"
-  },
-  {
-   "t": 48.116667,
-   "kind": "label",
-   "tag": "pr2-oval"
   },
   {
    "t": 57.85,

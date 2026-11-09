@@ -117,14 +117,14 @@
   {
    "t0": 5.4012,
    "t1": 39.4166,
-   "label": "speed of the drop",
+   "label": "speed",
    "unit": "m/s",
    "dp": 1
   },
   {
    "t0": 51.450033,
    "t1": 60.75,
-   "label": "speed of the drop",
+   "label": "speed",
    "unit": "m/s",
    "dp": 1
   }
@@ -232,86 +232,11 @@
   67.450033
  ],
  "tagT": [
-  55.3667,
-  58.7,
-  60.85
+  1000000.0,
+  1000000.0,
+  2000000.0
  ],
- "labels": [
-  {
-   "id": "no-speed",
-   "text": "speeding up",
-   "color": "energy",
-   "t0": 6.216667,
-   "t1": 9.833333333333332,
-   "at": "lane-medium",
-   "side": 1
-  },
-  {
-   "id": "no-steady",
-   "text": "steady speed",
-   "color": "motion",
-   "t0": 11.316667,
-   "t1": 17.550033,
-   "at": "lane-medium",
-   "side": 1
-  },
-  {
-   "id": "ch-weight",
-   "text": "weight",
-   "color": "force",
-   "t0": 23.75,
-   "t1": 26.616633,
-   "at": "w-arrow",
-   "side": -1
-  },
-  {
-   "id": "ch-drag",
-   "text": "air push",
-   "color": "energy",
-   "t0": 24.383333,
-   "t1": 26.616633,
-   "at": "d-arrow",
-   "side": 1
-  },
-  {
-   "id": "wy-tie",
-   "text": "a tie",
-   "color": "ghost",
-   "t0": 34.116667,
-   "t1": 35.833333333333336,
-   "at": "lane-medium",
-   "side": 1
-  },
-  {
-   "id": "wo-small",
-   "text": "round",
-   "color": "ghost",
-   "t0": 41.816667,
-   "t1": 47.5,
-   "at": "lane-small",
-   "side": 1
-  },
-  {
-   "id": "wo-big",
-   "text": "a bun",
-   "color": "energy",
-   "t0": 47.916667,
-   "t1": 49.766666666666666,
-   "at": "big-top",
-   "side": -1,
-   "v": "above"
-  },
-  {
-   "id": "wo-split",
-   "text": "breaks apart",
-   "color": "force",
-   "t0": 50.083333,
-   "t1": 51.150033,
-   "at": "split",
-   "side": 1,
-   "v": "below"
-  }
- ],
+ "labels": [],
  "badges": [
   {
    "id": "slow",
