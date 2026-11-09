@@ -1,6 +1,6 @@
 {
- "compose_s": 6.8,
- "master_s": 9.4,
+ "compose_s": 6.9,
+ "master_s": 9.9,
  "master": {
   "gain_db": 1.78,
   "iterations": 2,
@@ -25,8 +25,8 @@
     "pass": true
    },
    "scale.jump": {
-    "n": 4,
-    "max_ms": 0.0,
+    "n": 6,
+    "max_ms": 26.0,
     "median_ms": 0.0,
     "slow": true,
     "pass": true
@@ -71,10 +71,10 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c2",
-    "show": 4.7333,
+    "tag": "c3",
+    "show": 8.1,
     "method": "shape",
-    "err_ms": -0.0
+    "err_ms": 0.0
    },
    {
     "kind": "label",
@@ -106,7 +106,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c5",
+    "tag": "c8",
     "show": 26.2333,
     "method": "shape",
     "err_ms": -0.0
@@ -119,6 +119,13 @@
     "err_ms": 0.0
    },
    {
+    "kind": "scale.jump",
+    "tag": "c10",
+    "show": 38.9,
+    "method": "shape",
+    "err_ms": 0.0
+   },
+   {
     "kind": "section",
     "tag": null,
     "show": 43.6667,
@@ -127,7 +134,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c7",
+    "tag": "c11",
     "show": 43.9667,
     "method": "shape",
     "err_ms": -0.0
@@ -138,6 +145,13 @@
     "show": 43.9667,
     "method": "shape",
     "err_ms": 52.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c12",
+    "show": 48.2333,
+    "method": "shape",
+    "err_ms": -26.0
    },
    {
     "kind": "label",
@@ -155,7 +169,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c9",
+    "tag": "c13",
     "show": 56.9333,
     "method": "shape",
     "err_ms": -0.0

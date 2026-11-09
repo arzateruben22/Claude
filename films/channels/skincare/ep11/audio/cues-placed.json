@@ -26,11 +26,11 @@
  },
  {
   "kind": "scale.jump",
-  "tag": "c2",
-  "t": 4.715,
-  "show": 4.7333,
-  "sound": 4.7333,
-  "place": 4.7148,
+  "tag": "c3",
+  "t": 8.075,
+  "show": 8.1,
+  "sound": 8.1,
+  "place": 8.0815,
   "anchor": 890,
   "voice": "swell",
   "gain": -19,
@@ -86,7 +86,7 @@
  },
  {
   "kind": "scale.jump",
-  "tag": "c5",
+  "tag": "c8",
   "t": 26.212,
   "show": 26.2333,
   "sound": 26.2333,
@@ -109,6 +109,18 @@
   "pan": 0.0
  },
  {
+  "kind": "scale.jump",
+  "tag": "c10",
+  "t": 38.897,
+  "show": 38.9,
+  "sound": 38.9,
+  "place": 38.8815,
+  "anchor": 890,
+  "voice": "swell",
+  "gain": -19,
+  "pan": 0.0
+ },
+ {
   "kind": "section",
   "tag": null,
   "t": 43.636,
@@ -122,7 +134,7 @@
  },
  {
   "kind": "scale.jump",
-  "tag": "c7",
+  "tag": "c11",
   "t": 43.936,
   "show": 43.9667,
   "sound": 43.9667,
@@ -142,6 +154,18 @@
   "anchor": 30668,
   "voice": "swell",
   "gain": -17,
+  "pan": 0.0
+ },
+ {
+  "kind": "scale.jump",
+  "tag": "c12",
+  "t": 48.211,
+  "show": 48.2333,
+  "sound": 48.2333,
+  "place": 48.2148,
+  "anchor": 890,
+  "voice": "swell",
+  "gain": -19,
   "pan": 0.0
  },
  {
@@ -170,7 +194,7 @@
  },
  {
   "kind": "scale.jump",
-  "tag": "c9",
+  "tag": "c13",
   "t": 56.92,
   "show": 56.9333,
   "sound": 56.9333,

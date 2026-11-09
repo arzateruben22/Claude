@@ -65,14 +65,14 @@
    "t1": 15.914
   },
   {
-   "t": 4.715,
-   "kind": "scale.jump",
-   "tag": "c2"
-  },
-  {
    "t": 4.865,
    "kind": "badge",
    "tag": "b0"
+  },
+  {
+   "t": 8.075,
+   "kind": "scale.jump",
+   "tag": "c3"
   },
   {
    "t": 9.51,
@@ -99,12 +99,17 @@
   {
    "t": 26.212,
    "kind": "scale.jump",
-   "tag": "c5"
+   "tag": "c8"
   },
   {
    "t": 31.267,
    "kind": "label",
    "tag": "l2"
+  },
+  {
+   "t": 38.897,
+   "kind": "scale.jump",
+   "tag": "c10"
   },
   {
    "t": 43.636,
@@ -115,13 +120,18 @@
   {
    "t": 43.936,
    "kind": "scale.jump",
-   "tag": "c7"
+   "tag": "c11"
   },
   {
    "t": 43.936,
    "kind": "swell",
    "tag": "whoa",
    "t1": 55.02
+  },
+  {
+   "t": 48.211,
+   "kind": "scale.jump",
+   "tag": "c12"
   },
   {
    "t": 53.051,
@@ -137,7 +147,7 @@
   {
    "t": 56.92,
    "kind": "scale.jump",
-   "tag": "c9"
+   "tag": "c13"
   },
   {
    "t": 64.124,
