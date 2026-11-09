@@ -2,7 +2,8 @@
 // series with the bibles' planned slate, episodes with their scripts and claims (as sources), and for every
 // delivered final (out/*-9x16.mp4) a version, three platform exports (YouTube's from out/*-9x16-youtube.mp4 when
 // there is one) and planned publications.
-// Idempotent: re-running updates in place and never duplicates episodes, versions or publications.
+// Idempotent: re-running updates in place and never duplicates episodes, versions or publications. An episode whose
+// video was cleared after posting keeps all of its records; its text (title, captions, sources) still updates.
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
@@ -102,7 +103,9 @@ export async function importEpisodes(d = db()) {
       let [ep] = await d.select().from(S.episodes).where(and(eq(S.episodes.channelId, ch.id), eq(S.episodes.number, n)));
       if (!ep) ep = await createEpisode(d, { channelId: ch.id, title, seriesId: se.id, seriesOrder: order, number: n, state, filmsPath: exists ? rel(dir) : null });
       const question = info?.vo[0]?.split("?")[0] ? info.vo[0].split("?")[0] + "?" : ep.question;
-      const advance = ["idea", "research", "outline", "script"].includes(ep.state) ? state : ep.state;   // never move an episode backwards
+      // a video erased from the server after posting (src/domain/media-cleanup.ts): its .mp4 is missing on purpose
+      const cleared = !!ep.videoClearedAt;
+      const advance = !cleared && ["idea", "research", "outline", "script"].includes(ep.state) ? state : ep.state;   // never move an episode backwards
       await d.update(S.episodes).set({
         title: film?.title?.title ? plain(film.title.title) : title, question, seasonId: season[0].id, seriesId: se.id, seriesOrder: order,
         script: info ? info.vo.join("\n\n") : ep.script, storyboard: info ? info.beats : ep.storyboard, durationS: film?.dur ?? ep.durationS,
@@ -119,6 +122,8 @@ export async function importEpisodes(d = db()) {
             retrievedAt: c.accessed ?? "", verifiedVia: c.verified_via ?? "", status: c.status === "ok" ? "ok" : "unresolved", uncertainty: c.note ?? "" });
         }
       }
+      // cleared: the missing .mp4 is expected, not an error; its version, exports and publications stay exactly as they are
+      if (cleared) { report.push(`${slug} ep${n}: video cleared after posting (records kept)`); continue; }
       if (!out) { report.push(`${slug} ep${n}: ${state}`); continue; }
       const file = path.join(dir, "out", out), hash = sha256File(file);
       const existing = await d.select().from(S.versions).where(and(eq(S.versions.episodeId, ep.id), eq(S.versions.sha256, hash)));

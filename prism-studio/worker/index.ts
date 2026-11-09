@@ -1,14 +1,17 @@
 // Prism Studio worker: claims jobs from the Postgres queue (fair per channel, leased, heartbeated), runs them,
 // and does the periodic housekeeping: recover expired leases, move missed uploads, queue due analytics pulls, and
-// notify the owner's devices (upload due, a scheduled publish that needs them, an empty Instagram slot).
+// notify the owner's devices (upload due, a scheduled publish that needs them, an empty Instagram slot), and queue
+// erasing the videos of episodes posted everywhere (cleanup_uploaded_media, at most hourly).
 // Run alongside the web app: `npm run worker`. Stops cleanly on SIGINT/SIGTERM (the current job finishes).
 import os from "node:os";
+import path from "node:path";
 import { db, pool } from "../src/db/client";
 import { claim, complete, fail, heartbeat, markCancelled, recoverExpired } from "../src/domain/jobs";
 import { rescheduleMissed } from "../src/domain/schedule";
 import { enqueueDuePublishes } from "../src/domain/publish";
 import { enqueueDuePulls } from "../src/domain/api-analytics";
 import { notifyDue, prunePushEvents } from "../src/domain/push";
+import { enqueueVideoClear, VIDEO_CLEAR_JOB, videoClearBlocker } from "../src/domain/media-cleanup";
 import { audit, DomainError } from "../src/domain/core";
 import { eq } from "drizzle-orm";
 import * as S from "../src/db/schema";
@@ -17,11 +20,15 @@ import { loadEnv } from "../scripts/env";
 loadEnv();
 
 const ID = `${os.hostname()}:${process.pid}`;
+const FILMS_ROOT = path.resolve(process.env.FILMS_REPO_ROOT || "..");
+// A worker that must not erase videos (a films checkout, a read-only mirror) never claims the cleanup job
+let clearBlocked: string | null = videoClearBlocker(FILMS_ROOT);
 let stopping = false;
 for (const sig of ["SIGINT", "SIGTERM"] as const) process.on(sig, () => { stopping = true; console.log(`[worker] ${sig}: finishing the current job, then stopping`); });
 
 async function runOne(): Promise<boolean> {
-  const job = await claim(db(), ID, { types: Object.keys(HANDLERS), perChannel: 1 });
+  const types = Object.keys(HANDLERS).filter((t) => t !== VIDEO_CLEAR_JOB || !clearBlocked);
+  const job = await claim(db(), ID, { types, perChannel: 1 });
   if (!job) return false;
   console.log(`[worker] ${job.type} ${job.id.slice(0, 8)} (attempt ${job.attempts}/${job.maxAttempts})`);
   const beat = async (p: number, msg: string) => !(await heartbeat(db(), job.id, ID, p, msg));   // false = cancel requested
@@ -66,6 +73,10 @@ async function housekeeping() {
   const pulls = await enqueueDuePulls(db());
   if (pulls) console.log(`[worker] queued ${pulls} analytics pull${pulls > 1 ? "s" : ""}`);
   await prunePushEvents(db());
+  // posted everywhere 3+ days ago: queue erasing those videos from the server (at most once an hour, only when due)
+  clearBlocked = videoClearBlocker(FILMS_ROOT);
+  const clears = clearBlocked ? false : await enqueueVideoClear(db(), FILMS_ROOT);
+  if (clears) console.log("[worker] queued cleanup of posted episodes' videos");
   if (recovered || moved || pulls) await audit(db(), "worker", "housekeeping", "jobs", "", { recovered, moved, pulls });
 }
 

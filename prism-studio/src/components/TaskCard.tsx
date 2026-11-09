@@ -14,6 +14,7 @@ import { HandOff } from "./HandOff";
 import { Icon } from "./Icon";
 import { PostFields } from "./PostFields";
 import { groupOf, UploadedControl } from "./UploadedControl";
+import { VideoCleared } from "./VideoCleared";
 
 const when = (t: UploadTask, tz: string) => (t.p.scheduledFor ? formatLocal(t.p.scheduledFor, tz, { weekday: "short", hour: "numeric", minute: "2-digit" }) : "Not scheduled");
 
@@ -27,6 +28,7 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
   const base = `${channel.slug}-${no}-${dest.platform}`;
   const ready = isReady(t);
   const cover = coverOf(t), thumb = dest.platform === "youtube" ? thumbOf(t) : null;
+  const cleared = !!e.videoClearedAt;   // erased from the server after posting (an upload undone later): no video here
   return (
     <article id={`task-${p.id}`} data-task className="card stack" style={topicStyle(channel)}>
       <div className="row spread top">
@@ -56,7 +58,7 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
           <div className="grid2 desk-media">
             {version ? (
               <div className="player-wrap">
-                <video className="player" controls preload="none" playsInline poster={cover ? mediaUrl(cover) : undefined} src={mediaUrl(x.filePath)} style={{ maxHeight: 420 }} />
+                {cleared ? <VideoCleared /> : <video className="player" controls preload="none" playsInline poster={cover ? mediaUrl(cover) : undefined} src={mediaUrl(x.filePath)} style={{ maxHeight: 420 }} />}
               </div>
             ) : null}
             <div className="stack-sm">
@@ -65,18 +67,20 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
                 {cover ? <a className="btn quiet small" href={mediaUrl(cover, `${base}-cover.jpg`)} download={`${base}-cover.jpg`}><Icon name="download" size={16} /> Cover .jpg</a> : null}
                 {thumb ? <a className="btn quiet small" href={mediaUrl(thumb, `${base}-thumb.jpg`)} download={`${base}-thumb.jpg`}><Icon name="download" size={16} /> Thumbnail 16:9</a> : null}
                 {dest.platform === "youtube" && e.captionsSrt ? <a className="btn quiet small" href={`/api/srt/${e.id}`} download><Icon name="download" size={16} /> Captions .srt</a> : null}
-                <a className="btn quiet small" href={`/api/bundle/${p.id}`} download><Icon name="download" size={16} /> Bundle .zip</a>
+                {!cleared ? <a className="btn quiet small" href={`/api/bundle/${p.id}`} download><Icon name="download" size={16} /> Bundle .zip</a> : null}
               </div>
             </div>
           </div>
           {stopExternal ? <div className="notice bad">External actions are stopped in Settings.</div> : (
             <>
-              {connected ? (
+              {connected && !cleared ? (
                 <ActionForm action={publishNow} className="row" submit={`Publish now to ${handle || platform}`} submitClass="btn" confirm={`Upload this exact video and text to ${handle || platform} now?`}>
                   <input type="hidden" name="publicationId" value={p.id} />
                 </ActionForm>
               ) : null}
-              <HandOff publicationId={p.id} videoUrl={mediaUrl(x.filePath)} fileName={`${base}.mp4`} uploadUrl={uploadUrlFor(dest)} platformLabel={platform} shareText={composePostText(x)} />
+              {cleared
+                ? <div className="row"><a className="btn ghost" href={uploadUrlFor(dest)} target="_blank" rel="noopener noreferrer"><Icon name="external" size={18} /> Open {platform}</a></div>
+                : <HandOff publicationId={p.id} videoUrl={mediaUrl(x.filePath)} fileName={`${base}.mp4`} uploadUrl={uploadUrlFor(dest)} platformLabel={platform} shareText={composePostText(x)} />}
             </>
           )}
           <UploadedControl episodeId={e.id} group={groupOf(dest.platform)} tz={tz} pubs={[p]} />

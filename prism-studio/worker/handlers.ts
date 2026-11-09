@@ -13,6 +13,7 @@ import { lessonBuildPlan, recordLessonBuild } from "../src/domain/lessons";
 import { finalizeProcessing, publishPublication } from "../src/domain/publish";
 import { pullMetrics } from "../src/domain/api-analytics";
 import { DomainError } from "../src/domain/core";
+import { clearUploadedVideos } from "../src/domain/media-cleanup";
 import { importEpisodes } from "../scripts/import-episodes";
 
 export type Beat = (p: number, msg: string) => Promise<boolean>;   // false = cancel requested
@@ -65,6 +66,15 @@ export const HANDLERS: Record<string, Handler> = {
   async pull_metrics(job, beat, d) {
     await beat(0.1, "asking the platform for this post's numbers");
     return { ...(await pullMetrics(d, String(job.payload.publicationId))) };
+  },
+  // Free server disk: erase the .mp4 files of episodes posted everywhere at least 3 days ago (src/domain/media-cleanup.ts).
+  // Housekeeping queues it at most once an hour, only when something is due. A file that could not be erased fails the
+  // job (retried with backoff); the episodes that were cleared stay recorded.
+  async cleanup_uploaded_media(_, beat, d) {
+    await beat(0.1, "erasing posted episodes' videos");
+    const r = await clearUploadedVideos(d, path.resolve(process.env.FILMS_REPO_ROOT || ".."));
+    if (r.failed.length) throw new Error(`could not erase ${r.failed.length} file${r.failed.length > 1 ? "s" : ""}: ${r.failed.slice(0, 3).join("; ")}`);
+    return { ...r };
   },
   async reschedule_missed(_, __, d) {
     return { moved: await rescheduleMissed(d) };

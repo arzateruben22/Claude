@@ -1,6 +1,8 @@
 // Media push for a hosted studio (docs/LAUNCH-CHECKLIST.md), used by scripts/push-media.mjs from a cloud session.
 // Token only (MEDIA_PUSH_TOKEN, sent as a bearer token); off when the token isn't set. No session cookie needed.
-//   GET                      the files already here: { files: { "<films/channels/...>": [size, mtimeMs] } }
+//   GET                      the files already here: { files: { "<films/channels/...>": [size, mtimeMs] } }, and the
+//                            episode folders whose video was cleared after posting: { cleared: ["films/channels/x/ep01"] }
+//                            (the push skips their .mp4 files, so an erased video is never sent again)
 //   PUT  ?path=films/...     write one file (streamed, then renamed into place); x-mtime keeps its modified time,
 //                            which the import compares (a cover or the 1440p version must be newer than the render)
 //   POST                     queue "import rendered episodes" for the worker
@@ -12,6 +14,7 @@ import { randomBytes } from "node:crypto";
 import { db } from "@/db/client";
 import { enqueue } from "@/domain/jobs";
 import { PUSH_MAX_BYTES, pushAuthorized, pushPath, pushPrefix } from "@/domain/media-push";
+import { clearedVideoDirs } from "@/domain/media-cleanup";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,7 +35,7 @@ export async function GET(req: Request) {
   if (!pushAuthorized(req.headers.get("authorization"))) return denied();
   const files: Record<string, [number, number]> = {};
   walk(path.join(ROOT(), "films", "channels"), "films/channels", files);
-  return json({ files });
+  return json({ files, cleared: await clearedVideoDirs(db()) });
 }
 
 export async function PUT(req: Request) {

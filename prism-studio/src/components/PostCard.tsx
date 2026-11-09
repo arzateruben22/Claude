@@ -15,6 +15,7 @@ import { HandOff } from "./HandOff";
 import { Icon } from "./Icon";
 import { PostFields } from "./PostFields";
 import { groupOf, UploadedControl } from "./UploadedControl";
+import { VideoCleared } from "./VideoCleared";
 
 const POSTED = ["owner_reported", "scheduled_on_platform", "verified_published"];
 
@@ -30,6 +31,7 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
   const thumb = dest.platform === "youtube" ? thumbOf(t) : null;
   const ready = isReady(t);
   const uploadUrl = uploadUrlFor(dest);
+  const cleared = !!e.videoClearedAt;   // erased from the server after posting: no video to download, share or publish
   return (
     <article className="post" style={topicStyle(channel)} id={p ? `post-${p.id}` : undefined}>
       <div className="post-cover">
@@ -67,12 +69,17 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
       {x && stopExternal ? <div className="notice bad post-actions">External actions are stopped in Settings.</div>
         : x && ready ? (
           <div className="post-actions">
-            {t.connected && p ? (
+            {t.connected && p && !cleared ? (
               <ActionForm action={publishNow} className="row" submit={`Publish now to ${handle || platform}`} submitClass="btn" confirm={`Upload this exact video and text to ${handle || platform} now?`}>
                 <input type="hidden" name="publicationId" value={p.id} />
               </ActionForm>
             ) : null}
-            {p ? (
+            {cleared ? (
+              <div className="stack-sm">
+                <VideoCleared />
+                <div className="row"><a className="btn ghost" href={uploadUrl} target="_blank" rel="noopener noreferrer"><Icon name="external" size={18} /> Open {platform}</a></div>
+              </div>
+            ) : p ? (
               <HandOff publicationId={p.id} videoUrl={mediaUrl(x.filePath)} fileName={`${base}${res}.mp4`} uploadUrl={uploadUrl} platformLabel={platform} shareText={composePostText(x)} />
             ) : (
               <div className="row">

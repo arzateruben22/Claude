@@ -544,6 +544,9 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .checklist li.warn { color: var(--warn); } .checklist li.warn::before { border-color: var(--warn); }
 .checklist li.plain::before { width: 4px; height: 4px; border: 0; border-radius: 50%; background: var(--text-3); transform: translateY(-2px); }
 .post-note { font-size: 13.5px; margin: 0; color: var(--text-2); }
+/* an episode whose video was erased from the server after posting (VideoCleared): said where the player or video
+   download would be */
+.cleared-note { font-size: 13.5px; margin: 0; color: var(--text-2); }
 .post-actions { display: grid; gap: var(--s3); padding-top: var(--s4); border-top: 1px solid var(--line); }
 .post-actions > p { margin: 0; }
 .post-report summary { font-size: 14px; }
@@ -825,6 +828,7 @@ a.budget-name:hover { text-decoration: underline; }
 .slide-media { background: #000; display: grid; place-items: center; min-height: 0; }
 .slide-video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
 .slide-empty { margin: 0; padding: var(--s5); }
+.slide-media .cleared-note { position: relative; z-index: 1; align-self: start; margin: var(--s3); padding: 8px 12px; background: rgba(8, 9, 12, .82); border-radius: var(--r-sm); }
 .slide-head { display: grid; gap: var(--s2); justify-items: start; }
 .slide-title { margin: 0; }
 .slide-title a { text-decoration: none; }

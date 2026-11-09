@@ -151,6 +151,9 @@ export const episodes = pgTable("episodes", {
   revisionNotes: text("revision_notes").notNull().default(""),
   durationS: real("duration_s"),
   filmsPath: text("films_path"),                     // films/channels/<x>/epNN for imported episodes
+  // when the worker erased this episode's .mp4 files from the server after it was posted everywhere
+  // (src/domain/media-cleanup.ts); the originals stay in the films repo. Null = the video is still here.
+  videoClearedAt: timestamp("video_cleared_at", { withTimezone: true }),
   tags: jsonb("tags").$type<Record<string, string>>().notNull().default({}),   // creative choices (hook, pace, style…)
   isDemo: boolean("is_demo").notNull().default(false),
   createdAt: created(),

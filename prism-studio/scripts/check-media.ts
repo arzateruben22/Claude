@@ -27,6 +27,9 @@ for (const c of chans) {
   const rows = await d.select({ e: S.episodes, v: S.versions }).from(S.versions).innerJoin(S.episodes, eq(S.episodes.id, S.versions.episodeId))
     .where(and(eq(S.episodes.channelId, c.id), eq(S.versions.superseded, false), eq(S.episodes.isDemo, false))).orderBy(asc(S.episodes.number));
   for (const { e, v } of rows) {
+    const name = `${c.name.replace(/ \(name TBD\)$/, "")} ${String(e.number).padStart(3, "0")} "${e.title}"`;
+    // erased from the server after posting (src/domain/media-cleanup.ts): a missing video is expected there
+    if (e.videoClearedAt) { ok++; console.log(`· ${name} · video cleared after posting (original in GitHub) · ${e.state}`); continue; }
     const xs = await d.select().from(S.platformExports).where(eq(S.platformExports.versionId, v.id));
     const line: string[] = [];
     const bad: string[] = [];
@@ -43,7 +46,6 @@ for (const c of chans) {
       line.push(`${p} ${dims}`);
     }
     if (!e.captionsSrt) bad.push("no captions");
-    const name = `${c.name.replace(/ \(name TBD\)$/, "")} ${String(e.number).padStart(3, "0")} "${e.title}"`;
     if (bad.length) problems.push(`${name}: ${bad.join("; ")}`); else ok++;
     console.log(`${bad.length ? "✗" : "✓"} ${name} · ${line.join(" · ")} · ${e.state}${bad.length ? ` · ${bad.join("; ")}` : ""}`);
   }

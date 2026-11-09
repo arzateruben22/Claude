@@ -50,6 +50,13 @@
       "when": 1794190134643,
       "tag": "0006_account_snapshots",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794256740303,
+      "tag": "0007_video_cleared",
+      "breakpoints": true
     }
   ]
 }

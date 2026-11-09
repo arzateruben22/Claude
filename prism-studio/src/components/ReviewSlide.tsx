@@ -2,7 +2,8 @@
 // thumb bar with the platform switches, the two Uploaded buttons, then the title, the chosen platform's text and the sources
 // below); on a desktop it is a card with the video beside the same parts. The switches are radio inputs and the
 // panels follow them in CSS (:has), so it works without JavaScript and in the static preview. The Uploaded buttons record the owner's manual posts
-// (markEpisodeUploaded): no approval step.
+// (markEpisodeUploaded): no approval step. Once the video was cleared from the server after posting, the poster and a
+// note stand where the player was.
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { episodeFull } from "@/lib/data";
@@ -12,6 +13,7 @@ import { UploadedControl, groupOf } from "./UploadedControl";
 import { CopyButton } from "./CopyButton";
 import { composePostText } from "@/domain/metadata";
 import { Icon } from "./Icon";
+import { VideoCleared } from "./VideoCleared";
 
 type Full = NonNullable<Awaited<ReturnType<typeof episodeFull>>>;
 const POSTED = ["owner_reported", "scheduled_on_platform", "verified_published"];
@@ -45,7 +47,9 @@ export function ReviewSlide({ full, tz, head, prev, next, position, back, source
       </div>
 
       <div className="slide-media">
-        {current
+        {current && ep.videoClearedAt
+          ? <>{current.posterPath ? <img className="slide-video" src={mediaUrl(current.posterPath)} alt="" decoding="async" /> : null}<VideoCleared /></>
+          : current
           ? <video className="slide-video" controls preload={preload} playsInline poster={current.posterPath ? mediaUrl(current.posterPath) : undefined} src={mediaUrl(current.videoPath)} />
           : <p className="slide-empty muted">No render yet{ep.filmsPath ? `: the film lives in ${ep.filmsPath}` : ""}.</p>}
       </div>

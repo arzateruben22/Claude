@@ -44,7 +44,9 @@ export default async function Episode({ params }: { params: Promise<{ id: string
   const dlBase = `${channel.slug}-${String(ep.number).padStart(3, "0")}`;
   const dlCover = current ? coverOf({ x: ytX, version: current }) : null;
   const dlThumb = current ? thumbOf({ x: ytX, version: current }) : null;
-  const dl1440 = ytX && current && ytX.filePath !== current.videoPath ? ytX.filePath : null;
+  // once the video was cleared from the server after posting (the player shows a note), only the files that stay are offered
+  const cleared = !!ep.videoClearedAt;
+  const dl1440 = !cleared && ytX && current && ytX.filePath !== current.videoPath ? ytX.filePath : null;
   return (
     <div style={topicStyle(channel)}>
       <div id="player">
@@ -62,7 +64,7 @@ export default async function Episode({ params }: { params: Promise<{ id: string
           </div>
           {current ? (
             <div className="row" aria-label="Downloads">
-              <a className="btn small" href={mediaUrl(current.videoPath, `${dlBase}-1080p.mp4`)} download><Icon name="download" size={16} /> Download 1080p</a>
+              {!cleared ? <a className="btn small" href={mediaUrl(current.videoPath, `${dlBase}-1080p.mp4`)} download><Icon name="download" size={16} /> Download 1080p</a> : null}
               {dl1440 ? <a className="btn ghost small" href={mediaUrl(dl1440, `${dlBase}-1440p.mp4`)} download>YouTube 1440p</a> : null}
               {dlCover ? <a className="btn ghost small" href={mediaUrl(dlCover, `${dlBase}-cover.jpg`)} download>Cover</a> : null}
               {dlThumb ? <a className="btn ghost small" href={mediaUrl(dlThumb, `${dlBase}-thumb.jpg`)} download>Thumbnail</a> : null}

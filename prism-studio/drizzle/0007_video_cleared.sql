@@ -1,0 +1,1 @@
+ALTER TABLE "episodes" ADD COLUMN "video_cleared_at" timestamp with time zone;

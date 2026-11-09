@@ -581,8 +581,9 @@ export async function libraryView() {
     const episodes = rows.filter((r) => r.e.channelId === c.id).map(({ e, v }) => {
       const cover = covers.find((x) => x.versionId === v.id)?.coverPath || v.posterPath || null;
       const ytFile = xs.find((x) => x.versionId === v.id && x.platform === "youtube")?.filePath;
-      const youtube = ytFile && ytFile !== v.videoPath ? { path: ytFile, fileName: resolutionName(ytFile, "1440p"), bytes: bytes(ytFile) } : null;   // the 1440p version
-      return { youtube,
+      const cleared = !!e.videoClearedAt;   // erased from the server after posting: cover, thumbnail and captions stay
+      const youtube = !cleared && ytFile && ytFile !== v.videoPath ? { path: ytFile, fileName: resolutionName(ytFile, "1440p"), bytes: bytes(ytFile) } : null;   // the 1440p version
+      return { youtube, cleared,
         id: e.id, number: e.number, title: e.title, isDemo: e.isDemo, hasSrt: !!e.captionsSrt, videoPath: v.videoPath, fileName: resolutionName(v.videoPath, "1080p"),
         durationS: v.durationS, width: v.width, height: v.height, bytes: bytes(v.videoPath), cover, small: smallCover(cover), thumb: sibling(cover, "-thumb.jpg"),
       };

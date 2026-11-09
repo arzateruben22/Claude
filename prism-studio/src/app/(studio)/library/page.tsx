@@ -6,6 +6,7 @@ import { libraryView } from "@/lib/data";
 import { mediaUrl } from "@/lib/media";
 import { topicStyle } from "@/lib/format";
 import { Icon } from "@/components/Icon";
+import { VideoCleared } from "@/components/VideoCleared";
 
 export const metadata: Metadata = { title: "Library" };
 
@@ -46,8 +47,9 @@ export default async function Library() {
                 <div className="lib-body">
                   <span className="kicker">No. {String(e.number).padStart(3, "0")} · {len(e.durationS)} · {mb(e.bytes)}{e.isDemo ? " · " : ""}{e.isDemo ? <span className="demo-tag">DEMO</span> : null}</span>
                   <h3>{e.title}</h3>
+                  {e.cleared ? <VideoCleared /> : null}
                   <div className="row">
-                    <a className="btn small" href={mediaUrl(e.videoPath, e.fileName)} download><Icon name="download" size={16} /> Download</a>
+                    {!e.cleared ? <a className="btn small" href={mediaUrl(e.videoPath, e.fileName)} download><Icon name="download" size={16} /> Download</a> : null}
                     {e.youtube ? <a className="btn ghost small" href={mediaUrl(e.youtube.path, e.youtube.fileName)} download title={`1440×2560, ${mb(e.youtube.bytes)}`}>YouTube 1440p</a> : null}
                     {e.cover ? <a className="btn ghost small" href={mediaUrl(e.cover, e.fileName.replace(/-1080p\.mp4$/, "-cover.jpg"))} download>Cover</a> : null}
                     {e.thumb ? <a className="btn ghost small" href={mediaUrl(e.thumb, e.fileName.replace(/-1080p\.mp4$/, "-thumb.jpg"))} download>Thumbnail</a> : null}
