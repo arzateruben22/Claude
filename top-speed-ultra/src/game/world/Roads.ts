@@ -150,34 +150,36 @@ export class Roads {
       crowded = true;
       if (rank(h.path) < rank(p)) outranked = true;
     }
-    const covered = (s: number, d: number, y: number) => {
-      if (!outranked) return false;
-      const a = p.at(s, d);
-      return net.covered(a.x, a.z, y, p, -0.25, true, LEVEL);
-    };
     // the same test for the surfaces, many points a row: one search a row for the better-ranked roads across it, then
     // each point projected onto those few (from where the row's centre falls on them)
     // Each row's roads are kept in flat lists shared by every chunk (ROW_P, ROW_S; row i's from rowFrom[i] to rowTo[i]),
     // so a search allocates nothing (chunks are built while driving)
     ROW_P.length = 0; ROW_S.length = 0;
     const rowFrom = new Int32Array(rows.length).fill(-1), rowTo = new Int32Array(rows.length), PRS = { s: 0, d: 0 }, AT = { x: 0, y: 0, z: 0, h: 0 };
-    const coveredOnRow = (i: number, s: number, d: number, y: number, margin: number) => {
-      if (!outranked) return false;
+    // the height of the better-ranked road this one is on at (s, d) on row i (from 2.5 m under it to `above` over it; the
+    // first found, or the highest), or NaN where there's none
+    const onRoadY = (i: number, s: number, d: number, y: number, margin: number, above = LEVEL, highest = false) => {
+      if (!outranked) return NaN;
       if (rowFrom[i] < 0) {
         rowFrom[i] = ROW_P.length;
         for (const h of net.near(rows[i].ax, rows[i].az, Math.max(p.paveR, -p.paveL) + 1.5, ROW_HITS)) if (h.path !== p && rank(h.path) < rank(p)) { ROW_P.push(h.path); ROW_S.push(h.s); }
         rowTo[i] = ROW_P.length;
       }
-      if (rowFrom[i] === rowTo[i]) return false;
+      if (rowFrom[i] === rowTo[i]) return NaN;
       const a = p.at(s, d, AT);
+      let best = NaN;
       for (let k = rowFrom[i]; k < rowTo[i]; k++) {
         const q = ROW_P[k], pr = q.project(a.x, a.z, ROW_S[k], PRS);
         if (pr.s < 0 || pr.s > q.len || pr.d < q.paveL - margin || pr.d > q.paveR + margin) continue;
-        if (!onTop(y, q.height(pr.s), LEVEL)) continue;
-        return true;
+        const qy = q.height(pr.s);
+        if (!onTop(y, qy, above)) continue;
+        if (!highest) return qy;
+        if (qy > y + 0.1) continue;     // (the highest of those under it, or about level with it)
+        if (!(qy <= best)) best = qy;
       }
-      return false;
+      return best;
     };
+    const coveredOnRow = (i: number, s: number, d: number, y: number, margin: number) => !isNaN(onRoadY(i, s, d, y, margin));
     // A surface across the road (points [d, lift] with the texture's u at each), less what a better-ranked road covers. A
     // quad covered at both sides, at both ends, goes; one covered nowhere stays; one the other road's edge runs through is
     // cut into strips about 0.6 m wide that go or stay on their own. (Quads went or stayed by their centre alone: a lane
@@ -193,7 +195,9 @@ export class Roads {
       const a = p.at(s, d);
       return !!net.pavedAt(a.x, a.z, y - GIVE_WAY, y - 0.3, p, margin) || ((d < p.paveL + 0.6 || d > p.paveR - 0.6) && !!net.pavedAt(a.x, a.z, y - 0.3, y + 0.3, p, margin));
     };
-    const surface = (prof: [number, number][], u: number[], v: (row: Row) => number, rowOk = (_i: number) => true, hangs = false) => {
+    // which of a surface's cells stay: the profile's quads, each cut into columns about 0.6 m wide, a row apart along the
+    // road (keep: 1 stays, 0 goes, 2 isn't drawn: rowOk), and each quad's state (0 stays, 1 goes, 2 is cut)
+    const cells = (prof: [number, number][], rowOk: (i: number) => boolean, hangs: boolean) => {
       const nq = prof.length - 1, memo = new Map<number, boolean>();
       const gone = (i: number, s: number, d: number, margin: number) => coveredOnRow(i, s, d, rows[i].y, margin) || (hangs && overRoad(s, d, rows[i].y, margin));
       const at = (i: number, q: number, k: number) => {
@@ -206,30 +210,181 @@ export class Roads {
         }
         return c;
       };
-      // per quad: 0 stays, 1 goes, 2 is cut
-      const state = (i: number, q: number) => {
-        let n = 0;
-        for (const r of [i, i + 1]) for (const k of [0, 1]) if (at(r, q, k)) n++;
-        return n === 0 ? 0 : n === 4 ? 1 : 2;
-      };
-      const whole = this.strip(rows, prof, (row, j) => [u[j], v(row)], (i, q) => rowOk(i) && state(i, q) === 0);
-      // the cut quads, as one strip of narrow columns (the others left out of it)
-      const fine: [number, number][] = [], fu: number[] = [], of: number[] = [];
+      const fine: [number, number][] = [], of: number[] = [];
       for (let q = 0; q < nq; q++) {
         const m = Math.max(1, Math.round((prof[q + 1][0] - prof[q][0]) / 0.6));
         for (let k = 0; k < m; k++) {
           const t = k / m;
-          fine.push([prof[q][0] + (prof[q + 1][0] - prof[q][0]) * t, prof[q][1] + (prof[q + 1][1] - prof[q][1]) * t]); fu.push(u[q] + (u[q + 1] - u[q]) * t); of.push(q);
+          fine.push([prof[q][0] + (prof[q + 1][0] - prof[q][0]) * t, prof[q][1] + (prof[q + 1][1] - prof[q][1]) * t]); of.push(q);
         }
       }
-      fine.push(prof[nq]); fu.push(u[nq]);
-      const cut = this.strip(rows, fine, (row, j) => [fu[j], v(row)], (i, j) => {
-        if (!rowOk(i) || state(i, of[j]) !== 2) return false;
-        const half = (fine[j + 1][0] - fine[j][0]) / 2;
-        return !gone(i, (rows[i].s + rows[i + 1].s) / 2, fine[j][0] + half, -(half + 0.05));
-      });
-      const parts = [whole, cut].filter(Boolean) as THREE.BufferGeometry[];
+      fine.push(prof[nq]);
+      const R = rows.length - 1, nf = fine.length - 1, state = new Uint8Array(R * nq), keep = new Uint8Array(R * nf);
+      for (let i = 0; i < R; i++) {
+        const ok = rowOk(i);
+        for (let q = 0; q < nq; q++) {
+          let n = 0;
+          if (ok) for (const r of [i, i + 1]) for (const k of [0, 1]) if (at(r, q, k)) n++;
+          state[i * nq + q] = n === 0 ? 0 : n === 4 ? 1 : 2;
+        }
+        for (let j = 0; j < nf; j++) {
+          const st = state[i * nq + of[j]];
+          if (!ok) { keep[i * nf + j] = 2; continue; }
+          if (st !== 2) { keep[i * nf + j] = st === 0 ? 1 : 0; continue; }
+          const half = (fine[j + 1][0] - fine[j][0]) / 2;
+          keep[i * nf + j] = gone(i, (rows[i].s + rows[i + 1].s) / 2, fine[j][0] + half, -(half + 0.05)) ? 0 : 1;
+        }
+      }
+      // A cut quad the other road's edge crosses once, at both rows and the same way round, is cut along that edge
+      // (found to 2 cm at each row, straight between): what stays is one piece with a straight side, not columns 0.6 m
+      // wide a row long (a staircase of them along the edge; under a deck's surface its soffit's columns lay 1.5 m down,
+      // a few centimetres over the road there, as grey steps past the edge). side[]: 1 where the left part goes, -1 the right, 0 not
+      // cut this way; edge[]: where it crosses, at row i and at row i + 1.
+      const side = new Int8Array(R * nq), edge = new Float32Array(R * nq * 2), N = 8, g = new Uint8Array(N + 1);
+      // where the other road's edge crosses quad q at row r: [-1 | 1 (which part goes), d] or null (not once, or nowhere)
+      const cross = (r: number, q: number): [number, number] | null => {
+        const d0 = prof[q][0], d1 = prof[q + 1][0], test = (d: number) => gone(r, rows[r].s, d, -0.25);
+        let n = 0;
+        for (let k = 0; k <= N; k++) { g[k] = test(d0 + ((d1 - d0) * k) / N) ? 1 : 0; if (k && g[k] !== g[k - 1]) n++; }
+        if (n === 0) return [g[0] ? 2 : 0, 0];
+        if (n > 1) return null;
+        let k = 0; while (g[k + 1] === g[k]) k++;
+        let a = d0 + ((d1 - d0) * k) / N, b = d0 + ((d1 - d0) * (k + 1)) / N;
+        for (let it = 0; it < 6; it++) { const m = (a + b) / 2; if ((test(m) ? 1 : 0) === g[0]) a = m; else b = m; }
+        return [g[0] ? 1 : -1, (a + b) / 2];
+      };
+      for (let i = 0; i < R; i++) for (let q = 0; q < nq; q++) {
+        if (state[i * nq + q] !== 2) continue;
+        const A = cross(i, q), B = cross(i + 1, q);
+        if (!A || !B) continue;
+        const o = Math.abs(A[0]) === 1 ? A[0] : Math.abs(B[0]) === 1 ? B[0] : 0;
+        if (!o || (Math.abs(A[0]) === 1 && A[0] !== o) || (Math.abs(B[0]) === 1 && B[0] !== o)) continue;
+        // at a row it doesn't cross, all of it goes (2) or none (0): the edge is at that row's end
+        const at = (c: [number, number]) => (Math.abs(c[0]) === 1 ? c[1] : (c[0] === 2) === (o === 1) ? prof[q + 1][0] : prof[q][0]);
+        side[i * nq + q] = o; edge[(i * nq + q) * 2] = at(A); edge[(i * nq + q) * 2 + 1] = at(B);
+        const mid = (edge[(i * nq + q) * 2] + edge[(i * nq + q) * 2 + 1]) / 2;
+        for (let j = 0; j < nf; j++) if (of[j] === q) { const c = (fine[j][0] + fine[j + 1][0]) / 2; keep[i * nf + j] = (o === 1 ? c > mid : c < mid) ? 1 : 0; }
+      }
+      return { nq, nf, fine, of, state, keep, side, edge };
+    };
+    const surface = (prof: [number, number][], u: number[], v: (row: Row) => number, rowOk = (_i: number) => true, hangs = false) => {
+      const { nq, nf, fine, of, state, keep, side, edge } = cells(prof, rowOk, hangs);
+      const whole = this.strip(rows, prof, (row, j) => [u[j], v(row)], (i, q) => rowOk(i) && state[i * nq + q] === 0);
+      // the cut quads, as one strip of narrow columns (the others left out of it)
+      const fu: number[] = [];
+      for (let j = 0; j <= nf; j++) {
+        const q = j < nf ? of[j] : nq - 1, d0 = prof[q][0], d1 = prof[q + 1][0];
+        fu.push(j < nf ? u[q] + (u[q + 1] - u[q]) * (d1 > d0 ? (fine[j][0] - d0) / (d1 - d0) : 0) : u[nq]);
+      }
+      const cut = this.strip(rows, fine, (row, j) => [fu[j], v(row)], (i, j) => state[i * nq + of[j]] === 2 && !side[i * nq + of[j]] && keep[i * nf + j] === 1);
+      // the quads cut along the other road's edge: the part that stays, its corners at that edge and the quad's far side
+      const pos: number[] = [], uvs: number[] = [], idx: number[] = [];
+      for (let i = 0; i < rows.length - 1; i++) for (let q = 0; q < nq; q++) {
+        const o = side[i * nq + q];
+        if (!o) continue;
+        const base = pos.length / 3;
+        for (const r of [0, 1]) {
+          const row = rows[i + r], c = Math.cos(row.h), sn = Math.sin(row.h), e = edge[(i * nq + q) * 2 + r];
+          for (const d of o === 1 ? [e, prof[q + 1][0]] : [prof[q][0], e]) {
+            const t = prof[q + 1][0] > prof[q][0] ? (d - prof[q][0]) / (prof[q + 1][0] - prof[q][0]) : 0;
+            pos.push(row.x - c * d, row.y + prof[q][1] + (prof[q + 1][1] - prof[q][1]) * t, row.z + sn * d);
+            uvs.push(u[q] + (u[q + 1] - u[q]) * t, v(row));
+          }
+        }
+        idx.push(base, base + 1, base + 2, base + 1, base + 3, base + 2);
+      }
+      let edged: THREE.BufferGeometry | null = null;
+      if (idx.length) {
+        edged = new THREE.BufferGeometry();
+        edged.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+        edged.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+        edged.setIndex(idx); edged.computeVertexNormals();
+      }
+      const parts = [whole, cut, edged].filter(Boolean) as THREE.BufferGeometry[];
       return parts.length ? (parts.length > 1 ? mergeGeometries(parts)! : parts[0]) : null;
+    };
+    // The cut's sides. Where the surface is left out over a better-ranked road lower than it (by up to LEVEL), what stays
+    // of it stood over that road with its edge open: from a seat or a chase camera the eye ran in under it, to the ground
+    // under its deck (the CA-241 North 0.1 to 2.3 m over the CA-91 West where the 91's pavement reaches its lanes: dry
+    // grass under it showed through as a yellow saw-tooth in the lanes, and the deck's soffit lay as grey steps beside the
+    // car). Every edge between a cell that stays and one that goes, across the pavement and its shoulders as one, gets a
+    // side down to the road under the cell that went.
+    const cutSides = (all: ReturnType<typeof cells>, prof: [number, number][]) => {
+      const { nq, nf, fine, of, state, keep, side: cutAlong, edge } = all;
+      const pos: number[] = [], uv: number[] = [];
+      const R = rows.length - 1;
+      const lift = (q: number, d: number) => { const [d0, l0] = prof[q], [d1, l1] = prof[q + 1]; return d1 > d0 ? l0 + ((l1 - l0) * (d - d0)) / (d1 - d0) : l0; };
+      // is quad q's surface at offset d, t of the way along row segment i?
+      const keptIn = (i: number, q: number, d: number, t: number) => {
+        const st = state[i * nq + q];
+        if (st !== 2) return st === 0;
+        const o = cutAlong[i * nq + q];
+        if (o) { const e = edge[(i * nq + q) * 2] + (edge[(i * nq + q) * 2 + 1] - edge[(i * nq + q) * 2]) * t; return o === 1 ? d > e : d < e; }
+        let j = 0; while (j < nf - 1 && (of[j] !== q || fine[j + 1][0] <= d)) j++;
+        return keep[i * nf + j] === 1;
+      };
+      // the road under the part that went (the highest), at row r and offset d (a little into that part), or NaN
+      const below = (r: number, s: number, d: number) => onRoadY(r, s, d, rows[r].y, 0.3, LEVEL + 1, true);
+      const quad = (ax: number, az: number, ta: number, ya: number, bx: number, bz: number, tb: number, yb: number) => {
+        const len = Math.hypot(bx - ax, bz - az);
+        pos.push(ax, ta, az, bx, tb, bz, ax, ya, az, bx, tb, bz, bx, yb, bz, ax, ya, az);
+        uv.push(0, ta / 2, len / 2, tb / 2, 0, ya / 2, len / 2, tb / 2, len / 2, yb / 2, 0, ya / 2);
+      };
+      // along the road, from row ra at da to row rb at db, into is toward the part that went
+      const along = (ra: number, da: number, la: number, rb: number, db: number, lb: number, into: number) => {
+        const A = rows[ra], B = rows[rb], ta = A.y + la, tb = B.y + lb;
+        let ya = below(ra, A.s, da + into), yb = below(rb, B.s, db + into);
+        if (isNaN(ya) && isNaN(yb)) return;
+        if (isNaN(ya)) ya = yb; if (isNaN(yb)) yb = ya;
+        ya = Math.min(ya, ta); yb = Math.min(yb, tb);
+        if (ta - ya < 0.005 && tb - yb < 0.005) return;
+        quad(A.x - Math.cos(A.h) * da, A.z + Math.sin(A.h) * da, ta, ya, B.x - Math.cos(B.h) * db, B.z + Math.sin(B.h) * db, tb, yb);
+      };
+      for (let i = 0; i < R; i++) {
+        // a quad cut along the other road's edge: one side, along that edge
+        for (let q = 0; q < nq; q++) {
+          const o = cutAlong[i * nq + q];
+          if (!o) continue;
+          const ea = edge[(i * nq + q) * 2], eb = edge[(i * nq + q) * 2 + 1];
+          along(i, ea, lift(q, ea), i + 1, eb, lift(q, eb), -0.3 * o);
+        }
+        // between columns (and quads) side by side, where one stays and the other goes (the middle of a quad cut
+        // along an edge has none)
+        for (let j = 0; j + 1 < nf; j++) {
+          const qa = of[j], qb = of[j + 1], d = fine[j + 1][0];
+          if (qa === qb && cutAlong[i * nq + qa]) continue;
+          const ka = keptIn(i, qa, d - 1e-3, 0.5), kb = keptIn(i, qb, d + 1e-3, 0.5);
+          if (ka !== kb) along(i, d, fine[j + 1][1], i + 1, d, fine[j + 1][1], ka ? 0.3 : -0.3);
+        }
+      }
+      // across the road at each row between two segments, where the surface stays on one side of it and not the other
+      const cuts: number[] = [];
+      for (let r = 1; r < R; r++) {
+        const A = rows[r], c = Math.cos(A.h), sn = Math.sin(A.h);
+        for (let q = 0; q < nq; q++) {
+          if (state[(r - 1) * nq + q] === state[r * nq + q] && state[r * nq + q] !== 2) continue;
+          cuts.length = 0;
+          for (let j = 0; j <= nf; j++) if ((j < nf && of[j] === q) || (j > 0 && of[j - 1] === q)) cuts.push(fine[j][0]);
+          for (const i of [r - 1, r]) if (cutAlong[i * nq + q]) cuts.push(edge[(i * nq + q) * 2 + (i === r ? 0 : 1)]);
+          cuts.sort((x, y) => x - y);
+          for (let k = 0; k + 1 < cuts.length; k++) {
+            const d0 = cuts[k], d1 = cuts[k + 1];
+            if (d1 - d0 < 1e-3) continue;
+            const m = (d0 + d1) / 2, ka = keptIn(r - 1, q, m, 1), kb = keptIn(r, q, m, 0);
+            if (ka === kb) continue;
+            const ta = A.y + lift(q, d0), tb = A.y + lift(q, d1);
+            const y = below(r, ka ? Math.min(A.s + 0.3, rows[r + 1].s) : Math.max(A.s - 0.3, rows[r - 1].s), m);
+            if (isNaN(y) || y > Math.max(ta, tb) - 0.005) continue;
+            quad(A.x - c * d0, A.z + sn * d0, ta, Math.min(y, ta), A.x - c * d1, A.z + sn * d1, tb, Math.min(y, tb));
+          }
+        }
+      }
+      if (!pos.length) return null;
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+      g.computeVertexNormals();
+      return g;
     };
 
     // -------------------------------------------------------------- surfaces: lanes and shoulders
@@ -244,9 +399,35 @@ export class Roads {
     const shR = surface([[p.edgeR, 0], [p.paveR, 0], [p.paveR + 0.4, -0.05]], [0, 1.1, 2.2], (row) => vRow(row, 3));
     const sh = [shL, shR].filter(Boolean) as THREE.BufferGeometry[];
     if (sh.length) own(new THREE.Mesh(mergeGeometries(sh)!, this.m.shoulder));
+    // the pavement and its shoulders as one, cut as they were (the same quads, the same tests)
+    const across: [number, number][] = [[p.paveL - 0.4, -0.05], [p.paveL, 0], ...lanesProf.map((d) => [d, 0] as [number, number]), [p.paveR, 0], [p.paveR + 0.4, -0.05]];
+    const all = outranked ? cells(across, () => true, false) : null;
+    const sides = all && cutSides(all, across);
+    if (sides) { const mesh = own(new THREE.Mesh(sides, this.m.under)); mesh.userData.cutSide = true; }
+    // is this road's surface at (s, d), or did the cut leave it out?
+    const kept = (s: number, d: number) => {
+      if (!all) return true;
+      const { nq, nf, fine, state, keep, side, edge } = all, R = rows.length - 1;
+      if (d < across[0][0] || d > across[nq][0]) return true;
+      let i = Math.min(R - 1, Math.max(0, Math.floor((s - s0) / STEP)));
+      while (i > 0 && rows[i].s > s) i--;
+      while (i < R - 1 && rows[i + 1].s < s) i++;
+      let q = 0; while (q < nq - 1 && across[q + 1][0] <= d) q++;
+      const st = state[i * nq + q];
+      if (st !== 2) return st === 0;
+      const o = side[i * nq + q];
+      if (o) {
+        const t = (s - rows[i].s) / (rows[i + 1].s - rows[i].s || 1), e = edge[(i * nq + q) * 2] + (edge[(i * nq + q) * 2 + 1] - edge[(i * nq + q) * 2]) * t;
+        return o === 1 ? d > e : d < e;
+      }
+      let j = 0; while (j < nf - 1 && fine[j + 1][0] <= d) j++;
+      return keep[i * nf + j] === 1;
+    };
 
     // -------------------------------------------------------------- paint
-    const paint = this.markings(p, s0, s1, ox, oz, covered);
+    // only on what the cut left of the surface (it went or stayed by its own test, at its middle: lines lay over the
+    // other road where the surface under them had gone)
+    const paint = this.markings(p, s0, s1, ox, oz, kept);
     if (paint) own(new THREE.Mesh(paint, this.m.paint), true);
 
     // -------------------------------------------------------------- barriers: Jersey, or a block sound wall in town
@@ -416,12 +597,13 @@ export class Roads {
   }
 
   // dashed lane lines, a yellow line on the left edge, a white one on the right, raised reflectors in the gaps
-  private markings(p: Path, s0: number, s1: number, ox: number, oz: number, covered: (s: number, d: number, y: number) => boolean) {
+  private markings(p: Path, s0: number, s1: number, ox: number, oz: number, kept: (s: number, d: number) => boolean) {
     const pos: number[] = [], col: number[] = [], idx: number[] = [];
     const white = [0.93, 0.93, 0.9], yellow = [0.95, 0.74, 0.12];
     const quad = (sa: number, sb: number, d: number, w: number, c: number[], lift = 0.015) => {
       const a = p.at(sa, d), ax = a.x, ay = a.y, az = a.z, ah = a.h;
-      if (covered((sa + sb) / 2, d, ay)) return;
+      const e = Math.min(0.01, (sb - sa) / 4);
+      if (!(kept(sa + e, d - w / 2) && kept(sa + e, d + w / 2) && kept(sb - e, d - w / 2) && kept(sb - e, d + w / 2))) return;
       const b = p.at(sb, d);
       const base = pos.length / 3;
       for (const [x, y, z, h] of [[ax, ay, az, ah], [b.x, b.y, b.z, b.h]]) for (const e of [-w / 2, w / 2]) {
