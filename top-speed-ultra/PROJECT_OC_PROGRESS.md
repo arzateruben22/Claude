@@ -4,6 +4,125 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-09: Stoppage Time S3b built: interactions, relationships and conversations (uncommitted)
+
+S3b of `PROJECT_OC_SPORTS_BAR.md` is built on `claude/sports-bar` and not committed. Every number below was read from
+runs on this machine (headless Chromium with SwiftShader, one Playwright page at a time; the machine's load was 5 to
+23 with other workflows' browsers running). No phone was run.
+
+- **What's new.** People advertise (the 11 interactions, the acceptance formula, the expected deltas, the candidate
+  rule), the beats for guests and for you (your radial menu for a person with "More…" and the "i", Introduce and Buy a
+  round among them; guests' own rounds), talking groups of 2 to 6 across parties, relationships and memory with the
+  regulars' and your friendships kept on the device, people's cards and People here (pause menu), 141 lines, guests'
+  games (invites; pool on the table's physics on screen and statistical off it), and the hooks `rel(id?)` and
+  `interact(targetId, kind)`. Files: `src/onfoot/engine/sim/relations.ts`, `interactions.ts` (new), `groups.ts`,
+  `lines.ts`, `autonomy.ts`, `tokens.ts` (changed); `src/onfoot/venues/sportsbar/social.ts`, `npcgames.ts` (new),
+  `crowd.ts`, `life.ts`, `games.ts`, `hud.ts`, `main.ts` (one hook, `overheadAt`), `src/onfoot/sportsbar.html`; tests
+  `tests/sportsbar-social.mjs` and `tests/sportsbar-s3b.mjs` (new). `lot57/`, `people/`, `src/onfoot/main.ts` and
+  `src/onfoot/index.html` are unchanged. The as-built choices are under S3b in the plan.
+- **`npx tsc --noEmit` passes;** the page builds with `npx vite build --config src/onfoot/vite.sportsbar.config.ts`
+  (`dist/sportsbar/sportsbar.html`, 1,750 kB, 585 kB gzipped).
+- **Relationship maths, unit tests** (`node tests/sportsbar-social.mjs`, Node, against hand-worked numbers): 31 of 31.
+  Rapport and friendship updates (+6 from 0: 6 and 2.1; then +9: 14.64 and 5.2059; then -6 with k 0.15), the bounds,
+  rapport's fade (none in the first 5 quiet minutes, then 1.5 a minute to 0 and not past it), friendship's fade (0.5 a
+  device day; one that reached 45 never under 20), the ring of 8, highlights (the first meeting and the biggest two),
+  the level thresholds (0, 19, 20, 44, 45, 74, 75, -1, -29, -30) and Stranger, "Getting along" at 30, the 64-a-person
+  cap, persistence through JSON (friendship, memory and highlights kept, rapport back to 0, walk-ins not kept); the
+  acceptance formula (0.75 for strangers; 0.97 and 0.05 at the clamps), the memory term, the context terms, the plan's
+  expected-delta examples (Talk at p 0.8: social 10; Joke at p 0.7: fun 4.2, social 5.6), a Challenge's game deltas,
+  Introduce's start, a Talk advert scored by hand term by term (85.3464, the urgent +30 included), Joke's affinity by
+  playful, Excited +15 and the goal's +30 on Cheer together, groups of at most 6, one speaker at a time, the 141 lines
+  (S3a's 30 and 111 more; every interaction's kind; 10 remembering, 4 by your state; none offers a bet or says LIVE).
+  S3a's `tests/sportsbar-crowd.mjs` and `tests/sportsbar-sim.mjs` still pass (the worked "Urgent needs" arithmetic and
+  the blocklist).
+- **Page checks** (`node tests/sportsbar-s3b.mjs`; Low 844 x 390 at Saturday 21:00, week 43, `seed(1)` unless named),
+  all passed on the final runs (`tests/out/sportsbar/sportsbar-s3b-checks.json`; logs `tests/out/sportsbar/logs/s3b-*.log`):
+  - **People advertise.** Over a 20 sim-minute fast-forward, 1,048 decisions: at most 8 people and 43 adverts in any
+    (21 objects, 26 people's; the caps 8, 89, 41 and 48), 1,047 with people in them, 165 chose an interaction. The last
+    300 decisions' 2,748 person adverts (challenge, talk, joke, team, goodbye, introduce, high-five): every expected
+    delta and needs term equals the test's own working from the logged p and the plan's table. 26 accepted Talks and
+    Joins (groups of 2, 3 and 4), every one leaving both in one group. Guests' own interactions in the run: 182, of 10
+    kinds (challenge, round, joke, talk, goodbye, cheer, high-five, toast, introduce, team).
+  - **Conversations** (rendered frames at `door`, `tv-east` and `overhead`, 36 frames): 144 group samples, never two
+    speakers, nobody in two groups; listeners faced the speaker in 170 of 174 (98%), all bodies by the head (inside,
+    everyone built is a mesh, so no card was a listener). On the final build (a visitor now stands in the circle
+    nearest the person they came to, rather than nearest where they came from): 151 of 199 (76%).
+  - **Each interaction end to end through `interact()`** (forced accepted or not; rapport and friendship by the
+    plan's updates, both people's needs by the table, the memory, the caption and the beat in the log): Talk accepted
+    (0 to 6; you in their group; the reply chips: warm 6 to 7.92, a quip to a guest not playful 7.92 to 6.0256) and not
+    (0 to -3); Joke (6.0256 to 14.6641), Cheer together within 8 s of a goal (to 19.1753), High-five after a goal for a
+    team you share (to 26.1526), Toast holding drinks (0 to 7); Buy a round for a group of 3 (you and two): 80 to 68
+    house tokens, a second within 10 minutes not offered, brought after 113 sim s, offered again after 10.7 sim
+    minutes; Introduce (Peter and Alan start at 9.865 = 10 + 0.3 min(16.74, -0.45), +5 each with you); Ask about their
+    team (+4; the card shows "Mesa Quail"); Console (0 to 8; "My team lost" -12 to -6); Challenge (pool on pool-1, your
+    opponent Peter, not the house); Say goodbye (+2, you out of the group). Introduce ran with `force` (its second
+    person farther than 8 m from you); Console's setup sets the guest's team as just lost (`npcTeamLost`), as a seen
+    final whistle does.
+  - **Cards and lists:** Peter's menu "Talk · Joke · Introduce… · Challenge · pool" and the "i"; People here sorted by
+    friendship (Peter Friendly 21.9, Natalie 5.3, Ryan 2.8, Ray 2.4, Alan 1.3).
+  - **Sparks and puffs** in the HUD layer: 3 shown over heads; the frame 108 calls and 168.0k triangles before and with
+    them.
+  - **Persistence across a reload:** Tina (r19), friendship 6.5573 before and 6.5569 after (saved to 3 decimals, 19 s
+    of the per-day fade), 21 pairs loaded, rapport 18.25 to 0 (this visit's), 4 memories and 2 highlights kept, her team
+    still known.
+  - **Guests' games:** pool-1 with you 2.3 m away on the physics: 13 shots in 2 sim minutes, all on the physics, the
+    largest energy rise in a shot 0. pool-2 off screen (you 18 m away, looking away): 6 statistical turns of 15.5 to 27.6
+    s, 1 ball potted (groups stripes and solids, 7 and 6 left); walking up, the physics took over and the 14 object
+    balls left were laid out (15 less 1), left 7 and 6 as before, the closest two 0.095 m apart (2r 0.056). Over 20 sim
+    minutes: 8 invites (2 accepted, 6 dropped), 18 matches started (by Challenge and invites), 4 ended with their
+    results.
+  - **Budgets, S3a's run again** (21 poses: the five at 844 x 390 and `door` and `overhead` at 390 x 844, at Low, HD and
+    Ultra in turn on one page, after a 30 sim-minute fast-forward; the caps 36, 70 and 100 reached; every item model at
+    its cap; 1 to 9 groups talking and 5 or 6 guests' matches at every pose), all inside their rows:
+    - Low (pass / frame, calls and triangles): `door` 108/171.8k and 107/167.5k; `tv-east` 115/172.3k; `stall`
+      119/209.5k; `patio` 85/134.3k; `overhead` 111/165.9k; portrait `door` 105/169.4k, `overhead` 110/163.7k (rows
+      118/203.9k inside, 139/244.3k outside, 118/197.9k overhead; frame 150/250k).
+    - HD: `door` 147/363.9k, frame 200/481.4k, sun 41/134.7k; `tv-east` 154/361.0k, 206/483.4k; `stall` 135/338.6k,
+      221/605.9k, sun 74/284.7k; `patio` 109/224.1k, 190/489.2k; `overhead` 194/497.8k, 278/759.9k, sun 72/279.5k;
+      portrait `door` 140/353.4k, `overhead` 192/499.2k, 276/764.3k.
+    - Ultra: `door` 192/701.1k, frame 586/1,907.9k, sun 91/438.2k, pool spots 58/49.2k and 57/47.9k; `tv-east`
+      247/960.2k, 666/2,303.4k; `stall` 185/856.8k, 454/2,296.4k, sun 92/616.0k (pool spots frozen, 684); `patio`
+      163/724.2k, 410/2,015.4k; `overhead` 247/989.9k, 690/2,629.2k, sun 94/620.9k, pool spots 53/12.3k and 54/47.9k;
+      portrait `door` 185/690.3k, `overhead` 248/990.0k, 706/2,664.1k, sun 97/620.9k.
+    - No NPC at LOD 0 and no casting mesh other than a `lod1` at any pose. A batch of up to 6 decisions took 0.52 to 0.53
+      ms on average (S3a's repair: 0.41 ms; the people's adverts are the difference; the desktop target 0.4 ms); the
+      crowd's step 0.2 to 1.4 ms.
+- **On the final build** (after the budget run: the approach spot nearest the target, the `playHere` and `stageGames`
+  hooks freeing their spots, the `overheadAt` hook, the reply chips' label on its own line, the card's friendship
+  number; none of these is in the draw path): smoke, adverts (1,045 decisions, at most 8 people and 43 adverts; 2,858
+  person adverts all matching; 23 accepted Talks and Joins all both in one group), talk (above), interactions (all 11,
+  the card, People here, the sparks), persist, games and the shots passed again (`s3b-final-2.log`, `s3b-final-3.log`),
+  and Low's seven budget poses again, all inside their rows (`door` 108/169.3k, frame 107/165.1k; `tv-east` 115/173.4k;
+  `stall` 119/209.5k; `patio` 85/132.7k; `overhead` 111/166.9k; portrait 105/167.8k and 110/167.3k;
+  `s3b-final-4.log`), a batch of decisions 0.46 ms on average. The groups talking are recorded at each pose: 1 or 2 at
+  the first five and none at the two portrait poses, after `crowdAt('outside')` had moved walk-ins out of their
+  parties for `stall` and `patio`; 5 or 6 guests' matches at every pose.
+- **The earlier phases' checks on this build:** S3a's checks, staff, reactions, clock, fillers, spares and switch
+  groups 30 of 30 (`s3b-regress-s3a.log`; S3a's Join now gives your group's keys and party as before); S2b's checks
+  14 of 14 and controls 7 of 7 (`s3b-regress-s2b-2.log`, `s3b-regress-s2b.log`; S2b's `playHere` hook now frees its
+  spot of a guests' match first, as it skips the walk, and `stageGames` the three it stages); S2a's checks 22 of 22
+  (`s3b-regress-s2a-2.log`) and save 2 of 2. S2a's "order food at a table" check now takes a high-top nobody holds
+  (high-top 2 first): with S3b's guests moving between tables, a party of four held all of high-top 2, and the page
+  rightly toasted "Order food: no free place right now".
+- **How the groups run over time** (a probe, Low, Saturday 21:00 from `seed(1)`, every 5 sim minutes to 40): 3 to 5
+  groups with two or more present (sizes 2 to 4, a circle or two among them), 8 to 12 of the 31 guests in games, 3 to
+  9 standing or sitting in a group; leaving: 42 wrap-ups, 14 to games, 12 decisions elsewhere by 40 minutes.
+- **Seen in the runs (recorded, not marks):** guests take to the games: on a Saturday 21:00 room every game spot was in
+  use within 3 sim minutes of loading, and 5 or 6 matches were on at every budget pose (at Low 10 to 12 of 31 guests).
+  The Challenge advert's expected deltas carry its game's (fun 40 x p for pool), so it outbids most adverts for the
+  competitive.
+- **Screenshots** (HD, 1280 x 720, on the final build, each looked at): `tests/out/sportsbar/s3b-conversation-radial-1280x720-final.png`
+  (you in a group of three by the standing floor, the menu on Ramon: Talk, Joke, Buy a round · 16 tokens, Challenge ·
+  darts, Say goodbye and the "i"; Marisol's line and your two reply chips, "Reply · 1" over each), `s3b-card-1280x720-final.png`
+  (Marisol: Acquaintance, Regular, mood Fine and social, the friendship bar, "Friendship 2 of 100 · team: ask them",
+  "You got talking with Marisol"), `s3b-round-1280x720-final.png` (the toast "Round for 4 · 16 house tokens (no cash
+  value) · on its way" and Marisol's "Oh, you're a legend. Thanks."), `s3b-toast-1280x720-final.png` ("To a late winner
+  and a long night."; you holding a tamarindo agua fresca), `s3b-npc-pool-overhead-1280x720-final.png` (the overhead
+  camera 9 m over pool table 1: Marisol and Ramon's match with the balls spread on the cloth and a player bent over the
+  table; table 2 beside it). The first set, without `-final`, was the same scenes before the chips' label and the
+  closer overhead camera (the overhead one showed the whole room, the match too small to read).
+- **Left open:** guests' darts and shuffleboard on the physics (O35, S4); the murmur (no audio on either page).
+
 ## 2026-11-09: Stoppage Time S3a committed (the crowd, staff, fillers and how people are drawn)
 
 S3a, as repaired after review (the entry below), was kept by the follow-up review and is committed on

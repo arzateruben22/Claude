@@ -184,7 +184,9 @@ if (want('checks')) {
     return `${steps * 6} sim s to the hand-over (stages ${[...seen].join(' > ')}); you at frame (${pos.u}, ${pos.v}); thirst ${t0.toFixed(1)} -> ${n.thirst.toFixed(1)} in 2.5 min, sips left ${held.left} -> ${h2.left}; no new mesh`;
   });
   await check('order food at a table: a server comes, the food arrives, eating raises hunger', async () => {
-    const u = await H(page, `window.__onfoot.use('high-top-2', 'order-food', 'wings')`);
+    // (S3b: guests move between tables now, so the check takes a high-top whose four stools nobody holds, high-top 2 first)
+    const ht = await H(page, `(() => { const r = window.__onfoot.catalogue().reservations; for (const k of [2, 1, 3, 4, 5, 6]) if (!r.some((x) => x.slot.startsWith('high-top ' + k + ' '))) return 'high-top-' + k; return 'high-top-2'; })()`);
+    const u = await H(page, `window.__onfoot.use('${ht}', 'order-food', 'wings')`);
     const stages = [], dists = []; let food = null, k = 0;
     for (; k < 48 && !food; k++) {
       await H(page, 'window.__onfoot.fastForward(0.25)');

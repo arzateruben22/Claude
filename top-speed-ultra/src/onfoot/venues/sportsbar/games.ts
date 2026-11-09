@@ -15,11 +15,11 @@ import type { WalkGrid } from '../../engine/walkgrid';
 import type { Person } from '../../people';
 import type { HeldItems } from '../../engine/sim/held';
 import type { ClipLayer } from '../../engine/sim/clips';
-import { PoolGame, POOL, HEAD, rack, candidates, groupOf, Ball, POCKETS, clearPath } from '../../engine/sim/pool';
-import { DartsGame, swayInto, bedPoint, scoreAt } from '../../engine/sim/darts';
+import { PoolGame, POOL, HEAD, rack, candidates, groupOf, Ball, POCKETS, clearPath, statTurn, layOut } from '../../engine/sim/pool';
+import { DartsGame, swayInto, bedPoint, scoreAt, START as START_301 } from '../../engine/sim/darts';
 import { ShuffleGame, SHUFFLE, speedFor, zoneOf } from '../../engine/sim/shuffle';
 import type { GameKind } from '../../engine/sim/games';
-import { hash32, mulberry } from '../../engine/sim/rng';
+import { hash32, mulberry, gauss } from '../../engine/sim/rng';
 import { POOL_TABLES, DART_BOARDS } from './layout';
 import { RADIUS } from '../../engine/walkgrid';
 import type { BarPlayer } from './player';
@@ -35,6 +35,35 @@ export interface GamesCtx {
   competitive: () => number; energy: () => number;
   tell: (text: string, s?: number) => void;
   result: (o: GameOutcome) => void;
+  /** the sim clock, in sim minutes (the guests' matches' logs) */
+  simMin: () => number;
+}
+/** your opponent in a game: the house player (Rocío), or, after an accepted Challenge (S3b), a guest. Anything that
+ *  walks to a place on the walk grid and has a body the clips can play on (a guest's body can be a card's, null) */
+export interface Opp { p: Person | null; x: number; z: number; walking: boolean; walkTo(t: P2, yaw: number | null, done?: () => void): void; home(): void }
+/** S3b: one side of a match between two guests */
+export interface NpcSide { opp: Opp; name: string; competitive: number }
+/** S3b: a pool match between two guests on a table: on the physics while it's on screen or within 15 m of you, otherwise
+ *  resolved statistically ("Games nobody is watching"); the balls left are laid out when it comes back on screen */
+export interface NpcPool {
+  game: PoolGame; sides: [NpcSide, NpcSide]; mode: 'physics' | 'stat';
+  plan: { angle: number; speed: number } | null; wait: number; statT: number; seed: number;
+  log: { t: number; mode: 'physics' | 'stat'; side: number; potted: number[]; scratch: boolean; seconds?: number }[];
+  lays: { t: number; left: number[]; onTable: number; groups: (string | null)[] }[];
+  onEnd: (winner: number, close: boolean, note: string) => void;
+}
+/** S3b: a guests' darts match (301, straight out, bust over; or one guest's practice) or shuffleboard match (first to
+ *  15) on a spot: on the spot's physics while it's on screen or within 15 m of you (the house's throw model, each
+ *  side's competitiveness, the pieces drawn), resolved statistically otherwise (each turn's or frame's score drawn from
+ *  the thrower's skill); it changes mode only between turns (darts) or frames (shuffleboard) */
+export interface NpcThrows {
+  sides: NpcSide[]; solo: boolean; mode: 'physics' | 'stat'; seed: number;
+  /** the physics' step: walking to the line, lining up, the pause after a turn */
+  phase: 'walk' | 'aim' | 'hold'; wait: number;
+  /** the statistics' clock to the next turn or frame */
+  statT: number;
+  log: { t: number; mode: 'physics' | 'stat'; side: number; scored: number; note: string }[];
+  onEnd: (winner: number, close: boolean, note: string) => void;
 }
 export interface GameOutcome { id: string; kind: GameKind; won: boolean; close: boolean; detail: string; potTwo?: boolean; landedThree?: boolean }
 const $ = (id: string) => document.getElementById(id);
@@ -44,6 +73,8 @@ const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 const BALL_HEX = [0xf4f1e8, 0xf2c230, 0x2a5fd0, 0xd13a2f, 0x6a2d8f, 0xf08c1a, 0x1f8a5a, 0x7a2430, 0x141414];
 const ballHex = (id: number) => (id === 0 ? BALL_HEX[0] : id <= 8 ? BALL_HEX[id] : BALL_HEX[id - 8]);
 const YOU_PUCK = 0xc3f23a, HOUSE_PUCK = 0xff6b4a, YOU_DART = 0xc3f23a, HOUSE_DART = 0xff6b4a;
+/** guests' pieces (S3b): cream and blue, apart from your lime and the house's coral */
+const GUEST_HEX = [0xf1ead8, 0x3f86d6];
 const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _s = new THREE.Vector3(), _p = new THREE.Vector3(), _d = new THREE.Vector3();
 const UP = new THREE.Vector3(0, 1, 0), _to = new THREE.Vector3();
 
@@ -91,6 +122,10 @@ abstract class Spot {
   up(_x: number, _y: number) { /* none */ }
   frame(_dt: number) { /* real-time touches */ }
   abandon() { this.mine = false; this.houseBusy = false; this.bump(); }
+  /** S3b: a match between two guests is on here (the pool tables' own; the darts' and the shuffleboard's guests'
+   *  matches are npcgames.ts's, which sets this) */
+  npcOn = false;
+  get npcBusy() { return this.npcOn; }
   /** stand you somewhere for the game (the exact point if it's clear of every collider, else the nearest free cell) */
   standYou(at: P2, yaw: number) {
     const p = this.g.ctx.player;
@@ -101,13 +136,14 @@ abstract class Spot {
   finish(won: boolean, close: boolean, detail: string, extra: Partial<GameOutcome> = {}) {
     const o: GameOutcome = { id: this.id, kind: this.kind, won, close, detail, ...extra };
     this.outcome = o; this.mine = false; this.houseBusy = false; this.bump();
-    this.g.ctx.house().home();
+    this.g.opp().home();
     this.g.ctx.result(o);
+    this.g.vs = null;
   }
 }
 
 // ================================================================================================== pool
-class PoolSpot extends Spot {
+export class PoolSpot extends Spot {
   kind = 'pool' as const; label: string; start: P2; startFace: P2;
   game: PoolGame | null = null;
   private idle: Ball[];
@@ -140,20 +176,23 @@ class PoolSpot extends Spot {
     this.idle = rack(this.seed);
     for (const b of this.idle) { this.last[b.id * 2] = b.x; this.last[b.id * 2 + 1] = b.y; }
   }
-  get balls() { return this.game ? this.game.balls : this.idle; }
+  get balls() { return this.game ? this.game.balls : this.npc ? this.npc.game.balls : this.idle; }
   get playing() { return !!this.game && this.game.winner === null; }
+  /** S3b: a match between two guests on this table, or null */
+  npc: NpcPool | null = null;
+  private npcN = 0;
   /** table (x across, y along) to local (x, z), written into `out` (by default the spot's own scratch) */
   toW(x: number, y: number, out: P2 = this.w): P2 { out[0] = this.o[0] + x * this.ax[0] + y * this.ay[0]; out[1] = this.o[1] + x * this.ax[1] + y * this.ay[1]; return out; }
   toT(lx: number, lz: number): P2 { const dx = lx - this.o[0], dz = lz - this.o[1]; return [dx * this.ax[0] + dz * this.ax[1], dx * this.ay[0] + dz * this.ay[1]]; }
   yawOf(angle: number) { const c = Math.cos(angle), s = Math.sin(angle); return Math.atan2(c * this.ax[0] + s * this.ay[0], c * this.ax[1] + s * this.ay[1]); }
   begin() {
     this.seed = hash32(this.id, this.seed, 7);
-    this.game = new PoolGame([{ who: 'You', group: null, competitive: this.g.ctx.competitive() }, { who: HOUSE_NAME, group: null, competitive: HOUSE_C }], this.seed, 0);
+    this.game = new PoolGame([{ who: 'You', group: null, competitive: this.g.ctx.competitive() }, { who: this.g.oppName, group: null, competitive: this.g.oppC }], this.seed, 0);
     for (const b of this.game.balls) { this.last[b.id * 2] = b.x; this.last[b.id * 2 + 1] = b.y; this.rot[b.id].identity(); }
     this.mine = true; this.outcome = null; this.plan = null; this.hold = 0; this.placing = false; this.houseNext = null;
     this.aim.angle = Math.PI / 2; this.aim.power = 0;
     this.bump();
-    this.g.ctx.tell(`Pool with ${HOUSE_NAME}, the house player · you break`, 3);
+    this.g.ctx.tell(this.g.vs ? `Pool with ${this.g.oppName} · you break` : `Pool with ${this.g.oppName}, the house player · you break`, 3);
     this.yourSetup();
   }
   yourTurn() { const g = this.game; return !!g && this.mine && g.winner === null && g.state === 'aim' && g.turn === 0 && this.hold <= 0; }
@@ -161,8 +200,8 @@ class PoolSpot extends Spot {
   turnNow() { return this.game?.turn ?? -1; }
   focus(out: THREE.Vector3) { const c = this.game ? this.game.cue() : this.idle[0], w = this.toW(c.x, c.y); return out.set(w[0], this.Y, w[1]); }
   /** where a shooter stands for a shot along `angle`: behind the cue ball, just clear of the table */
-  standPoint(angle: number): [P2, number] {
-    const c = this.game!.cue(), dx = Math.cos(angle), dy = Math.sin(angle);
+  standPoint(angle: number, game: PoolGame = this.game!): [P2, number] {
+    const c = game.cue(), dx = Math.cos(angle), dy = Math.sin(angle);
     let d = 0.4;
     for (; d < 2.6; d += 0.05) { const x = c.x - dx * d, y = c.y - dy * d; if (Math.abs(x) > 0.62 + 0.33 || Math.abs(y) > 1.12 + 0.33) break; }
     return [this.toW(c.x - dx * d, c.y - dy * d, [0, 0]), this.yawOf(angle)];
@@ -178,9 +217,9 @@ class PoolSpot extends Spot {
     const [at, yaw] = this.standPoint(this.aim.angle); this.standYou(at, yaw);
     const p = this.g.ctx.person(); if (p) this.g.ctx.clips.play(p, 'pool-stance');
     // the house steps back to the other end and watches
-    const h = this.g.ctx.house(), [hx, hz] = this.g.ctx.F.fromFrame(this.cu - 0.95, this.cv + 1.4);
+    const h = this.g.opp(), [hx, hz] = this.g.ctx.F.fromFrame(this.cu - 0.95, this.cv + 1.4);
     if (Math.hypot(h.x - hx, h.z - hz) > 0.3) h.walkTo([hx, hz], Math.atan2(this.o[0] - hx, this.o[1] - hz));
-    this.g.ctx.clips.stop(h.p);
+    if (h.p) this.g.ctx.clips.stop(h.p);
     this.bump();
   }
   /** ball in hand: the cue ball to a point on the bed (the nearest free spot), still in hand; you stand behind it */
@@ -197,12 +236,13 @@ class PoolSpot extends Spot {
     if (who === 0) { this.aim.dragging = false; this.placing = false; }
     // the cue ball has its speed but hasn't moved yet: where it's struck from
     const c0 = g.cue(); this.strike.t = 0; this.strike.angle = angle; this.strike.who = who; this.strike.x = c0.x; this.strike.y = c0.y;
-    const body = who === 0 ? this.g.ctx.person() : this.g.ctx.house().p;
+    const body = who === 0 ? this.g.ctx.person() : this.g.opp().p;
     if (body) this.g.ctx.clips.play(body, 'pool-shot');
     this.bump();
     return true;
   }
   step(dS: number) {
+    if (!this.game && this.npc) { this.strike.t += dS; this.npcStep(dS); return; }
     const g = this.game; if (!g || g.winner !== null) return;
     this.strike.t += dS;
     if (this.hold > 0) {
@@ -219,7 +259,7 @@ class PoolSpot extends Spot {
   private after() {
     const g = this.game!, r = g.last!;
     this.bump();
-    const who = r.side === 0 ? 'You' : HOUSE_NAME;
+    const who = r.side === 0 ? 'You' : this.g.oppName;
     const objs = r.potted.filter((id) => id !== 0);
     let msg = objs.length ? `${who} pot${r.side === 0 ? '' : 's'} the ${objs.join(', ')}` : r.scratch ? '' : `${who}: nothing down`;
     if (r.note) msg = msg ? `${msg} · ${r.note}` : r.note;
@@ -245,19 +285,19 @@ class PoolSpot extends Spot {
   }
   /** the house's turn: plan (ball in hand placed first), walk behind the cue ball, settle into the stance, shoot */
   private houseTurn(dS: number) {
-    const g = this.game!, h = this.g.ctx.house();
+    const g = this.game!, h = this.g.opp();
     if (this.g.houseAt && this.g.houseAt !== this) return;
     this.g.houseAt = this; this.houseBusy = true;
     if (!this.plan) {
       const next = this.houseNext; this.houseNext = null;
-      this.plan = next === 'scratch' ? this.scratchPlan() : next ? next : g.plan(hash32(this.seed, g.shots), HOUSE_C);
-      if (!this.plan) { this.finish(true, false, `${HOUSE_NAME} had no shot`); return; }
+      this.plan = next === 'scratch' ? this.scratchPlan() : next ? next : g.plan(hash32(this.seed, g.shots), this.g.oppC);
+      if (!this.plan) { this.finish(true, false, `${this.g.oppName} had no shot`); return; }
       const [at, yaw] = this.standPoint(this.plan.angle);
       h.walkTo(at, yaw); this.houseWait = 1.4 + (g.shots % 3) * 0.4;
       return;
     }
     if (h.walking) return;
-    if (this.g.ctx.clips.playing(h.p) !== 'pool-stance' && this.houseWait > 0.5) this.g.ctx.clips.play(h.p, 'pool-stance');
+    if (h.p && this.g.ctx.clips.playing(h.p) !== 'pool-stance' && this.houseWait > 0.5) this.g.ctx.clips.play(h.p, 'pool-stance');
     this.houseWait -= dS;
     if (this.houseWait <= 0) { const p = this.plan; this.plan = null; this.fire(p.angle, p.speed, 1); this.g.houseAt = null; }
   }
@@ -379,11 +419,13 @@ class PoolSpot extends Spot {
       I.put('ball', _m, stripe ? 0xf4f1e8 : ballHex(b.id));
       if (stripe) I.put('band', _m, ballHex(b.id));
     }
+    const m = this.npc;
+    if (!this.game && m) { if (m.mode === 'physics' && m.game.winner === null) this.npcCue(I, m); return; }
     const g = this.game; if (!g || g.winner !== null) return;
     // the cue: behind the cue ball while aiming (yours pulled back with the power), through the strike, then away; not
     // while you're placing the cue ball in hand
     const c = g.cue();
-    const aiming = g.state === 'aim' && ((g.turn === 0 && this.mine && this.hold <= 0 && !this.placing) || (g.turn === 1 && !!this.plan && !this.g.ctx.house().walking));
+    const aiming = g.state === 'aim' && ((g.turn === 0 && this.mine && this.hold <= 0 && !this.placing) || (g.turn === 1 && !!this.plan && !this.g.opp().walking));
     const striking = this.strike.t < 0.35;
     if (aiming || striking) {
       const ang = aiming ? (g.turn === 0 ? this.aim.angle : this.plan!.angle) : this.strike.angle;
@@ -426,27 +468,150 @@ class PoolSpot extends Spot {
   scoreLine() {
     const g = this.game!;
     const side = (s: number) => { const gr = g.sides[s].group, n = g.leftN[s]; return gr ? `${gr}, ${n} left${n === 0 ? ' (on the 8)' : ''}` : 'open table'; };
-    const turn = g.winner !== null ? (g.winner === 0 ? 'You win' : `${HOUSE_NAME} wins`) : g.state === 'rolling' ? 'Rolling…' : g.turn === 0 ? 'Your shot' : `${HOUSE_NAME}'s shot`;
+    const turn = g.winner !== null ? (g.winner === 0 ? 'You win' : `${this.g.oppName} wins`) : g.state === 'rolling' ? 'Rolling…' : g.turn === 0 ? 'Your shot' : `${this.g.oppName}'s shot`;
     const hint = !this.yourTurn() ? '' : g.ballInHand
       ? (this.placing ? 'Ball in hand: drag to put the cue ball anywhere on the table · let go to set it' : 'Ball in hand: drag the cue ball to place it anywhere · then drag back from it to aim · release to shoot')
       : 'Drag back from the cue ball to aim and set the power · release to shoot';
-    return { title: `POOL · ${this.label.toUpperCase()}`, score: `You: ${side(0)} · ${HOUSE_NAME}: ${side(1)} · ${turn}`, hint };
+    return { title: `POOL · ${this.label.toUpperCase()}`, score: `You: ${side(0)} · ${this.g.oppName}: ${side(1)} · ${turn}`, hint };
   }
   state() {
     const g = this.game;
     return {
-      id: this.id, kind: this.kind, playing: this.playing, mine: this.mine, outcome: this.outcome,
+      id: this.id, kind: this.kind, playing: this.playing, mine: this.mine, outcome: this.outcome, npc: this.npcState(),
       balls: this.balls.map((b) => ({ id: b.id, on: b.on, x: +b.x.toFixed(4), y: +b.y.toFixed(4), moving: b.vx !== 0 || b.vy !== 0, group: groupOf(b.id) })),
       ...(g ? { state: g.state, turn: g.turn, sides: g.sides.map((s) => ({ ...s })), open: g.open, ballInHand: g.ballInHand, placing: this.placing, cue: [+g.cue().x.toFixed(4), +g.cue().y.toFixed(4)], strikeFrom: [+this.strike.x.toFixed(4), +this.strike.y.toFixed(4)], winner: g.winner, shots: g.shots, last: g.last, log: g.log.slice(-8), left: [g.left(0), g.left(1)], bestTurnPots: [...g.bestTurnPots], maxEnergyRise: g.maxEnergyRise, yourTurn: this.yourTurn(), aim: { angle: +((this.aim.angle * 180) / Math.PI).toFixed(2), power: +this.aim.power.toFixed(3) }, guide: this.yourTurn() ? (() => { const gd = this.guide(); return { len: gd.len, ghost: [...gd.ghost], ball: gd.ball, ob: gd.hasOb ? [...gd.ob] : null }; })() : null } : {}),
     };
   }
   abandon() { super.abandon(); if (this.game && this.game.winner === null) this.game.winner = -1 as never; this.plan = null; this.placing = false; this.houseNext = null; }
+  // ---- S3b: a match between two guests
+  /** two guests start a match here: side 0 breaks; `mode` as the caller sees the table now (on screen or not) */
+  npcBegin(sides: [NpcSide, NpcSide], mode: 'physics' | 'stat', onEnd: NpcPool['onEnd']) {
+    if (this.game || this.npc) return false;
+    const seed = hash32(this.id, 'npc', ++this.npcN);
+    const game = new PoolGame([{ who: sides[0].name, group: null, competitive: sides[0].competitive }, { who: sides[1].name, group: null, competitive: sides[1].competitive }], seed, 0);
+    this.npc = { game, sides, mode, plan: null, wait: 0, statT: 15 + 15 * mulberry(seed)(), seed, log: [], lays: [], onEnd };
+    this.npcOn = true;
+    for (const b of game.balls) { this.last[b.id * 2] = b.x; this.last[b.id * 2 + 1] = b.y; this.rot[b.id].identity(); }
+    // both come to the table: each to their end (the breaker walks behind the cue ball for the break on the physics)
+    this.npcAside(0); this.npcAside(1);
+    this.bump();
+    return true;
+  }
+  /** where the side that isn't shooting waits: the far end of the table, beside it */
+  private npcAside(side: number) {
+    const m = this.npc!, o = m.sides[side].opp, [x, z] = this.g.ctx.F.fromFrame(this.cu + (side ? -0.95 : 0.95), this.cv + (side ? 1.4 : -1.4));
+    if (Math.hypot(o.x - x, o.z - z) > 0.3 && !o.walking) o.walkTo([x, z], Math.atan2(this.o[0] - x, this.o[1] - z));
+  }
+  /** on screen or near you (physics) or not (statistics): from statistics the balls left are laid out first; to
+   *  statistics only between shots */
+  npcMode(mode: 'physics' | 'stat') {
+    const m = this.npc; if (!m || m.mode === mode || m.game.winner !== null) return;
+    if (mode === 'physics') { this.npcLayout(m); m.mode = 'physics'; m.plan = null; this.bump(); return; }
+    if (m.game.state !== 'aim') return;
+    m.mode = 'stat'; m.plan = null; m.statT = 15 + 15 * mulberry(hash32(m.seed, 'st', m.game.shots))();
+  }
+  /** the balls left laid out at seeded positions (no two within 2r, none in a pocket's mouth); the cue first */
+  private npcLayout(m: NpcPool) {
+    const g = m.game, ids = g.balls.filter((b) => b.on && b.id !== 0).map((b) => b.id), off = g.balls.filter((b) => !b.on && b.id !== 0);
+    const laid = layOut([0, ...ids], hash32(m.seed, 'lay', g.shots, m.lays.length));
+    g.balls = [...laid, ...off];
+    for (const b of g.balls) { this.last[b.id * 2] = b.x; this.last[b.id * 2 + 1] = b.y; }
+    g.leftN[0] = g.left(0); g.leftN[1] = g.left(1);
+    m.lays.push({ t: +g.t.toFixed(2), left: [g.left(0), g.left(1)], onTable: laid.length - 1, groups: [g.sides[0].group, g.sides[1].group] });
+  }
+  private npcStep(dS: number) {
+    const m = this.npc!, g = m.game;
+    if (g.winner !== null) return;
+    if (m.mode === 'stat') { m.statT -= dS; if (m.statT <= 0) this.npcStat(m); return; }
+    if (g.state === 'rolling') { if (g.step(dS)) this.npcAfter(m); return; }
+    const sh = m.sides[g.turn].opp;
+    if (!m.plan) {
+      const pl = g.plan(hash32(m.seed, g.shots), m.sides[g.turn].competitive);
+      m.plan = pl ? { angle: pl.angle, speed: pl.speed } : { angle: Math.atan2(-g.cue().y, -g.cue().x) || Math.PI / 2, speed: 1.2 };
+      const [at, yaw] = this.standPoint(m.plan.angle, g); sh.walkTo(at, yaw); m.wait = 1.4 + (g.shots % 3) * 0.4;
+      this.npcAside(1 - g.turn);
+      return;
+    }
+    if (sh.walking) return;
+    if (sh.p && this.g.ctx.clips.playing(sh.p) !== 'pool-stance' && m.wait > 0.5) this.g.ctx.clips.play(sh.p, 'pool-stance');
+    m.wait -= dS;
+    if (m.wait <= 0) {
+      const p = m.plan; m.plan = null;
+      if (!g.shoot(p.angle, p.speed)) return;
+      const c0 = g.cue(); this.strike.t = 0; this.strike.angle = p.angle; this.strike.who = 2 + g.turn; this.strike.x = c0.x; this.strike.y = c0.y;
+      if (sh.p) this.g.ctx.clips.play(sh.p, 'pool-shot');
+      this.bump();
+    }
+  }
+  private npcAfter(m: NpcPool) {
+    const g = m.game, r = g.last!;
+    m.log.push({ t: +g.t.toFixed(2), mode: 'physics', side: r.side, potted: r.potted.filter((id) => id !== 0), scratch: r.scratch });
+    if (m.log.length > 200) m.log.shift();
+    this.bump();
+    if (g.winner !== null) this.npcEnd(m);
+  }
+  /** an unwatched turn: 15 to 30 s; k balls potted, k geometric with p = 0.25 + 0.35 competitive; a shot on the 8
+   *  scratches with p 0.03 (engine/sim/pool.ts's statTurn); the table's groups taken by the first ball potted */
+  private npcStat(m: NpcPool) {
+    const g = m.game, s = g.turn, r = mulberry(hash32(m.seed, 'stat', g.shots, m.log.length));
+    const targets = g.targets(s), onEight = !g.open && targets.length === 1 && targets[0] === 8;
+    const t = statTurn(r, m.sides[s].competitive, onEight);
+    const potted: number[] = [];
+    const pot = (id: number) => { const b = g.balls.find((x) => x.id === id); if (b && b.on) { b.on = false; b.vx = b.vy = 0; potted.push(id); } };
+    let scratch = false;
+    if (onEight) { if (t.pots > 0 || t.scratchOnEight) { pot(8); scratch = t.scratchOnEight; g.winner = scratch ? 1 - s : s; g.overNote = scratch ? `${m.sides[s].name} scratched on the 8` : `${m.sides[s].name} sank the 8`; g.state = 'over'; } }
+    else if (t.pots > 0) {
+      if (g.open) { const first = targets[Math.floor(r() * targets.length)]; const gr = groupOf(first) as 'solids' | 'stripes'; g.sides[s].group = gr; g.sides[1 - s].group = gr === 'solids' ? 'stripes' : 'solids'; g.open = false; }
+      const own = g.targets(s).filter((id) => id !== 8);
+      for (let k = 0; k < Math.min(t.pots, own.length); k++) pot(own[k]);
+      // one success more than the group had left: the 8 goes down too (with its 3% scratch)
+      if (t.pots > own.length && own.length > 0) { const sc = r() < 0.03; pot(8); scratch = sc; g.winner = sc ? 1 - s : s; g.overNote = sc ? `${m.sides[s].name} scratched on the 8` : `${m.sides[s].name} sank the 8`; g.state = 'over'; }
+    }
+    g.shots++; g.breakShot = false; g.leftN[0] = g.left(0); g.leftN[1] = g.left(1);
+    if (g.winner === null) g.turn = 1 - s;
+    m.statT = t.seconds;
+    m.log.push({ t: +g.t.toFixed(2), mode: 'stat', side: s, potted, scratch, seconds: +t.seconds.toFixed(1) });
+    if (m.log.length > 200) m.log.shift();
+    this.bump();
+    if (g.winner !== null) this.npcEnd(m);
+  }
+  private npcEnd(m: NpcPool) {
+    const g = m.game, w = g.winner!;
+    this.npc = null; this.npcOn = false;
+    this.idle = g.balls.map((b) => ({ ...b, vx: 0, vy: 0 }));
+    this.bump();
+    m.onEnd(w, g.closeFor(1 - w), g.overNote);
+  }
+  /** the match ends without a result (a guest left, the bar closed) */
+  npcStop() { const m = this.npc; if (!m) return; this.npc = null; this.npcOn = false; this.idle = m.game.balls.map((b) => ({ ...b, vx: 0, vy: 0, on: b.on })); this.bump(); }
+  /** the guests' cue: behind the cue ball while the shooter lines up, through the strike */
+  private npcCue(I: HeldItems, m: NpcPool) {
+    const g = m.game, c = g.cue(), sh = m.sides[g.turn].opp;
+    const aiming = g.state === 'aim' && !!m.plan && !sh.walking, striking = this.strike.t < 0.35 && this.strike.who >= 2;
+    if (!aiming && !striking) return;
+    const ox = this.o[0], oz = this.o[1], ax = this.ax, ay = this.ay;
+    const ang = aiming ? m.plan!.angle : this.strike.angle, pull = aiming ? 0.1 : Math.max(-0.02, 0.12 - this.strike.t * 0.9);
+    const bx = aiming ? c.x : this.strike.x, by = aiming ? c.y : this.strike.y;
+    const dx = Math.cos(ang), dy = Math.sin(ang), wdx = dx * ax[0] + dy * ay[0], wdz = dx * ax[1] + dy * ay[1];
+    const e = (8 * Math.PI) / 180, ux = wdx * Math.cos(e), uy = -Math.sin(e), uz = wdz * Math.cos(e);
+    const back = POOL.R + 0.012 + pull, tx = ox + (bx - dx * back) * ax[0] + (by - dy * back) * ay[0], tz = oz + (bx - dx * back) * ax[1] + (by - dy * back) * ay[1];
+    const ty = this.Y + 0.004, Lc = 1.47;
+    _q.setFromUnitVectors(UP, _d.set(ux, uy, uz));
+    _m.compose(_p.set(tx - ux * Lc, ty - uy * Lc, tz - uz * Lc), _q, _s.set(2, Lc, 2));
+    I.put('stick', _m, 0xc8a070);
+  }
+  npcState() {
+    const m = this.npc; if (!m) return null; const g = m.game;
+    return { mode: m.mode, sides: m.sides.map((x, i) => ({ name: x.name, competitive: +x.competitive.toFixed(3), group: g.sides[i].group, left: g.left(i) })), turn: g.turn, state: g.state, shots: g.shots, winner: g.winner, onTable: g.balls.filter((b) => b.on).length, balls: g.balls.filter((b) => b.on).map((b) => ({ id: b.id, x: +b.x.toFixed(3), y: +b.y.toFixed(3), moving: b.vx !== 0 || b.vy !== 0 })), log: m.log.slice(-40), lays: m.lays.slice(), maxEnergyRise: g.maxEnergyRise };
+  }
 }
 
 // ================================================================================================== darts
 class DartsSpot extends Spot {
   kind = 'darts' as const; label: string; start: P2; startFace: P2 = [0, 1];
   game: DartsGame | null = null;
+  /** S3b: a guests' match (or one guest's practice) here, its game, or null */
+  npc: NpcThrows | null = null; npcGame: DartsGame | null = null;
   readonly c = new THREE.Vector3(); readonly n: P2; readonly right: P2;
   /** your aim on the board (metres), the hold, and the recent touches for the flick */
   aim = { x: 0, y: bedPoint(20, 3)[1], holding: false, t: 0, t0: 0, phase: 0, sx: 0, sy: 0, hist: [] as { t: number; x: number; y: number; ax: number; ay: number }[] };
@@ -479,15 +644,15 @@ class DartsSpot extends Spot {
   toW(x: number, y: number, out = _p) { return out.set(this.c.x + this.right[0] * x + this.n[0] * 0.004, this.c.y + y, this.c.z + this.right[1] * x + this.n[1] * 0.004); }
   begin() {
     this.seed = hash32(this.id, this.seed, 11);
-    this.game = new DartsGame([{ who: 'You', competitive: this.g.ctx.competitive() }, { who: HOUSE_NAME, competitive: HOUSE_C }], 0);
+    this.game = new DartsGame([{ who: 'You', competitive: this.g.ctx.competitive() }, { who: this.g.oppName, competitive: this.g.oppC }], 0);
     this.mine = true; this.outcome = null; this.flying.length = 0; this.hold = 0;
     this.bump();
-    this.g.ctx.tell(`Darts with ${HOUSE_NAME}: 301, straight out · you throw first`, 3);
+    this.g.ctx.tell(`Darts with ${this.g.oppName}: 301, straight out · you throw first`, 3);
     this.yourSetup();
   }
   private yourSetup() {
     this.standYou(this.ocheAt, this.ocheYaw); this.g.ctx.player.pitch = 0.05; this.aim.holding = false;
-    const h = this.g.ctx.house(), ha = this.houseAside;
+    const h = this.g.opp(), ha = this.houseAside;
     if (Math.hypot(h.x - ha[0], h.z - ha[1]) > 0.3) h.walkTo(ha, this.houseAsideYaw);
     this.bump();
   }
@@ -497,14 +662,15 @@ class DartsSpot extends Spot {
   focus(out: THREE.Vector3) { return this.toW(this.aim.x, this.aim.y, out); }
   /** a dart on its way: from the thrower's hand to (x, y) on the board, landing after `delay + dur` */
   private throwDart(side: number, to: P2, delay = 0.12) {
-    const body = side === 0 ? this.g.ctx.person() : this.g.ctx.house().p;
+    const body = side === 0 ? this.g.ctx.person() : this.g.opp().p;
     if (body) this.g.ctx.clips.play(body, 'dart-throw', { upper: false });
-    const thrower = side === 0 ? this.g.ctx.player : this.g.ctx.house();
+    const thrower = side === 0 ? this.g.ctx.player : this.g.opp();
     const from = new THREE.Vector3(thrower.x + this.right[0] * 0.22 - this.n[0] * 0.25, 1.72, thrower.z + this.right[1] * 0.22 - this.n[1] * 0.25);
     this.flying.push({ from, to, t: 0, dur: 0.32, side, delay });
     this.bump();
   }
   step(dS: number) {
+    if (!this.game && this.npc) { this.npcStep(dS); return; }
     const g = this.game; if (!g || g.winner !== null) return;
     for (let i = this.flying.length - 1; i >= 0; i--) {
       // the throw's wind-up, then the flight; a long step (a fast-forward's second) carries its remainder over
@@ -532,13 +698,13 @@ class DartsSpot extends Spot {
     const g = this.game!; if (g.turn !== side) return;
     const res = g.land(to[0], to[1], g.thrown.length);
     this.bump();
-    const who = side === 0 ? 'You' : HOUSE_NAME;
+    const who = side === 0 ? 'You' : this.g.oppName;
     this.g.ctx.tell(`${who}: ${res.hit.label === 'Miss' ? 'off the board' : res.hit.label} · ${res.hit.score}${res.bust ? ' · bust' : ''} · ${res.won ? 'checked out!' : `${res.left} to go`}`, 2);
-    if (res.won) { const won = side === 0; this.finish(won, !won && g.closeFor(0), won ? 'You checked out' : `${HOUSE_NAME} checked out`); return; }
+    if (res.won) { const won = side === 0; this.finish(won, !won && g.closeFor(0), won ? 'You checked out' : `${this.g.oppName} checked out`); return; }
     if (res.turnOver) { this.hold = 1.1; this.holdFor = side; }
   }
   private houseTurn(dS: number) {
-    const g = this.game!, h = this.g.ctx.house();
+    const g = this.game!, h = this.g.opp();
     if (this.g.houseAt && this.g.houseAt !== this) return;
     this.g.houseAt = this; this.houseBusy = true;
     const at = this.ocheAt;
@@ -546,7 +712,7 @@ class DartsSpot extends Spot {
     if (h.walking) return;
     this.houseWait -= dS;
     if (this.houseWait > 0) return;
-    const t = g.houseThrow(this.seed, HOUSE_C);
+    const t = g.houseThrow(this.seed, this.g.oppC);
     this.throwDart(1, t.at);
     this.houseWait = 1.2;
     if (g.dart >= 2) { this.g.houseAt = null; }
@@ -615,14 +781,15 @@ class DartsSpot extends Spot {
     return { ok: true, to: [+to[0].toFixed(4), +to[1].toFixed(4)], expect: scoreAt(to[0], to[1]), result: res };
   }
   draw(I: HeldItems) {
-    const g = this.game; if (!g) return;
+    const g = this.game ?? (this.npc && this.npc.mode === 'physics' ? this.npcGame : null); if (!g) return;
+    const guests = !this.game;
     // darts in the board: the tip at the hit, the barrel and flight standing out toward the oche, a little up
     const L = 0.14, ux = this.n[0] * 0.985, uy = 0.17, uz = this.n[1] * 0.985;
     for (const d of g.board) {
       const p = this.toW(d.x, d.y);
       _q.setFromUnitVectors(UP, _d.set(-ux, -uy, -uz).normalize());
       _m.compose(_p.set(p.x + ux * L, p.y + uy * L, p.z + uz * L), _q, _s.set(0.9, L, 0.9));
-      I.put('stick', _m, d.side === 0 ? YOU_DART : HOUSE_DART);
+      I.put('stick', _m, guests ? GUEST_HEX[d.side] : d.side === 0 ? YOU_DART : HOUSE_DART);
     }
     for (const f of this.flying) {
       if (f.delay > 0) continue;
@@ -631,8 +798,104 @@ class DartsSpot extends Spot {
       _d.set(to.x - f.from.x, to.y - f.from.y + Math.cos(k * Math.PI) * 0.37, to.z - f.from.z).normalize();
       _q.setFromUnitVectors(UP, _d);
       _m.compose(_p.set(x - _d.x * L, y - _d.y * L, z - _d.z * L), _q, _s.set(0.9, L, 0.9));
-      I.put('stick', _m, f.side === 0 ? YOU_DART : HOUSE_DART);
+      I.put('stick', _m, f.side >= 2 ? GUEST_HEX[f.side - 2] : f.side === 0 ? YOU_DART : HOUSE_DART);
     }
+  }
+  // ---- S3b: guests' darts
+  /** two guests (or one, practising) start here; `mode` as the caller sees the board now */
+  npcBegin(sides: NpcSide[], mode: 'physics' | 'stat', onEnd: NpcThrows['onEnd']) {
+    if (this.game || this.npc) return false;
+    const seed = hash32(this.id, 'npc', this.seed, sides.length, Math.floor(sides[0].competitive * 1000));
+    this.seed = hash32(seed, 1);
+    const solo = sides.length < 2;
+    this.npcGame = new DartsGame([{ who: sides[0].name, competitive: sides[0].competitive }, { who: (sides[1] ?? sides[0]).name, competitive: (sides[1] ?? sides[0]).competitive }], 0);
+    this.npc = { sides, solo, mode, seed, phase: 'walk', wait: 0, statT: 4, log: [], onEnd };
+    this.npcOn = true; this.flying.length = 0;
+    this.npcPlace();
+    this.bump();
+    return true;
+  }
+  /** the thrower to the oche, the other aside (on the house's waiting spot) */
+  private npcPlace() {
+    const m = this.npc!, g = this.npcGame!, s = m.solo ? 0 : g.turn, th = m.sides[s].opp;
+    if (Math.hypot(th.x - this.ocheAt[0], th.z - this.ocheAt[1]) > 0.15) th.walkTo(this.ocheAt, this.ocheYaw);
+    if (!m.solo) { const o = m.sides[1 - s].opp; if (Math.hypot(o.x - this.houseAside[0], o.z - this.houseAside[1]) > 0.3) o.walkTo(this.houseAside, this.houseAsideYaw); }
+    m.phase = 'walk'; m.wait = 0.9;
+  }
+  /** on screen or near you (physics) or not (statistics): only between turns (no dart in the air, none in the board) */
+  npcMode(mode: 'physics' | 'stat') {
+    const m = this.npc; if (!m || m.mode === mode) return;
+    if (this.flying.length || this.npcGame!.dart > 0 || m.phase === 'hold') return;
+    m.mode = mode; m.phase = 'walk'; m.wait = 0.9; m.statT = 4;
+    this.bump();
+  }
+  private npcStep(dS: number) {
+    const m = this.npc!, g = this.npcGame!;
+    if (g.winner !== null) return;
+    if (m.mode === 'stat') { m.statT -= dS; if (m.statT <= 0 && !m.sides.some((x) => x.opp.walking)) this.npcStatTurn(m, g); return; }
+    // the darts in the air
+    for (let i = this.flying.length - 1; i >= 0; i--) {
+      const f = this.flying[i]; let d = dS;
+      if (f.delay > 0) { const w = Math.min(f.delay, d); f.delay -= w; d -= w; if (f.delay > 0) continue; }
+      f.t += d;
+      if (f.t >= f.dur) { this.flying.splice(i, 1); if (this.npcLanded(m, g, f.side - 2, f.to)) return; }
+    }
+    if (this.flying.length) return;
+    if (m.phase === 'hold') {
+      m.wait -= dS; if (m.wait > 0) return;
+      g.clearBoard(); this.bump();
+      // practice: the next turn starts again from 301
+      if (m.solo) { g.winner = null; g.left[0] = g.left[1] = START_301; if (g.turn === 0) g.endTurn(); g.endTurn(); }
+      this.npcPlace(); return;
+    }
+    const s = m.solo ? 0 : g.turn, th = m.sides[s].opp;
+    if (th.walking) return;
+    m.phase = 'aim'; m.wait -= dS; if (m.wait > 0) return;
+    // the house's throw model with the thrower's competitiveness: a bed from what they have left, sigma 0.03 - 0.02 c
+    const t = g.houseThrow(hash32(m.seed, g.turns, s), m.sides[s].competitive);
+    if (th.p) this.g.ctx.clips.play(th.p, 'dart-throw', { upper: false });
+    const from = new THREE.Vector3(th.x + this.right[0] * 0.22 - this.n[0] * 0.25, 1.72, th.z + this.right[1] * 0.22 - this.n[1] * 0.25);
+    this.flying.push({ from, to: t.at, t: 0, dur: 0.32, side: 2 + s, delay: 0.12 });
+    m.wait = 1.2; this.bump();
+  }
+  /** a guest's dart lands: 301's rules; true when the match ended */
+  private npcLanded(m: NpcThrows, g: DartsGame, side: number, to: P2) {
+    if (g.turn !== side) return false;
+    const res = g.land(to[0], to[1], g.thrown.length);
+    this.bump();
+    if (res.won && !m.solo) { m.log.push({ t: +this.g.tNow().toFixed(3), mode: 'physics', side, scored: res.hit.score, note: `${res.hit.label}: checked out` }); this.npcEnd(m, g, side, `${m.sides[side].name} checked out`); return true; }
+    m.log.push({ t: +this.g.tNow().toFixed(3), mode: 'physics', side, scored: res.bust ? 0 : res.hit.score, note: `${res.hit.label}${res.bust ? ', bust' : ''}, ${res.left} left` });
+    if (m.log.length > 200) m.log.shift();
+    if (res.turnOver || res.won) { m.phase = 'hold'; m.wait = 1.1; }
+    return false;
+  }
+  /** an unwatched turn: three darts, each scored from the thrower's skill (a mean of 12 + 14 competitive a dart, sd 8,
+   *  0 to 60); 301, straight out, bust over; 15 to 25 s */
+  private npcStatTurn(m: NpcThrows, g: DartsGame) {
+    const s = m.solo ? 0 : g.turn, n = m.sides[s], r = mulberry(hash32('ndarts', m.seed, m.log.length));
+    let total = 0; for (let k = 0; k < 3; k++) total += Math.max(0, Math.min(60, Math.round(12 + 14 * n.competitive + 8 * gauss(r))));
+    let note = '';
+    if (m.solo) note = `${total} (practice)`;
+    else if (total > g.left[s]) { note = `bust (${total} over ${g.left[s]})`; total = 0; g.busts[s]++; }
+    else { g.left[s] -= total; note = `${total}, ${g.left[s]} left`; }
+    m.log.push({ t: +this.g.tNow().toFixed(3), mode: 'stat', side: s, scored: total, note });
+    if (m.log.length > 200) m.log.shift();
+    if (n.opp.p) this.g.ctx.clips.play(n.opp.p, 'dart-throw', { upper: false });
+    if (!m.solo && g.left[s] === 0) { g.winner = s; this.npcEnd(m, g, s, `${n.name} checked out`); return; }
+    m.statT = 15 + 10 * r();
+    if (!m.solo) { g.turn = 1 - s; g.dart = 0; g.turns++; this.npcPlace(); }
+    this.bump();
+  }
+  private npcEnd(m: NpcThrows, g: DartsGame, w: number, note: string) {
+    this.npc = null; this.npcOn = false; this.flying.length = 0; this.bump();
+    m.onEnd(w, g.closeFor(1 - w), note);
+    this.npcGame = null;
+  }
+  /** the match ends without a result (a guest left, the bar closed, practice over) */
+  npcStop() { if (!this.npc) return; this.npc = null; this.npcGame = null; this.npcOn = false; this.flying.length = 0; this.bump(); }
+  npcState() {
+    const m = this.npc, g = this.npcGame; if (!m || !g) return null;
+    return { mode: m.mode, solo: m.solo, phase: m.phase, sides: m.sides.map((x, i) => ({ name: x.name, competitive: +x.competitive.toFixed(3), left: g.left[i] })), turn: g.turn, dart: g.dart, thrown: g.thrown.length, board: g.board.length, flying: this.flying.length, inAir: this.flying.filter((f) => f.delay <= 0).length, winner: g.winner, log: m.log.slice(-40) };
   }
   camPose(_aspect: number, out: CamPose) {
     out.eye.copy(this.camEye);
@@ -642,12 +905,12 @@ class DartsSpot extends Spot {
   }
   scoreLine() {
     const g = this.game!;
-    const turn = g.winner !== null ? (g.winner === 0 ? 'You win' : `${HOUSE_NAME} wins`) : g.turn === 0 ? `Your throw · dart ${g.dart + 1} of 3` : `${HOUSE_NAME} throws · dart ${Math.min(3, g.dart + 1)} of 3`;
-    return { title: `DARTS · 301 · ${this.label.toUpperCase()}`, score: `You ${g.left[0]} · ${HOUSE_NAME} ${g.left[1]} · ${turn}`, hint: this.yourTurn() ? 'Hold to steady your aim (drag to move it) · flick up to throw' : '' };
+    const turn = g.winner !== null ? (g.winner === 0 ? 'You win' : `${this.g.oppName} wins`) : g.turn === 0 ? `Your throw · dart ${g.dart + 1} of 3` : `${this.g.oppName} throws · dart ${Math.min(3, g.dart + 1)} of 3`;
+    return { title: `DARTS · 301 · ${this.label.toUpperCase()}`, score: `You ${g.left[0]} · ${this.g.oppName} ${g.left[1]} · ${turn}`, hint: this.yourTurn() ? 'Hold to steady your aim (drag to move it) · flick up to throw' : '' };
   }
   state() {
     const g = this.game;
-    return { id: this.id, kind: this.kind, playing: this.playing, mine: this.mine, outcome: this.outcome, ...(g ? { left: [...g.left], turn: g.turn, dart: g.dart, winner: g.winner, busts: [...g.busts], board: g.board.map((d) => ({ side: d.side, label: d.hit.label, score: d.hit.score })), thrown: g.thrown.length, flying: this.flying.length, inAir: this.flying.filter((f) => f.delay <= 0).length, flights: this.flying.map((f) => ({ side: f.side, windUp: +f.delay.toFixed(3), k: +(f.t / f.dur).toFixed(3) })), holdAt: this.holdAt, hold: +this.hold.toFixed(2), yourTurn: this.yourTurn(), aim: { x: +this.aim.x.toFixed(4), y: +this.aim.y.toFixed(4), holding: this.aim.holding, t: +this.aim.t.toFixed(2) } } : {}) };
+    return { id: this.id, kind: this.kind, playing: this.playing, mine: this.mine, outcome: this.outcome, npc: this.npcState(), ...(g ? { left: [...g.left], turn: g.turn, dart: g.dart, winner: g.winner, busts: [...g.busts], board: g.board.map((d) => ({ side: d.side, label: d.hit.label, score: d.hit.score })), thrown: g.thrown.length, flying: this.flying.length, inAir: this.flying.filter((f) => f.delay <= 0).length, flights: this.flying.map((f) => ({ side: f.side, windUp: +f.delay.toFixed(3), k: +(f.t / f.dur).toFixed(3) })), holdAt: this.holdAt, hold: +this.hold.toFixed(2), yourTurn: this.yourTurn(), aim: { x: +this.aim.x.toFixed(4), y: +this.aim.y.toFixed(4), holding: this.aim.holding, t: +this.aim.t.toFixed(2) } } : {}) };
   }
   abandon() { super.abandon(); this.flying.length = 0; if (this.game && this.game.winner === null) this.game.winner = -1 as never; }
 }
@@ -656,6 +919,8 @@ class DartsSpot extends Spot {
 class ShuffleSpot extends Spot {
   kind = 'shuffleboard' as const; label = 'The shuffleboard'; start: P2 = [2.7, 1.45]; startFace: P2 = [1, 0];
   game: ShuffleGame | null = null;
+  /** S3b: a guests' match here, its game, or null */
+  npc: NpcThrows | null = null; npcGame: ShuffleGame | null = null; private npcFrame0 = 0;
   readonly Y = 0.97;
   /** your swipe */
   swipe = { on: false, hist: [] as { t: number; x: number; y: number }[], x0: 0 };
@@ -688,16 +953,16 @@ class ShuffleSpot extends Spot {
   toW(x: number, y: number, out: P2 = this.w): P2 { out[0] = this.o[0] + x * this.ax[0] + y * this.ay[0]; out[1] = this.o[1] + x * this.ax[1] + y * this.ay[1]; return out; }
   begin() {
     this.seed = hash32(this.id, this.seed, 13);
-    this.game = new ShuffleGame([{ who: 'You', competitive: this.g.ctx.competitive() }, { who: HOUSE_NAME, competitive: HOUSE_C }], 0);
+    this.game = new ShuffleGame([{ who: 'You', competitive: this.g.ctx.competitive() }, { who: this.g.oppName, competitive: this.g.oppC }], 0);
     this.mine = true; this.outcome = null; this.hold = 0;
     this.bump();
-    this.g.ctx.tell(`Shuffleboard with ${HOUSE_NAME}: four pucks a side, first to 15 · you slide first`, 3);
+    this.g.ctx.tell(`Shuffleboard with ${this.g.oppName}: four pucks a side, first to 15 · you slide first`, 3);
     this.yourSetup();
   }
   private yourSetup() {
     this.follow = null;
     this.standYou(this.throwAt, this.throwYaw); this.g.ctx.player.pitch = -0.12;
-    const h = this.g.ctx.house(), ha = this.houseAside;
+    const h = this.g.opp(), ha = this.houseAside;
     if (Math.hypot(h.x - ha[0], h.z - ha[1]) > 0.3) h.walkTo(ha, this.houseAsideYaw);
     this.bump();
   }
@@ -708,13 +973,14 @@ class ShuffleSpot extends Spot {
   private slide(speed: number, line: number, y0: number, side: number) {
     const g = this.game!;
     if (!g.slide(speed, line, y0)) return false;
-    const body = side === 0 ? this.g.ctx.person() : this.g.ctx.house().p;
+    const body = side === 0 ? this.g.ctx.person() : this.g.opp().p;
     if (body) this.g.ctx.clips.play(body, 'shuffle-slide');
     if (side === 0) { this.lastSpeed = speed; this.lastLine = line; this.follow = g.pucks[g.pucks.length - 1]; }
     this.bump();
     return true;
   }
   step(dS: number) {
+    if (!this.game && this.npc) { this.npcStep(dS); return; }
     const g = this.game; if (!g || g.winner !== null) return;
     if (this.hold > 0) {
       this.hold -= dS;
@@ -730,24 +996,24 @@ class ShuffleSpot extends Spot {
     const p = g.pucks[g.pucks.length - 1];
     if (g.frame !== frame0 || g.winner !== null) {
       const f = g.lastFrame!;
-      this.g.ctx.tell(`Frame ${frame0}: ${f.scorer === null ? 'no score' : `${f.scorer === 0 ? 'you score' : `${HOUSE_NAME} scores`} ${f.points}`} · You ${f.score[0]}, ${HOUSE_NAME} ${f.score[1]}`, 3);
-      if (g.winner !== null) { const won = g.winner === 0; this.finish(won, !won && g.closeFor(0), `${won ? 'You' : HOUSE_NAME} reached ${g.score[g.winner]}`, { landedThree: g.best3[0] }); return; }
+      this.g.ctx.tell(`Frame ${frame0}: ${f.scorer === null ? 'no score' : `${f.scorer === 0 ? 'you score' : `${this.g.oppName} scores`} ${f.points}`} · You ${f.score[0]}, ${this.g.oppName} ${f.score[1]}`, 3);
+      if (g.winner !== null) { const won = g.winner === 0; this.finish(won, !won && g.closeFor(0), `${won ? 'You' : this.g.oppName} reached ${g.score[g.winner]}`, { landedThree: g.best3[0] }); return; }
       this.hold = 2.2; this.holdFor = p && p.side === 0 ? 0 : 1;
     } else if (p) {
-      const who = p.side === 0 ? 'Your' : `${HOUSE_NAME}'s`;
+      const who = p.side === 0 ? 'Your' : `${this.g.oppName}'s`;
       this.g.ctx.tell(`${who} puck: ${p.out === 'gutter' ? 'in the gutter' : p.out === 'short' ? 'short of the line' : `zone ${zoneOf(p.x)}`}`, 1.8);
       this.hold = 0.7; this.holdFor = p.side;
     }
   }
   private plan: ReturnType<ShuffleGame['housePlan']> | null = null;
   private houseTurn(dS: number) {
-    const g = this.game!, h = this.g.ctx.house();
+    const g = this.game!, h = this.g.opp();
     if (this.g.houseAt && this.g.houseAt !== this) return;
     this.g.houseAt = this; this.houseBusy = true;
     const at = this.throwAt;
     if (Math.hypot(h.x - at[0], h.z - at[1]) > 0.15 && !h.walking) { h.walkTo(at, this.throwYaw); this.houseWait = 1.2; return; }
     if (h.walking) return;
-    if (!this.plan) this.plan = g.housePlan(this.seed, HOUSE_C);
+    if (!this.plan) this.plan = g.housePlan(this.seed, this.g.oppC);
     this.houseWait -= dS;
     if (this.houseWait > 0) return;
     const p = this.plan; this.plan = null; this.slide(p.speed, p.line, p.y0, 1); this.houseWait = 1.0;
@@ -788,6 +1054,13 @@ class ShuffleSpot extends Spot {
   }
   draw(I: HeldItems) {
     const g = this.game;
+    if (!g && this.npc && this.npc.mode === 'physics' && this.npcGame) {
+      // a guests' match on the bed: their pucks, and the next one at the release point while its thrower lines up
+      const ng = this.npcGame;
+      for (const p of ng.pucks) if (p.on) this.put(I, p.x, p.y, GUEST_HEX[p.side]);
+      if (ng.winner === null && ng.state === 'aim' && this.npc.phase !== 'hold') this.put(I, SHUFFLE.X0, 0, GUEST_HEX[ng.turn]);
+      return;
+    }
     if (!g) {
       // between games the eight pucks wait at the near end, four of each colour
       for (let k = 0; k < 8; k++) this.put(I, k < 4 ? 0.035 : 0.095, -0.18 + (k % 4) * 0.12, k < 4 ? YOU_PUCK : HOUSE_PUCK);
@@ -816,14 +1089,99 @@ class ShuffleSpot extends Spot {
   }
   scoreLine() {
     const g = this.game!, mineLeft = 4 - g.bySide[0], theirsLeft = 4 - g.bySide[1];
-    const turn = g.winner !== null ? (g.winner === 0 ? 'You win' : `${HOUSE_NAME} wins`) : g.state === 'sliding' ? 'Sliding…' : g.turn === 0 ? `Your slide · ${mineLeft} left` : `${HOUSE_NAME}'s slide · ${theirsLeft} left`;
-    return { title: `SHUFFLEBOARD · FRAME ${g.frame} · FIRST TO 15`, score: `You ${g.score[0]} · ${HOUSE_NAME} ${g.score[1]} · ${turn}`, hint: this.yourTurn() ? 'Swipe up to slide (faster goes farther) · zone 3 is the far end' : '' };
+    const turn = g.winner !== null ? (g.winner === 0 ? 'You win' : `${this.g.oppName} wins`) : g.state === 'sliding' ? 'Sliding…' : g.turn === 0 ? `Your slide · ${mineLeft} left` : `${this.g.oppName}'s slide · ${theirsLeft} left`;
+    return { title: `SHUFFLEBOARD · FRAME ${g.frame} · FIRST TO 15`, score: `You ${g.score[0]} · ${this.g.oppName} ${g.score[1]} · ${turn}`, hint: this.yourTurn() ? 'Swipe up to slide (faster goes farther) · zone 3 is the far end' : '' };
   }
   state() {
     const g = this.game;
-    return { id: this.id, kind: this.kind, playing: this.playing, mine: this.mine, outcome: this.outcome, side: this.side, ...(g ? { score: [...g.score], frame: g.frame, turn: g.turn, thrown: g.thrown, state: g.state, winner: g.winner, pucks: g.pucks.map((p) => ({ side: p.side, on: p.on, out: p.out, x: +p.x.toFixed(4), y: +p.y.toFixed(4), zone: p.on ? zoneOf(p.x) : null })), lastFrame: g.lastFrame, log: g.log.slice(-6), yourTurn: this.yourTurn(), hold: +this.hold.toFixed(2), best3: [...g.best3] } : {}) };
+    return { id: this.id, kind: this.kind, playing: this.playing, mine: this.mine, outcome: this.outcome, side: this.side, npc: this.npcState(), ...(g ? { score: [...g.score], frame: g.frame, turn: g.turn, thrown: g.thrown, state: g.state, winner: g.winner, pucks: g.pucks.map((p) => ({ side: p.side, on: p.on, out: p.out, x: +p.x.toFixed(4), y: +p.y.toFixed(4), zone: p.on ? zoneOf(p.x) : null })), lastFrame: g.lastFrame, log: g.log.slice(-6), yourTurn: this.yourTurn(), hold: +this.hold.toFixed(2), best3: [...g.best3] } : {}) };
   }
   abandon() { super.abandon(); this.plan = null; if (this.game && this.game.winner === null) this.game.winner = -1 as never; }
+  // ---- S3b: guests' shuffleboard
+  npcBegin(sides: NpcSide[], mode: 'physics' | 'stat', onEnd: NpcThrows['onEnd']) {
+    if (this.game || this.npc || sides.length < 2) return false;
+    const seed = hash32(this.id, 'npc', this.seed, Math.floor(sides[0].competitive * 1000), Math.floor(sides[1].competitive * 1000));
+    this.seed = hash32(seed, 1);
+    this.npcGame = new ShuffleGame([{ who: sides[0].name, competitive: sides[0].competitive }, { who: sides[1].name, competitive: sides[1].competitive }], 0);
+    this.npc = { sides, solo: false, mode, seed, phase: 'walk', wait: 0, statT: 40 + 20 * mulberry(seed)(), log: [], onEnd };
+    this.npcOn = true;
+    this.npcPlace();
+    this.bump();
+    return true;
+  }
+  /** the thrower to the throwing end, the other aside (the house's waiting spot) */
+  private npcPlace() {
+    const m = this.npc!, g = this.npcGame!, th = m.sides[g.turn].opp, o = m.sides[1 - g.turn].opp;
+    if (Math.hypot(th.x - this.throwAt[0], th.z - this.throwAt[1]) > 0.15) th.walkTo(this.throwAt, this.throwYaw);
+    if (Math.hypot(o.x - this.houseAside[0], o.z - this.houseAside[1]) > 0.3) o.walkTo(this.houseAside, this.houseAsideYaw);
+    m.phase = 'walk'; m.wait = 1.2;
+  }
+  /** physics or statistics: only between frames (no puck on the bed or sliding) */
+  npcMode(mode: 'physics' | 'stat') {
+    const m = this.npc, g = this.npcGame; if (!m || !g || m.mode === mode) return;
+    if (g.state !== 'aim' || g.thrown > 0 || m.phase === 'hold') return;
+    m.mode = mode; m.phase = 'walk'; m.wait = 1.2; m.statT = 40 + 20 * mulberry(hash32(m.seed, 'st', g.frame))();
+    this.bump();
+  }
+  private npcStep(dS: number) {
+    const m = this.npc!, g = this.npcGame!;
+    if (g.winner !== null) return;
+    if (m.mode === 'stat') { m.statT -= dS; if (m.statT <= 0 && !m.sides.some((x) => x.opp.walking)) this.npcStatFrame(m, g); return; }
+    if (g.state === 'sliding') { if (g.step(dS)) this.npcAfter(m, g); return; }
+    if (m.phase === 'hold') {
+      m.wait -= dS; if (m.wait > 0) return;
+      this.bump(); this.npcPlace(); return;
+    }
+    const th = m.sides[g.turn].opp; if (th.walking) return;
+    m.phase = 'aim'; m.wait -= dS; if (m.wait > 0) return;
+    // the plan's NPC slide: aim at a target zone (or knock off the leader), speed error 0.10 - 0.07 c m/s, line error
+    // 1.5 - 1.0 c degrees (the house's plan, with the thrower's competitiveness)
+    const pl = g.housePlan(hash32(m.seed, g.frame, g.thrown), m.sides[g.turn].competitive);
+    this.npcFrame0 = g.frame;
+    if (!g.slide(pl.speed, pl.line, pl.y0)) return;
+    if (th.p) this.g.ctx.clips.play(th.p, 'shuffle-slide');
+    m.wait = 1.0; this.bump();
+  }
+  private npcAfter(m: NpcThrows, g: ShuffleGame) {
+    this.bump();
+    const p = g.pucks[g.pucks.length - 1];
+    if (g.frame !== this.npcFrame0 || g.winner !== null) {
+      const f = g.lastFrame!;
+      m.log.push({ t: +this.g.tNow().toFixed(3), mode: 'physics', side: f.scorer ?? -1, scored: f.points, note: `frame ${this.npcFrame0}: ${f.scorer === null ? 'no score' : `${m.sides[f.scorer].name} ${f.points}`}; ${f.score[0]}-${f.score[1]}` });
+      if (m.log.length > 200) m.log.shift();
+      if (g.winner !== null) { this.npcEnd(m, g, g.winner, `${m.sides[g.winner].name} reached ${g.score[g.winner]}`); return; }
+      m.phase = 'hold'; m.wait = 2.2; return;
+    }
+    if (p) { m.log.push({ t: +this.g.tNow().toFixed(3), mode: 'physics', side: p.side, scored: 0, note: `puck ${p.out === 'gutter' ? 'in the gutter' : p.out === 'short' ? 'short' : `zone ${zoneOf(p.x)}`}` }); if (m.log.length > 200) m.log.shift(); }
+    m.phase = 'hold'; m.wait = 0.7;
+  }
+  /** an unwatched frame: its scorer by skill (competitive plus a draw, sd 0.35), 1 to 4 points (ours); first to 15;
+   *  40 to 60 s; the scorer slides first in the next */
+  private npcStatFrame(m: NpcThrows, g: ShuffleGame) {
+    const r = mulberry(hash32('nshuffle', m.seed, g.frame)), a = m.sides[0], b = m.sides[1];
+    const da = a.competitive + 0.35 * gauss(r), db = b.competitive + 0.35 * gauss(r);
+    const w = da >= db ? 0 : 1, pts = 1 + Math.floor(r() * 3) + (r() < 0.15 ? 1 : 0);
+    const thrower = m.sides[g.turn];
+    g.score[w] += pts;
+    g.lastFrame = { scorer: w, points: pts, zones: [], score: [g.score[0], g.score[1]] };
+    m.log.push({ t: +this.g.tNow().toFixed(3), mode: 'stat', side: w, scored: pts, note: `frame ${g.frame}: ${m.sides[w].name} ${pts}; ${g.score[0]}-${g.score[1]}` });
+    if (m.log.length > 200) m.log.shift();
+    if (thrower.opp.p) this.g.ctx.clips.play(thrower.opp.p, 'shuffle-slide');
+    if (g.score[w] >= SHUFFLE.TO) { g.winner = w; g.state = 'over'; this.npcEnd(m, g, w, `${m.sides[w].name} reached ${g.score[w]}`); return; }
+    g.frame++; g.pucks = []; g.thrown = 0; g.bySide[0] = g.bySide[1] = 0; g.firstOfFrame = w; g.turn = w; g.state = 'aim';
+    m.statT = 40 + 20 * r();
+    this.npcPlace(); this.bump();
+  }
+  private npcEnd(m: NpcThrows, g: ShuffleGame, w: number, note: string) {
+    this.npc = null; this.npcOn = false; this.bump();
+    m.onEnd(w, g.closeFor(1 - w), note);
+    this.npcGame = null;
+  }
+  npcStop() { if (!this.npc) return; this.npc = null; this.npcGame = null; this.npcOn = false; this.bump(); }
+  npcState() {
+    const m = this.npc, g = this.npcGame; if (!m || !g) return null;
+    return { mode: m.mode, phase: m.phase, sides: m.sides.map((x, i) => ({ name: x.name, competitive: +x.competitive.toFixed(3), score: g.score[i] })), turn: g.turn, frame: g.frame, thrown: g.thrown, state: g.state, onBed: g.pucks.filter((p) => p.on).length, pucks: g.pucks.map((p) => ({ side: p.side, on: p.on, out: p.out, x: +p.x.toFixed(3), y: +p.y.toFixed(3), moving: p.vx !== 0 || p.vy !== 0 })), winner: g.winner, log: m.log.slice(-40) };
+  }
 }
 
 // ================================================================================================== the games
@@ -839,6 +1197,14 @@ export class Games {
   /** how many times the bar's text was rebuilt (the check reads it: it moves with the game, not with the frames) */
   barBuilds = 0;
   private ptr: number | null = null;
+  /** S3b: your opponent when it isn't the house: a guest you challenged (their name, competitiveness and their body's
+   *  walks); null plays the house */
+  vs: { opp: Opp; name: string; competitive: number; id: number } | null = null;
+  opp(): Opp { return this.vs ? this.vs.opp : this.ctx.house(); }
+  get oppName() { return this.vs ? this.vs.name : HOUSE_NAME; }
+  get oppC() { return this.vs ? this.vs.competitive : HOUSE_C; }
+  /** the sim clock in sim minutes (the guests' matches' logs) */
+  tNow() { return this.ctx.simMin(); }
   constructor(public ctx: GamesCtx) {
     POOL_TABLES.forEach(([u, v], i) => this.spots.push(new PoolSpot(`pool-${i + 1}`, this, u, v, i + 1)));
     DART_BOARDS.forEach((u, i) => this.spots.push(new DartsSpot(`darts-${i + 1}`, this, u, i + 1)));
@@ -857,11 +1223,13 @@ export class Games {
   kindOf(id: string): GameKind | null { return this.spot(id)?.kind ?? null; }
   /** where you stand to begin a game (frame), and the way you face */
   startOf(id: string) { const s = this.spot(id); return s ? { at: s.start, face: s.startFace } : null; }
-  /** start a game against the house (any game you were in is left) */
-  begin(id: string) {
-    const s = this.spot(id); if (!s) return false;
+  /** start a game against the house, or (S3b) against `vs`, a guest who accepted your Challenge (any game you were in
+   *  is left) */
+  begin(id: string, vs: Games['vs'] = null) {
+    const s = this.spot(id); if (!s || s.npcBusy) return false;
     this.staged = false;
     const m = this.mine; if (m && m !== s) this.leave('another game');
+    this.vs = vs;
     if (this.houseAt) { this.houseAt.houseBusy = false; this.houseAt = null; }
     s.begin();
     return true;
@@ -869,9 +1237,10 @@ export class Games {
   leave(why = 'left') {
     const m = this.mine; if (!m) return false;
     m.abandon(); if (this.houseAt === m) this.houseAt = null;
-    this.ctx.house().home();
+    this.opp().home();
     const p = this.ctx.person(); if (p) this.ctx.clips.stop(p);
-    this.ctx.tell(why === 'walked away' ? `You left the game. ${HOUSE_NAME} racks up for the next one.` : `You left the game (${why}).`, 3);
+    this.ctx.tell(why === 'walked away' ? `You left the game. ${this.oppName} racks up for the next one.` : `You left the game (${why}).`, 3);
+    this.vs = null;
     return true;
   }
   /** the physics and the house's turns, in sim seconds */
@@ -937,12 +1306,12 @@ export class Games {
    *  board, the shuffleboard with three pucks down), every piece drawn; a test hook only (in play you're in one game) */
   /** the check's setup is on: no game view and no walking-away rule, so the budget poses keep their own cameras */
   staged = false;
-  stageAll() {
-    const pool = this.spot('pool-1') as PoolSpot, darts = this.spot('darts-1') as DartsSpot, sh = this.spot('shuffleboard') as ShuffleSpot;
-    pool.begin(); pool.shoot({ break: true, settle: true });
-    darts.begin(); darts.shoot({ seg: 20, mult: 1, settle: true }); darts.shoot({ seg: 5, mult: 1, settle: true });
-    sh.begin(); sh.shoot({ zone: 3, settle: true }); sh.game!.slide(2.8, 0.5, 0.1); sh.game!.settle(); sh.game!.slide(2.6, -0.5, -0.1); sh.game!.settle();
-    for (const s of [pool, darts, sh]) { s.hold = 0; }
+  stageAll(ids: { pool: string | null; darts: string | null; shuffleboard: string | null } = { pool: 'pool-1', darts: 'darts-1', shuffleboard: 'shuffleboard' }) {
+    const pool = ids.pool ? this.spot(ids.pool) as PoolSpot : null, darts = ids.darts ? this.spot(ids.darts) as DartsSpot : null, sh = ids.shuffleboard ? this.spot(ids.shuffleboard) as ShuffleSpot : null;
+    if (pool && !pool.npcBusy) { pool.begin(); pool.shoot({ break: true, settle: true }); }
+    if (darts && !darts.npcBusy) { darts.begin(); darts.shoot({ seg: 20, mult: 1, settle: true }); darts.shoot({ seg: 5, mult: 1, settle: true }); }
+    if (sh && !sh.npcBusy) { sh.begin(); sh.shoot({ zone: 3, settle: true }); sh.game!.slide(2.8, 0.5, 0.1); sh.game!.settle(); sh.game!.slide(2.6, -0.5, -0.1); sh.game!.settle(); }
+    for (const s of [pool, darts, sh]) if (s) s.hold = 0;
     this.staged = true; this.cams.exit();
     return this.spots.map((s) => s.state());
   }
