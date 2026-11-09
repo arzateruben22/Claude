@@ -42,7 +42,7 @@ export async function run({ stage, FILM, W, H, EP }) {
 .ss .plate .bl{font:500 ${px(34)}/1.2 "Red Hat Text";margin:${px(18)} 0 ${px(8)};opacity:0}
 .ss .plate .tag{display:inline-block;margin:0 ${px(10)} ${px(14)} 0;padding:${px(8)} ${px(18)};border-radius:${px(30)};background:rgba(47,143,134,.14);border:${px(2)} solid ${TEAL};font:600 ${px(28)}/1 "Red Hat Text";opacity:0}
 .ss .plate .note{margin-top:${px(24)};font:italic 400 ${px(34)}/1.25 "Newsreader",serif;opacity:0}
-.ss .endc{position:absolute;inset:0;background:rgba(248,242,231,.92);text-align:center;opacity:0;pointer-events:none}
+.ss .endc{position:absolute;inset:0;background:rgba(248,242,231,1);text-align:center;opacity:0;pointer-events:none}
 .ss .endc .e1{position:absolute;left:0;right:0;top:${px(560)};font:600 ${px(100)}/${px(112)} "Newsreader",serif}.ss .endc .e2{position:absolute;left:${px(80)};right:${px(80)};top:${px(880)};font:400 ${px(60)}/1.2 "Red Hat Text"}
 .ss .endc .chip{position:absolute;left:50%;top:${px(1040)};transform:translateX(-50%);padding:${px(14)} ${px(36)};border:${px(2.5)} solid ${NAVY};border-radius:${px(50)};font:600 ${px(36)}/1 "Red Hat Text";white-space:nowrap}
 .ss .endc .e3{position:absolute;left:0;right:0;top:${px(1150)};font:400 ${px(28)}/1 "Red Hat Text";opacity:.8}
@@ -87,7 +87,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
 <radialGradient id="gD"><stop offset="0" stop-color="#2A2060" stop-opacity=".95"/><stop offset=".6" stop-color="#2A2060" stop-opacity=".6"/><stop offset="1" stop-color="#3B2F72" stop-opacity="0"/></radialGradient>
 <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${(1.3 * u).toFixed(2)}"/></filter><filter id="soft2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${(3 * u).toFixed(2)}"/></filter>`;
   const LABELS = EP.labels.map((L) => ({ ...L, t0: R(L.t0), t1: R(L.t1) }));
-  for (const L of LABELS) { L.pill = document.createElement("div"); L.pill.className = "pill"; L.pill.textContent = L.text; pills.appendChild(L.pill); const r = L.pill.getBoundingClientRect(); L.pw = r.width; L.ph = r.height;
+  for (const L of LABELS) { L.pill = document.createElement("div"); L.pill.className = "pill"; L.pill.innerHTML = L.text.replace(/µm/g, '<span style="text-transform:none">µm</span>'); pills.appendChild(L.pill); const r = L.pill.getBoundingClientRect(); L.pw = r.width; L.ph = r.height;
     L.line = mk("path", { stroke: NAVY, "stroke-width": 2 * u, fill: "none", "stroke-linecap": "round" }); L.dot = mk("circle", { r: 7 * u, fill: IVORY, stroke: NAVY, "stroke-width": 2 * u }); }
   // animated overlays (soft, translucent): spray (messenger molecules), toxin (soft dark particles on a path), snap (a strand that parts), sprouts (new endings)
   const FX = (EP.fx || []).map((f0) => { const f = { ...f0, ...(IM[f0.img].fb && f0.fb ? f0.fb : {}) }; return { ...f, t0: R(f.t0), t1: R(f.t1), cut: f.cut ? R(f.cut) : 0 }; }).filter((f) => !(f.fbOnly && !IM[f.img].fb));
@@ -135,13 +135,13 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
     let eg = 0; for (const [a, z] of ENGR) eg = Math.max(eg, Math.min(eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z)))); engr.style.opacity = eg.toFixed(3);
     for (const [k, g] of Object.entries(IM)) { const p = c.P[k]; if (!p) { g.el.style.opacity = "0"; continue; } const FX0 = p.fx * AW, FY0 = p.fy * g.AH;
       g.el.style.transform = `translate(${AW / 2 - FX0 * p.s}px,${BH / 2 - FY0 * p.s}px) scale(${p.s})`; g.el.style.opacity = p.op.toFixed(3); }
-    artbox.style.opacity = (1 - q).toFixed(3);
+    artbox.style.opacity = ((1 - q) * (1 - eo(seg(t, NEXT - 0.5, NEXT)))).toFixed(3);
     drawFx(t, c);
-    const ev = eo(seg(t, NEXT - 0.3, NEXT + 0.2));
+    const ev = eo(seg(t, NEXT - 0.1, NEXT + 0.4)), ev2 = eo(seg(t, NEXT - 0.5, NEXT - 0.1));
     let k = 0; for (let i = 0; i < SUP.length; i++) if (t >= SUP[i][0]) k = i;
     if (supEl.dataset.k !== String(k)) { supEl.innerHTML = SUP[k][1]; supEl.dataset.k = String(k); }
-    supEl.style.opacity = (eo(seg(t, SUP[k][0], SUP[k][0] + 0.35)) * (1 - q) * (1 - eg) * (1 - ev)).toFixed(3);
-    const b = BADGES.find(([a, z]) => t >= a && t < z); if (b) badge.textContent = b[2];
+    supEl.style.opacity = (eo(seg(t, SUP[k][0], SUP[k][0] + 0.35)) * (1 - q) * (1 - eg) * (1 - ev2)).toFixed(3);
+    const b = BADGES.find(([a, z]) => t >= a && t < z); if (b) badge.innerHTML = b[2].replace(/µm/g, '<span style="text-transform:none">µm</span>');
     badge.style.opacity = b ? (eo(seg(t, b[0], b[0] + 0.3)) * (1 - eo(seg(t, b[1] - 0.3, b[1]))) * (1 - q) * (1 - eg)).toFixed(3) : "0";
     PLATES.forEach((P, i) => { const d = plEls[i]; d.style.opacity = (Math.min(P.t0 <= 0.1 ? 1 : eo(seg(t, P.t0 + 0.4, P.t0 + 0.85)), 1 - eo(seg(t, P.t1 - 0.85, P.t1 - 0.4)))).toFixed(3);
       const tg = d.querySelectorAll(".tag"); P.tags.forEach((g, j) => { tg[j].style.opacity = eo(seg(t, g.t, g.t + 0.4)).toFixed(3); });
@@ -165,7 +165,7 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
     let sc = 0, sy = 0; for (const [a, z] of SCAN) if (t >= a && t <= z) { const p = (t - a) / (z - a); sc = Math.sin(Math.PI * p) ** 0.5; sy = BTOP + 60 * u + p * (BH - 160 * u); }
     scanEl.setAttribute("y", sy); scanEl.setAttribute("opacity", (0.85 * sc * (1 - q)).toFixed(3));
     let pg = null; for (const g of pages) if (t >= g[0].t0 - 0.05 && t <= g[g.length - 1].t1 + 0.3) pg = g;
-    capEl.innerHTML = !pg || ev > 0.2 ? "" : `<span class="pg">${pg.map((w) => `<span class="${t >= w.t0 && t < w.t1 ? "on" : ""}">${w.w}</span>`).join(" ")}</span>`;
-    endc.style.opacity = ev.toFixed(3); $(".h1").style.opacity = $(".eyebrow").style.opacity = (1 - ev).toFixed(3);
+    capEl.innerHTML = !pg || ev2 > 0.2 ? "" : `<span class="pg">${pg.map((w) => `<span class="${t >= w.t0 && t < w.t1 ? "on" : ""}">${w.w}</span>`).join(" ")}</span>`;
+    endc.style.opacity = ev.toFixed(3); $(".h1").style.opacity = $(".eyebrow").style.opacity = (1 - ev2).toFixed(3);
   };
 }

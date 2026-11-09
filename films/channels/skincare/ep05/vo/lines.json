@@ -25,15 +25,15 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "In Nambour, Australia, pure chance decided who would wear sunscreen every morning. Head, neck, arms and hands, before the day began.",
+   "text": "In Nambour, Australia, pure chance decided who would wear sunscreen every morning. Head and arms, before the day began.",
    "stars": [
     "morning"
    ],
-   "phonemes": "ˈɪn nˈæmbɔː , ɒstɹˈeɪliə, pjˈʊə tʃˈans dɪsˈaɪdɪd hˌuː wʊd wˈeə sˈʌnskɹiːn ˈɛvɹɪ mˈɔːnɪŋ. hˈɛd, nˈɛk, ˈɑːmz and hˈandz, bɪfˌɔː ðə dˈeɪ bɪɡˈan.",
+   "phonemes": "ˈɪn nˈæmbɔː , ɒstɹˈeɪliə, pjˈʊə tʃˈans dɪsˈaɪdɪd hˌuː wʊd wˈeə sˈʌnskɹiːn ˈɛvɹɪ mˈɔːnɪŋ. hˈɛd and ˈɑːmz, bɪfˌɔː ðə dˈeɪ bɪɡˈan.",
    "speed": 0.9,
    "file": "02.wav",
-   "dur": 8.211,
-   "sha256": "48e7c2fd90d8237171b135e47c76741d8340de91c8ec9baf22cc607df96fd97e"
+   "dur": 7.372,
+   "sha256": "fa713520d6c5d93d10044c63e15dfef53d22efe45ba669a8b6fd08db47a28078"
   },
   {
    "id": "vo03",

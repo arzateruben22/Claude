@@ -100,8 +100,8 @@
   },
   {
    "id": "vo02",
-   "text": "In Nambour, Australia, pure chance decided who would wear sunscreen every morning. Head, neck, arms and hands, before the day began.",
-   "heard": "In Nambor, Australia, pure chance decided who would wear sunscreen every morning, head, neck, arms and hands before the day began.",
+   "text": "In Nambour, Australia, pure chance decided who would wear sunscreen every morning. Head and arms, before the day began.",
+   "heard": "In Nambor, Australia, pure chance decided who would wear sunscreen every morning, head and arms before the day began.",
    "words": [
     {
      "w": "In",
@@ -117,116 +117,104 @@
     },
     {
      "w": "Australia,",
-     "start": 0.99,
-     "end": 1.76,
+     "start": 0.995,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "pure",
-     "start": 1.865,
+     "start": 1.84,
      "end": 2.08,
      "heard": true
     },
     {
      "w": "chance",
-     "start": 2.115,
-     "end": 2.48,
+     "start": 2.09,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "decided",
-     "start": 2.52,
+     "start": 2.51,
      "end": 2.96,
      "heard": true
     },
     {
      "w": "who",
-     "start": 2.86,
+     "start": 3.02,
      "end": 3.12,
      "heard": true
     },
     {
      "w": "would",
-     "start": 3.2,
+     "start": 3.075,
      "end": 3.28,
      "heard": true
     },
     {
      "w": "wear",
-     "start": 3.23,
-     "end": 3.52,
+     "start": 3.255,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "sunscreen",
-     "start": 3.575,
-     "end": 4.24,
+     "start": 3.65,
+     "end": 4.32,
      "heard": true
     },
     {
      "w": "every",
-     "start": 4.125,
-     "end": 4.48,
+     "start": 4.23,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "morning.",
-     "start": 4.36,
+     "start": 4.465,
      "end": 5.36,
      "heard": true
     },
     {
-     "w": "Head,",
-     "start": 5.405,
+     "w": "Head",
+     "start": 5.485,
      "end": 5.76,
      "heard": true
     },
     {
-     "w": "neck,",
-     "start": 5.785,
-     "end": 6.24,
-     "heard": true
-    },
-    {
-     "w": "arms",
-     "start": 6.225,
-     "end": 6.56,
-     "heard": true
-    },
-    {
      "w": "and",
-     "start": 6.58,
-     "end": 6.72,
+     "start": 5.675,
+     "end": 5.92,
      "heard": true
     },
     {
-     "w": "hands,",
-     "start": 6.675,
-     "end": 7.04,
+     "w": "arms,",
+     "start": 5.92,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "before",
-     "start": 7.17,
-     "end": 7.44,
+     "start": 6.325,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.525,
-     "end": 7.575,
+     "start": 6.655,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "day",
-     "start": 7.555,
-     "end": 7.76,
+     "start": 6.685,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "began.",
-     "start": 7.76,
-     "end": 8.16,
+     "start": 6.915,
+     "end": 7.36,
      "heard": true
     }
    ]
