@@ -15,4 +15,4 @@
 **Pacing** (`scene-table.md`): about 35 visual changes in 68 s; longest gaps 4.6 s and 4.5 s; the 3.1 s picture-only hold after the twist is deliberate (a key idea to absorb). Captions: ≤ 3 words, timed by Parakeet.
 
 **First-listen check:** not done with a real listener; the lint grade and a read-aloud are the only checks so far.
-**Still blocked / not done:** clean text-free art (placeholder crop marked on screen; spec in `../art-prompts.md`), score and effects, final-tier render, person-checked sources (none OK yet; all SOURCE-READ), dermatologist sign-off.
+**Still blocked / not done:** score and effects (the owner's eight pictures are in; shot 8's sprouts, the messenger spray and the toxin particles are soft overlays drawn in code), final-tier render, person-checked sources (none OK yet; all SOURCE-READ), dermatologist sign-off.
