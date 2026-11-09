@@ -92,7 +92,7 @@ PILLS = [
 ]
 BADGES = [
     {"id": "b-illus", "text": "illustration", "t0": round(t_n + 0.25, 4), "t1": round(t_rd - 0.2, 4), "slot": "tr"},
-    {"id": "b-nts", "text": "not to scale", "t0": round(t_rd, 4), "t1": round(t_end - 0.45, 4), "slot": "tr"},
+    {"id": "b-nts", "text": "not to scale", "t0": round(t_rd, 4), "t1": round(t_end - 0.45, 4), "slot": "tl"},
 ]
 COUNTERS = [
     {"id": "c-hook", "label": "footprints on the Moon", "text": "still there?", "t0": 0.0, "t1": t_n},

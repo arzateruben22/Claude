@@ -158,7 +158,7 @@ function makeLoop() { hud.update(1.5); tRing.update(1.5); LOOPEL = [titleEl, CEL
 const lerp = (a, b, u) => a + (b - a) * u;
 function camAt(t) {
   let i = CAMK.findIndex((k) => k.t > t); if (i < 0) i = CAMK.length - 1; if (i < 1) i = 1;
-  const a = CAMK[i - 1], b = CAMK[i], u = b.t === a.t ? 1 : E.inout3(clamp01((t - a.t) / (b.t - a.t)));
+  const a = CAMK[i - 1], b = CAMK[i], u = b.t === a.t ? 1 : (() => { const x = clamp01((t - a.t) / (b.t - a.t)); return 0.55 * E.inout3(x) + 0.45 * x; })();
   return { p: a.p.map((v, k) => lerp(v, b.p[k], u)), l: a.l.map((v, k) => lerp(v, b.l[k], u)), fov: lerp(a.fov, b.fov, u) };
 }
 
@@ -183,7 +183,7 @@ window.seek = function (t) {
     gP[k * 3] = hx + (fall ? (1 - u) * 1.4 : 0); gP[k * 3 + 1] = fall ? 0.05 + (1 - u) * 1.8 : 0.03 + 0.12 * u; gP[k * 3 + 2] = hz; gA[k] = onMoon && tt > CUE.grains - 0.6 && tt < CUE.mm + 1.4 ? gOn * (fall ? 0.9 * u : 0.8 * (1 - u)) : 0; });
   gG.attributes.position.needsUpdate = true; gG.attributes.alpha.needsUpdate = true;
   // the street Moon rises; the Earth and Moon readout
-  mgU.position.y = 17 + 7 * E.inout3(seg(tt, CUE.tk, CUE.rd)); moonUp.set({ center: [0, 0, 0], sunDir: [-0.4, 0.2, 0.9], sun: 1, rimNight: 0.4, spin: 0.3 + 0.02 * tt });
+  mgU.position.y = 17 + 7 * (0.5 * E.inout3(seg(tt, CUE.tk, CUE.rd)) + 0.5 * seg(tt, CUE.tk, CUE.rd)); moonUp.set({ center: [0, 0, 0], sunDir: [-0.4, 0.2, 0.9], sun: 1, rimNight: 0.4, spin: 0.3 + 0.02 * tt });
   emE.set({ center: [0, 0, 0], sunDir: [0.6, 0.3, 0.7], sun: 1, rimNight: 0.5, spin: -0.9 + 0.45 * tt }); emM.set({ center: [0, 0, 0], sunDir: [-0.6, 0.3, 0.7], sun: 1, rimNight: 0.4, spin: 0.2 });
   earthSky.set({ center: [0, 0, 0], sunDir: [0.5, 0.2, 0.85], sun: 1, rimNight: 0.5, spin: -0.9 + 0.03 * tt });
   const u = E.inout3(seg(tt, CUE.light + 0.1, CUE.quarter + 1.0)), rr = 28 * u;
