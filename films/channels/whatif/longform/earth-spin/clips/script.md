@@ -20,7 +20,7 @@ N: And then the oceans start to move. {-}
 
 ## clip 3: the oceans leave the poles (target 50 s)
 N: Speed the Earth up fast, and the oceans leave the poles. {-}
-R(oceans): A spinning planet pushes water outward, toward the equator, exactly as it pushes you. {-} Speed the spin up quickly and the ground cannot adjust in time. At a twelve hour day, the water wants to be about thirty-three kilometers higher at the equator than at the poles. {c6} The whole ocean is only about three point seven kilometers deep. {c18} So the water does not simply rise. It drains toward a belt around the equator, while the poles dry out. {c6} This is a rough, first guess, but the direction is certain. {-}
+R(oceans): A spinning planet pushes water outward, toward the equator, exactly as it pushes you. {-} Speed the spin up quickly and the ground cannot adjust in time. At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today. {c6} The whole ocean is only about three point seven kilometers deep. {c18} So the water does not simply rise. It drains toward a belt around the equator, while the poles dry out. {c6} This is a rough, first guess, but the direction is certain. {-}
 N: That was a twelve hour day. Wait until it's two. {-}
 
 ## clip 4: half your weight (target 40 s)
