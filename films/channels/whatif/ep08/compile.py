@@ -216,7 +216,7 @@ for i, sp in enumerate(SPINE):
 for r in WORK["rows"]:
     ev.append({"t": r["t"], "kind": "term.write", "tag": f"work-{r['k']}"})
 ev += [{"t": t_wrap0, "kind": "swell", "tag": "wrap", "t1": t_wrap1}, {"t": t_moon0, "kind": "swell", "tag": "moon", "t1": t_moon1}]
-sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working",
+sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working", "tail_s": 0.05,
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
          "events": sorted(ev, key=lambda e: e["t"]),
          "voice": [{"id": v["id"], "t": v["t"], "file": v["file"]} for v in film["voice"]]}

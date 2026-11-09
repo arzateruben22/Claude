@@ -49,7 +49,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("ep"); ap.add_argument("--name", required=True); ap.add_argument("--hero", required=True)
     ap.add_argument("--series", required=True); ap.add_argument("--line1", required=True); ap.add_argument("--line2", default="")
-    ap.add_argument("--accent", default=""); ap.add_argument("--thumb-title", default=""); ap.add_argument("--anchor", default="0.5,0.4")
+    ap.add_argument("--accent", default=""); ap.add_argument("--thumb-title", default=""); ap.add_argument("--anchor", default="0.5,0.4"); ap.add_argument("--overlay", action="store_true", help="the hero is a full 9:16 frame with empty sky: the title is set over it")
     a = ap.parse_args()
     ep = Path(a.ep); out = ep / "out"; out.mkdir(exist_ok=True)
     hero = Image.open(ep / a.hero if not Path(a.hero).is_absolute() else a.hero).convert("RGB")
@@ -58,6 +58,27 @@ def main():
     # 9:16 cover: the hero on top (62%), a graphite plate below with the title
     W, H = 1080, 1920; top = 1190
     cv = Image.new("RGB", (W, H), BG)
+    if a.overlay:
+        cv = fit_cover(hero, W, H, (0.5, 0.5))
+        d = ImageDraw.Draw(cv)
+        d.text((72, 250), a.series.upper(), font=font("JetBrainsMono-VF.ttf", 34, 600), fill=MAG)
+        draw_title(d, 72, 320, lines, a.accent, 160)
+        d.text((72, 790), "A worked-out what-if", font=font("Figtree-VF.ttf", 40, 500), fill=DIM)
+        cv.save(out / f"{a.name}-cover.jpg", quality=92)
+        cv.resize((480, 854), Image.LANCZOS).save(out / f"{a.name}-cover-480.jpg", quality=90)
+        TW, TH = 1280, 720
+        th = Image.new("RGB", (TW, TH), BG)
+        hw = 500
+        th.paste(hero.crop((0, 1080, 1080, 1080 + 1080 * TH // hw)).resize((hw, TH)) if False else fit_cover(hero.crop((0, 900, 1080, 1920)), hw, TH, (0.2, 0.5)), (TW - hw, 0))
+        g2 = Image.new("L", (200, 1)); g2.putdata([int(255 * (1 - i / 199) ** 1.3) for i in range(200)])
+        th.paste(Image.new("RGB", (200, TH), BG), (TW - hw, 0), g2.resize((200, TH)))
+        d = ImageDraw.Draw(th)
+        d.text((64, 70), a.series.upper().replace("POSSIBILITY LAB · ", "POSSIBILITY LAB\n"), font=font("JetBrainsMono-VF.ttf", 28, 600), fill=MAG, spacing=8)
+        rows = a.thumb_title.split("|") if "|" in a.thumb_title else lines
+        draw_title(d, 64, 210, rows, a.accent, 124, 1.0)
+        th.save(out / f"{a.name}-thumb.jpg", quality=92)
+        print("wrote", out / f"{a.name}-cover.jpg", out / f"{a.name}-cover-480.jpg", out / f"{a.name}-thumb.jpg")
+        return
     cv.paste(fit_cover(hero, W, top, ax), (0, 0))
     g = Image.new("L", (1, 220)); g.putdata([int(255 * (i / 219) ** 1.6) for i in range(220)])
     cv.paste(Image.new("RGB", (W, 220), BG), (0, top - 220), g.resize((W, 220)))

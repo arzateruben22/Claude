@@ -4,7 +4,7 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 
 **Before posting:** every claim is still OPEN. A person has to open each source link and tick it in `review/claims-table.md` first. This is Season 2, episode 2 of 6 (folder ep08).
 
-**Cover / thumbnail**: `possibility-lab-s2e02-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `possibility-lab-s2e02-thumb.jpg` (16:9 YouTube thumbnail)
+**Cover / thumbnail**: `possibility-lab-s2e02-cover.jpg` (9:16 cover, 1080x1920: TikTok, Reels, Shorts; `possibility-lab-s2e02-cover-480.jpg` is the small copy) · `possibility-lab-s2e02-thumb.jpg` (16:9 YouTube thumbnail)
 
 ## YouTube Shorts
 **Title**
