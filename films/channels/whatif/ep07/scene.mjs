@@ -249,8 +249,8 @@ window.seek = function (t) {
   if (t > CUE.apollo[1]) { const o2 = E.inout2(seg(t, CUE.apollo[1], CUE.orbit[0])), px0 = moonX + Ro * Math.cos(ang), py0 = moonY + Ro * Math.sin(ang), sx = moonX + Ro * Math.cos(ang0), sy = moonY + Ro * Math.sin(ang0);
     const bx0 = cx + (sx - cx) * o2, by0 = top + (sy - top) * o2; cxp = t < CUE.orbit[0] ? bx0 : px0; cyp = t < CUE.orbit[0] ? by0 : py0; rot = t < CUE.orbit[0] ? 0 : ang; }
   orbitRing.visible = capOn > 0.02 && t > CUE.apollo[1] + 0.2 && shot !== "end"; orbitRing.material.opacity = 0.35 * E.out3(seg(t, CUE.apollo[1], CUE.orbit[0])) * capOn; orbitRing.position.set(moonX, moonY, 0); orbitRing.scale.set(Ro, Ro, 1);
-  setLane("C", cx, cap, px * 1.0, 0.45 * capOn * (1 - seg(t, CUE.apollo[1] - 0.1, CUE.apollo[1] + 0.4)));
-  capsule.visible = capOn > 0.02 && shot !== "end"; capsule.scale.setScalar(figH * 0.4); capsule.position.set(cxp, cyp, 0); capsule.rotation.z = rot;
+  setLane("C", cx, cap, px * 1.0, 0.45 * capOn * (1 - seg(t, CUE.apollo[1] - 0.6, CUE.apollo[1] - 0.1)));
+  capsule.visible = capOn > 0.02 && shot !== "end"; capsule.scale.setScalar(figH * 0.5); capsule.position.set(cxp, cyp, 0); capsule.rotation.z = rot;
   trail.visible = capsule.visible && t < CUE.apollo[1] - 0.05; trail.material.opacity = 0.5 * capOn; trail.scale.set(figH * 0.22, Math.min(top * capE, figH * 5), 1); trail.position.set(cx, top * capE - figH * 0.4, 0);
   for (const k of ["A", "B", "S", "C"]) bead[k].visible = false;
 
