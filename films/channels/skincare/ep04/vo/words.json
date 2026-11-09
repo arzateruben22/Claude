@@ -468,8 +468,8 @@
   },
   {
    "id": "vo04",
-   "text": "Two hundred years ago, a German doctor named Justinus Kerner studied a poison in spoiled sausages that caused paralysis. He guessed it might one day become a medicine.",
-   "heard": "Two hundred years ago, a German doctor named Justinus Kaener studied a poison in spoiled sausages that caused paralysis. He guessed it might one day become a medicine.",
+   "text": "Two hundred years ago, a German doctor named Justinus Kerner described a food poison found in sausages. He guessed it might one day become a medicine.",
+   "heard": "Two hundred years ago, a German doctor named Justinus Kaener described a food poison found in sausages. He guessed it might one day become a medicine.",
    "words": [
     {
      "w": "Two",
@@ -491,152 +491,140 @@
     },
     {
      "w": "ago,",
-     "start": 0.89,
+     "start": 0.915,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.515,
-     "end": 1.565,
+     "start": 1.495,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "German",
-     "start": 1.62,
+     "start": 1.61,
      "end": 1.92,
      "heard": true
     },
     {
      "w": "doctor",
-     "start": 2.025,
+     "start": 2.015,
      "end": 2.32,
      "heard": true
     },
     {
      "w": "named",
-     "start": 2.255,
+     "start": 2.28,
      "end": 2.56,
      "heard": true
     },
     {
      "w": "Justinus",
-     "start": 2.615,
-     "end": 3.12,
+     "start": 2.645,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "Kerner",
-     "start": 3.22,
+     "start": 3.25,
      "end": 4.0,
      "heard": false
     },
     {
-     "w": "studied",
-     "start": 3.95,
-     "end": 4.32,
+     "w": "described",
+     "start": 4.02,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.395,
-     "end": 4.445,
+     "start": 4.49,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "food",
+     "start": 4.655,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "poison",
-     "start": 4.46,
-     "end": 4.88,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 4.9,
-     "end": 5.04,
-     "heard": true
-    },
-    {
-     "w": "spoiled",
-     "start": 5.135,
+     "start": 4.96,
      "end": 5.52,
      "heard": true
     },
     {
-     "w": "sausages",
-     "start": 5.475,
-     "end": 6.24,
+     "w": "found",
+     "start": 5.51,
+     "end": 5.76,
      "heard": true
     },
     {
-     "w": "that",
-     "start": 6.3,
-     "end": 6.4,
+     "w": "in",
+     "start": 5.79,
+     "end": 5.92,
      "heard": true
     },
     {
-     "w": "caused",
-     "start": 6.425,
-     "end": 6.72,
-     "heard": true
-    },
-    {
-     "w": "paralysis.",
-     "start": 6.78,
-     "end": 7.92,
+     "w": "sausages.",
+     "start": 5.945,
+     "end": 7.04,
      "heard": true
     },
     {
      "w": "He",
-     "start": 8.07,
-     "end": 8.12,
+     "start": 7.225,
+     "end": 7.275,
      "heard": true
     },
     {
      "w": "guessed",
-     "start": 8.18,
-     "end": 8.4,
+     "start": 7.255,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "it",
-     "start": 8.39,
-     "end": 8.56,
+     "start": 7.54,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "might",
-     "start": 8.505,
-     "end": 8.8,
+     "start": 7.67,
+     "end": 8.0,
      "heard": true
     },
     {
      "w": "one",
-     "start": 8.805,
-     "end": 9.04,
+     "start": 7.925,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "day",
-     "start": 9.07,
-     "end": 9.28,
+     "start": 8.215,
+     "end": 8.4,
      "heard": true
     },
     {
      "w": "become",
-     "start": 9.315,
-     "end": 9.52,
+     "start": 8.465,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "a",
-     "start": 9.42,
-     "end": 9.6,
+     "start": 8.555,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "medicine.",
-     "start": 9.48,
-     "end": 10.16,
+     "start": 8.6,
+     "end": 9.28,
      "heard": true
     }
    ]

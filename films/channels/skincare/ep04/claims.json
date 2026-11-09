@@ -3,12 +3,12 @@
   "id": "s1",
   "sentence": "Every frown begins at the end of a nerve.",
   "claim": "A facial muscle is told to contract by the motor nerve ending that supplies it, at the neuromuscular junction.",
-  "source_url": "https://www.statpearls.com/point-of-care/25815",
-  "source_title": "Physiology, Neuromuscular Junction (StatPearls; editor P. C. Bollu, updated 17 Feb 2025)",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/32533580/",
+  "source_title": "Morphological variability is greater at developing than mature mouse neuromuscular junctions (J Anat, 2020)",
   "accessed": "2026-11-09",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "[OPEN] Not on a page I could read (StatPearls 403; Bookshelf reCAPTCHA). PMC2856357 only implies it ('inhibiting the release of acetylcholine from presynaptic motor neurons'). A person opens a neuromuscular-junction source. Treatment topic: dermatologist sign-off."
+  "note": "[SOURCE-READ] PubMed 32533580 (efetch abstract, read 9 Nov): 'Post-synaptic acetylcholine receptors (AChRs)… bind to acetylcholine released into the synaptic cleft of the NMJ, thereby enabling the conversion of motor action potentials to muscle contractions.' General neuromuscular-junction statement (a mouse paper's background sentence); 'every frown' is the film's plain-words application to facial muscle. Person to open."
  },
  {
   "id": "s2",
@@ -25,12 +25,12 @@
   "id": "s3",
   "sentence": "It reaches a muscle fibre, which gets the message and pulls.",
   "claim": "Released acetylcholine makes the muscle fibre contract.",
-  "source_url": "https://www.statpearls.com/point-of-care/25815",
-  "source_title": "Physiology, Neuromuscular Junction (StatPearls; editor P. C. Bollu, updated 17 Feb 2025)",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/32533580/",
+  "source_title": "Morphological variability is greater at developing than mature mouse neuromuscular junctions (J Anat, 2020)",
   "accessed": "2026-11-09",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "[OPEN] Implied only (PMC2856357: blocking ACh release causes muscle paralysis). Needs a neuromuscular-junction page a person opens. Treatment topic: dermatologist sign-off."
+  "note": "[SOURCE-READ] PubMed 32533580: AChRs 'bind to acetylcholine released into the synaptic cleft of the NMJ, thereby enabling the conversion of motor action potentials to muscle contractions.' Person to open."
  },
  {
   "id": "s4",
@@ -47,12 +47,12 @@
   "id": "s5",
   "sentence": "There it cuts one protein, SNAP-25, that the message needs.",
   "claim": "Type A's light chain is a protease that cleaves SNAP-25, a protein needed for acetylcholine vesicles to fuse with the membrane (other serotypes cut VAMP or syntaxin).",
-  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2856357/",
-  "source_title": "Botulinum toxin (Nigam PK, Nigam A; Indian Journal of Dermatology, 2010)",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/41023315/",
+  "source_title": "Botulinum neurotoxin Light Chain/A1 uses fast synaptic vesicle cycling to cleave plasma membrane bound SNAP-25 (Commun Biol, 2025)",
   "accessed": "2026-11-09",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "[OPEN] PMC2856357 (read) says the light chain 'interact[s] with … SNAP 25, vesicle associated membrane protein and syntaxin … to prevent fusion of acetylcholine vesicles'; it does not say 'cleaves'. The coordinator states type A cleaves SNAP-25 specifically (VAMP/syntaxin are other serotypes' targets). Needs a page that says 'cleaves' (nature.com and PubMed were blocked when tried): OPEN. Treatment topic: dermatologist sign-off."
+  "note": "[SOURCE-READ] PubMed 41023315 (efetch abstract, read 9 Nov): title 'Botulinum neurotoxin Light Chain/A1 uses fast synaptic vesicle cycling to cleave plasma membrane bound SNAP-25'; 'LC/A1 traffics on fast synaptic vesicles to the intracellular plasma membrane to cleave SNAP-25.' (Cell-based assay in Neuro-2A cells.) 'The message needs it': PMC2856357 says the light chain acts on SNAP-25 among SNARE proteins 'to prevent fusion of acetylcholine vesicles with the cell membrane'. Person to open."
  },
  {
   "id": "s6",
@@ -67,14 +67,14 @@
  },
  {
   "id": "s7",
-  "sentence": "Two hundred years ago, a German doctor named Justinus Kerner studied a poison in spoiled sausages that caused paralysis.",
-  "claim": "In 1817–1822 Kerner gave the first accurate descriptions of food-borne botulism ('sausage poisoning').",
+  "sentence": "Two hundred years ago, a German doctor named Justinus Kerner described a food poison found in sausages.",
+  "claim": "Kerner (1786–1862), a district medical officer in Württemberg, published the first accurate descriptions of food-borne botulism in 1817–1822; it followed eating meat and blood sausages.",
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/17458494/",
   "source_title": "From poison to remedy: the chequered history of botulinum toxin (Erbguth FJ; J Neural Transm, 2008)",
   "accessed": "2026-11-09",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "[OPEN] Carried over from the earlier draft (PubMed excerpt: Kerner's 1820 monograph on 'sausage poisoning' reviewed 76 cases). PubMed page not readable here; OPEN. Treatment topic: dermatologist sign-off."
+  "note": "[SOURCE-READ] PubMed 17458494 (Erbguth 2008, efetch abstract): 'the consumption of meat and blood sausages gave rise to many deaths throughout the kingdom of Württemberg'; 'The district medical officer Justinus Kerner (1786–1862)… published the first accurate and complete descriptions of the symptoms of food-borne botulism between 1817 and 1822 and attributed the intoxication to a biological poison.' The film says 'a food poison found in sausages' and does not repeat the deaths or show them over any person. Person to open."
  },
  {
   "id": "s8",
@@ -83,9 +83,9 @@
   "source_url": "https://pubmed.ncbi.nlm.nih.gov/17458494/",
   "source_title": "From poison to remedy: the chequered history of botulinum toxin (Erbguth FJ; J Neural Transm, 2008)",
   "accessed": "2026-11-09",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "[OPEN] Carried over: Kerner 'also suggested a possible therapeutic use'. OPEN. Treatment topic: dermatologist sign-off."
+  "note": "[SOURCE-READ] PubMed 17458494: 'Kerner also postulated that the toxin might be used for treatment purposes.' ('Guessed' = postulated.) Person to open."
  },
  {
   "id": "s9",

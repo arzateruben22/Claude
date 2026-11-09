@@ -7,7 +7,7 @@ HERE = Path(__file__).resolve().parent
 lines = json.load(open(HERE / "vo/lines.json"))["lines"]
 real = {l["id"]: l["words"] for l in json.load(open(HERE / "vo/words.json"))["lines"]}
 HOLD = {"hook": 0.4, "normal": 0.5, "change": 0.6, "why": 2.2, "whoa": 3.1, "takeaway": 0.5}
-END_CARD = 2.2
+END_CARD = 1.5
 T, START, END, caps = 0.05, {}, {}, []
 for L in lines:
     START[L["id"]] = round(T, 3); END[L["id"]] = round(T + L["dur"], 3)

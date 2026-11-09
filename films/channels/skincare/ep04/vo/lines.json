@@ -51,15 +51,15 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "Two hundred years ago, a German doctor named Justinus Kerner studied a poison in spoiled sausages that caused paralysis. He guessed it might one day become a medicine.",
+   "text": "Two hundred years ago, a German doctor named Justinus Kerner described a food poison found in sausages. He guessed it might one day become a medicine.",
    "stars": [
     "medicine"
    ],
-   "phonemes": "tˈuː hˈʌndɹɪd jˈiəz ɐɡˈəʊ, ɐ dʒˈɜːmən dˈɒktə nˈeɪmd jʊstˈiːnʊs kˈɛɐnɐ stˈʌdid ɐ pˈɔɪzən ɪn spˈɔɪld sˈɒsɪdʒɪz ðat kˈɔːzd pəɹˈaləsˌɪs. hiː ɡˈɛst ɪt mˌaɪt wˈɒn dˈeɪ bɪkˌʌm ɐ mˈɛdsən.",
+   "phonemes": "tˈuː hˈʌndɹɪd jˈiəz ɐɡˈəʊ, ɐ dʒˈɜːmən dˈɒktə nˈeɪmd jʊstˈiːnʊs kˈɛɐnɐ dɪskɹˈaɪbd ɐ fˈuːd pˈɔɪzən fˈaʊnd ɪn sˈɒsɪdʒɪz. hiː ɡˈɛst ɪt mˌaɪt wˈɒn dˈeɪ bɪkˌʌm ɐ mˈɛdsən.",
    "speed": 0.9,
    "file": "04.wav",
-   "dur": 10.198,
-   "sha256": "c41320a5b268970f6406607941cbc8c8f00eab1046f568e983ca845ea537367b"
+   "dur": 9.327,
+   "sha256": "07bf730aa06b1cd225ad9f69c265c101c319f4af8dfc86ccf56ca044135a5794"
   },
   {
    "id": "vo05",
