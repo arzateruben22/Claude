@@ -1,0 +1,124 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/space/ep07/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "More trees, or more stars? Guess first.",
+   "stars": [
+    "stars",
+    "first"
+   ],
+   "phonemes": "mˈɔːɹ tɹˈiːz, ɔːɹ mˈɔːɹ stˈɑːɹz? ɡˈɛs fˈɜːst.",
+   "speed": 1.0,
+   "file": "01.wav",
+   "dur": 2.61,
+   "sha256": "1a2e4f572d45a95608fc407a23b2c33e94d2faf720166ff3ed0d28ed890e9719"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Our galaxy has hundreds of billions of stars. Nobody counted them. Most of its weight is dark matter, not stars, so the number is an estimate.",
+   "stars": [
+    "billions",
+    "estimate"
+   ],
+   "phonemes": "ˌaʊɚ ɡˈælɐksi hɐz hˈʌndɹɪdz ʌv bˈɪliənz ʌv stˈɑːɹz. nˈoʊbɑːdi kˈaʊntᵻd ðˌɛm. mˈoʊst əv ɪts wˈeɪt ɪz dˈɑːɹk mˈæɾɚ, nˌɑːt stˈɑːɹz, sˌoʊ ðə nˈʌmbɚɹ ɪz ɐn ˈɛstᵻmət.",
+   "speed": 1.05,
+   "file": "02.wav",
+   "dur": 9.421,
+   "sha256": "b645b27e2e51257c37fac1f8432be95dbb8e07c2b053720a83b5977949233d4c"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Now the trees. In twenty fifteen, a team put Earth's at about three trillion. That's several hundred trees for every person alive.",
+   "stars": [
+    "trillion"
+   ],
+   "phonemes": "nˈaʊ ðə tɹˈiːz. ɪn twˈɛnti fˈɪftiːn, ɐ tˈiːm pˌʊt ˈɜːθz æɾ ɐbˌaʊt θɹˈiː tɹˈɪliən. ðæts sˈɛvɹəl hˈʌndɹɪd tɹˈiːz fɔːɹ ˈɛvɹi pˈɜːsən ɐlˈaɪv.",
+   "speed": 1.05,
+   "file": "03.wav",
+   "dur": 8.497,
+   "sha256": "de060ff1ea240cf8bfe9f0e58a8a54f96e6bd9afe83913d1f03293e507db5cba"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Researchers counted trees in ground plots, then scaled up with satellite maps. Both are estimates, not exact counts, so each really means about. The honest answer is a range.",
+   "stars": [
+    "ground",
+    "about",
+    "range"
+   ],
+   "phonemes": "ɹᵻsˈɜːtʃɚz kˈaʊntᵻd tɹˈiːz ɪn ɡɹˈaʊnd plˈɑːts, ðˈɛn skˈeɪld ˌʌp wɪð sˈæɾəlˌaɪt mˈæps. bˈoʊθ ɑːɹ ˈɛstᵻməts, nˌɑːt ɛɡzˈækt kˈaʊnts, sˌoʊ ˈiːtʃ ɹˈiəli mˈiːnz ɐbˈaʊt. ðɪ ˈɑːnɪst ˈænsɚɹ ɪz ɐ ɹˈeɪndʒ.",
+   "speed": 1.05,
+   "file": "04.wav",
+   "dur": 12.091,
+   "sha256": "a204864566627cbd5940e3ed493bf8acba6e6f03e86d980acd3e53463d50aa40"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Now turn every star into a tree. The stars run out, and Earth's forests keep going. Trees win, by roughly eight to thirty times.",
+   "stars": [
+    "tree",
+    "going",
+    "thirty"
+   ],
+   "phonemes": "nˈaʊ tˈɜːn ˈɛvɹi stˈɑːɹ ˌɪntʊ ɐ tɹˈiː. ðə stˈɑːɹz ɹˈʌn ˈaʊt, ænd ˈɜːθz fˈɔːɹɪsts kˈiːp ɡˈoʊɪŋ. tɹˈiːz wˈɪn, baɪ ɹˈʌfli ˈeɪt tə θˈɜːɾi tˈaɪmz.",
+   "speed": 1.0,
+   "file": "05.wav",
+   "dur": 8.862,
+   "sha256": "2482cb826d917edc3cc0a5a75c9a407125b40a4d1ea3c266325cf3b2b9f92e77"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So the next tree you pass is one of more than the stars. Big numbers hide in ordinary places.",
+   "stars": [
+    "more"
+   ],
+   "phonemes": "sˌoʊ ðə nˈɛkst tɹˈiː juː pˈæs ɪz wˈʌn ʌv mˈɔːɹ ðɐn ðə stˈɑːɹz. bˈɪɡ nˈʌmbɚz hˈaɪd ɪn ˈɔːɹdɪnˌɛɹi plˈeɪsᵻz.",
+   "speed": 0.95,
+   "file": "06.wav",
+   "dur": 6.377,
+   "sha256": "22ee90055211bd6fc026a108ec46692c6166e18acea1f6300127d709abeaccd2"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time across our galaxy: longer than all of written history. Across a city block: about a millionth of a second.",
+   "stars": [
+    "Light time",
+    "millionth"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm əkɹˌɑːs ˌaʊɚ ɡˈælɐksi: lˈɔŋɡɚ ðɐn ˈɔːl ʌv ɹˈɪʔn hˈɪstɚɹi. əkɹˌɑːs ɐ sˈɪɾi blˈɑːk: ɐbˌaʊt ɐ mˈɪliənθ əvə sˈɛkənd.",
+   "speed": 1.0,
+   "file": "07.wav",
+   "dur": 7.805,
+   "sha256": "a55461c4355fb9ef0e93382b73c1053bb98402eadd203a74785dd9019f55fa8d"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: with that many stars, why is the night sky dark?",
+   "stars": [
+    "dark"
+   ],
+   "phonemes": "nˈɛkst: wɪð ðæt mˈɛni stˈɑːɹz, wˌaɪ ɪz ðə nˈaɪt skˈaɪ dˈɑːɹk?",
+   "speed": 1.0,
+   "file": "08.wav",
+   "dur": 3.661,
+   "sha256": "4592f44e269d48cf8097c21982d650750eca19539f28747d72241c74e6caf6a4"
+  }
+ ]
+}

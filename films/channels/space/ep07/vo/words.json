@@ -1,0 +1,1015 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "More trees, or more stars? Guess first.",
+   "heard": "More trees or more stars? Guess first.",
+   "words": [
+    {
+     "w": "More",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "trees,",
+     "start": 0.245,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 0.635,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 0.925,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "stars?",
+     "start": 1.13,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "Guess",
+     "start": 1.785,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "first.",
+     "start": 2.185,
+     "end": 2.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Our galaxy has hundreds of billions of stars. Nobody counted them. Most of its weight is dark matter, not stars, so the number is an estimate.",
+   "heard": "Our galaxy has hundreds of billions of stars. Nobody counted them. Most of its weight is dark matter, not stars, so the number is an estimate.",
+   "words": [
+    {
+     "w": "Our",
+     "start": 0.08,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "galaxy",
+     "start": 0.24,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 0.845,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "hundreds",
+     "start": 1.13,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.48,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "billions",
+     "start": 1.71,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.195,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "stars.",
+     "start": 2.365,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "Nobody",
+     "start": 3.32,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "counted",
+     "start": 3.835,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "them.",
+     "start": 4.32,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "Most",
+     "start": 5.05,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.31,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 5.34,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "weight",
+     "start": 5.49,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 5.885,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "dark",
+     "start": 6.095,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "matter,",
+     "start": 6.405,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 6.965,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "stars,",
+     "start": 7.365,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 8.03,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.06,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 8.205,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 8.535,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 8.65,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "estimate.",
+     "start": 8.96,
+     "end": 9.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Now the trees. In twenty fifteen, a team put Earth's at about three trillion. That's several hundred trees for every person alive.",
+   "heard": "Now the trees. In 2015, a team put Earths at about 3 trillion. That's several hundred trees for every person alive.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.42,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "trees.",
+     "start": 0.45,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 1.44,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "twenty",
+     "start": 1.57,
+     "end": 2.48,
+     "heard": false
+    },
+    {
+     "w": "fifteen,",
+     "start": 1.61,
+     "end": 2.48,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 2.54,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "team",
+     "start": 2.665,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "put",
+     "start": 3.025,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "Earth's",
+     "start": 3.23,
+     "end": 3.68,
+     "heard": false
+    },
+    {
+     "w": "at",
+     "start": 3.605,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.785,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 4.02,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "trillion.",
+     "start": 4.415,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "That's",
+     "start": 5.42,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "several",
+     "start": 5.565,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 6.08,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "trees",
+     "start": 6.48,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 7.06,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 7.23,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "person",
+     "start": 7.54,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "alive.",
+     "start": 7.8,
+     "end": 8.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Researchers counted trees in ground plots, then scaled up with satellite maps. Both are estimates, not exact counts, so each really means about. The honest answer is a range.",
+   "heard": "Researchers counted trees in ground plots, then scaled up with satellite maps. Both are estimates, not exact counts, so each really means about. The honest answer is a range.",
+   "words": [
+    {
+     "w": "Researchers",
+     "start": 0.02,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "counted",
+     "start": 0.705,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "trees",
+     "start": 1.13,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.625,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 1.835,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "plots,",
+     "start": 2.175,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 2.97,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "scaled",
+     "start": 3.135,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 3.735,
+     "end": 3.785,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 3.765,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "satellite",
+     "start": 3.98,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "maps.",
+     "start": 4.47,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "Both",
+     "start": 5.445,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 5.84,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "estimates,",
+     "start": 6.085,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 6.88,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "exact",
+     "start": 7.15,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "counts,",
+     "start": 7.595,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 8.18,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 8.42,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "really",
+     "start": 8.695,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "means",
+     "start": 8.905,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "about.",
+     "start": 9.405,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 10.18,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "honest",
+     "start": 10.33,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "answer",
+     "start": 10.755,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 11.185,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 11.215,
+     "end": 11.52,
+     "heard": true
+    },
+    {
+     "w": "range.",
+     "start": 11.44,
+     "end": 12.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Now turn every star into a tree. The stars run out, and Earth's forests keep going. Trees win, by roughly eight to thirty times.",
+   "heard": "Now turn every star into a tree. The stars run out and Earth's forests keep going. Trees win by roughly eight to thirty times.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "turn",
+     "start": 0.325,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 0.645,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "star",
+     "start": 1.04,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 1.17,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.645,
+     "end": 1.695,
+     "heard": true
+    },
+    {
+     "w": "tree.",
+     "start": 1.675,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 2.575,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "stars",
+     "start": 2.605,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "run",
+     "start": 3.175,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "out,",
+     "start": 3.33,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.66,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "Earth's",
+     "start": 3.9,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "forests",
+     "start": 4.32,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "keep",
+     "start": 4.795,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "going.",
+     "start": 5.01,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "Trees",
+     "start": 5.965,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "win,",
+     "start": 6.41,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 6.935,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "roughly",
+     "start": 6.965,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 7.545,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.79,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "thirty",
+     "start": 7.97,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "times.",
+     "start": 8.235,
+     "end": 8.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "So the next tree you pass is one of more than the stars. Big numbers hide in ordinary places.",
+   "heard": "So the next tree you pass is one of more than the stars. Big numbers hide in ordinary places.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.16,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "next",
+     "start": 0.425,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "tree",
+     "start": 0.545,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.985,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "pass",
+     "start": 1.015,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.595,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 1.625,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.725,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 1.945,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 2.31,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.505,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "stars.",
+     "start": 2.65,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "Big",
+     "start": 3.74,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "numbers",
+     "start": 3.945,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "hide",
+     "start": 4.51,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 4.915,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "ordinary",
+     "start": 5.195,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "places.",
+     "start": 5.765,
+     "end": 6.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Light time across our galaxy: longer than all of written history. Across a city block: about a millionth of a second.",
+   "heard": "Light time across our galaxy, longer than all of written history, across a city block, about a millionth of a second.",
+   "words": [
+    {
+     "w": "Light",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "time",
+     "start": 0.375,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "across",
+     "start": 0.81,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "our",
+     "start": 1.105,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "galaxy:",
+     "start": 1.285,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "longer",
+     "start": 2.285,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 2.725,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 2.98,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.285,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "written",
+     "start": 3.315,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "history.",
+     "start": 3.695,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "Across",
+     "start": 4.595,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.995,
+     "end": 5.045,
+     "heard": true
+    },
+    {
+     "w": "city",
+     "start": 5.025,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "block:",
+     "start": 5.425,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.195,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.445,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "millionth",
+     "start": 6.475,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.03,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.175,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 7.4,
+     "end": 7.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: with that many stars, why is the night sky dark?",
+   "heard": "Next, with that many stars, why is the night sky dark?",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 0.53,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 0.685,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "many",
+     "start": 0.845,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "stars,",
+     "start": 1.175,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "why",
+     "start": 1.94,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.07,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.375,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "night",
+     "start": 2.405,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "sky",
+     "start": 2.765,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "dark?",
+     "start": 3.26,
+     "end": 3.6,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
