@@ -171,7 +171,7 @@ window.seek = function (t) {
   // the planet and its rope ring
   const planet = d > 2e4 && (shot === "pull" || shot === "lift");
   const pl = seg(ld, 5.6, 7.0);
-  earthB.visible = planet && pl > 0.01; earthB.position.set(0, -R_E, 0); earthB.scale.setScalar(R_E); earthB.material.uniforms.uOpacity.value = pl;
+  earthB.visible = planet && pl > 0.01; earthB.position.set(0, -R_E, 0); earthB.scale.setScalar(R_E); earthB.material.uniforms.uOpacity.value = pl * (1 - 0.8 * E.inout2(seg(t, CUE.dive[0], CUE.dive[0] + 0.9)));
   const lu = E.inout2(seg(t, CUE.lift, CUE.lift + 1.4));
   ringQ.visible = planet; ringQ.position.set(0, -R_E, 0); ringQ.scale.setScalar(R_E * 1.0);
   const w = px * 1.6 / R_E;

@@ -67,13 +67,13 @@ t_ph2 = A("vo07:Lift", -0.1)
 
 # ── the camera ──
 T = lambda x, y, z, d, el=5.0, az=0.0, fy=0.50: {"target": [x, y, z], "dist": d, "el": el, "az": az, "fov": 24, "fy": fy}
-FRONT = T(0.0, 0.85, 0.0, 24.0, 6.0, 0.0, 0.70)
-PL = T(0.0, -R_E, 0.0, 7.0e7, 10.0, 0.0, 0.30)
+FRONT = T(0.0, 0.85, 0.0, 24.0, 6.0, 0.0, 0.80)
+PL = T(0.0, -R_E, 0.0, 8.5e7, 10.0, 0.0, 0.27)
 LIFT = T(1.0, 0.9, 0.0, 12.0, 5.0, 0.0, 0.76)
 def on_path(d):                                               # a camera at distance d on the way between you and the planet (target and where it lands, in step)
-    s2 = min(1.0, max(0.0, (math.log10(d) - 5.0) / (math.log10(7.0e7) - 5.0)))
-    el = 6.0 + 4.0 * min(1.0, max(0.0, math.log10(d / 24.0) / math.log10(7.0e7 / 24.0)))
-    return T(0.0, 0.85 - (R_E + 0.85) * s2 ** 3, 0.0, d, el, 0.0, 0.70 - 0.40 * s2)
+    s2 = min(1.0, max(0.0, (math.log10(d) - 5.0) / (math.log10(8.5e7) - 5.0)))
+    el = 6.0 + 4.0 * min(1.0, max(0.0, math.log10(d / 24.0) / math.log10(8.5e7 / 24.0)))
+    return T(0.0, 0.85 - (R_E + 0.85) * s2 ** 3, 0.0, d, el, 0.0, 0.80 - 0.53 * s2)
 def path_keys(t0, t1, d0, d1, n):
     out = []
     for i in range(n + 1):
@@ -82,10 +82,10 @@ def path_keys(t0, t1, d0, d1, n):
         out.append({"t": round(t0 + (t1 - t0) * u, 4), **on_path(d), "ease": "linear"})
     return out
 t_arrive = t_nor + 4.6
-k_pull = path_keys(t_nor, t_arrive, 24.0, 7.0e7, 14)
+k_pull = path_keys(t_nor, t_arrive, 24.0, 8.5e7, 14)
 k_pull[0] = {"t": t_nor, **FRONT, "ease": "linear"}
 k_pull[-1] = {"t": round(t_arrive, 4), **PL, "ease": "inout2"}
-k_dive = path_keys(t_dive0, t_dive0 + 3.9, 7.0e7, 12.0, 14)[::1]
+k_dive = path_keys(t_dive0, t_dive0 + 3.9, 8.5e7, 12.0, 14)[::1]
 k_dive[0] = {"t": round(t_dive0, 4), **PL, "ease": "linear"}
 k_dive[-1] = {"t": round(t_dive0 + 3.9, 4), **LIFT, "ease": "inout2"}
 DIAP = T(DIA[0], 0.0, DIA[2], 13.0, 68.0, 0.0, 0.26)
@@ -101,8 +101,8 @@ CAM = {
     "lift": k_dive + [{"t": t_why, **T(1.0, 0.9, 0.0, 12.0, 5.0, 10.0, 0.76), "ease": "sine"}],
     "why": [{"t": t_why, **T(1.0, 0.9, 0.0, 12.0, 5.0, 10.0, 0.76)}, {"t": round(t_why + 2.6, 4), **DIAP, "ease": "inout2"}, {"t": round(t_lift4 + 0.5, 4), **DIAP, "ease": "sine"},
             {"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 11.5, 68.0, 0.0, 0.26), "ease": "sine"}],
-    "whoa": [{"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 11.5, 68.0, 0.0, 0.26)}, {"t": round(t_whoa + 1.8, 4), **LAYP, "ease": "inout2"}, {"t": t_work0, **LAYQ, "ease": "sine"}],
-    "work": [{"t": t_work0, **LAYQ}, {"t": round(t_work0 + 1.6, 4), **WORKP, "ease": "inout2"}, {"t": t_home, **WORKP2, "ease": "sine"}],
+    "whoa": [{"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 11.5, 68.0, 0.0, 0.26)}, {"t": round(t_whoa + 1.8, 4), **LAYP, "ease": "inout2"}, {"t": round(t_work0 - 2.0, 4), **LAYQ, "ease": "sine"}, {"t": t_work0, **WORKP, "ease": "inout2"}],
+    "work": [{"t": t_work0, **WORKP}, {"t": t_home, **WORKP2, "ease": "sine"}],
     "take": [{"t": t_home, **WORKP2}, {"t": round(t_home + 2.2, 4), **TENP, "ease": "inout2"}, {"t": round(t_ph2 - 0.1, 4), **TENP, "ease": "sine"},
              {"t": round(t_ph2 + 2.6, 4), **LONGP, "ease": "inout2"}, {"t": t_end, **LONGP, "ease": "sine"}],
     "end": [{"t": t_end, **LONGP}, {"t": round(t_end + 0.7, 4), **T(40.0, 0.0, 0.0, 1.5e3, 20.0, 0.0, 0.5), "ease": "linear"},
@@ -151,7 +151,7 @@ LABELS = [
     {"id": "l-rod", "text": "1 m", "kind": "part", "anchor": "rod", "t0": t_dive0 + 3.2, "t1": t_why - 0.2, "side": 1},
     {"id": "l-rad", "text": "radius", "kind": "part", "anchor": "rad", "t0": t_radius, "t1": t_lift4 - 0.2, "side": 1},
     {"id": "l-gap", "text": "+ 1 m", "kind": "calc", "anchor": "gap", "t0": t_lift4 + 0.3, "t1": t_whoa - 0.2, "side": -1},
-    {"id": "l-end", "text": "≈ 6.3 m of extra rope", "kind": "calc", "anchor": "lay-end", "t0": t_six + 0.2, "t1": t_work0 + 0.6, "side": -1},
+    {"id": "l-end", "text": "≈ 6.3 m of extra rope", "kind": "calc", "anchor": "lay-end", "t0": t_six + 0.2, "t1": t_work0 - 2.3, "side": -1},
     {"id": "l-ten", "text": "10 m", "kind": "part", "anchor": "ten-top", "t0": t_home + 2.4, "t1": t_ph2 + 0.8, "side": 1},
     {"id": "l-63", "text": "63 m of rope", "kind": "calc", "anchor": "long-end", "t0": t_ph2 + 1.6, "t1": t_end - 0.8, "side": -1},
 ]
@@ -168,7 +168,7 @@ BADGES = [
     {"id": "b-x10", "text": "10 × the lift: 10 × the rope", "t0": t_ph2 + 1.0, "t1": t_end - 0.3, "slot": "tl"},
 ]
 COUNTERS = [
-    {"id": "c-extra", "label": "extra rope", "t0": t_grows - 0.2, "t1": t_work0 - 0.3, "at": [0.66, 0.30], "keys": [[t_grows, 0.0], [t_six, EXTRA], [t_work0, EXTRA]], "end": EXTRA, "unit": "m"},
+    {"id": "c-extra", "label": "extra rope", "t0": t_grows - 0.2, "t1": t_work0 - 0.3, "at": [0.62, 0.2], "keys": [[t_grows, 0.0], [t_six, EXTRA], [t_work0, EXTRA]], "end": EXTRA, "unit": "m"},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 for b in BADGES:
