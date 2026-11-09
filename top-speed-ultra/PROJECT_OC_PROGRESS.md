@@ -4,6 +4,261 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-09: Stoppage Time S2a committed
+
+S2a (needs, objects, ordering and the screens), with its repair after review, is committed on `claude/sports-bar`.
+The second review kept it: the reviewer drove ordering four ways in a fresh Playwright session at 844 x 390 (table
+food then a counter drink; a drink menu open then a table order; drink, food, drink, food at the counter; cancelling
+and a stray pick) and every run ended with no orders left and the menu closed, with no console errors.
+
+- Checks as measured in the entry below: `npx tsc --noEmit` passes; `tests/sportsbar-sim.mjs` 32 of 32;
+  `tests/sportsbar-s2a.mjs` checks 22 of 22 and save, shots and clip shots 12 of 12; S1's groups on this page 65 of 65.
+- Budgets: the items per instance and at their caps are within their rows (6 calls, 5.7k triangles at Low; 13.9k at
+  HD and Ultra against 6.0k and 14.1k). The page is 1,509 KB (504 KB gzipped). Frame rates on real phones were not
+  measured.
+- Images: `tests/out/sportsbar/s2a-*-r2.png` (needs panel and strip at 390 x 844 and 844 x 390, radial menu, ordering,
+  holding a drink, TV goal, guide, dance, clips sheet) and `s1-door-front-in-low-2100-s2a-r2.png`,
+  `s1-shadow-ultra-third-lot-noon-s2a-r2.png`. Logs in `tests/out/sportsbar/logs/` (not committed).
+
+## 2026-11-09: Stoppage Time S2a repaired after review
+
+The review of S2a (one reject, one keep) drove the page and found four defects in the core loop that S2a's own 16
+checks didn't catch, plus stale messages, a radial menu over the needs strip at 844 x 390, per-frame allocations and
+smaller items. All are fixed in place on `claude/sports-bar`, uncommitted; what S2a did well is kept. `people/`,
+`lot57/`, `src/onfoot/main.ts` and `index.html` are still untouched (`git status` on each empty). `npx tsc --noEmit`
+passes. The page is 1,509 KB (504 KB gzipped), 7 KB more than S2a's.
+
+- **What was wrong and what changed:**
+  - **Ordering could lock itself for the visit.** Ordering a drink and then food at the counter left two orders
+    "choosing" behind one menu; a picked item went to the first, whatever its kind; "Not now" dropped one; the other
+    stayed forever, and `notHolding` with it. Now (`venues/sportsbar/life.ts`): only one order is ever choosing. A
+    second order at the counter waits in the queue (its icon stays, stage `waiting`) until the open menu is answered,
+    then opens its own; a server who arrives while a menu is open waits beside you. A picked item answers the open
+    menu only if it's that menu's kind. "Not now" drops the order its menu was opened for. A menu sheet closed without
+    an answer drops its order, and any order still choosing with no menu open is dropped the same frame. An unfinished
+    order of a kind, or one queued, keeps that kind off the menu; an empty in your hand no longer does (it's set down
+    when the next item comes), and with no table within 3 m a toast says once where it can go.
+  - **"A match watched to the final whistle" could never complete on the big screen** or the screens that follow it:
+    at the whistle's minute the big screen has already turned to highlights. The screen's channel is now taken just
+    before the whistle (`channelAt`).
+  - **Sip drank the whole glass at once.** `sip()` now does nothing while a sip's 2.4 s clip plays; the empty goes down
+    after the last sip's clip.
+  - **The schedule** paired teams slot by slot on their own (CGS v ARK three times on a Saturday, SFT four slots in a
+    row, the same featured pair Friday and Saturday). Each day's pairings now come from a seeded round-robin
+    (`engine/sim/tv.ts`, `pairings()`): 28 pairings for the eight teams, no pairing twice a day, no team in two slots
+    in a row, and a featured pairing never the same as the day before's in the same league (in weeks 30 to 55 that
+    took a second draw once in 52 such days). Each slot's own seed still draws the match.
+  - **Sim time and the clock.** Setting the clock to the same reading twice didn't restart sim time (found by the new
+    final-whistle check: the second run started 17 minutes late), and a clock set back left every absolute timer in
+    the future (found by the new nudge check: the next sip was an hour away, so a drink stayed in hand). A set clock
+    now always restarts sim time, and a jump keeps every timer's time left (the next sip, orders, an action's start, a
+    dance, reservations, the moodlets' fading, the nudges' spacing).
+  - **Messages.** A set clock takes toasts and captions down; a fast-forward takes them down at its start, and at its
+    end any it raised whose time has run out in sim seconds.
+  - **The radial menu** stays below the needs strip and above the map credit, measured after it's drawn.
+  - **Allocations in the frame:** the clip layer's helpers and quaternions are hoisted to module scratch (no closures
+    or quaternions per call); `drawItems` uses a member Euler and no array literals; the screens' channels are worked
+    out once a sim minute (every kick-off and whistle falls on one) and the screen mesh's UVs only when the big
+    screen's channel or the opening hours change; the heaters are a constant; `Moodlets.prune` and `hold` work in
+    place; `stepOrders` doesn't copy; `Reservations.lapse` returns a reused buffer; `eventsBetween` fills a reused
+    buffer (the broadcast has its own) and skips fixtures outside the span; the fixtures cache has a numeric key; the
+    life layer's `doing()` and the page's clock object are filled in place. These are code changes; the allocation
+    rate itself wasn't measured.
+  - **Smaller items:** the server's walk time is its grid path over its pace; your reservations hold for the walk
+    (its path at walking pace) plus 10 s, renewed if you're still walking when one lapses; the Cheer button shows
+    after any moment, as the plan says (goals, big chances, touchdowns, field goals, big plays, final whistles), and a
+    cheer counts as a team moment only for a score or a win; `clipTest` frees its test person's bone texture.
+- **Checks** (headless Chromium with SwiftShader, one browser at a time; the machine at a load of about 10):
+  - `node tests/sportsbar-sim.mjs`: **32 of 32 passed** (`tests/out/sportsbar/logs/s2a-r2-sim.log`), three new: the
+    schedule over weeks 30 to 55 (182 days, 1,924 fixtures: no pairing twice in a day, no team in two slots in a row,
+    no featured pairing repeated from the day before), the draw the same from a fresh schedule, and `eventsBetween` in
+    time order from one reused buffer (164 events on a Saturday). With the new pairings, week 43's 49 Marigold
+    matches average 1.69 goals and 4.37 big chances (the plan: about 2 and 4) and 25 gridiron games 2.40 touchdowns
+    (2.5).
+  - `node tests/sportsbar-s2a.mjs --only=checks --tag=r2`: **22 of 22 passed** on the final build
+    (`tests/out/sportsbar/logs/s2a-r2-checks-3.log`; the first two runs, `-1` and `-2`, found the two sim-time faults
+    above). S2a's 16 checks pass as before (the same decay, mood, jukebox, water, dance, watching, ordering, items,
+    featured, highlights, honesty, menu, clip and HD numbers; the clip probe values are identical to S2a's), and six
+    are new:
+    - Order a drink then Order food at the counter: the drink menu opened with the food order waiting in the queue;
+      wings picked on the drink menu changed nothing; after 30 s still one order choosing; the lime soda picked, the
+      food menu opened; both delivered 2.5 sim minutes after the food was picked; once finished (the empties on the
+      counter), the bar offered Order a drink and Order food again.
+    - Not now on the drink menu dropped only the drink order and the food menu opened; Not now there dropped it; a
+      food menu closed unanswered was dropped by the next frame ("menu closed"); both offered again.
+    - Twelve Sip taps in a row: one sip (6 to 5 left); a tap 2 sim seconds later: none; 3 s later: one; with the clock
+      set back an hour the automatic sips went on.
+    - "Watch a match to the final whistle" drawn for the visit: watching the big screen from 20:11 to 20:27 (its
+      channel 1 until the 20:25 whistle, highlights after) completed it, +5 tokens; the same on patio screen 1, which
+      follows the big screen.
+    - The low-need nudge: thirst from 30.05 under 30 showed "Thirsty: the bar's 3 m away"; setting the clock then
+      left no toast and no caption.
+    - The heaters: "Warm by the heater" +2 at frame (12.9, -2.6) at 21:00 (night 1), none at (17.0, -2.6), none by the
+      heater at 13:00 (night 0). (The tired prompt and your team's goal-for and team-won moodlets were confirmed by the
+      reviewer by hand; no check of their own yet.)
+  - `--only=save,shots,clipshots --tag=r2`: **12 of 12** (`tests/out/sportsbar/logs/s2a-r2-shots-1.log`): saving
+    round-trips and the page works with storage blocked; every S2a screenshot again with `-r2`; and two new at 844 x
+    390 on Low, driven as the review drove it: a dance at Saturday 21:00 after a closed hour (the "closed · opens
+    09:00" toast at 05:00) and a drink's hand-over, with no toast and no caption left; and the big screen's radial,
+    its pills from 77 to 279 px, the strip ending at 50 and the credit starting at 333.
+  - S1's groups on the repaired page (`node tests/sportsbar.mjs --only=data,walks,seats,cross,shadows,memory
+    --tag=s2a-r2`): **65 of 65 passed**
+    (`tests/out/sportsbar/logs/s2a-r2-s1-regress.log`, screenshots `*-s2a-r2.png`). Data: the frame, the near and far
+    sets, the I-5 and the bridge rule, the trees, the front, the zones and slots, walking on the real grid (137 stand
+    points, the worst 0.413 m; 11,641 cells reached, none in the lane or the flap), the lane path, the stalls (fill
+    bias 0.834), the darts, tap to go from the customer side, the light streams and every street row, all as S1's.
+    Walks: 1,000 random walks (500 tap to go, 500 stick; 1,068,196 positions over 25,822 m against 173 colliders)
+    never ended inside a collider or crossed a wall, the patio fence or the party wall (1 tap had no path, 499
+    arrived). Seats: tap to go reached all 91 seats and sat you down; sit and stand on each kind. Cross: at Low, HD and
+    Ultra, walking out of the front and patio doors in first and third person flips the state on the crossing frame
+    with only the listed swaps (front door, first person: step 49 of 162), and the door screenshots at 12:00 and 21:00
+    (`s1-door-front-in-low-2100-s2a-r2.png` looked at). Shadows: at HD and Ultra your avatar's caster drops the sun's
+    map by 11.8k triangles when turned off, first and third person, and Ultra's two pool spots' maps are frozen and
+    drawn once outside. Memory: Low, HD, Ultra, HD, Low twice comes back to the same counts round after round (low
+    24 textures and 104 geometries, then 52 and 105 after the first round's caches; the second round adds 0 and 0).
+    That's 2 textures and 8 geometries more than S1's page at every step (S2a's screens, staff and items), and none is
+    left behind by a switch, though S2a rebuilds the item meshes, the broadcast texture and both staff on one. So `tapScreen`'s routing to the radial menu first didn't disturb tap to go,
+    walking or seating.
+- **Screenshots, each looked at** (`tests/out/sportsbar/*-r2.png`): the needs panel and strip at 390 x 844 and 844 x
+  390; at 1280 x 720 HD the bar's radial menu, the drinks sheet, holding a drink in first person (just after the
+  hand-over, so the bartender's caption is current); the TV wall at the featured match's first goal (week 44, 20:03,
+  Ridgeview Sundials 4': week 43's Saturday featured match, MSQ v HBL, now ends 0-0 with no goal, so the suite takes
+  the next week with one and says so) with GOAL banners on three screens and no stale caption; the guide card for
+  that Saturday (12:00 BLU v RVS, 12:30 SFT v PAL, 13:00 ARK v CGS, ...: no pairing twice, no team twice running);
+  a dance at 21:00; at 844 x 390 the dance with the strip, chips and screens clear of stale messages
+  (`s2a-dance-844x390-r2.png`), and the big screen's radial (Watch the game, Stand and watch, Dance) below the strip
+  (`s2a-radial-big-844x390-r2.png`); each clip again (`s2a-clip-*-r2.png`, `s2a-clips-sheet-r2.png`), the same poses
+  as S2a's.
+- **Left open:** as S2a's entry, less the nudges, the heater and the final-whistle goal, which now have checks. The
+  room is still empty but for the two staff while the chip says "Packed" (S3a). No phone run.
+
+## 2026-11-08: Stoppage Time S2a, needs, objects, ordering and the screens (built and verified; uncommitted)
+
+Phase S2a of `PROJECT_OC_SPORTS_BAR.md`, built on `claude/sports-bar` after merging Lot 57's committed P1b and P1c
+(`claude/onfoot` 47c71a6; merge commit a5ac3fd, the only commit of this pass: `PROJECT_OC_PROGRESS.md` conflicted,
+both entries kept; `npx tsc --noEmit` and `npm run build` passed on the merge). The S2a build itself is uncommitted, as
+the workflow asked. Lot 57's files (`src/onfoot/lot57/`, `main.ts`, `index.html`) and `src/onfoot/people/` are
+unchanged (`git status` on `people/` empty, checked by the suite); Lot 57's page still builds
+(`npx vite build --config src/onfoot/vite.config.ts`, 1,172 KB). Everything on the page stays simulated and labelled:
+the matches are fictional and seeded, every screen frame carries a SIMULATED tag, nothing costs money (house tokens
+only, no price or purchase path anywhere), and the player's menu is alcohol-free.
+
+- **First, the merge and the re-measure (O1).** Every row of "Lot 57's numbers" was read again at 47c71a6. **L17
+  moved, and it broke the bar's page:** Lot 57's `Hud` now binds P1b's caption, reply chips, order and holding chip
+  and order sheet (`caption`, `chips`, `reply0`, `reply1`, `status2`, `status2Text`, `order`, `orderTitle`,
+  `orderWho`, `menuItems`) in its constructor without null checks, so S1's committed `sportsbar.html` would throw at
+  `new Hud()` after this merge. S2a's page carries them (and uses the order sheet, the captions and the chip). L3 and
+  L12 gained additive members (`ParkedCars.nearDist`, a give-way rule in Lot 57's page; `computeFree`'s optional
+  people); every other row is unchanged, so no sum moved. Contracts: additive (`Player`'s `Goal` and `onArrive`, which
+  S2a's queue uses; `Collider.see`; `Venue.counters`). `people/` unchanged since ab9fbe1, so O2 holds. The Retro module
+  is still uncommitted (`style.ts` 9bfd9da822 in `tsu-modes`, also in a WIP snapshot on `origin/claude/wip-modes`, not
+  on `claude/modes`). The plan's tables carry the moves.
+- **What was built** (new: `src/onfoot/engine/sim/` rng, needs, objects, tv, leagues, broadcast, held, clips and
+  tokens; `venues/sportsbar/` life, crew, menu and objects; `tests/sportsbar-s2a.mjs`, `tests/sportsbar-sim.mjs` and
+  `tests/onfoot/sportsbar-blocklist.json`; changed: `venues/sportsbar/hud.ts`, `sportsbar.html`, and 17 lines of
+  `venues/sportsbar/main.ts`, kept small and local for the parallel lane that makes it mountable; 2,641 lines of
+  TypeScript in the new and rewritten modules). The page is now 1,502 KB (503 KB gzipped), 107 KB more than S1's:
+  - **Needs, mood, moodlets, emotion, personality** (`engine/sim/needs.ts`), the plan's formulas term by term: the five
+    shown needs and the NPCs' hidden bladder, the rates while doing things, the trait multipliers, mood = 20 + 0.6 x
+    the weighted average + the moodlets, the moodlet table (fading linearly), and the emotion order.
+  - **Smart objects** (`engine/sim/objects.ts`, `venues/sportsbar/objects.ts`): the catalogue's 41 adverts in 15 types,
+    every placed object with its layout slots, reservations, and the action queue (up to 3; tap an icon to cancel;
+    moving the stick cancels the walk). The pool tables, dartboards and shuffleboard are in the catalogue but not
+    offered until S2b.
+  - **Ordering** (`venues/sportsbar/life.ts`, `crew.ts`): at the counter (a bartender on the lane path makes a drink in
+    4 to 8 s and hands it over; food goes to the kitchen, 60 to 180 s, and the server brings it) and table service at
+    booths, high-tops and patio tables (the server sets off to arrive 30 + 60 x the crowd share seconds after the call,
+    takes the order in 8 s, fetches it from the pick-up or the pass, brings it). Lot 57's order sheet shows our menu
+    ("You drove here, so your drinks are alcohol-free. On the house."). You hold a drink in the right hand and food in
+    the left (the corners of the first-person view); sips every 40 to 70 s (+7 thirst, 6 a drink), eating at +10 a
+    minute until the basket is eaten; empties go on the nearest table and the server buses them. Two staff, in our
+    night-violet polo with a lime trim, built by the people builder at LOD 1.
+  - **The screens** (`engine/sim/tv.ts`, `broadcast.ts`, `leagues.ts`): both fictional leagues with their teams and
+    colours, the channel windows and kick-off slots, the featured match and `gameNight` exactly as the plan's tables,
+    the match models (Marigold chances, gridiron possessions), highlights (the previous match day's before a day's
+    first final whistle and on Tuesday), the broadcast pictures (pitch, field, score bug, GOAL and TOUCHDOWN banners,
+    half-time and full-time cards, up-next cards, the SIMULATED tag in every frame), the TV chip, the guide card with
+    code-drawn crests and "Pick a side". **One deviation, for the budget:** the three channels are cells of one canvas
+    texture, so the twelve screens are one mesh and one draw call (the venue's test-card batch is hidden; the calls
+    are unchanged); Low draws 512 x 288 a channel at 8 Hz, HD and Ultra 1024 x 576 at 15 and 30 Hz.
+  - **Watching** (x1.6 only while the featured match is in play on the screen watched), **the jukebox** (fun +6, 20 s,
+    a toast naming a KFWY track; no audio yet), **the water station** (thirst +20, 15 s), **the dance spot** on game
+    nights (you only; three dances, changing every minute).
+  - **Held items** (`engine/sim/held.ts`): the six instanced meshes (glass, basket, disc, ball, band, stick),
+    `frustumCulled = false`, casting into the sun's map only, lit by the interior's baked channel.
+  - **The clip layer** (`engine/sim/clips.ts`): drink, eat, sway, two-step, arm pump, cheer, groan and clap as an
+    external pose layer by bone name (and the staff's own wipe), with an upper-body overlay for seated people.
+  - **The player's UI** (`hud.ts`, `sportsbar.html`): the needs strip (five rings with icons, the low word under a ring
+    under 30, the mood face and the emotion), the needs panel (bars with the word and the number, the moodlets, the
+    tokens and their label, tonight's three, "Saved on this device only"; two columns on a short landscape phone), the
+    queue icons, the radial menu (up to six pills, keys 1 to 6, LB on the gamepad), the Cheer button for 8 s after a
+    goal or touchdown, the tired prompt under 10 energy, a text size setting, the TV chip and the guide.
+  - **Tokens and saving** (`engine/sim/tokens.ts`): 50 on the first visit, 1 per 5 minutes in the bar (at most 12),
+    5 per goal of tonight's three; saved under `oc.onfoot.sportsbar.v1`, every access wrapped.
+  - **Hooks:** `needs`, `setNeeds`, `setTraits`, `mood`, `use(objectId, action, item?)`, `queue`, `tv(day?, week?)`,
+    `setWeek`, `setTimeScale`, `fastForward`, `tokens`, and for the suite `offers`, `held`, `orders`, `staff`, `items`,
+    `itemsAtCap`, `catalogue`, `tvAt`, `tvFrames`, `clipTest`, `saveNow`, `radial`, `openNeeds`, `openGuide` and more.
+- **Checks** (headless Chromium with SwiftShader, one browser at a time, the machine shared at a load of 5 to 8):
+  - `node tests/sportsbar-sim.mjs` (no browser): **29 of 29 passed.** The decay over 10 sim minutes standing equals the
+    formula at outgoing 0, 0.5 and 1 (hunger 62, thirst 54, fun 58, social 64, 60 and 56, energy 66); every rate while
+    doing things; mood 80 at full needs, 20 empty, 57.35 at the seeded average (= 20 + 0.6 x 62.25), 44.51 after 20
+    minutes alone (the plan: 44.5); the featured match each day; the same seeds giving the same fixtures from two
+    schedules built apart; in week 43, 49 Marigold matches averaged 2.35 goals and 4.20 big chances (the plan: about 2
+    and 4), 25 gridiron games 2.84 touchdowns (the plan: 2.5); gameNight and the x1.25 window; the blocklist (21 names
+    against 552 entries, no match).
+  - `node tests/sportsbar-s2a.mjs --only=checks` (1280 x 720, Low): **16 of 16 passed**
+    (`tests/out/sportsbar/logs/s2a-checks-1.log`, and again on the final build, after the look fixes below:
+    `s2a-checks-final.log`, 16 of 16). The page boots with no console errors. The needs decay at the
+    table's rates through the page (every need within 0.01 of the formula at all three outgoing values). Mood 80 Happy
+    at full needs; 57.35 Fine at the seeded average. The jukebox gave fun +4.6 over 1.5 min with the walk (+6 less
+    the walk's decay); the water station thirst +17.6 (+20 less it). Dance offered at Friday 20:26, Saturday 21:00 and
+    Saturday 01:59, not at Friday 20:24 or Thursday 21:00, and you dance. Watching: fun +8.00 in 2 min while the
+    featured match was in play (x1.6), +5.00 for the 21:00 match (not featured) and +5.00 on highlights. A drink at the
+    bar: the walk, the wait ("making"), the hand-over within 12 sim seconds, then thirst 40 to 57 in 2.5 min (3 sips).
+    Food at a high-top: seated, the server came from 7.8 m to 0.8 m, the wings arrived after 3.5 sim minutes, hunger
+    +9.2 in a minute. Items: per instance glass 19, basket 20, disc 16, ball 32, band 16, stick 12 at Low and 40, 44,
+    31, 128, 32, 24 at HD and Ultra, every one within its row; no new mesh in the scene after ordering, holding and
+    leaving empties. The featured match each day as the plan's table, x1.25 only inside its window (checked a minute
+    either side of both ends), every other fixture not featured. Highlights: "Monday's highlights" on Tuesday,
+    "Friday's" on Saturday at 11:00, "Today's" at 13:00. The same clock gave the same fixtures twice; 204 channel frames
+    drawn, none without the SIMULATED tag and none with the word "live"; 1,689 canvas strings, none with "live" or a
+    betting or currency word. The menu: 15 items, all alcohol-free, no price field; 41 adverts. The clip layer:
+    `people/` untouched; each of the nine clips turned its bones at LOD 2, 1 and 0 (a LOD 0 built in 5.4 s here).
+  - `--only=save` : **2 of 2.** Saving round-trips (a second page: visits 1 to 2, the team and the regulars' seed kept);
+    with `localStorage` throwing, the page boots clean and plays, and keeps nothing.
+  - `--only=budgets` (844 x 390, Saturday 21:00, the six item models at their caps, the two staff in the room): **17 of
+    17.** At every pose and preset the pass is inside the sums' column and the pass less the people and items inside
+    the "without people or items" row; the items are 6 calls, 5.7k at Low and 13.9k at HD and Ultra (rows 6.0k and
+    14.1k); the staff 2 calls, 14.4k at Low and 22.0k at HD and Ultra. The passes: Low 73 to 108 calls and 89.4k to
+    166.9k (stall the most); HD 74 to 120 and 111.4k to 272.2k (overhead the most); Ultra 85 to 146 and 151.0k to
+    618.9k (stall). The page's simulation took 0 to 0.1 ms a frame (`stats().simMs`; S3a's crowd isn't there yet).
+    (`tests/out/sportsbar/logs/s2a-budgets-2.log`; every row is in `tests/out/sportsbar/sportsbar-s2a-checks.json`.)
+  - S1's `honesty` and `closed` groups re-run on the S2a page (`node tests/sportsbar.mjs --only=honesty,closed`): **7 of
+    7 passed** (`tests/out/sportsbar/logs/s2a-s1-regress.log`): no real name in the 169 files under `src/` or the page,
+    no "live" outside the two allowed negations in 78 UI strings and 128 canvas strings, the closed-hours doors.
+    S1's budgets check now subtracts the staff and the items with your avatar (they are people and items, which its
+    row leaves out); S2a's own budget sweep above covers the same rows. S1's other groups weren't re-run in this pass.
+- **Screenshots** (each looked at): the needs panel open at 390 x 844 and 844 x 390 (`s2a-needs-panel-*.png`; at 844 x
+  390 the first try scrolled to its button and hid the bars, so the panel now has two columns there and opens at its
+  top) and the strip (`s2a-needs-strip-*.png`); at 1280 x 720 HD the radial menu on the bar (Order a drink, Order food,
+  Watch the bar screens) with the bartender behind the counter (`s2a-radial-bar-1280x720.png`), the order sheet
+  (`s2a-ordering-1280x720.png`), holding a drink in first person (`s2a-holding-drink-first-1280x720.png`; the cup was
+  made smaller and lower after the first look); the TV wall at the featured match's first goal, Saturday of week 43
+  at 20:16 (Saltflat Terns, 12'), with GOAL banners on the big screen and the two channel-1 screens beside it
+  (`s2a-tv-goal-1280x720.png`), and the guide card (`s2a-guide-1280x720.png`); a game-night dance at Saturday 21:00
+  (`s2a-dance-1280x720.png`, the arm pump, the drink in the raised hand). Each clip on your avatar
+  (`s2a-clip-*.png`, `s2a-clips-sheet.png`).
+- **The clips, looked at (O33).** Cheer (arms up in a V) and arm pump read clearly; clap reads (the hands meet a little
+  high, at the face); drink and eat bring the hand up to the chin (the first try only reached the chest: the sip now
+  rises over 0.8 s in absolute time, and the elbow comes further forward); sway and two-step read only in motion (a
+  still shows arms bent in front). Groan reads as hands behind the head more than hands on the head, with too little
+  bow: shipped, and written up in `PROJECT_OC_HANDOFF.md` for the design review queue with the two dances.
+- **Left open:** no audio yet (the jukebox's music, the room, the broadcast bed); the Watch camera drift; the
+  first-visit "Tap people and things" hint; the autonomy setting (it needs S3a's utility AI); the player's team
+  moodlets, the heater's +2, the low-need nudges and the tired prompt are built but no check exercises them; the
+  people-dependent parts (chat, Lean and chat, cheering with others, rounds, three of tonight's goals) wait for S3a and
+  S3b; Low still draws standard materials until the Retro module lands (S4); nothing has run on a phone.
+
 ## 2026-10-21: Stoppage Time S1, the venue and your avatar in it (a standalone page; built and re-verified through 2026-11-02, committed)
 
 Phase S1 of `PROJECT_OC_SPORTS_BAR.md`, built on `claude/sports-bar` after merging Lot 57's committed P1a

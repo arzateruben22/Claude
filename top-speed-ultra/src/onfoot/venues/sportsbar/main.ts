@@ -45,6 +45,7 @@ import { laneTest, pathAt, pathLength } from './staff';
 import { BAR_NAME } from './brand';
 import { FRONT, fd, DOOR_START, HANDOFF, TREES, ZONES, PZONES, furniture } from './layout';
 import { pointInPoly as pointInRing } from '../../engine/geom';
+import { BarLife } from './life';
 
 const q = new URLSearchParams(location.search);
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
@@ -293,10 +294,16 @@ async function main() {
   const barHud = new BarHud(hud);
   const S = def.schedule;
   const fillShare = () => (open ? clamp(0.12 + share * 0.92, 0, 0.96) : 0.05);
-  const applyClock = (firstTime = false) => {
+  // S2a: the life-sim layer (venues/sportsbar/life.ts); made here because the crowd's x1.25 reads its TV schedule
+  const life = new BarLife(def);
+  const applyClock = (firstTime = false, tick = false) => {
     simDate = live ? new Date() : C.anaheimDate(clock.day, clock.hour);
     if (live) clock = C.liveClock();
-    open = Sch.isOpen(S, clock.day, clock.hour); share = Sch.crowdShare(S, clock.day, clock.hour); level = Sch.crowdLevel(S, clock.day, clock.hour);
+    open = Sch.isOpen(S, clock.day, clock.hour); share = Sch.crowdShare(S, clock.day, clock.hour, life.extra); level = Sch.crowdLevel(S, clock.day, clock.hour, life.extra);
+    life.syncClock(!firstTime && !tick);
+    // a set clock: what was on screen (a toast, a caption) belonged to the old time (the live clock's own minute
+    // ticks don't count)
+    if (!firstTime && !tick) life.clearMessages();
     env.update(1000, simDate); dimEnvGround(); env.update(1000, simDate);
     night = Math.pow(1 - env.daylight, 0.75);
     setBarNight(mats, night, open);
@@ -426,6 +433,7 @@ async function main() {
     hud.setQuality(qq);
     vis.update(camera, view, qq, nearPoint(), true);
     vis.applyCasting(qq);
+    life.setQuality(qq, rebuildPeople);
     renderer.compile(scene, camera);
   };
   /** the point the parked cars' near set is taken round: the overhead's target, or the camera (one object, reused) */
@@ -466,9 +474,10 @@ async function main() {
   };
   const nearCar = () => Math.hypot(lot.door.x - player.x, lot.door.z - player.z) < 1.8;
   const avail: [string | null, string | null] = [null, null];
-  const available = (): [string | null, string | null] => { avail[0] = player.seat ? 'Stand' : nearCar() ? 'Drive' : nearSeat() ? 'Sit' : null; avail[1] = null; return avail; };
+  const available = (): [string | null, string | null] => { avail[0] = player.seat ? 'Stand' : nearCar() ? 'Drive' : nearSeat() ? 'Sit' : null; avail[1] = life.second(); return avail; };
   const doAction = (which: 1 | 2): string | null => {
     const [a] = available();
+    if (which === 2) return life.doSecond();
     if (which !== 1 || !a) return null;
     if (a === 'Stand') { player.stand(); return 'stand'; }
     if (a === 'Sit') { const s = nearSeat(); if (s) { player.sit(s); hud.fadeHint(); return 'sit'; } return null; }
@@ -512,7 +521,7 @@ async function main() {
   hud.onPause = (on) => { input.enabled = !on && view !== 'overhead'; };
   const ray = new THREE.Raycaster();
   const tapMeshes = () => [...worldMeshes, ...streets.near.meshes].filter((m) => m.visible && (m as THREE.Mesh).isMesh && !((m as THREE.Mesh).material as THREE.Material).transparent && !/plants|signs|neon|screens|lamps|exit|wordmark|blade/.test(m.name));
-  const tapScreen = (sx: number, sy: number) => {
+  const tapScreen = (sx: number, sy: number, menus = true) => {
     const ndc = new THREE.Vector2((sx / canvas.clientWidth) * 2 - 1, -(sy / canvas.clientHeight) * 2 + 1);
     ray.setFromCamera(ndc, camera);
     let seat: Seat | null = null, sd = 0.45;
@@ -523,6 +532,8 @@ async function main() {
     }
     if (seat) return tapGo(seat.ax, seat.az, seat);
     const hits = ray.intersectObjects(tapMeshes(), false);
+    // S2a: a tap on something with things to do opens its radial menu (the bar, a screen, a table, the jukebox...)
+    if (menus && life.tap(ray.ray, sx, sy, (hits[0]?.distance ?? Infinity) + 0.6)) return null;
     let gx: number, gz: number;
     const h = hits.find((x) => !(view === 'overhead' && x.point.y > 1.0 && x.face && x.face.normal.y > 0.6)) ?? hits[0];
     if (h && h.face && h.face.normal.y < 0.6) { const back = h.point.clone().addScaledVector(d, -0.5); gx = back.x; gz = back.z; }
@@ -684,12 +695,13 @@ async function main() {
       if (player.gaveUp) { hud.toast(`${THING[player.gaveUp.by] ?? 'Something'} is in the way. Stopped here.`, 3.5); player.gaveUp = null; showPath(null); }
     }
     if (hintT > 0) { hintT -= dt; if (hintT <= 0 && hud.hintVisible) hud.fadeHint(); }
-    if (live) { liveT -= dt; if (liveT <= 0) { liveT = 60; applyClock(); } }
+    if (live) { liveT -= dt; if (liveT <= 0) { liveT = 60; applyClock(false, true); } }
     // the blade sign cycles +1 to +5 slowly while open
     bladeT += dt; if (open && bladeT > 4) { bladeT = 0; bladeN = (bladeN % 5) + 1; mats.bladeSign.draw(bladeN, null); }
     updateDoors(dt);
     const hide = placeCamera(dt);
     updateAvatar(dt, hide);
+    life.update(dt, hide);
     // what's drawn: the state from the camera (the rule runs once a frame, after the camera moves)
     const np = nearPoint();
     if (vis.update(camera, view, quality, np)) avDirty = true;
@@ -708,6 +720,7 @@ async function main() {
   const handleAction = (a: BarAction) => {
     if (a === 'pause') { hud.pause(!hud.paused); return; }
     if (hud.paused) return;
+    if (life.action(a)) return;
     if (view === 'overhead' && (a === 'act' || a === 'act2')) { overhead.step(a === 'act' ? 1 : -1); return; }
     if (a === 'act') doAction(1); else if (a === 'act2') doAction(2);
     else if (a === 'view') setView();
@@ -715,6 +728,10 @@ async function main() {
     else if (a === 'car') walkToCar(false); else if (a === 'carSkip') walkToCar(true);
     else if (a === 'stand') { if (player.seat) player.stand(); }
   };
+  // the clock as the life layer reads it, one object filled in place (it's read several times a frame)
+  const lifeClock = { day: 0, hour: 0, live: false, open: false, night: 0, share: 0 };
+  life.attach({ scene, camera, F, def, venue, mats, grid, set, player, hud, barHud, person: () => person, view: () => view, quality: () => quality, reduced: () => reduced,
+    clock: () => { lifeClock.day = clock.day; lifeClock.hour = clock.hour; lifeClock.live = live; lifeClock.open = open; lifeClock.night = night; lifeClock.share = share; return lifeClock; }, worldMeshes, shadowHooks: { before: vis.before, after: vis.after }, input, walkToCar: () => walkToCar(false), canvas });
   applyQuality(quality, false);
 
   // ------------------------------------------------------------------------------------------ measuring (the budgets)
@@ -870,7 +887,7 @@ async function main() {
     tapLook(x: number, y: number, z: number) {
       const [lx, lz] = toL(x, z); fixedCam = null; lookAtPoint(lx, y, lz); placeCamera(0); camera.updateMatrixWorld();
       lastTapHit = null; lastSnap = null;
-      const p = tapScreen(canvas.clientWidth / 2, canvas.clientHeight / 2);
+      const p = tapScreen(canvas.clientWidth / 2, canvas.clientHeight / 2, false);
       const hit = lastTapHit as { name: string; x: number; y: number; z: number } | null;
       const sn = lastSnap as { from: P2; to: P2 | null; d: number } | null;
       const snap = sn ? { from: F.toFrame(sn.from[0], sn.from[1]).map((v) => +v.toFixed(3)), to: sn.to ? F.toFrame(sn.to[0], sn.to[1]).map((v) => +v.toFixed(3)) : null, d: +sn.d.toFixed(3) } : null;
@@ -1091,6 +1108,7 @@ async function main() {
     },
     buildAll() { if (quality === 'ultra') buildLod0(); return true; },
   };
+  Object.assign(hooks, life.hooks());
   Object.defineProperty(hooks, 'frames', { get: () => frames });
   window.__onfoot = hooks as unknown as Record<string, unknown>;
 

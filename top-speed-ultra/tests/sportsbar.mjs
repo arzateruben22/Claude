@@ -575,7 +575,9 @@ if (want('budgets')) {
           await frames(page, 2);
           const s = await H(page, 'window.__onfoot.stats()'), b = await H(page, 'window.__onfoot.breakdown()'), v = await H(page, 'window.__onfoot.vis()'), bud = await H(page, 'window.__onfoot.budget()');
           const av = b.groups.avatar ?? { calls: 0, tris: 0 };
-          const lessCalls = s.pass.calls - av.calls, lessTris = s.pass.tris - av.tris;
+          // the row leaves out the people and the items: your avatar, and from S2a the staff and the six item meshes
+          const pi = ['avatar', 'staff', 'items'].reduce((acc, k) => ({ calls: acc.calls + (b.groups[k]?.calls ?? 0), tris: acc.tris + (b.groups[k]?.tris ?? 0) }), { calls: 0, tris: 0 });
+          const lessCalls = s.pass.calls - pi.calls, lessTris = s.pass.tris - pi.tris;
           const [bc, bt] = bud.noPeople;
           const okPass = lessCalls <= bc && lessTris <= bt;
           const agree = Math.abs(b.total.calls - s.pass.calls) <= Math.max(1, s.pass.calls * 0.01) && Math.abs(b.total.tris - s.pass.tris) <= s.pass.tris * 0.01;
@@ -603,7 +605,7 @@ if (want('budgets')) {
             const own = v.poolTris[k - 1];
             const m = s.maps[`pool-${k}`]; expect(m && Math.abs(m.tris - own) <= 2, `pool-${k}'s map draws ${m?.tris} triangles, its table and lamp ${own}`);
           }
-          expect(okPass, `pass less your avatar ${lessCalls} calls, ${fmt(lessTris)} > ${bc}, ${fmt(bt)} (${gtxt})`);
+          expect(okPass, `pass less the people and items ${lessCalls} calls, ${fmt(lessTris)} > ${bc}, ${fmt(bt)} (${gtxt})`);
           // the rows as drawn at the pose: the venue, all the streets and the trees, each within its allocation
           const A = bud.alloc, gv = b.groups.venue ?? { calls: 0, tris: 0 }, gt = b.groups.trees ?? { calls: 0, tris: 0 };
           const gs = ['near streets', 'far streets'].reduce((a, k) => ({ calls: a.calls + (b.groups[k]?.calls ?? 0), tris: a.tris + (b.groups[k]?.tris ?? 0) }), { calls: 0, tris: 0 });

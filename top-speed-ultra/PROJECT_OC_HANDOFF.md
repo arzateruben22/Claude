@@ -315,6 +315,27 @@ still leak them:
    target (about 6 MB) on the GPU. **Remedy (the bar's):** the page replaces `rebuildEnv` on its own instance with the
    same rebuild that keeps the `fromScene()` render target and disposes the previous one. For the game's owners too.
 
+### From the sports bar's S2a (2026-11-08; `PROJECT_OC_SPORTS_BAR.md` open items O1, O25 and O33)
+
+8. **`Hud` binds P1b's elements without null checks** (`lot57/hud.ts` at 47c71a6: `caption`, `chips`, `reply0`,
+   `reply1`, `status2`, `status2Text`, `order` with its `[data-close]`, `orderTitle`, `orderWho`, `menuItems`). A page
+   that builds a `Hud` without them throws at `new Hud()` (`$('menuItems').addEventListener` on null): the bar's S1
+   page did, after the merge. The bar's S2a page carries them; any other page that uses `Hud` (the game, at J1) must
+   too, or `Hud` could look them up with a null check.
+9. **The bar didn't adopt P1b's held items or `doings.ts`** (O25). The sports bar's plan draws every held item as an
+   instance of six shared meshes ("Held items, table items and game pieces"), while `lot57/items.ts` makes three meshes
+   per item, and `doings.ts` is bound to Lot 57's `Venue` and `Crowd`. So the bar has its own `engine/sim/held.ts` and
+   its own ordering (`venues/sportsbar/life.ts`, `crew.ts`); it does use P1b's order sheet, captions and holding chip
+   through `Hud`. At E0 one copy of the held items survives; the bar's measured costs are in its plan (O4).
+   Since S2a's repair the bar also reads `Hud.orderOpen` (a public field at 47c71a6) to tell a menu sheet closed
+   without an answer, whose order it then drops; if `Hud` makes it private, the bar needs a getter.
+
+**For the design review queue (O33).** The bar's clips (`src/onfoot/engine/sim/clips.ts`, an external pose layer on
+the people builder's rig, `people/` untouched) were looked at on your avatar (`tests/out/sportsbar/s2a-clip-*.png`):
+cheer, arm pump and clap read; drink and eat bring the hand to the chin. Three need a better pose: **groan** reads as
+hands behind the head rather than on top of it with the head bowed; **sway** and **two-step** read only in motion (a
+still shows bent arms and little else). They ship as they are in S2a.
+
 ## Owner questions (open)
 
 - **The sports bar's Low and the sun map** (`PROJECT_OC_SPORTS_BAR.md`, "Owner questions", 1). Decision 15 lists
