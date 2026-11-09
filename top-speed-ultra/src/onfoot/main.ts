@@ -9,11 +9,6 @@
 // and seated, who arrive and leave with the simulated crowd curve; staff; walkers on the sidewalks), drawn inside the
 // phone and desktop budgets (lot57/crowdview.ts). Test hooks: window.__onfoot (see the bottom of this file).
 import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { Environment } from '../game/env/Environment';
 import { configureTextures } from '../game/textures';
 import * as Props from '../game/road/props';
@@ -39,17 +34,23 @@ import { Crowd, StaffPost, CrowdCtx, Npc } from './lot57/npcs';
 import { Doings, ActLabel } from './lot57/doings';
 import { useWorkers } from './lot57/crowdview';
 import { serveBuilds } from './lot57/crowd-worker';
+import { Look } from './lot57/look';
 
-type Quality = 'low' | 'high' | 'ultra';
+// (P1d: three presets, the owner's: Low the retro look at full resolution, HD the realistic one, Ultra the most;
+// how each frame is drawn is lot57/look.ts)
+type Quality = 'low' | 'hd' | 'ultra';
 const PRESET: Record<Quality, { shadows: number; post: boolean; bloom: boolean; ao: boolean; msaa: number; maxPR: number; scale: number; lights: number; people: 'phone' | 'high'; tex: number }> = {
-  low: { shadows: 0, post: false, bloom: false, ao: false, msaa: 0, maxPR: 1, scale: 0.85, lights: 0, people: 'phone', tex: 512 },
-  high: { shadows: 2048, post: true, bloom: true, ao: false, msaa: 4, maxPR: 2, scale: 1, lights: 4, people: 'high', tex: 1024 },
+  low: { shadows: 1024, post: false, bloom: false, ao: false, msaa: 0, maxPR: 2, scale: 1, lights: 0, people: 'phone', tex: 512 },
+  hd: { shadows: 2048, post: true, bloom: true, ao: false, msaa: 4, maxPR: 2, scale: 1, lights: 4, people: 'high', tex: 1024 },
   ultra: { shadows: 4096, post: true, bloom: true, ao: true, msaa: 4, maxPR: 2, scale: 1, lights: 8, people: 'high', tex: 1024 },
 };
 const q = new URLSearchParams(location.search);
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const sysReduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-let quality: Quality = (['low', 'high', 'ultra'].includes(q.get('quality') ?? '') ? q.get('quality') : coarse ? 'low' : 'high') as Quality;
+/** the preset's name for the crowd and the held items (theirs are low, high, ultra); 'high' is still read as HD */
+const tier = (qq: Quality) => (qq === 'hd' ? 'high' : qq) as 'low' | 'high' | 'ultra';
+const asQuality = (v: string | null) => (v === 'high' ? 'hd' : v) as Quality | null;
+let quality: Quality = (['low', 'hd', 'ultra'].includes(asQuality(q.get('quality')) ?? '') ? asQuality(q.get('quality')) : coarse ? 'low' : 'hd') as Quality;
 let reduced = q.get('motion') === 'reduced' || sysReduced;
 
 declare global { interface Window { __onfoot?: Record<string, unknown>; __onfootError?: string } }
@@ -131,7 +132,7 @@ async function main() {
   const glow = new THREE.Points(glowGeo, mats.glow); glow.name = 'bulb-glow'; glow.renderOrder = 5; world.add(glow);
   // the food trucks' wheels: a tyre and a rim at each, instanced (finer on High and Ultra)
   const wheelGeos = [truckWheel(0), null, null] as (ReturnType<typeof truckWheel> | null)[];
-  const wheelGeo = (qq: Quality) => { const d = qq === 'low' ? 0 : qq === 'high' ? 1 : 2; return (wheelGeos[d] ??= truckWheel(d as 0 | 1 | 2)); };
+  const wheelGeo = (qq: Quality) => { const d = qq === 'low' ? 0 : qq === 'hd' ? 1 : 2; return (wheelGeos[d] ??= truckWheel(d as 0 | 1 | 2)); };
   const tyres = new THREE.InstancedMesh(wheelGeo(quality).tyre, mats.tyre, venue.wheels.length), rims = new THREE.InstancedMesh(wheelGeo(quality).rim, mats.rim, venue.wheels.length);
   venue.wheels.forEach((w, i) => { const m4 = new THREE.Matrix4().makeRotationY(w.side > 0 ? 0 : Math.PI).setPosition(w.x, w.y, w.z); tyres.setMatrixAt(i, m4); rims.setMatrixAt(i, m4); });
   for (const [im, n] of [[tyres, 'truck-tyres'], [rims, 'truck-rims']] as [THREE.InstancedMesh, string][]) { im.name = n; im.castShadow = true; im.receiveShadow = true; im.userData.cast = true; im.computeBoundingSphere(); world.add(im); }
@@ -161,7 +162,7 @@ async function main() {
   // 150-triangle stand-ins beyond
   const carQuality = (qq: Quality) => (qq === 'ultra' ? 'high' : 'phone') as 'phone' | 'high';
   // (High: 24, so third person with the close-up driver stays inside 700k triangles; Ultra: 40, and the rest detailed)
-  const nearCars = (qq: Quality) => (qq === 'low' ? 12 : qq === 'high' ? 24 : 40);
+  const nearCars = (qq: Quality) => (qq === 'low' ? 12 : qq === 'hd' ? 24 : 40);
   let parked = new ParkedCars(lot.stalls, carQuality(quality), nearCars(quality), quality === 'ultra');
   let parkedFill: [number, number] = [0, 0];
   world.add(parked.group);
@@ -234,7 +235,7 @@ async function main() {
   // ------------------------------------------------------------------------------------------ the regulars and staff
   // A few groups of regulars talking in circles and the staff at the bar and the trucks (lot57/npcs.ts), built by
   // the people builder at load (about a second each on a desktop CPU), so nothing is built mid-play.
-  const items = new Items(quality);
+  const items = new Items(tier(quality));
   // (the clock first: the guests dress for the hour they're built at)
   let live = !(q.has('day') || q.has('hour'));
   let clock: C.ClockState = live ? C.liveClock() : { day: C.parseDay(q.get('day') ?? 'Sat'), hour: clamp(Number(q.get('hour') ?? 21), 0, 23.99) };
@@ -252,7 +253,7 @@ async function main() {
   /** the crowd for a preset: built here at load (with the progress on the loading screen), or at once on a preset
    *  switch (the page freezes for it, as before) */
   const makeCrowd = async (qq: Quality, progress?: (k: number, n: number) => Promise<void>) => {
-    const c = new Crowd(items, PRESET[qq].people, qq === 'ultra', renderer, qq);
+    const c = new Crowd(items, PRESET[qq].people, qq === 'ultra', renderer, tier(qq));
     await c.build(posts, crowdCtx, clock.hour >= 18 || clock.hour < 7, progress);
     c.car = choice.car; scene.add(c.root); wireCrowd(c); return c;
   };
@@ -264,13 +265,11 @@ async function main() {
   // ------------------------------------------------------------------------------------------ the clock and crowd
   let simDate = C.anaheimDate(clock.day, clock.hour);
   let open = false, night = 0, share = 0, level: C.CrowdLevel = 'Closed', liveT = 0;
-  let composer: EffectComposer | null = null, bloom: UnrealBloomPass | null = null;
-  /** bloom is for the lights after dark: by day a sunlit white car or wall is over the night threshold and smeared
-   *  into a glowing box, so the threshold rises and the strength falls with the daylight */
-  const tuneBloom = () => {
-    if (!bloom) return;
-    bloom.threshold = lerp(4.5, 0.88, night); bloom.strength = lerp(0.12, 0.32, night);
-  };
+  // the frame at each preset (lot57/look.ts): the retro pass on Low, the composer on HD and Ultra; bloom is tuned to
+  // the lights after dark there
+  const look = new Look(renderer, scene, camera, env.sun, env.flare, [env.mountains, env.sky, env.clouds], env);
+  look.spotSources = venue.lightSpots;
+  const tuneBloom = () => look.setNight(night, open);
   const hud = new Hud();
   let inputRef: Input | null = null;
   const rnd = rand(4242);
@@ -365,25 +364,13 @@ async function main() {
     env.setQuality(P.shadows, 2600);
     renderer.shadowMap.enabled = P.shadows > 0;
     world.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh && m.userData.cast === undefined) m.userData.cast = m.castShadow; if (m.isMesh) m.castShadow = P.shadows > 0 && !!m.userData.cast && (qq === 'ultra' || !m.name.endsWith('venue-plants')); });
-    composer?.dispose(); composer = null; bloom = null;
     const pr = clamp((devicePixelRatio || 1) * P.scale, 0.5, P.maxPR);
     renderer.setPixelRatio(pr);
     renderer.setSize(innerWidth, innerHeight, false);
-    if (P.post) {
-      const size = renderer.getDrawingBufferSize(new THREE.Vector2());
-      const rt = new THREE.WebGLRenderTarget(size.x, size.y, { type: THREE.HalfFloatType, samples: P.msaa });
-      const c = new EffectComposer(renderer, rt);
-      c.addPass(new RenderPass(scene, camera));
-      if (P.ao) { const g = new GTAOPass(scene, camera, size.x, size.y); g.blendIntensity = 0.8; c.addPass(g); }
-      if (P.bloom) { bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.32, 0.55, 0.88); tuneBloom(); c.addPass(bloom); }
-      c.addPass(new OutputPass());
-      c.setPixelRatio(pr); c.setSize(innerWidth, innerHeight);
-      composer = c;
-    }
     // a few real lights near you on High and Ultra (the yard's strings and heaters), so your driver is lit by them
     while (pointLights.length > P.lights) { const l = pointLights.pop()!; scene.remove(l); l.dispose(); }
     while (pointLights.length < P.lights) { const l = new THREE.PointLight(0xffb56a, 0, 15, 2); l.castShadow = false; scene.add(l); pointLights.push(l); }
-    crowd.ultra = qq === 'ultra'; crowd.view.setTier(qq); items.setQuality(qq);
+    crowd.ultra = qq === 'ultra'; crowd.view.setTier(tier(qq)); items.setQuality(tier(qq));
     if (rebuildPeople) {
       // the regulars and staff from the other set of people (a few seconds: say so first)
       doings.cancelAll();
@@ -406,10 +393,10 @@ async function main() {
     for (const m of worldMeshes) {
       const n = m.name;
       if (n.startsWith('ultra-')) m.visible = qq === 'ultra'; else if (n.startsWith('lo-')) m.visible = qq !== 'ultra';
-      else if (n.startsWith('phone-')) m.visible = qq === 'low'; else if (n.startsWith('high-')) m.visible = qq === 'high';
+      else if (n.startsWith('phone-')) m.visible = qq === 'low'; else if (n.startsWith('high-')) m.visible = qq === 'hd';
       else if (n.startsWith('hq-')) m.visible = qq !== 'low';
     }
-    setUltraMaps(mats, qq === 'ultra');
+    setUltraMaps(mats, qq !== 'low', qq === 'ultra');
     // the cheaper bulbs and wheels, and fewer detailed parked cars, on Low
     bulbs.geometry = qq === 'low' ? bulbGeoLow : bulbGeoHigh;
     tyres.geometry = wheelGeo(qq).tyre; rims.geometry = wheelGeo(qq).rim;
@@ -421,13 +408,14 @@ async function main() {
     }
     parked.near = nearCars(qq); parked.nearDist = qq === 'low' ? 45 : Infinity; parked.update(player.x, player.z, true);
     hud.setQuality(qq);
+    look.apply(qq, pr);
     renderer.compile(scene, camera);
   };
   applyQuality(quality, false);
   const onResize = () => {
     const P = PRESET[quality], pr = clamp((devicePixelRatio || 1) * P.scale, 0.5, P.maxPR);
     renderer.setPixelRatio(pr); renderer.setSize(innerWidth, innerHeight, false);
-    composer?.setPixelRatio(pr); composer?.setSize(innerWidth, innerHeight);
+    look.resize(pr);
     camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
   };
   addEventListener('resize', onResize);
@@ -593,7 +581,8 @@ async function main() {
     const p = person; if (!p) return;
     const close = third && lod0Ready && wantsLod0(quality), ultra = quality === 'ultra';
     p.setLod(close ? 0 : 1); avatarLod = close ? 0 : 1;
-    p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(third ? 0 : 1); m.castShadow = !close || ultra; m.receiveShadow = true; } });
+    // (P1d: on Low your driver casts no sun shadow, as the people don't: the phone's triangle budget)
+    p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(third ? 0 : 1); m.castShadow = quality !== 'low' && (!close || ultra); m.receiveShadow = true; } });
     if (close && !ultra && g1) { g1.visible = true; g1.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(1); m.castShadow = true; } }); }
   };
   const updateAvatar = (dt: number) => {
@@ -608,14 +597,14 @@ async function main() {
     p.update(dt * k);
     // holding something: the right hand comes up with it (the shadow shows it in first person too)
     doings.poseAvatar(p, player.heading, player.view === 'third' || !!fixedCam);
-    const third = player.view === 'third', key = (third ? 1 : 0) + (lod0Ready ? 2 : 0) + (quality === 'low' ? 0 : quality === 'high' ? 4 : 8);
+    const third = player.view === 'third', key = (third ? 1 : 0) + (lod0Ready ? 2 : 0) + (quality === 'low' ? 0 : quality === 'hd' ? 4 : 8);
     if (key !== avatarKey) { avatarKey = key; applyAvatar(third); }
   };
   // The background gives way to the people: when a frame comes in over the preset's triangle budget, or people near
   // you were drawn as impostors for want of triangles, fewer parked cars get their detailed model (the rest keep the
   // 150-triangle stand-in) from the next frame; they come back slowly once there's plenty of room. (Calls don't
   // change: the cars are instanced.) Ultra has no budget.
-  const TRI_BUDGET: Record<Quality, number> = { low: 250000, high: 700000, ultra: Infinity };
+  const TRI_BUDGET: Record<Quality, number> = { low: 250000, hd: 700000, ultra: Infinity };
   let carRoomT = 0;
   const makeRoom = () => {
     const B = TRI_BUDGET[quality]; if (!isFinite(B)) return;
@@ -631,7 +620,7 @@ async function main() {
     crowd.draw(camera, stats);
     crowdMs += performance.now() - tc;
     renderer.info.reset();
-    if (composer) composer.render(); else renderer.render(scene, camera);
+    look.render();
     stats.calls = renderer.info.render.calls; stats.tris = renderer.info.render.triangles;
     env.renderFlare();
     makeRoom();
@@ -730,7 +719,7 @@ async function main() {
     setClock(day: number | string, hour: number) { live = false; clock = { day: C.parseDay(day), hour: clamp(hour, 0, 23.99) }; const t = performance.now(); applyClock(); return { ...hooks.clock(), ms: +(performance.now() - t).toFixed(2) }; },
     liveClock() { live = true; applyClock(); return hooks.clock(); },
     clock() { return { day: clock.day, hour: clock.hour, label: C.fmtClock(clock), open, level, share: +share.toFixed(3), night: +night.toFixed(3) }; },
-    setQuality(qq: Quality) { if (!PRESET[qq]) throw new Error('quality: low, high or ultra'); const rebuild = PRESET[qq].people !== PRESET[quality].people; applyQuality(qq, rebuild); return quality; },
+    setQuality(qq: Quality) { qq = asQuality(qq) ?? qq; if (!PRESET[qq]) throw new Error('quality: low, hd or ultra'); const rebuild = PRESET[qq].people !== PRESET[quality].people; applyQuality(qq, rebuild); return quality; },
     stats() {
       const cs = crowd.stats();
       return {
@@ -752,9 +741,19 @@ async function main() {
         textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, programs: renderer.info.programs?.length ?? 0,
         avatar: person ? { lod: avatarLod, ...(() => { const s = person!.stats(); return { tris: s.tris, calls: s.calls }; })() } : null,
         pixelRatio: renderer.getPixelRatio(), rescues: player.rescues, parkedDetailed: parked.near, peopleStarved: crowd.view.stats.starved,
-        trees: { tris: quality === 'low' ? treeTris.phone : quality === 'high' ? treeTris.high : treeTris.ultra },
+        trees: { tris: quality === 'low' ? treeTris.phone : quality === 'hd' ? treeTris.high : treeTris.ultra },
+        // P1d: how the frame is drawn at this preset (lot57/look.ts) and the real lights near you
+        look: look.stats(), lights: { point: pointLights.length, lit: pointLights.filter((l) => l.intensity > 0).length },
       };
     },
+    /** P1d: the time to draw n frames start to finish here (software rendering: a relative cost, not a phone's fps) */
+    timeFrames(n = 5) { return look.timeFrames(n); },
+    /** P1d: what casts the sun's shadow in this view (the shadow pass's triangles) */
+    casters(n = 30) { return look.casters(n); },
+    /** P1d: the canvas textures the visible scene uses, and a named group's triangles (e.g. 'your-car') */
+    textures() { return look.textures(); },
+    groupTris(name: string) { return look.tris(name); },
+    aoView(on: boolean | 'raw', tune?: Record<string, number>) { return look.aoView(on, tune); },
     /** stand at (x, z), game coordinates, or the nearest free spot to it; returns where you are */
     go(x: number, z: number) { const [lx, lz] = L(x, z); player.seat = null; showPath(null); const ok = player.place(lx, lz); return ok ? G(player.x, player.z) : null; },
     /** tap to go to a ground point (game coordinates): the path's waypoints, or null */
@@ -804,7 +803,7 @@ async function main() {
     peopleCalls() {
       // (the two draws back to back, nothing else changing between them: render() would also re-choose the parked
       // cars' detail after each frame)
-      const draw = () => { renderer.info.reset(); if (composer) composer.render(); else renderer.render(scene, camera); return renderer.info.render.calls; };
+      const draw = () => { renderer.info.reset(); look.render(); return renderer.info.render.calls; };
       crowd.draw(camera, stats);
       const all = draw(), counted = crowd.view.stats.npcCalls;
       const vis = crowd.root.visible; crowd.root.visible = false;

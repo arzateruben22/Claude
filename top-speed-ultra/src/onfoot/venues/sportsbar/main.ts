@@ -54,8 +54,10 @@ const sysReduced = typeof matchMedia === 'function' && matchMedia('(prefers-redu
 // purchase path anywhere. Until RS2's shared entitlement lands (S4), the flag is the page's own: ?ultra=1, the owner
 // flag on this device, or the test hooks.
 let ultraUnlocked = q.get('ultra') === '1' || q.get('quality') === 'ultra' || (() => { try { return localStorage.getItem('tsu.owner') === '1'; } catch { return false; } })();
-let quality: Quality = (['low', 'high', 'ultra'].includes(q.get('quality') ?? '') ? q.get('quality') : coarse ? 'low' : 'high') as Quality;
-if (quality === 'ultra' && !ultraUnlocked) quality = 'high';
+/** the tiers are low, hd and ultra (Lot 57's P1d names); 'high' is still read as HD */
+const asQuality = (v: string | null) => (v === 'high' ? 'hd' : v) as Quality | null;
+let quality: Quality = (['low', 'hd', 'ultra'].includes(asQuality(q.get('quality')) ?? '') ? asQuality(q.get('quality')) : coarse ? 'low' : 'hd') as Quality;
+if (quality === 'ultra' && !ultraUnlocked) quality = 'hd';
 let reduced = q.get('motion') === 'reduced' || sysReduced;
 
 declare global { interface Window { __onfoot?: Record<string, unknown>; __onfootError?: string } }
@@ -134,7 +136,7 @@ async function main() {
   const MAX_STREAM = 400;
   const streams = lightStreams(streets, [[560, 362], [222, 358, 438]], MAX_STREAM, mats.streamHead, mats.streamTail);
   streets.near.group.add(streams.head, streams.tail);
-  const streamCars = (qq: Quality) => (qq === 'low' ? 100 : qq === 'high' ? 200 : 400);
+  const streamCars = (qq: Quality) => (qq === 'low' ? 100 : qq === 'hd' ? 200 : 400);
   await stage();
   const kit = new Kit();
   const room = def.rooms[0];
@@ -869,7 +871,7 @@ async function main() {
     setClock(day: number | string, hour: number) { live = false; clock = { day: C.parseDay(day), hour: clamp(hour, 0, 23.99) }; applyClock(); return hooks.clock(); },
     liveClock() { live = true; applyClock(); return hooks.clock(); },
     clock() { return { day: clock.day, hour: clock.hour, label: C.fmtClock(clock), open, level, share: +share.toFixed(3), night: +night.toFixed(3), business: Sch.businessDay(S, clock.day, clock.hour) }; },
-    setQuality(qq: Quality) { if (!PRESET[qq]) throw new Error('quality: low, high or ultra'); if (qq === 'ultra') { ultraUnlocked = true; barHud.setUltra(true); } const rebuild = PRESET[qq].people !== PRESET[quality].people; applyQuality(qq, rebuild); if (qq === 'ultra') buildLod0(); avDirty = true; return quality; },
+    setQuality(qq: Quality) { qq = asQuality(qq) ?? qq; if (!PRESET[qq]) throw new Error('quality: low, hd or ultra'); if (qq === 'ultra') { ultraUnlocked = true; barHud.setUltra(true); } const rebuild = PRESET[qq].people !== PRESET[quality].people; applyQuality(qq, rebuild); if (qq === 'ultra') buildLod0(); avDirty = true; return quality; },
     stats() {
       const pass = measurePass(), maps = measureMaps(pass), ao = measureAo();
       // the frame's own count again (the measuring renders above don't touch the last frame's figures)

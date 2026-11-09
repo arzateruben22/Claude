@@ -17,6 +17,7 @@ import * as THREE from 'three';
 import type { Person, PersonOptions } from '../people';
 import { lodMaterial } from '../people/lod';
 import type { BuildDone, BuildJob } from './crowd-worker';
+import { RIM, RIM_GAIN } from './mats';
 
 /** how the page starts a build worker (main.ts: its own script again); none, and the patio bodies are built here */
 let workerFactory: (() => Worker) | null = null;
@@ -162,16 +163,18 @@ function blobTexture() {
  * where they stand (`PeopleView.lamp`), and it's added the way the held items take theirs (lot57/items.ts): the
  * albedo times the level. The builder's material is wrapped, not changed (its own shader edits run first).
  */
+// (P1d) and a rim: light wrapping round the body's edge as seen from the camera (the sky's by day, the string lights'
+// after dark: mats.ts RIM), so people stand out of the lit yard rather than sit flat in it
 function withFill(mat: THREE.Material, fill: { value: THREE.Color }) {
   const before = mat.onBeforeCompile;
   mat.onBeforeCompile = (sh, r) => {
     before.call(mat, sh, r);
-    sh.uniforms.uFill = fill;
+    sh.uniforms.uFill = fill; sh.uniforms.uRim = RIM; sh.uniforms.uRimGain = RIM_GAIN;
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 uFill;')
-      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * uFill;');
+      .replace('#include <common>', '#include <common>\nuniform vec3 uFill;\nuniform vec3 uRim;\nuniform vec2 uRimGain;')
+      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * uFill * uRimGain.y;\n{ float rimK = 1.0 - clamp( dot( normal, normalize( vViewPosition ) ), 0.0, 1.0 ); totalEmissiveRadiance += uRim * uRimGain.x * ( 0.3 + diffuseColor.rgb ) * rimK * rimK * rimK; }');
   };
-  mat.customProgramCacheKey = () => 'person-lod-fill';
+  mat.customProgramCacheKey = () => 'person-lod-fill-rim';
   mat.needsUpdate = true;
 }
 
@@ -356,6 +359,7 @@ export class PeopleView {
     r.shadowMap.enabled = false;
     // (painted by the set's own lights alone: the lamps' fill goes on as the impostor's tint)
     const fill = this.fillOf(n), fill0 = fill.value.clone(); fill.value.setRGB(0, 0, 0);
+    const rim0 = RIM.value.clone(); RIM.value.setRGB(0, 0, 0);
     // which body: the patio one if it's built, else the far one
     const use1 = !!n.m1;
     const h1 = n.m1?.parent ?? null, h0 = this.lod0Of(n);
@@ -382,7 +386,7 @@ export class PeopleView {
     }
     this.rt.scissorTest = false;
     r.setRenderTarget(oldRT); r.autoClear = oldAuto; r.setClearColor(oldCol, oldA); r.shadowMap.enabled = shadowOn;
-    fill.value.copy(fill0);
+    fill.value.copy(fill0); RIM.value.copy(rim0);
     // back where they were, drawn as they were, playing what they were playing (a walker repainted mid-walk walks
     // on), looking where they were (told again at their next step) and posed again before they're next drawn as a
     // body (the bones hold the painting pose till then)

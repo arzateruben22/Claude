@@ -8,7 +8,7 @@ import type { Quality } from '../../engine/mats';
 export interface Preset { shadows: number; post: boolean; bloom: boolean; ao: boolean; msaa: number; maxPR: number; minPR: number; scale: number; lights: number; people: 'phone' | 'high'; tex: number; style: 'retro' | 'standard'; cars: 'phone' | 'high'; far: 'simple' | 'full' }
 export const PRESET: Record<Quality, Preset> = {
   low: { shadows: 0, post: false, bloom: false, ao: false, msaa: 0, maxPR: 2, minPR: 1, scale: 1, lights: 0, people: 'phone', tex: 512, style: 'retro', cars: 'phone', far: 'simple' },
-  high: { shadows: 2048, post: true, bloom: true, ao: false, msaa: 4, maxPR: 2, minPR: 0.5, scale: 1, lights: 4, people: 'high', tex: 1024, style: 'standard', cars: 'phone', far: 'simple' },
+  hd: { shadows: 2048, post: true, bloom: true, ao: false, msaa: 4, maxPR: 2, minPR: 0.5, scale: 1, lights: 4, people: 'high', tex: 1024, style: 'standard', cars: 'phone', far: 'simple' },
   ultra: { shadows: 4096, post: true, bloom: true, ao: true, msaa: 4, maxPR: 2, minPR: 0.5, scale: 1, lights: 8, people: 'high', tex: 1024, style: 'standard', cars: 'high', far: 'full' },
 };
-export const LABEL: Record<Quality, string> = { low: 'Low', high: 'HD', ultra: 'Ultra' };
+export const LABEL: Record<Quality, string> = { low: 'Low', hd: 'HD', ultra: 'Ultra' };

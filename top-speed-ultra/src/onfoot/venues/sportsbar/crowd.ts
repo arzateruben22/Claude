@@ -113,7 +113,7 @@ const PLATE_SCALE = new THREE.Vector3(0.12, 0.012, 0.12);
 /** the restroom doors (frame u, v): two, one person each, out of sight inside */
 const RESTROOMS: P2[] = [[28.25, 11.1], [30.35, 11.1]];
 /** the plan's per-preset filler distance ("fillerMinM"): 6 m at Low, 9 m at HD and Ultra */
-export const FILLER_MIN: Record<Quality, number> = { low: 6, high: 9, ultra: 9 };   // (def.budgets' fillerMinM, the same numbers)
+export const FILLER_MIN: Record<Quality, number> = { low: 6, hd: 9, ultra: 9 };   // (def.budgets' fillerMinM, the same numbers)
 /** guest slots fillers never take (ours): the counter's stools and gaps (they're where the bartenders serve, so a guest
  *  there is a live one), the staff spots, the water station, the jukebox spot and the games' player spots */
 const NO_FILLER_ZONES = new Set(['bar', 'water station', 'kitchen', 'host stand']);

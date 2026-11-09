@@ -1407,6 +1407,273 @@ unchanged.
   - **Lot 57's `PRESET`** (L1) is re-synced again at S4 (O1).
   - **Lot 57's copies** of the GTAO and ground-depth flaws (O34) and of the two shadow flaws (O28) are its owners'.
 
+## 2026-11-09: P1d committed (Lot 57 at maximum graphics)
+
+Committed the kept P1d repair r2: three presets (retro Low, realistic HD, Ultra with GTAO, capped bloom, MSAA 4x,
+4096 soft shadows, 16x anisotropy, window mirror), new `look.ts`, `retro.ts`, `surfaces.ts`, `dress.ts`, `sky.ts`,
+`glass.ts`. Final build md5 52b703d72fde498a1e5ed2d14ab4d816. Art review re-checked: `npx tsc --noEmit` clean; on dist
+at 390x844 touch, Low drew 110 calls / 220,338 triangles (inside 250k), Ultra 611 calls / 3.66M triangles, no console
+errors; walk(0,1,3s) moved 8.65 m. Screenshots: `tests/out/onfoot/*-p1d.png`, `onfoot-p1d-compare-*.png`,
+`review-p1d-r2-390-{low,ultra}-sat21.png` (not committed; tests/out and dist stay out of git). Details below.
+
+## 2026-11-09: Lot 57 on foot, P1d repair r2
+
+The reviewers kept P1d's code and its retro Low but sent it back on the look (art) and on reporting and robustness
+(code). This pass makes each fix they listed; it was told not to commit. Unchanged: the game's code (`src/game`,
+`src/ui`), its `vite.config.ts` and `package.json`, `src/onfoot/vite.config.ts`, the people builder
+(`src/onfoot/people/`), `src/preview/` and `Physics.ts` (checked with `git diff --stat 47c71a6` on those paths: empty).
+`main.ts` changed in two small, local places for the parallel venues-in-game lane: `Look` is given `env`, and three
+test hooks (`textures()`, `groupTris(name)`, `aoView(on, tune)`). Four builds of `dist/onfoot/index.html`, which
+differ only in Ultra's bloom (`tests/out/onfoot/logs/p1d-r2.md5`). The sweep ran on 5030dff01fecf0971a192206af5a9200;
+its Ultra night shots showed square haloes round the near bulbs (a bulb's emissive is many times white, and its
+saturated edge, blurred through the bloom's short separable kernels, took their square shape). A narrower radius
+(886dd6033ff44c95980f30062efae468, the build the suite ran on) didn't cure it; dropping the bloom's coarse levels and
+raising its strength to 0.8 (f2de9f2eb08466fbd91347268c314751) turned the lit pylon into a white blob at night. The
+final build, 52b703d72fde498a1e5ed2d14ab4d816, caps what goes into Ultra's bloom (at 1.4, keeping its hue) with a
+strength of 0.5 and radius 0.5 at night (HD: 0.34 and 0.55, uncapped): round haloes and a readable pylon. Every Ultra
+Saturday 21:00 shot was re-shot on it at both sizes and the names check run again. Ultra's golden-hour and noon shots
+were not re-shot, so their bloom is the first build's (its threshold rises with the daylight, to 4.5 at noon, so by
+day it spreads little; at golden hour the lit bulbs may still show the old haloes). Low and HD don't take this code
+path, so their shots and the suite stand.
+
+- **Ultra set apart from HD** (`lot57/look.ts`, `lot57/glass.ts`):
+  - GTAO strong in the contact areas: three's defaults (and P1d's 0.5 m) left only the table legs dark; now a 2 m
+    reach, no fall-off along a sample's path, the occluders taken as 6 m thick, the result raised to 2.2. Checked with
+    the new `aoView('raw' | true)` hook: under the tables and benches, at the Shed's base and under its hoods.
+  - After dark while open: four string-light spots (was two) casting shadows, hung from the spans nearest a point
+    7 m ahead of you (P1d's nearest-to-you put their pools behind the camera), narrower cones (pools, not a wash),
+    85 cd x night; the strings' baked light on the yard turned down to 60% for the frame and the painted pools under
+    the strings and heaters up 2.2x, for the contrast between a pool and the dark round it; a stronger bloom at
+    night (strength 0.5, threshold 0.72, its input capped: see the builds above).
+  - Reflections in the Shed's glass: a planar mirror (three's `Reflector` with our glass shader: a Fresnel term over
+    the panes, 512 px, no MSAA, drawn at most once a frame and kept out of GTAO) for the tank-room window and the four
+    roll-up doors' glass when they're down, all in the Shed's yard-wall plane.
+  - The people: rim x2.1 and fill x1.7 on Ultra (HD x1.1 and x1.05) through a new gain uniform (`mats.ts RIM_GAIN`,
+    `crowdview.ts withFill`).
+  - The grade: a little more contrast and mid-tone colour on Ultra.
+- **Mountains with form, every preset** (`lot57/sky.ts`): the ring is rebuilt as three ranges one behind another (the
+  far one keeps Environment's crest exactly, so the sun still sets behind the same ridge; the nearer two stay under
+  it), lit by the sun's direction and colour and the sky, with ridged relief in the fragment shader (seamless round
+  the compass), darker gullies, and haze graded by range and by height (feet deeper in it). Banded in the retro look.
+  Still drawn without fog and kept out of GTAO. About 5k triangles (was 512).
+- **Low at night**: no cloud deck once it's dark in the retro look (it showed as brown-grey smudges); by day its clouds
+  are a crisp cut of a blurrier level of the texture (rounded shapes, not the noise's ragged edge).
+- **Umbrellas' undersides** (`mats.ts CANOPY`, set each frame): the sun through the canvas and the paving's bounce by
+  day, the strings' warm fill after dark, added to the canopy's back faces (and a third of it to the outside: canvas
+  is translucent); the patio umbrellas' valance a lighter teal (it read as a black band in shade).
+- **Golden hour golden**: the sweep's golden clock is now the hour the page's sun is nearest 5 degrees up (found on the
+  page each run: Saturday 16:18 this week, sun 5.01 degrees), not 15:50 (10 degrees). The visible sky warms toward
+  the horizon and the clouds go amber while the sun is low, and the sun and sky light are warmed for the frame
+  (Environment's own colours put back after it), on every preset.
+- **Low's budgets**: your own car on Low has plain wheels (the food trucks' Low tyre and rim, scaled) in place of
+  the garage wheels: 62,158 to 35,102 triangles (`groupTris('your-car')`). Low's tiling surfaces are packed into
+  512 px atlas pages (four 240 px tiles each with wrapped borders; the toon shader repeats a tile itself and samples
+  with capped gradients): 22 surfaces into 6 pages. The two pool textures are one. Canvas textures the visible scene
+  uses on Low (the new `textures()` hook): 42 before, 25 to 27 now, 7 or 8 of them over 512 px (the signs' text
+  atlas, the cloud deck, the trees' leaf cards, the business park's lit windows, your car's lamps and badge). **The
+  plan's 12 is still not met.**
+- **Code**: `stats().look.passes` names each pass itself (the build minified the class names); `Toon` re-converts a
+  mesh whenever it wears something that is neither its toon nor a material already found unconvertible (WeakMaps, not
+  userData); leaving Low puts back each mesh's own earlier `castShadow` (kept in `userData.lowNoCast`); `Toon.sync`
+  walks a kept array; `placeSpots` uses plain loops and a partial insertion sort, no allocation; Low restyles only what
+  the renderer drew unstyled last frame (from its own draw list) instead of walking the scene every 20 frames; a spot
+  moved to a new span draws its shadow map that frame. The pylon's cabinet glows a little less at night (its art
+  washed out under bloom).
+- **Checked**, headless Chromium with SwiftShader, one browser of ours at a time on a machine other lanes were loading
+  (load average 13 to 19). Every screenshot named here was looked at.
+  - `npx tsc --noEmit` clean. The real venue's name is in nothing under `src/onfoot` or in `dist/onfoot/index.html`.
+  - **The sweep** (`tests/onfoot-p1d.mjs`, now with `--detail=sign,gate,trucks,glass` shot at golden hour and Saturday
+    21:00): east, shed and lawn at golden hour, Saturday 21:00 and noon, plus the sign, gate, trucks and glass views
+    at golden hour and 21:00, at Low, HD and Ultra, at 390x844 (touch) and 1280x720: 102 shots,
+    `tests/out/onfoot/onfoot-<size>-<view>-<preset>-<clock>-p1d-r2.png`. No console errors or warnings
+    (`tests/out/onfoot/logs/p1d-r2-390.log`, `p1d-r2-1280.log`).
+  - **Sheets** (`tests/onfoot-sheets.py`, Pillow): P1c | P1d | r2, a row a preset, for each view and clock
+    (`onfoot-p1d-r2-compare-<size>-<view>-<clock>.png`); HD | Ultra (`onfoot-p1d-r2-hd-vs-ultra-<size>-...`); the
+    detail views (`onfoot-p1d-r2-detail-<size>-<view>.png`).
+  - **stats() at each preset**, over the 17 shots of each in the sweep (calls, triangles, the people's calls; frame ms
+    is `stats().frameMs`, the CPU's part, at the shot, with the largest of the four frames sampled before it):
+
+    | Preset | 390x844 | 1280x720 |
+    | --- | --- | --- |
+    | Low | 57 to 100 calls, 117k to 201k tris, people 0 to 6; 1.4 to 5.7 ms (32.5) | 76 to 129, 164k to 221k, people 0 to 6; 2.2 to 5.7 ms (32.5) |
+    | HD | 83 to 184, 180k to 508k, people 0 to 21; 2.7 to 10.8 ms and once 131.1 (133.3) | 126 to 197, 315k to 513k, people 0 to 24; 3.6 to 14.5 ms (85.7) |
+    | Ultra | 156 to 616, 0.39M to 3.57M, people 0 to 56; 5.5 to 22.5 ms (55.2) | 279 to 739, 1.33M to 4.24M, people 0 to 90; 6.2 to 64 ms (500.4, one sample) |
+
+    Ultra's seven Saturday 21:00 shots at each size, re-shot on the final build (`p1d-r2-ultra21-390.log`,
+    `p1d-r2-ultra21-1280.log`, no console errors): 390x844 198 to 607 calls, 0.86M to 3.56M triangles, 5.8 to 16.1 ms
+    (41.6); 1280x720 342 to 711 calls, 2.12M to 4.36M triangles, 6.7 to 24.6 ms (24.6). The table's Ultra column
+    includes the sweep's own night shots, since replaced.
+
+    Low and HD are inside the plan's Low and High budgets in every shot (Low: 150 calls, 250k triangles, 16 for the
+    people; High: 350, 700k, 24). Ultra has no budget in the plan; it is heavier than P1d's (four spots, the mirror,
+    the mountains). Drawn start to finish (`timeFrames(3)`, median, east view; software rendering on a machine loaded
+    to 13 to 19, so only the presets' relative cost): 390x844 Low 288 to 405 ms, HD 1.0 to 1.3 s, Ultra 3.9 to 4.5 s;
+    1280x720 Low 1.1 to 1.4 s, HD 4.2 to 4.8 s, Ultra 7.9 to 10.6 s. Canvas textures in view: Low 25 to 27, HD and
+    Ultra 51 to 53. `stats().look.passes` in the built page reads, on Ultra: "scene (render), MSAA 4x", "ambient
+    occlusion (GTAO)", "bloom (UnrealBloom)", "output (tone map, sRGB)", "grade (vignette, split tone, golden hour)";
+    on Low: "scene", "retro (tone map, ink, sky bands, palette, dither)".
+  - **What the shots show**:
+    - HD | Ultra at 390x844, east view, Saturday 21:00 (`onfoot-p1d-r2-hd-vs-ultra-390x844-east-sat21.png`): a
+      difference you see at once: on Ultra a pool of light on the paving under the strings and round the heater with
+      darker paving round it, the left-hand table in shade, a little more contrast; round haloes on the bulbs. At noon in the shed view
+      (`...-shed-noon.png`) the difference is smaller: the ground under the picnic tables and benches darker, a
+      touch more contrast and colour; Ultra's reflections show in the glass view
+      (`onfoot-p1d-r2-detail-390x844-glass.png`: the string lights in the tank-room window at 21:00).
+    - The mountains have form at golden hour on every preset: lit rock ridges and darker gullies, rose-tan, hazier
+      to their feet and with distance (`onfoot-p1d-r2-compare-390x844-lawn-golden.png`, P1d's cream cut-out beside).
+    - Golden hour reads golden: warm light and long shadows, a warm horizon and lit clouds, also looking east.
+    - Low by night: a clean black sky with stars, no smudges (`onfoot-390x844-east-low-sat21-p1d-r2.png`,
+      `onfoot-390x844-shed-low-sat21-p1d-r2.png`).
+    - The umbrellas' undersides are cream in shade, not black, on Low and HD (`onfoot-390x844-shed-low-golden-p1d-r2.png`).
+    - The detail: the pylon's neon at night, the trucks' lit serving windows and awnings, the gate with the fictional
+      "On tap" menu board, a bike rack at the edge of the gate view.
+  - **The Phase 1 suite, on the final build**: `node tests/onfoot.mjs --only=crowd-phone,walks,names --suffix=-p1d-r2`,
+    16 of 16. Its first run was stopped by this session's own two-hour limit on the chained job after the four walks
+    checks had passed (`tests/out/onfoot/logs/onfoot-p1d-r2-suite-walks.log`: 1,000 random walks against 504
+    colliders, none ending inside a collider, off the walkable area or through a wall; 454 of 454 tap-to-go walks with
+    a path arrived; its two crowd "fails" there are the browser closing under it, not results); the crowd and names
+    groups were run again on their own, 12 of 12 (`onfoot-p1d-r2-suite2.log`). Low within budget in all 24 views at
+    each phone size: worst 135 calls and 233,409 triangles at 844x390, 119 calls and 234,429 triangles at 390x844 (P1d:
+    246,845 and 248,029; the margin is now about 6%), the people at most 13 and 16 calls. The people's CPU: median 0.4
+    and 0.3 ms, 90th percentile 0.6 and 0.5 ms, worst single frames 2.5 ms (844x390) and 93.9 ms (390x844) on this
+    loaded machine. Facing as drawn and the names checks pass.
+- **Not done, or short** (candidly):
+  - The Low texture budget (12 at 512 px): 25 to 27 canvas textures in view, 7 or 8 over 512 px. Getting to 12 means
+    folding in textures this page doesn't paint (the game's cloud deck and business-park windows, the car's lamps,
+    badge and wordmark, the trees' leaf cards) or dropping them on Low.
+  - At noon, Ultra over HD is modest in the shed view (above); the mirror covers the Shed's yard-wall glass only (the
+    forecourt's storefront glass and the sawtooth glazing still reflect the sky map).
+  - The gate view on a phone is narrow: the bike racks are at its edge.
+  - Nothing ran on a real phone or GPU: frame rates, including Low's at the higher pixel ratio with its shadow pass
+    and full-screen retro pass, are not measured.
+
+## 2026-11-08: Lot 57 on foot, P1d: maximum graphics, three presets (not committed)
+
+P1d of `PROJECT_OC_ON_FOOT.md` Phase 1: Lot 57 as good as the browser allows at the owner's three presets (2026-10-21:
+"let's just stick with 3"), Low inside the plan's phone budgets. Not committed: this pass was told not to commit. These
+are unchanged: the game's code, its `vite.config.ts` and `package.json`, `src/onfoot/vite.config.ts`, the people
+builder (`src/onfoot/people/`), `src/preview/` and `Physics.ts`. Build `dist/onfoot/index.html` md5 in
+`tests/out/onfoot/logs/p1d.md5`.
+
+- **The presets** (`setQuality('low' | 'hd' | 'ultra')`; `'high'` and `?quality=high` still select HD; the pause
+  menu's Graphics row reads "Low · retro", "HD", "Ultra" with a line saying what each is). How each frame is drawn is
+  the new `lot57/look.ts`; `main.ts` only calls it (its composer code moved there). The edits to `main.ts` are small
+  and in place (the preset's name, the calls to `look`, three hooks, your driver's shadow on Low), for the parallel
+  venues-in-game lane; whether they merge cleanly is for that merge to show. `tests/onfoot.mjs` changed in one line
+  (the check after Ultra to High accepts the name `hd`).
+  - **Low, the retro look** (`lot57/retro.ts`): full resolution (pixel ratio up to 2, was 0.85 x and at most 1),
+    every lit material swapped for a cel-shaded toon one (a lit side, a narrow mid band, a shade side; albedo
+    posterized by brightness so colours keep their hue), then one full-screen pass: the tone map, a colour lift,
+    dark ink where the depth bends (the second difference of 1/z: silhouettes and convex edges, not flat paving), the
+    sky in flat bands, a 16-bit palette (5-6-5) with a 4x4 ordered dither. Hard one-step sun shadows (a 1024 map over
+    32 m round you, from the big shapes only: the Shed, the hoods, the tables' tops, umbrellas, the trucks and painted
+    props, palms, poles; not the parked cars, your car, the trees' leaves, the thin steel or, on Low, your driver). No bloom, ambient occlusion or reflections; no lens flare. The
+    people get it too (their bodies cel-shaded and inked). Modelled on the game's own Retro style on the
+    `retro/port` branch (`src/game/render/style.ts`, commit 9e29640), which isn't on `claude/modes` as a kept commit
+    (only uncommitted work in its worktree) and changes the game's code, so it wasn't merged here: when it lands, the
+    two should become one module.
+  - **HD, the realistic look**: soft sun shadows (2048, PCF soft), 4x multisampling, bloom on the lights after dark,
+    four real lights near you, normal maps on the surfaces (new on HD), and a grade: a soft vignette, a touch of
+    contrast, warm highlights and cool shadows, and at golden hour the low sun's warmth through the frame.
+  - **Ultra**: as HD plus GTAO ambient occlusion (the sky's far layers kept out of it: the mountain ring had gone
+    black under it, as it already half did in P1c), 4096 sun shadows, 16x anisotropic filtering, eight real lights
+    near you, two of the string lights' spots casting shadows of their own after dark while Lot 57 is open (their
+    maps drawn in turn, one every other frame), stronger relief.
+- **Light.** The sun and sky follow the clock (the game's Environment); golden hour is graded warm on every preset
+  (`look.gold`, from the sun's height). Pools of warm light on the ground under the string lights (every third bulb),
+  the heaters and the fire tables, lit when Lot 57 is open after dark. Ambient occlusion baked into the ground's
+  vertex colours round walls, fences, tables, planters, the trucks and the new props, and a slow colour variation
+  across the lawn, the pavers and the concrete. A rim of light on the people's bodies (the sky's by day, the strings'
+  after dark), added by the crowd's own material wrapper (`crowdview.ts withFill`), so the people builder is
+  unchanged.
+- **Materials, all painted in code** (`lot57/surfaces.ts`): the Shed's walls are painted brick (paint in the joints,
+  chips showing brick), its roof and the new door hoods corrugated galvanised steel, gravel pads, the umbrellas'
+  canvas weave, brushed steel kegs, flame cards, oil stains on a third of the lot's stalls; normal maps from height for
+  the painted brick, the corrugation, gravel, wood grain, worn concrete, asphalt and the canvas (HD and Ultra; Ultra
+  stronger), as well as P1c's pavers, brick and block.
+- **Detail** (`lot57/dress.ts`): two fire tables on the lawn (board-formed concrete, a burner pan, flames that flicker
+  after dark and hold steady with reduced motion) on gravel pads, in place of the low tables the lawn chairs faced; a
+  corrugated hood over each roll-up door; our fictional menu board on the Shed's yard wall under a gooseneck lamp;
+  neon round the corner pylon's cabinet, both faces (a cream outline and a red rule), lit when open; four bike racks
+  on the frontage strip; a stack of kegs by the bins. Planters, palms, the slatted fence, the heaters and the trucks'
+  windows and awnings were already there.
+- **Hooks**: `stats().look` (style, passes, shadow map size and type, anisotropy, spots lit, the toon swap's counts,
+  bloom, AO) and `stats().lights`; `timeFrames(n)` (n frames drawn start to finish, each waited for with a pixel read);
+  `casters(n)` (what casts the sun's shadow and the shadow passes' measured cost).
+- **A movement fix the checks asked for** (`lot57/player.ts`): the "never stuck" rule now allows 1.5 cm of overlap at
+  most, not 2 cm. P1d's new colliders shifted the seeded random walks, and two stick walks then ended pinched against
+  a parked car's corner at 2.000 cm, which the independent walk checker (2 cm, in game coordinates) read as just over.
+- **Checked**, headless Chromium with SwiftShader, one browser of ours at a time on a machine other lanes were
+  loading to 13 to 23; every screenshot named here was looked at. The final build is md5
+  84e8f9643c8d1d530e8120ddec461906: the suite and the Low shots ran on it; the HD and Ultra shots ran on the build
+  before it (50c7cc92), which draws HD and Ultra the same (the last changes were Low's casters, your driver's shadow
+  on Low, and the movement fix above).
+  - `npx tsc --noEmit` clean. The real venue's name is in nothing under `src/onfoot` or in `dist/onfoot/index.html`.
+  - **The sweep** (`tests/onfoot-p1d.mjs`, new): three views (`east` across the yard to the lawn and trucks, `shed`
+    from the yard's north-east corner to the Shed, `lawn` the fire tables and trucks), at golden hour (Saturday
+    15:50: the sun about 10 degrees up in mid-November), Saturday 21:00 and Saturday noon, at Low, HD and Ultra, at
+    1280x720 and 390x844 (touch): 54 shots, `tests/out/onfoot/onfoot-<size>-<view>-<preset>-<clock>-p1d.png`, no
+    console errors or warnings in either run (`tests/out/onfoot/logs/p1d-after-1280.log`, `p1d-after-390.log`).
+  - **Before**: the same 54 from P1c's committed build r2 (`-p1c.png`; its High is HD's place), and side-by-side
+    sheets, `tests/out/onfoot/onfoot-p1d-compare-<size>-<view>-<clock>.png` (P1c left, P1d right, a row a preset).
+  - **stats() at each preset**, over the nine shots of each (calls, triangles, the people's calls):
+
+    | Preset | 390x844 | 1280x720 | P1c, 390x844 | P1c, 1280x720 |
+    | --- | --- | --- | --- | --- |
+    | Low | 72 to 101 calls, 156k to 177k tris, people 2 to 6 | 76 to 126, 157k to 234k, people 2 to 6 | 58 to 84, 131k to 151k | 61 to 113, 132k to 209k |
+    | HD | 126 to 183, 356k to 490k, people 2 to 21 | 152 to 194, 406k to 518k, people 6 to 23 | 119 to 174, 352k to 485k | 144 to 188, 400k to 514k |
+    | Ultra | 266 to 417, 1.60M to 2.46M, people 3 to 58 | 347 to 568, 1.94M to 3.34M, people 17 to 90 | 257 to 402, 1.59M to 2.46M | 336 to 508, 1.94M to 2.93M |
+
+    Low is inside the plan's phone budget (150 calls, 250k triangles, 16 for the people) in every shot at both sizes;
+    its new cost over P1c is mostly the hard sun shadows' pass (measured with `casters()`: 19 calls and 56k triangles
+    in the east view before the casters were trimmed and the box narrowed; 16 calls and 40k in the lot view after the
+    first trim). HD is inside the High budget (350, 700k, 24).
+    Ultra has no budget in the plan; its top is Saturday 21:00 in the east view, a frame that drew a spot's shadow map.
+  - **Frame ms.** `stats().frameMs` is the CPU's part of a frame (JavaScript only): Low 2.1 to 8.4 ms, HD 2.9 to 7.8 ms,
+    Ultra 7.2 to 16.1 ms in 15 of the 18 shots, and 24.9 ms (1280x720, east view, Saturday 21:00), 53.5 ms (1280x720,
+    shed view, Saturday 21:00) and 157 ms (1280x720, lawn view, golden hour) in the other three; of the four frames
+    sampled before each Ultra shot, single frames of up to 81.1 ms (corrected in the r2 repair: this line
+    first said 7.2 to 16.1 ms with one 157 ms frame, which the logs `p1d-after-1280.log` and `p1d-after-390.log` don't
+    support). Drawn
+    start to finish here (`timeFrames(3)`, median, east view; software rendering on a loaded 4-core machine, so only the
+    presets' relative cost, not a phone's or a GPU's frame rate): 1280x720 Low 654 to 761 ms, HD 2.8 to 3.2 s, Ultra
+    8.0 to 16.9 s; 390x844 Low 262 to 394 ms, HD 1.0 to 2.9 s, Ultra 4.0 to 5.3 s.
+  - **The Phase 1 suite, on the final build**: `node tests/onfoot.mjs --only=crowd-phone,walks,names --suffix=-p1d`,
+    16 of 16 (`tests/out/onfoot/logs/onfoot-p1d-suite2.log`). 1,000 random walks (500 tap, 500 stick) against 504
+    colliders: none ends inside a collider, off the walkable area or through a wall (the run before the movement fix
+    failed with the two car pinches above: `onfoot-p1d-suite.log`); 454 of 454 tap-to-go walks with a path arrived.
+    Low within budget in all 24 views at each phone size (twelve views, first and third person, Saturday 21:00):
+    worst 131 calls and 246,845 triangles at 844x390, 119 calls and 248,029 triangles at 390x844 (the lot's views, where
+    your own detailed car is in sight: the margin there is under 1%), the people at most 13 and 16 calls, counted and measured. Facing as
+    drawn, the people's CPU (median 0.3 to 0.4 ms; one 40 ms frame at 390x844 on the loaded machine) and the names
+    checks pass. (`suite.log`'s first run of the two crowd budget checks, before the casters were trimmed, failed at
+    268k and 261k triangles.)
+  - **What the shots show** (looked at, every one; the comparison sheets side by side):
+    - Low is a different game now: crisp, outlined, cel-shaded, with hard shadows, posterized pools of light, a banded
+      sky and the people cel-shaded and inked too, at full resolution on the phone.
+    - The lawn changed most: the fire tables on their gravel pads, lit and flickering after dark, the chairs round
+      them in their light (`onfoot-1280x720-lawn-hd-sat21-p1d.png`, `onfoot-390x844-lawn-low-sat21-p1d.png`).
+    - Golden hour reads warm on every preset (the grade), with long sun shadows across the yard; on Ultra the mountain
+      ring is lit again instead of black.
+    - HD and Ultra by night and at noon in the yard change less than the rest: the pools under the heaters and strings,
+      the rim on the people, the vignette and grade, the Shed's painted brick and corrugated hoods (`shed` view).
+- **Not done, or short of the brief** (candidly):
+  - The plan's Low budget of 12 canvas textures at 512 px is not met (P1d adds seven canvas textures on every preset,
+    the painted brick replacing the tilt-up one, and seven normal maps on HD and Ultra; P1c was already over it). Low's calls, triangles and the people's calls are inside
+    budget in every shot and every suite view, but with under 1% to spare in the lot's views; the people's CPU has
+    medians of 0.3 to 0.4 ms but single frames of 4.4 ms (844x390) and 40.3 ms (390x844) on this loaded machine,
+    against the plan's 2 ms; and Low now has a hard 1024 sun shadow map, which the owner's retro brief asks for and the
+    plan's Low column doesn't list.
+  - The umbrellas' undersides stay dark at HD and Ultra by day (no bounce from the sunlit paving); in the retro look
+    they go near black.
+  - The retro look's cloud deck turns into flat blobs, and Low's shadows stop 16 m from you (by design, for the
+    budget): tables farther off have none.
+  - Ultra's two shadow-casting spots draw every caster in their cones again (one map every other frame); Ultra by
+    night reaches 568 calls and 3.3M triangles at 1280x720. There is no Ultra budget in the plan, but this is heavy.
+  - Golden hour is a clock (Saturday 15:50) on this week's date: the page's sun follows the device's season, so the
+    same hour in June is not golden.
+  - Nothing ran on a real phone or GPU; frame rates are not measured.
+
 ## 2026-10-21: Lot 57 on foot, P1c committed (people, build r2)
 
 P1c, the people milestone, is committed as build r2 (`dist/onfoot/index.html` md5 e50e3fa0f8840195e793470d0b8776db,
