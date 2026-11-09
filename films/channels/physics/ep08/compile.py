@@ -59,7 +59,7 @@ TAKES = [
     {"name": "measure", "t0": cut("measure"), "t1": cut("takeaway"), "phimax": 300, "breaks": "single",
      "keys": take((cut("measure"), -1.0), (A("vo06:little"), -1.0), (A("vo06:fifty"), -1.0 / 6), (A("vo06:win."), 0.0), (cut("takeaway"), 0.0))},
     {"name": "takeaway", "t0": cut("takeaway"), "t1": cut("tease"), "pair": [
-        {"xo": 0.0, "yo": 11.0, "breaks": "casc", "phimax": 0, "keys": take((cut("takeaway"), 0.965), (A("vo07:chain") - 0.6, 0.99), (A("vo07:chain") - 0.1, 1.0), (A("vo07:chain") + 3.8, 1.95), (cut("tease"), 1.97))},
+        {"xo": 0.0, "yo": 11.0, "breaks": "casc", "phimax": 0, "keys": take((cut("takeaway"), 0.55), (A("vo07:chain") - 0.6, 0.985), (A("vo07:chain") - 0.1, 1.0), (A("vo07:chain") + 3.8, 1.95), (cut("tease"), 1.97))},
         {"xo": 0.0, "yo": -11.0, "breaks": "single", "phimax": 250, "keys": take((cut("takeaway"), -1.0), (A("vo07:Twist"), -1.0), (A("vo07:usually"), 0.0), (A("vo07:break#2") - 0.05, 0.97), (A("vo07:break#2"), 1.0), (A("vo07:break#2") + 3.4, 1.9), (cut("tease"), 1.92))}]},
     {"name": "tease", "t0": cut("tease"), "t1": EC - 0.6, "pair": [
         {"xo": 0.0, "yo": 11.0, "breaks": "casc", "phimax": 0, "keys": take((cut("tease"), 1.97), (EC, 1.97))},
@@ -91,7 +91,7 @@ for _i in range(4):
     LABELS.append({"id": f"pc{_i+1}", "text": f"piece {_i+1}", "color": "ghost", "t0": A("vo02:almost") + 0.35 * _i, "t1": cut("change") - 0.3, "at": f"pc{_i+1}", "side": 1 if _i % 2 else -1, "fixed": False})
 LABELS.append({"id": "tk-shat", "text": "shattered: 4 pieces", "color": "energy", "t0": A("vo07:chain") + 2.3, "t1": EC - 0.7, "at": "shat", "side": 1, "fixed": True})
 LABELS.append({"id": "tk-two", "text": "twisted first: 2 pieces", "color": "motion", "t0": A("vo07:break#2") + 0.3, "t1": EC - 0.7, "at": "twist2", "side": 1, "fixed": True})
-LABELS.append({"id": "wy-bent", "text": "most bent: breaks here", "color": "energy", "t0": cut("why") + 2.0, "t1": A("vo04:explained") - 0.2, "at": "b1", "side": 1, "fixed": True})
+LABELS.append({"id": "wy-bent", "text": "most bent: breaks here", "color": "energy", "t0": cut("why") + 2.0, "t1": A("vo04:explained") - 0.2, "at": "b1", "side": -1, "fixed": True})
 LABELS.append({"id": "wo-shat", "text": "earlier: 4 pieces", "color": "energy", "t0": A("vo05:pieces.") + 1.6, "t1": cut("measure") - 0.3, "at": "shat", "side": 1, "fixed": True})
 LABELS.append({"id": "wo-tw2", "text": "twisted: 2 pieces", "color": "motion", "t0": A("vo05:pieces.") + 1.6, "t1": cut("measure") - 0.3, "at": "twist2", "side": 1, "fixed": True})
 BADGES = [
@@ -111,7 +111,7 @@ def key(t, v, ease="p2"):
 
 Y0 = STICK["Y0"]
 WIDE = view([0.0, Y0 - 7.0, 0.0], 118.0)
-CLOSE = view([0.0, Y0 - 3.0, 0.0], 90.0)
+CLOSE = view([0.0, Y0 + 4.0, 0.0], 90.0)
 PUSH = view([0.0, Y0 + 1.0, 0.0], 80.0)
 PAIR = view([0.0, Y0 - 12.0, 0.0], 176.0)
 T1, T2, T3, T4 = A("vo02:snaps."), A("vo03:end.") - 0.1, A("vo04:sends"), A("vo05:two#2")
@@ -122,9 +122,14 @@ CAM = {
     "why": [key(cut("why"), CLOSE), key(cut("why") + 1.8, view([0.0, Y0 + 4.0, 0.0], 60.0), "p3"), key(A("vo04:Years") + 0.6, view([0.0, Y0 + 4.0, 0.0], 56.0, 0.0, 6.0), "sine"), key(A("vo04:explained"), {**CLOSE, "dist": 84.0, "yaw": 8.0}, "p3"), key(T3 - 0.9, PUSH, "p3"), key(T3 + 0.6, PUSH, "sine"), key(T3 + 2.4, {**WIDE, "dist": 124.0}, "p3"), key(cut("whoa"), {**WIDE, "dist": 108.0}, "sine")],
     "whoa": [key(cut("whoa"), WIDE), key(cut("whoa") + 2.4, {**WIDE, "dist": 100.0, "yaw": -10.0}, "sine"), key(A("vo05:Then") - 0.3, view([0.0, Y0 - 3.0, 0.0], 88.0), "p3"), key(T4 - 0.2, PUSH, "p3"), key(T4 + 0.5, PUSH, "sine"), key(A("vo05:pieces.") + 0.4, {**WIDE, "dist": 112.0, "yaw": 14.0}, "p3"), key(A("vo05:pieces.") + 1.5, PAIR, "p3"), key(cut("measure"), {**PAIR, "dist": 190.0, "yaw": -10.0}, "sine")],
     "measure": [key(cut("measure"), view([0.0, Y0 - 5.0, 0.0], 116.0, 0.0, 12.0)), key(cut("takeaway"), view([0.0, Y0 - 5.0, 0.0], 108.0, 0.0, -12.0), "sine")],
-    "takeaway": [key(cut("takeaway"), view([0.0, Y0 - 6.0, 0.0], 150.0, 0.0, 6.0)), key(A("vo07:It") + 1.0, PAIR, "p3"), key(cut("tease"), {**PAIR, "dist": 170.0, "yaw": -6.0}, "sine")],
-    "tease": [key(cut("tease"), {**PAIR, "dist": 170.0, "yaw": -12.0}), key(EC - 0.6, {**PAIR, "dist": 232.0, "yaw": 12.0}, "sine"), key(EC - 0.59, CLOSE, "lin"), key(DUR, CLOSE, "sine")],
+    "takeaway": [key(cut("takeaway"), view([0.0, Y0 - 6.0, 0.0], 128.0, 0.0, -14.0)), key(cut("takeaway") + 1.8, PAIR, "p3"), key(cut("tease"), {**PAIR, "dist": 160.0, "yaw": 10.0}, "sine")],
+    "tease": [key(cut("tease"), {**PAIR, "dist": 150.0, "yaw": -26.0, "pitch": 14.0}), key(EC - 0.6, {**PAIR, "dist": 250.0, "yaw": 26.0, "pitch": 2.0}, "sine"), key(EC - 0.59, CLOSE, "lin"), key(DUR, CLOSE, "sine")],
 }
+_CUTS = sorted([b["t0"] for b in BEATS] + [EC - 0.6])
+for _lb in LABELS:
+    _next = [x for x in _CUTS if x > _lb["t0"] + 0.1]
+    if _next and _lb.get("t1") is not None and _lb["t1"] > _next[0] - 0.75:
+        _lb["t1"] = max(_lb["t0"] + 0.6, _next[0] - 0.75)
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 TITLE = {"series": "Reality Rulebook · Season 2 · Episode 2", "title": "Spaghetti almost never breaks in *two*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
 film = {
