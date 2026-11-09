@@ -1,0 +1,236 @@
+{
+ "duration": 73.6,
+ "fps": 30,
+ "preset": "restframe-bench",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 3.7333,
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 3.7333,
+   "t1": 16.2667,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 16.2667,
+   "t1": 22.4,
+   "energy": 0.5
+  },
+  {
+   "id": "why",
+   "t0": 22.4,
+   "t1": 34.9333,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 34.9333,
+   "t1": 49.3333,
+   "energy": 0.75
+  },
+  {
+   "id": "measure",
+   "t0": 49.3333,
+   "t1": 58.6667,
+   "energy": 0.5
+  },
+  {
+   "id": "takeaway",
+   "t0": 58.6667,
+   "t1": 67.2,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 67.2,
+   "t1": 73.6,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 3.7333
+  },
+  {
+   "t": 0.0,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -4.0
+  },
+  {
+   "t": 3.716633,
+   "kind": "counter.show",
+   "tag": "spine"
+  },
+  {
+   "t": 3.7333,
+   "kind": "section",
+   "id": "normal",
+   "t1": 16.2667
+  },
+  {
+   "t": 3.916633,
+   "kind": "label",
+   "tag": "no-big"
+  },
+  {
+   "t": 4.0166,
+   "kind": "badge",
+   "tag": "sim",
+   "text": "Computer simulation (2D)"
+  },
+  {
+   "t": 4.016633,
+   "kind": "label",
+   "tag": "no-small"
+  },
+  {
+   "t": 9.5,
+   "kind": "reveal",
+   "tag": "rise"
+  },
+  {
+   "t": 16.2667,
+   "kind": "section",
+   "id": "change",
+   "t1": 22.4
+  },
+  {
+   "t": 18.8,
+   "kind": "label",
+   "tag": "ch-ball"
+  },
+  {
+   "t": 21.4,
+   "kind": "contact",
+   "tag": "heavier"
+  },
+  {
+   "t": 22.4,
+   "kind": "section",
+   "id": "why",
+   "t1": 34.9333
+  },
+  {
+   "t": 27.166666666666668,
+   "kind": "label",
+   "tag": "wy-gap"
+  },
+  {
+   "t": 27.1667,
+   "kind": "contact",
+   "tag": "tumble"
+  },
+  {
+   "t": 34.9333,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 49.3333
+  },
+  {
+   "t": 40.9,
+   "kind": "label",
+   "tag": "wo-up"
+  },
+  {
+   "t": 41.7667,
+   "kind": "badge",
+   "tag": "rev",
+   "text": "Bigger but lighter grains can sink."
+  },
+  {
+   "t": 41.93333333333333,
+   "kind": "label",
+   "tag": "wo-down"
+  },
+  {
+   "t": 49.3333,
+   "kind": "section",
+   "id": "measure",
+   "t1": 58.6667
+  },
+  {
+   "t": 53.06666666666667,
+   "kind": "label",
+   "tag": "ms-gh"
+  },
+  {
+   "t": 53.0667,
+   "kind": "swell",
+   "tag": "climb"
+  },
+  {
+   "t": 58.6667,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 67.2
+  },
+  {
+   "t": 61.1333,
+   "kind": "reveal",
+   "tag": "sorts"
+  },
+  {
+   "t": 67.2,
+   "kind": "section",
+   "id": "tease",
+   "t1": 73.6
+  },
+  {
+   "t": 72.1,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 3.8666666666666667,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 16.366666666666667,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 22.6,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 35.06666666666667,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 49.53333333333333,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 58.93333333333333,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 67.5,
+   "file": "vo/08.wav"
+  }
+ ]
+}

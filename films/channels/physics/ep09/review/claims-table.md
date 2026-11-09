@@ -1,0 +1,18 @@
+# S2E03 (folder ep09) claims table
+
+SOURCE-READ = the builder read the source's full text and it supports the wording (quote given). OK still needs a person to open the page. OPEN = not read, or our own model, or not supported as worded.
+
+| claim | source (direct link) | what the source actually says | qualifications | status |
+|---|---|---|---|---|
+| c1 Shake a jar of mixed nuts, or a box of cereal, and the biggest pieces often rise to the top. | https://arxiv.org/abs/2201.12128 | "When you repeatedly shake a box of cereal mix, the larger (and heavier) grains often rise to the top" 'Often', not always (the review also describes a reverse effect). |  | SOURCE-READ |
+| c2 Scientists call it the Brazil nut effect. | https://arxiv.org/abs/2201.12128 | "This phenomenon was called the 'Brazil nut effect' after the seminal work by Rosato et al." |  | SOURCE-READ |
+| c3 Yet it happens even when the big pieces are heavier. | https://arxiv.org/abs/2201.12128 | "One explanation is buoyancy, but the effect can happen even when the larger grains are denser than the smaller ones." |  | SOURCE-READ |
+| c4 Each shake lifts the grains, and small ones tumble into the gaps under it. | https://arxiv.org/abs/2201.12128 | "A second contributing factor is called percolation ... Here, smaller grains fall into the gaps below the larger grains during shaking." 'Lifts the grains a little' is our plain wording of the shaking. |  | SOURCE-READ |
+| c5 It can't fit down there, so it's propped up more each shake. | https://arxiv.org/abs/2201.12128 | Not read / our own model | OPEN: Our plain wording of the percolation mechanism; the review states percolation (c4) but not this step. A person should check it against Rosato et al. 1987 (PRL 58, 1038), which describes 'the local, geometric mechanism by which the segregation is produced' (search excerpt). | OPEN |
+| c6 Scientists have found several effects at work. | https://arxiv.org/abs/2201.12128 | "However, the scientific trail was mixed up again by the discovery of the 'reverse Brazil nut effect'" |  | SOURCE-READ |
+| c7 Grains can flow in a loop, up the walls and down the middle. | https://arxiv.org/abs/2201.12128 | "where the shaking leads to a flow pattern of grains moving upward along the walls and downward in the middle of the container" |  | SOURCE-READ |
+| c8 And in some jars, the big ones sink instead. | https://arxiv.org/abs/2201.12128 | "Here larger but lighter particles can sink in a shaken bed of smaller grains" |  | SOURCE-READ |
+| c9 Measure it: in this simulation, the big disc climbs from the bottom to near the top. | https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep09 | Not read / our own model | OPEN: OPEN: our model, not a published measurement; a person should rerun sim.mjs and check the trace in review/. The disc fluctuates near the top rather than sitting fixed. | OPEN |
+| c10 Unpopped popcorn kernels sink in a bowl for a related reason. | https://arxiv.org/abs/2201.12128 | "There is also an interesting connection between the Brazil nut effect and popcorn, where the grains that have not popped conveniently sink to the bottom." 'Related' is the review's 'connection'; it does not say the mechanism is identical. |  | SOURCE-READ |
+| c11 Why not a blob? | https://doi.org/10.1038/39827 | Not read / our own model | OPEN: Tease for ep10, not yet searched or read. | OPEN |
+| c12 It takes about half a minute of shaking. | https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep09 | Not read / our own model | OPEN: OPEN: our model, not a published measurement; a person should rerun sim.mjs and check the trace in review/. The disc fluctuates near the top rather than sitting fixed. | OPEN |

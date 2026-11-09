@@ -1,0 +1,108 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Where will the ball end up? It starts at the bottom.",
+   "stars": [
+    "bottom"
+   ],
+   "phonemes": "wˌɛɹ wɪl ðə bˈɔːl ˈɛnd ˈʌp? ɪt stˈɑːɹts æt ðə bˈɑːɾəm.",
+   "file": "01.wav",
+   "dur": 3.054,
+   "sha256": "c72d24f2cce129a0c46a9bdd30c43367b412c628d9d8e05a82d4d7f21c8864e3"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Shake a jar of mixed nuts, or a box of cereal, and the biggest pieces often rise to the top. Scientists call it the Brazil nut effect.",
+   "stars": [
+    "top"
+   ],
+   "phonemes": "ʃˈeɪk ɐ dʒˈɑːɹ ʌv mˈɪkst nˈʌts, ɔːɹ ɐ bˈɑːks ʌv sˈiəɹɪəl, ænd ðə bˈɪɡɪst pˈiːsᵻz ˈɔfən ɹˈaɪz tə ðə tˈɑːp. sˈaɪəntɪsts kˈɔːl ɪt ðə bɹɐzˈɪl nˈʌt ɪfˈɛkt.",
+   "file": "02.wav",
+   "dur": 10.295,
+   "sha256": "298b03ff737195d04ae897618ab418e227831ac93c4966e27e05a4354b436661"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "You'd expect heavy things to sink. Yet it happens even when the big pieces are heavier.",
+   "stars": [
+    "heavier"
+   ],
+   "phonemes": "juːd ɛkspˈɛkt hˈɛvi θˈɪŋz tə sˈɪŋk. jˈɛt ɪt hˈæpənz ˈiːvən wɛn ðə bˈɪɡ pˈiːsᵻz ɑːɹ hˈɛviɚ.",
+   "file": "03.wav",
+   "dur": 5.55,
+   "sha256": "1f5e5c1eb5ec8ea10f3928e92d8f9f11466faa4ca5fff346fb05ad27fc6f1756"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Here is one reason. Each shake lifts the grains, and small ones tumble into the gaps under it. It can't fit down there, so it's propped up more each shake.",
+   "stars": [
+    "under"
+   ],
+   "phonemes": "hˈɪɹ ɪz wˈʌn ɹˈiːzən. ˈiːtʃ ʃˈeɪk lˈɪfts ðə ɡɹˈeɪnz, ænd smˈɔːl wˈʌnz tˈʌmbəl ˌɪntʊ ðə ɡˈæps ˈʌndɚɹ ɪt. ɪt kˈænt fˈɪt dˌaʊn ðˈɛɹ, sˌoʊ ɪts pɹˈɑːpt ˌʌp mˈɔːɹ ˈiːtʃ ʃˈeɪk.",
+   "file": "04.wav",
+   "dur": 10.125,
+   "sha256": "db024d1bf906d507afaca333b7095e3c59ebb9f34b9e5d6814762111d9b2e7b3"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Scientists have found several effects at work. Grains can flow in a loop, up the walls and down the middle. And in some jars, the big ones sink instead.",
+   "stars": [
+    "middle"
+   ],
+   "phonemes": "sˈaɪəntɪsts hæv fˈaʊnd sˈɛvɹəl ɪfˈɛkts æt wˈɜːk. ɡɹˈeɪnz kæn flˈoʊ ɪn ɐ lˈuːp, ˌʌp ðə wˈɔːlz ænd dˌaʊn ðə mˈɪdəl. ænd ɪn sˌʌm dʒˈɑːɹz, ðə bˈɪɡ wˈʌnz sˈɪŋk ɪnstˈɛd.",
+   "file": "05.wav",
+   "dur": 11.171,
+   "sha256": "ed71bf0bb4fd63677af3f6eea13d4956d2a7eb8e7b459f1eaad0473d56920814"
+  },
+  {
+   "id": "vo06",
+   "beat": "measure",
+   "text": "Measure it: in this simulation, the big disc climbs from the bottom to near the top. It takes about half a minute of shaking.",
+   "stars": [
+    "Measure it"
+   ],
+   "phonemes": "mˈɛʒɚɹ ɪt: ɪn ðɪs sˌɪmjʊlˈeɪʃən, ðə bˈɪɡ dˈɪsk klˈaɪmz fɹʌmðə bˈɑːɾəm tə nˌɪɹ ðə tˈɑːp. ɪt tˈeɪks ɐbˌaʊt hˈæf ɐ mˈɪnɪt ʌv ʃˈeɪkɪŋ.",
+   "file": "06.wav",
+   "dur": 8.502,
+   "sha256": "f8064bb61de91b11eb1c68b046460e476c35868f8f06322b7d45980aac4ed176"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Shaking doesn't mix things. It sorts them. Unpopped popcorn kernels sink in a bowl for a related reason.",
+   "stars": [
+    "sorts"
+   ],
+   "phonemes": "ʃˈeɪkɪŋ dˈʌzənt mˈɪks θˈɪŋz. ɪt sˈɔːɹts ðˌɛm. ʌnpˈɑːpt pˈɑːpkɔːɹn kˈɜːnəlz sˈɪŋk ɪn ɐ bˈoʊl fɚɹɚ ɹᵻlˈeɪɾᵻd ɹˈiːzən.",
+   "file": "07.wav",
+   "dur": 7.771,
+   "sha256": "0bda1e31716ed4776dcd3571dc40b4dae7722578add4d0593a1914f8f98e6c6d"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a coffee drop dries into a ring. Why not a blob?",
+   "stars": [
+    "ring"
+   ],
+   "phonemes": "nˈɛkst: ɐ kˈɔfi dɹˈɑːp dɹˈaɪz ˌɪntʊ ɐ ɹˈɪŋ. wˌaɪ nˌɑːɾə blˈɑːb?",
+   "file": "08.wav",
+   "dur": 4.253,
+   "sha256": "cd7c3f1d172beaac68ec28d3efc972007a48f1ee9b63e93849d441fb0bb4c7cf"
+  }
+ ]
+}

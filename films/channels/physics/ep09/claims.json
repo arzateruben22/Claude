@@ -1,0 +1,134 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Shake a jar of mixed nuts, or a box of cereal, and the biggest pieces often rise to the top.",
+  "claim": "When mixed grains (a cereal mix) are shaken repeatedly, the larger grains often rise to the top.",
+  "source_url": "https://arxiv.org/abs/2201.12128",
+  "source_title": "Mathijssen, Lisicki, Prakash et al., 'Culinary fluid mechanics and other currents in food science' (a review), arXiv:2201.12128, section 'Brazil nut effect' (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"When you repeatedly shake a box of cereal mix, the larger (and heavier) grains often rise to the top\" 'Often', not always (the review also describes a reverse effect)."
+ },
+ {
+  "id": "c2",
+  "sentence": "Scientists call it the Brazil nut effect.",
+  "claim": "The effect is called the Brazil nut effect, after the seminal work of Rosato et al. (1987).",
+  "source_url": "https://arxiv.org/abs/2201.12128",
+  "source_title": "Mathijssen, Lisicki, Prakash et al., 'Culinary fluid mechanics and other currents in food science' (a review), arXiv:2201.12128, section 'Brazil nut effect' (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"This phenomenon was called the 'Brazil nut effect' after the seminal work by Rosato et al.\""
+ },
+ {
+  "id": "c3",
+  "sentence": "Yet it happens even when the big pieces are heavier.",
+  "claim": "The effect can happen even when the larger grains are denser than the smaller ones, so buoyancy alone does not explain it.",
+  "source_url": "https://arxiv.org/abs/2201.12128",
+  "source_title": "Mathijssen, Lisicki, Prakash et al., 'Culinary fluid mechanics and other currents in food science' (a review), arXiv:2201.12128, section 'Brazil nut effect' (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"One explanation is buoyancy, but the effect can happen even when the larger grains are denser than the smaller ones.\""
+ },
+ {
+  "id": "c4",
+  "sentence": "Each shake lifts the grains, and small ones tumble into the gaps under it.",
+  "claim": "Percolation: during shaking, smaller grains fall into the gaps below the larger grains.",
+  "source_url": "https://arxiv.org/abs/2201.12128",
+  "source_title": "Mathijssen, Lisicki, Prakash et al., 'Culinary fluid mechanics and other currents in food science' (a review), arXiv:2201.12128, section 'Brazil nut effect' (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"A second contributing factor is called percolation ... Here, smaller grains fall into the gaps below the larger grains during shaking.\" 'Lifts the grains a little' is our plain wording of the shaking."
+ },
+ {
+  "id": "c5",
+  "sentence": "It can't fit down there, so it's propped up more each shake.",
+  "claim": "Because the big grain cannot fall into the gaps the small ones fill, the filled gaps keep it from sinking back, so it ratchets upward.",
+  "source_url": "https://arxiv.org/abs/2201.12128",
+  "source_title": "Mathijssen, Lisicki, Prakash et al., 'Culinary fluid mechanics and other currents in food science' (a review), arXiv:2201.12128, section 'Brazil nut effect' (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: Our plain wording of the percolation mechanism; the review states percolation (c4) but not this step. A person should check it against Rosato et al. 1987 (PRL 58, 1038), which describes 'the local, geometric mechanism by which the segregation is produced' (search excerpt)."
+ },
+ {
+  "id": "c6",
+  "sentence": "Scientists have found several effects at work.",
+  "claim": "Buoyancy, percolation and granular convection have each been proposed, and 'the scientific trail was mixed up again' by the reverse effect.",
+  "source_url": "https://arxiv.org/abs/2201.12128",
+  "source_title": "Mathijssen, Lisicki, Prakash et al., 'Culinary fluid mechanics and other currents in food science' (a review), arXiv:2201.12128, section 'Brazil nut effect' (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"However, the scientific trail was mixed up again by the discovery of the 'reverse Brazil nut effect'\""
+ },
+ {
+  "id": "c7",
+  "sentence": "Grains can flow in a loop, up the walls and down the middle.",
+  "claim": "Granular convection: shaking can make grains move upward along the walls and downward in the middle of the container.",
+  "source_url": "https://arxiv.org/abs/2201.12128",
+  "source_title": "Mathijssen, Lisicki, Prakash et al., 'Culinary fluid mechanics and other currents in food science' (a review), arXiv:2201.12128, section 'Brazil nut effect' (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"where the shaking leads to a flow pattern of grains moving upward along the walls and downward in the middle of the container\""
+ },
+ {
+  "id": "c8",
+  "sentence": "And in some jars, the big ones sink instead.",
+  "claim": "In a reverse Brazil nut effect, larger but lighter particles can sink in a shaken bed of smaller grains; a container shape can also be designed where the larger grains move downwards.",
+  "source_url": "https://arxiv.org/abs/2201.12128",
+  "source_title": "Mathijssen, Lisicki, Prakash et al., 'Culinary fluid mechanics and other currents in food science' (a review), arXiv:2201.12128, section 'Brazil nut effect' (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"Here larger but lighter particles can sink in a shaken bed of smaller grains\""
+ },
+ {
+  "id": "c9",
+  "sentence": "Measure it: in this simulation, the big disc climbs from the bottom to near the top.",
+  "claim": "In our 2D soft-disc simulation (seeded, 111 discs, floor shaken 1.0 cm at 9 Hz) the big disc's centre rises from the bottom (4 cm) to near the top of the bed.",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep09",
+  "source_title": "Our own simulation (sim.mjs, sim.json)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "OPEN: OPEN: our model, not a published measurement; a person should rerun sim.mjs and check the trace in review/. The disc fluctuates near the top rather than sitting fixed."
+ },
+ {
+  "id": "c10",
+  "sentence": "Unpopped popcorn kernels sink in a bowl for a related reason.",
+  "claim": "There is a connection between the Brazil nut effect and popcorn, where the grains that have not popped sink to the bottom.",
+  "source_url": "https://arxiv.org/abs/2201.12128",
+  "source_title": "Mathijssen, Lisicki, Prakash et al., 'Culinary fluid mechanics and other currents in food science' (a review), arXiv:2201.12128, section 'Brazil nut effect' (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"There is also an interesting connection between the Brazil nut effect and popcorn, where the grains that have not popped conveniently sink to the bottom.\" 'Related' is the review's 'connection'; it does not say the mechanism is identical."
+ },
+ {
+  "id": "c11",
+  "sentence": "Why not a blob?",
+  "claim": "A drying coffee drop leaves a ring because the edge dries first and fluid flows outward (the coffee-ring effect).",
+  "source_url": "https://doi.org/10.1038/39827",
+  "source_title": "Deegan et al., Nature 389, 827 (1997)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: Tease for ep10, not yet searched or read."
+ },
+ {
+  "id": "c12",
+  "sentence": "It takes about half a minute of shaking.",
+  "claim": "The rise takes about 30 s of simulated shaking (about 270 shakes at 9 Hz).",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep09",
+  "source_title": "Our own simulation (sim.mjs, sim.json)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "OPEN: OPEN: our model, not a published measurement; a person should rerun sim.mjs and check the trace in review/. The disc fluctuates near the top rather than sitting fixed."
+ }
+]
