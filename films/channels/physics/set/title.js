@@ -46,7 +46,7 @@ export const dropTitle = (el, o = {}) => {
   const stage = document.createElement("div"); stage.className = "rf-stage";
   head.parentNode.insertBefore(stage, head);
   const series = el.querySelector(".hud-series");
-  const nCopies = o.copies ?? 3, copies = [], copyT = [];
+  const nCopies = o.copies ?? (o.head === ".t" ? 0 : 3), copies = [], copyT = [];   // the stamped copies trail the title only: on an end card (head ".t") they overlap a two-line title, so they are off by default there
   for (let k = 0; k < nCopies; k++) {
     const c = head.cloneNode(true); c.classList.add("rf-copy"); c.removeAttribute("id"); c.setAttribute("aria-hidden", "true");
     stage.appendChild(c); copies.push(c);
