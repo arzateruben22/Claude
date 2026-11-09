@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { Network } from './Network';
-import { STEP, ORIGIN } from './Path';
+import { STEP, ORIGIN, Path } from './Path';
 import * as P from '../road/props';
 import * as T from '../textures';
 import { fbm2, rng, smoothstep, clamp, lerp } from '../util';
@@ -98,11 +98,12 @@ export class Terrain {
     // the roads' influence: for every vertex, the strongest pull toward a road surface
     const best = new Float32Array(n * n).fill(1e9), target = new Float32Array(n * n), cap = new Float32Array(n * n).fill(1e9);
     const R = 60;
-    const seen = new Set<number>();
+    const seen = new Set<number>(), roads: Path[] = [];
     for (const hit of net.near(x0 + TILE / 2, z0 + TILE / 2, TILE * 0.72 + R)) {
       const p = hit.path;
       if (seen.has(p.id)) continue; seen.add(p.id);
       if (p.maxX < x0 - R || p.minX > x0 + TILE + R || p.maxZ < z0 - R || p.minZ > z0 + TILE + R) continue;
+      roads.push(p);
       for (let k = 0; k < p.n; k += 2) {
         const px = p.xs[k], pz = p.zs[k];
         if (px < x0 - R || px > x0 + TILE + R || pz < z0 - R || pz > z0 + TILE + R) continue;
@@ -118,7 +119,9 @@ export class Terrain {
           const e = d >= 0 ? d - p.paveR : p.paveL - d;       // metres beyond the paved edge (negative: under it)
           const v = j * n + i;
           if (bridge) { if (e < 3) cap[v] = Math.min(cap[v], yr - 3.5); continue; }
-          if (e < best[v]) { best[v] = e; target[v] = yr - 0.35; }
+          // the road's height level with the vertex, not at this sample: a vertex takes the sample with the least e, which can be
+          // up to 10 m (40 m tiles: 24 m) along the road, and on a grade that height was a metre off
+          if (e < best[v]) { best[v] = e; target[v] = yr + p.ss[k] * along - 0.35; }
         }
       }
     }
@@ -132,6 +135,7 @@ export class Terrain {
       }
       if (cap[v] < 1e8) H[v] = Math.min(H[v], cap[v]);
     }
+    keepUnder(H, n, sp, x0, z0, roads);
     // mesh with colours: dry grass, green where it's watered, chaparral on the slopes, sand by the sea
     const pos = new Float32Array(n * n * 3), col = new Float32Array(n * n * 3), uv = new Float32Array(n * n * 2);
     for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
@@ -204,9 +208,15 @@ export class Terrain {
           const h = 12 + r() * 13, cs = 1 + r2() * 0.25, m = mat(x, z, r() * 6, 1).multiply(new THREE.Matrix4().makeRotationZ((r2() - 0.5) * 0.12));
           palmT.push(m.clone().multiply(new THREE.Matrix4().makeScale(1, h, 1)));
           palmC.push(m.clone().multiply(new THREE.Matrix4().makeTranslation(0, h, 0)).multiply(new THREE.Matrix4().makeRotationY(r2() * 6)).multiply(new THREE.Matrix4().makeScale(cs, cs, cs)));
-        } else { const s = 0.7 + r() * 0.9; trees.push(mat(x, z, r() * 6, s, s * (0.9 + r() * 0.3))); }
+        } else {
+          // a street tree's canopy is up to 7 m across its trunk: keep all of it off the pavement (the draws in their old order)
+          const s = 0.7 + r() * 0.9, yawT = r() * 6, sy = s * (0.9 + r() * 0.3);
+          if (clear(x, z, 0.5 + footprint().canopy * s)) trees.push(mat(x, z, yawT, s, sy));
+        }
       } else if (pick < 0.62 * u + 0.4 && clear(x, z, 2)) {
-        const s = 0.8 + r() * 1.4; shrubs.push(mat(x, z, r() * 6, s));
+        // and a big oleander is 4 m across: the 2 m above kept its centre off the road, not its edge
+        const s = 0.8 + r() * 1.4, yawS = r() * 6;
+        if (clear(x, z, 0.4 + footprint().shrub * s)) shrubs.push(mat(x, z, yawS, s));
       }
     }
     const inst = (geo: THREE.BufferGeometry, m: THREE.Material | THREE.Material[], ms: THREE.Matrix4[], cast = true, colors?: THREE.Color[]) => {
@@ -239,6 +249,39 @@ function house() {
   memo.house = mergeGeometries([b2, r2])!;
   memo.house.computeVertexNormals();
   return memo.house;
+}
+// The grid's triangles are 12 m across (40 m on a far tile), far wider than the band kept under a road's edge, so a
+// triangle with a corner up a cut's slope (or a far tile's hill) leaned up through the shoulder and the lanes: patches of
+// ground on the road, the far ones vanishing as their tile sharpened on the way up to them. So every corner of every
+// triangle a road's pavement (and its lip) crosses goes below that pavement. The rule looks only at the roads, never at
+// a neighbour's heights, and samples a cell past the tile, so two tiles agree on the corners they share (no cracks).
+function keepUnder(H: Float32Array, n: number, sp: number, x0: number, z0: number, roads: Path[]) {
+  const M = sp + 14;
+  for (const p of roads) for (let k = 0; k < p.n; k++) {
+    const px = p.xs[k], pz = p.zs[k];
+    if (px < x0 - M || px > x0 + TILE + M || pz < z0 - M || pz > z0 + TILE + M) continue;
+    const h = p.hs[k], rX = -Math.cos(h), rZ = Math.sin(h), y = p.ys[k] - 0.25;
+    const dL = p.paveL - 0.5, dR = p.paveR + 0.5, m = Math.ceil(dR - dL);
+    for (let q = 0; q <= m; q++) {
+      const d = dL + ((dR - dL) * q) / m, fx = (px + rX * d - x0) / sp, fz = (pz + rZ * d - z0) / sp;
+      const i = Math.floor(fx), j = Math.floor(fz), u = fx - i, w = fz - j;
+      // the triangle under this point (the grid's cells split corner (i+1, j) to corner (i, j+1), as the index does)
+      const tri = u + w <= 1 ? [i, j, i + 1, j, i, j + 1] : [i + 1, j, i, j + 1, i + 1, j + 1];
+      for (let t = 0; t < 6; t += 2) {
+        const a = tri[t], b = tri[t + 1];
+        if (a < 0 || b < 0 || a >= n || b >= n) continue;
+        const v = b * n + a;
+        if (H[v] > y) H[v] = y;
+      }
+    }
+  }
+}
+// how far the plants reach from their trunk at scale 1 (the canopy from the phone tier's mesh, with a margin for the finer one)
+let reach: { shrub: number; canopy: number } | null = null;
+function footprint() {
+  if (reach) return reach;
+  const r = (g: THREE.BufferGeometry) => { g.computeBoundingBox(); const b = g.boundingBox!; return Math.max(-b.min.x, b.max.x, -b.min.z, b.max.z); };
+  return (reach = { shrub: r(P.shrub()), canopy: r(P.treeCanopy(1)) * 1.05 });
 }
 function houseMat() { return memo.mat ?? (memo.mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9 })); }
 const UPV = new THREE.Vector3(0, 1, 0);
