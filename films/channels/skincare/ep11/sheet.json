@@ -1,5 +1,5 @@
 {
- "duration": 65.733,
+ "duration": 65.4,
  "fps": 30,
  "preset": "outerlayer-slide",
  "sections": [
@@ -30,19 +30,19 @@
   {
    "id": "whoa",
    "t0": 40.883,
-   "t1": 51.667,
+   "t1": 51.784,
    "energy": 0.8
   },
   {
    "id": "takeaway",
-   "t0": 51.667,
-   "t1": 59.471,
+   "t0": 51.784,
+   "t1": 59.135,
    "energy": 0.3
   },
   {
    "id": "tease",
-   "t0": 59.471,
-   "t1": 65.733,
+   "t0": 59.135,
+   "t1": 65.4,
    "energy": 0.35
   }
  ],
@@ -52,6 +52,11 @@
    "kind": "section",
    "id": "hook",
    "t1": 4.815
+  },
+  {
+   "t": 0.75,
+   "kind": "label",
+   "tag": "l0"
   },
   {
    "t": 0.9,
@@ -72,22 +77,22 @@
   {
    "t": 8.475,
    "kind": "scale.jump",
-   "tag": "c3"
+   "tag": "c4"
   },
   {
    "t": 9.91,
    "kind": "label",
-   "tag": "l0"
-  },
-  {
-   "t": 10.77,
-   "kind": "label",
-   "tag": "l4"
+   "tag": "l1"
   },
   {
    "t": 11.94,
    "kind": "label",
-   "tag": "l1"
+   "tag": "l2"
+  },
+  {
+   "t": 13.07,
+   "kind": "label",
+   "tag": "l3"
   },
   {
    "t": 16.614,
@@ -104,69 +109,69 @@
   {
    "t": 27.112,
    "kind": "scale.jump",
-   "tag": "c8"
+   "tag": "c9"
   },
   {
    "t": 32.907,
    "kind": "label",
-   "tag": "l2"
+   "tag": "l4"
   },
   {
    "t": 37.482,
    "kind": "scale.jump",
-   "tag": "c10"
+   "tag": "c12"
   },
   {
    "t": 40.883,
    "kind": "section",
    "id": "whoa",
-   "t1": 51.667
+   "t1": 51.784
   },
   {
    "t": 41.183,
    "kind": "scale.jump",
-   "tag": "c11"
+   "tag": "c14"
   },
   {
    "t": 41.183,
    "kind": "swell",
    "tag": "whoa",
-   "t1": 52.267
+   "t1": 52.384
   },
   {
-   "t": 41.283,
+   "t": 44.118,
+   "kind": "scale.jump",
+   "tag": "c17"
+  },
+  {
+   "t": 45.618,
    "kind": "label",
    "tag": "l5"
   },
   {
-   "t": 45.458,
-   "kind": "scale.jump",
-   "tag": "c12"
-  },
-  {
-   "t": 50.298,
+   "t": 49.758,
    "kind": "label",
-   "tag": "l3"
+   "tag": "l6"
   },
   {
-   "t": 51.667,
+   "t": 51.784,
    "kind": "section",
    "id": "takeaway",
-   "t1": 59.471
+   "t1": 59.135
   },
   {
-   "t": 51.967,
+   "t": 52.084,
    "kind": "scale.jump",
-   "tag": "c13"
+   "tag": "c20"
   },
   {
-   "t": 59.471,
+   "t": 59.135,
    "kind": "section",
    "id": "tease",
-   "t1": 65.733
+   "t1": 65.4
   },
   {
-   "t": 59.771,
+   "t": 59.435,
    "kind": "signature",
    "tag": "end"
   }
@@ -199,12 +204,12 @@
   },
   {
    "id": "vo06",
-   "t": 51.967,
+   "t": 52.084,
    "file": "vo/06.wav"
   },
   {
    "id": "vo07",
-   "t": 59.771,
+   "t": 59.435,
    "file": "vo/07.wav"
   }
  ]

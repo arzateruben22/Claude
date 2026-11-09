@@ -1,17 +1,17 @@
 {
- "compose_s": 5.0,
- "master_s": 7.6,
+ "compose_s": 5.1,
+ "master_s": 8.1,
  "master": {
-  "gain_db": 1.54,
+  "gain_db": 1.52,
   "iterations": 2,
   "lufs": -14.07,
   "true_peak_db": -2.0,
   "ceiling_db": -2.0,
-  "limiting_max_db": -3.61,
+  "limiting_max_db": -3.6,
   "aac": {
    "lufs": -14.1,
    "true_peak_db": -2.0,
-   "lra": 3.2
+   "lra": 3.0
   },
   "stems_sum_error_db": -240.0
  },
@@ -26,7 +26,7 @@
    },
    "scale.jump": {
     "n": 6,
-    "max_ms": 26.0,
+    "max_ms": 2.0,
     "median_ms": 0.0,
     "slow": true,
     "pass": true
@@ -71,31 +71,31 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c3",
+    "tag": "c4",
     "show": 8.5,
     "method": "shape",
     "err_ms": 0.0
    },
    {
     "kind": "label",
-    "tag": "l0",
+    "tag": "l1",
     "show": 9.9333,
     "method": "rise",
     "err_ms": -0.0
    },
    {
     "kind": "label",
-    "tag": "l4",
-    "show": 10.8,
-    "method": "rise",
-    "err_ms": 0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l1",
+    "tag": "l2",
     "show": 11.9667,
     "method": "rise",
     "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l3",
+    "show": 13.1,
+    "method": "rise",
+    "err_ms": 0.0
    },
    {
     "kind": "section",
@@ -113,21 +113,21 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c8",
+    "tag": "c9",
     "show": 27.1333,
     "method": "shape",
     "err_ms": -0.0
    },
    {
     "kind": "label",
-    "tag": "l2",
+    "tag": "l4",
     "show": 32.9333,
     "method": "rise",
     "err_ms": -0.0
    },
    {
     "kind": "scale.jump",
-    "tag": "c10",
+    "tag": "c12",
     "show": 37.5,
     "method": "shape",
     "err_ms": -0.0
@@ -141,7 +141,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c11",
+    "tag": "c14",
     "show": 41.2,
     "method": "shape",
     "err_ms": -0.0
@@ -154,51 +154,51 @@
     "err_ms": 52.0
    },
    {
+    "kind": "scale.jump",
+    "tag": "c17",
+    "show": 44.1333,
+    "method": "shape",
+    "err_ms": -2.0
+   },
+   {
     "kind": "label",
     "tag": "l5",
-    "show": 41.3,
+    "show": 45.6333,
     "method": "rise",
     "err_ms": -0.0
    },
    {
-    "kind": "scale.jump",
-    "tag": "c12",
-    "show": 45.4667,
-    "method": "shape",
-    "err_ms": -26.0
-   },
-   {
     "kind": "label",
-    "tag": "l3",
-    "show": 50.3,
+    "tag": "l6",
+    "show": 49.7667,
     "method": "rise",
     "err_ms": -0.0
    },
    {
     "kind": "section",
     "tag": null,
-    "show": 51.7,
+    "show": 51.8,
     "method": "peak",
     "err_ms": 0.0
    },
    {
     "kind": "scale.jump",
-    "tag": "c13",
-    "show": 52.0,
+    "tag": "c20",
+    "show": 52.1,
     "method": "shape",
-    "err_ms": -0.0
+    "err_ms": 0.0
    },
    {
     "kind": "section",
     "tag": null,
-    "show": 59.5,
+    "show": 59.1667,
     "method": "peak",
-    "err_ms": 0.0
+    "err_ms": -0.0
    },
    {
     "kind": "signature",
     "tag": "end",
-    "show": 59.8,
+    "show": 59.4667,
     "method": "rise",
     "err_ms": 11.0
    }
@@ -213,7 +213,7 @@
  },
  "phone": {
   "correlation": 0.91,
-  "mono_loss_db": -0.0,
+  "mono_loss_db": -0.01,
   "dialog_mono_loss_db": 0.09,
   "pass": true
  }

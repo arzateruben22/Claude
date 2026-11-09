@@ -58,28 +58,26 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Here is the twist. The bricks are not the tight part. Most dissolved substances pass through the cells more easily than through the fats.",
+   "text": "Here is the twist. The bricks are not what holds water in. The fats between them do that work. Water cannot easily cross that mortar.",
    "stars": [
-    "fats"
+    "work"
    ],
-   "phonemes": "hˈiəɹ ɪz ðə twˈɪst. ðə bɹˈɪks ɑː nˌɒt ðə tˈaɪt pˈɑːt. mˈəʊst dɪsˈɒlvd sˈʌbstənsɪz pˈas θɹuː ðə sˈɛlz mˈɔːɹ ˈiːzili ðɐn θɹuː ðə fˈats.",
+   "phonemes": "hˈiəɹ ɪz ðə twˈɪst. ðə bɹˈɪks ɑː nˌɒt wɒt hˈəʊldz wˈɔːtəɹ ˈɪn. ðə fˈats bɪtwˌiːn ðˌɛm dˈuː ðat wˈɜːk. wˈɔːtə kˈanɒt ˈiːzili kɹˈɒs ðat mˈɔːtə.",
    "speed": 0.79,
    "file": "05.wav",
-   "dur": 9.584,
-   "sha256": "5a8049b9d912d9c91deb9a26e2f466463f7664524efe23a15c43d65bef3184bd"
+   "dur": 9.701,
+   "sha256": "44380821222782df5960098b542e126df35e05a7cf6631e365605343c8aa9a69"
   },
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So your skin's wall is bricks and fats, working as a team. The fats are the tight part.",
-   "stars": [
-    "part"
-   ],
-   "phonemes": "sˌəʊ jɔː skˈɪnz wˈɔːl ɪz bɹˈɪks and fˈats, wˈɜːkɪŋ az ɐ tˈiːm. ðə fˈats ɑː ðə tˈaɪt pˈɑːt.",
+   "text": "So your skin's wall is bricks and fats, working as a team. The fats are the seal.",
+   "stars": [],
+   "phonemes": "sˌəʊ jɔː skˈɪnz wˈɔːl ɪz bɹˈɪks and fˈats, wˈɜːkɪŋ az ɐ tˈiːm. ðə fˈats ɑː ðə sˈiːl.",
    "speed": 0.75,
    "file": "06.wav",
-   "dur": 6.704,
-   "sha256": "ac028964e05fa8a9e64591af397d30a6abdca4656b130abad8addd6683cebc2c"
+   "dur": 6.251,
+   "sha256": "8294d87d9d2c6a3077286fc29fe4b374cd75fd9c216101ef426bd59a7355b6e7"
   },
   {
    "id": "vo07",

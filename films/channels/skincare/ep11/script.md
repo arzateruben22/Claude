@@ -17,12 +17,12 @@ vo: The mortar is stacked sheets of fat, wrapped around each cell. {c6} That mak
 ## why {shot 3: droplets resting on the wall · labels: first line of defence · picture-only 0.8 s · energy: 0.5} (26.8–40.9 s)
 vo: That wall is the skin's first line of defence. {c8} It keeps outside things out and holds water in. {c15} It is not a single tough sheet. It is a system of cells, fats and acids. {c9}
 
-## whoa {shot 4: the wall slightly loosened, gaps in the mortar (no disease, no lesion) · labels: the fats are the tight part · picture-only 0.9 s · energy: 0.8} (40.9–51.7 s)
-vo: Here is the twist. {-} The bricks are not the tight part. {c10} Most dissolved substances pass through the cells more easily than through the *fats*. {c11}
+## whoa {shot 4: the wall slightly loosened, gaps in the mortar (no disease, no lesion) · labels: the fats are the tight part · picture-only 0.9 s · energy: 0.8} (40.9–51.8 s)
+vo: Here is the twist. {-} The bricks are not what holds water in. {c10} The fats between them do that *work*. {c11} Water cannot easily cross that mortar. {c16}
 
-## takeaway {shot 5: smooth light-toned skin with a soft sheen · labels: none · picture-only 0.8 s · energy: 0.3} (51.7–59.5 s)
-vo: So your skin's wall is bricks and fats, working as a team. {c12} The fats are the tight *part*. {c13}
+## takeaway {shot 5: smooth light-toned skin with a soft sheen · labels: none · picture-only 0.8 s · energy: 0.3} (51.8–59.1 s)
+vo: So your skin's wall is bricks and fats, working as a team. {c12} The fats are the seal. {c13}
 
-## tease {end card held ≥ 2 s · energy: 0.35} (59.5–65.8 s)
+## tease {end card held ≥ 2 s · energy: 0.35} (59.1–65.4 s)
 vo: Next: fingerprints, formed before birth. {-} The pattern spreads in *waves*. {c14}
 end card: "Next: fingerprints, formed before birth" · "Skin Sense · Season 2" · footnote: "Narration: synthetic voice (AI)."
