@@ -544,85 +544,7 @@
   -60,
   0
  ],
- "labels": [
-  {
-   "id": "l-sat",
-   "text": "Saturn",
-   "kind": "star",
-   "anchor": "sat",
-   "t0": 4.3667,
-   "t1": 10.5333,
-   "side": -1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-tank",
-   "text": "tank of water",
-   "kind": "light",
-   "anchor": "tank",
-   "t0": 10.5333,
-   "t1": 13.2333,
-   "side": 1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-earth",
-   "text": "Earth, same scale",
-   "kind": "body",
-   "anchor": "earthP",
-   "t0": 13.9333,
-   "t1": 16.8333,
-   "side": 1,
-   "v": "below",
-   "fixed": true
-  },
-  {
-   "id": "l-gas",
-   "text": "hydrogen + helium",
-   "kind": "light",
-   "anchor": "sat",
-   "t0": 17.0333,
-   "t1": 23.0667,
-   "side": -1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-rock",
-   "text": "rock and metal: tight",
-   "kind": "body",
-   "anchor": "rock",
-   "t0": 27.5,
-   "t1": 32.4667,
-   "side": -1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-gasb",
-   "text": "gas: spread thin",
-   "kind": "star",
-   "anchor": "gasb",
-   "t0": 32.5667,
-   "t1": 34.8,
-   "side": 1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-float",
-   "text": "floats: thought experiment",
-   "kind": "star",
-   "anchor": "sat",
-   "t0": 37.1,
-   "t1": 41.2,
-   "side": 1,
-   "v": "above",
-   "fixed": true
-  }
- ],
+ "labels": [],
  "badges": [
   {
    "id": "b-thought",
@@ -641,17 +563,6 @@
  ],
  "counters": [
   {
-   "id": "c-hook",
-   "label": "Saturn vs water",
-   "text": "lighter?",
-   "t0": 0.0,
-   "t1": 3.7333,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
    "id": "c-dens",
    "label": "density: Saturn · water",
    "text": "0.69 · 1.0",
@@ -661,108 +572,9 @@
     0.5,
     0.555
    ]
-  },
-  {
-   "id": "c-wide",
-   "label": "Saturn is about",
-   "text": "9 Earths wide",
-   "t0": 14.4,
-   "t1": 16.5333,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-mostly",
-   "label": "mostly",
-   "text": "hydrogen and helium",
-   "t0": 16.933333333333334,
-   "t1": 23.0667,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-weight",
-   "label": "weight ÷ space",
-   "text": "rock tight · gas thin",
-   "t0": 29.433333333333334,
-   "t1": 34.800000000000004,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-float",
-   "label": "in the thought experiment",
-   "text": "Saturn floats",
-   "t0": 37.0,
-   "t1": 40.9,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-piece",
-   "label": "real Saturn",
-   "text": "wouldn't stay in one piece",
-   "t0": 41.3,
-   "t1": 45.1333,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-density",
-   "label": "density tells you",
-   "text": "who floats, who sinks",
-   "t0": 48.63333333333333,
-   "t1": 51.2,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-read",
-   "label": "light time · Sun to Saturn",
-   "text": "about 80 minutes",
-   "read": true,
-   "t0": 53.26666666666667,
-   "t1": 58.2833,
-   "at": [
-    0.5,
-    0.555
-   ]
   }
  ],
- "pills": [
-  {
-   "id": "p-dens",
-   "text": "density = weight ÷ space",
-   "t0": 23.8,
-   "t1": 34.8,
-   "at": [
-    0.08333333333333333,
-    0.175
-   ]
-  },
-  {
-   "id": "p-real",
-   "text": "real Saturn would not float",
-   "t0": 41.3,
-   "t1": 45.1333,
-   "at": [
-    0.08333333333333333,
-    0.175
-   ]
-  }
- ],
+ "pills": [],
  "title": {
   "series": "One More Orbit · Season 2 · Episode 5",
   "title": "Lighter than *water*",

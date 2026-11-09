@@ -76,19 +76,9 @@
    "t1": 13.3333
   },
   {
-   "t": 4.3667,
-   "kind": "label",
-   "tag": "l-sat"
-  },
-  {
    "t": 4.566666666666666,
    "kind": "counter.show",
    "tag": "c-dens"
-  },
-  {
-   "t": 10.5333,
-   "kind": "label",
-   "tag": "l-tank"
   },
   {
    "t": 13.3333,
@@ -97,45 +87,10 @@
    "t1": 23.4667
   },
   {
-   "t": 13.9333,
-   "kind": "label",
-   "tag": "l-earth"
-  },
-  {
-   "t": 14.4,
-   "kind": "counter.show",
-   "tag": "c-wide"
-  },
-  {
-   "t": 16.933333333333334,
-   "kind": "counter.show",
-   "tag": "c-mostly"
-  },
-  {
-   "t": 17.0333,
-   "kind": "label",
-   "tag": "l-gas"
-  },
-  {
    "t": 23.4667,
    "kind": "section",
    "id": "why",
    "t1": 35.2
-  },
-  {
-   "t": 27.5,
-   "kind": "label",
-   "tag": "l-rock"
-  },
-  {
-   "t": 29.433333333333334,
-   "kind": "counter.show",
-   "tag": "c-weight"
-  },
-  {
-   "t": 32.5667,
-   "kind": "label",
-   "tag": "l-gasb"
   },
   {
    "t": 35.2,
@@ -144,30 +99,10 @@
    "t1": 45.3333
   },
   {
-   "t": 37.0,
-   "kind": "counter.show",
-   "tag": "c-float"
-  },
-  {
-   "t": 37.1,
-   "kind": "label",
-   "tag": "l-float"
-  },
-  {
-   "t": 41.3,
-   "kind": "counter.show",
-   "tag": "c-piece"
-  },
-  {
    "t": 45.3333,
    "kind": "section",
    "id": "takeaway",
    "t1": 51.2
-  },
-  {
-   "t": 48.63333333333333,
-   "kind": "counter.show",
-   "tag": "c-density"
   },
   {
    "t": 51.2,
@@ -179,11 +114,6 @@
    "t": 51.2,
    "kind": "badge",
    "tag": "b-nts"
-  },
-  {
-   "t": 53.26666666666667,
-   "kind": "counter.show",
-   "tag": "c-read"
   },
   {
    "t": 53.26666666666667,
