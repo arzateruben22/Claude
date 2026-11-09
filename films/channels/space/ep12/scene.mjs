@@ -131,10 +131,12 @@ const CEL = {};
 for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, lit: () => true, value: () => 0, fmt: () => c.text });
   CEL[c.id] = el; el.classList.add(c.read ? "lm-read" : "lm-clock");
+  if (!c.read) Object.assign(el.style, { background: "rgba(8,10,28,.82)", borderRadius: "2vmin", padding: "1.2vmin 2.4vmin" });
   const lb = el.querySelector(".lb");
   if (lb) lb.style.textShadow = "0 0 1.2vmin rgba(8,10,28,.95), 0 0 2.6vmin rgba(8,10,28,.85)";
   const v = el.querySelector(".v");
   if (v && c.text.length > 12) v.style.fontSize = c.read ? "4.4vmin" : "5.4vmin";
+  if (v && c.text.length > 20 && !c.read) v.style.fontSize = "4.2vmin";
   else if (v && c.text.length > 8 && !c.read) v.style.fontSize = "7.5vmin";
 }
 for (const L of FILM.labels) { const k = KIND[L.kind]; hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: () => S[L.anchor] || [0, 0, 0], t0: L.t0, t1: L.t1, side: L.side, v: L.v, fixed: L.fixed }); }

@@ -37,7 +37,7 @@ CUE = {
     "light": A("vo07:Light"), "quarter": A("vo07:three"), "talk": A("vo07:talk"),
 }
 assert CUE["apollo"] < CUE["dust"] < CUE["orbiters"] < t_c < CUE["earth"] < CUE["days"] < CUE["air"] < CUE["rain"] < t_why < CUE["grains"] < CUE["mm"] < t_w < CUE["site"] < t_tk, CUE
-CUE["dip"] = [round(t_c - 0.15, 4), round(CUE["air"] - 0.35, 4), round(t_tk - 0.25, 4), round(t_rd - 0.25, 4), round(t_end - 0.15, 4)]    # beach, back to the Moon, street, Earth and Moon, loop
+CUE["dip"] = [round(t_c - 0.15, 4), round(CUE["air"] - 0.35, 4), round(t_tk - 0.25, 4), round(t_rd - 0.25, 4), round(f.duration - 0.65, 4)]    # beach, back to the Moon, street, Earth and Moon, loop
 BEACH, ST, EMP = [600, 0, 0], [-700, 0, 0], [0, 0, -700]
 LAND = [-9, 0, -7]
 # camera: {t, p (position), l (look-at), fov}, eased between keys (the scene lerps)
@@ -57,7 +57,8 @@ CAMK = [
     (t_why, [1.2, 0.35, 1.6], [0, 0, 0], 34),                                       # low and close: grains strike the dust
     (CUE["grains"] + 1.0, [0.9, 0.3, 1.2], [0.1, 0, 0], 34),
     (CUE["mm"], [1.4, 0.5, 1.5], [0, 0, 0], 34),
-    (t_w - 0.1, [1.4, 0.5, 1.5], [0, 0, 0], 34),
+    (CUE["mm"] + 1.5, [2.2, 0.6, 0.8], [0.3, 0, 0], 34),
+    (t_w - 0.1, [2.6, 1.0, 1.7], [0.2, 0, 0], 34),
     (CUE["pull"], [2.2, 0.8, 2.2], [0, 0, 0], 38),                                  # pull back from one boot print
     (CUE["site"], [3, 22, 14], [0, 0, 0], 42),
     (CUE["lander"], [-1, 62, 36], [-4, 0, -4], 48),                                 # the whole site
@@ -68,6 +69,7 @@ CAMK = [
     (t_rd - 0.3, [ST[0] + 2.0, 1.8, 14], [ST[0], 20, -90], 48),
     (t_rd + 0.3, [EMP[0] + 14, 70, EMP[2] + 120], [EMP[0] + 14, 0, EMP[2] + 50], 40),     # Earth and Moon, from above
     (t_end - 0.15, [EMP[0] + 16, 74, EMP[2] + 124], [EMP[0] + 14, 0, EMP[2] + 50], 40),
+    (f.duration - 0.7, [EMP[0] + 16, 74, EMP[2] + 124], [EMP[0] + 14, 0, EMP[2] + 50], 40),   # hold the Earth-Moon view behind the end card until the loop
     (f.duration, [1.5, 0.75, 2.2], [0, 0.0, 0], 38),
 ]
 CAMK = [{"t": round(t, 4), "p": p, "l": l, "fov": fv} for t, p, l, fv in CAMK]
@@ -110,7 +112,7 @@ for a, b in zip(spine, spine[1:]):
         a["t1"] = round(b["t0"] - 0.4, 4)
 
 TITLE = {"series": "One More Orbit · Season 2 · Episode 6", "title": "*Footprints*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "That's *season two*", "follow": "One More Orbit · Season 2 · Episode 6",
+END = {"title": "That's *season two*", "follow": "One More Orbit · Season 2",
        "next": "NASA LRO has imaged the Apollo 11 site."}
 POSTER = A("vo05:site", 0.6)
 glue(f, {"vo02": ["Apollo astronauts", "the Moon's dust.", "Apollo 11 landing site.", "still there."], "vo03": ["no wind and no rain."], "vo04": ["a millimeter every", "million years."], "vo06": ["Look up tonight:", "may still be there."], "vo07": ["one point three seconds."], "vo08": ["another orbit,", "same sky."]})

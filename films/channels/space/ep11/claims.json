@@ -6,7 +6,7 @@
   "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn Facts (NASA Science)",
   "accessed": "2026-11-08",
-  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Page itself frames the bathtub as hypothetical; the exact 0.69 figure is on NASA NSSDC (blocked from here).",
+  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Page itself frames the bathtub as hypothetical; the exact 0.69 figure is on NASA the NSSDC page (blocked from here).",
   "verified_via": "page",
   "status": "SOURCE-READ",
   "source_read": {
@@ -57,7 +57,7 @@
   "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
   "source_title": "Saturn Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-08",
-  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. 'Rock and metal' is general knowledge; the sheet gives the density only.",
+  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. 'Rock and metal' is general knowledge; the sheet gives the density only. 9 Nov: the NSSDC Saturn fact sheet was read via the builder's fetch for this quote (an earlier note that it was blocked referred to another page).",
   "verified_via": "page",
   "status": "SOURCE-READ",
   "source_read": {
@@ -91,7 +91,7 @@
   "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
   "source_title": "Saturn Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-08",
-  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Water is 1,000 kg/m3 (standard value, not on the sheet).",
+  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Water is 1,000 kg/m3 (standard value, not on the sheet). 9 Nov: the NSSDC Saturn fact sheet was read via the builder's fetch for this quote (an earlier note that it was blocked referred to another page).",
   "verified_via": "page",
   "status": "SOURCE-READ",
   "source_read": {
@@ -149,7 +149,7 @@
    "date": "2026-11-08",
    "by": "builder (an AI), fetched the page and read it",
    "quote": "As a gas giant, Saturn doesn't have a true surface. The planet is mostly swirling gases and liquids deeper down.",
-   "qualification": "'Mostly gas' is a simplification of 'mostly hydrogen and helium'."
+   "qualification": "NASA says Saturn has no true surface and is mostly swirling gases and liquids; 'would mix with water' is the builder's own reasoning from that."
   }
  }
 ]

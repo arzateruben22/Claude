@@ -21,19 +21,19 @@ vo: Saturn weighs less than the same amount of water, space for space. {c20} Her
 ## change {shot: Saturn beside Earth at true scale; Saturn cut away: hydrogen and helium · spine "about 9 Earths wide · mostly hydrogen and helium" · picture-only 0.2 s · energy: 0.55} (13.3–23.5 s)
 vo: Saturn is about nine Earths *wide*. {c2} But it's mostly hydrogen and helium, the two lightest *gases*. {c3} Picture a giant ball of cloud. {-}
 
-## why {shot: a rock ball and a gas ball on a balance; density = weight spread over space · spine "density: weight ÷ space" · picture-only 1.2 s · energy: 0.62} (23.5–36.3 s)
+## why {shot: a rock ball and a gas ball on a balance; density = weight spread over space · spine "density: weight ÷ space" · picture-only 0.5 s · energy: 0.62} (23.5–35.2 s)
 vo: Density means how much stuff is packed into a space. {-} Earth is rock and metal, packed *tight*, so it sinks. {c4} Saturn is mostly gas, so its weight is spread *thin*. {c21}
 
-## whoa {shot: Saturn settles on the water, floating; then the picture breaks up: gas mixing, "not real" · badge: thought experiment · spine "in real life: it would not stay in one piece" · picture-only 1.2 s · energy: 0.8} (36.3–47.5 s)
+## whoa {pre: 0.03 · shot: Saturn settles on the water, floating; then the picture breaks up: gas mixing, "not real" · badge: thought experiment · spine "in real life: it would not stay in one piece" · picture-only 0.5 s · energy: 0.8} (35.2–45.3 s)
 vo: In the thought experiment, Saturn *floats*. {c22} But real Saturn would *not* float: it's gas, and it would mix with water. {c23} It wouldn't stay in one *piece*. {-}
 
-## takeaway {shot: hold on Saturn in the tank, rings level · picture-only 0.2 s · energy: 0.3} (47.5–53.9 s)
+## takeaway {pre: 0.03 · shot: hold on Saturn in the tank, rings level · picture-only 0.2 s · energy: 0.3} (45.3–51.2 s)
 vo: Size alone doesn't tell you what's inside. {-} *Density* tells you who floats and who sinks. {-}
 
-## readout {segment: readout · light-time readout: "80 minutes" Sun to Saturn · a ping per line · picture-only 0.2 s · energy: 0.45} (53.9–61.9 s)
+## readout {pre: 0.03 · segment: readout · light-time readout: "80 minutes" Sun to Saturn · a ping per line · picture-only 0.2 s · energy: 0.45} (51.2–58.7 s)
 vo: *Light time*: sunlight takes about eighty minutes to reach *Saturn*. {c5} That's a long way for the fastest thing there is. {-}
 
-## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (61.9–67.8 s)
+## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (58.7–64.5 s)
 vo: Next: do the Apollo footprints still *last* on the Moon? {-}
 end card: "Next orbit: the Moon's *footprints*" · "One More Orbit · S2 · Episode 6"
 

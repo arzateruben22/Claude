@@ -37,7 +37,7 @@ CUE = {
     "light": A("vo07:Light"), "eighty": A("vo07:eighty"), "reach": A("vo07:reach"),
 }
 assert CUE["weighs"] < CUE["tank"] < t_c < CUE["nine"] < CUE["hydrogen"] < t_why < CUE["density"] < t_w < CUE["floats"] < CUE["mix"] < t_tk, CUE
-CUE["dip"] = [round(t_n - 0.15, 4), round(t_why - 0.3, 4), round(t_w - 0.25, 4), round(t_end - 0.15, 4)]    # dips: into the tank scene, into the balance, out of it, and the loop back
+CUE["dip"] = [round(t_n - 0.15, 4), round(t_why - 0.3, 4), round(t_w - 0.25, 4), round(f.duration - 0.65, 4)]    # dips: into the tank scene, into the balance, out of it, and the loop back
 BAL = [0, -60, 0]                                                                 # the balance sits far below the tank
 SAT_IN, SAT_OUT = [6, 0.7, 0], [-15, 2.0, 0]
 CAMK = [
@@ -66,11 +66,13 @@ CAMK = [
     (CUE["who"], [3, 1.5, 21], [6, 0.3, 0], 38),
     (t_rd + 0.5, [-70, 170, 400], [-70, 0, 0], 44),                               # out: the Sun and Saturn
     (t_end - 0.15, [-70, 176, 408], [-70, 0, 0], 44),
+    (f.duration - 0.7, [-70, 176, 408], [-70, 0, 0], 44),                        # hold the read-out view behind the end card until the loop
     (f.duration, [14, 4, 20], [6, 0.2, 0], 38),
 ]
 def far(t, p, l):                                      # Saturn and its ring are wide: stand back from the tank and Saturn shots (not the balance, not the readout)
     if t < t_rd and l[1] > -30:
-        return [round(l[i] + (p[i] - l[i]) * (3.2 if t < t_n + 0.2 else 3.5), 3) for i in range(3)]
+        fct = 3.8 if t < t_n + 0.2 else (4.8 if t_c - 0.3 <= t < t_why else 4.2)
+        return [round(l[i] + (p[i] - l[i]) * fct, 3) for i in range(3)]
     return p
 CAMK = [{"t": round(t, 4), "p": far(t, p, l), "l": l, "fov": fv} for t, p, l, fv in CAMK]
 assert all(b["t"] >= a["t"] for a, b in zip(CAMK, CAMK[1:])), [(k["t"]) for k in CAMK]
