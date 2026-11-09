@@ -1,4 +1,6 @@
-# Reality Rulebook No. 008: "Spaghetti never breaks in two" (draft; a physicist signs off before it posts)
+# Reality Rulebook · Season 2 · Episode 2: "Spaghetti almost never breaks in two" (draft; a physicist signs off before it posts)
+
+S2E02 (folder ep08).
 
 About 66 s, 9:16, narrated by a synthetic voice (af_bella at speed 0.9, labeled as AI), with an original score. Season 2,
 episode 2, from `../season2/SLATE.md`; it pays off episode 7's tease.
@@ -13,7 +15,7 @@ One line per beat. `*starred*` words get a camera landing or a sound hit. `{…}
 compiler. In a vo line, `{c1,c2}` after a sentence ties it to `claims.json` and `{-}` marks a sentence that states nothing
 outside the film; neither is spoken. Check it with `python3 -I kits/cinema/script/lint.py films/channels/physics/ep08 --segment measure`.
 
-## hook {shot: close on a spaghetti stick bent into a bow, about to snap · title drop: "Spaghetti never breaks in two" · pre: 0.1 · energy: 0.7} (0–4 s)
+## hook {shot: close on a spaghetti stick bent into a bow, about to snap · title drop: "Spaghetti almost never breaks in two" · pre: 0.1 · energy: 0.7} (0–4 s)
 vo: How many *pieces*? {-} Bend a spaghetti stick until it snaps. {-}
 
 ## normal {shot: wide, the stick held at both ends, bent slowly · labels: "dry spaghetti", "bend slowly" · pre: 0.12 · energy: 0.45} (4–13 s)

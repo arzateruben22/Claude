@@ -1,4 +1,4 @@
-# ep08 clarity and pacing review (standards v2)
+# S2E02 (folder ep08) clarity and pacing review (standards v2)
 
 Lint (the `lint.py` from commit 3108849): whole script grade about 2.7 (target 7 or below), no beat over grade 8, no
 sentence over 22 words, pace 2.2-3.0 words/s, 0 errors. The hook asks its question first ("How many pieces?", ends at

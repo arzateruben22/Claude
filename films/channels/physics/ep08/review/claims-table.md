@@ -1,4 +1,4 @@
-# ep08 claims table
+# S2E02 (folder ep08) claims table
 
 SOURCE-READ = the builder read the source's full text and it supports the wording (quote given). OK still needs a person to open the page. OPEN = not read (search excerpt only), or not supported as worded.
 

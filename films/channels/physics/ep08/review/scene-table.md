@@ -1,8 +1,8 @@
-# ep08 scene table (direction; times from the compiled layout, ±0.3 s)
+# S2E02 (folder ep08) scene table (direction; times from the compiled layout, ±0.3 s)
 
 | time | narration | visual | on-screen text | sound |
 |---|---|---|---|---|
-| 0.0 | "How many pieces?" | Close on a spaghetti stick bent into a bow in two hands, about to snap | title drop "Spaghetti never breaks in two" | title signature knock |
+| 0.0 | "How many pieces?" | Close on a spaghetti stick bent into a bow in two hands, about to snap | title drop "Spaghetti almost never breaks in two" | title signature knock |
 | 1.4 | "Bend a spaghetti stick until it snaps." | Camera eases in; the bow creeps tighter | pieces: 1 (spine) | low pad |
 | 4.0 | "Hold both ends and push them together, slowly." | Wide shot: straight stick, hands move together | "dry spaghetti", "bend slowly" | quiet piano |
 | 7.5 | "The stick curves, then snaps." | Bow tightens; snap; pieces fly | spine counts 1 → 4 | knock |

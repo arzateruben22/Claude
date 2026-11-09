@@ -111,9 +111,9 @@ CAM = {
     "tease": [key(cut("tease"), WIDE), key(DUR, {**WIDE, "dist": 142.0}, "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
-TITLE = {"series": "Reality Rulebook · No. 008", "title": "Spaghetti never breaks in *two*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+TITLE = {"series": "Reality Rulebook · Season 2 · Episode 2", "title": "Spaghetti almost never breaks in *two*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
 film = {
-    "id": "rest-frame-008", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
+    "id": "reality-rulebook-s2e02", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "cue": {"cuts": CUTS, "ripple": RIPPLE_W, "twist": TWIST_W}, "spine": SPINE, "spineAt": SPINE_AT, "stick": STICK,
     "takes": TAKES, "labels": LABELS, "badges": BADGES, "piecesBadge": PIECES_BADGE, "cam": CAM, "captionY": 0.632, "title": TITLE,
