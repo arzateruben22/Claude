@@ -42,3 +42,9 @@ S2E03 (folder ep09). Timestamps are from `film.json` (real Parakeet word timings
 - 48.0 s: hard cut from the laid-out rope to the work card (no rope or figures cross the "≈ 6.3 m" box).
 - "1 m" label ends before the camera drift brings it within 24 px of the spine box. Caption pages fade in 0.14 s early, so they are fully in when the voice starts.
 - c5 (a person is 1.7 m) is an assumption, no URL.
+
+## Round 6 notes
+- 25.2 s: a true hard cut to the circle diagram (no rope in the diagram shots, no ghost); the circle starts drawing with the beat.
+- 55.8-60.2 s (takeaway, part 1): hard cut to the Earth with its ring and a big "≈ 6.3 m" (badge: same for every planet).
+- 60.2-64.0 s (part 2): hard cut to the ten-meter lift (poles 10 m, 63 m laid out); the rope and tag stay below the top 200 px.
+- claims.json: c2, c3, c4, c6, c7, c8 are derivations with no URL; c5 is an assumption (no source); the Sun's size is its own claim c9.

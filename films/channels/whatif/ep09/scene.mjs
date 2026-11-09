@@ -144,7 +144,7 @@ if (foot) Object.assign(foot.style, { fontSize: "3.7vmin", color: "var(--text-2)
 const ebox = endBox(endEl, { t0: FILM.endCard, answer: FILM.endAnswer, S1: Math.min(W, H) / 1080 });
 // the guess bar: how much extra rope you might guess ("thousands of km?")
 const bigEl = document.createElement("div");
-bigEl.style.cssText = "position:absolute;left:50%;top:21%;transform:translateX(-50%);padding:1.4vmin 3.6vmin;border:.7vmin solid " + MARK + ";border-radius:2.4vmin;background:rgba(14,17,21,.78);opacity:0;pointer-events:none;z-index:4;font:700 11vmin/1.05 var(--font-mono);color:var(--hud-text);white-space:nowrap";
+bigEl.style.cssText = "position:absolute;left:50%;top:19%;transform:translateX(-50%);padding:1.4vmin 3.6vmin;border:.7vmin solid " + MARK + ";border-radius:2.4vmin;background:rgba(14,17,21,.78);opacity:0;pointer-events:none;z-index:4;font:700 11vmin/1.05 var(--font-mono);color:var(--hud-text);white-space:nowrap";
 bigEl.textContent = FILM.endAnswer; document.body.appendChild(bigEl);
 const guessEl = document.createElement("div");
 guessEl.style.cssText = "position:absolute;left:12%;top:30%;width:76%;opacity:0;pointer-events:none;z-index:4;font:600 3.4vmin/1.2 var(--font-text);color:var(--hud-text)";
@@ -168,7 +168,7 @@ window.seek = function (t) {
   desk.update({ grid: 1 - seg(ld, 2.0, 2.5), pool: [pose.target[0], pose.target[2]], casters: [[youX, 1.7, 0, 0.35]], span: Math.max(800, d * 8) });
   { const wash = 1 + 1.0 * seg(ld, 2.9, 4.2); desk.uniforms.uExposure.value = wash; earthB.material.uniforms.uExposure.value = 1 + 4 * (1 - seg(ld, 6.9, 7.6)); }
   const lifted = seg(t, CUE.lift, CUE.lift + 1.2) * (1 - seg(t, CUE.why, CUE.why + 0.01));
-  const ropeOn = (shot === "lift" || (shot === "why" && t < CUE.why + 0.4)) && d < 6e3;
+  const ropeOn = shot === "lift" && d < 6e3;
   const ropeY = 0.03 + 0.97 * lifted;
   rope.visible = ropeOn; rope.position.set(0, ropeY, -0.45); rope.material.opacity = 1 - seg(ld, 3.3, 3.78);
   poles.visible = ropeOn && lifted > 0.01; poles.material.opacity = 0.9 * (1 - seg(ld, 2.7, 3.4));
@@ -177,7 +177,7 @@ window.seek = function (t) {
   rod.visible = rodOn > 0.02; rod.material.opacity = rodOn; for (const m of rodTicks) { m.visible = rodOn > 0.02; m.material.opacity = rodOn; }
   const onTen = shot === "take";
   youX = onTen ? TEN[0] - 1.6 : 0;
-  you.group.visible = d < 500 && ((shot === "lift" && t > CUE.dive[1] - 1.6) || shot === "why" && t < CUE.why + 0.5 || onTen);
+  you.group.visible = d < 500 && ((shot === "lift" && t > CUE.dive[1] - 1.6) || onTen);
   const armsU = 0.05;
   you.set({ at: [youX, 0.85, onTen ? 1.0 : 0], arms: armsU, tilt: 0 }); if (!onTen) you.set({ at: [0.15, 0.85, 0.2], arms: 0.06, tilt: 0 });
 

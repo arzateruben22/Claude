@@ -110,7 +110,7 @@ CAM = {
             {"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31), "ease": "sine"}],
     "whoa": [{"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31)}, {"t": round(t_grows - 0.1, 4), **T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31), "ease": "sine"}, {"t": round(t_grows + 1.1, 4), **LAYP, "ease": "inout2"}, {"t": round(t_work0 - 3.6, 4), **LAYQ, "ease": "sine"}, {"t": t_work0, **LAYQ, "ease": "sine"}],
     "work": [{"t": t_work0, **WORKP}, {"t": t_home, **WORKP2, "ease": "sine"}],
-    "payoff": [{"t": t_home, **PL}, {"t": t_take0, **T(0.0, -R_E, 0.0, 1.25e8, 14.0, 10.0, 0.34), "ease": "sine"}],
+    "payoff": [{"t": t_home, **T(0.0, -R_E, 0.0, 1.25e8, 10.0, 0.0, 0.40)}, {"t": t_take0, **T(0.0, -R_E, 0.0, 1.25e8, 14.0, 10.0, 0.40), "ease": "sine"}],
     "take": [{"t": t_take0, **TENP}, {"t": round(t_take0 + 1.6, 4), **TENP, "ease": "sine"},
              {"t": round(t_take0 + 3.0, 4), **LONGP, "ease": "inout2"}, {"t": t_end, **LONGP2, "ease": "sine"}],
     "end": [{"t": t_end, **LONGP2}, {"t": round(t_end + 1.0, 4), **T(0.0, 0.85, 0.0, 190.0, 12.0, 0.0, 0.7), "ease": "inout2"}] + k_end[1:] + [{"t": B["tease"]["t1"], **PL}],
