@@ -26,11 +26,23 @@
  },
  {
   "kind": "scale.jump",
-  "tag": "c2",
+  "tag": "c3",
   "t": 4.769,
   "show": 4.8,
   "sound": 4.8,
   "place": 4.7815,
+  "anchor": 890,
+  "voice": "swell",
+  "gain": -19,
+  "pan": 0.0
+ },
+ {
+  "kind": "scale.jump",
+  "tag": "c5",
+  "t": 12.379,
+  "show": 12.4,
+  "sound": 12.4,
+  "place": 12.3815,
   "anchor": 890,
   "voice": "swell",
   "gain": -19,
@@ -50,7 +62,7 @@
  },
  {
   "kind": "scale.jump",
-  "tag": "c4",
+  "tag": "c6",
   "t": 13.822,
   "show": 13.8333,
   "sound": 13.8333,
@@ -110,7 +122,7 @@
  },
  {
   "kind": "scale.jump",
-  "tag": "c7",
+  "tag": "c10",
   "t": 29.569,
   "show": 29.6,
   "sound": 29.6,
@@ -145,6 +157,18 @@
   "pan": 0.0
  },
  {
+  "kind": "scale.jump",
+  "tag": "c11",
+  "t": 32.659,
+  "show": 32.6667,
+  "sound": 32.6667,
+  "place": 32.6481,
+  "anchor": 890,
+  "voice": "swell",
+  "gain": -19,
+  "pan": 0.0
+ },
+ {
   "kind": "section",
   "tag": null,
   "t": 43.739,
@@ -158,7 +182,7 @@
  },
  {
   "kind": "scale.jump",
-  "tag": "c9",
+  "tag": "c13",
   "t": 44.039,
   "show": 44.0667,
   "sound": 44.0667,
@@ -181,6 +205,30 @@
   "pan": 0.0
  },
  {
+  "kind": "scale.jump",
+  "tag": "c14",
+  "t": 47.144,
+  "show": 47.1667,
+  "sound": 47.1667,
+  "place": 47.1481,
+  "anchor": 890,
+  "voice": "swell",
+  "gain": -19,
+  "pan": 0.0
+ },
+ {
+  "kind": "label",
+  "tag": "l5",
+  "t": 49.224,
+  "show": 49.2333,
+  "sound": 49.2333,
+  "place": 49.2333,
+  "anchor": 0,
+  "voice": "reed",
+  "gain": -19,
+  "pan": 0.0
+ },
+ {
   "kind": "section",
   "tag": null,
   "t": 56.873,
@@ -194,7 +242,7 @@
  },
  {
   "kind": "scale.jump",
-  "tag": "c11",
+  "tag": "c15",
   "t": 57.173,
   "show": 57.2,
   "sound": 57.2,
@@ -205,12 +253,24 @@
   "pan": 0.0
  },
  {
+  "kind": "scale.jump",
+  "tag": "c16",
+  "t": 64.603,
+  "show": 64.6333,
+  "sound": 64.6333,
+  "place": 64.6148,
+  "anchor": 890,
+  "voice": "swell",
+  "gain": -19,
+  "pan": 0.0
+ },
+ {
   "kind": "section",
   "tag": null,
-  "t": 65.288,
-  "show": 65.3,
-  "sound": 65.3,
-  "place": 64.67,
+  "t": 65.983,
+  "show": 66.0,
+  "sound": 66.0,
+  "place": 65.37,
   "anchor": 30239,
   "voice": "whoosh",
   "gain": -33,
@@ -219,10 +279,10 @@
  {
   "kind": "signature",
   "tag": "end",
-  "t": 65.588,
-  "show": 65.6,
-  "sound": 65.6,
-  "place": 65.6,
+  "t": 66.283,
+  "show": 66.3,
+  "sound": 66.3,
+  "place": 66.3,
   "anchor": 0,
   "voice": "seq",
   "gain": -12,

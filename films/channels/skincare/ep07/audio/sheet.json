@@ -1,5 +1,5 @@
 {
- "duration": 71.667,
+ "duration": 72.4,
  "fps": 30,
  "preset": "outerlayer-slide",
  "sections": [
@@ -36,13 +36,13 @@
   {
    "id": "takeaway",
    "t0": 56.873,
-   "t1": 65.288,
+   "t1": 65.983,
    "energy": 0.3
   },
   {
    "id": "tease",
-   "t0": 65.288,
-   "t1": 71.667,
+   "t0": 65.983,
+   "t1": 72.4,
    "energy": 0.35
   }
  ],
@@ -67,7 +67,12 @@
   {
    "t": 4.769,
    "kind": "scale.jump",
-   "tag": "c2"
+   "tag": "c3"
+  },
+  {
+   "t": 12.379,
+   "kind": "scale.jump",
+   "tag": "c5"
   },
   {
    "t": 13.522,
@@ -78,7 +83,7 @@
   {
    "t": 13.822,
    "kind": "scale.jump",
-   "tag": "c4"
+   "tag": "c6"
   },
   {
    "t": 13.972,
@@ -109,7 +114,7 @@
   {
    "t": 29.569,
    "kind": "scale.jump",
-   "tag": "c7"
+   "tag": "c10"
   },
   {
    "t": 29.669,
@@ -122,6 +127,11 @@
    "tag": "l4"
   },
   {
+   "t": 32.659,
+   "kind": "scale.jump",
+   "tag": "c11"
+  },
+  {
    "t": 43.739,
    "kind": "section",
    "id": "whoa",
@@ -130,7 +140,7 @@
   {
    "t": 44.039,
    "kind": "scale.jump",
-   "tag": "c9"
+   "tag": "c13"
   },
   {
    "t": 44.039,
@@ -144,24 +154,39 @@
    "tag": "b1"
   },
   {
+   "t": 47.144,
+   "kind": "scale.jump",
+   "tag": "c14"
+  },
+  {
+   "t": 49.224,
+   "kind": "label",
+   "tag": "l5"
+  },
+  {
    "t": 56.873,
    "kind": "section",
    "id": "takeaway",
-   "t1": 65.288
+   "t1": 65.983
   },
   {
    "t": 57.173,
    "kind": "scale.jump",
-   "tag": "c11"
+   "tag": "c15"
   },
   {
-   "t": 65.288,
+   "t": 64.603,
+   "kind": "scale.jump",
+   "tag": "c16"
+  },
+  {
+   "t": 65.983,
    "kind": "section",
    "id": "tease",
-   "t1": 71.667
+   "t1": 72.4
   },
   {
-   "t": 65.588,
+   "t": 66.283,
    "kind": "signature",
    "tag": "end"
   }
@@ -199,7 +224,7 @@
   },
   {
    "id": "vo07",
-   "t": 65.588,
+   "t": 66.283,
    "file": "vo/07.wav"
   }
  ]

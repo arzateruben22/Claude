@@ -83,6 +83,22 @@
     1
    ],
    "blur": 9
+  },
+  "q4b": {
+   "src": [
+    "art/s2e05-04b.webp"
+   ],
+   "layers": [
+    "art/s2e05-04b-L0.webp",
+    "art/s2e05-04b-L1.webp",
+    "art/s2e05-04b-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
   }
  },
  "camera": [
@@ -99,7 +115,7 @@
     0
    ],
    "dolly": 0,
-   "rack": 1
+   "rack": 2
   },
   {
    "t": "vo01:brick",
@@ -114,10 +130,25 @@
     0
    ],
    "dolly": 0.05,
-   "rack": 2
+   "rack": 1
   },
   {
    "t": "start:vo02",
+   "img": "q1",
+   "s": 1.04,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.03,
+   "rack": 1
+  },
+  {
+   "t": "vo02:Flat",
    "img": "q2",
    "s": 1.0,
    "f": [
@@ -167,18 +198,68 @@
    }
   },
   {
-   "t": "vo03:wrapped",
+   "t": "vo02:A",
    "img": "q2",
-   "s": 1.16,
+   "s": 1.12,
    "f": [
     0.5,
     0.5
    ],
    "trk": [
-    -0.01,
+    0.012,
     0
    ],
    "dolly": 0.05,
+   "rack": 1,
+   "anchors": {
+    "brick": [
+     0.3,
+     0.47
+    ],
+    "mortar": [
+     0.55,
+     0.54
+    ]
+   }
+  },
+  {
+   "t": "start:vo03",
+   "img": "q2",
+   "s": 1.14,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0.05,
+   "rack": 2,
+   "anchors": {
+    "brick": [
+     0.3,
+     0.47
+    ],
+    "mortar": [
+     0.55,
+     0.54
+    ]
+   }
+  },
+  {
+   "t": "vo03:That",
+   "img": "q2",
+   "s": 1.2,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.06,
    "rack": 1,
    "anchors": {
     "brick": [
@@ -204,18 +285,12 @@
     0
    ],
    "dolly": 0,
-   "rack": 1,
-   "anchors": {
-    "drops": [
-     0.46,
-     0.66
-    ]
-   }
+   "rack": 1
   },
   {
-   "t": "vo04:system",
+   "t": "vo04:Water",
    "img": "q3",
-   "s": 1.1,
+   "s": 1.08,
    "f": [
     0.5,
     0.5
@@ -225,13 +300,22 @@
     0
    ],
    "dolly": 0.04,
-   "rack": 2,
-   "anchors": {
-    "drops": [
-     0.46,
-     0.66
-    ]
-   }
+   "rack": 2
+  },
+  {
+   "t": "vo04:system",
+   "img": "q1",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1
   },
   {
    "t": "start:vo05",
@@ -255,9 +339,9 @@
    }
   },
   {
-   "t": "vo05:fats",
-   "img": "q4",
-   "s": 1.1,
+   "t": "vo05:Most",
+   "img": "q4b",
+   "s": 1.08,
    "f": [
     0.5,
     0.5
@@ -313,7 +397,7 @@
    "img": "q2",
    "layer": 1,
    "t0": "vo02:bricks",
-   "t1": "vo02:mortar",
+   "t1": "end:vo03",
    "off": [
     120,
     -150
@@ -325,7 +409,7 @@
    "img": "q2",
    "layer": 2,
    "t0": "vo02:mortar",
-   "t1": "vo02:A",
+   "t1": "end:vo03",
    "off": [
     -110,
     150
@@ -377,6 +461,20 @@
    "t1": "vo06:wall+1.2",
    "a": 0.45,
    "w": 0.12
+  },
+  {
+   "img": "q1",
+   "t0": "vo04:system",
+   "t1": "vo04:system+1.4",
+   "a": 0.5,
+   "w": 0.1
+  },
+  {
+   "img": "q4b",
+   "t0": "vo05:Most",
+   "t1": "vo05:Most+1.4",
+   "a": 0.5,
+   "w": 0.1
   }
  ],
  "particles": [
@@ -389,6 +487,11 @@
    "img": "q5",
    "n": 12,
    "a": 0.4
+  },
+  {
+   "img": "q3",
+   "n": 8,
+   "a": 0.3
   }
  ],
  "sup": [
@@ -420,6 +523,6 @@
   "t": "start:vo07-0.3",
   "e1": "Next:<br>fingerprints, before birth",
   "e2": "The pattern spreads in waves.",
-  "chip": "Skin Sense · Season 2 · Episode 6"
+  "chip": "Skin Sense · Season 2 · Episode 5"
  }
 }

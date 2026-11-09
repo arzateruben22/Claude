@@ -1,10 +1,10 @@
 {
- "gain_db": 1.69,
+ "gain_db": 1.75,
  "iterations": 2,
  "lufs": -14.05,
  "true_peak_db": -2.0,
  "ceiling_db": -2.0,
- "limiting_max_db": -4.15,
+ "limiting_max_db": -4.21,
  "aac": {
   "lufs": -14.1,
   "true_peak_db": -2.0,

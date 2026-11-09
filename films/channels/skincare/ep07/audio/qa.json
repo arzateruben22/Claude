@@ -1,13 +1,13 @@
 {
- "compose_s": 6.0,
- "master_s": 8.7,
+ "compose_s": 6.5,
+ "master_s": 10.1,
  "master": {
-  "gain_db": 1.69,
+  "gain_db": 1.75,
   "iterations": 2,
   "lufs": -14.05,
   "true_peak_db": -2.0,
   "ceiling_db": -2.0,
-  "limiting_max_db": -4.15,
+  "limiting_max_db": -4.21,
   "aac": {
    "lufs": -14.1,
    "true_peak_db": -2.0,
@@ -18,15 +18,15 @@
  "sync": {
   "per_kind": {
    "label": {
-    "n": 5,
+    "n": 6,
     "max_ms": 5.0,
     "median_ms": 0.0,
     "slow": false,
     "pass": true
    },
    "scale.jump": {
-    "n": 5,
-    "max_ms": 0.0,
+    "n": 9,
+    "max_ms": 10.0,
     "median_ms": 0.0,
     "slow": true,
     "pass": true
@@ -71,8 +71,15 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c2",
+    "tag": "c3",
     "show": 4.8,
+    "method": "shape",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c5",
+    "show": 12.4,
     "method": "shape",
     "err_ms": 0.0
    },
@@ -85,7 +92,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c4",
+    "tag": "c6",
     "show": 13.8333,
     "method": "shape",
     "err_ms": -0.0
@@ -120,7 +127,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c7",
+    "tag": "c10",
     "show": 29.6,
     "method": "shape",
     "err_ms": 0.0
@@ -140,6 +147,13 @@
     "err_ms": 0.0
    },
    {
+    "kind": "scale.jump",
+    "tag": "c11",
+    "show": 32.6667,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
     "kind": "section",
     "tag": null,
     "show": 43.7667,
@@ -148,7 +162,7 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c9",
+    "tag": "c13",
     "show": 44.0667,
     "method": "shape",
     "err_ms": -0.0
@@ -161,6 +175,20 @@
     "err_ms": -59.0
    },
    {
+    "kind": "scale.jump",
+    "tag": "c14",
+    "show": 47.1667,
+    "method": "shape",
+    "err_ms": 10.0
+   },
+   {
+    "kind": "label",
+    "tag": "l5",
+    "show": 49.2333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
     "kind": "section",
     "tag": null,
     "show": 56.9,
@@ -169,22 +197,29 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c11",
+    "tag": "c15",
     "show": 57.2,
     "method": "shape",
     "err_ms": 0.0
    },
    {
+    "kind": "scale.jump",
+    "tag": "c16",
+    "show": 64.6333,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
     "kind": "section",
     "tag": null,
-    "show": 65.3,
+    "show": 66.0,
     "method": "peak",
     "err_ms": 0.0
    },
    {
     "kind": "signature",
     "tag": "end",
-    "show": 65.6,
+    "show": 66.3,
     "method": "rise",
     "err_ms": 11.0
    }
@@ -193,14 +228,14 @@
  "picture_sync": [],
  "under_voice": {
   "music_lufs": -29.0,
-  "dialog_lufs": -13.7,
+  "dialog_lufs": -13.6,
   "gap_lu": 15.3,
   "pass": true
  },
  "phone": {
   "correlation": 0.9,
-  "mono_loss_db": 0.13,
-  "dialog_mono_loss_db": 0.09,
+  "mono_loss_db": 0.1,
+  "dialog_mono_loss_db": 0.08,
   "pass": true
  }
 }

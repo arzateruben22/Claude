@@ -1,0 +1,718 @@
+{
+ "num": "S2·E4",
+ "title": "What a tan<br>really is",
+ "titleSize": 84,
+ "images": {
+  "q1": {
+   "src": [
+    "art/s2e04-01.webp"
+   ],
+   "layers": [
+    "art/s2e04-01-L0.webp",
+    "art/s2e04-01-L1.webp",
+    "art/s2e04-01-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q2": {
+   "src": [
+    "art/s2e04-02.webp"
+   ],
+   "layers": [
+    "art/s2e04-02-L0.webp",
+    "art/s2e04-02-L1.webp",
+    "art/s2e04-02-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q3": {
+   "src": [
+    "art/s2e04-03.webp"
+   ],
+   "layers": [
+    "art/s2e04-03-L0.webp",
+    "art/s2e04-03-L1.webp",
+    "art/s2e04-03-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q4": {
+   "src": [
+    "art/s2e04-04.webp"
+   ],
+   "layers": [
+    "art/s2e04-04-L0.webp",
+    "art/s2e04-04-L1.webp",
+    "art/s2e04-04-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q5": {
+   "src": [
+    "art/s2e04-05.webp"
+   ],
+   "layers": [
+    "art/s2e04-05-L0.webp",
+    "art/s2e04-05-L1.webp",
+    "art/s2e04-05-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  }
+ },
+ "camera": [
+  {
+   "t": 0,
+   "img": "q3",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 2,
+   "anchors": {
+    "cap": [
+     0.46,
+     0.5
+    ],
+    "nuc": [
+     0.46,
+     0.62
+    ]
+   }
+  },
+  {
+   "t": "vo01:parked",
+   "img": "q3",
+   "s": 1.08,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.05,
+   "rack": 1,
+   "anchors": {
+    "cap": [
+     0.46,
+     0.5
+    ],
+    "nuc": [
+     0.46,
+     0.62
+    ]
+   }
+  },
+  {
+   "t": "start:vo02",
+   "img": "q1",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1,
+   "anchors": {
+    "cell": [
+     0.46,
+     0.7
+    ]
+   }
+  },
+  {
+   "t": "vo02:melanin",
+   "img": "q1",
+   "s": 1.1,
+   "f": [
+    0.46,
+    0.6
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2,
+   "anchors": {
+    "cell": [
+     0.46,
+     0.7
+    ]
+   }
+  },
+  {
+   "t": "vo02:After",
+   "img": "q2",
+   "s": 1.06,
+   "f": [
+    0.45,
+    0.55
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2,
+   "anchors": {
+    "cell": [
+     0.33,
+     0.7
+    ],
+    "pass": [
+     0.54,
+     0.43
+    ]
+   }
+  },
+  {
+   "t": "vo02:cap",
+   "img": "q3",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 2,
+   "anchors": {
+    "cap": [
+     0.46,
+     0.5
+    ],
+    "nuc": [
+     0.46,
+     0.62
+    ]
+   }
+  },
+  {
+   "t": "start:vo03",
+   "img": "q4",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1,
+   "anchors": {
+    "caps": [
+     0.37,
+     0.55
+    ],
+    "rays": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "t": "vo03:absorbing",
+   "img": "q4",
+   "s": 1.1,
+   "f": [
+    0.4,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0.05,
+   "rack": 2,
+   "anchors": {
+    "caps": [
+     0.37,
+     0.55
+    ],
+    "rays": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "t": "start:vo04",
+   "img": "q2",
+   "s": 1.0,
+   "f": [
+    0.45,
+    0.55
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1,
+   "anchors": {
+    "cell": [
+     0.33,
+     0.7
+    ],
+    "pass": [
+     0.54,
+     0.43
+    ]
+   }
+  },
+  {
+   "t": "vo04:So",
+   "img": "q3",
+   "s": 1.06,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2,
+   "anchors": {
+    "cap": [
+     0.46,
+     0.5
+    ],
+    "nuc": [
+     0.46,
+     0.62
+    ]
+   }
+  },
+  {
+   "t": "vo04:In",
+   "img": "q4",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.45
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1,
+   "anchors": {
+    "caps": [
+     0.37,
+     0.55
+    ],
+    "rays": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "t": "vo04:light",
+   "img": "q4",
+   "s": 1.08,
+   "f": [
+    0.5,
+    0.42
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2,
+   "anchors": {
+    "caps": [
+     0.37,
+     0.55
+    ],
+    "rays": [
+     0.5,
+     0.3
+    ]
+   }
+  },
+  {
+   "t": "start:vo05",
+   "img": "q3",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1,
+   "anchors": {
+    "cap": [
+     0.46,
+     0.5
+    ],
+    "nuc": [
+     0.46,
+     0.62
+    ]
+   }
+  },
+  {
+   "t": "start:vo06",
+   "img": "q5",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1
+  },
+  {
+   "t": "vo06:gathered",
+   "img": "q5",
+   "s": 1.06,
+   "f": [
+    0.5,
+    0.55
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2
+  }
+ ],
+ "labels": [
+  {
+   "text": "Pigment cap",
+   "a": "cap",
+   "img": "q3",
+   "layer": 2,
+   "t0": "vo01:Pigment",
+   "t1": "vo01:nucleus",
+   "off": [
+    130,
+    -150
+   ]
+  },
+  {
+   "text": "Cell nucleus",
+   "a": "nuc",
+   "img": "q3",
+   "layer": 1,
+   "t0": "vo01:nucleus",
+   "t1": "end:vo01",
+   "off": [
+    -100,
+    150
+   ]
+  },
+  {
+   "text": "Pigment cell",
+   "a": "cell",
+   "img": "q1",
+   "layer": 2,
+   "t0": "vo02:melanin",
+   "t1": "vo02:After",
+   "off": [
+    100,
+    -150
+   ]
+  },
+  {
+   "text": "Pigment passed on",
+   "a": "pass",
+   "img": "q2",
+   "layer": 2,
+   "t0": "vo02:After",
+   "t1": "vo02:cap",
+   "off": [
+    110,
+    -150
+   ]
+  },
+  {
+   "text": "Melanin cap",
+   "a": "cap",
+   "img": "q3",
+   "layer": 2,
+   "t0": "vo02:cap",
+   "t1": "end:vo02",
+   "off": [
+    130,
+    -150
+   ]
+  },
+  {
+   "text": "Nucleus",
+   "a": "nuc",
+   "img": "q3",
+   "layer": 1,
+   "t0": "vo02:nucleus",
+   "t1": "end:vo02",
+   "off": [
+    -100,
+    150
+   ]
+  },
+  {
+   "text": "Caps over nuclei",
+   "a": "caps",
+   "img": "q4",
+   "layer": 2,
+   "t0": "vo03:cap",
+   "t1": "vo03:light",
+   "off": [
+    110,
+    -160
+   ]
+  },
+  {
+   "text": "More melanin",
+   "a": "cell",
+   "img": "q2",
+   "layer": 2,
+   "t0": "vo04:melanin",
+   "t1": "vo04:So",
+   "off": [
+    110,
+    -140
+   ]
+  },
+  {
+   "text": "Light sensor (lab cells)",
+   "a": "rays",
+   "img": "q4",
+   "layer": 1,
+   "t0": "vo04:light",
+   "t1": "end:vo04+0.3",
+   "off": [
+    -60,
+    150
+   ]
+  }
+ ],
+ "sweeps": [
+  {
+   "img": "q3",
+   "t0": "vo01:Pigment",
+   "t1": "vo01:Pigment+1.4",
+   "a": 0.5,
+   "w": 0.1
+  },
+  {
+   "img": "q3",
+   "t0": "vo02:cap",
+   "t1": "vo02:cap+1.4",
+   "a": 0.5,
+   "w": 0.1
+  },
+  {
+   "img": "q4",
+   "t0": "vo03:That",
+   "t1": "vo03:sunscreen+0.8",
+   "a": 0.5,
+   "w": 0.1
+  },
+  {
+   "img": "q2",
+   "t0": "vo04:The",
+   "t1": "vo04:The+1.4",
+   "a": 0.45,
+   "w": 0.1
+  },
+  {
+   "img": "q5",
+   "t0": "vo06:So",
+   "t1": "vo06:So+1.6",
+   "a": 0.45,
+   "w": 0.12
+  }
+ ],
+ "particles": [
+  {
+   "img": "q3",
+   "n": 10,
+   "a": 0.35
+  },
+  {
+   "img": "q4",
+   "n": 10,
+   "a": 0.35
+  },
+  {
+   "img": "q5",
+   "n": 8,
+   "a": 0.3
+  }
+ ],
+ "plates": [
+  {
+   "t0": "vo03:light+0.1",
+   "t1": "end:vo03+0.4",
+   "top": 640,
+   "drift": 1.6,
+   "title": "Skin samples<br>exposed to UVB",
+   "ghost": 0,
+   "rows": [
+    {
+     "text": "Cells with a melanin cap",
+     "small": "less DNA damage",
+     "t": "vo03:cap#1"
+    },
+    {
+     "text": "Cells without a cap",
+     "small": "more DNA damage",
+     "t": "vo03:damage"
+    }
+   ]
+  },
+  {
+   "t0": "start:vo05",
+   "t1": "end:vo05+0.3",
+   "top": 640,
+   "drift": 1.6,
+   "title": "Melanin caps and<br>DNA damage",
+   "ghost": 0,
+   "rows": [
+    {
+     "text": "A cap lowers the damage",
+     "small": "",
+     "t": "vo05:lower"
+    },
+    {
+     "text": "A cap does not erase it",
+     "small": "",
+     "t": "vo05:erase"
+    }
+   ],
+   "note": "More melanin in a cell: more protection.",
+   "noteT": "vo05:effect"
+  },
+  {
+   "t0": "vo06:It",
+   "t1": "end:vo06+0.4",
+   "top": 640,
+   "drift": 1.6,
+   "title": "A tan, in short",
+   "ghost": 0,
+   "rows": [
+    {
+     "text": "Pigment over the nucleus",
+     "small": "",
+     "t": "vo06:It"
+    },
+    {
+     "text": "Lowers DNA damage",
+     "small": "",
+     "t": "vo06:lowers"
+    },
+    {
+     "text": "Does not erase it",
+     "small": "",
+     "t": "vo06:erase"
+    }
+   ]
+  }
+ ],
+ "quiet": [
+  [
+   "vo03:light+0.1",
+   "end:vo03+0.4"
+  ],
+  [
+   "start:vo05",
+   "end:vo05+0.3"
+  ],
+  [
+   "vo06:It",
+   "end:vo06+0.4"
+  ]
+ ],
+ "sup": [
+  [
+   "start:vo02",
+   "Pigment and<br>a cap."
+  ],
+  [
+   "start:vo03",
+   ""
+  ],
+  [
+   "start:vo04",
+   "More melanin,<br>more protection."
+  ],
+  [
+   "start:vo05",
+   ""
+  ],
+  [
+   "start:vo06",
+   ""
+  ]
+ ],
+ "badges": [
+  [
+   0,
+   "start:vo05",
+   "Simplified · not to scale"
+  ]
+ ],
+ "end": {
+  "t": "start:vo07-0.3",
+  "e1": "Next:<br>the brick wall<br>on your skin",
+  "e2": "Which part holds water in?",
+  "chip": "Skin Sense · Season 2 · Episode 4"
+ }
+}
