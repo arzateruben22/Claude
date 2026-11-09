@@ -105,7 +105,7 @@ CAM = {
     "change": [key(cut("change"), view([0.0, Y0 - 6.0, 0.0], 100.0)), key(cut("why"), view([0.0, Y0 - 7.0, 0.0], 112.0), "sine")],
     "why": [key(cut("why"), CLOSE), key(A("vo04:sends"), WIDE, "p3"), key(cut("whoa"), {**WIDE, "dist": 108.0}, "sine")],
     "whoa": [key(cut("whoa"), WIDE), key(A("vo05:Then"), {**WIDE, "dist": 104.0}, "p3"), key(A("vo05:pieces."), {**WIDE, "dist": 100.0, "yaw": 14.0}, "sine"), key(cut("measure"), {**WIDE, "dist": 112.0, "yaw": -12.0}, "sine")],
-    "measure": [key(cut("measure"), view([0.0, Y0 - 5.0, 0.0], 96.0, 0.0, 12.0)), key(cut("takeaway"), view([0.0, Y0 - 5.0, 0.0], 88.0, 0.0, -12.0), "sine")],
+    "measure": [key(cut("measure"), view([0.0, Y0 - 5.0, 0.0], 116.0, 0.0, 12.0)), key(cut("takeaway"), view([0.0, Y0 - 5.0, 0.0], 108.0, 0.0, -12.0), "sine")],
     "takeaway": [key(cut("takeaway"), {**WIDE, "yaw": -20.0}), key(cut("tease"), {**WIDE, "dist": 124.0, "yaw": 20.0}, "sine")],
     "tease": [key(cut("tease"), {**WIDE, "dist": 124.0, "yaw": 20.0}), key(DUR, {**WIDE, "dist": 130.0, "yaw": 8.0}, "sine")],
 }

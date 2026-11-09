@@ -22,3 +22,11 @@ Draft render (9 Nov): 72.0 s, 540x960 at 15 fps, 1080 frames, audio -14.1 LUFS /
 sync PASS, 0 text-audit warnings. Voice speed 0.9. The picture is an illustration (flat-ink stick, two hands, break rings):
 the stick is thick for phone legibility, the piece flight is stylised, and the twist stripe reads as a blue band rather
 than a clear helix; reviewers should judge (h) on that.
+
+## Round 2 (9 Nov): picture rebuilt to the S2E01 lessons
+Lit 3D stick (not a flat band), hands with a marker that turns with the twist, two stripes winding round the stick so the twist reads as a
+helix, a break sequence (one snap at the middle, then two more where the waves arrive: four pieces) with loose pieces that fly out, fall and
+land on a shelf, the end pieces hanging from the hands; one "Slow motion" note (no factors) whenever a break plays; the camera keeps moving through
+every beat (no frozen holds); labels have fixed sides; the title is hedged ("almost never"); scene-table.md is measured from the render.
+Claims c2, c5, c6 are now SOURCE-READ against the 2018 paper's Fig. 3 caption ("Bending waves originating at the point of first fracture create
+additional fractures"); c4 (the 2005 paper) and c12 stay OPEN. Final render (1080x1920, 30 fps) waits for the gate.
