@@ -56,9 +56,13 @@ TAKES = [
      "keys": take((cut("whoa"), -1.0), (A("vo05:Twist"), -1.0), (A("vo05:turn.") + 0.2, 0.0), (A("vo05:Then"), 0.0), (A("vo05:two") + 0.1, 1.0), (cut("measure") - 0.3, 1.8))},
     {"name": "measure", "t0": cut("measure"), "t1": cut("takeaway"), "phimax": 300, "breaks": "single",
      "keys": take((cut("measure"), -1.0), (A("vo06:little"), -1.0), (A("vo06:fifty"), -1.0 / 6), (A("vo06:win."), 0.0), (cut("takeaway"), 0.0))},
-    {"name": "takeaway", "t0": cut("takeaway"), "t1": cut("tease"), "phimax": 250, "breaks": "single",
-     "keys": take((cut("takeaway"), 1.5), (cut("tease"), 1.9))},
-    {"name": "tease", "t0": cut("tease"), "t1": DUR + 1, "phimax": 250, "breaks": "single", "keys": take((cut("tease"), 1.9), (DUR + 1, 1.9))},
+    {"name": "takeaway", "t0": cut("takeaway"), "t1": cut("tease"), "pair": [
+        {"xo": 0.0, "yo": 11.0, "breaks": "casc", "phimax": 0, "keys": take((cut("takeaway"), 0.965), (A("vo07:chain") - 0.6, 0.99), (A("vo07:chain") - 0.1, 1.0), (A("vo07:chain") + 3.8, 1.95), (cut("tease"), 1.97))},
+        {"xo": 0.0, "yo": -11.0, "breaks": "single", "phimax": 250, "keys": take((cut("takeaway"), -1.0), (A("vo07:Twist"), -1.0), (A("vo07:usually"), 0.0), (A("vo07:clean") + 0.45, 0.95), (A("vo07:clean") + 0.6, 1.0), (A("vo07:clean") + 4.1, 1.9), (cut("tease"), 1.92))}]},
+    {"name": "tease", "t0": cut("tease"), "t1": EC - 0.6, "pair": [
+        {"xo": 0.0, "yo": 11.0, "breaks": "casc", "phimax": 0, "keys": take((cut("tease"), 1.97), (EC, 1.97))},
+        {"xo": 0.0, "yo": -11.0, "breaks": "single", "phimax": 250, "keys": take((cut("tease"), 1.92), (EC, 1.92))}]},
+    {"name": "tease", "t0": EC - 0.6, "t1": DUR + 1, "phimax": 0, "breaks": "casc", "keys": take((EC - 0.6, 0.965), (DUR + 1, 0.965))},
 ]
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
 RIPPLE_W = [A("vo04:sends"), A("vo04:again.") + 0.1]
@@ -67,9 +71,8 @@ TWIST_W = [A("vo05:Twist"), cut("measure")]
 SPINE = [
     {"t0": cut("normal"), "t1": cut("whoa"), "label": "pieces so far", "unit": " ", "dp": 0, "kind": "pieces"},
     {"t0": cut("whoa"), "t1": cut("takeaway"), "label": "twist angle", "unit": "°", "dp": 0, "kind": "twist", "lit": [A("vo06:fifty"), cut("takeaway")]},
-    {"t0": cut("takeaway"), "t1": cut("tease") - 0.3, "label": "pieces, twisted first", "unit": " ", "dp": 0, "kind": "const", "v": 2, "lit": [cut("takeaway"), cut("tease")]},
 ]
-SPINE_AT = [[-1e9, [0.5, 0.235]]]
+SPINE_AT = [[-1e9, [0.74, 0.25]]]
 LABELS = [
     {"id": "no-stick", "text": "dry spaghetti", "color": "ghost", "t0": cut("normal") + 0.2, "t1": A("vo02:snaps.") - 0.3, "at": "stick", "side": 1},
     {"id": "no-bend", "text": "bend slowly", "color": "motion", "t0": A("vo02:curves,") - 0.6, "t1": A("vo02:snaps.") - 0.3, "at": "end", "side": -1},
@@ -80,12 +83,17 @@ LABELS = [
     {"id": "wy-rip", "text": "ripples", "color": "force", "t0": A("vo04:ripples"), "t1": A("vo04:They") + 0.3, "at": "ripple", "side": -1},
     {"id": "wy-2", "text": "breaks again", "color": "energy", "t0": A("vo04:extra"), "t1": cut("whoa") - 0.3, "at": "b2", "side": -1},
     {"id": "wo-tw", "text": "twist first", "color": "force", "t0": A("vo05:Twist") + 0.3, "t1": A("vo05:Then") - 0.3, "at": "stick", "side": 1},
-    {"id": "wo-2", "text": "two pieces", "color": "motion", "t0": A("vo05:pieces.") - 0.1, "t1": cut("measure") - 0.3, "at": "b1", "side": 1},
+    {"id": "wo-2", "text": "two pieces", "color": "motion", "t0": A("vo05:pieces.") - 0.1, "t1": cut("measure") - 0.3, "at": "hang", "side": 1, "fixed": True},
 ]
+for _i in range(4):
+    LABELS.append({"id": f"pc{_i+1}", "text": f"piece {_i+1}", "color": "ghost", "t0": A("vo02:almost") + 0.35 * _i, "t1": cut("change") - 0.3, "at": f"pc{_i+1}", "side": 1 if _i % 2 else -1, "fixed": False})
+LABELS.append({"id": "tk-shat", "text": "shattered: 4 pieces", "color": "energy", "t0": A("vo07:chain") + 2.3, "t1": cut("tease") + 1.0, "at": "shat", "side": 1, "fixed": True})
+LABELS.append({"id": "tk-two", "text": "twisted first: 2 pieces", "color": "motion", "t0": A("vo07:clean") + 1.6, "t1": cut("tease") + 1.0, "at": "twist2", "side": 1, "fixed": True})
 BADGES = [
-    {"id": "illus", "kind": "tag", "text": "Illustration, not a simulation", "t0": cut("takeaway") + 0.5, "t1": cut("tease"), "slot": "tr"},
+    {"id": "fey", "kind": "tag", "text": "Feynman asked why", "t0": A("vo04:Feynman"), "t1": A("vo04:Years"), "slot": "tr"},
+    {"id": "illus", "kind": "tag", "text": "Illustration, not a simulation", "t0": A("vo02:snaps."), "t1": EC - 0.2, "slot": "tl"},
 ]
-PIECES_BADGE = {"id": "pc", "t0": A("vo06:little"), "t1": cut("takeaway") - 0.1, "slot": "tr", "thr": 250, "phimax": 300}
+PIECES_BADGE = {"id": "pc", "t0": A("vo06:little"), "t1": cut("takeaway") - 0.1, "slot": "tl", "thr": 250, "phimax": 300}
 
 
 def view(look, dist, pitch=0.0, yaw=0.0, fov=32.0):
@@ -99,15 +107,18 @@ def key(t, v, ease="p2"):
 Y0 = STICK["Y0"]
 WIDE = view([0.0, Y0 - 7.0, 0.0], 118.0)
 CLOSE = view([0.0, Y0 - 3.0, 0.0], 90.0)
+PUSH = view([0.0, Y0 + 1.0, 0.0], 80.0)
+PAIR = view([0.0, Y0 - 12.0, 0.0], 176.0)
+T1, T2, T3, T4 = A("vo02:snaps."), A("vo03:end.") - 0.1, A("vo04:sends"), A("vo05:two") + 0.1
 CAM = {
     "hook": [key(0.0, CLOSE), key(cut("normal"), {**CLOSE, "dist": 84.0}, "sine")],
-    "normal": [key(cut("normal"), WIDE), key(cut("change"), {**WIDE, "dist": 112.0}, "sine")],
-    "change": [key(cut("change"), view([0.0, Y0 - 6.0, 0.0], 100.0)), key(cut("why"), view([0.0, Y0 - 7.0, 0.0], 112.0), "sine")],
-    "why": [key(cut("why"), CLOSE), key(A("vo04:sends"), WIDE, "p3"), key(cut("whoa"), {**WIDE, "dist": 108.0}, "sine")],
-    "whoa": [key(cut("whoa"), WIDE), key(A("vo05:Then"), {**WIDE, "dist": 104.0}, "p3"), key(A("vo05:pieces."), {**WIDE, "dist": 100.0, "yaw": 14.0}, "sine"), key(cut("measure"), {**WIDE, "dist": 112.0, "yaw": -12.0}, "sine")],
+    "normal": [key(cut("normal"), WIDE), key(T1 - 1.4, WIDE, "sine"), key(T1 - 0.3, PUSH, "p3"), key(T1 + 0.7, PUSH, "sine"), key(T1 + 2.6, {**WIDE, "dist": 124.0, "yaw": 10.0}, "p3"), key(cut("change"), {**WIDE, "dist": 112.0, "yaw": -8.0}, "sine")],
+    "change": [key(cut("change"), view([0.0, Y0 - 6.0, 0.0], 100.0)), key(T2 - 1.0, view([0.0, Y0 - 6.0, 0.0], 100.0), "sine"), key(T2 - 0.1, PUSH, "p3"), key(T2 + 0.6, PUSH, "sine"), key(A("vo03:snaps") - 0.4, {**WIDE, "dist": 120.0}, "p3"), key(cut("why"), view([0.0, Y0 - 7.0, 0.0], 112.0), "sine")],
+    "why": [key(cut("why"), CLOSE), key(A("vo04:Years"), {**CLOSE, "dist": 76.0, "yaw": 8.0}, "sine"), key(T3 - 0.9, PUSH, "p3"), key(T3 + 0.6, PUSH, "sine"), key(T3 + 2.4, {**WIDE, "dist": 124.0}, "p3"), key(cut("whoa"), {**WIDE, "dist": 108.0}, "sine")],
+    "whoa": [key(cut("whoa"), WIDE), key(A("vo05:Twist"), {**WIDE, "dist": 100.0, "yaw": -10.0}, "sine"), key(A("vo05:Then") - 0.2, view([0.0, Y0 - 3.0, 0.0], 78.0), "p3"), key(T4 + 0.4, PUSH, "sine"), key(A("vo05:pieces.") + 0.8, {**WIDE, "dist": 112.0, "yaw": 14.0}, "p3"), key(cut("measure"), {**WIDE, "dist": 118.0, "yaw": -12.0}, "sine")],
     "measure": [key(cut("measure"), view([0.0, Y0 - 5.0, 0.0], 116.0, 0.0, 12.0)), key(cut("takeaway"), view([0.0, Y0 - 5.0, 0.0], 108.0, 0.0, -12.0), "sine")],
-    "takeaway": [key(cut("takeaway"), {**WIDE, "yaw": -20.0}), key(cut("tease"), {**WIDE, "dist": 124.0, "yaw": 20.0}, "sine")],
-    "tease": [key(cut("tease"), {**WIDE, "dist": 124.0, "yaw": 20.0}), key(DUR, {**WIDE, "dist": 130.0, "yaw": 8.0}, "sine")],
+    "takeaway": [key(cut("takeaway"), view([0.0, Y0 - 6.0, 0.0], 150.0, 0.0, 6.0)), key(A("vo07:It") + 1.0, PAIR, "p3"), key(cut("tease"), {**PAIR, "dist": 170.0, "yaw": -6.0}, "sine")],
+    "tease": [key(cut("tease"), {**PAIR, "dist": 170.0, "yaw": -6.0}), key(EC - 0.6, {**PAIR, "dist": 166.0, "yaw": 4.0}, "sine"), key(EC - 0.59, CLOSE, "lin"), key(DUR, CLOSE, "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 TITLE = {"series": "Reality Rulebook · Season 2 · Episode 2", "title": "Spaghetti almost never breaks in *two*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
@@ -118,7 +129,7 @@ film = {
     "takes": TAKES, "labels": LABELS, "badges": BADGES, "piecesBadge": PIECES_BADGE, "cam": CAM, "captionY": 0.632, "title": TITLE,
     "noteSlots": {"speed": "tl", "hook": "bl"},
     "captions": phrase_captions(f, max_chars=24, fix=[], until=EC - 0.3), "endCard": EC,
-    "end": {"title": "Next drop: the nut that *rises*", "follow": "Follow Reality Rulebook", "foot": "Twist first, then bend: two pieces (Heisser et al., 2018)."},
+    "end": {"title": "Next drop: the nut that *rises*", "follow": "Follow Reality Rulebook", "foot": "Twist first, then bend: usually two pieces. Heisser et al., PNAS 115, 8665 (2018)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]

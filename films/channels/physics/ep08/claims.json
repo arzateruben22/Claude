@@ -58,12 +58,12 @@
   "id": "c6",
   "sentence": "They bend it even more than before, and that extra bend breaks it again.",
   "claim": "The waves locally raise the curvature above its value before the first break, which can break the rod again.",
-  "source_url": "https://arxiv.org/abs/1802.05402",
-  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
+  "source_url": "https://doi.org/10.1103/PhysRevLett.95.095505",
+  "source_title": "Audoly and Neukirch, Phys. Rev. Lett. 95, 095505 (2005)",
   "accessed": "2026-11-09",
-  "verified_via": "page",
+  "verified_via": "search excerpt",
   "status": "TODO open link",
-  "note": "SOURCE-READ (builder read the arXiv full text of the 2018 paper; a person has not opened it). Quote: \"Fracture cascade as observed in quench experiments at zero twist. The timings of secondary fractures (circled in blue) are in agreement with the simulations in (a).\" Fig. 3c caption; 'more than before' (curvature raised by the waves) is the 2005 paper's claim and is not in the 2018 text I read: the line stays hedged by its wording ('even more than before'): a person should check it against Audoly and Neukirch."
+  "note": "OPEN: the 2018 paper (read) says bending waves from the first fracture create additional fractures (Fig. 3 caption) but not that the waves bend the stick 'even more than before'; that is the 2005 paper's claim (search excerpt: 'flexural waves ... raise the curvature elsewhere'), and the 2005 paper was not opened (not on arXiv, APS blocks the page). A person should check it against the 2005 paper."
  },
  {
   "id": "c7",

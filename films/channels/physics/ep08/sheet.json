@@ -89,8 +89,34 @@
   },
   {
    "t": 8.8,
+   "kind": "badge",
+   "tag": "illus",
+   "text": "Illustration, not a simulation"
+  },
+  {
+   "t": 8.8,
    "kind": "impact",
    "tag": "snap1"
+  },
+  {
+   "t": 11.466666666666667,
+   "kind": "label",
+   "tag": "pc1"
+  },
+  {
+   "t": 11.816666666666666,
+   "kind": "label",
+   "tag": "pc2"
+  },
+  {
+   "t": 12.166666666666666,
+   "kind": "label",
+   "tag": "pc3"
+  },
+  {
+   "t": 12.516666666666666,
+   "kind": "label",
+   "tag": "pc4"
   },
   {
    "t": 13.8667,
@@ -128,6 +154,12 @@
    "kind": "section",
    "id": "why",
    "t1": 37.0667
+  },
+  {
+   "t": 21.6667,
+   "kind": "badge",
+   "tag": "fey",
+   "text": "Feynman asked why"
   },
   {
    "t": 28.400000000000002,
@@ -187,27 +219,26 @@
    "tag": "threshold"
   },
   {
-   "t": 57.850033,
-   "kind": "counter.tick",
-   "tag": "spine:pieces, twisted first"
-  },
-  {
    "t": 57.8667,
    "kind": "section",
    "id": "takeaway",
    "t1": 65.8667
   },
   {
-   "t": 58.35,
-   "kind": "badge",
-   "tag": "illus",
-   "text": "Illustration, not a simulation"
+   "t": 63.73333333333333,
+   "kind": "label",
+   "tag": "tk-shat"
   },
   {
    "t": 65.8667,
    "kind": "section",
    "id": "tease",
    "t1": 72.0
+  },
+  {
+   "t": 66.19999999999999,
+   "kind": "label",
+   "tag": "tk-two"
   },
   {
    "t": 70.5,

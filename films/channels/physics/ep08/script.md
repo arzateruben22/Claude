@@ -41,9 +41,13 @@ vo: Next: a jar of nuts. {-} The biggest one tends to *climb*. {c14}
 end card: "Next drop: the nut that rises" · "Follow Reality Rulebook" · footnote: "Heisser et al., PNAS 115, 8665 (2018)"
 
 ## Notes
-- Every claim: see `claims.json`. c1, c3 (Feynman's observation), c7-c11, c12-c13 are SOURCE-READ against the arXiv full text of the 2018
-  paper; c2, c4, c5, c6 (the 2005 cascade) and c14 (ep09's tease) were not opened (APS blocks the page): search excerpts only, so OPEN.
-- "Two thirds of a turn" is 240 degrees; the paper says binary fracture dominates above about 250 degrees: the voice says
-  "more than two thirds of a turn", the screen says "about 250 degrees".
-- Listen at T0: Feynman, "twenty eighteen", "two hundred fifty", "spaghetti".
+- Claims: c1, c3, c7-c11, c13 are SOURCE-READ against the arXiv full text of the 2018 paper (Heisser et al.); c2 and c5 are SOURCE-READ against its
+  Fig. 3 caption ("Bending waves originating at the point of first fracture create additional fractures"). c4 (the 2005 paper explained it), c6
+  ("even more than before": the 2005 paper's claim, not in the 2018 text), c12 and c14 are OPEN. Nothing is OK until a person opens the sources.
+- "Two thirds of a turn" is 240 degrees; the paper says binary fracture dominates above about 250 degrees: the voice says "over two thirds of a
+  turn", the screen says 250.
+- The picture is an illustration, not a simulation (a tag says so from the first break): a lit stick held in two stylised hands, the twist drawn
+  as two stripes winding round it, a fast spring-back and a gap at every break, loose pieces that fall onto a shelf, and in the takeaway the
+  shattered stick (top) and the twisted one (bottom) side by side.
+- Listen at T0: Feynman, "twenty eighteen", "two hundred fifty", "jar of nuts".
 - TODO: the handle, a physicist's sign-off, the AI-voice label in the post.
