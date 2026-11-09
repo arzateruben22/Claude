@@ -1,0 +1,1075 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Which hand aged? In four and a half years, one showed no detectable ageing.",
+   "heard": "Which hand aged? In four and a half years one showed no detectable aging.",
+   "words": [
+    {
+     "w": "Which",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "hand",
+     "start": 0.24,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "aged?",
+     "start": 0.55,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 1.51,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 1.685,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.735,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.07,
+     "end": 2.12,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 2.1,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "years,",
+     "start": 2.56,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 2.74,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "showed",
+     "start": 3.025,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 3.225,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "detectable",
+     "start": 3.505,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "ageing.",
+     "start": 4.135,
+     "end": 4.38,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "They belong to two neighbours in Nambour, a Queensland town where pure chance decided who would wear sunscreen every morning. Head, neck, arms and hands, before the day began.",
+   "heard": "They belonged to two neighbours in Nambor, a Queensland town where pure chance decided who would wear sunscreen every morning, head, neck, arms and hands, before the day began.",
+   "words": [
+    {
+     "w": "They",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "belong",
+     "start": 0.16,
+     "end": 0.56,
+     "heard": false
+    },
+    {
+     "w": "to",
+     "start": 0.625,
+     "end": 0.675,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 0.705,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "neighbours",
+     "start": 0.735,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.23,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "Nambour,",
+     "start": 1.36,
+     "end": 2.24,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 2.345,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "Queensland",
+     "start": 2.495,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "town",
+     "start": 3.03,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "where",
+     "start": 3.395,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "pure",
+     "start": 3.575,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "chance",
+     "start": 3.83,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "decided",
+     "start": 4.215,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "who",
+     "start": 4.56,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 4.895,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "wear",
+     "start": 4.925,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "sunscreen",
+     "start": 5.27,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 5.81,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "morning.",
+     "start": 6.255,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "Head,",
+     "start": 7.13,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "neck,",
+     "start": 7.615,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "arms",
+     "start": 8.095,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.545,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "hands,",
+     "start": 8.575,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "before",
+     "start": 9.195,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.545,
+     "end": 9.595,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 9.575,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "began.",
+     "start": 9.78,
+     "end": 10.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "It was never sunscreen against none: the others could use it whenever they pleased, or not at all. Researchers read the fine lines in silicone casts of hands.",
+   "heard": "It was never sunscreen against none. The others could use it whenever they pleased, or not at all. Researchers read the fine lines in silicone casts of hands.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "was",
+     "start": 0.28,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 0.485,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "sunscreen",
+     "start": 0.705,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "against",
+     "start": 1.355,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "none:",
+     "start": 1.7,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.585,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "others",
+     "start": 2.615,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 3.015,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "use",
+     "start": 3.13,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.39,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "whenever",
+     "start": 3.59,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 3.96,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "pleased,",
+     "start": 4.19,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 4.845,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 5.14,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 5.28,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "all.",
+     "start": 6.33,
+     "end": 6.38,
+     "heard": true
+    },
+    {
+     "w": "Researchers",
+     "start": 6.36,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "read",
+     "start": 7.045,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.345,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "fine",
+     "start": 7.495,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "lines",
+     "start": 7.84,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 8.285,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "silicone",
+     "start": 8.49,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "casts",
+     "start": 9.135,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 9.54,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "hands.",
+     "start": 9.645,
+     "end": 10.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "It's easy to think sun damage is the burn you feel. But an ultraviolet camera reveals damage the naked eye misses, long before it shows on the surface.",
+   "heard": "It's easy to think sun damage is the burn you feel, but an ultraviolet camera reveals damage the naked eye misses long before it shows on the surface.",
+   "words": [
+    {
+     "w": "It's",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "easy",
+     "start": 0.235,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 0.56,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "think",
+     "start": 0.71,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "sun",
+     "start": 0.9,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "damage",
+     "start": 1.255,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.825,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.005,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "burn",
+     "start": 2.165,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.655,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "feel.",
+     "start": 2.7,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 3.705,
+     "end": 3.755,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 3.735,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "ultraviolet",
+     "start": 3.95,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "camera",
+     "start": 4.79,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "reveals",
+     "start": 5.195,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "damage",
+     "start": 5.755,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.17,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "naked",
+     "start": 6.225,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "eye",
+     "start": 6.73,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "misses,",
+     "start": 7.07,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 7.92,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "before",
+     "start": 8.275,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 8.44,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "shows",
+     "start": 8.72,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 9.1,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.31,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "surface.",
+     "start": 9.435,
+     "end": 10.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "And they were followed for ten more years. Melanoma, the most serious skin cancer, came out at about half, in numbers too small to be sure.",
+   "heard": "And they were followed for ten more years. Melanoma, the most serious skin cancer, came out at about half in numbers too small to be sure.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 0.29,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "were",
+     "start": 0.475,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "followed",
+     "start": 0.505,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 1.075,
+     "end": 1.125,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 1.11,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 1.65,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "years.",
+     "start": 2.0,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "Melanoma,",
+     "start": 2.8,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.57,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "most",
+     "start": 3.855,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "serious",
+     "start": 3.91,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 4.67,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "cancer,",
+     "start": 4.95,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "came",
+     "start": 5.89,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 6.16,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 6.335,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.57,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "half,",
+     "start": 6.785,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.47,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "numbers",
+     "start": 7.5,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "too",
+     "start": 8.095,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "small",
+     "start": 8.46,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 8.845,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 8.97,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "sure.",
+     "start": 9.075,
+     "end": 9.52,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "At a lab's test dose, that morning layer is about a fifth of a paper's thickness.",
+   "heard": "At a lab's test dose, that morning layer is about a fifth of a paper's thickness.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.22,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "lab's",
+     "start": 0.28,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "test",
+     "start": 0.93,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "dose,",
+     "start": 1.375,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 2.135,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "morning",
+     "start": 2.26,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "layer",
+     "start": 2.88,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.26,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.48,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.66,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "fifth",
+     "start": 3.9,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.24,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.545,
+     "end": 4.595,
+     "heard": true
+    },
+    {
+     "w": "paper's",
+     "start": 4.575,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "thickness.",
+     "start": 5.205,
+     "end": 5.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "So, which hand aged? Both groups missed mornings; one missed fewer, and the skin kept count.",
+   "heard": "So which hand aged? Both groups missed mornings, one missed fewer and the skin kept count.",
+   "words": [
+    {
+     "w": "So,",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "which",
+     "start": 0.46,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "hand",
+     "start": 0.53,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "aged?",
+     "start": 0.83,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "Both",
+     "start": 1.81,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "groups",
+     "start": 2.075,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "missed",
+     "start": 2.265,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "mornings;",
+     "start": 2.565,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 3.175,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "missed",
+     "start": 3.24,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "fewer,",
+     "start": 3.715,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.005,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.195,
+     "end": 4.245,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 4.36,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "kept",
+     "start": 4.605,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "count.",
+     "start": 4.91,
+     "end": 5.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: tanning beds share a list with cigarettes. Same list, same risk?",
+   "heard": "Next, tanning beds share a list with cigarettes. Same list, same risk.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "tanning",
+     "start": 0.53,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "beds",
+     "start": 0.905,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "share",
+     "start": 1.27,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.515,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "list",
+     "start": 1.67,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 1.76,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "cigarettes.",
+     "start": 1.83,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "Same",
+     "start": 2.94,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "list,",
+     "start": 3.2,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 3.675,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "risk?",
+     "start": 3.935,
+     "end": 4.32,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

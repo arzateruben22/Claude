@@ -1,0 +1,145 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Processed meat is on it too.",
+  "claim": "IARC classified the consumption of processed meat as Group 1, 'carcinogenic to humans' (October 2015, Monographs Vol. 114), the same group as tobacco smoking and UV-emitting tanning devices.",
+  "source_url": "https://www.who.int/news-room/questions-and-answers/item/cancer-carcinogenicity-of-the-consumption-of-red-meat-and-processed-meat",
+  "source_title": "Cancer: Carcinogenicity of the consumption of red meat and processed meat (WHO Q&A, October 2015); IARC press release no. 240 (26 October 2015)",
+  "accessed": "2026-11-02",
+  "note": "Excerpts (WHO Q&A, via search; also IARC Monographs Q&A Vol. 114 and press release pr240): 'processed meat has been classified in the same category as causes of cancer such as tobacco smoking and asbestos (IARC Group 1, carcinogenic to humans)'; the working group concluded that eating processed meat causes colorectal cancer. Red meat is Group 2A, not 1. 'It' in the sentence is the list (IARC Group 1) asked about in the hook question. Said as a member of the list only, never as diet advice. The WHO page was seen as a search excerpt of its older URL (who.int/features/qa/cancer-red-meat); a person opens the current page.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c2",
+  "sentence": "All three share the top group of the World Health Organization's cancer agency, which says that doesn't make them equally dangerous: it ranks how sure the evidence is.",
+  "claim": "In 2009 the International Agency for Research on Cancer (IARC, the WHO's cancer agency) classified UV-emitting tanning devices in Group 1, 'carcinogenic to humans', its top group, which also holds tobacco smoking and (from 2015) processed meat.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/19655431/",
+  "source_title": "El Ghissassi F, et al. (WHO IARC Monograph Working Group). A review of human carcinogens, Part D: radiation. Lancet Oncol 2009;10:751–752",
+  "accessed": "2026-11-02",
+  "note": "Excerpts (ecancer news on the Lancet Oncology special report): the working group 'raised the classification of the use of UV-emitting tanning devices to Group 1, carcinogenic to humans'; previously 'probably carcinogenic to humans' (Group 2A). Coverage of the decision (MDedge; Reuters via Full Fact): Group 1 'also includes tobacco and tobacco smoke, asbestos'. Citation details (IARC publications listing): Lancet Oncol 10:751–752, doi:10.1016/S1470-2045(09)70213-X, PMID 19655431. Processed meat: see c1. 'All three' = tanning devices, tobacco smoking, processed meat consumption; Group 1 is IARC's highest evidence category.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c3",
+  "sentence": "All three share the top group of the World Health Organization's cancer agency, which says that doesn't make them equally dangerous: it ranks how sure the evidence is.",
+  "claim": "IARC/WHO say that sharing Group 1 does not make agents equally dangerous: the classifications describe the strength of the evidence that an agent can cause cancer, not the level of risk.",
+  "source_url": "https://monographs.iarc.who.int/wp-content/uploads/2018/07/IARCMonographs-QA.pdf",
+  "source_title": "IARC Monographs: Questions and Answers (IARC, WHO); WHO Q&A on red and processed meat (2015)",
+  "accessed": "2026-11-02",
+  "note": "WHO Q&A on processed meat (search excerpt): same category as tobacco smoking and asbestos, 'but this does NOT mean that they are all equally dangerous'. Excerpts (IARC Monographs Q&A documents): the classifications describe 'the strength of the scientific evidence about an agent being a cause of cancer, rather than assessing the level of risk'; 'the classification does not indicate the level of risk associated with a given level or circumstance of exposure'; Vol. 137 Q&A: the risk at typical exposure for two agents in the same group 'may be very different'. On sunbeds and smoking specifically, Full Fact (2026, https://fullfact.org/health/sunbeds-smoking-dhsc-iarc/) quotes Cancer Research UK: being in the same group 'doesn't mean they cause the same number of cases of cancer'. 'Equally dangerous' is WHO's own phrase; 'how sure the evidence is' is said for 'strength of the scientific evidence'.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c4",
+  "sentence": "Into the bed, then: its light is mostly UVA, the long rays.",
+  "claim": "Tanning beds emit mainly UVA (the longer-wavelength UV), with a small UVB fraction.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/21357345/",
+  "source_title": "Balk SJ; AAP Council on Environmental Health and Section on Dermatology. Ultraviolet radiation: a hazard to children and adolescents (technical report). Pediatrics 2011;127(3):e791–e817",
+  "accessed": "2026-11-02",
+  "note": "Excerpt (AAP technical report, via search): 'tanning beds primarily emit UVA radiation, although a small amount (<5%) is in the UVB range'. WHO (Artificial tanning devices, 2017, search excerpt): sunbeds 'predominantly emit UVA radiation'; newer models produce more UVB. UVA is the longest-wavelength UV band (315–400 nm).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c5",
+  "sentence": "In large, powerful units, it may be ten to fifteen times as intense as the midday sun.",
+  "claim": "The intensity of UVA produced by large, powerful tanning units may be 10 to 15 times higher than that of the midday sun.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/21357345/",
+  "source_title": "Balk SJ; AAP Council on Environmental Health and Section on Dermatology. Ultraviolet radiation: a hazard to children and adolescents (technical report). Pediatrics 2011;127(3):e791–e817",
+  "accessed": "2026-11-02",
+  "note": "Excerpt (AAP technical report, via search): 'the intensity of UVA radiation produced by large, powerful tanning units may be 10 to 15 times higher than that of the midday sun'. Hedges kept: 'large, powerful units', 'may be', UVA only. Not universal: a Norwegian study measured UVA 3–26 times Oslo summer sun; a Spanish study of 52 devices 2–6 times, most with less UVB than the midday summer sun (IARC-cited measurements, search excerpts); an IARC working-group excerpt says high-pressure lamps can emit about ten times more UVA than sunlight; Cleveland Clinic calls the 10–15× figure 'older yet oft-cited research'. A secondary attribution (WUSTL SPOTS manual) credits the 10–15× high-pressure figure to the FDA. Dermatologist to confirm.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c6",
+  "sentence": "When the beds joined that group, the sharpest signal came from people who started young.",
+  "claim": "When IARC moved UV-emitting tanning devices into Group 1 (2009), the key epidemiological finding was a raised melanoma risk in people who first used tanning devices young; risk increases with younger age at first use.",
+  "source_url": "https://ecancer.org/en/news/658-iarc-moves-sunbeds-to-highest-cancer-risk-category",
+  "source_title": "IARC moves sunbeds to highest cancer risk category (ecancer, reporting the IARC / Lancet Oncology special report, July 2009)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: a 'combined analysis of over 20 epidemiological studies shows that the risk of cutaneous melanoma is increased by 75% when use of tanning devices starts before 30 years of age'. WHO (2017, search excerpt): 'Melanoma risk increases with younger age of first sunbed use and with greater lifetime use of sunbeds.' WHO sunbed opinion (search excerpt): both meta-analyses that examined age at first use 'show a more pronounced risk when exposure began at a younger age'. 'Joined that group': upgraded from Group 2A (1992) to Group 1 (2009); see c2, c12.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c7",
+  "sentence": "In pooled studies, first use before thirty-five went with melanoma risk raised by more than half.",
+  "claim": "Meta-analyses found first sunbed use before age 35 associated with a summary relative risk of melanoma of 1.59 (Boniol et al. 2012, corrected) and 1.75 (IARC Working Group 2007).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/22833605/",
+  "source_title": "Boniol M, Autier P, Boyle P, Gandini S. Cutaneous melanoma attributable to sunbed use: systematic review and meta-analysis. BMJ 2012;345:e4757 (correction: BMJ 2012;345:e8503)",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: published estimate 'first use of sunbeds before age 35 years was associated with a summary relative risk of 1.87 (1.41 to 2.48)'; correction e8503 (13 Dec 2012), after 'a corrupted data file': 1.59 (95% CI 1.36 to 1.85), conclusions unchanged; Cancer Research UK: amended 'from 87% to 59%'. IARC Working Group, Int J Cancer 2007;120:1116–22 (search excerpts of later reviews): 'summary relative risk 1.75 (95% CI 1.35–2.26) for first exposure under the age of 35' (7 studies). 'More than half' is true of both (59%, 75%); relative risks from pooled observational studies, said as 'went with', not 'caused'. The screen shows both figures with their ages. The 2009 IARC summary's '75% … before 30' pairing is not used; the film says 'before thirty-five' for both figures, as both meta-analyses report it.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c8",
+  "sentence": "Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them too.",
+  "claim": "In November 2009, months after IARC's July 2009 classification, Brazil's health regulator ANVISA banned UV tanning equipment for aesthetic purposes (RDC 56/2009, dated 9 November 2009), the first country to do so, citing the IARC classification.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5710080/",
+  "source_title": "Review of sunbed regulation (PMC5710080), on national bans in Brazil and Australia",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: 'In 2009, Brazil imposed a general ban on sunbeds, becoming the first country to do so'; the decision came from ANVISA, based on IARC's classification (RDC 56/2009). WHO (2017, search excerpt): 'Brazil and Australia have banned commercial sunbeds.' Some salons' lawsuits against the ban are ongoing. Title of PMC5710080 to be confirmed when the page is opened. Date (search excerpts: saude.mg.gov.br copy of RDC 56 'de 9 de novembro de 2009'; contabeis.com.br): dated 9 Nov 2009, published 11 Nov 2009; bans import, sale, rental and use for aesthetic purposes. IARC's decision was published in Lancet Oncology in late July/August 2009 (c2), so 'within months'. The ban has been challenged in court (a 2010 São Paulo federal ruling voided it; higher courts, including the STJ, upheld it; sources conflict on its present reach); the film says only that Brazil banned them.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c9",
+  "sentence": "Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them too.",
+  "claim": "Australia banned commercial solariums from 1 January 2015 in most states and territories (NSW, Victoria, SA, Tasmania, Queensland, ACT), and in Western Australia from 1 January 2016.",
+  "source_url": "https://www.cancer.org.au/about-us/policy-and-advocacy/prevention/uv-radiation/related-resources/solariums",
+  "source_title": "Solariums (Cancer Council Australia, policy and advocacy)",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: 'Commercial solariums were banned in Australia from 1 January 2015'; in effect that day in NSW, Victoria, SA, Tasmania, Queensland and the ACT; Western Australia from 1 January 2016; 'the second nation after Brazil'. PMC5710080: 'by 1 January 2016, all six Australian states' had banned commercial sunbeds. The film's sentence ('switched off every commercial bed in the land') covers both dates; the screen shows 2015–16 (most states 2015, Western Australia 2016).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c10",
+  "sentence": "And those long rays reach right through the top layer, on most skin about as thin as paper.",
+  "claim": "Longer-wavelength UVA penetrates through the epidermis well into the dermis, whereas UVB is almost entirely absorbed in the epidermis.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3709783/",
+  "source_title": "D'Orazio J, Jarrett S, Amaro-Ortiz A, Scott T. UV radiation and the skin. Int J Mol Sci 2013;14:12222–12248",
+  "accessed": "2026-11-02",
+  "note": "Excerpt (figure 3 caption): 'Longer wavelength UVA penetrates deeply into the dermis reaching well into the dermis. In contrast, UVB is almost completely absorbed by the epidermis, with comparatively little reaching the dermis.' UK government 'UVR and the skin' (search excerpt): 'longer wavelengths having deeper penetration'. Not all of it gets through: a share is absorbed or scattered on the way; 'reach past' is the dermis-reaching fraction.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c11",
+  "sentence": "And those long rays reach right through the top layer, on most skin about as thin as paper.",
+  "claim": "The epidermis is usually about 0.1 mm thick (0.07–0.12 mm), thicker on the palms and soles; a sheet of office paper is about 0.1 mm.",
+  "source_url": "https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml",
+  "source_title": "Atlas of Microscopic Anatomy, Section 7: Integument (Anatomy Atlases, Bergman, Afifi & Heidger)",
+  "accessed": "2026-11-02",
+  "note": "Excerpt: the epidermis 'varies in thickness in different regions of the body but is usually 0.1 mm thick (given ranges are from 0.07 to 0.12 mm)'; palms and soles 0.8 to 1.4 mm. Hence 'on most skin'. Paper ≈ 100 µm is the series' standing scale mark (bible §6).",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c12",
+  "sentence": "The sun made that list years before the beds.",
+  "claim": "IARC classified solar radiation as Group 1, carcinogenic to humans, in 1992 (Monographs Vol. 55), when the use of sunlamps and sunbeds was classified Group 2A, 'probably carcinogenic'; tanning devices moved to Group 1 only in 2009, 17 years later.",
+  "source_url": "https://inchem.org/documents/iarc/vol55/solar-and-uv-radiation.html",
+  "source_title": "IARC Monographs Vol. 55, Solar and Ultraviolet Radiation (1992): Summaries & Evaluations (INCHEM); IARC publications page https://publications.iarc.fr/73",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: Vol. 55 working group met in Lyon, 11–18 February 1992; 'solar radiation is carcinogenic to humans (Group 1)'; UVA, UVB, UVC and 'use of sunlamps and sunbeds' 'probably carcinogenic to humans (Group 2A)'. 2009 upgrade of tanning devices (and UV radiation as a whole) to Group 1: ecancer reports on the Lancet Oncology special report (see c2). 'Years before' stands for 17 years; the screen shows 1992 and 2009. Read as the evidence being sure sooner, not as the sun being more or less harmful than the beds.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ },
+ {
+  "id": "c13",
+  "sentence": "Same list as cigarettes: not the same harm, the same certainty.",
+  "claim": "Tanning devices and tobacco smoking are both IARC Group 1 (sufficient evidence of carcinogenicity in humans); that shared group reflects the strength of evidence, and tobacco causes far more cancers.",
+  "source_url": "https://fullfact.org/health/sunbeds-smoking-dhsc-iarc/",
+  "source_title": "Government publishes misleading information about the dangers of sunbeds (Full Fact, 2026)",
+  "accessed": "2026-11-02",
+  "note": "Excerpts: the shared classification 'doesn't support the claim that sunbeds and smoking are equally dangerous, because of a subtle distinction in IARC's classifications'; Cancer Research UK: 'that doesn't mean they cause the same number of cases of cancer. Tobacco has a much bigger impact on cancer cases.' As c1 and c2. 'Certainty' stands for IARC's 'carcinogenic to humans' (the top evidence category), not certainty of harm to any one person.",
+  "verified_via": "search excerpt",
+  "status": "ok"
+ }
+]

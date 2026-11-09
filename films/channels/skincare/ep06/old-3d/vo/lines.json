@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep06/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Same list as cigarettes? Processed meat is on it too.",
+   "stars": [
+    "meat"
+   ],
+   "phonemes": "sˈeɪm lˈɪst az sˌɪɡəɹˈɛts? pɹˈəʊsɛst mˈiːt ɪz ˌɒn ɪt tˈuː.",
+   "speed": 0.84,
+   "file": "01.wav",
+   "dur": 3.734,
+   "sha256": "e99c2fc6e7acaa9db4161d90fa52bf27f9289d12a2449b503f39af316148fc96"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "All three share the top group of the World Health Organization's cancer agency, which says that doesn't make them equally dangerous: it ranks how sure the evidence is.",
+   "stars": [
+    "sure"
+   ],
+   "phonemes": "ˈɔːl θɹˈiː ʃˈeə ðə tˈɒp ɡɹˈuːp ɒvðə wˈɜːld hˈɛlθ ˌɔːɡɐnaɪzˈeɪʃənz kˈansəɹ ˈeɪdʒənsi, wˌɪtʃ sˈɛz ðat dˈʌzənt mˌeɪk ðˌɛm ˈiːkwəli dˈeɪndʒəɹəs: ɪt ɹˈaŋks hˌaʊ ʃˈʊə ðɪ ˈɛvɪdəns ɪz.",
+   "speed": 0.84,
+   "file": "02.wav",
+   "dur": 10.406,
+   "sha256": "3bd793d2fdaeebd44a93425f5441a0d8ac7e86f76eb760025a881f5f6c864ce4"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Into the bed, then: its light is mostly UVA, the long rays. In large, powerful units, it may be ten to fifteen times as intense as the midday sun.",
+   "stars": [
+    "sun"
+   ],
+   "phonemes": "ˌɪntʊ ðə bˈɛd, ðˈɛn: ɪts lˈaɪt ɪz mˈəʊstli jˌuːviːˈeɪ , ðə lˈɒŋ ɹˈeɪz. ɪn lˈɑːdʒ, pˈaʊəfəl jˈuːnɪts, ɪt mˈeɪ biː tˈɛn tə fˈɪftiːn tˈaɪmz az ɪntˈɛns az ðə mˌɪddˈeɪ sˈʌn.",
+   "speed": 0.79,
+   "file": "03.wav",
+   "dur": 11.758,
+   "sha256": "55b1a20e981a2093ceee5a5d2293a40bd1330d1605b50150ed84e0c7122b4631"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "When the beds joined that group, the sharpest signal came from people who started young. In pooled studies, first use before thirty-five went with melanoma risk raised by more than half.",
+   "stars": [
+    "half"
+   ],
+   "phonemes": "wˌɛn ðə bˈɛdz dʒˈɔɪnd ðat ɡɹˈuːp, ðə ʃˈɑːpɪst sˈɪɡnəl kˈeɪm fɹɒm pˈiːpəl hˌuː stˈɑːtɪd jˈʌŋ. ɪn pˈuːld stˈʌdiz, fˈɜːst jˈuːs bɪfˌɔː θˈɜːtifˈaɪv wˈɛnt wɪð mˌɛləˈnəʊmə ɹˈɪsk ɹˈeɪzd baɪ mˈɔː ðɐn hˈɑːf.",
+   "speed": 0.92,
+   "file": "04.wav",
+   "dur": 10.784,
+   "sha256": "e226bd44549141821f44b80ae8a8d2fcdb5e10a20cc5be9b34c3732af87094a2"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Whole countries acted: Australia switched off every commercial bed in the land, and Brazil banned them too.",
+   "stars": [
+    "too"
+   ],
+   "phonemes": "hˈəʊl kˈʌntɹiz ˈaktɪd: ɒstɹˈeɪliə swˈɪtʃt ˈɒf ˈɛvɹɪ kəmˈɜːʃəl bˈɛd ɪnðə lˈand, and bɹɐzˈɪl bˈand ðˌɛm tˈuː.",
+   "speed": 0.96,
+   "file": "05.wav",
+   "dur": 6.191,
+   "sha256": "ad76e8e7f0f40692cb32724b0bff969eea57c09ec8f56368f32bffd7dcbfe32a"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "And those long rays reach right through the top layer, on most skin about as thin as paper.",
+   "stars": [
+    "paper"
+   ],
+   "phonemes": "and ðəʊz lˈɒŋ ɹˈeɪz ɹˈiːtʃ ɹˈaɪt θɹuː ðə tˈɒp lˈeɪə, ˌɒn mˈəʊst skˈɪn ɐbˌaʊt az θˈɪn az pˈeɪpə.",
+   "speed": 0.76,
+   "file": "06.wav",
+   "dur": 6.391,
+   "sha256": "6046566843164ae68214be1a99911c82082bd7a5622bea0298940c9dcc7a8095"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "The sun made that list years before the beds. Same list as cigarettes: not the same harm, the same certainty.",
+   "stars": [
+    "certainty"
+   ],
+   "phonemes": "ðə sˈʌn mˌeɪd ðat lˈɪst jˈiəz bɪfˌɔː ðə bˈɛdz. sˈeɪm lˈɪst az sˌɪɡəɹˈɛts: nˌɒt ðə sˈeɪm hˈɑːm, ðə sˈeɪm sˈɜːtənti.",
+   "speed": 0.77,
+   "file": "07.wav",
+   "dur": 8.096,
+   "sha256": "f7f53a89fe5facc9e4f3855e91ae6b5933560ca8c3fea07114c1fdb48a29eab0"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next season: why do bath fingers wrinkle, but never your arm?",
+   "stars": [
+    "arm"
+   ],
+   "phonemes": "nˈɛkst sˈiːzən: wˌaɪ dˈuː bˈaθ fˈɪŋɡəz ɹˈɪŋkəl, bˌʌt nˈɛvə jɔːɹ ˈɑːm?",
+   "speed": 0.84,
+   "file": "08.wav",
+   "dur": 3.922,
+   "sha256": "78befc9d98284c445ad6e9cad98800ac11eed7f2ca9f6dfc97e21229e104df72"
+  }
+ ]
+}

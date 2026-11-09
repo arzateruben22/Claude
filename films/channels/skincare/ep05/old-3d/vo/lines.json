@@ -1,0 +1,117 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.17",
+ "made_by": "films/channels/skincare/ep05/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Which hand aged? In four and a half years, one showed no detectable ageing.",
+   "stars": [
+    "aged"
+   ],
+   "phonemes": "wˌɪtʃ hˈand ˈeɪdʒd? ɪn fˈɔː and ɐ hˈɑːf jˈiəz, wˈɒn ʃˈəʊd nˈəʊ dɪtˈɛktəbəl ˈeɪdʒɪŋ.",
+   "speed": 0.88,
+   "file": "01.wav",
+   "dur": 4.683,
+   "sha256": "530f4e1514ade012cf2c85a93a6c0f7cbc1884c59123faff5174fe95814fb63f"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "They belong to two neighbours in Nambour, a Queensland town where pure chance decided who would wear sunscreen every morning. Head, neck, arms and hands, before the day began.",
+   "stars": [
+    "morning"
+   ],
+   "phonemes": "ðeɪ bɪlˈɒŋ tə tˈuː nˈeɪbəz ˈɪn nˈæmbɔː , ˈeɪ kwˈiːnzlənd tˈaʊn wˌeə pjˈʊə tʃˈans dɪsˈaɪdɪd hˌuː wʊd wˈeə sˈʌnskɹiːn ˈɛvɹɪ mˈɔːnɪŋ. hˈɛd, nˈɛk, ˈɑːmz and hˈandz, bɪfˌɔː ðə dˈeɪ bɪɡˈan.",
+   "speed": 0.9,
+   "file": "02.wav",
+   "dur": 10.225,
+   "sha256": "0bdeabab42f956e5b9f9e97a29bfaa82f2f04dd8dc5cd1d99fa02b0fd8fcc801"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "It was never sunscreen against none: the others could use it whenever they pleased, or not at all. Researchers read the fine lines in silicone casts of hands.",
+   "stars": [
+    "none"
+   ],
+   "phonemes": "ɪt wɒz nˈɛvə sˈʌnskɹiːn ɐɡˈɛnst nˈɒn: ðɪ ˈʌðəz kʊd jˈuːz ɪt wɛnˌɛvə ðeɪ plˈiːzd, ɔː nˌɒt at ˈɔːl. ɹɪsˈɜːtʃəz ɹˈiːd ðə fˈaɪn lˈaɪnz ɪn sˈɪlɪkˌəʊn kˈasts ɒv hˈandz.",
+   "speed": 0.81,
+   "file": "03.wav",
+   "dur": 10.291,
+   "sha256": "1771fa32ef9b26bb523aea94a5a9c8e0dc60892d7b11cc0674fb339ba72ba4f8"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "It's easy to think sun damage is the burn you feel. But an ultraviolet camera reveals damage the naked eye misses, long before it shows on the surface.",
+   "stars": [
+    "surface"
+   ],
+   "phonemes": "ɪts ˈiːzi tə θˈɪŋk sˈʌn dˈamɪdʒ ɪz ðə bˈɜːn juː fˈiːl. bˌʌt ɐn ˌʊltɹɐvˈaɪəlɪt kˈamɹə ɹɪvˈiːlz dˈamɪdʒ ðə nˈeɪkɪd ˈaɪ mˈɪsɪz, lˈɒŋ bɪfˌɔːɹ ɪt ʃˈəʊz ɒnðə sˈɜːfɪs.",
+   "speed": 0.84,
+   "file": "04.wav",
+   "dur": 10.076,
+   "sha256": "11bdd384821ea30220f1e10f948f1f2c7c595b10c11c66e4619845e1aacc06fb"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "And they were followed for ten more years. Melanoma, the most serious skin cancer, came out at about half, in numbers too small to be sure.",
+   "stars": [
+    "half"
+   ],
+   "phonemes": "and ðeɪ wɜː fˈɒləʊd fɔː tˈɛn mˈɔː jˈiəz. mˌɛlənˈəʊmə , ðə mˈəʊst sˈiəɹiəs skˈɪn kˈansə, kˈeɪm ˈaʊt at ɐbˌaʊt hˈɑːf, ɪn nˈʌmbəz tˈuː smˈɔːl təbi ʃˈʊə.",
+   "speed": 0.8,
+   "file": "05.wav",
+   "dur": 9.589,
+   "sha256": "449d60a9d922800734383f93d0b0edd6a7c97853d683f32a646026c21fc16531"
+  },
+  {
+   "id": "vo06",
+   "beat": "toscale",
+   "text": "At a lab's test dose, that morning layer is about a fifth of a paper's thickness.",
+   "stars": [
+    "thickness"
+   ],
+   "phonemes": "atə lˈabz tˈɛst dˈəʊs, ðat mˈɔːnɪŋ lˈeɪəɹ ɪz ɐbˌaʊt ɐ fˈɪfθ əvə pˈeɪpəz θˈɪknəs.",
+   "speed": 0.79,
+   "file": "06.wav",
+   "dur": 5.809,
+   "sha256": "e039ac9558e4af8d792a2ce68379ffd3f3fca585ed17daf0a9d4e67720136060"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "So, which hand aged? Both groups missed mornings; one missed fewer, and the skin kept count.",
+   "stars": [
+    "count"
+   ],
+   "phonemes": "sˈəʊ, wˌɪtʃ hˈand ˈeɪdʒd? bˈəʊθ ɡɹˈuːps mˈɪst mˈɔːnɪŋz; wˈɒn mˈɪst fjˈuːə, and ðə skˈɪn kˈɛpt kˈaʊnt.",
+   "speed": 0.89,
+   "file": "07.wav",
+   "dur": 5.346,
+   "sha256": "1c15b06e5f7109862fb1f1bcf3aff25b837e8b104790ae375f4c9aeff3d76c40"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: tanning beds share a list with cigarettes. Same list, same risk?",
+   "stars": [
+    "risk"
+   ],
+   "phonemes": "nˈɛkst: tˈanɪŋ bˈɛdz ʃˈeəɹ ɐ lˈɪst wɪð sˌɪɡəɹˈɛts. sˈeɪm lˈɪst, sˈeɪm ɹˈɪsk?",
+   "speed": 0.91,
+   "file": "08.wav",
+   "dur": 4.382,
+   "sha256": "c90c82b6bddc4fcea044edd8fdb852c53ff364c98441f04bfa5144616113a474"
+  }
+ ]
+}
