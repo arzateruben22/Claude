@@ -1,0 +1,978 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "How does sweat cool you? It works by drying.",
+   "heard": "How does sweat cool you? It works by drying.",
+   "words": [
+    {
+     "w": "How",
+     "start": 0.05,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 0.335,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "sweat",
+     "start": 0.63,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "cool",
+     "start": 0.96,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "you?",
+     "start": 1.355,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 1.92,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "works",
+     "start": 2.005,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 2.56,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "drying.",
+     "start": 2.81,
+     "end": 3.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "You have about two to four million sweat glands. They sit in both hairy and hairless skin. Each is a tiny coil with a thin tube that leads to the surface. When you heat up, they release sweat.",
+   "heard": "You have about two to four million sweat glands. They sit in both hairy and hairless skin. Each is a tiny coil with a thin tube that leads to the surface. When you heat up, they release sweat.",
+   "words": [
+    {
+     "w": "You",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 0.2,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.49,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 0.815,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.115,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 1.35,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "million",
+     "start": 1.58,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "sweat",
+     "start": 2.11,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "glands.",
+     "start": 2.58,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 3.735,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "sit",
+     "start": 3.765,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 4.135,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "both",
+     "start": 4.355,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "hairy",
+     "start": 4.57,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.22,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "hairless",
+     "start": 5.485,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "skin.",
+     "start": 6.225,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "Each",
+     "start": 7.2,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 7.44,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.825,
+     "end": 7.875,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 7.93,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "coil",
+     "start": 8.32,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 8.885,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.145,
+     "end": 9.195,
+     "heard": true
+    },
+    {
+     "w": "thin",
+     "start": 9.175,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "tube",
+     "start": 9.48,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 9.935,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "leads",
+     "start": 10.065,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 10.545,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.66,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "surface.",
+     "start": 10.86,
+     "end": 11.92,
+     "heard": true
+    },
+    {
+     "w": "When",
+     "start": 12.09,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 12.12,
+     "end": 12.32,
+     "heard": true
+    },
+    {
+     "w": "heat",
+     "start": 12.34,
+     "end": 12.64,
+     "heard": true
+    },
+    {
+     "w": "up,",
+     "start": 12.575,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 12.97,
+     "end": 13.12,
+     "heard": true
+    },
+    {
+     "w": "release",
+     "start": 13.14,
+     "end": 13.52,
+     "heard": true
+    },
+    {
+     "w": "sweat.",
+     "start": 13.45,
+     "end": 14.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "As the water in sweat turns to vapour, it takes heat from your skin. Each gram of sweat that dries carries away about two thousand four hundred joules.",
+   "heard": "As the water in sweat turns to vapour, it takes heat from your skin. Each gram of sweat that dries carries away about two thousand four hundred jewels.",
+   "words": [
+    {
+     "w": "As",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.295,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 0.44,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 0.775,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "sweat",
+     "start": 1.21,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "turns",
+     "start": 1.56,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.075,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "vapour,",
+     "start": 2.215,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.245,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 3.395,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "heat",
+     "start": 3.675,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 4.095,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 4.495,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "skin.",
+     "start": 4.72,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "Each",
+     "start": 5.795,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "gram",
+     "start": 6.24,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 6.575,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "sweat",
+     "start": 6.805,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 7.105,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "dries",
+     "start": 7.285,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "carries",
+     "start": 7.88,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "away",
+     "start": 8.3,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 8.79,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 9.125,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "thousand",
+     "start": 9.43,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 9.94,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 10.21,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "joules.",
+     "start": 10.605,
+     "end": 10.86,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "That is why you sweat more in hot places and during hard exercise. When heavy clothing covers the skin, less heat escapes by evaporation. Your body is using water to move heat out.",
+   "heard": "That is why you sweat more in hot places and during hard exercise. When heavy clothing covers the skin, less heat escapes by evaporation. Your body is using water to move heat out.",
+   "words": [
+    {
+     "w": "That",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.25,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "why",
+     "start": 0.42,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.705,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "sweat",
+     "start": 0.795,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 1.16,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.41,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "hot",
+     "start": 1.54,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "places",
+     "start": 1.76,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.315,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "during",
+     "start": 2.495,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "hard",
+     "start": 2.805,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "exercise.",
+     "start": 3.125,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "When",
+     "start": 4.6,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "heavy",
+     "start": 4.63,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "clothing",
+     "start": 5.095,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "covers",
+     "start": 5.59,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.95,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "skin,",
+     "start": 6.215,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "less",
+     "start": 6.94,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "heat",
+     "start": 7.21,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "escapes",
+     "start": 7.395,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 8.065,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "evaporation.",
+     "start": 8.335,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "Your",
+     "start": 9.735,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "body",
+     "start": 9.955,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 10.085,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "using",
+     "start": 10.35,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 10.53,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 10.905,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "move",
+     "start": 11.085,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "heat",
+     "start": 11.5,
+     "end": 11.76,
+     "heard": true
+    },
+    {
+     "w": "out.",
+     "start": 11.68,
+     "end": 12.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Here is the twist. Sweat's job is cooling, not cleaning. Waste leaves mostly through the kidneys and gut.",
+   "heard": "Here is the twist. Sweat's job is cooling, not cleaning. Waste leaves mostly through the kidneys and gut.",
+   "words": [
+    {
+     "w": "Here",
+     "start": 0.035,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.37,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.565,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "twist.",
+     "start": 0.67,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "Sweat's",
+     "start": 1.62,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "job",
+     "start": 2.035,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.29,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "cooling,",
+     "start": 2.51,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 3.135,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "cleaning.",
+     "start": 3.2,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "Waste",
+     "start": 4.125,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "leaves",
+     "start": 4.49,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "mostly",
+     "start": 4.82,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 5.13,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.555,
+     "end": 5.605,
+     "heard": true
+    },
+    {
+     "w": "kidneys",
+     "start": 5.585,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.01,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "gut.",
+     "start": 6.205,
+     "end": 6.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "So sweat cools you when it dries. Its job is cooling, not cleaning.",
+   "heard": "So sweat cools you when it dries. Its job is cooling, not cleaning.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.16,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "sweat",
+     "start": 0.46,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "cools",
+     "start": 0.79,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.285,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "when",
+     "start": 1.42,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.7,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "dries.",
+     "start": 1.76,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "Its",
+     "start": 2.85,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "job",
+     "start": 3.16,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.47,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "cooling,",
+     "start": 3.775,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 4.49,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "cleaning.",
+     "start": 4.695,
+     "end": 5.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Next: what a tan really is. Pigment can form a cap over a cell's nucleus.",
+   "heard": "Next, what a tan really is. Pigment can form a cap over a cell's nucleus.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.16,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 0.59,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.97,
+     "end": 1.02,
+     "heard": true
+    },
+    {
+     "w": "tan",
+     "start": 1.0,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "really",
+     "start": 1.595,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "is.",
+     "start": 2.005,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "Pigment",
+     "start": 2.71,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 3.315,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "form",
+     "start": 3.55,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.855,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "cap",
+     "start": 3.96,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 4.305,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.47,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "cell's",
+     "start": 4.675,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "nucleus.",
+     "start": 5.23,
+     "end": 6.16,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,98 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/skincare/ep11/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why don't you dry out? Your skin has a brick wall.",
+   "stars": [
+    "out"
+   ],
+   "phonemes": "wˌaɪ dˈəʊnt juː dɹˈaɪ ˈaʊt? jɔː skˈɪn hɐz ɐ bɹˈɪk wˈɔːl.",
+   "speed": 0.742,
+   "file": "01.wav",
+   "dur": 3.965,
+   "sha256": "7ce1978db2dda3ae7f127e83a4a4c8236981d6a19b0d774bbc3f8a48659b1afc"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Its outer layer, the stratum corneum, is the barrier. Flat dead cells are the bricks. Fats between them are the mortar. A scientist named Peter Elias called it that.",
+   "stars": [],
+   "phonemes": "ɪts ˈaʊtə lˈeɪə, ðə stɹˈɑːtəm kˈɔːnɪəm , ɪz ðə bˈaɹiə. flˈat dˈɛd sˈɛlz ɑː ðə bɹˈɪks. fˈats bɪtwˌiːn ðˌɛm ɑː ðə mˈɔːtə. ɐ sˈaɪəntɪst nˈeɪmd pˈiːtə ɪlˈaɪəs kˈɔːld ɪt ðˈat.",
+   "speed": 0.83,
+   "file": "02.wav",
+   "dur": 10.699,
+   "sha256": "5a904f91950395315d47b2fa36714a33a0eca47788c039d7acf4b46f766efff2"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "The mortar is stacked sheets of fat, wrapped around each cell. That makes a semi-permeable barrier, which is what lets life live on land.",
+   "stars": [],
+   "phonemes": "ðə mˈɔːtəɹ ɪz stˈakt ʃˈiːts ɒv fˈat, ɹˈapt ɐɹˈaʊnd ˈiːtʃ sˈɛl. ðat mˌeɪks ɐ sˈɛmipˈɜːməbəl bˈaɹiə, wˌɪtʃ ɪz wɒt lˈɛts lˈaɪf lˈaɪv ˌɒn lˈand.",
+   "speed": 0.8,
+   "file": "03.wav",
+   "dur": 9.098,
+   "sha256": "6cefcef2a0658c32e57907e6dfaabc52032f3675427d4caede3e533252b37da9"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "That wall is the skin's first line of defence against germs, allergens and water loss. Water stays in, and germs stay out. It is not a single tough sheet. It is a system of cells, fats and acids.",
+   "stars": [],
+   "phonemes": "ðat wˈɔːl ɪz ðə skˈɪnz fˈɜːst lˈaɪn ɒv dɪfˈɛns ɐɡˈɛnst dʒˈɜːmz, ˈalədʒənz and wˈɔːtə lˈɒs. wˈɔːtə stˈeɪz ˈɪn, and dʒˈɜːmz stˈeɪ ˈaʊt. ɪt ɪz nˌɒtə sˈɪŋɡəl tˈʌf ʃˈiːt. ɪt ɪz ɐ sˈɪstəm ɒv sˈɛlz, fˈats and ˈasɪdz.",
+   "speed": 0.79,
+   "file": "04.wav",
+   "dur": 15.224,
+   "sha256": "d9dac3d9367d59c5dce7d3468b94502338d591d70979d31229ef937c89425ad1"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Here is the twist. The bricks are not the tight part. Most dissolved substances pass through the cells more easily than through the fats.",
+   "stars": [
+    "fats"
+   ],
+   "phonemes": "hˈiəɹ ɪz ðə twˈɪst. ðə bɹˈɪks ɑː nˌɒt ðə tˈaɪt pˈɑːt. mˈəʊst dɪsˈɒlvd sˈʌbstənsɪz pˈas θɹuː ðə sˈɛlz mˈɔːɹ ˈiːzili ðɐn θɹuː ðə fˈats.",
+   "speed": 0.79,
+   "file": "05.wav",
+   "dur": 9.584,
+   "sha256": "5a8049b9d912d9c91deb9a26e2f466463f7664524efe23a15c43d65bef3184bd"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So your skin's wall is bricks and fats, working as a team. The fats are the tight part.",
+   "stars": [
+    "part"
+   ],
+   "phonemes": "sˌəʊ jɔː skˈɪnz wˈɔːl ɪz bɹˈɪks and fˈats, wˈɜːkɪŋ az ɐ tˈiːm. ðə fˈats ɑː ðə tˈaɪt pˈɑːt.",
+   "speed": 0.75,
+   "file": "06.wav",
+   "dur": 6.704,
+   "sha256": "ac028964e05fa8a9e64591af397d30a6abdca4656b130abad8addd6683cebc2c"
+  },
+  {
+   "id": "vo07",
+   "beat": "tease",
+   "text": "Next: fingerprints, formed before birth. The pattern spreads in waves.",
+   "stars": [
+    "waves"
+   ],
+   "phonemes": "nˈɛkst: fˈɪŋɡəpɹˌɪnts, fˈɔːmd bɪfˌɔː bˈɜːθ. ðə pˈatən spɹˈɛdz ɪn wˈeɪvz.",
+   "speed": 1.0,
+   "file": "07.wav",
+   "dur": 3.991,
+   "sha256": "d4232c01d886f0921ebf4ef1ef67c749bc34ae1602a65270243e6d95ffdfa923"
+  }
+ ]
+}

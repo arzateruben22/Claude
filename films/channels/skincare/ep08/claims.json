@@ -1,0 +1,178 @@
+[
+ {
+  "id": "c1",
+  "sentence": "It's your nerves, not only the water.",
+  "claim": "Water-induced finger wrinkling is an active process controlled by the autonomic nervous system.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/23302867/",
+  "source_title": "Kareklas, Nettle & Smulders, Biol Lett 2013 (PubMed 23302867)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'The formation of these wrinkles is known to be an active process, controlled by the autonomic nervous system.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "After about fifteen minutes in water, the hairless skin on your hands and feet has folded deeply.",
+  "claim": "Upon continued submersion in water, the glabrous (hairless) skin on human hands and feet forms wrinkles.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/23302867/",
+  "source_title": "Kareklas, Nettle & Smulders, Biol Lett 2013 (PubMed 23302867)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'Upon continued submersion in water, the glabrous skin on human hands and feet forms wrinkles.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "After about fifteen minutes in water, the hairless skin on your hands and feet has folded deeply.",
+  "claim": "In 24 healthy adults, grade III finger wrinkling took a mean of 13.9 minutes in room-temperature filtered water.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/40451152/",
+  "source_title": "Skin Pharmacol Physiol 2025 (PubMed 40451152)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'compared to RTFW (mean: 6.4 vs. 13.9 min; p < 0.01)'. 'About fifteen minutes' rounds 13.9 up; time varies with conditions (warm acidic water 4.0 min). A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "It is an active process, run by your nervous system.",
+  "claim": "Water-induced finger wrinkling is an active process controlled by the autonomic nervous system.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/23302867/",
+  "source_title": "Kareklas, Nettle & Smulders, Biol Lett 2013 (PubMed 23302867)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'The formation of these wrinkles is known to be an active process, controlled by the autonomic nervous system.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "When nerves tell the tiny blood vessels in your fingertips to narrow, the tissue below shrinks a little.",
+  "claim": "Stimulated skin wrinkling depends on digital vasoconstriction mediated via sympathetic nerve fibres; vasoconstriction is postulated to drive wrinkling through loss of digit volume, which pulls on the overlying skin.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/25216595/",
+  "source_title": "Clin Neurophysiol 2015 (PubMed 25216595)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'dependent on digital vasoconstriction mediated via sympathetic nerve fibers. Vasoconstriction is postulated to drive wrinkling through loss of digit volume, which induces a negative pressure in the digit pulp and exerts a downward pull on the overlying skin and ultimately results in wrinkles.' Hedged in the voice ('Scientists think'). A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "Scientists think the skin above then folds into ridges.",
+  "claim": "Stimulated skin wrinkling depends on digital vasoconstriction mediated via sympathetic nerve fibres; vasoconstriction is postulated to drive wrinkling through loss of digit volume, which pulls on the overlying skin.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/25216595/",
+  "source_title": "Clin Neurophysiol 2015 (PubMed 25216595)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'dependent on digital vasoconstriction mediated via sympathetic nerve fibers. Vasoconstriction is postulated to drive wrinkling through loss of digit volume, which induces a negative pressure in the digit pulp and exerts a downward pull on the overlying skin and ultimately results in wrinkles.' Hedged in the voice ('Scientists think'). A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "Doctors have used this to test nerves for over eighty years.",
+  "claim": "The skin-wrinkling test has been used as a test of sympathetic function for more than 80 years.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/25216595/",
+  "source_title": "Clin Neurophysiol 2015 (PubMed 25216595)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: '…function for more than 80 years' (first half of the sentence not visible in the efetch text read; a person opens the page). Braham 1979: PubMed 420620. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "When the nerves to a finger are damaged, the finger does not wrinkle.",
+  "claim": "Skin wrinkling of the fingers after immersion depends on intact sympathetic innervation and is abolished by lesions of central and peripheral sympathetic pathways.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/420620/",
+  "source_title": "Braham et al., Arch Neurol 1979 (PubMed 420620)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'depends on intact sympathetic innervation. It is abolished by lesions affecting both central and peripheral sympathetic pathways.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c9",
+  "sentence": "So the wrinkles are a sign of working nerves, not just soaking.",
+  "claim": "Skin wrinkling of the fingers after immersion depends on intact sympathetic innervation and is abolished by lesions of central and peripheral sympathetic pathways.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/420620/",
+  "source_title": "Braham et al., Arch Neurol 1979 (PubMed 420620)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'depends on intact sympathetic innervation. It is abolished by lesions affecting both central and peripheral sympathetic pathways.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c10",
+  "sentence": "One idea is grip.",
+  "claim": "In one study, submerged objects were handled faster with wrinkled fingers than unwrinkled fingers; the authors suggest wrinkles may be an adaptation for handling wet objects.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/23302867/",
+  "source_title": "Kareklas, Nettle & Smulders, Biol Lett 2013 (PubMed 23302867)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'submerged objects are handled more quickly with wrinkled fingers than with unwrinkled fingers… suggest that they may be an adaptation'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c11",
+  "sentence": "In one study, people handled wet objects faster with wrinkled fingers.",
+  "claim": "In one study, submerged objects were handled faster with wrinkled fingers than unwrinkled fingers; the authors suggest wrinkles may be an adaptation for handling wet objects.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/23302867/",
+  "source_title": "Kareklas, Nettle & Smulders, Biol Lett 2013 (PubMed 23302867)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'submerged objects are handled more quickly with wrinkled fingers than with unwrinkled fingers… suggest that they may be an adaptation'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c12",
+  "sentence": "A later study found no difference.",
+  "claim": "A later study (n = 40) found wrinkling did not improve dexterity in handling wet objects nor affect touch sensitivity.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/24416318/",
+  "source_title": "Kareklas et al., PLoS One 2014 (PubMed 24416318)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'skin wrinkling did not improve dexterity in handling wet objects nor did it affect any aspect of touch sensitivity measured'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c13",
+  "sentence": "So wrinkled fingers are your nerves at work.",
+  "claim": "Water-induced finger wrinkling is an active process controlled by the autonomic nervous system.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/23302867/",
+  "source_title": "Kareklas, Nettle & Smulders, Biol Lett 2013 (PubMed 23302867)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'The formation of these wrinkles is known to be an active process, controlled by the autonomic nervous system.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c14",
+  "sentence": "Whether they help you grip is still debated.",
+  "claim": "In one study, submerged objects were handled faster with wrinkled fingers than unwrinkled fingers; the authors suggest wrinkles may be an adaptation for handling wet objects.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/23302867/",
+  "source_title": "Kareklas, Nettle & Smulders, Biol Lett 2013 (PubMed 23302867)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'submerged objects are handled more quickly with wrinkled fingers than with unwrinkled fingers… suggest that they may be an adaptation'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c15",
+  "sentence": "Whether they help you grip is still debated.",
+  "claim": "A later study (n = 40) found wrinkling did not improve dexterity in handling wet objects nor affect touch sensitivity.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/24416318/",
+  "source_title": "Kareklas et al., PLoS One 2014 (PubMed 24416318)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'skin wrinkling did not improve dexterity in handling wet objects nor did it affect any aspect of touch sensitivity measured'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c16",
+  "sentence": "Cooling happens when sweat dries.",
+  "claim": "Sweat evaporation from the skin surface plays a critical role in human thermoregulation.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238 introduction: 'Sweat evaporation from the skin surface plays a critical role in human thermoregulation'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ }
+]

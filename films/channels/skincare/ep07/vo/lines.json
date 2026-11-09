@@ -1,0 +1,98 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/skincare/ep07/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why do you get goosebumps? A tiny muscle on every hair pulls.",
+   "stars": [
+    "goosebumps"
+   ],
+   "phonemes": "wˌaɪ dˈuː juː ɡɛt ɡˈuːsbʌmps? ɐ tˈaɪni mˈʌsəl ˌɒn ˈɛvɹɪ hˈeə pˈʊlz.",
+   "speed": 0.85,
+   "file": "01.wav",
+   "dur": 4.019,
+   "sha256": "66dab8694b66c5ba78457f220b7d5e440e2577f137ec84ba4ef5f31d659bce28"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Cold makes nerves in your skin send a signal. That signal tells a tiny muscle beside each hair to tighten.",
+   "stars": [],
+   "phonemes": "kˈəʊld mˌeɪks nˈɜːvz ɪn jɔː skˈɪn sˈɛnd ɐ sˈɪɡnəl. ðat sˈɪɡnəl tˈɛlz ɐ tˈaɪni mˈʌsəl bɪsˌaɪd ˈiːtʃ hˈeə tə tˈaɪtən.",
+   "speed": 0.77,
+   "file": "02.wav",
+   "dur": 8.253,
+   "sha256": "539f3b89e3bc21e6a0fd7d2a2166c66e14e66fe39d5d2a3869c566992e2df70f"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Under the skin, each tiny muscle is woven through with nerve fibres. At its other end, it is attached to the bulge of the hair follicle, the pocket the hair grows from.",
+   "stars": [],
+   "phonemes": "ˌʌndə ðə skˈɪn, ˈiːtʃ tˈaɪni mˈʌsəl ɪz wˈəʊvən θɹuː wɪð nˈɜːv fˈaɪbəz. at ɪts ˈʌðəɹ ˈɛnd, ɪt ɪz ɐtˈatʃt tə ðə bˈʌldʒ ɒvðə hˈeə fˈɒlɪkəl, ðə pˈɒkɪt ðə hˈeə ɡɹˈəʊz fɹɒm.",
+   "speed": 0.75,
+   "file": "03.wav",
+   "dur": 12.757,
+   "sha256": "8d1e448c3e45541c7dc4b0ed8fa22a40b75950ab7208fcf020fea147080dbf73"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "When the nerve fires, the muscle shortens and pulls the hair upright. In people, that no longer helps keep us warm. Yet the muscle, the nerve and the follicle are still wired together across mammals.",
+   "stars": [],
+   "phonemes": "wˌɛn ðə nˈɜːv fˈaɪəz, ðə mˈʌsəl ʃˈɔːtənz and pˈʊlz ðə hˈeəɹ ˈʌpɹaɪt. ɪn pˈiːpəl, ðat nˌəʊ lˈɒŋɡə hˈɛlps kˈiːp ˌʌs wˈɔːm. jˈɛt ðə mˈʌsəl, ðə nˈɜːv and ðə fˈɒlɪkəl ɑː stˈɪl wˈaɪəd təɡˌɛðəɹ əkɹˌɒs mˈaməlz.",
+   "speed": 0.78,
+   "file": "04.wav",
+   "dur": 14.06,
+   "sha256": "d5d6376741484de6349eaf5092f8fd239112c2c62a34c00689e1a459689cda80"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "And this wiring does more than raise hair. In mice, the nerve talks to the stem cells that regrow hair. The muscle keeps that nerve in place.",
+   "stars": [
+    "hair"
+   ],
+   "phonemes": "and ðɪs wˈaɪəɹɪŋ dˈʌz mˈɔː ðɐn ɹˈeɪz hˈeə. ɪn mˈaɪs, ðə nˈɜːv tˈɔːks tə ðə stˈɛm sˈɛlz ðat ɹɪɡɹˈəʊ hˈeə. ðə mˈʌsəl kˈiːps ðat nˈɜːv ɪn plˈeɪs.",
+   "speed": 0.8,
+   "file": "05.wav",
+   "dur": 9.734,
+   "sha256": "25df7ed2f8e944c262eb6a1309b710b310768cd7eb5cc2b6ccdaf4b88757ec7d"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So goosebumps are a muscle, a nerve and a hair, working together. A small reflex with a bigger job.",
+   "stars": [
+    "job"
+   ],
+   "phonemes": "sˌəʊ ɡˈuːsbʌmps ɑːɹ ɐ mˈʌsəl, ɐ nˈɜːv and ɐ hˈeə, wˈɜːkɪŋ təɡˈɛðə. ɐ smˈɔːl ɹˈiːflɛks wɪð ɐ bˈɪɡə dʒˈɒb.",
+   "speed": 0.75,
+   "file": "06.wav",
+   "dur": 7.615,
+   "sha256": "9c1ab9105ae57d929707e49cda5d236ed8c7c431330f3f1c9560305bddaac59d"
+  },
+  {
+   "id": "vo07",
+   "beat": "tease",
+   "text": "Next: why fingers wrinkle in water. Your nerves are in charge.",
+   "stars": [
+    "nerves"
+   ],
+   "phonemes": "nˈɛkst: wˌaɪ fˈɪŋɡəz ɹˈɪŋkəl ɪn wˈɔːtə. jɔː nˈɜːvz ɑːɹ ɪn tʃˈɑːdʒ.",
+   "speed": 0.89,
+   "file": "07.wav",
+   "dur": 4.085,
+   "sha256": "28fa1e5369899fb0ec92af2467d1bbc453bb52c2184d7c96029569922693c6e2"
+  }
+ ]
+}

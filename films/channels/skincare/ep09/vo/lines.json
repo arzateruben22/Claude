@@ -1,0 +1,96 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/skincare/ep09/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How does sweat cool you? It works by drying.",
+   "stars": [
+    "cool"
+   ],
+   "phonemes": "hˌaʊ dˈʌz swˈɛt kˈuːl juː? ɪt wˈɜːks baɪ dɹˈaɪɪŋ.",
+   "speed": 0.78,
+   "file": "01.wav",
+   "dur": 3.596,
+   "sha256": "1006464be7ca6c6c88e5ab9a1fc36e45cc5babf7fe77b42e66df14b7efd66878"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "You have about two to four million sweat glands. They sit in both hairy and hairless skin. Each is a tiny coil with a thin tube that leads to the surface. When you heat up, they release sweat.",
+   "stars": [],
+   "phonemes": "juː hav ɐbˌaʊt tˈuː tə fˈɔː mˈɪliən swˈɛt ɡlˈandz. ðeɪ sˈɪt ɪn bˈəʊθ hˈeəɹi and hˈeələs skˈɪn. ˈiːtʃ ɪz ɐ tˈaɪni kˈɔɪl wɪð ɐ θˈɪn tjˈuːb ðat lˈiːdz tə ðə sˈɜːfɪs. wˌɛn juː hˈiːt ˈʌp, ðeɪ ɹɪlˈiːs swˈɛt.",
+   "speed": 0.78,
+   "file": "02.wav",
+   "dur": 14.14,
+   "sha256": "65caa018eaf607ab71f181faa607a4587deab390f8e99d5b83c0bc297b85ea87"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "As the water in sweat turns to vapour, it takes heat from your skin. Each gram of sweat that dries carries away about two thousand four hundred joules.",
+   "stars": [],
+   "phonemes": "az ðə wˈɔːtəɹ ɪn swˈɛt tˈɜːnz tə vˈeɪpə, ɪt tˈeɪks hˈiːt fɹɒm jɔː skˈɪn. ˈiːtʃ ɡɹˈam ɒv swˈɛt ðat dɹˈaɪz kˈaɹiz ɐwˈeɪ ɐbˌaʊt tˈuː θˈaʊzənd fˈɔː hˈʌndɹɪd dʒˈuːlz.",
+   "speed": 0.77,
+   "file": "03.wav",
+   "dur": 11.313,
+   "sha256": "cad8063391544918ac181f3e6d9f8d618f4ee454713c5956ce958d7675686349"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "That is why you sweat more in hot places and during hard exercise. When heavy clothing covers the skin, less heat escapes by evaporation. Your body is using water to move heat out.",
+   "stars": [],
+   "phonemes": "ðat ɪz wˌaɪ juː swˈɛt mˈɔːɹ ɪn hˈɒt plˈeɪsɪz and djˈʊəɹɪŋ hˈɑːd ˈɛksəsˌaɪz. wˌɛn hˈɛvi klˈəʊðɪŋ kˈʌvəz ðə skˈɪn, lˈɛs hˈiːt ɛskˈeɪps baɪ ɪvˌapəɹˈeɪʃən. jɔː bˈɒdi ɪz jˈuːzɪŋ wˈɔːtə tə mˈuːv hˈiːt ˈaʊt.",
+   "speed": 0.82,
+   "file": "04.wav",
+   "dur": 12.226,
+   "sha256": "339f0de9e4ca11c1751dae5a24549a7989d0f4d050817bbcb792169e19a6c5e2"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Here is the twist. Sweat's job is cooling, not cleaning. Waste leaves mostly through the kidneys and gut.",
+   "stars": [
+    "cleaning"
+   ],
+   "phonemes": "hˈiəɹ ɪz ðə twˈɪst. swˈɛts dʒˈɒb ɪz kˈuːlɪŋ, nˌɒt klˈiːnɪŋ. wˈeɪst lˈiːvz mˈəʊstli θɹuː ðə kˈɪdniz and ɡˈʌt.",
+   "speed": 0.85,
+   "file": "05.wav",
+   "dur": 6.653,
+   "sha256": "b1704f26174fdeae15c98bb58e1d03325bac1b97b8bc29fb8a4d57455270804f"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So sweat cools you when it dries. Its job is cooling, not cleaning.",
+   "stars": [
+    "cleaning"
+   ],
+   "phonemes": "sˌəʊ swˈɛt kˈuːlz juː wɛn ɪt dɹˈaɪz. ɪts dʒˈɒb ɪz kˈuːlɪŋ, nˌɒt klˈiːnɪŋ.",
+   "speed": 0.77,
+   "file": "06.wav",
+   "dur": 5.403,
+   "sha256": "ecb4d936a667791a8cf18155363edaa2070a05ed7c02edd5d515fd0239668942"
+  },
+  {
+   "id": "vo07",
+   "beat": "tease",
+   "text": "Next: what a tan really is. Pigment can form a cap over a cell's nucleus.",
+   "stars": [],
+   "phonemes": "nˈɛkst: wˌɒt ɐ tˈan ɹˈiəlɪ ɪz. pˈɪɡmənt kan fˈɔːm ɐ kˈap ˌəʊvəɹ ɐ sˈɛlz njˈuːklɪəs.",
+   "speed": 0.75,
+   "file": "07.wav",
+   "dur": 6.192,
+   "sha256": "4edb8dfc598d78882e4daaa61e63e4eb329d0f2de9a2c039206814639b0a1ae3"
+  }
+ ]
+}

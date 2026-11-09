@@ -1,0 +1,134 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Pigment, parked over each cell's nucleus.",
+  "claim": "UV-induced redistribution of melanin near keratinocyte nuclei leads to the formation of a supranuclear cap.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36869204/",
+  "source_title": "Opsin 3 mediates UVA-induced keratinocyte supranuclear melanin cap formation, Commun Biol 2023 (PubMed 36869204)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'UV-induced redistribution of melanin near keratinocyte nuclei leads to the formation of a supranuclear cap, which acts as a natural sunscreen and protects DNA by absorbing and scattering UV radiation.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "Brown pigment called melanin sits inside your skin's cells.",
+  "claim": "Melanin is present inside epidermal cells (intracellular melanin).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/9579550/",
+  "source_title": "Kobayashi et al., J Invest Dermatol 1998 (PubMed 9579550)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'intracellular melanin reduces ultraviolet transmission to underlying cell nuclei'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "After ultraviolet light, it can move to sit over each cell's nucleus, like a small cap.",
+  "claim": "UV-induced redistribution of melanin near keratinocyte nuclei leads to the formation of a supranuclear cap.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36869204/",
+  "source_title": "Opsin 3 mediates UVA-induced keratinocyte supranuclear melanin cap formation, Commun Biol 2023 (PubMed 36869204)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'UV-induced redistribution of melanin near keratinocyte nuclei leads to the formation of a supranuclear cap, which acts as a natural sunscreen and protects DNA by absorbing and scattering UV radiation.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "That cap works like a natural sunscreen, absorbing and scattering ultraviolet light.",
+  "claim": "The cap acts as a natural sunscreen and protects DNA by absorbing and scattering UV radiation.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36869204/",
+  "source_title": "Commun Biol 2023 (PubMed 36869204)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract (as c1). Note: 'sunscreen' used only as the paper's own metaphor; no product. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "In skin samples exposed to UVB, cells with a cap had less DNA damage.",
+  "claim": "In irradiated human skin explants, epidermal cells with supranuclear melanin caps had significantly less DNA photoproducts than cells without caps.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/9579550/",
+  "source_title": "Kobayashi et al., J Invest Dermatol 1998 (PubMed 9579550)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'We irradiated normal human skin explants with ultraviolet B… epidermal cells with supranuclear melanin caps had significantly less DNA photoproducts (both types) than epidermal cells without supranuclear melanin caps.' 'Do not erase it' is the reading of 'less' (some photoproducts still formed): a person checks the full text for the numbers. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "The more melanin a cell held, the more protection it had.",
+  "claim": "The protection factor correlated with melanin concentration in epidermal cells.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/9579550/",
+  "source_title": "Kobayashi et al., J Invest Dermatol 1998 (PubMed 9579550)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'the protection factor against both types of photolesions correlated with melanin concentration in epidermal cells… in a concentration dependent manner'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "So the shield is real, but its strength varies from cell to cell.",
+  "claim": "The protection factor correlated with melanin concentration in epidermal cells.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/9579550/",
+  "source_title": "Kobayashi et al., J Invest Dermatol 1998 (PubMed 9579550)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'the protection factor against both types of photolesions correlated with melanin concentration in epidermal cells… in a concentration dependent manner'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "In lab-grown skin cells, the long rays, UVA, set off cap-building through a light sensor.",
+  "claim": "In human epidermal keratinocytes, OPN3 is a photoreceptor critical for UVA-mediated supranuclear cap formation.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36869204/",
+  "source_title": "Commun Biol 2023 (PubMed 36869204)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'OPN3 is an important photoreceptor in human epidermal keratinocytes and is critical for UVA-mediated supranuclear cap formation.' Cultured cells. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c9",
+  "sentence": "Caps lower the damage, but do not erase it.",
+  "claim": "In irradiated human skin explants, epidermal cells with supranuclear melanin caps had significantly less DNA photoproducts than cells without caps.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/9579550/",
+  "source_title": "Kobayashi et al., J Invest Dermatol 1998 (PubMed 9579550)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'We irradiated normal human skin explants with ultraviolet B… epidermal cells with supranuclear melanin caps had significantly less DNA photoproducts (both types) than epidermal cells without supranuclear melanin caps.' 'Do not erase it' is the reading of 'less' (some photoproducts still formed): a person checks the full text for the numbers. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c10",
+  "sentence": "The effect depends on how much melanin a cell holds.",
+  "claim": "The protection factor correlated with melanin concentration in epidermal cells.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/9579550/",
+  "source_title": "Kobayashi et al., J Invest Dermatol 1998 (PubMed 9579550)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'the protection factor against both types of photolesions correlated with melanin concentration in epidermal cells… in a concentration dependent manner'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c11",
+  "sentence": "So a tan is pigment gathered over each cell's nucleus.",
+  "claim": "UV-induced redistribution of melanin near keratinocyte nuclei leads to the formation of a supranuclear cap.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36869204/",
+  "source_title": "Opsin 3 mediates UVA-induced keratinocyte supranuclear melanin cap formation, Commun Biol 2023 (PubMed 36869204)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'UV-induced redistribution of melanin near keratinocyte nuclei leads to the formation of a supranuclear cap, which acts as a natural sunscreen and protects DNA by absorbing and scattering UV radiation.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c12",
+  "sentence": "It lowers damage, but does not erase it.",
+  "claim": "In irradiated human skin explants, epidermal cells with supranuclear melanin caps had significantly less DNA photoproducts than cells without caps.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/9579550/",
+  "source_title": "Kobayashi et al., J Invest Dermatol 1998 (PubMed 9579550)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'We irradiated normal human skin explants with ultraviolet B… epidermal cells with supranuclear melanin caps had significantly less DNA photoproducts (both types) than epidermal cells without supranuclear melanin caps.' 'Do not erase it' is the reading of 'less' (some photoproducts still formed): a person checks the full text for the numbers. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ }
+]

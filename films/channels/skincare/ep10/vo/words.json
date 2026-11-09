@@ -1,0 +1,978 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "What is a tan, really? Pigment, parked over each cell's nucleus.",
+   "heard": "What is a tan really? Pigment parked over each cell's nucleus.",
+   "words": [
+    {
+     "w": "What",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.165,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.435,
+     "end": 0.485,
+     "heard": true
+    },
+    {
+     "w": "tan,",
+     "start": 0.47,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "really?",
+     "start": 0.85,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "Pigment,",
+     "start": 1.68,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "parked",
+     "start": 2.21,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 2.51,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 2.65,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "cell's",
+     "start": 2.91,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "nucleus.",
+     "start": 3.305,
+     "end": 4.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Brown pigment called melanin sits inside your skin's cells. After ultraviolet light, it can move to sit over each cell's nucleus, like a small cap.",
+   "heard": "Brown pigment called melanin sits inside your skin's cells. After ultraviolet light, it can move to sit over each cell's nucleus, like a small cap.",
+   "words": [
+    {
+     "w": "Brown",
+     "start": 0.04,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "pigment",
+     "start": 0.535,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "called",
+     "start": 0.84,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "melanin",
+     "start": 1.035,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "sits",
+     "start": 1.785,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 2.095,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.31,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "skin's",
+     "start": 2.575,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "cells.",
+     "start": 2.945,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "After",
+     "start": 3.955,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "ultraviolet",
+     "start": 4.145,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "light,",
+     "start": 5.01,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 5.815,
+     "end": 5.865,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 5.955,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "move",
+     "start": 5.985,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 6.38,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "sit",
+     "start": 6.57,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 6.655,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 6.915,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "cell's",
+     "start": 7.085,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "nucleus,",
+     "start": 7.72,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 8.32,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.455,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "small",
+     "start": 8.63,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "cap.",
+     "start": 8.885,
+     "end": 9.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "That cap works like a natural sunscreen, absorbing and scattering ultraviolet light. In skin samples exposed to UVB, cells with a cap had less DNA damage.",
+   "heard": "That cap works like a natural sunscreen, absorbing and scattering ultraviolet light. In skin samples exposed to UVB, cells with a cap had less DNA damage.",
+   "words": [
+    {
+     "w": "That",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "cap",
+     "start": 0.225,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "works",
+     "start": 0.535,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 0.985,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.015,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "natural",
+     "start": 1.215,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "sunscreen,",
+     "start": 1.615,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "absorbing",
+     "start": 2.555,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.005,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "scattering",
+     "start": 3.4,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "ultraviolet",
+     "start": 3.815,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "light.",
+     "start": 4.885,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 5.58,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 5.61,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "samples",
+     "start": 6.21,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "exposed",
+     "start": 6.71,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.205,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "UVB,",
+     "start": 7.245,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 8.38,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 8.735,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.765,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "cap",
+     "start": 8.97,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "had",
+     "start": 9.27,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "less",
+     "start": 9.46,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "DNA",
+     "start": 9.8,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "damage.",
+     "start": 10.28,
+     "end": 10.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "The more melanin a cell held, the more protection it had. So the shield is real, but its strength varies from cell to cell. In lab-grown skin cells, the long rays, UVA, set off cap-building through a light sensor.",
+   "heard": "The more melanin a cell held, the more protection it had. So the shield is real, but its strength varies from cell to cell. In lab-grown skin cells, the long rays UVA set off cap building through a light sensor.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 0.24,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "melanin",
+     "start": 0.4,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.215,
+     "end": 1.265,
+     "heard": true
+    },
+    {
+     "w": "cell",
+     "start": 1.245,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "held,",
+     "start": 1.49,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.005,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 2.045,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "protection",
+     "start": 2.365,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.085,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "had.",
+     "start": 4.16,
+     "end": 4.21,
+     "heard": true
+    },
+    {
+     "w": "So",
+     "start": 4.19,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.335,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "shield",
+     "start": 4.57,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.865,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "real,",
+     "start": 5.07,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 5.72,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 5.925,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "strength",
+     "start": 6.13,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "varies",
+     "start": 6.515,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 7.085,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "cell",
+     "start": 7.25,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.72,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "cell.",
+     "start": 7.985,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 9.035,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "lab-grown",
+     "start": 9.065,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 10.145,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "cells,",
+     "start": 10.515,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.255,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 11.285,
+     "end": 11.52,
+     "heard": true
+    },
+    {
+     "w": "rays,",
+     "start": 11.775,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "UVA,",
+     "start": 12.295,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "set",
+     "start": 13.14,
+     "end": 13.36,
+     "heard": true
+    },
+    {
+     "w": "off",
+     "start": 13.4,
+     "end": 13.68,
+     "heard": true
+    },
+    {
+     "w": "cap-building",
+     "start": 13.73,
+     "end": 14.56,
+     "heard": false
+    },
+    {
+     "w": "through",
+     "start": 14.585,
+     "end": 14.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 14.665,
+     "end": 14.88,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 14.82,
+     "end": 15.28,
+     "heard": true
+    },
+    {
+     "w": "sensor.",
+     "start": 15.225,
+     "end": 15.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Here is the twist. Caps lower the damage, but do not erase it. The effect depends on how much melanin a cell holds.",
+   "heard": "Here is the twist. Caps lower the damage but do not erase it. The effect depends on how much melanin a cell holds.",
+   "words": [
+    {
+     "w": "Here",
+     "start": 0.105,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.55,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.795,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "twist.",
+     "start": 0.935,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "Caps",
+     "start": 2.03,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "lower",
+     "start": 2.415,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.97,
+     "end": 3.02,
+     "heard": true
+    },
+    {
+     "w": "damage,",
+     "start": 3.0,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 3.59,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 3.745,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 4.015,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "erase",
+     "start": 4.09,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 4.91,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 5.55,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "effect",
+     "start": 5.58,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "depends",
+     "start": 6.235,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 6.73,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 6.88,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "much",
+     "start": 7.12,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "melanin",
+     "start": 7.37,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.15,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "cell",
+     "start": 8.37,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "holds.",
+     "start": 8.725,
+     "end": 9.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "So a tan is pigment gathered over each cell's nucleus. It lowers damage, but does not erase it.",
+   "heard": "So a tan is pigment gathered over each cell's nucleus. It lowers damage but does not erase it.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.37,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "tan",
+     "start": 0.405,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.77,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "pigment",
+     "start": 1.065,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "gathered",
+     "start": 1.74,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 2.105,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 2.44,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "cell's",
+     "start": 2.675,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "nucleus.",
+     "start": 3.19,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 4.565,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "lowers",
+     "start": 4.69,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "damage,",
+     "start": 5.285,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 5.915,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 6.08,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 6.305,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "erase",
+     "start": 6.57,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 7.145,
+     "end": 7.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Next: the brick wall on your skin. Which part holds water in?",
+   "heard": "Next the brick wall on your skin, which part holds water in,",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.04,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.725,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "brick",
+     "start": 0.87,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "wall",
+     "start": 1.155,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.545,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.765,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "skin.",
+     "start": 1.955,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "Which",
+     "start": 2.765,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "part",
+     "start": 3.075,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "holds",
+     "start": 3.42,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 3.865,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "in?",
+     "start": 4.315,
+     "end": 4.64,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

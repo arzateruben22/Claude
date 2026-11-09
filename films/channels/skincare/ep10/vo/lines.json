@@ -1,0 +1,98 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/skincare/ep10/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "What is a tan, really? Pigment, parked over each cell's nucleus.",
+   "stars": [
+    "really"
+   ],
+   "phonemes": "wˌɒt ɪz ɐ tˈan, ɹˈiəlɪ? pˈɪɡmənt, pˈɑːkt ˌəʊvəɹ ˈiːtʃ sˈɛlz njˈuːklɪəs.",
+   "speed": 0.88,
+   "file": "01.wav",
+   "dur": 4.087,
+   "sha256": "c1430cafd92bbf1fce421bdfba58a2f75a210108b88a1104d58590a6d3ecd85b"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Brown pigment called melanin sits inside your skin's cells. After ultraviolet light, it can move to sit over each cell's nucleus, like a small cap.",
+   "stars": [],
+   "phonemes": "bɹˈaʊn pˈɪɡmənt kˈɔːld mˈɛlənɪn sˈɪts ɪnsˈaɪd jɔː skˈɪnz sˈɛlz. ˈaftəɹ ˌʊltɹɐvˈaɪəlɪt lˈaɪt, ɪt kan mˈuːv tə sˈɪt ˌəʊvəɹ ˈiːtʃ sˈɛlz njˈuːklɪəs, lˈaɪk ɐ smˈɔːl kˈap.",
+   "speed": 0.88,
+   "file": "02.wav",
+   "dur": 9.321,
+   "sha256": "3b811deaa2d50b9be6331c0f6370815b1a797b30474d7f84051bf9c70ac4b1c7"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "That cap works like a natural sunscreen, absorbing and scattering ultraviolet light. In skin samples exposed to UVB, cells with a cap had less DNA damage.",
+   "stars": [],
+   "phonemes": "ðat kˈap wˈɜːks lˈaɪk ɐ nˈatʃəɹəl sˈʌnskɹiːn, ɐbsˈɔːbɪŋ and skˈatəɹɪŋ ˌʊltɹɐvˈaɪəlɪt lˈaɪt. ɪn skˈɪn sˈampəlz ɛkspˈəʊzd tuː jˌuːvˌiːbˈiː , sˈɛlz wɪð ɐ kˈap had lˈɛs dˌiːˌɛnˈeɪ dˈamɪdʒ.",
+   "speed": 0.88,
+   "file": "03.wav",
+   "dur": 10.808,
+   "sha256": "800d4c07079fd903e2aff534076d0803ff9ecf0e1a49029b73bbb81c9a2dee5a"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "The more melanin a cell held, the more protection it had. So the shield is real, but its strength varies from cell to cell. In lab-grown skin cells, the long rays, UVA, set off cap-building through a light sensor.",
+   "stars": [],
+   "phonemes": "ðə mˈɔː mˈɛlənɪn ɐ sˈɛl hˈɛld, ðə mˈɔː pɹətˈɛkʃən ɪt hˌad. sˌəʊ ðə ʃˈiːld ɪz ɹˈiəl, bˌʌt ɪts stɹˈɛŋθ vˈeəɹiz fɹɒm sˈɛl tə sˈɛl. ɪn lˈabɡɹˈəʊn skˈɪn sˈɛlz, ðə lˈɒŋ ɹˈeɪz, jˌuːvˌiːˈeɪ , sˈɛt ˈɒf kˈapbˈɪldɪŋ θɹuː ɐ lˈaɪt sˈɛnsə.",
+   "speed": 0.78,
+   "file": "04.wav",
+   "dur": 15.851,
+   "sha256": "12413fdef64d9109ffe54de4640ff19622fc9c9a196f18782580604505b92b24"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Here is the twist. Caps lower the damage, but do not erase it. The effect depends on how much melanin a cell holds.",
+   "stars": [
+    "erase"
+   ],
+   "phonemes": "hˈiəɹ ɪz ðə twˈɪst. kˈaps lˈəʊə ðə dˈamɪdʒ, bˌʌt duːnˌɒt ɪɹˈeɪz ɪt. ðɪ ɪfˈɛkt dɪpˈɛndz ˌɒn hˌaʊ mˈʌtʃ mˈɛlənɪn ɐ sˈɛl hˈəʊldz.",
+   "speed": 0.76,
+   "file": "05.wav",
+   "dur": 9.309,
+   "sha256": "c709953dc5ba5b76d2317af6f9127fa1ec254e098d88db10c0d988aa10cc7003"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So a tan is pigment gathered over each cell's nucleus. It lowers damage, but does not erase it.",
+   "stars": [
+    "erase"
+   ],
+   "phonemes": "sˌəʊ ɐ tˈan ɪz pˈɪɡmənt ɡˈaðəd ˌəʊvəɹ ˈiːtʃ sˈɛlz njˈuːklɪəs. ɪt lˈəʊəz dˈamɪdʒ, bˌʌt dʌznˌɒt ɪɹˈeɪz ɪt.",
+   "speed": 0.78,
+   "file": "06.wav",
+   "dur": 7.486,
+   "sha256": "5ee9babe934dd88dae8d192c375f8e84ba753daa81e63de1691bb926b0cd68cf"
+  },
+  {
+   "id": "vo07",
+   "beat": "tease",
+   "text": "Next: the brick wall on your skin. Which part holds water in?",
+   "stars": [
+    "in"
+   ],
+   "phonemes": "nˈɛkst: ðə bɹˈɪk wˈɔːl ˌɒn jɔː skˈɪn. wˌɪtʃ pˈɑːt hˈəʊldz wˈɔːtəɹ ˈɪn?",
+   "speed": 0.74,
+   "file": "07.wav",
+   "dur": 4.927,
+   "sha256": "71af7ec17d9b44ec5811122fd57f020a5b9b1eeee2d76c7cf46d172fd47dea32"
+  }
+ ]
+}

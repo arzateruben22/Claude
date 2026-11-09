@@ -1,0 +1,167 @@
+[
+ {
+  "id": "c1",
+  "sentence": "It works by drying.",
+  "claim": "Sweat evaporation from the skin surface plays a critical role in human thermoregulation.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238 introduction: 'Sweat evaporation from the skin surface plays a critical role in human thermoregulation'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "You have about two to four million sweat glands.",
+  "claim": "Humans have about 2–4 million eccrine sweat glands in total, on both glabrous and hairy skin.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238: 'Humans have ~2–4 million eccrine sweat glands in total and are found on both glabrous (palms, soles) and non-glabrous (hairy) skin'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "They sit in both hairy and hairless skin.",
+  "claim": "Humans have about 2–4 million eccrine sweat glands in total, on both glabrous and hairy skin.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238: 'Humans have ~2–4 million eccrine sweat glands in total and are found on both glabrous (palms, soles) and non-glabrous (hairy) skin'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "Each is a tiny coil with a thin tube that leads to the surface.",
+  "claim": "The eccrine sweat gland consists of a secretory coil and a duct; the duct connects to the skin surface.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238: 'consists of a secretory coil and duct made up of a simple tubular epithelium… The distal segment of the duct… connects with the acrosyringium in the epidermis'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "When you heat up, they release sweat.",
+  "claim": "Sweating rises with environmental heat stress and with exercise intensity (metabolic heat production).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238 table: 'Increase in WBSR and RSR with increases in exercise intensity… as metabolic heat production is directly proportional to energy expenditure'; 'Increase in WBSR and RSR… with increased environmental heat stress'. 'When you heat up, they release sweat' is the general thermoregulatory reading. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "As the water in sweat turns to vapour, it takes heat from your skin.",
+  "claim": "The latent heat of vaporization of sweat is about 2,426 J per gram: evaporating sweat removes heat from the body.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238: 'The latent heat of vaporization of sweat is 580 kcal of heat per 1 kg of evaporated sweat (2426 J per gram of sweat)'. Voice: about 2,400 J per gram. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "Each gram of sweat that dries carries away about two thousand four hundred joules.",
+  "claim": "The latent heat of vaporization of sweat is about 2,426 J per gram: evaporating sweat removes heat from the body.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238: 'The latent heat of vaporization of sweat is 580 kcal of heat per 1 kg of evaporated sweat (2426 J per gram of sweat)'. Voice: about 2,400 J per gram. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "That is why you sweat more in hot places and during hard exercise.",
+  "claim": "Sweating rises with environmental heat stress and with exercise intensity (metabolic heat production).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238 table: 'Increase in WBSR and RSR with increases in exercise intensity… as metabolic heat production is directly proportional to energy expenditure'; 'Increase in WBSR and RSR… with increased environmental heat stress'. 'When you heat up, they release sweat' is the general thermoregulatory reading. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c9",
+  "sentence": "When heavy clothing covers the skin, less heat escapes by evaporation.",
+  "claim": "Heavy protective clothing reduces evaporative and radiant heat loss from the skin surface.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238 table: 'Clothing/protective equipment: reduced evaporative and radiant heat loss from covering the skin surface'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c10",
+  "sentence": "Your body is using water to move heat out.",
+  "claim": "The latent heat of vaporization of sweat is about 2,426 J per gram: evaporating sweat removes heat from the body.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238: 'The latent heat of vaporization of sweat is 580 kcal of heat per 1 kg of evaporated sweat (2426 J per gram of sweat)'. Voice: about 2,400 J per gram. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c11",
+  "sentence": "Sweat's job is cooling, not cleaning.",
+  "claim": "The role of sweating in eliminating waste products and toxicants seems minor compared with the kidneys and gastrointestinal tract.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'The role of sweating to eliminate waste products and toxicants seems to be minor compared with other avenues of excretion via the kidneys and gastrointestinal tract'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c12",
+  "sentence": "Waste leaves mostly through the kidneys and gut.",
+  "claim": "The role of sweating in eliminating waste products and toxicants seems minor compared with the kidneys and gastrointestinal tract.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'The role of sweating to eliminate waste products and toxicants seems to be minor compared with other avenues of excretion via the kidneys and gastrointestinal tract'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c13",
+  "sentence": "So sweat cools you when it dries.",
+  "claim": "Sweat evaporation from the skin surface plays a critical role in human thermoregulation.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] PMC6773238 introduction: 'Sweat evaporation from the skin surface plays a critical role in human thermoregulation'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c14",
+  "sentence": "Its job is cooling, not cleaning.",
+  "claim": "The role of sweating in eliminating waste products and toxicants seems minor compared with the kidneys and gastrointestinal tract.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/31608304/",
+  "source_title": "Baker, Temperature 2019 (PubMed 31608304, PMC6773238)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'The role of sweating to eliminate waste products and toxicants seems to be minor compared with other avenues of excretion via the kidneys and gastrointestinal tract'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c15",
+  "sentence": "Pigment can form a cap over a cell's nucleus.",
+  "claim": "In skin explants, epidermal cells with supranuclear melanin caps had significantly less UV-induced DNA photoproducts; UV-induced redistribution of melanin near the nucleus forms a supranuclear cap.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/9579550/",
+  "source_title": "Kobayashi et al., J Invest Dermatol 1998 (PubMed 9579550); Commun Biol 2023 (PubMed 36869204)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstracts of both: 'epidermal cells with supranuclear melanin caps had significantly less DNA photoproducts'; 'UV-induced redistribution of melanin near keratinocyte nuclei leads to the formation of a supranuclear cap'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ }
+]

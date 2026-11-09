@@ -1,0 +1,167 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Before you are born.",
+  "claim": "Fingerprint ridge formation is established prenatally.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'Established prenatally, the molecular and cellular mechanisms that guide fingerprint ridge formation… are unknown. Here we show…'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "In the womb, the skin on each fingertip starts building ridges.",
+  "claim": "Fingerprint ridge formation is established prenatally.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'Established prenatally, the molecular and cellular mechanisms that guide fingerprint ridge formation… are unknown. Here we show…'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "Each ridge is a band of skin cells that keeps growing.",
+  "claim": "The signals resolve epithelial growth into bands of focalized proliferation under a precociously differentiated suprabasal layer.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'These signals resolve epithelial growth into bands of focalized proliferation under a precociously differentiated suprabasal layer.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "Each ridge begins like a hair follicle, then stops partway.",
+  "claim": "Fingerprint ridges undergo a truncated hair follicle developmental program and fail to recruit a mesenchymal condensate.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'fingerprint ridges are epithelial structures that undergo a truncated hair follicle developmental program and fail to recruit a mesenchymal condensate'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "Chemical signals push and pull against each other, in what scientists call a Turing system.",
+  "claim": "The spatial pattern is established by a Turing reaction-diffusion system based on signalling between EDAR, WNT and antagonistic BMP pathways.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'established by a Turing reaction-diffusion system, based on signaling between EDAR, WNT, and antagonistic BMP pathways'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "It turns smooth skin into bands of growth.",
+  "claim": "The signals resolve epithelial growth into bands of focalized proliferation under a precociously differentiated suprabasal layer.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'These signals resolve epithelial growth into bands of focalized proliferation under a precociously differentiated suprabasal layer.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "Ridges do not appear all at once.",
+  "claim": "Ridge formation occurs as a set of waves spreading from variable initiation sites; the propagation and meeting of the waves determine the type of pattern that forms.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'waves spreading from variable initiation sites… the propagation and meeting of these waves determining the type of pattern that forms'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "They start at a few places on the fingertip and spread outward in waves.",
+  "claim": "Ridge formation occurs as a set of waves spreading from variable initiation sites; the propagation and meeting of the waves determine the type of pattern that forms.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'waves spreading from variable initiation sites… the propagation and meeting of these waves determining the type of pattern that forms'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c9",
+  "sentence": "Where the waves meet shapes the type of pattern.",
+  "claim": "Ridge formation occurs as a set of waves spreading from variable initiation sites; the propagation and meeting of the waves determine the type of pattern that forms.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'waves spreading from variable initiation sites… the propagation and meeting of these waves determining the type of pattern that forms'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c10",
+  "sentence": "The pattern is grown, not drawn.",
+  "claim": "A dynamic patterning system triggered at spatially distinct sites generates the characteristic types and unending variation of human fingerprint patterns.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'Relying on a dynamic patterning system triggered at spatially distinct sites generates the characteristic types and unending variation of human fingerprint patterns.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c11",
+  "sentence": "Each place a wave starts is a little different.",
+  "claim": "Ridge formation occurs as a set of waves spreading from variable initiation sites; the propagation and meeting of the waves determine the type of pattern that forms.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'waves spreading from variable initiation sites… the propagation and meeting of these waves determining the type of pattern that forms'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c12",
+  "sentence": "Tiny differences in where waves begin make endless variety.",
+  "claim": "A dynamic patterning system triggered at spatially distinct sites generates the characteristic types and unending variation of human fingerprint patterns.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'Relying on a dynamic patterning system triggered at spatially distinct sites generates the characteristic types and unending variation of human fingerprint patterns.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c13",
+  "sentence": "So a fingerprint is a pattern of waves, set before birth.",
+  "claim": "Fingerprint ridge formation is established prenatally.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'Established prenatally, the molecular and cellular mechanisms that guide fingerprint ridge formation… are unknown. Here we show…'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c14",
+  "sentence": "So a fingerprint is a pattern of waves, set before birth.",
+  "claim": "Ridge formation occurs as a set of waves spreading from variable initiation sites; the propagation and meeting of the waves determine the type of pattern that forms.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'waves spreading from variable initiation sites… the propagation and meeting of these waves determining the type of pattern that forms'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c15",
+  "sentence": "Yours is one of endless variations.",
+  "claim": "A dynamic patterning system triggered at spatially distinct sites generates the characteristic types and unending variation of human fingerprint patterns.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'Relying on a dynamic patterning system triggered at spatially distinct sites generates the characteristic types and unending variation of human fingerprint patterns.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ }
+]

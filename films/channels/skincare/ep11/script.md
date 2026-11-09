@@ -1,0 +1,28 @@
+# Skin Sense Season 2 · Episode 5 (ep11): "The Brick Wall on Top of Your Skin" (draft; dermatologist sign-off before posting)
+
+About 68 s, 9:16, art direction ../ART-DIRECTION.md, Standards v2 (../../briefs/STANDARDS-v2.md), synthetic narrator (labelled AI).
+One question: Why doesn't water just leak out of you? Answer: The outer layer is a wall of flat cells and fat sheets; the fats, not the cells, are the tight part. One melanin level for the episode (light). Mechanism, myth, study; no brand, no dose, no advice,
+no before/after. **No disease or risk line is shown over skin or a person.** Pictures: the owner's five (S2-ART-PROMPTS-CHATGPT.md, files s2e05-01 … 05);
+every label and caption is drawn in code. Designed for 2.5-D parallax (foreground, mid, background layers). Dermatologist sign-off before posting.
+
+## hook {shot 1: light-toned skin section, flattened cell bricks stacked · labels: title · pre: 0.05 · picture-only 0.4 s · energy: 0.6} (0.0–4.4 s)
+vo: Why don't you dry *out*? {-} Your skin has a brick wall. {c1}
+
+## normal {shot 2: the wall close up, pale bricks and golden mortar · labels: bricks · mortar · picture-only 0.5 s · energy: 0.45} (4.4–15.9 s)
+vo: Its outer layer, the stratum corneum, is the barrier. {c2} Flat dead cells are the bricks. {c3} Fats between them are the mortar. {c4} A scientist named Peter Elias called it that. {c5}
+
+## change {shot 2: the sheets of fat wrapped round the cells · labels: fat sheets · picture-only 0.6 s · energy: 0.55} (15.9–25.9 s)
+vo: The mortar is stacked sheets of fat, wrapped around each cell. {c6} That makes a semi-permeable barrier, which is what lets life live on land. {c7}
+
+## why {shot 3: droplets resting on the wall · labels: first line of defence · picture-only 2.2 s · energy: 0.5} (25.9–43.6 s)
+vo: That wall is the skin's first line of defence against germs, allergens and water loss. {c8} Water stays in, and germs stay out. {c15} It is not a single tough sheet. It is a system of cells, fats and acids. {c9}
+
+## whoa {shot 4: the wall slightly loosened, gaps in the mortar (no disease, no lesion) · labels: the fats are the tight part · picture-only 3.1 s · energy: 0.8} (43.6–56.6 s)
+vo: Here is the twist. {-} The bricks are not the tight part. {c10} Most dissolved substances pass through the cells more easily than through the *fats*. {c11}
+
+## takeaway {shot 5: smooth light-toned skin with a soft sheen · labels: none · picture-only 0.5 s · energy: 0.3} (56.6–64.1 s)
+vo: So your skin's wall is bricks and fats, working as a team. {c12} The fats are the tight *part*. {c13}
+
+## tease {end card held ≥ 2 s · energy: 0.35} (64.1–70.4 s)
+vo: Next: fingerprints, formed before birth. {-} The pattern spreads in *waves*. {c14}
+end card: "Next: fingerprints, formed before birth" · "Skin Sense · Season 2" · footnote: "Narration: synthetic voice (AI)."

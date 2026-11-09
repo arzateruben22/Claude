@@ -1,0 +1,972 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "When do your fingerprints form? Before you are born.",
+   "heard": "When do your fingerprints form before you are born?",
+   "words": [
+    {
+     "w": "When",
+     "start": 0.025,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 0.26,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.575,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "fingerprints",
+     "start": 0.61,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "form?",
+     "start": 1.25,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "Before",
+     "start": 1.915,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.055,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 2.26,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "born.",
+     "start": 2.51,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "In the womb, the skin on each fingertip starts building ridges. Each ridge is a band of skin cells that keeps growing. Each ridge begins like a hair follicle, then stops partway.",
+   "heard": "In the womb, the skin on each fingertip starts building ridges. Each ridge is a band of skin cells that keeps growing. Each ridge begins like a hair follicle, then stops partway.",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.335,
+     "end": 0.385,
+     "heard": true
+    },
+    {
+     "w": "womb,",
+     "start": 0.365,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.945,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 0.975,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.52,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 1.71,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "fingertip",
+     "start": 1.84,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 2.305,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "building",
+     "start": 2.76,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "ridges.",
+     "start": 3.115,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "Each",
+     "start": 4.31,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "ridge",
+     "start": 4.445,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.89,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.205,
+     "end": 5.255,
+     "heard": true
+    },
+    {
+     "w": "band",
+     "start": 5.235,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.525,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 5.74,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 6.095,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 6.5,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 6.67,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "growing.",
+     "start": 7.0,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "Each",
+     "start": 8.095,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "ridge",
+     "start": 8.245,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "begins",
+     "start": 8.705,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 9.09,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.28,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 9.31,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "follicle,",
+     "start": 9.745,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 10.555,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "stops",
+     "start": 10.725,
+     "end": 11.2,
+     "heard": true
+    },
+    {
+     "w": "partway.",
+     "start": 11.17,
+     "end": 11.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Chemical signals push and pull against each other, in what scientists call a Turing system. It turns smooth skin into bands of growth.",
+   "heard": "Chemical signals push and pull against each other, in what scientists call a Turing system. It turns smooth skin into bands of growth.",
+   "words": [
+    {
+     "w": "Chemical",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "signals",
+     "start": 0.55,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 1.03,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.345,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "pull",
+     "start": 1.53,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "against",
+     "start": 1.845,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 2.27,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "other,",
+     "start": 3.09,
+     "end": 3.14,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 3.12,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 3.295,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "scientists",
+     "start": 3.365,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "call",
+     "start": 4.13,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.415,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "Turing",
+     "start": 4.605,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "system.",
+     "start": 5.285,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 6.1,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "turns",
+     "start": 6.235,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "smooth",
+     "start": 6.655,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 7.15,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 7.455,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "bands",
+     "start": 7.64,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.065,
+     "end": 8.115,
+     "heard": true
+    },
+    {
+     "w": "growth.",
+     "start": 8.095,
+     "end": 8.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Ridges do not appear all at once. They start at a few places on the fingertip and spread outward in waves. Think of ripples spreading on sand. Where the waves meet shapes the type of pattern.",
+   "heard": "Ridges do not appear all at once. They start at a few places on the fingertip and spread outward in waves. Think of ripples spreading on sand, where the waves meet shapes the type of pattern.",
+   "words": [
+    {
+     "w": "Ridges",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 0.65,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 0.895,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "appear",
+     "start": 1.1,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 1.44,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.73,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "once.",
+     "start": 2.015,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 2.81,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "start",
+     "start": 3.035,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 3.27,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.54,
+     "end": 3.59,
+     "heard": true
+    },
+    {
+     "w": "few",
+     "start": 3.57,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "places",
+     "start": 3.755,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 4.085,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.225,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "fingertip",
+     "start": 4.49,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.145,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "spread",
+     "start": 5.405,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "outward",
+     "start": 5.65,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 6.045,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "waves.",
+     "start": 6.27,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "Think",
+     "start": 7.37,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.515,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "ripples",
+     "start": 7.64,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "spreading",
+     "start": 8.38,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 8.8,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "sand.",
+     "start": 8.925,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "Where",
+     "start": 9.885,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.06,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "waves",
+     "start": 10.09,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "meet",
+     "start": 10.645,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "shapes",
+     "start": 11.08,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.535,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "type",
+     "start": 11.565,
+     "end": 11.76,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 11.8,
+     "end": 11.92,
+     "heard": true
+    },
+    {
+     "w": "pattern.",
+     "start": 11.955,
+     "end": 12.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Here is the twist. The pattern is grown, not drawn. Each place a wave starts is a little different. Tiny differences in where waves begin make endless variety.",
+   "heard": "Here is the twist. The pattern is grown, not drawn. Each place a wave starts is a little different. Tiny differences in where waves begin make endless variety.",
+   "words": [
+    {
+     "w": "Here",
+     "start": 0.025,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.375,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.65,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "twist.",
+     "start": 0.75,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 1.59,
+     "end": 1.64,
+     "heard": true
+    },
+    {
+     "w": "pattern",
+     "start": 1.685,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.175,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "grown,",
+     "start": 2.25,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 2.805,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "drawn.",
+     "start": 2.94,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "Each",
+     "start": 3.875,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "place",
+     "start": 4.17,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.425,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "wave",
+     "start": 4.545,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 4.94,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 5.195,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.39,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 5.785,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "different.",
+     "start": 5.935,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "Tiny",
+     "start": 6.775,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "differences",
+     "start": 7.15,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.66,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "where",
+     "start": 7.84,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "waves",
+     "start": 8.09,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "begin",
+     "start": 8.495,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "make",
+     "start": 8.975,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "endless",
+     "start": 9.165,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "variety.",
+     "start": 9.67,
+     "end": 10.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "So a fingerprint is a pattern of waves, set before birth. Yours is one of endless variations.",
+   "heard": "So a fingerprint is a pattern of waves set before birth. Yours is one of endless variations.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.025,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.375,
+     "end": 0.425,
+     "heard": true
+    },
+    {
+     "w": "fingerprint",
+     "start": 0.405,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.025,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.23,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "pattern",
+     "start": 1.375,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.605,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "waves,",
+     "start": 1.64,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "set",
+     "start": 2.44,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "before",
+     "start": 2.74,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "birth.",
+     "start": 3.11,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "Yours",
+     "start": 4.05,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.43,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 4.57,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.815,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "endless",
+     "start": 4.96,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "variations.",
+     "start": 5.405,
+     "end": 6.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Next: more skin questions, answered with the evidence.",
+   "heard": "Next, more skin questions answered with the evidence.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 0.415,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 0.805,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "questions,",
+     "start": 1.015,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "answered",
+     "start": 1.755,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 2.255,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.3,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "evidence.",
+     "start": 2.33,
+     "end": 2.8,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

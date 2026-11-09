@@ -1,0 +1,984 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Why do fingers wrinkle? It's your nerves, not only the water.",
+   "heard": "Why do fingers wrinkle? It's your nerves not only the water, but",
+   "words": [
+    {
+     "w": "Why",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 0.3,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "fingers",
+     "start": 0.47,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "wrinkle?",
+     "start": 0.9,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "It's",
+     "start": 1.81,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.9,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "nerves,",
+     "start": 2.04,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 2.66,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 2.82,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.155,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "water.",
+     "start": 3.185,
+     "end": 3.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "After about fifteen minutes in water, the hairless skin on your hands and feet has folded deeply. It is an active process, run by your nervous system.",
+   "heard": "After about fifteen minutes in water, the hairless skin on your hands and feet has folded deeply. It is an active process run by your nervous system.",
+   "words": [
+    {
+     "w": "After",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.515,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "fifteen",
+     "start": 0.745,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "minutes",
+     "start": 1.28,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.625,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "water,",
+     "start": 1.825,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.79,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "hairless",
+     "start": 2.82,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 3.615,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 3.92,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 4.175,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "hands",
+     "start": 4.205,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.64,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "feet",
+     "start": 4.88,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 5.135,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "folded",
+     "start": 5.46,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "deeply.",
+     "start": 6.05,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 7.28,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 7.405,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 7.645,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "active",
+     "start": 7.88,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "process,",
+     "start": 8.425,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "run",
+     "start": 9.35,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 9.695,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 9.725,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "nervous",
+     "start": 9.965,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "system.",
+     "start": 10.72,
+     "end": 11.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "When nerves tell the tiny blood vessels in your fingertips to narrow, the tissue below shrinks a little. Scientists think the skin above then folds into ridges.",
+   "heard": "When nerves tell the tiny blood vessels in your fingertips to narrow, the tissue below shrinks a little. Scientists think the skin above then folds into ridges.",
+   "words": [
+    {
+     "w": "When",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "nerves",
+     "start": 0.24,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "tell",
+     "start": 0.595,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.835,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 0.985,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "blood",
+     "start": 1.42,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "vessels",
+     "start": 1.68,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.09,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.35,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "fingertips",
+     "start": 2.38,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.915,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "narrow,",
+     "start": 3.12,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.94,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "tissue",
+     "start": 4.065,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "below",
+     "start": 4.47,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "shrinks",
+     "start": 4.88,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.14,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "little.",
+     "start": 5.35,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "Scientists",
+     "start": 6.175,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "think",
+     "start": 6.915,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.13,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 7.16,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "above",
+     "start": 7.675,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 7.905,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "folds",
+     "start": 8.24,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 8.535,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "ridges.",
+     "start": 8.72,
+     "end": 9.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Doctors have used this to test nerves for over eighty years. When the nerves to a finger are damaged, the finger does not wrinkle. So the wrinkles are a sign of working nerves, not just soaking.",
+   "heard": "Doctors have used this to test nerves for over eighty years. When the nerves to a finger are damaged, the finger does not wrinkle. So the wrinkles are a sign of working nerves, not just soaking.",
+   "words": [
+    {
+     "w": "Doctors",
+     "start": 0.02,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 0.815,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "used",
+     "start": 0.845,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 1.22,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.5,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "test",
+     "start": 1.65,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "nerves",
+     "start": 1.995,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 2.47,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 2.845,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "eighty",
+     "start": 3.06,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "years.",
+     "start": 3.925,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "When",
+     "start": 4.76,
+     "end": 4.81,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.79,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "nerves",
+     "start": 4.96,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.525,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.775,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "finger",
+     "start": 5.855,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 6.29,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "damaged,",
+     "start": 6.505,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.52,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "finger",
+     "start": 7.705,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 8.175,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 8.375,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "wrinkle.",
+     "start": 8.64,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "So",
+     "start": 9.975,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.005,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "wrinkles",
+     "start": 10.165,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 10.875,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 11.075,
+     "end": 11.2,
+     "heard": true
+    },
+    {
+     "w": "sign",
+     "start": 11.24,
+     "end": 11.52,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 11.615,
+     "end": 11.68,
+     "heard": true
+    },
+    {
+     "w": "working",
+     "start": 11.68,
+     "end": 12.24,
+     "heard": true
+    },
+    {
+     "w": "nerves,",
+     "start": 12.24,
+     "end": 12.88,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 12.84,
+     "end": 13.12,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 13.145,
+     "end": 13.36,
+     "heard": true
+    },
+    {
+     "w": "soaking.",
+     "start": 13.455,
+     "end": 14.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Why would the body do this? One idea is grip. In one study, people handled wet objects faster with wrinkled fingers. A later study found no difference.",
+   "heard": "Why would the body do this? One idea is grip. In one study, people handled wet objects faster with wrinkled fingers. A later study found no difference.",
+   "words": [
+    {
+     "w": "Why",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 0.345,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.45,
+     "end": 0.5,
+     "heard": true
+    },
+    {
+     "w": "body",
+     "start": 0.56,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 0.705,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "this?",
+     "start": 0.875,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "One",
+     "start": 1.43,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "idea",
+     "start": 1.665,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.175,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "grip.",
+     "start": 2.38,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 3.235,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 3.265,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "study,",
+     "start": 3.71,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "people",
+     "start": 4.07,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "handled",
+     "start": 4.265,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "wet",
+     "start": 4.785,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "objects",
+     "start": 5.105,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 5.5,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 6.175,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "wrinkled",
+     "start": 6.205,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "fingers.",
+     "start": 6.645,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 7.64,
+     "end": 7.69,
+     "heard": true
+    },
+    {
+     "w": "later",
+     "start": 7.67,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "study",
+     "start": 7.965,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "found",
+     "start": 8.47,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 8.72,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "difference.",
+     "start": 8.955,
+     "end": 9.52,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "So wrinkled fingers are your nerves at work. Whether they help you grip is still debated.",
+   "heard": "So wrinkled fingers are your nerves at work, whether they help you grip is still debated.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "wrinkled",
+     "start": 0.415,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "fingers",
+     "start": 0.97,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 1.54,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.715,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "nerves",
+     "start": 1.92,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 2.495,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "work.",
+     "start": 2.815,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "Whether",
+     "start": 3.555,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 3.92,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "help",
+     "start": 4.095,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 4.325,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "grip",
+     "start": 4.6,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.94,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 5.29,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "debated.",
+     "start": 5.6,
+     "end": 6.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Next: how sweat really cools you. Cooling happens when sweat dries.",
+   "heard": "Next, how sweat really cools you. Cooling happens when sweat dries.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 0.44,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "sweat",
+     "start": 0.8,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "really",
+     "start": 0.935,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "cools",
+     "start": 1.325,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "you.",
+     "start": 1.72,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "Cooling",
+     "start": 2.305,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "happens",
+     "start": 2.895,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "when",
+     "start": 3.195,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "sweat",
+     "start": 3.455,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "dries.",
+     "start": 3.69,
+     "end": 4.24,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

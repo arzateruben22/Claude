@@ -1,0 +1,167 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Your skin has a brick wall.",
+  "claim": "The permeability barrier function of the stratum corneum (SC) is provided by lipid lamellae surrounding corneocytes; the protective cutaneous functions largely reside in the SC.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17313091/",
+  "source_title": "Elias's bricks-and-mortar model, review (PubMed 17313091); Elias, J Invest Dermatol 2005 (PubMed 16098026)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstracts: 'The permeability barrier function of the SC is provided by lipid bilayers lamellae surrounding anucleated apoptotic corneocytes'; 'these protective cutaneous functions largely reside in the stratum corneum (SC)'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "Its outer layer, the stratum corneum, is the barrier.",
+  "claim": "The permeability barrier function of the stratum corneum (SC) is provided by lipid lamellae surrounding corneocytes; the protective cutaneous functions largely reside in the SC.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17313091/",
+  "source_title": "Elias's bricks-and-mortar model, review (PubMed 17313091); Elias, J Invest Dermatol 2005 (PubMed 16098026)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstracts: 'The permeability barrier function of the SC is provided by lipid bilayers lamellae surrounding anucleated apoptotic corneocytes'; 'these protective cutaneous functions largely reside in the stratum corneum (SC)'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "Flat dead cells are the bricks.",
+  "claim": "Peter Elias described the SC as a 'bricks and mortar' model: corneocytes are the bricks, the adjoining lipids the mortar.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17313091/",
+  "source_title": "Review (PubMed 17313091)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'This structure has been described by Peter Elias as the \"bricks and mortar\" model where the bricks are the cornecytes and the mortar refers to the adjoining lipids.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "Fats between them are the mortar.",
+  "claim": "Peter Elias described the SC as a 'bricks and mortar' model: corneocytes are the bricks, the adjoining lipids the mortar.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17313091/",
+  "source_title": "Review (PubMed 17313091)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'This structure has been described by Peter Elias as the \"bricks and mortar\" model where the bricks are the cornecytes and the mortar refers to the adjoining lipids.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "A scientist named Peter Elias called it that.",
+  "claim": "Peter Elias described the SC as a 'bricks and mortar' model: corneocytes are the bricks, the adjoining lipids the mortar.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17313091/",
+  "source_title": "Review (PubMed 17313091)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'This structure has been described by Peter Elias as the \"bricks and mortar\" model where the bricks are the cornecytes and the mortar refers to the adjoining lipids.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "The mortar is stacked sheets of fat, wrapped around each cell.",
+  "claim": "The lipids form lamellae (bilayer sheets) surrounding the corneocytes.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17313091/",
+  "source_title": "Review (PubMed 17313091)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract (as c1). A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "That makes a semi-permeable barrier, which is what lets life live on land.",
+  "claim": "The SC is a protective, semi-permeable layer that permits terrestrial life.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17313091/",
+  "source_title": "Review (PubMed 17313091)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'a protective, semi-permeable SC that permits terrestrial life'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "That wall is the skin's first line of defence against germs, allergens and water loss.",
+  "claim": "The skin barrier is the first line of protection against pathogens, allergens and transepidermal water loss.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/42955253/",
+  "source_title": "Am J Clin Dermatol 2026 review (PubMed 42955253)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'first line of protection for the body against pathogens, allergens, and transepidermal water loss'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c9",
+  "sentence": "It is a system of cells, fats and acids.",
+  "claim": "The barrier has structural, chemical, microbial and immunological components, including the acid mantle and ceramides in the extracellular lipid matrix.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/42955253/",
+  "source_title": "Am J Clin Dermatol 2026 review (PubMed 42955253)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'structural, chemical, microbial, and immunological components… the roles of the acid mantle and ceramides in the extracellular lipid matrix'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c10",
+  "sentence": "The bricks are not the tight part.",
+  "claim": "The weight of evidence shows the corneocyte phase of the SC is considerably more permeable to most solutes than the intercellular lipids.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/40349781/",
+  "source_title": "SC transport model, PubMed 40349781 (2025)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'the weight of evidence shows that the corneocyte phase of the SC is considerably more permeable to most solutes than are the intercellular lipids.' A modelling paper; hedged with 'most'. A person checks the journal and the claim's reach. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c11",
+  "sentence": "Most dissolved substances pass through the cells more easily than through the fats.",
+  "claim": "The weight of evidence shows the corneocyte phase of the SC is considerably more permeable to most solutes than the intercellular lipids.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/40349781/",
+  "source_title": "SC transport model, PubMed 40349781 (2025)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'the weight of evidence shows that the corneocyte phase of the SC is considerably more permeable to most solutes than are the intercellular lipids.' A modelling paper; hedged with 'most'. A person checks the journal and the claim's reach. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c12",
+  "sentence": "So your skin's wall is bricks and fats, working as a team.",
+  "claim": "Peter Elias described the SC as a 'bricks and mortar' model: corneocytes are the bricks, the adjoining lipids the mortar.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/17313091/",
+  "source_title": "Review (PubMed 17313091)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'This structure has been described by Peter Elias as the \"bricks and mortar\" model where the bricks are the cornecytes and the mortar refers to the adjoining lipids.' A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c13",
+  "sentence": "The fats are the tight part.",
+  "claim": "The weight of evidence shows the corneocyte phase of the SC is considerably more permeable to most solutes than the intercellular lipids.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/40349781/",
+  "source_title": "SC transport model, PubMed 40349781 (2025)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'the weight of evidence shows that the corneocyte phase of the SC is considerably more permeable to most solutes than are the intercellular lipids.' A modelling paper; hedged with 'most'. A person checks the journal and the claim's reach. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c14",
+  "sentence": "The pattern spreads in waves.",
+  "claim": "Fingerprint ridges form in waves spreading from variable initiation sites, before birth.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/36764291/",
+  "source_title": "Glover et al., Cell 2023 (PubMed 36764291)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'Ridge formation occurs as a set of waves spreading from variable initiation sites'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c15",
+  "sentence": "Water stays in, and germs stay out.",
+  "claim": "The skin barrier is the first line of protection against pathogens, allergens and transepidermal water loss.",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/42955253/",
+  "source_title": "Am J Clin Dermatol 2026 review (PubMed 42955253)",
+  "accessed": "2026-11-09",
+  "note": "[SOURCE-READ] abstract: 'first line of protection for the body against pathogens, allergens, and transepidermal water loss'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "page",
+  "status": "TODO open link"
+ }
+]

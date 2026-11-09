@@ -1,0 +1,98 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/skincare/ep08/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Why do fingers wrinkle? It's your nerves, not only the water.",
+   "stars": [
+    "wrinkle"
+   ],
+   "phonemes": "wˌaɪ dˈuː fˈɪŋɡəz ɹˈɪŋkəl? ɪts jɔː nˈɜːvz, nˌɒt ˈəʊnli ðə wˈɔːtə.",
+   "speed": 0.88,
+   "file": "01.wav",
+   "dur": 3.898,
+   "sha256": "0996f80fb62af05bf554ac76f1498a27ef1c78e0c66797c3e4d16b3da449c526"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "After about fifteen minutes in water, the hairless skin on your hands and feet has folded deeply. It is an active process, run by your nervous system.",
+   "stars": [],
+   "phonemes": "ˈaftəɹ ɐbˌaʊt fˈɪftiːn mˈɪnɪts ɪn wˈɔːtə, ðə hˈeələs skˈɪn ˌɒn jɔː hˈandz and fˈiːt hɐz fˈəʊldɪd dˈiːpli. ɪt ɪz ɐn ˈaktɪv pɹˈəʊsɛs, ɹˈʌn baɪ jɔː nˈɜːvəs sˈɪstəm.",
+   "speed": 0.79,
+   "file": "02.wav",
+   "dur": 11.243,
+   "sha256": "de3dbc0a27a534f66c01b41479d6f52292bdc0b4f64620d6d33ed5b49f608c23"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "When nerves tell the tiny blood vessels in your fingertips to narrow, the tissue below shrinks a little. Scientists think the skin above then folds into ridges.",
+   "stars": [],
+   "phonemes": "wˌɛn nˈɜːvz tˈɛl ðə tˈaɪni blˈʌd vˈɛsəlz ɪn jɔː fˈɪŋɡətˌɪps tə nˈaɹəʊ, ðə tˈɪʃuː bɪlˌəʊ ʃɹˈɪŋks ɐ lˈɪtəl. sˈaɪəntɪsts θˈɪŋk ðə skˈɪn əbˌʌv ðˈɛn fˈəʊldz ˌɪntʊ ɹˈɪdʒɪz.",
+   "speed": 0.88,
+   "file": "03.wav",
+   "dur": 9.459,
+   "sha256": "1bc3748599b67b102240a607663bcf743a25291b6cf889a52dbb0cfc3242a5bc"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Doctors have used this to test nerves for over eighty years. When the nerves to a finger are damaged, the finger does not wrinkle. So the wrinkles are a sign of working nerves, not just soaking.",
+   "stars": [],
+   "phonemes": "dˈɒktəz hav jˈuːzd ðɪs tə tˈɛst nˈɜːvz fɔːɹ ˌəʊvəɹ ˈeɪti jˈiəz. wˌɛn ðə nˈɜːvz tʊ ɐ fˈɪŋɡəɹ ɑː dˈamɪdʒd, ðə fˈɪŋɡə dʌznˌɒt ɹˈɪŋkəl. sˌəʊ ðə ɹˈɪŋkəlz ɑːɹ ɐ sˈaɪn ɒv wˈɜːkɪŋ nˈɜːvz, nˌɒt dʒˈʌst sˈəʊkɪŋ.",
+   "speed": 0.73,
+   "file": "04.wav",
+   "dur": 14.043,
+   "sha256": "edf12467041851e25a9fe11eb2be7de89af2a2ddc7b4019c6299768b59026466"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Why would the body do this? One idea is grip. In one study, people handled wet objects faster with wrinkled fingers. A later study found no difference.",
+   "stars": [
+    "difference"
+   ],
+   "phonemes": "wˌaɪ wʊd ðə bˈɒdi dˈuː ðˈɪs? wˈɒn aɪdˈiəɹ ɪz ɡɹˈɪp. ɪn wˈɒn stˈʌdi, pˈiːpəl hˈandəld wˈɛt ˈɒbdʒɛkts fˈastə wɪð ɹˈɪŋkəld fˈɪŋɡəz. ɐ lˈeɪtə stˈʌdi fˈaʊnd nˈəʊ dˈɪfɹəns.",
+   "speed": 0.88,
+   "file": "05.wav",
+   "dur": 9.527,
+   "sha256": "1de1a0e49379ab18eb2b777deb882d7fcfa4788995ad0676e73f0fb7c2fdb46b"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So wrinkled fingers are your nerves at work. Whether they help you grip is still debated.",
+   "stars": [
+    "debated"
+   ],
+   "phonemes": "sˌəʊ ɹˈɪŋkəld fˈɪŋɡəz ɑː jɔː nˈɜːvz at wˈɜːk. wˈɛðə ðeɪ hˈɛlp juː ɡɹˈɪp ɪz stˈɪl dɪbˈeɪtɪd.",
+   "speed": 0.78,
+   "file": "06.wav",
+   "dur": 6.408,
+   "sha256": "76c5f78f02ee3fa8eede5abea9cac7334b811e166734ef6a97e6c88805fdc249"
+  },
+  {
+   "id": "vo07",
+   "beat": "tease",
+   "text": "Next: how sweat really cools you. Cooling happens when sweat dries.",
+   "stars": [
+    "dries"
+   ],
+   "phonemes": "nˈɛkst: hˌaʊ swˈɛt ɹˈiəlɪ kˈuːlz juː. kˈuːlɪŋ hˈapənz wɛn swˈɛt dɹˈaɪz.",
+   "speed": 0.88,
+   "file": "07.wav",
+   "dur": 4.26,
+   "sha256": "12454fbbbb5e75d5c8e5c8281d3db21a3440e0e42332d40b866593d10222d3e4"
+  }
+ ]
+}

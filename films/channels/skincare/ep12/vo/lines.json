@@ -1,0 +1,96 @@
+{
+ "voice": "bf_isabella",
+ "speed": "per line",
+ "lang": "en-gb",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/skincare/ep12/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "When do your fingerprints form? Before you are born.",
+   "stars": [
+    "form"
+   ],
+   "phonemes": "wˌɛn dˈuː jɔː fˈɪŋɡəpɹˌɪnts fˈɔːm? bɪfˌɔː juː ɑː bˈɔːn.",
+   "speed": 0.86,
+   "file": "01.wav",
+   "dur": 3.042,
+   "sha256": "4ed777f305cce96ca3c16a02d90235005d8e52d1d9596f51b3e9733fa7022e46"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "In the womb, the skin on each fingertip starts building ridges. Each ridge is a band of skin cells that keeps growing. Each ridge begins like a hair follicle, then stops partway.",
+   "stars": [],
+   "phonemes": "ɪnðə wˈuːm, ðə skˈɪn ˌɒn ˈiːtʃ fˈɪŋɡətˌɪp stˈɑːts bˈɪldɪŋ ɹˈɪdʒɪz. ˈiːtʃ ɹˈɪdʒ ɪz ɐ bˈand ɒv skˈɪn sˈɛlz ðat kˈiːps ɡɹˈəʊɪŋ. ˈiːtʃ ɹˈɪdʒ bɪɡˈɪnz lˈaɪk ɐ hˈeə fˈɒlɪkəl, ðˈɛn stˈɒps pˈɑːtweɪ.",
+   "speed": 0.81,
+   "file": "02.wav",
+   "dur": 11.791,
+   "sha256": "bcf6bd5a1014742de0a5aededdcbf8b369cedd9a2a35f1f1879967899c8c69ba"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Chemical signals push and pull against each other, in what scientists call a Turing system. It turns smooth skin into bands of growth.",
+   "stars": [],
+   "phonemes": "kˈɛmɪkəl sˈɪɡnəlz pˈʊʃ and pˈʊl ɐɡˈɛnst ˈiːtʃ ˈʌðə, ɪn wɒt sˈaɪəntɪsts kˈɔːl ˈeɪ tjˈʊəɹɪŋ sˈɪstəm. ɪt tˈɜːnz smˈuːð skˈɪn ˌɪntʊ bˈandz ɒv ɡɹˈəʊθ.",
+   "speed": 0.86,
+   "file": "03.wav",
+   "dur": 8.563,
+   "sha256": "c97f38d06d197293c6b72710359b3959f7e7df6b28a889b96636fce3cc02e875"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Ridges do not appear all at once. They start at a few places on the fingertip and spread outward in waves. Think of ripples spreading on sand. Where the waves meet shapes the type of pattern.",
+   "stars": [],
+   "phonemes": "ɹˈɪdʒɪz duːnˌɒt ɐpˈiəɹ ˈɔːl ɐtwˈɒns. ðeɪ stˈɑːt atə fjˈuː plˈeɪsɪz ɒnðə fˈɪŋɡətˌɪp and spɹˈɛd ˈaʊtwəd ɪn wˈeɪvz. θˈɪŋk ɒv ɹˈɪpəlz spɹˈɛdɪŋ ˌɒn sˈand. wˌeə ðə wˈeɪvz mˈiːt ʃˈeɪps ðə tˈaɪp ɒv pˈatən.",
+   "speed": 0.81,
+   "file": "04.wav",
+   "dur": 12.485,
+   "sha256": "cdc5ae51ed2718e6f4bde84b2d8ba3cb7c2e10bf000d9104dc926d0bd52be26d"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Here is the twist. The pattern is grown, not drawn. Each place a wave starts is a little different. Tiny differences in where waves begin make endless variety.",
+   "stars": [
+    "variety"
+   ],
+   "phonemes": "hˈiəɹ ɪz ðə twˈɪst. ðə pˈatən ɪz ɡɹˈəʊn, nˌɒt dɹˈɔːn. ˈiːtʃ plˈeɪs ɐ wˈeɪv stˈɑːts ɪz ɐ lˈɪtəl dˈɪfɹənt. tˈaɪni dˈɪfɹənsɪz ɪn wˌeə wˈeɪvz bɪɡˈɪn mˌeɪk ˈɛndləs vəɹˈaɪəti.",
+   "speed": 0.88,
+   "file": "05.wav",
+   "dur": 10.344,
+   "sha256": "bf46e8a7bb536596ee1c5d0ed08187e8d1b6b92b44b97cc0ba81c8054eb50940"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So a fingerprint is a pattern of waves, set before birth. Yours is one of endless variations.",
+   "stars": [
+    "variations"
+   ],
+   "phonemes": "sˌəʊ ɐ fˈɪŋɡəpɹˌɪnt ɪz ɐ pˈatən ɒv wˈeɪvz, sˈɛt bɪfˌɔː bˈɜːθ. jˈɔːz ɪz wˈɒn ɒv ˈɛndləs vˌeəɹɪˈeɪʃənz.",
+   "speed": 0.87,
+   "file": "06.wav",
+   "dur": 6.273,
+   "sha256": "09578c362c9f67b5d9cbd4e0b69d3aa83878042c04a8250c5d8ba1d0a343cc14"
+  },
+  {
+   "id": "vo07",
+   "beat": "tease",
+   "text": "Next: more skin questions, answered with the evidence.",
+   "stars": [],
+   "phonemes": "nˈɛkst: mˈɔː skˈɪn kwˈɛstʃənz, ˈansəd wɪððɪ ˈɛvɪdəns.",
+   "speed": 1.0,
+   "file": "07.wav",
+   "dur": 3.024,
+   "sha256": "6cb08bb65e2870b3a7edebe5ac201af0eaef226619be7d2e47245a7dd62ec087"
+  }
+ ]
+}
