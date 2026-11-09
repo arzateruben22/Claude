@@ -1,4 +1,6 @@
-# One More Orbit No. 009: "Your gold" (draft; fact-check before posting)
+# One More Orbit, Season 2 · Episode 3: "Your gold" (draft; fact-check before posting)
+
+S2E03 (folder ep09). Season 2 numbers its episodes from 1 again (owner decision, 9 Nov 2026).
 
 About 72 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original score.
 Bible §7 #9. Hedge from the coordinator: neutron-star mergers are ONE confirmed source of gold; others are debated; never say all.
@@ -33,9 +35,9 @@ vo: *Light time*: the crash's ripples in space came *first*. {c21} Its visible l
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
 vo: Next: what happens at the edge of a *black hole*? {-}
-end card: "Next orbit: the *black hole* edge" · "One More Orbit · No. 010"
+end card: "Next orbit: the *black hole* edge" · "One More Orbit · S2 · Episode 4"
 
 ## Notes
 - Every claim is OPEN until a person opens its source page (see `claims.json`); NOTHING here was opened. Rows marked TO FIND have no source yet: find one or cut the sentence.
 - Listen at T0 after voicing.
-- TODO: the handle (@lightminute), kilometers vs miles, the AI-voice label in the post.
+- TODO: kilometers vs miles. The post must carry the AI-voice label (voice: synthetic).

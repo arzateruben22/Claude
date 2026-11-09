@@ -1,4 +1,6 @@
-# One More Orbit No. 010: "Black-hole edge" (draft; fact-check before posting)
+# One More Orbit, Season 2 · Episode 4: "Black-hole edge" (draft; fact-check before posting)
+
+S2E04 (folder ep10). Season 2 numbers its episodes from 1 again (owner decision, 9 Nov 2026).
 
 About 72 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original score.
 Bible §7 #10. Hedge: never claim what happens inside a black hole.
@@ -33,9 +35,9 @@ vo: *Light time*: we photographed a black hole in twenty nineteen. {c7} Its ligh
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
 vo: Next: a planet that could *float* in a big enough tub. {-}
-end card: "Next orbit: a planet that *floats*" · "One More Orbit · No. 011"
+end card: "Next orbit: a planet that *floats*" · "One More Orbit · S2 · Episode 5"
 
 ## Notes
 - Every claim is OPEN until a person opens its source page (see `claims.json`); NOTHING here was opened. Rows marked TO FIND have no source yet: find one or cut the sentence.
 - Listen at T0 after voicing.
-- TODO: the handle (@lightminute), kilometers vs miles, the AI-voice label in the post.
+- TODO: kilometers vs miles. The post must carry the AI-voice label (voice: synthetic).

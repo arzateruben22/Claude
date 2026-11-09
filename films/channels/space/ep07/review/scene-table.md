@@ -1,25 +1,27 @@
-# ep07 scene table (PLANNED: times are the script's windows; they are replaced by measured times after voicing and compile)
+# S2E01 (folder ep07) scene table: MEASURED times (from vo/words.json and film.json of 9 Nov 2026)
 
-Rhythm target: a visible change every 2 to 4 s. Look: the approved Season 1 look (void night, teal light, lilac gravity), no new look.
+One row per visual change; the narration column is the line playing at that time. The 2-D picture also pushes in a little on each starred word.
 
 | time | narration | visual | on-screen text | sound |
 |---|---|---|---|---|
-| 0.0 | "More trees, or more stars?" | Frame 0 payoff: the galaxy (illustration) with a ring of teal tally dots already spilling past its edge | title "Trees or stars"; spine "trees or stars: ?" | signature pings E5, B5, F#6 |
-| 1.8 | "Guess first." | Dots pause; galaxy begins its slow arc | spine "?" | soft bell |
-| 3.4 | "Our galaxy has hundreds of billions of stars." | Galaxy fills the frame; a pin lands on the Sun | label "the Sun"; spine "stars: 100 to 400 billion"; badges "illustration", "estimate" | bell on label |
-| 7.0 | "Nobody counted them." | Star points flicker out and back as one block, none picked | none new | none |
-| 9.0 | "Most of its weight is dark matter, not stars, so the number is an estimate." | The galaxy's glow is drawn as a mostly dark halo with a few lit stars inside it (dark matter shown as a faint lilac haze, labelled 'illustration') | caption only | tonal sweep |
-| 13.0 | "Now the trees." | Camera pulls in to Earth; forests light up as teal dots | label "Earth"; spine "trees: about 3 trillion (estimate)" | bell |
-| 15.5 | "In 2015, a team put Earth's at about three trillion." | Dots multiply across continents | badge "estimate"; "each dot = a billion" | rising sparkle |
-| 19.0 | "That's several hundred trees for every person alive." | A crowd of small figures, each with a tree dot above it | counter "about 420 per person" | tick |
-| 22.5 | "Researchers counted trees in ground plots, then scaled up with satellite maps." | Left half: small plots on a forest; right half: a satellite grid spreads over the map | pills "ground plots", "satellite maps" | none |
-| 28.0 | "Both are estimates, not exact counts, so each really means about." | Both tallies get an 'about' badge and a soft edge instead of a sharp number | badge "estimate" x2 | none |
-| 31.5 | "The honest answer is a range." | Bars widen to the two ranges | spine "both are estimates" | picture-only hold 2 s |
-| 37.0 | "Now turn every star into a tree." | Each star dot turns teal and drops into Earth's tally | spine "trees ÷ stars" | glide |
-| 41.0 | "The stars run out, and Earth's forests keep going." | Galaxy tally fills and stops; Earth's tally keeps filling past it | none | pad swell |
-| 45.0 | "Trees win, by roughly eight to thirty times." | Overflow reaches the top of frame; ratio bar reads 8 to 30 | counter "roughly 8 to 30 times" | chime; picture-only 3 s |
-| 51.0 | "So the next tree you pass is one of more than the stars." | Pull back to one tree beside the overflow | none | none |
-| 55.0 | "Big numbers hide in ordinary places." | Hold | none | none |
-| 58.0 | "Light time across our galaxy: longer than all of written history." | Light ring crosses the galaxy | readout "100,000 years" | ping |
-| 62.0 | "Across a city block: about a millionth of a second." | Ring shrinks to a street block | readout "1 millionth of a second" | ping |
-| 65.5 | "Next: with that many stars, why is the night sky dark?" | End card ring around "Next orbit: the dark sky" | "One More Orbit · No. 008" | signature; end card held 1.5 s or more |
+| 0.0 | More trees, or more stars? | Frame 0: two equal clouds of dots, teal and lemon, labelled 'trees' and 'stars' (no answer shown) | title; 'trees or stars: ?'; pills trees / stars | signature pings E5 B5 F#6 |
+| 1.8 | Guess first. | Dots drift; the clouds hold equal | spine '?' | soft bell |
+| 2.7 | Our galaxy has hundreds of billions of stars. | Clouds dissolve; the Milky Way (illustration) fades in | badges 'galaxy: illustration', 'estimate'; counter '100 to 400 billion' | bell |
+| 4.9 | ... billions of stars. | Camera glides to the Sun; push-in on 'billions'; the Sun pin lands | label 'the Sun' | bell on label |
+| 6.8 | Nobody counted them. | A scan line sweeps the galaxy; lemon flickers (counting that never finishes) | none new | tick |
+| 8.4 | Most of its weight is dark matter, so stars are a small part. | Camera pulls out; a lilac dark-matter halo grows round the galaxy | pill 'dark matter (illustration)' | tonal swell |
+| 12.7 | Now the trees. | Dip to black, cut to Earth (not to scale) turning slowly | badge 'not to scale' | glide |
+| 13.1 | In 2015, a team put Earth's at about three trillion. | Forests light as teal dots, one by one, across the land | counter 'about 3 trillion'; badge 'estimate' | rising sparkle |
+| 18.7 | That's hundreds of trees for every person alive. | Earth steps back; a row of eight people with a cloud of trees over each | counter 'about 420' | tick |
+| 21.9 | Researchers counted trees in ground plots, | Panel 1: a forest of dots; small squares flash and are counted | pill 'ground plots: trees counted by people' | none |
+| 26.1 | then scaled up with satellite maps. | Panel 2: a satellite map sweeps in, cells shaded by tree density | pill 'satellite map: trees from space' | sweep |
+| 27.6 | Both are estimates, not exact counts, so each really means about. | Panels leave; the galaxy returns under a dim tally; its edge dots flicker ('about') | counter 'estimates' | none |
+| 33.6 | The honest answer is a range. | Star block: 10 solid dots and 30 hollow ones (the 100 to 400 billion range) | pill 'each dot = 10 billion' | none; picture-only hold |
+| 37.2 | Now turn every star into a tree. | The 40 star dots turn teal one by one; the trees dim so the swap reads | spine 'trees ÷ stars' | glide |
+| 40.9 | The stars run out, and Earth's forests keep going. | The other 264 dots light outward in rings and fill past the galaxy | none | pad swell |
+| 42.5 | Trees win, by roughly eight to thirty times. | Full tally lit; push-in on 'thirty' | counter 'roughly 8 to 30' | chime; picture-only 3 s |
+| 48.5 | Every tree you pass is one of more trees than our galaxy has stars. | Tally shrinks and dims; one tree appears in the middle | pill 'one tree' | none |
+| 52.5 | Big numbers hide in ordinary places. | Hold on the tree | none | none |
+| 57.1 | Light time across our galaxy: longer than all of written history. | Galaxy returns; a teal light ring crosses it | counter '100,000 years' | ping |
+| 63.5 | Across a city block: about a millionth of a second. | A row of four city blocks; the ring crosses one (not to scale) | counter '1 millionth of a second'; pill 'a city block'; badge 'not to scale' | ping |
+| 65.7 | Next: with that many stars, why is the night sky dark? | End card on frame 0's two clouds (a replay loops) | 'Next orbit: the dark sky'; 'One More Orbit · S2 · Episode 2' | signature; end card held 1.5 s or more |

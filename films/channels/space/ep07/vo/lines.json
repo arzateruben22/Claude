@@ -26,29 +26,30 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Our galaxy has hundreds of billions of stars. Nobody counted them. Most of its weight is dark matter, not stars, so the number is an estimate.",
+   "text": "Our galaxy has hundreds of billions of stars. Nobody counted them. Most of its weight is dark matter, so stars are a small part.",
    "stars": [
     "billions",
-    "estimate"
+    "part"
    ],
-   "phonemes": "ˌaʊɚ ɡˈælɐksi hɐz hˈʌndɹɪdz ʌv bˈɪliənz ʌv stˈɑːɹz. nˈoʊbɑːdi kˈaʊntᵻd ðˌɛm. mˈoʊst əv ɪts wˈeɪt ɪz dˈɑːɹk mˈæɾɚ, nˌɑːt stˈɑːɹz, sˌoʊ ðə nˈʌmbɚɹ ɪz ɐn ˈɛstᵻmət.",
+   "phonemes": "ˌaʊɚ ɡˈælɐksi hɐz hˈʌndɹɪdz ʌv bˈɪliənz ʌv stˈɑːɹz. nˈoʊbɑːdi kˈaʊntᵻd ðˌɛm. mˈoʊst əv ɪts wˈeɪt ɪz dˈɑːɹk mˈæɾɚ, sˌoʊ stˈɑːɹz ɑːɹ ɐ smˈɔːl pˈɑːɹt.",
    "speed": 1.05,
    "file": "02.wav",
-   "dur": 9.421,
-   "sha256": "b645b27e2e51257c37fac1f8432be95dbb8e07c2b053720a83b5977949233d4c"
+   "dur": 8.662,
+   "sha256": "c61c300cd6c73d943f7cf57e6996b6efbb2981b8461985921f13baead699d8a2"
   },
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Now the trees. In twenty fifteen, a team put Earth's at about three trillion. That's several hundred trees for every person alive.",
+   "text": "Now the trees. In twenty fifteen, a team put Earth's at about three trillion. That's hundreds of trees for every person alive.",
    "stars": [
-    "trillion"
+    "trillion",
+    "hundreds"
    ],
-   "phonemes": "nˈaʊ ðə tɹˈiːz. ɪn twˈɛnti fˈɪftiːn, ɐ tˈiːm pˌʊt ˈɜːθz æɾ ɐbˌaʊt θɹˈiː tɹˈɪliən. ðæts sˈɛvɹəl hˈʌndɹɪd tɹˈiːz fɔːɹ ˈɛvɹi pˈɜːsən ɐlˈaɪv.",
+   "phonemes": "nˈaʊ ðə tɹˈiːz. ɪn twˈɛnti fˈɪftiːn, ɐ tˈiːm pˌʊt ˈɜːθz æɾ ɐbˌaʊt θɹˈiː tɹˈɪliən. ðæts hˈʌndɹɪdz ʌv tɹˈiːz fɔːɹ ˈɛvɹi pˈɜːsən ɐlˈaɪv.",
    "speed": 1.05,
    "file": "03.wav",
-   "dur": 8.497,
-   "sha256": "de060ff1ea240cf8bfe9f0e58a8a54f96e6bd9afe83913d1f03293e507db5cba"
+   "dur": 8.198,
+   "sha256": "284b97230ac5d7ea2ea961300f68e0f7c515ac10ae40ee08f10cace822a8483c"
   },
   {
    "id": "vo04",
@@ -83,15 +84,15 @@
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So the next tree you pass is one of more than the stars. Big numbers hide in ordinary places.",
+   "text": "Every tree you pass is one of more trees than our galaxy has stars. Big numbers hide in ordinary places.",
    "stars": [
     "more"
    ],
-   "phonemes": "sˌoʊ ðə nˈɛkst tɹˈiː juː pˈæs ɪz wˈʌn ʌv mˈɔːɹ ðɐn ðə stˈɑːɹz. bˈɪɡ nˈʌmbɚz hˈaɪd ɪn ˈɔːɹdɪnˌɛɹi plˈeɪsᵻz.",
+   "phonemes": "ˈɛvɹi tɹˈiː juː pˈæs ɪz wˈʌn ʌv mˈɔːɹ tɹˈiːz ðɐn ˌaʊɚ ɡˈælɐksi hɐz stˈɑːɹz. bˈɪɡ nˈʌmbɚz hˈaɪd ɪn ˈɔːɹdɪnˌɛɹi plˈeɪsᵻz.",
    "speed": 0.95,
    "file": "06.wav",
-   "dur": 6.377,
-   "sha256": "22ee90055211bd6fc026a108ec46692c6166e18acea1f6300127d709abeaccd2"
+   "dur": 7.638,
+   "sha256": "a25018d09d2c246d73a191c771f4d3b0cb3f32d90acc7fef621994f28615fc5e"
   },
   {
    "id": "vo07",

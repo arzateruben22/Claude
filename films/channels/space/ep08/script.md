@@ -1,4 +1,6 @@
-# One More Orbit No. 008: "Dark sky" (draft; fact-check before posting)
+# One More Orbit, Season 2 · Episode 2: "Dark sky" (draft; fact-check before posting)
+
+S2E02 (folder ep08). Season 2 numbers its episodes from 1 again (owner decision, 9 Nov 2026).
 
 About 72 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original score.
 Bible §7 #8. It pays off episode 7's tease and sets up episode 9 (gold).
@@ -33,9 +35,9 @@ vo: *Light time*: from the Sun, about eight minutes. {c8} From the farthest gala
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
 vo: Next: where did the *gold* in your ring come from? {-}
-end card: "Next orbit: your *gold*" · "One More Orbit · No. 009"
+end card: "Next orbit: your *gold*" · "One More Orbit · S2 · Episode 3"
 
 ## Notes
 - Every claim is OPEN until a person opens its source page (see `claims.json`); NOTHING here was opened. Rows marked TO FIND have no source yet: find one or cut the sentence.
 - Listen at T0 after voicing.
-- TODO: the handle (@lightminute), kilometers vs miles, the AI-voice label in the post.
+- TODO: kilometers vs miles. The post must carry the AI-voice label (voice: synthetic).

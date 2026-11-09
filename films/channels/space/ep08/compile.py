@@ -21,7 +21,7 @@ sys.path.insert(0, str(HERE.parent / "set"))
 from capglue import glue, hold, keep_units    # noqa: E402
 
 FPS, BPM = 30, 56.25
-ID = "lightminute-008"
+ID = "one-more-orbit-s2e02"
 f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
@@ -71,8 +71,8 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "One More Orbit · No. 008", "title": "Dark *sky*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next orbit: your *gold*", "follow": "One More Orbit · No. 009",
+TITLE = {"series": "One More Orbit · S2 · Episode 2", "title": "Dark *sky*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Next orbit: your *gold*", "follow": "One More Orbit · S2 · Episode 3",
        "next": "Planck (ESA): the universe is about 13.8 billion years old."}
 POSTER = A("vo04:years", 0.6)
 glue(f, {"vo04": ["thirteen point eight billion years."], "vo02": ["no edge or start."], "vo07": ["about eight minutes."]})

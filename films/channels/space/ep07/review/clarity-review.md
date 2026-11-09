@@ -1,4 +1,4 @@
-# ep07 clarity and pacing pass (script stage; re-run after voicing)
+# S2E01 (folder ep07) clarity and pacing pass (re-run after the 9 Nov rebuild)
 
 Lint (kits/cinema/script/lint.py, STANDARDS-v2): whole script about grade 3.9 (target 7 or below); no sentence over 22 words; 0 errors.
 One beat flagged earlier: normal read at grade 8.3.
@@ -19,6 +19,11 @@ Spoken figures went from 7 to 4 (2015, three trillion, eight to thirty, a millio
 
 ## Source-pass changes (8 Nov)
 - Yale's release on the 2015 study supports 3.04 trillion, 422 per person and the method (400,000+ plots plus satellite imagery); it says nothing about error bars, so 'error bars' became 'estimates, not exact counts, so each really means about'. NASA's Hubble mass page supports 'most of the weight is dark matter'; no reachable page supports 'weigh the galaxy then divide by one star', so that line was replaced. 'Nobody counted them' stays marked as our inference.
+
+## Rebuild after the Opus review (9 Nov: a3 b4 c2 d2 e3 f2 g3 h2, FAIL)
+Script: the unsupported 'so the number is an estimate' line is replaced by 'Most of its weight is dark matter, so stars are a small part.' (NASA Hubble mass page) and the picture now shows the dark-matter halo. 'Several hundred' became 'hundreds' (no digits in the caption). The takeaway was rewritten for the first listen: 'Every tree you pass is one of more trees than our galaxy has stars.' (window lengthened to 7.5 s so the pace is 2.9 words a second). Season numbering: this is S2E01.
+Picture: the tally is now 19 x 16 dots, each dot ten billion (dots about four times bigger); star block 10 solid plus 30 hollow dots; frame 0 shows two equal clouds (trees, stars) with no answer; the planned shots exist: Sun pin landing, halo, Earth with forests, crowd, ground-plot and satellite-map panels, tally overflowing, one tree, a city block; the camera and the 2-D picture push in on the starred words; the end card sits on frame 0 so a replay loops.
+Lint after the rebuild: 0 errors, voiced 71.5 s, hook spoken by 1.8 s.
 
 ## Still open
 - Lint warns: hook 7 words and normal 21 words (template ranges, deliberate).
