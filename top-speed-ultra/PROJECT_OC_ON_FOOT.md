@@ -497,6 +497,27 @@ Each phase ends with its checks passing in Playwright (headless Chromium, SwiftS
     facing check measured as drawn (bodies by the head, cut-outs by the body, which now turns toward the speaker),
     the people's per-frame work trimmed, a repaint that froze a walker, light specks on the cut-outs' legs, and the
     people's calls measured as well as counted (which found held cups' glass drawn in two passes and counted as one).
+  - [ ] P1d (2026-11-08, not committed): Lot 57 at maximum graphics. Three presets, the owner's (2026-10-21): Low is a
+    crisp retro look at full resolution (cel shading, simplified colour, a 16-bit palette with an ordered dither, dark
+    outlines, hard sun shadows, a banded sky; no bloom, AO or reflections; `lot57/retro.ts`), HD the realistic look,
+    Ultra the most (GTAO, bloom, MSAA, 4096 sun shadows, 16x anisotropy, eight lights near you and two string-light
+    spots casting shadows after dark). `setQuality('low' | 'hd' | 'ultra')` ('high' still selects HD) and the pause
+    menu; the frame is `lot57/look.ts`. Materials made in code (`lot57/surfaces.ts`): painted brick and corrugated
+    metal on the Shed, gravel, umbrella canvas, brushed kegs, oil stains, and normal maps on HD and Ultra. Detail
+    (`lot57/dress.ts`): fire tables on gravel pads, hoods over the roll-up doors, a menu board, the pylon's neon,
+    bike racks, kegs, pools of light under the strings, heaters and fires, baked ground occlusion. A rim light on
+    the people. See `PROJECT_OC_PROGRESS.md`. The Low budget's 12 canvas textures is not met (nor was it before).
+    Repair r2 (2026-11-09, not committed), as the reviewers asked: Ultra set apart from HD (stronger GTAO, four
+    shadow-casting string-light spots aimed where you look, the strings' baked light turned down under them, a
+    stronger bloom and grade, a stronger, warmer rim and fill on the people, reflections in the Shed's glass from a
+    planar mirror, `lot57/glass.ts`); the mountain ring given form on every preset (three ranges, ridged relief lit
+    by the sun, haze by distance and height, `lot57/sky.ts`); Low's night sky without the cloud deck and its day
+    clouds crisp; the umbrellas' undersides lit (`mats.ts` CANOPY); golden hour shot with the sun about 5 degrees
+    up, the sky and sun warmed; the sign, gate, trucks and glass views shot; your own car with plain wheels on Low
+    (62k to 35k triangles); Low's tiling surfaces packed into 512 px atlas pages (42 canvas textures to 26 or 27:
+    still over 12); readable pass names in `stats().look.passes`; the code fixes (toon re-conversion, Low's casters
+    restored to their own values, no per-frame allocations, restyling from the renderer's draw list, a moved spot's
+    shadow drawn the same frame).
 
 - **Deliverables.**
   - Lot 57 built in code: the Shed, the yard, string lights, the lawn, trucks, the lot and the sign. The rest of the

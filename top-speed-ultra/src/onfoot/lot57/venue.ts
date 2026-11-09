@@ -11,6 +11,7 @@ import { Collider, seg, box, boxMM, circ } from './collide';
 import { PLAN } from './coords';
 import { ATLAS } from './tex';
 import type { Mats } from './mats';
+import { dressVenue, fireTable } from './dress';
 
 export const HEX = {
   teal: 0x12333a, cream: 0xf3e6c4, red: 0xc8462f, patina: 0x4f7f6a, brick: 0x8e4a36,
@@ -59,6 +60,8 @@ export interface Venue {
 export interface Tree { x: number; z: number; y: number; s: number; kind: 'olive' | 'shade' | 'palm' }
 
 const faceTo = (dx: number, dz: number) => Math.atan2(dx, dz);
+/** the lawn's two fire tables, the lawn chairs round each (P1d) */
+const FIRES: [number, number][] = [[26, -21], [46, -22]];
 
 export function buildVenue(kit: Kit, m: Mats): Venue {
   const col: Collider[] = [], seats: Seat[] = [], spots: Spot[] = [], closedOnly: Collider[] = [], openOnly: Collider[] = [], counters: CounterSpot[] = [];
@@ -67,11 +70,11 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
   const r = rand(5757);
   const venueWheels: Venue['wheels'] = [], bulbsExtra: THREE.Vector3[] = [];
   // ---------------------------------------------------------------- batches (one draw call per material family)
-  const tilt = kit.get('shed-walls', m.tilt, { uv: 6.5, cast: true });
+  const tilt = kit.get('shed-walls', m.tilt, { uv: 3.2, cast: true });
   const inner = kit.get('shed-inside', m.block, { uv: 3.2 });
   const innerBrick = kit.get('shed-inside-brick', m.brickInside, { uv: 2 });
   const enamel = kit.get('shed-enamel', m.enamel);
-  const roof = kit.get('shed-roof', m.roof, { uv: 6, cast: true });
+  const roof = kit.get('shed-roof', m.roof, { uv: 2, cast: true });
   const floor = kit.get('shed-floor', m.shedFloor, { uv: 4.5, ao: false });
   const deck = kit.get('shed-deck', m.deck, { uv: 2, ao: false });
   const mural = kit.get('shed-mural', m.mural, { uv: 1, ao: false });
@@ -84,7 +87,7 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
   const stainless = kit.get('venue-stainless', m.stainless, { cast: true });
   const brick = kit.get('frontage-brick', m.brick, { uv: 2, cast: true });
   const plants = kit.get('venue-plants', m.plant, { cast: true });
-  const canvas = kit.get('venue-canvas', m.canvas, { cast: true });
+  const canvas = kit.get('venue-canvas', m.canvas, { uv: 1, cast: true });
   const rubber = kit.get('venue-rubber', m.rubber);
   const glass = kit.get('venue-glass', m.glass, { glow: false, order: 2 });
   const glazing = kit.get('shed-glazing', m.glazing, { glow: false, cast: true });
@@ -127,6 +130,11 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
   // ---------------------------------------------------------------- the Shed
   shed(); yard(); lawn(); trucks(); frontage(); fences();
   const lights = stringLights();
+  // P1d: the dressing (fire tables' pads and glow, the doors' hoods, the menu board, the pylon's neon, bike racks,
+  // kegs, the pools of light, the ground's baked occlusion and variation: lot57/dress.ts)
+  const HEATERS: [number, number][] = [[-7.5, -26], [10.5, -26], [-7.5, -12], [10.5, -12]];
+  const dressed = dressVenue(kit, m, col, lights.bulbs, HEATERS, FIRES);
+  col.push(...dressed.colliders);
 
   function wallRun(B: Batch, In: Batch | null, dir: 'x' | 'z', at: number, u0: number, u1: number, t: number, top: (u: number) => number,
     holes: { a: number; b: number; y0: number; y1: number }[], out: 1 | -1, hex: number, inHex: number, breaks: number[] = []) {
@@ -493,7 +501,7 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
       col.push(box(cx, cz, 0.95, L, 0, 'table'));
       blob(cx, cz, 2.6, L + 0.6);
       // a market umbrella through the middle of the top (cream with a teal valance; the yard's shade by day)
-      umbrella(cx, cz, (rows.indexOf(cz) + cols.indexOf(cx)) % 3 === 1 ? HEX.patina : HEX.teal);
+      umbrella(cx, cz, (rows.indexOf(cz) + cols.indexOf(cx)) % 3 === 1 ? HEX.patina : 0x225f68);       // (a lighter teal than the trim: a valance in shade read as a black band)
       // a steel caddy at each end of the top: a stack of napkins, salt and pepper (plain, no marks)
       for (const e of [-1, 1]) {
         const tz = cz + e * 0.95, ty = 0.773;
@@ -614,8 +622,9 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
     }
     spots.push({ kind: 'game', x: bx - 1.2, z: bz, face: faceTo(1, 0), label: 'stacking blocks' });
     // two clusters of lawn chairs (slatted, angled backs), facing each other round a low table
-    for (const [cx, cz] of [[26, -21], [46, -22]]) {
-      wood.box(cx, 0.22, cz, 0.7, 0.44, 0.7, 0x6a4a30); col.push(box(cx, cz, 0.75, 0.75, 0, 'table'));
+    // (P1d: round a fire table on a gravel pad, lot57/dress.ts, in place of the low wooden table)
+    for (const [cx, cz] of FIRES) {
+      fireTable(kit, m, cx, cz); col.push(box(cx, cz, 1.08, 1.08, 0, 'table'));
       for (let k = 0; k < 4; k++) {
         const a = k * Math.PI / 2 + 0.3, x = cx + Math.sin(a) * 1.25, z = cz + Math.cos(a) * 1.25, f = a + Math.PI;
         lawnChair(x, z, f, k % 2 ? HEX.patina : HEX.cream);
@@ -1029,6 +1038,6 @@ export function buildVenue(kit: Kit, m: Mats): Venue {
     return { bulbs, wires, lightSpots };
   }
 
-  const heaters = [[-7.5, -26], [10.5, -26], [-7.5, -12], [10.5, -12]].map(([x, z]) => new THREE.Vector3(x, 2.1, z));
+  const heaters = [...HEATERS.map(([x, z]) => new THREE.Vector3(x, 2.1, z)), ...dressed.fires];
   return { colliders: col, seats, spots, counters, bulbs: [...lights.bulbs, ...bulbsExtra], wires: lights.wires, heaters, closedOnly, openOnly, lightSpots: lights.lightSpots, insideLights, trees, wheels: venueWheels };
 }

@@ -8,8 +8,11 @@ import { PLAN } from './coords';
 import { Collider, box, circ, boxMM } from './collide';
 import { trafficParts, trafficMaterials, TrafficKind } from '../../preview/traffic';
 import { buildCar, CarId } from '../../preview/car';
+import { shapeFor } from '../../preview/car-shape';
+import { truckWheel } from './wheels';
 import type { Mats } from './mats';
 import type { Tree } from './venue';
+import { dressLot } from './dress';
 
 export interface Stall { x: number; z: number; face: number; row: number; mine: boolean; ada: boolean }
 export interface LotInfo { stalls: Stall[]; colliders: Collider[]; trees: Tree[]; mine: Stall; door: { x: number; z: number } }
@@ -93,6 +96,8 @@ export function buildLot(kit: Kit, m: Mats): LotInfo {
   for (const x of [-42, -28]) { heads.box(x, 4.2, PLAN.shed.z1 + 0.22, 0.4, 0.3, 0.18, 0xffffff); kit.light({ x, y: 4.1, z: PLAN.shed.z1 + 0.6, i: 30, ch: 1, reach: 16, down: 1 }); }
   for (const x of [-30, 10, 34]) { steel.cyl(x, 0.15, PLAN.lotWalk.z0 + 0.8, 0.09, 0.09, 1.0, 8, 0x2b2e31); heads.cyl(x, 1.1, PLAN.lotWalk.z0 + 0.8, 0.1, 0.1, 0.12, 8, 0xffffff); kit.light({ x, y: 1.1, z: PLAN.lotWalk.z0 + 0.8, i: 4, ch: 1, reach: 6 }); col.push(circ(x, PLAN.lotWalk.z0 + 0.8, 0.14, 'bollard')); }
   const door = { x: mine.x - 1.25, z: mine.z + 0.6 };
+  // P1d: oil stains on a third of the stalls (lot57/dress.ts)
+  dressLot(kit, m, stalls);
   return { stalls, colliders: col, trees, mine, door };
 }
 
@@ -210,7 +215,22 @@ function proxyGeometry(S: { len: number; wid: number; belt: number; roof: number
 
 /** your own car in your stall, with its paint (the game's car builder) */
 export function yourCar(stall: Stall, car: CarId, paint: number | undefined, quality: 'phone' | 'high') {
-  const g = buildCar({ car, paint, quality, cabin: 'full' });
+  // (P1d repair: on Low, the phone, a cheaper car: its body as before but four plain wheels, the food trucks' Low
+  // tyre and rim scaled to the car's, in place of the garage wheels' turned tyres, machined faces, calipers and
+  // discs: about 28k of the car's 62k triangles, and the lot's views were within 1% of the phone's budget)
+  const low = quality === 'phone';
+  const g = buildCar({ car, paint, quality, cabin: 'full', wheels: !low });
+  if (low) {
+    const A = shapeFor(car).axle, mats = g.userData.materials as Record<string, THREE.Material>, w = truckWheel(0), s = A.r / 0.41;
+    const tyre = mats.tyre ?? new THREE.MeshStandardMaterial({ color: 0x1b1b1c, roughness: 0.9 }), rim = mats.machined ?? mats.rimPaint ?? new THREE.MeshStandardMaterial({ color: 0xc9ccd0, roughness: 0.3, metalness: 0.8 });
+    for (const [z, track, wd] of [[A.zF, A.trackF, A.wF], [A.zR, A.trackR, A.wR]]) for (const out of [1, -1]) {
+      for (const [geo, mat, name] of [[w.tyre, tyre, 'tyre-low'], [w.rim, rim, 'rim-low']] as [THREE.BufferGeometry, THREE.Material, string][]) {
+        const m = new THREE.Mesh(geo, mat); m.name = name;
+        m.position.set(out * track, A.r, z); m.scale.set(wd / 0.256, s, s); m.rotation.y = out > 0 ? 0 : Math.PI;
+        g.add(m);
+      }
+    }
+  }
   g.position.set(stall.x, 0, stall.z - 0.15);
   g.rotation.y = stall.face;
   g.traverse((o) => { if ((o as THREE.Mesh).isMesh) { o.castShadow = true; o.receiveShadow = true; } });
