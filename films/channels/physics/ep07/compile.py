@@ -185,7 +185,7 @@ film = {
     "noteSlots": {"speed": "tl", "hook": "bl"},
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
     "end": {"title": "Next drop: spaghetti never breaks in *two*", "follow": "Follow Reality Rulebook",
-            "foot": "Cross and Wheatland, Am. J. Phys. 80, 1051 (2012): typical slinky collapse time about 0.3 s."},
+            "foot": "A real slinky collapses in about 0.3 s (Cross and Wheatland, 2012)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]

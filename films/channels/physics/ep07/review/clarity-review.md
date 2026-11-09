@@ -17,3 +17,9 @@ alignment model's hash (owner approval), so compile and render have not run.
 Update after reading the source (8 Nov): the paper's typical collapse time is about 0.3 s, so the script now says "about
 three tenths of a second" (not "a third") and the picture is tuned to 0.3 s; the earlier 0.35 s came from our own simple
 model, not the paper, and is dropped.
+
+Draft render (9 Nov): 66.7 s, 540x960 at 15 fps, 1000 frames, audio -14.1 LUFS / -1.9 dBTP, voice 21.1 LU over the music,
+sync PASS, 0 text-audit warnings after the end-card footnote was shortened. Voice speed 0.9 (the lint's 2.2-3.0 words/s
+rule). The lint reports 0 errors. Not done: the read-aloud pass by a person, final-tier render, the person check of
+claims. scene-table.md is the planned direction; the draft follows it with these changes: the hook shows the slinky
+mid-collapse, the spine plate sits right of the slinky, and the whoa shows a dot and a dropped ball level through the fall.
