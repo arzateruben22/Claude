@@ -100,6 +100,8 @@ export interface Hud {
   // the venues (Phase 3a): on one of a venue's exit ramps, its name for the prompt (tap to park there); parked at a
   // venue, its name (Get out replaces the pedals); '' otherwise
   venuePrompt: string; parked: string;
+  // parked: what happened, plainly ("Drove Orangewood Ave to Lot 57 · street driving isn't built yet"), kept on screen
+  parkedNote: string;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
@@ -1803,6 +1805,7 @@ export class Game {
       autoOffer: this.autoDriveOffered, autoOn: this.autoDrive, lanes: this.laneHint(turn, nextDist),
       venuePrompt: !this.venueState && this.venueAllowed ? this.vramps().get(this.path)?.venue.name ?? '' : '',
       parked: this.venueState?.phase === 'parked' ? this.venueState.vr.venue.name : '',
+      parkedNote: this.venueState?.phase === 'parked' ? `Drove ${this.venueState.vr.exit.street} to ${this.venueState.vr.venue.name} · street driving isn't built yet` : '',
       errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
     });
   }

@@ -58,8 +58,10 @@ async function toVenue(page, venue, prefix) {
   say(venue, 'route', JSON.stringify(r));
   await frames(page, 4);
   await shot(page, `${prefix}-1-route.png`);
-  await page.evaluate(() => { const g = window.__game; let t = 0; while (t < 300 && !g.venue()) { g.fastForward(0.5); t += 0.5; } });
-  await page.waitForFunction(() => document.querySelector('.venue-park .getout') && [...document.querySelectorAll('.toast')].some((t) => /street driving isn't built yet/.test(t.textContent)), null, { timeout: 300000 });
+  const d = await page.evaluate(() => { const g = window.__game; let t = 0; while (t < 300 && !g.venue()) { g.fastForward(0.5); t += 0.5; } return { t, venue: g.venue(), path: g.path.id, s: g.phys.s, auto: g.autoDriving }; });
+  say(venue, 'drove', JSON.stringify(d));
+  // (the toast has usually gone by the time a DPR 3 frame is read back; the same words stay on screen above Get out)
+  await page.waitForFunction(() => document.querySelector('.venue-park .getout') && /street driving isn't built yet/.test(document.querySelector('.venue-note')?.textContent ?? ''), null, { timeout: 300000 });
   await page.waitForTimeout(500);
   await shot(page, `${prefix}-2-arrival.png`);
   say(venue, 'arrived', JSON.stringify(await page.evaluate(() => window.__game.venue())));
@@ -73,7 +75,7 @@ async function getOut(page) {
 async function byYourCar(page, prefix) {
   await page.evaluate(() => {
     const o = window.__onfoot, c = o.yourCar(), p = o.pos(), s = c.stall;
-    o.look((Math.atan2(s.x - p.x, s.z - p.z) * 180) / Math.PI + 18, -12);
+    o.view('third'); o.look((Math.atan2(s.x - p.x, s.z - p.z) * 180) / Math.PI + 35, -10);
   });
   await frames(page, 3, '__onfoot');
   await shot(page, `${prefix}-3-by-your-car.png`);
@@ -106,11 +108,10 @@ if (only !== 'desk') {
   await getOut(page);
   await byYourCar(page, 'phone-stoppage');
   await page.evaluate(() => {
-    const o = window.__onfoot, p0 = o.pos(), d = o.doors().find((x) => x.id === 'front');
-    o.tap(d.x, d.z); o.sim(40, true);
-    const k = 4 / Math.max(0.1, Math.hypot(d.x - p0.x, d.z - p0.z));
-    o.tap(d.x + (d.x - p0.x) * k, d.z + (d.z - p0.z) * k); o.sim(30, true);
-    const p = o.pos(); o.look((Math.atan2(d.x - p0.x, d.z - p0.z) * 180) / Math.PI, -4);
+    // in through the front door (the point just inside it the bar's own page can start you at), looking on in
+    const o = window.__onfoot, d0 = o.doors().find((x) => x.id === 'front'), d = o.startAt().door;
+    o.view('first'); o.tap(d.x, d.z); o.sim(60, true);
+    o.look((Math.atan2(d.x - d0.x, d.z - d0.z) * 180) / Math.PI, -4);
   });
   await frames(page, 4, '__onfoot');
   await shot(page, 'phone-stoppage-4-inside.png');
@@ -131,13 +132,13 @@ if (only !== 'phone') {
   const { ctx, page, errors } = await open(DESK_PAGE, false);
   for (const [venue, prefix] of [['Lot 57', 'desk-lot57'], ['Stoppage Time', 'desk-stoppage']]) {
     await page.evaluate((v) => { const g = window.__game; g.placeCar(g.net.paths[v === 'Lot 57' ? 1142 : 124], v === 'Lot 57' ? 290 : 300, 0, 0); g.arriveVenue(); }, venue);
-    await page.waitForSelector('.venue-park .getout'); await page.waitForTimeout(1500);
+    await page.waitForSelector('.venue-park .getout'); await page.waitForTimeout(2500);
     if (venue === 'Lot 57') await shot(page, 'desk-1440x900-getout.png');
     await getOut(page);
     await page.evaluate((v) => {
       const o = window.__onfoot;
       if (v === 'Lot 57') { const g = o.groups().find((x) => x.active) ?? o.groups()[0]; const at = o.go(g.x + 3.5, g.z + 3.5); if (at) o.look((Math.atan2(g.x - at.x, g.z - at.z) * 180) / Math.PI, -6); }
-      else { const c = o.yourCar(), p = o.pos(); o.view('third'); o.look((Math.atan2(c.stall.x - p.x, c.stall.z - p.z) * 180) / Math.PI + 160, -8); }
+      else { const d0 = o.doors().find((x) => x.id === 'front'), d = o.startAt().door; o.tap(d.x, d.z); o.sim(60, true); o.look((Math.atan2(d.x - d0.x, d.z - d0.z) * 180) / Math.PI, -4); }
     }, venue);
     await frames(page, 4, '__onfoot');
     await shot(page, `${prefix}-1440x900.png`);

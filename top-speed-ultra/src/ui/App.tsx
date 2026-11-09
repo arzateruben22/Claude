@@ -87,7 +87,7 @@ export function App() {
   // set only when one of them changes
   const [autoDrive, setAutoDrive] = useState({ offer: false, on: false });
   // the venues (Game.arriveVenue, getOut, drive): on a venue's ramp, its name for the prompt; parked there, its name
-  const [venueUi, setVenueUi] = useState({ prompt: '', parked: '' });
+  const [venueUi, setVenueUi] = useState({ prompt: '', parked: '', note: '' });
   const getOutRef = useRef<HTMLButtonElement>(null);
   const [setSec, setSetSec] = useState('graphics');                  // the Settings rail's current section
   // the radial quick menu (U3): held open from the Pause button or Tab; holdT is the 300 ms timer, held says it opened
@@ -137,7 +137,7 @@ export function App() {
     try {
       g = new Game(host.current, settings, {
         hud: (h) => { lastHud.current = h; hud.current?.set(h); setAutoDrive((a) => (a.offer === h.autoOffer && a.on === h.autoOn ? a : { offer: h.autoOffer, on: h.autoOn }));
-          setVenueUi((v) => (v.prompt === h.venuePrompt && v.parked === h.parked ? v : { prompt: h.venuePrompt, parked: h.parked })); },
+          setVenueUi((v) => (v.prompt === h.venuePrompt && v.parked === h.parked && v.note === h.parkedNote ? v : { prompt: h.venuePrompt, parked: h.parked, note: h.parkedNote })); },
         toast: (text, kind) => toast(text, kind),
         over: (r) => { setResult(r); setScreen('over'); },
         pause: (on) => setScreen((s) => (on ? (s === 'playing' ? 'paused' : s) : s === 'paused' ? 'playing' : s)),
@@ -602,6 +602,7 @@ export function App() {
       )}
       {playing && venueUi.parked && (
         <div className="venue-park" role="group" aria-label={`Parked at ${venueUi.parked}`}>
+          <p className="venue-note">{venueUi.note}</p>
           <button type="button" className="btn primary getout" ref={getOutRef} onClick={() => void game.current?.getOut()}>Get out</button>
           <button type="button" className="btn driveon" onClick={() => void game.current?.drive()}>Drive on</button>
         </div>

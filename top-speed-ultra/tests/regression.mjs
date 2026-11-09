@@ -2303,11 +2303,11 @@ await group('venues', async (use) => {
       expect(out?.ready, 'not on foot');
       if (venue === 'Lot 57') {
         const r = await game(page, () => { const o = window.__onfoot, c = o.counters().find((x) => x.id === 'bar'), p0 = o.pos();
-          const tap = o.tap(c.stand.x, c.stand.z); o.sim(40, true, true); const p1 = o.pos(); o.look(90, -8);
+          const tap = o.tap(c.stand.x, c.stand.z); o.sim(120, true, true); const p1 = o.pos(); o.look(90, -8);
           const press = o.press('Order'), sheet = o.sheet(), pick = o.pick('agua'); o.sim(1, false, true);
           return { walked: Math.hypot(p1.x - p0.x, p1.z - p0.z), tap: !!tap, press, sheetOpen: sheet.open, pick, state: o.state() }; });
         expect(r.tap && r.walked > 5 && r.press?.did && r.pick && r.state.order, JSON.stringify(r).slice(0, 400));
-        return `walked ${r.walked.toFixed(1)} m to the bar; Order opened the sheet; ordered an agua fresca (${r.state.order.stage})`;
+        return `walked ${r.walked.toFixed(1)} m (straight line) to the bar; Order opened the sheet; ordered an agua fresca (${r.state.order.stage})`;
       }
       // (tap to go to the point just inside the front door the bar's own page starts you at: the walk opens the door)
       const r = await game(page, () => { const o = window.__onfoot, p0 = o.pos(), d = o.startAt().door;
