@@ -358,6 +358,27 @@ its own** (an instance of the stick mesh behind the cue ball, 8 degrees up), not
 stance reworked, the cue's butt wants to follow the right hand (`handR`'s world position) and the stand point to put
 that hand on the aim line. Both are for the same design pass.
 
+### From the sports bar's S3a (2026-11-09; `PROJECT_OC_SPORTS_BAR.md` open items O16, O25 and O32)
+
+11. **The bar didn't adopt P1c's crowd** (O25). `lot57/npcs.ts` and `crowdview.ts` are bound to Lot 57's venue and draw
+    people their own way (an impostor painted per person, LOD 1 built in workers). The bar's plan draws everyone not
+    built, every filler and every held guest from one atlas of 8 bodies (`venues/sportsbar/cards.ts`) and builds bodies
+    on a time budget (`engine/sim/builds.ts`); it writes Lot 57's talking-group rules (turns, looks, nods, laughter)
+    into `engine/sim/groups.ts`, pure, so E0 keeps one copy. Lot 57's worker builds (`lot57/crowd-worker.ts`) are the
+    way out of owner question 2 below for both venues once `people/`'s owners bless them for LOD 2 too. Neither page has
+    the crowd's murmur yet (no audio on either page).
+12. **A body's fill light.** The builder's LOD material, lit only by the sky and the few real lights, drew people
+    inside the bar as near-black cut-outs at Low, as Lot 57 found on its yard; the bar wraps each body's LOD 1 and LOD 2
+    material with a fill (Lot 57's `withFill` technique, written in `venues/sportsbar/crowd.ts`). Worth one shared copy
+    in `engine/` at E0.
+13. **For RS1 (the Retro module's hook-fit test, O16).** A LOD 0 body's hair cap and hair cards pass the hook-fit rule
+    but their toon versions wouldn't compile (`gHairT`, `gHairSpec` and `gHairShift` are set at `lights_fragment_begin`
+    and declared only in their own replacement for `lights_physical_pars_fragment`, which the toon shader doesn't
+    include). The bar marks those two meshes `retroSkip` on every LOD 0 it builds; please make the hook-fit test reject a
+    hook that sets a variable the toon shader never declares. The Retro module still isn't on `claude/modes`, so the
+    bar's Low draws standard materials and the toon half of S3a's "Low stays Retro" check can't run yet (the
+    shader-error half ran: see the progress log).
+
 ## Owner questions (open)
 
 - **The sports bar's Low and the sun map** (`PROJECT_OC_SPORTS_BAR.md`, "Owner questions", 1). Decision 15 lists
