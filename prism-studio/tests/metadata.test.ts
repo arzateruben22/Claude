@@ -74,7 +74,8 @@ describe("metadata", () => {
   it("Instagram: hook, a line of why/takeaway, 'sources in the first comment', hashtags after a gap; the comment lists sources", () => {
     const i = buildMetadata(input).instagram;
     expect(i.caption).toContain("Which ball lands first?");
-    expect(i.caption).toContain("Sources in the first comment. Synthetic (AI) narration; code-rendered animation.");
+    expect(i.caption).toContain("Sources in the first comment.");
+    expect(i.caption).not.toMatch(/synthetic|\(AI\)/i);   // Instagram's own AI label carries the disclosure, not the caption
     expect(i.caption.endsWith("\n\n#physics #science #stem #sciencefacts #learnsomethingnew #slowmotion #education #physicsfun")).toBe(true);
     expect(i.pinnedComment.startsWith("Sources\n1. ")).toBe(true);
   });
@@ -120,7 +121,7 @@ describe("metadata", () => {
     expect(buildMetadata({ ...input, sources: [], disclosures: { aiVoice: false, aiVisuals: false } }).tiktok.pinnedComment).toBe("Code-rendered animation.");
     // and Instagram's caption doesn't point at a sources comment that isn't there
     expect(m.instagram.caption).not.toContain("Sources in the first comment");
-    expect(m.instagram.caption).toContain("Synthetic (AI) narration; code-rendered animation.");
+    expect(m.instagram.caption).not.toMatch(/synthetic|\(AI\)/i);
   });
   it("the posting sheet carries every platform's text", () => {
     const s = postingSheet(input);
