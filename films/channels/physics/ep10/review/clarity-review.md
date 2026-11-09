@@ -14,3 +14,5 @@ Round 2 (look and legibility): the picture is now 3-D (lit coffee drop on fibre 
 
 Not done: a person's read-aloud pass, the final render, and every source check (all claims OPEN: nature.com was unreachable from
 the builder session, so Deegan et al. 1997 and Yunker et al. 2011 were seen only as search excerpts).
+
+Round 3: the readout shows only in the measure beat and freezes on the model's end figure (93%: the model now leaves specks in the middle once the film is thinner than a speck, so the voice, c8 and the model agree on about nine in ten); c6, c8 and c10 are derivations with no URL; c11 is softened to "which can keep them from the edge" (re-voiced) because the Yunker excerpt supports clinging, not a count; paper fibres are visible; the labels in the cutaway sit above the arrows.

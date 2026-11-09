@@ -104,11 +104,6 @@
    "tag": "fr-speck"
   },
   {
-   "t": 14.650033,
-   "kind": "counter.show",
-   "tag": "spine"
-  },
-  {
    "t": 14.6667,
    "kind": "section",
    "id": "change",
@@ -193,6 +188,11 @@
    "t": 40.016667,
    "kind": "label",
    "tag": "pr-oval"
+  },
+  {
+   "t": 42.916633,
+   "kind": "counter.show",
+   "tag": "spine"
   },
   {
    "t": 42.9333,

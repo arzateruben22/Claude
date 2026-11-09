@@ -40,6 +40,7 @@ def cut(beat):
 
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
 R, H0, NSP = 10.0, 3.2, 1500
+S_STICK = 0.955                                    # the film gets thinner than a speck: specks still in the middle stay where they are
 RING = 0.95                                       # a speck counts as "in the ring" beyond 95% of the radius
 
 
@@ -58,7 +59,7 @@ r0s = [math.sqrt(random.random()) for _ in range(20000)]
 
 
 def share(s):
-    tau = -math.log(1 - s) if s < 1 else 99
+    tau = -math.log(1 - min(s, S_STICK))
     c = 0
     for r0 in r0s:
         if r0 >= RING:
@@ -70,8 +71,8 @@ def share(s):
     return c / len(r0s)
 
 
-CHECK = [(s, share(s)) for s in (0.0, 0.3, 0.5, 0.8, 0.9, 0.95, 0.97, 0.99)]
-S_MEASURE = 0.95
+CHECK = [(s, share(s)) for s in (0.0, 0.3, 0.5, 0.8, 0.9, 0.95, 0.955, 0.99)]
+S_MEASURE = S_STICK
 assert 0.88 < share(S_MEASURE) < 0.95, share(S_MEASURE)
 
 
@@ -111,9 +112,9 @@ LABELS = [
     {"id": "fr-speck", "text": "a speck", "color": "motion", "t0": FRESH_T + 0.5, "t1": cut("change") - 0.3, "at": "speck", "side": -1},
     {"id": "ch-speck", "text": "a speck", "color": "motion", "t0": cut("change") + 0.3, "t1": A("vo03:outward,") - 0.2, "at": "speck", "side": -1},
     {"id": "ch-edge", "text": "the edge", "color": "ghost", "t0": A("vo03:toward"), "t1": cut("why") - 0.3, "at": "edge", "side": 1},
-    {"id": "wy-stuck", "text": "edge stuck to the paper", "color": "ghost", "t0": cut("why") + 0.2, "t1": A("vo04:Water") - 0.1, "at": "edge", "side": 1},
+    {"id": "wy-stuck", "text": "edge stuck to the paper", "color": "ghost", "t0": cut("why") + 0.2, "t1": A("vo04:Water") - 0.1, "at": "edgeHi", "side": -1},
     {"id": "wy-evap", "text": "water evaporates here", "color": "energy", "t0": A("vo04:Water"), "t1": A("vo04:so") - 0.1, "at": "evap", "side": -1},
-    {"id": "wy-flow", "text": "flow replaces it", "color": "force", "t0": A("vo04:so"), "t1": A("vo04:The") - 0.1, "at": "flow", "side": 1},
+    {"id": "wy-flow", "text": "flow replaces it", "color": "force", "t0": A("vo04:so"), "t1": A("vo04:The") - 0.1, "at": "flow", "side": -1},
     {"id": "wo-pile", "text": "specks pile up", "color": "energy", "t0": A("vo05:pile"), "t1": PAIR0 - 0.1, "at": "edge", "side": 1},
     {"id": "pr-round", "text": "round specks", "color": "energy", "t0": PAIR0 + 0.9, "t1": cut("tease") - 0.3, "at": "pairA", "side": 1},
     {"id": "pr-oval", "text": "oval specks", "color": "force", "t0": PAIR0 + 1.0, "t1": cut("tease") - 0.3, "at": "pairB", "side": 1},
@@ -127,8 +128,7 @@ BADGES = [
     {"id": "oval", "kind": "tag", "text": "Lower drop: illustration", "t0": PAIR0, "t1": round(cut("tease") - 0.5, 4), "slot": "tr"},
     {"id": "mug", "kind": "tag", "text": "Illustration", "t0": cut("tease"), "t1": round(ENDSHOW - 0.3, 4), "slot": "tr"},
 ]
-SPINE = [{"t0": cut("change"), "t1": round(PAIR0 - 0.2, 4), "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]},
-         {"t0": cut("measure"), "t1": round(cut("takeaway") - 0.35, 4), "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]}]
+SPINE = [{"t0": cut("measure"), "t1": round(cut("takeaway") - 0.35, 4), "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]}]
 SPINE_AT = [[-1e9, [0.5, 0.262]]]
 
 
@@ -162,7 +162,7 @@ film = {
     "id": "reality-rulebook-s2e04", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "cue": {"cuts": CUTS, "trail": TRAIL_W, "cut": CUT_W, "ring": RING}, "spine": SPINE, "spineAt": SPINE_AT,
-    "model": {"R": R, "H0": H0, "n": NSP, "ring": RING}, "takes": TAKES, "takesB": TAKE_B, "pair": {"t0": PAIR0, "ramp": 1.0, "tease": cut("tease")}, "pulse": PULSE_W, "yx": YX, "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
+    "model": {"R": R, "H0": H0, "n": NSP, "ring": RING, "stick": S_STICK}, "takes": TAKES, "takesB": TAKE_B, "pair": {"t0": PAIR0, "ramp": 1.0, "tease": cut("tease")}, "pulse": PULSE_W, "yx": YX, "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
     "captions": [pg for pg in phrase_captions(f, max_chars=24, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "endCard": EC,
     "end": {"title": "Next drop: listen to the cup fill", "follow": "Follow Reality Rulebook", "foot": "Deegan et al., Nature 389, 827 (1997)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
@@ -187,7 +187,7 @@ sheet = {"duration": DUR, "fps": FPS, "preset": "restframe-bench", "duck_db": -9
 (HERE / "film.json").write_text(json.dumps(film, indent=1, ensure_ascii=False, allow_nan=False))
 (HERE / "sheet.json").write_text(json.dumps(sheet, indent=1, ensure_ascii=False))
 (HERE / "review").mkdir(exist_ok=True)
-(HERE / "review" / "model-check.md").write_text("# S2E04 model check (for claims c6, c8, c10)\n\nShare of 20,000 specks, placed uniformly over the drop, that are beyond 0.95 R of the centre when the drop is a share s of the way through its drying time (compile.py; model in its docstring):\n\n| s | share |\n|---|---|\n" + "\n".join(f"| {s} | {v:.3f} |" for s, v in CHECK) + "\n\nAbout 6.4% of the specks start in that outer band. The film's measure beat reads this number at s = 0.95.\n")
+(HERE / "review" / "model-check.md").write_text("# S2E04 model check (for claims c6, c8, c10)\n\nShare of 20,000 specks, placed uniformly over the drop, that are beyond 0.95 R of the centre when the drop is a share s of the way through its drying time (compile.py; model in its docstring):\n\n| s | share |\n|---|---|\n" + "\n".join(f"| {s} | {v:.3f} |" for s, v in CHECK) + "\n\nAbout 6.4% of the specks start in that outer band; from s = 0.955 on the share stays where it is. The film's measure beat reads this number: specks still in the middle when the film gets thinner than a speck (s = 0.955) stay there, so the model ends with about nine in ten specks in the ring and the rest in the middle.\n")
 print(f"film.json: {len(SHOTS)} shots, {len(LABELS)} labels, {len(film['captions'])} caption pages, end card {EC} s, {DUR} s; share at 0.95: {share(0.95):.3f}")
 for b in BEATS:
     print(f"  {b['id']:<9} {b['t0']:6.2f}–{b['t1']:6.2f}")

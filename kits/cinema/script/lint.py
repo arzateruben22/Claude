@@ -73,7 +73,7 @@ PRE, HOLD = 0.3, 0.4     # timeline.layout's defaults: lead-in before a line, ho
 
 FIELDS = ("id", "sentence", "claim", "source_url", "source_title", "accessed", "verified_via", "status")
 STATUS = ("ok", "needs-wording", "TODO open link")
-VIA = ("search excerpt", "page")
+VIA = ("search excerpt", "page", "derivation")
 
 NUMBER_WORDS = set("""zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen
 sixteen seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety hundred hundreds thousand
@@ -335,7 +335,7 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
             entries = []
         for c in entries:
             cid = c.get("id", "?")
-            missing = [f for f in FIELDS if not str(c.get(f, "")).strip()]
+            missing = [f for f in FIELDS if not str(c.get(f, "")).strip() and not (f == "source_url" and c.get("verified_via") == "derivation")]   # a derivation (our own model) has no URL
             if missing:
                 r.error(f"claim {cid}", f"missing {', '.join(missing)}")
             if not re.fullmatch(r"[a-z][a-z0-9-]*\d", cid):
@@ -353,7 +353,7 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
                 r.error(f"claim {cid}", f"verified_via must be one of {VIA}")
             if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(c.get("accessed", ""))):
                 r.error(f"claim {cid}", "accessed must be a date, YYYY-MM-DD")
-            if not str(c.get("source_url", "")).startswith(("https://", "http://")):
+            if c.get("verified_via") != "derivation" and not str(c.get("source_url", "")).startswith(("https://", "http://")):
                 r.error(f"claim {cid}", "source_url must be a web address")
     for b in beats:
         for s in sentences(b["vo"]):
@@ -471,7 +471,7 @@ def sources(path):
         for s in sentences(b["vo"] or ""):
             for cid in s["claims"] or []:
                 c = ledger.get(cid)
-                if c and c["source_url"] not in seen:
+                if c and c.get("source_url") and c["source_url"] not in seen:
                     seen.add(c["source_url"])
                     out.append(f"{c['source_title']}: {c['source_url']}")
     return out

@@ -10,7 +10,7 @@ Share of 20,000 specks, placed uniformly over the drop, that are beyond 0.95 R o
 | 0.8 | 0.793 |
 | 0.9 | 0.880 |
 | 0.95 | 0.928 |
-| 0.97 | 0.951 |
-| 0.99 | 0.978 |
+| 0.955 | 0.934 |
+| 0.99 | 0.934 |
 
-About 6.4% of the specks start in that outer band. The film's measure beat reads this number at s = 0.95.
+About 6.4% of the specks start in that outer band; from s = 0.955 on the share stays where it is. The film's measure beat reads this number: specks still in the middle when the film gets thinner than a speck (s = 0.955) stay there, so the model ends with about nine in ten specks in the ring and the rest in the middle.

@@ -58,12 +58,12 @@
   "id": "c6",
   "sentence": "As the drop thins, the flow speeds up.",
   "claim": "In our closed-form model of a pinned drop, the outward speed of the flow grows without limit as the drop thins.",
-  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10",
-  "source_title": "Our model (scene.mjs, after Deegan et al. 1997)",
+  "source_url": "",
+  "source_title": "Our own simple model (compile.py, scene.mjs): a derivation, not a source",
   "accessed": "2026-11-09",
-  "verified_via": "page",
+  "verified_via": "derivation",
   "status": "TODO open link",
-  "note": "OPEN: our model, with round numbers; the paper predicts a power-law growth of the ring mass with time (search excerpt). A person should check the model's flux and flow formulas against the paper."
+  "note": "DERIVATION, OPEN: our model with made-up numbers; the 1997 paper predicts a power-law growth of the ring mass with time (search excerpt only). A person should check the model's behaviour against the paper."
  },
  {
   "id": "c7",
@@ -79,13 +79,13 @@
  {
   "id": "c8",
   "sentence": "Measure it: in this model, nine in ten specks reach the ring.",
-  "claim": "In our closed-form model, about nine in ten of the specks (initially uniform over the drop) end up within 5% of the drop's radius from its edge.",
-  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10",
-  "source_title": "Our model (scene.mjs, compile.py)",
+  "claim": "In our model, with specks left in place once the drying film is thinner than a speck, about nine in ten specks (93%) end up in the ring and the rest stay in the middle.",
+  "source_url": "",
+  "source_title": "Our own simple model (compile.py, scene.mjs): a derivation, not a source",
   "accessed": "2026-11-09",
-  "verified_via": "page",
+  "verified_via": "derivation",
   "status": "TODO open link",
-  "note": "OPEN: our model, to be re-run by a person; the number is set by the model's parameters and is checked in compile.py (review/model-check.md)."
+  "note": "DERIVATION, OPEN: our model with made-up numbers (review/model-check.md: 0.928 at the freeze point, s = 0.955). A person should re-run compile.py and check the number. Not a published result."
  },
  {
   "id": "c9",
@@ -102,22 +102,22 @@
   "id": "c10",
   "sentence": "In the last moments, the specks pile up at the edge.",
   "claim": "In our closed-form model, most specks reach the edge in the last moments of drying.",
-  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10",
-  "source_title": "Our model (scene.mjs, after Deegan et al. 1997)",
+  "source_url": "",
+  "source_title": "Our own simple model (compile.py, scene.mjs): a derivation, not a source",
   "accessed": "2026-11-09",
-  "verified_via": "page",
+  "verified_via": "derivation",
   "status": "TODO open link",
-  "note": "OPEN: our model, with round numbers; the paper predicts a power-law growth of the ring mass with time (search excerpt). A person should check the model's flux and flow formulas against the paper."
+  "note": "DERIVATION, OPEN: our model with made-up numbers; the 1997 paper predicts a power-law growth of the ring mass with time (search excerpt only). A person should check the model's behaviour against the paper."
  },
  {
   "id": "c11",
-  "sentence": "Oval specks cling together at the surface, so they rarely reach the edge.",
-  "claim": "Ellipsoidal particles are carried to the air-water surface by the outward flow, where their shape deforms the surface and produces attractions between particles, so they form loose clumps instead of a ring.",
+  "sentence": "Oval specks cling together at the surface, which can keep them from the edge.",
+  "claim": "Oval (ellipsoidal) particles at a liquid surface attract each other strongly through capillary forces, which can prevent them from being carried to the edge.",
   "source_url": "https://doi.org/10.1038/nature10344",
   "source_title": "Yunker, Still, Lohr, Yodh, Nature 476, 308 (2011)",
   "accessed": "2026-11-09",
   "verified_via": "search excerpt",
   "status": "TODO open link",
-  "note": "OPEN: search excerpt only (abstract: 'anisotropic shape of the particles significantly deforms interfaces, producing strong interparticle capillary interactions'; news summaries add that ellipsoids are captured at the interface). The line says 'rarely reach the edge': a person should check that against the paper."
+  "note": "OPEN: search excerpt only (Yunker et al. 2011 abstract: 'anisotropic shape of the particles significantly deforms interfaces, producing strong interparticle capillary attraction'); the 'which can keep them from the edge' step is our reading of that abstract and the 'deposited uniformly' sentence, softened from 'rarely reach'. A person should check it against the paper. nature.com was unreachable."
  }
 ]

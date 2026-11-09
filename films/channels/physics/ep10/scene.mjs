@@ -44,7 +44,8 @@ const rnd = rng(1997), SP = [];
 for (let i = 0; i < N; i++) { const r0 = Math.max(1e-3, Math.sqrt(rnd())), ph = rnd() * Math.PI * 2, fr = 0.08 + 0.8 * rnd(); SP.push({ r0, ph, fr, tau0: tau0Of(r0), arrive: TEDGE - tau0Of(r0) }); }
 { const order = SP.map((p, i) => i).sort((a, b) => SP[a].arrive - SP[b].arrive); order.forEach((i, k) => { SP[i].rank = k / N; }); }
 const tauOfS = (s) => -Math.log(1 - Math.min(0.9999, s));
-const radiusAt = (p, s, back = 0) => { const tt = p.tau0 + Math.max(0, tauOfS(s) - back); return tt >= TEDGE ? 1 - 0.008 - 0.04 * p.rank : lookT(tt); };
+const radiusAt = (p, s, back = 0) => { const tt = p.tau0 + Math.max(0, tauOfS(Math.min(s, M.stick)) - back);   // from M.stick on, specks still in the middle stay put (the film is thinner than a speck)
+   return tt >= TEDGE ? 1 - 0.008 - 0.04 * p.rank : lookT(tt); };
 const hAt = (r, s) => H0 * (1 - Math.min(1, s)) * (1 - r * r);
 
 // ── takes ──
@@ -56,10 +57,10 @@ const sAt = (t) => keyed(takeAt(t).keys, t, "lin");
 const YXf = (t) => { const w = FILM.yx; return 1 + Math.min(E.out2(seg(t, w[0], w[0] + 0.5)), 1 - E.in2(seg(t, w[1] - 0.4, w[1]))); };   // 1 normally, 2 in the side view
 const prof = []; for (let i = 0; i <= 48; i++) { const r = i / 48; prof.push(new THREE.Vector2(R * r, H0 * (1 - r * r))); }
 const lensGeo = new THREE.LatheGeometry(prof, 96);
-const paperTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 512; const g = c.getContext("2d"); g.fillStyle = "#ece6d6"; g.fillRect(0, 0, 512, 512);
-  const r2 = rng(7); for (let i = 0; i < 2600; i++) { const x = r2() * 512, y = r2() * 512, l = 6 + r2() * 22, a = r2() * Math.PI; g.strokeStyle = `rgba(${150 + r2() * 60 | 0},${135 + r2() * 50 | 0},${110 + r2() * 40 | 0},${0.05 + r2() * 0.08})`; g.lineWidth = 0.7; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke(); }
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(5, 3); return t; })();
-const paper = new THREE.Mesh(new THREE.PlaneGeometry(110, 64), new THREE.MeshStandardMaterial({ map: paperTex, roughness: 0.95, metalness: 0 })); paper.rotation.x = -Math.PI / 2; paper.position.y = 0.04; scene.add(paper);   // above the bench floor: coplanar planes flicker (z-fighting)
+const paperTex = (() => { const c = document.createElement("canvas"); c.width = c.height = 512; const g = c.getContext("2d"); g.fillStyle = "#e9e2d0"; g.fillRect(0, 0, 512, 512);
+  const r2 = rng(7); for (let i = 0; i < 4200; i++) { const x = r2() * 512, y = r2() * 512, l = 8 + r2() * 30, a = r2() * Math.PI; g.strokeStyle = `rgba(${120 + r2() * 60 | 0},${100 + r2() * 50 | 0},${70 + r2() * 40 | 0},${0.12 + r2() * 0.2})`; g.lineWidth = 0.9; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke(); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(12, 8); return t; })();
+const paper = new THREE.Mesh(new THREE.PlaneGeometry(260, 160), new THREE.MeshStandardMaterial({ map: paperTex, roughness: 0.95, metalness: 0 })); paper.rotation.x = -Math.PI / 2; paper.position.y = 0.04; scene.add(paper);   // above the bench floor: coplanar planes flicker (z-fighting)
 const speckGeo = new THREE.IcosahedronGeometry(1, 1);
 const mtx = new THREE.Matrix4(), qy = new THREE.Quaternion(), s3 = new THREE.Vector3(), p3 = new THREE.Vector3(), UP = new THREE.Vector3(0, 1, 0);
 const NT = 220;
@@ -68,7 +69,7 @@ const mkDrop = (kind) => {
   const washMat = new THREE.MeshBasicMaterial({ color: 0xb48a5a, transparent: true, opacity: 0, depthWrite: false });
   const wash = new THREE.Mesh(new THREE.CircleGeometry(R * 0.985, 96), washMat); wash.rotation.x = -Math.PI / 2; wash.position.y = 0.07; g.add(wash);
   const bandMat = new THREE.MeshBasicMaterial({ color: 0x4a2a12, transparent: true, opacity: 0, depthWrite: false });
-  const band = new THREE.Mesh(new THREE.RingGeometry(R * 0.955, R * 1.004, 96), bandMat); band.rotation.x = -Math.PI / 2; band.position.y = 0.09; g.add(band);
+  const band = new THREE.Mesh(new THREE.RingGeometry(R * 0.93, R * 1.006, 96), bandMat); band.rotation.x = -Math.PI / 2; band.position.y = 0.09; g.add(band);
   const n = kind === "A" ? N : 900;
   const mk = (cnt, col, scale, std) => { const m = new THREE.InstancedMesh(speckGeo, std ? new THREE.MeshStandardMaterial({ color: col, roughness: 0.55 }) : new THREE.MeshBasicMaterial({ color: col }), cnt); m.frustumCulled = false; m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); g.add(m); m.userData.scale = scale; return m; };
   const specks = mk(n, new THREE.Color(kind === "A" ? "#2b1708" : "#3a2010"), kind === "A" ? 0.2 : 0.3, true);
@@ -127,8 +128,9 @@ const worldOf = (d, x, y, z) => d.g.localToWorld(new THREE.Vector3(x, y, z)).toA
 const anchorFn = (an) => {
   if (an === "edge") return () => worldOf(dA, R, 0.2, 0);
   if (an === "speck") return (t) => { const p = speckPos(7, sAt(t), 0, YXf(t)); return worldOf(dA, p[0], p[1], p[2]); };
-  if (an === "evap") return (t) => worldOf(dA, R - 1.6, hAt(1 - 0.16, sAt(t)) * YXf(t) + 2.6, 0);
-  if (an === "flow") return (t) => worldOf(dA, 4.2, hAt(0.42, sAt(t)) * 0.55 * YXf(t) + 1.2, 0);
+  if (an === "edgeHi") return () => worldOf(dA, R - 0.2, 6.9, 0);
+  if (an === "evap") return () => worldOf(dA, R - 1.8, 6.9, 0);
+  if (an === "flow") return () => worldOf(dA, 3.0, 5.2, 0);
   if (an === "pairA") return () => worldOf(dA, R * 0.78, 0.3, R * 0.62);
   if (an === "pairB") return () => worldOf(dB, R * 0.78, 0.3, R * 0.62);
   return () => [0, 0, 0];
@@ -158,7 +160,7 @@ window.seek = function (t) {
   dB.g.position.set(0, 0, 6.4); dB.g.scale.setScalar(0.62 * Math.max(0.001, u));
   // ── A ──
   dA.lens.scale.y = Math.max(0.001, (1 - s) * yx); dA.lensMat.opacity = 0.42 * Math.sqrt(Math.max(0, 1 - s)); dA.lens.visible = s < 0.998;
-  dA.washMat.opacity = 0.34 * Math.min(1, Math.max(0, (s - 0.55) / 0.4)); dA.bandMat.opacity = 0.78 * Math.min(1, Math.max(0, (s - 0.2) / 0.75));
+  dA.washMat.opacity = 0.34 * Math.min(1, Math.max(0, (s - 0.55) / 0.4)); dA.bandMat.opacity = 0.92 * Math.min(1, Math.max(0, (s - 0.2) / 0.75));
   for (let i = 0; i < N; i++) { const [x, y, z] = speckPos(i, s, 0, yx); place(dA.specks, i, x, y, z, true); }
   dA.specks.instanceMatrix.needsUpdate = true;
   const tk = win(t, FILM.cue.trail);
@@ -188,11 +190,13 @@ window.seek = function (t) {
   hud.update(t);
   renderer.render(scene, camera);
 };
+const ck_vis = () => flowAr.some(([a]) => a.visible) || evapAr.some(([a]) => a.visible);
 window.OBJ_RECTS = () => {
   const out = [], V = new THREE.Vector3();
   for (const [nm, d] of [["dropA", dA], ["dropB", dB]]) { if (!d.g.visible) continue; let l = 1e9, r = -1e9, tp = 1e9, b = -1e9;
     for (let k = 0; k < 24; k++) { const a = (k / 24) * Math.PI * 2; V.set(R * Math.cos(a), 0.2, R * Math.sin(a)); d.g.localToWorld(V); V.project(camera); const x = (V.x * 0.5 + 0.5) * W, y = (1 - (V.y * 0.5 + 0.5)) * H; l = Math.min(l, x); r = Math.max(r, x); tp = Math.min(tp, y); b = Math.max(b, y); }
     out.push({ n: nm, l, r, t: tp, b }); }
+  if (ck_vis()) { let l = 1e9, r = -1e9, tp = 1e9, b = -1e9; for (const [a] of [...flowAr, ...evapAr]) { if (!a.visible) continue; for (const [x, y] of [[-0.4, 0], [0.4, 3.1]]) { V.set(a.position.x + x, a.position.y + y, 0); dA.g.localToWorld(V); V.project(camera); const px = (V.x * 0.5 + 0.5) * W, py = (1 - (V.y * 0.5 + 0.5)) * H; l = Math.min(l, px); r = Math.max(r, px); tp = Math.min(tp, py); b = Math.max(b, py); } } out.push({ n: "arrows", l, r, t: tp, b, label: true }); }
   if (mug.visible) { let l = 1e9, r = -1e9, tp = 1e9, b = -1e9; for (const [x, y, z] of [[-4.7, 0, 0], [6.9, 0, 0], [-4.7, 9, 0], [6.9, 9, 0]]) { V.set(x, y, z).project(camera); const px = (V.x * 0.5 + 0.5) * W, py = (1 - (V.y * 0.5 + 0.5)) * H; l = Math.min(l, px); r = Math.max(r, px); tp = Math.min(tp, py); b = Math.max(b, py); } out.push({ n: "mug", l, r, t: tp, b }); }
   return out;
 };

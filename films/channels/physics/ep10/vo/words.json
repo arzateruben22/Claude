@@ -765,8 +765,8 @@
   },
   {
    "id": "vo07",
-   "text": "Oval specks cling together at the surface, so they rarely reach the edge. A stuck edge and a flow going out: that's all a ring takes.",
-   "heard": "Oval specks cling together at the surface, so they rarely reach the edge. A stuck edge and a flow going out, that's all a ring takes.",
+   "text": "Oval specks cling together at the surface, which can keep them from the edge. A stuck edge and a flow going out: that's all a ring takes.",
+   "heard": "Oval specks cling together at the surface, which can keep them from the edge. A stuck edge and a flow going out, that's all a ring takes.",
    "words": [
     {
      "w": "Oval",
@@ -776,7 +776,7 @@
     },
     {
      "w": "specks",
-     "start": 0.57,
+     "start": 0.575,
      "end": 0.96,
      "heard": true
     },
@@ -788,7 +788,7 @@
     },
     {
      "w": "together",
-     "start": 1.355,
+     "start": 1.36,
      "end": 1.68,
      "heard": true
     },
@@ -806,121 +806,127 @@
     },
     {
      "w": "surface,",
-     "start": 1.885,
-     "end": 2.64,
+     "start": 1.88,
+     "end": 2.72,
      "heard": true
     },
     {
-     "w": "so",
-     "start": 2.725,
-     "end": 2.88,
+     "w": "which",
+     "start": 2.78,
+     "end": 2.96,
      "heard": true
     },
     {
-     "w": "they",
-     "start": 2.785,
-     "end": 3.04,
+     "w": "can",
+     "start": 2.99,
+     "end": 3.2,
      "heard": true
     },
     {
-     "w": "rarely",
-     "start": 3.12,
-     "end": 3.52,
+     "w": "keep",
+     "start": 3.155,
+     "end": 3.44,
      "heard": true
     },
     {
-     "w": "reach",
-     "start": 3.6,
-     "end": 3.92,
+     "w": "them",
+     "start": 3.43,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 3.645,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.93,
-     "end": 4.16,
+     "start": 3.925,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "edge.",
-     "start": 4.055,
-     "end": 5.04,
+     "start": 3.955,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "A",
-     "start": 5.21,
-     "end": 5.28,
+     "start": 5.085,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "stuck",
-     "start": 5.24,
-     "end": 5.76,
+     "start": 5.115,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "edge",
-     "start": 5.72,
-     "end": 6.08,
+     "start": 5.62,
+     "end": 6.0,
      "heard": true
     },
     {
      "w": "and",
-     "start": 6.125,
-     "end": 6.24,
+     "start": 6.06,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.325,
-     "end": 6.4,
+     "start": 6.255,
+     "end": 6.305,
      "heard": true
     },
     {
      "w": "flow",
-     "start": 6.455,
-     "end": 6.72,
+     "start": 6.305,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "going",
-     "start": 6.72,
-     "end": 7.04,
+     "start": 6.615,
+     "end": 6.96,
      "heard": true
     },
     {
      "w": "out:",
-     "start": 7.12,
-     "end": 7.68,
+     "start": 7.04,
+     "end": 7.52,
      "heard": true
     },
     {
      "w": "that's",
-     "start": 7.755,
-     "end": 7.92,
+     "start": 7.635,
+     "end": 7.84,
      "heard": true
     },
     {
      "w": "all",
-     "start": 7.94,
-     "end": 8.16,
+     "start": 7.82,
+     "end": 8.08,
      "heard": true
     },
     {
      "w": "a",
-     "start": 8.05,
-     "end": 8.24,
+     "start": 8.175,
+     "end": 8.225,
      "heard": true
     },
     {
      "w": "ring",
-     "start": 8.325,
+     "start": 8.205,
      "end": 8.56,
      "heard": true
     },
     {
      "w": "takes.",
-     "start": 8.55,
+     "start": 8.495,
      "end": 8.96,
      "heard": true
     }

@@ -34,7 +34,7 @@ vo: As the drop thins, the flow speeds up. {c6} In the last moments, the specks 
 vo: *Measure it*: in this model, nine in ten specks reach the ring. {c8}
 
 ## takeaway {shot: hold on the finished ring · badge: "A model, not a measurement" · pre: 0.25 · energy: 0.45} (52.5–62.4 s)
-vo: Oval specks cling together at the surface, so they rarely reach the *edge*. {c11} A stuck edge and a flow going out: that's all a ring takes. {-}
+vo: Oval specks cling together at the surface, which can keep them from the *edge*. {c11} A stuck edge and a flow going out: that's all a ring takes. {-}
 
 ## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (62.4–69.6 s)
 vo: Next: listen carefully to a mug filling with water. {-} You can *hear* it rise. {c9}
@@ -43,7 +43,7 @@ end card: "Next drop: listen to the cup fill" · "Follow Reality Rulebook" · fo
 ## Notes
 - All claims are OPEN. c3 and c5 come from the abstract excerpt of Deegan et al. ("Pinning of the contact line of the drying drop ensures
   that liquid evaporating from the edge is replenished by liquid from the interior"); c7 from the Yunker et al. abstract excerpt
-  ("ellipsoidal particles are deposited uniformly during evaporation"); c8 is our model (the readout counts 93% at the moment the voice says nine in ten: the model check in review/model-check.md gives 0.928 at s = 0.95). c9 is the next episode's tease (nothing opened).
+  ("ellipsoidal particles are deposited uniformly during evaporation"); c6, c8 and c10 are derivations from our own model (no URL; c8: specks still in the middle when the film gets thinner than a speck stay there, so the model ends with 93% in the ring, the readout counts up in the measure beat only and freezes on that figure: the model check in review/model-check.md gives 0.928 at s = 0.95). c9 is the next episode's tease (nothing opened).
 - Listen at T0: "ring", "outward", "oval", "hear".
 - TODO: the handle, a physicist's sign-off, the AI-voice label in the post. nature.com was not reachable from the builder session:
   a person should open both papers.
