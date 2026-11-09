@@ -81,14 +81,14 @@
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "Oval specks cling together at the surface, which can keep them from the edge. A stuck edge and a flow going out: that's all a ring takes.",
+   "text": "Oval specks cling together at the surface, which can hold them back from the edge. A stuck edge and an outward flow: that's all a ring takes.",
    "stars": [
     "edge"
    ],
-   "phonemes": "ˈoʊvəl spˈɛks klˈɪŋ təɡˌɛðɚɹ æt ðə sˈɜːfɪs, wˌɪtʃ kæn kˈiːp ðˌɛm fɹʌmðɪ ˈɛdʒ. ɐ stˈʌk ˈɛdʒ ænd ɐ flˈoʊ ɡˌoʊɪŋ ˈaʊt: ðæts ˈɔːl ɐ ɹˈɪŋ tˈeɪks.",
+   "phonemes": "ˈoʊvəl spˈɛks klˈɪŋ təɡˌɛðɚɹ æt ðə sˈɜːfɪs, wˌɪtʃ kæn hˈoʊld ðˌɛm bˈæk fɹʌmðɪ ˈɛdʒ. ɐ stˈʌk ˈɛdʒ ænd ɐn ˈaʊtwɚd flˈoʊ: ðæts ˈɔːl ɐ ɹˈɪŋ tˈeɪks.",
    "file": "07.wav",
-   "dur": 8.966,
-   "sha256": "111bd2375641c7067e394e3c5b675b0b6aa8fbd32f4ce556de9e0fcca82427c1"
+   "dur": 9.246,
+   "sha256": "0cd7eb12c7b00ad226df3c377c56bc93fa72414412923812e8049d94b275aa84"
   },
   {
    "id": "vo08",

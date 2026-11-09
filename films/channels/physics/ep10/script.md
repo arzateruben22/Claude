@@ -34,7 +34,7 @@ vo: As the drop thins, the flow speeds up. {c6} In the last moments, the specks 
 vo: *Measure it*: in this model, nine in ten specks reach the ring. {c8}
 
 ## takeaway {shot: hold on the finished ring · badge: "A model, not a measurement" · pre: 0.25 · energy: 0.45} (52.5–62.4 s)
-vo: Oval specks cling together at the surface, which can keep them from the *edge*. {c11} A stuck edge and a flow going out: that's all a ring takes. {-}
+vo: Oval specks cling together at the surface, which can hold them back from the *edge*. {c11} A stuck edge and an outward flow: that's all a ring takes. {-}
 
 ## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (62.4–69.6 s)
 vo: Next: listen carefully to a mug filling with water. {-} You can *hear* it rise. {c9}

@@ -119,7 +119,8 @@ const placeCam = (t) => {
 window.CINEMA_FOCUS = () => ({ point: [0, 0, 0], fstop: 0 });
 
 // ── the overlay ──
-const hud = createHud({ camera, captionY: FILM.captionY });
+const inPair = (t) => (t >= FILM.pair.t0 && t < FILM.cue.cuts.measure) || (t >= FILM.cue.cuts.takeaway && t < FILM.pair.tease);
+const hud = createHud({ camera, captionY: FILM.captionY, captionAt: (t) => (inPair(t) ? FILM.pair.capY : FILM.captionY), labelsBelowCaption: inPair });   // in the pair shots the caption sits in the gap between the two drops
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
@@ -148,7 +149,7 @@ const dropE = dropTitle(endEl, { sig: ES, fps: FILM.fps, head: ".t", fall: 90 })
 const win = (t, w, fin = 0.5, fout = 0.4) => (w ? Math.min(E.out2(seg(t, w[0], w[0] + fin)), 1 - E.in2(seg(t, w[1] - fout, w[1]))) : 0);
 
 const takeB = (t) => keyed(FILM.takesB, t, "lin");
-const pairU = (t) => { const P = FILM.pair, T = FILM.cue.cuts; const inA = t >= P.t0 && t < T.measure, inB = t >= T.takeaway && t < P.tease; return inA ? Math.min(1, (t - P.t0) / P.ramp) : inB ? Math.min(1, (t - T.takeaway) / 0.5) : 0; };
+const pairU = (t) => { const P = FILM.pair, T = FILM.cue.cuts; const inA = t >= P.t0 && t < T.measure, inB = t >= T.takeaway && t < P.tease; return inA || inB ? 1 : 0; };
 const L = (a, b, u) => a + (b - a) * u;
 window.seek = function (t) {
   stage(t);
@@ -156,8 +157,8 @@ window.seek = function (t) {
   const tease = t >= FILM.pair.tease, yx = YXf(t), s = sAt(t), sB = takeB(t), u0 = pairU(t), u = u0 * u0 * (3 - 2 * u0);
   dA.g.visible = !tease; dB.g.visible = !tease && u > 0.001; mug.visible = tease;
   const uA = (t >= FILM.cue.cuts.takeaway && t < FILM.pair.tease) ? 1 : u;   // in the takeaway the pair is there from the first frame
-  dA.g.position.set(0, 0, L(0, -6.4, uA)); dA.g.scale.setScalar(L(1, 0.62, uA));
-  dB.g.position.set(0, 0, 6.4); dB.g.scale.setScalar(0.62 * Math.max(0.001, u));
+  dA.g.position.set(0, 0, L(0, -8.0, uA)); dA.g.scale.setScalar(L(1, 0.58, uA));
+  dB.g.position.set(0, 0, 8.0); dB.g.scale.setScalar(0.58 * Math.max(0.001, u));
   // ── A ──
   dA.lens.scale.y = Math.max(0.001, (1 - s) * yx); dA.lensMat.opacity = 0.42 * Math.sqrt(Math.max(0, 1 - s)); dA.lens.visible = s < 0.998;
   dA.washMat.opacity = 0.34 * Math.min(1, Math.max(0, (s - 0.55) / 0.4)); dA.bandMat.opacity = 0.92 * Math.min(1, Math.max(0, (s - 0.2) / 0.75));

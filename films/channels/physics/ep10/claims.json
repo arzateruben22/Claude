@@ -58,12 +58,12 @@
   "id": "c6",
   "sentence": "As the drop thins, the flow speeds up.",
   "claim": "In our closed-form model of a pinned drop, the outward speed of the flow grows without limit as the drop thins.",
-  "source_url": "",
-  "source_title": "Our own simple model (compile.py, scene.mjs): a derivation, not a source",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10",
+  "source_title": "Our own simple model (compile.py, scene.mjs, review/model-check.md)",
   "accessed": "2026-11-09",
-  "verified_via": "derivation",
+  "verified_via": "own model",
   "status": "TODO open link",
-  "note": "DERIVATION, OPEN: our model with made-up numbers; the 1997 paper predicts a power-law growth of the ring mass with time (search excerpt only). A person should check the model's behaviour against the paper."
+  "note": "OWN MODEL, OPEN: our model with made-up numbers; the 1997 paper predicts a power-law growth of the ring mass with time (search excerpt only). A person should check the model's behaviour against the paper."
  },
  {
   "id": "c7",
@@ -80,12 +80,12 @@
   "id": "c8",
   "sentence": "Measure it: in this model, nine in ten specks reach the ring.",
   "claim": "In our model, with specks left in place once the drying film is thinner than a speck, about nine in ten specks (93%) end up in the ring and the rest stay in the middle.",
-  "source_url": "",
-  "source_title": "Our own simple model (compile.py, scene.mjs): a derivation, not a source",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10",
+  "source_title": "Our own simple model (compile.py, scene.mjs, review/model-check.md)",
   "accessed": "2026-11-09",
-  "verified_via": "derivation",
+  "verified_via": "own model",
   "status": "TODO open link",
-  "note": "DERIVATION, OPEN: our model with made-up numbers (review/model-check.md: 0.928 at the freeze point, s = 0.955). A person should re-run compile.py and check the number. Not a published result."
+  "note": "OWN MODEL, OPEN: our model with made-up numbers (review/model-check.md: 0.928 at the freeze point, s = 0.955). A person should re-run compile.py and check the number. Not a published result."
  },
  {
   "id": "c9",
@@ -102,16 +102,16 @@
   "id": "c10",
   "sentence": "In the last moments, the specks pile up at the edge.",
   "claim": "In our closed-form model, most specks reach the edge in the last moments of drying.",
-  "source_url": "",
-  "source_title": "Our own simple model (compile.py, scene.mjs): a derivation, not a source",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep10",
+  "source_title": "Our own simple model (compile.py, scene.mjs, review/model-check.md)",
   "accessed": "2026-11-09",
-  "verified_via": "derivation",
+  "verified_via": "own model",
   "status": "TODO open link",
-  "note": "DERIVATION, OPEN: our model with made-up numbers; the 1997 paper predicts a power-law growth of the ring mass with time (search excerpt only). A person should check the model's behaviour against the paper."
+  "note": "OWN MODEL, OPEN: our model with made-up numbers; the 1997 paper predicts a power-law growth of the ring mass with time (search excerpt only). A person should check the model's behaviour against the paper."
  },
  {
   "id": "c11",
-  "sentence": "Oval specks cling together at the surface, which can keep them from the edge.",
+  "sentence": "Oval specks cling together at the surface, which can hold them back from the edge.",
   "claim": "Oval (ellipsoidal) particles at a liquid surface attract each other strongly through capillary forces, which can prevent them from being carried to the edge.",
   "source_url": "https://doi.org/10.1038/nature10344",
   "source_title": "Yunker, Still, Lohr, Yodh, Nature 476, 308 (2011)",

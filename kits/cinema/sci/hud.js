@@ -154,6 +154,7 @@ export const createHud = (opts = {}) => {
   const sf = opts.safe || theme.safe || { l: 90 / 1080, r: 900 / 1080, t: 250 / 1920, b: 1420 / 1920 };
   const SAFE = { l: sf.l * W, r: sf.r * W, t: sf.t * H, b: sf.b * H };
   const capY = (opts.captionY ?? theme.captionY ?? 0.61) * H, GAP = (opts.gap ?? 14) * S1;
+  let capNow = capY;   // the caption plate's top this frame: opts.captionAt(t) (a fraction of the height) may move it for a stretch of the film
   const shots = opts.shots || (window.FILM && window.FILM.shots) || [];
   const tokens = theme.tokens || {};
   const colour = (c) => (c == null ? "var(--hud-text)" : c.startsWith("--") ? `var(${c})` : c in tokens ? `var(--${c})` : c);
@@ -206,8 +207,9 @@ export const createHud = (opts = {}) => {
     is.forEach((e, j) => { const cl = j === on ? "on" : j < on ? "said" : ""; if (e.className !== cl) e.className = cl; });
     const op = Math.max(0, Math.min(1, (t - pg.t0) / c.fade, (pg.t1 - t) / c.fade));
     c.el.style.opacity = op.toFixed(4);
-    place(c.el, c.cx - c.w / 2, c.y);
-    return op > 0.01 ? box(c.cx - c.w / 2, c.y, c.w, c.h) : null;
+    capNow = opts.captionAt ? opts.captionAt(t) * H : c.y;
+    place(c.el, c.cx - c.w / 2, capNow);
+    return op > 0.01 ? box(c.cx - c.w / 2, capNow, c.w, c.h) : null;
   };
 
   // ── labels on anchors ─────────────────────────────────────────────────────
@@ -230,7 +232,7 @@ export const createHud = (opts = {}) => {
   // none is clear, the one with the least overlap. Visible labels are placed in the order they were
   // made, so the result is the same on every seek.
   const drawLabels = (t, shot, obstacles) => {
-    const top = SAFE.t, bottom = Math.min(SAFE.b, capY - GAP), placed = [], svg = [];
+    const top = SAFE.t, bottom = Math.min(SAFE.b, (opts.labelsBelowCaption && opts.labelsBelowCaption(t)) ? SAFE.b : capNow - GAP), placed = [], svg = [];
     const g = 16 * S1, m = 8 * S1, now = L.map((lb) => {
       const o = lb.o, pr = o.shot && o.shot !== shot ? { o: 0, x: 0, y: 0, s: 1 } : presence(t, from0(o.t0), o.t1 ?? null, { dy: 0.012, d: 0.45 });
       return { pr: gated(pr), a: anchorAt(o, t) };
@@ -339,7 +341,7 @@ export const createHud = (opts = {}) => {
     return { text, prev: null, at: null, pr: presence(t, from0(o.t0), o.t1 ?? null, { d: 0.35, out: 0.3, dy: 0.01 }) };
   };
   const drawBadges = (t, obstacles) => {
-    const gapY = 12 * S1, stack = { tr: SAFE.t, tl: SAFE.t, br: capY - GAP, bl: capY - GAP }, rects = [];
+    const gapY = 12 * S1, stack = { tr: SAFE.t, tl: SAFE.t, br: capNow - GAP, bl: capNow - GAP }, rects = [];
     for (const bd of B) {
       const { el, o } = bd, now = badgeNow(o, t);
       // a clock's note can also be limited to a window of its own (t0, t1)
@@ -425,7 +427,7 @@ export const createHud = (opts = {}) => {
       bar.style.display = px == null ? "none" : "block";
       if (px != null) bar.style.width = Math.max(4 * S1, Math.min(px, (SAFE.r - SAFE.l) * 0.6)).toFixed(2) + "px";
       const pr = gated(presence(t, from0(o.t0), o.t1 ?? null, { d: 0.4 })), w = el.offsetWidth, h = el.offsetHeight;
-      const x = o.at ? o.at[0] * W : SAFE.l, y = o.at ? o.at[1] * H : capY - GAP - h;
+      const x = o.at ? o.at[0] * W : SAFE.l, y = o.at ? o.at[1] * H : capNow - GAP - h;
       place(el, x, y);
       apply(el, pr);
       if (pr.o > 0.01) obstacles.push(box(x, y, w, h));
