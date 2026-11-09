@@ -548,7 +548,8 @@
   "t": "start:vo07-0.3",
   "e1": "Next:<br>how sweat really cools you",
   "e2": "Cooling happens when sweat dries.",
-  "chip": "Skin Sense · Season 2 · Episode 2"
+  "chip": "Skin Sense · Season 2 · Episode 2",
+  "e3": "Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code."
  },
  "fx": [
   {
@@ -954,5 +955,6 @@
    "dir": -1,
    "rate": 0.25
   }
- ]
+ ],
+ "eyebrow": "SKIN SENSE · SEASON 2 · EPISODE 2"
 }

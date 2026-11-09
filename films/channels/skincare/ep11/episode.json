@@ -535,7 +535,8 @@
   "t": "start:vo07-0.3",
   "e1": "Next:<br>fingerprints, before birth",
   "e2": "The pattern spreads in waves.",
-  "chip": "Skin Sense · Season 2 · Episode 5"
+  "chip": "Skin Sense · Season 2 · Episode 5",
+  "e3": "Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code."
  },
  "fx": [
   {
@@ -902,5 +903,6 @@
    "t0": "start:vo06",
    "t1": "vo06:fats"
   }
- ]
+ ],
+ "eyebrow": "SKIN SENSE · SEASON 2 · EPISODE 5"
 }

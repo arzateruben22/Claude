@@ -728,7 +728,8 @@
   "t": "start:vo07-0.3",
   "e1": "Next:<br>the brick wall<br>on your skin",
   "e2": "Which part holds water in?",
-  "chip": "Skin Sense · Season 2 · Episode 4"
+  "chip": "Skin Sense · Season 2 · Episode 4",
+  "e3": "Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code."
  },
  "fx": [
   {
@@ -1143,5 +1144,6 @@
    "t0": "vo04:light",
    "t1": "end:vo04"
   }
- ]
+ ],
+ "eyebrow": "SKIN SENSE · SEASON 2 · EPISODE 4"
 }
