@@ -40,28 +40,16 @@ import { setHiddenCaster } from './visibility';
 import { Cards, SEATED, STANDING, CHEERING, CardPose } from './cards';
 import { SCREENS, fd, FRONT, POOL_TABLES } from './layout';
 import type { BarLife } from './life';
+import { withFillRim } from './look';
 
 const SECS = 60;
 /**
- * A body's own fill light (Lot 57's withFill, lot57/crowdview.ts, written here so the bar doesn't import Lot 57's
+ * A body's own fill light (Lot 57's withFill, lot57/crowdview.ts, written for the bar so it doesn't import Lot 57's
  * crowd): the room's light is baked into the venue's vertex colours, so the builder's body material, lit only by the
  * sky and the few real lights, drew guests inside as near-black cut-outs at Low. The fill is added as the albedo times
- * its level (the builder's material is wrapped, not changed; its own shader edits run first).
+ * its level; S4 adds the rim at HD and Ultra (look.ts withFillRim, which this now is).
  */
-function withFill(mat: THREE.Material, fill: { value: THREE.Color }) {
-  if ((mat.userData as { filled?: boolean }).filled) return;
-  (mat.userData as { filled?: boolean }).filled = true;
-  const before = mat.onBeforeCompile;
-  mat.onBeforeCompile = (sh, r) => {
-    before.call(mat, sh, r);
-    sh.uniforms.uFill = fill;
-    sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 uFill;')
-      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * uFill;');
-  };
-  mat.customProgramCacheKey = () => 'person-lod-fill';
-  mat.needsUpdate = true;
-}
+const withFill = withFillRim;
 const WALK = 1.25;
 const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 type Slot = { id: string; zone: string; group?: string; kind: 'seat' | 'stand' | 'staff'; at: P2; face: P2; y: number; stand: P2; r: number; x: number; z: number; sx: number; sz: number; seatId?: number };

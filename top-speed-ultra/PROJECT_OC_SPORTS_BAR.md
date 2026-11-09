@@ -11,9 +11,9 @@ at that real site**. It has our name, our look, our interior and our menu. In th
 real bar". Its name appears only in the data tooling, as the lookup key that finds the point, never in `src/` or in
 shipped data.
 
-**Status (2026-11-09): S3b built, and repaired after review the same day** (spots kept for you on a busy night, Watch
+**Status (2026-11-09): S3b done: built, repaired after review and kept the same day, committed** (spots kept for you on a busy night, Watch
 and "you're next" on a busy spot, Join from your menu, guests' darts and shuffleboard on the physics, lines that name a
-goal only after one, no self-pairs), on `claude/sports-bar`, uncommitted: people advertise (the 11 interactions with the
+goal only after one, no self-pairs), on `claude/sports-bar`, committed: people advertise (the 11 interactions with the
 acceptance formula and the expected deltas, scored beside the objects' adverts under the candidate rule and the budget),
 the beats for guests and for you (your radial menu for people with "More…" and the "i", Introduce and Buy a round
 among them, and guests' own rounds), talking groups of 2 to 6 across parties (Talk and Join forming and joining them,
@@ -3229,7 +3229,7 @@ ends with its own checks and its own budget run at the poses.
       by switching up keeps the seating it had, so Ultra's can still come out under Low's on another seed or path (a
       probe during the repair read 100 at the door after switching up).
 
-### S3b: interactions, relationships and conversations (built 2026-11-09, repaired after review the same day, uncommitted; see PROJECT_OC_PROGRESS.md)
+### S3b: interactions, relationships and conversations (done, committed 2026-11-09 after repair; see PROJECT_OC_PROGRESS.md)
 
 - **Brief.**
   - **People advertise.** Person adverts with the expected-delta formula and the candidate rule (under "NPC

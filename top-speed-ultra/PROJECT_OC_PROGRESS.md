@@ -4,7 +4,24 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
-## 2026-11-09: Stoppage Time S3b repaired after review (uncommitted)
+## 2026-11-09: Stoppage Time S3b kept after review and committed
+
+Both reviewers kept the repaired S3b (interactions, relationships and conversations). The details of the build, the
+measured numbers against the plan's budgets and each check's result are in the entry below this one; the checks file
+`tests/out/sportsbar/sportsbar-s3b-checks.json` (13:48 UTC) records 55 results passing. Its one `"ok": false` is an
+expected negative inside the Buy a round check (a second round isn't offered within 10 sim minutes). The play
+reviewer checked the busy night again on the 13:29 build without help: at Low, 844x390, on the default Saturday 21:00
+night with no week or seed pinned, after 5, 20 and about 35 sim minutes pool-2 and darts-3 stayed free with Play in
+their menus, guests held the other four spots, every busy spot offered Watch and "you're next", and Challenge was
+offered to 17 to 20 guests at each sample. Through the real radial, Challenge was turned down twice with a spoken line
+(acceptance about 0.55), then accepted by Vanessa (0.86), which started darts on darts-3 with no guest moved. Talk
+opened the reply chips at once and three warm replies took rapport from 0 to 11.68. Images:
+`tests/out/sportsbar/s3b-*-1280x720-r2.png` and `s3b-*-1280x720-final.png`. Budget numbers: the mean decision batch
+was 0.306 to 0.328 ms against the 0.4 ms desktop target, and every pose's frame stayed inside its row
+(`s3b-r2-budgets-shots.log`). No phone was run. Open items carried to S4: O37 (friendship climbs fast) and O38
+(Ultra's fillers, listeners' facing).
+
+## 2026-11-09: Stoppage Time S3b repaired after review
 
 Both reviews rejected S3b's first build: on the default Saturday 21:00 night guests took every game spot, so you
 couldn't start a game or Challenge anyone through the real menus (S2b's controls test only passed because its hooks
@@ -116,6 +133,17 @@ bytes, 590,024 gzipped); every run named "final" below used it. No phone was run
 - **Left open:** whether four guests' matches on a Saturday read as too many is the owner's call in play (O36); quick
   friendship from repeated Jokes (O37) and Ultra's fillers and the listeners' facing (O38), both for S4; the murmur (no
   audio on either page).
+- **QA review of the repair (14:16 to 14:18 UTC, the 13:29 build; two short headless runs at Low, 844 x 390, the
+  default Saturday 21:00 with no week or seed pinned):** after 5, 20 and about 35 sim minutes, pool-2 and darts-3 were
+  free and offered Play; pool-1, darts-1, darts-2 and the shuffleboard had guests (four matches, some darts solo); every
+  busy spot's menu offered Watch with the toast "Guests are playing … here · you're next". Challenge was offered to 17
+  to 20 of 17 to 20 guests checked. Through the real radial, Challenge was turned down twice with a spoken line (p 0.55)
+  and accepted once (Vanessa, p 0.86): your darts game began on darts-3 against her ("Darts with Vanessa: 301, straight
+  out · you throw first"). Two of four walk-ups failed on the way ("Couldn't reach Eli", a seated guest; "A stool is in
+  the way. Stopped here."). A Talk through the radial opened the reply chips at once; three warm replies took rapport
+  0 to 11.68 and wrapped at 3. A round for a party of one plus you cost 8 tokens (53 to 45) with the "no cash value"
+  toast. Listeners faced the speaker in 29 of 41 samples (71%; floor 70%), 0 groups with two speakers. No console
+  errors. `npx tsc --noEmit` passes; `tests/sportsbar-social.mjs` 36 of 36.
 
 ## 2026-11-09: Stoppage Time S3b built: interactions, relationships and conversations (uncommitted)
 
