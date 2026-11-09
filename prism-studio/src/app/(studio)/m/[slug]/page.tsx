@@ -11,6 +11,7 @@ import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
 import { PLATFORM_LABEL, qaFails, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
 import { approveLessonAction } from "@/app/actions";
+import { parseChapters } from "@/domain/lessons";
 import { ActionForm } from "@/components/ActionForm";
 import { CopyButton } from "@/components/CopyButton";
 import { MonitorStrip } from "@/components/MonitorStrip";
@@ -353,15 +354,18 @@ async function InstagramScreen() {
  *  here or on the channel's Lessons tab; editing the title or description lives there. */
 function LongVideo({ x, slug }: { x: { lesson: { id: string; name: string; title: string; description: string; chapters: string; state: string; videoPath: string; thumbnailPath: string; qa: unknown; isDemo: boolean }; approved: boolean; episodes: string[] }; slug: string }) {
   const l = x.lesson;
+  // a long video pushed from a cloud session may have no linked episodes: count its chapters instead
+  const chapterCount = parseChapters(l.chapters).length;
+  const parts = x.episodes.length ? `${x.episodes.length} episodes` : chapterCount ? `${chapterCount} chapters` : "";
   if (!l.videoPath) {
-    return <div className="card post-empty"><span className="label">{l.name} · {x.episodes.length} episodes{l.isDemo ? <> · <span className="demo-tag">DEMO</span></> : null}</span><h3 style={{ margin: 0 }}>{l.title}</h3><p className="muted">{l.state === "render" ? "Building in the worker (see Queue)." : "Not built yet."}</p></div>;
+    return <div className="card post-empty"><span className="label">{l.name}{parts ? ` · ${parts}` : ""}{l.isDemo ? <> · <span className="demo-tag">DEMO</span></> : null}</span><h3 style={{ margin: 0 }}>{l.title}</h3><p className="muted">{l.state === "render" ? "Building in the worker (see Queue)." : "Not built yet."}</p></div>;
   }
   const qa = l.qa as { dur?: number } | null, fails = qaFails(l.qa as Record<string, unknown> | null);
   const len = qa?.dur ? `${Math.floor(qa.dur / 60)}:${String(Math.round(qa.dur % 60)).padStart(2, "0")}` : "";
   return (
     <article className="card stack-sm">
       <div className="post-state">
-        <span className="label">{l.name} · {x.episodes.length} episodes{len ? ` · ${len}` : ""}</span>
+        <span className="label">{l.name}{parts ? ` · ${parts}` : ""}{len ? ` · ${len}` : ""}</span>
         {l.isDemo ? <span className="demo-tag">DEMO</span> : null}
         {fails ? <span className="chip bad">QA: {fails} failed</span> : fails === 0 ? <span className="chip good">QA passed</span> : null}
         {l.state === "published" ? <span className="chip good">Uploaded</span> : x.approved ? <span className="chip good">Approved</span> : <span className="chip warn">Needs approval</span>}

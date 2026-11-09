@@ -4,10 +4,12 @@
 // there is one) and planned publications.
 // Idempotent: re-running updates in place and never duplicates episodes, versions or publications. An episode whose
 // video was cleared after posting keeps all of its records; its text (title, captions, sources) still updates.
+// Then every long video a cloud session built and pushed (compilations/<name>/ with a *-16x9.mp4) is registered as
+// the channel's lesson of that name (registerCompilation): new ones are added, rebuilt ones refreshed, the rest untouched.
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { db, pool } from "../src/db/client";
 import * as S from "../src/db/schema";
 import { createEpisode, addVersion, upsertExport, editExport } from "../src/domain/episodes";
@@ -15,6 +17,7 @@ import type { Topic } from "../src/domain/catalog";
 import { captionsToSrt } from "../src/domain/srt";
 import { buildMetadata, postingNotesFor, type MetaInput } from "../src/domain/metadata";
 import { usesAiVisuals } from "../src/domain/disclosures";
+import { registerCompilation } from "../src/domain/lessons";
 import { loadEnv } from "./env";
 loadEnv();
 
@@ -165,7 +168,54 @@ export async function importEpisodes(d = db()) {
       report.push(`${slug} ep${n}: version ${ver.versionNo} (${(fs.statSync(file).size / 1e6).toFixed(1)} MB), 3 exports${yt ? ", YouTube 1440p" : ""}`);
     }
   }
+  // long videos last, so the episodes their chapters name are already here to link
+  const comp = await importCompilations(d);
+  report.push(...comp.report);
+  if (comp.failed.length) throw new Error(`episodes imported; ${comp.failed.length} long video(s) not registered: ${comp.failed.join("; ")}`);
   return report;
+}
+
+const sha256Stream = (f: string) => new Promise<string>((resolve, reject) => {
+  const h = createHash("sha256");
+  fs.createReadStream(f).on("data", (c) => h.update(c)).on("end", () => resolve(h.digest("hex"))).on("error", reject);
+});
+const FOLDER = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+
+/** A compilation folder's long video: <name>-16x9.mp4, else its first other *-16x9.mp4 (never a .part upload). */
+export function compilationVideo(dir: string, name: string): string | null {
+  const files = fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isFile() && FOLDER.test(e.name) && /-16x9\.mp4$/.test(e.name)).map((e) => e.name).sort();
+  return files.includes(`${name}-16x9.mp4`) ? `${name}-16x9.mp4` : files[0] ?? null;
+}
+
+/** Register each channel's pushed long videos (films/channels/<ch>/compilations/<name>/) as lessons. Only the video is
+ *  required; a missing thumbnail, chapters, description or QA (or an unreadable qa.json) is left empty. One folder that
+ *  fails doesn't stop the others; the failures are returned. */
+export async function importCompilations(d = db()) {
+  const report: string[] = [], failed: string[] = [];
+  for (const ch of await d.select().from(S.channels).orderBy(asc(S.channels.sort))) {
+    const base = ch.filmsPath ? path.join(ROOT, ch.filmsPath, "compilations") : "";
+    if (!base || !fs.existsSync(base)) continue;
+    const folders = fs.readdirSync(base, { withFileTypes: true }).filter((e) => e.isDirectory() && FOLDER.test(e.name)).map((e) => e.name).sort();
+    for (const name of folders) {
+      const dir = path.join(base, name), where = `${ch.slug} compilations/${name}`;
+      try {
+        const video = compilationVideo(dir, name);
+        if (!video) { report.push(`${where}: no *-16x9.mp4 yet`); continue; }
+        const text = (f: string) => { try { return fs.readFileSync(path.join(dir, f), "utf8"); } catch { return ""; } };
+        let qa: Record<string, unknown> = {};
+        try { const j = JSON.parse(text("qa.json") || "{}"); if (j && typeof j === "object" && !Array.isArray(j)) qa = j; } catch { /* unreadable: "QA not attached" */ }
+        const r = await registerCompilation(d, ch.id, name, {
+          videoPath: `films:${rel(path.join(dir, video))}`, videoSha256: await sha256Stream(path.join(dir, video)),
+          thumbnailPath: fs.existsSync(path.join(dir, "thumbnail.jpg")) ? `films:${rel(path.join(dir, "thumbnail.jpg"))}` : "",
+          chapters: text("chapters.txt"), description: text("description.md"), qa,
+        });
+        report.push(`${where}: ${r.action} "${r.lesson.title}"${r.linked ? `, ${r.linked} episodes linked` : ""}`);
+      } catch (e) {
+        failed.push(`${where}: ${e instanceof Error ? e.message : String(e)}`);
+      }
+    }
+  }
+  return { report, failed };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
