@@ -60,14 +60,14 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "And the middle? It falls the whole time, like a dropped ball. The top rushes down, the bottom waits, and the average is a plain fall.",
+   "text": "Its balance point, the spot you could balance it on? It falls like a dropped ball. The top rushes, the bottom waits: the average is a plain fall.",
    "stars": [
-    "middle"
+    "balance point"
    ],
-   "phonemes": "ænd ðə mˈɪdəl? ɪt fˈɔːlz ðə hˈoʊl tˈaɪm, lˈaɪk ɐ dɹˈɑːpt bˈɔːl. ðə tˈɑːp ɹˈʌʃᵻz dˈaʊn, ðə bˈɑːɾəm wˈeɪts, ænd ðɪ ˈævɹɪdʒ ɪz ɐ plˈeɪn fˈɔːl.",
+   "phonemes": "ɪts bˈæləns pˈɔɪnt, ðə spˈɑːt juː kʊd bˈæləns ɪɾ ˈɔn? ɪt fˈɔːlz lˈaɪk ɐ dɹˈɑːpt bˈɔːl. ðə tˈɑːp ɹˈʌʃᵻz, ðə bˈɑːɾəm wˈeɪts: ðɪ ˈævɹɪdʒ ɪz ɐ plˈeɪn fˈɔːl.",
    "file": "05.wav",
-   "dur": 8.757,
-   "sha256": "b313ab01a09ab128854157c4c5dd3309b247818d3d0485f1c505ec83f22df50a"
+   "dur": 9.444,
+   "sha256": "cc4b753731d3acfb7cab1940504211e380aa413562c5563d00791457c1f394ed"
   },
   {
    "id": "vo06",
@@ -96,14 +96,14 @@
   {
    "id": "vo08",
    "beat": "tease",
-   "text": "Next: dry spaghetti, bent until it snaps. It never breaks in two.",
+   "text": "Next: dry spaghetti, bent until it snaps. It almost never breaks in two.",
    "stars": [
     "two"
    ],
-   "phonemes": "nˈɛkst: dɹˈaɪ spɐɡˈɛɾi, bˈɛnt ʌntˈɪl ɪt snˈæps. ɪt nˈɛvɚ bɹˈeɪks ɪn tˈuː.",
+   "phonemes": "nˈɛkst: dɹˈaɪ spɐɡˈɛɾi, bˈɛnt ʌntˈɪl ɪt snˈæps. ɪɾ ˈɔːlmoʊst nˈɛvɚ bɹˈeɪks ɪn tˈuː.",
    "file": "08.wav",
-   "dur": 4.486,
-   "sha256": "80a6be2cec08ef3f8498e44870c639174cd9ea42db5f6a2ab572d90c2b34cdb7"
+   "dur": 5.137,
+   "sha256": "2ce52afb4addd4631b4d8287d7024ebb87f3a75c3f6e72372434e5ef1cb1ec18"
   }
  ]
 }

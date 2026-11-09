@@ -69,34 +69,34 @@
   "id": "c7",
   "sentence": "Until the news arrives, the bottom has no reason to move.",
   "claim": "Before the wave front arrives, the tension at the bottom is unchanged, so the bottom stays at rest.",
-  "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
+  "source_url": "https://arxiv.org/abs/1208.4629",
   "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "OPEN: the paper supports 'does not start to move until the collapsing top section collides with the bottom'; the tension-unchanged reasoning is ours (statics). Check wording."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"the collapse of tension in the slinky occurs from the top down, and a finite time is required for a wave front to propagate down the slinky communicating the release of the top.\" The paper supports 'no news, no motion'; 'no reason to move' is our plain wording."
  },
  {
   "id": "c8",
-  "sentence": "It falls the whole time, like a dropped ball.",
-  "claim": "After release the only external force is gravity, so the centre of mass of the slinky accelerates downward at g from the first instant (air ignored).",
+  "sentence": "It falls like a dropped ball.",
+  "claim": "After release the balance point (centre of mass) of the slinky accelerates downward at g from the first instant (air ignored); the coils in the middle of the slinky do not.",
   "source_url": "https://arxiv.org/abs/1208.4629",
   "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
   "verified_via": "page",
   "status": "TODO open link",
-  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"The center of mass falls from rest with acceleration g\" Eq. (19), the model; also Newton's second law with gravity the only external force (air ignored)."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"The center of mass falls from rest with acceleration g\" (Eq. 19, the model). The paper's other equations show the coils at the middle do not fall until the front arrives, so the line says 'balance point', not 'middle'."
  },
  {
   "id": "c9",
-  "sentence": "The top rushes down, the bottom waits, and the average is a plain fall.",
-  "claim": "The centre of mass is the mass-weighted average of the coils' positions; it falls like a free body while the top moves and the bottom waits.",
+  "sentence": "The top rushes, the bottom waits: the average is a plain fall.",
+  "claim": "The balance point is the mass average of the coils' positions; the top moves while the bottom waits, yet the average falls with acceleration g.",
   "source_url": "https://arxiv.org/abs/1208.4629",
   "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012); arXiv:1208.4629v1 (full text read, 8 Nov 2026)",
   "accessed": "2026-11-08",
   "verified_via": "page",
   "status": "TODO open link",
-  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"the center of mass is at X_com = ∫X(ξ)dξ (Eq. 12)\" The centre of mass is the mass average of the slinky's positions; 'average' in our line is plain words for that."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quotes: \"the center of mass is at X_com = ∫X(ξ)dξ\" (Eq. 12: the mass average of the coils' positions) and \"The center of mass falls from rest with acceleration g\" (Eq. 19)."
  },
  {
   "id": "c10",
@@ -105,9 +105,9 @@
   "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
   "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Uses c4's 0.3 s; the picture's collapse is tuned to it. OPEN: needs c4's page check by a person."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quotes: \"the bottom of the slinky does not begin to fall until the top section ... collides with the bottom\" and \"The total collapse time tc (typically ∼ 0.3 s for real slinkies)\". The ghost picture is our illustration tuned to 0.3 s."
  },
  {
   "id": "c11",
@@ -116,9 +116,9 @@
   "source_url": "https://ar5iv.arxiv.org/html/1208.4629",
   "source_title": "Cross and Wheatland, 'Modeling a falling slinky', Am. J. Phys. 80, 1051 (2012), arXiv:1208.4629",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Confirm in the paper. OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"The acceleration of the top becomes negative (downwards) after the collision of the top and bottom sections, when the whole slinky falls with acceleration −g.\""
  },
  {
   "id": "c12",
@@ -133,13 +133,13 @@
  },
  {
   "id": "c13",
-  "sentence": "It never breaks in two.",
-  "claim": "A bent dry spaghetti rod almost never breaks into exactly two pieces.",
-  "source_url": "https://doi.org/10.1103/PhysRevLett.95.095505",
-  "source_title": "Audoly and Neukirch, Phys. Rev. Lett. 95, 095505 (2005)",
+  "sentence": "It almost never breaks in two.",
+  "claim": "A bent dry spaghetti rod almost always breaks into at least three pieces, so almost never into exactly two.",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser et al., PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
   "accessed": "2026-11-08",
-  "verified_via": "search excerpt",
+  "verified_via": "page",
   "status": "TODO open link",
-  "note": "Not yet searched for ep07: re-check before ep08 is voiced; hedge 'almost never' if the paper says so. (The ledger date is the search date for ep08's slate only.) OPEN: a person must open the page; nothing here was read in full."
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"brittle elastic rods appear almost always to fragment into at least three pieces when placed under large bending stresses\" The 2005 Audoly and Neukirch paper was not opened; the line is hedged to 'almost never'."
  }
 ]

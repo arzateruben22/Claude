@@ -83,14 +83,19 @@ const hook = new THREE.Mesh(new THREE.BoxGeometry(1.6, 8, 1.6), standMat); hook.
 const foot = new THREE.Mesh(new THREE.BoxGeometry(24, 1.6, 12), standMat); foot.position.set(-36, 0.8, 0);
 scene.add(pole, arm, hook, foot);
 
+// the ruler beside the hung slinky: a bar from the release height down 150 cm, ticks every 10 cm (every 50 cm longer)
+const rulerMat = new THREE.MeshBasicMaterial({ color: flat(HEX.ink2) }), ruler = new THREE.Group();
+const rbar = new THREE.Mesh(new THREE.BoxGeometry(0.5, XB, 0.5), rulerMat); rbar.position.set(0, TOP_Y - XB / 2, 0); ruler.add(rbar);
+for (let c = 0; c <= XB; c += 10) { const w = c % 50 === 0 ? 7 : 4, tk = new THREE.Mesh(new THREE.BoxGeometry(w, 0.45, 0.5), rulerMat); tk.position.set(-w / 2, TOP_Y - c, 0); ruler.add(tk); }
+ruler.position.set(-RING - 9, 0, 0); scene.add(ruler);
 // the front (the news), the middle of the slinky and the dropped ball
 const frontMat = new THREE.MeshBasicMaterial({ color: flat(HEX.force), transparent: true });
 const frontRing = new THREE.Mesh(new THREE.TorusGeometry(RING + 2.2, 0.75, 8, 48), frontMat); frontRing.geometry.rotateX(Math.PI / 2); scene.add(frontRing);
-const dotMat = new THREE.MeshBasicMaterial({ color: flat(HEX.energy), transparent: true });
-const dot = new THREE.Mesh(new THREE.SphereGeometry(2.6, 20, 14), dotMat); scene.add(dot);
-const BALL_X = RING + 18;
-const ballMat = new THREE.MeshBasicMaterial({ color: flat(HEX.force), transparent: true });
-const ball = new THREE.Mesh(new THREE.SphereGeometry(3.4, 24, 16), ballMat); scene.add(ball);
+const dotMat = new THREE.MeshBasicMaterial({ color: flat(HEX.energy) });
+const dot = new THREE.Mesh(new THREE.SphereGeometry(3.0, 24, 16), dotMat); scene.add(dot);
+const BALL_X = RING + 42;
+const ballMat = new THREE.MeshBasicMaterial({ color: flat("#0E1F8A") });
+const ball = new THREE.Mesh(new THREE.SphereGeometry(5.0, 28, 18), ballMat); scene.add(ball);
 
 // the strobe: the top and bottom coils every 1/30 s of the slinky's own time (the change and the measure)
 const ghostGeo = new THREE.TorusGeometry(1, 0.075, 8, 44); ghostGeo.rotateX(Math.PI / 2);
@@ -127,11 +132,12 @@ const hud = createHud({ camera, captionY: FILM.captionY });
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
-const slowTxt = (t) => { const s = FILM.speed.find((x) => t >= x.t0 && t < x.t1 && tauAt(t) > 0 && t >= x.t0); return s ? `${s.slow}× slower` : null; };
-hud.badge("hook-speed", { kind: "speed", slot: FILM.noteSlots.hook, t0: 0, t1: CUE.cuts.normal, text: (t) => `${FILM.speed[1].slow}× slower` });
+const slowTxt = (t) => { const s = FILM.speed.find((x) => t >= x.t0 && t < x.t1); return s ? `${s.slow}× slower` : null; };
+hud.badge("hook-speed", { kind: "speed", slot: FILM.noteSlots.hook, t0: 0, t1: CUE.cuts.normal, text: () => "20× slower" });
 hud.badge("speed", { kind: "speed", slot: FILM.noteSlots.speed, t0: CUE.cuts.normal, t1: null, text: (t) => (t < CUE.cuts.normal ? null : slowTxt(t)) });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const anchorFn = (an) => {
+  if (an === "ruler") return () => [-RING - 9, TOP_Y - XB / 2, 0];
   if (an === "top0") return () => [RING + 1, TOP_Y, 0];
   if (an === "top") return (t) => [RING, coilY(0, tauAt(t)), 0];
   if (an === "bottom") return (t) => [RING, coilY(1, tauAt(t)), 0];
@@ -142,7 +148,7 @@ const anchorFn = (an) => {
   if (m) return () => S.ghost(`${m[1]}-${m[2]}`, +m[3]);
   return () => [0, 0, 0];
 };
-for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: false });
+for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: !!lb.fixed });
 const SPN = FILM.spine;
 const spineAt = (t) => SPN.find((s) => t >= s.t0 && t < s.t1) || (t < SPN[0].t0 ? SPN[0] : SPN[SPN.length - 1]);
 const spineVal = (t) => {
@@ -176,10 +182,11 @@ window.seek = function (t) {
   if (frontRing.visible) { frontRing.position.set(0, TOP_Y - Xh(frontAt(tau)), 0); frontMat.opacity = onScreen(fk, HEX.force); }
   // the middle of the slinky and a ball dropped from the same height at the same instant
   const mk = win(t, CUE.mid);
-  dot.visible = mk > 0.001; dot.position.set(0, comY(tau), 0); dotMat.opacity = onScreen(mk, HEX.energy);
+  dot.visible = mk > 0.001; dot.position.set(0, comY(tau), 6);
   const bk = win(t, CUE.ball) * dimAt("ball", t);
-  ball.visible = bk > 0.001; ball.position.set(BALL_X, comY(tau), 0); ballMat.opacity = onScreen(bk, HEX.force);
+  ball.visible = bk > 0.001; ball.position.set(BALL_X, comY(tau), 0);
   S.group.children.forEach((m) => { if (m.material && "opacity" in m.material && m.material.transparent) m.material.opacity = 0.9; });
+  ruler.visible = t < CUE.cuts.change;
   S.update(t);
   cyc.update({ grid: 1, casters: [[0, 60, 0, 26], [-36, 2, 0, 16]] });
   dropT(t); dropE(t);

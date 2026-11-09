@@ -63,45 +63,47 @@ def take(*keys):
     return [[round(t, 4), round(v, 5)] for t, v in keys]
 
 
+RATE = 0.05                                      # one slow-motion factor for the whole film: 20x slower
+D = TC / RATE                                    # 5.89 s of film for the whole collapse
+CAP, CAPW = 0.35, 0.40                           # the pile stays above the caption plate up to these τ
 T_REL1 = A("vo02:go.") + 0.25
-T_END1 = A("vo02:all.") + 0.45
-R1 = TC / (T_END1 - T_REL1)
-T_REL2 = A("vo03:Slowed") + 0.2
-T_END2 = A("vo03:second.") + 0.1
-R2 = TC / (T_END2 - T_REL2)
-T_REL3 = A("vo04:pull") - 0.2
-T_END3 = A("vo04:move.") + 0.15
-R3 = TC / (T_END3 - T_REL3)
-T_REL4 = A("vo05:It") - 0.1
-T_END4 = A("vo05:fall.") + 0.3
-R4 = TAU_END / (T_END4 - T_REL4)
-T_REL5 = A("vo06:Measure") + 0.35
-T_END5 = A("vo06:second.") + 0.1
-R5 = TC / (T_END5 - T_REL5)
-HOOK_TAU = (0.135, 0.135 + 0.0208 * cut("normal"))
-RATE_TXT = {}
+T_END1 = T_REL1 + D
+T_END2 = A("vo03:second.") + 0.05
+T_REL2 = T_END2 - D
+T_END3 = A("vo04:Until") + 0.1
+T_REL3 = T_END3 - D
+T_REL4 = A("vo05:Its") + 0.1
+T_END4 = T_REL4 + CAPW / RATE
+T_END5 = A("vo06:arrives,") + 0.05
+T_REL5 = T_END5 - D
+HOOK_TAU = (0.135, 0.135 + RATE * cut("normal"))
+assert HOOK_TAU[1] < TC, HOOK_TAU
+assert T_REL2 > cut("change") + 0.2 and T_REL3 > cut("why") + 0.2 and T_REL5 > cut("measure") + 0.1, (T_REL2, T_REL3, T_REL5)
+assert T_END1 + 0.8 < cut("change") and T_END2 + 0.6 < cut("why") and T_END3 + 0.6 < cut("whoa") and T_END4 < cut("measure"), (T_END1, cut("change"))
+
+
+def tail(t_end, cut_t):
+    return min(CAP, TC + RATE * (cut_t - t_end))
+
 
 TAKES = [
     {"name": "hook", "t0": 0.0, "t1": cut("normal"), "keys": take((0.0, HOOK_TAU[0]), (cut("normal"), HOOK_TAU[1]))},
     {"name": "normal", "t0": cut("normal"), "t1": cut("change"),
-     "keys": take((cut("normal"), 0.0), (T_REL1, 0.0), (T_END1, TC), (cut("change"), TC + R1 * (cut("change") - T_END1)))},
+     "keys": take((cut("normal"), 0.0), (T_REL1, 0.0), (T_END1, TC), (cut("change"), tail(T_END1, cut("change"))))},
     {"name": "change", "t0": cut("change"), "t1": cut("why"),
-     "keys": take((cut("change"), 0.0), (T_REL2, 0.0), (T_END2, TC), (cut("why"), TC + R2 * (cut("why") - T_END2)))},
+     "keys": take((cut("change"), 0.0), (T_REL2, 0.0), (T_END2, TC), (cut("why"), tail(T_END2, cut("why"))))},
     {"name": "why", "t0": cut("why"), "t1": cut("whoa"),
-     "keys": take((cut("why"), 0.0), (T_REL3, 0.0), (T_END3, TC), (cut("whoa"), TC + R3 * (cut("whoa") - T_END3)))},
+     "keys": take((cut("why"), 0.0), (T_REL3, 0.0), (T_END3, TC), (cut("whoa"), tail(T_END3, cut("whoa"))))},
     {"name": "whoa", "t0": cut("whoa"), "t1": cut("measure"),
-     "keys": take((cut("whoa"), 0.0), (T_REL4, 0.0), (T_END4, TAU_END), (cut("measure"), TAU_END))},
+     "keys": take((cut("whoa"), 0.0), (T_REL4, 0.0), (T_END4, CAPW), (cut("measure"), CAPW))},
     {"name": "measure", "t0": cut("measure"), "t1": cut("takeaway"),
-     "keys": take((cut("measure"), 0.0), (T_REL5, 0.0), (T_END5, TC), (cut("takeaway"), min(TAU_END, TC + R5 * (cut("takeaway") - T_END5))))},
-    {"name": "takeaway", "t0": cut("takeaway"), "t1": cut("tease"),
-     "keys": take((cut("takeaway"), TC), (cut("tease"), 0.34))},
+     "keys": take((cut("measure"), 0.0), (T_REL5, 0.0), (T_END5, TC), (cut("takeaway"), min(CAPW, TC + RATE * (cut("takeaway") - T_END5))))},
+    {"name": "takeaway", "t0": cut("takeaway"), "t1": cut("tease"), "keys": take((cut("takeaway"), min(CAPW, TC + RATE * (cut("takeaway") - T_END5))), (cut("tease"), min(CAPW, TC + RATE * (cut("takeaway") - T_END5))))},
     {"name": "tease", "t0": cut("tease"), "t1": DUR + 1, "keys": take((cut("tease"), 0.0), (DUR + 1, 0.0))},
 ]
-# the speed note: seconds-of-film per second of slinky, per take, while the slinky moves
-SPEED = [{"t0": T_REL1 - 0.0, "t1": cut("change"), "slow": round(1 / R1)}, {"t0": 0.0, "t1": cut("normal"), "slow": round(1 / 0.0208)},
-         {"t0": T_REL2, "t1": cut("why"), "slow": round(1 / R2)}, {"t0": T_REL3, "t1": cut("whoa"), "slow": round(1 / R3)},
-         {"t0": T_REL4, "t1": cut("measure"), "slow": round(1 / R4)}, {"t0": T_REL5, "t1": cut("takeaway"), "slow": round(1 / R5)},
-         {"t0": cut("takeaway"), "t1": cut("tease"), "slow": round(1 / ((0.34 - TC) / (cut("tease") - cut("takeaway"))))}]
+# the speed note: one factor, 20x slower, wherever the slinky is moving in slow motion
+SPEED = [{"t0": 0.0, "t1": cut("normal"), "slow": 20}, {"t0": T_REL1, "t1": cut("change"), "slow": 20}, {"t0": T_REL2, "t1": cut("why"), "slow": 20},
+         {"t0": T_REL3, "t1": cut("whoa"), "slow": 20}, {"t0": T_REL4, "t1": cut("measure"), "slow": 20}, {"t0": T_REL5, "t1": cut("takeaway"), "slow": 20}]
 
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
 BOTTOM_Y = TOP_Y - XB
@@ -112,7 +114,7 @@ GHOSTS = {"change": {"t0": T_REL2 + 0.05, "t1": cut("why"), "dt": GH_DT, "n": GH
           "measure": {"t0": T_REL5 + 0.05, "t1": cut("takeaway"), "dt": GH_DT, "n": GH_N}}
 FRONT_W = [A("vo04:travels"), A("vo04:Until") - 0.1]
 FRONT_W2 = [A("vo04:pull"), A("vo04:move.") + 0.3]
-MID_W = [A("vo05:middle?"), cut("measure")]
+MID_W = [A("vo05:balance"), cut("measure")]
 BALL_W = [A("vo05:dropped"), cut("measure")]
 CUE = {"cuts": CUTS, "front": FRONT_W2, "mid": MID_W, "ball": BALL_W, "ghosts": GHOSTS, "tc": round(TC, 5)}
 
@@ -127,7 +129,7 @@ DIM = {
 SPINE = [
     {"t0": cut("normal"), "t1": cut("why"), "label": "bottom coil: fallen so far", "unit": "cm", "dp": 1, "kind": "bottom"},
     {"t0": cut("why"), "t1": cut("whoa"), "label": "news has travelled down", "unit": "%", "dp": 0, "kind": "front"},
-    {"t0": cut("whoa"), "t1": cut("measure"), "label": "middle of the slinky: fallen", "unit": "cm", "dp": 0, "kind": "mid"},
+    {"t0": cut("whoa"), "t1": cut("measure"), "label": "balance point: fallen", "unit": "cm", "dp": 0, "kind": "mid"},
     {"t0": cut("measure"), "t1": cut("takeaway"), "label": "bottom waited", "unit": "s", "dp": 1, "kind": "wait", "lit": [T_END5, cut("takeaway")]},
     {"t0": cut("takeaway"), "t1": cut("tease") - 0.3, "label": "bottom waited", "unit": "s", "dp": 1, "kind": "const", "v": round(TC, 1), "lit": [cut("takeaway"), cut("tease")]},
 ]
@@ -135,15 +137,16 @@ SPINE_AT = [[-1e9, [0.76, 0.34]]]
 
 LABELS = [
     {"id": "no-held", "text": "held at the top", "color": "ghost", "t0": cut("normal") + 0.3, "t1": T_REL1, "at": "top0", "side": 1},
-    {"id": "no-still", "text": "bottom: still", "color": "motion", "t0": A("vo02:bottom"), "t1": cut("change") - 0.3, "at": "bottom", "side": 1},
+    {"id": "no-ruler", "text": "hung about 1.5 m", "color": "ghost", "t0": cut("normal") + 0.3, "t1": T_REL1, "at": "ruler", "side": -1},
+    {"id": "no-still", "text": "bottom: still", "color": "motion", "t0": A("vo02:bottom"), "t1": T_END1 - 0.15, "at": "bottom", "side": 1},
     {"id": "ch-top", "text": "top: falling", "color": "energy", "t0": A("vo03:coils"), "t1": A("vo03:there.") + 0.3, "at": "top", "side": 1},
     {"id": "ch-bot", "text": "bottom: still", "color": "motion", "t0": A("vo03:bottom"), "t1": T_END2 - 0.3, "at": "bottom", "side": 1},
     {"id": "ch-gap", "text": "1/30 s apart", "color": "ghost", "t0": A("vo03:three") - 0.2, "t1": cut("why") - 0.3, "at": "ghost-top-change-4", "side": 1},
     {"id": "wy-no", "text": "no news yet", "color": "motion", "t0": A("vo04:Nothing"), "t1": A("vo04:The"), "at": "bottom", "side": 1},
     {"id": "wy-front", "text": "the news travels", "color": "force", "t0": A("vo04:travels"), "t1": A("vo04:Until") - 0.1, "at": "front", "side": 1},
     {"id": "wy-arr", "text": "news arrives", "color": "force", "t0": A("vo04:move.") - 0.5, "t1": cut("whoa") - 0.3, "at": "bottom", "side": 1},
-    {"id": "wo-mid", "text": "middle of the slinky", "color": "energy", "t0": MID_W[0] + 0.2, "t1": cut("measure") - 0.3, "at": "mid", "side": 1},
-    {"id": "wo-ball", "text": "dropped ball", "color": "force", "t0": A("vo05:dropped"), "t1": cut("measure") - 0.3, "at": "ball", "side": 1},
+    {"id": "wo-mid", "text": "balance point", "color": "energy", "t0": MID_W[0] + 0.2, "t1": cut("measure") - 0.3, "at": "mid", "side": 1},
+    {"id": "wo-ball", "text": "dropped ball", "color": "force", "t0": A("vo05:dropped"), "t1": cut("measure") - 0.3, "at": "ball", "side": 1, "fixed": True},
     {"id": "ms-ghost", "text": "bottom's ghosts: one pile", "color": "motion", "t0": A("vo06:stack"), "t1": T_END5 + 0.5, "at": "ghost-bot-measure-4", "side": 1},
 ]
 BADGES = [
@@ -160,32 +163,33 @@ def key(t, v, ease="p2"):
     return {"t": round(t, 4), **v, "ease": ease}
 
 
-WIDE = view([0.0, 128.0, 0.0], 700.0, 5.0, 12.0)
-HOOKV = view([0.0, 128.0, 0.0], 470.0, 5.0, 14.0)
-BOT = view([0.0, 104.0, 0.0], 320.0, 5.0, 10.0)
-MID = view([0.0, 124.0, 0.0], 560.0, 5.0, 10.0)
+WIDE = view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0)
+HOOKV = view([-76.0, 118.0, 0.0], 520.0, 5.0, 14.0)
+MIDV = view([0.0, 112.0, 0.0], 600.0, 5.0, 10.0)
+BOT = view([0.0, 108.0, 0.0], 430.0, 5.0, 10.0)
+FOLLOW = view([0.0, 70.0, 0.0], 520.0, 5.0, -10.0)
 CAM = {
-    "hook": [key(0.0, HOOKV), key(cut("normal"), {**HOOKV, "dist": 300.0}, "sine")],
-    "normal": [key(cut("normal"), WIDE), key(T_REL1, WIDE, "sine"), key(A("vo02:bottom"), MID, "p3"), key(cut("change"), {**MID, "dist": 520.0}, "sine")],
-    "change": [key(cut("change"), MID), key(cut("why"), {**MID, "dist": 500.0}, "sine")],
-    "why": [key(cut("why"), WIDE), key(A("vo04:Nothing"), BOT, "p3"), key(A("vo04:travels"), MID, "p3"), key(cut("whoa"), {**MID, "dist": 440.0}, "sine")],
-    "whoa": [key(cut("whoa"), MID), key(A("vo05:The"), WIDE, "p3"), key(cut("measure"), {**WIDE, "dist": 590.0}, "sine")],
-    "measure": [key(cut("measure"), MID), key(cut("takeaway"), {**MID, "dist": 520.0}, "sine")],
-    "takeaway": [key(cut("takeaway"), view([0.0, 112.0, 0.0], 640.0, 5.0, 12.0)), key(cut("tease"), view([0.0, 112.0, 0.0], 560.0, 5.0, 12.0), "sine")],
-    "tease": [key(cut("tease"), WIDE), key(DUR, {**WIDE, "dist": 540.0}, "sine")],
+    "hook": [key(0.0, HOOKV), key(cut("normal"), {**HOOKV, "dist": 480.0}, "sine")],
+    "normal": [key(cut("normal"), WIDE), key(T_END1 - 0.5, WIDE, "sine"), key(cut("change") - 0.1, view([0.0, 100.0, 0.0], 650.0, 5.0, 12.0), "sine")],
+    "change": [key(cut("change"), MIDV), key(T_END2, MIDV, "sine"), key(cut("why") - 0.1, view([0.0, 100.0, 0.0], 600.0, 5.0, 10.0), "sine")],
+    "why": [key(cut("why"), WIDE), key(A("vo04:Nothing"), BOT, "p3"), key(T_REL3 + 0.5, MIDV, "p3"), key(T_END3, MIDV, "sine"), key(cut("whoa") - 0.1, view([0.0, 100.0, 0.0], 600.0, 5.0, 10.0), "sine")],
+    "whoa": [key(cut("whoa"), MIDV), key(T_REL4 + 3.0, MIDV, "sine"), key(T_END4, FOLLOW, "p3"), key(cut("measure"), view([0.0, 64.0, 0.0], 430.0, 5.0, -24.0), "sine")],
+    "measure": [key(cut("measure"), MIDV), key(T_END5 + 0.4, MIDV, "sine"), key(cut("takeaway"), view([0.0, 78.0, 0.0], 520.0, 5.0, -8.0), "sine")],
+    "takeaway": [key(cut("takeaway"), view([0.0, 72.0, 0.0], 480.0, 5.0, -8.0)), key(cut("tease"), view([0.0, 72.0, 0.0], 400.0, 5.0, 24.0), "sine")],
+    "tease": [key(cut("tease"), view([0.0, 100.0, 0.0], 520.0, 5.0, 18.0)), key(EC, view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0), "p3"), key(DUR, view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0), "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
-TITLE = {"series": "Reality Rulebook · No. 007", "title": "The slinky that *waits*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": 0.3}
+TITLE = {"series": "Reality Rulebook · Season 2 · Episode 1", "title": "The slinky that *waits*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": -0.7}
 CAP_FIX = []
 film = {
-    "id": "rest-frame-007", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
+    "id": "reality-rulebook-s2e01", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "cue": CUE, "spine": SPINE, "spineAt": SPINE_AT, "slinky": SLINKY, "takes": TAKES, "speed": SPEED,
     "dim": DIM, "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.632, "title": TITLE,
-    "noteSlots": {"speed": "tl", "hook": "bl"},
+    "noteSlots": {"speed": "tl", "hook": "tr"},
     "captions": phrase_captions(f, max_chars=24, fix=CAP_FIX, until=EC - 0.3), "endCard": EC,
-    "end": {"title": "Next drop: spaghetti never breaks in *two*", "follow": "Follow Reality Rulebook",
-            "foot": "A real slinky collapses in about 0.3 s (Cross and Wheatland, 2012)."},
+    "end": {"title": "Next drop: spaghetti almost never breaks in *two*", "follow": "Follow Reality Rulebook",
+            "foot": "Real slinkies: about 0.3 s (Cross and Wheatland, 2012)."},
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]
@@ -203,7 +207,7 @@ for bd in BADGES:
 ev.append({"t": SPINE[0]["t0"], "kind": "counter.show", "tag": "spine"})
 for s in SPINE[1:]:
     ev.append({"t": s["t0"], "kind": "counter.tick", "tag": f"spine:{s['label']}"})
-ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title", "gain": -4.0})
+ev.append({"t": 0.0, "kind": "signature", "tag": "title", "gain": -4.0})
 ev.append({"t": EC, "kind": "signature", "tag": "end"})
 sheet = {"duration": DUR, "fps": FPS, "preset": "restframe-bench", "duck_db": -9.0,
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
@@ -214,4 +218,4 @@ sheet = {"duration": DUR, "fps": FPS, "preset": "restframe-bench", "duck_db": -9
 print(f"film.json: {len(SHOTS)} shots, {len(LABELS)} labels, {len(film['captions'])} caption pages, end card {EC} s, {DUR} s; tc {TC:.4f} s, Xcom {XCOM:.1f} cm")
 for b in BEATS:
     print(f"  {b['id']:<9} {b['t0']:6.2f}–{b['t1']:6.2f}")
-print(f"  rates: take1 1/{1/R1:.0f}, take2 1/{1/R2:.0f}, take3 1/{1/R3:.0f}, take4 1/{1/R4:.0f}, take5 1/{1/R5:.0f}")
+print(f"  one rate 1/{1/RATE:.0f}; releases {T_REL1:.2f} {T_REL2:.2f} {T_REL3:.2f} {T_REL4:.2f} {T_REL5:.2f}; arrivals {T_END1:.2f} {T_END2:.2f} {T_END3:.2f} {T_END5:.2f}")
