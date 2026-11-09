@@ -25,3 +25,8 @@ Lint is a guide: the real test is reading it aloud once.
 - Draft render: `out/envelope-s2e02-9x16-draft.mp4` (540x960, 15 fps, 73.2 s, AAC -14.1 LUFS / -1.7 dBTP, sync PASS), 0 render-audit warnings. The last frame matches frame 0 (PSNR 50.8 dB).
 - Sources: see claims-table.md. Nothing is OK until a person opens the pages.
 - Rhythm: see scene-table.md. Some stretches run 7 to 12 s between distinct events (the ball of thread winding on, the work card with the camera orbit).
+
+## Pacing pass (S2E02, folder ep08)
+- Scene table now lists a distinct visual event at least every 5 s (longest gap 4.9 s; most 2 to 4 s). Added: crane swing (18.1 s), "too big to picture" pull-out to a dot (24.1 s) and push-in (28.5 s), pull-out and push-in around the taller case (54.7 s, 56.5 s), takeaway spine return (58.8 s).
+- The 27.7 to 28.5 s hold is a deliberate empty-space beat: a thin line and a tiny planet under "too big to picture". A reviewer may want something small in it.
+- Draft assembled: 73.2 s, picture and audio matched; loop PSNR (last frame vs frame 0) measured after assembly; audit 0 warnings.
