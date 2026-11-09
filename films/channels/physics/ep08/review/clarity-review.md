@@ -30,3 +30,10 @@ land on a shelf, the end pieces hanging from the hands; one "Slow motion" note (
 every beat (no frozen holds); labels have fixed sides; the title is hedged ("almost never"); scene-table.md is measured from the render.
 Claims c2, c5, c6 are now SOURCE-READ against the 2018 paper's Fig. 3 caption ("Bending waves originating at the point of first fracture create
 additional fractures"); c4 (the 2005 paper) and c12 stay OPEN. Final render (1080x1920, 30 fps) waits for the gate.
+
+## Round 3 (9 Nov): after the Opus review (a4 b5 c3 d3 e4 f2 g3 h3)
+Footnote: "usually two pieces" with the full citation; c6 back to OPEN; the illustration tag up from the first break; broken pieces now spring apart with a gap and
+recoil (no joined V); every former hold now changes (numbered pieces, a Feynman tag, the bow reddening before it breaks, a camera that pushes in on each
+snap and pulls back to see the pieces fly); the promised side-by-side is there (shattered on top, twisted below, "a chain of snaps" lands on the top
+stick breaking); stylised hands replace the grey blocks (the right wrist band's white notch shows the twist); the film loops to the bow; the tags no
+longer collide with the counter (tags at top left, the counter at the right). Final (1080x1920, 30 fps) and the three covers wait for the gate.
