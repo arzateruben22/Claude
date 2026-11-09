@@ -188,7 +188,7 @@ window.seek = function (t) {
   const inGPS = tt >= CUE.dip[0] + 0.1 && tt < CUE.dip[1] + 0.1;
   BH.visible = !inGPS; halo.visible = !inGPS; stars.visible = true; earthG.visible = inGPS;
   halo.position.set(0, 0, 0); halo.quaternion.copy(camera.quaternion);
-  diskMat.uniforms.uT.value = tt; const dk = 1 - 0.3 * fadeIn(tt, CUE.tk, 1.0); diskMat.uniforms.uGain.value = dk; haloMat.uniforms.uGain.value = dk;
+  diskMat.uniforms.uT.value = tt * 3.0; const dk = 1 - 0.3 * fadeIn(tt, CUE.tk, 1.0); diskMat.uniforms.uGain.value = dk; haloMat.uniforms.uGain.value = dk;
   const bhOn = !inGPS;
   // the horizon ring (teal, faces the camera): it draws on "horizon", stays through the escape lines, softens later
   const hzK = fadeIn(tt, CUE.horizon, 0.7) * (1 - 0.55 * fadeIn(tt, CUE.dip[1] + 0.4, 0.8));
@@ -226,7 +226,7 @@ window.seek = function (t) {
   const wOn = tt >= CUE.toyou - 0.1 && tt < CUE.tk + 0.4 && bhOn;
   clk("you", [YOU[0], YOU[1] + 2.4, YOU[2]], 1.0, wOn); clk("fr", [fp[0], fp[1] + 1.5, fp[2]], 0.7, wOn);
   // Earth and a GPS satellite
-  earth.set({ center: [0, 0, 0], sunDir: [0.5, 0.2, 0.85], sun: 1, rimNight: 0.5, spin: -0.9 + 0.06 * tt });
+  earth.set({ center: [0, 0, 0], sunDir: [0.5, 0.2, 0.85], sun: 1, rimNight: 0.5, spin: -0.9 + 0.5 * tt });
   const ga = 0.5 + 0.3 * (tt - CUE.gps), gp = [EARTH[0] + 9.2 * Math.cos(ga), EARTH[1] + 9.2 * Math.sin(ga) * 0.55, EARTH[2] + 3.0 * Math.sin(ga)];
   S.gps = gp; gpsB.set({ center: gp, camera, opacity: inGPS ? 1 : 0 });
   gpsOrb.arc({ center: EARTH, r: 9.2, e1: [1, 0, 0], e2: [0, 0.55, 0.3] }).set({ opacity: inGPS ? 0.6 : 0 });
