@@ -97,6 +97,13 @@ const prop = (kids) => { const g = new THREE.Group(); kids.forEach((k) => g.add(
 const propBed = prop([bx(2.0, 0.34, 1.05, MC2, 0, 0.17, 0), bx(1.9, 0.2, 0.95, MC, 0, 0.44, 0), bx(0.5, 0.16, 0.75, MC, -0.7, 0.62, 0), bx(1.2, 0.26, 0.97, MB, 0.3, 0.6, 0)]);
 const propTable = prop([bx(1.5, 0.12, 0.95, MC, 0, 0.95, 0), ...[[-0.62, -0.38], [0.62, -0.38], [-0.62, 0.38], [0.62, 0.38]].map(([x, z]) => bx(0.1, 0.9, 0.1, MC2, x, 0.45, z)), cy(0.3, 0.05, MC2, -0.2, 1.03, 0), cy(0.12, 0.2, MM, 0.35, 1.1, 0.1)]);
 const propShoe = prop([bx(1.2, 0.14, 0.46, MC2, 0, 0.07, 0), el(0.5, 0.3, 0.26, MC, -0.25, 0.3, 0), el(0.38, 0.2, 0.25, MC, 0.35, 0.2, 0), bx(0.5, 0.04, 0.05, MM, 0.0, 0.5, 0.0)]);
+const dial = (() => { const g = new THREE.Group(); const face = cy(0.75, 0.08, MC, 0, 0, 0), rim = cy(0.84, 0.06, MC2, 0, 0, -0.04); face.rotation.x = rim.rotation.x = Math.PI / 2;
+  const hrH = bx(0.09, 0.42, 0.04, MB, 0, 0.21, 0.07), mnH = bx(0.06, 0.62, 0.04, MM, 0, 0.31, 0.09); hrH.geometry.translate(0, 0, 0); g.add(rim, face);
+  const hp = new THREE.Group(), mp = new THREE.Group(); hp.add(hrH); mp.add(mnH); g.add(hp, mp);
+  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2, tk = bx(0.05, i % 3 ? 0.08 : 0.14, 0.03, MC2, Math.sin(a) * 0.64, Math.cos(a) * 0.64, 0.06); tk.rotation.z = -a; g.add(tk); }
+  g.userData = { hp, mp }; g.visible = false; g.userData.noProbe = true; scene.add(g); return g; })();
+const floorPatch = (m) => { const o = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: unlit(CHALK), transparent: true, opacity: 0, depthWrite: false })); o.visible = false; o.userData.noProbe = true; o.renderOrder = 3; scene.add(o); return o; };
+const patches = [floorPatch(), floorPatch(), floorPatch()];
 // the Earth and the Moon, outlined
 const limbO = mk(new THREE.CircleGeometry(1, 128), CHALK2, 1), limbI = mk(new THREE.CircleGeometry(1, 128), TK.graphite || "#171A1E", 2);   // the Earth's edge in section, a thin chalk arc
 const mark = mk(new THREE.CircleGeometry(1, 48), CHALK, 7);
@@ -131,7 +138,7 @@ const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { c
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
-const tFlap = titleFlap(titleEl, { t0: 0, sig: FILM.title.sig });
+const tFlap = titleFlap(titleEl, { t0: FILM.title.t0 ?? 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 for (const c of FILM.counters) {
   hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, keys: c.keys, ease: "linear", fmt: (v) => String(Math.round(v)), minCh: 3,
@@ -201,6 +208,14 @@ window.seek = function (t) {
   const popU = (t0, t1) => E.back(seg(t, t0, t0 + 0.32)) * (1 - E.in3(seg(t, t1 - 0.28, t1)));
   const prp = (g, name, t0, t1, rot) => { const u = Math.max(0, popU(t0, t1)), p = wpos("B"); g.visible = u > 0.01 && t > t0 && t < t1; g.scale.setScalar(hs * u); g.position.set(p[0] + PROPX[name] * figH, p[1], 0); g.rotation.y = rot + 0.25 * Math.sin(t * 2); };
   prp(propBed, "bed", CUE.props.bed, CUE.props.bed + 1.0, -0.55); prp(propTable, "table", CUE.props.table, CUE.props.table + 1.0, 0.5); prp(propShoe, "shoe", CUE.props.shoe, CUE.props.shoe + 1.2, -0.5);
+  // grounding: a short chalk ledge under each prop, and a time clock over you at the Moon (the hands sweep eight hours)
+  [["bed", propBed, CUE.props.bed, 1.0], ["table", propTable, CUE.props.table, 1.0], ["shoe", propShoe, CUE.props.shoe, 1.2]].forEach(([nm, g, t0, dur], i) => {
+    const u = Math.max(0, popU(t0, t0 + dur)), p = wpos("B"), o = patches[i];
+    o.visible = g.visible; o.material.opacity = 0.45 * Math.min(1, u); o.position.set(p[0] + PROPX[nm] * figH, p[1] - 0.012 * figH, 0); o.scale.set(2.5 * hs, 0.05 * hs, 1);
+  });
+  { const u = Math.max(0, popU(CUE.clock[0], CUE.clock[1])), p = wpos("B"), on = u > 0.01 && t > CUE.clock[0] && t < CUE.clock[1];
+    dial.visible = on; dial.scale.setScalar(hs * 0.95 * u); dial.position.set(p[0] + 1.55 * figH, p[1] + 0.75 * figH, 0);
+    const sw = E.inout2(seg(t, CUE.clock[0] + 0.1, CUE.clock[1] - 0.3)); dial.userData.hp.rotation.z = -sw * Math.PI * 2 * 8 / 12; dial.userData.mp.rotation.z = -sw * Math.PI * 2 * 8; }
   // the Apollo capsule: a marker bead up the line, landing on "three days", trailing a streak (size set by the camera's distance)
   const cap = E.inout2(seg(t, CUE.apollo[0], CUE.apollo[1]));
   const capOn = seg(t, CUE.apollo[0] - 0.05, CUE.apollo[0] + 0.12) * (1 - E.in3(seg(t, CUE.apollo[1] + 0.5, CUE.apollo[1] + 1.4))) * outG;

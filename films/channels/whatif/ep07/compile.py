@@ -63,6 +63,8 @@ t_steps = A("vo06:steps", -0.1)                           # the popular goal: th
 t_140 = A("vo06:forty", 0.1)                               # the clock runs on to 140
 t_box = t_26
 t_work0, t_home, t_end = B["work"]["t0"], B["takeaway"]["t0"], A("vo08:Next", -0.25)
+t_slower, t_quick = A("vo06:Slower", -0.25), A("vo06:quicker", -0.15)
+t_pb, t_gf = A("vo06:steps", -0.6), A("vo06:kilometers", -0.5)      # the work beat: in on the walkers, the clock, back out to the lanes, then along the step walker
 t_apollo = [A("vo07:Apollo", 0.3), A("vo07:three", -0.1)]  # the capsule crosses the gap, landing on "three days"
 t_62 = t_apollo[1] + 1.8                                   # a second change
 t_spread = [A("vo03:Walk", -0.3), A("vo03:Walk", 0.8)]      # the lanes open out
@@ -106,6 +108,9 @@ SHOTS = [
     {"at": t_dive0, "name": "chase-a"},                  # a dive onto the nonstop walker, a chase to the Moon, and back out
     {"at": t_zo1, "name": "chase-b"},                    # a dive onto the blue walker: stop and go
     {"at": t_zo3, "name": "space"},                      # the wide view for the work card and the step goal
+    {"at": t_slower, "name": "work-a"},                  # push in on the three walkers at the Moon; a time clock pops over you
+    {"at": t_pb, "name": "work-b"},                      # pull back to the lanes at the step-goal line
+    {"at": t_gf, "name": "work-c"},                      # follow the step walker up its lane
     {"at": t_home, "name": "apollo"},                    # the capsule, then a push toward the Moon
     {"at": t_end, "name": "end"},                        # down to frame 0 and a calm hold
 ]
@@ -134,6 +139,9 @@ def zoom_out(t0, t1, P_from):                            # chase → mid (the Mo
     return [{"t": t0, **chase(P_from)}, {"t": round(t0 + (t1 - t0) * 0.5, 4), **mid, "ease": "linear"}, {"t": t1, **SPACE, "ease": "inout2"}]
 swing = lambda a0, a1, amp: (lambda t: amp * math.sin(math.pi * lin(t, a0, a1)) ** 2)
 fA, fB, fS = fn(PA), fn(PB), fn(PS)
+NEAR = chase(LINE_TOP)                                             # the walkers at the Moon, big, in the lower band
+D_F = 1.2e8
+follow = lambda t: pose(LINE_TOP * fS(t) + 0.5 * 0.055 * D_F, FYC, D_F, FYC, el=3, x=0.05 * D_F)   # the step walker (the right lane) up its lane, big and low
 CAM = {
     "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **k(1.2, 30, 8, 0.40), "ease": "sine"}],      # a slow back-off through "Starting at your own front door"
     "pull": [                                                                    # a constant rate of zoom in log distance
@@ -149,7 +157,11 @@ CAM = {
                + [{"t": round(t_zo0, 4), **chase(LINE_TOP)}] + zoom_out(t_zo0, t_zo1, LINE_TOP)[1:],
     "chase-b": dive(t_zo1, t_b1, 0.0)[:-1] + [{"t": t_b1, **chase(0.0), "ease": "inout2"}] + chase_keys(t_b1 + 0.1, t_26, fB, swing(A("vo04:you", -0.3) + 2.0, A("vo04:you", -0.3) + 6.5, 10.0))
                + [{"t": round(t_zo2, 4), **chase(LINE_TOP)}] + zoom_out(t_zo2, t_zo3, LINE_TOP)[1:],
-    "space": [{"t": t_zo3, **SPACE}, {"t": t_home, **SPACE2, "ease": "sine"}],
+    "space": [{"t": t_zo3, **SPACE}, {"t": t_slower, **SPACE2, "ease": "sine"}],
+    "work-a": [{"t": t_slower, **SPACE2}, {"t": round(t_slower + 0.8, 4), **pose(LINE_TOP + 2.0e6, 0.20, 2.4e8, 0.60), "ease": "sine"}, {"t": round(t_slower + 1.7, 4), **NEAR, "ease": "inout2"}, {"t": t_pb, **NEAR, "ease": "sine"}],
+    "work-b": [{"t": t_pb, **NEAR}, {"t": round(t_pb + 0.8, 4), **pose(LINE_TOP + 2.0e6, 0.20, 2.4e8, 0.60), "ease": "linear"}, {"t": round(t_pb + 1.7, 4), **SPACE2, "ease": "inout2"}, {"t": t_gf, **SPACE2, "ease": "sine"}],
+    "work-c": [{"t": t_gf, **SPACE2}, {"t": round(t_gf + 1.0, 4), **follow(t_gf + 1.0), "ease": "inout2"}] + [{"t": round(t_gf + 1.0 + 0.15 * i, 4), **follow(t_gf + 1.0 + 0.15 * i), "ease": "linear"} for i in range(1, int((t_140 + 0.2 - t_gf - 1.0) / 0.15) + 1)]
+               + [{"t": t_home, **SPACE2, "ease": "inout2"}],
     "apollo": [{"t": t_home, **SPACE2}, {"t": t_62, **SPACE2, "ease": "sine"},
                {"t": t_end, **pose(Y_MOON, 0.30, 7.0e8, 0.45, el=3), "ease": "inout2"}],              # a second change: in toward the Moon
     "end": [                                                                      # back down to frame 0 by the pull-back's own steps, then a calm hold: the loop closes
@@ -197,18 +209,18 @@ WORK = {
 
 # ── labels, badges, counters ──
 LABELS = [
-    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.0, "t1": t_title_out + 0.1, "side": 1},
+    {"id": "l-you", "text": "you", "kind": "anchor", "anchor": "you", "t0": 0.3, "t1": t_title_out + 0.1, "side": 1},
     {"id": "l-earth", "text": "Earth", "kind": "part", "anchor": "earth", "t0": t_rings[0], "t1": t_dive0 - 2.0, "side": 1},
     {"id": "l-moon", "text": "the Moon · 384,400 km", "kind": "part", "anchor": "moon", "t0": A("vo02:Moon", 0.2), "t1": t_dive0 - 0.2, "side": -1},
-    {"id": "l-steps", "text": "10,000 steps a day: ≈ 140 yr", "kind": "calc", "anchor": "walkS", "t0": t_steps, "t1": t_140 + 0.4, "side": 1, "v": "below"},
-    {"id": "l-apollo", "text": "Apollo 11: about 3 days", "kind": "anchor", "anchor": "capsule", "t0": t_apollo[0] + 0.2, "t1": t_end - 0.3, "side": 1},
+    {"id": "l-apollo", "text": "Apollo 11: about 3 days", "kind": "anchor", "anchor": "capsule", "t0": t_apollo[0] + 0.3, "t1": t_end - 0.3, "side": 1},
 ]
 BADGES = [
-    {"id": "b-thought", "text": "thought experiment", "t0": 0.0, "t1": t_title_out, "slot": "bl"},
+    {"id": "b-thought", "text": "thought experiment", "t0": 0.3, "t1": t_title_out, "slot": "bl"},
     {"id": "b-scale", "text": "not to scale until the Moon", "t0": t_pull0, "t1": t_pull1 - 0.3, "slot": "tr"},
     {"id": "b-pace", "text": "∵ an easy pace, 5 km/h", "t0": t_walk0, "t1": t_zo0, "slot": "tl"},
     {"id": "b-road", "text": "∵ no road, no rest", "t0": t_halfway, "t1": t_zo0, "slot": "tr"},
     {"id": "b-day", "text": "∵ 8 hours a day", "t0": t_zo1, "t1": t_steps - 0.1, "slot": "tl"},
+    {"id": "b-steps", "text": "10,000 steps a day: ≈ 140 yr", "t0": t_steps, "t1": t_140 + 0.5, "slot": "tr"},
     {"id": "b-stride", "text": "∵ 0.75 m a step", "t0": t_steps, "t1": t_140 + 0.4, "slot": "tr"},
     {"id": "b-half", "text": "halfway", "t0": t_halfway - 0.3, "t1": t_halfway + 1.5, "slot": "tl"},
     {"id": "b-nonstop", "text": "nonstop: ≈ 9 yr", "t0": t_nine, "t1": t_zo0 + 0.8, "slot": "tr"},
@@ -224,12 +236,12 @@ COUNTERS = [
     {"id": "c-years", "label": "years of walking", "t0": t_run0 - 0.2, "t1": t_work0 - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
 ]
 
-TITLE = {"series": "Possibility Lab · Season 2 · Episode 1", "title": "Walking to the *Moon*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "Possibility Lab · Season 2 · Episode 1", "title": "Walking to the *Moon*", "t0": 0.3, "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next envelope: *everyone, holding hands*", "follow": "Possibility Lab · Season 2 · Episode 1",
        "next": "NASA Science, Moon Facts: average distance 384,400 km."}
 
 CUE = {"pull": [t_pull0, t_pull1], "rings": t_rings, "spread": t_spread, "clockA": CLOCK_A, "clockB": CLOCK_B, "box": t_box, "nine": t_nine,
-       "apollo": t_apollo, "home": t_home, "pauses": PAUSES, "props": {"bed": t_sleep, "table": t_eat, "shoe": t_shoe}, "run": [t_run0, t_b1, t_zo1],
+       "apollo": t_apollo, "home": t_home, "clock": [t_quick, t_quick + 1.8], "pauses": PAUSES, "props": {"bed": t_sleep, "table": t_eat, "shoe": t_shoe}, "run": [t_run0, t_b1, t_zo1],
        "fps": FPS, "pathA": PA, "pathB": PB, "pathS": PS, "dc": D_C, "hs": 0.055, "fy": FYC}
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": round(t_box + 1.0, 4),

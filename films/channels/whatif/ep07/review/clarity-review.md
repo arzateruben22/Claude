@@ -39,7 +39,8 @@ All beats are under the limit of 8. Several grades are low because the sentences
 ## Review round 2 changes (9 Nov 2026)
 - Layout rebuilt for the whole 9:16 frame: a dive from the wide view onto each walker and a chase, with big figures (13% of the frame) low in it, the Earth and the Moon big at the start and the arrival, star dust for depth, and three vignettes at the stops (bed, table, shoe, timed to "sleep", "eat" and "shoe"). Camera moves at 10.5 s (pan up the line), 17 s and 31 s (a swing round the walker) and 62 s (a push in toward the Moon).
 - The 10,000-step label holds until "a hundred and forty"; the counter is hidden while the work card is up, so nothing overlaps; the nonstop label is a badge so it no longer overlaps the Moon label; the lone "≈" at 24.5 s is gone (the "≈" and its figure are now one term).
-- The end is a calm hold on frame 0's picture; the loop's whole-frame PSNR is 21.5 dB and 29.1 dB outside the HUD (title, badge, caption, label).
+- The end is a calm hold on frame 0's picture. Frame 0 is now the bare picture (the title, badge and label arrive at 0.3 s), so the loop's whole-frame PSNR is 50.8 dB.
+- 41 to 52 s: the work beat now pushes in on the walkers at the Moon as 'slower adds years' is spoken (a time clock pops in as 'quicker' is spoken), pulls back to the lanes at the step-goal line, and follows the step walker up its lane. Vignettes sit on short chalk ledges.
 - Runtime is 72.0 s. c5's `source_url` in the ledger must be a web address for the linter (it errors on "none"); the table prints "none (assumption)".
 
 ## Status (9 Nov 2026)
