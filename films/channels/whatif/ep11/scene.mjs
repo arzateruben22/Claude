@@ -56,7 +56,7 @@ const waterCanvas = () => { const c = document.createElement("canvas"); c.width 
   for (let i = 0; i < 90; i++) { g.fillStyle = `rgba(255,255,255,${(0.05 + 0.08 * rn()).toFixed(3)})`; g.beginPath(); g.ellipse(rn() * 512, rn() * 256, 12 + 50 * rn(), 1.5 + 4 * rn(), 0, 0, 7); g.fill(); }
   for (let i = 0; i < 50; i++) { g.fillStyle = `rgba(8,30,90,${(0.06 + 0.1 * rn()).toFixed(3)})`; g.beginPath(); g.ellipse(rn() * 512, rn() * 256, 10 + 40 * rn(), 2 + 4 * rn(), 0, 0, 7); g.fill(); }
   return c; };
-const tex = (c) => { const t = new THREE.CanvasTexture(c); t.wrapS = THREE.RepeatWrapping; t.anisotropy = 4; return t; };
+const tex = (c) => { const t = new THREE.CanvasTexture(c); t.wrapS = THREE.RepeatWrapping; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; t.anisotropy = 4; return t; };
 const waterTex = tex(waterCanvas()), earthTex = tex(earthSurface({ width: 1024 })), moonTex = tex(moonSurface({ width: 512, seed: 9 }));
 const globe = (map, hex, mix) => { const c = hexRgb(hex), u = { uCol: { value: new THREE.Vector3(...c) }, uDark: { value: new THREE.Vector3(...c.map((v) => v * 0.28)) }, uLight: { value: new THREE.Vector3(-0.55, 0.45, 0.8) }, uExposure: { value: 1 }, uOpacity: { value: 1 }, uMix: { value: mix }, uMap: { value: map }, uSpin: { value: 0 } };
   const m = new THREE.Mesh(new THREE.SphereGeometry(1, 72, 54), new THREE.ShaderMaterial({ uniforms: u, vertexShader: SVS, fragmentShader: SFS, transparent: true, depthWrite: true, extensions: { derivatives: true } }));
@@ -170,7 +170,7 @@ window.seek = function (t) {
   ball.position.set(0, 0, 0); ball.scale.setScalar(rGrow * pulse); ball.material.uniforms.uSpin.value = 2 * Math.PI * t / FILM.dur * 2;
   const wk = shot === "work", fr = wk ? E.out3(seg(t, CUE.fresh[0], CUE.fresh[0] + 0.7)) : 0;
   freshBall.visible = wk && fr > 0.01; freshBall.position.set(FRESH_X, 0, 0); freshBall.scale.setScalar(Math.max(1, FRESH_R * fr));
-  const farF = shot === "why" ? seg(Math.log10(d), Math.log10(30000), Math.log10(48000)) : 1;   // the Moon and the Earth only come into view once the pull-back is far enough out, clear of the caption
+  const farF = shot === "why" ? seg(Math.log10(d), Math.log10(64000), Math.log10(75000)) : 1;   // the Moon and the Earth only come into view once the pull-back is far enough out, clear of the caption
   moon.visible = sp && shot !== "take" && farF > 0.01; moon.material.uniforms.uOpacity.value = farF; earth.material.uniforms.uOpacity.value = farF; moon.position.set(MOON_X, 0, 0); moon.scale.setScalar(MOON_R); moon.material.uniforms.uSpin.value = 0.5;
   earth.visible = sp && farF > 0.01; earth.position.set(EARTH_X, 0, 0); earth.scale.setScalar(EARTH_R); earth.material.uniforms.uSpin.value = 2 * Math.PI * t / FILM.dur;
   const fo = shot === "take" ? E.out3(seg(t, CUE.home + 0.2, CUE.home + 1.0)) : 0;

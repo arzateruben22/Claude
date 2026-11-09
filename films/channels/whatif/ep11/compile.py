@@ -148,7 +148,7 @@ LABELS += [
     {"id": "l-moon", "text": "the Moon · 3,480 km", "kind": "part", "anchor": "moon-top", "t0": t_whoa + 0.3, "t1": t_next - 0.2, "side": -1, "shot": "moon"},
     {"id": "l-ballm", "text": "water ball · 1,383 km", "kind": "anchor", "anchor": "ball-top", "t0": t_whoa + 0.3, "t1": t_next - 0.2, "side": 1, "shot": "moon"},
     {"id": "l-earth", "text": "the Earth · 12,756 km", "kind": "part", "anchor": "earth-top", "t0": t_next + 0.3, "t1": t_work0 - 0.2, "side": 1, "shot": "earth"},
-    {"id": "l-balle", "text": "water ball", "kind": "anchor", "anchor": "ball-top", "lift": 70, "t0": t_next + 0.3, "t1": t_work0 - 0.2, "side": -1, "shot": "earth"},
+    {"id": "l-balle", "text": "water ball", "kind": "anchor", "anchor": "ball-top", "lift": 110, "t0": t_next + 0.3, "t1": t_work0 - 0.2, "side": -1, "shot": "earth"},
 ]
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.3, "t1": t_title_out, "slot": "br"},

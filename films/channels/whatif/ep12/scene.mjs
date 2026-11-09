@@ -49,7 +49,7 @@ void main() {
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`;
-const tex = (c) => { const t = new THREE.CanvasTexture(c); t.wrapS = THREE.RepeatWrapping; t.anisotropy = 4; return t; };
+const tex = (c) => { const t = new THREE.CanvasTexture(c); t.wrapS = THREE.RepeatWrapping; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; t.anisotropy = 4; return t; };
 const earthTex = tex(earthSurface({ width: 1024 }));
 const globe = (map, hex, mix) => { const c = hexRgb(hex), u = { uCol: { value: new THREE.Vector3(...c) }, uDark: { value: new THREE.Vector3(...c.map((v) => v * 0.28)) }, uLight: { value: new THREE.Vector3(-0.55, 0.45, 0.8) }, uExposure: { value: 1 }, uOpacity: { value: 1 }, uMix: { value: mix }, uMap: { value: map }, uSpin: { value: 0 } };
   const m = new THREE.Mesh(new THREE.SphereGeometry(1, 72, 54), new THREE.ShaderMaterial({ uniforms: u, vertexShader: SVS, fragmentShader: SFS, transparent: true, depthWrite: true, extensions: { derivatives: true } }));
