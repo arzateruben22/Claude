@@ -114,7 +114,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
         const [ex, ey] = S(...bez(q, p)); f.els[i * 2].setAttribute("d", pts.join(" ")); f.els[i * 2].setAttribute("opacity", (p > 0 ? 0.95 * on * (1 - eo(seg(t, f.t1 - 0.6, f.t1))) : 0).toFixed(3)); f.els[i * 2 + 1].setAttribute("cx", ex); f.els[i * 2 + 1].setAttribute("cy", ey); f.els[i * 2 + 1].setAttribute("r", 11 * u * sc); f.els[i * 2 + 1].setAttribute("opacity", (p > 0.05 ? 0.85 * on * (1 - eo(seg(t, f.t1 - 0.6, f.t1))) : 0).toFixed(3)); });
     }
   };
-  const PLATES = (EP.plates || []).map((P) => ({ ...P, t0: R(P.t0), t1: R(P.t1), rows: (P.rows || []).map((r) => ({ ...r, t: R(r.t) })), tags: (P.tags || []).map((g) => ({ ...g, t: R(g.t) })), bars: (P.bars || []).map((b) => ({ ...b, t: R(b.t) })), noteT: P.note ? R(P.noteT) : 0, lines: (P.lines || []).map((l) => ({ ...l, t: R(l.t) })) }));
+  const PLATES = (EP.plates || []).map((P) => ({ ...P, t0: R(P.t0), t1: R(P.t1), rows: (P.rows || []).map((r) => ({ ...r, t: R(r.t) })), tags: (P.tags || []).map((g) => ({ ...g, t: R(g.t) })), bars: (P.bars || []).map((b) => ({ ...b, t: R(b.t), t2: b.t2 ? R(b.t2) : 0 })), noteT: P.note ? R(P.noteT) : 0, lines: (P.lines || []).map((l) => ({ ...l, t: R(l.t) })) }));
   const plEls = PLATES.map((P) => { const d = document.createElement("div"); d.className = "plate"; d.style.top = px(P.top || 640); if (P.fill) d.style.background = P.fill;
     d.innerHTML = `<div class="pt">${P.title}</div>` + (P.tags.length ? `<div>${P.tags.map((g) => `<span class="tag">${g.text}</span>`).join("")}</div>` : "") + P.lines.map((l) => `<div class="row" style="${l.style || ""}"><span>${l.text}</span></div>`).join("") + P.rows.map((r) => `<div class="row"><span>${r.text}</span><small>${r.small || ""}</small></div>`).join("") + P.bars.map((b) => `<div class="bl">${b.label}</div><div class="bar" style="background:${b.color || NAVY}"></div>`).join("") + (P.note ? `<div class="note">${P.note}</div>` : "");
     $("#plates").appendChild(d); return d; });
@@ -144,12 +144,12 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
     const b = BADGES.find(([a, z]) => t >= a && t < z); if (b) badge.innerHTML = b[2].replace(/µm/g, '<span style="text-transform:none">µm</span>');
     badge.style.opacity = b ? (eo(seg(t, b[0], b[0] + 0.3)) * (1 - eo(seg(t, b[1] - 0.3, b[1]))) * (1 - q) * (1 - eg) * (1 - ev2)).toFixed(3) : "0";
     PLATES.forEach((P, i) => { const d = plEls[i]; d.style.opacity = (Math.min(P.t0 <= 0.1 ? 1 : eo(seg(t, P.t0 + 0.4, P.t0 + 0.85)), 1 - eo(seg(t, P.t1 - 0.85, P.t1 - 0.4)))).toFixed(3);
-      const life = seg(t, P.t0, P.t1); d.style.transform = `translateY(${(-14 * life * u).toFixed(2)}px) scale(${(1 + 0.035 * life).toFixed(4)})`;
+      const life = seg(t, P.t0, P.t1), dr = P.drift || 1; d.style.transform = `translateY(${(-14 * dr * life * u).toFixed(2)}px) scale(${(1 + 0.035 * dr * life).toFixed(4)})`;
       const tg = d.querySelectorAll(".tag"); P.tags.forEach((g, j) => { tg[j].style.opacity = eo(seg(t, g.t, g.t + 0.4)).toFixed(3); });
       const rows = d.querySelectorAll(".row"), bl = d.querySelectorAll(".bl"), bars = d.querySelectorAll(".bar"), nl = P.lines.length;
       P.lines.forEach((l, j) => { rows[j].style.opacity = eo(seg(t, l.t, l.t + 0.4)).toFixed(3); });
       P.rows.forEach((r, j) => { rows[nl + j].style.opacity = (0.18 + 0.82 * eo(seg(t, r.t, r.t + 0.4))).toFixed(3); rows[nl + j].style.fontWeight = t >= r.t ? "700" : "500"; });
-      P.bars.forEach((bb, j) => { const p = eo(seg(t, bb.t, bb.t + 0.9)); bl[j].style.opacity = eo(seg(t, bb.t - 0.1, bb.t + 0.3)).toFixed(3); bars[j].style.width = `${(bb.value / bb.max * 100 * p).toFixed(1)}%`; });
+      P.bars.forEach((bb, j) => { const p = eo(seg(t, bb.t, bb.t + 0.9)); bl[j].style.opacity = eo(seg(t, bb.t - 0.1, bb.t + 0.3)).toFixed(3); const vv = bb.v2 ? bb.value + (bb.v2 - bb.value) * eo(seg(t, bb.t2, bb.t2 + 1.0)) : bb.value; bars[j].style.width = `${(vv / bb.max * 100 * p).toFixed(1)}%`; });
       const nt = d.querySelector(".note"); if (nt) nt.style.opacity = eo(seg(t, P.noteT, P.noteT + 0.4)).toFixed(3); });
     let chg = 1; for (const cc of CH) chg *= t < cc ? 1 - eo(seg(t, cc - 0.35, cc)) : eo(seg(t, cc + 0.35, cc + 0.95));
     for (const L of LABELS) {

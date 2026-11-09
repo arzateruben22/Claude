@@ -1,4 +1,4 @@
-# Skin Sense No. 06: "Same List as Cigarettes" (new art direction, tone: deep)
+# Skin Sense No. 06: "Same List as Cigarettes" (new art direction, tone: deep-medium)
 
 Draft: `review/skin-sense-006-preview.mp4` (voice only, 540×960), `review/contact-sheet.jpg`. Built to `../ART-DIRECTION.md` (branch `claude/skin-sense-art-direction`) and Standards v2.
 Deliverables: `script.md`, `review/scene-table.md`, `review/claims-table.md`, `review/clarity-review.md`, `art-prompts.md`. The previous 3D draft is archived in `old-3d/` (relative paths no longer work).

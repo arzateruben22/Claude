@@ -30,16 +30,20 @@
     "art/ep06-04.png",
     "art/ep06-04.webp",
     "art/section.png"
-   ],
-   "filter": "brightness(.78) saturate(1.2)"
+   ]
   },
   "q5": {
    "src": [
     "art/ep06-05.png",
     "art/ep06-05.webp",
     "art/skin.png"
-   ],
-   "filter": "brightness(1.12)"
+   ]
+  },
+  "q6": {
+   "src": [
+    "art/ep06-06.webp",
+    "art/skin.png"
+   ]
   }
  },
  "camera": [
@@ -512,7 +516,7 @@
    }
   },
   {
-   "t": "start:vo06",
+   "t": "start:vo05",
    "img": "q4",
    "s": 1.0,
    "f": [
@@ -616,54 +620,122 @@
    }
   },
   {
-   "t": "vo06:thin",
-   "img": "q4",
-   "s": 1.55,
+   "t": "vo06:which",
+   "img": "q6",
+   "s": 1.1,
    "f": [
-    0.5,
-    0.44
+    0.55,
+    0.53
    ],
    "anchors": {
-    "top": [
-     0.5,
-     0.43
-    ],
-    "uva": [
-     0.5,
-     0.4
-    ],
-    "sun": [
-     0.5,
-     0.4
+    "paper": [
+     0.8,
+     0.52
     ],
     "mid": [
-     0.5,
-     0.5
+     0.55,
+     0.53
+    ],
+    "top": [
+     0.55,
+     0.53
+    ],
+    "uva": [
+     0.55,
+     0.53
+    ],
+    "sun": [
+     0.55,
+     0.53
     ]
    },
    "fbAnchors": {
-    "top": [
-     0.5,
-     0.43
-    ],
-    "uva": [
-     0.5,
-     0.4
-    ],
-    "sun": [
-     0.5,
-     0.4
+    "paper": [
+     0.8,
+     0.52
     ],
     "mid": [
-     0.5,
-     0.5
+     0.55,
+     0.53
+    ],
+    "top": [
+     0.55,
+     0.53
+    ],
+    "uva": [
+     0.55,
+     0.53
+    ],
+    "sun": [
+     0.55,
+     0.53
     ]
    },
    "fb": {
-    "s": 1.55,
+    "s": 1.1,
     "f": [
-     0.5,
-     0.44
+     0.55,
+     0.53
+    ]
+   }
+  },
+  {
+   "t": "vo06:paper",
+   "img": "q6",
+   "s": 1.3,
+   "f": [
+    0.62,
+    0.53
+   ],
+   "anchors": {
+    "paper": [
+     0.8,
+     0.52
+    ],
+    "mid": [
+     0.55,
+     0.53
+    ],
+    "top": [
+     0.55,
+     0.53
+    ],
+    "uva": [
+     0.55,
+     0.53
+    ],
+    "sun": [
+     0.55,
+     0.53
+    ]
+   },
+   "fbAnchors": {
+    "paper": [
+     0.8,
+     0.52
+    ],
+    "mid": [
+     0.55,
+     0.53
+    ],
+    "top": [
+     0.55,
+     0.53
+    ],
+    "uva": [
+     0.55,
+     0.53
+    ],
+    "sun": [
+     0.55,
+     0.53
+    ]
+   },
+   "fb": {
+    "s": 1.3,
+    "f": [
+     0.62,
+     0.53
     ]
    }
   },
@@ -733,7 +805,7 @@
    ]
   },
   {
-   "text": "May be 10–15× midday sun",
+   "text": "May be 10–15× midday sun<br>large units · AAP 2011",
    "a": "uva",
    "img": "q2",
    "t0": "vo03:ten",
@@ -759,17 +831,28 @@
    "a": "top",
    "img": "q4",
    "t0": "vo06:top",
-   "t1": "end:vo06+0.4",
+   "t1": "vo06:which",
    "off": [
     120,
     -140
+   ]
+  },
+  {
+   "text": "Paper · about 100 µm",
+   "a": "paper",
+   "img": "q6",
+   "t0": "vo06:about",
+   "t1": "end:vo06+0.4",
+   "off": [
+    -70,
+    150
    ]
   }
  ],
  "plates": [
   {
    "t0": "start:vo02",
-   "t1": "end:vo02+0.3",
+   "t1": "end:vo02+0.5",
    "top": 640,
    "title": "IARC Group 1:<br>“carcinogenic to humans”",
    "rows": [
@@ -804,11 +887,12 @@
     }
    ],
    "note": "Group 1 ranks how sure the evidence is, not how big the risk.",
-   "noteT": "vo02:sure"
+   "noteT": "vo02:sure",
+   "drift": 1.6
   },
   {
    "t0": "start:vo04",
-   "t1": "end:vo04+2.4",
+   "t1": "end:vo04+2.0",
    "top": 650,
    "title": "Melanoma risk,<br>people who started using beds before 35",
    "tags": [
@@ -821,8 +905,8 @@
      "t": "vo04:started"
     },
     {
-     "text": "Before age 35",
-     "t": "vo04:thirty-five"
+     "text": "More than half again as high",
+     "t": "vo04:half"
     }
    ],
    "bars": [
@@ -830,23 +914,26 @@
      "label": "People who never used a bed",
      "value": 1,
      "max": 1.8,
-     "t": "vo04:Pooled",
+     "t": "vo04:joined",
      "color": "#9AA6C0"
     },
     {
-     "label": "Started before 35: more than half again as high",
-     "value": 1.6,
+     "label": "People who started using beds before 35",
+     "value": 1.0,
+     "v2": 1.6,
+     "t2": "vo04:raised",
      "max": 1.8,
-     "t": "vo04:started#1",
+     "t": "vo04:started",
      "color": "#2F8F86"
     }
    ],
    "note": "Group results, not a prediction for any one person. Not the same as ever using a bed (a much smaller rise). Boniol et al., BMJ 2012.",
-   "noteT": "vo04:half"
+   "noteT": "vo04:half",
+   "drift": 1.6
   },
   {
-   "t0": "start:vo05",
-   "t1": "start:vo06",
+   "t0": "end:vo04+1.2",
+   "t1": "end:vo05+1.2",
    "top": 680,
    "title": "Countries that acted",
    "rows": [
@@ -863,18 +950,19 @@
    ],
    "tags": [
     {
-     "text": "Brazil: months after IARC’s 2009 call",
-     "t": "end:vo05+0.3"
+     "text": "Most states 2015 · Western Australia 2016",
+     "t": "vo05:Australian+0.3"
     },
     {
-     "text": "Most states 2015 · Western Australia 2016",
-     "t": "end:vo05+1.8"
+     "text": "Brazil: months after IARC’s 2009 call",
+     "t": "vo05:Brazil+0.3"
     }
-   ]
+   ],
+   "drift": 2
   },
   {
    "t0": "start:vo07",
-   "t1": "end:vo07+0.3",
+   "t1": "end:vo07+1.0",
    "top": 640,
    "title": "IARC Group 1:<br>“carcinogenic to humans”",
    "rows": [
@@ -900,7 +988,8 @@
     }
    ],
    "note": "Same list: the same certainty, not the same harm.",
-   "noteT": "vo07:harm"
+   "noteT": "vo07:means",
+   "drift": 1.6
   }
  ],
  "sup": [
@@ -941,7 +1030,7 @@
  "quiet": [
   [
    "start:vo02",
-   "end:vo02+0.3"
+   "end:vo02+1.0"
   ],
   [
    "start:vo04",
@@ -955,13 +1044,13 @@
  "scan": [
   [
    "vo06:through",
-   "vo06:thin+1.4"
+   "vo06:which"
   ]
  ],
  "end": {
   "t": "start:vo08-0.3",
-  "e1": "Next season:<br>more skin questions",
+  "e1": "Next:<br>more skin questions",
   "e2": "answered with the evidence.",
-  "chip": "Skin Sense · season 2"
+  "chip": "Skin Sense · Season 2"
  }
 }
