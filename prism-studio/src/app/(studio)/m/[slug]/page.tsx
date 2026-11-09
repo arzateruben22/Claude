@@ -290,15 +290,15 @@ async function InstagramScreen() {
           {v.captions.map((g) => (
             <details key={g.channel.id} className="card ig-captions" style={topicStyle(g.channel)}>
               <summary><span className="h3">{g.channel.name.replace(/ \(name TBD\)$/, "")}</span> <span className="faint num">{g.items.filter((i) => i.state === "posted").length} posted · {g.items.length} ready</span></summary>
-              <ol className="ig-cap-list">
+              <ol className="igc-list">
                 {g.items.map(({ e, x, state }) => (
-                  <li key={e.id} className="ig-cap">
-                    <div className="ig-cap-head">
-                      <Link href={`/episodes/${e.id}`} className="ig-cap-title">{e.title}</Link>
+                  <li key={e.id} className="igc-item">
+                    <div className="igc-head">
+                      <Link href={`/episodes/${e.id}`} className="igc-title">{e.title}</Link>
                       <span className={`chip ${state === "posted" ? "good" : state === "planned" ? "info" : ""}`}>{state === "posted" ? "Posted" : state === "planned" ? "Planned" : "Not posted yet"}</span>
                     </div>
-                    <p className="ig-cap-text">{x.caption}</p>
-                    {x.hashtags ? <p className="ig-cap-tags">{x.hashtags}</p> : null}
+                    <p className="igc-text">{x.caption}</p>
+                    {x.hashtags ? <p className="igc-tags">{x.hashtags}</p> : null}
                     <div className="row">
                       <CopyButton text={[x.caption, x.hashtags].filter(Boolean).join("\n\n")} label="Copy caption + hashtags" />
                       {x.hashtags ? <CopyButton text={x.hashtags} label="Copy hashtags" /> : null}
