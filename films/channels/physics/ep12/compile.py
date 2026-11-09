@@ -76,7 +76,7 @@ LABELS = [
     {"id": "no-speed", "text": "speeding up", "color": "energy", "t0": _M0 + 0.8, "t1": A("vo02:Watch") - 0.3, "at": "lane-medium", "side": 1},
     {"id": "no-steady", "text": "steady speed", "color": "motion", "t0": A("vo02:Watch") + 1.2, "t1": min(cut("change") - 0.3, _M0 + FALLT["medium"] - 0.4), "at": "lane-medium", "side": 1},
     {"id": "ch-weight", "text": "weight", "color": "force", "t0": _F2 + 1.0, "t1": cut("why") - 0.3, "at": "w-arrow", "side": -1},
-    {"id": "ch-drag", "text": "air pushing back", "color": "energy", "t0": A("vo03:harder") - 0.4, "t1": cut("why") - 0.3, "at": "d-arrow", "side": 1},
+    {"id": "ch-drag", "text": "air push", "color": "energy", "t0": A("vo03:harder") - 0.4, "t1": cut("why") - 0.3, "at": "d-arrow", "side": 1},
     {"id": "wy-tie", "text": "a tie", "color": "ghost", "t0": A("vo04:matches"), "t1": A("vo04:weight#2") + 0.5, "at": "lane-medium", "side": 1},
     {"id": "wo-small", "text": "round", "color": "ghost", "t0": A("vo05:Small"), "t1": A("vo05:biggest") - 0.1, "at": "lane-small", "side": 1},
     {"id": "wo-big", "text": "a bun", "color": "energy", "t0": A("vo05:flatten") - 0.1, "t1": A("vo05:break") - 0.1, "at": "big-top", "side": -1, "v": "above"},
