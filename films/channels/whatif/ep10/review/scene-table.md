@@ -20,3 +20,12 @@ S2E04 (folder ep10). Timestamps are from `film.json` (real Parakeet word timings
 |  50.4 s | Give the planet a thousand times more shufflers, and it barely changes. | WORK: the card lists the sum, the division by 52! and the 1,000× and 1,000,000× rows. | 'Show your work' card; badge '1,000 × the people: still tiny' | term.write ×4 |
 |  59.4 s | Shuffle well, and your order has almost certainly never existed before. | The camera falls back to your deck: the cards re-deal into frame 0's order and hold. |  |  |
 |  68.5 s | Next envelope: all the water on Earth, in one ball. | End card: boxed '< 1 in 10³⁶'; the deck stays behind it; the card lifts to frame 0 (loop). | Next envelope: all the water, one ball | signature plucks |
+
+
+## Round 4 notes (after the coordinator's scores for 98b34d3)
+- Timeline shortened to 69.0 s: holds in why and whoa are 0.4 / 0.2 s, change and work 0.2 s, so no voiceless gap is over 0.81 s. (kits/cinema lint still asks for picture-only 2 s / 3 s in why / whoa; the coordinator's rule replaces that here.)
+- 68 digits: a fixed block of 4 lines x 17 digits on its own plate (typed left to right; the lines never reflow).
+- The blue figure steps into the crowd only after the camera has risen clear of the caption plate.
+- 45.0 s: hard cut from the bars to the work card. 53.4 s: hard cut from the crowd to your deck, cards visible at once.
+- End card: the grid is dimmed to ~10 % under the text; the text fades out first, then the dim lifts on the bare deck (the loop point is the bright deck).
+- Facts: new badge "well = about 7 riffle shuffles" with claim c10 (Bayer and Diaconis 1992, OPEN, not read); c6-c9 are derivations (no URL); c4 (UN population) stays OPEN, not read.

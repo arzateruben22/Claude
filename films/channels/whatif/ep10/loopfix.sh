@@ -4,5 +4,6 @@
 # jump. Run after studio/render.py:  bash films/channels/whatif/ep10/loopfix.sh
 set -e
 A="$(dirname "$0")/build/audio"
-ffmpeg -v error -y -i "$A/mix.wav" -af "volume='1+1.0*clip((t-72.9)/1.8,0,1)':eval=frame,afade=t=out:st=74.94:d=0.06" -c:a aac -b:a 256k -ar 48000 "$A/mix-loop.m4a"
+D=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['dur'])" "$(dirname "$0")/film.json")
+ffmpeg -v error -y -i "$A/mix.wav" -af "volume='1+1.0*clip((t-($D-2.1))/1.8,0,1)':eval=frame,afade=t=out:st=$(python3 -c "print($D-0.06)"):d=0.06" -c:a aac -b:a 256k -ar 48000 "$A/mix-loop.m4a"
 echo "wrote $A/mix-loop.m4a"

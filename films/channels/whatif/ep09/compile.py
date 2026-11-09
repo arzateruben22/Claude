@@ -62,7 +62,7 @@ t_basket, t_sun = A("vo06:basketball", 0.0), A("vo06:Sun:", 0.0)
 t_same = A("vo06:same.", -0.1)
 t_ten = A("vo07:ten", -0.1)
 t_ten2 = A("vo07:ten", 0.0)
-t_dive0 = t_big - 3.9                                       # the dive from the planet to the lifted rope on its poles
+t_dive0 = A("vo03:You", -0.15)                                       # the dive from the planet to the lifted rope on its poles
 t_ph2 = A("vo07:Lift", -0.1)
 
 # ── the camera ──
@@ -81,9 +81,8 @@ def path_keys(t0, t1, d0, d1, n):
         out.append({"t": round(t0 + (t1 - t0) * u, 4), **on_path(d), "ease": "linear"})
     return out
 t_arrive = t_nor + 2.0
-k_dive = path_keys(t_dive0, t_dive0 + 3.9, 1.25e8, 18.0, 14)
-k_dive[0] = {"t": round(t_dive0, 4), **PL, "ease": "linear"}
-k_dive[-1] = {"t": round(t_dive0 + 3.9, 4), **LIFT, "ease": "inout2"}
+DIVE = 0.8                                                   # hard cut from the space view to the ground; the ground elements settle in over DIVE
+k_dive = [{"t": round(t_dive0, 4), **LIFT, "ease": "linear"}]
 DIAP = T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31)
 LAYP = T(LAY[0] + 3.14, 0.0, -0.3, 40.0, 60.0, 0.0, 0.26)
 LAYQ = T(LAY[0] + 3.14, 0.0, -0.3, 36.0, 56.0, 8.0, 0.26)
@@ -94,12 +93,21 @@ LONGP = T(TEN[0] + 31.5, 0.0, 1.5, 190.0, 32.0, 0.0, 0.80)
 LONGP2 = T(TEN[0] + 31.5, 0.0, 1.5, 175.0, 30.0, 18.0, 0.80)
 k_end = path_keys(t_end + 1.0, t_end + 3.4, 190.0, 1.25e8, 12)
 k_end[-1] = {"t": round(t_end + 3.4, 4), **PL, "ease": "inout2"}
+def lead(pages, by=0.14):
+    """a caption page is fully in when its first word starts: it fades in `by` s earlier (a page that follows another with no gap is left alone)"""
+    for i, pg in enumerate(pages):
+        prev = pages[i - 1]["t1"] if i else -1.0
+        if pg["t0"] - prev >= by + 0.05:
+            pg["t0"] = round(max(0.0, pg["t0"] - by), 4)
+    return pages
+
+
 CAM = {
     "planet": [{"t": 0.0, **PL}, {"t": round(t_nor + 3.0, 4), **T(0.0, -R_E, 0.0, 1.25e8, 14.0, 16.0, 0.34), "ease": "sine"}, {"t": t_dive0, **PL, "ease": "sine"}],
     "lift": k_dive + [{"t": t_why, **T(1.0, 0.9, 0.0, 18.0, 5.0, 10.0, 0.84), "ease": "sine"}],
     "why": [{"t": t_why, **T(1.0, 0.9, 0.0, 18.0, 5.0, 10.0, 0.84)}, {"t": round(t_why + 2.6, 4), **DIAP, "ease": "inout2"}, {"t": round(t_lift4 + 0.5, 4), **DIAP, "ease": "sine"},
             {"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31), "ease": "sine"}],
-    "whoa": [{"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31)}, {"t": round(t_whoa + 1.8, 4), **LAYP, "ease": "inout2"}, {"t": round(t_work0 - 3.6, 4), **LAYQ, "ease": "sine"}, {"t": round(t_work0 - 1.4, 4), **WORKP, "ease": "inout2"}, {"t": t_work0, **WORKP, "ease": "linear"}],
+    "whoa": [{"t": t_whoa, **T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31)}, {"t": round(t_grows - 0.1, 4), **T(DIA[0], 0.0, DIA[2], 15.0, 68.0, 0.0, 0.31), "ease": "sine"}, {"t": round(t_grows + 1.1, 4), **LAYP, "ease": "inout2"}, {"t": round(t_work0 - 3.6, 4), **LAYQ, "ease": "sine"}, {"t": t_work0, **LAYQ, "ease": "sine"}],
     "work": [{"t": t_work0, **WORKP}, {"t": t_home, **WORKP2, "ease": "sine"}],
     "take": [{"t": t_home, **WORKP2}, {"t": round(t_home + 2.2, 4), **TENP, "ease": "inout2"}, {"t": round(t_ph2 - 0.1, 4), **TENP, "ease": "sine"},
              {"t": round(t_ph2 + 2.6, 4), **LONGP, "ease": "inout2"}, {"t": t_end, **LONGP2, "ease": "sine"}],
@@ -114,6 +122,8 @@ for shot, keys in CAM.items():
         for kk in ("az", "el"):
             assert abs(b[kk] - a[kk]) / dt <= 30.0 + 1e-9, f"{shot}: {kk} turns too fast between {a['t']:.2f} and {b['t']:.2f}"
 for x, y in zip(SHOTS[:-1], SHOTS[1:]):
+    if (x["name"], y["name"]) in (("planet", "lift"), ("whoa", "work")):         # a hard cut: space view to the ground
+        continue
     p, q_ = CAM[x["name"]][-1], CAM[y["name"]][0]
     assert p["target"] == q_["target"] and p["dist"] == q_["dist"], (x, y, p, q_)
 
@@ -142,7 +152,7 @@ WORK = {
 
 # ── labels, badges, counters ──
 LABELS = [
-    {"id": "l-rod", "text": "1 m", "kind": "part", "anchor": "rod", "t0": t_dive0 + 3.3, "t1": t_why - 0.2, "side": 1},
+    {"id": "l-rod", "text": "1 m", "kind": "part", "anchor": "rod", "t0": t_dive0 + 0.9, "t1": t_why - 1.3, "side": 1},
     {"id": "l-rad", "text": "radius", "kind": "part", "anchor": "rad", "t0": t_radius, "t1": t_lift4 - 0.2, "side": 1},
     {"id": "l-gap", "text": "+ 1 m", "kind": "calc", "anchor": "gap", "t0": t_lift4 + 0.3, "t1": t_whoa - 0.2, "side": -1},
     {"id": "l-ten", "text": "10 m", "kind": "part", "anchor": "ten-top", "t0": t_home + 2.4, "t1": t_ph2 + 0.8, "side": 1},
@@ -151,7 +161,7 @@ BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.3, "t1": t_title_out, "slot": "br"},
     {"id": "b-ring", "text": "the ring: the whole Earth", "t0": t_nor + 0.3, "t1": t_lift - 0.2, "slot": "tl"},
     {"id": "b-lift", "text": "lifted 1 m (drawn bigger)", "t0": t_lift + 0.4, "t1": t_dive0 - 0.1, "slot": "tl"},
-    {"id": "b-guess", "text": "a guess, not an answer", "t0": t_guess, "t1": t_dive0 + 1.0, "slot": "tr"},
+    {"id": "b-guess", "text": "a guess, not an answer", "t0": t_guess, "t1": t_dive0 + 2.5, "slot": "tr"},
     {"id": "b-circle", "text": "∵ a perfect circle", "t0": t_circle, "t1": t_whoa - 0.3, "slot": "tl"},
     {"id": "b-scale", "text": "not to scale", "t0": t_lift4, "t1": t_whoa - 0.3, "slot": "bl"},
     {"id": "b-pi", "text": "π ≈ 3.14", "t0": t_two + 0.3, "t1": t_lift4 - 0.4, "slot": "bl"},
@@ -172,7 +182,7 @@ TITLE = {"series": "Possibility Lab · Season 2 · Episode 3", "title": "A rope 
 END = {"title": "Next envelope: *a shuffled deck*", "follow": "Possibility Lab · Season 2 · Episode 3",
        "next": "NASA Earth Facts: equatorial diameter 12,756 km."}
 
-CUE = {"fps": FPS, "lift": t_lift, "float": t_float, "dive": [t_dive0, t_dive0 + 3.9], "guess": [t_guess, t_big, t_big + 0.6], "arrive": t_arrive,
+CUE = {"fps": FPS, "lift": t_lift, "float": t_float, "dive": [t_dive0, t_dive0 + DIVE], "guess": [t_guess, t_big, t_big + 0.6], "arrive": t_arrive,
        "circle": [t_circle, t_radius, t_lift4, t_bigger], "dia": list(DIA), "lay": list(LAY), "ten": list(TEN), "grows": t_grows, "six": t_six, "four": t_four, "toe": t_toe,
        "home": t_home, "work0": t_work0, "ph2": t_ph2, "ten2": t_ten2, "why": t_why, "whoa": t_whoa, "extra": EXTRA, "basket": t_basket, "sun": t_sun, "u": [t_ten]}
 film = {
@@ -182,7 +192,7 @@ film = {
     "cam": CAM, "cue": CUE, "spine": SPINE, "spineOut": SPINE_OUT, "work": WORK,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS,
     "title": TITLE, "endCard": t_end, "end": END, "endAnswer": f"≈ {R['extra_m']} m",
-    "captions": f.captions(max_chars=24, balance=True, keep=("forty thousand kilometers", "one meter", "two times pi", "six meters", "four of you", "ten times", "the planet's size")),
+    "captions": lead(f.captions(max_chars=24, balance=True, keep=("forty thousand kilometers", "one meter", "two times pi", "six meters", "four of you", "ten times", "the planet's size"))),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 
@@ -198,7 +208,7 @@ for i, sp in enumerate(SPINE):
     ev.append({"t": sp["t"], "kind": "answer.box" if first_box else "term.write", "tag": f"spine-{i}", **({"t1": round(sp["t"] + 0.5, 4)} if first_box else {})})
 for r in WORK["rows"]:
     ev.append({"t": r["t"], "kind": "term.write", "tag": f"work-{r['k']}"})
-ev += [{"t": t_dive0, "kind": "swell", "tag": "dive", "t1": t_dive0 + 3.9}, {"t": t_ph2, "kind": "swell", "tag": "ten", "t1": t_ph2 + 3.0}]
+ev += [{"t": t_dive0, "kind": "swell", "tag": "dive", "t1": t_dive0 + DIVE}, {"t": t_ph2, "kind": "swell", "tag": "ten", "t1": t_ph2 + 3.0}]
 sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working", "tail_s": 0.05,
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
          "events": sorted(ev, key=lambda e: e["t"]),

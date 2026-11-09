@@ -45,7 +45,7 @@
     "verified_via": "search excerpt",
     "status": "TODO open link",
     "kind": "source",
-    "note": "OPEN until a person opens the page. Not yet read (population.un.org was blocked when tried). The film says 'about eight billion' and shows 8.2 billion in the sum."
+    "note": "OPEN: the UN population page was NOT read (population.un.org could not be opened from the build machine). The film says \"about eight billion\"; keep OPEN until a person opens the page."
   },
   {
     "id": "c5",
@@ -64,48 +64,56 @@
     "id": "c6",
     "sentence": "Even then, you cover less than one part in a trillion trillion trillion of the orders.",
     "claim": "8.2e9 people x 13.8e9 years x 3.156e7 s = 3.6e27 shuffles; 3.6e27 / 8.07e67 = 4.4e-41, which is less than 1 part in 10^36 (a trillion trillion trillion).",
-    "source_url": "https://en.wikipedia.org/wiki/Factorial",
-    "source_title": "Arithmetic (calc.py: coverage)",
+    "source_title": "Derivation (calc.py): 52! = 8.07e67 and the counts in the claim; no outside page",
     "accessed": "2026-11-08",
     "verified_via": "search excerpt",
     "status": "TODO open link",
-    "kind": "calculation",
-    "note": "OPEN until a person opens the page. Computed from c2, c4, c5. A thought experiment: every shuffle counted even if repeated."
+    "kind": "derivation",
+    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4. OPEN until a person re-does the sum."
   },
   {
     "id": "c7",
     "sentence": "Your shuffle is almost certainly the first of its kind.",
     "claim": "If a shuffle is fair and uniform, the chance that it matches any specific earlier one is 1 in 52!; against all 3.6e27 shuffles in the thought experiment it is 4.4e-41. (The chance that any two of those ever match is about 8e-14, by the birthday bound N^2 / (2 x 52!).)",
-    "source_url": "https://en.wikipedia.org/wiki/Factorial",
-    "source_title": "Arithmetic (calc.py: coverage, collision)",
+    "source_title": "Derivation (calc.py): 52! = 8.07e67 and the counts in the claim; no outside page",
     "accessed": "2026-11-08",
     "verified_via": "search excerpt",
     "status": "TODO open link",
-    "kind": "calculation",
-    "note": "OPEN until a person opens the page. Probability statement, said as one ('almost certainly'). It assumes shuffles are fair and uniform; real shuffles are imperfect, so the film says 'shuffle well'."
+    "kind": "derivation",
+    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4. OPEN until a person re-does the sum."
   },
   {
     "id": "c8",
     "sentence": "Give the planet a thousand times more shufflers, and it barely changes.",
     "claim": "With 1,000 times the people the share is 4.4e-38: still less than 1 part in 10^36.",
-    "source_url": "https://en.wikipedia.org/wiki/Factorial",
-    "source_title": "Arithmetic (calc.py: SENS)",
+    "source_title": "Derivation (calc.py): 52! = 8.07e67 and the counts in the claim; no outside page",
     "accessed": "2026-11-08",
     "verified_via": "search excerpt",
     "status": "TODO open link",
-    "kind": "calculation",
-    "note": "OPEN until a person opens the page. Computed."
+    "kind": "derivation",
+    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4. OPEN until a person re-does the sum."
   },
   {
     "id": "c9",
     "sentence": "Shuffle well, and your order has almost certainly never existed before.",
     "claim": "If a shuffle is fair and uniform, the chance that it matches any specific earlier one is 1 in 52!; against all 3.6e27 shuffles in the thought experiment it is 4.4e-41. (The chance that any two of those ever match is about 8e-14, by the birthday bound N^2 / (2 x 52!).)",
-    "source_url": "https://en.wikipedia.org/wiki/Factorial",
-    "source_title": "Arithmetic (calc.py: coverage, collision)",
+    "source_title": "Derivation (calc.py): 52! = 8.07e67 and the counts in the claim; no outside page",
     "accessed": "2026-11-08",
     "verified_via": "search excerpt",
     "status": "TODO open link",
-    "kind": "calculation",
-    "note": "OPEN until a person opens the page. Probability statement, said as one ('almost certainly'). It assumes shuffles are fair and uniform; real shuffles are imperfect, so the film says 'shuffle well'."
+    "kind": "derivation",
+    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4. OPEN until a person re-does the sum."
+  },
+  {
+    "id": "c10",
+    "sentence": "Shuffle well (about seven riffle shuffles), and your order has almost certainly never existed before.",
+    "claim": "About seven riffle shuffles are enough to mix a 52-card deck close to uniformly at random.",
+    "source_url": "https://projecteuclid.org/journals/annals-of-applied-probability/volume-2/issue-2/Trailing-the-Dovetail-Shuffle-to-its-Lair/10.1214/aoap/1177005705.full",
+    "source_title": "Bayer and Diaconis, Trailing the Dovetail Shuffle to its Lair, Annals of Applied Probability 1992",
+    "accessed": "2026-11-09",
+    "verified_via": "citation from memory; page NOT opened",
+    "status": "TODO open link",
+    "kind": "source",
+    "note": "OPEN: cited, not read. A person must open the paper and confirm 'seven shuffles' (their result: about 7 for a 52-card deck, with total variation distance as the measure)."
   }
 ]

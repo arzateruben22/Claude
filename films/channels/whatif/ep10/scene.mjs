@@ -109,9 +109,9 @@ const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.7vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "1.6vmin auto 0" });
 const ebox = endBox(endEl, { t0: FILM.endCard, answer: FILM.endAnswer, S1: Math.min(W, H) / 1080 });
 // the 68 digits of 52!, typed across the screen
-const DIG = FILM.world.digits, grp = []; for (let i = DIG.length; i > 0; i -= 3) grp.unshift(DIG.slice(Math.max(0, i - 3), i));
+const DIG = String(FILM.world.digits).replace(/\D/g, "");               // the 68 digits, set in a fixed block of 4 lines of 17 on their own plate
 const digEl = document.createElement("div");
-digEl.style.cssText = "position:absolute;left:8%;top:9%;width:84%;opacity:0;pointer-events:none;z-index:4;font:700 4.5vmin/1.34 var(--font-mono);color:var(--hud-text);text-align:center;letter-spacing:.02em;word-spacing:.4em";
+digEl.style.cssText = "position:absolute;left:50%;top:18.5%;transform:translateX(-50%);padding:2.6vmin 3.4vmin;border-radius:3vmin;background:rgba(14,17,21,.94);border:1.5px solid rgba(255,255,255,.14);opacity:0;pointer-events:none;z-index:4;font:700 4.9vmin/1.42 var(--font-mono);color:var(--hud-text);text-align:left;letter-spacing:.06em;white-space:pre";
 document.body.appendChild(digEl);
 // the dim layer under the overlay, and the two bars
 const dimEl = document.createElement("div"); dimEl.style.cssText = "position:absolute;inset:0;background:#171A1E;opacity:0;pointer-events:none;z-index:2"; document.body.appendChild(dimEl);
@@ -147,7 +147,7 @@ window.seek = function (t) {
 
   // the cards: positions from the permutations; lift while a card is in flight; glow on the picks and on the wave of choices
   const pa = permAt(t), cardsOn = t < CUE.crowd[0] + 1.5 || t > CUE.home - 0.2;
-  const cardFade = 1 - seg(t, CUE.crowd[0], CUE.crowd[0] + 1.4) + seg(t, CUE.back[1] - 1.4, CUE.back[1]);
+  const cardFade = 1 - seg(t, CUE.crowd[0], CUE.crowd[0] + 1.4) + seg(t, CUE.home - 0.05, CUE.home + 0.25);
   cards.visible = cardsOn && cardFade > 0.02; cardMat.uniforms.uDim.value = 1 - clamp01(cardFade);
   const pk = CUE.picks, wv = E.inout2(seg(t, CUE.multi[0], CUE.multi[1]));
   for (let c = 0; c < NC; c++) {
@@ -175,19 +175,20 @@ window.seek = function (t) {
     S3.set(1, 1, 1); P3.set(x, 0, z); Q0.identity(); Mx.compose(P3, Q0, S3); crBody.setMatrixAt(i, Mx); crHead.setMatrixAt(i, Mx);
     const flipA = fl < 0.35 ? Math.sin((fl / 0.35) * Math.PI) * 1.2 : 0; EU.set(-0.9 - flipA * 1.2, 0, 0); Q1.setFromEuler(EU); P3.set(x + 0.0, 2.2 + flipA * 0.3, z); S3.set(0.9, 0.9, 0.9); Mx.compose(P3, Q1, S3); crCard.setMatrixAt(i, Mx); }
   crBody.instanceMatrix.needsUpdate = crHead.instanceMatrix.needsUpdate = crCard.instanceMatrix.needsUpdate = true;
-  you.visible = crOn && crO > 0.01; you.position.set(0.0, 0, 5.5); you.scale.setScalar(2.2);
+  const youU = E.out3(seg(t, CUE.crowd[0] + 2.3, CUE.crowd[0] + 2.9));   // you step into the crowd once the camera has risen clear of the caption plate
+  you.visible = crOn && crO > 0.01 && youU > 0.01; you.position.set(0.0, 0, 5.5); you.scale.setScalar(Math.max(0.01, 2.2 * youU));
 
   // the digits of 52!
-  { const dg = CUE.digits, typed = E.inout2(seg(t, dg[0], dg[1])), n = Math.round(typed * grp.length), fade = 1 - seg(t, dg[2], dg[2] + 0.5);
-    let s = ""; for (let i = 0; i < n; i++) s += (i % 6 === 0 && i ? "<br>" : "") + grp[i] + (i < grp.length - 1 ? "," : "") + " ";
+  { const dg = CUE.digits, typed = E.inout2(seg(t, dg[0], dg[1])), fade = 1 - seg(t, dg[2], dg[2] + 0.5);
+    let s = ""; for (let r = 0; r < 4; r++) { const line = DIG.slice(r * 17, r * 17 + 17), k = Math.max(0, Math.min(17, Math.round(typed * DIG.length) - r * 17)); s += (r ? "\n" : "") + line.slice(0, k) + '<span style="opacity:0">' + line.slice(k) + "</span>"; }
     digEl.innerHTML = s; digEl.style.opacity = String((seg(t, dg[0] - 0.05, dg[0] + 0.2) * fade * 0.97).toFixed(3));
-    dimEl.style.opacity = String((0.72 * seg(t, dg[0] - 0.1, dg[0] + 0.4) * (1 - seg(t, dg[2], dg[2] + 0.6)) + 0.82 * seg(t, CUE.bars[0] - 0.2, CUE.bars[0] + 0.5) * (1 - seg(t, CUE.home - 0.6, CUE.home + 0.4))).toFixed(3)); }
+    dimEl.style.opacity = String((0.72 * seg(t, dg[0] - 0.1, dg[0] + 0.4) * (1 - seg(t, dg[2], dg[2] + 0.6)) + 0.82 * seg(t, CUE.bars[0] - 0.2, CUE.bars[0] + 0.5) * (1 - seg(t, CUE.home - 0.6, CUE.home + 0.4)) + 0.9 * seg(t, FILM.endCard - 0.25, FILM.endCard + 0.3) * (1 - seg(t, beat("tease").t1 - 0.75, beat("tease").t1 - 0.05))).toFixed(3)); }
   // the bars
-  { const b = CUE.bars, on = seg(t, b[0] - 0.1, b[0] + 0.5) * (1 - seg(t, b[4], b[4] + 0.6)), grow = E.inout2(seg(t, CUE.bigbar[0], CUE.bigbar[1] + 1.2));
+  { const b = CUE.bars, on = seg(t, b[0] - 0.1, b[0] + 0.5) * (t < CUE.work0 - 0.02 ? 1 : 0), grow = E.inout2(seg(t, CUE.bigbar[0], CUE.bigbar[1] + 1.2));
     barsEl.style.opacity = String(on.toFixed(3)); document.getElementById("b2").style.height = (100 * grow).toFixed(1) + "%"; document.getElementById("b2t").style.opacity = String(seg(t, CUE.bigbar[1], CUE.bigbar[1] + 0.6).toFixed(3)); }
 
   hud.update(t);
-  const tail = E.inout2(seg(t, beat("tease").t1 - 1.1, beat("tease").t1 - 0.35));
+  const tail = E.inout2(seg(t, beat("tease").t1 - 1.35, beat("tease").t1 - 0.8));   // the card text is gone while the deck is still dimmed; then the dim lifts on the bare deck
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);
   spine.update(t, gate);

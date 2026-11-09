@@ -67,11 +67,20 @@ DECK = T(0.0, 0.0, 0.0, 26.0, 88.0, 0.0, 0.31)
 DECK2 = T(0.0, 0.0, 0.0, 24.5, 84.0, 5.0, 0.31)
 CROWD = T(0.0, 0.0, 0.0, 140.0, 52.0, 0.0, 0.30)
 CROWD2 = T(0.0, 0.0, 0.0, 120.0, 50.0, 14.0, 0.30)
+def lead(pages, by=0.14):
+    """a caption page is fully in when its first word starts: it fades in `by` s earlier (a page that follows another with no gap is left alone)"""
+    for i, pg in enumerate(pages):
+        prev = pages[i - 1]["t1"] if i else -1.0
+        if pg["t0"] - prev >= by + 0.05:
+            pg["t0"] = round(max(0.0, pg["t0"] - by), 4)
+    return pages
+
+
 CAM = {
     "deck": [{"t": 0.0, **DECK}, {"t": round(t_why - 0.4, 4), **DECK2, "ease": "sine"}],
     "crowd": [{"t": round(t_why - 0.4, 4), **DECK2}, {"t": round(t_why + 3.4, 4), **CROWD, "ease": "inout2"}, {"t": t_whoa, **CROWD2, "ease": "sine"}],
     "bars": [{"t": t_whoa, **CROWD2}, {"t": t_home, **T(0.0, 0.0, 0.0, 105.0, 48.0, 30.0, 0.30), "ease": "sine"}],
-    "back": [{"t": t_home, **T(0.0, 0.0, 0.0, 105.0, 48.0, 30.0, 0.30)}, {"t": round(t_home + 2.8, 4), **DECK2, "ease": "inout2"}, {"t": t_end, **DECK, "ease": "sine"}],
+    "back": [{"t": t_home, **DECK2}, {"t": t_end, **DECK, "ease": "sine"}],          # a hard cut from the crowd to your deck
     "end": [{"t": t_end, **DECK}, {"t": B["tease"]["t1"], **DECK}],
 }
 SHOTS = [{"at": 0.0, "name": "deck"}, {"at": round(t_why - 0.4, 4), "name": "crowd"}, {"at": t_whoa, "name": "bars"}, {"at": t_home, "name": "back"}, {"at": t_end, "name": "end"}]
@@ -82,6 +91,8 @@ for shot, keys in CAM.items():
         for kk in ("az", "el"):
             assert abs(b[kk] - a[kk]) / dt <= 30.0 + 1e-9, f"{shot}: {kk} turns too fast between {a['t']:.2f} and {b['t']:.2f}"
 for x, y in zip(SHOTS[:-1], SHOTS[1:]):
+    if (x["name"], y["name"]) == ("bars", "back"):               # hard cut: crowd to deck
+        continue
     p, q_ = CAM[x["name"]][-1], CAM[y["name"]][0]
     assert p["target"] == q_["target"] and p["dist"] == q_["dist"], (x, y, p, q_)
 
@@ -127,6 +138,7 @@ BADGES = [
     {"id": "b-people", "text": "8.2 billion people", "t0": t_eight, "t1": t_whoa - 0.3, "slot": "tl"},
     {"id": "b-rate", "text": "∵ one shuffle a second each", "t0": t_shufflew, "t1": t_whoa - 0.3, "slot": "tr"},
     {"id": "b-bar", "text": "bars: not to scale", "t0": t_cover, "t1": t_work0 + 0.2, "slot": "tl"},
+    {"id": "b-well", "text": "“well” = about 7 riffle shuffles", "t0": t_well, "t1": min(t_bet + 0.8, B["tease"]["t0"] - 0.3), "slot": "tl"},
     {"id": "b-1000", "text": "1,000 × the people: still tiny", "t0": t_thousand + 0.3, "t1": t_home - 0.3, "slot": "tr"},
 ]
 COUNTERS = [
@@ -152,7 +164,7 @@ film = {
     "cam": CAM, "cue": CUE, "spine": SPINE, "spineOut": SPINE_OUT, "work": WORK,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS,
     "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "< 1 in 10³⁶",
-    "captions": f.captions(max_chars=24, balance=True, keep=("fifty-two", "sixty-eight digits", "eight billion", "fourteen billion", "a trillion trillion trillion", "almost certainly")),
+    "captions": lead(f.captions(max_chars=24, balance=True, keep=("fifty-two", "sixty-eight digits", "eight billion", "fourteen billion", "a trillion trillion trillion", "almost certainly"))),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

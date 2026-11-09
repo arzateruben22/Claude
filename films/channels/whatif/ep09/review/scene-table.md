@@ -33,3 +33,12 @@ S2E03 (folder ep09). Timestamps are from `film.json` (real Parakeet word timings
 - The radius line sweeps once round the circle (29 to 33 s); the figure and the Earth never sit behind a caption in the swept 0.25 s check (a few frames of the dive and the camera moves excepted).
 - The ten pieces of rope are drawn 0.9 m thick and alternate chalk and marker colour; the "63 m of rope" label is dropped (the plate says it). The work card holds until the end of "the same".
 - Narration now says "a bit over six meters" (the screen says ≈ 6.3 m). The maths claims (c2 to c4, c6 to c8) are marked as derivations with no sourced fact; the Earth radius (c1) and Sun radius stay on NASA.
+
+
+## Round 4 notes (after the coordinator's scores for 98b34d3)
+- Timeline shortened to 70.8 s: the "picture-only" holds in why and whoa are 0.4 s, so no gap between spoken lines is over 1.2 s (largest 1.18 s). The visuals follow the voice anchors; the beat windows in the script headers are the new beat times. (kits/cinema lint still asks for picture-only 2 s / 3 s in why / whoa; the coordinator's no-gap-over-1.2-s rule replaces that here.)
+- 21.2 s ("You might guess"): hard cut from the space view straight to the ground (no dive, no blurred Earth, no grey frames).
+- 37.4-39.5 s: the camera stays on the circle until "grows", the rope is laid out as soon as the camera arrives.
+- 48.0 s: hard cut from the laid-out rope to the work card (no rope or figures cross the "≈ 6.3 m" box).
+- "1 m" label ends before the camera drift brings it within 24 px of the spine box. Caption pages fade in 0.14 s early, so they are fully in when the voice starts.
+- c5 (a person is 1.7 m) is an assumption, no URL.

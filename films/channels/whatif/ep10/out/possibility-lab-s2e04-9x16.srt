@@ -1,19 +1,19 @@
 1
-00:00:00,130 --> 00:00:01,730
+00:00:00,000 --> 00:00:01,730
 Has this ever happened?
 
 2
-00:00:02,075 --> 00:00:04,435
+00:00:01,935 --> 00:00:04,435
 Shuffle a deck,
 and look at the order.
 
 3
-00:00:05,120 --> 00:00:07,765
+00:00:04,980 --> 00:00:07,765
 The first card
 can be any of 52,
 
 4
-00:00:08,085 --> 00:00:10,025
+00:00:07,945 --> 00:00:10,025
 the next any
 of the rest.
 
@@ -28,7 +28,7 @@ and you count
 the orders.
 
 7
-00:00:14,720 --> 00:00:17,240
+00:00:14,580 --> 00:00:17,240
 The answer
 has 68 digits,
 
@@ -37,7 +37,7 @@ has 68 digits,
 too big to say out loud.
 
 9
-00:00:19,590 --> 00:00:20,865
+00:00:19,450 --> 00:00:20,865
 Each shuffle is just
 
 10
@@ -46,73 +46,73 @@ one pick
 from that huge pile.
 
 11
-00:00:24,320 --> 00:00:28,145
+00:00:23,580 --> 00:00:27,545
 Now give everyone alive
 a deck, 8 billion of us.
 
 12
-00:00:28,165 --> 00:00:32,055
+00:00:27,565 --> 00:00:31,455
 Shuffle once a second
 for 14 billion years,
 
 13
-00:00:32,055 --> 00:00:33,660
+00:00:31,455 --> 00:00:33,060
 the age of the universe.
 
 14
-00:00:36,325 --> 00:00:39,520
+00:00:33,785 --> 00:00:37,120
 Even then, you cover
 less than one part
 
 15
-00:00:39,520 --> 00:00:42,925
+00:00:37,120 --> 00:00:40,525
 in a trillion trillion
 trillion of the orders.
 
 16
-00:00:43,345 --> 00:00:45,445
+00:00:40,805 --> 00:00:43,045
 Your shuffle
 is almost certainly
 
 17
-00:00:45,600 --> 00:00:47,180
+00:00:43,200 --> 00:00:44,780
 the first of its kind.
 
 18
-00:00:50,725 --> 00:00:53,120
+00:00:45,185 --> 00:00:47,720
 Give the planet
 1,000 times more
 
 19
-00:00:53,120 --> 00:00:55,590
+00:00:47,720 --> 00:00:50,190
 shufflers,
 and it barely changes.
 
 20
-00:00:56,040 --> 00:00:58,660
+00:00:50,500 --> 00:00:53,260
 The pile of orders
 is just too big.
 
 21
-00:00:59,730 --> 00:01:01,920
+00:00:53,590 --> 00:00:55,920
 Shuffle well,
 and your order has
 
 22
-00:01:01,920 --> 00:01:05,440
+00:00:55,920 --> 00:00:59,440
 almost certainly
 never existed before.
 
 23
-00:01:05,480 --> 00:01:08,155
+00:00:59,480 --> 00:01:02,155
 Not certain,
 but a very safe bet.
 
 24
-00:01:08,720 --> 00:01:09,920
+00:01:02,580 --> 00:01:03,920
 Next envelope:
 
 25
-00:01:10,090 --> 00:01:12,885
+00:01:04,090 --> 00:01:06,885
 all the water on Earth,
 in one ball.

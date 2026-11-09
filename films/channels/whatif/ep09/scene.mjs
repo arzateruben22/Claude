@@ -208,7 +208,7 @@ window.seek = function (t) {
   diaOut.visible = diaOn && dOut > 0.001; diaOut.position.set(DIA[0], 0.03, DIA[2]); diaOut.scale.setScalar(RDIA + (RDIA2 - RDIA) * dOut); diaOut.material.opacity = dOut;
 
   // the extra rope, laid out beside four of you
-  const lu2 = E.inout2(seg(t, CUE.grows, CUE.six)), layOn = (shot === "whoa" || shot === "work") && t > CUE.whoa;
+  const lu2 = E.out3(seg(t, CUE.grows + 0.6, CUE.six)), layOn = (shot === "whoa" || shot === "work") && t > CUE.whoa;
   layRope.visible = layOn && lu2 > 0.001; layRope.scale.set(Math.max(0.01, EXTRA * lu2), 0.06, 0.06); layRope.position.set(LAY[0] + EXTRA * lu2 / 2, 0.04, LAY[2]);
   layTicks.forEach((m, i) => { m.visible = layOn && lu2 * EXTRA > i + 1; m.position.set(LAY[0] + i + 1, 0.2, LAY[2]); });
   layEnd.visible = layOn && lu2 > 0.99; layEnd.position.set(LAY[0] + EXTRA, 0.25, LAY[2]);

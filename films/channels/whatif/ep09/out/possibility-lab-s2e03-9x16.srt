@@ -1,9 +1,9 @@
 1
-00:00:00,125 --> 00:00:01,435
+00:00:00,000 --> 00:00:01,435
 How much more rope?
 
 2
-00:00:01,845 --> 00:00:03,200
+00:00:01,705 --> 00:00:03,200
 Round the whole Earth,
 
 3
@@ -12,7 +12,7 @@ lifted 1 meter
 off the ground.
 
 4
-00:00:06,925 --> 00:00:09,695
+00:00:06,785 --> 00:00:09,695
 Start with a rope
 that hugs the planet,
 
@@ -31,7 +31,7 @@ above the ground,
 everywhere.
 
 8
-00:00:17,720 --> 00:00:20,855
+00:00:17,580 --> 00:00:20,855
 A whole planet of rope,
 lifted all at once.
 
@@ -45,7 +45,7 @@ thousands
 of kilometers more.
 
 11
-00:00:25,525 --> 00:00:29,105
+00:00:25,385 --> 00:00:29,105
 But a circle's length
 is two times pi times
 
@@ -55,7 +55,7 @@ its radius, the distance
 to its center.
 
 13
-00:00:32,695 --> 00:00:34,315
+00:00:32,555 --> 00:00:34,315
 Lift the rope a meter,
 
 14
@@ -64,57 +64,57 @@ and the radius
 grows a meter.
 
 15
-00:00:39,325 --> 00:00:42,275
+00:00:37,385 --> 00:00:40,475
 So the rope grows
 by two times pi
 
 16
-00:00:42,275 --> 00:00:45,685
+00:00:40,475 --> 00:00:43,885
 times 1 meter,
 a bit over 6 meters.
 
 17
-00:00:46,100 --> 00:00:47,560
+00:00:44,160 --> 00:00:45,760
 That is about
 four of you,
 
 18
-00:00:47,560 --> 00:00:49,050
+00:00:45,760 --> 00:00:47,250
 lying head to toe.
 
 19
-00:00:52,525 --> 00:00:55,220
+00:00:48,185 --> 00:00:51,020
 Try a basketball
 or the Sun:
 
 20
-00:00:55,220 --> 00:00:57,150
+00:00:51,020 --> 00:00:52,950
 lift the rope 1 meter,
 
 21
-00:00:57,150 --> 00:00:59,715
+00:00:52,950 --> 00:00:55,515
 and the extra
 rope is the same.
 
 22
-00:01:00,320 --> 00:01:02,560
+00:00:55,980 --> 00:00:58,360
 The planet's size
 cancels out:
 
 23
-00:01:02,560 --> 00:01:04,300
+00:00:58,360 --> 00:01:00,100
 only the lift matters.
 
 24
-00:01:04,575 --> 00:01:08,200
+00:01:00,235 --> 00:01:04,000
 10 times higher needs
 10 times more rope.
 
 25
-00:01:08,740 --> 00:01:11,285
+00:01:04,400 --> 00:01:07,085
 Next envelope:
 a shuffled deck,
 
 26
-00:01:11,285 --> 00:01:13,045
+00:01:07,085 --> 00:01:08,845
 and a very rare order.
