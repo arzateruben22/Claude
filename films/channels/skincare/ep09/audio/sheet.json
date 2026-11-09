@@ -1,0 +1,216 @@
+{
+ "duration": 68.267,
+ "fps": 30,
+ "preset": "outerlayer-slide",
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.446,
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 4.446,
+   "t1": 19.686,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 19.686,
+   "t1": 32.099,
+   "energy": 0.55
+  },
+  {
+   "id": "why",
+   "t0": 32.099,
+   "t1": 45.425,
+   "energy": 0.5
+  },
+  {
+   "id": "whoa",
+   "t0": 45.425,
+   "t1": 53.278,
+   "energy": 0.8
+  },
+  {
+   "id": "takeaway",
+   "t0": 53.278,
+   "t1": 59.781,
+   "energy": 0.3
+  },
+  {
+   "id": "tease",
+   "t0": 59.781,
+   "t1": 68.267,
+   "energy": 0.35
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.446
+  },
+  {
+   "t": 0.9,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 1.11,
+   "kind": "label",
+   "tag": "l0"
+  },
+  {
+   "t": 4.446,
+   "kind": "section",
+   "id": "normal",
+   "t1": 19.686
+  },
+  {
+   "t": 4.746,
+   "kind": "scale.jump",
+   "tag": "c3"
+  },
+  {
+   "t": 4.896,
+   "kind": "badge",
+   "tag": "b0"
+  },
+  {
+   "t": 13.166,
+   "kind": "label",
+   "tag": "l1"
+  },
+  {
+   "t": 14.326,
+   "kind": "label",
+   "tag": "l2"
+  },
+  {
+   "t": 17.186,
+   "kind": "label",
+   "tag": "l3"
+  },
+  {
+   "t": 19.686,
+   "kind": "section",
+   "id": "change",
+   "t1": 32.099
+  },
+  {
+   "t": 19.986,
+   "kind": "scale.jump",
+   "tag": "c8"
+  },
+  {
+   "t": 26.326,
+   "kind": "label",
+   "tag": "l4"
+  },
+  {
+   "t": 32.099,
+   "kind": "section",
+   "id": "why",
+   "t1": 45.425
+  },
+  {
+   "t": 32.399,
+   "kind": "scale.jump",
+   "tag": "c11"
+  },
+  {
+   "t": 37.494,
+   "kind": "scale.jump",
+   "tag": "c13"
+  },
+  {
+   "t": 42.134,
+   "kind": "scale.jump",
+   "tag": "c15"
+  },
+  {
+   "t": 45.425,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 53.278
+  },
+  {
+   "t": 45.725,
+   "kind": "scale.jump",
+   "tag": "c17"
+  },
+  {
+   "t": 45.725,
+   "kind": "swell",
+   "tag": "whoa",
+   "t1": 53.878
+  },
+  {
+   "t": 46.225,
+   "kind": "reveal",
+   "tag": "p0"
+  },
+  {
+   "t": 53.278,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 59.781
+  },
+  {
+   "t": 53.578,
+   "kind": "scale.jump",
+   "tag": "c18"
+  },
+  {
+   "t": 59.781,
+   "kind": "section",
+   "id": "tease",
+   "t1": 68.267
+  },
+  {
+   "t": 60.081,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.05,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 4.746,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 19.986,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 32.399,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 45.725,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 53.578,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 60.081,
+   "file": "vo/07.wav"
+  }
+ ]
+}
