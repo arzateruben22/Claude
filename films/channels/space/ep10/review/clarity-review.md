@@ -12,7 +12,12 @@ Lint (kits/cinema/script/lint.py, STANDARDS-v2): 158 words, whole script about g
 ## Source-pass changes (8 Nov)
 - Source pass: NASA's black-hole safety card supports 'escaping requires traveling faster than light' and the time-dilation view, so the whoa now says the watcher sees the friend's clock tick slower and the faller sees everyone else speed up. 'Reddens, fades, freezes' cut (not on the card). GPS line reworded to match NIST. Nothing is claimed about the inside.
 
+## Round 2 changes (9 Nov)
+- SCIENCE: a freely falling friend does not see the universe race by, so the friend is now "hovering close" and the line reads "To someone hovering close, everyone else seems to speed up. The closer they hover, the bigger the gap." (NASA brochure wording; claims c13, c21 reworded).
+- GPS: the satellite is drawn in orbit (about 4.2 Earth radii from the centre), not on the surface; the line stays "GPS satellites must correct for that to keep good time" (no claim that they run slow).
+- c11 (escape speed) now rests on NASA's Imagine the Universe page (SOURCE-READ).
+- Overlaps: counters sit on dark plates; "you · your friend" counter removed; bar labels doubled in size; clocks pulled toward the middle with a counter held through "Now compare the two views".
+- Tease now reads "Next: a planet lighter than water." (S2E05 was retitled).
+
 ## Still open (9 Nov)
-- Voiced (73.6 s film, hook question spoken by 2.0 s, pace 2.3-2.9 words a second). Needs a person's listen.
-- All claims are SOURCE-READ at most except c11 (escape speed), which is OPEN; a person opens each source before OK.
-- The probes that "fall back" and the GPS inset are illustrations (badged); no claim about the inside of a black hole is made.
+- A person opens each source before OK. Needs a listen after the re-voiced lines (vo03, vo05, vo08).

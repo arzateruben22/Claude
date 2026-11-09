@@ -12,6 +12,8 @@ Lint (kits/cinema/script/lint.py, STANDARDS-v2): 152 words, whole script about g
 ## Source-pass changes (8 Nov)
 - Source pass: NASA's Saturn page says Saturn is the only planet less dense than water and could float in a bathtub; NSSDC gives 687 vs 5,513 kg per cubic meter. All 8 claims SOURCE-READ.
 
+## Retitle (9 Nov)
+- The title is now "Lighter than water": Saturn is less dense than water on average, but it would not float (it is gas and would mix, as the film says). The hook is "Saturn: lighter than water? On average, yes." (c1: mean density 0.687 g/cm3). "Saturn floats" appears only inside the badged thought experiment ("In the thought experiment, Saturn floats").
+
 ## Still open (9 Nov)
-- Voiced 69.3 s, hook spoken by 1.9 s. All claims are SOURCE-READ: a person opens each source before OK.
-- Needs a person's listen.
+- A person opens each source before OK; needs a listen.
