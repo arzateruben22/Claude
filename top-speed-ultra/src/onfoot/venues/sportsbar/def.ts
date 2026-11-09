@@ -51,11 +51,12 @@ export const SCHEDULE: Schedule = {
   noiseSeed: 2,
 };
 
-const B = (calls: number, tris: number, frameCalls: number, frameTris: number, live: number, staff: number, drawn: Budget['drawn'], cars: Budget['cars'], castPeople: number): Budget => ({ calls, tris, frameCalls, frameTris, live, staff, drawn, cars, castPeople, fillerMinM: 6 });
+/** (S3a) staff: Low draws at most 5; HD and Ultra up to 9 and the house player; fillerMinM 6 m at Low, 9 m at HD and Ultra */
+const B = (calls: number, tris: number, frameCalls: number, frameTris: number, live: number, staff: number, drawn: Budget['drawn'], cars: Budget['cars'], castPeople: number): Budget => ({ calls, tris, frameCalls, frameTris, live, staff, drawn, cars, castPeople, fillerMinM: live > 36 ? 9 : 6 });
 export const BUDGETS: VenueDef['budgets'] = {
   low: B(150, 250e3, 150, 250e3, 36, 5, { inside: { lod0: 0, lod1: 7, atLod: 36 }, outside: { lod0: 0, lod1: 7, atLod: 12 }, overhead: { lod0: 0, lod1: 6, atLod: 36 } },
     { inside: { near: 0, yours: 'standin' }, outside: { near: 4, yours: 'detailed' }, overhead: { near: 0, yours: 'standin' } }, 0),
-  high: B(350, 700e3, 500, 1.1e6, 70, 8, { inside: { lod0: 0, lod1: 17, atLod: 70 }, outside: { lod0: 0, lod1: 7, atLod: 24 }, overhead: { lod0: 0, lod1: 16, atLod: 70 } },
+  high: B(350, 700e3, 500, 1.1e6, 70, 10, { inside: { lod0: 0, lod1: 17, atLod: 70 }, outside: { lod0: 0, lod1: 7, atLod: 24 }, overhead: { lod0: 0, lod1: 16, atLod: 70 } },
     { inside: { near: 0, yours: 'standin' }, outside: { near: 12, yours: 'detailed' }, overhead: { near: 12, yours: 'detailed' } }, 6),
   ultra: B(600, 1.5e6, 1400, 3.6e6, 100, 10, { inside: { lod0: 1, lod1: 41, atLod: 100 }, outside: { lod0: 1, lod1: 19, atLod: 40 }, overhead: { lod0: 0, lod1: 40, atLod: 100 } },
     { inside: { near: 0, yours: 'detailed' }, outside: { near: 36, yours: 'detailed' }, overhead: { near: 36, yours: 'detailed' } }, 20),
