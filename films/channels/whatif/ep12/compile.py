@@ -67,8 +67,8 @@ t_bolt = 0.9                                          # the hook's bolt: a short
 T = lambda x, y, z, d, el=5.0, az=0.0, fy=0.50: {"target": [x, y, z], "dist": d, "el": el, "az": az, "fov": 24, "fy": fy}
 HOOK = T(0.3, 1.0, 0.0, 11.0, 8.0, 0.0, 0.35)
 HOOK2 = T(0.3, 1.0, 0.0, 10.4, 8.0, 6.0, 0.35)
-GLOBE = T(0.0, 0.0, 0.0, 11.8, 14.0, 0.0, 0.30)
-GLOBE2 = T(0.0, 0.0, 0.0, 11.0, 14.0, 6.0, 0.30)
+GLOBE = T(0.0, 0.0, 0.0, 12.6, 14.0, 0.0, 0.37)
+GLOBE2 = T(0.0, 0.0, 0.0, 12.0, 14.0, 6.0, 0.37)
 BOLTP = T(0.8, 1.0, 0.0, 14.0, 14.0, 0.0, 0.35)
 BOLTQ = T(0.8, 1.0, 0.0, 13.0, 14.0, 6.0, 0.35)
 TANKP = T(TANK1X, 0.5, 0.0, 58.0, 28.0, 0.0, 0.34)
@@ -151,7 +151,7 @@ BADGES = [
     {"id": "b-blink", "text": "random places, a split second", "t0": t_blink, "t1": t_end - 0.3, "slot": "tr"},
 ]
 COUNTERS = [
-    {"id": "c-flash", "label": "flashes since the film began", "t0": t_now, "t1": t_year2 + 0.2, "at": [0.5, 0.30], "keys": [[t_now, 0.0], [t_year2, 44.0 * (t_year2 - t_now)]], "end": 44.0 * (t_year2 - t_now), "unit": ""},
+    {"id": "c-flash", "label": "flashes since the film began", "t0": t_now, "t1": t_year2 + 0.2, "at": [0.5, 0.37], "keys": [[t_now, 0.0], [t_year2, 44.0 * (t_year2 - t_now)]], "end": 44.0 * (t_year2 - t_now), "unit": ""},
 ]
 CUTS = [sh["at"] for sh in SHOTS[1:]]
 for b in BADGES + LABELS:

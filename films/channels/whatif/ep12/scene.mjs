@@ -83,7 +83,7 @@ const setBolt = (m, pts, w, grow = 1, hdr = 0) => { const n = pts.length - 1, up
 const Mx = new THREE.Matrix4(), Q0 = new THREE.Quaternion(), S3 = new THREE.Vector3(), P3 = new THREE.Vector3();
 const hookPts = zig(1.3, 5.8, 0.0, -2.5, 9, 0.35, 3), hookBolt = mkBolt(9, "#FFF1C2", 1, 9);
 const bigPts = zig(0.0, 2.0, 0.0, 0, 9, 0.26, 8), bigBolt = mkBolt(9, "#FFF1C2", 1, 9), bigGlow = mkBolt(9, BOLT, 0.35, 8);
-const NM = 55, miniB = mkBolt(NM * 3, BOLT, 0.95, 9), MCOLS = [-0.85, -0.55, 0.45, 0.75, 1.05];
+const NM = 44, miniB = mkBolt(NM * 3, BOLT, 0.95, 9), MCOLS = [-0.85, -0.55, 0.4, 0.7];
 const flashOverlay = document.createElement("div"); flashOverlay.style.cssText = "position:absolute;inset:0;background:#FFE9A8;opacity:0;pointer-events:none;z-index:1;mix-blend-mode:screen"; document.body.appendChild(flashOverlay);
 
 // the meter: a log scale from 10^8 to 10^10 J beside the bolt
@@ -123,7 +123,7 @@ const rig = createRig(FILM.cam);
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
 const AN = { "meter-mid": () => [MX_, MID, 0], "meter-lo": () => [MX_, MY0, 0], "meter-range": () => [MX_ + 0.16, MY0 + 0.55, 0], "meter-hi": () => [MX_, MY1, 0],
-  "tank1-top": () => [T1X + TW / 2, H1, 0], "tank1-top-w": () => [T1X, H1, 0], "tank2-top": () => [T2X - TW / 2, H2, 0] };
+  "tank1-top": () => [T1X + TW / 2, H1, 0], "tank1-top-w": () => [T1X, H1, 0], "tank2-top": () => [T2X - TW / 2 - 3, H2, 0] };
 const KIND = { anchor: { color: "anchor", glyph: "◆", mark: "dot" }, part: { color: "chalk", glyph: "", mark: "bar" },
   assume: { color: "assume", glyph: "∵", mark: "dashed" }, calc: { color: "marker", glyph: "≈", mark: "dot" } };
 hud.captions(FILM.captions);
@@ -203,7 +203,7 @@ window.seek = function (t) {
   meterRange.visible = ru > 0.01; meterRange.scale.set(0.07, (MY1 - MY0) * ru, 0.04); meterRange.position.set(MX_ + 0.16, MID, 0);
   meterMark.visible = boltS && mu > 0.9; meterMark.position.set(MX_, MID, 0.02); meterMark.scale.setScalar(0.07);
   { const mu2 = boltS ? seg(t, CUE.mult, CUE.mult + 1.8) : 0; miniB.visible = mu2 > 0;
-    for (let i = 0; i < NM; i++) { const u = E.out3(seg(mu2, i / NM * 0.8, i / NM * 0.8 + 0.2)), gx = MCOLS[i % 5], gy = Math.floor(i / 5) * 0.17 + 0.1;
+    for (let i = 0; i < NM; i++) { const u = E.out3(seg(mu2, i / NM * 0.8, i / NM * 0.8 + 0.2)), gx = MCOLS[i % 4], gy = Math.floor(i / 4) * 0.17 + 0.1;
       const pts = zig(gx, gy + 0.22, gy, 0.1, 3, 0.04, 20 + i); setBolt(miniB, pts, 0.03 * (u > 0 ? 1 : 0.0001), Math.max(0.0001, u), i * 3); } }
 
   // the tanks
