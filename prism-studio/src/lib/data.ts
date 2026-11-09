@@ -493,6 +493,9 @@ export async function channelExtension(slug: string) {
   const tasks = (await loadTasks(d, and(inArray(S.publications.status, [...OPEN_STATUSES]), eq(S.episodes.channelId, c.id), demoFilter(s.showDemo, S.episodes.isDemo)))).filter((t) => !t.p.simulated);
   // the channel's own YouTube and TikTok, then the shared Instagram's next post from this channel, side by side
   const accounts = [...dests, ...(ig ? [ig] : [])].map((dest) => ({ dest, uploadUrl: uploadUrlFor(dest), next: (tasks.find((t) => t.dest.id === dest.id) ?? null) as PostItem | null }));
+  // when nothing is planned for Instagram from this channel: its oldest episode not yet on Instagram, caption ready to copy
+  const igPubs = ig ? await d.select({ episodeId: S.publications.episodeId }).from(S.publications).where(eq(S.publications.destinationId, ig.id)) : [];
+  const igNext = (await currentExports(d, "instagram", [c.id])).find((r) => !igPubs.some((p) => p.episodeId === r.e.id)) ?? null;
   const eps = await episodesFor(c.id, s.showDemo);
   const ser = await d.select().from(S.series).where(and(eq(S.series.channelId, c.id), demoFilter(s.showDemo, S.series.isDemo))).orderBy(asc(S.series.sort));
   const series = ser.map((x) => ({ series: x, episodes: eps.filter((e) => e.seriesId === x.id).sort((a, b) => (a.seriesOrder ?? a.number) - (b.seriesOrder ?? b.number)) }));
@@ -511,6 +514,7 @@ export async function channelExtension(slug: string) {
   return {
     tz: s.timezone, stopExternal: s.stopExternalActions, paused: s.globalPause || c.paused, channel: c, accounts, longVideos, season,
     upcoming: tasks.filter((t) => !accounts.some((a) => a.next?.p?.id === t.p.id)).slice(0, 16), igAccount: ig ?? null,
+    igNext: igNext ? { e: igNext.e, x: igNext.x } : null,
     series, loose, reviewCount: eps.filter((e) => !e.isDemo && ["ready_for_review", "correction_needed"].includes(e.state)).length,
   };
 }

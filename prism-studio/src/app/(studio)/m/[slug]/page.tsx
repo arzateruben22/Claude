@@ -165,9 +165,19 @@ async function ChannelScreen({ slug }: { slug: string }) {
                   <span className="label">{PLATFORM_LABEL[a.dest.platform]}{a.dest.handle ? ` · ${a.dest.handle}` : ""}</span>
                   {!a.dest.handle ? <Link href="/connections" className="chip warn">Account not set up</Link> : null}
                 </div>
-                <p className="muted">{a.dest.shared
-                  ? <>Nothing planned for Instagram from {name} yet. Each episode&apos;s Instagram caption is ready to copy on the <Link href="/m/instagram">Instagram screen</Link>.</>
-                  : <>Nothing waiting for {PLATFORM_LABEL[a.dest.platform]}. Rendered, approved episodes land here.</>}</p>
+                {a.dest.shared && v.igNext ? (
+                  <div className="stack-sm">
+                    <p className="muted">Next from {name} for Instagram: <Link href={`/episodes/${v.igNext.e.id}`}>{v.igNext.e.title}</Link> (not planned yet).</p>
+                    <p className="igc-text">{v.igNext.x.caption}</p>
+                    {v.igNext.x.hashtags ? <p className="igc-tags">{v.igNext.x.hashtags}</p> : null}
+                    <div className="row">
+                      <CopyButton text={[v.igNext.x.caption, v.igNext.x.hashtags].filter(Boolean).join("\n\n")} label="Copy caption + hashtags" />
+                      <Link href="/m/instagram" className="btn ghost small">Plan on Instagram</Link>
+                    </div>
+                  </div>
+                ) : <p className="muted">{a.dest.shared
+                  ? <>Nothing waiting for Instagram from {name}. Each episode&apos;s Instagram caption is on the <Link href="/m/instagram">Instagram screen</Link>.</>
+                  : <>Nothing waiting for {PLATFORM_LABEL[a.dest.platform]}. Rendered, approved episodes land here.</>}</p>}
                 <a className="btn ghost small" href={a.uploadUrl} target="_blank" rel="noopener noreferrer"><Icon name="external" size={16} /> {PLATFORM_LABEL[a.dest.platform]} upload page</a>
               </div>
             ))}
