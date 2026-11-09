@@ -10,7 +10,7 @@ RESULTS so the voice, captions, spine readout and claims.json can't disagree.   
 import math
 
 POP = 8.2e9               # people, mid-2025 (UN World Population Prospects 2024: about 8.2 billion)
-SPAN_M = 1.6              # assumption: one arm span, metres, averaged over adults and children (adult arm span is about body height)
+SPAN_M = 1.5              # assumption: average arm span, kids included, about 1.5 m (adults about 1.65 m; about 25-30% of people are under 18 and shorter)
 EQUATOR_KM = 40_075.0     # km (NASA Earth fact sheet)
 MOON_KM = 384_400.0       # km, mean distance (NASA Moon fact sheet)
 
@@ -22,7 +22,7 @@ def compute(span=SPAN_M, pop=POP):
 
 
 V = compute()
-SENS = {f"{s:g} m": compute(s) for s in (1.4, 1.6, 1.7)}
+SENS = {f"{s:g} m": compute(s) for s in (1.4, 1.5, 1.7)}
 
 
 def sig(x, n=2):

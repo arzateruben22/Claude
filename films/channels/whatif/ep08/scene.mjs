@@ -5,8 +5,8 @@ import * as THREE from "three";
 //
 // The world: a chain of people (instanced figures, kids and grown-ups, hand in hand) runs off along the graph paper with you,
 // in blue, at its head. The camera cranes up and pulls back (distance eased in log space) to the planet: the chain is a thread
-// that leaves the ground and runs off into space, 13.1 million km long; it is wound round the Earth, one great circle per lap
-// (327 thin rings), then laid out between the Earth and the Moon (34 trips). The camera returns to frame 0 for the loop.
+// that leaves the ground and runs off into space, 12.3 million km long; it is wound round the Earth, one great circle per lap
+// (307 thin rings), then laid out between the Earth and the Moon (32 trips). The camera returns to frame 0 for the loop.
 // Everything timed comes from film.json, which compile.py hangs on the voice; this file only stages it.
 import { stage, seg, E, clamp01 } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
@@ -91,7 +91,7 @@ const ball = (hex, grat) => { const m = new THREE.Mesh(new THREE.SphereGeometry(
 const earthB = ball(CHALK2, 1), moonB = ball(CHALK, 0);
 earthB.renderOrder = 1; moonB.renderOrder = 1;
 moonB.material.uniforms.uDark.value.multiplyScalar(0.85);
-const NLAP = Math.ceil(WD.laps * 348 / 330) + 2;
+const NLAP = Math.ceil(WD.laps * 1.7 / 1.5) + 2;
 const yarn = new THREE.InstancedMesh(new THREE.TorusGeometry(1, 0.0016, 5, 128), basic(CHALK, 0.55, true), NLAP);
 { const M4 = new THREE.Matrix4(), Q4 = new THREE.Quaternion(), S4 = new THREE.Vector3(), P4 = new THREE.Vector3(), Ax = new THREE.Vector3();
   let s2 = 5; const r2 = () => (s2 = (s2 * 16807) % 2147483647) / 2147483647;
@@ -102,7 +102,7 @@ const lapRing = new THREE.Mesh(new THREE.TorusGeometry(1, 0.004, 6, 160), basic(
 const threadG = new THREE.PlaneGeometry(1, 1); threadG.rotateX(-Math.PI / 2); threadG.translate(0, 0, -0.5);
 const thread = new THREE.Mesh(threadG, new THREE.MeshBasicMaterial({ color: unlit(ANCH), transparent: true, opacity: 1, depthTest: true, depthWrite: false, side: THREE.DoubleSide }));
 thread.renderOrder = 5; thread.frustumCulled = false; thread.userData.noProbe = true; thread.visible = false; scene.add(thread);
-// the trips: 34 arcs between the Earth and the Moon, each drawn in turn
+// the trips: 32 arcs between the Earth and the Moon, each drawn in turn
 const NT = Math.ceil(WD.trips), arcs = [];
 for (let i = 0; i < NT; i++) {
   const pts = [], hh = (0.02 + 0.2 * ((i * 0.618) % 1)) * 3.84e8, zz = ((((i * 0.381) % 1) - 0.5) * 2) * 0.12 * 3.84e8;
@@ -111,11 +111,11 @@ for (let i = 0; i < NT; i++) {
   ln.frustumCulled = false; ln.visible = false; ln.userData.noProbe = true; scene.add(ln); arcs.push(ln);
 }
 
-// "one person in three hundred": 330 dots, one lit (a screen-space overlay in the free band under the captions)
+// "one person in three hundred": 300 dots, one lit (a screen-space overlay in the free band under the captions)
 const dotsEl = document.createElement("div");
 dotsEl.style.cssText = "position:absolute;left:14%;top:72.5%;width:72%;height:13%;opacity:0;pointer-events:none;z-index:4";
-{ let h = '<svg viewBox="0 0 330 100" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" aria-hidden="true">';
-  for (let r = 0; r < 10; r++) for (let c = 0; c < 33; c++) { const lit = r === 4 && c === 16; h += `<circle cx="${5 + c * 10}" cy="${5 + r * 10}" r="${lit ? 4.6 : 2.4}" fill="${lit ? ANCH : CHALK2}" opacity="${lit ? 1 : 0.4}"/>`; }
+{ let h = '<svg viewBox="0 0 300 100" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" aria-hidden="true">';
+  for (let r = 0; r < 10; r++) for (let c = 0; c < 30; c++) { const lit = r === 4 && c === 15; h += `<circle cx="${5 + c * 10}" cy="${5 + r * 10}" r="${lit ? 4.6 : 2.4}" fill="${lit ? ANCH : CHALK2}" opacity="${lit ? 1 : 0.4}"/>`; }
   dotsEl.innerHTML = h + "</svg>"; document.body.appendChild(dotsEl); }
 
 // ── the camera ──────────────────────────────────────────────────────────────
@@ -134,7 +134,7 @@ const titleEl = hud.title(FILM.title);
 const tFlap = titleFlap(titleEl, { t0: FILM.title.t0 ?? 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 for (const c of FILM.counters) {
-  hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, keys: c.keys, ease: "linear", fmt: (v) => String(Math.round(v)), minCh: 3,
+  hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, keys: c.keys, ease: "linear", fmt: (v) => String(/lap/.test(c.id) && v >= 100 ? Math.round(v / 10) * 10 : Math.round(v)), minCh: 3,
     unit: c.unit, lit: (v) => v >= c.end - 0.6 });
 }
 for (const L of FILM.labels) {
@@ -166,6 +166,7 @@ window.seek = function (t) {
   // the paper: the grid, you, the chain, the row
   desk.group.visible = d < 320;
   desk.update({ grid: 1 - seg(Math.log10(d), 2.0, 2.5), pool: [pose.target[0], pose.target[2]], casters: [[0, 1.7, 0, 0.35]], span: Math.max(800, d * 8) });
+  { const wash = 1 + 2.5 * seg(Math.log10(d), 1.9, 2.8) * (1 - seg(Math.log10(d), 4.3, 7.4)); desk.uniforms.uExposure.value = wash; if (earthB.material?.uniforms?.uExposure) earthB.material.uniforms.uExposure.value = wash; }
   const endTail = shot === "end" ? 1 : 0;
   const bigMe = (shot === "moon" && t > CUE.small + 0.3) || shot === "end";
   const meS = bigMe ? Math.max(1, 0.055 * d / 1.7) : 1;
@@ -199,7 +200,7 @@ window.seek = function (t) {
   thread.material.opacity = 0.95 * (shot === "end" ? 0 : 1);
   const laps = keyed(CUE.lapKeys, t), nLap = Math.max(0, Math.min(NLAP, Math.floor(laps)));
   const yarnFade = shot === "moon" ? 1 - E.inout2(seg(t, CUE.moon[0] + 0.1, CUE.moon[0] + 1.3)) : shot === "end" ? 0 : 1;
-  yarn.visible = planet && nLap > 0 && yarnFade > 0.01 && shot !== "chain"; yarn.count = nLap; yarn.material.opacity = 0.55 * yarnFade;
+  yarn.visible = planet && nLap > 0 && yarnFade > 0.01 && shot !== "chain"; yarn.count = nLap; yarn.material.opacity = 0.34 * yarnFade;
   const drawU = seg(t, CUE.lapDraw[0], CUE.lapDraw[1]), drawOn = seg(t, CUE.lapDraw[0] - 0.05, CUE.lapDraw[0] + 0.15) * (1 - seg(t, CUE.lapDraw[1] + 0.4, CUE.lapDraw[1] + 0.9));
   const oneOn = seg(t, CUE.one - 0.1, CUE.one + 0.4) * yarnFade * (shot === "wrap" ? 1 : 0);
   const showLap = planet && shot === "wrap" && (drawOn > 0.01 || oneOn > 0.01) && t < CUE.moon[0];
@@ -207,7 +208,7 @@ window.seek = function (t) {
   if (t < CUE.one - 0.1) { lapRing.geometry.setDrawRange(0, Math.max(6, Math.floor(drawU * LAPIDX))); lapRing.material.opacity = 0.95 * drawOn; lapRing.rotation.set(Math.PI / 2, 0, 0); lapRing.scale.setScalar(R_E * 1.014); }
   else { lapRing.geometry.setDrawRange(0, LAPIDX); lapRing.material.opacity = 0.95 * oneOn; lapRing.rotation.set(1.1, 0.4, 0.2); lapRing.scale.setScalar(R_E * 1.12); }
   lapRing.position.set(0, -R_E, 0);
-  // the dots: one in 330, lit
+  // the dots: one in 300, lit
   const dOn = seg(t, CUE.person - 0.1, CUE.person + 0.5) * (1 - seg(t, CUE.home - 7.6, CUE.home - 7.2));
   dotsEl.style.opacity = String((dOn * 0.95).toFixed(3));
   // the Moon and the trips

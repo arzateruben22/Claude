@@ -71,11 +71,11 @@
   {
    "id": "vo03",
    "beat": "change",
-   "text": "Now add all eight billion people, one after another, hand in hand. Out past the horizon it goes, until the line is about thirteen million kilometers long.",
+   "text": "Now add all eight billion people, one after another, hand in hand. Out past the horizon it goes, until the line is about twelve million kilometers long.",
    "stars": [
     "long"
    ],
-   "phonemes": "nˈaʊ ˈæd ˈɔːl ˈeɪt bˈɪliən pˈiːpəl, wˈʌn ˈæftɚɹ ɐnˈʌðɚ, hˈænd ɪn hˈænd. ˈaʊt pˈæst ðə hɚɹˈaɪzən ɪt ɡˈoʊz, ʌntˈɪl ðə lˈaɪn ɪz ɐbˌaʊt θˈɜːtiːn mˈɪliən kɪlˈɑːmɪɾɚz lˈɔŋ.",
+   "phonemes": "nˈaʊ ˈæd ˈɔːl ˈeɪt bˈɪliən pˈiːpəl, wˈʌn ˈæftɚɹ ɐnˈʌðɚ, hˈænd ɪn hˈænd. ˈaʊt pˈæst ðə hɚɹˈaɪzən ɪt ɡˈoʊz, ʌntˈɪl ðə lˈaɪn ɪz ɐbˌaʊt twˈɛlv mˈɪliən kɪlˈɑːmɪɾɚz lˈɔŋ.",
    "speeds": [
     0.8,
     0.8
@@ -90,8 +90,8 @@
     ]
    ],
    "file": "03.wav",
-   "dur": 11.381,
-   "sha256": "b5a663fa4661511e85d07626f1cb3e3d7b2b3e645f466e8a24ef89f73eb9f677"
+   "dur": 11.195,
+   "sha256": "f49edcbc0390d5cfcae528e10bfd49dd050cae5c45048be321ff7a9639c79c6e"
   },
   {
    "id": "vo04",
@@ -127,12 +127,12 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "It circles the Earth about three hundred and thirty times. And one lap needs only one person in three hundred of us.",
+   "text": "It circles the Earth about three hundred and ten times. And one lap needs only about one person in three hundred of us.",
    "stars": [
     "times",
     "us"
    ],
-   "phonemes": "ɪt sˈɜːkəlz ðɪ ˈɜːθ ɐbˌaʊt θɹˈiː hˈʌndɹɪd ænd θˈɜːɾi tˈaɪmz. ænd wˈʌn lˈæp nˈiːdz ˈoʊnli wˈʌn pˈɜːsən ɪn θɹˈiː hˈʌndɹɪd ʌv ˌʌs.",
+   "phonemes": "ɪt sˈɜːkəlz ðɪ ˈɜːθ ɐbˌaʊt θɹˈiː hˈʌndɹɪd ænd tˈɛn tˈaɪmz. ænd wˈʌn lˈæp nˈiːdz ˈoʊnli ɐbˌaʊt wˈʌn pˈɜːsən ɪn θɹˈiː hˈʌndɹɪd ʌv ˌʌs.",
    "speeds": [
     0.72,
     0.72
@@ -142,13 +142,13 @@
    ],
    "silences": [
     [
-     4.0765,
-     4.4565
+     3.9785,
+     4.3585
     ]
    ],
    "file": "05.wav",
-   "dur": 8.732,
-   "sha256": "e8029cd013336be91780bb270786933c8ebd870f8dcd9ba983979e71bf12dfec"
+   "dur": 9.108,
+   "sha256": "b3bb14aecf882048c246076ad5e4ee27df50d4556eb07ae685e165c57c089bc6"
   },
   {
    "id": "vo06",

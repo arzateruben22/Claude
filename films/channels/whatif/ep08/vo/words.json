@@ -250,8 +250,8 @@
   },
   {
    "id": "vo03",
-   "text": "Now add all eight billion people, one after another, hand in hand. Out past the horizon it goes, until the line is about thirteen million kilometers long.",
-   "heard": "Now add all eight billion people one after another, hand in hand. Out past the horizon it goes, until the line is about thirteen million kilometers long.",
+   "text": "Now add all eight billion people, one after another, hand in hand. Out past the horizon it goes, until the line is about twelve million kilometers long.",
+   "heard": "Now add all 8 billion people one after another, hand in hand. Out past the horizon it goes until the line is about 12 million kilometers long.",
    "words": [
     {
      "w": "Now",
@@ -280,12 +280,12 @@
     {
      "w": "billion",
      "start": 1.265,
-     "end": 1.84,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "people,",
-     "start": 1.75,
+     "start": 2.01,
      "end": 2.16,
      "heard": true
     },
@@ -304,12 +304,12 @@
     {
      "w": "another,",
      "start": 2.825,
-     "end": 3.52,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "hand",
-     "start": 3.4,
+     "start": 3.395,
      "end": 3.84,
      "heard": true
     },
@@ -328,92 +328,92 @@
     },
     {
      "w": "Out",
-     "start": 4.92,
+     "start": 4.925,
      "end": 5.28,
      "heard": true
     },
     {
      "w": "past",
-     "start": 5.275,
+     "start": 5.305,
      "end": 5.6,
      "heard": true
     },
     {
      "w": "the",
-     "start": 5.7,
-     "end": 5.76,
+     "start": 5.725,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "horizon",
-     "start": 5.73,
+     "start": 5.755,
      "end": 6.56,
      "heard": true
     },
     {
      "w": "it",
-     "start": 6.705,
-     "end": 6.755,
+     "start": 6.73,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "goes,",
-     "start": 6.735,
-     "end": 7.36,
+     "start": 6.76,
+     "end": 7.12,
      "heard": true
     },
     {
      "w": "until",
-     "start": 7.365,
-     "end": 7.68,
+     "start": 7.415,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.7,
-     "end": 7.84,
+     "start": 7.74,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "line",
      "start": 7.86,
-     "end": 8.24,
+     "end": 8.32,
      "heard": true
     },
     {
      "w": "is",
-     "start": 8.295,
+     "start": 8.34,
      "end": 8.56,
      "heard": true
     },
     {
      "w": "about",
-     "start": 8.54,
+     "start": 8.57,
      "end": 8.8,
      "heard": true
     },
     {
-     "w": "thirteen",
-     "start": 8.815,
-     "end": 9.52,
+     "w": "twelve",
+     "start": 8.89,
+     "end": 9.44,
      "heard": true
     },
     {
      "w": "million",
-     "start": 9.52,
-     "end": 10.0,
+     "start": 9.37,
+     "end": 9.92,
      "heard": true
     },
     {
      "w": "kilometers",
-     "start": 10.03,
-     "end": 10.88,
+     "start": 9.905,
+     "end": 10.72,
      "heard": true
     },
     {
      "w": "long.",
-     "start": 10.875,
-     "end": 11.36,
+     "start": 10.725,
+     "end": 11.12,
      "heard": true
     }
    ],
@@ -581,8 +581,8 @@
   },
   {
    "id": "vo05",
-   "text": "It circles the Earth about three hundred and thirty times. And one lap needs only one person in three hundred of us.",
-   "heard": "It circles the earth about 330 times, and one lap needs only one person in 300 of us.",
+   "text": "It circles the Earth about three hundred and ten times. And one lap needs only about one person in three hundred of us.",
+   "heard": "It circles the earth about 310 times, and one lap needs only about one person in 300 of us.",
    "words": [
     {
      "w": "It",
@@ -610,13 +610,13 @@
     },
     {
      "w": "about",
-     "start": 1.53,
-     "end": 1.92,
+     "start": 1.49,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "three",
-     "start": 1.87,
+     "start": 1.885,
      "end": 3.44,
      "heard": false
     },
@@ -628,93 +628,99 @@
     },
     {
      "w": "and",
-     "start": 1.96,
+     "start": 1.945,
      "end": 3.44,
      "heard": false
     },
     {
-     "w": "thirty",
-     "start": 1.99,
+     "w": "ten",
+     "start": 1.975,
      "end": 3.44,
      "heard": false
     },
     {
      "w": "times.",
-     "start": 3.345,
-     "end": 4.077,
+     "start": 3.325,
+     "end": 3.978,
      "heard": true,
-     "end_asr": 4.48
+     "end_asr": 4.4
     },
     {
      "w": "And",
-     "start": 4.475,
-     "end": 4.64,
+     "start": 4.375,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "one",
-     "start": 4.725,
-     "end": 4.96,
+     "start": 4.445,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "lap",
-     "start": 5.05,
-     "end": 5.44,
+     "start": 4.965,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "needs",
-     "start": 5.49,
-     "end": 6.08,
+     "start": 5.4,
+     "end": 6.0,
      "heard": true
     },
     {
      "w": "only",
-     "start": 6.005,
-     "end": 6.4,
+     "start": 5.88,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.35,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "one",
-     "start": 6.295,
-     "end": 6.72,
+     "start": 6.57,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "person",
-     "start": 6.66,
-     "end": 6.96,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 7.28,
+     "start": 7.085,
      "end": 7.52,
      "heard": true
     },
     {
+     "w": "in",
+     "start": 7.63,
+     "end": 7.84,
+     "heard": true
+    },
+    {
      "w": "three",
-     "start": 7.495,
-     "end": 8.16,
+     "start": 7.845,
+     "end": 8.56,
      "heard": false
     },
     {
      "w": "hundred",
-     "start": 7.57,
-     "end": 8.16,
+     "start": 7.875,
+     "end": 8.56,
      "heard": false
     },
     {
      "w": "of",
-     "start": 8.255,
-     "end": 8.32,
+     "start": 8.65,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "us.",
-     "start": 8.285,
-     "end": 8.72,
+     "start": 8.68,
+     "end": 9.04,
      "heard": true
     }
    ],

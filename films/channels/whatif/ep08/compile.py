@@ -5,10 +5,10 @@ word; every number comes from calc.py, the same module claims.json was written f
   python3 -I films/channels/whatif/ep08/compile.py
 
 The world (scene.mjs): a chain of people holding hands runs off along the graph paper (instanced figures: you in blue at its
-head, kids and grown-ups of different heights, 1.6 m apart on average). A row of five shows the arm-span idea. The camera
+head, kids and grown-ups of different heights, 1.5 m apart on average). A row of five shows the arm-span idea. The camera
 cranes up as the chain grows, then pulls back to the planet (distance eased in log space, as in S2E01): the chain is a thread
-that leaves the ground and runs off into space, 13.1 million km long. It is wrapped round the Earth, one great circle per lap
-(327 of them, a ball of thread, each lap one Earth's circumference), and then laid out between the Earth and the Moon, 34
+that leaves the ground and runs off into space, 12.3 million km long. It is wrapped round the Earth, one great circle per lap
+(307 of them, a ball of thread, each lap one Earth's circumference), and then laid out between the Earth and the Moon, 32
 trips. The camera returns to frame 0 for the loop.
 """
 import json
@@ -30,10 +30,10 @@ BEATS = f.layout(plan, end_hold=end_hold)
 A = f.at
 B = {b["id"]: b for b in BEATS}
 R = RESULTS
-assert R["laps"] == 330 and R["moon_trips"] == 34 and R["km_m"] == 13.1
+assert R["laps"] == 310 and R["moon_trips"] == 32 and R["km_m"] == 12.3
 
 R_E = 6.378e6                                            # m, the Earth's equatorial radius (same as S2E01)
-LAPS, TRIPS = V["laps"], V["moon_trips"]                  # 327.4 and 34.1
+LAPS, TRIPS = V["laps"], V["moon_trips"]                  # 307 and 32.0
 LEN_M = V["km"] * 1000                                   # the chain's length, 1.31e10 m
 
 # ── times ──
@@ -41,12 +41,12 @@ t_title_out = B["normal"]["t0"] - 0.2
 t_row = A("vo02:Call", -0.25)                              # from you, arms out, to a row of kids and grown-ups
 t_chain0 = B["change"]["t0"]                               # the chain grows; the camera cranes up
 t_horizon = A("vo03:horizon", -0.2)                        # out past the horizon: the pull-back to the planet
-t_km = A("vo03:thirteen", 0.0)                             # the length is said: the thread stands out into space
+t_km = A("vo03:twelve", 0.0)                             # the length is said: the thread stands out into space
 t_wrap0 = A("vo04:wrap", -0.1)                             # "wrap the line around the Earth": the rings begin
 t_pull = A("vo04:Pull", -0.1)
 t_wrap1 = A("vo05:times", 0.0)                             # 327 laps, said as "times"
 t_one = A("vo05:one", -0.05)                               # "one lap needs only one person in three hundred"
-t_person = A("vo05:person", -0.15)                         # "one person in three hundred": 330 dots, one lit
+t_person = A("vo05:person", -0.15)                         # "one person in three hundred": 300 dots, one lit
 t_short, t_tall = A("vo06:shorter", -0.1), A("vo06:taller", -0.1)
 t_moon0 = A("vo07:reach", -0.2)                            # the thread laid out between the Earth and the Moon
 t_moon1 = A("vo07:again.", 0.1)                            # 34 trips counted by "again and again"
@@ -60,9 +60,9 @@ def n_people(t):
     if t < t_chain0:
         return N0 + (N_HOOK - N0) * min(1.0, max(0.0, (t - 0.4) / 4.4)) ** 1.5
     return N_HOOK + (N_MAX - N_HOOK) * min(1.0, max(0.0, (t - t_chain0) / (t_horizon - t_chain0))) ** 2
-LAP_KEYS = [[t_wrap0, 0.0], [t_wrap1, LAPS], [t_short - 0.3, LAPS], [t_short + 0.9, LAPS * 286 / 330], [t_tall - 0.3, LAPS * 286 / 330], [t_tall + 0.9, LAPS * 348 / 330], [t_moon0 - 0.5, LAPS * 348 / 330], [t_moon0 + 0.6, LAPS]]
+LAP_KEYS = [[t_wrap0, 0.0], [t_wrap1, LAPS], [t_short - 0.3, LAPS], [t_short + 0.9, LAPS * 1.4 / 1.5], [t_tall - 0.3, LAPS * 1.4 / 1.5], [t_tall + 0.9, LAPS * 1.7 / 1.5], [t_moon0 - 0.5, LAPS * 1.7 / 1.5], [t_moon0 + 0.6, LAPS]]
 TRIP_KEYS = [[t_moon0, 0.0], [t_moon1, TRIPS]]
-THREAD = [[t_chain0 + 1.0, 0.0], [t_km, 1.0], [t_wrap0, 1.0], [t_wrap1, 0.0]]       # the straight thread's length, as a fraction of 13.1 million km
+THREAD = [[t_chain0 + 1.0, 0.0], [t_km, 1.0], [t_wrap0, 1.0], [t_wrap1, 0.0]]       # the straight thread's length, as a fraction of 12.3 million km
 
 # ── shots ──
 SHOTS = [
@@ -81,7 +81,7 @@ ARMS2 = T(0.0, 0.9, 0.0, 12.0, 4.0, 8.0, 0.80)
 ROW0 = T(-1.2, 0.9, 0.0, 22.0, 4.0, 12.0, 0.80)
 ROW1 = T(1.2, 0.9, 0.0, 22.0, 4.0, 12.0, 0.80)
 PLANET = T(0.0, 6.0e6, 0.0, 6.5e7, 18.0, 0.0, 0.42)
-FAR = T(0.0, 0.0, -6.5e9, 3.0e10, 72.0, 0.0, 0.50)          # looking down on the thread, 13.1 million km of it, from far above        # the Earth big in the upper half; the thread leaves the ground toward the camera's right and up
+FAR = T(0.0, 0.0, -4.8e9, 3.0e10, 72.0, 0.0, 0.50)          # looking down on the thread, 12.3 million km of it, from far above        # the Earth big in the upper half; the thread leaves the ground toward the camera's right and up
 WRAP0 = T(0.0, -1.0e6, 0.0, 6.5e7, 18.0, 0.0, 0.42)
 WRAP1 = T(0.0, -1.0e6, 0.0, 6.5e7, 14.0, 66.0, 0.42)
 MOONW = T(0.0, 1.85e8, 0.0, 1.25e9, 4.0, 20.0, 0.42)
@@ -97,8 +97,11 @@ CAM = {
               {"t": t_horizon + (t_km - t_horizon) * 0.7, **T(0.0, 5.0e5, 0.0, 6.0e6, 16.0, 0.0, 0.46), "ease": "linear"},
               {"t": t_km, **PLANET, "ease": "inout2"},
               {"t": round(t_km + 1.0, 4), **PLANET, "ease": "sine"},
+              {"t": round(t_km + 2.1, 4), **T(0.0, 0.0, -2.2e8, 1.0e9, 45.0, 0.0, 0.50), "ease": "linear"},        # the Earth stays in the bottom of the frame all the way out
               {"t": round(t_km + 3.6, 4), **FAR, "ease": "inout2"},                                     # "too big to picture": all of it, the Earth a dot at its foot
               {"t": round(t_wrap0 - 2.0, 4), **FAR, "ease": "sine"},
+              {"t": round(t_wrap0 - 1.35, 4), **T(0.0, 0.0, -1.8e8, 1.0e9, 57.0, 0.0, 0.50), "ease": "linear"},
+              {"t": round(t_wrap0 - 0.7, 4), **T(0.0, -1.0e6, -1.0e7, 1.5e8, 38.0, 0.0, 0.45), "ease": "linear"},
               {"t": t_wrap0, **WRAP0, "ease": "inout2"}],
     "wrap": [{"t": t_wrap0, **WRAP0}, {"t": round(t_wrap0 + 3.2, 4), **T(0.0, -1.0e6, 0.0, 6.5e7, 16.0, 22.0, 0.42), "ease": "sine"},
              {"t": round(t_pull + 0.3, 4), **T(0.0, -1.0e6, 0.0, 3.3e7, 16.0, 34.0, 0.42), "ease": "inout2"},          # in close as it is pulled tight
@@ -107,6 +110,8 @@ CAM = {
              {"t": round(t_one + 0.2, 4), **T(0.0, -1.0e6, 0.0, 6.5e7, 18.0, 52.0, 0.42), "ease": "inout2"},
              {"t": round(t_one + 1.6, 4), **T(0.0, -1.0e6, 0.0, 2.6e7, 16.0, 60.0, 0.42), "ease": "inout2"},         # a close look at the rings
              {"t": round(t_person + 1.2, 4), **T(0.0, -1.0e6, 0.0, 6.5e7, 16.0, 64.0, 0.42), "ease": "inout2"},
+             {"t": round(t_person + 3.0, 4), **T(0.0, -1.0e6, 0.0, 3.6e7, 28.0, 100.0, 0.42), "ease": "inout2"},      # a push-in and a tilt: the ball's other face
+             {"t": round(t_person + 4.8, 4), **T(0.0, -1.0e6, 0.0, 7.0e7, 12.0, 135.0, 0.42), "ease": "inout2"},
              {"t": t_short + 0.6, **T(0.0, -1.0e6, 0.0, 5.0e7, 16.0, 66.0, 0.42), "ease": "inout2"},
              {"t": t_tall + 1.2, **T(0.0, -1.0e6, 0.0, 6.5e7, 14.0, 66.0, 0.42), "ease": "inout2"},
              {"t": round(t_tall + 3.0, 4), **T(0.0, -1.0e6, 0.0, 3.0e7, 16.0, 70.0, 0.42), "ease": "inout2"}, {"t": t_moon0, **WRAP1, "ease": "inout2"}],
@@ -131,8 +136,9 @@ for x, y in zip(SHOTS[:-1], SHOTS[1:]):
 # ── the spine readout ──
 sp_ = lambda t, label, terms, **kw: {"t": t, "label": label, "terms": terms, **kw}
 SPINE = [
-    sp_(A("vo02:Call", 0.0), "one person's arm span", [["in", "1.6 m"]]),
-    sp_(A("vo03:billion", 0.0), "8.2 billion people × 1.6 m each", [["ans", "≈ 13.1 million km"]]),
+    sp_(A("vo02:Call", 0.0), "one person's arm span", [["in", "1.5 m"]]),
+    sp_(A("vo03:billion", 0.0), "8.2 billion people × 1.5 m each", [["ans", "≈ ? km"]]),
+    sp_(t_km, "8.2 billion people × 1.5 m each", [["ans", "≈ 12.3 million km"]]),
     sp_(t_wrap0, "÷ the equator, 40,075 km", [["ans", "≈ ? laps"]]),
     sp_(t_box, "laps round the equator", [["ans", f"≈ {R['laps']} laps"]], box=True),
     sp_(A("vo05:one", 0.0), "laps round the equator", [["ans", f"≈ {R['laps']} laps"]], box=True, keep=True),
@@ -144,11 +150,11 @@ s = R["sens_laps"]
 WORK = {
     "t0": t_work0, "t1": t_home - 0.3, "title": "Show your work",
     "rows": [
-        {"t": t_work0 + 0.15, "k": "8.2 bn × 1.6 m ÷ 40,075 km", "v": f"≈ {R['laps']} laps", "lit": False},
+        {"t": t_work0 + 0.15, "k": "8.2 bn × 1.5 m ÷ 40,075 km", "v": f"≈ {R['laps']} laps", "lit": False},
         {"t": t_short, "k": "shorter: 1.4 m a person", "v": f"≈ {s[0]} laps", "lit": True},
         {"t": t_tall, "k": "taller: 1.7 m a person", "v": f"≈ {s[2]} laps", "lit": True},
     ],
-    "assume": ["1.6 m a person", "straight, no gaps", "everyone joins"],
+    "assume": ["1.5 m a person", "straight, no gaps", "everyone joins"],
 }
 
 # ── labels, badges, counters ──
@@ -157,17 +163,17 @@ LABELS = [
     {"id": "l-span", "text": "one arm span ≈ your height", "kind": "part", "anchor": "span", "t0": A("vo02:You", 0.0), "t1": t_row, "side": 1},
 ]
 BADGES = [
-    {"id": "b-thought", "text": "thought experiment", "t0": 0.3, "t1": t_title_out, "slot": "tr"},
-    {"id": "b-span", "text": "∵ 1.6 m a person", "t0": A("vo02:meter", 0.0), "t1": t_chain0 - 0.2, "slot": "tl"},
+    {"id": "b-thought", "text": "thought experiment", "t0": 2.6, "t1": t_title_out, "slot": "tr"},
+    {"id": "b-span", "text": "∵ 1.5 m a person", "t0": A("vo02:meter", 0.0), "t1": t_chain0 - 0.2, "slot": "tl"},
     {"id": "b-pop", "text": "8.2 billion people", "t0": A("vo03:billion", -0.1), "t1": t_horizon, "slot": "tl"},
-    {"id": "b-km", "text": "≈ 13.1 million km of people", "t0": t_km, "t1": t_wrap0, "slot": "tr"},
+    {"id": "b-km", "text": "≈ 12.3 million km of people", "t0": t_km, "t1": t_wrap0, "slot": "tr"},
     {"id": "b-wrap", "text": "∵ a straight chain, no gaps", "t0": t_wrap0, "t1": t_wrap1, "slot": "tl"},
     {"id": "b-lap1", "text": "one lap = 40,075 km", "t0": t_wrap0 + 0.5, "t1": t_wrap0 + 3.2, "slot": "tr"},
-    {"id": "b-lap", "text": "1 lap = 25 million people", "t0": t_one, "t1": t_work0 - 0.2, "slot": "tr"},
-    {"id": "b-1in", "text": "1 in 330 of us", "t0": t_person, "t1": t_work0 - 0.2, "slot": "tl"},
+    {"id": "b-lap", "text": "1 lap = 27 million people", "t0": t_one, "t1": t_work0 - 0.2, "slot": "tr"},
+    {"id": "b-1in", "text": "about 1 in 300 of us", "t0": t_person, "t1": t_work0 - 0.2, "slot": "tl"},
     {"id": "b-me", "text": "one of 8.2 billion", "t0": t_small, "t1": t_end - 0.3, "slot": "tr"},
     {"id": "b-rounded", "text": "rounded", "t0": t_box + 0.3, "t1": t_work0 - 0.2, "slot": "tl"},
-    {"id": "b-trips", "text": "≈ 34 trips to the Moon", "t0": t_moon1, "t1": t_end - 0.3, "slot": "tr"},
+    {"id": "b-trips", "text": "≈ 32 trips to the Moon", "t0": t_moon1, "t1": t_end - 0.3, "slot": "tr"},
     {"id": "b-sens", "text": "shorter or taller: 290 to 350 laps", "t0": t_short, "t1": t_home - 0.3, "slot": "tr"},
 ]
 COUNTERS = [
@@ -193,7 +199,7 @@ film = {
     "cam": CAM, "cue": CUE, "spine": SPINE, "spineOut": SPINE_OUT, "work": WORK,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": f.captions(max_chars=24, balance=True, keep=("eight billion", "thirteen million kilometers", "three hundred and thirty", "one person in three hundred", "a meter and a half", "the Moon again", "hand in hand")),
+    "captions": f.captions(max_chars=24, balance=True, keep=("eight billion", "twelve million kilometers", "three hundred and ten", "one person in three hundred", "a meter and a half", "the Moon again", "hand in hand")),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 

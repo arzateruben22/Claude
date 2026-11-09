@@ -1,5 +1,5 @@
 {
- "duration": 73.2,
+ "duration": 72.6,
  "fps": 30,
  "preset": "envelope-working",
  "sections": [
@@ -18,37 +18,37 @@
   {
    "id": "change",
    "t0": 15.0,
-   "t1": 27.6,
+   "t1": 27.0,
    "energy": 0.65
   },
   {
    "id": "why",
-   "t0": 27.6,
-   "t1": 38.4,
+   "t0": 27.0,
+   "t1": 37.8,
    "energy": 0.55
   },
   {
    "id": "whoa",
-   "t0": 38.4,
-   "t1": 51.0,
+   "t0": 37.8,
+   "t1": 50.4,
    "energy": 0.75
   },
   {
    "id": "work",
-   "t0": 51.0,
-   "t1": 58.8,
+   "t0": 50.4,
+   "t1": 58.2,
    "energy": 0.5
   },
   {
    "id": "takeaway",
-   "t0": 58.8,
-   "t1": 66.6,
+   "t0": 58.2,
+   "t1": 66.0,
    "energy": 0.45
   },
   {
    "id": "tease",
-   "t0": 66.6,
-   "t1": 73.2,
+   "t0": 66.0,
+   "t1": 72.6,
    "energy": 0.4
   }
  ],
@@ -83,7 +83,7 @@
    "t": 15.0,
    "kind": "section",
    "id": "change",
-   "t1": 27.6
+   "t1": 27.0
   },
   {
    "t": 16.566666666666666,
@@ -91,89 +91,94 @@
    "tag": "spine-1"
   },
   {
-   "t": 27.6,
-   "kind": "section",
-   "id": "why",
-   "t1": 38.4
-  },
-  {
-   "t": 30.266666666666666,
-   "kind": "counter.show",
-   "tag": "c-laps"
-  },
-  {
-   "t": 30.466666666666665,
+   "t": 24.2,
    "kind": "term.write",
    "tag": "spine-2"
   },
   {
-   "t": 30.466666666666665,
+   "t": 27.0,
+   "kind": "section",
+   "id": "why",
+   "t1": 37.8
+  },
+  {
+   "t": 29.666666666666668,
+   "kind": "counter.show",
+   "tag": "c-laps"
+  },
+  {
+   "t": 29.866666666666667,
+   "kind": "term.write",
+   "tag": "spine-3"
+  },
+  {
+   "t": 29.866666666666667,
    "kind": "swell",
    "tag": "wrap",
-   "t1": 42.03333333333333
+   "t1": 41.43333333333333
   },
   {
-   "t": 38.4,
+   "t": 37.8,
    "kind": "section",
    "id": "whoa",
-   "t1": 51.0
+   "t1": 50.4
   },
   {
-   "t": 42.03333333333333,
+   "t": 41.43333333333333,
    "kind": "answer.box",
-   "tag": "spine-3",
-   "t1": 42.5333
+   "tag": "spine-4",
+   "t1": 41.9333
   },
   {
-   "t": 43.43333333333333,
-   "kind": "term.write",
-   "tag": "spine-4"
-  },
-  {
-   "t": 51.0,
-   "kind": "section",
-   "id": "work",
-   "t1": 58.8
-  },
-  {
-   "t": 51.15,
-   "kind": "term.write",
-   "tag": "work-8.2 bn × 1.6 m ÷ 40,075 km"
-  },
-  {
-   "t": 52.8,
-   "kind": "term.write",
-   "tag": "work-shorter: 1.4 m a person"
-  },
-  {
-   "t": 53.46666666666667,
-   "kind": "term.write",
-   "tag": "work-taller: 1.7 m a person"
-  },
-  {
-   "t": 58.8,
-   "kind": "section",
-   "id": "takeaway",
-   "t1": 66.6
-  },
-  {
-   "t": 58.8,
+   "t": 42.53333333333333,
    "kind": "term.write",
    "tag": "spine-5"
   },
   {
-   "t": 60.06666666666667,
+   "t": 50.4,
+   "kind": "section",
+   "id": "work",
+   "t1": 58.2
+  },
+  {
+   "t": 50.55,
+   "kind": "term.write",
+   "tag": "work-8.2 bn × 1.5 m ÷ 40,075 km"
+  },
+  {
+   "t": 52.2,
+   "kind": "term.write",
+   "tag": "work-shorter: 1.4 m a person"
+  },
+  {
+   "t": 52.86666666666667,
+   "kind": "term.write",
+   "tag": "work-taller: 1.7 m a person"
+  },
+  {
+   "t": 58.2,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 66.0
+  },
+  {
+   "t": 58.2,
+   "kind": "term.write",
+   "tag": "spine-6"
+  },
+  {
+   "t": 59.46666666666667,
    "kind": "counter.show",
    "tag": "c-trips"
   },
   {
-   "t": 60.06666666666667,
+   "t": 59.46666666666667,
    "kind": "swell",
    "tag": "moon",
-   "t1": 61.233333333333334
+   "t1": 60.63333333333333
   },
   {
-   "t": 66.66666666666667,
+   "t": 66.06666666666666,
    "kind": "signature",
    "tag": "end"
   }
@@ -196,27 +201,27 @@
   },
   {
    "id": "vo04",
-   "t": 27.9,
+   "t": 27.3,
    "file": "vo/04.wav"
   },
   {
    "id": "vo05",
-   "t": 38.7,
+   "t": 38.1,
    "file": "vo/05.wav"
   },
   {
    "id": "vo06",
-   "t": 51.3,
+   "t": 50.7,
    "file": "vo/06.wav"
   },
   {
    "id": "vo07",
-   "t": 59.1,
+   "t": 58.5,
    "file": "vo/07.wav"
   },
   {
    "id": "vo08",
-   "t": 66.9,
+   "t": 66.3,
    "file": "vo/08.wav"
   }
  ]

@@ -30,3 +30,7 @@ Lint is a guide: the real test is reading it aloud once.
 - Scene table now lists a distinct visual event at least every 5 s (longest gap 4.9 s; most 2 to 4 s). Added: crane swing (18.1 s), "too big to picture" pull-out to a dot (24.1 s) and push-in (28.5 s), pull-out and push-in around the taller case (54.7 s, 56.5 s), takeaway spine return (58.8 s).
 - The 27.7 to 28.5 s hold is a deliberate empty-space beat: a thin line and a tiny planet under "too big to picture". A reviewer may want something small in it.
 - Draft assembled: 73.2 s, picture and audio matched; loop PSNR (last frame vs frame 0) measured after assembly; audit 0 warnings.
+
+## Round 2 (S2E02, folder ep08): numbers and look
+- The voice and the screen now agree everywhere: "a meter and a half" on the voice, 1.5 m on the badge, spine and work card; "about twelve million kilometers" and 12.3 million km; "about three hundred and ten times" and ≈ 310 laps (the live counter also shows tens, so it never reads 307 against a boxed 310); "about one person in three hundred" and a badge "About 1 in 300 of us" with 300 dots.
+- Sources: c2 is only partly read (an adult-height range from the PubMed abstract); the under-18 share and the world-mean adult height are not sourced. c3 (UN population) could not be read from this machine. All stay OPEN.
