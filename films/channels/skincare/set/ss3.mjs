@@ -62,6 +62,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
   stageEl.insertBefore(root, stageEl.firstChild);
   const $ = (s) => root.querySelector(s), artbox = $("#artbox"), lead = $("#lead"), fxs = $("#fxs"), pills = $("#pills"), supEl = $("#sup"), capEl = $("#cap"), badge = $("#badge"), endc = $("#endc"), engr = $("#engr");
   const AW = 1080 * u, BH = 1060 * u, BTOP = 560 * u, IM = {};
+  let T3 = null; if (EP.three) { const mod = await import(EP.three.module || "./goose3d.js"); T3 = await mod.create({ W, H, u, AW, BH, BTOP, artbox, R, EP }); }   // opt-in: the picture is a real three.js scene (set/goose3d.js); the overlay stays this engine's
   let HAVE = []; try { HAVE = await (await fetch(EP.artIndex || "art/index.json")).json(); } catch (e) { HAVE = []; }
   const loadImg = (srcs) => new Promise((res) => { let i = 0; const nx = () => { while (i < srcs.length && !HAVE.includes(srcs[i].split("/").pop())) i++; if (i >= srcs.length) return res(null); const j = i++, el = new Image(); el.onload = () => res({ el, idx: j }); el.onerror = nx; el.src = srcs[j]; }; nx(); });
   for (const [k, im] of Object.entries(EP.images)) {
@@ -75,7 +76,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
       Object.assign(IM[k], { el: w, lay: ls.map((x) => x.el), par: im.par || [0, 0.55, 1], blur: im.blur || 9 }); } }
   }
   if (EP.placeholder && Object.values(IM).some((g) => g.fb)) $("#ph").style.display = "block";
-  const KF = EP.camera.map((k) => { const fbk = IM[k.img].fb; const u2 = fbk && k.fb ? k.fb : k; return { ...k, s: u2.s, f: u2.f, t: R(k.t), anchors: (fbk && k.fbAnchors) ? k.fbAnchors : (k.anchors || EP.anchors || {}) }; });
+  const KF = (EP.camera || []).map((k) => { const fbk = IM[k.img].fb; const u2 = fbk && k.fb ? k.fb : k; return { ...k, s: u2.s, f: u2.f, t: R(k.t), anchors: (fbk && k.fbAnchors) ? k.fbAnchors : (k.anchors || EP.anchors || {}) }; });
   const CH = KF.filter((k, i) => i && KF[i - 1].img !== k.img).map((k) => k.t);
   const drift = (t, b) => 1 + 0.025 * seg(t, b.t, b.t + 4);
   const camAt = (t) => {
@@ -185,7 +186,7 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
   const RISKRE = EP.riskWords ? new RegExp(EP.riskWords, "i") : null, RISKW = RISKRE ? pages.filter((g) => g.some((w) => RISKRE.test(w.w))).map((g) => [g[0].t0 - 0.12, g[g.length - 1].t1 + 0.4]) : [];   // art is hard-hidden for the whole span of any caption page with a risk word
   window.seek = function (t) {
     stage(t);
-    const c = camAt(t);
+    const c = T3 ? { b: { anchors: {} }, m: 1, P: {}, img: "3d", t } : camAt(t);
     let q = 0; for (const [a, z] of QUIET) q = Math.max(q, Math.min(a <= 0.1 ? 1 : eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z))));
     for (const [a, z] of RISKW) q = Math.max(q, Math.min(eo(seg(t, a - 0.08, a)), 1 - eo(seg(t, z, z + 0.08))));
     let eg = 0; for (const [a, z] of ENGR) eg = Math.max(eg, Math.min(eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z)))); engr.style.opacity = eg.toFixed(3);
@@ -193,6 +194,7 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
       g.el.style.transform = `translate(${AW / 2 - FX0 * p.s}px,${BH / 2 - FY0 * p.s}px) scale(${p.s})`; g.el.style.opacity = p.op.toFixed(3);
       if (g.lay) g.lay[2].style.opacity = p.role ? (p.role < 0 ? 1 - eo(seg(p.xm, 0, 0.45)) : eo(seg(p.xm, 0.55, 1))).toFixed(3) : "1";   // in a dissolve the foreground (hair, muscle) goes out before the next one comes in: no double hair
       if (g.lay) g.lay.forEach((le, i) => { const q = layerX(p, g, i, t); le.style.transformOrigin = `${FX0}px ${FY0}px`; let rt = ""; for (const x of XF) if (x.img === k && x.layer === i) { const kk = seg(t, x.t0, x.t1), ee = x.ov ? 1 + 2.4 * (kk - 1) ** 3 + 1.4 * (kk - 1) ** 2 : eo(kk), a = x.wig ? (t >= x.t0 && t <= x.t1 ? x.wig * Math.sin((t - x.t0) * 2 * Math.PI * (x.hz || 3)) * (1 - kk) : 0) : x.from + (x.to - x.from) * ee, px = x.pivot[0] * AW, py = x.pivot[1] * g.AH; rt = ` translate(${px - FX0 + (x.dx || 0) * AW * ee}px,${py - FY0 + (x.dy || 0) * g.AH * ee}px) rotate(${a.toFixed(3)}deg) scale(${(1 + ((x.sc || 1) - 1) * ee).toFixed(4)}) translate(${FX0 - px}px,${FY0 - py}px)`; } le.style.transform = `translate(${q.tx}px,${q.ty}px) scale(${q.sc})` + rt; le.style.filter = p.rack == null ? "none" : `blur(${(g.blur * u * Math.min(1, Math.max(0, Math.abs(i - p.rack) - 0.4))).toFixed(2)}px)`; }); }
+    if (T3) T3.seek(t);
     artbox.style.opacity = ((1 - q) * (1 - eo(seg(t, NEXT - 0.5, NEXT)))).toFixed(3);
     window.__q = q; drawFx(t, c);
     const ev = eo(seg(t, NEXT - 0.35, NEXT + 0.15)), ev2 = eo(seg(t, NEXT - 0.35, NEXT - 0.05));
@@ -213,8 +215,8 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
     for (const g of PART) { const pp = c.P[g.img], on = pp ? pp.op : 0, tr = pp ? pp.trk[0] : 0; g.els.forEach((e) => { const [fx, fy, sp, sz] = JSON.parse(e.dataset.k), y = ((fy * BH - t * (14 + 22 * sp) * u) % BH + BH) % BH; e.style.width = e.style.height = (sz * u).toFixed(1) + "px"; e.style.transform = `translate(${(fx * AW + tr * AW * 1.4 + Math.sin(t * 0.6 + fx * 9) * 14 * u).toFixed(1)}px,${y.toFixed(1)}px)`; e.style.opacity = (on * (g.a || 0.45) * Math.min(1, y / (BH * 0.15)) * Math.min(1, (BH - y) / (BH * 0.15))).toFixed(3); }); }
     let chg = 1; for (const cc of CH) chg *= t < cc ? 1 - eo(seg(t, cc - 0.35, cc)) : eo(seg(t, cc + 0.35, cc + 0.95));
     for (const L of LABELS) {
-      const an = c.b.anchors[L.a]; if (!an || (L.img && L.img !== c.img)) { L.pill.style.opacity = "0"; L.line.setAttribute("opacity", "0"); L.dot.setAttribute("opacity", "0"); continue; }
-      const [ax, ay] = scr(c.img, an[0], an[1], c, L.layer);
+      const an = T3 ? T3.anchor(L.a, t) : c.b.anchors[L.a]; if (!an || (!T3 && L.img && L.img !== c.img)) { L.pill.style.opacity = "0"; L.line.setAttribute("opacity", "0"); L.dot.setAttribute("opacity", "0"); continue; }
+      const [ax, ay] = T3 ? an : scr(c.img, an[0], an[1], c, L.layer);
       const inside = eo(seg(ay, BTOP + 10 * u, BTOP + 90 * u)) * (1 - eo(seg(ay, BTOP + BH - 150 * u, BTOP + BH - 80 * u))) * eo(seg(ax, -10 * u, 60 * u)) * (1 - eo(seg(ax, W - 60 * u, W + 10 * u)));
       const p = eo(seg(t, L.t0, L.t0 + 0.5)), out = (1 - eo(seg(t, L.t1, L.t1 + 0.3))) * inside * chg * (1 - 0.95 * Math.max(q, eg)), vis = p * out, pw = L.pw, ph = L.ph, left = L.off[0] >= 0;
       let px0 = ax + L.off[0] * u, py0 = ay + L.off[1] * u;

@@ -1,0 +1,388 @@
+{
+ "num": "S2·E1",
+ "title": "Why goosebumps<br>happen",
+ "titleSize": 84,
+ "labels": [
+  {
+   "text": "Arrector pili",
+   "a": "muscle",
+   "t0": "vo03:tiny",
+   "t1": "vo03:woven",
+   "off": [
+    -160,
+    -150
+   ]
+  },
+  {
+   "text": "Sympathetic nerve",
+   "a": "nerve",
+   "t0": "vo03:fibres.",
+   "t1": "vo03:At",
+   "off": [
+    150,
+    160
+   ]
+  },
+  {
+   "text": "Stem-cell niche",
+   "a": "stem",
+   "t0": "vo03:pocket",
+   "t1": "end:vo03",
+   "off": [
+    -160,
+    170
+   ]
+  },
+  {
+   "text": "Skin bumps up",
+   "a": "bump",
+   "t0": "vo04:upright.",
+   "t1": "vo04:people,+0.6",
+   "off": [
+    170,
+    -150
+   ]
+  }
+ ],
+ "sup": [
+  [
+   "start:vo01",
+   ""
+  ]
+ ],
+ "badges": [
+  [
+   "start:vo03",
+   "start:vo05",
+   "Simplified section · not to scale"
+  ],
+  [
+   "start:vo05",
+   "start:vo06",
+   "Mouse study · hair stem cells"
+  ]
+ ],
+ "end": {
+  "t": "start:vo07-0.3",
+  "e1": "Next:<br>why fingers wrinkle<br>in water",
+  "e2": "Your nerves are in charge.",
+  "chip": "Skin Sense · Season 2 · Episode 1",
+  "e3": "Narration: synthetic voice (AI). Illustrations: AI-generated and 3-D animation made in code."
+ },
+ "eyebrow": "SKIN SENSE · SEASON 2 · EPISODE 1",
+ "images": {},
+ "camera": [],
+ "three": {
+  "module": "./goose3d.js",
+  "paintings": [
+   {
+    "src": "art/s2e01-01.webp",
+    "t0": 0,
+    "t1": 2.9,
+    "fin": 0.05,
+    "fout": 1.1,
+    "focus": [
+     0.5,
+     0.6
+    ],
+    "s0": 1.0,
+    "s1": 1.1
+   },
+   {
+    "src": "art/s2e01-01.webp",
+    "t0": 61.6,
+    "t1": 64.5,
+    "fin": 1.3,
+    "fout": 0.4,
+    "focus": [
+     0.5,
+     0.6
+    ],
+    "s0": 1.1,
+    "s1": 1.0
+   }
+  ],
+  "camera": [
+   {
+    "t": 0,
+    "pos": [
+     -14,
+     1.6,
+     10
+    ],
+    "look": [
+     -1,
+     0.2,
+     -8
+    ],
+    "fov": 20
+   },
+   {
+    "t": 3,
+    "pos": [
+     -10,
+     1.4,
+     8
+    ],
+    "look": [
+     0,
+     0.4,
+     -8
+    ],
+    "fov": 21
+   },
+   {
+    "t": 7,
+    "pos": [
+     -4,
+     1.6,
+     6
+    ],
+    "look": [
+     1,
+     0.6,
+     -4
+    ],
+    "fov": 26
+   },
+   {
+    "t": 11,
+    "pos": [
+     0.2,
+     0.9,
+     5.5
+    ],
+    "look": [
+     0.3,
+     0.2,
+     0.5
+    ],
+    "fov": 28
+   },
+   {
+    "t": 13.6,
+    "pos": [
+     0.8,
+     -0.6,
+     9
+    ],
+    "look": [
+     0.2,
+     -1.2,
+     0
+    ],
+    "fov": 30
+   },
+   {
+    "t": 15.2,
+    "pos": [
+     1.0,
+     -1.8,
+     12.5
+    ],
+    "look": [
+     0.5,
+     -1.8,
+     0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 19.5,
+    "pos": [
+     2.2,
+     -1.9,
+     11
+    ],
+    "look": [
+     1.4,
+     -1.9,
+     0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 24,
+    "pos": [
+     -0.6,
+     -1.9,
+     9.5
+    ],
+    "look": [
+     -0.6,
+     -1.9,
+     0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 28.3,
+    "pos": [
+     0.2,
+     -1.0,
+     12
+    ],
+    "look": [
+     0.2,
+     -1.0,
+     0
+    ],
+    "fov": 36
+   },
+   {
+    "t": 31,
+    "pos": [
+     1.6,
+     -0.2,
+     11
+    ],
+    "look": [
+     -0.4,
+     -0.2,
+     0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 34,
+    "pos": [
+     4.0,
+     0.8,
+     11
+    ],
+    "look": [
+     -0.3,
+     0.6,
+     0
+    ],
+    "fov": 34
+   },
+   {
+    "t": 38,
+    "pos": [
+     1.4,
+     2.0,
+     10
+    ],
+    "look": [
+     -1,
+     0.8,
+     -6
+    ],
+    "fov": 28
+   },
+   {
+    "t": 42,
+    "pos": [
+     -8,
+     1.6,
+     5
+    ],
+    "look": [
+     2,
+     1.2,
+     -8
+    ],
+    "fov": 26
+   },
+   {
+    "t": 44,
+    "pos": [
+     -4.5,
+     -2.4,
+     9.0
+    ],
+    "look": [
+     -1.3,
+     -1.9,
+     0
+    ],
+    "fov": 30
+   },
+   {
+    "t": 48,
+    "pos": [
+     -0.6,
+     -2.0,
+     9.0
+    ],
+    "look": [
+     -1.0,
+     -1.9,
+     0
+    ],
+    "fov": 30
+   },
+   {
+    "t": 52.5,
+    "pos": [
+     -3.2,
+     -1.6,
+     9.0
+    ],
+    "look": [
+     -1.0,
+     -1.9,
+     0.3
+    ],
+    "fov": 30
+   },
+   {
+    "t": 55,
+    "pos": [
+     -4,
+     0.8,
+     9
+    ],
+    "look": [
+     -1,
+     -0.6,
+     -1
+    ],
+    "fov": 28
+   },
+   {
+    "t": 58.5,
+    "pos": [
+     -14,
+     1.6,
+     10
+    ],
+    "look": [
+     -1,
+     0.2,
+     -8
+    ],
+    "fov": 20
+   },
+   {
+    "t": 63.6,
+    "pos": [
+     -13.5,
+     1.6,
+     9.6
+    ],
+    "look": [
+     -1,
+     0.2,
+     -8
+    ],
+    "fov": 20
+   },
+   {
+    "t": 72,
+    "pos": [
+     -13.5,
+     1.6,
+     9.6
+    ],
+    "look": [
+     -1,
+     0.2,
+     -8
+    ],
+    "fov": 20
+   }
+  ]
+ }
+}
