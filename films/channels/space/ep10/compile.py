@@ -74,8 +74,8 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-hz", "text": "event horizon", "kind": "light", "anchor": "hz", "t0": round(CUE["horizon"] + 0.2, 4), "t1": round(CUE["gets"], 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-probe", "text": "probe: falls back", "kind": "body", "anchor": "probe", "t0": round(CUE["escape"] + 0.8, 4), "t1": round(t_c - 0.1, 4), "side": -1, "v": "above", "fixed": True},
-    {"id": "l-you", "text": "you, far away", "kind": "body", "anchor": "you", "t0": round(CUE["friend"] - 0.2, 4), "t1": round(CUE["dip"][0], 4), "side": 1, "v": "below", "fixed": True},
-    {"id": "l-friend", "text": "your friend", "kind": "star", "anchor": "friend", "t0": round(CUE["friend"], 4), "t1": round(CUE["dip"][0], 4), "side": -1, "v": "above", "fixed": True},
+    {"id": "l-you", "text": "you, far away", "kind": "body", "anchor": "you", "t0": round(CUE["friend"] - 0.7, 4), "t1": round(CUE["dip"][0], 4), "side": 1, "v": "below", "fixed": True},
+    {"id": "l-friend", "text": "your friend", "kind": "star", "anchor": "friend", "t0": round(CUE["friend"] + 0.5, 4), "t1": round(CUE["dip"][0], 4), "side": -1, "v": "above", "fixed": True},
     {"id": "l-gps", "text": "GPS satellite", "kind": "body", "anchor": "gps", "t0": round(CUE["dip"][0] + 0.5, 4), "t1": round(CUE["dip"][1] - 0.1, 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-far", "text": "far: fast", "kind": "body", "anchor": "clockFar", "t0": round(CUE["dip"][1] + 0.5, 4), "t1": round(CUE["compare"], 4), "side": 1, "v": "above", "fixed": True},
     {"id": "l-near", "text": "near: slow", "kind": "grav", "anchor": "clockNear", "t0": round(CUE["closer"] + 0.4, 4), "t1": round(CUE["compare"], 4), "side": -1, "v": "below", "fixed": True},
@@ -87,7 +87,7 @@ PILLS = [
 ]
 BADGES = [
     {"id": "b-illus", "text": "illustration", "t0": round(t_n - 0.3, 4), "t1": round(t_rd - 0.2, 4), "slot": "tr"},
-    {"id": "b-nts", "text": "not to scale", "t0": round(t_rd, 4), "t1": round(t_end - 0.45, 4), "slot": "tr"},
+    {"id": "b-nts", "text": "not to scale", "t0": round(t_rd + 0.5, 4), "t1": round(t_end - 0.45, 4), "slot": "tr"},
 ]
 COUNTERS = [
     {"id": "c-hook", "label": "the edge of a black hole", "text": "?", "t0": 0.0, "t1": t_n},
@@ -96,7 +96,7 @@ COUNTERS = [
     {"id": "c-slow", "label": "close to a black hole", "text": "clocks tick slower", "t0": CUE["slower"] - 0.8, "t1": CUE["compare"] - 0.3},
     {"id": "c-gap", "label": "the closer they get", "text": "the bigger the gap", "t0": CUE["gap"], "t1": t_tk},
     {"id": "c-both", "label": "both views are", "text": "true", "t0": CUE["true"], "t1": t_rd},
-    {"id": "c-read", "label": "light time · the first photographed black hole", "text": "about 55 million years", "read": True, "t0": round(CUE["fifty"] - 0.6, 4), "t1": round(t_end - 0.45, 4)},
+    {"id": "c-read", "label": "light time · first photo", "text": "about 55 million years", "read": True, "t0": round(CUE["fifty"] - 0.6, 4), "t1": round(t_end - 0.45, 4)},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)

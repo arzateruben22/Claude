@@ -12,7 +12,7 @@ Lint (kits/cinema/script/lint.py, STANDARDS-v2): 158 words, whole script about g
 ## Source-pass changes (8 Nov)
 - Source pass: NASA's black-hole safety card supports 'escaping requires traveling faster than light' and the time-dilation view, so the whoa now says the watcher sees the friend's clock tick slower and the faller sees everyone else speed up. 'Reddens, fades, freezes' cut (not on the card). GPS line reworded to match NIST. Nothing is claimed about the inside.
 
-## Still open
-- Needs a listen after voicing (blocked on the Parakeet pin approval). Hook timing is an estimate until then.
-- c4, c5, c7, c8 have no source yet.
-- Every claim is OPEN; sources marked TO FIND in claims.json point at https://todo.invalid/find-source until a person finds a real page.
+## Still open (9 Nov)
+- Voiced (73.6 s film, hook question spoken by 2.0 s, pace 2.3-2.9 words a second). Needs a person's listen.
+- All claims are SOURCE-READ at most except c11 (escape speed), which is OPEN; a person opens each source before OK.
+- The probes that "fall back" and the GPS inset are illustrations (badged); no claim about the inside of a black hole is made.

@@ -500,7 +500,7 @@
    "text": "you, far away",
    "kind": "body",
    "anchor": "you",
-   "t0": 19.6667,
+   "t0": 19.1667,
    "t1": 26.6333,
    "side": 1,
    "v": "below",
@@ -511,7 +511,7 @@
    "text": "your friend",
    "kind": "star",
    "anchor": "friend",
-   "t0": 19.8667,
+   "t0": 20.3667,
    "t1": 26.6333,
    "side": -1,
    "v": "above",
@@ -562,7 +562,7 @@
   {
    "id": "b-nts",
    "text": "not to scale",
-   "t0": 58.6667,
+   "t0": 59.1667,
    "t1": 66.85,
    "slot": "tr"
   }
@@ -636,7 +636,7 @@
   },
   {
    "id": "c-read",
-   "label": "light time · the first photographed black hole",
+   "label": "light time · first photo",
    "text": "about 55 million years",
    "read": true,
    "t0": 64.2333,

@@ -120,13 +120,13 @@ function overlay2d(t) {
   // tick-rate bars: how fast each clock ticks, as one watcher sees it
   const bk = fadeIn(t, CUE.toyou, 0.5) * (1 - fadeIn(t, CUE.tk - 0.2, 0.4));
   if (bk > 0.01) {
-    const them = t >= CUE.them, rf = friendR(t), a = 1, b = them ? 1 / fRate(rf) : fRate(rf), mx = them ? 2.6 : 1.1, x0 = 130 * sx, wMax = 820 * sx, y0 = 1380 * sy;
-    ctx.fillStyle = rgba(VOID, 0.8 * bk); ctx.beginPath(); ctx.roundRect(90 * sx, 1300 * sy, 900 * sx, 170 * sy, 18 * S1); ctx.fill();
+    const them = t >= CUE.them, rf = friendR(t), a = 1, b = them ? 1 / fRate(rf) : fRate(rf), mx = them ? 2.6 : 1.1, x0 = 130 * sx, wMax = 820 * sx, y0 = 1380 * sy; void y0;
+    ctx.fillStyle = rgba(VOID, 0.8 * bk); ctx.beginPath(); ctx.roundRect(90 * sx, 1480 * sy, 900 * sx, 170 * sy, 18 * S1); ctx.fill();
     ctx.font = `700 ${Math.round(26 * S1)}px Lexend, sans-serif`; ctx.textBaseline = "middle"; ctx.textAlign = "left";
-    ctx.fillStyle = rgba(ICE, bk); ctx.fillText(them ? "everyone else, as your friend sees it" : "you", x0, (1330) * sy);
-    ctx.fillStyle = rgba(ICE, 0.9 * bk); ctx.beginPath(); ctx.roundRect(x0, 1346 * sy, wMax * (them ? b : a) / mx, 20 * sy, 8 * S1); ctx.fill();
-    ctx.fillStyle = rgba(LEMON, bk); ctx.fillText(them ? "your friend" : "your friend, as you see them", x0, 1396 * sy);
-    ctx.fillStyle = rgba(LEMON, 0.95 * bk); ctx.beginPath(); ctx.roundRect(x0, 1412 * sy, wMax * (them ? a : b) / mx, 20 * sy, 8 * S1); ctx.fill();
+    ctx.fillStyle = rgba(ICE, bk); ctx.fillText(them ? "everyone else, as your friend sees it" : "you", x0, 1510 * sy);
+    ctx.fillStyle = rgba(ICE, 0.9 * bk); ctx.beginPath(); ctx.roundRect(x0, 1526 * sy, wMax * (them ? b : a) / mx, 20 * sy, 8 * S1); ctx.fill();
+    ctx.fillStyle = rgba(LEMON, bk); ctx.fillText(them ? "your friend" : "your friend, as you see them", x0, 1576 * sy);
+    ctx.fillStyle = rgba(LEMON, 0.95 * bk); ctx.beginPath(); ctx.roundRect(x0, 1592 * sy, wMax * (them ? a : b) / mx, 20 * sy, 8 * S1); ctx.fill();
   }
   const [d0, d1, d2] = CUE.dip;
   const dip = Math.max(E.inout3(seg(t, d0 - 0.1, d0 + 0.2)) * (1 - E.inout3(seg(t, d0 + 0.2, d0 + 0.45))), E.inout3(seg(t, d1 - 0.1, d1 + 0.2)) * (1 - E.inout3(seg(t, d1 + 0.2, d1 + 0.45))), E.inout3(seg(t, d2 - 0.1, d2 + 0.15)) * (1 - E.inout3(seg(t, d2 + 0.15, d2 + 0.4))));

@@ -2,7 +2,7 @@
 
 S2E04 (folder ep10). Season 2 numbers its episodes from 1 again (owner decision, 9 Nov 2026).
 
-About 72 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original score.
+About 74 s, 9:16, narrated by a synthetic voice (am_michael, labelled as AI), with an original score.
 Bible §7 #10. Hedge: never claim what happens inside a black hole.
 
 The story: The event horizon is where escape would need more than light speed. Gravity slows clocks; from far away a faller seems to freeze and fade at the edge. The faller's own clock runs on.
