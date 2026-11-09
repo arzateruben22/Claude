@@ -17,7 +17,7 @@ compiler. In a vo line, `{c1,c2}` after a sentence ties it to `claims.json` and 
 outside the film; neither is spoken. Check it with `python3 -I kits/cinema/script/lint.py films/channels/physics/ep09 --segment measure`.
 
 ## hook {shot: close on a glass jar of small grains, the one big ball at the bottom · title drop: "The nut that rises" · pre: 0.1 · energy: 0.7} (0–3.7 s)
-vo: Where will the ball end up? {-} It starts at the *bottom*. {-}
+vo: Where will the nut end up? {-} Starting *underneath* everything. {-}
 
 ## normal {shot: wide, a hand shakes the jar · labels: "small grains", "one big ball" · picture-only 2 s · pre: 0.12 · energy: 0.45} (3.7–16.3 s)
 vo: Shake a jar of mixed nuts, or a box of cereal, and the biggest pieces often rise to the *top*. {c1} Scientists call it the Brazil nut effect. {c2}
@@ -31,11 +31,11 @@ vo: Here is one reason. {-} Each shake lifts the grains, and small ones tumble i
 ## whoa {shot: pull back to the whole jar: grains flowing up the walls and down the middle, then a second jar where the big ball sinks · picture-only 3 s · pre: 0.15 · energy: 0.75} (34.9–49.3 s)
 vo: Scientists have found several effects at work. {c6} Grains can flow in a loop, up the walls and down the *middle*. {c7} And in some jars, the big ones sink instead. {c8}
 
-## measure {segment: measure · the big ball's height in the jar counts up while the time-lapse runs · pre: 0.2 · energy: 0.5} (49.3–58.7 s)
-vo: *Measure it*: in this simulation, the big disc climbs from the bottom to near the top. {c9} It takes about half a minute of shaking. {c12}
+## measure {segment: measure · a replay of the climb from the bottom, 1.6x faster than the main run (badge: "Replay · 1.6× faster"), the height counts up from about 4 cm · pre: 0.2 · energy: 0.5} (49.3–58.7 s)
+vo: *Measure it*: in this simulation, the big disc climbs from the bottom to near the top. {c9} It takes about ten seconds of shaking. {c12}
 
-## takeaway {shot: hold on the big ball sitting among the top grains · badge: "Simulation, sped up" · pre: 0.25 · energy: 0.45} (58.7–67.2 s)
-vo: Shaking doesn't mix things. It *sorts* them. {-} Unpopped popcorn kernels sink in a bowl for a related reason. {c10}
+## takeaway {shot: hold on the big ball sitting among the top grains · badge: "Simulation, sped up" (the replay keeps running) · pre: 0.25 · energy: 0.45} (58.7–67.2 s)
+vo: Shaking doesn't just mix things. It often *sorts* them. {-} Unpopped popcorn kernels sink in a bowl for a related reason. {c10}
 
 ## tease {end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4} (67.2–73.6 s)
 vo: Next: a coffee drop dries into a *ring*. {-} Why not a blob? {c11}

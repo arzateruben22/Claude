@@ -30,10 +30,10 @@ window.SCENE_READY = P.ready;
 
 // ── the simulation, read at film time t ──
 const WC = PR.Wc, RS = PR.rs, RB = PR.rb, NP = SIM.xy[0].length / 2;
-const frameAt = (t) => { const s = Math.min(SIM.xy.length - 1.001, Math.max(0, (t / SIM.slow) / SIM.dt)), i = Math.floor(s); return [i, s - i]; };
+const simT = (t) => (t >= FILM.replay.t0 ? (t - FILM.replay.t0) * FILM.replay.rate : t / SIM.slow);   // the main run is 2× slower; from the measure beat a replay of the climb runs 1.6× faster
+const frameAt = (t) => { const s = Math.min(SIM.xy.length - 1.001, Math.max(0, simT(t) / SIM.dt)), i = Math.floor(s); return [i, s - i]; };
 const posAt = (t, n) => { const [i, u] = frameAt(t), a = SIM.xy[i], b = SIM.xy[i + 1]; return [a[2 * n] + (b[2 * n] - a[2 * n]) * u, a[2 * n + 1] + (b[2 * n + 1] - a[2 * n + 1]) * u]; };
 const floorAt = (t) => { const [i, u] = frameAt(t); return SIM.floor[i] + (SIM.floor[i + 1] - SIM.floor[i]) * u; };
-const simT = (t) => t / SIM.slow;
 
 // ── the jar and the grains, drawn in 3-D from the 2-D simulation ──
 // The simulation is flat (discs in a plane), so the jar is a thin cell one big nut deep: each small grain gets a fixed depth in the cell,
@@ -97,7 +97,7 @@ const mkCell = (ox, light) => {
   for (const x of [-0.3, WC + 0.3]) { const pane = new THREE.Mesh(new THREE.PlaneGeometry(2 * DZ + 0.6, JH + 1), glassMat); pane.rotation.y = Math.PI / 2; pane.position.set(x, JH / 2, 0); sub.add(pane); }
   const sheen = new THREE.Mesh(new THREE.PlaneGeometry(0.8, JH - 3), sheenMat); sheen.position.set(2.0, JH / 2, DZ + 0.4); sub.add(sheen);
   const sheen2 = new THREE.Mesh(new THREE.PlaneGeometry(0.25, JH - 6), sheenMat); sheen2.position.set(3.1, JH / 2, DZ + 0.4); sub.add(sheen2);
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.045, 8, 48), ringMat); ring.scale.setScalar(RB * 1.18); jar.add(ring);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.045, 8, 48), ringMat); ring.scale.setScalar(RB * 1.05); jar.add(ring);
   const place = (get, bpos, shakeY) => {
     meshes.forEach((m, k) => { const list = idx[k]; for (let j = 0; j < list.length; j++) { const n = list[j], [x, y] = get(n), sp = spin[n];
       eu.set(sp[0] + y * 0.5, sp[1], sp[2] - x * 1.0); qa.setFromEuler(eu); p3.set(x, y, zOf(n)); const sz = RS * (0.92 + 0.14 * hash(n, 5)); s3.set(sz, sz, sz); mtx.compose(p3, qa, s3); m.setMatrixAt(j, mtx); } m.instanceMatrix.needsUpdate = true; });
@@ -113,8 +113,8 @@ for (let c = 0; c <= 25; c += 5) { const w = c % 10 === 0 ? 2.4 : 1.5, tk = new 
 const rbar = new THREE.Mesh(new THREE.BoxGeometry(0.22, 25, 0.4), rulerMat); rbar.position.set(-0.9, 12.5, DZ + 1); ruler.add(rbar);
 scene.add(ruler);
 // ghosts of the big ball every 3 s of simulation time (measure, takeaway)
-const NG = 14, ghostMat = new THREE.MeshBasicMaterial({ color: flat(HEX.ghost), transparent: true, opacity: 0.6 }), ghosts = [];
-for (let i = 0; i < NG; i++) { const g = new THREE.Mesh(new THREE.TorusGeometry(1, 0.05, 8, 40), ghostMat); g.scale.setScalar(RB); g.visible = false; scene.add(g); ghosts.push(g); }
+const NG = 14, ghostMat = new THREE.MeshBasicMaterial({ color: flat(HEX.ghost) }), ghosts = [];
+for (let i = 0; i < NG; i++) { const g = new THREE.Mesh(new THREE.SphereGeometry(0.42, 14, 10), ghostMat); g.visible = false; scene.add(g); ghosts.push(g); }   // a dot at the big ball's centre every 3 s of simulated shaking
 const ghostPos = (k) => { const ts = CUE.ghosts.every * k, i = Math.min(SIM.xy.length - 1, Math.round(ts / SIM.dt)); return [SIM.xy[i][0], SIM.xy[i][1]]; };
 // the flow loop (illustrated): arrows up along the walls and down the middle, in front of the glass
 const arrowMat = new THREE.MeshBasicMaterial({ color: flat(HEX.energy), transparent: true }), arrowMat2 = new THREE.MeshBasicMaterial({ color: flat(HEX.force), transparent: true });
@@ -159,7 +159,7 @@ hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
 hud.badge("hook-speed", { kind: "speed", slot: FILM.noteSlots.hook, t0: 0, t1: CUE.cuts.normal, text: () => FILM.speedNote });
-hud.badge("speed", { kind: "speed", slot: FILM.noteSlots.speed, t0: CUE.cuts.normal, t1: null, text: () => FILM.speedNote });
+hud.badge("speed", { kind: "speed", slot: FILM.noteSlots.speed, t0: CUE.cuts.normal, t1: null, text: (t) => (t >= FILM.replay.t0 ? FILM.replay.note : FILM.speedNote) });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const anchorFn = (an) => {
   if (an === "ball") return (t) => { const [x, y] = posAt(t, 0); return [x + RB, y, DZ]; };
@@ -174,12 +174,12 @@ const anchorFn = (an) => {
 for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: false });
 const spineVal = (t) => Math.max(0, posAt(t, 0)[1] - RB);
 const counterEls = FILM.spine.map((SPN, i) => { const o = { value: spineVal, fmt: (v) => v.toFixed(0), unit: "cm", label: SPN.label, t0: SPN.t0, t1: SPN.t1, minCh: 2 }, el = hud.counter(i ? "spine" + (i + 1) : "spine", o); placeSpine(o, el, hud, W, H, FILM.spineAt); return el; });
-const endEl = hud.end({ t0: EC - 0.3, d: 0.3, ...FILM.end });
+const ES = FILM.endShow, endEl = hud.end({ t0: ES - 0.3, d: 0.3, ...FILM.end });
 const footEl = document.createElement("div"); footEl.className = "rf-foot"; footEl.textContent = FILM.end.foot; endEl.appendChild(footEl);
 { const st = document.createElement("style");
   st.textContent = SPINE_CSS + ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
   document.head.appendChild(st); }
-const dropE = dropTitle(endEl, { sig: EC, fps: FILM.fps, head: ".t", fall: 90 });
+const dropE = dropTitle(endEl, { sig: ES, fps: FILM.fps, head: ".t", fall: 90 });
 const win = (t, w, fin = 0.5, fout = 0.4) => (w ? Math.min(E.out2(seg(t, w[0], w[0] + fin)), 1 - E.in2(seg(t, w[1] - fout, w[1]))) : 0);
 
 window.seek = function (t) {
@@ -193,9 +193,21 @@ window.seek = function (t) {
   const ak = win(t, CUE.arrows);
   arrowsUp.forEach((a) => { a.visible = ak > 0.01; a.children.forEach((m) => { m.material.opacity = ak; }); });
   arrowsDown.forEach((a) => { a.visible = ak > 0.01; a.children.forEach((m) => { m.material.opacity = ak; }); });
-  ghosts.forEach((g, k) => { const tk = CUE.ghosts.every * k; g.visible = t >= CUE.ghosts.t0 && t < CUE.ghosts.t1 && simT(t) >= tk + 0.1; if (g.visible) { const [gx, gy] = ghostPos(k); g.position.set(gx, gy, DZ + 0.9); } });
+  ghosts.forEach((g, k) => { const tk = CUE.ghosts.every * k; g.visible = t >= CUE.ghosts.t0 && t < CUE.ghosts.t1 && simT(t) >= tk + 0.1; if (g.visible) { const [gx, gy] = ghostPos(k); g.position.set(gx, gy, DZ + 1.0); } });
   cyc.update({ grid: 1, casters: [[WC / 2, 2, 0, 11], [JX + WC / 2, 2, 0, 11]] });
   dropT(t); dropE(t);
   hud.update(t);
   renderer.render(scene, camera);
+};
+
+// the self-check (kit audit does the text): where the 3-D objects land on the screen, for the render's own overlap pass
+window.OBJ_RECTS = () => {
+  const out = [], V = new THREE.Vector3();
+  const scr = (x, y, z) => { V.set(x, y, z).project(camera); return [(V.x * 0.5 + 0.5) * W, (1 - (V.y * 0.5 + 0.5)) * H]; };
+  for (const [name, cell] of [["ringA", cellA], ["ringB", cellB]]) {
+    const p = cell.ring.position, x = cell.jar.position.x + p.x, y = p.y + cell.jar.position.y, c = scr(x, y, p.z), e = scr(x + RB * 1.05, y, p.z);
+    const r = Math.hypot(e[0] - c[0], e[1] - c[1]); out.push({ n: name, cx: c[0], cy: c[1], r });
+  }
+  ghosts.forEach((g, k) => { if (g.visible) { const c = scr(g.position.x, g.position.y, g.position.z); out.push({ n: "dot" + k, cx: c[0], cy: c[1], r: 6 }); } });
+  return out;
 };

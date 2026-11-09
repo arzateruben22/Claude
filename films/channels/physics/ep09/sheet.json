@@ -1,5 +1,5 @@
 {
- "duration": 73.6,
+ "duration": 74.6667,
  "fps": 30,
  "preset": "restframe-bench",
  "duck_db": -9.0,
@@ -7,49 +7,49 @@
   {
    "id": "hook",
    "t0": 0.0,
-   "t1": 3.7333,
+   "t1": 4.0,
    "energy": 0.7
   },
   {
    "id": "normal",
-   "t0": 3.7333,
-   "t1": 16.2667,
+   "t0": 4.0,
+   "t1": 16.5333,
    "energy": 0.45
   },
   {
    "id": "change",
-   "t0": 16.2667,
-   "t1": 22.4,
+   "t0": 16.5333,
+   "t1": 22.6667,
    "energy": 0.5
   },
   {
    "id": "why",
-   "t0": 22.4,
-   "t1": 34.9333,
+   "t0": 22.6667,
+   "t1": 35.2,
    "energy": 0.55
   },
   {
    "id": "whoa",
-   "t0": 34.9333,
-   "t1": 49.3333,
+   "t0": 35.2,
+   "t1": 49.6,
    "energy": 0.75
   },
   {
    "id": "measure",
-   "t0": 49.3333,
-   "t1": 58.6667,
+   "t0": 49.6,
+   "t1": 58.9333,
    "energy": 0.5
   },
   {
    "id": "takeaway",
-   "t0": 58.6667,
-   "t1": 67.2,
+   "t0": 58.9333,
+   "t1": 68.2667,
    "energy": 0.45
   },
   {
    "id": "tease",
-   "t0": 67.2,
-   "t1": 73.6,
+   "t0": 68.2667,
+   "t1": 74.6667,
    "energy": 0.4
   }
  ],
@@ -58,7 +58,7 @@
    "t": 0.0,
    "kind": "section",
    "id": "hook",
-   "t1": 3.7333
+   "t1": 4.0
   },
   {
    "t": 0.0,
@@ -67,142 +67,153 @@
    "gain": -4.0
   },
   {
-   "t": 3.716633,
+   "t": 3.983333,
    "kind": "counter.show",
    "tag": "spine"
   },
   {
-   "t": 3.7333,
+   "t": 4.0,
    "kind": "section",
    "id": "normal",
-   "t1": 16.2667
+   "t1": 16.5333
   },
   {
-   "t": 3.916633,
+   "t": 4.183333,
    "kind": "label",
    "tag": "no-big"
   },
   {
-   "t": 4.0166,
+   "t": 4.2833,
    "kind": "badge",
    "tag": "sim",
    "text": "2D model, drawn in 3-D"
   },
   {
-   "t": 4.016633,
+   "t": 4.283333,
    "kind": "label",
    "tag": "no-small"
   },
   {
-   "t": 9.5,
+   "t": 9.7667,
    "kind": "reveal",
    "tag": "rise"
   },
   {
-   "t": 16.2667,
+   "t": 16.5333,
    "kind": "section",
    "id": "change",
-   "t1": 22.4
+   "t1": 22.6667
   },
   {
-   "t": 18.8,
+   "t": 19.083333,
    "kind": "label",
    "tag": "ch-ball"
   },
   {
-   "t": 21.4,
+   "t": 21.6667,
    "kind": "contact",
    "tag": "heavier"
   },
   {
-   "t": 22.4,
+   "t": 22.6667,
    "kind": "section",
    "id": "why",
-   "t1": 34.9333
+   "t1": 35.2
   },
   {
-   "t": 27.166666666666668,
-   "kind": "label",
-   "tag": "wy-gap"
-  },
-  {
-   "t": 27.1667,
+   "t": 27.4333,
    "kind": "contact",
    "tag": "tumble"
   },
   {
-   "t": 34.9333,
-   "kind": "section",
-   "id": "whoa",
-   "t1": 49.3333
+   "t": 27.55,
+   "kind": "label",
+   "tag": "wy-gap"
   },
   {
-   "t": 40.9,
+   "t": 35.183333,
+   "kind": "counter.show",
+   "tag": "spine2"
+  },
+  {
+   "t": 35.2,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 49.6
+  },
+  {
+   "t": 41.183333,
    "kind": "label",
    "tag": "wo-up"
   },
   {
-   "t": 41.93333333333333,
+   "t": 42.216667,
    "kind": "label",
    "tag": "wo-down"
   },
   {
-   "t": 41.9667,
+   "t": 42.2333,
    "kind": "badge",
    "tag": "illus",
    "text": "Illustration, not a simulation"
   },
   {
-   "t": 44.6,
+   "t": 44.883333,
    "kind": "label",
    "tag": "wo-light"
   },
   {
-   "t": 49.3166,
+   "t": 49.5833,
    "kind": "badge",
    "tag": "sim2",
-   "text": "2D model, drawn in 3-D"
+   "text": "Replay of the model"
   },
   {
-   "t": 49.316633,
+   "t": 49.583333,
    "kind": "counter.show",
-   "tag": "spine2"
+   "tag": "spine3"
   },
   {
-   "t": 49.3333,
+   "t": 49.6,
    "kind": "section",
    "id": "measure",
-   "t1": 58.6667
+   "t1": 58.9333
   },
   {
-   "t": 53.06666666666667,
-   "kind": "label",
-   "tag": "ms-gh"
-  },
-  {
-   "t": 53.0667,
+   "t": 53.2667,
    "kind": "swell",
    "tag": "climb"
   },
   {
-   "t": 58.6667,
-   "kind": "section",
-   "id": "takeaway",
-   "t1": 67.2
+   "t": 53.283333,
+   "kind": "label",
+   "tag": "ms-gh"
   },
   {
-   "t": 61.1333,
+   "t": 58.9166,
+   "kind": "badge",
+   "tag": "sim3",
+   "text": "Simulation, sped up"
+  },
+  {
+   "t": 58.9333,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 68.2667
+  },
+  {
+   "t": 62.2333,
    "kind": "reveal",
    "tag": "sorts"
   },
   {
-   "t": 67.2,
+   "t": 68.2667,
    "kind": "section",
    "id": "tease",
-   "t1": 73.6
+   "t1": 74.6667
   },
   {
-   "t": 72.1,
+   "t": 71.6833,
    "kind": "signature",
    "tag": "end"
   }
@@ -215,37 +226,37 @@
   },
   {
    "id": "vo02",
-   "t": 3.8666666666666667,
+   "t": 4.133333333333334,
    "file": "vo/02.wav"
   },
   {
    "id": "vo03",
-   "t": 16.366666666666667,
+   "t": 16.633333333333333,
    "file": "vo/03.wav"
   },
   {
    "id": "vo04",
-   "t": 22.6,
+   "t": 22.866666666666667,
    "file": "vo/04.wav"
   },
   {
    "id": "vo05",
-   "t": 35.06666666666667,
+   "t": 35.333333333333336,
    "file": "vo/05.wav"
   },
   {
    "id": "vo06",
-   "t": 49.53333333333333,
+   "t": 49.8,
    "file": "vo/06.wav"
   },
   {
    "id": "vo07",
-   "t": 58.93333333333333,
+   "t": 59.2,
    "file": "vo/07.wav"
   },
   {
    "id": "vo08",
-   "t": 67.5,
+   "t": 68.56666666666666,
    "file": "vo/08.wav"
   }
  ]

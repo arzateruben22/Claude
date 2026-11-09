@@ -47,12 +47,12 @@
   "id": "c5",
   "sentence": "It can't fit down there, so it's propped up more each shake.",
   "claim": "Because the big grain cannot fall into the gaps the small ones fill, the filled gaps keep it from sinking back, so it ratchets upward.",
-  "source_url": "https://arxiv.org/abs/2201.12128",
-  "source_title": "Mathijssen, Lisicki, Prakash et al., 'Culinary fluid mechanics and other currents in food science' (a review), arXiv:2201.12128, section 'Brazil nut effect' (full text read, 9 Nov 2026)",
+  "source_url": "https://doi.org/10.1103/PhysRevLett.58.1038",
+  "source_title": "Rosato, Strandburg, Prinz, Swendsen, 'Why the Brazil nuts are on top: size segregation of particulate matter by shaking', Phys. Rev. Lett. 58, 1038 (1987); the arXiv review (Mathijssen et al., 2201.12128) was read in full and states percolation (c4) but not this step",
   "accessed": "2026-11-09",
   "verified_via": "search excerpt",
   "status": "TODO open link",
-  "note": "OPEN: Our plain wording of the percolation mechanism; the review states percolation (c4) but not this step. A person should check it against Rosato et al. 1987 (PRL 58, 1038), which describes 'the local, geometric mechanism by which the segregation is produced' (search excerpt)."
+  "note": "OPEN: nothing was opened for this step. Our plain wording of the percolation mechanism; the review (read) does not state it. The only evidence seen is a search excerpt of Rosato et al. 1987 describing 'the local, geometric mechanism by which the segregation is produced'. A person should check it against that paper."
  },
  {
   "id": "c6",
@@ -90,13 +90,13 @@
  {
   "id": "c9",
   "sentence": "Measure it: in this simulation, the big disc climbs from the bottom to near the top.",
-  "claim": "In our 2D soft-disc simulation (seeded, 111 discs, floor shaken 1.0 cm at 9 Hz) the big disc's centre rises from the bottom (4 cm) to near the top of the bed.",
+  "claim": "In our 2D soft-disc simulation (seeded, 71 discs: 1 big, 70 small; floor shaken 1.0 cm at 9 Hz) the big disc's centre rises from the bottom (4 cm) to near the top of the bed.",
   "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep09",
   "source_title": "Our own simulation (sim.mjs, sim.json)",
   "accessed": "2026-11-09",
   "verified_via": "page",
   "status": "TODO open link",
-  "note": "OPEN: OPEN: our model, not a published measurement; a person should rerun sim.mjs and check the trace in review/. The disc fluctuates near the top rather than sitting fixed."
+  "note": "OPEN: our model, not a published measurement; a person should rerun sim.mjs and check review/sim-trace.md. The disc fluctuates near the top rather than sitting fixed."
  },
  {
   "id": "c10",
@@ -118,17 +118,17 @@
   "accessed": "2026-11-09",
   "verified_via": "search excerpt",
   "status": "TODO open link",
-  "note": "OPEN: Tease for ep10, not yet searched or read."
+  "note": "OPEN: tease for ep10 (the coffee ring). The only evidence is a search excerpt of the Deegan et al. abstract, seen during ep10's research ('Pinning of the contact line ... liquid evaporating from the edge is replenished by liquid from the interior'); nothing was opened and the 'edge dries first' wording is ours."
  },
  {
   "id": "c12",
-  "sentence": "It takes about half a minute of shaking.",
-  "claim": "The rise takes about 30 s of simulated shaking (about 270 shakes at 9 Hz).",
+  "sentence": "It takes about ten seconds of shaking.",
+  "claim": "In our simulation the big disc's centre first passes 15 cm after about 10 s of simulated shaking (about 90 shakes at 9 Hz), then fluctuates between about 16 and 22 cm.",
   "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep09",
   "source_title": "Our own simulation (sim.mjs, sim.json)",
   "accessed": "2026-11-09",
   "verified_via": "page",
   "status": "TODO open link",
-  "note": "OPEN: OPEN: our model, not a published measurement; a person should rerun sim.mjs and check the trace in review/. The disc fluctuates near the top rather than sitting fixed."
+  "note": "OPEN: our model, not a published measurement; the trace in review/sim-trace.md shows 15.0 cm at 10 s. (Earlier wording said half a minute; that was where the disc stays near the top, not when it gets there.) A person should rerun sim.mjs."
  }
 ]

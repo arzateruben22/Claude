@@ -3,8 +3,8 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Where will the ball end up? It starts at the bottom.",
-   "heard": "Where will the ball end up? It starts at the bottom.",
+   "text": "Where will the nut end up? Starting underneath everything.",
+   "heard": "Where will the nut end up, starting underneath everything?",
    "words": [
     {
      "w": "Where",
@@ -14,7 +14,7 @@
     },
     {
      "w": "will",
-     "start": 0.29,
+     "start": 0.295,
      "end": 0.48,
      "heard": true
     },
@@ -25,51 +25,39 @@
      "heard": true
     },
     {
-     "w": "ball",
-     "start": 0.645,
+     "w": "nut",
+     "start": 0.665,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "end",
-     "start": 0.975,
-     "end": 1.28,
+     "start": 1.07,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "up?",
-     "start": 1.435,
+     "start": 1.335,
      "end": 1.76,
      "heard": true
     },
     {
-     "w": "It",
-     "start": 1.85,
-     "end": 1.92,
+     "w": "Starting",
+     "start": 1.75,
+     "end": 2.16,
      "heard": true
     },
     {
-     "w": "starts",
-     "start": 1.93,
-     "end": 2.24,
+     "w": "underneath",
+     "start": 2.235,
+     "end": 2.8,
      "heard": true
     },
     {
-     "w": "at",
-     "start": 2.24,
-     "end": 2.4,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 2.39,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "bottom.",
-     "start": 2.495,
-     "end": 3.04,
+     "w": "everything.",
+     "start": 2.7,
+     "end": 3.28,
      "heard": true
     }
    ]
@@ -716,159 +704,153 @@
   },
   {
    "id": "vo06",
-   "text": "Measure it: in this simulation, the big disc climbs from the bottom to near the top. It takes about half a minute of shaking.",
-   "heard": "Measure it. In this simulation, the big disc climbs from the bottom to near the top. It takes about half a minute of shaking.",
+   "text": "Measure it: in this simulation, the big disc climbs from the bottom to near the top. It takes about ten seconds of shaking.",
+   "heard": "Measure it. In this simulation, the big disc climbs from the bottom to near the top. It takes about 10 seconds of shaking.",
    "words": [
     {
      "w": "Measure",
-     "start": 0.02,
+     "start": 0.25,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "it:",
-     "start": 0.65,
+     "start": 0.655,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "in",
-     "start": 1.18,
+     "start": 1.155,
      "end": 1.28,
      "heard": true
     },
     {
      "w": "this",
-     "start": 1.21,
+     "start": 1.345,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "simulation,",
-     "start": 1.59,
-     "end": 2.56,
+     "start": 1.565,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "the",
-     "start": 2.695,
-     "end": 2.745,
+     "start": 2.64,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "big",
-     "start": 2.725,
-     "end": 2.88,
+     "start": 2.81,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "disc",
-     "start": 3.175,
-     "end": 3.52,
+     "start": 3.105,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "climbs",
-     "start": 3.525,
-     "end": 4.08,
+     "start": 3.48,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "from",
-     "start": 4.095,
-     "end": 4.24,
+     "start": 4.04,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "the",
-     "start": 4.355,
-     "end": 4.405,
+     "start": 4.07,
+     "end": 4.32,
      "heard": true
     },
     {
      "w": "bottom",
-     "start": 4.385,
-     "end": 4.8,
+     "start": 4.28,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "to",
-     "start": 4.825,
-     "end": 4.96,
+     "start": 4.75,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "near",
-     "start": 4.885,
-     "end": 5.28,
+     "start": 4.81,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "the",
-     "start": 5.315,
-     "end": 5.52,
+     "start": 5.24,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "top.",
-     "start": 5.415,
+     "start": 5.345,
      "end": 6.24,
      "heard": true
     },
     {
      "w": "It",
-     "start": 6.42,
-     "end": 6.48,
+     "start": 6.375,
+     "end": 6.425,
      "heard": true
     },
     {
      "w": "takes",
-     "start": 6.54,
+     "start": 6.49,
      "end": 6.8,
      "heard": true
     },
     {
      "w": "about",
-     "start": 6.745,
+     "start": 6.695,
      "end": 7.04,
      "heard": true
     },
     {
-     "w": "half",
-     "start": 7.065,
-     "end": 7.36,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 7.39,
+     "w": "ten",
+     "start": 7.145,
      "end": 7.44,
      "heard": true
     },
     {
-     "w": "minute",
-     "start": 7.42,
-     "end": 7.68,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 7.755,
+     "w": "seconds",
+     "start": 7.49,
      "end": 7.84,
      "heard": true
     },
     {
+     "w": "of",
+     "start": 7.74,
+     "end": 8.0,
+     "heard": true
+    },
+    {
      "w": "shaking.",
-     "start": 7.93,
-     "end": 8.48,
+     "start": 7.955,
+     "end": 8.64,
      "heard": true
     }
    ]
   },
   {
    "id": "vo07",
-   "text": "Shaking doesn't mix things. It sorts them. Unpopped popcorn kernels sink in a bowl for a related reason.",
-   "heard": "Shaking doesn't mix things. It sorts them. Unpopped popcorn kernels sink in a bowl for a related reason.",
+   "text": "Shaking doesn't just mix things. It often sorts them. Unpopped popcorn kernels sink in a bowl for a related reason.",
+   "heard": "Shaking doesn't just mix things. It often sorts them. Unpopped popcorn kernels sink in a bowl for a related reason.",
    "words": [
     {
      "w": "Shaking",
@@ -878,104 +860,116 @@
     },
     {
      "w": "doesn't",
-     "start": 0.61,
+     "start": 0.64,
      "end": 0.96,
      "heard": true
     },
     {
+     "w": "just",
+     "start": 0.905,
+     "end": 1.2,
+     "heard": true
+    },
+    {
      "w": "mix",
-     "start": 1.015,
-     "end": 1.36,
+     "start": 1.125,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "things.",
-     "start": 1.435,
-     "end": 2.0,
+     "start": 1.765,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "It",
-     "start": 2.115,
-     "end": 2.24,
+     "start": 2.445,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "often",
+     "start": 2.475,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "sorts",
-     "start": 2.21,
-     "end": 2.8,
-     "heard": true
-    },
-    {
-     "w": "them.",
-     "start": 2.845,
+     "start": 3.045,
      "end": 3.44,
      "heard": true
     },
     {
+     "w": "them.",
+     "start": 3.355,
+     "end": 4.08,
+     "heard": true
+    },
+    {
      "w": "Unpopped",
-     "start": 3.57,
-     "end": 4.24,
+     "start": 4.22,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "popcorn",
-     "start": 4.24,
-     "end": 4.88,
+     "start": 4.915,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "kernels",
-     "start": 4.87,
-     "end": 5.44,
+     "start": 5.55,
+     "end": 6.08,
      "heard": true
     },
     {
      "w": "sink",
-     "start": 5.515,
-     "end": 5.76,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 5.725,
-     "end": 5.92,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 5.995,
-     "end": 6.045,
-     "heard": true
-    },
-    {
-     "w": "bowl",
-     "start": 6.025,
+     "start": 6.15,
      "end": 6.4,
      "heard": true
     },
     {
-     "w": "for",
-     "start": 6.48,
+     "w": "in",
+     "start": 6.41,
      "end": 6.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.51,
+     "start": 6.66,
      "end": 6.72,
      "heard": true
     },
     {
+     "w": "bowl",
+     "start": 6.695,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 7.155,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.185,
+     "end": 7.44,
+     "heard": true
+    },
+    {
      "w": "related",
-     "start": 6.7,
-     "end": 7.2,
+     "start": 7.405,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "reason.",
-     "start": 7.145,
-     "end": 7.76,
+     "start": 7.845,
+     "end": 8.4,
      "heard": true
     }
    ]

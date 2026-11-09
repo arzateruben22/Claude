@@ -11,14 +11,14 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Where will the ball end up? It starts at the bottom.",
+   "text": "Where will the nut end up? Starting underneath everything.",
    "stars": [
-    "bottom"
+    "underneath"
    ],
-   "phonemes": "wˌɛɹ wɪl ðə bˈɔːl ˈɛnd ˈʌp? ɪt stˈɑːɹts æt ðə bˈɑːɾəm.",
+   "phonemes": "wˌɛɹ wɪl ðə nˈʌt ˈɛnd ˈʌp? stˈɑːɹɾɪŋ ˌʌndɚnˈiːθ ˈɛvɹɪθˌɪŋ.",
    "file": "01.wav",
-   "dur": 3.054,
-   "sha256": "c72d24f2cce129a0c46a9bdd30c43367b412c628d9d8e05a82d4d7f21c8864e3"
+   "dur": 3.329,
+   "sha256": "970f112e6ee8c18935b59204f3ec0a873555f46c0a04ca0cdcfb9bc80c48c233"
   },
   {
    "id": "vo02",
@@ -71,26 +71,26 @@
   {
    "id": "vo06",
    "beat": "measure",
-   "text": "Measure it: in this simulation, the big disc climbs from the bottom to near the top. It takes about half a minute of shaking.",
+   "text": "Measure it: in this simulation, the big disc climbs from the bottom to near the top. It takes about ten seconds of shaking.",
    "stars": [
     "Measure it"
    ],
-   "phonemes": "mˈɛʒɚɹ ɪt: ɪn ðɪs sˌɪmjʊlˈeɪʃən, ðə bˈɪɡ dˈɪsk klˈaɪmz fɹʌmðə bˈɑːɾəm tə nˌɪɹ ðə tˈɑːp. ɪt tˈeɪks ɐbˌaʊt hˈæf ɐ mˈɪnɪt ʌv ʃˈeɪkɪŋ.",
+   "phonemes": "mˈɛʒɚɹ ɪt: ɪn ðɪs sˌɪmjʊlˈeɪʃən, ðə bˈɪɡ dˈɪsk klˈaɪmz fɹʌmðə bˈɑːɾəm tə nˌɪɹ ðə tˈɑːp. ɪt tˈeɪks ɐbˌaʊt tˈɛn sˈɛkəndz ʌv ʃˈeɪkɪŋ.",
    "file": "06.wav",
-   "dur": 8.502,
-   "sha256": "f8064bb61de91b11eb1c68b046460e476c35868f8f06322b7d45980aac4ed176"
+   "dur": 8.704,
+   "sha256": "21ff926655fbbf619bbcc784c6189597d057480803f6a62ac40b001a96e793f3"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "Shaking doesn't mix things. It sorts them. Unpopped popcorn kernels sink in a bowl for a related reason.",
+   "text": "Shaking doesn't just mix things. It often sorts them. Unpopped popcorn kernels sink in a bowl for a related reason.",
    "stars": [
     "sorts"
    ],
-   "phonemes": "ʃˈeɪkɪŋ dˈʌzənt mˈɪks θˈɪŋz. ɪt sˈɔːɹts ðˌɛm. ʌnpˈɑːpt pˈɑːpkɔːɹn kˈɜːnəlz sˈɪŋk ɪn ɐ bˈoʊl fɚɹɚ ɹᵻlˈeɪɾᵻd ɹˈiːzən.",
+   "phonemes": "ʃˈeɪkɪŋ dˈʌzənt dʒˈʌst mˈɪks θˈɪŋz. ɪɾ ˈɔfən sˈɔːɹts ðˌɛm. ʌnpˈɑːpt pˈɑːpkɔːɹn kˈɜːnəlz sˈɪŋk ɪn ɐ bˈoʊl fɚɹɚ ɹᵻlˈeɪɾᵻd ɹˈiːzən.",
    "file": "07.wav",
-   "dur": 7.771,
-   "sha256": "0bda1e31716ed4776dcd3571dc40b4dae7722578add4d0593a1914f8f98e6c6d"
+   "dur": 8.447,
+   "sha256": "873037f001db2e961d1c9967c23605b5dc46bc7ae5cfeb2fe6d24ae1eb65f362"
   },
   {
    "id": "vo08",
