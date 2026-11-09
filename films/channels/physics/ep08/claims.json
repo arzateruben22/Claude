@@ -1,0 +1,156 @@
+[
+ {
+  "id": "c1",
+  "sentence": "You almost always get three or more.",
+  "claim": "A bent dry spaghetti rod almost always breaks into at least three pieces.",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, 'Controlling fracture cascades through twisting and quenching', PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"A famous longstanding problem posed by Feynman asks why brittle elastic rods appear almost always to fragment into at least three pieces when placed under large bending stresses.\" Slow, near-adiabatic bending (about 3 mm/s). Say 'almost always'."
+ },
+ {
+  "id": "c2",
+  "sentence": "A moment later, it snaps again, and again.",
+  "claim": "After the first break the rod breaks again at other points in a cascade.",
+  "source_url": "https://doi.org/10.1103/PhysRevLett.95.095505",
+  "source_title": "Audoly and Neukirch, 'Fragmentation of rods by cascading cracks: why spaghetti does not break in half', Phys. Rev. Lett. 95, 095505 (2005)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Excerpt: flexural waves from the first break raise the curvature elsewhere and trigger further breaks (Physics World coverage and the PRL abstract page title)."
+ },
+ {
+  "id": "c3",
+  "sentence": "The physicist Richard Feynman noticed this, and asked why.",
+  "claim": "Feynman noted that dry spaghetti under bending almost always fragments into at least three pieces, and the question of why became a famous problem.",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, 'Controlling fracture cascades through twisting and quenching', PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"A famous longstanding problem posed by Feynman asks why brittle elastic rods appear almost always to fragment into at least three pieces\" The paper cites Feynman's observation [26]; 'asked why' is our plain wording."
+ },
+ {
+  "id": "c4",
+  "sentence": "Years later, two physicists explained it.",
+  "claim": "Audoly and Neukirch (2005) explained why a bent rod breaks into several pieces rather than two.",
+  "source_url": "https://doi.org/10.1103/PhysRevLett.95.095505",
+  "source_title": "Audoly and Neukirch, 'Fragmentation of rods by cascading cracks: why spaghetti does not break in half', Phys. Rev. Lett. 95, 095505 (2005)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Based on the paper's title and abstract excerpt. Confirm that it explains the 'at least three' result."
+ },
+ {
+  "id": "c5",
+  "sentence": "The first break sends ripples along the stick.",
+  "claim": "The first break releases flexural (bending) waves that travel along the rod.",
+  "source_url": "https://doi.org/10.1103/PhysRevLett.95.095505",
+  "source_title": "Audoly and Neukirch, 'Fragmentation of rods by cascading cracks: why spaghetti does not break in half', Phys. Rev. Lett. 95, 095505 (2005)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Excerpt from Physics World's summary."
+ },
+ {
+  "id": "c6",
+  "sentence": "They bend it even more than before, and that extra bend breaks it again.",
+  "claim": "The waves locally raise the curvature above its value before the first break, which can break the rod again.",
+  "source_url": "https://doi.org/10.1103/PhysRevLett.95.095505",
+  "source_title": "Audoly and Neukirch, 'Fragmentation of rods by cascading cracks: why spaghetti does not break in half', Phys. Rev. Lett. 95, 095505 (2005)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Excerpt from Physics World's summary: 'waves locally increase stress'. Confirm 'more than before'."
+ },
+ {
+  "id": "c7",
+  "sentence": "In twenty eighteen, a team at MIT found a trick.",
+  "claim": "A 2018 paper from MIT's Departments of Mechanical Engineering and Mathematics showed a protocol for controlled binary fracture of spaghetti.",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, 'Controlling fracture cascades through twisting and quenching', PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"Department of Mechanical Engineering, Massachusetts Institute of Technology ... Department of Mathematics, Massachusetts Institute of Technology\" Affiliations from the preprint header; PNAS publication date Aug 2018 (from the search result)."
+ },
+ {
+  "id": "c8",
+  "sentence": "Twist the stick first, over two thirds of a turn.",
+  "claim": "Binary fracture dominates for twist angles larger than about 250 degrees (two thirds of a turn is 240 degrees).",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, 'Controlling fracture cascades through twisting and quenching', PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"binary fracture dominates for twist angles larger than ∼ 250 degrees (73 data points in total)\" Our line says 'over two thirds of a turn' (240 degrees); the paper says about 250 degrees: the screen shows 250. Rods were Barilla no. 3 spaghetti."
+ },
+ {
+  "id": "c9",
+  "sentence": "Then bend it: usually just two pieces.",
+  "claim": "At supercritical twist angles the rods break in two.",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, 'Controlling fracture cascades through twisting and quenching', PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"supercritical twist angles give rise to binary fracture\" 'Usually' because the phase diagram's data are not all binary."
+ },
+ {
+  "id": "c10",
+  "sentence": "Measure it: little twist, three or more pieces.",
+  "claim": "For small twist angles rods fragment typically into three or more pieces.",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, 'Controlling fracture cascades through twisting and quenching', PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"for small twist angles, rods are found to fragment typically into three or more pieces (Fig. 1a), in agreement with Feynman's conjecture\""
+ },
+ {
+  "id": "c11",
+  "sentence": "Past about two hundred fifty degrees, two pieces win.",
+  "claim": "Binary fracture dominates above about 250 degrees of twist.",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, 'Controlling fracture cascades through twisting and quenching', PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"binary fracture dominates for twist angles larger than ∼ 250 degrees\""
+ },
+ {
+  "id": "c12",
+  "sentence": "Bend slowly: a chain of snaps.",
+  "claim": "Slow bending without twist gives a cascade of breaks (three or more pieces).",
+  "source_url": "https://doi.org/10.1103/PhysRevLett.95.095505",
+  "source_title": "Audoly and Neukirch, 'Fragmentation of rods by cascading cracks: why spaghetti does not break in half', Phys. Rev. Lett. 95, 095505 (2005)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Paired with c1 (read) for the 'three or more' part; the 'chain' is the cascade of c2."
+ },
+ {
+  "id": "c13",
+  "sentence": "Twist first: usually one clean break.",
+  "claim": "Twisting first can give controlled binary fracture.",
+  "source_url": "https://arxiv.org/abs/1802.05402",
+  "source_title": "Heisser, Patil, Stoop, Villermaux, Dunkel, 'Controlling fracture cascades through twisting and quenching', PNAS 115, 8665 (2018); arXiv:1802.05402 (full text read, 9 Nov 2026)",
+  "accessed": "2026-11-09",
+  "verified_via": "page",
+  "status": "TODO open link",
+  "note": "SOURCE-READ (builder read the arXiv full text; a person has not opened it). Quote: \"we demonstrate controlled binary fracture of brittle elastic rods for two distinct protocols based on twisting and nonadiabatic quenching\" Hedged to 'usually'."
+ },
+ {
+  "id": "c14",
+  "sentence": "The biggest one tends to climb.",
+  "claim": "Shaken mixed nuts tend to separate with the largest on top (the Brazil nut effect).",
+  "source_url": "https://doi.org/10.1103/PhysRevLett.58.1038",
+  "source_title": "Rosato et al., Phys. Rev. Lett. 58, 1038 (1987)",
+  "accessed": "2026-11-09",
+  "verified_via": "search excerpt",
+  "status": "TODO open link",
+  "note": "OPEN: search excerpt only; nobody has opened the page (the APS page refuses automated readers). Tease for ep09, not yet searched; coordinator note: the mechanism is still studied."
+ }
+]

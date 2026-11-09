@@ -1,0 +1,1027 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "How many pieces? Bend a spaghetti stick until it snaps.",
+   "heard": "How many pieces? Bend a spaghetti stick until it snaps.",
+   "words": [
+    {
+     "w": "How",
+     "start": 0.025,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "many",
+     "start": 0.395,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "pieces?",
+     "start": 0.45,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "Bend",
+     "start": 1.38,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.41,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "spaghetti",
+     "start": 1.77,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "stick",
+     "start": 2.27,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "until",
+     "start": 2.44,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 2.83,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "snaps.",
+     "start": 2.97,
+     "end": 3.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Hold both ends and push them together, slowly. The stick curves, then snaps. You expect two halves. You almost always get three or more.",
+   "heard": "Hold both ends and push them together slowly. The stick curves, then snaps. You expect two halves. You almost always get three or more.",
+   "words": [
+    {
+     "w": "Hold",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "both",
+     "start": 0.34,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "ends",
+     "start": 0.63,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.955,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 1.115,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "them",
+     "start": 1.365,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "together,",
+     "start": 1.615,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "slowly.",
+     "start": 2.11,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.225,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "stick",
+     "start": 3.255,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "curves,",
+     "start": 3.66,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 4.295,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "snaps.",
+     "start": 4.655,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 5.565,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "expect",
+     "start": 5.76,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 6.15,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "halves.",
+     "start": 6.395,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 7.29,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "almost",
+     "start": 7.32,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "always",
+     "start": 7.785,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "get",
+     "start": 8.205,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 8.425,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 8.455,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "more.",
+     "start": 8.66,
+     "end": 9.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Slowed down, the first break isn't the end. A moment later, it snaps again, and again.",
+   "heard": "Slowed down, the first break isn't the end. A moment later, it snaps again and again.",
+   "words": [
+    {
+     "w": "Slowed",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "down,",
+     "start": 0.73,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.16,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 1.315,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "break",
+     "start": 1.6,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "isn't",
+     "start": 1.87,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.395,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "end.",
+     "start": 2.505,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 3.275,
+     "end": 3.325,
+     "heard": true
+    },
+    {
+     "w": "moment",
+     "start": 3.305,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "later,",
+     "start": 3.65,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.095,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "snaps",
+     "start": 4.205,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "again,",
+     "start": 4.785,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.205,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "again.",
+     "start": 5.41,
+     "end": 5.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "The physicist Richard Feynman noticed this, and asked why. Years later, two physicists explained it. The first break sends ripples along the stick. They bend it even more than before, and that extra bend breaks it again.",
+   "heard": "The physicist Richard Feynman noticed this and asked why. Years later, two physicists explained it. The first break sends ripples along the stick. They bend it even more than before, and that extra bend breaks it again.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "physicist",
+     "start": 0.17,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "Richard",
+     "start": 0.705,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "Feynman",
+     "start": 1.21,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "noticed",
+     "start": 1.835,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "this,",
+     "start": 2.335,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.6,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "asked",
+     "start": 2.77,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "why.",
+     "start": 3.535,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "Years",
+     "start": 4.325,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "later,",
+     "start": 4.645,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 5.235,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "physicists",
+     "start": 5.49,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "explained",
+     "start": 6.065,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 6.82,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 7.4,
+     "end": 7.45,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 7.43,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "break",
+     "start": 7.88,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "sends",
+     "start": 8.125,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "ripples",
+     "start": 8.52,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "along",
+     "start": 9.01,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.44,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "stick.",
+     "start": 9.65,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 10.34,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "bend",
+     "start": 10.37,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 10.895,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "even",
+     "start": 10.94,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 11.28,
+     "end": 11.52,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 11.52,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "before,",
+     "start": 11.905,
+     "end": 12.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 12.45,
+     "end": 12.56,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 12.48,
+     "end": 12.72,
+     "heard": true
+    },
+    {
+     "w": "extra",
+     "start": 12.795,
+     "end": 13.12,
+     "heard": true
+    },
+    {
+     "w": "bend",
+     "start": 13.225,
+     "end": 13.52,
+     "heard": true
+    },
+    {
+     "w": "breaks",
+     "start": 13.62,
+     "end": 13.84,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 13.765,
+     "end": 14.0,
+     "heard": true
+    },
+    {
+     "w": "again.",
+     "start": 14.02,
+     "end": 14.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "In twenty eighteen, a team at MIT found a trick. Twist the stick first, over two thirds of a turn. Then bend it: usually just two pieces.",
+   "heard": "In 2018, a team at MIT found a trick. Twist the stick first over two-thirds of a turn. Then bend it, usually just two pieces.",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "twenty",
+     "start": 0.24,
+     "end": 1.12,
+     "heard": false
+    },
+    {
+     "w": "eighteen,",
+     "start": 0.27,
+     "end": 1.12,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 1.25,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "team",
+     "start": 1.37,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.72,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "MIT",
+     "start": 1.91,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "found",
+     "start": 2.69,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.0,
+     "end": 3.05,
+     "heard": true
+    },
+    {
+     "w": "trick.",
+     "start": 3.11,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "Twist",
+     "start": 4.015,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.33,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "stick",
+     "start": 4.405,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "first,",
+     "start": 4.84,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 5.26,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 5.575,
+     "end": 6.16,
+     "heard": false
+    },
+    {
+     "w": "thirds",
+     "start": 5.605,
+     "end": 6.16,
+     "heard": false
+    },
+    {
+     "w": "of",
+     "start": 6.085,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.315,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "turn.",
+     "start": 6.395,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "Then",
+     "start": 7.355,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "bend",
+     "start": 7.66,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "it:",
+     "start": 8.015,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "usually",
+     "start": 8.39,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 8.895,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 9.175,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "pieces.",
+     "start": 9.415,
+     "end": 10.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Measure it: little twist, three or more pieces. Past about two hundred fifty degrees, two pieces win.",
+   "heard": "Measure it, little twist, three or more pieces. Past about two hundred fifty degrees, two pieces win.",
+   "words": [
+    {
+     "w": "Measure",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "it:",
+     "start": 0.575,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 0.92,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "twist,",
+     "start": 1.175,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 1.9,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 2.16,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 2.39,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "pieces.",
+     "start": 2.525,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "Past",
+     "start": 3.705,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.97,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 4.225,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 4.29,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "fifty",
+     "start": 4.705,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "degrees,",
+     "start": 5.12,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 5.76,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "pieces",
+     "start": 5.975,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "win.",
+     "start": 6.325,
+     "end": 6.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "It depends on how you break it. Bend slowly: a chain of snaps. Twist first: usually one clean break.",
+   "heard": "It depends on how you break it. Bend slowly, a chain of snaps. Twist first, usually one clean break.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "depends",
+     "start": 0.125,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.44,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 0.585,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.895,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "break",
+     "start": 0.945,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 1.4,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "Bend",
+     "start": 1.935,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "slowly:",
+     "start": 2.305,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.19,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "chain",
+     "start": 3.29,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.675,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "snaps.",
+     "start": 3.705,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "Twist",
+     "start": 4.78,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "first:",
+     "start": 5.115,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "usually",
+     "start": 5.76,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 6.05,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "clean",
+     "start": 6.475,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "break.",
+     "start": 6.815,
+     "end": 7.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: a jar of nuts. The biggest one tends to climb.",
+   "heard": "Next, a jar of nuts. The biggest one tends to climb.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.755,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "jar",
+     "start": 0.865,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.295,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "nuts.",
+     "start": 1.325,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 2.24,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "biggest",
+     "start": 2.415,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 2.765,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "tends",
+     "start": 2.95,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.29,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "climb.",
+     "start": 3.405,
+     "end": 3.92,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

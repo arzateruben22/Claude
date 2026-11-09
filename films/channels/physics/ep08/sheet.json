@@ -1,0 +1,266 @@
+{
+ "duration": 72.0,
+ "fps": 30,
+ "preset": "restframe-bench",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 4.0,
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 4.0,
+   "t1": 13.8667,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 13.8667,
+   "t1": 20.2667,
+   "energy": 0.5
+  },
+  {
+   "id": "why",
+   "t0": 20.2667,
+   "t1": 37.0667,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 37.0667,
+   "t1": 50.4,
+   "energy": 0.75
+  },
+  {
+   "id": "measure",
+   "t0": 50.4,
+   "t1": 57.8667,
+   "energy": 0.5
+  },
+  {
+   "id": "takeaway",
+   "t0": 57.8667,
+   "t1": 65.8667,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 65.8667,
+   "t1": 72.0,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 4.0
+  },
+  {
+   "t": 0.3,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -4.0
+  },
+  {
+   "t": 3.983333,
+   "kind": "counter.show",
+   "tag": "spine"
+  },
+  {
+   "t": 4.0,
+   "kind": "section",
+   "id": "normal",
+   "t1": 13.8667
+  },
+  {
+   "t": 4.183333,
+   "kind": "label",
+   "tag": "no-stick"
+  },
+  {
+   "t": 7.2,
+   "kind": "label",
+   "tag": "no-bend"
+  },
+  {
+   "t": 8.8,
+   "kind": "impact",
+   "tag": "snap1"
+  },
+  {
+   "t": 13.8667,
+   "kind": "section",
+   "id": "change",
+   "t1": 20.2667
+  },
+  {
+   "t": 14.0,
+   "kind": "badge",
+   "tag": "slow1",
+   "text": "Slow motion"
+  },
+  {
+   "t": 16.266666666666666,
+   "kind": "label",
+   "tag": "ch-1"
+  },
+  {
+   "t": 16.4667,
+   "kind": "impact",
+   "tag": "snap2"
+  },
+  {
+   "t": 18.1667,
+   "kind": "impact",
+   "tag": "snap3"
+  },
+  {
+   "t": 18.26666666666667,
+   "kind": "label",
+   "tag": "ch-2"
+  },
+  {
+   "t": 18.966666666666665,
+   "kind": "label",
+   "tag": "ch-3"
+  },
+  {
+   "t": 20.2667,
+   "kind": "section",
+   "id": "why",
+   "t1": 37.0667
+  },
+  {
+   "t": 28.400000000000002,
+   "kind": "label",
+   "tag": "wy-1"
+  },
+  {
+   "t": 28.6,
+   "kind": "impact",
+   "tag": "snap4"
+  },
+  {
+   "t": 29.0,
+   "kind": "label",
+   "tag": "wy-rip"
+  },
+  {
+   "t": 33.266666666666666,
+   "kind": "label",
+   "tag": "wy-2"
+  },
+  {
+   "t": 37.050033,
+   "kind": "counter.tick",
+   "tag": "spine:twist angle"
+  },
+  {
+   "t": 37.0667,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 50.4
+  },
+  {
+   "t": 41.5,
+   "kind": "label",
+   "tag": "wo-tw"
+  },
+  {
+   "t": 42.8667,
+   "kind": "impact",
+   "tag": "snap5"
+  },
+  {
+   "t": 46.5,
+   "kind": "label",
+   "tag": "wo-2"
+  },
+  {
+   "t": 50.4,
+   "kind": "section",
+   "id": "measure",
+   "t1": 57.8667
+  },
+  {
+   "t": 55.3,
+   "kind": "counter.end",
+   "tag": "threshold"
+  },
+  {
+   "t": 57.850033,
+   "kind": "counter.tick",
+   "tag": "spine:pieces, twisted first"
+  },
+  {
+   "t": 57.8667,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 65.8667
+  },
+  {
+   "t": 58.35,
+   "kind": "badge",
+   "tag": "illus",
+   "text": "Illustration, not a simulation"
+  },
+  {
+   "t": 65.8667,
+   "kind": "section",
+   "id": "tease",
+   "t1": 72.0
+  },
+  {
+   "t": 70.5,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 4.133333333333334,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 13.966666666666667,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 20.466666666666665,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 37.2,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 50.6,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 58.13333333333333,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 66.16666666666667,
+   "file": "vo/08.wav"
+  }
+ ]
+}

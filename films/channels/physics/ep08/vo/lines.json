@@ -1,0 +1,109 @@
+{
+ "voice": "af_bella",
+ "speed": 0.9,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How many pieces? Bend a spaghetti stick until it snaps.",
+   "stars": [
+    "pieces"
+   ],
+   "phonemes": "hˌaʊ mˈɛni pˈiːsᵻz? bˈɛnd ɐ spɐɡˈɛɾi stˈɪk ʌntˈɪl ɪt snˈæps.",
+   "file": "01.wav",
+   "dur": 3.475,
+   "sha256": "36f8e53adec411321853cc05e5be493e1599d85e5a542bfade4dc126070e5ae6"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Hold both ends and push them together, slowly. The stick curves, then snaps. You expect two halves. You almost always get three or more.",
+   "stars": [
+    "three"
+   ],
+   "phonemes": "hˈoʊld bˈoʊθ ˈɛndz ænd pˈʊʃ ðˌɛm təɡˈɛðɚ, slˈoʊli. ðə stˈɪk kˈɜːvz, ðˈɛn snˈæps. juː ɛkspˈɛkt tˈuː hˈævz. juː ˈɔːlmoʊst ˈɔːlweɪz ɡɛt θɹˈiː ɔːɹ mˈɔːɹ.",
+   "file": "02.wav",
+   "dur": 9.121,
+   "sha256": "6f53fb35cb9c8d8aef90f420ee5d51df493cfebd2ab260e4ba378d1c36c076e4"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Slowed down, the first break isn't the end. A moment later, it snaps again, and again.",
+   "stars": [
+    "again"
+   ],
+   "phonemes": "slˈoʊd dˈaʊn, ðə fˈɜːst bɹˈeɪk ˌɪzənt ðɪ ˈɛnd. ɐ mˈoʊmənt lˈeɪɾɚ, ɪt snˈæps ɐɡˈɛn, ænd ɐɡˈɛn.",
+   "file": "03.wav",
+   "dur": 5.8,
+   "sha256": "217a8e639b3a2e01f39cabe722b9acaf71ffcce4d454cee8639d4102b4906b35"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "The physicist Richard Feynman noticed this, and asked why. Years later, two physicists explained it. The first break sends ripples along the stick. They bend it even more than before, and that extra bend breaks it again.",
+   "stars": [
+    "why",
+    "more"
+   ],
+   "phonemes": "ðə fˈɪzɪsˌɪst ɹˈɪtʃɚd fˈeɪnmən nˈoʊɾɪst ðˈɪs, ænd ˈæskt wˈaɪ. jˈɪɹz lˈeɪɾɚ, tˈuː fˈɪzɪsˌɪsts ɛksplˈeɪnd ɪt. ðə fˈɜːst bɹˈeɪk sˈɛndz ɹˈɪpəlz ɐlˈɔŋ ðə stˈɪk. ðeɪ bˈɛnd ɪɾ ˈiːvən mˈɔːɹ ðɐn bᵻfˈɔːɹ, ænd ðæt ˈɛkstɹə bˈɛnd bɹˈeɪks ɪɾ ɐɡˈɛn.",
+   "file": "04.wav",
+   "dur": 14.375,
+   "sha256": "e0cd0d61647fcb3bf1098b1e0e8101a50e711912238342f670896cb4019c1b8e"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "In twenty eighteen, a team at MIT found a trick. Twist the stick first, over two thirds of a turn. Then bend it: usually just two pieces.",
+   "stars": [
+    "two"
+   ],
+   "phonemes": "ɪn twˈɛnti ˈeɪtiːn, ɐ tˈiːm æɾ ˌɛmˌaɪtˈiː fˈaʊnd ɐ tɹˈɪk. twˈɪst ðə stˈɪk fˈɜːst, ˌoʊvɚ tˈuː θˈɜːdz əvə tˈɜːn. ðˈɛn bˈɛnd ɪt: jˈuːʒuːəli dʒˈʌst tˈuː pˈiːsᵻz.",
+   "file": "05.wav",
+   "dur": 10.023,
+   "sha256": "d0532bf0aeab116bbcf28ce6f568457094becc345f07a089b6b309cd5daf84dc"
+  },
+  {
+   "id": "vo06",
+   "beat": "measure",
+   "text": "Measure it: little twist, three or more pieces. Past about two hundred fifty degrees, two pieces win.",
+   "stars": [
+    "Measure it"
+   ],
+   "phonemes": "mˈɛʒɚɹ ɪt: lˈɪɾəl twˈɪst, θɹˈiː ɔːɹ mˈɔːɹ pˈiːsᵻz. pˈæst ɐbˌaʊt tˈuː hˈʌndɹɪd fˈɪfti dᵻɡɹˈiːz, tˈuː pˈiːsᵻz wˈɪn.",
+   "file": "06.wav",
+   "dur": 6.792,
+   "sha256": "d1b53a9ffff730c0baee2d4e775c4f24d790b44ec04f63fc505b177c59cfe747"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "It depends on how you break it. Bend slowly: a chain of snaps. Twist first: usually one clean break.",
+   "stars": [
+    "clean"
+   ],
+   "phonemes": "ɪt dᵻpˈɛndz ˌɔn hˌaʊ juː bɹˈeɪk ɪt. bˈɛnd slˈoʊli: ɐ tʃˈeɪn ʌv snˈæps. twˈɪst fˈɜːst: jˈuːʒuːəli wˈʌn klˈiːn bɹˈeɪk.",
+   "file": "07.wav",
+   "dur": 7.236,
+   "sha256": "cd17d9bcd0f9ce84ddccaadc6f03bcccd948ed93666b91621a951008d3cfeb6e"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: a jar of nuts. The biggest one tends to climb.",
+   "stars": [
+    "climb"
+   ],
+   "phonemes": "nˈɛkst: ɐ dʒˈɑːɹ ʌv nˈʌts. ðə bˈɪɡɪst wˈʌn tˈɛndz tə klˈaɪm.",
+   "file": "08.wav",
+   "dur": 3.991,
+   "sha256": "35d1a90aa4e31c58f7e66ddaaec1fe1116acf057a2b813c0396a572d24755c3f"
+  }
+ ]
+}

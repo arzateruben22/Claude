@@ -6,7 +6,7 @@ No overlap with Season 1 (projectile, pendulum, bounce energy, free fall in vacu
 | # | Title | "Wait, what?" hook | Payoff |
 |---|---|---|---|
 | 07 | The slinky that waits | Drop a hanging slinky: the bottom hangs in mid-air while the top falls. | Until the news arrives (a wave travelling down the coils), the bottom has no reason to move; it only starts when the top reaches it. |
-| 08 | Spaghetti never breaks in two | Bend a dry spaghetti stick until it snaps: it never gives two pieces. | Each break sends a bending wave that snaps it again; twisting it first can make it break in two. |
+| 08 | Spaghetti never breaks in two | Bend a dry spaghetti stick until it snaps: it never gives two pieces. | Each break sends a bending wave that snaps it again; twisting it by more than about 250 degrees first usually makes it break in two. |
 | 09 | The nut that rises | Shake a jar of mixed nuts: the biggest one climbs to the top. | Shaking opens gaps small pieces fall into; the big one can't, so it is pushed up (the Brazil nut effect). |
 | 10 | The ring a coffee drop leaves | A drying drop leaves a dark ring, not a blob. | The edge dries first, so flow carries the stuff outward and parks it there (the coffee-ring effect). |
 | 11 | Listen to the cup fill | Close your eyes and you can hear a mug fill. | Less air above the water means a higher pitch: a shorter air column resonates higher. |
@@ -17,7 +17,7 @@ No overlap with Season 1 (projectile, pendulum, bounce energy, free fall in vacu
 **07 slinky.** (1) The bottom stays at rest while the top falls until the collapse reaches it; (2) the centre of mass falls as a free body; (3) the news travels as a wave in the coils; (4) the top falls at a roughly steady speed while it collapses.
 Sources: Calkin, Am. J. Phys. 61, 261 (1993) "Motion of a falling spring"; Cross and Wheatland, Am. J. Phys. 80, 1051 (2012) "Modeling a falling slinky"; Physics Today / Veritasium slinky coverage as a lay cross-check.
 
-**08 spaghetti.** (1) A bent dry spaghetti rod breaks into three or more pieces, rarely two (Feynman anecdote); (2) the first break launches a flexural wave that causes further breaks; (3) twisting a rod to about 270° before bending lets it break in two; (4) the pieces' count depends on how fast the bend is released.
+**08 spaghetti.** (1) A bent dry spaghetti rod breaks into three or more pieces, rarely two (Feynman anecdote); (2) the first break launches a flexural wave that causes further breaks; (3) twisting a rod past about 250° before bending gives two pieces; (4) the pieces' count depends on how fast the bend is released.
 Sources: Audoly and Neukirch, Phys. Rev. Lett. 95, 095505 (2005); Heisser et al., PNAS 115, 8665 (2018) (MIT); MIT News write-up of the 2018 paper.
 
 **09 nuts.** (1) Shaken mixed grains separate with the largest on top; (2) the effect is called the Brazil nut effect; (3) a big grain is lifted when small ones fall under it; (4) it can reverse (large grains sink) under other conditions.
