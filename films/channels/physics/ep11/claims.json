@@ -80,34 +80,34 @@
   "id": "c9",
   "sentence": "With two centimeters left, the mug rings nearly three times higher than when empty.",
   "claim": "For an illustrated mug 10 cm tall and R = 4 cm, the pitch at l = 2 cm is about 1,914 Hz against about 687 Hz at l = 10 cm: a ratio of 2.8.",
-  "source_url": "https://arxiv.org/abs/2411.11222",
-  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026) (formula, Eq. 2)",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep11",
+  "source_title": "Our own computation from the paper's formula (compile.py): f = c / (4 (l + 0.62 R)), c = 343 m/s, R = 4 cm; the paper is Bagad et al., arXiv:2411.11222 (read in full by the builder)",
   "accessed": "2026-11-09",
-  "verified_via": "page",
+  "verified_via": "own model",
   "status": "TODO open link",
-  "note": "OPEN: computed by us from the paper's Eq. 2, f = c / (4 (l + 0.62 R)), with c = 343 m/s and R = 4 cm. Real mugs differ (shape, handle, flow noise)."
+  "note": "OWN MODEL, OPEN: computed by us from the paper's Eq. 2, f = c / (4 (l + 0.62 R)), with c = 343 m/s and R = 4 cm. Real mugs differ (shape, handle, flow noise)."
  },
  {
   "id": "c10",
   "sentence": "Measure it: with ten centimeters of empty space, you hear about seven hundred vibrations a second.",
   "claim": "For l = 10 cm, f = 34300 / (4 (10 + 2.48)) = about 687 Hz.",
-  "source_url": "https://arxiv.org/abs/2411.11222",
-  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026) (formula, Eq. 2)",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep11",
+  "source_title": "Our own computation from the paper's formula (compile.py): f = c / (4 (l + 0.62 R)), c = 343 m/s, R = 4 cm; the paper is Bagad et al., arXiv:2411.11222 (read in full by the builder)",
   "accessed": "2026-11-09",
-  "verified_via": "page",
+  "verified_via": "own model",
   "status": "TODO open link",
-  "note": "OPEN: computed by us from the paper's Eq. 2, f = c / (4 (l + 0.62 R)), with c = 343 m/s and R = 4 cm. 'Vibrations a second' is hertz, said in plain words."
+  "note": "OWN MODEL, OPEN: computed by us from the paper's Eq. 2, f = c / (4 (l + 0.62 R)), with c = 343 m/s and R = 4 cm. 'Vibrations a second' is hertz, said in plain words."
  },
  {
   "id": "c11",
   "sentence": "With two centimeters, you hear nearly two thousand.",
   "claim": "For l = 2 cm, f = 34300 / (4 (2 + 2.48)) = about 1,914 Hz.",
-  "source_url": "https://arxiv.org/abs/2411.11222",
-  "source_title": "Bagad, Tapaswi, Snoek, Zisserman, 'The Sound of Water: Inferring Physical Properties from Pouring Liquids', arXiv:2411.11222 (ICASSP 2025) (full text read, 9 Nov 2026) (formula, Eq. 2)",
+  "source_url": "https://github.com/arzateruben22/Claude/tree/claude/physics-s2/films/channels/physics/ep11",
+  "source_title": "Our own computation from the paper's formula (compile.py): f = c / (4 (l + 0.62 R)), c = 343 m/s, R = 4 cm; the paper is Bagad et al., arXiv:2411.11222 (read in full by the builder)",
   "accessed": "2026-11-09",
-  "verified_via": "page",
+  "verified_via": "own model",
   "status": "TODO open link",
-  "note": "OPEN: computed by us from the paper's Eq. 2, f = c / (4 (l + 0.62 R)), with c = 343 m/s and R = 4 cm. "
+  "note": "OWN MODEL, OPEN: computed by us from the paper's Eq. 2, f = c / (4 (l + 0.62 R)), with c = 343 m/s and R = 4 cm. "
  },
  {
   "id": "c12",

@@ -3,61 +3,67 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Can you hear a mug fill? Close… your eyes.",
-   "heard": "Can you hear a mug, Phil? Close your eyes.",
+   "text": "Can you hear a mug fill? Eyes closed, just listening.",
+   "heard": "Can you hear a mug fill? Eyes closed, just listening.",
    "words": [
     {
      "w": "Can",
-     "start": 0.025,
+     "start": 0.02,
      "end": 0.24,
      "heard": true
     },
     {
      "w": "you",
-     "start": 0.335,
-     "end": 0.385,
+     "start": 0.33,
+     "end": 0.38,
      "heard": true
     },
     {
      "w": "hear",
-     "start": 0.365,
+     "start": 0.36,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.525,
-     "end": 0.575,
+     "start": 0.39,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "mug",
-     "start": 0.555,
-     "end": 0.88,
+     "start": 0.655,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "fill?",
-     "start": 0.89,
-     "end": 1.44,
-     "heard": false
-    },
-    {
-     "w": "Close…",
-     "start": 1.52,
-     "end": 1.92,
+     "start": 0.92,
+     "end": 1.6,
      "heard": true
     },
     {
-     "w": "your",
-     "start": 1.955,
+     "w": "Eyes",
+     "start": 1.71,
      "end": 2.08,
      "heard": true
     },
     {
-     "w": "eyes.",
-     "start": 2.145,
-     "end": 2.64,
+     "w": "closed,",
+     "start": 2.11,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 2.715,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "listening.",
+     "start": 2.965,
+     "end": 3.52,
      "heard": true
     }
    ]

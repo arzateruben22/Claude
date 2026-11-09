@@ -11,14 +11,14 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Can you hear a mug fill? Close… your eyes.",
+   "text": "Can you hear a mug fill? Eyes closed, just listening.",
    "stars": [
     "fill"
    ],
-   "phonemes": "kæn juː hˈɪɹ ɐ mˈʌɡ fˈɪl? klˈoʊs… jʊɹ ˈaɪz.",
+   "phonemes": "kæn juː hˈɪɹ ɐ mˈʌɡ fˈɪl? ˈaɪz klˈoʊzd, dʒˈʌst lˈɪsənɪŋ.",
    "file": "01.wav",
-   "dur": 2.721,
-   "sha256": "9e2255aa5d4c1990dad0fa7d380e3527952e2b32dbfbf980fd996d050f40db54"
+   "dur": 3.57,
+   "sha256": "da6fbf16e02543c202a4f64d0b57ad925f4b9b860fbf026611a02c49aefa8386"
   },
   {
    "id": "vo02",
