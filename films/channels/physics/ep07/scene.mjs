@@ -188,7 +188,8 @@ window.seek = function (t) {
   const bk = win(t, CUE.ball) * dimAt("ball", t);
   ball.visible = bk > 0.001; ball.position.set(BALL_X, comY(tau), 0);
   S.group.children.forEach((m) => { if (m.material && "opacity" in m.material && m.material.transparent) m.material.opacity = 0.9; });
-  ruler.visible = t < CUE.cuts.change;
+  ruler.visible = t >= CUE.cuts.normal && t < CUE.cuts.change;
+  [pole, arm, foot].forEach((m) => { m.visible = t >= CUE.cuts.normal; });
   S.update(t);
   cyc.update({ grid: 1, casters: [[0, 60, 0, 26], [-36, 2, 0, 16]] });
   dropT(t); dropE(t);

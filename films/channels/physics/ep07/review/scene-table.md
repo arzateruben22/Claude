@@ -15,7 +15,7 @@ One slow-motion factor for the whole film: 20× slower. The pile now falls to th
 | 22.1 | "Why doesn't it fall?" | Hung again, close on the bottom coil | "no news yet" | hush |
 | 29.3 | "The pull of the spring doesn't jump to the other end; it travels down the coils, like a wave." | A blue ring (the front) runs down the slinky as the top collapses | "the news travels", spine "news has travelled down: 0 → 100 %" | rising pad |
 | 35.2 | "Until the news arrives, the bottom has no reason to move." | The front reaches the bottom exactly on "move"; the pile then falls together toward the floor | "news arrives" (label and knock on "move") | knock on arrival |
-| 37.9 | "Its balance point, the spot you could balance it on?" | A red dot marks the balance point; a solid blue ball hangs level with it from the first frame | "balance point" (left), "dropped ball" (right, below) | blip |
+| 37.9 | "Its balance point, the spot you could balance it on?" | A red dot marks the balance point; a solid blue ball hangs level with it from the first frame | "balance point" (left, fixed), "dropped ball" (right, fixed): they never swap sides | blip |
 | 41.6 | "It falls like a dropped ball." | Both fall together, level; the pile collapses; the camera follows them down | spine "balance point: fallen" | whistle |
 | 45.5 | "The top rushes, the bottom waits: the average is a plain fall." | Dot and ball keep falling together to the floor (about 48 s), the pile lands | spine rising to 130 cm | swell |
 | 50.7 | "Measure it: the bottom's ghosts stack in one place for three tenths of a second." | Hung again; ghost ladder, top and bottom coils; ruler of the film's own spine | "bottom's ghosts: one pile", spine "bottom waited" | ticks |

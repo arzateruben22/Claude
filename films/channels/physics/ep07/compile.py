@@ -138,8 +138,8 @@ SPINE = [
 SPINE_AT = [[-1e9, [0.76, 0.34]]]
 
 LABELS = [
-    {"id": "no-held", "text": "held at the top", "color": "ghost", "t0": cut("normal") + 0.3, "t1": T_REL1, "at": "top0", "side": 1},
-    {"id": "no-ruler", "text": "hung about 1.5 m", "color": "ghost", "t0": cut("normal") + 0.3, "t1": T_REL1, "at": "ruler", "side": -1},
+    {"id": "no-held", "text": "held at the top", "color": "ghost", "t0": cut("normal") + 0.3, "t1": T_REL1 - 0.4, "at": "top0", "side": 1},
+    {"id": "no-ruler", "text": "hung about 1.5 m", "color": "ghost", "t0": cut("normal") + 0.3, "t1": T_REL1 - 0.4, "at": "ruler", "side": -1},
     {"id": "no-still", "text": "bottom: still", "color": "motion", "t0": A("vo02:bottom"), "t1": T_END1 - 0.15, "at": "bottom", "side": 1},
     {"id": "ch-top", "text": "top: falling", "color": "energy", "t0": A("vo03:coils"), "t1": A("vo03:there.") + 0.3, "at": "top", "side": 1},
     {"id": "ch-bot", "text": "bottom: still", "color": "motion", "t0": A("vo03:bottom"), "t1": T_END2 - 0.3, "at": "bottom", "side": 1},
@@ -147,8 +147,8 @@ LABELS = [
     {"id": "wy-no", "text": "no news yet", "color": "motion", "t0": A("vo04:Nothing"), "t1": A("vo04:The"), "at": "bottom", "side": 1},
     {"id": "wy-front", "text": "the news travels", "color": "force", "t0": A("vo04:travels"), "t1": A("vo04:Until") - 0.1, "at": "front", "side": 1},
     {"id": "wy-arr", "text": "news arrives", "color": "force", "t0": T_END3 - 0.15, "t1": cut("whoa") - 0.3, "at": "bottom", "side": 1},
-    {"id": "wo-mid", "text": "balance point", "color": "energy", "t0": MID_W[0] + 0.2, "t1": cut("measure") - 0.3, "at": "mid", "side": 1},
-    {"id": "wo-ball", "text": "dropped ball", "color": "force", "t0": cut("whoa") + 0.6, "t1": cut("measure") - 0.3, "at": "ball", "side": 1, "v": "below"},
+    {"id": "wo-mid", "text": "balance point", "color": "energy", "t0": MID_W[0] + 0.2, "t1": cut("measure") - 0.3, "at": "mid", "side": -1, "fixed": True},
+    {"id": "wo-ball", "text": "dropped ball", "color": "force", "t0": cut("whoa") + 0.6, "t1": cut("measure") - 0.3, "at": "ball", "side": 1, "fixed": True},
     {"id": "ms-ghost", "text": "bottom's ghosts: one pile", "color": "motion", "t0": A("vo06:stack"), "t1": T_END5 + 0.5, "at": "ghost-bot-measure-4", "side": 1},
 ]
 BADGES = [
@@ -178,8 +178,8 @@ CAM = {
     "why": [key(cut("why"), WIDE), key(A("vo04:Nothing"), BOT, "p3"), key(T_REL3 + 0.5, MIDV, "p3"), key(T_END3, MIDV, "sine"), key(cut("whoa") - 0.1, view([0.0, 70.0, 0.0], 560.0, 5.0, 10.0), "sine")],
     "whoa": [key(cut("whoa"), MIDV), key(T_REL4 + 3.0, MIDV, "sine"), key(T_REL4 + 7.0, FOLLOW, "p3"), key(T_END4, view([-10.0, 30.0, 0.0], 420.0, 5.0, -16.0), "p3"), key(cut("measure"), FLOORV, "sine")],
     "measure": [key(cut("measure"), MIDV), key(T_END5 + 0.4, MIDV, "sine"), key(cut("takeaway"), view([0.0, 78.0, 0.0], 520.0, 5.0, -8.0), "sine")],
-    "takeaway": [key(cut("takeaway"), view([-14.0, 60.0, 0.0], 480.0, 5.0, -8.0)), key(cut("takeaway") + 1.8, FLOORV, "p3"), key(cut("tease"), view([-30.0, 8.0, 0.0], 270.0, 8.0, 26.0), "sine")],
-    "tease": [key(cut("tease"), view([-30.0, 8.0, 0.0], 270.0, 8.0, 26.0)), key(EC, view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0), "p3"), key(DUR, view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0), "sine")],
+    "takeaway": [key(cut("takeaway"), view([-14.0, 60.0, 0.0], 480.0, 5.0, -8.0)), key(cut("takeaway") + 1.8, FLOORV, "p3"), key(cut("tease"), view([-30.0, -6.0, 0.0], 270.0, 8.0, 26.0), "sine")],
+    "tease": [key(cut("tease"), view([-30.0, -6.0, 0.0], 270.0, 8.0, 26.0)), key(EC, view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0), "p3"), key(DUR, view([0.0, 122.0, 0.0], 690.0, 5.0, 12.0), "sine")],
 }
 SHOTS = [{"at": CUTS[b["id"]], "name": b["id"]} for b in BEATS]
 TITLE = {"series": "Reality Rulebook · Season 2 · Episode 1", "title": "The slinky that *waits*", "t1": round(cut("normal") - 0.45, 4), "y": 0.183, "sig": -0.7}
