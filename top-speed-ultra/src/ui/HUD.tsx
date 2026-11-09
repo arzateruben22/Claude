@@ -9,7 +9,7 @@ export interface HudHandle { set: (h: HudData) => void }
 
 const miles = (m: number) => (m / 1609.344).toFixed(m < 1609 ? 2 : 1) + ' mi';
 
-export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; onAbility: () => void }>(function HUD({ showFps, visible, onAbility }, ref) {
+export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; onAbility: () => void; onThrust: (on: boolean) => void }>(function HUD({ showFps, visible, onAbility, onThrust }, ref) {
   const speed = useRef<HTMLSpanElement>(null), gear = useRef<HTMLSpanElement>(null), bar = useRef<HTMLDivElement>(null);
   const k1 = useRef<HTMLElement>(null), v1 = useRef<HTMLElement>(null), k2 = useRef<HTMLElement>(null), v2 = useRef<HTMLElement>(null);
   const k3 = useRef<HTMLElement>(null), v3 = useRef<HTMLElement>(null), fps = useRef<HTMLSpanElement>(null), cam = useRef<HTMLSpanElement>(null);
@@ -18,6 +18,9 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
   // the race HUD: the position box with the race timer beside the position, the standings, and the rev lights over the gear
   const race = useRef<HTMLDivElement>(null), pos = useRef<HTMLElement>(null), posOf = useRef<HTMLElement>(null), prog = useRef<HTMLElement>(null);
   const timer = useRef<HTMLElement>(null), rows = useRef<HTMLOListElement>(null), revs = useRef<HTMLDivElement>(null);
+  // the OC Hypercar: its tune chip, and its own systems' panel (the tank, Ground Lock, the hop) and THRUST button
+  const tune = useRef<HTMLSpanElement>(null), thr = useRef<HTMLDivElement>(null), thrPct = useRef<HTMLElement>(null), thrBar = useRef<HTMLElement>(null);
+  const thrLock = useRef<HTMLElement>(null), thrHop = useRef<HTMLElement>(null), thrBtn = useRef<HTMLButtonElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
   useImperativeHandle(ref, () => ({
@@ -80,6 +83,23 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
         b.setAttribute('aria-label', on ? `${h.ability} active` : cool > 0 ? `${h.ability} recharging` : `Use ${h.ability}`);
       }
       put(cam.current, 'cam', h.cam);
+      if (tune.current) { tune.current.hidden = !h.tune; put(tune.current, 'tune', h.tune); tune.current.classList.toggle('race', h.tune === 'Race tune'); }
+      if (thr.current && thrBtn.current) {
+        thr.current.hidden = !h.thrustLive; thrBtn.current.hidden = !h.thrustLive;
+        if (h.thrustLive) {
+          const pct = Math.round(h.tank * 100);
+          put(thrPct.current, 'thrPct', `${pct} %`);
+          if (thrBar.current) thrBar.current.style.transform = `scaleX(${h.tank.toFixed(3)})`;
+          thr.current.classList.toggle('low', h.tank < 0.1); thr.current.classList.toggle('on', h.thrustOn > 0.1);
+          thrLock.current?.classList.toggle('on', h.groundLock);
+          put(thrHop.current, 'thrHop', h.hop);
+          thrHop.current?.classList.toggle('ready', h.hop === 'Hop ready');
+          const b = thrBtn.current;
+          b.style.setProperty('--p', h.tank.toFixed(3));
+          b.classList.toggle('on', h.thrustOn > 0.1); b.classList.toggle('low', h.tank < 0.1);
+          if (last.thrAria !== String(pct)) { last.thrAria = String(pct); b.setAttribute('aria-label', `Cold Thrust: hold. Double-tap for Thrust Hop. Tank ${pct} %`); }
+        }
+      }
     },
   }));
   return (
@@ -99,7 +119,19 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
       </div>
       {showFps && <span className="hud-fps" ref={fps}>-- fps</span>}
       <button type="button" className="hud-ability" ref={abil} onClick={onAbility}><span ref={abilName}>Ability</span></button>
+      <div className="hud-thrust" ref={thr} hidden>
+        <div className="hud-thrust-top"><b>Thrust</b><em ref={thrPct as React.RefObject<HTMLElement>}>100 %</em></div>
+        <div className="hud-thrust-bar"><i ref={thrBar as React.RefObject<HTMLElement>} /><s /></div>
+        <div className="hud-thrust-low"><span className="hud-lock" ref={thrLock as React.RefObject<HTMLElement>}>Ground Lock</span><span className="hud-hop" ref={thrHop as React.RefObject<HTMLElement>} /></div>
+      </div>
+      {/* hold for Cold Thrust, double-tap for Thrust Hop (the ring is the tank) */}
+      <button type="button" className="hud-thrustbtn" ref={thrBtn} hidden
+        onPointerDown={(e) => { e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* fine */ } onThrust(true); }}
+        onPointerUp={() => onThrust(false)} onPointerCancel={() => onThrust(false)} onContextMenu={(e) => e.preventDefault()}>
+        <span>Thrust</span>
+      </button>
       <div className="hud-speed">
+        <span className="hud-tune" ref={tune} hidden />
         <div className="hud-revs" ref={revs}>{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</div>
         <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-gear" ref={gear}>1</span></div>
         <div className="hud-rpm"><div ref={bar} /></div>

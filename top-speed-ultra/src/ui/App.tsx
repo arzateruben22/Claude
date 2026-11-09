@@ -121,7 +121,7 @@ export function App() {
   return (
     <div className="app">
       <div className="stage" ref={host} />
-      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} onAbility={() => game.current?.useAbility()} />
+      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} onAbility={() => game.current?.useAbility()} onThrust={(on) => game.current?.input.setThrust('touch', on)} />
       {playing && settings.corner !== 'off' && (
         <button type="button" className={'corner ' + settings.corner} style={{ width: cornerPx, height: cornerPx }} onClick={() => game.current?.cycleCorner()}
           aria-label={settings.corner === 'map' ? 'Road map. Tap for the sky camera.' : 'Sky camera. Tap to hide.'}>
@@ -443,7 +443,8 @@ export function App() {
                 </section>
               </div>
             </div>
-            {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause.</p>}
+            {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause. OC Hypercar in Free Drive: hold Left Shift for Cold Thrust, double-tap it (or press J) for Thrust Hop; gamepad: D-pad up.</p>}
+            {coarse && <p className="fine keys">OC Hypercar in Free Drive: hold THRUST (beside your ability) for Cold Thrust, double-tap it for Thrust Hop.</p>}
             <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div>
           </div>
         </div>

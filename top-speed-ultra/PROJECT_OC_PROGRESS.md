@@ -4,6 +4,175 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-20: hypercar M5 committed (Cold Thrust, Ground Lock, Thrust Hop)
+
+Milestone M5 is done and committed on `claude/hypercar-drive`. The OC Hypercar is still a procedural model built in
+code, not a finished 3D asset. What was built: Cold Thrust (rear thrust from a tank), Ground Lock (fan suction) and
+Thrust Hop (a planned hop over traffic), live only on the Unleashed tune in Free Drive. Code in
+`src/game/vehicle/HyperAbility.ts`, `src/game/vehicle/ThrustJets.ts`, `src/game/traffic/limits.ts` and the files
+listed in the entry below. Images: `tests/out/hyper-thrust-day.png`, `tests/out/hyper-thrust-hop-r2.png`.
+Numbers (details below): 0-60 in 0.79 s with thrust and Ground Lock, peak 4.53 g, a full tank lasts 6.03 s, Ground
+Lock 2.04 g at 25 m/s in Arcade. Suite after the play retune: `npm test -- --only=abilities,survival,race,phone,boot,progression`
+53/53 passed; `node tests/dynamics.mjs` 1,742 passed, 0 failed. The play review's own test (moderate traffic, seeds
+31-34, the I-5 North straight plus four roads not tuned on) found the hop granted and over the vehicle 40-76 % of the
+time at +30 m/s from 50 m and 83-94 % over a sedan at +15 m/s from 15 m, about 230 hops with 0 contacts in the air.
+
+## 2026-10-20: the OC Hypercar's own ability: Cold Thrust, Ground Lock and Thrust Hop (hypercar M5)
+
+Branch `claude/hypercar-drive`. The car's own systems, separate from the driver's ability, on the dynamics model's
+interfaces (`ext.fx`, `ext.fz`, `hop()`, `airborne`), no new physics. Live only on the Unleashed tune in Free Drive
+(`CarDef.ability: 'hyper'`, cleared by the race tune); our own names only. Code: `src/game/vehicle/HyperAbility.ts`
+(tank, thrust, fans, the hop's planner), `src/game/vehicle/ThrustJets.ts` (the jets), `Game.ts` (rules, the hop, the
+clearance check), `input.ts` (Left Shift hold / double-tap, J, D-pad up, the touch button), `PlayerCar.ts` (nozzles, the
+dash gauge, the landing), `AudioEngine.ts`, `HUD.tsx`, `styles.css`, `App.tsx` (controls help), `contact.ts` (the level
+check measured from the road under a hopping car). Measured in the built game (owner mode, I-405 North, the
+simulation stepped at 120 Hz through `window.__game`; `tests/out/hyper-thrust/thrust.mjs`, report in
+`tests/out/hyper-thrust/report.json`):
+
+- **Cold Thrust** (2.6 g × (1 − smoothstep(0, 80, v)) + 0.05 g, see the plan §6.2 for why 2.6): 0-60 in 0.79 s with
+  THRUST and Ground Lock, 1.34 s fans only, 2.26 s tyres only; 0-100 1.47 s; peak 4.53 g. One tank from flat out:
+  335 → 341 mph. A full tank lasts 6.03 s (the suite's check). From 50 %: 73.47 % after 3 s driving at 30 m/s in the
+  proof script (`report.json`, `tank.cruise3From50` = 0.7347) and 73.94 % in the suite's check of the same 3 s drive
+  started elsewhere on the straight (its 900 m window against the script's 2,600 m one; the 0.47-point gap between
+  the two runs was not traced further; both are under the 75 % of a compressor running all 3 s, and the check allows
+  75 ± 3 %); 66.67 % after 1 s braking and 50 % after 2 s stopped in both; at 8 % the valve stays shut (both).
+- **Ground Lock** (0.8 × weight to 90 mph, 0.3 × by 200 mph): 1.54 → 2.04 g at 25 m/s and 1.49 → 1.81 g at 40 m/s in
+  Arcade, 1.42 → 1.97 g at 40 m/s in Simulation; 4 s of it costs 11.7 % of the tank.
+- **Thrust Hop**: at 60, 120 and 200 mph a 1.5 m apex, 1.1 s up, the same road and lane, at most 0.06° of slip, springs
+  0.03 m, camera dip 0.087 m. Over a parked sedan (roof 1.44 m): apex 2.54-2.74 m by approach, no contact. Over a moving semi in heavy
+  traffic (roof 4.1 m, closing at 40 m/s): peak 5.2-6.35 m over the seeds tried, 0.61-0.85 m over its roof at the
+  lowest point over the trailer, no contact, the same road.
+  Refused under an overpass ("No hop: overpass ahead"), before a sign gantry and under 40 % of tank, with no gas spent.
+  **Bug found and fixed:** the hop's scan compared each vehicle's height with the road under the car, so on a grade it
+  dropped vehicles 100 m ahead and the car landed on them (2 and then 3 of 6 seeded semi hops in a debug run); it now reads the level against the
+  road's own height where the vehicle is, and plans for the traffic braking or speeding up while the car is up.
+- **Off where it should be**: no button, no force and no hop in a race, the time trial and Speed Survival (the race
+  tune, chip "Race tune"), through the countdown, and while paused.
+- **Jets**: 3 draw calls and 384 triangles while gas flows (one instanced sprite call, 48 sprites on High and 24 on the
+  phone build, plus two nozzle cones), none otherwise; no allocation per frame.
+- **Frames** (960 × 540 High, read by eye): `tests/out/hyper-thrust-day.png` and `-night.png` (the jets in chase view),
+  `-hop.png` (over a parked sedan), `-semi.png` (over a semi in heavy traffic), `-refused.png` (the toast under an
+  overpass), `-cockpit.png` and `-dash.png` (the pressure gauge on the binnacle's left display), `-phone.png` (390 × 844:
+  THRUST beside the driver's ability, the tank panel, the Unleashed chip).
+- **Suite and harness** (*superseded* by the 37/37 re-verifications below and the repaired build's 40/40 run at the end
+  of this entry): `npm test -- --only=abilities,survival,race,phone` on the first build: abilities 14/14 (ten
+  new hypercar checks), survival 7/7, phone 6/6 (the THRUST hold and double-tap at 390 × 844), race 6/6. The race
+  group's existing "Too far behind" check timed out at its 10 s wait in two full runs with the machine at a load of
+  about 20 and passed when the group ran alone (9.8 s). `node tests/dynamics.mjs`: 1,742 passed, 0 failed. `tsc` clean
+  on both configs; `npm run build` clean.
+- **Re-verified 2026-10-21** on an unchanged tree, after a machine restart (load 35-50 from other passes): `tsc
+  --noEmit` and `npm run build` clean; `node tests/dynamics.mjs` 1,742 passed, 0 failed; `npm test --
+  --only=abilities,survival,race,phone` **37/37 passed** in 48 min 44 s (survival 7, race 6 with "Too far behind" in
+  30.9 s on the longer wait, abilities 18 with 14 hypercar checks, phone 6 with the THRUST button check). The suite's
+  numbers: 0-60 2.225 s on the tyres, 1.333 s with Ground Lock, 0.792 s with THRUST on Left Shift, peak 4.55 g; a full
+  tank 6.03 s; top speed 334.3 → 340.6 mph; Ground Lock 1.54 → 2.04 g at 25 m/s, 1.49 → 1.81 (Arcade) and 1.42 → 1.97
+  g (Simulation) at 40 m/s; hops at 60/120/200 mph landed at 60/118/196 mph with at most 0.06° of slip; parked sedan
+  apex 2.74 m; semi (seed 18, 261 cars) peak 6 m, 0.85 m over the roof, 0 contacts; a forced arc under the roof made
+  contact at 3.09 m, one at roof + 0.5 m did not. `tests/out/hyper-thrust/thrust.mjs` re-run (51 min 53 s): the same
+  telemetry to the digit, and every frame above shot again and read by eye. Jets' cost by day 907 vs 904 draw calls,
+  1,879,950 vs 1,879,566 triangles (+3 calls, +384 triangles); at night 941 vs 938, 1,916,410 vs 1,916,026.
+- **Re-verified again 2026-10-21 (later)** on the same unchanged tree, after another machine restart (load 1 at the
+  start, about 42 once the other passes resumed): `tsc --noEmit` on both configs and `npm run build` clean; `node
+  tests/dynamics.mjs` 1,742 passed, 0 failed; `tests/out/hyper-thrust/thrust.mjs` (44 min 16 s) gave the same telemetry
+  as the run above in every section of `report.json` (accel, top, tank, landings, semi, refused, lock), and every frame
+  was shot again and read by eye; jets' cost by day 900 vs 897 draw calls, 1,908,484 vs 1,908,100 triangles, at night
+  935 vs 932, 1,955,910 vs 1,955,526 (+3 calls, +384 triangles both times). `npm test --
+  --only=abilities,survival,race,phone` **37/37 passed** in 50 min 54 s (survival 7, race 6 with "Too far behind" in
+  42.2 s, abilities 18, phone 6).
+- **The repaired build re-verified 2026-11-09** (the review repairs of 2026-10-21 in the plan's §6.4: Focus Time held
+  through a hop, the plain hop short of a vehicle too far to clear, the gauge's redraw cap and "charging" label, THRUST
+  let go on a pad unplug). An earlier attempt on 2026-11-02 lost its phone group to a browser crash, and the proof
+  script's last two runs had stopped part-way, so the tree on disk was checked again from scratch (load 5-16 from other
+  passes): `tsc --noEmit` on both configs and `npm run build` clean; `node tests/dynamics.mjs` **1,742 passed, 0
+  failed**. `npm test -- --only=abilities,survival,race,phone` **40/40 passed** in 8 min 56 s (survival 7 in 56 s, race 6
+  in 61 s with "Too far behind" in 5.8 s, abilities 20 in 197 s with 16 hypercar checks, phone 7 in 213 s with the
+  THRUST button at 390 × 844 and the sideways HUD at 844 × 390). Its numbers matched the runs above: 0-60 2.225 s on the
+  tyres, 1.333 s with Ground Lock, 0.792 s with THRUST; a full tank 6.03 s; 334.32 → 340.6 mph; Ground Lock 1.54 → 2.04 g at 25
+  m/s; semi (seed 18) peak 6 m, 0.85 m over the roof, 0 contacts; Focus Time ending in the air: 0.7× through the
+  air, 0.72 m over the trailer, 0 contacts; the plain hop at 10 m/s came down 19.2 m short of the parked sedan; the
+  phone button's hold took the tank 100 → 79.19 %. `tests/out/hyper-thrust/thrust.mjs`, run one part at a time
+  (`--only=tele`, `frames`, `more`, `phone,land`): the telemetry (`report.json`) matched the 2026-10-21 run in every
+  section (0-60 0.79 / 1.34 / 2.26 s, 0-100 1.47 s, peak 4.53 g; 335.1 → 341.3 mph; landings at 60/120/200 mph:
+  1.5 m apex, 1.1 s up, at most 0.06° of slip; semi seed 25 peak 5.3 m, 0.7 m over the roof, 0 contacts; refused under
+  Seal Beach Boulevard, before the Laguna Beach / CA 133 South gantry and at 30 %; 0 page errors). Every frame was
+  shot again and read by eye: `hyper-thrust-day.png`, `-night.png` (jets white by day, ice-blue at night, the THRUST
+  panel and the Unleashed chip), `-refused.png` (the toast under the overpass), `-hop.png` (2.44 m up over the parked
+  sedan, peak 2.54 m), `-semi.png` (seed 13, 6.14 m up over the trailer, peak 6.35 m, 0 contacts), `-cockpit.png` (the
+  gauge reads 405 bar at 58 %), `-dash.png` (325 bar at 46 %), `-phone.png` (390 × 844, THRUST held, the panel at 92 %) and
+  `-landscape.png` (844 × 390, no overlaps). Jets' cost by day 904 vs 901 draw calls, 1,914,660 vs 1,914,276 triangles;
+  at night 935 vs 932, 1,960,654 vs 1,960,270 (+3 calls, +384 triangles, 48 sprites on High).
+- **Thrust Hop retuned for play, 2026-11-09** (the play review: the hop was refused at 5 of 6 deliberate double-taps
+  in moderate traffic). The plan's §6.4 has the details and the full before/after table. Code:
+  - `HyperAbility.ts`: a vehicle past the touchdown vetoes the hop only when the car would come down within one car
+    length and 2 m of its tail plus 0.5 s at the closing speed (`HOP.landGap`, was 1.5 s; within 1.5 s the toast adds
+    "· traffic on landing"). Each vehicle is planned braking at 3.2 m/s² (`IDM.comfort`, or harder when it already is;
+    was 10 m/s²) and speeding up at its own driver's rate only back to its own cruising speed (was 2.24 m/s² for the
+    whole hop). A plain hop short of a vehicle keeps 1.5 s of room before it. "Too close to clear" when only further
+    back would clear. The vehicle behind a refusal is logged in `hopLog.block`.
+  - `Game.ts`: passes each vehicle's cruising speed, bold flag and acceleration to the planner, and scans out to the
+    warning's room. `setHyper` is public (the suite's and the proof script's hook).
+- **Measured** with `tests/out/hyper-thrust/avail.mjs`, the judge's set-up run on a copy of the old build and on the
+  new one (seeds 7-12, the same vehicles; results in `tests/out/hyper-thrust/avail-before-*.json` and
+  `avail-after-*.json`):
+  - **The judge's stretch** (I-405 North from 34.5 km, moderate), granted:
+    - +30 m/s from 50 m: 15 % → 28 % (12 → 18 % over the vehicle).
+    - +40 m/s: 21 → 46 %.
+    - +30 m/s with nothing between on any road: 17 → 40 %.
+    - Heavy: 4 → 22 % at +30 m/s, 6 → 31 % at +40 m/s.
+    - Casual double-taps at 55 / 80 m/s: 22 / 8 % → 32 / 10 %.
+  - **The judge's own figures before:** 15-18 % at +30 / +40 m/s, 6-9 % in heavy traffic, 0 % over anything at
+    +15 m/s, and 1 and 5 of 25 casual double-taps at 55 and 80 m/s.
+  - **That stretch carries CA-22 West on I-405 North's centreline** (34.5-37.15 km in the road network). Its traffic
+    drives half a lane off every I-405 lane and overlaps the car's lane by about 9 cm. Cruising there on the autopilot
+    at 55 m/s with no hop, the car was in contact with CA-22 West vehicles for 3,791 steps (12 hits) in 40 s. They were
+    14 of the 17 "Too close to clear" refusals at +30 m/s and both contacts in the air at +40 m/s. This is a map-data
+    issue outside M5, reported and not fixed here.
+  - **A straight with no other freeway on its pavement** (I-5 North from 47 km), granted:
+    - +30 m/s: 31 → 54 % (30 → 53 % over the vehicle; 19 of 78 under an overpass, refused by design).
+    - +40 m/s: 41 → 68 %.
+    - Heavy: 22 → 28 % at +30 m/s, 25 → 45 % at +40 m/s.
+    - A sedan at +15 m/s from 10 / 15 / 20 m off its tail: 81 / 70 / 0 % → 85 / 79 / 76 % over it.
+    - From 50 m: 66 bunny hops short of it (0 over) → 62 of 63 "Get closer to clear", no gas spent. From 50 m at
+      +15 m/s no 2.5 s hop can pass a sedan; the car needs about 4 s.
+    - Casual double-taps at 55 / 80 m/s: 80 / 76 % → 86 / 74 %.
+  - **Contacts after the retune** on I-5 North: none in the air. None within 1.5 s of touchdown at +30 m/s (42 hops)
+    or at +15 m/s from 10 and 15 m. From 20 m, one landing rubbed a vehicle for 9 steps on the ground (no hit). At
+    +40 m/s the autopilot, which only brakes, hit the next vehicle after 3 of 54 landings into traffic (4 hits): the
+    landing is the driver's.
+- **Suite after the retune** (load 12-18 from other passes): `npm test -- --only=abilities,survival,race,phone,boot,progression`
+  **53/53 passed** in 11 min 15 s (boot 6, survival 7, race 6, abilities 21, progression 6, phone 7).
+  - The new check "Thrust Hop in natural traffic" on I-5 North from 47 km, moderate, untouched seeded traffic, nothing
+    from any road between, no structure over the track:
+    - +30 m/s from 50 m: 42 of 52 over the vehicle (81 %), 43 granted, 14 with traffic on landing, at least 0.44 m
+      over the roof, 0 contacts, the same road.
+    - A sedan at +15 m/s from 15 m: 25 of 27 over it (93 %).
+    - Cruising at 55 m/s: 36 of 40 double-taps granted (90 %), 0 contacts in the air.
+  - The existing hop proofs, re-run:
+    - Landings at 60 / 120 / 200 mph: 1.5 m apex, 1.1 s up, at most 0.06° of slip.
+    - The semi in heavy traffic: seed 11 after 1 semi refused (the first planner refused 8 of the first 9), peak 5.9 m,
+      0.66 m over the trailer, 0 contacts.
+    - Focus Time held to touchdown: 0.5 m over the trailer, 0 contacts.
+    - THRUST held through the air: 0 N up, the valve open again on landing.
+    - The plain hop at a parked sedan from 35 m at 10 m/s: down 22.1 m short of it.
+- **Other checks:** `tsc --noEmit` on both configs and `npm run build` clean; `node tests/dynamics.mjs` 1,742 passed,
+  0 failed.
+- **No headless coverage of the planner.** The dynamics harness never calls `planHop` or `hop()`, so the hop is proven
+  only in the browser: the suite and the proof script.
+- **Proof script's telemetry re-run** (`thrust.mjs --only=tele`; `report.json`):
+  - The same to the digit as before in accel, top speed, tank, landings and Ground Lock.
+  - The parked-sedan hop: peak 2.54 m (2.74 m before), 0 collisions.
+  - The semi in heavy traffic on the I-405 North straight (cars between removed): seed 16 after 4 refusals (seed 25
+    after 8 before), all four "No room to land" with the next vehicle 23-46 m past the semi. Peak 5.05 m, 0.48 m over
+    the trailer, 0 contacts, the same road; its toast "Thrust Hop · over the big rig · traffic on landing".
+- **Frames re-shot** (`thrust.mjs --only=hop,semi --suffix=-r2`, 960 × 540 High, read by eye):
+  - `tests/out/hyper-thrust-hop-r2.png`: 2.25 m up over the parked sedan, peak 2.39 m, the HUD reading "Airborne".
+  - `-semi-r2.png`: seed 11, the first semi tried, 5.18 m up over the trailer, peak 5.2 m, 0.91 m clear so far,
+    0 contacts.
+- **Not done, honestly**: Arcade's 40 m/s figure is held at 1.81 g by Arcade's steering lock, not the fans (M4's
+  grip-scaled stability control). The gauge sits on the Corsa-derived binnacle and the driver's left hand covers its
+  left third until M2 gives the hypercar its own interior. The seat view still shows the canopy bar across the
+  windscreen (the M1/M3 seat drop). The hop is the scripted road-bound arc (no pitch or roll in the air).
+
 ## 2026-10-20: the OC Hypercar is drivable (owner mode), on the finished physics
 
 The owner asked for the hypercar "ASAP". Branch `claude/hypercar-drive` = the body (`a137e50`) + the vehicle-dynamics
