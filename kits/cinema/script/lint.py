@@ -71,7 +71,7 @@ SYL_RATE = 3.8           # syllables a second for the estimate: median of Skin S
 PRE, HOLD = 0.3, 0.4     # timeline.layout's defaults: lead-in before a line, hold after it
 
 FIELDS = ("id", "sentence", "claim", "source_url", "source_title", "accessed", "verified_via", "status")
-STATUS = ("ok", "needs-wording", "TODO open link", "OPEN", "SOURCE-READ")
+STATUS = ("ok", "needs-wording", "TODO open link")
 VIA = ("search excerpt", "page")
 
 NUMBER_WORDS = set("""zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen
@@ -346,8 +346,8 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
                 r.error(f"claim {cid}", f"status must be one of {STATUS}")
             elif c["status"] == "needs-wording":
                 r.error(f"claim {cid}", "status 'needs-wording': fix the sentence, re-check, then mark it ok")
-            elif c["status"] in ("TODO open link", "OPEN"):
-                r.warn(f"claim {cid}", f"{c['status']}: {c.get('source_url')}")
+            elif c["status"] == "TODO open link":
+                r.warn(f"claim {cid}", f"TODO open link: {c.get('source_url')}")
             if c.get("verified_via") not in VIA:
                 r.error(f"claim {cid}", f"verified_via must be one of {VIA}")
             if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(c.get("accessed", ""))):
