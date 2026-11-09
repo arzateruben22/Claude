@@ -28,7 +28,7 @@ vo: Look around. The night is brighter. {-} Moonlight falls off with the square 
 shot: sand and shadow brightening; stars dim around the disc.
 
 ## eclipse (4:45–5:45)
-vo: At about this size, the Moon is bigger than the Sun. {c15} Whenever it lines up with the Sun, you get a total solar eclipse. {c15} Today a total eclipse happens somewhere on Earth about every year and a half. {c16} Here, the Moon is closer, and its shadow is wider. {c15} So it would happen far more often. {c15} Not every month, though, because its orbit is tilted a few degrees. {c17} But often. {-} Each one would be a long dark noon. {-}
+vo: At about this size, the Moon is bigger than the Sun. {c15} Whenever it lines up with the Sun, you get a total solar eclipse. {c15} Today, a total solar eclipse happens somewhere on Earth about every year and a half. {c16} Here, the Moon is closer, and its shadow is wider. {c15} So it would happen far more often. {c15} Not every month, though, because its orbit is tilted a few degrees. {c17} But often. {-} Each one would be a long dark noon. {-}
 shot: eclipse over the beach: day turns dim, corona, back; the Moon at about 2.5×.
 
 ## ground (5:45–6:30)
