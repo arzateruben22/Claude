@@ -68,6 +68,8 @@
   .seg button[aria-disabled="true"] { opacity: 0.7; cursor: not-allowed; }
   .sheet select, .sheet input[type=range] { min-height: 40px; font: inherit; font-size: 14px; color: var(--violet); background: var(--chalk); border-radius: 10px; border: 0; padding: 0 8px; }
   .sheet input[type=range] { padding: 0; accent-color: var(--lime); background: transparent; width: 160px; }
+  .sheet .mix { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
+  .sheet .mix input[type=range] { width: 110px; }
   .sheet .go { margin-top: 8px; min-height: 46px; width: 100%; border-radius: 12px; border: 0; background: var(--chalk); color: var(--violet); font-weight: 800; font-size: 16px; }
   .small { font-size: 12px !important; opacity: 0.9; }
   #busy { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(10, 9, 22, 0.82); z-index: 7; font-size: 20px; font-weight: 700; }
@@ -264,10 +266,16 @@
       <input id="hour" type="range" min="0" max="23.75" step="0.25" aria-label="Hour"><output id="hourOut" for="hour"></output>
     </div>
     <div class="row"><span>Text</span><div class="seg" id="segText"><button data-t="0">Small</button><button data-t="1">Medium</button><button data-t="2">Large</button></div></div>
+    <div class="row" id="mixRow"><span>Sound</span>
+      <label class="mix">Room <input id="mix-room" type="range" min="0" max="100" step="5" aria-label="Room sound"></label>
+      <label class="mix">Screens <input id="mix-screens" type="range" min="0" max="100" step="5" aria-label="Screens' sound"></label>
+      <label class="mix">Music <input id="mix-music" type="range" min="0" max="100" step="5" aria-label="Music"></label>
+      <label class="mix">Effects <input id="mix-effects" type="range" min="0" max="100" step="5" aria-label="Effects"></label>
+    </div>
     <div class="row"><span>Motion</span><div class="seg" id="segMotion"><button data-m="full">Full</button><button data-m="reduced">Reduced</button></div></div>
     <div class="panel" id="pauseCard" style="padding:10px 12px;margin:8px 0;background:rgba(241,239,231,0.06)"><p class="tokens" id="pauseTokens"></p><p class="small" id="pauseTokenNote"></p><p class="small"><b>Tonight's three</b></p><ol class="three" id="pauseThree"></ol><p class="small" id="pauseSave"></p></div>
     <button class="alt" id="peopleBtn">People here</button>
-    <p class="small">The clock is simulated: it sets the sun and Stoppage Time's fictional hours and crowd. Reduced motion turns off the head bob, the camera moves and the transitions.</p>
+    <p class="small">The clock is simulated: it sets the sun and Stoppage Time's fictional hours and crowd. Reduced motion turns off the head bob, the camera moves and the transitions. Every sound is made in code, and the commentary has no words.</p>
     <p class="small">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0).</p>
     <button class="go" data-close>Resume</button>
   </div>
