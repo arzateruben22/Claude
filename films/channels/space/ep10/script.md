@@ -33,7 +33,7 @@ vo: Both views are true. {-} Time depends on *where* you are, and how strong gra
 ## readout {segment: readout · light-time readout: "55 million years" to the first photographed black hole · a ping per line · picture-only 0.2 s · energy: 0.45} (57.6–66.1 s)
 vo: *Light time*: we photographed a black hole in twenty nineteen. {c7} Its light had traveled about fifty-five million *years*. {c8}
 
-## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (66.1–71.1 s)
+## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (66.1–70.3 s)
 vo: Next: a planet *lighter* than water. {-}
 end card: "Next orbit: a planet that *floats*" · "One More Orbit · S2 · Episode 5"
 
