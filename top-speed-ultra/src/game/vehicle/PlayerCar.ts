@@ -38,6 +38,7 @@ import type { Path } from '../world/Path';
 import { beamPool, BEAM_POOL } from '../textures';
 import type { DriverLook, Presentation } from '../drivers';
 import { clamp, damp, lerp } from '../util';
+import { profileOf } from '../settings';
 
 export type CarQuality = 'phone' | 'high';
 export type MirrorMode = 'live' | 'env';
@@ -45,7 +46,9 @@ export type MirrorMode = 'live' | 'env';
 // wheel: the garage's rim style (cars.ts WHEELS); absent, the car's own
 export interface CarConfig { car: CarId; paint: number; finish?: PaintFinish | null; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null; wheel?: WheelStyle }
 // paused: the game is paused (the hands' off-wheel blend and wave hold still)
-export interface CockpitState { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number; paused?: boolean }
+// handling, tank and tcs feed the sport steering wheel's displays: the handling value (its profile on the left dial),
+// the hypercar's Thrust tank (0..1) and whether the traction control is on (the right dial)
+export interface CockpitState { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number; paused?: boolean; handling?: number; tank?: number; tcs?: boolean }
 
 // the exterior's parts that only make sense from outside: the tinted glass and the dark cabin silhouette behind it
 const OUTSIDE_ONLY = ['glass', 'frit', 'interior', 'seatSil'];
@@ -463,7 +466,8 @@ export class PlayerCar {
       // share of the power the engine makes at these revs, a display figure) and the tune: Unleashed above 1 MW
       const kwMax = SPEC.power / 1000, kw = s.throttle * kwMax * clamp((s.rpm / SPEC.redline) * 1.25, 0.15, 1);
       this.interior.setInstruments?.({ rpm: s.rpm, mph: s.speed * 2.236936, gear: s.gear < 0 ? 'R' : s.gear === 0 ? 'N' : String(s.gear),
-        kw, kwMax, rpmFrac: s.rpm / SPEC.redline, mode: SPEC.power >= 1e6 ? 'UNLEASHED' : 'RACE TUNE' });
+        kw, kwMax, rpmFrac: s.rpm / SPEC.redline, mode: SPEC.power >= 1e6 ? 'UNLEASHED' : 'RACE TUNE',
+        profile: s.handling === undefined ? undefined : profileOf(s.handling), tank: s.tank, tcs: s.tcs });
       this.interior.update?.(dt);
     }
     this.arms?.setWheelAngle(this.wheelAngle, s.paused ? 0 : dt);

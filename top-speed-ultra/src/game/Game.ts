@@ -1240,6 +1240,7 @@ export class Game {
     this.car.updateCockpit(dt, {
       delta: this.phys.delta, rpm: this.phys.rpm, gear: this.phys.gear, auto: this.phys.auto, limiter: this.phys.limiter,
       speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake, paused: this.paused,
+      handling: this.phys.handling, tank: this.hyper.tank, tcs: this.phys.tc,
     });
     {
       const h = this.hyper, p = this.phys;
