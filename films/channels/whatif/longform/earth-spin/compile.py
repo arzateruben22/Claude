@@ -1,0 +1,122 @@
+"""Compile the Earth-spin pilot, "What If Earth Spun Faster and Couldn't Stop?" (16:9 long form): script + voice timings + this direction → film.json
+(the scene's clock) and sheet.json (the studio's cue sheet). Every number comes from calc.py, the same module claims.json was written from.
+
+  python3 -I films/channels/whatif/longform/earth-spin/compile.py
+
+The world (scene.mjs): you on the equator under a sky that speeds up. ONE big live number is always on screen, the length of a day (24 h falling to 1 h 24 min,
+never resetting), with your speed at the equator under it; a live weight badge; milestone badges. The sky's pace is tied to that number (one sun cycle every 16
+film seconds at 24 h, 17 times faster at 1 h 24 min). Beats cut between your eye line, over your shoulder, the globe and a tower of energy.
+"""
+import json
+import math
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[4] / "kits/cinema/script"))
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent.parent))
+from timeline import Film   # noqa: E402
+from calc import RESULTS as R, T_ORB, R as R_EQ, E_ORB, E_NOW   # noqa: E402
+
+FPS, BPM = 30, 50
+ID = "possibility-lab-earth-spin"
+f = Film(HERE / "script.md", HERE / "vo", fps=FPS, bpm=BPM)
+plan, end_hold = f.script_plan()
+BEATS = f.layout(plan, end_hold=end_hold)
+A = f.at
+B = {b["id"]: b for b in BEATS}
+L = lambda k: B[k]["line"]
+W = lambda k, word, dt=0.0: A(f"{L(k)}:{word}", dt)
+
+T0_H = 23.934
+T_ORB_H = T_ORB / 3600
+# ── the day length, falling and never resetting: (film time, hours) keys, geometric between them ──
+t_sp = round(B["spinup"]["t0"] + 0.6, 4)
+KEYS = [
+    [0.0, T0_H], [t_sp, T0_H],
+    [W("spinup", "twenty"), 20.0], [W("spinup", "sixteen"), 16.0],
+    [W("twelve", "twelve", -0.2), 12.0], [B["oceans"]["t1"], 11.2],
+    [B["weather"]["t1"], 8.0], [W("six", "six", -0.2), 6.0] if False else [B["six"]["t0"] + 1.2, 6.0],
+    [B["calendar"]["t1"], 4.6], [B["poles"]["t1"], 3.6],
+    [W("three", "three", -0.3), 3.0], [W("two", "two", -0.3), 2.0],
+    [B["one-five"]["t0"] + 2.0, 1.5], [W("float", "twenty-four", 0.0), round(T_ORB_H, 4)], [round(f.duration, 4), round(T_ORB_H, 4)],
+]
+# monotone check
+for (t0, a), (t1, b) in zip(KEYS, KEYS[1:]):
+    assert t1 >= t0 - 1e-9 and b <= a + 1e-9, (t0, a, t1, b)
+# the ocean's retreat from the poles (degrees of latitude still under water), a rough picture; first-order only
+DRY = [[0.0, 90.0], [B["oceans"]["t0"] + 14.0, 90.0], [B["oceans"]["t1"] - 4.0, 52.0], [B["weather"]["t1"], 50.0], [B["float"]["t1"], 24.0], [round(f.duration, 4), 24.0]]
+
+t_end = A("vo19:Subscribe", -0.25)
+t_title_out = B["premise"]["t0"] - 0.3
+
+SHOT_OF = {"hook": "shoulder", "premise": "globe", "today": "eye", "spinup": "eye", "twelve": "shoulder", "wind": "eye", "oceans": "globe", "weather": "globe",
+           "six": "eye", "calendar": "shoulder", "poles": "globe", "three": "shoulder", "two": "eye", "one-five": "shoulder", "float": "lift", "break": "globe",
+           "cost": "tower", "close": "shoulder", "tease": "end"}
+SHOTS = [{"at": 0.0, "name": "shoulder", "beat": "hook"}]
+for b in BEATS[1:]:
+    SHOTS.append({"at": b["t0"], "name": SHOT_OF[b["id"]], "beat": b["id"]})
+SHOTS[-1]["at"] = t_end
+SHOTS = [dict(s, name=s["name"] + f"-{i}") if False else s for i, s in enumerate(SHOTS)]
+
+def lead(pages, by=0.14):
+    for i, pg in enumerate(pages):
+        prev = pages[i - 1]["t1"] if i else -1.0
+        if pg["t0"] - prev >= by + 0.05:
+            pg["t0"] = round(max(0.0, pg["t0"] - by), 4)
+    return pages
+
+rows = R["rows"]
+BADGES = [
+    {"id": "b-thought", "text": "Thought experiment", "t0": 0.3, "t1": round(f.duration - 0.2, 4), "slot": "bl"},
+    {"id": "b-rule", "text": "only the spin changes", "t0": B["premise"]["t0"] + 4.0, "t1": B["today"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-today", "text": "today: 0.35 % lighter than on a still Earth", "t0": B["today"]["t0"] + 20.0, "t1": B["spinup"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-12", "text": "12 h day: the Sun crosses in 6 h", "t0": B["twelve"]["t0"] + 0.3, "t1": B["wind"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-wind", "text": f"wind through the air: ≈ {rows['h12']['wind_ms']} m/s at first", "t0": B["wind"]["t0"] + 12.0, "t1": B["oceans"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-ocean", "text": f"sea at the equator: +{rows['h12']['dh_km']} km vs today · rough guess", "t0": B["oceans"]["t0"] + 24.0, "t1": B["weather"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-shape", "text": "shape and seas drawn bigger than life", "t0": B["oceans"]["t0"] + 1.0, "t1": B["oceans"]["t0"] + 20.0, "slot": "tr"},
+    {"id": "b-cor", "text": "storm steering: 4 × at a 6 h day · 17 × at 1 h 24 min", "t0": B["weather"]["t0"] + 12.0, "t1": B["six"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-6", "text": "6 h day: the Sun crosses in 3 h", "t0": B["six"]["t0"] + 0.3, "t1": B["calendar"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-year", "text": "≈ 6,200 days in a year at 1 h 24 min", "t0": B["calendar"]["t0"] + 14.0, "t1": B["poles"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-45", "text": "45° N: 71 % of the speed, half the push · pole: 0", "t0": B["poles"]["t0"] + 12.0, "t1": B["three"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-3", "text": "3 h day: the Sun crosses in 90 min", "t0": B["three"]["t0"] + 0.3, "t1": B["two"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-2", "text": "2 h day: half your weight", "t0": B["two"]["t0"] + 0.3, "t1": B["one-five"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-orb", "text": "orbital speed at the equator: 7.91 km/s", "t0": B["float"]["t0"] + 2.0, "t1": B["break"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-hedge", "text": "where a simple sum stops", "t0": B["break"]["t0"] + 1.0, "t1": B["cost"]["t0"] - 0.3, "slot": "tr"},
+    {"id": "b-energy", "text": f"≈ {R['e_orb_j'] / 1e31:.0f} × 10³¹ J · {R['ratio']:.0f} × today's spin energy", "t0": B["cost"]["t0"] + 2.0, "t1": t_end - 0.4, "slot": "tr"},
+]
+for b in BADGES:
+    assert b["t1"] > b["t0"], b
+TITLE = {"series": "Possibility Lab · Long form", "title": "What if Earth spun faster and *couldn't stop*?", "t0": 0.3, "t1": round(t_title_out, 4), "sig": A("line:vo01:end", 0.05)}
+END = {"title": "Subscribe for the next *what-if*", "follow": "Possibility Lab · What If Earth Spun Faster and Couldn't Stop?",
+       "next": "Narration: synthetic voice (AI). Every number's source is in the description."}
+
+CUE = {"fps": FPS, "float": [B["float"]["t0"], B["float"]["t1"]], "break": [B["break"]["t0"], B["break"]["t1"]], "cost": [B["cost"]["t0"], B["cost"]["t1"]],
+       "weather": [B["weather"]["t0"], B["weather"]["t1"]], "wind": [B["wind"]["t0"], B["wind"]["t1"]], "oceans": [B["oceans"]["t0"], B["oceans"]["t1"]],
+       "poles": [B["poles"]["t0"], B["poles"]["t1"]], "end": t_end, "seed": 3}
+film = {
+    "id": ID, "theme": "../../theme.json", "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": round(W("float", "seven", 0.0), 4),
+    "shots": SHOTS, "beats": BEATS, "world": {"cycleS": 16.0, "keys": KEYS, "dry": DRY, "tOrbH": T_ORB_H, "t0H": T0_H, "rEq": R_EQ / 1000, "gm": 3.986004418e14,
+                                              "eNow": E_NOW, "eOrb": E_ORB},
+    "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [],
+    "work": None, "cam": {},
+    "captions": lead(f.captions(max_chars=44, balance=True, keep=("twelve hour day", "six hour day", "three hour day", "an hour and twenty-four minutes", "seven point nine kilometers a second",
+                                                              "sixteen hundred and seventy kilometers an hour"))),
+    "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
+}
+ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] not in ("tease",)]
+ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title"})
+ev.append({"t": t_end, "kind": "signature", "tag": "end"})
+for k in ("twelve", "six", "three", "two", "float"):
+    ev.append({"t": B[k]["t0"] + 0.3, "kind": "swell", "tag": f"ms-{k}", "t1": B[k]["t0"] + 3.3})
+sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working", "tail_s": 0.05,
+         "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
+         "events": sorted(ev, key=lambda e: e["t"]),
+         "voice": [{"id": v["id"], "t": v["t"], "file": v["file"]} for v in film["voice"]]}
+(HERE / "film.json").write_text(json.dumps(film, indent=1, ensure_ascii=False))
+(HERE / "sheet.json").write_text(json.dumps(sheet, indent=1, ensure_ascii=False))
+vg = [round(b["t"] - a["t"] - a["dur"], 2) for a, b in zip(f.lines, f.lines[1:])]
+print(f"film.json: {f.duration:.1f} s ({f.duration / 60:.2f} min), {len(SHOTS)} shots, {len(BADGES)} badges, {len(film['captions'])} caption pages, end card {t_end:.1f} s; voiceless gaps max {max(vg)}")
+for b in BEATS:
+    print(f"  {b['id']:<9} {b['t0']:7.1f}–{b['t1']:7.1f}")

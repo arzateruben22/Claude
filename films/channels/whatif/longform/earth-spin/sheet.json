@@ -1,0 +1,369 @@
+{
+ "duration": 521.4,
+ "fps": 30,
+ "preset": "envelope-working",
+ "tail_s": 0.05,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 19.2,
+   "energy": 0.6
+  },
+  {
+   "id": "premise",
+   "t0": 19.2,
+   "t1": 61.2,
+   "energy": 0.5
+  },
+  {
+   "id": "today",
+   "t0": 61.2,
+   "t1": 93.0,
+   "energy": 0.45
+  },
+  {
+   "id": "spinup",
+   "t0": 93.0,
+   "t1": 111.0,
+   "energy": 0.55
+  },
+  {
+   "id": "twelve",
+   "t0": 111.0,
+   "t1": 138.0,
+   "energy": 0.6
+  },
+  {
+   "id": "wind",
+   "t0": 138.0,
+   "t1": 168.0,
+   "energy": 0.7
+  },
+  {
+   "id": "oceans",
+   "t0": 168.0,
+   "t1": 231.0,
+   "energy": 0.75
+  },
+  {
+   "id": "weather",
+   "t0": 231.0,
+   "t1": 265.8,
+   "energy": 0.7
+  },
+  {
+   "id": "six",
+   "t0": 265.8,
+   "t1": 287.4,
+   "energy": 0.65
+  },
+  {
+   "id": "calendar",
+   "t0": 287.4,
+   "t1": 313.8,
+   "energy": 0.5
+  },
+  {
+   "id": "poles",
+   "t0": 313.8,
+   "t1": 348.6,
+   "energy": 0.55
+  },
+  {
+   "id": "three",
+   "t0": 348.6,
+   "t1": 365.4,
+   "energy": 0.7
+  },
+  {
+   "id": "two",
+   "t0": 365.4,
+   "t1": 386.4,
+   "energy": 0.75
+  },
+  {
+   "id": "one-five",
+   "t0": 386.4,
+   "t1": 402.0,
+   "energy": 0.8
+  },
+  {
+   "id": "float",
+   "t0": 402.0,
+   "t1": 432.0,
+   "energy": 0.9
+  },
+  {
+   "id": "break",
+   "t0": 432.0,
+   "t1": 458.4,
+   "energy": 0.85
+  },
+  {
+   "id": "cost",
+   "t0": 458.4,
+   "t1": 483.0,
+   "energy": 0.6
+  },
+  {
+   "id": "close",
+   "t0": 483.0,
+   "t1": 516.0,
+   "energy": 0.4
+  },
+  {
+   "id": "tease",
+   "t0": 516.0,
+   "t1": 521.4,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 19.2
+  },
+  {
+   "t": 18.466666666666665,
+   "kind": "signature",
+   "tag": "title"
+  },
+  {
+   "t": 19.2,
+   "kind": "section",
+   "id": "premise",
+   "t1": 61.2
+  },
+  {
+   "t": 61.2,
+   "kind": "section",
+   "id": "today",
+   "t1": 93.0
+  },
+  {
+   "t": 93.0,
+   "kind": "section",
+   "id": "spinup",
+   "t1": 111.0
+  },
+  {
+   "t": 111.0,
+   "kind": "section",
+   "id": "twelve",
+   "t1": 138.0
+  },
+  {
+   "t": 111.3,
+   "kind": "swell",
+   "tag": "ms-twelve",
+   "t1": 114.3
+  },
+  {
+   "t": 138.0,
+   "kind": "section",
+   "id": "wind",
+   "t1": 168.0
+  },
+  {
+   "t": 168.0,
+   "kind": "section",
+   "id": "oceans",
+   "t1": 231.0
+  },
+  {
+   "t": 231.0,
+   "kind": "section",
+   "id": "weather",
+   "t1": 265.8
+  },
+  {
+   "t": 265.8,
+   "kind": "section",
+   "id": "six",
+   "t1": 287.4
+  },
+  {
+   "t": 266.1,
+   "kind": "swell",
+   "tag": "ms-six",
+   "t1": 269.1
+  },
+  {
+   "t": 287.4,
+   "kind": "section",
+   "id": "calendar",
+   "t1": 313.8
+  },
+  {
+   "t": 313.8,
+   "kind": "section",
+   "id": "poles",
+   "t1": 348.6
+  },
+  {
+   "t": 348.6,
+   "kind": "section",
+   "id": "three",
+   "t1": 365.4
+  },
+  {
+   "t": 348.90000000000003,
+   "kind": "swell",
+   "tag": "ms-three",
+   "t1": 351.90000000000003
+  },
+  {
+   "t": 365.4,
+   "kind": "section",
+   "id": "two",
+   "t1": 386.4
+  },
+  {
+   "t": 365.7,
+   "kind": "swell",
+   "tag": "ms-two",
+   "t1": 368.7
+  },
+  {
+   "t": 386.4,
+   "kind": "section",
+   "id": "one-five",
+   "t1": 402.0
+  },
+  {
+   "t": 402.0,
+   "kind": "section",
+   "id": "float",
+   "t1": 432.0
+  },
+  {
+   "t": 402.3,
+   "kind": "swell",
+   "tag": "ms-float",
+   "t1": 405.3
+  },
+  {
+   "t": 432.0,
+   "kind": "section",
+   "id": "break",
+   "t1": 458.4
+  },
+  {
+   "t": 458.4,
+   "kind": "section",
+   "id": "cost",
+   "t1": 483.0
+  },
+  {
+   "t": 483.0,
+   "kind": "section",
+   "id": "close",
+   "t1": 516.0
+  },
+  {
+   "t": 516.0666666666667,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.3,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 19.5,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 61.5,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 93.3,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 111.3,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 138.3,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 168.3,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 231.3,
+   "file": "vo/08.wav"
+  },
+  {
+   "id": "vo09",
+   "t": 266.1,
+   "file": "vo/09.wav"
+  },
+  {
+   "id": "vo10",
+   "t": 287.7,
+   "file": "vo/10.wav"
+  },
+  {
+   "id": "vo11",
+   "t": 314.1,
+   "file": "vo/11.wav"
+  },
+  {
+   "id": "vo12",
+   "t": 348.9,
+   "file": "vo/12.wav"
+  },
+  {
+   "id": "vo13",
+   "t": 365.7,
+   "file": "vo/13.wav"
+  },
+  {
+   "id": "vo14",
+   "t": 386.7,
+   "file": "vo/14.wav"
+  },
+  {
+   "id": "vo15",
+   "t": 402.3,
+   "file": "vo/15.wav"
+  },
+  {
+   "id": "vo16",
+   "t": 432.3,
+   "file": "vo/16.wav"
+  },
+  {
+   "id": "vo17",
+   "t": 458.7,
+   "file": "vo/17.wav"
+  },
+  {
+   "id": "vo18",
+   "t": 483.3,
+   "file": "vo/18.wav"
+  },
+  {
+   "id": "vo19",
+   "t": 516.3,
+   "file": "vo/19.wav"
+  }
+ ]
+}

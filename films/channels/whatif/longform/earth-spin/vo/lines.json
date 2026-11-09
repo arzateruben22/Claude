@@ -1,0 +1,780 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/longform/earth-spin/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "What if the Earth started to spin faster, a little more every second, and nothing in the universe could stop it? You are standing on the equator, and you are going to watch what happens, minute by minute, until the planet can't take it anymore.",
+   "stars": [],
+   "phonemes": "wˌʌt ɪf ðɪ ˈɜːθ stˈɑːɹɾᵻd tə spˈɪn fˈæstɚ, ɐ lˈɪɾəl mˈɔːɹ ˈɛvɹi sˈɛkənd, ænd nˈʌθɪŋ ɪnðə jˈuːnɪvˌɜːs kʊd stˈɑːp ɪt? juː ɑːɹ stˈændɪŋ ɔnðɪ ɪkwˈeɪɾɚ, ænd juː ɑːɹ ɡˌoʊɪŋ tə wˈɑːtʃ wʌt hˈæpənz, mˈɪnɪt baɪ mˈɪnɪt, ʌntˈɪl ðə plˈænɪt kˈænt tˈeɪk ɪɾ ˌɛnɪmˈɔːɹ.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     7.8183,
+     8.4183
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 18.118,
+   "sha256": "9be3a498a1a5a43ee14e9edbf2649daaaa060a17fb1dea61ba3cd419b3096ea0"
+  },
+  {
+   "id": "vo02",
+   "beat": "premise",
+   "text": "Here are the rules. The Earth keeps its size, its shape, its air and its water. Only the spin changes, and it only ever gets faster. On screen there is one number that matters: the length of a day. It starts at twenty-four hours, and by the end it will have fallen to about an hour and twenty-four minutes. Under it is the second number: how fast the ground is moving under your feet. Nothing resets, and nothing slows. The planet is not a perfect ball, and we will skip a great deal of real physics, so treat every number as a first guess.",
+   "stars": [],
+   "phonemes": "hˈɪɹ ɑːɹ ðə ɹˈuːlz. ðɪ ˈɜːθ kˈiːps ɪts sˈaɪz, ɪts ʃˈeɪp, ɪts ˈɛɹ ænd ɪts wˈɔːɾɚ. ˈoʊnli ðə spˈɪn tʃˈeɪndʒᵻz, ænd ɪɾ ˈoʊnli ˈɛvɚ ɡˈɛts fˈæstɚ. ˌɔn skɹˈiːn ðɛɹ ɪz wˈʌn nˈʌmbɚ ðæt mˈæɾɚz: ðə lˈɛŋθ əvə dˈeɪ. ɪt stˈɑːɹts æt twˈɛntifˈɔːɹ ˈaʊɚz, ænd baɪ ðɪ ˈɛnd ɪt wɪl hæv fˈɔːlən tʊ ɐbˌaʊt ɐn ˈaʊɚ ænd twˈɛntifˈɔːɹ mˈɪnɪts. ˌʌndɚɹ ɪɾ ɪz ðə sˈɛkənd nˈʌmbɚ: hˌaʊ fˈæst ðə ɡɹˈaʊnd ɪz mˈuːvɪŋ ˌʌndɚ jʊɹ fˈiːt. nˈʌθɪŋ ɹᵻsˈɛts, ænd nˈʌθɪŋ slˈoʊz. ðə plˈænɪt ɪz nˌɑːɾə pˈɜːfɛkt bˈɔːl, ænd wiː wɪl skˈɪp ɐ ɡɹˈeɪt dˈiːl ʌv ɹˈiːəl fˈɪzɪks, sˌoʊ tɹˈiːt ˈɛvɹi nˈʌmbɚɹ æz ɐ fˈɜːst ɡˈɛs.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     1.1453,
+     1.5253
+    ],
+    [
+     5.4695,
+     5.8495
+    ],
+    [
+     10.0405,
+     10.4205
+    ],
+    [
+     14.9085,
+     15.2885
+    ],
+    [
+     22.6736,
+     23.0536
+    ],
+    [
+     28.6192,
+     28.9992
+    ],
+    [
+     31.2952,
+     31.6752
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 40.804,
+   "sha256": "3338ac30eb4a1fd21f733c113e44c50106df7f577543b1e47d272aeeadda631c"
+  },
+  {
+   "id": "vo03",
+   "beat": "today",
+   "text": "Right now, one day lasts twenty-four hours. Or almost: the Earth turns once in twenty-three hours, fifty-six minutes. Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour. You never feel it, because everything moves with you. What you do feel is a tiny push outward. You weigh about a third of a percent less than you would on a planet that did not spin.",
+   "stars": [],
+   "phonemes": "ɹˈaɪt nˈaʊ, wˈʌn dˈeɪ lˈæsts twˈɛntifˈɔːɹ ˈaʊɚz. ɔːɹ ˈɔːlmoʊst: ðɪ ˈɜːθ tˈɜːnz wˈʌns ɪn twˈɛntiθɹˈiː ˈaʊɚz, fˈɪftisˈɪks mˈɪnɪts. stˈændɪŋ ɔnðɪ ɪkwˈeɪɾɚ, ðə ɡɹˈaʊnd kˈæɹiz juː ɚɹˈaʊnd æɾ ɐbˌaʊt sˈɪkstiːn hˈʌndɹɪd ænd sˈɛvənti kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ. juː nˈɛvɚ fˈiːl ɪt, bɪkˈʌz ˈɛvɹɪθˌɪŋ mˈuːvz wɪð juː. wˌʌt juː dˈuː fˈiːl ɪz ɐ tˈaɪni pˈʊʃ ˈaʊtwɚd. juː wˈeɪ ɐbˌaʊt ɐ θˈɜːd əvə pɚsˈɛnt lˈɛs ðɐn juː wʊd ˌɔn ɐ plˈænɪt ðæt dɪdnˌɑːt spˈɪn.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     2.849,
+     3.229
+    ],
+    [
+     8.8452,
+     9.2252
+    ],
+    [
+     17.741,
+     18.121
+    ],
+    [
+     21.5299,
+     21.9099
+    ],
+    [
+     24.8763,
+     25.2563
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 31.049,
+   "sha256": "d90db1c3be645cfaeb673a7fe2148c8996251b493338b46b0a4df3c33f196056"
+  },
+  {
+   "id": "vo04",
+   "beat": "spinup",
+   "text": "Now the spin begins to speed up. At twenty hours, you can see the shadows sweep. At sixteen, the Sun climbs the sky like a slow elevator. The rule never changes. A day only ever gets shorter, and you cannot turn it back.",
+   "stars": [],
+   "phonemes": "nˈaʊ ðə spˈɪn bɪɡˈɪnz tə spˈiːd ˈʌp. æt twˈɛnti ˈaʊɚz, juː kæn sˈiː ðə ʃˈædoʊz swˈiːp. æt sˈɪkstiːn, ðə sˈʌn klˈaɪmz ðə skˈaɪ lˈaɪk ɐ slˈoʊ ˈɛlɪvˌeɪɾɚ. ðə ɹˈuːl nˈɛvɚ tʃˈeɪndʒᵻz. ɐ dˈeɪ ˈoʊnli ˈɛvɚ ɡˈɛts ʃˈɔːɹɾɚ, ænd juː kænˈɑːt tˈɜːn ɪt bˈæk.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     2.1652,
+     2.5452
+    ],
+    [
+     5.5575,
+     5.9375
+    ],
+    [
+     10.361,
+     10.741
+    ],
+    [
+     12.5606,
+     12.9406
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 17.2,
+   "sha256": "7607b4e19aee9439c586ddce540ff9d7c2bd258008163c89f1914cf6107f82be"
+  },
+  {
+   "id": "vo05",
+   "beat": "twelve",
+   "text": "At a twelve hour day, sunrise to sunset takes six hours. The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound. You weigh one point four percent less than on a still Earth, four times what you feel today. A seventy kilogram person feels like about sixty-nine.",
+   "stars": [],
+   "phonemes": "æɾə twˈɛlv ˈaʊɚ dˈeɪ, sˈʌnɹaɪz tə sˈʌnsɛt tˈeɪks sˈɪks ˈaʊɚz. ðə ɡɹˈaʊnd ˌʌndɚ jʊɹ fˈiːt nˈaʊ mˈuːvz æɾ ɐbˌaʊt θˈɜːɾiθɹˈiː hˈʌndɹɪd kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ, nˌɪɹli θɹˈiː tˈaɪmz ðə spˈiːd ʌv sˈaʊnd. juː wˈeɪ wˈʌn pˈɔɪnt fˈɔːɹ pɚsˈɛnt lˈɛs ðɐn ˌɔn ɐ stˈɪl ˈɜːθ, fˈɔːɹ tˈaɪmz wʌt juː fˈiːl tədˈeɪ. ɐ sˈɛvənti kˈɪləɡɹˌæm pˈɜːsən fˈiːlz lˈaɪk ɐbˌaʊt sˈɪkstinˈaɪn.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     4.3088,
+     4.6888
+    ],
+    [
+     14.4399,
+     14.8199
+    ],
+    [
+     21.6281,
+     22.0081
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 26.161,
+   "sha256": "e1434414b8d356f75817d0659f28072450f0fb801af938e613a8c8e32ddb3c79"
+  },
+  {
+   "id": "vo06",
+   "beat": "wind",
+   "text": "But the air has a problem. The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time. For the first hours, the air is left behind. At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound. Winds like that would strip the surface, and they would only be the beginning.",
+   "stars": [],
+   "phonemes": "bˌʌt ðɪ ˈɛɹ hɐz ɐ pɹˈɑːbləm. ðə ɡɹˈaʊnd spˈiːdz ˌʌp ɐtwˈʌns; ðɪ ˈætməsfˌɪɹ ɪz pˈʊld ɐlˈɔŋ ˈoʊnli baɪ fɹˈɪkʃən, ænd ðæt tˈeɪks tˈaɪm. fɚðə fˈɜːst ˈaʊɚz, ðɪ ˈɛɹ ɪz lˈɛft bᵻhˈaɪnd. æɾə twˈɛlv ˈaʊɚ dˈeɪ, ðə ɡɹˈaʊnd ɪz mˈuːvɪŋ θɹuː ðɪ ˈɛɹ æɾ ɐbˌaʊt fˈɔːɹ hˈʌndɹɪd ænd sˈɪksti mˈiːɾɚz ɐ sˈɛkənd, fˈæstɚ ðɐn ðə spˈiːd ʌv sˈaʊnd. wˈɪndz lˈaɪk ðæt wʊd stɹˈɪp ðə sˈɜːfɪs, ænd ðeɪ wʊd ˈoʊnli biː ðə bɪɡˈɪnɪŋ.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     1.7288,
+     2.1088
+    ],
+    [
+     9.6943,
+     10.0743
+    ],
+    [
+     12.953,
+     13.333
+    ],
+    [
+     23.5611,
+     23.9411
+    ]
+   ],
+   "file": "06.wav",
+   "dur": 28.821,
+   "sha256": "de92e56796e65d6cbc45f2447b2b65dc18bad9b7b77d492bad75db27ef6b485d"
+  },
+  {
+   "id": "vo07",
+   "beat": "oceans",
+   "text": "And then the oceans begin to move. A spinning planet pushes water outward, toward the equator, exactly as it pushes you. Today the Earth already bulges about twenty-one kilometers wider at the equator than from pole to pole, and the ground has had billions of years to settle into that shape. Speed the spin up quickly and the ground cannot adjust in time. At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today. The whole ocean is only about three point seven kilometers deep. So the water does not simply rise. It drains toward a belt around the equator, while the poles dry out. This is a rough, first guess, but the direction is certain: land near the poles emerges, and your own coast is flooded.",
+   "stars": [],
+   "phonemes": "ænd ðˈɛn ðɪ ˈoʊʃənz bɪɡˈɪn tə mˈuːv. ɐ spˈɪnɪŋ plˈænɪt pˈʊʃᵻz wˈɔːɾɚɹ ˈaʊtwɚd, təwˈɔːɹd ðɪ ɪkwˈeɪɾɚ, ɛɡzˈæktli æz ɪt pˈʊʃᵻz juː. tədˈeɪ ðɪ ˈɜːθ ɔːlɹˌɛdi bˈʌldʒᵻz ɐbˌaʊt twˈɛntiwˈʌn kɪlˈɑːmɪɾɚz wˈaɪdɚɹ æt ðɪ ɪkwˈeɪɾɚ ðɐn fɹʌm pˈoʊl tə pˈoʊl, ænd ðə ɡɹˈaʊnd hɐz hæd bˈɪliənz ʌv jˈɪɹz tə sˈɛɾəl ˌɪntʊ ðæt ʃˈeɪp. spˈiːd ðə spˈɪn ˌʌp kwˈɪkli ænd ðə ɡɹˈaʊnd kænˈɑːt ɐdʒˈʌst ɪn tˈaɪm. æɾə twˈɛlv ˈaʊɚ dˈeɪ, ðə wˈɔːɾɚ wˈɔnts tə stˈænd ɐbˌaʊt θˈɜːɾiθɹˈiː kɪlˈɑːmɪɾɚz hˈaɪɚɹ æt ðɪ ɪkwˈeɪɾɚ ðɐn æt ðə pˈoʊlz, ˈɛkstɹə, kəmpˈɛɹd wɪð tədˈeɪ. ðə hˈoʊl ˈoʊʃən ɪz ˈoʊnli ɐbˌaʊt θɹˈiː pˈɔɪnt sˈɛvən kɪlˈɑːmɪɾɚz dˈiːp. sˌoʊ ðə wˈɔːɾɚ dʌznˌɑːt sˈɪmpli ɹˈaɪz. ɪt dɹˈeɪnz təwˈɔːɹd ɐ bˈɛlt ɚɹˈaʊnd ðɪ ɪkwˈeɪɾɚ, wˌaɪl ðə pˈoʊlz dɹˈaɪ ˈaʊt. ðɪs ɪz ɐ ɹˈʌf, fˈɜːst ɡˈɛs, bˌʌt ðə dᵻɹˈɛkʃən ɪz sˈɜːʔn: lˈænd nˌɪɹ ðə pˈoʊlz ɪmˈɜːdʒᵻz, ænd jʊɹ ˈoʊn kˈoʊst ɪz flˈʌdᵻd.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     2.1359,
+     2.5159
+    ],
+    [
+     9.1275,
+     9.5075
+    ],
+    [
+     23.8068,
+     24.1868
+    ],
+    [
+     28.7533,
+     29.1333
+    ],
+    [
+     39.6559,
+     40.0359
+    ],
+    [
+     45.1041,
+     45.4841
+    ],
+    [
+     47.769,
+     48.149
+    ],
+    [
+     52.913,
+     53.293
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 62.026,
+   "sha256": "3d64e958b2febc43fb9d5e20ae8a39f896f2fd5284b40aba585adfff611defd3"
+  },
+  {
+   "id": "vo08",
+   "beat": "weather",
+   "text": "The sky has another problem. Storms are steered by the planet's spin, through the Coriolis effect, and that steering grows in step with the spin rate. At a six hour day it is four times stronger than today. At the edge of floating, it is seventeen times stronger. Weather systems would be squeezed into tight, fast bands, and the calm of an ordinary afternoon would be gone. Nobody could forecast it, because nobody has seen a planet like this.",
+   "stars": [],
+   "phonemes": "ðə skˈaɪ hɐz ɐnˈʌðɚ pɹˈɑːbləm. stˈɔːɹmz ɑːɹ stˈɪɹd baɪ ðə plˈænɪts spˈɪn, θɹuː ðə kˌɔːɹɪˈoʊliz ɪfˈɛkt, ænd ðæt stˈɪɹɪŋ ɡɹˈoʊz ɪn stˈɛp wɪððə spˈɪn ɹˈeɪt. æɾə sˈɪks ˈaʊɚ dˈeɪ ɪɾ ɪz fˈɔːɹ tˈaɪmz stɹˈɔŋɡɚ ðɐn tədˈeɪ. æt ðɪ ˈɛdʒ ʌv flˈoʊɾɪŋ, ɪɾ ɪz sˈɛvəntˌiːn tˈaɪmz stɹˈɔŋɡɚ. wˈɛðɚ sˈɪstəmz wʊd biː skwˈiːzd ˌɪntʊ tˈaɪt, fˈæst bˈændz, ænd ðə kˈɑːm əvən ˈɔːɹdɪnˌɛɹi ˌæftɚnˈuːn wʊd biː ɡˈɔn. nˈoʊbɑːdi kʊd fˈɔːɹkæst ɪt, bɪkˈʌz nˈoʊbɑːdi hɐz sˈiːn ɐ plˈænɪt lˈaɪk ðˈɪs.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     1.9579,
+     2.3379
+    ],
+    [
+     10.9801,
+     11.3601
+    ],
+    [
+     15.2583,
+     15.6383
+    ],
+    [
+     19.4962,
+     19.8762
+    ],
+    [
+     28.2528,
+     28.6328
+    ]
+   ],
+   "file": "08.wav",
+   "dur": 33.669,
+   "sha256": "56e702b57bb48041869d3c45e1a0e20fbc9b8a1817ca59931a0955ced1093d9c"
+  },
+  {
+   "id": "vo09",
+   "beat": "six",
+   "text": "At a six hour day, the Sun races from horizon to horizon in three hours. The equator moves at nearly seven thousand kilometers an hour. You are five and a half percent lighter. Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
+   "stars": [],
+   "phonemes": "æɾə sˈɪks ˈaʊɚ dˈeɪ, ðə sˈʌn ɹˈeɪsᵻz fɹʌm hɚɹˈaɪzən tə hɚɹˈaɪzən ɪn θɹˈiː ˈaʊɚz. ðɪ ɪkwˈeɪɾɚ mˈuːvz æt nˌɪɹli sˈɛvən θˈaʊzənd kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ. juː ɑːɹ fˈaɪv ænd ɐ hˈæf pɚsˈɛnt lˈaɪɾɚ. dʒˈʌmpɪŋ nˈaʊ tˈeɪks juː nˈoʊɾɪsəbli hˈaɪɚ ðɐn ɪt ʃˈʊd, ænd ˈɛvɹi stˈɛp fˈiːlz slˈaɪtli ɹˈɔŋ.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     5.8601,
+     6.2401
+    ],
+    [
+     10.9026,
+     11.2826
+    ],
+    [
+     13.5964,
+     13.9764
+    ]
+   ],
+   "file": "09.wav",
+   "dur": 20.479,
+   "sha256": "ca9372606fe4bbd879b1e66947d6a14cb7ab5d93bddac81b16c94de9b218f12a"
+  },
+  {
+   "id": "vo10",
+   "beat": "calendar",
+   "text": "Meanwhile, the calendar breaks. The year does not change, because the Earth still goes round the Sun once. But every day gets shorter, so a year contains more days. At a day of an hour and twenty-four minutes, a year would hold over six thousand of them. You would watch a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
+   "stars": [],
+   "phonemes": "mˈiːnwaɪl, ðə kˈæləndɚ bɹˈeɪks. ðə jˈɪɹ dʌznˌɑːt tʃˈeɪndʒ, bɪkˈʌz ðɪ ˈɜːθ stˈɪl ɡoʊz ɹˈaʊnd ðə sˈʌn wˈʌns. bˌʌt ˈɛvɹi dˈeɪ ɡˈɛts ʃˈɔːɹɾɚ, sˌoʊ ɐ jˈɪɹ kəntˈeɪnz mˈɔːɹ dˈeɪz. æɾə dˈeɪ əvən ˈaʊɚ ænd twˈɛntifˈɔːɹ mˈɪnɪts, ɐ jˈɪɹ wʊd hˈoʊld ˌoʊvɚ sˈɪks θˈaʊzənd ʌv ðˌɛm. juː wʊd wˈɑːtʃ ɐ sˈʌnɹaɪz ˈɛvɹi ˈeɪɾifˈɔːɹ mˈɪnɪts, ænd juː wʊd biː ˈæskt tə slˈiːp ˈeɪt tˈaɪmz ɐ dˈeɪ.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     1.8721,
+     2.2521
+    ],
+    [
+     7.1304,
+     7.5104
+    ],
+    [
+     11.7944,
+     12.1744
+    ],
+    [
+     18.2092,
+     18.5892
+    ]
+   ],
+   "file": "10.wav",
+   "dur": 25.322,
+   "sha256": "0854333808af3507e40e084276bb490e0f78e6691837eba737b1bf7219f65e40"
+  },
+  {
+   "id": "vo11",
+   "beat": "poles",
+   "text": "Not everyone on Earth would feel the same thing. At the poles, the ground only turns on the spot. Nobody there is carried around at all, and they would weigh the same as ever. At forty-five degrees north, you move at seventy percent of the equator's speed, and the push outward is only half as strong. The farther you stand from the equator, the longer you keep your weight. But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
+   "stars": [],
+   "phonemes": "nˌɑːt ˈɛvɹɪwˌʌn ˌɔn ˈɜːθ wʊd fˈiːl ðə sˈeɪm θˈɪŋ. æt ðə pˈoʊlz, ðə ɡɹˈaʊnd ˈoʊnli tˈɜːnz ɔnðə spˈɑːt. nˈoʊbɑːdi ðɛɹ ɪz kˈæɹid ɚɹˈaʊnd æɾ ˈɔːl, ænd ðeɪ wʊd wˈeɪ ðə sˈeɪm æz ˈɛvɚ. æt fˈɔːɹɾifˈaɪv dᵻɡɹˈiːz nˈɔːɹθ, juː mˈuːv æt sˈɛvənti pɚsˈɛnt ʌvðɪ ɪkwˈeɪɾɚz spˈiːd, ænd ðə pˈʊʃ ˈaʊtwɚd ɪz ˈoʊnli hˈæf æz stɹˈɔŋ. ðə fˈɑːɹðɚ juː stˈænd fɹʌmðɪ ɪkwˈeɪɾɚ, ðə lˈɔŋɡɚ juː kˈiːp jʊɹ wˈeɪt. bˌʌt ðə wˈɔːɾɚ lˈiːvz ðə pˈoʊlz fˈɜːst, sˌoʊ ðə stˈɪlɪst plˈeɪs ˌɔn ˈɜːθ wʊd stˈænd hˈaɪ ænd dɹˈaɪ.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     2.9283,
+     3.3083
+    ],
+    [
+     6.549,
+     6.929
+    ],
+    [
+     11.9868,
+     12.3668
+    ],
+    [
+     21.569,
+     21.949
+    ],
+    [
+     26.5449,
+     26.9249
+    ]
+   ],
+   "file": "11.wav",
+   "dur": 33.598,
+   "sha256": "725ad48a7796927b4202feb0c15f5a6eded157529694b0c59f09d85f110ed8f5"
+  },
+  {
+   "id": "vo12",
+   "beat": "three",
+   "text": "At a three hour day, the Sun crosses the sky in just ninety minutes. The ground now moves at over thirteen thousand kilometers an hour. You weigh twenty-two percent less. Seventy kilograms feels like fifty-five.",
+   "stars": [],
+   "phonemes": "æɾə θɹˈiː ˈaʊɚ dˈeɪ, ðə sˈʌn kɹˈɔsᵻz ðə skˈaɪ ɪn dʒˈʌst nˈaɪnti mˈɪnɪts. ðə ɡɹˈaʊnd nˈaʊ mˈuːvz æɾ ˌoʊvɚ θˈɜːtiːn θˈaʊzənd kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ. juː wˈeɪ twˈɛntitˈuː pɚsˈɛnt lˈɛs. sˈɛvənti kˈɪləɡɹˌæmz fˈiːlz lˈaɪk fˈɪftifˈaɪv.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     4.8569,
+     5.2369
+    ],
+    [
+     10.1943,
+     10.5743
+    ],
+    [
+     12.6133,
+     12.9933
+    ]
+   ],
+   "file": "12.wav",
+   "dur": 16.082,
+   "sha256": "1712000565bc302078955558714fd54be575665ea4d106494f2f49da8ecb1ee0"
+  },
+  {
+   "id": "vo13",
+   "beat": "two",
+   "text": "At two hours, you weigh half of what you did. Twenty thousand kilometers an hour; the Sun crosses the whole sky in an hour. Every object near the equator is half as heavy as it should be. Buildings, bridges and oceans are all being asked to hold on with half the force.",
+   "stars": [],
+   "phonemes": "æt tˈuː ˈaʊɚz, juː wˈeɪ hˈæf ʌv wʌt juː dˈɪd. twˈɛnti θˈaʊzənd kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ; ðə sˈʌn kɹˈɔsᵻz ðə hˈoʊl skˈaɪ ɪn ɐn ˈaʊɚ. ˈɛvɹi ˈɑːbdʒɛkt nˌɪɹ ðɪ ɪkwˈeɪɾɚɹ ɪz hˈæf æz hˈɛvi æz ɪt ʃˌʊd bˈiː. bˈɪldɪŋz, bɹˈɪdʒᵻz ænd ˈoʊʃənz ɑːɹ ˈɔːl bˌiːɪŋ ˈæskt tə hˈoʊld ˌɔn wɪð hˈæf ðə fˈɔːɹs.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     2.6088,
+     2.9888
+    ],
+    [
+     8.916,
+     9.296
+    ],
+    [
+     13.9241,
+     14.3041
+    ]
+   ],
+   "file": "13.wav",
+   "dur": 20.263,
+   "sha256": "d938f5c83ee55e9c1f542a11fd30b242c2528559b789d97c183b2b0300594d81"
+  },
+  {
+   "id": "vo14",
+   "beat": "one-five",
+   "text": "At an hour and a half, you are almost weightless. You weigh about one eighth of what you did. The equator moves at twenty-seven thousand kilometers an hour. One more nudge, and something changes completely.",
+   "stars": [],
+   "phonemes": "æɾ ɐn ˈaʊɚ ænd ɐ hˈæf, juː ɑːɹ ˈɔːlmoʊst wˈeɪtləs. juː wˈeɪ ɐbˌaʊt wˈʌn ˈeɪtθ ʌv wʌt juː dˈɪd. ðɪ ɪkwˈeɪɾɚ mˈuːvz æt twˈɛntisˈɛvən θˈaʊzənd kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ. wˈʌn mˈɔːɹ nˈʌdʒ, ænd sˈʌmθɪŋ tʃˈeɪndʒᵻz kəmplˈiːtli.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     2.9406,
+     3.3206
+    ],
+    [
+     5.8298,
+     6.2098
+    ],
+    [
+     10.8157,
+     11.1958
+    ]
+   ],
+   "file": "14.wav",
+   "dur": 14.712,
+   "sha256": "5febe358ebbd8a7793708d54c89c85f5f65b6e7a5b3874f112de3d82c0ab0680"
+  },
+  {
+   "id": "vo15",
+   "beat": "float",
+   "text": "At a day of about an hour and twenty-four minutes, the ground under you moves at seven point nine kilometers a second. That is the speed of a satellite in a low orbit. At that speed, the push outward exactly cancels gravity. You weigh nothing. You are no longer standing on the Earth. You are orbiting it, one stride above the surface, with the whole equator going by beneath you.",
+   "stars": [],
+   "phonemes": "æɾə dˈeɪ ʌv ɐbˌaʊt ɐn ˈaʊɚ ænd twˈɛntifˈɔːɹ mˈɪnɪts, ðə ɡɹˈaʊnd ˌʌndɚ juː mˈuːvz æt sˈɛvən pˈɔɪnt nˈaɪn kɪlˈɑːmɪɾɚz ɐ sˈɛkənd. ðæt ɪz ðə spˈiːd əvə sˈæɾəlˌaɪt ɪn ɐ lˈoʊ ˈɔːɹbɪt. æt ðæt spˈiːd, ðə pˈʊʃ ˈaʊtwɚd ɛɡzˈæktli kˈænsəlz ɡɹˈævᵻɾi. juː wˈeɪ nˈʌθɪŋ. juː ɑːɹ nˌoʊ lˈɑːŋɡɚ stˈændɪŋ ɔnðɪ ˈɜːθ. juː ɑːɹ ˈɔːɹbɪɾɪŋ ɪt, wˈʌn stɹˈaɪd əbˌʌv ðə sˈɜːfɪs, wɪððə hˈoʊl ɪkwˈeɪɾɚ ɡˌoʊɪŋ baɪ bᵻnˈiːθ juː.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     8.8295,
+     9.2095
+    ],
+    [
+     12.5525,
+     12.9325
+    ],
+    [
+     17.1776,
+     17.5576
+    ],
+    [
+     18.6625,
+     19.0425
+    ],
+    [
+     21.3899,
+     21.7699
+    ]
+   ],
+   "file": "15.wav",
+   "dur": 28.878,
+   "sha256": "1655a744c4b10a550a61719358e0cbcf09f7afd2f2722e8731baf4963407cacb"
+  },
+  {
+   "id": "vo16",
+   "beat": "break",
+   "text": "And past that point, the equator can no longer keep its own rock. This is as far as a simple sum can honestly take us. A real planet is not a perfect ball, and what happens next depends on how strong the Earth is. But the direction is clear: the spin would tear the equator apart. First the loose things would go, then the sea, then the rock.",
+   "stars": [],
+   "phonemes": "ænd pˈæst ðæt pˈɔɪnt, ðɪ ɪkwˈeɪɾɚ kæn nˌoʊ lˈɑːŋɡɚ kˈiːp ɪts ˈoʊn ɹˈɑːk. ðɪs ɪz æz fˈɑːɹ æz ɐ sˈɪmpəl sˈʌm kæn ˈɑːnɪstli tˈeɪk ˌʌs. ɐ ɹˈiːəl plˈænɪt ɪz nˌɑːɾə pˈɜːfɛkt bˈɔːl, ænd wʌt hˈæpənz nˈɛkst dᵻpˈɛndz ˌɔn hˌaʊ stɹˈɔŋ ðɪ ˈɜːθ ɪz. bˌʌt ðə dᵻɹˈɛkʃən ɪz klˈɪɹ: ðə spˈɪn wʊd tˈɛɹ ðɪ ɪkwˈeɪɾɚɹ ɐpˈɑːɹt. fˈɜːst ðə lˈuːs θˈɪŋz wʊd ɡˈoʊ, ðˈɛn ðə sˈiː, ðˈɛn ðə ɹˈɑːk.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     4.6724,
+     5.0524
+    ],
+    [
+     9.0092,
+     9.3893
+    ],
+    [
+     16.6449,
+     17.0249
+    ],
+    [
+     21.4851,
+     21.8651
+    ]
+   ],
+   "file": "16.wav",
+   "dur": 25.528,
+   "sha256": "a1eed4129c616c2a48fbcd669c38d31447b08cdcc912cabcc91023eb6c29f2de"
+  },
+  {
+   "id": "vo17",
+   "beat": "cost",
+   "text": "Of course, nothing in the real universe could ever do this. To spin the Earth that fast you would have to put in about six times ten to the thirty-first joules, nearly three hundred times the spin energy it has today. That is every drop of sunlight the Earth receives, for about eleven million years.",
+   "stars": [],
+   "phonemes": "ʌv kˈɔːɹs, nˈʌθɪŋ ɪnðə ɹˈiːəl jˈuːnɪvˌɜːs kʊd ˈɛvɚ dˈuː ðˈɪs. tə spˈɪn ðɪ ˈɜːθ ðæt fˈæst juː wʊdhˌævtə pˌʊt ɪn ɐbˌaʊt sˈɪks tˈaɪmz tˈɛn tə ðə θˈɜːɾifˈɜːst dʒˈuːlz, nˌɪɹli θɹˈiː hˈʌndɹɪd tˈaɪmz ðə spˈɪn ˈɛnɚdʒi ɪt hɐz tədˈeɪ. ðæt ɪz ˈɛvɹi dɹˈɑːp ʌv sˈʌnlaɪt ðɪ ˈɜːθ ɹᵻsˈiːvz, fɔːɹ ɐbˌaʊt ᵻlˈɛvən mˈɪliən jˈɪɹz.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     4.1517,
+     4.5317
+    ],
+    [
+     16.7825,
+     17.1625
+    ]
+   ],
+   "file": "17.wav",
+   "dur": 23.337,
+   "sha256": "16b74b9d700708e35a5f6ebab78711e275d8c5b06732a3eb2eb4d3873d048461"
+  },
+  {
+   "id": "vo18",
+   "beat": "close",
+   "text": "So the next time you stand still, remember the speed you are carrying. You are already moving at sixteen hundred kilometers an hour. You only have to go about seventeen times faster to leave the ground behind. The day would have to shrink from twenty-four hours to an hour and twenty-four minutes. That is the whole distance between standing and flying, and it is why a planet's spin can never be a small thing. Thanks for watching.",
+   "stars": [],
+   "phonemes": "sˌoʊ ðə nˈɛkst tˈaɪm juː stˈænd stˈɪl, ɹᵻmˈɛmbɚ ðə spˈiːd juː ɑːɹ kˈæɹiɪŋ. juː ɑːɹ ɔːlɹˌɛdi mˈuːvɪŋ æt sˈɪkstiːn hˈʌndɹɪd kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ. juː ˈoʊnli hæv tə ɡˌoʊ ɐbˌaʊt sˈɛvəntˌiːn tˈaɪmz fˈæstɚ tə lˈiːv ðə ɡɹˈaʊnd bᵻhˈaɪnd. ðə dˈeɪ wʊdhˌævtə ʃɹˈɪŋk fɹʌm twˈɛntifˈɔːɹ ˈaʊɚz tʊ ɐn ˈaʊɚ ænd twˈɛntifˈɔːɹ mˈɪnɪts. ðæt ɪz ðə hˈoʊl dˈɪstəns bᵻtwˌiːn stˈændɪŋ ænd flˈaɪɪŋ, ænd ɪɾ ɪz wˌaɪ ɐ plˈænɪts spˈɪn kæn nˈɛvɚ biː ɐ smˈɔːl θˈɪŋ. θˈæŋks fɔːɹ wˈɑːtʃɪŋ.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     4.5324,
+     4.9124
+    ],
+    [
+     9.2352,
+     9.6152
+    ],
+    [
+     15.3691,
+     15.7491
+    ],
+    [
+     21.4608,
+     21.8408
+    ],
+    [
+     30.197,
+     30.577
+    ]
+   ],
+   "file": "18.wav",
+   "dur": 32.004,
+   "sha256": "79e8fae6dcc2bb61c2e1fbe788bd1f7aada6aa50b42be70a1dabcb918e7ddfc5"
+  },
+  {
+   "id": "vo19",
+   "beat": "tease",
+   "text": "Subscribe, for the next what-if.",
+   "stars": [],
+   "phonemes": "səbskɹˈaɪb, fɚðə nˈɛkst wʌɾɪf.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "19.wav",
+   "dur": 2.01,
+   "sha256": "069d34250ef7c03dad717bc6dbe867e0b8a297c2e684a5e703aece523deee1aa"
+  }
+ ]
+}
