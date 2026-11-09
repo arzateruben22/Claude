@@ -17,6 +17,7 @@ for k in EP["camera"]: ev.append((R(k["t"]), f"camera: {k['img']} art, close-up 
 for l in EP["labels"]: ev.append((R(l["t0"]), f"pill draws on: {l['text']}"))
 for p in EP.get("plates", []):
     ev.append((R(p["t0"]), f"plate (art quiets): {re.sub('<br>', ' ', p['title'])}"))
+    for g in p.get("lines", []): ev.append((R(g["t"]), f"plate line appears: {g['text']}"))
     for g in p.get("tags", []): ev.append((R(g["t"]), f"tag appears: {g['text']}"))
     for r in p.get("rows", []): ev.append((R(r["t"]), f"row lights: {r['text']}"))
     for b in p.get("bars", []): ev.append((R(b["t"]), f"bar grows: {b['label']}"))

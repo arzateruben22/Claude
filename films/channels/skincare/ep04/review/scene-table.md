@@ -1,7 +1,7 @@
 # Scene table: Skin Sense No. 04, The message behind a frown (66.5 s)
 
 Times are film seconds (voice `vo/lines.json`, word times `vo/words.json`, Parakeet). Each row is a visual change; the bracket is the time since the last one. The "art" is a **procedural placeholder** (`set/gen_art.py`, marked on screen); plates, charts, pills, the scan line and every caption are drawn in code. Footers on every frame: "Conceptual illustration · not to scale", "Education, not medical advice". No disease or risk line is shown over skin or a person.
-Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm, not the studio mixer or `qa.py`). Longest gap between changes: 7.4 s (1 gaps over 4 s).
+Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm, not the studio mixer or `qa.py`). Longest gap between changes: 3.7 s (0 gaps over 4 s).
 
 | time | narration | visual change (and on-screen text) | sound |
 |---|---|---|---|
@@ -19,8 +19,10 @@ Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm,
 | 20.6 (+1.3) | SNAP-25, that the message needs. The message | camera: e7 art, close-up ×1.8 | voice |
 | 23.8 (+3.2) | stays stuck, | camera: e7 art, close-up ×1.5; pill draws on: Message stuck inside | voice |
 | 24.9 (+1.1) | so the muscle gets no signal and the frown can relax. | camera: e7 art, close-up ×1.35; pill draws on: No signal | voice |
-| 28.6 (+3.7) | Two hundred years ago, a German doctor named Justinus Kerner described a food poison found in … | plate (art quiets): <span style='font-size:1.45em'>Justinus Kerner</span>; camera: e1 art, close-up ×1.1 | voice |
-| 36.0 (+7.4) | He guessed it might one day become a medicine. | camera: e2 art, close-up ×1.1; supporting line: Poison first, medicine later.; badge: Illustration; pill draws on: Kerner's guess: a medicine | voice |
+| 28.6 (+3.7) | Two hundred years ago, a | plate (art quiets): <span style='font-size:1.45em'>Justinus Kerner</span>; camera: e1 art, close-up ×1.1 | voice |
+| 30.4 (+1.8) | German doctor named Justinus Kerner described a | plate line appears: physician, Württemberg | voice |
+| 33.5 (+3.0) | food poison found in sausages. | plate line appears: first accurate descriptions of food-borne botulism, 1817–1822 | voice |
+| 36.0 (+2.6) | He guessed it might one day become a medicine. | camera: e2 art, close-up ×1.1; supporting line: Poison first, medicine later.; badge: Illustration; pill draws on: Kerner's guess: a medicine | voice |
 | 38.1 (+2.1) | (picture only) | camera: e1 art, close-up ×1.1; pill draws on: The frown muscle | silence |
 | 40.6 (+2.5) | And here is the twist. | supporting line:  | voice |
 | 42.3 (+1.7) | The block does not | camera: e2 art, close-up ×1.5 | voice |
