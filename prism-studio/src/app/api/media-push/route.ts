@@ -11,7 +11,7 @@ import { pipeline } from "node:stream/promises";
 import { randomBytes } from "node:crypto";
 import { db } from "@/db/client";
 import { enqueue } from "@/domain/jobs";
-import { PUSH_MAX_BYTES, pushAuthorized, pushPath } from "@/domain/media-push";
+import { PUSH_MAX_BYTES, pushAuthorized, pushPath, pushPrefix } from "@/domain/media-push";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -62,6 +62,31 @@ export async function PUT(req: Request) {
     return json({ error: e instanceof Error ? e.message : "write failed" }, bytes > PUSH_MAX_BYTES ? 413 : 500);
   }
   return json({ ok: true, path: rel, bytes });
+}
+
+// DELETE ?prefix=films/channels/<channel>/   remove pushed files under one channel (or one episode/compilation
+// folder) to free disk; only files a push could have written (pushPath), plus leftover .part uploads there.
+export async function DELETE(req: Request) {
+  if (!pushAuthorized(req.headers.get("authorization"))) return denied();
+  const prefix = pushPrefix(new URL(req.url).searchParams.get("prefix") ?? "");
+  if (!prefix) return json({ error: "prefix not allowed" }, 400);
+  const root = ROOT(), dir = path.resolve(root, prefix);
+  if (!dir.startsWith(root + path.sep)) return json({ error: "prefix not allowed" }, 400);
+  const removed: string[] = [];
+  let bytes = 0;
+  const sweep = (d: string, rel: string) => {
+    for (const e of fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }) : []) {
+      const r = `${rel}/${e.name}`, p = path.join(d, e.name);
+      if (e.isDirectory()) sweep(p, r);
+      else if (e.isFile() && (pushPath(r) || /\.[0-9a-f]{12}\.part$/.test(e.name))) {
+        bytes += fs.statSync(p).size;
+        fs.rmSync(p, { force: true });
+        removed.push(r);
+      }
+    }
+  };
+  sweep(dir, prefix.replace(/\/$/, ""));
+  return json({ ok: true, removed: removed.length, bytes });
 }
 
 export async function POST(req: Request) {

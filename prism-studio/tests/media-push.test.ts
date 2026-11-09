@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { pushAuthorized, pushPath, pushToken } from "../src/domain/media-push";
+import { pushAuthorized, pushPath, pushPrefix, pushToken } from "../src/domain/media-push";
 
 describe("media push", () => {
+  it("cleanup prefixes: one channel, episode or compilation folder, nothing wider", () => {
+    for (const ok of ["films/channels/body/", "films/channels/body/ep01/", "films/channels/space/compilations/", "films/channels/space/compilations/vol01/"]) expect(pushPrefix(ok)).toBe(ok);
+    for (const bad of ["", "films/", "films/channels/", "films/channels/body", "films/channels/../", "films/channels/body/../physics/", "films/channels/body/ep01/out/", "films/channels/.x/", "/etc/"]) expect(pushPrefix(bad)).toBeNull();
+  });
   it("allows only the files the studio reads, under films/channels", () => {
     for (const ok of ["films/channels/physics/ep01/out/rest-frame-001-9x16.mp4", "films/channels/physics/ep01/out/rest-frame-001-cover.jpg",
       "films/channels/body/ep06/script.md", "films/channels/body/ep06/claims.json", "films/channels/body/ep06/film.json",

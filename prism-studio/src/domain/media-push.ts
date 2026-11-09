@@ -18,6 +18,12 @@ export function pushPath(rel: string): string | null {
   return ALLOWED.test(rel) ? rel : null;
 }
 
+/** A folder a cleanup may empty: one channel, or one episode or compilation folder in it ("films/channels/body/"). */
+export function pushPrefix(rel: string): string | null {
+  if (typeof rel !== "string" || rel.length > 200 || rel.includes("\\") || rel.split("/").some((s) => s === ".." || s.startsWith("."))) return null;
+  return /^films\/channels\/[a-z0-9-]+\/(?:(?:ep\d{2}|compilations(?:\/[A-Za-z0-9][A-Za-z0-9._-]*)?)\/)?$/.test(rel) ? rel : null;
+}
+
 /** The push token from the environment: 32+ characters, or pushing is off. */
 export function pushToken(env: Record<string, string | undefined> = process.env): string | null {
   const t = env.MEDIA_PUSH_TOKEN || "";
