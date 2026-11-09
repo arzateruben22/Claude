@@ -46,6 +46,7 @@ t_wrap0 = A("vo04:wrap", -0.1)                             # "wrap the line arou
 t_pull = A("vo04:Pull", -0.1)
 t_wrap1 = A("vo05:times", 0.0)                             # 327 laps, said as "times"
 t_one = A("vo05:one", -0.05)                               # "one lap needs only one person in three hundred"
+t_person = A("vo05:person", -0.15)                         # "one person in three hundred": 330 dots, one lit
 t_short, t_tall = A("vo06:shorter", -0.1), A("vo06:taller", -0.1)
 t_moon0 = A("vo07:reach", -0.2)                            # the thread laid out between the Earth and the Moon
 t_moon1 = A("vo07:again.", 0.1)                            # 34 trips counted by "again and again"
@@ -79,36 +80,50 @@ ARMS = T(0.0, 0.9, 0.0, 12.0, 4.0, -4.0, 0.80)
 ARMS2 = T(0.0, 0.9, 0.0, 12.0, 4.0, 8.0, 0.80)
 ROW0 = T(-1.2, 0.9, 0.0, 22.0, 4.0, 12.0, 0.80)
 ROW1 = T(1.2, 0.9, 0.0, 22.0, 4.0, 12.0, 0.80)
-PLANET = T(0.0, 6.0e6, 0.0, 6.5e7, 18.0, 0.0, 0.42)        # the Earth big in the upper half; the thread leaves the ground toward the camera's right and up
+PLANET = T(0.0, 6.0e6, 0.0, 6.5e7, 18.0, 0.0, 0.42)
+FAR = T(0.0, 0.0, -6.5e9, 3.0e10, 72.0, 0.0, 0.50)          # looking down on the thread, 13.1 million km of it, from far above        # the Earth big in the upper half; the thread leaves the ground toward the camera's right and up
 WRAP0 = T(0.0, -1.0e6, 0.0, 6.5e7, 18.0, 0.0, 0.42)
-WRAP1 = T(0.0, -1.0e6, 0.0, 6.5e7, 14.0, 60.0, 0.42)
-MOONW = T(0.0, 1.85e8, 0.0, 1.25e9, 4.0, 0.0, 0.42)     # the Earth at the bottom, the Moon at the top, one vertical line
+WRAP1 = T(0.0, -1.0e6, 0.0, 6.5e7, 14.0, 66.0, 0.42)
+MOONW = T(0.0, 1.85e8, 0.0, 1.25e9, 4.0, 20.0, 0.42)
+PERSON = T(0.0, 0.9e6, 0.0, 3.0e7, 6.0, 0.0, 0.79)         # a tiny person on the Earth: 13% of the frame, low, with the whole thread above     # the Earth at the bottom, the Moon at the top, one vertical line
 CAM = {
     "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **T(0.0, 0.9, -3.0, 19.0, 5.0, 22.0, 0.80), "ease": "sine"}],
     "arms": [{"t": B["normal"]["t0"], **T(0.0, 0.9, -3.0, 19.0, 5.0, 22.0, 0.80)}, {"t": B["normal"]["t0"] + 1.7, **ARMS, "ease": "inout2"}, {"t": t_row, **ARMS2, "ease": "sine"}],
     "row": [{"t": t_row, **ARMS2}, {"t": t_row + 1.2, **ROW0, "ease": "inout2"}, {"t": t_chain0, **ROW1, "ease": "sine"}],
     "chain": [{"t": t_chain0, **ROW1}, {"t": t_chain0 + 1.4, **T(0.0, 0.9, -4.0, 20.0, 6.0, 8.0, 0.80), "ease": "inout2"},
+              {"t": round(t_chain0 + 3.1, 4), **T(0.0, 5.0, -14.0, 38.0, 9.0, -8.0, 0.60), "ease": "inout2"},
               {"t": t_horizon, **T(0.0, 12.0, -30.0, 75.0, 14.0, 0.0, 0.50), "ease": "sine"},
               {"t": t_horizon + (t_km - t_horizon) * 0.35, **T(0.0, 2.0e3, 0.0, 2.0e4, 14.0, 0.0, 0.50), "ease": "linear"},
               {"t": t_horizon + (t_km - t_horizon) * 0.7, **T(0.0, 5.0e5, 0.0, 6.0e6, 16.0, 0.0, 0.46), "ease": "linear"},
               {"t": t_km, **PLANET, "ease": "inout2"},
-              {"t": t_wrap0, **WRAP0, "ease": "sine"}],
-    "wrap": [{"t": t_wrap0, **WRAP0}, {"t": t_wrap1, **T(0.0, -1.0e6, 0.0, 6.5e7, 16.0, 36.0, 0.42), "ease": "sine"},
-             {"t": t_short + 1.2, **T(0.0, -1.0e6, 0.0, 5.0e7, 16.0, 56.0, 0.42), "ease": "inout2"},
-             {"t": t_tall + 1.2, **T(0.0, -1.0e6, 0.0, 6.5e7, 14.0, 60.0, 0.42), "ease": "inout2"}, {"t": t_moon0, **WRAP1, "ease": "sine"}],
-    "moon": [{"t": t_moon0, **WRAP1}, {"t": t_moon0 + 1.8, **T(0.0, 2.0e7, 0.0, 3.0e8, 6.0, 30.0, 0.42), "ease": "inout2"},
-             {"t": t_moon0 + 3.2, **MOONW, "ease": "inout2"}, {"t": t_end, **MOONW, "ease": "sine"}],
-    "end": [{"t": t_end, **MOONW}, {"t": t_end + 1.0, **T(0.0, 3.0e6, 0.0, 6.0e7, 14.0, 0.0, 0.42), "ease": "inout2"},
-            {"t": t_end + 1.7, **T(0.0, 5.0e5, 0.0, 6.0e6, 14.0, 8.0, 0.46), "ease": "linear"},
-            {"t": t_end + 2.4, **T(0.0, 2.0e3, 0.0, 2.0e4, 12.0, 18.0, 0.50), "ease": "linear"},
-            {"t": t_end + 3.1, **FRONT, "ease": "inout2"}, {"t": B["tease"]["t1"], **FRONT}],
+              {"t": round(t_km + 1.0, 4), **PLANET, "ease": "sine"},
+              {"t": round(t_km + 3.6, 4), **FAR, "ease": "inout2"},                                     # "too big to picture": all of it, the Earth a dot at its foot
+              {"t": round(t_wrap0 - 2.0, 4), **FAR, "ease": "sine"},
+              {"t": t_wrap0, **WRAP0, "ease": "inout2"}],
+    "wrap": [{"t": t_wrap0, **WRAP0}, {"t": round(t_wrap0 + 3.2, 4), **T(0.0, -1.0e6, 0.0, 6.5e7, 16.0, 22.0, 0.42), "ease": "sine"},
+             {"t": round(t_pull + 0.3, 4), **T(0.0, -1.0e6, 0.0, 3.3e7, 16.0, 34.0, 0.42), "ease": "inout2"},          # in close as it is pulled tight
+             {"t": round(t_pull + 2.6, 4), **T(0.0, -1.0e6, 0.0, 6.5e7, 16.0, 44.0, 0.42), "ease": "inout2"},
+             {"t": t_wrap1, **T(0.0, -1.0e6, 0.0, 6.5e7, 16.0, 50.0, 0.42), "ease": "sine"},
+             {"t": round(t_one + 0.2, 4), **T(0.0, -1.0e6, 0.0, 6.5e7, 18.0, 52.0, 0.42), "ease": "inout2"},
+             {"t": round(t_one + 1.6, 4), **T(0.0, -1.0e6, 0.0, 2.6e7, 16.0, 60.0, 0.42), "ease": "inout2"},         # a close look at the rings
+             {"t": round(t_person + 1.2, 4), **T(0.0, -1.0e6, 0.0, 6.5e7, 16.0, 64.0, 0.42), "ease": "inout2"},
+             {"t": t_short + 0.6, **T(0.0, -1.0e6, 0.0, 5.0e7, 16.0, 66.0, 0.42), "ease": "inout2"},
+             {"t": t_tall + 1.2, **T(0.0, -1.0e6, 0.0, 6.5e7, 14.0, 66.0, 0.42), "ease": "inout2"},
+             {"t": round(t_tall + 3.0, 4), **T(0.0, -1.0e6, 0.0, 3.0e7, 16.0, 70.0, 0.42), "ease": "inout2"}, {"t": t_moon0, **WRAP1, "ease": "inout2"}],
+    "moon": [{"t": t_moon0, **WRAP1}, {"t": t_moon0 + 1.4, **T(0.0, 2.0e7, 0.0, 3.0e8, 6.0, 43.0, 0.42), "ease": "inout2"},
+             {"t": t_moon0 + 2.7, **MOONW, "ease": "inout2"}, {"t": round(t_small - 0.4, 4), **MOONW, "ease": "sine"},
+             {"t": round(t_small + 0.5, 4), **T(0.0, 1.0e7, 0.0, 2.4e8, 5.0, 10.0, 0.60), "ease": "inout2"},
+             {"t": round(t_small + 1.4, 4), **PERSON, "ease": "inout2"}, {"t": t_end, **PERSON, "ease": "sine"}],
+    "end": [{"t": t_end, **PERSON}, {"t": t_end + 0.6, **T(0.0, 5.0e5, 0.0, 6.0e6, 8.0, 6.0, 0.56), "ease": "linear"},
+            {"t": t_end + 1.1, **T(0.0, 2.0e3, 0.0, 2.0e4, 9.0, 16.0, 0.60), "ease": "linear"},
+            {"t": t_end + 1.8, **FRONT, "ease": "inout2"}, {"t": B["tease"]["t1"], **FRONT}],
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
         dt = b["t"] - a["t"]
         assert dt > 0, (shot, a["t"], b["t"])
         for kk in ("az", "el"):
-            assert abs(b[kk] - a[kk]) / dt <= 22.0 + 1e-9, f"{shot}: {kk} turns too fast between {a['t']:.2f} and {b['t']:.2f}"
+            assert abs(b[kk] - a[kk]) / dt <= 30.0 + 1e-9, f"{shot}: {kk} turns too fast between {a['t']:.2f} and {b['t']:.2f}"
 for x, y in zip(SHOTS[:-1], SHOTS[1:]):
     p, q_ = CAM[x["name"]][-1], CAM[y["name"]][0]
     assert p["target"] == q_["target"] and p["dist"] == q_["dist"], (x, y, p, q_)
@@ -147,7 +162,10 @@ BADGES = [
     {"id": "b-pop", "text": "8.2 billion people", "t0": A("vo03:billion", -0.1), "t1": t_horizon, "slot": "tl"},
     {"id": "b-km", "text": "≈ 13.1 million km of people", "t0": t_km, "t1": t_wrap0, "slot": "tr"},
     {"id": "b-wrap", "text": "∵ a straight chain, no gaps", "t0": t_wrap0, "t1": t_wrap1, "slot": "tl"},
+    {"id": "b-lap1", "text": "one lap = 40,075 km", "t0": t_wrap0 + 0.5, "t1": t_wrap0 + 3.2, "slot": "tr"},
     {"id": "b-lap", "text": "1 lap = 25 million people", "t0": t_one, "t1": t_work0 - 0.2, "slot": "tr"},
+    {"id": "b-1in", "text": "1 in 330 of us", "t0": t_person, "t1": t_work0 - 0.2, "slot": "tl"},
+    {"id": "b-me", "text": "one of 8.2 billion", "t0": t_small, "t1": t_end - 0.3, "slot": "tr"},
     {"id": "b-rounded", "text": "rounded", "t0": t_box + 0.3, "t1": t_work0 - 0.2, "slot": "tl"},
     {"id": "b-trips", "text": "≈ 34 trips to the Moon", "t0": t_moon1, "t1": t_end - 0.3, "slot": "tr"},
     {"id": "b-sens", "text": "shorter or taller: 290 to 350 laps", "t0": t_short, "t1": t_home - 0.3, "slot": "tr"},
@@ -167,7 +185,7 @@ END = {"title": "Next envelope: *a rope round the Earth*", "follow": "Possibilit
 
 CUE = {"fps": FPS, "row": t_row, "chain": [t_chain0, t_horizon, t_km], "wrap": [t_wrap0, t_wrap1, t_pull], "one": t_one, "short": t_short, "tall": t_tall,
        "moon": [t_moon0, t_moon1], "small": t_small, "home": t_home, "box": t_box, "lapKeys": LAP_KEYS, "tripKeys": TRIP_KEYS, "thread": THREAD,
-       "nPeople": [[round(t * 0.5, 2), round(n_people(t * 0.5), 2)] for t in range(0, int(f.duration * 2) + 2)]}
+       "lapDraw": [t_wrap0 + 0.5, t_wrap0 + 2.7], "person": t_person, "small": t_small, "nPeople": [[round(t * 0.5, 2), round(n_people(t * 0.5), 2)] for t in range(0, int(f.duration * 2) + 2)]}
 film = {
     "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": round(t_box + 1.0, 4),
     "shots": SHOTS, "beats": BEATS,

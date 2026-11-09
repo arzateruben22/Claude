@@ -98,7 +98,7 @@ const yarn = new THREE.InstancedMesh(new THREE.TorusGeometry(1, 0.0016, 5, 128),
   for (let i = 0; i < NLAP; i++) { Ax.set(r2() - 0.5, r2() - 0.5, r2() - 0.5).normalize(); Q4.setFromAxisAngle(Ax, r2() * Math.PI); const rr = R_E * (1.004 + 0.00028 * i); S4.set(rr, rr, rr); P4.set(0, -R_E, 0); M4.compose(P4, Q4, S4); yarn.setMatrixAt(i, M4); }
   yarn.instanceMatrix.needsUpdate = true; }
 yarn.frustumCulled = false; yarn.userData.noProbe = true; yarn.visible = false; yarn.renderOrder = 6; scene.add(yarn);
-const lapRing = new THREE.Mesh(new THREE.TorusGeometry(1, 0.004, 6, 160), basic(MARK, 0.95, false)); lapRing.renderOrder = 7; lapRing.frustumCulled = false; lapRing.visible = false; lapRing.userData.noProbe = true; scene.add(lapRing);
+const lapRing = new THREE.Mesh(new THREE.TorusGeometry(1, 0.004, 6, 160), basic(MARK, 0.95, false)); const LAPIDX = 6 * 160 * 6; lapRing.renderOrder = 7; lapRing.frustumCulled = false; lapRing.visible = false; lapRing.userData.noProbe = true; scene.add(lapRing);
 const threadG = new THREE.PlaneGeometry(1, 1); threadG.rotateX(-Math.PI / 2); threadG.translate(0, 0, -0.5);
 const thread = new THREE.Mesh(threadG, new THREE.MeshBasicMaterial({ color: unlit(ANCH), transparent: true, opacity: 1, depthTest: true, depthWrite: false, side: THREE.DoubleSide }));
 thread.renderOrder = 5; thread.frustumCulled = false; thread.userData.noProbe = true; thread.visible = false; scene.add(thread);
@@ -110,6 +110,13 @@ for (let i = 0; i < NT; i++) {
   const g = new THREE.BufferGeometry().setFromPoints(pts), ln = new THREE.Line(g, new THREE.LineBasicMaterial({ color: unlit(i % 5 === 0 ? MARK : CHALK), transparent: true, opacity: 0.55, depthTest: false }));
   ln.frustumCulled = false; ln.visible = false; ln.userData.noProbe = true; scene.add(ln); arcs.push(ln);
 }
+
+// "one person in three hundred": 330 dots, one lit (a screen-space overlay in the free band under the captions)
+const dotsEl = document.createElement("div");
+dotsEl.style.cssText = "position:absolute;left:14%;top:72.5%;width:72%;height:13%;opacity:0;pointer-events:none;z-index:4";
+{ let h = '<svg viewBox="0 0 330 100" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" aria-hidden="true">';
+  for (let r = 0; r < 10; r++) for (let c = 0; c < 33; c++) { const lit = r === 4 && c === 16; h += `<circle cx="${5 + c * 10}" cy="${5 + r * 10}" r="${lit ? 4.6 : 2.4}" fill="${lit ? ANCH : CHALK2}" opacity="${lit ? 1 : 0.4}"/>`; }
+  dotsEl.innerHTML = h + "</svg>"; document.body.appendChild(dotsEl); }
 
 // ── the camera ──────────────────────────────────────────────────────────────
 const rig = createRig(FILM.cam);
@@ -160,10 +167,13 @@ window.seek = function (t) {
   desk.group.visible = d < 320;
   desk.update({ grid: 1 - seg(Math.log10(d), 2.0, 2.5), pool: [pose.target[0], pose.target[2]], casters: [[0, 1.7, 0, 0.35]], span: Math.max(800, d * 8) });
   const endTail = shot === "end" ? 1 : 0;
-  const showYou = d < 500 && shot !== "wrap" && shot !== "moon" && shot !== "row";
+  const bigMe = (shot === "moon" && t > CUE.small + 0.3) || shot === "end";
+  const meS = bigMe ? Math.max(1, 0.055 * d / 1.7) : 1;
+  const showYou = bigMe ? d < 4e8 : d < 500 && shot !== "wrap" && shot !== "moon" && shot !== "row";
   you.group.visible = showYou;
   const armsU = shot === "arms" ? E.inout2(seg(t, beat("normal").t0 + 0.4, beat("normal").t0 + 1.4)) * (1 - E.inout2(seg(t, FILM.cue.row - 0.8, FILM.cue.row - 0.2))) : 0;
-  you.set({ at: [0, 0.85, 0], arms: 0.04 + 0.6 * armsU + (shot === "front" || shot === "chain" || shot === "end" ? 0.34 : 0), tilt: 0 });
+  you.group.scale.setScalar(meS);
+  you.set({ at: [0, 0.85 * meS, 0], arms: 0.04 + 0.6 * armsU + (shot === "front" || shot === "chain" || shot === "end" ? 0.34 : 0), tilt: 0 });
   // people in the chain
   let n = keyed(CUE.nPeople, t); if (shot === "end") n = WD.n0;
   const nn = Math.max(0, Math.min(WD.nmax, Math.floor(n)));
@@ -190,8 +200,16 @@ window.seek = function (t) {
   const laps = keyed(CUE.lapKeys, t), nLap = Math.max(0, Math.min(NLAP, Math.floor(laps)));
   const yarnFade = shot === "moon" ? 1 - E.inout2(seg(t, CUE.moon[0] + 0.1, CUE.moon[0] + 1.3)) : shot === "end" ? 0 : 1;
   yarn.visible = planet && nLap > 0 && yarnFade > 0.01 && shot !== "chain"; yarn.count = nLap; yarn.material.opacity = 0.55 * yarnFade;
+  const drawU = seg(t, CUE.lapDraw[0], CUE.lapDraw[1]), drawOn = seg(t, CUE.lapDraw[0] - 0.05, CUE.lapDraw[0] + 0.15) * (1 - seg(t, CUE.lapDraw[1] + 0.4, CUE.lapDraw[1] + 0.9));
   const oneOn = seg(t, CUE.one - 0.1, CUE.one + 0.4) * yarnFade * (shot === "wrap" ? 1 : 0);
-  lapRing.visible = planet && oneOn > 0.01; lapRing.material.opacity = 0.95 * oneOn; lapRing.position.set(0, -R_E, 0); lapRing.scale.setScalar(R_E * 1.12); lapRing.rotation.set(1.1, 0.4, 0.2);
+  const showLap = planet && shot === "wrap" && (drawOn > 0.01 || oneOn > 0.01) && t < CUE.moon[0];
+  lapRing.visible = showLap;
+  if (t < CUE.one - 0.1) { lapRing.geometry.setDrawRange(0, Math.max(6, Math.floor(drawU * LAPIDX))); lapRing.material.opacity = 0.95 * drawOn; lapRing.rotation.set(Math.PI / 2, 0, 0); lapRing.scale.setScalar(R_E * 1.014); }
+  else { lapRing.geometry.setDrawRange(0, LAPIDX); lapRing.material.opacity = 0.95 * oneOn; lapRing.rotation.set(1.1, 0.4, 0.2); lapRing.scale.setScalar(R_E * 1.12); }
+  lapRing.position.set(0, -R_E, 0);
+  // the dots: one in 330, lit
+  const dOn = seg(t, CUE.person - 0.1, CUE.person + 0.5) * (1 - seg(t, CUE.home - 7.6, CUE.home - 7.2));
+  dotsEl.style.opacity = String((dOn * 0.95).toFixed(3));
   // the Moon and the trips
   const moonOn = shot === "moon" || (shot === "end" && t < FILM.endCard + 1.2);
   const rM = Math.max(1.737e6, px * 3.0);
