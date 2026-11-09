@@ -5,7 +5,7 @@ Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm,
 
 | time | narration | visual change (and on-screen text) | sound |
 |---|---|---|---|
-| 0.0 | Who tells your face to frown? | camera: e1 art, close-up ×1.05; supporting line: A nerve sends a signal. A muscle responds.; badge: Simplified · not to scale; pill draws on: Frown muscle | voice |
+| 0.0 | Who tells your face to frown? | camera: e1 art, close-up ×1.1; supporting line: A nerve sends a signal. A muscle responds.; badge: Simplified · not to scale; pill draws on: Frown muscle | voice |
 | 2.0 (+2.0) | It starts with one small, quiet message. | camera: e2 art, close-up ×1.0 | voice |
 | 5.1 (+3.1) | Every frown begins at | camera: e2 art, close-up ×1.5; pill draws on: Nerve ending | voice |
 | 6.4 (+1.2) | the end of a nerve. The nerve lets out a | camera: e3 art, close-up ×1.3 | voice |
@@ -21,14 +21,14 @@ Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm,
 | 24.9 (+1.1) | so the muscle gets no signal and the frown can relax. | camera: e7 art, close-up ×1.35; pill draws on: No signal | voice |
 | 28.6 (+3.7) | Two hundred years ago, a German doctor named Justinus Kerner described a food poison found in … | plate (art quiets): <span style='font-size:1.45em'>Justinus Kerner</span>; camera: e1 art, close-up ×1.1 | voice |
 | 36.0 (+7.4) | He guessed it might one day become a medicine. | camera: e2 art, close-up ×1.1; supporting line: Poison first, medicine later.; badge: Illustration; pill draws on: Kerner's guess: a medicine | voice |
-| 38.1 (+2.1) | (picture only) | camera: e1 art, close-up ×1.15; pill draws on: The frown muscle | silence |
+| 38.1 (+2.1) | (picture only) | camera: e1 art, close-up ×1.1; pill draws on: The frown muscle | silence |
 | 40.6 (+2.5) | And here is the twist. | supporting line:  | voice |
 | 42.3 (+1.7) | The block does not | camera: e2 art, close-up ×1.5 | voice |
 | 43.4 (+1.1) | last. The nerve slowly grows | camera: e8 art, close-up ×1.1; supporting line: The block wears off. The nerve rebuilds. | voice |
 | 45.3 (+1.9) | new endings, and about | pill draws on: New endings | voice |
 | 46.8 (+1.5) | three months later the message | badge: About 3 months · time compressed | voice |
 | 48.2 (+1.4) | flows again. | camera: e4 art, close-up ×1.3; pill draws on: Message flows again | voice |
-| 49.5 (+1.2) | (picture only) | camera: e8 art, close-up ×1.05 | silence |
+| 49.5 (+1.2) | (picture only) | camera: e8 art, close-up ×1.1 | silence |
 | 52.5 (+3.0) | So a frown is a message, and this toxin | supporting line: Movement starts with a message. | voice |
 | 55.1 (+2.6) | blocks it. | camera: e7 art, close-up ×1.4 | voice |
 | 56.3 (+1.2) | The skin was never | camera: e1 art, close-up ×1.1; supporting line: The skin was never the target. | voice |
