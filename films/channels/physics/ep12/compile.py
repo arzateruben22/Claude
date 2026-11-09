@@ -4,8 +4,8 @@
 
 The model (scene.mjs reproduces it): a round drop of radius r falling in air, m dv/dt = m g - (1/2) C rho_air A v^2 with C = 0.5, rho_air = 1.21 kg/m^3
 (OpenStax University Physics Vol. 1, 6.4, and Loftus and Wordsworth, arXiv 2102.09570, Eq. 4). Its closed form: v = vT tanh(g t / vT), s = (vT^2 / g) ln cosh(g t / vT),
-vT = sqrt(8 rho_w g r / (3 rho_air C)): r = 0.5 mm gives 4.65 m/s, 1.5 mm 8.05 m/s, 2.5 mm 10.40 m/s. Real drops flatten and C changes with speed, so real speeds differ:
-the film badges it as a model. The fall is drawn slowed down 4x (a badge) over a stage that stands for 16 m of height. The breakup of the big drop is an illustration.
+vT = sqrt(8 rho_w g r / (3 rho_air C)): r = 0.5 mm gives 4.65 m/s, 1.0 mm 6.58 m/s, 2.0 mm 9.30 m/s (a real 4 mm drop falls near 9 m/s). Real drops flatten and C changes with speed, so real speeds differ:
+the film badges it as a model. The fall is drawn slowed down 4x (a badge) over a stage that stands for 24 m of height. The breakup of the big drop is an illustration.
 """
 import json
 import math
@@ -36,8 +36,9 @@ def cut(beat):
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
 G, RHO_W, RHO_A, CD = 9.81, 1000.0, 1.21, 0.5
 SLOWF = 4.0          # film seconds per real second
-HSTAGE = 16.0        # metres the stage stands for
-RADII = {"small": 0.5e-3, "medium": 1.5e-3, "big": 2.5e-3}
+HSTAGE = 24.0        # metres the stage stands for
+RADII = {"small": 0.5e-3, "medium": 1.0e-3, "big": 2.0e-3}
+PAUSE = 0.9          # seconds a landed drop waits before the next one falls (scene.mjs)
 
 
 def vT(r):
@@ -45,46 +46,52 @@ def vT(r):
 
 
 VT = {k: vT(r) for k, r in RADII.items()}
-assert abs(VT["small"] - 4.65) < 0.02 and abs(VT["big"] - 10.40) < 0.02, VT
+assert abs(VT["small"] - 4.65) < 0.02 and abs(VT["medium"] - 6.58) < 0.02 and abs(VT["big"] - 9.30) < 0.02, VT
+FALLT = {k: VT[k] / G * math.acosh(math.exp(G * HSTAGE / VT[k] ** 2)) * SLOWF for k in VT}   # film seconds one fall takes
 _v8 = [x for x in f.lines if x["id"] == "vo08"][0]
 ENDSHOW = round(max(_v8["t"] + _v8["dur"] + 0.3, DUR - 2.0), 4)
 # the falls: lane, start (film time), end; each lane's drop restarts at its start and loops until the end (the scene knows the period)
+# the medium drop falls twice through the normal/change/why beats; its first fall starts with the normal beat, the second ends just before the whoa beat
+_M0 = round(cut("whoa") - 0.5 - 2 * FALLT["medium"] - PAUSE, 4)
 FALLS = [
-    {"lane": "medium", "t0": round(0.7, 4), "t1": cut("whoa")},
-    {"lane": "small", "t0": round(cut("whoa") + 0.2, 4), "t1": cut("measure")},
-    {"lane": "medium", "t0": round(cut("whoa") + 0.2, 4), "t1": cut("measure")},
-    {"lane": "big", "t0": round(cut("whoa") + 0.2, 4), "t1": cut("measure")},
+    {"lane": "medium", "t0": _M0, "t1": cut("whoa"), "hang": round(_M0 - 1.2, 4)},
+    {"lane": "small", "t0": round(cut("whoa") + 0.6, 4), "t1": cut("measure")},
+    {"lane": "medium", "t0": round(cut("whoa") + 0.6, 4), "t1": cut("measure")},
+    {"lane": "big", "t0": round(cut("whoa") + 0.6, 4), "t1": cut("measure")},
     {"lane": "small", "t0": round(cut("measure") + 0.3, 4), "t1": cut("takeaway")},
-    {"lane": "big", "t0": round(A("vo06:five-millimeter") - 2.4, 4), "t1": cut("takeaway")},
-    {"lane": "small", "t0": round(cut("takeaway") + 0.2, 4), "t1": cut("tease")},
-    {"lane": "medium", "t0": round(cut("takeaway") + 0.2, 4), "t1": cut("tease")},
-    {"lane": "big", "t0": round(cut("takeaway") + 0.2, 4), "t1": cut("tease")},
+    {"lane": "big", "t0": round(cut("measure") + 0.3, 4), "t1": cut("takeaway")},
+    {"lane": "small", "t0": round(cut("takeaway") + 0.6, 4), "t1": cut("tease")},
+    {"lane": "medium", "t0": round(cut("takeaway") + 0.6, 4), "t1": cut("tease")},
+    {"lane": "big", "t0": round(cut("takeaway") + 0.6, 4), "t1": cut("tease")},
 ]
 SPLIT_T = round(A("vo05:break") + 0.1, 4)           # the big drop breaks apart (an illustration), in the whoa beat
-ARROWS_W = [round(cut("change") + 0.3, 4), round(cut("whoa") - 0.3, 4)]
+_F2 = round(_M0 + FALLT["medium"] + PAUSE, 4)           # when the second medium fall starts: arrows show during it
+ARROWS_W = [round(_F2 + 0.3, 4), round(_F2 + FALLT["medium"] - 0.4, 4)]
 FOCUS = [                                           # which drop the readout follows
-    {"t0": cut("normal") + 0.2, "t1": cut("whoa"), "lane": "medium"},
-    {"t0": cut("measure"), "t1": A("vo06:five-millimeter") - 0.5, "lane": "small"},
-    {"t0": A("vo06:five-millimeter") - 0.5, "t1": cut("takeaway") - 0.3, "lane": "big"},
+    {"t0": _M0, "t1": cut("whoa"), "lane": "medium"},
+    {"t0": cut("measure"), "t1": A("vo06:four-millimeter") - 0.5, "lane": "small"},
+    {"t0": A("vo06:four-millimeter") - 0.5, "t1": cut("takeaway") - 0.3, "lane": "big"},
 ]
 LABELS = [
-    {"id": "no-speed", "text": "speeding up", "color": "energy", "t0": cut("normal") + 0.8, "t1": A("vo02:Watch") - 0.3, "at": "med-top", "side": 1},
-    {"id": "no-steady", "text": "steady speed", "color": "motion", "t0": A("vo02:Watch") + 1.2, "t1": cut("change") - 0.3, "at": "med-low", "side": 1},
-    {"id": "ch-weight", "text": "weight", "color": "force", "t0": cut("change") + 0.5, "t1": A("vo03:pushes.") - 0.5, "at": "w-arrow", "side": -1},
-    {"id": "ch-drag", "text": "air pushing back", "color": "energy", "t0": A("vo03:The#2") if False else A("vo03:harder") - 0.4, "t1": cut("why") - 0.3, "at": "d-arrow", "side": 1},
-    {"id": "wy-tie", "text": "a tie", "color": "ghost", "t0": A("vo04:matches"), "t1": cut("whoa") - 0.3, "at": "med-low", "side": 1},
-    {"id": "wo-small", "text": "small: round", "color": "ghost", "t0": A("vo05:Small") , "t1": A("vo05:biggest") - 0.1, "at": "lane-small", "side": 1},
-    {"id": "wo-big", "text": "big: a bun", "color": "energy", "t0": A("vo05:biggest"), "t1": A("vo05:break") - 0.1, "at": "lane-big", "side": 1},
-    {"id": "wo-split", "text": "breaks apart", "color": "force", "t0": SPLIT_T + 0.1, "t1": cut("measure") - 0.3, "at": "lane-big", "side": 1},
+    {"id": "no-speed", "text": "speeding up", "color": "energy", "t0": _M0 + 0.8, "t1": A("vo02:Watch") - 0.3, "at": "lane-medium", "side": 1},
+    {"id": "no-steady", "text": "steady speed", "color": "motion", "t0": A("vo02:Watch") + 1.2, "t1": min(cut("change") - 0.3, _M0 + FALLT["medium"] - 0.4), "at": "lane-medium", "side": 1},
+    {"id": "ch-weight", "text": "weight", "color": "force", "t0": _F2 + 1.0, "t1": cut("why") - 0.3, "at": "w-arrow", "side": -1},
+    {"id": "ch-drag", "text": "air pushing back", "color": "energy", "t0": A("vo03:harder") - 0.4, "t1": cut("why") - 0.3, "at": "d-arrow", "side": 1},
+    {"id": "wy-tie", "text": "a tie", "color": "ghost", "t0": A("vo04:matches"), "t1": A("vo04:weight#2") + 0.5, "at": "lane-medium", "side": 1},
+    {"id": "wo-small", "text": "round", "color": "ghost", "t0": A("vo05:Small"), "t1": A("vo05:biggest") - 0.1, "at": "lane-small", "side": 1},
+    {"id": "wo-big", "text": "a bun", "color": "energy", "t0": A("vo05:flatten") - 0.1, "t1": A("vo05:break") - 0.1, "at": "lane-big", "side": -1},
+    {"id": "wo-split", "text": "breaks apart", "color": "force", "t0": SPLIT_T + 0.1, "t1": cut("measure") - 0.3, "at": "split", "side": -1},
 ]
 for _lb in LABELS:
     _lb["t0"] = round((math.floor(_lb["t0"] * FPS) + 0.5) / FPS, 6)
+    assert _lb["t1"] > _lb["t0"] + 0.8, ("label never shows", _lb["id"], _lb["t0"], _lb["t1"])
 BADGES = [
     {"id": "slow", "kind": "tag", "text": "Fall slowed 4×", "t0": cut("normal") + 0.3, "t1": round(cut("tease") - 0.3, 4), "slot": "tr"},
-    {"id": "mod", "kind": "tag", "text": "A model: round drops", "t0": cut("measure"), "t1": round(cut("tease") - 0.5, 4), "slot": "tr"},
+    {"id": "mod", "kind": "tag", "text": "A model: round drops", "t0": round(cut("normal") + 0.3, 4), "t1": round(cut("tease") - 0.5, 4), "slot": "tr"},
+    {"id": "bun", "kind": "tag", "text": "Flattening: illustration", "t0": round(A("vo05:flatten") - 0.2, 4), "t1": round(cut("measure") - 0.3, 4), "slot": "tr"},
     {"id": "ill", "kind": "tag", "text": "Illustration", "t0": cut("tease"), "t1": round(ENDSHOW - 0.3, 4), "slot": "tr"},
 ]
-SPINE = [{"t0": round(cut("normal") + 0.2, 4), "t1": round(cut("whoa") - 0.3, 4), "label": "speed of the drop", "unit": "m/s", "dp": 1},
+SPINE = [{"t0": _M0, "t1": round(cut("whoa") - 0.3, 4), "label": "speed of the drop", "unit": "m/s", "dp": 1},
          {"t0": cut("measure"), "t1": round(cut("takeaway") - 0.3, 4), "label": "speed of the drop", "unit": "m/s", "dp": 1}]
 SPINE_AT = [[-1e9, [0.5, 0.262]]]
 
@@ -105,7 +112,7 @@ film = {
     "id": "reality-rulebook-s2e06", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
     "shots": SHOTS, "beats": BEATS, "cue": {"cuts": CUTS, "arrows": ARROWS_W}, "spine": SPINE, "spineAt": SPINE_AT,
-    "model": {"g": G, "rhoW": RHO_W, "rhoA": RHO_A, "C": CD, "slow": SLOWF, "hstage": HSTAGE, "radii": RADII, "vT": VT}, "falls": FALLS, "split": SPLIT_T, "focus": FOCUS, "bun": [round(A("vo05:biggest"), 4), cut("measure")], "ghostT": [round(A("vo02:Watch") - 0.2, 4), cut("tease")], "tagT": [round(A("vo06:tops"), 4), round(A("vo06:five-millimeter") + 0.3, 4), round(cut("takeaway") - 0.2, 4)],
+    "model": {"g": G, "rhoW": RHO_W, "rhoA": RHO_A, "C": CD, "slow": SLOWF, "hstage": HSTAGE, "radii": RADII, "vT": VT}, "falls": FALLS, "pause": PAUSE, "split": SPLIT_T, "focus": FOCUS, "bun": [round(A("vo05:flatten") - 0.1, 4), cut("measure")], "ghostT": [round(A("vo02:Watch") - 0.2, 4), cut("tease")], "tagT": [round(A("vo06:tops"), 4), round(A("vo06:four-millimeter") + 0.3, 4), round(cut("takeaway") - 0.2, 4)],
     "labels": LABELS, "badges": BADGES, "cam": CAM, "captionY": 0.655, "title": TITLE,
     "captions": [pg for pg in phrase_captions(f, max_chars=24, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "endCard": EC,
     "end": {"title": "That's season *two*", "follow": "Follow Reality Rulebook", "foot": "Loftus and Wordsworth, arXiv 2102.09570 (2021)."},

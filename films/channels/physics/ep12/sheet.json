@@ -73,18 +73,24 @@
    "t1": 17.8667
   },
   {
-   "t": 4.1833,
-   "kind": "counter.show",
-   "tag": "spine"
-  },
-  {
    "t": 4.2833,
    "kind": "badge",
    "tag": "slow",
    "text": "Fall slowed 4×"
   },
   {
-   "t": 4.783333,
+   "t": 4.2833,
+   "kind": "badge",
+   "tag": "mod",
+   "text": "A model: round drops"
+  },
+  {
+   "t": 5.4012,
+   "kind": "counter.show",
+   "tag": "spine"
+  },
+  {
+   "t": 6.216667,
    "kind": "label",
    "tag": "no-speed"
   },
@@ -105,7 +111,7 @@
    "t1": 26.9333
   },
   {
-   "t": 18.35,
+   "t": 23.75,
    "kind": "label",
    "tag": "ch-weight"
   },
@@ -142,7 +148,13 @@
    "tag": "wo-small"
   },
   {
-   "t": 47.616667,
+   "t": 47.8,
+   "kind": "badge",
+   "tag": "bun",
+   "text": "Flattening: illustration"
+  },
+  {
+   "t": 47.916667,
    "kind": "label",
    "tag": "wo-big"
   },
@@ -155,12 +167,6 @@
    "t": 50.083333,
    "kind": "label",
    "tag": "wo-split"
-  },
-  {
-   "t": 51.45,
-   "kind": "badge",
-   "tag": "mod",
-   "text": "A model: round drops"
   },
   {
    "t": 51.450033,

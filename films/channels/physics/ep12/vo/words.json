@@ -800,8 +800,8 @@
   },
   {
    "id": "vo06",
-   "text": "Measure it: in this model, a one-millimeter drop tops out near five meters a second. A five-millimeter drop, near ten.",
-   "heard": "Measure it. In this model, a 1mm drop tops out near 5 meters a second. A 5mm drop near 10.",
+   "text": "Measure it: in this model, a one-millimeter drop tops out near five meters a second. A four-millimeter drop, near nine.",
+   "heard": "Measure it. In this model, a 1mm drop tops out near 5 meters a second, a 4mm drop near 9.",
    "words": [
     {
      "w": "Measure",
@@ -811,116 +811,116 @@
     },
     {
      "w": "it:",
-     "start": 0.65,
+     "start": 0.645,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "in",
-     "start": 1.13,
+     "start": 1.125,
      "end": 1.28,
      "heard": true
     },
     {
      "w": "this",
-     "start": 1.375,
+     "start": 1.37,
      "end": 1.44,
      "heard": true
     },
     {
      "w": "model,",
-     "start": 1.51,
+     "start": 1.505,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.265,
-     "end": 2.32,
+     "start": 2.285,
+     "end": 2.335,
      "heard": true
     },
     {
      "w": "one-millimeter",
-     "start": 2.295,
-     "end": 3.2,
+     "start": 2.315,
+     "end": 3.28,
      "heard": false
     },
     {
      "w": "drop",
-     "start": 3.23,
-     "end": 3.6,
+     "start": 3.27,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "tops",
-     "start": 3.665,
-     "end": 4.0,
+     "start": 3.71,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "out",
-     "start": 3.905,
+     "start": 4.025,
      "end": 4.24,
      "heard": true
     },
     {
      "w": "near",
-     "start": 4.165,
-     "end": 4.48,
+     "start": 4.205,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "five",
-     "start": 4.52,
-     "end": 4.88,
+     "start": 4.56,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "meters",
-     "start": 4.895,
-     "end": 5.36,
+     "start": 4.965,
+     "end": 5.44,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.31,
-     "end": 5.52,
+     "start": 5.35,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 5.62,
-     "end": 6.4,
+     "start": 5.69,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "A",
-     "start": 6.545,
-     "end": 6.64,
+     "start": 6.595,
+     "end": 6.645,
      "heard": true
     },
     {
-     "w": "five-millimeter",
-     "start": 6.575,
-     "end": 7.6,
+     "w": "four-millimeter",
+     "start": 6.735,
+     "end": 7.52,
      "heard": false
     },
     {
      "w": "drop,",
-     "start": 7.55,
-     "end": 8.0,
+     "start": 7.505,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "near",
-     "start": 8.21,
-     "end": 8.48,
+     "start": 8.095,
+     "end": 8.32,
      "heard": true
     },
     {
-     "w": "ten.",
-     "start": 8.47,
-     "end": 8.96,
+     "w": "nine.",
+     "start": 8.37,
+     "end": 8.8,
      "heard": true
     }
    ]

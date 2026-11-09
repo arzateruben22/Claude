@@ -71,14 +71,14 @@
   {
    "id": "vo06",
    "beat": "measure",
-   "text": "Measure it: in this model, a one-millimeter drop tops out near five meters a second. A five-millimeter drop, near ten.",
+   "text": "Measure it: in this model, a one-millimeter drop tops out near five meters a second. A four-millimeter drop, near nine.",
    "stars": [
     "Measure it"
    ],
-   "phonemes": "mˈɛʒɚɹ ɪt: ɪn ðɪs mˈɑːdəl, ɐ wˈʌnmˈɪlɪmˌiːɾɚ dɹˈɑːp tˈɑːps ˈaʊt nˌɪɹ fˈaɪv mˈiːɾɚz ɐ sˈɛkənd. ɐ fˈaɪvmˈɪlɪmˌiːɾɚ dɹˈɑːp, nˌɪɹ tˈɛn.",
+   "phonemes": "mˈɛʒɚɹ ɪt: ɪn ðɪs mˈɑːdəl, ɐ wˈʌnmˈɪlɪmˌiːɾɚ dɹˈɑːp tˈɑːps ˈaʊt nˌɪɹ fˈaɪv mˈiːɾɚz ɐ sˈɛkənd. ɐ fˈɔːɹmˈɪlɪmˌiːɾɚ dɹˈɑːp, nˌɪɹ nˈaɪn.",
    "file": "06.wav",
-   "dur": 8.979,
-   "sha256": "7c70ddd8b266a93c37952e957ac6aaf2f416087e8d6ce01bc56bb84852df5ebd"
+   "dur": 8.854,
+   "sha256": "63c04981cfd78097f2a5a8b69d125fcf4d041fa24ed9747b27a2f3cdf1edd58b"
   },
   {
    "id": "vo07",

@@ -1,6 +1,6 @@
 // Reality Rulebook · Season 2 · Episode 6, "The slow raindrop" (films/channels/physics/ep12; the season finale): the picture, a pure function of t.
-// Three round drops (0.5, 1.5, 2.5 mm radius) fall through a stage that stands for 16 m of height, computed from m dv/dt = m g - 1/2 C rho A v^2
-// (closed form: v = vT tanh(g t / vT)), drawn slowed 4x. Ghosts every quarter of a real second show the gaps grow, then stop growing; arrows show
+// Three round drops (0.5, 1.0, 2.0 mm radius) fall through a stage that stands for 24 m of height, computed from m dv/dt = m g - 1/2 C rho A v^2
+// (closed form: v = vT tanh(g t / vT)), drawn slowed 4x. Ghosts every half of a real second show the gaps grow, then stop growing; arrows show
 // the weight and the drag; a plot strip shows speed against time. The model uses round drops (badged); the flattening and the breakup are illustrations.
 import * as THREE from "three";
 import { stage, seg, E, ease, shotAt, keyed } from "cinema/film/runtime.js";
@@ -34,17 +34,17 @@ window.SCENE_READY = P.ready;
 
 // ── physics: a round drop, drag 1/2 C rho A v^2 ──
 const G = M.g, SLOW = M.slow, HST = M.hstage;
-const LANES = { small: { x: -5.4, vt: M.vT.small, r: 0.3, col: "#1F3BD1", mm: "1 mm" }, medium: { x: 0, vt: M.vT.medium, r: 0.5, col: "#08805A", mm: "3 mm" }, big: { x: 5.4, vt: M.vT.big, r: 0.72, col: "#B8321A", mm: "5 mm" } };
+const LANES = { small: { x: -5.4, vt: M.vT.small, r: 0.3, col: "#1F3BD1", mm: "1 mm" }, medium: { x: 0, vt: M.vT.medium, r: 0.5, col: "#08805A", mm: "2 mm" }, big: { x: 5.4, vt: M.vT.big, r: 0.72, col: "#B8321A", mm: "4 mm" } };
 const sOf = (vt, tau) => (vt * vt / G) * Math.log(Math.cosh(G * tau / vt)), vOf = (vt, tau) => vt * Math.tanh(G * tau / vt);
 for (const k in LANES) LANES[k].fall = (LANES[k].vt / G) * Math.acosh(Math.exp(G * HST / (LANES[k].vt * LANES[k].vt)));
-const PAUSE = 0.9, YTOP = 9.0, YH = 9.0;
+const PAUSE = FILM.pause, HANG = 0.5, YTOP = 9.0, YH = 9.0;
 const yOfS = (s) => YTOP - (s / HST) * YH;
 const laneState = (lane, t) => {
-  const L = LANES[lane]; let sg = null; for (const f of FILM.falls) if (f.lane === lane && t >= f.t0 && t < f.t1) sg = f;
-  if (!sg) return null;
+  const L = LANES[lane]; let sg = null, pre = null; for (const f of FILM.falls) if (f.lane === lane) { if (t >= f.t0 && t < f.t1) sg = f; else if (t < f.t0 && t >= f.t0 - (f.hang ?? HANG)) pre = f; }
+  if (!sg) return pre ? { falling: false, hang: true, u: Math.min(1, (t - (pre.t0 - (pre.hang ?? HANG))) / HANG), tau: 0, s: 0, v: 0, cyc: -1 } : null;
   const fallFilm = L.fall * SLOW, period = fallFilm + PAUSE, el = t - sg.t0, ph = el % period, cyc_ = Math.floor(el / period);
   if (ph < fallFilm) { const tau = ph / SLOW; return { falling: true, tau, s: sOf(L.vt, tau), v: vOf(L.vt, tau), cyc: cyc_, ph, seg: sg }; }
-  return { falling: false, tau: L.fall, s: HST, v: L.vt, cyc: cyc_, ph, since: ph - fallFilm, seg: sg };
+  return { falling: false, hang: true, u: Math.min(1, (ph - fallFilm) / HANG), tau: L.fall, s: HST, v: L.vt, cyc: cyc_, ph, since: ph - fallFilm, seg: sg };   // landed: the next drop forms at the cloud
 };
 
 // ── the stage: cloud, ground, a height ladder, lane guides ──
@@ -84,7 +84,7 @@ const mkRibbon = (n, color) => { const g = new THREE.BufferGeometry(), pos = new
   const idx = []; for (let i = 0; i < n - 1; i++) { const a = 2 * i, b = a + 1, c = a + 2, d = a + 3; idx.push(a, b, c, b, d, c); } g.setIndex(idx);
   const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide })); m.frustumCulled = false; panel.add(m); return { m, pos, n, g }; };
 const setRibbon = (rb, pts, w) => { for (let i = 0; i < rb.n; i++) { const [x, y] = pts[Math.min(i, pts.length - 1)]; rb.pos.set([x, y + w, 0, x, y - w, 0], i * 6); } rb.g.attributes.position.needsUpdate = true; };
-const PX0 = -7.4, PX1 = 7.6, PY0 = -2.1, PY1 = 2.3, TMAX = 2.2, VMAX = 11.5;
+const PX0 = -7.4, PX1 = 7.6, PY0 = -2.1, PY1 = 2.3, TMAX = 2.2, VMAX = 10.6;
 const pxOf = (tau) => PX0 + (PX1 - PX0) * Math.min(tau, TMAX) / TMAX, pyOf = (v) => PY0 + (PY1 - PY0) * v / VMAX;
 const curves = {}; for (const k in LANES) { const rb = mkRibbon(90, flat(LANES[k].col)); const pts = []; for (let i = 0; i < 90; i++) { const tau = TMAX * i / 89; pts.push([pxOf(tau), pyOf(vOf(LANES[k].vt, tau))]); } setRibbon(rb, pts, 0.09); curves[k] = rb; }
 const axisMat = new THREE.MeshBasicMaterial({ color: flat(HEX.ink2) });
@@ -95,14 +95,14 @@ const mkTag = (text, w, h, x, y, col = "#1B1E24") => { const cv = document.creat
   const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, transparent: true })); m.position.set(x, y, 0.08); panel.add(m);
   const draw = () => { const g = cv.getContext("2d"); g.clearRect(0, 0, cv.width, cv.height); g.fillStyle = col; g.font = `600 ${Math.round(cv.height * 0.55)}px "IBM Plex Sans", sans-serif`; g.textBaseline = "middle"; g.fillText(text, 8, cv.height / 2); tex.needsUpdate = true; };
   if (window.FONTS_READY) window.FONTS_READY.then(draw); else draw(); return m; };
-const tagSpeed = mkTag("speed", 4.6, 1.1, -6.3, 2.65), tagSmall = mkTag("1 mm: 4.6 m/s", 5.6, 1.1, 1.9, pyOf(M.vT.small) - 1.05, "#1F3BD1"), tagBig = mkTag("5 mm: 10.4 m/s", 5.8, 1.1, -3.3, pyOf(M.vT.big) + 0.72, "#B8321A");
+const tagSpeed = mkTag("speed", 4.6, 1.1, -6.3, 2.65), tagSmall = mkTag("1 mm: 4.6 m/s", 5.6, 1.1, 1.9, pyOf(M.vT.small) - 1.05, "#1F3BD1"), tagBig = mkTag("4 mm: 9.3 m/s", 5.8, 1.1, -3.3, pyOf(M.vT.big) + 0.72, "#B8321A");
 tagSmall.position.x = 3.6; tagBig.position.x = 2.8;
 
 // ── the rain (the finale): many drops falling slowly to the ground ──
 const rain = new THREE.Group(); scene.add(rain); rain.visible = false;
 function rng(seed) { let a = seed >>> 0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 const rr = rng(2006), NR = 34, RD = [];
-for (let i = 0; i < NR; i++) { const r = (0.4 + 2.2 * rr()) * 1e-3, vt = Math.sqrt(8 * M.rhoW * G * r / (3 * M.rhoA * M.C)); RD.push({ x: -7.8 + 15.6 * rr(), off: rr(), vt, r: 0.12 + 0.07 * (r * 1e3), fall: (vt / G) * Math.acosh(Math.exp(G * HST / (vt * vt))) }); }
+for (let i = 0; i < NR; i++) { const r = (0.4 + 1.6 * rr()) * 1e-3, vt = Math.sqrt(8 * M.rhoW * G * r / (3 * M.rhoA * M.C)); RD.push({ x: -7.8 + 15.6 * rr(), off: rr(), vt, r: 0.12 + 0.07 * (r * 1e3), fall: (vt / G) * Math.acosh(Math.exp(G * HST / (vt * vt))) }); }
 const rainDrops = RD.map((d) => { const m = new THREE.Mesh(sphere, dropMat); m.scale.set(d.r, d.r * 1.15, d.r); rain.add(m); return m; });
 const rainSplash = RD.map(() => { const m = new THREE.Mesh(new THREE.TorusGeometry(1, 0.05, 8, 24), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true })); m.rotation.x = Math.PI / 2; m.visible = false; rain.add(m); return m; });
 
@@ -129,16 +129,15 @@ const titleEl = hud.title(FILM.title);
 const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const dropPos = (lane, t) => { const st = laneState(lane, t); return [LANES[lane].x, st && st.falling ? yOfS(st.s) : YTOP]; };
-const anchorFn = (an) => {
-  if (an === "med-top") return (t) => { const [x, y] = dropPos("medium", t); return [x, y + 0.5, 0.5]; };
-  if (an === "med-low") return (t) => { const [x, y] = dropPos("medium", t); return [x, y, 0.5]; };
-  if (an === "w-arrow") return (t) => { const [x, y] = dropPos("medium", t); return [x - 0.9, y - 2.0, 0.8]; };
-  if (an === "d-arrow") return (t) => { const [x, y] = dropPos("medium", t), st = laneState("medium", t), v = st ? st.v : 0; return [x + 0.9, y + 2.0 * (v / LANES.medium.vt) ** 2, 0.8]; };
-  if (an === "lane-small") return (t) => { const [x, y] = dropPos("small", t); return [x, y, 0.5]; };
-  if (an === "lane-big") return (t) => { const [x, y] = dropPos("big", t); return [x, y, 0.5]; };
+const anchorFn = (an, side) => {
+  const ringR = (k) => LANES[k].r * 2 + 0.3;
+  if (an.startsWith("lane-")) { const k = an.slice(5), sd = side; return (t) => { const [x, y] = dropPos(k, t); return [x + sd * ringR(k), y, 0.5]; }; }
+  if (an === "w-arrow") return (t) => { const [x, y] = dropPos("medium", t); return [x - 1.5, y - 1.0, 0.8]; };
+  if (an === "d-arrow") return (t) => { const [x, y] = dropPos("medium", t), st = laneState("medium", t), v = st ? st.v : 0; return [x + 1.5, y + 1.0 * (v / LANES.medium.vt) ** 2, 0.8]; };
+  if (an === "split") return (t) => { const s0 = laneState("big", FILM.split); return [LANES.big.x - 1.4, Math.max(0.5, yOfS(s0.s) - 0.65 * (t - FILM.split) * 1.0), 0.5]; };
   return () => [0, 0, 0];
 };
-for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: false });
+for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at, lb.side), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: false });
 const focusVal = (t) => { const f = FILM.focus.find((q) => t >= q.t0 && t < q.t1) || FILM.focus[FILM.focus.length - 1], st = laneState(f.lane, t); return st ? st.v : LANES[f.lane].vt; };
 FILM.spine.forEach((SPN, i) => { const o = { value: focusVal, fmt: (v) => v.toFixed(1), unit: "m/s", label: SPN.label, t0: SPN.t0, t1: SPN.t1, minCh: 4 }, el = hud.counter(i ? "spine" + (i + 1) : "spine", o); placeSpine(o, el, hud, W, H, FILM.spineAt); });
 const endEl = hud.end({ t0: ES - 0.3, d: 0.3, ...FILM.end });
@@ -146,7 +145,7 @@ const footEl = document.createElement("div"); footEl.className = "rf-foot"; foot
 { const st = document.createElement("style");
   st.textContent = SPINE_CSS + ".rf-foot { margin-top: 3.2vmin; max-width: 62vmin; font: 500 2.9vmin/1.35 var(--font-text); color: var(--ink-2, #4B505B); }";
   document.head.appendChild(st); }
-const dropE = dropTitle(endEl, { sig: ES, fps: FILM.fps, head: ".t", fall: 90 });
+const dropE = dropTitle(endEl, { sig: ES, fps: FILM.fps, head: ".t", fall: 90, copies: 0 });
 const win = (t, w, fin = 0.5, fout = 0.4) => (w ? Math.min(E.out2(seg(t, w[0], w[0] + fin)), 1 - E.in2(seg(t, w[1] - fout, w[1]))) : 0);
 const FRAGX = [-1.3, -0.6, 0.2, 0.8, 1.5], FRAGV = [0.9, 1.1, 0.8, 1.0, 1.2];
 
@@ -159,11 +158,11 @@ window.seek = function (t) {
   const splitDone = t >= FILM.split && t < T.measure;
   for (const k in LANES) {
     const L = LANES[k], o = lanes[k], st = inRain ? null : laneState(k, t);
-    const show = !!(st && st.falling) && !(k === "big" && splitDone);
+    const show = !!st && !(k === "big" && splitDone);
     o.g.visible = show;
-    if (show) { o.g.position.set(L.x, yOfS(st.s), 0); const u = k === "big" ? bun : 0; o.body.scale.set(L.r * (1 + 0.35 * u), L.r * (1 - 0.45 * u), L.r * (1 + 0.35 * u)); }
-    o.ghosts.forEach((m, i) => { const tk = 0.25 * i, on = ghostsOn && st && st.falling && st.tau >= tk + 0.02 && !(k === "big" && splitDone); m.visible = !!on; if (on) m.position.set(L.x, yOfS(sOf(L.vt, tk)), -0.2); });
-    const sp = o.splash; if (st && !st.falling && st.since < 0.9 && !(k === "big" && splitDone)) { sp.visible = true; const q = st.since / 0.9; sp.position.set(L.x, 0.08, 0); sp.scale.setScalar(0.3 + 1.1 * q); sp.material.opacity = 0.9 * (1 - q); } else sp.visible = false;
+    if (show) { const hu = st.falling ? 1 : 0.15 + 0.85 * st.u; o.g.position.set(L.x, st.falling ? yOfS(st.s) : YTOP, 0); const u = k === "big" ? bun : 0; o.g.scale.setScalar(hu); o.body.scale.set(L.r * (1 + 0.7 * u), L.r * (1 - 0.6 * u), L.r * (1 + 0.7 * u)); }
+    o.ghosts.forEach((m, i) => { const tk = 0.5 * i, on = ghostsOn && st && st.falling && st.tau >= tk + 0.02 && !(k === "big" && splitDone); m.visible = !!on; if (on) m.position.set(L.x, yOfS(sOf(L.vt, tk)), -0.2); });
+    const sp = o.splash; if (st && !st.falling && st.since !== undefined && st.since < 0.9 && !(k === "big" && splitDone)) { sp.visible = true; const q = st.since / 0.9; sp.position.set(L.x, 0.08, 0); sp.scale.setScalar(0.3 + 1.1 * q); sp.material.opacity = 0.9 * (1 - q); } else sp.visible = false;
   }
   // the big drop breaks apart (an illustration)
   { const on = splitDone && t < FILM.split + 3.2; const s0 = laneState("big", FILM.split);

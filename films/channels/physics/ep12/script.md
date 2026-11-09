@@ -33,7 +33,7 @@ vo: It's a tug of war between the weight pulling down and the air pushing up. {-
 vo: Big drops fall faster than small ones. {c5} Raindrops are never *teardrops*. {c6} Small ones are round, and the biggest flatten like a bun, and then break apart. {c7}
 
 ## measure {segment: measure · the model's speed plot for a small and a big drop, plateaus marked · pre: 0.2 · energy: 0.5} (51.5–61.1 s)
-vo: *Measure it*: in this model, a one-millimeter drop tops out near five meters a second. {c8} A five-millimeter drop, near ten. {c9}
+vo: *Measure it*: in this model, a one-millimeter drop tops out near five meters a second. {c8} A four-millimeter drop, near nine. {c9}
 
 ## takeaway {shot: hold on the plateau · badge: "A model: a round drop, made-up round numbers" · pre: 0.25 · energy: 0.45} (61.1–67.5 s)
 vo: The air gives every drop a speed limit. {c10} So rain from way up high lands *gently*. {-}
