@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { analyticsRows, episodeFull, reviewOrder, studio } from "@/lib/data";
+import { analyticsRows, coverOf, episodeFull, reviewOrder, studio, thumbOf } from "@/lib/data";
+import { Icon } from "@/components/Icon";
 import { canTransition, PIPELINE, SIDE_STATES, type EpisodeState } from "@/domain/episodes";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
@@ -37,6 +38,13 @@ export default async function Episode({ params }: { params: Promise<{ id: string
   // in review, Previous / Next step through the review queue (the same order as the Review reel)
   const at = order.findIndex((o) => o.id === ep.id);
   const step = (o: (typeof order)[number] | undefined) => (at >= 0 && o ? { href: `/episodes/${o.id}`, label: o.title } : null);
+  // downloads for the current render: the 1080p master (TikTok, Instagram), YouTube's 1440p version, the designed cover and
+  // the YouTube thumbnail. Downloading never marks anything as posted; approval and "Mark uploaded" stay per account.
+  const ytX = f.exports.find((x) => x.platform === "youtube") ?? null;
+  const dlBase = `${channel.slug}-${String(ep.number).padStart(3, "0")}`;
+  const dlCover = current ? coverOf({ x: ytX, version: current }) : null;
+  const dlThumb = current ? thumbOf({ x: ytX, version: current }) : null;
+  const dl1440 = ytX && current && ytX.filePath !== current.videoPath ? ytX.filePath : null;
   return (
     <div style={topicStyle(channel)}>
       <div id="player">
@@ -52,6 +60,15 @@ export default async function Episode({ params }: { params: Promise<{ id: string
             {ep.durationS ? <span className="chip">{ep.durationS.toFixed(1)} s</span> : null}
             {ep.isDemo ? <span className="demo-tag">DEMO</span> : null}
           </div>
+          {current ? (
+            <div className="row" aria-label="Downloads">
+              <a className="btn small" href={mediaUrl(current.videoPath, `${dlBase}-1080p.mp4`)} download><Icon name="download" size={16} /> Download 1080p</a>
+              {dl1440 ? <a className="btn ghost small" href={mediaUrl(dl1440, `${dlBase}-1440p.mp4`)} download>YouTube 1440p</a> : null}
+              {dlCover ? <a className="btn ghost small" href={mediaUrl(dlCover, `${dlBase}-cover.jpg`)} download>Cover</a> : null}
+              {dlThumb ? <a className="btn ghost small" href={mediaUrl(dlThumb, `${dlBase}-thumb.jpg`)} download>Thumbnail</a> : null}
+              {ep.captionsSrt ? <a className="btn ghost small" href={`/api/srt/${ep.id}`} download>Captions</a> : null}
+            </div>
+          ) : null}
           {pipeStep >= 0 ? (
             <div className="bar" aria-label={`Production step ${pipeStep + 1} of ${PIPELINE.length}`} style={{ width: "100%", maxWidth: 520 }}><i style={{ width: `${((pipeStep + 1) / PIPELINE.length) * 100}%` }} /></div>
           ) : null}
