@@ -33,7 +33,7 @@ vo: Slower adds years, quicker trims a few. {c8} Ten thousand steps a day, the p
 ## takeaway {shot: the Moon beside a small capsule that crosses the gap in three days · picture-only 0.3 s · energy: 0.45} (56.5–65 s)
 vo: Apollo eleven's crew made the same trip in about three *days*. {c9} The distance never changed, only the *speed*. {-}
 
-## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (65–70.5 s)
+## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.7} (65–70.5 s)
 vo: Next envelope: what if everyone on Earth held *hands*? {-}
 end card: "Next envelope: *everyone, holding hands*" · "Possibility Lab · Season 2 · Episode 1" · footnote: "NASA Science, Moon Facts: average distance 384,400 km." (c1)
 

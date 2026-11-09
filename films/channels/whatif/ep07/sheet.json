@@ -49,7 +49,7 @@
    "id": "tease",
    "t0": 65.4,
    "t1": 72.0,
-   "energy": 0.4
+   "energy": 0.7
   }
  ],
  "events": [
@@ -161,6 +161,11 @@
    "tag": "work-quicker: 6 km/h"
   },
   {
+   "t": 53.666666666666664,
+   "kind": "term.write",
+   "tag": "spine-6"
+  },
+  {
    "t": 56.4,
    "kind": "section",
    "id": "takeaway",
@@ -169,7 +174,7 @@
   {
    "t": 56.4,
    "kind": "term.write",
-   "tag": "spine-6"
+   "tag": "spine-7"
   },
   {
    "t": 57.03333333333333,
@@ -181,6 +186,12 @@
    "t": 65.46666666666667,
    "kind": "signature",
    "tag": "end"
+  },
+  {
+   "t": 68.0,
+   "kind": "swell",
+   "tag": "loop",
+   "t1": 71.65
   }
  ],
  "voice": [

@@ -51,3 +51,15 @@ Framing check: the 0.5 s frames from 40 s to the end were looked at one by one f
 - End card: walkers, rings, capsule and orbit ring fade out 0.7 to 0.1 s before the card arrives; the card is raised so the footnote and the pill sit above the blue figure's head.
 - Orbit ring radius cut to 1.15 figure heights so it stays under the caption band.
 - 'not to scale' badge moved to the top left and shortened so it clears the Moon marker.
+
+## Round 6 notes (S2E01, folder ep07)
+Method: a 0.25 s step check over the whole film (a script projects every frame without the HUD and tests the picture against every caption, plate, card, badge and label box); every hit below was fixed and the check re-run (no figure, Moon or capsule remains behind a caption, plate, card or badge in the unblurred frames).
+- 7.0 to 7.5 s: the Earth's globe no longer fades in behind the distance plate and caption (it appears only once the camera is far out), and the Earth's edge ring is dimmed: no grey slab and no cut. The paper also darkens before the desk is hidden.
+- 8 to 14 s: the pull-back's wide view now keeps the Earth at the foot of the frame (80% down) and the Moon high (40%), clear of the distance plate and caption.
+- 21.5 to 24 s and 38.5 to 39 s: the Moon is drawn smaller near the walkers (30% of its size), with a real surface texture (grey highlands, maria, craters) in place of the old checkerboard; it also fades while it passes through the caption band. The zoom-outs and dives keep the walkers and the Moon in the bottom band (86 to 92% of frame height) all the way. The nonstop walker rests at the Moon (hidden) while the camera dives to the blue one.
+- 43.5 to 55.5 s (work beat): all figures stay under the caption; the wide view is the same bottom-band view.
+- 53 to 56 s: the boxed answer swaps to "≈ 140 years" (label "10,000 steps a day") when the voice says "a hundred and forty", and back to "≈ 26 years" at the takeaway.
+- 57 to 65 s (Apollo): the three walkers and their lanes fade out as the capsule starts, so it flies alone. The Moon is drawn big in the bottom band (about 11% of frame height across) with its real texture; the capsule climbs, arrives on "three days" (60.1 s) and orbits the Moon on a ring around it. The "~76 h: lunar orbit" badge appears only on arrival.
+- 65.5 s: the walkers no longer re-appear over the card (they were re-gated by the end card).
+- 67.5 to 71 s: the end card is smaller (headline 5.6 vmin, footnote 2.8 vmin) and sits above the blue figure's head, so neither the footnote nor the pill touches the figure, and the Moon marker is clear of the boxed answer.
+- Audio: the studio's own 0.6 s tail fade left the last 2 s about 6 dB under the opening. `loopfix.sh` lifts the music tail to the opening's level (opening -12.3 LUFS short-term, last second -13.1) and ends on a 0.3 s fade; the film's loudness stays -14.0 LUFS, sample peak -1.7 dBFS.

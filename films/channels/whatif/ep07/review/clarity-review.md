@@ -55,3 +55,8 @@ All beats are under the limit of 8. Several grades are low because the sentences
 - Draft render: `out/envelope-s2e01-9x16-draft.mp4` (540x960, 15 fps, 72.0 s, AAC -14.1 LUFS / -1.8 dBTP, sync PASS), 0 audit warnings. Final not rendered, awaiting the gate.
 - Sources: five of nine claims read by the builder (SOURCE-READ); none OK until a person opens it.
 - Rhythm: see scene-table.md for the two stretches that run longer than 4 s between distinct changes.
+
+## Round 6 (S2E01): staging and sound
+- The 140-year answer now takes the plate for the steps beat (a boxed "≈ 140 years") instead of a 0.7 s badge.
+- The Apollo beat shows the Moon (real texture) and the capsule orbiting it; the "~76 h" badge lands as the capsule arrives.
+- Loop: the opening and the closing second now sit within about 1 dB of each other.

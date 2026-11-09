@@ -19,6 +19,7 @@ import { titleFlap, endBox, workCard, injectCss } from "../set/motif.js";
 import { createRig } from "../set/rig.js";
 import { tok } from "../set/look.js";
 import { createPlanet } from "../set/ladder05.js";
+import { moonSurface } from "../../space/set/moon.js";
 import { unlit, ACES_INV_GLSL, hexRgb } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, WD = FILM.world, CUE = FILM.cue;
@@ -63,7 +64,7 @@ scene.add(rings);
 // shaded globes: a half-Lambert chalk sphere, the Earth with a pencil graticule, the Moon with a few darker craters
 const SVS = `varying vec3 vN; void main() { vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
 const SFS = `precision highp float;
-uniform vec3 uCol, uDark, uLight; uniform float uExposure, uOpacity, uGrat, uCrat; varying vec3 vN;
+uniform vec3 uCol, uDark, uLight; uniform float uExposure, uOpacity, uGrat, uCrat, uUseMap; uniform sampler2D uMap; varying vec3 vN;
 ${ACES_INV_GLSL}
 float hh(vec3 p) { return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453); }
 void main() {
@@ -71,13 +72,15 @@ void main() {
   vec3 col = mix(uDark, uCol, lam);
   if (uGrat > 0.0) { vec2 q = vec2(asin(clamp(n.y, -1.0, 1.0)), atan(n.z, n.x)) / radians(30.0); vec2 f = abs(fract(q + 0.5) - 0.5) / max(fwidth(q), vec2(1e-4)); col = mix(col, uDark * 0.45, 0.55 * (1.0 - smoothstep(0.6, 1.6, min(f.x, f.y)))); }
   if (uCrat > 0.0) { vec3 c = floor(n * 3.0); vec3 cc = normalize((c + 0.5) / 3.0); col *= 1.0 - 0.28 * step(0.7, hh(c)) * smoothstep(0.38, 0.2, length(n - cc)); }
+  if (uUseMap > 0.0) { float lon = atan(n.x, n.z), lat = asin(clamp(n.y, -1.0, 1.0)); vec3 tx = texture2D(uMap, vec2(lon / 6.2831853 + 0.5, lat / 3.1415927 + 0.5)).rgb; col *= tx / 0.6; }
   gl_FragColor = vec4(acesInv(srgbToLinear(clamp(col, 0.0, 1.0)), uExposure), uOpacity);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`;
+const moonTex = new THREE.CanvasTexture(moonSurface({ width: 512, seed: 9 })); moonTex.wrapS = THREE.RepeatWrapping; moonTex.anisotropy = 4;
 const globe = (hex, grat, crat) => {
   const c = hexRgb(hex), u = { uCol: { value: new THREE.Vector3(...c) }, uDark: { value: new THREE.Vector3(...c.map((v) => v * 0.28)) }, uLight: { value: new THREE.Vector3(-0.55, 0.45, 0.8) },
-    uExposure: { value: 1 }, uOpacity: { value: 1 }, uGrat: { value: grat }, uCrat: { value: crat } };
+    uExposure: { value: 1 }, uOpacity: { value: 1 }, uGrat: { value: grat }, uCrat: { value: 0 }, uUseMap: { value: crat ? 1 : 0 }, uMap: { value: moonTex } };
   const m = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 48), new THREE.ShaderMaterial({ uniforms: u, vertexShader: SVS, fragmentShader: SFS, transparent: true, depthTest: true, depthWrite: false, extensions: { derivatives: true } }));
   m.renderOrder = 5; m.frustumCulled = false; m.userData.noProbe = true; scene.add(m);
   return { mesh: m, set: (o) => { m.visible = o > 0.01; u.uOpacity.value = o; } };
@@ -120,7 +123,7 @@ const craters = [[-0.32, 0.28, 0.2], [0.30, -0.05, 0.28], [-0.1, -0.42, 0.15]].m
 const NDUST = 2600, dust = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 10), basic(CHALK2, 0.5), NDUST);
 dust.frustumCulled = false; dust.renderOrder = 1; dust.userData.noProbe = true; scene.add(dust);
 { let sd = 7; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; const MD = new THREE.Matrix4(), QD = new THREE.Quaternion(), SD = new THREE.Vector3(), PD = new THREE.Vector3();
-  for (let i = 0; i < NDUST; i++) { const r = 5e4 + rnd() * rnd() * 2.2e5; SD.set(r, r, 1); PD.set((rnd() - 0.5) * 3.2e7, rnd() * WD.top, (rnd() - 0.5) * 3.2e7); MD.compose(PD, QD, SD); dust.setMatrixAt(i, MD); } dust.instanceMatrix.needsUpdate = true; }
+  for (let i = 0; i < NDUST; i++) { const r = 3e4 + rnd() * rnd() * 1.0e5; SD.set(r, r, 1); PD.set((rnd() - 0.5) * 3.2e7, rnd() * WD.top, (rnd() - 0.5) * 3.2e7); MD.compose(PD, QD, SD); dust.setMatrixAt(i, MD); } dust.instanceMatrix.needsUpdate = true; }
 
 // ── the camera ──────────────────────────────────────────────────────────────
 const rig = createRig(FILM.cam);
@@ -158,8 +161,9 @@ for (const L of FILM.labels) {
 const spine = createSpine({ states: FILM.spine, t1: FILM.spineOut, y: 0.565, safe: hud.safe, W, H });
 const work = workCard(FILM.work, { safe: hud.safe, W, H, capTop: 0.61, y: 0.17 });
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.14 });
+const endT = endEl.querySelector(".t"), endFo = endEl.querySelector(".fo"); if (endT) endT.style.fontSize = "5.6vmin"; if (endFo) endFo.style.marginTop = "1.6vmin";
 const foot = endEl.querySelector(".nx");
-if (foot) Object.assign(foot.style, { fontSize: "3.1vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "2.5vmin auto 0" });
+if (foot) Object.assign(foot.style, { fontSize: "2.8vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "1.6vmin auto 0" });
 const box = endBox(endEl, { t0: FILM.endCard, answer: FILM.spine[FILM.spine.length - 1].terms.find((x) => x[0] === "ans")[1], S1: Math.min(W, H) / 1080 });
 
 // ── staging ─────────────────────────────────────────────────────────────────
@@ -171,7 +175,7 @@ window.seek = function (t) {
   window.__t = t;
   const st = stage(t), shot = st.name;
   const pose = rig.place(camera, shot, t);
-  const d = pose.dist;
+  const d = pose.dist; window.__d = d;
   camera.near = Math.max(0.05, d / 200); camera.far = Math.max(2000, d * 30); camera.updateProjectionMatrix();
   const gate = 1 - E.inout2(seg(t, FILM.endCard, FILM.endCard + 0.6));
   const space = d > 3e5;
@@ -182,6 +186,7 @@ window.seek = function (t) {
   moon.set({ opacity: 0, cam: camera.position.toArray(), grid: 1 });
   desk.group.visible = d < 90;
   desk.update({ grid: 1 - seg(Math.log10(d), 1.3, 1.9), pool: [pose.target[0], pose.target[2]], casters: [[0, WD.fig, 0, 0.35]], span: Math.max(800, d * 8) });
+  desk.uniforms.uExposure.value = 1 + 5 * seg(Math.log10(d), 1.4, 1.95);                // the paper darkens before the desk is hidden: no bright slab, no pop
   you.group.visible = d < 4e3 && (shot !== "end" || t > FILM.endCard + 1.5);
 
   // the lanes spread as the walk begins, then rest
@@ -190,12 +195,17 @@ window.seek = function (t) {
   if (d < 3e5) off = d * 0.05 * spread;                                           // in a chase the lanes sit a body apart
   figH = 0.055 * d;
   const hs = figH / WD.fig, outG = shot === "end" ? gate : 1;
+  const moonScale = 0.3 + 0.7 * seg(Math.log10(d), 8.5, 9.3);                      // the Moon is drawn smaller near it, so it never climbs behind the caption
+  const bigMoon = seg(t, CUE.bigMoon[0], CUE.bigMoon[0] + 0.6) * (1 - E.inout2(seg(t, CUE.bigMoon[1], CUE.bigMoon[1] + 0.6)));
+  const rE = Math.max(WD.rE, px * 3.4), rM = Math.max(WD.rM * moonScale, px * 3.0, 0.021 * d * bigMoon);
+  const moonCy = rM < WD.rM ? WD.top + rM : Math.max(WD.yMoon, WD.top + rM * bigMoon);
   const fA = frac.A(t), fB = frac.B(t), fS = frac.S(t);
   const top = WD.top, pre = shot === "front" || shot === "pull" || t < CUE.spread[0];
   const endLine = shot === "end" ? E.inout2(seg(t, FILM.endCard + 1.4, FILM.endCard + 2.1)) : 0;   // the loop: the line and the little Moon return once the card has lifted
   const setLane = (k, x, f, w, o) => { const l = lane[k]; l.visible = o > 0.003; l.material.opacity = o; place(l, x, 0, w, Math.max(1e-6, top * f)); };
-  const hookLine = pre ? 1 : 0, lanesOn = !pre && shot !== "end" ? 1 - E.inout2(seg(t, FILM.endCard - 0.7, FILM.endCard - 0.1)) : shot === "end" ? gate : 0;
-  setLane("B", LANE_X.B * off, hookLine || endLine > 0 ? 1 : fB, px * (hookLine || endLine > 0 ? 0.6 : 1.0), hookLine ? 0.8 : shot === "end" ? Math.max(0.0, 0.8 * endLine) : seg(t, CUE.run[2] - 0.2, CUE.run[2] + 0.3));
+  const afterHome = E.inout2(seg(t, CUE.home, CUE.home + 0.6));
+  const hookLine = pre ? 1 : 0, lanesOn = !pre && shot !== "end" ? (1 - afterHome) : 0;
+  setLane("B", LANE_X.B * off, hookLine || endLine > 0 ? 1 : fB, px * (hookLine || endLine > 0 ? 0.6 : 1.0), hookLine ? 0.8 : shot === "end" ? Math.max(0.0, 0.8 * endLine) : seg(t, CUE.run[2] - 0.2, CUE.run[2] + 0.3) * lanesOn);
   setLane("A", LANE_X.A * off, fA, px * 0.9, seg(t, CUE.spread[1], CUE.run[0]) * lanesOn);
   setLane("S", LANE_X.S * off, fS, px * 0.7, seg(t, CUE.run[2], CUE.run[1]) * lanesOn);
   // the walkers: big figures, each bobbing as it walks, still when it stops
@@ -205,8 +215,10 @@ window.seek = function (t) {
     w.group.visible = on > 0.02; w.group.scale.setScalar(hs);
     w.set({ at: [x, top * f + (mv ? Math.abs(Math.sin(ph)) * 0.035 * figH : 0) + hs * WD.fig / 2, 0], arms: mv ? 0.12 + 0.12 * Math.sin(ph) : 0.04, tilt: mv ? 0.05 : 0 });
   };
-  const hideAB = E.inout2(seg(t, CUE.gf - 0.1, CUE.gf + 0.3)) * (1 - E.inout2(seg(t, CUE.home - 0.5, CUE.home - 0.1)));
-  const wkAOn = (1 - hideAB) * seg(t, CUE.spread[1] - 0.2, CUE.spread[1] + 0.3) * lanesOn * (pre ? 0 : 1);
+  const hideAB = E.inout2(seg(t, CUE.gf - 0.1, CUE.gf + 0.3));
+  const hideMoon = hideAB * (1 - E.inout2(seg(t, CUE.home - 0.5, CUE.home - 0.1)));
+  const hideA = E.inout2(seg(t, CUE.run[2] - 0.3, CUE.run[2] + 0.2)) * (1 - E.inout2(seg(t, CUE.box - 0.6, CUE.box - 0.1)));   // the nonstop walker rests at the Moon while the camera dives to the blue one
+  const wkAOn = (1 - hideAB) * (1 - hideA) * seg(t, CUE.spread[1] - 0.2, CUE.spread[1] + 0.3) * lanesOn * (pre ? 0 : 1);
   const wkBOn = (1 - hideAB) * seg(t, CUE.run[2] - 0.2, CUE.run[2] + 0.3) * lanesOn * (pre ? 0 : 1);
   walk(wkA, LANE_X.A * off, fA, frac.A, wkAOn);
   walk(wkB, LANE_X.B * off, fB, frac.B, wkBOn);
@@ -227,13 +239,13 @@ window.seek = function (t) {
     const sw = E.inout2(seg(t, CUE.clock[0] + 0.1, CUE.clock[1] - 0.3)); dial.userData.hp.rotation.z = -sw * Math.PI * 2 * 8 / 12; dial.userData.mp.rotation.z = -sw * Math.PI * 2 * 8; }
   // the Apollo capsule: a real capsule in its own fourth lane, climbing in three "days" and landing on "three", then orbiting the Moon
   const cap = seg(t, CUE.apollo[0], CUE.apollo[1]), capE = cap, capOn = seg(t, CUE.apollo[0] - 0.1, CUE.apollo[0] + 0.15) * (1 - E.in3(seg(t, FILM.endCard - 0.7, FILM.endCard - 0.1)));
-  const orb = seg(t, CUE.orbit[0], CUE.orbit[1]), Ro = figH * 1.15, cx = CUE.lane * off, moonY = top + 1.737e6, ang0 = -Math.PI / 2 + 0.2, ang = ang0 + orb * Math.PI * 2 * 1.4;
+  const orb = seg(t, CUE.orbit[0], CUE.orbit[1]), Ro = 1.55 * rM, cx = CUE.lane * off, moonY = moonCy, ang0 = -Math.PI / 2 + 0.2, ang = ang0 + orb * Math.PI * 2 * 1.4;
   let cxp = cx, cyp = top * capE, rot = 0;
   if (t > CUE.apollo[1]) { const o2 = E.inout2(seg(t, CUE.apollo[1], CUE.orbit[0])), px0 = Ro * Math.cos(ang), py0 = moonY + Ro * Math.sin(ang), sx = Ro * Math.cos(ang0), sy = moonY + Ro * Math.sin(ang0);
     const bx0 = cx + (sx - cx) * o2, by0 = top + (sy - top) * o2; cxp = t < CUE.orbit[0] ? bx0 : px0; cyp = t < CUE.orbit[0] ? by0 : py0; rot = t < CUE.orbit[0] ? 0 : ang; }
   orbitRing.visible = capOn > 0.02 && t > CUE.apollo[1] + 0.2 && shot !== "end"; orbitRing.material.opacity = 0.35 * E.out3(seg(t, CUE.apollo[1], CUE.orbit[0])) * capOn; orbitRing.position.set(0, moonY, 0); orbitRing.scale.set(Ro, Ro, 1);
   setLane("C", cx, cap, px * 1.0, 0.45 * capOn * (t < CUE.apollo[1] + 0.2 ? 1 : 0.4));
-  capsule.visible = capOn > 0.02 && shot !== "end"; capsule.scale.setScalar(figH * 0.6); capsule.position.set(cxp, cyp, 0); capsule.rotation.z = rot;
+  capsule.visible = capOn > 0.02 && shot !== "end"; capsule.scale.setScalar(figH * 0.4); capsule.position.set(cxp, cyp, 0); capsule.rotation.z = rot;
   trail.visible = capsule.visible && t < CUE.apollo[1] + 0.3; trail.material.opacity = 0.5 * capOn; trail.scale.set(figH * 0.22, Math.min(top * capE, figH * 5), 1); trail.position.set(cx, top * capE - figH * 0.4, 0);
   for (const k of ["A", "B", "S", "C"]) bead[k].visible = false;
 
@@ -248,14 +260,15 @@ window.seek = function (t) {
   const near = 1 - seg(Math.log10(d), 7.9, 8.3);
   dust.visible = near > 0.02 && shot !== "front" && shot !== "pull" && shot !== "end"; dust.material.opacity = 0.5 * near;
   rings.visible = space && (shot === "pull" || shot === "end"); rings.material.opacity = 0.9 * seg(Math.log10(d), 8.2, 8.6);
-  const pl = seg(Math.log10(d), 5.2, 6.8) * (shot === "end" ? gate : 1) * (1 - hideAB);
-  ringE.set(pl); ringM.set(pl);
+  const pl = seg(Math.log10(d), 5.2, 6.8) * (shot === "end" ? gate : 1) * (1 - hideMoon);
+  const mv = new THREE.Vector3(0, moonCy, 0).project(camera), mq = (1 - mv.y) / 2;           // where the Moon is on screen, from the top
+  const bandFade = 1 - E.inout2(seg(mq, 0.49, 0.57)) * (1 - E.inout2(seg(mq, 0.69, 0.77)));   // the Moon never sits in the caption and plate band: it fades while it passes
+  ringE.set(pl * seg(Math.log10(d), 7.5, 8.3)); ringM.set(pl * bandFade);
   const lm = seg(d, 80, 120) * (1 - seg(Math.log10(d), 6.2, 6.6)) * (shot === "end" ? gate : 1);
-  limbO.visible = limbI.visible = lm > 0.01; limbO.material.opacity = 0.9 * lm; limbI.material.opacity = 1;
+  limbO.visible = limbI.visible = lm > 0.01; limbO.material.opacity = 0.3 * lm; limbI.material.opacity = 1;
   place(limbO, 0, -WD.rE, WD.rE + px * 0.9, WD.rE + px * 0.9); place(limbI, 0, -WD.rE, WD.rE - px * 0.9, WD.rE - px * 0.9);
-  const rE = Math.max(WD.rE, px * 3.4), rM = Math.max(WD.rM, px * 3.0);
   ringE.mesh.position.set(0, -rE, -1.35 * rE); ringE.mesh.scale.set(rE, rE, rE);
-  ringM.mesh.position.set(0, WD.yMoon, -1.35 * rM); ringM.mesh.scale.set(rM, rM, rM);
+  ringM.mesh.position.set(0, moonCy, -1.35 * rM); ringM.mesh.scale.set(rM, rM, rM);
   // the hook's small moon on the line above you: fades once the real one is findable
   const mk0 = 1 - E.inout2(seg(Math.log10(d), 1.5, 2.3));
   mark.visible = mk0 > 0.01 && d < 4e3 && (shot !== "end" || endLine > 0.01); mark.material.opacity = 0.9 * mk0 * (shot === "end" ? endLine : 1);
