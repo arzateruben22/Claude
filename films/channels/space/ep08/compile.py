@@ -36,7 +36,11 @@ CUE = {
     "time": A("vo04:time"), "yet": A("vo04:yet"), "age0": A("vo04:thirteen"), "age1": A("vo04:years"),
     "way": A("vo05:way"), "far": A("vo05:far"), "begin": A("vo05:beginning"),
     "clue": A("vo06:clue"), "sun": A("vo07:Sun"), "farthest": A("vo07:farthest"),
+    "forest0": A("vo02:forest"), "trunk": A("vo02:trunk"),
 }
+# push-ins on the starred words (the 2-D picture zooms about the frame centre)
+CUE["pulses"] = [round(x, 3) for x in (A("vo01:sky"), A("vo01:hard"), A("vo02:star"), A("vo03:glow"), A("vo04:time"), A("vo04:yet"), A("vo04:years"),
+                                       A("vo05:way"), A("vo05:far"), A("vo05:beginning"), A("vo06:clue"), A("vo07:Light"), A("vo07:billions"), A("vo08:gold"))]
 assert CUE["fainter"] < CUE["more"] < CUE["cancel"] < CUE["glow"] <= t_why and CUE["age0"] < CUE["age1"] < t_w, CUE
 
 POSE = {"target": [0, 0, 0], "el": 30.0, "fov": 24, "fx": 0.5, "fy": 0.36}
@@ -47,7 +51,7 @@ SHOTS = [{"at": 0.0, "name": "space"}, {"at": t_end, "name": "end"}]
 
 SPINE = [0.5, 0.555]
 PILLS = [
-    {"id": "p-sky", "text": "the night sky", "t0": round(t_n - 0.3, 4), "t1": round(t_rd - 0.3, 4), "at": [90 / 1080, 0.198]},
+    {"id": "p-sky", "text": "the night sky", "t0": round(t_n - 0.3, 4), "t1": round(t_rd - 0.3, 4), "at": [90 / 1080, 0.165]},
     {"id": "p-map", "text": "distance map: you in the middle", "t0": A("vo02:Then"), "t1": round(t_rd - 0.3, 4), "at": [90 / 1080, 0.74]},
     {"id": "p-way", "text": "still on its way", "t0": CUE["way"], "t1": round(t_tk, 4), "at": [340 / 1080, 0.532]},
 ]
@@ -71,7 +75,7 @@ for a, b in zip(spine, spine[1:]):
     if b["t0"] - a["t1"] < 0.4:
         a["t1"] = round(b["t0"] - 0.4, 4)
 
-TITLE = {"series": "One More Orbit · S2 · Episode 2", "title": "Dark *sky*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
+TITLE = {"series": "One More Orbit · S2E02", "title": "Dark *sky*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next orbit: your *gold*", "follow": "One More Orbit · S2 · Episode 3",
        "next": "Planck (ESA): the universe is about 13.8 billion years old."}
 POSTER = A("vo04:years", 0.6)

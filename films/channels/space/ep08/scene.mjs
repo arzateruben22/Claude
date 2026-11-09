@@ -35,8 +35,8 @@ tc.width = W; tc.height = H;
 Object.assign(tc.style, { position: "absolute", left: 0, top: 0, width: `${W}px`, height: `${H}px`, zIndex: 1, pointerEvents: "none" });
 document.getElementById("hud").appendChild(tc);
 const ctx = tc.getContext("2d");
-const CX = 540, CY = 742, R = 262;                                           // the distance map (1080 × 1920 units)
-const SX0 = 90, SX1 = 900, SY0 = 408, SY1 = 462;                              // the night-sky strip
+const CX = 540, CY = 752, R = 262;                                           // the distance map (1080 × 1920 units)
+const SX0 = 90, SX1 = 900, SY0 = 400, SY1 = 480;                              // the night-sky strip
 const TEAL = [79, 227, 198], LEMON = [242, 237, 166], LILAC = [185, 166, 255], TXT = [238, 240, 255], TXT2 = [169, 176, 217];
 const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${Math.max(0, Math.min(1, a)).toFixed(3)})`;
 const mul = (s) => () => { s |= 0; s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
@@ -46,6 +46,24 @@ const SPOKES = Array.from({ length: 30 }, (_, k) => ({ a: (k / 30) * 6.2832 + rn
 const STRIPDOTS = Array.from({ length: 70 }, () => ({ x: rnd(), y: rnd(), m: rnd() }));
 const FRONTS = [0, 0.5];
 
+const lw = (w) => { ctx.lineWidth = w * S1; };
+const pulse = (t) => { let z = 0; for (const tp of CUE.pulses) { const x = t - tp; if (x > 0 && x < 2.2) z += 0.04 * (x < 0.25 ? Math.sin((x / 0.25) * 1.5708) : Math.exp(-(x - 0.25) / 0.55)); } return z; };
+const FR = mul(77);
+const TRUNKS = Array.from({ length: 34 }, () => ({ x: FR() * 810, w: 16 + FR() * 40, a: 0.35 + FR() * 0.4 }));
+function forest(t, k) {                                                         // "like a forest": every look hits a trunk
+  if (k <= 0.001) return;
+  const x0 = 90 * sx, y0 = 540 * sy, w = 810 * sx, h = 470 * sy;
+  ctx.fillStyle = rgba([14, 17, 44], 0.97 * k); ctx.fillRect(x0, y0, w, h);
+  for (const tr of TRUNKS) { ctx.fillStyle = rgba(TXT2, tr.a * 0.55 * k); ctx.fillRect(x0 + tr.x * sx, y0, tr.w * sx, h); }
+  const u = E.inout3(seg(t, CUE.forest0, CUE.trunk + 0.4));
+  for (let j = 0; j < 7; j++) {                                                 // lines of sight from you, each stopped by a trunk
+    const y = (590 + j * 62) * sy, L = (120 + 690 * ((j * 0.37) % 1) * 0.0 + 60 * j % 300 + 190) * sx * u;
+    ctx.strokeStyle = rgba(TEAL, 0.9 * k); lw(3.5); ctx.beginPath(); ctx.moveTo(x0 + 6 * sx, y); ctx.lineTo(x0 + 6 * sx + L, y); ctx.stroke();
+    if (u > 0.95) { ctx.fillStyle = rgba(LEMON, k); ctx.beginPath(); ctx.arc(x0 + 6 * sx + L, y, 7 * S1, 0, 6.2832); ctx.fill(); }
+  }
+  ctx.fillStyle = rgba(TEAL, k); ctx.beginPath(); ctx.arc(x0 + 6 * sx, 590 * sy + 186 * sy, 9 * S1, 0, 6.2832); ctx.fill();
+  ctx.strokeStyle = rgba(TXT2, 0.6 * k); lw(2); ctx.strokeRect(x0, y0, w, h);
+}
 function bar(t, S, ramp) {                                                      // the night sky: S = 0 (dark) … 1 (white); ramp = the hook's payoff
   const x0 = SX0 * sx, x1 = SX1 * sx, y0 = SY0 * sy, y1 = SY1 * sy, w = x1 - x0, h = y1 - y0;
   ctx.save();
@@ -69,23 +87,26 @@ function bar(t, S, ramp) {                                                      
 }
 
 function draw(t) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, W, H);
-  const kOut = 1 - fadeIn(t, CUE.end - 0.45, 0.45);
-  if (kOut <= 0.001) return;
+  const kLoop = fadeIn(t, CUE.end - 0.45, 0.45);                                // the end card sits on frame 0 (a replay loops)
+  const z = 1 + pulse(t), fcy = 0.36 * H;
+  ctx.setTransform(z, 0, 0, z, (W / 2) * (1 - z), fcy * (1 - z));
+  const kOut = 1 - kLoop;
   const kRd = fadeIn(t, CUE.rd, 0.6);                                           // the readout: the strip leaves, the map stays quietly
   // the horizon: the universe's age closes in on "thirteen point eight billion years"
   const hz = E.inout3(seg(t, CUE.age0, CUE.age1 + 0.6)), Hr = R * (1.03 - 0.75 * hz);
   // the night sky: ramp (hook) → dark → climbs to white (fainter, but more) → falls with the horizon → dark, one star lit
-  const ramp = 1 - E.inout3(seg(t, CUE.n - 0.4, CUE.n + 0.3));
+  const ramp = Math.max(1 - E.inout3(seg(t, CUE.n - 0.4, CUE.n + 0.3)), kLoop);
   const climb = E.inout3(seg(t, CUE.fainter, CUE.surface));
   const fall = Math.pow(Math.min(1, Hr / (R * 1.03)), 2);
   let S = 0.08 + 0.92 * climb * (t < CUE.age0 ? 1 : fall) + (t >= CUE.age0 ? 0 : 0);
   if (t >= CUE.age0) S = 0.08 + 0.92 * climb * fall;
   S *= 1 - 0.55 * fadeIn(t, CUE.clue, 0.6);
-  if (t < CUE.rd) bar(t, S, ramp);
+  if (t < CUE.rd || kLoop > 0.01) bar(t, kLoop > 0.01 ? 0 : S, ramp);
   // the distance map
   const cx = CX * sx, cy = CY * sy, r0 = R * sx;
-  const mapA = kOut * (t < CUE.n - 0.4 ? 1 : 1);
+  const mapA = 1;
   ctx.strokeStyle = rgba(LILAC, 0.55 * mapA); ctx.lineWidth = 2 * S1;
   ctx.beginPath(); ctx.arc(cx, cy, r0, 0, 6.2832); ctx.stroke();
   ctx.setLineDash([4 * S1, 8 * S1]); ctx.strokeStyle = rgba(TXT2, 0.28 * mapA);
@@ -96,7 +117,7 @@ function draw(t) {
   const starsOn = fadeIn(t, 0.0, 0.01);
   for (const s of STARS) {
     const near = 1 - s.d;
-    const k = lit(s.d) * (t < CUE.n ? 0.55 : 1) * mapA * starsOn;
+    const k = lit(s.d) * (t < CUE.n ? 0.55 : 1 - 0.45 * kLoop) * mapA * starsOn;
     const a = (0.28 + 0.72 * near * near + 0.05 * Math.sin(t * 1.3 + s.tw * 9) * 0) * k;
     ctx.fillStyle = rgba(s.d * R < Hr ? LEMON : TXT2, a);
     ctx.beginPath(); ctx.arc(cx + s.x * r0, cy + s.y * r0, (0.9 + 3.8 * near * near) * S1 * (W / 1080 > 0.7 ? 1 : 1.2), 0, 6.2832); ctx.fill();
@@ -120,7 +141,7 @@ function draw(t) {
     ctx.beginPath(); ctx.arc(cx, cy, r0 * ((k + 1) / 3), 0, 6.2832); ctx.stroke();
   }
   // the horizon, and light still on its way
-  if (t >= CUE.age0 - 0.2) {
+  if (t >= CUE.age0 - 0.2 && kLoop < 0.5) {
     ctx.strokeStyle = rgba(TEAL, 0.95 * mapA * fadeIn(t, CUE.age0 - 0.2, 0.5)); ctx.lineWidth = 3.4 * S1;
     ctx.beginPath(); ctx.arc(cx, cy, Hr * sx, 0, 6.2832); ctx.stroke();
   }
@@ -134,6 +155,7 @@ function draw(t) {
     }
     ctx.setLineDash([]);
   }
+  forest(t, fadeIn(t, CUE.forest0 - 0.3, 0.4) * (1 - fadeIn(t, CUE.c - 0.4, 0.4)));
   // you (the observer)
   ctx.fillStyle = rgba(TEAL, mapA); ctx.beginPath(); ctx.arc(cx, cy, 6.5 * S1, 0, 6.2832); ctx.fill();
   ctx.strokeStyle = rgba(TEAL, 0.7 * mapA); ctx.lineWidth = 2 * S1; ctx.beginPath(); ctx.arc(cx, cy, 13 * S1, 0, 6.2832); ctx.stroke();

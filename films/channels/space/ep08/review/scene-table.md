@@ -1,22 +1,23 @@
-# ep08 scene table (PLANNED: times are the script's windows split by sentence; replaced by measured times after voicing)
+# S2E02 (folder ep08) scene table: MEASURED times (from vo/words.json and film.json, 9 Nov 2026)
+
+One row per visual change; the 2-D picture also pushes in a little on each starred word.
 
 | time | narration | visual | on-screen text | sound |
 |---|---|---|---|---|
-| 0.0 | Why is the night sky dark? | frame 0, the payoff: a sightline of stars through a dark sky that ramps toward white along one lane; spine "night sky: ?" | spine: night sky: ? | signature pings |
-| 1.7 | Think hard. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 3.4 | Say the universe has no edge or start. | a forest of trunks seen from inside, then the same drawn as stars; a straight sightline ends on a star every time | spine: endless universe: a star in every direction | bell on a label or counter |
-| 6.6 | Then every line of sight would end on a star. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 9.8 | Like a forest: every look hits a trunk. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 13.0 | Far stars look fainter, but there are more of them. | stars at 1x, 2x, 3x distance: fainter but more of them; the two effects cancel; the whole sky glows white | spine: fainter, but more: they cancel | bell on a label or counter |
-| 17.8 | Those two effects cancel, so the whole sky should glow like a star's surface. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 22.5 | The key here is time. | a timeline from now back to the start; light from far stars drawn as dashes still on the way | spine: light needs time to arrive | bell on a label or counter |
-| 27.3 | Far starlight may not have had time to reach us yet. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 32.2 | We now put the universe's age near thirteen point eight billion years. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 37.0 | Past a certain distance, starlight is still on its way. | the sightline stops at a horizon; beyond it the stars are switched off, "still on the way" | spine: the dark is a clue | bell on a label or counter |
-| 41.7 | So we can only see so far. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 46.3 | The dark sky hints that the universe has a beginning. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 51.0 | So tonight's dark isn't empty. | hold on the dark sky with one star lit | captions | bell on a label or counter |
-| 54.5 | It's a clue: the universe has not been shining forever. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 58.0 | Light time: from the Sun, about eight minutes. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 61.8 | From the farthest galaxies we see, billions of years. | the picture develops with the sentence (new element or close-up) | captions | bell on a label or counter |
-| 65.5 | Next: where did the gold in your ring come from? | the picture develops with the sentence (new element or close-up) | captions | signature pings |
+| 0.0 | Why is the night sky dark? | Frame 0: the night-sky strip ramps from dark to white; a distance map (you in the middle, stars round you) | title; 'the night sky: dark?' | signature pings |
+| 1.9 | Think hard. | Push-in; the map's stars hold dim | none | soft bell |
+| 3.2 | Say the universe has no edge or start. | Strip drops to a dark starry sky; the map's edge ring is drawn and 'illustration' lands | pills 'the night sky', 'illustration' | bell |
+| 6.5 | Then every line of sight would end on a star. | Thirty lines of sight run from you to the map's edge; each ends on a lemon star | counter 'a star in every direction'; pill 'distance map: you in the middle' | tonal sweep |
+| 10.0 | Like a forest: every look hits a trunk. | Cut to a forest of trunks; seven teal lines of sight each stop at one | none | tick |
+| 12.8 | Far stars look fainter, but there are more of them. | Back to the map; three rings light in turn: near (few, bright), middle, far (many, faint) | counter 'fainter, but more: they cancel' | three bells |
+| 17.7 | Those two effects cancel, so the whole sky should glow like a star's surface. | The strip climbs from dark to white | counter 'the sky glows' | swell |
+| 21.9 | The key here is time. | Strip stays white; a push-in on 'time' | none | none |
+| 26.8 | Far starlight may not have had time to reach us yet. | Light fronts hover beyond the map | none | none |
+| 29.7 | We now put the universe's age near thirteen point eight billion years. | A teal horizon ring closes in from the edge; stars beyond it dim; the strip falls back to dark | counter '13.8 billion years' | glide |
+| 34.1 | Past a certain distance, starlight is still on its way. | Dashed fronts creep inward but never arrive | pill 'still on its way' | none; picture-only 3 s |
+| 39.9 | So we can only see so far. | Push-in on 'far'; only stars inside the horizon stay lit | none | none |
+| 43.1 | The dark sky hints that the universe has a beginning. | The strip holds dark with a few stars | counter 'dark: a clue' | chime |
+| 46.9 | So tonight's dark isn't empty. It's a clue: the universe has not been shining forever. | Strip dims a little more; a push-in on 'clue' | none | none |
+| 53.3 | Light time: from the Sun, about eight minutes. | A small teal ring leaves you and grows (the Sun's distance, not to scale) | counter '8 minutes'; badge 'not to scale' | ping |
+| 57.1 | From the farthest galaxies, billions of years. | A big ring grows to the map's edge | counter 'billions of years' | ping |
+| 60.4 | Next: where did the gold in your ring come from? | End card on frame 0's strip ramp and map (a replay loops) | 'Next orbit: your gold'; 'One More Orbit · S2 · Episode 3' | signature; end card held 1.5 s or more |
