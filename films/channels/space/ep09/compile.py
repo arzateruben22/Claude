@@ -62,15 +62,15 @@ SPACE = [key(0.0, target=MID, dist=66.0, az=-28.0, el=16.0),
          key(CUE["zoom"] - 0.1, target=[7.5, -4.6, 4.6], dist=48.0, az=18.0, el=24.0, ease="sine"),
          key(CUE["zoom"] + 2.9, target=RING, dist=22.0, az=36.0, el=20.0, ease="inout3"),
          key(CUE["ring"] + 1.8, target=RING, dist=19.0, az=52.0, el=18.0, ease="sine"),
-         key(CUE["somewhere"], target=RINGT, dist=15.0, az=62.0, el=20.0, ease="sine"),            # push in: the beads arrive and the ring glints
-         key(CUE["somewhere"] + 2.4, target=RINGT, dist=11.5, az=72.0, el=6.0, ease="sine"),         # low, skimming the band
-         key(CUE["souv"], target=RINGT, dist=24.0, az=84.0, el=46.0, ease="sine"),                 # high and wide for "souvenir"
-         key(CUE["souv"] + 2.6, target=RINGT, dist=14.0, az=98.0, el=14.0, ease="sine"),
-         key(t_tk, target=RINGT, dist=21.0, az=108.0, el=26.0, ease="sine"),
-         key(A("vo06:crash"), target=RINGT, dist=13.0, az=120.0, el=12.0, ease="sine"),             # close on the metal for "a star crash"
+         key(CUE["somewhere"], target=RINGT, dist=19.0, az=62.0, el=20.0, ease="sine"),            # push in: the beads arrive and the ring glints
+         key(CUE["somewhere"] + 2.4, target=RINGT, dist=15.0, az=72.0, el=8.0, ease="sine"),         # low, skimming the band
+         key(CUE["souv"], target=RINGT, dist=30.0, az=84.0, el=46.0, ease="sine"),                 # high and wide for "souvenir"
+         key(CUE["souv"] + 2.6, target=RINGT, dist=19.0, az=98.0, el=14.0, ease="sine"),
+         key(t_tk, target=RINGT, dist=27.0, az=108.0, el=26.0, ease="sine"),
+         key(A("vo06:crash"), target=RINGT, dist=19.0, az=120.0, el=12.0, ease="sine"),             # close on the metal for "a star crash"
          key(A("vo06:poem") - 0.4, target=RINGT, dist=30.0, az=140.0, el=30.0, ease="sine"),       # wide, then in for the ring's reaction
-         key(CUE["chem"], target=RINGT, dist=18.0, az=150.0, el=10.0, ease="sine"),                 # in low for "chemistry"
-         key(t_rd - 0.1, target=RINGT, dist=22.0, az=156.0, el=16.0, ease="sine"),
+         key(CUE["chem"], target=RINGT, dist=22.0, az=150.0, el=10.0, ease="sine"),                 # in low for "chemistry"
+         key(t_rd - 0.1, target=RINGT, dist=26.0, az=156.0, el=16.0, ease="sine"),
          key(t_rd + 2.2, target=[0, 0, 0], dist=44.0, az=40.0, el=30.0, ease="inout3"),
          key(t_end, target=[0, 0, 0], dist=48.0, az=44.0, el=30.0, ease="sine"),
          key(f.duration, target=MID, dist=66.0, az=-28.0, el=16.0)]

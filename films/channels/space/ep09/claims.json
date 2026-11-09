@@ -121,18 +121,18 @@
  {
   "id": "c8",
   "sentence": "Some of its gold may have been made in a crash like that, somewhere in space.",
-  "claim": "The Sun and planets formed from gas already enriched in heavy elements by earlier stellar events, about 4.6 billion years ago.",
+  "claim": "NASA: astronomers think that after neutron stars merge, the debris makes radioactive elements like platinum and gold, so some gold may come from such crashes; the page says nothing about how much, or about the Sun's gas.",
   "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
   "source_title": "The Unfolding Story of a Kilonova Told in X-rays (NASA, 2022)",
   "accessed": "2026-11-08",
-  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Page says 'astronomers think'; the film says 'may have been'.",
+  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Page says 'astronomers think'; the film says 'may have been'. 9 Nov: claim reworded to match the quote read (merger debris and gold); the earlier '4.6 billion years / Sun's gas' wording is dropped because the page does not say it.",
   "verified_via": "page",
   "status": "SOURCE-READ",
   "source_read": {
    "date": "2026-11-08",
    "by": "builder (an AI), fetched the page and read it",
    "quote": "...radioactive elements like platinum and gold formed in the debris from the merger.",
-   "qualification": "Page says 'astronomers think'; the film says 'may have been'."
+   "qualification": "The page says 'astronomers think'; it does not give a share of any ring's gold or speak of the Sun's birth gas."
   }
  },
  {
@@ -172,18 +172,18 @@
  {
   "id": "c20",
   "sentence": "So some gold may be leftovers of a star crash.",
-  "claim": "The Sun and planets formed from gas already enriched in heavy elements by earlier stellar events, about 4.6 billion years ago.",
+  "claim": "NASA: astronomers think that after neutron stars merge, the debris makes radioactive elements like platinum and gold, so some gold may come from such crashes; the page says nothing about how much, or about the Sun's gas.",
   "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
   "source_title": "The Unfolding Story of a Kilonova Told in X-rays (NASA, 2022)",
   "accessed": "2026-11-08",
-  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. As above.",
+  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. As above. 9 Nov: claim reworded to match the quote read (merger debris and gold); the earlier '4.6 billion years / Sun's gas' wording is dropped because the page does not say it.",
   "verified_via": "page",
   "status": "SOURCE-READ",
   "source_read": {
    "date": "2026-11-08",
    "by": "builder (an AI), fetched the page and read it",
    "quote": "...radioactive elements like platinum and gold formed in the debris from the merger.",
-   "qualification": "As above."
+   "qualification": "The page says 'astronomers think'; it does not give a share of any ring's gold or speak of the Sun's birth gas."
   }
  },
  {

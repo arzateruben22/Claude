@@ -144,7 +144,7 @@ function explainer(t, k) {
   const rate = (t < CUE.fast ? 0.7 : 5.0); const gate = fadeIn(t, CUE.soak - 0.3, 0.4);
   for (const n of NEUT) {
     const ph = ((t - CUE.soak) * n.v * rate * 0.35 + n.u) % 1; if (t < CUE.soak - 0.3 || ph < 0 || (t < CUE.fast && n.u > 0.12)) continue;
-    const d = 470 * (1 - ph), a = n.a; if (Math.sin(a) > -0.05) continue;          // neutrons arrive from above and the sides only: never across the counter
+    const d = 470 * (1 - ph), a = n.a; if (Math.sin(a) > -0.05) continue; if (cy + Math.sin(a) * d * 0.78 < 650) continue;          // neutrons arrive from above and the sides only: never across the counter
     circ(cx + Math.cos(a) * d, cy + Math.sin(a) * d * 0.78, 6.5 + 2 * ph); ctx.fillStyle = rgba(TEAL, 0.95 * gate * k * Math.min(1, ph * 5)); ctx.fill();
   }
 }
@@ -192,7 +192,7 @@ for (const c of FILM.counters) {
   const el = hud.counter(c.id, { label: c.label, t0: c.t0, t1: c.t1, at: c.at, lit: () => true, value: () => 0, fmt: () => c.text });
   CEL[c.id] = el; el.classList.add(c.read ? "lm-read" : "lm-clock");
   const lb = el.querySelector(".lb");
-  if (c.id === "c-heavy" && lb) lb.style.fontSize = "3.6vmin";
+  if (c.id === "c-heavy" && lb) lb.style.setProperty("font-size", "4.2vmin", "important");
   if (lb) lb.style.textShadow = "0 0 1.2vmin rgba(8,10,28,.95), 0 0 2.6vmin rgba(8,10,28,.85)";
   const v = el.querySelector(".v");
   if (v && c.text.length > 12) v.style.fontSize = c.read ? "4.2vmin" : "5.2vmin";
@@ -273,6 +273,7 @@ window.seek = function (t) {
   const pp = (c) => Math.exp(-Math.pow((tt - c) / 0.4, 2)); ringMat.uniforms.uGlint.value = Math.min(1.6, arrived / NB * 1.1 + 0.15 * (tt < CUE.spiral0 ? 1 : 0) + 0.5 * (pp(CUE.poem) + pp(CUE.chem))); ringMat.uniforms.uT.value = tt;
   jewel.scale.setScalar(1 + 0.12 * (pp(CUE.poem) + pp(CUE.chem))); jewel.rotation.order = "YXZ"; jewel.rotation.set(-0.95 - 0.1 * Math.sin(tt * 0.6), Math.atan2(camera.position.x - RING[0], camera.position.z - RING[2]) + 0.35 * Math.sin(tt * 0.5), 0.15);
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 0.8, bandGain: 0.7 });
+  { const hide = tt >= CUE.end - 0.1 ? 0 : 1; jewel.visible = !!hide; ringGW.mesh.visible = !!hide; ringLi.mesh.visible = !!hide; ringGl.mesh.visible = !!hide; mergeB.mesh.visible = !!hide; }
   overlay2d(t);
   hud.update(t); tRing.update(t); eRing.update(t);
   const lk = fadeIn(t, FILM.loop0, 0.45);
