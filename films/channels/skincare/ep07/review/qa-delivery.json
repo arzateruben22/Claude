@@ -1,6 +1,6 @@
 {
  "file": "films/channels/skincare/ep07/out/skin-sense-007-9x16.mp4",
- "size_mb": 28.2,
+ "size_mb": 28.3,
  "video": {
   "codec": "h264",
   "profile": "High",
@@ -11,7 +11,7 @@
   "dur": 70.0,
   "pix_fmt": "yuv420p",
   "color": "bt709",
-  "mbps": 2.95
+  "mbps": 2.97
  },
  "film_dur": 70.0,
  "audio": {

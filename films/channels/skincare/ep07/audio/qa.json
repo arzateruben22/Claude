@@ -1,6 +1,6 @@
 {
- "compose_s": 5.8,
- "master_s": 8.7,
+ "compose_s": 6.1,
+ "master_s": 8.2,
  "master": {
   "gain_db": 1.64,
   "iterations": 2,
@@ -204,14 +204,14 @@
    },
    {
     "kind": "scale.jump",
-    "tag": "c28",
+    "tag": "c29",
     "show": 60.1667,
     "method": "shape",
     "err_ms": -0.0
    },
    {
     "kind": "scale.jump",
-    "tag": "c29",
+    "tag": "c30",
     "show": 61.9333,
     "method": "shape",
     "err_ms": -0.0
