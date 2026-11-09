@@ -39,6 +39,8 @@ import type { BarView } from './views';
 import type { BarVenue } from './venue';
 import type { BarMats } from './mats';
 import { BAR_NAME } from './brand';
+import { Crowd } from './crowd';
+import type { VisState } from '../../engine/venue-def';
 
 export interface LifeCtx {
   scene: THREE.Scene; camera: THREE.PerspectiveCamera; F: Frame; def: VenueDef; venue: BarVenue; mats: BarMats;
@@ -50,6 +52,12 @@ export interface LifeCtx {
   input: { enabled: boolean };
   walkToCar: () => void;
   canvas: HTMLCanvasElement;
+  /** S3a: the renderer (the filler atlas), the overhead's target, the visibility state, how your avatar is drawn (0 not
+   *  drawn, 1 at LOD 1, 2 at LOD 0) */
+  renderer: THREE.WebGLRenderer;
+  overheadTarget: () => { x: number; z: number };
+  visState: () => VisState;
+  avatarDrawn: () => 0 | 1 | 2;
 }
 type Slot = BarVenue['slots'][number];
 interface Held { item: BarItem; left: number; next: number; sipT: number; nudged?: boolean }
@@ -108,6 +116,9 @@ export class BarLife {
   log: { t: number; what: string }[] = [];
   // ---- the page parts
   private ctx!: LifeCtx;
+  /** S3a: the crowd, the staff, the fillers and how people are drawn (crowd.ts) */
+  crowd!: Crowd;
+  get ctxRef() { return this.ctx; }
   objects: SmartObject[] = placed();
   private slots = new Map<string, Slot>();
   items!: HeldItems; clips = new ClipLayer(); broadcast!: Broadcast;
@@ -118,6 +129,26 @@ export class BarLife {
   gameResults: (GameOutcome & { t: number; moodlet: string | null; tokens: number })[] = [];
   private screenMesh!: THREE.Mesh;
   private surfaces = surfaces();
+  /** the nearest table surface within r metres of (x, z): its local (x, y, z) (the crowd's empties go down there) */
+  surfacesNear(x: number, z: number, r: number): [number, number, number] | null {
+    let best: [number, number, number] | null = null, bd = r;
+    for (const sf of this.surfaces) { const [sx, sz] = this.ctx.F.fromFrame(sf.at[0], sf.at[1]), d = Math.hypot(sx - x, sz - z); if (d < bd) { bd = d; best = [sx + ((x * 13.1) % 0.2) - 0.1, sf.y, sz + ((z * 7.3) % 0.16) - 0.08]; } }
+    return best;
+  }
+  overheadTarget() { return this.ctx.overheadTarget(); }
+  /** a guest or one of the staff within r metres of (x, z) (the doors open for them) */
+  someoneNear(x: number, z: number, r: number) { return !!this.crowd && this.crowd.someoneNear(x, z, r); }
+  /** the crowd's counts for stats() */
+  crowdStats() { return this.crowd ? this.crowd.statsBrief() : { npcs: 0, groups: 0, seated: 0, walkers: 0 }; }
+  /** the people's own roots for the map members' listing (people are reported by visPeople, person by person) */
+  peopleRoots(): THREE.Object3D[] { return []; }
+  visPeople() { return this.crowd ? this.crowd.visReport() : null; }
+  get shadowBefore() { return this.ctx.shadowHooks.before; }
+  get shadowAfter() { return this.ctx.shadowHooks.after; }
+  /** a guest's caption line (its sim time noted, as the staff's are) */
+  sayCaption(who: string, text: string, seconds = 3) { this.say(who, text, seconds); }
+  /** a slot free for you: nobody's reservation and no filler or guest on it */
+  private freeForYou(id: string) { return this.crowd ? !this.crowd.slotTaken(id, 'you') && this.res.free(id, 'you') : this.res.free(id, 'you'); }
   private cheerT = 0; private lastMoment: TvEvent | null = null; private teamMomentAt?: number; private teamLostAt?: number;
   private nudgeT = 0; private lowWas: Record<string, boolean> = {}; private tiredShown = false;
   private watching: { screen: string; since: number } | null = null;
@@ -200,6 +231,9 @@ export class BarLife {
     // "Not now" (or the backdrop, or Escape) drops the order its menu was opened for, and only that one
     ctx.hud.onOrderClose = () => { ctx.hud.closeOrder(); const o = this.menuFor; this.menuFor = null; if (o) this.dropOrder(o, 'not now'); bh.onSheet(bh.anySheet()); };
     this.syncClock();
+    // S3a: the crowd (the slots, the staff plan, the room settled, the filler atlas painted before the first frame)
+    this.crowd = new Crowd(this, ctx.renderer, ctx.scene);
+    this.crowd.attach(q);
     const day = fromAbs(this.T), dateKey = this.weekNow() * 10 + day.day;
     if (!this.save.tonight || this.save.tonight.date !== dateKey || this.save.tonight.visit !== this.save.visits) this.save.tonight = { date: dateKey, visit: this.save.visits, goals: tonightsThree(dateKey, this.save.visits), done: [] };
     this.tonight = { goals: this.save.tonight.goals, done: this.save.tonight.done };
@@ -280,6 +314,7 @@ export class BarLife {
     if (this.broadcast.texture !== oldTex) { const m = this.ctx.mats.screen; m.map = this.broadcast.texture; m.emissiveMap = this.broadcast.texture; m.needsUpdate = true; }
     this.broadcast.update(this.T, performance.now() / 1000, true);
     if (rebuildPeople) this.buildCrew(q);
+    this.crowd?.setQuality(q, rebuildPeople);
   }
 
   // ------------------------------------------------------------------------------------------------ time
@@ -294,6 +329,7 @@ export class BarLife {
     const T1 = this.clockMinute() + this.drift;
     if (this.synced && T1 !== this.T) this.rebase(T1 - this.T);
     this.T = T1; this.synced = true;
+    if (reset && this.crowd) this.crowd.settle(true);
   }
   private synced = false;
   /** sim time jumped by d minutes without being lived through (a set clock, a pinned week): every timer that counts in
@@ -327,6 +363,8 @@ export class BarLife {
   /** once a frame, after the camera and your avatar have moved: sim time, needs, actions, staff, items, screens, HUD */
   update(dt: number, hideAvatar: boolean) {
     const c = this.ctx; if (!c) return;
+    // S3a: the build scheduler checks the gap here, at the top of the update and before the render
+    this.crowd.frame(dt, c.visState(), c.avatarDrawn());
     const paused = c.hud.paused || c.barHud.isOpen('needsSheet') || c.barHud.isOpen('guide') || c.barHud.isOpen('tired');
     const realNow = performance.now() / 1000;
     if (!paused) {
@@ -355,7 +393,9 @@ export class BarLife {
     this.stepOrders(dMin * SECS);
     // the staff walk on real time at 1x, sim time when sped up or fast-forwarding
     const staffDt = Math.max(dtReal, dMin * SECS);
-    this.bartender.update(staffDt); this.server.update(staffDt); this.house.update(staffDt);
+    // (S3a: the crowd steps every bartender, server, the host and the barback; the house player is life's)
+    this.house.update(staffDt);
+    this.crowd?.step(dMin * SECS, dtReal);
     // S2b: the games' physics and the house's turns, in sim seconds
     this.games.update(dMin * SECS);
     for (const e of this.tv.eventsBetween(T0, T1)) this.moment(e);
@@ -367,11 +407,14 @@ export class BarLife {
     const c = this.ctx, steps = Math.round((min * SECS) / SIM_STEP_S);
     // what was on screen belongs to the time before the jump
     this.clearMessages();
+    // S3a: every pending body first (the plan: fastForward() and pose() build up to the live cap before they measure)
+    this.crowd.buildAll();
     for (let i = 0; i < steps; i++) {
       if (c.player.path) for (let k = 0; k < 60 * SIM_STEP_S; k++) { c.player.step({ x: 0, y: 0, run: false }); if (!c.player.path) break; }
       this.drift += SIM_STEP_S / SECS;
       this.simulate(this.clockMinute() + this.drift - this.T, SIM_STEP_S);
     }
+    this.crowd.topUp(); this.crowd.relayFillers();
     this.broadcast.update(this.T, performance.now() / 1000, true);
     this.mapScreens(); this.refreshHud(true);
     // a toast or a caption from early in the jump has had its time (in sim seconds) by its end
@@ -454,6 +497,8 @@ export class BarLife {
   }
   /** a moment on a screen: the GOAL banner is the broadcast's; here the Cheer button, the moodlets for your team */
   private moment(e: TvEvent) {
+    // S3a: the crowd reacts (everyone who can see a screen on that channel), wherever you are
+    if (this.crowd) { const f = this.fixtureOf(e), d = fromAbs(e.t), bd = d.hour < 2 ? (d.day + 6) % 7 : d.day; this.crowd.moment(e, e.kind === 'final' && !!f?.featured && (bd === 5 || bd === 6)); }
     const c = this.ctx, p = c.player, [u, v] = c.F.toFrame(p.x, p.z), here = c.clock().open && (c.def.indoor(u, v) || (u > 2 && u < 24 && v < 0.3 && v > -5.5));
     if (!here) return;
     const f = this.fixtureOf(e);
@@ -475,7 +520,7 @@ export class BarLife {
       if (w && this.channelAt(w.screen, e.t - 0.5 / SECS) === e.channel && e.t - w.since > 1) this.goal('watch-final');
     }
   }
-  private fixtureOf(e: TvEvent): Fixture | null { const d = fromAbs(e.t); return this.tv.fixtures(d.week, d.day).find((f) => f.id === e.fixture) ?? null; }
+  fixtureOf(e: TvEvent): Fixture | null { const d = fromAbs(e.t); return this.tv.fixtures(d.week, d.day).find((f) => f.id === e.fixture) ?? null; }
   /** a cheer: your avatar's arms go up (an upper-body overlay when seated) */
   cheer() {
     const p = this.ctx.person(); if (!p) return false;
@@ -571,7 +616,7 @@ export class BarLife {
     const id = objId.startsWith('screen-') ? objId.slice(7) : objId, p = this.ctx.player;
     let best: Slot | null = null, bd = Infinity;
     for (const s of this.slots.values()) {
-      if (s.kind === 'staff' || !this.res.free(s.id, 'you')) continue;
+      if (s.kind === 'staff' || !this.freeForYou(s.id)) continue;
       const seat = this.seatOf(s.id);
       if (!this.screenInView(id, s.x, s.z, seat ? seat.face : null)) continue;
       const d = Math.hypot(s.sx - p.x, s.sz - p.z); if (d < bd) { bd = d; best = s; }
@@ -583,7 +628,7 @@ export class BarLife {
     const p = this.ctx.player; let best: Slot | null = null, bd = Infinity;
     for (const id of o.slots) {
       const s = this.slots.get(id); if (!s || (filter && !filter(s))) continue;
-      if (!this.res.free(id, 'you')) continue;
+      if (!this.freeForYou(id)) continue;
       const d = Math.hypot(s.sx - p.x, s.sz - p.z); if (d < bd) { bd = d; best = s; }
     }
     return best;
@@ -624,7 +669,7 @@ export class BarLife {
   private isGame(a: string) { return a === 'play-pool' || a === 'play-darts' || a === 'play-shuffleboard'; }
   private walkTo(a: QueuedAction, s: Slot) {
     const p = this.ctx.player, seat = this.seatOf(s.id);
-    if (!this.res.free(s.id, 'you')) return false;
+    if (!this.freeForYou(s.id)) return false;
     const x0 = p.x, z0 = p.z;
     const path = seat ? p.goTo(seat.ax, seat.az, { seat }) : p.goTo(s.x, s.z, { spot: s.id });
     if (!path) { this.tell("Can't get there from here.", 2); return false; }
@@ -828,7 +873,7 @@ export class BarLife {
     if (it.kind === 'drink') {
       o.stage = 'making'; o.label = `Pouring your ${it.name}`; o.start = this.T * SECS; o.readyAt = this.T * SECS + prep;
       const [u] = this.ctx.F.toFrame(this.ctx.player.x, this.ctx.player.z);
-      this.bartender.order(it.id, u, prep, () => { this.give(it); this.dropOrder(o, 'handed over'); this.say('Bartender', `One ${it.name}. Enjoy.`, 2.5); });
+      this.crowd.bartenderFor(u).order(it.id, u, prep, () => { this.give(it); this.dropOrder(o, 'handed over'); this.say('Bartender', `One ${it.name}. Enjoy.`, 2.5); });
       this.say('Bartender', `${it.name}, coming up.`, 2.5);
     } else {
       o.stage = 'kitchen'; o.label = `Your ${it.name} is in the kitchen`; o.start = this.T * SECS; o.readyAt = this.T * SECS + prep;
@@ -871,7 +916,7 @@ export class BarLife {
     // after 8 s the server goes for it: the bartender pours drinks at the pick-up; food waits at the pass
     this.server.add({ kind: 'deliver', label: 'fetch', delay: 8, to: () => (it.kind === 'drink' ? this.server.pickup : this.server.pass), arrive: () => {
       const fetch = () => { this.server.carry = it.id; o.stage = 'carrying'; o.label = `Your ${it.name} is on the way`; this.server.add({ kind: 'deliver', label: 'bring', to: () => this.besidePlayer(), arrive: () => { this.server.carry = null; this.give(it); this.dropOrder(o, 'delivered'); this.say('Server', `${it.name}. Enjoy.`, 2.5); } }, true); };
-      if (it.kind === 'drink') { o.stage = 'making'; o.label = `Pouring your ${it.name}`; this.bartender.order(it.id, 26.15, 4 + 4 * r(), fetch); }
+      if (it.kind === 'drink') { o.stage = 'making'; o.label = `Pouring your ${it.name}`; this.crowd.bartenderFor(26.15).order(it.id, 26.15, 4 + 4 * r(), fetch); }
       else { o.stage = 'kitchen'; o.label = `Your ${it.name} is in the kitchen`; const wait = () => { if (this.T * SECS >= o.readyAt) fetch(); else this.server.add({ kind: 'deliver', label: 'wait at the pass', delay: Math.max(1, o.readyAt - this.T * SECS), to: () => this.server.pass, arrive: wait }, true); }; wait(); }
     } }, true);
     this.note(`order ${o.id}: ${it.id} at a table`);
@@ -977,6 +1022,8 @@ export class BarLife {
     this.drawCarry(this.bartender); this.drawCarry(this.server);
     // S2b: the games' pieces (balls, bands, cues, darts, pucks) and the guide line
     this.games.draw(I);
+    // S3a: what the crowd holds (bodies only: a card holds nothing), their empties, the cooks' plates at the pass
+    this.crowd?.drawItems(I);
     for (const e of this.empties) I.putAt(e.model, e.x, e.y, e.z, e.yaw, 1, e.model === 'glass' ? EMPTY.glass : EMPTY.basket);
     // the budget check's worst case: every model at its cap ("The sums" count the items so), set on the room's surfaces
     if (this.itemsAtCap) {
@@ -1047,6 +1094,9 @@ export class BarLife {
   tap(ray: THREE.Ray, sx: number, sy: number, wallT = Infinity): boolean {
     const c = this.ctx, F = c.F;
     if (c.barHud.radialOpen) { c.barHud.closeRadial(); this.radialFor = null; }
+    // S3a: a person first (a body, a card or a filler) if the ray meets one before anything else
+    const who = this.crowd?.tapPerson(ray, Math.min(wallT, 40));
+    if (who) { this.openPerson(who.id, sx, sy); return true; }
     const [ou, ov] = F.toFrame(ray.origin.x, ray.origin.z), [du, dv] = F.toFrame(ray.direction.x, ray.direction.z), dy = ray.direction.y, oy = ray.origin.y;
     let best: SmartObject | null = null, bt = Math.min(wallT, 40);
     for (const o of this.objects) {
@@ -1077,9 +1127,18 @@ export class BarLife {
     c.barHud.radial(sx, sy, o.label, offers.map((x) => ({ label: x.label, key: x.action })));
     return true;
   }
+  /** a person's radial menu (S3a: their name and a hello; S3b brings the 11 interactions) */
+  openPerson(id: number, sx?: number, sy?: number) {
+    const n = this.crowd.byId(id); if (!n) return false;
+    if (sx === undefined || sy === undefined) { const v = this._v.set(n.x, n.y + 1.5, n.z).project(this.ctx.camera); sx = (v.x * 0.5 + 0.5) * this.ctx.canvas.clientWidth; sy = (-v.y * 0.5 + 0.5) * this.ctx.canvas.clientHeight; }
+    this.radialFor = `person:${id}`;
+    this.ctx.barHud.radial(sx, sy, n.name, [{ label: 'Say hi', key: 'hi' }]);
+    return true;
+  }
   private pick(key: string) {
     const o = this.radialFor; this.ctx.barHud.closeRadial(); this.radialFor = null;
     if (!o) return;
+    if (o.startsWith('person:')) { const n = this.crowd.byId(Number(o.slice(7))); if (n && key === 'hi') this.crowd.sayHi(n); return; }
     const r = this.use(o, key);
     if (!r.ok) this.ctx.hud.toast(r.why ?? "Can't do that now", 2.5);
   }
@@ -1269,6 +1328,48 @@ export class BarLife {
         }
         return { outcome: sp.outcome, yourTurns: turns, simMinutes: +(self.T - t0).toFixed(2), state: sp.state() };
       },
+      // ---- S3a: the crowd, the staff, the fillers and how people are drawn
+      /** live, held and fillers counted, and each person's draw mode */
+      people() { const c = self.crowd; return { ...c.report(), list: c.list() }; },
+      peopleBrief() { return self.crowd.report(); },
+      /** the last n decisions: the NPC, the needs, the top three with scores, what was chosen and any overlay */
+      decisions(n = 20) { return self.crowd.decisionsLog.slice(-n); },
+      /** the crowd's and the regulars' seed: the room settles again from it */
+      seed(n: number) { return self.crowd.seed(n); },
+      /** seats walk-ins in a zone ('outside': the patio and the front walk) until n live people are there */
+      crowdAt(zone: string, n: number) { return self.crowd.crowdAt(zone, n); },
+      /** the build log since a frame: each frame's check and build, each build's person, level, quality, reason, start,
+       *  duration and frame; the load and the switches marked */
+      builds(since = 0) { return self.crowd.sched.report(since); },
+      buildFrame() { return self.crowd.sched.frameNo; },
+      fillers() { return self.crowd.fillerList(); },
+      crowdLogs(which?: string, n = 400) { const L = self.crowd.logs() as Record<string, unknown[]>; if (which) return (L[which] ?? []).slice(-n); return Object.fromEntries(Object.entries(L).map(([k, v]) => [k, v.length])); },
+      staffReport() { return self.crowd.staffReport(); },
+      serveAll() { return self.crowd.serveAll(); },
+      resetAudits() { return self.crowd.resetAudits(); },
+      /** a seeded moment on a channel now, for the reactions check (the crowd and you react as to the screens' own) */
+      fireMoment(kind: 'goal' | 'final' | 'bigChance', team: string, channel: 1 | 2 = 1) {
+        const fx = self.tv.inPlay(channel, self.T) ?? self.tv.featured(self.now().week, self.now().day);
+        if (!fx) return null;
+        const e: TvEvent = { channel: fx.channel, kind, team, intensity: 1, t: self.T, fixture: fx.id, score: [0, 0], label: kind };
+        self.moment(e);
+        return { fixture: fx.id, home: fx.home.abbr, away: fx.away.abbr, featured: fx.featured, channel: fx.channel };
+      },
+      setNpcNeeds(values: Record<string, number>, share = 0.3, seed = 7) { return self.crowd.setNpcNeeds(values, share, seed); },
+      /** you join the party of guest `id` (Lot 57's Join): they're never held */
+      join(id: number) { const n = self.crowd.byId(id); return n ? self.crowd.join(n) : null; },
+      tapPerson(id: number) { return self.openPerson(id); },
+      /** a tap on the filler at a slot: the hand-over, then their menu */
+      tapFiller(slot: string) { const f = self.crowd.fillers.get(slot); if (!f) return null; const [x, z] = [f.x, f.z]; const cam = self.ctx.camera.position; const d = new THREE.Vector3(x - cam.x, f.y + 1.2 - cam.y, z - cam.z), len = d.length(); const ray = new THREE.Ray(cam.clone(), d.normalize()); const n = self.crowd.tapPerson(ray, len + 1); if (!n) return { ok: false }; self.openPerson(n.id); return { ok: true, id: n.id, name: n.name, slot: n.slot, menu: self.ctx.barHud.radialOpen ? self.ctx.barHud.radialItems : null, title: document.querySelector('#radial .title, #radialTitle')?.textContent ?? null }; },
+      forceLod0(id: number) { const n = self.crowd.byId(id); if (!n) return null; const p = self.crowd.forceLod0(n); return { id, lod: p.stats().lod, calls: p.stats().calls, tris: p.stats().tris }; },
+      atlasImage() { return self.crowd.cards.atlasImage(); },
+      tables() { return self.crowd.tables(); },
+      /** a tap on guest `id` (a body or a card, held or live): the ray from the camera to their chest; who it gave */
+      tapNpc(id: number) { const n = self.crowd.byId(id); if (!n) return null; const cam = self.ctx.camera.position; const d = new THREE.Vector3(n.x - cam.x, n.y + 1.1 - cam.y, n.z - cam.z), len = d.length(); const who = self.crowd.tapPerson(new THREE.Ray(cam.clone(), d.normalize()), len + 1); return who ? { id: who.id, key: who.key, name: who.name, mode: who.mode, same: who.id === id } : null; },
+      /** three.js's renderer.debug.onShaderError, watched from now on (each error is still printed); returns what it caught */
+      shaderWatch() { const r = self.ctx.renderer as unknown as { debug: { onShaderError: ((...a: unknown[]) => void) | null } }; const w = self as unknown as { shaderErrs?: string[] }; if (!w.shaderErrs) { w.shaderErrs = []; r.debug.onShaderError = (gl, prog, vs, fs) => { const g = gl as WebGL2RenderingContext; const msg = `program ${g.getProgramInfoLog(prog as WebGLProgram)} vs ${g.getShaderInfoLog(vs as WebGLShader)} fs ${g.getShaderInfoLog(fs as WebGLShader)}`; w.shaderErrs!.push(msg); console.error('THREE.WebGLProgram: shader error ' + msg); }; } return w.shaderErrs; },
+      fillerCheck() { const c = self.crowd; return { target: c.target(), live: c.liveGuests, held: c.heldGuests, fillers: c.fillers.size, freeEligible: c.freeEligible(), staff: c.staffOn, cap: c.cap, handFails: c.handFails }; },
+      npcs(filter?: string) { const l = self.crowd.list(); return filter ? l.filter((x) => JSON.stringify(x).includes(filter)) : l; },
     };
   }
 }

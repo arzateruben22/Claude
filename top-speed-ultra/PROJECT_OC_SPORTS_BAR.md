@@ -75,15 +75,15 @@ closes it, logs the result in `PROJECT_OC_PROGRESS.md`, and updates this table a
 | O14 | Held guests and staff going off shift (the live cap on a switch, under "People are slow to build" and "Fillers") | New design in this plan; Lot 57's spec has nothing like it | S3a builds them and checks them (the crowd, filler and change-of-graphics checks) | S3a |
 | O15 | The Retro style module (RS1) | Uncommitted on `claude/modes`; its API read at about 10:35 UTC (`style.ts` 5a1598bdd2), changed since (e606208d78, 10:53) | S1 re-reads the API; S4 turns Retro on after `claude/modes` merges, or ships Low with standard materials at full resolution and says so in the handoff | S1, S4 | **S1's part: done.** Re-read on 2026-11-02: still uncommitted on `claude/modes`; the API the bar uses holds (`RetroWorld` gains an optional `sun`). The S1 page's Low draws the standard materials at full resolution (render scale 1, pixel ratio 1 to 2, no shadow map), as this row allows; S4 turns Retro on or says so in the handoff. |
 | O16 | The hair finding: a LOD 0's toon hair cap and hair cards wouldn't compile, so they're `retroSkip` | The hooks' text read and resolved against the toon shader; no GLSL compiled | S3a's forced LOD 0 run at Low fails on any shader error; the handoff asks RS1 to make the hook-fit test catch such a hook | S3a |
-| O17 | No NPC's face moves (no NPC LOD 0) | A LOD 0 is one synchronous build of 4.6 s or 7 to 9.5 s | Owner question 2 | The owner; S3a applies the answer |
+| O17 | No NPC's face moves (no NPC LOD 0) | A LOD 0 is one synchronous build of 4.6 s or 7 to 9.5 s | Owner question 2 | The owner; S3a applies the answer | **S3a: applied as planned** (no answer yet): the build queue never builds an NPC LOD 0 and the draw rule never asks for one; `people()` and `vis()` report NPCs at LOD 0 (0 in every S3a check and pose). Only the Low shader check forces one, on purpose. |
 | O18 | Low draws no sun shadows, unlike the game's `RETRO` preset and decision 15's "hard shadows" | The plan's choice, for Low's budget | Owner question 1 | The owner; S4 applies the answer |
 | O19 | Our unit's extent (the arm's east 36 m) and the patio on unmapped paving | **Assumptions**: the data doesn't divide the building, and nothing is mapped on the strip | They stay ours and are built as planned; only the owner or new open data can change them | (stays an assumption) |
 | O20 | The lot: S0-data's derived lot, 55 to 62 stalls, and the 0.84 fill bias | The derived lot, our stall layout and L6's fill rule as measured | S1 lays out the stalls, counts them and recomputes 0.84 from the re-measured rule | S1 | **S1: closed.** 55 stalls in four rows (every one facing 0 or pi; aisle 416's line keeps three of the south row out), your stall the north row's nearest the routes' end; L6's rule, unchanged, gives these stalls a mean bias of 0.834, which the page computes at load and divides by. |
 | O21 | The walk grid, the lane path and the front's clearances | `sportsbar_zones.py`'s model of L12's grid, and shapely on the plan's numbers | S1 runs the same tests on the built colliders and Lot 57's real grid at the page's offset, and the front's from `layout()` | S1 | **S1: closed.** On the built colliders and Lot 57's real grid at the page's offset: all 137 stand points (the 103 modelled and the 34 standing, pool and darts spots) within 0.413 m of a reachable cell, H 0.052 m, no reachable cell in the lane or the flap (also with them painted back in); the lane path clears every collider but the gate by 0.10 m; the front from `layout()`: walk 0.40 m, ramp 0.41 m, bikes 0.81 m, planters 1.00 and 1.02 m, patio 1.88 m from aisle 416's ribbon, the ribbon 3.72 m from building 61. |
 | O22 | The I-5's drawing: the bridge rule, piers left out over drawn ribbons, the Katella slab under the decks, and the ground the ramps meet (the 60 m terrain cells smear the embankments) | The script's rule on the slice | S1's "The I-5 is drawn" check on the built sets, and its street and door screenshots from the patio and Katella | S1 | **S1: closed.** "The I-5 is drawn" passes on the built sets (the five carriageway pieces 14 m and seven links 8 m wide, decks at 7.6 m, 98 piers built and 33 left out, 19 of them near, as the script prints; no built pier meets a drawn ribbon; 393 connectors with one height each; 58 crossings without a junction, all 5.5 m apart or in one of the 5 tunnel spans). Screenshots from the patio rail and from Katella are under S1 in the progress log. |
 | O23 | Simulation CPU (2.5, 3 and 4 ms), the 6 decisions' 0.4 ms, the code size (180 KB), the first walkable frame (under 6 s) | Targets and estimates | S1 times the first frame; S3a reports simulation and decision ms; S4 the code size | S1, S3a, S4 | **S1's part: logged.** The first walkable frame (`buildMs`, load to ready) took 11.5 s to 14.8 s at Low here, on the loaded machine; the 6 s target is a desktop estimate, not measured here. |
-| O24 | The utility arithmetic (about 99% choose a drink when thirsty) | The formulas as written | S3a's "needs drive choices" check, at 70% | S3a |
-| O25 | Lot 57's P1b and P1c (Order, Join, Leave, held items; NPCs, groups, the crowd, staff) | Not written yet | If they haven't landed by S2a and S3a, the bar writes them in `engine/` from Lot 57's spec and says so in the handoff | S2a, S3a | **S2a: landed** (`claude/onfoot` 7d94139 and 47c71a6, merged at a5ac3fd). The bar uses P1b's order sheet, captions and holding chip through `Hud`; it keeps its own instanced held items (`engine/sim/held.ts`: P1b's items are three meshes each) and its own ordering (the action queue and two scripted staff), since P1b's `doings.ts` is bound to Lot 57's venue and crowd (the module map's P1b and P1c row; the handoff says so). P1c's people are S3a's to adopt. |
+| O24 | The utility arithmetic (about 99% choose a drink when thirsty) | The formulas as written | S3a's "needs drive choices" check, at 70% | S3a | **S3a: closed.** `engine/sim/autonomy.ts` reproduces the worked arithmetic exactly (`tests/sportsbar-crowd.mjs`: watching 70.46, the drink 28.94 without the urgent rule and 58.94 with it, water 47.35, watching plain 25.46, the bar screens 6.72, table service 73.57, 28.33 at thirst 45 and 24.36 at 50), and the top-three draw picks a drink-tagged action 0.9882 of the time over 20,000 seeded decisions (the plan's 0.988). On the page (Low, Saturday 21:00, `tests/sportsbar-s3a.mjs`, the checks group): 16 of 18 thirsty guests (88.9%), 5 of 5 hungry ones and 15 of 15 bored ones chose a drink-, food- or fun-tagged action within their next two decisions. |
+| O25 | Lot 57's P1b and P1c (Order, Join, Leave, held items; NPCs, groups, the crowd, staff) | Not written yet | If they haven't landed by S2a and S3a, the bar writes them in `engine/` from Lot 57's spec and says so in the handoff | S2a, S3a | **S3a: P1c not adopted.** Its crowd (`lot57/npcs.ts`, `crowdview.ts`) is bound to Lot 57's venue and draws people its own way (per-person impostors, worker builds), so the bar keeps the plan's atlas eight and time budget and writes Lot 57's group rules into `engine/sim/groups.ts` (the handoff says so; E0 keeps one copy). Neither page has the murmur: no audio is built on either page. **S2a: landed** (`claude/onfoot` 7d94139 and 47c71a6, merged at a5ac3fd). The bar uses P1b's order sheet, captions and holding chip through `Hud`; it keeps its own instanced held items (`engine/sim/held.ts`: P1b's items are three meshes each) and its own ordering (the action queue and two scripted staff), since P1b's `doings.ts` is bound to Lot 57's venue and crowd (the module map's P1b and P1c row; the handoff says so). P1c's people are S3a's to adopt. |
 | O26 | E0, the move into `engine/` | Waits for Lot 57's P1d to be committed | S4, or whoever next touches both venues | S4 or later |
 | O27 | The names: "Stoppage Time" and the fictional leagues and teams | One web search each, not a trademark search; the blocklist | Searched again before anything ships; the blocklist test runs in every phase | S4, before release |
 | O28 | Lot 57's own shadow flaws: its first-person body on layer 1 casts nothing, and at Ultra its maps are drawn twice a frame (GTAO's normal pass draws them again) | Its `main.ts` as read (3ab822eb73, 11:09 UTC) and three.js 0.160.1 | Not the bar's to change before E0: the handoff carries both to Lot 57's owners | S1 writes the handoff note | **S1: closed.** The note is in `PROJECT_OC_HANDOFF.md` ("For Lot 57's owners"). |
@@ -536,6 +536,16 @@ and `tex.ts` (d13a6672c5); `walkgrid.ts`, `hud.ts`, `clock.ts` and `driver.ts` h
 measured again for the round-6 revision. For this one, `main.ts` was re-read at 3ab822eb73 (11:09 UTC) for L9's
 first-person layer only, and `walkgrid.ts` (still 671715d7a0) for its painting methods in the contracts table. Under the
 drift rule the rest stay as measured, and the S1 builder's re-measure covers every row.
+
+**S3a's re-measure (2026-11-09, about 04:30 UTC).** `git fetch origin claude/onfoot` found nothing newer than 47c71a6,
+merged at a5ac3fd, so no merge was made. `git diff 47c71a6 HEAD` on `lot57/`, `main.ts`, `index.html`, `vite.config.ts`
+and `people/` is empty, and the blobs read as S2a's (`main.ts` bd91c72b38, `lot57/lot.ts` 89c14a9be3, `player.ts`
+47fa3b893d, `venue.ts` 950d5b337a, `walkgrid.ts` e8111a175d, `hud.ts` 0e34bd2fb8, `collide.ts` 7b5ae9a25b,
+`index.html` f7a1c87dff): every row, the contracts and the `people/` internals hold, and no sum moves. The Retro module
+is still only on `origin/claude/wip-modes` (its WIP snapshot 94b0d52, `style.ts` 9bfd9da822, the same blob as S1's
+read) and not on `claude/modes`, so O15 stands. Seen, not measured (it isn't committed): the `tsu-foot` worktree has
+uncommitted P1d work (`lot57/retro.ts`, `look.ts`, `sky.ts` and others new; `hud.ts` reads the quality segment's
+`data-q` through `closest('button')` and names HD `hd`, which would move L17 and the bar's `onQuality` when it lands).
 
 **S2a's re-measure (2026-11-08, about 23:10 UTC).** Lot 57's P1b and P1c are committed: `claude/onfoot` 47c71a6, merged
 into `claude/sports-bar` at a5ac3fd. Every row was read again there. Moved since ab9fbe1: `main.ts` (bd91c72b38),
@@ -2941,7 +2951,7 @@ module from `claude/modes` merged in.
     2 and the party invites (S3a); the games' sounds (with S2a's audio); keyboard and gamepad shots (the drag, the
     flick and the swipe are pointer gestures; the hooks shoot for tests).
 
-### S3a: the crowd, staff, fillers and how people are drawn
+### S3a: the crowd, staff, fillers and how people are drawn (built 2026-11-09, uncommitted; see PROJECT_OC_PROGRESS.md)
 
 S3 is split, as S2 was: S3a fills the room and draws it within budget; S3b adds what people do with each other. Each
 ends with its own checks and its own budget run at the poses.
@@ -3086,6 +3096,52 @@ ends with its own checks and its own budget run at the poses.
   - Low (844 × 390), Saturday 21:00, the `door` pose: does the room read as packed?
   - The `stall` and `patio` poses at Low: do the people inside read through the glazing as cards?
   - A Tuesday 15:00 quiet afternoon.
+- **As built (S3a, 2026-11-09), where the build chose within or beside the brief:**
+  - **Engine first.** `engine/sim/crowd.ts` (the regulars' pool, parties, stays, teams by arrival time, the staff
+    plan), `engine/sim/autonomy.ts` (the utility AI, term by term), `engine/sim/groups.ts` (the talking groups),
+    `engine/sim/builds.ts` (the time budget and its log), `engine/sim/names.ts` (200 first names) and
+    `engine/sim/lines.ts` (the starter 30 lines). No three.js in any of them; `tests/sportsbar-crowd.mjs` runs them in
+    Node, the plan's worked arithmetic among its checks. The venue's side is `venues/sportsbar/crowd.ts` (the crowd,
+    the staff wiring, fillers, the draw modes, casting, the builds, a change of graphics, the hooks) and
+    `venues/sportsbar/cards.ts` (the atlas and the cards); `crew.ts` gains the sections, the flap trip, the host and the
+    barback.
+  - **Where the people's rule lives.** The visibility rule for people (draw modes, LODs, the casting set, the pool-slot
+    people, the hidden casters under LOD 2 bodies) is in `venues/sportsbar/crowd.ts` (`drawModes`, `applyBody`),
+    beside the cars' and streets' rule in `visibility.ts`, whose hidden-caster hooks and per-light members it uses; the
+    fillers and the cards are the venue's own (`crowd.ts`, `cards.ts`), not `engine/sim/`, since they draw. E0 can move
+    both into `engine/visibility.ts` and `engine/cards.ts` unchanged.
+  - **P1c not adopted.** Lot 57's crowd (`lot57/npcs.ts`, `crowdview.ts`) is bound to its own venue and draws people
+    its own way (per-person impostors, worker builds); the bar keeps the plan's atlas eight and time budget, and writes
+    Lot 57's group rules into `engine/sim/groups.ts` for E0 to keep one copy of. Neither page has the murmur (no audio
+    is built on either page yet).
+  - **Who's live.** `people().live` counts the guests and the staff on shift (the cap: 36, 70, 100); your avatar is
+    on top of it. The sums count the live cap as all the people meshes, your avatar among them, so with your avatar
+    drawn there's one person mesh more than the sums' row (1 call, 1.1k to 1.5k at LOD 2), inside every margin; the LOD
+    1 count takes your avatar's LOD 1 into account (the NPCs' LOD 1 count is one less while it's drawn at LOD 1).
+  - **The staff.** All ten bodies are built at load (the S2a bartender and server and the house player at LOD 1 as
+    before, plus their LOD 2; three more bartenders, two more servers, the host and the barback at LOD 2) and go on and
+    off shift with the share: drawn and counted only on shift. The house player is always on at HD and Ultra; at Low
+    she's on only while a game is set up with her, and then takes the host's place, so Low never draws more than 5. The
+    bar's budgets row `staff` is 5, 10 and 10 (up to 9 and the house player). Bartenders' sections are equal stretches
+    of the counter from the first gap to the pick-up (13.75 to 26.2 in u); the crew holds every bartender's lane limits
+    0.6 m from its neighbours. The cooks' hands at the pass are a plate (a disc instance) for the 6 s a dish waits there.
+  - **Fillers** never take the counter's stools and gaps (a guest there is a live one the bartenders serve), the staff
+    spots, the water station, the jukebox's spot, the games' places or the front walk's spots (ours).
+  - **Arrivals** come from the courtyard lot or the drop-off by the front aisle; a room under its live target gets
+    parties at a Poisson rate of the deficit over about 6 sim minutes (ours), and a room at its cap stays at its cap:
+    after 2 sim minutes short, fillers become live walk-ins in place (the plan's going-up rule), and `fastForward()` and
+    `buildAll()` top the room up the same way. Leaving guests' bodies go to the spare pool when it's short (the builder
+    can't recolour a built body).
+  - **The person menu in S3a** is the person's first name and "Say hi" (a hello caption); S3b brings the 11
+    interactions. Tapping a filler hands its unit over first; a held guest comes back as themselves.
+  - **NPC games** wait for S3b: NPCs don't take the play adverts; Watch pool is offered while you play.
+  - **crowdAt('outside', n)** moves live walk-ins (never regulars or your party) from inside to the patio's seats and to
+    standing spots on the front walk (ours: two rows between the wall and the planters, the door and ramp clear).
+  - **Bodies' fill.** Inside, the builder's body material, lit only by the sky and the few real lights, drew guests as
+    near-black cut-outs at Low; each body's LOD 1 and LOD 2 material gets a fill light (Lot 57's technique from
+    `crowdview.ts`, written in the bar's crowd): inside 0.34 at Low and about half that at HD and Ultra, outside a little
+    at night.
+  - **Not exercised here:** the patio closing for rain (the page has no weather), the Retro style's toon check (O15).
 
 ### S3b: interactions, relationships and conversations
 
