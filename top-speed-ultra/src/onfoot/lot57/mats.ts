@@ -8,8 +8,34 @@ import * as T from './tex';
 import * as P from '../../game/road/props';
 import { ground } from '../../game/textures';
 import { leafAtlas, barkTex, leafShading } from './trees';
+import * as S from './surfaces';
 
-export type Quality = 'low' | 'high' | 'ultra';
+export type Quality = 'low' | 'hd' | 'ultra';
+
+/** a rim of light on the people's bodies (lot57/crowdview.ts withFill): the sky's by day, the string lights' after
+ *  dark, so a figure stands out of the scene instead of sitting flat in it (set by setNight) */
+export const RIM = { value: new THREE.Color(0, 0, 0) };
+/** the rim's and the fill's gain on the people at each preset (x rim, y fill; look.ts sets it: Ultra the strongest) */
+export const RIM_GAIN = { value: new THREE.Vector2(1, 1) };
+/** the light under the umbrellas' canopies (look.ts sets it each frame): the sun through the canvas and its bounce
+ *  off the sunlit paving by day, the strings' and heaters' warm fill after dark */
+export const CANOPY = { value: new THREE.Color(0, 0, 0) };
+/** a canopy's underside (its back faces) takes CANOPY's light as well as what lights it from below; its outside a
+ *  little of it too (canvas is translucent: a valance in shade still glows with the light through it) */
+function underside<M extends THREE.Material>(m: M): M {
+  const before = m.onBeforeCompile;
+  m.onBeforeCompile = (sh, r) => {
+    before.call(m, sh, r);
+    sh.uniforms.uCanopy = CANOPY;
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform vec3 uCanopy;')
+      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * uCanopy * ( gl_FrontFacing ? 0.3 : 1.0 );');
+  };
+  m.customProgramCacheKey = () => 'lot57-glow-canopy';
+  return m;
+}
+/** things that move every frame (the fire tables' flames): called by the page's renderer (lot57/look.ts) */
+export const TICKS: ((t: number) => void)[] = [];
 
 /** the night-light channels every glowing material reads (colour x level, set by setNight) */
 export const GLOW = {
@@ -41,6 +67,7 @@ export function makeMats(board: Parameters<typeof T.labelsAtlas>[0]) {
   const atlas = T.labelsAtlas(board);
   const reader = T.readerTex();
   const glowTex = T.glowTex(), blob = T.blobTex(), door = T.rollDoorTex();
+  const poolMap = T.poolTex();                    // (one texture for both kinds of pool: P1d repair, the texture budget)
   const concreteMap = T.concreteTex(), turfMap = T.turfTex();          // each shared by two materials
   const brickMap = T.brickTex();
   // the business park's lit windows at night (the facade texture's window grid, a fifth of them lit)
@@ -60,8 +87,9 @@ export function makeMats(board: Parameters<typeof T.labelsAtlas>[0]) {
     dirt: offset(std({ map: T.dirtTex(), roughness: 1 }), -1),
     marking: offset(std({ roughness: 0.65 }), -4),
     facade: std({ map: (P.mats as unknown as { facade?: (k: 0) => THREE.MeshStandardMaterial }).facade?.(0).map ?? T.tiltupTex(), roughness: 0.85, emissiveMap: facadeLit, emissive: 0xffffff, emissiveIntensity: 0 }),
-    roof: std({ roughness: 0.92 }),
-    tilt: std({ map: T.tiltupTex(), roughness: 0.88 }),
+    roof: std({ map: S.corrugatedTex(), roughness: 0.48, metalness: 0.55, envMapIntensity: 0.9 }),
+    // the Shed: painted brick walls (P1d; the tilt-up panels before) and a corrugated, galvanised roof
+    tilt: std({ map: S.paintedBrickTex(), roughness: 0.86 }),
     shedFloor: offset(std({ map: T.polishedTex(), roughness: 0.3, metalness: 0.0, envMapIntensity: 0.8 }), -2),
     deck: std({ map: T.deckTex(), roughness: 0.62, metalness: 0.35 }),
     block: std({ map: T.blockTex(), roughness: 0.9 }),
@@ -76,7 +104,16 @@ export function makeMats(board: Parameters<typeof T.labelsAtlas>[0]) {
     steel: std({ roughness: 0.5, metalness: 0.55 }),
     stainless: std({ roughness: 0.22, metalness: 0.92, envMapIntensity: 0.75 }),
     rubber: std({ roughness: 0.9 }),
-    canvas: std({ roughness: 0.95, side: THREE.DoubleSide }),
+    canvas: underside(std({ map: S.canvasWeaveTex(), roughness: 0.95, side: THREE.DoubleSide })),
+    // P1d: gravel round the fire tables, brushed steel kegs, the corrugated awning over the roll-up doors
+    gravel: offset(std({ map: S.gravelTex(), roughness: 1 }), -3),
+    keg: std({ map: S.brushedTex(), roughness: 0.32, metalness: 0.85, envMapIntensity: 0.9 }),
+    // the fire tables' flames: additive cards, lit when Lot 57 is open after dark (setNight), flickering (TICKS)
+    fire: new THREE.MeshBasicMaterial({ map: S.flameTex(), color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: true }),
+    // pools of light on the ground under the string lights, the heaters and the fire tables (the venue's own, so
+    // only when it's open after dark), and oil stains on the lot's stalls
+    poolVenue: new THREE.MeshBasicMaterial({ map: poolMap, color: 0xffc489, vertexColors: true, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -8 }),
+    stain: new THREE.MeshBasicMaterial({ color: 0x0b0a09, alphaMap: S.stainTex(), transparent: true, opacity: 0.55, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 }),
     plant: std({ roughness: 0.85, side: THREE.DoubleSide }),
     glass: new THREE.MeshStandardMaterial({ color: 0x9fb6c0, roughness: 0.04, metalness: 0.15, transparent: true, opacity: 0.18, depthWrite: false, side: THREE.DoubleSide }),
     doorGlass: new THREE.MeshStandardMaterial({ map: door, transparent: true, roughness: 0.15, metalness: 0.3, side: THREE.DoubleSide, depthWrite: false }),
@@ -112,7 +149,7 @@ export function makeMats(board: Parameters<typeof T.labelsAtlas>[0]) {
     dots: new THREE.MeshBasicMaterial({ color: 0xf3e6c4, transparent: true, opacity: 0.7, depthWrite: false }),
     // the pool of light under each street and lot head after dark, laid on the asphalt (whose dark albedo swallows the
     // baked light): a soft additive disc, brightest under the head
-    pool: new THREE.MeshBasicMaterial({ map: T.poolTex(), color: 0xffe0b4, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -8 }),
+    pool: new THREE.MeshBasicMaterial({ map: poolMap, color: 0xffe0b4, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -8 }),
     blob: new THREE.MeshBasicMaterial({ color: 0x000000, alphaMap: blob, transparent: true, opacity: 0.55, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 }),
     // the venue's olive and shade trees (trees.ts): painted sprigs on cut-out cards, and a fissured grey bark
     leaves: leafShading(glowify(new THREE.MeshStandardMaterial({ map: leafAtlas(), vertexColors: true, alphaTest: 0.42, side: THREE.DoubleSide, roughness: 0.82, envMapIntensity: 0.5 }))),
@@ -122,27 +159,37 @@ export function makeMats(board: Parameters<typeof T.labelsAtlas>[0]) {
     foliage: P.mats.foliage(),
     trunk: P.mats.trunk(),
   };
-  return { ...m, readerTex: reader, atlas, ultraMaps: null as null | Record<string, THREE.Texture> };
+  return { ...m, readerTex: reader, atlas, ultraMaps: null as null | Record<string, THREE.Texture>, detailMaps: null as null | Record<string, THREE.Texture> };
 }
 
 /**
- * Ultra's extra surface detail: normal maps (painted in code from height fields) on the yard's pavers, the brick and
- * the Shed's block, made the first time Ultra is chosen; off on the other presets.
+ * Surface relief: normal maps painted in code from height fields. HD and Ultra put them on the yard's pavers, the
+ * brick, the Shed's painted brick and block, its corrugated roof, the wood, the concrete, the asphalt, the gravel
+ * and the umbrellas' canvas (Ultra a little stronger); Low (the retro look) has none. Made the first time they're
+ * wanted. `on` is HD or Ultra; `ultra` the stronger relief.
  */
-export function setUltraMaps(m: Mats, on: boolean) {
+export function setUltraMaps(m: Mats, on: boolean, ultra = on) {
   if (on && !m.ultraMaps) m.ultraMaps = { pavers: T.paverNormal(), brick: T.brickNormal(), block: T.blockNormal() };
+  if (on && !m.detailMaps) m.detailMaps = { painted: S.paintedBrickNormal(), corrugated: S.corrugatedNormal(), gravel: S.gravelNormal(), wood: S.woodNormal(), concrete: S.concreteNormal(), asphalt: S.asphaltNormal(), weave: S.canvasWeaveNormal() };
   const set = (mat: THREE.MeshStandardMaterial, tex: THREE.Texture | undefined, scale: number, repeat: THREE.Vector2) => {
-    const want = on && tex ? tex : null;
-    if (mat.normalMap === want) return;
+    const want = on && tex ? tex : null, k = ultra ? scale : scale * 0.75;
+    if (mat.normalMap === want && (!want || mat.normalScale.x === k)) return;
     mat.normalMap = want;
-    if (want) { want.repeat.copy(repeat); mat.normalScale.set(scale, scale); }
+    if (want) { want.repeat.copy(repeat); mat.normalScale.set(k, k); }
     mat.needsUpdate = true;
   };
-  const u = m.ultraMaps ?? {};
+  const u = m.ultraMaps ?? {}, d = m.detailMaps ?? {};
   set(m.pavers, u.pavers, 0.9, m.pavers.map!.repeat);
   set(m.brick, u.brick, 0.8, m.brick.map!.repeat);
   set(m.brickInside, u.brick, 0.8, m.brickInside.map!.repeat);
   set(m.block, u.block, 0.6, m.block.map!.repeat);
+  set(m.tilt, d.painted, 0.7, m.tilt.map!.repeat);
+  set(m.roof, d.corrugated, 1.0, m.roof.map!.repeat);
+  set(m.gravel, d.gravel, 1.0, m.gravel.map!.repeat);
+  set(m.wood, d.wood, 0.5, m.wood.map!.repeat);
+  set(m.concrete, d.concrete, 0.6, m.concrete.map!.repeat);
+  set(m.asphalt, d.asphalt, 0.7, m.asphalt.map!.repeat);
+  set(m.canvas, d.weave, 0.35, m.canvas.map!.repeat);
 }
 export type Mats = ReturnType<typeof makeMats>;
 
@@ -159,7 +206,7 @@ export function setNight(m: Mats, k: number, open: boolean) {
   m.skylight.color.setRGB(0.86, 0.9, 0.95).multiplyScalar(Math.max(0.035, 1 - k * 0.97));
   m.window.emissiveIntensity = open ? 0.6 + k * 1.6 : 0;
   m.sign.emissiveIntensity = 0.1 + k * 1.25;
-  m.pylon.emissiveIntensity = 0.2 + k * 1.9;
+  m.pylon.emissiveIntensity = 0.2 + k * 1.15;          // (P1d repair: 1.9 washed the cabinet's art out under bloom)
   m.readerBoard.emissiveIntensity = 0.2 + k * 1.6;
   // the business park after dark: a scattering of offices still lit, a few lobbies and storefronts
   m.facade.emissiveIntensity = k * 1.15;
@@ -173,4 +220,26 @@ export function setNight(m: Mats, k: number, open: boolean) {
   m.lampGlow.opacity = k * 0.6;
   m.pool.opacity = k * 0.3;
   m.screen.emissiveIntensity = open ? 0.6 + k * 0.5 : 0.04;
+  // P1d: the fire tables, the pools under the strings and heaters, the rim on the people
+  m.fire.opacity = lit * 0.95;
+  m.poolVenue.opacity = lit * 0.32;
+  FIRE.lit = lit;
+  // the rim: a cool sky edge by day, the strings' warm edge after dark (a little even when closed: the street lamps)
+  RIM.value.setRGB(0.1, 0.12, 0.15).multiplyScalar(1 - k).add(_rim.setRGB(0.42, 0.26, 0.13).multiplyScalar(open ? k : k * 0.25));
+}
+const _rim = new THREE.Color();
+/** the fire tables' flicker (the page's renderer calls TICKS each frame) */
+const FIRE = { lit: 0, mat: null as THREE.MeshBasicMaterial | null };
+export function flicker(m: Mats) {
+  if (FIRE.mat === m.fire) return;           // (once per set of materials, however often the venue is built)
+  FIRE.mat = m.fire;
+  const tex = m.fire.map!;
+  TICKS.push((t) => {
+    if (FIRE.lit <= 0) return;
+    // (reduced motion: a steady flame)
+    if (typeof document !== 'undefined' && document.body.classList.contains('rm')) { m.fire.opacity = FIRE.lit * 0.9; tex.offset.x = 0; return; }
+    const f = 0.82 + 0.1 * Math.sin(t * 13.1) + 0.06 * Math.sin(t * 23.7 + 1.3) + 0.04 * Math.sin(t * 41.9);
+    m.fire.opacity = FIRE.lit * 0.95 * f;
+    tex.offset.x = 0.012 * Math.sin(t * 7.3);
+  });
 }

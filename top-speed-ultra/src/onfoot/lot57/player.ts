@@ -163,9 +163,11 @@ export class Player {
       if (!moved) break;
     }
     // never stuck: still inside something after three passes (a corner pinch) means stay put, and if even the old
-    // spot is now inside (a gate shut on you, a car parked on you), go to the nearest free cell
-    if (this.clearance(nx, nz) < RADIUS - 0.02) {
-      if (this.clearance(ox, oz) >= RADIUS - 0.02) { nx = ox; nz = oz; }
+    // spot is now inside (a gate shut on you, a car parked on you), go to the nearest free cell. (1.5 cm of overlap
+    // at most, not 2: a pinch against a parked car's corner could end at 2.000 cm exactly, which the walk check, at
+    // 2 cm in game coordinates, read as just over; P1d's random walks found two)
+    if (this.clearance(nx, nz) < RADIUS - 0.015) {
+      if (this.clearance(ox, oz) >= RADIUS - 0.015) { nx = ox; nz = oz; }
       else { const p = this.grid.nearestFree(ox, oz); if (p) { nx = p[0]; nz = p[1]; this.rescues++; } }
     }
     this.vx = (nx - ox) / dt; this.vz = (nz - oz) / dt;

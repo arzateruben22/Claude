@@ -511,7 +511,8 @@ async function main() {
     }
     applyQuality(qq, rebuild);
   };
-  hud.onQuality = (qq) => { if (qq === 'ultra' && !ultraUnlocked) { hud.toast('Ultra is locked on this device.', 3); return; } switchQuality(qq); };
+  // the shared HUD names Lot 57's presets (low, hd, ultra); the bar's buttons say high for HD
+  hud.onQuality = (q0) => { const qq: Quality = q0 === 'hd' ? 'high' : q0; if (qq === 'ultra' && !ultraUnlocked) { hud.toast('Ultra is locked on this device.', 3); return; } switchQuality(qq); };
   hud.onClock = (c) => { live = c.live; if (!c.live) clock = { day: c.day, hour: c.hour }; applyClock(); };
   hud.onMotion = (rm) => { reduced = rm; player.reducedMotion = rm; overhead.reducedMotion = rm; hud.setMotion(rm); };
   hud.onPause = (on) => { input.enabled = !on && view !== 'overhead'; };

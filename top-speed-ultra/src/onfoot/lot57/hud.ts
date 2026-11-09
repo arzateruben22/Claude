@@ -19,7 +19,7 @@ export class Hud {
   onAct: (which: 1 | 2) => void = () => {};
   onView: (v?: View) => void = () => {};
   onPause: (open: boolean) => void = () => {};
-  onQuality: (q: 'low' | 'high' | 'ultra') => void = () => {};
+  onQuality: (q: 'low' | 'hd' | 'ultra') => void = () => {};
   onClock: (c: { live: true } | { live: false; day: number; hour: number }) => void = () => {};
   onMotion: (reduced: boolean) => void = () => {};
   /** P1b: a reply chip, an item on the order sheet, the sheet closed without ordering */
@@ -45,7 +45,7 @@ export class Hud {
       el.addEventListener('click', (e) => { if (e.target === el) (s === 'pause' ? this.pause(false) : this.sheet(s, false)); });
     }
     $('segView').addEventListener('click', (e) => { const v = (e.target as HTMLElement).dataset.v as View | undefined; if (v) this.onView(v); });
-    $('segQ').addEventListener('click', (e) => { const q = (e.target as HTMLElement).dataset.q as 'low' | 'high' | 'ultra' | undefined; if (q) this.onQuality(q); });
+    $('segQ').addEventListener('click', (e) => { const q = (e.target as HTMLElement).closest('button')?.dataset.q as 'low' | 'hd' | 'ultra' | undefined; if (q) this.onQuality(q); });
     $('segClock').addEventListener('click', (e) => {
       const c = (e.target as HTMLElement).dataset.c; if (!c) return;
       if (c === 'live') this.onClock({ live: true }); else this.onClock({ live: false, day: Number($<HTMLSelectElement>('day').value), hour: Number($<HTMLInputElement>('hour').value) });
