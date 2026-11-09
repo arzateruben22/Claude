@@ -40,4 +40,4 @@ end card: "Next envelope: *a rope round the Earth*" · "Possibility Lab · Seaso
 ## Notes
 - Every number is `calc.py`'s; the answer is a thought experiment, badged: no oceans in the way, nobody left out.
 - The answer is "about 310 laps", not 12.3 million km: the voice says both, the box holds the laps.
-- Listen at T0: "eight billion", "thirteen million", "three hundred and ten".
+- Listen at T0: "eight billion", "twelve million", "three hundred and ten".

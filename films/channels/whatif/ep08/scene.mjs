@@ -115,7 +115,7 @@ for (let i = 0; i < NT; i++) {
 const dotsEl = document.createElement("div");
 dotsEl.style.cssText = "position:absolute;left:14%;top:72.5%;width:72%;height:13%;opacity:0;pointer-events:none;z-index:4";
 { let h = '<svg viewBox="0 0 300 100" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" aria-hidden="true">';
-  for (let r = 0; r < 10; r++) for (let c = 0; c < 30; c++) { const lit = r === 4 && c === 15; h += `<circle cx="${5 + c * 10}" cy="${5 + r * 10}" r="${lit ? 4.6 : 2.4}" fill="${lit ? ANCH : CHALK2}" opacity="${lit ? 1 : 0.4}"/>`; }
+  for (let r = 0; r < 10; r++) for (let c = 0; c < 30; c++) { const lit = r === 4 && c === 15; h += `<circle cx="${5 + c * 10}" cy="${5 + r * 10}" r="${lit ? 5.2 : 3.1}" fill="${lit ? ANCH : CHALK2}" opacity="${lit ? 1 : 0.8}"/>`; }
   dotsEl.innerHTML = h + "</svg>"; document.body.appendChild(dotsEl); }
 
 // ── the camera ──────────────────────────────────────────────────────────────
@@ -166,7 +166,7 @@ window.seek = function (t) {
   // the paper: the grid, you, the chain, the row
   desk.group.visible = d < 320;
   desk.update({ grid: 1 - seg(Math.log10(d), 2.0, 2.5), pool: [pose.target[0], pose.target[2]], casters: [[0, 1.7, 0, 0.35]], span: Math.max(800, d * 8) });
-  { const wash = 1 + 2.5 * seg(Math.log10(d), 1.9, 2.8) * (1 - seg(Math.log10(d), 4.3, 7.4)); desk.uniforms.uExposure.value = wash; if (earthB.material?.uniforms?.uExposure) earthB.material.uniforms.uExposure.value = wash; }
+  { const wash = 1 + 9 * seg(Math.log10(d), 1.9, 2.8) * (1 - seg(Math.log10(d), 4.3, 7.4)); desk.uniforms.uExposure.value = wash; if (earthB.material?.uniforms?.uExposure) earthB.material.uniforms.uExposure.value = 1 + (wash - 1) / 3; }
   const endTail = shot === "end" ? 1 : 0;
   const bigMe = (shot === "moon" && t > CUE.small + 0.3) || shot === "end";
   const meS = bigMe ? Math.max(1, 0.055 * d / 1.7) : 1;

@@ -33,10 +33,10 @@ def sig(x, n=2):
 RESULTS = {
     "pop_bn": 8.2,
     "span_m": SPAN_M,
-    "km_m": round(V["km"] / 1e6, 1),                         # 13.1 million km
-    "laps": int(round(V["laps"], -1)),                       # about 330 times round the equator
-    "moon_trips": int(round(V["moon_trips"])),               # about 34 trips
-    "per_lap_m": round(V["per_lap"] / 1e6, 1),               # 25 million people make one lap
+    "km_m": round(V["km"] / 1e6, 1),                         # 12.3 million km
+    "laps": int(round(V["laps"], -1)),                       # about 310 times round the equator (307)
+    "moon_trips": int(round(V["moon_trips"])),               # about 32 trips
+    "per_lap_m": round(V["per_lap"] / 1e6, 1),               # 27 million people (26.7) make one lap
     "sens_laps": [int(round(v["laps"], -1)) for v in SENS.values()],
     "sens_km_m": [round(v["km"] / 1e6, 1) for v in SENS.values()],
 }

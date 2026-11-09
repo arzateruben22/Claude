@@ -81,7 +81,8 @@ ARMS2 = T(0.0, 0.9, 0.0, 12.0, 4.0, 8.0, 0.80)
 ROW0 = T(-1.2, 0.9, 0.0, 22.0, 4.0, 12.0, 0.80)
 ROW1 = T(1.2, 0.9, 0.0, 22.0, 4.0, 12.0, 0.80)
 PLANET = T(0.0, 6.0e6, 0.0, 6.5e7, 18.0, 0.0, 0.42)
-FAR = T(0.0, 0.0, -4.8e9, 3.0e10, 72.0, 0.0, 0.50)          # looking down on the thread, 12.3 million km of it, from far above        # the Earth big in the upper half; the thread leaves the ground toward the camera's right and up
+E86 = lambda d, el, q=0.86: T(0.0, -6.4e6 + (q - 0.5) * 0.425 * d * math.cos(math.radians(el)), -(q - 0.5) * 0.425 * d * math.sin(math.radians(el)), d, el, 0.0, 0.50)   # a camera with the Earth at 86% of the frame height
+FAR = E86(3.0e10, 72.0)          # looking down on the thread, 12.3 million km of it, from far above        # the Earth big in the upper half; the thread leaves the ground toward the camera's right and up
 WRAP0 = T(0.0, -1.0e6, 0.0, 6.5e7, 18.0, 0.0, 0.42)
 WRAP1 = T(0.0, -1.0e6, 0.0, 6.5e7, 14.0, 66.0, 0.42)
 MOONW = T(0.0, 1.85e8, 0.0, 1.25e9, 4.0, 20.0, 0.42)
@@ -97,11 +98,10 @@ CAM = {
               {"t": t_horizon + (t_km - t_horizon) * 0.7, **T(0.0, 5.0e5, 0.0, 6.0e6, 16.0, 0.0, 0.46), "ease": "linear"},
               {"t": t_km, **PLANET, "ease": "inout2"},
               {"t": round(t_km + 1.0, 4), **PLANET, "ease": "sine"},
-              {"t": round(t_km + 2.1, 4), **T(0.0, 0.0, -2.2e8, 1.0e9, 45.0, 0.0, 0.50), "ease": "linear"},        # the Earth stays in the bottom of the frame all the way out
-              {"t": round(t_km + 3.6, 4), **FAR, "ease": "inout2"},                                     # "too big to picture": all of it, the Earth a dot at its foot
+              *[{"t": round(t_km + 1.0 + 2.6 * i / 6, 4), **E86(6.5e7 * 2.8 ** i, 18.0 + 9.0 * i), "ease": "linear"} for i in range(1, 6)],      # the Earth stays in the lower frame all the way out
+              {"t": round(t_km + 3.6, 4), **FAR, "ease": "inout2"},                                     # "too big to picture": all of it, the Earth a ball at its foot
               {"t": round(t_wrap0 - 2.0, 4), **FAR, "ease": "sine"},
-              {"t": round(t_wrap0 - 1.35, 4), **T(0.0, 0.0, -1.8e8, 1.0e9, 57.0, 0.0, 0.50), "ease": "linear"},
-              {"t": round(t_wrap0 - 0.7, 4), **T(0.0, -1.0e6, -1.0e7, 1.5e8, 38.0, 0.0, 0.45), "ease": "linear"},
+              *[{"t": round(t_wrap0 - 2.0 + 2.0 * i / 6, 4), **E86(3.0e10 / 2.8 ** i, 72.0 - 9.0 * i), "ease": "linear"} for i in range(1, 6)],     # and all the way back in
               {"t": t_wrap0, **WRAP0, "ease": "inout2"}],
     "wrap": [{"t": t_wrap0, **WRAP0}, {"t": round(t_wrap0 + 3.2, 4), **T(0.0, -1.0e6, 0.0, 6.5e7, 16.0, 22.0, 0.42), "ease": "sine"},
              {"t": round(t_pull + 0.3, 4), **T(0.0, -1.0e6, 0.0, 3.3e7, 16.0, 34.0, 0.42), "ease": "inout2"},          # in close as it is pulled tight
@@ -148,11 +148,11 @@ SPINE_OUT = t_end
 
 s = R["sens_laps"]
 WORK = {
-    "t0": t_work0, "t1": t_home - 0.3, "title": "Show your work",
+    "t0": t_work0, "t1": round(t_tall + 3.0, 4), "title": "Show your work",
     "rows": [
-        {"t": t_work0 + 0.15, "k": "8.2 bn × 1.5 m ÷ 40,075 km", "v": f"≈ {R['laps']} laps", "lit": False},
-        {"t": t_short, "k": "shorter: 1.4 m a person", "v": f"≈ {s[0]} laps", "lit": True},
-        {"t": t_tall, "k": "taller: 1.7 m a person", "v": f"≈ {s[2]} laps", "lit": True},
+        {"t": t_work0 + 0.15, "k": "8.2 bn × 1.5 m ÷ 40,075 km", "v": f"≈ {R['laps']} laps", "lit": False},
+        {"t": t_short, "k": "shorter: 1.4 m a person", "v": f"≈ {s[0]} laps", "lit": True},
+        {"t": t_tall, "k": "taller: 1.7 m a person", "v": f"≈ {s[2]} laps", "lit": True},
     ],
     "assume": ["1.5 m a person", "straight, no gaps", "everyone joins"],
 }
@@ -163,7 +163,7 @@ LABELS = [
     {"id": "l-span", "text": "one arm span ≈ your height", "kind": "part", "anchor": "span", "t0": A("vo02:You", 0.0), "t1": t_row, "side": 1},
 ]
 BADGES = [
-    {"id": "b-thought", "text": "thought experiment", "t0": 2.6, "t1": t_title_out, "slot": "tr"},
+    {"id": "b-thought", "text": "thought experiment", "t0": 0.3, "t1": t_title_out, "slot": "br"},
     {"id": "b-span", "text": "∵ 1.5 m a person", "t0": A("vo02:meter", 0.0), "t1": t_chain0 - 0.2, "slot": "tl"},
     {"id": "b-pop", "text": "8.2 billion people", "t0": A("vo03:billion", -0.1), "t1": t_horizon, "slot": "tl"},
     {"id": "b-km", "text": "≈ 12.3 million km of people", "t0": t_km, "t1": t_wrap0, "slot": "tr"},
@@ -172,7 +172,7 @@ BADGES = [
     {"id": "b-lap", "text": "1 lap = 27 million people", "t0": t_one, "t1": t_work0 - 0.2, "slot": "tr"},
     {"id": "b-1in", "text": "about 1 in 300 of us", "t0": t_person, "t1": t_work0 - 0.2, "slot": "tl"},
     {"id": "b-me", "text": "one of 8.2 billion", "t0": t_small, "t1": t_end - 0.3, "slot": "tr"},
-    {"id": "b-rounded", "text": "rounded", "t0": t_box + 0.3, "t1": t_work0 - 0.2, "slot": "tl"},
+    {"id": "b-rounded", "text": "rounded", "t0": t_box + 0.3, "t1": t_person - 0.25, "slot": "tl"},
     {"id": "b-trips", "text": "≈ 32 trips to the Moon", "t0": t_moon1, "t1": t_end - 0.3, "slot": "tr"},
     {"id": "b-sens", "text": "shorter or taller: 290 to 350 laps", "t0": t_short, "t1": t_home - 0.3, "slot": "tr"},
 ]
