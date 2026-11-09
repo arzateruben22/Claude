@@ -70,7 +70,7 @@ CAMK = [
 ]
 def far(t, p, l):                                      # Saturn and its ring are wide: stand back from the tank and Saturn shots (not the balance, not the readout)
     if t < t_rd and l[1] > -30:
-        return [round(l[i] + (p[i] - l[i]) * 2.4, 3) for i in range(3)]
+        return [round(l[i] + (p[i] - l[i]) * (2.6 if t < t_n + 0.2 else 3.5), 3) for i in range(3)]
     return p
 CAMK = [{"t": round(t, 4), "p": far(t, p, l), "l": l, "fov": fv} for t, p, l, fv in CAMK]
 assert all(b["t"] >= a["t"] for a, b in zip(CAMK, CAMK[1:])), [(k["t"]) for k in CAMK]
@@ -89,7 +89,7 @@ LABELS = [
 ]
 PILLS = [
     {"id": "p-dens", "text": "density = weight ÷ space", "t0": round(CUE["density"], 4), "t1": round(t_w - 0.4, 4), "at": [90 / 1080, 0.175]},
-    {"id": "p-real", "text": "not real: gas would mix", "t0": round(CUE["mix"] - 0.1, 4), "t1": round(t_tk - 0.2, 4), "at": [90 / 1080, 0.175]},
+    {"id": "p-real", "text": "real Saturn would not float: it's gas, it would mix", "t0": round(CUE["mix"] - 0.1, 4), "t1": round(t_tk - 0.2, 4), "at": [90 / 1080, 0.175]},
 ]
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 3.0, "t1": round(t_rd - 0.2, 4), "slot": "tr"},
@@ -102,8 +102,8 @@ COUNTERS = [
     {"id": "c-mostly", "label": "mostly", "text": "hydrogen and helium", "t0": CUE["hydrogen"] - 0.1, "t1": t_why - 0.4},
     {"id": "c-weight", "label": "weight ÷ space", "text": "rock tight · gas thin", "t0": CUE["tight"] - 0.2, "t1": t_w - 0.4},
     {"id": "c-float", "label": "in the thought experiment", "text": "Saturn floats", "t0": CUE["floats"] - 0.1, "t1": CUE["mix"] - 0.2},
-    {"id": "c-piece", "label": "real Saturn", "text": "would not stay in one piece", "t0": CUE["mix"] - 0.1, "t1": t_tk - 0.2},
-    {"id": "c-density", "label": "density tells you", "text": "who floats", "t0": CUE["who"] - 0.8, "t1": t_rd},
+    {"id": "c-piece", "label": "real Saturn", "text": "wouldn't stay in one piece", "t0": CUE["mix"] - 0.1, "t1": t_tk - 0.2},
+    {"id": "c-density", "label": "density tells you", "text": "who floats, who sinks", "t0": CUE["who"] - 0.8, "t1": t_rd},
     {"id": "c-read", "label": "light time · Sun to Saturn", "text": "about 80 minutes", "read": True, "t0": CUE["eighty"] - 0.3, "t1": round(t_end - 0.45, 4)},
 ]
 for c in COUNTERS:
@@ -115,7 +115,7 @@ for a, b in zip(spine, spine[1:]):
 
 TITLE = {"series": "One More Orbit · Season 2 · Episode 5", "title": "Lighter than *water*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Next orbit: the *footprints*", "follow": "One More Orbit · S2 · Episode 6",
-       "next": "Saturn: mean density 687 kg/m3 (NASA); sunlight takes about 80 minutes to reach it."}
+       "next": "Saturn: mean density 687 kg/m3 (NASA)."}
 POSTER = A("vo05:floats", 0.4)
 glue(f, {"vo02": ["a tank of water", "wider than Saturn."], "vo03": ["nine Earths wide.", "hydrogen and helium,"], "vo05": ["in one piece."], "vo06": ["who floats and who sinks."], "vo07": ["eighty minutes"]})
 LOOP0 = round(f.duration - 0.6, 4)

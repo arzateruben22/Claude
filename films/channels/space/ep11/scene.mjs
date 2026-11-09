@@ -111,12 +111,12 @@ const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${Math.max(0, Math.min(1, a
 const TEAL = [79, 227, 198], LEMON = [242, 237, 166], ICE = [143, 208, 255], VOID = [8, 10, 28];
 function overlay2d(t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
-  const bk = fadeIn(t, CUE.weighs, 0.5) * (1 - fadeIn(t, CUE.tank - 0.2, 0.4));
+  const bk = Math.max(fadeIn(t, CUE.weighs, 0.5) * (1 - fadeIn(t, CUE.tank - 0.2, 0.4)), fadeIn(t, CUE.tk, 0.5) * (1 - fadeIn(t, CUE.rd - 0.4, 0.4)));
   if (bk > 0.01) {
     const x0 = 130 * sx, wMax = 820 * sx; ctx.fillStyle = rgba(VOID, 0.8 * bk); ctx.beginPath(); ctx.roundRect(90 * sx, 1480 * sy, 900 * sx, 170 * sy, 18 * S1); ctx.fill();
     ctx.font = `700 ${Math.round(26 * S1)}px Lexend, sans-serif`; ctx.textBaseline = "middle"; ctx.textAlign = "left";
     ctx.fillStyle = rgba(ICE, bk); ctx.fillText("water  1.0", x0, 1510 * sy); ctx.fillStyle = rgba(ICE, 0.9 * bk); ctx.beginPath(); ctx.roundRect(x0, 1526 * sy, wMax, 20 * sy, 8 * S1); ctx.fill();
-    const g = E.out3(seg(t, CUE.weighs + 0.4, CUE.weighs + 1.6)); ctx.fillStyle = rgba(LEMON, bk); ctx.fillText("Saturn  0.69", x0, 1576 * sy); ctx.fillStyle = rgba(LEMON, 0.95 * bk); ctx.beginPath(); ctx.roundRect(x0, 1592 * sy, wMax * 0.687 * g, 20 * sy, 8 * S1); ctx.fill();
+    const g = t < CUE.tank ? E.out3(seg(t, CUE.weighs + 0.4, CUE.weighs + 1.6)) : E.out3(seg(t, CUE.tk + 0.2, CUE.tk + 1.4)); ctx.fillStyle = rgba(LEMON, bk); ctx.fillText("Saturn  0.69", x0, 1576 * sy); ctx.fillStyle = rgba(LEMON, 0.95 * bk); ctx.beginPath(); ctx.roundRect(x0, 1592 * sy, wMax * 0.687 * g, 20 * sy, 8 * S1); ctx.fill();
   }
   const D = CUE.dip, fl = (d) => E.inout3(seg(t, d - 0.1, d + 0.2)) * (1 - E.inout3(seg(t, d + 0.2, d + 0.45)));
   const dip = Math.max(fl(D[0]), fl(D[1]), fl(D[2]), E.inout3(seg(t, D[3] - 0.1, D[3] + 0.15)) * (1 - E.inout3(seg(t, D[3] + 0.15, D[3] + 0.4))));
@@ -141,7 +141,8 @@ for (const c of FILM.counters) {
   const lb = el.querySelector(".lb");
   if (lb) lb.style.textShadow = "0 0 1.2vmin rgba(8,10,28,.95), 0 0 2.6vmin rgba(8,10,28,.85)";
   const v = el.querySelector(".v");
-  if (v && c.text.length > 12) v.style.fontSize = c.read ? "4.4vmin" : "5.4vmin";
+  if (v && c.text.length > 20 && !c.read) v.style.fontSize = "4.2vmin";
+  else if (v && c.text.length > 12) v.style.fontSize = c.read ? "4.4vmin" : "5.4vmin";
   else if (v && c.text.length > 8 && !c.read) v.style.fontSize = "7.5vmin";
 }
 for (const L of FILM.labels) { const k = KIND[L.kind]; hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: () => S[L.anchor] || [0, 0, 0], t0: L.t0, t1: L.t1, side: L.side, v: L.v, fixed: L.fixed }); }
@@ -182,7 +183,7 @@ window.seek = function (t) {
   sat.position.fromArray(sp); S.sat = sp; S.tank = [TANKC[0] + 6, TANKC[1] + 3.5, 0];
   satMesh.rotation.y = 0.12 * tt; const tilt = tt < CUE.tk ? 0.5 : 0.5 + (0.06 - 0.5) * E.inout3(seg(tt, CUE.tk, CUE.tk + 1.4)); ringG.rotation.set(tilt, 0, 0.1);
   // the mix: the sphere dissolves into points that spread through the water, then returns
-  const sp1 = E.inout3(seg(tt, CUE.mix, CUE.mix + 2.2)) * (1 - E.inout3(seg(tt, CUE.tk - 0.2, CUE.tk + 1.4))), mixOn = sp1 > 0.003;
+  const sp1 = E.inout3(seg(tt, CUE.mix, CUE.mix + 2.2)), mixOn = sp1 > 0.003;           // the gas stays mixed: the intact planet never re-floats
   satMat.opacity = 1 - E.inout3(clamp01(sp1 * 3)); satMesh.visible = satMat.opacity > 0.02; ringMat.uniforms.uA.value = 1 - clamp01(sp1 * 2);
   mix.visible = mixOn; mix.position.set(0, 0, 0);
   for (let i = 0; i < NB; i++) { const j = i * 3, w = sp1, wob = Math.sin(tt * 1.1 + i) * 0.15 * w; bP[j] = sp[0] + bP0[j] + (bP1[j] - sp[0] - bP0[j]) * w + wob; bP[j + 1] = sp[1] + bP0[j + 1] + (bP1[j + 1] - sp[1] - bP0[j + 1]) * w; bP[j + 2] = bP0[j + 2] + (bP1[j + 2] - bP0[j + 2]) * w; }

@@ -87,7 +87,7 @@
  {
   "id": "c20",
   "sentence": "Saturn weighs less than the same amount of water, space for space.",
-  "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
+  "claim": "Saturn's mean density is 687 kg/m3 (0.687 g/cm3); water is about 1,000 kg/m3, so Saturn weighs less than the same volume of water.",
   "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/saturnfact.html",
   "source_title": "Saturn Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-08",
@@ -104,7 +104,7 @@
  {
   "id": "c21",
   "sentence": "Saturn is mostly gas, so its weight is spread thin.",
-  "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
+  "claim": "Saturn is a gas giant with no true surface: mostly swirling gases (and liquids deeper down), so its weight is spread thin.",
   "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn Facts (NASA Science)",
   "accessed": "2026-11-08",
@@ -121,7 +121,7 @@
  {
   "id": "c22",
   "sentence": "In the thought experiment, Saturn floats.",
-  "claim": "Saturn's mean density is 0.687 g/cm3; water is 1.0.",
+  "claim": "NASA says Saturn 'could float in a bathtub if such a colossal thing existed': a thought experiment, since its average density is below water's.",
   "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn Facts (NASA Science)",
   "accessed": "2026-11-08",
@@ -133,6 +133,23 @@
    "by": "builder (an AI), fetched the page and read it",
    "quote": "The giant gas planet could float in a bathtub if such a colossal thing existed.",
    "qualification": "The 'it would not stay in one piece' half is our own thought-experiment framing."
+  }
+ },
+ {
+  "id": "c23",
+  "sentence": "But real Saturn would not float: it's gas, and it would mix with water.",
+  "claim": "Saturn has no true surface; it is mostly swirling gases and liquids, so real Saturn is not a solid ball that sits on water (it would mix).",
+  "source_url": "https://science.nasa.gov/saturn/facts/",
+  "source_title": "Saturn Facts (NASA Science)",
+  "accessed": "2026-11-08",
+  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI); a person still opens it before OK. The 'would mix with water' step is the builder's own reasoning from a gas giant having no true surface.",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
+  "source_read": {
+   "date": "2026-11-08",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "As a gas giant, Saturn doesn't have a true surface. The planet is mostly swirling gases and liquids deeper down.",
+   "qualification": "'Mostly gas' is a simplification of 'mostly hydrogen and helium'."
   }
  }
 ]

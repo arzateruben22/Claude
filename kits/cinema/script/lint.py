@@ -57,8 +57,8 @@ TEMPLATE = {
     "hook":     {"words": (8, 14)},
     "normal":   {"words": (22, 34)},
     "change":   {"words": (20, 32)},
-    "why":      {"words": (24, 44), "hold": 2.0},
-    "whoa":     {"words": (16, 28), "hold": 3.0},
+    "why":      {"words": (24, 44), "hold": 1.0},
+    "whoa":     {"words": (16, 28), "hold": 1.0},
     "takeaway": {"words": (12, 20)},
     "tease":    {"words": (8, 14), "end_card": 1.5},
 }

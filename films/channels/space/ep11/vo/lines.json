@@ -67,16 +67,17 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "In the thought experiment, Saturn floats. But real Saturn is gas, and it would mix with water. It would never stay in one piece.",
+   "text": "In the thought experiment, Saturn floats. But real Saturn would not float: it's gas, and it would mix with water. It wouldn't stay in one piece.",
    "stars": [
     "floats",
+    "not",
     "piece"
    ],
-   "phonemes": "ɪnðə θˈɔːt ɛkspˈɛɹɪmənt, sˈæɾɜːn flˈoʊts. bˌʌt ɹˈiːəl sˈæɾɜːn ɪz ɡˈæs, ænd ɪt wʊd mˈɪks wɪð wˈɔːɾɚ. ɪt wʊd nˈɛvɚ stˈeɪ ɪn wˈʌn pˈiːs.",
+   "phonemes": "ɪnðə θˈɔːt ɛkspˈɛɹɪmənt, sˈæɾɜːn flˈoʊts. bˌʌt ɹˈiːəl sˈæɾɜːn wʊd nˌɑːt flˈoʊt: ɪts ɡˈæs, ænd ɪt wʊd mˈɪks wɪð wˈɔːɾɚ. ɪt wˈʊdənt stˈeɪ ɪn wˈʌn pˈiːs.",
    "speed": 0.95,
    "file": "05.wav",
-   "dur": 8.33,
-   "sha256": "e61734fa21e30bd730575ae71508c5981123e64409be8e66128be3301d5cb5e8"
+   "dur": 9.33,
+   "sha256": "9fff3920deab173d2c5ef29026079ce593cd5d898e6431314c82532c90c7e7c6"
   },
   {
    "id": "vo06",

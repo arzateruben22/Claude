@@ -523,8 +523,8 @@
   },
   {
    "id": "vo05",
-   "text": "In the thought experiment, Saturn floats. But real Saturn is gas, and it would mix with water. It would never stay in one piece.",
-   "heard": "In the thought experiment, Saturn floats. But real Saturn is gas and it would mix with water. It would never stay in one piece.",
+   "text": "In the thought experiment, Saturn floats. But real Saturn would not float: it's gas, and it would mix with water. It wouldn't stay in one piece.",
+   "heard": "In the thought experiment, Saturn floats. But real Saturn would not float, it's gas, and it would mix with water. It wouldn't stay in one piece.",
    "words": [
     {
      "w": "In",
@@ -534,7 +534,7 @@
     },
     {
      "w": "the",
-     "start": 0.235,
+     "start": 0.23,
      "end": 0.32,
      "heard": true
     },
@@ -552,122 +552,134 @@
     },
     {
      "w": "Saturn",
-     "start": 1.305,
+     "start": 1.25,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "floats.",
-     "start": 1.92,
+     "start": 1.875,
      "end": 2.72,
      "heard": true
     },
     {
      "w": "But",
-     "start": 2.77,
+     "start": 2.78,
      "end": 2.96,
      "heard": true
     },
     {
      "w": "real",
-     "start": 2.925,
-     "end": 3.28,
+     "start": 2.86,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "Saturn",
-     "start": 3.32,
-     "end": 3.92,
+     "start": 3.265,
+     "end": 3.84,
      "heard": true
     },
     {
-     "w": "is",
-     "start": 3.865,
-     "end": 4.16,
+     "w": "would",
+     "start": 3.885,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 3.995,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "float:",
+     "start": 4.26,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "it's",
+     "start": 4.98,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "gas,",
-     "start": 4.125,
-     "end": 4.56,
+     "start": 5.14,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "and",
-     "start": 4.74,
-     "end": 4.8,
+     "start": 5.835,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "it",
-     "start": 4.885,
-     "end": 4.96,
+     "start": 5.995,
+     "end": 6.08,
      "heard": true
     },
     {
      "w": "would",
-     "start": 4.915,
-     "end": 5.12,
+     "start": 6.025,
+     "end": 6.24,
      "heard": true
     },
     {
      "w": "mix",
-     "start": 5.065,
-     "end": 5.44,
+     "start": 6.17,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "with",
-     "start": 5.44,
-     "end": 5.68,
+     "start": 6.535,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "water.",
-     "start": 5.56,
-     "end": 6.4,
+     "start": 6.64,
+     "end": 7.52,
      "heard": true
     },
     {
      "w": "It",
-     "start": 6.53,
-     "end": 6.58,
+     "start": 7.655,
+     "end": 7.705,
      "heard": true
     },
     {
-     "w": "would",
-     "start": 6.56,
-     "end": 6.8,
-     "heard": true
-    },
-    {
-     "w": "never",
-     "start": 6.73,
-     "end": 7.04,
+     "w": "wouldn't",
+     "start": 7.745,
+     "end": 8.08,
      "heard": true
     },
     {
      "w": "stay",
-     "start": 6.945,
-     "end": 7.44,
+     "start": 8.185,
+     "end": 8.4,
      "heard": true
     },
     {
      "w": "in",
-     "start": 7.385,
-     "end": 7.6,
+     "start": 8.395,
+     "end": 8.56,
      "heard": true
     },
     {
      "w": "one",
-     "start": 7.6,
-     "end": 7.84,
+     "start": 8.44,
+     "end": 8.8,
      "heard": true
     },
     {
      "w": "piece.",
-     "start": 7.875,
-     "end": 8.32,
+     "start": 8.87,
+     "end": 9.28,
      "heard": true
     }
    ]
