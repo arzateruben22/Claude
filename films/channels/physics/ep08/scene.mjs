@@ -253,5 +253,6 @@ window.seek = function (t) {
   hud.update(t);
   { const s = spineAt(t); counterLb.textContent = s.label; counterU.textContent = s.unit; counterV.textContent = spineVal(t).toFixed(s.dp);
     counterEl.classList.toggle("lit", !!(s.lit && t >= s.lit[0] && t < s.lit[1])); }
+  if (FILM.noHud) { const h = document.getElementById("hud"); if (h) h.style.display = "none"; }
   renderer.render(scene, camera);
 };

@@ -1,0 +1,123 @@
+1
+00:00:00,125 --> 00:00:01,300
+How many pieces?
+
+2
+00:00:01,480 --> 00:00:03,820
+Bend a spaghetti stick
+until it snaps.
+
+3
+00:00:04,153 --> 00:00:06,993
+Hold both ends and push
+them together, slowly.
+
+4
+00:00:07,358 --> 00:00:09,538
+The stick curves,
+then snaps.
+
+5
+00:00:09,698 --> 00:00:11,278
+You expect two halves.
+
+6
+00:00:11,423 --> 00:00:13,543
+You almost always
+get three or more.
+
+7
+00:00:13,987 --> 00:00:17,222
+Slowed down, the first
+break isn't the end.
+
+8
+00:00:17,242 --> 00:00:19,172
+A moment later,
+it snaps again,
+
+9
+00:00:19,172 --> 00:00:20,127
+and again.
+
+10
+00:00:20,487 --> 00:00:23,067
+The physicist Richard
+Feynman noticed this,
+
+11
+00:00:23,067 --> 00:00:24,752
+and asked why.
+
+12
+00:00:24,792 --> 00:00:26,532
+Years later,
+two physicists
+
+13
+00:00:26,532 --> 00:00:27,867
+explained it.
+
+14
+00:00:27,867 --> 00:00:30,807
+The first break sends
+ripples along the stick.
+
+15
+00:00:30,807 --> 00:00:32,917
+They bend it even more
+than before,
+
+16
+00:00:32,917 --> 00:00:35,237
+and that extra bend
+breaks it again.
+
+17
+00:00:37,220 --> 00:00:41,060
+In 2018, a team
+at MIT found a trick.
+
+18
+00:00:41,215 --> 00:00:44,345
+Twist the stick first,
+over two thirds of a turn.
+
+19
+00:00:44,555 --> 00:00:47,365
+Then bend it:
+usually just two pieces.
+
+20
+00:00:50,620 --> 00:00:53,875
+Measure it: little twist,
+three or more pieces.
+
+21
+00:00:54,305 --> 00:00:57,675
+Past about 250 degrees,
+two pieces win.
+
+22
+00:00:58,153 --> 00:01:00,068
+It depends
+on how you break it.
+
+23
+00:01:00,068 --> 00:01:02,588
+Bend slowly:
+a chain of snaps.
+
+24
+00:01:02,913 --> 00:01:05,698
+Twist first:
+usually one clean break.
+
+25
+00:01:06,187 --> 00:01:08,242
+Next: a jar of nuts.
+
+26
+00:01:08,407 --> 00:01:10,200
+The biggest one tends
+to climb.
