@@ -13,6 +13,8 @@
 
 **Cut or tightened:** the old UV-camera brow shot, the micrograph under the tally, the spine readouts, the relative-odds plate (0.76, 0.59–0.98 stay in the claims table, not on screen), the adherence percentages (unconfirmed), the Nambour 1992–96 and 1,621-adults captions.
 
+**Design for five pictures** (owner time): see `../ART-PROMPTS-CHATGPT.md`; every figure about risk or disease sits on a code-drawn plate, never over skin or a person.
+
 **Pacing** (`scene-table.md`): 22 visual changes in 68 s; longest gap 5.0 s (six gaps over 4 s: reading time for the chart plates and the to-scale bars, and the 3.2 s hold after the twist).
 
 **First-listen check:** not done with a real listener. **Still blocked / not done:** clean text-free art (procedural placeholder, marked); score and effects; final-tier render; every source OPEN (none page-read, none person-checked); dermatologist sign-off.

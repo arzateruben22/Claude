@@ -15,6 +15,8 @@
 
 **Cut or tightened:** the engraved-slate look, the spine readouts, the UV-camera scene of skin with the countries' banks, the gauge beside paper (now a pill pair on the section), the 3D tubes' flare effect.
 
+**Design for five pictures** (owner time): see `../ART-PROMPTS-CHATGPT.md`; every figure about risk or disease sits on a code-drawn plate, never over skin or a person.
+
 **Pacing** (`scene-table.md`): 23 visual changes in 68 s; longest gap 5.6 s (six gaps over 4 s: the chart plates and the list plate need reading time).
 
 **First-listen check:** not done with a real listener. **Still blocked / not done:** clean text-free art (procedural placeholder, marked); score and effects; final-tier render; every source OPEN (none page-read, none person-checked); dermatologist sign-off.
