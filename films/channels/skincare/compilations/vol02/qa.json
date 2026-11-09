@@ -1,0 +1,17 @@
+{
+ "file": "films/channels/skincare/compilations/vol02/vol02-16x9.mp4",
+ "w": 2560,
+ "h": 1440,
+ "fps": "30/1",
+ "dur": 429.467,
+ "video_s": 429.467,
+ "audio_s": 429.467,
+ "size_mb": 72.6,
+ "description_chars": 2448,
+ "lufs": -14.2,
+ "true_peak_db": -1.7,
+ "lra": 3.5,
+ "chapters": 6,
+ "chapters_under_10s": 0,
+ "fails": []
+}
