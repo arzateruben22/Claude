@@ -107,8 +107,8 @@ LABELS = [
 ]
 BADGES = [
     {"id": "tl", "kind": "tag", "text": "Time-lapse model", "t0": cut("normal") + 0.3, "t1": None, "slot": "tr"},
-    {"id": "oval", "title": "Oval specks", "text": "Can spread evenly (2011 study).", "t0": A("vo05:Make"), "t1": cut("measure") - 0.1, "slot": "tr"},
-    {"id": "model", "title": "A model", "text": "Made-up numbers, simple physics.", "t0": cut("takeaway") + 0.5, "t1": cut("tease"), "slot": "tr"},
+    {"id": "oval", "kind": "tag", "text": "Oval specks can spread evenly", "t0": A("vo05:Make"), "t1": cut("measure") - 0.1, "slot": "tr"},
+    {"id": "model", "kind": "tag", "text": "A model: made-up numbers", "t0": cut("takeaway") + 0.5, "t1": cut("tease"), "slot": "tr"},
 ]
 SPINE = [{"t0": cut("change"), "t1": cut("tease") - 0.3, "label": "specks in the ring", "unit": "%", "dp": 0, "lit": [A("vo06:reach"), cut("takeaway")]}]
 SPINE_AT = [[-1e9, [0.27, 0.255]]]

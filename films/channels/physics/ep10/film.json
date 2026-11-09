@@ -389,16 +389,16 @@
   },
   {
    "id": "oval",
-   "title": "Oval specks",
-   "text": "Can spread evenly (2011 study).",
+   "kind": "tag",
+   "text": "Oval specks can spread evenly",
    "t0": 41.8,
    "t1": 47.616633,
    "slot": "tr"
   },
   {
    "id": "model",
-   "title": "A model",
-   "text": "Made-up numbers, simple physics.",
+   "kind": "tag",
+   "text": "A model: made-up numbers",
    "t0": 53.016633,
    "t1": 62.383333,
    "slot": "tr"

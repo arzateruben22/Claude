@@ -16,8 +16,8 @@ The picture is a closed-form model of a drying coffee drop seen from above, with
 | 31.5 | "The flow carries the specks along." | Specks drift along the blue arrows | spine rising | swell |
 | 34.7 | "As the drop thins, the flow speeds up." | Back above: the drop thins, the specks speed up | | rising pad |
 | 38.5 | "In the last moments, the specks pile up at the edge." | Specks rush to the rim and pile up | "specks pile up" | swell |
-| 42.0 | "Make the specks oval, and the ring can vanish." | Ring holds; camera drifts | card "Oval specks: Can spread evenly (2011 study)." | blip |
+| 42.0 | "Make the specks oval, and the ring can vanish." | Ring holds; camera drifts | tag "Oval specks can spread evenly" | blip |
 | 47.7 | "Measure it: in this model, nine in ten specks reach the ring." | Replay from a wet drop; the readout climbs to 93% | spine "specks in the ring" lit | ticks, chime |
-| 52.5 | "Oval specks cling together at the surface, so they rarely reach the edge." | Camera slowly tilts from above to an angle on the finished ring | card "A model: Made-up numbers, simple physics." | calm |
+| 52.5 | "Oval specks cling together at the surface, so they rarely reach the edge." | Camera slowly tilts from above to an angle on the finished ring | tag "A model: made-up numbers" | calm |
 | 57.5 | "A stuck edge and a flow going out: that's all a ring takes." | Same, still moving | | pad |
 | 62.4 | "Next: listen carefully to a mug filling with water. You can hear it rise." | End card | end card, footnote "Deegan et al., Nature 389, 827 (1997)." | signature knocks |
