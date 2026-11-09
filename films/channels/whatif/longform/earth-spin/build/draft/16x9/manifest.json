@@ -14,11 +14,11 @@
  "plain": false,
  "chunkSeconds": 10,
  "chunkFrames": 150,
- "codeSha256": "f01c232f5c4694da377aec22c7565a1930dc0fa54094015e9b75539b1434f048",
+ "codeSha256": "d4d1fd0116a84f736caeac950ef0071f30b1302697c5b5b0f0a1851e9c26a011",
  "files": {
   "scene": {
    "path": "films/channels/whatif/longform/earth-spin/scene.mjs",
-   "sha256": "bb01791fb221fab2f1a6d518128200ac717d676303dce4af0cd17a7d6d3bf63d"
+   "sha256": "d247499ad400a26a81c4c1c5c1497cee14d161b7fdd6189a0abf95301abb9730"
   },
   "film.json": {
    "path": "films/channels/whatif/longform/earth-spin/film.json",
@@ -89,7 +89,7 @@
    "sha256": "0bdb6b660482d31531b3945849fba5916b3ef8695da7024a9e6b9ee3c4157988"
   }
  },
- "pageSha256": "48ce849c0c5d0010ea2615bf641974d7a74f01ad4cc9a4d94015e8e71094309f",
+ "pageSha256": "bd2ebb7f6b6331f8bc3650dd667bd40337e086bba54804405e4ac7a52600bb61",
  "chromium": "153.0.8010.12",
  "info": {
   "page.mjs": "1d93148fad9d5ca5e77622b48859c9d9f9a9cc307d3d9769bd55b885d2cdd1a5",
@@ -98,12 +98,12 @@
   "chromiumPath": "/opt/pw-browsers/chromium-1243/chrome-linux64/chrome",
   "fontsMissing": []
  },
- "startedAt": "2026-11-09T19:19:06.418Z",
+ "startedAt": "2026-11-09T19:21:32.526Z",
  "mixed": [],
  "runs": [
   {
-   "at": "2026-11-09T19:19:06.418Z",
-   "pid": 10236,
+   "at": "2026-11-09T19:21:32.526Z",
+   "pid": 10803,
    "args": [
     "--film",
     "films/channels/whatif/longform/earth-spin",
@@ -112,16 +112,16 @@
     "--tier",
     "draft",
     "--times",
-    "113,116,118,120,122,124",
+    "111,112,200",
     "--share-cpu"
    ],
-   "frames": 6,
-   "codeSha256": "f01c232f5c4694da377aec22c7565a1930dc0fa54094015e9b75539b1434f048",
-   "endedAt": "2026-11-09T19:19:14.253Z",
+   "frames": 3,
+   "codeSha256": "d4d1fd0116a84f736caeac950ef0071f30b1302697c5b5b0f0a1851e9c26a011",
+   "endedAt": "2026-11-09T19:21:39.707Z",
    "status": "done",
-   "rendered": 6,
-   "renderSecPerFrame": 0.651,
-   "wallSec": 8,
+   "rendered": 3,
+   "renderSecPerFrame": 0.84,
+   "wallSec": 7,
    "warnings": 0
   }
  ]

@@ -221,6 +221,7 @@ window.seek = function (t) {
     camera.fov = 30; camera.position.set(0, TH * 0.44, 150 - 6 * seg(t, CUE.cost[0], CUE.cost[1])); camera.lookAt(0, TH * 0.44, 0);
     tower.scale.set(TW * 0.96, h, TW * 0.96); tower.position.set(4.5, h / 2, 0); towerE.position.set(4.5, TH / 2, 0); slice.scale.set(TW * 0.96, Math.max(0.3, TH / 290), TW * 0.96); slice.position.set(-4.5, Math.max(0.3, TH / 290) / 2, 0); }
 
+  camera.updateProjectionMatrix(); camera.updateMatrixWorld(true);
   // the end: the scene dims under the end card, the text goes, the dim lifts
   dimEl.style.opacity = String((0.86 * seg(t, FILM.endCard - 0.25, FILM.endCard + 0.3) * (1 - seg(t, FILM.dur - 0.75, FILM.dur - 0.05))).toFixed(3));
   roEl.style.opacity = String((1 - seg(t, FILM.endCard - 0.3, FILM.endCard)).toFixed(3));
