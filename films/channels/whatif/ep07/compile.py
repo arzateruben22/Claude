@@ -57,7 +57,7 @@ t_spread = [A("vo03:Walk", -0.3), A("vo03:Walk", 0.8)]      # the lanes open out
 # the clocks, in years
 CLOCK_A = [[t_walk0, 0.0], [t_nine, YN]]                                     # nonstop
 CLOCK_B = [[t_b0, 0.0], [t_26, Y8], [t_140, YS], [B["work"]["t0"], YS]]      # the race
-COUNT = [[t_walk0, 0.0], [t_nine, YN], [t_rw, YN], [t_rw + 0.6, 0.0], [t_b0, 0.0], [t_26, Y8], [t_140, YS]]
+COUNT = [[t_walk0, 0.0], [t_nine, YN], [t_rw, YN], [t_rw + 0.6, 0.0], [t_b0, 0.0], [t_26, Y8], [t_26 + 1.6, Y8], [t_140, YS]]
 
 # ── shots ──
 SHOTS = [
@@ -69,6 +69,7 @@ SHOTS = [
 k = lambda ty, dist, el, fy=0.40, az=0: {"target": [0, ty, 0], "dist": dist, "el": el, "az": az, "fov": 24, "fy": fy}
 FRONT = k(1.2, 17, 8, 0.40)
 SPACE = k(1.10e8, 2.2e9, 3, 0.40)
+SPACE2 = k(9.8e7, 1.9e9, 3, 0.40)         # a slow push in through the whole walk
 CAM = {
     "front": [{"t": 0.0, **FRONT}, {"t": B["normal"]["t0"], **k(1.2, 30, 8, 0.40), "ease": "sine"}],      # a slow back-off through "Starting at your own front door"
     "pull": [                                                                    # a constant rate of zoom in log distance
@@ -77,8 +78,8 @@ CAM = {
         {"t": t_pull0 + (t_pull1 - t_pull0) * 0.75, **k(1.0e6, 2.0e7, 4.5, 0.40), "ease": "linear"},
         {"t": t_pull1, **SPACE, "ease": "inout2"},
     ],
-    "space": [{"t": B["change"]["t0"], **SPACE}, {"t": t_home, **{**SPACE, "dist": 2.15e9}, "ease": "sine"}, {"t": t_end, **{**SPACE, "dist": 2.15e9}}],
-    "end": [{"t": t_end, **{**SPACE, "dist": 2.15e9}}, {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"}],
+    "space": [{"t": B["change"]["t0"], **SPACE}, {"t": t_end - 0.1, **SPACE2, "ease": "sine"}, {"t": t_end, **SPACE2}],
+    "end": [{"t": t_end, **SPACE2}, {"t": B["tease"]["t1"], **FRONT, "ease": "inout2"}],
 }
 for shot, keys in CAM.items():
     for a, b in zip(keys, keys[1:]):
@@ -136,7 +137,7 @@ for b in BADGES:
     if any(abs(b["t1"] - c) < 1e-6 for c in CUTS):
         b["t1"] = round(b["t1"] - 0.3, 4)
 COUNTERS = [
-    {"id": "c-years", "label": "years of walking", "t0": t_walk0, "t1": t_work0 - 0.3, "at": [0.80, 0.33], "keys": COUNT, "end": Y8},
+    {"id": "c-years", "label": "years of walking", "t0": t_walk0, "t1": t_work0 - 0.3, "at": [0.66, 0.33], "keys": COUNT, "end": Y8},
 ]
 
 TITLE = {"series": "Possibility Lab · No. 007", "title": "Walking to the *Moon*", "t1": t_title_out, "sig": A("line:vo01:end", 0.05)}

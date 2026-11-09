@@ -29,7 +29,8 @@ All beats are under the limit of 8. Several grades are low because the sentences
 - The "why" beat of the first draft was thin (18 words, two ideas); it is now three short sentences, one idea each (nobody walks day and night; you sleep, eat, stop; so a working day).
 - Open: the whoa beat still holds two big numbers back to back (26 and 140). If the reviewer finds it overwhelming, move 140 to the work beat.
 
-## Still blocked (say so plainly)
-- Word timings: Parakeet checksum is waiting on the owner (coordinator informed). Until then `compile.py` ran on a letter-proportional stand-in, so `scene-table.md` timestamps are not yet final.
-- Sources: five of nine claims were read by the builder against NASA and PubMed pages (SOURCE-READ, quotes in claims-table.md); none is OK until a person opens it. The three calculations rest on those inputs.
-- Draft render: not yet run (the render waits for real timings so the draft reviewers score the real pictures).
+## Status (9 Nov 2026)
+- Word timings: aligned with the owner-approved Parakeet pin (8 word ends clamped to the pauses). `film.json` is built from real timings.
+- Draft render: `out/envelope-007-9x16-draft.mp4` (540x960, 15 fps, 73.8 s, AAC -14.1 LUFS / -1.6 dBTP, sync PASS), 0 audit warnings. Final not rendered, awaiting the gate.
+- Sources: five of nine claims read by the builder (SOURCE-READ); none OK until a person opens it.
+- Rhythm: see scene-table.md for the two stretches that run longer than 4 s between distinct changes.

@@ -1,0 +1,23 @@
+# ep07 scene table (Possibility Lab No. 007, Walking to the Moon)
+
+Timestamps are from `film.json` (real Parakeet word timings, 9 Nov 2026). One row per visual change. Between rows the picture is never still: the walkers climb, the counter runs, and the camera pushes in slowly from 8 s to the end card. Known weak spots for the reviewer: 8-17 s (the ruler is the only new element) and 27-38 s (the why beat: the clock rewind and the race start) have gaps of 4-8 s between distinct changes, against the 2-4 s guide.
+
+| time | narration | visual | on-screen text | sound |
+|---|---|---|---|---|
+|   0.0 s | (pause) | You, one blue figure on the graph paper; a thin blue line leaves the paper straight up, ending in a small chalk Moon (not to scale). Title 'Walking to the Moon' unfolds. | Possibility Lab · No. 007 · Walking to the Moon; badge 'thought experiment'; label 'you' | title signature plucks A4-E5-D#5 at the end of the hook line |
+|   2.4 s | How long to walk to the Moon? Starting at your own front door. | Camera backs off slowly from you (distance 17 to 30 m). | caption: Starting at your own front door. |  |
+|   5.4 s | (pause) | Hard push-out from the paper: the camera lifts and zooms out in log steps; the paper's grid fades; the Earth's edge appears as a chalk arc. | badge 'not to scale until the Moon'; spine: the Moon's mean distance 384,400 km | term.write on the spine |
+|   8.1 s | The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between. That is a very long way for a pair of shoes. | Space in view: Earth at the bottom, the Moon at the top on one vertical line; labels 'Earth' and 'the Moon · 384,400 km'. | labels Earth, the Moon · 384,400 km | label sounds |
+|   8.7 s | The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between. That is a very long way for a pair of shoes. | Thirty ring outlines, one Earth wide each, appear one after another up the gap (the ruler). | caption: about 30 Earths away, lined up side by side |  |
+|  12.3 s | The Moon sits about thirty Earths away, lined up side by side, with nothing but dark between. That is a very long way for a pair of shoes. | Last ring lands beside the Moon. |  |  |
+|  17.4 s | (pause) | Lanes open out left and right of the line; a chalk walker (nonstop) starts up the left lane; the years counter appears. | counter 'years of walking' 0 yr; badge '∵ an easy pace, 5 km/h'; spine 384,400 km ÷ 5 km/h | term.write, swell |
+|  25.6 s | Walk at an easy pace, the kind you could chat through. Never stop, not even to sleep. You would arrive in about nine years. | The nonstop walker reaches the Moon. | spine 76,880 h ≈ 9 years; counter 9 yr; label 'nonstop: ≈ 9 yr'; badge '∵ no road, no rest' | term.write |
+|  27.1 s | (pause) | The clock rewinds to 0 while the nonstop walker stays at the Moon. |  |  |
+|  33.5 s | But nobody walks day and night. You sleep, you eat, you stop to tie a shoe. So give yourself a working day of walking. | The race starts: a blue walker (you, 8 hours a day) and a grey walker (10,000 steps a day) climb from the Earth together. | spine 76,880 h ÷ 8 h ≈ ? years; badge '∵ 8 hours a day' | term.write |
+|  42.6 s | A working day of walking gets you there in about twenty-six years. Stick to the popular daily step goal, and it is closer to a hundred and forty. | The blue walker reaches the Moon; the answer is boxed. | spine '≈ 26 years' boxed; badge 'rounded' | answer.box |
+|  47.8 s | A working day of walking gets you there in about twenty-six years. Stick to the popular daily step goal, and it is closer to a hundred and forty. | The clock runs on while the grey walker (10,000 steps) is still low on the line. | label '10,000 steps a day: ≈ 140 yr'; badge '∵ 0.75 m a step' |  |
+|  49.0 s | A working day of walking gets you there in about twenty-six years. Stick to the popular daily step goal, and it is closer to a hundred and forty. | Counter reaches 140 yr (the step-goal walker would take that long). | counter 140 |  |
+|  52.8 s | (pause) | Show your work card: the sum on one line, sensitivity rows. | 384,400 km ÷ 5 km/h ÷ 8 h ÷ 365 ≈ 26 yr; slower 4 km/h ≈ 33 yr; quicker 6 km/h ≈ 22 yr; assumptions: no road, 8 h a day, 0.75 m a step | term.write ×3 |
+|  59.7 s | The Apollo crews made the same trip in about three days. The distance never changed, only the speed. | A small marker capsule climbs a fourth lane beside the walkers. | label 'Apollo: about 3 days' | swell |
+|  67.3 s | (pause) | End card: boxed '26 years', 'Next envelope: everyone, holding hands', footnote 'NASA Moon fact sheet'. | Next envelope: everyone, holding hands | signature plucks |
+|  73.2 s | (pause) | Camera glides back toward frame 0's composition (the loop). |  |  |
