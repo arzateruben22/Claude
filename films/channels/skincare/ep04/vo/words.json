@@ -3,93 +3,93 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Poison, in a frown? In theory, a banknote's weight could kill a million.",
-   "heard": "Poison in a frown. In theory, a banknote's weight could kill a million.",
+   "text": "Who tells your face to frown? It starts with one small, quiet message.",
+   "heard": "Who tells your face to frown? It starts with one small, quiet message.",
    "words": [
     {
-     "w": "Poison,",
-     "start": 0.045,
+     "w": "Who",
+     "start": 0.035,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "tells",
+     "start": 0.17,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.655,
      "end": 0.72,
      "heard": true
     },
     {
-     "w": "in",
-     "start": 0.67,
-     "end": 0.88,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 0.91,
+     "w": "face",
+     "start": 0.71,
      "end": 1.04,
      "heard": true
     },
     {
+     "w": "to",
+     "start": 1.02,
+     "end": 1.2,
+     "heard": true
+    },
+    {
      "w": "frown?",
-     "start": 1.01,
+     "start": 1.135,
      "end": 1.92,
      "heard": true
     },
     {
-     "w": "In",
-     "start": 1.97,
+     "w": "It",
+     "start": 1.985,
      "end": 2.16,
      "heard": true
     },
     {
-     "w": "theory,",
-     "start": 2.235,
+     "w": "starts",
+     "start": 2.195,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 2.545,
      "end": 2.64,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 2.71,
-     "end": 2.8,
+     "w": "one",
+     "start": 2.61,
+     "end": 2.88,
      "heard": true
     },
     {
-     "w": "banknote's",
-     "start": 2.895,
-     "end": 3.52,
+     "w": "small,",
+     "start": 2.975,
+     "end": 3.28,
      "heard": true
     },
     {
-     "w": "weight",
-     "start": 3.495,
-     "end": 3.84,
+     "w": "quiet",
+     "start": 3.345,
+     "end": 3.68,
      "heard": true
     },
     {
-     "w": "could",
-     "start": 3.845,
-     "end": 4.0,
-     "heard": true
-    },
-    {
-     "w": "kill",
-     "start": 4.02,
-     "end": 4.24,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 4.3,
-     "end": 4.4,
-     "heard": true
-    },
-    {
-     "w": "million.",
-     "start": 4.33,
-     "end": 5.04,
+     "w": "message.",
+     "start": 3.72,
+     "end": 4.32,
      "heard": true
     }
    ]
   },
   {
    "id": "vo02",
-   "text": "Every frown starts at a nerve ending, letting out a chemical messenger onto the muscle below. The muscle pulls, and the skin above folds into a crease.",
-   "heard": "Every frown starts at a nerve ending, letting out a chemical messenger onto the muscle below. The muscle pulls, and the skin above folds into a crease.",
+   "text": "Every frown begins at the end of a nerve. The nerve lets out a chemical messenger called acetylcholine. It reaches a muscle fibre, which gets the message and pulls.",
+   "heard": "Every frown begins at the end of a nerve. The nerve lets out a chemical messenger called acetylcholine. It reaches a muscle fibre, which gets the message and pulls.",
    "words": [
     {
      "w": "Every",
@@ -99,329 +99,377 @@
     },
     {
      "w": "frown",
-     "start": 0.385,
-     "end": 0.8,
+     "start": 0.33,
+     "end": 0.72,
      "heard": true
     },
     {
-     "w": "starts",
-     "start": 0.86,
+     "w": "begins",
+     "start": 0.815,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "at",
-     "start": 1.135,
-     "end": 1.28,
+     "start": 1.185,
+     "end": 1.235,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.27,
+     "end": 1.32,
+     "heard": true
+    },
+    {
+     "w": "end",
+     "start": 1.3,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.535,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.27,
-     "end": 1.36,
+     "start": 1.565,
+     "end": 1.68,
      "heard": true
     },
     {
-     "w": "nerve",
-     "start": 1.3,
-     "end": 1.84,
-     "heard": true
-    },
-    {
-     "w": "ending,",
-     "start": 1.93,
+     "w": "nerve.",
+     "start": 1.605,
      "end": 2.48,
      "heard": true
     },
     {
-     "w": "letting",
-     "start": 2.56,
-     "end": 2.88,
+     "w": "The",
+     "start": 2.66,
+     "end": 2.71,
+     "heard": true
+    },
+    {
+     "w": "nerve",
+     "start": 2.69,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "lets",
+     "start": 3.095,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "out",
-     "start": 2.785,
-     "end": 3.04,
+     "start": 3.33,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "a",
-     "start": 3.11,
-     "end": 3.2,
-     "heard": true
-    },
-    {
-     "w": "chemical",
-     "start": 3.205,
+     "start": 3.56,
      "end": 3.68,
      "heard": true
     },
     {
+     "w": "chemical",
+     "start": 3.705,
+     "end": 4.08,
+     "heard": true
+    },
+    {
      "w": "messenger",
-     "start": 3.6,
-     "end": 4.32,
+     "start": 3.995,
+     "end": 4.72,
      "heard": true
     },
     {
-     "w": "onto",
-     "start": 4.31,
-     "end": 4.56,
+     "w": "called",
+     "start": 4.755,
+     "end": 4.96,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 4.54,
-     "end": 4.64,
+     "w": "acetylcholine.",
+     "start": 5.09,
+     "end": 6.4,
      "heard": true
     },
     {
-     "w": "muscle",
-     "start": 4.57,
-     "end": 5.2,
+     "w": "It",
+     "start": 6.485,
+     "end": 6.56,
      "heard": true
     },
     {
-     "w": "below.",
-     "start": 5.295,
-     "end": 6.08,
-     "heard": true
-    },
-    {
-     "w": "The",
-     "start": 6.18,
-     "end": 6.24,
-     "heard": true
-    },
-    {
-     "w": "muscle",
-     "start": 6.21,
-     "end": 6.72,
-     "heard": true
-    },
-    {
-     "w": "pulls,",
-     "start": 6.71,
-     "end": 7.44,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 7.565,
-     "end": 7.615,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 7.595,
-     "end": 7.76,
-     "heard": true
-    },
-    {
-     "w": "skin",
-     "start": 7.855,
-     "end": 8.16,
-     "heard": true
-    },
-    {
-     "w": "above",
-     "start": 8.215,
-     "end": 8.48,
-     "heard": true
-    },
-    {
-     "w": "folds",
-     "start": 8.505,
-     "end": 8.88,
-     "heard": true
-    },
-    {
-     "w": "into",
-     "start": 8.87,
-     "end": 9.12,
+     "w": "reaches",
+     "start": 6.56,
+     "end": 6.96,
      "heard": true
     },
     {
      "w": "a",
-     "start": 9.055,
+     "start": 6.875,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "muscle",
+     "start": 7.0,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "fibre,",
+     "start": 7.52,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "which",
+     "start": 8.24,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 8.455,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.725,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "message",
+     "start": 8.755,
      "end": 9.2,
      "heard": true
     },
     {
-     "w": "crease.",
-     "start": 9.31,
-     "end": 9.76,
+     "w": "and",
+     "start": 9.18,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "pulls.",
+     "start": 9.45,
+     "end": 9.92,
      "heard": true
     }
    ]
   },
   {
    "id": "vo03",
-   "text": "Botulinum toxin never touches the skin. It slips inside the nerve ending and cuts one protein the message needs, so the message waits, and never leaves.",
-   "heard": "Botulinum toxin never touches the skin. It slips inside the nerve ending and cuts one protein the message needs, so the message waits and never leaves.",
+   "text": "Botulinum toxin gets inside that nerve ending. There it cuts one protein, SNAP-25, that the message needs. The message stays stuck, so the muscle gets no signal and the frown can relax.",
+   "heard": "Botulinum toxin gets inside that nerve ending. There it cuts one protein, SNAP 25, that the message needs. The message stays stuck, so the muscle gets no signal and the frown can relax.",
    "words": [
     {
      "w": "Botulinum",
      "start": 0.02,
-     "end": 0.88,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "toxin",
-     "start": 1.01,
-     "end": 1.44,
+     "start": 0.715,
+     "end": 1.28,
      "heard": true
     },
     {
-     "w": "never",
-     "start": 1.535,
-     "end": 1.6,
-     "heard": true
-    },
-    {
-     "w": "touches",
-     "start": 1.585,
-     "end": 2.0,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 2.045,
-     "end": 2.24,
-     "heard": true
-    },
-    {
-     "w": "skin.",
-     "start": 2.29,
-     "end": 3.12,
-     "heard": true
-    },
-    {
-     "w": "It",
-     "start": 3.24,
-     "end": 3.29,
-     "heard": true
-    },
-    {
-     "w": "slips",
-     "start": 3.34,
-     "end": 3.76,
+     "w": "gets",
+     "start": 1.37,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "inside",
-     "start": 3.68,
-     "end": 4.08,
+     "start": 1.43,
+     "end": 1.92,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 4.17,
-     "end": 4.22,
+     "w": "that",
+     "start": 1.97,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "nerve",
-     "start": 4.2,
-     "end": 4.56,
+     "start": 2.1,
+     "end": 2.4,
      "heard": true
     },
     {
-     "w": "ending",
-     "start": 4.515,
-     "end": 4.96,
+     "w": "ending.",
+     "start": 2.375,
+     "end": 3.28,
      "heard": true
     },
     {
-     "w": "and",
-     "start": 4.96,
-     "end": 5.12,
+     "w": "There",
+     "start": 3.42,
+     "end": 3.47,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.615,
+     "end": 3.665,
      "heard": true
     },
     {
      "w": "cuts",
-     "start": 5.115,
-     "end": 5.44,
+     "start": 3.66,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "one",
-     "start": 5.415,
-     "end": 5.68,
+     "start": 3.935,
+     "end": 4.16,
      "heard": true
     },
     {
-     "w": "protein",
-     "start": 5.68,
+     "w": "protein,",
+     "start": 4.18,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "SNAP-25,",
+     "start": 4.735,
+     "end": 5.76,
+     "heard": false
+    },
+    {
+     "w": "that",
+     "start": 5.785,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.925,
      "end": 6.0,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 6.215,
-     "end": 6.32,
+     "w": "message",
+     "start": 5.955,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "needs.",
+     "start": 6.385,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 7.385,
+     "end": 7.435,
      "heard": true
     },
     {
      "w": "message",
-     "start": 6.38,
-     "end": 6.72,
+     "start": 7.415,
+     "end": 7.84,
      "heard": true
     },
     {
-     "w": "needs,",
-     "start": 6.665,
-     "end": 7.44,
+     "w": "stays",
+     "start": 7.945,
+     "end": 8.32,
      "heard": true
     },
     {
-     "w": "so",
-     "start": 7.56,
-     "end": 7.61,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 7.59,
-     "end": 7.76,
-     "heard": true
-    },
-    {
-     "w": "message",
-     "start": 7.72,
-     "end": 8.24,
-     "heard": true
-    },
-    {
-     "w": "waits,",
-     "start": 8.15,
-     "end": 8.72,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 8.77,
+     "w": "stuck,",
+     "start": 8.37,
      "end": 8.88,
      "heard": true
     },
     {
-     "w": "never",
-     "start": 8.8,
+     "w": "so",
+     "start": 9.005,
+     "end": 9.055,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.035,
      "end": 9.2,
      "heard": true
     },
     {
-     "w": "leaves.",
-     "start": 9.095,
-     "end": 9.76,
+     "w": "muscle",
+     "start": 9.145,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 9.62,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 9.775,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "signal",
+     "start": 10.065,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 10.625,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.655,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "frown",
+     "start": 10.855,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 11.265,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "relax.",
+     "start": 11.32,
+     "end": 12.0,
      "heard": true
     }
    ]
   },
   {
    "id": "vo04",
-   "text": "Two centuries ago a German doctor, Justinus Kerner, traced a deadly paralysis to spoiled sausages, and guessed the same poison might one day become a medicine.",
-   "heard": "Two centuries ago a German doctor, Justinus Koerner, traced a deadly paralysis to spoiled sausages and guessed the same poison might one day become a medicine.",
+   "text": "Two hundred years ago, a German doctor named Justinus Kerner studied a poison in spoiled sausages that caused paralysis. He guessed it might one day become a medicine.",
+   "heard": "Two hundred years ago, a German doctor named Justinus Kaener studied a poison in spoiled sausages that caused paralysis. He guessed it might one day become a medicine.",
    "words": [
     {
      "w": "Two",
@@ -430,554 +478,457 @@
      "heard": true
     },
     {
-     "w": "centuries",
-     "start": 0.41,
-     "end": 0.72,
+     "w": "hundred",
+     "start": 0.265,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "ago",
-     "start": 0.81,
-     "end": 0.96,
+     "w": "years",
+     "start": 0.545,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "ago,",
+     "start": 0.89,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.12,
-     "end": 1.17,
+     "start": 1.515,
+     "end": 1.565,
      "heard": true
     },
     {
      "w": "German",
-     "start": 1.15,
-     "end": 1.52,
+     "start": 1.62,
+     "end": 1.92,
      "heard": true
     },
     {
-     "w": "doctor,",
-     "start": 1.545,
-     "end": 2.16,
+     "w": "doctor",
+     "start": 2.025,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "named",
+     "start": 2.255,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "Justinus",
-     "start": 2.35,
-     "end": 2.8,
+     "start": 2.615,
+     "end": 3.12,
      "heard": true
     },
     {
-     "w": "Kerner,",
-     "start": 2.92,
-     "end": 3.76,
+     "w": "Kerner",
+     "start": 3.22,
+     "end": 4.0,
      "heard": false
     },
     {
-     "w": "traced",
-     "start": 3.84,
-     "end": 4.16,
+     "w": "studied",
+     "start": 3.95,
+     "end": 4.32,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.155,
-     "end": 4.24,
-     "heard": true
-    },
-    {
-     "w": "deadly",
-     "start": 4.34,
-     "end": 4.64,
-     "heard": true
-    },
-    {
-     "w": "paralysis",
-     "start": 4.7,
-     "end": 5.28,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 5.315,
-     "end": 5.44,
-     "heard": true
-    },
-    {
-     "w": "spoiled",
-     "start": 5.55,
-     "end": 5.84,
-     "heard": true
-    },
-    {
-     "w": "sausages,",
-     "start": 5.825,
-     "end": 6.64,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 7.015,
-     "end": 7.065,
-     "heard": true
-    },
-    {
-     "w": "guessed",
-     "start": 7.135,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 7.47,
-     "end": 7.68,
-     "heard": true
-    },
-    {
-     "w": "same",
-     "start": 7.66,
-     "end": 7.84,
+     "start": 4.395,
+     "end": 4.445,
      "heard": true
     },
     {
      "w": "poison",
-     "start": 7.915,
-     "end": 8.32,
+     "start": 4.46,
+     "end": 4.88,
      "heard": true
     },
     {
-     "w": "might",
-     "start": 8.245,
+     "w": "in",
+     "start": 4.9,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "spoiled",
+     "start": 5.135,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "sausages",
+     "start": 5.475,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 6.3,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "caused",
+     "start": 6.425,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "paralysis.",
+     "start": 6.78,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "He",
+     "start": 8.07,
+     "end": 8.12,
+     "heard": true
+    },
+    {
+     "w": "guessed",
+     "start": 8.18,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 8.39,
      "end": 8.56,
      "heard": true
     },
     {
-     "w": "one",
-     "start": 8.575,
+     "w": "might",
+     "start": 8.505,
      "end": 8.8,
      "heard": true
     },
     {
-     "w": "day",
-     "start": 8.835,
+     "w": "one",
+     "start": 8.805,
      "end": 9.04,
      "heard": true
     },
     {
-     "w": "become",
-     "start": 9.11,
+     "w": "day",
+     "start": 9.07,
      "end": 9.28,
      "heard": true
     },
     {
+     "w": "become",
+     "start": 9.315,
+     "end": 9.52,
+     "heard": true
+    },
+    {
      "w": "a",
-     "start": 9.205,
-     "end": 9.36,
+     "start": 9.42,
+     "end": 9.6,
      "heard": true
     },
     {
      "w": "medicine.",
-     "start": 9.24,
-     "end": 9.92,
+     "start": 9.48,
+     "end": 10.16,
      "heard": true
     }
    ]
   },
   {
    "id": "vo05",
-   "text": "Its dose is counted in units, measured by their effect on mice. One frown takes twenty, under a hundredth of what could kill a person.",
-   "heard": "Its dose is counted in units, measured by their effect on mice. One frown takes twenty, under a hundredth of what could kill a person.",
+   "text": "And here is the twist. The block does not last. The nerve slowly grows new endings, and about three months later the message flows again.",
+   "heard": "And here is the twist, the block does not last. The nerve slowly grows new endings, and about three months later the message flows again.",
    "words": [
     {
-     "w": "Its",
-     "start": 0.04,
-     "end": 0.32,
+     "w": "And",
+     "start": 0.025,
+     "end": 0.24,
      "heard": true
     },
     {
-     "w": "dose",
-     "start": 0.29,
-     "end": 0.64,
+     "w": "here",
+     "start": 0.2,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "is",
+     "start": 0.47,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.64,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "twist.",
      "start": 0.76,
-     "end": 0.81,
+     "end": 1.28,
      "heard": true
     },
     {
-     "w": "counted",
-     "start": 0.79,
-     "end": 1.2,
+     "w": "The",
+     "start": 1.67,
+     "end": 1.72,
      "heard": true
     },
     {
-     "w": "in",
-     "start": 1.17,
-     "end": 1.36,
-     "heard": true
-    },
-    {
-     "w": "units,",
-     "start": 1.255,
+     "w": "block",
+     "start": 1.785,
      "end": 2.16,
      "heard": true
     },
     {
-     "w": "measured",
-     "start": 2.22,
-     "end": 2.64,
+     "w": "does",
+     "start": 2.08,
+     "end": 2.4,
      "heard": true
     },
     {
-     "w": "by",
-     "start": 2.675,
-     "end": 2.8,
+     "w": "not",
+     "start": 2.45,
+     "end": 2.72,
      "heard": true
     },
     {
-     "w": "their",
-     "start": 2.855,
-     "end": 3.04,
+     "w": "last.",
+     "start": 2.79,
+     "end": 3.36,
      "heard": true
     },
     {
-     "w": "effect",
-     "start": 3.115,
-     "end": 3.52,
+     "w": "The",
+     "start": 3.51,
+     "end": 3.56,
      "heard": true
     },
     {
-     "w": "on",
-     "start": 3.475,
-     "end": 3.68,
+     "w": "nerve",
+     "start": 3.54,
+     "end": 4.0,
      "heard": true
     },
     {
-     "w": "mice.",
-     "start": 3.57,
-     "end": 4.64,
+     "w": "slowly",
+     "start": 4.04,
+     "end": 4.32,
      "heard": true
     },
     {
-     "w": "One",
-     "start": 4.775,
+     "w": "grows",
+     "start": 4.4,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "new",
+     "start": 4.725,
      "end": 4.96,
      "heard": true
     },
     {
-     "w": "frown",
-     "start": 5.04,
-     "end": 5.44,
+     "w": "endings,",
+     "start": 4.895,
+     "end": 5.6,
      "heard": true
     },
     {
-     "w": "takes",
-     "start": 5.425,
-     "end": 5.76,
+     "w": "and",
+     "start": 5.67,
+     "end": 5.84,
      "heard": true
     },
     {
-     "w": "twenty,",
-     "start": 5.785,
-     "end": 6.48,
+     "w": "about",
+     "start": 5.845,
+     "end": 6.08,
      "heard": true
     },
     {
-     "w": "under",
-     "start": 6.57,
+     "w": "three",
+     "start": 6.16,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "months",
+     "start": 6.225,
      "end": 6.72,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 6.675,
-     "end": 6.88,
+     "w": "later",
+     "start": 6.635,
+     "end": 7.04,
      "heard": true
     },
     {
-     "w": "hundredth",
-     "start": 6.92,
-     "end": 7.36,
+     "w": "the",
+     "start": 7.15,
+     "end": 7.2,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 7.305,
-     "end": 7.44,
+     "w": "message",
+     "start": 7.18,
+     "end": 7.68,
      "heard": true
     },
     {
-     "w": "what",
-     "start": 7.425,
-     "end": 7.6,
+     "w": "flows",
+     "start": 7.6,
+     "end": 8.08,
      "heard": true
     },
     {
-     "w": "could",
-     "start": 7.61,
-     "end": 7.76,
-     "heard": true
-    },
-    {
-     "w": "kill",
-     "start": 7.785,
-     "end": 8.0,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 8.09,
-     "end": 8.16,
-     "heard": true
-    },
-    {
-     "w": "person.",
-     "start": 8.12,
-     "end": 8.56,
+     "w": "again.",
+     "start": 8.11,
+     "end": 8.4,
      "heard": true
     }
    ]
   },
   {
    "id": "vo06",
-   "text": "And the gap that message never crosses is about two thousand times thinner than a sheet of paper.",
-   "heard": "And the gap that message never crosses is about two thousand times thinner than a sheet of paper.",
+   "text": "So a frown is a message, and this toxin blocks it. The skin was never the target. The nerve was.",
+   "heard": "So a frown is a message, and this toxin blocks it. The skin was never the target, the nerve was.",
    "words": [
     {
-     "w": "And",
-     "start": 0.02,
+     "w": "So",
+     "start": 0.155,
      "end": 0.24,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 0.34,
-     "end": 0.39,
+     "w": "a",
+     "start": 0.385,
+     "end": 0.48,
      "heard": true
     },
     {
-     "w": "gap",
-     "start": 0.37,
-     "end": 0.64,
-     "heard": true
-    },
-    {
-     "w": "that",
-     "start": 0.67,
-     "end": 0.88,
-     "heard": true
-    },
-    {
-     "w": "message",
-     "start": 0.795,
-     "end": 1.44,
-     "heard": true
-    },
-    {
-     "w": "never",
-     "start": 1.41,
-     "end": 1.76,
-     "heard": true
-    },
-    {
-     "w": "crosses",
-     "start": 1.78,
-     "end": 2.4,
+     "w": "frown",
+     "start": 0.415,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "is",
-     "start": 2.415,
-     "end": 2.64,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 2.66,
-     "end": 2.96,
-     "heard": true
-    },
-    {
-     "w": "two",
-     "start": 2.985,
-     "end": 3.12,
-     "heard": true
-    },
-    {
-     "w": "thousand",
-     "start": 3.305,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "times",
-     "start": 3.815,
-     "end": 4.24,
-     "heard": true
-    },
-    {
-     "w": "thinner",
-     "start": 4.38,
-     "end": 5.04,
-     "heard": true
-    },
-    {
-     "w": "than",
-     "start": 5.185,
-     "end": 5.28,
+     "start": 0.785,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "a",
-     "start": 5.215,
-     "end": 5.44,
+     "start": 0.905,
+     "end": 1.04,
      "heard": true
     },
     {
-     "w": "sheet",
-     "start": 5.375,
-     "end": 5.76,
+     "w": "message,",
+     "start": 0.945,
+     "end": 1.6,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 5.755,
+     "w": "and",
+     "start": 1.505,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 1.765,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "toxin",
+     "start": 2.03,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "blocks",
+     "start": 2.635,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 3.235,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.805,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 4.015,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "was",
+     "start": 4.37,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 4.49,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.995,
+     "end": 5.045,
+     "heard": true
+    },
+    {
+     "w": "target.",
+     "start": 5.035,
      "end": 5.92,
      "heard": true
     },
     {
-     "w": "paper.",
-     "start": 5.985,
-     "end": 6.48,
+     "w": "The",
+     "start": 6.05,
+     "end": 6.1,
+     "heard": true
+    },
+    {
+     "w": "nerve",
+     "start": 6.08,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "was.",
+     "start": 6.55,
+     "end": 7.04,
      "heard": true
     }
    ]
   },
   {
    "id": "vo07",
-   "text": "Poison in a frown: one message silenced, and months later the nerve grows spare endings, then prunes them away.",
-   "heard": "Poison in a frown, one message silenced, and months later the nerve grows spare endings, then prunes them away.",
-   "words": [
-    {
-     "w": "Poison",
-     "start": 0.02,
-     "end": 0.56,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 0.51,
-     "end": 0.72,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 0.76,
-     "end": 0.88,
-     "heard": true
-    },
-    {
-     "w": "frown:",
-     "start": 0.79,
-     "end": 1.68,
-     "heard": true
-    },
-    {
-     "w": "one",
-     "start": 1.74,
-     "end": 1.84,
-     "heard": true
-    },
-    {
-     "w": "message",
-     "start": 1.875,
-     "end": 2.4,
-     "heard": true
-    },
-    {
-     "w": "silenced,",
-     "start": 2.53,
-     "end": 3.2,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 3.25,
-     "end": 3.36,
-     "heard": true
-    },
-    {
-     "w": "months",
-     "start": 3.28,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "later",
-     "start": 3.7,
-     "end": 4.0,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 4.055,
-     "end": 4.16,
-     "heard": true
-    },
-    {
-     "w": "nerve",
-     "start": 4.085,
-     "end": 4.48,
-     "heard": true
-    },
-    {
-     "w": "grows",
-     "start": 4.555,
-     "end": 4.88,
-     "heard": true
-    },
-    {
-     "w": "spare",
-     "start": 4.97,
-     "end": 5.28,
-     "heard": true
-    },
-    {
-     "w": "endings,",
-     "start": 5.225,
-     "end": 6.0,
-     "heard": true
-    },
-    {
-     "w": "then",
-     "start": 6.085,
-     "end": 6.24,
-     "heard": true
-    },
-    {
-     "w": "prunes",
-     "start": 6.31,
-     "end": 6.64,
-     "heard": true
-    },
-    {
-     "w": "them",
-     "start": 6.68,
-     "end": 6.8,
-     "heard": true
-    },
-    {
-     "w": "away.",
-     "start": 6.71,
-     "end": 7.2,
-     "heard": true
-    }
-   ]
-  },
-  {
-   "id": "vo08",
-   "text": "Next: two neighbours under the same sun, one experiment. Which hand aged?",
-   "heard": "Next two neighbours under the same sun one experiment, which hand aged.",
+   "text": "Next: two neighbours, under the same sun, and one experiment. Which hand aged?",
+   "heard": "Next two neighbours under the same sun and one experiment, which hand aged.",
    "words": [
     {
      "w": "Next:",
@@ -987,31 +938,31 @@
     },
     {
      "w": "two",
-     "start": 0.635,
-     "end": 0.8,
+     "start": 0.59,
+     "end": 0.72,
      "heard": true
     },
     {
-     "w": "neighbours",
-     "start": 0.705,
+     "w": "neighbours,",
+     "start": 0.645,
      "end": 1.28,
      "heard": true
     },
     {
      "w": "under",
-     "start": 1.36,
+     "start": 1.37,
      "end": 1.44,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.39,
+     "start": 1.4,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "same",
-     "start": 1.54,
+     "start": 1.545,
      "end": 1.76,
      "heard": true
     },
@@ -1022,33 +973,39 @@
      "heard": true
     },
     {
+     "w": "and",
+     "start": 2.08,
+     "end": 2.24,
+     "heard": true
+    },
+    {
      "w": "one",
-     "start": 2.135,
-     "end": 2.32,
+     "start": 2.12,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "experiment.",
-     "start": 2.56,
-     "end": 3.28,
+     "start": 2.51,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "Which",
-     "start": 3.42,
-     "end": 3.47,
+     "start": 3.545,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "hand",
-     "start": 3.515,
-     "end": 3.84,
+     "start": 3.635,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "aged?",
-     "start": 3.9,
-     "end": 4.48,
+     "start": 4.025,
+     "end": 4.56,
      "heard": true
     }
    ]

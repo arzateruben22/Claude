@@ -1,0 +1,25 @@
+{
+ "_doc": "Art slot. Drop clean, text-free artwork in art/ and edit src, w, h and the anchors (0-1 of the art image) -- labels, leader lines and the camera follow. Placeholder = a crop of reference/ep04-frown-reference.webp; its baked-in pills double up with the drawn ones (expected).",
+ "src": "art/placeholder.png",
+ "placeholder": true,
+ "w": 941,
+ "h": 1065,
+ "anchors": {
+  "nerve": [
+   0.4357,
+   0.2207
+  ],
+  "ach": [
+   0.627,
+   0.5023
+  ],
+  "fibre": [
+   0.6217,
+   0.8028
+  ],
+  "snap": [
+   0.4995,
+   0.4789
+  ]
+ }
+}
