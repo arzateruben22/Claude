@@ -1,0 +1,1039 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "What's at a black hole's edge? Look closer.",
+   "heard": "What's at a black hole's edge? Look closer.",
+   "words": [
+    {
+     "w": "What's",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.225,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.555,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "black",
+     "start": 0.585,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "hole's",
+     "start": 0.835,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "edge?",
+     "start": 1.28,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "Look",
+     "start": 1.945,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "closer.",
+     "start": 2.185,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "The edge is called the event horizon. Escape speed is the speed needed to leave for good. Past that edge, escaping would take more than light speed.",
+   "heard": "The edge is called the event horizon. Escape speed is the speed needed to leave for good. Past that edge, escaping would take more than light speed.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "edge",
+     "start": 0.05,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.64,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "called",
+     "start": 0.67,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.945,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "event",
+     "start": 1.19,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "horizon.",
+     "start": 1.435,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "Escape",
+     "start": 2.685,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 3.35,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.64,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.83,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 4.105,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "needed",
+     "start": 4.365,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 4.715,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "leave",
+     "start": 4.75,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 5.195,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "good.",
+     "start": 5.67,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "Past",
+     "start": 6.335,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 6.735,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "edge,",
+     "start": 6.94,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "escaping",
+     "start": 7.715,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 8.495,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "take",
+     "start": 8.545,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 8.825,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 9.105,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 9.33,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "speed.",
+     "start": 9.75,
+     "end": 10.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Nothing travels faster than light, so nothing gets out from there. Now picture a friend, falling toward it, while you watch from far away.",
+   "heard": "Nothing travels faster than light, so nothing gets out from there. Now picture a friend falling toward it while you watch from far away.",
+   "words": [
+    {
+     "w": "Nothing",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "travels",
+     "start": 0.44,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 0.98,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 1.32,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "light,",
+     "start": 1.635,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 2.1,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "nothing",
+     "start": 2.26,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 2.54,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 3.135,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 3.185,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "there.",
+     "start": 3.655,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "Now",
+     "start": 4.3,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "picture",
+     "start": 4.625,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.885,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "friend,",
+     "start": 5.16,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "falling",
+     "start": 5.615,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "toward",
+     "start": 6.155,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 7.03,
+     "end": 7.08,
+     "heard": true
+    },
+    {
+     "w": "while",
+     "start": 7.06,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 7.215,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "watch",
+     "start": 7.37,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 7.8,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "far",
+     "start": 8.035,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "away.",
+     "start": 8.205,
+     "end": 8.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Gravity really does slow clocks. GPS satellites must correct for that to keep good time. The closer to a black hole, the slower a clock ticks. Now compare the two views.",
+   "heard": "Gravity really does slow clocks. GPS satellites must correct for that to keep good time. The closer to a black hole, the slower a clock ticks. Now compare the two views.",
+   "words": [
+    {
+     "w": "Gravity",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "really",
+     "start": 0.55,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 0.935,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "slow",
+     "start": 1.07,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "clocks.",
+     "start": 1.625,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "GPS",
+     "start": 2.63,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "satellites",
+     "start": 3.53,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "must",
+     "start": 4.13,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "correct",
+     "start": 4.405,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 4.755,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 4.85,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.175,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "keep",
+     "start": 5.295,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "good",
+     "start": 5.79,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "time.",
+     "start": 6.085,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 6.795,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "closer",
+     "start": 6.925,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.395,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.45,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "black",
+     "start": 7.675,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "hole,",
+     "start": 7.97,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.605,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "slower",
+     "start": 8.635,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.4,
+     "end": 9.45,
+     "heard": true
+    },
+    {
+     "w": "clock",
+     "start": 9.49,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "ticks.",
+     "start": 9.825,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "Now",
+     "start": 10.695,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "compare",
+     "start": 11.06,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.535,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 11.595,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "views.",
+     "start": 11.85,
+     "end": 12.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "To you, far away, your friend's clock seems to tick slower. To them, it's everyone else who seems to speed up. The closer they get, the bigger the gap.",
+   "heard": "To you, far away, your friend's clock seems to tick slower. To them, it's everyone else who seems to speed up. The closer they get, the bigger the gap.",
+   "words": [
+    {
+     "w": "To",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "you,",
+     "start": 0.175,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "far",
+     "start": 0.615,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "away,",
+     "start": 0.97,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.36,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "friend's",
+     "start": 1.61,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "clock",
+     "start": 1.935,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "seems",
+     "start": 2.33,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.69,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "tick",
+     "start": 2.825,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "slower.",
+     "start": 3.135,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "To",
+     "start": 4.085,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "them,",
+     "start": 4.145,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "it's",
+     "start": 4.71,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "everyone",
+     "start": 4.96,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "else",
+     "start": 5.32,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "who",
+     "start": 5.665,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "seems",
+     "start": 5.885,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 6.17,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 6.45,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 6.925,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 7.46,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "closer",
+     "start": 7.59,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 8.01,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "get,",
+     "start": 8.24,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.825,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "bigger",
+     "start": 8.855,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.3,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "gap.",
+     "start": 9.44,
+     "end": 9.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Both views are true. Time depends on where you are, and how strong gravity is.",
+   "heard": "Both views are true. Time depends on where you are and how strong gravity is.",
+   "words": [
+    {
+     "w": "Both",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "views",
+     "start": 0.36,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 0.895,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "true.",
+     "start": 0.925,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "Time",
+     "start": 1.83,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "depends",
+     "start": 2.15,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.56,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "where",
+     "start": 2.8,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 3.015,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "are,",
+     "start": 3.22,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.625,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 3.655,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "strong",
+     "start": 4.115,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "gravity",
+     "start": 4.49,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "is.",
+     "start": 5.135,
+     "end": 5.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Light time: we photographed a black hole in twenty nineteen. Its light had traveled about fifty-five million years.",
+   "heard": "Light time, we photographed a black hole in 2019. Its light had traveled about 55 million years.",
+   "words": [
+    {
+     "w": "Light",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "time:",
+     "start": 0.38,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 1.2,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "photographed",
+     "start": 1.23,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.945,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "black",
+     "start": 2.08,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "hole",
+     "start": 2.375,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.77,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "twenty",
+     "start": 2.96,
+     "end": 4.32,
+     "heard": false
+    },
+    {
+     "w": "nineteen.",
+     "start": 3.065,
+     "end": 4.32,
+     "heard": false
+    },
+    {
+     "w": "Its",
+     "start": 4.405,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 4.495,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "had",
+     "start": 4.9,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "traveled",
+     "start": 5.12,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 5.56,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "fifty-five",
+     "start": 5.875,
+     "end": 6.72,
+     "heard": false
+    },
+    {
+     "w": "million",
+     "start": 6.765,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "years.",
+     "start": 7.25,
+     "end": 7.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: a planet that could float in a big enough tub.",
+   "heard": "Next, a planet that could float in a big enough tub.",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.04,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.875,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 1.025,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 1.605,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 1.78,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "float",
+     "start": 1.925,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.57,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.6,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "big",
+     "start": 2.885,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "enough",
+     "start": 3.075,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "tub.",
+     "start": 3.53,
+     "end": 4.0,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
