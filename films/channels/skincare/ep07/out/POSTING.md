@@ -14,7 +14,7 @@ Why goosebumps happen | Skin Sense S2 · Ep 1
 ```
 Why do you get goosebumps? A tiny muscle on every hair pulls.
 
-When the nerve fires, the muscle shortens and pulls the hair upright. In people, that no longer helps keep us warm. Yet the muscle, the nerve and the follicle are still wired together across mammals. So goosebumps are a muscle, a nerve and a hair, working together. A small reflex with a bigger job.
+When the nerve fires, the muscle shortens and pulls the hair upright. In people, that no longer helps keep us warm. Yet the muscle, the nerve and the follicle are still wired together across mammals. So goosebumps are a muscle, a nerve and a hair, working together. A small reflex, and in mice, a bigger job.
 
 Series: Season 2: What your skin does, part 1 of 6. Next: why fingers wrinkle in water
 
