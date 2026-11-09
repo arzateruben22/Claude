@@ -609,6 +609,58 @@ await group('progression', async (use) => {
       + `${Math.round(s0.credits).toLocaleString()} credits, ${s0.vehicles.length} slots used: top ${Math.round(s0.top * MPH)} → ${Math.round(s1.top * MPH)} mph, run in ${run.built}; `
       + `profile unchanged (${s1.vehicles.join(', ')}, driving ${s1.chosen}); off: back to ${s2.car}; #owner on/off: ${hash.a.on}/${hash.b.on}`;
   });
+  // the OC Hypercar's two tunes on the HUD and the Free Drive earnings cap (PROJECT_OC_HYPERCAR.md M3, 5.5 item 10):
+  // its tune chip reads Unleashed in Free Drive and Race tune in Speed Survival; Unleashed pays XP and credits for
+  // distance at no more than the race tune's top speed, so flat out it earns what the race tune's pace would, while
+  // the distance driven still counts in full on the profile. Owner mode puts the hypercar in the driver's seat.
+  await check('OC Hypercar: Unleashed / Race tune chip, Free Drive earnings capped at the race tune\'s pace', async () => {
+    const chips = () => game(page, () => [...document.querySelectorAll('.hud-chips i')].map((e) => e.textContent));
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.getByLabel('Owner mode (all cars unlocked, test builds only)').check();
+    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.waitForSelector('.overlay.menu', { timeout: 120000 });
+    await game(page, () => window.__game.chooseOwnerCar('oc-hyper'));
+    await drive(page, 'Free Drive');
+    await frames(page, 2);
+    const free = await chips();
+    // 30 s each at 150 m/s (the plan's test speed: no road here lets the autopilot hold it, so the car is put back on
+    // its lane at that speed every quarter second and coasts) and at 90 m/s, both Unleashed: what each paid
+    const r = await game(page, () => {
+      const g = window.__game, p = g.profile.p;
+      g.setPaused(true);
+      const run = (v) => {
+        const c0 = p.credits, x0 = p.xp, d0 = p.distance, s0 = g.distance, n0 = g.steps;
+        for (let k = 0; k < 120; k++) {
+          g.traffic.clearAround(g.phys.x, g.phys.z, 400);
+          g.phys.placeAt(g.path, g.phys.s, g.path.laneCenter(1), v);
+          g.fastForward(0.25, { throttle: 0, brake: 0, steer: 0 });
+        }
+        g.fastForward(0.5, { throttle: 0, brake: 1, steer: 0 });               // the last half second's flush
+        return { credits: p.credits - c0, xp: p.xp - x0, profileDist: p.distance - d0, driven: g.distance - s0, t: (g.steps - n0) / 120 };
+      };
+      return { driving: g.driving, mode: g.mode, cap: g.earnCap, fast: run(150), slow: run(90) };
+    });
+    await page.getByRole('button', { name: 'Main menu' }).click();
+    await page.waitForSelector('.overlay.menu', { timeout: 120000 });
+    await drive(page, 'Speed Survival');
+    await frames(page, 2);
+    const scored = await chips();
+    const race = await game(page, () => { const g = window.__game; g.setPaused(true); return { driving: g.driving, mode: g.mode, cap: g.earnCap }; });
+    const paidFast = r.fast.credits * 200, paidSlow = r.slow.credits * 200;
+    expect(r.driving === 'oc-hyper' && r.mode === 'free' && free.includes('Unleashed') && !free.includes('Race tune'), `Free Drive in ${r.driving}: chips ${free.join(', ')}`);
+    expect(race.driving === 'oc-hyper' && race.mode === 'survival' && scored.includes('Race tune') && !scored.includes('Unleashed') && race.cap === 0, `Survival in ${race.driving}: chips ${scored.join(', ')}, cap ${race.cap}`);
+    expect(r.cap > 100 && r.cap < 106, `cap ${fmt(r.cap)} m/s`);
+    // (t: the simulated seconds, about 31.5: earnings are flushed every half second, so the window pays for between
+    // t - 0.5 and t seconds at the cap, plus what was left over from before it, a few metres)
+    const capM = r.cap * r.fast.t;
+    expect(r.fast.driven > capM * 1.25, `at 150 m/s drove ${Math.round(r.fast.driven)} m in ${fmt(r.fast.t)} s, not over the cap's ${Math.round(capM)} m`);
+    expect(paidFast <= capM + 20 && paidFast >= r.cap * (r.fast.t - 0.5) - 1 && Math.abs(r.fast.xp - 2 * r.fast.credits) < 1, `at 150 m/s paid for ${Math.round(paidFast)} m in ${fmt(r.fast.t)} s (cap ${Math.round(capM)} m), ${fmt(r.fast.xp)} XP for ${fmt(r.fast.credits)} credits`);
+    expect(Math.abs(r.fast.profileDist - r.fast.driven) < 160, `the profile counted ${Math.round(r.fast.profileDist)} m of ${Math.round(r.fast.driven)} m driven`);
+    expect(r.slow.driven < r.cap * r.slow.t && Math.abs(paidSlow - r.slow.driven) < 160, `at 90 m/s it paid for ${Math.round(paidSlow)} m of ${Math.round(r.slow.driven)} m`);
+    return `Free Drive chips ${free.join(', ')}; Survival chips ${scored.join(', ')} (cap off); cap ${fmt(r.cap)} m/s; ${fmt(r.fast.t)} s at 150 m/s: drove ${Math.round(r.fast.driven)} m, `
+      + `paid ${fmt(r.fast.credits)} credits / ${fmt(r.fast.xp)} XP (${Math.round(paidFast)} m; the cap allows ${Math.round(capM)}); ${fmt(r.slow.t)} s at 90 m/s: drove ${Math.round(r.slow.driven)} m, `
+      + `paid ${Math.round(r.slow.credits)} credits / ${Math.round(r.slow.xp)} XP; profile distance ${Math.round(r.fast.profileDist)} m flat out`;
+  });
 });
 
 // SwiftShader here manages under 2 fps on Low and well under 1 fps on High and Ultra (a frame there can take over a

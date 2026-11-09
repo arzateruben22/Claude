@@ -27,7 +27,7 @@ import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
-import { CARS, carById, applyCar, paintFor, wheelFor } from './cars';
+import { CARS, carById, applyCar, paintFor, wheelFor, earnCapFor } from './cars';
 import { settle, characterById, jobText, type RunFacts, type Job } from './story';
 type ErrandJob = Extract<Job, { kind: 'errand' }>;
 const fmtClock = (t: number) => `${Math.floor(Math.max(0, t) / 60)}:${String(Math.floor(Math.max(0, t) % 60)).padStart(2, '0')}`;
@@ -166,7 +166,9 @@ export class Game {
   errand: { job: ErrandJob; sign: Sign; t: number; done: boolean } | null = null;
   readonly radio = new Radio(() => this.audio.context, () => this.audio.musicBus, () => this.audio.noiseBuffer);
   private tunnel = 0;
-  private prof = { t: 0, dist: 0, flush: 0 };
+  private prof = { t: 0, dist: 0, paid: 0, flush: 0 };
+  // the distance-earnings cap in m/s (cars.ts earnCapFor: the hypercar Unleashed in Free Drive), 0 for none
+  private earnCap = 0;
   frames = 0;
   switches = 0;                      // how many times you've moved from one road to another (for tests)
   visited = new Set<string>();       // freeways driven this session (for tests and the profile)
@@ -513,6 +515,7 @@ export class Game {
     const c = carById(this.carId);
     this.driving = c.id;
     this.carGrip = applyCar(c, mode);
+    this.earnCap = earnCapFor(c, mode);
     this.configureCar();
     if (this.attract) this.syncAtmosphere();   // the menu's attract drive takes the car's atmosphere
     return c;
@@ -1050,12 +1053,13 @@ export class Game {
     const fwd = Math.max(0, view.v) * dt;
     if (!this.attract && !this.wrongWay) this.distance += fwd;
     if (playing) {
-      this.prof.t += dt; if (!this.wrongWay) this.prof.dist += fwd;
+      // (the distance that pays is capped at the race tune's pace while the hypercar runs Unleashed)
+      this.prof.t += dt; if (!this.wrongWay) { this.prof.dist += fwd; this.prof.paid += this.earnCap > 0 ? Math.min(fwd, this.earnCap * dt) : fwd; }
       this.prof.flush -= dt;
       if (this.prof.flush <= 0) {
         this.prof.flush = 0.5;
-        this.earned(this.profile.add({ time: this.prof.t, distance: this.prof.dist, speed: Math.abs(p.vx), streak: this.bestStreak, runNearMisses: this.nearMisses }));
-        this.prof.t = 0; this.prof.dist = 0;
+        this.earned(this.profile.add({ time: this.prof.t, distance: this.prof.dist, paid: this.prof.paid, speed: Math.abs(p.vx), streak: this.bestStreak, runNearMisses: this.nearMisses }));
+        this.prof.t = 0; this.prof.dist = 0; this.prof.paid = 0;
       }
     }
     this.top = Math.max(this.top, Math.abs(p.vx));

@@ -4,6 +4,64 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-09: SEAT, the hypercar's seat view, rolling tyres, tune chip and Free Drive earnings cap (branch `claude/hypercar`, committed)
+
+Still a **procedural model built in code**, not a finished 3D asset. The merged M2 had already replaced the drive
+branch's temporary `HYPER_EYE` with the per-car `seatOffset` (0.20 m lower, 0.10 m in); this pass finishes the seat
+view and M3's leftovers. The other session's unjudged seat pass (`origin/claude/wip-c-seat`) was read first; taken
+from it: the forward seat (`seatFwd` 0.10 m, through `seatOffset`, the cabin silhouette and the dash profile), no
+wipers on the hypercar, and the windscreen ghost fading up the glass. Not taken: its smaller display and second dash
+light line (the display already sits in the wheel's opening), and its windscreen top at −0.20 (measured: the header
+still crossed the top of a portrait phone's frame).
+
+- **Seat view (`car-shape.ts`, `car-body.ts`, `cockpit.ts`).** Eye at (−0.27, 0.96, 0.0) m, 0.118 m under the
+  headliner (the Corsa's: 0.113). The windscreen runs up to z −0.10 (was −0.30) with the side glass's front corner and
+  the smoked roof glass moved back with it, so the header's lip sits 42 degrees above the eye line (the Corsa's: 14),
+  over the top of the frame on 16:9 (top edge about 25 degrees up) and portrait (about 33). Seen from the seat
+  camera's numbers (`tests/out/seat/measure/`): the lip's lowest point was 170 to 232 px down a 1280 × 720 frame and
+  230 to 272 px down a 390 × 844 one; now 142 and 130 px above them. The hypercar's side-glass frit column is half as
+  wide (its long raked front edge made a 6 cm black band beside the A-pillar), its windscreen has more rows (the top
+  frit row stays narrow and out of frame), the wipers are gone (two dark bars across the road), and the dashboard's
+  reflection fades out from 30 to 60 % up the glass (at night its far edge was a hard line across the sky: a sky
+  pixel through the screen, (700, 200) in the 1280 × 720 night frame, went from (44,37,30) to (14,12,8)). The eye, cockpit, hands (`armsAt`) and steering
+  wheel move by the one per-car offset; every other car's is zero.
+- **Tyres roll with the road (`PlayerCar.ts`).** Each axle's spin is the physics' wheel angle × `SPEC.wheelR / r`.
+  One simulated second at 30 m/s (`tests/out/seat/spin-check.mjs`): the car moved 30.28 m; the hypercar's front tyre
+  turned 86.57 rad × 0.35 m = 30.30 m and its rear 81.90 rad × 0.37 m = 30.30 m (unscaled they turned 87.82 rad,
+  30.7 and 32.5 m). The GT (0.345 m) is unchanged (factor exactly 1, as for the Corsa); the Brio's 0.332 m and the
+  Vela's 0.35 m tyres now also roll true (factors 1.039 and 0.986).
+- **Tune chip (`App.tsx`, `HUD.tsx`, `styles.css`).** While the hypercar is driven the HUD's chips end in
+  **Unleashed** (filled, Free Drive) or **Race tune** (outlined in the same ice blue, Speed Survival). At 390 × 844
+  each is 65 × 14 CSS px at 8.5 px type (`tests/out/seat/after/chips-free-over-survival-390x844.png`).
+- **Free Drive earnings cap (`cars.ts` `topSpeed`, `earnCapFor`; `Game.ts`; `profile.ts` `paid`).** While the hypercar
+  runs Unleashed, the distance that pays XP and credits is counted at no more than the race tune's top speed,
+  102.49 m/s; the profile's distance driven still counts in full. Suite check (progression): 31.5 s held at 150 m/s
+  drove 4,700 m and paid 3,211 m (16.06 credits, 32.11 XP; the cap allows 3,228 m); at 90 m/s it paid 2,800 of
+  2,824 m. Flat out that is about 1,845 credits an hour, the best earnable car's pace. Not capped: interchange and
+  first-freeway bonuses and errands (fixed sums per event, not per metre).
+
+Proof, all looked at. In-game seat frames, before (the HEAD build) and after, day and night, 1280 × 720 High and
+390 × 844 phone (Medium, touch, 2x), the hypercar and the Corsa (`tests/out/seat-shots.mjs`):
+`tests/out/seat/{before,after}/{oc-hyper,rossini-corsa}-{day,night}-{1280x720,390x844}.png`, plus
+`after/oc-hyper-day-390x844-survival.png`. (The 1280 "before" frames have no HUD: the script showed it from the 390
+run on.) In-game frames differ run to run (engine buzz, live mirrors), so the other cars' sameness is shown on the
+preview: seat views of the GT, Brio, Corsa and Vela at 960 × 540 from the HEAD source and the working tree
+(`tests/out/seat/preview/{before,after}/*-seat.png`): Corsa 28 and Vela 91 pixels differ, by one level at most; GT 64 and
+Brio 93, and every one of them over one level (47 and 68) is on the tachometer's needle, which sweeps with time
+(`gt-seat-diffcrop.png`, `brio-seat-diffcrop.png`); their cockpits'
+own calls and triangles identical (GT 62 / 169,572, Brio 59 / 159,618, Corsa 63 / 158,988, Vela 54 / 148,704). The
+hypercar's cockpit 60 → 58 calls, 167,389 → 167,707 triangles; its body 29 → 28 calls, 251,430 → 250,654
+(the wipers out). Its side and hero views before and after: `tests/out/seat/preview/hyper-{side,hero,seat}-before-over-after.png`.
+
+Checks: `npx tsc --noEmit` clean; `npm run build` (top-speed-ultra.html md5 52948b3f…); `node tests/dynamics.mjs`
+**1742 passed, 0 failed**; `npm test -- --only=boot` 6/6, `--only=render` 14/14 (the M2 check now reads "eye
+-0.27,0.96,0"), `--only=phone` 5/5, `--only=progression` **7/7** with the new check "OC Hypercar: Unleashed / Race
+tune chip, Free Drive earnings capped at the race tune's pace" (logs `tests/out/seat/suite-*.log`).
+
+Left as they are, for every car: the windscreen's dust film is additive and unlit, so at night the sky through the
+glass takes a faint warm cast; the A-pillar trim reads tan at night. `seatX` stays 0.27 m (the sheet's occupants are
+about 0.25 m out; at 0.25 the narrowed buckets would sink another 2 cm into the console).
+
 ## 2026-11-09: sync merge of `origin/claude/hypercar` into this lane's M2 (branch `claude/hypercar`, not pushed)
 
 Merged the other session's 91 commits (`91421fb`..`67e65b9`: per-car atmospheres and driver colours, the Ultra grade,

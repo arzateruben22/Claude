@@ -4,7 +4,7 @@
 // and steer, headlight beams, tail lights that brighten on the brakes, and the game's camera anchors. The OC Hypercar
 // also blinks its turn signals (lane changes, and hard steering at low speed), lights its reversing lamps and spreads
 // a red haze round its thin tail bar on the brakes; its
-// driver sits lower and further in (car-shape seatOffset), so its eye and hands move with the seat.
+// driver sits lower, further in and further forward (car-shape seatOffset), so its eye and hands move with the seat.
 //
 // configure() builds or rebuilds only what changed: the car and its cockpit (car id, quality or mirrors), the paint,
 // the hands (driver look, presentation, nails). Quality 'phone' is the lighter build, 'high' the full desktop look.
@@ -70,7 +70,7 @@ export class PlayerCar {
   private arms: DriverArms | null = null;
   private mats: Record<string, THREE.Material> = {};
   private outsideParts: THREE.Object3D[] = [];
-  private wheels: { steer: THREE.Group; spin: THREE.Group; front: boolean }[] = [];
+  private wheels: { steer: THREE.Group; spin: THREE.Group; front: boolean; r: number }[] = [];   // r: the tyre's radius
   private wheelAngle = 0;
   private sus = { p: 0, pv: 0, r: 0, rv: 0, h: 0, hv: 0 };
   // the switched lamps (the hypercar's): its turn signals, reversing lamps and the stop light's haze, shown only while lit
@@ -158,7 +158,7 @@ export class PlayerCar {
     ck.wheel.rotation.z = this.wheelAngle;
     const B = bodyFor(c.car), P = shapeFor(c.car);
     this.buildSunOccluder(B, ck);
-    // the driver's eye (the hypercar's sits lower and further in), and the headlamp beams from this car's lamps
+    // the driver's eye (the hypercar's sits lower, further in and forward), and the headlamp beams from this car's lamps
     this.eye.position.copy(B.eye); this.hood.position.set(0, P.hoodY ?? 1.0, -1.45);
     this.beams.forEach((b, i) => { const s = i ? 1 : -1; b.position.set(s * B.beamAt.x, B.beamAt.y, B.beamAt.z); b.target.position.set(s * B.beamAt.x, 0.9, -70); });
     // the beams' colour: warm white (halogen-like) for the Rossinis and the Vela; the hypercar's ice-blue LED blades
@@ -189,7 +189,7 @@ export class PlayerCar {
         spinKit.build(this.mats, spin, { shadow: (key) => key === 'tyre' || key === 'rimPaint' });
         steer.position.set(out * track, r, z); steer.add(spin);
         this.root.add(steer);
-        this.wheels.push({ steer, spin, front });
+        this.wheels.push({ steer, spin, front, r });
       }
     }
   }
@@ -340,8 +340,10 @@ export class PlayerCar {
     const buzz = (p.rpm / 8000) * 0.00035 + v * 0.000012;
     this.body.position.set((Math.random() - 0.5) * buzz, s.h + (Math.random() - 0.5) * buzz * 2, 0);
     this.body.rotation.set(s.p + (Math.random() - 0.5) * buzz * 0.6, 0, s.r);
+    // the physics turns a tyre of SPEC.wheelR (0.345 m); each axle's own tyre turns by SPEC.wheelR / r of that, so
+    // it rolls with the road (the hypercar's staggered 0.70 / 0.74 m tyres; 1 for a 0.345 m tyre)
     for (const w of this.wheels) {
-      w.spin.rotation.x = -(w.front ? p.wheelRot : p.wheelRotR);
+      w.spin.rotation.x = -(w.front ? p.wheelRot : p.wheelRotR) * (SPEC.wheelR / w.r);
       if (w.front) w.steer.rotation.y = p.delta;
     }
     const tail = this.mats.tail as THREE.MeshPhysicalMaterial | undefined;

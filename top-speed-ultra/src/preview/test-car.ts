@@ -10,7 +10,7 @@
 //   &portrait=1 (the game's portrait-phone camera numbers)   &cam=x,y,z&at=x,y,z&fov=deg (any camera, car's frame)
 //   &lit=1 (outside views: every switched lamp on, as PlayerCar lights them: the brake level on the tail lamps (and the
 //          hypercar's brake haze), the turn signals and the reversing lamps; &head=night the headlamps at the game's night level)
-// The interior views follow the car's driver (car-shape seatOffset: the hypercar's sits lower and further in).
+// The interior views follow the car's driver (car-shape seatOffset: the hypercar's sits lower, further in and forward).
 // The game's cameras (src/game/Game.ts updateCamera), in the car's frame:
 //   seat: EYE, pitched -0.085 rad (portrait -0.27), FOV 58 (portrait 96); free: the same eye, FOV 66
 //   hood: (0, 1.0, -1.45), pitched -0.04 rad, FOV 62 (portrait 92)
