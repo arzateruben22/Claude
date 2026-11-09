@@ -171,7 +171,7 @@ function camAt(t) {
 window.seek = function (t) {
   if (!LOOPEL) makeLoop();
   const dipT = CUE.dip[3] + 0.15, tt = t >= dipT ? 0 : t;
-  const cm = camAt(tt); { const dd = Math.hypot(cm.p[0] - cm.l[0], cm.p[1] - cm.l[1], cm.p[2] - cm.l[2]) * 0.03; cm.p = [cm.p[0] + Math.sin(tt * 0.9) * dd, cm.p[1] + Math.sin(tt * 0.65 + 1.0) * dd * 0.6, cm.p[2] + Math.sin(tt * 0.5 + 2.0) * dd * 0.5]; }   // a slow drift: the picture is never still
+  const cm = camAt(tt); { const dd = Math.hypot(cm.p[0] - cm.l[0], cm.p[1] - cm.l[1], cm.p[2] - cm.l[2]) * 0.03; cm.p = [cm.p[0] + Math.sin(tt * 0.9) * dd, cm.p[1] + Math.sin(tt * 0.65 + 1.0) * dd * 0.6, cm.p[2] + Math.cos(tt * 0.9) * dd * 0.8]; }   // a slow drift: the picture is never still
   camera.position.fromArray(cm.p); camera.fov = cm.fov; camera.updateProjectionMatrix(); camera.lookAt(...cm.l); camera.updateMatrixWorld();
   const inBal = tt >= CUE.dip[1] + 0.1 && tt < CUE.dip[2] + 0.1, inRd = tt >= CUE.rd + 0.1 && tt < CUE.end + 1;
   tank.visible = !inBal && !inRd && !(tt >= CUE.c - 0.05 && tt < CUE.why - 0.4); water.visible = tank.visible; earthP.visible = !inBal && !inRd && tt >= CUE.c && tt < CUE.dip[1]; bal.visible = inBal;
