@@ -1,0 +1,286 @@
+{
+ "duration": 66.6667,
+ "fps": 30,
+ "preset": "restframe-bench",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 3.2,
+   "energy": 0.7
+  },
+  {
+   "id": "normal",
+   "t0": 3.2,
+   "t1": 11.4667,
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 11.4667,
+   "t1": 19.2,
+   "energy": 0.5
+  },
+  {
+   "id": "why",
+   "t0": 19.2,
+   "t1": 34.9333,
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 34.9333,
+   "t1": 46.9333,
+   "energy": 0.75
+  },
+  {
+   "id": "measure",
+   "t0": 46.9333,
+   "t1": 56.0,
+   "energy": 0.5
+  },
+  {
+   "id": "takeaway",
+   "t0": 56.0,
+   "t1": 60.2667,
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 60.2667,
+   "t1": 66.6667,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 3.2
+  },
+  {
+   "t": 0.3,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -4.0
+  },
+  {
+   "t": 3.183333,
+   "kind": "counter.show",
+   "tag": "spine"
+  },
+  {
+   "t": 3.2,
+   "kind": "section",
+   "id": "normal",
+   "t1": 11.4667
+  },
+  {
+   "t": 3.483333,
+   "kind": "label",
+   "tag": "no-held"
+  },
+  {
+   "t": 3.5833,
+   "kind": "badge",
+   "tag": "model",
+   "text": "Model slinky"
+  },
+  {
+   "t": 7.4833,
+   "kind": "contact",
+   "tag": "release1"
+  },
+  {
+   "t": 9.433333333333334,
+   "kind": "label",
+   "tag": "no-still"
+  },
+  {
+   "t": 10.9167,
+   "kind": "bounce",
+   "tag": "arrive1"
+  },
+  {
+   "t": 11.4667,
+   "kind": "section",
+   "id": "change",
+   "t1": 19.2
+  },
+  {
+   "t": 11.8,
+   "kind": "time.slow",
+   "tag": "release2"
+  },
+  {
+   "t": 13.033333333333333,
+   "kind": "label",
+   "tag": "ch-top"
+  },
+  {
+   "t": 15.3,
+   "kind": "label",
+   "tag": "ch-bot"
+  },
+  {
+   "t": 17.233333333333334,
+   "kind": "label",
+   "tag": "ch-gap"
+  },
+  {
+   "t": 18.6,
+   "kind": "bounce",
+   "tag": "arrive2"
+  },
+  {
+   "t": 19.183333,
+   "kind": "counter.tick",
+   "tag": "spine:news has travelled down"
+  },
+  {
+   "t": 19.2,
+   "kind": "section",
+   "id": "why",
+   "t1": 34.9333
+  },
+  {
+   "t": 20.9,
+   "kind": "label",
+   "tag": "wy-no"
+  },
+  {
+   "t": 26.4,
+   "kind": "label",
+   "tag": "wy-front"
+  },
+  {
+   "t": 31.766666666666666,
+   "kind": "label",
+   "tag": "wy-arr"
+  },
+  {
+   "t": 32.4167,
+   "kind": "reveal",
+   "tag": "arrive3"
+  },
+  {
+   "t": 34.916633,
+   "kind": "counter.tick",
+   "tag": "spine:middle of the slinky: fallen"
+  },
+  {
+   "t": 34.9333,
+   "kind": "section",
+   "id": "whoa",
+   "t1": 46.9333
+  },
+  {
+   "t": 35.66666666666667,
+   "kind": "label",
+   "tag": "wo-mid"
+  },
+  {
+   "t": 35.9667,
+   "kind": "time.slow",
+   "tag": "release4"
+  },
+  {
+   "t": 37.7,
+   "kind": "label",
+   "tag": "wo-ball"
+  },
+  {
+   "t": 46.916633,
+   "kind": "counter.tick",
+   "tag": "spine:bottom waited"
+  },
+  {
+   "t": 46.9333,
+   "kind": "section",
+   "id": "measure",
+   "t1": 56.0
+  },
+  {
+   "t": 49.56666666666667,
+   "kind": "label",
+   "tag": "ms-ghost"
+  },
+  {
+   "t": 51.8333,
+   "kind": "counter.end",
+   "tag": "arrive5"
+  },
+  {
+   "t": 55.983333,
+   "kind": "counter.tick",
+   "tag": "spine:bottom waited"
+  },
+  {
+   "t": 56.0,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 60.2667
+  },
+  {
+   "t": 56.5833,
+   "kind": "badge",
+   "tag": "ideal",
+   "text": "Its fall is modeled, with no air. Sized to the paper's typical 0.3 s."
+  },
+  {
+   "t": 60.2667,
+   "kind": "section",
+   "id": "tease",
+   "t1": 66.6667
+  },
+  {
+   "t": 65.1667,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 3.3333333333333335,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 11.566666666666666,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 19.4,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 35.06666666666667,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 47.13333333333333,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 56.266666666666666,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 60.56666666666667,
+   "file": "vo/08.wav"
+  }
+ ]
+}

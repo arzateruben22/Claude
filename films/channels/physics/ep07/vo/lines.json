@@ -1,6 +1,6 @@
 {
  "voice": "af_bella",
- "speed": 1.0,
+ "speed": 0.9,
  "lang": "en-us",
  "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
  "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
@@ -11,15 +11,15 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Does a slinky's bottom fall? Not for a while.",
+   "text": "Does a slinky's bottom fall? Not yet.",
    "stars": [
     "fall",
-    "while"
+    "yet"
    ],
-   "phonemes": "dˈʌz ɐ slˈɪŋkiz bˈɑːɾəm fˈɔːl? nˌɑːt fɚɹə wˈaɪl.",
+   "phonemes": "dˈʌz ɐ slˈɪŋkiz bˈɑːɾəm fˈɔːl? nˌɑːt jˈɛt.",
    "file": "01.wav",
-   "dur": 2.618,
-   "sha256": "b3ee38289fc4252c4634cd6028d95139e8659ca5799d3214256610f03e3f37d4"
+   "dur": 2.454,
+   "sha256": "c31c765ba6aca7103ba8bd575abf0cb1e115fc118f0892a6aa4f6e089fb285f4"
   },
   {
    "id": "vo02",
@@ -30,8 +30,8 @@
    ],
    "phonemes": "hˈɛld baɪ ðə tˈɑːp, ɐ slˈɪŋki hˈæŋz lˈɔŋ ænd stˈɪl. lˈɛt ɡˈoʊ. ðə tˈɑːp dɹˈɑːps… ænd ðə bˈɑːɾəm dˈʌzənt mˈuːv æɾ ˈɔːl.",
    "file": "02.wav",
-   "dur": 7.105,
-   "sha256": "fd7526fbd86b1c923889111fa8c3cd788f3d4b2cf7f6349644bf9835d634b6df"
+   "dur": 7.542,
+   "sha256": "f219efe15864f18b4f96003e44495de08723771d191f9c11e76d4d1efee3c75e"
   },
   {
    "id": "vo03",
@@ -42,8 +42,8 @@
    ],
    "phonemes": "slˈoʊd dˈaʊn, ðə tˈɑːp kˈɔɪlz pˈaɪl ˌʌp fɹʌm əbˈʌv, wˌaɪl ðə bˈɑːɾəm flˈoʊts ðˈɛɹ. fɔːɹ ɐbˌaʊt θɹˈiː tˈɛnθs əvə sˈɛkənd.",
    "file": "03.wav",
-   "dur": 6.852,
-   "sha256": "96a00e8ff176cde51291fd6bfb2e3bd8c852617215b5cd088edd89555b6b4bbd"
+   "dur": 7.209,
+   "sha256": "b800b28b6509348a7083aca21287a9eb3218d5074dfb54c304607a5e9c6f472a"
   },
   {
    "id": "vo04",
@@ -54,8 +54,8 @@
    ],
    "phonemes": "wˌaɪ dˈʌzənt ɪt fˈɔːl? nˈʌθɪŋ dˌaʊn ðɛɹ hˈæzbiːn tˈoʊld. ðə pˈʊl ʌvðə spɹˈɪŋ dˈʌzənt dʒˈʌmp tə ðɪ ˈʌðɚɹ ˈɛnd; ɪt tɹˈævəlz dˌaʊn ðə kˈɔɪlz, lˈaɪk ɐ wˈeɪv. ʌntˈɪl ðə nˈuːz ɚɹˈaɪvz, ðə bˈɑːɾəm hɐz nˈoʊ ɹˈiːzən tə mˈuːv.",
    "file": "04.wav",
-   "dur": 12.479,
-   "sha256": "f1aa5084a560e708a119553bff7f06fafe97eea25827bca3f7b7395d2efd220e"
+   "dur": 13.488,
+   "sha256": "227e54c469ab41991c4caa4fa6a170053cd7c19502d504418ebfbe60f1718905"
   },
   {
    "id": "vo05",
@@ -66,8 +66,8 @@
    ],
    "phonemes": "ænd ðə mˈɪdəl? ɪt fˈɔːlz ðə hˈoʊl tˈaɪm, lˈaɪk ɐ dɹˈɑːpt bˈɔːl. ðə tˈɑːp ɹˈʌʃᵻz dˈaʊn, ðə bˈɑːɾəm wˈeɪts, ænd ðɪ ˈævɹɪdʒ ɪz ɐ plˈeɪn fˈɔːl.",
    "file": "05.wav",
-   "dur": 8.271,
-   "sha256": "55af56057dcf2b93ec45ce954f1decc4978cabf7cace3ade87019c598347da87"
+   "dur": 8.757,
+   "sha256": "b313ab01a09ab128854157c4c5dd3309b247818d3d0485f1c505ec83f22df50a"
   },
   {
    "id": "vo06",
@@ -78,20 +78,20 @@
    ],
    "phonemes": "mˈɛʒɚɹ ɪt: ðə bˈɑːɾəmz ɡˈoʊsts stˈæk ɪn wˈʌn plˈeɪs fɔːɹ θɹˈiː tˈɛnθs əvə sˈɛkənd. ðˈɛn ðə tˈɑːp ɚɹˈaɪvz, ænd ðeɪ ˈɔːl ɡˌoʊ təɡˈɛðɚ.",
    "file": "06.wav",
-   "dur": 7.795,
-   "sha256": "df1bf5346dfebde19382dfbbaa74052bd8a3d549979b833ac613780e56ffcec5"
+   "dur": 8.286,
+   "sha256": "383cfea45f7b9c43ba9fa0ee21e9805773f95826cced4cc7292526009e5190da"
   },
   {
    "id": "vo07",
    "beat": "takeaway",
-   "text": "News at one end takes time to reach the other, even through a spring.",
+   "text": "Even through a spring, news travels at a limited speed.",
    "stars": [
-    "time"
+    "speed"
    ],
-   "phonemes": "nˈuːz æt wˈʌn ˈɛnd tˈeɪks tˈaɪm tə ɹˈiːtʃ ðɪ ˈʌðɚ, ˈiːvən θɹuː ɐ spɹˈɪŋ.",
+   "phonemes": "ˈiːvən θɹuː ɐ spɹˈɪŋ, nˈuːz tɹˈævəlz æɾə lˈɪmɪɾᵻd spˈiːd.",
    "file": "07.wav",
-   "dur": 3.771,
-   "sha256": "4b15d04f3f141c1cf10ba212b7a9a04ceea2dcc922443d1063e48d91756e8eba"
+   "dur": 3.401,
+   "sha256": "edeb55b8db1f33828205c8a34a6cb9c96276ff75c587375d9a6dd0296bf81c0b"
   },
   {
    "id": "vo08",
@@ -102,8 +102,8 @@
    ],
    "phonemes": "nˈɛkst: dɹˈaɪ spɐɡˈɛɾi, bˈɛnt ʌntˈɪl ɪt snˈæps. ɪt nˈɛvɚ bɹˈeɪks ɪn tˈuː.",
    "file": "08.wav",
-   "dur": 4.238,
-   "sha256": "84f92050132bace8be7a8b495d7f53a04d949282ae95efb5a52aa5383a49a89e"
+   "dur": 4.486,
+   "sha256": "80a6be2cec08ef3f8498e44870c639174cd9ea42db5f6a2ab572d90c2b34cdb7"
   }
  ]
 }
