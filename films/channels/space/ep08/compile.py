@@ -51,20 +51,22 @@ CAMK = [
     (CUE["dip"][0] + 0.32, FP(-9, 1.8, -24), FP(0, 3, 30), 54),                       # the forest (cut under a dip)
     (CUE["trunk"] + 0.5, FP(6, 1.8, -6), FP(0, 3, 36), 54),
     (CUE["dip"][1] + 0.0, FP(7, 1.8, -4), FP(0, 3, 36), 54),
-    (CUE["dip"][1] + 0.34, [0, 52, -200], [0, 0, 0], 34),                             # three shells, from outside
-    (CUE["more"], [-62, 40, -176], [0, 0, 0], 34),
-    (CUE["cancel"], [-112, 48, -140], [0, 0, 0], 34),
-    (CUE["cancel"] + 0.4, [-112, 48, -140], [0, 0, 0], 34),
+    (CUE["dip"][1] + 0.34, [-90, 70, -300], [0, 0, 0], 46),                             # three shells, from outside
+    (CUE["more"], [-150, 80, -290], [0, 0, 0], 46),
+    (CUE["cancel"], [-210, 70, -240], [0, 0, 0], 46),
+    (CUE["cancel"] + 0.4, [-210, 70, -240], [0, 0, 0], 46),
     (CUE["glow"] - 0.1, [0, 0.4, 0.8], [0, 0.3, 70], 62),                             # inside: the whole sky should glow
     (t_why + 0.2, [0, 0.4, 0.8], [0, 0.3, 70], 62),
-    (CUE["time"] + 1.8, [0, 70, -205], [0, 0, 0], 34),                                # out, to watch light-travel time
-    (CUE["age0"], [-72, 46, -150], [0, 0, 0], 34),
-    (CUE["age1"], [-88, 40, -112], [0, 0, 0], 36),
-    (CUE["way"], [-62, 30, -84], [0, 0, 0], 40),
+    (CUE["time"] + 1.8, [-60, 100, -320], [0, 0, 0], 48),                                # out, to watch light-travel time
+    (CUE["age0"], [-120, 90, -330], [0, 0, 0], 48),
+    (CUE["age1"], [-130, 95, -340], [0, 0, 0], 48),
+    (CUE["way"] - 0.5, [-190, 110, -410], [0, 0, 0], 48),
+    (CUE["way"], [-190, 110, -410], [0, 0, 0], 48),
     (CUE["far"], [22, 18, -44], [0, 0, 30], 46),                                      # push in on "far"
     (CUE["begin"], [22, 18, -44], [0, 0, 30], 46),
-    (CUE["begin"] + 2.6, [0, 0.5, 1], [0, 0.3, 70], 60),                              # inside: a dark sky with a few stars
-    (CUE["clue"], [0, 0.5, 1.5], [5, 3, 70], 60),
+    (CUE["begin"] + 2.6, [0, 0.5, 1], [-45, 8, 60], 60),                              # inside: a dark sky; look left: one star lights
+    (t_tk, [0, 0.5, 1], [42, 14, 62], 60),                  # look right: another
+    (CUE["clue"], [0, 1.5, 1.5], [0, 26, 60], 60),                                    # up, on "clue"
     (t_rd - 0.2, [0, 0.5, 1.5], [-5, 2, 70], 60),
     (t_rd + 1.5, [0, 72, -120], [0, 0, 6], 36),                                       # the rings, from above
     (t_end - 0.15, [0, 76, -126], [0, 0, 6], 36),
@@ -79,8 +81,8 @@ SPINE = [0.5, 0.555]
 LABELS = [
     {"id": "l-you", "text": "you", "kind": "light", "anchor": "you", "t0": round(CUE["spokes0"] + 0.9, 4), "t1": round(CUE["dip"][0], 4), "side": 1, "v": "below", "fixed": True},
     {"id": "l-near", "text": "near: few, bright", "kind": "star", "anchor": "near", "t0": CUE["fainter"], "t1": round(CUE["more"] + 1.2, 4), "side": -1, "v": "above", "fixed": True},
-    {"id": "l-mid", "text": "middle: more, fainter", "kind": "body", "anchor": "mid", "t0": round(CUE["more"] + 0.6, 4), "t1": round(CUE["cancel"] - 0.2, 4), "side": 1, "v": "below", "fixed": True},
-    {"id": "l-far", "text": "far: most, faintest", "kind": "grav", "anchor": "far", "t0": CUE["more"], "t1": round(CUE["cancel"] + 0.2, 4), "side": 1, "v": "above", "fixed": True},
+    {"id": "l-mid", "text": "middle: more, fainter", "kind": "body", "anchor": "mid", "t0": round(CUE["more"] + 0.6, 4), "t1": round(CUE["cancel"] - 0.2, 4), "side": 1, "v": "above", "fixed": True},
+    {"id": "l-far", "text": "far: most, faintest", "kind": "grav", "anchor": "far", "t0": CUE["more"], "t1": round(CUE["cancel"] + 0.2, 4), "side": 1, "v": "below", "fixed": True},
     {"id": "l-hz", "text": "light-travel time (not to scale)", "kind": "light", "anchor": "hz", "t0": round(CUE["age0"] - 0.2, 4), "t1": round(CUE["way"] - 0.4, 4), "side": -1, "v": "above", "fixed": True},
 ]
 PILLS = [

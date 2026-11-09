@@ -45,7 +45,7 @@ const starMat = new THREE.ShaderMaterial({
   vertexShader: `attribute float rnd; uniform float uPx, uH, uSh, uGain; varying vec3 vC; varying float vA;
     void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; float r = length(position), d = length(mv.xyz);
       float size = clamp(30.0 / d, 0.9, 6.0) * (0.7 + rnd); gl_PointSize = uPx * size * (0.75 + 1.5 * (1.0 - smoothstep(0.0, 90.0, r)));
-      float b = (0.25 + 0.75 * rnd) / (1.0 + pow(r / 38.0, 1.3)); float lit = 1.0 - 0.93 * smoothstep(uH - 5.0, uH + 5.0, r);
+      float b = (0.25 + 0.75 * rnd) / (1.0 + pow(r / 38.0, 1.3)); float lit = 1.0 - 0.985 * smoothstep(uH - 4.0, uH + 4.0, r);
       vec3 c = vec3(0.93, 0.94, 1.0); if (uSh > 0.5) c = r < 36.0 ? vec3(0.95, 0.93, 0.65) : (r < 86.0 ? vec3(0.56, 0.82, 1.0) : vec3(0.73, 0.65, 1.0));
       vC = c; vA = b * lit * uGain * (1.0 + 2.5 * uSh * (1.0 - smoothstep(0.0, 60.0, r))) * 3.0; }`,
   fragmentShader: `varying vec3 vC; varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0) discard; float a = (1.0 - smoothstep(0.15, 1.0, r2)) * min(vA, 1.4); gl_FragColor = vec4(vC * a * 1.5, a); }`,
@@ -53,13 +53,13 @@ const starMat = new THREE.ShaderMaterial({
 });
 const field = new THREE.Points(sG, starMat); field.frustumCulled = false; scene.add(field);
 // the lane: stars strung along one line of sight; they pile up toward the far end and ramp to white
-const NL = 2600, lr = mul(8), lP = new Float32Array(NL * 3), lR = new Float32Array(NL);
+const NL = 7000, lr = mul(8), lP = new Float32Array(NL * 3), lR = new Float32Array(NL);
 for (let i = 0; i < NL; i++) { const z = 5 + 165 * Math.pow(lr(), 0.55), sp = 0.035 * z; lP.set([(lr() + lr() + lr() - 1.5) * sp, 0.3 + (lr() + lr() + lr() - 1.5) * sp * 0.7, z], i * 3); lR[i] = lr(); }
 const lG = new THREE.BufferGeometry(); lG.setAttribute("position", new THREE.BufferAttribute(lP, 3)); lG.setAttribute("rnd", new THREE.BufferAttribute(lR, 1));
 const laneMat = new THREE.ShaderMaterial({
-  uniforms: { uPx: { value: 3.2 * S1 }, uGain: { value: 1 } },
-  vertexShader: `attribute float rnd; uniform float uPx, uGain; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = uPx * (0.8 + rnd); vA = uGain * (0.22 + 0.5 * smoothstep(20.0, 150.0, position.z)); }`,
-  fragmentShader: `varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0) discard; float a = (1.0 - smoothstep(0.1, 1.0, r2)) * vA; gl_FragColor = vec4(vec3(1.0, 0.98, 0.95) * a * 1.5, a); }`,
+  uniforms: { uPx: { value: 5.2 * S1 }, uGain: { value: 1 } },
+  vertexShader: `attribute float rnd; uniform float uPx, uGain; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = uPx * (0.8 + rnd); vA = uGain * (0.4 + 0.8 * smoothstep(20.0, 150.0, position.z)); }`,
+  fragmentShader: `varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0) discard; float a = (1.0 - smoothstep(0.1, 1.0, r2)) * vA; gl_FragColor = vec4(vec3(1.0, 0.98, 0.95) * a * 2.4, a); }`,
   transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
 });
 const lane = new THREE.Points(lG, laneMat); lane.frustumCulled = false; scene.add(lane);
@@ -82,20 +82,23 @@ const fRayMesh = FRAYS.map(() => segment({ color: pos(line("teal", 0.95)), width
 // three shells (near, middle, far) and the horizon sphere: each three great circles
 const mkSphere = (col, w) => [XZ, XY, YZ].map(() => ring({ color: col, width: w, opacity: 0 }));
 const SH = [[30, mkSphere(pos(line("lemon", 0.9)), 3)], [70, mkSphere(pos(line("ice", 0.9)), 3)], [130, mkSphere(pos(line("lilac", 0.9)), 3)]];
+const hzSphere = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), new THREE.MeshBasicMaterial({ color: 0x2fd0b5, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending })); scene.add(hzSphere);
 const HZ = mkSphere(pos(line("teal", 0.95)), 4.5);
 for (const [, rs3] of SH) rs3.forEach((r) => scene.add(r.mesh)); HZ.forEach((r) => scene.add(r.mesh));
 const setSphere = (set, r, op) => set.forEach((rg, i) => rg.arc({ center: [0, 0, 0], r: Math.max(0.01, r), ...[XZ, XY, YZ][i] }).set({ opacity: op }));
 // photons crawling in from beyond the horizon, and a flow of light arriving from inside it
-const NPH = 130, pr = mul(37), PH = Array.from({ length: NPH }, (_, i) => { const th = Math.acos(2 * pr() - 1), ph = pr() * 6.2832; return { d: [Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)], r0: i < 80 ? 104 + pr() * 60 : 14 + pr() * 80, v: i < 80 ? 0.9 + pr() * 1.2 : 7 + pr() * 6, ph: pr() }; });
+const NPH = 200, pr = mul(37), PH = Array.from({ length: NPH }, (_, i) => { const th = Math.acos(2 * pr() - 1), ph = pr() * 6.2832; return { d: [Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)], r0: i < 130 ? 104 + pr() * 60 : 14 + pr() * 80, v: i < 80 ? 0.9 + pr() * 1.2 : 7 + pr() * 6, ph: pr() }; });
 const phP = new Float32Array(NPH * 3), phA = new Float32Array(NPH), phG = new THREE.BufferGeometry();
 phG.setAttribute("position", new THREE.BufferAttribute(phP, 3)); phG.setAttribute("alpha", new THREE.BufferAttribute(phA, 1));
 const phMat = new THREE.ShaderMaterial({
-  uniforms: { uPx: { value: 8 * S1 } },
+  uniforms: { uPx: { value: 15 * S1 } },
   vertexShader: `attribute float alpha; uniform float uPx; varying float vA; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; gl_PointSize = uPx * clamp(40.0 / length(mv.xyz), 0.8, 5.0); vA = alpha; }`,
   fragmentShader: `varying float vA; void main(){ vec2 q = gl_PointCoord * 2.0 - 1.0; float r2 = dot(q, q); if (r2 > 1.0 || vA < 0.01) discard; float a = (1.0 - smoothstep(0.1, 1.0, r2)) * vA; gl_FragColor = vec4(vec3(0.31, 0.89, 0.78) * a * 1.6, a); }`,
   transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
 });
 const photons = new THREE.Points(phG, phMat); photons.frustumCulled = false; scene.add(photons);
+const LITS = Array.from({ length: 16 }, (_, k) => { const a = -0.85 + 1.7 * ((k * 0.618) % 1), e = -0.3 + 0.6 * ((k * 0.381) % 1), r = 36 + 48 * ((k * 0.733) % 1); return { c: [r * Math.sin(a) * Math.cos(e), r * Math.sin(e), r * Math.cos(a) * Math.cos(e)], b: createBeacon({ color: pos(hdr(k % 2 ? "ice" : "lemon", 0.9)), px: 14, core: 0.7 }) }; });
+LITS.forEach((l) => scene.add(l.b.mesh));
 const you = createBeacon({ color: pos(hdr("teal", 1.3)), px: 26, core: 0.5 }); scene.add(you.mesh);
 const ringSun = ring({ color: pos(line("teal", 0.95)), width: 5, opacity: 0 }), ringFar = ring({ color: pos(line("teal", 0.95)), width: 5, opacity: 0 });
 scene.add(ringSun.mesh, ringFar.mesh);
@@ -109,8 +112,10 @@ const ctx = tc.getContext("2d");
 const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${Math.max(0, Math.min(1, a)).toFixed(3)})`;
 function overlay2d(t) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, W, H);
-  const wash = 0.62 * E.inout3(seg(t, CUE.cancel, CUE.surface + 0.8)) * (1 - E.inout3(seg(t, CUE.time + 0.2, CUE.time + 1.6)));           // the whole sky should glow (a slow ramp)
-  if (wash > 0.002) { const g = ctx.createRadialGradient(W / 2, 0.38 * H, 20 * sx, W / 2, 0.38 * H, 900 * sx); g.addColorStop(0, rgba([245, 246, 255], wash)); g.addColorStop(1, rgba([200, 205, 240], wash * 0.8)); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+  const wash = 0.94 * E.inout3(seg(t, CUE.cancel, CUE.surface + 0.8)) * (1 - E.inout3(seg(t, CUE.time + 0.2, CUE.time + 1.6)));           // the whole sky should glow (a slow ramp), warm star-surface white
+  if (wash > 0.002) { const g = ctx.createRadialGradient(W / 2, 0.38 * H, 20 * sx, W / 2, 0.38 * H, 900 * sx); g.addColorStop(0, rgba([255, 255, 250], wash)); g.addColorStop(1, rgba([255, 250, 234], wash * 0.96)); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+  const lk0 = E.out3(seg(t, FILM.loop0, FILM.loop0 + 0.45)), w0 = Math.max(1 - E.inout3(seg(t, 1.0, 3.0)), lk0) * (t < CUE.spokes0 || lk0 > 0 ? 1 : 0);        // frame 0: the lane's far end ramps to white (and again at the loop)
+  if (w0 > 0.002) { const gy = 0.43 * H, g = ctx.createRadialGradient(W / 2, gy, 10 * sx, W / 2, gy, 520 * sx); g.addColorStop(0, rgba([255, 253, 244], 0.78 * w0)); g.addColorStop(0.35, rgba([255, 246, 224], 0.42 * w0)); g.addColorStop(1, rgba([255, 240, 210], 0)); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
   const [d0, d1, d2] = CUE.dip;
   const dip = Math.max(E.inout3(seg(t, d0 - 0.1, d0 + 0.2)) * (1 - E.inout3(seg(t, d0 + 0.2, d0 + 0.45))), E.inout3(seg(t, d1 - 0.05, d1 + 0.2)) * (1 - E.inout3(seg(t, d1 + 0.2, d1 + 0.45))), E.inout3(seg(t, d2 - 0.1, d2 + 0.15)) * (1 - E.inout3(seg(t, d2 + 0.15, d2 + 0.4))));
   if (dip > 0.001) { ctx.fillStyle = rgba([8, 10, 28], dip); ctx.fillRect(0, 0, W, H); }
@@ -182,13 +187,14 @@ window.seek = function (t) {
   // the shells: each lights in turn on the narration
   const sOn = [fadeIn(tt, CUE.fainter, 0.5), fadeIn(tt, CUE.fainter + 1.5, 0.5), fadeIn(tt, CUE.more, 0.5)], sOff = 1 - fadeIn(tt, CUE.glow - 0.2, 0.5);
   SH.forEach(([rad, rs3], k) => setSphere(rs3, rad, 0.75 * sOn[k] * sOff));
+  hzSphere.scale.setScalar(Math.max(0.01, hr)); hzSphere.material.opacity = hon && tt < CUE.begin + 2.5 ? 0.09 * fadeIn(tt, CUE.time + 0.3, 0.6) * (1 - fadeIn(tt, CUE.begin + 0.5, 1.5)) : 0;
   setSphere(HZ, hr, hon && tt < CUE.begin + 2.5 ? 0.95 * fadeIn(tt, CUE.time + 0.3, 0.6) * (1 - fadeIn(tt, CUE.begin + 0.5, 1.5)) : 0);
-  S.near = [26 * Math.cos(0.4), 0, -26 * Math.sin(0.4) - 6]; S.mid = [-52, 0, 46]; S.far = [118, 0, -38]; S.hz = [hr * Math.cos(0.55), 0, -hr * Math.sin(0.55)];
+  S.near = [0, 31, 0]; S.mid = [0, 71, 0]; S.far = [0, -131, 0]; S.hz = [hr * Math.cos(0.55), 0, -hr * Math.sin(0.55)];
   // photons: crawl in from beyond the horizon (never arriving) and a flow of arriving light inside it
   PH.forEach((p, k) => {
     const on = tt >= CUE.way - 3.0 && tt < CUE.begin + 1.0;
     let r, a = 0;
-    if (k < 80) { r = p.r0 - p.v * Math.max(0, tt - (CUE.way - 3.0)); a = on && r > hr + 6 ? 0.9 * fadeIn(tt, CUE.way - 3.0, 0.8) * (1 - fadeIn(tt, CUE.begin, 1.0)) : 0; }
+    if (k < 130) { r = p.r0 - p.v * Math.max(0, tt - (CUE.way - 3.0)); a = on && r > hr + 6 ? 0.9 * fadeIn(tt, CUE.way - 3.0, 0.8) * (1 - fadeIn(tt, CUE.begin, 1.0)) : 0; }
     else { const cyc = ((tt * 0.16 + p.ph) % 1); r = Math.max(4, hr * 0.95 * (1 - cyc)); a = on && hon && tt < CUE.way + 4 ? 0.95 * Math.min(1, cyc * 6) * (r > 6 ? 1 : 0.2) * fadeIn(tt, CUE.age0, 0.5) : 0; }
     phP.set([p.d[0] * r, p.d[1] * r, p.d[2] * r], k * 3); phA[k] = a;
   });
@@ -198,6 +204,7 @@ window.seek = function (t) {
   const u1 = E.out3(seg(tt, CUE.sun, CUE.sun + 1.6)), u2 = E.out3(seg(tt, CUE.farthest, CUE.farthest + 2.6));
   ringSun.arc({ center: [0, 0, 0], r: Math.max(0.01, 5 * u1), ...XZ }).set({ opacity: u1 > 0.002 && tt < CUE.farthest + 0.2 ? 0.95 * (1 - 0.5 * u1) : 0 });
   ringFar.arc({ center: [0, 0, 0], r: Math.max(0.01, HF * u2), ...XZ }).set({ opacity: u2 > 0.002 ? 0.95 * (1 - 0.6 * u2) : 0 });
+  LITS.forEach((l, k) => { const t0 = k < 8 ? CUE.age1 + 0.3 + k * 0.62 : CUE.begin + 1.2 + (k - 8) * 0.9, on = k < 8 ? tt >= t0 && tt < CUE.begin + 1.5 : tt >= t0 && tt < CUE.rd + 0.6; l.b.set({ center: l.c, camera, opacity: on ? fadeIn(tt, t0, 0.45) * (1 - fadeIn(tt, k < 8 ? CUE.begin + 0.8 : CUE.rd, 0.6)) : 0 }); });
   overlay2d(t);
   hud.update(t); tRing.update(t); eRing.update(t);
   const lk = fadeIn(t, FILM.loop0, 0.45);

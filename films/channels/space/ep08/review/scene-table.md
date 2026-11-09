@@ -23,3 +23,5 @@ You sit at the middle of an endless star field (not to scale, badged "Illustrati
 
 Measured: render log 0 warnings, 1000 frames, 66.67 s. Last 0.17 s of audio mean -46.5 dB, max -31.3 dB (faded, no drop). Mix -14.1 LUFS.
 Sound sync PASS (label max 1 ms; the 3.2 s section sound 49.5 ms is a slow swell, allowed three frames). The middle-shell label moved to 16.6 s so its sound no longer collides with the far label.
+
+Round 3 (9 Nov): frame 0 is a dense star lane ramping to a white glow (and again at the loop; SSIM first vs last 0.964); near, middle and far pills sit apart (top, top, bottom of their shells); the glow wash is warm star-surface white; from 23.8 s the horizon is a teal sphere seen from far out, stars outside it are dimmed to 1.5%, photons crawl in; 30.2-38.3 s the camera pulls back as eight stars light one at a time; 44-54 s the camera looks left on "dark", right at "beginning" and up on "clue" while stars light one by one.
