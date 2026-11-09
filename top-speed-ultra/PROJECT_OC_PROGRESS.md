@@ -4,6 +4,45 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-10-17: the radial quick menu on a held Pause (UI pass, U3)
+
+Panel 3 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U3). `src/ui/Radial.tsx`, wired in
+`App.tsx`; the pad's Back in `src/game/input.ts` and `Game.ts`.
+
+- **Opening it** (while driving, no card up): hold the Pause chip 300 ms (touch or mouse; the same chip is the round
+  corner chip of the Minimal HUD), hold Tab, or hold the pad's Back. A tap on Pause still pauses; a quick Tab still
+  just moves focus; a short press of Back still toggles the HUD (now on release, since a hold means something).
+- **The ring**: six wedges of dark HUD glass around the OC mark, clockwise from the top: Map, Go to, Garage, Radio,
+  Camera, Settings, each with its own line icon (inline SVG) and label; the road behind is dimmed a little and blurred
+  under the ring. The chosen wedge turns sunset-tinted with a lit outer edge, and a pill under the ring says what it
+  does ("Your cars · pauses the drive", "Hide the corner map"). Wedges are about 100 × 120 px on a phone, and the whole
+  wedge is the target. On a phone held upright the ring sits between the speed box and corner window and the pedals.
+- **Picking**: slide onto a wedge and let go to pick it; let go on the centre to cancel; let go anywhere else and it
+  stays open to tap (the centre then reads "Close"). Keyboard: the arrows move the choice (focus follows), Enter picks,
+  Escape or a fresh Tab closes, and none of them reach the car (Escape doesn't pause, the arrows don't steer). Pad:
+  aim with the right stick or the d-pad (it doesn't look around while the menu is open), let go of Back to pick; at
+  rest it's the centre, so letting go cancels (the pad path is not exercised here: no gamepad in headless Chromium).
+  Only the ring takes taps, so by design the pedals and the steering rail keep working while it's open (not
+  separately tested); a tap elsewhere closes it.
+- **What each does**: Map shows or hides the corner's road map (a toast says which); Go to opens the Go to card (as
+  the top bar does); Garage and Settings pause the drive and open their card, and Done comes back to the pause screen;
+  Radio changes station; Camera changes the view. There is no full-screen map yet (U4), so Map is the corner window.
+- **Reduced motion**: a plain list in a glass card (icon, name, what it does), no fan, no animation.
+- **Checked**: `npx tsc --noEmit` exits 0; `npm run build` builds. `npm test -- --only=phone,launch,boot`: "20/20
+  passed", including the new phone check "Quick menu: hold Pause, slide onto Camera and let go; let go in place to tap;
+  Tab held, arrows, Escape" (a real held touch through CDP on a 390 × 844 phone: six choices in order; Camera: cockpit →
+  hood and still driving; let go in place, still open; its centre closes it; Tab held, ArrowRight focuses "Go to",
+  Escape closes it and the drive isn't paused). `tests/out/u3-radial-shots.mjs`: phone, a held touch slid onto Garage,
+  then Camera and let go (view cockpit → hood, not paused), a tap on Pause pauses; desktop, the mouse held on Pause and
+  moved onto Map, let go (corner map → off), let go on the centre (nothing changes), Tab held (Map focused), ArrowRight
+  ("Go to"), Escape (closed, not paused), a quick Tab only moved focus, End + Enter opened Settings over a paused drive,
+  a click on Pause paused; reduced motion, the list with no animations, Tab held, ArrowDown twice (Garage), Enter (the
+  Garage card, paused). No page errors, no sideways scroll at either size.
+- **Screenshots** (tests/out/ui-after/): radial-phone.png, radial-desktop.png, radial-reduced.png. `tools/ui-shots.mjs`
+  now captures the menu too (`<size>-radial.png`, opened with Tab held).
+- **Open**: the Garage card from the menu lets you switch to another car you own mid-drive (the panel was only
+  reachable from the main menu before); whether a mid-race switch should be allowed is a design call for later.
+
 ## 2026-10-17: the navigation card, the destination card and blue chevrons on the road (UI pass, U2)
 
 Panel 2 of the owner's concept board, built from `PROJECT_OC_UI_TARGET.md` (U2). It shows only with a route set
