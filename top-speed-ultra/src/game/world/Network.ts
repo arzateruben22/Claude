@@ -30,7 +30,7 @@ export const DIR_WORD: Record<string, string> = { N: 'North', S: 'South', E: 'Ea
 const CELL = 50;
 // the version of the height passes: bump it when bridgeSags(), levelOverlaps() or limitProfile() change what they do, so
 // a build never uses heights baked by an older version (npm test also checks the baked heights against the passes)
-export const LEVELS = 1;
+export const LEVELS = 2;
 interface Baked { version: number; sig: number; runs: [number, number, number][]; data: string }
 // How far a road can be over another's pavement and still count as on it: from 2.5 m below to LEVEL above, its surface
 // is left out there if the other is better ranked, and it has no barrier or crash cushion there. Further up it keeps
@@ -42,6 +42,15 @@ interface Baked { version: number; sig: number; runs: [number, number, number][]
 // takes up another road's heights only within GIVE_WAY.
 export const GIVE_WAY = 4.0, LEVEL = 2.5;
 export const onTop = (y: number, oy: number, above = LEVEL) => y - oy >= -2.5 && y - oy <= above;
+// Overhead clearance over a carriageway's travel lanes (California builds to about 4.9 m; 4.5 m is our floor): nothing of
+// another road (its surface, deck, soffit, barriers, paint, the side of a cut) may be from 0.05 m to CLEAR over a
+// carriageway's drawn travel lanes, widened by SIDE_CLEAR. A deck is thinned to DECK_MIN over them, so a road's surface
+// clears them from CLEAR_TOP. (The lanes check had 2 m: ramp 800's surface stopped in mid-air 2.3 m over the I-5
+// North's left lane, and the side closing it hung 2.01 to 2.31 m over that lane, a beam at windscreen height.)
+export const CLEAR = 4.5, DECK_MIN = 0.4, CLEAR_TOP = CLEAR + DECK_MIN, SIDE_CLEAR = 0.05;
+// how far from a carriageway's pavement a road cut back off its travel lanes (Network.trimEnds) ends: its end wall stands
+// on the ground beside it, not on its shoulder
+const END_CLEAR = 0.5;
 const cellKey = (cx: number, cz: number) => (cx + 4096) * 8192 + (cz + 4096);
 
 export class Network {
@@ -162,7 +171,46 @@ export class Network {
       this.loadMs.level = performance.now() - t1;
     }
     this.mapYs = null;
+    this.trimEnds();
   }
+
+  // A road that just stops (no next, a dead end on the map) with its end out over a better-ranked carriageway's travel
+  // lanes, higher than at grade with them (over LEVEL), is cut back so it ends before them: its deck (out to the backs of
+  // its barriers) clear of that carriageway's pavement, widened by END_CLEAR, and its end closed by a crash cushion and a wall down to the
+  // ground (Roads). Ramp 1164 at the I-5 North's Disney Way / Gene Autry Way exit stops on the map 5 m over the 5's left
+  // lanes (on its way to Gene Autry Way, a street drawn as a bridge): its end hung in mid-air over them, a slab with a
+  // crash cushion on it (2.7 to 3.8 m up in the live game, before the levelling held it clear). The same on the I-5
+  // South: ramps 261 (7 m up) and 774 (5 m). Sets p.end, which Roads, the physics' end wall and the end-of-road check use.
+  private trimEnds() {
+    const PRQ = { s: 0, d: 0 };
+    for (const p of this.paths) {
+      p.end = p.len;
+      if (p.next || p.main) continue;
+      const ds = [p.wallL - 0.6, p.paveL, (p.paveL + p.paveR) / 2, p.paveR, p.wallR + 0.6];
+      // is the deck at s over such lanes?
+      const over = (s: number) => {
+        for (const d of ds) {
+          const a = this.at(p, s, d);
+          for (const h of this.near(a.x, a.z, 1, HITS_END)) {
+            const q = h.path;
+            if (q === p || !q.main || h.s < 0 || h.s > q.len || h.d < q.paveL - END_CLEAR || h.d > q.paveR + END_CLEAR) continue;
+            const pr = q.project(a.x, a.z, h.s, PRQ), dy = a.y - q.height(clamp(pr.s, 0, q.len));
+            if (dy > LEVEL && dy < 30) return true;
+          }
+        }
+        return false;
+      };
+      // walked back from the end, 1 m at a time, while it's over them (and 3 m past a gap, as a deck can leave the
+      // lanes between two)
+      let cut = NaN, gap = 0;
+      for (let t = 0.25; t < Math.min(p.len, 400); t += 1) {
+        if (over(p.len - t)) { cut = p.len - t; gap = 0; } else if (!isNaN(cut) || t > 3) { if (++gap > 3 || isNaN(cut)) break; }
+      }
+      if (isNaN(cut)) continue;
+      p.end = Math.max(Math.min(p.len, 2), cut - 1.5);
+    }
+  }
+  private at(p: Path, s: number, d: number) { return p.at(s, d, AT_END); }
   // what the baked heights were made from: the roads' sample counts, their ends' heights on the map and the junctions
   sig = 0;
   private signature() {
@@ -353,6 +401,10 @@ export class Network {
             zone[k] = 1; delta[k] = delta[k0] + (delta[k1] - delta[k0]) * t; share[k] = share[k0] + (share[k1] - share[k0]) * t;
           }
         }
+      }
+      // over a better-ranked carriageway's travel lanes: at grade with it, or clear of it (laneRuns)
+      if (this.laneRuns(p, delta, zone, share, LANES, SMOOTH)) any = true;
+      if (any) {
         // elsewhere: eased out from the nearest stretch on each side, or carried across a short gap between two
         const out = spread(delta, zone);
         // smoothed, so a switch between two roads followed is a bump, not a step
@@ -389,6 +441,92 @@ export class Network {
       if (sag) for (let i = 0; i < n; i++) off[i] += pre(i);
       settled.set(p, off);
     }
+  }
+
+  // Where a road's deck (out to the backs of its barriers, wallL - 0.6 to wallR + 0.6) reaches a better-ranked
+  // carriageway's travel lanes (widened by SIDE_CLEAR), it may be at grade with that carriageway (Roads leaves its
+  // surface out up to LEVEL over the other's, which takes its place) or clear it (CLEAR_TOP over it), nothing between:
+  // a road between the two hung its surface, deck and barriers over those lanes 2.5 to 4.9 m up (ramp 800 along the I-5
+  // North's left lanes, where its surface stopped in mid-air 2.3 m over them, and the connectors at the 5/55, 405/55,
+  // 57/91 and 5/405 rising away from a freeway over its outer lanes). Each stretch over one carriageway's lanes is a
+  // run (judged on the map's heights, before this road is levelled), held `pad` samples past either end (the smoothing
+  // spreads a change over that many):
+  // - alongside it (within 45 degrees), the same way, and at grade with it somewhere in the run (leaving or joining it,
+  //   rising away from it or settling onto it while still over its lanes): it follows that carriageway over the whole
+  //   run, at `weight`, and climbs once clear of its lanes. (However high it is in the middle: a hump there is that road
+  //   going over something crossing the carriageway, which clears the carriageway, and so the road following it; ramp
+  //   800's 9 m hump over the I-5 North's left lanes, under ramp 1203 and East 4th Street, 7 m over the freeway.)
+  // - crossing it, the other way, or never down near it: it is held CLEAR_TOP plus 0.1 m over it (raised where it's
+  //   lower, kept where it isn't), at 100 times `weight`, so following another road nearby (this pass's own, or a run
+  //   of the first kind) can't bring it down onto those lanes: ramp 305, following the I-5 North's left lanes, crosses
+  //   the I-5 South 7 m up on the map, and was brought down to 1.9 m over its lanes.
+  // - crossing it at grade (a road joining it from the side): left as it is.
+  // What the profile limits don't let it hold (a climb from a followed carriageway to clear the next one, or a main's
+  // grade) is left to Roads, which cuts the road's deck back off those lanes. delta, zone and share are levelOverlaps'
+  // offsets, held samples and weights; returns whether any was held.
+  private laneRuns(p: Path, delta: Float32Array, zone: Uint8Array, share: Float32Array, weight: number, pad: number) {
+    const n = p.n, DL = p.wallL - 0.6, DR = p.wallR + 0.6, ALONG = Math.cos(Math.PI / 4), PRQ = { s: 0, d: 0 }, GAP = 6;
+    const cand = new Map<Path, number>();
+    type Run = { q: Path; k0: number; k1: number; lo: number; hi: number; along: boolean; qs0: number; qs1: number };
+    const open = new Map<Path, Run>(), runs: Run[] = [];
+    for (let k = 0; k < n; k += 2) {
+      const x = p.xs[k], z = p.zs[k];
+      if (k % 24 === 0) {
+        const cx = Math.floor(x / CELL), cz = Math.floor(z / CELL);
+        for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) {
+          const a = this.grid.get(cellKey(cx + i, cz + j));
+          if (!a) continue;
+          for (let m = 0; m < a.length; m += 2) { const q = this.paths[a[m]]; if (q !== p && q.main && rank(q) < rank(p) && !cand.has(q)) cand.set(q, a[m + 1] * STEP); }
+        }
+      }
+      for (const [q, guess] of cand) {
+        const pr = q.project(x, z, guess, PRQ);
+        cand.set(q, pr.s);
+        const r = open.get(q);
+        if (Math.abs(pr.d) > 80 || pr.s < -60 || pr.s > q.len + 60) { cand.delete(q); if (r) { runs.push(r); open.delete(q); } continue; }
+        let hit = false;
+        if (pr.s >= 0 && pr.s <= q.len) {
+          // the deck's cross-section, on that carriageway's offsets
+          const c = Math.cos(p.hs[k] - q.heading(pr.s)), a = pr.d + Math.min(DL * c, DR * c), b = pr.d + Math.max(DL * c, DR * c);
+          const dy = p.ys[k] - q.height(pr.s);
+          // (however high it is over them: a hump in the middle of a run is that road going over something
+          // crossing the carriageway, which clears the carriageway, and so the road following it; ramp 800's 9 m hump
+          // over the I-5 North's left lanes under ramp 1203 and East 4th Street, 7 m over the freeway)
+          hit = Math.min(b, q.edgeR + SIDE_CLEAR) - Math.max(a, q.edgeL - SIDE_CLEAR) > 0 && dy > -2.5;
+          if (hit) {
+            if (r && k - r.k1 <= GAP) { r.k1 = k; r.lo = Math.min(r.lo, dy); r.hi = Math.max(r.hi, dy); r.qs1 = pr.s; if (c < ALONG) r.along = false; }
+            else { if (r) runs.push(r); open.set(q, { q, k0: k, k1: k, lo: dy, hi: dy, along: c >= ALONG, qs0: pr.s, qs1: pr.s }); }
+          }
+        }
+        if (!hit && r && k - r.k1 > GAP) { runs.push(r); open.delete(q); }
+      }
+    }
+    for (const r of open.values()) runs.push(r);
+    let held = false;
+    // following runs first, so a clearing one wins where the two meet
+    const follows = (r: Run) => r.along && r.lo <= LEVEL;
+    runs.sort((a, b) => Number(follows(b)) - Number(follows(a)));
+    for (const r of runs) {
+      const follow = follows(r);
+      if (follow ? r.hi <= LEVEL : r.lo <= LEVEL || r.lo >= CLEAR_TOP + 3) continue;
+      const q = r.q, k0 = Math.max(0, r.k0 - pad), k1 = Math.min(n - 1, r.k1 + pad);
+      let g = r.qs0 - (r.k0 - k0) * STEP, lift = 0;
+      for (let k = k0; k <= k1; k++) {
+        const pr = q.project(p.xs[k], p.zs[k], g, PRQ);
+        g = pr.s;
+        const qy = q.height(clamp(pr.s, 0, q.len));
+        if (follow) delta[k] = qy - p.ys[k];
+        else {
+          // (past the run's ends, the lift at its end)
+          if (k >= r.k0 && k <= r.k1) lift = Math.max(0, qy + CLEAR_TOP + 0.1 - p.ys[k]);
+          else if (k < r.k0) { const pq = q.project(p.xs[r.k0], p.zs[r.k0], r.qs0, PRQ); lift = Math.max(0, q.height(clamp(pq.s, 0, q.len)) + CLEAR_TOP + 0.1 - p.ys[r.k0]); }
+          delta[k] = Math.max(zone[k] ? delta[k] : 0, lift);
+        }
+        zone[k] = 1; share[k] = follow ? weight : weight * 100;
+      }
+      held = true;
+    }
+    return held;
   }
 
   // bare-earth height (metres above sea level), bilinear
@@ -535,7 +673,7 @@ export class Network {
         let a = NaN, best = 0;
         const m = Math.ceil((p.paveR - p.paveL) / 0.5);
         for (let k = 0; k <= m + 1; k++) {
-          const d = p.paveL + ((p.paveR - p.paveL) * k) / m, at = k <= m ? p.at(p.len - 0.5, d, AT) : null;
+          const d = p.paveL + ((p.paveR - p.paveL) * k) / m, at = k <= m ? p.at(p.end - 0.5, d, AT) : null;
           const clear = !!at && !this.covered(at.x, at.z, at.y, p, 0.6, false, LEVEL);
           if (clear && isNaN(a)) a = d;
           if (!clear && !isNaN(a)) {
@@ -562,7 +700,7 @@ export class Network {
       // a road's barriers stop the cars on roads within LEVEL of it, the ones it can drive onto (surfaces()): a barrier
       // 2.5 to 4 m over another road's lanes is overhead there, not a wall in them
       if (Math.abs(p.height(clamp(h.s, 0, p.len)) - y) > LEVEL) continue;
-      const i0 = clamp(Math.floor((h.s - r) / STEP), 0, p.n - 2), i1 = clamp(Math.ceil((h.s + r) / STEP), 0, p.n - 2);
+      const i0 = clamp(Math.floor((h.s - r) / STEP), 0, p.n - 2), i1 = clamp(Math.ceil((h.s + r) / STEP), 0, p.end < p.len ? Math.floor(p.end / STEP) - 1 : p.n - 2);
       for (const side of ['L', 'R'] as const) {
         const d = side === 'L' ? p.wallL : p.wallR;
         for (let i = i0; i <= i1; i++) {
@@ -582,10 +720,10 @@ export class Network {
         }
       }
       // a dead end: a wall across the end of the road
-      const span = !p.next && p.len - h.s < r + 5 ? this.endSpan(p) : null;
+      const span = !p.next && p.end - h.s < r + 5 ? this.endSpan(p) : null;
       if (span) {
         // across the clear part of the end (out to the barriers' faces where it reaches the pavement's edges)
-        const e = p.len - 0.5, da = span.a <= p.paveL + 0.01 ? p.wallL : span.a, db = span.b >= p.paveR - 0.01 ? p.wallR : span.b;
+        const e = p.end - 0.5, da = span.a <= p.paveL + 0.01 ? p.wallL : span.a, db = span.b >= p.paveR - 0.01 ? p.wallR : span.b;
         const a = p.at(e, da, AT), ax = a.x, az = a.z; const b = p.at(e, db, AT);
         const hd = p.heading(e);
         if (Math.abs(a.y - y) <= 2) out.push({ ax, az, bx: b.x, bz: b.z, nx: -Math.sin(hd), nz: -Math.cos(hd), y: a.y, capA: false, capB: false });
@@ -657,4 +795,4 @@ function lands(p: Path, x: number, z: number, pr: { s: number; d: number }) {
   return Math.abs(Math.hypot(a.x - x, a.z - z) - Math.abs(pr.s - sc)) < 0.5;
 }
 const HITS: Hit[] = [], HITS2: Hit[] = [], HITS3: Hit[] = [], HITS4: Hit[] = [];
-const AT = { x: 0, y: 0, z: 0, h: 0 };
+const AT = { x: 0, y: 0, z: 0, h: 0 }, AT_END = { x: 0, y: 0, z: 0, h: 0 }, HITS_END: Hit[] = [];

@@ -333,6 +333,164 @@ await group('boot', async (use) => {
     expect(r.found.length === 0, `${r.found.length} spots, such as ${r.found.slice(0, 5).join('; ')}`);
     return `${r.built.toLocaleString()} chunks and bridges built, ${r.tris.toLocaleString()} triangles: nothing in a travel lane`;
   });
+  // Where a road's surface is left out over a better-ranked road under it (by up to LEVEL), what stays of it must not
+  // stand over that road with its edge open, and its paint must go with it. The CA-241 North 0.1 to 2.3 m over the
+  // CA-91 West: from the seat the eye ran in under the 241's surface where it was cut, to the dry grass under its deck,
+  // a yellow saw-tooth in its lanes, and its deck's soffit lay as grey steps a few centimetres over the 91. Every chunk
+  // of every road on or within 40 m of a carriageway that a better-ranked road can cut: across its pavement every 0.25
+  // m, along it every metre, wherever a point the road's surface covers is next to one it doesn't and a road under
+  // that one is more than 0.1 m lower, something of the chunk (a side) must close the gap halfway down; no paint quad
+  // where its own road's surface under it was left out; and no other road's paint or shoulder in a carriageway's drawn
+  // travel lanes 0.1 to 2 m up. (0.1 m: the sides close gaps from 0.005 m, but 100 cut edges 0.05 to 0.09 m over the
+  // road under them, and the I-405 South's shoulder 0.06 m up in the CA-22 East's lanes at 3,318 m, are still open.)
+  await check('no cut road surface left open over the road under it, no paint where its surface went', async () => {
+    const r = await game(page, () => {
+      // <cut-scan>
+      const g = window.__game, net = g.net, roads = g.roads, M = roads.m;
+      const SURF = new Set([M.asphalt, M.pcc, M.shoulder]), rank = (q) => (q.main ? 0 : 1e6) + q.id;
+      const V3 = g.camera.position.constructor, A = new V3(), B = new V3(), C = new V3();
+      const found = { open: [], paint: [], other: [] }, seen = new Set();
+      let chunks = 0, pairs = 0, quads = 0, exempt = 0;
+      const note = (kind, key, msg) => { if (seen.has(key)) return; seen.add(key); found[kind].push(msg); };
+      for (const desc of roads.descs) {
+        const p = desc.path;
+        if (!p || (window.__scanOnly && !window.__scanOnly(desc))) continue;
+        const near = net.near(desc.x, desc.z, desc.r + 40, []);
+        if (!p.main && !near.some((h) => h.path.main)) continue;
+        if (!near.some((h) => h.path !== p && rank(h.path) < rank(p))) continue;
+        const b = roads.buildChunk(desc); chunks++;
+        b.group.updateMatrixWorld(true);
+        // the chunk's triangles in world x/z (and heights), bucketed by 1 m cell: its own surface, its paint, the rest
+        const cell = (x, z) => Math.floor(x) * 100003 + Math.floor(z);
+        const buckets = { surf: new Map(), rest: new Map() }, paint = [], shoulder = [];
+        b.group.traverse((o) => {
+          if (!o.isMesh || o.isInstancedMesh) return;
+          const pos = o.geometry.attributes.position, idx = o.geometry.index, nt = (idx ? idx.count : pos.count) / 3;
+          const kind = SURF.has(o.material) ? 'surf' : o.material === M.paint ? 'paint' : 'rest';
+          for (let t = 0; t < nt; t++) {
+            const v = [0, 1, 2].map((k) => { const i = idx ? idx.getX(t * 3 + k) : t * 3 + k; A.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld); return [A.x + b.ox - b.group.position.x, A.y, A.z + b.oz - b.group.position.z]; });
+            if (kind === 'paint') { if (t % 2 === 0) paint.push(v); continue; }
+            if (o.material === M.shoulder) shoulder.push(v);
+            const map = buckets[kind];
+            const x0 = Math.floor(Math.min(v[0][0], v[1][0], v[2][0])), x1 = Math.floor(Math.max(v[0][0], v[1][0], v[2][0]));
+            const z0 = Math.floor(Math.min(v[0][2], v[1][2], v[2][2])), z1 = Math.floor(Math.max(v[0][2], v[1][2], v[2][2]));
+            for (let x = x0; x <= x1; x++) for (let z = z0; z <= z1; z++) { const k = x * 100003 + z; let a = map.get(k); if (!a) map.set(k, (a = [])); a.push(v); }
+          }
+        });
+        // the height of the chunk's own surface at (x, z), or NaN
+        const surfY = (x, z) => {
+          let y = NaN;
+          for (const [a, bb, c] of buckets.surf.get(cell(x, z)) ?? []) {
+            const d = (bb[2] - c[2]) * (a[0] - c[0]) + (c[0] - bb[0]) * (a[2] - c[2]);
+            if (!d) continue;
+            const u = ((bb[2] - c[2]) * (x - c[0]) + (c[0] - bb[0]) * (z - c[2])) / d, v = ((c[2] - a[2]) * (x - c[0]) + (a[0] - c[0]) * (z - c[2])) / d;
+            if (u >= -1e-4 && v >= -1e-4 && u + v <= 1.0001) { const yy = a[1] * u + bb[1] * v + c[1] * (1 - u - v); if (!(yy <= y)) y = yy; }
+          }
+          return y;
+        };
+        // does any of the rest of the chunk cross the segment from (ax, y, az) to (bx, y, bz)?
+        const closed = (ax, az, bx, bz, y) => {
+          const dir = new V3(bx - ax, 0, bz - az), len = dir.length(); dir.multiplyScalar(1 / len);
+          const o = new V3(ax, y, az), e1 = new V3(), e2 = new V3(), pv = new V3(), tv = new V3(), qv = new V3();
+          const tried = new Set();
+          const ks = [];
+          for (let x = Math.floor(Math.min(ax, bx)); x <= Math.floor(Math.max(ax, bx)); x++) for (let z = Math.floor(Math.min(az, bz)); z <= Math.floor(Math.max(az, bz)); z++) ks.push(x * 100003 + z);
+          for (const k of ks) for (const v of buckets.rest.get(k) ?? []) {
+            if (tried.has(v)) continue; tried.add(v);
+            A.set(...v[0]); B.set(...v[1]); C.set(...v[2]);
+            e1.subVectors(B, A); e2.subVectors(C, A); pv.crossVectors(dir, e2); const det = e1.dot(pv);
+            if (Math.abs(det) < 1e-9) continue;
+            tv.subVectors(o, A); const u = tv.dot(pv) / det; if (u < -1e-4 || u > 1.0001) continue;
+            qv.crossVectors(tv, e1); const w = dir.dot(qv) / det; if (w < -1e-4 || u + w > 1.0001) continue;
+            const t = e2.dot(qv) / det;
+            if (t >= -0.1 && t <= len + 0.1) return true;     // (10 cm: a sample right on a cut edge that runs nearly along the road)
+          }
+          return false;
+        };
+        // the highest better-ranked road at (x, z) within LEVEL of y (one that can take this one's place), if it is
+        // lower than y by more than 0.1 m, or NaN
+        // (not where a better-ranked road is over it there, up to LEVEL over this one, its pavement widened by 0.3 m: that
+        // road takes this one's place, as the generator's cut has it)
+        const under = (x, z, y) => {
+          let best = NaN;
+          for (const h of net.near(x, z, 1.3, [])) {
+            const q = h.path;
+            if (q === p || rank(q) > rank(p) || h.s < 0 || h.s > q.len) continue;
+            const qy = q.height(h.s);
+            if (qy > y + 0.1 && qy <= y + 2.5 && h.d >= q.paveL - 0.3 && h.d <= q.paveR + 0.3) return NaN;
+            if (h.d < q.paveL || h.d > q.paveR) continue;
+            if (qy > y - 2.6 && qy < y + 2.5 && !(qy <= best)) best = qy;
+          }
+          return best < y - 0.1 ? best : NaN;
+        };
+        // An open edge is exempt where a side closing it would stand in a carriageway's drawn travel lanes (a wall in
+        // its lanes; the lanes check above forbids it), by the generator's own rule (roads.sideFoot): at the edge, or
+        // within PIECE of it (the generator leaves out a side's piece, SIDE_PIECE long, if either end of it can't stand),
+        // nothing of a side can stand, or its foot has to stay over the lowest height the closing test above tries
+        const PIECE = 0.45, RING = [[0, 0]];
+        for (const r of [PIECE / 2, PIECE]) for (let k = 0; k < 12; k++) RING.push([r * Math.cos((k * Math.PI) / 6), r * Math.sin((k * Math.PI) / 6)]);
+        const inLanes = (x, z, top, foot) => RING.some(([dx, dz]) => { const f = roads.sideFoot(x + dx, z + dz, top, foot, p); return isNaN(f) || f > top - (top - foot) * 0.75; });
+        const s0 = desc.k * 160, s1 = Math.min(p.end, s0 + 160), D = 0.25;
+        const nd = Math.floor((p.paveR - p.paveL - 0.1) / D);
+        let prev = null;
+        for (let s = s0 + 0.5; s < s1 - 0.5; s += 1) {
+          const row = [];
+          for (let k = 0; k <= nd; k++) { const a = p.at(s, p.paveL + 0.05 + k * D); row.push([a.x, a.z, surfY(a.x, a.z)]); }
+          const test = (P, Q) => {
+            if (isNaN(P[2]) === isNaN(Q[2])) return;
+            let [top, low] = isNaN(Q[2]) ? [P, Q] : [Q, P];
+            // the edge between them, to 2 cm: the gap is measured there (where a ramp climbs away, 0.5 m on, it's another)
+            for (let it = 0; it < 6; it++) {
+              const m = [(top[0] + low[0]) / 2, (top[1] + low[1]) / 2], y = surfY(m[0], m[1]);
+              if (isNaN(y)) low = [m[0], m[1], NaN]; else top = [m[0], m[1], y];
+            }
+            const ex = low[0] - top[0], ez = low[1] - top[1], el = Math.hypot(ex, ez) || 1;
+            low = [top[0] + (ex / el) * 0.12, top[1] + (ez / el) * 0.12, NaN];
+            top = [top[0] - (ex / el) * 0.12, top[1] - (ez / el) * 0.12, top[2]];
+            const yb = under(low[0], low[1], top[2]);
+            if (isNaN(yb)) return;
+            pairs++;
+            // (a quarter, half and three quarters of the way down: where the edge climbs, the gap at the sample isn't the gap where the edge crosses)
+            if ([0.25, 0.5, 0.75].some((f) => closed(top[0], top[1], low[0], low[1], top[2] - (top[2] - yb) * f))) return;
+            if (inLanes((top[0] + low[0]) / 2, (top[1] + low[1]) / 2, top[2], yb)) { exempt++; pairs--; return; }
+            if (window.__scanDebug) window.__scanDebug.push({ id: p.id, s, P: [P[0], P[1], P[2]], Q: [Q[0], Q[1], Q[2]], yb, pr: p.project(low[0], low[1], s, { s: 0, d: 0 }) });
+            note('open', `${p.id}|${Math.round(s / 20)}`, `${p.label || 'ramp ' + p.id} at ${Math.round(s)} m, ${(top[2] - yb).toFixed(2)} m over the road under it`);
+          };
+          for (let k = 0; k < nd; k++) test(row[k], row[k + 1]);
+          if (prev) for (let k = 0; k <= nd; k++) test(prev[k], row[k]);
+          prev = row;
+        }
+        // paint: each quad's middle over its own road's surface
+        for (const v of paint) {
+          quads++;
+          const x = (v[0][0] + v[1][0] + v[2][0]) / 3, z = (v[0][2] + v[1][2] + v[2][2]) / 3, y = (v[0][1] + v[1][1] + v[2][1]) / 3, sy = surfY(x, z);
+          if (!isNaN(sy) && y - sy < 0.1) continue;     // (under it, it is hidden)
+          const pr = p.project(x, z, s0 + 80, { s: 0, d: 0 });
+          if (pr.s < s0 || pr.s > s1) continue;     // a dot across the chunk's end, on the next chunk's surface
+          note('paint', `p${p.id}|${Math.round(x / 20)}|${Math.round(z / 20)}`, `paint of ${p.label || 'ramp ' + p.id} at ${pr.s.toFixed(0)} m, ${pr.d.toFixed(2)} m across (edges ${p.edgeL.toFixed(2)}, ${p.edgeR.toFixed(2)}; pavement ${p.paveL.toFixed(2)}, ${p.paveR.toFixed(2)}) ${isNaN(sy) ? 'with none of its surface under it' : (y - sy).toFixed(2) + ' m off its surface'}`);
+        }
+        // another road's paint or shoulder in a carriageway's drawn travel lanes, 0.05 to 2 m up
+        for (const [list, kind] of [[paint, 'paint'], [shoulder, 'shoulder']]) for (const v of list) {
+          const x = (v[0][0] + v[1][0] + v[2][0]) / 3, z = (v[0][2] + v[1][2] + v[2][2]) / 3, y = (v[0][1] + v[1][1] + v[2][1]) / 3;
+          for (const h of net.near(x, z, 1, [])) {
+            const m = h.path;
+            if (m === p || !m.main || h.s < 0 || h.s > m.len || h.d < m.edgeL + 0.15 || h.d > m.edgeR - 0.15) continue;
+            const dy = y - m.height(h.s);
+            if (dy < 0.1 || dy > 2) continue;
+            const a = m.at(h.s, h.d);
+            if (net.covered(a.x, a.z, a.y, m, -0.25, true, 2.5)) continue;     // that lane isn't drawn here
+            note('other', `${kind}|${p.id}|${m.id}|${Math.round(h.s / 50)}`, `${kind} of ${p.label || 'ramp ' + p.id} ${dy.toFixed(2)} m up in ${m.label}'s lanes at ${Math.round(h.s)} m`);
+          }
+        }
+        roads.drop(b);
+      }
+      return { chunks, pairs, quads, exempt, found };
+      // </cut-scan>
+    });
+    const f = r.found, bad = f.open.length + f.paint.length + f.other.length;
+    expect(bad === 0, `${f.open.length} cut edges open over the road under them (such as ${f.open.slice(0, 4).join('; ')}), ${f.paint.length} paint spots (such as ${f.paint.slice(0, 3).join('; ')}), ${f.other.length} other roads' paint or shoulder in lanes (such as ${f.other.slice(0, 3).join('; ')})`);
+    return `${r.chunks.toLocaleString()} chunks a better-ranked road can cut, ${r.pairs.toLocaleString()} cut edges closed (${r.exempt.toLocaleString()} more left open where a side would stand in a carriageway's lanes), ${r.quads.toLocaleString()} paint quads on their surface, no other road's paint or shoulder in a carriageway's lanes`;
+  });
   // the network moves roads' heights at load (a road lying on a better-ranked one along it takes its heights; a bridge
   // the map brought down to the road under it is spanned), and every road meeting at a junction has to stay level with
   // the others there: the first version left ramp pieces up to 2.8 m above or below the piece they carry on from, a step
