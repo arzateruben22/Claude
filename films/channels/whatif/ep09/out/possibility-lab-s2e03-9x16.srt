@@ -109,12 +109,3 @@ only the lift matters.
 00:01:00,235 --> 00:01:04,000
 10 times higher needs
 10 times more rope.
-
-25
-00:01:04,400 --> 00:01:07,085
-Next envelope:
-a shuffled deck,
-
-26
-00:01:07,085 --> 00:01:08,845
-and a very rare order.
