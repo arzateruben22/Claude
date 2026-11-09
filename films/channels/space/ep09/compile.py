@@ -90,7 +90,7 @@ LABELS = [
 PILLS = [
     {"id": "p-table", "text": "neutron capture (illustration)", "t0": round(t_n + 0.4, 4), "t1": round(t_c - 0.3, 4), "at": [90 / 1080, 0.165]},
     {"id": "p-city", "text": "star width ≈ Manhattan length", "t0": round(CUE["city"] - 0.4, 4), "t1": round(CUE["tm"] - 0.3, 4), "at": [90 / 1080, 0.165]},
-    {"id": "p-debate", "text": "how much from crashes? debated", "t0": round(CUE["debate"] - 0.3, 4), "t1": round(CUE["zoom"] - 0.2, 4), "at": [90 / 1080, 0.165]},
+    {"id": "p-debate", "text": "how much from crashes? debated", "t0": round(CUE["debate"] - 0.3, 4), "t1": round(CUE["zoom"] - 0.2, 4), "at": [90 / 1080, 0.255]},
     {"id": "p-hours", "text": "times not to scale", "t0": round(CUE["rip"] - 0.2, 4), "t1": round(t_end - 0.45, 4), "at": [90 / 1080, 0.165]},
 ]
 BADGES = [

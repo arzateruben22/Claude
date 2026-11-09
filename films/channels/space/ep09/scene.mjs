@@ -95,7 +95,7 @@ const ringMat = new THREE.ShaderMaterial({
 const mergeB = createBeacon({ color: pos(hdr("lilac", 1.4)), px: 26, core: 0.5 }); scene.add(mergeB.mesh);
 const jewel = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.1, 24, 180), ringMat);
 jewel.position.fromArray(RING); jewel.rotation.set(1.05, 0.4, 0.2);
-const stone = new THREE.Mesh(new THREE.OctahedronGeometry(0.19, 1), new THREE.MeshBasicMaterial({ color: 0xcfeeff })); stone.position.set(0, 1.3, 0); jewel.add(stone);
+const stone = new THREE.Mesh(new THREE.OctahedronGeometry(0.11, 1), new THREE.MeshBasicMaterial({ color: 0xb8d8f0 })); stone.position.set(0, 1.3, 0); jewel.add(stone);
 scene.add(jewel);
 const rig = createRig(FILM.cam);
 
@@ -125,7 +125,7 @@ function explainer(t, k) {
   if (k <= 0.01) return;
   ctx.fillStyle = rgba(VOID, 0.985 * k); ctx.fillRect(0, 0, W, H);
   const hK = fadeIn(t, CUE.heavier - 0.2, 0.7);
-  const zin = E.inout3(seg(t, CUE.heavier + 0.2, CUE.heavier + 1.2)) * (1 - E.inout3(seg(t, CUE.soak - 0.8, CUE.soak - 0.1))), zs = 1 + 0.4 * zin, zfx = 400 * zin + 540 * (1 - zin), zfy = 470 * zin + 450 * (1 - zin);
+  const zin = E.inout3(seg(t, CUE.heavier + 0.2, CUE.heavier + 1.2)) * (1 - E.inout3(seg(t, CUE.soak - 0.8, CUE.soak - 0.1))), zs = 1 + 0.12 * zin, zfx = 540, zfy = 470;
   ctx.save(); ctx.translate(zfx * sx, zfy * sy); ctx.scale(zs, zs); ctx.translate(-zfx * sx, -zfy * sy);
   for (let r = 0; r < ROWS.length; r++) for (const c of ROWS[r]) {
     const [x, y] = cellXY(r, c), isFe = r === FE[0] && c === FE[1], isAu = r === AU[0] && c === AU[1];
@@ -271,7 +271,7 @@ window.seek = function (t) {
   bG.attributes.position.needsUpdate = true; bG.attributes.alpha.needsUpdate = true; bG.attributes.size.needsUpdate = true;
   // the ring takes them: it glints as beads arrive; it turns slowly
   const pp = (c) => Math.exp(-Math.pow((tt - c) / 0.4, 2)); ringMat.uniforms.uGlint.value = Math.min(1.6, arrived / NB * 1.1 + 0.15 * (tt < CUE.spiral0 ? 1 : 0) + 0.5 * (pp(CUE.poem) + pp(CUE.chem))); ringMat.uniforms.uT.value = tt;
-  jewel.scale.setScalar(1 + 0.12 * (pp(CUE.poem) + pp(CUE.chem))); jewel.rotation.order = "YXZ"; jewel.rotation.set(0.95 + 0.15 * Math.sin(tt * 0.6), Math.atan2(camera.position.x - RING[0], camera.position.z - RING[2]) + 0.35 * Math.sin(tt * 0.5), 0.15);
+  jewel.scale.setScalar(1 + 0.12 * (pp(CUE.poem) + pp(CUE.chem))); jewel.rotation.order = "YXZ"; jewel.rotation.set(-0.95 - 0.1 * Math.sin(tt * 0.6), Math.atan2(camera.position.x - RING[0], camera.position.z - RING[2]) + 0.35 * Math.sin(tt * 0.5), 0.15);
   sky.update(camera, { frameCam: rig.frameCamera(camera, shot, tr), starGain: 0.8, bandGain: 0.7 });
   overlay2d(t);
   hud.update(t); tRing.update(t); eRing.update(t);
