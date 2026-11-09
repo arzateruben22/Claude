@@ -335,7 +335,8 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
             entries = []
         for c in entries:
             cid = c.get("id", "?")
-            missing = [f for f in FIELDS if not str(c.get(f, "")).strip()]
+            own = str(c.get("note", "")).startswith("OWN INFERENCE")          # the builder's own reasoning: no page to cite, said so in the note
+            missing = [f for f in FIELDS if not str(c.get(f, "")).strip() and not (own and f in ("source_url", "source_title"))]
             if missing:
                 r.error(f"claim {cid}", f"missing {', '.join(missing)}")
             if not re.fullmatch(r"[a-z][a-z0-9-]*\d", cid):
@@ -353,7 +354,7 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
                 r.error(f"claim {cid}", f"verified_via must be one of {VIA}")
             if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(c.get("accessed", ""))):
                 r.error(f"claim {cid}", "accessed must be a date, YYYY-MM-DD")
-            if not str(c.get("source_url", "")).startswith(("https://", "http://")):
+            if not own and not str(c.get("source_url", "")).startswith(("https://", "http://")):
                 r.error(f"claim {cid}", "source_url must be a web address")
     for b in beats:
         for s in sentences(b["vo"]):

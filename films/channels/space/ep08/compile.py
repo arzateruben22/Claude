@@ -46,8 +46,8 @@ CAMK = [
     (0.0, [0, 0.5, 2], [0, 0.3, 70], 58),
     (t_n - 0.3, [0, 0.5, 6], [0, 0.3, 74], 56),
     (CUE["spokes0"] - 0.2, [0, 0.5, 46], [0, 0.3, 118], 56),                          # driving through an endless field
-    (CUE["spokes0"] + 2.4, [0, 22, -62], [0, 0, 8], 38),                              # out to see you and the rays
-    (CUE["dip"][0], [0, 26, -66], [0, 0, 8], 38),
+    (CUE["spokes0"] + 2.4, [0, 22, -62], [0, 0, -16], 38),                              # out to see you and the rays
+    (CUE["dip"][0], [0, 26, -66], [0, 0, -16], 38),
     (CUE["dip"][0] + 0.32, FP(-9, 1.8, -24), FP(0, 3, 30), 54),                       # the forest (cut under a dip)
     (CUE["trunk"] + 0.5, FP(6, 1.8, -6), FP(0, 3, 36), 54),
     (CUE["dip"][1] + 0.0, FP(7, 1.8, -4), FP(0, 3, 36), 54),
@@ -68,8 +68,8 @@ CAMK = [
     (t_tk, [0, 0.5, 1], [42, 14, 62], 60),                  # look right: another
     (CUE["clue"], [0, 1.5, 1.5], [0, 26, 60], 60),                                    # up, on "clue"
     (t_rd - 0.2, [0, 0.5, 1.5], [-5, 2, 70], 60),
-    (t_rd + 1.5, [0, 72, -120], [0, 0, 6], 36),                                       # the rings, from above
-    (t_end - 0.15, [0, 76, -126], [0, 0, 6], 36),
+    (t_rd + 1.5, [0, 72, -120], [0, 0, -52], 36),                                       # the rings, from above
+    (t_end - 0.15, [0, 76, -126], [0, 0, -52], 36),
     (f.duration, [0, 0.5, 2], [0, 0.3, 70], 58),
 ]
 CAMK = [{"t": round(t, 4), "p": p, "l": l, "fov": fv} for t, p, l, fv in CAMK]
@@ -101,7 +101,7 @@ COUNTERS = [
     {"id": "c-cancel", "label": "each shell adds the same light", "text": "the sky glows", "t0": CUE["cancel"], "t1": t_why},
     {"id": "c-age", "label": "the universe's age, about", "text": "13.8 billion years", "t0": round(CUE["age0"] - 0.3, 4), "t1": round(CUE["way"] - 0.5, 4)},
     {"id": "c-dark", "label": "so the sky is", "text": "dark: a clue", "t0": CUE["begin"], "t1": t_rd},
-    {"id": "c-read-sun", "label": "light time · the Sun", "text": "8 minutes", "read": True, "t0": t_rd, "t1": round(CUE["farthest"] - 0.05, 4)},
+    {"id": "c-read-sun", "label": "light time · the Sun", "text": "8 minutes", "read": True, "t0": t_rd, "t1": round(CUE["farthest"] - 0.4, 4)},
     {"id": "c-read-far", "label": "light time · far galaxies", "text": "billions of years", "read": True, "t0": CUE["farthest"], "t1": round(t_end - 0.45, 4)},
 ]
 for c in COUNTERS:

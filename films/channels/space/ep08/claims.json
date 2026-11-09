@@ -60,11 +60,11 @@
  {
   "id": "c6",
   "sentence": "We now put the universe's age near thirteen point eight billion years.",
-  "claim": "The universe is 13.787 +/- 0.020 billion years old (Planck 2018).",
+  "claim": "The ESA Planck page puts the universe's age at about 13.8 billion years.",
   "source_url": "https://www.esa.int/Science_Exploration/Space_Science/Planck/Planck_science_highlights",
   "source_title": "Planck science highlights (ESA)",
   "accessed": "2026-11-08",
-  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Matches 'about 13.8'; the ESA page gives the 2013 Planck value.",
+  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. Matches 'about 13.8'; the ESA page gives the 2013 Planck value. 9 Nov: claim reworded to match the cited ESA page ('about 13.8 billion years'); the 13.787 +/- 0.020 Gyr value of the Planck 2018 results paper was not opened and is not claimed.",
   "verified_via": "page",
   "status": "SOURCE-READ",
   "source_read": {
@@ -112,10 +112,10 @@
   "id": "c9",
   "sentence": "From the farthest galaxies we see, billions of years.",
   "claim": "Light from any galaxy has traveled less than the age of the universe, 13.8 billion years, so 'billions of years' is safe.",
-  "source_url": "https://www.esa.int/Science_Exploration/Space_Science/Planck/Planck_science_highlights",
-  "source_title": "Own inference from the universe's age (c6)",
+  "source_url": "",
+  "source_title": "",
   "accessed": "2026-11-08",
-  "note": "CALC (inference): light from any galaxy has traveled less than the universe's age, 13.8 billion years (ESA, SOURCE-READ), so 'billions of years' is safe; no page states a galaxy-by-galaxy figure.",
+  "note": "OWN INFERENCE (no source): light from any galaxy has traveled less than the age of the universe, so 'billions of years' is safe; the 13.8 billion years figure is c6.",
   "verified_via": "not read",
   "status": "OPEN",
   "calc": "CALC (inference): light from any galaxy has traveled less than the universe's age, 13.8 billion years (ESA, SOURCE-READ), so 'billions of years' is safe; no page states a galaxy-by-galaxy figure."

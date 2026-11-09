@@ -215,17 +215,18 @@ window.seek = function (t) {
   LITS.forEach((l, k) => {
     const t0 = k < 6 ? CUE.age1 + 0.3 + k * 1.25 : CUE.begin + 1.1 + (k - 6) * 1.05, tEnd = k < 6 ? CUE.begin + 0.8 : CUE.rd + 0.8;
     if (l.t0 !== t0) { l.t0 = t0; const cmK = camAt(t0 + 0.5), inside = Math.hypot(...cmK.p) < 20; const rnd = () => lr2() - 0.5;
-      if (inside) { const d = [cmK.l[0] - cmK.p[0], cmK.l[1] - cmK.p[1], cmK.l[2] - cmK.p[2]], n = Math.hypot(...d), r = 34 + 40 * lr2(); l.c = [cmK.p[0] + d[0] / n * r + rnd() * 26, cmK.p[1] + d[1] / n * r + rnd() * 22, cmK.p[2] + d[2] / n * r + rnd() * 10]; }
+      if (inside) { const d = [cmK.l[0] - cmK.p[0], cmK.l[1] - cmK.p[1], cmK.l[2] - cmK.p[2]], n = Math.hypot(...d), f = d.map((v) => v / n), rt = [f[2], 0, -f[0]], rn = Math.hypot(rt[0], rt[2]) || 1, R = rt.map((v) => v / rn), U = [R[1] * f[2] - R[2] * f[1], R[2] * f[0] - R[0] * f[2], R[0] * f[1] - R[1] * f[0]], r = 34 + 40 * lr2(), th = Math.tan(cmK.fov * 0.5 * Math.PI / 180) * r, hx = rnd() * 2 * 0.85 * th * 0.5625, vy = (0.3 + 0.5 * lr2()) * th;          // upper part of the screen, clear of the counter and the caption
+        l.c = [cmK.p[0] + f[0] * r + R[0] * hx + U[0] * vy, cmK.p[1] + f[1] * r + R[1] * hx + U[1] * vy, cmK.p[2] + f[2] * r + R[2] * hx + U[2] * vy]; }
       else { const th = Math.acos(2 * lr2() - 1), ph = lr2() * 6.2832, r = 20 + 55 * lr2(); l.c = [r * Math.sin(th) * Math.cos(ph), r * Math.cos(th), r * Math.sin(th) * Math.sin(ph)]; } }
     const on = tt >= t0 && tt < tEnd, age = tt - t0, pulse = on ? 0.55 + 0.45 * Math.exp(-age * 2.2) : 0;
     l.b.set({ center: l.c, camera, opacity: on ? Math.min(1, age * 5) * (1 - fadeIn(tt, tEnd - 0.6, 0.6)) * (0.8 + 0.2 * pulse) : 0 });
-    l.ring.arc({ center: l.c, r: Math.max(0.01, 1 + 9 * Math.min(1, age / 0.9)), e1: right.toArray(), e2: up.toArray() }).set({ opacity: on && age < 0.9 ? 0.9 * (1 - age / 0.9) : 0 });
+    l.ring.arc({ center: l.c, r: Math.max(0.01, 0.6 + 2.4 * Math.min(1, age / 0.9)), e1: right.toArray(), e2: up.toArray() }).set({ opacity: on && age < 0.9 ? 0.6 * (1 - age / 0.9) : 0 });
   });
   overlay2d(t);
   hud.update(t); tRing.update(t); eRing.update(t);
   const lk = fadeIn(t, FILM.loop0, 0.45);
-  endEl.style.opacity = String(1 - lk);
-  if (scrimEl) scrimEl.style.opacity = String(parseFloat(scrimEl.style.opacity || "0") * (1 - lk));
+  endEl.style.opacity = t < FILM.loop0 ? "1" : "0";                                    // hard cut: the end card never ghosts under the hook
+  if (scrimEl) scrimEl.style.opacity = t < FILM.loop0 ? scrimEl.style.opacity : "0";
   for (const c of LOOPEL) { c.style.visibility = lk > 0.01 ? "visible" : "hidden"; c.style.opacity = String(lk); }
   renderer.render(scene, camera);
 };
