@@ -65,15 +65,15 @@
    "tag": "title"
   },
   {
-   "t": 3.4333,
-   "kind": "badge",
-   "tag": "b-illus"
-  },
-  {
    "t": 3.7333,
    "kind": "section",
    "id": "normal",
    "t1": 14.9333
+  },
+  {
+   "t": 3.9833,
+   "kind": "badge",
+   "tag": "b-illus"
   },
   {
    "t": 5.3667,
