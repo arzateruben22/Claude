@@ -995,6 +995,8 @@ async function main() {
     /** turn your avatar's caster's castShadow off (or back on) for the next renders, to measure its own share */
     avatarCaster(on: boolean) { const lod1 = person?.group.getObjectByName('lod1') as THREE.Mesh | undefined; if (lod1) lod1.castShadow = on; return !!lod1; },
     overheadState() { return { target: G(overhead.target.x, overhead.target.z), yaw: overhead.yaw, pitch: overhead.pitch, dist: overhead.dist }; },
+    /** S3b: the overhead camera over a frame point at a distance (the guests' pool match screenshot) */
+    overheadAt(u: number, v: number, dist: number) { const [x, z] = L(u, v); overhead.target.set(x, 0.5, z); overhead.dist = dist; overhead.clamp(); return hooks.overheadState(); },
     startAt() { return { door: G(...L(DOOR_START[0], DOOR_START[1])) }; },
     frozen() { return frozen; },
     /** S1's walk test on the real grid: from just inside the front door, every slot's stand point has a reachable

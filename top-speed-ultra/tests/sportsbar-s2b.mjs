@@ -82,6 +82,18 @@ const gesture = (page, steps) => page.evaluate(async (st) => {
 }, steps);
 const clearQueue = async (page) => { await H(page, 'window.__onfoot.leaveGame()'); const q = await H(page, 'window.__onfoot.queue()'); for (const a of q) await H(page, `window.__onfoot.cancelAction(${a.id})`); };
 const at = (u, v) => `(() => { const f = window.__onfoot.frame(); return [f.O[0] + ${u} * f.A[0] + ${v} * f.B[0], f.O[1] + ${u} * f.A[1] + ${v} * f.B[1]]; })()`;
+/** (S3b repair) your game at a spot, where you stand (the hooks' shortcut past the walk). Guests playing there aren't
+ *  moved: playHere says busy and you're next there (as a tap on the spot does); the sim runs on a sim minute at a time
+ *  (up to 25) until their match ends, then it starts. `playAt.waits` keeps how long each spot was waited for */
+const playAt = async (page, id) => {
+  for (let i = 0; i <= 25; i++) {
+    const u = await H(page, `window.__onfoot.playHere('${id}')`);
+    if (!u || !u.busy) { if (i) { playAt.waits.push({ id, minutes: i }); console.log(`    (guests were playing at ${id}: you were next, and it was free after ${i} sim minutes)`); } return u; }
+    await H(page, 'window.__onfoot.fastForward(1)');
+  }
+  throw new Error(`guests kept ${id} for 25 sim minutes`);
+};
+playAt.waits = [];
 
 // ------------------------------------------------------------------------------------------------ the engine's own checks
 if (want('checks')) {
@@ -109,7 +121,7 @@ if (want('checks')) {
     await clearQueue(page);
     await H(page, `(() => { const o = window.__onfoot; o.setTraits({ competitive: ${competitive} }); o.clearMoodlets(); o.setNeeds({ hunger: 80, thirst: 80, fun: 50, social: 60, energy: 80 }); })()`);
     const t0k = await H(page, 'window.__onfoot.tokens()'), tk0 = t0k.tokens;
-    const u = await H(page, `window.__onfoot.playHere('${id}')`);
+    const u = await playAt(page, `${id}`);
     await H(page, 'window.__onfoot.fastForward(0.02)');
     const doing = (await H(page, 'window.__onfoot.needs()')).doing;
     const r = await H(page, `window.__onfoot.playOut('${id}', '${strategy}')`);
@@ -187,7 +199,7 @@ if (want('checks')) {
     for (const [id, play] of [['pool-2', `window.__onfoot.shoot('pool-2', { speed: 0.6, angle: -90, settle: true })`], ['darts-3', `(() => { const o = window.__onfoot; for (const s of [20, 20, 20]) o.shoot('darts-3', { seg: s, mult: 1, settle: true }); return o.game('darts-3'); })()`], ['shuffleboard', `window.__onfoot.shoot('shuffleboard', { zone: 2, settle: true })`]]) {
       await clearQueue(page);
       await H(page, 'window.__onfoot.view("first")');
-      await H(page, `window.__onfoot.playHere('${id}')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+      await playAt(page, `${id}`); await H(page, 'window.__onfoot.fastForward(0.01)');
       const inn = await blendTo(page, 1);
       const r = await H(page, play);
       // the turn passes (the pause after it runs in sim time), then the camera comes back to you
@@ -206,7 +218,7 @@ if (want('checks')) {
     // reduced motion: a cut each way (the blend jumps in the frame the turn starts and ends)
     await H(page, 'window.__onfoot.reducedMotion(true)');
     await clearQueue(page);
-    await H(page, `window.__onfoot.playHere('pool-1')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await playAt(page, `pool-1`); await H(page, 'window.__onfoot.fastForward(0.01)');
     await frames(page, 1);
     const c1 = await H(page, 'window.__onfoot.gamecam()');
     await H(page, `window.__onfoot.shoot('pool-1', { speed: 0.6, angle: -90, settle: true })`);
@@ -224,7 +236,7 @@ if (want('checks')) {
   /** a pool game where the house scratches (its shot scripted by the hook): returns your turn's state, ball in hand */
   const toBallInHand = async (id) => {
     await clearQueue(page);
-    await H(page, `window.__onfoot.playHere('${id}')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await playAt(page, `${id}`); await H(page, 'window.__onfoot.fastForward(0.01)');
     await frames(page, 1);
     // your break, soft: the cue ball to the head rail, nothing down; the house's next shot is scripted to scratch
     const r0 = await H(page, `window.__onfoot.shoot('${id}', { angle: -90, speed: 0.6, settle: true })`);
@@ -251,16 +263,16 @@ if (want('checks')) {
   });
   await check('the scripted shots refuse a NaN, infinite, zero or negative speed, a NaN angle, a place without ball in hand, and darts and shuffleboard values that aren\'t numbers (nothing is clamped, nothing moves)', async () => {
     await clearQueue(page);
-    await H(page, `window.__onfoot.playHere('pool-2')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await playAt(page, `pool-2`); await H(page, 'window.__onfoot.fastForward(0.01)');
     const g0 = await H(page, `window.__onfoot.game('pool-2')`);
     const pool = await H(page, `(() => { const o = window.__onfoot; return [o.shoot('pool-2', { angle: NaN, speed: 1 }), o.shoot('pool-2', { angle: 10, speed: NaN }), o.shoot('pool-2', { angle: 10, speed: Infinity }), o.shoot('pool-2', { angle: 10, speed: 0 }), o.shoot('pool-2', { angle: 10, speed: -2 }), o.shoot('pool-2', { place: [0.1, -0.3], angle: 10, speed: 1 })]; })()`);
     const g1 = await H(page, `window.__onfoot.game('pool-2')`);
     await H(page, 'window.__onfoot.leaveGame()');
-    await H(page, `window.__onfoot.playHere('darts-3')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await playAt(page, `darts-3`); await H(page, 'window.__onfoot.fastForward(0.01)');
     const darts = await H(page, `(() => { const o = window.__onfoot; return [o.shoot('darts-3', { x: NaN, y: 0 }), o.shoot('darts-3', { seg: 20, mult: 1, held: -1 })]; })()`);
     const d1 = await H(page, `window.__onfoot.game('darts-3')`);
     await H(page, 'window.__onfoot.leaveGame()');
-    await H(page, `window.__onfoot.playHere('shuffleboard')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await playAt(page, `shuffleboard`); await H(page, 'window.__onfoot.fastForward(0.01)');
     const shuf = await H(page, `(() => { const o = window.__onfoot; return [o.shoot('shuffleboard', { speed: NaN }), o.shoot('shuffleboard', { speed: -3 }), o.shoot('shuffleboard', { speed: 3, line: Infinity }), o.shoot('shuffleboard', { zone: 7 })]; })()`);
     const s1 = await H(page, `window.__onfoot.game('shuffleboard')`);
     await H(page, 'window.__onfoot.leaveGame()');
@@ -283,7 +295,7 @@ if (want('checks')) {
   await check('the game bar\'s text is rebuilt only when the game changes (not every frame), and your avatar is hidden under the pool view but shown over your shoulder at darts', async () => {
     await clearQueue(page);
     await H(page, 'window.__onfoot.view("third")');
-    await H(page, `window.__onfoot.playHere('pool-1')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await playAt(page, `pool-1`); await H(page, 'window.__onfoot.fastForward(0.01)');
     await blendTo(page, 1, 60, 'pool'); await frames(page, 1);
     const a = await H(page, 'window.__onfoot.gamebar()');
     await frames(page, 4);
@@ -293,7 +305,7 @@ if (want('checks')) {
     await frames(page, 1);
     const c = await H(page, 'window.__onfoot.gamebar()');
     await H(page, 'window.__onfoot.leaveGame()');
-    await H(page, `window.__onfoot.playHere('darts-1')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await playAt(page, `darts-1`); await H(page, 'window.__onfoot.fastForward(0.01)');
     await blendTo(page, 1, 60, 'darts'); await frames(page, 1);
     const visDarts = (await H(page, 'window.__onfoot.vis()')).avatar, camDarts = await H(page, 'window.__onfoot.gamecam()');
     await H(page, 'window.__onfoot.leaveGame()'); await H(page, 'window.__onfoot.view("first")');
@@ -324,7 +336,7 @@ if (want('controls')) {
   await H(page, 'window.__onfoot.setWeek(43)');
   await check('controls: pool, drag back from the cue ball sets the aim and the power (the meter shows), release shoots', async () => {
     expect(!errors.length, errors.join(' | '));
-    await clearQueue(page); await H(page, `window.__onfoot.playHere('pool-2')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await clearQueue(page); await playAt(page, `pool-2`); await H(page, 'window.__onfoot.fastForward(0.01)');
     await blendTo(page, 1);
     const g0 = await H(page, `window.__onfoot.game('pool-2')`), s = await H(page, `window.__onfoot.gameScreen('pool-2')`);
     await H(page, 'window.__onfoot.freeze(true)');
@@ -341,7 +353,7 @@ if (want('controls')) {
     return `the cue ball at (${s.x.toFixed(0)}, ${s.y.toFixed(0)}) px; dragged 91 px back: aim ${mid.aim.angle} degrees, power ${mid.aim.power} (meter ${meter.p}); released: shot ${g1.shots}, ${g1.state}`;
   });
   await check('controls: darts, hold (the aim steadies) and flick up to throw; a press without a flick throws nothing', async () => {
-    await clearQueue(page); await H(page, `window.__onfoot.playHere('darts-1')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await clearQueue(page); await playAt(page, `darts-1`); await H(page, 'window.__onfoot.fastForward(0.01)');
     await blendTo(page, 1);
     const s = await H(page, `window.__onfoot.gameScreen('darts-1')`);
     await H(page, 'window.__onfoot.freeze(true)');
@@ -358,7 +370,7 @@ if (want('controls')) {
     return `no flick: ${g0.thrown} darts; after a 1.2 s hold and a flick up: ${g1.thrown} dart, ${g1.board.map((d) => d.label).join(', ')} (${g1.left[0]} left), the aim at (${g1.aim.x}, ${g1.aim.y}) m (it starts on the treble 20's middle, (0, 0.103); the two slow drags, 13 px in all, moved it ${(g1.aim.x * 1000).toFixed(1)} mm right)`;
   });
   await check('controls: shuffleboard, a swipe up slides the puck (the swipe\'s speed sets the puck\'s)', async () => {
-    await clearQueue(page); await H(page, `window.__onfoot.playHere('shuffleboard')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await clearQueue(page); await playAt(page, `shuffleboard`); await H(page, 'window.__onfoot.fastForward(0.01)');
     await blendTo(page, 1);
     const g0 = await H(page, `window.__onfoot.game('shuffleboard')`);
     await H(page, 'window.__onfoot.freeze(true)');
@@ -376,7 +388,7 @@ if (want('controls')) {
   });
   await check('controls: pool ball in hand by pointer: after the house scratches, a drag that starts on the cue ball moves it off the head spot; a drag back from it then aims and shoots from there', async () => {
     await clearQueue(page);
-    await H(page, `window.__onfoot.playHere('pool-2')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await playAt(page, `pool-2`); await H(page, 'window.__onfoot.fastForward(0.01)');
     await H(page, `window.__onfoot.shoot('pool-2', { angle: -90, speed: 0.6, settle: true })`);
     await H(page, `window.__onfoot.houseShot('pool-2', 'scratch')`);
     let g = null;
@@ -404,7 +416,7 @@ if (want('controls')) {
     return `ball in hand on the head spot (${g.cue.join(', ')}); a 190 px drag from the cue ball at (${s0.x.toFixed(0)}, ${s0.y.toFixed(0)}) px put it at (${g1.cue.join(', ')}), ${moved.toFixed(3)} m away, still in hand; a drag back from it: shot ${g2.shots} struck from (${g2.strikeFrom.join(', ')}) at ${g2.aim.angle} degrees`;
   });
   await check('controls: shuffleboard, a swipe that drifts right sends the puck to the right of the board as you see it (the line +, the bed\'s +y on the right of the screen)', async () => {
-    await clearQueue(page); await H(page, `window.__onfoot.playHere('shuffleboard')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await clearQueue(page); await playAt(page, `shuffleboard`); await H(page, 'window.__onfoot.fastForward(0.01)');
     await blendTo(page, 1);
     await H(page, 'window.__onfoot.freeze(true)');
     // 360 px up in 0.2 s, drifting 20 px right
@@ -421,7 +433,7 @@ if (want('controls')) {
     return `the line ${ln.line} degrees (side ${ln.side}); on screen the bed's centre line at 5.6 m is at x ${centre.x.toFixed(0)} px and 0.15 m toward +y at x ${plusY.x.toFixed(0)} px (to the right); the puck ${pk ? (pk.on ? `came to rest at y ${pk.y} m (zone ${pk.zone})` : pk.out) : '(the frame moved on)'}`;
   });
   await check('controls: at 1280x720 a game\'s toast sits above its bar, clear of the "Simulated crowd" chip', async () => {
-    await clearQueue(page); await H(page, `window.__onfoot.playHere('darts-2')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+    await clearQueue(page); await playAt(page, `darts-2`); await H(page, 'window.__onfoot.fastForward(0.01)');
     await blendTo(page, 1);
     await H(page, `window.__onfoot.shoot('darts-2', { seg: 20, mult: 1, settle: true })`);
     await frames(page, 1);
@@ -446,7 +458,7 @@ if (want('shots')) {
     await H(page, 'window.__onfoot.setWeek(43)');
     await check(`shots ${w}x${h} ${q}: a pool shot overhead (your aim with the guide line and the power, then the break rolling)`, async () => {
       expect(!errors.length, errors.join(' | '));
-      await clearQueue(page); await H(page, `window.__onfoot.playHere('pool-1')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+      await clearQueue(page); await playAt(page, `pool-1`); await H(page, 'window.__onfoot.fastForward(0.01)');
       await blendTo(page, 1);
       await H(page, `window.__onfoot.gameAim('pool-1', 92, 0.55)`);
       await frames(page, 2);
@@ -461,7 +473,7 @@ if (want('shots')) {
       return `${a}, ${b} (${g.state}, ${g.balls.filter((x) => x.moving).length} balls moving; your avatar in the pool view: ${av.caster.visible ? (av.caster.hidden ? 'a hidden caster only' : 'drawn') : 'not drawn'})`;
     });
     await check(`shots ${w}x${h} ${q}: darts behind the oche (two darts in the board, the aim held, a third in the air)`, async () => {
-      await clearQueue(page); await H(page, `window.__onfoot.playHere('darts-2')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+      await clearQueue(page); await playAt(page, `darts-2`); await H(page, 'window.__onfoot.fastForward(0.01)');
       await blendTo(page, 1);
       await H(page, `(() => { const o = window.__onfoot; o.shoot('darts-2', { seg: 20, mult: 3, settle: true }); o.shoot('darts-2', { seg: 20, mult: 1, settle: true }); return o.gameAim('darts-2', 0.004, 0.103, true); })()`);
       await frames(page, 3);
@@ -482,7 +494,7 @@ if (want('shots')) {
       return `${a}, ${b} (in the board ${g.board.map((d) => d.label).join(', ')}; ${g.left[0]} left; ${g.inAir} in the air at ${Math.round(g.flights[0].k * 100)}% of its flight, held by the hook; the toast "${boxes.toastText}" ${boxes.toast.shown ? `at y ${boxes.toast.y} to ${boxes.toast.y + boxes.toast.h}, the chip at y ${boxes.crowd.y} to ${boxes.crowd.y + boxes.crowd.h}: no overlap` : 'not showing'})`;
     });
     await check(`shots ${w}x${h} ${q}: a shuffleboard slide (behind the puck)`, async () => {
-      await clearQueue(page); await H(page, `window.__onfoot.playHere('shuffleboard')`); await H(page, 'window.__onfoot.fastForward(0.01)');
+      await clearQueue(page); await playAt(page, `shuffleboard`); await H(page, 'window.__onfoot.fastForward(0.01)');
       await blendTo(page, 1);
       // a few pucks down first (yours and the house's), then your slide, caught on its way
       await H(page, `window.__onfoot.shoot('shuffleboard', { zone: 2, settle: true })`);
@@ -577,6 +589,8 @@ if (want('budgets')) {
 }
 
 await browser?.close().catch(() => {});
+summary.waitedForGuests = playAt.waits; save();
+console.log(`guests' matches waited for (you next, nobody moved): ${playAt.waits.length ? playAt.waits.map((w) => `${w.id} ${w.minutes} sim min`).join(', ') : 'none'}`);
 const fails = results.filter((r) => !r.ok);
 console.log(`\n${results.length - fails.length} of ${results.length} passed`);
 process.exit(fails.length ? 1 : 0);

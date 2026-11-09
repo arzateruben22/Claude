@@ -55,3 +55,20 @@ export function stepGroup(g: TalkGroup, present: number[], dt: number, r: () => 
   if (laugh) g.laughs++;
   return { started: -1, ended, nods, laugh };
 }
+
+// ------------------------------------------------------------------------------------------------ S3b: who's in a group
+/** groups are 2 to 6 people ("Conversations and lines"); a Talk or a Join toward a member of a group of 6 isn't offered */
+export const GROUP_MAX = 6;
+/** someone joins (the circle or the table makes room): false if the group is full or they're in it */
+export function addMember(g: TalkGroup, id: number) {
+  if (g.members.includes(id) || g.members.length >= GROUP_MAX) return false;
+  g.members.push(id); return true;
+}
+/** someone leaves: a speaker who leaves ends their turn; who's looked at moves on */
+export function removeMember(g: TalkGroup, id: number) {
+  const i = g.members.indexOf(id); if (i < 0) return false;
+  g.members.splice(i, 1);
+  if (g.speaker === id) { g.prev = id; g.speaker = -1; g.pauseT = 0.4; }
+  if (g.lookAt === id) g.lookAt = -1;
+  return true;
+}
