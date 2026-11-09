@@ -66,19 +66,9 @@
    "tag": "title"
   },
   {
-   "t": 5.2,
-   "kind": "term.write",
-   "tag": "spine-0"
-  },
-  {
    "t": 6.7,
    "kind": "counter.show",
    "tag": "c-choices"
-  },
-  {
-   "t": 10.033333333333333,
-   "kind": "term.write",
-   "tag": "spine-1"
   },
   {
    "t": 14.4,
@@ -121,21 +111,10 @@
    "t1": 45.0
   },
   {
-   "t": 39.766666666666666,
-   "kind": "answer.box",
-   "tag": "spine-3",
-   "t1": 40.2667
-  },
-  {
    "t": 45.0,
    "kind": "section",
    "id": "work",
    "t1": 53.4
-  },
-  {
-   "t": 45.0,
-   "kind": "term.write",
-   "tag": "spine-4"
   },
   {
    "t": 45.15,

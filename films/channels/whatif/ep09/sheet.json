@@ -66,11 +66,6 @@
    "tag": "title"
   },
   {
-   "t": 10.033333333333333,
-   "kind": "term.write",
-   "tag": "spine-0"
-  },
-  {
    "t": 13.333333333333334,
    "kind": "term.write",
    "tag": "spine-1"
@@ -99,11 +94,6 @@
    "t1": 37.2
   },
   {
-   "t": 25.35,
-   "kind": "term.write",
-   "tag": "spine-2"
-  },
-  {
    "t": 29.0,
    "kind": "label",
    "tag": "l-rad"
@@ -125,26 +115,10 @@
    "tag": "c-extra"
   },
   {
-   "t": 38.1,
-   "kind": "term.write",
-   "tag": "spine-3"
-  },
-  {
-   "t": 42.733333333333334,
-   "kind": "answer.box",
-   "tag": "spine-4",
-   "t1": 43.2333
-  },
-  {
    "t": 48.0,
    "kind": "section",
    "id": "work",
    "t1": 55.8
-  },
-  {
-   "t": 48.0,
-   "kind": "term.write",
-   "tag": "spine-5"
   },
   {
    "t": 48.15,

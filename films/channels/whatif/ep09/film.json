@@ -781,44 +781,7 @@
    "no sag"
   ]
  },
- "labels": [
-  {
-   "id": "l-rod",
-   "text": "1 m",
-   "kind": "part",
-   "anchor": "rod",
-   "t0": 21.599999999999998,
-   "t1": 23.9,
-   "side": 1
-  },
-  {
-   "id": "l-rad",
-   "text": "radius",
-   "kind": "part",
-   "anchor": "rad",
-   "t0": 29.0,
-   "t1": 32.4,
-   "side": 1
-  },
-  {
-   "id": "l-gap",
-   "text": "+ 1 m",
-   "kind": "calc",
-   "anchor": "gap",
-   "t0": 32.9,
-   "t1": 37.0,
-   "side": -1
-  },
-  {
-   "id": "l-ten",
-   "text": "10 m",
-   "kind": "part",
-   "anchor": "ten-top",
-   "t0": 61.4667,
-   "t1": 63.1667,
-   "side": 1
-  }
- ],
+ "labels": [],
  "badges": [
   {
    "id": "b-thought",
@@ -903,7 +866,7 @@
    "id": "c-extra",
    "label": "extra rope",
    "t0": 38.1,
-   "t1": 44.3,
+   "t1": 43.3,
    "at": [
     0.5,
     0.4
@@ -1728,64 +1691,6 @@
      ]
     ]
    ]
-  },
-  {
-   "t0": 64.4,
-   "t1": 67.085,
-   "lines": [
-    [
-     [
-      "Next",
-      64.54
-     ],
-     [
-      "envelope:",
-      64.955
-     ]
-    ],
-    [
-     [
-      "a",
-      65.81
-     ],
-     [
-      "shuffled",
-      65.89
-     ],
-     [
-      "deck,",
-      66.595
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 67.085,
-   "t1": 68.845,
-   "lines": [
-    [
-     [
-      "and",
-      67.085
-     ],
-     [
-      "a",
-      67.305
-     ],
-     [
-      "very",
-      67.335
-     ],
-     [
-      "rare",
-      67.65
-     ],
-     [
-      "order.",
-      68.095
-     ]
-    ]
-   ]
   }
  ],
  "voice": [
@@ -1845,5 +1750,19 @@
    "file": "vo/08.wav",
    "text": "Next envelope: a shuffled deck, and a very rare order."
   }
+ ],
+ "spineHide": [
+  [
+   10.0,
+   13.0
+  ],
+  [
+   21.0,
+   44.2
+  ],
+  [
+   48.0,
+   60.3
+  ]
  ]
 }

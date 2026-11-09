@@ -3,7 +3,7 @@ disclaimers. Each episode's compile.py lists, in a DECL dict, what to drop; this
 
   DECL = {"spineHide": [[t0, t1], ...],        # windows where the spine plate is hidden (it only restates the caption, or a card is up)
           "labels": {"l-id": None | t1},       # None drops a label, a number ends it earlier
-          "counters": {"c-id": None | t1},
+          "counters": {"c-id": None | t1}, "badges": {"b-id": None | t1},
           "dropEndCaptions": True,             # no caption copy of the end card's line while the card shows it
           "noEndAnswer": True}                 # no second "≈ answer" box on the end card
 """
@@ -11,7 +11,7 @@ disclaimers. Each episode's compile.py lists, in a DECL dict, what to drop; this
 
 def apply(film, d):
     film["spineHide"] = d.get("spineHide", [])
-    for key, field in (("labels", "labels"), ("counters", "counters")):
+    for key, field in (("labels", "labels"), ("counters", "counters"), ("badges", "badges")):
         edits, out = d.get(key, {}), []
         for it in film[field]:
             if it["id"] in edits:

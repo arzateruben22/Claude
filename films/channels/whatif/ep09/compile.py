@@ -198,6 +198,12 @@ film = {
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 
+sys.path.insert(0, str(HERE.parent))
+import declutter   # noqa: E402
+DECL = {"spineHide": [[10.0, 13.0], [21.0, 44.2], [48.0, 60.3]], "labels": {"l-rod": None, "l-rad": None, "l-gap": None, "l-ten": None},
+        "counters": {"c-extra": 43.3}, "dropEndCaptions": True}
+film = declutter.apply(film, DECL)
+
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] not in ("tease", "normal")]
 ev.append({"t": TITLE["sig"], "kind": "signature", "tag": "title"})
 ev.append({"t": t_end, "kind": "signature", "tag": "end"})
@@ -211,6 +217,7 @@ for i, sp in enumerate(SPINE):
 for r in WORK["rows"]:
     ev.append({"t": r["t"], "kind": "term.write", "tag": f"work-{r['k']}"})
 ev += [{"t": t_dive0, "kind": "swell", "tag": "dive", "t1": t_dive0 + DIVE}, {"t": t_take0, "kind": "swell", "tag": "ten", "t1": t_take0 + 3.0}]
+ev = [e for e in ev if declutter.keep_event(e, SPINE, DECL["spineHide"])]
 sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working", "tail_s": 0.05,
          "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
          "events": sorted(ev, key=lambda e: e["t"]),

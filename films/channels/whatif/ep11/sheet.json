@@ -71,16 +71,6 @@
    "tag": "c-vol"
   },
   {
-   "t": 6.933333333333334,
-   "kind": "term.write",
-   "tag": "spine-0"
-  },
-  {
-   "t": 16.866666666666667,
-   "kind": "term.write",
-   "tag": "spine-1"
-  },
-  {
    "t": 19.2,
    "kind": "section",
    "id": "change",
@@ -96,11 +86,6 @@
    "t": 21.333333333333332,
    "kind": "term.write",
    "tag": "spine-2"
-  },
-  {
-   "t": 26.833333333333332,
-   "kind": "term.write",
-   "tag": "spine-3"
   },
   {
    "t": 30.0,
@@ -125,11 +110,6 @@
    "kind": "section",
    "id": "work",
    "t1": 56.4
-  },
-  {
-   "t": 46.8,
-   "kind": "term.write",
-   "tag": "spine-5"
   },
   {
    "t": 46.949999999999996,
@@ -161,12 +141,6 @@
    "t": 56.4,
    "kind": "term.write",
    "tag": "spine-6"
-  },
-  {
-   "t": 62.0,
-   "kind": "answer.box",
-   "tag": "spine-7",
-   "t1": 62.5
   },
   {
    "t": 65.5,

@@ -503,32 +503,12 @@
  },
  "labels": [
   {
-   "id": "l-j",
-   "text": "1 billion J",
-   "kind": "calc",
-   "anchor": "meter-mid",
-   "t0": 20.333333333333332,
-   "t1": 27.9,
-   "side": 1,
-   "shot": "bolt"
-  },
-  {
-   "id": "l-rough",
-   "text": "a rough guess",
-   "kind": "assume",
-   "anchor": "meter-range",
-   "t0": 22.966666666666665,
-   "t1": 27.9,
-   "side": 1,
-   "shot": "bolt"
-  },
-  {
    "id": "l-lo",
    "text": "100 million J",
    "kind": "part",
    "anchor": "meter-lo",
    "t0": 20.53333333333333,
-   "t1": 27.9,
+   "t1": 24.4,
    "side": 1,
    "shot": "bolt"
   },
@@ -538,19 +518,9 @@
    "kind": "part",
    "anchor": "meter-hi",
    "t0": 20.53333333333333,
-   "t1": 27.9,
+   "t1": 24.4,
    "side": 1,
    "shot": "bolt"
-  },
-  {
-   "id": "l-mark",
-   "text": "390 billion kWh",
-   "kind": "calc",
-   "anchor": "tank1-top",
-   "t0": 29.96666666666667,
-   "t1": 39.300000000000004,
-   "side": 1,
-   "shot": "tank"
   },
   {
    "id": "l-slice",
@@ -558,16 +528,6 @@
    "kind": "anchor",
    "anchor": "tank1-top-w",
    "t0": 44.699999999999996,
-   "t1": 49.5,
-   "side": -1,
-   "shot": "tower"
-  },
-  {
-   "id": "l-year",
-   "text": "a year of world electricity",
-   "kind": "part",
-   "anchor": "tank2-top",
-   "t0": 41.266666666666666,
    "t1": 49.5,
    "side": -1,
    "shot": "tower"
@@ -661,7 +621,7 @@
   "follow": "Possibility Lab · Season 2 · Episode 6",
   "next": "About 44 flashes a second: Christian et al., J. Geophys. Res. 108 (2003)."
  },
- "endAnswer": "≈ 5 days",
+ "endAnswer": "",
  "captions": [
   {
    "t0": 0.0,
@@ -1504,32 +1464,6 @@
      ]
     ]
    ]
-  },
-  {
-   "t0": 69.18,
-   "t1": 71.135,
-   "lines": [
-    [
-     [
-      "Next",
-      69.32
-     ],
-     [
-      "envelope:",
-      69.73
-     ]
-    ],
-    [
-     [
-      "your",
-      70.315
-     ],
-     [
-      "what-if.",
-      70.385
-     ]
-    ]
-   ]
   }
  ],
  "voice": [
@@ -1589,5 +1523,24 @@
    "file": "vo/08.wav",
    "text": "Next envelope: your what-if."
   }
- ]
+ ],
+ "spineHide": [
+  [
+   9.0,
+   18.2
+  ],
+  [
+   20.3,
+   24.5
+  ],
+  [
+   29.2,
+   32.4
+  ],
+  [
+   44.7,
+   68.7
+  ]
+ ],
+ "noBars": true
 }

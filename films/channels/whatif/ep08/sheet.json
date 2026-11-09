@@ -76,25 +76,10 @@
    "tag": "l-span"
   },
   {
-   "t": 10.5,
-   "kind": "term.write",
-   "tag": "spine-0"
-  },
-  {
    "t": 15.0,
    "kind": "section",
    "id": "change",
    "t1": 27.0
-  },
-  {
-   "t": 16.566666666666666,
-   "kind": "term.write",
-   "tag": "spine-1"
-  },
-  {
-   "t": 24.2,
-   "kind": "term.write",
-   "tag": "spine-2"
   },
   {
    "t": 27.0,
@@ -109,11 +94,6 @@
   },
   {
    "t": 29.866666666666667,
-   "kind": "term.write",
-   "tag": "spine-3"
-  },
-  {
-   "t": 29.866666666666667,
    "kind": "swell",
    "tag": "wrap",
    "t1": 41.43333333333333
@@ -123,17 +103,6 @@
    "kind": "section",
    "id": "whoa",
    "t1": 50.4
-  },
-  {
-   "t": 41.43333333333333,
-   "kind": "answer.box",
-   "tag": "spine-4",
-   "t1": 41.9333
-  },
-  {
-   "t": 42.53333333333333,
-   "kind": "term.write",
-   "tag": "spine-5"
   },
   {
    "t": 50.4,
@@ -161,11 +130,6 @@
    "kind": "section",
    "id": "takeaway",
    "t1": 66.0
-  },
-  {
-   "t": 58.2,
-   "kind": "term.write",
-   "tag": "spine-6"
   },
   {
    "t": 59.46666666666667,

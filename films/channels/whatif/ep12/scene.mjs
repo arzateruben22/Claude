@@ -221,7 +221,7 @@ window.seek = function (t) {
     drops.instanceMatrix.needsUpdate = true; }
 
   // the work bars, over the globe
-  { const wb = shot === "work" ? seg(t, CUE.work0 + 0.4, CUE.work0 + 0.9) * (1 - seg(t, CUE.home - 0.5, CUE.home - 0.1)) : 0; barsEl.style.opacity = String(wb.toFixed(3));
+  { const wb = shot === "work" && !FILM.noBars ? seg(t, CUE.work0 + 0.4, CUE.work0 + 0.9) * (1 - seg(t, CUE.home - 0.5, CUE.home - 0.1)) : 0; barsEl.style.opacity = String(wb.toFixed(3));
     BARD.forEach((b, i) => { document.getElementById("br" + i).style.opacity = String((seg(t, CUE.ten - 0.3 + i * 0.5, CUE.ten + 0.3 + i * 0.5) * (i === 1 ? 1 : 1) + (i === 1 ? seg(t, CUE.work0 + 0.4, CUE.work0 + 0.9) : 0)).toFixed(3)); }); }
 
   // the end: the dim under the end card, lifted on the bare scene once the card text is gone

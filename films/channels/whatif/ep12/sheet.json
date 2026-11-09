@@ -71,25 +71,10 @@
    "tag": "c-flash"
   },
   {
-   "t": 9.033333333333333,
-   "kind": "term.write",
-   "tag": "spine-0"
-  },
-  {
-   "t": 16.7,
-   "kind": "term.write",
-   "tag": "spine-1"
-  },
-  {
    "t": 18.0,
    "kind": "section",
    "id": "change",
    "t1": 28.2
-  },
-  {
-   "t": 20.333333333333332,
-   "kind": "term.write",
-   "tag": "spine-2"
   },
   {
    "t": 24.5,
@@ -125,21 +110,10 @@
    "tag": "spine-5"
   },
   {
-   "t": 44.9,
-   "kind": "answer.box",
-   "tag": "spine-6",
-   "t1": 45.4
-  },
-  {
    "t": 49.8,
    "kind": "section",
    "id": "work",
    "t1": 58.8
-  },
-  {
-   "t": 49.8,
-   "kind": "term.write",
-   "tag": "spine-7"
   },
   {
    "t": 49.949999999999996,
@@ -166,11 +140,6 @@
    "kind": "section",
    "id": "takeaway",
    "t1": 69.0
-  },
-  {
-   "t": 58.8,
-   "kind": "term.write",
-   "tag": "spine-8"
   },
   {
    "t": 69.06666666666666,
