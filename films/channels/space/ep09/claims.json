@@ -36,7 +36,7 @@
  {
   "id": "c3",
   "sentence": "One place that does that: two neutron stars crashing together.",
-  "claim": "Neutron-star mergers are a confirmed site of r-process element production (one source).",
+  "claim": "Neutron-star mergers are one place heavy elements form: the 2017 merger GW170817 showed a kilonova powered by freshly made heavy elements (NASA page: 'astronomers think').",
   "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
   "source_title": "The Unfolding Story of a Kilonova Told in X-rays (NASA, 2022)",
   "accessed": "2026-11-08",
@@ -103,19 +103,19 @@
  },
  {
   "id": "c7",
-  "sentence": "Scientists still debate what else makes heavy atoms.",
-  "claim": "As of 2012 the sites of r-process production were not definitively known.",
-  "source_url": "https://assets.science.nasa.gov/content/dam/science/astro/programs/cosmic-origins/documents/uv-vis-study-2012/submissions/03.Lawler.pdf",
-  "source_title": "The Origin of the Elements Heavier than Iron (Roederer, Sobeck and Lawler, white paper to NASA, 2012)",
-  "accessed": "2026-11-08",
-  "note": "SOURCE-READ on 2026-11-08 by the builder (an AI), who fetched the page; a person still opens it before OK. 2012, before GW170817: supports 'debated' as of then, not a current survey.",
+  "sentence": "How much gold comes from crashes is still debated.",
+  "claim": "Neutron-star mergers alone may not explain the heavy elements in the Milky Way; collapsars (a kind of massive-star collapse) were proposed as another site, so the share from crashes is debated.",
+  "source_url": "https://arxiv.org/abs/1809.03525",
+  "source_title": "Côté et al., 'Neutron Star Mergers Might not be the Only Source of r-Process Elements in the Milky Way' (arXiv 1809.03525; read on ar5iv)",
+  "accessed": "2026-11-09",
+  "note": "SOURCE-READ on 2026-11-09 by the builder (an AI), who fetched the ar5iv copy; a person still opens it before OK. A 2018 review: 'We found discrepancies with the neutron star (NS-NS) merger scenario'; it describes collapsars (Siegel et al. 2018) as a proposed second site. Supports 'debated', NOT any percentage.",
   "verified_via": "page",
   "status": "SOURCE-READ",
   "source_read": {
-   "date": "2026-11-08",
+   "date": "2026-11-09",
    "by": "builder (an AI), fetched the page and read it",
-   "quote": "...there are no definitive observations linking high-mass r-process material with an astrophysical site or sites of nucleosynthesis... reasonable but unproven models of r-process nucleosynthesis in neutron star plus neutron star or black hole mergers...",
-   "qualification": "2012, before GW170817: supports 'debated' as of then, not a current survey."
+   "quote": "We found discrepancies with the neutron star (NS-NS) merger scenario. Assuming they are the only site, the decreasing trend of [Eu/Fe] ... in the disk of the Milky Way cannot be reproduced...",
+   "qualification": "Review from 2018; says mergers alone do not fit and names collapsars as another proposed site; no share is claimed."
   }
  },
  {
@@ -154,8 +154,8 @@
  },
  {
   "id": "c13",
-  "sentence": "Its visible light was spotted several hours later.",
-  "claim": "Visible and infrared light from GW170817 was detected several hours after the gravitational waves.",
+  "sentence": "Telescopes found its glow hours after.",
+  "claim": "Visible and infrared light from GW170817 was detected several hours after the gravitational waves (telescopes had to search for it).",
   "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
   "source_title": "The Unfolding Story of a Kilonova Told in X-rays (NASA, 2022)",
   "accessed": "2026-11-08",
@@ -188,7 +188,7 @@
  },
  {
   "id": "c21",
-  "sentence": "Light time: the crash's ripples in space came first.",
+  "sentence": "Light time: the ripples came first.",
   "claim": "GW170817 (Aug 2017): a neutron-star merger seen in gravitational waves, light and X-rays.",
   "source_url": "https://www.nasa.gov/image-article/unfolding-story-of-kilonova-told-x-rays/",
   "source_title": "The Unfolding Story of a Kilonova Told in X-rays (NASA, 2022)",
@@ -201,6 +201,23 @@
    "by": "builder (an AI), fetched the page and read it",
    "quote": "Visible light and infrared emission were detected from GW170817 several hours after the gravitational waves.",
    "qualification": ""
+  }
+ },
+ {
+  "id": "c22",
+  "sentence": "A gamma-ray flash came one point seven seconds later.",
+  "claim": "The gamma-ray burst GRB 170817A was seen +1.74 ± 0.05 s after the gravitational-wave event GW170817.",
+  "source_url": "https://arxiv.org/abs/1710.05834",
+  "source_title": "LIGO, Virgo, Fermi GBM, INTEGRAL: 'Gravitational Waves and Gamma-rays from a Binary Neutron Star Merger: GW170817 and GRB 170817A' (arXiv 1710.05834)",
+  "accessed": "2026-11-09",
+  "note": "SOURCE-READ on 2026-11-09 by the builder (an AI), who fetched the arXiv abstract page; a person still opens it before OK.",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI), fetched the page and read it",
+   "quote": "We use the observed time delay of (+1.74 ± 0.05) s between GRB 170817A and GW170817",
+   "qualification": "'about 1.7 seconds' is the rounded delay; the abstract is the source, a person still opens it."
   }
  }
 ]

@@ -1,5 +1,5 @@
 {
- "duration": 73.0667,
+ "duration": 74.6667,
  "fps": 30,
  "preset": "lightminute-vacuum",
  "sections": [
@@ -42,13 +42,13 @@
   {
    "id": "readout",
    "t0": 59.2,
-   "t1": 67.2,
+   "t1": 68.8,
    "energy": 0.45
   },
   {
    "id": "tease",
-   "t0": 67.2,
-   "t1": 73.0667,
+   "t0": 68.8,
+   "t1": 74.6667,
    "energy": 0.4
   }
  ],
@@ -113,22 +113,22 @@
    "t1": 39.4667
   },
   {
-   "t": 26.866666666666667,
+   "t": 26.833333333333332,
    "kind": "counter.show",
    "tag": "c-city"
   },
   {
-   "t": 29.6,
+   "t": 29.533333333333335,
    "kind": "counter.show",
    "tag": "c-atoms"
   },
   {
-   "t": 29.6,
+   "t": 29.533333333333335,
    "kind": "merge",
    "tag": "merger"
   },
   {
-   "t": 33.1,
+   "t": 33.0667,
    "kind": "label",
    "tag": "l-bead"
   },
@@ -168,36 +168,41 @@
    "t": 59.2,
    "kind": "section",
    "id": "readout",
-   "t1": 67.2
+   "t1": 68.8
   },
   {
-   "t": 61.4,
+   "t": 60.63333333333333,
    "kind": "counter.show",
    "tag": "c-read-gw"
   },
   {
-   "t": 61.4,
+   "t": 60.63333333333333,
    "kind": "light.front",
    "tag": "ripples"
   },
   {
-   "t": 63.833333333333336,
+   "t": 63.06666666666667,
    "kind": "counter.show",
-   "tag": "c-read-li"
+   "tag": "c-read-gr"
   },
   {
-   "t": 63.833333333333336,
+   "t": 63.06666666666667,
    "kind": "light.front",
    "tag": "light"
   },
   {
-   "t": 67.2,
-   "kind": "section",
-   "id": "tease",
-   "t1": 73.0667
+   "t": 67.06666666666666,
+   "kind": "counter.show",
+   "tag": "c-read-li"
   },
   {
-   "t": 67.36666666666666,
+   "t": 68.8,
+   "kind": "section",
+   "id": "tease",
+   "t1": 74.6667
+  },
+  {
+   "t": 68.96666666666667,
    "kind": "signature",
    "tag": "end"
   }
@@ -240,7 +245,7 @@
   },
   {
    "id": "vo08",
-   "t": 67.5,
+   "t": 69.1,
    "file": "vo/08.wav"
   }
  ]

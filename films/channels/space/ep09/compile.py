@@ -33,10 +33,10 @@ CUE = {
     "n": t_n, "c": t_c, "why": t_why, "w": t_w, "tk": t_tk, "rd": t_rd, "end": t_end,
     "heavier": A("vo02:heavier"), "soak": A("vo02:soaking"), "neutrons": A("vo02:neutrons"), "fast": A("vo02:fast"), "packed": A("vo02:packed"),
     "crashing": A("vo03:crashing"), "y2017": A("vo03:seventeen"), "light": A("vo03:light"),
-    "city": A("vo04:city"), "heavierS": A("vo04:heavier"), "crash": A("vo04:crash"), "throws": A("vo04:throws"), "debate": A("vo04:debate"),
+    "city": A("vo04:city"), "heavierS": A("vo04:heavier"), "crash": A("vo04:crash"), "throws": A("vo04:throws"), "debate": A("vo04:debated"),
     "zoom": A("vo05:Zoom"), "ring": A("vo05:ring"), "like": A("vo05:like"), "somewhere": A("vo05:somewhere"), "souv": A("vo05:souvenir"),
     "left": A("vo06:leftovers"), "chem": A("vo06:chemistry"),
-    "rip": A("vo07:ripples"), "first": A("vo07:first"), "vis": A("vo07:visible"), "hours": A("vo07:hours"),
+    "rip": A("vo07:ripples"), "first": A("vo07:first"), "vis": A("vo07:flash"), "glow": A("vo07:glow"), "sec": A("vo07:seconds"), "hours": A("vo07:hours"),
 }
 CUE["spiral0"] = round(t_c + 0.4, 4)
 CUE["tm"] = CUE["crash"]                          # the merger happens as the narration says "A crash throws out hot matter"
@@ -83,8 +83,8 @@ LABELS = [
 PILLS = [
     {"id": "p-table", "text": "neutron capture (illustration)", "t0": round(t_n + 0.4, 4), "t1": round(t_c - 0.3, 4), "at": [90 / 1080, 0.165]},
     {"id": "p-city", "text": "Manhattan Island (length) = a neutron star (width)", "t0": round(CUE["city"] - 0.4, 4), "t1": round(CUE["tm"] - 0.3, 4), "at": [90 / 1080, 0.165]},
-    {"id": "p-debate", "text": "what else makes heavy atoms? still debated", "t0": round(CUE["debate"] - 0.3, 4), "t1": round(CUE["zoom"] - 0.2, 4), "at": [90 / 1080, 0.165]},
-    {"id": "p-hours", "text": "hours later (not to scale)", "t0": round(CUE["vis"] - 0.3, 4), "t1": round(t_end - 0.45, 4), "at": [90 / 1080, 0.165]},
+    {"id": "p-debate", "text": "how much from crashes? debated", "t0": round(CUE["debate"] - 0.3, 4), "t1": round(CUE["zoom"] - 0.2, 4), "at": [90 / 1080, 0.165]},
+    {"id": "p-hours", "text": "times not to scale", "t0": round(CUE["rip"] - 0.2, 4), "t1": round(t_end - 0.45, 4), "at": [90 / 1080, 0.165]},
 ]
 BADGES = [
     {"id": "b-nts", "text": "not to scale", "t0": round(CUE["spiral0"] + 0.3, 4), "t1": round(CUE["zoom"] - 0.2, 4), "slot": "tr"},
@@ -100,7 +100,8 @@ COUNTERS = [
     {"id": "c-gold", "label": "some of your ring's gold", "text": "may be from a crash", "t0": CUE["like"], "t1": t_tk},
     {"id": "c-chem", "label": "stardust is", "text": "chemistry", "t0": CUE["chem"], "t1": t_rd},
     {"id": "c-read-gw", "label": "light time · the ripples", "text": "first", "read": True, "t0": CUE["rip"], "t1": round(CUE["vis"] - 0.05, 4)},
-    {"id": "c-read-li", "label": "light time · the visible light", "text": "hours later", "read": True, "t0": CUE["vis"], "t1": round(t_end - 0.45, 4)},
+    {"id": "c-read-gr", "label": "light time · the gamma-ray flash", "text": "1.7 seconds later", "read": True, "t0": CUE["vis"], "t1": round(CUE["glow"] - 0.05, 4)},
+    {"id": "c-read-li", "label": "light time · the glow, found by telescopes", "text": "hours later", "read": True, "t0": CUE["glow"], "t1": round(t_end - 0.45, 4)},
 ]
 for c in COUNTERS:
     c.setdefault("at", SPINE)
@@ -113,14 +114,14 @@ TITLE = {"series": "One More Orbit · S2E03", "title": "Your *gold*", "t1": t_n 
 END = {"title": "Next orbit: the *black hole* edge", "follow": "One More Orbit · S2 · Episode 4",
        "next": "GW170817 (2017): the first merger seen in both ripples and light (NASA)."}
 POSTER = A("vo05:ring", 1.0)
-glue(f, {"vo03": ["twenty seventeen,"], "vo04": ["about as wide as a city,"], "vo06": ["a star crash."], "vo07": ["came first.", "several hours later."], "vo08": ["a black hole?"]})
+glue(f, {"vo02": ["soaking up neutrons."], "vo03": ["twenty seventeen,"], "vo04": ["about as wide as a city,", "still debated."], "vo06": ["a star crash."], "vo07": ["came first.", "seven seconds later.", "hours after."], "vo08": ["Next: what happens", "at the edge of", "a black hole?"]})
 LOOP0 = round(f.duration - 0.6, 4)
 film = {
     "loop0": LOOP0, "id": ID, "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": POSTER,
     "shots": SHOTS, "beats": BEATS, "cam": CAM, "cue": CUE, "ring": RING,
     "labels": LABELS, "badges": BADGES, "counters": COUNTERS, "pills": PILLS,
     "title": TITLE, "endCard": t_end, "end": END,
-    "captions": hold(f, keep_units(f.captions(max_chars=24, written=False))),
+    "captions": hold(f, keep_units(f.captions(max_chars=26, written=False))),
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS]

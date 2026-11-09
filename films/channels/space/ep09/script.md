@@ -22,7 +22,7 @@ vo: Gold is heavier than iron. {c1} Atoms that heavy are built by soaking up *ne
 vo: One place that does that: two neutron stars *crashing* together. {c3} In twenty seventeen, astronomers saw one happen, as ripples in space and as *light*. {c4}
 
 ## why {shot: a city-sized ball with more mass than the Sun; the crash flings out hot matter that cools into new atoms · spine "the crash makes heavy atoms" · picture-only 2 s · energy: 0.62} (22.5–37 s)
-vo: A neutron star is about as wide as a *city*, yet heavier than the Sun. {c5} A crash throws out hot matter, and some becomes heavy atoms. {c6} Scientists still debate what *else* makes heavy atoms. {c7}
+vo: A neutron star is about as wide as a *city*, yet heavier than the Sun. {c5} A crash throws out hot matter, and some becomes heavy atoms. {c6} How much gold comes from crashes is still *debated*. {c7}
 
 ## whoa {shot: zoom from the cloud into a ring on a hand; one gold bead settles into it · spine "your ring: older than the Sun" · picture-only 3 s · energy: 0.8} (37–51 s)
 vo: Zoom in on your *ring*. {-} Some of its gold may have been made in a crash like that, *somewhere* in space. {c8} Think of it as a *souvenir*. {-}
@@ -30,10 +30,10 @@ vo: Zoom in on your *ring*. {-} Some of its gold may have been made in a crash l
 ## takeaway {shot: hold on the ring with the galaxy behind · picture-only 0.2 s · energy: 0.3} (51–58 s)
 vo: So some gold may be leftovers of a star *crash*. {c20} Stardust isn't a poem. {-} It's *chemistry*. {-}
 
-## readout {segment: readout · light-time readout: the ripples first, the light hours later (not to scale) · a ping per line · picture-only 0.2 s · energy: 0.45} (58–65.5 s)
-vo: *Light time*: the crash's ripples in space came *first*. {c21} Its visible light was spotted several *hours* later. {c13}
+## readout {segment: readout · light-time readout: the ripples first, the light hours later (not to scale) · a ping per line · picture-only 0.2 s · energy: 0.45} (58–67 s)
+vo: *Light time*: the ripples came *first*. {c21} A gamma-ray flash came one point seven seconds later. {c22} Telescopes found its glow *hours* after. {c13}
 
-## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
+## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (67–73 s)
 vo: Next: what happens at the edge of a *black hole*? {-}
 end card: "Next orbit: the *black hole* edge" · "One More Orbit · S2 · Episode 4"
 

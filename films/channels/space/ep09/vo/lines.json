@@ -53,16 +53,16 @@
   {
    "id": "vo04",
    "beat": "why",
-   "text": "A neutron star is about as wide as a city, yet heavier than the Sun. A crash throws out hot matter, and some becomes heavy atoms. Scientists still debate what else makes heavy atoms.",
+   "text": "A neutron star is about as wide as a city, yet heavier than the Sun. A crash throws out hot matter, and some becomes heavy atoms. How much gold comes from crashes is still debated.",
    "stars": [
     "city",
-    "else"
+    "debated"
    ],
-   "phonemes": "ɐ nˈuːtɹɑːn stˈɑːɹ ɪz ɐbˌaʊt æz wˈaɪd æz ɐ sˈɪɾi, jˈɛt hˈɛviɚ ðɐn ðə sˈʌn. ɐ kɹˈæʃ θɹˈoʊz ˈaʊt hˈɑːt mˈæɾɚ, ænd sˌʌm bɪkˌʌmz hˈɛvi ˈæɾəmz. sˈaɪəntɪsts stˈɪl dᵻbˈeɪt wʌt ˈɛls mˌeɪks hˈɛvi ˈæɾəmz.",
-   "speed": 0.95,
+   "phonemes": "ɐ nˈuːtɹɑːn stˈɑːɹ ɪz ɐbˌaʊt æz wˈaɪd æz ɐ sˈɪɾi, jˈɛt hˈɛviɚ ðɐn ðə sˈʌn. ɐ kɹˈæʃ θɹˈoʊz ˈaʊt hˈɑːt mˈæɾɚ, ænd sˌʌm bɪkˌʌmz hˈɛvi ˈæɾəmz. hˌaʊ mˈʌtʃ ɡˈoʊld kˈʌmz fɹʌm kɹˈæʃᵻz ɪz stˈɪl dᵻbˈeɪɾᵻd.",
+   "speed": 0.98,
    "file": "04.wav",
-   "dur": 13.022,
-   "sha256": "493c7212272ac3eebbaa180547a6ff922aafdcd419c2b000a01218d36f5e486a"
+   "dur": 12.643,
+   "sha256": "e889ebfef699db9e8bbdc80bb70a0c89840a7f72b73b818091bdfbd0ac8a9dcb"
   },
   {
    "id": "vo05",
@@ -96,17 +96,17 @@
   {
    "id": "vo07",
    "beat": "readout",
-   "text": "Light time: the crash's ripples in space came first. Its visible light was spotted several hours later.",
+   "text": "Light time: the ripples came first. A gamma-ray flash came one point seven seconds later. Telescopes found its glow hours after.",
    "stars": [
     "Light time",
     "first",
     "hours"
    ],
-   "phonemes": "lˈaɪt tˈaɪm: ðə kɹˈæʃᵻz ɹˈɪpəlz ɪn spˈeɪs kˈeɪm fˈɜːst. ɪts vˈɪzᵻbəl lˈaɪt wʌz spˈɑːɾᵻd sˈɛvɹəl ˈaʊɚz lˈeɪɾɚ.",
-   "speed": 0.95,
+   "phonemes": "lˈaɪt tˈaɪm: ðə ɹˈɪpəlz kˈeɪm fˈɜːst. ɐ ɡˈæmɚɹˈeɪ flˈæʃ kˈeɪm wˈʌn pˈɔɪnt sˈɛvən sˈɛkəndz lˈeɪɾɚ. tˈɛlᵻskˌoʊps fˈaʊnd ɪts ɡlˈoʊ ˈaʊɚz ˈæftɚ.",
+   "speed": 1.0,
    "file": "07.wav",
-   "dur": 7.201,
-   "sha256": "4c946f6890f4b62fc69c0cf9f6fda537b9ec31491a3de0d0e762c8541365d414"
+   "dur": 9.07,
+   "sha256": "89159ee0e78f8c739baf8424366d75e70ab3e90a8ea7727c3f54b6adf6ffe50f"
   },
   {
    "id": "vo08",

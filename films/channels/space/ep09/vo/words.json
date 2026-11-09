@@ -360,8 +360,8 @@
   },
   {
    "id": "vo04",
-   "text": "A neutron star is about as wide as a city, yet heavier than the Sun. A crash throws out hot matter, and some becomes heavy atoms. Scientists still debate what else makes heavy atoms.",
-   "heard": "A neutron star is about as wide as a city, yet heavier than the sun. A crash throws out hot matter and some becomes heavy atoms. Scientists still debate what else makes heavy atoms.",
+   "text": "A neutron star is about as wide as a city, yet heavier than the Sun. A crash throws out hot matter, and some becomes heavy atoms. How much gold comes from crashes is still debated.",
+   "heard": "A neutron star is about as wide as a city, yet heavier than the sun. A crash throws out hot matter and some becomes heavy atoms. How much gold comes from crashes is still debated.",
    "words": [
     {
      "w": "A",
@@ -377,194 +377,200 @@
     },
     {
      "w": "star",
-     "start": 0.83,
+     "start": 0.825,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "is",
-     "start": 1.2,
+     "start": 1.195,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "about",
-     "start": 1.415,
+     "start": 1.41,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "as",
-     "start": 1.59,
+     "start": 1.585,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "wide",
-     "start": 1.855,
+     "start": 1.85,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "as",
-     "start": 2.15,
+     "start": 2.155,
      "end": 2.32,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.275,
+     "start": 2.29,
      "end": 2.48,
      "heard": true
     },
     {
      "w": "city,",
-     "start": 2.55,
-     "end": 3.2,
+     "start": 2.525,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "yet",
-     "start": 3.26,
+     "start": 3.23,
      "end": 3.44,
      "heard": true
     },
     {
      "w": "heavier",
-     "start": 3.43,
+     "start": 3.42,
      "end": 3.92,
      "heard": true
     },
     {
      "w": "than",
-     "start": 3.87,
+     "start": 3.86,
      "end": 4.08,
      "heard": true
     },
     {
      "w": "the",
-     "start": 4.095,
+     "start": 4.07,
      "end": 4.24,
      "heard": true
     },
     {
      "w": "Sun.",
-     "start": 4.245,
-     "end": 5.04,
+     "start": 4.215,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "A",
-     "start": 5.165,
-     "end": 5.28,
+     "start": 5.11,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "crash",
-     "start": 5.285,
-     "end": 5.76,
+     "start": 5.23,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "throws",
-     "start": 5.8,
-     "end": 6.24,
+     "start": 5.77,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "out",
-     "start": 6.335,
+     "start": 6.13,
      "end": 6.4,
      "heard": true
     },
     {
      "w": "hot",
-     "start": 6.37,
+     "start": 6.34,
      "end": 6.8,
      "heard": true
     },
     {
      "w": "matter,",
-     "start": 6.755,
+     "start": 6.705,
      "end": 7.28,
      "heard": true
     },
     {
      "w": "and",
-     "start": 7.41,
+     "start": 7.325,
      "end": 7.52,
      "heard": true
     },
     {
      "w": "some",
-     "start": 7.44,
-     "end": 7.76,
+     "start": 7.545,
+     "end": 7.84,
      "heard": true
     },
     {
      "w": "becomes",
-     "start": 7.93,
-     "end": 8.4,
+     "start": 7.815,
+     "end": 8.32,
      "heard": true
     },
     {
      "w": "heavy",
-     "start": 8.4,
-     "end": 8.8,
+     "start": 8.29,
+     "end": 8.72,
      "heard": true
     },
     {
      "w": "atoms.",
-     "start": 8.775,
-     "end": 9.76,
+     "start": 8.67,
+     "end": 9.6,
      "heard": true
     },
     {
-     "w": "Scientists",
+     "w": "How",
+     "start": 9.67,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "much",
      "start": 9.805,
-     "end": 10.64,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "gold",
+     "start": 10.1,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "comes",
+     "start": 10.545,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 10.88,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "crashes",
+     "start": 11.045,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 11.48,
+     "end": 11.84,
      "heard": true
     },
     {
      "w": "still",
-     "start": 10.7,
-     "end": 10.88,
+     "start": 11.87,
+     "end": 12.0,
      "heard": true
     },
     {
-     "w": "debate",
-     "start": 10.89,
-     "end": 11.36,
-     "heard": true
-    },
-    {
-     "w": "what",
-     "start": 11.36,
-     "end": 11.52,
-     "heard": true
-    },
-    {
-     "w": "else",
-     "start": 11.405,
-     "end": 11.76,
-     "heard": true
-    },
-    {
-     "w": "makes",
-     "start": 11.84,
-     "end": 12.08,
-     "heard": true
-    },
-    {
-     "w": "heavy",
-     "start": 12.0,
-     "end": 12.48,
-     "heard": true
-    },
-    {
-     "w": "atoms.",
-     "start": 12.475,
-     "end": 12.96,
+     "w": "debated.",
+     "start": 11.9,
+     "end": 12.56,
      "heard": true
     }
    ]
@@ -843,8 +849,8 @@
   },
   {
    "id": "vo07",
-   "text": "Light time: the crash's ripples in space came first. Its visible light was spotted several hours later.",
-   "heard": "Light time. The crash's ripples in space came first. Its visible light was spotted several hours later.",
+   "text": "Light time: the ripples came first. A gamma-ray flash came one point seven seconds later. Telescopes found its glow hours after.",
+   "heard": "Light time. The ripples came first. A gamma ray flash came 1.7 seconds later. Telescopes found its glow hours after.",
    "words": [
     {
      "w": "Light",
@@ -854,98 +860,122 @@
     },
     {
      "w": "time:",
-     "start": 0.655,
-     "end": 1.12,
+     "start": 0.64,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.29,
-     "end": 1.34,
-     "heard": true
-    },
-    {
-     "w": "crash's",
-     "start": 1.32,
-     "end": 1.92,
+     "start": 1.105,
+     "end": 1.155,
      "heard": true
     },
     {
      "w": "ripples",
-     "start": 1.895,
-     "end": 2.4,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 2.485,
-     "end": 2.56,
-     "heard": true
-    },
-    {
-     "w": "space",
-     "start": 2.67,
-     "end": 3.04,
+     "start": 1.135,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "came",
-     "start": 2.985,
-     "end": 3.52,
+     "start": 1.595,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "first.",
-     "start": 3.615,
-     "end": 4.16,
+     "start": 2.155,
+     "end": 2.64,
      "heard": true
     },
     {
-     "w": "Its",
-     "start": 4.24,
-     "end": 4.4,
+     "w": "A",
+     "start": 2.77,
+     "end": 2.82,
      "heard": true
     },
     {
-     "w": "visible",
-     "start": 4.33,
-     "end": 4.8,
+     "w": "gamma-ray",
+     "start": 2.895,
+     "end": 3.52,
+     "heard": false
+    },
+    {
+     "w": "flash",
+     "start": 3.555,
+     "end": 3.92,
      "heard": true
     },
     {
-     "w": "light",
-     "start": 4.72,
-     "end": 5.2,
+     "w": "came",
+     "start": 3.92,
+     "end": 4.24,
      "heard": true
     },
     {
-     "w": "was",
-     "start": 5.205,
-     "end": 5.44,
-     "heard": true
+     "w": "one",
+     "start": 4.245,
+     "end": 5.28,
+     "heard": false
     },
     {
-     "w": "spotted",
-     "start": 5.51,
-     "end": 5.92,
-     "heard": true
+     "w": "point",
+     "start": 4.275,
+     "end": 5.28,
+     "heard": false
     },
     {
-     "w": "several",
-     "start": 5.89,
-     "end": 6.4,
-     "heard": true
+     "w": "seven",
+     "start": 4.305,
+     "end": 5.28,
+     "heard": false
     },
     {
-     "w": "hours",
-     "start": 6.415,
-     "end": 6.72,
+     "w": "seconds",
+     "start": 5.375,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "later.",
-     "start": 6.775,
-     "end": 7.12,
+     "start": 5.7,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "Telescopes",
+     "start": 6.45,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "found",
+     "start": 7.09,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 7.47,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "glow",
+     "start": 7.575,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "hours",
+     "start": 8.115,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "after.",
+     "start": 8.535,
+     "end": 9.04,
      "heard": true
     }
    ]
