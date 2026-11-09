@@ -69,8 +69,8 @@ _F2 = round(_M0 + FALLT["medium"] + PAUSE, 4)           # when the second medium
 ARROWS_W = [round(_F2 + 0.3, 4), round(_F2 + FALLT["medium"] - 0.4, 4)]
 FOCUS = [                                           # which drop the readout follows
     {"t0": _M0, "t1": cut("whoa"), "lane": "medium"},
-    {"t0": cut("measure"), "t1": A("vo06:four-millimeter") - 0.5, "lane": "small"},
-    {"t0": A("vo06:four-millimeter") - 0.5, "t1": cut("takeaway") - 0.3, "lane": "big"},
+    {"t0": cut("measure"), "t1": A("vo06:four-millimeter") - 0.1, "lane": "small"},
+    {"t0": A("vo06:four-millimeter") - 0.1, "t1": cut("takeaway") - 0.3, "lane": "big"},
 ]
 LABELS = [
     {"id": "no-speed", "text": "speeding up", "color": "energy", "t0": _M0 + 0.8, "t1": A("vo02:Watch") - 0.3, "at": "lane-medium", "side": 1},
@@ -79,8 +79,8 @@ LABELS = [
     {"id": "ch-drag", "text": "air pushing back", "color": "energy", "t0": A("vo03:harder") - 0.4, "t1": cut("why") - 0.3, "at": "d-arrow", "side": 1},
     {"id": "wy-tie", "text": "a tie", "color": "ghost", "t0": A("vo04:matches"), "t1": A("vo04:weight#2") + 0.5, "at": "lane-medium", "side": 1},
     {"id": "wo-small", "text": "round", "color": "ghost", "t0": A("vo05:Small"), "t1": A("vo05:biggest") - 0.1, "at": "lane-small", "side": 1},
-    {"id": "wo-big", "text": "a bun", "color": "energy", "t0": A("vo05:flatten") - 0.1, "t1": A("vo05:break") - 0.1, "at": "lane-big", "side": -1},
-    {"id": "wo-split", "text": "breaks apart", "color": "force", "t0": SPLIT_T + 0.1, "t1": cut("measure") - 0.3, "at": "split", "side": -1},
+    {"id": "wo-big", "text": "a bun", "color": "energy", "t0": A("vo05:flatten") - 0.1, "t1": A("vo05:break") - 0.1, "at": "big-top", "side": -1, "v": "above"},
+    {"id": "wo-split", "text": "breaks apart", "color": "force", "t0": SPLIT_T + 0.1, "t1": cut("measure") - 0.3, "at": "split", "side": 1, "v": "below"},
 ]
 for _lb in LABELS:
     _lb["t0"] = round((math.floor(_lb["t0"] * FPS) + 0.5) / FPS, 6)

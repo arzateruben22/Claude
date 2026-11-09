@@ -130,14 +130,15 @@ const dropT = dropTitle(titleEl, { sig: FILM.title.sig, fps: FILM.fps });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const dropPos = (lane, t) => { const st = laneState(lane, t); return [LANES[lane].x, st && st.falling ? yOfS(st.s) : YTOP]; };
 const anchorFn = (an, side) => {
-  const ringR = (k) => LANES[k].r * 2 + 0.3;
+  const ringR = (k) => LANES[k].r * 2 + 0.25;
+  if (an === "big-top") return (t) => { const [x, y] = dropPos("big", t); return [x - 0.9, y + ringR("big"), 0.5]; };
   if (an.startsWith("lane-")) { const k = an.slice(5), sd = side; return (t) => { const [x, y] = dropPos(k, t); return [x + sd * ringR(k), y, 0.5]; }; }
-  if (an === "w-arrow") return (t) => { const [x, y] = dropPos("medium", t); return [x - 1.5, y - 1.0, 0.8]; };
+  if (an === "w-arrow") return (t) => { const [x, y] = dropPos("medium", t); return [x - 1.4, y - 1.0, 0.8]; };
   if (an === "d-arrow") return (t) => { const [x, y] = dropPos("medium", t), st = laneState("medium", t), v = st ? st.v : 0; return [x + 1.5, y + 1.0 * (v / LANES.medium.vt) ** 2, 0.8]; };
-  if (an === "split") return (t) => { const s0 = laneState("big", FILM.split); return [LANES.big.x - 1.4, Math.max(0.5, yOfS(s0.s) - 0.65 * (t - FILM.split) * 1.0), 0.5]; };
+  if (an === "split") return (t) => { const s0 = laneState("big", FILM.split); return [LANES.big.x - 1.4, Math.max(0.5, yOfS(s0.s) - 0.65 * (t - FILM.split) * 1.0) - 0.2, 0.5]; };
   return () => [0, 0, 0];
 };
-for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at, lb.side), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, fixed: false });
+for (const lb of FILM.labels) hud.label(lb.id, { text: lb.text, color: lb.color, mark: "bar", at: anchorFn(lb.at, lb.side), t0: lb.t0, t1: lb.t1 ?? null, side: lb.side, v: lb.v || "middle", fixed: true });
 const focusVal = (t) => { const f = FILM.focus.find((q) => t >= q.t0 && t < q.t1) || FILM.focus[FILM.focus.length - 1], st = laneState(f.lane, t); return st ? st.v : LANES[f.lane].vt; };
 FILM.spine.forEach((SPN, i) => { const o = { value: focusVal, fmt: (v) => v.toFixed(1), unit: "m/s", label: SPN.label, t0: SPN.t0, t1: SPN.t1, minCh: 4 }, el = hud.counter(i ? "spine" + (i + 1) : "spine", o); placeSpine(o, el, hud, W, H, FILM.spineAt); });
 const endEl = hud.end({ t0: ES - 0.3, d: 0.3, ...FILM.end });
@@ -160,7 +161,7 @@ window.seek = function (t) {
     const L = LANES[k], o = lanes[k], st = inRain ? null : laneState(k, t);
     const show = !!st && !(k === "big" && splitDone);
     o.g.visible = show;
-    if (show) { const hu = st.falling ? 1 : 0.15 + 0.85 * st.u; o.g.position.set(L.x, st.falling ? yOfS(st.s) : YTOP, 0); const u = k === "big" ? bun : 0; o.g.scale.setScalar(hu); o.body.scale.set(L.r * (1 + 0.7 * u), L.r * (1 - 0.6 * u), L.r * (1 + 0.7 * u)); }
+    if (show) { const hu = st.falling ? 1 : 0.55 + 0.45 * st.u; o.g.position.set(L.x, st.falling ? yOfS(st.s) : YTOP, 0); const u = k === "big" ? bun : 0; o.g.scale.setScalar(hu); o.body.scale.set(L.r * (1 + 0.7 * u), L.r * (1 - 0.6 * u), L.r * (1 + 0.7 * u)); }
     o.ghosts.forEach((m, i) => { const tk = 0.5 * i, on = ghostsOn && st && st.falling && st.tau >= tk + 0.02 && !(k === "big" && splitDone); m.visible = !!on; if (on) m.position.set(L.x, yOfS(sOf(L.vt, tk)), -0.2); });
     const sp = o.splash; if (st && !st.falling && st.since !== undefined && st.since < 0.9 && !(k === "big" && splitDone)) { sp.visible = true; const q = st.since / 0.9; sp.position.set(L.x, 0.08, 0); sp.scale.setScalar(0.3 + 1.1 * q); sp.material.opacity = 0.9 * (1 - q); } else sp.visible = false;
   }
