@@ -41,3 +41,4 @@ end card: "Next envelope: *all the water, one ball*" · "Possibility Lab · Seas
 - Every number is `calc.py`'s; "almost certainly" is a probability statement, said as one. Real shuffles are imperfect: the film says "shuffle well".
 - The thought experiment is badged: one fair shuffle a second for every person alive, since the Big Bang.
 - Listen at T0: "fifty-two", "sixty-eight", "trillion trillion trillion".
+- Lint note: the kit lint asks for picture-only 2 s (why) and 3 s (whoa); for this channel the coordinator's rule "no voiceless gap over 1.2 s" overrides it, so those lint errors are expected.

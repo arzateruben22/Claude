@@ -21,17 +21,17 @@ vo: Count the oceans, the ice, the lakes, the rivers, the water underground, and
 ## change {shot: the stream gathers into a sphere that swells; a ruler in kilometers · events: term.write · energy: 0.65} (17–27 s)
 vo: Squeeze all of it into one round ball, as if it were a single giant drop. {-} That ball is about fourteen hundred kilometers *wide*. {c3}
 
-## why {shot: pull back beside the ball: the Earth beyond, a planet-sized sphere · badge: ∵ liquid, ice and vapor counted together · picture-only 2 s · energy: 0.55} (27–40 s)
+## why {shot: pull back beside the ball: the Earth beyond, a planet-sized sphere · badge: ∵ liquid, ice and vapor counted together · picture-only 0.4 s · energy: 0.55} (27–40 s)
 vo: That sounds enormous, and next to us it is. {-} But our world is much bigger, so let's set the ball next to a *planet*. {-}
 
-## whoa {shot: the water ball hangs beside the Moon, then beside the Earth; the box closes round "≈ 1,400 km" · events: answer.box · picture-only 3 s · energy: 0.75} (40–52.5 s)
+## whoa {shot: the water ball hangs beside the Moon, then beside the Earth; the box closes round "≈ 1,400 km" · events: answer.box · picture-only 0.4 s · energy: 0.75} (40–52.5 s)
 vo: It is less than half as wide as the *Moon*. {c4} Next to the Earth, it is a marble beside a *basketball*. {c5}
 
 ## work {segment: work · show your work: the whole sum on one line, its badges green, the sensitivity rows below · energy: 0.5} (52.5–61 s)
 vo: Only a small part of the water is fresh; count just that, and the ball is about four hundred kilometers *wide*. {c6}
 
 ## takeaway {shot: the Earth with a thin blue film; the ball beside it · picture-only 0.3 s · energy: 0.45} (61–69 s)
-vo: Earth looks like a water world from space. {-} But its water is only about an eighth of one percent of its *volume*. {c7}
+vo: Earth looks like a water world from space. {-} But its water is only about an eighth of one percent of its *volume*. {c7,c8}
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (69–74.5 s)
 vo: Next envelope: could we catch all the world's *lightning*? {-}
@@ -41,3 +41,4 @@ end card: "Next envelope: *catching all the lightning*" · "Possibility Lab · S
 - Every number is `calc.py`'s. The answer is about 1,400 km (1,383 km computed), badged "liquid, ice and vapor counted together": all water, not only the sea.
 - The last line means volume: one eighth of one percent of the Earth's volume.
 - Listen at T0: "kilometers", "fourteen hundred", "marble".
+- Lint note: the kit lint asks for picture-only 2 s (why) and 3 s (whoa); for this channel the coordinator's rule "no voiceless gap over 1.2 s" overrides it, so those lint errors are expected.

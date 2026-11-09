@@ -1,0 +1,200 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/ep11/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "How big is Earth's water? Gather every drop into one ball, and measure it.",
+   "stars": [
+    "water"
+   ],
+   "phonemes": "hˌaʊ bˈɪɡ ɪz ˈɜːθz wˈɔːɾɚ? ɡˈæðɚɹ ˈɛvɹi dɹˈɑːp ˌɪntʊ wˈʌn bˈɔːl, ænd mˈɛʒɚɹ ɪt.",
+   "speeds": [
+    0.84,
+    0.72
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     1.3949,
+     1.9949
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 5.608,
+   "sha256": "11d928f9488db8d345cc60671013a25607556999ea6779df1502a01b3bdcdfc9"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Count the oceans, the ice, the lakes, the rivers, the water underground, and the water in the air. It adds up to about one point four billion cubic kilometers.",
+   "stars": [
+    "kilometers"
+   ],
+   "phonemes": "kˈaʊnt ðɪ ˈoʊʃənz, ðɪ ˈaɪs, ðə lˈeɪks, ðə ɹˈɪvɚz, ðə wˈɔːɾɚɹ ˌʌndɚɡɹˈaʊnd, ænd ðə wˈɔːɾɚɹ ɪnðɪ ˈɛɹ. ɪɾ ˈædz ˌʌp tʊ ɐbˌaʊt wˈʌn pˈɔɪnt fˈɔːɹ bˈɪliən kjˈuːbɪk kɪlˈɑːmɪɾɚz.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     6.7873,
+     7.1673
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 11.946,
+   "sha256": "01ccf1a8fa1ece6c9e249987b155e50064e6fe157b467c3413625cffc3eb228e"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Squeeze all of it into one round ball, as if it were a single giant drop. That ball is about fourteen hundred kilometers wide.",
+   "stars": [
+    "wide"
+   ],
+   "phonemes": "skwˈiːz ˈɔːl ʌv ɪɾ ˌɪntʊ wˈʌn ɹˈaʊnd bˈɔːl, æz ɪf ɪt wɜːɹ ɐ sˈɪŋɡəl dʒˈaɪənt dɹˈɑːp. ðæt bˈɔːl ɪz ɐbˌaʊt fˈɔːɹtiːn hˈʌndɹɪd kɪlˈɑːmɪɾɚz wˈaɪd.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     5.7956,
+     6.1756
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 9.894,
+   "sha256": "63501ab6d7148d4398665823d9e6fd072d5797e24345fda3b4d4842188de7b00"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "That sounds enormous, and next to us it is. But our world is much bigger, so let's set the ball next to a planet.",
+   "stars": [
+    "planet"
+   ],
+   "phonemes": "ðæt sˈaʊndz ɪnˈɔːɹməs, ænd nˈɛkst tʊ ˌʌs ɪɾ ˈɪz. bˌʌt ˌaʊɚ wˈɜːld ɪz mˈʌtʃ bˈɪɡɚ, sˌoʊ lˈɛts sˈɛt ðə bˈɔːl nˈɛkst tʊ ɐ plˈænɪt.",
+   "speeds": [
+    0.76,
+    0.74
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     2.7572,
+     3.1372
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 7.95,
+   "sha256": "1113b61df363056e8381b4ed3612de77f636a72abca0958271051a542120a2c4"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "It is less than half as wide as the Moon. Next to the Earth, it is a marble beside a basketball.",
+   "stars": [
+    "Moon",
+    "basketball"
+   ],
+   "phonemes": "ɪɾ ɪz lˈɛs ðɐn hˈæf æz wˈaɪd æz ðə mˈuːn. nˈɛkst tə ðɪ ˈɜːθ, ɪɾ ɪz ɐ mˈɑːɹbəl bᵻsˌaɪd ɐ bˈæskɪtbˌɔːl.",
+   "speeds": [
+    0.74,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     2.694,
+     3.074
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 7.028,
+   "sha256": "50d927257805cce61872d50089bbec3049793b8932da6dfa1febb286f099efd4"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Only a small part of the water is fresh; count just that, and the ball is about four hundred kilometers wide.",
+   "stars": [
+    "wide"
+   ],
+   "phonemes": "ˈoʊnli ɐ smˈɔːl pˈɑːɹt ʌvðə wˈɔːɾɚɹ ɪz fɹˈɛʃ; kˈaʊnt dʒˈʌst ðˈæt, ænd ðə bˈɔːl ɪz ɐbˌaʊt fˈɔːɹ hˈʌndɹɪd kɪlˈɑːmɪɾɚz wˈaɪd.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 8.534,
+   "sha256": "746c7dc32b7ee3e023218d36efa38a5bdce2c87d0f0eef158702dca81bba756a"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Earth looks like a water world from space. But its water is only about an eighth of one percent of its volume.",
+   "stars": [
+    "volume"
+   ],
+   "phonemes": "ˈɜːθ lˈʊks lˈaɪk ɐ wˈɔːɾɚ wˈɜːld fɹʌm spˈeɪs. bˌʌt ɪts wˈɔːɾɚɹ ɪz ˈoʊnli ɐbˌaʊt ɐn ˈeɪtθ ʌv wˈʌn pɚsˈɛnt ʌv ɪts vˈɑːljuːm.",
+   "speeds": [
+    0.76,
+    0.72
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     2.6646,
+     3.0446
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 8.177,
+   "sha256": "d3e56f06b8d0e621b68d3ee0b54777db586a5a3c863f9cc509e3302783b8f454"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: could we catch all the world's lightning?",
+   "stars": [
+    "lightning"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: kʊd wiː kˈætʃ ˈɔːl ðə wˈɜːldz lˈaɪtnɪŋ?",
+   "speeds": [
+    0.72
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 3.857,
+   "sha256": "6aaa92390076d5f2d62ba958ca71271a51f62f353f6f5b64b579de41b32b18f2"
+  }
+ ]
+}

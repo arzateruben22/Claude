@@ -41,3 +41,4 @@ end card: "Next envelope: *a shuffled deck*" · "Possibility Lab · Season 2 · 
 - Every number is `calc.py`'s; the answer is a thought experiment, badged: a perfect sphere, a smooth rope, no sag.
 - The answer is "about 6.3 m" however big the planet: said once, shown in the box.
 - Listen at T0: "radius", "pi", "six".
+- Lint note: the kit lint asks for picture-only 2 s (why) and 3 s (whoa); for this channel the coordinator's rule "no voiceless gap over 1.2 s" overrides it, so those lint errors are expected.
