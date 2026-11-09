@@ -2,8 +2,9 @@
 // paint, a real dashboard and tachometer per car, and the driver's anatomical hands on the wheel), on a sprung body
 // that pitches under acceleration and braking, rolls in corners and buzzes with the engine, with wheels that spin
 // and steer, headlight beams, tail lights that brighten on the brakes, and the game's camera anchors. The OC Hypercar
-// also blinks its turn signals (lane changes, and hard steering at low speed) and lights its reversing lamps; its
-// driver sits lower and further in (car-shape seatOffset), so its eye and hands move with the seat.
+// also blinks its turn signals (lane changes, and hard steering at low speed), lights its reversing lamps and spreads
+// a red haze round its thin tail bar on the brakes; its
+// driver sits lower, further in and further forward (car-shape seatOffset), so its eye and hands move with the seat.
 //
 // configure() builds or rebuilds only what changed: the car and its cockpit (car id, quality or mirrors), the paint,
 // the hands (driver look, presentation, nails). Quality 'phone' is the lighter build, 'high' the full desktop look.
@@ -19,13 +20,19 @@ import type { PaintFinish } from '../../preview/car';
 import { buildCockpit, Cockpit } from '../../preview/cockpit';
 import { buildDriverArms, DriverArms, HandPose } from '../../preview/hands';
 import { addWheel, type WheelStyle } from '../../preview/car-wheel';
-import { Kit } from '../../preview/car-kit';
+import { Kit, mat } from '../../preview/car-kit';
 import { bodyFor } from '../../preview/car-body';
 import type { CarBody } from '../../preview/car-body';
 import { CarId, shapeFor, rearR, seatOffset } from '../../preview/car-shape';
 import { EYE } from '../../preview/spec';
-const HYPER_EYE = new THREE.Vector3(0.07, -0.13, -0.02);
+import { WAKE, WAKE_SECONDS, wakeAt } from '../../preview/car-wake';
+// the hypercar's air-pressure gauge (the cockpit's frame): its own interior (cockpit.ts 'hyper', M2) keeps a gauge pod
+// on the dash top right of the binnacle (Cockpit.gaugeAt), and the display sits in it behind the pod's glass. With no
+// pod, it falls back to the shared binnacle: over the left-hand display beside the tachometer (the binnacle at
+// (-0.37, 0.835, -0.62) tilted -0.41, the display 0.158 m left of the tach and turned 0.2 toward the driver)
+const GAUGE_M = mat(-0.37, 0.835, -0.62, -0.41).multiply(mat(-0.158, -0.004, -0.0055, 0, 0.2, 0));
 import { CarPhysics, SPEC } from './Physics';
+import { jetCone } from './ThrustJets';
 import { ORIGIN } from '../world/Path';
 import type { Path } from '../world/Path';
 import { beamPool, BEAM_POOL } from '../textures';
@@ -72,11 +79,22 @@ export class PlayerCar {
   private arms: DriverArms | null = null;
   private mats: Record<string, THREE.Material> = {};
   private outsideParts: THREE.Object3D[] = [];
-  private wheels: { steer: THREE.Group; spin: THREE.Group; front: boolean }[] = [];
+  private wheels: { steer: THREE.Group; spin: THREE.Group; front: boolean; r: number }[] = [];   // r: the tyre's radius
+  // the OC Hypercar's Cold Thrust: its two diffuser nozzles (markers on the sprung body, for the jets) and the
+  // compressed-air pressure gauge on its dash (a small canvas display, redrawn only when what it shows changes)
+  private nozzles: THREE.Object3D[] = [];
+  private nozzleOut = [new THREE.Vector3(), new THREE.Vector3()];
+  // (`step`: the bar it counts in; `period`: the least time between redraws. The phone build counts in 10 bar at most 4
+  // times a second, High in 5 bar at most 10 times)
+  private gauge: { mesh: THREE.Mesh; canvas: HTMLCanvasElement; tex: THREE.CanvasTexture; key: number; wait: number; draws: number; step: number; period: number } | null = null;
+  // the OC Hypercar's LED wake-up (Founder Edition): seconds into the sweep (car-wake.ts; steady past WAKE_SECONDS).
+  // wakeHold (tests and proof frames): hold the sweep at that time instead of running it
+  private wakeT = 99;
+  wakeHold: number | null = null;
   private wheelAngle = 0;
   private sus = { p: 0, pv: 0, r: 0, rv: 0, h: 0, hv: 0 };
-  // the switched lamps (the hypercar's): its turn signals and reversing lamps, shown only while lit
-  private lamps: { L: THREE.Object3D | null; R: THREE.Object3D | null; rev: THREE.Object3D | null } = { L: null, R: null, rev: null };
+  // the switched lamps (the hypercar's): its turn signals, reversing lamps and the stop light's haze, shown only while lit
+  private lamps: { L: THREE.Object3D | null; R: THREE.Object3D | null; rev: THREE.Object3D | null; glow: THREE.Object3D | null } = { L: null, R: null, rev: null, glow: null };
   // the signals, stepped with the physics (snapshot): the simulation's clock, the lateral rate along the road, how
   // long it has pointed one way, which side is signalling (-1 left, 1 right) and until when, the flash phase's start
   private sig = { t: 0, d: 0, s: 0, rate: 0, arm: 0, armSide: 0, side: 0, until: 0, t0: 0 };
@@ -149,10 +167,6 @@ export class PlayerCar {
     this.restoreCabinLight();
     if (this.interior) { for (const m of this.interior.mirrors) m.dispose(); disposeGeometry(this.interior.group); }
     let t = performance.now();
-    // the hypercar's roof (1.07 m over the shared eye point) is lower than the shared driver's frame: until the full seat
-    // drop lands (PROJECT_OC_HYPERCAR.md, M3), its driver sits lower and a little further in, the way the sheet's occupants do
-    this.eye.position.copy(EYE);
-    if (c.car === 'oc-hyper') this.eye.position.add(HYPER_EYE);
     const ext = buildCar({ car: c.car, paint: c.paint, quality: c.quality, cabin: 'full', wheels: false });
     this.stats.carMs = Math.round(performance.now() - t);
     this.exterior = ext; this.body.add(ext);
@@ -165,7 +179,7 @@ export class PlayerCar {
     ck.wheel.rotation.z = this.wheelAngle;
     const B = bodyFor(c.car), P = shapeFor(c.car);
     this.buildSunOccluder(B, ck);
-    // the driver's eye (the hypercar's sits lower and further in), and the headlamp beams from this car's lamps
+    // the driver's eye (the hypercar's sits lower, further in and forward), and the headlamp beams from this car's lamps
     this.eye.position.copy(B.eye); this.hood.position.set(0, P.hoodY ?? 1.0, -1.45);
     this.beams.forEach((b, i) => { const s = i ? 1 : -1; b.position.set(s * B.beamAt.x, B.beamAt.y, B.beamAt.z); b.target.position.set(s * B.beamAt.x, 0.9, -70); });
     // the beams' colour: warm white (halogen-like) for the Rossinis and the Vela; the hypercar's ice-blue LED blades
@@ -173,10 +187,14 @@ export class PlayerCar {
     const beamC = P.led ? 0xd4e8ff : 0xfff4e6, poolC = P.led ? [0.86, 0.94, 1.0] : [1, 1, 1];
     for (const b of this.beams) b.color.setHex(beamC);
     (this.pool.material as THREE.MeshBasicMaterial).color.setRGB(POOL_LEVEL * poolC[0], POOL_LEVEL * poolC[1], POOL_LEVEL * poolC[2]);
-    this.lamps = { L: ext.getObjectByName('sigL') ?? null, R: ext.getObjectByName('sigR') ?? null, rev: ext.getObjectByName('reverse') ?? null };
+    this.lamps = { L: ext.getObjectByName('sigL') ?? null, R: ext.getObjectByName('sigR') ?? null, rev: ext.getObjectByName('reverse') ?? null, glow: ext.getObjectByName('brakeGlow') ?? null };
     for (const k of SWITCHED_LAMPS) { const m = ext.getObjectByName(k); if (m) m.visible = false; }
     this.armsAt.set(...seatOffset(P));
     if (this.arms) this.arms.group.position.copy(this.armsAt);
+    for (const n of this.nozzles) n.parent?.remove(n);
+    // each nozzle carries its jet's cone (drawn only while gas flows; ThrustJets drives the shared material)
+    this.nozzles = B.thrusters.map((t) => { const o = new THREE.Object3D(); o.position.copy(t); o.add(jetCone()); this.body.add(o); return o; });
+    this.buildGauge(c.car === 'oc-hyper', ck, c.quality === 'phone');
     this.buildWheels(c);
   }
 
@@ -196,9 +214,85 @@ export class PlayerCar {
         spinKit.build(this.mats, spin, { shadow: (key) => key === 'tyre' || key === 'rimPaint' });
         steer.position.set(out * track, r, z); steer.add(spin);
         this.root.add(steer);
-        this.wheels.push({ steer, spin, front });
+        this.wheels.push({ steer, spin, front, r });
       }
     }
+  }
+
+  // the pressure gauge: in the binnacle beside the tach, facing the driver
+  private buildGauge(on: boolean, ck: Cockpit, phone: boolean) {
+    if (this.gauge) { this.gauge.mesh.parent?.remove(this.gauge.mesh); this.gauge.mesh.geometry.dispose(); this.gauge.tex.dispose(); (this.gauge.mesh.material as THREE.Material).dispose(); this.gauge = null; }
+    if (!on || typeof document === 'undefined') return;
+    const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 160;
+    const tex = new THREE.CanvasTexture(canvas); tex.colorSpace = THREE.SRGBColorSpace;
+    const m = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
+    // in the hypercar's own pod: the 16:10 display inscribed in the dial (its corners on the bezel's inner edge), 2 mm
+    // behind the pod's glass, upright on the pod's tilt; otherwise the shared binnacle's left display
+    const at = ck.gaugeAt, w = at ? 2 * (at.r - 0.002) * 1.6 / Math.hypot(1, 1.6) : 0.118;
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, w / 1.6), m);
+    mesh.name = 'thrust-gauge';
+    if (at) {
+      mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), at.normal);
+      mesh.position.copy(at.at).addScaledVector(at.normal, -0.002);
+    } else mesh.applyMatrix4(GAUGE_M);
+    ck.group.add(mesh);
+    this.gauge = { mesh, canvas, tex, key: -1, wait: 0, draws: 0, step: phone ? 10 : 5, period: phone ? 0.25 : 0.1 };
+  }
+
+  // what the gauge shows: the tank's pressure (0..700 bar) as a bar, and the system that's running. `seen`: the camera is
+  // in the seat (from outside the display is a few pixels behind the glass, so it isn't redrawn); `dt` the frame time;
+  // `charging`: the compressor is filling the tank. A redraw is a 256 × 160 canvas and a texture upload, so at most 10 a
+  // second on High (4 on the phone build), and only when what it shows changed
+  setThrustGauge(live: boolean, tank: number, thrust: number, lock: boolean, air: boolean, seen = true, dt = 0, charging = false) {
+    const gg = this.gauge; if (!gg) return;
+    // the race tune has no ability, so the pod is hidden there (and on the menu's attract drive)
+    gg.mesh.visible = live;
+    gg.wait -= dt;
+    if (!live || !seen) return;
+    // what it shows, as one number (no string built per frame): the pressure in its steps and the four states
+    const bar = Math.round((tank * 700) / gg.step) * gg.step;
+    const key = (bar / gg.step) * 16 + (thrust > 0.1 ? 8 : 0) + (lock ? 4 : 0) + (air ? 2 : 0) + (charging ? 1 : 0);
+    if (key === gg.key || gg.wait > 0) return;
+    gg.key = key; gg.wait = gg.period; gg.draws++;
+    const g = gg.canvas.getContext('2d'); if (!g) return;
+    const W = gg.canvas.width, H = gg.canvas.height;
+    g.clearRect(0, 0, W, H);
+    g.fillStyle = '#05080d'; g.fillRect(0, 0, W, H);
+    g.strokeStyle = '#2f8fe8'; g.lineWidth = 4; g.strokeRect(2, 2, W - 4, H - 4);
+    g.textBaseline = 'middle';
+    // laid out to the right: the driver's left hand on the rim sits over this display's left third, so the number, the
+    // state and the gauge's column all live in the right two thirds (only the AIR label is left of them)
+    const f = Math.max(0, Math.min(1, tank));
+    g.textAlign = 'left'; g.fillStyle = '#a6dcff'; g.font = '700 22px Arial, Helvetica, sans-serif'; g.fillText('AIR', 14, 28);
+    g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.font = '700 54px Arial, Helvetica, sans-serif'; g.fillText(String(bar), W - 52, 50);
+    g.font = '600 20px Arial, Helvetica, sans-serif'; g.fillStyle = '#8b98a8'; g.fillText('bar', W - 52, 92);
+    // the column: 0..700 bottom to top, red under the valve's 70 bar, amber under the hop's 280, ice blue above, and
+    // the hop's mark at 280
+    const cx = W - 40, cw = 26, y0 = 14, y1 = H - 14, ch = y1 - y0;
+    g.fillStyle = '#1b2430'; g.fillRect(cx, y0, cw, ch);
+    g.fillStyle = f >= 0.4 ? '#59b8ff' : f >= 0.1 ? '#e8a356' : '#d0141e'; g.fillRect(cx, y1 - ch * f, cw, ch * f);
+    g.fillStyle = '#e8ecef'; g.fillRect(cx - 6, y1 - ch * 0.4 - 1.5, cw + 12, 3);
+    // the system that's running
+    const word = air ? 'HOP' : thrust > 0.1 ? 'THRUST' : lock ? 'LOCK' : f >= 0.4 ? 'HOP READY' : charging ? 'CHARGING' : 'LOW';
+    g.textAlign = 'right'; g.font = '700 24px Arial, Helvetica, sans-serif';
+    g.fillStyle = air || thrust > 0.1 ? '#ffffff' : lock ? '#a6dcff' : '#8b98a8'; g.fillText(word, W - 52, 132);
+    gg.tex.needsUpdate = true;
+  }
+
+  // how many times the gauge has been redrawn (for the tests)
+  get gaugeDraws() { return this.gauge?.draws ?? 0; }
+
+  // the two nozzles in render coordinates (null for a car without them)
+  nozzleWorld(): THREE.Vector3[] | null {
+    if (this.nozzles.length !== 2) return null;
+    this.nozzles[0].getWorldPosition(this.nozzleOut[0]); this.nozzles[1].getWorldPosition(this.nozzleOut[1]);
+    return this.nozzleOut;
+  }
+
+  // a hop's landing: the springs take the vertical speed (m/s)
+  land(vz: number) {
+    const s = this.sus;
+    s.hv -= Math.min(2.4, 0.3 * vz); s.pv -= Math.min(0.4, 0.04 * vz);
   }
 
   private buildHands(c: CarConfig) {
@@ -231,6 +325,11 @@ export class PlayerCar {
     });
     this.mats = { ...this.mats, paint: next, ...(nextM ? { mirrorPaint: nextM } : {}) };
   }
+
+  // the Founder Edition's LED wake-up: a quarter second dark, then the sweep (reduced motion: the lights are on at once)
+  wake(reduced = false) { this.wakeT = reduced ? 99 : -0.25; }
+  get waking() { return this.wakeT < WAKE_SECONDS; }
+  get wakeTime() { return this.wakeT; }
 
   // the driver's look (sleeves, gloves, watch, ring, bracelet, skin) without rebuilding the car
   setLook(look: DriverLook) { if (this.cfg) this.configure({ ...this.cfg, look }); }
@@ -329,14 +428,15 @@ export class PlayerCar {
 
   // The turn signals, with the physics: the car's sideways speed along the road (from its offset d; a jump of
   // more than a metre in one step is a change of road, not a move) smoothed over about 0.15 s. Crossing toward the
-  // next lane lights the side it moves to; full lock at low speed lights the side it turns to.
+  // next lane lights the side it moves to; hard steering at low speed lights the side it turns to. Only driving
+  // forward: weaving while reversing is not a lane change.
   private stepSignals(p: CarPhysics, dt: number) {
     const g = this.sig;
     g.t += dt;
     const dd = p.d - g.d, jump = Math.abs(dd) > 1 || Math.abs(p.s - g.s) > 5;
     g.d = p.d; g.s = p.s;
     if (!jump && dt > 0) g.rate += (dd / dt - g.rate) * Math.min(1, dt / 0.15);
-    const v = Math.abs(p.vx);
+    const v = p.vx;                                                 // forward speed: backing up never signals
     let want = 0, hold = 0;
     const side = Math.sign(g.rate);
     if (v > SIG_MIN && Math.abs(g.rate) > SIG_RATE) {
@@ -387,7 +487,7 @@ export class PlayerCar {
     for (let i = 0; i < n; i++) {
       s.pv += (95 * (pt - s.p) - 13 * s.pv) * h; s.p += s.pv * h;
       s.rv += (110 * (rt - s.r) - 14 * s.rv) * h; s.r += s.rv * h;
-      s.hv += (260 * (0 - s.h) - 18 * s.hv) * h; s.h += s.hv * h;
+      s.hv += (260 * ((p.airborne ? 0.035 : 0) - s.h) - 18 * s.hv) * h; s.h += s.hv * h;   // the wheels hang in the air
     }
     s.p = clamp(s.p, -0.08, 0.08); s.r = clamp(s.r, -0.07, 0.07); s.h = clamp(s.h, -0.06, 0.06);
     const joint = Math.floor(p.s / 15);
@@ -395,18 +495,26 @@ export class PlayerCar {
     const buzz = (p.rpm / 8000) * 0.00035 + v * 0.000012;
     this.body.position.set((Math.random() - 0.5) * buzz, s.h + (Math.random() - 0.5) * buzz * 2, 0);
     this.body.rotation.set(s.p + (Math.random() - 0.5) * buzz * 0.6, 0, s.r);
+    // the physics turns a tyre of SPEC.wheelR (0.345 m); each axle's own tyre turns by SPEC.wheelR / r of that, so
+    // it rolls with the road (the hypercar's staggered 0.70 / 0.74 m tyres; 1 for a 0.345 m tyre)
     for (const w of this.wheels) {
-      w.spin.rotation.x = -(w.front ? p.wheelRot : p.wheelRotR);
+      w.spin.rotation.x = -(w.front ? p.wheelRot : p.wheelRotR) * (SPEC.wheelR / w.r);
       if (w.front) w.steer.rotation.y = p.delta;
     }
     const tail = this.mats.tail as THREE.MeshPhysicalMaterial | undefined;
-    if (tail) tail.emissiveIntensity = braking ? 5 : 1.6;
+    // (the levels as a tail light and on the brakes: 1.6 and 5, the hypercar's bar 0.5 and 6; lampMaterials)
+    if (tail) { const lv = (tail.userData.levels as [number, number] | undefined) ?? [1.6, 5]; tail.emissiveIntensity = braking ? lv[1] : lv[0]; }
     // the hypercar's switched lamps: the signals flash from the moment they start; reverse while backing up
     const g = this.sig, L = this.lit;
     L.signal = g.side; L.blink = g.side !== 0 && ((g.t - g.t0) * SIG_HZ) % 1 < 0.5; L.reverse = p.gear < 0 || p.vx < -0.3; L.brake = braking;
     if (this.lamps.L) this.lamps.L.visible = L.blink && g.side < 0;
     if (this.lamps.R) this.lamps.R.visible = L.blink && g.side > 0;
     if (this.lamps.rev) this.lamps.rev.visible = L.reverse;
+    if (this.lamps.glow) this.lamps.glow.visible = braking;
+    // the hypercar's lights: where the wake-up sweep is (one shared uniform; the garage's reveal stage sets its own
+    // round its render and puts this back)
+    this.wakeT = Math.min(99, this.wakeT + dt);
+    if (this.cfg?.car === 'oc-hyper') WAKE.value = wakeAt(this.wakeHold ?? this.wakeT);
     void now;
   }
 

@@ -52,7 +52,7 @@ const MODE_LABEL: Record<string, string> = { free: 'Free Drive', survival: 'Spee
 
 type El = React.RefObject<HTMLElement>;
 
-export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void }>(function HUD({ showFps, visible, chips, onAbility }, ref) {
+export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void; onThrust: (on: boolean) => void }>(function HUD({ showFps, visible, chips, onAbility, onThrust }, ref) {
   const root = useRef<HTMLDivElement>(null);
   const speed = useRef<HTMLSpanElement>(null), gear = useRef<HTMLSpanElement>(null), bar = useRef<HTMLDivElement>(null);
   const k1 = useRef<HTMLElement>(null), v1 = useRef<HTMLElement>(null), k2 = useRef<HTMLElement>(null), v2 = useRef<HTMLElement>(null);
@@ -73,6 +73,10 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
   const dest = useRef<HTMLDivElement>(null), destRoad = useRef<HTMLElement>(null), destDist = useRef<HTMLElement>(null), destEta = useRef<HTMLElement>(null), traffic = useRef<HTMLElement>(null);
   // what the wake rules remember between calls (kept across re-renders)
   const st = useRef({ t: 0, road: '', roadAt: -1e9, wakeUntil: 0, brakeS: 0, cool: 0 });
+  // the OC Hypercar: its tune's chip (from the run itself, Game.hud: Unleashed in Free Drive, Race tune in the scored
+  // modes), and its own systems' panel (the tank, Ground Lock, the hop) and THRUST button
+  const tune = useRef<HTMLElement>(null), thr = useRef<HTMLDivElement>(null), thrPct = useRef<HTMLElement>(null), thrBar = useRef<HTMLElement>(null);
+  const thrLock = useRef<HTMLElement>(null), thrHop = useRef<HTMLElement>(null), thrBtn = useRef<HTMLButtonElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
   // a line-2 slot: its key (the long form for a desktop plate, `data-s` the short one a phone shows) and its value
@@ -179,6 +183,26 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
       if (s.brakeS >= 0.4) s.wakeUntil = now + WAKE_MS;
       const approach = (navOn && h.nextDist < 800) || (!!h.errand && h.errand.dist >= 0 && h.errand.dist < 1600);
       attr(R, 'data-wake', approach || now < s.wakeUntil);
+      if (tune.current) {
+        const el = tune.current; put(el, 'tune', h.tune);
+        el.style.display = h.tune ? '' : 'none'; el.className = h.tune === 'Unleashed' ? 'hot' : h.tune ? 'tune' : '';
+      }
+      if (thr.current && thrBtn.current) {
+        thr.current.hidden = !h.thrustLive; thrBtn.current.hidden = !h.thrustLive;
+        if (h.thrustLive) {
+          const pct = Math.round(h.tank * 100);
+          put(thrPct.current, 'thrPct', `${pct} %`);
+          if (thrBar.current) thrBar.current.style.transform = `scaleX(${h.tank.toFixed(3)})`;
+          thr.current.classList.toggle('low', h.tank < 0.1); thr.current.classList.toggle('on', h.thrustOn > 0.1);
+          thrLock.current?.classList.toggle('on', h.groundLock);
+          put(thrHop.current, 'thrHop', h.hop);
+          thrHop.current?.classList.toggle('ready', h.hop === 'Hop ready');
+          const b = thrBtn.current;
+          b.style.setProperty('--p', h.tank.toFixed(3));
+          b.classList.toggle('on', h.thrustOn > 0.1); b.classList.toggle('low', h.tank < 0.1);
+          if (last.thrAria !== String(pct)) { last.thrAria = String(pct); b.setAttribute('aria-label', `Cold Thrust: hold. Double-tap for Thrust Hop. Tank ${pct} %`); }
+        }
+      }
     },
   }));
   return (
@@ -201,7 +225,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
             <div className="hud-main">
               <div className="hud-revs" ref={revs}>{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</div>
               <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-auto" ref={autoTag} hidden>AUTO</span><span className="hud-gear" ref={gear}>1</span></div>
-              <div className="hud-chips">{chips.map((c) => <i key={c} className={c === 'Unleashed' ? 'hot' : ''}>{c}</i>)}</div>
+              <div className="hud-chips">{chips.map((c) => <i key={c}>{c}</i>)}<i ref={tune} style={{ display: 'none' }} /></div>
               <span className="hud-cam" ref={cam} />
             </div>
           </div>
@@ -236,6 +260,17 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
       </div>
       {/* the driver's ability: a real button outside the hidden readouts, so a screen reader and the keyboard reach it */}
       <button type="button" className="hud-ability" ref={abil} onClick={onAbility} aria-keyshortcuts="F"><span ref={abilName}>Ability</span></button>
+      <div className="hud-thrust" ref={thr} hidden aria-hidden="true">
+        <div className="hud-thrust-top"><b>Thrust</b><em ref={thrPct as React.RefObject<HTMLElement>}>100 %</em></div>
+        <div className="hud-thrust-bar"><i ref={thrBar as React.RefObject<HTMLElement>} /><s /></div>
+        <div className="hud-thrust-low"><span className="hud-lock" ref={thrLock as React.RefObject<HTMLElement>}>Ground Lock</span><span className="hud-hop" ref={thrHop as React.RefObject<HTMLElement>} /></div>
+      </div>
+      {/* hold for Cold Thrust, double-tap for Thrust Hop (the ring is the tank) */}
+      <button type="button" className="hud-thrustbtn" ref={thrBtn} hidden
+        onPointerDown={(e) => { e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* fine */ } onThrust(true); }}
+        onPointerUp={() => onThrust(false)} onPointerCancel={() => onThrust(false)} onContextMenu={(e) => e.preventDefault()}>
+        <span>Thrust</span>
+      </button>
     </div>
   );
 });

@@ -459,7 +459,7 @@ function makeBody(P: ShapeParams) {
   // the headlamp beams' origin, right side (PlayerCar mirrors it): the blade's middle on the hypercar, set when its
   // lamps are built; the other cars keep the game's fixed lamp point
   const beamAt = v3(0.62, 0.55, -2.2);
-  // this car's driver's eye (the hypercar's driver sits lower and further in: car-shape seatOffset)
+  // this car's driver's eye (the hypercar's driver sits lower, further in and forward: car-shape seatOffset)
   const eye = EYE.clone().add(v3(...seatOffset(P)));
   // Each mirror is aimed for the driver, as a driver would set it: the glass's normal halves the angle between the
   // eye and the view it should show (straight back, so the inboard edge just shows the flank)
@@ -594,21 +594,22 @@ function makeBody(P: ShapeParams) {
       for (let i = 0; i < rows.length; i++) for (let j = 0; j < 2; j++) uv.setXY(i * 2 + j, i / (rows.length - 1), j);
       kit.add(key, g);
     };
-    // the hypercar's blades (M2): a lit face standing on the nose, its foot along the black lower nose's top edge from
-    // blade.x0 off the centre to the head quad's inner end, then along the quad's swept front edge round the fender's
-    // corner; over it a dark lamp socket (the smoked lens, the module at its outer end) runs back to the skin, rising
-    // blade.socket metres in the FRONT view. All in the lamp material (face and lens are two bands of its map), with
-    // a gloss-black cap at each end. PlayerCar's beams start from beamAt.
+    // the hypercar's blades (M2): a lit face standing on the nose along the head quad's swept front edge round the
+    // fender's corner (from blade.x0 along the black lower nose's top edge first, when set), narrowing to a point at
+    // its inner tip; over it a dark lamp socket (the smoked lens, the module at its outer end) runs back to the skin,
+    // rising blade.socket metres in the FRONT view. All in the lamp material (face and lens are two bands of its map),
+    // with a gloss-black cap at each end. PlayerCar's beams start from beamAt.
     if (P.blade && keep(v3(0.6, 0.6, ZF + 0.3))) for (const sd of [1, -1]) {
       const BL = P.blade, xh = HEAD[0][0], xo = HEAD[1][0], yh = body.top(HEAD[0][1], xh);
       // the foot in plan: dense, then resampled by length
       const foot: [number, number][] = [];
-      for (let k = 0; k <= 30; k++) {
-        const x = BL.x0 + (xh - BL.x0) * (k / 30), y = BL.y0 + (yh - BL.y0) * (k / 30);
+      if (BL.x0 !== undefined && BL.x0 < xh - 0.01) for (let k = 0; k < 30; k++) {
+        const x0 = BL.x0, y0 = BL.y0 ?? yh, x = x0 + (xh - x0) * (k / 30), y = y0 + (yh - y0) * (k / 30);
         let lo = ZF, hi = HEAD[0][1] + 0.05;
         for (let i = 0; i < 30; i++) { const m = (lo + hi) / 2; if (body.top(m, x) < y) lo = m; else hi = m; }
         foot.push([x, (lo + hi) / 2]);
       }
+      foot.push([xh, HEAD[0][1]]);
       for (let k = 1; k <= 40; k++) {
         const u = k / 40, sw = P.bladeSweep ?? 0, z = HEAD[0][1] + (HEAD[1][1] - HEAD[0][1]) * u + sw * u * u * u;
         foot.push([Math.min(xh + (xo - xh) * u, body.shoulder(z).Ws - 0.01), z]);
@@ -626,11 +627,14 @@ function makeBody(P: ShapeParams) {
         let tx = xb - xa, tz = zb - za; const tl = Math.hypot(tx, tz) || 1; tx /= tl; tz /= tl;
         const nx = -tz, nz = tx;                                      // across the blade in plan: back and in
         const f = v3(sd * x, body.top(z, x), z).addScaledVector(body.topNormal(sd * x, z), high ? 0.004 : 0.006);
-        const t = f.clone().add(v3(0, BL.h, 0));
+        // (the face narrows to a point at the inner tip: its top edge comes down over the first blade.tip of its length)
+        const t = f.clone().add(v3(0, BL.h * (BL.tip ? 0.25 + 0.75 * sstep(0, BL.tip, u) : 1), 0));
         // the socket's back edge: on along the plan normal until the skin stands blade.socket over the face's top
-        const rise = BL.socket[0] + (BL.socket[1] - BL.socket[0]) * u * u;
+        const rise = BL.socket[0] + (BL.socket[1] - BL.socket[0]) * Math.pow(u, 1.4);
+        // (and no deeper in plan than 2 cm at the tip to 24 cm at the outer end, so the lens tapers to a point at the
+        // tip, as on the sheet, and stays a slash, not a panel, where the skin behind it is nearly flat)
         let d = 0.004, sx = x, sz = z;
-        for (; d < 0.3; d += 0.003) { sx = x + nx * d; sz = z + nz * d; if (body.top(sz, Math.min(sx, body.shoulder(sz).Ws - 0.01)) >= t.y + rise) break; }
+        for (const dmax = 0.02 + 0.22 * Math.pow(u, 1.3); d < dmax; d += 0.003) { sx = x + nx * d; sz = z + nz * d; if (body.top(sz, Math.min(sx, body.shoulder(sz).Ws - 0.01)) >= t.y + rise) break; }
         sx = Math.min(sx, body.shoulder(sz).Ws - 0.01);
         F.push(f); T.push(t); us.push(u);
         S.push(v3(sd * sx, body.top(sz, sx), sz).addScaledVector(body.topNormal(sd * sx, sz), high ? 0.003 : 0.005));
@@ -914,6 +918,8 @@ function makeBody(P: ShapeParams) {
           sg.translate(0, 0, ZR + 0.0065); sg.computeVertexNormals();
           kit.add(sd < 0 ? 'sigL' : 'sigR', sg, null, 0.05);
         }
+        // the stop light's haze (PlayerCar shows it on the brakes): a soft quad 0.11 m tall over the bar and its channel
+        const gw = new THREE.PlaneGeometry(hw * 2 + 0.12, 0.11); gw.translate(0, yb, ZR + 0.008); kit.add('brakeGlow', gw);
       } else {
         // Vela: one lit line across the whole tail, wrapping round the corners, over a gloss-black band
         const hw = tailX(yl) - 0.006;
@@ -1221,8 +1227,10 @@ function makeBody(P: ShapeParams) {
       for (let k = 0; k <= 6; k++) { const z = z0 + 0.01 + (z1 - z0 - 0.02) * (k / 6); rowsH.push([v3(sd * (body.side(z, y - 0.006) + 0.0012), y - 0.006, z), v3(sd * (body.side(z, y + 0.006) + 0.0012), y + 0.006, z)]); }
       kit.add('chrome', gridGeo(rowsH, { flip: sd > 0 }), null, 0.05);
     }
-    // wipers parked along the base of the windscreen
-    if (keep(v3(0, 0.9, WS.zb + 0.05))) for (const [px, len] of [[-0.06, 0.6], [0.6, 0.5]] as [number, number][]) {
+    // wipers parked along the base of the windscreen (not on the hypercar: its narrow screen's wiper would park under
+    // the cowl, out of sight, and isn't modelled; the two standard ones reached past its glass and lay across the
+    // driver's view of the road as two dark bars)
+    if (P.noseStyle !== 'hyper' && keep(v3(0, 0.9, WS.zb + 0.05))) for (const [px, len] of [[-0.06, 0.6], [0.6, 0.5]] as [number, number][]) {
       const path: V3[] = [];
       for (let k = 0; k <= 10; k++) { const x = px - len * (k / 10), z = WS.zb + 0.05 + 0.012 * (k / 10); path.push(v3(x, body.top(z, Math.abs(x)) + 0.016, z)); }
       kit.add('dark', tubeGeo(path, () => 0.007, 6, { rb: () => 0.004 }), null, 0.1);
@@ -1248,9 +1256,10 @@ function makeBody(P: ShapeParams) {
   // for outside views only: the shapes of the cockpit (dash and binnacle, the wheel, two bucket seats with their
   // bolsters and head sections, the console, the bulkhead) in flat materials, so the windows look into a cabin
   function cabinSilhouette(kit: Kit) {
-    // a car whose driver sits lower (the hypercar's seatDrop) has its seats, wheel and hoop lowered with them
-    const drop = P.seatDrop ?? 0;
-    const put = (key: string, g: THREE.BufferGeometry, m: THREE.Matrix4) => kit.add(key, drop ? g.applyMatrix4(m).translate(0, -drop, 0) : g.applyMatrix4(m), null, 0.3);
+    // a car whose driver sits lower (the hypercar's seatDrop) has its seats, wheel and hoop lowered with them (and,
+    // seated further forward, its seats, wheel and dash moved forward: seatFwd; the hoop and bulkhead stay)
+    const drop = P.seatDrop ?? 0, fwd = P.seatFwd ?? 0;
+    const put = (key: string, g: THREE.BufferGeometry, m: THREE.Matrix4) => kit.add(key, drop || fwd ? g.applyMatrix4(m).translate(0, -drop, -fwd) : g.applyMatrix4(m), null, 0.3);
     const rb = (w: number, h: number, d: number, r: number) => new RoundedBoxGeometry(w, h, d, 2, r);
     const D = P.cabinW;
     put('interior', rb(D * 2 - 0.01, 0.2, 0.46, 0.06), mat(0, 0.755, -0.88, -0.08));
@@ -1343,6 +1352,14 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
       ge.fillStyle = lift; ge.fillRect(0, 2, w, 44);
       const lg = g.createLinearGradient(0, 50, 0, h); lg.addColorStop(0, '#0e141b'); lg.addColorStop(0.5, '#080b0f'); lg.addColorStop(1, '#030405');
       g.fillStyle = lg; g.fillRect(0, 50, w, h - 50);
+      // the blade's light spilling up into the lens over it (the socket band starts at row 54): blue, fading out
+      // over the first fifth of the socket, as the sheet's HEADLIGHT DETAIL glows into its recess. Mostly light (the
+      // emissive map), hardly paint: the lens stays smoked by day, so from the hood camera, which looks down on the
+      // sockets, they read as dark glass with a glow along the blade, not as blue panels
+      for (const [ctx, a] of [[g, 0.12], [ge, 0.5]] as const) {
+        const sp = ctx.createLinearGradient(0, 54, 0, 72); sp.addColorStop(0, `rgba(30,111,216,${a})`); sp.addColorStop(1, 'rgba(30,111,216,0)');
+        ctx.fillStyle = sp; ctx.fillRect(0, 54, w, 18);
+      }
       for (let x = 14; x < w - 110; x += 18) { g.fillStyle = 'rgba(150,170,195,0.12)'; g.fillRect(x, 56, 2, 66); }
       g.fillStyle = 'rgba(190,205,225,0.3)'; g.fillRect(0, 52, w, 2);
       for (let k = 0; k < 3; k++) {
@@ -1364,6 +1381,16 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
       }
       g.fillStyle = '#5a3a10'; g.fillRect(20, 40, 90, 22);
     }
+  } else if (style === 'blade') {
+    // the hypercar's full-width bar (u 0..0.5, v 0.3..0.7 of this map): a smoked lens that reads dark red when the
+    // bar is only a tail light, over a light guide whose emissive fills the band with a hotter core. The diffuse is
+    // kept dark so the sun doesn't light the bar as if it were on, and the brake level (lampMaterials' levels) shows
+    // as a clear step in daylight, not only at night
+    g.fillStyle = '#120103'; g.fillRect(0, 0, w, h);
+    for (let x = 0; x < w; x += 8) { g.fillStyle = x % 16 ? '#2a0407' : '#1c0205'; g.fillRect(x, h * 0.3, 4, h * 0.4); }
+    const eg = ge.createLinearGradient(0, h * 0.3, 0, h * 0.7);
+    eg.addColorStop(0, '#5a0408'); eg.addColorStop(0.3, '#ff2626'); eg.addColorStop(0.5, '#ff5a50'); eg.addColorStop(0.7, '#ff2626'); eg.addColorStop(1, '#5a0408');
+    ge.fillStyle = eg; ge.fillRect(0, h * 0.3, w, h * 0.4);
   } else {
     // left half: a bar lens (vertical optics, a bright core band); right half: a round lens (rings, a bright ring)
     const W2 = w / 2;
@@ -1383,13 +1410,20 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
   return { map: t, emissiveMap: te };
 }
 const lampCache = new Map<string, { lamp: THREE.Material; tail: THREE.Material }>();
+// the tail material's emissive level as a tail light and on the brakes (PlayerCar reads them from the material's
+// userData.levels): 1.6 and 5 for every car's lamps, and for the hypercar's thin bar a dim tail light and a bright
+// stop, because a 2 cm bar of saturated red reads the same at 1.6 and 5 once the tone map has clipped it
+const TAIL_LEVELS: Record<'std' | 'blade', [number, number]> = { std: [1.6, 5], blade: [0.5, 6] };
 export function lampMaterials(style: 'twin' | 'round' | 'slim' | 'blade' = 'twin') {
   if (!lampCache.has(style)) {
     const head = lampTex('head', style), tail = lampTex('tail', style);
     lampCache.set(style, {
-      lamp: new THREE.MeshPhysicalMaterial({ map: head.map, emissive: 0xffffff, emissiveMap: head.emissiveMap, emissiveIntensity: 2.4, metalness: 0.4, roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.02 }),
-      tail: new THREE.MeshPhysicalMaterial({ map: tail.map, emissive: 0xffffff, emissiveMap: tail.emissiveMap, emissiveIntensity: 1.6, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.02 }),
+      // (the blade's socket is a smoked lens in a black recess: it keeps a third of the sky's reflection, so it reads
+      // dark over the lit face as on the sheet, not as a pale ledge)
+      lamp: new THREE.MeshPhysicalMaterial({ map: head.map, emissive: 0xffffff, emissiveMap: head.emissiveMap, emissiveIntensity: 2.4, metalness: style === 'blade' ? 0.1 : 0.4, roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: style === 'blade' ? 0.3 : 1 }),
+      tail: new THREE.MeshPhysicalMaterial({ map: tail.map, emissive: 0xffffff, emissiveMap: tail.emissiveMap, emissiveIntensity: TAIL_LEVELS[style === 'blade' ? 'blade' : 'std'][0], roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.02 }),
     });
+    lampCache.get(style)!.tail.userData.levels = TAIL_LEVELS[style === 'blade' ? 'blade' : 'std'];
   }
   return lampCache.get(style)!;
 }

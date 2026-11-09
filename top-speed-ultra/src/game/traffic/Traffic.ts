@@ -11,6 +11,7 @@ import { buildClasses, wheelGeometry, CarClass, PAINTS } from './carModels';
 import * as M from '../../preview/car-mats';
 import { clamp, rng, smoothstep } from '../util';
 import { sweptContact } from './contact';
+import { IDM } from './limits';
 
 export interface TrafficCar {
   cls: number; path: Path; s: number; d: number; v: number; v0: number;
@@ -30,7 +31,7 @@ export interface Contact { car: TrafficCar; speed: number; nx: number; nz: numbe
 export interface PassEvent { car: TrafficCar; clean: boolean; close: boolean; gap: number; rel: number }
 export interface TrafficLevel { perKmLane: number; bold: number }
 
-const A = 1.6, B = 3.2;
+const A = IDM.accel, B = IDM.comfort;
 
 export class Traffic {
   readonly group = new THREE.Group();
@@ -179,12 +180,12 @@ export class Traffic {
         }
         if (c.stopT > 0) c.stopT -= dt;
         const v0 = c.stopT > 0 ? 0 : c.v0 * this.pace;
-        const aMax = A * (c.bold ? 1.4 : 1);
+        const aMax = A * (c.bold ? IDM.boldAccel : 1);
         const s0 = c.bold ? 2 : 3, th = c.bold ? 0.85 : 1.25;
         const sStar = s0 + c.v * th + (c.v * (c.v - vl)) / (2 * Math.sqrt(aMax * B));
         let acc = aMax * (1 - Math.pow(c.v / Math.max(1, v0), 4)) - (gap < 1e8 ? aMax * Math.pow(Math.max(sStar, 0) / Math.max(gap, 0.5), 2) : 0);
-        acc = clamp(acc, -10, aMax);
-        if (c.stopT > 0) acc = Math.min(acc, -4);
+        acc = clamp(acc, -IDM.maxBrake, aMax);
+        if (c.stopT > 0) acc = Math.min(acc, -IDM.stopBrake);
         c.acc = acc;
         c.v = Math.max(0, c.v + acc * dt);
         c.s += c.v * dt;
@@ -260,7 +261,9 @@ export class Traffic {
     for (let i = 0; i < cars.length && n < 8; i++) {
       const c = cars[i];
       const dx = c.x - player.x, dz = c.z - player.z;
-      if (Math.abs(dx) > reach || Math.abs(dz) > reach || Math.abs(c.y - player.y) > 2.5) continue;
+      // another level of road (a deck above, a road below) is 2.5 m away from the road under you: a hop's altitude is
+      // not another level (a semi's trailer stands 4.1 m tall), so whether a hop clears a roof is contact.ts's to say
+      if (Math.abs(dx) > reach || Math.abs(dz) > reach || Math.abs(c.y - (player.y - player.altitude)) > 2.5) continue;
       const cl = this.classes[c.cls];
       if (n >= this.contacts.length) this.contacts.push({ car: c, speed: 0, nx: 0, nz: 0, depth: 0 });
       const out = this.contacts[n];
@@ -293,10 +296,14 @@ export class Traffic {
   // clear the space you're about to be put back into
   clearAround(x: number, z: number, r = 70) { this.cars = this.cars.filter((c) => Math.hypot(c.x - x, c.z - z) > r); }
   // thin the traffic out of sight (Clear Path): drop a share of the cars you can't see right now
+  // In sight: near, or ahead within the view distance, ahead of the camera or of the car. (The camera can still be
+  // turning: a run opens with a half-second blend from the menu's cinematic shots, and the free look turns it away;
+  // the road ahead of the car is the one the driver is about to see either way.)
   thin(fraction: number, player: PlayerView, camFwdX: number, camFwdZ: number) {
+    const hx = Math.sin(player.psi), hz = Math.cos(player.psi);
     this.cars = this.cars.filter((c) => {
-      const dx = c.x - player.x, dz = c.z - player.z, dist = Math.hypot(dx, dz);
-      const inView = dist < 40 || (dist < this.viewAhead * 0.8 && (dx * camFwdX + dz * camFwdZ) / Math.max(1, dist) > 0.35);
+      const dx = c.x - player.x, dz = c.z - player.z, dist = Math.hypot(dx, dz), k = 1 / Math.max(1, dist);
+      const inView = dist < 40 || (dist < this.viewAhead * 0.8 && ((dx * camFwdX + dz * camFwdZ) * k > 0.35 || (dx * hx + dz * hz) * k > 0.35));
       return inView || this.r() > fraction;
     });
   }

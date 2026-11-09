@@ -1,11 +1,16 @@
 // The garage cars' cockpits: everything the driver sees from the seat, in the car's frame (spec.ts).
 //
 //   buildCockpit({ car?, paint?, quality?, mirrors?, body?, stitch? }): Cockpit
-//     car: 'rossini-gt' (default) | 'rossini-brio' | 'rossini-corsa' | 'vela-e'. Each has its own trim (THEMES below):
-//       GT black Alcantara and Nappa with cognac seats; Brio navy leather, aluminium trim, an all-leather wheel;
-//       Corsa carbon buckets in Alcantara with red four-point harnesses, a roll hoop, carbon door cards, an
-//       Alcantara wheel with a yellow centre stripe; Vela E ivory leather, a round two-spoke wheel with the V badge
-//       and a wide display in place of the tachometer.
+//     car: 'rossini-gt' (default) | 'rossini-brio' | 'rossini-corsa' | 'vela-e' | 'oc-hyper'. Each has its own trim
+//       (THEMES below): GT black Alcantara and Nappa with cognac seats; Brio navy leather, aluminium trim, an
+//       all-leather wheel; Corsa carbon buckets in Alcantara with red four-point harnesses, a roll hoop, carbon door
+//       cards, an Alcantara wheel with a yellow centre stripe; Vela E ivory leather, a round two-spoke wheel with the
+//       V badge and a wide display in place of the tachometer; the OC Hypercar the Corsa's buckets, hoop and wheel
+//       with ice-blue stitching and rim stripe, blue harnesses, an ice-blue ambient line along the dash and the door
+//       cards, the OC badge on the boss, its own live driver display (car-gauges hyperScreen) in place of the tach,
+//       and a gauge pod kept for the Cold Thrust tank (gaugeAt). Its
+//       driver sits lower, further in and further forward (car-shape seatOffset): the eye, wheel, binnacle, dash, console and seats
+//       move with the seat; it has no rear-view mirror (its low header), only the door mirrors.
 //     paint: sRGB hex for the body seen through the glass (bonnet, wings, mirror housings; default the car's).
 //     quality: 'phone' | 'high' (default 'high': finer meshes, anisotropic carbon and aluminium, 512 maps).
 //     mirrors: 'env' (default: the sky's environment map in the rear-view and door mirrors, no extra renders) or
@@ -17,7 +22,9 @@
 //       builds the body separately), so it draws over it.
 //     body: include the front of the car's body seen through the windscreen and the door mirrors (default true).
 //     stitch: thread colour (default cognac).
-//   returns { group, wheel, update(dt), setInstruments({ rpm }), mirrors }
+//     plaque: the OC Hypercar's Founder Edition plaques' number line (default src/game/founder.ts plaqueNumber(): "No. 0000 ·
+//       TEST" until the store assigns real numbers); one on the driver's door sill cap, one on the console lid.
+//   returns { group, wheel, update(dt), setInstruments({ rpm }), mirrors, rearView?, gaugeAt? }
 //     group: the interior in the car's frame. wheel: the steering-wheel mount at spec WHEEL_AT, rotation.x =
 //     WHEEL_TILT; its rotation.z steers, and hands added to it turn with it (the rim follows spec rimAt/rimA/rimB).
 //     update(dt): the needle's idle flutter. setInstruments: move the tach needle. mirrors: the live CarMirrors
@@ -38,10 +45,11 @@ import { carMaterials, aoFor } from './car';
 import { CarId, shapeFor, seatOffset } from './car-shape';
 import { EYE, WHEEL_AT, WHEEL_TILT, rimAt, rimA, rimB } from './spec';
 import * as G from './car-gauges';
-import { windscreenDust, badgeTex, once } from './car-tex';
+import { windscreenDust, badgeTex, plaqueTex, once } from './car-tex';
+import { plaqueNumber } from '../game/founder';
 import { CarMirror } from './car-mirror';
 
-export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number }
+export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number; plaque?: string }
 // each car's trim: seat colour and kind, thread, the dash top's material, the fascia band, the wheel, the binnacle
 interface Theme { seat: number; seatKind: 'leather' | 'buckets'; stitch: number; dash: 'alc' | 'nappa'; band: 'carbon' | 'alu'; wheel: 'gt' | 'brio' | 'corsa' | 'vela'; binnacle: 'tach' | 'screen'; door: 'nappa' | 'carbon'; head: number; stripe?: number; belt?: number }
 const THEMES: Record<string, Theme> = {
@@ -130,9 +138,9 @@ function rimFrames(a0: number, a1: number, n: number) {
 export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const q = o.quality ?? 'high', high = q === 'high';
   const id = o.car ?? 'rossini-gt', P = shapeFor(id), B = bodyFor(id), T = THEMES[P.interior];
-  // the driver's frame: the shared one (spec.ts), moved for a car whose driver sits lower and further in (the
-  // hypercar: car-shape seatOffset). The eye, the wheel and the binnacle move with the driver; the dash, the console
-  // and the gauge pod move down with them across the car; the seats drop less (the floor stays above the sills, so
+  // the driver's frame: the shared one (spec.ts), moved for a car whose driver sits lower, further in and further
+  // forward (the hypercar: car-shape seatOffset). The eye, the wheel and the binnacle move with the driver; the dash,
+  // the console and the gauge pod move down and forward with them across the car (the dash's front edge stays on the glass); the seats drop less (the floor stays above the sills, so
   // the driver reclines a little more); the glass, pillars, headliner, doors and hoop stay fitted to the body.
   const [sX, sY, sZ] = seatOffset(P), hyper = P.interior === 'hyper';
   const seatY = Math.max(sY, -0.12), floorY = Math.max(sY, -0.04);
@@ -216,7 +224,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   bk.ao = aoFor(B);
 
   // ---------------------------------------------------------------- windscreen: glass, frit, dust
-  const NS = high ? 30 : 18, NT = high ? 18 : 10;
+  // (the hypercar's screen runs up over its driver's head: more rows, so its top row of frit, the band under the
+  // header, stays as narrow as the others' and above the seat camera's frame, portrait included)
+  const NS = high ? 30 : 18, NT = hyper ? (high ? 28 : 18) : high ? 18 : 10;
   const wsRows: V3[][] = [];
   for (let i = 0; i <= NT; i++) { const r: V3[] = []; for (let j = 0; j <= NS; j++) r.push(wsPoint(-1 + 2 * (j / NS), i / NT, -0.006)); wsRows.push(r); }
   {
@@ -313,7 +323,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   if (hyper && mats.amb) {
     const [lz, ly] = LIP[LIP.length - 1];
     kit.add('amb', ambLine(range(-(D - 0.012), D - 0.012, 40).map((x) => v3(x, ly - 0.004, lz + 0.0035)), v3(0, 1, 0), 0.005));
-    const gm = mat(0.06, 0.87 + sY, -0.74 + sZ, -0.62), r = 0.046;
+    // (x 0.16: clear of the live driver display's right end, which reaches x 0.01 now that it is centred on the driver)
+    const gm = mat(0.16, 0.87 + sY, -0.74 + sZ, -0.62), r = 0.046;
     kit.add('alu', latheGeo([[r - 0.002, 0.004], [r + 0.003, 0.009], [r + 0.008, 0.006], [r + 0.009, -0.03]], high ? 48 : 28, 'z', { flip: true, vScale: 0.05 }), gm);
     const face = new THREE.CircleGeometry(r, 40); face.translate(0, 0, -0.002); kit.add('gloss', face, gm, 0.05);
     const ring = new THREE.RingGeometry(r * 0.8, r * 0.83, 48, 1); ring.translate(0, 0, -0.0012); kit.add('amb', ring, gm);
@@ -541,7 +552,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       const [lining, hole] = splitGrid(hl, NZ + 1, NX + 1, (i, j) => inRoof(rows[i][j].clone().add(rows[i + 1][j + 1]).multiplyScalar(0.5)));
       kit.add('head', lining);
       const gl = hole.clone(); const gp = gl.attributes.position;
-      for (let k = 0; k < gp.count; k++) gp.setY(k, gp.getY(k) + 0.012);
+      // (the Vela's glass sits 12 mm up in its opening; the hypercar's stays level with the lining, because from its
+      // lowered seat the step showed as a strip of open sky between the header's lining and the glass)
+      if (!hyper) for (let k = 0; k < gp.count; k++) gp.setY(k, gp.getY(k) + 0.012);
       kit.add('roofGlass', gl);
     } else kit.add('head', hl);
     // sun visors folded up against the headliner, hinged outboard, clipped inboard (not in the hypercar's narrow
@@ -567,8 +580,11 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     }
   }
   // ---------------------------------------------------------------- side glass (inside) with frit
+  // (the frit is the grid's first column, last column and next-to-top row; the hypercar's long, raked front edge
+  // made a first column 6 cm wide at its foot, which from the seat doubled the A-pillar's width in a black band beside
+  // its trim: its grid has twice the columns, so the frit is the others' width)
   for (const sd of [-1, 1] as const) {
-    const nu = high ? 22 : 12, nv = high ? 9 : 5, rows: V3[][] = [];
+    const nu = (high ? 22 : 12) * (hyper ? 2 : 1), nv = high ? 9 : 5, rows: V3[][] = [];
     for (let i = 0; i <= nv; i++) { const r: V3[] = []; for (let j = 0; j <= nu; j++) r.push(sgInner(j / nu, i / nv, sd)); rows.push(r); }
     const [clear, frit] = splitGrid(gridGeo(rows, { flip: sd > 0 }), nv + 1, nu + 1, (i, j) => i === nv - 1 || j === 0 || j === nu - 1);
     kit.add('sideGlass', clear); kit.add('frit', frit);
@@ -620,7 +636,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // ---------------------------------------------------------------- bulkhead behind the seats, with its window
   {
     const z = 0.565, sh = new THREE.Shape();
-    const pts: [number, number][] = [[wallX(z) + 0.012, 0.2], [wallX(z) + 0.012, sill(z) - 0.01]];
+    // (the other cars' bulkhead meets the door cards' face at 0.866 m as before; the hypercar's, 12 mm outside its wall)
+    const xw = hyper ? wallX(z) + 0.012 : 0.866, pts: [number, number][] = [[xw, 0.2], [xw, sill(z) - 0.01]];
     for (const a of range(body.canopyX(z, sill(z)) - 0.01, 0, 14)) pts.push([a, body.top(z, a) - 0.035]);
     const all = [...pts, ...pts.slice(0, -1).reverse().map(([x, y]) => [-x, y] as [number, number])];
     sh.moveTo(all[0][0], all[0][1]); for (const p of all.slice(1)) sh.lineTo(p[0], p[1]); sh.closePath();
@@ -702,6 +719,31 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const toe = new THREE.PlaneGeometry(1.74, 0.42); toe.rotateX(-0.85); toe.translate(0, 0.27 + floorY, -1.12); kit.add('carpet', toe);
   }
 
+  // ---------------------------------------------------------------- the Founder Edition's numbered plaques
+  // (the OC Hypercar only): brushed aluminium, engraved, on a thin carbon plinth; one material for both, so one draw
+  // call. The console's sits on the lid behind the bridge, its lettering reading from the driver's seat and tilted to
+  // it; the sill's lies on the driver's door sill cap ahead of the shoulder, reading front to back as the driver looks
+  // down to the left. Both carry the same number line.
+  if (P.brand === 'oc') {
+    const number = o.plaque ?? plaqueNumber();
+    mats.plaque = once('m.plaque' + number + q, () => new THREE.MeshPhysicalMaterial({ map: plaqueTex(number, high ? 1024 : 512), metalness: 0.65, roughness: 0.38, clearcoat: 0.5, clearcoatRoughness: 0.08, envMapIntensity: 0.9 }));
+    const put = (w: number, m: THREE.Matrix4) => {
+      const face = new THREE.PlaneGeometry(w, w / 4); face.translate(0, 0, 0.0052); kit.add('plaque', face, m);
+      const base = new RoundedBoxGeometry(w + 0.01, w / 4 + 0.01, 0.006, 2, 0.002); base.translate(0, 0, 0.002); kit.add('carbon', base, m, 0.05);
+    };
+    // the console: the plate's normal tilted 0.3 rad back toward the driver, its lettering's top toward the nose. The
+    // hypercar's own console (interior 'hyper') is 30 % narrower and sits lower and further forward with its seats
+    // (the console's warp above), so its plate follows the lid down and is sized to its narrower top
+    const cy = hyper ? seatY : 0, cz = hyper ? sZ : 0;
+    put(hyper ? 0.13 : 0.18, mat(0, 0.467 + cy, -0.1 + cz, -Math.PI / 2 + 0.3));
+    // the sill cap at z -0.3: across the cap, laid on it and tilted 0.25 rad inboard; the lettering runs forward, its top outboard
+    const zs = -0.3, ys = sill(zs), gx = body.canopyX(zs, ys + 0.012) - 0.008, xm = (0.845 + gx) / 2;
+    const sm = new THREE.Matrix4().makeTranslation(-xm, ys + 0.006, zs)
+      .multiply(new THREE.Matrix4().makeRotationZ(-0.25)).multiply(new THREE.Matrix4().makeRotationY(Math.PI / 2)).multiply(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+    put(0.14, sm);
+    group.userData.plaques = { number, sill: { x: -xm, y: ys + 0.006, z: zs, capW: 0.845 - gx }, console: { x: 0, y: 0.459 + cy, z: -0.1 + cz } };
+  }
+
   // ---------------------------------------------------------------- the car's body seen through the glass
   if (o.body ?? true) {
     // the whole shell (no glass: the cockpit has its own): the bonnet and wings through the windscreen, the door
@@ -732,6 +774,13 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       if (tt > 0.03 && tt < 0.95 && Math.abs(Pp.x) < half - 0.04) keepIdx.push(t, t + 1, t + 2);
     }
     src.setIndex(keepIdx);
+    // (the hypercar: from its forward seat its long screen showed the reflection's far edge as a hard line across the
+    // sky, so the ghost fades out up the glass, from 30 to 60 % of the way to the header, and stays low as glare)
+    if (hyper) for (let i = 0; i < P.count; i++) {
+      const dir = v3(P.getX(i), P.getY(i), P.getZ(i)).sub(E), den = n.dot(dir); if (Math.abs(den) < 1e-6) continue;
+      const tt = (E.z + (dir.z * (d - n.dot(E))) / den - WS.zb) / (WS.zt - WS.zb), k = 1 - sstep(0.3, 0.6, tt);
+      col[i * 3] *= k; col[i * 3 + 1] *= k; col[i * 3 + 2] *= k;
+    }
     const gm = new THREE.MeshBasicMaterial({ vertexColors: true, color: 0x2a2622, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false });
     const gh = new THREE.Mesh(src, gm); gh.name = 'windscreen-reflection'; gh.renderOrder = 3;
     group.add(gh);

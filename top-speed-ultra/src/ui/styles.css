@@ -59,6 +59,13 @@
   --alarm: #c81a0a;                          /* wrong way: a deeper tail-light red, --ink on it 5.23:1 */
   --good: #6ff7de;                          /* ULTRA success */
   --bad: #ff6a4f;                            /* danger text, tail-light red: 7:1 on the base */
+  /* the OC Hypercar's own systems and Founder Edition (Cold Thrust, Ground Lock, Thrust Hop, its garage card): its LED
+     ice blue, fixed whatever the atmosphere (the atmospheres below re-point --ice, never these). --founder on a HUD
+     plate over a white sky is 6.2:1, on the card's dark 11:1; black on it 13:1 */
+  --founder: #8fd0ff;
+  --founder-line: rgba(143, 208, 255, 0.6);
+  --founder-wash: rgba(143, 208, 255, 0.14);
+  --founder-glow: rgba(89, 184, 255, 0.45);
   /* brushed chrome, cool */
   --chrome-hi: #ffffff;
   --chrome: #dde9f3;                         /* ULTRA primary: liquid silver */
@@ -338,6 +345,17 @@ input[type="range"]::-moz-range-track { height: 4px; background: linear-gradient
 input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 26px; margin-top: -11px; border: 0; border-radius: 1px; transform: skewX(var(--skew));
   background: var(--g-chrome); box-shadow: 0 0 0 1px var(--void), 0 0 0 2px var(--ice); }
 input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; border-radius: 1px; background: var(--g-chrome); box-shadow: 0 0 0 1px var(--void), 0 0 0 2px var(--ice); }
+/* the handling slider's named profiles: ticks under the track at Arcade, Sport and Simulation (the thumb's centre runs
+   from 7 px to the width less 7 px), and one line each, the active one lit */
+.htrack { position: relative; }
+.htrack i { position: absolute; top: 21px; left: calc(7px + (100% - 14px) * var(--at)); width: 2px; height: 7px; margin-left: -1px; background: var(--line-3); pointer-events: none; }
+.htrack i.on { background: var(--cyan); }
+.profiles { display: grid; gap: 6px; margin: 2px 0 0; padding-inline: 5px; }
+.profiles > div { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 10px; align-items: baseline; }
+.profiles dt { color: var(--faint); font: 500 10.5px/1.3 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; }
+.profiles dd { margin: 0; color: var(--faint); font-size: 13px; line-height: 1.45; }
+.profiles .on dt { color: var(--cyan); }
+.profiles .on dd { color: var(--ink); }
 .toggle { display: flex; gap: 14px; align-items: center; min-height: 44px; cursor: pointer; color: var(--ink); font-size: 14.5px; }
 .toggle input { -webkit-appearance: none; appearance: none; flex: none; width: 46px; height: 24px; margin: 0; cursor: pointer; transform: skewX(var(--skew));
   background: linear-gradient(var(--dim), var(--dim)) 4px 50% / 14px 14px no-repeat, var(--cell); box-shadow: inset 0 0 0 1px var(--line-2); }
@@ -612,6 +630,26 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   font: 600 11px/1.2 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--night); white-space: nowrap; }
 .chip::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(var(--skew)); background: var(--cyan); }
 
+/* the OC Hypercar's Founder Edition card: its own ice-blue edge, its reveal stage on top (a canvas the game draws its
+   stage into), a chip, and the list of what only it has. --ice on the card's dark is 11:1; black on --ice 13:1 */
+.gcell.car.founder { background: linear-gradient(165deg, var(--founder-wash), var(--clear) 55%), var(--cell); box-shadow: inset 0 0 0 1px var(--founder-line); }
+.fe-stage { position: relative; justify-self: stretch; aspect-ratio: 16 / 9; margin: -2px 0 8px; overflow: hidden;
+  background: radial-gradient(60% 55% at 50% 70%, #151a21 0%, #050608 70%, #020305 100%); box-shadow: inset 0 0 0 1px var(--founder-line); }
+.fe-stage canvas { display: block; width: 100%; height: 100%; }
+.fe-stage::after { content: ""; position: absolute; inset: 55% 0 0; pointer-events: none; background: linear-gradient(180deg, rgba(2, 3, 5, 0), rgba(2, 3, 5, 0.78)); }
+.fe-cap, .fe-replay.btn { z-index: 1; }
+.gcell.car.founder .carhead { flex-wrap: wrap; row-gap: 6px; }
+.gcell.car.founder .carhead b { white-space: nowrap; }
+.gcell .fe-cap { position: absolute; left: 12px; bottom: 10px; margin: 0; display: grid; gap: 3px; pointer-events: none; text-shadow: 0 1px 6px #000; }
+.gcell.driver .fe-cap b { font: 800 15px/1 var(--f-display); letter-spacing: 0.16em; text-transform: uppercase; color: var(--founder); }
+.gcell .fe-cap span:not(.shield) { font: 500 10.5px/1.2 var(--f-mono); letter-spacing: 0.14em; color: #dbe6f2; }
+.fe-replay.btn { position: absolute; right: 12px; bottom: 8px; min-height: 36px; padding: 0 12px; font-size: 11px; letter-spacing: 0.12em; }
+.gcell .carhead span.chip.ice { color: var(--night); font: 600 10.5px/1.2 var(--f-mono); letter-spacing: 0.16em; margin-left: 4px; vertical-align: 0; }
+.chip.ice::before { background: var(--founder); }
+.fe-list { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 5px; }
+.fe-list li { padding-left: 10px; border-left: 2px solid var(--founder-line); font-size: 13px; line-height: 1.4; color: var(--dim); }
+.gcell.driver .fe-list b { font: 600 13px/1.4 var(--f-ui); letter-spacing: 0; text-transform: none; color: var(--founder); }
+
 /* route shields: the real sign shapes, sharpened */
 .shield-row { display: inline-flex; gap: 8px; align-items: center; }
 .shield-row b { font: 600 16px/1 var(--f-ui); letter-spacing: 0.02em; }
@@ -721,6 +759,8 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-chips i { padding: 4px 7px 3px; font: 600 9.5px/1 var(--f-mono); font-style: normal; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); box-shadow: inset 0 0 0 1px var(--line-2); }
 .hud-chips i:first-child { color: var(--ice-text); box-shadow: inset 0 0 0 1px var(--ice-line); }
 .hud-chips i.hot { color: var(--night); background: var(--cyan); box-shadow: none; }
+/* the hypercar's race tune (every scored mode): the same chip outlined, where Unleashed is filled */
+.hud-chips i.tune { color: var(--cyan); box-shadow: inset 0 0 0 1px var(--cyan-line); white-space: nowrap; }
 .hud-cam { display: block; font: 500 10px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
 .hud [hidden] { display: none !important; }
 /* the seat view of a car whose own display shows the live speed and gear (the hypercar): the HUD drops its duplicate */
@@ -1042,6 +1082,13 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .app[data-hud="pp"] .hud-ability { right: calc(var(--sa-r) + 20px + 74px + 16px + 11px); bottom: calc(var(--ctl-b) + 96px + 8px); width: 52px; height: 52px; font-size: 9.5px; letter-spacing: 0.02em; }
 .app[data-hud="pl"] .hud-ability { right: calc(var(--sa-r) + 20px + 74px + 16px + 74px + 16px); bottom: calc(var(--ctl-b) + 22px); width: 52px; height: 52px; font-size: 9.5px; letter-spacing: 0.02em; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-ability span { max-width: 42px; }
+/* the OC Hypercar's THRUST: the same 52 px hexagon beside FOCUS TIME, its tank panel over the two of them */
+.app[data-hud="pp"] .hud-thrustbtn { right: calc(var(--sa-r) + 20px + 74px + 16px + 11px + 60px); bottom: calc(var(--ctl-b) + 96px + 8px); width: 52px; height: 52px; font-size: 9.5px; letter-spacing: 0.02em; }
+.app[data-hud="pl"] .hud-thrustbtn { right: calc(var(--sa-r) + 20px + 74px + 16px + 74px + 16px + 60px); bottom: calc(var(--ctl-b) + 22px); width: 52px; height: 52px; font-size: 9.5px; letter-spacing: 0.02em; }
+.app[data-hud="pp"] .hud-thrust { right: calc(var(--sa-r) + 20px + 74px + 16px + 11px); bottom: calc(var(--ctl-b) + 96px + 8px + 60px); width: 150px; padding: 6px 10px 7px; gap: 5px; }
+.app[data-hud="pl"] .hud-thrust { right: calc(var(--sa-r) + 20px + 74px + 16px + 74px + 16px); bottom: calc(var(--ctl-b) + 22px + 60px); width: 150px; padding: 6px 10px 7px; gap: 5px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-thrust-top em { font-size: 15px; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-thrust-low { font-size: 8.5px; letter-spacing: 0.08em; }
 /* transient things: toasts under the cluster, the radio card docked under it */
 .app[data-hud="pp"] .toasts { top: calc(var(--sa-t) + 168px); }
 .app[data-hud="pl"] .toasts { top: 30%; }
@@ -1058,6 +1105,32 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .app[data-hud="pp"] .tbtn.honk { position: fixed; bottom: calc(var(--ctl-b) + 96px + 8px); right: calc(var(--sa-r) + 20px + 74px + 16px + 11px + 52px + 8px); width: 44px; height: 44px; padding: 0; justify-content: center; }
 .app[data-hud="pl"] .tbtn.honk { position: fixed; bottom: calc(var(--ctl-b) + 22px); right: calc(var(--sa-r) + 200px + 52px + 8px); width: 44px; height: 44px; padding: 0; justify-content: center; }
 .app[data-hud="desk"] .tbar .livechip { order: -1; }
+
+/* the OC Hypercar: the tank panel (the tank bar with the hop's 40 % mark, Ground Lock's light, the hop's state) and
+   the THRUST button beside the driver's ability, its ring the tank. Free Drive only (the scored modes run the race tune
+   with no THRUST control). Its tune is one of the speed block's chips (.hud-chips: Unleashed or Race tune) */
+.hud-thrust { position: absolute; right: 18px; bottom: calc(max(16px, env(safe-area-inset-bottom)) + 136px); width: 190px; padding: 8px 12px 8px; display: grid; gap: 6px;
+  background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--founder-line); }
+.hud-thrust-top { display: flex; justify-content: space-between; align-items: baseline; }
+.hud-thrust-top b { font: 600 10px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--founder); }
+.hud-thrust-top em { font: 700 17px/1 var(--f-mono); font-style: normal; font-variant-numeric: tabular-nums; }
+.hud-thrust-bar { position: relative; height: 7px; background: var(--line-2); overflow: hidden; }
+.hud-thrust-bar i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--founder-line), var(--founder)); transform-origin: left; transform: scaleX(1); }
+.hud-thrust-bar s { position: absolute; top: 0; bottom: 0; left: 40%; width: 2px; background: var(--ink); opacity: 0.7; }
+.hud-thrust.low .hud-thrust-bar i { background: var(--ember); }
+.hud-thrust.on { box-shadow: inset 0 0 0 1px var(--founder-line), inset 0 2px 0 var(--founder), 0 0 18px var(--founder-glow); }
+.hud-thrust-low { display: flex; justify-content: space-between; gap: 8px; font: 600 9.5px/1.1 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+.hud-lock.on { color: var(--founder); text-shadow: 0 0 8px var(--founder-glow); }
+.hud-hop.ready { color: var(--ink); }
+.hud-thrustbtn { --p: 1; position: absolute; right: 386px; bottom: max(18px, env(safe-area-inset-bottom)); isolation: isolate; width: 76px; height: 70px; padding: 0; border: 0; cursor: pointer; pointer-events: auto; touch-action: none; user-select: none; -webkit-user-select: none;
+  display: grid; place-items: center; color: var(--founder); font: 700 11px/1.1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: conic-gradient(var(--founder) calc(var(--p) * 1turn), var(--line-2) 0); }
+.hud-thrustbtn::before { content: ""; position: absolute; inset: 3px 4px; z-index: -1; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: var(--glass-2); }
+.hud-thrustbtn.on { color: var(--night); }
+.hud-thrustbtn.on::before { background: var(--founder); }
+.hud-thrustbtn.low { color: var(--dim); background: conic-gradient(var(--ember) calc(var(--p) * 1turn), var(--line) 0); }
+.hud-thrustbtn:focus-visible { outline: none; }
+.hud-thrustbtn:focus-visible::before { background: var(--night-3); }
 
 /* ------------------------------------------------------------------ touch: a steering rail and two pedals */
 

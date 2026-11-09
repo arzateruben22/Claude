@@ -479,6 +479,22 @@ export function plateTex(w = 1024, h = 216): THREE.Texture {
     return canvasTex(c, true);
   });
 }
+// a soft glow for an additive quad (the hypercar's brake haze round its tail bar): bright along the middle row,
+// falling off across it (a tight core and a wider skirt) and toward both ends; grey, so the material's colour tints it
+export function glowTex(): THREE.Texture {
+  return once('glow', () => {
+    const W = 128, H = 32, [c, g] = canvas(W, H), im = g.createImageData(W, H);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const v = (y + 0.5) / H * 2 - 1, u = (x + 0.5) / W * 2 - 1;
+      const across = 0.8 * Math.exp(-((v / 0.3) ** 2)) + 0.2 * Math.exp(-((v / 0.75) ** 2));
+      const along = Math.min(1, (1 - Math.abs(u)) / 0.12);
+      const a = Math.round(255 * across * along * along), i = (y * W + x) * 4;
+      im.data[i] = im.data[i + 1] = im.data[i + 2] = a; im.data[i + 3] = 255;
+    }
+    g.putImageData(im, 0, 0);
+    return canvasTex(c, false);
+  });
+}
 // an LED strip's light across its width (v): a hot core, the strip's body (halo) either side and an outer glow (edge,
 // the halo unless given), on black (an emissive map)
 export function ledTex(core: number, halo: number, edge = halo): THREE.Texture {
@@ -489,6 +505,52 @@ export function ledTex(core: number, halo: number, edge = halo): THREE.Texture {
     gr.addColorStop(0, '#000000'); gr.addColorStop(0.1, hex(edge)); gr.addColorStop(0.26, hex(halo)); gr.addColorStop(0.44, hex(core)); gr.addColorStop(0.56, hex(core));
     gr.addColorStop(0.74, hex(halo)); gr.addColorStop(0.9, hex(edge)); gr.addColorStop(1, '#000000');
     g.fillStyle = gr; g.fillRect(0, 0, 4, 64);
+    return canvasTex(c, true);
+  });
+}
+// The Founder Edition's numbered plaque (the door sill and the console; src/game/founder.ts gives the number): a
+// brushed-aluminium plate with a bevelled edge, the OC mark and the lettering engraved and filled black, and a thin
+// Founder Ice enamel line under FOUNDER EDITION. w x h at 4:1; `number` is the plaque's own line ("No. 0000 · TEST").
+export function plaqueTex(number: string, w = 1024): THREE.Texture {
+  return once('plaque' + number + w, () => {
+    const h = Math.round(w / 4), [c, g] = canvas(w, h), r = h * 0.1;
+    const FONT = '"Saira Semi Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif';
+    // the plate: brushed along its length, lit from the top edge
+    const bg = g.createLinearGradient(0, 0, 0, h); bg.addColorStop(0, '#d3d8de'); bg.addColorStop(0.5, '#aeb4bc'); bg.addColorStop(1, '#8d939b');
+    g.fillStyle = bg; g.beginPath(); g.roundRect(0, 0, w, h, r); g.fill();
+    const rnd = rng(42);
+    for (let i = 0; i < 900; i++) { const y = rnd() * h, a = rnd() * 0.08; g.fillStyle = rnd() > 0.5 ? `rgba(255,255,255,${a})` : `rgba(0,0,0,${a})`; g.fillRect(0, y, w, 1 + rnd() * 1.5); }
+    // the bevel: a bright top edge, a dark bottom edge
+    g.lineWidth = h * 0.035;
+    g.strokeStyle = 'rgba(255,255,255,0.55)'; g.beginPath(); g.roundRect(h * 0.03, h * 0.03, w - h * 0.06, h * 0.94, r * 0.8); g.stroke();
+    g.strokeStyle = 'rgba(20,24,28,0.6)'; g.lineWidth = h * 0.012; g.beginPath(); g.roundRect(h * 0.07, h * 0.07, w - h * 0.14, h * 0.86, r * 0.6); g.stroke();
+    // engraved: the cut's lit lower lip (a light offset under the black fill), then the black fill
+    const engrave = (draw: (dx: number, dy: number, fill: string) => void) => { draw(0, h * 0.012, 'rgba(255,255,255,0.7)'); draw(0, 0, '#121417'); };
+    engrave((dx, dy, fill) => drawOcMark(g, h * 0.2 + dx, h * 0.2 + dy, h * 1.05, h * 0.6, fill));
+    g.fillStyle = '#121417'; g.fillRect(h * 1.42, h * 0.2, h * 0.018, h * 0.6);
+    const x0 = h * 1.62;
+    g.textBaseline = 'alphabetic'; g.textAlign = 'left';
+    // a line of spaced capitals, its size cut down until it fits the room right of the divider
+    const room = w - x0 - h * 0.22;
+    const text = (s: string, x: number, y: number, size: number, weight: number, spacing: number) => {
+      let k = 1;
+      for (let i = 0; i < 12; i++) {
+        g.font = `${weight} ${size * k}px ${FONT}`;
+        const wd = [...s].reduce((a, ch) => a + g.measureText(ch).width + spacing * k, -spacing * k);
+        if (wd <= room) break;
+        k *= Math.max(0.6, (room / wd) * 0.99);
+      }
+      engrave((dx, dy, fill) => {
+        g.font = `${weight} ${size * k}px ${FONT}`; g.fillStyle = fill;
+        let cx = x + dx; for (const ch of s) { g.fillText(ch, cx, y + dy); cx += g.measureText(ch).width + spacing * k; }
+      });
+    };
+    text('OC HYPERCAR · PROTOTYPE 01', x0, h * 0.32, h * 0.13, 600, h * 0.03);
+    text('FOUNDER EDITION', x0, h * 0.6, h * 0.25, 800, h * 0.018);
+    // the Founder Ice enamel line
+    g.fillStyle = '#2f8fe8'; g.fillRect(x0, h * 0.665, w - x0 - h * 0.25, h * 0.026);
+    g.fillStyle = '#a6dcff'; g.fillRect(x0, h * 0.665, w - x0 - h * 0.25, h * 0.009);
+    text(number, x0, h * 0.86, h * 0.15, 700, h * 0.03);
     return canvasTex(c, true);
   });
 }
