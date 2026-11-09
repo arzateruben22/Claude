@@ -1,0 +1,211 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/ep10/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Has this ever happened? Shuffle a deck, and look at the order.",
+   "stars": [
+    "ever"
+   ],
+   "phonemes": "hɐz ðɪs ˈɛvɚ hˈæpənd? ʃˈʌfəl ɐ dˈɛk, ænd lˈʊk æt ðɪ ˈɔːɹdɚ.",
+   "speeds": [
+    0.84,
+    0.72
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     1.3518,
+     1.9518
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.258,
+   "sha256": "fa9bcefe03995cc67c95f9e1de620a86befd72ff9ab7bf288f0445f8f49e912e"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "The first card can be any of fifty-two, the next any of the rest. Multiply all those choices, and you count the orders.",
+   "stars": [
+    "rest",
+    "orders"
+   ],
+   "phonemes": "ðə fˈɜːst kˈɑːɹd kæn biː ˌɛni ʌv fˈɪftitˈuː, ðə nˈɛkst ˌɛni ʌvðə ɹˈɛst. mˌʌltɪplˈaɪ ˈɔːl ðoʊz tʃˈɔɪsᵻz, ænd juː kˈaʊnt ðɪ ˈɔːɹdɚz.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     4.6465,
+     5.0265
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 8.795,
+   "sha256": "488b5ca76d82482a69e07f1a952c08c31de6451536bc8937743248ba7290454a"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "The answer has sixty-eight digits, too big to say out loud. Each shuffle is just one pick from that huge pile.",
+   "stars": [
+    "loud",
+    "pile"
+   ],
+   "phonemes": "ðɪ ˈænsɚ hɐz sˈɪkstiˈeɪt dˈɪdʒɪts, tˈuː bˈɪɡ tə sˈeɪ ˈaʊt lˈaʊd. ˈiːtʃ ʃˈʌfəl ɪz dʒˈʌst wˈʌn pˈɪk fɹʌm ðæt hjˈuːdʒ pˈaɪl.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     4.4925,
+     4.8725
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 8.342,
+   "sha256": "9aa8410875b036843a520a8e6838171b8a941b2d0e0ef1a1d28998fd1c335b5f"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Now give everyone alive a deck, eight billion of us. Shuffle once a second for fourteen billion years, the age of the universe.",
+   "stars": [
+    "universe"
+   ],
+   "phonemes": "nˈaʊ ɡˈɪv ˈɛvɹɪwˌʌn ɐlˈaɪv ɐ dˈɛk, ˈeɪt bˈɪliən ʌv ˌʌs. ʃˈʌfəl wˈʌns ɐ sˈɛkənd fɔːɹ fˈɔːɹtiːn bˈɪliən jˈɪɹz, ðɪ ˈeɪdʒ ʌvðə jˈuːnɪvˌɜːs.",
+   "speeds": [
+    0.76,
+    0.74
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     3.458,
+     3.838
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 9.402,
+   "sha256": "7cfcfba390f1ab66ee01112e7e8fef302a4ef018b276ed53df92a5c2049c2bce"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Even then, you cover less than one part in a trillion trillion trillion of the orders. Your shuffle is almost certainly the first of its kind.",
+   "stars": [
+    "orders",
+    "kind"
+   ],
+   "phonemes": "ˈiːvən ðˈɛn, juː kˈʌvɚ lˈɛs ðɐn wˈʌn pˈɑːɹt ɪn ɐ tɹˈɪliən tɹˈɪliən tɹˈɪliən ʌvðɪ ˈɔːɹdɚz. jʊɹ ʃˈʌfəl ɪz ˈɔːlmoʊst sˈɜːʔnli ðə fˈɜːst ʌv ɪts kˈaɪnd.",
+   "speeds": [
+    0.74,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     6.6475,
+     7.0275
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 10.733,
+   "sha256": "3dd329bef8d2fd70de758175512ab5d1dad491a1784814d8c6fb63a185b55b39"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "Give the planet a thousand times more shufflers, and it barely changes. The pile of orders is just too big.",
+   "stars": [
+    "changes",
+    "big"
+   ],
+   "phonemes": "ɡˈɪv ðə plˈænɪt ɐ θˈaʊzənd tˈaɪmz mˈɔːɹ ʃˈʌflɚz, ænd ɪt bˈɛɹli tʃˈeɪndʒᵻz. ðə pˈaɪl ʌv ˈɔːɹdɚz ɪz dʒˈʌst tˈuː bˈɪɡ.",
+   "speeds": [
+    0.76,
+    0.74
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     4.9349,
+     5.3149
+    ]
+   ],
+   "file": "06.wav",
+   "dur": 7.755,
+   "sha256": "5dd4d587b8ab61362a48cbec6cd68eaadf7a0cf2873805ad13686ca0058bfdf1"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "Shuffle well, and your order has almost certainly never existed before. Not certain, but a very safe bet.",
+   "stars": [
+    "bet"
+   ],
+   "phonemes": "ʃˈʌfəl wˈɛl, ænd jʊɹ ˈɔːɹdɚ hɐz ˈɔːlmoʊst sˈɜːʔnli nˈɛvɚɹ ɛɡzˈɪstᵻd bᵻfˈɔːɹ. nˌɑːt sˈɜːʔn, bˌʌt ɐ vˈɛɹi sˈeɪf bˈɛt.",
+   "speeds": [
+    0.76,
+    0.72
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     5.3785,
+     5.7585
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 8.193,
+   "sha256": "63ae44c3fbb9faf8fd68a2c82c8e48f250de0bcedf8395f1afa98fbac4afb4f4"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: all the water on Earth, in one ball.",
+   "stars": [
+    "ball"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: ˈɔːl ðə wˈɔːɾɚɹ ˌɔn ˈɜːθ, ɪn wˈʌn bˈɔːl.",
+   "speeds": [
+    0.72
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 3.976,
+   "sha256": "cf24c4e5d9abee84ea46c5a4dce5931aad581fab1d2ac66b6c1a17821d5e95e6"
+  }
+ ]
+}

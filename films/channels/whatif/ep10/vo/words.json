@@ -1,0 +1,994 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Has this ever happened? Shuffle a deck, and look at the order.",
+   "heard": "Has this ever happened? Shuffle a deck and look at the order.",
+   "words": [
+    {
+     "w": "Has",
+     "start": 0.03,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 0.41,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "ever",
+     "start": 0.44,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "happened?",
+     "start": 0.88,
+     "end": 1.352,
+     "heard": true,
+     "end_asr": 1.92
+    },
+    {
+     "w": "Shuffle",
+     "start": 1.975,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.575,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "deck,",
+     "start": 2.605,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.99,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "look",
+     "start": 3.03,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 3.305,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.435,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "order.",
+     "start": 3.585,
+     "end": 4.24,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo02",
+   "text": "The first card can be any of fifty-two, the next any of the rest. Multiply all those choices, and you count the orders.",
+   "heard": "The first card can be any of fifty-two, the next any of the rest. Multiply all those choices and you count the orders.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 0.165,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "card",
+     "start": 0.635,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 1.06,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 1.275,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "any",
+     "start": 1.48,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.775,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "fifty-two,",
+     "start": 1.915,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.985,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "next",
+     "start": 3.06,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "any",
+     "start": 3.455,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.795,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.845,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "rest.",
+     "start": 4.175,
+     "end": 4.646,
+     "heard": true,
+     "end_asr": 4.96
+    },
+    {
+     "w": "Multiply",
+     "start": 5.05,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 5.885,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "those",
+     "start": 6.15,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "choices,",
+     "start": 6.445,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.29,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 7.35,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "count",
+     "start": 7.6,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.92,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "orders.",
+     "start": 8.055,
+     "end": 8.72,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo03",
+   "text": "The answer has sixty-eight digits, too big to say out loud. Each shuffle is just one pick from that huge pile.",
+   "heard": "The answer has 68 digits, too big to say out loud. Each shuffle is just one pick from that huge pile.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "answer",
+     "start": 0.27,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 0.765,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "sixty-eight",
+     "start": 1.135,
+     "end": 1.76,
+     "heard": false
+    },
+    {
+     "w": "digits,",
+     "start": 1.8,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "too",
+     "start": 2.54,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "big",
+     "start": 2.825,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.08,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "say",
+     "start": 3.29,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 3.54,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "loud.",
+     "start": 3.775,
+     "end": 4.492,
+     "heard": true,
+     "end_asr": 4.8
+    },
+    {
+     "w": "Each",
+     "start": 4.89,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "shuffle",
+     "start": 5.105,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 5.715,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 5.93,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 6.165,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "pick",
+     "start": 6.615,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 6.885,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 7.045,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "huge",
+     "start": 7.265,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "pile.",
+     "start": 7.725,
+     "end": 8.32,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo04",
+   "text": "Now give everyone alive a deck, eight billion of us. Shuffle once a second for fourteen billion years, the age of the universe.",
+   "heard": "Now give everyone alive a deck, 8 billion of us. A shuffle once a second for 14 billion years, the age of the universe.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "give",
+     "start": 0.435,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "everyone",
+     "start": 0.61,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "alive",
+     "start": 1.08,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.515,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "deck,",
+     "start": 1.55,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 2.085,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "billion",
+     "start": 2.325,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.975,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "us.",
+     "start": 3.095,
+     "end": 3.458,
+     "heard": true,
+     "end_asr": 3.76
+    },
+    {
+     "w": "Shuffle",
+     "start": 3.865,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "once",
+     "start": 4.52,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.765,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "second",
+     "start": 5.085,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 5.65,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "fourteen",
+     "start": 5.93,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "billion",
+     "start": 6.6,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "years,",
+     "start": 7.14,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.755,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "age",
+     "start": 7.935,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.355,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.385,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "universe.",
+     "start": 8.61,
+     "end": 9.36,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo05",
+   "text": "Even then, you cover less than one part in a trillion trillion trillion of the orders. Your shuffle is almost certainly the first of its kind.",
+   "heard": "Even then, you cover less than one part in a trillion trillion trillion of the orders. Your shuffle is almost certainly the first of its kind.",
+   "words": [
+    {
+     "w": "Even",
+     "start": 0.025,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "then,",
+     "start": 0.555,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.085,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "cover",
+     "start": 1.25,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "less",
+     "start": 1.665,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 2.08,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 2.37,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "part",
+     "start": 2.68,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 3.22,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.29,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "trillion",
+     "start": 3.505,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "trillion",
+     "start": 4.21,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "trillion",
+     "start": 4.865,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.52,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.685,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "orders.",
+     "start": 5.875,
+     "end": 6.647,
+     "heard": true,
+     "end_asr": 7.04
+    },
+    {
+     "w": "Your",
+     "start": 7.045,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "shuffle",
+     "start": 7.335,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 7.935,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "almost",
+     "start": 8.025,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "certainly",
+     "start": 8.395,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.3,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 9.48,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 9.835,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 10.04,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "kind.",
+     "start": 10.13,
+     "end": 10.72,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo06",
+   "text": "Give the planet a thousand times more shufflers, and it barely changes. The pile of orders is just too big.",
+   "heard": "Give the planet a thousand times more shufflers and it barely changes. The pile of orders is just too big.",
+   "words": [
+    {
+     "w": "Give",
+     "start": 0.025,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.395,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 0.47,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.94,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "thousand",
+     "start": 1.08,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 1.615,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 2.1,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "shufflers,",
+     "start": 2.42,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.31,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.57,
+     "end": 3.62,
+     "heard": true
+    },
+    {
+     "w": "barely",
+     "start": 3.6,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "changes.",
+     "start": 4.14,
+     "end": 4.935,
+     "heard": true,
+     "end_asr": 5.28
+    },
+    {
+     "w": "The",
+     "start": 5.34,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "pile",
+     "start": 5.5,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.91,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "orders",
+     "start": 5.98,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.45,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 6.64,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "too",
+     "start": 6.89,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "big.",
+     "start": 7.21,
+     "end": 7.68,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo07",
+   "text": "Shuffle well, and your order has almost certainly never existed before. Not certain, but a very safe bet.",
+   "heard": "Shuffle well and your order has almost certainly never existed before. Not certain but a very safe bet.",
+   "words": [
+    {
+     "w": "Shuffle",
+     "start": 0.03,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "well,",
+     "start": 0.625,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.07,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.1,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "order",
+     "start": 1.45,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 1.92,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "almost",
+     "start": 2.22,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "certainly",
+     "start": 2.715,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 3.535,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "existed",
+     "start": 3.965,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "before.",
+     "start": 4.99,
+     "end": 5.378,
+     "heard": true,
+     "end_asr": 5.76
+    },
+    {
+     "w": "Not",
+     "start": 5.78,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "certain,",
+     "start": 6.115,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 6.525,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.875,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "very",
+     "start": 6.905,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "safe",
+     "start": 7.29,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "bet.",
+     "start": 7.705,
+     "end": 8.16,
+     "heard": true
+    }
+   ],
+   "clamped": true
+  },
+  {
+   "id": "vo08",
+   "text": "Next envelope: all the water on Earth, in one ball.",
+   "heard": "Next envelope all the water on earth in one ball.",
+   "words": [
+    {
+     "w": "Next",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "envelope:",
+     "start": 0.47,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 1.39,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.615,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 1.78,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.11,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 2.35,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.83,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 3.09,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "ball.",
+     "start": 3.435,
+     "end": 3.92,
+     "heard": true
+    }
+   ]
+  }
+ ],
+ "clamped_by": "films/channels/whatif/ep10/voice.py --clamp: word ends cut back to the start of an inserted pause"
+}
