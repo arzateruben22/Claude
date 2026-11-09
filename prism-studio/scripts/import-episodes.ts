@@ -13,6 +13,7 @@ import { createEpisode, addVersion, upsertExport, editExport } from "../src/doma
 import type { Topic } from "../src/domain/catalog";
 import { captionsToSrt } from "../src/domain/srt";
 import { buildMetadata, postingNotesFor, type MetaInput } from "../src/domain/metadata";
+import { usesAiVisuals } from "../src/domain/disclosures";
 import { loadEnv } from "./env";
 loadEnv();
 
@@ -53,7 +54,7 @@ export function metaInputFor(dir: string, ch: { name: string; label: string; tag
     channel: ch, episode: ep,
     beats: (info?.beats ?? []).filter((b) => b.vo).map((b) => ({ beat: b.beat, vo: b.vo! })),
     sources: claims.map((c) => ({ key: c.id, claim: c.claim, title: c.source_title, publisher: (() => { try { return new URL(c.source_url ?? "").hostname.replace(/^www\./, ""); } catch { return c.source_title ?? ""; } })(), url: c.source_url })),
-    disclosures: { aiVoice: true, aiVisuals: false },
+    disclosures: { aiVoice: true, aiVisuals: usesAiVisuals(dir) },
     next: info?.next ? `Next: ${info.next}` : null,
   };
 }
@@ -118,7 +119,9 @@ export async function importEpisodes(d = db()) {
         const use = platform === "youtube" && yt ? yt : { file, hash };
         const x = await upsertExport(d, { versionId: ver.id, platform, filePath: `films:${rel(use.file)}`, fileSha256: use.hash,
           title: m.title, caption: m.caption, hashtags: m.hashtags, coverPath,
-          disclosures: { aiVoice: true, aiVisuals: false, notes: "Code-rendered (procedural) animation; synthetic narration." },
+          disclosures: usesAiVisuals(dir)
+            ? { aiVoice: true, aiVisuals: true, notes: "AI-generated illustrations (owner-made), animated in code; synthetic narration." }
+            : { aiVoice: true, aiVisuals: false, notes: "Code-rendered (procedural) animation; synthetic narration." },
           postingNotes: postingNotesFor(m) });
         if (x.coverPath !== coverPath) await editExport(d, x.id, { coverPath });   // an existing export: approvals bound to the old cover are withdrawn
       }
