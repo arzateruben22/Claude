@@ -35,3 +35,4 @@ renamed to `graphite`), `set/aces.js` (Rest Frame's). The originals are untouche
 - kits/cinema/studio/compose.py (shared, additive, 9 Nov): an optional cue-sheet key `tail_s` sets the length of the
   fade the studio puts on the last seconds of every stem (default 0.6, so every existing film's audio is
   byte-identical). A film that loops (S2E01) sets 0.05 so the end lands at the opening's level.
+- kits/cinema/film/compilation.mjs (shared, additive): `--bridge <s>` puts an "Up next" card of that many seconds between episodes (no change without it; chapter starts include the bridges); an episode whose title.series carries "Episode N" (Season 2) shows that instead of a made-up "No. 00k".
