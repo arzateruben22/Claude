@@ -284,6 +284,33 @@ async function InstagramScreen() {
         ) : <p className="muted">Nothing else in rotation.</p>}
       </section>
 
+      <section className="section" id="captions">
+        <div className="section-head"><h2>Captions by series</h2><span className="faint num">copy straight into Instagram</span></div>
+        <div className="stack">
+          {v.captions.map((g) => (
+            <details key={g.channel.id} className="card ig-captions" style={topicStyle(g.channel)}>
+              <summary><span className="h3">{g.channel.name.replace(/ \(name TBD\)$/, "")}</span> <span className="faint num">{g.items.filter((i) => i.state === "posted").length} posted · {g.items.length} ready</span></summary>
+              <ol className="ig-cap-list">
+                {g.items.map(({ e, x, state }) => (
+                  <li key={e.id} className="ig-cap">
+                    <div className="ig-cap-head">
+                      <Link href={`/episodes/${e.id}`} className="ig-cap-title">{e.title}</Link>
+                      <span className={`chip ${state === "posted" ? "good" : state === "planned" ? "info" : ""}`}>{state === "posted" ? "Posted" : state === "planned" ? "Planned" : "Not posted yet"}</span>
+                    </div>
+                    <p className="ig-cap-text">{x.caption}</p>
+                    {x.hashtags ? <p className="ig-cap-tags">{x.hashtags}</p> : null}
+                    <div className="row">
+                      <CopyButton text={[x.caption, x.hashtags].filter(Boolean).join("\n\n")} label="Copy caption + hashtags" />
+                      {x.hashtags ? <CopyButton text={x.hashtags} label="Copy hashtags" /> : null}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          ))}
+        </div>
+      </section>
+
       <section className="section">
         <div className="section-head"><h2>Never repeats</h2><span className="faint num">{v.totals.posted} posted · {v.totals.never} not yet</span></div>
         <div className="card flush">

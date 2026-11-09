@@ -538,6 +538,15 @@ export async function instagramExtension() {
   return {
     tz, today, ig: ig ?? null, uploadUrl: ig ? uploadUrlFor(ig) : OFFICIAL.instagram.upload, daily: s.instagramDaily, paused: s.globalPause, stopExternal: s.stopExternalActions,
     slots, day, rotation: rotation.filter((r) => !slots.some((x) => x.item?.e.id === r.e.id)), upcoming, ledger,
+    // every Instagram-ready episode per channel, with its exact caption and hashtags, for copying straight into Instagram
+    captions: chans.map((c) => ({
+      channel: c,
+      items: exportsIg.filter((r) => r.e.channelId === c.id).map((r) => ({
+        e: r.e, x: r.x,
+        state: pubs.some((p) => p.episodeId === r.e.id && POSTED.includes(p.status)) ? "posted" as const
+          : pubs.some((p) => p.episodeId === r.e.id && (OPEN_STATUSES as readonly string[]).includes(p.status)) ? "planned" as const : "not_yet" as const,
+      })),
+    })).filter((g) => g.items.length),
     totals: { episodes: sum("episodes"), ready: sum("ready"), posted: sum("posted"), planned: sum("planned"), never: sum("never") },
   };
 }

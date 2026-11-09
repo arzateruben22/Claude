@@ -1017,3 +1017,12 @@ h1 + :is(.card, section, form, .stack, .stack-lg) { margin-top: var(--s4); }
 .ep-chip:hover { border-color: currentColor; background: rgba(255, 255, 255, .07); }
 .ep-chip .num { color: var(--text-3); font-size: 12px; }
 @media (max-width: 719px) { .ep-nav-row { grid-template-columns: 1fr; gap: 4px; } }
+
+/* Instagram screen: every series' captions, ready to copy */
+.ig-captions summary { cursor: pointer; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.ig-cap-list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.ig-cap { border-top: 1px solid var(--line); padding-top: 12px; min-width: 0; }
+.ig-cap-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.ig-cap-title { font-weight: 600; color: var(--text); }
+.ig-cap-text { white-space: pre-line; margin: 6px 0; color: var(--text-2); overflow-wrap: anywhere; }
+.ig-cap-tags { margin: 0 0 6px; color: var(--text-3); font-size: 13.5px; overflow-wrap: anywhere; }
