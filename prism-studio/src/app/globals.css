@@ -488,6 +488,9 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .small-note { font-size: 13px; margin: 10px 0 0; }
 
 .posts { display: grid; gap: var(--s4); }
+/* a channel's next post per account: YouTube across the top, then TikTok and the shared Instagram side by side */
+.posts-accounts { grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); align-items: start; }
+.posts-accounts > :first-child { grid-column: 1 / -1; }
 /* the library: 9:16 covers in a wrapping grid, the long video as one wide card above them */
 .lib-channel { display: grid; gap: var(--s4); }
 .lib-grid { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }

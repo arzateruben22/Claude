@@ -491,7 +491,8 @@ export async function channelExtension(slug: string) {
     .sort((a, b) => ["youtube", "tiktok"].indexOf(a.platform) - ["youtube", "tiktok"].indexOf(b.platform));
   const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
   const tasks = (await loadTasks(d, and(inArray(S.publications.status, [...OPEN_STATUSES]), eq(S.episodes.channelId, c.id), demoFilter(s.showDemo, S.episodes.isDemo)))).filter((t) => !t.p.simulated);
-  const accounts = dests.map((dest) => ({ dest, uploadUrl: uploadUrlFor(dest), next: (tasks.find((t) => t.dest.id === dest.id) ?? null) as PostItem | null }));
+  // the channel's own YouTube and TikTok, then the shared Instagram's next post from this channel, side by side
+  const accounts = [...dests, ...(ig ? [ig] : [])].map((dest) => ({ dest, uploadUrl: uploadUrlFor(dest), next: (tasks.find((t) => t.dest.id === dest.id) ?? null) as PostItem | null }));
   const eps = await episodesFor(c.id, s.showDemo);
   const ser = await d.select().from(S.series).where(and(eq(S.series.channelId, c.id), demoFilter(s.showDemo, S.series.isDemo))).orderBy(asc(S.series.sort));
   const series = ser.map((x) => ({ series: x, episodes: eps.filter((e) => e.seriesId === x.id).sort((a, b) => (a.seriesOrder ?? a.number) - (b.seriesOrder ?? b.number)) }));

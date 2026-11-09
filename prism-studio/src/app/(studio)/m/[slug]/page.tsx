@@ -156,7 +156,7 @@ async function ChannelScreen({ slug }: { slug: string }) {
       <>
       <section className="section">
         <div className="section-head"><h2>Ready to post</h2><span className="faint num">next per account</span></div>
-        <div className="posts">
+        <div className="posts posts-accounts">
           {v.accounts.map((a) => a.next
             ? <PostCard key={a.dest.id} t={a.next} tz={v.tz} stopExternal={v.stopExternal} />
             : (
@@ -165,7 +165,9 @@ async function ChannelScreen({ slug }: { slug: string }) {
                   <span className="label">{PLATFORM_LABEL[a.dest.platform]}{a.dest.handle ? ` · ${a.dest.handle}` : ""}</span>
                   {!a.dest.handle ? <Link href="/connections" className="chip warn">Account not set up</Link> : null}
                 </div>
-                <p className="muted">Nothing waiting for {PLATFORM_LABEL[a.dest.platform]}. Rendered, approved episodes land here.</p>
+                <p className="muted">{a.dest.shared
+                  ? <>Nothing planned for Instagram from {name} yet. Each episode&apos;s Instagram caption is ready to copy on the <Link href="/m/instagram">Instagram screen</Link>.</>
+                  : <>Nothing waiting for {PLATFORM_LABEL[a.dest.platform]}. Rendered, approved episodes land here.</>}</p>
                 <a className="btn ghost small" href={a.uploadUrl} target="_blank" rel="noopener noreferrer"><Icon name="external" size={16} /> {PLATFORM_LABEL[a.dest.platform]} upload page</a>
               </div>
             ))}
