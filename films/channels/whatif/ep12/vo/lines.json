@@ -1,0 +1,201 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/ep12/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Could lightning power the world? Catch every bolt, for a whole year.",
+   "stars": [
+    "world"
+   ],
+   "phonemes": "kʊd lˈaɪtnɪŋ pˈaʊɚ ðə wˈɜːld? kˈætʃ ˈɛvɹi bˈoʊlt, fɚɹə hˈoʊl jˈɪɹ.",
+   "speeds": [
+    0.84,
+    0.72
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     1.4533,
+     2.0533
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.439,
+   "sha256": "eea80b7463e44ac72d20a81b356331597992820b2765530a2cb176792b0bce0b"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Lightning is flashing somewhere right now, about forty-four times every second, all around the planet. That adds up to more than a billion flashes in a year.",
+   "stars": [
+    "second",
+    "year"
+   ],
+   "phonemes": "lˈaɪtnɪŋ ɪz flˈæʃɪŋ sˈʌmwɛɹ ɹˈaɪt nˈaʊ, ɐbˌaʊt fˈɔːɹɾifˈɔːɹ tˈaɪmz ˈɛvɹi sˈɛkənd, ˈɔːl ɚɹˈaʊnd ðə plˈænɪt. ðæt ˈædz ˌʌp tə mˈɔːɹ ðˌænə bˈɪliən flˈæʃᵻz ɪn ɐ jˈɪɹ.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     7.8775,
+     8.2575
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 11.849,
+   "sha256": "eb94c60c8472a2a0889f8be707971d2605a520a3ad38024faa11213e4bf0e2f6"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "One flash carries roughly a billion joules, a rough guess with a wide range. Multiply it by every flash in the year.",
+   "stars": [
+    "range",
+    "year"
+   ],
+   "phonemes": "wˈʌn flˈæʃ kˈæɹiz ɹˈʌfli ɐ bˈɪliən dʒˈuːlz, ɐ ɹˈʌf ɡˈɛs wɪð ɐ wˈaɪd ɹˈeɪndʒ. mˌʌltɪplˈaɪ ɪt baɪ ˈɛvɹi flˈæʃ ɪnðə jˈɪɹ.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     5.9069,
+     6.2869
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 9.012,
+   "sha256": "3db07a548aec614780e4276eeb2bf232ea2b8de414d7e3aad2554e043a7864b8"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "That is about four hundred billion kilowatt-hours, a very big number. But a number only means something beside another, so let's compare it with what we use.",
+   "stars": [
+    "use"
+   ],
+   "phonemes": "ðæt ɪz ɐbˌaʊt fˈɔːɹ hˈʌndɹɪd bˈɪliən kˈɪləwˌɑːtˈaʊɚz, ɐ vˈɛɹi bˈɪɡ nˈʌmbɚ. bˌʌt ɐ nˈʌmbɚɹ ˈoʊnli mˈiːnz sˈʌmθɪŋ bᵻsˌaɪd ɐnˈʌðɚ, sˌoʊ lˈɛts kəmpˈɛɹ ɪt wɪð wʌt wiː jˈuːz.",
+   "speeds": [
+    0.76,
+    0.74
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     5.4813,
+     5.8613
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 12.252,
+   "sha256": "979fa156b5478675f4328615f514406e0e32f3f2f5326d25e2bde38b48b26cef"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "The world uses nearly eighty times more electricity in a year. All the lightning on Earth would run it for about five days.",
+   "stars": [
+    "days"
+   ],
+   "phonemes": "ðə wˈɜːld jˈuːsᵻz nˌɪɹli ˈeɪɾi tˈaɪmz mˈɔːɹ ᵻlɛktɹˈɪsᵻɾi ɪn ɐ jˈɪɹ. ˈɔːl ðə lˈaɪtnɪŋ ˌɔn ˈɜːθ wʊd ɹˈʌn ɪt fɔːɹ ɐbˌaʊt fˈaɪv dˈeɪz.",
+   "speeds": [
+    0.74,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     4.704,
+     5.084
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 9.124,
+   "sha256": "a554f8b51d25dda77d245ad9facbb5f7338689b09cf7c5c26f921099ebc5c61e"
+  },
+  {
+   "id": "vo06",
+   "beat": "work",
+   "text": "If a flash holds ten times less or ten times more, it swings from half a day to about seven weeks.",
+   "stars": [
+    "weeks"
+   ],
+   "phonemes": "ɪf ɐ flˈæʃ hˈoʊldz tˈɛn tˈaɪmz lˈɛs ɔːɹ tˈɛn tˈaɪmz mˈɔːɹ, ɪt swˈɪŋz fɹʌm hˈæf ɐ dˈeɪ tʊ ɐbˌaʊt sˈɛvən wˈiːks.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 8.071,
+   "sha256": "5bcb9402471a862b24e61b45008d1d12aa0434fa3ff31066505b41bba93fa49f"
+  },
+  {
+   "id": "vo07",
+   "beat": "takeaway",
+   "text": "And catching it is the real problem. The bolts are everywhere, and each is over in a split second.",
+   "stars": [
+    "second"
+   ],
+   "phonemes": "ænd kˈætʃɪŋ ɪɾ ɪz ðə ɹˈiːəl pɹˈɑːbləm. ðə bˈoʊlts ɑːɹ ˈɛvɹɪwˌɛɹ, ænd ˈiːtʃ ɪz ˌoʊvɚɹ ɪn ɐ splˈɪt sˈɛkənd.",
+   "speeds": [
+    0.76,
+    0.72
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     2.4488,
+     2.8288
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 7.37,
+   "sha256": "8180b7511545888f3800f3a9b7ee3f88b475e87a347c61e815101f67c591a82e"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next envelope: a what-if that you ask us next.",
+   "stars": [
+    "next"
+   ],
+   "phonemes": "nˈɛkst ˈɑːnvəlˌoʊp: ɐ wʌɾɪf ðæt juː ˈæsk ˌʌs nˈɛkst.",
+   "speeds": [
+    0.72
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 3.409,
+   "sha256": "01de5e85986f596f61b7ff4d1a421e7c0a1a31630eb12f46a3f481da760d4622"
+  }
+ ]
+}

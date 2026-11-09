@@ -16,22 +16,22 @@ Check it with `python3 -I kits/cinema/script/lint.py films/channels/whatif/ep12 
 vo: Could lightning power the *world*? Catch every bolt, for a whole year. {-}
 
 ## normal {shot: the globe turns; bolts flicker over it, a counter ticks flashes a second · spine "44 flashes a second" · picture-only 0.3 s · energy: 0.45} (5.3–17 s)
-vo: Somewhere on Earth, lightning is flashing right now, about forty-four times every *second*, all around the planet. {c1} That adds up to more than a billion flashes in a *year*. {c2}
+vo: Lightning is flashing somewhere right now, about forty-four times every *second*, all around the planet. {c1} That adds up to more than a billion flashes in a *year*. {c2}
 
 ## change {shot: one bolt, enlarged, with a meter beside it reading "about 1 billion joules" · events: term.write · energy: 0.65} (17–27 s)
 vo: One flash carries roughly a billion joules, a rough guess with a wide *range*. {c3} Multiply it by every flash in the *year*. {-}
 
-## why {shot: the year's bolts pour into a tank on the paper; the tank fills to a mark labelled 390 billion kWh · badge: ∵ every bolt caught, nothing lost · picture-only 2 s · energy: 0.55} (27–40 s)
-vo: That is about four hundred billion kilowatt-hours, a very big number. {c4} But a number only means something next to another number, so let's put it beside what we really *use*. {-}
+## why {shot: the year's bolts pour into a tank on the paper; the tank fills to a mark labelled 390 billion kWh · badge: ∵ every bolt caught, nothing lost · picture-only 0.4 s · energy: 0.55} (27–40 s)
+vo: That is about four hundred billion kilowatt-hours, a very big number. {c4} But a number only means something beside another, so let's compare it with what we *use*. {-}
 
-## whoa {shot: a second tank, the world's electricity for a year, towers over the first; the lightning tank is a thin slice; the box closes round "≈ 5 days" · events: answer.box · picture-only 3 s · energy: 0.75} (40–52.5 s)
+## whoa {shot: a second tank, the world's electricity for a year, towers over the first; the lightning tank is a thin slice; the box closes round "≈ 5 days" · events: answer.box · picture-only 0.4 s · energy: 0.75} (40–52.5 s)
 vo: The world uses nearly eighty times more electricity in a year. {c5} All the lightning on Earth would run it for about five *days*. {c6}
 
 ## work {segment: work · show your work: the whole sum on one line, its badges green, the sensitivity rows below · energy: 0.5} (52.5–61 s)
-vo: If a flash holds ten times less or ten times more, the answer swings from half a day to about seven *weeks*. {c7}
+vo: If a flash holds ten times less or ten times more, it swings from half a day to about seven *weeks*. {c7}
 
 ## takeaway {shot: the bolts scatter across the whole globe, each gone in a blink · picture-only 0.3 s · energy: 0.45} (61–69 s)
-vo: And catching it is the real problem. {-} The bolts are everywhere, and each one is over in a split *second*. {-}
+vo: And catching it is the real problem. {-} The bolts are everywhere, and each is over in a split *second*. {-}
 
 ## tease {end card held ≥ 1.5 s · signature: plucks A4, E5, D♯5 · energy: 0.4} (69–74.5 s)
 vo: Next envelope: a what-if that you ask us *next*. {-}
@@ -41,3 +41,4 @@ end card: "Next envelope: *your what-if*" · "Possibility Lab · Season 2 · Epi
 - Every number is `calc.py`'s and an order of magnitude: the energy of a flash varies a lot, so the film gives a range and says "roughly".
 - The takeaway says only that catching it is hard; it does not claim a share that could be captured.
 - Listen at T0: "forty-four", "billion joules", "five days".
+- Lint note: the kit lint asks for picture-only 2 s (why) and 3 s (whoa); for this channel the coordinator's rule "no voiceless gap over 1.2 s" overrides it, so those lint errors are expected.

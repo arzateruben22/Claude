@@ -1,0 +1,1601 @@
+{
+ "id": "envelope-s2e06",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 75.0,
+ "poster": 30.3,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "hook"
+  },
+  {
+   "at": 5.4,
+   "name": "globe"
+  },
+  {
+   "at": 18.0,
+   "name": "bolt"
+  },
+  {
+   "at": 28.2,
+   "name": "tank"
+  },
+  {
+   "at": 41.4,
+   "name": "tower"
+  },
+  {
+   "at": 51.6,
+   "name": "work"
+  },
+  {
+   "at": 60.6,
+   "name": "take"
+  },
+  {
+   "at": 69.06666666666666,
+   "name": "end"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 5.4,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "normal",
+   "t0": 5.4,
+   "t1": 18.0,
+   "line": "vo02",
+   "energy": 0.45
+  },
+  {
+   "id": "change",
+   "t0": 18.0,
+   "t1": 28.2,
+   "line": "vo03",
+   "energy": 0.65
+  },
+  {
+   "id": "why",
+   "t0": 28.2,
+   "t1": 41.4,
+   "line": "vo04",
+   "energy": 0.55
+  },
+  {
+   "id": "whoa",
+   "t0": 41.4,
+   "t1": 51.6,
+   "line": "vo05",
+   "energy": 0.75
+  },
+  {
+   "id": "work",
+   "t0": 51.6,
+   "t1": 60.6,
+   "line": "vo06",
+   "energy": 0.5
+  },
+  {
+   "id": "takeaway",
+   "t0": 60.6,
+   "t1": 69.0,
+   "line": "vo07",
+   "energy": 0.45
+  },
+  {
+   "id": "tease",
+   "t0": 69.0,
+   "t1": 75.0,
+   "line": "vo08",
+   "energy": 0.4
+  }
+ ],
+ "world": {
+  "h1": 1.0,
+  "h2": 77.8,
+  "t1x": -5.0,
+  "t2x": 5.0,
+  "tw": 8.0,
+  "rate": 44,
+  "sens": [
+   0.0013689253935660506,
+   0.012867898699520876,
+   0.12867898699520877
+  ]
+ },
+ "cam": {
+  "hook": [
+   {
+    "t": 0.0,
+    "target": [
+     0.3,
+     1.0,
+     0.0
+    ],
+    "dist": 11.0,
+    "el": 8.0,
+    "az": 0.0,
+    "fov": 24,
+    "fy": 0.35
+   },
+   {
+    "t": 5.4,
+    "target": [
+     0.3,
+     1.0,
+     0.0
+    ],
+    "dist": 10.4,
+    "el": 8.0,
+    "az": 6.0,
+    "fov": 24,
+    "fy": 0.35,
+    "ease": "sine"
+   }
+  ],
+  "globe": [
+   {
+    "t": 5.4,
+    "target": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dist": 11.8,
+    "el": 14.0,
+    "az": 0.0,
+    "fov": 24,
+    "fy": 0.3
+   },
+   {
+    "t": 18.0,
+    "target": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dist": 11.0,
+    "el": 14.0,
+    "az": 6.0,
+    "fov": 24,
+    "fy": 0.3,
+    "ease": "sine"
+   }
+  ],
+  "bolt": [
+   {
+    "t": 18.0,
+    "target": [
+     0.8,
+     1.0,
+     0.0
+    ],
+    "dist": 14.0,
+    "el": 14.0,
+    "az": 0.0,
+    "fov": 24,
+    "fy": 0.35
+   },
+   {
+    "t": 28.2,
+    "target": [
+     0.8,
+     1.0,
+     0.0
+    ],
+    "dist": 13.0,
+    "el": 14.0,
+    "az": 6.0,
+    "fov": 24,
+    "fy": 0.35,
+    "ease": "sine"
+   }
+  ],
+  "tank": [
+   {
+    "t": 28.2,
+    "target": [
+     -5.0,
+     0.5,
+     0.0
+    ],
+    "dist": 58.0,
+    "el": 28.0,
+    "az": 0.0,
+    "fov": 24,
+    "fy": 0.34
+   },
+   {
+    "t": 41.4,
+    "target": [
+     -5.0,
+     0.5,
+     0.0
+    ],
+    "dist": 54.0,
+    "el": 28.0,
+    "az": 5.0,
+    "fov": 24,
+    "fy": 0.34,
+    "ease": "sine"
+   }
+  ],
+  "tower": [
+   {
+    "t": 41.4,
+    "target": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dist": 470.0,
+    "el": 4.0,
+    "az": 0.0,
+    "fov": 24,
+    "fy": 0.48
+   },
+   {
+    "t": 51.6,
+    "target": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dist": 450.0,
+    "el": 4.0,
+    "az": 0.0,
+    "fov": 24,
+    "fy": 0.48,
+    "ease": "sine"
+   }
+  ],
+  "work": [
+   {
+    "t": 51.6,
+    "target": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dist": 34.0,
+    "el": 14.0,
+    "az": 0.0,
+    "fov": 24,
+    "fy": 0.91
+   },
+   {
+    "t": 60.6,
+    "target": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dist": 32.0,
+    "el": 14.0,
+    "az": 5.0,
+    "fov": 24,
+    "fy": 0.91,
+    "ease": "sine"
+   }
+  ],
+  "take": [
+   {
+    "t": 60.6,
+    "target": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dist": 11.8,
+    "el": 14.0,
+    "az": 0.0,
+    "fov": 24,
+    "fy": 0.3
+   },
+   {
+    "t": 69.06666666666666,
+    "target": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dist": 11.0,
+    "el": 14.0,
+    "az": 6.0,
+    "fov": 24,
+    "fy": 0.3,
+    "ease": "sine"
+   }
+  ],
+  "end": [
+   {
+    "t": 69.06666666666666,
+    "target": [
+     0.3,
+     1.0,
+     0.0
+    ],
+    "dist": 11.0,
+    "el": 8.0,
+    "az": 0.0,
+    "fov": 24,
+    "fy": 0.35
+   },
+   {
+    "t": 75.0,
+    "target": [
+     0.3,
+     1.0,
+     0.0
+    ],
+    "dist": 11.0,
+    "el": 8.0,
+    "az": 0.0,
+    "fov": 24,
+    "fy": 0.35
+   }
+  ]
+ },
+ "cue": {
+  "fps": 30,
+  "bolt": [
+   0.9,
+   1.1800000000000002
+  ],
+  "now": 5.633333333333334,
+  "year": 16.7,
+  "j": 20.333333333333332,
+  "range": 22.966666666666665,
+  "mult": 24.5,
+  "fill": [
+   29.3,
+   32.46666666666667
+  ],
+  "why": 28.2,
+  "whoa": 41.4,
+  "eighty": 43.266666666666666,
+  "all": 46.7,
+  "five": 49.53333333333333,
+  "work0": 51.6,
+  "ten": 53.3,
+  "home": 60.6,
+  "blink": 67.1,
+  "end": 69.06666666666666,
+  "seed": 6
+ },
+ "spine": [
+  {
+   "t": 9.033333333333333,
+   "label": "lightning flashes on Earth",
+   "terms": [
+    [
+     "ans",
+     "≈ 44 a second"
+    ]
+   ]
+  },
+  {
+   "t": 16.7,
+   "label": "flashes in a year",
+   "terms": [
+    [
+     "ans",
+     "≈ 1.4 billion"
+    ]
+   ]
+  },
+  {
+   "t": 20.333333333333332,
+   "label": "energy of one flash",
+   "terms": [
+    [
+     "ans",
+     "≈ 1 billion J"
+    ]
+   ]
+  },
+  {
+   "t": 24.5,
+   "label": "all flashes, one year",
+   "terms": [
+    [
+     "ans",
+     "≈ 1.4 × 10¹⁸ J"
+    ]
+   ]
+  },
+  {
+   "t": 29.3,
+   "label": "the same, in kilowatt-hours",
+   "terms": [
+    [
+     "ans",
+     "≈ 390 billion kWh"
+    ]
+   ]
+  },
+  {
+   "t": 43.266666666666666,
+   "label": "as days of the world's electricity",
+   "terms": [
+    [
+     "ans",
+     "≈ ? days"
+    ]
+   ]
+  },
+  {
+   "t": 46.7,
+   "label": "as days of the world's electricity",
+   "terms": [
+    [
+     "ans",
+     "≈ 5 days"
+    ]
+   ],
+   "box": true
+  },
+  {
+   "t": 51.6,
+   "label": "as days of the world's electricity",
+   "terms": [
+    [
+     "ans",
+     "≈ 5 days"
+    ]
+   ],
+   "box": true,
+   "keep": true
+  },
+  {
+   "t": 60.6,
+   "label": "can we catch it?",
+   "terms": [
+    [
+     "ans",
+     "the hard part"
+    ]
+   ]
+  }
+ ],
+ "spineOut": 68.61666666666666,
+ "work": {
+  "t0": 51.6,
+  "t1": 60.3333,
+  "title": "Show your work",
+  "rows": [
+   {
+    "t": 51.75,
+    "k": "44 /s × 1 year × 1 GJ",
+    "v": "≈ 1.4 × 10¹⁸ J",
+    "lit": false
+   },
+   {
+    "t": 52.15,
+    "k": "÷ 30,000 TWh",
+    "v": "≈ 1.3 % ≈ 5 days",
+    "lit": false
+   },
+   {
+    "t": 53.3,
+    "k": "10 × less per flash",
+    "v": "≈ 0.5 days",
+    "lit": true
+   },
+   {
+    "t": 54.3,
+    "k": "10 × more per flash",
+    "v": "≈ 47 days",
+    "lit": true
+   }
+  ],
+  "assume": [
+   "every bolt caught",
+   "nothing lost",
+   "about 1 GJ a flash"
+  ]
+ },
+ "labels": [
+  {
+   "id": "l-j",
+   "text": "≈ 1 billion J",
+   "kind": "calc",
+   "anchor": "meter-mid",
+   "t0": 20.333333333333332,
+   "t1": 27.9,
+   "side": 1,
+   "shot": "bolt"
+  },
+  {
+   "id": "l-lo",
+   "text": "100 million J",
+   "kind": "part",
+   "anchor": "meter-lo",
+   "t0": 20.53333333333333,
+   "t1": 27.9,
+   "side": 1,
+   "shot": "bolt"
+  },
+  {
+   "id": "l-hi",
+   "text": "10 billion J",
+   "kind": "part",
+   "anchor": "meter-hi",
+   "t0": 20.53333333333333,
+   "t1": 27.9,
+   "side": 1,
+   "shot": "bolt"
+  },
+  {
+   "id": "l-mark",
+   "text": "390 billion kWh",
+   "kind": "calc",
+   "anchor": "tank1-top",
+   "t0": 30.1,
+   "t1": 41.1,
+   "side": 1,
+   "shot": "tank"
+  },
+  {
+   "id": "l-slice",
+   "text": "all the lightning",
+   "kind": "anchor",
+   "anchor": "tank1-top-w",
+   "t0": 46.5,
+   "t1": 51.300000000000004,
+   "side": -1,
+   "shot": "tower"
+  },
+  {
+   "id": "l-year",
+   "text": "a year of world electricity",
+   "kind": "part",
+   "anchor": "tank2-top",
+   "t0": 43.06666666666666,
+   "t1": 51.300000000000004,
+   "side": -1,
+   "shot": "tower"
+  }
+ ],
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "thought experiment",
+   "t0": 0.3,
+   "t1": 5.2,
+   "slot": "br"
+  },
+  {
+   "id": "b-rate",
+   "text": "worldwide, all kinds of flash",
+   "t0": 9.033333333333333,
+   "t1": 17.7,
+   "slot": "tl"
+  },
+  {
+   "id": "b-rough",
+   "text": "a rough guess: 100 million to 10 billion",
+   "t0": 22.966666666666665,
+   "t1": 27.9,
+   "slot": "tr"
+  },
+  {
+   "id": "b-every",
+   "text": "∵ every bolt caught, nothing lost",
+   "t0": 28.4,
+   "t1": 41.1,
+   "slot": "tl"
+  },
+  {
+   "id": "b-times",
+   "text": "≈ 80 × more",
+   "t0": 43.266666666666666,
+   "t1": 51.300000000000004,
+   "slot": "tr"
+  },
+  {
+   "id": "b-bars",
+   "text": "bars: a year = the full bar",
+   "t0": 53.099999999999994,
+   "t1": 60.300000000000004,
+   "slot": "tl"
+  },
+  {
+   "id": "b-blink",
+   "text": "each flash: a fraction of a second",
+   "t0": 67.1,
+   "t1": 68.76666666666667,
+   "slot": "tl"
+  }
+ ],
+ "counters": [
+  {
+   "id": "c-flash",
+   "label": "flashes since the film began",
+   "t0": 5.633333333333334,
+   "t1": 16.9,
+   "at": [
+    0.5,
+    0.3
+   ],
+   "keys": [
+    [
+     5.633333333333334,
+     0.0
+    ],
+    [
+     16.7,
+     486.93333333333334
+    ]
+   ],
+   "end": 486.93333333333334,
+   "unit": ""
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab · Season 2 · Episode 6",
+  "title": "Catch all the *lightning*",
+  "t0": 0.3,
+  "t1": 5.2,
+  "sig": 4.6
+ },
+ "endCard": 69.06666666666666,
+ "end": {
+  "title": "Next envelope: *your what-if*",
+  "follow": "Possibility Lab · Season 2 · Episode 6",
+  "next": "About 44 flashes a second: Christian et al., J. Geophys. Res. 108 (2003)."
+ },
+ "endAnswer": "≈ 5 days",
+ "captions": [
+  {
+   "t0": 0.0,
+   "t1": 2.175,
+   "lines": [
+    [
+     [
+      "Could",
+      0.13
+     ],
+     [
+      "lightning",
+      0.515
+     ]
+    ],
+    [
+     [
+      "power",
+      0.735
+     ],
+     [
+      "the",
+      1.115
+     ],
+     [
+      "world?",
+      1.43
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 2.175,
+   "t1": 4.75,
+   "lines": [
+    [
+     [
+      "Catch",
+      2.175
+     ],
+     [
+      "every",
+      2.61
+     ],
+     [
+      "bolt,",
+      3.02
+     ]
+    ],
+    [
+     [
+      "for",
+      3.365
+     ],
+     [
+      "a",
+      3.705
+     ],
+     [
+      "whole",
+      3.735
+     ],
+     [
+      "year.",
+      4.0
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.58,
+   "t1": 9.045,
+   "lines": [
+    [
+     [
+      "Lightning",
+      5.72
+     ],
+     [
+      "is",
+      6.48
+     ],
+     [
+      "flashing",
+      6.7
+     ]
+    ],
+    [
+     [
+      "somewhere",
+      7.505
+     ],
+     [
+      "right",
+      8.27
+     ],
+     [
+      "now,",
+      8.345
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.045,
+   "t1": 12.035,
+   "lines": [
+    [
+     [
+      "about",
+      9.045
+     ],
+     [
+      "44",
+      9.135
+     ],
+     [
+      "times",
+      10.37
+     ]
+    ],
+    [
+     [
+      "every",
+      10.975
+     ],
+     [
+      "second,",
+      11.285
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.145,
+   "t1": 13.695,
+   "lines": [
+    [
+     [
+      "all",
+      12.145
+     ],
+     [
+      "around",
+      12.455
+     ],
+     [
+      "the",
+      12.915
+     ],
+     [
+      "planet.",
+      12.945
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.835,
+   "t1": 15.3,
+   "lines": [
+    [
+     [
+      "That",
+      13.975
+     ],
+     [
+      "adds",
+      14.23
+     ],
+     [
+      "up",
+      14.485
+     ],
+     [
+      "to",
+      14.715
+     ],
+     [
+      "more",
+      14.78
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 15.3,
+   "t1": 17.76,
+   "lines": [
+    [
+     [
+      "than",
+      15.3
+     ],
+     [
+      "1 billion",
+      15.61
+     ]
+    ],
+    [
+     [
+      "flashes",
+      16.08
+     ],
+     [
+      "in",
+      16.745
+     ],
+     [
+      "a",
+      16.98
+     ],
+     [
+      "year.",
+      17.01
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 18.18,
+   "t1": 19.7,
+   "lines": [
+    [
+     [
+      "One",
+      18.32
+     ],
+     [
+      "flash",
+      18.675
+     ],
+     [
+      "carries",
+      19.245
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.7,
+   "t1": 21.695,
+   "lines": [
+    [
+     [
+      "roughly",
+      19.7
+     ]
+    ],
+    [
+     [
+      "1 billion",
+      20.235
+     ],
+     [
+      "joules,",
+      20.945
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 21.825,
+   "t1": 24.24,
+   "lines": [
+    [
+     [
+      "a",
+      21.825
+     ],
+     [
+      "rough",
+      21.99
+     ],
+     [
+      "guess",
+      22.335
+     ]
+    ],
+    [
+     [
+      "with",
+      22.87
+     ],
+     [
+      "a",
+      22.9
+     ],
+     [
+      "wide",
+      23.06
+     ],
+     [
+      "range.",
+      23.49
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.465,
+   "t1": 27.52,
+   "lines": [
+    [
+     [
+      "Multiply",
+      24.605
+     ],
+     [
+      "it",
+      25.355
+     ],
+     [
+      "by",
+      25.505
+     ],
+     [
+      "every",
+      25.73
+     ]
+    ],
+    [
+     [
+      "flash",
+      26.03
+     ],
+     [
+      "in",
+      26.535
+     ],
+     [
+      "the",
+      26.74
+     ],
+     [
+      "year.",
+      26.77
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 28.38,
+   "t1": 30.865,
+   "lines": [
+    [
+     [
+      "That",
+      28.52
+     ],
+     [
+      "is",
+      28.85
+     ],
+     [
+      "about",
+      29.13
+     ]
+    ],
+    [
+     [
+      "400 billion",
+      29.39
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.865,
+   "t1": 34.275,
+   "lines": [
+    [
+     [
+      "kilowatt-hours,",
+      30.865
+     ]
+    ],
+    [
+     [
+      "a",
+      32.4
+     ],
+     [
+      "very",
+      32.595
+     ],
+     [
+      "big",
+      33.01
+     ],
+     [
+      "number.",
+      33.525
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.38,
+   "t1": 36.45,
+   "lines": [
+    [
+     [
+      "But",
+      34.38
+     ],
+     [
+      "a",
+      34.46
+     ],
+     [
+      "number",
+      34.74
+     ],
+     [
+      "only",
+      35.21
+     ],
+     [
+      "means",
+      35.735
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 36.45,
+   "t1": 37.93,
+   "lines": [
+    [
+     [
+      "something",
+      36.45
+     ]
+    ],
+    [
+     [
+      "beside",
+      36.715
+     ],
+     [
+      "another,",
+      37.18
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 37.94,
+   "t1": 40.77,
+   "lines": [
+    [
+     [
+      "so",
+      37.94
+     ],
+     [
+      "let's",
+      38.07
+     ],
+     [
+      "compare",
+      38.57
+     ]
+    ],
+    [
+     [
+      "it",
+      39.18
+     ],
+     [
+      "with",
+      39.36
+     ],
+     [
+      "what",
+      39.595
+     ],
+     [
+      "we",
+      39.785
+     ],
+     [
+      "use.",
+      40.02
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.585,
+   "t1": 44.36,
+   "lines": [
+    [
+     [
+      "The",
+      41.725
+     ],
+     [
+      "world",
+      41.925
+     ],
+     [
+      "uses",
+      42.36
+     ]
+    ],
+    [
+     [
+      "nearly",
+      42.83
+     ],
+     [
+      "80",
+      43.365
+     ],
+     [
+      "times",
+      43.81
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 44.36,
+   "t1": 46.805,
+   "lines": [
+    [
+     [
+      "more",
+      44.36
+     ],
+     [
+      "electricity",
+      44.52
+     ]
+    ],
+    [
+     [
+      "in",
+      45.65
+     ],
+     [
+      "a",
+      45.91
+     ],
+     [
+      "year.",
+      46.195
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.805,
+   "t1": 48.545,
+   "lines": [
+    [
+     [
+      "All",
+      46.805
+     ],
+     [
+      "the",
+      47.13
+     ],
+     [
+      "lightning",
+      47.27
+     ]
+    ],
+    [
+     [
+      "on",
+      47.87
+     ],
+     [
+      "Earth",
+      48.105
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 48.545,
+   "t1": 50.94,
+   "lines": [
+    [
+     [
+      "would",
+      48.545
+     ],
+     [
+      "run",
+      48.77
+     ]
+    ],
+    [
+     [
+      "it",
+      49.16
+     ],
+     [
+      "for",
+      49.19
+     ],
+     [
+      "about",
+      49.41
+     ],
+     [
+      "five",
+      49.63
+     ],
+     [
+      "days.",
+      50.19
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 51.78,
+   "t1": 54.695,
+   "lines": [
+    [
+     [
+      "If",
+      51.92
+     ],
+     [
+      "a",
+      52.1
+     ],
+     [
+      "flash",
+      52.385
+     ],
+     [
+      "holds",
+      52.895
+     ]
+    ],
+    [
+     [
+      "10",
+      53.405
+     ],
+     [
+      "times",
+      53.76
+     ],
+     [
+      "less",
+      54.27
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 54.695,
+   "t1": 57.225,
+   "lines": [
+    [
+     [
+      "or",
+      54.695
+     ],
+     [
+      "10",
+      54.865
+     ],
+     [
+      "times",
+      55.245
+     ],
+     [
+      "more,",
+      55.71
+     ]
+    ],
+    [
+     [
+      "it",
+      56.395
+     ],
+     [
+      "swings",
+      56.545
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 57.225,
+   "t1": 59.975,
+   "lines": [
+    [
+     [
+      "from",
+      57.225
+     ],
+     [
+      "half",
+      57.45
+     ],
+     [
+      "a",
+      57.9
+     ],
+     [
+      "day",
+      58.125
+     ]
+    ],
+    [
+     [
+      "to",
+      58.225
+     ],
+     [
+      "about",
+      58.53
+     ],
+     [
+      "seven",
+      58.85
+     ],
+     [
+      "weeks.",
+      59.225
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.78,
+   "t1": 63.75,
+   "lines": [
+    [
+     [
+      "And",
+      60.92
+     ],
+     [
+      "catching",
+      61.105
+     ]
+    ],
+    [
+     [
+      "it",
+      61.6
+     ],
+     [
+      "is",
+      61.905
+     ],
+     [
+      "the",
+      62.085
+     ],
+     [
+      "real",
+      62.515
+     ],
+     [
+      "problem.",
+      63.155
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.75,
+   "t1": 65.52,
+   "lines": [
+    [
+     [
+      "The",
+      63.75
+     ],
+     [
+      "bolts",
+      63.78
+     ]
+    ],
+    [
+     [
+      "are",
+      64.675
+     ],
+     [
+      "everywhere,",
+      64.77
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 65.67,
+   "t1": 68.355,
+   "lines": [
+    [
+     [
+      "and",
+      65.67
+     ],
+     [
+      "each",
+      65.86
+     ],
+     [
+      "is",
+      66.205
+     ],
+     [
+      "over",
+      66.445
+     ]
+    ],
+    [
+     [
+      "in",
+      66.705
+     ],
+     [
+      "a",
+      66.86
+     ],
+     [
+      "split",
+      67.215
+     ],
+     [
+      "second.",
+      67.605
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 69.18,
+   "t1": 72.765,
+   "lines": [
+    [
+     [
+      "Next",
+      69.32
+     ],
+     [
+      "envelope:",
+      69.75
+     ],
+     [
+      "a",
+      70.65
+     ],
+     [
+      "what-if",
+      70.79
+     ]
+    ],
+    [
+     [
+      "that",
+      71.225
+     ],
+     [
+      "you",
+      71.33
+     ],
+     [
+      "ask",
+      71.505
+     ],
+     [
+      "us",
+      71.78
+     ],
+     [
+      "next.",
+      72.015
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "dur": 4.439,
+   "file": "vo/01.wav",
+   "text": "Could lightning power the world? Catch every bolt, for a whole year."
+  },
+  {
+   "id": "vo02",
+   "t": 5.7,
+   "dur": 11.849,
+   "file": "vo/02.wav",
+   "text": "Lightning is flashing somewhere right now, about forty-four times every second, all around the planet. That adds up to more than a billion flashes in a year."
+  },
+  {
+   "id": "vo03",
+   "t": 18.3,
+   "dur": 9.012,
+   "file": "vo/03.wav",
+   "text": "One flash carries roughly a billion joules, a rough guess with a wide range. Multiply it by every flash in the year."
+  },
+  {
+   "id": "vo04",
+   "t": 28.5,
+   "dur": 12.252,
+   "file": "vo/04.wav",
+   "text": "That is about four hundred billion kilowatt-hours, a very big number. But a number only means something beside another, so let's compare it with what we use."
+  },
+  {
+   "id": "vo05",
+   "t": 41.7,
+   "dur": 9.124,
+   "file": "vo/05.wav",
+   "text": "The world uses nearly eighty times more electricity in a year. All the lightning on Earth would run it for about five days."
+  },
+  {
+   "id": "vo06",
+   "t": 51.9,
+   "dur": 8.071,
+   "file": "vo/06.wav",
+   "text": "If a flash holds ten times less or ten times more, it swings from half a day to about seven weeks."
+  },
+  {
+   "id": "vo07",
+   "t": 60.9,
+   "dur": 7.37,
+   "file": "vo/07.wav",
+   "text": "And catching it is the real problem. The bolts are everywhere, and each is over in a split second."
+  },
+  {
+   "id": "vo08",
+   "t": 69.3,
+   "dur": 3.409,
+   "file": "vo/08.wav",
+   "text": "Next envelope: a what-if that you ask us next."
+  }
+ ]
+}
