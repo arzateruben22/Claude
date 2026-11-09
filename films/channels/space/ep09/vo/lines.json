@@ -1,0 +1,125 @@
+{
+ "voice": "am_michael",
+ "speed": "per line",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/space/ep09/voice.py (tts.py's phonemes and trim, one speed per line)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Where does gold come from? Look up.",
+   "stars": [
+    "gold",
+    "up"
+   ],
+   "phonemes": "wˌɛɹ dˈʌz ɡˈoʊld kˈʌm fɹʌm? lˈʊk ˈʌp.",
+   "speed": 0.83,
+   "file": "01.wav",
+   "dur": 2.34,
+   "sha256": "5001309a798ab5479c3cc232f0a08b27568e036509bd5ffcf60a35698f376b54"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Gold is heavier than iron. Atoms that heavy are built by soaking up neutrons. One way is the fast way: a place packed with neutrons.",
+   "stars": [
+    "neutrons"
+   ],
+   "phonemes": "ɡˈoʊld ɪz hˈɛviɚ ðɐn ˈaɪɚn. ˈæɾəmz ðæt hˈɛvi ɑːɹ bˈɪlt baɪ sˈoʊkɪŋ ˌʌp nˈuːtɹɑːnz. wˈʌn wˈeɪ ɪz ðə fˈæst wˈeɪ: ɐ plˈeɪs pˈækt wɪð nˈuːtɹɑːnz.",
+   "speed": 0.95,
+   "file": "02.wav",
+   "dur": 9.816,
+   "sha256": "b144ad6b92abb673e238c0e07b14e07ad4d7e8a44c31b7a36cb8ac0d291d8c94"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "One place that does that: two neutron stars crashing together. In twenty seventeen, astronomers saw one happen, as ripples in space and as light.",
+   "stars": [
+    "crashing",
+    "light"
+   ],
+   "phonemes": "wˈʌn plˈeɪs ðæt dˈʌz ðˈæt: tˈuː nˈuːtɹɑːn stˈɑːɹz kɹˈæʃɪŋ təɡˈɛðɚ. ɪn twˈɛnti sˈɛvəntˌiːn, ɐstɹˈɑːnəmɚz sˈɔː wˈʌn hˈæpən, æz ɹˈɪpəlz ɪn spˈeɪs ænd æz lˈaɪt.",
+   "speed": 0.95,
+   "file": "03.wav",
+   "dur": 10.137,
+   "sha256": "c245c7c91aa6d8d7363fb4ba8d08f5c0292c4227714c000088160162ef01f234"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "A neutron star is about as wide as a city, yet heavier than the Sun. A crash throws out hot matter, and some becomes heavy atoms. Scientists still debate what else makes heavy atoms.",
+   "stars": [
+    "city",
+    "else"
+   ],
+   "phonemes": "ɐ nˈuːtɹɑːn stˈɑːɹ ɪz ɐbˌaʊt æz wˈaɪd æz ɐ sˈɪɾi, jˈɛt hˈɛviɚ ðɐn ðə sˈʌn. ɐ kɹˈæʃ θɹˈoʊz ˈaʊt hˈɑːt mˈæɾɚ, ænd sˌʌm bɪkˌʌmz hˈɛvi ˈæɾəmz. sˈaɪəntɪsts stˈɪl dᵻbˈeɪt wʌt ˈɛls mˌeɪks hˈɛvi ˈæɾəmz.",
+   "speed": 0.95,
+   "file": "04.wav",
+   "dur": 13.022,
+   "sha256": "493c7212272ac3eebbaa180547a6ff922aafdcd419c2b000a01218d36f5e486a"
+  },
+  {
+   "id": "vo05",
+   "beat": "whoa",
+   "text": "Zoom in on your ring. Some of its gold may have been made in a crash like that, somewhere in space. Think of it as a souvenir.",
+   "stars": [
+    "ring",
+    "somewhere",
+    "souvenir"
+   ],
+   "phonemes": "zˈuːm ɪn ˌɔn jʊɹ ɹˈɪŋ. sˌʌm ʌv ɪts ɡˈoʊld mˌeɪhɐv bˌɪn mˌeɪd ɪn ɐ kɹˈæʃ lˈaɪk ðˈæt, sˈʌmwɛɹ ɪn spˈeɪs. θˈɪŋk ʌv ɪɾ æz ɐ sˌuːvənˈɪɹ.",
+   "speed": 0.83,
+   "file": "05.wav",
+   "dur": 9.305,
+   "sha256": "f3af087f23dcc8c1c89c09cedd79966a61678f485d79ce35b51e3ddef9856d83"
+  },
+  {
+   "id": "vo06",
+   "beat": "takeaway",
+   "text": "So some gold may be leftovers of a star crash. Stardust isn't a poem. It's chemistry.",
+   "stars": [
+    "crash",
+    "chemistry"
+   ],
+   "phonemes": "sˌoʊ sˌʌm ɡˈoʊld mˈeɪ biː lˈɛftoʊvɚz əvə stˈɑːɹ kɹˈæʃ. stˈɑːɹdʌst ˌɪzənt ɐ pˈoʊᵻm. ɪts kˈɛmɪstɹi.",
+   "speed": 0.95,
+   "file": "06.wav",
+   "dur": 6.316,
+   "sha256": "ccdd9ad508cfd24810c3a10b4ad1e64578e28391bc97df82b74b2c76332b7947"
+  },
+  {
+   "id": "vo07",
+   "beat": "readout",
+   "text": "Light time: the crash's ripples in space came first. Its visible light was spotted several hours later.",
+   "stars": [
+    "Light time",
+    "first",
+    "hours"
+   ],
+   "phonemes": "lˈaɪt tˈaɪm: ðə kɹˈæʃᵻz ɹˈɪpəlz ɪn spˈeɪs kˈeɪm fˈɜːst. ɪts vˈɪzᵻbəl lˈaɪt wʌz spˈɑːɾᵻd sˈɛvɹəl ˈaʊɚz lˈeɪɾɚ.",
+   "speed": 0.95,
+   "file": "07.wav",
+   "dur": 7.201,
+   "sha256": "4c946f6890f4b62fc69c0cf9f6fda537b9ec31491a3de0d0e762c8541365d414"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Next: what happens at the edge of a black hole?",
+   "stars": [
+    "black hole"
+   ],
+   "phonemes": "nˈɛkst: wˌʌt hˈæpənz æt ðɪ ˈɛdʒ əvə blˈæk hˈoʊl?",
+   "speed": 0.72,
+   "file": "08.wav",
+   "dur": 3.844,
+   "sha256": "4cf6600abbb129d1dad435c9e4b53023cb1c97a89de5878626a5ce080d86dc11"
+  }
+ ]
+}

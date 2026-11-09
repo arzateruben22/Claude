@@ -1,4 +1,4 @@
-# ep09 clarity and pacing pass (script stage; re-run after voicing)
+# S2E03 (folder ep09) clarity and pacing pass (voiced 9 Nov 2026)
 
 Lint (kits/cinema/script/lint.py, STANDARDS-v2): 165 words, whole script about grade 3.0 (target 7 or below), no sentence over 22 words, 0 errors. Pace 2.2 to 3.0 words a second in every beat.
 
@@ -11,6 +11,10 @@ Lint (kits/cinema/script/lint.py, STANDARDS-v2): 165 words, whole script about g
 
 ## Source-pass changes (8 Nov)
 - Source pass: the NASA-hosted Lawler paper is a 2012 community white paper, and it undercuts 'Not our Sun' / 'Sun-like stars don't make much' (slow-process stars do make some heavy elements), so those lines were cut. Hook is now 'Look up.'; normal explains neutron capture in plain words ('one way is the fast way'). 'Before our Sun was born' and 'older than our planet' cut (no source). The 130-million-light-year line cut (no NASA page); the readout now uses NASA's statement that the light came hours after the gravitational waves.
+
+## After voicing
+Lint: 0 errors, voiced 73.1 s, hook spoken by 1.7 s (hook line slowed to speed 0.83). Pace 2.4 to 3.0 words a second. Gold is drawn pale lemon because the channel palette has no gold (a legend is not needed: the ring and beads carry the colour). Picture: one real 3-D world (not to scale, badged) with a moving camera; the only flat explainer is the periodic-table beat (3.4 to 13 s), kept short and between two dips.
+Claims dropped for lack of a reachable source: 'before our Sun was born', 'older than our planet', the 130-million-light-year distance.
 
 ## Still open
 - Needs a listen after voicing (blocked on the Parakeet pin approval). Hook timing is an estimate until then.

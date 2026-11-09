@@ -1,0 +1,1021 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Where does gold come from? Look up.",
+   "heard": "Where does gold come from? Look up.",
+   "words": [
+    {
+     "w": "Where",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 0.275,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "gold",
+     "start": 0.495,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "come",
+     "start": 0.855,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "from?",
+     "start": 1.165,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "Look",
+     "start": 1.655,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 1.91,
+     "end": 2.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Gold is heavier than iron. Atoms that heavy are built by soaking up neutrons. One way is the fast way: a place packed with neutrons.",
+   "heard": "Gold is heavier than iron. Atoms that heavy are built by soaking up neutrons. One way is the fast way, a place packed with neutrons.",
+   "words": [
+    {
+     "w": "Gold",
+     "start": 0.02,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.515,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "heavier",
+     "start": 0.785,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 1.475,
+     "end": 1.525,
+     "heard": true
+    },
+    {
+     "w": "iron.",
+     "start": 1.505,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "Atoms",
+     "start": 2.54,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 2.96,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "heavy",
+     "start": 3.15,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 3.605,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "built",
+     "start": 3.675,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 3.925,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "soaking",
+     "start": 4.09,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 4.655,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "neutrons.",
+     "start": 4.7,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "One",
+     "start": 5.975,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "way",
+     "start": 6.26,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.45,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.645,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 6.87,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "way:",
+     "start": 7.24,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.925,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "place",
+     "start": 8.06,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "packed",
+     "start": 8.46,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 8.835,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "neutrons.",
+     "start": 8.97,
+     "end": 9.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "One place that does that: two neutron stars crashing together. In twenty seventeen, astronomers saw one happen, as ripples in space and as light.",
+   "heard": "One place that does that, two neutron stars crashing together. In 2017, astronomers saw one happen, as ripples in space and as light.",
+   "words": [
+    {
+     "w": "One",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "place",
+     "start": 0.3,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 0.62,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 0.765,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "that:",
+     "start": 1.0,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 1.71,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "neutron",
+     "start": 1.89,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "stars",
+     "start": 2.595,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "crashing",
+     "start": 3.08,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "together.",
+     "start": 3.585,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "In",
+     "start": 4.555,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "twenty",
+     "start": 4.585,
+     "end": 5.76,
+     "heard": false
+    },
+    {
+     "w": "seventeen,",
+     "start": 4.685,
+     "end": 5.76,
+     "heard": false
+    },
+    {
+     "w": "astronomers",
+     "start": 5.84,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "saw",
+     "start": 6.64,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 6.865,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "happen,",
+     "start": 7.295,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 7.915,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "ripples",
+     "start": 8.17,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 8.775,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "space",
+     "start": 9.01,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 9.365,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 9.42,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "light.",
+     "start": 9.69,
+     "end": 10.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "A neutron star is about as wide as a city, yet heavier than the Sun. A crash throws out hot matter, and some becomes heavy atoms. Scientists still debate what else makes heavy atoms.",
+   "heard": "A neutron star is about as wide as a city, yet heavier than the sun. A crash throws out hot matter and some becomes heavy atoms. Scientists still debate what else makes heavy atoms.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "neutron",
+     "start": 0.05,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "star",
+     "start": 0.83,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.2,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.415,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 1.59,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "wide",
+     "start": 1.855,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.15,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.275,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "city,",
+     "start": 2.55,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "yet",
+     "start": 3.26,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "heavier",
+     "start": 3.43,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 3.87,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.095,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "Sun.",
+     "start": 4.245,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 5.165,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "crash",
+     "start": 5.285,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "throws",
+     "start": 5.8,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 6.335,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "hot",
+     "start": 6.37,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "matter,",
+     "start": 6.755,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.41,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "some",
+     "start": 7.44,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "becomes",
+     "start": 7.93,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "heavy",
+     "start": 8.4,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "atoms.",
+     "start": 8.775,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "Scientists",
+     "start": 9.805,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 10.7,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "debate",
+     "start": 10.89,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 11.36,
+     "end": 11.52,
+     "heard": true
+    },
+    {
+     "w": "else",
+     "start": 11.405,
+     "end": 11.76,
+     "heard": true
+    },
+    {
+     "w": "makes",
+     "start": 11.84,
+     "end": 12.08,
+     "heard": true
+    },
+    {
+     "w": "heavy",
+     "start": 12.0,
+     "end": 12.48,
+     "heard": true
+    },
+    {
+     "w": "atoms.",
+     "start": 12.475,
+     "end": 12.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Zoom in on your ring. Some of its gold may have been made in a crash like that, somewhere in space. Think of it as a souvenir.",
+   "heard": "Zoom in on your ring. Some of its gold may have been made in a crash like that somewhere in space. Think of it as a souvenir.",
+   "words": [
+    {
+     "w": "Zoom",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 0.67,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.92,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.185,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "ring.",
+     "start": 1.34,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "Some",
+     "start": 2.365,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.395,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 2.715,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "gold",
+     "start": 2.79,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "may",
+     "start": 3.33,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 3.6,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "been",
+     "start": 3.65,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "made",
+     "start": 3.93,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 4.07,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.3,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "crash",
+     "start": 4.44,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 5.07,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "that,",
+     "start": 5.135,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "somewhere",
+     "start": 5.6,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 6.24,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "space.",
+     "start": 6.47,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "Think",
+     "start": 7.475,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.745,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 7.99,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 8.115,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.305,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "souvenir.",
+     "start": 8.335,
+     "end": 9.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "So some gold may be leftovers of a star crash. Stardust isn't a poem. It's chemistry.",
+   "heard": "so some gold may be leftovers of a star crash. Stardust isn't a poem, it's chemistry.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "some",
+     "start": 0.3,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "gold",
+     "start": 0.515,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "may",
+     "start": 0.83,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 1.01,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "leftovers",
+     "start": 1.295,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.915,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.945,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "star",
+     "start": 2.185,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "crash.",
+     "start": 2.48,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "Stardust",
+     "start": 3.51,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "isn't",
+     "start": 4.19,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.55,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "poem.",
+     "start": 4.625,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "It's",
+     "start": 5.4,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "chemistry.",
+     "start": 5.62,
+     "end": 6.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Light time: the crash's ripples in space came first. Its visible light was spotted several hours later.",
+   "heard": "Light time. The crash's ripples in space came first. Its visible light was spotted several hours later.",
+   "words": [
+    {
+     "w": "Light",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "time:",
+     "start": 0.655,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.29,
+     "end": 1.34,
+     "heard": true
+    },
+    {
+     "w": "crash's",
+     "start": 1.32,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "ripples",
+     "start": 1.895,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.485,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "space",
+     "start": 2.67,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "came",
+     "start": 2.985,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "first.",
+     "start": 3.615,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "Its",
+     "start": 4.24,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "visible",
+     "start": 4.33,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 4.72,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "was",
+     "start": 5.205,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "spotted",
+     "start": 5.51,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "several",
+     "start": 5.89,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "hours",
+     "start": 6.415,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "later.",
+     "start": 6.775,
+     "end": 7.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Next: what happens at the edge of a black hole?",
+   "heard": "Next, what happens at the edge of a black hole?",
+   "words": [
+    {
+     "w": "Next:",
+     "start": 0.125,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 1.0,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "happens",
+     "start": 1.49,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.67,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.87,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "edge",
+     "start": 2.115,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.405,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.595,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "black",
+     "start": 2.83,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "hole?",
+     "start": 3.205,
+     "end": 3.76,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

@@ -12,7 +12,7 @@ direction for the compiler. In a vo line, `{cN}` after a sentence ties it to `cl
 `{-}` marks a sentence that states nothing outside the film; neither is spoken. Check it with
 `python3 -I kits/cinema/script/lint.py films/channels/space/ep09 --segment readout`.
 
-## hook {shot: frame 0, the payoff: two neutron stars about to merge, a teal bead of gold flung toward a ring; spine "gold: from where?" · title: "Your *gold*" · pre: 0.03 · picture-only 0.2 s · energy: 0.7} (0–3.4 s)
+## hook {shot: frame 0, the payoff: two neutron stars about to merge, pale-lemon beads of gold streaming toward a ring (gold is drawn pale lemon: the channel has no gold); spine "gold: from where?" · title: "Your *gold*" · pre: 0.03 · picture-only 0.2 s · energy: 0.7} (0–3.4 s)
 vo: Where does *gold* come from? {-} Look *up*. {-}
 
 ## normal {shot: the periodic table, gold lit, iron marked; a Sun-like star fusing lighter atoms and stopping short · spine "gold: heavier than iron" · picture-only 0.2 s · energy: 0.45} (3.4–13 s)
@@ -30,7 +30,7 @@ vo: Zoom in on your *ring*. {-} Some of its gold may have been made in a crash l
 ## takeaway {shot: hold on the ring with the galaxy behind · picture-only 0.2 s · energy: 0.3} (51–58 s)
 vo: So some gold may be leftovers of a star *crash*. {c20} Stardust isn't a poem. {-} It's *chemistry*. {-}
 
-## readout {segment: readout · light-time readout: "130 million years" · a ping per line · picture-only 0.2 s · energy: 0.45} (58–65.5 s)
+## readout {segment: readout · light-time readout: the ripples first, the light hours later (not to scale) · a ping per line · picture-only 0.2 s · energy: 0.45} (58–65.5 s)
 vo: *Light time*: the crash's ripples in space came *first*. {c21} Its visible light was spotted several *hours* later. {c13}
 
 ## tease {end card held ≥ 1.5 s · signature: pings E5, B5, F♯6 · energy: 0.4} (65.5–71.5 s)
