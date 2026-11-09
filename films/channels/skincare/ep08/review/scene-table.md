@@ -23,4 +23,4 @@ Sound: voice only so far (no score or effects yet; loudness via ffmpeg loudnorm,
 | 47.9 (+1.9) | handled wet objects faster with wrinkled fingers. A later study found no difference. | camera: q5 art, close-up ×1.1 | voice |
 | 56.5 (+8.7) | So wrinkled fingers are your | camera: q1 art, close-up ×1.0; supporting line:  | voice |
 | 58.4 (+1.9) | nerves at work. Whether they help you grip is still debated. | camera: q1 art, close-up ×1.06 | voice |
-| 63.4 (+5.0) | Next: how sweat really cools you. Cooling happens when sweat dries. | end card: Next: how sweat really cools you · Skin Sense · Season 2 · Episode 3 · Narration: synthetic voice (AI) | voice |
+| 63.4 (+5.0) | Next: how sweat really cools you. Cooling happens when sweat dries. | end card: Next: how sweat really cools you · Skin Sense · Season 2 · Episode 2 · Narration: synthetic voice (AI) | voice |
