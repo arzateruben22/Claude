@@ -1198,7 +1198,7 @@ if (want('crowd')) {
   await check('crowd 1280x720: after Ultra -> High, in first and third person, the people stay within their 24 calls, counted by the crowd and measured (the frame drawn with them and again without them, every pass)', async () => {
     await H(page, "window.__onfoot.setClock('Sat', 21)");
     const q = await H(page, 'window.__onfoot.stats().quality');
-    expect(q === 'high', `quality ${q}`);
+    expect(q === 'high' || q === 'hd', `quality ${q}`);          // (P1d: High is now called HD; 'high' still selects it)
     const views = [CROWD_VIEW, [-5117, -8345, 128, -3], [-5104, -8337, 185, 4], [-5098, -8362, 205, -10], [-5100, -8343, 180, -4], [-5070, -8354, 25, -4]];
     const seen = [], bad = []; let worst = 0;
     for (const third of [false, true]) for (const [x, z, yaw, pitch] of views) {
