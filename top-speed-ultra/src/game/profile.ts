@@ -97,12 +97,14 @@ export class ProfileBook {
   constructor() { this.p = loadProfile(); }
   get level() { return levelOf(this.p.xp); }
 
-  // call often with small amounts; returns what changed worth telling you about
-  add(d: { time?: number; distance?: number; speed?: number; streak?: number; nearMiss?: number; cleanPass?: number; collision?: number; freeway?: string; interchange?: number; runNearMisses?: number }): Earned {
+  // call often with small amounts; returns what changed worth telling you about. paid: the part of the distance
+  // that earns XP and credits, when it is less than the distance driven (the hypercar's Free Drive earnings cap,
+  // cars.ts earnCapFor); the distance driven still counts in full toward the profile's total
+  add(d: { time?: number; distance?: number; paid?: number; speed?: number; streak?: number; nearMiss?: number; cleanPass?: number; collision?: number; freeway?: string; interchange?: number; runNearMisses?: number }): Earned {
     const p = this.p, before = this.level;
     let xp = 0, credits = 0;
     if (d.time) p.timeDriven += d.time;
-    if (d.distance) { p.distance += d.distance; xp += d.distance / 100; credits += d.distance / 200; }
+    if (d.distance) { const pay = Math.min(d.distance, d.paid ?? d.distance); p.distance += d.distance; xp += pay / 100; credits += pay / 200; }
     if (d.speed && d.speed > p.topSpeed) p.topSpeed = d.speed;
     if (d.streak && d.streak > p.bestStreak) p.bestStreak = d.streak;
     if (d.nearMiss) { p.nearMisses += d.nearMiss; xp += 25 * d.nearMiss; credits += 10 * d.nearMiss; }

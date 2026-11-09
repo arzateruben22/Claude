@@ -570,8 +570,11 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     }
   }
   // ---------------------------------------------------------------- side glass (inside) with frit
+  // (the frit is the grid's first column, last column and next-to-top row; the hypercar's long, raked front edge
+  // made a first column 6 cm wide at its foot, which from the seat doubled the A-pillar's width in a black band beside
+  // its trim: its grid has twice the columns, so the frit is the others' width)
   for (const sd of [-1, 1] as const) {
-    const nu = high ? 22 : 12, nv = high ? 9 : 5, rows: V3[][] = [];
+    const nu = (high ? 22 : 12) * (hyper ? 2 : 1), nv = high ? 9 : 5, rows: V3[][] = [];
     for (let i = 0; i <= nv; i++) { const r: V3[] = []; for (let j = 0; j <= nu; j++) r.push(sgInner(j / nu, i / nv, sd)); rows.push(r); }
     const [clear, frit] = splitGrid(gridGeo(rows, { flip: sd > 0 }), nv + 1, nu + 1, (i, j) => i === nv - 1 || j === 0 || j === nu - 1);
     kit.add('sideGlass', clear); kit.add('frit', frit);
@@ -736,6 +739,13 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       if (tt > 0.03 && tt < 0.95 && Math.abs(Pp.x) < half - 0.04) keepIdx.push(t, t + 1, t + 2);
     }
     src.setIndex(keepIdx);
+    // (the hypercar: from its forward seat its long screen showed the reflection's far edge as a hard line across the
+    // sky, so the ghost fades out up the glass, from 30 to 60 % of the way to the header, and stays low as glare)
+    if (hyper) for (let i = 0; i < P.count; i++) {
+      const dir = v3(P.getX(i), P.getY(i), P.getZ(i)).sub(E), den = n.dot(dir); if (Math.abs(den) < 1e-6) continue;
+      const tt = (E.z + (dir.z * (d - n.dot(E))) / den - WS.zb) / (WS.zt - WS.zb), k = 1 - sstep(0.3, 0.6, tt);
+      col[i * 3] *= k; col[i * 3 + 1] *= k; col[i * 3 + 2] *= k;
+    }
     const gm = new THREE.MeshBasicMaterial({ vertexColors: true, color: 0x2a2622, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false });
     const gh = new THREE.Mesh(src, gm); gh.name = 'windscreen-reflection'; gh.renderOrder = 3;
     group.add(gh);

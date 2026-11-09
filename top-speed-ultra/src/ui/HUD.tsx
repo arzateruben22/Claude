@@ -119,7 +119,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
         <div className="hud-main">
           <div className="hud-revs" ref={revs}>{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</div>
           <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-gear" ref={gear}>1</span></div>
-          <div className="hud-chips">{chips.map((c) => <i key={c} className={c === 'Unleashed' ? 'hot' : ''}>{c}</i>)}</div>
+          <div className="hud-chips">{chips.map((c) => <i key={c} className={c === 'Unleashed' ? 'hot' : c === 'Race tune' ? 'tune' : ''}>{c}</i>)}</div>
           <span className="hud-cam" ref={cam} />
         </div>
       </div>
