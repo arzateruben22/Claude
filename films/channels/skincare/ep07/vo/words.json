@@ -794,8 +794,8 @@
   },
   {
    "id": "vo06",
-   "text": "So goosebumps are a muscle, a nerve and a hair, working together. A small reflex with a bigger job.",
-   "heard": "So goosebumps are a muscle, a nerve and a hair working together, a small reflex with a bigger job.",
+   "text": "So goosebumps are a muscle, a nerve and a hair, working together. A small reflex, and in mice, a bigger job.",
+   "heard": "So goosebumps are a muscle, a nerve and a hair working together, a small reflex and in mice a bigger job.",
    "words": [
     {
      "w": "So",
@@ -805,67 +805,67 @@
     },
     {
      "w": "goosebumps",
-     "start": 0.4,
+     "start": 0.395,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "are",
-     "start": 1.02,
+     "start": 1.085,
      "end": 1.28,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.28,
+     "start": 1.165,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "muscle,",
-     "start": 1.455,
+     "start": 1.44,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.08,
-     "end": 2.24,
+     "start": 2.05,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "nerve",
-     "start": 2.24,
+     "start": 2.08,
      "end": 2.56,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.64,
+     "start": 2.61,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.68,
+     "start": 2.685,
      "end": 2.96,
      "heard": true
     },
     {
      "w": "hair,",
-     "start": 2.955,
-     "end": 3.44,
+     "start": 2.905,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "working",
-     "start": 3.355,
+     "start": 3.3,
      "end": 3.92,
      "heard": true
     },
     {
      "w": "together.",
-     "start": 4.03,
+     "start": 4.005,
      "end": 4.96,
      "heard": true
     },
@@ -877,38 +877,50 @@
     },
     {
      "w": "small",
-     "start": 5.135,
-     "end": 5.68,
+     "start": 5.285,
+     "end": 5.6,
      "heard": true
     },
     {
-     "w": "reflex",
-     "start": 5.73,
-     "end": 6.4,
+     "w": "reflex,",
+     "start": 5.665,
+     "end": 6.24,
      "heard": true
     },
     {
-     "w": "with",
-     "start": 6.325,
-     "end": 6.56,
+     "w": "and",
+     "start": 6.24,
+     "end": 6.48,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 6.57,
+     "w": "in",
+     "start": 6.495,
      "end": 6.72,
      "heard": true
     },
     {
-     "w": "bigger",
-     "start": 6.73,
+     "w": "mice,",
+     "start": 6.72,
      "end": 7.12,
      "heard": true
     },
     {
+     "w": "a",
+     "start": 7.255,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "bigger",
+     "start": 7.43,
+     "end": 7.76,
+     "heard": true
+    },
+    {
      "w": "job.",
-     "start": 7.075,
-     "end": 7.6,
+     "start": 7.77,
+     "end": 8.24,
      "heard": true
     }
    ]

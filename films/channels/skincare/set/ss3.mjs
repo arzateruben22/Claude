@@ -81,8 +81,10 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
   const camAt = (t) => {
     let i = 0; for (let k = 0; k < KF.length; k++) if (t >= KF[k].t - 0.05) i = k;
     const a = KF[Math.max(0, i - 1)], b = KF[i], m = i ? ease(seg(t, b.t - 0.05, b.t + 0.9)) : 1, P = {};
+    if (!(!i || a.img === b.img)) { /* roles set below */ }
     if (!i || a.img === b.img) P[b.img] = { s: (a.s + (b.s - a.s) * m) * drift(t, b), fx: a.f[0] + (b.f[0] - a.f[0]) * m, fy: a.f[1] + (b.f[1] - a.f[1]) * m, op: 1 };
     else { P[a.img] = { s: a.s * drift(t, b), fx: a.f[0], fy: a.f[1], op: 1 - m }; P[b.img] = { s: b.s * (1.05 - 0.05 * m) * drift(t, b), fx: b.f[0], fy: b.f[1], op: m }; }
+    if (i && a.img !== b.img) { P[a.img].role = -1; P[a.img].xm = m; P[b.img].role = 1; P[b.img].xm = m; }
     const iv = (x, y) => x + (y - x) * m;
     for (const n in P) { const A = n === b.img && a.img === b.img ? a : b, B2 = b; P[n].trk = [iv(A.trk ? A.trk[0] : 0, B2.trk ? B2.trk[0] : 0), iv(A.trk ? A.trk[1] : 0, B2.trk ? B2.trk[1] : 0)]; P[n].dolly = iv(A.dolly || 0, B2.dolly || 0); P[n].rack = B2.rack === undefined ? null : (A.rack === undefined ? B2.rack : iv(A.rack, B2.rack)); }
     return { b, m, P, img: b.img, t };
@@ -147,6 +149,7 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
     let eg = 0; for (const [a, z] of ENGR) eg = Math.max(eg, Math.min(eo(seg(t, a, a + 0.5)), 1 - eo(seg(t, z - 0.4, z)))); engr.style.opacity = eg.toFixed(3);
     for (const [k, g] of Object.entries(IM)) { const p = c.P[k]; if (!p) { g.el.style.opacity = "0"; continue; } const FX0 = p.fx * AW, FY0 = p.fy * g.AH;
       g.el.style.transform = `translate(${AW / 2 - FX0 * p.s}px,${BH / 2 - FY0 * p.s}px) scale(${p.s})`; g.el.style.opacity = p.op.toFixed(3);
+      if (g.lay) g.lay[2].style.opacity = p.role ? (p.role < 0 ? 1 - eo(seg(p.xm, 0, 0.45)) : eo(seg(p.xm, 0.55, 1))).toFixed(3) : "1";   // in a dissolve the foreground (hair, muscle) goes out before the next one comes in: no double hair
       if (g.lay) g.lay.forEach((le, i) => { const q = layerX(p, g, i, t); le.style.transformOrigin = `${FX0}px ${FY0}px`; le.style.transform = `translate(${q.tx}px,${q.ty}px) scale(${q.sc})`; le.style.filter = p.rack == null ? "none" : `blur(${(g.blur * u * Math.min(1, Math.max(0, Math.abs(i - p.rack) - 0.4))).toFixed(2)}px)`; }); }
     artbox.style.opacity = ((1 - q) * (1 - eo(seg(t, NEXT - 0.5, NEXT)))).toFixed(3);
     drawFx(t, c);

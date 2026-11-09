@@ -20,9 +20,9 @@ vo: When the nerve fires, the muscle shortens and pulls the hair upright. {c6} I
 ## whoa {shot 5: wide, hairs upright like grass, backlit · labels: in mice · hair stem cells · picture-only 3.1 s · energy: 0.8} (43.7–56.9 s)
 vo: And this wiring does more than raise hair. {-} In mice, the nerve talks to the stem cells that regrow *hair*. {c9} The muscle keeps that nerve in place. {c10}
 
-## takeaway {shot 1 again: the calm forearm · labels: none · picture-only 0.5 s · energy: 0.3} (56.9–65.3 s)
-vo: So goosebumps are a muscle, a nerve and a hair, working together. {c11} A small reflex with a bigger *job*. {c12}
+## takeaway {shot 1 again: the calm forearm · labels: none · picture-only 0.5 s · energy: 0.3} (56.9–66.0 s)
+vo: So goosebumps are a muscle, a nerve and a hair, working together. {c11} A small reflex, and in mice, a bigger *job*. {c12}
 
-## tease {end card held ≥ 2 s · energy: 0.35} (65.3–71.7 s)
+## tease {end card held ≥ 2 s · energy: 0.35} (66.0–72.4 s)
 vo: Next: why fingers wrinkle in water. {-} Your *nerves* are in charge. {c13}
 end card: "Next: why fingers wrinkle in water" · "Skin Sense · Season 2" · footnote: "Narration: synthetic voice (AI)."

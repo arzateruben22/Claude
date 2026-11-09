@@ -71,15 +71,15 @@
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So goosebumps are a muscle, a nerve and a hair, working together. A small reflex with a bigger job.",
+   "text": "So goosebumps are a muscle, a nerve and a hair, working together. A small reflex, and in mice, a bigger job.",
    "stars": [
     "job"
    ],
-   "phonemes": "sˌəʊ ɡˈuːsbʌmps ɑːɹ ɐ mˈʌsəl, ɐ nˈɜːv and ɐ hˈeə, wˈɜːkɪŋ təɡˈɛðə. ɐ smˈɔːl ɹˈiːflɛks wɪð ɐ bˈɪɡə dʒˈɒb.",
+   "phonemes": "sˌəʊ ɡˈuːsbʌmps ɑːɹ ɐ mˈʌsəl, ɐ nˈɜːv and ɐ hˈeə, wˈɜːkɪŋ təɡˈɛðə. ɐ smˈɔːl ɹˈiːflɛks, and ɪn mˈaɪs, ɐ bˈɪɡə dʒˈɒb.",
    "speed": 0.75,
    "file": "06.wav",
-   "dur": 7.615,
-   "sha256": "9c1ab9105ae57d929707e49cda5d236ed8c7c431330f3f1c9560305bddaac59d"
+   "dur": 8.31,
+   "sha256": "462608ac08c2f2ca40982b75326f25cbf5b1118c2910b85ba3576c2c48ca4ffb"
   },
   {
    "id": "vo07",

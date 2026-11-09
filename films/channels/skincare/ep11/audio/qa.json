@@ -1,0 +1,192 @@
+{
+ "compose_s": 6.8,
+ "master_s": 9.4,
+ "master": {
+  "gain_db": 1.78,
+  "iterations": 2,
+  "lufs": -14.07,
+  "true_peak_db": -2.0,
+  "ceiling_db": -2.0,
+  "limiting_max_db": -4.81,
+  "aac": {
+   "lufs": -14.1,
+   "true_peak_db": -1.9,
+   "lra": 3.4
+  },
+  "stems_sum_error_db": -240.0
+ },
+ "sync": {
+  "per_kind": {
+   "label": {
+    "n": 4,
+    "max_ms": 5.0,
+    "median_ms": 0.5,
+    "slow": false,
+    "pass": true
+   },
+   "scale.jump": {
+    "n": 4,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": true,
+    "pass": true
+   },
+   "section": {
+    "n": 6,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": true,
+    "pass": true
+   },
+   "signature": {
+    "n": 2,
+    "max_ms": 11.0,
+    "median_ms": 11.0,
+    "slow": false,
+    "pass": true
+   },
+   "swell": {
+    "n": 1,
+    "max_ms": 52.0,
+    "median_ms": 52.0,
+    "slow": true,
+    "pass": true
+   }
+  },
+  "pass": true,
+  "events": [
+   {
+    "kind": "signature",
+    "tag": "title",
+    "show": 0.9,
+    "method": "rise",
+    "err_ms": 11.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 4.4333,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c2",
+    "show": 4.7333,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l0",
+    "show": 9.5333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l1",
+    "show": 11.5667,
+    "method": "rise",
+    "err_ms": 5.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 15.9333,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 25.9333,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c5",
+    "show": 26.2333,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l2",
+    "show": 31.3,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 43.6667,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c7",
+    "show": 43.9667,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "swell",
+    "tag": "whoa",
+    "show": 43.9667,
+    "method": "shape",
+    "err_ms": 52.0
+   },
+   {
+    "kind": "label",
+    "tag": "l3",
+    "show": 53.0667,
+    "method": "rise",
+    "err_ms": -1.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 56.6333,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c9",
+    "show": 56.9333,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 64.1333,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "signature",
+    "tag": "end",
+    "show": 64.4333,
+    "method": "rise",
+    "err_ms": 11.0
+   }
+  ]
+ },
+ "picture_sync": [],
+ "under_voice": {
+  "music_lufs": -28.9,
+  "dialog_lufs": -13.6,
+  "gap_lu": 15.2,
+  "pass": true
+ },
+ "phone": {
+  "correlation": 0.9,
+  "mono_loss_db": 0.09,
+  "dialog_mono_loss_db": 0.09,
+  "pass": true
+ }
+}
