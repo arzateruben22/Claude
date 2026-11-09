@@ -43,7 +43,7 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   const [silI, silS] = SIL[P.interior];
   // the OC Hypercar's paint: a bright, cool light silver (less metal than a chrome-like silver, so a warm sky doesn't
   // turn it bronze), a fine flake, and its gloss-black two-tone drawn by the paint shader (P.masks)
-  const paintO = oc ? { key: id, flake: 0.2, rough: P.paintFinish?.rough ?? 0.22, metal: P.paintFinish?.metal ?? 0.8, masks: P.masks } : { key: id, flake: vela ? 0.1 : 0.15, rough: vela ? 0.3 : undefined };
+  const paintO = oc ? { key: id, flake: 0.2, rough: P.paintFinish?.rough ?? 0.22, metal: P.paintFinish?.metal ?? 0.8, masks: P.masks, env: P.paintFinish?.env } : { key: id, flake: vela ? 0.1 : 0.15, rough: vela ? 0.3 : undefined };
   const word = (w: number, h: number) => (oc ? ocMarkTex(w / 2, h * 1.5) : wordmarkTex(vela ? 'VELA' : 'ROSSINI', w, h));
   const extra: Record<string, THREE.Material> = {};
   if (P.led) {
@@ -64,8 +64,8 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     ...extra,
     paint: M.paint(paint, q, B.shutLines(), paintO),
     frit: M.gloss(0x050505), trim: M.gloss(0x070708), dark,
-    glass: M.glass('tint', 0.62, { env: 1.0 }),
-    carbon: M.carbon(q), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
+    glass: P.glassTint ? M.glass('tint', P.glassTint[0], { env: P.glassTint[1] }) : M.glass('tint', 0.62, { env: 1.0 }),
+    carbon: P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.064, P.carbonTint), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
     lamp: lamps.lamp, tail: lamps.tail,
     chrome: M.chrome(0.12, 0xd8dadd), mirror: M.chrome(0.015, 0xb9bfc6), rubber: M.rubber(),
     badge: once('m.badge' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03 })),
