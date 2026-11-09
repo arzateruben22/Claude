@@ -6,6 +6,8 @@ here, then read:
 - `PROJECT_OC_PROGRESS.md`: what's done and how it was checked.
 - `PROJECT_OC_ROADMAP.md`: what's left, in priority order.
 - `PROJECT_OC_TECHNICAL_NOTES.md`: how it works.
+- `PROJECT_OC_STYLE_GUIDE.md`: the owner's style library (three art directions, tokens, cameras) and what the game
+  takes from it. Read it before any visual work.
 
 ## Where things are
 

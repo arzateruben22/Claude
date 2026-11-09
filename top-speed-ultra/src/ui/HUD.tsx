@@ -1,19 +1,21 @@
 // The heads-up display. It never re-renders: the game writes straight into these elements ten times a second.
 
 import { forwardRef, useImperativeHandle, useRef } from 'react';
-import type { CSSProperties } from 'react';
 import type { Hud as HudData } from '../game/Game';
-import { OcMark, OC_LOGO_240 } from './Mark';
+import { OcMark } from './Mark';
 
 export interface HudHandle { set: (h: HudData) => void }
 
 const miles = (m: number) => (m / 1609.344).toFixed(m < 1609 ? 2 : 1) + ' mi';
 
-export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; onAbility: () => void }>(function HUD({ showFps, visible, onAbility }, ref) {
+const MODE_LABEL: Record<string, string> = { free: 'Free Drive', survival: 'Speed Survival', race: 'Race', time: 'Time Trial' };
+
+export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void }>(function HUD({ showFps, visible, chips, onAbility }, ref) {
   const speed = useRef<HTMLSpanElement>(null), gear = useRef<HTMLSpanElement>(null), bar = useRef<HTMLDivElement>(null);
   const k1 = useRef<HTMLElement>(null), v1 = useRef<HTMLElement>(null), k2 = useRef<HTMLElement>(null), v2 = useRef<HTMLElement>(null);
   const k3 = useRef<HTMLElement>(null), v3 = useRef<HTMLElement>(null), fps = useRef<HTMLSpanElement>(null), cam = useRef<HTMLSpanElement>(null);
   const big = useRef<HTMLDivElement>(null), road = useRef<HTMLSpanElement>(null), next = useRef<HTMLDivElement>(null), wrong = useRef<HTMLDivElement>(null);
+  const modeEl = useRef<HTMLElement>(null), shield = useRef<HTMLSpanElement>(null);
   const abil = useRef<HTMLButtonElement>(null), abilName = useRef<HTMLSpanElement>(null), tun = useRef<HTMLDivElement>(null);
   // the race HUD: the position box with the race timer beside the position, the standings, and the rev lights over the gear
   const race = useRef<HTMLDivElement>(null), pos = useRef<HTMLElement>(null), posOf = useRef<HTMLElement>(null), prog = useRef<HTMLElement>(null);
@@ -24,7 +26,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
     set(h) {
       put(speed.current, 'speed', String(h.speed));
       put(gear.current, 'gear', h.gear + (h.auto ? '' : ' M'));
-      if (bar.current) { bar.current.style.transform = `scaleX(${h.rpmFrac.toFixed(3)})`; bar.current.classList.toggle('red', h.rpmFrac > 0.92); }
+      if (bar.current) { bar.current.style.transform = `scaleY(${h.rpmFrac.toFixed(3)})`; bar.current.classList.toggle('red', h.rpmFrac > 0.92); }
       if (revs.current) {
         // eight lights from 55% of the redline, the last one at 90%; all of them flash at the limiter
         const lit = h.rpmFrac < 0.55 ? 0 : Math.min(8, Math.floor((h.rpmFrac - 0.55) / 0.05) + 1);
@@ -63,12 +65,21 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
       } else {
         put(k1.current, 'k1', 'Distance'); put(v1.current, 'v1', miles(h.distance));
         put(k2.current, 'k2', 'Top'); put(v2.current, 'v2', h.top + ' mph');
-        put(k3.current, 'k3', ''); put(v3.current, 'v3', '');
+        // a story errand (story.ts): its clock in the free slot
+        if (h.errand) { const t = Math.ceil(h.errand.left); put(k3.current, 'k3', 'Errand'); put(v3.current, 'v3', `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`); }
+        else { put(k3.current, 'k3', ''); put(v3.current, 'v3', ''); }
       }
       if (big.current) big.current.classList.toggle('warn', h.mode === 'time' && h.timeLeft < 10);
-      put(road.current, 'road', h.road);
-      put(next.current, 'next', h.next ? `${h.next} · ${h.nextDist > 1609 ? miles(h.nextDist) : Math.round(h.nextDist * 3.281 / 10) * 10 + ' ft'}` : '');
-      if (next.current) next.current.hidden = !h.next;
+      put(modeEl.current, 'modeLabel', MODE_LABEL[h.mode] ?? h.mode);
+      // the road as a guide sign: the route shield (blue Interstate, white state route) then the direction
+      const rm = /^(I|CA)-(\d+)\s*(\w+)?/.exec(h.road);
+      if (shield.current) { shield.current.hidden = !rm; if (rm) { put(shield.current, 'shieldNo', rm[2]); const cls = 'shield ' + (rm[1] === 'I' ? 'i' : 'ca'); if (last.shieldCls !== cls) { last.shieldCls = cls; shield.current.className = cls; } } }
+      put(road.current, 'road', rm ? (rm[3] ?? '') : h.road);
+      // the route's next manoeuvre; with none, an errand's exit and how far its sign is
+      const far = (m: number) => (m > 1609 ? miles(m) : Math.round(m * 3.281 / 10) * 10 + ' ft');
+      const nx = h.next ? `${h.next} · ${far(h.nextDist)}` : h.errand ? `Errand: ${h.errand.exit} exit${h.errand.dist >= 0 ? ' · ' + far(h.errand.dist) : ''}` : '';
+      put(next.current, 'next', nx);
+      if (next.current) next.current.hidden = !nx;
       if (wrong.current) wrong.current.hidden = !h.wrongWay;
       put(fps.current, 'fps', h.fps + ' fps');
       if (tun.current) tun.current.style.setProperty('--t', h.tunnel.toFixed(3));
@@ -85,25 +96,32 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; o
   return (
     <div className="hud" hidden={!visible} aria-hidden="true">
       <div className="tunnel" ref={tun} />
-      <div className="hud-road"><div className="hud-roadname"><OcMark size="sm" /><span ref={road} /></div><div className="hud-next" ref={next} hidden /></div>
+      <div className="hud-road"><div className="hud-roadname"><span className="shield i" ref={shield} hidden /><span ref={road} /></div><div className="hud-next" ref={next} hidden /></div>
       <div className="hud-race" ref={race} hidden>
         <div className="hud-pos"><b ref={pos as React.RefObject<HTMLElement>}>–</b><span><i>Position</i><em ref={posOf as React.RefObject<HTMLElement>}>of 4</em></span><span className="hud-timer"><i>Time</i><em ref={timer as React.RefObject<HTMLElement>}>0:00.0</em></span><small ref={prog as React.RefObject<HTMLElement>} /></div>
-        <ol className="hud-standings" ref={rows} style={{ '--oc-mark-sm': `url("${OC_LOGO_240}")` } as CSSProperties}>{[0, 1, 2, 3].map((k) => <li key={k} hidden><i /><em /><span /><b /></li>)}</ol>
+        <ol className="hud-standings" ref={rows}>{[0, 1, 2, 3].map((k) => <li key={k} hidden><i /><em /><span /><b /></li>)}</ol>
         <small className="hud-race-note">Gaps in s · estimated</small>
       </div>
       <div className="hud-wrong" ref={wrong} hidden>WRONG WAY</div>
       <div className="hud-stats" ref={big}>
+        <OcMark size="sm" />
+        <em className="hud-mode" ref={modeEl as React.RefObject<HTMLElement>} />
         <div><b ref={k1 as React.RefObject<HTMLElement>}>Distance</b><span ref={v1 as React.RefObject<HTMLSpanElement>}>0.00 mi</span></div>
         <div><b ref={k2 as React.RefObject<HTMLElement>} /><span ref={v2 as React.RefObject<HTMLSpanElement>} /></div>
         <div><b ref={k3 as React.RefObject<HTMLElement>} /><span ref={v3 as React.RefObject<HTMLSpanElement>} /></div>
       </div>
       {showFps && <span className="hud-fps" ref={fps}>-- fps</span>}
       <button type="button" className="hud-ability" ref={abil} onClick={onAbility}><span ref={abilName}>Ability</span></button>
+      {/* the speed block (owner's reference, 2026-10-21): the revs as a slanted ice bar on the left, big light numerals,
+          the gear in an outlined box, and chips for the handling profile and the assists under it */}
       <div className="hud-speed">
-        <div className="hud-revs" ref={revs}>{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</div>
-        <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-gear" ref={gear}>1</span></div>
         <div className="hud-rpm"><div ref={bar} /></div>
-        <span className="hud-cam" ref={cam} />
+        <div className="hud-main">
+          <div className="hud-revs" ref={revs}>{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</div>
+          <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-gear" ref={gear}>1</span></div>
+          <div className="hud-chips">{chips.map((c) => <i key={c} className={c === 'Unleashed' ? 'hot' : ''}>{c}</i>)}</div>
+          <span className="hud-cam" ref={cam} />
+        </div>
       </div>
     </div>
   );

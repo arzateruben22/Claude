@@ -6,20 +6,34 @@ import type { CSSProperties } from 'react';
 import { Game, Result, CORNER_PX } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
-import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, loadBest } from '../game/settings';
+import { Settings, loadSettings, saveSettings, ownerFromHash, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, Look, loadBest } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
 import { COURSES, bestTime, fmtTime } from '../game/race';
-import { carById, figures, slotsFor, garageCars } from '../game/cars';
+import { carById, figures, garageCars, PAINTS, paintFor, WHEELS, wheelFor } from '../game/cars';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
 import { OcLockup, OcWatermark } from './Mark';
+import { Ico } from './Icons';
+import { Homes } from './Homes';
+import { unread } from '../game/story';
+import { garageSlots } from '../game/homes';
+import { ModeArt } from './ModeArt';
+import { WorldMap } from './WorldMap';
+import { RadioCard } from './RadioCard';
+import { Phone, PhoneApp } from './Phone';
+import { RadialMenu, RadialPick } from './RadialMenu';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over';
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'course' | 'garage' | 'feedback' | 'map' | 'phone' | 'homes';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+// the Settings rail (U8): the sections in the library's order; every control keeps its label, so all stay on one page
+const SET_SECTIONS: [string, string][] = [['graphics', 'Graphics'], ['hud', 'HUD and map'], ['world', 'World'], ['driving', 'Driving'], ['sound', 'Sound'], ['testing', 'Testing']];
+// the mode cards' one-line subtitles (the menu)
+const MODE_SUB: Record<Mode, string> = { free: 'Explore Orange County', survival: 'Stay over 100 mph', race: 'Sprint / checkpoints / endurance', time: '60 s on the clock' };
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
 
 export function App() {
@@ -29,6 +43,7 @@ export function App() {
   const mapRef = useRef<HTMLCanvasElement>(null);
   const [screen, setScreen] = useState<Screen>('loading');
   const [panel, setPanel] = useState<Panel>(null);
+  const [mapHome, setMapHome] = useState<string | undefined>(undefined);   // the World Map opened from Lifestyle, on a home
   const [busy, setBusy] = useState(true);
   const [loadingText, setLoadingText] = useState('Starting the engine');
   const [settings, setSettings] = useState<Settings>(loadSettings);
@@ -41,7 +56,13 @@ export function App() {
   const [boardMode, setBoardMode] = useState<Mode>('survival');
   const [navTarget, setNavTarget] = useState<string | null>(null);
   const [exitRoad, setExitRoad] = useState<string | null>(null);    // the Start panel: which carriageway's exits are listed
+  const [radioOpen, setRadioOpen] = useState(false);
+  const [setSec, setSetSec] = useState('graphics');
+  // the radial quick menu (U3): held open from the Pause button or Tab; holdT is the 300 ms timer, held says it opened
+  const [radial, setRadial] = useState<{ x: number; y: number } | null>(null);
+  const holdT = useRef(0), held = useRef(false);                   // the Settings rail's current section              // the radio card beside the controls while driving
   const [report, setReport] = useState('');                           // the Feedback panel's text
+  const [, rerender] = useState(0);                                   // the garage changed the car: the atmosphere follows
   const reportRef = useRef<HTMLTextAreaElement>(null);
   const toastId = useRef(0);
   const settingsRef = useRef(settings);
@@ -107,9 +128,16 @@ export function App() {
   };
 
   useEffect(() => {
-    const k = (e: KeyboardEvent) => { if (e.code === 'Escape' && panel) { setPanel(null); e.stopPropagation(); } if (e.code === 'Enter' && screen === 'menu' && !panel) drive(); };
+    const k = (e: KeyboardEvent) => {
+      if (e.code === 'Escape' && panel) { setPanel(null); e.stopPropagation(); }
+      if (e.code === 'Enter' && screen === 'menu' && !panel) drive();
+      // hold Tab while driving for the quick menu (released, the menu picks or cancels)
+      if (e.code === 'Tab' && screen === 'playing' && !panel && !e.repeat && !radial) { e.preventDefault(); clearTimeout(holdT.current); holdT.current = window.setTimeout(() => setRadial({ x: innerWidth / 2, y: innerHeight / 2 }), 300); }
+    };
+    const ku = (e: KeyboardEvent) => { if (e.code === 'Tab') clearTimeout(holdT.current); };
+    addEventListener('keyup', ku, true);
     addEventListener('keydown', k, true);
-    return () => removeEventListener('keydown', k, true);
+    return () => { removeEventListener('keydown', k, true); removeEventListener('keyup', ku, true); };
   });
 
   const playing = screen === 'playing';
@@ -118,10 +146,23 @@ export function App() {
   // "start at your exit": the key names the carriageway; the exit list gives its sign text
   const exitRoadOf = settings.exit.split(' @ ')[0];
   const myExit = settings.exit ? game.current?.exitsFor(exitRoadOf).find((e) => e.key === settings.exit) ?? null : null;
+  // the drive HUD's chips under the speed: the handling profile (where the slider sits), the assists the physics runs
+  // at every setting (ABS and traction control), and the hypercar's tune when it is off the leash
+  const carNow = carById(game.current?.carId ?? 'rossini-gt');
+  const chips = [settings.handling < 0.35 ? 'Arcade' : settings.handling < 0.75 ? 'Sport' : 'Sim', 'ABS', 'TCS', ...(carNow.race && mode === 'free' ? ['Unleashed'] : [])];
+  // the player card on the menu
+  const prof = game.current?.profile.p, level = prof ? levelOf(prof.xp) : 1, xpLo = xpFor(level), xpHi = xpFor(level + 1);
+  const av = AVATARS[prof?.avatar ?? 0];
+  // the atmosphere follows the car (owner, 2026-10-21): styles.css re-points the tokens by <html data-car>
+  useEffect(() => { document.documentElement.dataset.car = carNow.id; }, [carNow.id]);
+  // and the driver signs the human elements (the ability ring, the Driver row, the avatar) with their colour
+  useEffect(() => { document.documentElement.dataset.driver = settings.driver; }, [settings.driver]);
+  // and the look: the interface's art direction from the owner's style library (styles.css :root[data-look])
+  useEffect(() => { document.documentElement.dataset.look = settings.look; }, [settings.look]);
   return (
     <div className="app">
       <div className="stage" ref={host} />
-      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} onAbility={() => game.current?.useAbility()} />
+      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} chips={chips} onAbility={() => game.current?.useAbility()} />
       {playing && settings.corner !== 'off' && (
         <button type="button" className={'corner ' + settings.corner} style={{ width: cornerPx, height: cornerPx }} onClick={() => game.current?.cycleCorner()}
           aria-label={settings.corner === 'map' ? 'Road map. Tap for the sky camera.' : 'Sky camera. Tap to hide.'}>
@@ -131,13 +172,26 @@ export function App() {
       )}
       {playing && (
         <div className="tbar">
-          <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}>View</button>
-          {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}>Map</button>}
-          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}>Go to</button>
-          <button type="button" className="tbtn" onClick={() => game.current?.cycleRadio()} aria-label="Radio: next station">Radio</button>
-          <button type="button" className="tbtn" onClick={() => game.current?.setPaused(true)}>Pause</button>
+          <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}><Ico name="camera" />View</button>
+          {settings.corner === 'off' && <button type="button" className="tbtn" onClick={() => game.current?.cycleCorner()}><Ico name="map" />Map</button>}
+          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}><Ico name="nav" />Go to</button>
+          <button type="button" className={'tbtn' + (radioOpen ? ' on' : '')} aria-expanded={radioOpen} onClick={() => setRadioOpen((o) => !o)}><Ico name="radio" />Radio</button>
+          <button type="button" className="tbtn" aria-haspopup="menu" title="Tap to pause; hold for the quick menu"
+            onPointerDown={() => { held.current = false; clearTimeout(holdT.current); holdT.current = window.setTimeout(() => { held.current = true; setRadial({ x: innerWidth / 2, y: innerHeight / 2 }); }, 300); }}
+            onPointerUp={() => clearTimeout(holdT.current)} onPointerLeave={() => { if (!held.current) clearTimeout(holdT.current); }}
+            onClick={() => { if (!held.current) game.current?.setPaused(true); held.current = false; }}><Ico name="pause" />Pause</button>
         </div>
       )}
+      {playing && radial && (
+        <RadialMenu at={radial} onCancel={() => setRadial(null)} onPick={(p: RadialPick) => {
+          setRadial(null); const g = game.current; if (!g) return;
+          if (p === 'camera') { g.cycleCam(); return; }
+          if (p === 'radio') { setRadioOpen(true); return; }
+          if (p === 'nav') { setPanel('nav'); return; }
+          g.setPaused(true); setPanel(p);
+        }} />
+      )}
+      {playing && radioOpen && game.current && <RadioCard game={game.current} settings={settings} update={update} onClose={() => setRadioOpen(false)} />}
       <div className="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast ' + t.kind}>{t.text}</div>)}</div>
       {playing && (coarse || settings.showTouch) && game.current && (
         <Touch input={game.current.input} manual={settings.transmission === 'manual'} onShift={(d) => game.current?.pushAction(d > 0 ? 'shiftUp' : 'shiftDown')} />
@@ -151,51 +205,68 @@ export function App() {
 
       {screen === 'menu' && !panel && !busy && (
         <div className="overlay menu">
-          <div className="menu-col">
-            <Brand hero />
-            <p className="lede">Orange County's real freeways (the 5, 405, 55, 57, 22, 91, 73, 133, 241 and 261) and every interchange between them, from the driver's seat of a 711 hp coupe.</p>
-            <section className="menu-sec">
-              <p className="sect" aria-hidden="true">Mode</p>
-              <div className="modes" role="radiogroup" aria-label="Mode">
-                {(Object.keys(MODES) as Mode[]).map((m, i) => (
-                  <button key={m} className={'mode' + (mode === m ? ' on' : '')} role="radio" aria-checked={mode === m} aria-describedby={mode === m ? 'mode-brief' : undefined} onClick={() => setMode(m)}>
-                    <i aria-hidden="true">{String(i + 1).padStart(2, '0')}</i>
-                    <b>{MODES[m].label}</b>
-                    {(m === 'survival' || m === 'time') && <em>Best {m === 'time' ? (loadBest(m) / 1609.344).toFixed(2) + ' mi' : loadBest(m).toLocaleString()}</em>}
-                    {m === 'race' && <em>{game.current?.profile.p.racesWon ?? 0} won</em>}
-                  </button>
-                ))}
-              </div>
-              <p className="mode-brief" id="mode-brief">{MODES[mode].blurb}</p>
-            </section>
-            <section className="menu-sec">
-              <p className="sect" aria-hidden="true">Loadout</p>
+          {/* the owner's 2026-10-21 reference: a glass rail on the left (brand, Drive, the loadout, the rest of the menu),
+              the player card top right, the live scene as the hero in the middle, and the four mode cards along the
+              bottom. On a phone it is one column with Drive pinned under the thumb (styles.css .menu-grid). */}
+          <div className="menu-grid">
+            <div className="m-brand">
+              <Brand hero />
+              <p className="lede">Orange County's real freeways and every interchange between them, from the driver's seat.</p>
+            </div>
+            <button type="button" className="player" aria-label="Your profile" onClick={() => setPanel('profile')}>
+              <span className="avatar" style={{ background: av.bg, color: av.fg }} aria-hidden="true">{(prof?.username || 'D').slice(0, 1).toUpperCase()}</span>
+              <span className="player-main"><b>{prof?.username || 'Driver'}</b><small>Level {level}</small>
+                <span className="xp-mini" aria-hidden="true"><i style={{ width: `${Math.min(100, (((prof?.xp ?? 0) - xpLo) / Math.max(1, xpHi - xpLo)) * 100).toFixed(1)}%` }} /></span></span>
+              <span className="player-credits"><b>{Math.floor(prof?.credits ?? 0).toLocaleString()}</b><small>credits</small></span>
+            </button>
+            <nav className="m-nav" aria-label="Main menu">
+              <button className="rail-btn primary" onClick={() => drive()}><Ico name="drive" />Drive<i className="chev" aria-hidden="true" /></button>
               <div className="picks">
-                <button className="pick" onClick={() => setPanel('driver')}>
-                  <small>Driver</small><b>{(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).name}</b><span>{ABILITIES[(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).ability].name}</span><i aria-hidden="true">›</i>
-                </button>
                 <button className="pick" onClick={() => setPanel('garage')}>
-                  <small>Car</small><b>{carById(game.current?.carId ?? 'rossini-gt').name}</b><span>{figures(carById(game.current?.carId ?? 'rossini-gt')).hp} hp</span><i aria-hidden="true">›</i>
+                  <Ico name="garage" /><small>Car</small><b>{carById(game.current?.carId ?? 'rossini-gt').name}</b><span>{figures(carById(game.current?.carId ?? 'rossini-gt')).hp} hp</span><i aria-hidden="true">›</i>
+                </button>
+                <button className="pick drv" onClick={() => setPanel('driver')}>
+                  <Ico name="driver" /><small>Driver</small><b>{(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).name}</b><span>{ABILITIES[(DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0]).ability].name}</span><i aria-hidden="true">›</i>
                 </button>
                 {mode === 'race' && (
                   <button className="pick" onClick={() => setPanel('course')}>
-                    <small>Race</small><b>{(COURSES.find((c) => c.id === settings.course) ?? COURSES[0]).name}</b><span>{(COURSES.find((c) => c.id === settings.course) ?? COURSES[0]).road}</span><i aria-hidden="true">›</i>
+                    <Ico name="bests" /><small>Race</small><b>{(COURSES.find((c) => c.id === settings.course) ?? COURSES[0]).name}</b><span>{(COURSES.find((c) => c.id === settings.course) ?? COURSES[0]).road}</span><i aria-hidden="true">›</i>
                   </button>
                 )}
                 {mode !== 'time' && mode !== 'race' && (
                   <button className="pick" onClick={() => { setExitRoad(null); setPanel('start'); }}>
-                    <small>Start on</small><Shield label={myExit ? exitRoadOf : start.label} /><span>{myExit ? `${myExit.text} exit` : start.blurb}</span><i aria-hidden="true">›</i>
+                    <Ico name="map" /><small>Start on</small><Shield label={myExit ? exitRoadOf : start.label} /><span>{myExit ? `${myExit.text} exit` : start.blurb}</span><i aria-hidden="true">›</i>
                   </button>
                 )}
               </div>
-              <div className="field"><label>Traffic</label><Seg value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
+              <div className="field traffic"><label>Traffic · simulated</label><Seg value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
+              <button className="rail-btn" onClick={() => setPanel('map')}><Ico name="map" />World Map</button>
+              <button className="rail-btn" onClick={() => setPanel('profile')}><Ico name="career" />Profile</button>
+              <button className="rail-btn" onClick={() => { setBoardMode(mode === 'free' ? 'survival' : mode); setPanel('board'); }}><Ico name="bests" />Bests</button>
+              <button className="rail-btn" onClick={() => setPanel('settings')}><Ico name="settings" />Settings</button>
+              <button className="rail-btn" onClick={() => setPanel('homes')}><Ico name="home" />Lifestyle</button>
+              {(() => { const n = game.current ? unread(game.current.profile.p, levelOf(game.current.profile.p.xp)) : 0;
+                return <button className="rail-btn" onClick={() => setPanel('phone')}><Ico name="phone" />Phone{n > 0 && <small className="new">{n} new</small>}</button>; })()}
+              <span className="rail-btn off" aria-disabled="true"><Ico name="online" />Online<small>Roadmap</small></span>
+            </nav>
+            <p className="m-foot"><span>Orange County</span><span aria-hidden="true">·</span><span>California</span></p>
+            <section className="m-modes">
+              <p className="mode-brief" id="mode-brief"><b>{MODES[mode].label}</b>{MODES[mode].blurb}</p>
+              <div className="modes" role="radiogroup" aria-label="Mode">
+                {(Object.keys(MODES) as Mode[]).map((m, i) => (
+                  <button key={m} className={'mode' + (mode === m ? ' on' : '')} role="radio" aria-checked={mode === m} aria-describedby={mode === m ? 'mode-brief' : undefined} onClick={() => setMode(m)}>
+                    <ModeArt kind={m} />
+                    <span className="mode-text">
+                      <i aria-hidden="true">{String(i + 1).padStart(2, '0')}</i>
+                      <b>{MODES[m].label}</b>
+                      <span>{MODE_SUB[m]}</span>
+                      {(m === 'survival' || m === 'time') && <em>Best {m === 'time' ? (loadBest(m) / 1609.344).toFixed(2) + ' mi' : loadBest(m).toLocaleString()}</em>}
+                      {m === 'race' && <em>{game.current?.profile.p.racesWon ?? 0} won</em>}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </section>
-            <div className="row dock">
-              <button className="btn primary go" onClick={() => drive()}>Drive</button>
-              <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
-              <button className="btn" onClick={() => { setBoardMode(mode === 'free' ? 'survival' : mode); setPanel('board'); }}>Bests</button>
-              <button className="btn" onClick={() => setPanel('profile')}>Profile</button>
-            </div>
             <div className="menu-aside">
               <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">
                 <small>Coming soon</small><b>Loop Lab</b><span>An arcade track with a loop-the-loop and boost pads, separate from OC. Take a look at the preview.</span><i aria-hidden="true">↗</i>
@@ -214,6 +285,8 @@ export function App() {
             <h2>Paused</h2>
             <div className="stack">
               <button className="btn primary" onClick={resume}>Resume</button>
+              <button className="btn" onClick={() => setPanel('phone')}>Phone</button>
+              <button className="btn" onClick={() => setPanel('map')}>World map</button>
               <button className="btn" onClick={() => setPanel('nav')}>Go to a freeway</button>
               <button className="btn" onClick={() => drive(mode)}>Restart</button>
               <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
@@ -249,6 +322,11 @@ export function App() {
                 <div><dt>Collisions</dt><dd>{result.collisions}</dd></div>
               </>}
             </dl>
+            {result.jobs && result.jobs.length > 0 && (
+              <ul className="jobs-done" aria-label="Jobs done">
+                {result.jobs.map((j) => <li key={j.from + j.job}><b>Job done for {j.from}</b><span>{j.job} · +{j.credits.toLocaleString()} credits</span></li>)}
+              </ul>
+            )}
             {!result.race && <Board runs={result.board.runs} mode={result.mode} highlight={result.board.rank} />}
             <div className="row">
               <button className="btn primary" onClick={() => drive(result.mode)}>Drive again</button>
@@ -329,6 +407,38 @@ export function App() {
 
       {panel === 'profile' && game.current && <ProfilePanel game={game.current} onClose={() => setPanel(null)} />}
 
+      {panel === 'phone' && game.current && (
+        <Phone name={game.current.profile.p.username || 'Driver'} credits={game.current.profile.p.credits} level={levelOf(game.current.profile.p.xp)} book={game.current.profile} onClose={() => setPanel(null)}
+          onJob={(j) => {
+            // a story job: back to the menu with its mode (and course or freeway) chosen, ready to Drive
+            if (j.kind === 'race') update({ course: j.course });
+            if (j.kind === 'drive' || j.kind === 'errand') update({ start: j.road, exit: '' });
+            game.current?.setErrand(j.kind === 'errand' ? j : null);   // an errand rides on the next Free Drive
+            setMode(j.kind === 'survival' ? 'survival' : j.kind === 'time' ? 'time' : j.kind === 'race' ? 'race' : 'free');
+            toMenu();
+          }}
+          onOpen={(a: PhoneApp) => {
+            if (a === 'radio') { resume(); setRadioOpen(true); return; }
+            if (a === 'feedback') { openFeedback(); return; }
+            if (a === 'board') setBoardMode(mode === 'free' ? 'survival' : mode);
+            setPanel(a);
+          }} />
+      )}
+
+      {panel === 'map' && game.current && (
+        <WorldMap game={game.current} driving={screen !== 'menu'} navTarget={navTarget} focusHome={mapHome} onClose={() => { setMapHome(undefined); setPanel(null); }}
+          onNavigate={(l) => navigate(l)}
+          onStartFreeway={(l) => { update({ start: l, exit: '' }); setPanel(null); }}
+          onStartExit={(k) => { update({ exit: k }); setMapHome(undefined); setPanel(null); }}
+          onRace={(id) => { update({ course: id }); setMode('race'); setPanel(null); }} />
+      )}
+
+      {panel === 'homes' && game.current && (
+        <Homes game={game.current} onClose={() => setPanel(null)}
+          onStart={(k) => { update({ exit: k }); setPanel(null); }}
+          onMap={(h) => { setMapHome(h.id); setPanel('map'); }} />
+      )}
+
       {panel === 'course' && (
         <div className="overlay center">
           <div className="panel">
@@ -349,7 +459,7 @@ export function App() {
         </div>
       )}
 
-      {panel === 'garage' && game.current && <GaragePanel game={game.current} onClose={() => setPanel(null)} />}
+      {panel === 'garage' && game.current && <GaragePanel game={game.current} settings={settings} update={update} onClose={() => setPanel(null)} onPick={() => rerender((n) => n + 1)} />}
 
       {panel === 'driver' && (
         <div className="overlay center">
@@ -391,57 +501,66 @@ export function App() {
         <div className="overlay center">
           <div className="panel wide settings">
             <h2>Settings</h2>
+            <div className="s-layout">
+              <nav className="s-rail" aria-label="Settings sections">
+                {SET_SECTIONS.map(([k, t]) => <button key={k} type="button" className={'s-tab' + (setSec === k ? ' on' : '')} onClick={() => { setSetSec(k); document.getElementById('set-' + k)?.scrollIntoView({ block: 'start', behavior: REDUCED ? 'auto' : 'smooth' }); }}>{t}</button>)}
+              </nav>
             <div className="sgrid">
               <div className="scol">
-                <section className="sgroup">
+                <section className="sgroup" id="set-graphics">
+                  <h3 className="sect">Graphics</h3>
+                  <div className="field"><label>Look</label><Seg value={settings.look} options={['ultra', 'hd'] as Look[]} labels={(l) => (l === 'ultra' ? 'Futuristic' : 'Realistic')} onChange={(l) => update({ look: l })} /></div>
+                  <div className="field"><label>Graphics</label><Seg value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q })} /></div>
+                  <p className="fine">{qualityNote(settings.quality)}</p>
+                  <Toggle label="Adaptive resolution (holds the frame rate)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
+                  <Toggle label="Show frame rate" value={settings.showFps} onChange={(v) => update({ showFps: v })} />
+                  <Range label="Field of view" min={-10} max={15} step={1} value={settings.fov} fmt={(v) => (v > 0 ? '+' : '') + v + '°'} onChange={(v) => update({ fov: v })} />
+                </section>
+                <section className="sgroup" id="set-hud">
+                  <h3 className="sect">HUD and map</h3>
+                  <div className="field"><label>Corner window</label><Seg value={settings.corner} options={['map', 'sky', 'off']} labels={(c) => (c === 'map' ? 'Road map' : c === 'sky' ? 'Sky camera' : 'Off')} onChange={(c) => update({ corner: c })} /></div>
+                  <div className="field"><label>Corner size</label><Seg value={String(settings.cornerSize)} options={['0', '1', '2']} labels={(v) => ['Small', 'Medium', 'Large'][Number(v)]} onChange={(v) => update({ cornerSize: Number(v) })} /></div>
+                  {!coarse && <Toggle label="On-screen pedals (for touch screens)" value={settings.showTouch} onChange={(v) => update({ showTouch: v })} />}
+                </section>
+                <section className="sgroup" id="set-world">
                   <h3 className="sect">World</h3>
                   <div className="field"><label>Time of day</label><Seg value={settings.time} options={['live', 'sunrise', 'day', 'sunset', 'night'] as TimeOfDay[]} labels={(t) => ({ live: 'Live', sunrise: 'Sunrise', day: 'Day', sunset: 'Sunset', night: 'Night' })[t]} onChange={(t) => update({ time: t })} /></div>
                   <div className="field"><label>Weather</label><Seg value={settings.weather} options={['clear', 'cloudy', 'rain', 'fog', 'mist', 'changing'] as Weather[]} labels={(w) => ({ clear: 'Clear', cloudy: 'Cloudy', rain: 'Rain', fog: 'Fog', mist: 'Mist', changing: 'Changing' })[w]} onChange={(w) => update({ weather: w })} /></div>
                   <p className="fine">Live puts the sun where it is over Orange County right now, from this device's clock. Weather is simulated here (no live weather feed). Rain cuts grip by about a fifth.</p>
                 </section>
-                <section className="sgroup">
+              </div>
+              <div className="scol">
+                <section className="sgroup" id="set-driving">
                   <h3 className="sect">Driving</h3>
                   <div className="field"><label>Gearbox</label><Seg value={settings.transmission} options={['auto', 'manual']} labels={(t) => (t === 'auto' ? 'Automatic' : 'Manual')} onChange={(t) => update({ transmission: t })} /></div>
                   <div className="field"><label htmlFor="handling">Handling</label>
-                    <div className="slider"><span>Arcade</span><input id="handling" type="range" min={0} max={1} step={0.05} value={settings.handling} style={fill(settings.handling, 0, 1)} onChange={(e) => update({ handling: Number(e.target.value) })} /><span>Sim</span></div>
+                  <div className="slider"><span>Arcade</span><input id="handling" type="range" min={0} max={1} step={0.05} value={settings.handling} style={fill(settings.handling, 0, 1)} onChange={(e) => update({ handling: Number(e.target.value) })} /><span>Sim</span></div>
                   </div>
                   <div className="field"><label>Ultra Realism</label>
-                    {game.current?.ultraOpen ? <>
-                      <Toggle label="On: the world closes in at speed" value={settings.ultra} onChange={(v) => update({ ultra: v })} />
-                      {settings.ultra && <div className="stack">
-                        <Toggle label="Tunnel vision above about 100 mph" value={settings.ultraTunnel} onChange={(v) => update({ ultraTunnel: v })} />
-                        <Toggle label="Camera shake at speed" value={settings.ultraShake} onChange={(v) => update({ ultraShake: v })} />
-                        <Toggle label="Muffled sound at speed" value={settings.ultraMuffle} onChange={(v) => update({ ultraMuffle: v })} />
-                      </div>}
-                    </> : <p className="fine locked">Opens at level 5 (you're level {game.current ? levelOf(game.current.profile.p.xp) : 1}).</p>}
+                  {game.current?.ultraOpen ? <>
+                  <Toggle label="On: the world closes in at speed" value={settings.ultra} onChange={(v) => update({ ultra: v })} />
+                  {settings.ultra && <div className="stack">
+                  <Toggle label="Tunnel vision above about 100 mph" value={settings.ultraTunnel} onChange={(v) => update({ ultraTunnel: v })} />
+                  <Toggle label="Camera shake at speed" value={settings.ultraShake} onChange={(v) => update({ ultraShake: v })} />
+                  <Toggle label="Muffled sound at speed" value={settings.ultraMuffle} onChange={(v) => update({ ultraMuffle: v })} />
+                  </div>}
+                  </> : <p className="fine locked">Opens at level 5 (you're level {game.current ? levelOf(game.current.profile.p.xp) : 1}).</p>}
                   </div>
                 </section>
-              </div>
-              <div className="scol">
-                <section className="sgroup">
-                  <h3 className="sect">Display</h3>
-                  <div className="field"><label>Graphics</label><Seg value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q })} /></div>
-                  <p className="fine">{qualityNote(settings.quality)}</p>
-                  <div className="field"><label>Corner window</label><Seg value={settings.corner} options={['map', 'sky', 'off']} labels={(c) => (c === 'map' ? 'Road map' : c === 'sky' ? 'Sky camera' : 'Off')} onChange={(c) => update({ corner: c })} /></div>
-                  <div className="field"><label>Corner size</label><Seg value={String(settings.cornerSize)} options={['0', '1', '2']} labels={(v) => ['Small', 'Medium', 'Large'][Number(v)]} onChange={(v) => update({ cornerSize: Number(v) })} /></div>
-                  <Toggle label="Adaptive resolution (holds the frame rate)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
-                  <Toggle label="Show frame rate" value={settings.showFps} onChange={(v) => update({ showFps: v })} />
-                  {!coarse && <Toggle label="On-screen pedals (for touch screens)" value={settings.showTouch} onChange={(v) => update({ showTouch: v })} />}
-                  <Range label="Field of view" min={-10} max={15} step={1} value={settings.fov} fmt={(v) => (v > 0 ? '+' : '') + v + '°'} onChange={(v) => update({ fov: v })} />
-                </section>
-                <section className="sgroup">
+                <section className="sgroup" id="set-sound">
                   <h3 className="sect">Sound</h3>
                   <Range label="Radio" min={0} max={1} step={0.05} value={settings.music} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ music: v })} />
                   <Range label="Master volume" min={0} max={1} step={0.05} value={settings.master} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ master: v })} />
                   <Range label="Engine" min={0} max={1} step={0.05} value={settings.engine} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ engine: v })} />
                   <Range label="Road and wind" min={0} max={1} step={0.05} value={settings.ambient} fmt={(v) => Math.round(v * 100) + '%'} onChange={(v) => update({ ambient: v })} />
                 </section>
-                <section className="sgroup">
+                <section className="sgroup" id="set-testing">
                   <h3 className="sect">Testing</h3>
                   <Toggle label="Owner mode (all cars unlocked, test builds only)" value={settings.owner} onChange={(v) => update({ owner: v })} />
                   <p className="fine">Every car in the garage to drive, without credits, a level or a slot. Your saved garage, credits and level stay as you earned them. A switch on this device, not a sign-in; opening the game with #owner turns it on.</p>
                 </section>
               </div>
+            </div>
             </div>
             {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause.</p>}
             <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div>
@@ -485,26 +604,84 @@ function Board({ runs, mode, highlight }: { runs: { score: number; distance: num
   );
 }
 
+// a rim style as a small face-on drawing for the Wheels tab (the 3D wheel is on the car behind the panel)
+function RimIcon({ style }: { style: string }) {
+  const n = style === 'five' ? 5 : style === 'blade' ? 7 : style === 'cl10' ? 10 : style === 'mesh' ? 20 : 10;
+  const spokes = style === 'aero' ? [] : Array.from({ length: n }, (_, k) => {
+    const pair = style === 'twin5' || style === 'multi' || style === 'mesh', base = (pair ? Math.floor(k / 2) / (n / 2) : k / n) * Math.PI * 2, s = k % 2 ? 1 : -1;
+    const a0 = base + (style === 'mesh' ? s * 0.15 : pair ? s * 0.05 : 0), a1 = base + (style === 'mesh' ? -s * 0.15 : style === 'blade' ? 0.6 : pair ? s * (style === 'multi' ? 0.17 : 0.14) : 0);
+    const p = (a: number, r: number) => `${(20 + Math.sin(a) * r).toFixed(2)} ${(20 - Math.cos(a) * r).toFixed(2)}`;
+    return style === 'blade' ? `M${p(a0, 6)} Q${p(base + 0.15, 11)} ${p(a1, 15.5)}` : `M${p(a0, 6)} L${p(a1, 15.5)}`;
+  });
+  const w = style === 'five' ? 2.6 : style === 'blade' ? 2.2 : style === 'mesh' ? 0.9 : 1.4;
+  return (
+    <svg className="rim-ico" viewBox="0 0 40 40" aria-hidden="true">
+      <circle cx="20" cy="20" r="18.5" className="tyre" /><circle cx="20" cy="20" r="16" className="lip" />
+      {style === 'aero' && <><circle cx="20" cy="20" r="15" className="disc" />{[0, 1, 2, 3, 4].map((k) => { const a = k / 5 * Math.PI * 2 + 0.3; return <path key={k} className="slot" d={`M${20 + Math.sin(a) * 7} ${20 - Math.cos(a) * 7} Q${20 + Math.sin(a + 0.3) * 11} ${20 - Math.cos(a + 0.3) * 11} ${20 + Math.sin(a + 0.55) * 13.5} ${20 - Math.cos(a + 0.55) * 13.5}`} />; })}</>}
+      {spokes.map((d, k) => <path key={k} d={d} className="spoke" strokeWidth={w} />)}
+      <circle cx="20" cy="20" r={style === 'multi' ? 5 : 4} className="hub" />
+    </svg>
+  );
+}
+
 // the garage (what you own, pick one) and the showroom (what credits can buy, by level)
-function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
+function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; settings: Settings; update: (p: Partial<Settings>) => void; onClose: () => void; onPick: () => void }) {
+  const [tab, setTab] = useState<'cars' | 'paint' | 'wheels' | 'upgrades' | 'custom'>('cars');
   const book = game.profile;
   const [, bump] = useState(0);
   const [msg, setMsg] = useState('');
-  const p = book.p, level = levelOf(p.xp), slots = slotsFor(level), owner = game.ownerMode;
-  const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); };
+  const p = book.p, level = levelOf(p.xp), slots = garageSlots(level, p.homes), owner = game.ownerMode;
+  const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); onPick(); };
   return (
     <div className="overlay center">
       <div className="panel profile">
         <h2>Garage{owner && <span className="chip">Owner mode</span>}</h2>
-        <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.vehicles.length} of {slots} slots (more open every 4 levels). Credits come from driving; nothing here costs real money.</p>
+        <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.vehicles.length} of {slots} slots (more open every 4 levels, and with each home). Credits come from driving; nothing here costs real money.</p>
         {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only). Your saved garage doesn't change; turn it off in Settings.</p>}
         {msg && <p className="good" role="status">{msg}</p>}
-        <div className="drivers">
+        <Seg value={tab} options={['cars', 'paint', 'wheels', 'upgrades', 'custom']} labels={(t) => ({ cars: 'Vehicles', paint: 'Paint', wheels: 'Wheels', upgrades: 'Upgrades', custom: 'Customize' })[t]} onChange={setTab} />
+        {tab === 'paint' && (() => {
+          // the car you drive: its six paints, applied live to the car behind the panel and kept for that car
+          const car = carById(game.carId), now = paintFor(car, settings.paints), list = PAINTS[car.id] ?? [];
+          return (
+            <div className="paints">
+              <p className="fine">{car.name}: {list.find((x) => x.hex === now)?.name ?? 'its own paint'}. The car behind this panel takes it now.</p>
+              <div className="paint-grid" role="radiogroup" aria-label={`Paint for the ${car.name}`}>
+                {list.map((x) => (
+                  <button key={x.hex} type="button" role="radio" aria-checked={x.hex === now} className={'paint-chip' + (x.hex === now ? ' on' : '')}
+                    onClick={() => { update({ paints: { ...settings.paints, [car.id]: x.hex } }); onPick(); }}>
+                    <span className="sw" style={{ background: '#' + x.hex.toString(16).padStart(6, '0') }} /><b>{x.name}</b>
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+        {tab === 'wheels' && (() => {
+          // the car you drive: its own rims and a second style, fitted live to the car behind the panel and kept for that car
+          const car = carById(game.carId), now = wheelFor(car, settings.wheels), list = WHEELS[car.id] ?? [];
+          return (
+            <div className="paints">
+              <p className="fine">{car.name}: {list.find((x) => x.style === now)?.name ?? 'its own rims'}. The car behind this panel wears them now.</p>
+              <div className="paint-grid wheel-grid" role="radiogroup" aria-label={`Wheels for the ${car.name}`}>
+                {list.map((x, i) => (
+                  <button key={x.style} type="button" role="radio" aria-checked={x.style === now} className={'paint-chip wheel-chip' + (x.style === now ? ' on' : '')}
+                    onClick={() => { update({ wheels: { ...settings.wheels, [car.id]: x.style } }); onPick(); }}>
+                    <RimIcon style={x.style} /><b>{x.name}</b><small>{i === 0 ? 'Factory · ' : ''}{x.note}</small>
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+        {tab === 'upgrades' && <p className="fine soon-note">Upgrades (engine, tyres, aero) bought with credits are coming later. Nothing here costs real money.</p>}
+        {tab === 'custom' && <p className="fine soon-note">Customize (calipers, tint, liveries in our own designs) is coming later. Nothing here costs real money.</p>}
+        {tab === 'cars' && <div className="drivers">
           {garageCars(owner, p.vehicles).map((c) => {
             const f = figures(c), owned = p.vehicles.includes(c.id), driving = game.carId === c.id, locked = level < c.level;
             return (
               <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '')}>
-                <div className="carhead"><span className="paint" style={{ background: '#' + c.paint.toString(16).padStart(6, '0') }} /><b>{c.name}</b></div>
+                <div className="carhead"><span className="paint" style={{ background: '#' + paintFor(c, settings.paints).toString(16).padStart(6, '0') }} /><b>{c.name}</b></div>
                 <small>{f.hp} hp · {f.zeroSixty} s 0-60 · {f.topMph} mph · {c.mass.toLocaleString()} kg</small>
                 <span>{c.blurb}</span>
                 <div className="row">
@@ -518,7 +695,7 @@ function GaragePanel({ game, onClose }: { game: Game; onClose: () => void }) {
               </div>
             );
           })}
-        </div>
+        </div>}
         <p className="fine">The makes are our own. Each has its own body and interior, and its own numbers underneath.</p>
         <div className="row"><button className="btn primary" onClick={onClose}>Done</button></div>
       </div>

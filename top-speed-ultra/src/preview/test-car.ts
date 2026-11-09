@@ -30,6 +30,7 @@ const view = q.get('view') ?? 'beauty';
 const quality = (q.get('q') ?? 'high') as 'high' | 'phone';
 const car = (q.get('car') ?? 'rossini-gt') as CarId;
 const paint = q.get('paint') ? parseInt(q.get('paint')!, 16) : undefined;
+const rim = (q.get('rim') ?? undefined) as import('./car-wheel').WheelStyle | undefined;   // a garage rim style
 const portrait = q.get('portrait') === '1';
 const debug = ['side', 'top', 'front', 'lineup', 'lineup-top', 'back-ortho', 'wheel-side', 'top-full'].includes(view);
 const wantWorld = !debug && q.get('world') !== '0';
@@ -126,7 +127,7 @@ if (interior) {
   if (view === 'lineup') { const mid = -8.1 + 5.4 * (CAR_IDS.length - 1) / 2, span = 5.4 * (CAR_IDS.length - 1) + 5.4; camera.fov = 2 * Math.atan(span / 2 / camera.aspect / 180) * 180 / Math.PI; look(L(-180, 0.7, mid), L(0, 0.7, mid)); }
   if (view === 'lineup-top') { camera.fov = 7.5; look(L(0, 180, 0.01), L(0, 0, 0)); }
 } else {
-  const c = buildCar({ car, paint, quality });
+  const c = buildCar({ car, paint, quality, rim });
   frame.add(c); part = c;
   if (q.get('lit') === '1') {
     const m = c.userData.materials as Record<string, THREE.MeshStandardMaterial>;

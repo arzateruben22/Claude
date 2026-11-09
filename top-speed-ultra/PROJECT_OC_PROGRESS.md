@@ -4,6 +4,43 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-09: sync merge of `origin/claude/hypercar` into this lane's M2 (branch `claude/hypercar`, not pushed)
+
+Merged the other session's 91 commits (`91421fb`..`67e65b9`: per-car atmospheres and driver colours, the Ultra grade,
+`PROJECT_OC_STYLE_GUIDE.md` with ULTRA tokens, the hypercar's live display in `car-gauges.ts` and the Look setting, the
+cinematic menu camera, the World Map, the Wheels tab, hands, wheels, physics, story and the rest) into this lane's M2
+(`8f57a02`). Still a **procedural model built in code**, not a finished 3D asset. Conflicts in `PlayerCar.ts`,
+`car-body.ts`, `car-tex.ts`, `car.ts` and this log; `cockpit.ts`, `car-shape.ts`, `test-car.ts` and `regression.mjs`
+merged on their own. Every side's work kept; where both finished the same M2 item:
+
+- **Blade colours: theirs** (emissive edge 0x0c4fb8, body 0x1e6fd8, core 0x5eb8ff, the car's new LED family).
+  Judged on the same night front render with each texture (`tests/out/preview/m2-sync/ab-blade-theirs-front-night.png`,
+  `ab-blade-ours-front-night.png`, crops `ab-blade-crops-x3.png`). Theirs reads as a white-blue core in a deeper blue
+  glow, as the sheet's FRONT does; ours read flatter mid-blue. Lit blade pixels average (141,164,195) against ours'
+  (139,160,190); the sheet's strips sample about (122,152,190). **Kept from this lane:** the blade geometry (the tip
+  and socket taper), the socket's blue spill (re-tinted to 0x1e6fd8) and the smoked lens at 0.3 of the sky.
+- **LED strips: theirs** (`HYPER.led` with an `edge` stop, `ledTex`/`M.led` take it). This lane had not changed them.
+- **Beams: both.** This lane's positions from the blades (`beamAt`); their ice-tinted beam colour and road pool.
+- **Red bar: this lane's** (levels 0.5 → 6, the brake haze `brakeGlow` with `glowTex`); theirs had not changed it.
+- **Interior: both.** This lane's seat drop, roof glass and bulkhead fixes; their carbon plinth and amb line at 1.4.
+- **Binnacle: theirs.** Their live driver display replaces this lane's tach with "O C". The header comment in
+  `cockpit.ts` now says so.
+- **Fixed after the merge:** their display, centred on the driver, reached x 0.01 m and ran into this lane's M5 gauge
+  pod at x 0.06 m. In the seat and dash frames the pod's bezel cut the display's top-right corner. The pod moved to
+  x 0.16 m and is now clear.
+
+Checks: `npx tsc --noEmit` (both configs) clean; `npm run build` (artifact md5 234e1b0b…);
+`node tests/dynamics.mjs` **1742 passed, 0 failed**; `npm test -- --only=boot,render,phone` **25/25 passed** (boot 29 s,
+render 676 s, phone 141 s; the M2 check "eye -0.27,0.96,0.1, beam 0.71,0.49,-2.25; bar 0.5 → 6 and its haze; right
+signal lit 0.5 s into a lane change (0.54 m); … left driving at 30.02 m/s"; log `tests/out/m2-sync/suite-boot-render-phone.log`).
+That suite run was **before** the pod move. The move is one constant, re-type-checked and rebuilt, but not re-run in
+the suite.
+
+Frames (960 × 540, one browser, `tests/out/m2-sync/shoot.mjs`), all looked at:
+`tests/out/preview/m2-sync/hyper-night-{beauty,rear,seat,dash}.png`. Seat and dash were re-shot after the pod move.
+Exterior 29 calls / 251,430 triangles (the other session's wheels add about 4,900 over M2's 246,566). Interior
+60 calls / 167,389.
+
 ## 2026-10-20 to 11-09: the OC Hypercar's lights and cockpit (hypercar M2, branch `claude/hypercar`)
 
 Still a **procedural model built in code**, not a finished 3D asset. The first M2 pass was cut off by a usage pause
@@ -133,6 +170,651 @@ M2 check in them. Every number below is from the code as it stands.
   - the optional tyre lettering
   - the pressure gauge's face (M5)
   - the rest of M1b (nose, bonnet, splitter, side scoop, plan, rear), which waits for the fidelity pass
+
+## 2026-10-27 (05:30 UTC): the sky camera fixed on iPhone and desktop; a roomier phone HUD and seat view (branch `ui/phone-space`)
+
+- **The owner:** "Sky view camera still doesn't show correctly on mobile view and I'm not too sure on desktop so let's fix
+  that. Also we need more space on the phone when navigating as well as the pov driver, everything is too clunky." Their
+  iPhone, through the OC Freeway shared link (the main link).
+- **Built on the always-on session's claude/hud-pov** (597c495 seat view, 2258dfc HUD condense; stopped, never reviewed).
+  The new commits are on `ui/phone-space`:
+  - 1f28fc9: the sky camera has its own canvas inside the frame.
+  - 4adcf42: the guidance is shown whole and with its lane; the seat view is framed below the notch.
+  - 0ddee6e: no blank frame on a resize; a self-checked copy with a direct fallback.
+- **The sky camera's causes**, all present in main link v9 (local/live-preview ef9f1b1):
+  - three r160's setScissor/setViewport already multiply by the pixel ratio, and renderCorner multiplied again. So the
+    picture landed at pr times its place and size: an empty frame at Medium on an iPhone (pr 1.5) and on desktop at Low
+    (pr 0.75).
+  - The square painted under the DOM frame poked past its rounded corners.
+  - At Low it rendered at 1 px per CSS px (blocky at dpr 3).
+  - The Minimal HUD slid the window away 4 s after every tap.
+  - Now the view renders at the window's size times the device pixel ratio (capped at 2 on Low, 3 above) and is copied
+    into a canvas inside the frame.
+  - A self-check on the third copy compares 49 sample points with the WebGL buffer. If the copy is blank (a WebKit
+    risk), it falls back for the session to drawing directly into the main canvas inside the frame's box, in CSS pixels.
+    Forced with `?skyfallback=1` or `__game.setSkyFallback(true)`.
+  - A ResizeObserver handles iOS's late layout; resizes that change nothing return early, so no cleared frame is ever
+    shown.
+- **Room on the phone:** one compact plate at the top holds the speed, the gear, the next manoeuvre with its distance and
+  lane ("4.9 mi KEEP RIGHT"), the whole road sign and the ETA. Radio, phone and clock are a tap away. The road ahead is
+  clear. The portrait seat view puts the horizon below the top safe area.
+- **Judged:** an independent judge (Opus) said keep. Its two severity-2 notes, the resize flicker and the WebKit copy
+  risk, were then fixed in a repair round.
+- **Verified** (headless Chromium, SwiftShader, an iPhone UA at dsf 3 for 393x852 and 430x932, plain, with the safe-area
+  insets forced, and inside an iframe like the claude.ai viewer; plus 852x393, 1280x720 and 1440x900):
+  - tsc clean; render 15/15; phone 12/12. The phone group includes the sky picture checks, the copy self-check (49/49)
+    and the forced fallback (0.68 levels from the copy against 71 for the road).
+  - 42 after shots with no page errors.
+  - Earlier on 4adcf42: boot 6/6, launch 11/11.
+  - **Seat-view test changed:** the "seat view: horizon, cluster and windscreen clear" check now waits for the 0.5 s
+    camera blend to finish. It had raced the frame rate on the repair build.
+- **Not verified:**
+  - **Real iPhone:** not tested on a real iPhone or in WebKit (none installed here). The self-check and fallback exist
+    for that.
+  - **Seat view:** in portrait the cockpit, windscreen, top band and touch controls take about 95% of the height. More
+    road there needs a cockpit or touch-control redesign: an owner decision.
+  - **Desktop seat view:** the destination card still overlaps the windscreen's right edge, as before.
+
+## 2026-10-25 (23:35 UTC): the thumbs, wheels and physics in the main game (main link v9); paused by the owner
+
+- **The main game.** The owner asked for this branch's graphics in the game itself. claude/hypercar is merged into
+  local/live-preview, the main game's branch, as ef9f1b1. It was pushed as a fast-forward from the always-on session's
+  8d5ba6c.
+  - **Conflicts:** two only. In PlayerCar.ts the store's paint finish and the cockpit's pause flag are both kept; the
+    progress log keeps both sides. Nothing outside top-speed-ultra/ changed.
+  - **Verified on that build:** tsc and the build clean; boot 6/6, abilities 4/4, survival 8/8, race 6/6, render 15/15,
+    launch 11/11.
+  - **Published** to the main link as **version 9**. The live v8 matched the build of 8d5ba6c exactly (apart from the
+    page wrapper), so nothing in it was lost. The store and the owner unlock are kept.
+  - The always-on session (session_01NkQ41gebWX6mPbmCQZBc81) was told.
+  - **Agreed with that session:** its unreviewed HUD and seat-view work lives on claude/hud-pov and reaches
+    local/live-preview only once kept. Whoever lands last builds and publishes from the tip.
+- **The weekly limit (2026-10-22 ~17:00 to 2026-10-25 22:00 UTC)** stopped the live integration before its judge. The
+  hourly task was switched off while the session ran on overage. At 22:10 the owner said "Keep going", accepting the
+  overage. The integration (fourth start), the Retro finish and overdrive round 3 (face/eyes) were resumed.
+- **Paused by the owner at 23:32 UTC ("Okay take a pause").** All three were stopped before their judges.
+  - **Live integration (integrate/live 48d4262, pushed).** At 48d4262 every core group had passed (boot,
+    interchanges, survival, race, abilities, progression, render, phone, launch; 2026-10-22). The live group passed
+    again in the fourth start. livephone was running; live/ npm test, the story test and the judge had not run.
+  - **Retro (retro/port d21573d, pushed).** It is brought up to date with claude/hypercar. tsc and the build were clean,
+    and the boot, render and phone groups passed in its verify step. The shots, defaults and perf checks and the judge
+    had not finished.
+  - **Face/eyes round 3 (fable/face b5ac6a2, pushed).** The round-3 fixes for the re-judge's defects are uncommitted
+    in its worktree (.claude/worktrees/fable-face). A copy is saved at scratchpad/pause-2335/fable-face.patch, plus
+    morphs.ts.
+    - Done: the beard's side box ramps and the neck step; a leaf morphs.ts for the import cycle; the beard tufts
+      taper; the brow guard.
+    - Not done: the grey-beard speckle; the after shots; the judge.
+  - Hair and body did not start.
+- **Not yet:** claude/always-on is still unconnected; that waits on the integration landing.
+
+## 2026-10-22 (13:45 UTC): physics landed (dt-independence); the owner asked for a pause once tasks complete
+
+- **The owner (13:38 UTC): "Take a pause once tasks are complete."** The work in flight finishes and lands if judged
+  keep: the live integration, the face/eyes judge, and this physics landing. Nothing new starts: hair, body and the
+  Retro finish wait. A watcher stops overdrive round 2 if it reaches hair or body. When the in-flight work is done, the
+  hourly task and the Sunday check-in are switched off.
+- **Landed `fable/physics` on `claude/hypercar`** as e1c2270 (2 commits, `src/game/vehicle/Physics.ts` only). The judge (Opus)
+  returned keep and reproduced every claim byte for byte.
+  - **What changed:**
+    - A step longer than 1/120 s now runs as equal 1/120 s steps with the controls held, so a 60 Hz caller gets the
+      120 Hz car. Measured 60 against 120 Hz: 0-60 within 0.37 % (was 2.94 %), 0-100 0.22 % (1.08 %), quarter mile
+      0.10 % (0.55 %), top speed 0.00 %, 100-0 0.11 %, lateral g 0.000 g, catch time within 9.8 % (the scripted driver
+      decides at 60 Hz).
+    - A barrier grind costs per second, not per step. 240 against 120 Hz, the barrier's share of the speed lost is
+      within 0.4-3.0 % in the judge's harder press (base: up to +99 %).
+  - **In the game nothing changes for a player:** the game always steps at exactly 1/120 s, a path the judge proved
+    bit-identical. The value is that the model now meets the dynamics design's dt-independence requirement and protects
+    any future caller at another rate.
+  - **The judge's guards** (f00ae9f, by the coordinator):
+    - a non-finite step is ignored, and a long one is capped at 12 steps (`step(Infinity)` used to loop forever);
+    - a landing counts as a fresh barrier touch.
+
+    Both are bit-identical at 120 Hz.
+  - **Verified on the merged build:**
+
+    | Check | Result |
+    | --- | --- |
+    | `node tests/dynamics.mjs` | 1742 passed, 0 failed; the JSON byte-identical to the judge's and to before (sha256 e28f83e5) |
+    | `--hz=60 --only=perf,drift` | 1163 passed, 13 failed, byte-identical to the judge's (base: 31 failed). The 13 are harness artefacts |
+    | survival | 7/7 |
+    | race | 6/6 |
+
+    The 13 harness artefacts: the 60 Hz kTop sampling aliases on the rev limiter (8 top-speed rows with tops equal to
+    120 Hz's), plus driver-rate checks.
+  - **Not done:**
+    - **Plan item 1** (an implicit lateral/yaw step, which takes the low-speed yaw snap from 2,651 to 166 deg/s², under
+      the tyres' 558 ceiling) is built but not committed: it fails 82 Sim catch checks. That's the owner's call (see the
+      handoff's "Decisions waiting").
+    - **Harness fixes for the tests lane:**
+      - the advisory rows print `[object Object]`;
+      - kTop should be sampled per 1/120 s;
+      - a car travelling backwards reads a drift angle of 0.
+    - The audit's step-cost label was out by 1,000: the model costs about 0.018 % of one core, not 21 %.
+
+## 2026-10-22 (12:45 UTC): the overdrive's round 1 landed: the thumbs and the wheels
+
+- **Landed on `claude/hypercar`** after independent adversarial judges, each running on Opus (the session's model since
+  the Fable limit at 05:28), returned **keep**:
+  - `fable/wheels` as 7ab71b5 (8 commits, `src/preview/car-wheel.ts` only);
+  - `fable/hands` as fb35439 (13 commits: `hands.ts`, `hands-sdf.ts`, `hands-geo.ts`, `hands-skin.ts`, `test-hands.ts`
+    and new `tools/preview-hands-*` tools).
+- **The thumbs (the owner's "Fix the thumbs still").**
+  - Each thumb lies along the rim's front face toward twelve, with the nail square to the driver's eye (cosine 0.98 m /
+    0.97 f) and the tip's pad on the leather.
+  - The first web space is a saddle instead of a mound, so the rim shows in a notch between the index knuckle and the
+    thumb (no eye ray through the web meets the rim, 0/105).
+  - There's an IP knuckle and crease that also reads on the shaded thumb in the game (luminance 50 at the IP against
+    61-66 beside it, where before there was no dip), and a wider nail.
+  - Off the wheel (the Closer's watch check, the Ace's wave) a thumb bone curls the thumb into the fist, so those poses
+    no longer read as a thumbs-up. On the wheel the render is pixel-identical to the pass before it.
+  - **Cost:** 664 triangles (+0.9 %, 75,744 to 76,408 in the seat view), no new draw calls, 2 more skeleton bones, still
+    no per-frame allocation.
+  - **The judge** re-rendered the seat view at the game's framing (`?frame=game`, 1170x2532 High): pixel-identical to the
+    implementer's shot. It then built the game and shot it in game at the owner's capture size (393x852 at 3x).
+- **The wheels.**
+  - The Aero Disc's banding is gone: the cover is re-meshed as polar grids (max triangle aspect 3.6, was 499).
+  - Every spoke style has crowned faces that catch a highlight; twin5, cl10 and blade are forged-wide.
+  - The five-bolt hub boss is smaller (34 % of the rim, was 41 %), with chamfered nuts and a valve stem on every open
+    style.
+  - Round 7 x 8 mm drill holes on the discs instead of ovals.
+  - The caliper wordmarks sit on a strip of their own aspect (stretch 1.00, was 0.38).
+  - Phone tyres drop their groove geometry: about 13 % fewer triangles per car on phone (GT 141,920 to 122,384 for all
+    five cars' wheels), with the sidewall pixel-identical.
+  - **Cost:** High +388 to +1,228 triangles a wheel, no new material keys, so no new draw calls.
+  - **The judge** re-rendered the headline shot (GT twin5 wheel-side, High): byte-identical.
+- **The judges' one-line hooks** (fbb60a7, outside the two branches' files):
+  - the hands' off-wheel blend and wave hold while the game is paused (`CockpitState.paused`, so `setWheelAngle` gets
+    0 then);
+  - the calipers pick their wordmark strip by the car's brand (`brand: P.brand` in `car.ts` and `PlayerCar.buildWheels`);
+  - a NaN step can no longer leave the arms at NaN.
+- **Verified on the merged build** (fbb60a7; tsc clean, `npm run build` clean), one group at a time:
+
+  | Group | Result |
+  | --- | --- |
+  | boot | 6/6 |
+  | abilities | 4/4 (fires the abilities' off-wheel hand poses) |
+  | launch | 11/11 (the Wheels tab check included) |
+  | render | 14/14 |
+
+  Both branches had also passed these groups at their own heads. The render group's "reset" check failed once on each
+  branch (29.21 against a 30 m/s pre-reset speed) and passed on the re-run: a load flake, not these changes.
+- **Not done or not proven, honestly:**
+  - **Hands:**
+    - The thumb's IP and MCP stand 2.5 and 5-7 mm off the leather; only the tip touches. It's hidden from the seat.
+    - The thumb-bone weights change sharply across the web in the off-wheel poses; smoothing them is queued.
+    - The Wrench's knee pose curls the thumb more than it should.
+    - The nail reads near-white under the test page's light.
+  - **Wheels:**
+    - A 1 px dashed seam on the twin5's Y stem at close range.
+    - The crown stands up to 2 mm proud of the boss at the spoke root.
+    - The recess disc floats 0.7-4.9 mm over the sloped boss.
+    - On the phone chase camera the wheels look the same; the gain shows in the garage and close views.
+  - No real-phone frame rates (SwiftShader only).
+- **Republished** the test build (version 9, from fbb60a7).
+- **Not yet merged into `claude/always-on`, on purpose.** A trial merge conflicted in `Game.ts`, `settings.ts`, `App.tsx`,
+  `HUD.tsx`, `styles.css` and three docs. The two branches split at 9cdcf07. Since then, always-on's 18 game commits are
+  all in the live server's code by patch, except decision 16 (`PROJECT_OC_DECISIONS.md`). That code reaches this branch
+  only through `integrate/live`, a plain commit, so git can't see the overlap. Resolving now would either undo
+  always-on's live work or repeat the integration's work by hand. The merge was aborted. It happens right after
+  `integrate/live` lands: game files resolve to this branch's versions, decision 16's lines are kept, and the diff outside
+  `top-speed-ultra/` stays empty.
+- **A lesson from the run.** At 11:40 the overdrive was stopped and resumed with the hands and wheels judges moved ahead
+  of the other implementers. A Workflow resume replays saved results only until its first new agent call; after that
+  everything runs live. So the face, physics, hair and body audits ran live on Fable and failed at once (no Fable usage
+  spent). Round 2 (`overdrive-round2.js`, from 12:15) carries those four audits inline and makes no Fable calls:
+  - physics and face/eyes first;
+  - then hair and body, branched from the face head if face is kept.
+
+## 2026-10-22 (08:40 UTC): the five-hour limit again; the integration is committed, resumed for its proofs
+
+- **About 07:05 UTC:** the session's five-hour limit stopped all three agents; it reset at 07:50.
+- **What the agents had committed (all pushed):**
+  - **`integrate/live`:**
+    - 1b0bc0c, the integration itself: `top-speed-ultra/` only from `claude/live-server` db324db, a regular commit
+      with nothing outside the game folder;
+    - Live in this branch's navigation: the phone's Online app, the radial menu's Online wedge, the live drive;
+    - the live side's menu details on the cinematic menu, the account avatar in the car's accent;
+    - the Live panel usable mid-drive; live drivers' names on the World Map; the control rail placed under the sky
+      camera;
+    - the tests moved to the unified menu (the live groups open Live from the rail's Online row; the mode cards' arrow
+      keys; the mid-drive Live panel from the phone).
+  - **`fable/hands`:** the thumb now separates from the hand (a web valley beside the proximal phalanx) and its joint
+    reads (two segments, a crease, a spatulate tip), plus measuring tools.
+  - **`fable/wheels`:** the OC mark unstretched on the hypercar's calipers and Aero Disc.
+- **Not yet done:** none of this is proven by a full test run or judged. Those runs' results were lost with the
+  agents, so the resumed integrator re-runs every core group and the live groups before its judge. Hands and wheels
+  continue to their proofs and judges.
+
+## 2026-10-22 (05:27 UTC): a container restart; the work kept and resumed
+
+- **05:20 UTC:** the session's container restarted and every running agent stopped. The disk survived.
+- **Kept, and now pushed:**
+  - `fable/hands`: 5 more commits, including a node check for the thumbs and the first web space
+    (`tools/preview-hands-web.mjs`) and a merge of `claude/hypercar`;
+  - `fable/wheels`: brought up to `claude/hypercar`;
+  - `retro/port`: brought up to `claude/hypercar`.
+- **The live integration** (`integrate/live`) was mid-merge: every path outside `top-speed-ultra/` already restored, and
+  all eight conflicts resolved in the working tree but unstaged. The rerun reviews those resolutions against both sides
+  before committing, then runs every core group plus the live ones (the live-server session's core run on db324db had
+  been cut off).
+- **05:28: the Fable model's usage limit was reached.** Every relaunched agent failed at once, before doing any work. The
+  remaining agents (the implementers, judges, the critic and the integrator) now run on Opus, the session's model. The
+  seven audits stay Fable's, replayed from the journal. Which model judged each landing will be named in its entry.
+- **Relaunched at 05:27, then on Opus at 05:31,** at most three agents at once: the integration and the overdrive (its implementers continue
+  their existing branches). The Retro finish waits for the first free slot. No log says whether memory caused the
+  restart; the cap is a precaution.
+
+## 2026-10-21 (23:02 UTC): paused by the owner
+
+The owner said "Pause". Both workflows were stopped and the hourly task switched off. The 00:20 stop-and-ask check-in was
+deleted. Nothing was merged: no branch had reached a judge. Where each piece stands (all committed, no uncommitted
+scraps; both workflows resume from their journals):
+
+- **Hands, `fable/hands`** (worktree `.claude/worktrees/wf_ba9f2603-ef8-8`), unjudged:
+  - c285d6e: the thumbs lie along the rim, nails to the driver, the web open (the owner's "fix the thumbs");
+  - cfeee35: the pose allocates nothing per frame; blend and wave run on the game's dt, so they stop while paused;
+  - 2a52270: the test page frames the seat view like the game (`?frame=game`).
+  - Its proof renders, suite groups and judge had not run.
+- **Wheels, `fable/wheels`** (worktree `-10`), unjudged:
+  - c2350ef: the Aero Disc cover re-meshed as polar grids (no banding);
+  - e5ea194: crowned, forged-width spoke faces;
+  - 8ff6257: round drill holes, the caliper wordmark, chamfered nuts, a valve stem;
+  - 7599805: a plain tread band on the phone tier.
+- **Retro, `retro/port`**: the three port commits plus a merge of `claude/hypercar` (960dc12). Its verification against
+  the merge bar had not finished.
+- **Audits done** for hands, signs, wheels, face, physics, hair and body; the signs spec delivered (bdc9b47).
+- **Not started:** the face, physics, hair and body implementations; the critic.
+
+## 2026-10-21 (21:55 UTC): both workflows cut off by the usage limit; resumed
+
+- **What the limit cut off.** At about 18:30 UTC the session's five-hour usage limit stopped every running agent; it
+  reset at 21:50 UTC.
+  - **The Fable overdrive:** six audits had finished (hands, signs, wheels, face, physics, hair, under
+    `scratchpad/fable/<area>/before/`). The body audit, the signs spec, every implementer and the critic were cut off.
+  - **The hands implementer** had begun only plan item 1, the thumb re-solve parameters, uncommitted and unproven. It
+    was saved as `scratchpad/fable/hands/partial-thumb-params.patch` and the worktree removed so the rerun starts clean.
+  - **The Retro port** had made its three commits on `retro/port` (9e29640 the render style and its settings pieces,
+    619ae83 Game's hooks and the switch under Low, c6d03c4 the two suite checks and `tests/modes-retro.mjs`) but proved
+    nothing.
+- **The 75 % checkpoint** (20:35) fired during the outage. The owner then said "continue and don't stop", so it is
+  replaced by a usage guard: no new agents while the limit is hit.
+- **Resumed at 21:55.**
+  - The overdrive resumes from its journal: the six audits replay, and the rest runs live.
+  - A new workflow verifies the Retro port on its own branch against the agreed merge bar (tsc clean; boot, render and
+    phone groups pass), then an adversarial judge decides.
+  - Nothing from either is merged yet.
+
+## 2026-10-21 (17:45 UTC): the online board (live server), from server-observed poses only
+
+Agreed with the live-server session (session_014twwPd83rJxBkHT9T8yEiQ, which owns `claude/live-server`): this session
+builds the board as new files; that session wires it into `server.mjs` and the menu. A Fable agent designed and built it
+(anti-cheat is Fable-class) on **`claude/live-board`** (cut from `claude/live-server` 6d16421; commits 9c76011, 99c5fd4).
+
+- **Files.** Four new files only: `live/board.mjs`, `live/test/board.test.mjs`, `src/live/board.ts` (the GET
+  /api/board client) and `src/ui/OnlineBoard.tsx` (the panel, reusing the existing panel and board styles).
+- **Rules** (documented at the top of `board.mjs`):
+  - Only poses the relay accepted count, on the server's clock; no score from a phone is trusted.
+  - Distance comes from displacement, metered by a token bucket capped at the reported speed and 110 m/s, so a
+    teleport, a reconnect or a parked car reporting speed earns nothing. The daily ceiling is 3,000 km.
+  - Top speed is the speed held for 3 s, cross-checked against ground speed.
+  - The longest unbroken drive breaks on more than 3 s without a pose (the relay's own freshness window) or less than
+    3 m per 3 s.
+  - The day is Pacific, DST-correct; today and the rolling week.
+  - Banned and deleted players are hidden through the server's `players` table; the output is names and numbers only.
+  - At most one write per driver per 5 s; rows kept 35 days.
+  - Speed Survival streaks and near misses are off the board: computer traffic exists only on the phone.
+- **Checked.**
+  - `node --test test/board.test.mjs` **9/9**, reproduced by this session. It covers teleport, reconnect and parked
+    cases; a spike, a 2.9 s burst and a 3 s hold; drive splits; both 2026 DST dates; ordering, limits, names only, bans
+    and deletions; `forget()`; a bot at 199 m/s for an hour capped at 110 m/s; and 24 writes for 1,200 poses.
+  - The agent's run of the live server's `npm test` was **57/57**, and `tsc` was clean.
+  - The agent also proved the wiring snippet end to end on a scratch copy of `server.mjs`.
+- **Wired (17:49, that session's report):** reviewed and merged onto `claude/live-server` (merge af33cc8).
+  - `/api/board` has its own rate limit, and `board.close()` runs on shutdown.
+  - A new server test shows a 4.5 s drive at 30 m/s giving about 135 m and 30 m/s held; "you" appears only with a token;
+    rows carry names and numbers only; a ban hides the driver and a delete removes them. The live `npm test` was
+    **58/58** on a quiet machine.
+  - The menu has an "Online board" pick in the Live section when a server is set; that session's browser check was
+    running.
+  - These are that session's results, not re-run here.
+- **Still open:** an independent adversarial review of the rules before the board goes public (the owner's decision,
+  queued).
+- **Honest gap:** a modified client driving a perfect straight line at the ceiling can't be told apart by poses alone.
+  It is bounded by the ceiling, shows under its name in a lobby slot, and a ban removes it.
+
+## 2026-10-21 (17:50 UTC): weekly events (activities); the story's logic tested without a browser
+
+- **Weekly events** (`story.ts` `EVENTS`): three simulated meets, each at set hours of the device's local week:
+  - Dee's Cars & Coffee, Saturday 7:00 to 11:00, Glenwood Drive off the 73 South;
+  - the Friday Night Meet, Friday 19:00 to 23:00, Weir Canyon Road off the 91 East;
+  - Jun's Sunday Canyon Run, Sunday 8:00 to 12:00, 10 miles on the 241 South.
+  While one is on, its invitation is a message in the phone (id `event@week`) with the job to get there. Each pays
+  once a week. They are not real events and not gatherings of real players.
+- **`tests/story.mjs`** (new, `npm run test:story`, about a second, no browser), **14/14**:
+  - the unlock chains (fresh: only Mara; after her first at level 2: her second and Sal's; a home opens Dee's);
+  - every job pays; every chain points at a real message; errand keys are unique;
+  - events by day and hour (Saturday 9:00 Cars & Coffee, 12:00 none, Friday 20:30 the meet, Sunday 9:00 the run,
+    none below their level);
+  - Cars & Coffee pays once this week, not again, and again next week;
+  - a race job needs both its course and its place.
+- **In the browser** (17:50, the build after ec321ad; Playwright with the page's clock set to Saturday 24 October 2026,
+  9:15 PDT, `timezoneId: America/Los_Angeles`, a level-3 profile):
+  - the menu rail read "Phone · 3 new";
+  - Messages listed Dee's "Cars & Coffee" first, then Sal and Mara;
+  - her thread's job read "Errand: the Glenwood Drive exit off the CA-73 South, within 15:00 · 2,000 credits, 500 XP";
+  - no page errors.
+  - Not yet in the regression suite: the launch group isn't re-run while the Fable workflow renders.
+- **Full suite on the build before the events** (25eb3f2: homes, the story, errands, the panels' Done bar): `npm test`,
+  all groups, **66/66** (run 16:40 to 17:15 UTC, slow beside other renders).
+
+## 2026-10-21 (17:30 UTC): activities: timed errands to real exits
+
+- **Errands** (story job kind `errand`): six errands from five of the characters.
+  - Each starts a Free Drive at the start of a real carriageway. Take the named real exit within a time limit set for
+    about 50 mph on average.
+  - The six: a parcel to Imperial Highway off the 57 North (5.0 mi, 6:00); a tyre to Dyer Road off the 55 South
+    (4:30); a sensor kit to Jamboree Road off the 405 South (5:30); wedding flowers to Jamboree Road off the 5 North
+    (7:00); coffee for the meet to Glenwood Drive off the 73 South (8:00); a charger to Gypsum Canyon Road off the 91
+    East (8:00). Exits and distances were read from the data first.
+  - **Delivered** is exact: the car's path becomes that sign's own exit ramp (`Game.errandTick`). The clock is game
+    time, so it stops while paused. At zero the errand is called off and the drive goes on.
+  - The HUD shows the clock in Free Drive's empty third slot, and "Errand: <exit> exit · <distance>" on the guidance
+    line when no route manoeuvre is due.
+  - Set it up from the phone chooses Free Drive and the errand's freeway.
+- **Checked** (new launch check; `npm test -- --only=launch` **11/11**):
+  - Sal's errand read "the Imperial Highway exit off the CA-57 North, within 6:00", and the Start pick became the 57
+    North.
+  - In the drive, the errand's sign was "CA 90 / Imperial Highway", 5.0 mi ahead. The HUD read "Errand: Imperial
+    Highway exit · 5.0 mi" (`tests/out/launch-errand-hud.png`).
+  - A copy past its clock was called off.
+  - Putting the car on that sign's ramp ended the drive "Delivered" and paid 1,400 credits with "Job done for Sal Reyes".
+  - Not proven: a driven approach to the ramp; the test places the car on it.
+
+## 2026-10-21 (17:00 UTC): characters and story on the phone (Messages, Contacts)
+
+- **Story** (`src/game/story.ts`): five fictional OC characters, ours, written for 13+ (no romance, no real people
+  or businesses):
+  - Mara Ortiz, who runs the tyre shop under the Orangewood studio;
+  - Jun Park, an Irvine aero engineer;
+  - Sal Reyes, a courier who knows every exit;
+  - Dee Okafor, who organises a Saturday car meet ("no street racing, just cars and coffee");
+  - Nina Hale, a Vela test driver.
+- **Messages and jobs.** Twelve messages in threads, opened by level, homes owned, races won and the message before.
+  Eleven carry a job built only from what the game has: a Survival score, Time Trial miles, a race placing on a named
+  course, miles of Free Drive on a named freeway, or a top speed. Each pays 600 to 10,000 credits and XP, paid when a
+  run meets it (`Game.settleJobs` at the end of every run and race; not on a "Too far behind" race).
+- **On the phone.** Messages (threads, unread badges, the job's goal and pay, Set it up) and Contacts (the people
+  you've heard from, labelled fictional) replace the two Roadmap icons.
+  - Set it up goes back to the menu with the job's mode chosen, plus its course or freeway.
+  - The menu rail has a Phone row with "N new".
+  - The results screen lists "Job done for …" with the pay.
+  - Nothing is sent or received over a network. Profile: `story { done, read }`, defaulted for older saves.
+- **Checked** (new launch check, `npm test -- --only=launch` **10/10**):
+  - a fresh story shows 1 unread; Mara's thread reads "Reach 120 mph · 600 credits";
+  - Set it up chose Free Drive;
+  - a drive ending at 134 mph paid the job (+600 credits on top of the drive's own), and the results said "Job done
+    for Mara Ortiz";
+  - her next message then showed as unread.
+  - Screenshot: `tests/out/launch-story-thread.png`.
+
+## 2026-10-21 (16:30 UTC): Lifestyle: homes (the life half's first piece); every panel's Done bar fixed
+
+The owner asked for the life half and the online side toward 95 %, with homes and walk-in interiors first, online
+on a free-tier backend, and the map OC-only. The online side is already the always-on session's `claude/live-server`
+lane (accounts, lobby, relay, ghosts, crews, $0 on the owner's machine), so this session does not build it; it asked
+that session which of its open gaps (online board, races against people) it wants handed over, and how interiors
+should reuse its on-foot engine.
+
+- **Homes** (`src/game/homes.ts`, `src/ui/Homes.tsx`): nine fictional homes in real OC neighbourhoods (Anaheim, Orange,
+  Tustin, Huntington Beach, Irvine, Anaheim Hills, Laguna Canyon, Newport Beach, Dana Point), our own names, no real
+  address or listing.
+  - Each costs 8,000 to 240,000 credits (earned only) and opens from level 1 to 15.
+  - Each owned home adds 1 to 3 garage slots (`garageSlots`, at most 12).
+  - The first one bought is where you live. Homes sell back for 60 %, never if your cars would no longer fit.
+  - The menu's Lifestyle row (greyed until now) and a Homes app on the phone open the panel.
+  - **Start here** sets the start to the real exit nearest the home (`Game.nearestExit`; weigh stations, rest areas
+    and vista points are skipped).
+  - The World Map draws every home as a small house (yours filled, the one you live in ringed), lists them under
+    Places, and opens on a home from the panel's "On the map", with "Start from" for one you own.
+  - Profile: `homes`, `home`, defaulted for older saves without a version bump.
+- **Checked.**
+  - Each home's nearest exit, read from the built page: Orangewood Avenue on the 57 (0.1 mi), Glassell/Grand on the
+    22, Edinger on the 55, Brookhurst on the 405 (3.9 mi: Huntington Beach is far from a freeway), Jeffrey/University on
+    the 405, Imperial Highway on the 91, Glenwood on the 73, Bison on the 73, Camino Las Ramblas on the 5.
+  - Found and fixed on the way: Orangewood first resolved to the 5 (its point was 1 km west), and the Hills Ranch to
+    a weigh station.
+  - New launch check: 9 homes; buy Orangewood for 8,000; slots 1 → 2; the level-15 home locked; Start here makes the
+    Start pick read "Orangewood Avenue exit"; selling returns 4,800.
+  - `npm test -- --only=launch,boot` **15/15**.
+- **Every panel's Done bar** stopped 20 px above the screen's edge (the overlay's padding), and content scrolled
+  visibly beneath it (seen on Profile). It now sticks to the real bottom edge with the safe area inside it.
+  `tools/panel-shots.mjs` (new): Profile and Lifestyle at 1280 × 720 and 390 × 844, top and bottom, no errors, no
+  sideways scroll.
+- **Not a bug: panels shot at opacity 0.** In software rendering the panel's 0.3 s fade-in clock stayed at 0 for about
+  1.6 s, because no frame was produced while the 3D scene rendered; the element was never remounted. The shot tool now
+  waits for the animation to finish.
+
+## 2026-10-21 (12:00 UTC): the garage's Wheels tab (U5 done); the run card saves in the viewer; the aero cover's streaks
+
+- **Wheels tab (U5).** Two rim styles per car (`cars.ts` `WHEELS`, our own names), fitted live to the car behind the
+  panel and kept per car in `settings.wheels` (validated in `readSettings`). Only the four wheels are rebuilt
+  (`PlayerCar.buildWheels`); the body, cockpit and hands stay. Two new rim designs in `car-wheel.ts`:
+  - **Cross Lace** (`mesh`): twenty slim spokes in crossing pairs, machined faces. Second style for the GT and the Brio.
+  - **Turbine Blade** (`blade`): seven blades swept toward the rim, mirrored on the left. Second style for the Corsa and
+    the Vela E.
+  - The hypercar's second style is the **Aero Disc** cover.
+  - Each choice has a small face-on rim drawing (SVG, `RimIcon` in `App.tsx`).
+- **Checked.** Close-up renders (`tools/preview-shoot.mjs src/preview/test-car.ts`, `view=wheel-side`, new `rim=`
+  query; `tests/out/wheels/`): GT Cross Lace, Corsa Turbine Blade, hypercar and Vela E Aero Disc. New launch check:
+  the tab lists 2 styles; Cross Lace is fitted and saved; 4 wheels in the scene; the car's root keeps 11 children
+  through both changes. `npm test -- --only=launch` **8/8**.
+- **Found and fixed: the Aero Disc cover was shaded in heavy streaks** (pre-existing on the Vela E's own wheels; the
+  hypercar render showed it). The dished cover's normals were averaged over the cap's long sliver triangles; they now
+  come from the dish's formula. The heavy faceting is gone. Faint streaks remain in the 0.5 m close-up only. A matte
+  cover kept them (not reflections); a high sun made them worse; at the garage line-up's distance they don't show. So
+  they are the shadow map's resolution where the tyre's bulge shadows the cover, not the cover's shape.
+- **Not a bug: old wheels on a car change.** The old code disposed of the previous wheels without removing them; a
+  check on the previous build (GT, hypercar, Corsa, GT in owner mode) found the root at 11 children throughout, so
+  nothing was left behind. `buildWheels` removes them explicitly anyway.
+- **Run card in the viewer.** The save through the viewer's prompt was already in `runCard.ts` (fd7c0c3); the test
+  artifact had never declared it. Republished with `downloads` declared (version 3); the publish no longer warns.
+  Not yet tried by a person inside the viewer.
+- **Customize tab** added to the garage as "coming later" (U5's last tab). `tools/garage-shot.mjs` (new,
+  `tests/out/garage/`): every tab at 1280 × 720 and 390 × 844, no page errors, no sideways scroll; on a phone the five
+  tabs wrap to two rows. `npm test -- --only=render` **14/14**; launch rerun on the final build **8/8**.
+- **Phone size (390 × 844, touch) for the other new panels**, on this build:
+  - the World Map: `tools/map-shots.mjs`, no errors;
+  - the radio card: `tools/radio-shot.mjs`, tuned Coast, no errors; the card fits under the top bar, with stars,
+    volume and Off/Close in reach;
+  - the phone: `tools/phone-shot.mjs`, home and Credits, no errors; the Map app opened the World Map.
+  - Shots are in `tests/out/phone390/`.
+- **Glove stripe.** `hands.ts` now passes the driver's accent to the glove's wrist stripe. No visible change today:
+  the Ace is the only gloved driver and its accent equals the old default.
+
+## 2026-10-21 (11:45 UTC): the full suite green on the merged branch; the test build republished
+
+- `npm test` (all groups) after the clothing merge: **62/62**. The intermittent reset check passed this time.
+- **Settings rail (U8) and radial menu (U3)** (`tools/quick-shots.mjs`, `tests/out/quick/`, 1280 × 720 and 390 × 844,
+  no errors): the rail jumps to a section (Sound lit); on a phone the rail is a scrolling strip. Holding Pause opens
+  the six wedges round a hub that names the wedge under the pointer; releasing over the upper-right wedge opened
+  "Go to" at both sizes (read back from the page), and the drive was not paused.
+- **Test build** republished to https://claude.ai/artifact/9tXRF74cdLc7Po7DqHeJFS (version 2) from this build. The
+  publish noted that the run card's download does nothing inside the artifact viewer (it does not grant plain
+  downloads); queued below.
+
+## 2026-10-21 (11:10 UTC): the full suite on this session's work
+
+- `npm test` (all groups) on the branch at 06:55 (World Map, paint, radio, phone, settings rail, radial menu; before
+  the clothing merge): **61/62**. The one failure: "reset puts the car back on the road, stopped" (`7.92 → 0.54 m/s`:
+  the car never reached the 30 m/s the check drives up to before resetting).
+- Rerun of the `render` group alone, side by side: the current code **14/14** (reset `40 → 0.01 m/s`) and this
+  session's starting commit (07f46ac) **14/14** (`40.02 → 0.02 m/s`). Intermittent and not reproduced on either; the
+  cause is not known (the check's speed-up is simulated time, so machine load should not matter). Watch it.
+
+## 2026-10-21 (11:00 UTC): the drivers' clothes, a black-frame bug fixed
+
+A lane on this session (worktree, merged as one commit) finished the drivers' clothing pass from the parked work,
+rendered on the preview (`tests/out/preview/fashion2/` in its worktree, every frame looked at) and in the game:
+- **The Closer**: a pressed white (ivory for her) cuff with an edge stitch and a gold cufflink (a pearl button for
+  her), the gold bracelet watch with an index ring, blued hands and a crown, red polish on her nails.
+- **The Ace**: black ribbed fire-suit sleeves with a small Rossini R chevron patch, black stitched gloves with knuckle
+  pads and a lavender (#b9a6ff, the UI's Ace colour) stripe at the wrist.
+- **The Wrench**: an olive work shirt rolled twice above the forearm with a hem stitch and a slight tan line, a
+  polished titanium smart watch whose black screen shows a green grip readout.
+- **A bug found and fixed**: the Wrench's cockpit rendered entirely black in the game (both presentations, 960 × 540).
+  The smart watch's glass had 28 vertices with zero-length normals; the shader turned them into NaN and the
+  post-processing spread it over the frame. The mesh builder now widens its stencil where points coincide and never
+  emits a zero normal; the frames render (`game/wrench-m.png`, read by eye here too). Why the baseline's identical
+  glass did not go black is not explained.
+- **Numbers** (the preview's JSON, budget 12 calls, 220k triangles): Closer 75,744 / 6 (male), Ace 57,180 / 3, Wrench
+  110,292 / 6; arms build 1.7 to 2.6 s on the shared software renderer (baseline 1.6 to 1.9 s).
+- **Checked**: `npx tsc --noEmit` clean, `npm run build` clean, `npm test -- --only=boot,abilities` 10/10 on the lane.
+- **Here**: the game now passes each driver's own nail colour (it hard-coded a burgundy for every female presentation,
+  so the Closer's red never showed and the Wrench had polish she shouldn't).
+- **Still off**: the glove stripe takes the default colour (hands.ts does not pass the accent; right for the Ace only);
+  the Wrench's roll never shows from the seat; the knuckle pads read as round patches; the Closer's weave is faint.
+
+## 2026-10-21 (06:30 UTC): the World Map, the garage's paint, the radio card; the two sessions coordinated
+
+- **Two sessions.** Another session (the always-on one) runs lanes for the seat view, body fidelity, the freeways,
+  Ultra graphics, the UI to the reference, the graphics modes and the store (`PROJECT_OC_HANDOFF.md`). This session
+  stopped its overlapping lanes and pushed their unjudged work as `claude/wip-c-seat` and `claude/wip-c-world`; the
+  other session agreed to build on this branch's UI and to bind the Look tokens to its three graphics modes.
+- **World Map (U4)** (`WorldMap.tsx`, `tools/map-shots.mjs`): proven at 1280 × 720 and 390 × 844 in three rounds
+  (`tests/out/map`, `map2`, `map3`), no errors. Round one showed labels over each other and phone views framed behind
+  the sheet; labels now take boxes (shields, the race's markers and our places first, then cities from the largest)
+  and every fit frames the visible part of the screen; a picked race frames its own stretch.
+  Round three (`map3`, read by eye) framed the Santa Ana course clear of the sheet and the shields, and showed a real
+  bug: **Santa Ana Checkpoints** ("12 km of the 5 through Santa Ana") ran between Mission Viejo and Lake Forest. I-5
+  North passes Santa Ana at 0.629 of its length (measured in the game: 1.6 km from the city centre), so the course
+  now starts at 0.565 instead of 0.38 (`race.ts`); old best times on it stay under the same id. Fits now also keep
+  clear of the map's title (the Finish label sat under it).
+- **The garage's Paint tab (U5)**: `npm test -- --only=launch` **7/7 passed**, including the new check (Sunset Orange
+  reaches the car, `car.config.paint` 0xe5620b, and the saved settings; back to Rossini Red) and the theme/Look check;
+  `tests/out/launch-paint.png` shows the GT behind the panel in Sunset Orange. Wheels and Upgrades say "coming later".
+- **The radio card (U7)** (`RadioCard.tsx`, `tools/radio-shot.mjs`): frames at 1280 × 720 and 390 × 844
+  (`tests/out/radio/`, no errors): KCST tuned from the card and playing a generated title, the starred station sorted
+  first, volume, Off; on a phone it sits under the top bar, clear of the steering and pedals. Its stars were low in
+  their rows; centred.
+- **The phone (U6)** (`Phone.tsx`, `tools/phone-shot.mjs`): from the pause screen, at 1280 × 720 and 390 × 844
+  (`tests/out/phone/`, no errors): the device clock, the driver's colour on the level line, nine working apps and
+  Messages and Contacts greyed "Roadmap"; Credits shows the balance and how credits are earned; the Map app opens the
+  World Map (checked by the script). Races had the same trophy icon as Bests; it takes the wheel.
+
+## 2026-10-21 (later): the style library, a live hypercar display, a Look setting, the run card's colours
+
+The owner uploaded their style library (branch `style-references`) and asked for continuous improvement. Logged here:
+
+- **The style guide.** `PROJECT_OC_STYLE_GUIDE.md` reads the library (three art directions, tokens, cameras,
+  navigation) against the game; its text files are copied to `style-references/`. The default and hypercar
+  atmosphere uses the library's ULTRA tokens exactly (background #030915, accent #408CFF 6.1:1, secondary #8BD6FF,
+  primary #DDE9F3, foreground #F6FBFF, success #6FF7DE).
+- **The hypercar's display is live** (`car-gauges.ts` `hyperScreen`, `cockpit.ts`, `PlayerCar.ts`): a base drawn once,
+  the speed, gear, power in use, revs and tune repainted at most 15 times a second, only when they change. The right
+  pod (a battery charge and a range, meaningless on a combustion car) is the rev bar. Proof: an in-game frame at
+  1280 × 720, High, day (`tests/out/cluster/hyper-live-day.png`, `tools/grade-shot.mjs`): the display reads 66 MPH in
+  3rd while the HUD reads 66 and 3; no page errors. The previews keep the 132-in-sixth still.
+- **Look: Futuristic or Realistic** (Settings, Display; `settings.look`, `<html data-look>`): Realistic takes the
+  library's HD tokens for the surfaces, ink and shapes (graphite #0a111d, HUD plates at 86 %, 8 px corners, no skew,
+  hex lattice or scanlines, a contemporary display sans); the car keeps its accent, and on the hypercar the accent is
+  HD's muted blue with champagne for what's selected (contrast in the stylesheet: ink 17.3:1, blue 8.3:1, champagne
+  6.9:1). Proof: `tools/atmo-shots.mjs --look=hd` on the hypercar and the GT, menu and drive (`tests/out/look-hd/`),
+  no errors, read by eye: flat rounded controls, a steel-blue Drive plate, champagne selection, the GT's orange
+  accent inside the Realistic shapes. A greyed Lifestyle row ("Roadmap") joins Online, from the library's navigation.
+- **The run card takes the atmosphere** (`runCard.ts`): its background, glow, lane lines, hairline and accents are
+  read from the page's tokens when it is drawn (falling back to the OC sunset).
+- **A suite check** (launch group): the theme follows the car and driver, and the Look switches, re-points the base
+  and is saved. Its first run is with the merged branch (below).
+- **A cinematic camera; the menu is filmed with it** (`Game.ts` `SHOTS`, `view3`): four long-lens tracking shots cut
+  hard (a low hero front three-quarter pushing in, the profile, a low rear three-quarter, a high drone), all within
+  5 m of the car so none needs to know where the walls are; "Cinematic" is last in the View cycle; the menu's attract
+  drive uses it, a run still opens in the driver's seat. Proof (`tools/atmo-shots.mjs --shot=0`): the first frames
+  (`tests/out/cine/`, hypercar and GT, no errors) put the car's lower body behind the mode cards, so the hero tilts
+  down 0.07 rad; the reshoot after the atmosphere settled (`tests/out/cine2/oc-hyper-menu.png`, no errors) shows the
+  hypercar at dusk, its ice-blue blades and splitter strip lit, clear of the cards and right of the rail, as on the
+  library's ULTRA home screens.
+
+## 2026-10-21: the ice reference: the UI re-themed, the menu and drive HUD rebuilt, the hypercar's lights and cluster judged (branch `claude/hypercar`)
+
+The owner sent a second concept board (the menu with the hypercar as its hero, and the cockpit HUD, in a navy and
+ice-blue colour world) with "keep rendering graphics for this car and HUD interface as well as overall themes of
+colour". What it maps to is written in `PROJECT_OC_UI_TARGET.md` ("Owner's direction, 2026-10-21"). Two lanes ran at
+once: the UI (theme, menu, HUD) and the hypercar's lights and cluster (M2, judged for the first time).
+
+- **Theme ("Ice noir", `src/ui/styles.css`).** The sunset tokens became the ice family with the same roles (`--ice`
+  press and focus, `--cyan` selected, `--ember` danger only); the base went from violet-black to navy-black; chrome is
+  a touch cooler. Contrast is in the token comments. Every screen re-themed from the tokens; no rule needed its own
+  colour. The page's theme colour is #04070d.
+- **The OC mark in chrome** (`Mark.tsx`, `.oc-mark`): the owner's letterform alpha filled with brushed chrome, lit from
+  below in ice. The 480 px sunset cut-out stays for the run card; the 1200 and 240 px cut-outs are out of the repo
+  (the bundle's images went from about 157 KB to 58.5 KB inlined). The name stays OC Ultra: Top Speed.
+- **The menu** (`App.tsx`, `ModeArt.tsx`, `Icons.tsx`): the rail (brand, Drive, Car / Driver / Start on or Race with
+  line icons, the traffic chips labelled simulated, Profile, Bests, Settings, Online greyed "Roadmap"), the player card
+  (avatar, name, level with an XP bar, credits without a currency sign), the live attract drive as the hero, the four
+  modes as picture cards (four SVG night scenes drawn in code) with the brief above them, the Loop Lab card and the
+  data credits under them. Phones: one column, Drive fixed under the thumb. Every accessible name the suite and
+  `tools/ui-shots.mjs` use is unchanged (Drive, Settings, Bests, Profile, the `.pick` rows, the mode radios).
+- **The drive HUD** (`HUD.tsx`): the mode line and the small chrome OC on the top-left plate; the road as a guide sign
+  (the route shield, then the direction; the OC mark left the route chip for the mode plate); the controls as an icon
+  rail down the right with a mouse, a strip along the top on phones; the speed block with the revs as a slanted ice
+  bar (scaleY now), big numerals, the gear in an outlined box, and chips: the handling profile (Arcade under 0.35,
+  Sport under 0.75, Sim), ABS and TCS (both run at every handling setting in `Physics.ts`), Unleashed for the
+  hypercar in Free Drive; the round road map bottom left with a mouse (the game reads the window's rect from the DOM,
+  so the sky camera still draws where its box is). The ability hexagon moved left of the wider block.
+- **The hypercar (M2 judged, `src/preview/car-*.ts`, `cockpit.ts`, `car-gauges.ts`, `PlayerCar.ts` lamp colours).**
+  The night renders of the WIP showed every LED blown out to white under ACES (a pale material colour at emissive
+  2.4 to 2.8). The material blues are now deeper so the tone-mapped result lands on the reference's screen colours:
+  `led: { color: 0x5eb8ff, halo: 0x1e6fd8, edge: 0x0c4fb8 }` (hypercar only; `ledTex` gained an optional edge stop
+  with the cache key unchanged when it is omitted); the blade lamp texture the same family; the dash line's intensity
+  1.4. Sampled in the hero render (sRGB): splitter (151, 201, 240), blade (128, 153, 186), sill (133, 162, 194)
+  against the reference's (122, 152, 190) strips and (176, 219, 245) core. A driver display of its own
+  (`hyperScreenTex`: OC, 132, MPH, the gear in a box, hexagonal ice frame, a kW pod and a segment bar, the centre
+  screen SPORT / ABS TCS) replaces the Vela's on the hypercar's binnacle, centred on its driver at 88 % on a carbon
+  plinth; beams 0xd4e8ff and an ice-tinted road pool for the hypercar only (the other cars keep 0xfff4e6 and the
+  white pool). Calipers already read royal blue; the OC centre cap already reads.
+  - Renders (960 × 540, night, showroom key, `tests/out/preview/ice/`): hero, front, rear34, wheel, seat, dash, with
+    the before pair for hero, front, seat and dash. Own cost unchanged: 32 calls / 246,612 triangles on `high`
+    (budget 40 / 260k); the interior went from 63 / 170,307 to 60 / 167,389 (one screen replaces the tach assembly).
+  - The Corsa's side view before and after: 0 of 518,400 pixels differ by more than one level (max 0).
+  - Still off against the reference: the rim's top band clips the small OC mark in the seat view (it fits in the
+    dash view); the caliper's OC lettering is clipped (M1b item 9); the rear LEDs read thin at the rear 3/4 distance;
+    "132" is not a true light weight (headless Chromium has no light face); the body's shape gaps stay M1b's. The
+    beam colour change is type-checked and rendered in the preview, not yet looked at in a game night frame.
+- **The atmosphere follows the car** (owner, later the same day: "every specific car we choose, each one representing
+  a different atmosphere"). `App.tsx` sets `<html data-car>` from the car in the garage (the garage re-renders the
+  App when a car is picked, so it switches live), and `styles.css` re-points the tokens per car: the hypercar is the
+  ice reference; the Rossini GT keeps the owner's OC sunset over violet-black (the wordmark's colours, so the starter
+  car opens in the identity the owner gave on 2026-10-16); the Brio is aqua over deep sea green; the Corsa racing
+  yellow on graphite (its Drive plate takes black ink, `--on-deep`); the Vela E violet over plum with a magenta
+  flash. The Drive plate's fill and ink come from tokens (`--ice-deep-2`, `--on-deep`). Contrast per block is in the
+  stylesheet. Proof: `tools/atmo-shots.mjs` (new) picks each car through the garage and shoots the menu and a drive
+  frame into `tests/out/atmo/`; on the final build it shot all five cars with no errors (`tests/out/atmo/<car>-menu.png` and `<car>-drive.png`, 1280 × 720), each read by eye: the rail, the player card, the cards and the HUD take each car's colours, the Drive plate keeps its ink readable on every fill, and the hypercar's drive frame shows the Unleashed chip. Known and by design: the hypercar's cluster is a static texture (it reads 132 while the HUD reads the live speed), like the GT's digital window; a live cluster is a later step. The first run of the tool timed out on screenshots while the suite ran beside it; the tool now waits up to 180 s for a frame and returns to the menu after a failure.
+- **The driver's layer, the futuristic details, the menu's atmosphere per car, an Ultra grade** (owner, later the same
+  day: "do the same for each driver ... keep upscaling the ultra graphics ... a more futuristic theme"). The driver
+  signs the human elements with `--drv` (`<html data-driver>`): The Closer gold #ffd166, The Ace lavender #b9a6ff
+  (the first lavender-white, #d4dbff, read as plain ink in the shot and was changed; 9.6:1 on the darkest base), The
+  Wrench green #7dffa8. Decoration: a hex lattice behind the glass, chamfered HUD plates with scanlines, brackets on
+  the speed block, a slow accent sweep on the rail (off with reduced motion). The menu's attract drive takes the car's
+  atmosphere (`CarDef.atmosphere`, `Game.syncAtmosphere`): hypercar night, GT sunset, Brio cloudy sunset, Corsa clear
+  day, Vela E misty sunrise; a run uses the player's settings; the car's atmosphere holds on the menu only until the
+  player changes time or weather that session and never reaches the saved settings. Ultra only
+  (`QualityPreset.grade`): a grade pass (vignette, radial chromatic aberration about 1.5 px at the corners, a grain
+  proportional to the pixel so the night's blacks stay black; the lane's first version added the grain linearly,
+  which would lift black by about 28 levels, and was changed before any render) and a bloom at threshold 0.85,
+  strength 0.3. Proof: `tools/atmo-shots.mjs` on a clean worktree (HEAD plus only these files, since two other lanes
+  had unbuilt work in the tree): all five cars and all three drivers shot with no errors (`tests/out/atmo3/`), each
+  read by eye: the GT at sunset with its flare, the Vela in a hazy dawn, the hypercar at night with its beams on the
+  road (its first menu shot caught the sky mid-ease, by design a few seconds), the Corsa in daylight; the Closer's
+  gold and the Wrench's green on the Driver row and the avatar ring. The hypercar at night in a run (`tools/grade-shot.mjs`, 640 × 360, `tests/out/attract/ultra-night.png` and `high-night.png`, no page errors): the two frames read close to identical at this size, the grade is subtle by design (a slightly darker rim on Ultra, no visible fringing or grain at 640 px, no lifted blacks), and the bloom change does not blow out the sky. At 640 × 360 the HUD covers much of the frame; a larger frame is the better judge once the world lane lands.
+- **Checked:** `npx tsc --noEmit` (both configs) clean. `npm run build` clean. `tools/ui-shots.mjs` at 390 × 844 and
+  1280 × 720 (`tests/out/ui-ice2/`), every screen read by eye: the rail, the player card, the cards, the sign plate,
+  the icon rail, the speed block and the round map all read; one layout bug found and fixed on the first pass (the
+  rail's nav row was too short, clipping the traffic chips and the rows under them; the nav now takes the rows above
+  the cards). `npm test -- --only=boot,phone,launch` on the final build: **16/16 passed** (boot 6, phone 5 including "menu fits a 390 × 844 phone" and "driving HUD: top bar clear of the gear readout", launch 5 including the run card download). Run before the one-line short-window rule that hides the lede under 760 px tall.
+- **Not done:** the `render` and `race` suite groups were not run in this session (the HUD's race plate was
+  re-themed, not restructured); a real-phone look; the owner's wording "Project OC / Orange County Freeway Simulator"
+  in the lockup is the owner's call (one line in `Mark.tsx`).
 
 ## 2026-10-20: the OC Hypercar is drivable (owner mode), on the finished physics
 

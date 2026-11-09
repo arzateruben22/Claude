@@ -7,7 +7,8 @@
 //       cards, an Alcantara wheel with a yellow centre stripe; Vela E ivory leather, a round two-spoke wheel with the
 //       V badge and a wide display in place of the tachometer; the OC Hypercar the Corsa's buckets, hoop and wheel
 //       with ice-blue stitching and rim stripe, blue harnesses, an ice-blue ambient line along the dash and the door
-//       cards, the OC badge on the boss and the tach, and a gauge pod kept for the Cold Thrust tank (gaugeAt). Its
+//       cards, the OC badge on the boss, its own live driver display (car-gauges hyperScreen) in place of the tach,
+//       and a gauge pod kept for the Cold Thrust tank (gaugeAt). Its
 //       driver sits lower and further in (car-shape seatOffset): the eye, wheel, binnacle, dash, console and seats
 //       move with the seat; it has no rear-view mirror (its low header), only the door mirrors.
 //     paint: sRGB hex for the body seen through the glass (bonnet, wings, mirror housings; default the car's).
@@ -55,14 +56,16 @@ const THEMES: Record<string, Theme> = {
   vela: { seat: 0xbdb5a5, seatKind: 'leather', stitch: 0x7d7870, dash: 'nappa', band: 'alu', wheel: 'vela', binnacle: 'screen', door: 'nappa', head: 0xa39e93 },
   // the OC Hypercar: the Corsa's carbon buckets, roll hoop and Alcantara wheel, with ice-blue stitching, an ice-blue
   // centre stripe on the rim, deep blue harnesses, an ice-blue ambient line along the dash and the door cards, the OC
-  // badge on the wheel's boss (the car's brand), and a gauge pod on the dash kept for M5's Cold Thrust tank gauge
-  hyper: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0x8fd0ff, dash: 'alc', band: 'carbon', wheel: 'corsa', binnacle: 'tach', door: 'carbon', head: 0x29292b, stripe: 0x7cc8ff, belt: 0x1f3f66 },
+  // badge on the wheel's boss (the car's brand), a gauge pod on the dash kept for M5's Cold Thrust tank gauge, and
+  // its own driver display (the Vela's display geometry, centred on its driver, with car-gauges hyperScreenTex)
+  hyper: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0x8fd0ff, dash: 'alc', band: 'carbon', wheel: 'corsa', binnacle: 'screen', door: 'carbon', head: 0x29292b, stripe: 0x7cc8ff, belt: 0x1f3f66 },
 };
 export interface Cockpit {
   group: THREE.Group;
   wheel: THREE.Object3D;
   update?(dt: number): void;
-  setInstruments?(o: { rpm?: number }): void;
+  // rpm moves the tachometer's needle; the hypercar's live display takes the rest (car-gauges hyperScreen)
+  setInstruments?(o: { rpm?: number } & Partial<G.HyperReadout>): void;
   rearView?: { at: THREE.Vector3; normal: THREE.Vector3; w: number; h: number };   // the rear-view mirror's face: centre, normal, size
   mirrors: CarMirror[];
   // the hypercar's gauge pod on the dash, kept for M5's Cold Thrust tank gauge: the face's centre, its normal (toward
@@ -172,6 +175,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     hoop: once('m.hoop', () => new THREE.MeshPhysicalMaterial({ color: 0x1c1c1e, roughness: 0.55, metalness: 0.2, clearcoat: 0.3 })),
     stripe: once('m.stripe' + (T.stripe ?? 0xe8b81c), () => new THREE.MeshStandardMaterial({ color: T.stripe ?? 0xe8b81c, roughness: 0.6 })),
     screenV: once('m.scrV', () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: G.velaScreenTex(), emissiveIntensity: 0.95, roughness: 0.12 })),
+    screenH: once('m.scrH', () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: G.hyperScreenTex(), emissiveIntensity: 1.0, roughness: 0.12 })),
     tach: once('m.tach' + q + P.brand, () => new THREE.MeshStandardMaterial({ map: tachT.map, emissiveMap: tachT.emissiveMap, emissive: 0xffffff, emissiveIntensity: 0.85, roughness: 0.55 })),
     screenL: once('m.scrL', () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: G.leftScreenTex(), emissiveIntensity: 0.9, roughness: 0.18 })),
     screenR: once('m.scrR', () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: G.rightScreenTex(), emissiveIntensity: 0.9, roughness: 0.18 })),
@@ -183,6 +187,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     dust: once('m.dust', () => new THREE.MeshBasicMaterial({ map: windscreenDust(1024, 512, 1.53, 1.05, [[0.705, 0.0], [1.365, 0.0]], 0.58), color: 0x6e665e, transparent: true, opacity: 0.13, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })),
   };
   for (const k of ['alc', 'nappa', 'tan', 'tanPerf', 'carpet', 'plastic']) (mats[k] as THREE.Material).side = THREE.DoubleSide;
+  // the screen binnacle's display: the Vela's atlas, or the hypercar's own
+  const scrK = hyper ? 'screenH' : 'screenV';
   mats.badgeHub = once('m.badgehub' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.25, clearcoat: 1, clearcoatRoughness: 0.03, metalness: 0.1 }));
   // the dash top and the fascia band, per car
   mats.dashTop = T.dash === 'alc' ? mats.alc : mats.nappa;
@@ -192,7 +198,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // the headliner, pillars and visors: one Alcantara per car (dark grey, grey, black, ivory)
   mats.head = M.alcantara(q, T.head, 0.08); (mats.head as THREE.Material).side = THREE.DoubleSide;
   // the hypercar's ambient line: its LED, dimmed to a cabin accent
-  if (hyper && P.led) { const led = P.led; mats.amb = once('m.amb' + q, () => { const m = M.led(led.color, led.halo, q).clone(); m.emissiveIntensity = q === 'high' ? 1.1 : 0.8; m.side = THREE.DoubleSide; return m; }); }
+  if (hyper && P.led) { const led = P.led; mats.amb = once('m.amb' + q, () => { const m = M.led(led.color, led.halo, q, led.edge).clone(); m.emissiveIntensity = q === 'high' ? 1.4 : 1.0; m.side = THREE.DoubleSide; return m; }); }
 
   // ambient occlusion inside: dark low down and under the dash, the headliner lit only by bounce
   const aoIn = (p: V3, n: V3) => {
@@ -291,7 +297,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       // the Vela's centre touchscreen (the lower part of its display atlas)
       const sc = new THREE.PlaneGeometry(0.19, 0.17); const su = sc.attributes.uv as THREE.BufferAttribute;
       for (let i = 0; i < su.count; i++) su.setXY(i, 0.7 + 0.3 * su.getX(i), su.getY(i) * 0.5);
-      sc.rotateX(-0.45); sc.translate(0, 0.567, -0.592); kit.add('screenV', sc);
+      sc.rotateX(-0.45); sc.translate(0, 0.567, -0.592); kit.add(scrK, sc);
     } else for (const x of [-0.06, 0, 0.06]) { const k = latheGeo([[0.0, 0.016], [0.012, 0.016], [0.014, 0.012], [0.014, 0.0]], 24, 'z', { flip: true, vScale: 0.02 }); kit.add('alu', k, mat(x, 0.585, -0.585, -0.45)); }
   }
   });
@@ -307,7 +313,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   if (hyper && mats.amb) {
     const [lz, ly] = LIP[LIP.length - 1];
     kit.add('amb', ambLine(range(-(D - 0.012), D - 0.012, 40).map((x) => v3(x, ly - 0.004, lz + 0.0035)), v3(0, 1, 0), 0.005));
-    const gm = mat(0.06, 0.87 + sY, -0.74 + sZ, -0.62), r = 0.046;
+    // (x 0.16: clear of the live driver display's right end, which reaches x 0.01 now that it is centred on the driver)
+    const gm = mat(0.16, 0.87 + sY, -0.74 + sZ, -0.62), r = 0.046;
     kit.add('alu', latheGeo([[r - 0.002, 0.004], [r + 0.003, 0.009], [r + 0.008, 0.006], [r + 0.009, -0.03]], high ? 48 : 28, 'z', { flip: true, vScale: 0.05 }), gm);
     const face = new THREE.CircleGeometry(r, 40); face.translate(0, 0, -0.002); kit.add('gloss', face, gm, 0.05);
     const ring = new THREE.RingGeometry(r * 0.8, r * 0.83, 48, 1); ring.translate(0, 0, -0.0012); kit.add('amb', ring, gm);
@@ -319,13 +326,16 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // ---------------------------------------------------------------- the binnacle: tach, two displays, the cowl
   const clM = mat(-0.37 + sX, 0.835 + sY, -0.62 + sZ, -0.41);
   if (T.binnacle === 'screen') {
-    // the Vela's wide display, free-standing over the dash on a leather-wrapped plinth
-    const vM = mat(-0.17 + sX, 0.862 + sY, -0.635 + sZ, -0.36);
-    const bez = extrude(roundRect(0.64, 0.168, 0.018), 0.014, 0.003); bez.translate(0, 0, -0.0165); kit.add('gloss', bez, vM, 0.05);
-    const scr = new THREE.PlaneGeometry(0.62, 0.15); const su = scr.attributes.uv as THREE.BufferAttribute;
+    // the Vela's wide display, free-standing over the dash on a leather-wrapped plinth (the hypercar's: the same
+    // display centred on its driver, 12 % smaller and 2 cm lower so the whole screen sits between the rim's top and
+    // the hub from its low seat, on a carbon plinth, with its own screen)
+    const ds = hyper ? 0.88 : 1, dy = hyper ? -0.02 : 0;
+    const vM = mat((hyper ? -0.37 : -0.17) + sX, 0.862 + dy + sY, -0.635 + sZ, -0.36);
+    const bez = extrude(roundRect(0.64 * ds, 0.168 * ds, 0.018), 0.014, 0.003); bez.translate(0, 0, -0.0165); kit.add('gloss', bez, vM, 0.05);
+    const scr = new THREE.PlaneGeometry(0.62 * ds, 0.15 * ds); const su = scr.attributes.uv as THREE.BufferAttribute;
     for (let i = 0; i < su.count; i++) su.setY(i, 0.5 + 0.5 * su.getY(i));
-    scr.translate(0, 0, -0.0018); kit.add('screenV', scr, vM);
-    const plinth = new RoundedBoxGeometry(0.34, 0.07, 0.1, 3, 0.02); plinth.translate(-0.17 + sX, 0.81 + sY, -0.68 + sZ); kit.add('nappa', plinth);
+    scr.translate(0, 0, -0.0018); kit.add(scrK, scr, vM);
+    const plinth = new RoundedBoxGeometry(0.34 * ds, 0.07, 0.1, 3, 0.02); plinth.translate((hyper ? -0.37 : -0.17) + sX, 0.81 + dy + sY, -0.68 + sZ); kit.add(hyper ? 'carbon' : 'nappa', plinth);
     ghost.push(bez.clone().applyMatrix4(vM));
   } else {
     const plate = extrude(roundRect(0.47, 0.18, 0.02), 0.012, 0.002); plate.translate(0, 0, -0.03);
@@ -783,9 +793,17 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     }
   }
 
-  const setInstruments = (s: { rpm?: number }) => { if (s.rpm !== undefined) rpm = s.rpm; };
+  // the hypercar's display: the latest readout, repainted at most 15 times a second and only when it changed
+  const disp: G.HyperReadout = { mph: 0, gear: 'N', kw: 0, kwMax: 1500, rpm: 0, rpmFrac: 0, mode: 'SPORT' };
+  let liveT = 0, liveKey = '';
+  const setInstruments = (s: { rpm?: number } & Partial<G.HyperReadout>) => { if (s.rpm !== undefined) rpm = s.rpm; if (hyper) Object.assign(disp, s); };
   const update = (dt: number) => {
     flutter += dt;
+    if (hyper && (liveT += dt) >= 1 / 15) {
+      liveT = 0;
+      const key = `${Math.round(disp.mph)}|${disp.gear}|${Math.round(disp.kw / 10)}|${Math.round(disp.rpmFrac * 12)}|${(disp.rpm / 1000).toFixed(1)}|${disp.mode}`;
+      if (key !== liveKey) { liveKey = key; G.hyperScreen().draw(disp); }
+    }
     rpmShown += (rpm - rpmShown) * Math.min(1, dt * 8);
     setNeedle(rpmShown + Math.sin(flutter * 23) * 12 + Math.sin(flutter * 7.3) * 18);
   };

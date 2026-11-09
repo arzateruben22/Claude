@@ -21,6 +21,9 @@ export interface DriverLook {
   skin: number; sleeve: number | null; gloves: number | null;
   watch: 'gold' | 'steel' | 'smart' | null; ring: boolean; bracelet: boolean; scale: number;
   pose: 'watch' | 'wave' | 'knee';                  // what the left hand does when the ability fires
+  outfit?: 'shirt' | 'suit' | 'work';               // the sleeves: a pressed shirt's cuffs, a fire suit, a work shirt rolled up
+  accent?: number;                                  // the driver's signature colour (the UI's --drv), for the trim
+  nails?: number | null;                            // the female presentation's polish (null: natural); unset: the caller's choice
 }
 export interface DriverDef { id: DriverId; name: string; title: string; blurb: string; ability: AbilityId }
 
@@ -35,9 +38,12 @@ export const SKINS = [0xf1c6a5, 0xd9a37f, 0xb67a52, 0x8a5536, 0x5c3a24];
 export function lookFor(id: DriverId, pres: Presentation, skinIdx: number): DriverLook {
   const skin = SKINS[Math.max(0, Math.min(SKINS.length - 1, skinIdx))];
   const scale = pres === 'f' ? 0.9 : 1;
-  if (id === 'closer') return { skin, sleeve: pres === 'f' ? 0xe9e4da : 0xf2f2f0, gloves: null, watch: 'gold', ring: true, bracelet: pres === 'f', scale, pose: 'watch' };
-  if (id === 'ace') return { skin, sleeve: 0x1b1b1d, gloves: 0x121214, watch: null, ring: false, bracelet: false, scale, pose: 'wave' };
-  return { skin, sleeve: null, gloves: null, watch: 'smart', ring: pres === 'f', bracelet: false, scale, pose: 'knee' };
+  // the Closer: a pressed white (ivory for her) shirt with buttoned cuffs, the gold watch, a red polish; the Ace: a
+  // black ribbed fire suit over knit cuffs and the R chevron patch, black racing gloves; the Wrench: an olive work shirt rolled
+  // up past the forearm (a faint tan line), the smart watch with its green grip readout
+  if (id === 'closer') return { skin, sleeve: pres === 'f' ? 0xe9e4da : 0xf2f2f0, gloves: null, watch: 'gold', ring: true, bracelet: pres === 'f', scale, pose: 'watch', outfit: 'shirt', accent: 0xffd166, nails: pres === 'f' ? 0xb4111c : null };
+  if (id === 'ace') return { skin, sleeve: 0x1b1b1d, gloves: 0x121214, watch: null, ring: false, bracelet: false, scale, pose: 'wave', outfit: 'suit', accent: 0xb9a6ff, nails: null };
+  return { skin, sleeve: null, gloves: null, watch: 'smart', ring: pres === 'f', bracelet: false, scale, pose: 'knee', outfit: 'work', accent: 0x7dffa8, nails: null };
 }
 
 // one ability's clock: active for `duration`, then cooling down

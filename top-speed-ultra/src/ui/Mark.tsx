@@ -1,21 +1,15 @@
-// The OC sunset wordmark (owner, 2026-10-16): the letters "OC" cut like a racing decal and filled with an Orange
-// County sunset. Three cut-outs (src/ui/assets, transparent WebP) and the letterform alpha (oc-mask.png, used as a
-// CSS mask). The single-file build inlines them (scripts/single-file.mjs). The skyline in the mark is stylised, not
-// any real building, and nothing in it is a brand. Never stretch it: every use keeps the 1200 × 429 aspect.
-import logo1200 from './assets/oc-logo-1200.webp';
+// The OC mark. The owner's sunset wordmark (2026-10-16) gave the letterform: the letters "OC" cut like a racing
+// decal, with the speed streaks under them. Its alpha (oc-mask.png) is a CSS mask, and since the owner's ice-blue
+// reference (2026-10-21) the UI fills it with brushed chrome and an ice rim light (styles.css .oc-mark), so it reads
+// like the chromed "OC" on the showroom wall. The 480 px sunset cut-out (transparent WebP) stays for the run card
+// (runCard.ts), where the card is drawn on a canvas. Never stretch it: every use keeps the 960 × 343 aspect.
 import logo480 from './assets/oc-logo-480.webp';
-import logo240 from './assets/oc-logo-240.webp';
 
-const CUTS = {
-  lg: { src: logo1200, w: 1200, h: 429 },     // the menu and loading brand block
-  md: { src: logo480, w: 480, h: 171 },       // panel headers, the run card
-  sm: { src: logo240, w: 240, h: 86 },        // HUD chips
-} as const;
-export const OC_LOGO_480 = logo480, OC_LOGO_240 = logo240;
+export const OC_LOGO_480 = logo480;
 
-export function OcMark({ size = 'md', alt = '', className = '' }: { size?: keyof typeof CUTS; alt?: string; className?: string }) {
-  const c = CUTS[size];
-  return <img className={'oc-mark ' + className} src={c.src} width={c.w} height={c.h} alt={alt} decoding="async" draggable={false} />;
+// `alt` makes it an image for screen readers ("OC"); without one it is decoration beside text that already says OC
+export function OcMark({ size = 'md', alt = '', className = '' }: { size?: 'lg' | 'md' | 'sm'; alt?: string; className?: string }) {
+  return <span className={`oc-mark ${size} ${className}`} role={alt ? 'img' : undefined} aria-label={alt || undefined} aria-hidden={alt ? undefined : true}><i /></span>;
 }
 
 // The game's name (owner, 2026-10-16): OC Ultra, with Top Speed beneath. The lockup is the OC wordmark, the chromed

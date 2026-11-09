@@ -7,7 +7,8 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
-import { Settings, QUALITY, DENSITY, Mode, STARTS, loadBest, saveBest, VERSION } from './settings';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import { Settings, QUALITY, DENSITY, Mode, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign } from './world/Network';
@@ -26,13 +27,27 @@ import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
-import { CARS, carById, applyCar } from './cars';
+import { CARS, carById, applyCar, paintFor, wheelFor } from './cars';
+import { settle, characterById, jobText, type RunFacts, type Job } from './story';
+type ErrandJob = Extract<Job, { kind: 'errand' }>;
+const fmtClock = (t: number) => `${Math.floor(Math.max(0, t) / 60)}:${String(Math.floor(Math.max(0, t) % 60)).padStart(2, '0')}`;
 import { COURSES, Course, RIVALS, Standing, standings, gate, saveBestTime, bestTime, fmtTime } from './race';
 import type { TrafficCar } from './traffic/Traffic';
 
-export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free';
-const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free'];
-const CAM_LABEL: Record<CamMode, string> = { cockpit: "Driver's seat", hood: 'Hood', chase: 'Chase', free: 'Free look' };
+export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free' | 'cinematic';
+const CAMS: CamMode[] = ['cockpit', 'hood', 'chase', 'free', 'cinematic'];
+const CAM_LABEL: Record<CamMode, string> = { cockpit: "Driver's seat", hood: 'Hood', chase: 'Chase', free: 'Free look', cinematic: 'Cinematic' };
+// The cinematic camera (the style library's DRV_CINEMATIC, PROJECT_OC_STYLE_GUIDE.md): a cycle of tracking shots cut
+// hard from one to the next, every one close to the car so it never needs to know where the walls are. In the car's
+// frame: f metres ahead, s to the side (+ the driver's left), y up; looking at the car's middle plus `at` metres ahead;
+// a long lens. The menu's attract drive runs it, and its hero shot sits the car right of centre, clear of the rail.
+interface Shot { f: [number, number]; s: number; y: number; at: number; fov: number; len: number }
+const SHOTS: Shot[] = [
+  { f: [7.2, 5.0], s: 3.1, y: 0.75, at: 0.4, fov: 30, len: 8 },     // the hero: a low front three-quarter, pushing in
+  { f: [0.4, -0.6], s: 4.6, y: 0.95, at: 0.6, fov: 28, len: 6 },    // the profile, tracking alongside
+  { f: [-6.4, -5.6], s: -2.7, y: 0.6, at: 1.8, fov: 38, len: 6 },   // a low rear three-quarter from the other side
+  { f: [-15, -12], s: 0, y: 8.5, at: 10, fov: 44, len: 6 },         // the drone, high behind
+];
 const DT = 1 / 120;
 const OWNER_CAR = 'tsu.ownerCar';  // owner mode's car (localStorage), never part of the profile
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
@@ -47,7 +62,10 @@ export interface Hud {
   ability: string; abilityOn: number; abilityCool: number;
   racePos: number; raceOf: number; raceLeft: number; raceTime: string; raceCp: string; standings: Standing[];
   tunnel: number; radio: string;
+  errand: { exit: string; left: number; dist: number } | null;   // a story errand: its exit, seconds left, metres to its sign (-1 off its road)
 }
+// signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
+const NOT_AN_EXIT = /weigh|inspection|rest area|vista point|scales?\b/i;
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
 export interface Exit { key: string; text: string; s: number; mi: number; side: 'L' | 'R' }
 // what a feedback report says about the device and this drive: nothing personal, nothing sent by the game
@@ -61,6 +79,7 @@ export interface Result {
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
   race?: { course: string; position: number; of: number; time: string; best: string; credits: number; xp: number; order: string[] };
+  jobs?: { from: string; job: string; credits: number }[];   // story jobs this run completed (story.ts), already paid
 }
 interface RaceState {
   course: Course; path: Path; s0: number; L: number; cps: number[]; next: number; t: number; go: boolean;
@@ -99,6 +118,7 @@ export class Game {
   private bloom: UnrealBloomPass | null = null;
   private gtao: GTAOPass | null = null;
   private outputSat: THREE.IUniform<number> | null = null;   // the output pass's saturation, under cloud
+  private grade: ShaderPass | null = null;                    // Ultra's grade: vignette, edge aberration, film grain
   private settings: Settings;
   private raf = 0;
   private last = 0;
@@ -106,12 +126,15 @@ export class Game {
   private time = 0;
   private paused = false;
   private attract = true;
+  private attractAtmo = true;        // the menu shows the chosen car's atmosphere, until the player touches time or weather
+  private shown: { time: TimeOfDay; weather: Weather } | null = null;   // what the environment was last set to
   private mode: Mode = 'free';
   private cam: CamMode = 'cockpit';
   private camBlend = 1;
   private camFrom = { p: new THREE.Vector3(), q: new THREE.Quaternion() };
   private chasePos = new THREE.Vector3();
   private chaseFwd = new THREE.Vector3(0, 0, 1);
+  private cineT = 0; private cineShot = 0;   // the cinematic camera's clock and its current shot
   private head = new THREE.Vector3();
   private shake = 0;
   private renderScale = 1;
@@ -138,6 +161,9 @@ export class Game {
   private driving = 'rossini-gt';    // the car applyCarChoice last put into the physics and the scene
   private ownerPick: string | null | undefined;   // owner mode's car, kept on this device apart from the profile (undefined: not read yet)
   race: RaceState | null = null;
+  // a story errand (story.ts): set from the phone before a Free Drive, live during it (the sign, the time left)
+  private pendingErrand: ErrandJob | null = null;
+  errand: { job: ErrandJob; sign: Sign; t: number; done: boolean } | null = null;
   readonly radio = new Radio(() => this.audio.context, () => this.audio.musicBus, () => this.audio.noiseBuffer);
   private tunnel = 0;
   private prof = { t: 0, dist: 0, flush: 0 };
@@ -166,6 +192,7 @@ export class Game {
     this.driving = this.carId;
     this.applyDriver();
     this.applyCarChoice();
+    this.syncAtmosphere(true);         // the menu opens in the car's atmosphere, no fade from the settings' sky
     this.input = new Input(canvas);
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.ctxLost = true; this.setPaused(true); this.ev.context(true); });
     canvas.addEventListener('webglcontextrestored', () => { this.ctxLost = false; this.composer = null; this.applyQuality(); this.ev.context(false); });
@@ -229,6 +256,21 @@ export class Game {
     }
     return out.sort((a, b) => a.s - b.s);
   }
+  // the real exit nearest a place (a home, homes.ts): its carriageway, its Settings.exit key, and how far its sign is
+  // from the place in metres. Every direction is considered; the nearest sign wins.
+  nearestExit(x: number, z: number): { label: string; exit: Exit; dist: number } | null {
+    let best: { label: string; exit: Exit; dist: number } | null = null;
+    const p = { x: 0, y: 0, z: 0, h: 0 };
+    for (const g of this.net.signs) {
+      if (!g.path.main || NOT_AN_EXIT.test(g.text.join(' '))) continue;
+      g.path.at(g.s, 0, p);
+      const d = Math.hypot(p.x - x, p.z - z);
+      if (best && d >= best.dist) continue;
+      const label = g.path.label;
+      best = { label, dist: d, exit: { key: `${label} @ ${Math.round(g.s)}`, text: g.text.join(' / '), s: g.s, mi: g.s / 1609.344, side: g.side } };
+    }
+    return best;
+  }
   // the sign a Settings.exit key names, if the data still has it
   private resolveExit(key: string): Sign | null {
     const m = /^(.+) @ (\d+)$/.exec(key);
@@ -262,6 +304,7 @@ export class Game {
 
   private startAttract() {
     this.attract = true; this.over = false; this.mode = 'free';
+    this.syncAtmosphere();
     const m = this.findMain('I-405 North');
     this.placeCar(m, m.len * 0.12, 1, 28);
     this.apLane = 1;
@@ -280,6 +323,7 @@ export class Game {
     this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
     this.audio.applyVolumes();
     this.mode = mode; this.attract = false; this.over = false;
+    this.syncAtmosphere(true);         // a run opens in the player's own time and weather, behind the loading screen
     // the time trial always starts in the same place with the same traffic, so times compare
     const st = mode === 'time' ? STARTS[0] : STARTS.find((x) => x.label === startLabel) ?? STARTS[0];
     // "start at your exit": on that exit's carriageway, 450 m before its sign, so the first thing you see is your exit
@@ -287,6 +331,7 @@ export class Game {
     const m = exit ? exit.path : this.findMain(st.label);
     const s0 = exit ? clamp(exit.s - 450, 40, Math.max(40, m.len - 200)) : m.len * st.at;
     this.placeCar(m, s0, Math.min(1, m.lanes - 1), mode === 'survival' ? 30 : 0);
+    if (mode === 'free') this.startErrand(m, s0); else { this.errand = null; this.pendingErrand = null; }
     this.earned(this.profile.add({ freeway: m.label }));
     this.setRoute(null);
     this.traffic.reseed(mode === 'time' ? 405 : 1000 + Math.floor(Math.random() * 1e6));
@@ -304,8 +349,10 @@ export class Game {
     this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
   }
 
-  quitToMenu() { this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
+  quitToMenu() { this.errand = null; this.profile.save(); this.endRace(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
   cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
+  // tune a station directly (the radio card), -1 for off
+  tuneRadio(i: number) { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.radio.tune(i); }
   // Ultra Realism opens at level 5; then each of its parts can be switched on its own
   get ultraOpen() { return this.profile.level >= 5; }
   private ultraOn() { return this.settings.ultra && this.ultraOpen && !this.attract; }
@@ -316,6 +363,7 @@ export class Game {
     this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
     this.audio.applyVolumes();
     this.mode = 'race'; this.attract = false; this.over = false;
+    this.syncAtmosphere(true);
     const m = this.findMain(course.road), s0 = m.len * course.at, L = course.length;
     this.placeCar(m, s0, Math.min(1, m.lanes - 1), 0);
     this.setRoute(null);
@@ -402,8 +450,9 @@ export class Game {
     const best = bestTime(r.course.id);
     const ordinal = ['1st', '2nd', '3rd', '4th'][Math.min(position, 4) - 1];
     if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
+    const jobs = why ? undefined : this.settleJobs({ mode: 'race', score: credits, distance: r.progress, top: this.top, road: r.course.road, courseId: r.course.id, position });
     setTimeout(() => this.ev.over({
-      mode: 'race', score: credits, distance: r.progress, overtakes: this.overtakes, top: this.top, reason: why ?? (position === 1 ? 'You won' : `You finished ${ordinal}`),
+      mode: 'race', jobs, score: credits, distance: r.progress, overtakes: this.overtakes, top: this.top, reason: why ?? (position === 1 ? 'You won' : `You finished ${ordinal}`),
       road: r.course.road, best, newBest, time: r.t, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions,
       board: { mode: 'race', runs: [], rank: 0 },
       race: { course: r.course.name, position, of: r.racers.length + 1, time: fmtTime(r.t), best: best ? fmtTime(best) : '', credits, xp, order: [...r.order, ...r.racers.filter((c) => !c.racer!.done).map((c) => c.racer!.name)] },
@@ -422,11 +471,17 @@ export class Game {
 
   updateSettings(s: Settings) {
     const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density;
-    if (s.time !== this.settings.time || s.weather !== this.settings.weather) this.env.set(s.time, s.weather);
+    const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
     const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
     const owner = s.owner !== this.settings.owner;
+    const cur = carById(this.driving);
+    const repaint = paintFor(cur, s.paints) !== paintFor(cur, this.settings.paints) || wheelFor(cur, s.wheels) !== wheelFor(cur, this.settings.wheels);
     this.settings = s;
+    // the player touched time or weather: from now on the menu shows their choice, not the car's atmosphere (the
+    // settings themselves never take the car's atmosphere; it lives only in the environment)
+    if (atmo) { this.attractAtmo = false; this.syncAtmosphere(); }
     if (who) this.applyDriver();
+    else if (repaint) this.configureCar();   // the garage's Paint and Wheels tabs: the car changes live
     if (owner && this.attract) this.applyCarChoice();   // on the menu; a run keeps its car until the next start
     this.phys.handling = s.handling;
     if (!this.attract) this.phys.auto = s.transmission === 'auto';
@@ -459,7 +514,21 @@ export class Game {
     this.driving = c.id;
     this.carGrip = applyCar(c, mode);
     this.configureCar();
+    if (this.attract) this.syncAtmosphere();   // the menu's attract drive takes the car's atmosphere
     return c;
+  }
+  // The atmosphere on screen (owner, 2026-10-21: "every car we choose represents a different atmosphere"). On the
+  // menu the attract drive runs in the chosen car's time and weather (cars.ts); a run runs in the player's settings.
+  // The rule: the car's atmosphere holds on the menu only until the player touches time or weather in Settings this
+  // session (attractAtmo); from then on the menu shows what they chose, so a change made on the menu is seen. The
+  // car's atmosphere never reaches the saved settings: it lives only in the environment. Same env.set as always:
+  // eased over a few seconds, or instant behind a loading screen (instant also re-snaps an unchanged atmosphere).
+  private syncAtmosphere(instant = false) {
+    const car = carById(this.driving).atmosphere, s = this.settings, fromCar = this.attract && this.attractAtmo;
+    const time = fromCar ? car.time : s.time, weather = fromCar ? car.weather : s.weather;
+    if (!instant && this.shown && this.shown.time === time && this.shown.weather === weather) return;
+    this.shown = { time, weather };
+    this.env.set(time, weather, instant);
   }
   // the car, its paint, the graphics quality and the driver's look: PlayerCar rebuilds only what changed. Live
   // mirrors (the road and the traffic behind, one extra low-resolution render a frame) come with High and Ultra on
@@ -467,10 +536,11 @@ export class Game {
   private configureCar() {
     const s = this.settings, c = carById(this.driving), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
+    const look = lookFor(d.id, s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.car.configure({
-      car: c.id as CarId, paint: c.paint, quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
-      look: lookFor(d.id, s.presentation, s.skin), presentation: s.presentation, nails: s.presentation === 'f' ? 0x7c1426 : null,
+      car: c.id as CarId, paint: paintFor(c, s.paints), wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
+      look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
     });
   }
 
@@ -539,14 +609,41 @@ export class Game {
       const p = this.phys;
       for (let i = 0; i < 200 && this.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + this.terrain.update(p.x, p.z, 3) > 0; i++) { /* rebuild what's in view */ }
     }
-    this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null;
+    this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null; this.grade = null;
     if (q.post) {
       const size = this.renderer.getDrawingBufferSize(new THREE.Vector2());
       const rt = new THREE.WebGLRenderTarget(Math.max(1, size.x), Math.max(1, size.y), { type: THREE.HalfFloatType, samples: q.msaa });
       const c = new EffectComposer(this.renderer, rt);
       c.addPass(new RenderPass(this.scene, this.camera));
       if (q.ao) { this.gtao = new GTAOPass(this.scene, this.camera, size.x, size.y); this.gtao.blendIntensity = 0.75; c.addPass(this.gtao); }
-      if (q.bloom) { this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.22, 0.45, 0.92); c.addPass(this.bloom); }
+      // Ultra's bloom is set so the hypercar's LEDs bloom at night without the sky blowing out: a lower threshold
+      // (0.85) lets the lamps and the cluster through, a touch more strength (0.3); High keeps its lighter bloom
+      if (q.bloom) { this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), q.grade ? 0.3 : 0.22, 0.45, q.grade ? 0.85 : 0.92); c.addPass(this.bloom); }
+      // Ultra's grade, one small pass between the bloom and the output pass, on the linear HDR frame: a soft
+      // vignette, a chromatic aberration that is zero in the centre and about 1.5 px at the corners (red pushed out,
+      // blue pulled in, radially), and a faint film grain (about ±5 % of each pixel's own value) that moves with time
+      if (q.grade) {
+        this.grade = new ShaderPass({
+          uniforms: { tDiffuse: { value: null }, resolution: { value: new THREE.Vector2(size.x, size.y) }, time: { value: 0 }, aberration: { value: 1.5 }, grain: { value: 0.012 }, vignette: { value: 0.32 } },
+          vertexShader: 'varying vec2 vUv;\nvoid main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+          fragmentShader: `
+            uniform sampler2D tDiffuse; uniform vec2 resolution; uniform float time; uniform float aberration; uniform float grain; uniform float vignette;
+            varying vec2 vUv;
+            float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+            void main() {
+              vec2 c = vUv - 0.5;
+              float r2 = dot(c, c) * 2.0;                                   // 0 in the centre, 1 at the corners
+              vec2 off = c * r2 * 1.4142 * aberration / resolution;         // radial, |off| = aberration px at a corner
+              vec4 g = texture2D(tDiffuse, vUv);
+              vec3 col = vec3(texture2D(tDiffuse, vUv + off).r, g.g, texture2D(tDiffuse, vUv - off).b);
+              float n = hash(gl_FragCoord.xy + vec2(fract(time * 7.31) * 977.0, fract(time * 3.17) * 613.0)) * 2.0 - 1.0;
+              col *= 1.0 + n * grain * 4.0;                                  // proportional: an added grain on the linear frame would lift the night's blacks to grey speckle (0.012 linear is about 28 levels near black after the sRGB curve)
+              col *= 1.0 - vignette * smoothstep(0.25, 1.1, r2);
+              gl_FragColor = vec4(col, g.a);
+            }`,
+        });
+        c.addPass(this.grade);
+      }
       // the output pass with a saturation control folded into its shader (no extra pass): the grade under cloud
       const out = new OutputPass(), sat: THREE.IUniform<number> = { value: 1 };
       (out.uniforms as Record<string, THREE.IUniform>).saturation = sat;
@@ -566,6 +663,7 @@ export class Game {
     this.renderer.setPixelRatio(pr);
     this.renderer.setSize(w, h, false);
     this.composer?.setPixelRatio(pr); this.composer?.setSize(w, h);
+    if (this.grade) (this.grade.uniforms.resolution.value as THREE.Vector2).set(w * pr, h * pr);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
   };
@@ -823,15 +921,17 @@ export class Game {
     this.car.update(dt, alpha, this.phys, this.input.c.brake > 0.05 && this.phys.gear > 0, this.time, this.path);
     this.car.updateCockpit(dt, {
       delta: this.phys.delta, rpm: this.phys.rpm, gear: this.phys.gear, auto: this.phys.auto, limiter: this.phys.limiter,
-      speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake,
+      speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake, paused: this.paused,
     });
     this.traffic.render(alpha, this.time);
     this.updateCamera(dt);
     this.weatherTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
-    this.car.setOutsideView(this.cam !== 'cockpit' && this.cam !== 'free');
+    const view = this.view3();
+    this.car.setOutsideView(view !== 'cockpit' && view !== 'free');
     if (this.outputSat) this.outputSat.value = this.env.saturation;
+    if (this.grade) this.grade.uniforms.time.value = (now / 1000) % 1000;   // the grain moves every frame, paused or not
     if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
     this.env.renderFlare();
     this.renderCorner(dt);
@@ -966,12 +1066,44 @@ export class Game {
         const band = p.vx > FAST ? 1 + (p.vx - FAST) / 22 : 0.2;
         this.score += fwd * 0.1 * band * (1 + Math.min(this.streak, 60) / 30);
       }
+      if (this.mode === 'free') this.errandTick(dt);
       if (this.mode === 'time') {
         this.timeLeft -= dt;
         if (this.distance >= this.nextCheckpoint) { this.nextCheckpoint += 2000; this.timeLeft += 25; this.ev.toast('Checkpoint +25 s', 'good'); }
         if (this.timeLeft <= 0) { this.timeLeft = 0; this.endRun('Out of time'); }
       }
     }
+  }
+
+  // the phone's "Set it up" on an errand: the next Free Drive on its freeway carries it
+  setErrand(job: ErrandJob | null) { this.pendingErrand = job; }
+  // at a Free Drive's start: the errand's sign is the first ahead on this carriageway whose text names its exit
+  private startErrand(m: Path, s0: number) {
+    const j = this.pendingErrand; this.pendingErrand = null; this.errand = null;
+    if (!j || j.road !== m.label) return;
+    const want = j.exit.toLowerCase();
+    const sign = this.net.signs.filter((g) => g.path === m && g.s > s0 + 200 && g.text.join(' / ').toLowerCase().includes(want)).sort((a, b) => a.s - b.s)[0];
+    if (!sign) { this.ev.toast(`No ${j.exit} exit ahead on ${m.label}`, 'bad'); return; }
+    this.errand = { job: j, sign, t: j.seconds, done: false };
+    this.ev.toast(`Errand: ${j.what}. Take the ${j.exit} exit · ${fmtClock(j.seconds)}`, 'info');
+  }
+  private errandTick(dt: number) {
+    const e = this.errand; if (!e || e.done) return;
+    e.t -= dt;
+    if (this.path === e.sign.ramp) { e.done = true; this.ev.toast(`Delivered with ${fmtClock(e.t)} to spare`, 'good'); this.endRun('Delivered'); return; }
+    if (e.t <= 0) { this.errand = null; this.ev.toast('Too late: the errand is off. Keep driving, or try it again from the phone.', 'bad'); }
+  }
+
+  // story jobs (the phone's Messages): what this run met is paid now, and the results screen lists it
+  private settleJobs(r: RunFacts): Result['jobs'] {
+    if (this.attract) return undefined;
+    const paid = settle(this.profile.p, this.profile.level, r);
+    if (!paid.length) return undefined;
+    let lvl: number | null = null;
+    for (const m of paid) { lvl = this.profile.reward(m.xp ?? 0, m.credits ?? 0) ?? lvl; this.ev.toast(`${characterById(m.from)?.name ?? 'Job'}: job done · +${(m.credits ?? 0).toLocaleString()} credits`, 'good'); }
+    this.profile.save();
+    if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
+    return paid.map((m) => ({ from: characterById(m.from)?.name ?? m.from, job: m.job ? jobText(m.job) : '', credits: m.credits ?? 0 }));
   }
 
   // level-ups and achievements, as they happen
@@ -989,7 +1121,9 @@ export class Game {
     if (newBest) saveBest(this.mode, score);
     const run: Run = { mode: this.mode, score, distance: Math.round(this.distance), top: Math.round(this.top * MPH), streak: Math.round(this.bestStreak * 10) / 10, nearMisses: this.nearMisses, overtakes: this.overtakes, collisions: this.collisions, when: Date.now(), road: this.lastMain?.label ?? '' };
     const board = recordRun(run);
-    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board }), 1200);
+    const jobs = this.settleJobs({ mode: this.mode, score, distance: this.distance, top: this.top, road: run.road, errands: this.errand?.done ? [this.errand.job.key] : [] });
+    this.errand = null;
+    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, jobs }), 1200);
   }
 
   // Free Drive has no ending of its own: this one files the drive (distance, top speed) and shows the summary
@@ -997,8 +1131,10 @@ export class Game {
 
   // ----------------------------------------------------------------------------------------- cameras
   private tmpQ = new THREE.Quaternion(); private tmpE = new THREE.Euler(0, 0, 0, 'YXZ'); private tmpV = new THREE.Vector3(); private wantP = new THREE.Vector3(); private wantQ = new THREE.Quaternion();
+  // the camera actually in use: the menu's attract drive is filmed cinematically, a run uses the player's choice
+  private view3(): CamMode { return this.attract ? 'cinematic' : this.cam; }
   private updateCamera(dt: number) {
-    const c = this.input.c, p = this.phys, portrait = this.camera.aspect < 0.95;
+    const c = this.input.c, p = this.phys, portrait = this.camera.aspect < 0.95, view = this.view3();
     const speedK = clamp(Math.abs(p.vx) / 90, 0, 1);
     let fov = 60;
     this.car.root.updateMatrixWorld(true);
@@ -1007,7 +1143,7 @@ export class Game {
       this.car.rear.getWorldPosition(this.wantP); this.car.rear.getWorldQuaternion(this.wantQ);
       this.tmpQ.setFromEuler(this.tmpE.set(-0.08, 0, 0)); this.wantQ.multiply(this.tmpQ);
       fov = 62;
-    } else if (this.cam === 'cockpit' || this.cam === 'free') {
+    } else if (view === 'cockpit' || view === 'free') {
       this.head.x = damp(this.head.x, clamp(p.ay * 0.0032, -0.04, 0.04), 6, dt);
       this.head.z = damp(this.head.z, clamp(p.ax * 0.0028, -0.035, 0.03), 6, dt);
       this.car.eye.getWorldPosition(this.wantP);
@@ -1017,11 +1153,26 @@ export class Game {
       const sway = this.attract ? Math.sin(this.time * 0.25) * 0.18 : 0;
       this.tmpQ.setFromEuler(this.tmpE.set(basePitch + c.lookPitch, c.lookYaw + sway, 0));
       this.wantQ.multiply(this.tmpQ);
-      fov = (portrait ? 96 : 58) + (this.cam === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
-    } else if (this.cam === 'hood') {
+      fov = (portrait ? 96 : 58) + (view === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
+    } else if (view === 'hood') {
       this.car.hood.getWorldPosition(this.wantP); this.car.root.getWorldQuaternion(this.wantQ);
       this.tmpQ.setFromEuler(this.tmpE.set(-0.04 + c.lookPitch, c.lookYaw, 0)); this.wantQ.multiply(this.tmpQ);
       fov = (portrait ? 92 : 62) + this.settings.fov + speedK * 5;
+    } else if (view === 'cinematic') {
+      // the shot's clock; a new shot is a hard cut (no blend), as an edit would be
+      this.cineT += dt;
+      if (this.cineT >= SHOTS[this.cineShot].len) { this.cineT = 0; this.cineShot = (this.cineShot + 1) % SHOTS.length; this.camBlend = 1; }
+      const sh = SHOTS[this.cineShot], k = this.cineT / sh.len, ease = k * k * (3 - 2 * k);
+      const root = this.car.root.position, fwd = this.tmpV.set(Math.sin(p.psi), 0, Math.cos(p.psi));
+      this.chaseFwd.lerp(fwd, 1 - Math.exp(-dt * 3)).normalize();
+      const F = this.chaseFwd, side = new THREE.Vector3(F.z, 0, -F.x), ahead = lerp(sh.f[0], sh.f[1], ease);
+      this.wantP.copy(root).addScaledVector(F, ahead).addScaledVector(side, sh.s); this.wantP.y = root.y + sh.y;
+      const look = root.clone().addScaledVector(F, sh.at); look.y += 0.55;
+      this.wantQ.setFromRotationMatrix(new THREE.Matrix4().lookAt(this.wantP, look, new THREE.Vector3(0, 1, 0)));
+      // on the menu the hero sits right of centre, clear of the rail (a turn to the left moves the subject right)
+      // and tilted down a touch so it sits above the mode cards along the bottom
+      if (this.attract && !portrait && this.cineShot === 0) { this.tmpQ.setFromEuler(this.tmpE.set(-0.07, 0.16, 0)); this.wantQ.multiply(this.tmpQ); }
+      fov = (portrait ? sh.fov * 1.6 : sh.fov) + speedK * 3;
     } else {
       const root = this.car.root.position, psi = p.psi;
       const fwd = this.tmpV.set(Math.sin(psi), 0, Math.cos(psi));
@@ -1052,7 +1203,7 @@ export class Game {
       this.camera.quaternion.slerpQuaternions(this.camFrom.q, this.wantQ, t);
     } else { this.camera.position.copy(this.wantP); this.camera.quaternion.copy(this.wantQ); }
     if (Math.abs(this.camera.fov - fov) > 0.05) { this.camera.fov = lerp(this.camera.fov, fov, 1 - Math.exp(-dt * 6)); this.camera.updateProjectionMatrix(); }
-    this.camera.near = this.cam === 'chase' && !lookBack ? 0.15 : 0.05;
+    this.camera.near = (view === 'chase' || view === 'cinematic') && !lookBack ? 0.15 : 0.05;
   }
 
   // ----------------------------------------------------------------------------------------- the corner window
@@ -1186,6 +1337,7 @@ export class Game {
       racePos: this.race ? this.race.position : 0, raceOf: this.race ? this.race.racers.length + 1 : 0, raceLeft: this.race ? this.race.L - this.race.progress : 0,
       raceTime: this.race ? fmtTime(this.race.t) : '', raceCp: this.race && this.race.cps.length ? `${this.race.next}/${this.race.cps.length}` : '', standings: this.race ? this.race.standings : NO_STANDINGS,
       tunnel: this.tunnel, radio: this.radio.current ? `${this.radio.current.call} ${this.radio.current.freq}` : '',
+      errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
     });
   }
 

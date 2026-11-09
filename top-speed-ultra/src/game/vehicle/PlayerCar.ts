@@ -18,7 +18,7 @@ import * as THREE from 'three';
 import { buildCar, SWITCHED_LAMPS } from '../../preview/car';
 import { buildCockpit, Cockpit } from '../../preview/cockpit';
 import { buildDriverArms, DriverArms, HandPose } from '../../preview/hands';
-import { addWheel } from '../../preview/car-wheel';
+import { addWheel, type WheelStyle } from '../../preview/car-wheel';
 import { Kit } from '../../preview/car-kit';
 import { bodyFor } from '../../preview/car-body';
 import type { CarBody } from '../../preview/car-body';
@@ -33,8 +33,10 @@ import { clamp, damp, lerp } from '../util';
 
 export type CarQuality = 'phone' | 'high';
 export type MirrorMode = 'live' | 'env';
-export interface CarConfig { car: CarId; paint: number; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null }
-export interface CockpitState { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number }
+// wheel: the garage's rim style (cars.ts WHEELS); absent, the car's own
+export interface CarConfig { car: CarId; paint: number; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null; wheel?: WheelStyle }
+// paused: the game is paused (the hands' off-wheel blend and wave hold still)
+export interface CockpitState { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number; paused?: boolean }
 
 // the exterior's parts that only make sense from outside: the tinted glass and the dark cabin silhouette behind it
 const OUTSIDE_ONLY = ['glass', 'frit', 'interior', 'seatSil'];
@@ -120,11 +122,13 @@ export class PlayerCar {
     const o = this.cfg;
     const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors;
     const paintChanged = !carChanged && o!.paint !== c.paint;
+    const wheelsChanged = !carChanged && o!.wheel !== c.wheel;
     const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify(o!.look) !== JSON.stringify(c.look);
     this.cfg = c;
     const t0 = performance.now();
     if (carChanged) this.buildCarAndCockpit(c);
     else if (paintChanged) this.setPaint(c.paint);
+    if (wheelsChanged) this.buildWheels(c);   // the garage's Wheels tab: only the four wheels are rebuilt
     if (handsChanged) this.buildHands(c);
     this.setMirrorExclusions();
     this.stats.buildMs = Math.round(performance.now() - t0);
@@ -141,8 +145,6 @@ export class PlayerCar {
   private buildCarAndCockpit(c: CarConfig) {
     if (this.exterior) disposeGeometry(this.exterior);
     if (this.interior) { for (const m of this.interior.mirrors) m.dispose(); disposeGeometry(this.interior.group); }
-    for (const w of this.wheels) disposeGeometry(w.steer);
-    this.wheels = [];
     let t = performance.now();
     const ext = buildCar({ car: c.car, paint: c.paint, quality: c.quality, cabin: 'full', wheels: false });
     this.stats.carMs = Math.round(performance.now() - t);
@@ -154,22 +156,34 @@ export class PlayerCar {
     this.stats.cockpitMs = Math.round(performance.now() - t);
     this.interior = ck; this.body.add(ck.group);
     ck.wheel.rotation.z = this.wheelAngle;
-    // wheels: the preview builds them rigid into the body; here each gets its own groups so it spins, and the
-    // fronts steer. The calipers stay on the hub (the non-spinning kit); the tyre, rim and disc turn.
-    const B = bodyFor(c.car), P = shapeFor(c.car), A = B.AXLE;
+    const B = bodyFor(c.car), P = shapeFor(c.car);
     this.buildSunOccluder(B, ck);
     // the driver's eye (the hypercar's sits lower and further in), and the headlamp beams from this car's lamps
     this.eye.position.copy(B.eye); this.hood.position.set(0, P.hoodY ?? 1.0, -1.45);
     this.beams.forEach((b, i) => { const s = i ? 1 : -1; b.position.set(s * B.beamAt.x, B.beamAt.y, B.beamAt.z); b.target.position.set(s * B.beamAt.x, 0.9, -70); });
+    // the beams' colour: warm white (halogen-like) for the Rossinis and the Vela; the hypercar's ice-blue LED blades
+    // throw a cool white-blue, and their pool on the road takes the same cast (the other cars' stays as it was)
+    const beamC = P.led ? 0xd4e8ff : 0xfff4e6, poolC = P.led ? [0.86, 0.94, 1.0] : [1, 1, 1];
+    for (const b of this.beams) b.color.setHex(beamC);
+    (this.pool.material as THREE.MeshBasicMaterial).color.setRGB(POOL_LEVEL * poolC[0], POOL_LEVEL * poolC[1], POOL_LEVEL * poolC[2]);
     this.lamps = { L: ext.getObjectByName('sigL') ?? null, R: ext.getObjectByName('sigR') ?? null, rev: ext.getObjectByName('reverse') ?? null, glow: ext.getObjectByName('brakeGlow') ?? null };
     for (const k of SWITCHED_LAMPS) { const m = ext.getObjectByName(k); if (m) m.visible = false; }
     this.armsAt.set(...seatOffset(P));
     if (this.arms) this.arms.group.position.copy(this.armsAt);
+    this.buildWheels(c);
+  }
+
+  // wheels: the preview builds them rigid into the body; here each gets its own groups so it spins, and the fronts
+  // steer. The calipers stay on the hub (the non-spinning kit); the tyre, rim and disc turn.
+  private buildWheels(c: CarConfig) {
+    for (const w of this.wheels) { disposeGeometry(w.steer); w.steer.parent?.remove(w.steer); }
+    this.wheels = [];
+    const B = bodyFor(c.car), P = shapeFor(c.car), A = B.AXLE;
     for (const [z, track, front] of [[A.zF, A.trackF, true], [A.zR, A.trackR, false]] as [number, number, boolean][]) {
       const r = front ? A.r : rearR(P), k = r / 0.345, scale = new THREE.Matrix4().makeScale(1, k, k);
       for (const out of [1, -1] as const) {
         const hub = new Kit(), spinKit = new Kit();
-        addWheel(hub, { q: c.quality, front, style: P.wheel, w: front ? A.wF : A.wR, sidewall: P.sidewall }, scale, out, spinKit);
+        addWheel(hub, { q: c.quality, front, style: c.wheel ?? P.wheel, w: front ? A.wF : A.wR, sidewall: P.sidewall, brand: P.brand }, scale, out, spinKit);
         const steer = new THREE.Group(), spin = new THREE.Group();
         hub.build(this.mats, steer, { shadow: () => false });
         spinKit.build(this.mats, spin, { shadow: (key) => key === 'tyre' || key === 'rimPaint' });
@@ -290,10 +304,14 @@ export class PlayerCar {
     this.wheelAngle = damp(this.wheelAngle, target, 30, dt);
     if (this.interior) {
       this.interior.wheel.rotation.z = this.wheelAngle;
-      this.interior.setInstruments?.({ rpm: s.rpm });
+      // the tach's needle, and (the hypercar's live display only) the speed, the gear, the power in use (the throttle's
+      // share of the power the engine makes at these revs, a display figure) and the tune: Unleashed above 1 MW
+      const kwMax = SPEC.power / 1000, kw = s.throttle * kwMax * clamp((s.rpm / SPEC.redline) * 1.25, 0.15, 1);
+      this.interior.setInstruments?.({ rpm: s.rpm, mph: s.speed * 2.236936, gear: s.gear < 0 ? 'R' : s.gear === 0 ? 'N' : String(s.gear),
+        kw, kwMax, rpmFrac: s.rpm / SPEC.redline, mode: SPEC.power >= 1e6 ? 'UNLEASHED' : 'RACE TUNE' });
       this.interior.update?.(dt);
     }
-    this.arms?.setWheelAngle(this.wheelAngle);
+    this.arms?.setWheelAngle(this.wheelAngle, s.paused ? 0 : dt);
   }
 
   // place everything for this frame; alpha blends the last two physics steps. With the road's path the beam pool is

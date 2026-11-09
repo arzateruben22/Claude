@@ -2,9 +2,12 @@
 // their vertex normals, and dorsal vertices much darker (baked AO) than their neighbours.
 //   node tools/preview-hands-specks.mjs [m|f] [cell mm]
 import { build } from 'esbuild';
-import { pathToFileURL } from 'node:url';
-const out = '/home/user/Claude/top-speed-ultra/tests/out/preview/build/hands-prof/geo3.mjs';
-await build({ stdin: { contents: `export * from './src/preview/hands-geo.ts'; export * from './src/preview/hands-sdf.ts';`, resolveDir: '/home/user/Claude/top-speed-ultra', loader: 'ts' }, bundle: true, format: 'esm', platform: 'node', outfile: out, logLevel: 'warning' });
+import path from 'node:path';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+// this checkout's top-speed-ultra (was the main checkout's, so a worktree measured the main checkout's code)
+const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const out = path.join(ROOT, 'tests/out/preview/build/hands-prof/geo3.mjs');
+await build({ stdin: { contents: `export * from './src/preview/hands-geo.ts'; export * from './src/preview/hands-sdf.ts';`, resolveDir: ROOT, loader: 'ts' }, bundle: true, format: 'esm', platform: 'node', outfile: out, logLevel: 'warning' });
 const M = await import(pathToFileURL(out).href + '?t=' + Date.now());
 const g = M.buildArmGeometry(process.argv[2] ?? 'm', Number(process.argv[3] ?? 2.25));
 const { idx, pos: P, nrm: N } = g.mesh, nv = P.length / 3, S = g.skin;

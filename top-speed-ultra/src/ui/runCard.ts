@@ -2,7 +2,7 @@
 // the phone's own share sheet takes the picture where there is one, and everywhere else it downloads as a PNG.
 // It carries the honesty lines the game lives by: it's a game, scores stay on this device, the map is credited.
 // The header is the game's lockup, as on the menus: the OC sunset wordmark (the 480 px cut-out), the chromed ULTRA
-// beside it and TOP SPEED under (the game is "OC Ultra", owner 2026-10-16); its colours are the wordmark's.
+// beside it and TOP SPEED under (the game is "OC Ultra", owner 2026-10-16); its colours follow the atmosphere on screen.
 import type { Result } from '../game/Game';
 import { MODES } from '../game/settings';
 import { OC_LOGO_480 } from './Mark';
@@ -10,7 +10,17 @@ import { OC_LOGO_480 } from './Mark';
 const W = 1080, H = 1350;                 // 4:5, the portrait size feeds like
 const FONT = '"Saira Semi Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif';
 const MPH = 2.236936, MI = 1609.344;
-const SUNSET = '#fd9123', AMBER = '#febc31', EMBER = '#ee1e0a';
+// the card takes the atmosphere on screen (the car's, owner 2026-10-21): its colours are read from the page's tokens
+// when the card is drawn (styles.css :root[data-car] / [data-look]); the fallbacks are the OC sunset's
+interface Palette { accent: string; sel: string; deep: string; hi: string; base: [string, string, string] }
+function palette(): Palette {
+  let css: CSSStyleDeclaration | null = null;
+  try { css = getComputedStyle(document.documentElement); } catch { /* no page: the fallbacks */ }
+  const v = (n: string, d: string) => { const x = css?.getPropertyValue(n).trim(); return x && /^#[0-9a-f]{6}$/i.test(x) ? x : d; };
+  return { accent: v('--ice', '#fd9123'), sel: v('--cyan', '#febc31'), deep: v('--ice-deep', '#ee1e0a'), hi: v('--ice-hi', '#ffc98c'),
+    base: [v('--night-1', '#0b0812'), v('--night-2', '#120c1e'), v('--night-3', '#1b1329')] };
+}
+const rgba = (hex: string, a: number) => `rgba(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)}, ${a})`;
 const DISPLAY = '"Big Shoulders Display", "Arial Narrow", Impact, sans-serif';
 const MARK_W = 330, MARK_H = MARK_W * 171 / 480;   // the 480 px cut-out, drawn smaller for a crisp edge, never stretched
 // inside the cut-out the letters start 2 % in and end at 85 % of its height (the speed streaks run below)
@@ -56,16 +66,17 @@ function shield(g: CanvasRenderingContext2D, label: string, x: number, y: number
 export function drawRunCard(r: Result, name: string, logo: HTMLImageElement | null = null): HTMLCanvasElement {
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const g = c.getContext('2d')!;
-  // night road: the violet-black of the menus, a sunset glow on the horizon, lane lines running away from the bottom
-  const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#0b0812'); bg.addColorStop(0.55, '#120c1e'); bg.addColorStop(1, '#1b1329');
+  // night road: the menus' surfaces, the accent's glow on the horizon, lane lines running away from the bottom
+  const P = palette(), SUNSET = P.accent, AMBER = P.sel, EMBER = P.deep;
+  const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, P.base[0]); bg.addColorStop(0.55, P.base[1]); bg.addColorStop(1, P.base[2]);
   g.fillStyle = bg; g.fillRect(0, 0, W, H);
   const glow = g.createRadialGradient(W / 2, H * 0.58, 20, W / 2, H * 0.58, W * 0.7);
-  glow.addColorStop(0, 'rgba(253, 145, 35, 0.2)'); glow.addColorStop(0.5, 'rgba(238, 30, 10, 0.06)'); glow.addColorStop(1, 'rgba(238, 30, 10, 0)');
+  glow.addColorStop(0, rgba(SUNSET, 0.2)); glow.addColorStop(0.5, rgba(EMBER, 0.06)); glow.addColorStop(1, rgba(EMBER, 0));
   g.fillStyle = glow; g.fillRect(0, 0, W, H);
   const vy = H * 0.58;                                      // vanishing point
   for (let i = -2; i <= 2; i++) {
     const x0 = W / 2 + i * 330, x1 = W / 2 + i * 26;
-    g.strokeStyle = i === 0 ? 'rgba(0, 0, 0, 0)' : Math.abs(i) === 1 ? 'rgba(243, 241, 236, 0.22)' : 'rgba(253, 145, 35, 0.5)';
+    g.strokeStyle = i === 0 ? 'rgba(0, 0, 0, 0)' : Math.abs(i) === 1 ? 'rgba(243, 241, 236, 0.22)' : rgba(SUNSET, 0.5);
     g.lineWidth = Math.abs(i) === 2 ? 5 : 4;
     if (Math.abs(i) === 1) g.setLineDash([60, 90]); else g.setLineDash([]);
     g.beginPath(); g.moveTo(x0, H + 40); g.lineTo(x1, vy); g.stroke();
@@ -75,8 +86,8 @@ export function drawRunCard(r: Result, name: string, logo: HTMLImageElement | nu
   const sc = g.createLinearGradient(0, 0, 0, H); sc.addColorStop(0, 'rgba(6, 7, 9, 0.2)'); sc.addColorStop(0.5, 'rgba(6, 7, 9, 0.55)'); sc.addColorStop(1, 'rgba(6, 7, 9, 0.85)');
   g.fillStyle = sc; g.fillRect(0, 0, W, H);
 
-  // the sunset hairline along the top, as on the menus' panels
-  const edge = g.createLinearGradient(0, 0, W, 0); edge.addColorStop(0, '#f96d09'); edge.addColorStop(0.5, '#fc6231'); edge.addColorStop(1, EMBER);
+  // the accent's hairline along the top, as on the menus' panels
+  const edge = g.createLinearGradient(0, 0, W, 0); edge.addColorStop(0, P.hi); edge.addColorStop(0.5, SUNSET); edge.addColorStop(1, EMBER);
   g.fillStyle = edge; g.fillRect(0, 0, W, 8);
 
   const pad = 72;
