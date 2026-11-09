@@ -140,6 +140,12 @@ export class BarLife {
     return best;
   }
   overheadTarget() { return this.ctx.overheadTarget(); }
+  /** S4: a match on the big screen now (the sound's broadcast bed) and how much a moment just lifted the room: 1 when
+   *  a moment lands on a screen, easing to 0 over the Cheer button's 8 s (audio.ts) */
+  bigMatchOn() { const ch = this.tv.bigChannel(this.T); return ch !== 3 && !!this.tv.inPlay(ch, this.T); }
+  excitement() { return this.cheerT > 0 ? Math.min(1, this.cheerT / 8) : 0; }
+  /** S4: a game night now (the featured match's final whistle until close): the dance spot's lights (look.ts) */
+  gameNightNow() { const n = this.now(); return this.tv.gameNight(this.weekNow(), n.day, n.hour); }
   /** a guest or one of the staff within r metres of (x, z) (the doors open for them) */
   someoneNear(x: number, z: number, r: number) { return !!this.crowd && this.crowd.someoneNear(x, z, r); }
   /** the crowd's counts for stats() */
