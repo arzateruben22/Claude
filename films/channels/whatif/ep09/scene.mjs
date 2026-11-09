@@ -143,6 +143,9 @@ const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.7vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "1.6vmin auto 0" });
 const ebox = endBox(endEl, { t0: FILM.endCard, answer: FILM.endAnswer, S1: Math.min(W, H) / 1080 });
 // the guess bar: how much extra rope you might guess ("thousands of km?")
+const bigEl = document.createElement("div");
+bigEl.style.cssText = "position:absolute;left:50%;top:21%;transform:translateX(-50%);padding:1.4vmin 3.6vmin;border:.7vmin solid " + MARK + ";border-radius:2.4vmin;background:rgba(14,17,21,.78);opacity:0;pointer-events:none;z-index:4;font:700 11vmin/1.05 var(--font-mono);color:var(--hud-text);white-space:nowrap";
+bigEl.textContent = FILM.endAnswer; document.body.appendChild(bigEl);
 const guessEl = document.createElement("div");
 guessEl.style.cssText = "position:absolute;left:12%;top:30%;width:76%;opacity:0;pointer-events:none;z-index:4;font:600 3.4vmin/1.2 var(--font-text);color:var(--hud-text)";
 guessEl.innerHTML = '<div style="margin-bottom:1.6vmin;letter-spacing:.02em">extra rope you might guess</div><div style="height:4.2vmin;border:.35vmin solid var(--hud-text-2);border-radius:99px;overflow:hidden"><div id="gfill" style="height:100%;width:0%;background:' + MARK + '"></div></div><div id="gq" style="margin-top:1.6vmin;font:700 4.6vmin/1 var(--font-mono);color:' + MARK + '">thousands of km?</div>';
@@ -172,17 +175,17 @@ window.seek = function (t) {
   for (let i = 0; i < NPOLE; i++) { S3.set(1, Math.max(0.01, ropeY), 1); P3.set((i - 40) * 5, 0, -0.45); Mx.compose(P3, Q0, S3); poles.setMatrixAt(i, Mx); } poles.instanceMatrix.needsUpdate = true;
   const rodOn = shot === "lift" && t > CUE.dive[1] - 0.8 ? E.out3(seg(t, CUE.dive[1] - 0.8, CUE.dive[1] - 0.2)) * (1 - E.in3(seg(t, CUE.why - 0.2, CUE.why + 0.1))) : 0;
   rod.visible = rodOn > 0.02; rod.material.opacity = rodOn; for (const m of rodTicks) { m.visible = rodOn > 0.02; m.material.opacity = rodOn; }
-  const onTen = t >= CUE.home - 0.2 && shot === "take";
+  const onTen = shot === "take";
   youX = onTen ? TEN[0] - 1.6 : 0;
   you.group.visible = d < 500 && ((shot === "lift" && t > CUE.dive[1] - 1.6) || shot === "why" && t < CUE.why + 0.5 || onTen);
   const armsU = 0.05;
   you.set({ at: [youX, 0.85, onTen ? 1.0 : 0], arms: armsU, tilt: 0 }); if (!onTen) you.set({ at: [0.15, 0.85, 0.2], arms: 0.06, tilt: 0 });
 
   // the planet and its rope ring
-  const planet = d > 1500 && (shot === "planet" || shot === "lift" || shot === "end");
+  const planet = d > 1500 && (shot === "planet" || shot === "lift" || shot === "end" || shot === "payoff");
   const pl = seg(ld, 3.3, 4.4);
   earthB.visible = planet && pl > 0.01; earthB.position.set(0, -R_E, 0); earthB.scale.setScalar(R_E); const endE = shot === "end" ? seg(t, beat("tease").t1 - 0.55, beat("tease").t1 - 0.12) : 1; earthB.material.uniforms.uOpacity.value = pl * endE * (1 - 0.85 * seg(ld, 3.9, 4.7) * (1 - seg(ld, 7.2, 7.7))); earthB.material.uniforms.uSpin.value = 2 * Math.PI * t / FILM.dur; ringQ.material.uniforms.uPulse.value = 2 * Math.PI * 13 * t / FILM.dur;
-  const lu = E.inout2(seg(t, CUE.lift, CUE.lift + 1.4)) * (t < CUE.why ? 1 : 0);
+  const lu = shot === "payoff" ? 1 : E.inout2(seg(t, CUE.lift, CUE.lift + 1.4)) * (t < CUE.why ? 1 : 0);
   ringQ.visible = planet; ringQ.position.set(0, -R_E, 0); ringQ.scale.setScalar(R_E * 1.0);
   const w = px * 1.6 / R_E;
   ringQ.material.uniforms.uR1.value = 1.0; ringQ.material.uniforms.uR2.value = 1.0 + 0.055 * lu; ringQ.material.uniforms.uW.value = w;
@@ -191,7 +194,7 @@ window.seek = function (t) {
   { const nearPan = shot === "why" || shot === "whoa" || shot === "work" || shot === "take" || shot === "lift";
     dust0.visible = nearPan && d < 160; dust0.material.opacity = 0.32 * (1 - seg(ld, 1.8, 2.2));
     dust1.visible = (shot === "lift" || shot === "planet" || shot === "end" || shot === "take") && d > 200 && d < 4e4; dust1.material.opacity = 0.5 * seg(ld, 2.2, 2.7) * (1 - seg(ld, 3.9, 4.4));
-    dust2.visible = (shot === "lift" || shot === "planet" || shot === "end") && d > 2e3 && d < 4e6; dust2.material.opacity = 0.5 * seg(ld, 3.4, 3.9) * (1 - seg(ld, 6.0, 6.5)); }
+    dust2.visible = (shot === "lift" || shot === "planet" || shot === "end" || shot === "payoff") && d > 2e3 && d < 4e6; dust2.material.opacity = 0.5 * seg(ld, 3.4, 3.9) * (1 - seg(ld, 6.0, 6.5)); }
   // the guess bar
   { const g = seg(t, CUE.guess[0] - 0.1, CUE.guess[0] + 0.4) * (1 - seg(t, CUE.guess[2], CUE.guess[2] + 0.5));
     guessEl.style.opacity = String((g * 0.95).toFixed(3)); const f = E.inout2(seg(t, CUE.guess[0] + 0.3, CUE.guess[1])); document.getElementById("gfill").style.width = (84 * f).toFixed(1) + "%"; }
@@ -216,13 +219,14 @@ window.seek = function (t) {
 
   // ten meters
   const tenOn = shot === "take" || (shot === "end" && t < FILM.endCard + 1.0);
-  const grow = E.inout2(seg(t, CUE.home + 0.2, CUE.home + 2.0)), hh = 1 + 9 * grow;
-  const tenFade = 1 - seg(t, CUE.ph2 + 0.2, CUE.ph2 + 1.0) + seg(t, FILM.endCard + 0.4, FILM.endCard + 0.41);
+  const grow = E.inout2(seg(t, CUE.take0 + 0.1, CUE.take0 + 1.3)), hh = 1 + 9 * grow;
+  const tenFade = 1 - seg(t, CUE.take0 + 1.9, CUE.take0 + 2.5) + seg(t, FILM.endCard + 0.4, FILM.endCard + 0.41);
   tenPoles.visible = tenOn && tenFade > 0.02; tenRope.visible = tenOn && tenFade > 0.02; tenPoles.material.opacity = 0.9 * tenFade; tenRope.material.opacity = tenFade;
   for (let i = 0; i < NT; i++) { S3.set(1, hh, 1); P3.set(TEN[0] - 2.7 + (i - 2) * 12, 0, 0); Mx.compose(P3, Q0, S3); tenPoles.setMatrixAt(i, Mx); } tenPoles.instanceMatrix.needsUpdate = true;
   tenRope.scale.set(160, 0.06, 0.06); tenRope.position.set(TEN[0] + 40, hh, 0);
-  pieces.forEach((m, i) => { const u = seg(t, CUE.ph2 + 0.9 + 0.22 * i, CUE.ph2 + 1.25 + 0.22 * i); m.visible = tenOn && u > 0.01; m.scale.set(Math.max(0.01, (EXTRA - 0.15) * u), 0.9, 0.9); m.position.set(TEN[0] + EXTRA * i + (EXTRA - 0.15) * u / 2, 0.45, 3.0); });
+  pieces.forEach((m, i) => { const u = seg(t, CUE.take0 + 2.0 + 0.14 * i, CUE.take0 + 2.3 + 0.14 * i); m.visible = tenOn && u > 0.01; m.scale.set(Math.max(0.01, (EXTRA - 0.15) * u), 0.9, 0.9); m.position.set(TEN[0] + EXTRA * i + (EXTRA - 0.15) * u / 2, 0.45, 3.0); });
 
+  bigEl.style.opacity = String((shot === "payoff" ? E.out3(seg(t, CUE.home + 0.15, CUE.home + 0.7)) * (1 - seg(t, CUE.take0 - 0.2, CUE.take0 - 0.02)) : 0).toFixed(3));
   hud.update(t);
   const tail = E.inout2(seg(t, beat("tease").t1 - 1.5, beat("tease").t1 - 0.75));
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }

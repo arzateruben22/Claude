@@ -76,10 +76,10 @@ GLASS = T(0.2, 0.9, 0.0, 11.0, 10.0, 0.0, 0.35)
 GLASS2 = T(0.2, 0.9, 0.0, 10.4, 10.0, 6.0, 0.35)
 BALLP = T(0.0, 0.0, 0.0, 9500.0, 8.0, 0.0, 0.30)
 BALLQ = T(0.0, 0.0, 0.0, 8600.0, 8.0, 0.0, 0.30)
-MOONP = T(-1500.0, 0.0, 0.0, 24500.0, 8.0, 0.0, 0.30)
-EARTHP = T(5800.0, 0.0, 0.0, 73000.0, 8.0, 0.0, 0.30)
+MOONP = T(-1700.0, 0.0, 0.0, 27000.0, 8.0, 0.0, 0.30)
+EARTHP = T(5900.0, 0.0, 0.0, 79000.0, 8.0, 0.0, 0.30)
 WORKP = T(250.0, 0.0, 0.0, 14000.0, 8.0, 0.0, 0.84)
-FILMP = T(8000.0, 0.0, 0.0, 75000.0, 8.0, 0.0, 0.30)
+FILMP = T(6800.0, 0.0, 0.0, 80000.0, 8.0, 0.0, 0.30)
 def lead(pages, by=0.14):
     """a caption page is fully in when its first word starts: it fades in `by` s earlier (a page that follows another with no gap is left alone)"""
     for i, pg in enumerate(pages):
@@ -92,10 +92,10 @@ CAM = {
     "glass": [{"t": 0.0, **GLASS}, {"t": t_nor, **GLASS2, "ease": "sine"}],
     "pool": [{"t": t_nor, **BALLP}, {"t": t_why, **BALLQ, "ease": "sine"}],
     "why": [{"t": t_why, **BALLQ}, {"t": round(t_planet, 4), **EARTHP, "ease": "inout2"}, {"t": t_whoa, **EARTHP, "ease": "linear"}],
-    "moon": [{"t": t_whoa, **MOONP}, {"t": t_next, **T(-1500.0, 0.0, 0.0, 23500.0, 8.0, 0.0, 0.30), "ease": "sine"}],
-    "earth": [{"t": t_next, **EARTHP}, {"t": t_work0, **T(5800.0, 0.0, 0.0, 70000.0, 8.0, 0.0, 0.30), "ease": "sine"}],
+    "moon": [{"t": t_whoa, **MOONP}, {"t": t_next, **T(-1700.0, 0.0, 0.0, 26000.0, 8.0, 0.0, 0.30), "ease": "sine"}],
+    "earth": [{"t": t_next, **EARTHP}, {"t": t_work0, **T(5900.0, 0.0, 0.0, 76000.0, 8.0, 0.0, 0.30), "ease": "sine"}],
     "work": [{"t": t_work0, **WORKP}, {"t": t_home, **T(250.0, 0.0, 0.0, 13200.0, 8.0, 0.0, 0.84), "ease": "sine"}],
-    "take": [{"t": t_home, **FILMP}, {"t": t_end, **T(8000.0, 0.0, 0.0, 69000.0, 8.0, 0.0, 0.30), "ease": "sine"}],
+    "take": [{"t": t_home, **FILMP}, {"t": t_end, **T(6800.0, 0.0, 0.0, 77000.0, 8.0, 0.0, 0.30), "ease": "sine"}],
     "end": [{"t": t_end, **GLASS}, {"t": B["tease"]["t1"], **GLASS}],
 }
 SHOTS = [{"at": 0.0, "name": "glass"}, {"at": t_nor, "name": "pool"}, {"at": t_why, "name": "why"}, {"at": t_whoa, "name": "moon"},
@@ -148,7 +148,7 @@ LABELS += [
     {"id": "l-moon", "text": "the Moon · 3,480 km", "kind": "part", "anchor": "moon-top", "t0": t_whoa + 0.3, "t1": t_next - 0.2, "side": -1, "shot": "moon"},
     {"id": "l-ballm", "text": "water ball · 1,383 km", "kind": "anchor", "anchor": "ball-top", "t0": t_whoa + 0.3, "t1": t_next - 0.2, "side": 1, "shot": "moon"},
     {"id": "l-earth", "text": "the Earth · 12,756 km", "kind": "part", "anchor": "earth-top", "t0": t_next + 0.3, "t1": t_work0 - 0.2, "side": 1, "shot": "earth"},
-    {"id": "l-balle", "text": "water ball", "kind": "anchor", "anchor": "ball-top", "t0": t_next + 0.3, "t1": t_work0 - 0.2, "side": -1, "shot": "earth"},
+    {"id": "l-balle", "text": "water ball", "kind": "anchor", "anchor": "ball-top", "lift": 70, "t0": t_next + 0.3, "t1": t_work0 - 0.2, "side": -1, "shot": "earth"},
 ]
 BADGES = [
     {"id": "b-thought", "text": "thought experiment", "t0": 0.3, "t1": t_title_out, "slot": "br"},

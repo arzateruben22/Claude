@@ -3,37 +3,34 @@
     "id": "c1",
     "sentence": "The first card can be any of fifty-two, the next any of the rest.",
     "claim": "A standard deck has 52 cards; each position can take any card not yet used (52, then 51, then 50 ...).",
-    "source_url": "https://en.wikipedia.org/wiki/Factorial",
-    "source_title": "Counting orders (permutations): n! (a textbook fact; link a stronger source, e.g. a probability text)",
+    "source_title": "Derivation (calc.py): counting rule and exact integer arithmetic; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
-    "kind": "calculation",
-    "note": "OPEN until a person opens the page. A counting rule, not a measurement. A person should replace the link with a textbook or encyclopedia page they trust."
+    "kind": "derivation",
+    "note": "DERIVATION: a counting rule and exact Python integer arithmetic (52! = 8.07e67); anyone can re-do it with a calculator that shows big integers. Not taken from any page. OPEN until a person re-does the sum."
   },
   {
     "id": "c2",
     "sentence": "Multiply all those choices, and you count the orders.",
     "claim": "52 x 51 x ... x 1 = 52! = 80,658,175,170,943,878,571,660,636,856,403,766,975,289,505,440,883,277,824,000,000,000,000 (about 8.07 x 10^67), exact integer arithmetic in calc.py.",
-    "source_url": "https://en.wikipedia.org/wiki/Factorial",
-    "source_title": "Arithmetic (calc.py: orders)",
+    "source_title": "Derivation (calc.py): counting rule and exact integer arithmetic; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
-    "kind": "calculation",
-    "note": "OPEN until a person opens the page. Computed exactly by Python integers; anyone can check with a calculator that shows big integers."
+    "kind": "derivation",
+    "note": "DERIVATION: a counting rule and exact Python integer arithmetic (52! = 8.07e67); anyone can re-do it with a calculator that shows big integers. Not taken from any page. OPEN until a person re-does the sum."
   },
   {
     "id": "c3",
     "sentence": "The answer has sixty-eight digits, too big to say out loud.",
     "claim": "52! has 68 digits (log10 52! = 67.9).",
-    "source_url": "https://en.wikipedia.org/wiki/Factorial",
-    "source_title": "Arithmetic (calc.py: digits)",
+    "source_title": "Derivation (calc.py): counting rule and exact integer arithmetic; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
-    "kind": "calculation",
-    "note": "OPEN until a person opens the page. Computed."
+    "kind": "derivation",
+    "note": "DERIVATION: a counting rule and exact Python integer arithmetic (52! = 8.07e67); anyone can re-do it with a calculator that shows big integers. Not taken from any page. OPEN until a person re-does the sum."
   },
   {
     "id": "c4",
@@ -66,10 +63,10 @@
     "claim": "8.2e9 people x 13.8e9 years x 3.156e7 s = 3.6e27 shuffles; 3.6e27 / 8.07e67 = 4.4e-41, which is less than 1 part in 10^36 (a trillion trillion trillion).",
     "source_title": "Derivation (calc.py): 52! = 8.07e67 and the counts in the claim; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4. OPEN until a person re-does the sum."
+    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4 (people) and c5 (years). OPEN until a person re-does the sum."
   },
   {
     "id": "c7",
@@ -77,10 +74,10 @@
     "claim": "If a shuffle is fair and uniform, the chance that it matches any specific earlier one is 1 in 52!; against all 3.6e27 shuffles in the thought experiment it is 4.4e-41. (The chance that any two of those ever match is about 8e-14, by the birthday bound N^2 / (2 x 52!).)",
     "source_title": "Derivation (calc.py): 52! = 8.07e67 and the counts in the claim; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4. OPEN until a person re-does the sum."
+    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4 (people) and c5 (years). OPEN until a person re-does the sum."
   },
   {
     "id": "c8",
@@ -88,10 +85,10 @@
     "claim": "With 1,000 times the people the share is 4.4e-38: still less than 1 part in 10^36.",
     "source_title": "Derivation (calc.py): 52! = 8.07e67 and the counts in the claim; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4. OPEN until a person re-does the sum."
+    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4 (people) and c5 (years). OPEN until a person re-does the sum."
   },
   {
     "id": "c9",
@@ -99,10 +96,10 @@
     "claim": "If a shuffle is fair and uniform, the chance that it matches any specific earlier one is 1 in 52!; against all 3.6e27 shuffles in the thought experiment it is 4.4e-41. (The chance that any two of those ever match is about 8e-14, by the birthday bound N^2 / (2 x 52!).)",
     "source_title": "Derivation (calc.py): 52! = 8.07e67 and the counts in the claim; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4. OPEN until a person re-does the sum."
+    "note": "DERIVATION from 52! (= 8.07e67); not taken from the Factorial page. The inputs (8.2e9 people, 13.8e9 years) are claims c4 (people) and c5 (years). OPEN until a person re-does the sum."
   },
   {
     "id": "c10",

@@ -26,7 +26,7 @@
   {
     "id": "c3",
     "sentence": "That ball is about fourteen hundred kilometers wide.",
-    "claim": "Sphere diameter d = (6 V / pi)^(1/3) = 1,383 km for V = 1.386e9 km3; USGS's own picture of the water 'bubble' gives about 860 miles (1,385 km).",
+    "claim": "Sphere diameter d = (6 V / pi)^(1/3) = 1,383 km for V = 1.386e9 km3.",
     "source_title": "Derivation (calc.py) from the inputs of claims c2 and c4/c5 inputs; no outside page",
     "accessed": "2026-11-08",
     "verified_via": "search excerpt",
@@ -51,13 +51,12 @@
     "id": "c5",
     "sentence": "Next to the Earth, it is a marble beside a basketball.",
     "claim": "1,383 km / 12,756 km = 0.108: a 24 cm basketball next to a 2.6 cm ball (a large marble).",
-    "source_title": "Derivation (calc.py) from the inputs of claims c2 and c4/c5 inputs; no outside page",
+    "source_title": "Derivation (calc.py): 1,383 km / 12,756 km, scaled to a 24 cm basketball; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "page",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "DERIVATION: arithmetic on the figures above; not read from any page. OPEN until a person re-does the sum and opens the pages that give its inputs (USGS volume, NASA diameters).",
-    "builder_read": "\"With an equatorial diameter of 7,926 miles (12,756 kilometers), Earth is the biggest of the terrestrial planets\""
+    "note": "DERIVATION: 1,383 / 12,756 = 0.108; a 24 cm basketball next to a ball 11 % as wide. The Earth diameter is its own claim (c9). Not taken from any page. OPEN until a person re-does the sum."
   },
   {
     "id": "c6",
@@ -92,5 +91,17 @@
     "status": "TODO open link",
     "kind": "derivation",
     "note": "DERIVATION; OPEN until a person re-does the sum. The badge says the film is drawn bigger than it is."
+  },
+  {
+    "id": "c9",
+    "sentence": "(input) The Earth's equatorial diameter is 12,756 km.",
+    "claim": "The Earth's equatorial diameter is 12,756 km.",
+    "source_url": "https://science.nasa.gov/earth/facts/",
+    "source_title": "NASA Science, Earth Facts",
+    "accessed": "2026-11-09",
+    "verified_via": "not read by a person",
+    "status": "TODO open link",
+    "kind": "source",
+    "note": "OPEN until a person opens the page; used in c5 and the end-card ratio 11 %."
   }
 ]

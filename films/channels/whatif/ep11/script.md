@@ -2,11 +2,11 @@
 
 S2E05 (folder ep11): Season 2 numbers its episodes from 1 again; the folder name stays ep11 so the pipeline and Prism imports keep working.
 
-About 70 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
+About 71 s, 9:16, narrated by a synthetic voice (labelled as AI), with an original score (A lydian, 50 BPM).
 The destination No. 010's end card promised. Every number comes from `calc.py` (USGS's total of Earth's water, NASA's
 sizes of the Earth and the Moon); `compile.py` reads its `RESULTS`. The voice says four figures (one point four billion
 cubic kilometers, fourteen hundred kilometers, four hundred kilometers, an eighth of one percent); the running sum,
-labels and footnote carry the rest (1,386,000,000 km³, 3,480 km, 12,756 km, 40%, 11%, 2.6 cm, 2.5%).
+labels and footnote carry the rest (1,386,000,000 km³, 3,480 km, 12,756 km, 40%, 11%, 2.5%).
 
 One line per beat. `*starred*` words get a camera landing or a sound hit. `{c1,c2}` after a sentence ties
 it to `claims.json`; `{-}` marks a sentence that states nothing outside the film.

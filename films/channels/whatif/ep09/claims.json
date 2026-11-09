@@ -16,37 +16,34 @@
     "id": "c2",
     "sentence": "But a circle's length is two times pi times its radius, the distance to its center.",
     "claim": "Circumference = 2 x pi x radius (a mathematical definition).",
-    "source_url": "https://en.wikipedia.org/wiki/Circle",
-    "source_title": "Mathematical derivation (C = 2πr, so the change in C is 2π times the change in r). Definition reference: Wikipedia, Circle",
+    "source_title": "Derivation (calc.py): geometry of a circle, 2 x pi x r; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "OPEN until a person opens the page. A definition, not a measurement. A person should link one textbook reference (e.g. an encyclopedia entry) before posting."
+    "note": "DERIVATION: the length of a circle is 2 x pi x its radius (a definition). Not taken from any page. OPEN until a person re-does the sum."
   },
   {
     "id": "c3",
     "sentence": "Lift the rope a meter, and the radius grows a meter.",
     "claim": "Lifting the rope evenly by 1 m raises the circle's radius by 1 m (idealised: a perfect sphere, a smooth rope).",
-    "source_url": "https://en.wikipedia.org/wiki/Circle",
-    "source_title": "Mathematical derivation (C = 2πr, so the change in C is 2π times the change in r). Definition reference: Wikipedia, Circle",
+    "source_title": "Derivation (calc.py): geometry of a circle, 2 x pi x r; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "OPEN until a person opens the page. The thought experiment's assumption, badged on screen: a perfect sphere, nothing in the way, no sag."
+    "note": "DERIVATION: the thought experiment's assumption, badged on screen: a perfect sphere, a smooth rope, no sag. Lifting by 1 m adds 1 m to the radius. Not taken from any page."
   },
   {
     "id": "c4",
     "sentence": "So the rope grows by two times pi times one meter, a bit over six meters.",
     "claim": "New length minus old length = 2 pi (R + 1 m) - 2 pi R = 2 pi x 1 m = 6.28 m: R cancels. calc.py: extra_m = 6.3 for the Earth, a ball and the Sun.",
-    "source_url": "https://en.wikipedia.org/wiki/Circle",
-    "source_title": "Mathematical derivation (C = 2πr, so the change in C is 2π times the change in r). Definition reference: Wikipedia, Circle",
+    "source_title": "Derivation (calc.py): geometry of a circle, 2 x pi x r; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "OPEN until a person opens the page. Computed. Checkable by hand with a hula hoop."
+    "note": "DERIVATION: 2 x pi x 1 m = 6.28 m. Checkable by hand with a hula hoop. Not taken from any page."
   },
   {
     "id": "c5",
@@ -54,7 +51,7 @@
     "claim": "6.28 m / 1.7 m (an adult's height, assumption) = 3.7: 'about four of you'.",
     "source_title": "Assumption: an adult is about 1.7 m tall; arithmetic 2π × 1 m ÷ 1.7 m = 3.7",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "assumption (no source)",
     "status": "TODO open link",
     "kind": "assumption",
     "note": "ASSUMPTION (no source page): a person about 1.7 m tall. The division is arithmetic. Shown in the film as the badge \"∵ 1.7 m a person\"."
@@ -63,37 +60,46 @@
     "id": "c6",
     "sentence": "Try a basketball or the Sun: lift the rope one meter, and the extra rope is the same.",
     "claim": "The extra rope is the same 6.3 m for a basketball (radius about 12 cm), the Earth (6,378 km) and the Sun (diameter about 1.4 million km).",
-    "source_url": "https://science.nasa.gov/sun/facts/",
-    "source_title": "Mathematical derivation (the extra rope 2πh does not depend on the radius); the Earth and Sun radii are from NASA Earth Facts and Sun Facts",
+    "source_title": "Derivation (calc.py): geometry of a circle, 2 x pi x r; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "page",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "OPEN until a person opens the page. Computed (calc.py: sens_m). The Sun page was read: 'Its diameter is about 865,000 miles (1.4 million kilometers).' The basketball size is an assumption.",
-    "builder_read": "\"Its diameter is about 865,000 miles (1.4 million kilometers).\""
+    "note": "DERIVATION (calc.py: sens_m): 2 x pi x 1 m is the same for any radius (a basketball, the Earth, the Sun). Inputs: the radii of the three bodies; the Earth and Sun sizes are claim c9 and c1. Not taken from any page."
   },
   {
     "id": "c7",
     "sentence": "The planet's size cancels out: only the lift matters.",
     "claim": "extra = 2 pi h: the planet's radius is not in the answer.",
-    "source_url": "https://en.wikipedia.org/wiki/Circle",
-    "source_title": "Mathematical derivation (C = 2πr, so the change in C is 2π times the change in r). Definition reference: Wikipedia, Circle",
+    "source_title": "Derivation (calc.py): geometry of a circle, 2 x pi x r; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "OPEN until a person opens the page. Computed; follows from c2 and c4."
+    "note": "DERIVATION: follows from c2 and c4; the radius cancels. Not taken from any page."
   },
   {
     "id": "c8",
     "sentence": "Ten times higher needs ten times more rope.",
     "claim": "extra = 2 pi h is proportional to h: 10 m gives 63 m (shown on screen).",
-    "source_url": "https://en.wikipedia.org/wiki/Circle",
-    "source_title": "Mathematical derivation (C = 2πr, so the change in C is 2π times the change in r). Definition reference: Wikipedia, Circle",
+    "source_title": "Derivation (calc.py): geometry of a circle, 2 x pi x r; no outside page",
     "accessed": "2026-11-08",
-    "verified_via": "search excerpt",
+    "verified_via": "calculation",
     "status": "TODO open link",
     "kind": "derivation",
-    "note": "OPEN until a person opens the page. Computed; follows from c4."
+    "note": "DERIVATION: follows from c4: 2 x pi x 10 m = 62.8 m. Not taken from any page."
+  },
+  {
+    "id": "c9",
+    "sentence": "Sun (radius 695,000 km), shown on the work card as an input.",
+    "claim": "The Sun's diameter is about 1.4 million km (radius about 695,000 km).",
+    "source_url": "https://science.nasa.gov/sun/facts/",
+    "source_title": "NASA Science, Sun Facts",
+    "accessed": "2026-11-08",
+    "verified_via": "page",
+    "status": "TODO open link",
+    "kind": "source",
+    "note": "OPEN until a person opens the page. The builder read the page excerpt (below); a person has not.",
+    "builder_read": "\"Its diameter is about 865,000 miles (1.4 million kilometers).\""
   }
 ]

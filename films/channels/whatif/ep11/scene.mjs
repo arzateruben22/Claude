@@ -124,11 +124,11 @@ for (const c of FILM.counters) {
 }
 for (const L of FILM.labels) {
   const k = KIND[L.kind];
-  hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: AN[L.anchor], t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v });
+  hud.label(L.id, { text: L.text, glyph: k.glyph, mark: k.mark, color: k.color, at: AN[L.anchor], t0: L.t0, t1: L.t1, shot: L.shot, side: L.side, v: L.v, lift: L.lift });
 }
 const spine = createSpine({ states: FILM.spine, t1: FILM.spineOut, y: 0.565, safe: hud.safe, W, H });
 const work = workCard(FILM.work, { safe: hud.safe, W, H, capTop: 0.61, y: 0.2 });
-const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.14 });
+const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: 0.215 });
 const endT = endEl.querySelector(".t"), endFo = endEl.querySelector(".fo"); if (endT) endT.style.fontSize = "5.6vmin"; if (endFo) endFo.style.marginTop = "1.6vmin";
 const foot = endEl.querySelector(".nx");
 if (foot) Object.assign(foot.style, { fontSize: "3.7vmin", color: "var(--text-2)", fontWeight: "500", maxWidth: "66vmin", margin: "1.6vmin auto 0" });
@@ -170,8 +170,9 @@ window.seek = function (t) {
   ball.position.set(0, 0, 0); ball.scale.setScalar(rGrow * pulse); ball.material.uniforms.uSpin.value = 2 * Math.PI * t / FILM.dur * 2;
   const wk = shot === "work", fr = wk ? E.out3(seg(t, CUE.fresh[0], CUE.fresh[0] + 0.7)) : 0;
   freshBall.visible = wk && fr > 0.01; freshBall.position.set(FRESH_X, 0, 0); freshBall.scale.setScalar(Math.max(1, FRESH_R * fr));
-  moon.visible = sp && shot !== "take"; moon.position.set(MOON_X, 0, 0); moon.scale.setScalar(MOON_R); moon.material.uniforms.uSpin.value = 0.5;
-  earth.visible = sp; earth.position.set(EARTH_X, 0, 0); earth.scale.setScalar(EARTH_R); earth.material.uniforms.uSpin.value = 2 * Math.PI * t / FILM.dur;
+  const farF = shot === "why" ? seg(Math.log10(d), Math.log10(30000), Math.log10(48000)) : 1;   // the Moon and the Earth only come into view once the pull-back is far enough out, clear of the caption
+  moon.visible = sp && shot !== "take" && farF > 0.01; moon.material.uniforms.uOpacity.value = farF; earth.material.uniforms.uOpacity.value = farF; moon.position.set(MOON_X, 0, 0); moon.scale.setScalar(MOON_R); moon.material.uniforms.uSpin.value = 0.5;
+  earth.visible = sp && farF > 0.01; earth.position.set(EARTH_X, 0, 0); earth.scale.setScalar(EARTH_R); earth.material.uniforms.uSpin.value = 2 * Math.PI * t / FILM.dur;
   const fo = shot === "take" ? E.out3(seg(t, CUE.home + 0.2, CUE.home + 1.0)) : 0;
   film.visible = fo > 0.01; film.position.set(EARTH_X, 0, 0); film.scale.setScalar(EARTH_R * 1.012); film.material.uniforms.uO.value = fo;
   dust.visible = far && !wk; dust.material.opacity = 0.5;
