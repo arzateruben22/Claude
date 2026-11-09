@@ -89,7 +89,7 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
     for (const n in P) { const A = n === b.img && a.img === b.img ? a : b, B2 = b; P[n].trk = [iv(A.trk ? A.trk[0] : 0, B2.trk ? B2.trk[0] : 0), iv(A.trk ? A.trk[1] : 0, B2.trk ? B2.trk[1] : 0)]; P[n].dolly = iv(A.dolly || 0, B2.dolly || 0); P[n].rack = B2.rack === undefined ? null : (A.rack === undefined ? B2.rack : iv(A.rack, B2.rack)); }
     return { b, m, P, img: b.img, t };
   };
-  const layerX = (p, g, i, t) => { const par = g.par[i]; return { tx: p.trk[0] * AW * par + Math.sin(t * 0.9 + i * 1.7) * 1.5 * u * i, ty: p.trk[1] * g.AH * par + Math.cos(t * 0.7 + i) * 1.3 * u * i, sc: 1 + p.dolly * par + 0.002 * Math.sin(t * 0.5 + i) }; };
+  const layerX = (p, g, i, t) => { const par = g.par[i]; return { tx: p.trk[0] * AW * par + Math.sin(t * 0.9 + i * 1.7) * 3.2 * u * (i + 0.4), ty: p.trk[1] * g.AH * par + Math.cos(t * 0.7 + i) * 2.6 * u * (i + 0.4), sc: 1 + p.dolly * par + 0.0045 * Math.sin(t * 0.5 + i) }; };
   const scr = (name, nx, ny, c, layer) => { const p = c.P[name], g = IM[name]; let X = nx * AW, Y = ny * g.AH; const FX = p.fx * AW, FY = p.fy * g.AH;
     if (layer != null && g.lay) { const q = layerX(p, g, layer, c.t); X = FX + (X - FX) * q.sc + q.tx; Y = FY + (Y - FY) * q.sc + q.ty; }
     return [AW / 2 + (X - FX) * p.s, BTOP + BH / 2 + (Y - FY) * p.s]; };
