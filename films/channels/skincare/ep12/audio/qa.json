@@ -1,0 +1,241 @@
+{
+ "compose_s": 5.3,
+ "master_s": 8.1,
+ "master": {
+  "gain_db": 1.73,
+  "iterations": 2,
+  "lufs": -14.08,
+  "true_peak_db": -2.0,
+  "ceiling_db": -2.0,
+  "limiting_max_db": -5.46,
+  "aac": {
+   "lufs": -14.1,
+   "true_peak_db": -1.9,
+   "lra": 2.6
+  },
+  "stems_sum_error_db": -240.0
+ },
+ "sync": {
+  "per_kind": {
+   "label": {
+    "n": 9,
+    "max_ms": 33.0,
+    "median_ms": 3.0,
+    "slow": false,
+    "pass": true
+   },
+   "scale.jump": {
+    "n": 6,
+    "max_ms": 23.0,
+    "median_ms": 0.0,
+    "slow": true,
+    "pass": true
+   },
+   "section": {
+    "n": 6,
+    "max_ms": 0.0,
+    "median_ms": 0.0,
+    "slow": true,
+    "pass": true
+   },
+   "signature": {
+    "n": 2,
+    "max_ms": 11.0,
+    "median_ms": 11.0,
+    "slow": false,
+    "pass": true
+   },
+   "swell": {
+    "n": 1,
+    "max_ms": 45.0,
+    "median_ms": 45.0,
+    "slow": true,
+    "pass": true
+   }
+  },
+  "pass": true,
+  "events": [
+   {
+    "kind": "signature",
+    "tag": "title",
+    "show": 0.9,
+    "method": "rise",
+    "err_ms": 11.0
+   },
+   {
+    "kind": "label",
+    "tag": "l0",
+    "show": 1.4333,
+    "method": "rise",
+    "err_ms": 20.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 3.9,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c3",
+    "show": 4.2,
+    "method": "shape",
+    "err_ms": -23.0
+   },
+   {
+    "kind": "label",
+    "tag": "l1",
+    "show": 4.3,
+    "method": "rise",
+    "err_ms": 5.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c5",
+    "show": 9.4333,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l2",
+    "show": 9.5333,
+    "method": "rise",
+    "err_ms": 3.0
+   },
+   {
+    "kind": "label",
+    "tag": "l3",
+    "show": 15.0333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 16.8,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c10",
+    "show": 23.7667,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 26.4667,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c11",
+    "show": 26.7667,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l4",
+    "show": 29.9,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l5",
+    "show": 30.6333,
+    "method": "rise",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l6",
+    "show": 37.5,
+    "method": "rise",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 40.0333,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c15",
+    "show": 40.3333,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "swell",
+    "tag": "whoa",
+    "show": 40.3333,
+    "method": "shape",
+    "err_ms": -45.0
+   },
+   {
+    "kind": "scale.jump",
+    "tag": "c17",
+    "show": 50.0333,
+    "method": "shape",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 51.6,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l7",
+    "show": 52.0,
+    "method": "rise",
+    "err_ms": 33.0
+   },
+   {
+    "kind": "label",
+    "tag": "l8",
+    "show": 52.0,
+    "method": "rise",
+    "err_ms": 33.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 58.9667,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "signature",
+    "tag": "end",
+    "show": 59.2667,
+    "method": "rise",
+    "err_ms": 11.0
+   }
+  ]
+ },
+ "picture_sync": [],
+ "under_voice": {
+  "music_lufs": -28.8,
+  "dialog_lufs": -13.7,
+  "gap_lu": 15.1,
+  "pass": true
+ },
+ "phone": {
+  "correlation": 0.9,
+  "mono_loss_db": 0.03,
+  "dialog_mono_loss_db": 0.08,
+  "pass": true
+ }
+}
