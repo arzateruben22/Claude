@@ -2,7 +2,7 @@
 
 Hand-written for this episode (the studio's posting-pack script was not run: prism-studio's packages are not installed in the builder's session). Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off; the SRT is `reality-rulebook-s2e01.srt`. Post as a vertical video (Shorts / TikTok / Reel). **Do not post until a person has opened the sources: every claim is still OPEN.**
 
-**Cover**: `reality-rulebook-s2e01-cover.jpg` (9:16). TODO: a 16:9 YouTube thumbnail.
+**Cover / thumbnail**: `reality-rulebook-s2e01-cover.jpg` (9:16 cover: TikTok, Reels, Shorts) · `reality-rulebook-s2e01-thumb.jpg` (16:9 YouTube thumbnail: the owner's slinky photo with the title set in code)
 
 ## YouTube Shorts
 **Title**
