@@ -32,15 +32,24 @@ def words(d, text, accent, f, x, y, maxw, line_gap=1.08):
             d.text((tx + 3, y + 3), w, font=f, fill=(8, 10, 28)); d.text((tx, y), w, font=f, fill=col); tx += d.textlength(w + " ", font=f)
         y += int(f.size * line_gap)
     return y
-# 9:16 cover
-c = grade(base.resize((1080, 1920)), 1.0); d = ImageDraw.Draw(c)
-d.text((70, 150), series.upper(), font=font(38, 600), fill=TEAL)
-words(d, title, accent, font(168, 800), 70, 1150, 940)
+# 9:16 cover: the hero (a crop of the frame without captions and counters) on the channel's night, the title below
+y0, y1 = (int(v) for v in (os.environ.get("HERO_Y", "335,1005").split(",")))
+hero = base.crop((0, y0, 1080, y1)); hh = y1 - y0
+night = Image.linear_gradient("L").resize((1080, 1920)); c = Image.composite(Image.new("RGB", (1080, 1920), (16, 20, 52)), Image.new("RGB", (1080, 1920), (7, 9, 24)), night)
+big = hero.resize((1350, int(hh * 1.25)), Image.LANCZOS).crop((135, 0, 1215, int(hh * 1.25)))
+vf = Image.linear_gradient("L").rotate(180).resize(big.size).point(lambda v: 255 if v > 90 else int(v * 255 / 90)).filter(ImageFilter.GaussianBlur(4))
+c.paste(big, (0, 190), vf)
+d = ImageDraw.Draw(c)
+d.text((70, 90), series.upper(), font=font(38, 600), fill=TEAL)
+words(d, title, accent, font(176, 800), 70, 1130, 940)
 c.save(os.path.join(out, f"{name}-cover.jpg"), quality=92)
 c.resize((480, 853), Image.LANCZOS).save(os.path.join(out, f"{name}-cover-480.jpg"), quality=88)
-# 16:9 thumbnail: the frame, cover-fit, a wide crop around its middle
-t = base.resize((1280, 2276)); t = t.crop((0, 700, 1280, 1420)); t = grade(t, 0.9); d = ImageDraw.Draw(t)
-words(d, thumb, accent, font(120, 800), 60, 340, 1160)
-d.text((60, 60), series.upper(), font=font(34, 600), fill=TEAL)
+# 16:9 thumbnail: the hero at left, the title at right
+t = Image.new("RGB", (1280, 720), (10, 12, 32)); hs = hero.resize((int(1080 * 700 / hh), 700), Image.LANCZOS).crop((190, 0, 880, 700))
+hm = Image.linear_gradient("L").rotate(90).resize(hs.size).point(lambda v: 255 if v > 150 else int(v * 255 / 150)); hm = hm.transpose(Image.FLIP_LEFT_RIGHT)
+t.paste(hs, (0, 10), hm); d = ImageDraw.Draw(t)
+d.rectangle((0, 0, 1280, 6), fill=TEAL)
+words(d, thumb, accent, font(104, 800), 690, 270, 560)
+d.text((690, 170), series.upper().replace(" · ", "\n"), font=font(28, 600), fill=TEAL)
 t.save(os.path.join(out, f"{name}-thumb.jpg"), quality=92)
 print("covers:", [f for f in os.listdir(out) if f.startswith(name) and f.endswith(".jpg")])
