@@ -852,7 +852,7 @@
  "plates": [
   {
    "t0": "start:vo02",
-   "t1": "end:vo02+0.9",
+   "t1": "end:vo02+0.75",
    "top": 640,
    "title": "IARC Group 1:<br>“carcinogenic to humans”",
    "rows": [
@@ -892,7 +892,7 @@
   },
   {
    "t0": "start:vo04",
-   "t1": "end:vo04+2.0",
+   "t1": "end:vo04+1.7",
    "top": 650,
    "title": "Melanoma risk,<br>people who started using beds before 35",
    "tags": [
@@ -932,7 +932,7 @@
    "drift": 1.6
   },
   {
-   "t0": "end:vo04+1.2",
+   "t0": "end:vo04+0.9",
    "t1": "start:vo06",
    "top": 680,
    "title": "Countries that acted",
@@ -940,12 +940,14 @@
     {
      "text": "Australia · commercial beds",
      "small": "all states by 2016",
-     "t": "vo05:By"
+     "t": "end:vo04+1.6",
+     "hl": "vo05:Australian"
     },
     {
      "text": "Brazil · tanning equipment",
      "small": "banned 2009",
-     "t": "vo05:Brazil"
+     "t": "vo05:acted",
+     "hl": "vo05:Brazil"
     }
    ],
    "tags": [
@@ -962,9 +964,22 @@
      "t": "vo05:Brazil+0.3"
     }
    ],
-   "drift": 2,
-   "note": "IARC listed tanning devices in 2009; Brazil banned them that year.",
-   "noteT": "end:vo05+0.4"
+   "drift": 3,
+   "ghost": 0,
+   "notes": [
+    {
+     "text": "IARC listed tanning devices in 2009.",
+     "t": "end:vo05+0.3"
+    },
+    {
+     "text": "Brazil banned them that year.",
+     "t": "end:vo05+1.2"
+    },
+    {
+     "text": "Australia followed, state by state, by 2016.",
+     "t": "end:vo05+2.1"
+    }
+   ]
   },
   {
    "t0": "start:vo07",
@@ -1036,7 +1051,7 @@
  "quiet": [
   [
    "start:vo02",
-   "end:vo02+1.0"
+   "end:vo02+0.75"
   ],
   [
    "start:vo04",

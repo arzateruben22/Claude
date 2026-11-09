@@ -1,0 +1,1138 @@
+{
+ "id": "skin-sense-011",
+ "title": {
+  "series": "Skin Sense \u00b7 No. 011",
+  "title": "The brick wall on your skin"
+ },
+ "fps": 30,
+ "dur": 70.4,
+ "poster": 38.72,
+ "theme": "../theme.json",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "main"
+  }
+ ],
+ "disclosures": {
+  "aiVoice": true,
+  "aiVisuals": true
+ },
+ "captions": [
+  {
+   "w": "Why",
+   "t0": 0.07,
+   "t1": 0.37,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "don't",
+   "t0": 0.395,
+   "t1": 0.61,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "you",
+   "t0": 0.55,
+   "t1": 0.77,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "dry",
+   "t0": 0.74,
+   "t1": 1.25,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "out?",
+   "t0": 1.15,
+   "t1": 1.89,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "Your",
+   "t0": 1.96,
+   "t1": 2.21,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "skin",
+   "t0": 2.15,
+   "t1": 2.69,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "has",
+   "t0": 2.7,
+   "t1": 2.85,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "a",
+   "t0": 2.9,
+   "t1": 3.01,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "brick",
+   "t0": 3.07,
+   "t1": 3.33,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "wall.",
+   "t0": 3.275,
+   "t1": 3.65,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "Its",
+   "t0": 4.735,
+   "t1": 4.955,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "outer",
+   "t0": 4.86,
+   "t1": 5.275,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "layer,",
+   "t0": 5.18,
+   "t1": 5.675,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 5.65,
+   "t1": 5.755,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "stratum",
+   "t0": 5.82,
+   "t1": 6.235,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "corneum,",
+   "t0": 6.205,
+   "t1": 6.795,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "is",
+   "t0": 6.91,
+   "t1": 6.96,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 6.94,
+   "t1": 7.035,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "barrier.",
+   "t0": 7.02,
+   "t1": 7.915,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Flat",
+   "t0": 8.075,
+   "t1": 8.315,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "dead",
+   "t0": 8.45,
+   "t1": 8.715,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "cells",
+   "t0": 8.625,
+   "t1": 9.115,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "are",
+   "t0": 9.14,
+   "t1": 9.275,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 9.38,
+   "t1": 9.43,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "bricks.",
+   "t0": 9.41,
+   "t1": 10.155,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Fats",
+   "t0": 10.27,
+   "t1": 10.635,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "between",
+   "t0": 10.68,
+   "t1": 11.035,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "them",
+   "t0": 11.125,
+   "t1": 11.275,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "are",
+   "t0": 11.29,
+   "t1": 11.435,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 11.41,
+   "t1": 11.515,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "mortar.",
+   "t0": 11.44,
+   "t1": 12.475,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "A",
+   "t0": 12.57,
+   "t1": 12.715,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "scientist",
+   "t0": 12.775,
+   "t1": 13.355,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "named",
+   "t0": 13.395,
+   "t1": 13.595,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Peter",
+   "t0": 13.74,
+   "t1": 13.995,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "Elias",
+   "t0": 13.91,
+   "t1": 14.635,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "called",
+   "t0": 14.59,
+   "t1": 14.875,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "it",
+   "t0": 15.01,
+   "t1": 15.06,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "that.",
+   "t0": 15.04,
+   "t1": 15.355,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "The",
+   "t0": 16.234,
+   "t1": 16.454,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "mortar",
+   "t0": 16.454,
+   "t1": 16.934,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "is",
+   "t0": 16.889,
+   "t1": 17.094,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "stacked",
+   "t0": 17.159,
+   "t1": 17.494,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "sheets",
+   "t0": 17.459,
+   "t1": 17.894,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "of",
+   "t0": 17.799,
+   "t1": 18.054,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "fat,",
+   "t0": 18.044,
+   "t1": 18.534,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "wrapped",
+   "t0": 18.579,
+   "t1": 19.014,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "around",
+   "t0": 18.929,
+   "t1": 19.334,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "each",
+   "t0": 19.439,
+   "t1": 19.654,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "cell.",
+   "t0": 19.604,
+   "t1": 20.454,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "That",
+   "t0": 20.584,
+   "t1": 20.694,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "makes",
+   "t0": 20.799,
+   "t1": 21.014,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "a",
+   "t0": 21.014,
+   "t1": 21.174,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "semi-permeable",
+   "t0": 21.104,
+   "t1": 22.294,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "barrier,",
+   "t0": 22.254,
+   "t1": 22.934,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "which",
+   "t0": 23.059,
+   "t1": 23.174,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "is",
+   "t0": 23.159,
+   "t1": 23.334,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "what",
+   "t0": 23.234,
+   "t1": 23.574,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "lets",
+   "t0": 23.589,
+   "t1": 23.894,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "life",
+   "t0": 23.809,
+   "t1": 24.214,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "live",
+   "t0": 24.229,
+   "t1": 24.694,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "on",
+   "t0": 24.609,
+   "t1": 24.854,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "land.",
+   "t0": 24.854,
+   "t1": 25.254,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "That",
+   "t0": 26.232,
+   "t1": 26.452,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "wall",
+   "t0": 26.447,
+   "t1": 26.852,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "is",
+   "t0": 26.837,
+   "t1": 27.012,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 27.017,
+   "t1": 27.172,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "skin's",
+   "t0": 27.267,
+   "t1": 27.812,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "first",
+   "t0": 27.722,
+   "t1": 28.052,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "line",
+   "t0": 28.047,
+   "t1": 28.292,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "of",
+   "t0": 28.387,
+   "t1": 28.452,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "defence",
+   "t0": 28.477,
+   "t1": 29.012,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "against",
+   "t0": 29.022,
+   "t1": 29.492,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "germs,",
+   "t0": 29.492,
+   "t1": 30.132,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "allergens",
+   "t0": 30.227,
+   "t1": 30.932,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "and",
+   "t0": 30.972,
+   "t1": 31.172,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "water",
+   "t0": 31.167,
+   "t1": 31.572,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "loss.",
+   "t0": 31.502,
+   "t1": 32.612,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "Water",
+   "t0": 32.702,
+   "t1": 33.092,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "stays",
+   "t0": 33.007,
+   "t1": 33.572,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "in,",
+   "t0": 33.592,
+   "t1": 33.812,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "and",
+   "t0": 33.897,
+   "t1": 34.052,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "germs",
+   "t0": 34.082,
+   "t1": 34.692,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "stay",
+   "t0": 34.687,
+   "t1": 35.092,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "out.",
+   "t0": 35.187,
+   "t1": 35.732,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "It",
+   "t0": 35.837,
+   "t1": 35.892,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "is",
+   "t0": 35.902,
+   "t1": 36.132,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "not",
+   "t0": 36.057,
+   "t1": 36.292,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "a",
+   "t0": 36.302,
+   "t1": 36.452,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "single",
+   "t0": 36.347,
+   "t1": 36.932,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "tough",
+   "t0": 37.052,
+   "t1": 37.412,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "sheet.",
+   "t0": 37.292,
+   "t1": 38.292,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "It",
+   "t0": 38.417,
+   "t1": 38.467,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "is",
+   "t0": 38.517,
+   "t1": 38.692,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "a",
+   "t0": 38.777,
+   "t1": 38.932,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "system",
+   "t0": 38.897,
+   "t1": 39.172,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "of",
+   "t0": 39.097,
+   "t1": 39.412,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "cells,",
+   "t0": 39.372,
+   "t1": 40.132,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "fats",
+   "t0": 40.182,
+   "t1": 40.532,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "and",
+   "t0": 40.527,
+   "t1": 40.772,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "acids.",
+   "t0": 40.797,
+   "t1": 41.412,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "Here",
+   "t0": 43.956,
+   "t1": 44.336,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "is",
+   "t0": 44.376,
+   "t1": 44.576,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 44.586,
+   "t1": 44.736,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "twist.",
+   "t0": 44.721,
+   "t1": 45.616,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "The",
+   "t0": 45.751,
+   "t1": 45.801,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "bricks",
+   "t0": 45.781,
+   "t1": 46.336,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "are",
+   "t0": 46.251,
+   "t1": 46.496,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "not",
+   "t0": 46.666,
+   "t1": 46.716,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 46.696,
+   "t1": 46.896,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "tight",
+   "t0": 46.791,
+   "t1": 47.456,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "part.",
+   "t0": 47.551,
+   "t1": 48.096,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "Most",
+   "t0": 48.211,
+   "t1": 48.496,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "dissolved",
+   "t0": 48.561,
+   "t1": 49.296,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "substances",
+   "t0": 49.281,
+   "t1": 50.096,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "pass",
+   "t0": 50.156,
+   "t1": 50.496,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "through",
+   "t0": 50.556,
+   "t1": 50.656,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 50.591,
+   "t1": 50.816,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "cells",
+   "t0": 50.711,
+   "t1": 51.376,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "more",
+   "t0": 51.321,
+   "t1": 51.616,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "easily",
+   "t0": 51.691,
+   "t1": 52.256,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "than",
+   "t0": 52.311,
+   "t1": 52.496,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "through",
+   "t0": 52.511,
+   "t1": 52.736,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 52.761,
+   "t1": 52.896,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "fats.",
+   "t0": 52.951,
+   "t1": 53.456,
+   "line": "vo05",
+   "beat": "whoa"
+  },
+  {
+   "w": "So",
+   "t0": 57.105,
+   "t1": 57.24,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "your",
+   "t0": 57.39,
+   "t1": 57.48,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "skin's",
+   "t0": 57.565,
+   "t1": 57.96,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "wall",
+   "t0": 57.895,
+   "t1": 58.28,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "is",
+   "t0": 58.58,
+   "t1": 58.63,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "bricks",
+   "t0": 58.61,
+   "t1": 59.08,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "and",
+   "t0": 59.05,
+   "t1": 59.24,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "fats,",
+   "t0": 59.33,
+   "t1": 59.88,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "working",
+   "t0": 59.785,
+   "t1": 60.28,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "as",
+   "t0": 60.28,
+   "t1": 60.44,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "a",
+   "t0": 60.595,
+   "t1": 60.68,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "team.",
+   "t0": 60.67,
+   "t1": 61.56,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "The",
+   "t0": 61.65,
+   "t1": 61.8,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "fats",
+   "t0": 61.835,
+   "t1": 62.28,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "are",
+   "t0": 62.21,
+   "t1": 62.44,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "the",
+   "t0": 62.455,
+   "t1": 62.6,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "tight",
+   "t0": 62.595,
+   "t1": 63.08,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "part.",
+   "t0": 63.065,
+   "t1": 63.4,
+   "line": "vo06",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Next:",
+   "t0": 64.444,
+   "t1": 64.744,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "fingerprints,",
+   "t0": 64.909,
+   "t1": 65.624,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "formed",
+   "t0": 65.569,
+   "t1": 65.944,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "before",
+   "t0": 65.879,
+   "t1": 66.184,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "birth.",
+   "t0": 66.159,
+   "t1": 66.824,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "The",
+   "t0": 66.934,
+   "t1": 66.984,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "pattern",
+   "t0": 67.029,
+   "t1": 67.384,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "spreads",
+   "t0": 67.484,
+   "t1": 67.704,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "in",
+   "t0": 67.649,
+   "t1": 67.864,
+   "line": "vo07",
+   "beat": "tease"
+  },
+  {
+   "w": "waves.",
+   "t0": 67.749,
+   "t1": 68.344,
+   "line": "vo07",
+   "beat": "tease"
+  }
+ ],
+ "lines": {
+  "vo01": [
+   0.05,
+   4.015,
+   "hook"
+  ],
+  "vo02": [
+   4.715,
+   15.414,
+   "normal"
+  ],
+  "vo03": [
+   16.214,
+   25.312,
+   "change"
+  ],
+  "vo04": [
+   26.212,
+   41.436,
+   "why"
+  ],
+  "vo05": [
+   43.936,
+   53.52,
+   "whoa"
+  ],
+  "vo06": [
+   56.92,
+   63.624,
+   "takeaway"
+  ],
+  "vo07": [
+   64.424,
+   68.415,
+   "tease"
+  ]
+ }
+}

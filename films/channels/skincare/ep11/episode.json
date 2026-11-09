@@ -1,0 +1,425 @@
+{
+ "num": "S2·E5",
+ "title": "The brick wall<br>on your skin",
+ "placeholder": "Placeholder art",
+ "titleSize": 84,
+ "images": {
+  "q1": {
+   "src": [
+    "art/s2e05-01.webp"
+   ],
+   "layers": [
+    "art/s2e05-01-L0.webp",
+    "art/s2e05-01-L1.webp",
+    "art/s2e05-01-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q2": {
+   "src": [
+    "art/s2e05-02.webp"
+   ],
+   "layers": [
+    "art/s2e05-02-L0.webp",
+    "art/s2e05-02-L1.webp",
+    "art/s2e05-02-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q3": {
+   "src": [
+    "art/s2e05-03.webp"
+   ],
+   "layers": [
+    "art/s2e05-03-L0.webp",
+    "art/s2e05-03-L1.webp",
+    "art/s2e05-03-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q4": {
+   "src": [
+    "art/s2e05-04.webp"
+   ],
+   "layers": [
+    "art/s2e05-04-L0.webp",
+    "art/s2e05-04-L1.webp",
+    "art/s2e05-04-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  },
+  "q5": {
+   "src": [
+    "art/s2e05-05.webp"
+   ],
+   "layers": [
+    "art/s2e05-05-L0.webp",
+    "art/s2e05-05-L1.webp",
+    "art/s2e05-05-L2.webp"
+   ],
+   "par": [
+    0,
+    0.55,
+    1
+   ],
+   "blur": 9
+  }
+ },
+ "camera": [
+  {
+   "t": 0,
+   "img": "q1",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1
+  },
+  {
+   "t": "vo01:brick",
+   "img": "q1",
+   "s": 1.08,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.05,
+   "rack": 2
+  },
+  {
+   "t": "start:vo02",
+   "img": "q2",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1,
+   "anchors": {
+    "brick": [
+     0.3,
+     0.47
+    ],
+    "mortar": [
+     0.55,
+     0.54
+    ]
+   }
+  },
+  {
+   "t": "vo02:Fats",
+   "img": "q2",
+   "s": 1.12,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.05,
+   "rack": 2,
+   "anchors": {
+    "brick": [
+     0.3,
+     0.47
+    ],
+    "mortar": [
+     0.55,
+     0.54
+    ]
+   }
+  },
+  {
+   "t": "vo03:wrapped",
+   "img": "q2",
+   "s": 1.16,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.01,
+    0
+   ],
+   "dolly": 0.05,
+   "rack": 1,
+   "anchors": {
+    "brick": [
+     0.3,
+     0.47
+    ],
+    "mortar": [
+     0.55,
+     0.54
+    ]
+   }
+  },
+  {
+   "t": "start:vo04",
+   "img": "q3",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1,
+   "anchors": {
+    "drops": [
+     0.46,
+     0.66
+    ]
+   }
+  },
+  {
+   "t": "vo04:system",
+   "img": "q3",
+   "s": 1.1,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2,
+   "anchors": {
+    "drops": [
+     0.46,
+     0.66
+    ]
+   }
+  },
+  {
+   "t": "start:vo05",
+   "img": "q4",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1,
+   "anchors": {
+    "mortar": [
+     0.5,
+     0.55
+    ]
+   }
+  },
+  {
+   "t": "vo05:fats",
+   "img": "q4",
+   "s": 1.1,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0.05,
+   "rack": 2,
+   "anchors": {
+    "mortar": [
+     0.5,
+     0.55
+    ]
+   }
+  },
+  {
+   "t": "start:vo06",
+   "img": "q5",
+   "s": 1.0,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    0.012,
+    0
+   ],
+   "dolly": 0,
+   "rack": 1
+  },
+  {
+   "t": "vo06:fats",
+   "img": "q5",
+   "s": 1.06,
+   "f": [
+    0.5,
+    0.5
+   ],
+   "trk": [
+    -0.01,
+    0
+   ],
+   "dolly": 0.04,
+   "rack": 2
+  }
+ ],
+ "labels": [
+  {
+   "text": "Bricks: flat cells",
+   "a": "brick",
+   "img": "q2",
+   "layer": 1,
+   "t0": "vo02:bricks",
+   "t1": "vo02:mortar",
+   "off": [
+    120,
+    -150
+   ]
+  },
+  {
+   "text": "Mortar: fats",
+   "a": "mortar",
+   "img": "q2",
+   "layer": 2,
+   "t0": "vo02:mortar",
+   "t1": "vo02:A",
+   "off": [
+    -110,
+    150
+   ]
+  },
+  {
+   "text": "Water held at the surface",
+   "a": "drops",
+   "img": "q3",
+   "layer": 2,
+   "t0": "vo04:Water",
+   "t1": "vo04:It",
+   "off": [
+    -60,
+    -170
+   ]
+  },
+  {
+   "text": "The tight part: the fats",
+   "a": "mortar",
+   "img": "q4",
+   "layer": 2,
+   "t0": "vo05:fats",
+   "t1": "end:vo05+0.3",
+   "off": [
+    -80,
+    -160
+   ]
+  }
+ ],
+ "sweeps": [
+  {
+   "img": "q2",
+   "t0": "vo02:Fats",
+   "t1": "vo02:mortar+0.9",
+   "a": 0.5,
+   "w": 0.1
+  },
+  {
+   "img": "q3",
+   "t0": "vo04:Water",
+   "t1": "vo04:stays+1.0",
+   "a": 0.5,
+   "w": 0.1
+  },
+  {
+   "img": "q5",
+   "t0": "vo06:So",
+   "t1": "vo06:wall+1.2",
+   "a": 0.45,
+   "w": 0.12
+  }
+ ],
+ "particles": [
+  {
+   "img": "q1",
+   "n": 10,
+   "a": 0.35
+  },
+  {
+   "img": "q5",
+   "n": 12,
+   "a": 0.4
+  }
+ ],
+ "sup": [
+  [
+   "start:vo02",
+   "Bricks<br>and mortar."
+  ],
+  [
+   "start:vo04",
+   "A system,<br>not a sheet."
+  ],
+  [
+   "start:vo05",
+   "The fats are<br>the tight part."
+  ],
+  [
+   "start:vo06",
+   ""
+  ]
+ ],
+ "badges": [
+  [
+   "start:vo02",
+   "start:vo06",
+   "Simplified · not to scale"
+  ]
+ ],
+ "end": {
+  "t": "start:vo07-0.3",
+  "e1": "Next:<br>fingerprints, before birth",
+  "e2": "The pattern spreads in waves.",
+  "chip": "Skin Sense · Season 2 · Episode 6"
+ }
+}

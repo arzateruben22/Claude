@@ -23,16 +23,17 @@ Sources
 2. In 2009 the International Agency for Research on Cancer (IARC, the WHO's cancer agency) classified UV-emitting tanning devices in Group 1, 'carcinogenic to humans', its top group, which also holds tobacco smoking and (from 2015) processed meat. — NIH: https://pubmed.ncbi.nlm.nih.gov/19655431/
 3. IARC/WHO say that sharing Group 1 does not make agents equally dangerous: the classifications describe the strength of the evidence that an agent can cause cancer, not the level of risk. — WHO: https://monographs.iarc.who.int/wp-content/uploads/2018/07/IARCMonographs-QA.pdf
 4. Tanning beds emit mainly UVA (the longer-wavelength UV), with a small UVB fraction. — NIH: https://pubmed.ncbi.nlm.nih.gov/21357345/
-5. When IARC moved UV-emitting tanning devices into Group 1 (2009), the key epidemiological finding was a raised melanoma risk in people who first used tanning devices young; risk increases with younger age at first use. — ecancer.org: https://ecancer.org/en/news/658-iarc-moves-sunbeds-to-highest-cancer-risk-category
-6. Meta-analyses found first sunbed use before age 35 associated with a summary relative risk of melanoma of 1.59 (Boniol et al. 2012, corrected) and 1.75 (IARC Working Group 2007). — NIH: https://pubmed.ncbi.nlm.nih.gov/22833605/
-7. In November 2009, months after IARC's July 2009 classification, Brazil's health regulator ANVISA banned UV tanning equipment for aesthetic purposes (RDC 56/2009, dated 9 November 2009), the first country to do so, citing the IARC classification. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC5710080/
-8. Australia banned commercial solariums from 1 January 2015 in most states and territories (NSW, Victoria, SA, Tasmania, Queensland, ACT), and in Western Australia from 1 January 2016. — cancer.org.au: https://www.cancer.org.au/about-us/policy-and-advocacy/prevention/uv-radiation/related-resources/solariums
-9. Longer-wavelength UVA penetrates through the epidermis well into the dermis, whereas UVB is almost entirely absorbed in the epidermis. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC3709783/
-10. The epidermis is usually about 0.1 mm thick (0.07–0.12 mm), thicker on the palms and soles; a sheet of office paper is about 0.1 mm. — anatomyatlases.org: https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml
-11. IARC classified solar radiation as Group 1, carcinogenic to humans, in 1992 (Monographs Vol. 55), when the use of sunlamps and sunbeds was classified Group 2A, 'probably carcinogenic'; tanning devices moved to Group 1 only in 2009, 17 years later. — inchem.org: https://inchem.org/documents/iarc/vol55/solar-and-uv-radiation.html
-12. Tanning devices and tobacco smoking are both IARC Group 1 (sufficient evidence of carcinogenicity in humans); that shared group reflects the strength of evidence, and tobacco causes far more cancers. — fullfact.org: https://fullfact.org/health/sunbeds-smoking-dhsc-iarc/
+5. The intensity of UVA produced by large, powerful tanning units may be 10 to 15 times higher than that of the midday sun. — NIH: https://pubmed.ncbi.nlm.nih.gov/21357345/#tanning-unit-intensity
+6. When IARC moved UV-emitting tanning devices into Group 1 (2009), the key epidemiological finding was a raised melanoma risk in people who first used tanning devices young; risk increases with younger age at first use. — ecancer.org: https://ecancer.org/en/news/658-iarc-moves-sunbeds-to-highest-cancer-risk-category
+7. Meta-analyses found first sunbed use before age 35 associated with a summary relative risk of melanoma of 1.59 (Boniol et al. 2012, corrected) and 1.75 (IARC Working Group 2007). — NIH: https://pubmed.ncbi.nlm.nih.gov/22833605/
+8. In November 2009, months after IARC's July 2009 classification, Brazil's health regulator ANVISA banned UV tanning equipment for aesthetic purposes (RDC 56/2009, dated 9 November 2009), the first country to do so, citing the IARC classification. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC5710080/
+9. Australia banned commercial solariums from 1 January 2015 in most states and territories (NSW, Victoria, SA, Tasmania, Queensland, ACT), and in Western Australia from 1 January 2016. — cancer.org.au: https://www.cancer.org.au/about-us/policy-and-advocacy/prevention/uv-radiation/related-resources/solariums
+10. Longer-wavelength UVA penetrates through the epidermis well into the dermis, whereas UVB is almost entirely absorbed in the epidermis. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC3709783/
+11. The epidermis is usually about 0.1 mm thick (0.07–0.12 mm), thicker on the palms and soles; a sheet of office paper is about 0.1 mm. — anatomyatlases.org: https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml
+12. IARC classified solar radiation as Group 1, carcinogenic to humans, in 1992 (Monographs Vol. 55), when the use of sunlamps and sunbeds was classified Group 2A, 'probably carcinogenic'; tanning devices moved to Group 1 only in 2009, 17 years later. — inchem.org: https://inchem.org/documents/iarc/vol55/solar-and-uv-radiation.html
+13. Tanning devices and tobacco smoking are both IARC Group 1 (sufficient evidence of carcinogenicity in humans); that shared group reflects the strength of evidence, and tobacco causes far more cancers. — fullfact.org: https://fullfact.org/health/sunbeds-smoking-dhsc-iarc/
 
-Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code, no stock footage. Sources for every number are listed below.
+Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code, no stock footage. Every number's source is listed in this description.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
@@ -53,14 +54,15 @@ Sources
 2. In 2009 the International Agency for Research on Cancer (IARC, the WHO's cancer agency) classified UV-emitting tanning devices in Group 1, 'carcinogenic to humans', its top group, which also holds tobacco smoking and (from 2015) processed meat. — NIH: https://pubmed.ncbi.nlm.nih.gov/19655431/
 3. IARC/WHO say that sharing Group 1 does not make agents equally dangerous: the classifications describe the strength of the evidence that an agent can cause cancer, not the level of risk. — WHO: https://monographs.iarc.who.int/wp-content/uploads/2018/07/IARCMonographs-QA.pdf
 4. Tanning beds emit mainly UVA (the longer-wavelength UV), with a small UVB fraction. — NIH: https://pubmed.ncbi.nlm.nih.gov/21357345/
-5. When IARC moved UV-emitting tanning devices into Group 1 (2009), the key epidemiological finding was a raised melanoma risk in people who first used tanning devices young; risk increases with younger age at first use. — ecancer.org: https://ecancer.org/en/news/658-iarc-moves-sunbeds-to-highest-cancer-risk-category
-6. Meta-analyses found first sunbed use before age 35 associated with a summary relative risk of melanoma of 1.59 (Boniol et al. 2012, corrected) and 1.75 (IARC Working Group 2007). — NIH: https://pubmed.ncbi.nlm.nih.gov/22833605/
-7. In November 2009, months after IARC's July 2009 classification, Brazil's health regulator ANVISA banned UV tanning equipment for aesthetic purposes (RDC 56/2009, dated 9 November 2009), the first country to do so, citing the IARC classification. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC5710080/
-8. Australia banned commercial solariums from 1 January 2015 in most states and territories (NSW, Victoria, SA, Tasmania, Queensland, ACT), and in Western Australia from 1 January 2016. — cancer.org.au: https://www.cancer.org.au/about-us/policy-and-advocacy/prevention/uv-radiation/related-resources/solariums
-9. Longer-wavelength UVA penetrates through the epidermis well into the dermis, whereas UVB is almost entirely absorbed in the epidermis. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC3709783/
-10. The epidermis is usually about 0.1 mm thick (0.07–0.12 mm), thicker on the palms and soles; a sheet of office paper is about 0.1 mm. — anatomyatlases.org: https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml
-11. IARC classified solar radiation as Group 1, carcinogenic to humans, in 1992 (Monographs Vol. 55), when the use of sunlamps and sunbeds was classified Group 2A, 'probably carcinogenic'; tanning devices moved to Group 1 only in 2009, 17 years later. — inchem.org: https://inchem.org/documents/iarc/vol55/solar-and-uv-radiation.html
-12. Tanning devices and tobacco smoking are both IARC Group 1 (sufficient evidence of carcinogenicity in humans); that shared group reflects the strength of evidence, and tobacco causes far more cancers. — fullfact.org: https://fullfact.org/health/sunbeds-smoking-dhsc-iarc/
+5. The intensity of UVA produced by large, powerful tanning units may be 10 to 15 times higher than that of the midday sun. — NIH: https://pubmed.ncbi.nlm.nih.gov/21357345/#tanning-unit-intensity
+6. When IARC moved UV-emitting tanning devices into Group 1 (2009), the key epidemiological finding was a raised melanoma risk in people who first used tanning devices young; risk increases with younger age at first use. — ecancer.org: https://ecancer.org/en/news/658-iarc-moves-sunbeds-to-highest-cancer-risk-category
+7. Meta-analyses found first sunbed use before age 35 associated with a summary relative risk of melanoma of 1.59 (Boniol et al. 2012, corrected) and 1.75 (IARC Working Group 2007). — NIH: https://pubmed.ncbi.nlm.nih.gov/22833605/
+8. In November 2009, months after IARC's July 2009 classification, Brazil's health regulator ANVISA banned UV tanning equipment for aesthetic purposes (RDC 56/2009, dated 9 November 2009), the first country to do so, citing the IARC classification. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC5710080/
+9. Australia banned commercial solariums from 1 January 2015 in most states and territories (NSW, Victoria, SA, Tasmania, Queensland, ACT), and in Western Australia from 1 January 2016. — cancer.org.au: https://www.cancer.org.au/about-us/policy-and-advocacy/prevention/uv-radiation/related-resources/solariums
+10. Longer-wavelength UVA penetrates through the epidermis well into the dermis, whereas UVB is almost entirely absorbed in the epidermis. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC3709783/
+11. The epidermis is usually about 0.1 mm thick (0.07–0.12 mm), thicker on the palms and soles; a sheet of office paper is about 0.1 mm. — anatomyatlases.org: https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml
+12. IARC classified solar radiation as Group 1, carcinogenic to humans, in 1992 (Monographs Vol. 55), when the use of sunlamps and sunbeds was classified Group 2A, 'probably carcinogenic'; tanning devices moved to Group 1 only in 2009, 17 years later. — inchem.org: https://inchem.org/documents/iarc/vol55/solar-and-uv-radiation.html
+13. Tanning devices and tobacco smoking are both IARC Group 1 (sufficient evidence of carcinogenicity in humans); that shared group reflects the strength of evidence, and tobacco causes far more cancers. — fullfact.org: https://fullfact.org/health/sunbeds-smoking-dhsc-iarc/
 ```
 
 
@@ -74,39 +76,43 @@ Same list as cigarettes? The sun joined that list years before the beds. Educati
 **Pinned comment + replies (full sources)**
 
 ```
-Sources 1/9: 1. https://www.who.int/news-room/questions-and-answers/item/cancer-carcinogenicity-of-the-consumption-of-red-meat-and-processed-meat
+Sources 1/10: 1. https://www.who.int/news-room/questions-and-answers/item/cancer-carcinogenicity-of-the-consumption-of-red-meat-and-processed-meat
 ```
 
 ```
-Sources 2/9: 2. https://pubmed.ncbi.nlm.nih.gov/19655431/ · 3. https://monographs.iarc.who.int/wp-content/uploads/2018/07/IARCMonographs-QA.pdf
+Sources 2/10: 2. https://pubmed.ncbi.nlm.nih.gov/19655431/ · 3. https://monographs.iarc.who.int/wp-content/uploads/2018/07/IARCMonographs-QA.pdf
 ```
 
 ```
-Sources 3/9: 4. https://pubmed.ncbi.nlm.nih.gov/21357345/
+Sources 3/10: 4. https://pubmed.ncbi.nlm.nih.gov/21357345/ · 5. https://pubmed.ncbi.nlm.nih.gov/21357345/#tanning-unit-intensity
 ```
 
 ```
-Sources 4/9: 5. https://ecancer.org/en/news/658-iarc-moves-sunbeds-to-highest-cancer-risk-category
+Sources 4/10: 6. https://ecancer.org/en/news/658-iarc-moves-sunbeds-to-highest-cancer-risk-category
 ```
 
 ```
-Sources 5/9: 6. https://pubmed.ncbi.nlm.nih.gov/22833605/ · 7. https://pmc.ncbi.nlm.nih.gov/articles/PMC5710080/
+Sources 5/10: 7. https://pubmed.ncbi.nlm.nih.gov/22833605/ · 8. https://pmc.ncbi.nlm.nih.gov/articles/PMC5710080/
 ```
 
 ```
-Sources 6/9: 8. https://www.cancer.org.au/about-us/policy-and-advocacy/prevention/uv-radiation/related-resources/solariums
+Sources 6/10: 9. https://www.cancer.org.au/about-us/policy-and-advocacy/prevention/uv-radiation/related-resources/solariums
 ```
 
 ```
-Sources 7/9: 9. https://pmc.ncbi.nlm.nih.gov/articles/PMC3709783/ · 10. https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml
+Sources 7/10: 10. https://pmc.ncbi.nlm.nih.gov/articles/PMC3709783/
 ```
 
 ```
-Sources 8/9: 11. https://inchem.org/documents/iarc/vol55/solar-and-uv-radiation.html
+Sources 8/10: 11. https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml
 ```
 
 ```
-Sources 9/9: 12. https://fullfact.org/health/sunbeds-smoking-dhsc-iarc/
+Sources 9/10: 12. https://inchem.org/documents/iarc/vol55/solar-and-uv-radiation.html
+```
+
+```
+Sources 10/10: 13. https://fullfact.org/health/sunbeds-smoking-dhsc-iarc/
 ```
 ## Instagram Reel (shared account)
 **Caption**
@@ -118,7 +124,7 @@ When beds joined the list, the clearest signal came from people who started youn
 
 Season 1: Under the surface, part 6 of 6.
 
-Sources in the first comment. Synthetic (AI) narration; AI-generated illustrations, animated in code.
+Sources in the first comment. AI voice and AI-generated illustrations.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
@@ -133,19 +139,20 @@ Sources 1/2
 2. In 2009 the International Agency for Research on Cancer (IARC, the WHO's cancer agency) classified UV-emitting tanning devices in Group 1, 'carcinogenic to humans', its top group, which also holds tobacco smoking and (from 2015) processed meat. — NIH: https://pubmed.ncbi.nlm.nih.gov/19655431/
 3. IARC/WHO say that sharing Group 1 does not make agents equally dangerous: the classifications describe the strength of the evidence that an agent can cause cancer, not the level of risk. — WHO: https://monographs.iarc.who.int/wp-content/uploads/2018/07/IARCMonographs-QA.pdf
 4. Tanning beds emit mainly UVA (the longer-wavelength UV), with a small UVB fraction. — NIH: https://pubmed.ncbi.nlm.nih.gov/21357345/
-5. When IARC moved UV-emitting tanning devices into Group 1 (2009), the key epidemiological finding was a raised melanoma risk in people who first used tanning devices young; risk increases with younger age at first use. — ecancer.org: https://ecancer.org/en/news/658-iarc-moves-sunbeds-to-highest-cancer-risk-category
-6. Meta-analyses found first sunbed use before age 35 associated with a summary relative risk of melanoma of 1.59 (Boniol et al. 2012, corrected) and 1.75 (IARC Working Group 2007). — NIH: https://pubmed.ncbi.nlm.nih.gov/22833605/
-7. In November 2009, months after IARC's July 2009 classification, Brazil's health regulator ANVISA banned UV tanning equipment for aesthetic purposes (RDC 56/2009, dated 9 November 2009), the first country to do so, citing the IARC classification. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC5710080/
+5. The intensity of UVA produced by large, powerful tanning units may be 10 to 15 times higher than that of the midday sun. — NIH: https://pubmed.ncbi.nlm.nih.gov/21357345/#tanning-unit-intensity
+6. When IARC moved UV-emitting tanning devices into Group 1 (2009), the key epidemiological finding was a raised melanoma risk in people who first used tanning devices young; risk increases with younger age at first use. — ecancer.org: https://ecancer.org/en/news/658-iarc-moves-sunbeds-to-highest-cancer-risk-category
+7. Meta-analyses found first sunbed use before age 35 associated with a summary relative risk of melanoma of 1.59 (Boniol et al. 2012, corrected) and 1.75 (IARC Working Group 2007). — NIH: https://pubmed.ncbi.nlm.nih.gov/22833605/
+8. In November 2009, months after IARC's July 2009 classification, Brazil's health regulator ANVISA banned UV tanning equipment for aesthetic purposes (RDC 56/2009, dated 9 November 2009), the first country to do so, citing the IARC classification. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC5710080/
 ```
 
 **Reply** (under the first comment)
 
 ```
 Sources 2/2
-8. Australia banned commercial solariums from 1 January 2015 in most states and territories (NSW, Victoria, SA, Tasmania, Queensland, ACT), and in Western Australia from 1 January 2016. — cancer.org.au: https://www.cancer.org.au/about-us/policy-and-advocacy/prevention/uv-radiation/related-resources/solariums
-9. Longer-wavelength UVA penetrates through the epidermis well into the dermis, whereas UVB is almost entirely absorbed in the epidermis. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC3709783/
-10. The epidermis is usually about 0.1 mm thick (0.07–0.12 mm), thicker on the palms and soles; a sheet of office paper is about 0.1 mm. — anatomyatlases.org: https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml
-11. IARC classified solar radiation as Group 1, carcinogenic to humans, in 1992 (Monographs Vol. 55), when the use of sunlamps and sunbeds was classified Group 2A, 'probably carcinogenic'; tanning devices moved to Group 1 only in 2009, 17 years later. — inchem.org: https://inchem.org/documents/iarc/vol55/solar-and-uv-radiation.html
-12. Tanning devices and tobacco smoking are both IARC Group 1 (sufficient evidence of carcinogenicity in humans); that shared group reflects the strength of evidence, and tobacco causes far more cancers. — fullfact.org: https://fullfact.org/health/sunbeds-smoking-dhsc-iarc/
+9. Australia banned commercial solariums from 1 January 2015 in most states and territories (NSW, Victoria, SA, Tasmania, Queensland, ACT), and in Western Australia from 1 January 2016. — cancer.org.au: https://www.cancer.org.au/about-us/policy-and-advocacy/prevention/uv-radiation/related-resources/solariums
+10. Longer-wavelength UVA penetrates through the epidermis well into the dermis, whereas UVB is almost entirely absorbed in the epidermis. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC3709783/
+11. The epidermis is usually about 0.1 mm thick (0.07–0.12 mm), thicker on the palms and soles; a sheet of office paper is about 0.1 mm. — anatomyatlases.org: https://anatomyatlases.org/MicroscopicAnatomy/Section07/Section07.shtml
+12. IARC classified solar radiation as Group 1, carcinogenic to humans, in 1992 (Monographs Vol. 55), when the use of sunlamps and sunbeds was classified Group 2A, 'probably carcinogenic'; tanning devices moved to Group 1 only in 2009, 17 years later. — inchem.org: https://inchem.org/documents/iarc/vol55/solar-and-uv-radiation.html
+13. Tanning devices and tobacco smoking are both IARC Group 1 (sufficient evidence of carcinogenicity in humans); that shared group reflects the strength of evidence, and tobacco causes far more cancers. — fullfact.org: https://fullfact.org/health/sunbeds-smoking-dhsc-iarc/
 ```
 
