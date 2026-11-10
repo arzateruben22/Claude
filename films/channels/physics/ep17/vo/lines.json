@@ -1,0 +1,42 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "A bullet, through an apple, slowly.",
+   "stars": [],
+   "phonemes": "ɐ bˈʊlɪt, θɹuː ɐn ˈæpəl, slˈoʊli.",
+   "file": "01.wav",
+   "dur": 2.307,
+   "sha256": "c7eea44cb293ffd36bd5795ea7246e0465d3cfd7bf6e5c4c534d38697bf9c74b"
+  },
+  {
+   "id": "vo02",
+   "beat": "body",
+   "text": "A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second. The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples. The apple has no time to react. Then the back of the apple blows outward, in a spray. Pieces of the apple trail behind it, one at a time. And the bullet is already past. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Even now, a table a meter wide would take it about twelve seconds to cross. A bullet is fast. But out the window, something is about to be much faster.",
+   "stars": [],
+   "phonemes": "ɐ fˈeɪməs ˈoʊld fˈoʊɾəɡɹˌæf baɪ hˈæɹəld ˈɛdʒətən ʃˈoʊz ɐ bˈʊlɪt ɡˌoʊɪŋ θɹuː ɐn ˈæpəl. ðæt bˈʊlɪt flˈuː æɾ ɐbˌaʊt ˈeɪt hˈʌndɹɪd fˈɪfti mˈiːɾɚz ɐ sˈɛkənd. ðɪ ˈæpəl ɪz ɐbˌaʊt ˈeɪt sˈɛntɪmˌiːɾɚz əkɹˈɑːs. sˌoʊ ðə bˈʊlɪt kɹˈɔsᵻz ɪɾ ɪn lˈɛs ðˌænə tˈɛnθˈaʊzəndθ əvə sˈɛkənd. hˈɪɹ, ðæt tˈeɪks ɐbˌaʊt wˈʌn sˈɛkənd. ðə bˈʊlɪt ɪz ɐ smˈɔːl, dˈɑːɹk ʃˈeɪp. æt ðɪs spˈiːd, juː kæn wˈɑːtʃ ɪt dɹˈɪft ˌɪntʊ ðɪ ˈæpəl lˈaɪk ɐ slˈoʊ fˈɪʃ. ðə skˈɪn dˈɪmpəlz. ðɪ ˈæpəl hɐz nˈoʊ tˈaɪm tə ɹɪˈækt. ðˈɛn ðə bˈæk ʌvðɪ ˈæpəl blˈoʊz ˈaʊtwɚd, ɪn ɐ spɹˈeɪ. pˈiːsᵻz ʌvðɪ ˈæpəl tɹˈeɪl bᵻhˈaɪnd ɪt, wˈʌn æɾə tˈaɪm. ænd ðə bˈʊlɪt ɪz ɔːlɹˌɛdi pˈæst. ɪn ɹˈiːəl tˈaɪm, ðæt wʌz fˈɑːɹ tˈuː kwˈɪk tə blˈɪŋk. ɪts mˈuːvɪŋ mˈɔːɹ ðɐn twˈaɪs æz fˈæst æz sˈaʊnd, sˌoʊ ɪt dɹˈæɡz ɐ nˈæɹoʊ kˈoʊn ʌv ˈɛɹ bᵻhˈaɪnd ɪt. ˈiːvən nˈaʊ, ɐ tˈeɪbəl ɐ mˈiːɾɚ wˈaɪd wʊd tˈeɪk ɪɾ ɐbˌaʊt twˈɛlv sˈɛkəndz tə kɹˈɔs. ɐ bˈʊlɪt ɪz fˈæst. bˌʌt ˈaʊt ðə wˈɪndoʊ, sˈʌmθɪŋ ɪz ɐbˌaʊt təbi mˈʌtʃ fˈæstɚ.",
+   "file": "02.wav",
+   "dur": 56.963,
+   "sha256": "69ba20440a519e8eb04281aa00844e67c65fa49ee11e7803cb74a7b5cf4c12c2"
+  },
+  {
+   "id": "vo03",
+   "beat": "tease",
+   "text": "Part 5 of 8. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt fˈaɪv ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "file": "03.wav",
+   "dur": 2.864,
+   "sha256": "3e0fa164b3e83613153361bdf2fa7bce16ddecb3c53a1d774e4b029724746d34"
+  }
+ ]
+}

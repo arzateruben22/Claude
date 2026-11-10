@@ -1,0 +1,42 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Lightning, a million times slower.",
+   "stars": [],
+   "phonemes": "lˈaɪtnɪŋ, ɐ mˈɪliən tˈaɪmz slˈoʊɚ.",
+   "file": "01.wav",
+   "dur": 2.327,
+   "sha256": "6d7e6672911d17db9333d2a4db90b9e40c5ec4ba791161e9b9490d00625535f8"
+  },
+  {
+   "id": "vo02",
+   "beat": "body",
+   "text": "Beyond the window, a storm. Lightning looks like it strikes in an instant. It doesn't. The whole fall from the cloud takes tens of thousandths of a second. At this speed, that would take hours. So I'll skip ahead, and show you the highlights. First, a faint path of electric charge reaches down from the cloud, in jumps. Each jump is tens of meters long. Each takes about a microsecond. Here, one jump lasts one whole second. Then the path waits, about thirty to fifty microseconds. Here, that's half a minute or more. Then it jumps again, feeling its way down. Look at how it branches, like a tree turned upside down. At last it touches the ground, and a bright flash runs back up the three-kilometer path. That flash travels up to about a third of the speed of light. Even at a million times slower, it takes at least thirty seconds to climb. And that's the fastest thing so far. But it's still not light's top speed.",
+   "stars": [],
+   "phonemes": "bᵻjˌɔnd ðə wˈɪndoʊ, ɐ stˈɔːɹm. lˈaɪtnɪŋ lˈʊks lˈaɪk ɪt stɹˈaɪks ɪn ɐn ˈɪnstənt. ɪt dˈʌzənt. ðə hˈoʊl fˈɔːl fɹʌmðə klˈaʊd tˈeɪks tˈɛnz ʌv θˈaʊzəndθs əvə sˈɛkənd. æt ðɪs spˈiːd, ðæt wʊd tˈeɪk ˈaʊɚz. sˌoʊ aɪl skˈɪp ɐhˈɛd, ænd ʃˈoʊ juː ðə hˈaɪlaɪts. fˈɜːst, ɐ fˈeɪnt pˈæθ ʌv ᵻlˈɛktɹɪk tʃˈɑːɹdʒ ɹˈiːtʃᵻz dˌaʊn fɹʌmðə klˈaʊd, ɪn dʒˈʌmps. ˈiːtʃ dʒˈʌmp ɪz tˈɛnz ʌv mˈiːɾɚz lˈɔŋ. ˈiːtʃ tˈeɪks ɐbˌaʊt ɐ mˈaɪkɹoʊsˌɛkənd. hˈɪɹ, wˈʌn dʒˈʌmp lˈæsts wˈʌn hˈoʊl sˈɛkənd. ðˈɛn ðə pˈæθ wˈeɪts, ɐbˌaʊt θˈɜːɾi tə fˈɪfti mˈaɪkɹoʊsˌɛkəndz. hˈɪɹ, ðæts hˈæf ɐ mˈɪnɪt ɔːɹ mˈɔːɹ. ðˈɛn ɪt dʒˈʌmps ɐɡˈɛn, fˈiːlɪŋ ɪts wˈeɪ dˈaʊn. lˈʊk æt hˌaʊ ɪt bɹˈæntʃᵻz, lˈaɪk ɐ tɹˈiː tˈɜːnd ˈʌpsaɪd dˈaʊn. æt lˈæst ɪt tˈʌtʃᵻz ðə ɡɹˈaʊnd, ænd ɐ bɹˈaɪt flˈæʃ ɹˈʌnz bˈæk ˌʌp ðə θɹˈiːkɪlˈɑːmɪɾɚ pˈæθ. ðæt flˈæʃ tɹˈævəlz ˌʌp tʊ ɐbˌaʊt ɐ θˈɜːd ʌvðə spˈiːd ʌv lˈaɪt. ˈiːvən æɾə mˈɪliən tˈaɪmz slˈoʊɚ, ɪt tˈeɪks æt lˈiːst θˈɜːɾi sˈɛkəndz tə klˈaɪm. ænd ðæts ðə fˈæstɪst θˈɪŋ sˈoʊ fˌɑːɹ. bˌʌt ɪts stˈɪl nˌɑːt lˈaɪts tˈɑːp spˈiːd.",
+   "file": "02.wav",
+   "dur": 64.682,
+   "sha256": "79ec4cee84c887151988cb38b6c2f2663536cd4d30c57968df5533044ee2aa54"
+  },
+  {
+   "id": "vo03",
+   "beat": "tease",
+   "text": "Part 6 of 8. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt sˈɪks ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "file": "03.wav",
+   "dur": 2.85,
+   "sha256": "6ec22ac0a123d6b53bddc0515ea075eae0793db414bdb1194bbcc54b16658b86"
+  }
+ ]
+}

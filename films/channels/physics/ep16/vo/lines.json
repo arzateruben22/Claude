@@ -1,0 +1,42 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Watch sound cross a kitchen.",
+   "stars": [],
+   "phonemes": "wˈɑːtʃ sˈaʊnd kɹˈɔs ɐ kˈɪtʃən.",
+   "file": "01.wav",
+   "dur": 1.623,
+   "sha256": "6b197fe5a00c208ca015d97ee83ff66e13d317919cb0841708f671a51f7524ae"
+  },
+  {
+   "id": "vo02",
+   "beat": "body",
+   "text": "Now, someone claps at the far end of the kitchen. Sound is air pushing on air. Without air, there would be nothing to push, and no sound at all. In a room, it moves about three hundred forty meters a second. That's why you never see it travel. The room is five meters across, so the clap crosses it in about fifteen thousandths of a second. Here, that's fifteen seconds. There it goes: a ring of squeezed air, crossing the room. Imagine standing at the far wall. You'd hear the clap only when this ring reached you. It reaches the wall, and bounces back. That bounce is an echo. You use this trick in every storm. Sound covers about a kilometer in three seconds. So count the seconds between a flash and its thunder, and divide by three. That's roughly how many kilometers away the lightning is. But a clap is slow. Something on this table is much faster than sound, and it's about to go through an apple.",
+   "stars": [],
+   "phonemes": "nˈaʊ, sˈʌmwʌn klˈæps æt ðə fˈɑːɹ ˈɛnd ʌvðə kˈɪtʃən. sˈaʊnd ɪz ˈɛɹ pˈʊʃɪŋ ˌɔn ˈɛɹ. wɪðˌaʊt ˈɛɹ, ðɛɹ wʊd biː nˈʌθɪŋ tə pˈʊʃ, ænd nˈoʊ sˈaʊnd æɾ ˈɔːl. ɪn ɐ ɹˈuːm, ɪt mˈuːvz ɐbˌaʊt θɹˈiː hˈʌndɹɪd fˈɔːɹɾi mˈiːɾɚz ɐ sˈɛkənd. ðæts wˌaɪ juː nˈɛvɚ sˈiː ɪt tɹˈævəl. ðə ɹˈuːm ɪz fˈaɪv mˈiːɾɚz əkɹˈɑːs, sˌoʊ ðə klˈæp kɹˈɔsᵻz ɪɾ ɪn ɐbˌaʊt fˈɪftiːn θˈaʊzəndθs əvə sˈɛkənd. hˈɪɹ, ðæts fˈɪftiːn sˈɛkəndz. ðɛɹ ɪt ɡˈoʊz: ɐ ɹˈɪŋ ʌv skwˈiːzd ˈɛɹ, kɹˈɔsɪŋ ðə ɹˈuːm. ɪmˈædʒɪn stˈændɪŋ æt ðə fˈɑːɹ wˈɔːl. juːd hˈɪɹ ðə klˈæp ˈoʊnli wɛn ðɪs ɹˈɪŋ ɹˈiːtʃt juː. ɪt ɹˈiːtʃᵻz ðə wˈɔːl, ænd bˈaʊnsᵻz bˈæk. ðæt bˈaʊns ɪz ɐn ˈɛkoʊ. juː jˈuːz ðɪs tɹˈɪk ɪn ˈɛvɹi stˈɔːɹm. sˈaʊnd kˈʌvɚz ɐbˌaʊt ɐ kɪlˈɑːmɪɾɚɹ ɪn θɹˈiː sˈɛkəndz. sˌoʊ kˈaʊnt ðə sˈɛkəndz bᵻtwˌiːn ɐ flˈæʃ ænd ɪts θˈʌndɚ, ænd dᵻvˈaɪd baɪ θɹˈiː. ðæts ɹˈʌfli hˌaʊ mˈɛni kɪlˈɑːmɪɾɚz ɐwˈeɪ ðə lˈaɪtnɪŋ ɪz. bˌʌt ɐ klˈæp ɪz slˈoʊ. sˈʌmθɪŋ ˌɔn ðɪs tˈeɪbəl ɪz mˈʌtʃ fˈæstɚ ðɐn sˈaʊnd, ænd ɪts ɐbˌaʊt tə ɡˌoʊ θɹuː ɐn ˈæpəl.",
+   "file": "02.wav",
+   "dur": 56.718,
+   "sha256": "ec6d34b54936ac4f96d310bf779b6a01e17b5a2560ffa9f1ca431b35c4902048"
+  },
+  {
+   "id": "vo03",
+   "beat": "tease",
+   "text": "Part 4 of 8. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt fˈɔːɹ ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "file": "03.wav",
+   "dur": 2.751,
+   "sha256": "8a408926e3d8a8f3d0658c07aa44207f0df669767759980c71c531d65e1e5cf6"
+  }
+ ]
+}
