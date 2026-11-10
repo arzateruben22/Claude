@@ -8,8 +8,10 @@ reviews what members contribute and keeps an audited ledger.
 > not a promise of future payment. Likes, comments, views, shares, follows and
 > subscriptions can be shown as statistics and never earn anything.
 
-**Status:** the server, data rules, sign-in and JSON API are built and tested. The
-premium single-screen UI is the next phase (`docs/UI_BRIEF.md`). See `PROGRESS.md`.
+**Status:** the data rules and business logic are built and tested. The sign-in layer,
+HTTP API and sample-data seed are being built against `docs/API.md` and are **not yet
+verified** — until `PROGRESS.md` says otherwise, `npm run seed` and `npm run dev` below
+may not work. The single-screen UI comes after that (`docs/UI_BRIEF.md`).
 
 ## Run it locally
 
@@ -25,8 +27,8 @@ npm run dev              # http://localhost:8787  (dev sign-in + sample platform
 
 `npm run dev` prints a **sign-in code** in the terminal. Dev sign-in needs that code
 plus one of the sample addresses (`admin@example.test`, `daryl@example.test`,
-`leo@example.test`, `alex@example.test`). Until the UI exists you can try the API
-directly — see "Try it with curl" in `PROGRESS.md`.
+`leo@example.test`, `alex@example.test`). Until the UI exists the API can be tried
+directly with curl; `docs/API.md` lists every route.
 
 `npm run seed -- --reset` wipes the local database and seeds it again.
 
@@ -60,7 +62,8 @@ Never put a secret in a file that is committed.
 
 ## Known limits
 
-- No dashboard UI yet; `public/` holds a placeholder page.
+- No dashboard UI yet.
+- Sign-in, HTTP routes and the seed are in progress and unverified (see `PROGRESS.md`).
 - Nothing has been run against live Google, YouTube or TikTok services.
 - Linking a YouTube channel is not built (needs a Google Cloud project).
 - Runs locally only; no hosting has been chosen.
