@@ -148,7 +148,7 @@ window.seek = function (t) {
   const pov = shot === "eye" || shot === "shoulder" || shot === "lift" || shot === "end";
   const sunDir = new THREE.Vector3(0, Math.sin(ph), -Math.cos(ph)), day0 = clamp01((sunDir.y + 0.12) / 0.4);
   // photosensitivity: when one day takes only a second or two of film, shrink the day/night swing so the light only pulses gently
-  const cycP = WD.cycleS * T / WD.t0H, amp = Math.max(0.2, Math.min(1, (cycP - 0.8) / 3.2)), day = 0.5 + (day0 - 0.5) * amp;
+  const cycP = WD.cycleS * T / WD.t0H, amp = Math.max(0.08, Math.min(1, (cycP - 0.8) / 5.2)), day = 0.5 + (day0 - 0.5) * amp;
 
   // the sky, stars, sun and the ground
   sky.visible = pov; stars.visible = pov; sunDisk.visible = pov; sunHalo.visible = pov;
