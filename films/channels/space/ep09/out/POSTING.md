@@ -7,7 +7,7 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-Where does your gold come from? | One More Orbit · Season 2 · Episode 3
+Where does your gold come from?
 
 **Description**
 
