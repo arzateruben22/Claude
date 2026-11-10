@@ -1,0 +1,82 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "opening",
+   "text": "A slinky. A strand of spaghetti. A jar of nuts. A coffee drop. A cup of water. And a raindrop. Six ordinary things. Each one hides a reason that is too quick, too small, or too hidden to see. So we'll slow each one down, until the physics shows.",
+   "stars": [],
+   "phonemes": "ɐ slˈɪŋki. ɐ stɹˈænd ʌv spɐɡˈɛɾi. ɐ dʒˈɑːɹ ʌv nˈʌts. ɐ kˈɔfi dɹˈɑːp. ɐ kˈʌp ʌv wˈɔːɾɚ. ænd ɐ ɹˈeɪndɹɑːp. sˈɪks ˈɔːɹdɪnˌɛɹi θˈɪŋz. ˈiːtʃ wˈʌn hˈaɪdz ɐ ɹˈiːzən ðæt ɪz tˈuː kwˈɪk, tˈuː smˈɔːl, ɔːɹ tˈuː hˈɪdən tə sˈiː. sˌoʊ wiːl slˈoʊ ˈiːtʃ wˈʌn dˈaʊn, ʌntˈɪl ðə fˈɪzɪks ʃˈoʊz.",
+   "file": "01.wav",
+   "dur": 18.002,
+   "sha256": "6115ca25f18e5956c40fc1a6bb80ec893cfc49ca9352b15e61aa1488a203c2e2"
+  },
+  {
+   "id": "vo02",
+   "beat": "bridge1",
+   "text": "The slinky's bottom waited, because the news of the drop had to travel down it, like a wave. A bending stick has the same problem. When it snaps, a wave from the break runs along it, and that wave can break it again.",
+   "stars": [],
+   "phonemes": "ðə slˈɪŋkiz bˈɑːɾəm wˈeɪɾᵻd, bɪkˈʌz ðə nˈuːz ʌvðə dɹˈɑːp hædtə tɹˈævəl dˈaʊn ɪt, lˈaɪk ɐ wˈeɪv. ɐ bˈɛndɪŋ stˈɪk hɐz ðə sˈeɪm pɹˈɑːbləm. wˌɛn ɪt snˈæps, ɐ wˈeɪv fɹʌmðə bɹˈeɪk ɹˈʌnz ɐlˈɔŋ ɪt, ænd ðæt wˈeɪv kæn bɹˈeɪk ɪɾ ɐɡˈɛn.",
+   "file": "02.wav",
+   "dur": 15.382,
+   "sha256": "d258434d4e85489644d59122098ebe8aae85727ea20fef8040be1c59ad598bed"
+  },
+  {
+   "id": "vo03",
+   "beat": "bridge2",
+   "text": "Spaghetti breaks into a few pieces. Now let's watch a whole jar of pieces at once. Shake it, and something strange happens to the biggest one.",
+   "stars": [],
+   "phonemes": "spɐɡˈɛɾi bɹˈeɪks ˌɪntʊ ɐ fjˈuː pˈiːsᵻz. nˈaʊ lˈɛts wˈɑːtʃ ɐ hˈoʊl dʒˈɑːɹ ʌv pˈiːsᵻz ɐtwˈʌns. ʃˈeɪk ɪt, ænd sˈʌmθɪŋ stɹˈeɪndʒ hˈæpənz tə ðə bˈɪɡɪst wˌʌn.",
+   "file": "03.wav",
+   "dur": 9.94,
+   "sha256": "bfc1fadf945d7c789690e925d0bf409a06ee027385200f9b105760f1f74ef71c"
+  },
+  {
+   "id": "vo04",
+   "beat": "bridge3",
+   "text": "In the jar, the big nut rises because small grains slip into the gaps under it. Small things moving together can do surprising things. So can the tiny specks inside a drop of drying coffee.",
+   "stars": [],
+   "phonemes": "ɪnðə dʒˈɑːɹ, ðə bˈɪɡ nˈʌt ɹˈaɪzᵻz bɪkˈʌz smˈɔːl ɡɹˈeɪnz slˈɪp ˌɪntʊ ðə ɡˈæps ˈʌndɚɹ ɪt. smˈɔːl θˈɪŋz mˈuːvɪŋ təɡˌɛðɚ kæn dˈuː sɚpɹˈaɪzɪŋ θˈɪŋz. sˌoʊ kæn ðə tˈaɪni spˈɛks ɪnsˈaɪd ɐ dɹˈɑːp ʌv dɹˈaɪɪŋ kˈɔfi.",
+   "file": "04.wav",
+   "dur": 14.043,
+   "sha256": "32288b0f0f0bb35ce2e4c0dc179ff5c14a343b8bb20a096e90c9d022d4d76548"
+  },
+  {
+   "id": "vo05",
+   "beat": "bridge4",
+   "text": "The coffee drop hid a flow that carries its specks to the edge. Now let's listen for a different hidden shape: the empty air inside a cup.",
+   "stars": [],
+   "phonemes": "ðə kˈɔfi dɹˈɑːp hˈɪd ɐ flˈoʊ ðæt kˈæɹiz ɪts spˈɛks tə ðɪ ˈɛdʒ. nˈaʊ lˈɛts lˈɪsən fɚɹə dˈɪfɹənt hˈɪdən ʃˈeɪp: ðɪ ˈɛmpti ˈɛɹ ɪnsˈaɪd ɐ kˈʌp.",
+   "file": "05.wav",
+   "dur": 9.152,
+   "sha256": "95043e01e2bfe1df7bf3bd036add84274b1ee35ed53cf32ab346abe0cadb195f"
+  },
+  {
+   "id": "vo06",
+   "beat": "bridge5",
+   "text": "A cup's note climbs as its empty space shrinks. For the last one, water is falling through the air instead, from a cloud.",
+   "stars": [],
+   "phonemes": "ɐ kˈʌps nˈoʊt klˈaɪmz æz ɪts ˈɛmpti spˈeɪs ʃɹˈɪŋks. fɚðə lˈæst wˌʌn, wˈɔːɾɚɹ ɪz fˈɔːlɪŋ θɹuː ðɪ ˈɛɹ ɪnstˈɛd, fɹʌm ɐ klˈaʊd.",
+   "file": "06.wav",
+   "dur": 8.464,
+   "sha256": "c0ec4c5d49941e39aa0f02be4f736ac4ba8e20bb2b7f68424bf318e5b0e34e9a"
+  },
+  {
+   "id": "vo07",
+   "beat": "finale",
+   "text": "A slinky that waits. A stick that breaks again. A nut that rises. A ring from a drop. A cup that sings. A raindrop with a speed limit. None of them needed new physics, only a slower look. And all of them were happening around you the whole time. Next time you see something ordinary, slow it down in your head.",
+   "stars": [],
+   "phonemes": "ɐ slˈɪŋki ðæt wˈeɪts. ɐ stˈɪk ðæt bɹˈeɪks ɐɡˈɛn. ɐ nˈʌt ðæt ɹˈaɪzᵻz. ɐ ɹˈɪŋ fɹʌm ɐ dɹˈɑːp. ɐ kˈʌp ðæt sˈɪŋz. ɐ ɹˈeɪndɹɑːp wɪð ɐ spˈiːd lˈɪmɪt. nˈʌn ʌv ðˌɛm nˈiːdᵻd nˈuː fˈɪzɪks, ˈoʊnli ɐ slˈoʊɚ lˈʊk. ænd ˈɔːl ʌv ðˌɛm wɜː hˈæpənɪŋ ɚɹˈaʊnd juː ðə hˈoʊl tˈaɪm. nˈɛkst tˈaɪm juː sˈiː sˈʌmθɪŋ ˈɔːɹdɪnˌɛɹi, slˈoʊ ɪt dˌaʊn ɪn jʊɹ hˈɛd.",
+   "file": "07.wav",
+   "dur": 21.7,
+   "sha256": "8c0d17335e8834c0ed5a8fab7546aa91ae15bbd90553ac8fa7762cfb3cb2f1fe"
+  }
+ ]
+}
