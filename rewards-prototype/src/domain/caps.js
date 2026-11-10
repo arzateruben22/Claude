@@ -1,8 +1,9 @@
 // Monthly cap (per member) and monthly budget (all members together).
 //
-// What counts: positive points from `task_award` and `bonus` entries whose `period` is the
-// month in question, EXCLUDING entries that have since been reversed. Manual
-// `adjustment` entries do not count: they are explicit, audited corrections.
+// What counts: every positive non-reversal entry (task award, bonus, positive adjustment)
+// whose `period` is the month in question, EXCLUDING entries that have since been
+// reversed. A reversal always carries the period of the entry it undoes, so this is the
+// same as summing the month's entries together with their reversals.
 //
 // An entry's period is fixed when it is written, so changing the time-zone setting later
 // never moves old entries between months.
@@ -19,7 +20,7 @@ const CAPPED_SUM = `
   SELECT COALESCE(SUM(e.points), 0) AS used
     FROM ledger_entries e
    WHERE e.period = ?
-     AND e.kind IN ('task_award', 'bonus')
+     AND e.kind <> 'reversal'
      AND e.points > 0
      AND NOT EXISTS (SELECT 1 FROM ledger_entries r WHERE r.reverses_entry_id = e.id)`;
 

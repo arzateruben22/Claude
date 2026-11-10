@@ -40,6 +40,17 @@ export function requireAdmin(ctx) {
   throw forbidden('admin_only', 'Only an admin can do that.');
 }
 
+/**
+ * A real, signed-in admin account. The system actor is NOT enough: ledger entries and
+ * claim decisions must record which person made them.
+ */
+export function requireAdminUser(ctx) {
+  if (ctx.actor.role === 'admin' && ctx.actor.userId) return;
+  if (ctx.actor.role === 'system') throw forbidden('admin_account_required', 'This needs a signed-in admin account, so the audit trail can say who did it.');
+  if (!ctx.actor.userId) throw unauthorized();
+  throw forbidden('admin_only', 'Only an admin can do that.');
+}
+
 /** Any signed-in user (or the system actor). */
 export function requireSignedIn(ctx) {
   if (ctx.actor.role === 'system') return;

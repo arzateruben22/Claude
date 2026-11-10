@@ -43,7 +43,7 @@ test('like attribution is reported as unsupported everywhere, never guessed', as
   for (const mode of ['mock', 'live']) {
     const registry = createPlatformRegistry({ mode, clock });
     for (const platform of ['youtube', 'tiktok']) {
-      const result = await registry.get(platform).checkLike({ platformVideoId: 'demo-yt-long-01', memberChannelId: demoChannelId(1) });
+      const result = await registry.get(platform).checkLike({ platformVideoId: 'demoLong001', memberChannelId: demoChannelId(1) });
       assert.equal(result.outcome, 'unsupported', `${mode}/${platform}`);
       assert.match(result.reason, /like/i);
     }
@@ -52,15 +52,15 @@ test('like attribution is reported as unsupported everywhere, never guessed', as
 
 test('mock YouTube: statistics, including a hidden like count and labelled source', async () => {
   const youtube = mock().get('youtube');
-  const stats = await youtube.fetchVideoStats('demo-yt-long-01');
+  const stats = await youtube.fetchVideoStats('demoLong001');
   assert.deepEqual(stats, { ok: true, stats: { views: 1840, likes: 96, comments: 14 }, fetched_at: '2026-11-09T20:00:00.000Z', source: 'mock_adapter' });
-  const hidden = await youtube.fetchVideoStats('demo-yt-hidden-likes');
+  const hidden = await youtube.fetchVideoStats('demoHidden1');
   assert.equal(hidden.stats.likes, null);
 });
 
 test('mock YouTube: API failures come back as results, with honest codes', async () => {
   const youtube = mock().get('youtube');
-  const cases = { 'demo-fail-quota': ['quota_exceeded', true], 'demo-fail-missing': ['not_found', false], 'demo-fail-forbidden': ['forbidden', false], 'demo-fail-outage': ['unavailable', true], 'no-such-video': ['not_found', false] };
+  const cases = { demoQuota01: ['quota_exceeded', true], demoMissing: ['not_found', false], demoForbid1: ['forbidden', false], demoOutage1: ['unavailable', true], noSuchVideo: ['not_found', false] };
   for (const [id, [code, retryable]] of Object.entries(cases)) {
     const result = await youtube.fetchVideoStats(id);
     assert.equal(result.ok, false);
@@ -73,37 +73,37 @@ test('mock YouTube: API failures come back as results, with honest codes', async
 
 test('mock YouTube: ownership is attested only on an exact channel match', async () => {
   const youtube = mock().get('youtube');
-  const own = await youtube.checkVideoOwnership({ platformVideoId: 'demo-yt-long-01', memberChannelId: demoChannelId(1) });
+  const own = await youtube.checkVideoOwnership({ platformVideoId: 'demoLong001', memberChannelId: demoChannelId(1) });
   assert.equal(own.outcome, 'attested');
   assert.equal(own.evidence.simulated, true);
   assert.match(own.reason, /Simulated/);
 
-  const other = await youtube.checkVideoOwnership({ platformVideoId: 'demo-yt-long-01', memberChannelId: demoChannelId(2) });
+  const other = await youtube.checkVideoOwnership({ platformVideoId: 'demoLong001', memberChannelId: demoChannelId(2) });
   assert.equal(other.outcome, 'not_attested');
 
-  const unlinked = await youtube.checkVideoOwnership({ platformVideoId: 'demo-yt-long-01', memberChannelId: null });
+  const unlinked = await youtube.checkVideoOwnership({ platformVideoId: 'demoLong001', memberChannelId: null });
   assert.equal(unlinked.outcome, 'not_attested');
   assert.equal(unlinked.evidence.member_linked, false);
 
-  const quota = await youtube.checkVideoOwnership({ platformVideoId: 'demo-fail-quota', memberChannelId: demoChannelId(1) });
+  const quota = await youtube.checkVideoOwnership({ platformVideoId: 'demoQuota01', memberChannelId: demoChannelId(1) });
   assert.equal(quota.outcome, 'unavailable');
   assert.equal(quota.evidence.error_code, 'quota_exceeded');
 
-  const missing = await youtube.checkVideoOwnership({ platformVideoId: 'demo-fail-missing', memberChannelId: demoChannelId(1) });
+  const missing = await youtube.checkVideoOwnership({ platformVideoId: 'demoMissing', memberChannelId: demoChannelId(1) });
   assert.equal(missing.outcome, 'not_attested');
   for (const result of [own, other, unlinked, quota, missing]) assert.ok(CHECK_OUTCOMES.includes(result.outcome));
 });
 
 test('mock YouTube: an incomplete comment scan is never reported as "did not comment"', async () => {
   const youtube = mock().get('youtube');
-  const found = await youtube.checkComment({ platformVideoId: 'demo-yt-short-01', memberChannelId: demoChannelId(3) });
+  const found = await youtube.checkComment({ platformVideoId: 'demoShort01', memberChannelId: demoChannelId(3) });
   assert.equal(found.outcome, 'attested');
 
-  const completeMiss = await youtube.checkComment({ platformVideoId: 'demo-yt-short-02', memberChannelId: demoChannelId(1) });
+  const completeMiss = await youtube.checkComment({ platformVideoId: 'demoShort02', memberChannelId: demoChannelId(1) });
   assert.equal(completeMiss.outcome, 'not_attested');
   assert.equal(completeMiss.evidence.scan_complete, true);
 
-  const partialMiss = await youtube.checkComment({ platformVideoId: 'demo-yt-busy-01', memberChannelId: demoChannelId(1) });
+  const partialMiss = await youtube.checkComment({ platformVideoId: 'demoBusy001', memberChannelId: demoChannelId(1) });
   assert.equal(partialMiss.outcome, 'not_attested');
   assert.equal(partialMiss.evidence.scan_complete, false);
   assert.match(partialMiss.reason, /not proof/);
@@ -111,10 +111,11 @@ test('mock YouTube: an incomplete comment scan is never reported as "did not com
 
 test('mock TikTok: statistics only; every attribution check is unsupported', async () => {
   const tiktok = mock().get('tiktok');
-  assert.equal((await tiktok.fetchVideoStats('demo-tt-01')).ok, true);
-  assert.equal((await tiktok.fetchVideoStats('demo-fail-quota')).error.code, 'quota_exceeded');
+  assert.equal((await tiktok.fetchVideoStats('7000000000000000001')).ok, true);
+  assert.equal((await tiktok.fetchVideoStats('7999999999999999001')).error.code, 'quota_exceeded');
+  assert.equal((await tiktok.fetchVideoStats('7111111111111111111')).error.code, 'not_found');
   for (const method of ['checkVideoOwnership', 'checkComment', 'checkLike']) {
-    assert.equal((await tiktok[method]({ platformVideoId: 'demo-tt-01', memberChannelId: 'x' })).outcome, 'unsupported');
+    assert.equal((await tiktok[method]({ platformVideoId: '7000000000000000001', memberChannelId: 'x' })).outcome, 'unsupported');
   }
 });
 

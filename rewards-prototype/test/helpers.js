@@ -3,8 +3,9 @@
 import { openDatabase } from '../src/db/sqlite.js';
 import { migrate } from '../src/db/migrate.js';
 import { createContext, withActor } from '../src/domain/context.js';
+import { ensureDefaultTiers } from '../src/domain/tiers.js';
 import { fixedClock } from '../src/lib/clock.js';
-import { newId } from '../src/lib/ids.js';
+import { newId, sha256Hex } from '../src/lib/ids.js';
 
 export const T0 = '2026-11-09T20:00:00.000Z'; // a Monday afternoon in Los Angeles
 
@@ -18,7 +19,9 @@ export function makeWorld({ at = T0 } = {}) {
   migrate(db);
   const clock = fixedClock(at);
   const system = createContext({ db, clock });
-  const adminUserId = insertUser(db, { email: 'admin@example.test', role: 'admin' });
+  ensureDefaultTiers(system);
+  // The standing admin has signed in before, like a real one.
+  const adminUserId = insertUser(db, { email: 'admin@example.test', role: 'admin', lastLoginAt: T0 });
   const admin = withActor(system, { userId: adminUserId, role: 'admin', memberId: null });
   return { db, clock, system, admin, adminUserId, as: (actor) => withActor(system, actor) };
 }
@@ -36,9 +39,9 @@ export function insertMember(db, { name = 'Sample', slug, status = 'active', sor
   return id;
 }
 
-export function insertUser(db, { email, role = 'member', memberId = null, googleSub = null, status = 'active' }) {
+export function insertUser(db, { email, role = 'member', memberId = null, googleSub = null, status = 'active', lastLoginAt = null }) {
   const id = newId('usr');
-  db.run('INSERT INTO users (id, email, google_sub, role, member_id, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)', [
+  db.run('INSERT INTO users (id, email, google_sub, role, member_id, status, created_at, last_login_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
     id,
     email.toLowerCase(),
     googleSub,
@@ -46,6 +49,7 @@ export function insertUser(db, { email, role = 'member', memberId = null, google
     memberId,
     status,
     T0,
+    lastLoginAt,
   ]);
   return id;
 }
@@ -70,24 +74,27 @@ let subjectCounter = 0;
 
 /**
  * Inserts a claim directly (bypassing claims.js) for tests of lower layers.
- * `state` is 'pending' or 'approved' (approved = manually reviewed, ready for an award).
+ * `state`:
+ *   'pending'  – as submitted: pending and unverified
+ *   'reviewed' – pending, and marked manually reviewed: ready for its award
+ * (A claim only becomes approved by its ledger award being written; use awardClaim().)
  */
-export function insertClaim(db, { memberId, taskTypeId, points = 25, xp = 25, state = 'pending', subjectKey, at = T0 }) {
+export function insertClaim(db, { memberId, taskTypeId, points = 25, xp = 25, state = 'pending', subjectKey, evidenceText = 'Sample evidence for tests.', at = T0 }) {
   const id = newId('clm');
   subjectCounter += 1;
+  const hash = sha256Hex(`${evidenceText}#${subjectCounter}`);
   db.run(
-    `INSERT INTO claims (id, member_id, task_type_id, subject_key, evidence_text, points_snapshot, xp_snapshot, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    [id, memberId, taskTypeId, subjectKey ?? `text:test-${subjectCounter}`, 'Sample evidence for tests.', points, xp, at],
+    `INSERT INTO claims (id, member_id, task_type_id, subject_key, evidence_text, evidence_hash, points_snapshot, xp_snapshot, submitted_by_role, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'member', ?)`,
+    [id, memberId, taskTypeId, subjectKey ?? `text:${hash}`, evidenceText, hash, points, xp, at],
   );
-  if (state === 'approved') {
-    db.run(
-      `UPDATE claims SET decision = 'approved', decided_at = ?, verification_status = 'manually_reviewed',
-              verification_source = 'admin_review', verified_at = ? WHERE id = ?`,
-      [at, at, id],
-    );
-  }
+  if (state === 'reviewed') markReviewed(db, id, at);
   return db.get('SELECT * FROM claims WHERE id = ?', [id]);
+}
+
+/** Marks a pending claim manually reviewed with raw SQL (what an approval does first). */
+export function markReviewed(db, claimId, at = T0) {
+  db.run("UPDATE claims SET verification_status = 'manually_reviewed', verification_source = 'admin_review', verified_at = ? WHERE id = ?", [at, claimId]);
 }
 
 export const count = (db, table, where = '1 = 1', params = []) => db.get(`SELECT COUNT(*) AS n FROM ${table} WHERE ${where}`, params).n;

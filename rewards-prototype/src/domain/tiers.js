@@ -17,6 +17,23 @@ export const DEFAULT_TIERS = Object.freeze([
   { level: 5, name: 'Stage 5', min_xp: 1000, art_key: 'stage-5' },
 ]);
 
+/**
+ * First start: install the placeholder ladder if there are no tiers yet. Never touches
+ * an existing ladder. Called at boot and by the test harness.
+ * @returns {boolean} true when the defaults were installed
+ */
+export function ensureDefaultTiers(ctx) {
+  return ctx.db.tx(() => {
+    if (ctx.db.get('SELECT COUNT(*) AS n FROM tiers').n > 0) return false;
+    const at = nowIso(ctx);
+    for (const tier of DEFAULT_TIERS) {
+      ctx.db.run('INSERT INTO tiers (level, name, min_xp, art_key, updated_at) VALUES (?, ?, ?, ?, ?)', [tier.level, tier.name, tier.min_xp, tier.art_key, at]);
+    }
+    recordAudit(ctx, { action: 'tiers.install_defaults', entityType: 'tiers', detail: { thresholds: DEFAULT_TIERS.map((tier) => tier.min_xp) } });
+    return true;
+  });
+}
+
 export function listTiers(ctx) {
   return ctx.db.all('SELECT level, name, min_xp, art_key, updated_at FROM tiers ORDER BY level');
 }

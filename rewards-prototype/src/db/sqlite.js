@@ -5,7 +5,7 @@
 // `tx()` enforces that by rejecting async bodies.
 
 import { DatabaseSync } from 'node:sqlite';
-import { mkdirSync } from 'node:fs';
+import { chmodSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 
 // SQLite extended result codes we care about.
@@ -59,9 +59,18 @@ export class Db {
     this.#raw = raw;
   }
 
+  // The schema's append-only promises assume rows are never replaced. No application
+  // statement may use the REPLACE conflict resolution.
+  static #assertNoReplace(sql) {
+    if (/\b(OR\s+REPLACE|REPLACE\s+INTO)\b/i.test(sql)) {
+      throw new TypeError('REPLACE statements are not allowed: use SELECT-then-INSERT inside a transaction');
+    }
+  }
+
   #prepare(sql) {
     let statement = this.#statements.get(sql);
     if (!statement) {
+      Db.#assertNoReplace(sql);
       statement = this.#raw.prepare(sql);
       this.#statements.set(sql, statement);
     }
@@ -92,6 +101,12 @@ export class Db {
   /** Runs one or more statements with no parameters (DDL, PRAGMAs). */
   exec(sql) {
     this.#raw.exec(sql);
+  }
+
+  /** Reads a PRAGMA value, e.g. pragma('foreign_keys') -> 1. */
+  pragma(name) {
+    if (!/^[a-z_]+$/.test(name)) throw new TypeError('invalid pragma name');
+    return Object.values(this.#raw.prepare(`PRAGMA ${name}`).get() ?? {})[0];
   }
 
   get inTransaction() {
@@ -155,21 +170,26 @@ export class Db {
  */
 export function openDatabase(path) {
   const inMemory = path === ':memory:';
-  if (!inMemory) mkdirSync(dirname(path), { recursive: true });
+  // The data directory and file are private to the account running the server.
+  if (!inMemory) mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
   const raw = new DatabaseSync(path);
+  if (!inMemory) chmodSync(path, 0o600);
   // foreign_keys      : the schema's REFERENCES clauses are only enforced when this is on.
   // recursive_triggers: without it, INSERT OR REPLACE deletes rows WITHOUT firing the
   //                     append-only delete triggers.
   // trusted_schema    : defence in depth against a tampered database file.
   raw.exec('PRAGMA foreign_keys = ON; PRAGMA recursive_triggers = ON; PRAGMA trusted_schema = OFF; PRAGMA busy_timeout = 5000;');
-  if (!inMemory) raw.exec('PRAGMA journal_mode = WAL; PRAGMA synchronous = NORMAL;');
-  // secure_delete: erased rows are overwritten with zeros instead of being left in free pages.
-  raw.exec('PRAGMA secure_delete = ON;');
+  // journal_mode = DELETE (not WAL), deliberately: with WAL, the pages of an erased
+  // member stay readable in the -wal file for as long as the server runs. One process
+  // with a handful of writes a day gains nothing from WAL. The rollback journal is
+  // deleted at every commit, and secure_delete overwrites freed pages with zeros.
+  raw.exec('PRAGMA journal_mode = DELETE; PRAGMA synchronous = FULL; PRAGMA secure_delete = ON;');
   const db = new Db(raw);
-  const fk = db.get('PRAGMA foreign_keys');
-  const rt = db.get('PRAGMA recursive_triggers');
-  if (fk?.foreign_keys !== 1 || rt?.recursive_triggers !== 1) {
+  if (db.pragma('foreign_keys') !== 1 || db.pragma('recursive_triggers') !== 1 || db.pragma('secure_delete') !== 1) {
     throw new Error('SQLite safety pragmas could not be enabled');
+  }
+  if (!inMemory && String(db.pragma('journal_mode')).toLowerCase() !== 'delete') {
+    throw new Error('SQLite journal_mode could not be set to DELETE');
   }
   return db;
 }

@@ -1,14 +1,20 @@
 // Append-only audit trail. Call recordAudit() inside the SAME transaction as the change
 // it describes, so there is never a change without a row or a row without a change.
 //
-// `detail` is deliberately restricted: ids, enum values, numbers, booleans and short
-// admin-entered reasons. Evidence text, e-mail addresses, tokens and URLs supplied by
-// members must never be written here; assertSafeDetail() refuses the obvious mistakes.
+// `detail` is deliberately restricted to ids, enum values, numbers and booleans.
+// Reasons and notes are NOT copied here: they live on the ledger entry or claim, which
+// erasure deletes. Evidence text, e-mail addresses, tokens and URLs must never be written
+// here; assertSafeDetail() refuses the obvious mistakes and the schema refuses '@' and
+// '://' outright.
+//
+// A row about a member must name that member in `subjectMemberId`, otherwise erasure
+// could never scrub it (the schema enforces this for claims, ledger entries and members).
+// For a member actor the subject defaults to the member themselves.
 
 import { nowIso, requireAdmin } from './context.js';
 
-const FORBIDDEN_KEYS = /(^|_)(email|e_mail|evidence|token|credential|secret|password|cookie|csrf|nonce|authorization|sub|google_sub|display_name|name|url|text|body|content)($|_)/i;
-const MAX_STRING = 500;
+const FORBIDDEN_KEYS = /(^|_)(email|e_mail|evidence|token|credential|secret|password|cookie|csrf|nonce|authorization|sub|google_sub|display_name|name|url|text|body|content|reason|note|subject_key)($|_)/i;
+const MAX_STRING = 80;
 const MAX_DEPTH = 4;
 
 function assertSafeDetail(value, path = 'detail', depth = 0) {
@@ -17,8 +23,8 @@ function assertSafeDetail(value, path = 'detail', depth = 0) {
   const type = typeof value;
   if (type === 'number' || type === 'boolean') return;
   if (type === 'string') {
-    if (value.length > MAX_STRING) throw new TypeError(`audit ${path}: string too long`);
-    if (/@[^\s@]+\.[a-z]{2,}/i.test(value)) throw new TypeError(`audit ${path}: looks like an e-mail address`);
+    if (value.length > MAX_STRING) throw new TypeError(`audit ${path}: string too long (ids and enum values only)`);
+    if (value.includes('@') || value.includes('://')) throw new TypeError(`audit ${path}: addresses and links must not be audit-logged`);
     return;
   }
   if (Array.isArray(value)) {
@@ -44,6 +50,7 @@ function assertSafeDetail(value, path = 'detail', depth = 0) {
 export function recordAudit(ctx, { action, entityType, entityId = null, subjectMemberId = null, detail = null }) {
   if (!/^[a-z_]+\.[a-z_]+$/.test(action)) throw new TypeError(`audit action must look like "entity.verb": ${action}`);
   assertSafeDetail(detail);
+  const subject = subjectMemberId ?? (ctx.actor.role === 'member' ? ctx.actor.memberId : null) ?? null;
   const result = ctx.db.run(
     `INSERT INTO audit_log (at, actor_user_id, actor_role, action, entity_type, entity_id, subject_member_id, detail, request_id)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -54,7 +61,7 @@ export function recordAudit(ctx, { action, entityType, entityId = null, subjectM
       action,
       entityType,
       entityId === null || entityId === undefined ? null : String(entityId),
-      subjectMemberId,
+      subject,
       detail ? JSON.stringify(detail) : null,
       ctx.requestId ?? null,
     ],
