@@ -14,7 +14,7 @@
 // Tokens are unsealed only for the call (connections.freshTokens) and never logged or stored anywhere else.
 import { and, eq, inArray, sql } from "drizzle-orm";
 import type { DB } from "../db/client";
-import { connections, destinations, episodes, jobs, metricPulls, metricSnapshots, publications } from "../db/schema";
+import { channels, connections, destinations, episodes, jobs, metricPulls, metricSnapshots, publications } from "../db/schema";
 import { audit, type Conn, DomainError, settings } from "./core";
 import { freshTokens, markConnectionError } from "./connections";
 import { enqueue } from "./jobs";
@@ -63,9 +63,10 @@ async function targets(c: Conn, ids: string[] | null) {
     id: publications.id, status: publications.status, simulated: publications.simulated, postId: publications.postId,
     verifiedAt: publications.verifiedAt, reportedAt: publications.reportedAt, createdAt: publications.createdAt,
     isDemo: episodes.isDemo, channelId: episodes.channelId, destinationId: destinations.id, platform: destinations.platform,
-    connStatus: connections.status, lastAttemptAt: metricPulls.lastAttemptAt,
+    connStatus: connections.status, lastAttemptAt: metricPulls.lastAttemptAt, archived: sql<boolean>`${channels.archivedAt} is not null`,
   }).from(publications)
     .innerJoin(episodes, eq(episodes.id, publications.episodeId))
+    .innerJoin(channels, eq(channels.id, episodes.channelId))
     .innerJoin(destinations, eq(destinations.id, publications.destinationId))
     .leftJoin(connections, eq(connections.destinationId, destinations.id))
     .leftJoin(metricPulls, eq(metricPulls.publicationId, publications.id))
@@ -79,8 +80,9 @@ const readsMetrics = (k: PlatformConnector | null): k is PlatformConnector & { m
   !!k && k.capabilities.metrics && typeof k.metrics === "function";
 
 /** Why this publication can't be pulled now, or null when it can. */
-export function pullBlocker(t: Pick<Target, "simulated" | "isDemo" | "status" | "postId" | "platform" | "connStatus">, o: { stopped: boolean; connector: PlatformConnector | null }): PullBlock | null {
+export function pullBlocker(t: Pick<Target, "simulated" | "isDemo" | "status" | "postId" | "platform" | "connStatus"> & { archived?: boolean }, o: { stopped: boolean; connector: PlatformConnector | null }): PullBlock | null {
   const name = LABEL[t.platform];
+  if (t.archived) return { code: "archived", message: "This channel is archived: its numbers are no longer pulled." };
   if (t.simulated) return { code: "simulated", message: "Simulated publications are never pulled from a platform." };
   if (t.isDemo) return { code: "demo", message: "Demo episodes are never pulled from a platform." };
   if (t.status !== "verified_published") return { code: "not_verified", message: "Only a post the platform itself verified as published is pulled. Log its numbers by hand or paste a CSV." };

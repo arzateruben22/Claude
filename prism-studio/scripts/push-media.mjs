@@ -1,7 +1,8 @@
 // Push the finished films to a hosted studio that has no films checkout (docs/LAUNCH-CHECKLIST.md), from any machine
 // with the films repo (a cloud session, a laptop): the files the importer reads per episode and the lesson
 // compilations, only those new or changed since the last push, with their modified times; then it queues the import.
-// Videos the studio cleared after posting (its GET lists those episode folders) are skipped.
+// Videos the studio cleared after posting (its GET lists those episode folders) are skipped, and so is every file of an
+// archived channel (its GET lists those folders too).
 //   STUDIO_URL=https://prism-studio-production.up.railway.app MEDIA_PUSH_TOKEN=… node scripts/push-media.mjs [--dry-run] [--no-import] [channel…]
 // Transfers go through curl (it honours HTTPS_PROXY and the system CA bundle, which Node's fetch doesn't).
 import fs from "node:fs";
@@ -46,8 +47,11 @@ const answer = JSON.parse(curl([ENDPOINT])), remote = answer.files ?? {};
 // episodes posted everywhere have their videos erased from the studio (originals stay here, in GitHub): never send them
 // again (the same rule as isClearedVideo in src/domain/media-cleanup.ts)
 const cleared = answer.cleared ?? [], isCleared = (rel) => rel.endsWith(".mp4") && cleared.some((d) => rel.startsWith(`${d}/`));
-const changed = local().filter((f) => { const r = remote[f.rel]; return !r || r[0] !== f.size || Math.abs(r[1] - f.mtime) > 1000; });
+// archived channels (src/domain/channels.ts): hidden in the studio and never imported, so nothing of theirs is sent
+const archived = answer.archived ?? [], isArchived = (rel) => archived.some((d) => rel.startsWith(`${d}/`));
+const changed = local().filter((f) => !isArchived(f.rel)).filter((f) => { const r = remote[f.rel]; return !r || r[0] !== f.size || Math.abs(r[1] - f.mtime) > 1000; });
 const todo = changed.filter((f) => !isCleared(f.rel)), skipped = changed.length - todo.length;
+if (archived.length) console.log(`archived, not sent: ${archived.join(", ")}`);
 const mb = (n) => `${(n / 1024 / 1024).toFixed(1)} MB`;
 console.log(`${todo.length} file(s) to send, ${mb(todo.reduce((a, f) => a + f.size, 0))}${skipped ? `; ${skipped} cleared video(s) skipped` : ""}${flag("--dry-run") ? " (dry run)" : ""}`);
 for (const f of todo) {

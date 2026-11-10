@@ -20,6 +20,7 @@ import { enqueue, requestCancel, retry } from "@/domain/jobs";
 import { addCost, editCost, paidSwitch, parseMoney, setBudget, voidCost, type CostInput } from "@/domain/costs";
 import { localDate, zonedTimeToUtc } from "@/domain/time";
 import { attemptSignIn, clientKey, safeNextPath, SignInThrottle } from "@/domain/signin";
+import { onActiveChannel, restoreChannel } from "@/domain/channels";
 import { checkPasswordAsync } from "@/lib/auth";
 import { COOKIE, DEVICE_COOKIE, makeDeviceMark, makeSession, verifyDeviceMark } from "@/lib/session";
 import { requireOwner } from "@/lib/owner";
@@ -338,7 +339,9 @@ export async function importCsv(_: Result, fd: FormData) {
     const cols = head.split(",").map((c) => c.trim().toLowerCase());
     const at = (k: string) => cols.indexOf(k);
     if ((at("post_url") < 0 && at("publication_id") < 0) || at("metric") < 0 || at("value") < 0) throw new DomainError("header", "The header needs post_url (or publication_id), metric and value.");
-    const pubs = await db().select().from(S.publications);
+    // an archived channel's posts aren't matched: its numbers stay as they were (src/domain/channels.ts)
+    const pubs = (await db().select({ p: S.publications }).from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
+      .where(onActiveChannel(S.episodes.channelId))).map((r) => r.p);
     let n = 0; const skipped: string[] = [];
     for (const [i, line] of lines.entries()) {
       const cells = line.split(",").map((c) => c.trim());
@@ -452,6 +455,15 @@ export async function saveChannel(_: Result, fd: FormData) {
     const [ch] = await db().select().from(S.channels).where(eq(S.channels.id, id));
     refresh(`/channels/${ch.slug}`);
     return ok("Saved.");
+  });
+}
+
+/** Settings → Archived channels → Restore: the channel comes back on every screen and to every job (audit-logged). */
+export async function restoreArchivedChannel(_: Result, fd: FormData) {
+  return run(async () => {
+    const ch = await restoreChannel(db(), z.string().uuid().parse(fd.get("channelId")));
+    revalidatePath("/", "layout");   // every screen lists it again
+    return ok(`${ch.name.replace(/ \(name TBD\)$/, "")} is back on every screen.`);
   });
 }
 

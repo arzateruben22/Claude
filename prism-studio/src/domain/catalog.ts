@@ -1,5 +1,7 @@
-// The studio's default catalogue: five channels, their creations and challenges, milestone rules, official links.
-// Everything here is an editable default. Placeholder accounts are never presented as real (provenance "unset").
+// The studio's default catalogue: the channels, their creations and challenges, milestone rules, official links.
+// Everything here is an editable default. A channel archived in the database (src/domain/channels.ts) stays listed here
+// (the seed never un-archives it); every screen and job reads the active channels from the database, never this list.
+// Placeholder accounts are never presented as real (provenance "unset").
 import type { Editorial } from "../db/schema";
 
 export type Topic = "skincare" | "physics" | "body" | "space" | "whatif";
@@ -165,7 +167,7 @@ export const ONBOARDING_ITEMS = [
 ];
 export const SHARED_ONBOARDING = [
   { item: "admin_email", label: "Studio/admin email chosen (owner access, recovery, Instagram)" },
-  { item: "instagram", label: "Shared Instagram account created or designated; bio explains the five topics" },
+  { item: "instagram", label: "Shared Instagram account created or designated; bio explains the topics" },
   { item: "instagram_links", label: "Instagram handle and links saved in the studio" },
 ];
 

@@ -10,6 +10,7 @@ import { and, asc, eq, ne } from "drizzle-orm";
 import { db, pool } from "../src/db/client";
 import * as S from "../src/db/schema";
 import { resolveMedia } from "../src/lib/media";
+import { activeChannels } from "../src/domain/channels";
 import { loadEnv } from "./env";
 loadEnv();
 
@@ -22,7 +23,7 @@ const sha = (f: string) => createHash("sha256").update(fs.readFileSync(f)).diges
 const d = db();
 const problems: string[] = [];
 let ok = 0;
-const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
+const chans = await activeChannels(d);   // an archived channel's media was removed on purpose
 for (const c of chans) {
   const rows = await d.select({ e: S.episodes, v: S.versions }).from(S.versions).innerJoin(S.episodes, eq(S.episodes.id, S.versions.episodeId))
     .where(and(eq(S.episodes.channelId, c.id), eq(S.versions.superseded, false), eq(S.episodes.isDemo, false))).orderBy(asc(S.episodes.number));

@@ -6,10 +6,11 @@
 // video was cleared after posting keeps all of its records; its text (title, captions, sources) still updates.
 // Then every long video a cloud session built and pushed (compilations/<name>/ with a *-16x9.mp4) is registered as
 // the channel's lesson of that name (registerCompilation): new ones are added, rebuilt ones refreshed, the rest untouched.
+// An archived channel (src/domain/channels.ts) is skipped entirely: whatever files a push brings, its rows stay as they are.
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
-import { and, asc, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db, pool } from "../src/db/client";
 import * as S from "../src/db/schema";
 import { createEpisode, addVersion, upsertExport, editExport } from "../src/domain/episodes";
@@ -18,6 +19,7 @@ import { captionsToSrt } from "../src/domain/srt";
 import { buildMetadata, postingNotesFor, type MetaInput } from "../src/domain/metadata";
 import { usesAiVisuals } from "../src/domain/disclosures";
 import { registerCompilation } from "../src/domain/lessons";
+import { activeChannels, isArchived } from "../src/domain/channels";
 import { loadEnv } from "./env";
 loadEnv();
 
@@ -91,6 +93,8 @@ export async function importEpisodes(d = db()) {
   for (const slug of Object.keys(SLATES)) for (const { season: seasonNo, first, slate } of seasonsFor(slug)) {
     const [ch] = await d.select().from(S.channels).where(eq(S.channels.slug, slug));
     if (!ch?.filmsPath) continue;
+    // archived: never imported, so a stray push can't bring it back (its rows stay exactly as they are)
+    if (isArchived(ch)) { if (first === 1) report.push(`${slug}: archived, skipped`); continue; }
     // a later season is created only once its first episode folder exists, so plans don't show up as empty seasons
     if (first > 1 && !fs.existsSync(path.join(ROOT, ch.filmsPath, `ep${String(first).padStart(2, "0")}`))) continue;
     let [se] = await d.select().from(S.series).where(and(eq(S.series.channelId, ch.id), eq(S.series.title, slate.series)));
@@ -187,12 +191,12 @@ export function compilationVideo(dir: string, name: string): string | null {
   return files.includes(`${name}-16x9.mp4`) ? `${name}-16x9.mp4` : files[0] ?? null;
 }
 
-/** Register each channel's pushed long videos (films/channels/<ch>/compilations/<name>/) as lessons. Only the video is
- *  required; a missing thumbnail, chapters, description or QA (or an unreadable qa.json) is left empty. One folder that
- *  fails doesn't stop the others; the failures are returned. */
+/** Register each active channel's pushed long videos (films/channels/<ch>/compilations/<name>/) as lessons. Only the
+ *  video is required; a missing thumbnail, chapters, description or QA (or an unreadable qa.json) is left empty. One
+ *  folder that fails doesn't stop the others; the failures are returned. An archived channel's folders are never read. */
 export async function importCompilations(d = db()) {
   const report: string[] = [], failed: string[] = [];
-  for (const ch of await d.select().from(S.channels).orderBy(asc(S.channels.sort))) {
+  for (const ch of await activeChannels(d)) {
     const base = ch.filmsPath ? path.join(ROOT, ch.filmsPath, "compilations") : "";
     if (!base || !fs.existsSync(base)) continue;
     const folders = fs.readdirSync(base, { withFileTypes: true }).filter((e) => e.isDirectory() && FOLDER.test(e.name)).map((e) => e.name).sort();

@@ -255,7 +255,7 @@ async function InstagramScreen() {
   return (
     <div style={IG}>
       <header className="ext-head">
-        <div className="kicker">Shared account · all five series · {v.daily} a day</div>
+        <div className="kicker">Shared account · every series · {v.daily} a day</div>
         <h1>Instagram</h1>
         <p className="lede">Two posts a day from any series, rotating across the channels. An episode goes up on Instagram once, never twice.</p>
         <div className="ext-links">

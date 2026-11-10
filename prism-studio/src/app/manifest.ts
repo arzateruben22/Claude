@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Prism Studio", short_name: "Prism", description: "A phone-first studio for five educational channels.",
+    name: "Prism Studio", short_name: "Prism", description: "A phone-first studio for educational channels.",
     start_url: "/", scope: "/", display: "standalone", orientation: "portrait", background_color: "#05060A", theme_color: "#05060A",
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },

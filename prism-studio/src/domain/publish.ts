@@ -7,6 +7,7 @@ import fs from "node:fs";
 import type { DB } from "../db/client";
 import { channels, connections, destinations, episodes, platformExports, publications } from "../db/schema";
 import { audit, DomainError, settings } from "./core";
+import { isArchived, onActiveChannel } from "./channels";
 import { currentApproval } from "./approvals";
 import { freshTokens, markConnectionError } from "./connections";
 import { mayAutoPublish } from "./publications";
@@ -32,6 +33,8 @@ async function load(d: DB, publicationId: string) {
 export async function publishPublication(d: DB, publicationId: string, o: { manual?: boolean; onProgress?: (f: number, m: string) => Promise<boolean> | boolean; deps?: PublishDeps } = {}): Promise<PublishOutcome> {
   const s = await settings(d);
   const { p, dest, ep, ch, x } = await load(d, publicationId);
+  // an archived channel is never published, by a schedule or by hand (a job queued before it was archived ends here)
+  if (isArchived(ch)) return { outcome: "skipped", note: "this channel is archived" };
   const gate = mayAutoPublish({ ...p, method: dest.publishMethod }, s.stopExternalActions);
   if (!gate.ok) {
     if (gate.reason === "external actions are stopped") throw new DomainError("stopped", "External actions are stopped in Settings.");
@@ -86,7 +89,8 @@ async function recordResult(d: DB, publicationId: string, r: PublishResult, acto
 
 /** Ask the platform again about a post that was still processing. */
 export async function finalizeProcessing(d: DB, publicationId: string, deps: PublishDeps = {}): Promise<PublishOutcome> {
-  const { p, dest } = await load(d, publicationId);
+  const { p, dest, ch } = await load(d, publicationId);
+  if (isArchived(ch)) return { outcome: "skipped", note: "this channel is archived" };
   if (p.status === "verified_published") return { outcome: "published", note: "already verified", postUrl: p.postUrl };
   if (!p.postId) return { outcome: "skipped", note: "no platform post id" };
   const { tokens, connector: stored } = await freshTokens(d, dest.id, deps.fetch);
@@ -97,7 +101,8 @@ export async function finalizeProcessing(d: DB, publicationId: string, deps: Pub
   return recordResult(d, publicationId, { ...r, postUrl: r.postUrl || p.postUrl }, "worker");
 }
 
-/** Scheduled publishing: every due, approved publication on a connected destination of an "approved"-mode channel. */
+/** Scheduled publishing: every due, approved publication on a connected destination of an "approved"-mode channel
+ *  (never a paused or archived one). */
 export async function enqueueDuePublishes(d: DB, now = new Date()): Promise<number> {
   const s = await settings(d);
   if (s.globalPause || s.stopExternalActions) return 0;
@@ -106,7 +111,8 @@ export async function enqueueDuePublishes(d: DB, now = new Date()): Promise<numb
     .innerJoin(episodes, eq(episodes.id, publications.episodeId)).innerJoin(channels, eq(channels.id, episodes.channelId))
     .innerJoin(connections, and(eq(connections.destinationId, destinations.id), eq(connections.status, "connected")))
     .where(and(lte(publications.scheduledFor, now), inArray(publications.status, ["planned", "ready"]), eq(publications.simulated, false), isNull(publications.reportedAt),
-      eq(destinations.publishMethod, "api"), eq(destinations.paused, false), eq(channels.automationMode, "approved"), eq(channels.paused, false), eq(episodes.isDemo, false)));
+      eq(destinations.publishMethod, "api"), eq(destinations.paused, false), eq(channels.automationMode, "approved"), eq(channels.paused, false), eq(episodes.isDemo, false),
+      onActiveChannel(episodes.channelId)));
   let n = 0;
   for (const r of rows) {
     if (!r.p.exportId || !(await currentApproval(d, r.p.exportId, r.dest.id))) continue;

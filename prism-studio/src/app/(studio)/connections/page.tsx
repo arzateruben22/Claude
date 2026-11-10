@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { asc } from "drizzle-orm";
 import { db } from "@/db/client";
-import * as S from "@/db/schema";
 import { destinationsAll, onboardingView } from "@/lib/data";
 import { OFFICIAL, ONBOARDING_ITEMS, SHARED_ONBOARDING } from "@/domain/catalog";
+import { activeChannels } from "@/domain/channels";
 import { formatLocal } from "@/domain/time";
 import { PLATFORM_LABEL, PROVENANCE_LABEL, topicStyle } from "@/lib/format";
 import { disconnectDestination, saveDestination, setAutomationCaps, toggleOnboarding } from "@/app/actions";
@@ -16,15 +15,15 @@ import { studio } from "@/lib/data";
 export const metadata: Metadata = { title: "Accounts" };
 
 export default async function Connections({ searchParams }: { searchParams: Promise<{ connected?: string; error?: string }> }) {
-  const [dests, onb, chans, s, conns, q] = await Promise.all([destinationsAll(), onboardingView(), db().select().from(S.channels).orderBy(asc(S.channels.sort)), studio(), connectionSummary(db()), searchParams]);
+  const [dests, onb, chans, s, conns, q] = await Promise.all([destinationsAll(), onboardingView(), activeChannels(db()), studio(), connectionSummary(db()), searchParams]);
   const keyOk = integrationsConfigured();
   const label = (item: string) => [...ONBOARDING_ITEMS, ...SHARED_ONBOARDING].find((o) => o.item === item)?.label ?? item;
   const groups = [...chans.map((c) => ({ key: c.id, title: c.name.replace(/ \(name TBD\)$/, ""), channel: c as typeof c | null })), { key: "shared", title: "Shared Instagram and studio", channel: null }];
   return (
     <div>
-      <div className="kicker">11 destinations · manual publishing</div>
+      <div className="kicker">{dests.length} destinations · manual publishing</div>
       <h1>Accounts</h1>
-      <p className="lede">One YouTube channel and one TikTok account per channel, plus one Instagram for all five. Saving a handle or link here is not a connection: it tells the Upload Desk who to post as.</p>
+      <p className="lede">One YouTube channel and one TikTok account per channel, plus one Instagram shared by all of them. Saving a handle or link here is not a connection: it tells the Upload Desk who to post as.</p>
       {q.connected ? <div className="notice good" style={{ marginBottom: 16 }}>Connected {q.connected}. Approved episodes on this account can now be published by the worker.</div> : null}
       {q.error ? <div className="notice bad" style={{ marginBottom: 16 }}>{q.error}</div> : null}
       <div className="card stack-sm" style={{ marginBottom: 16 }}>
@@ -34,7 +33,7 @@ export default async function Connections({ searchParams }: { searchParams: Prom
       </div>
       <div className="notice info stack-sm" style={{ marginBottom: 24 }}>
         <b>Keep accounts safe</b>
-        <span>Prism never asks for or stores platform passwords, recovery codes or 2-step codes: keep them in your password manager. Give each TikTok account its own email, and don&apos;t attach one phone number to all five. Turn on 2-step verification everywhere. Only official links are accepted below (youtube.com, tiktok.com, instagram.com, facebook.com).</span>
+        <span>Prism never asks for or stores platform passwords, recovery codes or 2-step codes: keep them in your password manager. Give each TikTok account its own email, and don&apos;t attach one phone number to all of them. Turn on 2-step verification everywhere. Only official links are accepted below (youtube.com, tiktok.com, instagram.com, facebook.com).</span>
       </div>
       <div className="stack-lg">
         {groups.map((g) => {

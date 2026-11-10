@@ -145,7 +145,7 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
               <Link href={`/connections#dest-${d.id}`} className="btn ghost small" style={{ justifySelf: "start" }}>Edit in Accounts</Link>
             </div>
           ))}
-          <div className="card flat note-row"><p className="muted">Instagram is one shared account for all five channels: set it up in Accounts.</p><Link href="/connections" className="btn ghost small">Accounts</Link></div>
+          <div className="card flat note-row"><p className="muted">Instagram is one account shared by every channel: set it up in Accounts.</p><Link href="/connections" className="btn ghost small">Accounts</Link></div>
         </div>
       ) : null}
 

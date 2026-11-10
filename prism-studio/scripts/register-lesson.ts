@@ -11,6 +11,7 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import { db, pool } from "../src/db/client";
 import * as S from "../src/db/schema";
 import { createLesson, lessonBuildPlan, recordLessonBuild } from "../src/domain/lessons";
+import { isArchived } from "../src/domain/channels";
 import { loadEnv } from "./env";
 loadEnv();
 
@@ -21,6 +22,7 @@ if (!channelPath || !epList || !title) { console.error('usage: npm run lesson:re
 const d = db();
 const [ch] = await d.select().from(S.channels).where(eq(S.channels.filmsPath, channelPath));
 if (!ch) throw new Error(`no channel with filmsPath ${channelPath}`);
+if (isArchived(ch)) throw new Error(`${ch.name} is archived: restore it in Settings → Archived channels first`);
 const eps = [];
 for (const e of epList.split(",")) {
   const [row] = await d.select({ id: S.episodes.id }).from(S.episodes).where(and(eq(S.episodes.channelId, ch.id), eq(S.episodes.filmsPath, `${channelPath}/${e.trim()}`)));

@@ -14,6 +14,7 @@
 import { and, asc, eq, isNull, lte, ne, sql } from "drizzle-orm";
 import type { DB } from "../db/client";
 import { budgets, channels, costLedger, episodes } from "../db/schema";
+import { activeChannels } from "./channels";
 import { audit, type Conn, DomainError, settings } from "./core";
 import { localMonth } from "./time";
 
@@ -276,12 +277,12 @@ export async function canUsePaidGeneration(c: Conn, channelId: string, amountCen
   return { ok: true, code: "ok", reason: `Allowed: ${fmt(ch.remainingCents!, ch.currency)} left in this channel's budget this month.`, month, currency: ch.currency, remainingCents: ch.remainingCents };
 }
 
-/** Whether the Settings switch may be turned on: some channel has a production budget this month. */
+/** Whether the Settings switch may be turned on: some active channel has a production budget this month. */
 export async function anyChannelBudget(c: Conn, at = new Date()) {
   const s = await settings(c);
   const month = localMonth(at, s.timezone);
   const rows = await budgetRows(c, month);
-  const chans = await c.select({ id: channels.id }).from(channels);
+  const chans = await activeChannels(c);
   return chans.some((ch) => effectiveBudget(rows, ch.id, month));
 }
 

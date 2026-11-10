@@ -15,6 +15,13 @@
   hourly `cleanup_uploaded_media` job erases that episode's `out/*.mp4` from the server and sets `episodes.video_cleared_at`
   (`src/domain/media-cleanup.ts`). Covers, captions and text stay; the importer keeps cleared episodes as they are;
   media-push skips their videos. Never inside a git checkout or a read-only mirror. Compilations are never touched.
+- **Archived channels (owner's request, 10 Nov 2026: Body Backstage, `drizzle/0008`):** `channels.archived_at` set =
+  hidden from every screen, list and total, and skipped by everything automatic (schedule, publish, notifications,
+  analytics pulls, video cleanup, importer, media push). Paused is different (nothing planned, still shown). Never query
+  `channels` or iterate `CHANNELS` for a screen or job: use `activeChannels()` / `onActiveChannel(col)` /
+  `activeChannelBySlug()` in `src/domain/channels.ts` (an archived channel's pages 404). Nothing is deleted; the seed
+  never un-archives; Settings → Archived channels → Restore (audit-logged) brings it back. Costs keep counting its real
+  spend in the studio total (its entries stay listed, read-only). The wall re-balances (`rigLayout`, src/lib/rig.ts).
 - **Money:** Prism never moves money. Personal rewards are owner-funded, reserved only within the funded balance
   and the monthly cap, under a row lock. Demo or estimated numbers never create or reserve a reward. Production
   budgets are separate, and paid generation stays off without one.

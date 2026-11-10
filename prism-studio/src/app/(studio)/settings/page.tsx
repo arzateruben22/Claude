@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notificationsView, studio } from "@/lib/data";
-import { resetPushKeys, saveSettings, sendTestPush, signOut } from "@/app/actions";
+import { archivedChannelsView, notificationsView, studio } from "@/lib/data";
+import { resetPushKeys, restoreArchivedChannel, saveSettings, sendTestPush, signOut } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
 import { PushDevices } from "@/components/PushDevices";
+import { topicStyle } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Settings" };
 
 export default async function Settings() {
-  const [s, push] = await Promise.all([studio(), notificationsView()]);
+  const [s, push, archived] = await Promise.all([studio(), notificationsView(), archivedChannelsView()]);
   const canUse = push.status.canSeal && push.status.keys !== "unreadable";
   return (
     <div>
@@ -73,6 +74,22 @@ export default async function Settings() {
           </div>
         ) : null}
       </section>
+      {archived.length ? (
+        <section id="archived" className="card stack-sm archived-card" aria-labelledby="archived-h">
+          <h3 id="archived-h">Archived channels</h3>
+          <p className="muted" style={{ margin: 0 }}>Hidden from every screen, and nothing runs for them: no planning, publishing, notifications, analytics or imports. Their episodes, posts and numbers are kept.</p>
+          <ul className="archived-list">
+            {archived.map((c) => (
+              <li key={c.id} style={topicStyle(c)}>
+                <span className="archived-name"><b>{c.name}</b><span className="faint num">Archived {c.archived} · {c.episodes} episode{c.episodes === 1 ? "" : "s"} kept</span></span>
+                <ActionForm action={restoreArchivedChannel} className="archived-restore" submit="Restore" submitClass="btn ghost small" confirm={`Restore ${c.name}? It comes back on every screen, and planning, imports and analytics include it again.`}>
+                  <input type="hidden" name="channelId" value={c.id} />
+                </ActionForm>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
       <section className="section">
         <form action={signOut}><button className="btn ghost">Sign out</button></form>
       </section>

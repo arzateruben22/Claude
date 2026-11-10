@@ -9,6 +9,7 @@ import { and, eq, inArray, isNotNull, isNull } from "drizzle-orm";
 import type { DB } from "../db/client";
 import { destinations, episodes, publications } from "../db/schema";
 import { audit } from "./core";
+import { onActiveChannel } from "./channels";
 import { enqueue } from "./jobs";
 import { pushPath, pushPrefix } from "./media-push";
 import { UPLOAD_GROUPS, type UploadGroup } from "./publications";
@@ -97,7 +98,7 @@ export async function videoClearPlan(d: DB, root: string, now = new Date()): Pro
   const abs = path.resolve(root), base = path.join(abs, "films", "channels");
   const posted = await d.selectDistinct({ id: episodes.id }).from(publications).innerJoin(episodes, eq(episodes.id, publications.episodeId))
     .where(and(inArray(publications.status, ["owner_reported", "scheduled_on_platform", "verified_published"]), eq(publications.simulated, false),
-      eq(episodes.isDemo, false), isNotNull(episodes.filmsPath)));
+      eq(episodes.isDemo, false), isNotNull(episodes.filmsPath), onActiveChannel(episodes.channelId)));   // never an archived channel's
   if (!posted.length) return [];
   const ids = posted.map((r) => r.id);
   const eps = await d.select({ id: episodes.id, filmsPath: episodes.filmsPath, videoClearedAt: episodes.videoClearedAt }).from(episodes).where(inArray(episodes.id, ids));

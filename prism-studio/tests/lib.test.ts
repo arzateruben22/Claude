@@ -51,6 +51,7 @@ describe("zip bundle", () => {
     const zip = path.join(dir, "b.zip");
     fs.writeFileSync(zip, Buffer.concat(chunks));
     const out = execFileSync("python3", ["-c", "import sys,zipfile; z=zipfile.ZipFile(sys.argv[1]); print(z.testzip(), [(i.filename,i.file_size) for i in z.infolist()])", zip]).toString();
+    fs.rmSync(dir, { recursive: true, force: true });   // ~6 MB per run otherwise left in the temp folder
     expect(out).toContain("None");
     expect(out).toContain("('video.mp4', 3145745)");
     expect(out).toContain("caption — ünïcode.txt");

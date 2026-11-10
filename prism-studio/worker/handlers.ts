@@ -5,7 +5,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import type { DB } from "../src/db/client";
-import * as S from "../src/db/schema";
 import type { JobRow } from "../src/domain/jobs";
 import { rescheduleMissed } from "../src/domain/schedule";
 import { refreshEvolution } from "../src/domain/living";
@@ -14,11 +13,12 @@ import { finalizeProcessing, publishPublication } from "../src/domain/publish";
 import { pullMetrics } from "../src/domain/api-analytics";
 import { DomainError } from "../src/domain/core";
 import { clearUploadedVideos } from "../src/domain/media-cleanup";
+import { activeChannels } from "../src/domain/channels";
 import { importEpisodes } from "../scripts/import-episodes";
 
 export type Beat = (p: number, msg: string) => Promise<boolean>;   // false = cancel requested
 /** Failures that another attempt can't fix: the worker dead-letters these at once instead of retrying. */
-export const NON_RETRYABLE = new Set(["needs_films_toolchain", "needs_reconnect", "pull_failed"]);
+export const NON_RETRYABLE = new Set(["needs_films_toolchain", "needs_reconnect", "pull_failed", "archived"]);
 export type Handler = (job: JobRow, beat: Beat, d: DB) => Promise<Record<string, unknown>>;
 export const HANDLERS: Record<string, Handler> = {
   async import_episodes(_, beat, d) {
@@ -79,8 +79,9 @@ export const HANDLERS: Record<string, Handler> = {
   async reschedule_missed(_, __, d) {
     return { moved: await rescheduleMissed(d) };
   },
+  // every active channel (an archived one is left exactly as it was)
   async refresh_evolution(_, beat, d) {
-    const chans = await d.select().from(S.channels);
+    const chans = await activeChannels(d);
     const out: Record<string, number[]> = {};
     for (const [i, c] of chans.entries()) {
       if (!(await beat(i / chans.length, `checking ${c.slug}`))) break;

@@ -64,7 +64,10 @@ export const channels = pgTable("channels", {
   editorial: jsonb("editorial").$type<Editorial>().notNull(),
   filmsPath: text("films_path"),             // films/channels/<x> in the films repo, when the channel has one
   automationMode: automationEnum("automation_mode").notNull().default("draft"),
-  paused: boolean("paused").notNull().default(false),
+  paused: boolean("paused").notNull().default(false),   // nothing planned; the channel still shows everywhere
+  // archived (src/domain/channels.ts): hidden from every screen, list and total, and nothing automatic touches it; every
+  // row stays as the backup and Settings → Archived channels restores it. Null = an active channel.
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
   sort: integer("sort").notNull().default(0),
   createdAt: created(),
   updatedAt: updated(),

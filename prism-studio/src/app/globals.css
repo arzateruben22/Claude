@@ -431,6 +431,16 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
   .rig-joint.j3 { left: calc(69.7cqw - .6cqw); } .rig-joint.j4 { left: calc(86cqw - .6cqw); }
   .rig-base::before { content: ""; position: absolute; left: 50%; top: -1.1cqw; width: 4.2cqw; height: 1.2cqw; margin-left: -2.1cqw; border-radius: .3cqw .3cqw 0 0;
     background: linear-gradient(90deg, #0E1013, #555B63 45%, #8A919A 52%, #3B4047, #0E1013); }
+  /* four channels (one archived): two screens a side and no top screen, so the whole stand moves up by 12cqw and the
+     pole starts behind Instagram instead of carrying a screen above it */
+  .rig[data-no-top] .rig-stage { height: 36cqw; }
+  .rig[data-no-top] .mon[data-pos="center"] { top: 5.4cqw; }
+  .rig[data-no-top] .mon[data-pos="innerLeft"], .rig[data-no-top] .mon[data-pos="innerRight"] { top: 2.4cqw; }
+  .rig[data-no-top] .mon[data-pos="outerLeft"], .rig[data-no-top] .mon[data-pos="outerRight"] { top: 5cqw; }
+  .rig[data-no-top] .rig-pole { top: 8cqw; height: 26.2cqw; }
+  .rig[data-no-top] .rig-arm { top: calc(15.4cqw - .36cqw); }
+  .rig[data-no-top] .rig-joint { top: calc(15.4cqw - .8cqw); }
+  .rig[data-no-top] .rig-base { top: 33.8cqw; }
 }
 
 /* ── monitor extensions ("/m/[slug]") ──────────────────────────────────── */
@@ -704,6 +714,15 @@ a.budget-name:hover { text-decoration: underline; }
 .push-log li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
 .push-log-title { min-width: 0; overflow-wrap: anywhere; color: var(--text-2); }
 @media (min-width: 720px) { .push-card { margin-top: var(--s7); } }
+/* Settings → Archived channels: a quiet list, each with its Restore button at the right */
+.archived-card { margin-top: var(--s6); }
+.archived-card h3 { margin: 0; }
+.archived-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.archived-list li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.archived-name { display: grid; gap: 2px; min-width: 0; }
+.archived-name .faint { font-size: 13px; }
+.archived-restore { display: grid; justify-items: end; }
+.archived-restore [role="status"] { margin: 0; font-size: 12.5px; text-align: right; }
 
 /* ── channel identities (src/lib/identity.ts) ─────────────────────────────
    Two channels bring their films' look onto the wall and their screen; the studio around them stays night glass.

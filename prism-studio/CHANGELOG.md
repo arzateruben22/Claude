@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+- Archived channels (owner's request, 10 Nov 2026): Body Backstage is archived (`drizzle/0008_archived_channels.sql`
+  adds `channels.archived_at` and archives `body`; nothing is deleted). An archived channel is gone from the wall, the
+  monitor strip, Upload, Review, Calendar, Library, Analytics, Earn, Learn, Accounts, Costs (its row and filter),
+  Rewards and every count and total, and its pages answer 404. The schedule, publishing, notifications, analytics
+  pulls, video cleanup, the importer and media push all skip it. The wall re-balances to two screens a side with four
+  channels. Settings → Archived channels lists it with Restore (audit-logged), which brings everything back.
+
 ## 0.8.0 — 2026-11-03 (launch from a phone)
 - Railway hosting (`railway.json`, `docs/LAUNCH-CHECKLIST.md`): one service runs the web app and the worker together
   (`deploy/entrypoint.sh all` → `deploy/run-both.mjs`; if either stops, both restart), with Postgres and a disk at

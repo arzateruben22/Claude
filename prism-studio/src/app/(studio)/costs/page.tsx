@@ -63,6 +63,7 @@ function BudgetRow({ name, href, s, gate, style, reason = true }: { name: string
 
 function Entry({ e, v }: { e: CostsView["entries"][number]; v: CostsView }) {
   const ch = v.channels.find((c) => c.id === e.channelId);
+  const gone = ch ? null : v.archived.find((c) => c.id === e.channelId) ?? null;   // an archived channel's cost: kept, read-only
   const ep = v.episodes.find((x) => x.id === e.episodeId);
   const est = e.source === "estimate", void_ = !!e.voidedAt;
   const opts = v.channels.map((c) => ({ id: c.id, name: plain(c.name) }));
@@ -73,13 +74,13 @@ function Entry({ e, v }: { e: CostsView["entries"][number]; v: CostsView }) {
       <span className="cost-meta">
         <span>{dayLabel(e.incurredOn, e.incurredOn.slice(0, 4) !== v.today.slice(0, 4))}</span>
         <span>{CATEGORY_LABEL[e.category] ?? e.category}</span>
-        <span className={ch ? "topic-text" : undefined}>{ch ? plain(ch.name) : "Studio-wide"}</span>
+        <span className={ch ? "topic-text" : undefined}>{ch ? plain(ch.name) : gone ? `${gone.name} (archived)` : "Studio-wide"}</span>
         {ep ? <Link href={`/episodes/${ep.id}`}>No. {String(ep.number).padStart(3, "0")} · {ep.title}</Link> : null}
         {e.provider && e.provider !== "local" ? <span>paid to {e.provider}</span> : null}
         {e.jobId ? <span>recorded by a job</span> : null}
         {void_ ? <span>void: {e.voidReason}</span> : e.note ? <span>{e.note}</span> : null}
       </span>
-      {!void_ && !e.jobId ? (
+      {!void_ && !e.jobId && !gone ? (
         <details className="cost-change">
           <summary>Edit or void</summary>
           <div className="cost-forms">

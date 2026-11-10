@@ -9,6 +9,7 @@ import { resolveMedia } from "@/lib/media";
 import { zipStream, type ZipEntry } from "@/lib/zip";
 import { markHandedOff } from "@/domain/publications";
 import { handOffText } from "@/domain/metadata";
+import { isArchived } from "@/domain/channels";
 
 export const runtime = "nodejs";
 
@@ -22,6 +23,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ publicatio
   const [x] = await d.select().from(S.platformExports).where(eq(S.platformExports.id, p.exportId));
   const [e] = await d.select().from(S.episodes).where(eq(S.episodes.id, p.episodeId));
   const [c] = await d.select().from(S.channels).where(eq(S.channels.id, e.channelId));
+  if (isArchived(c)) return new Response("not found", { status: 404 });   // an archived channel's posts are hidden
   const [dest] = await d.select().from(S.destinations).where(eq(S.destinations.id, p.destinationId));
   const base = `${c.slug}-${String(e.number).padStart(3, "0")}-${dest.platform}`;
   const video = resolveMedia(x.filePath), cover = x.coverPath ? resolveMedia(x.coverPath) : null;

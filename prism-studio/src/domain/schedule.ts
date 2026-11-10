@@ -2,8 +2,9 @@
 // destination is an upload task due for the owner. Missed slots move to the next open slot (no catch-up burst).
 import { and, asc, desc, eq, gte, inArray, isNull, lt, lte, ne, or, sql } from "drizzle-orm";
 import type { DB } from "../db/client";
-import { blackouts, channels, destinations, episodes, platformExports, publications, publishingWindows, versions } from "../db/schema";
+import { blackouts, destinations, episodes, platformExports, publications, publishingWindows, versions } from "../db/schema";
 import { audit, type Conn, settings } from "./core";
+import { activeChannels, onActiveChannel } from "./channels";
 import { addDays, localDate, zonedTimeToUtc } from "./time";
 
 // provisional defaults (not claimed to be optimal): one Short per channel per day on YouTube and TikTok,
@@ -31,11 +32,12 @@ export async function isBlackedOut(c: Conn, at: Date, channelId: string | null, 
   return rows.length > 0;
 }
 
-/** The slots due on one local date: [{ destination, channel, at (UTC), kind }]. Paused channels/destinations and blackouts are skipped. */
+/** The slots due on one local date: [{ destination, channel, at (UTC), kind }]. Paused or archived channels, paused
+ *  destinations and blackouts are skipped. */
 export async function slotsForDate(c: Conn, date: string) {
   const s = await settings(c);
   if (s.globalPause) return [];
-  const chans = await c.select().from(channels).where(eq(channels.paused, false));
+  const chans = (await activeChannels(c)).filter((ch) => !ch.paused);
   const dests = await c.select().from(destinations).where(eq(destinations.paused, false));
   const out: { destinationId: string; channelId: string | null; platform: string; at: Date; kind: string }[] = [];
   for (const ch of chans) {
@@ -64,7 +66,9 @@ export async function slotsForDate(c: Conn, date: string) {
 export async function rescheduleMissed(d: DB, now = new Date(), graceHours = 6) {
   const s = await settings(d);
   if (s.missedSlotPolicy !== "reschedule") return 0;
-  const late = await d.select().from(publications).where(and(inArray(publications.status, ["planned", "ready", "handed_off"]), lt(publications.scheduledFor, new Date(+now - graceHours * 3_600_000)), eq(publications.simulated, false)));
+  const late = (await d.select({ p: publications }).from(publications).innerJoin(episodes, eq(episodes.id, publications.episodeId))
+    .where(and(inArray(publications.status, ["planned", "ready", "handed_off"]), lt(publications.scheduledFor, new Date(+now - graceHours * 3_600_000)), eq(publications.simulated, false),
+      onActiveChannel(episodes.channelId)))).map((r) => r.p);   // an archived channel's posts stay where they were
   let moved = 0;
   for (const p of late) {
     const taken = await d.select({ at: publications.scheduledFor }).from(publications).where(and(eq(publications.destinationId, p.destinationId), gte(publications.scheduledFor, now)));
@@ -100,8 +104,9 @@ export async function planDays(d: DB, from: string, days: number, now = new Date
     const slots = await slotsForDate(d, addDays(from, i));
     for (const slot of slots) {
       if (slot.at <= now) continue;
-      const [taken] = await d.select({ id: publications.id }).from(publications)
-        .where(and(eq(publications.destinationId, slot.destinationId), eq(publications.scheduledFor, slot.at), ne(publications.status, "cancelled")));
+      // a slot held by an archived channel's post counts as free: that post is hidden everywhere and never notified
+      const [taken] = await d.select({ id: publications.id }).from(publications).innerJoin(episodes, eq(episodes.id, publications.episodeId))
+        .where(and(eq(publications.destinationId, slot.destinationId), eq(publications.scheduledFor, slot.at), ne(publications.status, "cancelled"), onActiveChannel(episodes.channelId)));
       if (taken) continue;
       if (slot.kind !== "instagram") {
         const [next] = await d.select({ id: publications.id }).from(publications)
@@ -115,9 +120,9 @@ export async function planDays(d: DB, from: string, days: number, now = new Date
         continue;
       }
       // shared Instagram: rotate through channels, oldest unplaced episode first
-      const chans = await d.select().from(channels).where(eq(channels.paused, false)).orderBy(asc(channels.sort));
+      const chans = (await activeChannels(d)).filter((ch) => !ch.paused);
       const [last] = await d.select({ channelId: episodes.channelId }).from(publications).innerJoin(episodes, eq(episodes.id, publications.episodeId))
-        .where(and(eq(publications.destinationId, slot.destinationId), ne(publications.status, "cancelled"))).orderBy(desc(publications.scheduledFor)).limit(1);
+        .where(and(eq(publications.destinationId, slot.destinationId), ne(publications.status, "cancelled"), onActiveChannel(episodes.channelId))).orderBy(desc(publications.scheduledFor)).limit(1);
       const start = last ? (chans.findIndex((c) => c.id === last.channelId) + 1) % Math.max(1, chans.length) : 0;
       for (let k = 0; k < chans.length; k++) {
         const ch = chans[(start + k) % chans.length];

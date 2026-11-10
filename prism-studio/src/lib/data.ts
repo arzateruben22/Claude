@@ -15,10 +15,11 @@ import { listDevices, pushStatus, recentPushEvents } from "@/domain/push";
 import { currentApproval } from "@/domain/approvals";
 import { lessonHash } from "@/domain/lessons";
 import { CHANNELS, OFFICIAL, PLANNED_SEASONS, youtubeStudioFor } from "@/domain/catalog";
+import { achievementOnActiveChannel, activeChannelBySlug, activeChannels, archivedChannels, isArchived, onActiveChannel } from "@/domain/channels";
 import { plannedSeason, seasonLine, seasonProgress, type SeasonProgress } from "@/domain/season";
 import { slotsForDate } from "@/domain/schedule";
 import { addDays, formatLocal, localDate, localMonth, zonedTimeToUtc } from "@/domain/time";
-import { INSTAGRAM_SLUG } from "@/lib/rig";
+import { INSTAGRAM_SLUG, rigLayout, type RigPosition } from "@/lib/rig";
 import { resolveMedia } from "@/lib/media";
 import { STATE_LABEL } from "@/lib/format";
 
@@ -31,7 +32,7 @@ export async function studio() {
 
 export async function channelsWithWorlds() {
   const d = db();
-  const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
+  const chans = await activeChannels(d);
   const crs = await d.select().from(S.creations);
   const counts = await d.select({ channelId: S.episodes.channelId, state: S.episodes.state, n: sql<number>`count(*)::int` })
     .from(S.episodes).where(eq(S.episodes.isDemo, false)).groupBy(S.episodes.channelId, S.episodes.state);
@@ -43,15 +44,16 @@ export async function channelsWithWorlds() {
   }));
 }
 
+/** An active channel by slug; null for an archived (or unknown) one, so its pages answer 404. */
 export async function channelBySlug(slug: string) {
-  const [c] = await db().select().from(S.channels).where(eq(S.channels.slug, slug));
-  return c ?? null;
+  return activeChannelBySlug(db(), slug);
 }
 
+/** Every account of the active channels, plus the shared Instagram. */
 export async function destinationsAll() {
   const d = db();
-  const dests = await d.select().from(S.destinations);
-  const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
+  const dests = await d.select().from(S.destinations).where(onActiveChannel(S.destinations.channelId));
+  const chans = await activeChannels(d);
   const order = (x: Destination) => (x.channelId ? chans.findIndex((c) => c.id === x.channelId) : 99) * 10 + ["youtube", "tiktok", "instagram"].indexOf(x.platform);
   return dests.sort((a, b) => order(a) - order(b)).map((x) => ({ ...x, channel: chans.find((c) => c.id === x.channelId) ?? null }));
 }
@@ -66,6 +68,7 @@ export async function episodeFull(id: string) {
   const [ep] = await d.select().from(S.episodes).where(eq(S.episodes.id, id));
   if (!ep) return null;
   const [channel] = await d.select().from(S.channels).where(eq(S.channels.id, ep.channelId));
+  if (isArchived(channel)) return null;   // an archived channel's episodes answer 404
   const vers = await d.select().from(S.versions).where(eq(S.versions.episodeId, id)).orderBy(desc(S.versions.versionNo));
   const current = vers.find((v) => !v.superseded) ?? null;
   const exports = current ? await d.select().from(S.platformExports).where(eq(S.platformExports.versionId, current.id)) : [];
@@ -87,32 +90,30 @@ export async function episodeFull(id: string) {
 export async function reviewQueue() {
   const d = db();
   const s = await settings(d);
-  const eps = await d.select().from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), demoFilter(s.showDemo, S.episodes.isDemo))).orderBy(asc(S.episodes.updatedAt));
-  return Promise.all(eps.map(async (e) => {
-    const full = await episodeFull(e.id);
-    return full!;
-  }));
+  const eps = await d.select().from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId))).orderBy(asc(S.episodes.updatedAt));
+  return (await Promise.all(eps.map((e) => episodeFull(e.id)))).filter((f): f is NonNullable<typeof f> => !!f);
 }
 
 /** The review queue's order (ids and titles only), for Previous / Next on an episode page. */
 export async function reviewOrder() {
   const d = db();
   const s = await settings(d);
-  return d.select({ id: S.episodes.id, title: S.episodes.title }).from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), demoFilter(s.showDemo, S.episodes.isDemo))).orderBy(asc(S.episodes.updatedAt));
+  return d.select({ id: S.episodes.id, title: S.episodes.title }).from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId))).orderBy(asc(S.episodes.updatedAt));
 }
 
 const OPEN_STATUSES = ["planned", "ready", "handed_off"] as const;
 
-/** Publications with everything a task needs: the episode, account, export, live approval, render and channel. */
+/** Publications with everything a task needs: the episode, account, export, live approval, render and channel.
+ *  Never an archived channel's. */
 async function loadTasks(d: DB, where: SQL | undefined) {
   const rows = await d.select({ p: S.publications, e: S.episodes, dest: S.destinations, x: S.platformExports })
     .from(S.publications)
     .innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
     .innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
     .leftJoin(S.platformExports, eq(S.platformExports.id, S.publications.exportId))
-    .where(where)
+    .where(and(where, onActiveChannel(S.episodes.channelId)))
     .orderBy(asc(S.publications.scheduledFor), asc(S.episodes.number));
-  const chans = await d.select().from(S.channels);
+  const chans = await activeChannels(d);
   const conns = await d.select({ destinationId: S.connections.destinationId, status: S.connections.status }).from(S.connections);
   const vers = rows.length ? await d.select().from(S.versions).where(inArray(S.versions.id, rows.flatMap((r) => (r.x ? [r.x.versionId] : [])).concat(["00000000-0000-0000-0000-000000000000"]))) : [];
   return Promise.all(rows.map(async (r) => {
@@ -152,19 +153,19 @@ export async function calendar(days = 7) {
   const start = zonedTimeToUtc(today, "00:00", s.timezone), end = zonedTimeToUtc(addDays(today, days), "00:00", s.timezone);
   const rows = await d.select({ p: S.publications, e: S.episodes, dest: S.destinations })
     .from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId)).innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
-    .where(and(isNotNull(S.publications.scheduledFor), gte(S.publications.scheduledFor, start), lt(S.publications.scheduledFor, end), ne(S.publications.status, "cancelled"), demoFilter(s.showDemo, S.episodes.isDemo)))
+    .where(and(isNotNull(S.publications.scheduledFor), gte(S.publications.scheduledFor, start), lt(S.publications.scheduledFor, end), ne(S.publications.status, "cancelled"), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId)))
     .orderBy(asc(S.publications.scheduledFor));
-  const chans = await d.select().from(S.channels);
+  const chans = await activeChannels(d);
   // the backlog planning would fill: real episodes only (planning never places demo ones)
   const backlog = await d.select({ n: sql<number>`count(*)::int` }).from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
-    .where(and(isNull(S.publications.scheduledFor), inArray(S.publications.status, ["planned", "ready"]), eq(S.episodes.isDemo, false)));
+    .where(and(isNull(S.publications.scheduledFor), inArray(S.publications.status, ["planned", "ready"]), eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId)));
   const bl = await d.select().from(S.blackouts).where(gte(S.blackouts.endsAt, start)).orderBy(asc(S.blackouts.startsAt));
   return { tz: s.timezone, today, days: Array.from({ length: days }, (_, i) => addDays(today, i)), rows: rows.map((r) => ({ ...r, channel: chans.find((c) => c.id === r.e.channelId)! })), backlog: backlog[0]?.n ?? 0, blackouts: bl, settings: s };
 }
 
 export async function jobsList() {
   const s = await settings(db());
-  return db().select().from(S.jobs).where(demoFilter(s.showDemo, S.jobs.isDemo)).orderBy(desc(S.jobs.createdAt)).limit(60);
+  return db().select().from(S.jobs).where(and(demoFilter(s.showDemo, S.jobs.isDemo), onActiveChannel(S.jobs.channelId))).orderBy(desc(S.jobs.createdAt)).limit(60);
 }
 
 const METRICS = ["views", "likes", "comments", "shares", "avg_view_duration_s", "watch_time_s", "followers_gained"] as const;
@@ -175,12 +176,12 @@ export async function analyticsRows(o: { episodeId?: string } = {}) {
   const rows = await d.select({ p: S.publications, e: S.episodes, dest: S.destinations })
     .from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId)).innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
     .where(and(or(inArray(S.publications.status, ["owner_reported", "scheduled_on_platform", "verified_published"]), eq(S.publications.simulated, true)), demoFilter(s.showDemo, S.episodes.isDemo),
-      o.episodeId ? eq(S.publications.episodeId, o.episodeId) : undefined))
+      onActiveChannel(S.episodes.channelId), o.episodeId ? eq(S.publications.episodeId, o.episodeId) : undefined))
     .orderBy(desc(S.publications.reportedAt));
   const ids = rows.map((r) => r.p.id);
   const snaps = ids.length ? await d.select().from(S.metricSnapshots).where(inArray(S.metricSnapshots.publicationId, ids)).orderBy(desc(S.metricSnapshots.retrievedAt)) : [];
   const pulls = await pullStates(d, ids);
-  const chans = await d.select().from(S.channels);
+  const chans = await activeChannels(d);
   return rows.map((r) => ({
     ...r, channel: chans.find((c) => c.id === r.e.channelId)!,
     latest: Object.fromEntries(METRICS.map((m) => [m, snaps.find((s) => s.publicationId === r.p.id && s.metric === m) ?? null])) as Record<(typeof METRICS)[number], typeof S.metricSnapshots.$inferSelect | null>,
@@ -194,12 +195,13 @@ export async function rewardsView() {
   const d = db();
   const balances = await rewardBalances(d);
   const rules = await d.select().from(S.milestoneRules).where(ne(S.milestoneRules.kind, "evolution_threshold")).orderBy(asc(S.milestoneRules.sort));
-  const events = await d.select().from(S.achievementEvents).orderBy(desc(S.achievementEvents.achievedAt));
+  const events = await d.select().from(S.achievementEvents).where(achievementOnActiveChannel(S.achievementEvents.scopeKey, S.achievementEvents.channelId)).orderBy(desc(S.achievementEvents.achievedAt));
   const rws = await d.select().from(S.rewards).orderBy(desc(S.rewards.createdAt));
   const ledger = await d.select().from(S.rewardLedger).orderBy(desc(S.rewardLedger.createdAt)).limit(30);
   const best = await d.execute(sql`
     select coalesce(max(m.value), 0) as v from metric_snapshots m join publications p on p.id = m.publication_id join episodes e on e.id = p.episode_id
-     where m.metric = 'views' and m.source in ('api','csv','manual') and not p.simulated and not e.is_demo and m.status <> 'revised'`);
+     where m.metric = 'views' and m.source in ('api','csv','manual') and not p.simulated and not e.is_demo and m.status <> 'revised'
+       and ${onActiveChannel(sql`e.channel_id`)}`);
   return { balances, rules, events, rewards: rws, ledger, bestViews: Number((best.rows[0] as { v: number }).v) };
 }
 
@@ -214,22 +216,25 @@ export async function worldView(channelId: string) {
   return { creation: cr, evolutions: evs, challenges: chs, next, reqs, ascendReqs, xp: await channelXp(d, channelId) };
 }
 
-/** The Costs screen: this month's spent vs budget for the studio and each channel (with the paid-generation gate),
- *  the last six months for the studio or one channel, and the cost entries. */
+/** The Costs screen: this month's spent vs budget for the studio and each active channel (with the paid-generation
+ *  gate), the last six months for the studio or one channel, and the cost entries. Money is never hidden: an archived
+ *  channel has no row or filter here, but its real costs still count in the studio total (the studio budget is a
+ *  ceiling for everything spent) and its entries stay listed, marked archived and read-only. */
 export async function costsView(channelSlug?: string) {
   const d = db();
   const s = await settings(d);
   const now = new Date();
   const month = localMonth(now, s.timezone), months = monthsBack(month, 6);
-  const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
+  const [chans, gone] = await Promise.all([activeChannels(d), archivedChannels(d)]);
   const focus = channelSlug ? chans.find((c) => c.slug === channelSlug) ?? null : null;
   const totals = await costTotals(d, months);
   const scopes = await Promise.all(chans.map(async (c) => ({ channel: c, sum: totals.scope(c.id, month), gate: await canUsePaidGeneration(d, c.id, 1, now) })));
   const entries = await costEntries(d, { channelId: focus?.id, limit: 80 });
   const eps = await d.select({ id: S.episodes.id, number: S.episodes.number, title: S.episodes.title, channelId: S.episodes.channelId }).from(S.episodes)
-    .where(eq(S.episodes.isDemo, false)).orderBy(asc(S.episodes.number));
+    .where(and(eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId))).orderBy(asc(S.episodes.number));
   return {
     tz: s.timezone, month, today: localDate(now, s.timezone), channels: chans, focus,
+    archived: gone.map((c) => ({ id: c.id, name: plainName(c.name) })),
     studio: totals.scope(null, month), scopes,
     history: [...months].reverse().map((m) => totals.scope(focus?.id ?? null, m)),
     entries, episodes: eps, paidSwitch: s.paidGenerationEnabled, stopExternal: s.stopExternalActions,
@@ -254,9 +259,24 @@ export async function notificationsView() {
 }
 export type NotificationsView = Awaited<ReturnType<typeof notificationsView>>;
 
+/** The setup checklists: each active channel's, and the shared Instagram's and studio's (channel null). */
+/** Settings → Archived channels: each archived channel, when, and how many of its (real) episodes are kept. */
+export async function archivedChannelsView() {
+  const d = db();
+  const [s, chans] = await Promise.all([settings(d), archivedChannels(d)]);
+  if (!chans.length) return [];
+  const counts = await d.select({ channelId: S.episodes.channelId, n: sql<number>`count(*)::int` }).from(S.episodes)
+    .where(and(eq(S.episodes.isDemo, false), inArray(S.episodes.channelId, chans.map((c) => c.id)))).groupBy(S.episodes.channelId);
+  return chans.map((c) => ({
+    id: c.id, name: plainName(c.name), color: c.color, colorInk: c.colorInk,
+    archived: formatLocal(c.archivedAt!, s.timezone, { month: "short", day: "numeric", year: "numeric" }),
+    episodes: counts.find((x) => x.channelId === c.id)?.n ?? 0,
+  }));
+}
+
 export async function onboardingView() {
   const d = db();
-  return d.select().from(S.onboarding);
+  return d.select().from(S.onboarding).where(onActiveChannel(S.onboarding.channelId));
 }
 
 
@@ -270,7 +290,7 @@ export type CoverTone = "light" | "dark";
 /** One Instagram slot. "missed": its time passed with nothing planned (no rotation episode is spent on it). */
 export type IgSlot = { at: Date; item: PostItem | null; state: "posted" | "ready" | "not_ready" | "unplanned" | "missed" | "empty"; tone?: CoverTone };
 export type MonitorCard = {
-  slug: string; kind: "channel" | "instagram"; href: string; name: string; label: string; color: string; colorInk: string;
+  slug: string; kind: "channel" | "instagram"; pos: RigPosition; href: string; name: string; label: string; color: string; colorInk: string;
   cover: string | null; coverTone?: CoverTone; status: string; led: Led; ledLabel: string; slots?: IgSlot[]; season?: SeasonProgress | null;
 };
 
@@ -345,11 +365,11 @@ export function coverTone(slug: string): CoverTone {
 /** A ready post has a current (not superseded) render for its platform. No approval is needed to download or copy it. */
 export const isReady = (t: Pick<PostItem, "x" | "version">) => !!t.x && !t.version?.superseded;
 
-/** The current render's export for one platform, per episode (non-demo). */
+/** The current render's export for one platform, per episode (non-demo, active channels only). */
 async function currentExports(d: DB, platform: "youtube" | "tiktok" | "instagram", channelIds?: string[]) {
   return d.select({ e: S.episodes, x: S.platformExports, version: S.versions }).from(S.platformExports)
     .innerJoin(S.versions, eq(S.versions.id, S.platformExports.versionId)).innerJoin(S.episodes, eq(S.episodes.id, S.versions.episodeId))
-    .where(and(eq(S.platformExports.platform, platform), eq(S.versions.superseded, false), eq(S.episodes.isDemo, false),
+    .where(and(eq(S.platformExports.platform, platform), eq(S.versions.superseded, false), eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId),
       channelIds ? inArray(S.episodes.channelId, channelIds.length ? channelIds : ["00000000-0000-0000-0000-000000000000"]) : undefined))
     .orderBy(asc(S.episodes.number));
 }
@@ -360,9 +380,9 @@ async function currentExports(d: DB, platform: "youtube" | "tiktok" | "instagram
  * (src/domain/schedule.ts), which is what actually places posts and never puts an episode on Instagram twice.
  */
 async function instagramRotation(d: DB, ig: Destination, limit: number): Promise<PostItem[]> {
-  const chans = await d.select().from(S.channels).where(eq(S.channels.paused, false)).orderBy(asc(S.channels.sort));
+  const chans = (await activeChannels(d)).filter((c) => !c.paused);
   const [last] = await d.select({ channelId: S.episodes.channelId }).from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
-    .where(and(eq(S.publications.destinationId, ig.id), ne(S.publications.status, "cancelled"))).orderBy(desc(S.publications.scheduledFor)).limit(1);
+    .where(and(eq(S.publications.destinationId, ig.id), ne(S.publications.status, "cancelled"), onActiveChannel(S.episodes.channelId))).orderBy(desc(S.publications.scheduledFor)).limit(1);
   const placed = new Set((await d.select({ id: S.publications.episodeId }).from(S.publications).where(eq(S.publications.destinationId, ig.id))).map((r) => r.id));
   const rows = (await currentExports(d, "instagram")).filter((r) => !placed.has(r.e.id));
   const queues = new Map(chans.map((c) => [c.id, rows.filter((r) => r.e.channelId === c.id)]));
@@ -407,21 +427,23 @@ async function instagramToday(d: DB, ig: Destination | undefined, tz: string, to
   return { slots, rotation, day };
 }
 
-/** The six monitors: each one's cover, one status line and its status light. */
+/** The monitors (Instagram and one per active channel, placed by rigLayout): each one's cover, one status line and its
+ *  status light. */
 export async function rigView() {
   const d = db();
   const s = await settings(d);
   const tz = s.timezone, today = localDate(new Date(), tz);
   const endOfToday = zonedTimeToUtc(addDays(today, 1), "00:00", tz);
-  const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
+  const chans = await activeChannels(d);
   const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
   const tasks = (await loadTasks(d, inArray(S.publications.status, [...OPEN_STATUSES]))).filter((t) => !t.e.isDemo && !t.p.simulated);
-  const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId, state: S.episodes.state, number: S.episodes.number }).from(S.episodes).where(eq(S.episodes.isDemo, false));
+  const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId, state: S.episodes.state, number: S.episodes.number }).from(S.episodes).where(and(eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId)));
   const renders = [...await currentExports(d, "youtube"), ...await currentExports(d, "tiktok")];
   const when = (at: Date) => formatLocal(at, tz, at < endOfToday ? { hour: "numeric", minute: "2-digit" } : { weekday: "short", hour: "numeric", minute: "2-digit" });
   const seasons = await currentSeasons(d, chans);
+  const layout = rigLayout(chans.map((c) => c.slug));
 
-  const monitors: MonitorCard[] = chans.map((c) => {
+  const monitors: MonitorCard[] = chans.filter((c) => layout.has(c.slug)).map((c) => {
     const mine = tasks.filter((t) => t.channel.id === c.id && !t.dest.shared);
     const scheduled = mine.filter((t) => t.p.scheduledFor);
     const dueToday = scheduled.filter((t) => t.p.scheduledFor! < endOfToday);
@@ -443,7 +465,7 @@ export async function rigView() {
       : production || "No episodes yet";
     const led: Led = dueToday.some(isReady) ? "ready" : toReview.length || dueToday.length ? "review" : "off";
     return {
-      slug: c.slug, kind: "channel", href: `/m/${c.slug}`, name: plainName(c.name), label: c.label, color: c.color, colorInk: c.colorInk, cover, coverTone: cover ? coverTone(c.slug) : undefined, status, led,
+      slug: c.slug, kind: "channel", pos: layout.get(c.slug)!, href: `/m/${c.slug}`, name: plainName(c.name), label: c.label, color: c.color, colorInk: c.colorInk, cover, coverTone: cover ? coverTone(c.slug) : undefined, status, led,
       season: seasons.get(c.slug) ?? null,
       ...(seasons.get(c.slug)?.planned && status === "No episodes yet" ? { status: seasonLine(seasons.get(c.slug)!) } : {}),
       ledLabel: led === "ready" ? "ready to post today" : led === "review" ? "needs review" : "nothing queued today",
@@ -460,7 +482,7 @@ export async function rigView() {
     : unplanned ? `Plan ${day}'s ${unplanned === 1 ? "post" : `${unplanned} posts`}` : "Nothing in rotation yet";
   const igLed: Led = ready ? "ready" : waiting ? "review" : "off";
   monitors.push({
-    slug: INSTAGRAM_SLUG, kind: "instagram", href: `/m/${INSTAGRAM_SLUG}`, name: "Instagram", ...INSTAGRAM_LOOK,
+    slug: INSTAGRAM_SLUG, kind: "instagram", pos: "center", href: `/m/${INSTAGRAM_SLUG}`, name: "Instagram", ...INSTAGRAM_LOOK,
     cover: slots.map((x) => (x.item ? coverOf(x.item) : null)).find(Boolean) ?? null, status: igStatus, led: igLed,
     ledLabel: igLed === "ready" ? "ready to post today" : igLed === "review" ? "needs a render" : "nothing queued today", slots,
   });
@@ -473,7 +495,8 @@ export async function rigView() {
   const unseenEvolutions = (await d.select({ channelId: S.evolutions.channelId }).from(S.evolutions).where(and(isNotNull(S.evolutions.evolvedAt), isNull(S.evolutions.seenAt))))
     .map((x) => chans.find((c) => c.id === x.channelId)).filter((c): c is Channel => !!c);
   const unseenAchievements = await d.select({ title: S.milestoneRules.title, demo: S.achievementEvents.isDemo }).from(S.achievementEvents)
-    .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId)).where(isNull(S.achievementEvents.seenAt));
+    .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId))
+    .where(and(isNull(S.achievementEvents.seenAt), achievementOnActiveChannel(S.achievementEvents.scopeKey, S.achievementEvents.channelId)));
   return {
     tz, today, monitors, reviewCount, longToApprove, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length,
     instagram: { toPlan: s.globalPause ? 0 : unplanned, day }, paused: s.globalPause, stopExternal: s.stopExternalActions,
@@ -525,12 +548,12 @@ export async function instagramExtension() {
   const s = await settings(d);
   const tz = s.timezone, today = localDate(new Date(), tz);
   const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
-  const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
+  const chans = await activeChannels(d);
   const { slots, rotation, day } = await instagramToday(d, ig, tz, today);
   const upcoming = ig ? (await loadTasks(d, and(eq(S.publications.destinationId, ig.id), inArray(S.publications.status, [...OPEN_STATUSES]), gte(S.publications.scheduledFor, zonedTimeToUtc(addDays(today, 1), "00:00", tz))))).slice(0, 14) : [];
   const pubs = ig ? await d.select({ episodeId: S.publications.episodeId, status: S.publications.status }).from(S.publications).where(eq(S.publications.destinationId, ig.id)) : [];
   const exportsIg = await currentExports(d, "instagram");
-  const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId }).from(S.episodes).where(eq(S.episodes.isDemo, false));
+  const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId }).from(S.episodes).where(and(eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId)));
   const ledger = chans.map((c) => {
     const ready = exportsIg.filter((r) => r.e.channelId === c.id);
     const statusOf = (id: string) => pubs.filter((p) => p.episodeId === id).map((p) => p.status);
@@ -561,14 +584,14 @@ export async function instagramExtension() {
 export async function libraryView() {
   const d = db();
   const s = await settings(d);
-  const chans = await d.select().from(S.channels).orderBy(asc(S.channels.sort));
+  const chans = await activeChannels(d);
   const rows = await d.select({ e: S.episodes, v: S.versions }).from(S.versions).innerJoin(S.episodes, eq(S.episodes.id, S.versions.episodeId))
-    .where(and(eq(S.versions.superseded, false), demoFilter(s.showDemo, S.episodes.isDemo))).orderBy(asc(S.episodes.number));
+    .where(and(eq(S.versions.superseded, false), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId))).orderBy(asc(S.episodes.number));
   const xs = rows.length ? await d.select({ versionId: S.platformExports.versionId, platform: S.platformExports.platform, coverPath: S.platformExports.coverPath, filePath: S.platformExports.filePath })
     .from(S.platformExports).where(inArray(S.platformExports.versionId, rows.map((r) => r.v.id))) : [];
   const covers = xs.filter((x) => x.coverPath);
   const lessons = await d.select().from(S.lessons)
-    .where(and(eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), demoFilter(s.showDemo, S.lessons.isDemo))).orderBy(asc(S.lessons.createdAt));
+    .where(and(eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), demoFilter(s.showDemo, S.lessons.isDemo), onActiveChannel(S.lessons.channelId))).orderBy(asc(S.lessons.createdAt));
   const bytes = (key: string) => { const f = mediaFile(key); return f ? fs.statSync(f).size : 0; };
   // download names say which is which: skin-sense-004-1080p.mp4 (TikTok, Instagram), skin-sense-004-1440p.mp4 (YouTube)
   const resolutionName = (key: string, res: string) => path.basename(key).replace(/-9x16(?:-youtube)?\.mp4$/, `-${res}.mp4`);

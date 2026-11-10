@@ -13,7 +13,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
       <Wallpaper variant="crisp" />
       <div className="kicker">Owner only</div>
       <h1>Prism <em className="accent">Studio</em></h1>
-      <p className="lede">Five channels, one studio. Sign in with your studio passphrase.</p>
+      <p className="lede">Every channel, one studio. Sign in with your studio passphrase.</p>
       {ownerConfigured() ? <LoginForm next={safeNextPath(next)} /> : (
         <div className="card stack-sm">
           <p style={{ margin: 0 }}>This studio has no passphrase yet.</p>

@@ -57,6 +57,13 @@
       "when": 1794256740303,
       "tag": "0007_video_cleared",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794270034092,
+      "tag": "0008_archived_channels",
+      "breakpoints": true
     }
   ]
 }

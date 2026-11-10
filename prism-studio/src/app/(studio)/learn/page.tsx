@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { asc, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as S from "@/db/schema";
 import { studio } from "@/lib/data";
+import { activeChannels } from "@/domain/channels";
 import { formatLocal } from "@/domain/time";
 import { topicStyle } from "@/lib/format";
 import { addExperiment, addLearning, setExperimentStatus } from "@/app/actions";
@@ -17,7 +18,7 @@ const NEXT: Record<string, string[]> = { proposed: ["running", "discarded"], run
 export default async function Learn({ searchParams }: { searchParams: Promise<{ channel?: string }> }) {
   const { channel } = await searchParams;
   const d = db();
-  const [chans, s] = await Promise.all([d.select().from(S.channels).orderBy(asc(S.channels.sort)), studio()]);
+  const [chans, s] = await Promise.all([activeChannels(d), studio()]);
   const cur = chans.find((c) => c.slug === channel) ?? chans[0];
   const [exps, learns, posted] = await Promise.all([
     d.select().from(S.experiments).where(eq(S.experiments.channelId, cur.id)).orderBy(desc(S.experiments.createdAt)),

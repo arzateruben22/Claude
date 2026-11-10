@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { asc, eq, inArray } from "drizzle-orm";
+import { inArray } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as S from "@/db/schema";
 import { OFFICIAL, youtubeStudioFor } from "@/domain/catalog";
+import { activeChannels } from "@/domain/channels";
 import { accountSnapshotsByDestination, attentionItems, earnProgress, EARN_RULES, METRIC_LABEL, METRICS_BY_PLATFORM, type EarnPlatform, type Progress, type Req, type Tier } from "@/domain/earn";
 import { addAccountMetrics } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
@@ -85,7 +86,7 @@ function Row({ platform, p, dest }: { platform: EarnPlatform; p: Progress; dest:
 
 export default async function Earn() {
   const d = db();
-  const chans = await d.select().from(S.channels).where(eq(S.channels.paused, false)).orderBy(asc(S.channels.sort));
+  const chans = (await activeChannels(d)).filter((c) => !c.paused);
   const dests = chans.length ? await d.select().from(S.destinations).where(inArray(S.destinations.channelId, chans.map((c) => c.id))) : [];
   const snaps = await accountSnapshotsByDestination(d);
   const now = new Date();

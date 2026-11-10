@@ -9,6 +9,7 @@ import { db, pool } from "../src/db/client";
 import * as S from "../src/db/schema";
 import { backfillPosted } from "../src/domain/publications";
 import { onPublicationReported } from "../src/domain/living";
+import { isArchived } from "../src/domain/channels";
 import { loadEnv } from "./env";
 loadEnv();
 
@@ -37,6 +38,7 @@ function episodeList(s: string): string[] {
 const d = db();
 const [ch] = await d.select().from(S.channels).where(eq(S.channels.filmsPath, channelPath));
 if (!ch) { console.error(`no channel with filmsPath ${channelPath}`); process.exit(1); }
+if (isArchived(ch)) { console.error(`${ch.name} is archived: restore it in Settings → Archived channels first`); process.exit(1); }
 const NOTE = `Backfilled: posted before Prism Studio tracked it (recorded ${new Date().toISOString().slice(0, 10)}).`;
 let marked = 0, already = 0, missing = 0;
 for (const ep of episodeList(epArg)) {

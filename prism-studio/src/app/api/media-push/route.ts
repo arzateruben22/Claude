@@ -2,9 +2,11 @@
 // Token only (MEDIA_PUSH_TOKEN, sent as a bearer token); off when the token isn't set. No session cookie needed.
 //   GET                      the files already here: { files: { "<films/channels/...>": [size, mtimeMs] } }, and the
 //                            episode folders whose video was cleared after posting: { cleared: ["films/channels/x/ep01"] }
-//                            (the push skips their .mp4 files, so an erased video is never sent again)
+//                            (the push skips their .mp4 files, so an erased video is never sent again), and the
+//                            folders of archived channels: { archived: ["films/channels/body"] } (never sent at all)
 //   PUT  ?path=films/...     write one file (streamed, then renamed into place); x-mtime keeps its modified time,
-//                            which the import compares (a cover or the 1440p version must be newer than the render)
+//                            which the import compares (a cover or the 1440p version must be newer than the render).
+//                            A file of an archived channel is read and dropped, never stored ({ skipped: "archived" })
 //   POST                     queue "import rendered episodes" for the worker
 import fs from "node:fs";
 import path from "node:path";
@@ -15,6 +17,7 @@ import { db } from "@/db/client";
 import { enqueue } from "@/domain/jobs";
 import { PUSH_MAX_BYTES, pushAuthorized, pushPath, pushPrefix } from "@/domain/media-push";
 import { clearedVideoDirs } from "@/domain/media-cleanup";
+import { archivedFilmsPaths, inArchivedFolder } from "@/domain/channels";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,7 +38,7 @@ export async function GET(req: Request) {
   if (!pushAuthorized(req.headers.get("authorization"))) return denied();
   const files: Record<string, [number, number]> = {};
   walk(path.join(ROOT(), "films", "channels"), "films/channels", files);
-  return json({ files, cleared: await clearedVideoDirs(db()) });
+  return json({ files, cleared: await clearedVideoDirs(db()), archived: await archivedFilmsPaths(db()) });
 }
 
 export async function PUT(req: Request) {
@@ -45,6 +48,12 @@ export async function PUT(req: Request) {
   const size = Number(req.headers.get("content-length") ?? "");
   if (Number.isFinite(size) && size > PUSH_MAX_BYTES) return json({ error: "too large" }, 413);
   if (!req.body) return json({ error: "no body" }, 400);
+  // an archived channel's media was removed from the server on purpose and the importer never reads it: the upload is
+  // read to the end and dropped (not refused), so an older push script carries on with the other channels
+  if (inArchivedFolder(rel, await archivedFilmsPaths(db()))) {
+    for await (const chunk of req.body as unknown as AsyncIterable<Uint8Array>) void chunk;
+    return json({ ok: true, path: rel, bytes: 0, skipped: "archived" });
+  }
   const root = ROOT(), file = path.resolve(root, rel);
   if (!file.startsWith(root + path.sep)) return json({ error: "path not allowed" }, 400);
   fs.mkdirSync(path.dirname(file), { recursive: true });

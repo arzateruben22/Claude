@@ -1,6 +1,7 @@
 import { and, eq, gt, inArray, isNull, sql } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as S from "@/db/schema";
+import { achievementOnActiveChannel, onActiveChannel } from "@/domain/channels";
 import { Nav } from "@/components/Nav";
 import { CelebrationHost } from "@/components/CelebrationHost";
 import { Wallpaper } from "@/components/Wallpaper";
@@ -9,13 +10,13 @@ export const dynamic = "force-dynamic";
 
 export default async function StudioLayout({ children }: { children: React.ReactNode }) {
   const d = db();
-  // badge counts are real work only: demo episodes never count, even when "Show demo data" is on
+  // badge counts are real work only: demo episodes never count, even when "Show demo data" is on; archived channels never
   const [up] = await d.select({ n: sql<number>`count(*)::int` }).from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
-    .where(sql`${S.publications.status} in ('ready','handed_off') and ${S.publications.scheduledFor} is not null and ${S.publications.scheduledFor} < now() + interval '1 day' and not ${S.episodes.isDemo}`);
-  const [rv] = await d.select({ n: sql<number>`count(*)::int` }).from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), eq(S.episodes.isDemo, false)));
+    .where(and(sql`${S.publications.status} in ('ready','handed_off') and ${S.publications.scheduledFor} is not null and ${S.publications.scheduledFor} < now() + interval '1 day' and not ${S.episodes.isDemo}`, onActiveChannel(S.episodes.channelId)));
+  const [rv] = await d.select({ n: sql<number>`count(*)::int` }).from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId)));
   const fresh = await d.select({ id: S.achievementEvents.id, title: S.milestoneRules.title, demo: S.achievementEvents.isDemo }).from(S.achievementEvents)
     .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId))
-    .where(and(isNull(S.achievementEvents.seenAt), gt(S.achievementEvents.achievedAt, new Date(Date.now() - 10 * 60_000))));
+    .where(and(isNull(S.achievementEvents.seenAt), gt(S.achievementEvents.achievedAt, new Date(Date.now() - 10 * 60_000)), achievementOnActiveChannel(S.achievementEvents.scopeKey, S.achievementEvents.channelId)));
   return (
     <div className="shell">
       <Wallpaper variant="soft" />

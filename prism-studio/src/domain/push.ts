@@ -10,14 +10,15 @@
 //   (a) upload due: 30 minutes before a manual slot whose post is approved and ready (the exact export, current render);
 //   (b) a scheduled automatic publish that gave up (dead job) or ended handed off (inbox/private): it needs the owner;
 //   (c) an Instagram slot that passed with nothing planned on it.
-//   Never for demo or simulated posts. Pause publishing silences (a) and (c); Stop external actions silences (a)
+//   Never for demo or simulated posts, nor an archived channel's. Pause publishing silences (a) and (c); Stop external actions silences (a)
 //   (the desk's hand-off is off then). Nothing is computed while no device is registered.
 import { createHash } from "node:crypto";
-import { and, count, desc, eq, gte, inArray, isNull, lte, ne, notLike } from "drizzle-orm";
+import { and, count, desc, eq, gte, inArray, isNull, lte, ne, notLike, sql } from "drizzle-orm";
 import webpush from "web-push";
 import type { DB } from "../db/client";
 import { channels, connections, destinations, episodes, jobs, platformExports, publications, pushEvents, pushKeys, pushSubscriptions, versions } from "../db/schema";
 import { audit, type Conn, DomainError, settings } from "./core";
+import { onActiveChannel } from "./channels";
 import { currentApproval } from "./approvals";
 import { slotsForDate } from "./schedule";
 import { addDays, formatLocal, localDate } from "./time";
@@ -258,7 +259,7 @@ export async function dueUploads(c: Conn, now = new Date()): Promise<PushCandida
     .leftJoin(connections, eq(connections.destinationId, destinations.id))
     .where(and(inArray(publications.status, ["planned", "ready", "handed_off"]), isNull(publications.reportedAt), eq(publications.simulated, false),
       gte(publications.scheduledFor, new Date(+now - UPLOAD_GRACE_MIN * MIN)), lte(publications.scheduledFor, new Date(+now + UPLOAD_LEAD_MIN * MIN)),
-      eq(episodes.isDemo, false), eq(channels.paused, false), eq(destinations.paused, false), eq(versions.superseded, false)));
+      eq(episodes.isDemo, false), eq(channels.paused, false), eq(destinations.paused, false), eq(versions.superseded, false), onActiveChannel(episodes.channelId)));
   const out: PushCandidate[] = [];
   for (const r of rows) {
     // the worker publishes these itself (scheduled publishing on a connected account): not the owner's upload
@@ -287,8 +288,9 @@ export async function publishProblems(c: Conn, now = new Date()): Promise<PushCa
   const since = new Date(+now - PROBLEM_LOOKBACK_H * 3_600_000);
   const out: PushCandidate[] = [];
   const pubInfo = async (publicationId: string) => {
-    const [r] = await c.select({ p: publications, e: episodes, dest: destinations }).from(publications)
+    const [r] = await c.select({ p: publications, e: episodes, dest: destinations, archived: sql<boolean>`${channels.archivedAt} is not null` }).from(publications)
       .innerJoin(episodes, eq(episodes.id, publications.episodeId)).innerJoin(destinations, eq(destinations.id, publications.destinationId))
+      .innerJoin(channels, eq(channels.id, episodes.channelId))
       .where(eq(publications.id, publicationId));
     return r ?? null;
   };
@@ -299,7 +301,7 @@ export async function publishProblems(c: Conn, now = new Date()): Promise<PushCa
     const pj = j.type === "publish" ? j : await publishJob(c, publicationId);
     if (!pj || pj.payload.manual === true) continue;   // the owner pressed Publish now: they're in the app
     const r = await pubInfo(publicationId);
-    if (!r || r.e.isDemo || r.p.simulated || POSTED.includes(r.p.status) || r.p.status === "cancelled") continue;
+    if (!r || r.e.isDemo || r.p.simulated || POSTED.includes(r.p.status) || r.p.status === "cancelled" || r.archived) continue;
     const platform = PLATFORM[r.dest.platform];
     const why = j.type === "publish_status" ? `${platform} never finished processing it` : firstSentence(j.error) || "the upload failed";
     out.push({
@@ -313,7 +315,7 @@ export async function publishProblems(c: Conn, now = new Date()): Promise<PushCa
   const handed = await c.select({ p: publications, e: episodes, dest: destinations }).from(publications)
     .innerJoin(episodes, eq(episodes.id, publications.episodeId)).innerJoin(destinations, eq(destinations.id, publications.destinationId))
     .where(and(eq(publications.status, "handed_off"), eq(publications.method, "api"), gte(publications.handedOffAt, since),
-      notLike(publications.note, "processing:%"), eq(publications.simulated, false), eq(episodes.isDemo, false)));
+      notLike(publications.note, "processing:%"), eq(publications.simulated, false), eq(episodes.isDemo, false), onActiveChannel(episodes.channelId)));
   for (const r of handed) {
     const pj = await publishJob(c, r.p.id);
     if (!pj || pj.payload.manual === true) continue;
@@ -338,8 +340,8 @@ export async function unplannedInstagramSlots(c: Conn, now = new Date()): Promis
     .filter((x) => x.kind === "instagram" && x.at <= now && +x.at >= +now - SLOT_LOOKBACK_H * 3_600_000);
   const out: PushCandidate[] = [];
   for (const slot of slots) {
-    const [taken] = await c.select({ n: count() }).from(publications)
-      .where(and(eq(publications.destinationId, slot.destinationId), eq(publications.scheduledFor, slot.at), ne(publications.status, "cancelled")));
+    const [taken] = await c.select({ n: count() }).from(publications).innerJoin(episodes, eq(episodes.id, publications.episodeId))
+      .where(and(eq(publications.destinationId, slot.destinationId), eq(publications.scheduledFor, slot.at), ne(publications.status, "cancelled"), onActiveChannel(episodes.channelId)));
     if (taken.n) continue;
     out.push({
       key: `instagram_unplanned:${slot.destinationId}:${slot.at.toISOString()}`, kind: "instagram_unplanned", publicationId: null,

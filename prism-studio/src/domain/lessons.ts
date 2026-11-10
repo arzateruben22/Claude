@@ -58,6 +58,7 @@ export async function lessonBuildPlan(c: Conn, lessonId: string) {
   const [l] = await c.select().from(lessons).where(eq(lessons.id, lessonId));
   if (!l) throw new DomainError("not_found", "lesson not found");
   const [ch] = await c.select().from(channels).where(eq(channels.id, l.channelId));
+  if (ch.archivedAt) throw new DomainError("archived", "this channel is archived: restore it in Settings to build its lessons");
   if (!ch.filmsPath) throw new DomainError("no_films", "this channel has no films pipeline folder");
   const parts = await c.select({ position: lessonEpisodes.position, filmsPath: episodes.filmsPath }).from(lessonEpisodes)
     .innerJoin(episodes, eq(episodes.id, lessonEpisodes.episodeId)).where(eq(lessonEpisodes.lessonId, lessonId)).orderBy(asc(lessonEpisodes.position));
@@ -163,6 +164,7 @@ export async function registerCompilation(d: DB, channelId: string, name: string
     // one registration per channel at a time, so two imports can't both insert the same name
     const [ch] = await tx.select().from(channels).where(eq(channels.id, channelId)).for("update");
     if (!ch) throw new DomainError("not_found", "channel not found");
+    if (ch.archivedAt) throw new DomainError("archived", "this channel is archived: its compilations are not registered");
     const [l] = await tx.select().from(lessons).where(and(eq(lessons.channelId, channelId), eq(lessons.name, name), eq(lessons.isDemo, false)))
       .orderBy(asc(lessons.isTestFixture), asc(lessons.createdAt)).limit(1);
     const fallback = fallbackCompilationTitle(name, ch.name), titled = titleFromDescription(v.description);

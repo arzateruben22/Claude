@@ -4,7 +4,7 @@ import { Pwa } from "@/components/Pwa";
 
 export const metadata: Metadata = {
   title: { default: "Prism Studio", template: "%s · Prism Studio" },
-  description: "A phone-first studio for five educational channels.",
+  description: "A phone-first studio for educational channels.",
   applicationName: "Prism Studio",
   appleWebApp: { capable: true, title: "Prism", statusBarStyle: "black-translucent" },
   icons: { icon: "/icons/icon-192.png", apple: "/icons/apple-touch-icon.png" },

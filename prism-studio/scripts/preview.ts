@@ -12,7 +12,7 @@ import path from "node:path";
 import { spawn, spawnSync, execSync, type ChildProcess } from "node:child_process";
 import { createRequire } from "node:module";
 import pg from "pg";
-import { RIG, RIG_ORDER, INSTAGRAM_SLUG } from "../src/lib/rig";
+import { INSTAGRAM_SLUG, rigLayout, type ChannelPosition } from "../src/lib/rig";
 import { loadEnv } from "./env";
 
 const ROOT = path.resolve(new URL("..", import.meta.url).pathname);
@@ -167,15 +167,19 @@ function jpegSize(file: string): { w: number; h: number } {
 }
 
 type Names = Record<string, string>;
-function figuresHtml(names: Names, channel: { slug: string; name: string }) {
+type Layout = Map<string, ChannelPosition>;
+const at = (layout: Layout, pos: ChannelPosition) => [...layout].find(([, p]) => p === pos)?.[0];
+function figuresHtml(names: Names, layout: Layout, channel: { slug: string; name: string }) {
   const img = (file: string, alt: string) => { const { w, h } = jpegSize(path.join(OUT, file)); return `<img class="shot" src="${file}" width="${w}" height="${h}" alt="${esc(alt)}">`; };
   const n = (slug: string) => names[slug] ?? slug;
-  const left = [RIG.outerLeft, RIG.innerLeft].map(n).join(" and "), right = [RIG.innerRight, RIG.outerRight].map(n).join(" and ");
+  const side = (a: ChannelPosition, b: ChannelPosition) => [at(layout, a), at(layout, b)].filter((s): s is string => !!s).map(n).join(" and ");
+  const left = side("outerLeft", "innerLeft"), right = side("innerRight", "outerRight"), top = at(layout, "top");
+  const monitors = ["one", "two", "three", "four", "five", "six"][layout.size] ?? String(layout.size + 1);
   return `
   <figure>
-    ${img("wall-desktop.jpg", `The home screen: six monitors over a dark New York skyline at night. Instagram is the large screen in the middle with today's posts; ${n(RIG.top)} sits above it; ${left} are on the left; ${right} are on the right.`)}
+    ${img("wall-desktop.jpg", `The home screen: ${monitors} monitors over a dark New York skyline at night. Instagram is the large screen in the middle with today's posts; ${top ? `${n(top)} sits above it; ` : ""}${left} are on the left; ${right} are on the right.`)}
     <figcaption>
-      <p><b>The wall.</b> Instagram in the middle: two posts a day from any series, and no episode goes up twice. ${esc(n(RIG.top))} sits above it. ${esc(left)} are on the left, ${esc(right)} on the right. A screen stays dark until its channel has a finished episode.</p>
+      <p><b>The wall.</b> Instagram in the middle: two posts a day from any series, and no episode goes up twice. ${top ? `${esc(n(top))} sits above it. ` : ""}${esc(left)} are on the left, ${esc(right)} on the right. A screen stays dark until its channel has a finished episode.</p>
       <p>The skyline is original code-rendered art (Manhattan at 2 a.m.), not a photo.</p>
     </figcaption>
   </figure>
@@ -215,13 +219,13 @@ function figuresHtml(names: Names, channel: { slug: string; name: string }) {
   `;
 }
 
-function rewriteIndex(names: Names, channel: { slug: string; name: string }, tz: string) {
+function rewriteIndex(names: Names, layout: Layout, channel: { slug: string; name: string }, tz: string) {
   const html = fs.readFileSync(INDEX, "utf8");
   const START = "<!-- figures: written by npm run preview (scripts/preview.ts); edit them there -->", END = "<!-- /figures -->";
   const a = html.indexOf(START), b = html.indexOf(END);
   if (a < 0 || b < a) throw new Error(`${INDEX}: the ${START} … ${END} markers are missing`);
   const date = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: tz }).format(new Date());
-  const next = (html.slice(0, a + START.length) + figuresHtml(names, channel) + html.slice(b))
+  const next = (html.slice(0, a + START.length) + figuresHtml(names, layout, channel) + html.slice(b))
     .replace(/(<div class="kicker">Preview · )[^<]*?( · real screenshots<\/div>)/, `$1${date}$2`);
   fs.writeFileSync(INDEX, next);
 }
@@ -232,7 +236,7 @@ async function studioFacts() {
   try {
     const tz = ((await p.query("select timezone from studio_settings limit 1")).rows[0]?.timezone as string | undefined) ?? "America/Los_Angeles";
     const chans = (await p.query(`select c.slug, c.name, exists (select 1 from episodes e join versions v on v.episode_id = e.id and not v.superseded
-      where e.channel_id = c.id and not e.is_demo) as has_render from channels c`)).rows as { slug: string; name: string; has_render: boolean }[];
+      where e.channel_id = c.id and not e.is_demo) as has_render from channels c where c.archived_at is null order by c.sort`)).rows as { slug: string; name: string; has_render: boolean }[];
     return { tz, chans: chans.map((c) => ({ ...c, name: c.name.replace(/ \(name TBD\)$/, "") })) };
   } finally {
     await p.end();
@@ -247,9 +251,10 @@ async function main() {
 
   const { tz, chans } = await studioFacts();
   const names: Names = Object.fromEntries(chans.map((c) => [c.slug, c.name]));
+  const layout = rigLayout(chans.map((c) => c.slug));
   // the channel screen: --channel, else the first rig screen (inner pair first) whose channel has a render
-  const prefer = [RIG.innerRight, RIG.innerLeft, RIG.top, RIG.outerLeft, RIG.outerRight];
-  const slug = opt("channel") ?? prefer.find((s) => chans.find((c) => c.slug === s)?.has_render) ?? RIG_ORDER.find((r) => r.slug !== INSTAGRAM_SLUG)!.slug;
+  const prefer = (["innerRight", "innerLeft", "top", "outerLeft", "outerRight"] as const).map((p) => at(layout, p)).filter((s): s is string => !!s);
+  const slug = opt("channel") ?? prefer.find((s) => chans.find((c) => c.slug === s)?.has_render) ?? prefer[0];
   if (!names[slug]) throw new Error(`No channel "${slug}" (have: ${Object.keys(names).join(", ")}).`);
 
   ensureBuild();
@@ -316,7 +321,7 @@ async function main() {
     console.log("Server stopped.");
   }
 
-  rewriteIndex(names, { slug, name: names[slug] }, tz);
+  rewriteIndex(names, layout, { slug, name: names[slug] }, tz);
   console.log(`Wrote ${path.relative(ROOT, INDEX)}`);
   if (problems.length) {
     console.warn(`\n${problems.length} problem${problems.length === 1 ? "" : "s"} while capturing:\n  ${[...new Set(problems)].join("\n  ")}`);
