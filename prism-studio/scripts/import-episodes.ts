@@ -7,6 +7,8 @@
 // Then every long video a cloud session built and pushed (compilations/<name>/ with a *-16x9.mp4) is registered as
 // the channel's lesson of that name (registerCompilation): new ones are added, rebuilt ones refreshed, the rest untouched.
 // An archived channel (src/domain/channels.ts) is skipped entirely: whatever files a push brings, its rows stay as they are.
+// An archived (uploaded) season's episodes (src/domain/season-archive.ts) keep their render, exports and publications
+// exactly as they are, like a cleared video, so an import never brings the season back; their text still updates.
 // packaging.json (out/packaging.json, compilations/<name>/packaging.json; src/domain/packaging.ts) is stored on the episode
 // or lesson when present, and its winner title becomes the YouTube title; a missing or bad one never fails the import.
 import fs from "node:fs";
@@ -22,6 +24,7 @@ import { buildMetadata, postingNotesFor, type MetaInput } from "../src/domain/me
 import { usesAiVisuals } from "../src/domain/disclosures";
 import { registerCompilation } from "../src/domain/lessons";
 import { activeChannels, isArchived } from "../src/domain/channels";
+import { seasonArchive } from "../src/domain/season-archive";
 import { packagingTitle, readPackagingFile } from "../src/domain/packaging";
 import { loadEnv } from "./env";
 loadEnv();
@@ -95,6 +98,7 @@ export function metaInputFor(dir: string, ch: { name: string; label: string; tag
 
 export async function importEpisodes(d = db()) {
   const report: string[] = [];
+  const archive = await seasonArchive(d);   // the uploaded seasons as they stand before this import
   for (const slug of Object.keys(SLATES)) for (const { season: seasonNo, first, slate } of seasonsFor(slug)) {
     const [ch] = await d.select().from(S.channels).where(eq(S.channels.slug, slug));
     if (!ch?.filmsPath) continue;
@@ -141,6 +145,8 @@ export async function importEpisodes(d = db()) {
       }
       // cleared: the missing .mp4 is expected, not an error; its version, exports and publications stay exactly as they are
       if (cleared) { report.push(`${slug} ep${n}: video cleared after posting (records kept)`); continue; }
+      // an uploaded season: every post is up, so a re-render or new text never touches its render or posts
+      if (archive.episodeIds.has(ep.id)) { report.push(`${slug} ep${n}: season uploaded and archived (records kept)`); continue; }
       if (!out) { report.push(`${slug} ep${n}: ${state}`); continue; }
       const file = path.join(dir, "out", out), hash = sha256File(file);
       const existing = await d.select().from(S.versions).where(and(eq(S.versions.episodeId, ep.id), eq(S.versions.sha256, hash)));

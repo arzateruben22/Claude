@@ -22,6 +22,14 @@
   `activeChannelBySlug()` in `src/domain/channels.ts` (an archived channel's pages 404). Nothing is deleted; the seed
   never un-archives; Settings → Archived channels → Restore (audit-logged) brings it back. Costs keep counting its real
   spend in the studio total (its entries stay listed, read-only). The wall re-balances (`rigLayout`, src/lib/rig.ts).
+- **Uploaded seasons are archived (owner's request, 10 Nov 2026):** a season is uploaded once every real (non-demo,
+  not cancelled) episode stands on both Uploaded buttons and every built long video of it is marked uploaded
+  (`src/domain/season-archive.ts`, using `episodeUploaded` from publications.ts, the buttons' one done test). Derived,
+  never stored: an Undo brings it back. It leaves every working view for Library → Archived seasons (read-only; its
+  episode pages say so) but keeps counting in analytics, totals, earnings and rewards. Never list a channel's episodes,
+  posts, series or lessons for a working screen or job without `onWorkingSeason` / `seriesOnWorkingSeason` /
+  `lessonOnWorkingSeason` (screens: `workingSeasons()` in src/lib/data.ts, cached per request). Planning never places
+  its posts (a slot one holds counts as free); the importer keeps its render and posts as they are.
 - **Packaging (owner's rule, 10 Nov 2026; films/channels/PACKAGING.md, `drizzle/0009`):** the importer reads
   `epNN/out/packaging.json` and `compilations/<name>/packaging.json` with zod (`src/domain/packaging.ts`: forgiving, a bad
   or missing file never fails an import, the stored one is kept) into `episodes.packaging` / `lessons.packaging`. The

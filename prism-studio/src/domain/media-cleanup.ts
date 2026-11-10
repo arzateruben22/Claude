@@ -12,27 +12,26 @@ import { audit } from "./core";
 import { onActiveChannel } from "./channels";
 import { enqueue } from "./jobs";
 import { pushPath, pushPrefix } from "./media-push";
-import { UPLOAD_GROUPS, type UploadGroup } from "./publications";
+import { groupUploaded, UPLOAD_GROUPS, type UploadGroup } from "./publications";
 
 /** How long both uploads must stand (not undone) before the server copy of the video is erased. */
 export const VIDEO_CLEAR_GRACE_DAYS = 3;
 export const VIDEO_CLEAR_GRACE_MS = VIDEO_CLEAR_GRACE_DAYS * 24 * 60 * 60 * 1000;
 export const VIDEO_CLEAR_JOB = "cleanup_uploaded_media";
 
-const POSTED = ["owner_reported", "scheduled_on_platform", "verified_published"];
 export type PubForClear = {
   platform: "youtube" | "tiktok" | "instagram"; status: string; simulated: boolean;
   reportedAt: Date | null; verifiedAt?: Date | null; scheduledFor?: Date | null;
 };
 
-/** When one upload group was recorded as uploaded, or null. Uploaded = it has real (not simulated) rows and every one
- *  is posted (the same test as the Uploaded button's done state); the time is the latest of them. An undone press puts
+/** When one upload group was recorded as uploaded, or null. Uploaded = groupUploaded (publications.ts, the Uploaded
+ *  button's own done state); the time is the latest of its rows. An undone press puts
  *  its rows back (status "ready", no report time), so an undone group is null. A post scheduled on the platform counts
  *  from when it goes live, if that is later. */
 export function groupUploadedAt(pubs: PubForClear[], group: UploadGroup): Date | null {
+  if (!groupUploaded(pubs, group)) return null;
   const platforms: readonly string[] = UPLOAD_GROUPS[group];
   const rows = pubs.filter((p) => !p.simulated && platforms.includes(p.platform));
-  if (!rows.length || !rows.every((p) => POSTED.includes(p.status))) return null;
   let latest: Date | null = null;
   for (const p of rows) {
     let t = p.reportedAt ?? p.verifiedAt ?? null;

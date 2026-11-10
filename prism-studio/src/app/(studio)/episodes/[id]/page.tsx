@@ -25,7 +25,7 @@ export default async function Episode({ params }: { params: Promise<{ id: string
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
   const [f, s, numbers, order] = await Promise.all([episodeFull(id), studio(), analyticsRows({ episodeId: id }), reviewOrder()]);
   if (!f) notFound();
-  const { ep, channel, current } = f;
+  const { ep, channel, current, archived } = f;
   if (ep.isDemo && !s.showDemo) return (
     <div style={topicStyle(channel)}>
       <Link href={`/channels/${channel.slug}?tab=episodes`} className="kicker" style={{ color: "var(--topic-ink)", textDecoration: "none" }}>← {channel.name.replace(/ \(name TBD\)$/, "")}</Link>
@@ -53,8 +53,13 @@ export default async function Episode({ params }: { params: Promise<{ id: string
       <div id="player">
       <ReviewSlide full={f} tz={s.timezone} single sources={false} prev={step(order[at - 1])} next={step(order[at + 1])}
         position={at >= 0 ? { n: at + 1, of: order.length } : undefined}
-        back={{ href: `/channels/${channel.slug}?tab=episodes`, label: channel.name.replace(/ \(name TBD\)$/, "") }}
+        back={archived ? { href: `/library#archived-${channel.slug}`, label: "Archived seasons" } : { href: `/channels/${channel.slug}?tab=episodes`, label: channel.name.replace(/ \(name TBD\)$/, "") }}
         head={<>
+          {archived ? (
+            <div className="notice info" role="note">
+              <b>{archived.label} is archived:</b> every episode is uploaded on YouTube &amp; TikTok and Instagram, so it&apos;s out of the working screens and kept in <Link href={`/library#archived-${channel.slug}`}>Library → Archived seasons</Link>. Undo an Uploaded button below to bring the season back.
+            </div>
+          ) : null}
           <h1 className="slide-title">{ep.title}</h1>
           {ep.question ? <p className="lede" style={{ margin: 0 }}>{ep.question}</p> : null}
           <div className="row">
@@ -89,7 +94,7 @@ export default async function Episode({ params }: { params: Promise<{ id: string
               {ep.captionsSrt ? <a className="btn ghost small" href={`/api/srt/${ep.id}`} download>Captions .srt</a> : null}
             </div>
           ) : null}
-          <div className="card stack-sm">
+          {archived ? null : <div className="card stack-sm">
             <h3>Move this episode</h3>
             <ActionForm action={moveEpisode} className="row" submit="Move" submitClass="btn small">
               <input type="hidden" name="episodeId" value={ep.id} />
@@ -97,7 +102,7 @@ export default async function Episode({ params }: { params: Promise<{ id: string
                 {moves.map((m) => <option key={m} value={m}>{STATE_LABEL[m]}</option>)}
               </select>
             </ActionForm>
-          </div>
+          </div>}
         </section>
 
         <section className="stack">

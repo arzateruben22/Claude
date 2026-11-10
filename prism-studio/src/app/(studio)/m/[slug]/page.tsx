@@ -25,6 +25,7 @@ import { identityOf } from "@/lib/identity";
 import { IdentityArt } from "@/components/IdentityArt";
 import { SeasonBar } from "@/components/SeasonBar";
 import { seasonLabel } from "@/domain/season";
+import { ArchivedNote } from "@/components/ArchivedSeasons";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -99,6 +100,7 @@ async function ChannelScreen({ slug }: { slug: string }) {
   const name = c.name.replace(/ \(name TBD\)$/, "");
   const scheduled = v.upcoming.filter((t) => t.p?.scheduledFor), unscheduled = v.upcoming.filter((t) => !t.p?.scheduledFor);
   const noEpisodes = !v.series.length && !v.loose.length;
+  const allArchived = noEpisodes && v.archived.length > 0;   // every season uploaded everywhere: Library → Archived seasons
   const unset = v.accounts.filter((a) => !a.dest.handle);
   const identity = identityOf(c.slug);
   return (
@@ -114,7 +116,7 @@ async function ChannelScreen({ slug }: { slug: string }) {
           <Link href="/upload" className="btn ghost small">Upload Desk</Link>
         </div>
         {v.paused ? <div className="notice">{c.paused ? "This channel is paused" : "Publishing is paused"}: nothing new is planned.</div> : null}
-        {v.series.length || v.loose.length ? (
+        {v.series.length || v.loose.length || v.archived.length ? (
           <nav className="ep-nav" aria-label="Seasons and episodes">
             {v.series.map((x) => (
               <div key={x.series.id} className="ep-nav-row">
@@ -134,11 +136,25 @@ async function ChannelScreen({ slug }: { slug: string }) {
                 <div className="ep-nav-eps">{v.loose.map((e) => <Link key={e.id} href={`/episodes/${e.id}`} className="ep-chip" title={e.title}>{e.title}</Link>)}</div>
               </div>
             ) : null}
+            {v.archived.length ? (
+              <div className="ep-nav-row">
+                <span className="ep-nav-season">Archived</span>
+                <div className="ep-nav-eps">{v.archived.map((x) => <Link key={x.id} href={`/library#archived-${c.slug}`} className="ep-chip" title={`${x.label}: uploaded everywhere`}>{x.label} · uploaded</Link>)}</div>
+              </div>
+            ) : null}
           </nav>
         ) : null}
       </header>
 
-      {noEpisodes ? (
+      {allArchived ? (
+        <section className="section">
+          <div className="card empty-state">
+            <h2>All caught up</h2>
+            <p className="muted">Every season of {name} is uploaded on YouTube &amp; TikTok and Instagram, so it&apos;s archived. The next season shows here once its first film is imported.</p>
+            <ArchivedNote slug={c.slug} seasons={v.archived} />
+          </div>
+        </section>
+      ) : noEpisodes ? (
         <section className="section">
           <div className="card empty-state">
             {v.season?.planned ? <>

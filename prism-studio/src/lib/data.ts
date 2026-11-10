@@ -2,6 +2,7 @@
 import "server-only";
 import fs from "node:fs";
 import path from "node:path";
+import { cache } from "react";
 import { and, asc, desc, eq, gte, inArray, isNotNull, isNull, lt, ne, or, sql, type SQL } from "drizzle-orm";
 import { db, type DB } from "@/db/client";
 import * as S from "@/db/schema";
@@ -17,6 +18,9 @@ import { lessonHash } from "@/domain/lessons";
 import { CHANNELS, OFFICIAL, PLANNED_SEASONS, youtubeStudioFor } from "@/domain/catalog";
 import { achievementOnActiveChannel, activeChannelBySlug, activeChannels, archivedChannels, isArchived, onActiveChannel } from "@/domain/channels";
 import { plannedSeason, seasonLine, seasonProgress, type SeasonProgress } from "@/domain/season";
+import {
+  archivedSeasonOf, inArchivedSeason, lessonOnWorkingSeason, onWorkingSeason, seasonArchive, seriesOnWorkingSeason, type ArchivedSeason, type SeasonArchive,
+} from "@/domain/season-archive";
 import { slotsForDate } from "@/domain/schedule";
 import { addDays, formatLocal, localDate, localMonth, zonedTimeToUtc } from "@/domain/time";
 import { INSTAGRAM_SLUG, rigLayout, type RigPosition } from "@/lib/rig";
@@ -30,6 +34,10 @@ export type Destination = typeof S.destinations.$inferSelect;
 export async function studio() {
   return settings(db());
 }
+
+/** The archived (uploaded) seasons (src/domain/season-archive.ts), worked out once per request: every working list
+ *  below leaves their rows out with onWorkingSeason / lessonOnWorkingSeason / seriesOnWorkingSeason. */
+export const workingSeasons = cache((): Promise<SeasonArchive> => seasonArchive(db()));
 
 export async function channelsWithWorlds() {
   const d = db();
@@ -85,13 +93,17 @@ export async function episodeFull(id: string) {
   const srcs = await d.select().from(S.sources).where(eq(S.sources.episodeId, id)).orderBy(asc(S.sources.claimKey));
   const notes = await d.select().from(S.reviewNotes).where(eq(S.reviewNotes.episodeId, id)).orderBy(desc(S.reviewNotes.createdAt));
   const [se] = ep.seriesId ? await d.select().from(S.series).where(eq(S.series.id, ep.seriesId)) : [];
-  return { ep, channel, versions: vers, current, exports, placements, sources: srcs, notes, series: se ?? null };
+  // an uploaded season's episode still opens (read-only, from Library → Archived seasons)
+  const archived = archivedSeasonOf(await workingSeasons(), ep);
+  return { ep, channel, versions: vers, current, exports, placements, sources: srcs, notes, series: se ?? null, archived };
 }
 
 export async function reviewQueue() {
   const d = db();
   const s = await settings(d);
-  const eps = await d.select().from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId))).orderBy(asc(S.episodes.updatedAt));
+  const arch = await workingSeasons();
+  const eps = await d.select().from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId),
+    onWorkingSeason(arch, S.episodes.seasonId))).orderBy(asc(S.episodes.updatedAt));
   return (await Promise.all(eps.map((e) => episodeFull(e.id)))).filter((f): f is NonNullable<typeof f> => !!f);
 }
 
@@ -99,20 +111,23 @@ export async function reviewQueue() {
 export async function reviewOrder() {
   const d = db();
   const s = await settings(d);
-  return d.select({ id: S.episodes.id, title: S.episodes.title }).from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId))).orderBy(asc(S.episodes.updatedAt));
+  const arch = await workingSeasons();
+  return d.select({ id: S.episodes.id, title: S.episodes.title }).from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId),
+    onWorkingSeason(arch, S.episodes.seasonId))).orderBy(asc(S.episodes.updatedAt));
 }
 
 const OPEN_STATUSES = ["planned", "ready", "handed_off"] as const;
 
 /** Publications with everything a task needs: the episode, account, export, live approval, render and channel.
- *  Never an archived channel's. */
-async function loadTasks(d: DB, where: SQL | undefined) {
+ *  Never an archived channel's, nor (unless `keepArchivedSeasons`) an archived season's. */
+async function loadTasks(d: DB, where: SQL | undefined, o: { keepArchivedSeasons?: boolean } = {}) {
+  const seasonsWhere = o.keepArchivedSeasons ? undefined : onWorkingSeason(await workingSeasons(), S.episodes.seasonId);
   const rows = await d.select({ p: S.publications, e: S.episodes, dest: S.destinations, x: S.platformExports })
     .from(S.publications)
     .innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
     .innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
     .leftJoin(S.platformExports, eq(S.platformExports.id, S.publications.exportId))
-    .where(and(where, onActiveChannel(S.episodes.channelId)))
+    .where(and(where, onActiveChannel(S.episodes.channelId), seasonsWhere))
     .orderBy(asc(S.publications.scheduledFor), asc(S.episodes.number));
   const chans = await activeChannels(d);
   const conns = await d.select({ destinationId: S.connections.destinationId, status: S.connections.status }).from(S.connections);
@@ -152,14 +167,17 @@ export async function calendar(days = 7) {
   const s = await settings(d);
   const today = localDate(new Date(), s.timezone);
   const start = zonedTimeToUtc(today, "00:00", s.timezone), end = zonedTimeToUtc(addDays(today, days), "00:00", s.timezone);
+  // an uploaded (archived) season's posts are off the calendar; planning treats a slot one of them holds as free
+  const arch = await workingSeasons();
   const rows = await d.select({ p: S.publications, e: S.episodes, dest: S.destinations })
     .from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId)).innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
-    .where(and(isNotNull(S.publications.scheduledFor), gte(S.publications.scheduledFor, start), lt(S.publications.scheduledFor, end), ne(S.publications.status, "cancelled"), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId)))
+    .where(and(isNotNull(S.publications.scheduledFor), gte(S.publications.scheduledFor, start), lt(S.publications.scheduledFor, end), ne(S.publications.status, "cancelled"), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId),
+      onWorkingSeason(arch, S.episodes.seasonId)))
     .orderBy(asc(S.publications.scheduledFor));
   const chans = await activeChannels(d);
   // the backlog planning would fill: real episodes only (planning never places demo ones)
   const backlog = await d.select({ n: sql<number>`count(*)::int` }).from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
-    .where(and(isNull(S.publications.scheduledFor), inArray(S.publications.status, ["planned", "ready"]), eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId)));
+    .where(and(isNull(S.publications.scheduledFor), inArray(S.publications.status, ["planned", "ready"]), eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId), onWorkingSeason(arch, S.episodes.seasonId)));
   const bl = await d.select().from(S.blackouts).where(gte(S.blackouts.endsAt, start)).orderBy(asc(S.blackouts.startsAt));
   return { tz: s.timezone, today, days: Array.from({ length: days }, (_, i) => addDays(today, i)), rows: rows.map((r) => ({ ...r, channel: chans.find((c) => c.id === r.e.channelId)! })), backlog: backlog[0]?.n ?? 0, blackouts: bl, settings: s };
 }
@@ -296,13 +314,17 @@ export type MonitorCard = {
 };
 
 /** Each channel's current season from the database (real episodes only): the active series, else the first one not
- *  complete, else the last. A channel with no series yet gets its planned season (titles, no numbers), if it has one. */
+ *  complete, else the last, never an archived (uploaded) one. A channel with no series yet gets its planned season
+ *  (titles, no numbers), if it has one; a channel whose seasons are all archived shows none. */
 async function currentSeasons(d: DB, chans: { id: string; slug: string }[]) {
-  const ser = await d.select().from(S.series).where(eq(S.series.isDemo, false)).orderBy(asc(S.series.sort), asc(S.series.createdAt));
+  const arch = await workingSeasons();
+  const all = await d.select().from(S.series).where(eq(S.series.isDemo, false)).orderBy(asc(S.series.sort), asc(S.series.createdAt));
+  const ser = all.filter((x) => !arch.seriesIds.has(x.id));
   const eps = await d.select({ seriesId: S.episodes.seriesId, state: S.episodes.state, title: S.episodes.title, seriesOrder: S.episodes.seriesOrder, number: S.episodes.number })
-    .from(S.episodes).where(and(eq(S.episodes.isDemo, false), isNotNull(S.episodes.seriesId)));
+    .from(S.episodes).where(and(eq(S.episodes.isDemo, false), isNotNull(S.episodes.seriesId), onWorkingSeason(arch, S.episodes.seasonId)));
   return new Map(chans.map((c): [string, SeasonProgress | null] => {
     const mine = ser.filter((x) => x.channelId === c.id);
+    if (!mine.length && all.some((x) => x.channelId === c.id)) return [c.slug, null];   // every season uploaded and archived
     const cur = mine.find((x) => x.status === "active") ?? mine.find((x) => x.status !== "complete") ?? mine.at(-1);
     const plan = PLANNED_SEASONS[c.slug];
     const mineEps = cur ? eps.filter((e) => e.seriesId === cur.id) : [];
@@ -376,11 +398,14 @@ export const lessonFolder = (videoPath: string) => (/^films:.+\//.test(videoPath
 /** A ready post has a current (not superseded) render for its platform. No approval is needed to download or copy it. */
 export const isReady = (t: Pick<PostItem, "x" | "version">) => !!t.x && !t.version?.superseded;
 
-/** The current render's export for one platform, per episode (non-demo, active channels only). */
-async function currentExports(d: DB, platform: "youtube" | "tiktok" | "instagram", channelIds?: string[]) {
+/** The current render's export for one platform, per episode (non-demo, active channels only; working seasons only
+ *  unless `keepArchivedSeasons`, for the Instagram ledger's totals). */
+async function currentExports(d: DB, platform: "youtube" | "tiktok" | "instagram", o: { channelIds?: string[]; keepArchivedSeasons?: boolean } = {}) {
+  const { channelIds } = o;
   return d.select({ e: S.episodes, x: S.platformExports, version: S.versions }).from(S.platformExports)
     .innerJoin(S.versions, eq(S.versions.id, S.platformExports.versionId)).innerJoin(S.episodes, eq(S.episodes.id, S.versions.episodeId))
     .where(and(eq(S.platformExports.platform, platform), eq(S.versions.superseded, false), eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId),
+      o.keepArchivedSeasons ? undefined : onWorkingSeason(await workingSeasons(), S.episodes.seasonId),
       channelIds ? inArray(S.episodes.channelId, channelIds.length ? channelIds : ["00000000-0000-0000-0000-000000000000"]) : undefined))
     .orderBy(asc(S.episodes.number));
 }
@@ -418,7 +443,11 @@ async function instagramToday(d: DB, ig: Destination | undefined, tz: string, to
   const dayOf = async (date: string) => {
     const start = zonedTimeToUtc(date, "00:00", tz), end = zonedTimeToUtc(addDays(date, 1), "00:00", tz);
     const times = (await slotsForDate(d, date)).filter((s) => s.kind === "instagram").map((s) => s.at);
-    const tasks = await loadTasks(d, and(eq(S.publications.destinationId, ig.id), ne(S.publications.status, "cancelled"), gte(S.publications.scheduledFor, start), lt(S.publications.scheduledFor, end)));
+    // an archived (uploaded) season's post still fills a slot that has passed (it went up then), but no longer holds a
+    // later one: planning treats that slot as free (planDays), so this shows the next in rotation there instead
+    const arch = await workingSeasons();
+    const tasks = (await loadTasks(d, and(eq(S.publications.destinationId, ig.id), ne(S.publications.status, "cancelled"), gte(S.publications.scheduledFor, start), lt(S.publications.scheduledFor, end)), { keepArchivedSeasons: true }))
+      .filter((t) => !arch.episodeIds.has(t.e.id) || t.p.scheduledFor! < now);
     const at = [...new Set([...times, ...tasks.map((t) => t.p.scheduledFor!)].map((x) => +x))].sort((a, b) => a - b).map((x) => new Date(x));
     return { at, tasks, find: (when: Date) => tasks.find((x) => +x.p.scheduledFor! === +when) };
   };
@@ -448,7 +477,9 @@ export async function rigView() {
   const chans = await activeChannels(d);
   const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
   const tasks = (await loadTasks(d, inArray(S.publications.status, [...OPEN_STATUSES]))).filter((t) => !t.e.isDemo && !t.p.simulated);
-  const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId, state: S.episodes.state, number: S.episodes.number }).from(S.episodes).where(and(eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId)));
+  const arch = await workingSeasons();
+  const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId, state: S.episodes.state, number: S.episodes.number }).from(S.episodes)
+    .where(and(eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId), onWorkingSeason(arch, S.episodes.seasonId)));
   const renders = [...await currentExports(d, "youtube"), ...await currentExports(d, "tiktok")];
   const when = (at: Date) => formatLocal(at, tz, at < endOfToday ? { hour: "numeric", minute: "2-digit" } : { weekday: "short", hour: "numeric", minute: "2-digit" });
   const seasons = await currentSeasons(d, chans);
@@ -470,10 +501,11 @@ export async function rigView() {
       inWork.length === 1 ? `1 in ${(STATE_LABEL[inWork[0].state] ?? inWork[0].state).toLowerCase()}` : inWork.length ? `${inWork.length} in production` : "",
       ideas ? `${ideas} idea${ideas === 1 ? "" : "s"}` : "",
     ].filter(Boolean).join(" · ");
+    const done = arch.archived.filter((x) => x.channelId === c.id).at(-1);   // its latest season uploaded everywhere
     const status = next ? `Next: ${next.e.title} · ${PLATFORM_NAME[next.dest.platform]} ${when(next.p.scheduledFor!)}`
       : toReview.length ? `${toReview.length} to review`
       : mine.length ? `${mine.length} to schedule`
-      : production || "No episodes yet";
+      : production || (done ? `${done.label} uploaded · all caught up` : "No episodes yet");
     const led: Led = dueToday.some(isReady) ? "ready" : toReview.length || dueToday.length ? "review" : "off";
     return {
       slug: c.slug, kind: "channel", pos: layout.get(c.slug)!, href: `/m/${c.slug}`, name: plainName(c.name), label: c.label, color: c.color, colorInk: c.colorInk, cover, coverTone: cover ? coverTone(c.slug) : undefined, status, led,
@@ -500,7 +532,7 @@ export async function rigView() {
   const reviewCount = eps.filter((e) => e.state === "ready_for_review").length;
   // built long videos (lessons) still waiting for their YouTube approval: they aren't episodes, so Review doesn't list them
   const longToApprove = (await d.select().from(S.lessons)
-    .where(and(eq(S.lessons.isDemo, false), eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), ne(S.lessons.state, "published"))))
+    .where(and(eq(S.lessons.isDemo, false), eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), ne(S.lessons.state, "published"), lessonOnWorkingSeason(arch, S.lessons.id))))
     .filter((l) => !l.approvedHash || l.approvedHash !== lessonHash(l))
     .map((l) => chans.find((c) => c.id === l.channelId)).filter((c): c is Channel => !!c);
   const unseenEvolutions = (await d.select({ channelId: S.evolutions.channelId }).from(S.evolutions).where(and(isNotNull(S.evolutions.evolvedAt), isNull(S.evolutions.seenAt))))
@@ -529,14 +561,16 @@ export async function channelExtension(slug: string) {
   const accounts = [...dests, ...(ig ? [ig] : [])].map((dest) => ({ dest, uploadUrl: uploadUrlFor(dest), next: (tasks.find((t) => t.dest.id === dest.id) ?? null) as PostItem | null }));
   // when nothing is planned for Instagram from this channel: its oldest episode not yet on Instagram, caption ready to copy
   const igPubs = ig ? await d.select({ episodeId: S.publications.episodeId }).from(S.publications).where(eq(S.publications.destinationId, ig.id)) : [];
-  const igNext = (await currentExports(d, "instagram", [c.id])).find((r) => !igPubs.some((p) => p.episodeId === r.e.id)) ?? null;
-  const eps = await episodesFor(c.id, s.showDemo);
-  const ser = await d.select().from(S.series).where(and(eq(S.series.channelId, c.id), demoFilter(s.showDemo, S.series.isDemo))).orderBy(asc(S.series.sort));
+  const igNext = (await currentExports(d, "instagram", { channelIds: [c.id] })).find((r) => !igPubs.some((p) => p.episodeId === r.e.id)) ?? null;
+  // an uploaded (archived) season leaves the seasons, episodes and long videos here for Library → Archived seasons
+  const arch = await workingSeasons();
+  const eps = (await episodesFor(c.id, s.showDemo)).filter((e) => !inArchivedSeason(arch, e));
+  const ser = await d.select().from(S.series).where(and(eq(S.series.channelId, c.id), demoFilter(s.showDemo, S.series.isDemo), seriesOnWorkingSeason(arch, S.series.id))).orderBy(asc(S.series.sort));
   const series = ser.map((x) => ({ series: x, episodes: eps.filter((e) => e.seriesId === x.id).sort((a, b) => (a.seriesOrder ?? a.number) - (b.seriesOrder ?? b.number)) }));
   const loose = eps.filter((e) => !e.seriesId || !ser.some((x) => x.id === e.seriesId));
   // the channel's long videos (lessons) for YouTube: built ones first, newest first; one being built shows as such
   const lessonRows = await d.select().from(S.lessons)
-    .where(and(eq(S.lessons.channelId, c.id), eq(S.lessons.isTestFixture, false), demoFilter(s.showDemo, S.lessons.isDemo)))
+    .where(and(eq(S.lessons.channelId, c.id), eq(S.lessons.isTestFixture, false), demoFilter(s.showDemo, S.lessons.isDemo), lessonOnWorkingSeason(arch, S.lessons.id)))
     .orderBy(desc(S.lessons.createdAt));
   const parts = lessonRows.length ? await d.select({ lessonId: S.lessonEpisodes.lessonId, title: S.episodes.title, position: S.lessonEpisodes.position })
     .from(S.lessonEpisodes).innerJoin(S.episodes, eq(S.episodes.id, S.lessonEpisodes.episodeId))
@@ -551,6 +585,7 @@ export async function channelExtension(slug: string) {
     upcoming: tasks.filter((t) => !accounts.some((a) => a.next?.p?.id === t.p.id)).slice(0, 16), igAccount: ig ?? null,
     igNext: igNext ? { e: igNext.e, x: igNext.x } : null,
     series, loose, reviewCount: eps.filter((e) => !e.isDemo && ["ready_for_review", "correction_needed"].includes(e.state)).length,
+    archived: arch.archived.filter((x) => x.channelId === c.id),
   };
 }
 
@@ -564,7 +599,8 @@ export async function instagramExtension() {
   const { slots, rotation, day } = await instagramToday(d, ig, tz, today);
   const upcoming = ig ? (await loadTasks(d, and(eq(S.publications.destinationId, ig.id), inArray(S.publications.status, [...OPEN_STATUSES]), gte(S.publications.scheduledFor, zonedTimeToUtc(addDays(today, 1), "00:00", tz))))).slice(0, 14) : [];
   const pubs = ig ? await d.select({ episodeId: S.publications.episodeId, status: S.publications.status }).from(S.publications).where(eq(S.publications.destinationId, ig.id)) : [];
-  const exportsIg = await currentExports(d, "instagram");
+  const exportsIg = await currentExports(d, "instagram", { keepArchivedSeasons: true });   // the ledger counts every season
+  const archivedEps = (await workingSeasons()).episodeIds;
   const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId }).from(S.episodes).where(and(eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId)));
   const ledger = chans.map((c) => {
     const ready = exportsIg.filter((r) => r.e.channelId === c.id);
@@ -581,7 +617,7 @@ export async function instagramExtension() {
     // every Instagram-ready episode per channel, with its exact caption and hashtags, for copying straight into Instagram
     captions: chans.map((c) => ({
       channel: c,
-      items: exportsIg.filter((r) => r.e.channelId === c.id).map((r) => ({
+      items: exportsIg.filter((r) => r.e.channelId === c.id && !archivedEps.has(r.e.id)).map((r) => ({
         e: r.e, x: r.x,
         state: pubs.some((p) => p.episodeId === r.e.id && POSTED.includes(p.status)) ? "posted" as const
           : pubs.some((p) => p.episodeId === r.e.id && (OPEN_STATUSES as readonly string[]).includes(p.status)) ? "planned" as const : "not_yet" as const,
@@ -592,18 +628,21 @@ export async function instagramExtension() {
 }
 
 /** The library: every finished video, per channel, to download at full quality. An episode's current (not superseded)
- *  render with its covers and file size; a channel's built long videos. Demo rows only when demo data is shown. */
+ *  render with its covers and file size; a channel's built long videos. Demo rows only when demo data is shown. An
+ *  uploaded (archived) season is not in the main list: `archived` lists it per channel (Library → Archived seasons). */
 export async function libraryView() {
   const d = db();
   const s = await settings(d);
   const chans = await activeChannels(d);
+  const arch = await workingSeasons();
   const rows = await d.select({ e: S.episodes, v: S.versions }).from(S.versions).innerJoin(S.episodes, eq(S.episodes.id, S.versions.episodeId))
-    .where(and(eq(S.versions.superseded, false), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId))).orderBy(asc(S.episodes.number));
+    .where(and(eq(S.versions.superseded, false), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId), onWorkingSeason(arch, S.episodes.seasonId))).orderBy(asc(S.episodes.number));
   const xs = rows.length ? await d.select({ versionId: S.platformExports.versionId, platform: S.platformExports.platform, coverPath: S.platformExports.coverPath, filePath: S.platformExports.filePath })
     .from(S.platformExports).where(inArray(S.platformExports.versionId, rows.map((r) => r.v.id))) : [];
   const covers = xs.filter((x) => x.coverPath);
   const lessons = await d.select().from(S.lessons)
-    .where(and(eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), demoFilter(s.showDemo, S.lessons.isDemo), onActiveChannel(S.lessons.channelId))).orderBy(asc(S.lessons.createdAt));
+    .where(and(eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), demoFilter(s.showDemo, S.lessons.isDemo), onActiveChannel(S.lessons.channelId),
+      lessonOnWorkingSeason(arch, S.lessons.id))).orderBy(asc(S.lessons.createdAt));
   const bytes = (key: string) => { const f = mediaFile(key); return f ? fs.statSync(f).size : 0; };
   // download names say which is which: skin-sense-004-1080p.mp4 (TikTok, Instagram), skin-sense-004-1440p.mp4 (YouTube)
   const resolutionName = (key: string, res: string) => path.basename(key).replace(/-9x16(?:-youtube)?\.mp4$/, `-${res}.mp4`);
@@ -630,5 +669,17 @@ export async function libraryView() {
     return { channel: c, episodes, longs };
   });
   const all = channels.flatMap((c) => [...c.episodes, ...c.longs]);
-  return { channels, count: all.length, bytes: all.reduce((a, x) => a + x.bytes, 0) };
+  const archived = archivedByChannel(arch, chans, s.showDemo);
+  return { channels, count: all.length, bytes: all.reduce((n, x) => n + x.bytes, 0), archived, tz: s.timezone };
 }
+
+/** Library → Archived seasons: each active channel's archived seasons, in studio order (demo rows only when shown). */
+function archivedByChannel(a: SeasonArchive, chans: Channel[], showDemo: boolean) {
+  return chans.map((channel) => ({
+    channel,
+    seasons: a.archived.filter((x) => x.channelId === channel.id).map((x): ArchivedSeason => ({
+      ...x, episodeList: x.episodeList.filter((e) => showDemo || !e.isDemo), lessonList: x.lessonList.filter((l) => showDemo || !l.isDemo),
+    })),
+  })).filter((g) => g.seasons.length);
+}
+export type ArchivedSeasonsByChannel = ReturnType<typeof archivedByChannel>;

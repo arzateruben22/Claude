@@ -3,18 +3,18 @@
 // nothing posts by itself. Once pressed, the control shows "✓ Uploaded on … · date" with a small Undo.
 import { undoUploadedAction, uploadedAction } from "@/app/actions";
 import { formatLocal } from "@/domain/time";
-import type { UploadGroup } from "@/domain/publications";
+import { allPosted, type UploadGroup } from "@/domain/publications";
 import { ActionForm } from "./ActionForm";
 
 export const GROUP_LABEL: Record<UploadGroup, string> = { youtube_tiktok: "YouTube & TikTok", instagram: "Instagram" };
 export const groupOf = (platform: string): UploadGroup => (platform === "instagram" ? "instagram" : "youtube_tiktok");
-const POSTED = ["owner_reported", "scheduled_on_platform", "verified_published"];
 type PubLite = { status: string; reportedAt: Date | null; simulated?: boolean } | null | undefined;
 
-/** Uploaded for a group = it has real rows and every one of them is reported. Returns the latest report date. */
+/** Uploaded for a group = it has real rows and every one of them is reported (allPosted, the domain's one test).
+ *  Returns the latest report date. */
 export function uploadedState(pubs: PubLite[]): { done: boolean; at: Date | null } {
   const real = pubs.filter((p): p is NonNullable<PubLite> => !!p && !p.simulated);
-  const done = real.length > 0 && real.every((p) => POSTED.includes(p.status));
+  const done = allPosted(real);
   const at = real.map((p) => p.reportedAt).filter((x): x is Date => !!x).sort((a, b) => +b - +a)[0] ?? null;
   return { done, at };
 }

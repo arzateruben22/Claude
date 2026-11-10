@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { and, asc, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as S from "@/db/schema";
-import { channelBySlug, episodesFor, lessonFolder, packagingThumb, studio, worldView } from "@/lib/data";
+import { channelBySlug, episodesFor, lessonFolder, packagingThumb, studio, workingSeasons, worldView } from "@/lib/data";
 import { Creation } from "@/creations/Creation";
 import { CREATIONS } from "@/creations/meta";
 import type { CreationKey, Form } from "@/creations/types";
@@ -17,6 +17,8 @@ import { demoFilter } from "@/domain/demo";
 import { canUsePaidGeneration, costTotals } from "@/domain/costs";
 import { localMonth } from "@/domain/time";
 import { ScrollTabs } from "@/components/ScrollTabs";
+import { ArchivedNote } from "@/components/ArchivedSeasons";
+import { inArchivedSeason, lessonOnWorkingSeason, seasonStateOfSeries, seriesOnWorkingSeason } from "@/domain/season-archive";
 
 const TABS = [["overview", "Overview"], ["episodes", "Episodes"], ["lessons", "Lessons"], ["series", "Series"], ["accounts", "Accounts"], ["editorial", "Editorial"]] as const;
 
@@ -29,17 +31,20 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
   const [{ slug }, { tab = "overview" }] = await Promise.all([params, searchParams]);
   const c = await channelBySlug(slug);
   if (!c) notFound();
-  const s = await studio();
+  const [s, a] = await Promise.all([studio(), workingSeasons()]);
   const month = localMonth(new Date(), s.timezone);
-  const [eps, w, dests, ser, lessonRows, available, costs, gate] = await Promise.all([
+  // an uploaded (archived) season leaves the episode, season and lesson lists for Library → Archived seasons
+  const [allEps, w, dests, ser, lessonRows, available, costs, gate] = await Promise.all([
     episodesFor(c.id, s.showDemo), worldView(c.id),
     db().select().from(S.destinations).where(eq(S.destinations.channelId, c.id)),
-    db().select().from(S.series).where(and(eq(S.series.channelId, c.id), demoFilter(s.showDemo, S.series.isDemo))).orderBy(asc(S.series.sort)),
-    db().select().from(S.lessons).where(and(eq(S.lessons.channelId, c.id), eq(S.lessons.isTestFixture, false), demoFilter(s.showDemo, S.lessons.isDemo))).orderBy(desc(S.lessons.createdAt)),
+    db().select().from(S.series).where(and(eq(S.series.channelId, c.id), demoFilter(s.showDemo, S.series.isDemo), seriesOnWorkingSeason(a, S.series.id))).orderBy(asc(S.series.sort)),
+    db().select().from(S.lessons).where(and(eq(S.lessons.channelId, c.id), eq(S.lessons.isTestFixture, false), demoFilter(s.showDemo, S.lessons.isDemo), lessonOnWorkingSeason(a, S.lessons.id))).orderBy(desc(S.lessons.createdAt)),
     availableForLesson(db(), c.id),
     costTotals(db(), [month]), canUsePaidGeneration(db(), c.id, 1),
   ]);
-  const real = eps.filter((e) => !e.isDemo);   // counts never include demo episodes, even when they're shown
+  const eps = allEps.filter((e) => !inArchivedSeason(a, e));
+  const archived = a.archived.filter((x) => x.channelId === c.id);
+  const real = allEps.filter((e) => !e.isDemo);   // the overview's counts: every real episode (archived seasons too), never demo
   const spend = costs.scope(c.id, month);
   const lessonParts = lessonRows.length ? (await db().select({ le: S.lessonEpisodes, episode: S.episodes }).from(S.lessonEpisodes).innerJoin(S.episodes, eq(S.episodes.id, S.lessonEpisodes.episodeId))
     .where(inArray(S.lessonEpisodes.lessonId, lessonRows.map((l) => l.id)))).map((r) => ({ ...r.le, episode: r.episode })) : [];
@@ -108,13 +113,17 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
               </li>
             ))}
           </ul>
-          {!eps.length ? <p className="muted">No episodes yet.</p> : null}
+          {!eps.length ? <p className="muted">{archived.length ? "Nothing in the working seasons." : "No episodes yet."}</p> : null}
+          <ArchivedNote slug={slug} seasons={archived} />
         </div>
       ) : null}
 
       {tab === "lessons" ? (
-        <Lessons channelId={c.id} channelName={name} ytHandle={dests.find((d) => d.platform === "youtube")?.handle ?? ""} lessons={lessonRows} parts={lessonParts} available={available} tz={s.timezone}
-          packThumbs={Object.fromEntries(lessonRows.map((l) => [l.id, packagingThumb(lessonFolder(l.videoPath), l.packaging)]))} />
+        <>
+          <Lessons channelId={c.id} channelName={name} ytHandle={dests.find((d) => d.platform === "youtube")?.handle ?? ""} lessons={lessonRows} parts={lessonParts} available={available} tz={s.timezone}
+            packThumbs={Object.fromEntries(lessonRows.map((l) => [l.id, packagingThumb(lessonFolder(l.videoPath), l.packaging)]))} />
+          <ArchivedNote slug={slug} seasons={archived.filter((x) => x.lessonList.length)} />
+        </>
       ) : null}
 
       {tab === "series" ? (
@@ -122,17 +131,26 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
           {ser.map((x) => {
             const parts = eps.filter((e) => e.seriesId === x.id);
             const done = parts.filter((e) => !e.isDemo && ["published", "analytics"].includes(e.state)).length;
+            // how far this season is from Archived seasons: every episode on both Uploaded buttons, its long video uploaded
+            const st = seasonStateOfSeries(a, x.id);
+            const left = st?.longVideosLeft ?? [];
             return (
               <div key={x.id} className="card topic stack-sm">
                 <div className="row spread"><h3 style={{ margin: 0 }}>{x.title}{x.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</h3><span className="chip">{x.status}</span></div>
                 <p className="muted" style={{ margin: 0 }}>{x.objective}</p>
                 <div className="bar"><i style={{ width: `${(done / Math.max(1, s.lessonBundleSize)) * 100}%` }} /></div>
                 <div className="faint num">{done}/{s.lessonBundleSize} published · the lesson is built from all {s.lessonBundleSize}</div>
+                {st?.episodes ? (
+                  <div className="faint">{st.uploaded === st.episodes && left.length
+                    ? <>Every episode is uploaded. Mark the long video {left.map((l) => `“${l.title}”`).join(", ")} uploaded in <Link href={`/channels/${slug}?tab=lessons`}>Lessons</Link> and this season moves to Archived seasons.</>
+                    : <>{st.uploaded} of {st.episodes} episodes uploaded on YouTube &amp; TikTok and Instagram. Once all are{left.length ? `, and ${left.length === 1 ? "its long video" : "its long videos"} too` : ""}, this season moves to Archived seasons.</>}</div>
+                ) : null}
                 <ol style={{ margin: 0, paddingLeft: 20 }}>{parts.sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0)).map((e) => <li key={e.id}><Link href={`/episodes/${e.id}`}>{e.title}</Link>{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null} <span className="faint">· {STATE_LABEL[e.state]}</span></li>)}</ol>
               </div>
             );
           })}
-          {!ser.length ? <p className="muted">No series yet.</p> : null}
+          {!ser.length ? <p className="muted">{archived.length ? "No season in progress." : "No series yet."}</p> : null}
+          <ArchivedNote slug={slug} seasons={archived} />
         </div>
       ) : null}
 

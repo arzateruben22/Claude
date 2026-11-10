@@ -116,6 +116,22 @@ export const UPLOAD_GROUPS = { youtube_tiktok: ["youtube", "tiktok"], instagram:
 export type UploadGroup = keyof typeof UPLOAD_GROUPS;
 export const UPLOADED_NOTE = "Marked uploaded by the owner (Uploaded button).";
 
+/** The Uploaded buttons' done state, the one test for it (the button itself, video clearing and season archiving all
+ *  use it): a set of publication rows is uploaded when it has real (not simulated) rows and every one is posted. An
+ *  undone press puts its rows back to "ready", so an undone group is not uploaded. */
+export function allPosted(rows: readonly { status: string; simulated?: boolean }[]): boolean {
+  const real = rows.filter((p) => !p.simulated);
+  return real.length > 0 && real.every((p) => (REPORTED as readonly string[]).includes(p.status));
+}
+
+/** One button for one episode: its rows on the group's platforms ("YouTube & TikTok", or "Instagram") all posted. */
+export const groupUploaded = (pubs: readonly { platform: string; status: string; simulated?: boolean }[], group: UploadGroup): boolean =>
+  allPosted(pubs.filter((p) => (UPLOAD_GROUPS[group] as readonly string[]).includes(p.platform)));
+
+/** Both buttons stand for this episode: "Uploaded on YouTube & TikTok" and "Uploaded on Instagram". */
+export const episodeUploaded = (pubs: readonly { platform: string; status: string; simulated?: boolean }[]): boolean =>
+  groupUploaded(pubs, "youtube_tiktok") && groupUploaded(pubs, "instagram");
+
 /** "Uploaded on YouTube & TikTok" / "Uploaded on Instagram": records the owner's own manual posts for one episode.
  *  Needs no approval (the post already happened). Owner-reported only (never "verified"); creates the shared
  *  Instagram row when missing; skips simulated rows and rows already reported; writes the audit log and runs the

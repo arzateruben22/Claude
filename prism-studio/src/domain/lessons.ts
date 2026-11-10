@@ -9,16 +9,19 @@ import { enqueue } from "./jobs";
 import { awardXp, refreshEvolution } from "./living";
 import { parsePostUrl } from "./publications";
 import { packagingTitle, type Packaging } from "./packaging";
+import { onWorkingSeason, seasonArchive } from "./season-archive";
 
 export const LESSON_MIN = 4, LESSON_MAX = 6;   // "every 4–6 shorts, a 5–10 minute compilation"
 
-/** Episodes that can go into a new lesson: rendered (a current films: version), not demo, not in a lesson yet. */
+/** Episodes that can go into a new lesson: rendered (a current films: version), not demo, not in a lesson yet, and
+ *  not in an archived (uploaded) season (src/domain/season-archive.ts). */
 export async function availableForLesson(c: Conn, channelId: string) {
   const used = c.select({ id: lessonEpisodes.episodeId }).from(lessonEpisodes);
+  const archive = await seasonArchive(c);
   return c.selectDistinct({ id: episodes.id, number: episodes.number, title: episodes.title, filmsPath: episodes.filmsPath, seriesId: episodes.seriesId, durationS: episodes.durationS })
     .from(episodes).innerJoin(versions, and(eq(versions.episodeId, episodes.id), eq(versions.superseded, false)))
     .where(and(eq(episodes.channelId, channelId), eq(episodes.isDemo, false), notInArray(episodes.id, used), sql`${episodes.filmsPath} is not null`,
-      sql`${versions.videoPath} like 'films:%'`))
+      sql`${versions.videoPath} like 'films:%'`, onWorkingSeason(archive, episodes.seasonId)))
     .orderBy(asc(episodes.number));
 }
 

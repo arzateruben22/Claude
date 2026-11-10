@@ -5,6 +5,7 @@ import type { DB } from "../db/client";
 import { blackouts, destinations, episodes, platformExports, publications, publishingWindows, versions } from "../db/schema";
 import { audit, type Conn, settings } from "./core";
 import { activeChannels, onActiveChannel } from "./channels";
+import { onWorkingSeason, seasonArchive } from "./season-archive";
 import { addDays, localDate, zonedTimeToUtc } from "./time";
 
 // provisional defaults (not claimed to be optimal): one Short per channel per day on YouTube and TikTok,
@@ -100,18 +101,24 @@ export async function nextReadyEpisodes(c: Conn, channelId: string) {
  */
 export async function planDays(d: DB, from: string, days: number, now = new Date()) {
   let placed = 0;
+  // an uploaded (archived) season is never planned (its posts are all up already), and a slot one of its posts still
+  // holds counts as free, as for an archived channel (src/domain/season-archive.ts)
+  const archive = await seasonArchive(d);
   for (let i = 0; i < days; i++) {
     const slots = await slotsForDate(d, addDays(from, i));
     for (const slot of slots) {
       if (slot.at <= now) continue;
-      // a slot held by an archived channel's post counts as free: that post is hidden everywhere and never notified
+      // a slot held by an archived channel's post, or an archived season's, counts as free: that post is hidden everywhere
+      // and never notified
       const [taken] = await d.select({ id: publications.id }).from(publications).innerJoin(episodes, eq(episodes.id, publications.episodeId))
-        .where(and(eq(publications.destinationId, slot.destinationId), eq(publications.scheduledFor, slot.at), ne(publications.status, "cancelled"), onActiveChannel(episodes.channelId)));
+        .where(and(eq(publications.destinationId, slot.destinationId), eq(publications.scheduledFor, slot.at), ne(publications.status, "cancelled"), onActiveChannel(episodes.channelId),
+          onWorkingSeason(archive, episodes.seasonId)));
       if (taken) continue;
       if (slot.kind !== "instagram") {
         const [next] = await d.select({ id: publications.id }).from(publications)
           .innerJoin(episodes, eq(episodes.id, publications.episodeId))
-          .where(and(eq(publications.destinationId, slot.destinationId), isNull(publications.scheduledFor), inArray(publications.status, ["planned", "ready"]), eq(episodes.isDemo, false), eq(publications.simulated, false)))
+          .where(and(eq(publications.destinationId, slot.destinationId), isNull(publications.scheduledFor), inArray(publications.status, ["planned", "ready"]), eq(episodes.isDemo, false), eq(publications.simulated, false),
+            onWorkingSeason(archive, episodes.seasonId)))
           .orderBy(asc(episodes.number)).limit(1);
         if (!next) continue;
         await d.update(publications).set({ scheduledFor: slot.at, originalSlot: slot.at, updatedAt: new Date() }).where(eq(publications.id, next.id));
@@ -129,6 +136,7 @@ export async function planDays(d: DB, from: string, days: number, now = new Date
         const [cand] = await d.select({ episodeId: episodes.id, exportId: platformExports.id }).from(platformExports)
           .innerJoin(versions, eq(versions.id, platformExports.versionId)).innerJoin(episodes, eq(episodes.id, versions.episodeId))
           .where(and(eq(episodes.channelId, ch.id), eq(platformExports.platform, "instagram"), eq(versions.superseded, false), eq(episodes.isDemo, false),
+            onWorkingSeason(archive, episodes.seasonId),
             sql`not exists (select 1 from publications p where p.episode_id = ${episodes.id} and p.destination_id = ${slot.destinationId})`))
           .orderBy(asc(episodes.number)).limit(1);
         if (!cand) continue;

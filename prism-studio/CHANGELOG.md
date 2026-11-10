@@ -1,6 +1,17 @@
 # Changelog
 
 ## Unreleased
+- Archived seasons (owner's request, 10 Nov 2026: "as soon as season 1 is uploaded and checked off for each channel,
+  remove it"): a season is uploaded once every real episode stands on both Uploaded buttons ("YouTube & TikTok" and
+  "Instagram") and every built long video of it is marked uploaded (`src/domain/season-archive.ts`; derived from the
+  publication records, no migration, so an Undo brings the season straight back). An uploaded season leaves Home,
+  Upload, Review, Calendar, the channel's Episodes, Series and Lessons tabs, the channel monitor (`/m/<channel>`), the
+  Instagram screen's captions, the long-video lists and the Library's main list, and moves to Library → Archived
+  seasons, where every episode and long video still opens (the episode page says it is archived). Analytics, totals,
+  earnings, rewards and the Instagram ledger keep counting it. Planning never places its posts and treats a slot one of
+  them still holds as free; the importer keeps its render and posts as they are; video clearing works as before. The
+  Uploaded buttons, video clearing and the archive now share one "uploaded" test (`allPosted` / `groupUploaded` /
+  `episodeUploaded` in `src/domain/publications.ts`).
 - Archived channels (owner's request, 10 Nov 2026): Body Backstage is archived (`drizzle/0008_archived_channels.sql`
   adds `channels.archived_at` and archives `body`; nothing is deleted). An archived channel is gone from the wall, the
   monitor strip, Upload, Review, Calendar, Library, Analytics, Earn, Learn, Accounts, Costs (its row and filter),

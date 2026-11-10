@@ -1,5 +1,6 @@
 // The library: every finished video at full quality, per channel, with its covers, captions and posting text. The same
-// files the upload tasks hand off; downloading here never marks anything published.
+// files the upload tasks hand off; downloading here never marks anything published. Seasons uploaded everywhere are
+// listed apart at the end (Archived seasons), read-only.
 import type { Metadata } from "next";
 import Link from "next/link";
 import { libraryView } from "@/lib/data";
@@ -7,6 +8,7 @@ import { mediaUrl } from "@/lib/media";
 import { topicStyle } from "@/lib/format";
 import { Icon } from "@/components/Icon";
 import { VideoCleared } from "@/components/VideoCleared";
+import { ArchivedSeasons } from "@/components/ArchivedSeasons";
 
 export const metadata: Metadata = { title: "Library" };
 
@@ -61,7 +63,9 @@ export default async function Library() {
             ))}
           </div>
         </section>
-      )) : <p className="muted">No finished videos yet. Rendered episodes appear here once they&apos;re imported (Queue → Import rendered episodes).</p>}
+      )) : v.archived.length ? <p className="muted">Every finished season is uploaded and archived: see Archived seasons below.</p>
+        : <p className="muted">No finished videos yet. Rendered episodes appear here once they&apos;re imported (Queue → Import rendered episodes).</p>}
+      <ArchivedSeasons groups={v.archived} tz={v.tz} />
     </div>
   );
 }
