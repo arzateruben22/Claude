@@ -118,6 +118,33 @@ Style: premium editorial science documentary, distinctive and art-directed, not 
 
 Image models garble long text, so keep the thumbnail text to 1-4 words, or add it afterwards in code.
 
+## What's working (owner's observations; hypotheses until the analytics confirm them)
+
+**10 Nov 2026: Possibility Lab S2E1 "How Long Would It Take to Walk to the Moon?"** was the first video posted, and the
+owner reports it is pulling noticeably more traffic. The owner likes the thumbnail: the channel's figure walking
+toward the Moon. Likely reasons, to apply on every channel:
+1. **A human anchor in the frame:** a small figure, or a hand or finger (Skin Sense: never a face), *doing* the
+   everyday action. Viewers picture themselves.
+2. **The goal or destination visible:** the Moon, the far wall, the bottom of the jar. The question reads before
+   the title does.
+3. **Scale contrast:** a tiny "you" against something huge (or huge against tiny).
+4. **A title about you doing something ordinary at an impossible scale:** "How long would it take to walk to the
+   Moon?" Plain words, one question.
+5. **Show the setup, never the answer:** the 26 years stays in the video.
+
+How each channel applies it:
+- **Possibility Lab:** keep the figure-on-a-journey thumbnails.
+- **Reality Rulebook:** a hand or figure caught mid-action at the key frozen moment (letting go of the slinky,
+  snapping the spaghetti, shaking the jar).
+- **One More Orbit:** a tiny figure on the ground facing the cosmic thing: under the ringed sky, among trees under
+  the stars, beside a clock near a black hole.
+- **Skin Sense:** one hand, finger or forearm in that episode's skin tone doing the action (in water, in the
+  cold), with no face.
+
+Every cover is still a frame (or a re-cut) of what the video shows: the truth test doesn't change. Once Prism has the
+numbers (impressions, CTR, average view duration), record here which of these held up. One video is a lead, not a
+rule.
+
 ## Learning loop
 
 When real YouTube analytics exist, read impressions, CTR, traffic source, average view duration, 30-second retention
