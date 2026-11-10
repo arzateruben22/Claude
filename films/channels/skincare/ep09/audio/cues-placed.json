@@ -13,18 +13,6 @@
   "of": "reed"
  },
  {
-  "kind": "label",
-  "tag": "l0",
-  "t": 1.11,
-  "show": 1.1333,
-  "sound": 1.1333,
-  "place": 1.1333,
-  "anchor": 0,
-  "voice": "reed",
-  "gain": -19,
-  "pan": 0.0
- },
- {
   "kind": "section",
   "tag": null,
   "t": 4.346,
@@ -37,20 +25,8 @@
   "pan": 0.0
  },
  {
-  "kind": "scale.jump",
-  "tag": "c3",
-  "t": 4.646,
-  "show": 4.6667,
-  "sound": 4.6667,
-  "place": 4.6481,
-  "anchor": 890,
-  "voice": "swell",
-  "gain": -19,
-  "pan": 0.0
- },
- {
   "kind": "label",
-  "tag": "l1",
+  "tag": "l0",
   "t": 13.066,
   "show": 13.0667,
   "sound": 13.0667,
@@ -62,23 +38,11 @@
  },
  {
   "kind": "label",
-  "tag": "l2",
-  "t": 14.226,
-  "show": 14.2333,
-  "sound": 14.2333,
-  "place": 14.2333,
-  "anchor": 0,
-  "voice": "reed",
-  "gain": -19,
-  "pan": 0.0
- },
- {
-  "kind": "label",
-  "tag": "l3",
-  "t": 17.086,
-  "show": 17.1,
-  "sound": 17.1,
-  "place": 17.1,
+  "tag": "l1",
+  "t": 15.606,
+  "show": 15.6333,
+  "sound": 15.6333,
+  "place": 15.6333,
   "anchor": 0,
   "voice": "reed",
   "gain": -19,
@@ -97,30 +61,6 @@
   "pan": 0.0
  },
  {
-  "kind": "scale.jump",
-  "tag": "c8",
-  "t": 19.786,
-  "show": 19.8,
-  "sound": 19.8,
-  "place": 19.7815,
-  "anchor": 890,
-  "voice": "swell",
-  "gain": -19,
-  "pan": 0.0
- },
- {
-  "kind": "label",
-  "tag": "l4",
-  "t": 26.126,
-  "show": 26.1333,
-  "sound": 26.1333,
-  "place": 26.1333,
-  "anchor": 0,
-  "voice": "reed",
-  "gain": -19,
-  "pan": 0.0
- },
- {
   "kind": "section",
   "tag": null,
   "t": 31.799,
@@ -130,42 +70,6 @@
   "anchor": 30239,
   "voice": "whoosh",
   "gain": -33,
-  "pan": 0.0
- },
- {
-  "kind": "scale.jump",
-  "tag": "c11",
-  "t": 32.099,
-  "show": 32.1,
-  "sound": 32.1,
-  "place": 32.0815,
-  "anchor": 890,
-  "voice": "swell",
-  "gain": -19,
-  "pan": 0.0
- },
- {
-  "kind": "scale.jump",
-  "tag": "c13",
-  "t": 37.194,
-  "show": 37.2,
-  "sound": 37.2,
-  "place": 37.1815,
-  "anchor": 890,
-  "voice": "swell",
-  "gain": -19,
-  "pan": 0.0
- },
- {
-  "kind": "scale.jump",
-  "tag": "c15",
-  "t": 41.834,
-  "show": 41.8667,
-  "sound": 41.8667,
-  "place": 41.8481,
-  "anchor": 890,
-  "voice": "swell",
-  "gain": -19,
   "pan": 0.0
  },
  {
@@ -181,18 +85,6 @@
   "pan": 0.0
  },
  {
-  "kind": "scale.jump",
-  "tag": "c17",
-  "t": 45.325,
-  "show": 45.3333,
-  "sound": 45.3333,
-  "place": 45.3148,
-  "anchor": 890,
-  "voice": "swell",
-  "gain": -19,
-  "pan": 0.0
- },
- {
   "kind": "swell",
   "tag": "whoa",
   "t": 45.325,
@@ -205,18 +97,6 @@
   "pan": 0.0
  },
  {
-  "kind": "reveal",
-  "tag": "p0",
-  "t": 45.825,
-  "show": 45.8333,
-  "sound": 45.8333,
-  "place": 45.8217,
-  "anchor": 557,
-  "voice": "swell",
-  "gain": -20,
-  "pan": 0.0
- },
- {
   "kind": "section",
   "tag": null,
   "t": 52.678,
@@ -226,18 +106,6 @@
   "anchor": 30239,
   "voice": "whoosh",
   "gain": -33,
-  "pan": 0.0
- },
- {
-  "kind": "scale.jump",
-  "tag": "c18",
-  "t": 52.978,
-  "show": 53.0,
-  "sound": 53.0,
-  "place": 52.9815,
-  "anchor": 890,
-  "voice": "swell",
-  "gain": -19,
   "pan": 0.0
  },
  {

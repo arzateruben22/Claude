@@ -7,7 +7,7 @@
  "limiting_max_db": -3.61,
  "aac": {
   "lufs": -14.1,
-  "true_peak_db": -1.9,
+  "true_peak_db": -1.8,
   "lra": 2.2
  },
  "stems_sum_error_db": -240.0
