@@ -41,9 +41,15 @@ test('the right code with an allowlisted address returns that account', () => {
   // Addresses are matched the way the allowlist stores them.
   assert.equal(attempt({ email: '  Ada@Example.TEST ', code: CODE }).id, ada.userId);
   assert.equal(attempt({ email: 'admin@example.test', code: CODE }).role, 'admin');
-  // Looking an account up is all it does: no session is started and nothing is written.
+  // A successful sign-in records its time (the last-admin rule counts only accounts that
+  // have signed in) and nothing else: no session is started here.
+  assert.equal(user.last_login_at, T0);
   assert.equal(count(world.db, 'sessions'), 0);
-  assert.equal(world.db.get('SELECT total_changes() AS n').n, writesBefore);
+  assert.equal(world.db.get('SELECT total_changes() AS n').n, writesBefore + 3, 'one write per successful sign-in');
+  // A refused attempt writes nothing at all.
+  expectAppError(assert, () => attempt({ email: 'ada@example.test', code: WRONG }), 'sign_in_denied', 401);
+  expectAppError(assert, () => attempt({ email: 'nobody@example.test', code: CODE }), 'sign_in_denied', 401);
+  assert.equal(world.db.get('SELECT total_changes() AS n').n, writesBefore + 3);
 });
 
 test('a wrong code is refused, whatever the address', () => {
@@ -59,6 +65,8 @@ test('a wrong code is refused, whatever the address', () => {
   expectAppError(assert, () => attempt({ email: 'ada@example.test' }), 'sign_in_denied', 401);
   expectAppError(assert, () => attempt({}), 'sign_in_denied', 401);
   expectAppError(assert, () => attempt(), 'sign_in_denied', 401);
+  expectAppError(assert, () => attempt(null), 'sign_in_denied', 401);
+  expectAppError(assert, () => attempt(CODE), 'sign_in_denied', 401);
   assert.equal(thrownBy(() => attempt({ email: 'ada@example.test', code: WRONG })).reason, 'wrong_code');
 });
 
@@ -190,7 +198,6 @@ test('a dev sign-in cannot be created without a code of at least 16 characters',
 
 test(
   'in dev mode, too, the only admin account cannot be removed (promise P9)',
-  { todo: 'defect: a dev sign-in cannot be recorded (domain/users.js has no function for it), so last_login_at stays NULL and the last-admin guard never engages' },
   () => {
     // A database as a first dev start leaves it: one admin from ADMIN_EMAILS, never signed in with Google.
     const db = openDatabase(':memory:');
@@ -200,7 +207,7 @@ test(
 
     const owner = createDevLogin({ code: CODE }).attempt(system, { email: 'owner@example.test', code: CODE });
     const asOwner = withActor(system, { userId: owner.id, role: 'admin', memberId: null });
-    assert.equal(owner.last_login_at, null, 'nothing records that this admin has signed in');
+    assert.equal(owner.last_login_at, T0, 'a dev sign-in is recorded, so the last-admin rule can count this account');
 
     // The only admin, signed in and working, deletes the only admin account.
     expectAppError(assert, () => deleteUser(asOwner, owner.id), 'last_admin', 409);

@@ -5,6 +5,10 @@
 // HTTP layer builds one limiter per rule: sign-in attempts per client (key from
 // clientKey() below) and sign-in attempts overall (one constant key).
 //
+// Fixed, not sliding: a client that times it well can fit the end of one window and the
+// start of the next into a short stretch (at most 2 x limit - 1 requests). For slowing
+// down sign-in attempts that is acceptable, and it keeps one small record per key.
+//
 // Memory is bounded. At most `maxKeys` windows are held; beyond that the oldest is
 // dropped. Someone who can present that many different keys can therefore forget their
 // own window early, which is exactly why the "overall" limit exists alongside the

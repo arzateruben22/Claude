@@ -104,9 +104,10 @@ function reasonFor(error) {
 const UNKNOWN_KEY_CODES = new Set(['ERR_JWKS_NO_MATCHING_KEY', 'ERR_JWKS_MULTIPLE_MATCHING_KEYS']);
 
 /**
- * Google's published signing keys, fetched on first use and cached by jose (re-fetched
- * when a token names a key id it has not seen). Nothing is requested until the first
- * token is verified. Exported so the HTTP layer never needs to import jose itself.
+ * Google's published signing keys. jose fetches them when the first token is verified
+ * (never before), keeps them for ten minutes, and fetches again early, at most once
+ * every thirty seconds, when a token names a key id it has not seen: that is how a key
+ * rotation is picked up. Exported so the HTTP layer never needs to import jose itself.
  */
 export function googleKeySet() {
   return createRemoteJWKSet(new URL(GOOGLE_JWKS_URL));
@@ -116,9 +117,8 @@ export function googleKeySet() {
  * @param {{ clientId: string, keySet: Function, clock: { now(): Date } }} options
  *        `keySet` is a jose key-set function: googleKeySet() in production,
  *        createLocalJWKSet(...) in tests.
- * @returns {((idToken: unknown, options?: { expectedNonce?: unknown }) => Promise<{ sub: string, email: string|undefined, emailVerified: boolean, hostedDomain: string|undefined }>) & { verify: Function }}
- *        The verifier. It can be called directly or as `verifier.verify(...)`; both are
- *        the same function.
+ * @returns {Function & { verify: Function }} the verifier, documented at verify() below.
+ *        It can be called directly or as `verifier.verify(...)`; both are the same function.
  */
 export function createGoogleVerifier({ clientId, keySet, clock }) {
   // jose skips the audience check altogether when it is given no audience. A missing
@@ -140,6 +140,9 @@ export function createGoogleVerifier({ clientId, keySet, clock }) {
   /**
    * @param {unknown} idToken  the `credential` string from the page
    * @param {{ expectedNonce?: unknown }} [options]  the nonce this browser was given (its cookie)
+   * @returns {Promise<{ sub: string, email: string|undefined, emailVerified: boolean, hostedDomain: string|undefined }>}
+   *          the identity, in the shape domain/users.js resolveSignIn() takes
+   * @throws {IdTokenError} for every failure, whatever its cause
    */
   async function verify(idToken, options) {
     // Without a nonce to compare with, the token cannot be tied to a sign-in this server
@@ -185,6 +188,8 @@ export function createGoogleVerifier({ clientId, keySet, clock }) {
     };
   }
 
+  // One function, reachable as `verifier(...)` and as `verifier.verify(...)`, so a
+  // caller written against either reading of "the verifier" gets the same checks.
   verify.verify = verify;
   return Object.freeze(verify);
 }

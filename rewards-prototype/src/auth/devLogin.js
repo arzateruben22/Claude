@@ -20,7 +20,7 @@
 import { randomBytes } from 'node:crypto';
 import { AppError } from '../lib/errors.js';
 import { safeEqual, sha256Hex } from '../lib/ids.js';
-import { findActiveUserByEmail } from '../domain/users.js';
+import { resolveDevSignIn } from '../domain/users.js';
 
 /** DEV_LOGIN_CODE must be at least this long (docs/API.md §1). */
 export const MIN_DEV_LOGIN_CODE_LENGTH = 16;
@@ -60,17 +60,19 @@ export function createDevLogin({ code, maxFailures = 5 }) {
   return Object.freeze({
     /**
      * @param {{ email: unknown, code: unknown }} input  as posted to /api/auth/dev-login
-     * @returns {object} the account view from domain/users.js findActiveUserByEmail
+     * @returns {object} the account view from domain/users.js resolveDevSignIn, which also
+     *          records the sign-in time (the last-admin rule depends on it)
      * @throws {AppError} 401 sign_in_denied, or 403 dev_login_locked once locked
      */
-    attempt(ctx, { email, code: presented } = {}) {
+    attempt(ctx, input) {
       if (failures >= maxFailures) throw locked();
+      const presented = input?.code;
       if (typeof presented !== 'string' || !safeEqual(sha256Hex(presented), expectedHash)) {
         failures += 1;
         throw denied('wrong_code');
       }
       // Only reached with the right code, so the allowlist is never consulted for a guesser.
-      const user = typeof email === 'string' ? findActiveUserByEmail(ctx, email) : null;
+      const user = resolveDevSignIn(ctx, input.email);
       if (!user) throw denied('unknown_account');
       return user;
     },

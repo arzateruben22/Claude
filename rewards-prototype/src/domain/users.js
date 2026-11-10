@@ -172,10 +172,29 @@ export function resolveSignIn(ctx, identity) {
   });
 }
 
-/** Dev-mode sign-in lookup: an allowlisted, active account by e-mail. Never used with AUTH_MODE=google. */
+/** An allowlisted, active account by e-mail. A plain lookup: it records nothing. */
 export function findActiveUserByEmail(ctx, email) {
   const row = ctx.db.get("SELECT * FROM users WHERE email = ? AND status = 'active'", [String(email).trim().toLowerCase()]);
   return row ? view(row) : null;
+}
+
+/**
+ * Dev-mode sign-in (never used with AUTH_MODE=google): the allowlisted, active account
+ * for this e-mail, with the sign-in time recorded. Recording it matters: the rule that
+ * the last admin who can sign in cannot be removed (P9) counts only accounts that HAVE
+ * signed in, so without this the rule would never engage in dev mode.
+ * The caller has already checked the dev sign-in code.
+ * @returns {object|null}
+ */
+export function resolveDevSignIn(ctx, email) {
+  if (typeof email !== 'string') return null;
+  return ctx.db.tx(() => {
+    const row = ctx.db.get("SELECT * FROM users WHERE email = ? AND status = 'active'", [email.trim().toLowerCase()]);
+    if (!row) return null;
+    const at = nowIso(ctx);
+    ctx.db.run('UPDATE users SET last_login_at = ? WHERE id = ?', [at, row.id]);
+    return view({ ...row, last_login_at: at });
+  });
 }
 
 /**

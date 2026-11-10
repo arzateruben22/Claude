@@ -1,4 +1,6 @@
 import { test } from 'node:test';
+// Addresses here must not be anybody's real mailbox. Where the Gmail domain itself is under
+// test, the local part is longer than Gmail allows and contains hyphens, so it cannot exist.
 import assert from 'node:assert/strict';
 import { makeWorld, insertMember, insertMemberWithUser, insertUser, count, expectAppError } from '../helpers.js';
 import { createMember, getMember, linkYoutubeChannel, listMembers, unlinkYoutubeChannel, updateMember } from '../../src/domain/members.js';
@@ -64,16 +66,16 @@ test('members: a channel can be linked only by a trusted caller for self, and un
 test('users: allowlist management, uniqueness and the member requirement', () => {
   const world = makeWorld();
   const memberId = insertMember(world.db, { name: 'Ada' });
-  const user = createUser(world.admin, { email: '  Ada@Gmail.com ', role: 'member', member_id: memberId });
-  assert.equal(user.email, 'ada@gmail.com');
+  const user = createUser(world.admin, { email: '  Ada.not-a-real-mailbox-for-tests-only@Gmail.com ', role: 'member', member_id: memberId });
+  assert.equal(user.email, 'ada.not-a-real-mailbox-for-tests-only@gmail.com');
   assert.equal(user.signed_in_before, false);
-  expectAppError(assert, () => createUser(world.admin, { email: 'ada@gmail.com', role: 'admin' }), 'email_taken', 409);
-  expectAppError(assert, () => createUser(world.admin, { email: 'other@gmail.com', role: 'member', member_id: memberId }), 'member_already_linked', 409);
-  expectAppError(assert, () => createUser(world.admin, { email: 'solo@gmail.com', role: 'member' }), 'member_required', 409);
-  expectAppError(assert, () => createUser(world.admin, { email: 'ghost@gmail.com', role: 'member', member_id: 'mbr_missing' }), 'member_not_found', 404);
+  expectAppError(assert, () => createUser(world.admin, { email: 'ada.not-a-real-mailbox-for-tests-only@gmail.com', role: 'admin' }), 'email_taken', 409);
+  expectAppError(assert, () => createUser(world.admin, { email: 'other.not-a-real-mailbox-for-tests-only@gmail.com', role: 'member', member_id: memberId }), 'member_already_linked', 409);
+  expectAppError(assert, () => createUser(world.admin, { email: 'solo.not-a-real-mailbox-for-tests-only@gmail.com', role: 'member' }), 'member_required', 409);
+  expectAppError(assert, () => createUser(world.admin, { email: 'ghost.not-a-real-mailbox-for-tests-only@gmail.com', role: 'member', member_id: 'mbr_missing' }), 'member_not_found', 404);
   expectAppError(assert, () => createUser(world.admin, { email: 'not-an-email', role: 'admin' }), 'invalid_input', 422);
-  expectAppError(assert, () => createUser(world.admin, { email: 'x@gmail.com', role: 'owner' }), 'invalid_input', 422);
-  expectAppError(assert, () => createUser(world.admin, { email: 'x@gmail.com', role: 'admin', google_sub: 'attacker' }), 'unknown_field', 422);
+  expectAppError(assert, () => createUser(world.admin, { email: 'x.not-a-real-mailbox-for-tests-only@gmail.com', role: 'owner' }), 'invalid_input', 422);
+  expectAppError(assert, () => createUser(world.admin, { email: 'x.not-a-real-mailbox-for-tests-only@gmail.com', role: 'admin', google_sub: 'attacker' }), 'unknown_field', 422);
   assert.equal(listUsers(world.admin).length, 2);
   const audit = JSON.stringify(listAudit(world.admin).items);
   assert.ok(!audit.includes('gmail.com'), 'e-mail addresses must not be written to the audit trail');
@@ -82,7 +84,7 @@ test('users: allowlist management, uniqueness and the member requirement', () =>
 test('users: the last admin who can sign in cannot be demoted, disabled or deleted', () => {
   const world = makeWorld();
   // A second admin exists on the allowlist but has never signed in: it does not count.
-  const second = createUser(world.admin, { email: 'second@gmail.com', role: 'admin' });
+  const second = createUser(world.admin, { email: 'second.not-a-real-mailbox-for-tests-only@gmail.com', role: 'admin' });
   const asSecond = world.as({ userId: second.id, role: 'admin', memberId: null });
   const memberId = insertMember(world.db);
   expectAppError(assert, () => updateUser(asSecond, world.adminUserId, { status: 'disabled' }), 'last_admin', 409);
@@ -95,11 +97,11 @@ test('users: the last admin who can sign in cannot be demoted, disabled or delet
   assert.throws(() => world.db.run('DELETE FROM users WHERE id = ?', [world.adminUserId]), /at least one active, signed-in admin must remain/);
 
   // Once the second admin has signed in, the first can be disabled — and then the second is the last.
-  resolveSignIn(world.system, { sub: 'second-sub', email: 'second@gmail.com', emailVerified: true });
+  resolveSignIn(world.system, { sub: 'second-sub', email: 'second.not-a-real-mailbox-for-tests-only@gmail.com', emailVerified: true });
   assert.equal(updateUser(asSecond, world.adminUserId, { status: 'disabled' }).status, 'disabled');
   expectAppError(assert, () => deleteUser(world.admin, second.id), 'last_admin', 409);
   // A never-used admin row (for example a mistyped address) can always be removed.
-  const typo = createUser(asSecond, { email: 'typo@gmail.com', role: 'admin' });
+  const typo = createUser(asSecond, { email: 'typo.not-a-real-mailbox-for-tests-only@gmail.com', role: 'admin' });
   assert.deepEqual(deleteUser(asSecond, typo.id), { deleted: true });
 });
 
@@ -125,61 +127,61 @@ test('users: changing role or status signs the account out everywhere', () => {
 test('sign-in: an allowlisted Gmail address binds on first sign-in, then only the Google id matters', () => {
   const world = makeWorld();
   const memberId = insertMember(world.db, { name: 'Ada' });
-  createUser(world.admin, { email: 'ada@gmail.com', role: 'member', member_id: memberId });
+  createUser(world.admin, { email: 'ada.not-a-real-mailbox-for-tests-only@gmail.com', role: 'member', member_id: memberId });
 
-  const first = resolveSignIn(world.system, { sub: 'google-sub-1', email: 'Ada@Gmail.com', emailVerified: true });
+  const first = resolveSignIn(world.system, { sub: 'google-sub-1', email: 'Ada.not-a-real-mailbox-for-tests-only@Gmail.com', emailVerified: true });
   assert.equal(first.firstSignIn, true);
   assert.equal(first.user.member_id, memberId);
 
   // The e-mail later changes at Google: the same person still signs in.
-  const again = resolveSignIn(world.system, { sub: 'google-sub-1', email: 'renamed@gmail.com', emailVerified: true });
+  const again = resolveSignIn(world.system, { sub: 'google-sub-1', email: 'renamed.not-a-real-mailbox-for-tests-only@gmail.com', emailVerified: true });
   assert.equal(again.firstSignIn, false);
   assert.equal(again.user.id, first.user.id);
 
   // A different Google account presenting the same e-mail cannot take the account over.
-  assert.equal(resolveSignIn(world.system, { sub: 'google-sub-2', email: 'ada@gmail.com', emailVerified: true }), null);
+  assert.equal(resolveSignIn(world.system, { sub: 'google-sub-2', email: 'ada.not-a-real-mailbox-for-tests-only@gmail.com', emailVerified: true }), null);
   assert.equal(world.db.get('SELECT google_sub FROM users WHERE id = ?', [first.user.id]).google_sub, 'google-sub-1');
 });
 
 test('sign-in: denied for unknown people, unverified or non-authoritative e-mail, and disabled accounts', () => {
   const world = makeWorld();
-  createUser(world.admin, { email: 'pat@example.org', role: 'admin' });
-  createUser(world.admin, { email: 'sam@gmail.com', role: 'admin' });
+  createUser(world.admin, { email: 'pat@workspace.example.test', role: 'admin' });
+  createUser(world.admin, { email: 'sam.not-a-real-mailbox-for-tests-only@gmail.com', role: 'admin' });
 
-  assert.equal(resolveSignIn(world.system, { sub: 's1', email: 'stranger@gmail.com', emailVerified: true }), null);
-  assert.equal(resolveSignIn(world.system, { sub: 's2', email: 'sam@gmail.com', emailVerified: false }), null);
+  assert.equal(resolveSignIn(world.system, { sub: 's1', email: 'stranger.not-a-real-mailbox-for-tests-only@gmail.com', emailVerified: true }), null);
+  assert.equal(resolveSignIn(world.system, { sub: 's2', email: 'sam.not-a-real-mailbox-for-tests-only@gmail.com', emailVerified: false }), null);
   // Not a Gmail address and no Workspace domain claim: Google is not the authority for it.
-  assert.equal(resolveSignIn(world.system, { sub: 's3', email: 'pat@example.org', emailVerified: true }), null);
-  assert.equal(resolveSignIn(world.system, { sub: 's3', email: 'pat@example.org', emailVerified: true, hostedDomain: 'evil.example' }), null);
-  assert.ok(resolveSignIn(world.system, { sub: 's3', email: 'pat@example.org', emailVerified: true, hostedDomain: 'example.org' }));
-  assert.equal(resolveSignIn(world.system, { sub: '', email: 'sam@gmail.com', emailVerified: true }), null);
-  assert.equal(resolveSignIn(world.system, { email: 'sam@gmail.com', emailVerified: true }), null);
+  assert.equal(resolveSignIn(world.system, { sub: 's3', email: 'pat@workspace.example.test', emailVerified: true }), null);
+  assert.equal(resolveSignIn(world.system, { sub: 's3', email: 'pat@workspace.example.test', emailVerified: true, hostedDomain: 'evil.example' }), null);
+  assert.ok(resolveSignIn(world.system, { sub: 's3', email: 'pat@workspace.example.test', emailVerified: true, hostedDomain: 'workspace.example.test' }));
+  assert.equal(resolveSignIn(world.system, { sub: '', email: 'sam.not-a-real-mailbox-for-tests-only@gmail.com', emailVerified: true }), null);
+  assert.equal(resolveSignIn(world.system, { email: 'sam.not-a-real-mailbox-for-tests-only@gmail.com', emailVerified: true }), null);
 
-  const sam = resolveSignIn(world.system, { sub: 's4', email: 'sam@gmail.com', emailVerified: true });
+  const sam = resolveSignIn(world.system, { sub: 's4', email: 'sam.not-a-real-mailbox-for-tests-only@gmail.com', emailVerified: true });
   updateUser(world.admin, sam.user.id, { status: 'disabled' });
-  assert.equal(resolveSignIn(world.system, { sub: 's4', email: 'sam@gmail.com', emailVerified: true }), null);
+  assert.equal(resolveSignIn(world.system, { sub: 's4', email: 'sam.not-a-real-mailbox-for-tests-only@gmail.com', emailVerified: true }), null);
 
-  assert.equal(isGoogleAuthoritative({ email: 'a@googlemail.com', emailVerified: true }), true);
-  assert.equal(isGoogleAuthoritative({ email: 'a@gmail.com.evil.test', emailVerified: true }), false);
-  assert.equal(isGoogleAuthoritative({ email: 'a@gmail.com', emailVerified: 'true' }), false);
+  assert.equal(isGoogleAuthoritative({ email: 'a.not-a-real-mailbox-for-tests-only@googlemail.com', emailVerified: true }), true);
+  assert.equal(isGoogleAuthoritative({ email: 'a.not-a-real-mailbox-for-tests-only@gmail.com.evil.test', emailVerified: true }), false);
+  assert.equal(isGoogleAuthoritative({ email: 'a.not-a-real-mailbox-for-tests-only@gmail.com', emailVerified: 'true' }), false);
 });
 
 test('bootstrapAdmins only acts on a database with no admin at all', () => {
   // An admin already exists: the configured list is ignored, so the environment can
   // never re-create an erased person or restore a demoted one.
   const world = makeWorld();
-  assert.equal(bootstrapAdmins(world.system, ['owner@gmail.com']), 0);
+  assert.equal(bootstrapAdmins(world.system, ['owner.not-a-real-mailbox-for-tests-only@gmail.com']), 0);
   assert.equal(listUsers(world.admin).length, 1);
 
   // A brand-new, empty database, as on first start.
   const db = openDatabase(':memory:');
   migrate(db);
   const system = createContext({ db, clock: world.clock });
-  assert.equal(bootstrapAdmins(system, ['Owner@Gmail.com', 'owner@gmail.com', 'second@gmail.com']), 2);
-  assert.equal(bootstrapAdmins(system, ['third@gmail.com']), 0);
+  assert.equal(bootstrapAdmins(system, ['Owner.not-a-real-mailbox-for-tests-only@Gmail.com', 'owner.not-a-real-mailbox-for-tests-only@gmail.com', 'second.not-a-real-mailbox-for-tests-only@gmail.com']), 2);
+  assert.equal(bootstrapAdmins(system, ['third.not-a-real-mailbox-for-tests-only@gmail.com']), 0);
   assert.deepEqual(db.all('SELECT email, role, google_sub FROM users ORDER BY email').map((row) => ({ ...row })), [
-    { email: 'owner@gmail.com', role: 'admin', google_sub: null },
-    { email: 'second@gmail.com', role: 'admin', google_sub: null },
+    { email: 'owner.not-a-real-mailbox-for-tests-only@gmail.com', role: 'admin', google_sub: null },
+    { email: 'second.not-a-real-mailbox-for-tests-only@gmail.com', role: 'admin', google_sub: null },
   ]);
 
   const empty = openDatabase(':memory:');

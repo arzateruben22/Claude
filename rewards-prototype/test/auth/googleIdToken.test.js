@@ -150,7 +150,9 @@ test('signature: a token signed by any other key, or altered after signing, is r
   // A genuine token whose payload was swapped for a different account.
   const [header, , signature] = (await mint()).split('.');
   await refused(verify(`${header}.${segment(claims({ sub: 'someone-else' }))}.${signature}`), 'bad_signature');
-  await refused(verify(`${header}.${segment(claims())}.${signature.slice(0, -4)}AAAA`), 'bad_signature');
+  // The genuine token with one character of its signature changed.
+  const damaged = (signature[0] === 'A' ? 'B' : 'A') + signature.slice(1);
+  await refused(verify(`${header}.${segment(claims())}.${damaged}`), 'bad_signature');
   await refused(verify(`${header}.${segment(claims())}.`), 'bad_signature');
 });
 
@@ -203,6 +205,27 @@ test('keys: an unknown key id is refused; a key set that cannot be loaded is rep
   // A key set that hands back something that is not a key at all must not sign anyone in.
   const broken = async () => ({ not: 'a key' });
   await refused(createGoogleVerifier({ clientId: CLIENT_ID, keySet: broken, clock: fixedClock(T0) }).verify(await mint(), { expectedNonce: NONCE }), 'verifier_error');
+});
+
+test('with several published keys, as Google always has, the key id picks the key', async () => {
+  const next = await generateKeyPair('RS256', { extractable: true });
+  const rotating = createLocalJWKSet({
+    keys: [
+      { ...(await exportJWK(google.publicKey)), kid: KID, alg: 'RS256', use: 'sig' },
+      { ...(await exportJWK(next.publicKey)), kid: 'google-key-2', alg: 'RS256', use: 'sig' },
+    ],
+  });
+  const verifier = createGoogleVerifier({ clientId: CLIENT_ID, keySet: rotating, clock: fixedClock(T0) });
+  const attempt = (token) => verifier.verify(token, { expectedNonce: NONCE });
+
+  assert.ok(await attempt(await mint()));
+  assert.ok(await attempt(await mint({}, { key: next.privateKey, header: { kid: 'google-key-2' } })));
+  // Signed by one published key while naming the other.
+  await refused(attempt(await mint({}, { key: next.privateKey })), 'bad_signature');
+  await refused(attempt(await mint({}, { header: { kid: 'google-key-2' } })), 'bad_signature');
+  // No key id: the verifier does not go trying keys until one fits.
+  await refused(attempt(await mint({}, { header: { kid: undefined } })), 'unknown_key');
+  await refused(attempt(await mint({}, { key: stranger.privateKey, header: { kid: undefined } })), 'unknown_key');
 });
 
 test('nonce: the token must carry exactly the nonce this browser was given', async () => {

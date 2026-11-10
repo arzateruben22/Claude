@@ -77,10 +77,16 @@ test('the token cannot be worked back into the session token', () => {
   assert.notEqual(Buffer.from(csrf, 'base64url').toString('hex'), sha256Hex(session), 'it is keyed, not a bare hash of the cookie');
 });
 
-test('safeEqual tells apart two strings that differ only in an unpaired surrogate', { todo: 'defect: src/lib/ids.js safeEqual compares UTF-8 encodings, and every unpaired surrogate encodes to the same replacement bytes' }, () => {
-  // Harmless for the callers in src/auth (one side is always an ASCII secret), but the
-  // helper's contract is "equal strings", and these are not equal.
+test('safeEqual, which every secret comparison here relies on, compares the strings themselves', () => {
+  assert.equal(safeEqual(CSRF_A, CSRF_A), true);
+  assert.equal(safeEqual(CSRF_A, CSRF_B), false);
+  assert.equal(safeEqual(CSRF_A, CSRF_A.slice(0, -1)), false);
+  assert.equal(safeEqual('', ''), true, 'which is why callers refuse an empty secret before comparing');
+  for (const [a, b] of [[undefined, undefined], [null, null], [1, 1], [CSRF_A, Buffer.from(CSRF_A)], [[CSRF_A], CSRF_A]]) assert.equal(safeEqual(a, b), false);
+  // Two different strings that an encoding to UTF-8 would make identical: every unpaired
+  // surrogate becomes the same replacement bytes there.
   assert.notEqual('\ud800', '\ud801');
   assert.equal(safeEqual('\ud800', '\ud801'), false);
-  assert.equal(safeEqual('code-\ud800', 'code-�'), false);
+  assert.equal(safeEqual('code-\ud800', 'code-\ufffd'), false);
+  assert.equal(safeEqual('caf\u00e9', 'caf\u00e9'), true);
 });

@@ -51,6 +51,17 @@ test('the window rolls over exactly `windowMs` after its first request', () => {
   clock.advance(24 * 60 * MINUTE);
   assert.deepEqual(limiter.check('k'), ALLOWED);
   assert.equal(limiter.size, 1);
+
+  // The documented price of a fixed window: the end of one window and the start of the
+  // next can sit side by side. Never more than 2 x limit - 1 requests, here three.
+  const edge = createRateLimiter({ clock, limit: 2, windowMs: MINUTE });
+  assert.deepEqual(edge.check('k'), ALLOWED);
+  clock.advance(MINUTE - 1);
+  assert.deepEqual(edge.check('k'), ALLOWED);
+  clock.advance(1);
+  assert.deepEqual(edge.check('k'), ALLOWED);
+  assert.deepEqual(edge.check('k'), ALLOWED);
+  assert.equal(edge.check('k').allowed, false);
 });
 
 test('keys are isolated from one another', () => {

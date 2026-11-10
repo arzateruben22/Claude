@@ -104,7 +104,8 @@ test('at capacity the oldest outstanding nonce is evicted, so the store cannot g
 test('consume on anything unknown is false and changes nothing', () => {
   const nonces = createNonceStore({ clock: fixedClock(T0) });
   const real = nonces.issue();
-  const unknown = [randomToken(32), '', 'x', real.slice(0, -1), `${real}A`, real.toLowerCase(), ` ${real}`, '__proto__', 'constructor', 'size'];
+  const oneCharacterOff = real.replace(/^./, (first) => (first === 'A' ? 'B' : 'A'));
+  const unknown = [randomToken(32), '', 'x', real.slice(0, -1), `${real}A`, oneCharacterOff, ` ${real}`, '__proto__', 'constructor', 'size'];
   for (const nonce of unknown) assert.equal(nonces.consume(nonce), false, JSON.stringify(nonce));
   for (const nonce of [undefined, null, 0, true, {}, [real], { toString: () => real }, Buffer.from(real)]) assert.equal(nonces.consume(nonce), false);
   assert.equal(nonces.size, 1);
