@@ -1,4 +1,4 @@
-# One More Orbit · Season 2 long video: opening, 5 bridges, finale (v2 after fact-check; CTA moments added per CTA.md: one after episode 2 at the start of bridge 2, one in the finale)
+# One More Orbit · Season 2 long video: opening, 5 bridges, finale (v2 after fact-check; CTA moments per CTA.md: the first is episode 2's own line at about 2:05, the second is the finale line; episode 1 keeps its own line too)
 
 Goal (SEASON-FORMAT.md, owner 10 Nov): the stitched Season 2 video goes from 7:07 to 8:30-9:30 with REAL content only: an opening, five bridges
 (new facts that carry the viewer from one question to the next, never repeating what an episode already said) and a finale. No holds, no silence.
@@ -15,7 +15,7 @@ vo: The Hubble Ultra Deep Field is a patch of sky about a tenth the width of the
 visual: a small square outlined on a star field, zooming into a galaxy field (illustration, not the real image).
 
 ## bridge 2 (episode 2 to episode 3: "Dark sky" to "Your gold")
-vo: The dark sky says the universe has a beginning. {-} Quick thing: if that made the sky feel bigger, tap like and subscribe. {-} Okay, back to it. {-} NASA's Webb telescope is built to catch light from some of the first galaxies, light that has travelled for more than thirteen billion years. {b3} The first stars are thought to have been massive and short-lived. {b4} What they and later stars made, and where it went, is the next question. {-}
+vo: The dark sky says the universe has a beginning. {-} NASA's Webb telescope is built to catch light from some of the first galaxies, light that has travelled for more than thirteen billion years. {b3} The first stars are thought to have been massive and short-lived. {b4} What they and later stars made, and where it went, is the next question. {-}
 visual: a time axis from the Big Bang with a lit band (50 million to 1 billion years), 'not to scale'.
 
 ## bridge 3 (episode 3 to episode 4: "Your gold" to "Black-hole edge")

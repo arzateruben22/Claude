@@ -55,11 +55,22 @@ const eps = String(A.episodes).split(",").map((id, k) => {
     poster: path.join(out, mp4.replace(/\.mp4$/, ".jpg")) };
 });
 if (eps.length < 2) die("a compilation needs at least two episodes");
+const OV = Object.fromEntries(String(A.override || "").split(",").filter(Boolean).map((q) => q.split("=")));
+const BR = A.bridges ? JSON.parse(fs.readFileSync(A.bridges, "utf8")) : null, brDir = A.bridges ? path.dirname(path.resolve(A.bridges)) : null;
+const brOf = (id) => { const b = BR.find((x) => x.id === id); if (!b) die(`bridges.json has no ${id}`); const f = path.join(brDir, `seg-${id}.mp4`); if (!fs.existsSync(f)) die(`missing ${f}`); return { ...b, seg: f }; };
+eps.forEach((e) => {
+  if (OV[e.id]) { e.file = path.resolve(OV[e.id]); e.dur = Number(probe(e.file).format.duration); }
+  if (A.trim) { const fj = JSON.parse(fs.readFileSync(path.join(e.dir, "film.json"), "utf8")); if (fj.cue && fj.cue.end) e.dur = Math.min(e.dur, fj.cue.end + 0.3); e.fadeOut = true; }
+});
+const INTRO_D = BR ? 0 : INTRO, BRD = BR ? BR.reduce((a, b) => a + b.dur, 0) : 0;
 const name = A.name || `vol${String(Math.ceil(eps.length / 6)).padStart(2, "0")}`;
 const outDir = path.resolve(A.out || path.join(chan, "compilations"), name), work = path.join(outDir, "work");
 fs.mkdirSync(work, { recursive: true });
 const title = A.title || `${theme.name}: ${eps.map((e) => e.title).slice(0, 2).join(", ")}${eps.length > 2 ? ` and ${eps.length - 2} more` : ""}`;
 
+// Long-film options (SEASON-FORMAT.md): --bridges <bridges.json> puts an opening before episode 1, a bridge between episodes and a finale after the last
+// (each a segment seg-<id>.mp4 + a studio mix, from season2/render_bridges.mjs); --override ep09=file.mp4,… uses another cut of an episode;
+// --trim ends each episode where its tease/end card starts (the bridges say what comes next); chapters start at the bridge that leads into them.
 // ── the cards, drawn in the channel's theme by the browser ─────────────────────
 const tok = theme.tokens || {}, roles = theme.roles || {};
 const val = (v) => (typeof v === "string" && v in tok ? `var(--${v})` : String(v));
@@ -96,7 +107,7 @@ body { background: radial-gradient(1400px 900px at 50% 40%, ${tok["bg-hi"] || to
 .thumb .posters img:nth-child(2) { transform: translateY(-26px); }
 `;
 const rows = (k) => eps.map((e, i) => `<div class="row ${i < k ? "past" : i === k ? "now" : ""}"><b>${String(i + 1).padStart(2, "0")}</b><span>${esc(e.title)}</span></div>`).join("");
-const minutes = Math.round((INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0)) / 60);
+const minutes = Math.round((INTRO_D + BRD + OUTRO + eps.reduce((a, e) => a + e.dur, 0)) / 60);
 const posters = (n) => `<div class="posters">${eps.slice(0, n).filter((e) => fs.existsSync(e.poster)).map((e) => `<img src="${pathToFileURL(e.poster).href}">`).join("")}</div>`;
 const pages = {
   intro: `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="big" style="margin-top:22px">${esc(title)}</p><p class="prom"${theme.compilation && theme.compilation.introPromiseWidth ? ` style="max-width:${+theme.compilation.introPromiseWidth}px"` : ""}>${esc(theme.promise || "")}</p><p class="meta">${eps.length} episodes · about ${minutes} min</p></div>${posters(3)}`,
@@ -130,10 +141,10 @@ const cardSound = (k, dur, energy, sigAt) => {
   run("python3", ["-I", path.join(repo, "kits/cinema/studio/render.py"), sp, od]);
   return path.join(od, "mix.wav");
 };
-const introWav = preset ? cardSound("intro", INTRO, 0.6, 0.5) : null, outroWav = preset ? cardSound("outro", OUTRO, 0.4, 0.6) : null;
+const introWav = preset && !BR ? cardSound("intro", INTRO, 0.6, 0.5) : null, outroWav = preset ? cardSound("outro", OUTRO, 0.4, 0.6) : null;
 
 // ── the picture: segments encoded alike (picture only), then joined without re-encoding ──
-const total = INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0);
+const total = INTRO_D + BRD + OUTRO + eps.reduce((a, e) => a + e.dur, 0);
 const capK = Math.floor((MAX_MB * 8e6) / total / 1000 - 400);                                 // kbps for the picture, room left for sound
 const V = ["-c:v", "libx264", "-preset", "slow", "-crf", String(CRF), "-maxrate", `${capK}k`, "-bufsize", `${capK * 2}k`, "-x264-params", "aq-mode=3:deblock=-1,-1",
   "-pix_fmt", "yuv420p", "-profile:v", "high", "-r", String(FPS), "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-color_range", "tv"];
@@ -143,14 +154,16 @@ const card = (k, dur) => {
     `[0:v]fps=${FPS},format=yuv420p,fade=t=in:st=0:d=0.4,fade=t=out:st=${dur - 0.4}:d=0.4[v]`, "-map", "[v]", "-an", "-t", String(dur), ...V, o]);
   return o;
 };
-const segs = [card("intro", INTRO)];
+const segs = BR ? [brOf("opening").seg] : [card("intro", INTRO)];
 eps.forEach((e, k) => {
   const o = path.join(work, `seg-ep${k}.mp4`);
   run("ffmpeg", ["-v", "error", "-y", "-loop", "1", "-i", path.join(work, `ep${k}.png`), "-i", e.file, "-filter_complex",
     `[0:v]fps=${FPS},format=yuv420p[bg];[1:v]scale=${SLOT_PX.w}:${OH}:flags=lanczos+accurate_rnd+full_chroma_int[ep];[bg][ep]overlay=${SLOT_PX.x}:0:shortest=1,format=yuv420p[v]`,
     "-map", "[v]", "-an", "-t", e.dur.toFixed(3), ...V, o]);
   segs.push(o);
+  if (BR && k + 1 < eps.length) segs.push(brOf(`bridge${k + 1}`).seg);
 });
+if (BR) segs.push(brOf("finale").seg);
 segs.push(card("outro", OUTRO));
 const list = path.join(work, "concat.txt"), final = path.join(outDir, `${name}-16x9.mp4`);
 fs.writeFileSync(list, segs.map((s) => `file '${s}'`).join("\n") + "\n");
@@ -160,13 +173,14 @@ fs.writeFileSync(list, segs.map((s) => `file '${s}'`).join("\n") + "\n");
 // cards' music 4 dB under the episodes' mastered sound (a frame around speech, not the programme) and each episode's
 // master decoded once, has no seams. One AAC encode can still overshoot a peak, so it is measured and trimmed under −1.
 const inputs = [], parts = [];
-const part = (src, dur, card) => {                     // src: a file, or a lavfi source for a card without music
+const part = (src, dur, card, fade) => {                     // src: a file, or a lavfi source for a card without music
   const i = parts.length;
   inputs.push(...(src.startsWith("anullsrc") ? ["-f", "lavfi", "-i", src] : ["-i", src]));
-  parts.push(`[${i}:a:0]aformat=sample_rates=48000:channel_layouts=stereo${card ? `,volume=-4dB,afade=t=out:st=${dur - 0.5}:d=0.5` : ""},apad=whole_dur=${dur},atrim=0:${dur},asetpts=N/SR/TB[a${i}]`);
+  parts.push(`[${i}:a:0]aformat=sample_rates=48000:channel_layouts=stereo${card ? `,volume=-4dB,afade=t=out:st=${dur - 0.5}:d=0.5` : fade ? `,afade=t=out:st=${dur - 0.4}:d=0.4` : ""},apad=whole_dur=${dur},atrim=0:${dur},asetpts=N/SR/TB[a${i}]`);
 };
-part(introWav || `anullsrc=r=48000:cl=stereo:d=${INTRO}`, INTRO, true);
-eps.forEach((e) => part(e.file, +e.dur.toFixed(3), false));
+if (BR) { const o = brOf("opening"); part(o.mix, o.dur, false); } else part(introWav || `anullsrc=r=48000:cl=stereo:d=${INTRO}`, INTRO, true);
+eps.forEach((e, k) => { part(e.file, +e.dur.toFixed(3), false, e.fadeOut); if (BR && k + 1 < eps.length) { const b = brOf(`bridge${k + 1}`); part(b.mix, b.dur, false); } });
+if (BR) { const f = brOf("finale"); part(f.mix, f.dur, false); }
 part(outroWav || `anullsrc=r=48000:cl=stereo:d=${OUTRO}`, OUTRO, true);
 const wavAll = path.join(work, "sound.wav"), m4a = path.join(work, "sound.m4a");
 run("ffmpeg", ["-v", "error", "-y", ...inputs, "-filter_complex", `${parts.join(";")};${parts.map((_, j) => `[a${j}]`).join("")}concat=n=${parts.length}:v=0:a=1[a]`,
@@ -184,8 +198,9 @@ run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", list, "-
 
 // ── chapters, description, QA ──────────────────────────────────────────────────
 const starts = [];
-let t = INTRO;
-for (const e of eps) { starts.push(t); t += e.dur; }
+let t = INTRO_D + (BR ? brOf("opening").dur : 0);
+eps.forEach((e, k) => { starts.push(k === 0 || !BR ? t : t - 0); t += e.dur; if (BR && k + 1 < eps.length) { starts.push(null); t += brOf(`bridge${k + 1}`).dur; } });
+if (BR) { const real = []; for (let i = 0; i < starts.length; i++) if (starts[i] !== null) real.push(starts[i]); /* each chapter after the first starts at the bridge that leads into it */ for (let k = 1; k < real.length; k++) real[k] -= brOf(`bridge${k}`).dur; starts.length = 0; starts.push(...real); }
 starts[0] = 0;   // YouTube: the first chapter starts at 0:00 (the intro belongs to it); the outro belongs to the last
 const chapters = eps.map((e, k) => `${ts(starts[k])} ${e.title}`).join("\n");
 fs.writeFileSync(path.join(outDir, "chapters.txt"), chapters + "\n");
@@ -194,16 +209,18 @@ const srcs = eps.map((e, k) => {
   for (const c of e.claims) if (c.source_url && !seen.has(c.source_url)) { seen.add(c.source_url); items.push(`- ${c.source_title}: ${c.source_url}`); }
   return `${String(k + 1).padStart(2, "0")} ${e.title}\n${items.join("\n") || "- (no claims ledger)"}`;
 }).join("\n\n");
+const bridgeClaims = A["bridge-claims"] ? JSON.parse(fs.readFileSync(A["bridge-claims"], "utf8")) : [];
+const bridgeSrc = bridgeClaims.length ? "\n\nBetween the episodes\n" + [...new Map(bridgeClaims.filter((c) => c.source_url).map((c) => [c.source_url, `- ${c.source_title}: ${c.source_url}`])).values()].join("\n") + "\n- Black-hole size: our own arithmetic (2GM/c^2, 2.95 km radius for one solar mass)" : "";
 const families = [...new Set(theme.fonts.map((f) => f.family))].join(", ");
 fs.writeFileSync(path.join(outDir, "description.md"), `${title}
 
-${theme.promise || ""}
+${A.lead || theme.promise || ""}
 
 Chapters
 ${chapters}
 
 Sources (every number's source is listed below)
-${srcs}
+${srcs}${bridgeSrc}
 
 Narration is a synthetic voice (AI-generated). Music and sound design are original, made for ${theme.name}. Type: ${families} (SIL Open Font License).
 TODO before posting: the channel handle and links, the expert sign-offs listed in each episode's review/HUMAN-REVIEW.md, and YouTube's altered/synthetic content setting.
@@ -213,7 +230,7 @@ const loud = JSON.parse(run("python3", ["-I", "-c", `import sys, json; sys.path.
 const dur = Number(pj.format.duration), short = eps.map((e, k) => (k + 1 < eps.length ? starts[k + 1] : dur) - starts[k]).filter((d) => d < 10);
 const qa = { file: path.relative(repo, final), w: vv.width, h: vv.height, fps: vv.r_frame_rate, dur: +dur.toFixed(3), video_s: +Number(vv.duration).toFixed(3), audio_s: +Number(aa.duration).toFixed(3),
   size_mb: +(fs.statSync(final).size / 1e6).toFixed(1), ...loud, chapters: eps.length, chapters_under_10s: short.length,
-  fails: [vv.width !== OW || vv.height !== OH ? `not ${OW}x${OH}` : null, fs.statSync(final).size > 95e6 ? "over 95 MB" : null, dur < 300 || dur > 660 ? `length ${ts(dur)} outside 5–11 min` : null,
+  fails: [vv.width !== OW || vv.height !== OH ? `not ${OW}x${OH}` : null, fs.statSync(final).size > 95e6 ? "over 95 MB" : null, BR ? (dur < 510 || dur > 570 ? `length ${ts(dur)} outside 8:30–9:30` : null) : (dur < 300 || dur > 660 ? `length ${ts(dur)} outside 5–11 min` : null),
     Math.abs(loud.lufs + 14) > 1.5 ? `loudness ${loud.lufs} LUFS` : null, loud.true_peak_db > -1 ? `true peak ${loud.true_peak_db} dBTP` : null,
     short.length ? "a chapter under 10 s" : null, Math.abs(Number(vv.duration) - Number(aa.duration)) > 0.1 ? "picture and sound lengths differ" : null].filter(Boolean) };
 fs.writeFileSync(path.join(outDir, "qa.json"), JSON.stringify(qa, null, 1));
