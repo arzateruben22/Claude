@@ -6,3 +6,4 @@ rerender.log
 */compilations/*/work/
 *.part.mp4
 whatif/longform/**/build/
+whatif/longform/**/out/*-draft.mp4
