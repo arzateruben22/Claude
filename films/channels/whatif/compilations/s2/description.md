@@ -5,11 +5,11 @@ Impossible questions, honest assumptions, real calculations.
 Chapters
 0:00 Walking to the Moon
 1:36 Everyone holds hands
-2:50 A rope round the Earth
-4:06 Every shuffle is new
-5:19 All the water in one ball
-6:34 Catch all the lightning
-7:08 The six answers, ranked
+2:54 A rope round the Earth
+4:10 Every shuffle is new
+5:22 All the water in one ball
+6:37 Catch all the lightning
+7:46 The six answers, ranked
 
 Sources (every number in these episodes is checked against a source)
 01 Walking to the Moon
