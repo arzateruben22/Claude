@@ -1,10 +1,10 @@
 {
  "version": 1,
  "format": "short",
- "hook": "A tan is brown pigment gathered over each skin cell's nucleus, like a tiny parasol that lowers, but does not erase, the damage from ultraviolet light.",
+ "hook": "A tan is brown pigment gathered over each skin cell's nucleus, like a leaky parasol that lowers, but does not erase, the damage from ultraviolet light.",
  "titles": [
   {
-   "text": "A Tan Is a Tiny Parasol Over Each Cell",
+   "text": "A Tan Is a Leaky Parasol Over Each Cell",
    "mechanism": "hidden mechanism"
   },
   {
@@ -101,10 +101,10 @@
   }
  ],
  "winner": {
-  "title": "A Tan Is a Tiny Parasol Over Each Cell",
+  "title": "A Tan Is a Leaky Parasol Over Each Cell",
   "thumbnail": "A",
   "thumbnailText": "",
-  "why": "The video itself calls the cap a tiny parasol; the thumbnail shows the cap without repeating the metaphor in words."
+  "why": "The video itself calls the cap a leaky parasol; the thumbnail shows the cap without repeating the metaphor in words."
  },
  "testAndCompare": [
   "A",

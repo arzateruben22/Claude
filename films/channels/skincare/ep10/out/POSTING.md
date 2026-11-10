@@ -7,7 +7,7 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-A Tan Is a Tiny Parasol Over Each Cell
+A Tan Is a Leaky Parasol Over Each Cell
 
 **Description**
 
