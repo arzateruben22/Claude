@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "If space were endless and eternal, every line of sight would end on a star, so the night sky would glow. It doesn't, and that is a clue.",
+ "titles": [
+  {
+   "text": "Why Isn't the Night Sky Blazing White?",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "The Dark Sky Is Telling You Something",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "If Space Never Ended, Night Would Never Fall",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Why Is the Night Sky Dark at All?",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "The Oldest Mystery You Can See Tonight",
+   "mechanism": "unanswered question"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a dense star field that fades to a calm black patch at centre",
+   "composition": "bright crowded stars at the frame edges, one dark gap centre-left on a third",
+   "lighting": "white stars on indigo night, soft bloom at the edge",
+   "trigger": "visual paradox",
+   "text": "A star every way.",
+   "complements": "the title asks why it is dark; the picture shows the crowd that should fill it"
+  },
+  {
+   "id": "B",
+   "subject": "a lone figure on a hill under a perfectly black sky with a single bright star",
+   "composition": "figure small lower-left, sky negative space",
+   "lighting": "cool moonless night, faint rim light",
+   "trigger": "curiosity",
+   "text": "",
+   "complements": "quiet emptiness as the question"
+  },
+  {
+   "id": "C",
+   "subject": "a line of sight drawn as a thin teal line ending on a star",
+   "composition": "line runs across the frame to a bright star at the right third",
+   "lighting": "teal on indigo",
+   "trigger": "hidden mechanism",
+   "text": "Every look",
+   "complements": "the idea behind the paradox"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 84,
+    "synergy": 86,
+    "originality": 74,
+    "accuracy": 92,
+    "mobile": 82,
+    "satisfaction": 84
+   },
+   "note": "Picture shows the crowd the sky does not have; text adds the logic without repeating the title."
+  },
+  {
+   "title": 3,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 72,
+    "clarity": 80,
+    "synergy": 66,
+    "originality": 66,
+    "accuracy": 92,
+    "mobile": 78,
+    "satisfaction": 78
+   },
+   "note": "Honest, calm, less scroll power."
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 78,
+    "clarity": 72,
+    "synergy": 74,
+    "originality": 76,
+    "accuracy": 88,
+    "mobile": 72,
+    "satisfaction": 82
+   },
+   "note": "Clear idea, less striking."
+  }
+ ],
+ "winner": {
+  "title": "Why Isn't the Night Sky Blazing White?",
+  "thumbnail": "A",
+  "thumbnailText": "A star every way.",
+  "why": "A real paradox stated in plain words; the thumbnail shows the crowd that should fill the sky and adds the reason in four words."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "one-more-orbit-s2e02-thumb.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: a dense field of white stars crowding the frame edges, fading to a calm black patch near the centre (an illustration).\nComposition: stars crowd all four edges; one dark gap sits in the centre third; a thin teal line of sight runs from the lower middle toward the gap.\nLighting and treatment: white stars (#EEF0FF) on indigo night (#0B0F2A), soft bloom, subtle grain.\nMood: disbelief and quiet wonder.\nText: \"A star every way.\" in a clean geometric sans (Lexend style), centred in the lower middle, white with the last word teal (#4FE3C6).\nScientific accuracy: Olbers' paradox: in an endless, eternal universe every line of sight would end on a star; the real sky is dark partly because the universe has a finite age, so far light has not arrived yet.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 27.5,
+  "text": "A star every way."
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
