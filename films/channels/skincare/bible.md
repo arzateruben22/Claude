@@ -122,3 +122,13 @@ Scripts and claims from the second builder (`s1v2/`, jaw-drop pass by the coordi
 
 Nothing posts until a person has opened every source and a **board-certified dermatologist** has signed every claim
 (`review/CLAIMS-REVIEW.md`). The owner approves every post in Prism Studio.
+
+## 11. Season 2 direction (owner decision, 10 Nov 2026): short stories, and acne inside the pore
+
+- **Length.** Each episode is 1:01 to 1:15. Never under 1:01 (TikTok pays only for videos over a minute). Season long videos stay as a bonus.
+- **Format.** Each fact is told as a short story with an arc (a beginning, a turn and a close), for example "This is the life of one pore". The facts stay exact and every claim keeps its source. Anything that is not literal is badged "Illustration".
+- **Acne is allowed, under these conditions:**
+  1. It is shown only inside a pore, as an illustrated cross-section. Never on a face or a person, and never as a lesion close-up on skin.
+  2. Mechanism only: oil, dead cells, the pore, C. acnes, inflammation as a process. No treatment, product, ingredient or routine advice.
+  3. The end line is "Talk to a dermatologist about your own skin." plus both disclaimers.
+  4. The risk-word rule still applies: no fear words over skin art. Put them on ivory plates if needed.
