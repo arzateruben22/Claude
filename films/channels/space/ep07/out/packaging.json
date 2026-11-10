@@ -27,12 +27,12 @@
  "thumbnails": [
   {
    "id": "A",
-   "subject": "two equal clouds of dots, one of tiny stars and one of tiny trees, side by side",
-   "composition": "two clouds mirrored left and right, a thin gap in the middle",
-   "lighting": "indigo night; stars white, trees lemon-green",
-   "trigger": "curiosity",
+   "subject": "a row of tiny stick-figure people standing under a glowing Earth whose surface is dotted with tiny teal trees, a cloud of tree dots floating above them",
+   "composition": "Earth upper centre, the row of small people lower-centre facing up at it, a thin cloud of tree dots between; empty indigo night around",
+   "lighting": "Earth lit from the left, soft teal tree glow on indigo night",
+   "trigger": "scale contrast with a human anchor",
    "text": "Guess first.",
-   "complements": "the title gives the claim; the picture asks you to guess before you read it"
+   "complements": "the title states the result; the picture shows how many trees each tiny person has, and the words ask you to guess first"
   },
   {
    "id": "B",
@@ -121,9 +121,9 @@
   "originality": true
  },
  "thumbnailFile": "one-more-orbit-s2e01-thumb.jpg",
- "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: two equal clouds of tiny dots side by side: the left cloud tiny white stars, the right cloud small lemon-green tree shapes (an illustration).\nComposition: the two clouds stacked left and right of centre with a thin dark gap between, centred in the upper two thirds; empty indigo night around them.\nLighting and treatment: white stars (#EEF0FF) against lemon-green trees (#C8E65A) on indigo night (#0B0F2A), soft bloom, subtle grain.\nMood: curiosity.\nText: \"Guess first.\" in a clean geometric sans (Lexend style), centred in the lower middle, white.\nScientific accuracy: estimates: the Milky Way holds about 100 to 400 billion stars; Earth is estimated to hold about 3 trillion trees, so trees probably win by roughly 8 to 30 times; both are estimates.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25%% and of the right-hand button column.\nSubject: a glowing Earth whose surface is dotted with tiny teal tree lights, and, small in the lower-centre foreground, a row of tiny stick-figure people looking up at it with a thin cloud of tree dots floating above them (an illustration).\nComposition: Earth in the upper centre, the people in a row below it, a lot of empty indigo night; everything inside the centre safe area.\nLighting and treatment: Earth lit from the left, teal glow (#4FE3C6) on indigo night (#0B0F2A), soft bloom, subtle grain.\nMood: curiosity.\nText: \"Guess first.\" in a clean geometric sans (Lexend style), centred in the lower middle, white.\nScientific accuracy: estimates: the Milky Way holds about 100 to 400 billion stars; Earth is estimated to hold about 3 trillion trees, about 420 per person; both are estimates.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look.\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
  "shortsCover": {
-  "frameSeconds": 16.0,
+  "frameSeconds": 20.5,
   "text": "Guess first."
  },
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
