@@ -1,0 +1,133 @@
+{
+ "version": 1,
+ "format": "long",
+ "channel": "Possibility Lab",
+ "video": "longform/earth-spin",
+ "hook": "Shorten the day to about 1 h 24 min and the ground at the equator moves at orbital speed: you weigh nothing and float, one stride above an ordinary beach.",
+ "titles": [
+  {
+   "text": "What If Earth Spun Faster and Couldn't Stop?",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "At 84 Minutes a Day, You'd Weigh Nothing",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Spin Earth Faster and the Poles Run Dry",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "How Fast Is the Earth Spinning You Right Now?",
+   "mechanism": "personal relevance"
+  },
+  {
+   "text": "How Short Can a Day Get Before You Float?",
+   "mechanism": "unanswered question"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a person seen from behind, floating a few centimetres above a flat equatorial beach, pebbles and dust lifting around their feet",
+   "composition": "ground-level camera behind them; figure on the left third at ~40% frame height; low, gently curved horizon; empty sky right for text",
+   "lighting": "the Sun as one long bright streak arcing across a blue-violet dawn sky (a very short day); warm rim light; magenta #EB63FF glow at the horizon",
+   "trigger": "visual paradox and disbelief: an ordinary beach, and someone is floating",
+   "text": "84-MINUTE DAY",
+   "complements": "the title asks what happens; the picture shows the strangest answer and a number the title doesn't explain"
+  },
+  {
+   "id": "B",
+   "subject": "the whole Earth, 3/4 view: the oceans gathered into a band around the equator, the high latitudes showing bare grey seabed",
+   "composition": "globe centred-left, tilted so a pole faces the camera; black space right",
+   "lighting": "hard sunlight from the right, night side soft; magenta rim on the atmosphere",
+   "trigger": "scale shock: a planet without polar seas",
+   "text": "POLES: DRY",
+   "complements": "pairs with a floating or day-length title by adding a second, unexpected consequence"
+  },
+  {
+   "id": "C",
+   "subject": "a person at the equator, many faint shadows fanned around their feet like a sundial gone mad, the Sun a streak overhead",
+   "composition": "high three-quarter view looking down, figure centred, shadows radiating",
+   "lighting": "bright noon blur, clean ivory sand, magenta accents",
+   "trigger": "hidden mechanism: days flashing past",
+   "text": "",
+   "complements": "silent picture of a day lasting minutes; the title supplies the weight number"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 90,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 80,
+    "accuracy": 92,
+    "mobile": 86,
+    "satisfaction": 92
+   },
+   "note": "premise in the title, payoff in the picture; the Minute Zero format the owner chose"
+  },
+  {
+   "title": 4,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 84,
+    "curiosity": 85,
+    "clarity": 74,
+    "synergy": 70,
+    "originality": 86,
+    "accuracy": 84,
+    "mobile": 72,
+    "satisfaction": 85
+   },
+   "note": "two different hooks (floating vs oceans) dilute each other; a globe is small on a phone"
+  },
+  {
+   "title": 1,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 82,
+    "clarity": 76,
+    "synergy": 80,
+    "originality": 84,
+    "accuracy": 90,
+    "mobile": 74,
+    "satisfaction": 88
+   },
+   "note": "accurate and original but the fanned shadows need a second look"
+  }
+ ],
+ "winner": {
+  "title": "What If Earth Spun Faster and Couldn't Stop?",
+  "thumbnail": "A",
+  "thumbnailText": "84-MINUTE DAY",
+  "why": "The title sets up the escalation and the picture jumps to the most impossible-looking moment: a person floating over an ordinary beach. The number on it is a second mystery the title doesn't answer."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "notes": "Truth: the film reaches weightlessness at about 1 h 24 min (c8), so the figure floats only slightly and doesn't fly upward. The poles running dry is in the oceans/poles beats (c6).",
+ "thumbnailFile": "possibility-lab-earth-spin-thumb-16x9.jpg",
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: one person seen from behind, standing on a flat sandy beach at the equator, with their feet floating a few centimetres above the sand as if their weight has just switched off. Small pebbles and grains of sand are lifting off the ground around their feet.\nComposition: low camera at ground level, slightly behind the person. The person is on the left third, about 40% of the frame height. The horizon is low and gently curved, with a wide empty sky on the right for the text.\nLighting and treatment: the Sun is a single long bright streak arcing across a deep blue-violet dawn sky, like a time-lapse of a very short day. Warm rim light on the person from the streak, a magenta (#EB63FF) glow near the horizon. Sharp foreground, soft background, high contrast, clean.\nMood: disbelief and wonder: are they floating?\nText: \"84-MINUTE DAY\" in heavy white condensed sans-serif, upper right, large, with a soft dark shadow. No other text.\nScientific accuracy: the person floats only slightly, weightless at ground level, not flying upward; the ground is ordinary Earth; the Sun streak shows a very fast day.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, spaceships, explosions, or anything that looks like a news photo.\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": null,
+  "text": "84-MINUTE DAY",
+  "note": "Part 1/Part 2 covers: use the floating moment for Part 2 and the 12-hour Sun race for Part 1."
+ }
+}
