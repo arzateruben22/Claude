@@ -5,7 +5,7 @@
 // button or a verified integration does.
 import Link from "next/link";
 import { publishNow } from "@/app/actions";
-import { coverOf, isReady, thumbOf, uploadUrlFor, type PostItem } from "@/lib/data";
+import { coverOf, isReady, uploadUrlFor, type PostItem } from "@/lib/data";
 import { composePostText } from "@/domain/metadata";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
@@ -28,7 +28,6 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
   const base = `${channel.slug}-${no}-${dest.platform}`;
   // the file name says its resolution: the YouTube 1440p version or the 1080p master
   const res = x && /-youtube\.mp4$/.test(x.filePath) ? "-1440p" : "-1080p";
-  const thumb = dest.platform === "youtube" ? thumbOf(t) : null;
   const ready = isReady(t);
   const uploadUrl = uploadUrlFor(dest);
   const cleared = !!e.videoClearedAt;   // erased from the server after posting: no video to download, share or publish
@@ -36,9 +35,9 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
     <article className="post" style={topicStyle(channel)} id={p ? `post-${p.id}` : undefined}>
       <div className="post-cover">
         {cover ? (
-          <a href={mediaUrl(cover, `${base}-cover.jpg`)} download={`${base}-cover.jpg`} className="post-thumb" aria-label={`Download the cover for ${e.title}`}>
+          <a href={mediaUrl(cover, `${base}-cover.jpg`)} download={`${base}-cover.jpg`} className="post-thumb" aria-label={`Download the cover and thumbnail for ${e.title}`}>
             <img src={mediaUrl(cover)} alt="" decoding="async" loading="lazy" />
-            <span className="post-dl"><Icon name="download" size={16} /> Cover</span>
+            <span className="post-dl"><Icon name="download" size={16} /> Cover &amp; thumbnail</span>
           </a>
         ) : <div className="post-thumb" data-empty><span className="faint">No cover yet</span></div>}
       </div>
@@ -63,7 +62,7 @@ export function PostCard({ t, tz, stopExternal, heading }: { t: PostItem; tz: st
         </div>
       </header>
 
-      {x ? <PostFields x={x} platform={dest.platform} thumb={thumb ? { url: mediaUrl(thumb, `${base}-thumb.jpg`), name: `${base}-thumb.jpg` } : null} />
+      {x ? <PostFields x={x} platform={dest.platform} />
         : <p className="muted post-fields">Nothing rendered for {platform} yet.</p>}
 
       {x && stopExternal ? <div className="notice bad post-actions">External actions are stopped in Settings.</div>

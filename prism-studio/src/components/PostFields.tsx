@@ -1,4 +1,4 @@
-// The exact words for one post, each with its copy button: the YouTube title (and its 16:9 thumbnail), the description or
+// The exact words for one post, each with its copy button: the YouTube title, the description or
 // caption, the hashtags, the pinned / first comment with the sources and, when they don't fit one comment, each reply
 // ("Reply", or "Reply 1", "Reply 2" … when there are several, posted under it in order), YouTube's keyword tags, and a
 // short checklist for the upload screen. Shared by the monitor screens' post cards and the Upload Desk. The caption
@@ -44,7 +44,7 @@ function CommentText({ text }: { text: string }) {
     : <p className="copy-text notes">{text}</p>;
 }
 
-export function PostFields({ x, platform, thumb }: { x: Export; platform: Platform; thumb?: { url: string; name: string } | null }) {
+export function PostFields({ x, platform }: { x: Export; platform: Platform }) {
   const notes = parsePostingNotes(x.postingNotes);
   const body = captionBody(x), full = composePostText(x);
   const first = FIRST_COMMENT[platform], replies = notes.comment ? notes.replies : [];
@@ -53,10 +53,7 @@ export function PostFields({ x, platform, thumb }: { x: Export; platform: Platfo
   return (
     <div className="post-fields">
       {platform === "youtube" ? (
-        <Field label="Title" actions={<>
-          <CopyButton text={x.title} label="Copy title" />
-          {thumb ? <a className="btn quiet small" href={thumb.url} download={thumb.name}>Thumbnail 16:9</a> : null}
-        </>}>
+        <Field label="Title" actions={<CopyButton text={x.title} label="Copy title" />}>
           <p className="copy-text strong">{x.title}</p>
         </Field>
       ) : null}

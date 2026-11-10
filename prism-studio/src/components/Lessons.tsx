@@ -90,7 +90,7 @@ export function Lessons({ channelId, channelName, ytHandle, lessons, parts, avai
                   <a className="btn ghost small" href={`${mediaUrl(l.videoPath)}&dl=${encodeURIComponent(`${l.name}-16x9.mp4`)}`} download>Download video</a>
                   {l.thumbnailPath ? <a className="btn ghost small" href={`${mediaUrl(l.thumbnailPath)}&dl=${encodeURIComponent(`${l.name}-thumbnail.jpg`)}`} download>Thumbnail</a> : null}
                 </div>
-                {l.packaging ? <PackagingCard id={`pack-${l.id}`} p={l.packaging} thumb={packThumbs[l.id] ?? null} download={`${l.name}-packaging-thumbnail.jpg`} /> : null}
+                {l.packaging ? <PackagingCard id={`pack-${l.id}`} p={l.packaging} thumb={l.thumbnailPath || packThumbs[l.id] || null} download={`${l.name}-thumbnail.jpg`} /> : null}
                 <LessonUploadedPanel lesson={l} tz={tz} account={ytHandle || `${channelName}'s YouTube`} />
                 {l.state === "published" && l.postUrl ? <p className="muted" style={{ margin: 0 }}><a href={l.postUrl} target="_blank" rel="noopener noreferrer">Watch it on YouTube</a></p> : null}
               </>

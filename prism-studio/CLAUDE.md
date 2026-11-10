@@ -40,6 +40,10 @@
   already on YouTube, and the same packaging again keeps the owner's edits. The "Title & thumbnail" card
   (`PackagingCard`) shows it on the episode page, the Lessons tab and the long-video card; scores are always labelled
   creative judgments, not CTR predictions. The worker image carries zod for this (Dockerfile).
+- **One picture per episode (owner's request, 10 Nov 2026):** the designed 9:16 cover is both the cover and the thumbnail.
+  `episodeCover` (src/lib/data.ts) picks it (the export's cover, else the render's poster frame), and the player's poster,
+  the single "Cover & thumbnail" button (episode page, Library, Upload Desk, post cards) and the "Title & thumbnail" card
+  all show that same file. No separate 16:9 thumbnail button for shorts. A long video's one picture is its `thumbnailPath`.
 - **Money:** Prism never moves money. Personal rewards are owner-funded, reserved only within the funded balance
   and the monthly cap, under a row lock. Demo or estimated numbers never create or reserve a reward. Production
   budgets are separate, and paid generation stays off without one.

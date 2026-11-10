@@ -408,7 +408,7 @@ function LongVideo({ x, slug, tz, account }: {
         {l.thumbnailPath ? <a className="btn ghost small" href={`${mediaUrl(l.thumbnailPath)}&dl=${encodeURIComponent(`${l.name}-thumbnail.jpg`)}`} download>Thumbnail</a> : null}
         <Link href={`/channels/${slug}?tab=lessons`} className="btn ghost small">Title and description</Link>
       </div>
-      {l.packaging ? <PackagingCard id={`pack-${l.id}`} p={l.packaging} thumb={x.packThumb} download={`${l.name}-packaging-thumbnail.jpg`} /> : null}
+      {l.packaging ? <PackagingCard id={`pack-${l.id}`} p={l.packaging} thumb={l.thumbnailPath || x.packThumb} download={`${l.name}-thumbnail.jpg`} /> : null}
       <LessonUploadedPanel lesson={l} tz={tz} account={account} />
     </article>
   );

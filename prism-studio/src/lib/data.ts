@@ -355,12 +355,12 @@ export function smallCover(key: string | null): string | null {
   return a && b && fs.statSync(a).mtimeMs >= fs.statSync(b).mtimeMs ? small : key;
 }
 
-/** The 16:9 YouTube thumbnail drawn with a post's designed cover (<name>-thumb.jpg), when it exists. */
-export function thumbOf(t: Pick<PostItem, "x" | "version">): string | null {
-  const cover = coverOf(t);
-  if (!cover || !/-cover\.jpg$/.test(cover)) return null;
-  const thumb = cover.replace(/-cover\.jpg$/, "-thumb.jpg");
-  return mediaFile(thumb) ? thumb : null;
+/** An episode's one picture (owner, 10 Nov 2026): the designed 9:16 cover is both the cover and the thumbnail. The player's
+ *  poster, the "Cover & thumbnail" button and the "Title & thumbnail" card all show this same file, so what you see is
+ *  what you download. Every export of a render carries the same cover (the importer sets it), YouTube's first. */
+export function episodeCover(f: { current: PostItem["version"] | null; exports: NonNullable<PostItem["x"]>[] }): string | null {
+  if (!f.current) return null;
+  return coverOf({ x: f.exports.find((x) => x.platform === "youtube") ?? f.exports[0] ?? null, version: f.current });
 }
 
 /** Whether a channel's covers are drawn on light paper (its theme.json tokens.bg luminance above 0.5): the wall dims those
@@ -658,11 +658,11 @@ export async function libraryView() {
     const episodes = rows.filter((r) => r.e.channelId === c.id).map(({ e, v }) => {
       const cover = covers.find((x) => x.versionId === v.id)?.coverPath || v.posterPath || null;
       const ytFile = xs.find((x) => x.versionId === v.id && x.platform === "youtube")?.filePath;
-      const cleared = !!e.videoClearedAt;   // erased from the server after posting: cover, thumbnail and captions stay
+      const cleared = !!e.videoClearedAt;   // erased from the server after posting: the cover and captions stay
       const youtube = !cleared && ytFile && ytFile !== v.videoPath ? { path: ytFile, fileName: resolutionName(ytFile, "1440p"), bytes: bytes(ytFile) } : null;   // the 1440p version
       return { youtube, cleared,
         id: e.id, number: e.number, title: e.title, isDemo: e.isDemo, hasSrt: !!e.captionsSrt, videoPath: v.videoPath, fileName: resolutionName(v.videoPath, "1080p"),
-        durationS: v.durationS, width: v.width, height: v.height, bytes: bytes(v.videoPath), cover, small: smallCover(cover), thumb: sibling(cover, "-thumb.jpg"),
+        durationS: v.durationS, width: v.width, height: v.height, bytes: bytes(v.videoPath), cover, small: smallCover(cover),
       };
     });
     const longs = lessons.filter((l) => l.channelId === c.id).map((l) => ({

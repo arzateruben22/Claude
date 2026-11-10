@@ -3,7 +3,7 @@
 // button for the platform ("Uploaded on YouTube & TikTok" / "Uploaded on Instagram"). Done tasks show the done state
 // with Undo.
 import Link from "next/link";
-import { coverOf, isReady, thumbOf, uploadUrlFor, type UploadTask } from "@/lib/data";
+import { coverOf, isReady, uploadUrlFor, type UploadTask } from "@/lib/data";
 import { publishNow } from "@/app/actions";
 import { composePostText } from "@/domain/metadata";
 import { formatLocal } from "@/domain/time";
@@ -27,7 +27,7 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
   const no = String(e.number).padStart(3, "0");
   const base = `${channel.slug}-${no}-${dest.platform}`;
   const ready = isReady(t);
-  const cover = coverOf(t), thumb = dest.platform === "youtube" ? thumbOf(t) : null;
+  const cover = coverOf(t);   // the one picture: both the cover and the thumbnail
   const cleared = !!e.videoClearedAt;   // erased from the server after posting (an upload undone later): no video here
   return (
     <article id={`task-${p.id}`} data-task className="card stack" style={topicStyle(channel)}>
@@ -64,8 +64,7 @@ export function TaskCard({ t, tz, stopExternal, connected }: { t: UploadTask; tz
             <div className="stack-sm">
               <PostFields x={x} platform={dest.platform} />
               <div className="row files">
-                {cover ? <a className="btn quiet small" href={mediaUrl(cover, `${base}-cover.jpg`)} download={`${base}-cover.jpg`}><Icon name="download" size={16} /> Cover .jpg</a> : null}
-                {thumb ? <a className="btn quiet small" href={mediaUrl(thumb, `${base}-thumb.jpg`)} download={`${base}-thumb.jpg`}><Icon name="download" size={16} /> Thumbnail 16:9</a> : null}
+                {cover ? <a className="btn quiet small" href={mediaUrl(cover, `${base}-cover.jpg`)} download={`${base}-cover.jpg`}><Icon name="download" size={16} /> Cover &amp; thumbnail</a> : null}
                 {dest.platform === "youtube" && e.captionsSrt ? <a className="btn quiet small" href={`/api/srt/${e.id}`} download><Icon name="download" size={16} /> Captions .srt</a> : null}
                 {!cleared ? <a className="btn quiet small" href={`/api/bundle/${p.id}`} download><Icon name="download" size={16} /> Bundle .zip</a> : null}
               </div>

@@ -6,7 +6,7 @@
 // note stand where the player was.
 import Link from "next/link";
 import type { ReactNode } from "react";
-import type { episodeFull } from "@/lib/data";
+import { episodeCover, type episodeFull } from "@/lib/data";
 import { mediaUrl } from "@/lib/media";
 import { PLATFORM_LABEL, pubTone, qaFails, topicStyle } from "@/lib/format";
 import { UploadedControl, groupOf } from "./UploadedControl";
@@ -25,6 +25,7 @@ export function ReviewSlide({ full, tz, head, prev, next, position, back, source
 }) {
   const { ep, channel, current, placements } = full;
   const fails = current ? qaFails(current.qa) : null;
+  const poster = episodeCover(full);   // the same picture the "Cover & thumbnail" button downloads
   const unchecked = full.sources.filter((x) => x.status !== "ok").length;
   // the switch starts on the first account that is not uploaded yet (else the first account)
   const start = placements.find((p) => p.export && !(p.publication && POSTED.includes(p.publication.status))) ?? placements[0];
@@ -48,9 +49,9 @@ export function ReviewSlide({ full, tz, head, prev, next, position, back, source
 
       <div className="slide-media">
         {current && ep.videoClearedAt
-          ? <>{current.posterPath ? <img className="slide-video" src={mediaUrl(current.posterPath)} alt="" decoding="async" /> : null}<VideoCleared /></>
+          ? <>{poster ? <img className="slide-video" src={mediaUrl(poster)} alt="" decoding="async" /> : null}<VideoCleared /></>
           : current
-          ? <video className="slide-video" controls preload={preload} playsInline poster={current.posterPath ? mediaUrl(current.posterPath) : undefined} src={mediaUrl(current.videoPath)} />
+          ? <video className="slide-video" controls preload={preload} playsInline poster={poster ? mediaUrl(poster) : undefined} src={mediaUrl(current.videoPath)} />
           : <p className="slide-empty muted">No render yet{ep.filmsPath ? `: the film lives in ${ep.filmsPath}` : ""}.</p>}
       </div>
 
