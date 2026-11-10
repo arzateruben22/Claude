@@ -6,8 +6,10 @@
 --
 --   P1  An approved claim has exactly one ledger award, and a claim becomes approved
 --       ONLY by that award being written.            -> ledger_one_award_per_claim, ledger_award_approves_claim, claims_transitions
---   P2  A duplicate submission can never be credited twice.
---                                                    -> claims_one_live_per_subject, subject CHECKs, claims_exception_is_next
+--   P2  A duplicate submission can never be credited twice. A platform video is ONE
+--       subject, whether or not it is on the tracked list.
+--                                                    -> claims_one_live_per_subject, subject CHECKs,
+--                                                       claims_video_subject_is_canonical, claims_exception_is_next
 --   P3  No task award exists without a reviewed or API-attested claim, and the "earned"
 --       bucket can only grow through such an award.  -> ledger_award_requires_reviewed_claim, adjustment CHECK
 --   P4  The ledger is append-only; corrections are new entries.
@@ -82,6 +84,9 @@ CREATE TABLE members (
   created_at         TEXT NOT NULL,
   CHECK ((youtube_channel_id IS NULL) = (youtube_linked_at IS NULL))
 ) STRICT;
+
+-- Two members cannot hold the same channel: each would be attested as owner of its videos.
+CREATE UNIQUE INDEX members_one_member_per_channel ON members (youtube_channel_id) WHERE youtube_channel_id IS NOT NULL;
 
 -- A user is someone allowed to sign in. Access is by allowlist: a row must exist
 -- (keyed by e-mail) before the first Google sign-in; after that the Google `sub`
@@ -211,6 +216,16 @@ CREATE TABLE task_types (
   CHECK (points > 0 OR xp > 0)
 ) STRICT;
 
+-- P12: "verified" presumes the task has an automatic check, so the check cannot be
+-- switched off while claims verified under it exist.
+CREATE TRIGGER task_types_keep_check_while_verified
+BEFORE UPDATE OF api_check ON task_types
+WHEN NEW.api_check = 'none' AND OLD.api_check <> 'none'
+BEGIN
+  SELECT RAISE(ABORT, 'a task with verified claims keeps its automatic check')
+  WHERE EXISTS (SELECT 1 FROM claims c WHERE c.task_type_id = OLD.id AND c.verification_status = 'verified');
+END;
+
 -- A claim is a member saying "I did this task". It carries two independent facts:
 --   verification_status : how well the activity itself is established
 --   decision            : what was decided about crediting it
@@ -220,10 +235,13 @@ CREATE TABLE claims (
   task_type_id        TEXT NOT NULL REFERENCES task_types (id),
   video_id            TEXT REFERENCES videos (id),
   -- What uniqueness is measured on, in this fixed order of precedence:
-  --   'video:<videos.id>'  when the claim is about a tracked video
-  --   'url:<normalised>'   otherwise, when a link was submitted
+  --   'video:<platform>:<platform video id>'  when the claim is about a YouTube or TikTok
+  --        video — picked from the tracked list OR submitted as a link. The same video is
+  --        the same subject before and after it is put on the tracked list.
+  --   'url:<normalised>'   otherwise, when some other link was submitted
   --   'text:<sha256>'      otherwise (the hash of the normalised evidence text)
-  subject_key         TEXT NOT NULL CHECK (subject_key GLOB 'video:?*' OR subject_key GLOB 'url:?*' OR subject_key GLOB 'text:?*'),
+  -- ('video:erased:<videos.id>' replaces the first form when the video's owner is erased.)
+  subject_key         TEXT NOT NULL CHECK (subject_key GLOB 'video:?*:?*' OR subject_key GLOB 'url:?*' OR subject_key GLOB 'text:?*'),
   -- 0 for ordinary claims. An admin may grant an explicit, logged exception that lets a
   -- member be credited again for a subject that was already credited; each takes the next number.
   exception_seq       INTEGER NOT NULL DEFAULT 0 CHECK (exception_seq >= 0),
@@ -252,17 +270,22 @@ CREATE TABLE claims (
   created_at          TEXT NOT NULL CHECK (created_at IS strftime('%Y-%m-%dT%H:%M:%fZ', created_at)),
 
   CHECK ((exception_seq = 0) = (exception_reason IS NULL)),
-  CHECK (evidence_text IS NOT NULL OR evidence_url IS NOT NULL OR video_id IS NOT NULL),
+  CHECK (evidence_text IS NOT NULL OR evidence_url IS NOT NULL OR video_id IS NOT NULL OR subject_key GLOB 'video:erased:*'),
   -- A claim that could never produce a ledger entry cannot exist.
   CHECK (points_snapshot > 0 OR xp_snapshot > 0),
-  -- P2: the subject of a claim about a tracked video IS that video. (CASE, because a NULL CHECK passes.)
-  CHECK (CASE WHEN video_id IS NULL THEN subject_key NOT GLOB 'video:*' ELSE subject_key = 'video:' || video_id END),
+  -- P2: a claim attached to a tracked video has a video subject (which one: claims_video_subject_is_canonical).
+  CHECK (video_id IS NULL OR subject_key GLOB 'video:*'),
+  -- P2: a url: subject is never a platform video (those are video: subjects) and always has its link.
+  CHECK (subject_key NOT GLOB 'url:*' OR (lower(subject_key) NOT GLOB '*youtube.com*' AND lower(subject_key) NOT GLOB '*youtu.be*' AND lower(subject_key) NOT GLOB '*tiktok.com*')),
+  CHECK (subject_key NOT GLOB 'url:*' OR evidence_url IS NOT NULL),
+  -- P2: a claim that carries a link is measured on the link, never on its wording.
+  CHECK (evidence_url IS NULL OR subject_key NOT GLOB 'text:*'),
   -- P12: "verified" may only ever come from a platform adapter; "manually reviewed" only from a person.
   CHECK ((verification_status = 'unverified') = (verification_source = 'none')),
   CHECK ((verification_status = 'manually_reviewed') = (verification_source = 'admin_review')),
   CHECK ((verification_status = 'unverified') = (verified_at IS NULL)),
   -- P12: only something a platform can look at can be "verified".
-  CHECK (verification_status <> 'verified' OR video_id IS NOT NULL OR evidence_url IS NOT NULL),
+  CHECK (verification_status <> 'verified' OR video_id IS NOT NULL OR evidence_url IS NOT NULL OR subject_key GLOB 'video:erased:*'),
   -- P3: an unverified claim can never be approved.
   CHECK (decision <> 'approved' OR verification_status IN ('manually_reviewed', 'verified')),
   CHECK (decision <> 'pending' OR (decided_at IS NULL AND decided_by IS NULL AND decision_note IS NULL)),
@@ -390,6 +413,7 @@ BEGIN
       AND c.verification_status IN ('manually_reviewed', 'verified')
       AND c.points_snapshot = NEW.points
       AND c.xp_snapshot = NEW.xp
+      AND c.created_at <= NEW.created_at
   );
 END;
 
@@ -514,14 +538,23 @@ BEGIN
   SELECT RAISE(ABORT, 'a text: subject is the evidence hash');
 END;
 
--- P2: a link to a tracked video must be submitted against that video, so that the same
--- video cannot be credited once per spelling of its link.
-CREATE TRIGGER claims_tracked_video_url_must_use_video
+-- P2: a claim attached to a tracked video carries exactly that video's subject.
+CREATE TRIGGER claims_video_subject_is_canonical
 BEFORE INSERT ON claims
-WHEN NEW.video_id IS NULL AND NEW.evidence_url IS NOT NULL
- AND EXISTS (SELECT 1 FROM videos v WHERE instr(NEW.evidence_url, v.platform_video_id) > 0)
+WHEN NEW.video_id IS NOT NULL
+ AND NEW.subject_key IS NOT (SELECT 'video:' || v.platform || ':' || v.platform_video_id FROM videos v WHERE v.id = NEW.video_id)
 BEGIN
-  SELECT RAISE(ABORT, 'evidence_url points at a tracked video: submit the claim against that video');
+  SELECT RAISE(ABORT, 'the subject of a claim about a tracked video is video:<platform>:<platform video id>');
+END;
+
+-- P2: a submitted link to a platform video is a claim about that video, so it must use
+-- the video subject and cannot hide under a text: or url: subject.
+CREATE TRIGGER claims_video_link_needs_video_subject
+BEFORE INSERT ON claims
+WHEN NEW.evidence_url IS NOT NULL AND NEW.subject_key NOT GLOB 'video:*'
+ AND (lower(NEW.evidence_url) GLOB '*youtube.com*' OR lower(NEW.evidence_url) GLOB '*youtu.be*' OR lower(NEW.evidence_url) GLOB '*tiktok.com*')
+BEGIN
+  SELECT RAISE(ABORT, 'a link to a platform video must use the video subject');
 END;
 
 -- P2: an exception is the next number after an APPROVED claim for the same subject,
@@ -542,10 +575,11 @@ END;
 -- The only legal moves, and what each one needs.
 CREATE TRIGGER claims_transitions
 BEFORE UPDATE OF decision ON claims
-WHEN NEW.decision <> OLD.decision
+WHEN NEW.decision IS NOT OLD.decision
 BEGIN
   SELECT RAISE(ABORT, 'illegal claim transition')
-  WHERE NOT ((OLD.decision = 'pending'  AND NEW.decision IN ('approved', 'rejected', 'withdrawn'))
+  WHERE NEW.decision IS NULL
+     OR NOT ((OLD.decision = 'pending'  AND NEW.decision IN ('approved', 'rejected', 'withdrawn'))
           OR (OLD.decision = 'approved' AND NEW.decision = 'revoked'));
   SELECT RAISE(ABORT, 'a claim becomes approved only by inserting its task_award')
   WHERE NEW.decision = 'approved'
@@ -557,6 +591,16 @@ BEGIN
   SELECT RAISE(ABORT, 'a rejection needs a recorded reviewer and a note')
   WHERE NEW.decision = 'rejected'
     AND (NEW.decided_by IS NULL OR NEW.decision_note IS NULL OR length(trim(NEW.decision_note)) < 3);
+END;
+
+-- A column that has a default can otherwise be RESET to it: "UPDATE OR REPLACE ... SET
+-- decision = NULL" does not fail on NOT NULL, it silently stores the default ('pending'),
+-- which would un-decide an approved claim while its award stays. NULL is refused outright.
+CREATE TRIGGER claims_no_null_reset
+BEFORE UPDATE ON claims
+WHEN NEW.decision IS NULL OR NEW.verification_status IS NULL OR NEW.verification_source IS NULL OR NEW.exception_seq IS NULL
+BEGIN
+  SELECT RAISE(ABORT, 'a claim column cannot be reset to its default');
 END;
 
 -- P8: an approval needs a recorded reviewer, and that reviewer's account must not be
@@ -571,15 +615,16 @@ BEGIN
 END;
 
 -- P12: who a claim belongs to, what it is for, what was submitted and what it is worth
--- never change. The one exception: during an erasure, evidence may be blanked (other
--- members' feedback about the erased member's videos).
+-- never change. The one exception is narrow: while member M is being erased, another
+-- member's claim about one of M's videos has its evidence blanked AND its subject moved
+-- from that video's real id to 'video:erased:<videos.id>', in the same statement. Nothing
+-- else may be blanked, so an erasure cannot be used to wipe unrelated evidence.
 CREATE TRIGGER claims_identity_is_immutable
 BEFORE UPDATE ON claims
 WHEN NEW.id IS NOT OLD.id
   OR NEW.member_id IS NOT OLD.member_id
   OR NEW.task_type_id IS NOT OLD.task_type_id
   OR NEW.video_id IS NOT OLD.video_id
-  OR NEW.subject_key IS NOT OLD.subject_key
   OR NEW.exception_seq IS NOT OLD.exception_seq
   OR NEW.exception_reason IS NOT OLD.exception_reason
   OR NEW.points_snapshot IS NOT OLD.points_snapshot
@@ -587,9 +632,13 @@ WHEN NEW.id IS NOT OLD.id
   OR NEW.created_at IS NOT OLD.created_at
   OR NEW.submitted_by_role IS NOT OLD.submitted_by_role
   OR (NEW.submitted_by IS NOT OLD.submitted_by AND NEW.submitted_by IS NOT NULL)
-  OR ((NEW.evidence_text IS NOT OLD.evidence_text OR NEW.evidence_url IS NOT OLD.evidence_url OR NEW.evidence_hash IS NOT OLD.evidence_hash)
-      AND NOT ((SELECT member_id FROM erasure_guard WHERE id = 1) IS NOT NULL
-               AND NEW.evidence_text IS NULL AND NEW.evidence_url IS NULL AND NEW.evidence_hash IS NULL))
+  OR ((NEW.subject_key IS NOT OLD.subject_key OR NEW.evidence_text IS NOT OLD.evidence_text
+       OR NEW.evidence_url IS NOT OLD.evidence_url OR NEW.evidence_hash IS NOT OLD.evidence_hash)
+      AND NOT (NEW.evidence_text IS NULL AND NEW.evidence_url IS NULL AND NEW.evidence_hash IS NULL
+               AND EXISTS (SELECT 1 FROM videos v
+                            WHERE v.owner_member_id = (SELECT member_id FROM erasure_guard WHERE id = 1)
+                              AND OLD.subject_key = 'video:' || v.platform || ':' || v.platform_video_id
+                              AND NEW.subject_key = 'video:erased:' || v.id)))
 BEGIN
   SELECT RAISE(ABORT, 'claim identity, evidence and value are immutable');
 END;
@@ -675,6 +724,12 @@ CREATE TABLE tiers (
   updated_at TEXT NOT NULL,
   CHECK (level <> 1 OR min_xp = 0)
 ) STRICT;
+
+CREATE TRIGGER tiers_no_delete
+BEFORE DELETE ON tiers
+BEGIN
+  SELECT RAISE(ABORT, 'there are exactly five tiers');
+END;
 
 -- Key/value settings (JSON values), validated by src/domain/settings.js.
 CREATE TABLE settings (

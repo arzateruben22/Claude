@@ -296,7 +296,7 @@ describe('P1  An approved claim has exactly one ledger award, and a claim become
       'a pending claim cannot carry a decision note': ({ sql, claimId }) => sql.run("UPDATE claims SET decision_note = 'Looks fine to me.' WHERE id = ?", [claimId]),
       'a decided claim always has a time': [({ sql, claimId }) => sql.run("UPDATE claims SET decision = 'withdrawn' WHERE id = ?", [claimId]), CHECK("decision = 'pending' OR decided_at IS NOT NULL")],
       'a decision outside the five known ones is refused': [({ sql, claimId }) => sql.run("UPDATE claims SET decision = 'archived', decided_at = ? WHERE id = ?", [T0, claimId]), illegal],
-      'a NULL decision is refused by a plain UPDATE': [({ sql, claimId }) => sql.run('UPDATE claims SET decision = NULL WHERE id = ?', [claimId]), NOT_NULL('claims.decision')],
+      'a NULL decision is refused by a plain UPDATE': [({ sql, claimId }) => sql.run('UPDATE claims SET decision = NULL WHERE id = ?', [claimId]), either(ABORT.claims_no_null_reset, illegal, NOT_NULL('claims.decision'))],
     });
   });
 
@@ -305,14 +305,14 @@ describe('P1  An approved claim has exactly one ledger award, and a claim become
   const unDecide = (sql, claimId) => sql.run('UPDATE OR REPLACE claims SET decision = NULL, decided_at = NULL, decided_by = NULL, decision_note = NULL WHERE id = ?', [claimId]);
 
   for (const from of ['approved', 'rejected', 'withdrawn', 'revoked']) {
-    test(`UPDATE OR REPLACE with a NULL decision cannot turn a claim that was ${from} back into a pending one`, DEFECT('claims.decision = NULL under UPDATE OR REPLACE falls back to the column default and un-decides the claim'), () => {
+    test(`UPDATE OR REPLACE with a NULL decision cannot turn a claim that was ${from} back into a pending one`, () => {
       const sql = stage();
       const claimId = claimIn(sql, from);
-      refuses(sql, () => unDecide(sql, claimId), ANY_REFUSAL);
+      refuses(sql, () => unDecide(sql, claimId), either(ABORT.claims_no_null_reset, ABORT.claims_transitions.illegal));
     });
   }
 
-  test('an approved claim cannot be un-decided, withdrawn and submitted again for a second credit', DEFECT('un-deciding an approved claim leaves its award in place and frees the subject: one contribution, two awards'), () => {
+  test('an approved claim cannot be un-decided, withdrawn and submitted again for a second credit', () => {
     const sql = stage();
     const text = 'The intro runs long; cut the first ten seconds and the hook lands.';
     const { claimId } = approvedClaim(sql, { evidence_text: text });
@@ -323,7 +323,7 @@ describe('P1  An approved claim has exactly one ledger award, and a claim become
     assert.equal(claimOf(sql, claimId).decision, 'approved');
   });
 
-  test('a revoked claim cannot be un-decided and approved again by UPDATE alone', DEFECT('after un-deciding, a claim whose award was reversed can be approved by UPDATE with no live award'), () => {
+  test('a revoked claim cannot be un-decided and approved again by UPDATE alone', () => {
     const sql = stage();
     const claimId = claimIn(sql, 'revoked');
     attempt(() => unDecide(sql, claimId));
@@ -338,8 +338,12 @@ describe('P1  An approved claim has exactly one ledger award, and a claim become
 
 describe('P2  A duplicate submission can never be credited twice', () => {
   const TEXT = 'Move the captions up: they cover the product in the second half.';
-  const subjectPrefix = CHECK("subject_key GLOB 'video:?*' OR subject_key GLOB 'url:?*' OR subject_key GLOB 'text:?*'");
-  const subjectIsVideo = CHECK("CASE WHEN video_id IS NULL THEN subject_key NOT GLOB 'video:*' ELSE subject_key = 'video:' || video_id END");
+  const subjectPrefix = CHECK("subject_key GLOB 'video:?*:?*' OR subject_key GLOB 'url:?*' OR subject_key GLOB 'text:?*'");
+  const trackedNeedsVideoSubject = CHECK("video_id IS NULL OR subject_key GLOB 'video:*'");
+  const urlNeedsLink = CHECK("subject_key NOT GLOB 'url:*' OR evidence_url IS NOT NULL");
+  const urlIsNeverAVideo = CHECK("subject_key NOT GLOB 'url:*' OR (lower(subject_key) NOT GLOB '*youtube.com*' AND lower(subject_key) NOT GLOB '*youtu.be*' AND lower(subject_key) NOT GLOB '*tiktok.com*')");
+  const linkIsNeverText = CHECK("evidence_url IS NULL OR subject_key NOT GLOB 'text:*'");
+  const canonical = ABORT.claims_video_subject_is_canonical;
 
   describe('one live claim per member, task and subject', () => {
     const alreadyClaimed = (decision) => () => {
@@ -385,27 +389,34 @@ describe('P2  A duplicate submission can never be credited twice', () => {
   });
 
   describe('what a subject key may be', () => {
-    refusedOneByOne(justTheCast, subjectIsVideo, {
-      'a claim about a tracked video cannot use a url: subject': ({ sql }) => claim(sql, { video_id: 'vid_yt', subject_key: 'url:https://youtu.be/ytSample001' }),
+    refusedOneByOne(justTheCast, canonical, {
+      'a claim about a tracked video cannot use a url: subject': ({ sql }) => claim(sql, { video_id: 'vid_yt', evidence_url: 'https://example.test/elsewhere', subject_key: 'url:https://example.test/elsewhere' }),
       'a claim about a tracked video cannot use a text: subject': ({ sql }) => claim(sql, { video_id: 'vid_yt', evidence_text: TEXT, subject_key: `text:${sha256(TEXT)}` }),
-      'a claim about one tracked video cannot use the subject of another': ({ sql }) => claim(sql, { video_id: 'vid_yt', subject_key: 'video:vid_tt' }),
-      'the video subject is compared exactly, not case-insensitively': ({ sql }) => claim(sql, { video_id: 'vid_yt', subject_key: 'video:VID_YT' }),
-      'a claim with no video cannot use a video: subject': ({ sql }) => claim(sql, { video_id: null, subject_key: 'video:vid_yt' }),
+      'a claim about one tracked video cannot use the subject of another': ({ sql }) => claim(sql, { video_id: 'vid_yt', subject_key: 'video:tiktok:7300000000000000001' }),
+      'the video subject is compared exactly, not case-insensitively': ({ sql }) => claim(sql, { video_id: 'vid_yt', subject_key: 'video:YOUTUBE:ytSample001' }),
+      'a claim about a tracked video cannot use the old internal-id subject': ({ sql }) => claim(sql, { video_id: 'vid_yt', subject_key: 'video:vid_yt:x' }),
+    });
+
+    test('beneath the trigger, a claim attached to a tracked video still needs a video subject', () => {
+      const sql = stage();
+      dropTrigger(sql, 'claims_video_subject_is_canonical');
+      refuses(sql, () => claim(sql, { video_id: 'vid_yt', evidence_url: 'https://example.test/elsewhere', subject_key: 'url:https://example.test/elsewhere' }), trackedNeedsVideoSubject);
     });
     refusedOneByOne(justTheCast, subjectPrefix, {
       'a subject with an unknown prefix is refused': ({ sql }) => claim(sql, { subject_key: 'misc:thing' }),
-      'a url: subject with nothing after the colon is refused': ({ sql }) => claim(sql, { subject_key: 'url:' }),
+      'a url: subject with nothing after the colon is refused': [({ sql }) => claim(sql, { subject_key: 'url:' }), either(subjectPrefix, urlNeedsLink)],
+      'a video: subject with only one part is refused': ({ sql }) => claim(sql, { subject_key: 'video:ytSample001' }),
       'a subject prefix in capitals is refused': ({ sql }) => claim(sql, { subject_key: 'URL:https://example.test/a' }),
       'an empty subject is refused': ({ sql }) => claim(sql, { subject_key: '' }),
       'a subject with no colon is refused': ({ sql }) => claim(sql, { subject_key: 'video' }),
-      'a video: subject with nothing after the colon is refused': [({ sql }) => claim(sql, { subject_key: 'video:' }), either(subjectPrefix, subjectIsVideo)],
+      'a video: subject with nothing after the colon is refused': ({ sql }) => claim(sql, { subject_key: 'video:' }),
       'a missing subject is refused': [({ sql }) => claim(sql, { subject_key: null }), NOT_NULL('claims.subject_key')],
     });
 
     test('legal: a claim about a tracked video has that video as its subject', () => {
       const sql = stage();
       const claimId = claim(sql, { video_id: 'vid_yt' });
-      assert.equal(claimOf(sql, claimId).subject_key, 'video:vid_yt');
+      assert.equal(claimOf(sql, claimId).subject_key, 'video:youtube:ytSample001');
     });
   });
 
@@ -424,33 +435,50 @@ describe('P2  A duplicate submission can never be credited twice', () => {
     });
   });
 
-  describe('a link to a tracked video must be submitted against that video', () => {
+  describe('a link to a platform video is a claim about that video, tracked or not', () => {
     const links = {
       'the watch link of a tracked YouTube video': 'https://www.youtube.com/watch?v=ytSample001',
       'the short link of a tracked YouTube video': 'https://youtu.be/ytSample001?t=42',
       'the mobile link of a tracked YouTube video': 'https://m.youtube.com/watch?feature=share&v=ytSample001',
       'the link of a tracked TikTok video': 'https://www.tiktok.com/@sample/video/7300000000000000001',
+      'the link of an untracked YouTube video': 'https://www.youtube.com/watch?v=untracked01',
+      'a YouTube link with its host in capitals': 'https://WWW.YOUTUBE.COM/watch?v=ytSample001',
     };
     refusedOneByOne(
       justTheCast,
-      ABORT.claims_tracked_video_url_must_use_video,
-      Object.fromEntries(Object.entries(links).map(([name, link]) => [`${name}, submitted without the video, is refused`, ({ sql }) => claim(sql, { evidence_url: link })])),
+      ABORT.claims_video_link_needs_video_subject,
+      Object.fromEntries(
+        Object.entries(links).flatMap(([name, link]) => [
+          [`${name} cannot hide under a text: subject`, ({ sql }) => claim(sql, { evidence_text: TEXT, evidence_url: link, subject_key: `text:${sha256(TEXT)}` })],
+          [`${name} cannot hide under a url: subject`, ({ sql }) => claim(sql, { evidence_url: link, subject_key: `url:${link}` })],
+        ]),
+      ),
     );
 
-    test('legal: the same link next to its video, a link to something untracked, and no link at all', () => {
+    test('beneath the trigger, the CHECKs refuse a video link under a url: or text: subject on their own', () => {
+      const sql = stage();
+      dropTrigger(sql, 'claims_video_link_needs_video_subject');
+      const link = 'https://www.YouTube.com/watch?v=untracked01';
+      refuses(sql, () => claim(sql, { evidence_url: link, subject_key: `url:${link}` }), urlIsNeverAVideo);
+      refuses(sql, () => claim(sql, { evidence_text: TEXT, evidence_url: link, subject_key: `text:${sha256(TEXT)}` }), linkIsNeverText);
+    });
+
+    test('legal: a link next to its tracked video, a link to an untracked video, a link elsewhere, and no link at all', () => {
       const sql = stage();
       const against = claim(sql, { video_id: 'vid_yt', evidence_url: 'https://www.youtube.com/watch?v=ytSample001' });
-      assert.equal(claimOf(sql, against).subject_key, 'video:vid_yt');
+      assert.equal(claimOf(sql, against).subject_key, 'video:youtube:ytSample001');
+      const untracked = claim(sql, { task_type_id: 'tsk_creative', points_snapshot: 40, xp_snapshot: 20, evidence_url: 'https://youtu.be/untracked01' });
+      assert.deepEqual([claimOf(sql, untracked).subject_key, claimOf(sql, untracked).video_id], ['video:youtube:untracked01', null]);
       claim(sql, { evidence_url: 'https://example.test/portfolio/edit-7' });
       claim(sql, { evidence_url: null });
-      assert.equal(count(sql, 'claims'), 3);
+      assert.equal(count(sql, 'claims'), 4);
     });
   });
 
   describe('a claim has evidence of some kind', () => {
     const textRule = CHECK('length(evidence_text) <= 4000 AND length(trim(evidence_text)) > 0');
     refusedOneByOne(justTheCast, textRule, {
-      'a claim with no text, no link and no video is refused': [({ sql }) => claim(sql, { evidence_text: null, evidence_url: null, video_id: null, subject_key: 'url:nothing-at-all' }), CHECK('evidence_text IS NOT NULL OR evidence_url IS NOT NULL OR video_id IS NOT NULL')],
+      'a claim with no text, no link and no video is refused': [({ sql }) => claim(sql, { evidence_text: null, evidence_url: null, video_id: null, subject_key: 'url:nothing-at-all' }), either(CHECK("evidence_text IS NOT NULL OR evidence_url IS NOT NULL OR video_id IS NOT NULL OR subject_key GLOB 'video:erased:*'"), urlNeedsLink)],
       'evidence text made of spaces is refused': ({ sql }) => claim(sql, { evidence_text: '   ' }),
       'empty evidence text is refused': ({ sql }) => claim(sql, { evidence_text: '' }),
       'evidence text of 4001 characters is refused': ({ sql }) => claim(sql, { evidence_text: 'x'.repeat(4001) }),
@@ -514,27 +542,25 @@ describe('P2  A duplicate submission can never be credited twice', () => {
     });
   });
 
-  test('a text-only claim cannot dodge the text rule by calling its subject url:', DEFECT('a url: subject is tied to nothing, so one text can be live (and credited) under any number of invented url: subjects'), () => {
+  test('a text-only claim cannot dodge the text rule by calling its subject url:', () => {
     const sql = stage();
     claim(sql, { evidence_text: TEXT });
-    refuses(sql, () => claim(sql, { evidence_text: TEXT, subject_key: 'url:invented-one' }), ANY_REFUSAL);
-    refuses(sql, () => claim(sql, { evidence_text: TEXT, subject_key: 'url:invented-two' }), ANY_REFUSAL);
+    refuses(sql, () => claim(sql, { evidence_text: TEXT, subject_key: 'url:invented-one' }), urlNeedsLink);
+    refuses(sql, () => claim(sql, { evidence_text: TEXT, subject_key: 'url:invented-two' }), urlNeedsLink);
   });
 
-  test('a claim with a link is measured on the link, not on its text', DEFECT('a claim that carries evidence_url may use a text: subject, so one link can be live under any number of different texts'), () => {
+  test('a claim with a link is measured on the link, not on its text', () => {
     const sql = stage();
     const link = 'https://example.test/portfolio/edit-7';
     claim(sql, { evidence_url: link });
-    refuses(sql, () => claim(sql, { evidence_url: link, evidence_text: 'First wording.', subject_key: `text:${sha256('First wording.')}` }), ANY_REFUSAL);
+    refuses(sql, () => claim(sql, { evidence_url: link, evidence_text: 'First wording.', subject_key: `text:${sha256('First wording.')}` }), linkIsNeverText);
   });
 
-  test('a tracked video cannot be claimed again through a percent-encoded spelling of its link', DEFECT('claims_tracked_video_url_must_use_video compares raw text, so v=ytSample00%31 slips past it'), () => {
-    const sql = stage();
-    claim(sql, { video_id: 'vid_yt' });
-    refuses(sql, () => claim(sql, { evidence_url: 'https://www.youtube.com/watch?v=ytSample00%31' }), ANY_REFUSAL);
-  });
+  // Not attacked here: a percent-encoded spelling of a link. The database cannot decode a
+  // link; reducing a link to its video id is application code (src/domain/claims.js), and the
+  // test near the end of this file attacks that with an encoded link.
 
-  test('a link credited before its video was tracked cannot be credited again against the tracked video', DEFECT('(recorded as PE-01) a video put on the tracked list after its link was credited can be credited a second time'), () => {
+  test('a link credited before its video was tracked cannot be credited again against the tracked video', () => {
     const sql = stage();
     approvedClaim(sql, { evidence_url: 'https://www.youtube.com/watch?v=trackedLater' });
     attempt(() => video(sql, 'vid_later', { platform_video_id: 'trackedLater' }));
@@ -549,7 +575,7 @@ describe('P2  A duplicate submission can never be credited twice', () => {
 
 describe('P3  No task award exists without a reviewed or API-attested claim, and the "earned" bucket can only grow through such an award', () => {
   const needsReviewedClaim = ABORT.ledger_award_requires_reviewed_claim;
-  const creative = (overrides = {}) => ({ task_type_id: 'tsk_creative', points_snapshot: 40, xp_snapshot: 20, evidence_text: null, evidence_url: 'https://www.youtube.com/watch?v=untracked01', subject_key: 'url:youtube/untracked01', ...overrides });
+  const creative = (overrides = {}) => ({ task_type_id: 'tsk_creative', points_snapshot: 40, xp_snapshot: 20, evidence_text: null, evidence_url: 'https://www.youtube.com/watch?v=untracked01', subject_key: 'video:youtube:untracked01', ...overrides });
   /** One claim that has been reviewed and waits for its award, and one that nobody has looked at. */
   const reviewedClaim = () => {
     const sql = stage();
@@ -705,9 +731,9 @@ describe('P3  No task award exists without a reviewed or API-attested claim, and
     });
   });
 
-  test('an award is never dated before the claim it rewards was submitted', DEFECT('ledger_award_requires_reviewed_claim does not compare dates, so an award (and its cap month) can be backdated to before its claim existed'), () => {
+  test('an award is never dated before the claim it rewards was submitted', () => {
     const { sql, claimId } = reviewedClaim();
-    refuses(sql, () => award(sql, claimId, { created_at: '2019-01-15T00:00:00.000Z', period: '2019-01' }), ANY_REFUSAL);
+    refuses(sql, () => award(sql, claimId, { created_at: '2019-01-15T00:00:00.000Z', period: '2019-01' }), needsReviewedClaim);
   });
 });
 
@@ -1236,7 +1262,7 @@ describe('P7  Erasing a member removes their rows for real, is all-or-nothing, a
     assert.equal(count(sql, 'ledger_entries', "member_id IN ('mbr_ada', 'mbr_parked')") + count(sql, 'claims', "member_id IN ('mbr_ada', 'mbr_parked')"), 0);
   });
 
-  test('with recursive_triggers OFF, un-deciding a claim cannot delete another claim through REPLACE', DEFECT('UPDATE OR REPLACE ... SET decision = NULL re-enters the live index; with recursive_triggers OFF the conflicting pending claim is deleted without claims_no_delete firing'), () => {
+  test('with recursive_triggers OFF, un-deciding a claim cannot delete another claim through REPLACE', () => {
     const sql = cast(openBare({ recursiveTriggers: false }));
     const text = 'One piece of feedback, submitted twice over time.';
     const rejected = claimIn(sql, 'rejected', { evidence_text: text });
@@ -1720,8 +1746,8 @@ describe('P12  "verified" means a platform attested it; "manually reviewed" mean
   const verify = (sql, claimId, source) => sql.run("UPDATE claims SET verification_status = 'verified', verification_source = ?, verified_at = ?, verification_detail = '{\"check\":\"video_ownership\"}' WHERE id = ?", [source, T0, claimId]);
 
   const EVIDENCE = {
-    'a YouTube link': { evidence_url: 'https://www.youtube.com/watch?v=untracked01', subject_key: 'url:youtube/untracked01' },
-    'a TikTok link': { evidence_url: 'https://www.tiktok.com/@someone/video/7399999999999999999', subject_key: 'url:tiktok/7399999999999999999' },
+    'a YouTube link': { evidence_url: 'https://www.youtube.com/watch?v=untracked01', subject_key: 'video:youtube:untracked01' },
+    'a TikTok link': { evidence_url: 'https://www.tiktok.com/@someone/video/7399999999999999999', subject_key: 'video:tiktok:7399999999999999999' },
     'a link elsewhere': { evidence_url: 'https://example.test/my-own-video', subject_key: 'url:https://example.test/my-own-video' },
     'a tracked YouTube video': { video_id: 'vid_yt' },
     'a tracked TikTok video': { video_id: 'vid_tt' },
@@ -1861,7 +1887,7 @@ describe('P12  "verified" means a platform attested it; "manually reviewed" mean
       'an exception reason cannot be removed': ({ sql, exceptionId }) => sql.run('UPDATE claims SET exception_reason = NULL WHERE id = ?', [exceptionId]),
       'an exception cannot be turned back into an ordinary claim': ({ sql, exceptionId }) => sql.run('UPDATE claims SET exception_seq = 0, exception_reason = NULL WHERE id = ?', [exceptionId]),
       'a claim cannot be detached from its video': ({ sql, aboutVideo }) => sql.run('UPDATE claims SET video_id = NULL WHERE id = ?', [aboutVideo]),
-      'a claim cannot be moved to another video, subject and all': ({ sql, aboutVideo }) => sql.run("UPDATE claims SET video_id = 'vid_tt', subject_key = 'video:vid_tt' WHERE id = ?", [aboutVideo]),
+      'a claim cannot be moved to another video, subject and all': ({ sql, aboutVideo }) => sql.run("UPDATE claims SET video_id = 'vid_tt', subject_key = 'video:tiktok:7300000000000000001' WHERE id = ?", [aboutVideo]),
       'outside an erasure, evidence text cannot be removed': ({ sql, aboutVideo }) => sql.run('UPDATE claims SET evidence_text = NULL WHERE id = ?', [aboutVideo]),
       'outside an erasure, an evidence link cannot be removed': ({ sql, aboutVideo }) => sql.run('UPDATE claims SET evidence_url = NULL WHERE id = ?', [aboutVideo]),
       'outside an erasure, an evidence hash cannot be removed': ({ sql, aboutVideo }) => sql.run('UPDATE claims SET evidence_hash = NULL WHERE id = ?', [aboutVideo]),
@@ -1929,29 +1955,33 @@ describe('P12  "verified" means a platform attested it; "manually reviewed" mean
       'even during an erasure, the text alone cannot be blanked': ({ sql, aboutVideo }) => sql.run('UPDATE claims SET evidence_text = NULL WHERE id = ?', [aboutVideo]),
       'even during an erasure, text and hash cannot be blanked while the link stays': ({ sql, aboutVideo }) => sql.run('UPDATE claims SET evidence_text = NULL, evidence_hash = NULL WHERE id = ?', [aboutVideo]),
       'even during an erasure, evidence cannot be replaced by a placeholder': ({ sql, aboutVideo }) => sql.run("UPDATE claims SET evidence_text = '[removed]', evidence_url = NULL, evidence_hash = NULL WHERE id = ?", [aboutVideo]),
-      'even during an erasure, a claim is not left with nothing that identifies it': [({ sql, textOnly }) => sql.run('UPDATE claims SET evidence_text = NULL, evidence_url = NULL, evidence_hash = NULL WHERE id = ?', [textOnly]), CHECK('evidence_text IS NOT NULL OR evidence_url IS NOT NULL OR video_id IS NOT NULL')],
+      'even during an erasure, a claim that is not about the erased member\'s video cannot be blanked': ({ sql, textOnly }) => sql.run('UPDATE claims SET evidence_text = NULL, evidence_url = NULL, evidence_hash = NULL WHERE id = ?', [textOnly]),
+      'even during an erasure, evidence cannot be blanked while the subject keeps the real video id': ({ sql, aboutVideo }) => sql.run('UPDATE claims SET evidence_text = NULL, evidence_url = NULL, evidence_hash = NULL WHERE id = ?', [aboutVideo]),
+      'even during an erasure, the subject cannot be moved to another video\'s placeholder': ({ sql, aboutVideo }) => sql.run("UPDATE claims SET evidence_text = NULL, evidence_url = NULL, evidence_hash = NULL, subject_key = 'video:erased:vid_tt' WHERE id = ?", [aboutVideo]),
+      'even during an erasure, the subject cannot be detached while the evidence stays': ({ sql, aboutVideo }) => sql.run("UPDATE claims SET subject_key = 'video:erased:vid_yt' WHERE id = ?", [aboutVideo]),
     });
 
-    test('legal: during the erasure of a video\'s owner, the evidence of a claim about that video is blanked as a whole', () => {
+    test('legal: during the erasure of a video\'s owner, a claim about that video is blanked as a whole and detached from the real video id', () => {
       const { sql, aboutVideo } = erasingTheOwner();
       const before = claimOf(sql, aboutVideo);
-      sql.run('UPDATE claims SET evidence_text = NULL, evidence_url = NULL, evidence_hash = NULL WHERE id = ?', [aboutVideo]);
-      assert.deepEqual(claimOf(sql, aboutVideo), { ...before, evidence_text: null, evidence_url: null, evidence_hash: null });
+      assert.equal(before.subject_key, 'video:youtube:ytSample001');
+      sql.run("UPDATE claims SET evidence_text = NULL, evidence_url = NULL, evidence_hash = NULL, subject_key = 'video:erased:vid_yt' WHERE id = ?", [aboutVideo]);
+      assert.deepEqual(claimOf(sql, aboutVideo), { ...before, evidence_text: null, evidence_url: null, evidence_hash: null, subject_key: 'video:erased:vid_yt' });
     });
   });
 
-  test('erasing one member does not unlock the evidence of claims that have nothing to do with them', DEFECT('while ANY guard is set, evidence of ANY video claim may be blanked: a throw-away member is enough to wipe the evidence behind other members\' approved claims'), () => {
+  test('erasing one member does not unlock the evidence of claims that have nothing to do with them', () => {
     const sql = stage();
     const unrelated = approvedClaim(sql, { video_id: 'vid_yt' }).claimId;
     member(sql, 'mbr_throwaway');
     setGuard(sql, 'mbr_throwaway');
-    refuses(sql, () => sql.run('UPDATE claims SET evidence_text = NULL, evidence_url = NULL, evidence_hash = NULL WHERE id = ?', [unrelated]), ANY_REFUSAL);
+    refuses(sql, () => sql.run('UPDATE claims SET evidence_text = NULL, evidence_url = NULL, evidence_hash = NULL WHERE id = ?', [unrelated]), ABORT.claims_identity_is_immutable);
   });
 
-  test('a task cannot lose its automatic check while claims verified under it exist', DEFECT('task_types.api_check can be set to none afterwards, leaving "verified" claims on a task with no automatic check (integrity.js notices; the schema does not refuse)'), () => {
+  test('a task cannot lose its automatic check while claims verified under it exist', () => {
     const { sql, claimId } = creativeClaim('a YouTube link')();
     verify(sql, claimId, 'youtube_api');
-    refuses(sql, () => sql.run("UPDATE task_types SET api_check = 'none' WHERE id = 'tsk_creative'"), ANY_REFUSAL);
+    refuses(sql, () => sql.run("UPDATE task_types SET api_check = 'none' WHERE id = 'tsk_creative'"), ABORT.task_types_keep_check_while_verified);
   });
 });
 
@@ -2344,9 +2374,9 @@ describe('The other tables keep their shape', () => {
       assert.ok(checks().includes('tiers_not_five_ascending'));
     });
 
-    test('the ladder always has exactly five rungs', DEFECT('(recorded as PE-14) a tier row can be deleted, leaving fewer than five; only integrity.js notices'), () => {
+    test('the ladder always has exactly five rungs', () => {
       const { sql } = ladder();
-      refuses(sql, () => sql.run('DELETE FROM tiers WHERE level = 4'), ANY_REFUSAL);
+      refuses(sql, () => sql.run('DELETE FROM tiers WHERE level = 4'), ABORT.tiers_no_delete);
     });
   });
 
@@ -2355,10 +2385,10 @@ describe('The other tables keep their shape', () => {
     refuses(sql, () => sql.run("UPDATE videos SET stats_json = '{\"views\":10}', stats_source = 'mock_adapter', stats_fetched_at = '9999' WHERE id = 'vid_yt'"), ANY_REFUSAL);
   });
 
-  test('one YouTube channel belongs to one member', DEFECT('(recorded as PE-09) two members can hold the same youtube_channel_id, so both would be attested as owner of the same videos'), () => {
+  test('one YouTube channel belongs to one member', () => {
     const sql = stage();
     sql.run("UPDATE members SET youtube_channel_id = 'UC-sample-01', youtube_linked_at = ? WHERE id = 'mbr_ada'", [T0]);
-    refuses(sql, () => sql.run("UPDATE members SET youtube_channel_id = 'UC-sample-01', youtube_linked_at = ? WHERE id = 'mbr_bo'", [T0]), ANY_REFUSAL);
+    refuses(sql, () => sql.run("UPDATE members SET youtube_channel_id = 'UC-sample-01', youtube_linked_at = ? WHERE id = 'mbr_bo'", [T0]), UNIQUE('members.youtube_channel_id'));
   });
 });
 
@@ -2405,7 +2435,7 @@ describe('Every REFERENCES clause is enforced', () => {
       'videos.owner_member_id': ({ sql }) => video(sql, 'vid_orphan', { owner_member_id: 'mbr_nobody' }),
       'videos.added_by': ({ sql }) => video(sql, 'vid_orphan', { added_by: 'usr_nobody' }),
       'claims.member_id': ({ sql }) => claim(sql, { member_id: 'mbr_nobody' }),
-      'claims.video_id': ({ sql }) => claim(sql, { video_id: 'vid_nobody' }),
+      'claims.video_id': [({ sql }) => claim(sql, { video_id: 'vid_nobody' }), either(ABORT.claims_video_subject_is_canonical, FOREIGN_KEY)],
       'claims.submitted_by': ({ sql }) => claim(sql, { submitted_by: 'usr_nobody' }),
       'claims.decided_by': ({ sql, claimId }) => sql.run("UPDATE claims SET decision = 'withdrawn', decided_at = ?, decided_by = 'usr_nobody' WHERE id = ?", [T0, claimId]),
       'claims.task_type_id': [({ sql }) => claim(sql, { task_type_id: 'tsk_nobody' }), either(ABORT.claims_snapshot_matches_task, FOREIGN_KEY)],
@@ -2614,7 +2644,7 @@ describe('Found on the way: defects outside schema.sql', () => {
     assert.throws(() => sql.db.exec(`INSERT OR REPLACE INTO settings (key, value, updated_at) VALUES ('probe', '1', '${T0}')`), /REPLACE statements are not allowed/);
   });
 
-  test('src/domain/claims.js: a percent-encoded link to a tracked video is not a second subject', DEFECT('submitClaim() looks for the tracked id in the raw link, so "v=demoLong00%31" is accepted next to a claim against the video itself and both can be approved'), async () => {
+  test('src/domain/claims.js: a percent-encoded link to a tracked video is not a second subject', async () => {
     const { createContext, withActor } = await import('../../src/domain/context.js');
     const { submitClaim } = await import('../../src/domain/claims.js');
     const sql = stage();
@@ -2629,12 +2659,12 @@ describe('Found on the way: defects outside schema.sql', () => {
     assert.equal(count(sql, 'claims'), 1);
   });
 
-  test('src/domain/taskTypes.js: an ordinary admin edit cannot leave the database failing its own start-up check', DEFECT('updateTaskType() lets api_check go to none while verified claims exist; checkIntegrity() then reports verified_claim_on_unattestable_task and the server would refuse to start'), async () => {
+  test('src/domain/taskTypes.js: an ordinary admin edit cannot leave the database failing its own start-up check', async () => {
     const { createContext, withActor } = await import('../../src/domain/context.js');
     const { updateTaskType } = await import('../../src/domain/taskTypes.js');
     const sql = stage();
     for (const [level, minXp] of [[1, 0], [2, 100], [3, 250], [4, 500], [5, 1000]]) insert(sql, 'tiers', { level, name: `Stage ${level}`, min_xp: minXp, art_key: `stage-${level}`, updated_at: T0 });
-    const claimId = claim(sql, { task_type_id: 'tsk_creative', points_snapshot: 40, xp_snapshot: 20, evidence_text: null, evidence_url: 'https://www.youtube.com/watch?v=untracked01', subject_key: 'url:youtube/untracked01' });
+    const claimId = claim(sql, { task_type_id: 'tsk_creative', points_snapshot: 40, xp_snapshot: 20, evidence_text: null, evidence_url: 'https://www.youtube.com/watch?v=untracked01', subject_key: 'video:youtube:untracked01' });
     sql.run("UPDATE claims SET verification_status = 'verified', verification_source = 'mock_adapter', verified_at = ? WHERE id = ?", [T0, claimId]);
     assert.equal(checkIntegrity(sql.db).ok, true);
     const root = withActor(createContext({ db: sql.db, clock: fixedClock(T0) }), { userId: 'usr_root', role: 'admin', memberId: null });

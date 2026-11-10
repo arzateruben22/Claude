@@ -168,6 +168,8 @@ function reviewFlags(ctx, row) {
 
 const normaliseText = (text) => text.normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim();
 
+const isPlatformHost = (hostname) => /(^|\.)(youtube\.com|youtu\.be|tiktok\.com)$/i.test(hostname);
+
 function normaliseGenericUrl(url) {
   const params = [...url.searchParams.entries()].filter(([key]) => !/^(utm_|si$|feature$|fbclid$|gclid$)/i.test(key)).sort(([a], [b]) => a.localeCompare(b));
   const query = params.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&');
@@ -232,43 +234,45 @@ export function submitClaim(ctx, input) {
     }
 
     // Evidence rules depend on how the task is checked.
-    let effectiveVideoId = videoId;
-    let evidenceUrl = null;
-    let urlKey = null;
+    let linked = null; // the platform video a submitted link points at, if any
     if (task.api_check === 'video_ownership') {
       if (!rawUrl) throw unprocessable('evidence_url_required', 'Add the link to your video.', { field: 'evidence_url' });
-      const parsed = parseVideoUrl(rawUrl.href);
-      evidenceUrl = parsed.url;
-      urlKey = `${parsed.platform}/${parsed.platformVideoId}`;
-      // If that video is already on the tracked list, the claim is about that video: one
-      // subject per video, however its link is spelled.
-      const tracked = ctx.db.get('SELECT id, status FROM videos WHERE platform = ? AND platform_video_id = ?', [parsed.platform, parsed.platformVideoId]);
-      if (tracked) {
-        if (videoId && videoId !== tracked.id) throw unprocessable('video_mismatch', 'The link and the chosen video are different videos.', { field: 'evidence_url' });
-        if (tracked.status !== 'active') throw conflict('video_not_active', 'That video is archived.');
-        effectiveVideoId = tracked.id;
-      } else if (videoId) {
-        throw unprocessable('video_mismatch', 'The link and the chosen video are different videos.', { field: 'evidence_url' });
-      }
+      linked = parseVideoUrl(rawUrl.href); // 422 for anything that is not a video link
     } else {
       const minChars = getSetting(ctx, 'feedback_min_chars');
       if (!evidenceText || evidenceText.length < minChars) {
         throw unprocessable('evidence_too_short', `Write at least ${minChars} characters so there is something to review.`, { field: 'evidence_text', min: minChars });
       }
-      if (rawUrl) {
-        evidenceUrl = rawUrl.href;
-        urlKey = normaliseGenericUrl(rawUrl);
-        if (!videoId) {
-          const tracked = ctx.db.get('SELECT id FROM videos WHERE instr(?, platform_video_id) > 0 LIMIT 1', [evidenceUrl]);
-          if (tracked) {
-            throw unprocessable('use_tracked_video', 'That link is one of the tracked videos. Choose the video from the list instead.', { field: 'evidence_url', video_id: tracked.id });
-          }
+      if (rawUrl && isPlatformHost(rawUrl.hostname)) {
+        try {
+          linked = parseVideoUrl(rawUrl.href);
+        } catch {
+          throw unprocessable('video_link_required', 'Paste the link to the video itself, not to a channel or a profile.', { field: 'evidence_url' });
         }
       }
     }
 
+    // P2: a platform video is ONE subject — 'video:<platform>:<id>' — whether it was picked
+    // from the tracked list or pasted as a link, and whether or not it is tracked yet.
+    // Otherwise the subject is the other link, or the hash of the text.
+    let effectiveVideoId = videoId;
+    let evidenceUrl = rawUrl ? rawUrl.href : null;
+    let subjectKey = null;
+    if (linked) {
+      const tracked = ctx.db.get('SELECT id, status FROM videos WHERE platform = ? AND platform_video_id = ?', [linked.platform, linked.platformVideoId]);
+      if (videoId && (!tracked || tracked.id !== videoId)) throw unprocessable('video_mismatch', 'The link and the chosen video are different videos.', { field: 'evidence_url' });
+      if (tracked) {
+        if (tracked.status !== 'active') throw conflict('video_not_active', 'That video is archived.');
+        effectiveVideoId = tracked.id;
+      }
+      evidenceUrl = linked.url;
+      subjectKey = `video:${linked.platform}:${linked.platformVideoId}`;
+    } else if (videoId) {
+      const video = ctx.db.get('SELECT platform, platform_video_id FROM videos WHERE id = ?', [videoId]);
+      subjectKey = `video:${video.platform}:${video.platform_video_id}`;
+    }
     const evidenceHash = evidenceText ? sha256Hex(normaliseText(evidenceText)) : null;
-    const subjectKey = effectiveVideoId ? `video:${effectiveVideoId}` : urlKey ? `url:${urlKey}` : `text:${evidenceHash}`;
+    if (!subjectKey) subjectKey = rawUrl ? `url:${normaliseGenericUrl(rawUrl)}` : `text:${evidenceHash}`;
 
     // Anti-abuse: a member's own submissions per local day. Admin entries are not limited.
     if (!staff) {

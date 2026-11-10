@@ -103,9 +103,29 @@ test('the schema itself refuses a second live claim, a second award and a forged
       raw.run(
         `INSERT INTO claims (id, member_id, task_type_id, video_id, subject_key, evidence_text, points_snapshot, xp_snapshot, submitted_by_role, created_at)
          VALUES ('clm_forged', ?, ?, ?, ?, 'x', 25, 25, 'member', ?)`,
-        [s.bo.memberId, s.feedbackTask, s.video1.id, `video:${s.video1.id}`, T0],
+        [s.bo.memberId, s.feedbackTask, s.video1.id, 'video:youtube:demoLong001', T0],
       ),
     /duplicate_claim|UNIQUE constraint failed/,
+  );
+  // Another video's subject on this video is refused: a tracked video has exactly one subject.
+  assert.throws(
+    () =>
+      raw.run(
+        `INSERT INTO claims (id, member_id, task_type_id, video_id, subject_key, evidence_text, points_snapshot, xp_snapshot, submitted_by_role, created_at)
+         VALUES ('clm_forged', ?, ?, ?, 'video:youtube:someOtherId', 'x', 25, 25, 'member', ?)`,
+        [s.bo.memberId, s.feedbackTask, s.video1.id, T0],
+      ),
+    /the subject of a claim about a tracked video/,
+  );
+  // A video link cannot hide under a text or url subject.
+  assert.throws(
+    () =>
+      raw.run(
+        `INSERT INTO claims (id, member_id, task_type_id, subject_key, evidence_text, evidence_hash, evidence_url, points_snapshot, xp_snapshot, submitted_by_role, created_at)
+         VALUES ('clm_forged', ?, ?, 'text:abc', 'x', 'abc', 'https://www.youtube.com/watch?v=demoLong001', 25, 40, 'member', ?)`,
+        [s.bo.memberId, s.creativeTask, T0],
+      ),
+    /a link to a platform video must use the video subject/,
   );
   // A different subject string for the same video is refused too.
   assert.throws(
@@ -115,7 +135,7 @@ test('the schema itself refuses a second live claim, a second award and a forged
          VALUES ('clm_forged', ?, ?, ?, 'url:other-spelling', 'x', 25, 25, 'member', ?)`,
         [s.bo.memberId, s.feedbackTask, s.video1.id, T0],
       ),
-    /CHECK constraint failed/,
+    /CHECK constraint failed|the subject of a claim about a tracked video/,
   );
   // A claim worth more than its task is refused.
   assert.throws(
@@ -123,7 +143,7 @@ test('the schema itself refuses a second live claim, a second award and a forged
       raw.run(
         `INSERT INTO claims (id, member_id, task_type_id, video_id, subject_key, evidence_text, points_snapshot, xp_snapshot, submitted_by_role, created_at)
          VALUES ('clm_forged', ?, ?, ?, ?, 'x', 1000, 25, 'member', ?)`,
-        [s.cy.memberId, s.feedbackTask, s.video1.id, `video:${s.video1.id}`, T0],
+        [s.cy.memberId, s.feedbackTask, s.video1.id, 'video:youtube:demoLong001', T0],
       ),
     /must snapshot an active task type/,
   );
@@ -394,10 +414,9 @@ test('a re-check can withdraw an earlier attestation while the claim is still pe
   assert.equal(second.claim.verified_at, null);
 });
 
-test('one video is one subject, however its link is written', () => {
+test('one video is one subject, however its link is written and whether or not it is tracked yet', () => {
   const s = setup();
-  // video1 (demoLong001) is on the tracked list. Submitting its link as a creative submission
-  // attaches the claim to that video.
+  // video1 (demoLong001) is on the tracked list. Submitting its link attaches the claim to that video.
   const viaLink = submitClaim(s.asAda, { task_type_id: s.creativeTask, evidence_url: 'https://youtu.be/demoLong001' });
   assert.equal(viaLink.video.id, s.video1.id);
   expectAppError(assert, () => submitClaim(s.asAda, { task_type_id: s.creativeTask, evidence_url: 'https://www.youtube.com/watch?v=demoLong001&t=10s' }), 'duplicate_claim', 409);
@@ -405,15 +424,32 @@ test('one video is one subject, however its link is written', () => {
   expectAppError(assert, () => submitClaim(s.asAda, { task_type_id: s.creativeTask, video_id: s.video2.id, evidence_url: 'https://youtu.be/demoLong001' }), 'video_mismatch', 422);
 
   // An untracked video: every spelling of its link is the same subject too.
-  submitClaim(s.asBo, { task_type_id: s.creativeTask, evidence_url: 'https://youtu.be/demoOwnB001' });
+  const early = submitClaim(s.asBo, { task_type_id: s.creativeTask, evidence_url: 'https://youtu.be/demoOwnB001' });
   expectAppError(assert, () => submitClaim(s.asBo, { task_type_id: s.creativeTask, evidence_url: 'https://www.youtube.com/watch?v=demoOwnB001&feature=share' }), 'duplicate_claim', 409);
 
-  // A written-feedback task cannot smuggle a tracked video in as a plain link.
+  // REGRESSION: credited while the video was NOT tracked, then the video is put on the
+  // tracked list. It is still the same subject, so it cannot be credited a second time.
+  reviewClaim(s.world.admin, early.id, { outcome: 'approve' });
+  const nowTracked = createVideo(s.world.admin, { url: 'https://www.youtube.com/watch?v=demoOwnB001', title: 'Now on the tracked list', owner_member_id: s.bo.memberId });
+  expectAppError(assert, () => submitClaim(s.asBo, { task_type_id: s.creativeTask, evidence_url: 'https://youtu.be/demoOwnB001' }), 'duplicate_claim', 409);
+  expectAppError(assert, () => submitClaim(s.asBo, { task_type_id: s.creativeTask, video_id: nowTracked.id, evidence_url: 'https://youtu.be/demoOwnB001' }), 'duplicate_claim', 409);
+  assert.deepEqual(balanceOf(s.world.admin, s.bo.memberId), { earned: 25, bonus: 0, total: 25, xp: 40 });
+  assert.equal(count(s.world.db, 'claims', 'member_id = ?', [s.bo.memberId]), 1);
+
+  // On a written task, a link to a video makes the claim about that video — tracked or not.
   const freeTask = insertTaskType(s.world.db, { key: 'script_notes', label: 'Script notes' });
-  expectAppError(assert, () => submitClaim(s.asCy, { task_type_id: freeTask, evidence_text: feedback(1), evidence_url: 'https://www.youtube.com/watch?v=demoLong001' }), 'use_tracked_video', 422);
+  const attached = submitClaim(s.asCy, { task_type_id: freeTask, evidence_text: feedback(1), evidence_url: 'https://www.youtube.com/watch?v=demoLong001' });
+  assert.equal(attached.video.id, s.video1.id);
+  expectAppError(assert, () => submitClaim(s.asCy, { task_type_id: freeTask, video_id: s.video1.id, evidence_text: feedback(2) }), 'duplicate_claim', 409);
+  // A channel or profile link is not a video.
+  expectAppError(assert, () => submitClaim(s.asCy, { task_type_id: freeTask, evidence_text: feedback(3), evidence_url: 'https://www.youtube.com/@some.channel' }), 'video_link_required', 422);
+  // Any other link is a subject by its normalised form.
+  submitClaim(s.asCy, { task_type_id: freeTask, evidence_text: feedback(4), evidence_url: 'https://example.org/notes?utm_source=share' });
+  expectAppError(assert, () => submitClaim(s.asCy, { task_type_id: freeTask, evidence_text: feedback(5), evidence_url: 'https://example.org/notes/' }), 'duplicate_claim', 409);
   // The same text twice is the same subject.
-  submitClaim(s.asCy, { task_type_id: freeTask, evidence_text: feedback(2) });
-  expectAppError(assert, () => submitClaim(s.asCy, { task_type_id: freeTask, evidence_text: `  ${feedback(2).toUpperCase()}  ` }), 'duplicate_claim', 409);
+  submitClaim(s.asCy, { task_type_id: freeTask, evidence_text: feedback(6) });
+  expectAppError(assert, () => submitClaim(s.asCy, { task_type_id: freeTask, evidence_text: `  ${feedback(6).toUpperCase()}  ` }), 'duplicate_claim', 409);
+  integrityOk(s.world);
 });
 
 test('members see only their own submissions; admins see everything, with review flags', () => {

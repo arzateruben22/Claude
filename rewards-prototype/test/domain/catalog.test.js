@@ -93,3 +93,26 @@ test('task types: contributions only — engagement and money wording are refuse
   expectAppError(assert, () => createTaskType(world.as(member.actor), base), 'admin_only', 403);
   expectAppError(assert, () => updateTaskType(world.as(member.actor), task.id, { points: 999 }), 'admin_only', 403);
 });
+
+test('a task keeps its automatic check while submissions verified under it exist', async () => {
+  const world = makeWorld();
+  const { submitClaim, runApiCheck } = await import('../../src/domain/claims.js');
+  const { linkYoutubeChannel } = await import('../../src/domain/members.js');
+  const { checkIntegrity } = await import('../../src/domain/integrity.js');
+  const member = insertMemberWithUser(world.db, 'Ada');
+  linkYoutubeChannel(world.system, { memberId: member.memberId, channelId: 'UC-demo-01', attestedBy: 'demo_seed' });
+  const task = createTaskType(world.admin, { key: 'creative_submission', label: 'Original creative submission', points: 25, xp: 40, api_check: 'video_ownership' });
+  const registry = createPlatformRegistry({ mode: 'mock', clock: world.clock });
+  const claim = submitClaim(world.as(member.actor), { task_type_id: task.id, evidence_url: 'https://youtu.be/demoOwnA001' });
+  assert.equal((await runApiCheck(world.admin, claim.id, registry)).claim.verification_status, 'verified');
+
+  // An ordinary admin edit must not be able to leave the database failing its own start-up check.
+  expectAppError(assert, () => updateTaskType(world.admin, task.id, { api_check: 'none' }), 'task_has_verified_claims', 409);
+  assert.throws(() => world.db.run("UPDATE task_types SET api_check = 'none' WHERE id = ?", [task.id]), /a task with verified claims keeps its automatic check/);
+  assert.equal(updateTaskType(world.admin, task.id, { points: 30 }).api_check, 'video_ownership');
+  assert.deepEqual(checkIntegrity(world.db).violations, []);
+
+  // A task with no verified submissions can still have its check switched off.
+  const other = createTaskType(world.admin, { key: 'second_creative_task', label: 'Second creative task', points: 10, xp: 10, api_check: 'video_ownership' });
+  assert.equal(updateTaskType(world.admin, other.id, { api_check: 'none' }).api_check, 'none');
+});

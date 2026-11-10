@@ -6,8 +6,9 @@
 //   * the member's ledger entries, claims (with their evidence), sign-in account, sessions
 //   * the member row itself (name, slug, avatar key, linked channel id)
 //   * videos the member owned; if another member's claim still points at one, that video
-//     is kept as an anonymous, archived placeholder and the other claim's evidence text —
-//     which was written ABOUT the erased member's video — is blanked
+//     is kept as an anonymous, archived placeholder, the other claim's evidence — which
+//     was written ABOUT the erased member's video — is blanked, and its subject no longer
+//     carries the real platform video id
 //   * the `detail` of every audit row about the member
 // What stays: opaque random ids in the audit trail and in other members' rows. Ids are
 // never derived from a name or an e-mail address, so they identify nobody once the rows
@@ -107,13 +108,17 @@ export function eraseMember(ctx, memberId, { confirm } = {}) {
       const counts = {};
       ctx.db.run('UPDATE erasure_guard SET member_id = ? WHERE id = 1', [memberId]);
 
-      // Other members' feedback about this member's videos is content about this member.
-      counts.other_claims_blanked = ctx.db.run(
-        `UPDATE claims SET evidence_text = NULL, evidence_url = NULL, evidence_hash = NULL
-          WHERE member_id <> ? AND video_id IN (SELECT id FROM videos WHERE owner_member_id = ?)
-            AND (evidence_text IS NOT NULL OR evidence_url IS NOT NULL OR evidence_hash IS NOT NULL)`,
-        [memberId, memberId],
-      ).changes;
+      // Other members' claims about this member's videos are content about this member:
+      // blank what was written, and detach the subject from the real platform video id
+      // (which would otherwise identify the erased member's video for ever).
+      counts.other_claims_blanked = 0;
+      for (const video of ctx.db.all('SELECT id, platform, platform_video_id FROM videos WHERE owner_member_id = ?', [memberId])) {
+        counts.other_claims_blanked += ctx.db.run(
+          `UPDATE claims SET evidence_text = NULL, evidence_url = NULL, evidence_hash = NULL, subject_key = ?
+            WHERE member_id <> ? AND subject_key = ?`,
+          [`video:erased:${video.id}`, memberId, `video:${video.platform}:${video.platform_video_id}`],
+        ).changes;
+      }
 
       counts.ledger_entries = ctx.db.run('DELETE FROM ledger_entries WHERE member_id = ?', [memberId]).changes;
       counts.claims = ctx.db.run('DELETE FROM claims WHERE member_id = ?', [memberId]).changes;

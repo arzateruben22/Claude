@@ -120,7 +120,7 @@ every one with raw SQL.
 | # | Promise |
 |---|---|
 | P1 | An approved claim has exactly one ledger award, and becomes approved **only** by that award being written. |
-| P2 | A duplicate submission can never be credited twice: one live claim per member + task + subject, exceptions only after a credit, by an admin, with a reason. *Reducing a link to its subject is application code, and has a known gap: see PE-01 in `../PROGRESS.md`.* |
+| P2 | A duplicate submission can never be credited twice: one live claim per member + task + subject, exceptions only after a credit, by an admin, with a reason. A platform video is one subject whether it is picked from the tracked list or pasted as a link, before or after it is tracked. *Recognising a pasted link as a video is application code; the database then refuses a video link under any other kind of subject.* |
 | P3 | No award without a reviewed or attested claim; the `earned` bucket grows only through such an award. |
 | P4 | The ledger is append-only. |
 | P5 | A correction can be undone once, mirrors its target and counts in its target's month; undoing an award revokes the claim. |
@@ -168,8 +168,10 @@ submit ──> pending / unverified ──(adapter attests)──> pending / ver
 ```
 
 - **Submit.** Evidence rules depend on the task: written feedback must reach a minimum
-  length; a task with an ownership check needs a video link. The subject is the tracked
-  video if there is one, else the normalised link, else the hash of the text. A second
+  length; a task with an ownership check needs a video link. The subject is
+  `video:<platform>:<platform video id>` for any YouTube or TikTok video — picked from
+  the tracked list or pasted as a link, tracked or not — else the normalised form of
+  another link, else the hash of the text. A second
   live claim for the same member + task + subject is refused with `409 duplicate_claim`,
   and the refused attempt is audit-logged. Points and XP are snapshotted from the task.
   A member's own submissions are limited per local day.

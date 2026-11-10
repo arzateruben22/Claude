@@ -63,6 +63,18 @@ test('members: a channel can be linked only by a trusted caller for self, and un
   assert.equal(world.db.get('SELECT youtube_channel_id, youtube_linked_at FROM members WHERE id = ?', [a.memberId]).youtube_linked_at, null);
 });
 
+test('members: one YouTube channel belongs to one member', () => {
+  const world = makeWorld();
+  const a = insertMemberWithUser(world.db, 'Ada');
+  const b = insertMemberWithUser(world.db, 'Bo');
+  linkYoutubeChannel(world.as(a.actor), { memberId: a.memberId, channelId: 'UC-demo-01', attestedBy: 'oauth' });
+  expectAppError(assert, () => linkYoutubeChannel(world.as(b.actor), { memberId: b.memberId, channelId: 'UC-demo-01', attestedBy: 'oauth' }), 'channel_already_linked', 409);
+  assert.equal(getMember(world.admin, b.memberId).youtube_linked, false);
+  // Once the first member unlinks, the channel is free again.
+  unlinkYoutubeChannel(world.as(a.actor), a.memberId);
+  assert.equal(linkYoutubeChannel(world.as(b.actor), { memberId: b.memberId, channelId: 'UC-demo-01', attestedBy: 'oauth' }).youtube_linked, true);
+});
+
 test('users: allowlist management, uniqueness and the member requirement', () => {
   const world = makeWorld();
   const memberId = insertMember(world.db, { name: 'Ada' });

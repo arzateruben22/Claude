@@ -130,7 +130,13 @@ export function linkYoutubeChannel(ctx, { memberId, channelId, attestedBy }) {
   if (typeof channelId !== 'string' || !YOUTUBE_CHANNEL_ID.test(channelId)) throw new TypeError('linkYoutubeChannel: not a channel id');
   return ctx.db.tx(() => {
     load(ctx, memberId);
-    ctx.db.run('UPDATE members SET youtube_channel_id = ?, youtube_linked_at = ? WHERE id = ?', [channelId, nowIso(ctx), memberId]);
+    try {
+      ctx.db.run('UPDATE members SET youtube_channel_id = ?, youtube_linked_at = ? WHERE id = ?', [channelId, nowIso(ctx), memberId]);
+    } catch (error) {
+      // One channel, one member: otherwise two people would be attested as owner of the same videos.
+      if (isUniqueViolation(error, 'members.youtube_channel_id')) throw conflict('channel_already_linked', 'That YouTube channel is already linked to another member.');
+      throw error;
+    }
     recordAudit(ctx, { action: 'member.link_youtube', entityType: 'member', entityId: memberId, subjectMemberId: memberId, detail: { attested_by: attestedBy } });
     return privateView(load(ctx, memberId));
   });

@@ -99,6 +99,12 @@ export function updateTaskType(ctx, taskTypeId, input) {
     const before = load(ctx, taskTypeId);
     const changed = fields.filter((key) => before[key] !== changes[key]);
     assertWorthSomething(changes.points ?? before.points, changes.xp ?? before.xp);
+    // "Verified" presumes an automatic check. Switching the check off while claims verified
+    // under it exist would leave them unexplained (and fail the start-up integrity check).
+    if (changed.includes('api_check') && changes.api_check === 'none'
+        && ctx.db.get("SELECT 1 AS present FROM claims WHERE task_type_id = ? AND verification_status = 'verified' LIMIT 1", [taskTypeId])) {
+      throw conflict('task_has_verified_claims', 'Submissions were verified automatically under this task, so its automatic check cannot be switched off. Make a new task instead.');
+    }
     if (changed.length > 0) {
       ctx.db.run(`UPDATE task_types SET ${changed.map((key) => `${key} = ?`).join(', ')}, updated_at = ? WHERE id = ?`, [
         ...changed.map((key) => changes[key]),

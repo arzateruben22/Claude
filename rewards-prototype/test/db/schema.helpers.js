@@ -159,7 +159,8 @@ export const ABORT = Object.freeze({
   claims_no_insert_during_erasure: abort('claims_no_insert_during_erasure', 'an erasure is in progress (guard is set)'),
   claims_snapshot_matches_task: abort('claims_snapshot_matches_task', 'claim must snapshot an active task type and satisfy its video rule'),
   claims_text_subject_is_evidence_hash: abort('claims_text_subject_is_evidence_hash', 'a text: subject is the evidence hash'),
-  claims_tracked_video_url_must_use_video: abort('claims_tracked_video_url_must_use_video', 'evidence_url points at a tracked video: submit the claim against that video'),
+  claims_video_subject_is_canonical: abort('claims_video_subject_is_canonical', 'the subject of a claim about a tracked video is video:<platform>:<platform video id>'),
+  claims_video_link_needs_video_subject: abort('claims_video_link_needs_video_subject', 'a link to a platform video must use the video subject'),
   claims_exception_is_next: abort('claims_exception_is_next', 'an exception follows an approved claim for the same subject and is submitted by an admin with a reason'),
   claims_transitions: Object.freeze({
     illegal: abort('claims_transitions', 'illegal claim transition'),
@@ -169,6 +170,9 @@ export const ABORT = Object.freeze({
   }),
   claims_no_self_approval: abort('claims_no_self_approval', 'approval needs a recorded reviewer who is not linked to the member'),
   claims_identity_is_immutable: abort('claims_identity_is_immutable', 'claim identity, evidence and value are immutable'),
+  claims_no_null_reset: abort('claims_no_null_reset', 'a claim column cannot be reset to its default'),
+  task_types_keep_check_while_verified: abort('task_types_keep_check_while_verified', 'a task with verified claims keeps its automatic check'),
+  tiers_no_delete: abort('tiers_no_delete', 'there are exactly five tiers'),
   claims_decided_is_frozen: abort('claims_decided_is_frozen', 'a decided claim is frozen'),
   claims_verified_needs_attestable_task: abort('claims_verified_needs_attestable_task', 'verified requires an api-checkable task and evidence on the attesting platform'),
   erasure_guard_set: abort('erasure_guard_set', 'erasure guard: already set, or no such member'),
@@ -364,11 +368,39 @@ export function cast(sql) {
 /** Fresh application connection with the standing cast. */
 export const stage = (open = openApplication) => cast(open());
 
+/** The platform video a link points at, the way the application reads it (no decoding tricks). */
+export function platformVideoOf(link) {
+  const youtube = /youtu\.be\/([\w%-]+)/.exec(link) ?? /youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/)([\w%-]+)/.exec(link);
+  if (youtube) return { platform: 'youtube', id: youtube[1] };
+  const tiktok = /tiktok\.com\/@[\w.]+\/video\/(\d+)/.exec(link);
+  return tiktok ? { platform: 'tiktok', id: tiktok[1] } : null;
+}
+
+// The standing cast's tracked videos, for when no connection is at hand.
+const CAST_VIDEOS = { vid_yt: 'video:youtube:ytSample001', vid_tt: 'video:tiktok:7300000000000000001' };
+
+/**
+ * The subject key the application would compute (src/domain/claims.js). A platform video
+ * is ONE subject, `video:<platform>:<platform video id>`, whether it is on the tracked
+ * list or was only pasted as a link; any other link is `url:`; otherwise `text:<hash>`.
+ */
+export function subjectFor(row, sql) {
+  if (row.video_id !== null) {
+    const tracked = sql?.get('SELECT platform, platform_video_id FROM videos WHERE id = ?', [row.video_id]);
+    return tracked ? `video:${tracked.platform}:${tracked.platform_video_id}` : (CAST_VIDEOS[row.video_id] ?? `video:unknown:${row.video_id}`);
+  }
+  if (row.evidence_url !== null) {
+    const linked = platformVideoOf(row.evidence_url);
+    return linked ? `video:${linked.platform}:${linked.id}` : `url:${row.evidence_url}`;
+  }
+  return `text:${row.evidence_hash}`;
+}
+
 /**
  * The row a pending claim is inserted with. By default: mbr_ada, the feedback task, text
  * evidence, and the subject key the application would compute for it.
  */
-export function claimRow(overrides = {}) {
+export function claimRow(overrides = {}, sql) {
   const id = overrides.id ?? `clm_${next()}`;
   const row = {
     id,
@@ -385,15 +417,13 @@ export function claimRow(overrides = {}) {
     ...overrides,
   };
   if (row.evidence_hash === undefined) row.evidence_hash = row.evidence_text === null ? null : sha256(row.evidence_text);
-  if (row.subject_key === undefined) {
-    row.subject_key = row.video_id !== null ? `video:${row.video_id}` : row.evidence_url !== null ? `url:${row.evidence_url}` : `text:${row.evidence_hash}`;
-  }
+  if (row.subject_key === undefined) row.subject_key = subjectFor(row, sql);
   return row;
 }
 
 /** Inserts a pending, unverified claim and returns its id. */
 export function claim(sql, overrides = {}, options) {
-  const row = claimRow(overrides);
+  const row = claimRow(overrides, sql);
   insert(sql, 'claims', row, options);
   return row.id;
 }

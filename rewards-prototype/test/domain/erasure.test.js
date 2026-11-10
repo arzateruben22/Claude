@@ -101,8 +101,8 @@ test('ACCEPTANCE: erasing a member really deletes their data and leaves everyone
 
   // The other member keeps their credit; their feedback text about the erased member's video is blanked.
   assert.deepEqual(balanceOf(world.admin, p.bo.memberId), bosBalance);
-  const bosClaim = world.db.get('SELECT decision, evidence_text, evidence_hash FROM claims WHERE id = ?', [p.bosClaim.id]);
-  assert.deepEqual({ ...bosClaim }, { decision: 'approved', evidence_text: null, evidence_hash: null });
+  const bosClaim = world.db.get('SELECT decision, evidence_text, evidence_hash, subject_key FROM claims WHERE id = ?', [p.bosClaim.id]);
+  assert.deepEqual({ ...bosClaim }, { decision: 'approved', evidence_text: null, evidence_hash: null, subject_key: `video:erased:${p.adasVideo.id}` });
 
   // The erasure itself is on record, without the erased account's id, with counts only.
   const [record] = listAudit(world.admin, { action: 'member.erase' }).items;

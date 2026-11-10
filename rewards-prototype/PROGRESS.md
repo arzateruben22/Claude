@@ -36,7 +36,7 @@ Handoff acceptance criteria:
 |---|---|
 | Three sample accounts and avatars visible on one page | Data side done (`ACCEPTANCE` test on the dashboard payload). **The page itself does not exist yet.** |
 | An approved task creates exactly one ledger entry and updates balance and leaderboard | **Passing** at the business-logic level; not yet proven over HTTP |
-| A duplicate submission cannot double-credit | **Passing with one known gap**: a link submitted before its video is put on the tracked list can be credited again afterwards (PE-01 below). Not yet proven over HTTP. |
+| A duplicate submission cannot double-credit | **Passing** at the business-logic level, including the case found in review (a link credited before its video was tracked, PE-01 below). Not yet proven over HTTP. |
 | API failures and unsupported like attribution are shown honestly | **Passing** for the adapters and claim checks; UI not built |
 | Admin adjustments are recorded and reversible | **Passing** |
 | Auth, authorization, data deletion, privacy tests | Authorization, deletion and privacy **passing** at the business-logic level. **Sign-in and per-route tests are not written yet.** |
@@ -67,7 +67,7 @@ built. Its findings, and the decision on each:
 
 | # | Finding | Decision |
 |---|---|---|
-| PE-01 | **A video can be credited twice to one member**: the duplicate check keys on the tracked-video id when the video is on the list and on the link otherwise, so submitting a link before the video is tracked and again afterwards gives two credits. | **Fix first.** One subject per platform video, tracked or not (`video:<platform>:<platform id>`), enforced in the schema; erasure rewrites that subject so the erased member's video id does not linger. *Not fixed yet — the acceptance criterion "a duplicate cannot double-credit" holds only for videos that stay tracked or stay untracked.* |
+| PE-01 | **A video could be credited twice to one member**: the duplicate check keyed on the tracked-video id when the video was on the list and on the link otherwise, so submitting a link before the video was tracked and again afterwards gave two credits. | **Fixed.** Reproduced first (25 → 50 points), then closed: one subject per platform video, tracked or not (`video:<platform>:<platform id>`), enforced in the schema; a regression test replays the reproduction. Erasure rewrites that subject so an erased member's video id does not linger. |
 | PE-02 | Sample data and real data are told apart by scanning for a few kinds of row; sample awards would pass the scan. | Accept. A database is `demo` or `live` for its whole life (one row, set at creation); simulated results and dev sign-in are only possible in a demo database. |
 | PE-03 | The migration runner cannot apply a table rebuild, and a rebuild would silently drop guard triggers. | Accept, before any real data exists: `schema.sql` stays the complete current schema, migrations only upgrade old databases, and a test requires both routes to produce an identical schema. |
 | PE-04 | A missing database file looks like a first start; backup is one sentence. | Accept: refuse to start on a missing database unless told to create one; add a backup command with retention; state the persistent-disk requirement. |
@@ -90,7 +90,7 @@ built. Its findings, and the decision on each:
    with the dev settings, seed it, sign in with the printed code and fetch
    `/api/dashboard` to see the three sample members. Fix or record every reported
    defect. Do not mark this done from a report alone.
-2. **Apply the third review** in the order of the table above, PE-01 first. Schema
+2. **Apply the rest of the third review** in the order of the table above (PE-01 is done). Schema
    changes wait until the schema-attack suite has landed (it is being written against
    the current schema); each change updates schema, `integrity.js`, tests and docs together.
 3. **Adversarially review sign-in and HTTP** before building on them: sessions, CSRF,

@@ -133,7 +133,14 @@ export function checkIntegrity(db) {
   );
 
   // 7. One credit per subject (P2).
-  report('video_claim_with_wrong_subject', db.all("SELECT id FROM claims WHERE video_id IS NOT NULL AND subject_key <> 'video:' || video_id"), 'id');
+  report(
+    'video_claim_with_wrong_subject',
+    db.all(
+      `SELECT c.id FROM claims c JOIN videos v ON v.id = c.video_id
+        WHERE c.subject_key NOT IN ('video:' || v.platform || ':' || v.platform_video_id, 'video:erased:' || v.id)`,
+    ),
+    'id',
+  );
   report(
     'duplicate_live_claims',
     db.all(

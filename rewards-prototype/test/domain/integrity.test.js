@@ -101,7 +101,8 @@ test('a half-finished erasure, a broken tier ladder and a lost admin are caught'
   tamper(world.db, ['erasure_guard_clear'], () => world.db.run('UPDATE erasure_guard SET member_id = NULL WHERE id = 1'));
   assert.equal(checkIntegrity(world.db).ok, true);
 
-  world.db.run('DELETE FROM tiers WHERE level = 5');
+  assert.throws(() => world.db.run('DELETE FROM tiers WHERE level = 5'), /there are exactly five tiers/);
+  tamper(world.db, ['tiers_no_delete'], () => world.db.run('DELETE FROM tiers WHERE level = 5'));
   assert.deepEqual(checks(world.db), ['tiers_not_five_ascending']);
   world.db.run("INSERT INTO tiers (level, name, min_xp, art_key, updated_at) VALUES (5, 'Stage 5', 10, 'stage-5', ?)", [T0]);
   assert.deepEqual(checks(world.db), ['tiers_not_five_ascending'], 'thresholds must climb');
