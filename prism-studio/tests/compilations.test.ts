@@ -87,7 +87,6 @@ describe("registerCompilation", () => {
     [row] = await db.select().from(S.lessons).where(eq(S.lessons.id, r.lesson.id));
     expect(row).toMatchObject({ state: "ready_for_review", approvedHash: "", videoSha256: "b".repeat(64), thumbnailPath: "", chapters: "0:00 New", description: "New title\n\nNew text", title: "Owner's own title" });
     expect(row.qa).toEqual({ fails: ["loudness"] });
-    await expect(markLessonUploaded(db, row.id, {})).rejects.toThrow(/Approve this exact/);
     const log = await audits(r.lesson.id);
     expect(log).toHaveLength(2);
     expect(log.find((a) => (a.detail as { approvalWithdrawn?: boolean }).approvalWithdrawn)).toBeTruthy();
@@ -157,8 +156,7 @@ describe("registerCompilation", () => {
     await db.insert(S.lessons).values({ channelId: c.id, name: "vol01", title: "Demo", isDemo: true });
     const r = await registerCompilation(db, c.id, "vol01", build("vol01"));
     expect(r.lesson.isDemo).toBe(false);
-    await approveLesson(db, r.lesson.id);
-    await markLessonUploaded(db, r.lesson.id, {});
+    await markLessonUploaded(db, r.lesson.id, {});   // no approval needed
     const p = await registerCompilation(db, c.id, "vol01", build("vol01", { videoSha256: "c".repeat(64) }));
     expect(p.action).toBe("published");
     const [row] = await db.select().from(S.lessons).where(eq(S.lessons.id, r.lesson.id));

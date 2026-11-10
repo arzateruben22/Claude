@@ -11,7 +11,7 @@ import {
   archivedSeasonOf, inArchivedSeason, lessonOnWorkingSeason, onWorkingSeason, seasonArchive, seasonUploaded, seriesOnWorkingSeason,
 } from "../src/domain/season-archive";
 import { allPosted, episodeUploaded, groupUploaded, markEpisodeUploaded, undoEpisodeUploaded } from "../src/domain/publications";
-import { availableForLesson } from "../src/domain/lessons";
+import { availableForLesson, markLessonUploaded, undoLessonUploaded } from "../src/domain/lessons";
 import { analyticsTotals } from "../src/domain/analytics";
 import { planDays, slotsForDate } from "../src/domain/schedule";
 import { clearUploadedVideos, videoClearPlan } from "../src/domain/media-cleanup";
@@ -153,7 +153,7 @@ describe("seasonArchive (derived from the publication records)", () => {
     expect(a.archived[0].episodes).toBe(6);   // real episodes only
   });
 
-  it("a built long video of the season must be marked uploaded too; an unbuilt one doesn't count", async () => {
+  it("a built long video of the season must be uploaded too: its own button (no approval) archives the season at once, Undo brings it back", async () => {
     const [l] = await db.insert(S.lessons).values({ channelId: physics.id, title: "Season 1, the long cut", name: "s1", state: "ready_for_review",
       videoPath: "films:films/channels/physics/compilations/s1/s1-16x9.mp4", videoSha256: "abc" }).returning();
     await db.insert(S.lessonEpisodes).values([{ lessonId: l.id, episodeId: s1.eps[0].id, position: 1 }, { lessonId: l.id, episodeId: s1.eps[1].id, position: 2 }]);
@@ -162,7 +162,18 @@ describe("seasonArchive (derived from the publication records)", () => {
     let a = await archive();
     expect(a.seasonIds.has(s1.seasonId)).toBe(false);
     expect(a.seasons.find((x) => x.id === s1.seasonId)!.longVideosLeft).toEqual([{ id: l.id, name: "s1", title: "Season 1, the long cut" }]);
-    await db.update(S.lessons).set({ state: "published", reportedAt: new Date() }).where(eq(S.lessons.id, l.id));
+    // "Uploaded on YouTube" on the long video, never approved: the last button, so the season archives at once
+    expect(l.approvedHash).toBe("");
+    expect(await markLessonUploaded(db, l.id)).toBe("marked");
+    a = await archive();
+    expect(a.seasonIds.has(s1.seasonId)).toBe(true);
+    expect(a.archived[0].lessonList.find((x) => x.id === l.id)).toMatchObject({ state: "published" });
+    // its Undo brings the season back, with the long video as what is left; pressing again archives it again
+    expect(await undoLessonUploaded(db, l.id)).toBe(true);
+    a = await archive();
+    expect(a.seasonIds.has(s1.seasonId)).toBe(false);
+    expect(a.seasons.find((x) => x.id === s1.seasonId)).toMatchObject({ uploaded: 6, longVideosLeft: [{ id: l.id, name: "s1", title: "Season 1, the long cut" }] });
+    expect(await markLessonUploaded(db, l.id)).toBe("marked");
     a = await archive();
     expect(a.seasonIds.has(s1.seasonId)).toBe(true);
     expect(a.lessonIds.has(l.id) && a.lessonIds.has(unbuilt.id)).toBe(true);   // both go with their season

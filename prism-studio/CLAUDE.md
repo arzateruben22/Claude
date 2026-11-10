@@ -11,6 +11,8 @@
   only record what the owner did. One publication record per destination.
 - **Uploaded buttons (owner's decision, 9 Nov 2026):** the owner posts by hand and presses "Uploaded on YouTube & TikTok" /
   "Uploaded on Instagram"; that records owner-reported posts (audit-logged, undoable). Approvals are no longer part of the UI.
+  Long videos have the same button, "Uploaded on YouTube" (10 Nov 2026: `LessonUploadedControl`, `markLessonUploaded` /
+  `undoLessonUploaded`): any real, built lesson, no approval; published = the owner pressed it; Undo → ready_for_review.
 - **Video clearing (owner's request):** once both Uploaded buttons have stood 3 days (`VIDEO_CLEAR_GRACE_DAYS`), the worker's
   hourly `cleanup_uploaded_media` job erases that episode's `out/*.mp4` from the server and sets `episodes.video_cleared_at`
   (`src/domain/media-cleanup.ts`). Covers, captions and text stay; the importer keeps cleared episodes as they are;

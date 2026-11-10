@@ -1,8 +1,11 @@
 // Home: the monitor wall. The New York night behind six monitors: Instagram in the middle, a monitor per channel
-// around it. Each monitor shows the next thing to post and opens its extension (/m/[slug]).
+// around it. Each monitor shows the next thing to post and opens its extension (/m/[slug]). Long videos not yet
+// recorded as uploaded get a small card above the wall with their "Uploaded on YouTube" buttons.
 import Link from "next/link";
 import { rigView } from "@/lib/data";
 import { formatLocal } from "@/domain/time";
+import { topicStyle } from "@/lib/format";
+import { LessonUploadedControl } from "@/components/UploadedControl";
 import { MonitorRig } from "@/components/MonitorRig";
 import { Wallpaper } from "@/components/Wallpaper";
 
@@ -25,7 +28,7 @@ export default async function Home() {
           <span><span className="day-long">{day}</span><span className="day-short">{dayShort}</span></span>
           {first}
           {v.reviewCount ? <span><Link href="/review">{v.reviewCount} to review</Link></span> : null}
-          {v.longToApprove.length ? <span><Link href={`/m/${v.longToApprove[0].slug}#long-video`}>{v.longToApprove.length} long video{v.longToApprove.length === 1 ? "" : "s"} to approve</Link></span> : null}
+          {v.longToUpload.length ? <span><a href="#long-videos">{v.longToUpload.length} long video{v.longToUpload.length === 1 ? "" : "s"} to upload</a></span> : null}
           {v.paused ? <span>Publishing paused</span> : null}
         </p>
       </header>
@@ -34,6 +37,20 @@ export default async function Home() {
           {v.unseenEvolutions.length ? <>A creation evolved: <Link href={`/evolution/${v.unseenEvolutions[0].slug}`}>see it</Link>. </> : null}
           {v.unseenAchievements.length ? <>Unlocked {v.unseenAchievements.map((a) => a.title + (a.demo ? " (demo)" : "")).join(", ")}: <Link href="/rewards">trophy shelf</Link>.</> : null}
         </p>
+      ) : null}
+      {v.longVideos.length ? (
+        <section id="long-videos" className="card home-longs" aria-labelledby="home-longs-h">
+          <div className="home-longs-head"><h2 id="home-longs-h">Long videos</h2><span className="faint">YouTube · a regular video, not Shorts</span></div>
+          <ul>
+            {v.longVideos.map(({ lesson: l, channel: c }) => (
+              <li key={l.id} style={topicStyle(c)}>
+                <span className="home-long-title"><span className="kicker topic-text">{c.label} · {l.name}</span><Link href={`/m/${c.slug}#long-video`}>{l.title}</Link></span>
+                <span className="uploaded-bar"><LessonUploadedControl lesson={l} tz={v.tz} /></span>
+              </li>
+            ))}
+          </ul>
+          <p className="faint">Post it on YouTube by hand, then press its button. Nothing posts by itself: the button only records what you did.</p>
+        </section>
       ) : null}
       <MonitorRig v={v} />
     </div>

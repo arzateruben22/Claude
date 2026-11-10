@@ -10,9 +10,7 @@ import { INSTAGRAM_SLUG } from "@/lib/rig";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
 import { PLATFORM_LABEL, qaFails, STATE_LABEL, stateTone, topicStyle } from "@/lib/format";
-import { approveLessonAction } from "@/app/actions";
 import { parseChapters } from "@/domain/lessons";
-import { ActionForm } from "@/components/ActionForm";
 import { CopyButton } from "@/components/CopyButton";
 import { PackagingCard } from "@/components/PackagingCard";
 import type { Packaging } from "@/domain/packaging";
@@ -26,6 +24,7 @@ import { IdentityArt } from "@/components/IdentityArt";
 import { SeasonBar } from "@/components/SeasonBar";
 import { seasonLabel } from "@/domain/season";
 import { ArchivedNote } from "@/components/ArchivedSeasons";
+import { LessonUploadedPanel } from "@/components/UploadedControl";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -207,7 +206,7 @@ async function ChannelScreen({ slug }: { slug: string }) {
         <div className="section-head"><h2>Long video</h2><span className="faint num">YouTube · regular video, not Shorts</span></div>
         {v.longVideos.length ? (
           <div className="posts">
-            {v.longVideos.map((x) => <LongVideo key={x.lesson.id} x={x} slug={c.slug} />)}
+            {v.longVideos.map((x) => <LongVideo key={x.lesson.id} x={x} slug={c.slug} tz={v.tz} account={v.accounts.find((a) => a.dest.platform === "youtube")?.dest.handle || `${name}'s YouTube`} />)}
           </div>
         ) : <p className="muted">No long video yet. Once 4–6 shorts are rendered, build one from <Link href={`/channels/${c.slug}?tab=lessons`}>Lessons</Link>: they play back to back in one 16:9 video with chapters.</p>}
       </section>
@@ -368,9 +367,13 @@ async function InstagramScreen() {
   );
 }
 
-/** A long video (a lesson): the 16:9 compilation of the channel's shorts, for YouTube as a regular video. Approve it
- *  here or on the channel's Lessons tab; editing the title or description lives there. */
-function LongVideo({ x, slug }: { x: { lesson: { id: string; name: string; title: string; description: string; chapters: string; state: string; videoPath: string; thumbnailPath: string; qa: unknown; isDemo: boolean; packaging: Packaging | null }; approved: boolean; episodes: string[]; packThumb: string | null }; slug: string }) {
+/** A long video (a lesson): the 16:9 compilation of the channel's shorts, for YouTube as a regular video. Post it by
+ *  hand, then press "Uploaded on YouTube" here (no approval; Undo puts it back); editing the title or description lives
+ *  on the channel's Lessons tab. */
+function LongVideo({ x, slug, tz, account }: {
+  x: { lesson: { id: string; name: string; title: string; description: string; chapters: string; state: string; videoPath: string; thumbnailPath: string; qa: unknown; isDemo: boolean; isTestFixture: boolean; reportedAt: Date | null; packaging: Packaging | null }; episodes: string[]; packThumb: string | null };
+  slug: string; tz: string; account: string;
+}) {
   const l = x.lesson;
   // a long video pushed from a cloud session may have no linked episodes: count its chapters instead
   const chapterCount = parseChapters(l.chapters).length;
@@ -386,7 +389,7 @@ function LongVideo({ x, slug }: { x: { lesson: { id: string; name: string; title
         <span className="label">{l.name}{parts ? ` · ${parts}` : ""}{len ? ` · ${len}` : ""}</span>
         {l.isDemo ? <span className="demo-tag">DEMO</span> : null}
         {fails ? <span className="chip bad">QA: {fails} failed</span> : fails === 0 ? <span className="chip good">QA passed</span> : null}
-        {l.state === "published" ? <span className="chip good">Uploaded</span> : x.approved ? <span className="chip good">Approved</span> : <span className="chip warn">Needs approval</span>}
+        {l.state === "published" ? <span className="chip good">Uploaded</span> : <span className="chip">Not uploaded yet</span>}
       </div>
       <h3 style={{ margin: 0 }}>{l.title}</h3>
       <div style={{ background: "#000", borderRadius: 8, overflow: "hidden" }}>
@@ -399,14 +402,14 @@ function LongVideo({ x, slug }: { x: { lesson: { id: string; name: string; title
         </details>
       ) : null}
       <div className="row">
-        {!x.approved && l.state !== "published" ? <ActionForm action={approveLessonAction} submit="Approve for YouTube" submitClass="btn small"><input type="hidden" name="lessonId" value={l.id} /></ActionForm> : null}
         <CopyButton text={l.title} label="Copy title" />
         <CopyButton text={l.description} label="Copy description" />
         <a className="btn ghost small" href={`${mediaUrl(l.videoPath)}&dl=${encodeURIComponent(`${l.name}-16x9.mp4`)}`} download>Download video</a>
         {l.thumbnailPath ? <a className="btn ghost small" href={`${mediaUrl(l.thumbnailPath)}&dl=${encodeURIComponent(`${l.name}-thumbnail.jpg`)}`} download>Thumbnail</a> : null}
-        <Link href={`/channels/${slug}?tab=lessons`} className="btn ghost small">Edit or mark uploaded</Link>
+        <Link href={`/channels/${slug}?tab=lessons`} className="btn ghost small">Title and description</Link>
       </div>
       {l.packaging ? <PackagingCard id={`pack-${l.id}`} p={l.packaging} thumb={x.packThumb} download={`${l.name}-packaging-thumbnail.jpg`} /> : null}
+      <LessonUploadedPanel lesson={l} tz={tz} account={account} />
     </article>
   );
 }

@@ -14,7 +14,6 @@ import { rewardBalances } from "@/domain/rewards";
 import { pullStates } from "@/domain/api-analytics";
 import { listDevices, pushStatus, recentPushEvents } from "@/domain/push";
 import { currentApproval } from "@/domain/approvals";
-import { lessonHash } from "@/domain/lessons";
 import { CHANNELS, OFFICIAL, PLANNED_SEASONS, youtubeStudioFor } from "@/domain/catalog";
 import { achievementOnActiveChannel, activeChannelBySlug, activeChannels, archivedChannels, isArchived, onActiveChannel } from "@/domain/channels";
 import { plannedSeason, seasonLine, seasonProgress, type SeasonProgress } from "@/domain/season";
@@ -530,18 +529,22 @@ export async function rigView() {
     ledLabel: igLed === "ready" ? "ready to post today" : igLed === "review" ? "needs a render" : "nothing queued today", slots,
   });
   const reviewCount = eps.filter((e) => e.state === "ready_for_review").length;
-  // built long videos (lessons) still waiting for their YouTube approval: they aren't episodes, so Review doesn't list them
-  const longToApprove = (await d.select().from(S.lessons)
-    .where(and(eq(S.lessons.isDemo, false), eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), ne(S.lessons.state, "published"), lessonOnWorkingSeason(arch, S.lessons.id))))
-    .filter((l) => !l.approvedHash || l.approvedHash !== lessonHash(l))
-    .map((l) => chans.find((c) => c.id === l.channelId)).filter((c): c is Channel => !!c);
+  // built long videos (lessons) not recorded as uploaded on YouTube yet, and those recorded today (so a mis-press can be
+  // undone right there): the Home card's "Uploaded on YouTube" buttons. No approval needed; working seasons only.
+  const startOfToday = zonedTimeToUtc(today, "00:00", tz);
+  const longVideos = (await d.select().from(S.lessons)
+    .where(and(eq(S.lessons.isDemo, false), eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), onActiveChannel(S.lessons.channelId),
+      or(ne(S.lessons.state, "published"), gte(S.lessons.reportedAt, startOfToday)), lessonOnWorkingSeason(arch, S.lessons.id)))
+    .orderBy(asc(S.lessons.createdAt)))
+    .map((lesson) => ({ lesson, channel: chans.find((c) => c.id === lesson.channelId)! })).filter((x) => !!x.channel);
+  const longToUpload = longVideos.filter((x) => x.lesson.state !== "published");
   const unseenEvolutions = (await d.select({ channelId: S.evolutions.channelId }).from(S.evolutions).where(and(isNotNull(S.evolutions.evolvedAt), isNull(S.evolutions.seenAt))))
     .map((x) => chans.find((c) => c.id === x.channelId)).filter((c): c is Channel => !!c);
   const unseenAchievements = await d.select({ title: S.milestoneRules.title, demo: S.achievementEvents.isDemo }).from(S.achievementEvents)
     .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId))
     .where(and(isNull(S.achievementEvents.seenAt), achievementOnActiveChannel(S.achievementEvents.scopeKey, S.achievementEvents.channelId)));
   return {
-    tz, today, monitors, reviewCount, longToApprove, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length,
+    tz, today, monitors, reviewCount, longVideos, longToUpload, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length,
     instagram: { toPlan: s.globalPause ? 0 : unplanned, day }, paused: s.globalPause, stopExternal: s.stopExternalActions,
   };
 }
@@ -576,7 +579,7 @@ export async function channelExtension(slug: string) {
     .from(S.lessonEpisodes).innerJoin(S.episodes, eq(S.episodes.id, S.lessonEpisodes.episodeId))
     .where(inArray(S.lessonEpisodes.lessonId, lessonRows.map((l) => l.id))).orderBy(asc(S.lessonEpisodes.position)) : [];
   const longVideos = lessonRows.map((l) => ({
-    lesson: l, approved: !!l.approvedHash && l.approvedHash === lessonHash(l), episodes: parts.filter((x) => x.lessonId === l.id).map((x) => x.title),
+    lesson: l, episodes: parts.filter((x) => x.lessonId === l.id).map((x) => x.title),
     packThumb: packagingThumb(lessonFolder(l.videoPath), l.packaging),
   }));
   const season = (await currentSeasons(d, [c])).get(c.slug) ?? null;
@@ -663,7 +666,8 @@ export async function libraryView() {
       };
     });
     const longs = lessons.filter((l) => l.channelId === c.id).map((l) => ({
-      id: l.id, name: l.name, title: l.title, isDemo: l.isDemo, videoPath: l.videoPath, thumbnailPath: l.thumbnailPath, bytes: bytes(l.videoPath),
+      id: l.id, name: l.name, title: l.title, isDemo: l.isDemo, isTestFixture: l.isTestFixture, videoPath: l.videoPath, thumbnailPath: l.thumbnailPath, bytes: bytes(l.videoPath),
+      state: l.state, reportedAt: l.reportedAt,
       durationS: (l.qa as { dur?: number } | null)?.dur ?? null,
     }));
     return { channel: c, episodes, longs };

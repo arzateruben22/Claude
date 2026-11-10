@@ -514,15 +514,6 @@ export async function newLesson(_: Result, fd: FormData) {
     return ok(`${l.name} queued: the worker builds it with compilation.mjs (a few minutes).`);
   });
 }
-export async function approveLessonAction(_: Result, fd: FormData) {
-  return run(async () => {
-    const id = z.string().uuid().parse(fd.get("lessonId"));
-    const { approveLesson } = await import("@/domain/lessons");
-    await approveLesson(db(), id);
-    refresh();
-    return ok("Approved this exact video, title and description.");
-  });
-}
 export async function saveLesson(_: Result, fd: FormData) {
   return run(async () => {
     const id = z.string().uuid().parse(fd.get("lessonId"));
@@ -531,17 +522,27 @@ export async function saveLesson(_: Result, fd: FormData) {
     const { editLesson } = await import("@/domain/lessons");
     await editLesson(db(), id, v);
     refresh();
-    return ok("Saved. Approve again before uploading.");
+    return ok("Saved.");
   });
 }
-export async function reportLessonUploaded(_: Result, fd: FormData) {
+/** "Uploaded on YouTube" for a long video: the owner posted it by hand; record it (owner-reported, no approval needed).
+ *  Nothing posts by itself. Every screen can change (the season may archive), so the whole studio is refreshed. */
+export async function lessonUploadedAction(_: Result, fd: FormData) {
   return run(async () => {
     const id = z.string().uuid().parse(fd.get("lessonId"));
-    if (fd.get("confirmAccount") !== "on") throw new DomainError("confirm", "Tick the box to confirm which channel you uploaded to.");
     const { markLessonUploaded } = await import("@/domain/lessons");
-    await markLessonUploaded(db(), id, { postUrl: str(fd, "postUrl") || undefined });
-    refresh("/analytics");
-    return ok("Recorded as uploaded.");
+    const r = await markLessonUploaded(db(), id);
+    revalidatePath("/", "layout");
+    return ok(r === "marked" ? "Recorded: uploaded on YouTube." : "Already recorded as uploaded on YouTube.");
+  });
+}
+export async function undoLessonUploadedAction(_: Result, fd: FormData) {
+  return run(async () => {
+    const id = z.string().uuid().parse(fd.get("lessonId"));
+    const { undoLessonUploaded } = await import("@/domain/lessons");
+    const undone = await undoLessonUploaded(db(), id);
+    revalidatePath("/", "layout");
+    return undone ? ok("Undone: not uploaded on YouTube.") : { ok: false, message: "Nothing to undo." };
   });
 }
 export async function dissolveLessonAction(_: Result, fd: FormData) {

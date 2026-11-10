@@ -1,12 +1,14 @@
 // Archived seasons (src/domain/season-archive.ts): a season uploaded everywhere leaves the working views for Library →
 // Archived seasons. Compact and read-only: one line per season that opens to its episodes (each opens its own page) and
-// its long videos (watch, download, the YouTube post). ArchivedNote is the one-line pointer the channel screens show.
+// its long videos (watch, download, the YouTube post, and its "Uploaded on YouTube" state with Undo). ArchivedNote is the
+// one-line pointer the channel screens show.
 import Link from "next/link";
 import type { ArchivedSeason } from "@/domain/season-archive";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
 import { topicStyle } from "@/lib/format";
 import { Icon } from "./Icon";
+import { LessonUploadedControl } from "./UploadedControl";
 
 type Group = { channel: { id: string; slug: string; name: string; color: string; colorInk: string }; seasons: ArchivedSeason[] };
 
@@ -50,6 +52,7 @@ export function ArchivedSeasons({ groups, tz }: { groups: Group[]; tz: string })
                         {l.videoPath ? <a className="btn ghost small" href={mediaUrl(l.videoPath, `${l.name}-16x9.mp4`)} download><Icon name="download" size={16} /> Download</a> : null}
                         {l.postUrl ? <a className="btn ghost small" href={l.postUrl} target="_blank" rel="noopener noreferrer">On YouTube</a> : null}
                       </span>
+                      <span className="uploaded-bar"><LessonUploadedControl lesson={l} tz={tz} /></span>
                     </li>
                   ))}
                 </ul>

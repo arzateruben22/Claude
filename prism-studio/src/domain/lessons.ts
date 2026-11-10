@@ -1,7 +1,8 @@
 // Lessons: a channel's rendered shorts, piled into one long-form 16:9 YouTube video (the films pipeline's
 // kits/cinema/film/compilation.mjs does the rendering). An episode joins one lesson only (lesson_episodes.episode_id
-// is unique). Approval binds the exact video file, title and description; any rebuild or edit needs a fresh one.
-import { and, asc, eq, notInArray, sql } from "drizzle-orm";
+// is unique). The owner posts a long video on YouTube by hand and presses "Uploaded on YouTube" (markLessonUploaded,
+// undoable); no approval is needed. A recorded approval (approveLesson, no longer in the UI) still lapses on any rebuild or edit.
+import { and, asc, eq, ne, notInArray, sql } from "drizzle-orm";
 import type { DB, Tx } from "../db/client";
 import { channels, episodes, jobs, lessonEpisodes, lessons, milestoneRules, achievementEvents, versions } from "../db/schema";
 import { audit, type Conn, DomainError, settings, sha256 } from "./core";
@@ -233,6 +234,8 @@ export async function registerCompilation(d: DB, channelId: string, name: string
   });
 }
 
+/** Approval of exactly this video, title and description. No longer a step in the UI and nothing requires it (the owner
+ *  dropped approvals on 9 Nov 2026; "Uploaded on YouTube" needs none); kept for the record it leaves. */
 export async function approveLesson(d: DB, lessonId: string) {
   const [l] = await d.select().from(lessons).where(eq(lessons.id, lessonId));
   if (!l) throw new DomainError("not_found", "lesson not found");
@@ -251,19 +254,34 @@ export async function editLesson(d: DB, lessonId: string, patch: { title?: strin
   return l;
 }
 
-/** "Mark uploaded" for a lesson (YouTube only). Needs a live approval of exactly this video and text. */
-export async function markLessonUploaded(d: DB, lessonId: string, v: { postUrl?: string }) {
+/** Why the owner can't record this long video as uploaded, or null when they can: any real (not demo, not a test
+ *  fixture), built lesson, whatever its approval (the owner dropped approvals on 9 Nov 2026). */
+export function lessonUploadBlocker(l: { isDemo: boolean; isTestFixture: boolean; videoPath: string }): string | null {
+  if (l.isDemo || l.isTestFixture) return "A demo or test long video can't be marked uploaded.";
+  if (!l.videoPath) return "This long video isn't built yet.";
+  return null;
+}
+
+/** "Uploaded on YouTube" for a long video, the sibling of the episodes' Uploaded buttons: the owner posted it on YouTube
+ *  by hand and says so. One press records it (owner-reported: state published with the report time, audit-logged with
+ *  the owner as actor, undoable); nothing posts by itself. No approval is needed. Pressing it again changes nothing
+ *  ("already"). The XP and "The Long Form" are awarded once, as before. */
+export async function markLessonUploaded(d: DB, lessonId: string, v: { postUrl?: string } = {}): Promise<"marked" | "already"> {
   const [l] = await d.select().from(lessons).where(eq(lessons.id, lessonId));
   if (!l) throw new DomainError("not_found", "lesson not found");
-  if (l.isDemo || l.isTestFixture) throw new DomainError("demo", "a demo or test lesson can't be marked uploaded");
-  if (!l.approvedHash || l.approvedHash !== lessonHash(l)) throw new DomainError("not_approved", "Approve this exact video, title and description first.");
+  const blocked = lessonUploadBlocker(l);
+  if (blocked) throw new DomainError(l.videoPath ? "demo" : "not_built", blocked);
   let postUrl = "";
   if (v.postUrl) {
     const p = parsePostUrl("youtube", v.postUrl);
     if (!p.ok) throw new DomainError("bad_url", p.error);
     postUrl = p.url;
   }
-  await d.update(lessons).set({ state: "published", postUrl, reportedAt: new Date(), updatedAt: new Date() }).where(eq(lessons.id, lessonId));
+  // one press wins: a lesson already recorded keeps its first report
+  const [row] = await d.update(lessons).set({ state: "published", postUrl, reportedAt: new Date(), updatedAt: new Date() })
+    .where(and(eq(lessons.id, lessonId), ne(lessons.state, "published"))).returning();
+  if (!row) return "already";
+  await audit(d, "owner", "lesson.mark_uploaded", "lesson", l.id, { postUrl, evidence: "owner_reported", previousState: l.state });
   await awardXp(d, { channelId: l.channelId, kind: "lesson", amount: 150, key: `lesson:${l.id}` });
   // "The Long Form": the studio's first lesson that covers a whole series bundle
   const s = await settings(d);
@@ -273,8 +291,21 @@ export async function markLessonUploaded(d: DB, lessonId: string, v: { postUrl?:
     const [ev] = await d.insert(achievementEvents).values({ ruleId: rule.id, scopeKey: "studio", channelId: l.channelId, evidence: { lessonId: l.id, postUrl } }).onConflictDoNothing().returning();
     if (ev && rule.xp) await awardXp(d, { channelId: l.channelId, kind: "achievement:first_series_lesson", amount: rule.xp, key: "achievement:first_series_lesson:studio:live" });
   }
-  await audit(d, "owner", "lesson.mark_uploaded", "lesson", l.id, { postUrl });
   await refreshEvolution(d, l.channelId);
+  return "marked";
+}
+
+/** Undo "Uploaded on YouTube" for a long video pressed by mistake: back to built and not uploaded (ready_for_review),
+ *  with no report time or link (audit-logged; the audit keeps what it was). Only the owner's button sets a lesson to
+ *  published, so this undoes exactly that. As with episodes, XP already earned stays. Returns whether it undid anything. */
+export async function undoLessonUploaded(d: DB, lessonId: string): Promise<boolean> {
+  const [l] = await d.select().from(lessons).where(eq(lessons.id, lessonId));
+  if (!l) throw new DomainError("not_found", "lesson not found");
+  const [row] = await d.update(lessons).set({ state: "ready_for_review", postUrl: "", reportedAt: null, updatedAt: new Date() })
+    .where(and(eq(lessons.id, lessonId), eq(lessons.state, "published"), eq(lessons.isDemo, false), eq(lessons.isTestFixture, false))).returning();
+  if (!row) return false;
+  await audit(d, "owner", "lesson.undo_uploaded", "lesson", lessonId, { reportedAt: l.reportedAt?.toISOString() ?? null, postUrl: l.postUrl });
+  return true;
 }
 
 /** Give a lesson's episodes back (only before it is published) so they can join another one. */

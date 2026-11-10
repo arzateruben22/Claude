@@ -1,6 +1,16 @@
 # Changelog
 
 ## Unreleased
+- Long videos get the owner's "Uploaded on YouTube" button (owner's report, 10 Nov 2026: every long video is up, but
+  there was no working button to record it). It is the episodes' Uploaded button for a long video
+  (`LessonUploadedControl`, the same render as `UploadedControl`): one press records it, owner-reported and
+  audit-logged, on any real, built long video whatever its approval; Undo (`undoLessonUploaded`, new) puts it back to
+  built and not uploaded. The "Approve for YouTube" step and the approval gate before marking a long video uploaded
+  are gone (approvals left the UI on 9 Nov). The button is on the channel's Lessons tab, a new Home "Long videos" card
+  (each long video not yet recorded, and those recorded today, with Undo; the day line now says "N long videos to
+  upload"), the long-video card on `/m/<channel>`, the Library's long videos and Library → Archived seasons. A season
+  whose episodes and long videos are all recorded archives at once. Nothing posts by itself: the button only records
+  what the owner did. No migration.
 - Archived seasons (owner's request, 10 Nov 2026: "as soon as season 1 is uploaded and checked off for each channel,
   remove it"): a season is uploaded once every real episode stands on both Uploaded buttons ("YouTube & TikTok" and
   "Instagram") and every built long video of it is marked uploaded (`src/domain/season-archive.ts`; derived from the

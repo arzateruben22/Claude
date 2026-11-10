@@ -1,15 +1,15 @@
-// The channel's lessons: build one from 4–6 rendered shorts, review the result, approve, hand off, mark uploaded. A long
-// video built and pushed from a cloud session shows here too (registered by the importer); when its episodes couldn't be
-// linked with certainty it lists its chapters instead.
+// The channel's lessons: build one from 4–6 rendered shorts, watch the result, post it on YouTube by hand, then press
+// "Uploaded on YouTube" (no approval step; Undo puts it back). A long video built and pushed from a cloud session shows
+// here too (registered by the importer); when its episodes couldn't be linked with certainty it lists its chapters instead.
 import type { lessons as lessonsTable, lessonEpisodes as leTable, episodes as epTable } from "@/db/schema";
-import { approveLessonAction, dissolveLessonAction, newLesson, reportLessonUploaded, saveLesson } from "@/app/actions";
-import { LESSON_MAX, LESSON_MIN, lessonHash, parseChapters } from "@/domain/lessons";
-import { formatLocal } from "@/domain/time";
+import { dissolveLessonAction, newLesson, saveLesson } from "@/app/actions";
+import { LESSON_MAX, LESSON_MIN, parseChapters } from "@/domain/lessons";
 import { mediaUrl } from "@/lib/media";
 import { qaFails, STATE_LABEL, stateTone } from "@/lib/format";
 import { ActionForm } from "./ActionForm";
 import { CopyButton } from "./CopyButton";
 import { PackagingCard } from "./PackagingCard";
+import { LessonUploadedPanel } from "./UploadedControl";
 
 type Lesson = typeof lessonsTable.$inferSelect;
 type Part = typeof leTable.$inferSelect & { episode: typeof epTable.$inferSelect };
@@ -48,7 +48,6 @@ export function Lessons({ channelId, channelName, ytHandle, lessons, parts, avai
       {lessons.map((l) => {
         const mine = parts.filter((p) => p.lessonId === l.id).sort((a, b) => a.position - b.position);
         const chapters = mine.length ? [] : parseChapters(l.chapters);   // a pushed long video with no linked episodes
-        const approved = !!l.approvedHash && l.approvedHash === lessonHash(l);
         const fails = qaFails(l.qa);
         const qa = l.qa as { dur?: number; lufs?: number; true_peak_db?: number } | null;
         return (
@@ -59,8 +58,8 @@ export function Lessons({ channelId, channelName, ytHandle, lessons, parts, avai
                 <h3 className="h2" style={{ margin: "4px 0 0" }}>{l.title}</h3>
               </div>
               <div className="row">
-                <span className={`chip ${stateTone(l.state)}`}>{STATE_LABEL[l.state]}</span>
-                {l.videoPath ? (approved ? <span className="chip good">Approved</span> : <span className="chip warn">Not approved</span>) : null}
+                {l.videoPath ? (l.state === "published" ? <span className="chip good">Uploaded</span> : <span className="chip">Not uploaded yet</span>)
+                  : <span className={`chip ${stateTone(l.state)}`}>{STATE_LABEL[l.state]}</span>}
               </div>
             </div>
             {mine.length ? <ol style={{ margin: 0, paddingLeft: 20, fontSize: 14 }}>{mine.map((p) => <li key={p.episodeId}>{p.episode.title}</li>)}</ol>
@@ -77,7 +76,7 @@ export function Lessons({ channelId, channelName, ytHandle, lessons, parts, avai
                 </div>
                 {l.state !== "published" ? (
                   <details>
-                    <summary style={{ cursor: "pointer", fontWeight: 650 }}>Title and description{approved ? " (editing withdraws the approval)" : ""}</summary>
+                    <summary style={{ cursor: "pointer", fontWeight: 650 }}>Title and description</summary>
                     <ActionForm action={saveLesson} className="stack-sm" submit="Save" submitClass="btn small">
                       <input type="hidden" name="lessonId" value={l.id} />
                       <label className="field">Title <input name="title" defaultValue={l.title} maxLength={100} /></label>
@@ -86,24 +85,14 @@ export function Lessons({ channelId, channelName, ytHandle, lessons, parts, avai
                   </details>
                 ) : null}
                 <div className="row">
-                  {!approved && l.state !== "published" ? <ActionForm action={approveLessonAction} submit="Approve for YouTube" submitClass="btn topic small"><input type="hidden" name="lessonId" value={l.id} /></ActionForm> : null}
                   <CopyButton text={l.title} label="Copy title" />
                   <CopyButton text={l.description} label="Copy description" />
                   <a className="btn ghost small" href={`${mediaUrl(l.videoPath)}&dl=${encodeURIComponent(`${l.name}-16x9.mp4`)}`} download>Download video</a>
                   {l.thumbnailPath ? <a className="btn ghost small" href={`${mediaUrl(l.thumbnailPath)}&dl=${encodeURIComponent(`${l.name}-thumbnail.jpg`)}`} download>Thumbnail</a> : null}
                 </div>
                 {l.packaging ? <PackagingCard id={`pack-${l.id}`} p={l.packaging} thumb={packThumbs[l.id] ?? null} download={`${l.name}-packaging-thumbnail.jpg`} /> : null}
-                {approved && l.state !== "published" ? (
-                  <details>
-                    <summary style={{ cursor: "pointer", fontWeight: 650 }}>I&apos;ve uploaded it to YouTube: mark uploaded</summary>
-                    <ActionForm action={reportLessonUploaded} className="stack-sm" submit="Mark uploaded" submitClass="btn">
-                      <input type="hidden" name="lessonId" value={l.id} />
-                      <label className="field">Video link <span className="hint">Optional.</span><input name="postUrl" type="url" inputMode="url" placeholder="https://youtu.be/…" /></label>
-                      <label className="check"><input type="checkbox" name="confirmAccount" /> <span>I uploaded it to <b>{ytHandle || `${channelName} YouTube`}</b> as a regular (not Shorts) video, with the AI label on and the chapters in the description.</span></label>
-                    </ActionForm>
-                  </details>
-                ) : null}
-                {l.state === "published" ? <p className="muted" style={{ margin: 0 }}>Uploaded {formatLocal(l.reportedAt, tz)}{l.postUrl ? <> · <a href={l.postUrl} target="_blank" rel="noopener noreferrer">watch</a></> : null}</p> : null}
+                <LessonUploadedPanel lesson={l} tz={tz} account={ytHandle || `${channelName}'s YouTube`} />
+                {l.state === "published" && l.postUrl ? <p className="muted" style={{ margin: 0 }}><a href={l.postUrl} target="_blank" rel="noopener noreferrer">Watch it on YouTube</a></p> : null}
               </>
             )}
             {/* dissolving gives episodes back; one with none would only come back on the next import */}

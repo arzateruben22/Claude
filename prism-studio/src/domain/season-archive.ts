@@ -24,7 +24,8 @@ type RuleLesson = { isDemo: boolean; isTestFixture: boolean; state: string; vide
 
 /** A long video counts for its season once it is built (a real, built lesson: not demo, not a test fixture). */
 export const lessonCounts = (l: RuleLesson): boolean => !l.isDemo && !l.isTestFixture && !!l.videoPath;
-/** A long video's own uploaded state: "Mark uploaded" (markLessonUploaded) sets it to published. */
+/** A long video's own uploaded state: its "Uploaded on YouTube" button (markLessonUploaded, no approval needed) sets it
+ *  to published; Undo (undoLessonUploaded) puts it back. The button reads this too. */
 export const lessonUploaded = (l: { state: string }): boolean => l.state === "published";
 
 /** The rule. A season is uploaded when it has at least one real episode (cancelled and superseded ones aside), every
@@ -39,6 +40,7 @@ export function seasonUploaded(eps: readonly RuleEpisode[], longs: readonly Rule
 export type ArchivedEpisode = { id: string; number: number; title: string; seriesOrder: number | null; isDemo: boolean; videoClearedAt: Date | null };
 export type ArchivedLesson = {
   id: string; channelId: string; name: string; title: string; videoPath: string; thumbnailPath: string; postUrl: string; reportedAt: Date | null; isDemo: boolean;
+  state: string; isTestFixture: boolean;
 };
 /** One season of an active channel and where it stands: how many real episodes are uploaded on both buttons, and which
  *  built long videos still wait for "Mark uploaded". */
@@ -68,7 +70,7 @@ export const EMPTY_ARCHIVE: SeasonArchive = { seasons: [], archived: [], seasonI
 type SeasonRow = { id: string; seriesId: string; number: number; title: string; seriesTitle: string; channelId: string };
 type EpisodeRow = ArchivedEpisode & { seasonId: string | null; state: string };
 type PubRow = Pub & { episodeId: string };
-type LessonRow = ArchivedLesson & { seriesId: string | null; state: string; isTestFixture: boolean };
+type LessonRow = ArchivedLesson & { seriesId: string | null };
 
 /** The archive from loaded rows (pure: seasonArchive loads them). A long video belongs to the seasons of the episodes
  *  it is linked to (lesson_episodes) and to its series' seasons. */
@@ -113,7 +115,8 @@ export function archiveFrom(rows: { seasons: SeasonRow[]; episodes: EpisodeRow[]
       episodeList: [...s.eps].sort((a, b) => (a.seriesOrder ?? a.number) - (b.seriesOrder ?? b.number))
         .map(({ id, number, title, seriesOrder, isDemo, videoClearedAt }) => ({ id, number, title, seriesOrder, isDemo, videoClearedAt })),
       lessonList: s.longs.filter((l) => lessonIds.has(l.id))
-        .map(({ id, channelId, name, title, videoPath, thumbnailPath, postUrl, reportedAt, isDemo }) => ({ id, channelId, name, title, videoPath, thumbnailPath, postUrl, reportedAt, isDemo })),
+        .map(({ id, channelId, name, title, videoPath, thumbnailPath, postUrl, reportedAt, isDemo, state, isTestFixture }) =>
+          ({ id, channelId, name, title, videoPath, thumbnailPath, postUrl, reportedAt, isDemo, state, isTestFixture })),
     })),
     seasonIds, seriesIds, episodeIds, lessonIds,
   };

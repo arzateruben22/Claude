@@ -9,6 +9,7 @@ import { topicStyle } from "@/lib/format";
 import { Icon } from "@/components/Icon";
 import { VideoCleared } from "@/components/VideoCleared";
 import { ArchivedSeasons } from "@/components/ArchivedSeasons";
+import { LessonUploadedControl } from "@/components/UploadedControl";
 
 export const metadata: Metadata = { title: "Library" };
 
@@ -39,6 +40,7 @@ export default async function Library() {
                   {l.thumbnailPath ? <a className="btn ghost small" href={mediaUrl(l.thumbnailPath, `${l.name}-thumbnail.jpg`)} download>Thumbnail</a> : null}
                   <Link className="btn ghost small" href={`/channels/${c.slug}?tab=lessons`}>Chapters and text</Link>
                 </div>
+                <div className="uploaded-bar"><LessonUploadedControl lesson={l} tz={v.tz} /></div>
               </div>
             </article>
           ))}

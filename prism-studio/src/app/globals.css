@@ -303,6 +303,18 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 }
 .home-note { margin: -6px 0 16px; font-size: 13.5px; color: var(--text-2); }
 .home-note a { color: var(--text); }
+/* Home → Long videos: each long video not yet recorded as uploaded, with its "Uploaded on YouTube" button */
+.home-longs { position: relative; z-index: 2; max-width: 760px; margin: 0 0 18px; padding: var(--s3) var(--s4); display: grid; gap: var(--s2); }
+.home-longs-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; }
+.home-longs-head h2 { margin: 0; font-size: 18px; }
+.home-longs-head .faint { font-size: 12.5px; }
+.home-longs ul { list-style: none; margin: 0; padding: 0; }
+.home-longs li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; padding: 8px 0; border-top: 1px solid var(--line); }
+.home-long-title { display: grid; gap: 2px; min-width: 0; flex: 1 1 240px; overflow-wrap: anywhere; }
+.home-long-title a { color: var(--text); font-weight: 560; text-decoration: none; }
+.home-long-title a:hover { text-decoration: underline; }
+.home-longs .uploaded-bar { flex: 0 1 230px; }
+.home-longs > p { margin: 0; font-size: 12.5px; }
 @media (min-width: 1100px) { .home-brand { font-size: 30px; } }
 @media (max-width: 899px) {
   /* the brand and the day at the top, then a band of open skyline (the portrait wallpaper's spire) above the monitors */
@@ -767,6 +779,7 @@ a.budget-name:hover { text-decoration: underline; }
 .archived-longs { list-style: none; margin: 0 0 var(--s2); padding: 0; }
 .archived-longs li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; padding: 9px 0; border-top: 1px solid var(--line); min-width: 0; overflow-wrap: anywhere; }
 .archived-longs .kicker { display: block; }
+.archived-longs .uploaded-bar { flex: 0 1 230px; }
 .archived-note { margin: var(--s3) 0 0; font-size: 13.5px; }
 
 /* ── channel identities (src/lib/identity.ts) ─────────────────────────────

@@ -142,7 +142,7 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
                 <div className="faint num">{done}/{s.lessonBundleSize} published · the lesson is built from all {s.lessonBundleSize}</div>
                 {st?.episodes ? (
                   <div className="faint">{st.uploaded === st.episodes && left.length
-                    ? <>Every episode is uploaded. Mark the long video {left.map((l) => `“${l.title}”`).join(", ")} uploaded in <Link href={`/channels/${slug}?tab=lessons`}>Lessons</Link> and this season moves to Archived seasons.</>
+                    ? <>Every episode is uploaded. Press &ldquo;Uploaded on YouTube&rdquo; for the long video {left.map((l) => `“${l.title}”`).join(", ")} in <Link href={`/channels/${slug}?tab=lessons`}>Lessons</Link> and this season moves to Archived seasons.</>
                     : <>{st.uploaded} of {st.episodes} episodes uploaded on YouTube &amp; TikTok and Instagram. Once all are{left.length ? `, and ${left.length === 1 ? "its long video" : "its long videos"} too` : ""}, this season moves to Archived seasons.</>}</div>
                 ) : null}
                 <ol style={{ margin: 0, paddingLeft: 20 }}>{parts.sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0)).map((e) => <li key={e.id}><Link href={`/episodes/${e.id}`}>{e.title}</Link>{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null} <span className="faint">· {STATE_LABEL[e.state]}</span></li>)}</ol>
