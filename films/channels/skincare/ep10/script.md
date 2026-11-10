@@ -23,6 +23,6 @@ vo: Here is the twist. {-} Caps lower the damage, but do not *erase* it. {c9} Th
 ## takeaway {shot 5: two medium-tone patches side by side, even, no redness · labels: none · picture-only 0.8 s · energy: 0.3} (56.7–65.3 s)
 vo: So a tan is pigment gathered over each cell's nucleus. {c11} It lowers damage, but does not *erase* it. {c12}
 
-## tease {end card held ≥ 2 s · energy: 0.35} (65.3–72.5 s)
+## tease {end card held ≥ 1 s · energy: 0.35} (65.3–72.5 s)
 vo: Next: the brick wall on your skin. {-} Which part holds water *in*? {-}
 end card: "Next: the brick wall on your skin" · "Skin Sense · Season 2" · footnote: "Narration: synthetic voice (AI)."

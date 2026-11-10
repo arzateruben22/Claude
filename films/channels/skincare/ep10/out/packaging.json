@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "A tan is brown pigment gathered over each skin cell's nucleus, like a tiny parasol that lowers, but does not erase, the damage from ultraviolet light.",
+ "titles": [
+  {
+   "text": "A Tan Is a Tiny Parasol Over Each Cell",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "What Is a Tan, Really?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Every Tanned Cell Is Wearing a Tiny Cap",
+   "mechanism": "visual paradox"
+  },
+  {
+   "text": "A Tan Isn't a Switch: It Varies Cell by Cell",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "How Your Skin Cells Shade Themselves",
+   "mechanism": "personal relevance"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "one large translucent skin cell with a mauve nucleus and a cap of small brown granules over it, lilac light arriving from above",
+   "composition": "the cell centred in the lower two thirds, the cap on top, soft lilac beams from the top edge, ivory negative space",
+   "lighting": "soft translucent glow, shallow depth of field, lilac light",
+   "trigger": "a hidden shield caught in the act",
+   "text": "",
+   "complements": "the title gives the metaphor, the picture shows the cap itself"
+  },
+  {
+   "id": "B",
+   "subject": "a star-shaped pigment cell with brown granules travelling along its arms",
+   "composition": "the cell low centre, arms reaching up and outward",
+   "lighting": "warm amber glow",
+   "trigger": "hidden delivery",
+   "text": "Handed on",
+   "complements": "adds the verb"
+  },
+  {
+   "id": "C",
+   "subject": "two medium-tone skin patches side by side with a soft lilac glow between them",
+   "composition": "patches filling the frame",
+   "lighting": "even soft light",
+   "trigger": "quiet comparison",
+   "text": "Same cells",
+   "complements": "hint of difference"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 84,
+    "synergy": 84,
+    "originality": 76,
+    "accuracy": 84,
+    "mobile": 84,
+    "satisfaction": 84
+   },
+   "note": "metaphor in the title, the object in the picture"
+  },
+  {
+   "title": 2,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 74,
+    "curiosity": 82,
+    "clarity": 78,
+    "synergy": 80,
+    "originality": 78,
+    "accuracy": 84,
+    "mobile": 80,
+    "satisfaction": 82
+   },
+   "note": "cap and delivery"
+  },
+  {
+   "title": 1,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 78,
+    "clarity": 82,
+    "synergy": 70,
+    "originality": 64,
+    "accuracy": 88,
+    "mobile": 82,
+    "satisfaction": 78
+   },
+   "note": "plain"
+  }
+ ],
+ "winner": {
+  "title": "A Tan Is a Tiny Parasol Over Each Cell",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The video itself calls the cap a tiny parasol; the thumbnail shows the cap without repeating the metaphor in words."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "skin-sense-010-cover.jpg",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: one large translucent skin cell, pale peach membrane, a mauve-pink nucleus, and a cap of small brown pigment granules arched over the nucleus; soft lilac light beams arriving from the top edge.\nComposition: the cell centred in the lower two thirds with the cap on top, ivory negative space above.\nLighting and treatment: soft translucent glow, shallow depth of field, lilac light, ivory ground (#F7EFE3), deep green #00685F as the only accent, medium-tone warmth (skin patches elsewhere in the video are about RGB 208, 148, 105).\nMood: quiet wonder.\nText: No text.\nScientific accuracy: after ultraviolet light, brown melanin can gather over the nucleus of skin cells like a small cap; it lowers but does not remove DNA damage (verify); an illustration, not to scale, not a photograph.\nAvoid: no faces, skin lesions, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical image.\nStyle: premium medical-editorial documentary illustration, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 3.0,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

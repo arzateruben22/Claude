@@ -1,45 +1,31 @@
 {
- "compose_s": 6.2,
- "master_s": 8.6,
+ "compose_s": 8.1,
+ "master_s": 11.8,
  "master": {
   "gain_db": 1.59,
   "iterations": 2,
-  "lufs": -14.04,
+  "lufs": -14.05,
   "true_peak_db": -2.0,
   "ceiling_db": -2.0,
-  "limiting_max_db": -3.59,
+  "limiting_max_db": -3.87,
   "aac": {
    "lufs": -14.1,
    "true_peak_db": -1.7,
-   "lra": 3.3
+   "lra": 3.2
   },
   "stems_sum_error_db": -240.0
  },
  "sync": {
   "per_kind": {
    "label": {
-    "n": 9,
-    "max_ms": 9.0,
+    "n": 1,
+    "max_ms": 0.0,
     "median_ms": 0.0,
     "slow": false,
     "pass": true
    },
-   "reveal": {
-    "n": 3,
-    "max_ms": 12.0,
-    "median_ms": 12.0,
-    "slow": true,
-    "pass": true
-   },
-   "scale.jump": {
-    "n": 8,
-    "max_ms": 0.0,
-    "median_ms": 0.0,
-    "slow": true,
-    "pass": true
-   },
    "section": {
-    "n": 6,
+    "n": 7,
     "max_ms": 0.0,
     "median_ms": 0.0,
     "slow": true,
@@ -54,8 +40,8 @@
    },
    "swell": {
     "n": 1,
-    "max_ms": 52.0,
-    "median_ms": 52.0,
+    "max_ms": 46.0,
+    "median_ms": 46.0,
     "slow": true,
     "pass": true
    }
@@ -70,20 +56,6 @@
     "err_ms": 11.0
    },
    {
-    "kind": "label",
-    "tag": "l0",
-    "show": 1.8333,
-    "method": "rise",
-    "err_ms": 9.0
-   },
-   {
-    "kind": "label",
-    "tag": "l1",
-    "show": 3.4667,
-    "method": "rise",
-    "err_ms": 5.0
-   },
-   {
     "kind": "section",
     "tag": null,
     "show": 4.9667,
@@ -91,53 +63,11 @@
     "err_ms": -0.0
    },
    {
-    "kind": "scale.jump",
-    "tag": "c2",
-    "show": 5.2667,
-    "method": "shape",
-    "err_ms": -0.0
-   },
-   {
     "kind": "label",
-    "tag": "l2",
-    "show": 5.6667,
+    "tag": "l0",
+    "show": 6.8333,
     "method": "rise",
     "err_ms": -0.0
-   },
-   {
-    "kind": "scale.jump",
-    "tag": "c4",
-    "show": 8.7,
-    "method": "shape",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l3",
-    "show": 8.8,
-    "method": "rise",
-    "err_ms": 0.0
-   },
-   {
-    "kind": "scale.jump",
-    "tag": "c5",
-    "show": 11.5,
-    "method": "shape",
-    "err_ms": 0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l4",
-    "show": 13.7333,
-    "method": "rise",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l5",
-    "show": 14.9,
-    "method": "rise",
-    "err_ms": 0.0
    },
    {
     "kind": "section",
@@ -147,66 +77,10 @@
     "err_ms": -0.0
    },
    {
-    "kind": "scale.jump",
-    "tag": "c8",
-    "show": 17.7667,
-    "method": "shape",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l6",
-    "show": 18.1,
-    "method": "rise",
-    "err_ms": 0.0
-   },
-   {
-    "kind": "reveal",
-    "tag": "p0",
-    "show": 23.0333,
-    "method": "shape",
-    "err_ms": -12.0
-   },
-   {
     "kind": "section",
     "tag": null,
     "show": 29.2333,
     "method": "peak",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "scale.jump",
-    "tag": "c10",
-    "show": 29.5333,
-    "method": "shape",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l7",
-    "show": 30.0333,
-    "method": "rise",
-    "err_ms": -1.0
-   },
-   {
-    "kind": "scale.jump",
-    "tag": "c12",
-    "show": 33.7333,
-    "method": "shape",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "scale.jump",
-    "tag": "c15",
-    "show": 38.5667,
-    "method": "shape",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l8",
-    "show": 44.4667,
-    "method": "rise",
     "err_ms": -0.0
    },
    {
@@ -217,25 +91,11 @@
     "err_ms": 0.0
    },
    {
-    "kind": "scale.jump",
-    "tag": "c18",
-    "show": 46.5,
-    "method": "shape",
-    "err_ms": -0.0
-   },
-   {
     "kind": "swell",
     "tag": "whoa",
     "show": 46.5,
     "method": "shape",
-    "err_ms": 52.0
-   },
-   {
-    "kind": "reveal",
-    "tag": "p1",
-    "show": 47.0,
-    "method": "shape",
-    "err_ms": -0.0
+    "err_ms": -46.0
    },
    {
     "kind": "section",
@@ -245,23 +105,23 @@
     "err_ms": 0.0
    },
    {
-    "kind": "reveal",
-    "tag": "p2",
-    "show": 62.0667,
-    "method": "shape",
-    "err_ms": -12.0
-   },
-   {
     "kind": "section",
     "tag": null,
-    "show": 65.2667,
+    "show": 60.2333,
     "method": "peak",
     "err_ms": -0.0
    },
    {
+    "kind": "section",
+    "tag": null,
+    "show": 68.8,
+    "method": "peak",
+    "err_ms": 0.0
+   },
+   {
     "kind": "signature",
     "tag": "end",
-    "show": 65.5667,
+    "show": 69.1,
     "method": "rise",
     "err_ms": 11.0
    }
@@ -276,8 +136,8 @@
  },
  "phone": {
   "correlation": 0.91,
-  "mono_loss_db": 0.08,
-  "dialog_mono_loss_db": 0.09,
+  "mono_loss_db": 0.06,
+  "dialog_mono_loss_db": 0.08,
   "pass": true
  }
 }

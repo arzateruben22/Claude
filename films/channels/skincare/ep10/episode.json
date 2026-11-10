@@ -2,1570 +2,494 @@
  "num": "S2·E4",
  "title": "What a tan<br>really is",
  "titleSize": 84,
- "images": {
-  "q1": {
-   "src": [
-    "art/s2e04-01.webp"
-   ],
-   "layers": [
-    "art/s2e04-01-L0.webp",
-    "art/s2e04-01-L1.webp",
-    "art/s2e04-01-L2.webp"
-   ],
-   "par": [
-    0,
-    0.55,
-    1
-   ],
-   "blur": 9
-  },
-  "q2": {
-   "src": [
-    "art/s2e04-02.webp"
-   ],
-   "layers": [
-    "art/s2e04-02-L0.webp",
-    "art/s2e04-02-L1.webp",
-    "art/s2e04-02-L2.webp"
-   ],
-   "par": [
-    0,
-    0.55,
-    1
-   ],
-   "blur": 9
-  },
-  "q3": {
-   "src": [
-    "art/s2e04-03.webp"
-   ],
-   "layers": [
-    "art/s2e04-03-L0.webp",
-    "art/s2e04-03-L1.webp",
-    "art/s2e04-03-L2.webp"
-   ],
-   "par": [
-    0,
-    0.55,
-    1
-   ],
-   "blur": 9
-  },
-  "q4": {
-   "src": [
-    "art/s2e04-04.webp"
-   ],
-   "layers": [
-    "art/s2e04-04-L0.webp",
-    "art/s2e04-04-L1.webp",
-    "art/s2e04-04-L2.webp"
-   ],
-   "par": [
-    0,
-    0.55,
-    1
-   ],
-   "blur": 9
-  }
- },
- "camera": [
-  {
-   "t": 0,
-   "img": "q3",
-   "s": 1.0,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    -0.02,
-    0
-   ],
-   "dolly": 0,
-   "rack": 2,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   }
-  },
-  {
-   "t": "vo01:parked",
-   "img": "q3",
-   "s": 1.1,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0.05,
-   "rack": 1,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   },
-   "d": 2.0
-  },
-  {
-   "t": "start:vo02",
-   "img": "q1",
-   "s": 1.0,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0,
-   "rack": 1,
-   "anchors": {
-    "cell": [
-     0.46,
-     0.7
-    ]
-   },
-   "d": 0.35,
-   "zin": 0.16,
-   "zout": 0.14
-  },
-  {
-   "t": "vo02:melanin",
-   "img": "q1",
-   "s": 1.1,
-   "f": [
-    0.46,
-    0.6
-   ],
-   "trk": [
-    -0.02,
-    0
-   ],
-   "dolly": 0.04,
-   "rack": 2,
-   "anchors": {
-    "cell": [
-     0.46,
-     0.7
-    ]
-   },
-   "d": 2.0
-  },
-  {
-   "t": "vo02:arms",
-   "img": "q2",
-   "s": 1.06,
-   "f": [
-    0.45,
-    0.55
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0.04,
-   "rack": 2,
-   "anchors": {
-    "cell": [
-     0.33,
-     0.7
-    ],
-    "pass": [
-     0.54,
-     0.43
-    ]
-   },
-   "d": 0.35,
-   "zin": 0.16,
-   "zout": 0.14
-  },
-  {
-   "t": "vo02:After",
-   "img": "q3",
-   "s": 1.0,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    -0.02,
-    0
-   ],
-   "dolly": 0,
-   "rack": 2,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   },
-   "d": 0.35,
-   "zin": 0.16,
-   "zout": 0.14
-  },
-  {
-   "t": 11.62,
-   "img": "q3",
-   "s": 1.05,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0.04,
-   "rack": 2,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   },
-   "d": 2.03
-  },
-  {
-   "t": "vo02:gather",
-   "img": "q3",
-   "s": 1.12,
-   "f": [
-    0.5,
-    0.52
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0.05,
-   "rack": 1,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   },
-   "d": 2.0
-  },
-  {
-   "t": "start:vo03",
-   "img": "q4",
-   "s": 1.0,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0,
-   "rack": 1,
-   "anchors": {
-    "caps": [
-     0.37,
-     0.55
-    ],
-    "rays": [
-     0.5,
-     0.3
-    ]
-   },
-   "d": 0.35,
-   "zin": 0.16,
-   "zout": 0.14
-  },
-  {
-   "t": "vo03:absorbing",
-   "img": "q4",
-   "s": 1.1,
-   "f": [
-    0.4,
-    0.5
-   ],
-   "trk": [
-    -0.02,
-    0
-   ],
-   "dolly": 0.05,
-   "rack": 2,
-   "anchors": {
-    "caps": [
-     0.37,
-     0.55
-    ],
-    "rays": [
-     0.5,
-     0.3
-    ]
-   },
-   "d": 2.0
-  },
-  {
-   "t": "start:vo04",
-   "img": "q2",
-   "s": 1.0,
-   "f": [
-    0.45,
-    0.55
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0,
-   "rack": 1,
-   "anchors": {
-    "cell": [
-     0.33,
-     0.7
-    ],
-    "pass": [
-     0.54,
-     0.43
-    ]
-   },
-   "d": 0.35,
-   "zin": 0.16,
-   "zout": 0.14
-  },
-  {
-   "t": "vo04:protection",
-   "img": "q2",
-   "s": 1.1,
-   "f": [
-    0.4,
-    0.58
-   ],
-   "trk": [
-    -0.02,
-    0
-   ],
-   "dolly": 0.05,
-   "rack": 2,
-   "anchors": {
-    "cell": [
-     0.33,
-     0.7
-    ],
-    "pass": [
-     0.54,
-     0.43
-    ]
-   },
-   "d": 2.2
-  },
-  {
-   "t": "vo04:So",
-   "img": "q3",
-   "s": 1.06,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0.04,
-   "rack": 2,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   },
-   "d": 0.35,
-   "zin": 0.14
-  },
-  {
-   "t": 33.85,
-   "img": "q3",
-   "s": 1.11,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    -0.02,
-    0
-   ],
-   "dolly": 0.08,
-   "rack": 2,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   },
-   "d": 2.1
-  },
-  {
-   "t": "vo04:strength",
-   "img": "q3",
-   "s": 1.16,
-   "f": [
-    0.5,
-    0.52
-   ],
-   "trk": [
-    -0.02,
-    0
-   ],
-   "dolly": 0.05,
-   "rack": 1,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   },
-   "d": 2.2
-  },
-  {
-   "t": "vo04:In",
-   "img": "q4",
-   "s": 1.0,
-   "f": [
-    0.5,
-    0.45
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0,
-   "rack": 1,
-   "anchors": {
-    "caps": [
-     0.37,
-     0.55
-    ],
-    "rays": [
-     0.5,
-     0.3
-    ]
-   },
-   "d": 0.35,
-   "zin": 0.14
-  },
-  {
-   "t": "vo04:rays",
-   "img": "q4",
-   "s": 1.1,
-   "f": [
-    0.5,
-    0.42
-   ],
-   "trk": [
-    -0.02,
-    0
-   ],
-   "dolly": 0.04,
-   "rack": 2,
-   "anchors": {
-    "caps": [
-     0.37,
-     0.55
-    ],
-    "rays": [
-     0.5,
-     0.3
-    ]
-   },
-   "d": 2.2
-  },
-  {
-   "t": "vo04:sensor",
-   "img": "q4",
-   "s": 1.18,
-   "f": [
-    0.5,
-    0.42
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0.05,
-   "rack": 1,
-   "anchors": {
-    "caps": [
-     0.37,
-     0.55
-    ],
-    "rays": [
-     0.5,
-     0.3
-    ]
-   },
-   "d": 2.0
-  },
-  {
-   "t": "start:vo05",
-   "img": "q3",
-   "s": 1.0,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    -0.02,
-    0
-   ],
-   "dolly": 0,
-   "rack": 1,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   },
-   "d": 0.3
-  },
-  {
-   "t": "start:vo06",
-   "img": "q3",
-   "s": 1.0,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    0.02,
-    0
-   ],
-   "dolly": 0,
-   "rack": 1,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   },
-   "d": 0.3
-  },
-  {
-   "t": "vo06:gathered",
-   "img": "q3",
-   "s": 1.1,
-   "f": [
-    0.5,
-    0.5
-   ],
-   "trk": [
-    -0.02,
-    0
-   ],
-   "dolly": 0.05,
-   "rack": 2,
-   "anchors": {
-    "cap": [
-     0.46,
-     0.5
-    ],
-    "nuc": [
-     0.46,
-     0.62
-    ]
-   },
-   "d": 2.2
-  }
- ],
- "labels": [
-  {
-   "text": "Pigment cap",
-   "a": "cap",
-   "img": "q3",
-   "layer": 2,
-   "t0": "vo01:Pigment",
-   "t1": "vo01:nucleus",
-   "off": [
-    130,
-    -150
-   ]
-  },
-  {
-   "text": "Cell nucleus",
-   "a": "nuc",
-   "img": "q3",
-   "layer": 1,
-   "t0": "vo01:nucleus",
-   "t1": "end:vo01",
-   "off": [
-    -100,
-    150
-   ]
-  },
-  {
-   "text": "Pigment cell",
-   "a": "cell",
-   "img": "q1",
-   "layer": 2,
-   "t0": "vo02:melanin",
-   "t1": "vo02:arms",
-   "off": [
-    100,
-    -150
-   ]
-  },
-  {
-   "text": "Pigment passed on",
-   "a": "pass",
-   "img": "q2",
-   "layer": 2,
-   "t0": "vo02:arms",
-   "t1": "vo02:After",
-   "off": [
-    110,
-    -150
-   ]
-  },
-  {
-   "text": "Melanin cap",
-   "a": "cap",
-   "img": "q3",
-   "layer": 2,
-   "t0": "vo02:gather",
-   "t1": "end:vo02",
-   "off": [
-    130,
-    -150
-   ]
-  },
-  {
-   "text": "Nucleus",
-   "a": "nuc",
-   "img": "q3",
-   "layer": 1,
-   "t0": "vo02:nucleus",
-   "t1": "end:vo02",
-   "off": [
-    -100,
-    150
-   ]
-  },
-  {
-   "text": "Caps over nuclei",
-   "a": "caps",
-   "img": "q4",
-   "layer": 2,
-   "t0": "vo03:cap",
-   "t1": "vo03:light",
-   "off": [
-    110,
-    -160
-   ]
-  },
-  {
-   "text": "More melanin",
-   "a": "cell",
-   "img": "q2",
-   "layer": 2,
-   "t0": "vo04:melanin",
-   "t1": "vo04:So",
-   "off": [
-    110,
-    -140
-   ]
-  },
-  {
-   "text": "Light sensor (lab cells)",
-   "a": "rays",
-   "img": "q4",
-   "layer": 1,
-   "t0": "vo04:light",
-   "t1": "end:vo04+0.3",
-   "off": [
-    -60,
-    150
-   ]
-  }
- ],
- "sweeps": [
-  {
-   "img": "q3",
-   "t0": "vo01:Pigment",
-   "t1": "vo01:Pigment+1.4",
-   "a": 0.5,
-   "w": 0.1
-  },
-  {
-   "img": "q3",
-   "t0": "vo02:cap",
-   "t1": "vo02:cap+1.4",
-   "a": 0.5,
-   "w": 0.1
-  },
-  {
-   "img": "q4",
-   "t0": "vo03:That",
-   "t1": "vo03:parasol+0.8",
-   "a": 0.5,
-   "w": 0.1
-  },
-  {
-   "img": "q2",
-   "t0": "vo04:The",
-   "t1": "vo04:The+1.4",
-   "a": 0.45,
-   "w": 0.1
-  }
- ],
- "particles": [
-  {
-   "img": "q3",
-   "n": 10,
-   "a": 0.35
-  },
-  {
-   "img": "q4",
-   "n": 10,
-   "a": 0.35
-  }
- ],
- "plates": [
-  {
-   "t0": "vo03:light+0.1",
-   "t1": "end:vo03+0.4",
-   "top": 640,
-   "drift": 1.6,
-   "title": "Skin samples<br>exposed to UVB",
-   "ghost": 0,
-   "rows": [
-    {
-     "text": "Cells with a melanin cap: less DNA damage",
-     "small": "",
-     "t": "vo03:light+0.9",
-     "hl": "vo03:cap#1"
-    },
-    {
-     "text": "Cells without a cap: more DNA damage",
-     "small": "",
-     "t": "vo03:light+1.8",
-     "hl": "vo03:damage"
-    }
-   ]
-  },
-  {
-   "t0": "start:vo05",
-   "t1": "start:vo06+0.3",
-   "top": 640,
-   "drift": 2.4,
-   "title": "Melanin caps and<br>DNA damage",
-   "ghost": 0,
-   "rows": [
-    {
-     "text": "A cap lowers the damage",
-     "small": "",
-     "t": "start:vo05+0.9",
-     "hl": "vo05:lower"
-    },
-    {
-     "text": "A cap does not erase it",
-     "small": "",
-     "t": "start:vo05+1.9",
-     "hl": "vo05:erase"
-    }
-   ],
-   "notes": [
-    {
-     "text": "Illustrative only: not to scale.",
-     "t": "vo05:lower+1.0"
-    },
-    {
-     "text": "More melanin in a cell: more protection.",
-     "t": "vo05:effect"
-    }
-   ],
-   "bars": [
-    {
-     "label": "Cells without a cap",
-     "value": 1.0,
-     "max": 1.0,
-     "t": "vo05:lower",
-     "color": "#9AA6C0"
-    },
-    {
-     "label": "Cells with a cap",
-     "value": 0.55,
-     "max": 1.0,
-     "t": "vo05:lower+0.4",
-     "color": "#2F8F86"
-    }
-   ]
-  },
-  {
-   "t0": "vo06:It",
-   "t1": "end:vo06+0.4",
-   "top": 640,
-   "drift": 1.6,
-   "title": "A tan, in short",
-   "ghost": 0,
-   "rows": [
-    {
-     "text": "Pigment over the nucleus",
-     "small": "",
-     "t": "vo06:It",
-     "hl": "vo06:It"
-    },
-    {
-     "text": "Lowers DNA damage",
-     "small": "",
-     "t": "vo06:It+0.8",
-     "hl": "vo06:lowers"
-    },
-    {
-     "text": "Does not erase it",
-     "small": "",
-     "t": "vo06:It+1.6",
-     "hl": "vo06:erase"
-    }
-   ]
-  }
- ],
- "quiet": [
-  [
-   "vo03:light+0.1",
-   "end:vo03+0.4"
-  ],
-  [
-   "start:vo05",
-   "start:vo06+0.3"
-  ],
-  [
-   "vo06:It",
-   "end:vo06+0.4"
-  ]
- ],
  "sup": [
   [
-   "start:vo02",
-   "Pigment and<br>a cap."
-  ],
-  [
-   "start:vo03",
-   ""
-  ],
-  [
-   "start:vo04",
-   "More melanin,<br>more protection."
-  ],
-  [
-   "start:vo05",
-   ""
-  ],
-  [
-   "start:vo06",
+   "start:vo01",
    ""
   ]
  ],
- "badges": [
-  [
-   0,
-   "start:vo05",
-   "Simplified · not to scale"
-  ]
- ],
+ "badges": [],
  "end": {
   "t": "start:vo07-0.3",
   "e1": "Next:<br>the brick wall<br>on your skin",
   "e2": "Which part holds water in?",
   "chip": "Skin Sense · Season 2 · Episode 4",
-  "e3": "Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code."
+  "e3": "Narration: synthetic voice (AI). Illustrations: AI-generated and 3-D animation made in code."
  },
- "fx": [
-  {
-   "type": "stream",
-   "img": "q3",
-   "layer": 2,
-   "path": [
-    [
-     0.46,
-     0.26
+ "eyebrow": "SKIN SENSE · SEASON 2 · EPISODE 4",
+ "riskWords": "damage|DNA",
+ "images": {},
+ "camera": [],
+ "three": {
+  "module": "./tan3d.js",
+  "paintings": [
+   {
+    "src": "art/s2e04-03.webp",
+    "t0": 0,
+    "t1": 2.7,
+    "fin": 0.05,
+    "fout": 1.1,
+    "focus": [
+     0.5,
+     0.55
     ],
-    [
-     0.46,
-     0.47
-    ]
-   ],
-   "n": 8,
-   "r": 7,
-   "color": "#B79BFF",
-   "rate": 0.5,
-   "t0": "vo01:What",
-   "t1": "end:vo01"
-  },
-  {
-   "type": "glow",
-   "img": "q3",
-   "layer": 2,
-   "pts": [
-    [
-     0.46,
-     0.485
-    ]
-   ],
-   "r": 38,
-   "t0": "vo01:Pigment",
-   "t1": "end:vo01"
-  },
-  {
-   "type": "glow",
-   "img": "q1",
-   "layer": 2,
-   "pts": [
-    [
-     0.46,
-     0.7
+    "s0": 1.0,
+    "s1": 1.08
+   }
+  ],
+  "camera": [
+   {
+    "t": 0,
+    "sc": "C",
+    "pos": [
+     0,
+     0.5,
+     14
     ],
-    [
-     0.16,
-     0.72
+    "look": [
+     0,
+     0.2,
+     0
     ],
-    [
-     0.78,
-     0.72
-    ]
-   ],
-   "r": 36,
-   "t0": "start:vo02",
-   "t1": "vo02:arms"
-  },
-  {
-   "type": "stream",
-   "img": "q2",
-   "layer": 2,
-   "path": [
-    [
-     0.33,
-     0.7
+    "fov": 32
+   },
+   {
+    "t": 2.8,
+    "sc": "C",
+    "pos": [
+     3,
+     1.5,
+     12
     ],
-    [
-     0.4,
-     0.62
+    "look": [
+     0,
+     0.3,
+     0
     ],
-    [
-     0.47,
-     0.52
+    "fov": 32
+   },
+   {
+    "t": 4.7,
+    "sc": "C",
+    "pos": [
+     -3,
+     1,
+     11
     ],
-    [
-     0.54,
-     0.43
-    ]
-   ],
-   "n": 10,
-   "r": 7,
-   "color": "#6B3A22",
-   "rate": 0.3,
-   "t0": "vo02:arms",
-   "t1": "vo02:After"
-  },
-  {
-   "type": "stream",
-   "img": "q2",
-   "layer": 2,
-   "path": [
-    [
-     0.33,
-     0.7
+    "look": [
+     0,
+     0.5,
+     0
     ],
-    [
-     0.45,
-     0.72
+    "fov": 32
+   },
+   {
+    "t": 4.8,
+    "sc": "M",
+    "pos": [
+     51,
+     2,
+     13
     ],
-    [
+    "look": [
+     60,
+     0,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 8,
+    "sc": "M",
+    "pos": [
+     58,
+     4,
+     12
+    ],
+    "look": [
+     60,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 11.5,
+    "sc": "M",
+    "pos": [
+     65,
+     1,
+     11
+    ],
+    "look": [
+     60,
+     1.0,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 14.5,
+    "sc": "M",
+    "pos": [
+     60,
+     0.5,
+     13
+    ],
+    "look": [
+     60,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 17.6,
+    "sc": "M",
+    "pos": [
+     57,
+     2,
+     13
+    ],
+    "look": [
+     60,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 17.7,
+    "sc": "R",
+    "pos": [
+     106,
+     0.5,
+     12
+    ],
+    "look": [
+     110,
+     0.2,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 22,
+    "sc": "R",
+    "pos": [
+     116,
+     1.4,
+     12
+    ],
+    "look": [
+     118,
+     0.3,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 26,
+    "sc": "R",
+    "pos": [
+     124,
      0.6,
-     0.66
+     11
     ],
-    [
-     0.72,
-     0.55
-    ]
-   ],
-   "n": 10,
-   "r": 7,
-   "color": "#6B3A22",
-   "rate": 0.3,
-   "t0": "vo02:arms",
-   "t1": "vo02:After"
-  },
-  {
-   "type": "ink",
-   "img": "q3",
-   "layer": 2,
-   "paths": [
-    [
-     [
-      0.35,
-      0.56
-     ],
-     [
-      0.4,
-      0.51
-     ],
-     [
-      0.46,
-      0.49
-     ],
-     [
-      0.52,
-      0.51
-     ],
-     [
-      0.57,
-      0.56
-     ]
-    ]
-   ],
-   "color": "#5A3220",
-   "w0": 11,
-   "w1": 11,
-   "a": 0.75,
-   "reveal": true,
-   "cut": "vo02:gather",
-   "dur": 1.6,
-   "t0": "vo02:cap",
-   "t1": "end:vo02"
-  },
-  {
-   "type": "stream",
-   "img": "q4",
-   "layer": 1,
-   "path": [
-    [
-     0.1,
-     0.28
+    "look": [
+     126,
+     0.3,
+     0
     ],
-    [
-     0.1,
-     0.52
-    ]
-   ],
-   "n": 6,
-   "r": 6,
-   "color": "#B79BFF",
-   "rate": 0.5,
-   "t0": "start:vo03",
-   "t1": "vo03:light"
-  },
-  {
-   "type": "stream",
-   "img": "q4",
-   "layer": 1,
-   "path": [
-    [
-     0.37,
-     0.28
+    "fov": 32
+   },
+   {
+    "t": 29.5,
+    "sc": "R",
+    "pos": [
+     131,
+     1,
+     12
     ],
-    [
-     0.37,
-     0.52
-    ]
-   ],
-   "n": 6,
-   "r": 6,
-   "color": "#B79BFF",
-   "rate": 0.55,
-   "t0": "start:vo03",
-   "t1": "vo03:light"
-  },
-  {
-   "type": "stream",
-   "img": "q4",
-   "layer": 1,
-   "path": [
-    [
-     0.62,
-     0.28
-    ],
-    [
-     0.62,
-     0.52
-    ]
-   ],
-   "n": 6,
-   "r": 6,
-   "color": "#B79BFF",
-   "rate": 0.45,
-   "t0": "start:vo03",
-   "t1": "vo03:light"
-  },
-  {
-   "type": "stream",
-   "img": "q4",
-   "layer": 1,
-   "path": [
-    [
-     0.88,
-     0.28
-    ],
-    [
-     0.88,
-     0.52
-    ]
-   ],
-   "n": 6,
-   "r": 6,
-   "color": "#B79BFF",
-   "rate": 0.5,
-   "t0": "start:vo03",
-   "t1": "vo03:light"
-  },
-  {
-   "type": "glow",
-   "img": "q4",
-   "layer": 2,
-   "pts": [
-    [
-     0.1,
-     0.55
-    ],
-    [
-     0.37,
-     0.55
-    ],
-    [
-     0.62,
-     0.55
-    ],
-    [
-     0.88,
-     0.55
-    ]
-   ],
-   "r": 30,
-   "t0": "vo03:absorbing",
-   "t1": "vo03:light"
-  },
-  {
-   "type": "chips",
-   "y": 1450,
-   "t0": "start:vo03",
-   "t1": "vo03:light",
-   "items": [
-    {
-     "text": "UV light",
-     "t": "vo03:ultraviolet"
-    },
-    {
-     "text": "Cap absorbs",
-     "t": "vo03:absorbing"
-    },
-    {
-     "text": "Light scattered",
-     "t": "vo03:scattering"
-    }
-   ],
-   "spike": "start:vo03"
-  },
-  {
-   "type": "stream",
-   "img": "q2",
-   "layer": 2,
-   "path": [
-    [
-     0.33,
-     0.7
-    ],
-    [
+    "look": [
+     128,
      0.4,
-     0.62
+     0
     ],
-    [
-     0.47,
-     0.52
+    "fov": 32
+   },
+   {
+    "t": 34,
+    "sc": "R",
+    "pos": [
+     122,
+     2,
+     12
     ],
-    [
-     0.54,
-     0.43
-    ]
-   ],
-   "n": 14,
-   "r": 7,
-   "color": "#6B3A22",
-   "rate": 0.35,
-   "t0": "start:vo04",
-   "t1": "vo04:So"
-  },
+    "look": [
+     120,
+     0.3,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 38.5,
+    "sc": "R",
+    "pos": [
+     112,
+     1,
+     11
+    ],
+    "look": [
+     114,
+     0.4,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 41.5,
+    "sc": "R",
+    "pos": [
+     114,
+     0.8,
+     9
+    ],
+    "look": [
+     116,
+     0.4,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 46.3,
+    "sc": "R",
+    "pos": [
+     121,
+     1.5,
+     13
+    ],
+    "look": [
+     120,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 46.4,
+    "sc": "C",
+    "pos": [
+     4,
+     1,
+     12
+    ],
+    "look": [
+     0,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 49,
+    "sc": "C",
+    "pos": [
+     1,
+     2.5,
+     11
+    ],
+    "look": [
+     0,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 50.6,
+    "sc": "C",
+    "pos": [
+     -2,
+     1.5,
+     10.2
+    ],
+    "look": [
+     0,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 52,
+    "sc": "C",
+    "pos": [
+     -3.4,
+     2.2,
+     9.8
+    ],
+    "look": [
+     0,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 55,
+    "sc": "C",
+    "pos": [
+     2.5,
+     0.5,
+     9
+    ],
+    "look": [
+     0,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 57.5,
+    "sc": "C",
+    "pos": [
+     3.2,
+     1.4,
+     9.6
+    ],
+    "look": [
+     0,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 60.3,
+    "sc": "C",
+    "pos": [
+     0,
+     1.2,
+     12
+    ],
+    "look": [
+     0,
+     0.5,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 60.4,
+    "sc": "P",
+    "pos": [
+     180,
+     0.5,
+     22
+    ],
+    "look": [
+     180,
+     0,
+     0
+    ],
+    "fov": 30
+   },
+   {
+    "t": 62.2,
+    "sc": "P",
+    "pos": [
+     184,
+     1.5,
+     19
+    ],
+    "look": [
+     180,
+     0,
+     0
+    ],
+    "fov": 30
+   },
+   {
+    "t": 64,
+    "sc": "P",
+    "pos": [
+     183,
+     0.8,
+     17
+    ],
+    "look": [
+     180,
+     0,
+     0
+    ],
+    "fov": 30
+   },
+   {
+    "t": 66,
+    "sc": "P",
+    "pos": [
+     177,
+     1.0,
+     19
+    ],
+    "look": [
+     180,
+     0,
+     0
+    ],
+    "fov": 30
+   },
+   {
+    "t": 68,
+    "sc": "P",
+    "pos": [
+     176,
+     0.5,
+     21
+    ],
+    "look": [
+     180,
+     0,
+     0
+    ],
+    "fov": 30
+   },
+   {
+    "t": 80,
+    "sc": "P",
+    "pos": [
+     180,
+     0.5,
+     21
+    ],
+    "look": [
+     180,
+     0,
+     0
+    ],
+    "fov": 30
+   }
+  ],
+  "exposure": 0.86
+ },
+ "labels": [
   {
-   "type": "stream",
-   "img": "q2",
-   "layer": 2,
-   "path": [
-    [
-     0.33,
-     0.7
-    ],
-    [
-     0.45,
-     0.72
-    ],
-    [
-     0.6,
-     0.66
-    ],
-    [
-     0.72,
-     0.55
-    ]
-   ],
-   "n": 14,
-   "r": 7,
-   "color": "#6B3A22",
-   "rate": 0.35,
-   "t0": "start:vo04",
-   "t1": "vo04:So"
-  },
-  {
-   "type": "glow",
-   "img": "q3",
-   "layer": 2,
-   "pts": [
-    [
-     0.46,
-     0.485
-    ]
-   ],
-   "r": 40,
-   "t0": "vo04:So",
-   "t1": "vo04:In"
-  },
-  {
-   "type": "stream",
-   "img": "q4",
-   "layer": 1,
-   "path": [
-    [
-     0.37,
-     0.28
-    ],
-    [
-     0.37,
-     0.52
-    ]
-   ],
-   "n": 6,
-   "r": 6,
-   "color": "#B79BFF",
-   "rate": 0.5,
-   "t0": "vo04:In",
-   "t1": "end:vo04"
-  },
-  {
-   "type": "glow",
-   "img": "q4",
-   "layer": 2,
-   "pts": [
-    [
-     0.37,
-     0.55
-    ]
-   ],
-   "r": 34,
-   "t0": "vo04:light",
-   "t1": "end:vo04"
-  },
-  {
-   "type": "stream",
-   "img": "q3",
-   "layer": 2,
-   "path": [
-    [
-     0.26,
-     0.44
-    ],
-    [
-     0.36,
-     0.48
-    ],
-    [
-     0.46,
-     0.49
-    ]
-   ],
-   "n": 9,
-   "r": 8,
-   "color": "#6B3A22",
-   "rate": 0.35,
-   "t0": "vo04:So",
-   "t1": "vo04:In"
-  },
-  {
-   "type": "stream",
-   "img": "q3",
-   "layer": 2,
-   "path": [
-    [
-     0.66,
-     0.44
-    ],
-    [
-     0.56,
-     0.48
-    ],
-    [
-     0.46,
-     0.49
-    ]
-   ],
-   "n": 9,
-   "r": 8,
-   "color": "#6B3A22",
-   "rate": 0.4,
-   "t0": "vo04:So",
-   "t1": "vo04:In"
-  },
-  {
-   "type": "glow",
-   "img": "q3",
-   "layer": 2,
-   "pts": [
-    [
-     0.46,
-     0.485
-    ]
-   ],
-   "r": 46,
-   "t0": "vo04:So",
-   "t1": "vo04:In"
-  },
-  {
-   "type": "stream",
-   "img": "q4",
-   "layer": 1,
-   "path": [
-    [
-     0.1,
-     0.28
-    ],
-    [
-     0.1,
-     0.5
-    ],
-    [
-     0.17,
-     0.42
-    ],
-    [
-     0.25,
-     0.28
-    ]
-   ],
-   "n": 7,
-   "r": 7,
-   "color": "#B79BFF",
-   "rate": 0.4,
-   "t0": "vo04:In",
-   "t1": "end:vo04"
-  },
-  {
-   "type": "stream",
-   "img": "q4",
-   "layer": 1,
-   "path": [
-    [
-     0.37,
-     0.28
-    ],
-    [
-     0.37,
-     0.5
-    ],
-    [
-     0.44,
-     0.42
-    ],
-    [
-     0.52,
-     0.28
-    ]
-   ],
-   "n": 7,
-   "r": 7,
-   "color": "#B79BFF",
-   "rate": 0.4,
-   "t0": "vo04:In",
-   "t1": "end:vo04"
-  },
-  {
-   "type": "stream",
-   "img": "q4",
-   "layer": 1,
-   "path": [
-    [
-     0.62,
-     0.28
-    ],
-    [
-     0.62,
-     0.5
-    ],
-    [
-     0.69,
-     0.42
-    ],
-    [
-     0.77,
-     0.28
-    ]
-   ],
-   "n": 7,
-   "r": 7,
-   "color": "#B79BFF",
-   "rate": 0.4,
-   "t0": "vo04:In",
-   "t1": "end:vo04"
-  },
-  {
-   "type": "stream",
-   "img": "q4",
-   "layer": 1,
-   "path": [
-    [
-     0.88,
-     0.28
-    ],
-    [
-     0.88,
-     0.5
-    ],
-    [
-     0.95,
-     0.42
-    ],
-    [
-     0.98,
-     0.28
-    ]
-   ],
-   "n": 7,
-   "r": 7,
-   "color": "#B79BFF",
-   "rate": 0.4,
-   "t0": "vo04:In",
-   "t1": "end:vo04"
-  },
-  {
-   "type": "glow",
-   "img": "q4",
-   "layer": 2,
-   "pts": [
-    [
-     0.1,
-     0.55
-    ],
-    [
-     0.37,
-     0.55
-    ],
-    [
-     0.62,
-     0.55
-    ],
-    [
-     0.88,
-     0.55
-    ]
-   ],
-   "r": 34,
-   "t0": "vo04:In",
-   "t1": "end:vo04"
-  },
-  {
-   "type": "stream",
-   "img": "q3",
-   "layer": 2,
-   "path": [
-    [
-     0.46,
-     0.26
-    ],
-    [
-     0.46,
-     0.47
-    ]
-   ],
-   "n": 8,
-   "r": 7,
-   "color": "#B79BFF",
-   "rate": 0.5,
-   "t0": "start:vo06",
-   "t1": "vo06:It"
-  },
-  {
-   "type": "stream",
-   "img": "q3",
-   "layer": 2,
-   "path": [
-    [
-     0.26,
-     0.44
-    ],
-    [
-     0.36,
-     0.48
-    ],
-    [
-     0.46,
-     0.49
-    ]
-   ],
-   "n": 9,
-   "r": 8,
-   "color": "#6B3A22",
-   "rate": 0.35,
-   "t0": "start:vo05",
-   "t1": "end:vo06"
+   "text": "Melanocyte",
+   "a": "star",
+   "t0": "vo02:special",
+   "t1": "vo02:arms",
+   "off": [
+    170,
+    -150
+   ]
   }
  ],
- "eyebrow": "SKIN SENSE · SEASON 2 · EPISODE 4",
- "riskWords": "damage|DNA"
+ "quietFx": {
+  "color": "176,140,240",
+  "n": 26
+ }
 }

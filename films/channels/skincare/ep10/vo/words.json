@@ -823,6 +823,85 @@
    ]
   },
   {
+   "id": "vo05c",
+   "text": "If you just looked at your own arm, tap like and follow!",
+   "heard": "If you just looked at your own arm, tap like and follow.",
+   "words": [
+    {
+     "w": "If",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.26,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 0.52,
+     "end": 0.57,
+     "heard": true
+    },
+    {
+     "w": "looked",
+     "start": 0.55,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.76,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.85,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 1.035,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "arm,",
+     "start": 1.265,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 1.745,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.975,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.23,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "follow!",
+     "start": 2.405,
+     "end": 2.8,
+     "heard": true
+    }
+   ]
+  },
+  {
    "id": "vo06",
    "text": "So a tan is pigment gathered over each cell's nucleus. It lowers damage, but does not erase it.",
    "heard": "So a tan is pigment gathered over each cell's nucleus. It lowers damage but does not erase it.",
