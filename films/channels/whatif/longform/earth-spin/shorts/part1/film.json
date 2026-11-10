@@ -1,0 +1,1053 @@
+{
+ "id": "possibility-lab-earth-spin-part1",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 72.0,
+ "poster": 27.2,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "shoulder",
+   "beat": "hook"
+  },
+  {
+   "at": 19.2,
+   "name": "eye",
+   "beat": "today"
+  },
+  {
+   "at": 45.0,
+   "name": "eye",
+   "beat": "spinup"
+  },
+  {
+   "at": 63.0,
+   "name": "shoulder",
+   "beat": "outro"
+  },
+  {
+   "at": 66.73333333333333,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 19.2,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "today",
+   "t0": 19.2,
+   "t1": 45.0,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "spinup",
+   "t0": 45.0,
+   "t1": 63.0,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "outro",
+   "t0": 63.0,
+   "t1": 66.6,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 66.6,
+   "t1": 72.0,
+   "line": "vo05",
+   "energy": 0.4
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    23.934
+   ],
+   [
+    45.6,
+    23.934
+   ],
+   [
+    48.0667,
+    20.0
+   ],
+   [
+    51.4333,
+    16.0
+   ],
+   [
+    72.0,
+    15.0
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    72.0,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWin": [
+   33.2,
+   62.8
+  ]
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 66.73333333333333,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 71.8,
+   "slot": "bl"
+  },
+  {
+   "id": "b-today",
+   "text": "today: 0.35 % lighter than on a still Earth",
+   "t0": 33.2,
+   "t1": 44.7,
+   "slot": "tr"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab · Part 1 of 2",
+  "title": "",
+  "t0": 0.2,
+  "t1": 2.4,
+  "sig": 0.3333
+ },
+ "endCard": 66.73333333333333,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster…*",
+  "follow": "Part 1 of 2 · Possibility Lab",
+  "next": "Narration: synthetic voice (AI)."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "captions": [
+  {
+   "t0": 0.185,
+   "t1": 3.13,
+   "lines": [
+    [
+     [
+      "What",
+      0.325
+     ],
+     [
+      "if",
+      0.715
+     ],
+     [
+      "the",
+      0.765
+     ],
+     [
+      "Earth",
+      0.965
+     ]
+    ],
+    [
+     [
+      "started",
+      1.505
+     ],
+     [
+      "to",
+      1.805
+     ],
+     [
+      "spin",
+      2.115
+     ],
+     [
+      "faster,",
+      2.38
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.28,
+   "t1": 6.045,
+   "lines": [
+    [
+     [
+      "a",
+      3.28
+     ],
+     [
+      "little",
+      3.4
+     ],
+     [
+      "more",
+      3.795
+     ],
+     [
+      "every",
+      4.12
+     ]
+    ],
+    [
+     [
+      "second,",
+      4.34
+     ],
+     [
+      "and",
+      5.285
+     ],
+     [
+      "nothing",
+      5.49
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 6.045,
+   "t1": 8.745,
+   "lines": [
+    [
+     [
+      "in",
+      6.045
+     ],
+     [
+      "the",
+      6.315
+     ],
+     [
+      "universe",
+      6.38
+     ]
+    ],
+    [
+     [
+      "could",
+      7.195
+     ],
+     [
+      "stop",
+      7.405
+     ],
+     [
+      "it?",
+      8.26
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.745,
+   "t1": 10.985,
+   "lines": [
+    [
+     [
+      "You",
+      8.745
+     ],
+     [
+      "are",
+      8.995
+     ],
+     [
+      "standing",
+      9.34
+     ]
+    ],
+    [
+     [
+      "on",
+      9.88
+     ],
+     [
+      "the",
+      10.155
+     ],
+     [
+      "equator,",
+      10.235
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.005,
+   "t1": 13.505,
+   "lines": [
+    [
+     [
+      "and",
+      11.005
+     ],
+     [
+      "you",
+      11.2
+     ],
+     [
+      "are",
+      11.495
+     ],
+     [
+      "going",
+      11.565
+     ]
+    ],
+    [
+     [
+      "to",
+      11.84
+     ],
+     [
+      "watch",
+      12.02
+     ],
+     [
+      "what",
+      12.705
+     ],
+     [
+      "happens,",
+      12.755
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.51,
+   "t1": 14.86,
+   "lines": [
+    [
+     [
+      "minute",
+      13.51
+     ],
+     [
+      "by",
+      13.935
+     ],
+     [
+      "minute,",
+      14.255
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 14.86,
+   "t1": 17.655,
+   "lines": [
+    [
+     [
+      "until",
+      14.86
+     ],
+     [
+      "the",
+      15.22
+     ],
+     [
+      "planet",
+      15.325
+     ]
+    ],
+    [
+     [
+      "can't",
+      15.925
+     ],
+     [
+      "take",
+      16.565
+     ],
+     [
+      "it",
+      16.875
+     ],
+     [
+      "anymore.",
+      16.905
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.38,
+   "t1": 22.45,
+   "lines": [
+    [
+     [
+      "Right",
+      19.52
+     ],
+     [
+      "now,",
+      19.755
+     ]
+    ],
+    [
+     [
+      "one",
+      20.07
+     ],
+     [
+      "day",
+      20.32
+     ],
+     [
+      "lasts",
+      20.525
+     ],
+     [
+      "24",
+      20.99
+     ],
+     [
+      "hours.",
+      21.7
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.615,
+   "t1": 26.095,
+   "lines": [
+    [
+     [
+      "Standing",
+      22.755
+     ],
+     [
+      "on",
+      23.435
+     ],
+     [
+      "the",
+      23.465
+     ],
+     [
+      "equator,",
+      23.915
+     ]
+    ],
+    [
+     [
+      "the",
+      24.71
+     ],
+     [
+      "ground",
+      24.835
+     ],
+     [
+      "carries",
+      25.345
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.215,
+   "t1": 31.4,
+   "lines": [
+    [
+     [
+      "you",
+      26.215
+     ],
+     [
+      "around",
+      26.35
+     ],
+     [
+      "at",
+      26.815
+     ],
+     [
+      "about",
+      27.065
+     ]
+    ],
+    [
+     [
+      "1,670",
+      27.33
+     ],
+     [
+      "kilometers",
+      29.51
+     ],
+     [
+      "an",
+      30.455
+     ],
+     [
+      "hour.",
+      30.65
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.51,
+   "t1": 35.435,
+   "lines": [
+    [
+     [
+      "You",
+      31.65
+     ],
+     [
+      "never",
+      31.7
+     ],
+     [
+      "feel",
+      32.265
+     ],
+     [
+      "it,",
+      32.62
+     ],
+     [
+      "because",
+      32.925
+     ]
+    ],
+    [
+     [
+      "everything",
+      33.3
+     ],
+     [
+      "moves",
+      33.895
+     ],
+     [
+      "with",
+      34.49
+     ],
+     [
+      "you.",
+      34.87
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 35.435,
+   "t1": 38.38,
+   "lines": [
+    [
+     [
+      "What",
+      35.435
+     ],
+     [
+      "you",
+      35.59
+     ],
+     [
+      "do",
+      35.775
+     ],
+     [
+      "feel",
+      36.085
+     ]
+    ],
+    [
+     [
+      "is",
+      36.465
+     ],
+     [
+      "a",
+      36.495
+     ],
+     [
+      "tiny",
+      36.74
+     ],
+     [
+      "push",
+      37.245
+     ],
+     [
+      "outward.",
+      37.63
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.645,
+   "t1": 41.75,
+   "lines": [
+    [
+     [
+      "You",
+      38.785
+     ],
+     [
+      "weigh",
+      39.06
+     ],
+     [
+      "about",
+      39.425
+     ],
+     [
+      "a",
+      39.7
+     ],
+     [
+      "third",
+      39.985
+     ]
+    ],
+    [
+     [
+      "of",
+      40.395
+     ],
+     [
+      "a",
+      40.54
+     ],
+     [
+      "percent",
+      40.57
+     ],
+     [
+      "less",
+      41.085
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.75,
+   "t1": 44.67,
+   "lines": [
+    [
+     [
+      "than",
+      41.75
+     ],
+     [
+      "you",
+      41.865
+     ],
+     [
+      "would",
+      42.08
+     ],
+     [
+      "on",
+      42.385
+     ],
+     [
+      "a",
+      42.645
+     ],
+     [
+      "planet",
+      42.675
+     ]
+    ],
+    [
+     [
+      "that",
+      43.26
+     ],
+     [
+      "did",
+      43.44
+     ],
+     [
+      "not",
+      43.545
+     ],
+     [
+      "spin.",
+      43.92
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 45.185,
+   "t1": 47.865,
+   "lines": [
+    [
+     [
+      "Now",
+      45.325
+     ],
+     [
+      "the",
+      45.665
+     ],
+     [
+      "spin",
+      45.905
+     ]
+    ],
+    [
+     [
+      "begins",
+      46.24
+     ],
+     [
+      "to",
+      46.5
+     ],
+     [
+      "speed",
+      46.805
+     ],
+     [
+      "up.",
+      47.295
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.865,
+   "t1": 51.05,
+   "lines": [
+    [
+     [
+      "At",
+      47.865
+     ],
+     [
+      "20",
+      48.075
+     ],
+     [
+      "hours,",
+      48.46
+     ],
+     [
+      "you",
+      48.975
+     ],
+     [
+      "can",
+      49.11
+     ],
+     [
+      "see",
+      49.37
+     ]
+    ],
+    [
+     [
+      "the",
+      49.4
+     ],
+     [
+      "shadows",
+      49.69
+     ],
+     [
+      "sweep.",
+      50.3
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 51.115,
+   "t1": 55.655,
+   "lines": [
+    [
+     [
+      "At",
+      51.255
+     ],
+     [
+      "16,",
+      51.45
+     ],
+     [
+      "the",
+      52.365
+     ],
+     [
+      "Sun",
+      52.58
+     ],
+     [
+      "climbs",
+      52.915
+     ],
+     [
+      "the",
+      53.44
+     ]
+    ],
+    [
+     [
+      "sky",
+      53.665
+     ],
+     [
+      "like",
+      54.115
+     ],
+     [
+      "a",
+      54.28
+     ],
+     [
+      "slow",
+      54.51
+     ],
+     [
+      "elevator.",
+      54.905
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 55.92,
+   "t1": 57.82,
+   "lines": [
+    [
+     [
+      "The",
+      56.06
+     ],
+     [
+      "rule",
+      56.09
+     ],
+     [
+      "never",
+      56.89
+     ],
+     [
+      "changes.",
+      57.07
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 58.12,
+   "t1": 60.69,
+   "lines": [
+    [
+     [
+      "A",
+      58.26
+     ],
+     [
+      "day",
+      58.43
+     ],
+     [
+      "only",
+      58.78
+     ],
+     [
+      "ever",
+      59.31
+     ]
+    ],
+    [
+     [
+      "gets",
+      59.67
+     ],
+     [
+      "shorter,",
+      60.08
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.69,
+   "t1": 62.77,
+   "lines": [
+    [
+     [
+      "and",
+      60.69
+     ],
+     [
+      "you",
+      60.74
+     ],
+     [
+      "cannot",
+      61.01
+     ]
+    ],
+    [
+     [
+      "turn",
+      61.515
+     ],
+     [
+      "it",
+      61.905
+     ],
+     [
+      "back.",
+      62.02
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.18,
+   "t1": 66.045,
+   "lines": [
+    [
+     [
+      "And",
+      63.32
+     ],
+     [
+      "at",
+      63.57
+     ],
+     [
+      "12",
+      63.66
+     ],
+     [
+      "hours,",
+      63.995
+     ]
+    ],
+    [
+     [
+      "it",
+      64.55
+     ],
+     [
+      "gets",
+      64.68
+     ],
+     [
+      "much",
+      65.095
+     ],
+     [
+      "stranger.",
+      65.295
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.3,
+   "dur": 18.118,
+   "file": "vo/01.wav",
+   "text": "What if the Earth started to spin faster, a little more every second, and nothing in the universe could stop it? You are standing on the equator, and you are going to watch what happens, minute by minute, until the planet can't take it anymore."
+  },
+  {
+   "id": "vo02",
+   "t": 19.5,
+   "dur": 25.053,
+   "file": "vo/02.wav",
+   "text": "Right now, one day lasts twenty-four hours. Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour. You never feel it, because everything moves with you. What you do feel is a tiny push outward. You weigh about a third of a percent less than you would on a planet that did not spin."
+  },
+  {
+   "id": "vo03",
+   "t": 45.3,
+   "dur": 17.2,
+   "file": "vo/03.wav",
+   "text": "Now the spin begins to speed up. At twenty hours, you can see the shadows sweep. At sixteen, the Sun climbs the sky like a slow elevator. The rule never changes. A day only ever gets shorter, and you cannot turn it back."
+  },
+  {
+   "id": "vo04",
+   "t": 63.3,
+   "dur": 2.904,
+   "file": "vo/04.wav",
+   "text": "And at twelve hours, it gets much stranger."
+  },
+  {
+   "id": "vo05",
+   "t": 66.9,
+   "dur": 1.624,
+   "file": "vo/05.wav",
+   "text": "Full video on YouTube."
+  }
+ ]
+}

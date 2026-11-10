@@ -1,0 +1,144 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/longform/earth-spin/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Earth's day is now twelve hours long. Here's what you'd feel.",
+   "stars": [],
+   "phonemes": "ˈɜːθz dˈeɪ ɪz nˈaʊ twˈɛlv ˈaʊɚz lˈɔŋ. hˈɪɹz wʌt juːd fˈiːl.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     2.4724,
+     2.8524
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 4.139,
+   "sha256": "727251fb486729248b74754890adc985385f2fb5168a1e471c71119777bf96a2"
+  },
+  {
+   "id": "vo02",
+   "beat": "twelve",
+   "text": "At a twelve hour day, sunrise to sunset takes six hours. The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound. You weigh one point four percent less than on a still Earth, four times what you feel today. A seventy kilogram person feels like about sixty-nine.",
+   "stars": [],
+   "phonemes": "æɾə twˈɛlv ˈaʊɚ dˈeɪ, sˈʌnɹaɪz tə sˈʌnsɛt tˈeɪks sˈɪks ˈaʊɚz. ðə ɡɹˈaʊnd ˌʌndɚ jʊɹ fˈiːt nˈaʊ mˈuːvz æɾ ɐbˌaʊt θˈɜːɾiθɹˈiː hˈʌndɹɪd kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ, nˌɪɹli θɹˈiː tˈaɪmz ðə spˈiːd ʌv sˈaʊnd. juː wˈeɪ wˈʌn pˈɔɪnt fˈɔːɹ pɚsˈɛnt lˈɛs ðɐn ˌɔn ɐ stˈɪl ˈɜːθ, fˈɔːɹ tˈaɪmz wʌt juː fˈiːl tədˈeɪ. ɐ sˈɛvənti kˈɪləɡɹˌæm pˈɜːsən fˈiːlz lˈaɪk ɐbˌaʊt sˈɪkstinˈaɪn.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     4.3088,
+     4.6888
+    ],
+    [
+     14.4399,
+     14.8199
+    ],
+    [
+     21.6281,
+     22.0081
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 26.161,
+   "sha256": "e1434414b8d356f75817d0659f28072450f0fb801af938e613a8c8e32ddb3c79"
+  },
+  {
+   "id": "vo03",
+   "beat": "wind",
+   "text": "But the air has a problem. The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time. For the first hours, the air is left behind. At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound. Winds like that would strip the surface, and they would only be the beginning.",
+   "stars": [],
+   "phonemes": "bˌʌt ðɪ ˈɛɹ hɐz ɐ pɹˈɑːbləm. ðə ɡɹˈaʊnd spˈiːdz ˌʌp ɐtwˈʌns; ðɪ ˈætməsfˌɪɹ ɪz pˈʊld ɐlˈɔŋ ˈoʊnli baɪ fɹˈɪkʃən, ænd ðæt tˈeɪks tˈaɪm. fɚðə fˈɜːst ˈaʊɚz, ðɪ ˈɛɹ ɪz lˈɛft bᵻhˈaɪnd. æɾə twˈɛlv ˈaʊɚ dˈeɪ, ðə ɡɹˈaʊnd ɪz mˈuːvɪŋ θɹuː ðɪ ˈɛɹ æɾ ɐbˌaʊt fˈɔːɹ hˈʌndɹɪd ænd sˈɪksti mˈiːɾɚz ɐ sˈɛkənd, fˈæstɚ ðɐn ðə spˈiːd ʌv sˈaʊnd. wˈɪndz lˈaɪk ðæt wʊd stɹˈɪp ðə sˈɜːfɪs, ænd ðeɪ wʊd ˈoʊnli biː ðə bɪɡˈɪnɪŋ.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     1.7288,
+     2.1088
+    ],
+    [
+     9.6943,
+     10.0743
+    ],
+    [
+     12.953,
+     13.333
+    ],
+    [
+     23.5611,
+     23.9411
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 28.821,
+   "sha256": "de92e56796e65d6cbc45f2447b2b65dc18bad9b7b77d492bad75db27ef6b485d"
+  },
+  {
+   "id": "vo04",
+   "beat": "outro",
+   "text": "And then the oceans start to move.",
+   "stars": [],
+   "phonemes": "ænd ðˈɛn ðɪ ˈoʊʃənz stˈɑːɹt tə mˈuːv.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "04.wav",
+   "dur": 2.116,
+   "sha256": "7f94d5648e44894aae69841c627f5a5c801eda50416f50b2d173d6dc67e59136"
+  },
+  {
+   "id": "vo05",
+   "beat": "tease",
+   "text": "Full video on YouTube.",
+   "stars": [],
+   "phonemes": "fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "05.wav",
+   "dur": 1.624,
+   "sha256": "8a6ecf042ba769f7d8a6a54bfa90334f1613184815c69dcfb334a4092dbeeb06"
+  }
+ ]
+}

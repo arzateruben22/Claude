@@ -1,0 +1,150 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/longform/earth-spin/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "What if the Earth started to spin faster, a little more every second, and nothing in the universe could stop it? You are standing on the equator, and you are going to watch what happens, minute by minute, until the planet can't take it anymore.",
+   "stars": [],
+   "phonemes": "wˌʌt ɪf ðɪ ˈɜːθ stˈɑːɹɾᵻd tə spˈɪn fˈæstɚ, ɐ lˈɪɾəl mˈɔːɹ ˈɛvɹi sˈɛkənd, ænd nˈʌθɪŋ ɪnðə jˈuːnɪvˌɜːs kʊd stˈɑːp ɪt? juː ɑːɹ stˈændɪŋ ɔnðɪ ɪkwˈeɪɾɚ, ænd juː ɑːɹ ɡˌoʊɪŋ tə wˈɑːtʃ wʌt hˈæpənz, mˈɪnɪt baɪ mˈɪnɪt, ʌntˈɪl ðə plˈænɪt kˈænt tˈeɪk ɪɾ ˌɛnɪmˈɔːɹ.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.6
+   ],
+   "silences": [
+    [
+     7.8183,
+     8.4183
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 18.118,
+   "sha256": "9be3a498a1a5a43ee14e9edbf2649daaaa060a17fb1dea61ba3cd419b3096ea0"
+  },
+  {
+   "id": "vo02",
+   "beat": "today",
+   "text": "Right now, one day lasts twenty-four hours. Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour. You never feel it, because everything moves with you. What you do feel is a tiny push outward. You weigh about a third of a percent less than you would on a planet that did not spin.",
+   "stars": [],
+   "phonemes": "ɹˈaɪt nˈaʊ, wˈʌn dˈeɪ lˈæsts twˈɛntifˈɔːɹ ˈaʊɚz. stˈændɪŋ ɔnðɪ ɪkwˈeɪɾɚ, ðə ɡɹˈaʊnd kˈæɹiz juː ɚɹˈaʊnd æɾ ɐbˌaʊt sˈɪkstiːn hˈʌndɹɪd ænd sˈɛvənti kɪlˈɑːmɪɾɚz ɐn ˈaʊɚ. juː nˈɛvɚ fˈiːl ɪt, bɪkˈʌz ˈɛvɹɪθˌɪŋ mˈuːvz wɪð juː. wˌʌt juː dˈuː fˈiːl ɪz ɐ tˈaɪni pˈʊʃ ˈaʊtwɚd. juː wˈeɪ ɐbˌaʊt ɐ θˈɜːd əvə pɚsˈɛnt lˈɛs ðɐn juː wʊd ˌɔn ɐ plˈænɪt ðæt dɪdnˌɑːt spˈɪn.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     2.849,
+     3.229
+    ],
+    [
+     11.7448,
+     12.1248
+    ],
+    [
+     15.5337,
+     15.9138
+    ],
+    [
+     18.8802,
+     19.2602
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 25.053,
+   "sha256": "90203e4c382e5a8c83fd87f8194abc9da6cd88ae409b4896db35fa7a39066594"
+  },
+  {
+   "id": "vo03",
+   "beat": "spinup",
+   "text": "Now the spin begins to speed up. At twenty hours, you can see the shadows sweep. At sixteen, the Sun climbs the sky like a slow elevator. The rule never changes. A day only ever gets shorter, and you cannot turn it back.",
+   "stars": [],
+   "phonemes": "nˈaʊ ðə spˈɪn bɪɡˈɪnz tə spˈiːd ˈʌp. æt twˈɛnti ˈaʊɚz, juː kæn sˈiː ðə ʃˈædoʊz swˈiːp. æt sˈɪkstiːn, ðə sˈʌn klˈaɪmz ðə skˈaɪ lˈaɪk ɐ slˈoʊ ˈɛlɪvˌeɪɾɚ. ðə ɹˈuːl nˈɛvɚ tʃˈeɪndʒᵻz. ɐ dˈeɪ ˈoʊnli ˈɛvɚ ɡˈɛts ʃˈɔːɹɾɚ, ænd juː kænˈɑːt tˈɜːn ɪt bˈæk.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     2.1652,
+     2.5452
+    ],
+    [
+     5.5575,
+     5.9375
+    ],
+    [
+     10.361,
+     10.741
+    ],
+    [
+     12.5606,
+     12.9406
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 17.2,
+   "sha256": "7607b4e19aee9439c586ddce540ff9d7c2bd258008163c89f1914cf6107f82be"
+  },
+  {
+   "id": "vo04",
+   "beat": "outro",
+   "text": "And at twelve hours, it gets much stranger.",
+   "stars": [],
+   "phonemes": "ænd æt twˈɛlv ˈaʊɚz, ɪt ɡˈɛts mˈʌtʃ stɹˈeɪndʒɚ.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "04.wav",
+   "dur": 2.904,
+   "sha256": "baab5e9554747627ae00cf7a38096898744b3f86039a5d624a06507b1275199f"
+  },
+  {
+   "id": "vo05",
+   "beat": "tease",
+   "text": "Full video on YouTube.",
+   "stars": [],
+   "phonemes": "fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "05.wav",
+   "dur": 1.624,
+   "sha256": "8a6ecf042ba769f7d8a6a54bfa90334f1613184815c69dcfb334a4092dbeeb06"
+  }
+ ]
+}
