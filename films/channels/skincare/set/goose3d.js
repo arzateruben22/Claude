@@ -68,7 +68,7 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
     topC.width = iw * 2; topC.height = ch * 2; tg.drawImage(m2, 0, 0); }
   const bumpC = mkCanvas(256, 256), bg2 = bumpC.getContext("2d"); { bg2.fillStyle = "#808080"; bg2.fillRect(0, 0, 256, 256); for (let i = 0; i < 700; i++) { const v = 90 + rnd() * 90 | 0; bg2.fillStyle = `rgb(${v},${v},${v})`; bg2.beginPath(); bg2.arc(rnd() * 256, rnd() * 256, 1 + rnd() * 3, 0, 7); bg2.fill(); } }
   const faceTex = tex(faceC, [4, 1]), topTex = tex(topC, armImg ? [3.2, 4.4] : [10, 10]), bumpTex = armImg ? tex(topC, [3.2, 4.4]) : tex(bumpC, [14, 14]);
-  const skinMat = new THREE.MeshPhysicalMaterial({ map: topTex, emissiveMap: topTex, emissive: new THREE.Color(0.2, 0.17, 0.15), color: new THREE.Color(0.82, 0.7, 0.62), bumpMap: DBG.nobump ? null : bumpTex, bumpScale: armImg ? 2.2 : 0.7, roughness: 0.7, sheen: 0.0, sheenColor: new THREE.Color(1, 0.8, 0.7), sheenRoughness: 0.6 });
+  const skinMat = new THREE.MeshPhysicalMaterial({ map: topTex, emissiveMap: topTex, emissive: new THREE.Color(0.2, 0.17, 0.15), color: new THREE.Color(0.8, 0.72, 0.7), bumpMap: DBG.nobump ? null : bumpTex, bumpScale: armImg ? 2.2 : 0.7, roughness: 0.7, sheen: 0.0, sheenColor: new THREE.Color(1, 0.8, 0.7), sheenRoughness: 0.6 });
   if (DBG.nomap) { skinMat.map = null; skinMat.emissiveMap = null; skinMat.bumpMap = null; skinMat.color.set(0xd09070); }
   const faceMat = new THREE.MeshPhysicalMaterial({ map: faceTex, roughness: 0.55, clearcoat: 0.25, clearcoatRoughness: 0.45, sheen: 0.3, sheenColor: new THREE.Color(1, 0.8, 0.75) });
   const sideMat = new THREE.MeshStandardMaterial({ map: faceTex, roughness: 0.7, color: 0xe8d0c4 });
@@ -130,7 +130,7 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
   const hairInst = new THREE.InstancedMesh(hg, M.hair.clone(), NH); hairInst.castShadow = true; hairInst.frustumCulled = false; scene.add(hairInst);
   const dummy = new THREE.Object3D();
   const WAVE = { t0: 3.0, dur: 3.2 };                                                          // the hook: a wave of goosebumps rolls across the arm
-  const raiseAt = (x, t, main) => Math.min(1, Math.max(globalRaise(t), clamp((t - WAVE.t0 - (x + 22) / 30 * WAVE.dur) / 0.9) * (1 - seg(t, 5.0, 5.6) * 0.0)) * calm(t));
+  const raiseAt = (x, t, main) => Math.min(1, Math.max(globalRaise(t), clamp((t - WAVE.t0 - clamp((x + 9) / 15, 0, 1.4) * WAVE.dur) / 0.9) * (1 - seg(t, 5.0, 5.6) * 0.0)) * calm(t));
   const globalRaise = (t) => Math.max(eo(seg(t, 6.6, 10.0)) * 0.9, 0);
   const calm = (t) => 1 - eo(seg(t, 56.0, 61.0));
 
@@ -222,7 +222,7 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
     const grow = eo(seg(t, 50.2, 53.5)) * (1 - eo(seg(t, 56, 59))); newHair.mesh.visible = grow > 0.02; if (grow > 0.02) { const pts = [], rr = []; for (let i = 0; i <= 8; i++) { const s = i / 8; pts.push([BULB[0] + d[0] * (LF * 0.15 + LF * 0.6 * grow * s), BULB[1] + d[1] * (LF * 0.15 + LF * 0.6 * grow * s) , 0.1]); rr.push(0.07 - 0.04 * s); } newHair.set(pts, rr); }
     // the field's hairs
     for (let i = 0; i < NH; i++) { const hh = HAIRS[i], r = hh.raise, tilt = lerp(78, 9, r) * D2R + Math.sin(t * 1.3 + hh.ph * 6) * 0.025 * (1 + r), y = bumpH(hh.x, hh.z, 0, hb) * 0.9; dummy.position.set(hh.x, y, hh.z); dummy.rotation.set(0, 0, 0); dummy.rotateY(-Math.PI / 2 + hh.az); dummy.rotateX(0); dummy.rotation.order = "YXZ"; dummy.rotation.set(0, 0, 0);
-      dummy.quaternion.setFromEuler(new THREE.Euler(0, 0, -tilt)); const qa = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), hh.az); dummy.quaternion.premultiply(qa); dummy.scale.set(1, hh.len, 1); dummy.updateMatrix(); hairInst.setMatrixAt(i, dummy.matrix); }
+      dummy.quaternion.setFromEuler(new THREE.Euler(0, 0, -tilt)); const qa = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), hh.az); dummy.quaternion.premultiply(qa); const cd = Math.hypot(hh.x - camera.position.x, hh.z - camera.position.z); const th = clamp(cd / 14, 0.4, 1); dummy.scale.set(th, hh.len, th); dummy.updateMatrix(); hairInst.setMatrixAt(i, dummy.matrix); }
     hairInst.instanceMatrix.needsUpdate = true;
     // cold: a pale breath drifting over the skin (5.2 – 9)
     cold.forEach((c) => (c.material.opacity = 0)); // (wisps drawn below as sprites)
@@ -260,7 +260,7 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
       Pnow = (eio(seg(t, 29.7, 32.4))) * (t < 56 ? 1 : 1 - eo(seg(t, 56.0, 60.5)));
       const c = camAt(t); camera.position.set(...c.pos); camera.fov = c.fov; camera.up.set(Math.sin(c.roll * D2R), Math.cos(c.roll * D2R), 0); camera.lookAt(...c.look); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
       setWorld(t); setCold(t); paintSet(t); key.target.position.set(0, -1, -4); key.target.updateMatrixWorld();
-      if (FIN) { const fp = new THREE.Vector3(...c.look); finish(scene, camera, Math.max(2, fp.distanceTo(camera.position) * (c.focusK || 1))); } else renderer.render(scene, camera);
+      if (FIN) { const fp = new THREE.Vector3(...c.look); const hook = seg(t, 2.6, 3.0) * (1 - seg(t, 6.6, 7.2)); compMat.uniforms.coc.value = (T.coc ?? 0.012) * (1 - 0.8 * hook); finish(scene, camera, Math.max(2, lerp(fp.distanceTo(camera.position), 16, hook))); } else renderer.render(scene, camera);
     },
     anchor(name, t) { const f = ANC[name]; if (!f) return null; const p = f(); V.set(p[0], p[1], p[2]).project(camera); if (V.z > 1) return null; return [AW / 2 * (V.x + 1), BTOP + BH / 2 * (1 - V.y)]; },
   };
