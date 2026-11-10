@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "The tiny muscle that makes goosebumps no longer keeps people warm, yet in mice the same nerve talks to the stem cells that regrow hair.",
+ "titles": [
+  {
+   "text": "Goosebumps Have a Second Job in Mice",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "A Tiny Muscle Is Pulling on Every Hair",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Why Do You Get Goosebumps?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Goosebumps Don't Warm You. So Why Keep Them?",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Every Hair You Have Has Its Own Tiny Muscle",
+   "mechanism": "scale shock"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "one amber hair standing upright in a skin cut-away, the rose muscle shortened beside it, a gold signal spark on the nerve, the skin lifted into a small bump",
+   "composition": "hair rising from the lower middle to the upper third, muscle left, nerve glow lower right, ivory negative space above",
+   "lighting": "warm key from the upper left, soft depth of field, peach and rose tissue",
+   "trigger": "a hidden mechanism caught mid-action",
+   "text": "Still wired",
+   "complements": "the title promises a second job; the thumbnail shows the wiring"
+  },
+  {
+   "id": "B",
+   "subject": "a field of fine amber hairs standing like grass, backlit, on peach skin",
+   "composition": "low camera, hairs fill the lower two thirds, horizon at the upper third",
+   "lighting": "warm rim light, soft haze",
+   "trigger": "familiar sensation made strange",
+   "text": "",
+   "complements": "pure visual; the title carries the question"
+  },
+  {
+   "id": "C",
+   "subject": "a single hair bulb with a faint glow of tiny pearl cells around it",
+   "composition": "bulb lower third, shaft rising",
+   "lighting": "soft amber glow",
+   "trigger": "a surprising passenger at the root",
+   "text": "In mice",
+   "complements": "adds the species caveat"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 82,
+    "synergy": 84,
+    "originality": 74,
+    "accuracy": 86,
+    "mobile": 84,
+    "satisfaction": 84
+   },
+   "note": "the title gives the surprise, the thumbnail shows the wiring"
+  },
+  {
+   "title": 2,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 76,
+    "curiosity": 78,
+    "clarity": 86,
+    "synergy": 72,
+    "originality": 64,
+    "accuracy": 90,
+    "mobile": 86,
+    "satisfaction": 78
+   },
+   "note": "safe question plus a calm visual"
+  },
+  {
+   "title": 3,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 84,
+    "clarity": 80,
+    "synergy": 80,
+    "originality": 72,
+    "accuracy": 86,
+    "mobile": 82,
+    "satisfaction": 82
+   },
+   "note": "contradiction, same image"
+  }
+ ],
+ "winner": {
+  "title": "Goosebumps Have a Second Job in Mice",
+  "thumbnail": "A",
+  "thumbnailText": "Still wired",
+  "why": "A true surprise (the species caveat is in the title) paired with an image of the hidden mechanism; the thumbnail text adds the wiring idea instead of repeating the title."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "skin-sense-007-cover.jpg",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point and any text inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: one amber hair standing upright in a skin cut-away, a shortened rose-pink arrector muscle beside it, a gold signal spark travelling along a thin nerve, the skin lifted into a small bump.\nComposition: hair rising from the lower middle to the upper third, muscle at left, nerve glow lower right, ivory negative space above.\nLighting and treatment: warm key light from the upper left, soft depth of field, peach and rose tissue in one light skin tone, deep green #00685F as the only accent.\nMood: quiet wonder.\nText: \"Still wired\" in a navy editorial serif, upper centre.\nScientific accuracy: the arrector pili muscle attaches to the hair follicle and a nerve signals it to contract, raising the hair; this is a simplified illustration, not to scale.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 31.9,
+  "text": "Still wired"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

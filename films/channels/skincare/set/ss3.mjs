@@ -61,7 +61,10 @@ svg.lead{position:absolute;left:0;top:0;width:${W}px;height:${H}px;overflow:visi
 <div class="endc" id="endc"><div class="e1">${EP.end.e1}</div><div class="e2">${EP.end.e2}</div><div class="chip">${EP.end.chip}</div><div class="e3">${EP.end.e3 || "Narration: synthetic voice (AI)."}</div></div>`;
   stageEl.insertBefore(root, stageEl.firstChild);
   const $ = (s) => root.querySelector(s), artbox = $("#artbox"), lead = $("#lead"), fxs = $("#fxs"), pills = $("#pills"), supEl = $("#sup"), capEl = $("#cap"), badge = $("#badge"), endc = $("#endc"), engr = $("#engr");
-  const AW = 1080 * u, BH = 1060 * u, BTOP = 560 * u, IM = {};
+  const COV = !!EP.coverMode, AW = 1080 * u, BH = (COV ? 1920 : 1060) * u, BTOP = (COV ? 0 : 560) * u, IM = {};
+  if (COV) { artbox.style.top = "0px"; artbox.style.height = BH + "px"; artbox.style.webkitMaskImage = artbox.style.maskImage = "none"; for (const sel of [".eyebrow", ".h1", ".sup", ".cap", ".foot", ".rule", "#pills", "#badge", "#plates", ".engr", ".endc", "#fxs", "#lead", ".ph"]) root.querySelectorAll(sel).forEach((e) => { e.style.display = "none"; });
+    root.style.background = "#F7EFE3";
+    if (EP.cover && EP.cover.text) { const d = document.createElement("div"); d.style.cssText = `position:absolute;left:${px(70)};right:${px(70)};top:${px(EP.cover.top || 300)};text-align:center;font:600 ${px(EP.cover.size || 150)}/${px((EP.cover.size || 150) * 1.02)} "Newsreader",serif;color:#0E1B3D;text-shadow:0 0 ${px(30)} rgba(247,239,227,.9)`; d.textContent = EP.cover.text; root.appendChild(d); } }
   let T3 = null; if (EP.three) { const mod = await import(EP.three.module || "./goose3d.js"); T3 = await mod.create({ W, H, u, AW, BH, BTOP, artbox, R, EP }); }   // opt-in: the picture is a real three.js scene (set/goose3d.js); the overlay stays this engine's
   let HAVE = []; try { HAVE = await (await fetch(EP.artIndex || "art/index.json")).json(); } catch (e) { HAVE = []; }
   const loadImg = (srcs) => new Promise((res) => { let i = 0; const nx = () => { while (i < srcs.length && !HAVE.includes(srcs[i].split("/").pop())) i++; if (i >= srcs.length) return res(null); const j = i++, el = new Image(); el.onload = () => res({ el, idx: j }); el.onerror = nx; el.src = srcs[j]; }; nx(); });
@@ -214,6 +217,7 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
     for (const w of SWEEPS) { const k = seg(t, w.t0, w.t1), on = c.P[w.img] ? c.P[w.img].op : 0; w.d.style.opacity = (Math.sin(Math.PI * k) * (w.a || 0.5) * on).toFixed(3); w.d.style.transform = `translateX(${((k - 0.5) * 70).toFixed(1)}%)`; }
     for (const g of PART) { const pp = c.P[g.img], on = pp ? pp.op : 0, tr = pp ? pp.trk[0] : 0; g.els.forEach((e) => { const [fx, fy, sp, sz] = JSON.parse(e.dataset.k), y = ((fy * BH - t * (14 + 22 * sp) * u) % BH + BH) % BH; e.style.width = e.style.height = (sz * u).toFixed(1) + "px"; e.style.transform = `translate(${(fx * AW + tr * AW * 1.4 + Math.sin(t * 0.6 + fx * 9) * 14 * u).toFixed(1)}px,${y.toFixed(1)}px)`; e.style.opacity = (on * (g.a || 0.45) * Math.min(1, y / (BH * 0.15)) * Math.min(1, (BH - y) / (BH * 0.15))).toFixed(3); }); }
     let chg = 1; for (const cc of CH) chg *= t < cc ? 1 - eo(seg(t, cc - 0.35, cc)) : eo(seg(t, cc + 0.35, cc + 0.95));
+    let lvMax = 0;
     for (const L of LABELS) {
       const an = T3 ? T3.anchor(L.a, t) : c.b.anchors[L.a]; if (!an || (!T3 && L.img && L.img !== c.img)) { L.pill.style.opacity = "0"; L.line.setAttribute("opacity", "0"); L.dot.setAttribute("opacity", "0"); continue; }
       const [ax, ay] = T3 ? an : scr(c.img, an[0], an[1], c, L.layer);
@@ -221,6 +225,7 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
       const p = eo(seg(t, L.t0, L.t0 + 0.5)), out = (1 - eo(seg(t, L.t1, L.t1 + 0.3))) * inside * chg * (1 - 0.95 * Math.max(q, eg)), vis = p * out, pw = L.pw, ph = L.ph, left = L.off[0] >= 0;
       let px0 = ax + L.off[0] * u, py0 = ay + L.off[1] * u;
       px0 = left ? Math.min(Math.max(px0, 34 * u), W - 34 * u - pw) : Math.min(Math.max(px0, 34 * u + pw), W - 34 * u); py0 = Math.min(Math.max(py0, BTOP + 30 * u + ph / 2), BTOP + BH - 90 * u);
+      lvMax = Math.max(lvMax, vis);
       L.pill.style.opacity = vis.toFixed(3); L.pill.style.transform = `translate(${left ? px0 : px0 - pw}px,${py0 - ph / 2}px)`;
       L.line.setAttribute("d", `M${ax},${ay} L${ax + (px0 - ax) * p},${ay + (py0 - ay) * p}`); L.line.setAttribute("opacity", (0.8 * out).toFixed(3));
       L.dot.setAttribute("cx", ax); L.dot.setAttribute("cy", ay); L.dot.setAttribute("opacity", (p * out).toFixed(3));
@@ -229,6 +234,6 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
     scanEl.setAttribute("y", sy); scanEl.setAttribute("opacity", (0.85 * sc * (1 - q)).toFixed(3));
     let pg = null; for (const g of pages) if (t >= g[0].t0 - 0.05 && t <= g[g.length - 1].t1 + 0.3) pg = g;
     capEl.innerHTML = !pg || ev2 > 0.2 ? "" : `<span class="pg">${pg.map((w) => `<span class="${t >= w.t0 && t < w.t1 ? "on" : ""}">${w.w}</span>`).join(" ")}</span>`;
-    endc.style.opacity = ev.toFixed(3); $(".h1").style.opacity = $(".eyebrow").style.opacity = (1 - ev2).toFixed(3);
+    endc.style.opacity = ev.toFixed(3); $(".eyebrow").style.opacity = (1 - ev2).toFixed(3); $(".h1").style.opacity = ((1 - ev2) * (T3 ? 1 - 0.92 * lvMax : 1)).toFixed(3);   // 3-D look: at most two text blocks, so the headline steps back while a label points at something
   };
 }

@@ -5,14 +5,17 @@ import json, re, sys
 from pathlib import Path
 R = Path(__file__).resolve().parent.parent
 AI = "AI-generated illustrations, animated in code"
-def fix(s): return s.replace("Outer Layer", "Skin Sense").replace("code-rendered animation", AI).replace("Animation: code-rendered", "Illustrations: AI-generated, animated in code")
+AI3 = "AI-generated illustrations and 3-D animation made in code"
+def fix(s, three=False):
+    if three: s = s.replace("AI-generated, animated in code", "AI-generated and 3-D animation made in code")
+    return s.replace("Outer Layer", "Skin Sense").replace("code-rendered animation", AI3 if three else AI).replace("Animation: code-rendered", "Illustrations: AI-generated and 3-D animation made in code" if three else "Illustrations: AI-generated, animated in code")
 for ep in sys.argv[1:]:
-    o = R / ep / "out"; d = json.loads((o / "posting.json").read_text())
+    o = R / ep / "out"; d = json.loads((o / "posting.json").read_text()); three = "\"three\"" in (R / ep / "episode.json").read_text()
     for p in d.values():
         if isinstance(p, dict):
             for k, v in p.items():
-                if isinstance(v, str): p[k] = fix(v)
-                elif isinstance(v, list): p[k] = [fix(x) if isinstance(x, str) else x for x in v]
+                if isinstance(v, str): p[k] = fix(v, three)
+                elif isinstance(v, list): p[k] = [fix(x, three) if isinstance(x, str) else x for x in v]
     srcs = re.findall(r"^(\d+)\. .+? — ([^\n]*?): (https?://\S+)$", d["youtube"]["caption"], re.M)
     items = [f"{n}. {u}" for n, _, u in srcs]
     th, cur = [], ""
@@ -24,7 +27,7 @@ for ep in sys.argv[1:]:
     d["tiktok"]["pinnedComment"], d["tiktok"]["replies"] = th[0], th[1:]
     for t in th: assert len(t) <= 150, (ep, len(t))
     (o / "posting.json").write_text(json.dumps(d, indent=1, ensure_ascii=False))
-    md = fix((o / "POSTING.md").read_text())
+    md = fix((o / "POSTING.md").read_text(), three)
     tail = "\n\n".join(th)
     md = re.sub(r"(## TikTok.*?)(?=\n## )", lambda m: re.sub(r"\*\*Pinned comment.*", "**Pinned comment + replies (full sources)**\n\n" + "\n\n".join(f"```\n{t}\n```" for t in th), m.group(1), flags=re.S), md, flags=re.S) if "## TikTok" in md else md
     (o / "POSTING.md").write_text(md); print(ep, len(th), "tiktok source comments; posting.md", len(md))

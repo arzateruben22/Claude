@@ -258,7 +258,7 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
     renderer,
     seek(t) {
       Pnow = (eio(seg(t, 29.7, 32.4))) * (t < 56 ? 1 : 1 - eo(seg(t, 56.0, 60.5)));
-      const c = camAt(t); camera.position.set(...c.pos); camera.fov = c.fov; camera.up.set(Math.sin(c.roll * D2R), Math.cos(c.roll * D2R), 0); camera.lookAt(...c.look); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
+      const c = T.coverCam ? { pos: T.coverCam.pos, look: T.coverCam.look, fov: T.coverCam.fov, roll: 0 } : camAt(t); camera.position.set(...c.pos); camera.fov = c.fov; camera.up.set(Math.sin(c.roll * D2R), Math.cos(c.roll * D2R), 0); camera.lookAt(...c.look); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
       setWorld(t); setCold(t); paintSet(t); key.target.position.set(0, -1, -4); key.target.updateMatrixWorld();
       if (FIN) { const fp = new THREE.Vector3(...c.look); const hook = seg(t, 2.6, 3.0) * (1 - seg(t, 6.6, 7.2)); compMat.uniforms.coc.value = (T.coc ?? 0.012) * (1 - 0.8 * hook); finish(scene, camera, Math.max(2, lerp(fp.distanceTo(camera.position), 16, hook))); } else renderer.render(scene, camera);
     },

@@ -7,7 +7,7 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-Why goosebumps happen | Skin Sense S2 · Ep 1
+Goosebumps Have a Second Job in Mice
 
 **Description**
 
@@ -22,7 +22,7 @@ Sources
 1. In the skin, sympathetic nerve impulses trigger contraction of the arrector pili muscle (APM), pulling the hair erect: piloerection, or goosebumps. — NIH: https://pubmed.ncbi.nlm.nih.gov/32679029/
 2. Water-induced finger wrinkling is an active process controlled by the autonomic nervous system. — NIH: https://pubmed.ncbi.nlm.nih.gov/23302867/
 
-Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code, no stock footage. Every number's source is listed in this description.
+Narration: synthetic voice (AI). Illustrations: AI-generated and 3-D animation made in code, no stock footage. Every number's source is listed in this description.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
@@ -48,7 +48,7 @@ Sources
 **Caption**
 
 ```
-Why do you get goosebumps? So goosebumps are a muscle, a nerve and a hair, working together. Education, not medical advice. #skincare #skinscience #learnontiktok #dermatology #skinbarrier
+Why do you get goosebumps? So goosebumps are a muscle, a nerve and a hair, working together. Education, not medical advice. #fyp #skincare #skinscience #learnontiktok #dermatology #skinbarrier
 ```
 
 **Pinned comment + replies (full sources)**
@@ -70,7 +70,7 @@ Sources in the first comment. AI voice and AI-generated illustrations.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
-#skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
+#fyp #skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
 ```
 
 **First comment** (2,200-character limit)

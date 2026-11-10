@@ -16,11 +16,11 @@
   {
    "text": "Sympathetic nerve",
    "a": "nerve",
-   "t0": "vo03:fibres.",
-   "t1": "vo03:At",
+   "t0": "vo03:At",
+   "t1": "vo03:attached",
    "off": [
     150,
-    160
+    -170
    ]
   },
   {
@@ -52,11 +52,6 @@
  ],
  "badges": [
   [
-   "start:vo03",
-   "start:vo05",
-   "Simplified section \u00b7 not to scale"
-  ],
-  [
    "start:vo05",
    "start:vo06",
    "Mouse study \u00b7 hair stem cells"
@@ -74,34 +69,7 @@
  "camera": [],
  "three": {
   "module": "./goose3d.js",
-  "paintings": [
-   {
-    "src": "art/s2e01-01.webp",
-    "t0": 0,
-    "t1": 2.9,
-    "fin": 0.05,
-    "fout": 1.1,
-    "focus": [
-     0.5,
-     0.6
-    ],
-    "s0": 1.0,
-    "s1": 1.1
-   },
-   {
-    "src": "art/s2e01-01.webp",
-    "t0": 61.6,
-    "t1": 64.5,
-    "fin": 1.3,
-    "fout": 0.4,
-    "focus": [
-     0.5,
-     0.6
-    ],
-    "s0": 1.1,
-    "s1": 1.0
-   }
-  ],
+  "paintings": [],
   "camera": [
    {
     "t": 0,
@@ -390,6 +358,25 @@
    0.26
   ],
   "coc": 0.011,
-  "bloom": 0.3
- }
+  "bloom": 0.3,
+  "coverCam": {
+   "pos": [
+    1.4,
+    0.4,
+    19
+   ],
+   "look": [
+    0.4,
+    0.4,
+    0
+   ],
+   "fov": 32
+  }
+ },
+ "cover": {
+  "text": "Still wired",
+  "top": 230,
+  "size": 150
+ },
+ "coverMode": true
 }
