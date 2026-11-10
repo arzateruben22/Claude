@@ -9,6 +9,7 @@
 //        [--theme <file>]   a theme file to draw the cards in, instead of <channel>/theme.json (its fonts resolve from the channel folder)
 //        [--season <n>]   label the episode cards "Season n · Episode k" instead of "No. 00x"
 //        [--promise <text>]   replace the theme's promise line (cards and description)
+//        [--narration <dir>]   narrated cards: <dir>/narration.json lists {id,wav,dur} for open, bridge1..n, finale (+ finale_cta, optional); each card lasts its voice plus a breath, the music under it
 //        [--ai-visuals]   say "Illustrations: AI-generated, animated in code." in the side-card footer and the description
 //        [--height 1440|1080] (default 1440) [--crf 15] [--max-mb 90]
 //
@@ -39,7 +40,8 @@ const die = (m) => { console.error("compilation: " + m); process.exit(2); };
 if (!A.channel || !A.episodes) die("usage: --channel <dir> --episodes ep01,ep02,… [--title T] [--name vol01] [--out DIR]");
 const chan = path.resolve(A.channel), theme = JSON.parse(fs.readFileSync(A.theme ? path.resolve(A.theme) : path.join(chan, "theme.json"), "utf8"));
 if (A.promise) theme.promise = String(A.promise);                                                // opt-in: replace the theme's promise line on the cards and in the description
-const W = 1920, H = 1080, FPS = 30, SLOT = { x: 656, w: 608 }, INTRO = 4.0, OUTRO = 8.0;     // the layout, in CSS px at 1080
+let INTRO = 4.0;
+const W = 1920, H = 1080, FPS = 30, SLOT = { x: 656, w: 608 }, OUTRO = 8.0;   // INTRO is replaced by the narrated opening's length with --narration     // the layout, in CSS px at 1080
 const OH = Number(A.height || 1440), S = OH / H, OW = Math.round(W * S);                      // the delivered frame
 if (![1080, 1440].includes(OH)) die("--height is 1080 or 1440");
 const BR = Number(A.bridge || 0), CRF = Number(A.crf ?? 15), MAX_MB = Number(A["max-mb"] || 90);
@@ -63,6 +65,12 @@ const eps = String(A.episodes).split(",").map((id, k) => {
     poster: path.join(out, mp4.replace(/\.mp4$/, ".jpg")) };
 });
 if (eps.length < 2) die("a compilation needs at least two episodes");
+const NARR = A.narration ? path.resolve(A.narration) : null, NR = NARR ? JSON.parse(fs.readFileSync(path.join(NARR, "narration.json"), "utf8")) : null;
+const nar = (id) => (NR ? NR.find((x) => x.id === id) : null);
+if (NR) { for (const id of ["open", "finale", ...eps.slice(1).map((_, i) => `bridge${i + 1}`)]) if (!nar(id)) die(`--narration: no ${id} in narration.json`); INTRO = nar("open").dur + 2.2; }
+const FIN = NR ? nar("finale").dur + 1.0 + (nar("finale_cta") ? nar("finale_cta").dur : 0) + 1.8 : 0;     // the narrated finale card's length
+const brd = (k) => (NR ? nar(`bridge${k}`).dur + 1.8 : BR > 0 ? BR : 0);                                // the card before episode k (k ≥ 1)
+const bridgeSum = eps.slice(1).reduce((a, _, i) => a + brd(i + 1), 0);
 const name = A.name || `vol${String(Math.ceil(eps.length / 6)).padStart(2, "0")}`;
 const outDir = path.resolve(A.out || path.join(chan, "compilations"), name), work = path.join(outDir, "work");
 fs.mkdirSync(work, { recursive: true });
@@ -104,7 +112,7 @@ body { background: radial-gradient(1400px 900px at 50% 40%, ${tok["bg-hi"] || to
 .thumb .posters img:nth-child(2) { transform: translateY(-26px); }
 `;
 const rows = (k) => eps.map((e, i) => `<div class="row ${i < k ? "past" : i === k ? "now" : ""}"><b>${String(i + 1).padStart(2, "0")}</b><span>${esc(e.title)}</span></div>`).join("");
-const minutes = Math.round((INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0) + BR * (eps.length - 1)) / 60);
+const minutes = Math.round((INTRO + OUTRO + FIN + eps.reduce((a, e) => a + e.dur, 0) + bridgeSum) / 60);
 const posters = (n) => `<div class="posters">${eps.slice(0, n).filter((e) => fs.existsSync(e.poster)).map((e) => `<img src="${pathToFileURL(e.poster).href}">`).join("")}</div>`;
 const pages = {
   intro: `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="big" style="margin-top:22px">${esc(title)}</p><p class="prom"${theme.compilation && theme.compilation.introPromiseWidth ? ` style="max-width:${+theme.compilation.introPromiseWidth}px"` : ""}>${esc(theme.promise || "")}</p><p class="meta">${eps.length} episodes · about ${minutes} min</p></div>${posters(3)}`,
@@ -113,14 +121,15 @@ const pages = {
 };
 eps.forEach((e, k) => { pages[`ep${k}`] = `<div class="slot"></div><div class="left"><p class="kick">${esc(theme.name)}</p><p class="num">${esc(e.num)}</p><p class="t">${esc(e.title)}</p><p class="of">Episode ${k + 1} of ${eps.length}</p></div><div class="right"><p class="hd">In this video</p>${rows(k)}</div><p class="foot">Narration: synthetic voice (AI).${A["ai-visuals"] ? " Illustrations: AI-generated, animated in code." : ""}</p>`; });
 
-if (BR > 0) eps.forEach((e, k) => { if (k > 0) pages[`bridge${k}`] = `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="prom" style="margin-top:22px">Next · ${esc(e.num)}</p><p class="big" style="margin-top:14px;font-size:96px;max-width:1500px">${esc(e.title)}</p></div>`; });
+if (NR) pages.finale = `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="big" style="margin-top:22px;max-width:1100px">So that is your skin, working without you.</p>${nar("finale_cta") ? '<span class="pill">Like and subscribe</span>' : ""}</div>${posters(3)}`;
+if (BR > 0 || NR) eps.forEach((e, k) => { if (k > 0) pages[`bridge${k}`] = `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="prom" style="margin-top:22px">Next · ${esc(e.num)}</p><p class="big" style="margin-top:14px;font-size:96px;max-width:1500px">${esc(e.title)}</p></div>`; });
 const pwDir = process.env.PLAYWRIGHT_DIR || path.dirname(run("npm", ["root", "-g"]).trim());
 const { chromium } = createRequire(path.join(pwDir, "x.js"))("playwright");
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || (fs.existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined) });
 for (const [k, body] of Object.entries(pages)) {
   const thumb = k === "thumb", page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: S });   // drawn at the delivered size
   const html = path.join(work, `${k}.html`);
-  const bg = A["card-bg"] && /^(intro|outro|bridge\d+)$/.test(k) ? `<div style="position:fixed;inset:-60px;z-index:-2;background:url(${pathToFileURL(path.resolve(A["card-bg"])).href}) center/cover;filter:blur(30px);opacity:.5"></div><div style="position:fixed;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(248,242,231,.9),rgba(248,242,231,.55))"></div>` : "";   // opt-in: a softly blurred picture behind the intro, bridge and outro cards
+  const bg = A["card-bg"] && /^(intro|outro|finale|bridge\d+)$/.test(k) ? `<div style="position:fixed;inset:-60px;z-index:-2;background:url(${pathToFileURL(path.resolve(A["card-bg"])).href}) center/cover;filter:blur(30px);opacity:.5"></div><div style="position:fixed;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(248,242,231,.9),rgba(248,242,231,.55))"></div>` : "";   // opt-in: a softly blurred picture behind the intro, bridge and outro cards
   fs.writeFileSync(html, `<!doctype html><meta charset="utf-8"><style>${css}</style><body>${bg}${body}</body>`);
   await page.goto(pathToFileURL(html).href);
   await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].map((i) => i.decode().catch(() => {}))); });
@@ -140,10 +149,21 @@ const cardSound = (k, dur, energy, sigAt) => {
   run("python3", ["-I", path.join(repo, "kits/cinema/studio/render.py"), sp, od]);
   return path.join(od, "mix.wav");
 };
-const introWav = preset ? cardSound("intro", INTRO, 0.6, 0.5) : null, outroWav = preset ? cardSound("outro", OUTRO, 0.4, 0.6) : null;
+const mixCard = (k, dur, voices, musicWav) => {      // narrated card: the voice(s) levelled, the card's music well under them
+  const o = path.join(work, `${k}-mix.wav`), ins = [], fl = []; let n = 0;
+  if (musicWav) { ins.push("-i", musicWav); fl.push(`[${n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=-11dB,afade=t=out:st=${(dur - 0.8).toFixed(2)}:d=0.8[m${n}]`); n++; }
+  for (const v of voices) { ins.push("-i", path.join(NARR, v.wav)); const ms = Math.round(v.at * 1000); fl.push(`[${n}:a]aformat=sample_rates=48000:channel_layouts=stereo,loudnorm=I=-15:TP=-2:LRA=7,aformat=sample_rates=48000:channel_layouts=stereo,adelay=${ms}|${ms}[m${n}]`); n++; }
+  run("ffmpeg", ["-v", "error", "-y", ...ins, "-filter_complex", `${fl.join(";")};${fl.map((_, j) => `[m${j}]`).join("")}amix=inputs=${n}:normalize=0:duration=longest,apad=whole_dur=${dur.toFixed(3)},atrim=0:${dur.toFixed(3)},asetpts=N/SR/TB[a]`, "-map", "[a]", "-c:a", "pcm_f32le", o]);
+  return o;
+};
+const quietMusic = (k, dur, energy) => { try { const sheet = { duration: dur, fps: FPS, preset, sections: [{ id: k, t0: 0, t1: dur, energy }], events: [], voice: [] }, sp = path.join(work, `${k}-sheet.json`), od = path.join(work, `${k}-audio`); fs.writeFileSync(sp, JSON.stringify(sheet)); run("python3", ["-I", path.join(repo, "kits/cinema/studio/render.py"), sp, od]); return path.join(od, "mix.wav"); } catch { return null; } };
+const introMusic = preset ? cardSound("intro", INTRO, 0.6, 0.5) : null, outroWav = preset ? cardSound("outro", OUTRO, 0.4, 0.6) : null;
+const introWav = NR ? mixCard("intro", INTRO, [{ wav: nar("open").wav, at: 0.8 }], introMusic) : introMusic;
+const bridgeWav = (k) => mixCard(`bridge${k}`, brd(k), [{ wav: nar(`bridge${k}`).wav, at: 0.7 }], preset ? quietMusic(`bridge${k}`, brd(k), 0.3) : null);
+const finaleWav = NR ? mixCard("finale", FIN, [{ wav: nar("finale").wav, at: 0.6 }, ...(nar("finale_cta") ? [{ wav: nar("finale_cta").wav, at: 0.6 + nar("finale").dur + 1.0 }] : [])], preset ? quietMusic("finale", FIN, 0.45) : null) : null;
 
 // ── the picture: segments encoded alike (picture only), then joined without re-encoding ──
-const total = INTRO + OUTRO + eps.reduce((a, e) => a + e.dur, 0) + BR * (eps.length - 1);
+const total = INTRO + OUTRO + FIN + eps.reduce((a, e) => a + e.dur, 0) + bridgeSum;
 const capK = Math.floor((MAX_MB * 8e6) / total / 1000 - 400);                                 // kbps for the picture, room left for sound
 const V = ["-c:v", "libx264", "-preset", "slow", "-crf", String(CRF), "-maxrate", `${capK}k`, "-bufsize", `${capK * 2}k`, "-x264-params", "aq-mode=3:deblock=-1,-1",
   "-pix_fmt", "yuv420p", "-profile:v", "high", "-r", String(FPS), "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-color_range", "tv"];
@@ -160,8 +180,9 @@ eps.forEach((e, k) => {
     `[0:v]fps=${FPS},format=yuv420p[bg];[1:v]scale=${SLOT_PX.w}:${OH}:flags=lanczos+accurate_rnd+full_chroma_int[ep];[bg][ep]overlay=${SLOT_PX.x}:0:shortest=1,format=yuv420p[v]`,
     "-map", "[v]", "-an", "-t", e.dur.toFixed(3), ...V, o]);
   segs.push(o);
-  if (BR > 0 && k < eps.length - 1) segs.push(card(`bridge${k + 1}`, BR));
+  if (k < eps.length - 1 && brd(k + 1) > 0) segs.push(card(`bridge${k + 1}`, brd(k + 1)));
 });
+if (NR) segs.push(card("finale", FIN));
 segs.push(card("outro", OUTRO));
 const list = path.join(work, "concat.txt"), final = path.join(outDir, `${name}-16x9.mp4`);
 fs.writeFileSync(list, segs.map((s) => `file '${s}'`).join("\n") + "\n");
@@ -176,8 +197,9 @@ const part = (src, dur, card) => {                     // src: a file, or a lavf
   inputs.push(...(src.startsWith("anullsrc") ? ["-f", "lavfi", "-i", src] : ["-i", src]));
   parts.push(`[${i}:a:0]aformat=sample_rates=48000:channel_layouts=stereo${card ? `,volume=-4dB,afade=t=out:st=${dur - 0.5}:d=0.5` : ""},apad=whole_dur=${dur},atrim=0:${dur},asetpts=N/SR/TB[a${i}]`);
 };
-part(introWav || `anullsrc=r=48000:cl=stereo:d=${INTRO}`, INTRO, true);
-eps.forEach((e, k) => { part(e.file, +e.dur.toFixed(3), false); if (BR > 0 && k < eps.length - 1) part(`anullsrc=r=48000:cl=stereo:d=${BR}`, BR, false); });
+part(introWav || `anullsrc=r=48000:cl=stereo:d=${INTRO}`, INTRO, !NR);
+eps.forEach((e, k) => { part(e.file, +e.dur.toFixed(3), false); if (k < eps.length - 1 && brd(k + 1) > 0) part(NR ? bridgeWav(k + 1) : `anullsrc=r=48000:cl=stereo:d=${BR}`, brd(k + 1), false); });
+if (NR) part(finaleWav || `anullsrc=r=48000:cl=stereo:d=${FIN}`, FIN, false);
 part(outroWav || `anullsrc=r=48000:cl=stereo:d=${OUTRO}`, OUTRO, true);
 const wavAll = path.join(work, "sound.wav"), m4a = path.join(work, "sound.m4a");
 run("ffmpeg", ["-v", "error", "-y", ...inputs, "-filter_complex", `${parts.join(";")};${parts.map((_, j) => `[a${j}]`).join("")}concat=n=${parts.length}:v=0:a=1[a]`,
@@ -196,7 +218,7 @@ run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", list, "-
 // ── chapters, description, QA ──────────────────────────────────────────────────
 const starts = [];
 let t = INTRO;
-for (const [k, e] of eps.entries()) { starts.push(t); t += e.dur + (BR > 0 && k < eps.length - 1 ? BR : 0); }
+for (const [k, e] of eps.entries()) { const b = k > 0 && NR ? brd(k) : 0; starts.push(t - b); t += e.dur + (k < eps.length - 1 ? brd(k + 1) : 0); }   // a narrated bridge introduces the next episode, so that chapter starts at it
 starts[0] = 0;   // YouTube: the first chapter starts at 0:00 (the intro belongs to it); the outro belongs to the last
 const chapters = eps.map((e, k) => `${ts(starts[k])} ${e.title}`).join("\n");
 fs.writeFileSync(path.join(outDir, "chapters.txt"), chapters + "\n");

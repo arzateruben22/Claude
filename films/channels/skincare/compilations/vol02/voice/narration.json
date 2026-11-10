@@ -1,0 +1,58 @@
+[
+ {
+  "id": "open",
+  "text": "Your skin does at least six jobs without asking you. It raises hairs, folds your fingertips, cools you down, answers the sun, holds water in, and drew a pattern on your fingers before you were born. Here is how each one works.",
+  "speed": 0.86,
+  "wav": "open.wav",
+  "dur": 13.411
+ },
+ {
+  "id": "bridge1",
+  "text": "That was a nerve telling a muscle what to do. Your nerves run another trick in your fingertips, and you have seen it in the bath.",
+  "speed": 0.86,
+  "wav": "bridge1.wav",
+  "dur": 6.818
+ },
+ {
+  "id": "bridge2",
+  "text": "Wrinkled fingers, run by your nervous system. Now a job your skin does for the whole body: it cools you.",
+  "speed": 0.86,
+  "wav": "bridge2.wav",
+  "dur": 6.383
+ },
+ {
+  "id": "bridge3",
+  "text": "Sweat handles heat. Sunlight is another story, and your skin answers it with pigment.",
+  "speed": 0.86,
+  "wav": "bridge3.wav",
+  "dur": 5.163
+ },
+ {
+  "id": "bridge4",
+  "text": "That was pigment answering sunlight. Underneath it, a wall of cells and fats keeps water in.",
+  "speed": 0.86,
+  "wav": "bridge4.wav",
+  "dur": 5.729
+ },
+ {
+  "id": "bridge5",
+  "text": "A wall built from cells and fats, layer by layer. And on the outside of it, a pattern you have carried since before you were born.",
+  "speed": 0.86,
+  "wav": "bridge5.wav",
+  "dur": 7.257
+ },
+ {
+  "id": "finale",
+  "text": "So that is your skin, working without you. A muscle, a nerve and a hair, for goosebumps. Nerves that fold your fingertips. Sweat that cools you as it dries. Pigment that caps a cell's nucleus. A wall of bricks and fats. And a pattern drawn in waves before birth. None of it needs your permission, and most of it is going on in your skin right now.",
+  "speed": 0.86,
+  "wav": "finale.wav",
+  "dur": 20.871
+ },
+ {
+  "id": "finale_cta",
+  "text": "If you just looked at your own arm, tap like and subscribe!",
+  "speed": 0.9,
+  "wav": "finale_cta.wav",
+  "dur": 3.393
+ }
+]

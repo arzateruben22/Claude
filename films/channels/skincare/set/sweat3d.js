@@ -27,17 +27,18 @@ export async function create(args) {
     fg.save(); fg.beginPath(); fg.rect(0, 64, 1024, 290); fg.clip(); fibres(fg, 1024, 440, 560, ["#fde4d8", "#f3b6a6", "#d9786b", "#fff0e8"], 200, 2.2); fg.restore();
     fg.save(); fg.beginPath(); fg.rect(0, 364, 1024, 80); fg.clip(); for (let i = 0; i < 170; i++) { const x = rnd() * 1024, y = 360 + rnd() * 80, r = 12 + rnd() * 16; fg.strokeStyle = "rgba(226,160,60,.5)"; fg.fillStyle = `rgba(250,${210 + rnd() * 30 | 0},${110 + rnd() * 50 | 0},.5)`; fg.lineWidth = 2; fg.beginPath(); fg.ellipse(x, y, r, r * 0.85, 0, 0, 7); fg.fill(); fg.stroke(); } fg.restore(); }
   const faceMat = mat({ map: tex(faceC, [1, 1]), roughness: 0.55, clearcoat: 0.25, clearcoatRoughness: 0.45 }); faceMat.map.wrapS = faceMat.map.wrapT = THREE.ClampToEdgeWrapping;
-  const dropMat = mat({ color: 0xcfe6f2, transparent: true, opacity: 0.24, roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 1.3, depthWrite: false });
+  const dropMat = mat({ color: 0xffffff, transmission: 1, thickness: 0.7, ior: 1.33, roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 2.2, specularIntensity: 1, attenuationColor: new THREE.Color(0xe6f4fa), attenuationDistance: 4 });
   const vessM = mat({ color: 0xd9485a, roughness: 0.38, clearcoat: 0.5 }), vessL = new THREE.MeshBasicMaterial({ color: 0x8e2736, side: THREE.BackSide, toneMapped: false });
   const glandM = mat({ color: 0xf3b3a6, roughness: 0.35, clearcoat: 0.8, clearcoatRoughness: 0.2, sheen: 0.5, sheenColor: new THREE.Color(1, 0.8, 0.75) });
 
   // ── set G: the section, the gland, the duct, beads, the surface droplet ────────────────────────────────────
   const GW = 17, GH = 7, face = new THREE.PlaneGeometry(GW, GH, 120, 6); face.translate(0, -GH / 2, 0); const faceMesh = new THREE.Mesh(face, faceMat); faceMesh.receiveShadow = true; groups.G.add(faceMesh);
   const top = new THREE.Mesh(new THREE.PlaneGeometry(GW, 22), skinMat); top.rotation.x = -Math.PI / 2; top.position.set(0, 0, -11); top.receiveShadow = true; groups.G.add(top);
-  { const bk = new THREE.Mesh(new THREE.PlaneGeometry(60, 30), new THREE.MeshBasicMaterial({ color: 0xf5ecdf })); bk.position.set(0, -2, -9); groups.G.add(bk); }
+  { const bk = new THREE.Mesh(new THREE.PlaneGeometry(60, 30), new THREE.MeshBasicMaterial({ color: new THREE.Color(0xf5ecdf).multiplyScalar(1.5) })); bk.position.set(0, -2, -9); groups.G.add(bk); }
   // the gland: a pink knot (rosette) in the lower dermis, its duct rising in a gentle spiral to the pore
-  const CC = [-1.2, -5.0], coilPts = [], coilR = []; for (let i = 0; i <= 160; i++) { const a = (i / 160) * Math.PI * 4, r = 0.95 * (1 - 0.35 * (i / 160)) + 0.3 * Math.sin(5 * a) + 0.12 * Math.sin(2 * a); coilPts.push([CC[0] + Math.cos(a) * r, CC[1] + Math.sin(a) * r, 0.2 + 0.12 * Math.sin(a * 2)]); coilR.push(0.17); }
-  const coilT = makeTube(160, 12, glandM, true); coilT.set(coilPts, coilR);
+  const tangle = (cx, cy, cz, R, n) => { const pts = []; for (let i = 0; i <= n; i++) { const a = (i / n) * Math.PI * 2; pts.push([cx + R * (0.62 * Math.sin(3 * a + 0.4) + 0.3 * Math.sin(7 * a + 1.1)), cy + R * (0.55 * Math.cos(4 * a + 0.9) + 0.28 * Math.cos(6 * a)), cz + R * 0.55 * Math.sin(5 * a + 0.2)]); } return pts; };
+  const CC = [-1.2, -4.9], coilPts = tangle(CC[0], CC[1], 0.15, 1.25, 200), coilR = coilPts.map(() => 0.15);
+  const coilT = makeTube(200, 12, glandM, true); coilT.set(coilPts, coilR);
   const PORE = [0.6, 0], ductPts = [], ductR = []; const ductStart = coilPts[coilPts.length - 1]; for (let i = 0; i <= 80; i++) { const u = i / 80, y = lerp(ductStart[1], 0.0, u), x = lerp(ductStart[0], PORE[0], eo(u)) + 0.18 * Math.sin(u * 14) * (1 - u); ductPts.push([x, y, 0.2]); ductR.push(0.07); }
   const ductT = makeTube(80, 10, glandM, true); ductT.set(ductPts, ductR);
   const ductCurve = NV(ductPts.map((p) => p)); groups.G.add(coilT.mesh, ductT.mesh);
@@ -46,9 +47,10 @@ export async function create(args) {
   const surfDrop = new THREE.Mesh(new THREE.SphereGeometry(1, 36, 24, 0, Math.PI * 2, 0, Math.PI / 2), dropMat); surfDrop.position.set(PORE[0], 0.02, 0.2); groups.G.add(surfDrop);
   const smallDrops = Array.from({ length: 14 }, (_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2), dropMat); m.position.set(-7 + hash(i * 3.1) * 14, 0.01, -hash(i * 5.3) * 6 - 0.2); m.userData = { s: 0.08 + hash(i * 7.1) * 0.2, t0: 17.6 + hash(i * 2.2) * 2.4 }; groups.G.add(m); return m; });
   // capillaries (a small branching tree) and a warm shimmer when you heat up
-  const TREE = []; { TREE.push({ main: true }); for (let i = 0; i < 7; i++) TREE.push({ b: true, x: -7 + i * 2.3 + hash(i * 5.5), up: 1, len: 1.1 + hash(i * 3.7) * 1.2, dx: (hash(i * 9.3) - 0.5) * 1.8 }); }
+  const vy = (x) => -2.1 + 0.2 * Math.sin(x * 0.6), TREE = [];
+  { TREE.push({ x0: -8, x1: 8, y: vy, r: 0.24 }); for (let i = 0; i < 6; i++) { const xb = -6.4 + i * 2.6 + (hash(i * 3.3) - 0.5) * 0.8, up = hash(i * 5.1) < 0.5 ? 1 : -1, len = 0.9 + hash(i * 7.7) * 0.7, dx = (hash(i * 9.1) - 0.5) * 2.2;
+      TREE.push({ branch: true, xb, up, len, dx, r: 0.13, y0: vy }); for (let k = 0; k < 2; k++) TREE.push({ branch: true, sub: true, xb: xb + dx * 0.55, yb: len * 0.55, up, len: 0.5 + hash(i * 13 + k) * 0.3, dx: (k ? 1 : -1) * (0.7 + hash(i * 17 + k) * 0.8), r: 0.07, y0: vy }); } }
   const tv = TREE.map(() => ({ t: makeTube(24, 10, vessM, false), l: makeTube(24, 10, vessL, false) })); tv.forEach((v) => groups.G.add(v.t.mesh, v.l.mesh));
-  const vy = (x) => -2.1 + 0.2 * Math.sin(x * 0.6);
   const heatSp = mkGlow(18, 0xffa860); heatSp.forEach((s) => groups.G.add(s));
   const gSig = mkGlow(1, 0xffffff);
 
@@ -72,15 +74,16 @@ export async function create(args) {
 
   // ── set K: waste rides the blood past the gland; the sweat stays clear ─────────────────────────────────────
   const kc = NV([[-9, -1.4, 0], [-5, -1.1, 0.1], [-1, -1.5, 0], [3, -1.1, 0.1], [7, -1.5, 0], [11, -1.2, 0.1]]), kPts = kc.getPoints(60).map((p) => [p.x, p.y, p.z]);
-  const kT = makeTube(60, 16, vessM, false), kL = makeTube(60, 16, vessL, false); kT.set(kPts, kPts.map(() => 0.55)); kL.set(kPts, kPts.map(() => 0.6)); groups.K.add(kT.mesh, kL.mesh);
+  const vessK = vessM.clone(); vessK.transparent = true; vessK.opacity = 0.5; vessK.depthWrite = false; const kT = makeTube(60, 16, vessK, false), kL = makeTube(60, 16, vessL, false); kT.set(kPts, kPts.map(() => 0.55)); kL.set(kPts, kPts.map(() => 0.6)); groups.K.add(kT.mesh, kL.mesh);
   const kSkin = new THREE.Mesh(new THREE.PlaneGeometry(40, 16), skinMat); kSkin.rotation.x = -Math.PI / 2; kSkin.position.set(0, 3.2, -4); groups.K.add(kSkin);
   const specks = Array.from({ length: 40 }, (_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.1 + hash(i * 3.7) * 0.07, 12, 8), mat({ color: 0xc6842c, roughness: 0.4, emissive: 0x6e4012, emissiveIntensity: 0.3 })); m.userData = { u: hash(i * 5.1), sp: 0.04 + hash(i * 7.9) * 0.03, o: [(hash(i * 2.2) - 0.5) * 0.7, (hash(i * 8.8) - 0.5) * 0.7] }; groups.K.add(m); return m; });
   const kidneyG = (() => { const g = new THREE.SphereGeometry(1, 48, 32), p = g.attributes.position; for (let i = 0; i < p.count; i++) { let x = p.getX(i), y = p.getY(i), z = p.getZ(i); const c = x < 0 ? 0.35 * Math.cos(y * 1.2) * (1 - Math.abs(y) * 0.2) : 0; p.setXYZ(i, (x + c * Math.abs(Math.sin(y * 1.2)) * 0.6) * 1.0, y * 1.35, z * 0.8); } g.computeVertexNormals(); return g; })();
   const kidney = new THREE.Mesh(kidneyG, mat({ color: 0x9f4a52, roughness: 0.35, clearcoat: 0.7 })); kidney.position.set(14.5, -0.9, 0); kidney.scale.setScalar(1.7); groups.K.add(kidney);
   const gutPts = []; for (let i = 0; i <= 60; i++) { const u = i / 60; gutPts.push(new THREE.Vector3(12 + u * 9, -3.2 + Math.sin(u * 14) * 0.5 + u * 1.2, -0.4)); }
   const gut = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(gutPts), 120, 0.4, 12, false), mat({ color: 0xe7b9a0, roughness: 0.4, clearcoat: 0.5 })); groups.K.add(gut);
-  const kGland = new THREE.Mesh(new THREE.TorusKnotGeometry(0.5, 0.15, 90, 12, 2, 3), glandM); kGland.position.set(-4, 1.6, 0.3); groups.K.add(kGland);
-  const kDuct = makeTube(20, 8, glandM, false); { const pts = []; for (let i = 0; i <= 20; i++) pts.push([-4 + 0.1 * Math.sin(i), lerp(2.1, 3.2, i / 20), 0.3]); kDuct.set(pts, pts.map(() => 0.06)); groups.K.add(kDuct.mesh); }
+  const kFaceG = new THREE.PlaneGeometry(21, 7.6, 60, 4); const kFace = new THREE.Mesh(kFaceG, faceMat); kFace.position.set(0.5, 3.2 - 3.8, -0.9); kFace.receiveShadow = true; groups.K.add(kFace);
+  const kGland = makeTube(200, 12, glandM, true); kGland.set(tangle(0, 0, 0, 0.8, 200), Array(201).fill(0.1)); kGland.mesh.position.set(-4, 1.5, 0.3); groups.K.add(kGland.mesh);
+  const kDuct = makeTube(20, 8, glandM, false); { const pts = []; for (let i = 0; i <= 20; i++) pts.push([-4 + 0.1 * Math.sin(i), lerp(2.0, 3.2, i / 20), 0.3]); kDuct.set(pts, pts.map(() => 0.06)); groups.K.add(kDuct.mesh); }
   const kDrop = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 18, 0, Math.PI * 2, 0, Math.PI / 2), dropMat); kDrop.position.set(-4.1, 3.2, 0.2); kDrop.scale.setScalar(0.5); groups.K.add(kDrop);
 
   // ── per-frame state ──────────────────────────────────────────────────────────────────────────────────────────
@@ -88,7 +91,11 @@ export async function create(args) {
   const setG = (t) => {
     // vessels
     tv.forEach((v, j) => { const T2 = TREE[j], pts = [], rad = [], heat = 1 + 0.1 * Math.sin(t * 3 + j) * warm(t);
-      for (let i = 0; i <= 24; i++) { const u = i / 24; let x, y; if (T2.main) { x = lerp(-8, 8, u); y = vy(x); } else { x = T2.x + T2.dx * u * u; y = vy(T2.x) + T2.len * u * 1.2; } pts.push([x, Math.min(-0.5, y), 0.15]); rad.push((T2.main ? 0.24 : 0.12 * (1 - 0.5 * u)) * heat); }
+      for (let i = 0; i <= 24; i++) { const u = i / 24; let x, y;
+        if (!T2.branch) { x = lerp(T2.x0, T2.x1, u); y = T2.y(x); }
+        else if (!T2.sub) { const y0 = T2.y0(T2.xb); x = T2.xb + T2.dx * u * u + Math.sin(u * 5 + j) * 0.12; y = y0 + T2.up * T2.len * u * 1.3 + Math.sin(u * 3 + j) * 0.06; }
+        else { const y0 = T2.y0(T2.xb) + T2.up * T2.yb; x = T2.xb + T2.dx * u; y = y0 + T2.up * T2.len * u * 1.2; }
+        pts.push([x, clamp(y, -3.4, -1.3), 0.15]); rad.push((T2.sub ? lerp(1, 0.45, u) : T2.branch ? lerp(1, 0.6, u) : 0.9 + 0.1 * Math.sin(x * 2)) * T2.r * heat); }
       v.t.set(pts, rad); v.l.set(pts, rad.map((r) => r + 0.035)); });
     // beads climb the duct when the body heats (16.6 →) and keep going; the droplet on the surface swells
     const rel = clamp((t - 16.6) / 1.6); let bi = 0; beads.forEach((b, i) => { const u = ((t - 16.6) * 0.32 - i / beads.length) ; const uu = ((u % 1) + 1) % 1; const on = t > 16.6 && t < 19.9 ? 1 : (t > 4.6 ? 0.25 : 0); const p = ductCurve.getPoint(uu); b.position.set(p.x, p.y, p.z + 0.06); b.visible = on > 0.1 && (t > 16.6 ? true : i < 3); });
@@ -118,7 +125,7 @@ export async function create(args) {
   const setK = (t) => {
     const u0 = (t - 45.3);
     specks.forEach((m, i) => { const U = m.userData, u = (((u0 * U.sp + U.u) % 1) + 1) % 1, p = kc.getPoint(u); m.position.set(p.x + U.o[0] * 0.5, p.y + U.o[1] * 0.5, p.z + U.o[1] * 0.4); m.visible = true; });
-    kDrop.scale.set(0.5 + 0.08 * Math.sin(t * 1.4), 0.38 + 0.06 * Math.sin(t * 1.4), 0.5 + 0.08 * Math.sin(t * 1.4)); kGland.rotation.y = t * 0.6; kGland.rotation.x = t * 0.4;
+    kDrop.scale.set(0.5 + 0.08 * Math.sin(t * 1.4), 0.38 + 0.06 * Math.sin(t * 1.4), 0.5 + 0.08 * Math.sin(t * 1.4)); kGland.mesh.rotation.y = Math.sin(t * 0.5) * 0.6; kGland.mesh.rotation.x = Math.sin(t * 0.4) * 0.3;
     kidney.rotation.y = Math.sin(t * 0.5) * 0.2;
   };
 
