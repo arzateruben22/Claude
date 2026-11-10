@@ -17,10 +17,12 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
   const T = EP.three || {};
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
   renderer.setPixelRatio(1); renderer.setSize(AW, BH, false);
-  renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.96;
+  const FIN = T.finish !== false;
+  const DBG = T.dbg || {};
+  renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   const cv = renderer.domElement; cv.style.cssText = `position:absolute;left:0;top:0;width:${AW}px;height:${BH}px`; artbox.appendChild(cv);
-  const scene = new THREE.Scene(); scene.background = new THREE.Color(IVORY); scene.fog = new THREE.Fog(IVORY, 70, 170);
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(IVORY); scene.fog = null;
   const camera = new THREE.PerspectiveCamera(30, AW / BH, 0.1, 200);
 
   // ── light: an ivory studio (soft environment, warm key, cool-white rim) ──────────────────────────────
@@ -28,10 +30,10 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
     const box = (w, h, c, k, p) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(k), side: THREE.DoubleSide })); m.position.set(...p); m.lookAt(0, 0, 0); es.add(m); };
     box(8, 5, 0xfff4e6, 5, [-7, 8, 7]); box(3, 9, 0xeef4ff, 3, [9, 3, -6]); box(14, 3, 0xf6d8c4, 1.6, [0, -7, 3]);
     const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromScene(es, 0.03).texture; scene.environmentIntensity = 0.4; }
-  const key = new THREE.DirectionalLight(0xffeedd, 2.1); key.position.set(-9, 14, 12); key.castShadow = true; key.shadow.mapSize.set(2048, 2048);
+  const key = new THREE.DirectionalLight(0xffe0bd, 2.1); key.userData.dbg = 1; key.position.set(-14, 9, 10); key.castShadow = !DBG.noshadow; key.shadow.mapSize.set(2048, 2048);
   Object.assign(key.shadow.camera, { left: -20, right: 20, top: 20, bottom: -20, near: 1, far: 60 }); key.shadow.bias = -0.0006; key.shadow.radius = 5; scene.add(key, key.target);
-  const rim = new THREE.DirectionalLight(0xfff6ea, 1.5); rim.position.set(8, 5, -14); scene.add(rim);
-  scene.add(new THREE.HemisphereLight(0xfff4ea, 0xe9b9a2, 0.55));
+  const rim = new THREE.DirectionalLight(0xffefdc, 1.6); rim.position.set(8, 5, -14); scene.add(rim);
+  scene.add(new THREE.HemisphereLight(0xfff0e0, 0xe0a890, 0.4));
 
   // ── procedural tissue textures in the painting's colours ──────────────────────────────────────────────
   const mkCanvas = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
@@ -47,27 +49,41 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
     fg.fillStyle = "rgba(255,246,236,.3)"; fg.fillRect(0, 0, 1024, 20);
     fg.save(); fg.beginPath(); fg.rect(0, 392, 1024, 120); fg.clip();   // the fat: loose cells
     for (let i = 0; i < 260; i++) { const x = rnd() * 1024, y = 384 + rnd() * 128, r = 12 + rnd() * 16; fg.strokeStyle = "rgba(226,160,60,.55)"; fg.fillStyle = `rgba(250,${215 + rnd() * 25 | 0},${120 + rnd() * 50 | 0},.5)`; fg.lineWidth = 2; fg.beginPath(); fg.ellipse(x, y, r, r * 0.85, 0, 0, 7); fg.fill(); fg.stroke(); } fg.restore(); }
+  const armImg = await new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = T.skinSrc || ""; });
   const topC = mkCanvas(512, 512), tg = topC.getContext("2d");   // the skin surface: warm peach, fine lines and pores
   { tg.fillStyle = "#cf8567"; tg.fillRect(0, 0, 512, 512); for (let i = 0; i < 70; i++) { tg.fillStyle = `rgba(${200 + rnd() * 40 | 0},${130 + rnd() * 40 | 0},${100 + rnd() * 30 | 0},.07)`; tg.beginPath(); tg.arc(rnd() * 512, rnd() * 512, 20 + rnd() * 50, 0, 7); tg.fill(); }
     tg.lineWidth = 1.2; for (let i = 0; i < 420; i++) { tg.strokeStyle = `rgba(150,80,60,${0.05 + rnd() * 0.08})`; const x = rnd() * 512, y = rnd() * 512, a = (rnd() < 0.5 ? 0.6 : -0.6) + (rnd() - 0.5) * 0.3, L = 20 + rnd() * 50; tg.beginPath(); tg.moveTo(x, y); tg.lineTo(x + Math.cos(a) * L, y + Math.sin(a) * L); tg.stroke(); }
     for (let i = 0; i < 380; i++) { tg.fillStyle = "rgba(140,70,52,.28)"; tg.beginPath(); tg.arc(rnd() * 512, rnd() * 512, 1 + rnd() * 1.4, 0, 7); tg.fill(); } }
+  if (armImg) {   // the surface wears the owner's painting: its peach and rose, its pores and lines (a mirrored crop of the forearm)
+    const iw = armImg.naturalWidth, ih = armImg.naturalHeight, cy = Math.round(ih * (T.skinCrop ? T.skinCrop[0] : 0.44)), ch = Math.round(ih * (T.skinCrop ? T.skinCrop[1] : 0.30));
+    const m2 = mkCanvas(iw * 2, ch * 2), g2 = m2.getContext("2d");
+    g2.drawImage(armImg, 0, cy, iw, ch, 0, 0, iw, ch); g2.save(); g2.translate(iw * 2, 0); g2.scale(-1, 1); g2.drawImage(armImg, 0, cy, iw, ch, 0, 0, iw, ch); g2.restore();
+    g2.save(); g2.translate(0, ch * 2); g2.scale(1, -1); g2.drawImage(m2, 0, 0, iw * 2, ch, 0, 0, iw * 2, ch); g2.restore();
+    // keep the painting's fine detail and colour, drop its cylindrical shading (so the tile has no big light and dark areas)
+    const bl = mkCanvas(m2.width, m2.height), bg = bl.getContext("2d"), sm0 = mkCanvas(Math.ceil(m2.width / 14), Math.ceil(m2.height / 14)), sg = sm0.getContext("2d"); sg.imageSmoothingQuality = "high"; sg.drawImage(m2, 0, 0, sm0.width, sm0.height); bg.imageSmoothingQuality = "high"; bg.drawImage(sm0, 0, 0, m2.width, m2.height);
+    const a1 = g2.getImageData(0, 0, m2.width, m2.height), a2 = bg.getImageData(0, 0, m2.width, m2.height); let mr = 0, mg = 0, mb = 0, n = 0;
+    for (let i = 0; i < a2.data.length; i += 4 * 97) { mr += a2.data[i]; mg += a2.data[i + 1]; mb += a2.data[i + 2]; n++; } mr /= n; mg /= n; mb /= n;
+    const k = T.skinDetail ?? 1.6; for (let i = 0; i < a1.data.length; i += 4) { a1.data[i] = clamp(mr + (a1.data[i] - a2.data[i]) * k, 0, 255); a1.data[i + 1] = clamp(mg + (a1.data[i + 1] - a2.data[i + 1]) * k, 0, 255); a1.data[i + 2] = clamp(mb + (a1.data[i + 2] - a2.data[i + 2]) * k, 0, 255); }
+    g2.putImageData(a1, 0, 0);
+    topC.width = iw * 2; topC.height = ch * 2; tg.drawImage(m2, 0, 0); }
   const bumpC = mkCanvas(256, 256), bg2 = bumpC.getContext("2d"); { bg2.fillStyle = "#808080"; bg2.fillRect(0, 0, 256, 256); for (let i = 0; i < 700; i++) { const v = 90 + rnd() * 90 | 0; bg2.fillStyle = `rgb(${v},${v},${v})`; bg2.beginPath(); bg2.arc(rnd() * 256, rnd() * 256, 1 + rnd() * 3, 0, 7); bg2.fill(); } }
-  const faceTex = tex(faceC, [4, 1]), topTex = tex(topC, [10, 10]), bumpTex = tex(bumpC, [14, 14]);
-  const skinMat = new THREE.MeshPhysicalMaterial({ map: topTex, bumpMap: bumpTex, bumpScale: 0.7, roughness: 0.7, sheen: 0.0, sheenColor: new THREE.Color(1, 0.8, 0.7), sheenRoughness: 0.6 });
+  const faceTex = tex(faceC, [4, 1]), topTex = tex(topC, armImg ? [3.2, 4.4] : [10, 10]), bumpTex = armImg ? tex(topC, [3.2, 4.4]) : tex(bumpC, [14, 14]);
+  const skinMat = new THREE.MeshPhysicalMaterial({ map: topTex, emissiveMap: topTex, emissive: new THREE.Color(0.2, 0.17, 0.15), color: new THREE.Color(0.82, 0.7, 0.62), bumpMap: DBG.nobump ? null : bumpTex, bumpScale: armImg ? 2.2 : 0.7, roughness: 0.7, sheen: 0.0, sheenColor: new THREE.Color(1, 0.8, 0.7), sheenRoughness: 0.6 });
+  if (DBG.nomap) { skinMat.map = null; skinMat.emissiveMap = null; skinMat.bumpMap = null; skinMat.color.set(0xd09070); }
   const faceMat = new THREE.MeshPhysicalMaterial({ map: faceTex, roughness: 0.55, clearcoat: 0.25, clearcoatRoughness: 0.45, sheen: 0.3, sheenColor: new THREE.Color(1, 0.8, 0.75) });
   const sideMat = new THREE.MeshStandardMaterial({ map: faceTex, roughness: 0.7, color: 0xe8d0c4 });
 
   // ── the block: surface (displaced), cut face (follows the surface at its top edge), sides ────────────
   const BW = 44, BD = 34, DEPTH = 5.2, NX = 220, NZ = 150;
   const surf = new THREE.PlaneGeometry(BW, BD, NX, NZ); surf.rotateX(-Math.PI / 2); surf.translate(0, 0, -BD / 2);
-  const surfMesh = new THREE.Mesh(surf, skinMat); surfMesh.receiveShadow = true; scene.add(surfMesh);
+  const surfMesh = new THREE.Mesh(surf, DBG.basic ? new THREE.MeshBasicMaterial({ map: topTex }) : skinMat); surfMesh.receiveShadow = true; scene.add(surfMesh);
   const sp = surf.attributes.position, sx0 = new Float32Array(sp.count), sz0 = new Float32Array(sp.count);
   for (let i = 0; i < sp.count; i++) { sx0[i] = sp.getX(i); sz0[i] = sp.getZ(i); }
   const face = new THREE.PlaneGeometry(BW, DEPTH, NX, 12); face.translate(0, -DEPTH / 2, 0); const fp = face.attributes.position, fy0 = new Float32Array(fp.count), fx0 = new Float32Array(fp.count);
   for (let i = 0; i < fp.count; i++) { fy0[i] = fp.getY(i); fx0[i] = fp.getX(i); }
   const faceMesh = new THREE.Mesh(face, faceMat); faceMesh.receiveShadow = true; scene.add(faceMesh);
-  for (const sgn of [-1, 1]) { const s = new THREE.Mesh(new THREE.PlaneGeometry(BD, DEPTH), sideMat); s.position.set(sgn * BW / 2, -DEPTH / 2, -BD / 2); s.rotation.y = sgn * Math.PI / 2; scene.add(s); }
-  const under = new THREE.Mesh(new THREE.PlaneGeometry(BW, BD), sideMat); under.rotation.x = Math.PI / 2; under.position.set(0, -DEPTH, -BD / 2); scene.add(under);
+  if (!DBG.noside) for (const sgn of [-1, 1]) { const s = new THREE.Mesh(new THREE.PlaneGeometry(BD, DEPTH), sideMat); s.position.set(sgn * BW / 2, -DEPTH / 2, -BD / 2); s.rotation.y = sgn * Math.PI / 2; scene.add(s); }
+  const under = new THREE.Mesh(new THREE.PlaneGeometry(BW, BD), sideMat); under.rotation.x = Math.PI / 2; under.position.set(0, -DEPTH, -BD / 2); if (!DBG.noside) scene.add(under);
 
   // ── the follicle (a real one, in the cut face), its hair, the muscle and the nerve ────────────────────
   const BULB = [-1.5, -3.55], LF = 3.2, F0 = 40 * D2R, F1 = 13 * D2R;                       // follicle: from the bulb up to the surface; leaning, then upright
@@ -108,13 +124,13 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
   const newHair = makeTube(8, 8, M.hair, false);
 
   // ── the field of hairs on the surface: instanced, standing with `raise`, each with a bump ─────────────
-  const NH = 96, HAIRS = Array.from({ length: NH }, (_, i) => { let x, z, n = 0; do { x = (hash(i * 3.1 + n * 17.3) - 0.5) * (BW - 6); z = -2.2 - hash(i * 5.7 + 2 + n * 11.9) * (BD - 6); n++; } while (Math.abs(x - 0.4) < 2.4 && z > -6 && n < 20); return { x, z, az: (hash(i * 9.3) - 0.5) * 0.9, len: 2.6 + hash(i * 1.7) * 1.6, ph: hash(i * 2.9) }; });
+  const NH = 220, HAIRS = Array.from({ length: NH }, (_, i) => { let x, z, n = 0; do { x = -22 + hash(i * 3.1 + n * 17.3) * 34; z = -2.2 - hash(i * 5.7 + 2 + n * 11.9) * 30; n++; } while (Math.abs(x - 0.4) < 2.4 && z > -6 && n < 20); return { x, z, az: (hash(i * 9.3) - 0.5) * 0.9, len: 2.6 + hash(i * 1.7) * 1.6, ph: hash(i * 2.9) }; });
   const hg = (() => { const pts = [], n = 6; const rad = 0.06; const g = new THREE.CylinderGeometry(0.018, rad, 1, 6, n, true); g.translate(0, 0.5, 0); const p = g.attributes.position;
     for (let i = 0; i < p.count; i++) { const y = p.getY(i); p.setX(i, p.getX(i) + 0.28 * y * y); } g.computeVertexNormals(); return g; })();
   const hairInst = new THREE.InstancedMesh(hg, M.hair.clone(), NH); hairInst.castShadow = true; hairInst.frustumCulled = false; scene.add(hairInst);
   const dummy = new THREE.Object3D();
-  const WAVE = { t0: 3.2, dur: 2.6 };                                                          // the hook: a wave of goosebumps rolls across the arm
-  const raiseAt = (x, t, main) => Math.min(1, Math.max(globalRaise(t), clamp((t - WAVE.t0 - (x + 22) / 44 * WAVE.dur) / 1.2) * (1 - seg(t, 5.0, 5.6) * 0.0)) * calm(t));
+  const WAVE = { t0: 3.0, dur: 3.2 };                                                          // the hook: a wave of goosebumps rolls across the arm
+  const raiseAt = (x, t, main) => Math.min(1, Math.max(globalRaise(t), clamp((t - WAVE.t0 - (x + 22) / 30 * WAVE.dur) / 0.9) * (1 - seg(t, 5.0, 5.6) * 0.0)) * calm(t));
   const globalRaise = (t) => Math.max(eo(seg(t, 6.6, 10.0)) * 0.9, 0);
   const calm = (t) => 1 - eo(seg(t, 56.0, 61.0));
 
@@ -124,12 +140,45 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
   const paintSet = (t) => { for (const p of PL) { const t0 = R(p.t0), t1 = R(p.t1), op = Math.min(sm(seg(t, t0, t0 + (p.fin ?? 0.5))), 1 - sm(seg(t, t1 - (p.fout ?? 0.8), t1))) * (t >= t0 && t <= t1 ? 1 : 0), el = p.el, h = AW * el.naturalHeight / el.naturalWidth, f = p.focus || [0.5, 0.6], life = seg(t, t0, t1), sc = (p.s0 || 1) + ((p.s1 || 1.08) - (p.s0 || 1)) * life;
     el.style.height = h + "px"; el.style.transformOrigin = `${f[0] * AW}px ${f[1] * h}px`; el.style.transform = `translate(${-(f[0] * AW - AW / 2) + (p.dx || 0) * life * AW * 0.04}px,${-(f[1] * h - BH / 2)}px) scale(${sc})`; el.style.opacity = op.toFixed(3); } };
 
+
+  // ── the finish: depth of field (focus on the subject), a gentle bloom, ACES on the way out ────────────────────────
+  const sceneRT = new THREE.WebGLRenderTarget(AW, BH, { type: THREE.HalfFloatType, samples: 4, depthTexture: new THREE.DepthTexture(AW, BH) });
+  const bw = Math.ceil(AW / 4), bh = Math.ceil(BH / 4), bloomA = new THREE.WebGLRenderTarget(bw, bh, { type: THREE.HalfFloatType }), bloomB = new THREE.WebGLRenderTarget(bw, bh, { type: THREE.HalfFloatType });
+  const quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), quadScene = new THREE.Scene(), quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2)); quad.frustumCulled = false; quadScene.add(quad);
+  const VS = "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }";
+  const brightMat = new THREE.ShaderMaterial({ uniforms: { tex: { value: null }, px: { value: new THREE.Vector2(1 / bw, 1 / bh) }, dir: { value: new THREE.Vector2(1, 0) }, thr: { value: 0.0 } }, vertexShader: VS, depthTest: false, depthWrite: false,
+    fragmentShader: `uniform sampler2D tex; uniform vec2 px, dir; uniform float thr; varying vec2 vUv;
+      vec3 f(vec2 uv){ vec3 c = texture2D(tex, uv).rgb; return thr > 0.0 ? max(c - vec3(thr), 0.0) : c; }
+      void main(){ vec3 s = f(vUv) * 0.2270270; for (int i = 1; i < 5; i++) { float w = i == 1 ? 0.3162162 : i == 2 ? 0.0702703 : i == 3 ? 0.0 : 0.0; float o = i == 1 ? 1.3846154 : i == 2 ? 3.2307692 : 0.0; if (w > 0.0) { s += f(vUv + dir * px * o * 1.6) * w + f(vUv - dir * px * o * 1.6) * w; } } gl_FragColor = vec4(s, 1.0); }` });
+  const compMat = new THREE.ShaderMaterial({ uniforms: { tex: { value: null }, tDepth: { value: null }, bloom: { value: null }, focus: { value: 12 }, coc: { value: T.coc ?? 0.012 }, near: { value: 0.1 }, far: { value: 200 }, bk: { value: T.bloom ?? 0.35 }, asp: { value: AW / BH }, ex: { value: 1.0 } }, vertexShader: VS, depthTest: false, depthWrite: false, toneMapped: false,
+    fragmentShader: `uniform sampler2D tex, tDepth, bloom; uniform float focus, coc, near, far, bk, asp, ex; varying vec2 vUv;
+      float lin(vec2 uv){ float d = texture2D(tDepth, uv).x; float z = d * 2.0 - 1.0; return 2.0 * near * far / (far + near - z * (far - near)); }
+      float cocAt(vec2 uv){ float L = lin(uv); return clamp(abs(L - focus) / max(focus * 0.55, 0.001), 0.0, 1.0) * coc; }
+      const mat3 AIn = mat3(vec3(0.59719, 0.07600, 0.02840), vec3(0.35458, 0.90834, 0.13383), vec3(0.04823, 0.01566, 0.83777));
+      const mat3 AOut = mat3(vec3(1.60475, -0.10208, -0.00327), vec3(-0.53108, 1.10813, -0.07276), vec3(-0.07367, -0.00605, 1.07602));
+      vec3 rrt(vec3 v){ vec3 a = v * (v + 0.0245786) - 0.000090537; vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081; return a / b; }
+      vec3 aces(vec3 c){ c *= ex / 0.6; c = AIn * c; c = rrt(c); c = AOut * c; return clamp(c, 0.0, 1.0); }
+      vec3 tap(vec2 uv){ return texture2D(tDepth, uv).x > 0.99999 ? vec3(0.9302, 0.8588, 0.7673) : aces(texture2D(tex, uv).rgb); }   // the ivory ground stays the page's ivory: only the picture goes through ACES
+      void main(){ float c0 = cocAt(vUv); vec3 acc = tap(vUv); float wsum = 1.0;
+        for (int i = 0; i < 20; i++) { float fi = float(i) + 0.5, r = sqrt(fi / 20.0), a = fi * 2.39996; vec2 o = vec2(cos(a) * r / asp, sin(a) * r) * c0; vec2 uv = vUv + o; float ci = cocAt(uv); float w = (ci >= r * c0 * 0.6 || lin(uv) > lin(vUv)) ? 1.0 : 0.2; acc += tap(uv) * w; wsum += w; }
+        vec3 col = acc / wsum + aces(texture2D(bloom, vUv).rgb) * bk; gl_FragColor = vec4(min(col, vec3(1.0)), 1.0);
+        #include <colorspace_fragment>
+      }` });
+  const pass = (mat, target) => { quad.material = mat; renderer.setRenderTarget(target); renderer.render(quadScene, quadCam); };
+  const finish = (sc, cam, focusDist) => {
+    renderer.setRenderTarget(sceneRT); renderer.render(sc, cam);
+    brightMat.uniforms.tex.value = sceneRT.texture; brightMat.uniforms.thr.value = 0.9; brightMat.uniforms.dir.value.set(1, 0); pass(brightMat, bloomA);
+    brightMat.uniforms.tex.value = bloomA.texture; brightMat.uniforms.thr.value = 0.0; brightMat.uniforms.dir.value.set(0, 1); pass(brightMat, bloomB);
+    brightMat.uniforms.tex.value = bloomB.texture; brightMat.uniforms.dir.value.set(1, 0); pass(brightMat, bloomA);
+    compMat.uniforms.tex.value = sceneRT.texture; compMat.uniforms.tDepth.value = sceneRT.depthTexture; compMat.uniforms.bloom.value = bloomA.texture; compMat.uniforms.focus.value = focusDist; compMat.uniforms.near.value = cam.near; compMat.uniforms.far.value = cam.far;
+    pass(compMat, null); };
+
   // ── the set functions ────────────────────────────────────────────────────────────────────────────────
   const MAIN = { x: 0.4 };                                                                     // where the section's follicle meets the surface
   const bumpH = (x, z, pull, hairBumps) => { let h = 0;
     const ex = x - (BULB[0] + LF * Math.sin(lerp(F0, F1, pull))), ez = z; h += 0.42 * pull * Math.exp(-(ex * ex / 1.9 + ez * ez / 1.7));
     const mx = x - ANCH[0] - 0.2; h -= 0.17 * pull * Math.exp(-(mx * mx / 0.8 + ez * ez / 1.1));
-    if (hairBumps > 0) for (const hh of HAIRS) { const dx = x - hh.x, dz = z - hh.z; if (dx * dx + dz * dz < 3.4) h += 0.3 * hairBumps * hh.raise * Math.exp(-(dx * dx + dz * dz) / 0.7); }
+    if (hairBumps > 0) for (const hh of HAIRS) if (hh.raise > 0.01) { const dx = x - hh.x, dz = z - hh.z; if (dx * dx + dz * dz < 4.5) h += 0.5 * hairBumps * hh.raise * Math.exp(-(dx * dx + dz * dz) / 1.1); }
     return h; };
   let lastKey = "";
   const setWorld = (t) => {
@@ -139,8 +188,8 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
     // field hairs
     for (let i = 0; i < NH; i++) { const hh = HAIRS[i]; hh.raise = raiseAt(hh.x, t) * (0.55 + 0.45 * hash(i * 4.4)); }
     // surface displacement
-    const hb = clamp(globalRaise(t) + seg(t, WAVE.t0, WAVE.t0 + 3), 0, 1) * calm(t);
-    for (let i = 0; i < sp.count; i++) sp.setY(i, bumpH(sx0[i], sz0[i], P, hb * 0.9));
+    const hb = 1 * calm(t);
+    for (let i = 0; i < sp.count; i++) sp.setY(i, bumpH(sx0[i], sz0[i], P, hb));
     sp.needsUpdate = true; surf.computeVertexNormals();
     // the face's top edge follows the surface at z = 0; the rows below blend to flat
     for (let i = 0; i < fp.count; i++) { const k = clamp(1 + fy0[i] / 0.9); fp.setY(i, fy0[i] + bumpH(fx0[i], 0, P, 0) * k); } fp.needsUpdate = true; face.computeVertexNormals();
@@ -172,7 +221,7 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
     { const p = new THREE.Vector3(BULB[0] + d[0] * LF * 0.52, BULB[1] + d[1] * LF * 0.52, 0.4); stemGlow.position.copy(p); stemGlow.scale.setScalar(1.3 * wake + 0.01); stemGlow.material.opacity = 0.3 * wake; }
     const grow = eo(seg(t, 50.2, 53.5)) * (1 - eo(seg(t, 56, 59))); newHair.mesh.visible = grow > 0.02; if (grow > 0.02) { const pts = [], rr = []; for (let i = 0; i <= 8; i++) { const s = i / 8; pts.push([BULB[0] + d[0] * (LF * 0.15 + LF * 0.6 * grow * s), BULB[1] + d[1] * (LF * 0.15 + LF * 0.6 * grow * s) , 0.1]); rr.push(0.07 - 0.04 * s); } newHair.set(pts, rr); }
     // the field's hairs
-    for (let i = 0; i < NH; i++) { const hh = HAIRS[i], r = hh.raise, tilt = lerp(78, 9, r) * D2R + Math.sin(t * 1.3 + hh.ph * 6) * 0.025 * (1 + r), y = bumpH(hh.x, hh.z, 0, hb * 0.9); dummy.position.set(hh.x, y, hh.z); dummy.rotation.set(0, 0, 0); dummy.rotateY(-Math.PI / 2 + hh.az); dummy.rotateX(0); dummy.rotation.order = "YXZ"; dummy.rotation.set(0, 0, 0);
+    for (let i = 0; i < NH; i++) { const hh = HAIRS[i], r = hh.raise, tilt = lerp(78, 9, r) * D2R + Math.sin(t * 1.3 + hh.ph * 6) * 0.025 * (1 + r), y = bumpH(hh.x, hh.z, 0, hb) * 0.9; dummy.position.set(hh.x, y, hh.z); dummy.rotation.set(0, 0, 0); dummy.rotateY(-Math.PI / 2 + hh.az); dummy.rotateX(0); dummy.rotation.order = "YXZ"; dummy.rotation.set(0, 0, 0);
       dummy.quaternion.setFromEuler(new THREE.Euler(0, 0, -tilt)); const qa = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), hh.az); dummy.quaternion.premultiply(qa); dummy.scale.set(1, hh.len, 1); dummy.updateMatrix(); hairInst.setMatrixAt(i, dummy.matrix); }
     hairInst.instanceMatrix.needsUpdate = true;
     // cold: a pale breath drifting over the skin (5.2 – 9)
@@ -211,7 +260,7 @@ export async function create({ W, H, u, AW, BH, BTOP, artbox, R, EP, loadImage }
       Pnow = (eio(seg(t, 29.7, 32.4))) * (t < 56 ? 1 : 1 - eo(seg(t, 56.0, 60.5)));
       const c = camAt(t); camera.position.set(...c.pos); camera.fov = c.fov; camera.up.set(Math.sin(c.roll * D2R), Math.cos(c.roll * D2R), 0); camera.lookAt(...c.look); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
       setWorld(t); setCold(t); paintSet(t); key.target.position.set(0, -1, -4); key.target.updateMatrixWorld();
-      renderer.render(scene, camera);
+      if (FIN) { const fp = new THREE.Vector3(...c.look); finish(scene, camera, Math.max(2, fp.distanceTo(camera.position) * (c.focusK || 1))); } else renderer.render(scene, camera);
     },
     anchor(name, t) { const f = ANC[name]; if (!f) return null; const p = f(); V.set(p[0], p[1], p[2]).project(camera); if (V.z > 1) return null; return [AW / 2 * (V.x + 1), BTOP + BH / 2 * (1 - V.y)]; },
   };

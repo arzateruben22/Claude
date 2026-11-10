@@ -1,5 +1,5 @@
 {
- "num": "S2·E1",
+ "num": "S2\u00b7E1",
  "title": "Why goosebumps<br>happen",
  "titleSize": 84,
  "labels": [
@@ -54,22 +54,22 @@
   [
    "start:vo03",
    "start:vo05",
-   "Simplified section · not to scale"
+   "Simplified section \u00b7 not to scale"
   ],
   [
    "start:vo05",
    "start:vo06",
-   "Mouse study · hair stem cells"
+   "Mouse study \u00b7 hair stem cells"
   ]
  ],
  "end": {
   "t": "start:vo07-0.3",
   "e1": "Next:<br>why fingers wrinkle<br>in water",
   "e2": "Your nerves are in charge.",
-  "chip": "Skin Sense · Season 2 · Episode 1",
+  "chip": "Skin Sense \u00b7 Season 2 \u00b7 Episode 1",
   "e3": "Narration: synthetic voice (AI). Illustrations: AI-generated and 3-D animation made in code."
  },
- "eyebrow": "SKIN SENSE · SEASON 2 · EPISODE 1",
+ "eyebrow": "SKIN SENSE \u00b7 SEASON 2 \u00b7 EPISODE 1",
  "images": {},
  "camera": [],
  "three": {
@@ -383,6 +383,13 @@
     ],
     "fov": 20
    }
-  ]
+  ],
+  "skinSrc": "art/s2e01-01.webp",
+  "skinCrop": [
+   0.45,
+   0.26
+  ],
+  "coc": 0.011,
+  "bloom": 0.3
  }
 }
