@@ -114,8 +114,10 @@ const pages = {
 };
 eps.forEach((e, k) => { if (BR && k > 0) pages[`bridge${k}`] = `<div class="card"><p class="kick">${esc(theme.name)} · ${esc(e.num)}</p><p class="big" style="margin-top:22px;font-size:96px">${esc(e.title)}</p><p class="prom">Episode ${k + 1} of ${eps.length}</p></div>`; pages[`ep${k}`] = `<div class="slot"></div><div class="left"><p class="kick">${esc(theme.name)}</p><p class="num">${esc(e.num)}</p><p class="t">${esc(e.title)}</p><p class="of">Episode ${k + 1} of ${eps.length}</p></div><div class="right"><p class="hd">In this video</p>${rows(k)}</div><p class="foot">Narration: synthetic voice (AI)</p>`; });
 
-if (NARR) for (const id of Object.keys(NARR.segments)) pages[`n-${id}-bg`] = `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="line">&nbsp;</p></div>`;
-if (NARR) for (const [id, sg] of Object.entries(NARR.segments)) sg.sentences.forEach((q, i) => { pages[`n-${id}-${i}`] = `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="line">${esc(q.text)}</p></div>`; });
+if (NARR) for (const [id, sg] of Object.entries(NARR.segments)) sg.sentences.forEach((q, i) => {   // one page per spoken word: the sentence is laid out whole, and the words not yet spoken are transparent
+  const ws = q.words || q.text.split(" ").map((w) => ({ w }));
+  for (let k = 0; k <= ws.length; k++) pages[`n-${id}-${i}-${k}`] = `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="line">${ws.map((w, m) => `<span${m < k ? "" : ' style="opacity:0"'}>${esc(w.w)}</span>`).join(" ")}</p></div>`;
+});
 const pwDir = process.env.PLAYWRIGHT_DIR || path.dirname(run("npm", ["root", "-g"]).trim());
 const { chromium } = createRequire(path.join(pwDir, "x.js"))("playwright");
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || (fs.existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined) });
@@ -156,20 +158,14 @@ const card = (k, dur) => {
     `[0:v]fps=${FPS},format=yuv420p,fade=t=in:st=0:d=0.4,fade=t=out:st=${dur - 0.4}:d=0.4[v]`, "-map", "[v]", "-an", "-t", String(dur), ...V, o]);
   return o;
 };
-const narrCard = (id, dur) => {                                  // a narrated card: each sentence fades up over the plain card as it is spoken (soft in and out), and the whole card pushes in slowly, so nothing sits still
-  const o = path.join(work, `seg-${id}.mp4`), sg = NARR.segments[id], lst = path.join(work, `${id}-clips.txt`), rows = [], PUSH = 0.045, bg = path.join(work, `n-${id}-bg.png`);
-  const L = ["-c:v", "libx264", "-preset", "ultrafast", "-crf", "0", "-pix_fmt", "yuv444p", "-r", String(FPS)];
-  sg.sentences.forEach((q, i) => {
-    const end = i + 1 < sg.sentences.length ? sg.sentences[i + 1].t0 + 0.6 : dur, start = i === 0 ? 0 : q.t0 + 0.6, d = Math.round((end - start) * FPS) / FPS, c = path.join(work, `${id}-clip${i}.mp4`);
-    const fi = Math.min(0.4, d / 3), fo = Math.min(0.25, d / 4);
-    run("ffmpeg", ["-v", "error", "-y", "-loop", "1", "-t", d.toFixed(4), "-i", bg, "-loop", "1", "-t", d.toFixed(4), "-i", path.join(work, `n-${id}-${i}.png`), "-filter_complex",
-      `[1:v]format=yuva444p,fade=t=in:st=0:d=${fi.toFixed(3)}:alpha=1,fade=t=out:st=${(d - fo).toFixed(3)}:d=${fo.toFixed(3)}:alpha=1[t];[0:v][t]overlay=format=auto,fps=${FPS},format=yuv444p[v]`, "-map", "[v]", "-an", ...L, c]);
-    rows.push(`file '${c}'`);
-  });
+const narrCard = (id, dur) => {                                  // a narrated card: the sentence builds word by word as it is spoken, and the whole card pushes in slowly, so nothing sits still
+  const o = path.join(work, `seg-${id}.mp4`), sg = NARR.segments[id], lst = path.join(work, `${id}-stills.txt`), PUSH = 0.05;
+  const rows = [];                                                // a sentence's finished state holds until the next sentence's first word; the empty state of the next sentence is skipped
+  const seq = []; sg.sentences.forEach((q, i) => { for (let k = (i === 0 ? 0 : 1); k <= q.words.length; k++) seq.push({ f: `n-${id}-${i}-${k}.png`, t: i === 0 && k === 0 ? 0 : k === 0 ? 0 : q.words[k - 1].t + 0.6 }); });
+  seq.forEach((e, n) => { const end = n + 1 < seq.length ? seq[n + 1].t : dur, d = Math.max(1 / FPS, end - e.t); rows.push(`file '${path.join(work, e.f)}'\nduration ${d.toFixed(4)}`); });
+  rows.push(`file '${path.join(work, seq[seq.length - 1].f)}'`);
   fs.writeFileSync(lst, rows.join("\n") + "\n");
-  const cat = path.join(work, `${id}-cat.mp4`);
-  run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", cat]);
-  run("ffmpeg", ["-v", "error", "-y", "-i", cat, "-filter_complex",
+  run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-filter_complex",
     `[0:v]scale=3840:2160:flags=lanczos,scale=w='3840*(1+${PUSH}*t/${dur})':h='2160*(1+${PUSH}*t/${dur})':eval=frame:flags=bicubic,crop=3840:2160,scale=${OW}:${OH}:flags=lanczos,fps=${FPS},tpad=stop_mode=clone:stop_duration=1,format=yuv420p,fade=t=in:st=0:d=0.4,fade=t=out:st=${dur - 0.4}:d=0.4[v]`, "-map", "[v]", "-an", "-t", String(dur), ...V, o]);
   return o;
 };
