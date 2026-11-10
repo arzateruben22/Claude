@@ -1,8 +1,7 @@
 # Season format: one long film, eight parts (owner's decision, 10 Nov 2026)
 
-Applies to Reality Rulebook, One More Orbit and Possibility Lab from their next season on. Skin Sense stays
-short-form (1:01-1:15 story shorts), but its seasons are 8 stories that share one thread, so a long film can be made
-from them later. Body Backstage is paused and excluded.
+Applies to Reality Rulebook, One More Orbit and Possibility Lab from their next season on. Skin Sense has its own
+Season 3 format: six premium lessons (see "Skin Sense Season 3" below). Body Backstage is paused and excluded.
 
 Why: YouTube mid-roll ads need a video of at least 8:00. Every stitched Season 2 long video is 7:07-7:31, so none
 qualified. Long-form watch hours are also what unlock the Partner Program (shorts views don't count toward the
@@ -49,7 +48,7 @@ qualified. Long-form watch hours are also what unlock the Partner Program (short
 ## Voice (owner, 10 Nov 2026: one recording-script format for every future season)
 
 - **Possibility Lab and One More Orbit** are voiced by the owner from Season 3 on. Reality Rulebook keeps the AI voice
-  for now, and so does Skin Sense until its host records. Season 2 stays as it was posted.
+  for now. **Skin Sense Season 3 is voiced by Evelyn** (see below). Season 2 stays as it was posted.
 - **Every new season gets a recording script in the standard four-part layout**, made with
   `films/channels/voice-scripts/make_recording_script.py` as soon as the season's script passes fact-check:
   - Part A: the long video's narration
@@ -75,13 +74,34 @@ possible with margin. A long video that would land under 8:30 gets **real conten
 Never stretch with slowed-down footage, silence, long holds, repeats or recaps of what was just shown. That hurts
 retention, and YouTube's repetitive-content policy targets it. Every added line is fact-checked like any other.
 
-### Season 2 long videos, stretched with bridges
-- **Possibility Lab** S2 long video (7:31): add an opening, 5 bridges and a finale, to about 8:30-8:45.
-- **Skin Sense** S2 long video: rebuilt from the 3-D episodes once ep12 is done, with an opening, bridges and a
-  finale, to at least 8:30.
-- **Reality Rulebook** (7:28) and **One More Orbit** (7:07): revived with bridges to at least 8:30, but only after
-  each channel's Season 3 long film and its 8 parts are done.
+## Season 2: done (10 Nov 2026)
 
-## Season 2
+All four channels finished Season 2: 6 shorts each, plus one long video each, all over 8:30 (Possibility Lab 8:40,
+Reality Rulebook 9:06, One More Orbit 8:37, Skin Sense 8:37), all in Prism. Season 3 goes **one channel at a time**:
+Reality Rulebook first, from Mon 16 Nov 2026 (after the weekly usage reset); the owner picks the next one when it's done.
 
-The Season 2 shorts finish their declutter re-renders and post as normal. Their stitched long videos follow the 8:30 rule above: they are rebuilt with bridges, not glued as they were.
+## Skin Sense Season 3: six premium lessons (owner, 10 Nov 2026)
+
+Quality over volume. Each episode should look like a very short, expensive sci-fi film and teach one real thing.
+Take as long as it needs: the usage of about three Season 2 episodes goes into one. There is no daily-upload schedule.
+
+- **Six episodes, 70-90 s each** (never under 60 s; over a minute also qualifies for TikTok Creator Rewards). The owner
+  picks the six from the eight "life of one..." stories in `films/channels/skincare/s3-slate/`.
+- **The look:** one detailed 3-D world per episode instead of diagrams and cards; one continuous camera journey through
+  it; the cinema kit's film finish (depth of field, motion blur, bloom, grain); real sound design and an original
+  score under the voice. Almost no on-screen text: one number or one word at the key moment, plus the captions. Skin
+  Sense keeps its own identity (ivory, peach, rose, deep green `#00685F`, navy serif), never Lumevina's black, rose or gold.
+- **Look gate:** before an episode is built, the owner approves one still frame and a 10-second test clip.
+- **Voice: Evelyn, soft and close.** An ASMR-style lesson: close to the mic, unhurried, warm, every word clear, so it
+  sounds like a lesson where you actually learn something. Music stays low and captions are always on.
+  - **Her real recordings only, never an AI copy of her voice.** The owner gets her OK in writing and asks whether
+    she wants to be credited by name. The studio never contacts her directly.
+  - No Lumevina name, products or links in Skin Sense. The channel's no-brands and no-advice rules still apply.
+  - A soft AI voice stands in for the look test and drafts only; the finals wait for her recording.
+  - Her recording script uses the standard layout, adapted for shorts: Part A is each episode's narration, plus the
+    long video's opening, bridges and finale; there are no part openings or closers; Part D is the like/follow lines.
+- **Long video:** at the end of the season, the six episodes are joined with an opening, bridges and a finale into one
+  long video of at least 8:30, as in Season 2 (6 x about 80 s, plus about a minute of new narration).
+- **Every Skin Sense rule still applies:** one skin tone per episode matched to its art, never a face (acne only inside
+  a pore), no disease, risk or damage words over skin art, AI illustrations disclosed, no advice, and claims stay OPEN
+  until a person opens the source.
