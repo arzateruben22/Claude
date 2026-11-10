@@ -26,6 +26,15 @@
  ],
  "thumbnails": [
   {
+   "id": "D",
+   "subject": "a hand letting go of a hanging steel slinky, the bottom coil still in place with faint ruler lines beside it",
+   "composition": "slinky right of centre, hand entering from the top, big number left",
+   "lighting": "soft daylight on a cream backdrop",
+   "trigger": "curiosity",
+   "text": "0.3 SECONDS",
+   "complements": "shows the setup (the release) and gives a number the title doesn't state; the title asks the question"
+  },
+  {
    "id": "A",
    "subject": "six small tiles in two rows, each a different everyday object frozen at its key moment: a slinky with a floating bottom, a spaghetti arc, a big nut in a jar, a coffee ring, a cup with water, a raindrop column",
    "composition": "a clean 3x2 grid on cream with generous gaps",
@@ -54,6 +63,21 @@
   }
  ],
  "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "D",
+   "scores": {
+    "scroll": 90,
+    "curiosity": 92,
+    "clarity": 88,
+    "synergy": 92,
+    "originality": 78,
+    "accuracy": 94,
+    "mobile": 90,
+    "satisfaction": 90
+   },
+   "note": "Human anchor, the setup shown not the answer, and a number the title leaves out."
+  },
   {
    "title": 0,
    "thumbnail": "A",
@@ -102,14 +126,14 @@
  ],
  "winner": {
   "title": "A Falling Slinky's Bottom Doesn't Move at First. Why?",
-  "thumbnail": "A",
-  "thumbnailText": "",
-  "why": "Leads with the strongest segment as one honest question ('at first' keeps it true: the bottom waits about 0.3 s). The six-tile grid shows the other five without repeating the title."
+  "thumbnail": "D",
+  "thumbnailText": "0.3 SECONDS",
+  "why": "A hand letting go of the slinky is the human anchor from the film's own frame; '0.3 seconds' adds a number the title doesn't repeat. The other five stories are in the film."
  },
  "testAndCompare": [
+  "D",
   "A",
-  "B",
-  "C"
+  "B"
  ],
  "checks": {
   "halfSecond": true,
@@ -121,6 +145,6 @@
   "originality": true
  },
  "thumbnailFile": "thumbnail.jpg",
- "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080). Subject: a clean 3 by 2 grid of six small tiles on a cream background, each tile an everyday object frozen at its key moment: a hanging slinky whose bottom coil floats, a bent spaghetti arc, a large nut rising in a jar of small nuts, a dried coffee drop with a dark ring, a cup filling with water with a sound-wave stack above it, and a column of three raindrops with ghost stamps. Composition: a 3x2 grid centred with generous gaps and soft rounded tile corners. Lighting and treatment: soft daylight and one blue accent line; a daylight lab or an everyday room, clean and exact, cream background #E9E3D3, ink #1B1E24, one blue #2F5BFF accent, soft strobe-ghost stamps, premium editorial science documentary look, clearly a code-rendered illustration rather than a photograph. Mood: curiosity. Text: No text. Scientific accuracy: each tile shows what its episode shows: the slinky bottom waiting about 0.3 seconds, three-or-more spaghetti pieces, the Brazil nut effect, the coffee ring, the pitch of a filling cup, and raindrops at their top speed. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real photograph or a news image. Style: distinctive and art-directed, not generic AI art.",
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080). Subject: a hand letting go of the top of a hanging steel slinky, the bottom coil still in place, faint thin ruler lines beside it. Composition: slinky right of centre and tall, hand entering from the top left, large empty space on the left for text. Lighting and treatment: soft daylight on a cream backdrop #E9E3D3, clean and exact, premium editorial science documentary look. Mood: curiosity. Text: '0.3' in large bold blue (#2F5BFF) above 'SECONDS' in bold ink (#1B1E24), left side. Scientific accuracy: the bottom of a slinky stays put for about 0.3 seconds after release while the top collapses. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, extra text. Style: distinctive, not generic AI art.",
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
 }
