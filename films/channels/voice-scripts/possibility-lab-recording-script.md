@@ -9,7 +9,7 @@ re-check the fact (the on-screen captions are rebuilt from your recording, so th
 - **Phone:** Voice Memos is fine. Hold it **about a hand's width (15–20 cm) from your mouth**, slightly to the side so your breath doesn't hit it. Same spot every session.
 - **One file per episode.** Read the lines in order with a **2-second pause** between them. Flubbed one? Pause, then read **that whole line again**; we keep the last take.
 - Start every file by saying its name, e.g. *"Possibility Lab, Season 2, Episode 1"*, then pause and begin.
-- **Name the files** like `pl-s2e01.m4a` … `pl-s2e06.m4a`, `pl-spin.m4a` (pilot), `pl-spin-clips.m4a` (clip hooks).
+- **Name the files** like `pl-s2e01.m4a` … `pl-s2e06.m4a`, `pl-spin.m4a` (pilot), `pl-spin-shorts.m4a` (the shorts' new lines).
 - **Upload** them on GitHub here: https://github.com/arzateruben22/claude/upload/claude/whatif-s2/films/channels/whatif/voice-owner
 
 ### How it should sound
@@ -174,26 +174,13 @@ About 9 minutes. Same rules. Take a breath between lines; there's no rush in a l
 **19.** Subscribe, for the next what-if.
 
 
-## Pilot TikTok clips: new hooks and endings only
-The rest of each clip reuses your pilot lines above, so you only record these.
+## Pilot TikTok shorts (Part 1 and Part 2): new lines only
+Each part reuses your pilot lines above, so you only record these four. Name the file `pl-spin-shorts.m4a`.
 
-**1.** Earth's day is now twelve hours long. Here's what you'd feel.
+**1.** And at twelve hours, it gets much **stranger**.
 
-**2.** Doesn't sound like much. But the air is about to turn on you.
+**2.** Earth's day is now **twelve hours** long. Here's what you'd feel.
 
-**3.** The ground is moving faster than sound, and the air hasn't noticed.
+**3.** And then the **oceans** start to move.
 
-**4.** And then the oceans start to move.
-
-**5.** Speed the Earth up fast, and the oceans leave the poles.
-
-**6.** That was a twelve hour day. Wait until it's two.
-
-**7.** A two hour day, and you weigh half of what you did.
-
-**8.** And in half an hour, you stop touching the ground.
-
-**9.** At an hour and twenty-four minutes, you're in orbit, standing still.
-
-**10.** Watch how it ends, in the full video.
-
+**4.** Full video on **YouTube**.
