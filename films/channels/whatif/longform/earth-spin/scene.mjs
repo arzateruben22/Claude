@@ -134,7 +134,10 @@ const roEl = document.createElement("div");
 roEl.style.cssText = "position:absolute;left:" + (PORT ? "6vw" : "5vw") + ";top:" + (PORT ? "21vh" : "21vh") + ";z-index:5;pointer-events:none;color:var(--hud-text);text-shadow:0 .2vmin 1.2vmin rgba(0,0,0,.55)";
 roEl.innerHTML = '<div style="font:700 2.1vh/1 var(--font-text);letter-spacing:.16em;color:var(--hud-text-2)">LENGTH OF A DAY</div><div id="roT" style="font:800 ' + (PORT ? 'min(9vh,17vw)' : '15vh') + '/1.02 var(--font-display);letter-spacing:-.02em;font-variation-settings:\'wdth\' 85;margin-top:.8vh"></div>' +
   '<div style="margin-top:' + (PORT ? '1.4vh' : '2.4vh') + ';font:700 2.1vh/1 var(--font-text);letter-spacing:.16em;color:var(--hud-text-2)"><span id="roL2">YOUR SPEED AT THE EQUATOR</span></div><div id="roV" style="font:700 ' + (PORT ? 'min(3.6vh,7vw)' : '5.4vh') + '/1.1 var(--font-mono);color:' + AMB + ';margin-top:.8vh;font-variant-numeric:tabular-nums"></div>';
-document.body.appendChild(roEl);
+// soft dark scrim behind the readout so the white numbers hold 4.5:1 on a bright daytime sky
+const scrim = document.createElement("div");
+scrim.style.cssText = "position:absolute;left:0;top:0;width:" + (PORT ? "100vw" : "64vw") + ";height:" + (PORT ? "46vh" : "70vh") + ";z-index:4;pointer-events:none;background:radial-gradient(ellipse farthest-side at 28% 36%, rgba(6,9,16,.55) 0%, rgba(6,9,16,.40) 45%, rgba(6,9,16,0) 100%)";
+document.body.appendChild(scrim); document.body.appendChild(roEl);
 const roT = roEl.querySelector("#roT"), roV = roEl.querySelector("#roV"), roL2 = roEl.querySelector("#roL2");
 const WWINS = WD.weightWins || [], inWeight = (t) => WWINS.some(([a, b]) => t >= a && t < b);
 const fmtT = (T) => T >= 10 ? Math.round(T) + " h" : T >= 1.995 ? T.toFixed(1) + " h" : Math.floor(T + 1e-6) + " h " + String(Math.round((T - Math.floor(T + 1e-6)) * 60)).padStart(2, "0") + " min";
@@ -230,7 +233,7 @@ window.seek = function (t) {
   camera.updateProjectionMatrix(); camera.updateMatrixWorld(true);
   // the end: the scene dims under the end card, the text goes, the dim lifts
   dimEl.style.opacity = String((0.86 * seg(t, FILM.endCard - 0.25, FILM.endCard + 0.3) * (1 - seg(t, FILM.dur - 0.75, FILM.dur - 0.05))).toFixed(3));
-  roEl.style.opacity = String((1 - seg(t, FILM.endCard - 0.3, FILM.endCard)).toFixed(3));
+  roEl.style.opacity = String((1 - seg(t, FILM.endCard - 0.3, FILM.endCard)).toFixed(3)); scrim.style.opacity = roEl.style.opacity;
   roT.textContent = fmtT(T); roV.textContent = Math.round(2 * Math.PI * R_EQ / (T * 3600) * 3.6 * 1000 / 1000 * 1000 / 1000).toLocaleString("en-US") + " km/h";
   if (inWeight(t)) { const w = Math.max(0, weightFrac(T)) * 100; roL2.textContent = "YOUR WEIGHT, VS A STILL EARTH"; roV.textContent = (w < 99.95 ? w.toFixed(w >= 99 ? 2 : 1) : "100") + " %"; }
   else roL2.textContent = "YOUR SPEED AT THE EQUATOR";
