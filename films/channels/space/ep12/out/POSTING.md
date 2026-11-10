@@ -1,4 +1,4 @@
-# Posting sheet: One More Orbit · Season 2 · Episode 6, "Do the Moon's footprints last?"
+# Posting sheet: One More Orbit · Season 2 · Episode 6, "Footprints From 1969 May Still Be on the Moon"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel). **Before posting, a person opens every source link** (the builder read the pages; no claim is person-verified yet).
 
@@ -7,12 +7,12 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-Do the Moon's footprints last? | One More Orbit · Season 2 · Episode 6
+Footprints From 1969 May Still Be on the Moon
 
 **Description**
 
 ```
-Do the Moon's footprints last? Look closer.
+Footprints from 1969 may still be on the Moon. Look closer.
 
 The Moon has almost no air or rain, so prints wear away very slowly; an orbiter has photographed the Apollo 11 site. Some prints may still be there.
 
@@ -51,7 +51,7 @@ Sources
 **Caption**
 
 ```
-Do the Moon's footprints last? Look closer. #space #astronomy #learnontiktok #science #cosmos
+Footprints from 1969 may still be on the Moon. Look closer. #space #astronomy #learnontiktok #science #cosmos
 ```
 
 **Pinned comment** (150-character limit)
@@ -64,7 +64,7 @@ Sources: nasa.gov; science.nasa.gov. Synthetic (AI) voice; code-rendered animati
 **Caption**
 
 ```
-Do the Moon's footprints last? Look closer.
+Footprints from 1969 may still be on the Moon. Look closer.
 
 The Moon has almost no air or rain, so prints wear away very slowly; an orbiter has photographed the Apollo 11 site. Some prints may still be there.
 

@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "long",
+ "hook": "Six questions about the night sky, from 'more trees or more stars?' to 'do the Moon's footprints last?', each with its sources.",
+ "titles": [
+  {
+   "text": "Are There More Trees Than Stars? And 5 More Sky Questions",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Six Things About the Night Sky You Can Check Yourself",
+   "mechanism": "personal relevance"
+  },
+  {
+   "text": "Trees, Gold, Black Holes, Saturn, the Moon: Six Sky Questions",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Why the Night Sky Is Dark, and 5 More Things to Look Up",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "Look Up Tonight: Six Questions, Every Number Sourced",
+   "mechanism": "hidden mechanism"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a lone tree silhouette on a hill under a star-dense sky with the Moon rising",
+   "composition": "tree on the left third, Moon upper right, wide negative space",
+   "lighting": "indigo night, silver Moon glow, teal horizon haze",
+   "trigger": "wonder",
+   "text": "Look up.",
+   "complements": "the title asks the questions; the picture is the sky they come from"
+  },
+  {
+   "id": "B",
+   "subject": "six small glowing glyphs (tree, star, ring, black hole, Saturn, Moon) in a row over a dark horizon",
+   "composition": "row across the lower third",
+   "lighting": "teal glow",
+   "trigger": "curiosity",
+   "text": "6",
+   "complements": "count"
+  },
+  {
+   "id": "C",
+   "subject": "a huge Moon over a quiet street",
+   "composition": "Moon large right",
+   "lighting": "silver on indigo",
+   "trigger": "scale shock",
+   "text": "",
+   "complements": "single big image"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 76,
+    "curiosity": 82,
+    "clarity": 80,
+    "synergy": 80,
+    "originality": 70,
+    "accuracy": 90,
+    "mobile": 80,
+    "satisfaction": 84
+   },
+   "note": "Quiet wonder; the title carries the hook."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 76,
+    "clarity": 72,
+    "synergy": 76,
+    "originality": 66,
+    "accuracy": 90,
+    "mobile": 66,
+    "satisfaction": 80
+   },
+   "note": "Informative, less striking."
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 74,
+    "clarity": 74,
+    "synergy": 70,
+    "originality": 64,
+    "accuracy": 86,
+    "mobile": 78,
+    "satisfaction": 80
+   },
+   "note": "Strong image, less tied to the title."
+  }
+ ],
+ "winner": {
+  "title": "Are There More Trees Than Stars? And 5 More Sky Questions",
+  "thumbnail": "A",
+  "thumbnailText": "Look up.",
+  "why": "The first question is a real surprise and the title promises more; the thumbnail is the sky the questions come from and the words add the invitation."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "thumbnail.jpg",
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: a lone tree silhouette on a hill under a star-dense night sky with a large Moon rising (an illustration, not a photograph).\nComposition: tree on the left third, the Moon in the upper right third, wide empty negative space between.\nLighting and treatment: indigo night (#0B0F2A), silver Moon glow, faint teal horizon haze (#4FE3C6), soft bloom, subtle grain, shallow depth.\nMood: quiet wonder.\nText: \"Look up.\" in a clean geometric sans (Lexend style), lower-left, white.\nScientific accuracy: the Moon and stars are real objects; show a plausible, calm night sky and no impossible sizes.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 0.0,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

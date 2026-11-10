@@ -3,6 +3,7 @@ spec keys: format, hook, titles[5 of [text, mechanism]], thumbnails[3 dicts], pa
 winner{title,thumbnail,thumbnailText,why}, thumbnailFile, chatgptPrompt, shortsCover{frameSeconds,text}.  Scores are creative judgments, not CTR."""
 import json, os, sys
 ep, spec = sys.argv[1], json.load(open(sys.argv[2]))
+direct = len(sys.argv) > 3 and sys.argv[3] == "direct"   # long video: compilations/<name>/packaging.json (no out/ folder)
 AX = ["scroll", "curiosity", "clarity", "synergy", "originality", "accuracy", "mobile", "satisfaction"]
 pk = {"version": 1, "format": spec["format"], "hook": spec["hook"],
       "titles": [{"text": t, "mechanism": m} for t, m in spec["titles"]], "thumbnails": spec["thumbnails"],
@@ -13,6 +14,6 @@ pk = {"version": 1, "format": spec["format"], "hook": spec["hook"],
       "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."}
 assert len(pk["titles"]) == 5 and len(pk["thumbnails"]) == 3 and len(pk["pairings"]) == 3
 assert 0 < len(spec["winner"]["title"]) <= 70 and len(spec["winner"].get("thumbnailText", "").split()) <= 4
-os.makedirs(os.path.join(ep, "out"), exist_ok=True)
-json.dump(pk, open(os.path.join(ep, "out", "packaging.json"), "w"), indent=1, ensure_ascii=False)
+dest = ep if direct else os.path.join(ep, "out"); os.makedirs(dest, exist_ok=True)
+json.dump(pk, open(os.path.join(dest, "packaging.json"), "w"), indent=1, ensure_ascii=False)
 print("packaging.json written:", spec["winner"]["title"])

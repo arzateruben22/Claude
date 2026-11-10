@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "The Moon has almost no air, so no wind or rain: a footprint from 1969 may still be there, and an orbiter has photographed the Apollo 11 tracks.",
+ "titles": [
+  {
+   "text": "Footprints From 1969 May Still Be on the Moon",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Why Don't Moon Footprints Wash Away?",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "Wind and Rain Erase Footprints. The Moon Has Neither",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "How Long Does a Footprint Last on the Moon?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "An Orbiter Can See the Apollo 11 Tracks",
+   "mechanism": "visual paradox"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a single boot print in grey dust under a black sky, a small Earth above",
+   "composition": "print large in the lower-centre foreground, Earth small upper right",
+   "lighting": "low raking sun, long shadows, cool indigo sky",
+   "trigger": "wonder",
+   "text": "Still there?",
+   "complements": "title says may still be there; the text asks the viewer's question"
+  },
+  {
+   "id": "B",
+   "subject": "the Apollo 11 site from orbit: a lander base and a trail of prints (illustration)",
+   "composition": "top-down, trail leading to the base",
+   "lighting": "grey on dark",
+   "trigger": "visual paradox",
+   "text": "",
+   "complements": "seen-from-orbit proof"
+  },
+  {
+   "id": "C",
+   "subject": "a beach footprint washing away beside a Moon footprint",
+   "composition": "split, beach left, Moon right",
+   "lighting": "warm vs cool",
+   "trigger": "contradiction",
+   "text": "Days vs ?",
+   "complements": "contrast"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 82,
+    "clarity": 84,
+    "synergy": 84,
+    "originality": 72,
+    "accuracy": 92,
+    "mobile": 82,
+    "satisfaction": 86
+   },
+   "note": "One iconic image, the title carries the hedged claim."
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 74,
+    "curiosity": 80,
+    "clarity": 76,
+    "synergy": 72,
+    "originality": 70,
+    "accuracy": 90,
+    "mobile": 76,
+    "satisfaction": 82
+   },
+   "note": "Clear contrast; more cluttered."
+  },
+  {
+   "title": 4,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 72,
+    "clarity": 72,
+    "synergy": 70,
+    "originality": 72,
+    "accuracy": 90,
+    "mobile": 70,
+    "satisfaction": 82
+   },
+   "note": "Satisfying but quieter."
+  }
+ ],
+ "winner": {
+  "title": "Footprints From 1969 May Still Be on the Moon",
+  "thumbnail": "A",
+  "thumbnailText": "Still there?",
+  "why": "A hedged, true surprise; the thumbnail is one iconic boot print and the words ask the viewer's question."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "one-more-orbit-s2e06-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: a single boot print pressed into fine grey lunar dust under a black sky, a small blue-green Earth far above (an illustration, not a photograph).\nComposition: the print large in the lower-centre foreground inside the safe area, the small Earth in the upper centre, empty black sky.\nLighting and treatment: low raking sunlight with long soft shadows across the dust, cool indigo night sky (#0B0F2A), faint teal rim (#4FE3C6), subtle grain.\nMood: quiet wonder.\nText: \"Still there?\" in a clean geometric sans (Lexend style), centred in the lower middle, white.\nScientific accuracy: the Moon has almost no atmosphere, so no wind or rain; footprints from the Apollo missions may still be there, and an orbiter has photographed the Apollo 11 landing site and tracks; do not claim certainty.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 2.0,
+  "text": "Still there?"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

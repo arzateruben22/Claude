@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "On average, Saturn is less dense than water, so in a thought experiment it would float, but real Saturn is gas and would not stay in one piece.",
+ "titles": [
+  {
+   "text": "Saturn Would Float in Water. Here's the Catch",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Why Is Saturn Less Dense Than Water?",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "A Planet Lighter Than Water? Not Quite",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Weigh Saturn Against Water and Saturn Wins the Float",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Saturn in a Bathtub: What Really Happens",
+   "mechanism": "unexpected consequence"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "Saturn with level rings bobbing in a huge glass tank of water",
+   "composition": "tank centred, Saturn half-sunk, water line crossing the planet",
+   "lighting": "teal water glow, warm planet, indigo night",
+   "trigger": "visual paradox",
+   "text": "Until it mixes.",
+   "complements": "title gives the float; the text hints at the catch"
+  },
+  {
+   "id": "B",
+   "subject": "a balance with Saturn on one side and a water cube on the other",
+   "composition": "balance centred",
+   "lighting": "even",
+   "trigger": "curiosity",
+   "text": "0.69",
+   "complements": "one number"
+  },
+  {
+   "id": "C",
+   "subject": "Saturn dissolving into hazy gas inside the tank",
+   "composition": "cloud centred",
+   "lighting": "teal haze",
+   "trigger": "unexpected consequence",
+   "text": "",
+   "complements": "the catch itself"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 82,
+    "synergy": 84,
+    "originality": 72,
+    "accuracy": 92,
+    "mobile": 80,
+    "satisfaction": 86
+   },
+   "note": "Float then catch: both in one frame and one title."
+  },
+  {
+   "title": 2,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 76,
+    "clarity": 80,
+    "synergy": 70,
+    "originality": 66,
+    "accuracy": 90,
+    "mobile": 76,
+    "satisfaction": 80
+   },
+   "note": "Honest, less visual."
+  },
+  {
+   "title": 4,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 72,
+    "curiosity": 78,
+    "clarity": 72,
+    "synergy": 74,
+    "originality": 74,
+    "accuracy": 88,
+    "mobile": 72,
+    "satisfaction": 84
+   },
+   "note": "Spoils the catch."
+  }
+ ],
+ "winner": {
+  "title": "Saturn Would Float in Water. Here's the Catch",
+  "thumbnail": "A",
+  "thumbnailText": "Until it mixes.",
+  "why": "The title is a true thought experiment with a promised catch; the thumbnail shows the float and the words name the catch."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "one-more-orbit-s2e05-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: Saturn with level rings sitting half-sunk in a huge transparent tank of water, the waterline crossing the planet (an illustration, a thought experiment).\nComposition: tank centred in the upper two thirds, Saturn at the waterline, empty indigo night around; all in the centre safe area.\nLighting and treatment: warm pale-gold planet, teal (#4FE3C6) water glow, indigo night (#0B0F2A), soft rim light, subtle grain.\nMood: wonder with a hint of doubt.\nText: \"Until it mixes.\" in a clean geometric sans (Lexend style), centred in the lower middle, white with the last word teal.\nScientific accuracy: Saturn's average density, about 0.69 g/cm3, is lower than water's 1.0, so it would float in a thought-experiment bathtub; real Saturn is mostly hydrogen and helium gas and would mix with water, not stay in one piece.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 4.2,
+  "text": "Until it mixes."
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

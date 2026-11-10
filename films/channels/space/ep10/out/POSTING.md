@@ -1,4 +1,4 @@
-# Posting sheet: One More Orbit · Season 2 · Episode 4, "What's at a black hole's edge?"
+# Posting sheet: One More Orbit · Season 2 · Episode 4, "Near a Black Hole, Two Clocks Can't Agree"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel). **Before posting, a person opens every source link** (the builder read the pages; no claim is person-verified yet).
 
@@ -7,12 +7,12 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-What's at a black hole's edge? | One More Orbit · Season 2 · Episode 4
+Near a Black Hole, Two Clocks Can't Agree
 
 **Description**
 
 ```
-What's at a black hole's edge? Look closer.
+Near a black hole, two clocks can't agree. Look closer.
 
 Time depends on where you are, and how strong gravity is: to a far-away watcher, a clock hovering near a black hole ticks slower. Both views are true.
 
@@ -59,7 +59,7 @@ Sources
 **Caption**
 
 ```
-What's at a black hole's edge? Look closer. #space #astronomy #learnontiktok #science #cosmos
+Near a black hole, two clocks can't agree. Look closer. #space #astronomy #learnontiktok #science #cosmos
 ```
 
 **Pinned comment** (150-character limit)
@@ -72,7 +72,7 @@ Sources: svs.gsfc.nasa.gov; nist.gov; science.nasa.gov; imagine.gsfc.nasa.gov. S
 **Caption**
 
 ```
-What's at a black hole's edge? Look closer.
+Near a black hole, two clocks can't agree. Look closer.
 
 Time depends on where you are, and how strong gravity is: to a far-away watcher, a clock hovering near a black hole ticks slower. Both views are true.
 

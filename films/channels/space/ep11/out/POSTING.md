@@ -1,4 +1,4 @@
-# Posting sheet: One More Orbit · Season 2 · Episode 5, "Is Saturn lighter than water?"
+# Posting sheet: One More Orbit · Season 2 · Episode 5, "Saturn Would Float in Water. Here's the Catch"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel). **Before posting, a person opens every source link** (the builder read the pages; no claim is person-verified yet).
 
@@ -7,12 +7,12 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-Is Saturn lighter than water? | One More Orbit · Season 2 · Episode 5
+Saturn Would Float in Water. Here's the Catch
 
 **Description**
 
 ```
-Saturn: lighter than water? Look closer.
+Saturn would float in water, in a thought experiment. Here's the catch.
 
 Saturn's average density is lower than water's, so in a thought experiment it floats. Real Saturn is gas and would not stay in one piece.
 
@@ -57,7 +57,7 @@ Sources
 **Caption**
 
 ```
-Saturn: lighter than water? Look closer. #space #astronomy #learnontiktok #science #cosmos
+Saturn would float in water, in a thought experiment. Here's the catch. #space #astronomy #learnontiktok #science #cosmos
 ```
 
 **Pinned comment** (150-character limit)
@@ -70,7 +70,7 @@ Sources: science.nasa.gov; nssdc.gsfc.nasa.gov. Synthetic (AI) voice; code-rende
 **Caption**
 
 ```
-Saturn: lighter than water? Look closer.
+Saturn would float in water, in a thought experiment. Here's the catch.
 
 Saturn's average density is lower than water's, so in a thought experiment it floats. Real Saturn is gas and would not stay in one piece.
 
