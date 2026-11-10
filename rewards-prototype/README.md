@@ -8,10 +8,10 @@ reviews what members contribute and keeps an audited ledger.
 > not a promise of future payment. Likes, comments, views, shares, follows and
 > subscriptions can be shown as statistics and never earn anything.
 
-**Status:** the data rules and business logic are built and tested. The sign-in layer,
-HTTP API and sample-data seed are being built against `docs/API.md` and are **not yet
-verified** — until `PROGRESS.md` says otherwise, `npm run seed` and `npm run dev` below
-may not work. The single-screen UI comes after that (`docs/UI_BRIEF.md`).
+**Status (work paused):** the data rules, business logic and sign-in modules are built
+and tested. The server and its JSON API run and were checked by hand, but that layer is
+a draft with **no automated tests yet**. There is no dashboard screen yet — only a
+clickable design preview. `PROGRESS.md` has the details and what comes next.
 
 ## Run it locally
 
@@ -27,10 +27,30 @@ npm run dev              # http://localhost:8787  (dev sign-in + sample platform
 
 `npm run dev` prints a **sign-in code** in the terminal. Dev sign-in needs that code
 plus one of the sample addresses (`admin@example.test`, `daryl@example.test`,
-`leo@example.test`, `alex@example.test`). Until the UI exists the API can be tried
-directly with curl; `docs/API.md` lists every route.
+`leo@example.test`, `alex@example.test`).
 
-`npm run seed -- --reset` wipes the local database and seeds it again.
+`npm run seed -- --reset` wipes the local database and seeds it again. (The two npm
+scripts set their settings with `NAME=value command`, which works on macOS and Linux.)
+
+### Try it with curl
+
+Until the screen exists, the API can be used directly (`docs/API.md` lists every route):
+
+```bash
+CODE=paste-the-code-from-the-terminal
+ORIGIN='Origin: http://localhost:8787'
+JSON='Content-Type: application/json'
+
+# sign in as a sample member (the cookie is kept in ./jar)
+curl -s -c jar -X POST -H "$ORIGIN" -H "$JSON" \
+  -d "{\"email\":\"leo@example.test\",\"code\":\"$CODE\"}" http://localhost:8787/api/auth/dev-login
+
+# the whole dashboard in one response: three members, leaderboard, videos, limits
+curl -s -b jar http://localhost:8787/api/dashboard
+
+# anything that changes data also needs the CSRF token from the session
+curl -s -b jar http://localhost:8787/api/session        # -> { ..., "csrf_token": "…" }
+```
 
 ## What "dev" and "mock" mean
 
@@ -62,8 +82,10 @@ Never put a secret in a file that is committed.
 
 ## Known limits
 
-- No dashboard UI yet.
-- Sign-in, HTTP routes and the seed are in progress and unverified (see `PROGRESS.md`).
+- No dashboard UI yet; `public/` serves a placeholder page.
+- The HTTP layer and the seed are a draft checked by hand; they have no automated tests
+  and have not been reviewed (see `PROGRESS.md`).
+- Nine database-level findings from the attack suite are still open (see `PROGRESS.md`).
 - Nothing has been run against live Google, YouTube or TikTok services.
 - Linking a YouTube channel is not built (needs a Google Cloud project).
 - Runs locally only; no hosting has been chosen.

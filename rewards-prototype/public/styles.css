@@ -1,0 +1,29 @@
+/* Placeholder page only. The real screen is built from docs/UI_BRIEF.md. */
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+  padding: 1.5rem;
+}
+
+main {
+  max-width: 34rem;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+.status {
+  font-weight: 600;
+}
+
+.disclaimer {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}

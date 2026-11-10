@@ -20,6 +20,7 @@ value away from being changed; none is baked into the schema.
 | A8 | Stack and hosting | Node + built-in SQLite, runs locally only | see `docs/ARCHITECTURE.md` §2 |
 | A9 | Google Cloud project, OAuth client, authorised YouTube channels | none — dev sign-in and mock platform data only | environment variables when they exist |
 | A10 | Terms and privacy notice | none written | needed before any real YouTube API use (`docs/PLATFORM_CAPABILITIES.md` §2) |
+| A11 | Clock leeway when checking Google sign-in tokens | none (a server clock running behind would refuse fresh tokens) | `src/auth/googleIdToken.js` |
 
 ## B. Choices that change how the product behaves — please confirm or overrule
 

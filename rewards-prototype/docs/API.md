@@ -146,6 +146,18 @@ it; afterwards only the Google `sub` counts).
 Denied sign-ins are counted in memory; at most one `auth.denied` audit row per minute is
 written, carrying a count and reason codes only.
 
+Details settled when the sign-in modules were built (confirm or change in `PROGRESS.md`):
+
+- `aud` must be exactly the client id (a list that merely contains it is refused); `exp`
+  is required; a token dated in the future is refused; **no clock tolerance**.
+- Dev sign-in: a wrong code and an unknown or disabled address both get `401
+  sign_in_denied` with the same message; once locked, `403 dev_login_locked`. Wrong codes
+  are counted for the life of the process. A successful dev sign-in records the sign-in time.
+- Cookies also carry `Max-Age` (the session lifetime; ten minutes for the nonce).
+- Rate limits use a fixed window per client, opened by that client's first request.
+- If `X-Forwarded-For` is shorter than `TRUST_PROXY_HOPS`, or the entry is not an
+  address, the socket address is used.
+
 ## 4. Routes for signed-in people
 
 `member` means an account attached to a member; `admin` means an admin account.
