@@ -116,7 +116,7 @@ for a, b in zip(spine, spine[1:]):
         a["t1"] = round(b["t0"] - 0.4, 4)
 
 TITLE = {"series": "One More Orbit · Season 2 · Episode 2", "title": "Dark *sky*", "t1": t_n - 0.5, "sig": A("line:vo01:end", 0.05)}
-END = {"title": "Next orbit: your *gold*", "follow": "One More Orbit · S2 · Episode 3",
+END = {"title": "One more *orbit*", "follow": "Season 2 · Episode 3 is next",
        "next": "Planck (ESA): the universe is about 13.8 billion years old."}
 POSTER = A("vo04:years", 0.6)
 glue(f, {"vo03": ["a star's surface."], "vo02": ["no edge or start."], "vo07": ["about eight minutes."]})
