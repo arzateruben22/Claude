@@ -18,7 +18,7 @@
  },
  {
   "id": "c2",
-  "sentence": "Right now it is drifting away from you.",
+  "sentence": "Right now, it is drifting away from you.",
   "claim": "Lunar laser ranging shows the Moon receding from Earth by about 3.8 cm a year.",
   "source_url": "https://www.jpl.nasa.gov/news/the-apollo-experiment-that-keeps-on-giving/",
   "source_title": "The Apollo experiment that keeps on giving (NASA JPL)",
@@ -35,7 +35,7 @@
  },
  {
   "id": "c3",
-  "sentence": "That is why it looks about this big: half a degree across.",
+  "sentence": "From the beach, it looks about half a degree wide.",
   "claim": "the Moon's angular diameter is 2*atan(1,737.4 / 384,400) = 0.52 deg (calc.py); radius and distance from NASA's Moon fact sheet.",
   "source_url": "",
   "source_title": "",
@@ -52,7 +52,7 @@
  },
  {
   "id": "c4",
-  "sentence": "About the same size as the Sun in your sky.",
+  "sentence": "About the same size as the Sun.",
   "claim": "The Sun's mean angular diameter is about 0.53 deg, close to the Moon's: they look about the same size from Earth.",
   "source_url": "https://science.nasa.gov/eclipses/geometry",
   "source_title": "Eclipse geometry (NASA Science)",
@@ -86,7 +86,7 @@
  },
  {
   "id": "c6",
-  "sentence": "About one hundred ninety-two thousand kilometers.",
+  "sentence": "Half the distance: about one hundred ninety-two thousand kilometers.",
   "claim": "half of 384,400 km is 192,200 km.",
   "source_url": "",
   "source_title": "",
@@ -120,7 +120,7 @@
  },
  {
   "id": "c8",
-  "sentence": "Tides come from the difference in the Moon's pull across the Earth.",
+  "sentence": "The Moon's pull on the Earth gets stronger as it comes in.",
   "claim": "Tides come from the difference in the Moon's gravitational pull across the Earth (the tide-generating force).",
   "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
   "source_title": "What causes tides? (NOAA Ocean Service)",
@@ -187,25 +187,8 @@
   }
  },
  {
-  "id": "c12",
-  "sentence": "At half the distance, a full Moon gives about four times the light.",
-  "claim": "(1/0.5)^2 = 4x the light at half the distance, same phase (calc.py).",
-  "source_url": "",
-  "source_title": "",
-  "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): (1/0.5)^2 = 4x the light at half the distance, same phase (calc.py).",
-  "verified_via": "not read",
-  "status": "OPEN",
-  "source_read": {
-   "date": "2026-11-09",
-   "by": "builder (an AI): derivation, no page read for this step",
-   "quote": "",
-   "qualification": "Own inference; see the note."
-  }
- },
- {
   "id": "c13",
-  "sentence": "And the Moon is moving faster across the sky.",
+  "sentence": "And the Moon is crossing the sky faster.",
   "claim": "orbital speed rises as the orbit shrinks; the Moon would cross the sky faster. No page needed beyond Kepler's third law.",
   "source_url": "",
   "source_title": "",
@@ -221,25 +204,8 @@
   }
  },
  {
-  "id": "c14",
-  "sentence": "One lap takes about ten days instead of twenty-seven.",
-  "claim": "at 192,200 km the period is 9.7 days versus 27.5 days at 384,400 km (GM of Earth 398,600.4 km3/s2).",
-  "source_url": "",
-  "source_title": "",
-  "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (Kepler's third law, calc.py): at 192,200 km the period is 9.7 days versus 27.5 days at 384,400 km (GM of Earth 398,600.4 km3/s2).",
-  "verified_via": "not read",
-  "status": "OPEN",
-  "source_read": {
-   "date": "2026-11-09",
-   "by": "builder (an AI): derivation, no page read for this step",
-   "quote": "",
-   "qualification": "Own inference; see the note."
-  }
- },
- {
   "id": "c15",
-  "sentence": "At about this size, the Moon is bigger than the Sun.",
+  "sentence": "The Moon is now bigger than the Sun.",
   "claim": "a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film.",
   "source_url": "",
   "source_title": "",
@@ -273,7 +239,7 @@
  },
  {
   "id": "c17",
-  "sentence": "Not every month, though, because its orbit is tilted a few degrees.",
+  "sentence": "Not every month, though, because the Moon's orbit is tilted by a few degrees.",
   "claim": "the Moon's orbit is inclined about 5 deg to the ecliptic, so the alignment does not happen every new moon. The 5 deg figure comes from NASA's Moon fact sheet (orbit inclination).",
   "source_url": "",
   "source_title": "",
@@ -307,7 +273,7 @@
  },
  {
   "id": "c19",
-  "sentence": "The Moon is about eight times wider than tonight.",
+  "sentence": "The Moon is nearly eight times wider than tonight.",
   "claim": "at 50,000 km the Moon's angular width is 7.7x today's (calc.py).",
   "source_url": "",
   "source_title": "",
@@ -324,7 +290,7 @@
  },
  {
   "id": "c20",
-  "sentence": "Its pull is about four hundred fifty times what you feel today.",
+  "sentence": "The pull is about four hundred fifty times today's.",
   "claim": "(384,400/50,000)^3 = 454x the tidal force (calc.py).",
   "source_url": "",
   "source_title": "",
@@ -341,7 +307,7 @@
  },
  {
   "id": "c21",
-  "sentence": "Now the Moon takes about a day and a quarter to orbit.",
+  "sentence": "One lap now takes about a day and a quarter.",
   "claim": "at 50,000 km the period is 30.9 h.",
   "source_url": "",
   "source_title": "",
@@ -358,7 +324,7 @@
  },
  {
   "id": "c22",
-  "sentence": "Closer than a certain height, a Moon would circle faster than the Earth turns, and rise in the west.",
+  "sentence": "A moon that orbits slower than the Earth turns rises in the east, like today.",
   "claim": "a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day.",
   "source_url": "",
   "source_title": "",
@@ -443,7 +409,7 @@
  },
  {
   "id": "c27",
-  "sentence": "Over time, they would flatten into a ring.",
+  "sentence": "Over time, material like that can flatten into a ring around a planet.",
   "claim": "Material torn from a satellite inside the Roche limit can spread into a ring around the planet (as in planetary-ring theory).",
   "source_url": "https://en.wikipedia.org/wiki/Roche_limit",
   "source_title": "Roche limit (Wikipedia) — secondary source; HEDGED ('would')",
@@ -456,6 +422,244 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
+  }
+ },
+ {
+  "id": "c28",
+  "sentence": "Its light takes about a second and a quarter to reach you.",
+  "claim": "Light covers the Moon's mean distance (384,400 km) in 1.28 s (384,400 km / 299,792 km/s), about a second and a quarter (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c29",
+  "sentence": "Its light takes about a second to reach you now.",
+  "claim": "At three quarters of today's distance (288,300 km) light takes 0.96 s, about a second (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c30",
+  "sentence": "At this distance, that pull is more than twice what it is today.",
+  "claim": "With tidal force ~ 1/d^3, three quarters of the distance gives (1/0.75)^3 = 2.37x, more than twice today's (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c31",
+  "sentence": "One hundred fifty thousand kilometers.",
+  "claim": "150,000 km is a waypoint chosen for the film; no physics claim.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN CHOICE: a waypoint, not a physics claim.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c32",
+  "sentence": "The Moon looks about two and a half times wider.",
+  "claim": "At 150,000 km the Moon's angular width is 2.56x today's, about two and a half (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c33",
+  "sentence": "So at this distance, a full Moon gives about six and a half times the light.",
+  "claim": "At 150,000 km, same phase, (384,400/150,000)^2 = 6.57x the moonlight, about six and a half (calc.py; inverse-square law).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c34",
+  "sentence": "At this distance, one lap takes about seven days, not twenty-seven.",
+  "claim": "At 150,000 km, Kepler's third law gives an orbital period of 160.6 h = 6.7 days versus 27.5 days today (calc.py, Earth GM 398,600.4 km3/s2).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c35",
+  "sentence": "One hundred thousand kilometers.",
+  "claim": "100,000 km is a waypoint chosen for the film; no physics claim.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN CHOICE: a waypoint, not a physics claim.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c36",
+  "sentence": "The Moon is nearly four times wider than tonight.",
+  "claim": "At 100,000 km the Moon's angular width is 3.8x today's, nearly four times (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c37",
+  "sentence": "Seventy thousand kilometers.",
+  "claim": "70,000 km is a waypoint chosen for the film; no physics claim.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN CHOICE: a waypoint, not a physics claim.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c38",
+  "sentence": "The Moon is about five and a half times wider than tonight.",
+  "claim": "At 70,000 km the Moon's angular width is 5.5x today's (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c39",
+  "sentence": "Its pull on the Earth is more than a hundred sixty times today's tidal force.",
+  "claim": "With force ~ 1/d^3, at 70,000 km the tidal force is (384,400/70,000)^3 = 166x today's, more than a hundred sixty times (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c40",
+  "sentence": "Fifty thousand kilometers.",
+  "claim": "50,000 km is a waypoint chosen for the film; no physics claim.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN CHOICE: a waypoint, not a physics claim.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c41",
+  "sentence": "It is about as wide as a fist held out at arm's length.",
+  "claim": "At 18,000 km the Moon spans 2*atan(1,737.4/18,000) = 11 deg (calc.py); a closed fist at arm's length spans about 10 deg (common observing rule of thumb; a person should confirm against an astronomy-outreach page).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
   }
  }
 ]

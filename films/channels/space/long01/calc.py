@@ -34,7 +34,7 @@ ROCHE_RIGID = 1.26 * RE_MEAN * k                                     # rigid Moo
 SYNC = (GME * (86164.1 / (2 * math.pi)) ** 2) ** (1 / 3)             # geostationary radius (sidereal day)
 
 rows = []
-for name, d in [("today", D0), ("half", D0 / 2), ("100k", 100_000), ("50k", 50_000), ("Roche fluid", ROCHE_FLUID)]:
+for name, d in [("today", D0), ("3/4", D0 * 0.75), ("half", D0 / 2), ("150k", 150_000), ("100k", 100_000), ("70k", 70_000), ("50k", 50_000), ("Roche fluid", ROCHE_FLUID)]:
     rows.append(dict(name=name, km=round(d), angle_deg=round(ang_deg(d), 2), size_x=round(size_x(d), 1), tide_x=round(tide_x(d), 1),
                      light_x=round(light_x(d)), period_h=round(period_h(d), 1), light_s=round(light_s(d), 3)))
 
@@ -54,3 +54,10 @@ assert 20 < size_x(18_000) < 23                      # ~21x wider at 18,000 km
 assert 400 < light_x(18_000) < 500                   # ~456x more light, same phase
 assert 6 < period_h(18_000) < 7.5                    # ~6.7 h: faster than Earth turns
 assert 42_000 < SYNC < 42_400
+assert abs(size_x(D0*0.75)-1.333)<0.01 and 2.3 < tide_x(D0*0.75) < 2.4     # chapter 2
+assert 2.5 < size_x(150_000) < 2.6 and 6.4 < light_x(150_000) < 6.7 and 6 < period_h(150_000)/24 < 7   # chapter 4 (~6.7 days)
+assert 3.7 < size_x(100_000) < 3.9                 # chapter 5
+assert 5.3 < size_x(70_000) < 5.7 and 160 < tide_x(70_000) < 170   # chapter 6
+assert 7.5 < size_x(50_000) < 7.9 and 450 < tide_x(50_000) < 460   # chapter 7
+assert 0.9 < light_s(D0*0.75) < 1.0 and 1.27 < light_s(D0) < 1.29   # light time
+assert 10 < ang_deg(18_000) < 11.5                  # a fist at arm's length is ~10 deg

@@ -262,3 +262,10 @@ winner plus 7 checks, a rendered winner thumbnail (16:9 export 1920x1080 JPG und
 self-contained ChatGPT image prompt. The YouTube title is the winner title alone (no series suffix; the series line lives in
 the description). The thumbnail never repeats the title, carries 0-4 words, no badges or series line, no fabricated cosmic threat.
 Tools here: `season2/pack.py` (spec JSON to packaging.json), `season2/make_cover.py` (plain covers/thumbs), `season2/make_posting.py`.
+
+## Season format (owner's decision, 10 Nov 2026)
+
+`SEASON-FORMAT.md` (copied here): from Season 3 each season is ONE long film (8 chapters of about 65 s, no chapter cards, each
+ending on a cliffhanger, 8:30-9:30, the payoff in the last minute) rendered twice (16:9 long film in compilations/<slug>/, 9:16 parts
+in the next epNN folders). The 8 parts are the 8 chapters (1:01-1:15 each, its own 2 s hook, "Part N of 8. Full video on YouTube."
+at the end); the ending belongs to the long film only. Season 2 compilation stopped (7:07 stays under 8:00).
