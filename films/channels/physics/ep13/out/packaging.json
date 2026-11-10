@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "A hummingbird's wings beat about fifty times a second, so your eyes see a blur, until time is slowed ten times.",
+ "titles": [
+  {
+   "text": "Slow Time 10× and a Hummingbird's Wings Stop Blurring",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "You've Never Really Seen a Hummingbird's Wings",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Why Your Eyes Can't See 50 Wingbeats a Second",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Fly Is Still a Blur at 10× Slower",
+   "mechanism": "visual paradox"
+  },
+  {
+   "text": "What Hides Inside One Second of a Hummingbird",
+   "mechanism": "knowledge gap"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a hummingbird hovering at a window, wings caught as a fan of 12 faint ghost copies on one side and two crisp wings on the other",
+   "composition": "centre-left, large, side profile, negative space above",
+   "lighting": "soft daylight from the window, cool sky behind",
+   "trigger": "wonder",
+   "text": "TEN TIMES SLOWER",
+   "complements": "the same wing drawn blurred and crisp: the blur-versus-crisp split IS the story"
+  },
+  {
+   "id": "B",
+   "subject": "a hummingbird's single wing tip tracing a glowing loop in the air, 8 ghost stamps along the loop",
+   "composition": "wing tip at the lower third, loop sweeping up to the right",
+   "lighting": "dark window surround, cobalt trace line",
+   "trigger": "suspense",
+   "text": "",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  },
+  {
+   "id": "C",
+   "subject": "a hummingbird beside a fly, one crisp and one a grey smear",
+   "composition": "bird left, fly right, equal weight",
+   "lighting": "daylight kitchen window",
+   "trigger": "disbelief",
+   "text": "STILL A BLUR",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 86,
+    "curiosity": 82,
+    "clarity": 84,
+    "synergy": 90,
+    "originality": 70,
+    "accuracy": 96,
+    "mobile": 90,
+    "satisfaction": 84
+   },
+   "note": "The blur/crisp split shows the mechanism the title names."
+  },
+  {
+   "title": 3,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 84,
+    "clarity": 72,
+    "synergy": 66,
+    "originality": 80,
+    "accuracy": 96,
+    "mobile": 88,
+    "satisfaction": 86
+   },
+   "note": "Pairs the paradox title with the paradox picture, but repeats the idea."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 62,
+    "curiosity": 70,
+    "clarity": 60,
+    "synergy": 64,
+    "originality": 86,
+    "accuracy": 90,
+    "mobile": 72,
+    "satisfaction": 70
+   },
+   "note": "Pretty, but less clear what the video is."
+  }
+ ],
+ "winner": {
+  "title": "Slow Time 10× and a Hummingbird's Wings Stop Blurring",
+  "thumbnail": "A",
+  "thumbnailText": "TEN TIMES SLOWER",
+  "why": "The picture shows the blurred and crisp wing side by side; the title names the cause. The part really shows both, then the fly still blurring."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "reality-rulebook-s3p1-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a hummingbird hovering beside a window feeder, one wing a crisp shape and the other a fan of faint ghost copies. Composition: centre-left, large, side profile, negative space above. Lighting and treatment: soft daylight from the window, cool sky behind; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: wonder. Text: \"TEN TIMES SLOWER\" in a bold geometric sans, placed upper third. Scientific accuracy: hummingbird wings beat about fifty times a second; the model wing sweeps forward, flips and sweeps back. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
+ "shortsCover": {
+  "frameSeconds": 18.0,
+  "text": "TEN TIMES SLOWER"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

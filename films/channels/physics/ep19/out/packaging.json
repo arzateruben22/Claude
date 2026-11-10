@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "At a billion times slower, light crosses a kitchen in about seventeen seconds, and you can watch it light up the cup.",
+ "titles": [
+  {
+   "text": "Slow Time a Billion Times and Light Starts to Crawl",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Watch Light Cross a Kitchen",
+   "mechanism": "visual paradox"
+  },
+  {
+   "text": "The Cup Lights Up on One Side First",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "How Slow Do You Have to Go to See Light?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "A Flash of Light Takes 2 Seconds to Cross This Room",
+   "mechanism": "unexpected consequence"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a glowing front of light caught halfway across a dim kitchen counter, lit side warm, dark side shadowed, a water drop frozen in mid-air above the coffee cup on the lit side",
+   "composition": "front centre, cup left of it, drop above the cup",
+   "lighting": "a single warm light front, the rest dim",
+   "trigger": "wonder",
+   "text": "BILLION× SLOWER",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  },
+  {
+   "id": "B",
+   "subject": "the cup half lit, half dark",
+   "composition": "",
+   "lighting": "",
+   "trigger": "",
+   "text": "",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  },
+  {
+   "id": "C",
+   "subject": "the flashlight with a wavefront ring",
+   "composition": "",
+   "lighting": "",
+   "trigger": "",
+   "text": "",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 90,
+    "curiosity": 88,
+    "clarity": 86,
+    "synergy": 92,
+    "originality": 78,
+    "accuracy": 96,
+    "mobile": 92,
+    "satisfaction": 90
+   },
+   "note": "The front across a dim kitchen is the whole premise in one image."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 72,
+    "curiosity": 78,
+    "clarity": 72,
+    "synergy": 74,
+    "originality": 70,
+    "accuracy": 94,
+    "mobile": 84,
+    "satisfaction": 80
+   },
+   "note": "Subtler."
+  },
+  {
+   "title": 3,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 64,
+    "curiosity": 70,
+    "clarity": 66,
+    "synergy": 66,
+    "originality": 68,
+    "accuracy": 92,
+    "mobile": 80,
+    "satisfaction": 74
+   },
+   "note": "Generic."
+  }
+ ],
+ "winner": {
+  "title": "Slow Time a Billion Times and Light Starts to Crawl",
+  "thumbnail": "A",
+  "thumbnailText": "BILLION× SLOWER",
+  "why": "The frame is delivered by the part: the front crossing the counter with the drop frozen above the cup."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "reality-rulebook-s3p7-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a glowing front of light caught halfway across a dim kitchen counter, the lit side warm and the far side in shadow, a water drop frozen in mid-air above a coffee cup on the lit side. Composition: front centre, cup left of it, drop above the cup. Lighting and treatment: a single warm light front, the rest dim; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: wonder. Text: \"BILLION× SLOWER\" in a bold geometric sans, placed upper third. Scientific accuracy: light moves about 30 centimeters per nanosecond; at a billion times slower it crawls 30 cm per second and crosses a 5 m room in about 17 seconds. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
+ "shortsCover": {
+  "frameSeconds": 40.0,
+  "text": "BILLION× SLOWER"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

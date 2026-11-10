@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "A mosquito beats its wings about 500 times a second: slow time 100 times and you can count the beats on one hand.",
+ "titles": [
+  {
+   "text": "What a Water Drop Does in a Few Hundredths of a Second",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Count a Mosquito's Wingbeats on One Hand",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "A Splash Takes 4 Seconds When You Slow Time 100×",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Why Does a Water Drop Build a Crown?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Cup Is Hiding a Crown",
+   "mechanism": "visual paradox"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a water-drop crown frozen above a coffee cup, 22 spikes, small droplets pinching off",
+   "composition": "cup centre, crown filling the middle third, tap tip just visible above",
+   "lighting": "daylight from the left, cool shadow",
+   "trigger": "wonder",
+   "text": "",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  },
+  {
+   "id": "B",
+   "subject": "a mosquito's two wings as five crisp ghost stamps in a row",
+   "composition": "mosquito centre",
+   "lighting": "kitchen window light",
+   "trigger": "curiosity",
+   "text": "FIVE BEATS",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  },
+  {
+   "id": "C",
+   "subject": "a splash crown with a tiny fly circling it",
+   "composition": "crown large, fly small at upper right",
+   "lighting": "daylight",
+   "trigger": "delight",
+   "text": "",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 86,
+    "clarity": 88,
+    "synergy": 90,
+    "originality": 72,
+    "accuracy": 96,
+    "mobile": 92,
+    "satisfaction": 86
+   },
+   "note": "The crown is the unmistakable focal point; the title says what it is doing."
+  },
+  {
+   "title": 2,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 80,
+    "clarity": 76,
+    "synergy": 82,
+    "originality": 70,
+    "accuracy": 96,
+    "mobile": 90,
+    "satisfaction": 84
+   },
+   "note": "Same picture, a more numeric title."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 76,
+    "clarity": 70,
+    "synergy": 60,
+    "originality": 84,
+    "accuracy": 92,
+    "mobile": 76,
+    "satisfaction": 78
+   },
+   "note": "Cleaner idea but a smaller picture."
+  }
+ ],
+ "winner": {
+  "title": "What a Water Drop Does in a Few Hundredths of a Second",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The crown is the visual mystery; the title is the question. The part shows the crown forming and breaking into droplets."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "reality-rulebook-s3p2-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a crown-shaped splash of water frozen above a white coffee cup, thin spikes with tiny droplets at their tips. Composition: cup centre, crown filling the middle third, tap tip just visible above. Lighting and treatment: daylight from the left, cool shadow; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: wonder. Text: No text. Scientific accuracy: a drop hitting water forms a crown within a few hundredths of a second; the model is simplified. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
+ "shortsCover": {
+  "frameSeconds": 33.0,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

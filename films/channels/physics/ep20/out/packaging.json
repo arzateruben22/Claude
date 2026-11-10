@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "At a trillion times slower, light moves about a third of a millimeter a second, slower than a garden snail.",
+ "titles": [
+  {
+   "text": "At a Trillion Times Slower, Light Is Slower Than a Snail",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Has Anyone Ever Filmed Light Crawling?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "A Computer Chip Ticks 3 Times a Second",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Light Crosses a Hair in a Third of a Second",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "One Second Lasts 32,000 Years",
+   "mechanism": "scale shock"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a human hair in extreme close-up with a thin line of light just beginning to cross it, a mm ruler below",
+   "composition": "hair vertical centre, light line at its left edge, ruler along the bottom",
+   "lighting": "dark, one warm line of light",
+   "trigger": "awe",
+   "text": "",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  },
+  {
+   "id": "B",
+   "subject": "a garden snail on a kitchen counter beside a tiny glowing dot",
+   "composition": "snail left, dot right",
+   "lighting": "daylight",
+   "trigger": "wit",
+   "text": "",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  },
+  {
+   "id": "C",
+   "subject": "the counter reading a trillion",
+   "composition": "",
+   "lighting": "",
+   "trigger": "",
+   "text": "",
+   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 86,
+    "curiosity": 84,
+    "clarity": 84,
+    "synergy": 88,
+    "originality": 78,
+    "accuracy": 96,
+    "mobile": 90,
+    "satisfaction": 86
+   },
+   "note": "The hair and the line of light make the scale shock visible; the title makes the comparison."
+  },
+  {
+   "title": 1,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 72,
+    "synergy": 76,
+    "originality": 76,
+    "accuracy": 96,
+    "mobile": 88,
+    "satisfaction": 84
+   },
+   "note": "Open-loop title; same picture."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 78,
+    "clarity": 68,
+    "synergy": 70,
+    "originality": 82,
+    "accuracy": 94,
+    "mobile": 78,
+    "satisfaction": 76
+   },
+   "note": "Witty but more of a gag."
+  }
+ ],
+ "winner": {
+  "title": "At a Trillion Times Slower, Light Is Slower Than a Snail",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The part says exactly this (about a third of a millimeter a second). The hair-and-light image is the scale layer the title lacks."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "reality-rulebook-s3p8-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a human hair in extreme close-up with a thin line of warm light just beginning to cross it, a millimeter ruler along the bottom, black background. Composition: hair vertical centre, light line at its left edge, ruler along the bottom. Lighting and treatment: dark, one warm line of light; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: awe. Text: No text. Scientific accuracy: at a trillion times slower, light moves about 0.3 mm per second; a hair is about 0.1 mm wide, so light crosses it in about a third of a second. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
+ "shortsCover": {
+  "frameSeconds": 46.0,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
