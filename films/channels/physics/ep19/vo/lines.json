@@ -1,0 +1,44 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Slow light until it crawls.",
+   "stars": [],
+   "phonemes": "slˈoʊ lˈaɪt ʌntˈɪl ɪt kɹˈɔːlz.",
+   "file": "01.wav",
+   "dur": 1.637,
+   "sha256": "0a3c3d3e4a0667140ba1ea785562d127a2bcaab0a0b75b0672786e9ca4524ff0"
+  },
+  {
+   "id": "vo02",
+   "beat": "body",
+   "text": "Ten million times slower. One second now lasts about one hundred sixteen days. A hundred million times slower, and one second lasts more than three years. At this speed, a flash of light would take almost two seconds to cross the room. Now we're close. A billion times slower. One second now lasts about thirty-two years. Now the light itself is slow. Light moves about thirty centimeters in a billionth of a second. So at this speed, it crawls thirty centimeters in one second. That's a slow crawl. Someone flicks on a flashlight. A glowing front of light leaves the lens, and spreads across the room. Behind it, the table is lit. Ahead of it, the table is still dark. The cup lights up on one side first, and its shadow arrives last. The drop of water above the cup hangs there, frozen. It takes about seventeen seconds for the light to reach the far wall. And in the corner, a computer chip is about to start ticking.",
+   "stars": [
+    "light"
+   ],
+   "phonemes": "tˈɛn mˈɪliən tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ɐbˌaʊt wˈʌn hˈʌndɹɪd sˈɪkstiːn dˈeɪz. ɐ hˈʌndɹɪd mˈɪliən tˈaɪmz slˈoʊɚ, ænd wˈʌn sˈɛkənd lˈæsts mˈɔːɹ ðɐn θɹˈiː jˈɪɹz. æt ðɪs spˈiːd, ɐ flˈæʃ ʌv lˈaɪt wʊd tˈeɪk ˈɔːlmoʊst tˈuː sˈɛkəndz tə kɹˈɔs ðə ɹˈuːm. nˈaʊ wɪɹ klˈoʊs. ɐ bˈɪliən tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ɐbˌaʊt θˈɜːɾitˈuː jˈɪɹz. nˈaʊ ðə lˈaɪt ɪtsˈɛlf ɪz slˈoʊ. lˈaɪt mˈuːvz ɐbˌaʊt θˈɜːɾi sˈɛntɪmˌiːɾɚz ɪn ɐ bˈɪliənθ əvə sˈɛkənd. sˌoʊ æt ðɪs spˈiːd, ɪt kɹˈɔːlz θˈɜːɾi sˈɛntɪmˌiːɾɚz ɪn wˈʌn sˈɛkənd. ðæts ɐ slˈoʊ kɹˈɔːl. sˈʌmwʌn flˈɪks ˌɔn ɐ flˈæʃlaɪt. ɐ ɡlˈoʊɪŋ fɹˈʌnt ʌv lˈaɪt lˈiːvz ðə lˈɛnz, ænd spɹˈɛdz əkɹˌɑːs ðə ɹˈuːm. bᵻhˈaɪnd ɪt, ðə tˈeɪbəl ɪz lˈɪt. ɐhˈɛd ʌv ɪt, ðə tˈeɪbəl ɪz stˈɪl dˈɑːɹk. ðə kˈʌp lˈaɪts ˌʌp ˌɔn wˈʌn sˈaɪd fˈɜːst, ænd ɪts ʃˈædoʊ ɚɹˈaɪvz lˈæst. ðə dɹˈɑːp ʌv wˈɔːɾɚɹ əbˌʌv ðə kˈʌp hˈæŋz ðˈɛɹ, fɹˈoʊzən. ɪt tˈeɪks ɐbˌaʊt sˈɛvəntˌiːn sˈɛkəndz fɚðə lˈaɪt tə ɹˈiːtʃ ðə fˈɑːɹ wˈɔːl. ænd ɪnðə kˈɔːɹnɚ, ɐ kəmpjˈuːɾɚ tʃˈɪp ɪz ɐbˌaʊt tə stˈɑːɹt tˈɪkɪŋ.",
+   "file": "02.wav",
+   "dur": 65.619,
+   "sha256": "e33b307069c8e269b46b9b86193d17b225ab09a408da52dbd188d65545b1681e"
+  },
+  {
+   "id": "vo03",
+   "beat": "tease",
+   "text": "Part 7 of 8. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt sˈɛvən ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "file": "03.wav",
+   "dur": 2.841,
+   "sha256": "9c21a6d12bfdaa51dee4a8b8ac7dc8eb83ac78da7a438e2f3c3fd3d68c05acf0"
+  }
+ ]
+}

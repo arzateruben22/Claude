@@ -1,0 +1,85 @@
+{
+ "duration": 73.6,
+ "fps": 30,
+ "preset": "restframe-bench",
+ "duck_db": -9.0,
+ "sections": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 2.4,
+   "energy": 0.6
+  },
+  {
+   "id": "body",
+   "t0": 2.4,
+   "t1": 68.8,
+   "energy": 0.7
+  },
+  {
+   "id": "tease",
+   "t0": 68.8,
+   "t1": 73.6,
+   "energy": 0.4
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "hook",
+   "t1": 2.4
+  },
+  {
+   "t": 0.0,
+   "kind": "signature",
+   "tag": "title",
+   "gain": -4.0
+  },
+  {
+   "t": 0.45,
+   "kind": "counter.show",
+   "tag": "spine"
+  },
+  {
+   "t": 0.6,
+   "kind": "badge",
+   "tag": "code",
+   "text": "Drawn by code · model"
+  },
+  {
+   "t": 2.4,
+   "kind": "section",
+   "id": "body",
+   "t1": 68.8
+  },
+  {
+   "t": 68.8,
+   "kind": "section",
+   "id": "tease",
+   "t1": 73.6
+  },
+  {
+   "t": 71.6,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.1,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 2.533333333333333,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 69.1,
+   "file": "vo/03.wav"
+  }
+ ]
+}
