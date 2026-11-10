@@ -156,5 +156,17 @@
   "gain": -12,
   "pan": 0.0,
   "of": "reed"
+ },
+ {
+  "kind": "section",
+  "tag": null,
+  "t": 67.968,
+  "show": 68.0,
+  "sound": 68.0,
+  "place": 67.37,
+  "anchor": 30239,
+  "voice": "whoosh",
+  "gain": -33,
+  "pan": 0.0
  }
 ]

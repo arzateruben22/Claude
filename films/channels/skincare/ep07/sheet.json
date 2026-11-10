@@ -1,5 +1,5 @@
 {
- "duration": 70.0,
+ "duration": 73.733,
  "fps": 30,
  "preset": "outerlayer-slide",
  "sections": [
@@ -42,8 +42,14 @@
   {
    "id": "tease",
    "t0": 63.583,
-   "t1": 70.0,
+   "t1": 67.968,
    "energy": 0.35
+  },
+  {
+   "id": "cta",
+   "t0": 67.968,
+   "t1": 73.733,
+   "energy": 0.4
   }
  ],
  "events": [
@@ -123,12 +129,18 @@
    "t": 63.583,
    "kind": "section",
    "id": "tease",
-   "t1": 70.0
+   "t1": 67.968
   },
   {
    "t": 63.883,
    "kind": "signature",
    "tag": "end"
+  },
+  {
+   "t": 67.968,
+   "kind": "section",
+   "id": "cta",
+   "t1": 73.733
   }
  ],
  "voice": [
@@ -166,6 +178,11 @@
    "id": "vo07",
    "t": 63.883,
    "file": "vo/07.wav"
+  },
+  {
+   "id": "vo07c",
+   "t": 68.268,
+   "file": "vo/07c.wav"
   }
  ]
 }
