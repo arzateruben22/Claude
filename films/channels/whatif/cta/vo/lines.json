@@ -1,0 +1,91 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/cta/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "l3follow",
+   "text": "If your brain's doing the math with me, tap like and follow.",
+   "stars": [],
+   "phonemes": "ɪf jʊɹ bɹˈeɪnz dˌuːɪŋ ðə mˈæθ wɪð mˌiː, tˈæp lˈaɪk ænd fˈɑːloʊ.",
+   "speeds": [
+    0.92
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "01.wav",
+   "dur": 3.152,
+   "sha256": "e47cc9e1587f044ee2575bcb07669a2446f515fbbab9f5d29c210bfd31a8c1e1"
+  },
+  {
+   "id": "vo02",
+   "beat": "l3sub",
+   "text": "If your brain's doing the math with me, tap like and subscribe.",
+   "stars": [],
+   "phonemes": "ɪf jʊɹ bɹˈeɪnz dˌuːɪŋ ðə mˈæθ wɪð mˌiː, tˈæp lˈaɪk ænd səbskɹˈaɪb.",
+   "speeds": [
+    0.92
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "02.wav",
+   "dur": 3.313,
+   "sha256": "1ddea2424c78e191f4cd14bbd29f6b1248ee6a555f1ce62a2b5e530c0a42e309"
+  },
+  {
+   "id": "vo03",
+   "beat": "l4follow",
+   "text": "Real quick: like and follow. The next what-if is even stranger.",
+   "stars": [],
+   "phonemes": "ɹˈiːəl kwˈɪk: lˈaɪk ænd fˈɑːloʊ. ðə nˈɛkst wʌɾɪf ɪz ˈiːvən stɹˈeɪndʒɚ.",
+   "speeds": [
+    0.92,
+    0.92
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.4714,
+     1.8514
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 3.59,
+   "sha256": "0b1b531e38cfb4419a9e65de9b2b64a44264bbae353c7a98d59e662f01ce4257"
+  },
+  {
+   "id": "vo04",
+   "beat": "l4sub",
+   "text": "Real quick: like and subscribe. The next what-if is even stranger.",
+   "stars": [],
+   "phonemes": "ɹˈiːəl kwˈɪk: lˈaɪk ænd səbskɹˈaɪb. ðə nˈɛkst wʌɾɪf ɪz ˈiːvən stɹˈeɪndʒɚ.",
+   "speeds": [
+    0.92,
+    0.92
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.7505,
+     2.1305
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 3.87,
+   "sha256": "2d1ecb0ab73e67b9e388c2e505cfabfe10b565bda1e8b8ea5f48df5ab4094f13"
+  }
+ ]
+}

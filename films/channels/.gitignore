@@ -7,3 +7,5 @@ rerender.log
 *.part.mp4
 whatif/longform/**/build/
 whatif/longform/**/out/*-draft.mp4
+whatif/ep*/out/.orig/
+whatif/ep*/out/.tmp/

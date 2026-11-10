@@ -66,6 +66,7 @@ if (ST && ST.trimBeforeLastVo) for (const e of eps) {          // cut each episo
   if (v.length) e.dur = Math.min(e.dur, Number((v[v.length - 1].t - 0.15).toFixed(3)));
 }
 const SEG = ST ? ST.segments : {}, segDur = (k) => (SEG[k] ? SEG[k].dur : 0);
+const insAfter = (k) => (ST && ST.insertAfterEpisode && ST.insertAfterEpisode[String(k)]) || null, insDur = (k) => (insAfter(k) ? segDur(insAfter(k)) : 0), beforeOutro = ST && ST.beforeOutro ? ST.beforeOutro : null;
 const bridgeOf = (k) => (ST ? segDur(`bridge${k + 1}`) : BRIDGE), stretchTotal = Object.values(SEG).reduce((a, g) => a + g.dur, 0) - (ST ? 0 : 0);
 if (eps.length < 2) die("a compilation needs at least two episodes");
 const name = A.name || `vol${String(Math.ceil(eps.length / 6)).padStart(2, "0")}`;
@@ -119,7 +120,7 @@ const pages = {
   outro: `<div class="card"><p class="kick">${esc(theme.name)}</p><p class="big" style="margin-top:22px;max-width:900px">A new one every day.</p><p class="prom" style="max-width:820px">${esc(theme.promise || "")}</p><span class="pill">Subscribe</span></div>`,
   thumb: `<div class="card thumb"><p class="kick">${esc(theme.name)}</p><p class="big" style="margin-top:20px">${esc(A.thumb || title)}</p></div>${posters(3)}`,
 };
-const stHtml = (st) => `<div class="card"${st.rows ? ' style="width:880px;padding-right:0"' : ""}><p class="kick">${esc(st.kick || theme.name)}</p><p class="big" style="margin-top:22px;${st.rows ? "font-size:88px;max-width:880px" : ""}">${esc(st.big || "")}</p>${st.sub ? `<p class="prom"${st.rows ? ' style="max-width:820px"' : ""}>${esc(st.sub)}</p>` : ""}${st.meta ? `<p class="meta">${esc(st.meta)}</p>` : ""}</div>${st.rows ? `<div class="rank">${st.rows.map((r) => `<div class="rrow${r.on ? " on" : ""}"><b>${esc(r.n)}</b><span>${esc(r.t)}</span><i>${esc(r.v)}</i></div>`).join("")}</div>` : ""}`;
+const stHtml = (st) => `<div class="card"${st.rows ? ' style="width:880px;padding-right:0"' : ""}><p class="kick">${esc(st.kick || theme.name)}</p><p class="big" style="margin-top:22px;${st.rows ? "font-size:88px;max-width:880px" : ""}${st.size ? `font-size:${st.size}px;max-width:1300px` : ""}">${esc(st.big || "")}</p>${st.sub ? `<p class="prom"${st.rows ? ' style="max-width:820px"' : ""}>${esc(st.sub)}</p>` : ""}${st.meta ? `<p class="meta">${esc(st.meta)}</p>` : ""}</div>${st.rows ? `<div class="rank">${st.rows.map((r) => `<div class="rrow${r.on ? " on" : ""}"><b>${esc(r.n)}</b><span>${esc(r.t)}</span><i>${esc(r.v)}</i></div>`).join("")}</div>` : ""}`;
 for (const [sk, g] of Object.entries(SEG)) g.states.forEach((st, i) => { pages[`st-${sk}-${i}`] = stHtml(st); });
 if (BRIDGE && !ST) eps.slice(1).forEach((e, k) => { pages[`bridge${k}`] = `<div class="card"><p class="kick">Up next</p><p class="big" style="margin-top:22px">${esc(e.title)}</p><p class="meta">${esc(e.num)}</p></div>`; });
 eps.forEach((e, k) => { pages[`ep${k}`] = `<div class="slot"></div><div class="left"><p class="kick">${esc(theme.name)}</p><p class="num">${esc(e.num)}</p><p class="t">${esc(e.title)}</p><p class="of">Episode ${k + 1} of ${eps.length}</p></div><div class="right"><p class="hd">In this video</p>${rows(k)}</div><p class="foot">Narration: synthetic voice (AI)</p>`; });
@@ -178,9 +179,11 @@ eps.forEach((e, k) => {
     `[0:v]fps=${FPS},format=yuv420p[bg];[1:v]scale=${SLOT_PX.w}:${OH}:flags=lanczos+accurate_rnd+full_chroma_int[ep];[bg][ep]overlay=${SLOT_PX.x}:0:shortest=1,format=yuv420p[v]`,
     "-map", "[v]", "-an", "-t", e.dur.toFixed(3), ...V, o]);
   segs.push(o);
+  if (ST && insAfter(k)) segs.push(...stSeg(insAfter(k)));
   if (ST) segs.push(...stSeg(k + 1 < eps.length ? `bridge${k + 1}` : "finale"));
   else if (BRIDGE && k + 1 < eps.length) segs.push(card(`bridge${k}`, BRIDGE));
 });
+if (ST && beforeOutro) segs.push(...stSeg(beforeOutro));
 segs.push(card("outro", OUTRO));
 const list = path.join(work, "concat.txt"), final = path.join(outDir, `${name}-16x9.mp4`);
 fs.writeFileSync(list, segs.map((s) => `file '${s}'`).join("\n") + "\n");
@@ -202,7 +205,8 @@ const vwav = (sk) => {                                  // the voiced segment's 
 };
 part(introWav || `anullsrc=r=48000:cl=stereo:d=${INTRO}`, INTRO, true);
 if (ST) part(vwav("opening"), SEG.opening.dur, false);
-eps.forEach((e, k) => { part(e.file, +e.dur.toFixed(3), false, ST && ST.trimBeforeLastVo); if (ST) { const sk = k + 1 < eps.length ? `bridge${k + 1}` : "finale"; part(vwav(sk), SEG[sk].dur, false); } else if (BRIDGE && k + 1 < eps.length) part(`anullsrc=r=48000:cl=stereo:d=${BRIDGE}`, BRIDGE, true); });
+eps.forEach((e, k) => { part(e.file, +e.dur.toFixed(3), false, ST && ST.trimBeforeLastVo); if (ST) { if (insAfter(k)) part(vwav(insAfter(k)), SEG[insAfter(k)].dur, false); const sk = k + 1 < eps.length ? `bridge${k + 1}` : "finale"; part(vwav(sk), SEG[sk].dur, false); } else if (BRIDGE && k + 1 < eps.length) part(`anullsrc=r=48000:cl=stereo:d=${BRIDGE}`, BRIDGE, true); });
+if (ST && beforeOutro) part(vwav(beforeOutro), SEG[beforeOutro].dur, false);
 part(outroWav || `anullsrc=r=48000:cl=stereo:d=${OUTRO}`, OUTRO, true);
 const wavAll = path.join(work, "sound.wav"), m4a = path.join(work, "sound.m4a");
 run("ffmpeg", ["-v", "error", "-y", ...inputs, "-filter_complex", `${parts.join(";")};${parts.map((_, j) => `[a${j}]`).join("")}concat=n=${parts.length}:v=0:a=1[a]`,
@@ -221,8 +225,8 @@ run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", list, "-
 // ── chapters, description, QA ──────────────────────────────────────────────────
 const starts = [];
 let t = INTRO + (ST ? SEG.opening.dur : 0);
-for (const [k, e] of eps.entries()) { starts.push(t); t += e.dur + bridgeOf(k); }
-const finaleStart = ST ? t - SEG.finale.dur : null;
+for (const [k, e] of eps.entries()) { starts.push(t); t += e.dur + insDur(k) + bridgeOf(k); }
+const finaleStart = ST ? t : null;   // the finale follows the last episode (and its optional inserted line)
 starts[0] = 0;   // YouTube: the first chapter starts at 0:00 (the intro belongs to it); the outro belongs to the last
 const chapters = [...eps.map((e, k) => `${ts(starts[k])} ${e.title}`), ...(ST && ST.finaleChapter ? [`${ts(finaleStart)} ${ST.finaleChapter}`] : [])].join("\n");
 fs.writeFileSync(path.join(outDir, "chapters.txt"), chapters + "\n");

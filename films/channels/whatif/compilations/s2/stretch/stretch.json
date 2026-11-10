@@ -589,6 +589,34 @@
      ]
     }
    ]
+  },
+  "cta1": {
+   "wav": "../../../cta/vo/02.wav",
+   "dur": 3.313,
+   "states": [
+    {
+     "at": 0,
+     "kick": "Possibility Lab",
+     "big": "If your brain's doing the math with me, tap like and subscribe.",
+     "size": 78
+    }
+   ]
+  },
+  "cta2": {
+   "wav": "../../../cta/vo/04.wav",
+   "dur": 3.87,
+   "states": [
+    {
+     "at": 0,
+     "kick": "Possibility Lab",
+     "big": "Real quick: like and subscribe. The next what-if is even stranger.",
+     "size": 78
+    }
+   ]
   }
- }
+ },
+ "insertAfterEpisode": {
+  "1": "cta1"
+ },
+ "beforeOutro": "cta2"
 }
