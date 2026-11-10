@@ -1,0 +1,133 @@
+{
+ "version": 1,
+ "format": "short",
+ "channel": "Possibility Lab",
+ "video": "ep12",
+ "hook": "Catch every lightning bolt for a whole year and you would collect only about five days of the world's electricity, roughly.",
+ "titles": [
+  {
+   "text": "A Year of Lightning Would Power the World for 5 Days",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Could We Catch All the World's Lightning?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "1.4 Billion Lightning Flashes a Year. How Much Power?",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "The Lightning Power Plant That Can't Exist",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Why All the Lightning on Earth Isn't Enough",
+   "mechanism": "hidden mechanism"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a tall glowing bolt filling a thin tank on the left, and a far taller tank of the world's electricity beside it",
+   "composition": "two tanks side by side, bolt tank short, electricity tank towering",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "scale shock: lightning is a thin slice",
+   "text": "5 DAYS",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "B",
+   "subject": "a single bolt striking a light bulb above the blue figure",
+   "composition": "bolt centre, figure low",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "visual paradox: a bulb and a bolt",
+   "text": "",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "C",
+   "subject": "the globe flickering with many bolts and a counter ticking",
+   "composition": "globe centre, counter top",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "44 A SECOND",
+   "text": "",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 90,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 80,
+    "accuracy": 92,
+    "mobile": 86,
+    "satisfaction": 92
+   },
+   "note": "the cover adds a number or picture the title leaves out; clear at phone size"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 84,
+    "curiosity": 85,
+    "clarity": 76,
+    "synergy": 74,
+    "originality": 86,
+    "accuracy": 86,
+    "mobile": 72,
+    "satisfaction": 85
+   },
+   "note": "a different hook in the picture dilutes the title"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 80,
+    "clarity": 80,
+    "synergy": 72,
+    "originality": 70,
+    "accuracy": 88,
+    "mobile": 76,
+    "satisfaction": 82
+   },
+   "note": "weaker focal point at 168 px wide"
+  }
+ ],
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "winner": {
+  "title": "A Year of Lightning Would Power the World for 5 Days",
+  "thumbnail": "A",
+  "thumbnailText": "5 DAYS",
+  "why": "The title makes the surprising claim; the cover shows how thin the lightning tank is next to the world's electricity, with a number that completes the idea."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
+ "thumbnailFile": "possibility-lab-s2e06-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: two tall glass tanks side by side on a dark graph-paper floor: a short tank filled with glowing amber lightning, next to a far taller tank of cool blue light, the lightning tank only a thin slice of the other.\nComposition: 9:16 vertical: the tall tank on the right of centre, the short lightning tank on the left, both in the middle band; the number sits above them, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"5 DAYS\" in heavy white condensed sans-serif, \"DAYS\" in magenta, placed upper middle. No other text.\nScientific accuracy: about 44 flashes a second, about 1.4 billion a year, roughly a billion joules each (a wide range); that is roughly five days of world electricity (about 4.7), and the video hedges the range; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 30.1667,
+  "text": "5 DAYS"
+ }
+}

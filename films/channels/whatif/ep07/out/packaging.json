@@ -1,0 +1,133 @@
+{
+ "version": 1,
+ "format": "short",
+ "channel": "Possibility Lab",
+ "video": "ep07",
+ "hook": "Walk to the Moon without stopping and it takes about nine years; walk a working day at a time and it takes about 26.",
+ "titles": [
+  {
+   "text": "How Long Would It Take to Walk to the Moon?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Walking to the Moon: 9 Years Nonstop, 26 With Sleep",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "You Could Walk to the Moon. It Would Take About 26 Years.",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "The Moon Is About 30 Earths Away. Could You Walk It?",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "Your Front Door to the Moon: How Long Is the Walk?",
+   "mechanism": "personal relevance"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "the blue figure, small, at the left end of a very long dotted path that runs off to a pale Moon at the far right",
+   "composition": "figure low left, path crossing the whole frame, Moon top right, empty dark space for the number",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "scale shock: a tiny person, an enormous distance",
+   "text": "26 YEARS",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "B",
+   "subject": "one big readout number counting up beside the figure, the Moon far behind",
+   "composition": "number upper third, figure lower third",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "knowledge gap: the number is the hook",
+   "text": "9 YEARS",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "C",
+   "subject": "the blue figure standing at a front door, the Moon hanging above",
+   "composition": "figure centre, door at left, Moon top",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "personal relevance: starting from your own door",
+   "text": "",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 90,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 80,
+    "accuracy": 92,
+    "mobile": 86,
+    "satisfaction": 92
+   },
+   "note": "the cover adds a number or picture the title leaves out; clear at phone size"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 84,
+    "curiosity": 85,
+    "clarity": 76,
+    "synergy": 74,
+    "originality": 86,
+    "accuracy": 86,
+    "mobile": 72,
+    "satisfaction": 85
+   },
+   "note": "a different hook in the picture dilutes the title"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 80,
+    "clarity": 80,
+    "synergy": 72,
+    "originality": 70,
+    "accuracy": 88,
+    "mobile": 76,
+    "satisfaction": 82
+   },
+   "note": "weaker focal point at 168 px wide"
+  }
+ ],
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "winner": {
+  "title": "How Long Would It Take to Walk to the Moon?",
+  "thumbnail": "A",
+  "thumbnailText": "26 YEARS",
+  "why": "The title asks the plain question everyone wonders about; the cover answers it with a number the title does not give, 26 years at a working-day pace, which the video explains."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
+ "thumbnailFile": "possibility-lab-s2e01-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the small glossy blue mannequin figure seen from behind, standing at the left end of a long thin dotted path that runs across the frame to a pale grey Moon at the far right.\nComposition: 9:16 vertical: the Moon in the upper third, the figure small in the lower third, the dotted path winding up between them; the number sits in the middle band, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"26 YEARS\" in heavy white condensed sans-serif, with \"YEARS\" in magenta, placed upper middle. No other text.\nScientific accuracy: the walk is a thought experiment at a working-day pace: about 26 years (about nine years if you never stopped); the Moon is about 384,400 km away; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 39.5,
+  "text": "26 YEARS"
+ }
+}

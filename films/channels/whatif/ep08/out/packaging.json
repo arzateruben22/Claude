@@ -1,0 +1,133 @@
+{
+ "version": 1,
+ "format": "short",
+ "channel": "Possibility Lab",
+ "video": "ep08",
+ "hook": "Everyone on Earth holding hands would make a chain that wraps around the planet about 310 times.",
+ "titles": [
+  {
+   "text": "If Everyone on Earth Held Hands, How Far Would It Reach?",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Everyone Holds Hands: The Chain Wraps Earth 310 Times",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "8 Billion People, One Chain. Where Does It End?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "How Many People Does It Take to Circle the Earth?",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "One Person in 300 of Us Would Circle the Whole Planet",
+   "mechanism": "contradiction"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "the Earth drawn as a ball of white thread: a single line wound about 310 times round a dark sphere",
+   "composition": "sphere large and centred in the upper two thirds, number below it",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "scale shock: a planet wrapped like yarn",
+   "text": "310 LAPS",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "B",
+   "subject": "the blue figure at the left holding hands with a long line of grey figures that curves away over the horizon",
+   "composition": "figure left, chain bending out of frame",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "visual paradox: where does it end?",
+   "text": "",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "C",
+   "subject": "a pale globe with one thin ring round the equator and a big readout number",
+   "composition": "globe centre, number top",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "knowledge gap",
+   "text": "12 MILLION KM",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 90,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 80,
+    "accuracy": 92,
+    "mobile": 86,
+    "satisfaction": 92
+   },
+   "note": "the cover adds a number or picture the title leaves out; clear at phone size"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 84,
+    "curiosity": 85,
+    "clarity": 76,
+    "synergy": 74,
+    "originality": 86,
+    "accuracy": 86,
+    "mobile": 72,
+    "satisfaction": 85
+   },
+   "note": "a different hook in the picture dilutes the title"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 80,
+    "clarity": 80,
+    "synergy": 72,
+    "originality": 70,
+    "accuracy": 88,
+    "mobile": 76,
+    "satisfaction": 82
+   },
+   "note": "weaker focal point at 168 px wide"
+  }
+ ],
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "winner": {
+  "title": "If Everyone on Earth Held Hands, How Far Would It Reach?",
+  "thumbnail": "A",
+  "thumbnailText": "310 LAPS",
+  "why": "The title is the question; the cover shows the surprising answer as a picture, the chain wound round the planet like thread, with a number the title never states."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
+ "thumbnailFile": "possibility-lab-s2e02-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the Earth drawn as a ball of thread: a single long white line wound about 310 times round a dark grey sphere, so the planet looks like a ball of yarn.\nComposition: 9:16 vertical: the sphere large in the upper two thirds, a little left of centre; the number sits below it, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"310 LAPS\" in heavy white condensed sans-serif, \"LAPS\" in magenta, placed upper middle. No other text.\nScientific accuracy: the thread is a chain of everyone on Earth holding hands, about 12.3 million km, wound about 310 times round the equator; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 42.4333,
+  "text": "310 LAPS"
+ }
+}

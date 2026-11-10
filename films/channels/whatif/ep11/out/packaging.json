@@ -1,0 +1,133 @@
+{
+ "version": 1,
+ "format": "short",
+ "channel": "Possibility Lab",
+ "video": "ep11",
+ "hook": "All the water on Earth, ocean, ice and vapor together, would make a ball only about 1,400 km across, smaller than the Moon.",
+ "titles": [
+  {
+   "text": "All the Water on Earth Fits in a Ball This Big",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "All of Earth's Water in One Ball: Smaller Than the Moon",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "How Big Is a Ball Made of Every Drop of Earth's Water?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Every Ocean, Every Glacier: One Ball, 1,400 km Wide",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "The Whole Ocean Is a Tiny Dot Next to the Earth",
+   "mechanism": "unexpected consequence"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a pale blue ball of water floating beside the full grey Moon and a much bigger Earth, three spheres in a row",
+   "composition": "three spheres across the frame in descending size, water ball in the middle",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "scale shock: all the water looks small",
+   "text": "1,400 KM",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "B",
+   "subject": "the water ball alone, glowing, against the dark",
+   "composition": "ball centre, glow",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "visual paradox: is that all?",
+   "text": "",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "C",
+   "subject": "the blue figure beside the water ball, about the size of a city",
+   "composition": "figure left, ball right",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "human scale",
+   "text": "",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 90,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 80,
+    "accuracy": 92,
+    "mobile": 86,
+    "satisfaction": 92
+   },
+   "note": "the cover adds a number or picture the title leaves out; clear at phone size"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 84,
+    "curiosity": 85,
+    "clarity": 76,
+    "synergy": 74,
+    "originality": 86,
+    "accuracy": 86,
+    "mobile": 72,
+    "satisfaction": 85
+   },
+   "note": "a different hook in the picture dilutes the title"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 80,
+    "clarity": 80,
+    "synergy": 72,
+    "originality": 70,
+    "accuracy": 88,
+    "mobile": 76,
+    "satisfaction": 82
+   },
+   "note": "weaker focal point at 168 px wide"
+  }
+ ],
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "winner": {
+  "title": "All the Water on Earth Fits in a Ball This Big",
+  "thumbnail": "A",
+  "thumbnailText": "1,400 KM",
+  "why": "The title sets the question; the cover answers with the size next to the Moon and the Earth, a number the title does not state."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
+ "thumbnailFile": "possibility-lab-s2e05-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: a smooth glowing pale-blue ball of water hanging between the grey Moon and the much larger Earth, three spheres in a row.\nComposition: 9:16 vertical: the three spheres stacked down the middle with the water ball in the centre of the frame; the number sits in the upper third, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"1,400 KM\" in heavy white condensed sans-serif, \"KM\" in magenta, placed upper middle. No other text.\nScientific accuracy: all liquid, ice and vapor water on Earth, about 1.386 billion km3, makes a ball about 1,400 km across; the Moon is about 3,474 km across; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 27.6333,
+  "text": "1,400 KM"
+ }
+}

@@ -1,0 +1,133 @@
+{
+ "version": 1,
+ "format": "short",
+ "channel": "Possibility Lab",
+ "video": "ep09",
+ "hook": "Lift a rope that circles the whole Earth by one meter and you need only about 6.3 meters more rope, on a planet of any size.",
+ "titles": [
+  {
+   "text": "Lift a Rope Around Earth 1 Meter. You Need Just 6 More.",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "A Rope Around the Earth, Lifted 1 Meter: How Much More?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Same 6 Meters Lift a Rope Around Any Planet",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Why a Tiny Bit of Rope Lifts the Whole Earth's Rope",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Could You Fit a Person Under a Rope Around Earth?",
+   "mechanism": "personal relevance"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "the blue figure beside a rope loop that hovers one meter above a huge dark planet curve",
+   "composition": "figure left third, planet arc lower right, loop above it",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "contradiction: a tiny change on a huge planet",
+   "text": "+6.3 M",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "B",
+   "subject": "a long straight rope laid beside the figure, about four of them end to end",
+   "composition": "figure left, rope across the middle",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "scale shock: how little extra rope",
+   "text": "",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "C",
+   "subject": "the planet curve with a thin bright ring just above its surface",
+   "composition": "curve fills the bottom, ring across it",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "visual paradox: a ring floating over the Earth",
+   "text": "1 METER",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 90,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 80,
+    "accuracy": 92,
+    "mobile": 86,
+    "satisfaction": 92
+   },
+   "note": "the cover adds a number or picture the title leaves out; clear at phone size"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 84,
+    "curiosity": 85,
+    "clarity": 76,
+    "synergy": 74,
+    "originality": 86,
+    "accuracy": 86,
+    "mobile": 72,
+    "satisfaction": 85
+   },
+   "note": "a different hook in the picture dilutes the title"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 80,
+    "clarity": 80,
+    "synergy": 72,
+    "originality": 70,
+    "accuracy": 88,
+    "mobile": 76,
+    "satisfaction": 82
+   },
+   "note": "weaker focal point at 168 px wide"
+  }
+ ],
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "winner": {
+  "title": "Lift a Rope Around Earth 1 Meter. You Need Just 6 More.",
+  "thumbnail": "A",
+  "thumbnailText": "+6.3 M",
+  "why": "The title poses the paradox; the cover shows the little extra rope as a number the title only hints at with 'just 6 more'."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
+ "thumbnailFile": "possibility-lab-s2e03-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the small glossy blue mannequin figure beside a thin rope loop that floats one meter above the curved surface of a huge dark planet.\nComposition: 9:16 vertical: the planet's curve across the bottom third, the figure at the left, the loop arching above it; the number sits in the upper middle, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"+6.3 M\" in heavy white condensed sans-serif, the \"M\" in magenta, placed upper middle. No other text.\nScientific accuracy: lifting a rope round a sphere by 1 meter adds 2 x pi x 1 = about 6.3 m of rope for any radius; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 43.7333,
+  "text": "+6.3 M"
+ }
+}

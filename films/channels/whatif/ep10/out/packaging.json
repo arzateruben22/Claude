@@ -1,0 +1,133 @@
+{
+ "version": 1,
+ "format": "short",
+ "channel": "Possibility Lab",
+ "video": "ep10",
+ "hook": "A shuffled deck is almost certainly in an order that has never existed before: 52! has 68 digits.",
+ "titles": [
+  {
+   "text": "Every Card Shuffle Is Almost Certainly a First",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "A Shuffled Deck Has 68 Digits of Possible Orders",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Has Anyone Ever Shuffled the Same Deck Twice?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Why Your Shuffle Has Never Happened Before",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "The Number Hidden Inside Every Deck of Cards",
+   "mechanism": "knowledge gap"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a single playing-card back, face down, in front of a vast column of digits that runs off the top of the frame",
+   "composition": "card low centre, digits receding upward",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "scale shock: a deck against a number too big to fit",
+   "text": "52!",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "B",
+   "subject": "a fan of cards with a bar for all possible orders towering over a tiny bar of all the shuffles ever",
+   "composition": "fan low, bars right",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "unexpected consequence",
+   "text": "",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  },
+  {
+   "id": "C",
+   "subject": "the blue figure holding one card up to the light",
+   "composition": "figure centre, card raised",
+   "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
+   "trigger": "personal relevance",
+   "text": "1 OF 10⁶⁸",
+   "complements": "adds a layer the title does not state; it never repeats the title's words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 90,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 80,
+    "accuracy": 92,
+    "mobile": 86,
+    "satisfaction": 92
+   },
+   "note": "the cover adds a number or picture the title leaves out; clear at phone size"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 84,
+    "curiosity": 85,
+    "clarity": 76,
+    "synergy": 74,
+    "originality": 86,
+    "accuracy": 86,
+    "mobile": 72,
+    "satisfaction": 85
+   },
+   "note": "a different hook in the picture dilutes the title"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 80,
+    "clarity": 80,
+    "synergy": 72,
+    "originality": 70,
+    "accuracy": 88,
+    "mobile": 76,
+    "satisfaction": 82
+   },
+   "note": "weaker focal point at 168 px wide"
+  }
+ ],
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "winner": {
+  "title": "Every Card Shuffle Is Almost Certainly a First",
+  "thumbnail": "A",
+  "thumbnailText": "52!",
+  "why": "The title is the surprising claim; the cover gives the mystery behind it, the number that makes it true, without explaining it."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
+ "thumbnailFile": "possibility-lab-s2e04-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: a single face-down playing card, plain and unmarked, standing in front of a tall column of small white digits that rises and fades off the top of the frame.\nComposition: 9:16 vertical: the card in the lower middle, the digit column rising behind it; the big symbol sits in the upper third, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"52!\" in heavy white condensed sans-serif, the \"!\" in magenta, placed upper middle. No other text.\nScientific accuracy: 52! is about 8 x 10^67, a 68-digit number; the chance that two shuffles in history ever matched is below 1 in 10^36; the digits are decorative, not the real number; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 43.8667,
+  "text": "52!"
+ }
+}
