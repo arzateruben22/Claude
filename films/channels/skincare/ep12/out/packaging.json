@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "format": "short",
+  "hook": "Your fingerprints were grown, not drawn: waves of ridge growth start at a few places on each fingertip before birth, and where they meet sets the pattern.",
+  "titles": [
+    {
+      "text": "Your Fingerprints Were Grown, Not Drawn",
+      "mechanism": "hidden mechanism"
+    },
+    {
+      "text": "When Do Your Fingerprints Form?",
+      "mechanism": "unanswered question"
+    },
+    {
+      "text": "Fingerprints Spread Like Ripples on Sand",
+      "mechanism": "visual paradox"
+    },
+    {
+      "text": "Nobody Drew Your Fingerprints",
+      "mechanism": "contradiction"
+    },
+    {
+      "text": "Your Fingertips Were Patterned Before Birth",
+      "mechanism": "personal relevance"
+    }
+  ],
+  "thumbnails": [
+    {
+      "id": "A",
+      "subject": "one fingertip pad in deep brown skin, its ridges forming a whorl, seen close and large",
+      "composition": "the fingertip filling the lower two thirds, rising from the bottom edge, ivory space above for the text",
+      "lighting": "warm side light, soft depth of field",
+      "trigger": "your own fingertip as a made thing",
+      "text": "Grown, not drawn.",
+      "complements": "the title names the twist, the picture shows the ridges"
+    },
+    {
+      "id": "B",
+      "subject": "a tiny newborn hand reaching, soft golden light",
+      "composition": "hand centre, warm glow",
+      "lighting": "golden",
+      "trigger": "before birth",
+      "text": "Before birth",
+      "complements": "the timing"
+    },
+    {
+      "id": "C",
+      "subject": "ripples spreading on sand",
+      "composition": "concentric ripples meeting",
+      "lighting": "soft",
+      "trigger": "familiar picture, new meaning",
+      "text": "Waves",
+      "complements": "the mechanism"
+    }
+  ],
+  "pairings": [
+    {
+      "title": 0,
+      "thumbnail": "A",
+      "scores": {
+        "scroll": 80,
+        "curiosity": 84,
+        "clarity": 84,
+        "synergy": 84,
+        "originality": 76,
+        "accuracy": 86,
+        "mobile": 84,
+        "satisfaction": 84
+      },
+      "note": "claim and the evidence image"
+    },
+    {
+      "title": 2,
+      "thumbnail": "C",
+      "scores": {
+        "scroll": 76,
+        "curiosity": 82,
+        "clarity": 80,
+        "synergy": 82,
+        "originality": 74,
+        "accuracy": 86,
+        "mobile": 80,
+        "satisfaction": 82
+      },
+      "note": "cause named"
+    },
+    {
+      "title": 1,
+      "thumbnail": "B",
+      "scores": {
+        "scroll": 72,
+        "curiosity": 78,
+        "clarity": 84,
+        "synergy": 70,
+        "originality": 62,
+        "accuracy": 90,
+        "mobile": 84,
+        "satisfaction": 78
+      },
+      "note": "plain question"
+    }
+  ],
+  "winner": {
+    "title": "Your Fingerprints Were Grown, Not Drawn",
+    "thumbnail": "A",
+    "thumbnailText": "Grown, not drawn.",
+    "why": "The video's twist in one line; the painted fingertip shows the ridges the line is about."
+  },
+  "testAndCompare": [
+    "A",
+    "B",
+    "C"
+  ],
+  "checks": {
+    "halfSecond": true,
+    "curiosity": true,
+    "duplication": true,
+    "competition": true,
+    "truth": true,
+    "satisfaction": true,
+    "originality": true
+  },
+  "thumbnailFile": "skin-sense-012-cover.jpg",
+  "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: one human fingertip pad seen close and large, deep warm brown painted skin (about RGB 124, 57, 29), the fingerprint ridges forming a clear whorl, no face.\nComposition: the fingertip fills the lower two thirds, rising from the bottom edge, ivory negative space above it for the text.\nLighting and treatment: warm side light, soft depth of field, ivory ground (#F7EFE3), deep green #00685F as the only accent.\nMood: quiet wonder.\nText: \"Grown, not drawn.\" in a navy editorial serif, upper centre.\nScientific accuracy: fingerprint ridges form before birth, spreading in waves from a few starting places on the fingertip; an illustration, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, distinctive and art-directed, not generic AI art.",
+  "shortsCover": {
+    "frameSeconds": 0.8,
+    "text": "Grown, not drawn.",
+    "note": "re-cut from the opening painting (image-only)"
+  },
+  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

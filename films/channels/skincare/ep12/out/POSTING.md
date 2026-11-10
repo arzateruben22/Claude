@@ -7,7 +7,7 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-Fingerprints form before you're born | Skin Sense S2 · Ep 6
+Your Fingerprints Were Grown, Not Drawn
 
 **Description**
 
@@ -21,7 +21,7 @@ Series: Season 2: What your skin does, part 6 of 6. Next: more skin questions
 Sources
 1. Fingerprint ridge formation is established prenatally. — NIH: https://pubmed.ncbi.nlm.nih.gov/36764291/
 
-Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code, no stock footage. Every number's source is listed in this description.
+Narration: synthetic voice (AI). Illustrations: AI-generated and 3-D animation made in code, no stock footage. Every number's source is listed in this description.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
@@ -46,7 +46,7 @@ Sources
 **Caption**
 
 ```
-When do your fingerprints form? So a fingerprint is a pattern of waves, set before birth. Education, not medical advice. #skincare #skinscience #learnontiktok #dermatology #skinbarrier
+When do your fingerprints form? So a fingerprint is a pattern of waves, set before birth. Education, not medical advice. #fyp #skincare #skinscience #learnontiktok #dermatology #skinbarrier
 ```
 
 **Pinned comment + replies (full sources)**
@@ -68,7 +68,7 @@ Sources in the first comment. AI voice and AI-generated illustrations.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
-#skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
+#fyp #skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
 ```
 
 **First comment** (2,200-character limit)
