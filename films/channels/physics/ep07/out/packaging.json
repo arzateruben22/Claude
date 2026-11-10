@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "When you drop a hanging slinky, the bottom coil hangs in mid-air for about three tenths of a second, as if nothing happened.",
+ "titles": [
+  {
+   "text": "The Bottom of a Dropped Slinky Hangs in Mid-Air",
+   "mechanism": "visual paradox"
+  },
+  {
+   "text": "Why the Bottom of a Falling Slinky Doesn't Fall",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Slinky's Bottom Hasn't Heard the News Yet",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Gravity Works on a Slinky, but Its Bottom Waits",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Slow a Slinky Drop 20× and Watch What Waits",
+   "mechanism": "scale shock"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a tall slinky hanging from a hand-held top, the top coils collapsing into a stack while the bottom coil floats exactly where it was, with a faint ruler beside it",
+   "composition": "slinky vertical, centre-left, large; bottom coil in the lower third with a ghost stamp row showing it has not moved",
+   "lighting": "soft daylight from the left on a cream bench",
+   "trigger": "disbelief",
+   "text": "",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  },
+  {
+   "id": "B",
+   "subject": "the same slinky as a row of strobe ghost stamps of the bottom coil, all in one spot",
+   "composition": "",
+   "lighting": "",
+   "trigger": "curiosity",
+   "text": "STILL THERE",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  },
+  {
+   "id": "C",
+   "subject": "a slinky mid-collapse with a blue wave front marked going down",
+   "composition": "",
+   "lighting": "",
+   "trigger": "wonder",
+   "text": "",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 86,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 74,
+    "accuracy": 96,
+    "mobile": 92,
+    "satisfaction": 86
+   },
+   "note": "The floating bottom coil is the whole mystery in one picture; the title states it."
+  },
+  {
+   "title": 2,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 74,
+    "synergy": 82,
+    "originality": 76,
+    "accuracy": 96,
+    "mobile": 90,
+    "satisfaction": 84
+   },
+   "note": "Same picture, a more abstract title."
+  },
+  {
+   "title": 1,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 78,
+    "clarity": 72,
+    "synergy": 70,
+    "originality": 70,
+    "accuracy": 94,
+    "mobile": 84,
+    "satisfaction": 76
+   },
+   "note": "Less clear which coil to look at."
+  }
+ ],
+ "winner": {
+  "title": "The Bottom of a Dropped Slinky Hangs in Mid-Air",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The video shows exactly this (about 0.3 s) and then why. The thumbnail has the paradox and the title says it plainly."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "reality-rulebook-s2e01-cover.jpg",
+ "chatgptPrompt": "Create a Shorts cover, 9:16 (1080x1920). Subject: a long steel-blue slinky held from the top by a hand, the top coils collapsing into a tight stack while the bottom coil stays exactly where it was, a thin pale ruler beside it. Composition: slinky vertical, left of centre, the floating bottom coil in the lower third. Lighting and treatment: soft daylight from the left on a cream bench; a daylight lab or an everyday room, clean and exact, cream background #E9E3D3, ink #1B1E24, one blue #2F5BFF accent, soft strobe-ghost stamps, premium editorial science documentary look, clearly a code-rendered illustration rather than a photograph. Mood: disbelief. Text: No text. Scientific accuracy: the bottom of a hanging slinky stays still for about 0.3 seconds after release because the news of the release travels down as a wave; the top falls first. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real photograph or a news image. Style: distinctive and art-directed, not generic AI art. Keep the focal point and any text inside the centre safe area, clear of the bottom 25% and the right-hand buttons.",
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "shortsCover": {
+  "frameSeconds": 0.0,
+  "text": ""
+ }
+}

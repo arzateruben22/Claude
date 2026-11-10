@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "Raindrops reach a top speed almost at once, then fall at a steady speed, because the air pushes back as hard as gravity pulls.",
+ "titles": [
+  {
+   "text": "Every Raindrop Has a Speed Limit",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Why Rain From Miles Up Lands Gently",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "A Stone Keeps Speeding Up. A Raindrop Doesn't",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Raindrops Are Never Teardrops",
+   "mechanism": "visual paradox"
+  },
+  {
+   "text": "How Fast Does Rain Really Fall?",
+   "mechanism": "unanswered question"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "three round raindrops of different sizes falling in a column of ghost stamps whose gaps grow then stop growing, under a small cloud, a thin height ladder at the left",
+   "composition": "three drops in a row, ghosts above each, cloud at the top",
+   "lighting": "soft daylight, pale sky",
+   "trigger": "wonder",
+   "text": "",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  },
+  {
+   "id": "B",
+   "subject": "one drop with an arrow-free pair of equal bars suggesting a balance of forces",
+   "composition": "",
+   "lighting": "",
+   "trigger": "",
+   "text": "BALANCED",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  },
+  {
+   "id": "C",
+   "subject": "a teardrop crossed out",
+   "composition": "",
+   "lighting": "",
+   "trigger": "",
+   "text": "",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 86,
+    "curiosity": 84,
+    "clarity": 86,
+    "synergy": 88,
+    "originality": 72,
+    "accuracy": 96,
+    "mobile": 90,
+    "satisfaction": 86
+   },
+   "note": "The growing-then-constant ghost spacing shows the speed limit directly."
+  },
+  {
+   "title": 2,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 78,
+    "synergy": 80,
+    "originality": 76,
+    "accuracy": 96,
+    "mobile": 90,
+    "satisfaction": 84
+   },
+   "note": "The contradiction title with the same picture."
+  },
+  {
+   "title": 3,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 62,
+    "curiosity": 76,
+    "clarity": 66,
+    "synergy": 62,
+    "originality": 74,
+    "accuracy": 92,
+    "mobile": 78,
+    "satisfaction": 74
+   },
+   "note": "A crossed-out teardrop reads as a rule, not a mystery."
+  }
+ ],
+ "winner": {
+  "title": "Every Raindrop Has a Speed Limit",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The part shows each drop reaching its top speed and a bigger drop reaching a higher one. The picture is the ghost spacing that stops growing."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "reality-rulebook-s2e06-cover.jpg",
+ "chatgptPrompt": "Create a Shorts cover, 9:16 (1080x1920). Subject: three round raindrops of different sizes falling in a column under a small soft cloud, each followed by faint ghost stamps whose spacing grows and then stays constant, a thin height ladder at the left. Composition: three drops in a vertical frame, cloud at the top, ladder on the left. Lighting and treatment: soft daylight and a pale sky; a daylight lab or an everyday room, clean and exact, cream background #E9E3D3, ink #1B1E24, one blue #2F5BFF accent, soft strobe-ghost stamps, premium editorial science documentary look, clearly a code-rendered illustration rather than a photograph. Mood: wonder. Text: No text. Scientific accuracy: a falling raindrop reaches a steady top speed because air drag equals its weight; bigger drops fall faster; real raindrops are not teardrop shaped. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real photograph or a news image. Style: distinctive and art-directed, not generic AI art. Keep the focal point and any text inside the centre safe area, clear of the bottom 25% and the right-hand buttons.",
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "shortsCover": {
+  "frameSeconds": 0.0,
+  "text": ""
+ }
+}

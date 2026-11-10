@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "Shake a jar of mixed nuts and the biggest one often rises to the top, even when it is heavier.",
+ "titles": [
+  {
+   "text": "Shake a Jar and the Biggest Nut Rises. Why?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Brazil Nut Effect, Slowed Down",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Why Heavy Things Rise When You Shake Them",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Why the Biggest Piece in Your Cereal Box Is on Top",
+   "mechanism": "personal relevance"
+  },
+  {
+   "text": "The Gaps Under the Big Nut Fill Up, and It Rises",
+   "mechanism": "unexpected consequence"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a glass jar cross-section of small nuts with one large dark nut rising near the top, a ghost-stamp trail below it",
+   "composition": "jar centre, big nut upper third, small grains below, tall vertical frame",
+   "lighting": "daylight, translucent glass edges",
+   "trigger": "wonder",
+   "text": "",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  },
+  {
+   "id": "B",
+   "subject": "the big nut alone above a field of small grains with arrows of flow suggested by ghost stamps",
+   "composition": "",
+   "lighting": "",
+   "trigger": "curiosity",
+   "text": "UP, NOT DOWN",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  },
+  {
+   "id": "C",
+   "subject": "a cereal box and jar",
+   "composition": "",
+   "lighting": "",
+   "trigger": "",
+   "text": "",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 86,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 74,
+    "accuracy": 96,
+    "mobile": 92,
+    "satisfaction": 86
+   },
+   "note": "One big nut climbing through small grains is the mystery."
+  },
+  {
+   "title": 3,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 82,
+    "clarity": 76,
+    "synergy": 80,
+    "originality": 66,
+    "accuracy": 96,
+    "mobile": 90,
+    "satisfaction": 82
+   },
+   "note": "More relatable title."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 68,
+    "curiosity": 76,
+    "clarity": 66,
+    "synergy": 68,
+    "originality": 74,
+    "accuracy": 92,
+    "mobile": 80,
+    "satisfaction": 78
+   },
+   "note": "Text claims direction more strongly than the picture."
+  }
+ ],
+ "winner": {
+  "title": "Shake a Jar and the Biggest Nut Rises. Why?",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The part shows the effect and several reasons, and says some jars do the opposite. The thumbnail shows the rise without implying it always happens."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "reality-rulebook-s2e03-cover.jpg",
+ "chatgptPrompt": "Create a Shorts cover, 9:16 (1080x1920). Subject: a tall glass jar seen from the side filled with small golden nuts, one large dark nut rising near the top leaving a faint ghost trail below it. Composition: jar centred in a vertical frame, the big nut in the upper third. Lighting and treatment: soft daylight, translucent glass edges; a daylight lab or an everyday room, clean and exact, cream background #E9E3D3, ink #1B1E24, one blue #2F5BFF accent, soft strobe-ghost stamps, premium editorial science documentary look, clearly a code-rendered illustration rather than a photograph. Mood: wonder. Text: No text. Scientific accuracy: the Brazil nut effect: shaking a mixed granular material often lifts the largest pieces to the top, even when they are heavier; it depends on the jar and the shaking. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real photograph or a news image. Style: distinctive and art-directed, not generic AI art. Keep the focal point and any text inside the centre safe area, clear of the bottom 25% and the right-hand buttons.",
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "shortsCover": {
+  "frameSeconds": 0.0,
+  "text": ""
+ }
+}

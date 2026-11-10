@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "As a cup fills, the sound climbs higher, because the empty space above the water is a shrinking pipe.",
+ "titles": [
+  {
+   "text": "You Can Hear a Cup Fill Up. Here's Why",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Why Does Pouring Water Get Higher in Pitch?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Empty Space in a Cup Is a Pipe",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Close Your Eyes and Hear How Full the Cup Is",
+   "mechanism": "personal relevance"
+  },
+  {
+   "text": "A Short Pipe Rings Higher Than a Long One",
+   "mechanism": "knowledge gap"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a cup cut open, water rising and a stack of thin green lines in the air above it showing the standing sound wave, a ruler at the left",
+   "composition": "cup centre, air column in the upper half",
+   "lighting": "soft daylight, light blue water",
+   "trigger": "wonder",
+   "text": "",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  },
+  {
+   "id": "B",
+   "subject": "two pipes side by side, one long one short, with wave lines",
+   "composition": "",
+   "lighting": "",
+   "trigger": "curiosity",
+   "text": "HIGHER",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  },
+  {
+   "id": "C",
+   "subject": "a cup with a sound wave curve beneath",
+   "composition": "",
+   "lighting": "",
+   "trigger": "",
+   "text": "",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 86,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 76,
+    "accuracy": 96,
+    "mobile": 92,
+    "satisfaction": 88
+   },
+   "note": "The air column above the water is the unexpected idea made visible."
+  },
+  {
+   "title": 1,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 78,
+    "synergy": 82,
+    "originality": 70,
+    "accuracy": 96,
+    "mobile": 90,
+    "satisfaction": 84
+   },
+   "note": "The question the video answers."
+  },
+  {
+   "title": 3,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 74,
+    "clarity": 70,
+    "synergy": 66,
+    "originality": 72,
+    "accuracy": 92,
+    "mobile": 80,
+    "satisfaction": 76
+   },
+   "note": "Less specific."
+  }
+ ],
+ "winner": {
+  "title": "You Can Hear a Cup Fill Up. Here's Why",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The part explains the pitch rising from the shrinking air pipe, with numbers from a formula. The picture shows the pipe."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "reality-rulebook-s2e05-cover.jpg",
+ "chatgptPrompt": "Create a Shorts cover, 9:16 (1080x1920). Subject: a cutaway of a white cup filling with light blue water, a stack of thin green lines in the empty air above the water showing a standing sound wave, a thin ruler at the left. Composition: cup centred in a vertical frame, the air column in the upper half. Lighting and treatment: soft daylight; a daylight lab or an everyday room, clean and exact, cream background #E9E3D3, ink #1B1E24, one blue #2F5BFF accent, soft strobe-ghost stamps, premium editorial science documentary look, clearly a code-rendered illustration rather than a photograph. Mood: wonder. Text: No text. Scientific accuracy: the empty air above the water behaves like a pipe closed at one end; a shorter pipe has a higher pitch, so the pitch rises as the cup fills. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real photograph or a news image. Style: distinctive and art-directed, not generic AI art. Keep the focal point and any text inside the centre safe area, clear of the bottom 25% and the right-hand buttons.",
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "shortsCover": {
+  "frameSeconds": 0.0,
+  "text": ""
+ }
+}

@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "A stick of dry spaghetti bent until it snaps almost never breaks in two; it usually breaks in three or more.",
+ "titles": [
+  {
+   "text": "Why Dry Spaghetti Almost Never Breaks in Two",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Bend Spaghetti Until It Snaps. You Get Three Pieces",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "The Spaghetti Mystery That Stumped Feynman",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Snap-Back That Breaks Spaghetti Twice",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "A Twist That Makes Spaghetti Break in Two",
+   "mechanism": "personal relevance"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "two hands bending a dry spaghetti stick into an arc at the instant before it snaps, a ghost-stamp of three pieces flying apart at its right",
+   "composition": "arc across the middle, hands at both ends, pieces at right",
+   "lighting": "daylight on cream, shallow shadow",
+   "trigger": "anticipation",
+   "text": "",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  },
+  {
+   "id": "B",
+   "subject": "three spaghetti pieces fanned out, one blue-tinted",
+   "composition": "",
+   "lighting": "",
+   "trigger": "curiosity",
+   "text": "NOT TWO",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  },
+  {
+   "id": "C",
+   "subject": "a twisted spaghetti stick in two hands",
+   "composition": "",
+   "lighting": "",
+   "trigger": "wonder",
+   "text": "",
+   "complements": "adds the picture the title only describes, without repeating its words"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 86,
+    "curiosity": 86,
+    "clarity": 84,
+    "synergy": 88,
+    "originality": 72,
+    "accuracy": 96,
+    "mobile": 90,
+    "satisfaction": 86
+   },
+   "note": "The bent arc shows the setup; the title is the surprise."
+  },
+  {
+   "title": 1,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 82,
+    "clarity": 80,
+    "synergy": 78,
+    "originality": 70,
+    "accuracy": 96,
+    "mobile": 92,
+    "satisfaction": 84
+   },
+   "note": "More literal, equally true."
+  },
+  {
+   "title": 2,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 76,
+    "clarity": 70,
+    "synergy": 68,
+    "originality": 72,
+    "accuracy": 92,
+    "mobile": 80,
+    "satisfaction": 76
+   },
+   "note": "Name-drop, weaker picture."
+  }
+ ],
+ "winner": {
+  "title": "Why Dry Spaghetti Almost Never Breaks in Two",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The video says 'almost never' and shows three or more pieces; it ends on the twist that makes two pieces. The picture is the moment before the snap."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "reality-rulebook-s2e02-cover.jpg",
+ "chatgptPrompt": "Create a Shorts cover, 9:16 (1080x1920). Subject: two hands bending a stick of dry spaghetti into an arc at the instant before it snaps, faint ghost stamps of the pieces flying apart. Composition: the arc across the middle of the frame, hands at both ends. Lighting and treatment: soft daylight on a cream bench; a daylight lab or an everyday room, clean and exact, cream background #E9E3D3, ink #1B1E24, one blue #2F5BFF accent, soft strobe-ghost stamps, premium editorial science documentary look, clearly a code-rendered illustration rather than a photograph. Mood: anticipation. Text: No text. Scientific accuracy: dry spaghetti bent until it snaps usually breaks into three or more pieces because the first break sends bending waves that break it again; twisting it first can give two pieces. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real photograph or a news image. Style: distinctive and art-directed, not generic AI art. Keep the focal point and any text inside the centre safe area, clear of the bottom 25% and the right-hand buttons.",
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "shortsCover": {
+  "frameSeconds": 0.0,
+  "text": ""
+ }
+}
