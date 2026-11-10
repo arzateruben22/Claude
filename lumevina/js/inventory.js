@@ -26,6 +26,11 @@
   var KEY = "lumevina_inventory";
   var CAT = window.LUMEVINA_CATALOG || { products: [], brands: [], categories: [] };
   var LOW = 3;
+  /* shop.countStock: false = the shelf isn't being counted yet: a product with
+     no count reads as in stock and sells without limit (the counts in the guide
+     came from screenshots and aren't used); type a count in the dashboard's
+     Inventory and that product is counted from then on. */
+  var notCounting = function () { var c = window.LUMEVINA_CONFIG; return !!(c && c.shop && c.shop.countStock === false); };
 
   var num = function (n) { return Number(n || 0); };
   var read = function () {
@@ -44,6 +49,7 @@
       var s = saved[c.id] || {};
       var p = {};
       Object.keys(c).forEach(function (k) { p[k] = c[k]; });
+      if (notCounting()) p.stock = null;   // the guide's counts came from screenshots: not trusted yet
       if (s.stock !== undefined) p.stock = s.stock;
       if (s.price != null && s.priceSet) { p.price = s.price; p.priceSet = true; }
       if (s.cost != null) p.cost = s.cost;
@@ -98,7 +104,7 @@
   /* "in" (plenty), "low" (3 or fewer), "out", or "ask" (count unknown) */
   var status = function (p) {
     if (p.kind === "consult") return "in";
-    if (p.stock == null) return "ask";
+    if (p.stock == null) return notCounting() ? "in" : "ask";
     if (num(p.stock) <= 0) return "out";
     return num(p.stock) <= LOW ? "low" : "in";
   };

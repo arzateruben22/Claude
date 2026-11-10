@@ -54,7 +54,13 @@
        payments through Stripe Checkout, and Lumevina Studio's notifications. */
     shop: {
       supabase: "",   /* e.g. https://<project>.supabase.co */
-      key: ""         /* the Supabase anon key (public) */
+      key: "",        /* the Supabase anon key (public) */
+      /* false = the shelf isn't counted yet (launch): every product without a
+         count reads "In stock" and sells without limit, online and in the
+         dashboard. As Evelyn types a count for a product (Inventory), that
+         product is counted and can sell out. Remove the line, or set true,
+         to go back to "Ask about stock" for products with no count. */
+      countStock: false
     },
     booking: {
       /* new clients book here; clients who already book with Evelyn on

@@ -164,7 +164,10 @@ const stableFor = (site: Site) => [
 ].filter(Boolean).join("\n\n");
 const STABLE: Record<Site, string> = { v2: stableFor("v2"), v3: stableFor("v3") };
 
-const stockWord = (n: number | null) => n == null ? "ask Evelyn" : n <= 0 ? "out of stock, can be requested" : n <= 3 ? `only ${n} left` : "in stock";
+// COUNT_STOCK=off: the shelf isn't counted yet, so a product with no count is in stock (and the catalog's
+// screenshot counts aren't used); a count typed in the dashboard puts that product back on the books
+const COUNTING = Deno.env.get("COUNT_STOCK") !== "off";
+const stockWord = (n: number | null) => n == null ? (COUNTING ? "ask Evelyn" : "in stock") : n <= 0 ? "out of stock, can be requested" : n <= 3 ? `only ${n} left` : "in stock";
 const stockBlock = async (db: ReturnType<typeof admin>) => {
   // live counts from the products table when it exists; otherwise the catalog's
   const live = new Map<string, number | null>();
@@ -172,7 +175,7 @@ const stockBlock = async (db: ReturnType<typeof admin>) => {
     const { data } = await db.from("products").select("id, stock");
     for (const row of data ?? []) live.set(row.id, row.stock);
   } catch { /* no products table yet: the bundle's counts stand */ }
-  return "# Stock right now\n\n" + SHELF.map((p) => `- ${p.name}: ${stockWord(live.has(p.id) ? live.get(p.id)! : p.stock)}`).join("\n");
+  return "# Stock right now\n\n" + SHELF.map((p) => `- ${p.name}: ${stockWord(live.has(p.id) ? live.get(p.id)! : COUNTING ? p.stock : null)}`).join("\n");
 };
 
 // the signed-in client's file: after the cached part, never cached, never shown to anyone else

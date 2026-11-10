@@ -2,6 +2,12 @@
 
 A plain checklist, in order. Steps marked **(Claude)** are code work to ask for in a session; everything else is an account to create or a button to press. Keys and passwords never go in chat or in the code: they're pasted into Supabase as "secrets" (step 3).
 
+## The fast path: the shop live in one sitting (v2, booking stays on GlossGenius)
+
+Everything in the code is built; what's left is accounts and settings, done with Evelyn at the keyboard. For the shop on its own you need only: the **domain**, **Stripe**, **Supabase**, **Netlify or Cloudflare Pages**, **Resend** and (optional, the chat falls back to keyword answers without it) **Anthropic**. Skip for now: Twilio (texts are v3), the Google calendar sync (booking stays on GlossGenius), Apple Developer and Google Play. Order: section 2 (accounts) → section 3 (connect) → section 4 (test mode, then one real $1 purchase and refund) → section 5 (launch) → section 8 (the first day's traffic). The things that can't be hurried: Stripe activating live payments, the domain's DNS, and her California seller's permit if she doesn't have one (STOREFRONT.md, Step 1).
+
+**Counting the shelf comes later.** `js/site-config.js → shop.countStock` is `false`: every product reads "In stock" and sells without limit, online and from the dashboard, and the counts in the product guide (read off screenshots) are not used. Evelyn types a count for a product in the dashboard's Inventory whenever she gets to it; that product is counted from then on (2 or fewer left shows "Only … left", 0 shows "Out of stock"). She still gets a "New order" notification for every order, so she can type 0 on anything she's out of. When every product is counted, delete the line (or set it `true`), delete the `COUNT_STOCK` secret in step 3.2, and rebuild the feeds.
+
 ## 1. Finish the last build pieces (Claude)
 
 - [x] **Shop checkout through Stripe** (built Oct 20): cards, Apple Pay, Google Pay, pay-over-time where switched on, sales tax by Stripe Tax, shipping or pickup, gift certificates. It turns on when `js/site-config.js → shop` is filled in.
@@ -27,8 +33,8 @@ A plain checklist, in order. Steps marked **(Claude)** are code work to ask for 
 
 ## 3. Connect them (Claude can walk through this live)
 
-1. **Supabase:** create the project, then run `server/schema.sql` in its SQL editor, then `server/seed-products.sql` (her 43 products and the online Skin Consult, from `node scripts/seed-products.mjs`; `products.consult` marks the actives that need her yes first, `server/README.md` → The consult gate).
-2. **Secrets:** paste the keys into Supabase (Project → Edge Functions → Secrets): Stripe, Anthropic, Resend, the three Google ones from `server/scripts/google-auth.mjs`, and a **`STUDIO_KEY`**: a long phrase only Evelyn knows, which lets her dashboard use gift certificates, save skin plans, change stock and see orders. She types it once into the dashboard (Lumevina Studio, at the top) and that device remembers it. Also: **`SITE_URL`** (the website's address), **`OWNER_EMAIL`** (where her order alerts and morning email go), and **`VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`** for phone notifications (make the pair once with `npx web-push generate-vapid-keys`).
+1. **Supabase:** create the project, then run `server/schema.sql` in its SQL editor, then `server/seed-products.sql` (her 43 products and the online Skin Consult, from `node scripts/seed-products.mjs`; with `countStock: false` they go in with no count, and running it again later never overwrites a count she typed; `products.consult` marks the actives that need her yes first, `server/README.md` → The consult gate).
+2. **Secrets:** paste the keys into Supabase (Project → Edge Functions → Secrets): Stripe, Anthropic, Resend, the three Google ones from `server/scripts/google-auth.mjs`, and a **`STUDIO_KEY`**: a long phrase only Evelyn knows, which lets her dashboard use gift certificates, save skin plans, change stock and see orders. She types it once into the dashboard (Lumevina Studio, at the top) and that device remembers it. Also: **`COUNT_STOCK=off`** (the shelf isn't counted yet: the chat treats a product with no count as in stock; delete it once the counts are in), **`SITE_URL`** (the website's address), **`OWNER_EMAIL`** (where her order alerts and morning email go), and **`VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`** for phone notifications (make the pair once with `npx web-push generate-vapid-keys`).
 3. **Deploy** the server functions: `supabase functions deploy` (the list is in `server/README.md`).
 4. **Stripe webhook:** in Stripe → Developers → Webhooks, point it at the `stripe-webhook` function's address, with the events in `server/README.md` → Turning on v3 → Stripe (the checkout.session.* ones for the shop; v3 adds invoice.paid and customer.subscription.*).
 4b. **Stripe for the shop:** Settings → Payment methods: turn on Apple Pay, Google Pay and any of Klarna / Afterpay / Affirm she wants. **Sales tax:** set up Stripe Tax (her business address and California registration), then add the secret `STRIPE_TAX=on`. Selling products in California generally needs a seller's permit; her accountant should confirm the setup.
@@ -108,6 +114,15 @@ Prices in v3: Glow **$185**, Ageless **$235** a month; the first 25 members keep
 - [ ] After that it grows by itself, with her approval: every everyday question she answers becomes a suggested answer in **Teach the chat**, and each signed-in client's skin profile and notes make answers specific to them.
 
 ## 8. Getting found: feeds, listings, ads (MARKETING.md), and selling past the client list (STOREFRONT.md)
+
+**Day one, free (the fastest traffic is the people who already know her):**
+- [ ] Text or email her existing clients the shop link with WELCOME10 (first online order).
+- [ ] The shop link in the Instagram and TikTok bios, a story and a post, and the Skin School clips (`marketing/ads/out/video/`, 9:16) on TikTok, Reels and Shorts.
+- [ ] Google Business Profile, Apple Maps, Yelp and Nextdoor (copy in `marketing/local-listings.md`).
+- [ ] A QR code to the shop at the studio: counter, bags, receipts.
+- [ ] Every link carries its UTM tag (`marketing/local-listings.md`), so the first week shows which one brought people.
+
+**Days 1 to 7:** the feeds into Google Merchant Center and Meta Commerce (item 2 below; both review before listing, a few days), the sitemap into Search Console, then the $10 a day ads (item 4), once the Meta pixel and Google tag are on the site: **neither is installed yet**, and without them the ads can't measure or learn. Send Claude the two public ids (the pixel id and the Google tag id) and it adds them, behind the privacy page's wording.
 
 1. **Google Business Profile, Nextdoor, Yelp, Apple Maps:** claim them with the copy in `marketing/local-listings.md`; the booking link with its UTM tag.
 2. **Product feeds:** `node scripts/build-feed.mjs --site https://<her domain>` → `feed/google.xml` (Google Merchant Center: free Shopping listings and Maps) and `feed/meta.csv` (Meta Commerce Manager: Instagram and Facebook Shop, checkout on the website). Publish the `feed/` folder with the site and point each platform's scheduled fetch at it. Add barcodes to `scripts/gtins.json` as she reads them off the boxes.

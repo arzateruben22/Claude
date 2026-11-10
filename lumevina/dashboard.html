@@ -2477,7 +2477,7 @@
             '<button class="inv-btn" data-d="1" data-id="' + esc(p.id) + '" aria-label="One more ' + esc(p.name) + '">+</button></span></td>' +
             '<td>' + money(num(p.cost)) + '</td><td>' + money(num(p.price)) + '</td>' +
             '<td>' + (st == null ? "—" : money(st * num(p.price))) + '</td><td>' + status + '</td>' +
-            '<td>' + (st > 0 ? '<button class="inv-sell" data-id="' + esc(p.id) + '">Sell</button>' : '—') + '</td></tr>';
+            '<td>' + (st == null || st > 0 ? '<button class="inv-sell" data-id="' + esc(p.id) + '">Sell</button>' : '—') + '</td></tr>';
         }).join("") + '</tbody>';
         document.getElementById("inv-table").innerHTML = thead + tbody;
 
@@ -2509,7 +2509,7 @@
         var sell = e.target.closest(".inv-sell");
         if (sell) {
           var sp = INV.get(sell.dataset.id);
-          if (!sp || num(sp.stock) <= 0) return;
+          if (!sp || (sp.stock != null && num(sp.stock) <= 0)) return;   // no count yet: it still sells
           logSale(sp, "in-person");
           INV.sell(sp.id, 1).then(ok, fail);
         }

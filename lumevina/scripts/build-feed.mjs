@@ -5,7 +5,8 @@
 //   → feed/meta.csv     Meta Commerce Manager (Instagram and Facebook Shop)
 //
 // Both link to her website, never to a marketplace (MARKETING.md). Stock
-// comes from the catalog's counts; the live site's counts are on the server,
+// comes from the catalog's counts (or all in stock while shop.countStock is false
+// in js/site-config.js); the live site's counts are on the server,
 // so rebuild and re-upload the feed whenever the catalog changes, or point
 // the feeds' schedule at these files once the site is live. GTINs (the
 // barcodes on the boxes) aren't in the catalog yet: add them to
@@ -33,7 +34,10 @@ const CATEGORY = {   // Google product taxonomy ids
 };
 const link = (p) => `${site}/?product=${encodeURIComponent(p.id)}#shop`;
 const image = (p) => p.photo ? `${site}/${p.photo}` : "";
-const availability = (p) => p.stock == null ? "in_stock" : p.stock > 0 ? "in_stock" : "out_of_stock";
+// js/site-config.js shop.countStock: false = the shelf isn't counted yet, so every product is listed in stock
+// (the catalog's counts came from screenshots); once she types counts in the dashboard, set it back and rebuild
+const counting = !/countStock:\s*false/.test(fs.readFileSync(path.join(root, "js/site-config.js"), "utf8"));
+const availability = (p) => !counting || p.stock == null ? "in_stock" : p.stock > 0 ? "in_stock" : "out_of_stock";
 const description = (p) => [p.about, p.size ? `${p.size}.` : "", `Professional skincare from Evelyn Romero's treatment room at Lumevina Aesthetics Spa, Woodland Hills. Free pickup at your visit, or shipped.`].filter(Boolean).join(" ");
 
 const live = CAT.products.filter((p) => !p.draft && !p.hidden && p.kind !== "consult");

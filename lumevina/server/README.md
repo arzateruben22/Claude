@@ -76,6 +76,7 @@ site's address (that browser only); the dashboard follows the same switch.
    supabase secrets set REVIEW_URL=https://g.page/r/... STUDIO_ADDRESS="<the studio's address, for confirmations>" PREFS_SECRET=<random>
    ```
 
+   `COUNT_STOCK=off` while the shelf isn't counted yet (a product with no count reads as in stock to the assistant; see GO-LIVE.md).
    `SITE_VERSION` is the assistant's default; the website also tells it which
    version it runs, so a `?preview=v3` visitor gets v3 answers. Without
    `PREFS_SECRET`, unsubscribe links are signed with the studio key.
