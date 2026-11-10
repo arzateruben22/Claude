@@ -1,4 +1,4 @@
-# Posting sheet: One More Orbit · Season 2 · Episode 3, "Where does your gold come from?"
+# Posting sheet: One More Orbit · Season 2 · Episode 3, "Your Gold Ring May Be Made of a Star Crash"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel). **Before posting, a person opens every source link** (the builder read the pages; no claim is person-verified yet).
 
@@ -7,7 +7,7 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-Where does your gold come from?
+Your Gold Ring May Be Made of a Star Crash
 
 **Description**
 

@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "Some of the gold in a ring may have been made when two city-sized stars crashed into each other.",
+ "titles": [
+  {
+   "text": "Your Gold Ring May Be Made of a Star Crash",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Where Does Gold Actually Come From?",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "Two Dead Stars Crashed. Your Ring May Be the Leftovers",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Nobody Knows How Much Gold Comes From Star Crashes",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Gold Is Heavier Than Iron. Stars Can't Make It the Normal Way",
+   "mechanism": "contradiction"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "two neutron stars at the instant of merger, lilac ripples spreading",
+   "composition": "merger low-left on a third, empty indigo night above and right",
+   "lighting": "hot lemon core against indigo, thin lilac wavefronts",
+   "trigger": "wonder at scale",
+   "text": "2 stars. 1 ring.",
+   "complements": "the title says the ring, the picture shows the crash; the words count them"
+  },
+  {
+   "id": "B",
+   "subject": "a plain gold ring floating in dark space with a faint crash glow behind it",
+   "composition": "ring large, centred right, crash glow far upper left",
+   "lighting": "warm lemon rim light on the ring, indigo field",
+   "trigger": "personal relevance",
+   "text": "",
+   "complements": "ring is the everyday object; the glow hints at its origin"
+  },
+  {
+   "id": "C",
+   "subject": "periodic-table gold square with a teal arrow-free spark above it",
+   "composition": "flat close-up, square at lower third",
+   "lighting": "even, teal accent",
+   "trigger": "curiosity",
+   "text": "79",
+   "complements": "atomic number only"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 84,
+    "clarity": 82,
+    "synergy": 86,
+    "originality": 72,
+    "accuracy": 90,
+    "mobile": 80,
+    "satisfaction": 85
+   },
+   "note": "The crash image carries the surprise; the title brings it home to your ring (hedged 'may')."
+  },
+  {
+   "title": 2,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 74,
+    "curiosity": 80,
+    "clarity": 78,
+    "synergy": 70,
+    "originality": 70,
+    "accuracy": 90,
+    "mobile": 78,
+    "satisfaction": 84
+   },
+   "note": "Title and picture both show the crash, so less new information."
+  },
+  {
+   "title": 3,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 76,
+    "clarity": 80,
+    "synergy": 70,
+    "originality": 66,
+    "accuracy": 92,
+    "mobile": 76,
+    "satisfaction": 84
+   },
+   "note": "Honest and calm; weaker at scroll."
+  }
+ ],
+ "winner": {
+  "title": "Your Gold Ring May Be Made of a Star Crash",
+  "thumbnail": "A",
+  "thumbnailText": "2 stars. 1 ring.",
+  "why": "The title makes the personal claim with an honest 'may'; the thumbnail shows the crash and counts it, adding a layer the title does not repeat."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "one-more-orbit-s2e03-thumb.jpg",
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: two neutron stars at the moment they merge, small and intensely bright, with thin lilac ripples of gravitational waves spreading outward (an illustration, not a photograph).\nComposition: the merger sits in the lower-left third; a large area of empty indigo night above and to the right; a single small gold ring floating faintly at the far right.\nLighting and treatment: hot lemon-white core (#F5D76E), indigo night (#0B0F2A), faint lilac wavefronts, shallow depth of field, subtle film grain.\nMood: wonder.\nText: \"2 stars. 1 ring.\" in a clean geometric sans (Lexend style), placed upper right.\nScientific accuracy: neutron star mergers are thought to make some heavy elements such as gold; how much of the gold comes from them is still debated, so show no certainty.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo.\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 15.5,
+  "text": "2 stars. 1 ring."
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
