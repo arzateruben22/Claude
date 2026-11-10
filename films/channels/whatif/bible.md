@@ -216,3 +216,7 @@ Every new episode, long and short, follows `PACKAGING.md` in this folder (copied
 ## Season format (owner decision)
 
 Every long film is one 8-chapter story with 8 vertical parts: see `SEASON-FORMAT.md` here. Season numbering: S3 Earth-spin, S4 hole, S5 cold. Part hook/outro drafts: `voice-lines-s3.md`.
+
+## Cover reference: the figure-on-a-journey (owner's note, 10 Nov 2026)
+
+The Season 2 episode 1 cover (`library/walker-earth-to-moon.webp`, shown in `ep07/out/possibility-lab-s2e01-cover.jpg`) is the reference: a clay-style blue figurine seen from behind, mid-stride, a glowing magenta path from the dark Earth (bottom left) to a cratered Moon (upper right), a warm lamp glowing in the top-left corner on a dark graph-paper tabletop, deep warm-black background, no text on the picture. Principles (PACKAGING.md, "What's working"): a human anchor doing an ordinary action, the goal in view, scale contrast, a plain one-question title, the setup shown and never the answer. Season 2's other covers are re-cuts of the figure frames in each film; every cover stays a frame or re-cut of what the video shows.
