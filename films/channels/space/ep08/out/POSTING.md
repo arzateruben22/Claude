@@ -1,4 +1,4 @@
-# Posting sheet: One More Orbit · Season 2 · Episode 2, "Why is the night sky dark?"
+# Posting sheet: One More Orbit · Season 2 · Episode 2, "Why Isn't the Night Sky Blazing White?"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel). **Before posting, a person opens every source link** (the builder read the pages; no claim is person-verified yet).
 
@@ -7,12 +7,12 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-Why is the night sky dark? | One More Orbit · Season 2 · Episode 2
+Why Isn't the Night Sky Blazing White?
 
 **Description**
 
 ```
-Why is the night sky dark? Look closely.
+Why isn't the night sky blazing white? Look closely.
 
 If space were endless and eternal, every line of sight would end on a star. Tonight's dark isn't empty: it's a clue that the universe has not been shining forever.
 
@@ -49,7 +49,7 @@ Sources
 **Caption**
 
 ```
-Why is the night sky dark? Look closely. #space #astronomy #learnontiktok #science #cosmos
+Why isn't the night sky blazing white? Look closely. #space #astronomy #learnontiktok #science #cosmos
 ```
 
 **Pinned comment** (150-character limit)
@@ -62,7 +62,7 @@ Sources: science.nasa.gov; esa.int. Synthetic (AI) voice; code-rendered animatio
 **Caption**
 
 ```
-Why is the night sky dark? Look closely.
+Why isn't the night sky blazing white? Look closely.
 
 If space were endless and eternal, every line of sight would end on a star. Tonight's dark isn't empty: it's a clue that the universe has not been shining forever.
 
