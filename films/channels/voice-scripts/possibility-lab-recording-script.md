@@ -9,7 +9,7 @@ re-check the fact (the on-screen captions are rebuilt from your recording, so th
 - **Phone:** Voice Memos is fine. Hold it **about a hand's width (15–20 cm) from your mouth**, slightly to the side so your breath doesn't hit it. Same spot every session.
 - **One file per episode.** Read the lines in order with a **2-second pause** between them. Flubbed one? Pause, then read **that whole line again**; we keep the last take.
 - Start every file by saying its name, e.g. *"Possibility Lab, Season 2, Episode 1"*, then pause and begin.
-- **Name the files** like `pl-s2e01.m4a` … `pl-s2e06.m4a`, `pl-s2-long.m4a` (Season 2 long video's extra lines), `pl-spin.m4a` (Season 3), `pl-s4.m4a`, `pl-s5.m4a` (Seasons 4 and 5), `pl-s3-parts.m4a`, `pl-s4-parts.m4a`, `pl-s5-parts.m4a` and `pl-part-closers.m4a` (the short parts' lines, below).
+- **Name the files** like `pl-s2e01.m4a` … `pl-s2e06.m4a`, `pl-s2-long.m4a` (Season 2 long video's extra lines), `pl-spin.m4a` (Season 3), `pl-s4.m4a`, `pl-s5.m4a` (Seasons 4 and 5), `pl-s3-parts.m4a`, `pl-s4-parts.m4a`, `pl-s5-parts.m4a` and `pl-part-closers.m4a` (the short parts' lines) and `pl-cta.m4a` (the like and follow lines, at the end).
 - **Upload** them on GitHub here: https://github.com/arzateruben22/claude/upload/claude/whatif-s2/films/channels/whatif/voice-owner
 
 ### How it should sound
@@ -408,4 +408,26 @@ File: `pl-part-closers.m4a`.
 **7.** Part seven of eight. Full video on **YouTube**.
 
 **8.** Part eight of eight. Full video on **YouTube**.
+
+
+## The like and follow lines
+
+A quick, natural moment that's slipped in right after a "whoa" moment. Say it like you're letting a friend in on something, not reading an ad: quick, warm, a smile in it. Each line is read twice: once with
+"follow" (for TikTok and Instagram), once with "subscribe" (for YouTube). File: `pl-cta.m4a`.
+
+**1.** Hang on. If you're enjoying this, tap like and **follow**. Okay, back to the math.
+
+**2.** Hang on. If you're enjoying this, tap like and **subscribe**. Okay, back to the math.
+
+**3.** Quick break: like and **follow**. Then let's see how bad this gets.
+
+**4.** Quick break: like and **subscribe**. Then let's see how bad this gets.
+
+**5.** If your brain's doing the math with me, tap like and **follow**.
+
+**6.** If your brain's doing the math with me, tap like and **subscribe**.
+
+**7.** Real quick: like and **follow**. The next what-if is even stranger.
+
+**8.** Real quick: like and **subscribe**. The next what-if is even stranger.
 

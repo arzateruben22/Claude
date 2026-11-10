@@ -18,7 +18,7 @@ Warm and smiling, but still clear and trustworthy, because it's science.
 - **Phone:** Voice Memos is fine. Hold it **a hand's width (15–20 cm) from your mouth**, slightly to the side. Same spot every time.
 - **One file per episode.** Read the lines in order with a **2-second pause** between them. Flubbed one? Pause, then read **that whole line again**; we keep the last take.
 - Start each file by saying its name, e.g. *"Skin Sense, Season 2, Episode 1"*.
-- **Name the files** `ss-s2e01.m4a` … `ss-s2e06.m4a`.
+- **Name the files** `ss-s2e01.m4a` … `ss-s2e06.m4a`, and `ss-cta.m4a` for the like and follow lines at the end.
 - **Upload** them on GitHub here: https://github.com/arzateruben22/claude/upload/claude/outer-layer-s1-b/films/channels/skincare/voice-host
 
 ---
@@ -128,4 +128,26 @@ Say it like: **follicle**: say *FOL-ih-kul*
 **6.** So a fingerprint is a pattern of waves, set before birth. Yours is one of endless **variations**.
 
 **7.** Next: more skin questions, answered with the evidence.
+
+
+## The like and follow lines
+
+A quick, natural moment that's slipped in right after a "whoa" moment. Big smile, real excitement, like you can't wait for them to see the next one, but quick. Each line is read twice: once with
+"follow" (for TikTok and Instagram), once with "subscribe" (for YouTube). File: `ss-cta.m4a`.
+
+**1.** Okay, tiny pause! If your skin just got more interesting, tap like and **follow**.
+
+**2.** Okay, tiny pause! If your skin just got more interesting, tap like and **subscribe**.
+
+**3.** Quick thing: like and **follow**. Your skin has plenty more secrets.
+
+**4.** Quick thing: like and **subscribe**. Your skin has plenty more secrets.
+
+**5.** Wait, before we keep going: tap like and **follow**! Okay, back inside the skin.
+
+**6.** Wait, before we keep going: tap like and **subscribe**! Okay, back inside the skin.
+
+**7.** If you just looked at your own arm, tap like and **follow**!
+
+**8.** If you just looked at your own arm, tap like and **subscribe**!
 
