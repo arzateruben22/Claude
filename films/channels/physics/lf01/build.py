@@ -74,7 +74,7 @@ WIDE = ([0.0, 1.2, -0.8], 5.6)
 EV.update({"fly1": BIG, "fly2": BIG, "fly3": BIG, "fly4": BIG, "wire": NEVER, "bird": NEVER, "blur": NEVER, "cupfly": NEVER, "fly100": NEVER, "mosq": NEVER,
            "tapdrop": [BIG, BIG, BIG], "settle": BIG, "kernel": {"jump": BIG, "pop": BIG, "foamEnd": BIG}, "bubble": {"in": BIG, "pop": BIG}, "clap": BIG,
            "bullet": {"enter": BIG, "approach": BIG}, "storm": BIG, "leader": {"t0": BIG, "stepEvery": 3.0, "steps": 8, "ground": BIG}, "flash8": BIG, "light9": BIG,
-           "chip": NEVER, "ruler": NEVER, "hair": NEVER, "pulse": BIG, "lab": NEVER, "back": BIG})
+           "chip": NEVER, "ruler": NEVER, "hair": NEVER, "pulse": BIG, "lab": NEVER, "back": BIG, "fades": []})
 K0 = {"wings": 0.0, "fly": 2.0, "pop": 3.0, "sound": 3.0, "bullet": 4.0, "leader": 6.0, "light": 7.0, "still": 9.0}
 
 
@@ -193,8 +193,9 @@ if has("still"):
     EV["pulse"] = R(W(L, "Keep"))
     CAM += ([ck(0.0, CHIP, 0.8, 4.0)] if PART else [ck(cut("still") - 0.2, CHIP, 0.8, 4.0)])
     CAM += [ck(W(L, "Keep") + 0.3, [-2.3, 0.93, -1.0], 0.5, -4.0, "p2", 30.0), ck(W(L, "Now,") + 0.5, [-2.43, 0.91, -1.0], 0.1, 4.0, "sine", 45.0),
-            ck(W(L, "Here's") - 0.2, [-2.45, 0.91, -1.0], 0.03, -3.0, "sine", 50.0), ck(W(L, "human") - 0.3, [0.0, 3.0, 0.0], 0.0006, 0.0), ck(W(L, "Light#4") - 0.3, [0.0, 3.0, 0.0], 0.0006, 0.0),
-            ck(W(L, "But#2") - 0.2, WIDE[0], 5.4, 0.0)]
+            ck(W(L, "Here's") - 0.2, [-2.45, 0.91, -1.0], 0.03, -3.0, "sine", 50.0), ck(EV["hair"][0] - 0.3 - 0.4, [-2.45, 0.91, -1.0], 0.03, -3.0, "sine", 50.0), ck(EV["hair"][0] - 0.3 + 0.1, [0.0, 3.0, 0.0], 0.0006, 0.0, "p2", 0.0),
+            ck(EV["hair"][1] + 4.1 - 0.1, [0.0, 3.0, 0.0], 0.0006, 0.0, "p2", 0.0), ck(EV["hair"][1] + 4.1 + 0.2, WIDE[0], 5.4, 0.0, "p2", 3.0)]
+    EV["fades"] = [R(EV["hair"][0] - 0.3), R(EV["hair"][1] + 4.1)]
     if PART:
         BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": "tr"})
 
@@ -204,7 +205,8 @@ if not PART:
     EV["back"] = R(A("vo11:Now"))
     EV["fly4"] = R(A("vo11:fly") + 0.1)
     plateau(A("vo11:Now"), 12.0, 0.0, 1.5)
-    CAM += [ck(cut("real"), [0.0, 2.85, 0.0], 1.0, 0.0), ck(cut("takeaway") - 0.1, [0.0, 2.85, 0.0], 1.0, 0.0), ck(cut("takeaway"), WIDE[0], WIDE[1], 0.0), ck(DUR, WIDE[0], WIDE[1], 3.0, "sine")]
+    EV["fades"] = EV.get("fades", []) + [cut("real") + 0.0, cut("takeaway")]
+    CAM += [ck(cut("real") - 0.2, WIDE[0], WIDE[1], 3.0, "sine"), ck(cut("real") + 0.1, [0.0, 2.85, 0.0], 1.0, 0.0), ck(cut("takeaway") - 0.2, [0.0, 2.85, 0.0], 1.0, 0.0), ck(cut("takeaway") + 0.1, WIDE[0], WIDE[1], 0.0), ck(DUR, WIDE[0], WIDE[1], 3.0, "sine")]
     BADGES += [{"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(A("vo02:Ten") - 5.0), "t1": R(cut("takeaway")), "slot": "tr"},
                {"id": "bench", "kind": "tag", "text": "Model of the MIT setup", "t0": R(cut("real") + 3.0), "t1": R(cut("takeaway") - 0.4), "slot": "tr"}]
     _seen = set(); BADGES = [b for b in BADGES if not (b["id"] in _seen or _seen.add(b["id"]))]

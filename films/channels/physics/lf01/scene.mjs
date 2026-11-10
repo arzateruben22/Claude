@@ -150,8 +150,8 @@ const mkFlyer = (scale, body, wingCol) => {
   const head = new THREE.Mesh(new THREE.SphereGeometry(0.34, 10, 8), new THREE.MeshStandardMaterial({ color: body, roughness: 0.6 })); head.position.set(1.0, 0.05, 0); g.add(head);
   const wings = [];
   for (let i = 0; i < GHOSTS; i++) for (const side of [-1, 1]) {
-    const hinge = new THREE.Group(); hinge.position.set(0.15, 0.25, side * 0.2); const wm = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 6), new THREE.MeshBasicMaterial({ color: wingCol, transparent: true, opacity: 0.5, depthWrite: false, side: THREE.DoubleSide }));
-    wm.scale.set(0.3, 0.012, 1.05); wm.position.set(-0.1, 0, side * 1.1); hinge.add(wm); g.add(hinge); wings.push({ hinge, wm, i, side });
+    const hinge = new THREE.Group(); hinge.position.set(0.1, 0.28, side * 0.14); const wg = new THREE.ConeGeometry(0.17, 1.15, 10); wg.scale(1.25, 1, 0.12); wg.translate(0, 0.575, 0); const wm = new THREE.Mesh(wg, new THREE.MeshBasicMaterial({ color: wingCol, transparent: true, opacity: 0.5, depthWrite: false, side: THREE.DoubleSide }));
+    hinge.add(wm); g.add(hinge); wings.push({ hinge, wm, i, side });   // the wing blade stands up from the shoulder; the stroke sweeps it forward and back in the picture plane
   }
   g.scale.setScalar(scale); scene.add(g); return { g, wings, scale };
 };
@@ -161,11 +161,11 @@ const poseFlyer = (fl, hz, tReal, blur, amp = 1.0) => {                         
     const ph = hz * tReal + (blur > 0.01 ? w.i / GHOSTS : 0);
     const a = Math.sin(ph * Math.PI * 2) * 1.0 * amp, fl2 = Math.cos(ph * Math.PI * 2);
     w.hinge.rotation.set(w.side * fl2 * 0.7, 0, 0); w.hinge.rotation.y = -a * 0.9 * w.side * 0 + 0; w.hinge.rotation.z = 0;
-    w.hinge.rotation.set(0, a * 1.0 * w.side * -1, w.side * fl2 * 0.5);
-    w.wm.material.opacity = blur > 0.01 ? 0.06 + 0.04 * (1 - blur) : 0.9;
+    w.hinge.rotation.set(0, 0, -a * 0.95 + 0.1); void fl2;   // a flap: both wings up and down about the body's long axis
+    w.wm.material.opacity = blur > 0.01 ? 0.08 + 0.05 * (1 - blur) : 0.92;
   }
 };
-const hum = mkFlyer(0.075, 0x2E7D4F, 0xCFD8E6), flyH = mkFlyer(0.03, 0x20232A, 0xDDE6EE), flyC = mkFlyer(0.03, 0x20232A, 0xDDE6EE), mosq = mkFlyer(0.034, 0x3B3F46, 0xDDE6EE);
+const hum = mkFlyer(0.075, 0x2E7D4F, 0x22324A), flyH = mkFlyer(0.03, 0x20232A, 0xDDE6EE), flyC = mkFlyer(0.03, 0x20232A, 0xDDE6EE), mosq = mkFlyer(0.034, 0x3B3F46, 0xDDE6EE);
 { const beak = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.9, 5), new THREE.MeshStandardMaterial({ color: 0x151515 })); beak.rotation.z = Math.PI / 2; beak.position.set(1.65, 0.0, 0); hum.g.add(beak); }
 const trail = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 6), new THREE.MeshBasicMaterial({ color: 0x20232A, transparent: true, opacity: 0.25 })); m.visible = false; scene.add(m); trail.push(m); }
 
@@ -235,10 +235,14 @@ const camNow = (t) => {
   return { look: [0, 1, 2].map((j) => lerp(a.look[j], b.look[j], u)), fitW: lw(a.fitW, b.fitW), yaw: lerp(a.yaw, b.yaw, u), pitch: lerp(a.pitch ?? 3, b.pitch ?? 3, u) };
 };
 const placeCam = (t) => {
-  const c = camNow(t), dist = c.fitW / (2 * Math.tan((VFOV * Math.PI) / 360) * (W / H)), y = (c.yaw * Math.PI) / 180, p = (c.pitch * Math.PI) / 180;
+  const c = camNow(t), dist = c.fitW / (2 * Math.tan((VFOV * Math.PI) / 360) * (W / H)), y = ((c.yaw + 0.9 * Math.sin(t * 0.55)) * Math.PI) / 180, p = ((c.pitch + 0.45 * Math.sin(t * 0.37 + 1.0)) * Math.PI) / 180;   // a slow sway: nothing is ever perfectly still
   camera.position.set(c.look[0] + dist * Math.sin(y) * Math.cos(p), c.look[1] + dist * Math.sin(p), c.look[2] + dist * Math.cos(y) * Math.cos(p));
   camera.near = Math.max(1e-5, dist * 0.05); camera.far = 80; camera.fov = VFOV; camera.updateProjectionMatrix(); camera.lookAt(c.look[0], c.look[1], c.look[2]); camera.updateMatrixWorld();
 };
+
+const fadeMat = new THREE.ShaderMaterial({ transparent: true, depthTest: false, depthWrite: false, uniforms: { uA: { value: 0 } }, vertexShader: "void main(){ gl_Position = vec4(position.xy, 0.0, 1.0); }", fragmentShader: "uniform float uA; void main(){ gl_FragColor = vec4(0.02, 0.025, 0.035, uA); }" });
+const fadeQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), fadeMat); fadeQuad.renderOrder = 1000; fadeQuad.frustumCulled = false; scene.add(fadeQuad);
+const dip = (t) => { let a = 0; for (const c of EV.fades) a = Math.max(a, 1 - E.inout2(seg(Math.abs(t - c), 0.2, 0.65))); return a; };   // a dip through black, 0.4 s fully black either side of nothing: |t - c| < 0.2 is black, gone by 0.65
 
 // ── the overlay: captions, the factor (the one live number), badges, the end card ──
 const hud = createHud({ camera, captionY: FILM.captionY });
@@ -261,7 +265,8 @@ window.seek = function (t) {
   stage(t);
   placeCam(t);
   const k = kAt(t), F = Math.pow(10, k);
-  const inLab = t >= EV.lab[0] && t < EV.lab[1], inMacro = t >= EV.hair[0] - 0.3 && t < EV.hair[1] + 4.2 && !inLab;
+  const inLab = t >= EV.lab[0] && t < EV.lab[1], inMacro = t >= EV.hair[0] - 0.3 && t < EV.hair[1] + 4.1 && !inLab;
+  fadeMat.uniforms.uA.value = dip(t);
   kitchen.visible = !inLab && !inMacro; wires.visible = kitchen.visible; sky.visible = storm.visible = kitchen.visible; feeder.visible = kitchen.visible && t < T.pop;
   macro.visible = inMacro; lab.visible = inLab;
   // the kitchen is drawn on (wireframe -> solid behind a sweeping line) during the method lines
@@ -285,7 +290,7 @@ window.seek = function (t) {
   if (t >= EV.bird[0] && t < EV.bird[1]) {
     const r = (t - EV.bird[0]) / 10, blurMix = E.inout2(seg(t, EV.blur[0], EV.blur[0] + 0.8)) * (1 - E.inout2(seg(t, EV.blur[1] - 0.6, EV.blur[1])));
     const fr = blurMix > 0.01 ? Math.max(0.0, 1) : 1;
-    place(hum, -1.45 + 0.03 * Math.sin(r * 3), 1.86 + 0.012 * Math.sin(r * 7), -2.05, 0.12); hum.g.rotation.z = 0.3;
+    place(hum, -1.45 + 0.03 * Math.sin(r * 3), 1.86 + 0.012 * Math.sin(r * 7), -2.05, 0.0); hum.g.rotation.z = 0.2;
     poseFlyer(hum, CAL.hz.hum, blurMix > 0.01 ? (t - EV.bird[0]) / 1 : r * F / F * 10 / 10 * 1, blurMix, 1.0);
     if (blurMix <= 0.01) poseFlyer(hum, CAL.hz.hum, r * 1.0 * 1, 0, 1.0);
     void fr;
@@ -353,10 +358,12 @@ window.seek = function (t) {
     if (t >= ground && t < ground + 2.0) flashV = E.out2(seg(t, ground, ground + 0.35)) * (1 - E.inout2(seg(t, ground + 0.5, ground + 2.0)));   // soft: in over 0.35 s, out over 1.5 s (no full-frame white)
     flashLight.intensity = 1.6 * flashV; renderer.toneMappingExposure = 1.0 + 0.18 * flashV; }
   // the light fronts: a flash across the room (1e8x), the flashlight's front (1e9x), a crawling pulse (1e10x and more)
-  { const fl8 = EV.flash8, l9 = EV.light9, pulse0 = EV.pulse; let R = 0, on = 0, lk = 1;
-    if (t >= fl8 && t < fl8 + 3.0) { R = Rint(t) - Rint(fl8); on = 1; }
-    if (t >= l9 && t < pulse0) { R = Rint(t) - Rint(l9); on = 1; }
-    if (t >= pulse0 && t < T.takeaway) { R = Rint(t) - Rint(pulse0) + 0.005; on = t < EV.hair[0] - 0.3 ? 1 : 0; }
+  { const fl8 = EV.flash8, l9 = EV.light9, pulse0 = EV.pulse; let R = 0, lk = 1;
+    const env = (a, b, fin = 1.2, fout = 1.2) => Math.min(E.inout2(seg(t, a - fin, a)), 1 - E.inout2(seg(t, b, b + fout)));
+    const on = Math.max(env(fl8, fl8 + 3.0), env(l9, EV.hair[0] - 0.3 + 0.0, 1.5, 0.8));
+    if (t >= fl8 && t < fl8 + 4.0) R = Rint(t) - Rint(fl8);
+    if (t >= l9) R = Rint(t) - Rint(l9);
+    if (t >= pulse0 - 0.2) { const rn = Rint(t) - Rint(pulse0) + 0.005, q = E.inout2(seg(t, pulse0 - 0.2, pulse0 + 1.4)); R = lerp(Math.max(R, 6.0), rn, q); }   // the lit room's front shrinks back into the flashlight, smoothly
     WV.uLOn.value = on; WV.uLR.value = R; WV.uLW.value = t >= pulse0 ? Math.max(0.0004, Math.min(0.05, 0.4 * (Rint(t) - Rint(pulse0) + 0.01))) : 0.06; WV.uLK.value = lk;
     // the macro stage: the front crosses a hair (0.1 mm) in 1/3 s at 1e12x
     if (inMacro) { const rr = (t - EV.hair[1]) / 1.0, x = -0.0003 + CAL.c / 1e12 * (t - (EV.hair[1] - 0.18) ) * 1.0; frontPl.position.x = x; litLayer.position.x = x - 0.0003 - 0.000006; litLayer.visible = true; void rr; }
