@@ -7,7 +7,7 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-How sweat cools you | Skin Sense S2 · Ep 3
+Sweat Doesn't Cool You. Drying Does.
 
 **Description**
 
@@ -48,7 +48,7 @@ Sources
 **Caption**
 
 ```
-How does sweat cool you? So sweat cools you when it dries. Education, not medical advice. #skincare #skinscience #learnontiktok #dermatology #skinbarrier
+How does sweat cool you? So sweat cools you when it dries. Education, not medical advice. #fyp #skincare #skinscience #learnontiktok #dermatology #skinbarrier
 ```
 
 **Pinned comment + replies (full sources)**
@@ -70,7 +70,7 @@ Sources in the first comment. AI voice and AI-generated illustrations.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
-#skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
+#fyp #skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
 ```
 
 **First comment** (2,200-character limit)
