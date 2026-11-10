@@ -11,22 +11,22 @@
   {
    "id": "vo01",
    "beat": "opening",
-   "text": "A slinky. A strand of spaghetti. A jar of nuts. A coffee drop. A cup of water. And a raindrop. Six ordinary things. Each one hides a reason that is too quick, too small, or too hidden to see. So we'll slow each one down, until the physics shows.",
+   "text": "A slinky. A strand of spaghetti. A jar of nuts. A coffee drop. A cup of water. And a raindrop. Six ordinary things. Each one hides a reason that is too quick, too small, or too hidden to see. So we'll slow each one down, or speed it up, until the physics shows.",
    "stars": [],
-   "phonemes": "ɐ slˈɪŋki. ɐ stɹˈænd ʌv spɐɡˈɛɾi. ɐ dʒˈɑːɹ ʌv nˈʌts. ɐ kˈɔfi dɹˈɑːp. ɐ kˈʌp ʌv wˈɔːɾɚ. ænd ɐ ɹˈeɪndɹɑːp. sˈɪks ˈɔːɹdɪnˌɛɹi θˈɪŋz. ˈiːtʃ wˈʌn hˈaɪdz ɐ ɹˈiːzən ðæt ɪz tˈuː kwˈɪk, tˈuː smˈɔːl, ɔːɹ tˈuː hˈɪdən tə sˈiː. sˌoʊ wiːl slˈoʊ ˈiːtʃ wˈʌn dˈaʊn, ʌntˈɪl ðə fˈɪzɪks ʃˈoʊz.",
+   "phonemes": "ɐ slˈɪŋki. ɐ stɹˈænd ʌv spɐɡˈɛɾi. ɐ dʒˈɑːɹ ʌv nˈʌts. ɐ kˈɔfi dɹˈɑːp. ɐ kˈʌp ʌv wˈɔːɾɚ. ænd ɐ ɹˈeɪndɹɑːp. sˈɪks ˈɔːɹdɪnˌɛɹi θˈɪŋz. ˈiːtʃ wˈʌn hˈaɪdz ɐ ɹˈiːzən ðæt ɪz tˈuː kwˈɪk, tˈuː smˈɔːl, ɔːɹ tˈuː hˈɪdən tə sˈiː. sˌoʊ wiːl slˈoʊ ˈiːtʃ wˈʌn dˈaʊn, ɔːɹ spˈiːd ɪɾ ˈʌp, ʌntˈɪl ðə fˈɪzɪks ʃˈoʊz.",
    "file": "01.wav",
-   "dur": 18.002,
-   "sha256": "6115ca25f18e5956c40fc1a6bb80ec893cfc49ca9352b15e61aa1488a203c2e2"
+   "dur": 19.076,
+   "sha256": "adecca331d83981dea64f5c3e0a73f6319e6311c92331a20d66fb77cb36e6528"
   },
   {
    "id": "vo02",
    "beat": "bridge1",
-   "text": "The slinky's bottom waited, because the news of the drop had to travel down it, like a wave. A bending stick has the same problem. When it snaps, a wave from the break runs along it, and that wave can break it again.",
+   "text": "Quick pause: if that one got you, tap like and subscribe. Okay, back to it. The slinky's bottom waited, because the news of the drop had to travel down it, like a wave. A bending stick has the same problem. When it snaps, a wave from the break runs along it, and that wave can break it again.",
    "stars": [],
-   "phonemes": "ðə slˈɪŋkiz bˈɑːɾəm wˈeɪɾᵻd, bɪkˈʌz ðə nˈuːz ʌvðə dɹˈɑːp hædtə tɹˈævəl dˈaʊn ɪt, lˈaɪk ɐ wˈeɪv. ɐ bˈɛndɪŋ stˈɪk hɐz ðə sˈeɪm pɹˈɑːbləm. wˌɛn ɪt snˈæps, ɐ wˈeɪv fɹʌmðə bɹˈeɪk ɹˈʌnz ɐlˈɔŋ ɪt, ænd ðæt wˈeɪv kæn bɹˈeɪk ɪɾ ɐɡˈɛn.",
+   "phonemes": "kwˈɪk pˈɔːz: ɪf ðˈætwˌʌn ɡˈɑːt juː, tˈæp lˈaɪk ænd səbskɹˈaɪb. oʊkˈeɪ, bˈæk tʊ ɪt. ðə slˈɪŋkiz bˈɑːɾəm wˈeɪɾᵻd, bɪkˈʌz ðə nˈuːz ʌvðə dɹˈɑːp hædtə tɹˈævəl dˈaʊn ɪt, lˈaɪk ɐ wˈeɪv. ɐ bˈɛndɪŋ stˈɪk hɐz ðə sˈeɪm pɹˈɑːbləm. wˌɛn ɪt snˈæps, ɐ wˈeɪv fɹʌmðə bɹˈeɪk ɹˈʌnz ɐlˈɔŋ ɪt, ænd ðæt wˈeɪv kæn bɹˈeɪk ɪɾ ɐɡˈɛn.",
    "file": "02.wav",
-   "dur": 15.382,
-   "sha256": "d258434d4e85489644d59122098ebe8aae85727ea20fef8040be1c59ad598bed"
+   "dur": 20.719,
+   "sha256": "042569f9bc946893cdb778baf66fc1e77be40b23fb8b32ff322c40059e8f84d9"
   },
   {
    "id": "vo03",
@@ -41,12 +41,12 @@
   {
    "id": "vo04",
    "beat": "bridge3",
-   "text": "In the jar, the big nut rises because small grains slip into the gaps under it. Small things moving together can do surprising things. So can the tiny specks inside a drop of drying coffee.",
+   "text": "In the jar, small grains slipping into the gaps under the big nut is one reason it rises. Small things moving together can do surprising things. So can the tiny specks inside a drop of drying coffee.",
    "stars": [],
-   "phonemes": "ɪnðə dʒˈɑːɹ, ðə bˈɪɡ nˈʌt ɹˈaɪzᵻz bɪkˈʌz smˈɔːl ɡɹˈeɪnz slˈɪp ˌɪntʊ ðə ɡˈæps ˈʌndɚɹ ɪt. smˈɔːl θˈɪŋz mˈuːvɪŋ təɡˌɛðɚ kæn dˈuː sɚpɹˈaɪzɪŋ θˈɪŋz. sˌoʊ kæn ðə tˈaɪni spˈɛks ɪnsˈaɪd ɐ dɹˈɑːp ʌv dɹˈaɪɪŋ kˈɔfi.",
+   "phonemes": "ɪnðə dʒˈɑːɹ, smˈɔːl ɡɹˈeɪnz slˈɪpɪŋ ˌɪntʊ ðə ɡˈæps ˌʌndɚ ðə bˈɪɡ nˈʌt ɪz wˈʌn ɹˈiːzən ɪt ɹˈaɪzᵻz. smˈɔːl θˈɪŋz mˈuːvɪŋ təɡˌɛðɚ kæn dˈuː sɚpɹˈaɪzɪŋ θˈɪŋz. sˌoʊ kæn ðə tˈaɪni spˈɛks ɪnsˈaɪd ɐ dɹˈɑːp ʌv dɹˈaɪɪŋ kˈɔfi.",
    "file": "04.wav",
-   "dur": 14.043,
-   "sha256": "32288b0f0f0bb35ce2e4c0dc179ff5c14a343b8bb20a096e90c9d022d4d76548"
+   "dur": 14.732,
+   "sha256": "522505b0b29fa119a8113d105bd6ddac41b7567479a96a5dbae97d1163f9cd7d"
   },
   {
    "id": "vo05",
@@ -71,12 +71,12 @@
   {
    "id": "vo07",
    "beat": "finale",
-   "text": "A slinky that waits. A stick that breaks again. A nut that rises. A ring from a drop. A cup that sings. A raindrop with a speed limit. None of them needed new physics, only a slower look. And all of them were happening around you the whole time. Next time you see something ordinary, slow it down in your head.",
+   "text": "A slinky that waits. A stick that breaks again. A nut that rises. A ring from a drop. A cup that sings. A raindrop with a speed limit. None of them needed new physics, only a closer look. And all of them were happening around you the whole time. Real quick: like and subscribe. It genuinely helps. Next time you see something ordinary, slow it down in your head.",
    "stars": [],
-   "phonemes": "ɐ slˈɪŋki ðæt wˈeɪts. ɐ stˈɪk ðæt bɹˈeɪks ɐɡˈɛn. ɐ nˈʌt ðæt ɹˈaɪzᵻz. ɐ ɹˈɪŋ fɹʌm ɐ dɹˈɑːp. ɐ kˈʌp ðæt sˈɪŋz. ɐ ɹˈeɪndɹɑːp wɪð ɐ spˈiːd lˈɪmɪt. nˈʌn ʌv ðˌɛm nˈiːdᵻd nˈuː fˈɪzɪks, ˈoʊnli ɐ slˈoʊɚ lˈʊk. ænd ˈɔːl ʌv ðˌɛm wɜː hˈæpənɪŋ ɚɹˈaʊnd juː ðə hˈoʊl tˈaɪm. nˈɛkst tˈaɪm juː sˈiː sˈʌmθɪŋ ˈɔːɹdɪnˌɛɹi, slˈoʊ ɪt dˌaʊn ɪn jʊɹ hˈɛd.",
+   "phonemes": "ɐ slˈɪŋki ðæt wˈeɪts. ɐ stˈɪk ðæt bɹˈeɪks ɐɡˈɛn. ɐ nˈʌt ðæt ɹˈaɪzᵻz. ɐ ɹˈɪŋ fɹʌm ɐ dɹˈɑːp. ɐ kˈʌp ðæt sˈɪŋz. ɐ ɹˈeɪndɹɑːp wɪð ɐ spˈiːd lˈɪmɪt. nˈʌn ʌv ðˌɛm nˈiːdᵻd nˈuː fˈɪzɪks, ˈoʊnli ɐ klˈoʊsɚ lˈʊk. ænd ˈɔːl ʌv ðˌɛm wɜː hˈæpənɪŋ ɚɹˈaʊnd juː ðə hˈoʊl tˈaɪm. ɹˈiːəl kwˈɪk: lˈaɪk ænd səbskɹˈaɪb. ɪt dʒˈɛnjuːɪnli hˈɛlps. nˈɛkst tˈaɪm juː sˈiː sˈʌmθɪŋ ˈɔːɹdɪnˌɛɹi, slˈoʊ ɪt dˌaʊn ɪn jʊɹ hˈɛd.",
    "file": "07.wav",
-   "dur": 21.7,
-   "sha256": "8c0d17335e8834c0ed5a8fab7546aa91ae15bbd90553ac8fa7762cfb3cb2f1fe"
+   "dur": 24.39,
+   "sha256": "33053a8f10bc1775e1604a6c3293be48ddeef4c6ac677c0c04925d7ee443712d"
   }
  ]
 }

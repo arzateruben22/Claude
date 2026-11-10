@@ -3,8 +3,8 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "A slinky. A strand of spaghetti. A jar of nuts. A coffee drop. A cup of water. And a raindrop. Six ordinary things. Each one hides a reason that is too quick, too small, or too hidden to see. So we'll slow each one down, until the physics shows.",
-   "heard": "A slinky, a strand of spaghetti, a jar of nuts, a coffee drop, a cup of water and a raindrop, six ordinary things. Each one hides a reason that is too quick, too small, or too hidden to see. So we'll slow each one down until the physics shows.",
+   "text": "A slinky. A strand of spaghetti. A jar of nuts. A coffee drop. A cup of water. And a raindrop. Six ordinary things. Each one hides a reason that is too quick, too small, or too hidden to see. So we'll slow each one down, or speed it up, until the physics shows.",
+   "heard": "A slinky, a strand of spaghetti, a jar of nuts, a coffee drop, a cup of water and a raindrop. Six ordinary things. Each one hides a reason that is too quick, too small, or too hidden to see. So we'll slow each one down or speed it up until the physics shows.",
    "words": [
     {
      "w": "A",
@@ -20,26 +20,26 @@
     },
     {
      "w": "A",
-     "start": 0.87,
+     "start": 0.875,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "strand",
-     "start": 1.075,
+     "start": 1.08,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "of",
-     "start": 1.445,
+     "start": 1.455,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "spaghetti.",
-     "start": 1.635,
-     "end": 2.48,
+     "start": 1.61,
+     "end": 2.24,
      "heard": true
     },
     {
@@ -68,501 +68,615 @@
     },
     {
      "w": "A",
-     "start": 4.2,
+     "start": 4.225,
      "end": 4.32,
      "heard": true
     },
     {
      "w": "coffee",
-     "start": 4.31,
+     "start": 4.335,
      "end": 4.8,
      "heard": true
     },
     {
      "w": "drop.",
-     "start": 4.825,
+     "start": 4.85,
      "end": 5.52,
      "heard": true
     },
     {
      "w": "A",
-     "start": 5.58,
+     "start": 5.63,
      "end": 5.68,
      "heard": true
     },
     {
      "w": "cup",
-     "start": 5.68,
+     "start": 5.73,
      "end": 5.92,
      "heard": true
     },
     {
      "w": "of",
-     "start": 5.855,
-     "end": 6.08,
+     "start": 5.905,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "water.",
-     "start": 5.97,
-     "end": 6.4,
+     "start": 6.16,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "And",
-     "start": 6.59,
+     "start": 6.64,
      "end": 6.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.62,
-     "end": 6.8,
+     "start": 6.67,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "raindrop.",
-     "start": 6.835,
-     "end": 8.0,
+     "start": 6.89,
+     "end": 8.08,
      "heard": true
     },
     {
      "w": "Six",
-     "start": 7.965,
-     "end": 8.4,
+     "start": 8.09,
+     "end": 8.48,
      "heard": true
     },
     {
      "w": "ordinary",
-     "start": 8.435,
-     "end": 9.28,
+     "start": 8.535,
+     "end": 9.44,
      "heard": true
     },
     {
      "w": "things.",
-     "start": 9.365,
-     "end": 10.16,
+     "start": 9.51,
+     "end": 10.24,
      "heard": true
     },
     {
      "w": "Each",
-     "start": 10.31,
-     "end": 10.48,
+     "start": 10.41,
+     "end": 10.56,
      "heard": true
     },
     {
      "w": "one",
-     "start": 10.45,
-     "end": 10.72,
+     "start": 10.555,
+     "end": 10.8,
      "heard": true
     },
     {
      "w": "hides",
-     "start": 10.73,
-     "end": 11.04,
+     "start": 10.815,
+     "end": 11.12,
      "heard": true
     },
     {
      "w": "a",
-     "start": 11.015,
-     "end": 11.2,
+     "start": 11.055,
+     "end": 11.28,
      "heard": true
     },
     {
      "w": "reason",
-     "start": 11.145,
+     "start": 11.195,
      "end": 11.6,
      "heard": true
     },
     {
      "w": "that",
-     "start": 11.68,
+     "start": 11.48,
      "end": 11.76,
      "heard": true
     },
     {
      "w": "is",
-     "start": 11.855,
-     "end": 11.92,
+     "start": 11.73,
+     "end": 12.0,
      "heard": true
     },
     {
      "w": "too",
-     "start": 11.905,
-     "end": 12.16,
+     "start": 11.96,
+     "end": 12.24,
      "heard": true
     },
     {
      "w": "quick,",
-     "start": 12.185,
-     "end": 12.72,
+     "start": 12.235,
+     "end": 12.8,
      "heard": true
     },
     {
      "w": "too",
-     "start": 12.725,
+     "start": 12.8,
      "end": 13.04,
      "heard": true
     },
     {
      "w": "small,",
-     "start": 13.085,
-     "end": 13.52,
+     "start": 13.165,
+     "end": 13.6,
      "heard": true
     },
     {
      "w": "or",
-     "start": 13.54,
-     "end": 13.68,
+     "start": 13.645,
+     "end": 13.76,
      "heard": true
     },
     {
      "w": "too",
-     "start": 13.745,
-     "end": 13.92,
+     "start": 13.82,
+     "end": 14.0,
      "heard": true
     },
     {
      "w": "hidden",
-     "start": 13.82,
+     "start": 13.895,
      "end": 14.32,
      "heard": true
     },
     {
      "w": "to",
-     "start": 14.365,
+     "start": 14.255,
      "end": 14.56,
      "heard": true
     },
     {
      "w": "see.",
-     "start": 14.655,
-     "end": 15.12,
+     "start": 14.48,
+     "end": 15.2,
      "heard": true
     },
     {
      "w": "So",
-     "start": 15.255,
-     "end": 15.305,
+     "start": 15.315,
+     "end": 15.365,
      "heard": true
     },
     {
      "w": "we'll",
-     "start": 15.285,
-     "end": 15.6,
+     "start": 15.345,
+     "end": 15.68,
      "heard": true
     },
     {
      "w": "slow",
-     "start": 15.69,
-     "end": 15.92,
+     "start": 15.74,
+     "end": 16.0,
      "heard": true
     },
     {
      "w": "each",
-     "start": 16.02,
-     "end": 16.16,
+     "start": 16.08,
+     "end": 16.24,
      "heard": true
     },
     {
      "w": "one",
-     "start": 16.12,
-     "end": 16.4,
+     "start": 16.19,
+     "end": 16.48,
      "heard": true
     },
     {
      "w": "down,",
-     "start": 16.35,
-     "end": 16.64,
+     "start": 16.425,
+     "end": 16.72,
+     "heard": true
+    },
+    {
+     "w": "or",
+     "start": 16.855,
+     "end": 17.04,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 17.035,
+     "end": 17.44,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 17.415,
+     "end": 17.6,
+     "heard": true
+    },
+    {
+     "w": "up,",
+     "start": 17.695,
+     "end": 17.76,
      "heard": true
     },
     {
      "w": "until",
-     "start": 16.715,
-     "end": 16.96,
+     "start": 17.77,
+     "end": 18.0,
      "heard": true
     },
     {
      "w": "the",
-     "start": 17.04,
-     "end": 17.09,
+     "start": 17.89,
+     "end": 18.08,
      "heard": true
     },
     {
      "w": "physics",
-     "start": 17.07,
-     "end": 17.52,
+     "start": 18.12,
+     "end": 18.56,
      "heard": true
     },
     {
      "w": "shows.",
-     "start": 17.52,
-     "end": 17.92,
+     "start": 18.575,
+     "end": 19.04,
      "heard": true
     }
    ]
   },
   {
    "id": "vo02",
-   "text": "The slinky's bottom waited, because the news of the drop had to travel down it, like a wave. A bending stick has the same problem. When it snaps, a wave from the break runs along it, and that wave can break it again.",
-   "heard": "The slinky's bottom waited because the news of the drop had to travel down it like a wave. A bending stick has the same problem. When it snaps, a wave from the break runs along it, and that wave can break it again.",
+   "text": "Quick pause: if that one got you, tap like and subscribe. Okay, back to it. The slinky's bottom waited, because the news of the drop had to travel down it, like a wave. A bending stick has the same problem. When it snaps, a wave from the break runs along it, and that wave can break it again.",
+   "heard": "Quick pause: if that one got you, tap like and subscribe. Okay, back to it. The slinky's bottom waited because the news of the drop had to travel down it like a wave. A bending stick has the same problem. When it snaps, a wave from the break runs along it, and that wave can break it again.",
    "words": [
     {
-     "w": "The",
-     "start": 0.02,
-     "end": 0.16,
+     "w": "Quick",
+     "start": 0.235,
+     "end": 0.4,
      "heard": true
     },
     {
-     "w": "slinky's",
-     "start": 0.2,
+     "w": "pause:",
+     "start": 0.32,
      "end": 0.88,
      "heard": true
     },
     {
-     "w": "bottom",
-     "start": 0.865,
-     "end": 1.36,
-     "heard": true
-    },
-    {
-     "w": "waited,",
-     "start": 1.335,
-     "end": 1.92,
-     "heard": true
-    },
-    {
-     "w": "because",
-     "start": 2.145,
-     "end": 2.32,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 2.415,
-     "end": 2.56,
-     "heard": true
-    },
-    {
-     "w": "news",
-     "start": 2.445,
-     "end": 2.88,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 2.975,
-     "end": 3.04,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 3.095,
-     "end": 3.2,
-     "heard": true
-    },
-    {
-     "w": "drop",
-     "start": 3.23,
-     "end": 3.68,
-     "heard": true
-    },
-    {
-     "w": "had",
-     "start": 3.615,
-     "end": 3.84,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 3.93,
-     "end": 4.0,
-     "heard": true
-    },
-    {
-     "w": "travel",
-     "start": 4.01,
-     "end": 4.48,
-     "heard": true
-    },
-    {
-     "w": "down",
-     "start": 4.365,
-     "end": 4.72,
-     "heard": true
-    },
-    {
-     "w": "it,",
-     "start": 4.86,
-     "end": 4.91,
-     "heard": true
-    },
-    {
-     "w": "like",
-     "start": 5.095,
-     "end": 5.28,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 5.23,
-     "end": 5.6,
-     "heard": true
-    },
-    {
-     "w": "wave.",
-     "start": 5.685,
-     "end": 6.56,
-     "heard": true
-    },
-    {
-     "w": "A",
-     "start": 6.71,
-     "end": 6.8,
-     "heard": true
-    },
-    {
-     "w": "bending",
-     "start": 6.89,
-     "end": 7.36,
-     "heard": true
-    },
-    {
-     "w": "stick",
-     "start": 7.395,
-     "end": 7.92,
-     "heard": true
-    },
-    {
-     "w": "has",
-     "start": 7.825,
-     "end": 8.16,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 8.105,
-     "end": 8.48,
-     "heard": true
-    },
-    {
-     "w": "same",
-     "start": 8.56,
-     "end": 8.8,
-     "heard": true
-    },
-    {
-     "w": "problem.",
-     "start": 8.845,
-     "end": 9.6,
-     "heard": true
-    },
-    {
-     "w": "When",
-     "start": 9.745,
-     "end": 9.84,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 9.955,
-     "end": 10.005,
-     "heard": true
-    },
-    {
-     "w": "snaps,",
-     "start": 9.985,
-     "end": 10.88,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 10.98,
-     "end": 11.04,
-     "heard": true
-    },
-    {
-     "w": "wave",
-     "start": 11.01,
-     "end": 11.44,
-     "heard": true
-    },
-    {
-     "w": "from",
-     "start": 11.48,
-     "end": 11.6,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 11.51,
-     "end": 11.76,
-     "heard": true
-    },
-    {
-     "w": "break",
-     "start": 11.81,
-     "end": 12.24,
-     "heard": true
-    },
-    {
-     "w": "runs",
-     "start": 12.135,
-     "end": 12.56,
-     "heard": true
-    },
-    {
-     "w": "along",
-     "start": 12.525,
-     "end": 12.96,
-     "heard": true
-    },
-    {
-     "w": "it,",
-     "start": 13.045,
-     "end": 13.44,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 13.52,
-     "end": 13.6,
+     "w": "if",
+     "start": 0.84,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "that",
-     "start": 13.55,
+     "start": 1.01,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 1.19,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "got",
+     "start": 1.405,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "you,",
+     "start": 1.685,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 2.0,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.325,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.625,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "subscribe.",
+     "start": 2.905,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "Okay,",
+     "start": 4.17,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 4.875,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.145,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 5.47,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 6.08,
+     "end": 6.13,
+     "heard": true
+    },
+    {
+     "w": "slinky's",
+     "start": 6.11,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "bottom",
+     "start": 6.9,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "waited,",
+     "start": 7.375,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "because",
+     "start": 8.035,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.36,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "news",
+     "start": 8.39,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.865,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.985,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 9.12,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "had",
+     "start": 9.5,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 9.705,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "travel",
+     "start": 9.82,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "down",
+     "start": 10.28,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 10.635,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 10.835,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 10.95,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "wave.",
+     "start": 11.37,
+     "end": 12.24,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 12.42,
+     "end": 12.48,
+     "heard": true
+    },
+    {
+     "w": "bending",
+     "start": 12.58,
+     "end": 13.04,
+     "heard": true
+    },
+    {
+     "w": "stick",
+     "start": 13.06,
+     "end": 13.6,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 13.495,
      "end": 13.84,
      "heard": true
     },
     {
-     "w": "wave",
-     "start": 13.85,
-     "end": 14.24,
+     "w": "the",
+     "start": 13.745,
+     "end": 14.16,
      "heard": true
     },
     {
-     "w": "can",
-     "start": 14.345,
+     "w": "same",
+     "start": 14.2,
      "end": 14.48,
      "heard": true
     },
     {
-     "w": "break",
-     "start": 14.555,
-     "end": 14.88,
+     "w": "problem.",
+     "start": 14.48,
+     "end": 15.2,
+     "heard": true
+    },
+    {
+     "w": "When",
+     "start": 15.36,
+     "end": 15.44,
      "heard": true
     },
     {
      "w": "it",
-     "start": 14.985,
-     "end": 15.04,
+     "start": 15.39,
+     "end": 15.68,
+     "heard": true
+    },
+    {
+     "w": "snaps,",
+     "start": 15.59,
+     "end": 16.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 16.56,
+     "end": 16.64,
+     "heard": true
+    },
+    {
+     "w": "wave",
+     "start": 16.59,
+     "end": 17.04,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 17.125,
+     "end": 17.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 17.16,
+     "end": 17.36,
+     "heard": true
+    },
+    {
+     "w": "break",
+     "start": 17.45,
+     "end": 17.84,
+     "heard": true
+    },
+    {
+     "w": "runs",
+     "start": 17.755,
+     "end": 18.16,
+     "heard": true
+    },
+    {
+     "w": "along",
+     "start": 18.06,
+     "end": 18.48,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 18.6,
+     "end": 18.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 18.955,
+     "end": 19.04,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 18.985,
+     "end": 19.2,
+     "heard": true
+    },
+    {
+     "w": "wave",
+     "start": 19.23,
+     "end": 19.6,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 19.695,
+     "end": 19.84,
+     "heard": true
+    },
+    {
+     "w": "break",
+     "start": 19.735,
+     "end": 20.16,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 20.15,
+     "end": 20.32,
      "heard": true
     },
     {
      "w": "again.",
-     "start": 15.015,
-     "end": 15.36,
+     "start": 20.345,
+     "end": 20.64,
      "heard": true
     }
    ]
@@ -732,8 +846,8 @@
   },
   {
    "id": "vo04",
-   "text": "In the jar, the big nut rises because small grains slip into the gaps under it. Small things moving together can do surprising things. So can the tiny specks inside a drop of drying coffee.",
-   "heard": "In the jar, the big nut rises because small grains slip into the gaps under it. Small things moving together can do surprising things. So can the tiny specks inside a drop of drying coffee.",
+   "text": "In the jar, small grains slipping into the gaps under the big nut is one reason it rises. Small things moving together can do surprising things. So can the tiny specks inside a drop of drying coffee.",
+   "heard": "In the jar, small grains slipping into the gaps under the big nut is one reason it rises. Small things moving together can do surprising things. So can the tiny specks inside a drop of drying coffee.",
    "words": [
     {
      "w": "In",
@@ -743,206 +857,218 @@
     },
     {
      "w": "the",
-     "start": 0.295,
+     "start": 0.26,
      "end": 0.4,
      "heard": true
     },
     {
      "w": "jar,",
-     "start": 0.325,
-     "end": 0.96,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 1.11,
-     "end": 1.2,
-     "heard": true
-    },
-    {
-     "w": "big",
-     "start": 1.285,
-     "end": 1.44,
-     "heard": true
-    },
-    {
-     "w": "nut",
-     "start": 1.39,
-     "end": 1.92,
-     "heard": true
-    },
-    {
-     "w": "rises",
-     "start": 1.85,
-     "end": 2.56,
-     "heard": true
-    },
-    {
-     "w": "because",
-     "start": 2.585,
-     "end": 2.88,
+     "start": 0.29,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "small",
-     "start": 2.975,
-     "end": 3.28,
+     "start": 1.065,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "grains",
-     "start": 3.365,
-     "end": 3.92,
+     "start": 1.48,
+     "end": 2.08,
      "heard": true
     },
     {
-     "w": "slip",
-     "start": 4.035,
-     "end": 4.4,
+     "w": "slipping",
+     "start": 2.17,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "into",
-     "start": 4.36,
-     "end": 4.56,
+     "start": 2.63,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "the",
-     "start": 4.67,
-     "end": 4.72,
+     "start": 2.725,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "gaps",
-     "start": 4.7,
-     "end": 5.36,
+     "start": 2.865,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "under",
-     "start": 5.44,
-     "end": 5.6,
-     "heard": true
-    },
-    {
-     "w": "it.",
-     "start": 5.8,
-     "end": 6.24,
-     "heard": true
-    },
-    {
-     "w": "Small",
-     "start": 6.315,
-     "end": 6.72,
-     "heard": true
-    },
-    {
-     "w": "things",
-     "start": 6.755,
-     "end": 7.04,
-     "heard": true
-    },
-    {
-     "w": "moving",
-     "start": 7.07,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "together",
-     "start": 7.585,
-     "end": 7.92,
-     "heard": true
-    },
-    {
-     "w": "can",
-     "start": 7.92,
-     "end": 8.08,
-     "heard": true
-    },
-    {
-     "w": "do",
-     "start": 8.095,
-     "end": 8.32,
-     "heard": true
-    },
-    {
-     "w": "surprising",
-     "start": 8.415,
-     "end": 9.44,
-     "heard": true
-    },
-    {
-     "w": "things.",
-     "start": 9.42,
-     "end": 10.16,
-     "heard": true
-    },
-    {
-     "w": "So",
-     "start": 10.205,
-     "end": 10.32,
-     "heard": true
-    },
-    {
-     "w": "can",
-     "start": 10.235,
-     "end": 10.56,
+     "start": 3.185,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "the",
-     "start": 10.465,
-     "end": 10.72,
+     "start": 3.515,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "big",
+     "start": 3.695,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "nut",
+     "start": 3.895,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.62,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 4.73,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "reason",
+     "start": 5.165,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 5.695,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "rises.",
+     "start": 5.725,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "Small",
+     "start": 7.11,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "things",
+     "start": 7.55,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "moving",
+     "start": 7.87,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "together",
+     "start": 8.265,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 8.715,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 8.89,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "surprising",
+     "start": 9.215,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "things.",
+     "start": 10.25,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "So",
+     "start": 10.95,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 11.205,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.47,
+     "end": 11.52,
      "heard": true
     },
     {
      "w": "tiny",
-     "start": 10.725,
-     "end": 11.2,
+     "start": 11.5,
+     "end": 11.92,
      "heard": true
     },
     {
      "w": "specks",
-     "start": 11.35,
-     "end": 11.76,
+     "start": 11.935,
+     "end": 12.48,
      "heard": true
     },
     {
      "w": "inside",
-     "start": 11.695,
-     "end": 12.16,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 12.2,
-     "end": 12.32,
-     "heard": true
-    },
-    {
-     "w": "drop",
-     "start": 12.335,
-     "end": 12.72,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 12.71,
+     "start": 12.425,
      "end": 12.88,
      "heard": true
     },
     {
+     "w": "a",
+     "start": 12.895,
+     "end": 13.04,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 13.03,
+     "end": 13.36,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 13.405,
+     "end": 13.6,
+     "heard": true
+    },
+    {
      "w": "drying",
-     "start": 12.93,
-     "end": 13.44,
+     "start": 13.63,
+     "end": 14.16,
      "heard": true
     },
     {
      "w": "coffee.",
-     "start": 13.46,
-     "end": 14.0,
+     "start": 14.155,
+     "end": 14.72,
      "heard": true
     }
    ]
@@ -1263,8 +1389,8 @@
   },
   {
    "id": "vo07",
-   "text": "A slinky that waits. A stick that breaks again. A nut that rises. A ring from a drop. A cup that sings. A raindrop with a speed limit. None of them needed new physics, only a slower look. And all of them were happening around you the whole time. Next time you see something ordinary, slow it down in your head.",
-   "heard": "A slinky that waits, a stick that breaks again, a nut that rises, a ring from a drop, a cup that sings, a raindrop with a speed limit. None of them needed new physics, only a slower look, and all of them were happening around you the whole time next time you see something ordinary, slow it down in your head.",
+   "text": "A slinky that waits. A stick that breaks again. A nut that rises. A ring from a drop. A cup that sings. A raindrop with a speed limit. None of them needed new physics, only a closer look. And all of them were happening around you the whole time. Real quick: like and subscribe. It genuinely helps. Next time you see something ordinary, slow it down in your head.",
+   "heard": "A slinky that waits, a stick that breaks again, a nut that rises, a ring from a drop, a cup that sings, a raindrop with a speed limit. None of them needed new physics, only a closer look, and all of them were happening around you the whole time. Real quick, like and subscribe. It genuinely helps. Next time you see something ordinary, slow it down in your head.",
    "words": [
     {
      "w": "A",
@@ -1274,362 +1400,410 @@
     },
     {
      "w": "slinky",
-     "start": 0.245,
-     "end": 0.72,
+     "start": 0.24,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "that",
-     "start": 0.87,
+     "start": 0.81,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "waits.",
-     "start": 0.9,
-     "end": 1.76,
+     "start": 1.055,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "A",
-     "start": 1.845,
-     "end": 1.92,
+     "start": 1.735,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "stick",
-     "start": 1.875,
+     "start": 1.935,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 2.185,
      "end": 2.32,
      "heard": true
     },
     {
-     "w": "that",
-     "start": 2.325,
-     "end": 2.48,
-     "heard": true
-    },
-    {
      "w": "breaks",
-     "start": 2.505,
-     "end": 2.96,
+     "start": 2.38,
+     "end": 2.88,
      "heard": true
     },
     {
      "w": "again.",
-     "start": 2.925,
-     "end": 3.6,
+     "start": 2.795,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "A",
-     "start": 3.72,
-     "end": 3.77,
+     "start": 3.565,
+     "end": 3.615,
      "heard": true
     },
     {
      "w": "nut",
-     "start": 3.75,
+     "start": 3.595,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.935,
      "end": 4.16,
      "heard": true
     },
     {
-     "w": "that",
-     "start": 4.14,
-     "end": 4.4,
-     "heard": true
-    },
-    {
      "w": "rises.",
-     "start": 4.29,
-     "end": 5.44,
+     "start": 4.065,
+     "end": 5.12,
      "heard": true
     },
     {
      "w": "A",
-     "start": 5.52,
-     "end": 5.6,
+     "start": 5.215,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "ring",
-     "start": 5.55,
-     "end": 6.0,
+     "start": 5.245,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "from",
-     "start": 6.075,
-     "end": 6.16,
+     "start": 5.71,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.105,
-     "end": 6.32,
+     "start": 5.92,
+     "end": 6.0,
      "heard": true
     },
     {
      "w": "drop.",
-     "start": 6.325,
-     "end": 7.2,
+     "start": 5.95,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "A",
-     "start": 7.28,
-     "end": 7.36,
+     "start": 6.78,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "cup",
-     "start": 7.39,
-     "end": 7.76,
+     "start": 6.89,
+     "end": 7.2,
      "heard": true
     },
     {
      "w": "that",
-     "start": 7.86,
-     "end": 7.92,
+     "start": 7.185,
+     "end": 7.44,
      "heard": true
     },
     {
      "w": "sings.",
-     "start": 7.89,
-     "end": 8.8,
+     "start": 7.33,
+     "end": 8.16,
      "heard": true
     },
     {
      "w": "A",
-     "start": 8.915,
-     "end": 9.04,
+     "start": 8.22,
+     "end": 8.32,
      "heard": true
     },
     {
      "w": "raindrop",
-     "start": 9.095,
-     "end": 9.84,
+     "start": 8.25,
+     "end": 9.12,
      "heard": true
     },
     {
      "w": "with",
-     "start": 9.805,
-     "end": 10.0,
+     "start": 9.07,
+     "end": 9.28,
      "heard": true
     },
     {
      "w": "a",
-     "start": 9.915,
-     "end": 10.16,
+     "start": 9.175,
+     "end": 9.36,
      "heard": true
     },
     {
      "w": "speed",
-     "start": 10.23,
-     "end": 10.48,
+     "start": 9.475,
+     "end": 9.68,
      "heard": true
     },
     {
      "w": "limit.",
-     "start": 10.46,
-     "end": 11.36,
+     "start": 9.705,
+     "end": 10.56,
      "heard": true
     },
     {
      "w": "None",
-     "start": 11.48,
-     "end": 11.6,
+     "start": 10.675,
+     "end": 10.8,
      "heard": true
     },
     {
      "w": "of",
-     "start": 11.51,
-     "end": 11.76,
+     "start": 10.895,
+     "end": 10.96,
      "heard": true
     },
     {
      "w": "them",
-     "start": 11.77,
-     "end": 11.92,
+     "start": 10.96,
+     "end": 11.12,
      "heard": true
     },
     {
      "w": "needed",
-     "start": 11.92,
-     "end": 12.32,
+     "start": 11.12,
+     "end": 11.44,
      "heard": true
     },
     {
      "w": "new",
-     "start": 12.245,
-     "end": 12.56,
+     "start": 11.365,
+     "end": 11.68,
      "heard": true
     },
     {
      "w": "physics,",
-     "start": 12.555,
-     "end": 13.2,
+     "start": 11.68,
+     "end": 12.24,
      "heard": true
     },
     {
      "w": "only",
-     "start": 13.165,
-     "end": 13.44,
+     "start": 12.21,
+     "end": 12.48,
      "heard": true
     },
     {
      "w": "a",
-     "start": 13.44,
-     "end": 13.6,
+     "start": 12.605,
+     "end": 12.655,
      "heard": true
     },
     {
-     "w": "slower",
-     "start": 13.695,
-     "end": 14.16,
+     "w": "closer",
+     "start": 12.69,
+     "end": 13.12,
      "heard": true
     },
     {
      "w": "look.",
-     "start": 14.12,
-     "end": 14.88,
+     "start": 13.215,
+     "end": 13.68,
      "heard": true
     },
     {
      "w": "And",
-     "start": 14.96,
-     "end": 15.04,
+     "start": 13.765,
+     "end": 13.84,
      "heard": true
     },
     {
      "w": "all",
-     "start": 14.99,
-     "end": 15.2,
+     "start": 13.795,
+     "end": 14.0,
      "heard": true
     },
     {
      "w": "of",
-     "start": 15.29,
-     "end": 15.36,
+     "start": 14.085,
+     "end": 14.135,
      "heard": true
     },
     {
      "w": "them",
-     "start": 15.345,
-     "end": 15.52,
+     "start": 14.14,
+     "end": 14.24,
      "heard": true
     },
     {
      "w": "were",
-     "start": 15.615,
-     "end": 15.68,
+     "start": 14.17,
+     "end": 14.48,
      "heard": true
     },
     {
      "w": "happening",
-     "start": 15.805,
-     "end": 16.08,
+     "start": 14.58,
+     "end": 14.88,
      "heard": true
     },
     {
      "w": "around",
-     "start": 16.12,
-     "end": 16.32,
+     "start": 14.89,
+     "end": 15.12,
      "heard": true
     },
     {
      "w": "you",
-     "start": 16.38,
-     "end": 16.56,
+     "start": 15.21,
+     "end": 15.28,
      "heard": true
     },
     {
      "w": "the",
-     "start": 16.64,
-     "end": 16.8,
+     "start": 15.385,
+     "end": 15.52,
      "heard": true
     },
     {
      "w": "whole",
-     "start": 16.875,
-     "end": 17.28,
+     "start": 15.6,
+     "end": 16.0,
      "heard": true
     },
     {
      "w": "time.",
-     "start": 17.32,
-     "end": 17.6,
+     "start": 16.04,
+     "end": 16.8,
      "heard": true
     },
     {
-     "w": "Next",
-     "start": 18.085,
-     "end": 18.16,
+     "w": "Real",
+     "start": 16.885,
+     "end": 17.2,
      "heard": true
     },
     {
-     "w": "time",
-     "start": 18.4,
-     "end": 18.64,
+     "w": "quick:",
+     "start": 17.3,
+     "end": 17.76,
      "heard": true
     },
     {
-     "w": "you",
-     "start": 18.64,
-     "end": 18.8,
+     "w": "like",
+     "start": 17.76,
+     "end": 18.0,
      "heard": true
     },
     {
-     "w": "see",
-     "start": 18.865,
-     "end": 19.04,
+     "w": "and",
+     "start": 18.02,
+     "end": 18.24,
      "heard": true
     },
     {
-     "w": "something",
-     "start": 19.095,
+     "w": "subscribe.",
+     "start": 18.3,
+     "end": 19.2,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 19.28,
      "end": 19.36,
      "heard": true
     },
     {
+     "w": "genuinely",
+     "start": 19.4,
+     "end": 20.08,
+     "heard": true
+    },
+    {
+     "w": "helps.",
+     "start": 20.015,
+     "end": 20.88,
+     "heard": true
+    },
+    {
+     "w": "Next",
+     "start": 20.985,
+     "end": 21.2,
+     "heard": true
+    },
+    {
+     "w": "time",
+     "start": 21.155,
+     "end": 21.44,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 21.32,
+     "end": 21.68,
+     "heard": true
+    },
+    {
+     "w": "see",
+     "start": 21.705,
+     "end": 21.84,
+     "heard": true
+    },
+    {
+     "w": "something",
+     "start": 21.89,
+     "end": 22.16,
+     "heard": true
+    },
+    {
      "w": "ordinary,",
-     "start": 19.455,
-     "end": 20.16,
+     "start": 22.245,
+     "end": 22.96,
      "heard": true
     },
     {
      "w": "slow",
-     "start": 20.165,
-     "end": 20.56,
+     "start": 23.055,
+     "end": 23.36,
      "heard": true
     },
     {
      "w": "it",
-     "start": 20.65,
-     "end": 20.8,
+     "start": 23.45,
+     "end": 23.52,
      "heard": true
     },
     {
      "w": "down",
-     "start": 20.73,
-     "end": 20.96,
+     "start": 23.48,
+     "end": 23.68,
      "heard": true
     },
     {
      "w": "in",
-     "start": 21.055,
-     "end": 21.12,
+     "start": 23.775,
+     "end": 23.84,
      "heard": true
     },
     {
      "w": "your",
-     "start": 21.2,
-     "end": 21.28,
+     "start": 23.885,
+     "end": 24.0,
      "heard": true
     },
     {
      "w": "head.",
-     "start": 21.345,
-     "end": 21.68,
+     "start": 24.04,
+     "end": 24.32,
      "heard": true
     }
    ]

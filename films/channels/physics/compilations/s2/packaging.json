@@ -4,16 +4,16 @@
  "hook": "Six everyday things (a slinky, spaghetti, a jar of nuts, a coffee drop, a cup filling, a raindrop) each hide a clear physical reason, and slowing them down shows it.",
  "titles": [
   {
-   "text": "Six Everyday Things, Slowed Down Until the Physics Shows",
-   "mechanism": "scale shock"
-  },
-  {
-   "text": "Why a Slinky's Bottom Waits, and Five More Surprises",
+   "text": "A Falling Slinky's Bottom Doesn't Move at First. Why?",
    "mechanism": "unanswered question"
   },
   {
-   "text": "Everyday Mysteries You Can Finally See",
+   "text": "Your House Is Full of Physics You've Never Noticed",
    "mechanism": "knowledge gap"
+  },
+  {
+   "text": "Six Everyday Things, Slowed Down Until the Physics Shows",
+   "mechanism": "scale shock"
   },
   {
    "text": "The Hidden Physics of a Coffee Ring, a Raindrop and Four More",
@@ -58,53 +58,53 @@
    "title": 0,
    "thumbnail": "A",
    "scores": {
-    "scroll": 84,
-    "curiosity": 86,
-    "clarity": 82,
+    "scroll": 86,
+    "curiosity": 90,
+    "clarity": 84,
     "synergy": 88,
-    "originality": 70,
-    "accuracy": 96,
-    "mobile": 86,
-    "satisfaction": 88
+    "originality": 76,
+    "accuracy": 94,
+    "mobile": 88,
+    "satisfaction": 90
    },
-   "note": "The grid promises six different surprises; each tile is an honest frame from the film."
+   "note": "One strange, checkable question leads; the grid promises five more honest surprises without repeating the title."
+  },
+  {
+   "title": 1,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 80,
+    "clarity": 66,
+    "synergy": 80,
+    "originality": 62,
+    "accuracy": 76,
+    "mobile": 84,
+    "satisfaction": 74
+   },
+   "note": "Broad and warm, but 'never noticed' overclaims and the promise is vague."
   },
   {
    "title": 0,
    "thumbnail": "B",
    "scores": {
-    "scroll": 80,
-    "curiosity": 84,
-    "clarity": 78,
+    "scroll": 84,
+    "curiosity": 88,
+    "clarity": 82,
     "synergy": 80,
     "originality": 74,
-    "accuracy": 96,
+    "accuracy": 94,
     "mobile": 88,
-    "satisfaction": 84
+    "satisfaction": 88
    },
-   "note": "A hero picture with a text promise."
-  },
-  {
-   "title": 3,
-   "thumbnail": "C",
-   "scores": {
-    "scroll": 66,
-    "curiosity": 74,
-    "clarity": 68,
-    "synergy": 64,
-    "originality": 72,
-    "accuracy": 92,
-    "mobile": 76,
-    "satisfaction": 76
-   },
-   "note": "Only two of the six."
+   "note": "Hero slinky plus the slinky title repeats the same idea; less synergy."
   }
  ],
  "winner": {
-  "title": "Six Everyday Things, Slowed Down Until the Physics Shows",
+  "title": "A Falling Slinky's Bottom Doesn't Move at First. Why?",
   "thumbnail": "A",
   "thumbnailText": "",
-  "why": "The film is exactly six everyday things slowed down, each with its reason. The grid is the promise; the title says how."
+  "why": "Leads with the strongest segment as one honest question ('at first' keeps it true: the bottom waits about 0.3 s). The six-tile grid shows the other five without repeating the title."
  },
  "testAndCompare": [
   "A",
