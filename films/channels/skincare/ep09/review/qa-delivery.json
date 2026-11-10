@@ -1,6 +1,6 @@
 {
  "file": "films/channels/skincare/ep09/out/skin-sense-009-9x16.mp4",
- "size_mb": 23.1,
+ "size_mb": 26.1,
  "video": {
   "codec": "h264",
   "profile": "High",
@@ -11,7 +11,7 @@
   "dur": 72.2,
   "pix_fmt": "yuv420p",
   "color": "bt709",
-  "mbps": 2.29
+  "mbps": 2.62
  },
  "film_dur": 72.2,
  "audio": {
@@ -27,15 +27,14 @@
   "mono_loss_db": 0.04
  },
  "flashing": {
-  "large_transitions": 3,
+  "large_transitions": 2,
   "transition_frames": [
    1,
-   591,
    1332
   ],
   "flashes": 1,
   "max_flashes_per_s": 1,
-  "largest_changed_area": 0.421
+  "largest_changed_area": 0.429
  },
  "fails": []
 }
