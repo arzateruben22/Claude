@@ -55,7 +55,7 @@
   ],
   "pairings": [
     {
-      "title": 0,
+      "title": 1,
       "thumbnail": "A",
       "scores": {
         "scroll": 80,
@@ -67,7 +67,7 @@
         "mobile": 84,
         "satisfaction": 84
       },
-      "note": "claim and the evidence image"
+      "note": "re-paired: claim and the evidence image"
     },
     {
       "title": 2,
@@ -101,10 +101,10 @@
     }
   ],
   "winner": {
-    "title": "Your Fingerprints Were Grown, Not Drawn",
+    "title": "When Do Your Fingerprints Form?",
     "thumbnail": "A",
     "thumbnailText": "Grown, not drawn.",
-    "why": "The video's twist in one line; the painted fingertip shows the ridges the line is about."
+    "why": "The title asks when; the cover answers how (grown, not drawn) without giving away the timing, which stays in the video. Re-paired 10 Nov: the first winner's title repeated the cover text."
   },
   "testAndCompare": [
     "A",

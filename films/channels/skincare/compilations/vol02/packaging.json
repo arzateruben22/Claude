@@ -16,8 +16,8 @@
       "mechanism": "personal relevance"
     },
     {
-      "text": "Goosebumps, Wrinkled Fingers, Sweat, Tans, Barrier, Fingerprints",
-      "mechanism": "list"
+      "text": "Why Do Wet Fingers Wrinkle? And 5 More Skin Mysteries",
+      "mechanism": "unanswered question"
     },
     {
       "text": "How Your Skin Works, With the Evidence On Screen",
@@ -55,7 +55,7 @@
   ],
   "pairings": [
     {
-      "title": 0,
+      "title": 3,
       "thumbnail": "A",
       "scores": {
         "scroll": 80,
@@ -67,7 +67,7 @@
         "mobile": 84,
         "satisfaction": 84
       },
-      "note": "claim and the evidence image"
+      "note": "re-paired: claim and the evidence image"
     },
     {
       "title": 2,
@@ -101,10 +101,10 @@
     }
   ],
   "winner": {
-    "title": "What Your Skin Does Without Asking You",
+    "title": "Why Do Wet Fingers Wrinkle? And 5 More Skin Mysteries",
     "thumbnail": "A",
     "thumbnailText": "Without asking you.",
-    "why": "The title and thumbnail share one idea (it happens without your say) and the three tones and three jobs show the range."
+    "why": "One concrete question everyone has wondered about, plus five more. The cover adds the thread (it all happens without asking you) and the middle tile shows the wrinkled fingers. Re-paired 10 Nov: the first winner's title repeated the cover text."
   },
   "testAndCompare": [
     "A",
