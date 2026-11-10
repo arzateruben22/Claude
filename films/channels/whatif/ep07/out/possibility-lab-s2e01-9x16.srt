@@ -100,3 +100,7 @@ in about three days.
 00:01:01,460 --> 00:01:04,705
 The distance never
 changed, only the speed.
+
+22
+00:01:09,792 --> 00:01:13,382
+Real quick: like and follow. The next what-if is even stranger.
