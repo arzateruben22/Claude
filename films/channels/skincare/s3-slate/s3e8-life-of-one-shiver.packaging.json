@@ -1,0 +1,132 @@
+{
+ "version": 1,
+ "format": "short",
+ "status": "slate draft: titles and thumbnails are hypotheses until the script's claims are sourced (truth check held false); nothing is rendered yet",
+ "bridge": "Ending of 8: the last story's closing line returns to the first cell ('and tomorrow, a new layer of cells begins again'), closing the season's thread.",
+ "hook": "A shiver is skin and muscle answering the cold together, a story that starts in the same nerves as a goosebump. (claims to source: shivering is involuntary muscle contraction that makes heat; link to the goosebump circuit from S2 E1)",
+ "titles": [
+  {
+   "text": "What One Shiver Does Inside You",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Why You Shiver When You're Cold",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "A Shiver Is a Tiny Furnace",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Shivering Is Muscles Making Heat on Purpose",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "The Life of One Shiver",
+   "mechanism": "knowledge gap"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a cut-away of skin with a glowing signal running down a nerve to a muscle that trembles, a soft amber warmth radiating",
+   "composition": "muscle centre, nerve rising from below, warmth glow above",
+   "lighting": "cool blue edge light on the skin, warm amber at the muscle",
+   "trigger": "cold meeting warmth",
+   "text": "",
+   "complements": "title says what the shiver does; the picture shows the furnace"
+  },
+  {
+   "id": "B",
+   "subject": "a forearm in pale blue morning light with fine goosebump texture",
+   "composition": "arm across the lower third",
+   "lighting": "cool, ivory",
+   "trigger": "familiar sensation made precise",
+   "text": "Why?",
+   "complements": "adds the question"
+  },
+  {
+   "id": "C",
+   "subject": "a single muscle fibre bundle with tiny sparks",
+   "composition": "centred",
+   "lighting": "warm amber sparks",
+   "trigger": "mechanism",
+   "text": "",
+   "complements": "mechanism"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 82,
+    "synergy": 84,
+    "originality": 76,
+    "accuracy": 86,
+    "mobile": 84,
+    "satisfaction": 84
+   },
+   "note": "the surprise, shown"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 74,
+    "curiosity": 80,
+    "clarity": 86,
+    "synergy": 74,
+    "originality": 66,
+    "accuracy": 88,
+    "mobile": 86,
+    "satisfaction": 80
+   },
+   "note": "simple question"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 72,
+    "curiosity": 80,
+    "clarity": 78,
+    "synergy": 80,
+    "originality": 72,
+    "accuracy": 84,
+    "mobile": 80,
+    "satisfaction": 82
+   },
+   "note": "furnace metaphor, check literal truth"
+  }
+ ],
+ "winner": {
+  "title": "What One Shiver Does Inside You",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "Active and specific, with a thumbnail that shows the mechanism instead of repeating the title."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": false,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point and any text inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a cut-away of skin and muscle: a gold signal running down a nerve to a muscle that trembles, with a soft amber warmth radiating from it.\nComposition: the muscle at the centre, the nerve rising from the lower right, ivory negative space above.\nLighting and treatment: cool blue edge light on the skin, warm amber at the muscle, peach and rose tissue in one light skin tone, deep green #00685F as the only accent.\nMood: wonder.\nText: No text.\nScientific accuracy: shivering is involuntary muscle activity that produces heat (verify); an illustration, not to scale.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, shocked expressions, or anything that looks like a real medical photo. Style: premium medical-editorial documentary illustration, ivory page, one light skin tone, peach and rose tissue, deep green #00685F accent, navy serif type; distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 5.0,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

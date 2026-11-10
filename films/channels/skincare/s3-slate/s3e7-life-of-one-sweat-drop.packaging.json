@@ -1,0 +1,132 @@
+{
+ "version": 1,
+ "format": "short",
+ "status": "slate draft: titles and thumbnails are hypotheses until the script's claims are sourced (truth check held false); nothing is rendered yet",
+ "bridge": "From ep6 (healing): skin keeps working while it rests. Ending of 7: 'the drop dries, and the skin shivers' bridging to 8.",
+ "hook": "One sweat drop leaves a gland as water and its journey to the surface ends by carrying heat away as it dries. (claims to source: gland and duct path, evaporation takes heat from skin; reuses S2 E3's sourced figures)",
+ "titles": [
+  {
+   "text": "The Life of One Drop of Sweat",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "A Sweat Drop's Trip to Your Skin Surface",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Where Does One Drop of Sweat Go?",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "Your Sweat Is Mostly Trying to Disappear",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "One Drop, One Gland, One Cooling Trick",
+   "mechanism": "scale shock"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a single glistening drop emerging from a pore opening, its duct visible in a cut-away below",
+   "composition": "drop at the surface upper third, the coiled gland low in the frame",
+   "lighting": "warm side light, droplet catching a highlight, peach tissue",
+   "trigger": "tiny event at huge scale",
+   "text": "",
+   "complements": "title promises a life story; the picture shows its birth"
+  },
+  {
+   "id": "B",
+   "subject": "the drop thinning to a faint vapour wisp above the skin",
+   "composition": "wisp rising from the surface",
+   "lighting": "soft rim light",
+   "trigger": "something vanishing",
+   "text": "Gone",
+   "complements": "adds the ending the title only implies"
+  },
+  {
+   "id": "C",
+   "subject": "the gland coil as a glowing spring",
+   "composition": "coil centred, duct rising",
+   "lighting": "amber glow",
+   "trigger": "hidden machinery",
+   "text": "",
+   "complements": "mechanism"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 84,
+    "clarity": 82,
+    "synergy": 82,
+    "originality": 72,
+    "accuracy": 86,
+    "mobile": 84,
+    "satisfaction": 86
+   },
+   "note": "story plus birth image"
+  },
+  {
+   "title": 2,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 74,
+    "curiosity": 82,
+    "clarity": 80,
+    "synergy": 78,
+    "originality": 74,
+    "accuracy": 84,
+    "mobile": 82,
+    "satisfaction": 84
+   },
+   "note": "ending teased"
+  },
+  {
+   "title": 1,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 78,
+    "clarity": 80,
+    "synergy": 76,
+    "originality": 68,
+    "accuracy": 86,
+    "mobile": 80,
+    "satisfaction": 82
+   },
+   "note": "mechanism"
+  }
+ ],
+ "winner": {
+  "title": "The Life of One Drop of Sweat",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "Matches the series' story frame; the thumbnail starts the story the title promises."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": false,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point and any text inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a single glistening sweat drop emerging from a skin pore opening, with a cut-away of its duct and coiled gland below.\nComposition: the drop in the upper third, the coiled gland low in the frame, ivory negative space.\nLighting and treatment: warm side light, a bright highlight on the drop, peach and rose tissue in one light skin tone, deep green #00685F as the only accent.\nMood: quiet wonder.\nText: No text.\nScientific accuracy: sweat is made in a coiled gland and travels through a duct to the surface (verify); an illustration, not to scale.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, shocked expressions, or anything that looks like a real medical photo. Style: premium medical-editorial documentary illustration, ivory page, one light skin tone, peach and rose tissue, deep green #00685F accent, navy serif type; distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 4.0,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
