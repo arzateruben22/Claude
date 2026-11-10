@@ -22,19 +22,19 @@
    "mechanism": "unanswered question"
   },
   {
-   "text": "A Year of Lightning Would Power the World for 5 Days",
+   "text": "A Year of Lightning Could Power the World for About 5 Days",
    "mechanism": "unexpected consequence"
   }
  ],
  "thumbnails": [
   {
    "id": "A",
-   "subject": "the ball of thread: a straight chain of everyone on Earth, wound about 310 times round the planet, drawn as white thread on a dark globe",
-   "composition": "globe large on the right two thirds, big stacked number on the left, plenty of dark negative space",
-   "lighting": "soft warm-white rim glow on the thread, deep slate background, magenta #EB63FF accent on one word",
-   "trigger": "scale shock: a planet wrapped like a ball of yarn",
-   "text": "310 LAPS",
-   "complements": "the title promises six impossible questions; the picture answers one of them with a number the title never states"
+   "subject": "the owner's clay-style blue figurine seen from behind, mid-stride, walking along a glowing magenta path toward a cratered grey Moon, with the dark Earth behind it",
+   "composition": "figure large on the left-centre at about 70% of the frame height, the path curving up to the Moon in the upper right, a warm lamp glow in the top-left corner",
+   "lighting": "warm lamp light on a dark graph-paper table, magenta #EB63FF path glow, shallow depth of field",
+   "trigger": "a tiny 'you' doing an ordinary action at an impossible scale; the goal is in view and no answer is shown",
+   "text": "",
+   "complements": "shows the setup only (the same walk as Episode 1); the title promises six such questions"
   },
   {
    "id": "B",
@@ -106,8 +106,8 @@
  "winner": {
   "title": "6 Impossible Questions You Can Solve on an Envelope",
   "thumbnail": "A",
-  "thumbnailText": "310 LAPS",
-  "why": "The title promises exactly what the film delivers: six questions, each answered with one simple calculation. The thumbnail shows one of those answers as a striking picture, so the number is a second mystery the title does not explain."
+  "thumbnailText": "",
+  "why": "The title promises six questions with one-calculation answers; the cover shows the channel's figure setting off toward the Moon, the plain 'you doing something ordinary at an impossible scale' idea, with no answer on screen."
  },
  "testAndCompare": [
   "A",
@@ -122,7 +122,7 @@
   "satisfaction": true,
   "originality": true
  },
- "checksNote": "duplication: the thumbnail text (310 LAPS) is not in the title. truth: the film shows the ball-of-thread globe and says the chain circles the Earth about 310 times. competition and originality are my own judgments, not measured.",
+ "checksNote": "duplication: the thumbnail has no text. truth: it is the Episode 1 art, and the film shows that walk. competition and originality are my own judgments, not measured.",
  "thumbnailFile": "thumbnail-16x9.jpg",
- "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: the Earth drawn as a ball of thread: a single long white line wound round a dark grey sphere about 310 times, so the planet looks like a ball of yarn. Nothing else is on the planet.\nComposition: the sphere is large, filling the right two thirds of the frame and sitting slightly right of centre. A big empty dark area on the left holds the text.\nLighting and treatment: deep slate background (#171A1E) with a soft violet glow behind the sphere, a warm white rim glow on the thread, thin crisp lines, a little depth of field. One magenta (#EB63FF) accent on the text.\nMood: wonder and disbelief.\nText: \"310 LAPS\" in heavy white condensed sans-serif, the number large on one line and \"LAPS\" in magenta underneath, left side. No other text.\nScientific accuracy: the thread is a chain of every person on Earth holding hands, wrapped about 310 times round the equator; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, rockets or anything that looks like a NASA photo.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art."
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: a small clay-style blue figurine with a round head and no face, seen from behind and mid-stride, walking along a thin glowing magenta (#EB63FF) path that curves up toward a cratered grey clay Moon; the edge of a dark clay Earth with white outlined continents sits behind and below it.\nComposition: low three-quarter camera behind the figure; the figure large on the left-centre, about 70% of the frame height; the path sweeping to the Moon in the upper right; a lot of dark space; nothing important in the extreme corners.\nLighting and treatment: a warm desk lamp glowing in the top-left corner on a dark graph-paper tabletop, soft shadows, shallow depth of field, tactile clay texture, deep warm-black background.\nMood: wonder and anticipation: a small person facing an impossible distance.\nText: No text.\nScientific accuracy: the Moon is much smaller and farther than the Earth would suggest; the picture shows the setup only and no answer; it is a stylised illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, rockets or anything that looks like a NASA photo.\nStyle: premium, art-directed, handmade clay-stop-motion look; not photorealistic, not generic AI art."
 }

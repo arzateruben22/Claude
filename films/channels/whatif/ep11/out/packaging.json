@@ -29,12 +29,12 @@
  "thumbnails": [
   {
    "id": "A",
-   "subject": "a pale blue ball of water floating beside the full grey Moon and a much bigger Earth, three spheres in a row",
-   "composition": "three spheres across the frame in descending size, water ball in the middle",
+   "subject": "the glossy blue mannequin figure standing beside a small glowing sphere of water that floats above a blue bucket on a dark graph-paper floor",
+   "composition": "9:16 vertical: the figure on the left half at about 40% of the frame height, the water sphere and bucket on the right, a dark starry background",
    "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
-   "trigger": "scale shock: all the water looks small",
-   "text": "1,400 KM",
-   "complements": "adds a layer the title does not state; it never repeats the title's words"
+   "trigger": "a tiny 'you' doing the ordinary action; the goal is in view and the answer is not",
+   "text": "",
+   "complements": "shows the setup only; the number stays in the video"
   },
   {
    "id": "B",
@@ -106,8 +106,8 @@
  "winner": {
   "title": "All the Water on Earth Fits in a Ball This Big",
   "thumbnail": "A",
-  "thumbnailText": "1,400 KM",
-  "why": "The title sets the question; the cover answers with the size next to the Moon and the Earth, a number the title does not state."
+  "thumbnailText": "",
+  "why": "The title asks one plain question and the cover shows the figure about to do the ordinary thing, with the goal in view and no answer on screen, as the principles in PACKAGING.md recommend."
  },
  "testAndCompare": [
   "A",
@@ -125,9 +125,9 @@
  },
  "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
  "thumbnailFile": "possibility-lab-s2e05-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: a smooth glowing pale-blue ball of water hanging between the grey Moon and the much larger Earth, three spheres in a row.\nComposition: 9:16 vertical: the three spheres stacked down the middle with the water ball in the centre of the frame; the number sits in the upper third, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"1,400 KM\" in heavy white condensed sans-serif, \"KM\" in magenta, placed upper middle. No other text.\nScientific accuracy: all liquid, ice and vapor water on Earth, about 1.386 billion km3, makes a ball about 1,400 km across; the Moon is about 3,474 km across; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the glossy blue mannequin figure standing beside a small glowing sphere of water that floats above a blue bucket on a dark graph-paper floor.\nComposition: 9:16 vertical: the figure on the left half at about 40% of the frame height, the water sphere and bucket on the right, a dark starry background; keep everything important clear of the bottom quarter and the right-hand edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, soft cool key light, a glossy blue mannequin figure with no face, a magenta (#EB63FF) accent used sparingly; clean, minimal, high contrast, stylised 3-D render.\nMood: wonder and anticipation: you are about to do something ordinary at an impossible scale.\nText: No text.\nScientific accuracy: it shows the setup only, never the answer; it is a diagram-style illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
  "shortsCover": {
   "frameSeconds": 27.6333,
-  "text": "1,400 KM"
+  "text": ""
  }
 }

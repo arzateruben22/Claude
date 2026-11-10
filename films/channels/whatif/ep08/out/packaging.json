@@ -29,12 +29,12 @@
  "thumbnails": [
   {
    "id": "A",
-   "subject": "the Earth drawn as a ball of white thread: a single line wound about 310 times round a dark sphere",
-   "composition": "sphere large and centred in the upper two thirds, number below it",
+   "subject": "the glossy blue mannequin figure at the front of a long line of plain grey mannequin figures all holding hands, the line receding to the horizon on a dark graph-paper floor",
+   "composition": "9:16 vertical: the blue figure large in the lower left, the grey line curving away to the right toward the horizon, empty dark sky above",
    "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
-   "trigger": "scale shock: a planet wrapped like yarn",
-   "text": "310 LAPS",
-   "complements": "adds a layer the title does not state; it never repeats the title's words"
+   "trigger": "a tiny 'you' doing the ordinary action; the goal is in view and the answer is not",
+   "text": "",
+   "complements": "shows the setup only; the number stays in the video"
   },
   {
    "id": "B",
@@ -106,8 +106,8 @@
  "winner": {
   "title": "If Everyone on Earth Held Hands, How Far Would It Reach?",
   "thumbnail": "A",
-  "thumbnailText": "310 LAPS",
-  "why": "The title is the question; the cover shows the surprising answer as a picture, the chain wound round the planet like thread, with a number the title never states."
+  "thumbnailText": "",
+  "why": "The title asks one plain question and the cover shows the figure about to do the ordinary thing, with the goal in view and no answer on screen, as the principles in PACKAGING.md recommend."
  },
  "testAndCompare": [
   "A",
@@ -125,9 +125,9 @@
  },
  "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
  "thumbnailFile": "possibility-lab-s2e02-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the Earth drawn as a ball of thread: a single long white line wound about 310 times round a dark grey sphere, so the planet looks like a ball of yarn.\nComposition: 9:16 vertical: the sphere large in the upper two thirds, a little left of centre; the number sits below it, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"310 LAPS\" in heavy white condensed sans-serif, \"LAPS\" in magenta, placed upper middle. No other text.\nScientific accuracy: the thread is a chain of everyone on Earth holding hands, about 12.3 million km, wound about 310 times round the equator; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the glossy blue mannequin figure at the front of a long line of plain grey mannequin figures all holding hands, the line receding to the horizon on a dark graph-paper floor.\nComposition: 9:16 vertical: the blue figure large in the lower left, the grey line curving away to the right toward the horizon, empty dark sky above; keep everything important clear of the bottom quarter and the right-hand edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, soft cool key light, a glossy blue mannequin figure with no face, a magenta (#EB63FF) accent used sparingly; clean, minimal, high contrast, stylised 3-D render.\nMood: wonder and anticipation: you are about to do something ordinary at an impossible scale.\nText: No text.\nScientific accuracy: it shows the setup only, never the answer; it is a diagram-style illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
  "shortsCover": {
   "frameSeconds": 42.4333,
-  "text": "310 LAPS"
+  "text": ""
  }
 }

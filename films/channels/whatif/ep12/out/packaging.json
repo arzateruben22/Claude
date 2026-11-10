@@ -6,7 +6,7 @@
  "hook": "Catch every lightning bolt for a whole year and you would collect only about five days of the world's electricity, roughly.",
  "titles": [
   {
-   "text": "A Year of Lightning Would Power the World for 5 Days",
+   "text": "A Year of Lightning Could Power the World for About 5 Days",
    "mechanism": "unexpected consequence"
   },
   {
@@ -29,12 +29,12 @@
  "thumbnails": [
   {
    "id": "A",
-   "subject": "a tall glowing bolt filling a thin tank on the left, and a far taller tank of the world's electricity beside it",
-   "composition": "two tanks side by side, bolt tank short, electricity tank towering",
+   "subject": "the glossy blue mannequin figure standing beside a hanging light bulb, switched off, on a dark graph-paper floor under a starry sky",
+   "composition": "9:16 vertical: the figure on the left at about 40% of the frame height, the grey bulb on the right at head height, empty dark sky",
    "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
-   "trigger": "scale shock: lightning is a thin slice",
-   "text": "5 DAYS",
-   "complements": "adds a layer the title does not state; it never repeats the title's words"
+   "trigger": "a tiny 'you' doing the ordinary action; the goal is in view and the answer is not",
+   "text": "",
+   "complements": "shows the setup only; the number stays in the video"
   },
   {
    "id": "B",
@@ -104,10 +104,10 @@
  ],
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
  "winner": {
-  "title": "A Year of Lightning Would Power the World for 5 Days",
+  "title": "A Year of Lightning Could Power the World for About 5 Days",
   "thumbnail": "A",
-  "thumbnailText": "5 DAYS",
-  "why": "The title makes the surprising claim; the cover shows how thin the lightning tank is next to the world's electricity, with a number that completes the idea."
+  "thumbnailText": "",
+  "why": "The title asks one plain question and the cover shows the figure about to do the ordinary thing, with the goal in view and no answer on screen, as the principles in PACKAGING.md recommend."
  },
  "testAndCompare": [
   "A",
@@ -125,9 +125,9 @@
  },
  "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
  "thumbnailFile": "possibility-lab-s2e06-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: two tall glass tanks side by side on a dark graph-paper floor: a short tank filled with glowing amber lightning, next to a far taller tank of cool blue light, the lightning tank only a thin slice of the other.\nComposition: 9:16 vertical: the tall tank on the right of centre, the short lightning tank on the left, both in the middle band; the number sits above them, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"5 DAYS\" in heavy white condensed sans-serif, \"DAYS\" in magenta, placed upper middle. No other text.\nScientific accuracy: about 44 flashes a second, about 1.4 billion a year, roughly a billion joules each (a wide range); that is roughly five days of world electricity (about 4.7), and the video hedges the range; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the glossy blue mannequin figure standing beside a hanging light bulb, switched off, on a dark graph-paper floor under a starry sky.\nComposition: 9:16 vertical: the figure on the left at about 40% of the frame height, the grey bulb on the right at head height, empty dark sky; keep everything important clear of the bottom quarter and the right-hand edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, soft cool key light, a glossy blue mannequin figure with no face, a magenta (#EB63FF) accent used sparingly; clean, minimal, high contrast, stylised 3-D render.\nMood: wonder and anticipation: you are about to do something ordinary at an impossible scale.\nText: No text.\nScientific accuracy: it shows the setup only, never the answer; it is a diagram-style illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
  "shortsCover": {
   "frameSeconds": 30.1667,
-  "text": "5 DAYS"
+  "text": ""
  }
 }

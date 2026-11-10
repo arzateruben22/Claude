@@ -29,12 +29,12 @@
  "thumbnails": [
   {
    "id": "A",
-   "subject": "a single playing-card back, face down, in front of a vast column of digits that runs off the top of the frame",
-   "composition": "card low centre, digits receding upward",
+   "subject": "a loose grid of fifty-two face-up playing cards laid out on a dark graph-paper plane, slightly fanned, seen from above at a tilt",
+   "composition": "9:16 vertical: the card grid filling the upper two thirds, slightly left of centre, empty dark space below",
    "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
-   "trigger": "scale shock: a deck against a number too big to fit",
-   "text": "52!",
-   "complements": "adds a layer the title does not state; it never repeats the title's words"
+   "trigger": "a tiny 'you' doing the ordinary action; the goal is in view and the answer is not",
+   "text": "",
+   "complements": "shows the setup only; the number stays in the video"
   },
   {
    "id": "B",
@@ -106,8 +106,8 @@
  "winner": {
   "title": "Every Card Shuffle Is Almost Certainly a First",
   "thumbnail": "A",
-  "thumbnailText": "52!",
-  "why": "The title is the surprising claim; the cover gives the mystery behind it, the number that makes it true, without explaining it."
+  "thumbnailText": "",
+  "why": "The title asks one plain question and the cover shows the figure about to do the ordinary thing, with the goal in view and no answer on screen, as the principles in PACKAGING.md recommend."
  },
  "testAndCompare": [
   "A",
@@ -125,9 +125,9 @@
  },
  "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
  "thumbnailFile": "possibility-lab-s2e04-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: a single face-down playing card, plain and unmarked, standing in front of a tall column of small white digits that rises and fades off the top of the frame.\nComposition: 9:16 vertical: the card in the lower middle, the digit column rising behind it; the big symbol sits in the upper third, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"52!\" in heavy white condensed sans-serif, the \"!\" in magenta, placed upper middle. No other text.\nScientific accuracy: 52! is about 8 x 10^67, a 68-digit number; the chance that two shuffles in history ever matched is below 1 in 10^36; the digits are decorative, not the real number; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: a loose grid of fifty-two face-up playing cards laid out on a dark graph-paper plane, slightly fanned, seen from above at a tilt.\nComposition: 9:16 vertical: the card grid filling the upper two thirds, slightly left of centre, empty dark space below; keep everything important clear of the bottom quarter and the right-hand edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, soft cool key light, a glossy blue mannequin figure with no face, a magenta (#EB63FF) accent used sparingly; clean, minimal, high contrast, stylised 3-D render.\nMood: wonder and anticipation: you are about to do something ordinary at an impossible scale.\nText: No text.\nScientific accuracy: it shows the setup only, never the answer; it is a diagram-style illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
  "shortsCover": {
   "frameSeconds": 43.8667,
-  "text": "52!"
+  "text": ""
  }
 }

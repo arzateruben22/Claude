@@ -29,12 +29,12 @@
  "thumbnails": [
   {
    "id": "A",
-   "subject": "the blue figure beside a rope loop that hovers one meter above a huge dark planet curve",
-   "composition": "figure left third, planet arc lower right, loop above it",
+   "subject": "the small glossy blue mannequin figure standing beside a thin glowing white rope laid along the horizon of a dark graph-paper plain, a short vertical measuring post with magenta tick marks next to it",
+   "composition": "9:16 vertical: the figure in the lower left third, the glowing rope crossing the whole frame behind it at about one third height, empty dark sky above",
    "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
-   "trigger": "contradiction: a tiny change on a huge planet",
-   "text": "+6.3 M",
-   "complements": "adds a layer the title does not state; it never repeats the title's words"
+   "trigger": "a tiny 'you' doing the ordinary action; the goal is in view and the answer is not",
+   "text": "",
+   "complements": "shows the setup only; the number stays in the video"
   },
   {
    "id": "B",
@@ -106,8 +106,8 @@
  "winner": {
   "title": "Lift a Rope Around Earth 1 Meter. You Need Just 6 More.",
   "thumbnail": "A",
-  "thumbnailText": "+6.3 M",
-  "why": "The title poses the paradox; the cover shows the little extra rope as a number the title only hints at with 'just 6 more'."
+  "thumbnailText": "",
+  "why": "The title asks one plain question and the cover shows the figure about to do the ordinary thing, with the goal in view and no answer on screen, as the principles in PACKAGING.md recommend."
  },
  "testAndCompare": [
   "A",
@@ -125,9 +125,9 @@
  },
  "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
  "thumbnailFile": "possibility-lab-s2e03-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the small glossy blue mannequin figure beside a thin rope loop that floats one meter above the curved surface of a huge dark planet.\nComposition: 9:16 vertical: the planet's curve across the bottom third, the figure at the left, the loop arching above it; the number sits in the upper middle, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"+6.3 M\" in heavy white condensed sans-serif, the \"M\" in magenta, placed upper middle. No other text.\nScientific accuracy: lifting a rope round a sphere by 1 meter adds 2 x pi x 1 = about 6.3 m of rope for any radius; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the small glossy blue mannequin figure standing beside a thin glowing white rope laid along the horizon of a dark graph-paper plain, a short vertical measuring post with magenta tick marks next to it.\nComposition: 9:16 vertical: the figure in the lower left third, the glowing rope crossing the whole frame behind it at about one third height, empty dark sky above; keep everything important clear of the bottom quarter and the right-hand edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, soft cool key light, a glossy blue mannequin figure with no face, a magenta (#EB63FF) accent used sparingly; clean, minimal, high contrast, stylised 3-D render.\nMood: wonder and anticipation: you are about to do something ordinary at an impossible scale.\nText: No text.\nScientific accuracy: it shows the setup only, never the answer; it is a diagram-style illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
  "shortsCover": {
   "frameSeconds": 43.7333,
-  "text": "+6.3 M"
+  "text": ""
  }
 }

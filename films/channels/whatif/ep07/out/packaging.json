@@ -29,12 +29,12 @@
  "thumbnails": [
   {
    "id": "A",
-   "subject": "the blue figure, small, at the left end of a very long dotted path that runs off to a pale Moon at the far right",
-   "composition": "figure low left, path crossing the whole frame, Moon top right, empty dark space for the number",
+   "subject": "the small glossy blue mannequin figure seen from behind, walking along a long thin dotted path that runs across the frame toward a pale grey Moon",
+   "composition": "9:16 vertical: the Moon in the upper third, the figure small in the lower third, the dotted path winding up between them",
    "lighting": "the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent",
-   "trigger": "scale shock: a tiny person, an enormous distance",
-   "text": "26 YEARS",
-   "complements": "adds a layer the title does not state; it never repeats the title's words"
+   "trigger": "a tiny 'you' doing the ordinary action; the goal is in view and the answer is not",
+   "text": "",
+   "complements": "shows the setup only; the number stays in the video"
   },
   {
    "id": "B",
@@ -106,8 +106,8 @@
  "winner": {
   "title": "How Long Would It Take to Walk to the Moon?",
   "thumbnail": "A",
-  "thumbnailText": "26 YEARS",
-  "why": "The title asks the plain question everyone wonders about; the cover answers it with a number the title does not give, 26 years at a working-day pace, which the video explains."
+  "thumbnailText": "",
+  "why": "The title asks one plain question and the cover shows the figure about to do the ordinary thing, with the goal in view and no answer on screen, as the principles in PACKAGING.md recommend."
  },
  "testAndCompare": [
   "A",
@@ -125,9 +125,9 @@
  },
  "checksNote": "These are my own creative judgments. 'truth' holds because the cover shows what the film shows and hedges as the film does; competition and originality are not measured.",
  "thumbnailFile": "possibility-lab-s2e01-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the small glossy blue mannequin figure seen from behind, standing at the left end of a long thin dotted path that runs across the frame to a pale grey Moon at the far right.\nComposition: 9:16 vertical: the Moon in the upper third, the figure small in the lower third, the dotted path winding up between them; the number sits in the middle band, clear of the bottom quarter and the right edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, a glossy blue mannequin figure with no face, soft cool key light and a magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief and wonder.\nText: \"26 YEARS\" in heavy white condensed sans-serif, with \"YEARS\" in magenta, placed upper middle. No other text.\nScientific accuracy: the walk is a thought experiment at a working-day pace: about 26 years (about nine years if you never stopped); the Moon is about 384,400 km away; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the small glossy blue mannequin figure seen from behind, walking along a long thin dotted path that runs across the frame toward a pale grey Moon.\nComposition: 9:16 vertical: the Moon in the upper third, the figure small in the lower third, the dotted path winding up between them; keep everything important clear of the bottom quarter and the right-hand edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E) with faint graph-paper lines, soft cool key light, a glossy blue mannequin figure with no face, a magenta (#EB63FF) accent used sparingly; clean, minimal, high contrast, stylised 3-D render.\nMood: wonder and anticipation: you are about to do something ordinary at an impossible scale.\nText: No text.\nScientific accuracy: it shows the setup only, never the answer; it is a diagram-style illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
  "shortsCover": {
   "frameSeconds": 39.5,
-  "text": "26 YEARS"
+  "text": ""
  }
 }
