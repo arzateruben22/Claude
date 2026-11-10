@@ -4,11 +4,11 @@ How your skin works, with the evidence on the screen.
 
 Chapters
 0:00 Why goosebumps happen
-1:16 Why fingers wrinkle in water
-2:25 How sweat cools you
-3:35 What a tan really is
-4:49 The brick wall on your skin
-5:57 Fingerprints form before you're born
+1:25 Why fingers wrinkle in water
+2:44 How sweat cools you
+4:03 What a tan really is
+5:28 The brick wall on your skin
+6:43 Fingerprints form before you're born
 
 Sources (every number in these episodes is checked against a source)
 01 Why goosebumps happen

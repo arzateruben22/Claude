@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "format": "long",
+  "hook": "Your skin raises hairs, folds your fingertips, cools you, answers the sun, holds water in and patterned your fingers before you were born, without asking you.",
+  "titles": [
+    {
+      "text": "What Your Skin Does Without Asking You",
+      "mechanism": "hidden mechanism"
+    },
+    {
+      "text": "Six Jobs Your Skin Does Without Your Permission",
+      "mechanism": "knowledge gap"
+    },
+    {
+      "text": "Your Skin Is Busy Right Now: Six Short Stories",
+      "mechanism": "personal relevance"
+    },
+    {
+      "text": "Goosebumps, Wrinkled Fingers, Sweat, Tans, Barrier, Fingerprints",
+      "mechanism": "list"
+    },
+    {
+      "text": "How Your Skin Works, With the Evidence On Screen",
+      "mechanism": "promise"
+    }
+  ],
+  "thumbnails": [
+    {
+      "id": "A",
+      "subject": "three painted close-ups in three skin tones, side by side: a forearm with raised hairs (light), two fingertips one smooth and one wrinkled (medium), a fingertip whorl (deep)",
+      "composition": "three tall rounded tiles on the right, big serif text on the left",
+      "lighting": "soft warm light, ivory ground",
+      "trigger": "your own skin doing something you never decided",
+      "text": "Without asking you.",
+      "complements": "the title says what, the tiles show three of the jobs"
+    },
+    {
+      "id": "B",
+      "subject": "one forearm with goosebumps, close",
+      "composition": "forearm across the lower half",
+      "lighting": "soft",
+      "trigger": "familiar",
+      "text": "Six jobs",
+      "complements": "the count"
+    },
+    {
+      "id": "C",
+      "subject": "two fingertips, smooth and wrinkled",
+      "composition": "close",
+      "lighting": "warm",
+      "trigger": "familiar mystery",
+      "text": "Why?",
+      "complements": "the question"
+    }
+  ],
+  "pairings": [
+    {
+      "title": 0,
+      "thumbnail": "A",
+      "scores": {
+        "scroll": 80,
+        "curiosity": 84,
+        "clarity": 84,
+        "synergy": 84,
+        "originality": 76,
+        "accuracy": 86,
+        "mobile": 84,
+        "satisfaction": 84
+      },
+      "note": "claim and the evidence image"
+    },
+    {
+      "title": 2,
+      "thumbnail": "B",
+      "scores": {
+        "scroll": 76,
+        "curiosity": 82,
+        "clarity": 80,
+        "synergy": 82,
+        "originality": 74,
+        "accuracy": 86,
+        "mobile": 80,
+        "satisfaction": 82
+      },
+      "note": "cause named"
+    },
+    {
+      "title": 1,
+      "thumbnail": "C",
+      "scores": {
+        "scroll": 72,
+        "curiosity": 78,
+        "clarity": 84,
+        "synergy": 70,
+        "originality": 62,
+        "accuracy": 90,
+        "mobile": 84,
+        "satisfaction": 78
+      },
+      "note": "plain question"
+    }
+  ],
+  "winner": {
+    "title": "What Your Skin Does Without Asking You",
+    "thumbnail": "A",
+    "thumbnailText": "Without asking you.",
+    "why": "The title and thumbnail share one idea (it happens without your say) and the three tones and three jobs show the range."
+  },
+  "testAndCompare": [
+    "A",
+    "B",
+    "C"
+  ],
+  "checks": {
+    "halfSecond": true,
+    "curiosity": true,
+    "duplication": true,
+    "competition": true,
+    "truth": true,
+    "satisfaction": true,
+    "originality": true
+  },
+  "thumbnailFile": "thumbnail.jpg",
+  "chatgptPrompt": "Create a 16:9 (1280x720) YouTube thumbnail.\nSubject: three tall rounded painted close-ups side by side on the right: a bare forearm in light skin with fine hairs standing up (goosebumps), two fingertips in medium-brown skin one smooth and one wrinkled like a prune, and one deep-brown fingertip with a clear whorl of fingerprint ridges. No faces.\nComposition: the three tiles on the right half, large navy serif text on the left, ivory ground (#F7EFE3).\nLighting and treatment: soft warm light, shallow depth of field, deep green #00685F only for the small label.\nMood: quiet wonder.\nText: small label \"SKIN SENSE · SEASON 2\" and large text \"Without asking you.\" in a navy editorial serif.\nScientific accuracy: illustrations of real skin responses; not photographs, no medical claims.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text.\nStyle: premium medical-editorial documentary illustration, distinctive, not generic AI art.",
+  "shortsCover": {
+    "frameSeconds": 0,
+    "text": ""
+  },
+  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
