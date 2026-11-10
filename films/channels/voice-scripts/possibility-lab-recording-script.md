@@ -9,7 +9,7 @@ re-check the fact (the on-screen captions are rebuilt from your recording, so th
 - **Phone:** Voice Memos is fine. Hold it **about a hand's width (15–20 cm) from your mouth**, slightly to the side so your breath doesn't hit it. Same spot every session.
 - **One file per episode.** Read the lines in order with a **2-second pause** between them. Flubbed one? Pause, then read **that whole line again**; we keep the last take.
 - Start every file by saying its name, e.g. *"Possibility Lab, Season 2, Episode 1"*, then pause and begin.
-- **Name the files** like `pl-s2e01.m4a` … `pl-s2e06.m4a`, `pl-spin.m4a` (pilot), `pl-s3-parts.m4a`, `pl-s4-parts.m4a`, `pl-s5-parts.m4a` and `pl-part-closers.m4a` (the short parts' lines, below).
+- **Name the files** like `pl-s2e01.m4a` … `pl-s2e06.m4a`, `pl-spin.m4a` (Season 3), `pl-s4.m4a`, `pl-s5.m4a` (Seasons 4 and 5), `pl-s3-parts.m4a`, `pl-s4-parts.m4a`, `pl-s5-parts.m4a` and `pl-part-closers.m4a` (the short parts' lines, below).
 - **Upload** them on GitHub here: https://github.com/arzateruben22/claude/upload/claude/whatif-s2/films/channels/whatif/voice-owner
 
 ### How it should sound
@@ -174,11 +174,96 @@ About 9 minutes. Same rules. Take a breath between lines; there's no rush in a l
 **19.** Subscribe, for the next what-if.
 
 
+## Season 4 long video: “What If You Fell Into a Hole Through the Earth?”
+About 9 minutes. File: `pl-s4.m4a`. Same rules as the other long videos: a breath between lines, no rush.
+
+**1.** What if you could dig a hole straight through the middle of the Earth, all the way to the other side, and jump in? It would take you forty-two minutes to come out the other end. And on the way, you would pass through some of the strangest places on the planet.
+
+**2.** Here are the rules. The tube runs from pole to pole, straight through the centre. There is no air in it, and nothing rubs against you. You do not need to dig it, cool it or hold it up. You simply stand at the top, and you let go. Later, we will see why none of this could ever be built.
+
+**3.** On screen there are two numbers: how deep you are, and how fast you are falling. Depth starts at zero, and by the end it will have reached six thousand, three hundred and seventy kilometers. Speed starts at zero too, and it will not stop rising until the middle. Nothing resets.
+
+**4.** In the first second, you fall about five meters, just like any falling object. After a minute, you are seventeen kilometers down, falling at almost six hundred meters a second, faster than the speed of sound. You are already deeper than any hole humans have ever drilled.
+
+**5.** At about thirty-five kilometers, you leave the crust, the thin skin of rock we live on. It has taken you less than a minute and a half. Down here, the rock around the tube is already hot enough to glow, because the Earth gets warmer by about twenty-five degrees for every kilometer you descend. But the tube is made of imagination, so you keep falling.
+
+**6.** Next comes the mantle, nearly three thousand kilometers of hot rock that flows, very slowly, like thick tar. Its temperature climbs from about a thousand degrees to nearly four thousand. You are now moving at over five kilometers a second. And something odd is happening. You are still speeding up, but more and more gently, because the pull of gravity is getting weaker as you go down.
+
+**7.** Why does the pull get weaker as you go down? Because of a lovely rule that Isaac Newton worked out. Inside a ball, all the rock above you pulls in every direction at once, and its pull cancels out completely. Only the rock below you still pulls you down. The deeper you go, the less rock is below you, so the pull shrinks, steadily, until at the very centre there is nothing below you at all.
+
+**8.** Thirteen minutes in, you cross into the outer core. It is a sea of liquid iron and nickel, as hot as the surface of the Sun. Nothing solid is left. If this tube were not imaginary, you would not survive another second. But you do, and you are falling at about six and a half kilometers a second, nearly twenty-four thousand kilometers an hour.
+
+**9.** Eighteen and a half minutes in, you reach the inner core, a solid ball of iron about as wide as the dwarf planet Pluto. It is solid because the pressure down here is so enormous that it squeezes the iron into a solid, even though it is as hot as the Sun. Your speed is almost at its peak, and gravity, the force that has been pulling you, is almost gone.
+
+**10.** Twenty-one minutes after you let go, you pass the exact centre of the Earth. Here, the pull of gravity is zero. You are weightless, and you are moving at your highest speed: about seven point nine kilometers a second, nearly twenty-eight and a half thousand kilometers an hour. That is fast enough to cross the United States, coast to coast, in under ten minutes. And you carry on, because you cannot stop.
+
+**11.** Now gravity pulls you back. Everything you passed on the way down, you pass again in reverse, and you slow down by exactly the same amounts. The depth number starts to fall, and so does the speed. The trip is a perfect mirror image of the first half.
+
+**12.** Forty-two minutes after you started, you reach the far end of the tube, and your speed falls to exactly zero. You have gone all the way through the Earth, and you have just enough speed to reach the other opening and no more. For an instant, you hang there. If a friend does not catch you, you start to fall back in.
+
+**13.** With no air and no friction, you would never stop. You would swing from one end of the Earth to the other and back again, over and over, once every eighty-four minutes. That is about seventeen times a day, for ever.
+
+**14.** One honest correction. This is for an Earth that is the same density all the way through. The real Earth is far denser at the middle, so gravity stays stronger for longer, and you would fall faster, passing the centre at closer to ten kilometers a second. The real trip takes about thirty-eight minutes, not forty-two, and you would pass the centre a bit quicker than seven point nine. The shape of the trip stays the same.
+
+**15.** Now, here is the strangest part. Suppose the tunnel does not go through the centre. Suppose it is a shortcut between two cities, a straight tunnel that never gets near the middle. How long would that take? Forty-two minutes. The same. A short tunnel, a long tunnel, or one that goes through the centre. They all take forty-two minutes, with no engine and no fuel.
+
+**16.** In the real world, none of this works, for good reasons. The deepest hole ever drilled, in Russia, only reached twelve kilometers, and the rock there was already over one hundred and eighty degrees. Down at the centre, the pressure is about three point six million times the air pressure you feel now. And if the tube had air in it, the air would slow you down to a few dozen meters a second, no faster than a skydiver. Even the spinning Earth would get in the way: you would be thrown sideways into the wall, except on a path from pole to pole.
+
+**17.** So you cannot jump through the Earth. But the maths is lovely. That swing through the middle takes exactly as long as it would take to orbit the Earth, a little under an hour and a half. It is the same rhythm, in two different places. Thanks for watching.
+
+**18.** Subscribe, for the next what-if.
+
+
+## Season 5 long video: “What If It Got Colder Every Second and Couldn't Stop?”
+About 9 minutes. File: `pl-s5.m4a`. Same rules as the other long videos: a breath between lines, no rush.
+
+**1.** What if the temperature around you started to fall, a little more every second, and nothing in the universe could stop it? You would watch the world freeze, then freeze again, and then something stranger than freezing. By the end, even the air would turn to rain.
+
+**2.** Here are the rules. The air everywhere gets colder, and it only ever gets colder. You are wearing an imaginary suit, so you survive. The film is about what happens to everything else. On screen is one number, the temperature in degrees Celsius, and under it the same temperature in kelvin, the scale that starts at the coldest possible temperature. Nothing resets.
+
+**3.** At zero degrees Celsius, water freezes. Puddles turn to ice, and rain turns to snow. That is the temperature everyone knows. It is also only the beginning, and a very mild beginning: you have fallen just twenty degrees.
+
+**4.** The sea is a little more stubborn, because salt lowers its freezing point to about minus two degrees. But it is only a delay. A crust of ice spreads across the oceans from the shore, and the water underneath is sealed away from the sky. For a while, it would stay liquid below, kept warm by its own depth.
+
+**5.** Under the ice, the oceans would not freeze quickly. In the minutes of this film, the ice lid is only centimetres thick, and a lid of ice slows the cold down. Without the Sun, my rough estimate is that it would take tens of thousands of years for the oceans to freeze all the way through. So the first thing to give up is the sky, not the sea.
+
+**6.** At minus forty degrees, something happens that happens nowhere else on the scale. Celsius and Fahrenheit agree. Minus forty is minus forty on both. It is the one number where you never need to ask which scale someone means.
+
+**7.** By minus sixty, the sky has gone strangely clear. Cold air can hold almost no water vapour, so the clouds fall out as snow and frost, and they do not come back. The world turns sharp and silent, a blue dome over a white street. Rubber goes stiff, and some metals, like ordinary steel, turn brittle, and things that bent for a hundred years begin to crack.
+
+**8.** Somewhere on the way, you pass the coldest air temperature ever measured at a weather station. It was minus eighty-nine point two degrees, at the Vostok station in Antarctica, in nineteen eighty-three. Satellites have read about minus ninety-eight at the snow surface, but nothing colder than that has ever been recorded as weather. From here on, the cold is colder than any weather Earth has had.
+
+**9.** A jar of pure carbon dioxide turns from gas to solid at minus seventy-eight and a half, the white stuff we call dry ice. But in real air, carbon dioxide is only a trace, so the air has to get far colder, about one hundred and forty below. Then a frost of dry ice settles on every surface, and the air loses its first gas.
+
+**10.** A jar of pure oxygen boils at minus one hundred and eighty-three. But air is a mixture, and it holds out a little longer. At about minus one hundred and ninety-one, the first drops begin to form, and they are rich in oxygen, so they are pale blue. It is the gas that you breathe, starting to pool on every surface that is colder than the air.
+
+**11.** Nitrogen is almost four fifths of the air. A jar of air would be all liquid by minus one hundred and ninety-four. But the sky does not empty all at once. At minus one hundred and ninety-six, about four fifths of it is still gas. At minus two hundred and three, about a third. By minus two hundred and twenty-three, less than one percent. The air rains out, and it keeps raining as it gets colder. If all of it came down, it would cover the planet with a layer of liquid air about twelve meters deep.
+
+**12.** A few tiny traces of gas are left. There is so little of each that they hold out far longer than a jar of the pure gas would. Neon lasts to about twelve kelvin, hydrogen to about six. Helium, the lightest and most stubborn, is about five millionths of the air and does not condense out until below one kelvin. After that, there is no gas left in the air at all.
+
+**13.** And now the cold itself starts to behave oddly. Below about two kelvin, helium becomes a superfluid, a liquid with no friction at all. It creeps up the walls of its container and spills over the rim. Cool a ring of lead below about seven kelvin, and an electric current can circle inside it for years without fading. The closer to the floor you go, the less like ordinary matter anything is.
+
+**14.** Step back and look at the whole scale. Room temperature is about two hundred and ninety-three kelvin. The coldest air ever measured on Earth was about one hundred and eighty-four. So the entire range of weather, from a warm room to Antarctica at its worst, covers just over a third of the way down. Everything from there to the floor, nearly two thirds of the whole scale, is colder than any weather Earth has recorded.
+
+**15.** To find a natural place this cold, you have to leave the Earth. The Boomerang Nebula, five thousand light years away, is about one degree above the coldest possible temperature, the coldest natural place we know of. Even the glow left over from the Big Bang is warmer than that, at about two point seven degrees.
+
+**16.** The coldest anything has ever been made is not in space. It was in a laboratory. A cloud of atoms, dropped down a tower and slowed with magnetic fields, moved as slowly as if it were thirty-eight trillionths of a degree above absolute zero. That is far colder than the nebula, and colder than anything else we know of.
+
+**17.** And the temperature never gets there. The coldest possible temperature is minus two hundred and seventy-three point one five degrees, which we call absolute zero. A law of physics, the third law of thermodynamics, says that nothing can be brought exactly to it in any finite number of steps. You can get closer, and closer, and closer, but each step needs more effort than the last. The number on screen can fall forever. It can never land.
+
+**18.** Now, the strangest part. You might think that at absolute zero, everything would stop moving. It does not. Quantum physics says that even the coldest atom keeps a tiny, unavoidable jiggle, called zero-point motion. Nothing in the universe can ever be perfectly still.
+
+**19.** In the real world, none of this could happen. The Earth is kept warm by the Sun, and the Sun would have to go out. Even then, the planet's own heat would keep the deep oceans liquid for a very long time. The cold is only a thought experiment.
+
+**20.** So the next time you feel cold, remember how little of the scale you have used. From the warmth of a room, to the coldest day on Earth, to the edge of the universe's coldest places, you have only travelled a few hundred degrees. And the floor is still not there. Thanks for watching.
+
+**21.** Subscribe, for the next what-if.
+
+
 ## The short parts: opening and cliffhanger lines
 Each long video is cut into 8 short parts. Every part reuses your long-video lines, but opens with a 2-second line of its own
 and ends on a cliffhanger. These are only those extra lines: two short sentences per part. The cliffhangers carry the suspense,
-so let them hang, a little slower, with a lift at the end. The Season 4 and Season 5 long-video narration gets added here once those
-two films are final. Until you record, an AI voice stands in, so nothing waits on you.
+so let them hang, a little slower, with a lift at the end. Until you record, an AI voice stands in, so nothing waits on you.
 
 ### Season 3: What If Earth Spun Faster and Couldn't Stop?
 File: `pl-s3-parts.m4a`. For each part, read the opening line, pause 2 seconds, then the cliffhanger.
