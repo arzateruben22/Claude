@@ -1,5 +1,5 @@
 {
- "duration": 64.267,
+ "duration": 68.467,
  "fps": 30,
  "preset": "outerlayer-slide",
  "sections": [
@@ -34,15 +34,21 @@
    "energy": 0.8
   },
   {
-   "id": "takeaway",
+   "id": "cta",
    "t0": 51.575,
-   "t1": 58.948,
+   "t1": 55.744,
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 55.744,
+   "t1": 63.117,
    "energy": 0.3
   },
   {
    "id": "tease",
-   "t0": 58.948,
-   "t1": 64.267,
+   "t0": 63.117,
+   "t1": 68.467,
    "energy": 0.35
   }
  ],
@@ -59,45 +65,10 @@
    "tag": "title"
   },
   {
-   "t": 1.4,
-   "kind": "label",
-   "tag": "l0"
-  },
-  {
    "t": 3.892,
    "kind": "section",
    "id": "normal",
    "t1": 16.783
-  },
-  {
-   "t": 4.192,
-   "kind": "scale.jump",
-   "tag": "c3"
-  },
-  {
-   "t": 4.292,
-   "kind": "label",
-   "tag": "l1"
-  },
-  {
-   "t": 4.342,
-   "kind": "badge",
-   "tag": "b0"
-  },
-  {
-   "t": 9.427,
-   "kind": "scale.jump",
-   "tag": "c5"
-  },
-  {
-   "t": 9.527,
-   "kind": "label",
-   "tag": "l2"
-  },
-  {
-   "t": 15.017,
-   "kind": "label",
-   "tag": "l3"
   },
   {
    "t": 16.783,
@@ -106,35 +77,15 @@
    "t1": 26.446
   },
   {
-   "t": 23.738,
-   "kind": "scale.jump",
-   "tag": "c10"
+   "t": 18.213,
+   "kind": "label",
+   "tag": "l0"
   },
   {
    "t": 26.446,
    "kind": "section",
    "id": "why",
    "t1": 40.031
-  },
-  {
-   "t": 26.746,
-   "kind": "scale.jump",
-   "tag": "c11"
-  },
-  {
-   "t": 29.881,
-   "kind": "label",
-   "tag": "l4"
-  },
-  {
-   "t": 30.601,
-   "kind": "label",
-   "tag": "l5"
-  },
-  {
-   "t": 37.491,
-   "kind": "label",
-   "tag": "l6"
   },
   {
    "t": 40.031,
@@ -144,44 +95,30 @@
   },
   {
    "t": 40.331,
-   "kind": "scale.jump",
-   "tag": "c15"
-  },
-  {
-   "t": 40.331,
    "kind": "swell",
    "tag": "whoa",
    "t1": 52.175
   },
   {
-   "t": 50.001,
-   "kind": "scale.jump",
-   "tag": "c17"
-  },
-  {
    "t": 51.575,
    "kind": "section",
+   "id": "cta",
+   "t1": 55.744
+  },
+  {
+   "t": 55.744,
+   "kind": "section",
    "id": "takeaway",
-   "t1": 58.948
+   "t1": 63.117
   },
   {
-   "t": 51.975,
-   "kind": "label",
-   "tag": "l7"
-  },
-  {
-   "t": 51.975,
-   "kind": "label",
-   "tag": "l8"
-  },
-  {
-   "t": 58.948,
+   "t": 63.117,
    "kind": "section",
    "id": "tease",
-   "t1": 64.267
+   "t1": 68.467
   },
   {
-   "t": 59.248,
+   "t": 63.417,
    "kind": "signature",
    "tag": "end"
   }
@@ -213,13 +150,18 @@
    "file": "vo/05.wav"
   },
   {
-   "id": "vo06",
+   "id": "vo05c",
    "t": 51.875,
+   "file": "vo/05c.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 56.044,
    "file": "vo/06.wav"
   },
   {
    "id": "vo07",
-   "t": 59.248,
+   "t": 63.417,
    "file": "vo/07.wav"
   }
  ]
