@@ -64,8 +64,8 @@ CAMK = [
     (CUE["way"], [-190, 110, -410], [0, 0, 0], 48),
     (CUE["far"], [22, 18, -44], [0, 0, 30], 46),                                      # push in on "far"
     (CUE["begin"], [22, 18, -44], [0, 0, 30], 46),
-    (CUE["begin"] + 2.6, [0, 0.5, 1], [-45, 8, 60], 60),                              # inside: a dark sky; look left: one star lights
-    (t_tk, [0, 0.5, 1], [42, 14, 62], 60),                  # look right: another
+    (CUE["begin"] + 0.4, [0, 0.5, 1], [-45, 8, 60], 60),                              # inside: a dark sky; look left: one star lights
+    (t_tk + 1.2, [0, 0.5, 1], [42, 14, 62], 60),                  # look right: another
     (CUE["clue"], [0, 1.5, 1.5], [0, 26, 60], 60),                                    # up, on "clue"
     (t_rd - 0.2, [0, 0.5, 1.5], [-5, 2, 70], 60),
     (t_rd + 1.5, [0, 72, -120], [0, 0, -52], 36),                                       # the rings, from above
