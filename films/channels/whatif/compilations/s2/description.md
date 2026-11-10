@@ -1,16 +1,17 @@
-Season 2: six more worked-out what-ifs
+6 Impossible Questions You Can Solve on an Envelope
 
 Impossible questions, honest assumptions, real calculations.
 
 Chapters
 0:00 Walking to the Moon
-1:18 Everyone holds hands
-2:32 A rope round the Earth
-3:45 Every shuffle is new
-4:56 All the water in one ball
-6:09 Catch all the lightning
+1:36 Everyone holds hands
+2:50 A rope round the Earth
+4:06 Every shuffle is new
+5:19 All the water in one ball
+6:34 Catch all the lightning
+7:08 The six answers, ranked
 
-Sources (every number's source is listed here)
+Sources (every number in these episodes is checked against a source)
 01 Walking to the Moon
 - NASA Science, Moon Facts: https://science.nasa.gov/moon/facts/
 - Bohannon, Comfortable and maximum walking speed of adults aged 20-79 years, Age and Ageing 26 (1997) (abstract via PubMed E-utilities): https://pubmed.ncbi.nlm.nih.gov/9143432/
@@ -46,6 +47,3 @@ Sources (every number's source is listed here)
 
 Narration is a synthetic voice (AI-generated). Music and sound design are original, made for Possibility Lab. Type: Bricolage Grotesque, Figtree, JetBrains Mono, Caveat (SIL Open Font License).
 TODO before posting: the channel handle and links, the expert sign-offs listed in each episode's review/HUMAN-REVIEW.md, and YouTube's altered/synthetic content setting.
-
-Every number's source is listed above. Sums that follow from those numbers (and any assumption, such as a person's height) are shown on screen and have no outside page.
-TODO before posting: every claim in claims.json is still OPEN until a person opens its source page; the UN population, NCD-RisC, USGS, Christian et al., NWS and Ember pages have not been read by the builder.

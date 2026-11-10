@@ -1,0 +1,594 @@
+{
+ "trimBeforeLastVo": true,
+ "outro": 14,
+ "finaleChapter": "The six answers, ranked",
+ "segments": {
+  "opening": {
+   "wav": "vo/01.wav",
+   "dur": 16.386,
+   "states": [
+    {
+     "at": 0.0,
+     "kick": "Possibility Lab · Season 2",
+     "big": "Six questions."
+    },
+    {
+     "at": 1.6983,
+     "kick": "Possibility Lab · Season 2",
+     "big": "Each one sounds impossible.",
+     "sub": "Each has an answer you can work out on the back of an envelope.",
+     "rows": [
+      {
+       "n": "01",
+       "t": "Walking to the Moon",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "02",
+       "t": "Everyone holds hands",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "03",
+       "t": "A rope round the Earth",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "04",
+       "t": "Every shuffle is new",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "05",
+       "t": "All the water in one ball",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "06",
+       "t": "Catch all the lightning",
+       "v": "",
+       "on": true
+      }
+     ]
+    },
+    {
+     "at": 9.2879,
+     "kick": "Possibility Lab · Season 2",
+     "big": "One simple calculation beats gut feeling.",
+     "rows": [
+      {
+       "n": "01",
+       "t": "Walking to the Moon",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "02",
+       "t": "Everyone holds hands",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "03",
+       "t": "A rope round the Earth",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "04",
+       "t": "Every shuffle is new",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "05",
+       "t": "All the water in one ball",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "06",
+       "t": "Catch all the lightning",
+       "v": "",
+       "on": true
+      }
+     ]
+    },
+    {
+     "at": 14.2735,
+     "kick": "Possibility Lab · Season 2",
+     "big": "Let's open the first envelope.",
+     "meta": "Episode 1 · Walking to the Moon",
+     "rows": [
+      {
+       "n": "01",
+       "t": "Walking to the Moon",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "02",
+       "t": "Everyone holds hands",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "03",
+       "t": "A rope round the Earth",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "04",
+       "t": "Every shuffle is new",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "05",
+       "t": "All the water in one ball",
+       "v": "",
+       "on": true
+      },
+      {
+       "n": "06",
+       "t": "Catch all the lightning",
+       "v": "",
+       "on": true
+      }
+     ]
+    }
+   ]
+  },
+  "bridge1": {
+   "wav": "vo/02.wav",
+   "dur": 10.249,
+   "states": [
+    {
+     "at": 0.0,
+     "kick": "Episode 1 · Walking to the Moon",
+     "big": "≈ 26 years",
+     "sub": "to walk to the Moon, a working day at a time"
+    },
+    {
+     "at": 4.8157,
+     "kick": "Up next",
+     "big": "Everyone holds hands",
+     "meta": "Episode 2"
+    }
+   ]
+  },
+  "bridge2": {
+   "wav": "vo/03.wav",
+   "dur": 8.443,
+   "states": [
+    {
+     "at": 0.0,
+     "kick": "Episode 2 · Everyone holds hands",
+     "big": "≈ 310 laps",
+     "sub": "of the Earth, in a chain of everyone holding hands"
+    },
+    {
+     "at": 4.0064,
+     "kick": "Up next",
+     "big": "A rope round the Earth",
+     "meta": "Episode 3"
+    }
+   ]
+  },
+  "bridge3": {
+   "wav": "vo/04.wav",
+   "dur": 11.704,
+   "states": [
+    {
+     "at": 0.0,
+     "kick": "Episode 3 · A rope round the Earth",
+     "big": "≈ 6.3 m",
+     "sub": "of extra rope, on a planet of any size"
+    },
+    {
+     "at": 7.5938,
+     "kick": "Up next",
+     "big": "Every shuffle is new",
+     "meta": "Episode 4"
+    }
+   ]
+  },
+  "bridge4": {
+   "wav": "vo/05.wav",
+   "dur": 10.264,
+   "states": [
+    {
+     "at": 0.0,
+     "kick": "Episode 4 · Every shuffle is new",
+     "big": "68 digits",
+     "sub": "in the number of orders of a shuffled deck"
+    },
+    {
+     "at": 3.7242,
+     "kick": "Up next",
+     "big": "All the water in one ball",
+     "meta": "Episode 5"
+    }
+   ]
+  },
+  "bridge5": {
+   "wav": "vo/06.wav",
+   "dur": 9.178,
+   "states": [
+    {
+     "at": 0.0,
+     "kick": "Episode 5 · All the water in one ball",
+     "big": "≈ 1,400 km",
+     "sub": "across: all the water on Earth in one ball"
+    },
+    {
+     "at": 4.1945,
+     "kick": "Up next",
+     "big": "Catch all the lightning",
+     "meta": "Episode 6"
+    }
+   ]
+  },
+  "finale": {
+   "wav": "vo/07.wav",
+   "dur": 34.899,
+   "states": [
+    {
+     "at": 0.0,
+     "kick": "Season 2",
+     "big": "Six envelopes."
+    },
+    {
+     "at": 1.6615,
+     "kick": "Season 2",
+     "big": "Smallest surprise to biggest.",
+     "rows": [
+      {
+       "n": "1",
+       "t": "Walking to the Moon",
+       "v": "≈ 26 years",
+       "on": false
+      },
+      {
+       "n": "2",
+       "t": "A year of lightning",
+       "v": "≈ 5 days of world electricity",
+       "on": false
+      },
+      {
+       "n": "3",
+       "t": "All the water in one ball",
+       "v": "≈ 1,400 km",
+       "on": false
+      },
+      {
+       "n": "4",
+       "t": "Everyone holding hands",
+       "v": "≈ 310 laps",
+       "on": false
+      },
+      {
+       "n": "5",
+       "t": "A shuffled deck",
+       "v": "68 digits",
+       "on": false
+      },
+      {
+       "n": "6",
+       "t": "A rope round the Earth",
+       "v": "≈ 6.3 m",
+       "on": false
+      }
+     ]
+    },
+    {
+     "at": 5.4387,
+     "kick": "Season 2",
+     "big": "Smallest surprise to biggest.",
+     "rows": [
+      {
+       "n": "1",
+       "t": "Walking to the Moon",
+       "v": "≈ 26 years",
+       "on": true
+      },
+      {
+       "n": "2",
+       "t": "A year of lightning",
+       "v": "≈ 5 days of world electricity",
+       "on": false
+      },
+      {
+       "n": "3",
+       "t": "All the water in one ball",
+       "v": "≈ 1,400 km",
+       "on": false
+      },
+      {
+       "n": "4",
+       "t": "Everyone holding hands",
+       "v": "≈ 310 laps",
+       "on": false
+      },
+      {
+       "n": "5",
+       "t": "A shuffled deck",
+       "v": "68 digits",
+       "on": false
+      },
+      {
+       "n": "6",
+       "t": "A rope round the Earth",
+       "v": "≈ 6.3 m",
+       "on": false
+      }
+     ]
+    },
+    {
+     "at": 10.257,
+     "kick": "Season 2",
+     "big": "Smallest surprise to biggest.",
+     "rows": [
+      {
+       "n": "1",
+       "t": "Walking to the Moon",
+       "v": "≈ 26 years",
+       "on": true
+      },
+      {
+       "n": "2",
+       "t": "A year of lightning",
+       "v": "≈ 5 days of world electricity",
+       "on": true
+      },
+      {
+       "n": "3",
+       "t": "All the water in one ball",
+       "v": "≈ 1,400 km",
+       "on": false
+      },
+      {
+       "n": "4",
+       "t": "Everyone holding hands",
+       "v": "≈ 310 laps",
+       "on": false
+      },
+      {
+       "n": "5",
+       "t": "A shuffled deck",
+       "v": "68 digits",
+       "on": false
+      },
+      {
+       "n": "6",
+       "t": "A rope round the Earth",
+       "v": "≈ 6.3 m",
+       "on": false
+      }
+     ]
+    },
+    {
+     "at": 15.9005,
+     "kick": "Season 2",
+     "big": "Smallest surprise to biggest.",
+     "rows": [
+      {
+       "n": "1",
+       "t": "Walking to the Moon",
+       "v": "≈ 26 years",
+       "on": true
+      },
+      {
+       "n": "2",
+       "t": "A year of lightning",
+       "v": "≈ 5 days of world electricity",
+       "on": true
+      },
+      {
+       "n": "3",
+       "t": "All the water in one ball",
+       "v": "≈ 1,400 km",
+       "on": true
+      },
+      {
+       "n": "4",
+       "t": "Everyone holding hands",
+       "v": "≈ 310 laps",
+       "on": false
+      },
+      {
+       "n": "5",
+       "t": "A shuffled deck",
+       "v": "68 digits",
+       "on": false
+      },
+      {
+       "n": "6",
+       "t": "A rope round the Earth",
+       "v": "≈ 6.3 m",
+       "on": false
+      }
+     ]
+    },
+    {
+     "at": 20.4349,
+     "kick": "Season 2",
+     "big": "Smallest surprise to biggest.",
+     "rows": [
+      {
+       "n": "1",
+       "t": "Walking to the Moon",
+       "v": "≈ 26 years",
+       "on": true
+      },
+      {
+       "n": "2",
+       "t": "A year of lightning",
+       "v": "≈ 5 days of world electricity",
+       "on": true
+      },
+      {
+       "n": "3",
+       "t": "All the water in one ball",
+       "v": "≈ 1,400 km",
+       "on": true
+      },
+      {
+       "n": "4",
+       "t": "Everyone holding hands",
+       "v": "≈ 310 laps",
+       "on": true
+      },
+      {
+       "n": "5",
+       "t": "A shuffled deck",
+       "v": "68 digits",
+       "on": false
+      },
+      {
+       "n": "6",
+       "t": "A rope round the Earth",
+       "v": "≈ 6.3 m",
+       "on": false
+      }
+     ]
+    },
+    {
+     "at": 25.3052,
+     "kick": "Season 2",
+     "big": "Smallest surprise to biggest.",
+     "rows": [
+      {
+       "n": "1",
+       "t": "Walking to the Moon",
+       "v": "≈ 26 years",
+       "on": true
+      },
+      {
+       "n": "2",
+       "t": "A year of lightning",
+       "v": "≈ 5 days of world electricity",
+       "on": true
+      },
+      {
+       "n": "3",
+       "t": "All the water in one ball",
+       "v": "≈ 1,400 km",
+       "on": true
+      },
+      {
+       "n": "4",
+       "t": "Everyone holding hands",
+       "v": "≈ 310 laps",
+       "on": true
+      },
+      {
+       "n": "5",
+       "t": "A shuffled deck",
+       "v": "68 digits",
+       "on": true
+      },
+      {
+       "n": "6",
+       "t": "A rope round the Earth",
+       "v": "≈ 6.3 m",
+       "on": false
+      }
+     ]
+    },
+    {
+     "at": 29.1137,
+     "kick": "Season 2",
+     "big": "Smallest surprise to biggest.",
+     "rows": [
+      {
+       "n": "1",
+       "t": "Walking to the Moon",
+       "v": "≈ 26 years",
+       "on": true
+      },
+      {
+       "n": "2",
+       "t": "A year of lightning",
+       "v": "≈ 5 days of world electricity",
+       "on": true
+      },
+      {
+       "n": "3",
+       "t": "All the water in one ball",
+       "v": "≈ 1,400 km",
+       "on": true
+      },
+      {
+       "n": "4",
+       "t": "Everyone holding hands",
+       "v": "≈ 310 laps",
+       "on": true
+      },
+      {
+       "n": "5",
+       "t": "A shuffled deck",
+       "v": "68 digits",
+       "on": true
+      },
+      {
+       "n": "6",
+       "t": "A rope round the Earth",
+       "v": "≈ 6.3 m",
+       "on": true
+      }
+     ]
+    },
+    {
+     "at": 34.0005,
+     "kick": "Season 2",
+     "big": "Wait, what?",
+     "rows": [
+      {
+       "n": "1",
+       "t": "Walking to the Moon",
+       "v": "≈ 26 years",
+       "on": true
+      },
+      {
+       "n": "2",
+       "t": "A year of lightning",
+       "v": "≈ 5 days of world electricity",
+       "on": true
+      },
+      {
+       "n": "3",
+       "t": "All the water in one ball",
+       "v": "≈ 1,400 km",
+       "on": true
+      },
+      {
+       "n": "4",
+       "t": "Everyone holding hands",
+       "v": "≈ 310 laps",
+       "on": true
+      },
+      {
+       "n": "5",
+       "t": "A shuffled deck",
+       "v": "68 digits",
+       "on": true
+      },
+      {
+       "n": "6",
+       "t": "A rope round the Earth",
+       "v": "≈ 6.3 m",
+       "on": true
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

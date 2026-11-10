@@ -1,0 +1,236 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/compilations/s2/stretch/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "opening",
+   "text": "Six questions. Each one sounds impossible, and each has an answer you can work out on the back of an envelope. One simple calculation, again and again, beats gut feeling. Let's open the first envelope.",
+   "stars": [],
+   "phonemes": "sˈɪks kwˈɛstʃənz. ˈiːtʃ wˈʌn sˈaʊndz ɪmpˈɑːsᵻbəl, ænd ˈiːtʃ hɐz ɐn ˈænsɚ juː kæn wˈɜːk ˈaʊt ɔnðə bˈæk əvən ˈɑːnvəlˌoʊp. wˈʌn sˈɪmpəl kˌælkjʊlˈeɪʃən, ɐɡˈɛn ænd ɐɡˈɛn, bˈiːts ɡˈʌt fˈiːlɪŋ. lˈɛts ˈoʊpən ðə fˈɜːst ˈɑːnvəlˌoʊp.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     1.3183,
+     1.6983
+    ],
+    [
+     8.9079,
+     9.2879
+    ],
+    [
+     13.8935,
+     14.2735
+    ]
+   ],
+   "file": "01.wav",
+   "dur": 16.386,
+   "sha256": "340bbe7b8a18716821c0310728cf6d5d9d58c5e7bb748a639e68890fe1601713"
+  },
+  {
+   "id": "vo02",
+   "beat": "bridge1",
+   "text": "Twenty-six years to walk to the Moon, a working day at a time. Now imagine everyone on Earth holding hands. How far would that chain reach?",
+   "stars": [],
+   "phonemes": "twˈɛntisˈɪks jˈɪɹz tə wˈɔːk tə ðə mˈuːn, ɐ wˈɜːkɪŋ dˈeɪ æɾə tˈaɪm. nˈaʊ ɪmˈædʒɪn ˈɛvɹɪwˌʌn ˌɔn ˈɜːθ hˈoʊldɪŋ hˈændz. hˌaʊ fˈɑːɹ wʊd ðæt tʃˈeɪn ɹˈiːtʃ?",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     4.4357,
+     4.8157
+    ],
+    [
+     7.9902,
+     8.3703
+    ]
+   ],
+   "file": "02.wav",
+   "dur": 10.249,
+   "sha256": "93d42ad00e9be79cfec76b950c6d42a47dcf6b25b8dcb15b22d0087c2e89a71a"
+  },
+  {
+   "id": "vo03",
+   "beat": "bridge2",
+   "text": "A chain that wraps the Earth about three hundred times. Let's go back to a single loop around the planet, and one rope.",
+   "stars": [],
+   "phonemes": "ɐ tʃˈeɪn ðæt ɹˈæps ðɪ ˈɜːθ ɐbˌaʊt θɹˈiː hˈʌndɹɪd tˈaɪmz. lˈɛts ɡˌoʊ bˈæk tʊ ɐ sˈɪŋɡəl lˈuːp ɚɹˈaʊnd ðə plˈænɪt, ænd wˈʌn ɹˈoʊp.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     3.6264,
+     4.0064
+    ]
+   ],
+   "file": "03.wav",
+   "dur": 8.443,
+   "sha256": "741dc9ea028b748da33df127bbb82aa32b87bd21299290a28cd4dfa39b50977f"
+  },
+  {
+   "id": "vo04",
+   "beat": "bridge3",
+   "text": "Lift that rope one meter, and you need only about six meters more, on a planet of any size. Now for a number almost too big to say: a shuffled deck.",
+   "stars": [],
+   "phonemes": "lˈɪft ðæt ɹˈoʊp wˈʌn mˈiːɾɚ, ænd juː nˈiːd ˈoʊnli ɐbˌaʊt sˈɪks mˈiːɾɚz mˈɔːɹ, ˌɔn ɐ plˈænɪt ʌv ˌɛni sˈaɪz. nˈaʊ fɚɹə nˈʌmbɚɹ ˈɔːlmoʊst tˈuː bˈɪɡ tə sˈeɪ: ɐ ʃˈʌfəld dˈɛk.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     7.2138,
+     7.5938
+    ]
+   ],
+   "file": "04.wav",
+   "dur": 11.704,
+   "sha256": "b7571a0de8eb8c9165a9f2c444f2931b9cabbcceadd76f88b6f25632341683ac"
+  },
+  {
+   "id": "vo05",
+   "beat": "bridge4",
+   "text": "Sixty-eight digits, from a single deck of cards. Now something huge in size instead: all the water on Earth, gathered into one ball.",
+   "stars": [],
+   "phonemes": "sˈɪkstiˈeɪt dˈɪdʒɪts, fɹʌm ɐ sˈɪŋɡəl dˈɛk ʌv kˈɑːɹdz. nˈaʊ sˈʌmθɪŋ hjˈuːdʒ ɪn sˈaɪz ɪnstˈɛd: ˈɔːl ðə wˈɔːɾɚɹ ˌɔn ˈɜːθ, ɡˈæðɚd ˌɪntʊ wˈʌn bˈɔːl.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     3.3442,
+     3.7242
+    ]
+   ],
+   "file": "05.wav",
+   "dur": 10.264,
+   "sha256": "76945a57663436dd78250c86204ba75608ecd64aa65a4fa1996d435a90baf430"
+  },
+  {
+   "id": "vo06",
+   "beat": "bridge5",
+   "text": "A ball of water fourteen hundred kilometers across. Now something fast and wild: could we catch all the lightning on Earth?",
+   "stars": [],
+   "phonemes": "ɐ bˈɔːl ʌv wˈɔːɾɚ fˈɔːɹtiːn hˈʌndɹɪd kɪlˈɑːmɪɾɚz əkɹˈɑːs. nˈaʊ sˈʌmθɪŋ fˈæst ænd wˈaɪld: kʊd wiː kˈætʃ ˈɔːl ðə lˈaɪtnɪŋ ˌɔn ˈɜːθ?",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     3.8145,
+     4.1945
+    ]
+   ],
+   "file": "06.wav",
+   "dur": 9.178,
+   "sha256": "a16189444b75a3e4af879f488ba45f0df054c3f549f9a79a0cf2cb087299e038"
+  },
+  {
+   "id": "vo07",
+   "beat": "finale",
+   "text": "Six envelopes. Here they are, from the smallest surprise to the biggest. Walking to the Moon: twenty-six years, long, but easy to believe. A whole year of lightning: roughly five days of the world's electricity. All the water in one ball: fourteen hundred kilometers. Everyone holding hands: three hundred laps around the planet. A shuffled deck: an answer with sixty-eight digits. And the rope: just six more meters, whatever the size of the planet. Wait, what?",
+   "stars": [],
+   "phonemes": "sˈɪks ˈɑːnvəlˌoʊps. hˈɪɹ ðeɪ ɑːɹ, fɹʌmðə smˈɔːlɪst sɚpɹˈaɪz tə ðə bˈɪɡɪst. wˈɔːkɪŋ tə ðə mˈuːn: twˈɛntisˈɪks jˈɪɹz, lˈɔŋ, bˌʌt ˈiːzi tə bᵻlˈiːv. ɐ hˈoʊl jˈɪɹ ʌv lˈaɪtnɪŋ: ɹˈʌfli fˈaɪv dˈeɪz ʌvðə wˈɜːldz ᵻlɛktɹˈɪsᵻɾi. ˈɔːl ðə wˈɔːɾɚɹ ɪn wˈʌn bˈɔːl: fˈɔːɹtiːn hˈʌndɹɪd kɪlˈɑːmɪɾɚz. ˈɛvɹɪwˌʌn hˈoʊldɪŋ hˈændz: θɹˈiː hˈʌndɹɪd lˈæps ɚɹˈaʊnd ðə plˈænɪt. ɐ ʃˈʌfəld dˈɛk: ɐn ˈænsɚ wɪð sˈɪkstiˈeɪt dˈɪdʒɪts. ænd ðə ɹˈoʊp: dʒˈʌst sˈɪks mˈɔːɹ mˈiːɾɚz, wʌtˈɛvɚ ðə sˈaɪz ʌvðə plˈænɪt. wˈeɪt, wˌʌt?",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     1.2815,
+     1.6615
+    ],
+    [
+     5.0587,
+     5.4387
+    ],
+    [
+     9.877,
+     10.257
+    ],
+    [
+     15.5205,
+     15.9005
+    ],
+    [
+     20.0549,
+     20.4349
+    ],
+    [
+     24.9252,
+     25.3052
+    ],
+    [
+     28.7337,
+     29.1137
+    ],
+    [
+     33.6205,
+     34.0005
+    ]
+   ],
+   "file": "07.wav",
+   "dur": 34.899,
+   "sha256": "b3c89878ee18ac397b62e6e777065b4d60d3289efda26ac9bc68faf0d52be657"
+  }
+ ]
+}

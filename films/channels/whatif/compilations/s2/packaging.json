@@ -1,0 +1,128 @@
+{
+ "version": 1,
+ "format": "long",
+ "channel": "Possibility Lab",
+ "video": "compilations/s2",
+ "hook": "Lift a rope that circles the whole Earth by one meter and you need only about 6.3 meters more rope, on a planet of any size.",
+ "titles": [
+  {
+   "text": "6 Impossible Questions You Can Solve on an Envelope",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Lift a Rope Around Earth 1 Meter. You Need Just 6 More.",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Everyone on Earth Holds Hands. How Far Does It Reach?",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "How Long Would It Take to Walk to the Moon?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "A Year of Lightning Would Power the World for 5 Days",
+   "mechanism": "unexpected consequence"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "the ball of thread: a straight chain of everyone on Earth, wound about 310 times round the planet, drawn as white thread on a dark globe",
+   "composition": "globe large on the right two thirds, big stacked number on the left, plenty of dark negative space",
+   "lighting": "soft warm-white rim glow on the thread, deep slate background, magenta #EB63FF accent on one word",
+   "trigger": "scale shock: a planet wrapped like a ball of yarn",
+   "text": "310 LAPS",
+   "complements": "the title promises six impossible questions; the picture answers one of them with a number the title never states"
+  },
+  {
+   "id": "B",
+   "subject": "the blue figure on the graph paper holding up one meter-long rope, a huge planet curve behind it",
+   "composition": "figure at left third, planet arc filling the lower right, rope loop above",
+   "lighting": "cool blue key, magenta rim light",
+   "trigger": "contradiction: a tiny change, a huge planet",
+   "text": "+6 M",
+   "complements": "pairs with a title that asks about the rope; adds the number as a second layer"
+  },
+  {
+   "id": "C",
+   "subject": "a single glowing bolt striking a tank of water-glass lines, a Moon behind",
+   "composition": "bolt centre-left, Moon top right",
+   "lighting": "amber bolt on indigo, magenta edge",
+   "trigger": "visual paradox: lightning in a jar",
+   "text": "",
+   "complements": "silent picture; the title supplies the question"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 84,
+    "curiosity": 86,
+    "clarity": 84,
+    "synergy": 84,
+    "originality": 82,
+    "accuracy": 92,
+    "mobile": 90,
+    "satisfaction": 88
+   },
+   "note": "promise of six answers in the title, one vivid answer in the picture; the number is true and paid off in the video"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 82,
+    "curiosity": 90,
+    "clarity": 78,
+    "synergy": 80,
+    "originality": 84,
+    "accuracy": 90,
+    "mobile": 78,
+    "satisfaction": 86
+   },
+   "note": "the strongest single hook, but it sells only one of the six questions"
+  },
+  {
+   "title": 2,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 82,
+    "clarity": 84,
+    "synergy": 72,
+    "originality": 74,
+    "accuracy": 90,
+    "mobile": 88,
+    "satisfaction": 84
+   },
+   "note": "title and picture both about the chain, so the picture repeats the title's idea rather than adding to it"
+  }
+ ],
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "winner": {
+  "title": "6 Impossible Questions You Can Solve on an Envelope",
+  "thumbnail": "A",
+  "thumbnailText": "310 LAPS",
+  "why": "The title promises exactly what the film delivers: six questions, each answered with one simple calculation. The thumbnail shows one of those answers as a striking picture, so the number is a second mystery the title does not explain."
+ },
+ "testAndCompare": [
+  "A",
+  "B"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "checksNote": "duplication: the thumbnail text (310 LAPS) is not in the title. truth: the film shows the ball-of-thread globe and says the chain circles the Earth about 310 times. competition and originality are my own judgments, not measured.",
+ "thumbnailFile": "thumbnail-16x9.jpg",
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: the Earth drawn as a ball of thread: a single long white line wound round a dark grey sphere about 310 times, so the planet looks like a ball of yarn. Nothing else is on the planet.\nComposition: the sphere is large, filling the right two thirds of the frame and sitting slightly right of centre. A big empty dark area on the left holds the text.\nLighting and treatment: deep slate background (#171A1E) with a soft violet glow behind the sphere, a warm white rim glow on the thread, thin crisp lines, a little depth of field. One magenta (#EB63FF) accent on the text.\nMood: wonder and disbelief.\nText: \"310 LAPS\" in heavy white condensed sans-serif, the number large on one line and \"LAPS\" in magenta underneath, left side. No other text.\nScientific accuracy: the thread is a chain of every person on Earth holding hands, wrapped about 310 times round the equator; it is a diagram, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, rockets or anything that looks like a NASA photo.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art."
+}
