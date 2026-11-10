@@ -1,6 +1,6 @@
 {
  "file": "films/channels/skincare/ep12/out/skin-sense-012-9x16.mp4",
- "size_mb": 33.0,
+ "size_mb": 18.6,
  "video": {
   "codec": "h264",
   "profile": "High",
@@ -11,7 +11,7 @@
   "dur": 68.466667,
   "pix_fmt": "yuv420p",
   "color": "bt709",
-  "mbps": 3.59
+  "mbps": 1.9
  },
  "film_dur": 68.467,
  "audio": {
@@ -27,15 +27,14 @@
   "mono_loss_db": 0.08
  },
  "flashing": {
-  "large_transitions": 3,
+  "large_transitions": 2,
   "transition_frames": [
-   1017,
-   1098,
-   1884
+   1,
+   1098
   ],
   "flashes": 1,
   "max_flashes_per_s": 1,
-  "largest_changed_area": 0.309
+  "largest_changed_area": 0.41
  },
  "fails": []
 }
