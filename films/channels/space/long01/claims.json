@@ -205,7 +205,7 @@
  },
  {
   "id": "c15",
-  "sentence": "The Moon is now bigger than the Sun.",
+  "sentence": "By now, the Moon looks far bigger than the Sun.",
   "claim": "a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film.",
   "source_url": "",
   "source_title": "",
@@ -392,8 +392,8 @@
  },
  {
   "id": "c26",
-  "sentence": "At eighteen thousand kilometers, it is twenty-one times wider than tonight.",
-  "claim": "at 18,000 km the Moon's angular width is 21x today's (calc.py).",
+  "sentence": "At eighteen thousand kilometers, it looks more than twenty times wider than tonight.",
+  "claim": "At 18,000 km centre to centre the Moon's angular width is 21x today's (horizon view); overhead, one Earth radius closer (about 11,600 km), it is about 17 deg wide, about 33x (calc.py). The film says 'more than twenty times'.",
   "source_url": "",
   "source_title": "",
   "accessed": "2026-11-09",
@@ -460,8 +460,8 @@
  },
  {
   "id": "c30",
-  "sentence": "At this distance, that pull is more than twice what it is today.",
-  "claim": "With tidal force ~ 1/d^3, three quarters of the distance gives (1/0.75)^3 = 2.37x, more than twice today's (calc.py).",
+  "sentence": "At this distance, its tidal pull is more than twice what it is today.",
+  "claim": "With tidal force ~ 1/d^3, three quarters of the distance gives (1/0.75)^3 = 2.37x the TIDAL pull, more than twice today's (calc.py). Plain gravity would be only (1/0.75)^2 = 1.78x, so the film says 'tidal pull'.",
   "source_url": "",
   "source_title": "",
   "accessed": "2026-11-10",
@@ -613,8 +613,8 @@
  },
  {
   "id": "c39",
-  "sentence": "Its pull on the Earth is more than a hundred sixty times today's tidal force.",
-  "claim": "With force ~ 1/d^3, at 70,000 km the tidal force is (384,400/70,000)^3 = 166x today's, more than a hundred sixty times (calc.py).",
+  "sentence": "Its tidal pull is more than a hundred sixty times today's.",
+  "claim": "With tidal force ~ 1/d^3, at 70,000 km the TIDAL pull is (384,400/70,000)^3 = 166x today's, more than a hundred sixty times (calc.py).",
   "source_url": "",
   "source_title": "",
   "accessed": "2026-11-10",
@@ -647,8 +647,8 @@
  },
  {
   "id": "c41",
-  "sentence": "It is about as wide as a fist held out at arm's length.",
-  "claim": "At 18,000 km the Moon spans 2*atan(1,737.4/18,000) = 11 deg (calc.py); a closed fist at arm's length spans about 10 deg (common observing rule of thumb; a person should confirm against an astronomy-outreach page).",
+  "sentence": "It is at least as wide as a fist held out at arm's length, and wider still overhead.",
+  "claim": "At 18,000 km the Moon spans 11 deg at the horizon and about 17 deg overhead (calc.py); a closed fist at arm's length spans about 10 deg (common observing rule of thumb; a person should confirm against an astronomy-outreach page). The film says 'at least as wide as a fist ... and wider still overhead'.",
   "source_url": "",
   "source_title": "",
   "accessed": "2026-11-10",

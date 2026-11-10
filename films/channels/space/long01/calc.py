@@ -38,6 +38,8 @@ for name, d in [("today", D0), ("3/4", D0 * 0.75), ("half", D0 / 2), ("150k", 15
     rows.append(dict(name=name, km=round(d), angle_deg=round(ang_deg(d), 2), size_x=round(size_x(d), 1), tide_x=round(tide_x(d), 1),
                      light_x=round(light_x(d)), period_h=round(period_h(d), 1), light_s=round(light_s(d), 3)))
 
+def over_km(d): return d - RE                                            # overhead: one Earth radius closer than centre-to-centre
+def over_deg(d): return ang_deg(over_km(d))
 # when does the Moon cross the geostationary radius? (it would rise in the west and set in the east below that)
 out = dict(rows=rows, roche_fluid_km=round(ROCHE_FLUID), roche_rigid_km=round(ROCHE_RIGID), sync_km=round(SYNC),
            yrs_at_today_rate_to_half=round((D0 / 2) * 1e5 / REC_CM_YR / 1e6, 1),   # million years to move 192,200 km at 3.8 cm/yr
@@ -60,4 +62,4 @@ assert 3.7 < size_x(100_000) < 3.9                 # chapter 5
 assert 5.3 < size_x(70_000) < 5.7 and 160 < tide_x(70_000) < 170   # chapter 6
 assert 7.5 < size_x(50_000) < 7.9 and 450 < tide_x(50_000) < 460   # chapter 7
 assert 0.9 < light_s(D0*0.75) < 1.0 and 1.27 < light_s(D0) < 1.29   # light time
-assert 10 < ang_deg(18_000) < 11.5                  # a fist at arm's length is ~10 deg
+assert 10 < ang_deg(18_000) < 11.5 and 16 < over_deg(18_000) < 18 and 30 < over_deg(18_000) / ang_deg(D0) < 35   # horizon view 11 deg; overhead ~17 deg, ~33x                  # a fist at arm's length is ~10 deg
