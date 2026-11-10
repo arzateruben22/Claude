@@ -48,7 +48,7 @@ const weightFrac = (T) => 1 - Math.pow(WD.tOrbH / T, 2);
 
 // ── the sky ─────────────────────────────────────────────────────────────────
 const SKYV = `varying vec3 vD; void main() { vD = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
-const SKYF = `precision highp float; uniform vec3 uSun; uniform float uDay; varying vec3 vD;
+const SKYF = `precision highp float; uniform vec3 uSun; uniform float uDay; uniform float uGlow; varying vec3 vD;
 ${ACES_INV_GLSL}
 void main() {
   vec3 d = normalize(vD); float el = d.y, sd = max(dot(d, uSun), 0.0);
@@ -56,13 +56,13 @@ void main() {
   float k = pow(clamp(el, 0.0, 1.0), 0.55);
   vec3 col = mix(mix(nightH, nightT, k), mix(dayH, dayT, k), uDay);
   float low = 1.0 - smoothstep(0.0, 0.5, abs(uSun.y));
-  col += vec3(1.0, 0.52, 0.22) * pow(sd, 6.0) * 0.55 * low + vec3(1.0, 0.8, 0.55) * pow(sd, 40.0) * (0.35 + 0.6 * uDay);
+  col += (vec3(1.0, 0.52, 0.22) * pow(sd, 6.0) * 0.55 * low + vec3(1.0, 0.8, 0.55) * pow(sd, 40.0) * (0.35 + 0.6 * uDay)) * uGlow;
   if (el < 0.0) col = mix(col, vec3(0.02, 0.025, 0.04) + 0.10 * uDay, smoothstep(0.0, -0.15, el));
   gl_FragColor = vec4(acesInv(srgbToLinear(clamp(col, 0.0, 1.0)), 1.0), 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }`;
-const skyU = { uSun: { value: new THREE.Vector3(0, 0, -1) }, uDay: { value: 0 } };
+const skyU = { uSun: { value: new THREE.Vector3(0, 0, -1) }, uDay: { value: 0 }, uGlow: { value: 1 } };
 const sky = new THREE.Mesh(new THREE.SphereGeometry(1500, 32, 24), new THREE.ShaderMaterial({ uniforms: skyU, vertexShader: SKYV, fragmentShader: SKYF, side: THREE.BackSide, depthWrite: false }));
 sky.renderOrder = -10; sky.frustumCulled = false; sky.userData.noProbe = true; scene.add(sky);
 const starG = new THREE.BufferGeometry(); { const n = 1800, p = new Float32Array(n * 3);
@@ -152,9 +152,9 @@ window.seek = function (t) {
 
   // the sky, stars, sun and the ground
   sky.visible = pov; stars.visible = pov; sunDisk.visible = pov; sunHalo.visible = pov;
-  skyU.uSun.value.copy(sunDir); skyU.uDay.value = day; stars.rotation.x = ph; starM.opacity = 0.9 * (1 - day);
-  sunDisk.position.copy(sunDir).multiplyScalar(1200); sunDisk.scale.setScalar(52); sunDisk.lookAt(camera.position);
-  sunHalo.position.copy(sunDir).multiplyScalar(1190); sunHalo.scale.setScalar(260); sunHalo.lookAt(camera.position);
+  skyU.uSun.value.copy(sunDir); skyU.uDay.value = day; skyU.uGlow.value = 0.25 + 0.75 * amp; const gs = 0.3 + 0.7 * amp; stars.rotation.x = ph; starM.opacity = 0.9 * (1 - day);
+  sunDisk.position.copy(sunDir).multiplyScalar(1200); sunDisk.scale.setScalar(52 * gs); sunDisk.lookAt(camera.position);
+  sunHalo.position.copy(sunDir).multiplyScalar(1190); sunHalo.scale.setScalar(260 * gs); sunHalo.lookAt(camera.position);
   sunDisk.visible = pov && sunDir.y > -0.05; sunHalo.visible = sunDisk.visible;
   desk.group.visible = pov;
   desk.update({ grid: 1, pool: [0, -2], casters: [], span: 3000 }); desk.uniforms.uExposure.value = 0.45 + 0.85 * day;
