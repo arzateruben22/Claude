@@ -1,0 +1,133 @@
+{
+ "version": 1,
+ "format": "long",
+ "channel": "Reality Rulebook",
+ "video": "lf01",
+ "hook": "Slow one second down a billion times and a flash of light crawls across your kitchen at about 30 cm a second, while a falling drop hangs frozen in the air.",
+ "titles": [
+  {
+   "text": "Slow Down One Second Until Light Stands Still",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "What's Hiding Inside One Second?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "At This Speed, Light Is Slower Than a Snail",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Every Second You Live Hides All of This",
+   "mechanism": "personal relevance"
+  },
+  {
+   "text": "You Can Watch Light Cross a Kitchen",
+   "mechanism": "visual paradox"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a glowing wall of light caught halfway across a dim kitchen table, lit side and dark side; a water drop frozen in mid-air above a coffee cup on the lit side",
+   "composition": "eye level; the light front a clean vertical edge at centre-left; drop and cup on the left third; a flashlight at the far left pointing right; the dark right half empty for text",
+   "lighting": "bright white front with an electric-blue #2F5BFF fringe; warm lit side, blue-black dark side; dust specks frozen in the beam",
+   "trigger": "visual paradox: light caught mid-room",
+   "text": "BILLION× SLOWER",
+   "complements": "the title says light stands still; the picture shows it mid-crossing and names the slow-down"
+  },
+  {
+   "id": "B",
+   "subject": "a hummingbird at a window feeder with its wings frozen and four faint strobe ghost stamps of the wingbeat",
+   "composition": "bird on the right third against a bright window, ghost stamps fanning out",
+   "lighting": "clean daylight lab look, blue accents",
+   "trigger": "hidden mechanism: what a blur really is",
+   "text": "",
+   "complements": "pairs with a 'what's inside one second' title"
+  },
+  {
+   "id": "C",
+   "subject": "a bullet frozen mid-way through an apple, its shock cone visible in the air",
+   "composition": "apple centred, cone trailing left",
+   "lighting": "black background, hard side light",
+   "trigger": "frozen moment",
+   "text": "STILL TOO FAST",
+   "complements": "the text promises that even this isn't slow enough; strong but echoes a famous photograph"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 86,
+    "curiosity": 90,
+    "clarity": 82,
+    "synergy": 86,
+    "originality": 88,
+    "accuracy": 90,
+    "mobile": 80,
+    "satisfaction": 90
+   },
+   "note": "a scene no camera has shown in a kitchen; the drop makes the frozen time readable"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 86,
+    "synergy": 84,
+    "originality": 72,
+    "accuracy": 94,
+    "mobile": 82,
+    "satisfaction": 86
+   },
+   "note": "beautiful and true, softer hook"
+  },
+  {
+   "title": 0,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 84,
+    "curiosity": 82,
+    "clarity": 88,
+    "synergy": 80,
+    "originality": 62,
+    "accuracy": 88,
+    "mobile": 86,
+    "satisfaction": 84
+   },
+   "note": "recreates Edgerton's famous image: low originality"
+  }
+ ],
+ "winner": {
+  "title": "Slow Down One Second Until Light Stands Still",
+  "thumbnail": "A",
+  "thumbnailText": "BILLION× SLOWER",
+  "why": "It shows the impossible-looking end state, light caught in the middle of a room with time frozen around it. The text gives the scale the title only hints at, and the film pays it off in the light beat."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "notes": "Truth: the light beat (1e9) must show the drop frozen above the cup as the light front crosses the table, so the thumbnail is a frame the film delivers. Builder: add the frozen drop to that beat if it isn't there. The light is drawn as a front that has travelled part-way, not as a solid beam stopped at the lens.",
+ "thumbnailFile": "reality-rulebook-lf01-thumb-16x9.jpg",
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: a dim kitchen table at dawn. A sharp, glowing wall of light is caught halfway across the table, travelling left to right: everything to its left is lit, everything to its right is still dark. On the lit side, a single water drop hangs frozen in mid-air just above a white coffee cup.\nComposition: eye-level, slightly low camera. The light front is a clean vertical glowing edge at the centre-left third. The frozen drop and the cup sit just inside the lit side on the left third. A small flashlight lies at the far left edge, pointing right, where the light came from. The dark right half is empty for the text.\nLighting and treatment: the light front is bright white with an electric-blue (#2F5BFF) fringe. The lit side is warm and clear, the dark side deep blue-black. Fine dust specks hang frozen in the light. Crisp, exact and clean, with photographic depth of field.\nMood: disbelief: light caught in the middle of a room.\nText: \"BILLION× SLOWER\" in bold white condensed sans-serif on the dark right half. No other text.\nScientific accuracy: the light is a front that has travelled part-way across the table, not a solid beam stopped at the lens. The drop and the dust are frozen because only a billionth of a second is shown.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, laser beams, sci-fi effects, or anything that looks like a real laboratory photograph.\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": null,
+  "text": "",
+  "note": "Shorts from the opening: Part 1 cover = the hummingbird's frozen wings; Part 2 = the splash crown."
+ }
+}
