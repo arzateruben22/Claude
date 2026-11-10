@@ -47,7 +47,7 @@ const patch = (m, clip = true) => {
   float rl = length(vWP - uLSrc);
   float lit = smoothstep(uLR + uLW * 0.5, uLR - uLW * 0.5, rl);
   gl_FragColor.rgb *= mix(1.0, mix(0.06, 1.0, lit), uLOn);
-  gl_FragColor.rgb += vec3(1.0, 0.92, 0.7) * exp(-pow((rl - uLR) / uLW, 2.0)) * uLOn * 0.85 * uLK;
+  gl_FragColor.rgb += vec3(1.0, 0.9, 0.62) * (exp(-pow((rl - uLR) / uLW, 2.0)) * 1.7 + 0.28 * exp(-pow((rl - uLR) / (uLW * 7.0), 2.0))) * uLOn * uLK;
   float s1 = exp(-pow((length(vWP - uSS1) - uSR1) / uSW, 2.0)), s2 = exp(-pow((length(vWP - uSS2) - uSR2) / uSW, 2.0));
   gl_FragColor.rgb += vec3(0.22, 0.4, 1.0) * (s1 + s2) * uSOn * 0.55;
   #include <dithering_fragment>`);
@@ -58,7 +58,8 @@ const patch = (m, clip = true) => {
 const std = (hex, rough = 0.85, metal = 0, o = {}) => patch(new THREE.MeshStandardMaterial({ color: new THREE.Color(hex), roughness: rough, metalness: metal, ...o }), o.noclip !== true);
 
 // ── lights ──
-scene.add(new THREE.HemisphereLight(0xfff6e8, 0xb8b0a0, 1.05));
+scene.add(new THREE.HemisphereLight(0xfff1dc, 0xc2a98a, 1.1));
+const winLight = new THREE.DirectionalLight(0xffe2b0, 1.1); winLight.position.set(-1.0, 3.0, -3.0); winLight.target.position.set(-0.5, 0.9, -1.0); scene.add(winLight, winLight.target);   // daylight through the window
 const sun = new THREE.DirectionalLight(0xfff0dc, 1.7); sun.position.set(-2.5, 4.0, 4.0); scene.add(sun);
 const rim = new THREE.DirectionalLight(0xbcd0ff, 0.5); rim.position.set(2.0, 2.0, -3.0); scene.add(rim);
 
@@ -79,9 +80,20 @@ box(WINX1 - WINX0 + 0.1, FW, 0.1, (WINX0 + WINX1) / 2, WINY0, WZ + 0.03, frameM)
 box(FW, WINY1 - WINY0, 0.1, WINX0, (WINY0 + WINY1) / 2, WZ + 0.03, frameM); box(FW, WINY1 - WINY0, 0.1, WINX1, (WINY0 + WINY1) / 2, WZ + 0.03, frameM);
 box(FW, WINY1 - WINY0, 0.1, (WINX0 + WINX1) / 2, (WINY0 + WINY1) / 2, WZ + 0.03, frameM);
 box(WINX1 - WINX0 + 0.2, 0.04, 0.24, (WINX0 + WINX1) / 2, WINY0 - 0.02, WZ + 0.1, frameM);   // sill
-box(5.4, 0.86, 1.3, 0, 0.43, -1.17, cabM); box(5.5, 0.04, 1.34, 0, 0.88, -1.17, topM);     // the counter: cabinets, then the top at y = 0.90
+const woodTex = (() => { const c = document.createElement("canvas"); c.width = 512; c.height = 256; const g = c.getContext("2d"); g.fillStyle = "#C79A64"; g.fillRect(0, 0, 512, 256); const r2 = rng(3);
+  for (let i = 0; i < 160; i++) { g.strokeStyle = `rgba(${90 + r2() * 50 | 0},${55 + r2() * 30 | 0},${25 + r2() * 20 | 0},${0.12 + r2() * 0.18})`; g.lineWidth = 0.6 + r2() * 1.6; g.beginPath(); const y = r2() * 256; g.moveTo(0, y); g.bezierCurveTo(170, y + (r2() - 0.5) * 8, 340, y + (r2() - 0.5) * 8, 512, y + (r2() - 0.5) * 6); g.stroke(); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 1); return t; })();
+const tileTex = (() => { const c = document.createElement("canvas"); c.width = 512; c.height = 128; const g = c.getContext("2d"); g.fillStyle = "#F2EEE2"; g.fillRect(0, 0, 512, 128); g.strokeStyle = "#CFC8B5"; g.lineWidth = 3; for (let x = 0; x <= 512; x += 32) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 128); g.stroke(); } for (let y = 0; y <= 128; y += 32) { g.beginPath(); g.moveTo(0, y); g.lineTo(512, y); g.stroke(); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 1); return t; })();
+box(5.4, 0.86, 1.3, 0, 0.43, -1.17, cabM); box(5.5, 0.04, 1.34, 0, 0.88, -1.17, patch(new THREE.MeshStandardMaterial({ map: woodTex, roughness: 0.55 })));     // the counter: cabinets, then the top at y = 0.90
+box(5.4, 0.3, 0.02, 0, 1.05, -1.79, patch(new THREE.MeshStandardMaterial({ map: tileTex, roughness: 0.35 })), false);   // tiles behind the counter
 for (let i = -2; i <= 2; i++) box(0.98, 0.7, 0.02, i * 1.08, 0.43, -0.5, std("#6B7990", 0.6), false);   // cabinet doors
 const TOP = 0.90;
+for (let i = -2; i <= 2; i++) box(0.12, 0.012, 0.012, i * 1.08, 0.7, -0.485, steel, false);   // cabinet handles
+{ const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.04, 0.09, 14), std('#B8683F', 0.7)); pot.position.set(-2.55, TOP + 0.045, -1.5); kitchen.add(pot); for (let k = 0; k < 7; k++) { const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 8), std('#4E8A4B', 0.8)); leaf.scale.set(1, 0.7, 1); leaf.position.set(-2.55 + Math.cos(k * 2.4) * 0.05, TOP + 0.14 + 0.05 * (k % 3), -1.5 + Math.sin(k * 2.4) * 0.05); kitchen.add(leaf); }
+  const bowl = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), std('#E7DFCB', 0.5, 0, { side: THREE.DoubleSide })); bowl.position.set(0.15, TOP + 0.1, -1.55); kitchen.add(bowl);
+  for (const [x, c2] of [[0.1, '#E0A92E'], [0.19, '#C8442B'], [0.15, '#7FA84A']]) { const fr = new THREE.Mesh(new THREE.SphereGeometry(0.035, 14, 10), std(c2, 0.5)); fr.position.set(x, TOP + 0.05, -1.55 + (x - 0.15) * 0.4); kitchen.add(fr); }
+  box(0.28, 0.02, 0.18, 1.0, TOP + 0.011, -1.55, std('#B99668', 0.7), false); }
 // the sink and the tap
 box(0.9, 0.012, 0.6, -2.1, TOP + 0.006, -1.1, steel, false); box(0.78, 0.004, 0.46, -2.1, TOP + 0.014, -1.1, std("#6E7682", 0.3, 0.6), false);
 const CUPX = -0.3, CUPZ = -1.0;
@@ -127,7 +139,7 @@ const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.008, 18), n
 const rulerG = new THREE.Group(); kitchen.add(rulerG);
 { const rm = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.002, 0.03), std("#F2EBD1", 0.6, 0, { noclip: true })); rm.position.set(FLX + 0.22, TOP + 0.001, FLZ - 0.05); rulerG.add(rm);
   for (let i = 0; i <= 200; i++) { const tk = new THREE.Mesh(new THREE.BoxGeometry(0.0004, 0.0021, i % 10 === 0 ? 0.016 : i % 5 === 0 ? 0.012 : 0.008), new THREE.MeshBasicMaterial({ color: 0x1b1e24 })); tk.position.set(FLX + 0.02 + i * 0.001, TOP + 0.0016, FLZ - 0.05 + (i % 10 === 0 ? -0.007 : i % 5 === 0 ? -0.005 : -0.003)); rulerG.add(tk); } }
-const hang = new THREE.Mesh(new THREE.SphereGeometry(0.0034, 14, 10), new THREE.MeshPhysicalMaterial({ color: 0x9fcdf2, roughness: 0.05, clearcoat: 1, transparent: true, opacity: 0.92 })); kitchen.add(hang);   // the drop at the tap / frozen over the cup
+const hang = new THREE.Mesh(new THREE.SphereGeometry(0.0034, 14, 10), patch(new THREE.MeshPhysicalMaterial({ color: 0x9fcdf2, roughness: 0.05, clearcoat: 1, transparent: true, opacity: 0.95 }), false)); kitchen.add(hang);   // the drop at the tap / frozen over the cup
 
 // the backyard: a sky backdrop (a storm that darkens), a lawn, a feeder
 const skyTex = (() => { const c = document.createElement("canvas"); c.width = 512; c.height = 512; const g = c.getContext("2d");
@@ -171,7 +183,7 @@ const trail = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new TH
 
 // ── the splash: a crown of spikes at the rim, droplets that pinch off, ripples; the cup rings ──
 const crown = new THREE.Group(); crown.position.set(0, surfY, 0); cupG.add(crown);
-const crownMat = new THREE.MeshPhysicalMaterial({ color: 0x6b4429, roughness: 0.12, clearcoat: 1, transparent: true, opacity: 0.95 });
+const crownMat = new THREE.MeshPhysicalMaterial({ color: 0xBFDDF2, roughness: 0.1, clearcoat: 1, transparent: true, opacity: 0.88 });
 const spikes = []; const NSP = 22; for (let i = 0; i < NSP; i++) { const m = new THREE.Mesh(new THREE.ConeGeometry(0.0022, 1, 6), crownMat); m.userData.a = (i / NSP) * Math.PI * 2; crown.add(m); spikes.push(m); }
 const crownRing = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0016, 6, 40), crownMat); crownRing.rotation.x = Math.PI / 2; crown.add(crownRing);
 const drops = []; for (let i = 0; i < 12; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.0022, 8, 6), crownMat); m.userData = { a: (i / 12) * Math.PI * 2 + 0.2, v: 0.35 + 0.25 * ((i * 7) % 5) / 5, w: 0.7 + 0.3 * ((i * 3) % 4) / 4 }; crown.add(m); drops.push(m); }
@@ -181,7 +193,7 @@ const ripples = []; for (let i = 0; i < 3; i++) { const m = new THREE.Mesh(new T
 const BUBX = -2.05, BUBY = TOP + 0.26, BUBZ = -1.05, BUBR = 0.025;
 const bubMat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, side: THREE.DoubleSide, uniforms: { uTheta: { value: 0 }, uTime: { value: 0 } },
   vertexShader: "varying vec3 vN; varying vec3 vP; varying vec3 vV; void main(){ vN = normalize(normalMatrix * normal); vP = position; vec4 mv = modelViewMatrix * vec4(position,1.0); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }",
-  fragmentShader: "varying vec3 vN; varying vec3 vP; varying vec3 vV; uniform float uTheta, uTime; void main(){ float c = dot(normalize(vP), vec3(0.0,0.0,1.0)); if (c > cos(uTheta)) discard; float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.0); vec3 col = 0.5 + 0.5 * cos(6.2831 * (f * 1.2 + vP.y * 14.0 + uTime * 0.15) + vec3(0.0, 2.1, 4.2)); gl_FragColor = vec4(col * 0.75, 0.16 + 0.7 * f); }" });
+  fragmentShader: "varying vec3 vN; varying vec3 vP; varying vec3 vV; uniform float uTheta, uTime; void main(){ float c = dot(normalize(vP), vec3(0.0,0.0,1.0)); if (c > cos(uTheta)) discard; float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.0); vec3 col = 0.5 + 0.5 * cos(6.2831 * (f * 1.2 + vP.y * 14.0 + uTime * 0.15) + vec3(0.0, 2.1, 4.2)); gl_FragColor = vec4(col * 0.85, 0.3 + 0.65 * f); }" });
 const bubble = new THREE.Mesh(new THREE.SphereGeometry(BUBR, 40, 28), bubMat); bubble.position.set(BUBX, BUBY, BUBZ); kitchen.add(bubble);
 const rimR = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0006, 6, 36), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 })); kitchen.add(rimR);
 
@@ -301,8 +313,8 @@ window.seek = function (t) {
   // the tap drop, the crown
   const [d0, d1, d2] = EV.tapdrop; let hangV = false;
   if (t >= d0 && t < d2) { hangV = true; if (t < d1) { hang.position.set(CUPX, TAPY - 0.004 * E.in2(seg(t, d0, d1)), TAPZ); hang.scale.setScalar(2.5 * (0.3 + 0.7 * E.out2(seg(t, d0, d1 - 0.2)))); } else { const u = E.in2(seg(t, d1, d2)); hang.position.set(CUPX, lerp(TAPY - 0.004, TOP + 0.005 + surfY + 0.004, u), TAPZ); hang.scale.set(2.5, 2.5 * (1 + 0.4 * u), 2.5); } }
-  const rC = (t - d2) / F;                                                                 // real seconds since the impact
-  crown.visible = rC >= 0 && rC < 0.9; crown.position.x = 0; crown.position.z = 0; crown.rotation.set(0, 0, 0);
+  const rC = (t - d2) / 100;   // the crown is drawn at 100x (this event's own factor, not the clock's present one)                                                                 // real seconds since the impact
+  crown.visible = rC >= 0 && rC < 0.6; crown.position.x = 0; crown.position.z = 0; crown.rotation.set(0, 0, 0);
   if (crown.visible) {
     const grow = Math.min(1, rC / 0.04), Rc = 0.007 + 0.03 * Math.sqrt(grow), Hc = rC < 0.04 ? 0.026 * Math.sin(Math.min(1, rC / 0.034) * Math.PI * 0.5) : Math.max(0, 0.026 * (1 - (rC - 0.04) / 0.05));
     crownRing.position.y = Hc * 0.85; crownRing.scale.set(Rc, Rc, Rc); crownRing.visible = Hc > 0.0005;
@@ -325,7 +337,7 @@ window.seek = function (t) {
     foam.position.set(0, 0.0145 + 0.002, 0); foamBits.forEach((m) => { const s = 0.0085 * (0.6 + 2.0 * g * m.userData.s) * (1 - 0.35 * settle); m.scale.setScalar(s); m.position.copy(m.userData.dir).multiplyScalar(0.008 * g * (1 + 1.6 * m.userData.s) * (1 - 0.5 * settle)).add(sp(0, 0.006 * g, 0)); });
     const hh = Math.max(0, rP) / 0.004; hullA.position.set(-0.01 * hh, 0.0145 + 0.012 * hh, 0.004); hullA.rotation.set(0, 0, 0.5 + hh * 2.2); hullB.position.set(0.012 * hh, 0.0145 + 0.01 * hh, -0.004); hullB.rotation.set(0, 0, -0.5 - hh * 2.0);
   }
-  { const B = EV.bubble, inB = t >= B.in - 0.5 && t < B.pop + 11.5, rB = (t - B.pop) / F;
+  { const B = EV.bubble, inB = t >= B.in - 0.5 && t < B.pop + 11.5, rB = (t - B.pop) / 1000;
     bubble.visible = inB && !(rB >= CAL.bubble_t * 1.02); rimR.visible = false;
     bubMat.uniforms.uTime.value = t; bubble.position.set(BUBX + 0.01 * Math.sin(t * 0.7), BUBY + 0.006 * Math.sin(t * 0.9) + 0.03 * (1 - E.out3(seg(t, B.in - 0.5, B.in + 3))), BUBZ);
     const th = Math.max(0, Math.min(Math.PI, Math.PI * rB / CAL.bubble_t)); bubMat.uniforms.uTheta.value = rB > 0 ? th : 0;
@@ -337,13 +349,13 @@ window.seek = function (t) {
     WV.uSS1.value.set(CLAPX, CLAPY, CLAPZ); WV.uSS2.value.set(-5.4 - CLAPX, CLAPY, CLAPZ);   // the image source behind the left wall (x = -2.7)
     const Rr = CAL.sound * r; WV.uSR1.value = r > 0 ? Rr : -9; WV.uSR2.value = r > 0 ? Rr : -9; WV.uSOn.value = r > 0 && r < 0.052 ? 1 : 0; }
   // the bullet, the apple's spray
-  { const Bt = EV.bullet, r = (t - Bt.enter) / F, ap = APPX - 0.04, speed = CAL.bullet.v;
-    const x = ap + speed * r - 0.0, show = t >= Bt.approach - 1.0 && x < 3.4;
+  { const Bt = EV.bullet, r = (t - Bt.enter) / 1e4, ap = APPX - 0.04, speed = CAL.bullet.v;
+    const x = ap + speed * r - 0.0, show = t >= Bt.approach - 1.0 && t < Bt.enter + 70 && x < 3.4;
     bullet.visible = show && !(Math.abs(x - APPX) < 0.0 && false); bullet.position.set(x, APPY, CUPZ); cone.visible = show;
     const L = 0.22; cone.scale.set(L * Math.tan(HALFANG) * 1.0, L, L * Math.tan(HALFANG) * 1.0); cone.rotation.z = Math.PI / 2; cone.position.set(x - L / 2 - 0.006, APPY, CUPZ);
-    const exit = ap + 0.08, afterExit = x > exit, rEx = (t - (Bt.enter + 0.08 / speed * F)) / F;
+    const exit = ap + 0.08, afterExit = x > exit, rEx = (t - (Bt.enter + 0.08 / speed * 1e4)) / 1e4;
     spray.forEach((m) => { m.visible = rEx > 0 && rEx < 0.0009; if (!m.visible) return; const v = m.userData.v; m.position.set(exit + v[0] * rEx * m.userData.s, APPY + v[1] * rEx * 0.6, CUPZ + v[2] * rEx * 0.6); });
-    const dim = seg(t, Bt.enter - 3.0, Bt.enter - 0.2), shell = afterExit ? 0 : 1; apple.visible = true; apple.scale.set(1 - 0.12 * dim * (afterExit ? 0 : 1) - (afterExit ? 0.0 : 0), 1, 1 - 0.12 * dim); apple.scale.x = afterExit ? Math.max(0.6, 1 - 0.4 * seg(t, Bt.enter + 0.08 / speed * F, Bt.enter + 0.08 / speed * F + 2.0)) : 1 - 0.06 * dim; void shell;
+    const dim = seg(t, Bt.enter - 3.0, Bt.enter - 0.2), shell = afterExit ? 0 : 1; apple.visible = true; apple.scale.set(1 - 0.12 * dim * (afterExit ? 0 : 1) - (afterExit ? 0.0 : 0), 1, 1 - 0.12 * dim); apple.scale.x = t >= Bt.enter + 70 ? 1 : afterExit ? Math.max(0.6, 1 - 0.4 * seg(t, Bt.enter + 0.08 / speed * 1e4, Bt.enter + 0.08 / speed * 1e4 + 2.0)) : 1 - 0.06 * dim; void shell;
     apple.position.set(APPX, APPY, CUPZ); stem.visible = !afterExit; }
   // the storm's leader: a step every 3 s (1 s of growth, then a skipped wait), branches, the return stroke
   { const Lt = SL.t0, ground = SL.ground, every = SL.stepEvery; let flashV = 0;

@@ -79,7 +79,7 @@ K0 = {"wings": 0.0, "fly": 2.0, "pop": 3.0, "sound": 3.0, "bullet": 4.0, "leader
 
 
 def plateau(t, k0, k1, dur=RAMP):
-    KEYS.extend([(R(t - 0.1), k0), (R(t + dur), k1)])
+    KEYS.extend([(R(t - 1.0), k0), (R(t + 0.1), k1)])   # the ramp lands on the spoken number as it is spoken
 
 
 if PART:
@@ -173,10 +173,15 @@ if has("light"):
     plateau(W("light", "hundred#2"), 7.0, 8.0)
     plateau(W("light", "billion"), 8.0, 9.0)
     EV["flash8"] = R(W("light", "flash") - 0.3)
-    EV["light9"] = R(W("light", "glowing") - 0.9)
+    EV["light9"] = R(W("light", "glowing") + 1.1)
     CAM += ([ck(0.0, WIDE[0], WIDE[1], -3.0)] if PART else [ck(cut("light") - 0.2, WIDE[0], WIDE[1], -3.0)])
-    CAM += [ck(W("light", "Someone") - 0.6, [-0.4, 1.1, -0.8], 4.8, 4.0, "sine"), ck(W("light", "Behind") - 0.3, [0.0, 1.1, -0.8], 3.4, -5.0, "sine"),
-            ck(W("light", "cup") - 0.1, [-0.3, 1.05, -1.0], 0.7, 5.0), ck(W("light", "seventeen") - 0.8, WIDE[0], 5.4, -3.0), ck(W("light", "corner,") - 0.2, CHIP, 0.9, 4.0)]
+    TC = EV["light9"] + 2.2 / (CALC["light"]["m_per_ns"] * 1e9 / 1e9 * 1.0)   # (placeholder, replaced below)
+    TC = EV["light9"] + 2.2 / 0.2998                                         # the front reaches the cup (2.2 m from the lens at 0.2998 m per slowed second)
+    CAM += [ck(W("light", "million") - 0.2, WIDE[0], WIDE[1], -3.0, "sine"), ck(W("light", "million") + 3.5, [-1.0, 1.4, -1.0], 2.8, 8.0, "sine"), ck(W("light", "hundred#2") - 0.2, [0.5, 1.0, -1.0], 2.4, -6.0, "sine"),
+            ck(W("light", "flash") - 0.8, WIDE[0], 5.4, 0.0, "sine"), ck(W("light", "Now#2") + 0.5, WIDE[0], 5.2, 4.0, "sine"),
+            ck(W("light", "Someone") - 0.2, [-2.0, 1.0, -0.9], 2.2, -10.0, "sine"), ck(EV["light9"] + 1.5, [-2.0, 1.0, -0.9], 2.2, -10.0, "sine"),
+            ck(TC - 3.6, [-1.0, 1.0, -1.0], 1.2, -62.0, "sine", 4.0), ck(TC + 4.6, [0.15, 1.0, -1.0], 1.0, -48.0, "sine", 4.0),
+            ck(W("light", "seventeen") - 0.6, WIDE[0], 5.4, -3.0, "sine"), ck(W("light", "corner,") - 0.2, CHIP, 0.9, 4.0)]
     if PART:
         BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": "tr"})
 
@@ -227,7 +232,7 @@ for r in CALC["rows"]:
 LBL = [[-1e9, f"1 real second now lasts {LABEL_TXT[round(KEYS[0][1], 3)]}"]]
 for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
     if abs(k1 - k0) > 1e-6:
-        LBL.append([R(t1 + 1.0), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
+        LBL.append([R(t1 + 0.9), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
 SPINE_AT = [[-1e9, [0.5, 0.27]]] if PART else [[-1e9, [0.3, 0.19]]]
