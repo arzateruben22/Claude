@@ -27,12 +27,12 @@
  "thumbnails": [
   {
    "id": "A",
-   "subject": "a lone tree silhouette on a hill under a star-dense sky with the Moon rising",
-   "composition": "tree on the left third, Moon upper right, wide negative space",
-   "lighting": "indigo night, silver Moon glow, teal horizon haze",
-   "trigger": "wonder",
+   "subject": "a row of tiny stick-figure people standing under a glowing Earth dotted with tiny teal trees (a real frame from episode 1 of the video)",
+   "composition": "Earth upper left, the row of small people lower left facing up at it, tree dots between; wide empty negative space on the right for two words",
+   "lighting": "Earth lit from the left, teal tree glow on indigo night",
+   "trigger": "scale contrast with a human anchor",
    "text": "Look up.",
-   "complements": "the title asks the questions; the picture is the sky they come from"
+   "complements": "the title asks the questions; the picture is the first one, with people looking up at it"
   },
   {
    "id": "B",
@@ -121,7 +121,7 @@
   "originality": true
  },
  "thumbnailFile": "thumbnail.jpg",
- "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: a lone tree silhouette on a hill under a star-dense night sky with a large Moon rising (an illustration, not a photograph).\nComposition: tree on the left third, the Moon in the upper right third, wide empty negative space between.\nLighting and treatment: indigo night (#0B0F2A), silver Moon glow, faint teal horizon haze (#4FE3C6), soft bloom, subtle grain, shallow depth.\nMood: quiet wonder.\nText: \"Look up.\" in a clean geometric sans (Lexend style), lower-left, white.\nScientific accuracy: the Moon and stars are real objects; show a plausible, calm night sky and no impossible sizes.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: a glowing Earth dotted with tiny teal tree lights, and, small in the lower-left foreground, a row of tiny stick-figure people looking up at it, with a thin cloud of tree dots floating above them (an illustration).\nComposition: Earth upper left, the row of people lower left, wide empty indigo negative space on the right third for the text.\nLighting and treatment: Earth lit from the left, teal glow (#4FE3C6) on indigo night (#0B0F2A), soft bloom, subtle grain, shallow depth.\nMood: quiet wonder.\nText: \"Look up.\" in a clean geometric sans (Lexend style), right of centre, the first word teal (#4FE3C6) and the second white.\nScientific accuracy: estimates: Earth is thought to hold about 3 trillion trees and the Milky Way 100 to 400 billion stars; both are estimates.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look.\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
  "shortsCover": {
   "frameSeconds": 0.0,
   "text": ""

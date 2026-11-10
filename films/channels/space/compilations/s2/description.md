@@ -1,14 +1,14 @@
-One More Orbit: Season 2
+Are There More Trees Than Stars? And 5 More Sky Questions
 
-One minute, one 'whoa' about the universe, every number sourced.
+One More Orbit · Season 2. Six questions about the night sky, from 'more trees or more stars?' to 'do the Moon's footprints last?', each with its sources.
 
 Chapters
 0:00 Trees or stars
-1:14 Dark sky
-2:21 Your gold
-3:35 Black-hole edge
-4:46 Lighter than water
-5:51 Footprints
+1:30 Dark sky
+2:44 Your gold
+4:12 Black-hole edge
+5:38 Lighter than water
+6:52 Footprints
 
 Sources (every number's source is listed below)
 01 Trees or stars
@@ -45,6 +45,16 @@ Sources (every number's source is listed below)
 - Apollo 11 Landing Site (NASA Science, LROC): https://science.nasa.gov/resource/apollo-11-landing-site/
 - Moon Facts (NASA Science): https://science.nasa.gov/moon/facts/
 - History of Lunar Exploration (NASA Science): https://science.nasa.gov/solar-system/moon/history-of-lunar-exploration/
+
+Between the episodes
+- Hubble sees galaxies galore (ESA/Hubble heic0406a): https://esahubble.org/images/heic0406a/
+- Hubble Ultra Deep Field (NASA SVS): https://svs.gsfc.nasa.gov/30946
+- Webb (NASA Science) — exact page for the '13 billion years' wording to be confirmed: https://science.nasa.gov/mission/webb/
+- Webb: Early Universe (NASA Science) — exact release to be confirmed: https://science.nasa.gov/mission/webb/early-universe/
+- GW150914 (Cardiff University): https://cardiff.ac.uk/physics-astronomy/research/research-groups/gravity-exploration-institute/first-detection-of-gravitational-waves-gw150914
+- Saturn Moons (NASA Science): https://science.nasa.gov/saturn/moons
+- Saturn still reigns supreme as moon king with 128 new moons (UBC): https://news.ubc.ca/2025/03/saturn-128-new-moons/
+- Black-hole size: our own arithmetic (2GM/c^2, 2.95 km radius for one solar mass)
 
 Narration is a synthetic voice (AI-generated). Music and sound design are original, made for One More Orbit. Type: Unbounded, Lexend, Martian Mono (SIL Open Font License).
 TODO before posting: the channel handle and links, the expert sign-offs listed in each episode's review/HUMAN-REVIEW.md, and YouTube's altered/synthetic content setting.
