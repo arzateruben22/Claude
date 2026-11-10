@@ -2,7 +2,8 @@
 #   docker compose up -d        (see deploy/DEPLOY.md)
 # The runtime stage carries only Next's standalone server (the files the web app traces) and the few packages the
 # worker and the migrate / seed / import scripts load through tsx: drizzle-orm, pg, web-push and tsx itself, at the
-# lockfile's versions. No compiler, test tools, image library or build cache.
+# lockfile's versions, and zod (the importer validates packaging.json with it). No compiler, test tools, image library or
+# build cache.
 FROM node:22-bookworm-slim AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -15,7 +16,7 @@ RUN npx next build
 
 # Everything but the worker's and the scripts' packages pruned away (from the installed tree: no network needed).
 FROM deps AS worker-deps
-RUN node -e "const fs=require('fs'),p=JSON.parse(fs.readFileSync('package.json')),all={...p.dependencies,...p.devDependencies};p.dependencies=Object.fromEntries(['drizzle-orm','pg','web-push','tsx'].map(k=>[k,all[k]]));delete p.devDependencies;fs.writeFileSync('package.json',JSON.stringify(p))" \
+RUN node -e "const fs=require('fs'),p=JSON.parse(fs.readFileSync('package.json')),all={...p.dependencies,...p.devDependencies};p.dependencies=Object.fromEntries(['drizzle-orm','pg','web-push','tsx','zod'].map(k=>[k,all[k]]));delete p.devDependencies;fs.writeFileSync('package.json',JSON.stringify(p))" \
  && npm prune --omit=dev --no-audit --no-fund && find node_modules -mindepth 1 -maxdepth 1 -type d -empty -delete
 
 FROM node:22-bookworm-slim AS run

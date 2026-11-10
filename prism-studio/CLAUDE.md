@@ -22,6 +22,14 @@
   `activeChannelBySlug()` in `src/domain/channels.ts` (an archived channel's pages 404). Nothing is deleted; the seed
   never un-archives; Settings → Archived channels → Restore (audit-logged) brings it back. Costs keep counting its real
   spend in the studio total (its entries stay listed, read-only). The wall re-balances (`rigLayout`, src/lib/rig.ts).
+- **Packaging (owner's rule, 10 Nov 2026; films/channels/PACKAGING.md, `drizzle/0009`):** the importer reads
+  `epNN/out/packaging.json` and `compilations/<name>/packaging.json` with zod (`src/domain/packaging.ts`: forgiving, a bad
+  or missing file never fails an import, the stored one is kept) into `episodes.packaging` / `lessons.packaging`. The
+  winner title is the YouTube title exactly (`buildMetadata`'s `packagingTitle`, no "| Channel · No." suffix; TikTok and
+  Instagram unchanged); a new or changed winner reaches an existing export or lesson title (approval lapses) unless it is
+  already on YouTube, and the same packaging again keeps the owner's edits. The "Title & thumbnail" card
+  (`PackagingCard`) shows it on the episode page, the Lessons tab and the long-video card; scores are always labelled
+  creative judgments, not CTR predictions. The worker image carries zod for this (Dockerfile).
 - **Money:** Prism never moves money. Personal rewards are owner-funded, reserved only within the funded balance
   and the monthly cap, under a row lock. Demo or estimated numbers never create or reserve a reward. Production
   budgets are separate, and paid generation stays off without one.

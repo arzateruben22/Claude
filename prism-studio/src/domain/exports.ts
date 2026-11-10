@@ -6,6 +6,7 @@ import { channels, episodes, platformExports, series, sources, versions } from "
 import { audit, DomainError } from "./core";
 import { editExport } from "./episodes";
 import { buildMetadata, postingNotesFor, type MetaInput, type Topic } from "./metadata";
+import { packagingTitle } from "./packaging";
 
 export async function metaInputFromDb(d: DB, episodeId: string): Promise<MetaInput> {
   const [ep] = await d.select().from(episodes).where(eq(episodes.id, episodeId));
@@ -21,6 +22,7 @@ export async function metaInputFromDb(d: DB, episodeId: string): Promise<MetaInp
     beats, sources: srcs.map((s) => ({ key: s.claimKey, claim: s.claim, title: s.title, publisher: s.publisher, url: s.url })),
     disclosures: { aiVoice: true, aiVisuals: false },
     next: null,
+    packagingTitle: packagingTitle(ep.packaging),
   };
 }
 

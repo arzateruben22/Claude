@@ -2,6 +2,7 @@
 // Times are stored in UTC (timestamptz); the display timezone is a studio setting (America/Los_Angeles by default).
 // Money is integer cents. Demo rows carry is_demo = true and never reserve real rewards or count as real progress.
 import { sql } from "drizzle-orm";
+import type { Packaging } from "../domain/packaging";
 import {
   pgTable, pgEnum, uuid, text, integer, boolean, timestamp, jsonb, real, doublePrecision, uniqueIndex, index, primaryKey, bigint, date, check,
 } from "drizzle-orm/pg-core";
@@ -157,6 +158,9 @@ export const episodes = pgTable("episodes", {
   // when the worker erased this episode's .mp4 files from the server after it was posted everywhere
   // (src/domain/media-cleanup.ts); the originals stay in the films repo. Null = the video is still here.
   videoClearedAt: timestamp("video_cleared_at", { withTimezone: true }),
+  // the episode's title and thumbnail package (out/packaging.json, src/domain/packaging.ts): the winner title is the
+  // YouTube title. Null until the importer has read one.
+  packaging: jsonb("packaging").$type<Packaging>(),
   tags: jsonb("tags").$type<Record<string, string>>().notNull().default({}),   // creative choices (hook, pace, style…)
   isDemo: boolean("is_demo").notNull().default(false),
   createdAt: created(),
@@ -292,6 +296,7 @@ export const lessons = pgTable("lessons", {
   thumbnailPath: text("thumbnail_path").notNull().default(""),
   chapters: text("chapters").notNull().default(""),          // YouTube chapters, ready to paste
   description: text("description").notNull().default(""),    // ready to paste: chapters, sources, AI label
+  packaging: jsonb("packaging").$type<Packaging>(),            // compilations/<name>/packaging.json (src/domain/packaging.ts)
   qa: jsonb("qa").$type<Record<string, unknown>>().notNull().default({}),
   approvedHash: text("approved_hash").notNull().default(""), // sha256(video, title, description) at approval
   postUrl: text("post_url").notNull().default(""),

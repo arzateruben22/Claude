@@ -14,6 +14,8 @@ import { approveLessonAction } from "@/app/actions";
 import { parseChapters } from "@/domain/lessons";
 import { ActionForm } from "@/components/ActionForm";
 import { CopyButton } from "@/components/CopyButton";
+import { PackagingCard } from "@/components/PackagingCard";
+import type { Packaging } from "@/domain/packaging";
 import { MonitorStrip } from "@/components/MonitorStrip";
 import { PostCard } from "@/components/PostCard";
 
@@ -352,7 +354,7 @@ async function InstagramScreen() {
 
 /** A long video (a lesson): the 16:9 compilation of the channel's shorts, for YouTube as a regular video. Approve it
  *  here or on the channel's Lessons tab; editing the title or description lives there. */
-function LongVideo({ x, slug }: { x: { lesson: { id: string; name: string; title: string; description: string; chapters: string; state: string; videoPath: string; thumbnailPath: string; qa: unknown; isDemo: boolean }; approved: boolean; episodes: string[] }; slug: string }) {
+function LongVideo({ x, slug }: { x: { lesson: { id: string; name: string; title: string; description: string; chapters: string; state: string; videoPath: string; thumbnailPath: string; qa: unknown; isDemo: boolean; packaging: Packaging | null }; approved: boolean; episodes: string[]; packThumb: string | null }; slug: string }) {
   const l = x.lesson;
   // a long video pushed from a cloud session may have no linked episodes: count its chapters instead
   const chapterCount = parseChapters(l.chapters).length;
@@ -388,6 +390,7 @@ function LongVideo({ x, slug }: { x: { lesson: { id: string; name: string; title
         {l.thumbnailPath ? <a className="btn ghost small" href={`${mediaUrl(l.thumbnailPath)}&dl=${encodeURIComponent(`${l.name}-thumbnail.jpg`)}`} download>Thumbnail</a> : null}
         <Link href={`/channels/${slug}?tab=lessons`} className="btn ghost small">Edit or mark uploaded</Link>
       </div>
+      {l.packaging ? <PackagingCard id={`pack-${l.id}`} p={l.packaging} thumb={x.packThumb} download={`${l.name}-packaging-thumbnail.jpg`} /> : null}
     </article>
   );
 }

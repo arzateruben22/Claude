@@ -558,6 +558,38 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
    download would be */
 .cleared-note { font-size: 13.5px; margin: 0; color: var(--text-2); }
 .post-actions { display: grid; gap: var(--s3); padding-top: var(--s4); border-top: 1px solid var(--line); }
+/* "Title & thumbnail" (PackagingCard): the winner title and the ChatGPT prompt to copy, the rendered thumbnail beside
+   them from 720 px, and the scored pairings folded away (creative judgments, not CTR predictions) */
+.pack { container-type: inline-size; }
+.pack h3 { margin: 0; }
+.pack-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; }
+.pack-main { display: grid; gap: var(--s4); align-items: start; }
+@container (min-width: 600px) {
+  .pack-main[data-thumb="landscape"] { grid-template-columns: minmax(0, 1fr) minmax(200px, 300px); }
+  .pack-main[data-thumb="portrait"] { grid-template-columns: minmax(0, 1fr) 150px; }
+}
+.pack-thumb { position: relative; display: block; overflow: hidden; border-radius: var(--r-sm); border: 1px solid var(--line-2); background: #050608; text-decoration: none; }
+.pack-thumb img { display: block; width: 100%; height: auto; }
+.pack-thumb:hover .post-dl, .pack-thumb:focus-visible .post-dl { text-decoration: underline; }
+.pack-fact { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; font-size: 14.5px; }
+.pack-text { font: 600 13px/1.3 var(--mono); letter-spacing: .06em; color: var(--text); }
+.pack-why { margin: 0; font-size: 13.5px; }
+.pack-id { font-family: var(--mono); font-weight: 600; }
+.pack-pairs-box > summary { flex-wrap: wrap; gap: 0 8px; font: 600 14.5px/1.3 var(--ui); padding: 6px 0; }
+.pack-disclaimer { flex-basis: 100%; padding-left: 18px; font: 500 13px/1.3 var(--ui); color: var(--text-3); }
+@container (min-width: 600px) { .pack-disclaimer { flex-basis: auto; padding-left: 0; } .pack-disclaimer::before { content: "· "; } }
+.pack-pairs { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: var(--s3); }
+.pack-pairs li { display: grid; gap: 4px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--well); }
+.pack-pairs li[data-winner] { border-color: var(--line-3); }
+.pack-pair-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.pack-pair-thumb, .pack-note { font-size: 13px; margin: 0; }
+.pack-scores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px 10px; margin: 4px 0 0; }
+@container (max-width: 340px) { .pack-scores { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@container (min-width: 720px) { .pack-scores { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
+.pack-scores div { display: grid; gap: 1px; min-width: 0; }
+.pack-scores dt { font-size: 11.5px; color: var(--text-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pack-scores dd { margin: 0; color: var(--text); }
+.pack-prompt { min-height: 0; height: 10em; resize: vertical; font-family: var(--mono); font-size: 12.5px; line-height: 1.5; color: var(--text-2); }
 .post-actions > p { margin: 0; }
 .post-report summary { font-size: 14px; }
 .post-report form { margin-top: 8px; }

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { and, asc, desc, eq, inArray } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as S from "@/db/schema";
-import { channelBySlug, episodesFor, studio, worldView } from "@/lib/data";
+import { channelBySlug, episodesFor, lessonFolder, packagingThumb, studio, worldView } from "@/lib/data";
 import { Creation } from "@/creations/Creation";
 import { CREATIONS } from "@/creations/meta";
 import type { CreationKey, Form } from "@/creations/types";
@@ -113,7 +113,8 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
       ) : null}
 
       {tab === "lessons" ? (
-        <Lessons channelId={c.id} channelName={name} ytHandle={dests.find((d) => d.platform === "youtube")?.handle ?? ""} lessons={lessonRows} parts={lessonParts} available={available} tz={s.timezone} />
+        <Lessons channelId={c.id} channelName={name} ytHandle={dests.find((d) => d.platform === "youtube")?.handle ?? ""} lessons={lessonRows} parts={lessonParts} available={available} tz={s.timezone}
+          packThumbs={Object.fromEntries(lessonRows.map((l) => [l.id, packagingThumb(lessonFolder(l.videoPath), l.packaging)]))} />
       ) : null}
 
       {tab === "series" ? (

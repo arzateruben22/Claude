@@ -7,6 +7,13 @@
   Rewards and every count and total, and its pages answer 404. The schedule, publishing, notifications, analytics
   pulls, video cleanup, the importer and media push all skip it. The wall re-balances to two screens a side with four
   channels. Settings → Archived channels lists it with Restore (audit-logged), which brings everything back.
+- Packaging (films/channels/PACKAGING.md): the importer reads each episode's `out/packaging.json` and each long video's
+  `compilations/<name>/packaging.json` (`drizzle/0009_packaging.sql` adds `episodes.packaging` and `lessons.packaging`).
+  The winner title becomes the YouTube title exactly, with no channel or episode suffix; TikTok and Instagram captions
+  are unchanged. The episode page, the Lessons tab and the long-video card get a "Title & thumbnail" card: the winner
+  title and the ChatGPT prompt with copy buttons, the thumbnail text, the rendered thumbnail when it is there, the Test &
+  Compare set and the three pairings, whose scores are labelled creative judgments, not CTR predictions. A missing or
+  broken file never fails an import. Nothing is marked uploaded.
 
 ## 0.8.0 — 2026-11-03 (launch from a phone)
 - Railway hosting (`railway.json`, `docs/LAUNCH-CHECKLIST.md`): one service runs the web app and the worker together

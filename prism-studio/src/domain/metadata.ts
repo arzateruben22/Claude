@@ -17,6 +17,8 @@ export interface MetaInput {
   disclosures: { aiVoice: boolean; aiVisuals: boolean; branded?: boolean };
   /** the end card's "Next: …" line when the script has one */
   next?: string | null;
+  /** the packaging winner title (packaging.json, src/domain/packaging.ts): when set, the YouTube title is exactly this */
+  packagingTitle?: string | null;
 }
 
 export interface PlatformMeta {
@@ -149,10 +151,13 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   };
 
   // ── YouTube (Shorts): a title and a full description ──────────────────────
+  // With packaging, the title is the winner title alone (PACKAGING.md: no "| Channel · Season · Episode" suffix; the
+  // series line stays in the description). Without it, the episode title with the channel and its number.
   const yw: string[] = [];
-  let title = `${ep.title} | ${ch} ${epLabel(ep)}`;
-  if (title.length > LIMITS.youtube.title) title = `${ep.title} | ${ch}`;
-  if (title.length > LIMITS.youtube.title) { title = cut(ep.title, LIMITS.youtube.title); yw.push("title cut to 100 characters"); }
+  const packaged = input.packagingTitle?.trim() ?? "";
+  let title = packaged || `${ep.title} | ${ch} ${epLabel(ep)}`;
+  if (!packaged && title.length > LIMITS.youtube.title) title = `${ep.title} | ${ch}`;
+  if (title.length > LIMITS.youtube.title) { title = cut(packaged || ep.title, LIMITS.youtube.title); yw.push("title cut to 100 characters"); }
   const ytTags = HASHTAG_SETS[topic].youtube;
   /** the description with the first k sources (the rest are named as being in the pinned comment, which holds them all) */
   const ytDescription = (k: number) => [

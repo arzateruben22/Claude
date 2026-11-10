@@ -7,10 +7,12 @@
 // Then every long video a cloud session built and pushed (compilations/<name>/ with a *-16x9.mp4) is registered as
 // the channel's lesson of that name (registerCompilation): new ones are added, rebuilt ones refreshed, the rest untouched.
 // An archived channel (src/domain/channels.ts) is skipped entirely: whatever files a push brings, its rows stay as they are.
+// packaging.json (out/packaging.json, compilations/<name>/packaging.json; src/domain/packaging.ts) is stored on the episode
+// or lesson when present, and its winner title becomes the YouTube title; a missing or bad one never fails the import.
 import fs from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { db, pool } from "../src/db/client";
 import * as S from "../src/db/schema";
 import { createEpisode, addVersion, upsertExport, editExport } from "../src/domain/episodes";
@@ -20,6 +22,7 @@ import { buildMetadata, postingNotesFor, type MetaInput } from "../src/domain/me
 import { usesAiVisuals } from "../src/domain/disclosures";
 import { registerCompilation } from "../src/domain/lessons";
 import { activeChannels, isArchived } from "../src/domain/channels";
+import { packagingTitle, readPackagingFile } from "../src/domain/packaging";
 import { loadEnv } from "./env";
 loadEnv();
 
@@ -74,9 +77,10 @@ export function scriptInfo(dir: string) {
   return { text, vo, beats, next };
 }
 
-/** Everything the metadata engine needs, from an episode folder and its channel. */
+/** Everything the metadata engine needs, from an episode folder and its channel (with out/packaging.json's winner title). */
 export function metaInputFor(dir: string, ch: { name: string; label: string; tagline: string; topic: Topic }, ep: MetaInput["episode"]): MetaInput {
   const info = scriptInfo(dir);
+  const pkg = readPackagingFile(path.join(dir, "out", "packaging.json")).packaging;
   const claimsPath = path.join(dir, "claims.json");
   const claims: { id: string; claim: string; source_title?: string; source_url?: string }[] = fs.existsSync(claimsPath) ? JSON.parse(fs.readFileSync(claimsPath, "utf8")) : [];
   return {
@@ -85,6 +89,7 @@ export function metaInputFor(dir: string, ch: { name: string; label: string; tag
     sources: claims.map((c) => ({ key: c.id, claim: c.claim, title: c.source_title, publisher: (() => { try { return new URL(c.source_url ?? "").hostname.replace(/^www\./, ""); } catch { return c.source_title ?? ""; } })(), url: c.source_url })),
     disclosures: { aiVoice: true, aiVisuals: usesAiVisuals(dir) },
     next: info?.next ? `Next: ${info.next}` : null,
+    packagingTitle: packagingTitle(pkg),
   };
 }
 
@@ -110,6 +115,10 @@ export async function importEpisodes(d = db()) {
       let [ep] = await d.select().from(S.episodes).where(and(eq(S.episodes.channelId, ch.id), eq(S.episodes.number, n)));
       if (!ep) ep = await createEpisode(d, { channelId: ch.id, title, seriesId: se.id, seriesOrder: order, number: n, state, filmsPath: exists ? rel(dir) : null });
       const question = info?.vo[0]?.split("?")[0] ? info.vo[0].split("?")[0] + "?" : ep.question;
+      // the title and thumbnail package: stored when the file is usable; a bad file is reported and the stored one kept
+      const pkg = exists ? readPackagingFile(path.join(dir, "out", "packaging.json")) : {};
+      if (pkg.problem) report.push(`${slug} ep${n}: ${pkg.problem}; kept what was there`);
+      const pkgTitle = packagingTitle(pkg.packaging ?? ep.packaging), pkgTitleChanged = !!pkgTitle && pkgTitle !== packagingTitle(ep.packaging);
       // a video erased from the server after posting (src/domain/media-cleanup.ts): its .mp4 is missing on purpose
       const cleared = !!ep.videoClearedAt;
       const advance = !cleared && ["idea", "research", "outline", "script"].includes(ep.state) ? state : ep.state;   // never move an episode backwards
@@ -118,6 +127,7 @@ export async function importEpisodes(d = db()) {
         script: info ? info.vo.join("\n\n") : ep.script, storyboard: info ? info.beats : ep.storyboard, durationS: film?.dur ?? ep.durationS,
         captionsSrt: film?.captions ? captionsToSrt(film.captions) : ep.captionsSrt,
         filmsPath: exists ? rel(dir) : ep.filmsPath, state: advance as typeof ep.state, updatedAt: new Date(),
+        ...(pkg.packaging ? { packaging: pkg.packaging } : {}),
       }).where(eq(S.episodes.id, ep.id));
       // claims → sources (replace: claims.json is the source of truth for an imported episode)
       const claimsPath = path.join(dir, "claims.json");
@@ -140,8 +150,14 @@ export async function importEpisodes(d = db()) {
         ver = await addVersion(d, { episodeId: ep.id, videoPath: `films:${rel(file)}`, sha256: hash, posterPath: `films:${rel(file.replace(/\.mp4$/, ".jpg"))}`,
           width: 1080, height: 1920, durationS: film?.dur, label: "final", qa: fs.existsSync(qaPath) ? JSON.parse(fs.readFileSync(qaPath, "utf8")) : {} });
       }
-      const meta = buildMetadata(metaInputFor(dir, { name: ch.name, label: ch.label, tagline: ch.tagline, topic: ch.topic as Topic },
-        { number: n, title: film?.title?.title ? plain(film.title.title) : title, durationS: film?.dur, seriesTitle: slate.series, seriesOrder: order, seriesTotal: slate.titles.length, season: seasonNo }));
+      const meta = buildMetadata({ ...metaInputFor(dir, { name: ch.name, label: ch.label, tagline: ch.tagline, topic: ch.topic as Topic },
+        { number: n, title: film?.title?.title ? plain(film.title.title) : title, durationS: film?.dur, seriesTitle: slate.series, seriesOrder: order, seriesTotal: slate.titles.length, season: seasonNo }),
+        packagingTitle: pkgTitle });
+      // a new or changed winner title reaches an existing YouTube export too (its approval lapses, as on any edit), unless
+      // the episode is already on YouTube; the same packaging again leaves the owner's own edits alone
+      const onYouTube = pkgTitleChanged && (await d.select({ id: S.publications.id }).from(S.publications)
+        .innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
+        .where(and(eq(S.publications.episodeId, ep.id), eq(S.destinations.platform, "youtube"), inArray(S.publications.status, ["owner_reported", "scheduled_on_platform", "verified_published"])))).length > 0;
       // the designed 9:16 cover (npm run covers) when it is newer than this render (the covers script's own rule), else
       // the film's poster: a cover drawn from an earlier render never rides on a re-rendered video
       const coverFile = file.replace(/-9x16\.mp4$/, "-cover.jpg");
@@ -161,6 +177,10 @@ export async function importEpisodes(d = db()) {
             : { aiVoice: true, aiVisuals: false, notes: "Code-rendered (procedural) animation; synthetic narration." },
           postingNotes: postingNotesFor(m) });
         if (x.coverPath !== coverPath) await editExport(d, x.id, { coverPath });   // an existing export: approvals bound to the old cover are withdrawn
+        if (platform === "youtube" && pkgTitleChanged && x.title !== m.title) {
+          if (onYouTube) report.push(`${slug} ep${n}: packaging title not applied (already on YouTube)`);
+          else await editExport(d, x.id, { title: m.title });
+        }
       }
       // planned publications for this channel's YouTube and TikTok (Instagram picks from the backlog separately)
       const dests = await d.select().from(S.destinations).where(eq(S.destinations.channelId, ch.id));
@@ -169,7 +189,7 @@ export async function importEpisodes(d = db()) {
         await d.insert(S.publications).values({ episodeId: ep.id, destinationId: dest.id, exportId: x.id, kind: "short", status: "planned" })
           .onConflictDoUpdate({ target: [S.publications.episodeId, S.publications.destinationId], set: { exportId: x.id, updatedAt: new Date() } });
       }
-      report.push(`${slug} ep${n}: version ${ver.versionNo} (${(fs.statSync(file).size / 1e6).toFixed(1)} MB), 3 exports${yt ? ", YouTube 1440p" : ""}`);
+      report.push(`${slug} ep${n}: version ${ver.versionNo} (${(fs.statSync(file).size / 1e6).toFixed(1)} MB), 3 exports${yt ? ", YouTube 1440p" : ""}${pkgTitle ? ", packaging title" : ""}`);
     }
   }
   // long videos last, so the episodes their chapters name are already here to link
@@ -208,10 +228,12 @@ export async function importCompilations(d = db()) {
         const text = (f: string) => { try { return fs.readFileSync(path.join(dir, f), "utf8"); } catch { return ""; } };
         let qa: Record<string, unknown> = {};
         try { const j = JSON.parse(text("qa.json") || "{}"); if (j && typeof j === "object" && !Array.isArray(j)) qa = j; } catch { /* unreadable: "QA not attached" */ }
+        const pkg = readPackagingFile(path.join(dir, "packaging.json"));
+        if (pkg.problem) report.push(`${where}: ${pkg.problem}; kept what was there`);
         const r = await registerCompilation(d, ch.id, name, {
           videoPath: `films:${rel(path.join(dir, video))}`, videoSha256: await sha256Stream(path.join(dir, video)),
           thumbnailPath: fs.existsSync(path.join(dir, "thumbnail.jpg")) ? `films:${rel(path.join(dir, "thumbnail.jpg"))}` : "",
-          chapters: text("chapters.txt"), description: text("description.md"), qa,
+          chapters: text("chapters.txt"), description: text("description.md"), qa, packaging: pkg.packaging,
         });
         report.push(`${where}: ${r.action} "${r.lesson.title}"${r.linked ? `, ${r.linked} episodes linked` : ""}`);
       } catch (e) {

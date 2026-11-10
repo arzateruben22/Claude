@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { analyticsRows, coverOf, episodeFull, reviewOrder, studio, thumbOf } from "@/lib/data";
+import { analyticsRows, coverOf, episodeFull, packagingThumb, reviewOrder, studio, thumbOf } from "@/lib/data";
 import { Icon } from "@/components/Icon";
 import { canTransition, PIPELINE, SIDE_STATES, type EpisodeState } from "@/domain/episodes";
 import { formatLocal } from "@/domain/time";
@@ -13,6 +13,7 @@ import { Placements } from "@/components/Placements";
 import { ReviewSlide } from "@/components/ReviewSlide";
 import { ReelNav } from "@/components/ReelNav";
 import { MetricChips, MetricHistory, PullLine, ViewsFigure } from "@/components/PostNumbers";
+import { PackagingCard } from "@/components/PackagingCard";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const f = /^[0-9a-f-]{36}$/.test((await params).id) ? await episodeFull((await params).id) : null;
@@ -104,6 +105,12 @@ export default async function Episode({ params }: { params: Promise<{ id: string
           <Placements full={f} tz={s.timezone} />
         </section>
       </div>
+
+      {ep.packaging ? (
+        <div className="section">
+          <PackagingCard p={ep.packaging} thumb={packagingThumb(ep.filmsPath ? `films:${ep.filmsPath}/out` : null, ep.packaging)} download={`${dlBase}-thumbnail.jpg`} />
+        </div>
+      ) : null}
 
       {numbers.length ? (
         <section className="section" id="numbers">

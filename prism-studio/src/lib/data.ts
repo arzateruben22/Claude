@@ -22,6 +22,7 @@ import { addDays, formatLocal, localDate, localMonth, zonedTimeToUtc } from "@/d
 import { INSTAGRAM_SLUG, rigLayout, type RigPosition } from "@/lib/rig";
 import { resolveMedia } from "@/lib/media";
 import { STATE_LABEL } from "@/lib/format";
+import type { Packaging } from "@/domain/packaging";
 
 export type Channel = typeof S.channels.$inferSelect;
 export type Destination = typeof S.destinations.$inferSelect;
@@ -362,6 +363,16 @@ export function coverTone(slug: string): CoverTone {
   return tone;
 }
 
+/** The packaging winner's rendered thumbnail (packaging.json's thumbnailFile, in the folder `folderKey` names: an episode's
+ *  out/, a compilation's folder), when it is on disk. */
+export function packagingThumb(folderKey: string | null, p: Packaging | null | undefined): string | null {
+  if (!folderKey || !p?.thumbnailFile) return null;
+  const key = `${folderKey}/${p.thumbnailFile}`;
+  return mediaFile(key) ? key : null;
+}
+/** A lesson's folder as a media key ("films:films/channels/x/compilations/vol01"), from its video. */
+export const lessonFolder = (videoPath: string) => (/^films:.+\//.test(videoPath) ? videoPath.replace(/\/[^/]+$/, "") : null);
+
 /** A ready post has a current (not superseded) render for its platform. No approval is needed to download or copy it. */
 export const isReady = (t: Pick<PostItem, "x" | "version">) => !!t.x && !t.version?.superseded;
 
@@ -532,6 +543,7 @@ export async function channelExtension(slug: string) {
     .where(inArray(S.lessonEpisodes.lessonId, lessonRows.map((l) => l.id))).orderBy(asc(S.lessonEpisodes.position)) : [];
   const longVideos = lessonRows.map((l) => ({
     lesson: l, approved: !!l.approvedHash && l.approvedHash === lessonHash(l), episodes: parts.filter((x) => x.lessonId === l.id).map((x) => x.title),
+    packThumb: packagingThumb(lessonFolder(l.videoPath), l.packaging),
   }));
   const season = (await currentSeasons(d, [c])).get(c.slug) ?? null;
   return {

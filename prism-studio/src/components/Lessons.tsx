@@ -9,13 +9,16 @@ import { mediaUrl } from "@/lib/media";
 import { qaFails, STATE_LABEL, stateTone } from "@/lib/format";
 import { ActionForm } from "./ActionForm";
 import { CopyButton } from "./CopyButton";
+import { PackagingCard } from "./PackagingCard";
 
 type Lesson = typeof lessonsTable.$inferSelect;
 type Part = typeof leTable.$inferSelect & { episode: typeof epTable.$inferSelect };
 type Avail = { id: string; number: number; title: string; durationS: number | null };
 
-export function Lessons({ channelId, channelName, ytHandle, lessons, parts, available, tz }: {
+export function Lessons({ channelId, channelName, ytHandle, lessons, parts, available, tz, packThumbs = {} }: {
   channelId: string; channelName: string; ytHandle: string; lessons: Lesson[]; parts: Part[]; available: Avail[]; tz: string;
+  /** each lesson's rendered packaging thumbnail (media key), when it is on disk */
+  packThumbs?: Record<string, string | null>;
 }) {
   const total = available.reduce((a, e) => a + (e.durationS ?? 0), 0);
   return (
@@ -89,6 +92,7 @@ export function Lessons({ channelId, channelName, ytHandle, lessons, parts, avai
                   <a className="btn ghost small" href={`${mediaUrl(l.videoPath)}&dl=${encodeURIComponent(`${l.name}-16x9.mp4`)}`} download>Download video</a>
                   {l.thumbnailPath ? <a className="btn ghost small" href={`${mediaUrl(l.thumbnailPath)}&dl=${encodeURIComponent(`${l.name}-thumbnail.jpg`)}`} download>Thumbnail</a> : null}
                 </div>
+                {l.packaging ? <PackagingCard id={`pack-${l.id}`} p={l.packaging} thumb={packThumbs[l.id] ?? null} download={`${l.name}-packaging-thumbnail.jpg`} /> : null}
                 {approved && l.state !== "published" ? (
                   <details>
                     <summary style={{ cursor: "pointer", fontWeight: 650 }}>I&apos;ve uploaded it to YouTube: mark uploaded</summary>

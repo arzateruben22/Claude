@@ -8,6 +8,7 @@ import { audit, type Conn, DomainError, settings, sha256 } from "./core";
 import { enqueue } from "./jobs";
 import { awardXp, refreshEvolution } from "./living";
 import { parsePostUrl } from "./publications";
+import { packagingTitle, type Packaging } from "./packaging";
 
 export const LESSON_MIN = 4, LESSON_MAX = 6;   // "every 4–6 shorts, a 5–10 minute compilation"
 
@@ -81,7 +82,11 @@ export async function recordLessonBuild(d: DB, lessonId: string, v: { videoPath:
 // lessons do. The folder name is the key: a lesson the owner already created under that name is reused, never doubled.
 
 type Lesson = typeof lessons.$inferSelect;
-export type CompilationBuild = { videoPath: string; videoSha256: string; thumbnailPath: string; chapters: string; description: string; qa: Record<string, unknown> };
+export type CompilationBuild = {
+  videoPath: string; videoSha256: string; thumbnailPath: string; chapters: string; description: string; qa: Record<string, unknown>;
+  /** the folder's packaging.json (src/domain/packaging.ts); undefined when there is none, or none usable: what's stored stays */
+  packaging?: Packaging;
+};
 export type CompilationRegistration = { lesson: Lesson; action: "created" | "updated" | "filled" | "unchanged" | "published"; linked: number };
 
 const COMPILATION_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
@@ -155,8 +160,11 @@ async function linkByChapters(tx: Tx, l: Lesson): Promise<number> {
  *  different video (sha256): the new video, thumbnail, chapters and description replace the old, and its approval
  *  lapses as on any rebuild; the title stays (the owner may have edited it) unless it is still the folder's
  *  fallback. Known, same video: a no-op, except that files which were missing before (a thumbnail pushed later) are
- *  filled in; text already there is never overwritten. An uploaded (published) lesson is left as it is. */
-export async function registerCompilation(d: DB, channelId: string, name: string, v: CompilationBuild): Promise<CompilationRegistration> {
+ *  filled in; text already there is never overwritten. An uploaded (published) lesson is left as it is.
+ *  Packaging: a new or changed packaging.json is stored; a new or changed winner title becomes the title (the YouTube
+ *  title is exactly the winner title; the approval lapses). The same packaging again leaves the owner's edits alone. */
+export async function registerCompilation(d: DB, channelId: string, name: string, input: CompilationBuild): Promise<CompilationRegistration> {
+  const { packaging, ...v } = input;
   if (!COMPILATION_NAME.test(name)) throw new DomainError("name", `not a compilation folder name: ${name}`);
   if (!/^films:./.test(v.videoPath) || (v.thumbnailPath && !/^films:./.test(v.thumbnailPath))) throw new DomainError("path", "compilation media must be films: keys");
   if (!v.videoSha256) throw new DomainError("sha", "the video's sha256 is missing");
@@ -168,10 +176,11 @@ export async function registerCompilation(d: DB, channelId: string, name: string
     const [l] = await tx.select().from(lessons).where(and(eq(lessons.channelId, channelId), eq(lessons.name, name), eq(lessons.isDemo, false)))
       .orderBy(asc(lessons.isTestFixture), asc(lessons.createdAt)).limit(1);
     const fallback = fallbackCompilationTitle(name, ch.name), titled = titleFromDescription(v.description);
+    const pkgTitle = packagingTitle(packaging);
 
     if (!l) {
       const [row] = await tx.insert(lessons).values({
-        channelId, name, title: titled ?? fallback, state: "ready_for_review", approvedHash: "", ...v,
+        channelId, name, title: pkgTitle ?? titled ?? fallback, state: "ready_for_review", approvedHash: "", ...v, packaging: packaging ?? null,
         outline: parseChapters(v.chapters).map((c) => ({ part: c.title })),
       }).returning();
       const linked = await linkByChapters(tx, row);
@@ -182,9 +191,13 @@ export async function registerCompilation(d: DB, channelId: string, name: string
     if (l.state === "published") return { lesson: l, action: l.videoSha256 === v.videoSha256 ? "unchanged" : "published", linked: 0 };
 
     const keepTitle = !(titled && l.title === fallback);
+    // packaging: stored when it changed; a new winner title replaces the title (and so ends the approval)
+    const pkgChanged = !!packaging && JSON.stringify(packaging) !== JSON.stringify(l.packaging ?? null);
+    const pkgRetitle = pkgChanged && !!pkgTitle && pkgTitle !== packagingTitle(l.packaging) && pkgTitle !== l.title;
+    const pkgPatch: Partial<typeof lessons.$inferInsert> = pkgChanged ? { packaging, ...(pkgRetitle ? { title: pkgTitle! } : {}) } : {};
     if (l.videoSha256 !== v.videoSha256) {
       // a new build (or the first one, for a lesson the owner created): exactly what recordLessonBuild does on a rebuild
-      await tx.update(lessons).set({ ...v, ...(keepTitle ? {} : { title: titled! }), state: "ready_for_review", approvedHash: "", updatedAt: new Date() })
+      await tx.update(lessons).set({ ...v, ...(keepTitle ? {} : { title: titled! }), ...pkgPatch, state: "ready_for_review", approvedHash: "", updatedAt: new Date() })
         .where(eq(lessons.id, l.id));
       // a build the worker would still try (it can't, without the films toolchain) is no longer needed
       await tx.update(jobs).set({ status: "cancelled" })
@@ -206,6 +219,7 @@ export async function registerCompilation(d: DB, channelId: string, name: string
     if (!l.description && v.description) {
       Object.assign(fill, { description: v.description, approvedHash: "" }, keepTitle ? {} : { title: titled! }, l.state === "approved" ? { state: "ready_for_review" as const } : {});
     }
+    Object.assign(fill, pkgPatch, pkgRetitle ? { approvedHash: "", ...(l.state === "approved" ? { state: "ready_for_review" as const } : {}) } : {});
     if (!Object.keys(fill).length) return { lesson: l, action: "unchanged", linked: 0 };
     await tx.update(lessons).set({ ...fill, updatedAt: new Date() }).where(eq(lessons.id, l.id));
     const [row] = await tx.select().from(lessons).where(eq(lessons.id, l.id));
