@@ -123,7 +123,7 @@
  "thumbnailFile": "one-more-orbit-s2e05-cover.jpg",
  "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: Saturn with level rings sitting half-sunk in a huge transparent tank of water, the waterline crossing the planet (an illustration, a thought experiment).\nComposition: tank centred in the upper two thirds, Saturn at the waterline, empty indigo night around; all in the centre safe area.\nLighting and treatment: warm pale-gold planet, teal (#4FE3C6) water glow, indigo night (#0B0F2A), soft rim light, subtle grain.\nMood: wonder with a hint of doubt.\nText: \"Until it mixes.\" in a clean geometric sans (Lexend style), centred in the lower middle, white with the last word teal.\nScientific accuracy: Saturn's average density, about 0.69 g/cm3, is lower than water's 1.0, so it would float in a thought-experiment bathtub; real Saturn is mostly hydrogen and helium gas and would mix with water, not stay in one piece.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
  "shortsCover": {
-  "frameSeconds": 4.2,
+  "frameSeconds": 38.0,
   "text": "Until it mixes."
  },
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."

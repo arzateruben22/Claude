@@ -123,7 +123,7 @@
  "thumbnailFile": "one-more-orbit-s2e06-cover.jpg",
  "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: a single boot print pressed into fine grey lunar dust under a black sky, a small blue-green Earth far above (an illustration, not a photograph).\nComposition: the print large in the lower-centre foreground inside the safe area, the small Earth in the upper centre, empty black sky.\nLighting and treatment: low raking sunlight with long soft shadows across the dust, cool indigo night sky (#0B0F2A), faint teal rim (#4FE3C6), subtle grain.\nMood: quiet wonder.\nText: \"Still there?\" in a clean geometric sans (Lexend style), centred in the lower middle, white.\nScientific accuracy: the Moon has almost no atmosphere, so no wind or rain; footprints from the Apollo missions may still be there, and an orbiter has photographed the Apollo 11 landing site and tracks; do not claim certainty.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
  "shortsCover": {
-  "frameSeconds": 2.0,
+  "frameSeconds": 11.0,
   "text": "Still there?"
  },
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."

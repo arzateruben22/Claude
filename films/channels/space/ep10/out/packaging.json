@@ -123,7 +123,7 @@
  "thumbnailFile": "one-more-orbit-s2e04-cover.jpg",
  "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: a black hole with a thin bright ring (an illustration), and two small clock dials: one crisp and far from it, one motion-smeared close to the ring.\nComposition: black hole in the upper centre third; the crisp clock lower-left; the smeared clock beside the ring; all in the centre safe area.\nLighting and treatment: white-lemon ring (#F5D76E) against indigo night (#0B0F2A), teal (#4FE3C6) clock faces, faint lilac glow, shallow depth, subtle grain.\nMood: wonder and quiet disbelief.\nText: \"Both are right.\" in a clean geometric sans (Lexend style), centred in the lower middle, white.\nScientific accuracy: time runs slower close to a massive object, so a clock hovering near a black hole ticks slower as seen by a far-away watcher; both views are true; do not show anything falling in as if it were real footage.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
  "shortsCover": {
-  "frameSeconds": 4.2,
+  "frameSeconds": 7.0,
   "text": "Both are right."
  },
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
