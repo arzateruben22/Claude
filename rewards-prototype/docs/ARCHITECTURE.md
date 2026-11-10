@@ -113,21 +113,22 @@ route handler cannot grant anything.
 
 ### The twelve promises
 
-Each is enforced by the database; application checks exist only to give clearer
-messages. `test/db/schema.test.js` attacks every one with raw SQL.
+Each is enforced by the database except where its row says otherwise; application
+checks otherwise exist only to give clearer messages. `test/db/schema.test.js` attacks
+every one with raw SQL.
 
 | # | Promise |
 |---|---|
 | P1 | An approved claim has exactly one ledger award, and becomes approved **only** by that award being written. |
-| P2 | A duplicate submission can never be credited twice: one live claim per member + task + subject, one subject per video however its link is spelled, exceptions only after a credit, by an admin, with a reason. |
+| P2 | A duplicate submission can never be credited twice: one live claim per member + task + subject, exceptions only after a credit, by an admin, with a reason. *Reducing a link to its subject is application code, and has a known gap: see PE-01 in `../PROGRESS.md`.* |
 | P3 | No award without a reviewed or attested claim; the `earned` bucket grows only through such an award. |
 | P4 | The ledger is append-only. |
 | P5 | A correction can be undone once, mirrors its target and counts in its target's month; undoing an award revokes the claim. |
 | P6 | Engagement has no path to points (structural). |
 | P7 | Erasure really deletes, is all-or-nothing, and is the only way ledger rows or claims are deleted. |
-| P8 | Nobody credits themselves — by approval, bonus, adjustment or un-deduction. |
+| P8 | No account can approve the claims of, or write a positive entry for, the member it is attached to. *A rule about accounts, not people: it cannot stop one person who holds both an unattached admin account and a member account.* |
 | P9 | There is always an admin who can sign in. |
-| P10 | The audit trail cannot be rewritten and holds no addresses, links, reasons or evidence. |
+| P10 | The audit trail cannot be rewritten and holds no addresses or links. *Reasons and evidence text are kept out by `domain/audit.js`, not by the database.* |
 | P11 | No points bucket and no XP total goes below zero. |
 | P12 | "Verified" means a platform attested it; a decided claim's evidence and verification never change. |
 

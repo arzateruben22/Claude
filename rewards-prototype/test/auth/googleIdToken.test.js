@@ -221,8 +221,9 @@ test('nonce: the token must carry exactly the nonce this browser was given', asy
   for (const expectedNonce of [undefined, null, '', 0, true, [NONCE], { nonce: NONCE }]) {
     await refused(verify(token, { expectedNonce }), 'bad_nonce');
   }
-  // A token without a nonce does not match a missing expectation either.
+  // "Nothing" never equals "nothing": an absent or empty nonce on both sides is still a refusal.
   await refused(verify(await mint({ nonce: undefined }), { expectedNonce: undefined }), 'bad_nonce');
+  await refused(verify(await mint({ nonce: '' }), { expectedNonce: '' }), 'bad_nonce');
 });
 
 test('subject: `sub` must be text of 1 to 255 characters', async () => {

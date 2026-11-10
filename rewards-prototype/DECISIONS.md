@@ -35,12 +35,16 @@ approved challenges.
 Feedback is typed into the dashboard and read by the admin. It is deliberately not a
 YouTube/TikTok comment: rewarding a public comment would be rewarding engagement.
 
-**B3. The admin account should not be one of the three members.**
-Nobody can credit themselves: an admin attached to a member can neither approve that
-member's submissions nor give them a bonus, a positive adjustment or an un-deduction
-(database-enforced). With a single admin who is also a member, that member's
-submissions could never be approved. So either the admin account is separate from the
-members (what the sample data does), or there are two admins. **Owner's call.**
+**B3. Who is the admin? The admin account should not be one of the three members.**
+No account can credit the member it is attached to: an admin attached to a member can
+neither approve that member's submissions nor give them a bonus, a positive adjustment
+or an un-deduction (database-enforced). With a single admin who is also a member, that
+member's submissions could never be approved. So either the admin account is separate
+from the members (what the sample data does), or there are two admins.
+Be aware what this rule can and cannot do: it is a rule about *accounts*. If one person
+holds both a separate admin account and a member account, nothing technical stops them
+approving their own work — only a second admin does. **Owner's call:** who administers,
+and is a second reviewer wanted?
 
 **B4. "Earned" grows only through an approved submission.**
 A manual adjustment can take points away from either bucket but can add them only to
