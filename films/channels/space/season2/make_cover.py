@@ -1,5 +1,6 @@
 """Designed covers for a Season 2 final, built AFTER the mp4 (a cover must be newer than the render).
-usage: python3 -I make_cover.py <epdir> <name> <seconds> "<cover title>" "<accent word>" "<thumb text>" "<series line>"
+usage: python3 -I make_cover.py <epdir> <name> <seconds> "<cover text, 0-4 words, NOT the title>" "<accent word>" "<thumb text, 0-4 words>" "<unused>"
+PACKAGING.md rule: no series line, no badges; the text adds a layer the title does not repeat.
 Writes out/<name>-cover.jpg (1080x1920), -cover-480.jpg, -thumb.jpg (1280x720): a frame from the final, graded dark, title set in the channel's fonts."""
 import os, subprocess, sys, tempfile
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
@@ -48,7 +49,6 @@ big = hero.resize((1350, int(hh * 1.25)), Image.LANCZOS).crop((135, 0, 1215, int
 vf = Image.linear_gradient("L").rotate(180).resize(big.size).point(lambda v: 255 if v > 90 else int(v * 255 / 90)).filter(ImageFilter.GaussianBlur(4))
 c.paste(big, (0, 190), vf)
 d = ImageDraw.Draw(c)
-series_line(d, 70, 90, series, 38)
 words(d, title, accent, font(176, 800), 70, 1130, 940)
 c.save(os.path.join(out, f"{name}-cover.jpg"), quality=92)
 c.resize((480, 853), Image.LANCZOS).save(os.path.join(out, f"{name}-cover-480.jpg"), quality=88)
@@ -56,8 +56,6 @@ c.resize((480, 853), Image.LANCZOS).save(os.path.join(out, f"{name}-cover-480.jp
 t = Image.new("RGB", (1280, 720), (10, 12, 32)); hs = hero.resize((int(1080 * 700 / hh), 700), Image.LANCZOS).crop((190, 0, 880, 700))
 hm = Image.linear_gradient("L").rotate(90).resize(hs.size).point(lambda v: 255 if v > 150 else int(v * 255 / 150)); hm = hm.transpose(Image.FLIP_LEFT_RIGHT)
 t.paste(hs, (0, 10), hm); d = ImageDraw.Draw(t)
-d.rectangle((0, 0, 1280, 6), fill=TEAL)
 words(d, thumb, accent, font(104, 800), 690, 270, 560)
-series_line(d, 690, 150, "One More Orbit", 26); series_line(d, 690, 186, "Season 2 · Episode " + series.split(" ")[-1], 26)
-t.save(os.path.join(out, f"{name}-thumb.jpg"), quality=92)
+t.resize((1920, 1080), Image.LANCZOS).save(os.path.join(out, f"{name}-thumb.jpg"), quality=90, optimize=True)   # 16:9 export, 1920x1080, under 2 MB
 print("covers:", [f for f in os.listdir(out) if f.startswith(name) and f.endswith(".jpg")])

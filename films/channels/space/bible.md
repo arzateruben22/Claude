@@ -253,3 +253,12 @@ vo: Next: a planet where one day lasts longer than its *year*.
 - **Capacity:** three channels at 3–4 h each is 9–12 h of rendering a day on one 4-CPU box, one job at a time. Keep 5–7 episodes in hand per channel, or add machines.
 
 Scratch files: preset `/tmp/claude-0/-home-user-Claude/b65d3a2f-52c6-526e-b15b-5f369330bc42/scratchpad/series/lightminute-vacuum.json`, contrast check `/tmp/claude-0/-home-user-Claude/b65d3a2f-52c6-526e-b15b-5f369330bc42/scratchpad/series/space_contrast.py`.
+## Packaging (owner's standing rule, 10 Nov 2026)
+
+Every new episode and long video follows `PACKAGING.md` (copied here from `films/channels/PACKAGING.md`): per video write
+`out/packaging.json` (long video: `compilations/<name>/packaging.json`) with the single strongest hook, 5 titles on different
+curiosity mechanisms, 3 thumbnail concepts, the 3 best pairings scored 1-100 on 8 axes (creative judgment, not CTR), the
+winner plus 7 checks, a rendered winner thumbnail (16:9 export 1920x1080 JPG under 2 MB; 9:16 cover for shorts) and a
+self-contained ChatGPT image prompt. The YouTube title is the winner title alone (no series suffix; the series line lives in
+the description). The thumbnail never repeats the title, carries 0-4 words, no badges or series line, no fabricated cosmic threat.
+Tools here: `season2/pack.py` (spec JSON to packaging.json), `season2/make_cover.py` (plain covers/thumbs), `season2/make_posting.py`.
