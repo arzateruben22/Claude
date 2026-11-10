@@ -1,14 +1,14 @@
-Season 2: six everyday things, slowed down
+A Falling Slinky's Bottom Doesn't Move at First. Why?
 
 Everyday things, slowed down until the physics shows.
 
 Chapters
 0:00 The slinky that waits
-1:17 Spaghetti almost never breaks in two
-2:31 The nut that rises
-3:47 The ring a coffee drop leaves
-4:54 Listen to the cup fill
-6:06 The slow raindrop
+1:53 Spaghetti almost never breaks in two
+3:16 The nut that rises
+4:46 The ring a coffee drop leaves
+6:01 Listen to the cup fill
+7:20 The slow raindrop
 
 Sources (every number in these episodes is checked against a source)
 01 The slinky that waits

@@ -5,6 +5,7 @@
 //        [--out <channel>/compilations] [--cards-only] [--narration <dir>/narration.json] [--bridge 2]   (--bridge S: an S-second "Next: …" card between episodes, silent; default none)   (draws the cards and the thumbnail, then stops)
 //        [--height 1440|1080] (default 1440) [--crf 15] [--max-mb 90]
 //
+// --raw: play each episode's pre-delivery master (<episode>/build/final/9x16/master-audio.mp4) instead of its delivered file, so social-only additions on the delivered file (a held end card with a follow line) stay out of the long video.
 // Each episode's delivered 9:16 file (<episode>/out/*-9x16.mp4) plays whole, full height, in the middle
 // of a 16:9 frame drawn in the channel's own theme (2560×1440 by default: YouTube is widely reported to give
 // 1440p uploads its better encoder; the cards are drawn at that size, the episodes upscaled into the slot): the channel and the episode's title on the left,
@@ -53,7 +54,7 @@ const eps = String(A.episodes).split(",").map((id, k) => {
   const dir = path.join(chan, id.trim()), film = JSON.parse(fs.readFileSync(path.join(dir, "film.json"), "utf8"));
   const out = path.join(dir, "out"), mp4 = fs.existsSync(out) && fs.readdirSync(out).find((f) => /-9x16\.mp4$/.test(f));
   if (!mp4) die(`${id}: no delivered episode in ${path.relative(repo, out)} (render and assemble its final first)`);
-  const file = path.join(out, mp4), j = probe(file), v = j.streams.find((s) => s.codec_type === "video");
+  const file = A.raw ? path.join(dir, "build/final/9x16/master-audio.mp4") : path.join(out, mp4), j = probe(file), v = j.streams.find((s) => s.codec_type === "video");
   if (v.width !== 1080 || v.height !== 1920) die(`${id}: ${mp4} is ${v.width}×${v.height}, not 1080×1920`);
   const claims = fs.existsSync(path.join(dir, "claims.json")) ? JSON.parse(fs.readFileSync(path.join(dir, "claims.json"), "utf8")) : [];
   const series = plain(film.title && film.title.series) || "", num = (series.match(/(?:No\.|Season 2 · Episode)\s*\d+/) || [`No. ${String(k + 1).padStart(3, "0")}`])[0];
