@@ -1,0 +1,424 @@
+<title>Crew Rewards Preview</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;600;800&display=swap">
+<style>
+/* Layout: one phone-width column. A lit stage with three pedestals on top; the leaderboard,
+   the likes-and-comments tracker and the tools stack beneath. Single dark "game stage" look by choice. */
+:root {
+  color-scheme: dark;
+  --bg: #0b161d; --stage: #10222d; --surface: #132531; --raised: #1b3443; --line: #2a4859;
+  --fg: #e9f2f4; --muted: #93abb7;
+  --gold: #ffc54d; --mint: #57e0b6; --coral: #ff7d6e; --sky: #71c8ff;
+  --display: 'Unbounded', 'Trebuchet MS', system-ui, sans-serif;
+  --body: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --r: 18px;
+}
+html { background: var(--bg); }
+body { background: var(--bg); color: var(--fg); font: 400 15px/1.5 var(--body); }
+.app { max-width: 480px; margin: 0 auto; padding-block: 12px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 18px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+h1 { font-size: 20px; } h2 { font-size: 15px; } h3 { font-size: 13px; font-weight: 500; }
+p { margin: 0; } small, .muted { color: var(--muted); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; border-radius: 8px; }
+.num { font-family: var(--display); font-variant-numeric: tabular-nums; }
+
+.strip { background: #2b2410; color: var(--gold); border: 1px solid #5c4a17; border-radius: 12px; padding: 8px 12px; font-size: 13px; font-weight: 600; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.month { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; }
+.seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: var(--surface); border-radius: 14px; padding: 4px; }
+.seg button { border: 0; background: transparent; border-radius: 10px; padding: 9px 4px; font-weight: 800; font-size: 13px; color: var(--muted); min-height: 44px; }
+.seg button[aria-pressed="true"] { background: var(--raised); color: var(--fg); box-shadow: inset 0 0 0 1px var(--line); }
+.label { font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+/* the stage */
+.stage { background: radial-gradient(120% 90% at 50% 0%, #1d3f52 0%, var(--stage) 55%, var(--bg) 100%); border-radius: 26px; padding: 18px 8px 0; overflow: hidden; }
+.stage-row { display: grid; grid-template-columns: repeat(3, 1fr); align-items: end; gap: 4px; }
+.hero { border: 0; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.hero svg { width: 100%; max-width: 112px; height: auto; display: block; }
+.float { animation: float 5s ease-in-out infinite; }
+.hero:nth-child(2) .float { animation-delay: -1.6s; } .hero:nth-child(3) .float { animation-delay: -3.1s; }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+.shadow { width: 54%; height: 8px; border-radius: 50%; background: #000; opacity: .35; margin-top: 2px; }
+.ped { width: 100%; background: linear-gradient(180deg, var(--raised), #122633); border: 1px solid var(--line); border-bottom: 0; border-radius: 14px 14px 0 0; margin-top: 6px; padding: 8px 4px 10px; text-align: center; transition: height .35s ease; display: flex; flex-direction: column; gap: 1px; justify-content: flex-start; }
+.ped .name { font-weight: 800; font-size: 14px; }
+.ped .pts { font-size: 15px; color: var(--gold); }
+.ped .tier { font-size: 11px; color: var(--muted); font-weight: 600; }
+.rank { width: 24px; height: 24px; border-radius: 50%; display: inline-grid; place-items: center; font: 700 11px var(--display); background: var(--line); color: var(--fg); margin: 0 auto 2px; }
+.rank.r1 { background: var(--gold); color: #2a1e00; }
+.hero[aria-expanded="true"] .ped { border-color: var(--sky); }
+.you { font-size: 10px; font-weight: 800; letter-spacing: .08em; color: var(--mint); text-transform: uppercase; }
+.glow .float { animation: pop .9s ease; }
+@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.14); } 100% { transform: scale(1); } }
+
+.panel { background: var(--surface); border-radius: var(--r); padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.panel.open { border: 1px solid var(--sky); }
+.row { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.row > .grow { flex: 1; min-width: 0; }
+.split { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tile { background: var(--raised); border-radius: 12px; padding: 10px; min-width: 0; }
+.tile .num { font-size: 17px; display: block; }
+.bar { height: 8px; border-radius: 99px; background: var(--raised); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--mint); border-radius: 99px; transition: width .4s ease; }
+.bar.cap > i { background: var(--gold); }
+.ladder { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.ladder span { text-align: center; font-size: 11px; font-weight: 700; padding: 6px 2px; border-radius: 9px; background: var(--raised); color: var(--muted); }
+.ladder span.on { background: var(--mint); color: #05281e; }
+.ladder span.done { color: var(--mint); }
+.list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.item { background: var(--raised); border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.item p { overflow-wrap: anywhere; }
+.chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800; border-radius: 99px; padding: 3px 9px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.chip.good { color: var(--mint); border-color: #2c6b59; } .chip.warn { color: var(--gold); border-color: #6a5420; }
+.chip.bad { color: var(--coral); border-color: #7a3a33; } .chip.info { color: var(--sky); border-color: #2f5d78; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.lb { display: grid; grid-template-columns: 28px 1fr auto auto; gap: 10px; align-items: center; padding: 10px 12px; background: var(--raised); border-radius: 12px; }
+.lb .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+.lb .xp { color: var(--mint); font-size: 12px; font-weight: 700; }
+
+.btn { border: 1px solid var(--line); background: var(--raised); border-radius: 12px; padding: 10px 14px; font-weight: 800; font-size: 14px; min-height: 44px; }
+.btn.primary { background: var(--mint); color: #05281e; border-color: var(--mint); }
+.btn.danger { color: var(--coral); border-color: #7a3a33; }
+.btn.small { min-height: 36px; padding: 6px 10px; font-size: 12px; }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field input, .field select, .field textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; width: 100%; box-sizing: border-box; min-height: 44px; }
+.field textarea { min-height: 96px; resize: vertical; }
+.pills { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pills button { border: 1px solid var(--line); background: var(--bg); border-radius: 12px; padding: 10px; text-align: left; font-weight: 700; font-size: 13px; min-height: 44px; }
+.pills button[aria-pressed="true"] { border-color: var(--mint); background: #0f2d2a; }
+.err { color: var(--coral); font-weight: 700; font-size: 13px; }
+.note { font-size: 13px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 10px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.stats .tile small { display: block; font-size: 11px; font-weight: 700; }
+.spark { width: 100%; height: 22px; display: block; margin-top: 4px; }
+details { background: var(--surface); border-radius: var(--r); padding: 14px 16px; }
+summary { font-family: var(--display); font-size: 14px; cursor: pointer; min-height: 28px; }
+.toast { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); align-self: center; background: #f1f7f8; color: #0b161d; font-weight: 800; font-size: 14px; border-radius: 14px; padding: 10px 14px; box-shadow: 0 8px 30px #0008; max-width: 100%; text-align: center; }
+footer { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 10px; }
+@media (prefers-reduced-motion: reduce) { .float, .glow .float { animation: none; } .ped, .bar > i { transition: none; } }
+.still .float, .still .glow .float { animation: none; } .still .ped, .still .bar > i { transition: none; }
+</style>
+
+<div class="app" id="app"></div>
+
+<script>
+(() => {
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const n = (x) => Number(x).toLocaleString('en-US');
+  const TIERS = [{ level: 1, name: 'Rookie', min: 0 }, { level: 2, name: 'Rising', min: 100 }, { level: 3, name: 'Pro', min: 250 }, { level: 4, name: 'Elite', min: 500 }, { level: 5, name: 'Legend', min: 1000 }];
+  const TASKS = {
+    feedback: { label: 'Constructive feedback', hint: 'Private notes to the creator on one video', pts: 25, xp: 25 },
+    creative: { label: 'Original creative submission', hint: 'A video you made yourself', pts: 25, xp: 40 },
+  };
+  const CAP = 300, DAILY = 5, MIN = 80;
+  const MEMBERS = [
+    { id: 'daryl', name: 'Daryl', color: '#ff8f5a', shade: '#c7592b', linked: true },
+    { id: 'leo', name: 'Leo', color: '#7b8cff', shade: '#4a58c9', linked: true },
+    { id: 'alex', name: 'Alex', color: '#f06fb1', shade: '#b83d7d', linked: false },
+  ];
+  const who = (id) => MEMBERS.find((m) => m.id === id);
+
+  const fresh = () => ({
+    viewer: 'leo', open: 'leo', rejecting: null, task: 'feedback', error: '', toast: '', glow: null, still: false, seq: 40,
+    today: { daryl: 0, leo: 1, alex: 1 }, quotaHit: false,
+    ledger: [
+      { id: 1, m: 'leo', kind: 'award', bucket: 'earned', pts: 200, xp: 260, label: 'Earlier approved contributions', at: 'Oct' },
+      { id: 2, m: 'daryl', kind: 'award', bucket: 'earned', pts: 100, xp: 100, label: 'Earlier approved contributions', at: 'Oct' },
+      { id: 3, m: 'alex', kind: 'award', bucket: 'earned', pts: 50, xp: 60, label: 'Earlier approved contributions', at: 'Oct' },
+      { id: 4, m: 'leo', kind: 'bonus', bucket: 'bonus', pts: 20, xp: 0, label: 'Bonus: October challenge', at: 'Nov 1' },
+      { id: 5, m: 'daryl', kind: 'bonus', bucket: 'bonus', pts: 10, xp: 0, label: 'Bonus: October challenge', at: 'Nov 1' },
+      { id: 6, m: 'daryl', kind: 'award', bucket: 'earned', pts: 25, xp: 40, label: 'Original creative submission', video: 'Street tacos at midnight', at: 'Nov 4', claim: 11 },
+      { id: 7, m: 'leo', kind: 'award', bucket: 'earned', pts: 25, xp: 25, label: 'Constructive feedback', video: 'Street tacos at midnight', at: 'Nov 6', claim: 12 },
+      { id: 8, m: 'alex', kind: 'award', bucket: 'earned', pts: 25, xp: 25, label: 'Constructive feedback', video: 'Garage studio tour', at: 'Nov 7', claim: 13 },
+    ],
+    claims: [
+      { id: 11, m: 'daryl', task: 'creative', subject: 'v1', link: 'youtube.com/shorts/demoShort01', verif: 'verified', decision: 'approved', at: 'Nov 4' },
+      { id: 12, m: 'leo', task: 'feedback', subject: 'v1', text: 'The first three seconds hook well. The captions cover the salsa close-up though — move them up, and cut the second drone shot so the bite lands sooner.', verif: 'reviewed', decision: 'approved', at: 'Nov 6' },
+      { id: 13, m: 'alex', task: 'feedback', subject: 'v2', text: 'Great walkthrough. The audio dips when you turn to the desk; a lav mic or a quick voiceover over that part would fix it. Thumbnail text is hard to read on a phone.', verif: 'reviewed', decision: 'approved', at: 'Nov 7' },
+      { id: 14, m: 'daryl', task: 'feedback', subject: 'v2', text: 'Looks good, nice job on this one!', verif: 'unverified', decision: 'rejected', note: 'Too general — say what you would change.', at: 'Nov 8' },
+      { id: 15, m: 'alex', task: 'feedback', subject: 'v1', text: 'Love the energy. The middle drags a little between the second and third stand; trimming five seconds there keeps the pace. End card could show the map pin for longer.', verif: 'unverified', decision: 'pending', at: 'Today' },
+      { id: 16, m: 'leo', task: 'creative', subject: 'link:demoOwnL01', link: 'youtube.com/watch?v=demoOwnL01', verif: 'verified', decision: 'pending', at: 'Today' },
+    ],
+    videos: [
+      { id: 'v1', title: 'Street tacos at midnight', kind: 'Short', platform: 'YouTube', owner: 'daryl', views: 12950, likes: 811, comments: 37, tl: [640, 690, 720, 745, 770, 790, 811], tc: [22, 25, 27, 30, 33, 35, 37], spotted: ['leo', 'alex'], at: 'Today 9:12 AM' },
+      { id: 'v2', title: 'Garage studio tour', kind: 'Video', platform: 'YouTube', owner: 'leo', views: 1840, likes: 96, comments: 14, tl: [61, 70, 74, 80, 88, 93, 96], tc: [6, 8, 9, 11, 12, 13, 14], spotted: ['daryl'], at: 'Today 9:12 AM' },
+      { id: 'v3', title: 'One-take trick shot', kind: 'Short', platform: 'YouTube', owner: 'alex', views: 4210, likes: null, comments: 9, tl: null, tc: [2, 3, 5, 6, 7, 9, 9], spotted: [], at: 'Today 9:12 AM' },
+      { id: 'v4', title: 'Beach day recap', kind: 'Clip', platform: 'TikTok', owner: 'daryl', views: 30400, likes: 2210, comments: 88, tl: [1500, 1720, 1890, 2010, 2100, 2170, 2210], tc: [51, 60, 66, 73, 80, 85, 88], spotted: null, at: 'Today 9:12 AM' },
+    ],
+    audit: ['Nov 8 · Admin rejected a submission', 'Nov 7 · Admin approved a submission (+25)', 'Nov 6 · Admin approved a submission (+25)'],
+  });
+  let S = fresh();
+
+  // ---- numbers come only from the ledger ----
+  const live = (e) => !e.reversedBy && e.kind !== 'reversal';
+  const bal = (id) => {
+    const mine = S.ledger.filter((e) => e.m === id);
+    const sum = (f) => mine.reduce((t, e) => t + f(e), 0);
+    const earned = sum((e) => (e.bucket === 'earned' ? e.pts : 0)), bonus = sum((e) => (e.bucket === 'bonus' ? e.pts : 0));
+    const pending = S.claims.filter((c) => c.m === id && c.decision === 'pending').reduce((t, c) => t + TASKS[c.task].pts, 0);
+    return { earned, bonus, pending, total: earned + bonus, xp: sum((e) => e.xp) };
+  };
+  const capUsed = (id) => S.ledger.filter((e) => e.m === id && live(e) && e.pts > 0 && e.at !== 'Oct').reduce((t, e) => t + e.pts, 0);
+  const tierOf = (xp) => { const t = [...TIERS].reverse().find((x) => xp >= x.min); const next = TIERS[t.level] || null; return { ...t, next, progress: next ? (xp - t.min) / (next.min - t.min) : 1 }; };
+  const ranked = () => {
+    const rows = MEMBERS.map((m) => ({ ...m, ...bal(m.id) })).sort((a, b) => b.total - a.total || b.xp - a.xp);
+    let place = 0;
+    return rows.map((r, i) => { if (i === 0 || rows[i - 1].total !== r.total || rows[i - 1].xp !== r.xp) place = i + 1; return { ...r, rank: place }; });
+  };
+  const videoTitle = (c) => (c.subject.startsWith('v') ? S.videos.find((v) => v.id === c.subject).title : c.link);
+  const isAdmin = () => S.viewer === 'admin';
+
+  // ---- drawings ----
+  function avatar(m, level) {
+    const head = m.id === 'leo' ? `<rect x="36" y="18" width="48" height="46" rx="16" fill="${m.color}"/>` : m.id === 'alex' ? `<path d="M60 16 84 30v24L60 68 36 54V30z" fill="${m.color}"/>` : `<circle cx="60" cy="42" r="26" fill="${m.color}"/>`;
+    return `<svg viewBox="0 0 120 132" role="img" aria-label="${m.name}, stage ${level} avatar">
+      ${level >= 4 ? `<circle cx="60" cy="66" r="56" fill="none" stroke="${m.color}" stroke-opacity=".45" stroke-width="3" stroke-dasharray="3 9"/>` : ''}
+      ${level >= 5 ? `<path d="M30 78 4 58l8 34zM90 78l26-20-8 34z" fill="${m.color}" fill-opacity=".7"/>` : ''}
+      ${level >= 3 ? `<path d="M34 70h52l10 44H24z" fill="${m.shade}"/>` : ''}
+      <rect x="34" y="62" width="52" height="54" rx="22" fill="${m.shade}"/>
+      <rect x="44" y="76" width="32" height="22" rx="8" fill="#0b161d" fill-opacity=".28"/>
+      ${head}
+      <circle cx="51" cy="40" r="6" fill="#fff"/><circle cx="69" cy="40" r="6" fill="#fff"/>
+      <circle cx="52" cy="41" r="2.6" fill="#0b161d"/><circle cx="70" cy="41" r="2.6" fill="#0b161d"/>
+      <path d="M52 52q8 6 16 0" fill="none" stroke="#0b161d" stroke-width="2.5" stroke-linecap="round"/>
+      ${level >= 2 ? `<rect x="35" y="27" width="50" height="6" rx="3" fill="#ffc54d"/>` : ''}
+      ${level >= 5 ? `<path d="M44 16l6-12 10 9 10-9 6 12z" fill="#ffc54d"/>` : ''}
+      ${level >= 3 ? `<path d="M60 80l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6-4.5-4 6-1z" fill="#ffc54d"/>` : ''}
+    </svg>`;
+  }
+  const piggy = `<svg viewBox="0 0 64 48" width="56" height="42" aria-hidden="true"><ellipse cx="30" cy="26" rx="22" ry="16" fill="#f7a8c4"/><circle cx="50" cy="24" r="8" fill="#f7a8c4"/><ellipse cx="55" cy="25" rx="5" ry="4" fill="#e9799f"/><path d="M40 10l5-7 3 9z" fill="#e9799f"/><rect x="16" y="38" width="6" height="8" rx="2" fill="#e9799f"/><rect x="36" y="38" width="6" height="8" rx="2" fill="#e9799f"/><rect x="22" y="9" width="14" height="3" rx="1.5" fill="#7d3550"/><circle cx="47" cy="20" r="1.6" fill="#3b1626"/><path d="M30 2l1.6 3.3 3.6.5-2.6 2.5.6 3.6L30 10.2l-3.2 1.7.6-3.6-2.6-2.5 3.6-.5z" fill="#ffc54d"/></svg>`;
+  const spark = (arr, color) => {
+    if (!arr) return '';
+    const lo = Math.min(...arr), hi = Math.max(...arr), span = hi - lo || 1;
+    const pts = arr.map((v, i) => `${(i / (arr.length - 1)) * 96 + 2},${20 - ((v - lo) / span) * 16}`).join(' ');
+    return `<svg class="spark" viewBox="0 0 100 22" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  };
+  const verifChip = (c) => c.verif === 'verified' ? '<span class="chip good">Verified (simulated)</span>' : c.verif === 'reviewed' ? '<span class="chip info">Reviewed by an admin</span>' : '<span class="chip">Not verified</span>';
+  const decisionChip = (c) => ({ pending: '<span class="chip warn">Pending</span>', approved: '<span class="chip good">Approved</span>', rejected: '<span class="chip bad">Rejected</span>', revoked: '<span class="chip bad">Revoked</span>', withdrawn: '<span class="chip">Withdrawn</span>' }[c.decision]);
+
+  // ---- sections ----
+  function stage(rows) {
+    const height = { 1: 96, 2: 80, 3: 68 };
+    return `<section class="stage" aria-label="The crew"><div class="stage-row">${MEMBERS.map((m) => {
+      const r = rows.find((x) => x.id === m.id), t = tierOf(r.xp);
+      return `<button class="hero ${S.glow === m.id ? 'glow' : ''}" data-act="open" data-id="${m.id}" aria-expanded="${S.open === m.id}" data-testid="member-card-${m.id}">
+        <span class="float">${avatar(m, t.level)}</span><span class="shadow"></span>
+        <span class="ped" style="height:${height[r.rank] || 68}px">
+          <span class="rank ${r.rank === 1 ? 'r1' : ''}">${r.rank}</span>
+          <span class="name">${m.name}${S.viewer === m.id ? ' <span class="you">you</span>' : ''}</span>
+          <span class="pts num">${n(r.total)}</span><span class="tier">${t.name}</span>
+        </span></button>`;
+    }).join('')}</div></section>`;
+  }
+
+  function detail(rows) {
+    if (!S.open) return '<p class="muted" style="text-align:center">Tap an avatar to open their piggy bank.</p>';
+    const m = who(S.open), r = rows.find((x) => x.id === m.id), t = tierOf(r.xp);
+    const own = S.viewer === m.id, canSeeAll = own || isAdmin();
+    const activity = S.ledger.filter((e) => e.m === m.id && live(e) && (e.kind === 'award' || e.kind === 'bonus')).slice(-4).reverse();
+    const claims = S.claims.filter((c) => c.m === m.id).slice().reverse();
+    const used = capUsed(m.id);
+    return `<section class="panel open" data-testid="member-detail-${m.id}">
+      <div class="row">${piggy}<div class="grow"><h2>${m.name}'s piggy bank</h2><span class="num" style="font-size:26px;color:var(--gold)">${n(r.total)}</span> <small>points</small></div><span class="chip info">Rank ${r.rank}</span></div>
+      <div class="split">
+        <div class="tile"><span class="num">${n(r.earned)}</span><small>earned</small></div>
+        <div class="tile"><span class="num">${n(r.bonus)}</span><small>bonus</small></div>
+        <div class="tile"><span class="num">${n(r.pending)}</span><small>pending</small></div>
+      </div>
+      <div><div class="row" style="justify-content:space-between"><span class="label">${t.name} · ${n(r.xp)} XP</span><small>${t.next ? `${n(t.next.min - r.xp)} XP to ${t.next.name}` : 'Top stage'}</small></div>
+        <div class="bar" style="margin-top:6px"><i style="width:${Math.round(t.progress * 100)}%"></i></div></div>
+      <div class="ladder">${TIERS.map((x) => `<span class="${x.level === t.level ? 'on' : x.level < t.level ? 'done' : ''}">${x.name}</span>`).join('')}</div>
+      <div><span class="label">Recent activity</span><ul class="list" style="margin-top:8px">${activity.map((e) => `<li class="item"><div class="row"><span class="grow"><b>${esc(e.label)}</b>${e.video ? `<br><small>${esc(e.video)}</small>` : ''}</span><span class="num" style="color:var(--gold)">+${e.pts}</span></div><small>${e.at}${e.xp ? ` · +${e.xp} XP` : ''}</small></li>`).join('') || '<li class="muted">Nothing yet.</li>'}</ul></div>
+      ${canSeeAll ? `<div><div class="row" style="justify-content:space-between"><span class="label">This month's cap</span><small>${n(used)} of ${CAP} points</small></div><div class="bar cap" style="margin-top:6px"><i style="width:${Math.min(100, Math.round((used / CAP) * 100))}%"></i></div></div>
+      <div><span class="label">${own ? 'Your submissions' : `${m.name}'s submissions`}</span><ul class="list" style="margin-top:8px">${claims.map((c) => `<li class="item" data-testid="claim-row-${c.id}"><div class="chips">${decisionChip(c)}${verifChip(c)}</div><b>${TASKS[c.task].label}</b><small>${esc(videoTitle(c))} · ${c.at}</small>${c.text ? `<p class="note">${esc(c.text)}</p>` : ''}${c.note ? `<p class="err">Admin note: ${esc(c.note)}</p>` : ''}${own && c.decision === 'pending' ? `<div class="btns"><button class="btn small" data-act="withdraw" data-id="${c.id}">Withdraw</button></div>` : ''}</li>`).join('') || '<li class="muted">No submissions yet.</li>'}</ul></div>` : `<p class="note">Only ${m.name} and the admin can see ${m.name}'s submissions, notes and deductions.</p>`}
+      ${own ? contribute(m) : ''}
+    </section>`;
+  }
+
+  function contribute(m) {
+    const left = DAILY - S.today[m.id];
+    const others = S.videos.filter((v) => v.owner !== m.id);
+    return `<form class="panel" style="background:var(--raised)" data-form="contribute" data-testid="contribute-form">
+      <div class="row" style="justify-content:space-between"><h2>Contribute</h2><small>${left} of ${DAILY} left today</small></div>
+      <div class="pills">${Object.entries(TASKS).map(([k, t]) => `<button type="button" data-act="task" data-id="${k}" aria-pressed="${S.task === k}">${t.label}<br><small>+${t.pts} points · +${t.xp} XP</small></button>`).join('')}</div>
+      ${S.task === 'feedback' ? `<label class="field"><span class="label">Which video</span><select id="c-video">${others.map((v) => `<option value="${v.id}">${esc(v.title)} — ${who(v.owner).name}</option>`).join('')}</select></label>
+        <label class="field"><span class="label">Your private feedback (at least ${MIN} characters)</span><textarea id="c-text" placeholder="What worked, and one thing you would change…"></textarea></label>
+        <small>Only the creator's admin reads this. It is not a public comment.</small>`
+      : `<label class="field"><span class="label">Link to a video you made</span><input id="c-link" inputmode="url" placeholder="https://youtu.be/…"></label>
+        <small>${m.linked ? 'Your YouTube channel is linked, so ownership can be checked.' : 'Your YouTube channel is not linked yet, so this cannot be checked automatically. An admin can still review it.'}</small>`}
+      ${S.error ? `<p class="err" role="alert" data-testid="contribute-error">${esc(S.error)}</p>` : ''}
+      <button class="btn primary" type="submit">Submit for review</button>
+    </form>`;
+  }
+
+  function leaderboard(rows) {
+    return `<section class="panel" data-testid="leaderboard"><h2>Leaderboard</h2><div class="list">${rows.map((r) => `<div class="lb" data-testid="leaderboard-row-${r.id}"><span class="rank ${r.rank === 1 ? 'r1' : ''}">${r.rank}</span><span><span class="dot" style="background:${r.color}"></span><b>${r.name}</b> <small>${tierOf(r.xp).name}</small></span><span class="xp">${n(r.xp)} XP</span><span class="num" style="color:var(--gold)">${n(r.total)}</span></div>`).join('')}</div>
+      <small>Points come from approved contributions and bonuses. Ties share a rank.</small></section>`;
+  }
+
+  function tracker() {
+    const likes = S.videos.reduce((t, v) => t + (v.likes || 0), 0), comments = S.videos.reduce((t, v) => t + v.comments, 0);
+    const weekL = S.videos.reduce((t, v) => t + (v.tl ? v.tl[6] - v.tl[0] : 0), 0), weekC = S.videos.reduce((t, v) => t + (v.tc[6] - v.tc[0]), 0);
+    return `<section class="panel" data-testid="videos-block"><div><h2>Likes &amp; comments tracker</h2><small>From YouTube and TikTok. For information only — these numbers never change points, XP or rank.</small></div>
+      <div class="split"><div class="tile"><span class="num">${n(likes)}</span><small>likes · +${n(weekL)} this week</small></div><div class="tile"><span class="num">${n(comments)}</span><small>comments · +${n(weekC)} this week</small></div><div class="tile"><span class="num">${S.videos.length}</span><small>videos tracked</small></div></div>
+      <div class="list">${S.videos.map((v) => `<article class="item" data-testid="video-stats-${v.id}">
+        <div class="row"><div class="grow"><b>${esc(v.title)}</b><br><small>${who(v.owner).name} · ${v.platform} ${v.kind}</small></div>${isAdmin() ? `<button class="btn small" data-act="refresh" data-id="${v.id}">Refresh</button>` : ''}</div>
+        <div class="stats">
+          <div class="tile"><span class="num">${n(v.views)}</span><small>views</small></div>
+          <div class="tile"><span class="num">${v.likes === null ? '—' : n(v.likes)}</span><small>${v.likes === null ? 'likes hidden by owner' : 'likes'}</small>${spark(v.tl, '#ffc54d')}</div>
+          <div class="tile"><span class="num">${n(v.comments)}</span><small>comments</small>${spark(v.tc, '#57e0b6')}</div>
+        </div>
+        <div class="chips">${v.spotted === null ? '<span class="chip">TikTok does not show apps who commented</span>' : v.spotted.length ? v.spotted.map((id) => `<span class="chip info">${who(id).name} commented</span>`).join('') : '<span class="chip">No crew comments found</span>'}</div>
+        <small>${v.fail ? `<span class="err">${esc(v.fail)}</span> ` : ''}Sample data · last updated ${v.at}</small>
+      </article>`).join('')}</div>
+      <p class="note">Who liked a video cannot be tracked: YouTube and TikTok only share the total, never the names. Comments can be matched to a crew member only when that member has linked their channel and the comment is public.</p></section>`;
+  }
+
+  function admin() {
+    const queue = S.claims.filter((c) => c.decision === 'pending');
+    const entries = S.ledger.slice(-7).reverse();
+    return `<section class="panel" data-testid="review-queue"><div class="row" style="justify-content:space-between"><h2>Review queue</h2><span class="chip warn">${queue.length} waiting</span></div>
+      <div class="list">${queue.map((c) => `<div class="item"><div class="row"><span class="grow"><b>${who(c.m).name}</b> · ${TASKS[c.task].label}<br><small>${esc(videoTitle(c))}</small></span><span class="num" style="color:var(--gold)">+${TASKS[c.task].pts}</span></div>
+        <div class="chips">${verifChip(c)}</div>${c.text ? `<p class="note">${esc(c.text)}</p>` : `<small>${c.verif === 'verified' ? 'The video is on the member’s linked channel (simulated check).' : 'Could not be checked automatically. Review by hand.'}</small>`}
+        ${S.rejecting === c.id ? `<label class="field"><span class="label">Why? The member will see this.</span><input id="r-note" placeholder="Say what to change"></label><div class="btns"><button class="btn danger" data-act="reject-go" data-id="${c.id}">Confirm rejection</button><button class="btn" data-act="reject-cancel">Cancel</button></div>`
+        : `<div class="btns"><button class="btn primary" data-act="approve" data-id="${c.id}" data-testid="review-approve-${c.id}">Approve</button><button class="btn danger" data-act="reject" data-id="${c.id}" data-testid="review-reject-${c.id}">Reject</button></div>`}</div>`).join('') || '<p class="muted">Nothing waiting.</p>'}</div></section>
+    <section class="panel"><h2>Ledger</h2>
+      <div class="list">${entries.map((e) => `<div class="item"><div class="row"><span class="grow"><b>${who(e.m).name}</b> · ${esc(e.label)}<br><small>#${e.id} · ${e.at} · ${e.bucket}${e.reversedBy ? ' · reversed' : ''}</small></span><span class="num" style="color:${e.pts < 0 ? 'var(--coral)' : 'var(--gold)'}">${e.pts > 0 ? '+' : ''}${e.pts}</span>${e.kind !== 'reversal' && !e.reversedBy ? `<button class="btn small" data-act="reverse" data-id="${e.id}" data-testid="ledger-reverse-${e.id}">Undo</button>` : ''}</div></div>`).join('')}</div>
+      <form class="panel" style="background:var(--raised)" data-form="adjust" data-testid="ledger-adjust-form"><h3>Bonus or correction</h3>
+        <div class="row"><label class="field grow"><span class="label">Member</span><select id="a-member">${MEMBERS.map((m) => `<option value="${m.id}">${m.name}</option>`).join('')}</select></label>
+        <label class="field" style="width:110px"><span class="label">Points (+/−)</span><input id="a-points" type="number" step="1" value="10"></label></div>
+        <label class="field"><span class="label">Reason (kept on record)</span><input id="a-reason" placeholder="e.g. November challenge winner"></label>
+        ${S.error ? `<p class="err" role="alert">${esc(S.error)}</p>` : ''}
+        <button class="btn" type="submit">Apply</button><small>Adding goes to “bonus”. “Earned” only grows when a submission is approved.</small></form></section>
+    <section class="panel"><h2>Audit trail</h2><ul class="list">${S.audit.slice(0, 6).map((a) => `<li><small>${esc(a)}</small></li>`).join('')}</ul></section>`;
+  }
+
+  function render() {
+    const rows = ranked();
+    const app = document.getElementById('app');
+    app.className = `app${S.still ? ' still' : ''}`;
+    app.innerHTML = `
+      <div class="strip" data-testid="demo-banner">Clickable preview with sample data. Nothing here is live, and sign-in is skipped.</div>
+      <header class="top"><h1>Crew Rewards</h1><span class="month">November</span></header>
+      <div><span class="label">Preview as</span><div class="seg" style="margin-top:6px" role="group" aria-label="Preview as">${[...MEMBERS, { id: 'admin', name: 'Admin' }].map((m) => `<button data-act="viewer" data-id="${m.id}" aria-pressed="${S.viewer === m.id}">${m.name}</button>`).join('')}</div></div>
+      ${stage(rows)}${detail(rows)}${leaderboard(rows)}${tracker()}${isAdmin() ? admin() : ''}
+      <details data-testid="capabilities"><summary>What can and cannot be checked</summary><ul class="list" style="margin-top:10px">
+        <li><b>Who liked a video</b> — not possible. Platforms share totals only.</li>
+        <li><b>Who commented</b> — sometimes, on YouTube, for members who linked their channel. Never on TikTok.</li>
+        <li><b>That a video is yours</b> — yes on YouTube, once your channel is linked.</li>
+        <li><b>Private feedback</b> — read and approved by an admin.</li></ul></details>
+      <footer><p data-testid="disclaimer">Points are virtual. They have no cash value, cannot be redeemed or withdrawn, and are not a promise of future payment. Likes, comments and views are shown for information and never earn points.</p>
+        <div class="btns"><button class="btn small" data-act="motion">${S.still ? 'Turn motion on' : 'Reduce motion'}</button><button class="btn small" data-act="reset">Reset preview</button></div>
+        <small>Stage names, thresholds and avatar art are placeholders.</small></footer>
+      ${S.toast ? `<div class="toast" role="status">${esc(S.toast)}</div>` : ''}`;
+  }
+
+  // ---- actions ----
+  let toastTimer;
+  const toast = (msg) => { S.toast = msg; clearTimeout(toastTimer); toastTimer = setTimeout(() => { S.toast = ''; S.glow = null; render(); }, 3200); };
+  const log = (line) => S.audit.unshift(`Today · ${line}`);
+  const val = (id) => (document.getElementById(id) ? document.getElementById(id).value.trim() : '');
+
+  const actions = {
+    viewer(id) { S.viewer = id; S.error = ''; S.rejecting = null; if (id !== 'admin') S.open = id; },
+    open(id) { S.open = S.open === id ? null : id; S.error = ''; },
+    task(id) { S.task = id; S.error = ''; },
+    motion() { S.still = !S.still; },
+    reset() { S = fresh(); },
+    withdraw(id) { const c = S.claims.find((x) => x.id === Number(id)); c.decision = 'withdrawn'; log(`${who(c.m).name} withdrew a submission`); toast('Withdrawn.'); },
+    reject(id) { S.rejecting = Number(id); },
+    'reject-cancel'() { S.rejecting = null; },
+    'reject-go'(id) {
+      const note = val('r-note');
+      if (note.length < 3) return toast('Add a short reason first.');
+      const c = S.claims.find((x) => x.id === Number(id)); c.decision = 'rejected'; c.note = note; S.rejecting = null;
+      log('Admin rejected a submission'); toast(`Rejected. ${who(c.m).name} can fix it and send it again.`);
+    },
+    approve(id) {
+      const c = S.claims.find((x) => x.id === Number(id)), t = TASKS[c.task], m = who(c.m);
+      if (c.decision !== 'pending') return;
+      if (capUsed(c.m) + t.pts > CAP) return toast(`${m.name} has reached this month's cap of ${CAP} points. Nothing was changed.`);
+      const before = tierOf(bal(c.m).xp).level;
+      if (c.verif === 'unverified') c.verif = 'reviewed';
+      c.decision = 'approved';
+      S.ledger.push({ id: ++S.seq, m: c.m, kind: 'award', bucket: 'earned', pts: t.pts, xp: t.xp, label: t.label, video: c.subject.startsWith('v') ? videoTitle(c) : undefined, at: 'Today', claim: c.id });
+      log(`Admin approved a submission (+${t.pts})`);
+      const after = tierOf(bal(c.m).xp); S.glow = c.m;
+      toast(after.level > before ? `${m.name} evolved to ${after.name}!` : `Approved. ${m.name} gets ${t.pts} points — one ledger entry written.`);
+    },
+    reverse(id) {
+      const e = S.ledger.find((x) => x.id === Number(id)), b = bal(e.m);
+      if (b[e.bucket] - e.pts < 0 || b.xp - e.xp < 0) return toast('That would take the balance below zero. Nothing was changed.');
+      const rev = { id: ++S.seq, m: e.m, kind: 'reversal', bucket: e.bucket, pts: -e.pts, xp: -e.xp, label: `Undo of #${e.id}`, at: 'Today' };
+      S.ledger.push(rev); e.reversedBy = rev.id;
+      if (e.claim) S.claims.find((c) => c.id === e.claim).decision = 'revoked';
+      log(`Admin undid ledger entry #${e.id}`); toast('Undone. An entry can only be undone once.');
+    },
+    refresh(id) {
+      const v = S.videos.find((x) => x.id === id);
+      if (v.id === 'v2' && !S.quotaHit) { S.quotaHit = true; v.fail = 'Could not refresh: YouTube’s daily limit is used up.'; return toast('Refresh failed. Showing the last saved numbers.'); }
+      v.fail = ''; const dl = v.likes === null ? 0 : 3 + (v.views % 7), dc = 1 + (v.views % 3);
+      v.views += 40 + (v.views % 60); if (v.likes !== null) { v.likes += dl; v.tl = [...v.tl.slice(1), v.likes]; } v.comments += dc; v.tc = [...v.tc.slice(1), v.comments]; v.at = 'just now';
+      toast('Numbers refreshed. Points did not change.');
+    },
+  };
+
+  const forms = {
+    contribute() {
+      const m = S.viewer, t = TASKS[S.task];
+      if (S.today[m] >= DAILY) return (S.error = `You have reached today's limit of ${DAILY} submissions. Try again tomorrow.`);
+      let claim;
+      if (S.task === 'feedback') {
+        const video = val('c-video'), text = val('c-text');
+        if (text.length < MIN) return (S.error = `Write at least ${MIN} characters so there is something to review (${text.length} so far).`);
+        if (S.claims.some((c) => c.m === m && c.task === 'feedback' && c.subject === video && ['pending', 'approved'].includes(c.decision))) return (S.error = 'You already have a submission for this video. It cannot be credited twice.');
+        claim = { task: 'feedback', subject: video, text, verif: 'unverified' };
+      } else {
+        const link = val('c-link'), match = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/)|tiktok\.com\/@[\w.]+\/video\/)([\w-]{6,})/.exec(link);
+        if (!match) return (S.error = 'That does not look like a YouTube or TikTok video link.');
+        const subject = `link:${match[1]}`;
+        if (S.claims.some((c) => c.m === m && c.task === 'creative' && c.subject === subject && ['pending', 'approved'].includes(c.decision))) return (S.error = 'You already submitted this video. It cannot be credited twice.');
+        claim = { task: 'creative', subject, link: link.replace(/^https?:\/\/(www\.)?/, ''), verif: who(m).linked && !/tiktok/.test(link) ? 'verified' : 'unverified' };
+      }
+      S.claims.push({ id: ++S.seq, m, decision: 'pending', at: 'Today', ...claim }); S.today[m] += 1; S.error = '';
+      log(`${who(m).name} sent a submission`);
+      toast(`Sent for review. ${t.pts} points are pending until an admin approves.`);
+    },
+    adjust() {
+      const m = val('a-member'), pts = Number(val('a-points')), reason = val('a-reason');
+      if (!Number.isInteger(pts) || pts === 0) return (S.error = 'Enter a whole number of points, not zero.');
+      if (reason.length < 3) return (S.error = 'Give a reason. It is kept on record.');
+      if (/\b(likes?|comments?|views?|subscrib\w*|follow\w*)\b/i.test(reason)) return (S.error = 'Points cannot be given for likes, comments, views, follows or subscriptions.');
+      if (/[$€£]|\b(cash|dollars?|paid|payout)\b/i.test(reason)) return (S.error = 'Points are virtual. Leave money wording out of the reason.');
+      const bucket = pts > 0 ? 'bonus' : 'earned';
+      if (pts > 0 && capUsed(m) + pts > CAP) return (S.error = `That would pass this month's cap of ${CAP} points.`);
+      if (pts < 0 && bal(m).earned + pts < 0) return (S.error = 'That would take the balance below zero.');
+      S.ledger.push({ id: ++S.seq, m, kind: pts > 0 ? 'bonus' : 'adjustment', bucket, pts, xp: 0, label: reason, at: 'Today' }); S.error = '';
+      log(`Admin ${pts > 0 ? 'added a bonus' : 'made a deduction'} (${pts > 0 ? '+' : ''}${pts})`); S.glow = pts > 0 ? m : null;
+      toast(`${who(m).name}: ${pts > 0 ? '+' : ''}${pts} points recorded.`);
+    },
+  };
+
+  document.addEventListener('click', (ev) => {
+    const el = ev.target.closest('[data-act]');
+    if (!el) return;
+    actions[el.dataset.act](el.dataset.id);
+    render();
+  });
+  document.addEventListener('submit', (ev) => {
+    const form = ev.target.closest('[data-form]');
+    if (!form) return;
+    ev.preventDefault();
+    const keep = {}; form.querySelectorAll('[id]').forEach((f) => { keep[f.id] = f.value; });
+    forms[form.dataset.form]();
+    render();
+    if (S.error) Object.entries(keep).forEach(([id, v]) => { const f = document.getElementById(id); if (f) f.value = v; });
+  });
+  render();
+})();
+</script>

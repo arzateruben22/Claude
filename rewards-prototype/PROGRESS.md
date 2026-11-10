@@ -11,11 +11,11 @@ Last updated: 2026-11-10 (end of the first working session).
 | Business logic (`src/domain/`): claims, ledger, caps, accounts, erasure, dashboard read model, competitions, integrity self-check | **Done and tested** |
 | Platform adapter contract, capability matrix, mock adapters | **Done and tested** |
 | Docs: API contract, architecture, UI brief, decision log | **Done** |
-| Sign-in layer (`src/auth/`) | **In progress — not in the repository yet, unverified** |
+| Sign-in layer (`src/auth/`) | **In progress.** Work-in-progress modules and tests are committed so nothing is lost; they have not been reviewed and the author's report has not been read yet. |
 | Raw-SQL attack suite against the schema (`test/db/`) | **In progress — not in the repository yet** |
 | HTTP layer, config, server start-up, sample-data seed (`src/http/`, `src/app.js`, `src/server.js`, `scripts/seed.js`) | **Queued behind the sign-in layer — not started** |
 | Adversarial review of sign-in + HTTP | **Not started** |
-| Single-screen UI | **Not started** (`docs/UI_BRIEF.md` is the spec) |
+| Single-screen UI | **Design preview only.** `design-preview/crew-rewards-preview.html` is a clickable mock on sample data (published privately to the owner for review). It is not wired to the API and uses inline styles and scripts, which the real app's security policy forbids — treat it as the visual and interaction reference when building `public/` from `docs/UI_BRIEF.md`. |
 | Live YouTube adapter, YouTube channel linking | **Not started** — needs a Google Cloud project |
 | Second project (the separate marketplace product) | **Not started** — its source archive was not provided and its owner's authorisation is needed. Nothing of it is in this repository. |
 
@@ -68,8 +68,8 @@ See `DECISIONS.md`. Section B lists behaviour choices that need the owner's yes 
    with the dev settings, seed it, sign in with the printed code and fetch
    `/api/dashboard` to see the three sample members. Fix or record every reported
    defect. Do not mark this done from a report alone.
-2. **Read the third design review** (pragmatic-engineering lens; it had not reported
-   when this was written) and act on anything that affects the API contract.
+2. **Read the third design review** (pragmatic-engineering lens). It has now reported
+   but has not been read or acted on; do that before the API contract is relied on.
 3. **Adversarially review sign-in and HTTP** before building on them: sessions, CSRF,
    cookies and nonce replay; a role check on every route; leaks of other members' data
    in any response, log line or error; idempotency and caps through the HTTP surface;

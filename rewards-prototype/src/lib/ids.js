@@ -32,8 +32,10 @@ export function sha256Hex(input) {
 /** Constant-time comparison of two strings. Returns false for non-strings or length mismatch. */
 export function safeEqual(a, b) {
   if (typeof a !== 'string' || typeof b !== 'string') return false;
-  const ab = Buffer.from(a);
-  const bb = Buffer.from(b);
+  // UTF-16 code units, not UTF-8: in UTF-8 every unpaired surrogate becomes the same
+  // replacement bytes, so two different strings could compare as equal.
+  const ab = Buffer.from(a, 'utf16le');
+  const bb = Buffer.from(b, 'utf16le');
   if (ab.length !== bb.length) return false;
   return timingSafeEqual(ab, bb);
 }
