@@ -69,6 +69,17 @@
    "sha256": "b1704f26174fdeae15c98bb58e1d03325bac1b97b8bc29fb8a4d57455270804f"
   },
   {
+   "id": "vo05c",
+   "beat": "cta",
+   "text": "Wait, before we keep going: tap like and follow! Okay, back inside the skin.",
+   "stars": [],
+   "phonemes": "wˈeɪt, bɪfˌɔː wiː kˈiːp ɡˈəʊɪŋ: tˈap lˈaɪk and fˈɒləʊ! əʊkˈeɪ, bˈak ɪnsˈaɪd ðə skˈɪn.",
+   "speed": 1.12,
+   "file": "05c.wav",
+   "dur": 3.914,
+   "sha256": "17fa7812eb04ca79ae6e99119330a0f0c69cc7dd96f4066bf65d7cfa45073511"
+  },
+  {
    "id": "vo06",
    "beat": "takeaway",
    "text": "So sweat cools you when it dries. Its job is cooling, not cleaning.",

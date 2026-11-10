@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "Sweat does not cool you by being wet: it cools you when it dries, because turning to vapour takes heat from your skin.",
+ "titles": [
+  {
+   "text": "Sweat Doesn't Cool You. Drying Does.",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "How Does Sweat Actually Cool You?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Your Sweat Is Not Cleaning You",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "A Gram of Sweat Carries Away About 2,400 Joules",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Your Body Spends Water to Move Heat",
+   "mechanism": "hidden mechanism"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "one glossy sweat droplet on deep-brown skin with a faint vapour wisp rising from it",
+   "composition": "the droplet large in the lower third, vapour rising into ivory negative space above",
+   "lighting": "warm side light, soft depth of field, bright highlights on the droplet",
+   "trigger": "a tiny event with a hidden consequence",
+   "text": "",
+   "complements": "the title makes the claim; the picture shows the moment it happens"
+  },
+  {
+   "id": "B",
+   "subject": "a coiled sweat gland in cross-section with its duct rising to a droplet",
+   "composition": "duct vertical through the centre",
+   "lighting": "amber glow on the gland",
+   "trigger": "hidden machinery",
+   "text": "2,400 J",
+   "complements": "adds the scale"
+  },
+  {
+   "id": "C",
+   "subject": "a shoulder with a sheen of beads on deep-brown skin",
+   "composition": "shoulder in the lower half",
+   "lighting": "soft rim light",
+   "trigger": "familiar sensation",
+   "text": "Not cleaning",
+   "complements": "the twist"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 84,
+    "synergy": 84,
+    "originality": 74,
+    "accuracy": 86,
+    "mobile": 84,
+    "satisfaction": 84
+   },
+   "note": "claim and moment"
+  },
+  {
+   "title": 3,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 72,
+    "curiosity": 80,
+    "clarity": 78,
+    "synergy": 80,
+    "originality": 76,
+    "accuracy": 84,
+    "mobile": 80,
+    "satisfaction": 80
+   },
+   "note": "scale"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 76,
+    "curiosity": 82,
+    "clarity": 82,
+    "synergy": 78,
+    "originality": 72,
+    "accuracy": 88,
+    "mobile": 82,
+    "satisfaction": 80
+   },
+   "note": "the twist"
+  }
+ ],
+ "winner": {
+  "title": "Sweat Doesn't Cool You. Drying Does.",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "A short true contradiction; the thumbnail shows the droplet at the moment it starts to dry."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "skin-sense-009-cover.jpg",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: one glossy, clear sweat droplet resting on deep-brown skin (about RGB 147, 95, 69), a few smaller beads around it, and a faint white vapour wisp rising from the large droplet.\nComposition: the droplet large in the lower third, vapour rising into ivory negative space above.\nLighting and treatment: warm side light, soft depth of field, bright highlights on the droplet, ivory ground (#F7EFE3), deep green #00685F as the only accent.\nMood: quiet wonder.\nText: No text.\nScientific accuracy: sweat cools the skin when its water turns to vapour and takes heat with it (about 2,400 joules per gram, verify); an illustration, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 21.5,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

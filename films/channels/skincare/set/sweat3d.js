@@ -21,13 +21,13 @@ export async function create(args) {
     sg.lineWidth = 1.2; for (let i = 0; i < 520; i++) { sg.strokeStyle = `rgba(40,18,10,${0.08 + rnd() * 0.12})`; const x = rnd() * 512, y = rnd() * 512, a = (rnd() < 0.5 ? 0.6 : -0.6) + (rnd() - 0.5) * 0.3, L = 14 + rnd() * 36; sg.beginPath(); sg.moveTo(x, y); sg.lineTo(x + Math.cos(a) * L, y + Math.sin(a) * L); sg.stroke(); }
     for (let i = 0; i < 520; i++) { sg.fillStyle = "rgba(30,12,6,.3)"; sg.beginPath(); sg.arc(rnd() * 512, rnd() * 512, 1 + rnd() * 1.3, 0, 7); sg.fill(); } }
   const skinTex = tex(skinC, [6, 6]);
-  const skinMat = mat({ map: skinTex, bumpMap: skinTex, bumpScale: 1.6, roughness: 0.6, sheen: 0.4, sheenColor: new THREE.Color(0.9, 0.6, 0.45), clearcoat: 0.15, clearcoatRoughness: 0.45 });
+  const skinMat = mat({ map: skinTex, bumpMap: skinTex, bumpScale: 1.6, roughness: 0.75, sheen: 0.1, sheenColor: new THREE.Color(0.6, 0.35, 0.25), clearcoat: 0, envMapIntensity: 0.3 });
   const faceC = mkCanvas(1024, 440), fg = faceC.getContext("2d");
   { const gr = fg.createLinearGradient(0, 0, 0, 440); gr.addColorStop(0, hex(SK.map((v) => v * 1.05))); gr.addColorStop(0.1, hex(SK.map((v) => v * 0.95))); gr.addColorStop(0.135, hex(SK.map((v) => v * 0.6))); gr.addColorStop(0.16, "#f1b9a6"); gr.addColorStop(0.5, "#ec9f90"); gr.addColorStop(0.8, "#e98f80"); gr.addColorStop(0.83, "#f1c47c"); gr.addColorStop(1, "#ecbf60"); fg.fillStyle = gr; fg.fillRect(0, 0, 1024, 440);
     fg.save(); fg.beginPath(); fg.rect(0, 64, 1024, 290); fg.clip(); fibres(fg, 1024, 440, 560, ["#fde4d8", "#f3b6a6", "#d9786b", "#fff0e8"], 200, 2.2); fg.restore();
     fg.save(); fg.beginPath(); fg.rect(0, 364, 1024, 80); fg.clip(); for (let i = 0; i < 170; i++) { const x = rnd() * 1024, y = 360 + rnd() * 80, r = 12 + rnd() * 16; fg.strokeStyle = "rgba(226,160,60,.5)"; fg.fillStyle = `rgba(250,${210 + rnd() * 30 | 0},${110 + rnd() * 50 | 0},.5)`; fg.lineWidth = 2; fg.beginPath(); fg.ellipse(x, y, r, r * 0.85, 0, 0, 7); fg.fill(); fg.stroke(); } fg.restore(); }
   const faceMat = mat({ map: tex(faceC, [1, 1]), roughness: 0.55, clearcoat: 0.25, clearcoatRoughness: 0.45 }); faceMat.map.wrapS = faceMat.map.wrapT = THREE.ClampToEdgeWrapping;
-  const dropMat = mat({ color: 0xcfe6f2, transparent: true, opacity: 0.24, roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 2.4, depthWrite: false });
+  const dropMat = mat({ color: 0xcfe6f2, transparent: true, opacity: 0.24, roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 1.3, depthWrite: false });
   const vessM = mat({ color: 0xd9485a, roughness: 0.38, clearcoat: 0.5 }), vessL = new THREE.MeshBasicMaterial({ color: 0x8e2736, side: THREE.BackSide, toneMapped: false });
   const glandM = mat({ color: 0xf3b3a6, roughness: 0.35, clearcoat: 0.8, clearcoatRoughness: 0.2, sheen: 0.5, sheenColor: new THREE.Color(1, 0.8, 0.75) });
 
@@ -36,7 +36,7 @@ export async function create(args) {
   const top = new THREE.Mesh(new THREE.PlaneGeometry(GW, 22), skinMat); top.rotation.x = -Math.PI / 2; top.position.set(0, 0, -11); top.receiveShadow = true; groups.G.add(top);
   { const bk = new THREE.Mesh(new THREE.PlaneGeometry(60, 30), new THREE.MeshBasicMaterial({ color: 0xf5ecdf })); bk.position.set(0, -2, -9); groups.G.add(bk); }
   // the gland: a pink knot (rosette) in the lower dermis, its duct rising in a gentle spiral to the pore
-  const CC = [-1.2, -5.0], coilPts = [], coilR = []; for (let i = 0; i <= 160; i++) { const a = (i / 160) * Math.PI * 4, r = 0.95 * (1 - 0.35 * (i / 160)) + 0.34 * Math.sin(3 * a); coilPts.push([CC[0] + Math.cos(a) * r, CC[1] + Math.sin(a) * r, 0.2 + 0.12 * Math.sin(a * 2)]); coilR.push(0.17); }
+  const CC = [-1.2, -5.0], coilPts = [], coilR = []; for (let i = 0; i <= 160; i++) { const a = (i / 160) * Math.PI * 4, r = 0.95 * (1 - 0.35 * (i / 160)) + 0.3 * Math.sin(5 * a) + 0.12 * Math.sin(2 * a); coilPts.push([CC[0] + Math.cos(a) * r, CC[1] + Math.sin(a) * r, 0.2 + 0.12 * Math.sin(a * 2)]); coilR.push(0.17); }
   const coilT = makeTube(160, 12, glandM, true); coilT.set(coilPts, coilR);
   const PORE = [0.6, 0], ductPts = [], ductR = []; const ductStart = coilPts[coilPts.length - 1]; for (let i = 0; i <= 80; i++) { const u = i / 80, y = lerp(ductStart[1], 0.0, u), x = lerp(ductStart[0], PORE[0], eo(u)) + 0.18 * Math.sin(u * 14) * (1 - u); ductPts.push([x, y, 0.2]); ductR.push(0.07); }
   const ductT = makeTube(80, 10, glandM, true); ductT.set(ductPts, ductR);
@@ -98,7 +98,7 @@ export async function create(args) {
     heatSp.forEach((s, i) => { const U = { ph: hash(i * 3.3), x: -6 + hash(i * 5.9) * 12 }, a = warm(t), y = -3 + ((t * 0.6 + U.ph * 5) % 3); s.position.set(U.x + Math.sin(t + i) * 0.3, y, 0.3); s.scale.setScalar(0.9); s.material.opacity = a * 0.5 * Math.sin(Math.PI * clamp((y + 3) / 3)); });
     coilT.mesh.rotation.z = 0;
   };
-  const dropPhase = (t) => (t >= 19.8 && t < 32 ? seg(t, 20.2, 31.0) : t >= 52 && t < 60 ? seg(t, 52.6, 58.2) : t < 20 ? 0 : 1);
+  const dropPhase = (t) => (t >= 19.8 && t < 32 ? seg(t, 20.2, 31.0) : t >= 56.5 && t < 66 ? seg(t, 57.2, 62.6) : t < 20 ? 0 : 1);
   const setD = (t) => {
     const u = dropPhase(t), r = lerp(1.5, 0.35, eo(u)); dDrop.scale.set(r * 1.05, r * 0.8 * (1 - 0.15 * u), r); dDrop.position.set(0, 0.0, 0); dRing.scale.setScalar(r * 1.1); dRing.material.opacity = 0.25 * (1 - u);
     cool.material.opacity = 0.35 * Math.sin(Math.PI * clamp(u * 1.0)) * (u > 0 ? 1 : 0); cool.scale.setScalar(0.6 + u * 0.8);

@@ -1,14 +1,14 @@
 {
- "gain_db": 1.73,
+ "gain_db": 1.82,
  "iterations": 2,
  "lufs": -14.06,
  "true_peak_db": -2.0,
  "ceiling_db": -2.0,
- "limiting_max_db": -3.61,
+ "limiting_max_db": -3.7,
  "aac": {
   "lufs": -14.1,
-  "true_peak_db": -1.8,
-  "lra": 2.2
+  "true_peak_db": -1.9,
+  "lra": 2.1
  },
  "stems_sum_error_db": -240.0
 }

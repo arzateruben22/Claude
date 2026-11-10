@@ -793,6 +793,97 @@
    ]
   },
   {
+   "id": "vo05c",
+   "text": "Wait, before we keep going: tap like and follow! Okay, back inside the skin.",
+   "heard": "Wait before we keep going, tap like and follow, okay back inside the skin.",
+   "words": [
+    {
+     "w": "Wait,",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "before",
+     "start": 0.27,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 0.605,
+     "end": 0.655,
+     "heard": true
+    },
+    {
+     "w": "keep",
+     "start": 0.78,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "going:",
+     "start": 0.82,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 1.2,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.42,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.615,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "follow!",
+     "start": 1.78,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "Okay,",
+     "start": 2.5,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 2.91,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 3.055,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.45,
+     "end": 3.5,
+     "heard": true
+    },
+    {
+     "w": "skin.",
+     "start": 3.48,
+     "end": 3.84,
+     "heard": true
+    }
+   ]
+  },
+  {
    "id": "vo06",
    "text": "So sweat cools you when it dries. Its job is cooling, not cleaning.",
    "heard": "So sweat cools you when it dries. Its job is cooling, not cleaning.",

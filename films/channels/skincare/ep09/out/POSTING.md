@@ -22,7 +22,7 @@ Sources
 1. Sweat evaporation from the skin surface plays a critical role in human thermoregulation. — NIH: https://pubmed.ncbi.nlm.nih.gov/31608304/
 2. In skin explants, epidermal cells with supranuclear melanin caps had significantly less UV-induced DNA photoproducts; UV-induced redistribution of melanin near the nucleus forms a supranuclear cap. — NIH: https://pubmed.ncbi.nlm.nih.gov/9579550/
 
-Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code, no stock footage. Every number's source is listed in this description.
+Narration: synthetic voice (AI). Illustrations: AI-generated and 3-D animation made in code, no stock footage. Every number's source is listed in this description.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
