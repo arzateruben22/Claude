@@ -46,11 +46,22 @@ qualified. Long-form watch hours are also what unlock the Partner Program (short
   keep them identical.
 - Push each with push-one.sh (`compilations/<film-slug>` or `epNN`), then POST the import.
 
-## Voice
+## Voice (owner, 10 Nov 2026: one recording-script format for every future season)
 
-Reality Rulebook and One More Orbit keep the AI voice. Possibility Lab uses the owner's own voice: each film adds
-8 hook lines and 8 cliffhanger/outro lines to the owner's recording script (films/channels/voice-scripts/), and
-the AI voice stands in until the recordings land.
+- **Possibility Lab and One More Orbit** are voiced by the owner from Season 3 on. Reality Rulebook keeps the AI voice
+  for now, and so does Skin Sense until its host records. Season 2 stays as it was posted.
+- **Every new season gets a recording script in the standard four-part layout**, made with
+  `films/channels/voice-scripts/make_recording_script.py` as soon as the season's script passes fact-check:
+  - Part A: the long video's narration
+  - Part B: the 8 parts' 2-second openings (plus their cliffhangers when those aren't already in Part A)
+  - Part C: the closers, "Part N of eight. Full video on YouTube.", recorded once ever and reused by every channel
+  - Part D: the like/follow lines, each read with "follow" then "subscribe", recorded once per channel
+  Commit it as `films/channels/voice-scripts/<channel>-season-N-recording-script.md` and send it to the coordinator,
+  who passes it to the owner.
+- **The owner uploads to `films/channels/<channel>/voice-owner/`** on the channel's branch, as `<pl|oo>-sN.m4a`,
+  `<pl|oo>-sN-parts.m4a`, `part-closers.m4a` and `<pl|oo>-cta.m4a`. The builder cuts the files into lines, swaps them for
+  the AI stand-in, rebuilds the captions from the recording and re-renders. The AI voice stands in until then, so
+  production never waits on a recording.
 
 ## Every long video is at least 8:30 (owner, 10 Nov 2026)
 
