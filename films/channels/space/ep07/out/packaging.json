@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "There are probably more trees on Earth than stars in our galaxy.",
+ "titles": [
+  {
+   "text": "Earth Probably Has More Trees Than the Milky Way Has Stars",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Trees or Stars: Which Is There More Of?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Every Person Has Hundreds of Trees",
+   "mechanism": "personal relevance"
+  },
+  {
+   "text": "How Many Trees Are There, Really?",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "The Forest Beats the Galaxy",
+   "mechanism": "contradiction"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "two equal clouds of dots, one of tiny stars and one of tiny trees, side by side",
+   "composition": "two clouds mirrored left and right, a thin gap in the middle",
+   "lighting": "indigo night; stars white, trees lemon-green",
+   "trigger": "curiosity",
+   "text": "Guess first.",
+   "complements": "the title gives the claim; the picture asks you to guess before you read it"
+  },
+  {
+   "id": "B",
+   "subject": "one small tree under the Milky Way",
+   "composition": "tree lower third, galaxy band rising diagonally",
+   "lighting": "cool starlight with a warm rim on the leaves",
+   "trigger": "scale shock",
+   "text": "",
+   "complements": "quiet scale"
+  },
+  {
+   "id": "C",
+   "subject": "the Milky Way as a glowing spiral with one tree icon at its centre",
+   "composition": "spiral filling the frame, tree small at centre",
+   "lighting": "lilac and white on indigo",
+   "trigger": "visual paradox",
+   "text": "3,000,000,000,000",
+   "complements": "one big number"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 82,
+    "clarity": 82,
+    "synergy": 80,
+    "originality": 70,
+    "accuracy": 90,
+    "mobile": 80,
+    "satisfaction": 84
+   },
+   "note": "Equal clouds make the question visible; hedged 'probably' stays true."
+  },
+  {
+   "title": 3,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 68,
+    "curiosity": 74,
+    "clarity": 82,
+    "synergy": 70,
+    "originality": 68,
+    "accuracy": 92,
+    "mobile": 76,
+    "satisfaction": 80
+   },
+   "note": "Calm and clear."
+  },
+  {
+   "title": 1,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 76,
+    "clarity": 70,
+    "synergy": 72,
+    "originality": 66,
+    "accuracy": 86,
+    "mobile": 70,
+    "satisfaction": 80
+   },
+   "note": "Big number, harder at phone size."
+  }
+ ],
+ "winner": {
+  "title": "Earth Probably Has More Trees Than the Milky Way Has Stars",
+  "thumbnail": "A",
+  "thumbnailText": "Guess first.",
+  "why": "The title states the surprising result with an honest 'probably'; the thumbnail turns it into a guess, adding a layer the title does not repeat."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "one-more-orbit-s2e01-thumb.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: two equal clouds of tiny dots side by side: the left cloud tiny white stars, the right cloud small lemon-green tree shapes (an illustration).\nComposition: the two clouds stacked left and right of centre with a thin dark gap between, centred in the upper two thirds; empty indigo night around them.\nLighting and treatment: white stars (#EEF0FF) against lemon-green trees (#C8E65A) on indigo night (#0B0F2A), soft bloom, subtle grain.\nMood: curiosity.\nText: \"Guess first.\" in a clean geometric sans (Lexend style), centred in the lower middle, white.\nScientific accuracy: estimates: the Milky Way holds about 100 to 400 billion stars; Earth is estimated to hold about 3 trillion trees, so trees probably win by roughly 8 to 30 times; both are estimates.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 16.0,
+  "text": "Guess first."
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
