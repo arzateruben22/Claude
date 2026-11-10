@@ -10,6 +10,7 @@
 //        [--season <n>]   label the episode cards "Season n · Episode k" instead of "No. 00x"
 //        [--promise <text>]   replace the theme's promise line (cards and description)
 //        [--narration <dir>]   narrated cards: <dir>/narration.json lists {id,wav,dur} for open, bridge1..n, finale (+ finale_cta, optional); each card lasts its voice plus a breath, the music under it
+//        [--cut-cta]   take each episode's own like/follow line out (a 0.28 s dissolve across the seam); the compilation asks once, in its own voice
 //        [--ai-visuals]   say "Illustrations: AI-generated, animated in code." in the side-card footer and the description
 //        [--height 1440|1080] (default 1440) [--crf 15] [--max-mb 90]
 //
@@ -69,11 +70,22 @@ const NARR = A.narration ? path.resolve(A.narration) : null, NR = NARR ? JSON.pa
 const nar = (id) => (NR ? NR.find((x) => x.id === id) : null);
 if (NR) { for (const id of ["open", "finale", ...eps.slice(1).map((_, i) => `bridge${i + 1}`)]) if (!nar(id)) die(`--narration: no ${id} in narration.json`); INTRO = nar("open").dur + 2.2; }
 const FIN = NR ? nar("finale").dur + 1.0 + (nar("finale_cta") ? nar("finale_cta").dur : 0) + 1.8 : 0;     // the narrated finale card's length
-const brd = (k) => (NR ? nar(`bridge${k}`).dur + 1.8 : BR > 0 ? BR : 0);                                // the card before episode k (k ≥ 1)
+const brd = (k) => (NR ? nar(`bridge${k}`).dur + 1.2 : BR > 0 ? BR : 0);                                // the card before episode k (k ≥ 1)
 const bridgeSum = eps.slice(1).reduce((a, _, i) => a + brd(i + 1), 0);
 const name = A.name || `vol${String(Math.ceil(eps.length / 6)).padStart(2, "0")}`;
 const outDir = path.resolve(A.out || path.join(chan, "compilations"), name), work = path.join(outDir, "work");
 fs.mkdirSync(work, { recursive: true });
+if (A["cut-cta"]) for (const e of eps) {                   // take each episode's own like/follow line out (the long video asks once, in its own voice): a short dissolve across the seam, music and all
+  const film = JSON.parse(fs.readFileSync(path.join(e.dir, "film.json"), "utf8")), ls = Object.entries(film.lines).map(([id, v]) => ({ id, s: v[0], e: v[1], beat: v[2] })).sort((x, y) => x.s - y.s), i = ls.findIndex((l) => l.beat === "cta");
+  if (i < 0) continue;
+  const prev = ls[i - 1], next = ls[i + 1], d = 0.28, h = d / 2, o = path.join(work, `cut-${e.id}.mp4`);
+  const enc = ["-c:v", "libx264", "-preset", "medium", "-crf", "10", "-pix_fmt", "yuv420p", "-r", "30", "-c:a", "aac", "-b:a", "320k", "-ar", "48000", "-movflags", "+faststart"];
+  if (!next) { const end = Math.min(e.dur, prev.e + 1.4); run("ffmpeg", ["-v", "error", "-y", "-i", e.file, "-t", String(end), "-af", `afade=t=out:st=${end - 0.5}:d=0.5`, ...enc, o]); e.cut = { from: +end.toFixed(2), to: +e.dur.toFixed(2), tail: true }; }
+  else { const a = prev.e + 0.3, b = next.s - 0.3;
+    run("ffmpeg", ["-v", "error", "-y", "-i", e.file, "-filter_complex", `[0:v]trim=0:${(a + h).toFixed(3)},setpts=PTS-STARTPTS[v1];[0:v]trim=${(b - h).toFixed(3)},setpts=PTS-STARTPTS[v2];[v1][v2]xfade=transition=fade:duration=${d}:offset=${(a - h).toFixed(3)}[v];[0:a]atrim=0:${(a + h).toFixed(3)},asetpts=PTS-STARTPTS[a1];[0:a]atrim=${(b - h).toFixed(3)},asetpts=PTS-STARTPTS[a2];[a1][a2]acrossfade=d=${d}[a]`, "-map", "[v]", "-map", "[a]", ...enc, o]);
+    e.cut = { a: +a.toFixed(2), b: +b.toFixed(2) }; }
+  e.file = o; e.dur = Number(probe(o).format.duration); console.log(`cut-cta ${e.id}: ${JSON.stringify(e.cut)} → ${e.dur.toFixed(2)} s`);
+}
 const title = A.title || `${theme.name}: ${eps.map((e) => e.title).slice(0, 2).join(", ")}${eps.length > 2 ? ` and ${eps.length - 2} more` : ""}`;
 
 // ── the cards, drawn in the channel's theme by the browser ─────────────────────
