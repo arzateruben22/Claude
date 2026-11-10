@@ -153,7 +153,7 @@ About 9 minutes. Same rules. Take a breath between lines; there's no rush in a l
 
 **9.** At a six hour day, the Sun races from horizon to horizon in three hours. The equator moves at nearly seven thousand kilometers an hour. You are five and a half percent lighter. Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.
 
-**10.** Meanwhile, the calendar breaks. The year does not change, because the Earth still goes round the Sun once. But every day gets shorter, so a year contains more days. At a day of an hour and twenty-four minutes, a year would hold over six thousand of them. You would watch a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.
+**10.** Meanwhile, the calendar breaks. The year does not change, because the Earth still goes round the Sun once. But every day gets shorter, so a year contains more days. Right now, at a six hour day, a year already holds about fourteen hundred and sixty days. By the end, it would hold over six thousand, with a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.
 
 **11.** Not everyone on Earth would feel the same thing. At the poles, the ground only turns on the spot. Nobody there is carried around at all, and they would weigh the same as ever. At forty-five degrees north, you move at seventy percent of the equator's speed, and the push outward is only half as strong. The farther you stand from the equator, the longer you keep your weight. But the water leaves the poles first, so the stillest place on Earth would stand high and dry.
 
@@ -172,7 +172,6 @@ About 9 minutes. Same rules. Take a breath between lines; there's no rush in a l
 **18.** So the next time you stand still, remember the speed you are carrying. You are already moving at sixteen hundred kilometers an hour. You only have to go about seventeen times faster to leave the ground behind. The day would have to shrink from twenty-four hours to an hour and twenty-four minutes. That is the whole distance between standing and flying, and it is why a planet's spin can never be a small thing. Thanks for watching.
 
 **19.** Subscribe, for the next what-if.
-
 
 ## Season 4 long video: “What If You Fell Into a Hole Through the Earth?”
 About 9 minutes. File: `pl-s4.m4a`. Same rules as the other long videos: a breath between lines, no rush.
