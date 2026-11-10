@@ -12,7 +12,8 @@ import { nowIso, requireAdmin, requireSignedIn } from './context.js';
 import { recordAudit } from './audit.js';
 import { getSetting } from './settings.js';
 
-const PLATFORM_VIDEO_ID = /^[A-Za-z0-9_-]{1,64}$/;
+// At least 6 characters, matching the schema (a shorter id could match inside an unrelated link).
+const PLATFORM_VIDEO_ID = /^[A-Za-z0-9_-]{6,64}$/;
 const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
 
 /**
