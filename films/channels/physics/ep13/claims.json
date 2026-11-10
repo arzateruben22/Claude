@@ -1,0 +1,57 @@
+[
+{
+"id": "c2",
+"sentence": "One second now takes ten / lasts about seventeen minutes / almost three hours / twelve days / 116 days / more than three years / about thirty-two years / about thirty-two thousand years.",
+"claim": "At a slow-motion factor F, one real second lasts F seconds on screen: 10x = 10 s, 100x = 1.7 min, 1,000x = 17 min, 10^4x = 2.8 h, 10^6x = 12 days, 10^7x = 116 days, 10^8x = 3.2 years, 10^9x = 32 years, 10^12x = 31,700 years.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. Uses a 365.25-day year. The counter in the picture reads the same table (calc.json)."
+},
+{
+"id": "c3",
+"sentence": "Its wings beat about fifty times a second.",
+"claim": "A hovering hummingbird beats its wings roughly 50 times a second (small species faster, large species slower; reported range roughly 10 to 80).",
+"source_url": "https://en.wikipedia.org/wiki/Hummingbird",
+"source_title": "Wikipedia, Hummingbird (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Hedged in the voice as 'about'. "
+},
+{
+"id": "c4",
+"sentence": "At ten times slower, that's five beats a second.",
+"claim": "50 beats per second / 10 = 5 beats per second of screen time.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+},
+{
+"id": "c34",
+"sentence": "Your eyes blend flashes that come faster than about sixty a second.",
+"claim": "Human vision stops resolving a flickering light as separate flashes above roughly 50 to 90 flashes a second (the critical flicker fusion frequency, about 60 for a typical bright light).",
+"source_url": "https://en.wikipedia.org/wiki/Flicker_fusion_threshold",
+"source_title": "Wikipedia, Flicker fusion threshold (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Depends on brightness, the part of the retina and the person; 'about sixty' is a hedge."
+},
+{
+"id": "c37",
+"sentence": "Each wing sweeps forward, flips, and sweeps back.",
+"claim": "A hovering hummingbird sweeps each wing forward and back in a figure-of-eight path, flipping it at each end of the stroke.",
+"source_url": "https://doi.org/10.1038/nature03843",
+"source_title": "Warrick, Tobalske, Powers, 'Aerodynamics of the hovering hummingbird', Nature 435, 1094 (2005) (recalled, not opened; DOI from memory)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The film's wing motion is a simple sweep-and-flip model, not the measured stroke."
+}
+]

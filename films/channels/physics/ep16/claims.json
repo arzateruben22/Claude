@@ -1,0 +1,46 @@
+[
+{
+"id": "c14",
+"sentence": "In a room, it moves about three hundred forty meters a second.",
+"claim": "The speed of sound in air at 20 C is about 343 m/s.",
+"source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-1-sound-waves",
+"source_title": "OpenStax, University Physics Vol. 1, 17.1 Sound Waves (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Standard textbook value; depends on temperature."
+},
+{
+"id": "c15",
+"sentence": "The room is five meters across, so the clap crosses it in about fifteen thousandths of a second. Here, that's fifteen seconds. ... would still take about two and a half minutes to arrive.",
+"claim": "5 m / 343 m/s = 14.6 ms; at 1,000x that is 14.6 s; at 10,000x it is 146 s (2.4 minutes).",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. The kitchen width (5 m) is our assumption."
+},
+{
+"id": "c35",
+"sentence": "Sound covers about a kilometer in three seconds.",
+"claim": "1,000 m / 343 m/s = 2.9 s.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+},
+{
+"id": "c39",
+"sentence": "Without air, there would be nothing to push, and no sound at all.",
+"claim": "Sound is a pressure wave in a medium (air, water, a solid) and cannot travel through a vacuum.",
+"source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-1-sound-waves",
+"source_title": "OpenStax, University Physics Vol. 1, 17.1 Sound Waves (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Standard physics; in space there is no air to carry a clap."
+}
+]

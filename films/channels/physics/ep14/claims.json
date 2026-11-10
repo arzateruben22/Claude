@@ -1,0 +1,68 @@
+[
+{
+"id": "c5",
+"sentence": "A housefly beats its wings about two hundred times a second.",
+"claim": "A housefly's wingbeat is on the order of 200 per second.",
+"source_url": "https://en.wikipedia.org/wiki/Housefly",
+"source_title": "Wikipedia, Housefly (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Hedged as 'about'."
+},
+{
+"id": "c6",
+"sentence": "Slow it a hundred times, and that's two beats a second.",
+"claim": "200 / 100 = 2 beats per second of screen time.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+},
+{
+"id": "c7",
+"sentence": "It hits, and the water climbs into a crown. The whole crown forms in a few hundredths of a second.",
+"claim": "A falling water drop hitting a thin layer of water forms a crown within a few hundredths of a second (tens of milliseconds).",
+"source_url": "https://doi.org/10.1146/annurev.fluid.38.050304.092144",
+"source_title": "Yarin, 'Drop impact dynamics: splashing, spreading, receding, bouncing', Annu. Rev. Fluid Mech. 38, 159 (2006) (recalled, not opened; DOI from memory)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Crown timescales depend on drop size, speed and the liquid layer; 'a few hundredths of a second' is a hedge, not a measurement."
+},
+{
+"id": "c8",
+"sentence": "At this speed, that takes a few seconds.",
+"claim": "A few hundredths of a second times 100 is a few seconds.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+},
+{
+"id": "c30",
+"sentence": "A mosquito's wings beat about five hundred times a second.",
+"claim": "Mosquito wingbeats are several hundred per second (reports range roughly 300 to 800); the film uses 500 as one round value.",
+"source_url": "https://en.wikipedia.org/wiki/Mosquito",
+"source_title": "Wikipedia, Mosquito (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Hedged as 'about'; species vary."
+},
+{
+"id": "c38",
+"sentence": "Here, that's five beats a second.",
+"claim": "500 beats a second / 100 = 5 beats per second of screen time.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+}
+]

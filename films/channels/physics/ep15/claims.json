@@ -1,0 +1,57 @@
+[
+{
+"id": "c9",
+"sentence": "It pops when it gets to about one hundred eighty degrees Celsius. Its hard shell holds the steam in, until the pressure wins.",
+"claim": "A popcorn kernel pops at about 180 C, when steam pressure inside its hull ruptures it.",
+"source_url": "https://doi.org/10.1098/rsif.2014.1247",
+"source_title": "Virot and Ponomarenko, 'Popcorn: critical temperature, jump and sound', J. R. Soc. Interface 12, 20141247 (2015) (recalled, not opened; DOI from memory, corrected by the reviewer, also from memory)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The DOI was not confirmed (the first guess 10.1098/rsif.2015.0174 returned 404); find the paper by title."
+},
+{
+"id": "c10",
+"sentence": "The pop is over in a few thousandths of a second.",
+"claim": "The pop (the hull's rupture and the foam's release) lasts a few milliseconds or less.",
+"source_url": "https://doi.org/10.1098/rsif.2014.1247",
+"source_title": "Virot and Ponomarenko, 'Popcorn: critical temperature, jump and sound', J. R. Soc. Interface 12, 20141247 (2015) (recalled, not opened; DOI from memory, corrected by the reviewer, also from memory)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The exact duration is the weakest number in the film. If a person cannot find it, change the line to 'in a blink' or cut it."
+},
+{
+"id": "c11",
+"sentence": "Here, that's a few seconds.",
+"claim": "A few thousandths of a second times 1,000 is a few seconds.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+},
+{
+"id": "c12",
+"sentence": "When it pops, the hole races around the film at several meters a second.",
+"claim": "The hole in a bursting soap film opens at the Taylor-Culick speed, v = sqrt(2 gamma / (rho h)), about 7 m/s for a 1 micrometre film with surface tension 0.025 N/m.",
+"source_url": "https://doi.org/10.1063/1.1735828",
+"source_title": "Culick, 'Comments on a ruptured soap film', J. Appl. Phys. 31, 1128 (1960) (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. Own calculation from the standard formula; film thickness (1 micrometre) and surface tension (0.025 N/m) are assumptions, stated in calc.py. The film says 'several meters a second'."
+},
+{
+"id": "c13",
+"sentence": "The whole bubble is gone in about a hundredth of a second. Here, that takes about eleven seconds.",
+"claim": "A bubble about as wide as an egg (5 cm across, R = 2.5 cm) pops in about 11 ms (pi R / v, the edge of the hole running half way round), about 11 s at 1,000x.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. The hole's edge runs from the puncture to the far side: half a great circle, pi R. Assumes a 1 micrometre film."
+}
+]

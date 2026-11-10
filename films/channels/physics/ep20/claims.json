@@ -1,0 +1,68 @@
+[
+{
+"id": "c2",
+"sentence": "One second now takes ten / lasts about seventeen minutes / almost three hours / twelve days / 116 days / more than three years / about thirty-two years / about thirty-two thousand years.",
+"claim": "At a slow-motion factor F, one real second lasts F seconds on screen: 10x = 10 s, 100x = 1.7 min, 1,000x = 17 min, 10^4x = 2.8 h, 10^6x = 12 days, 10^7x = 116 days, 10^8x = 3.2 years, 10^9x = 32 years, 10^12x = 31,700 years.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. Uses a 365.25-day year. The counter in the picture reads the same table (calc.json)."
+},
+{
+"id": "c25",
+"sentence": "At this speed, it crawls thirty centimeters in one second. ... three centimeters a second. ... three millimeters a second. ... about a third of a millimeter a second. ... it has barely moved at all.",
+"claim": "c / F: 30 cm/s at 10^9x, 3 cm/s at 10^10x, 3 mm/s at 10^11x, 0.30 mm/s at 10^12x.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+},
+{
+"id": "c26",
+"sentence": "At this speed, a flash of light would take almost two seconds to cross the room. ... about seventeen seconds to reach the far wall. ... about seventeen billionths of a second. ... about four and a half hours to cross.",
+"claim": "5 m / c = 16.7 ns; x 10^8 = 1.7 s; x 10^9 = 16.7 s; x 10^12 = 16,700 s = 4.6 hours.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+},
+{
+"id": "c27",
+"sentence": "The chip in your phone would tick thirty times a second (at 10^8x). A computer chip ticks about three billion times a second. Here, it ticks three times a second (at 10^9x).",
+"claim": "A 3 GHz processor ticks 3 billion times a second; at 10^8x slower that is 30 ticks per slowed second; at 10^9x slower, 3.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. Typical phone and desktop chips run about 2 to 5 GHz; the film uses 3 GHz as one round value."
+},
+{
+"id": "c28",
+"sentence": "That's slower than a garden snail.",
+"claim": "0.3 mm/s is below a common garden snail's crawling speed (reported from about 1 mm/s to about 1 cm/s).",
+"source_url": "https://en.wikipedia.org/wiki/Snail",
+"source_title": "Wikipedia, Snail (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Snail speeds vary by species; the comparison holds across the reported range."
+},
+{
+"id": "c36",
+"sentence": "A human hair is about a tenth of a millimeter wide. Light crosses a hair in about a third of a trillionth of a second. At this speed, that takes about a third of a second.",
+"claim": "A hair is about 0.1 mm (50 to 100 micrometres) wide; light crosses 0.1 mm in 0.33 ps; x 10^12 = 0.33 s.",
+"source_url": "https://en.wikipedia.org/wiki/Hair",
+"source_title": "Wikipedia, Hair (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The width is a hedge (human hairs run about 17 to 180 micrometres; 0.1 mm is typical). The two times are derivations (calc.py)."
+}
+]

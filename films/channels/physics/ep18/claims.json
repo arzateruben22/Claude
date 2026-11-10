@@ -1,0 +1,68 @@
+[
+{
+"id": "c20",
+"sentence": "First, a faint path of electric charge reaches down from the cloud, in jumps. Each jump is tens of meters long. Each takes about a microsecond.",
+"claim": "The stepped leader of a lightning flash advances in steps tens of meters long, each about a microsecond, with pauses of tens of microseconds between them.",
+"source_url": "https://www.weather.gov/safety/lightning-science",
+"source_title": "NOAA / National Weather Service, lightning science (page reached from the builder session, text not read)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Step length and timing vary from flash to flash; 'tens of meters' and 'about a microsecond' are hedges."
+},
+{
+"id": "c21",
+"sentence": "At this speed, a microsecond lasts one whole second.",
+"claim": "1 microsecond x 1,000,000 = 1 second.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+},
+{
+"id": "c22",
+"sentence": "At last it touches the ground, and a bright flash runs back up the three-kilometer path. That flash travels up to about a third of the speed of light.",
+"claim": "The return stroke races up the leader channel at up to roughly a third of the speed of light (the literature range is about 1/10 to 1/2 of c); the channel here is taken to be 3 km long (our assumption).",
+"source_url": "https://www.weather.gov/safety/lightning-science",
+"source_title": "NOAA / National Weather Service, lightning science (text not read); Rakov and Uman, Lightning: Physics and Effects (2003) (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Return-stroke speeds are reported from about 1/10 to 1/3 of c; the film says 'about a third'. Change to 'up to a third' if a person prefers."
+},
+{
+"id": "c23",
+"sentence": "Even at a million times slower, it takes at least thirty seconds to climb.",
+"claim": "3 km / (c/3) = 30 microseconds at the top speed; x 1,000,000 = 30 s, so at least thirty seconds for a slower stroke. The 3 km channel length is our assumption, and the narration says it (three-kilometer path).",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. Channel length of 3 km is our assumption (clouds are typically a few km up)."
+},
+{
+"id": "c31",
+"sentence": "The whole fall from the cloud takes tens of thousandths of a second. At this speed, that would take hours.",
+"claim": "A stepped leader takes tens of milliseconds to reach the ground; at 1,000,000x slower, 20 ms is about 5.6 hours.",
+"source_url": "https://www.weather.gov/safety/lightning-science",
+"source_title": "NOAA / National Weather Service, lightning science (page reached from the builder session, text not read); Uman, The Lightning Discharge (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The descent time is a hedge ('tens of thousandths'); 20 ms is used for the hours figure (calc.py). The film says it is skipping ahead."
+},
+{
+"id": "c33",
+"sentence": "Then the path waits, about thirty to fifty microseconds. Here, that's half a minute or more.",
+"claim": "Between leader steps there are pauses of about 30 to 50 microseconds; x 1,000,000 = 30 to 50 s.",
+"source_url": "https://www.weather.gov/safety/lightning-science",
+"source_title": "NOAA / National Weather Service, lightning science (text not read); Uman (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Interstep times of 20 to 50 microseconds are quoted in the literature; the film says 'about thirty to fifty'."
+}
+]
