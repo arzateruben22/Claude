@@ -4,7 +4,7 @@
  "hook": "On average, Saturn is less dense than water, so in a thought experiment it would float, but real Saturn is gas and would not stay in one piece.",
  "titles": [
   {
-   "text": "Saturn Would Float in Water. Here's the Catch",
+   "text": "Saturn Is Less Dense Than Water. Would It Float?",
    "mechanism": "contradiction"
   },
   {
@@ -16,11 +16,11 @@
    "mechanism": "unanswered question"
   },
   {
-   "text": "Weigh Saturn Against Water and Saturn Wins the Float",
-   "mechanism": "scale shock"
+   "text": "Saturn Is Less Dense Than Water. So Why Isn't It Floating?",
+   "mechanism": "unanswered question"
   },
   {
-   "text": "Saturn in a Bathtub: What Really Happens",
+   "text": "Saturn in a Bathtub: What Would Really Happen?",
    "mechanism": "unexpected consequence"
   }
  ],
@@ -31,8 +31,8 @@
    "composition": "tank centred, Saturn half-sunk, water line crossing the planet",
    "lighting": "teal water glow, warm planet, indigo night",
    "trigger": "visual paradox",
-   "text": "Until it mixes.",
-   "complements": "title gives the float; the text hints at the catch"
+   "text": "Not quite.",
+   "complements": "the title asks if it floats; the picture shows it half-sunk and the words say the thought experiment fails"
   },
   {
    "id": "B",
@@ -67,7 +67,7 @@
     "mobile": 80,
     "satisfaction": 86
    },
-   "note": "Float then catch: both in one frame and one title."
+   "note": "Premise and question in the title; the picture and 'Not quite.' answer without spoiling the why."
   },
   {
    "title": 2,
@@ -101,10 +101,10 @@
   }
  ],
  "winner": {
-  "title": "Saturn Would Float in Water. Here's the Catch",
+  "title": "Saturn Is Less Dense Than Water. Would It Float?",
   "thumbnail": "A",
-  "thumbnailText": "Until it mixes.",
-  "why": "The title is a true thought experiment with a promised catch; the thumbnail shows the float and the words name the catch."
+  "thumbnailText": "Not quite.",
+  "why": "A true premise plus an honest question; the thumbnail shows the thought-experiment bathtub and the words say the answer is not a simple yes."
  },
  "testAndCompare": [
   "A",
@@ -121,10 +121,10 @@
   "originality": true
  },
  "thumbnailFile": "one-more-orbit-s2e05-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: Saturn with level rings sitting half-sunk in a huge transparent tank of water, the waterline crossing the planet (an illustration, a thought experiment).\nComposition: tank centred in the upper two thirds, Saturn at the waterline, empty indigo night around; all in the centre safe area.\nLighting and treatment: warm pale-gold planet, teal (#4FE3C6) water glow, indigo night (#0B0F2A), soft rim light, subtle grain.\nMood: wonder with a hint of doubt.\nText: \"Until it mixes.\" in a clean geometric sans (Lexend style), centred in the lower middle, white with the last word teal.\nScientific accuracy: Saturn's average density, about 0.69 g/cm3, is lower than water's 1.0, so it would float in a thought-experiment bathtub; real Saturn is mostly hydrogen and helium gas and would mix with water, not stay in one piece.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: Saturn with level rings sitting half-sunk in a huge transparent tank of water, the waterline crossing the planet (an illustration, a thought experiment).\nComposition: tank centred in the upper two thirds, Saturn at the waterline, empty indigo night around; all in the centre safe area.\nLighting and treatment: warm pale-gold planet, teal (#4FE3C6) water glow, indigo night (#0B0F2A), soft rim light, subtle grain.\nMood: wonder with a hint of doubt.\nText: \"Not quite.\" in a clean geometric sans (Lexend style), centred in the lower middle, white with the last word teal (#4FE3C6).\nScientific accuracy: Saturn's average density, about 0.69 g/cm3, is lower than water's 1.0, so it would float in a thought-experiment bathtub; real Saturn is mostly hydrogen and helium gas and would mix with water, not stay in one piece.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo. It must read as a code-rendered illustration in the channel's look (indigo night #0B0F2A, teal #4FE3C6 light fronts, violet #5B3FD0).\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
  "shortsCover": {
-  "frameSeconds": 38.0,
-  "text": "Until it mixes."
+  "frameSeconds": 4.2,
+  "text": "Not quite."
  },
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
 }
