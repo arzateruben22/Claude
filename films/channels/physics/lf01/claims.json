@@ -133,14 +133,14 @@
 },
 {
 "id": "c13",
-"sentence": "A bubble that size is gone in about a hundredth of a second. Here, that takes about eleven seconds.",
-"claim": "A 5 cm bubble pops in about 11 ms, about 11 s at 1,000x.",
+"sentence": "The whole bubble is gone in about a hundredth of a second. Here, that takes about eleven seconds.",
+"claim": "A bubble about as wide as an egg (5 cm across, R = 2.5 cm) pops in about 11 ms (pi R / v, the edge of the hole running half way round), about 11 s at 1,000x.",
 "source_url": "",
 "source_title": "Our own arithmetic (calc.py)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. Rough: the hole races a quarter of the bubble's circumference (pi r / 2) at 7.1 m/s."
+"note": "DERIVATION (calc.py, run it); no outside source. The hole's edge runs from the puncture to the far side: half a great circle, pi R. Assumes a 1 micrometre film."
 },
 {
 "id": "c14",
@@ -166,30 +166,30 @@
 },
 {
 "id": "c16",
-"sentence": "A rifle bullet moves a few hundred meters a second. Let's say four hundred.",
-"claim": "Typical rifle bullets leave the muzzle at about 300 to over 900 m/s; the film uses 400 m/s as one round value.",
-"source_url": "https://en.wikipedia.org/wiki/Muzzle_velocity",
-"source_title": "Wikipedia, Muzzle velocity (recalled, not opened)",
+"sentence": "A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second.",
+"claim": "Edgerton's famous photograph shows a .30-calibre bullet at about 2,800 feet per second (about 850 m/s) passing through an apple.",
+"source_url": "https://edgerton.mit.edu/",
+"source_title": "MIT Edgerton Center (the photograph and its bullet speed; recalled, not opened; page address from memory)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Hedged: 'a few hundred', 'let's say four hundred'. The film's bullet is an illustration, not a particular cartridge."
+"note": "FROM MEMORY, NOT OPENED: a person must open the Edgerton Center / MIT Museum page for the photograph and check the bullet speed (about 2,800 ft/s) and the caliber. Rifle bullets run about 700 to 1,000 m/s, so 850 m/s is typical. verified_via 'derivation' is a placeholder (see c3)."
 },
 {
 "id": "c17",
-"sentence": "The apple is about eight centimeters across. So the bullet crosses it in about two ten-thousandths of a second.",
-"claim": "0.08 m / 400 m/s = 0.0002 s.",
+"sentence": "The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second.",
+"claim": "0.08 m / 850 m/s = 94 microseconds.",
 "source_url": "",
 "source_title": "Our own arithmetic (calc.py)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. Apple width is our assumption (typical apples are about 7 to 9 cm)."
+"note": "DERIVATION (calc.py, run it); no outside source. Apple width (8 cm) is our assumption (typical apples are about 7 to 9 cm)."
 },
 {
 "id": "c18",
-"sentence": "Here, that's two seconds.",
-"claim": "0.0002 s x 10,000 = 2 s.",
+"sentence": "Here, that takes about one second.",
+"claim": "94 microseconds x 10,000 = 0.94 s.",
 "source_url": "",
 "source_title": "Our own arithmetic (calc.py)",
 "accessed": "2026-11-10",
@@ -199,14 +199,14 @@
 },
 {
 "id": "c19",
-"sentence": "It's moving faster than sound, so it drags a cone of air behind it.",
-"claim": "A body moving faster than sound makes a cone-shaped shock wave (Mach cone); 400 m/s is Mach 1.2.",
+"sentence": "It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it.",
+"claim": "A body moving faster than sound makes a cone-shaped shock wave (Mach cone); 850 m/s is Mach 2.5 (half-angle of the cone about 24 degrees).",
 "source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-8-shock-waves",
 "source_title": "OpenStax, University Physics Vol. 1, 17.8 Shock Waves (recalled, not opened)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. At 400 m/s the bullet is only just supersonic (Mach 1.17 by calc.py); the cone is wide."
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. At 850 m/s the bullet is Mach 2.5 (calc.py), so the cone is narrow."
 },
 {
 "id": "c20",
@@ -232,8 +232,8 @@
 },
 {
 "id": "c22",
-"sentence": "Then it touches the ground, and the bright flash runs back up the same path. That flash travels about a third of the speed of light.",
-"claim": "The return stroke races up the leader channel at up to roughly a third of the speed of light.",
+"sentence": "At last it touches the ground, and a bright flash runs back up the three-kilometer path. That flash travels up to about a third of the speed of light.",
+"claim": "The return stroke races up the leader channel at up to roughly a third of the speed of light; the channel here is taken to be 3 km long (our assumption).",
 "source_url": "https://www.weather.gov/safety/lightning-science",
 "source_title": "NOAA / National Weather Service, lightning science (text not read); Rakov and Uman, Lightning: Physics and Effects (2003) (recalled, not opened)",
 "accessed": "2026-11-10",
@@ -243,8 +243,8 @@
 },
 {
 "id": "c23",
-"sentence": "And at a million times slower, it still takes thirty seconds to climb.",
-"claim": "3 km / (c/3) = 30 microseconds; x 1,000,000 = 30 s.",
+"sentence": "Even at a million times slower, it takes about thirty seconds to climb.",
+"claim": "3 km / (c/3) = 30 microseconds; x 1,000,000 = 30 s. The 3 km channel length is our assumption, and the narration says it (three-kilometer path).",
 "source_url": "",
 "source_title": "Our own arithmetic (calc.py)",
 "accessed": "2026-11-10",
@@ -276,8 +276,8 @@
 },
 {
 "id": "c26",
-"sentence": "It takes about seventeen seconds to reach the far wall. ... about seventeen billionths of a second. ... The room would take about four and a half hours to cross.",
-"claim": "5 m / c = 16.7 ns; x 10^9 = 16.7 s; x 10^12 = 16,700 s = 4.6 hours.",
+"sentence": "At this speed, a flash of light would take almost two seconds to cross the room. ... about seventeen seconds to reach the far wall. ... about seventeen billionths of a second. ... about four and a half hours to cross.",
+"claim": "5 m / c = 16.7 ns; x 10^8 = 1.7 s; x 10^9 = 16.7 s; x 10^12 = 16,700 s = 4.6 hours.",
 "source_url": "",
 "source_title": "Our own arithmetic (calc.py)",
 "accessed": "2026-11-10",
@@ -287,14 +287,14 @@
 },
 {
 "id": "c27",
-"sentence": "A computer chip ticks about three billion times a second. Here, it ticks three times a second.",
-"claim": "A 3 GHz processor ticks 3 billion times a second; at 10^9x slower that is 3 ticks per slowed second.",
+"sentence": "The chip in your phone would tick thirty times a second (at 10^8x). A computer chip ticks about three billion times a second. Here, it ticks three times a second (at 10^9x).",
+"claim": "A 3 GHz processor ticks 3 billion times a second; at 10^8x slower that is 30 ticks per slowed second; at 10^9x slower, 3.",
 "source_url": "",
 "source_title": "Our own arithmetic (calc.py)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. Typical desktop clock speeds are about 3 to 5 GHz; the film uses 3 GHz as one round value."
+"note": "DERIVATION (calc.py, run it); no outside source. Typical phone and desktop chips run about 2 to 5 GHz; the film uses 3 GHz as one round value."
 },
 {
 "id": "c28",
@@ -309,7 +309,7 @@
 },
 {
 "id": "c29",
-"sentence": "A team at MIT built a camera that records about a trillion frames a second. They used it to film a pulse of light moving through a bottle. It's slow-motion made out of many nearly identical pulses ... They repeat the flash again and again, and record a different instant each time.",
+"sentence": "So this isn't just a drawing. Light really has been filmed crawling like this. (and the MIT / bottle / many-pulses lines)",
 "claim": "Velten and colleagues (MIT Media Lab, Raskar's group) built a 'femto-photography' camera with an effective rate of about a trillion frames a second, imaging a light pulse moving through a scene (including a bottle); the movie is assembled from many repeated pulses.",
 "source_url": "https://doi.org/10.1145/2461912.2461928",
 "source_title": "Velten, Wu, Jarabo, Masia, Barsi, Joshi, Lawson, Bawendi, Gutierrez, Raskar, 'Femto-photography: capturing and visualizing the propagation of light', ACM Trans. Graph. 32(4), 44 (2013); also Velten et al., Nature Commun. 3, 745 (2012) (recalled, not opened; DOIs from memory and not resolved from the builder session)",
@@ -328,5 +328,38 @@
 "verified_via": "derivation",
 "status": "TODO open link",
 "note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Hedged as 'about'; species vary. verified_via 'derivation' is a placeholder (see c3)."
+},
+{
+"id": "c31",
+"sentence": "The whole fall from the cloud takes tens of thousandths of a second. At this speed, that would take hours.",
+"claim": "A stepped leader takes tens of milliseconds to reach the ground; at 1,000,000x slower, 20 ms is about 5.6 hours.",
+"source_url": "https://www.weather.gov/safety/lightning-science",
+"source_title": "NOAA / National Weather Service, lightning science (page reached from the builder session, text not read); Uman, The Lightning Discharge (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The descent time is a hedge ('tens of thousandths'); 20 ms is used for the hours figure (calc.py). The film says it is skipping ahead."
+},
+{
+"id": "c32",
+"sentence": "Even now, a table a meter wide would take it about twelve seconds to cross.",
+"claim": "1 m / 850 m/s = 1.18 ms; x 10,000 = 11.8 s.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. The 1 m table is our assumption."
+},
+{
+"id": "c33",
+"sentence": "Then the path waits, about thirty to fifty microseconds. Here, that's half a minute or more.",
+"claim": "Between leader steps there are pauses of about 30 to 50 microseconds; x 1,000,000 = 30 to 50 s.",
+"source_url": "https://www.weather.gov/safety/lightning-science",
+"source_title": "NOAA / National Weather Service, lightning science (text not read); Uman (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Interstep times of 20 to 50 microseconds are quoted in the literature; the film says 'about thirty to fifty'."
 }
 ]
