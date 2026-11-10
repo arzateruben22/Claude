@@ -4,7 +4,7 @@
 import { unprocessable } from '../lib/errors.js';
 import { nowIso, requireAdmin } from './context.js';
 import { recordAudit } from './audit.js';
-import { assertRewardableText } from './policy.js';
+import { assertRewardableName } from './policy.js';
 
 export const TIER_COUNT = 5;
 
@@ -49,7 +49,7 @@ function validateTiers(tiers) {
     if (typeof tier.name !== 'string' || tier.name.trim().length < 1 || tier.name.trim().length > 40) {
       throw unprocessable('invalid_tiers', `Tier ${level} needs a name of 1–40 characters.`, { level });
     }
-    assertRewardableText(`tiers[${level}].name`, tier.name);
+    assertRewardableName(`tiers[${level}].name`, tier.name);
     if (!Number.isInteger(tier.min_xp) || tier.min_xp < 0 || tier.min_xp > 10000000) {
       throw unprocessable('invalid_tiers', `Tier ${level} needs a whole-number XP threshold.`, { level });
     }

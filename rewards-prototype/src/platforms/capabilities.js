@@ -1,7 +1,7 @@
 // What each platform can attest, in words a person can read. The UI shows this so that
 // limits (above all: nobody can see who liked a video) are stated, not hidden.
 //
-// Source of truth for the claims: docs/PLATFORM_CAPABILITIES.md. `evidence` uses its tiers:
+// Source of truth for the claims: docs/PLATFORM_CAPABILITIES.md. `evidence_tier` uses its tiers:
 //   A  read directly from the official machine-readable API description
 //   B  official page, seen through search excerpts (not checked verbatim)
 //   C  inference from the absence of any such method
@@ -29,7 +29,7 @@ export const CAPABILITIES = Object.freeze({
       used_by_product: 'informational',
       can_earn_points: false,
       explanation: 'Total counts for a video can be shown as statistics. They never affect points, XP or rank.',
-      evidence: 'A',
+      evidence_tier: 'A',
       source_url: 'https://developers.google.com/youtube/v3/docs/videos/list',
     },
     {
@@ -39,7 +39,7 @@ export const CAPABILITIES = Object.freeze({
       used_by_product: 'no',
       can_earn_points: false,
       explanation: 'YouTube does not let any app see who liked a video — only the total. A like can therefore never be verified here, and likes never earn points.',
-      evidence: 'C',
+      evidence_tier: 'C',
       source_url: 'https://developers.google.com/youtube/v3/docs/videos',
     },
     {
@@ -50,7 +50,7 @@ export const CAPABILITIES = Object.freeze({
       used_by_product: 'no',
       can_earn_points: false,
       explanation: 'YouTube can tell an app how the signed-in person rated a video, if they grant access. This product does not ask for it, because likes are never rewarded.',
-      evidence: 'A',
+      evidence_tier: 'A',
       source_url: 'https://developers.google.com/youtube/v3/docs/videos/getRating',
     },
     {
@@ -61,7 +61,7 @@ export const CAPABILITIES = Object.freeze({
       used_by_product: 'informational',
       can_earn_points: false,
       explanation: 'A public comment can be matched to a linked channel. There is no search by author, so a video’s comments must be scanned; hidden, held or removed comments cannot be seen. Comments never earn points.',
-      evidence: 'A',
+      evidence_tier: 'A',
       source_url: 'https://developers.google.com/youtube/v3/docs/commentThreads/list',
     },
     {
@@ -72,7 +72,7 @@ export const CAPABILITIES = Object.freeze({
       used_by_product: 'yes',
       can_earn_points: true,
       explanation: 'For an original creative submission, the video’s channel can be compared with the member’s linked channel. A match is the only automatic “verified” in this product; an admin still decides whether to credit it.',
-      evidence: 'to_confirm',
+      evidence_tier: 'to_confirm',
       source_url: 'https://developers.google.com/youtube/v3/docs/videos',
     },
     {
@@ -83,7 +83,7 @@ export const CAPABILITIES = Object.freeze({
       used_by_product: 'no',
       can_earn_points: false,
       explanation: 'Possible with the member’s consent, and deliberately unused: subscriptions never earn points.',
-      evidence: 'A',
+      evidence_tier: 'A',
       source_url: 'https://developers.google.com/youtube/v3/docs/subscriptions/list',
     },
   ]),
@@ -96,7 +96,7 @@ export const CAPABILITIES = Object.freeze({
       used_by_product: 'informational',
       can_earn_points: false,
       explanation: 'TikTok shares totals only for the authorising creator’s own public videos, and only to an app that passed TikTok’s review.',
-      evidence: 'B',
+      evidence_tier: 'B',
       source_url: 'https://developers.tiktok.com/doc/tiktok-api-scopes',
     },
     {
@@ -106,7 +106,7 @@ export const CAPABILITIES = Object.freeze({
       used_by_product: 'no',
       can_earn_points: false,
       explanation: 'TikTok does not offer this to an app like this one. Likes can never be verified here and never earn points.',
-      evidence: 'B',
+      evidence_tier: 'B',
       source_url: 'https://developers.tiktok.com/doc/tiktok-api-scopes',
     },
     {
@@ -116,7 +116,7 @@ export const CAPABILITIES = Object.freeze({
       used_by_product: 'no',
       can_earn_points: false,
       explanation: 'TikTok does not offer this to an app like this one. Comments never earn points.',
-      evidence: 'B',
+      evidence_tier: 'B',
       source_url: 'https://developers.tiktok.com/doc/tiktok-api-scopes',
     },
     {
@@ -126,7 +126,7 @@ export const CAPABILITIES = Object.freeze({
       used_by_product: 'no',
       can_earn_points: true,
       explanation: 'Not available without an approved TikTok app, which a small private dashboard is unlikely to get. TikTok submissions are reviewed by a person.',
-      evidence: 'B',
+      evidence_tier: 'B',
       source_url: 'https://developers.tiktok.com/doc/display-api-overview',
     },
   ]),

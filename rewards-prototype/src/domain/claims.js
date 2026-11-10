@@ -487,6 +487,13 @@ export function revokeClaim(ctx, claimId, { reason } = {}) {
   });
 }
 
+/** How many submissions a member has made today (their local day) against the daily limit. */
+export function submissionAllowance(ctx, memberId) {
+  const limit = getSetting(ctx, 'daily_claim_limit_per_member');
+  const used = submissionsToday(ctx, memberId, getSetting(ctx, 'time_zone'));
+  return { limit, used, remaining: Math.max(0, limit - used) };
+}
+
 /** Points sitting in pending claims, per member — what the dashboard shows as "pending". */
 export function pendingPointsByMember(ctx) {
   const rows = ctx.db.all("SELECT member_id, COALESCE(SUM(points_snapshot), 0) AS points, COALESCE(SUM(xp_snapshot), 0) AS xp, COUNT(*) AS claims FROM claims WHERE decision = 'pending' GROUP BY member_id");
