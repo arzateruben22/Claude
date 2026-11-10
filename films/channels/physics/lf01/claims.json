@@ -361,5 +361,38 @@
 "verified_via": "from memory",
 "status": "TODO open link",
 "note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Interstep times of 20 to 50 microseconds are quoted in the literature; the film says 'about thirty to fifty'."
+},
+{
+"id": "c34",
+"sentence": "Your eyes blend flashes that come faster than about sixty a second.",
+"claim": "Human vision stops resolving a flickering light as separate flashes above roughly 50 to 90 flashes a second (the critical flicker fusion frequency, about 60 for a typical bright light).",
+"source_url": "https://en.wikipedia.org/wiki/Flicker_fusion_threshold",
+"source_title": "Wikipedia, Flicker fusion threshold (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Depends on brightness, the part of the retina and the person; 'about sixty' is a hedge."
+},
+{
+"id": "c35",
+"sentence": "Sound covers about a kilometer in three seconds.",
+"claim": "1,000 m / 343 m/s = 2.9 s.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+},
+{
+"id": "c36",
+"sentence": "A human hair is about a tenth of a millimeter wide. Light crosses a hair in about a third of a trillionth of a second. At this speed, that takes about a third of a second.",
+"claim": "A hair is about 0.1 mm (50 to 100 micrometres) wide; light crosses 0.1 mm in 0.33 ps; x 10^12 = 0.33 s.",
+"source_url": "https://en.wikipedia.org/wiki/Hair",
+"source_title": "Wikipedia, Hair (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The width is a hedge (human hairs run about 17 to 180 micrometres; 0.1 mm is typical). The two times are derivations (calc.py)."
 }
 ]

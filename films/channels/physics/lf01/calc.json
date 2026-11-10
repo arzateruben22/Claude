@@ -166,6 +166,14 @@
   "ticks_per_slow_s_at_1e9": 3.0,
   "ticks_per_slow_s_at_1e8": 30.0
  },
+ "hair": {
+  "m": 0.0001,
+  "light_s": 3.3356409519815206e-13,
+  "slow_1e12_s": 0.33356409519815206
+ },
+ "thunder": {
+  "s_per_km": 2.9154518950437316
+ },
  "femto": {
   "fps": 1000000000000.0,
   "playback_fps": 30.0,

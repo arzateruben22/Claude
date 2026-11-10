@@ -82,6 +82,9 @@ assert abs(out["light"]["at"]["1000000000000"]["speed_m_per_slow_s"] - 0.0002998
 out["light"]["snail_ratio_1e12"] = out["light"]["at"]["1000000000000"]["speed_m_per_slow_s"] / SNAIL_MS
 out["cpu"] = {"hz": CPU_HZ, "tick_s": 1 / CPU_HZ, "ticks_per_slow_s_at_1e9": CPU_HZ / 1e9, "ticks_per_slow_s_at_1e8": CPU_HZ / 1e8}
 assert abs(out["cpu"]["ticks_per_slow_s_at_1e9"] - 3.0) < 1e-9
+out["hair"] = {"m": 1.0e-4, "light_s": 1.0e-4 / C, "slow_1e12_s": 1.0e-4 / C * 1e12}
+assert abs(out["hair"]["slow_1e12_s"] - 0.3336) < 1e-3
+out["thunder"] = {"s_per_km": 1000.0 / V_SOUND}
 out["femto"] = {"fps": 1e12, "playback_fps": 30.0, "slow_factor_playback": 1e12 / 30.0}
 if __name__ == "__main__":
     (HERE / "calc.json").write_text(json.dumps(out, indent=1))
@@ -97,4 +100,5 @@ if __name__ == "__main__":
     print(f"light: {C*1e-9*100:.1f} cm per nanosecond; at 1e9x {C/1e9*100:.0f} cm per slowed second, room in {KITCHEN_M/C*1e9:.1f} s; at 1e12x {C/1e12*1000:.2f} mm per slowed second, room in {KITCHEN_M/C*1e12/3600:.1f} h, {out['light']['snail_ratio_1e12']:.2f} of a snail's pace")
     print(f"at 1e8x a flash crosses the room in {KITCHEN_M/C*1e8:.2f} s; the chip ticks {CPU_HZ/1e8:.0f} times per slowed second")
     print(f"3 GHz processor tick every {1e9/CPU_HZ:.2f} ns -> {CPU_HZ/1e9:.0f} ticks per slowed second at 1e9x")
+    print(f"light crosses a 0.1 mm hair in {out['hair']['light_s']*1e12:.2f} ps -> {out['hair']['slow_1e12_s']:.2f} s at 1e12x; sound: {out['thunder']['s_per_km']:.1f} s per km")
     print(f"a trillion frames a second played back at 30 fps is {out['femto']['slow_factor_playback']:.2e}x")
