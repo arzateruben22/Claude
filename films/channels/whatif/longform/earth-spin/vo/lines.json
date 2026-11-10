@@ -407,9 +407,9 @@
   {
    "id": "vo10",
    "beat": "calendar",
-   "text": "Meanwhile, the calendar breaks. The year does not change, because the Earth still goes round the Sun once. But every day gets shorter, so a year contains more days. At a day of an hour and twenty-four minutes, a year would hold over six thousand of them. You would watch a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
+   "text": "Meanwhile, the calendar breaks. The year does not change, because the Earth still goes round the Sun once. But every day gets shorter, so a year contains more days. Right now, at a six hour day, a year already holds about fourteen hundred and sixty days. By the end, it would hold over six thousand, with a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
    "stars": [],
-   "phonemes": "mˈiːnwaɪl, ðə kˈæləndɚ bɹˈeɪks. ðə jˈɪɹ dʌznˌɑːt tʃˈeɪndʒ, bɪkˈʌz ðɪ ˈɜːθ stˈɪl ɡoʊz ɹˈaʊnd ðə sˈʌn wˈʌns. bˌʌt ˈɛvɹi dˈeɪ ɡˈɛts ʃˈɔːɹɾɚ, sˌoʊ ɐ jˈɪɹ kəntˈeɪnz mˈɔːɹ dˈeɪz. æɾə dˈeɪ əvən ˈaʊɚ ænd twˈɛntifˈɔːɹ mˈɪnɪts, ɐ jˈɪɹ wʊd hˈoʊld ˌoʊvɚ sˈɪks θˈaʊzənd ʌv ðˌɛm. juː wʊd wˈɑːtʃ ɐ sˈʌnɹaɪz ˈɛvɹi ˈeɪɾifˈɔːɹ mˈɪnɪts, ænd juː wʊd biː ˈæskt tə slˈiːp ˈeɪt tˈaɪmz ɐ dˈeɪ.",
+   "phonemes": "mˈiːnwaɪl, ðə kˈæləndɚ bɹˈeɪks. ðə jˈɪɹ dʌznˌɑːt tʃˈeɪndʒ, bɪkˈʌz ðɪ ˈɜːθ stˈɪl ɡoʊz ɹˈaʊnd ðə sˈʌn wˈʌns. bˌʌt ˈɛvɹi dˈeɪ ɡˈɛts ʃˈɔːɹɾɚ, sˌoʊ ɐ jˈɪɹ kəntˈeɪnz mˈɔːɹ dˈeɪz. ɹˈaɪt nˈaʊ, æɾə sˈɪks ˈaʊɚ dˈeɪ, ɐ jˈɪɹ ɔːlɹˌɛdi hˈoʊldz ɐbˌaʊt fˈɔːɹtiːn hˈʌndɹɪd ænd sˈɪksti dˈeɪz. baɪ ðɪ ˈɛnd, ɪt wʊd hˈoʊld ˌoʊvɚ sˈɪks θˈaʊzənd, wɪð ɐ sˈʌnɹaɪz ˈɛvɹi ˈeɪɾifˈɔːɹ mˈɪnɪts, ænd juː wʊd biː ˈæskt tə slˈiːp ˈeɪt tˈaɪmz ɐ dˈeɪ.",
    "speeds": [
     0.76,
     0.76,
@@ -437,13 +437,13 @@
      12.1744
     ],
     [
-     18.2092,
-     18.5892
+     19.2274,
+     19.6074
     ]
    ],
    "file": "10.wav",
-   "dur": 25.322,
-   "sha256": "0854333808af3507e40e084276bb490e0f78e6691837eba737b1bf7219f65e40"
+   "dur": 29.226,
+   "sha256": "6dba59fcaa048b727e5b4bba941e6fa9b9ce71a794156f42efc51a3ce4703176"
   },
   {
    "id": "vo11",

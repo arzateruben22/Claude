@@ -4102,13 +4102,13 @@
   },
   {
    "id": "vo10",
-   "text": "Meanwhile, the calendar breaks. The year does not change, because the Earth still goes round the Sun once. But every day gets shorter, so a year contains more days. At a day of an hour and twenty-four minutes, a year would hold over six thousand of them. You would watch a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
-   "heard": "Meanwhile the calendar breaks. The year does not change because the earth still goes round the sun once. But every day gets shorter so a year contains more days. At a day of an hour and 24 minutes, a year would hold over 6,000 of them. You would watch a sunrise every 84 minutes and you would be asked to sleep eight times a day.",
+   "text": "Meanwhile, the calendar breaks. The year does not change, because the Earth still goes round the Sun once. But every day gets shorter, so a year contains more days. Right now, at a six hour day, a year already holds about fourteen hundred and sixty days. By the end, it would hold over six thousand, with a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
+   "heard": "Meanwhile, the calendar breaks. The year does not change, because the earth still goes round the sun once. But every day gets shorter, so a year contains more days. Right now, at a six-hour day, a year already holds about 1460 days. By the end, it would hold over 6,000 with a sunrise every 84 minutes, and you would be asked to sleep 8 times a day.",
    "words": [
     {
      "w": "Meanwhile,",
      "start": 0.02,
-     "end": 0.56,
+     "end": 0.64,
      "heard": true
     },
     {
@@ -4157,7 +4157,7 @@
     {
      "w": "change,",
      "start": 3.285,
-     "end": 3.84,
+     "end": 4.08,
      "heard": true
     },
     {
@@ -4241,8 +4241,8 @@
     },
     {
      "w": "shorter,",
-     "start": 8.695,
-     "end": 9.28,
+     "start": 8.69,
+     "end": 9.44,
      "heard": true
     },
     {
@@ -4265,14 +4265,14 @@
     },
     {
      "w": "contains",
-     "start": 10.11,
-     "end": 11.04,
+     "start": 10.1,
+     "end": 10.96,
      "heard": true
     },
     {
      "w": "more",
-     "start": 11.13,
-     "end": 11.28,
+     "start": 11.055,
+     "end": 11.2,
      "heard": true
     },
     {
@@ -4280,229 +4280,265 @@
      "start": 11.19,
      "end": 11.794,
      "heard": true,
-     "end_asr": 12.08
+     "end_asr": 12.16
     },
     {
-     "w": "At",
-     "start": 12.19,
-     "end": 12.32,
+     "w": "Right",
+     "start": 12.195,
+     "end": 12.56,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 12.22,
-     "end": 12.48,
+     "w": "now,",
+     "start": 12.53,
+     "end": 13.04,
      "heard": true
     },
     {
-     "w": "day",
-     "start": 12.485,
-     "end": 12.72,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 12.785,
-     "end": 12.96,
-     "heard": true
-    },
-    {
-     "w": "an",
+     "w": "at",
      "start": 13.05,
      "end": 13.2,
      "heard": true
     },
     {
-     "w": "hour",
-     "start": 13.115,
-     "end": 13.6,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 13.66,
-     "end": 13.84,
-     "heard": true
-    },
-    {
-     "w": "twenty-four",
-     "start": 13.83,
-     "end": 14.48,
-     "heard": false
-    },
-    {
-     "w": "minutes,",
-     "start": 14.545,
-     "end": 15.2,
-     "heard": true
-    },
-    {
      "w": "a",
-     "start": 15.27,
-     "end": 15.44,
-     "heard": true
-    },
-    {
-     "w": "year",
-     "start": 15.445,
-     "end": 15.76,
-     "heard": true
-    },
-    {
-     "w": "would",
-     "start": 15.77,
-     "end": 16.0,
-     "heard": true
-    },
-    {
-     "w": "hold",
-     "start": 16.03,
-     "end": 16.4,
-     "heard": true
-    },
-    {
-     "w": "over",
-     "start": 16.36,
-     "end": 16.64,
+     "start": 13.085,
+     "end": 13.36,
      "heard": true
     },
     {
      "w": "six",
-     "start": 16.525,
-     "end": 17.76,
+     "start": 13.305,
+     "end": 14.16,
      "heard": false
     },
     {
-     "w": "thousand",
-     "start": 16.555,
-     "end": 17.76,
+     "w": "hour",
+     "start": 13.335,
+     "end": 14.16,
      "heard": false
     },
     {
-     "w": "of",
-     "start": 17.87,
-     "end": 18.0,
-     "heard": true
-    },
-    {
-     "w": "them.",
-     "start": 18.095,
-     "end": 18.209,
-     "heard": true,
-     "end_asr": 18.56
-    },
-    {
-     "w": "You",
-     "start": 18.615,
-     "end": 18.8,
-     "heard": true
-    },
-    {
-     "w": "would",
-     "start": 18.68,
-     "end": 18.96,
-     "heard": true
-    },
-    {
-     "w": "watch",
-     "start": 19.0,
-     "end": 19.36,
+     "w": "day,",
+     "start": 14.14,
+     "end": 14.64,
      "heard": true
     },
     {
      "w": "a",
-     "start": 19.245,
-     "end": 19.52,
+     "start": 14.64,
+     "end": 14.88,
+     "heard": true
+    },
+    {
+     "w": "year",
+     "start": 14.79,
+     "end": 15.2,
+     "heard": true
+    },
+    {
+     "w": "already",
+     "start": 15.265,
+     "end": 15.76,
+     "heard": true
+    },
+    {
+     "w": "holds",
+     "start": 15.805,
+     "end": 16.32,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 16.325,
+     "end": 16.64,
+     "heard": true
+    },
+    {
+     "w": "fourteen",
+     "start": 16.575,
+     "end": 18.72,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 16.605,
+     "end": 18.72,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 16.64,
+     "end": 18.72,
+     "heard": false
+    },
+    {
+     "w": "sixty",
+     "start": 16.67,
+     "end": 18.72,
+     "heard": false
+    },
+    {
+     "w": "days.",
+     "start": 18.635,
+     "end": 19.227,
+     "heard": true,
+     "end_asr": 19.6
+    },
+    {
+     "w": "By",
+     "start": 19.63,
+     "end": 20.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 19.985,
+     "end": 20.16,
+     "heard": true
+    },
+    {
+     "w": "end,",
+     "start": 20.17,
+     "end": 20.64,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 20.685,
+     "end": 20.8,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 20.715,
+     "end": 21.04,
+     "heard": true
+    },
+    {
+     "w": "hold",
+     "start": 20.985,
+     "end": 21.36,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 21.335,
+     "end": 21.68,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 21.775,
+     "end": 22.8,
+     "heard": false
+    },
+    {
+     "w": "thousand,",
+     "start": 21.805,
+     "end": 22.8,
+     "heard": false
+    },
+    {
+     "w": "with",
+     "start": 22.815,
+     "end": 23.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 23.03,
+     "end": 23.28,
      "heard": true
     },
     {
      "w": "sunrise",
-     "start": 19.565,
-     "end": 20.4,
+     "start": 23.305,
+     "end": 24.16,
      "heard": true
     },
     {
      "w": "every",
-     "start": 20.355,
-     "end": 20.72,
+     "start": 24.1,
+     "end": 24.48,
      "heard": true
     },
     {
      "w": "eighty-four",
-     "start": 20.835,
-     "end": 21.6,
+     "start": 24.545,
+     "end": 25.36,
      "heard": false
     },
     {
      "w": "minutes,",
-     "start": 21.645,
-     "end": 22.08,
+     "start": 25.415,
+     "end": 26.08,
      "heard": true
     },
     {
      "w": "and",
-     "start": 22.33,
-     "end": 22.48,
+     "start": 26.095,
+     "end": 26.24,
      "heard": true
     },
     {
      "w": "you",
-     "start": 22.545,
-     "end": 22.64,
+     "start": 26.335,
+     "end": 26.4,
      "heard": true
     },
     {
      "w": "would",
-     "start": 22.72,
-     "end": 22.8,
+     "start": 26.485,
+     "end": 26.56,
      "heard": true
     },
     {
      "w": "be",
-     "start": 22.75,
-     "end": 22.96,
+     "start": 26.655,
+     "end": 26.72,
      "heard": true
     },
     {
      "w": "asked",
-     "start": 22.855,
-     "end": 23.2,
+     "start": 26.685,
+     "end": 27.04,
      "heard": true
     },
     {
      "w": "to",
-     "start": 23.265,
-     "end": 23.44,
+     "start": 27.075,
+     "end": 27.2,
      "heard": true
     },
     {
      "w": "sleep",
-     "start": 23.54,
-     "end": 23.92,
+     "start": 27.125,
+     "end": 27.68,
      "heard": true
     },
     {
      "w": "eight",
-     "start": 23.925,
-     "end": 24.32,
+     "start": 27.69,
+     "end": 28.16,
      "heard": true
     },
     {
      "w": "times",
-     "start": 24.265,
-     "end": 24.72,
+     "start": 28.14,
+     "end": 28.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 24.745,
-     "end": 24.88,
+     "start": 28.655,
+     "end": 28.8,
      "heard": true
     },
     {
      "w": "day.",
-     "start": 24.915,
-     "end": 25.28,
+     "start": 28.805,
+     "end": 29.2,
      "heard": true
     }
    ],
