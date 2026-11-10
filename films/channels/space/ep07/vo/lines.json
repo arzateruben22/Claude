@@ -69,17 +69,17 @@
   {
    "id": "vo05",
    "beat": "whoa",
-   "text": "Now turn every star into a tree. The stars run out, and Earth's forests keep going. Trees win, by roughly eight to thirty times.",
+   "text": "Now turn every star into a tree. The stars run out, and Earth's forests keep going. Trees win, by roughly eight to thirty times. Quick thing: if that made the sky feel bigger, tap like and follow.",
    "stars": [
     "tree",
     "going",
     "thirty"
    ],
-   "phonemes": "nˈaʊ tˈɜːn ˈɛvɹi stˈɑːɹ ˌɪntʊ ɐ tɹˈiː. ðə stˈɑːɹz ɹˈʌn ˈaʊt, ænd ˈɜːθz fˈɔːɹɪsts kˈiːp ɡˈoʊɪŋ. tɹˈiːz wˈɪn, baɪ ɹˈʌfli ˈeɪt tə θˈɜːɾi tˈaɪmz.",
+   "phonemes": "nˈaʊ tˈɜːn ˈɛvɹi stˈɑːɹ ˌɪntʊ ɐ tɹˈiː. ðə stˈɑːɹz ɹˈʌn ˈaʊt, ænd ˈɜːθz fˈɔːɹɪsts kˈiːp ɡˈoʊɪŋ. tɹˈiːz wˈɪn, baɪ ɹˈʌfli ˈeɪt tə θˈɜːɾi tˈaɪmz. kwˈɪk θˈɪŋ: ɪf ðæt mˌeɪd ðə skˈaɪ fˈiːl bˈɪɡɚ, tˈæp lˈaɪk ænd fˈɑːloʊ.",
    "speed": 1.0,
    "file": "05.wav",
-   "dur": 8.862,
-   "sha256": "2482cb826d917edc3cc0a5a75c9a407125b40a4d1ea3c266325cf3b2b9f92e77"
+   "dur": 13.647,
+   "sha256": "d59d9b2755f9f772b3edb4aa8b82d217ebe4ee761aa19466ac0e704ab17b3246"
   },
   {
    "id": "vo06",

@@ -82,15 +82,15 @@
   {
    "id": "vo06",
    "beat": "takeaway",
-   "text": "So tonight's dark isn't empty. It's a clue: the universe has not been shining forever.",
+   "text": "So tonight's dark isn't empty. It's a clue: the universe has not been shining forever. Still looking up? Tap like and follow. There's plenty more sky.",
    "stars": [
     "clue"
    ],
-   "phonemes": "sˌoʊ tənˈaɪts dˈɑːɹk ˌɪzənt ˈɛmpti. ɪts ɐ klˈuː: ðə jˈuːnɪvˌɜːs həznɑːt bˌɪn ʃˈaɪnɪŋ fɚɹˈɛvɚ.",
+   "phonemes": "sˌoʊ tənˈaɪts dˈɑːɹk ˌɪzənt ˈɛmpti. ɪts ɐ klˈuː: ðə jˈuːnɪvˌɜːs həznɑːt bˌɪn ʃˈaɪnɪŋ fɚɹˈɛvɚ. stˈɪl lˈʊkɪŋ ˈʌp? tˈæp lˈaɪk ænd fˈɑːloʊ. ðɛɹz plˈɛnti mˈɔːɹ skˈaɪ.",
    "speed": 0.95,
    "file": "06.wav",
-   "dur": 5.87,
-   "sha256": "9d61c86232482525a0e60e9528a2209e4871e64f460d3fee88e7a91f69c60c2f"
+   "dur": 10.11,
+   "sha256": "6c1833027b6bdcf77b463d8bcd5f116379073fe9b9b324747265203e12ce8903"
   },
   {
    "id": "vo07",

@@ -32,7 +32,7 @@ vo: Now the trees. In twenty fifteen, a team put Earth's at about three *trillio
 vo: Researchers counted trees in *ground* plots, then scaled up with satellite maps. {c5} Both are estimates, not exact counts, so each really means *about*. {c6} The honest answer is a *range*. {-}
 
 ## whoa {shot: every star turns into a tree: the galaxy's dots turn teal and fill Earth's tally; the tally overflows past the galaxy · spine "trees ÷ stars: roughly 8 to 30" · picture-only 0.6 s · energy: 0.8} (37–51 s)
-vo: Now turn every star into a *tree*. {-} The stars run out, and Earth's forests keep *going*. {-} Trees win, by roughly eight to *thirty* times. {c7}
+vo: Now turn every star into a *tree*. {-} The stars run out, and Earth's forests keep *going*. {-} Trees win, by roughly eight to *thirty* times. {c7} Quick thing: if that made the sky feel bigger, tap like and follow. {-}
 
 ## takeaway {shot: hold on the overflow · picture-only 0.2 s · energy: 0.3} (51–58.5 s)
 vo: There are *more* trees on Earth than stars in our galaxy. {c12} Big numbers hide in ordinary places. {-}

@@ -40,20 +40,20 @@
   {
    "id": "why",
    "t0": 22.4,
-   "t1": 34.6667,
+   "t1": 33.0667,
    "line": "vo04",
    "energy": 0.62
   },
   {
    "id": "whoa",
-   "t0": 34.6667,
-   "t1": 47.4667,
+   "t0": 33.0667,
+   "t1": 43.2,
    "line": "vo05",
    "energy": 0.8
   },
   {
    "id": "takeaway",
-   "t0": 47.4667,
+   "t0": 43.2,
    "t1": 53.8667,
    "line": "vo06",
    "energy": 0.3
@@ -337,7 +337,7 @@
    "fov": 48
   },
   {
-   "t": 37.8333,
+   "t": 36.2333,
    "p": [
     -190,
     110,
@@ -351,7 +351,7 @@
    "fov": 48
   },
   {
-   "t": 38.3333,
+   "t": 36.7333,
    "p": [
     -190,
     110,
@@ -365,7 +365,7 @@
    "fov": 48
   },
   {
-   "t": 40.4333,
+   "t": 38.8333,
    "p": [
     22,
     18,
@@ -379,7 +379,7 @@
    "fov": 46
   },
   {
-   "t": 43.6667,
+   "t": 42.0667,
    "p": [
     22,
     18,
@@ -393,7 +393,7 @@
    "fov": 46
   },
   {
-   "t": 46.2667,
+   "t": 42.4667,
    "p": [
     0,
     0.5,
@@ -407,7 +407,7 @@
    "fov": 60
   },
   {
-   "t": 47.4667,
+   "t": 44.4,
    "p": [
     0,
     0.5,
@@ -421,7 +421,7 @@
    "fov": 60
   },
   {
-   "t": 50.4333,
+   "t": 46.0333,
    "p": [
     0,
     1.5,
@@ -495,8 +495,8 @@
   "n": 3.2,
   "c": 13.3333,
   "why": 22.4,
-  "w": 34.6667,
-  "tk": 47.4667,
+  "w": 33.0667,
+  "tk": 43.2,
   "rd": 53.8667,
   "end": 60.93333333333333,
   "spokes0": 6.533333333333333,
@@ -511,10 +511,10 @@
   "yet": 27.333333333333332,
   "age0": 30.2,
   "age1": 31.933333333333334,
-  "way": 38.333333333333336,
-  "far": 40.43333333333333,
-  "begin": 43.666666666666664,
-  "clue": 50.43333333333333,
+  "way": 36.733333333333334,
+  "far": 38.833333333333336,
+  "begin": 42.06666666666667,
+  "clue": 46.03333333333333,
   "sun": 55.36666666666667,
   "farthest": 57.6,
   "dip": [
@@ -541,45 +541,12 @@
    "fixed": true
   },
   {
-   "id": "l-near",
-   "text": "near: few, bright",
-   "kind": "star",
-   "anchor": "near",
-   "t0": 14.666666666666666,
-   "t1": 17.7,
-   "side": -1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-mid",
-   "text": "middle: more, fainter",
-   "kind": "body",
-   "anchor": "mid",
-   "t0": 16.4667,
-   "t1": 17.7,
-   "side": 1,
-   "v": "above",
-   "fixed": true
-  },
-  {
-   "id": "l-far",
-   "text": "far: most, faintest",
-   "kind": "grav",
-   "anchor": "far",
-   "t0": 15.866666666666667,
-   "t1": 17.7,
-   "side": 1,
-   "v": "below",
-   "fixed": true
-  },
-  {
    "id": "l-hz",
    "text": "light-travel time (not to scale)",
    "kind": "light",
    "anchor": "hz",
    "t0": 30.0,
-   "t1": 37.9333,
+   "t1": 36.3333,
    "side": -1,
    "v": "above",
    "fixed": true
@@ -603,79 +570,11 @@
  ],
  "counters": [
   {
-   "id": "c-hook",
-   "label": "the night sky",
-   "text": "dark?",
-   "t0": 0.0,
-   "t1": 3.2,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-endless",
-   "label": "an endless, eternal universe",
-   "text": "a star every way",
-   "t0": 6.533333333333333,
-   "t1": 9.8333,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-cancel",
-   "label": "each shell adds the same light",
-   "text": "the sky glows",
-   "t0": 18.2,
-   "t1": 22.4,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
    "id": "c-age",
    "label": "the universe's age, about",
    "text": "13.8 billion years",
    "t0": 29.9,
-   "t1": 37.8333,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-dark",
-   "label": "so the sky is",
-   "text": "dark: a clue",
-   "t0": 43.666666666666664,
-   "t1": 53.4667,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-read-sun",
-   "label": "light time · the Sun",
-   "text": "8 minutes",
-   "read": true,
-   "t0": 53.8667,
-   "t1": 57.2,
-   "at": [
-    0.5,
-    0.555
-   ]
-  },
-  {
-   "id": "c-read-far",
-   "label": "light time · far galaxies",
-   "text": "billions of years",
-   "read": true,
-   "t0": 57.6,
-   "t1": 60.4833,
+   "t1": 36.2333,
    "at": [
     0.5,
     0.555
@@ -692,36 +591,6 @@
     0.08333333333333333,
     0.235
    ]
-  },
-  {
-   "id": "p-rays",
-   "text": "a ray from you to a star",
-   "t0": 8.1333,
-   "t1": 9.8333,
-   "at": [
-    0.08333333333333333,
-    0.175
-   ]
-  },
-  {
-   "id": "p-forest",
-   "text": "every look hits a trunk",
-   "t0": 10.2333,
-   "t1": 13.1333,
-   "at": [
-    0.08333333333333333,
-    0.175
-   ]
-  },
-  {
-   "id": "p-way",
-   "text": "still on its way",
-   "t0": 38.333333333333336,
-   "t1": 42.4333,
-   "at": [
-    0.08333333333333333,
-    0.175
-   ]
   }
  ],
  "title": {
@@ -732,8 +601,8 @@
  },
  "endCard": 60.93333333333333,
  "end": {
-  "title": "Next orbit: your *gold*",
-  "follow": "One More Orbit · S2 · Episode 3",
+  "title": "One more *orbit*",
+  "follow": "Season 2 · Episode 3 is next",
   "next": "Planck (ESA): the universe is about 13.8 billion years old."
  },
  "captions": [
@@ -1164,215 +1033,283 @@
    ]
   },
   {
-   "t0": 34.987,
-   "t1": 38.922,
+   "t0": 33.387,
+   "t1": 37.322,
    "lines": [
     [
      [
       "Past",
-      34.987
+      33.387
      ],
      [
       "a",
-      35.267
+      33.667
      ],
      [
       "certain",
-      35.457
+      33.857
      ],
      [
       "distance,",
-      35.842
+      34.242
      ]
     ],
     [
      [
       "starlight",
-      36.657
+      35.057
      ],
      [
       "is",
-      37.307
+      35.707
      ],
      [
       "still",
-      37.562
+      35.962
      ],
      [
       "on",
-      37.727
+      36.127
      ],
      [
       "its",
-      37.982
+      36.382
      ],
      [
       "way.",
-      38.332
+      36.732
      ]
     ]
    ]
   },
   {
-   "t0": 38.922,
-   "t1": 41.267,
+   "t0": 37.322,
+   "t1": 39.667,
    "lines": [
     [
      [
       "So",
-      38.922
+      37.322
      ],
      [
       "we",
-      39.227
+      37.627
      ],
      [
       "can",
-      39.432
+      37.832
      ],
      [
       "only",
-      39.462
+      37.862
      ],
      [
       "see",
-      39.857
+      38.257
      ],
      [
       "so",
-      40.147
+      38.547
      ],
      [
       "far.",
-      40.432
+      38.832
      ]
     ]
    ]
   },
   {
-   "t0": 41.267,
-   "t1": 44.467,
+   "t0": 39.667,
+   "t1": 42.867,
    "lines": [
     [
      [
       "The",
-      41.267
+      39.667
      ],
      [
       "dark",
-      41.297
+      39.697
      ],
      [
       "sky",
-      41.682
+      40.082
      ],
      [
       "hints",
-      42.237
+      40.637
      ],
      [
       "that",
-      42.577
+      40.977
      ],
      [
       "the",
-      42.752
+      41.152
      ]
     ],
     [
      [
       "universe",
-      42.782
+      41.182
      ],
      [
       "has",
-      43.367
+      41.767
      ],
      [
       "a",
-      43.407
+      41.807
      ],
      [
       "beginning.",
-      43.682
+      42.082
      ]
     ]
    ]
   },
   {
-   "t0": 47.792,
-   "t1": 50.072,
+   "t0": 43.52,
+   "t1": 45.675,
    "lines": [
     [
      [
       "So",
-      47.792
+      43.52
      ],
      [
       "tonight's",
-      48.012
+      43.745
      ],
      [
       "dark",
-      48.442
+      44.15
      ],
      [
       "isn't",
-      48.867
+      44.575
      ],
      [
       "empty.",
-      49.242
+      44.95
      ]
     ]
    ]
   },
   {
-   "t0": 50.072,
-   "t1": 53.907,
+   "t0": 45.675,
+   "t1": 49.57,
    "lines": [
     [
      [
       "It's",
-      50.072
+      45.675
      ],
      [
       "a",
-      50.332
+      45.94
      ],
      [
       "clue:",
-      50.437
+      46.045
      ],
      [
       "the",
-      51.277
+      46.945
      ],
      [
       "universe",
-      51.307
+      46.975
      ]
     ],
     [
      [
       "has",
-      51.912
+      47.62
      ],
      [
       "not",
-      52.072
+      47.985
      ],
      [
       "been",
-      52.337
+      48.035
      ],
      [
       "shining",
-      52.657
+      48.205
      ],
      [
       "forever.",
-      53.132
+      48.785
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 49.57,
+   "t1": 50.765,
+   "lines": [
+    [
+     [
+      "Still",
+      49.57
+     ],
+     [
+      "looking",
+      49.995
+     ],
+     [
+      "up?",
+      50.1
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 50.765,
+   "t1": 52.155,
+   "lines": [
+    [
+     [
+      "Tap",
+      50.765
+     ],
+     [
+      "like",
+      51.055
+     ],
+     [
+      "and",
+      51.27
+     ],
+     [
+      "follow.",
+      51.515
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 52.155,
+   "t1": 53.9,
+   "lines": [
+    [
+     [
+      "There's",
+      52.155
+     ],
+     [
+      "plenty",
+      52.41
+     ],
+     [
+      "more",
+      52.68
+     ],
+     [
+      "sky.",
+      53.15
      ]
     ]
    ]
@@ -1539,17 +1476,17 @@
   },
   {
    "id": "vo05",
-   "t": 34.96666666666667,
+   "t": 33.36666666666667,
    "dur": 9.22,
    "file": "vo/05.wav",
    "text": "Past a certain distance, starlight is still on its way. So we can only see so far. The dark sky hints that the universe has a beginning."
   },
   {
    "id": "vo06",
-   "t": 47.766666666666666,
-   "dur": 5.87,
+   "t": 43.5,
+   "dur": 10.11,
    "file": "vo/06.wav",
-   "text": "So tonight's dark isn't empty. It's a clue: the universe has not been shining forever."
+   "text": "So tonight's dark isn't empty. It's a clue: the universe has not been shining forever. Still looking up? Tap like and follow. There's plenty more sky."
   },
   {
    "id": "vo07",

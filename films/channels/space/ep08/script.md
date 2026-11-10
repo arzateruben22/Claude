@@ -28,7 +28,7 @@ vo: The key here is *time*. {-} Far starlight may not have had time to reach us 
 vo: Past a certain distance, starlight is still on its *way*. {c20} So we can only see so *far*. {c21} The dark sky hints that the universe has a *beginning*. {c7}
 
 ## takeaway {shot: hold on the dark sky with one star lit · picture-only 0.2 s · energy: 0.3} (50–57 s)
-vo: So tonight's dark isn't empty. {-} It's a *clue*: the universe has not been shining forever. {c22}
+vo: So tonight's dark isn't empty. {-} It's a *clue*: the universe has not been shining forever. {c22} Still looking up? Tap like and follow. There's plenty more sky. {-}
 
 ## readout {segment: readout · light-time readout: "8 min" Sun; "billions of years" far galaxies · a ping per line · picture-only 0.2 s · energy: 0.45} (57–64.5 s)
 vo: *Light time*: from the Sun, about eight minutes. {c8} From the farthest galaxies we see, *billions* of years. {c9}
