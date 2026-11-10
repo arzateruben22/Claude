@@ -1,0 +1,44 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Watch a wing, slowed ten times.",
+   "stars": [],
+   "phonemes": "wˈɑːtʃ ɐ wˈɪŋ, slˈoʊd tˈɛn tˈaɪmz.",
+   "file": "01.wav",
+   "dur": 2.252,
+   "sha256": "d648fd82713b89855e48b6d3a4b8b9f7d69444531709803e46bb119c04ef0dbf"
+  },
+  {
+   "id": "vo02",
+   "beat": "body",
+   "text": "No camera on Earth could film all of this. So every picture here is drawn by a computer, from the physics. When a number was measured by someone, I'll say so. When a picture is just an idea, it will wear a badge. Ten times slower. One second now takes ten. A small hummingbird hovers at the window. Its wings beat about fifty times a second. At ten times slower, that's five beats a second. Now you can see them. Not a blur anymore, just wings, going up and down. The wings are doing all the work of holding it still. Each wing sweeps forward, flips, and sweeps back. Watch the wing tips: they trace tiny loops in the air. Here's why they blur at full speed. Your eyes blend flashes that come faster than about sixty a second. So fifty wing beats a second just smear together. But look at the fly by the cup. Even at ten times slower, its wings are still a blur.",
+   "stars": [
+    "see"
+   ],
+   "phonemes": "nˈoʊ kˈæmɹə ˌɔn ˈɜːθ kʊd fˈɪlm ˈɔːl ʌv ðˈɪs. sˌoʊ ˈɛvɹi pˈɪktʃɚ hˈɪɹ ɪz dɹˈɔːn baɪ ɐ kəmpjˈuːɾɚ, fɹʌmðə fˈɪzɪks. wˌɛn ɐ nˈʌmbɚ wʌz mˈɛʒɚd baɪ sˈʌmwʌn, aɪl sˈeɪ sˈoʊ. wˌɛn ɐ pˈɪktʃɚɹ ɪz dʒˈʌst ɐn aɪdˈiə, ɪt wɪl wˈɛɹ ɐ bˈædʒ. tˈɛn tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ tˈeɪks tˈɛn. ɐ smˈɔːl hˈʌmɪŋbˌɜːd hˈʌvɚz æt ðə wˈɪndoʊ. ɪts wˈɪŋz bˈiːt ɐbˌaʊt fˈɪfti tˈaɪmz ɐ sˈɛkənd. æt tˈɛn tˈaɪmz slˈoʊɚ, ðæts fˈaɪv bˈiːts ɐ sˈɛkənd. nˈaʊ juː kæn sˈiː ðˌɛm. nˌɑːɾə blˈɜːɹ ˌɛnɪmˈɔːɹ, dʒˈʌst wˈɪŋz, ɡˌoʊɪŋ ˌʌp ænd dˈaʊn. ðə wˈɪŋz ɑːɹ dˌuːɪŋ ˈɔːl ðə wˈɜːk ʌv hˈoʊldɪŋ ɪt stˈɪl. ˈiːtʃ wˈɪŋ swˈiːps fˈɔːɹwɚd, flˈɪps, ænd swˈiːps bˈæk. wˈɑːtʃ ðə wˈɪŋ tˈɪps: ðeɪ tɹˈeɪs tˈaɪni lˈuːps ɪnðɪ ˈɛɹ. hˈɪɹz wˌaɪ ðeɪ blˈɜːɹ æt fˈʊl spˈiːd. jʊɹ ˈaɪz blˈɛnd flˈæʃᵻz ðæt kˈʌm fˈæstɚ ðɐn ɐbˌaʊt sˈɪksti ɐ sˈɛkənd. sˌoʊ fˈɪfti wˈɪŋ bˈiːts ɐ sˈɛkənd dʒˈʌst smˈɪɹ təɡˈɛðɚ. bˌʌt lˈʊk æt ðə flˈaɪ baɪ ðə kˈʌp. ˈiːvən æt tˈɛn tˈaɪmz slˈoʊɚ, ɪts wˈɪŋz ɑːɹ stˈɪl ɐ blˈɜː.",
+   "file": "02.wav",
+   "dur": 56.209,
+   "sha256": "d6b3ff48a60bcf8004c99a023fa7b99a15726fb22f5e1ad56b0591052ccca2e0"
+  },
+  {
+   "id": "vo03",
+   "beat": "tease",
+   "text": "Part 1 of 8. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt wˈʌn ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "file": "03.wav",
+   "dur": 2.688,
+   "sha256": "2998bde2383b28c466bbf0cd4d36539636f74513d7c1abb08e1956d9bd63eff0"
+  }
+ ]
+}

@@ -209,6 +209,8 @@ if not PART:
                {"id": "bench", "kind": "tag", "text": "Model of the MIT setup", "t0": R(cut("real") + 3.0), "t1": R(cut("takeaway") - 0.4), "slot": "tr"}]
     _seen = set(); BADGES = [b for b in BADGES if not (b["id"] in _seen or _seen.add(b["id"]))]
 
+BADGES = []          # owner rule (lesson from the PL draft): text is the counter plus the caption only; no corner chips, stamps or extra labels
+
 # the factor keys: sort, round, and guard the order
 KEYS = sorted({(R(t), R(k)) for t, k in KEYS}, key=lambda x: (x[0], x[1]))
 KEYS = [(t, k) for t, k in KEYS]
@@ -220,7 +222,7 @@ for r in CALC["rows"]:
 LBL = [[-1e9, f"1 real second now lasts {LABEL_TXT[round(KEYS[0][1], 3)]}"]]
 for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
     if abs(k1 - k0) > 1e-6:
-        LBL.append([R(t1), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
+        LBL.append([R(t1 + 1.0), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
 SPINE_AT = [[-1e9, [0.5, 0.17]]] if PART else [[-1e9, [0.3, 0.19]]]

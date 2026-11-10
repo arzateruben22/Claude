@@ -1,0 +1,42 @@
+{
+ "voice": "af_bella",
+ "speed": 0.85,
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "A fly's wings, then a splash.",
+   "stars": [],
+   "phonemes": "ɐ flˈaɪz wˈɪŋz, ðˈɛn ɐ splˈæʃ.",
+   "file": "01.wav",
+   "dur": 1.961,
+   "sha256": "9f40c6a71aa7d8fbe326af5cfaab407cc515f2c424a8cee068b4d1faab4e17a9"
+  },
+  {
+   "id": "vo02",
+   "beat": "body",
+   "text": "First, a fly. A housefly beats its wings about two hundred times a second. Slow it a hundred times, and that's two beats a second. A mosquito's wings beat about five hundred times a second. Here, that's five beats a second. You can count them on one hand. Now look at the tap. A drop of water swells there, heavier and heavier, until it lets go. It falls into the cup. It hits, and the water climbs into a crown. The whole crown forms in a few hundredths of a second. At this speed, that takes a few seconds. You can watch each point of the crown rise. Then little drops pinch off, and fly outward. The cup rings. The water settles, and the surface goes flat again. The cup sits still while all this happens. Nothing else in the kitchen has moved yet. Nothing here moved faster than you could follow, once you gave it time. But the next thing happens faster than a splash, in a hot pan on the stove.",
+   "stars": [],
+   "phonemes": "fˈɜːst, ɐ flˈaɪ. ɐ hˈaʊsflaɪ bˈiːts ɪts wˈɪŋz ɐbˌaʊt tˈuː hˈʌndɹɪd tˈaɪmz ɐ sˈɛkənd. slˈoʊ ɪɾ ɐ hˈʌndɹɪd tˈaɪmz, ænd ðæts tˈuː bˈiːts ɐ sˈɛkənd. ɐ məskˈiːɾoʊz wˈɪŋz bˈiːt ɐbˌaʊt fˈaɪv hˈʌndɹɪd tˈaɪmz ɐ sˈɛkənd. hˈɪɹ, ðæts fˈaɪv bˈiːts ɐ sˈɛkənd. juː kæn kˈaʊnt ðˌɛm ˌɔn wˈʌn hˈænd. nˈaʊ lˈʊk æt ðə tˈæp. ɐ dɹˈɑːp ʌv wˈɔːɾɚ swˈɛlz ðˈɛɹ, hˈɛviɚɹ ænd hˈɛviɚ, ʌntˈɪl ɪt lˈɛts ɡˈoʊ. ɪt fˈɔːlz ˌɪntʊ ðə kˈʌp. ɪt hˈɪts, ænd ðə wˈɔːɾɚ klˈaɪmz ˌɪntʊ ɐ kɹˈaʊn. ðə hˈoʊl kɹˈaʊn fˈɔːɹmz ɪn ɐ fjˈuː hˈʌndɹədθs əvə sˈɛkənd. æt ðɪs spˈiːd, ðæt tˈeɪks ɐ fjˈuː sˈɛkəndz. juː kæn wˈɑːtʃ ˈiːtʃ pˈɔɪnt ʌvðə kɹˈaʊn ɹˈaɪz. ðˈɛn lˈɪɾəl dɹˈɑːps pˈɪntʃ ˈɔf, ænd flˈaɪ ˈaʊtwɚd. ðə kˈʌp ɹˈɪŋz. ðə wˈɔːɾɚ sˈɛɾəlz, ænd ðə sˈɜːfɪs ɡoʊz flˈæt ɐɡˈɛn. ðə kˈʌp sˈɪts stˈɪl wˌaɪl ˈɔːl ðɪs hˈæpənz. nˈʌθɪŋ ˈɛls ɪnðə kˈɪtʃən hɐz mˈuːvd jˈɛt. nˈʌθɪŋ hˈɪɹ mˈuːvd fˈæstɚ ðɐn juː kʊd fˈɑːloʊ, wˈʌns juː ɡˈeɪv ɪt tˈaɪm. bˌʌt ðə nˈɛkst θˈɪŋ hˈæpənz fˈæstɚ ðˌænə splˈæʃ, ɪn ɐ hˈɑːt pˈæn ɔnðə stˈoʊv.",
+   "file": "02.wav",
+   "dur": 56.771,
+   "sha256": "1712e78546e84835aec12c224556026082c6da3a3cf6511d7c2a7695abb4ab90"
+  },
+  {
+   "id": "vo03",
+   "beat": "tease",
+   "text": "Part 2 of 8. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt tˈuː ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "file": "03.wav",
+   "dur": 2.704,
+   "sha256": "020a80b4caf128c96798683cba6864c944e6c4f7f734f00cc09cb9cf32e82acd"
+  }
+ ]
+}

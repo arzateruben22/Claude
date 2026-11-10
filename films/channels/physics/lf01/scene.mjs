@@ -8,7 +8,7 @@ import { SPINE_CSS, placeSpine } from "../set/spine.js";
 import { dropTitle } from "../set/title.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
-const EV = FILM.ev, CAL = FILM.calc, ES = FILM.endShow, T = FILM.cue.cuts;
+const EV = FILM.ev, CAL = FILM.calc, ES = FILM.endShow, T = new Proxy(FILM.cue.cuts, { get: (o, k) => (k in o ? o[k] : 1e9) });   // a part has only its own beats: the others are never
 const canvas = document.getElementById("gl");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true, logarithmicDepthBuffer: true });
 renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
@@ -270,7 +270,7 @@ window.seek = function (t) {
   planeWire.constant = t < w0 || t >= w1 ? 1e6 : -lerp(-3.3, 3.3, E.inout2(seg(t, w0 + 0.4, w1)));
   wires.visible = kitchen.visible && t >= w0 && t < w1 + 0.2;
   // storm
-  const stormK = E.inout2(seg(t, EV.storm - 1.0, EV.storm + 3.0)) * (1 - E.inout2(seg(t, FILM.beats.find((b) => b.id === "light").t0 + 8, FILM.beats.find((b) => b.id === "light").t0 + 14)));
+  const stormK = E.inout2(seg(t, EV.storm - 1.0, EV.storm + 3.0)) * (1 - E.inout2(seg(t, T.light + 8, T.light + 14)));
   stormMat.opacity = 0.82 * stormK;
   // the fly's flight in the hook: once at 1x, then 2x, then 4x slower (the same second)
   for (const [t0, f] of [[EV.fly1, 1], [EV.fly2, 2], [EV.fly3, 4], [EV.fly4, 1]]) { /* handled below */ void t0; void f; }
@@ -349,9 +349,9 @@ window.seek = function (t) {
       setSeg(mainSegs[i], a, b, 0.07, op, 0xE6EEFF); setSeg(mainGlow[i], a, b, 0.22, op * 0.28, 0x7FA6FF);
     });
     BRANCH.forEach((br, bi) => br.pts.slice(1).forEach((q, j) => { const t0b = Lt + (br.at + j * 0.6) * every * 0.75 + 4, g = E.inout2(seg(t, t0b, t0b + 1.4)); const a = br.pts[j]; setSeg(brSegs[bi][j], a, [lerp(a[0], q[0], g), lerp(a[1], q[1], g)], 0.035, (!inL || t < t0b ? 0 : (t < ground ? 0.8 : Math.max(0, 0.45 - 0.45 * seg(t, ground + 3, ground + 30)))), 0xCFDDFF); }));
-    PATH.slice(1).forEach((p, i) => { const idx = STEPS - 1 - i, a = PATH[idx + 1], b = PATH[idx], f0 = i / STEPS, f1 = (i + 1) / STEPS, g = Math.min(1, Math.max(0, (retK - f0) / (f1 - f0))); setSeg(retSegs[i], a, [lerp(a[0], b[0], g), lerp(a[1], b[1], g)], 0.16, inL && t >= ground && g > 0 ? 1 : 0, 0xFFFFFF); });
-    if (t >= ground && t < ground + 1.2) flashV = 1 - E.inout2(seg(t, ground, ground + 1.2));
-    flashLight.intensity = 3.0 * flashV; renderer.toneMappingExposure = 1.0 + 0.5 * flashV; }
+    PATH.slice(1).forEach((p, i) => { const idx = STEPS - 1 - i, a = PATH[idx + 1], b = PATH[idx], f0 = i / STEPS, f1 = (i + 1) / STEPS, g = Math.min(1, Math.max(0, (retK - f0) / (f1 - f0))); setSeg(retSegs[i], a, [lerp(a[0], b[0], g), lerp(a[1], b[1], g)], 0.12, inL && t >= ground && g > 0 ? 0.85 * E.out2(seg(t, ground, ground + 0.3)) : 0, 0xF2F6FF); });
+    if (t >= ground && t < ground + 2.0) flashV = E.out2(seg(t, ground, ground + 0.35)) * (1 - E.inout2(seg(t, ground + 0.5, ground + 2.0)));   // soft: in over 0.35 s, out over 1.5 s (no full-frame white)
+    flashLight.intensity = 1.6 * flashV; renderer.toneMappingExposure = 1.0 + 0.18 * flashV; }
   // the light fronts: a flash across the room (1e8x), the flashlight's front (1e9x), a crawling pulse (1e10x and more)
   { const fl8 = EV.flash8, l9 = EV.light9, pulse0 = EV.pulse; let R = 0, on = 0, lk = 1;
     if (t >= fl8 && t < fl8 + 3.0) { R = Rint(t) - Rint(fl8); on = 1; }

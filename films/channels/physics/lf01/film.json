@@ -4,7 +4,9 @@
  "bpm": 112.5,
  "dur": 566.6667,
  "poster": 0.0,
- "_doc": "Compiled by compile.py from script.md, vo/ and the direction in compile.py. Do not edit by hand.",
+ "_doc": "Compiled by build.py from script.md, vo/ and the direction in build.py. Do not edit by hand.",
+ "scene": "scene.mjs",
+ "part": 0,
  "shots": [
   {
    "at": 0.0,
@@ -231,7 +233,7 @@
    4.0
   ],
   [
-   324.5333,
+   324.0333,
    6.0
   ],
   [
@@ -239,7 +241,7 @@
    6.0
   ],
   [
-   395.7333,
+   395.4333,
    7.0
   ],
   [
@@ -247,7 +249,7 @@
    7.0
   ],
   [
-   401.4333,
+   401.1333,
    8.0
   ],
   [
@@ -255,7 +257,7 @@
    8.0
   ],
   [
-   413.6,
+   413.3,
    9.0
   ],
   [
@@ -263,7 +265,7 @@
    9.0
   ],
   [
-   470.9333,
+   470.7333,
    10.0
   ],
   [
@@ -271,7 +273,7 @@
    10.0
   ],
   [
-   476.0667,
+   475.8667,
    11.0
   ],
   [
@@ -279,7 +281,7 @@
    11.0
   ],
   [
-   479.4,
+   479.0,
    12.0
   ],
   [
@@ -298,59 +300,59 @@
    "1 real second now lasts 1 second"
   ],
   [
-   14.3,
+   15.3,
    "1 real second now lasts 2 seconds"
   ],
   [
-   15.6,
+   16.6,
    "1 real second now lasts 4 seconds"
   ],
   [
-   34.9,
+   35.9,
    "1 real second now lasts 10 seconds"
   ],
   [
-   78.4667,
+   79.4667,
    "1 real second now lasts 1.7 minutes"
   ],
   [
-   146.9667,
+   147.9667,
    "1 real second now lasts 17 minutes"
   ],
   [
-   263.5,
+   264.5,
    "1 real second now lasts 2.8 hours"
   ],
   [
-   324.5333,
+   325.0333,
    "1 real second now lasts 12 days"
   ],
   [
-   395.7333,
+   396.4333,
    "1 real second now lasts 116 days"
   ],
   [
-   401.4333,
+   402.1333,
    "1 real second now lasts 3.2 years"
   ],
   [
-   413.6,
+   414.3,
    "1 real second now lasts 32 years"
   ],
   [
-   470.9333,
+   471.7333,
    "1 real second now lasts 317 years"
   ],
   [
-   476.0667,
+   476.8667,
    "1 real second now lasts 3,169 years"
   ],
   [
-   479.4,
+   480.0,
    "1 real second now lasts 31,688 years"
   ],
   [
-   545.0,
+   546.0,
    "1 real second now lasts 1 second"
   ]
  ],
@@ -358,6 +360,7 @@
   "fly1": 7.1833,
   "fly2": 14.2,
   "fly3": 15.4,
+  "fly4": 545.9667,
   "wire": [
    20.6333,
    33.2
@@ -372,7 +375,7 @@
   ],
   "cupfly": [
    71.5,
-   99.05
+   95.3
   ],
   "fly100": [
    82.5667,
@@ -428,8 +431,7 @@
    517.050033,
    543.183333
   ],
-  "back": 543.5,
-  "fly4": 545.9667
+  "back": 543.5
  },
  "cam": [
   {
@@ -1102,32 +1104,7 @@
   "light": 0.29979245800000004,
   "hair_m": 0.0001
  },
- "badges": [
-  {
-   "id": "code",
-   "kind": "tag",
-   "text": "Model · drawn by code",
-   "t0": 28.8,
-   "t1": 543.1833,
-   "slot": "tr"
-  },
-  {
-   "id": "skip",
-   "kind": "tag",
-   "text": "Skipping ahead",
-   "t0": 341.0333,
-   "t1": 386.5333,
-   "slot": "tr"
-  },
-  {
-   "id": "bench",
-   "kind": "tag",
-   "text": "Model of the MIT setup",
-   "t0": 520.05,
-   "t1": 542.7833,
-   "slot": "tr"
-  }
- ],
+ "badges": [],
  "captionY": 0.77,
  "title": null,
  "captions": [

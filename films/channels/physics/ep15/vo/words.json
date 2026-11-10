@@ -1,0 +1,1100 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "A popcorn pop, in slow motion.",
+   "heard": "A popcorn pop in slow motion.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "popcorn",
+     "start": 0.145,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "pop,",
+     "start": 0.61,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.165,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "slow",
+     "start": 1.395,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "motion.",
+     "start": 1.665,
+     "end": 2.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "In the pan on the stove, a few kernels of popcorn sit still. Then one jumps. Its hard shell holds the steam in, until the pressure wins. It pops when it gets to about one hundred eighty degrees Celsius. The pop is over in a few thousandths of a second. Here, that's a few seconds. The shell splits, and the white foam bursts out. That crack you'd hear is the shell giving way. One kernel becomes a fluffy cloud, many times its size. The foam hangs for a moment, then settles in the pan. Over the sink, a soap bubble drifts, about as wide as an egg. Its colors swirl as the wall of the bubble thins. When it pops, the hole races around the film at several meters a second. The whole bubble is gone in about a hundredth of a second. Here, that takes about eleven seconds. And somebody across the kitchen has just clapped. How long does that take to reach you?",
+   "heard": "In the pan on the stove, a few kernels of popcorn sit still. Then one jumps. Its hard shell holds the steam in until the pressure wins. It pops when it gets to about 180 degrees Celsius. The pop is over in a few thousandths of a second. Here, that's a few seconds. The shell splits, and the white foam bursts out. That crack you'd hear is the shell giving way. One kernel becomes a fluffy cloud, many times its size. The foam hangs for a moment, then settles in the pan. Over the sink, a soap bubble drifts about as wide as an egg. Its colors swirl as the wall of the bubble thins. When it pops, the hole races around the film at several meters a second. The whole bubble is gone in about a hundredth of a second. Here, that takes about eleven seconds, and somebody across the kitchen has just clapped. How long does that take to reach you?",
+   "words": [
+    {
+     "w": "In",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.235,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "pan",
+     "start": 0.265,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.585,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.895,
+     "end": 0.945,
+     "heard": true
+    },
+    {
+     "w": "stove,",
+     "start": 0.93,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.435,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "few",
+     "start": 1.465,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "kernels",
+     "start": 1.725,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.24,
+     "end": 2.29,
+     "heard": true
+    },
+    {
+     "w": "popcorn",
+     "start": 2.27,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "sit",
+     "start": 3.07,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "still.",
+     "start": 3.205,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "Then",
+     "start": 4.02,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 4.24,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "jumps.",
+     "start": 4.485,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "Its",
+     "start": 5.56,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "hard",
+     "start": 5.64,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "shell",
+     "start": 6.055,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "holds",
+     "start": 6.455,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.76,
+     "end": 6.81,
+     "heard": true
+    },
+    {
+     "w": "steam",
+     "start": 6.79,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "in,",
+     "start": 7.235,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "until",
+     "start": 7.505,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.745,
+     "end": 7.795,
+     "heard": true
+    },
+    {
+     "w": "pressure",
+     "start": 7.775,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "wins.",
+     "start": 8.165,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 9.195,
+     "end": 9.245,
+     "heard": true
+    },
+    {
+     "w": "pops",
+     "start": 9.33,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "when",
+     "start": 9.69,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 9.885,
+     "end": 9.935,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 10.015,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 10.145,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 10.175,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 10.475,
+     "end": 11.36,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 10.505,
+     "end": 11.36,
+     "heard": false
+    },
+    {
+     "w": "eighty",
+     "start": 10.535,
+     "end": 11.36,
+     "heard": false
+    },
+    {
+     "w": "degrees",
+     "start": 11.375,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "Celsius.",
+     "start": 11.875,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 13.16,
+     "end": 13.21,
+     "heard": true
+    },
+    {
+     "w": "pop",
+     "start": 13.19,
+     "end": 13.6,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 13.56,
+     "end": 13.76,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 13.67,
+     "end": 14.0,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 13.905,
+     "end": 14.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 14.215,
+     "end": 14.265,
+     "heard": true
+    },
+    {
+     "w": "few",
+     "start": 14.245,
+     "end": 14.48,
+     "heard": true
+    },
+    {
+     "w": "thousandths",
+     "start": 14.455,
+     "end": 15.04,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 14.96,
+     "end": 15.2,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 15.35,
+     "end": 15.4,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 15.38,
+     "end": 16.0,
+     "heard": true
+    },
+    {
+     "w": "Here,",
+     "start": 16.115,
+     "end": 16.4,
+     "heard": true
+    },
+    {
+     "w": "that's",
+     "start": 16.455,
+     "end": 16.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 16.625,
+     "end": 16.8,
+     "heard": true
+    },
+    {
+     "w": "few",
+     "start": 16.745,
+     "end": 17.04,
+     "heard": true
+    },
+    {
+     "w": "seconds.",
+     "start": 17.14,
+     "end": 17.76,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 17.91,
+     "end": 17.96,
+     "heard": true
+    },
+    {
+     "w": "shell",
+     "start": 17.94,
+     "end": 18.4,
+     "heard": true
+    },
+    {
+     "w": "splits,",
+     "start": 18.505,
+     "end": 18.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 19.0,
+     "end": 19.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 19.03,
+     "end": 19.2,
+     "heard": true
+    },
+    {
+     "w": "white",
+     "start": 19.22,
+     "end": 19.52,
+     "heard": true
+    },
+    {
+     "w": "foam",
+     "start": 19.435,
+     "end": 19.92,
+     "heard": true
+    },
+    {
+     "w": "bursts",
+     "start": 19.995,
+     "end": 20.48,
+     "heard": true
+    },
+    {
+     "w": "out.",
+     "start": 20.575,
+     "end": 21.04,
+     "heard": true
+    },
+    {
+     "w": "That",
+     "start": 21.135,
+     "end": 21.28,
+     "heard": true
+    },
+    {
+     "w": "crack",
+     "start": 21.355,
+     "end": 21.76,
+     "heard": true
+    },
+    {
+     "w": "you'd",
+     "start": 21.695,
+     "end": 22.0,
+     "heard": true
+    },
+    {
+     "w": "hear",
+     "start": 21.915,
+     "end": 22.24,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 22.365,
+     "end": 22.415,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 22.395,
+     "end": 22.48,
+     "heard": true
+    },
+    {
+     "w": "shell",
+     "start": 22.56,
+     "end": 22.88,
+     "heard": true
+    },
+    {
+     "w": "giving",
+     "start": 22.865,
+     "end": 23.36,
+     "heard": true
+    },
+    {
+     "w": "way.",
+     "start": 23.435,
+     "end": 24.0,
+     "heard": true
+    },
+    {
+     "w": "One",
+     "start": 24.105,
+     "end": 24.32,
+     "heard": true
+    },
+    {
+     "w": "kernel",
+     "start": 24.43,
+     "end": 24.88,
+     "heard": true
+    },
+    {
+     "w": "becomes",
+     "start": 24.965,
+     "end": 25.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 25.0,
+     "end": 25.28,
+     "heard": true
+    },
+    {
+     "w": "fluffy",
+     "start": 25.35,
+     "end": 25.84,
+     "heard": true
+    },
+    {
+     "w": "cloud,",
+     "start": 25.845,
+     "end": 26.4,
+     "heard": true
+    },
+    {
+     "w": "many",
+     "start": 26.445,
+     "end": 26.72,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 26.69,
+     "end": 27.12,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 27.22,
+     "end": 27.36,
+     "heard": true
+    },
+    {
+     "w": "size.",
+     "start": 27.36,
+     "end": 28.16,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 28.21,
+     "end": 28.32,
+     "heard": true
+    },
+    {
+     "w": "foam",
+     "start": 28.39,
+     "end": 28.8,
+     "heard": true
+    },
+    {
+     "w": "hangs",
+     "start": 28.87,
+     "end": 29.2,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 29.28,
+     "end": 29.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 29.33,
+     "end": 29.6,
+     "heard": true
+    },
+    {
+     "w": "moment,",
+     "start": 29.645,
+     "end": 30.16,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 30.265,
+     "end": 30.48,
+     "heard": true
+    },
+    {
+     "w": "settles",
+     "start": 30.555,
+     "end": 30.96,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 30.91,
+     "end": 31.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 31.155,
+     "end": 31.28,
+     "heard": true
+    },
+    {
+     "w": "pan.",
+     "start": 31.24,
+     "end": 32.08,
+     "heard": true
+    },
+    {
+     "w": "Over",
+     "start": 32.245,
+     "end": 32.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 32.485,
+     "end": 32.56,
+     "heard": true
+    },
+    {
+     "w": "sink,",
+     "start": 32.515,
+     "end": 33.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 33.08,
+     "end": 33.2,
+     "heard": true
+    },
+    {
+     "w": "soap",
+     "start": 33.295,
+     "end": 33.52,
+     "heard": true
+    },
+    {
+     "w": "bubble",
+     "start": 33.565,
+     "end": 33.92,
+     "heard": true
+    },
+    {
+     "w": "drifts,",
+     "start": 33.88,
+     "end": 34.48,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 34.455,
+     "end": 34.72,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 34.795,
+     "end": 34.88,
+     "heard": true
+    },
+    {
+     "w": "wide",
+     "start": 34.825,
+     "end": 35.2,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 35.21,
+     "end": 35.36,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 35.475,
+     "end": 35.525,
+     "heard": true
+    },
+    {
+     "w": "egg.",
+     "start": 35.505,
+     "end": 36.24,
+     "heard": true
+    },
+    {
+     "w": "Its",
+     "start": 36.365,
+     "end": 36.48,
+     "heard": true
+    },
+    {
+     "w": "colors",
+     "start": 36.57,
+     "end": 37.04,
+     "heard": true
+    },
+    {
+     "w": "swirl",
+     "start": 37.135,
+     "end": 37.6,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 37.585,
+     "end": 37.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 37.78,
+     "end": 37.92,
+     "heard": true
+    },
+    {
+     "w": "wall",
+     "start": 37.93,
+     "end": 38.24,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 38.335,
+     "end": 38.385,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 38.4,
+     "end": 38.45,
+     "heard": true
+    },
+    {
+     "w": "bubble",
+     "start": 38.51,
+     "end": 38.88,
+     "heard": true
+    },
+    {
+     "w": "thins.",
+     "start": 38.91,
+     "end": 39.76,
+     "heard": true
+    },
+    {
+     "w": "When",
+     "start": 39.96,
+     "end": 40.01,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 39.99,
+     "end": 40.16,
+     "heard": true
+    },
+    {
+     "w": "pops,",
+     "start": 40.175,
+     "end": 40.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 40.73,
+     "end": 40.88,
+     "heard": true
+    },
+    {
+     "w": "hole",
+     "start": 40.89,
+     "end": 41.2,
+     "heard": true
+    },
+    {
+     "w": "races",
+     "start": 41.205,
+     "end": 41.68,
+     "heard": true
+    },
+    {
+     "w": "around",
+     "start": 41.755,
+     "end": 41.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 42.015,
+     "end": 42.065,
+     "heard": true
+    },
+    {
+     "w": "film",
+     "start": 42.08,
+     "end": 42.48,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 42.535,
+     "end": 42.64,
+     "heard": true
+    },
+    {
+     "w": "several",
+     "start": 42.565,
+     "end": 42.96,
+     "heard": true
+    },
+    {
+     "w": "meters",
+     "start": 42.96,
+     "end": 43.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 43.365,
+     "end": 43.6,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 43.71,
+     "end": 44.32,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 44.47,
+     "end": 44.52,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 44.5,
+     "end": 44.8,
+     "heard": true
+    },
+    {
+     "w": "bubble",
+     "start": 44.85,
+     "end": 45.2,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 45.28,
+     "end": 45.36,
+     "heard": true
+    },
+    {
+     "w": "gone",
+     "start": 45.34,
+     "end": 45.68,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 45.665,
+     "end": 45.92,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 45.985,
+     "end": 46.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 46.21,
+     "end": 46.26,
+     "heard": true
+    },
+    {
+     "w": "hundredth",
+     "start": 46.24,
+     "end": 46.72,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 46.62,
+     "end": 46.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 47.09,
+     "end": 47.14,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 47.195,
+     "end": 47.92,
+     "heard": true
+    },
+    {
+     "w": "Here,",
+     "start": 47.99,
+     "end": 48.48,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 48.62,
+     "end": 48.72,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 48.81,
+     "end": 49.04,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 49.005,
+     "end": 49.28,
+     "heard": true
+    },
+    {
+     "w": "eleven",
+     "start": 49.265,
+     "end": 49.84,
+     "heard": true
+    },
+    {
+     "w": "seconds.",
+     "start": 49.845,
+     "end": 50.64,
+     "heard": true
+    },
+    {
+     "w": "And",
+     "start": 50.77,
+     "end": 50.88,
+     "heard": true
+    },
+    {
+     "w": "somebody",
+     "start": 50.955,
+     "end": 51.28,
+     "heard": true
+    },
+    {
+     "w": "across",
+     "start": 51.375,
+     "end": 51.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 51.705,
+     "end": 51.84,
+     "heard": true
+    },
+    {
+     "w": "kitchen",
+     "start": 51.8,
+     "end": 52.24,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 52.335,
+     "end": 52.4,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 52.42,
+     "end": 52.64,
+     "heard": true
+    },
+    {
+     "w": "clapped.",
+     "start": 52.71,
+     "end": 53.68,
+     "heard": true
+    },
+    {
+     "w": "How",
+     "start": 53.74,
+     "end": 53.92,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 53.92,
+     "end": 54.16,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 54.16,
+     "end": 54.4,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 54.495,
+     "end": 54.64,
+     "heard": true
+    },
+    {
+     "w": "take",
+     "start": 54.685,
+     "end": 54.88,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 54.89,
+     "end": 55.04,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 54.955,
+     "end": 55.36,
+     "heard": true
+    },
+    {
+     "w": "you?",
+     "start": 55.265,
+     "end": 55.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Part 3 of 8. Full video on YouTube.",
+   "heard": "Part 3 of 8. Full video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "3",
+     "start": 0.285,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.57,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "8.",
+     "start": 0.785,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Full",
+     "start": 1.305,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.595,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.945,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 2.25,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

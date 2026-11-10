@@ -1,0 +1,1148 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "A fly's wings, then a splash.",
+   "heard": "A fly's wings, then a splash.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "fly's",
+     "start": 0.205,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "wings,",
+     "start": 0.57,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 1.155,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.185,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "splash.",
+     "start": 1.465,
+     "end": 1.92,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "First, a fly. A housefly beats its wings about two hundred times a second. Slow it a hundred times, and that's two beats a second. A mosquito's wings beat about five hundred times a second. Here, that's five beats a second. You can count them on one hand. Now look at the tap. A drop of water swells there, heavier and heavier, until it lets go. It falls into the cup. It hits, and the water climbs into a crown. The whole crown forms in a few hundredths of a second. At this speed, that takes a few seconds. You can watch each point of the crown rise. Then little drops pinch off, and fly outward. The cup rings. The water settles, and the surface goes flat again. The cup sits still while all this happens. Nothing else in the kitchen has moved yet. Nothing here moved faster than you could follow, once you gave it time. But the next thing happens faster than a splash, in a hot pan on the stove.",
+   "heard": "First, a fly. A house fly beats its wings about 200 times a second. Slow it a hundred times and that's two beats a second. A mosquito's wings beat about five hundred times a second. Here, that's five beats a second. You can count them on one hand. Now look at the tap. A drop of water swells there, heavier and heavier until it lets go. It falls into the cup. It hits, and the water climbs into a crown. The whole crown forms in a few hundredths of a second. At this speed, that takes a few seconds. You can watch each point of the crown rise. Then little drops pinch off and fly outward. The cup rings. The water settles and the surface goes flat again. The cup sits still while all this happens. Nothing else in the kitchen has moved yet. Nothing here moved faster than you could follow once you gave it time. But the next thing happens faster than a splash in a hot pan on the stove.",
+   "words": [
+    {
+     "w": "First,",
+     "start": 0.025,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.45,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "fly.",
+     "start": 0.635,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 1.64,
+     "end": 1.69,
+     "heard": true
+    },
+    {
+     "w": "housefly",
+     "start": 1.67,
+     "end": 2.4,
+     "heard": false
+    },
+    {
+     "w": "beats",
+     "start": 2.435,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 2.755,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "wings",
+     "start": 2.835,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 3.235,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 3.445,
+     "end": 4.0,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 3.475,
+     "end": 4.0,
+     "heard": false
+    },
+    {
+     "w": "times",
+     "start": 3.98,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 4.355,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 4.53,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "Slow",
+     "start": 5.215,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 5.54,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.695,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 5.725,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "times,",
+     "start": 6.025,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.52,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "that's",
+     "start": 6.735,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 6.905,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "beats",
+     "start": 7.155,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.325,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 7.7,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 8.44,
+     "end": 8.49,
+     "heard": true
+    },
+    {
+     "w": "mosquito's",
+     "start": 8.47,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "wings",
+     "start": 9.175,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "beat",
+     "start": 9.66,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 9.915,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "five",
+     "start": 10.09,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 10.51,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 10.83,
+     "end": 11.2,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 11.18,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 11.505,
+     "end": 12.32,
+     "heard": true
+    },
+    {
+     "w": "Here,",
+     "start": 12.37,
+     "end": 12.72,
+     "heard": true
+    },
+    {
+     "w": "that's",
+     "start": 12.72,
+     "end": 13.04,
+     "heard": true
+    },
+    {
+     "w": "five",
+     "start": 12.93,
+     "end": 13.36,
+     "heard": true
+    },
+    {
+     "w": "beats",
+     "start": 13.435,
+     "end": 13.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 13.83,
+     "end": 13.88,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 13.975,
+     "end": 14.48,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 14.59,
+     "end": 14.64,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 14.68,
+     "end": 14.88,
+     "heard": true
+    },
+    {
+     "w": "count",
+     "start": 14.855,
+     "end": 15.12,
+     "heard": true
+    },
+    {
+     "w": "them",
+     "start": 15.155,
+     "end": 15.28,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 15.185,
+     "end": 15.44,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 15.44,
+     "end": 15.68,
+     "heard": true
+    },
+    {
+     "w": "hand.",
+     "start": 15.625,
+     "end": 16.32,
+     "heard": true
+    },
+    {
+     "w": "Now",
+     "start": 16.405,
+     "end": 16.48,
+     "heard": true
+    },
+    {
+     "w": "look",
+     "start": 16.655,
+     "end": 16.8,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 16.81,
+     "end": 16.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 17.02,
+     "end": 17.12,
+     "heard": true
+    },
+    {
+     "w": "tap.",
+     "start": 17.06,
+     "end": 17.84,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 18.035,
+     "end": 18.085,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 18.135,
+     "end": 18.4,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 18.435,
+     "end": 18.64,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 18.535,
+     "end": 19.04,
+     "heard": true
+    },
+    {
+     "w": "swells",
+     "start": 19.135,
+     "end": 19.6,
+     "heard": true
+    },
+    {
+     "w": "there,",
+     "start": 19.58,
+     "end": 20.0,
+     "heard": true
+    },
+    {
+     "w": "heavier",
+     "start": 20.03,
+     "end": 20.48,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 20.52,
+     "end": 20.64,
+     "heard": true
+    },
+    {
+     "w": "heavier,",
+     "start": 20.67,
+     "end": 21.12,
+     "heard": true
+    },
+    {
+     "w": "until",
+     "start": 21.21,
+     "end": 21.44,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 21.515,
+     "end": 21.6,
+     "heard": true
+    },
+    {
+     "w": "lets",
+     "start": 21.7,
+     "end": 22.08,
+     "heard": true
+    },
+    {
+     "w": "go.",
+     "start": 22.095,
+     "end": 22.64,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 22.815,
+     "end": 22.88,
+     "heard": true
+    },
+    {
+     "w": "falls",
+     "start": 22.95,
+     "end": 23.28,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 23.36,
+     "end": 23.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 23.445,
+     "end": 23.6,
+     "heard": true
+    },
+    {
+     "w": "cup.",
+     "start": 23.55,
+     "end": 24.16,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 24.27,
+     "end": 24.4,
+     "heard": true
+    },
+    {
+     "w": "hits,",
+     "start": 24.445,
+     "end": 24.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 25.04,
+     "end": 25.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 25.07,
+     "end": 25.2,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 25.27,
+     "end": 25.6,
+     "heard": true
+    },
+    {
+     "w": "climbs",
+     "start": 25.635,
+     "end": 26.08,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 26.135,
+     "end": 26.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 26.34,
+     "end": 26.4,
+     "heard": true
+    },
+    {
+     "w": "crown.",
+     "start": 26.455,
+     "end": 27.2,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 27.285,
+     "end": 27.36,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 27.315,
+     "end": 27.6,
+     "heard": true
+    },
+    {
+     "w": "crown",
+     "start": 27.675,
+     "end": 28.16,
+     "heard": true
+    },
+    {
+     "w": "forms",
+     "start": 28.185,
+     "end": 28.48,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 28.515,
+     "end": 28.565,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 28.655,
+     "end": 28.72,
+     "heard": true
+    },
+    {
+     "w": "few",
+     "start": 28.685,
+     "end": 28.88,
+     "heard": true
+    },
+    {
+     "w": "hundredths",
+     "start": 28.875,
+     "end": 29.36,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 29.28,
+     "end": 29.52,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 29.67,
+     "end": 29.72,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 29.7,
+     "end": 30.4,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 30.515,
+     "end": 30.64,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 30.66,
+     "end": 30.88,
+     "heard": true
+    },
+    {
+     "w": "speed,",
+     "start": 30.965,
+     "end": 31.36,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 31.39,
+     "end": 31.52,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 31.59,
+     "end": 31.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 31.74,
+     "end": 31.92,
+     "heard": true
+    },
+    {
+     "w": "few",
+     "start": 31.88,
+     "end": 32.16,
+     "heard": true
+    },
+    {
+     "w": "seconds.",
+     "start": 32.285,
+     "end": 32.96,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 33.055,
+     "end": 33.12,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 33.14,
+     "end": 33.28,
+     "heard": true
+    },
+    {
+     "w": "watch",
+     "start": 33.175,
+     "end": 33.52,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 33.605,
+     "end": 33.84,
+     "heard": true
+    },
+    {
+     "w": "point",
+     "start": 33.89,
+     "end": 34.08,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 34.175,
+     "end": 34.225,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 34.205,
+     "end": 34.32,
+     "heard": true
+    },
+    {
+     "w": "crown",
+     "start": 34.295,
+     "end": 34.8,
+     "heard": true
+    },
+    {
+     "w": "rise.",
+     "start": 34.89,
+     "end": 35.44,
+     "heard": true
+    },
+    {
+     "w": "Then",
+     "start": 35.6,
+     "end": 35.68,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 35.63,
+     "end": 35.92,
+     "heard": true
+    },
+    {
+     "w": "drops",
+     "start": 35.925,
+     "end": 36.32,
+     "heard": true
+    },
+    {
+     "w": "pinch",
+     "start": 36.37,
+     "end": 36.72,
+     "heard": true
+    },
+    {
+     "w": "off,",
+     "start": 36.62,
+     "end": 36.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 36.955,
+     "end": 37.12,
+     "heard": true
+    },
+    {
+     "w": "fly",
+     "start": 37.17,
+     "end": 37.44,
+     "heard": true
+    },
+    {
+     "w": "outward.",
+     "start": 37.4,
+     "end": 38.32,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 38.44,
+     "end": 38.49,
+     "heard": true
+    },
+    {
+     "w": "cup",
+     "start": 38.47,
+     "end": 38.88,
+     "heard": true
+    },
+    {
+     "w": "rings.",
+     "start": 38.78,
+     "end": 39.68,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 39.805,
+     "end": 39.855,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 39.835,
+     "end": 40.16,
+     "heard": true
+    },
+    {
+     "w": "settles,",
+     "start": 40.25,
+     "end": 40.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 40.715,
+     "end": 40.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 40.925,
+     "end": 40.975,
+     "heard": true
+    },
+    {
+     "w": "surface",
+     "start": 40.98,
+     "end": 41.44,
+     "heard": true
+    },
+    {
+     "w": "goes",
+     "start": 41.44,
+     "end": 41.76,
+     "heard": true
+    },
+    {
+     "w": "flat",
+     "start": 41.77,
+     "end": 42.16,
+     "heard": true
+    },
+    {
+     "w": "again.",
+     "start": 42.05,
+     "end": 42.72,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 42.92,
+     "end": 42.97,
+     "heard": true
+    },
+    {
+     "w": "cup",
+     "start": 42.95,
+     "end": 43.28,
+     "heard": true
+    },
+    {
+     "w": "sits",
+     "start": 43.22,
+     "end": 43.68,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 43.665,
+     "end": 43.92,
+     "heard": true
+    },
+    {
+     "w": "while",
+     "start": 43.885,
+     "end": 44.16,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 44.07,
+     "end": 44.32,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 44.4,
+     "end": 44.56,
+     "heard": true
+    },
+    {
+     "w": "happens.",
+     "start": 44.675,
+     "end": 45.36,
+     "heard": true
+    },
+    {
+     "w": "Nothing",
+     "start": 45.475,
+     "end": 45.76,
+     "heard": true
+    },
+    {
+     "w": "else",
+     "start": 45.65,
+     "end": 46.0,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 46.0,
+     "end": 46.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 46.205,
+     "end": 46.255,
+     "heard": true
+    },
+    {
+     "w": "kitchen",
+     "start": 46.255,
+     "end": 46.64,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 46.735,
+     "end": 46.8,
+     "heard": true
+    },
+    {
+     "w": "moved",
+     "start": 46.765,
+     "end": 47.2,
+     "heard": true
+    },
+    {
+     "w": "yet.",
+     "start": 47.145,
+     "end": 47.92,
+     "heard": true
+    },
+    {
+     "w": "Nothing",
+     "start": 47.995,
+     "end": 48.32,
+     "heard": true
+    },
+    {
+     "w": "here",
+     "start": 48.205,
+     "end": 48.64,
+     "heard": true
+    },
+    {
+     "w": "moved",
+     "start": 48.64,
+     "end": 48.96,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 48.975,
+     "end": 49.44,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 49.44,
+     "end": 49.6,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 49.7,
+     "end": 49.76,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 49.745,
+     "end": 50.0,
+     "heard": true
+    },
+    {
+     "w": "follow,",
+     "start": 49.95,
+     "end": 50.48,
+     "heard": true
+    },
+    {
+     "w": "once",
+     "start": 50.48,
+     "end": 50.72,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 50.815,
+     "end": 50.88,
+     "heard": true
+    },
+    {
+     "w": "gave",
+     "start": 50.845,
+     "end": 51.2,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 51.135,
+     "end": 51.44,
+     "heard": true
+    },
+    {
+     "w": "time.",
+     "start": 51.51,
+     "end": 52.08,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 52.26,
+     "end": 52.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 52.355,
+     "end": 52.48,
+     "heard": true
+    },
+    {
+     "w": "next",
+     "start": 52.605,
+     "end": 52.72,
+     "heard": true
+    },
+    {
+     "w": "thing",
+     "start": 52.765,
+     "end": 52.96,
+     "heard": true
+    },
+    {
+     "w": "happens",
+     "start": 52.98,
+     "end": 53.44,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 53.48,
+     "end": 53.92,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 53.945,
+     "end": 54.08,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 53.975,
+     "end": 54.24,
+     "heard": true
+    },
+    {
+     "w": "splash,",
+     "start": 54.325,
+     "end": 54.88,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 54.97,
+     "end": 55.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 55.125,
+     "end": 55.2,
+     "heard": true
+    },
+    {
+     "w": "hot",
+     "start": 55.21,
+     "end": 55.52,
+     "heard": true
+    },
+    {
+     "w": "pan",
+     "start": 55.53,
+     "end": 55.92,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 55.93,
+     "end": 56.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 56.15,
+     "end": 56.24,
+     "heard": true
+    },
+    {
+     "w": "stove.",
+     "start": 56.28,
+     "end": 56.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Part 2 of 8. Full video on YouTube.",
+   "heard": "Part 2 of 8, Full Video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "2",
+     "start": 0.335,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.58,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "8.",
+     "start": 0.815,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Full",
+     "start": 1.31,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.57,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.825,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 2.175,
+     "end": 2.64,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

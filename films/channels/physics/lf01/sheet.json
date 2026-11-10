@@ -102,12 +102,6 @@
    "t1": 77.0667
   },
   {
-   "t": 28.8,
-   "kind": "badge",
-   "tag": "code",
-   "text": "Model · drawn by code"
-  },
-  {
    "t": 77.0667,
    "kind": "section",
    "id": "fly",
@@ -153,12 +147,6 @@
    "t1": 392.0
   },
   {
-   "t": 341.0333,
-   "kind": "badge",
-   "tag": "skip",
-   "text": "Skipping ahead"
-  },
-  {
    "t": 372.6667,
    "kind": "contact",
    "tag": "strike"
@@ -180,12 +168,6 @@
    "kind": "section",
    "id": "real",
    "t1": 543.2
-  },
-  {
-   "t": 520.05,
-   "kind": "badge",
-   "tag": "bench",
-   "text": "Model of the MIT setup"
   },
   {
    "t": 543.2,
