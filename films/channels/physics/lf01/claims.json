@@ -394,5 +394,49 @@
 "verified_via": "from memory",
 "status": "TODO open link",
 "note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The width is a hedge (human hairs run about 17 to 180 micrometres; 0.1 mm is typical). The two times are derivations (calc.py)."
+},
+{
+"id": "c37",
+"sentence": "Each wing sweeps forward, flips, and sweeps back.",
+"claim": "A hovering hummingbird sweeps each wing forward and back in a figure-of-eight path, flipping it at each end of the stroke.",
+"source_url": "https://doi.org/10.1038/nature03843",
+"source_title": "Warrick, Tobalske, Powers, 'Aerodynamics of the hovering hummingbird', Nature 435, 1094 (2005) (recalled, not opened; DOI from memory)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The film's wing motion is a simple sweep-and-flip model, not the measured stroke."
+},
+{
+"id": "c38",
+"sentence": "Here, that's five beats a second.",
+"claim": "500 beats a second / 100 = 5 beats per second of screen time.",
+"source_url": "",
+"source_title": "Our own arithmetic (calc.py)",
+"accessed": "2026-11-10",
+"verified_via": "derivation",
+"status": "TODO open link",
+"note": "DERIVATION (calc.py, run it); no outside source. "
+},
+{
+"id": "c39",
+"sentence": "Without air, there would be nothing to push, and no sound at all.",
+"claim": "Sound is a pressure wave in a medium (air, water, a solid) and cannot travel through a vacuum.",
+"source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-1-sound-waves",
+"source_title": "OpenStax, University Physics Vol. 1, 17.1 Sound Waves (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Standard physics; in space there is no air to carry a clap."
+},
+{
+"id": "c40",
+"sentence": "In real time, that was far too quick to blink.",
+"claim": "A human blink takes roughly 100 to 400 milliseconds; the bullet crosses the apple in 94 microseconds.",
+"source_url": "https://en.wikipedia.org/wiki/Blinking",
+"source_title": "Wikipedia, Blinking (recalled, not opened)",
+"accessed": "2026-11-10",
+"verified_via": "from memory",
+"status": "TODO open link",
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The 94 microseconds is a derivation (calc.py); the blink duration is a hedge ('roughly a tenth of a second or more')."
 }
 ]

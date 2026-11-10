@@ -11,147 +11,129 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "How much fits in one second? Here's one. A kitchen. A window. Coffee on the table. A fly crosses the room, and it's over. You barely noticed it. Now I'll play that same second again, slower. And then slower again, and again, and again. I won't stop until light itself looks like it's standing still. On the way, we'll watch wings, a splash, a pop, a bullet, and a bolt of lightning. Each one hides something that's too fast to see.",
+   "text": "How much fits in one second? Here's one. A kitchen. A window. Coffee on the table. A fly crosses the room, and it's over. You barely noticed. Now I'll play that same second again, slower, and then slower again. I won't stop until light itself looks like it's standing still.",
    "stars": [
     "second",
     "still"
    ],
-   "phonemes": "hˌaʊ mˈʌtʃ fˈɪts ɪn wˈʌn sˈɛkənd? hˈɪɹz wˌʌn. ɐ kˈɪtʃən. ɐ wˈɪndoʊ. kˈɔfi ɔnðə tˈeɪbəl. ɐ flˈaɪ kɹˈɔsᵻz ðə ɹˈuːm, ænd ɪts ˈoʊvɚ. juː bˈɛɹli nˈoʊɾɪst ɪt. nˈaʊ aɪl plˈeɪ ðæt sˈeɪm sˈɛkənd ɐɡˈɛn, slˈoʊɚ. ænd ðˈɛn slˈoʊɚɹ ɐɡˈɛn, ænd ɐɡˈɛn, ænd ɐɡˈɛn. aɪ woʊnt stˈɑːp ʌntˈɪl lˈaɪt ɪtsˈɛlf lˈʊks lˈaɪk ɪts stˈændɪŋ stˈɪl. ɔnðə wˈeɪ, wiːl wˈɑːtʃ wˈɪŋz, ɐ splˈæʃ, ɐ pˈɑːp, ɐ bˈʊlɪt, ænd ɐ bˈoʊlt ʌv lˈaɪtnɪŋ. ˈiːtʃ wˈʌn hˈaɪdz sˈʌmθɪŋ ðæts tˈuː fˈæst tə sˈiː.",
+   "phonemes": "hˌaʊ mˈʌtʃ fˈɪts ɪn wˈʌn sˈɛkənd? hˈɪɹz wˌʌn. ɐ kˈɪtʃən. ɐ wˈɪndoʊ. kˈɔfi ɔnðə tˈeɪbəl. ɐ flˈaɪ kɹˈɔsᵻz ðə ɹˈuːm, ænd ɪts ˈoʊvɚ. juː bˈɛɹli nˈoʊɾɪst. nˈaʊ aɪl plˈeɪ ðæt sˈeɪm sˈɛkənd ɐɡˈɛn, slˈoʊɚ, ænd ðˈɛn slˈoʊɚɹ ɐɡˈɛn. aɪ woʊnt stˈɑːp ʌntˈɪl lˈaɪt ɪtsˈɛlf lˈʊks lˈaɪk ɪts stˈændɪŋ stˈɪl.",
    "file": "01.wav",
-   "dur": 27.294,
-   "sha256": "46aee9b091ce5e0c251234661f0cbd0616130b25e969df3974204149daf1159c"
+   "dur": 19.735,
+   "sha256": "e1a12a9d0181b48e4551863641558db6a63b4a1e621503d772da4b75f86d5426"
   },
   {
    "id": "vo02",
-   "beat": "method",
-   "text": "No camera on Earth could film all of this. So every picture here is drawn by a computer, from the physics. When a number was measured by someone, I'll say so. When a picture is just an idea, it will wear a badge. Ready? Let's slow it down.",
-   "stars": [],
-   "phonemes": "nˈoʊ kˈæmɹə ˌɔn ˈɜːθ kʊd fˈɪlm ˈɔːl ʌv ðˈɪs. sˌoʊ ˈɛvɹi pˈɪktʃɚ hˈɪɹ ɪz dɹˈɔːn baɪ ɐ kəmpjˈuːɾɚ, fɹʌmðə fˈɪzɪks. wˌɛn ɐ nˈʌmbɚ wʌz mˈɛʒɚd baɪ sˈʌmwʌn, aɪl sˈeɪ sˈoʊ. wˌɛn ɐ pˈɪktʃɚɹ ɪz dʒˈʌst ɐn aɪdˈiə, ɪt wɪl wˈɛɹ ɐ bˈædʒ. ɹˈɛdi? lˈɛts slˈoʊ ɪt dˈaʊn.",
-   "file": "02.wav",
-   "dur": 16.747,
-   "sha256": "269de2e51364938452f2439df31d21e5c2d98faba415105595bf0ec6246f573f"
-  },
-  {
-   "id": "vo03",
    "beat": "wings",
-   "text": "Ten times slower. One second now takes ten. A small hummingbird hovers at the window. Its wings beat about fifty times a second. At ten times slower, that's five beats a second. Now you can see them. Not a blur anymore, just wings, going up and down. Here's why they blur at full speed. Your eyes blend flashes that come faster than about sixty a second. So fifty wing beats a second just smear together. Now the fly. A housefly beats its wings about two hundred times a second. Slow it a hundred times, and that's two beats a second. One second now lasts almost two minutes. The fly's wing sweeps forward, flips over, and sweeps back. All of that was hiding inside one blink. A mosquito's wings beat about five hundred times a second. At a hundred times slower, that's five beats a second. You can count them on one hand.",
+   "text": "No camera on Earth could film all of this. So every picture here is drawn by a computer, from the physics. When a number was measured by someone, I'll say so. When a picture is just an idea, it will wear a badge. Ten times slower. One second now takes ten. A small hummingbird hovers at the window. Its wings beat about fifty times a second. At ten times slower, that's five beats a second. Now you can see them. Not a blur anymore, just wings, going up and down. The wings are doing all the work of holding it still. Each wing sweeps forward, flips, and sweeps back. Watch the wing tips: they trace tiny loops in the air. Here's why they blur at full speed. Your eyes blend flashes that come faster than about sixty a second. So fifty wing beats a second just smear together. But look at the fly by the cup. Even at ten times slower, its wings are still a blur.",
    "stars": [
     "see"
    ],
-   "phonemes": "tˈɛn tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ tˈeɪks tˈɛn. ɐ smˈɔːl hˈʌmɪŋbˌɜːd hˈʌvɚz æt ðə wˈɪndoʊ. ɪts wˈɪŋz bˈiːt ɐbˌaʊt fˈɪfti tˈaɪmz ɐ sˈɛkənd. æt tˈɛn tˈaɪmz slˈoʊɚ, ðæts fˈaɪv bˈiːts ɐ sˈɛkənd. nˈaʊ juː kæn sˈiː ðˌɛm. nˌɑːɾə blˈɜːɹ ˌɛnɪmˈɔːɹ, dʒˈʌst wˈɪŋz, ɡˌoʊɪŋ ˌʌp ænd dˈaʊn. hˈɪɹz wˌaɪ ðeɪ blˈɜːɹ æt fˈʊl spˈiːd. jʊɹ ˈaɪz blˈɛnd flˈæʃᵻz ðæt kˈʌm fˈæstɚ ðɐn ɐbˌaʊt sˈɪksti ɐ sˈɛkənd. sˌoʊ fˈɪfti wˈɪŋ bˈiːts ɐ sˈɛkənd dʒˈʌst smˈɪɹ təɡˈɛðɚ. nˈaʊ ðə flˈaɪ. ɐ hˈaʊsflaɪ bˈiːts ɪts wˈɪŋz ɐbˌaʊt tˈuː hˈʌndɹɪd tˈaɪmz ɐ sˈɛkənd. slˈoʊ ɪɾ ɐ hˈʌndɹɪd tˈaɪmz, ænd ðæts tˈuː bˈiːts ɐ sˈɛkənd. wˈʌn sˈɛkənd nˈaʊ lˈæsts ˈɔːlmoʊst tˈuː mˈɪnɪts. ðə flˈaɪz wˈɪŋ swˈiːps fˈɔːɹwɚd, flˈɪps ˈoʊvɚ, ænd swˈiːps bˈæk. ˈɔːl ʌv ðæt wʌz hˈaɪdɪŋ ɪnsˈaɪd wˈʌn blˈɪŋk. ɐ məskˈiːɾoʊz wˈɪŋz bˈiːt ɐbˌaʊt fˈaɪv hˈʌndɹɪd tˈaɪmz ɐ sˈɛkənd. æɾə hˈʌndɹɪd tˈaɪmz slˈoʊɚ, ðæts fˈaɪv bˈiːts ɐ sˈɛkənd. juː kæn kˈaʊnt ðˌɛm ˌɔn wˈʌn hˈænd.",
+   "phonemes": "nˈoʊ kˈæmɹə ˌɔn ˈɜːθ kʊd fˈɪlm ˈɔːl ʌv ðˈɪs. sˌoʊ ˈɛvɹi pˈɪktʃɚ hˈɪɹ ɪz dɹˈɔːn baɪ ɐ kəmpjˈuːɾɚ, fɹʌmðə fˈɪzɪks. wˌɛn ɐ nˈʌmbɚ wʌz mˈɛʒɚd baɪ sˈʌmwʌn, aɪl sˈeɪ sˈoʊ. wˌɛn ɐ pˈɪktʃɚɹ ɪz dʒˈʌst ɐn aɪdˈiə, ɪt wɪl wˈɛɹ ɐ bˈædʒ. tˈɛn tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ tˈeɪks tˈɛn. ɐ smˈɔːl hˈʌmɪŋbˌɜːd hˈʌvɚz æt ðə wˈɪndoʊ. ɪts wˈɪŋz bˈiːt ɐbˌaʊt fˈɪfti tˈaɪmz ɐ sˈɛkənd. æt tˈɛn tˈaɪmz slˈoʊɚ, ðæts fˈaɪv bˈiːts ɐ sˈɛkənd. nˈaʊ juː kæn sˈiː ðˌɛm. nˌɑːɾə blˈɜːɹ ˌɛnɪmˈɔːɹ, dʒˈʌst wˈɪŋz, ɡˌoʊɪŋ ˌʌp ænd dˈaʊn. ðə wˈɪŋz ɑːɹ dˌuːɪŋ ˈɔːl ðə wˈɜːk ʌv hˈoʊldɪŋ ɪt stˈɪl. ˈiːtʃ wˈɪŋ swˈiːps fˈɔːɹwɚd, flˈɪps, ænd swˈiːps bˈæk. wˈɑːtʃ ðə wˈɪŋ tˈɪps: ðeɪ tɹˈeɪs tˈaɪni lˈuːps ɪnðɪ ˈɛɹ. hˈɪɹz wˌaɪ ðeɪ blˈɜːɹ æt fˈʊl spˈiːd. jʊɹ ˈaɪz blˈɛnd flˈæʃᵻz ðæt kˈʌm fˈæstɚ ðɐn ɐbˌaʊt sˈɪksti ɐ sˈɛkənd. sˌoʊ fˈɪfti wˈɪŋ bˈiːts ɐ sˈɛkənd dʒˈʌst smˈɪɹ təɡˈɛðɚ. bˌʌt lˈʊk æt ðə flˈaɪ baɪ ðə kˈʌp. ˈiːvən æt tˈɛn tˈaɪmz slˈoʊɚ, ɪts wˈɪŋz ɑːɹ stˈɪl ɐ blˈɜː.",
+   "file": "02.wav",
+   "dur": 56.209,
+   "sha256": "d6b3ff48a60bcf8004c99a023fa7b99a15726fb22f5e1ad56b0591052ccca2e0"
+  },
+  {
+   "id": "vo03",
+   "beat": "fly",
+   "text": "A hundred times slower. One second now lasts almost two minutes. First, a fly. A housefly beats its wings about two hundred times a second. Slow it a hundred times, and that's two beats a second. A mosquito's wings beat about five hundred times a second. Here, that's five beats a second. You can count them on one hand. Now look at the tap. A drop of water swells there, heavier and heavier, until it lets go. It falls into the cup. It hits, and the water climbs into a crown. The whole crown forms in a few hundredths of a second. At this speed, that takes a few seconds. You can watch each point of the crown rise. Then little drops pinch off, and fly outward. The cup rings. The water settles, and the surface goes flat again. The cup sits still while all this happens. Nothing else in the kitchen has moved yet. Nothing here moved faster than you could follow, once you gave it time. But the next thing happens faster than a splash, in a hot pan on the stove.",
+   "stars": [],
+   "phonemes": "ɐ hˈʌndɹɪd tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ˈɔːlmoʊst tˈuː mˈɪnɪts. fˈɜːst, ɐ flˈaɪ. ɐ hˈaʊsflaɪ bˈiːts ɪts wˈɪŋz ɐbˌaʊt tˈuː hˈʌndɹɪd tˈaɪmz ɐ sˈɛkənd. slˈoʊ ɪɾ ɐ hˈʌndɹɪd tˈaɪmz, ænd ðæts tˈuː bˈiːts ɐ sˈɛkənd. ɐ məskˈiːɾoʊz wˈɪŋz bˈiːt ɐbˌaʊt fˈaɪv hˈʌndɹɪd tˈaɪmz ɐ sˈɛkənd. hˈɪɹ, ðæts fˈaɪv bˈiːts ɐ sˈɛkənd. juː kæn kˈaʊnt ðˌɛm ˌɔn wˈʌn hˈænd. nˈaʊ lˈʊk æt ðə tˈæp. ɐ dɹˈɑːp ʌv wˈɔːɾɚ swˈɛlz ðˈɛɹ, hˈɛviɚɹ ænd hˈɛviɚ, ʌntˈɪl ɪt lˈɛts ɡˈoʊ. ɪt fˈɔːlz ˌɪntʊ ðə kˈʌp. ɪt hˈɪts, ænd ðə wˈɔːɾɚ klˈaɪmz ˌɪntʊ ɐ kɹˈaʊn. ðə hˈoʊl kɹˈaʊn fˈɔːɹmz ɪn ɐ fjˈuː hˈʌndɹədθs əvə sˈɛkənd. æt ðɪs spˈiːd, ðæt tˈeɪks ɐ fjˈuː sˈɛkəndz. juː kæn wˈɑːtʃ ˈiːtʃ pˈɔɪnt ʌvðə kɹˈaʊn ɹˈaɪz. ðˈɛn lˈɪɾəl dɹˈɑːps pˈɪntʃ ˈɔf, ænd flˈaɪ ˈaʊtwɚd. ðə kˈʌp ɹˈɪŋz. ðə wˈɔːɾɚ sˈɛɾəlz, ænd ðə sˈɜːfɪs ɡoʊz flˈæt ɐɡˈɛn. ðə kˈʌp sˈɪts stˈɪl wˌaɪl ˈɔːl ðɪs hˈæpənz. nˈʌθɪŋ ˈɛls ɪnðə kˈɪtʃən hɐz mˈuːvd jˈɛt. nˈʌθɪŋ hˈɪɹ mˈuːvd fˈæstɚ ðɐn juː kʊd fˈɑːloʊ, wˈʌns juː ɡˈeɪv ɪt tˈaɪm. bˌʌt ðə nˈɛkst θˈɪŋ hˈæpənz fˈæstɚ ðˌænə splˈæʃ, ɪn ɐ hˈɑːt pˈæn ɔnðə stˈoʊv.",
    "file": "03.wav",
-   "dur": 54.982,
-   "sha256": "9b3cd0813e9ff0cbe8bf4cb6616df7656cde7afbfac5e347e07096c6d1ae2096"
+   "dur": 67.664,
+   "sha256": "c9615c02565390945ab4832bc56cc599c13df32efb63392b4714c6f31d663d25"
   },
   {
    "id": "vo04",
-   "beat": "splash",
-   "text": "Stay at a hundred times slower. A drop of water falls from the tap into the cup. It hits, and the water climbs into a crown. The whole crown forms in a few hundredths of a second. At this speed, that takes a few seconds. You can watch each point of the crown rise. Then little drops pinch off, and fly outward. The cup rings. Nothing here moved faster than you could follow, once you gave it time.",
-   "stars": [],
-   "phonemes": "stˈeɪ æɾə hˈʌndɹɪd tˈaɪmz slˈoʊɚ. ɐ dɹˈɑːp ʌv wˈɔːɾɚ fˈɔːlz fɹʌmðə tˈæp ˌɪntʊ ðə kˈʌp. ɪt hˈɪts, ænd ðə wˈɔːɾɚ klˈaɪmz ˌɪntʊ ɐ kɹˈaʊn. ðə hˈoʊl kɹˈaʊn fˈɔːɹmz ɪn ɐ fjˈuː hˈʌndɹədθs əvə sˈɛkənd. æt ðɪs spˈiːd, ðæt tˈeɪks ɐ fjˈuː sˈɛkəndz. juː kæn wˈɑːtʃ ˈiːtʃ pˈɔɪnt ʌvðə kɹˈaʊn ɹˈaɪz. ðˈɛn lˈɪɾəl dɹˈɑːps pˈɪntʃ ˈɔf, ænd flˈaɪ ˈaʊtwɚd. ðə kˈʌp ɹˈɪŋz. nˈʌθɪŋ hˈɪɹ mˈuːvd fˈæstɚ ðɐn juː kʊd fˈɑːloʊ, wˈʌns juː ɡˈeɪv ɪt tˈaɪm.",
+   "beat": "pop",
+   "text": "A thousand times slower. One second now lasts about seventeen minutes. In the pan on the stove, a few kernels of popcorn sit still. Then one jumps. Its hard shell holds the steam in, until the pressure wins. It pops when it gets to about one hundred eighty degrees Celsius. The pop is over in a few thousandths of a second. Here, that's a few seconds. The shell splits, and the white foam bursts out. That crack you'd hear is the shell giving way. One kernel becomes a fluffy cloud, many times its size. The foam hangs for a moment, then settles in the pan. Over the sink, a soap bubble drifts, about as wide as an egg. Its colors swirl as the wall of the bubble thins. When it pops, the hole races around the film at several meters a second. The whole bubble is gone in about a hundredth of a second. Here, that takes about eleven seconds. And somebody across the kitchen has just clapped. How long does that take to reach you?",
+   "stars": [
+    "that"
+   ],
+   "phonemes": "ɐ θˈaʊzənd tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ɐbˌaʊt sˈɛvəntˌiːn mˈɪnɪts. ɪnðə pˈæn ɔnðə stˈoʊv, ɐ fjˈuː kˈɜːnəlz ʌv pˈɑːpkɔːɹn sˈɪt stˈɪl. ðˈɛn wˈʌn dʒˈʌmps. ɪts hˈɑːɹd ʃˈɛl hˈoʊldz ðə stˈiːm ˈɪn, ʌntˈɪl ðə pɹˈɛʃɚ wˈɪnz. ɪt pˈɑːps wɛn ɪt ɡˈɛts tʊ ɐbˌaʊt wˈʌn hˈʌndɹɪd ˈeɪɾi dᵻɡɹˈiːz sˈɛlsɪəs. ðə pˈɑːp ɪz ˌoʊvɚɹ ɪn ɐ fjˈuː θˈaʊzəndθs əvə sˈɛkənd. hˈɪɹ, ðæts ɐ fjˈuː sˈɛkəndz. ðə ʃˈɛl splˈɪts, ænd ðə wˈaɪt fˈoʊm bˈɜːsts ˈaʊt. ðæt kɹˈæk juːd hˈɪɹ ɪz ðə ʃˈɛl ɡˈɪvɪŋ wˈeɪ. wˈʌn kˈɜːnəl bɪkˌʌmz ɐ flˈʌfi klˈaʊd, mˈɛni tˈaɪmz ɪts sˈaɪz. ðə fˈoʊm hˈæŋz fɚɹə mˈoʊmənt, ðˈɛn sˈɛɾəlz ɪnðə pˈæn. ˌoʊvɚ ðə sˈɪŋk, ɐ sˈoʊp bˈʌbəl dɹˈɪfts, ɐbˌaʊt æz wˈaɪd æz ɐn ˈɛɡ. ɪts kˈʌlɚz swˈɜːl æz ðə wˈɔːl ʌvðə bˈʌbəl θˈɪnz. wˌɛn ɪt pˈɑːps, ðə hˈoʊl ɹˈeɪsᵻz ɚɹˈaʊnd ðə fˈɪlm æt sˈɛvɹəl mˈiːɾɚz ɐ sˈɛkənd. ðə hˈoʊl bˈʌbəl ɪz ɡɔn ɪn ɐbˌaʊt ɐ hˈʌndɹədθ əvə sˈɛkənd. hˈɪɹ, ðæt tˈeɪks ɐbˌaʊt ᵻlˈɛvən sˈɛkəndz. ænd sˈʌmbɑːdi əkɹˌɑːs ðə kˈɪtʃən hɐz dʒˈʌst klˈæpt. hˌaʊ lˈɔŋ dˈʌz ðæt tˈeɪk tə ɹˈiːtʃ juː?",
    "file": "04.wav",
-   "dur": 26.031,
-   "sha256": "1358a0765f0bead2d71fc21cebe6be103a6de39dc7c3b7bd0ed9650acff87b15"
+   "dur": 58.736,
+   "sha256": "7150551d87186d2c104a600698f2834da9b5f21f8ad40018c5718869520e5c8a"
   },
   {
    "id": "vo05",
-   "beat": "pop",
-   "text": "A thousand times slower. One second now lasts about seventeen minutes. A kernel of popcorn sits in a hot pan. Its hard shell holds the steam in, until the pressure wins. It pops when it gets to about one hundred eighty degrees Celsius. The pop is over in a few thousandths of a second. Here, that's a few seconds. The shell splits, and the white foam bursts out. Over the sink, a soap bubble drifts, about as wide as an egg. When it pops, the hole races around the film at several meters a second. The whole bubble is gone in about a hundredth of a second. Here, that takes about eleven seconds.",
+   "beat": "sound",
+   "text": "Now, someone claps at the far end of the kitchen. Sound is air pushing on air. Without air, there would be nothing to push, and no sound at all. In a room, it moves about three hundred forty meters a second. That's why you never see it travel. The room is five meters across, so the clap crosses it in about fifteen thousandths of a second. Here, that's fifteen seconds. There it goes: a ring of squeezed air, crossing the room. Imagine standing at the far wall. You'd hear the clap only when this ring reached you. It reaches the wall, and bounces back. That bounce is an echo. You use this trick in every storm. Sound covers about a kilometer in three seconds. So count the seconds between a flash and its thunder, and divide by three. That's roughly how many kilometers away the lightning is. But a clap is slow. Something on this table is much faster than sound, and it's about to go through an apple.",
    "stars": [],
-   "phonemes": "ɐ θˈaʊzənd tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ɐbˌaʊt sˈɛvəntˌiːn mˈɪnɪts. ɐ kˈɜːnəl ʌv pˈɑːpkɔːɹn sˈɪts ɪn ɐ hˈɑːt pˈæn. ɪts hˈɑːɹd ʃˈɛl hˈoʊldz ðə stˈiːm ˈɪn, ʌntˈɪl ðə pɹˈɛʃɚ wˈɪnz. ɪt pˈɑːps wɛn ɪt ɡˈɛts tʊ ɐbˌaʊt wˈʌn hˈʌndɹɪd ˈeɪɾi dᵻɡɹˈiːz sˈɛlsɪəs. ðə pˈɑːp ɪz ˌoʊvɚɹ ɪn ɐ fjˈuː θˈaʊzəndθs əvə sˈɛkənd. hˈɪɹ, ðæts ɐ fjˈuː sˈɛkəndz. ðə ʃˈɛl splˈɪts, ænd ðə wˈaɪt fˈoʊm bˈɜːsts ˈaʊt. ˌoʊvɚ ðə sˈɪŋk, ɐ sˈoʊp bˈʌbəl dɹˈɪfts, ɐbˌaʊt æz wˈaɪd æz ɐn ˈɛɡ. wˌɛn ɪt pˈɑːps, ðə hˈoʊl ɹˈeɪsᵻz ɚɹˈaʊnd ðə fˈɪlm æt sˈɛvɹəl mˈiːɾɚz ɐ sˈɛkənd. ðə hˈoʊl bˈʌbəl ɪz ɡɔn ɪn ɐbˌaʊt ɐ hˈʌndɹədθ əvə sˈɛkənd. hˈɪɹ, ðæt tˈeɪks ɐbˌaʊt ᵻlˈɛvən sˈɛkəndz.",
+   "phonemes": "nˈaʊ, sˈʌmwʌn klˈæps æt ðə fˈɑːɹ ˈɛnd ʌvðə kˈɪtʃən. sˈaʊnd ɪz ˈɛɹ pˈʊʃɪŋ ˌɔn ˈɛɹ. wɪðˌaʊt ˈɛɹ, ðɛɹ wʊd biː nˈʌθɪŋ tə pˈʊʃ, ænd nˈoʊ sˈaʊnd æɾ ˈɔːl. ɪn ɐ ɹˈuːm, ɪt mˈuːvz ɐbˌaʊt θɹˈiː hˈʌndɹɪd fˈɔːɹɾi mˈiːɾɚz ɐ sˈɛkənd. ðæts wˌaɪ juː nˈɛvɚ sˈiː ɪt tɹˈævəl. ðə ɹˈuːm ɪz fˈaɪv mˈiːɾɚz əkɹˈɑːs, sˌoʊ ðə klˈæp kɹˈɔsᵻz ɪɾ ɪn ɐbˌaʊt fˈɪftiːn θˈaʊzəndθs əvə sˈɛkənd. hˈɪɹ, ðæts fˈɪftiːn sˈɛkəndz. ðɛɹ ɪt ɡˈoʊz: ɐ ɹˈɪŋ ʌv skwˈiːzd ˈɛɹ, kɹˈɔsɪŋ ðə ɹˈuːm. ɪmˈædʒɪn stˈændɪŋ æt ðə fˈɑːɹ wˈɔːl. juːd hˈɪɹ ðə klˈæp ˈoʊnli wɛn ðɪs ɹˈɪŋ ɹˈiːtʃt juː. ɪt ɹˈiːtʃᵻz ðə wˈɔːl, ænd bˈaʊnsᵻz bˈæk. ðæt bˈaʊns ɪz ɐn ˈɛkoʊ. juː jˈuːz ðɪs tɹˈɪk ɪn ˈɛvɹi stˈɔːɹm. sˈaʊnd kˈʌvɚz ɐbˌaʊt ɐ kɪlˈɑːmɪɾɚɹ ɪn θɹˈiː sˈɛkəndz. sˌoʊ kˈaʊnt ðə sˈɛkəndz bᵻtwˌiːn ɐ flˈæʃ ænd ɪts θˈʌndɚ, ænd dᵻvˈaɪd baɪ θɹˈiː. ðæts ɹˈʌfli hˌaʊ mˈɛni kɪlˈɑːmɪɾɚz ɐwˈeɪ ðə lˈaɪtnɪŋ ɪz. bˌʌt ɐ klˈæp ɪz slˈoʊ. sˈʌmθɪŋ ˌɔn ðɪs tˈeɪbəl ɪz mˈʌtʃ fˈæstɚ ðɐn sˈaʊnd, ænd ɪts ɐbˌaʊt tə ɡˌoʊ θɹuː ɐn ˈæpəl.",
    "file": "05.wav",
-   "dur": 42.465,
-   "sha256": "5d400e9eb8a61f855347f503743cb2b41032789f31873434440fd70c287316f9"
+   "dur": 56.718,
+   "sha256": "ec6d34b54936ac4f96d310bf779b6a01e17b5a2560ffa9f1ca431b35c4902048"
   },
   {
    "id": "vo06",
-   "beat": "sound",
-   "text": "Now, someone claps at the far end of the kitchen. Sound is air pushing on air. In a room, it moves about three hundred forty meters a second. That's why you never see it travel. The room is five meters across, so the clap crosses it in about fifteen thousandths of a second. Here, that's fifteen seconds. There it goes: a ring of squeezed air, crossing the room. It reaches the wall, and bounces back. You use this trick in every storm. Sound covers about a kilometer in three seconds. So count the seconds between a flash and its thunder, and divide by three. That's roughly how many kilometers away the lightning is.",
+   "beat": "bullet",
+   "text": "Ten thousand times slower. One second now lasts almost three hours. A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second. The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples. The apple has no time to react. Then the back of the apple blows outward, in a spray. Pieces of the apple trail behind it, one at a time. And the bullet is already past. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Even now, a table a meter wide would take it about twelve seconds to cross. A bullet is fast. But out the window, something is about to be much faster.",
    "stars": [],
-   "phonemes": "nˈaʊ, sˈʌmwʌn klˈæps æt ðə fˈɑːɹ ˈɛnd ʌvðə kˈɪtʃən. sˈaʊnd ɪz ˈɛɹ pˈʊʃɪŋ ˌɔn ˈɛɹ. ɪn ɐ ɹˈuːm, ɪt mˈuːvz ɐbˌaʊt θɹˈiː hˈʌndɹɪd fˈɔːɹɾi mˈiːɾɚz ɐ sˈɛkənd. ðæts wˌaɪ juː nˈɛvɚ sˈiː ɪt tɹˈævəl. ðə ɹˈuːm ɪz fˈaɪv mˈiːɾɚz əkɹˈɑːs, sˌoʊ ðə klˈæp kɹˈɔsᵻz ɪɾ ɪn ɐbˌaʊt fˈɪftiːn θˈaʊzəndθs əvə sˈɛkənd. hˈɪɹ, ðæts fˈɪftiːn sˈɛkəndz. ðɛɹ ɪt ɡˈoʊz: ɐ ɹˈɪŋ ʌv skwˈiːzd ˈɛɹ, kɹˈɔsɪŋ ðə ɹˈuːm. ɪt ɹˈiːtʃᵻz ðə wˈɔːl, ænd bˈaʊnsᵻz bˈæk. juː jˈuːz ðɪs tɹˈɪk ɪn ˈɛvɹi stˈɔːɹm. sˈaʊnd kˈʌvɚz ɐbˌaʊt ɐ kɪlˈɑːmɪɾɚɹ ɪn θɹˈiː sˈɛkəndz. sˌoʊ kˈaʊnt ðə sˈɛkəndz bᵻtwˌiːn ɐ flˈæʃ ænd ɪts θˈʌndɚ, ænd dᵻvˈaɪd baɪ θɹˈiː. ðæts ɹˈʌfli hˌaʊ mˈɛni kɪlˈɑːmɪɾɚz ɐwˈeɪ ðə lˈaɪtnɪŋ ɪz.",
+   "phonemes": "tˈɛn θˈaʊzənd tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ˈɔːlmoʊst θɹˈiː ˈaʊɚz. ɐ fˈeɪməs ˈoʊld fˈoʊɾəɡɹˌæf baɪ hˈæɹəld ˈɛdʒətən ʃˈoʊz ɐ bˈʊlɪt ɡˌoʊɪŋ θɹuː ɐn ˈæpəl. ðæt bˈʊlɪt flˈuː æɾ ɐbˌaʊt ˈeɪt hˈʌndɹɪd fˈɪfti mˈiːɾɚz ɐ sˈɛkənd. ðɪ ˈæpəl ɪz ɐbˌaʊt ˈeɪt sˈɛntɪmˌiːɾɚz əkɹˈɑːs. sˌoʊ ðə bˈʊlɪt kɹˈɔsᵻz ɪɾ ɪn lˈɛs ðˌænə tˈɛnθˈaʊzəndθ əvə sˈɛkənd. hˈɪɹ, ðæt tˈeɪks ɐbˌaʊt wˈʌn sˈɛkənd. ðə bˈʊlɪt ɪz ɐ smˈɔːl, dˈɑːɹk ʃˈeɪp. æt ðɪs spˈiːd, juː kæn wˈɑːtʃ ɪt dɹˈɪft ˌɪntʊ ðɪ ˈæpəl lˈaɪk ɐ slˈoʊ fˈɪʃ. ðə skˈɪn dˈɪmpəlz. ðɪ ˈæpəl hɐz nˈoʊ tˈaɪm tə ɹɪˈækt. ðˈɛn ðə bˈæk ʌvðɪ ˈæpəl blˈoʊz ˈaʊtwɚd, ɪn ɐ spɹˈeɪ. pˈiːsᵻz ʌvðɪ ˈæpəl tɹˈeɪl bᵻhˈaɪnd ɪt, wˈʌn æɾə tˈaɪm. ænd ðə bˈʊlɪt ɪz ɔːlɹˌɛdi pˈæst. ɪn ɹˈiːəl tˈaɪm, ðæt wʌz fˈɑːɹ tˈuː kwˈɪk tə blˈɪŋk. ɪts mˈuːvɪŋ mˈɔːɹ ðɐn twˈaɪs æz fˈæst æz sˈaʊnd, sˌoʊ ɪt dɹˈæɡz ɐ nˈæɹoʊ kˈoʊn ʌv ˈɛɹ bᵻhˈaɪnd ɪt. ˈiːvən nˈaʊ, ɐ tˈeɪbəl ɐ mˈiːɾɚ wˈaɪd wʊd tˈeɪk ɪɾ ɐbˌaʊt twˈɛlv sˈɛkəndz tə kɹˈɔs. ɐ bˈʊlɪt ɪz fˈæst. bˌʌt ˈaʊt ðə wˈɪndoʊ, sˈʌmθɪŋ ɪz ɐbˌaʊt təbi mˈʌtʃ fˈæstɚ.",
    "file": "06.wav",
-   "dur": 43.974,
-   "sha256": "c1a6be7e660b5214f80ca41517a18ef1e1d5158cbfea3bb89bef7117fb7b3876"
+   "dur": 59.434,
+   "sha256": "e4902f09fa126158b36b6584b917d5c56e6c59f2f74ab2c740357fb6df78a96c"
   },
   {
    "id": "vo07",
-   "beat": "bullet",
-   "text": "Ten thousand times slower. One second now lasts almost three hours. A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second. The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second. Here, that takes about one second. The skin dimples. Then the back of the apple blows outward, in a spray. And the bullet is already past. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Even now, a table a meter wide would take it about twelve seconds to cross. And a clap across the room would still take about two and a half minutes to arrive.",
+   "beat": "leader",
+   "text": "A million times slower. One second now lasts twelve days. Beyond the window, a storm. Lightning looks like it strikes in an instant. It doesn't. The whole fall from the cloud takes tens of thousandths of a second. At this speed, that would take hours. So I'll skip ahead, and show you the highlights. First, a faint path of electric charge reaches down from the cloud, in jumps. Each jump is tens of meters long. Each takes about a microsecond. Here, one jump lasts one whole second. Then the path waits, about thirty to fifty microseconds. Here, that's half a minute or more. Then it jumps again, feeling its way down. Look at how it branches, like a tree turned upside down. At last it touches the ground, and a bright flash runs back up the three-kilometer path. That flash travels up to about a third of the speed of light. Even at a million times slower, it takes at least thirty seconds to climb. And that's the fastest thing so far. But it's still not light's top speed.",
    "stars": [],
-   "phonemes": "tˈɛn θˈaʊzənd tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ˈɔːlmoʊst θɹˈiː ˈaʊɚz. ɐ fˈeɪməs ˈoʊld fˈoʊɾəɡɹˌæf baɪ hˈæɹəld ˈɛdʒətən ʃˈoʊz ɐ bˈʊlɪt ɡˌoʊɪŋ θɹuː ɐn ˈæpəl. ðæt bˈʊlɪt flˈuː æɾ ɐbˌaʊt ˈeɪt hˈʌndɹɪd fˈɪfti mˈiːɾɚz ɐ sˈɛkənd. ðɪ ˈæpəl ɪz ɐbˌaʊt ˈeɪt sˈɛntɪmˌiːɾɚz əkɹˈɑːs. sˌoʊ ðə bˈʊlɪt kɹˈɔsᵻz ɪɾ ɪn lˈɛs ðˌænə tˈɛnθˈaʊzəndθ əvə sˈɛkənd. hˈɪɹ, ðæt tˈeɪks ɐbˌaʊt wˈʌn sˈɛkənd. ðə skˈɪn dˈɪmpəlz. ðˈɛn ðə bˈæk ʌvðɪ ˈæpəl blˈoʊz ˈaʊtwɚd, ɪn ɐ spɹˈeɪ. ænd ðə bˈʊlɪt ɪz ɔːlɹˌɛdi pˈæst. ɪts mˈuːvɪŋ mˈɔːɹ ðɐn twˈaɪs æz fˈæst æz sˈaʊnd, sˌoʊ ɪt dɹˈæɡz ɐ nˈæɹoʊ kˈoʊn ʌv ˈɛɹ bᵻhˈaɪnd ɪt. ˈiːvən nˈaʊ, ɐ tˈeɪbəl ɐ mˈiːɾɚ wˈaɪd wʊd tˈeɪk ɪɾ ɐbˌaʊt twˈɛlv sˈɛkəndz tə kɹˈɔs. ænd ɐ klˈæp əkɹˌɑːs ðə ɹˈuːm wʊd stˈɪl tˈeɪk ɐbˌaʊt tˈuː ænd ɐ hˈæf mˈɪnɪts tʊ ɚɹˈaɪv.",
+   "phonemes": "ɐ mˈɪliən tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts twˈɛlv dˈeɪz. bᵻjˌɔnd ðə wˈɪndoʊ, ɐ stˈɔːɹm. lˈaɪtnɪŋ lˈʊks lˈaɪk ɪt stɹˈaɪks ɪn ɐn ˈɪnstənt. ɪt dˈʌzənt. ðə hˈoʊl fˈɔːl fɹʌmðə klˈaʊd tˈeɪks tˈɛnz ʌv θˈaʊzəndθs əvə sˈɛkənd. æt ðɪs spˈiːd, ðæt wʊd tˈeɪk ˈaʊɚz. sˌoʊ aɪl skˈɪp ɐhˈɛd, ænd ʃˈoʊ juː ðə hˈaɪlaɪts. fˈɜːst, ɐ fˈeɪnt pˈæθ ʌv ᵻlˈɛktɹɪk tʃˈɑːɹdʒ ɹˈiːtʃᵻz dˌaʊn fɹʌmðə klˈaʊd, ɪn dʒˈʌmps. ˈiːtʃ dʒˈʌmp ɪz tˈɛnz ʌv mˈiːɾɚz lˈɔŋ. ˈiːtʃ tˈeɪks ɐbˌaʊt ɐ mˈaɪkɹoʊsˌɛkənd. hˈɪɹ, wˈʌn dʒˈʌmp lˈæsts wˈʌn hˈoʊl sˈɛkənd. ðˈɛn ðə pˈæθ wˈeɪts, ɐbˌaʊt θˈɜːɾi tə fˈɪfti mˈaɪkɹoʊsˌɛkəndz. hˈɪɹ, ðæts hˈæf ɐ mˈɪnɪt ɔːɹ mˈɔːɹ. ðˈɛn ɪt dʒˈʌmps ɐɡˈɛn, fˈiːlɪŋ ɪts wˈeɪ dˈaʊn. lˈʊk æt hˌaʊ ɪt bɹˈæntʃᵻz, lˈaɪk ɐ tɹˈiː tˈɜːnd ˈʌpsaɪd dˈaʊn. æt lˈæst ɪt tˈʌtʃᵻz ðə ɡɹˈaʊnd, ænd ɐ bɹˈaɪt flˈæʃ ɹˈʌnz bˈæk ˌʌp ðə θɹˈiːkɪlˈɑːmɪɾɚ pˈæθ. ðæt flˈæʃ tɹˈævəlz ˌʌp tʊ ɐbˌaʊt ɐ θˈɜːd ʌvðə spˈiːd ʌv lˈaɪt. ˈiːvən æɾə mˈɪliən tˈaɪmz slˈoʊɚ, ɪt tˈeɪks æt lˈiːst θˈɜːɾi sˈɛkəndz tə klˈaɪm. ænd ðæts ðə fˈæstɪst θˈɪŋ sˈoʊ fˌɑːɹ. bˌʌt ɪts stˈɪl nˌɑːt lˈaɪts tˈɑːp spˈiːd.",
    "file": "07.wav",
-   "dur": 49.712,
-   "sha256": "8d438a6a19f62f23d0443a4a8846f6e84902d194cb03bf8034e441ae7996946c"
+   "dur": 68.916,
+   "sha256": "6c2e801a73f0e3c92904c02674f4d40028744a1c1e135b77c7b786096d82c81a"
   },
   {
    "id": "vo08",
-   "beat": "leader",
-   "text": "A million times slower. One second now lasts twelve days. Beyond the window, a storm. Lightning looks like it strikes in an instant. It doesn't. The whole fall from the cloud takes tens of thousandths of a second. At this speed, that would take hours. So I'll skip ahead, and show you the highlights. First, a faint path of electric charge reaches down from the cloud, in jumps. Each jump is tens of meters long. Each takes about a microsecond. Here, one jump lasts one whole second. Then the path waits, about thirty to fifty microseconds. Here, that's half a minute or more. Then it jumps again, feeling its way down. At last it touches the ground, and a bright flash runs back up the three-kilometer path. That flash travels up to about a third of the speed of light. Even at a million times slower, it takes at least thirty seconds to climb.",
-   "stars": [],
-   "phonemes": "ɐ mˈɪliən tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts twˈɛlv dˈeɪz. bᵻjˌɔnd ðə wˈɪndoʊ, ɐ stˈɔːɹm. lˈaɪtnɪŋ lˈʊks lˈaɪk ɪt stɹˈaɪks ɪn ɐn ˈɪnstənt. ɪt dˈʌzənt. ðə hˈoʊl fˈɔːl fɹʌmðə klˈaʊd tˈeɪks tˈɛnz ʌv θˈaʊzəndθs əvə sˈɛkənd. æt ðɪs spˈiːd, ðæt wʊd tˈeɪk ˈaʊɚz. sˌoʊ aɪl skˈɪp ɐhˈɛd, ænd ʃˈoʊ juː ðə hˈaɪlaɪts. fˈɜːst, ɐ fˈeɪnt pˈæθ ʌv ᵻlˈɛktɹɪk tʃˈɑːɹdʒ ɹˈiːtʃᵻz dˌaʊn fɹʌmðə klˈaʊd, ɪn dʒˈʌmps. ˈiːtʃ dʒˈʌmp ɪz tˈɛnz ʌv mˈiːɾɚz lˈɔŋ. ˈiːtʃ tˈeɪks ɐbˌaʊt ɐ mˈaɪkɹoʊsˌɛkənd. hˈɪɹ, wˈʌn dʒˈʌmp lˈæsts wˈʌn hˈoʊl sˈɛkənd. ðˈɛn ðə pˈæθ wˈeɪts, ɐbˌaʊt θˈɜːɾi tə fˈɪfti mˈaɪkɹoʊsˌɛkəndz. hˈɪɹ, ðæts hˈæf ɐ mˈɪnɪt ɔːɹ mˈɔːɹ. ðˈɛn ɪt dʒˈʌmps ɐɡˈɛn, fˈiːlɪŋ ɪts wˈeɪ dˈaʊn. æt lˈæst ɪt tˈʌtʃᵻz ðə ɡɹˈaʊnd, ænd ɐ bɹˈaɪt flˈæʃ ɹˈʌnz bˈæk ˌʌp ðə θɹˈiːkɪlˈɑːmɪɾɚ pˈæθ. ðæt flˈæʃ tɹˈævəlz ˌʌp tʊ ɐbˌaʊt ɐ θˈɜːd ʌvðə spˈiːd ʌv lˈaɪt. ˈiːvən æɾə mˈɪliən tˈaɪmz slˈoʊɚ, ɪt tˈeɪks æt lˈiːst θˈɜːɾi sˈɛkəndz tə klˈaɪm.",
-   "file": "08.wav",
-   "dur": 55.52,
-   "sha256": "317f54425816c8a8247c9ed23eee4ea346ac22b783668096142e426d12cdeca2"
-  },
-  {
-   "id": "vo09",
-   "beat": "ramp",
-   "text": "Now it gets strange. Ten million times slower. One second now lasts about one hundred sixteen days. A whole season fits inside it. A hundred million times slower, and one second lasts more than three years. At this speed, a flash of light would take almost two seconds to cross the room. And the chip in your phone would tick thirty times a second. Now we're close. Everything you've seen so far happened in less than a second of real time. And all of it was hiding in plain sight.",
-   "stars": [],
-   "phonemes": "nˈaʊ ɪt ɡˈɛts stɹˈeɪndʒ. tˈɛn mˈɪliən tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ɐbˌaʊt wˈʌn hˈʌndɹɪd sˈɪkstiːn dˈeɪz. ɐ hˈoʊl sˈiːzən fˈɪts ɪnsˈaɪd ɪt. ɐ hˈʌndɹɪd mˈɪliən tˈaɪmz slˈoʊɚ, ænd wˈʌn sˈɛkənd lˈæsts mˈɔːɹ ðɐn θɹˈiː jˈɪɹz. æt ðɪs spˈiːd, ɐ flˈæʃ ʌv lˈaɪt wʊd tˈeɪk ˈɔːlmoʊst tˈuː sˈɛkəndz tə kɹˈɔs ðə ɹˈuːm. ænd ðə tʃˈɪp ɪn jʊɹ fˈoʊn wʊd tˈɪk θˈɜːɾi tˈaɪmz ɐ sˈɛkənd. nˈaʊ wɪɹ klˈoʊs. ˈɛvɹɪθˌɪŋ juːv sˈiːn sˈoʊ fˌɑːɹ hˈæpənd ɪn lˈɛs ðˌænə sˈɛkənd ʌv ɹˈiːəl tˈaɪm. ænd ˈɔːl ʌv ɪt wʌz hˈaɪdɪŋ ɪn plˈeɪn sˈaɪt.",
-   "file": "09.wav",
-   "dur": 33.67,
-   "sha256": "c7f26ea3eeff9df274e7a09319e7fa3582eedd95da57e1178fa09a0dd13b9c08"
-  },
-  {
-   "id": "vo10",
    "beat": "light",
-   "text": "A billion times slower. One second now lasts about thirty-two years. Now the light itself is slow. Light moves about thirty centimeters in a billionth of a second. So at this speed, it crawls thirty centimeters in one second. That's a slow crawl. Someone flicks on a flashlight. The beam is not instant anymore. A glowing front of light leaves the lens, and spreads across the room. Behind it, the table is lit. Ahead of it, the table is still dark. The cup lights up on one side first, and its shadow arrives last. It takes about seventeen seconds to reach the far wall. In real time, that crossing takes about seventeen billionths of a second. And the chip in the corner? A computer chip ticks about three billion times a second. Here, it ticks three times a second. Tick. Tick. Tick. Even the chip in your phone is slow enough to count.",
+   "text": "Now it gets strange. Ten million times slower. One second now lasts about one hundred sixteen days. A hundred million times slower, and one second lasts more than three years. At this speed, a flash of light would take almost two seconds to cross the room. Now we're close. A billion times slower. One second now lasts about thirty-two years. Now the light itself is slow. Light moves about thirty centimeters in a billionth of a second. So at this speed, it crawls thirty centimeters in one second. That's a slow crawl. Someone flicks on a flashlight. A glowing front of light leaves the lens, and spreads across the room. Behind it, the table is lit. Ahead of it, the table is still dark. The cup lights up on one side first, and its shadow arrives last. The drop of water above the cup hangs there, frozen. It takes about seventeen seconds for the light to reach the far wall. And in the corner, a computer chip is about to start ticking.",
    "stars": [
     "light"
    ],
-   "phonemes": "ɐ bˈɪliən tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ɐbˌaʊt θˈɜːɾitˈuː jˈɪɹz. nˈaʊ ðə lˈaɪt ɪtsˈɛlf ɪz slˈoʊ. lˈaɪt mˈuːvz ɐbˌaʊt θˈɜːɾi sˈɛntɪmˌiːɾɚz ɪn ɐ bˈɪliənθ əvə sˈɛkənd. sˌoʊ æt ðɪs spˈiːd, ɪt kɹˈɔːlz θˈɜːɾi sˈɛntɪmˌiːɾɚz ɪn wˈʌn sˈɛkənd. ðæts ɐ slˈoʊ kɹˈɔːl. sˈʌmwʌn flˈɪks ˌɔn ɐ flˈæʃlaɪt. ðə bˈiːm ɪz nˌɑːt ˈɪnstənt ˌɛnɪmˈɔːɹ. ɐ ɡlˈoʊɪŋ fɹˈʌnt ʌv lˈaɪt lˈiːvz ðə lˈɛnz, ænd spɹˈɛdz əkɹˌɑːs ðə ɹˈuːm. bᵻhˈaɪnd ɪt, ðə tˈeɪbəl ɪz lˈɪt. ɐhˈɛd ʌv ɪt, ðə tˈeɪbəl ɪz stˈɪl dˈɑːɹk. ðə kˈʌp lˈaɪts ˌʌp ˌɔn wˈʌn sˈaɪd fˈɜːst, ænd ɪts ʃˈædoʊ ɚɹˈaɪvz lˈæst. ɪt tˈeɪks ɐbˌaʊt sˈɛvəntˌiːn sˈɛkəndz tə ɹˈiːtʃ ðə fˈɑːɹ wˈɔːl. ɪn ɹˈiːəl tˈaɪm, ðæt kɹˈɔsɪŋ tˈeɪks ɐbˌaʊt sˈɛvəntˌiːn bˈɪliənθs əvə sˈɛkənd. ænd ðə tʃˈɪp ɪnðə kˈɔːɹnɚ? ɐ kəmpjˈuːɾɚ tʃˈɪp tˈɪks ɐbˌaʊt θɹˈiː bˈɪliən tˈaɪmz ɐ sˈɛkənd. hˈɪɹ, ɪt tˈɪks θɹˈiː tˈaɪmz ɐ sˈɛkənd. tˈɪk. tˈɪk. tˈɪk. ˈiːvən ðə tʃˈɪp ɪn jʊɹ fˈoʊn ɪz slˈoʊ ɪnˈʌf tə kˈaʊnt.",
+   "phonemes": "nˈaʊ ɪt ɡˈɛts stɹˈeɪndʒ. tˈɛn mˈɪliən tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ɐbˌaʊt wˈʌn hˈʌndɹɪd sˈɪkstiːn dˈeɪz. ɐ hˈʌndɹɪd mˈɪliən tˈaɪmz slˈoʊɚ, ænd wˈʌn sˈɛkənd lˈæsts mˈɔːɹ ðɐn θɹˈiː jˈɪɹz. æt ðɪs spˈiːd, ɐ flˈæʃ ʌv lˈaɪt wʊd tˈeɪk ˈɔːlmoʊst tˈuː sˈɛkəndz tə kɹˈɔs ðə ɹˈuːm. nˈaʊ wɪɹ klˈoʊs. ɐ bˈɪliən tˈaɪmz slˈoʊɚ. wˈʌn sˈɛkənd nˈaʊ lˈæsts ɐbˌaʊt θˈɜːɾitˈuː jˈɪɹz. nˈaʊ ðə lˈaɪt ɪtsˈɛlf ɪz slˈoʊ. lˈaɪt mˈuːvz ɐbˌaʊt θˈɜːɾi sˈɛntɪmˌiːɾɚz ɪn ɐ bˈɪliənθ əvə sˈɛkənd. sˌoʊ æt ðɪs spˈiːd, ɪt kɹˈɔːlz θˈɜːɾi sˈɛntɪmˌiːɾɚz ɪn wˈʌn sˈɛkənd. ðæts ɐ slˈoʊ kɹˈɔːl. sˈʌmwʌn flˈɪks ˌɔn ɐ flˈæʃlaɪt. ɐ ɡlˈoʊɪŋ fɹˈʌnt ʌv lˈaɪt lˈiːvz ðə lˈɛnz, ænd spɹˈɛdz əkɹˌɑːs ðə ɹˈuːm. bᵻhˈaɪnd ɪt, ðə tˈeɪbəl ɪz lˈɪt. ɐhˈɛd ʌv ɪt, ðə tˈeɪbəl ɪz stˈɪl dˈɑːɹk. ðə kˈʌp lˈaɪts ˌʌp ˌɔn wˈʌn sˈaɪd fˈɜːst, ænd ɪts ʃˈædoʊ ɚɹˈaɪvz lˈæst. ðə dɹˈɑːp ʌv wˈɔːɾɚɹ əbˌʌv ðə kˈʌp hˈæŋz ðˈɛɹ, fɹˈoʊzən. ɪt tˈeɪks ɐbˌaʊt sˈɛvəntˌiːn sˈɛkəndz fɚðə lˈaɪt tə ɹˈiːtʃ ðə fˈɑːɹ wˈɔːl. ænd ɪnðə kˈɔːɹnɚ, ɐ kəmpjˈuːɾɚ tʃˈɪp ɪz ɐbˌaʊt tə stˈɑːɹt tˈɪkɪŋ.",
+   "file": "08.wav",
+   "dur": 66.988,
+   "sha256": "26bd24404382f36f33b38796c5269fe9749b0182457f17eaaccdf41c92bd924f"
+  },
+  {
+   "id": "vo09",
+   "beat": "still",
+   "text": "A computer chip ticks about three billion times a second. Here, it ticks three times a second. Tick. Tick. Tick. Keep going. Ten billion times slower. Now, light moves three centimeters a second. A hundred billion, and it moves three millimeters a second. And at a trillion times slower, the light moves about a third of a millimeter a second. That's slower than a garden snail. One second of your life now lasts about thirty-two thousand years. The room would take about four and a half hours to cross. Here's another way to see it. A human hair is about a tenth of a millimeter wide. Light crosses a hair in about a third of a trillionth of a second. At this speed, that takes about a third of a second. Light hasn't stopped. But in the time of one slow second, it has barely moved at all. It looks almost frozen. But is any of this real? Has anyone ever filmed light crawling like this?",
+   "stars": [],
+   "phonemes": "ɐ kəmpjˈuːɾɚ tʃˈɪp tˈɪks ɐbˌaʊt θɹˈiː bˈɪliən tˈaɪmz ɐ sˈɛkənd. hˈɪɹ, ɪt tˈɪks θɹˈiː tˈaɪmz ɐ sˈɛkənd. tˈɪk. tˈɪk. tˈɪk. kˈiːp ɡˈoʊɪŋ. tˈɛn bˈɪliən tˈaɪmz slˈoʊɚ. nˈaʊ, lˈaɪt mˈuːvz θɹˈiː sˈɛntɪmˌiːɾɚz ɐ sˈɛkənd. ɐ hˈʌndɹɪd bˈɪliən, ænd ɪt mˈuːvz θɹˈiː mˈɪlɪmˌiːɾɚz ɐ sˈɛkənd. ænd æɾə tɹˈɪliən tˈaɪmz slˈoʊɚ, ðə lˈaɪt mˈuːvz ɐbˌaʊt ɐ θˈɜːd əvə mˈɪlɪmˌiːɾɚɹ ɐ sˈɛkənd. ðæts slˈoʊɚ ðˌænə ɡˈɑːɹdən snˈeɪl. wˈʌn sˈɛkənd ʌv jʊɹ lˈaɪf nˈaʊ lˈæsts ɐbˌaʊt θˈɜːɾitˈuː θˈaʊzənd jˈɪɹz. ðə ɹˈuːm wʊd tˈeɪk ɐbˌaʊt fˈɔːɹ ænd ɐ hˈæf ˈaʊɚz tə kɹˈɔs. hˈɪɹz ɐnˈʌðɚ wˈeɪ tə sˈiː ɪt. ɐ hjˈuːmən hˈɛɹ ɪz ɐbˌaʊt ɐ tˈɛnθ əvə mˈɪlɪmˌiːɾɚ wˈaɪd. lˈaɪt kɹˈɔsᵻz ɐ hˈɛɹ ɪn ɐbˌaʊt ɐ θˈɜːd əvə tɹˈɪliənθ əvə sˈɛkənd. æt ðɪs spˈiːd, ðæt tˈeɪks ɐbˌaʊt ɐ θˈɜːd əvə sˈɛkənd. lˈaɪt hˈæzənt stˈɑːpt. bˌʌt ɪnðə tˈaɪm ʌv wˈʌn slˈoʊ sˈɛkənd, ɪt hɐz bˈɛɹli mˈuːvd æɾ ˈɔːl. ɪt lˈʊks ˈɔːlmoʊst fɹˈoʊzən. bˌʌt ɪz ˌɛni ʌv ðɪs ɹˈiːəl? hɐz ˈɛnɪwˌʌn ˈɛvɚ fˈɪlmd lˈaɪt kɹˈɔːlɪŋ lˈaɪk ðˈɪs?",
+   "file": "09.wav",
+   "dur": 56.48,
+   "sha256": "1de0136c60617889d713411dde47e553bdb4ae0d9a60ba81ccbb59ff7f08692d"
+  },
+  {
+   "id": "vo10",
+   "beat": "real",
+   "text": "Yes. A team at MIT built a camera that records about a trillion frames a second. They used it to film a pulse of light moving through a bottle. It's slow-motion made out of many nearly identical pulses, one slice at a time. So this isn't just a drawing. Light really has been filmed crawling like this. Light does move. We only needed a slow enough clock to see it.",
+   "stars": [],
+   "phonemes": "jˈɛs. ɐ tˈiːm æɾ ˌɛmˌaɪtˈiː bˈɪlt ɐ kˈæmɹə ðæt ɹᵻkˈɔːɹdz ɐbˌaʊt ɐ tɹˈɪliən fɹˈeɪmz ɐ sˈɛkənd. ðeɪ jˈuːzd ɪt tə fˈɪlm ɐ pˈʌls ʌv lˈaɪt mˈuːvɪŋ θɹuː ɐ bˈɑːɾəl. ɪts slˈoʊmˈoʊʃən mˌeɪd ˌaʊɾəv mˈɛni nˌɪɹli aɪdˈɛntɪkəl pˈʌlsᵻz, wˈʌn slˈaɪs æɾə tˈaɪm. sˌoʊ ðɪs ˌɪzənt dʒˈʌst ɐ dɹˈɔːɪŋ. lˈaɪt ɹˈiəli hˈæzbiːn fˈɪlmd kɹˈɔːlɪŋ lˈaɪk ðˈɪs. lˈaɪt dˈʌz mˈuːv. wiː ˈoʊnli nˈiːdᵻd ɐ slˈoʊ ɪnˈʌf klˈɑːk tə sˈiː ɪt.",
    "file": "10.wav",
-   "dur": 54.794,
-   "sha256": "67f6103e2efa437caff23cf5c710caa561f3d2282d7fb614f07db484d64b5d5d"
+   "dur": 25.294,
+   "sha256": "7cfb8f585fe0b451aa2911d00afae748549e810ee774d740f87decfbf62a54d7"
   },
   {
    "id": "vo11",
-   "beat": "still",
-   "text": "Keep going. Ten billion times slower. Now, light moves three centimeters a second. A hundred billion, and it moves three millimeters a second. And at a trillion times slower, the light moves about a third of a millimeter a second. That's slower than a garden snail. One second of your life now lasts about thirty-two thousand years. The room would take about four and a half hours to cross. Here's another way to see it. A human hair is about a tenth of a millimeter wide. Light crosses a hair in about a third of a trillionth of a second. At this speed, that takes about a third of a second. Light hasn't stopped. But in the time of one slow second, it has barely moved at all.",
+   "beat": "takeaway",
+   "text": "Now we're back at one second. The fly crosses the room. It's over. But you know what's hiding inside it. Every second you have ever lived had all of this inside it. We just never had a clock slow enough to watch. Next time a fly crosses a room, remember that.",
    "stars": [],
-   "phonemes": "kˈiːp ɡˈoʊɪŋ. tˈɛn bˈɪliən tˈaɪmz slˈoʊɚ. nˈaʊ, lˈaɪt mˈuːvz θɹˈiː sˈɛntɪmˌiːɾɚz ɐ sˈɛkənd. ɐ hˈʌndɹɪd bˈɪliən, ænd ɪt mˈuːvz θɹˈiː mˈɪlɪmˌiːɾɚz ɐ sˈɛkənd. ænd æɾə tɹˈɪliən tˈaɪmz slˈoʊɚ, ðə lˈaɪt mˈuːvz ɐbˌaʊt ɐ θˈɜːd əvə mˈɪlɪmˌiːɾɚɹ ɐ sˈɛkənd. ðæts slˈoʊɚ ðˌænə ɡˈɑːɹdən snˈeɪl. wˈʌn sˈɛkənd ʌv jʊɹ lˈaɪf nˈaʊ lˈæsts ɐbˌaʊt θˈɜːɾitˈuː θˈaʊzənd jˈɪɹz. ðə ɹˈuːm wʊd tˈeɪk ɐbˌaʊt fˈɔːɹ ænd ɐ hˈæf ˈaʊɚz tə kɹˈɔs. hˈɪɹz ɐnˈʌðɚ wˈeɪ tə sˈiː ɪt. ɐ hjˈuːmən hˈɛɹ ɪz ɐbˌaʊt ɐ tˈɛnθ əvə mˈɪlɪmˌiːɾɚ wˈaɪd. lˈaɪt kɹˈɔsᵻz ɐ hˈɛɹ ɪn ɐbˌaʊt ɐ θˈɜːd əvə tɹˈɪliənθ əvə sˈɛkənd. æt ðɪs spˈiːd, ðæt tˈeɪks ɐbˌaʊt ɐ θˈɜːd əvə sˈɛkənd. lˈaɪt hˈæzənt stˈɑːpt. bˌʌt ɪnðə tˈaɪm ʌv wˈʌn slˈoʊ sˈɛkənd, ɪt hɐz bˈɛɹli mˈuːvd æɾ ˈɔːl.",
+   "phonemes": "nˈaʊ wɪɹ bˈæk æt wˈʌn sˈɛkənd. ðə flˈaɪ kɹˈɔsᵻz ðə ɹˈuːm. ɪts ˈoʊvɚ. bˌʌt juː nˈoʊ wʌts hˈaɪdɪŋ ɪnsˈaɪd ɪt. ˈɛvɹi sˈɛkənd juː hæv ˈɛvɚ lˈɪvd hæd ˈɔːl ʌv ðɪs ɪnsˈaɪd ɪt. wiː dʒˈʌst nˈɛvɚ hæd ɐ klˈɑːk slˈoʊ ɪnˈʌf tə wˈɑːtʃ. nˈɛkst tˈaɪm ɐ flˈaɪ kɹˈɔsᵻz ɐ ɹˈuːm, ɹᵻmˈɛmbɚ ðˈæt.",
    "file": "11.wav",
-   "dur": 46.857,
-   "sha256": "537d0be88dd31523f3140dfab5ec3ef06ca10ca853d07083633345c15223ad50"
+   "dur": 17.89,
+   "sha256": "e2f32569c47b261c3dda2ae3b45e99b5dde42c3e07218ee014c387379469d4cd"
   },
   {
    "id": "vo12",
-   "beat": "real",
-   "text": "This isn't just a story. A team at MIT built a camera that records about a trillion frames a second. They used it to film a pulse of light moving through a bottle. It's slow-motion made out of many nearly identical pulses, one slice at a time. They repeat the flash again and again, and record a different instant each time. So this isn't just a drawing. Light really has been filmed crawling like this. Light does move. We only needed a slow enough clock to see it.",
-   "stars": [],
-   "phonemes": "ðɪs ˌɪzənt dʒˈʌst ɐ stˈɔːɹi. ɐ tˈiːm æɾ ˌɛmˌaɪtˈiː bˈɪlt ɐ kˈæmɹə ðæt ɹᵻkˈɔːɹdz ɐbˌaʊt ɐ tɹˈɪliən fɹˈeɪmz ɐ sˈɛkənd. ðeɪ jˈuːzd ɪt tə fˈɪlm ɐ pˈʌls ʌv lˈaɪt mˈuːvɪŋ θɹuː ɐ bˈɑːɾəl. ɪts slˈoʊmˈoʊʃən mˌeɪd ˌaʊɾəv mˈɛni nˌɪɹli aɪdˈɛntɪkəl pˈʌlsᵻz, wˈʌn slˈaɪs æɾə tˈaɪm. ðeɪ ɹᵻpˈiːt ðə flˈæʃ ɐɡˈɛn ænd ɐɡˈɛn, ænd ɹˈɛkɚd ɐ dˈɪfɹənt ˈɪnstənt ˈiːtʃ tˈaɪm. sˌoʊ ðɪs ˌɪzənt dʒˈʌst ɐ dɹˈɔːɪŋ. lˈaɪt ɹˈiəli hˈæzbiːn fˈɪlmd kɹˈɔːlɪŋ lˈaɪk ðˈɪs. lˈaɪt dˈʌz mˈuːv. wiː ˈoʊnli nˈiːdᵻd ɐ slˈoʊ ɪnˈʌf klˈɑːk tə sˈiː ɪt.",
-   "file": "12.wav",
-   "dur": 28.942,
-   "sha256": "f64708e541ee8019fdeace3988c5716f605b9689ed933f09c429b05106213633"
-  },
-  {
-   "id": "vo13",
-   "beat": "takeaway",
-   "text": "Now we're back at one second. The fly crosses the room. It's over. But you know what's hiding inside it. Every second you have ever lived had all of this inside it. The wings, the splash, the pop, the sound crossing the room. Even the light, creeping across the room. We just never had a clock slow enough to watch. Next time a fly crosses a room, remember that.",
-   "stars": [],
-   "phonemes": "nˈaʊ wɪɹ bˈæk æt wˈʌn sˈɛkənd. ðə flˈaɪ kɹˈɔsᵻz ðə ɹˈuːm. ɪts ˈoʊvɚ. bˌʌt juː nˈoʊ wʌts hˈaɪdɪŋ ɪnsˈaɪd ɪt. ˈɛvɹi sˈɛkənd juː hæv ˈɛvɚ lˈɪvd hæd ˈɔːl ʌv ðɪs ɪnsˈaɪd ɪt. ðə wˈɪŋz, ðə splˈæʃ, ðə pˈɑːp, ðə sˈaʊnd kɹˈɔsɪŋ ðə ɹˈuːm. ˈiːvən ðə lˈaɪt, kɹˈiːpɪŋ əkɹˌɑːs ðə ɹˈuːm. wiː dʒˈʌst nˈɛvɚ hæd ɐ klˈɑːk slˈoʊ ɪnˈʌf tə wˈɑːtʃ. nˈɛkst tˈaɪm ɐ flˈaɪ kɹˈɔsᵻz ɐ ɹˈuːm, ɹᵻmˈɛmbɚ ðˈæt.",
-   "file": "13.wav",
-   "dur": 24.548,
-   "sha256": "1995033e41a80a1992cc4fd63ff93cb818645b9ab924f008975d32b13ae2f3d3"
-  },
-  {
-   "id": "vo14",
    "beat": "tease",
    "text": "Thanks for watching, and see you next time.",
    "stars": [],
    "phonemes": "θˈæŋks fɔːɹ wˈɑːtʃɪŋ, ænd sˈiː juː nˈɛkst tˈaɪm.",
-   "file": "14.wav",
+   "file": "12.wav",
    "dur": 2.686,
    "sha256": "258ffbf82b90c410d58cea1c3ae4e8ad7db7c1274a95cc6f554a24e8a5029cea"
   }
