@@ -64,6 +64,7 @@ TEMPLATE = {
 }
 SEGMENT_WORDS = (6, 28)
 REQUIRED = ("hook", "whoa", "takeaway", "tease")
+LONG = False            # --long: a long-form video (8:00 and more): no short-form template, length or one-sentence-per-claim rules
 NEED_STAR = ("hook", "whoa")
 WORDS, DUR, WPS = (150, 180), (60.0, 75.0), (2.2, 3.0)
 OVERALL_WPS = 2.5        # words a second over the whole film, for the quick length estimate
@@ -73,7 +74,7 @@ PRE, HOLD = 0.3, 0.4     # timeline.layout's defaults: lead-in before a line, ho
 
 FIELDS = ("id", "sentence", "claim", "source_url", "source_title", "accessed", "verified_via", "status")
 STATUS = ("ok", "needs-wording", "TODO open link")
-VIA = ("search excerpt", "page", "derivation", "own model")
+VIA = ("search excerpt", "page", "derivation", "own model", "from memory")   # "from memory": recalled by the builder, not opened (the claim stays OPEN)
 
 NUMBER_WORDS = set("""zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen
 sixteen seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety hundred hundreds thousand
@@ -189,7 +190,7 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
         r.error(ids[0], "the first beat must be the hook")
     if ids[-1] != "tease":
         r.error(ids[-1], "the last beat must be the tease")
-    for need in REQUIRED:
+    for need in (("hook", "takeaway", "tease") if LONG else REQUIRED):
         if need not in ids:
             r.error("template", f"no '{need}' beat")
     if "whoa" in ids and "takeaway" in ids and ids.index("whoa") > ids.index("takeaway"):
@@ -207,9 +208,11 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
         total_words += n
         tmpl = TEMPLATE.get(b["id"], {"words": SEGMENT_WORDS} if "segment" in p else {})
         lo_hi = tmpl.get("words")
+        if LONG:
+            tmpl, lo_hi = {}, None
         if lo_hi and not lo_hi[0] <= n <= lo_hi[1]:
             r.warn(b["id"], f"{n} words; the template asks {lo_hi[0]}–{lo_hi[1]}")
-        if not tmpl:
+        if not tmpl and not LONG:
             r.note(f"{b['id']}: not a template beat and not a segment; no word range checked")
         pre = p.get("pre", PRE)
         hold = p.get("hold", 0.0) + p.get("end_card", 0.0) if ("hold" in p or "end_card" in p) else HOLD
@@ -229,7 +232,7 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
         else:
             r.warn(b["id"], "no planned window '(a–b s)' in the heading; pace not checked before voicing")
         need = tmpl.get("hold")
-        if need and p.get("hold", 0.0) < need:
+        if need and not LONG and p.get("hold", 0.0) < need:
             r.error(b["id"], f"plan at least {need:g} s picture-only (direction: 'picture-only {need:g} s'); found {p.get('hold', 0):g} s")
         if k == len(beats) - 1:
             if p.get("end_card", 0.0) < TEMPLATE["tease"]["end_card"]:
@@ -294,14 +297,15 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
                                                           f"(target {CLARITY_FILM_GRADE} or below)")
 
     # ── length ──────────────────────────────────────────────────────
-    if not WORDS[0] <= total_words <= WORDS[1]:
-        r.error("length", f"{total_words} words; keep {WORDS[0]}–{WORDS[1]}")
+    WORDS_, DUR_, wps_ = ((1000, 1500), (510.0, 570.0), 2.2) if LONG else (WORDS, DUR, overall_wps)   # long-form: 8:30 to 9:30
+    if not WORDS_[0] <= total_words <= WORDS_[1]:
+        r.error("length", f"{total_words} words; keep {WORDS_[0]}–{WORDS_[1]}")
     planned = beats[-1]["window"][1] if all(b["window"] for b in beats) else None
-    if planned is not None and not DUR[0] <= planned <= DUR[1]:
-        r.error("length", f"the plan runs {planned:g} s; keep {DUR[0]:g}–{DUR[1]:g} s")
-    estimate = total_words / overall_wps
-    if not DUR[0] <= estimate <= DUR[1]:
-        r.error("length", f"{total_words} words at {overall_wps} words/s is {estimate:.1f} s; keep {DUR[0]:g}–{DUR[1]:g} s")
+    if planned is not None and not DUR_[0] <= planned <= DUR_[1]:
+        r.error("length", f"the plan runs {planned:g} s; keep {DUR_[0]:g}–{DUR_[1]:g} s")
+    estimate = total_words / wps_
+    if not DUR_[0] <= estimate <= DUR_[1]:
+        r.error("length", f"{total_words} words at {wps_} words/s is {estimate:.1f} s; keep {DUR_[0]:g}–{DUR_[1]:g} s")
 
     # ── hook question, estimated ────────────────────────────────────
     hook_sents = sentences(beats[0]["vo"])
@@ -374,7 +378,7 @@ def lint(path, segment=None, overall_wps=OVERALL_WPS, bpm=None):
                 c = ledger.get(cid)
                 if cpath.exists() and c is None:
                     r.error(b["id"], f"claim {cid} is not in claims.json")
-                elif c is not None and c.get("sentence") != s["text"]:
+                elif c is not None and not LONG and c.get("sentence") != s["text"]:
                     r.error(f"claim {cid}", f"its sentence differs from the script:\n      ledger: {c.get('sentence')!r}\n      script: {s['text']!r}")
     for cid in ledger:
         if cid not in cited:
@@ -483,12 +487,15 @@ def main():
     ap.add_argument("--segment", help="the channel's recurring segment, which a beat must carry ('segment: <name>')")
     ap.add_argument("--wps", type=float, default=OVERALL_WPS, help="overall words a second for the length estimate")
     ap.add_argument("--bpm", type=float, help="the channel's tempo: once voiced, lay the film out on its grid with timeline.py")
+    ap.add_argument("--long", action="store_true", help="a long-form video: skip the short-form template, length and one-sentence-per-claim rules (every {cN} must still be in claims.json)")
     ap.add_argument("--json", action="store_true", help="print the result as JSON")
     ap.add_argument("--sources", action="store_true", help="print the source list for the post and stop")
     a = ap.parse_args()
     if a.sources:
         print("\n".join(sources(a.episode)))
         return 0
+    global LONG
+    LONG = a.long
     r, res = lint(a.episode, a.segment, a.wps, a.bpm)
     if a.json:
         print(json.dumps(res, indent=1, ensure_ascii=False))
