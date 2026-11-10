@@ -238,6 +238,28 @@
   }
  ],
  "world": {
+  "weightWins": [
+   [
+    86.8333,
+    93.0
+   ],
+   [
+    126.0333,
+    138.0
+   ],
+   [
+    277.5,
+    287.4
+   ],
+   [
+    359.3333,
+    365.4
+   ],
+   [
+    365.4,
+    432.0
+   ]
+  ],
   "cycleS": 16.0,
   "keys": [
    [
@@ -261,27 +283,23 @@
     12.0
    ],
    [
-    231.0,
-    11.2
+    232.0,
+    12.0
    ],
    [
-    265.8,
-    8.0
-   ],
-   [
-    267.0,
+    242.93333333333334,
     6.0
    ],
    [
-    313.8,
-    4.6
-   ],
-   [
-    348.6,
-    3.6
+    348.5,
+    6.0
    ],
    [
     349.03333333333336,
+    3.0
+   ],
+   [
+    365.35,
     3.0
    ],
    [
@@ -289,7 +307,15 @@
     2.0
    ],
    [
-    388.4,
+    386.35,
+    2.0
+   ],
+   [
+    387.2,
+    1.5
+   ],
+   [
+    401.95,
     1.5
    ],
    [
@@ -374,111 +400,6 @@
    "t0": 0.3,
    "t1": 521.2,
    "slot": "bl"
-  },
-  {
-   "id": "b-rule",
-   "text": "only the spin changes",
-   "t0": 23.2,
-   "t1": 60.900000000000006,
-   "slot": "tr"
-  },
-  {
-   "id": "b-today",
-   "text": "today: 0.35 % lighter than on a still Earth",
-   "t0": 81.2,
-   "t1": 92.7,
-   "slot": "tr"
-  },
-  {
-   "id": "b-12",
-   "text": "12 h day: the Sun crosses in 6 h",
-   "t0": 111.3,
-   "t1": 137.7,
-   "slot": "tr"
-  },
-  {
-   "id": "b-wind",
-   "text": "wind through the air: ≈ 463 m/s at first",
-   "t0": 150.0,
-   "t1": 167.7,
-   "slot": "tr"
-  },
-  {
-   "id": "b-ocean",
-   "text": "sea at the equator: +33 km vs today · rough guess",
-   "t0": 192.0,
-   "t1": 230.7,
-   "slot": "tr"
-  },
-  {
-   "id": "b-shape",
-   "text": "shape and seas drawn bigger than life",
-   "t0": 169.0,
-   "t1": 188.0,
-   "slot": "tr"
-  },
-  {
-   "id": "b-cor",
-   "text": "storm steering: 4 × at a 6 h day · 17 × at 1 h 24 min",
-   "t0": 243.0,
-   "t1": 265.5,
-   "slot": "tr"
-  },
-  {
-   "id": "b-6",
-   "text": "6 h day: the Sun crosses in 3 h",
-   "t0": 266.1,
-   "t1": 287.09999999999997,
-   "slot": "tr"
-  },
-  {
-   "id": "b-year",
-   "text": "≈ 6,200 days in a year at 1 h 24 min",
-   "t0": 301.4,
-   "t1": 313.5,
-   "slot": "tr"
-  },
-  {
-   "id": "b-45",
-   "text": "45° N: 71 % of the speed, half the push · pole: 0",
-   "t0": 325.8,
-   "t1": 348.3,
-   "slot": "tr"
-  },
-  {
-   "id": "b-3",
-   "text": "3 h day: the Sun crosses in 90 min",
-   "t0": 348.90000000000003,
-   "t1": 365.09999999999997,
-   "slot": "tr"
-  },
-  {
-   "id": "b-2",
-   "text": "2 h day: half your weight",
-   "t0": 365.7,
-   "t1": 386.09999999999997,
-   "slot": "tr"
-  },
-  {
-   "id": "b-orb",
-   "text": "orbital speed at the equator: 7.91 km/s",
-   "t0": 404.0,
-   "t1": 431.7,
-   "slot": "tr"
-  },
-  {
-   "id": "b-hedge",
-   "text": "where a simple sum stops",
-   "t0": 433.0,
-   "t1": 458.09999999999997,
-   "slot": "tr"
-  },
-  {
-   "id": "b-energy",
-   "text": "≈ 6 × 10³¹ J · 289 × today's spin energy",
-   "t0": 460.4,
-   "t1": 515.6666666666667,
-   "slot": "tr"
   }
  ],
  "title": {

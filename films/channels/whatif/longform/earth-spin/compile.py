@@ -36,15 +36,19 @@ t_sp = round(B["spinup"]["t0"] + 0.6, 4)
 KEYS = [
     [0.0, T0_H], [t_sp, T0_H],
     [W("spinup", "twenty"), 20.0], [W("spinup", "sixteen"), 16.0],
-    [W("twelve", "twelve", -0.2), 12.0], [B["oceans"]["t1"], 11.2],
-    [B["weather"]["t1"], 8.0], [W("six", "six", -0.2), 6.0] if False else [B["six"]["t0"] + 1.2, 6.0],
-    [B["calendar"]["t1"], 4.6], [B["poles"]["t1"], 3.6],
-    [W("three", "three", -0.3), 3.0], [W("two", "two", -0.3), 2.0],
-    [B["one-five"]["t0"] + 2.0, 1.5], [W("float", "twenty-four", 0.0), round(T_ORB_H, 4)], [round(f.duration, 4), round(T_ORB_H, 4)],
+    [W("twelve", "twelve", -0.2), 12.0], [round(B["weather"]["t0"] + 1.0, 4), 12.0],            # holds at 12 h through twelve, wind, oceans
+    [W("weather", "six", -0.1), 6.0], [round(B["three"]["t0"] - 0.1, 4), 6.0],                   # holds at 6 h through six, calendar, poles
+    [W("three", "three", -0.3), 3.0], [round(B["two"]["t0"] - 0.05, 4), 3.0],                    # holds at 3 h through three
+    [W("two", "two", -0.3), 2.0], [round(B["one-five"]["t0"] - 0.05, 4), 2.0],                   # holds at 2 h through two
+    [round(B["one-five"]["t0"] + 0.8, 4), 1.5], [round(B["float"]["t0"] - 0.05, 4), 1.5],        # holds at 1 h 30 through one-five
+    [W("float", "twenty-four", 0.0), round(T_ORB_H, 4)], [round(f.duration, 4), round(T_ORB_H, 4)],
 ]
 # monotone check
 for (t0, a), (t1, b) in zip(KEYS, KEYS[1:]):
     assert t1 >= t0 - 1e-9 and b <= a + 1e-9, (t0, a, t1, b)
+WEIGHT_WINS = [[round(W("today", "weigh", -0.2), 4), B["today"]["t1"]], [round(W("twelve", "weigh", -0.2), 4), B["twelve"]["t1"]],
+               [round(W("six", "five", -0.3), 4), B["six"]["t1"]], [round(W("three", "weigh", -0.2), 4), B["three"]["t1"]],
+               [B["two"]["t0"], B["float"]["t1"]]]
 # the ocean's retreat from the poles (degrees of latitude still under water), a rough picture; first-order only
 DRY = [[0.0, 90.0], [B["oceans"]["t0"] + 14.0, 90.0], [B["oceans"]["t1"] - 4.0, 52.0], [B["weather"]["t1"], 50.0], [B["float"]["t1"], 24.0], [round(f.duration, 4), 24.0]]
 
@@ -70,21 +74,6 @@ def lead(pages, by=0.14):
 rows = R["rows"]
 BADGES = [
     {"id": "b-thought", "text": "Thought experiment", "t0": 0.3, "t1": round(f.duration - 0.2, 4), "slot": "bl"},
-    {"id": "b-rule", "text": "only the spin changes", "t0": B["premise"]["t0"] + 4.0, "t1": B["today"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-today", "text": "today: 0.35 % lighter than on a still Earth", "t0": B["today"]["t0"] + 20.0, "t1": B["spinup"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-12", "text": "12 h day: the Sun crosses in 6 h", "t0": B["twelve"]["t0"] + 0.3, "t1": B["wind"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-wind", "text": f"wind through the air: ≈ {rows['h12']['wind_ms']} m/s at first", "t0": B["wind"]["t0"] + 12.0, "t1": B["oceans"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-ocean", "text": f"sea at the equator: +{rows['h12']['dh_km']} km vs today · rough guess", "t0": B["oceans"]["t0"] + 24.0, "t1": B["weather"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-shape", "text": "shape and seas drawn bigger than life", "t0": B["oceans"]["t0"] + 1.0, "t1": B["oceans"]["t0"] + 20.0, "slot": "tr"},
-    {"id": "b-cor", "text": "storm steering: 4 × at a 6 h day · 17 × at 1 h 24 min", "t0": B["weather"]["t0"] + 12.0, "t1": B["six"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-6", "text": "6 h day: the Sun crosses in 3 h", "t0": B["six"]["t0"] + 0.3, "t1": B["calendar"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-year", "text": "≈ 6,200 days in a year at 1 h 24 min", "t0": B["calendar"]["t0"] + 14.0, "t1": B["poles"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-45", "text": "45° N: 71 % of the speed, half the push · pole: 0", "t0": B["poles"]["t0"] + 12.0, "t1": B["three"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-3", "text": "3 h day: the Sun crosses in 90 min", "t0": B["three"]["t0"] + 0.3, "t1": B["two"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-2", "text": "2 h day: half your weight", "t0": B["two"]["t0"] + 0.3, "t1": B["one-five"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-orb", "text": "orbital speed at the equator: 7.91 km/s", "t0": B["float"]["t0"] + 2.0, "t1": B["break"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-hedge", "text": "where a simple sum stops", "t0": B["break"]["t0"] + 1.0, "t1": B["cost"]["t0"] - 0.3, "slot": "tr"},
-    {"id": "b-energy", "text": f"≈ {R['e_orb_j'] / 1e31:.0f} × 10³¹ J · {R['ratio']:.0f} × today's spin energy", "t0": B["cost"]["t0"] + 2.0, "t1": t_end - 0.4, "slot": "tr"},
 ]
 for b in BADGES:
     assert b["t1"] > b["t0"], b
@@ -97,7 +86,7 @@ CUE = {"fps": FPS, "float": [B["float"]["t0"], B["float"]["t1"]], "break": [B["b
        "poles": [B["poles"]["t0"], B["poles"]["t1"]], "end": t_end, "seed": 3}
 film = {
     "id": ID, "theme": "../../theme.json", "fps": FPS, "bpm": BPM, "dur": f.duration, "poster": round(W("float", "seven", 0.0), 4),
-    "shots": SHOTS, "beats": BEATS, "world": {"cycleS": 16.0, "keys": KEYS, "dry": DRY, "tOrbH": T_ORB_H, "t0H": T0_H, "rEq": R_EQ / 1000, "gm": 3.986004418e14,
+    "shots": SHOTS, "beats": BEATS, "world": {"weightWins": WEIGHT_WINS, "cycleS": 16.0, "keys": KEYS, "dry": DRY, "tOrbH": T_ORB_H, "t0H": T0_H, "rEq": R_EQ / 1000, "gm": 3.986004418e14,
                                               "eNow": E_NOW, "eOrb": E_ORB},
     "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [],
     "work": None, "cam": {},
