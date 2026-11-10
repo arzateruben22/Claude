@@ -9,7 +9,7 @@ re-check the fact (the on-screen captions are rebuilt from your recording, so th
 - **Phone:** Voice Memos is fine. Hold it **about a hand's width (15–20 cm) from your mouth**, slightly to the side so your breath doesn't hit it. Same spot every session.
 - **One file per episode.** Read the lines in order with a **2-second pause** between them. Flubbed one? Pause, then read **that whole line again**; we keep the last take.
 - Start every file by saying its name, e.g. *"Possibility Lab, Season 2, Episode 1"*, then pause and begin.
-- **Name the files** like `pl-s2e01.m4a` … `pl-s2e06.m4a`, `pl-spin.m4a` (pilot), `pl-spin-shorts.m4a` (the shorts' new lines).
+- **Name the files** like `pl-s2e01.m4a` … `pl-s2e06.m4a`, `pl-spin.m4a` (pilot), `pl-s3-parts.m4a`, `pl-s4-parts.m4a`, `pl-s5-parts.m4a` and `pl-part-closers.m4a` (the short parts' lines, below).
 - **Upload** them on GitHub here: https://github.com/arzateruben22/claude/upload/claude/whatif-s2/films/channels/whatif/voice-owner
 
 ### How it should sound
@@ -132,7 +132,7 @@ You're a friend working out a wild puzzle out loud, curious and a little amused,
 
 ---
 
-## Long-video pilot: “What If Earth Spun Faster and Couldn't Stop?”
+## Season 3 long video: “What If Earth Spun Faster and Couldn't Stop?”
 About 9 minutes. Same rules. Take a breath between lines; there's no rush in a long video.
 
 **1.** What if the Earth started to spin faster, a little more every second, and nothing in the universe could stop it? You are standing on the equator, and you are going to watch what happens, minute by minute, until the planet can't take it anymore.
@@ -174,13 +174,133 @@ About 9 minutes. Same rules. Take a breath between lines; there's no rush in a l
 **19.** Subscribe, for the next what-if.
 
 
-## Pilot TikTok shorts (Part 1 and Part 2): new lines only
-Each part reuses your pilot lines above, so you only record these four. Name the file `pl-spin-shorts.m4a`.
+## The short parts: opening and cliffhanger lines
+Each long video is cut into 8 short parts. Every part reuses your long-video lines, but opens with a 2-second line of its own
+and ends on a cliffhanger. These are only those extra lines: two short sentences per part. The cliffhangers carry the suspense,
+so let them hang, a little slower, with a lift at the end. The Season 4 and Season 5 long-video narration gets added here once those
+two films are final. Until you record, an AI voice stands in, so nothing waits on you.
 
-**1.** And at twelve hours, it gets much **stranger**.
+### Season 3: What If Earth Spun Faster and Couldn't Stop?
+File: `pl-s3-parts.m4a`. For each part, read the opening line, pause 2 seconds, then the cliffhanger.
 
-**2.** Earth's day is now **twelve hours** long. Here's what you'd feel.
+**Part 1, opening.** What if Earth spun faster, and couldn't stop?
 
-**3.** And then the **oceans** start to move.
+**Part 1, cliffhanger.** And the spin has only just begun to speed up.
 
-**4.** Full video on **YouTube**.
+**Part 2, opening.** The day is now twelve hours long.
+
+**Part 2, cliffhanger.** And then the wind starts to blow.
+
+**Part 3, opening.** The air can't keep up with the ground.
+
+**Part 3, cliffhanger.** And then the oceans start to move.
+
+**Part 4, opening.** The oceans are sliding toward the equator.
+
+**Part 4, cliffhanger.** And the weather is about to change completely.
+
+**Part 5, opening.** Storms are turning faster, and the days are six hours long.
+
+**Part 5, cliffhanger.** And the calendar is about to break.
+
+**Part 6, opening.** Now a year has more than a thousand days in it.
+
+**Part 6, cliffhanger.** And the days keep getting shorter.
+
+**Part 7, opening.** Three hours, then two: a day is as long as a movie.
+
+**Part 7, cliffhanger.** And at an hour and a half, you're almost weightless.
+
+**Part 8, opening.** A day now lasts about an hour and a half.
+
+**Part 8, cliffhanger.** One more nudge, and something changes completely.
+
+### Season 4: What If You Fell Into a Hole Through the Earth?
+File: `pl-s4-parts.m4a`. For each part, read the opening line, pause 2 seconds, then the cliffhanger.
+
+**Part 1, opening.** What if you jumped into a hole that went straight through the Earth?
+
+**Part 1, cliffhanger.** And in one minute, you'll be faster than any car.
+
+**Part 2, opening.** One minute in, and you're falling at five hundred and eighty-eight meters a second.
+
+**Part 2, cliffhanger.** And by the bottom of the crust, you're going more than twice the speed of sound.
+
+**Part 3, opening.** Now you're falling through the mantle, almost three thousand kilometers of hot rock.
+
+**Part 3, cliffhanger.** And then the rock gives way to liquid metal.
+
+**Part 4, opening.** You have just fallen into an ocean of liquid iron.
+
+**Part 4, cliffhanger.** And ahead is a solid ball of metal, about as hot as the Sun's surface.
+
+**Part 5, opening.** You're falling into the solid heart of the planet.
+
+**Part 5, cliffhanger.** And at the centre, you will weigh nothing at all.
+
+**Part 6, opening.** You are at the centre of the Earth, and you weigh nothing.
+
+**Part 6, cliffhanger.** But you're still moving at nearly eight kilometers a second.
+
+**Part 7, opening.** You're rising toward the far side, and slowing down.
+
+**Part 7, cliffhanger.** And you'll stop right at the opening, then fall back.
+
+**Part 8, opening.** You'd do this again, and again, for as long as the tube lasts.
+
+**Part 8, cliffhanger.** And that is before we ask whether any of this could be real.
+
+### Season 5: What If It Got Colder Every Second and Couldn't Stop?
+File: `pl-s5-parts.m4a`. For each part, read the opening line, pause 2 seconds, then the cliffhanger.
+
+**Part 1, opening.** What if the temperature started to fall, a little more every second, and nothing could stop it?
+
+**Part 1, cliffhanger.** And that was only the first twenty degrees.
+
+**Part 2, opening.** The sea is freezing over from the shore.
+
+**Part 2, cliffhanger.** And then the sky starts to empty.
+
+**Part 3, opening.** It's minus eighty degrees, and the clouds are gone: they've frozen out of the sky.
+
+**Part 3, cliffhanger.** And then the air itself starts to lose a gas.
+
+**Part 4, opening.** The air has just lost its first gas.
+
+**Part 4, cliffhanger.** And at minus one hundred and ninety-one, the air itself starts to turn to liquid.
+
+**Part 5, opening.** The sky is raining.
+
+**Part 5, cliffhanger.** And a few last gases are still holding on.
+
+**Part 6, opening.** Only a few traces of gas are left.
+
+**Part 6, cliffhanger.** But the coldest natural place we know isn't on Earth.
+
+**Part 7, opening.** Leave the Earth, and you find a few places this cold.
+
+**Part 7, cliffhanger.** But the floor is still ahead, and the number can't reach it.
+
+**Part 8, opening.** You are almost at the bottom of the scale.
+
+**Part 8, cliffhanger.** But even the coldest thing in the universe is hiding something.
+
+### The closers (record once, used by every season)
+File: `pl-part-closers.m4a`.
+
+**1.** Part one of eight. Full video on **YouTube**.
+
+**2.** Part two of eight. Full video on **YouTube**.
+
+**3.** Part three of eight. Full video on **YouTube**.
+
+**4.** Part four of eight. Full video on **YouTube**.
+
+**5.** Part five of eight. Full video on **YouTube**.
+
+**6.** Part six of eight. Full video on **YouTube**.
+
+**7.** Part seven of eight. Full video on **YouTube**.
+
+**8.** Part eight of eight. Full video on **YouTube**.
+
