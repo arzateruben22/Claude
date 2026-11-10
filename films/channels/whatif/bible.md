@@ -212,3 +212,7 @@ and a human-scale anchor such as the longest walks on record. Nothing is compute
 ## Packaging rule (owner standing rule)
 
 Every new episode, long and short, follows `PACKAGING.md` in this folder (copied from `films/channels/PACKAGING.md` on `claude/made-with-claude-film`): `out/packaging.json` per video (compilations: `compilations/<name>/packaging.json`), winner title alone as the YouTube title, thumbnail 0-4 words with no title repeat, no badges/series line, 16:9 1920x1080 JPG under 2 MB for long videos, 9:16 cover for shorts.
+
+## Season format (owner decision)
+
+Every long film is one 8-chapter story with 8 vertical parts: see `SEASON-FORMAT.md` here. Season numbering: S3 Earth-spin, S4 hole, S5 cold. Part hook/outro drafts: `voice-lines-s3.md`.
