@@ -209,7 +209,10 @@ if not PART:
                {"id": "bench", "kind": "tag", "text": "Model of the MIT setup", "t0": R(cut("real") + 3.0), "t1": R(cut("takeaway") - 0.4), "slot": "tr"}]
     _seen = set(); BADGES = [b for b in BADGES if not (b["id"] in _seen or _seen.add(b["id"]))]
 
-BADGES = []          # owner rule (lesson from the PL draft): text is the counter plus the caption only; no corner chips, stamps or extra labels
+# one small honesty badge for the whole film (and each part, which is watched alone): simulations are never presented as footage; no other chips
+BADGES = [{"id": "code", "kind": "tag", "text": "Drawn by code · model", "t0": R(0.6), "t1": R(cut("tease") - 0.3) if PART else R(cut("tease") - 0.3), "slot": "tr"}]
+if not PART:
+    BADGES.append({"id": "bench", "kind": "tag", "text": "Model of the MIT experiment", "t0": R(cut("real") + 3.0), "t1": R(cut("takeaway") - 0.4), "slot": "tr"})
 
 # the factor keys: sort, round, and guard the order
 KEYS = sorted({(R(t), R(k)) for t, k in KEYS}, key=lambda x: (x[0], x[1]))

@@ -1104,7 +1104,24 @@
   "light": 0.29979245800000004,
   "hair_m": 0.0001
  },
- "badges": [],
+ "badges": [
+  {
+   "id": "code",
+   "kind": "tag",
+   "text": "Drawn by code · model",
+   "t0": 0.6,
+   "t1": 561.55,
+   "slot": "tr"
+  },
+  {
+   "id": "bench",
+   "kind": "tag",
+   "text": "Model of the MIT experiment",
+   "t0": 520.05,
+   "t1": 542.7833,
+   "slot": "tr"
+  }
+ ],
  "captionY": 0.77,
  "title": null,
  "captions": [

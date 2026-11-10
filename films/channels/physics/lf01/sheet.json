@@ -96,6 +96,12 @@
    "tag": "spine"
   },
   {
+   "t": 0.6,
+   "kind": "badge",
+   "tag": "code",
+   "text": "Drawn by code · model"
+  },
+  {
    "t": 20.2667,
    "kind": "section",
    "id": "wings",
@@ -168,6 +174,12 @@
    "kind": "section",
    "id": "real",
    "t1": 543.2
+  },
+  {
+   "t": 520.05,
+   "kind": "badge",
+   "tag": "bench",
+   "text": "Model of the MIT experiment"
   },
   {
    "t": 543.2,
