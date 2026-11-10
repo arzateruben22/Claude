@@ -15,12 +15,12 @@ for e in ("ep07", "ep08", "ep09", "ep10", "ep11", "ep12"):
     try: lex.update({w.lower(): p for w, p in json.loads((R / e / "pron.json").read_text()).items()})
     except Exception: pass
 LINES = [
- ("open", "Your skin does at least six jobs without asking you. It raises hairs, folds your fingertips, cools you down, answers the sun, holds water in, and drew a pattern on your fingers before you were born. Here is how each one works. Six short stories, about a minute each, told one at a time.", 0.86),
- ("bridge1", "That was a nerve telling a muscle what to do. Your nerves run another trick in your fingertips, and you have seen it in the bath. So why does water do that to your fingers? Let us find out.", 0.86),
- ("bridge2", "Wrinkled fingers, run by your nervous system. Now a job your skin does for the whole body: it cools you. So how does a drop of sweat take heat away? Let us watch one.", 0.86),
- ("bridge3", "Sweat handles heat. Sunlight is another story, and your skin answers it with pigment. So what is a tan, really? Let us look at one cell.", 0.86),
- ("bridge4", "That was pigment answering sunlight. Underneath it, a wall of cells and fats keeps water in. So what is that wall actually made of? Let us look closer.", 0.86),
- ("bridge5", "A wall built from cells and fats. And on the outside of it, a pattern you have carried since before you were born. So how does a pattern like that get drawn? Let us find out.", 0.86),
+ ("open", "Your skin does at least six jobs without asking you. It raises hairs, folds your fingertips, cools you down, answers the sun, holds water in, and drew a pattern on your fingers before you were born. Here is how each one works.", 0.86),
+ ("bridge1", "That was a nerve telling a muscle what to do. Your nerves run another trick in your fingertips, and you have seen it in the bath. So why does water do that to your fingers? It's stranger than you think.", 0.86),
+ ("bridge2", "Wrinkled fingers, run by your nervous system. Now a job your skin does for the whole body: it cools you. So how does a drop of sweat take heat away? Watch what happens.", 0.86),
+ ("bridge3", "Sweat handles heat. Sunlight is another story, and your skin answers it with pigment. So what is a tan, really? Let's zoom in on one cell.", 0.86),
+ ("bridge4", "That was pigment answering sunlight. Underneath it, a wall of cells and fats keeps water in. So what is that wall actually made of? Here's how it works.", 0.86),
+ ("bridge5", "A wall built from cells and fats. And on the outside of it, a pattern you have carried since before you were born. So how does a pattern like that get drawn? Here's the trick.", 0.86),
  ("finale", "So that is your skin, working without you. A muscle, a nerve and a hair, for goosebumps. Nerves that fold your fingertips. Sweat that cools you as it dries. Pigment that caps a cell's nucleus. A wall of bricks and fats. And a pattern drawn in waves before birth. Six stories, and the same skin in every one. None of it needs your permission, and most of it is going on in your skin right now.", 0.86),
  ("finale_cta", "Before you go: tap like and subscribe. Your skin has plenty more secrets.", 0.9),
 ]
