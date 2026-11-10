@@ -170,7 +170,7 @@ const narrCard = (id, dur) => {                                  // a narrated c
   const cat = path.join(work, `${id}-cat.mp4`);
   run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", cat]);
   run("ffmpeg", ["-v", "error", "-y", "-i", cat, "-filter_complex",
-    `[0:v]scale=3840:2160:flags=lanczos,scale=w='3840*(1+${PUSH}*t/${dur})':h='2160*(1+${PUSH}*t/${dur})':eval=frame:flags=bicubic,crop=3840:2160,scale=${OW}:${OH}:flags=lanczos,fps=${FPS},format=yuv420p,fade=t=in:st=0:d=0.4,fade=t=out:st=${dur - 0.4}:d=0.4[v]`, "-map", "[v]", "-an", "-t", String(dur), ...V, o]);
+    `[0:v]scale=3840:2160:flags=lanczos,scale=w='3840*(1+${PUSH}*t/${dur})':h='2160*(1+${PUSH}*t/${dur})':eval=frame:flags=bicubic,crop=3840:2160,scale=${OW}:${OH}:flags=lanczos,fps=${FPS},tpad=stop_mode=clone:stop_duration=1,format=yuv420p,fade=t=in:st=0:d=0.4,fade=t=out:st=${dur - 0.4}:d=0.4[v]`, "-map", "[v]", "-an", "-t", String(dur), ...V, o]);
   return o;
 };
 const segs = [NARR ? narrCard("opening", INTRO) : card("intro", INTRO)];
