@@ -1,8 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { inspect } from 'node:util';
-import { makeWorld, insertMemberWithUser, count, expectAppError } from '../helpers.js';
-import { findActiveUserByEmail, updateUser } from '../../src/domain/users.js';
+import { T0, makeWorld, insertMemberWithUser, count, expectAppError } from '../helpers.js';
+import { openDatabase } from '../../src/db/sqlite.js';
+import { migrate } from '../../src/db/migrate.js';
+import { fixedClock } from '../../src/lib/clock.js';
+import { createContext, withActor } from '../../src/domain/context.js';
+import { bootstrapAdmins, deleteUser, findActiveUserByEmail, updateUser } from '../../src/domain/users.js';
+import { findMoneyTerm } from '../../src/domain/policy.js';
 import { MIN_DEV_LOGIN_CODE_LENGTH, createDevLogin, generateDevLoginCode } from '../../src/auth/devLogin.js';
 
 const CODE = 'dev-code-for-tests-0001';
@@ -151,6 +156,7 @@ test('no refusal contains the code, the address or the guess', () => {
     const everything = [error.message, error.stack, JSON.stringify(error), inspect(error, { depth: 10, showHidden: true })].join('\n');
     for (const secret of [CODE, WRONG, 'ada@example.test', 'nobody@example.test']) assert.ok(!everything.includes(secret), `${error.code} must not contain ${secret}`);
     assert.deepEqual(Object.keys(error.toJSON().error), ['code', 'message']);
+    assert.equal(findMoneyTerm(error.message), null, 'no money words in anything a person reads');
   }
   // The instance does not expose the code either.
   assert.deepEqual(Object.keys(devLogin).sort(), ['attempt', 'isLocked']);
@@ -181,3 +187,23 @@ test('a dev sign-in cannot be created without a code of at least 16 characters',
   assert.ok(createDevLogin({ code: '1234567890123456' }));
   for (const maxFailures of [0, -1, 2.5, '5', null]) assert.throws(() => createDevLogin({ code: CODE, maxFailures }), /maxFailures must be/);
 });
+
+test(
+  'in dev mode, too, the only admin account cannot be removed (promise P9)',
+  { todo: 'defect: a dev sign-in cannot be recorded (domain/users.js has no function for it), so last_login_at stays NULL and the last-admin guard never engages' },
+  () => {
+    // A database as a first dev start leaves it: one admin from ADMIN_EMAILS, never signed in with Google.
+    const db = openDatabase(':memory:');
+    migrate(db);
+    const system = createContext({ db, clock: fixedClock(T0) });
+    assert.equal(bootstrapAdmins(system, ['owner@example.test']), 1);
+
+    const owner = createDevLogin({ code: CODE }).attempt(system, { email: 'owner@example.test', code: CODE });
+    const asOwner = withActor(system, { userId: owner.id, role: 'admin', memberId: null });
+    assert.equal(owner.last_login_at, null, 'nothing records that this admin has signed in');
+
+    // The only admin, signed in and working, deletes the only admin account.
+    expectAppError(assert, () => deleteUser(asOwner, owner.id), 'last_admin', 409);
+    assert.equal(db.get("SELECT COUNT(*) AS n FROM users WHERE role = 'admin'").n, 1);
+  },
+);

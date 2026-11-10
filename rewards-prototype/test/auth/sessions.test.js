@@ -313,12 +313,12 @@ test('last_seen_at is refreshed at most once every five minutes, so reads do not
   assert.equal(world.db.get('SELECT expires_at FROM sessions').expires_at, '2026-11-16T20:00:00.000Z');
 });
 
-test('anything that is not one of our tokens resolves to null without touching the database', () => {
+test('anything that is not one of our tokens resolves to null, and is never even looked up', () => {
   const world = makeWorld();
   const ada = insertMemberWithUser(world.db, 'Ada');
   const { token } = start(world, ada.userId);
   const before = writes(world);
-  const notTokens = [
+  const malformed = [
     undefined,
     null,
     '',
@@ -332,15 +332,31 @@ test('anything that is not one of our tokens resolves to null without touching t
     ` ${token}`,
     `${token}\n`,
     token.replace(/.$/, '='),
-    randomToken(32),
     randomToken(64),
+    sha256Hex(token),
     "' OR '1'='1",
     'A'.repeat(100_000),
   ];
-  for (const value of notTokens) {
-    assert.equal(resolveSession(world.system, value, DEV), null);
-    assert.equal(destroySession(world.system, value), false);
+  // A context whose database refuses to be used: a value that cannot be one of our tokens
+  // must be turned away before any hashing or lookup is spent on it.
+  const untouchable = {
+    ...world.system,
+    db: new Proxy(world.db, {
+      get() {
+        throw new assert.AssertionError({ message: 'the database must not be consulted for a value that is not a token' });
+      },
+    }),
+  };
+  for (const value of malformed) {
+    assert.equal(resolveSession(untouchable, value, DEV), null);
+    assert.equal(destroySession(untouchable, value), false);
   }
+
+  // A well-formed token that was never issued is looked up, and is simply not there.
+  const neverIssued = randomToken(32);
+  assert.equal(resolveSession(world.system, neverIssued, DEV), null);
+  assert.equal(destroySession(world.system, neverIssued), false);
+
   assert.equal(writes(world), before);
   assert.equal(count(world.db, 'sessions'), 1);
   assert.ok(resolveSession(world.system, token, DEV));

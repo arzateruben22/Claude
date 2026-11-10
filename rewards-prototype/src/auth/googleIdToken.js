@@ -141,9 +141,10 @@ export function createGoogleVerifier({ clientId, keySet, clock }) {
    * @param {unknown} idToken  the `credential` string from the page
    * @param {{ expectedNonce?: unknown }} [options]  the nonce this browser was given (its cookie)
    */
-  async function verify(idToken, { expectedNonce } = {}) {
+  async function verify(idToken, options) {
     // Without a nonce to compare with, the token cannot be tied to a sign-in this server
     // started, so it is refused before anything else is looked at.
+    const expectedNonce = options?.expectedNonce;
     if (typeof expectedNonce !== 'string' || expectedNonce.length === 0) throw new IdTokenError('bad_nonce');
     // jose would also accept bytes; a credential from a JSON body is always text.
     if (typeof idToken !== 'string' || idToken.length === 0 || idToken.length > MAX_TOKEN_LENGTH) throw new IdTokenError('malformed');
@@ -160,6 +161,9 @@ export function createGoogleVerifier({ clientId, keySet, clock }) {
         requiredClaims: ['exp'],
         maxTokenAge: MAX_TOKEN_AGE_SECONDS,
         currentDate: clock.now(),
+        // No leeway: "not expired" and "at most ten minutes old" mean exactly that. The
+        // price is that a server clock running behind Google's refuses fresh tokens as
+        // not_yet_valid, which the reason counters make visible.
         clockTolerance: 0,
       }));
     } catch (error) {

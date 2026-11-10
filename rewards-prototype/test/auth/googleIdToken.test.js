@@ -5,6 +5,7 @@ import { CompactSign, SignJWT, UnsecuredJWT, createLocalJWKSet, exportJWK, expor
 import { T0, makeWorld } from '../helpers.js';
 import { fixedClock } from '../../src/lib/clock.js';
 import { recordAudit } from '../../src/domain/audit.js';
+import { findMoneyTerm } from '../../src/domain/policy.js';
 import {
   GOOGLE_ISSUERS,
   GOOGLE_JWKS_URL,
@@ -218,6 +219,8 @@ test('nonce: the token must carry exactly the nonce this browser was given', asy
   // With nothing to compare against, even a perfect token is refused.
   await refused(verifierAt().verify(token), 'bad_nonce');
   await refused(verify(token, {}), 'bad_nonce');
+  await refused(verify(token, null), 'bad_nonce');
+  await refused(verify(token, NONCE), 'bad_nonce');
   for (const expectedNonce of [undefined, null, '', 0, true, [NONCE], { nonce: NONCE }]) {
     await refused(verify(token, { expectedNonce }), 'bad_nonce');
   }
@@ -309,6 +312,8 @@ test('IdTokenError is an AppError the HTTP layer can pass straight through', () 
   const error = new IdTokenError('expired');
   assert.equal(error.name, 'AppError');
   assert.deepEqual(error.toJSON(), { error: { code: 'sign_in_denied', message: error.message } });
+  assert.match(error.message, /^Sign-in was not accepted\./);
+  assert.equal(findMoneyTerm(error.message), null, 'no money words in anything a person reads');
   assert.throws(() => new IdTokenError('because'), /unknown ID token reason/);
   assert.ok(Object.isFrozen(ID_TOKEN_REASONS));
   assert.equal(new Set(ID_TOKEN_REASONS).size, ID_TOKEN_REASONS.length);
