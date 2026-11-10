@@ -93,6 +93,17 @@
    "file": "07.wav",
    "dur": 4.085,
    "sha256": "28fa1e5369899fb0ec92af2467d1bbc453bb52c2184d7c96029569922693c6e2"
+  },
+  {
+   "id": "vo07c",
+   "beat": "cta",
+   "text": "Got goosebumps? Tap like and follow for more skin secrets.",
+   "stars": [],
+   "phonemes": "ɡɒt ɡˈuːsbʌmps? tˈap lˈaɪk and fˈɒləʊ fɔː mˈɔː skˈɪn sˈiːkɹɪts.",
+   "speed": 0.9,
+   "file": "07c.wav",
+   "dur": 3.465,
+   "sha256": "4c468cb0cb3509001e5e6250afea3ff09eab4b6f694b44fa27bffdc61205e92d"
   }
  ]
 }

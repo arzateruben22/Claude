@@ -997,6 +997,73 @@
      "heard": true
     }
    ]
+  },
+  {
+   "id": "vo07c",
+   "text": "Got goosebumps? Tap like and follow for more skin secrets.",
+   "heard": "Got goosebumps, tap like and follow for more skin secrets.",
+   "words": [
+    {
+     "w": "Got",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "goosebumps?",
+     "start": 0.3,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "Tap",
+     "start": 1.125,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.35,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.56,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "follow",
+     "start": 1.745,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 2.1,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 2.145,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 2.42,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "secrets.",
+     "start": 3.025,
+     "end": 3.44,
+     "heard": true
+    }
+   ]
   }
  ]
 }

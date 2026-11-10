@@ -10,7 +10,7 @@ export async function run({ stage, FILM, W, H, EP }) {
   const R = (spec) => {   // time spec -> seconds
     if (typeof spec === "number") return spec;
     const m = spec.match(/^(?:(start|end|hold):)?([a-z0-9]+)(?::([^#+]+))?(?:#(\d+))?(?:\+(-?[\d.]+))?$/i) || spec.match(/^([a-z0-9]+):([^#+]+)(?:#(\d+))?(?:([+-][\d.]+))?$/i);
-    const mm = spec.match(/^(?:(start|end|hold):)?(vo\d+)(?::([^#+]*))?(?:#(\d+))?(?:([+-][\d.]+))?$/);
+    const mm = spec.match(/^(?:(start|end|hold):)?(vo\d+c?)(?::([^#+]*))?(?:#(\d+))?(?:([+-][\d.]+))?$/);
     if (!mm) throw new Error("bad time spec " + spec);
     const [, kind, id, word, n, off] = mm, o = Number(off || 0);
     if (kind === "start") return LN[id][0] + o; if (kind === "end") return LN[id][1] + o; if (kind === "hold") return LN[id][1] + 0.4 + o;
@@ -237,7 +237,7 @@ ${[0, 1, 2, 3].map((i) => { const x = 150 + i * 200, y = 150 + 28 * Math.sin((x 
     let sc = 0, sy = 0; for (const [a, z] of SCAN) if (t >= a && t <= z) { const p = (t - a) / (z - a); sc = Math.sin(Math.PI * p) ** 0.5; sy = BTOP + 60 * u + p * (BH - 160 * u); }
     scanEl.setAttribute("y", sy); scanEl.setAttribute("opacity", (0.85 * sc * (1 - q)).toFixed(3));
     let pg = null; for (const g of pages) if (t >= g[0].t0 - 0.05 && t <= g[g.length - 1].t1 + 0.3) pg = g;
-    capEl.innerHTML = !pg || ev2 > 0.2 ? "" : `<span class="pg">${pg.map((w) => `<span class="${t >= w.t0 && t < w.t1 ? "on" : ""}">${w.w}</span>`).join(" ")}</span>`;
+    capEl.style.zIndex = "9"; capEl.innerHTML = !pg || (ev2 > 0.2 && !(EP.end.cap && t >= R(EP.end.cap))) ? "" : `<span class="pg">${pg.map((w) => `<span class="${t >= w.t0 && t < w.t1 ? "on" : ""}">${w.w}</span>`).join(" ")}</span>`;
     endc.style.opacity = ev.toFixed(3); $(".eyebrow").style.opacity = (1 - ev2).toFixed(3); $(".h1").style.opacity = ((1 - ev2) * (T3 ? 1 - 0.92 * lvMax : 1)).toFixed(3);   // 3-D look: at most two text blocks, so the headline steps back while a label points at something
   };
 }

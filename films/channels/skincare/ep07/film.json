@@ -5,8 +5,8 @@
   "title": "Why goosebumps happen"
  },
  "fps": 30,
- "dur": 70.0,
- "poster": 38.5,
+ "dur": 73.733,
+ "poster": 40.55,
  "theme": "../theme.json",
  "shots": [
   {
@@ -1124,6 +1124,76 @@
    "t1": 67.963,
    "line": "vo07",
    "beat": "tease"
+  },
+  {
+   "w": "Got",
+   "t0": 68.288,
+   "t1": 68.588,
+   "line": "vo07c",
+   "beat": "cta"
+  },
+  {
+   "w": "goosebumps?",
+   "t0": 68.568,
+   "t1": 69.388,
+   "line": "vo07c",
+   "beat": "cta"
+  },
+  {
+   "w": "Tap",
+   "t0": 69.393,
+   "t1": 69.628,
+   "line": "vo07c",
+   "beat": "cta"
+  },
+  {
+   "w": "like",
+   "t0": 69.618,
+   "t1": 69.868,
+   "line": "vo07c",
+   "beat": "cta"
+  },
+  {
+   "w": "and",
+   "t0": 69.828,
+   "t1": 70.028,
+   "line": "vo07c",
+   "beat": "cta"
+  },
+  {
+   "w": "follow",
+   "t0": 70.013,
+   "t1": 70.348,
+   "line": "vo07c",
+   "beat": "cta"
+  },
+  {
+   "w": "for",
+   "t0": 70.368,
+   "t1": 70.508,
+   "line": "vo07c",
+   "beat": "cta"
+  },
+  {
+   "w": "more",
+   "t0": 70.413,
+   "t1": 70.668,
+   "line": "vo07c",
+   "beat": "cta"
+  },
+  {
+   "w": "skin",
+   "t0": 70.688,
+   "t1": 70.988,
+   "line": "vo07c",
+   "beat": "cta"
+  },
+  {
+   "w": "secrets.",
+   "t0": 71.293,
+   "t1": 71.708,
+   "line": "vo07c",
+   "beat": "cta"
   }
  ],
  "lines": {
@@ -1161,6 +1231,11 @@
    63.883,
    67.968,
    "tease"
+  ],
+  "vo07c": [
+   68.268,
+   71.733,
+   "cta"
   ]
  }
 }
