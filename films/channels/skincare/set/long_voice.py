@@ -22,7 +22,7 @@ LINES = [
  ("bridge4", "That was pigment answering sunlight. Underneath it, a wall of cells and fats keeps water in. So what is that wall actually made of? Let us look closer.", 0.86),
  ("bridge5", "A wall built from cells and fats. And on the outside of it, a pattern you have carried since before you were born. So how does a pattern like that get drawn? Let us find out.", 0.86),
  ("finale", "So that is your skin, working without you. A muscle, a nerve and a hair, for goosebumps. Nerves that fold your fingertips. Sweat that cools you as it dries. Pigment that caps a cell's nucleus. A wall of bricks and fats. And a pattern drawn in waves before birth. Six stories, and the same skin in every one. None of it needs your permission, and most of it is going on in your skin right now.", 0.86),
- ("finale_cta", "If you just looked at your own arm, tap like and subscribe!", 0.9),
+ ("finale_cta", "Before you go: tap like and subscribe. Your skin has plenty more secrets.", 0.9),
 ]
 out = R / "compilations/vol02/voice"; out.mkdir(parents=True, exist_ok=True); meta = []
 for lid, text, sp in LINES:

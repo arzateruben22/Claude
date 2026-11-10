@@ -11,6 +11,7 @@
 //        [--promise <text>]   replace the theme's promise line (cards and description)
 //        [--narration <dir>]   narrated cards: <dir>/narration.json lists {id,wav,dur} for open, bridge1..n, finale (+ finale_cta, optional); each card lasts its voice plus a breath, the music under it
 //        [--cut-cta]   take each episode's own like/follow line out (a 0.28 s dissolve across the seam); the compilation asks once, in its own voice
+//        [--keep-cta ep10,…]   episodes whose own line stays (a seam that does not read as an edit)
 //        [--ai-visuals]   say "Illustrations: AI-generated, animated in code." in the side-card footer and the description
 //        [--height 1440|1080] (default 1440) [--crf 15] [--max-mb 90]
 //
@@ -75,7 +76,8 @@ const bridgeSum = eps.slice(1).reduce((a, _, i) => a + brd(i + 1), 0);
 const name = A.name || `vol${String(Math.ceil(eps.length / 6)).padStart(2, "0")}`;
 const outDir = path.resolve(A.out || path.join(chan, "compilations"), name), work = path.join(outDir, "work");
 fs.mkdirSync(work, { recursive: true });
-if (A["cut-cta"]) for (const e of eps) {                   // take each episode's own like/follow line out (the long video asks once, in its own voice): a short dissolve across the seam, music and all
+const KEEP = String(A["keep-cta"] || "").split(",").map((x) => x.trim()).filter(Boolean);
+if (A["cut-cta"]) for (const e of eps) { if (KEEP.includes(e.id)) { console.log(`cut-cta ${e.id}: kept (its caption page runs across the seam)`); continue; }                   // take each episode's own like/follow line out (the long video asks once, in its own voice): a short dissolve across the seam, music and all
   const film = JSON.parse(fs.readFileSync(path.join(e.dir, "film.json"), "utf8")), ls = Object.entries(film.lines).map(([id, v]) => ({ id, s: v[0], e: v[1], beat: v[2] })).sort((x, y) => x.s - y.s), i = ls.findIndex((l) => l.beat === "cta");
   if (i < 0) continue;
   const prev = ls[i - 1], next = ls[i + 1], d = 0.28, h = d / 2, o = path.join(work, `cut-${e.id}.mp4`);
