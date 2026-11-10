@@ -9,6 +9,7 @@ import { world, THREE, clamp, seg, sm, eo, eio, lerp, hash, D2R } from "./w3d.js
 
 export async function create(args) {
   const W3 = await world(args), { renderer, scene, camera, mkCanvas, rnd, tex, fibres, makeTube, NV, mkGlow, glowTex, key, rim, R, EP, T, AW, BH, BTOP } = W3;
+  const SKH = T.skinHex || "#d89b7c", SKR = [1, 3, 5].map((i) => parseInt(SKH.slice(i, i + 2), 16)), shade = (k) => "#" + SKR.map((v) => Math.round(clamp(v * k, 0, 255)).toString(16).padStart(2, "0")).join(""), CF = T.skinCF || [0.84, 0.76, 0.72];
   const MED = [0.73, 0.415, 0.282];                                                      // medium melanin, from the painting's fingertip (186, 106, 72)
   const mat = (o) => new THREE.MeshPhysicalMaterial({ roughness: 0.5, ...o });
   const groups = { F: new THREE.Group(), S: new THREE.Group(), N: new THREE.Group(), P: new THREE.Group() };
@@ -16,7 +17,7 @@ export async function create(args) {
 
   // ── textures: skin with a fingerprint (whorl), bump from the same lines ──────────────────────────────────
   const skinC = mkCanvas(512, 1024), sg = skinC.getContext("2d"), bumpC = mkCanvas(512, 1024), bg = bumpC.getContext("2d");
-  { sg.fillStyle = "#d89b7c"; sg.fillRect(0, 0, 512, 1024); for (let i = 0; i < 160; i++) { sg.fillStyle = `rgba(${215 + rnd() * 25 | 0},${140 + rnd() * 40 | 0},${110 + rnd() * 30 | 0},.08)`; sg.beginPath(); sg.arc(rnd() * 512, rnd() * 1024, 12 + rnd() * 40, 0, 7); sg.fill(); }
+  { sg.fillStyle = SKH; sg.fillRect(0, 0, 512, 1024); for (let i = 0; i < 160; i++) { sg.fillStyle = rnd() < 0.5 ? "rgba(255,235,220,.05)" : "rgba(60,25,10,.06)"; sg.beginPath(); sg.arc(rnd() * 512, rnd() * 1024, 12 + rnd() * 40, 0, 7); sg.fill(); }
     bg.fillStyle = "#808080"; bg.fillRect(0, 0, 512, 1024);
     for (let i = 1; i < 110; i++) { const rx = i * 7.4, ry = i * 11.8, a = Math.min(0.5, 0.15 + i * 0.004); sg.strokeStyle = `rgba(150,80,58,${a * 0.5})`; sg.lineWidth = 1.5; sg.beginPath(); sg.ellipse(256, 940, rx, ry, 0, 0, Math.PI * 2); sg.stroke(); bg.strokeStyle = "#d8d8d8"; bg.lineWidth = 2.4; bg.beginPath(); bg.ellipse(256, 940, rx, ry, 0, 0, Math.PI * 2); bg.stroke(); } }
   const wrC = mkCanvas(1024, 1024), wg = wrC.getContext("2d"); { wg.fillStyle = "#6a6a6a"; wg.fillRect(0, 0, 1024, 1024);
@@ -35,7 +36,7 @@ export async function create(args) {
     const m = mat({ map: skinTex, bumpMap: bumpTex, bumpScale: 0.05, color: new THREE.Color(0.95, 0.9, 0.88), roughness: 0.55, sheen: 0.4, sheenColor: new THREE.Color(1, 0.75, 0.65), clearcoat: 0.08, clearcoatRoughness: 0.5 });
     const mesh = new THREE.Mesh(g, m); mesh.castShadow = true; mesh.receiveShadow = true; mesh.frustumCulled = false; parent.add(mesh);
     const nail = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 16), mat({ color: 0xf6dccb, roughness: 0.25, clearcoat: 0.9, transparent: true, opacity: 0.95 })); nail.scale.set(1.25, 2.3, 0.28); nail.position.set(0, LC - 0.4, -RAD * 0.82 * 0.86); mesh.add(nail);
-    const set = (A, wet = 0) => { m.bumpScale = 0.05 + 6.5 * A; m.color.setRGB(0.84 - 0.05 * A, 0.76 - 0.07 * A, 0.72 - 0.07 * A);
+    const set = (A, wet = 0) => { m.bumpScale = 0.05 + 6.5 * A; m.color.setRGB(CF[0] - 0.05 * A, CF[1] - 0.07 * A, CF[2] - 0.07 * A);
       m.clearcoat = 0.08 + 0.7 * wet; m.clearcoatRoughness = 0.5 - 0.35 * wet;
       for (let k = 0; k < meta.length; k++) { const [th, s] = meta[k]; let r, y, ny = 0, nr = 1;
         const rb = RAD * (1.1 - 0.2 * clamp(s / LC)); if (s <= LC) { r = rb; y = s; } else { const ph = (s - LC) / RAD; const a = Math.min(Math.PI / 2, ph * (Math.PI / 2)); r = rb * Math.cos(a); y = LC + RAD * Math.sin(a); nr = Math.cos(a); ny = Math.sin(a); }
@@ -60,7 +61,7 @@ export async function create(args) {
   // ── set S: the section ────────────────────────────────────────────────────────────────────────────────────
   const SWd = 17, SHt = 6.4, NXs = 170, NYs = 16;
   const faceC = mkCanvas(1024, 400), fg = faceC.getContext("2d");
-  { fg.fillStyle = "#e9b09b"; fg.fillRect(0, 0, 1024, 400); const gr = fg.createLinearGradient(0, 0, 0, 400); gr.addColorStop(0, "#e0a98a"); gr.addColorStop(0.12, "#d89b7a"); gr.addColorStop(0.145, "#b9755a"); gr.addColorStop(0.17, "#f3cdb9"); gr.addColorStop(0.5, "#eeb7a3"); gr.addColorStop(0.8, "#eaa58f"); gr.addColorStop(0.83, "#f2cd82"); gr.addColorStop(1, "#ecc064"); fg.fillStyle = gr; fg.fillRect(0, 0, 1024, 400);
+  { fg.fillStyle = shade(1.0); fg.fillRect(0, 0, 1024, 400); const gr = fg.createLinearGradient(0, 0, 0, 400); gr.addColorStop(0, shade(1.04)); gr.addColorStop(0.12, shade(0.98)); gr.addColorStop(0.145, shade(0.8)); gr.addColorStop(0.17, "#f3cdb9"); gr.addColorStop(0.5, "#eeb7a3"); gr.addColorStop(0.8, "#eaa58f"); gr.addColorStop(0.83, "#f2cd82"); gr.addColorStop(1, "#ecc064"); fg.fillStyle = gr; fg.fillRect(0, 0, 1024, 400);
     for (let i = 0; i < 90; i++) { fg.strokeStyle = `rgba(120,58,30,${0.1 + rnd() * 0.12})`; fg.lineWidth = 1.2; const x = rnd() * 1024; fg.beginPath(); fg.moveTo(x, 4 + rnd() * 10); fg.bezierCurveTo(x + 8, 20, x - 8, 30, x + 3, 44); fg.stroke(); }
     fg.save(); fg.beginPath(); fg.rect(0, 68, 1024, 260); fg.clip(); fibres(fg, 1024, 400, 520, ["#fdf0e6", "#f6d3c4", "#e6a08e", "#fff7f0"], 200, 2.2); fg.restore();
     fg.save(); fg.beginPath(); fg.rect(0, 332, 1024, 70); fg.clip(); for (let i = 0; i < 160; i++) { const x = rnd() * 1024, y = 330 + rnd() * 70, r = 12 + rnd() * 16; fg.strokeStyle = "rgba(226,160,60,.5)"; fg.fillStyle = `rgba(250,${210 + rnd() * 30 | 0},${110 + rnd() * 50 | 0},.5)`; fg.lineWidth = 2; fg.beginPath(); fg.ellipse(x, y, r, r * 0.85, 0, 0, 7); fg.fill(); fg.stroke(); } fg.restore(); }
@@ -119,7 +120,14 @@ export async function create(args) {
   const nFire = [27.7, 28.5, 29.3, 30.1, 31.0, 31.9, 32.8, 37.8, 38.7, 39.6, 40.5, 41.4];
   const BREAK = [33.0, 37.7];                                                                  // the nerve stops working, then works again
 
+  // the cover (T.coverFinger): ONE fingertip, three-quarter view with its nail, half the pad smooth and half wrinkled, a few drops on it
+  let fC = null;
+  if (T.coverFinger) { const cf = T.coverFinger; fC = makeFinger(1.3, groups.F); fR.mesh.visible = false; for (const f of [fL, fC]) { f.mesh.position.set(0, -9, 0); f.mesh.rotation.y = cf.rotY; f.mesh.rotation.z = cf.tilt || 0; }
+    renderer.localClippingEnabled = true; const pl = (sgn) => new THREE.Plane(new THREE.Vector3(sgn, 0, 0), 0); fL.mesh.material.clippingPlanes = [pl(-1)]; fC.mesh.material.clippingPlanes = [pl(1)]; fL.mesh.material.clipShadows = fC.mesh.material.clipShadows = true;
+    const dm = mat({ color: 0xdcecf4, transparent: true, opacity: 0.3, roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 2.4, depthWrite: false });
+    for (let i = 0; i < 16; i++) { const th = (hash(i * 2.3) - 0.5) * 1.5 + 0.25, sy = 5.5 + hash(i * 4.7) * 4.6, r0 = 0.1 + hash(i * 6.1) * 0.22; const d = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2), dm); const rr = RAD * (1.1 - 0.2 * clamp(sy / LC)); d.position.set(rr * Math.sin(th) * 1.05, sy, rr * Math.cos(th) * 0.86); d.lookAt(d.position.x * 3, sy, d.position.z * 3); d.rotateX(Math.PI / 2); d.scale.set(r0, r0 * 0.7, r0); (th < 0.25 ? fL : fC).mesh.add(d); } }
   const setF = (t) => {
+    if (T.coverFinger) { fL.set(0, 1); fC.set(1, 1); water.visible = tint.visible = false; bub.forEach((b) => (b.material.opacity = 0)); return; }
     const a = AF(t), wet = WATER_ON(t);
     const wr = t < 30 ? a.L : eo(seg(t, 38.0, 41.4)); fL.set(wr, wet); fR.set(1, wet);
     for (let i = 0; i < wp.count; i++) { const x = wx[i], z = wz[i], r1 = Math.hypot(x + 2.35, z), r2 = Math.hypot(x - 2.35, z); wp.setZ(i, wet * (0.06 * Math.sin(r1 * 3.2 - t * 2.4) * Math.exp(-r1 * 0.16) + 0.06 * Math.sin(r2 * 3.2 - t * 2.1) * Math.exp(-r2 * 0.16) + 0.02 * Math.sin(x * 1.3 + t * 0.9) * Math.cos(z * 1.1 - t * 0.7))); }
@@ -156,13 +164,13 @@ export async function create(args) {
     cap.set(pts, rad); capO.set(pts, rad.map((r) => r + 0.05)); capEnd.position.set(pts[0][0], pts[0][1], pts[0][2]); capEnd.scale.setScalar(rad[0]);
     const p2 = [], r2 = []; for (let i = 0; i <= 30; i++) { const x = lerp(4, 11, i / 30); p2.push([x, 1.4 + 0.5 * Math.sin(x * 0.5), -0.3 + 0.0 * x]); r2.push(0.3 * (1 - 0.45 * nr)); } cap2.set(p2, r2); cap2O.set(p2, r2.map((r) => r + 0.04));
   };
-  let pebbleX = [0, 0];
   const setP = (t) => {
-    const run = (t0, durL, durR) => [eio(seg(t, t0, t0 + durL)), eio(seg(t, t0, t0 + durR))];
-    const a = run(46.4, 2.6, 1.5), b = run(48.9, 2.2, 2.2), cyc = [clamp(a[0] + b[0]), clamp(a[1] + b[1])];
-    pairs.forEach((p, i) => { const k = i === 0 ? (t < 48.9 ? a[0] : b[0]) : (t < 48.9 ? a[1] : b[1]); const start = i === 0 ? 4.6 : -4.6, base = (i === 0 ? -4.6 : 4.6) + 0, tx = lerp(start * 0.0 + (i === 0 ? 3.6 : -3.6), 0, 0);   // pebble slides from the outer side toward the middle
-      const x0 = i === 0 ? -4.8 : 4.8, x1 = i === 0 ? -1.3 : 1.3; const slide = (t < 50.5) ? k : 1 - (1 - k) * 0 - 0; const pos = t < 48.9 ? lerp(x0, x1, k) : lerp(x1, x0, k);
-      p.g.position.x = pos; p.A = i ? 1 : (t < 30 ? 1 : 0); p.fin.set(i ? 1 : eo(seg(t, 38, 41)) , 1); p.peb.rotation.z = Math.sin(t * 1.2 + i) * 0.01; p.fg2.position.y = 6.1 + 0.12 * Math.sin(t * 3.0 + i) * (k > 0 && k < 1 ? 1 : 0); });
+    const ez = (t0, d) => eio(seg(t, t0, t0 + d));
+    pairs.forEach((p, i) => {
+      const x0 = i === 0 ? -4.8 : 4.8, x1 = i === 0 ? -1.3 : 1.3, dL = i === 0 ? 2.6 : 1.5;                 // run 1: the wrinkled finger (right) is faster; run 2: equal; run 3 (the moment after): equal again
+      let k, pos;
+      if (t < 48.9) { k = ez(46.4, dL); pos = lerp(x0, x1, k); } else if (t < 51.4) { k = ez(48.9, 2.5); pos = lerp(x1, x0, k); } else if (t < 54.2) { k = ez(51.4, 2.8); pos = lerp(x0, x1, k); } else { k = ez(54.2, 3.4); pos = lerp(x1, x0, k); }
+      p.g.position.x = pos; p.fin.set(i ? 1 : eo(seg(t, 38, 41)), 1); p.peb.rotation.z = Math.sin(t * 1.2 + i) * 0.01; p.fg2.position.y = 6.1 + 0.12 * Math.sin(t * 3.0 + i) * (k > 0 && k < 1 ? 1 : 0); });
   };
 
   // ── camera, cuts, painting overlays ──────────────────────────────────────────────────────────────────────────────────────

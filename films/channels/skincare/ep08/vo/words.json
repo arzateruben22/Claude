@@ -805,6 +805,79 @@
    ]
   },
   {
+   "id": "vo05c",
+   "text": "Quick thing: like and follow. Your skin has plenty more secrets.",
+   "heard": "Quick thing like and follow. Your skin has plenty more secrets.",
+   "words": [
+    {
+     "w": "Quick",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "thing:",
+     "start": 0.275,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 0.655,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.695,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 0.86,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "Your",
+     "start": 1.58,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 1.88,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 2.17,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "plenty",
+     "start": 2.29,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 2.53,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "secrets.",
+     "start": 2.92,
+     "end": 3.44,
+     "heard": true
+    }
+   ]
+  },
+  {
    "id": "vo06",
    "text": "So wrinkled fingers are your nerves at work. Whether they help you grip is still debated.",
    "heard": "So wrinkled fingers are your nerves at work, whether they help you grip is still debated.",

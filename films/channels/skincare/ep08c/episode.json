@@ -1,5 +1,5 @@
 {
- "num": "S2\u00b7E2",
+ "num": "S2·E2",
  "title": "Why fingers<br>wrinkle in water",
  "titleSize": 84,
  "sup": [
@@ -19,10 +19,10 @@
   "t": "start:vo07-0.3",
   "e1": "Next:<br>how sweat really<br>cools you",
   "e2": "Cooling happens when sweat dries.",
-  "chip": "Skin Sense \u00b7 Season 2 \u00b7 Episode 2",
+  "chip": "Skin Sense · Season 2 · Episode 2",
   "e3": "Narration: synthetic voice (AI). Illustrations: AI-generated and 3-D animation made in code."
  },
- "eyebrow": "SKIN SENSE \u00b7 SEASON 2 \u00b7 EPISODE 2",
+ "eyebrow": "SKIN SENSE · SEASON 2 · EPISODE 2",
  "images": {},
  "camera": [],
  "three": {
@@ -345,7 +345,7 @@
     "fov": 30
    },
    {
-    "t": 53.7,
+    "t": 57.869,
     "sc": "P",
     "pos": [
      122,
@@ -360,7 +360,7 @@
     "fov": 30
    },
    {
-    "t": 53.8,
+    "t": 57.969,
     "sc": "F",
     "pos": [
      -3,
@@ -375,7 +375,7 @@
     "fov": 30
    },
    {
-    "t": 58,
+    "t": 62.169,
     "sc": "F",
     "pos": [
      3,
@@ -390,7 +390,7 @@
     "fov": 30
    },
    {
-    "t": 61.5,
+    "t": 65.669,
     "sc": "F",
     "pos": [
      0,
@@ -405,7 +405,7 @@
     "fov": 30
    },
    {
-    "t": 72,
+    "t": 76.169,
     "sc": "F",
     "pos": [
      0,
@@ -420,18 +420,29 @@
     "fov": 30
    }
   ],
+  "skinHex": "#9a5436",
+  "skinCF": [
+   0.8,
+   0.62,
+   0.52
+  ],
+  "exposure": 0.8,
+  "coverFinger": {
+   "rotY": 1.35,
+   "tilt": 0.0
+  },
   "coverCam": {
    "pos": [
     0,
-    -2.5,
-    26
+    -0.5,
+    17
    ],
    "look": [
-    0,
-    -2.2,
+    0.4,
+    -0.6,
     0
    ],
-   "fov": 50
+   "fov": 58
   }
  },
  "labels": [
@@ -448,7 +459,8 @@
  ],
  "coverMode": true,
  "cover": {
-  "text": "",
-  "top": 300
+  "text": "Not just water.",
+  "top": 250,
+  "size": 128
  }
 }

@@ -27,12 +27,12 @@
  "thumbnails": [
   {
    "id": "A",
-   "subject": "two fingertips side by side in the series' one skin tone, one smooth and one deeply wrinkled",
-   "composition": "pad-on, fingers rising from the lower edge to the upper third, ivory negative space above",
-   "lighting": "warm key from the upper left, soft depth of field, fine fingerprint ridges on the smooth one",
-   "trigger": "a familiar thing seen as a before and after of itself",
-   "text": "",
-   "complements": "the title names the cause (nerves); the picture shows only the effect"
+   "subject": "one human fingertip in three-quarter view, the pad half smooth and half deeply wrinkled, a few water droplets on it",
+   "composition": "the fingertip large in the lower two thirds, rising from the bottom edge, the nail edge visible at the silhouette, ivory negative space above for the text",
+   "lighting": "warm key from the upper left, soft depth of field, glossy droplet highlights",
+   "trigger": "a familiar thing split into before and after on one finger",
+   "text": "Not just water.",
+   "complements": "the title names the hidden cause; the thumbnail text says water is not the whole story without repeating the title"
   },
   {
    "id": "B",
@@ -103,8 +103,8 @@
  "winner": {
   "title": "Your Fingers Wrinkle on Orders From Your Nerves",
   "thumbnail": "A",
-  "thumbnailText": "",
-  "why": "The title promises the hidden cause; the thumbnail shows the effect without naming it, so nothing repeats."
+  "thumbnailText": "Not just water.",
+  "why": "The title promises the hidden cause (nerves); the cover shows one finger half smooth and half wrinkled with the line 'Not just water.', which the video itself says."
  },
  "testAndCompare": [
   "A",
@@ -121,10 +121,10 @@
   "originality": true
  },
  "thumbnailFile": "skin-sense-008-cover.jpg",
- "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: two human fingertips side by side, pad-on, one smooth with fine fingerprint ridges and one deeply wrinkled, in one light peach skin tone.\nComposition: the fingers rise from the lower edge to the upper third, ivory negative space above.\nLighting and treatment: warm key light from the upper left, soft depth of field, peach and rose tones, deep green #00685F as the only accent.\nMood: quiet curiosity.\nText: No text.\nScientific accuracy: fingertip skin wrinkles after about fifteen minutes in water, and this is driven by the nervous system narrowing fingertip blood vessels; an illustration, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, distinctive and art-directed, not generic AI art.",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: one human fingertip in three-quarter view, large in frame with the nail edge visible, the pad half smooth with fine fingerprint ridges and half deeply wrinkled, a few glossy water droplets on it. Warm medium-brown skin tone (about RGB 180, 109, 75), the same tone throughout.\nComposition: the fingertip fills the lower two thirds, rising from the bottom edge, ivory negative space above it for the text.\nLighting and treatment: warm key light from the upper left, soft depth of field, ivory ground (#F7EFE3), deep green #00685F as the only accent.\nMood: quiet curiosity.\nText: \"Not just water.\" in a navy editorial serif, upper centre.\nScientific accuracy: fingertip skin wrinkles after about fifteen minutes in water, driven by the nervous system narrowing fingertip blood vessels; an illustration, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, distinctive and art-directed, not generic AI art.",
  "shortsCover": {
   "frameSeconds": 3.6,
-  "text": ""
+  "text": "Not just water."
  },
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
 }

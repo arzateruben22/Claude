@@ -1,17 +1,17 @@
 {
- "compose_s": 7.0,
- "master_s": 8.6,
+ "compose_s": 7.1,
+ "master_s": 9.4,
  "master": {
-  "gain_db": 1.53,
+  "gain_db": 1.59,
   "iterations": 2,
   "lufs": -14.05,
   "true_peak_db": -2.0,
   "ceiling_db": -2.0,
-  "limiting_max_db": -3.32,
+  "limiting_max_db": -3.43,
   "aac": {
    "lufs": -14.1,
-   "true_peak_db": -1.9,
-   "lra": 2.9
+   "true_peak_db": -2.0,
+   "lra": 2.8
   },
   "stems_sum_error_db": -240.0
  },
@@ -25,7 +25,7 @@
     "pass": true
    },
    "section": {
-    "n": 6,
+    "n": 7,
     "max_ms": 0.0,
     "median_ms": 0.0,
     "slow": true,
@@ -107,14 +107,21 @@
    {
     "kind": "section",
     "tag": null,
-    "show": 61.2,
+    "show": 57.8667,
+    "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "section",
+    "tag": null,
+    "show": 65.4,
     "method": "peak",
     "err_ms": 0.0
    },
    {
     "kind": "signature",
     "tag": "end",
-    "show": 61.5,
+    "show": 65.7,
     "method": "rise",
     "err_ms": 11.0
    }
@@ -123,13 +130,13 @@
  "picture_sync": [],
  "under_voice": {
   "music_lufs": -29.0,
-  "dialog_lufs": -13.8,
+  "dialog_lufs": -13.7,
   "gap_lu": 15.3,
   "pass": true
  },
  "phone": {
   "correlation": 0.91,
-  "mono_loss_db": -0.0,
+  "mono_loss_db": 0.02,
   "dialog_mono_loss_db": 0.09,
   "pass": true
  }

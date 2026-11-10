@@ -1,5 +1,5 @@
 {
- "duration": 67.733,
+ "duration": 71.933,
  "fps": 30,
  "preset": "outerlayer-slide",
  "sections": [
@@ -34,15 +34,21 @@
    "energy": 0.8
   },
   {
-   "id": "takeaway",
+   "id": "cta",
    "t0": 53.692,
-   "t1": 61.2,
+   "t1": 57.861,
+   "energy": 0.4
+  },
+  {
+   "id": "takeaway",
+   "t0": 57.861,
+   "t1": 65.369,
    "energy": 0.3
   },
   {
    "id": "tease",
-   "t0": 61.2,
-   "t1": 67.733,
+   "t0": 65.369,
+   "t1": 71.933,
    "energy": 0.35
   }
  ],
@@ -101,17 +107,23 @@
   {
    "t": 53.692,
    "kind": "section",
-   "id": "takeaway",
-   "t1": 61.2
+   "id": "cta",
+   "t1": 57.861
   },
   {
-   "t": 61.2,
+   "t": 57.861,
+   "kind": "section",
+   "id": "takeaway",
+   "t1": 65.369
+  },
+  {
+   "t": 65.369,
    "kind": "section",
    "id": "tease",
-   "t1": 67.733
+   "t1": 71.933
   },
   {
-   "t": 61.5,
+   "t": 65.669,
    "kind": "signature",
    "tag": "end"
   }
@@ -143,13 +155,18 @@
    "file": "vo/05.wav"
   },
   {
-   "id": "vo06",
+   "id": "vo05c",
    "t": 53.992,
+   "file": "vo/05c.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 58.161,
    "file": "vo/06.wav"
   },
   {
    "id": "vo07",
-   "t": 61.5,
+   "t": 65.669,
    "file": "vo/07.wav"
   }
  ]

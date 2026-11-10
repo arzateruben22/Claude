@@ -69,6 +69,17 @@
    "sha256": "1de1a0e49379ab18eb2b777deb882d7fcfa4788995ad0676e73f0fb7c2fdb46b"
   },
   {
+   "id": "vo05c",
+   "beat": "cta",
+   "text": "Quick thing: like and follow. Your skin has plenty more secrets.",
+   "stars": [],
+   "phonemes": "kwˈɪk θˈɪŋ: lˈaɪk and fˈɒləʊ. jɔː skˈɪn hɐz plˈɛnti mˈɔː sˈiːkɹɪts.",
+   "speed": 1.05,
+   "file": "05c.wav",
+   "dur": 3.469,
+   "sha256": "6a184770b7d4fae606acabc06e9199fd8e75caa1f11c1307e6ca2d77a9f543a0"
+  },
+  {
    "id": "vo06",
    "beat": "takeaway",
    "text": "So wrinkled fingers are your nerves at work. Whether they help you grip is still debated.",

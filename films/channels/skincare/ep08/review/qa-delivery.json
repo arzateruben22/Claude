@@ -1,41 +1,41 @@
 {
  "file": "films/channels/skincare/ep08/out/skin-sense-008-9x16.mp4",
- "size_mb": 21.4,
+ "size_mb": 23.9,
  "video": {
   "codec": "h264",
   "profile": "High",
   "w": 1080,
   "h": 1920,
   "fps": 30.0,
-  "frames": 2032,
-  "dur": 67.733333,
+  "frames": 2158,
+  "dur": 71.933333,
   "pix_fmt": "yuv420p",
   "color": "bt709",
-  "mbps": 2.26
+  "mbps": 2.39
  },
- "film_dur": 67.733,
+ "film_dur": 71.933,
  "audio": {
   "codec": "aac",
   "sr": 48000,
   "ch": 2,
   "kbps": 260,
-  "dur": 67.733,
+  "dur": 71.933,
   "lufs": -14.1,
-  "true_peak_db": -1.9,
-  "lra": 2.9,
+  "true_peak_db": -2.0,
+  "lra": 2.8,
   "corr": 0.91,
-  "mono_loss_db": -0.0
+  "mono_loss_db": 0.02
  },
  "flashing": {
   "large_transitions": 3,
   "transition_frames": [
    1,
-   510,
-   1614
+   1095,
+   1739
   ],
   "flashes": 0,
   "max_flashes_per_s": 0,
-  "largest_changed_area": 0.452
+  "largest_changed_area": 0.275
  },
  "fails": []
 }
