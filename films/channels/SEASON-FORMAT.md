@@ -52,8 +52,25 @@ Reality Rulebook and One More Orbit keep the AI voice. Possibility Lab uses the 
 8 hook lines and 8 cliffhanger/outro lines to the owner's recording script (films/channels/voice-scripts/), and
 the AI voice stands in until the recordings land.
 
+## Every long video is at least 8:30 (owner, 10 Nov 2026)
+
+This applies to every long video on every channel, new or rebuilt. Aim for **8:30-9:30**, so mid-roll ads are always
+possible with margin. A long video that would land under 8:30 gets **real content added, never padding**:
+- an opening hook (15-25 s) that states the thread connecting the whole video
+- **bridges** between segments (6-12 s each): a cliffhanger line that links one topic to the next, so it plays as
+  one story rather than "1, 2, 3"
+- a **finale** (25-45 s) that pays the thread off: a ranking, a comparison of all the answers, or a closing "wait,
+  what?" fact
+Never stretch with slowed-down footage, silence, long holds, repeats or recaps of what was just shown. That hurts
+retention, and YouTube's repetitive-content policy targets it. Every added line is fact-checked like any other.
+
+### Season 2 long videos, stretched with bridges
+- **Possibility Lab** S2 long video (7:31): add an opening, 5 bridges and a finale, to about 8:30-8:45.
+- **Skin Sense** S2 long video: rebuilt from the 3-D episodes once ep12 is done, with an opening, bridges and a
+  finale, to at least 8:30.
+- **Reality Rulebook** (7:28) and **One More Orbit** (7:07): revived with bridges to at least 8:30, but only after
+  each channel's Season 3 long film and its 8 parts are done.
+
 ## Season 2
 
-The Season 2 shorts finish their declutter re-renders and post as normal. The stitched Season 2 long videos that
-are still being rebuilt (Reality Rulebook, One More Orbit) are **stopped**: they would stay under 8:00. Long videos
-already in Prism stay as they are.
+The Season 2 shorts finish their declutter re-renders and post as normal. Their stitched long videos follow the 8:30 rule above: they are rebuilt with bridges, not glued as they were.
