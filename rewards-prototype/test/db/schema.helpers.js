@@ -9,6 +9,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
+import { test } from 'node:test';
 import { openDatabase } from '../../src/db/sqlite.js';
 import { migrate } from '../../src/db/migrate.js';
 import { fixedClock } from '../../src/lib/clock.js';
@@ -62,14 +63,22 @@ export function openApplication() {
     db,
     foreignKeys: true,
     recursiveTriggers: true,
+    lastStatement: null,
     run: (text, params = []) => {
+      sql.lastStatement = text;
       if (!REPLACE_STATEMENT.test(text)) return db.run(text, params);
       db.exec(inline(text, params));
       return { changes: db.get('SELECT changes() AS n').n, lastInsertRowid: db.get('SELECT last_insert_rowid() AS id').id };
     },
     get: (text, params = []) => db.get(text, params),
-    all: (text, params = []) => db.all(text, params),
-    exec: (text) => db.exec(text),
+    all: (text, params = []) => {
+      sql.lastStatement = text;
+      return db.all(text, params);
+    },
+    exec: (text) => {
+      sql.lastStatement = text;
+      db.exec(text);
+    },
     close: () => db.close(),
   };
   opened.push(sql);
@@ -89,13 +98,21 @@ export function openBare({ foreignKeys = true, recursiveTriggers = true } = {}) 
     raw,
     foreignKeys,
     recursiveTriggers,
+    lastStatement: null,
     run: (text, params = []) => {
+      sql.lastStatement = text;
       const result = raw.prepare(text).run(...params);
       return { changes: Number(result.changes), lastInsertRowid: Number(result.lastInsertRowid) };
     },
     get: (text, params = []) => raw.prepare(text).get(...params),
-    all: (text, params = []) => raw.prepare(text).all(...params),
-    exec: (text) => raw.exec(text),
+    all: (text, params = []) => {
+      sql.lastStatement = text;
+      return raw.prepare(text).all(...params);
+    },
+    exec: (text) => {
+      sql.lastStatement = text;
+      raw.exec(text);
+    },
     close: () => raw.close(),
   };
   opened.push(sql);
@@ -115,7 +132,7 @@ export const CONNECTIONS = Object.freeze({
 // ---------------------------------------------------------------------------
 
 // SQLite extended result codes.
-const ERRCODE = { check: 275, foreign_key: 787, not_null: 1299, primary_key: 1555, trigger: 1811, unique: 2067, datatype: 3091 };
+const ERRCODE = { check: 275, foreign_key: 787, not_null: 1299, primary_key: 1555, trigger: 1811, unique: 2067, datatype: 3091, mismatch: 20 };
 
 const abort = (trigger, message) => Object.freeze({ kind: 'trigger', trigger, message });
 
@@ -176,6 +193,8 @@ export const UNIQUE = (column) => ({ kind: 'unique', fragment: column });
 export const NOT_NULL = (column) => ({ kind: 'not_null', fragment: column });
 /** STRICT typing: "cannot store TEXT value in INTEGER column t.c". */
 export const DATATYPE = (fragment) => ({ kind: 'datatype', fragment });
+/** A value that is not a whole number offered as an INTEGER PRIMARY KEY (SQLite's own rowid rule, older than STRICT). */
+export const ROWID_MISMATCH = Object.freeze({ kind: 'mismatch', fragment: 'datatype mismatch' });
 /**
  * For statements that break two rules at once. SQLite does not promise which BEFORE trigger
  * runs first, so either refusal is correct.
@@ -240,11 +259,30 @@ export function refuses(sql, attack, expected) {
   } catch (error) {
     refusal = error;
   }
-  assert.ok(refusal, `the statement was ACCEPTED; expected a refusal (${describeExpectation(expected)})`);
-  assert.ok(matches(refusal, expected), `refused for the wrong reason.\n  expected ${describeExpectation(expected)}\n  got      [${refusal.errcode ?? refusal.name}] ${refusal.message}`);
+  const statement = `\n  statement ${String(sql.lastStatement).replace(/\s+/g, ' ').slice(0, 300)}`;
+  assert.ok(refusal, `the statement was ACCEPTED; expected a refusal (${describeExpectation(expected)})${statement}`);
+  assert.ok(matches(refusal, expected), `refused for the wrong reason.\n  expected ${describeExpectation(expected)}\n  got      [${refusal.errcode ?? refusal.name}] ${refusal.message}${statement}`);
   assert.deepEqual(snapshot(sql), before, 'a refused statement must leave every table exactly as it was');
   recordFired(refusal, expected);
   return refusal;
+}
+
+/**
+ * One small test per forbidden statement. Each test starts from a fresh copy of the rows
+ * `arrange()` builds, attempts that ONE statement, and goes through refuses().
+ * @param {() => { sql: object }} arrange  builds the starting rows; whatever it returns is handed to the attack
+ * @param {object} expected  the refusal every attack in the table must meet, unless the attack names its own
+ * @param {Record<string, ((world: object) => unknown) | [(world: object) => unknown, object]>} attacks
+ *        test name -> the forbidden statement, or [statement, its own expected refusal]
+ */
+export function refusedOneByOne(arrange, expected, attacks) {
+  for (const [name, plan] of Object.entries(attacks)) {
+    const [attack, expectedHere] = Array.isArray(plan) ? plan : [plan, expected];
+    test(name, () => {
+      const world = arrange();
+      refuses(world.sql, () => attack(world), expectedHere);
+    });
+  }
 }
 
 // ---------------------------------------------------------------------------
