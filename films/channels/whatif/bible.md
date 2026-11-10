@@ -208,3 +208,7 @@ and a human-scale anchor such as the longest walks on record. Nothing is compute
 - **Platform:** AI-voice labels on TikTok, YouTube and Meta; each episode a distinct calculation, a
   script a person wrote and checked, and sources in the description (≤ 15).
 - **Photosensitivity:** ≤ 3 flashes a second; the box and term flashes are fades ≥ 0.2 s.
+
+## Packaging rule (owner standing rule)
+
+Every new episode, long and short, follows `PACKAGING.md` in this folder (copied from `films/channels/PACKAGING.md` on `claude/made-with-claude-film`): `out/packaging.json` per video (compilations: `compilations/<name>/packaging.json`), winner title alone as the YouTube title, thumbnail 0-4 words with no title repeat, no badges/series line, 16:9 1920x1080 JPG under 2 MB for long videos, 9:16 cover for shorts.
