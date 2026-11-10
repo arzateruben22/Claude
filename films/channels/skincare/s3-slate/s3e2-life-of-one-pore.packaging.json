@@ -1,0 +1,131 @@
+{
+ "version": 1,
+ "format": "short",
+ "status": "slate draft: titles and thumbnails are hypotheses until the script's claims are sourced (truth check held false); nothing is rendered yet",
+ "hook": "Every pore is the doorway of a tiny oil gland with a hair running through it. (claims to source: the follicle and gland structure, sebum reaching the surface through the opening)",
+ "titles": [
+  {
+   "text": "What Is Actually Inside a Pore?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "A Pore Is Not a Hole. It's a Doorway.",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "The Oil Factory Behind Every Hair",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Your Skin Makes Oil Through Tiny Doorways",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "One Pore, One Hair, One Oil Gland",
+   "mechanism": "scale shock"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "cut-away of one pore: the hair, the gland beside it, oil as soft gold glow drifting up",
+   "composition": "the pore opening at top centre, the gland low left, the hair rising",
+   "lighting": "warm side light, soft depth of field, ivory and peach",
+   "trigger": "looking into a tiny hidden room",
+   "text": "",
+   "complements": "the title asks what is inside; the picture shows it"
+  },
+  {
+   "id": "B",
+   "subject": "a single pore opening seen from just above the surface, a drop of gold oil at its lip",
+   "composition": "centred opening, skin texture around it in the series' one tone",
+   "lighting": "low light with a little sheen",
+   "trigger": "an ordinary thing seen too close",
+   "text": "Doorway",
+   "complements": "adds the word that reframes the title"
+  },
+  {
+   "id": "C",
+   "subject": "the gland as a small glowing sac connected by a thin channel to the surface",
+   "composition": "diagonal channel from lower left to upper right",
+   "lighting": "amber inner glow on the gland",
+   "trigger": "hidden machinery",
+   "text": "",
+   "complements": "pure mechanism"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 86,
+    "synergy": 82,
+    "originality": 72,
+    "accuracy": 86,
+    "mobile": 84,
+    "satisfaction": 86
+   },
+   "note": "question answered visually"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 80,
+    "clarity": 78,
+    "synergy": 70,
+    "originality": 76,
+    "accuracy": 84,
+    "mobile": 80,
+    "satisfaction": 78
+   },
+   "note": "reframe"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 72,
+    "curiosity": 78,
+    "clarity": 80,
+    "synergy": 78,
+    "originality": 70,
+    "accuracy": 86,
+    "mobile": 82,
+    "satisfaction": 80
+   },
+   "note": "mechanism story"
+  }
+ ],
+ "winner": {
+  "title": "What Is Actually Inside a Pore?",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "A question everyone has and nobody can picture; the cut-away answers it at a glance."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": false,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point and any text inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a cut-away of one skin pore: the hair, the sebaceous gland beside it, oil as a soft gold glow rising to the opening.\nComposition: The opening at top centre, the gland low left, the hair rising, ivory negative space around.\nLighting and treatment: Warm side light, soft depth of field, peach and rose tissue, amber oil glow.\nMood: wonder.\nText: No text.\nScientific accuracy: a pore is the opening of a hair follicle with a sebaceous gland that releases oil (verify); an illustration, not to scale.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, shocked expressions, or anything that looks like a real medical photo. Style: premium medical-editorial documentary illustration, ivory page, one light skin tone, peach and rose tissue, deep green #00685F accent, navy serif type; distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 5.0,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

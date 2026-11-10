@@ -1,0 +1,131 @@
+{
+ "version": 1,
+ "format": "short",
+ "status": "slate draft: titles and thumbnails are hypotheses until the script's claims are sourced (truth check held false); nothing is rendered yet",
+ "hook": "The skin on your arm right now is about four weeks old, and its outer layer is made of cells that have finished their lives. (claims to source: the renewal cycle length, its slowing with age, the layer structure)",
+ "titles": [
+  {
+   "text": "Where Do Your Skin Cells Go?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Skin You See Is Four Weeks Old",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "One Skin Cell's Month-Long Trip to the Surface",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Why You Never Have the Same Skin Twice",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Your Skin Replaces Itself. Slowly.",
+   "mechanism": "unexpected consequence"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "one amber-lit cell at the base of a cut-away layered skin block",
+   "composition": "the cell low left, a faint translucent trail of cells rising diagonally to the surface top right, large ivory negative space above",
+   "lighting": "soft warm key from upper left, shallow depth, peach and rose layers",
+   "trigger": "a quiet ascent: where is it going?",
+   "text": "Day 1",
+   "complements": "the text names the start, the title asks the destination"
+  },
+  {
+   "id": "B",
+   "subject": "macro of a fingertip's ridged surface with one tile-like cell lifting at its edge",
+   "composition": "ridges fill the lower two thirds, one flake lifting in the upper third, centred",
+   "lighting": "low raking light, ivory ground",
+   "trigger": "small shock at something so familiar leaving",
+   "text": "",
+   "complements": "pure visual mystery; the title carries the number"
+  },
+  {
+   "id": "C",
+   "subject": "a stack of translucent layers seen edge-on with a single glowing cell at the very top",
+   "composition": "layers fill the lower half; the top cell in sharp focus",
+   "lighting": "back-lit amber glow on the top cell",
+   "trigger": "arrival",
+   "text": "Day 28",
+   "complements": "the title states a trip; this shows its end"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 1,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 82,
+    "clarity": 88,
+    "synergy": 80,
+    "originality": 70,
+    "accuracy": 84,
+    "mobile": 86,
+    "satisfaction": 82
+   },
+   "note": "title says the number, thumbnail starts the story"
+  },
+  {
+   "title": 0,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 72,
+    "curiosity": 86,
+    "clarity": 80,
+    "synergy": 76,
+    "originality": 74,
+    "accuracy": 86,
+    "mobile": 84,
+    "satisfaction": 80
+   },
+   "note": "question plus visual mystery"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 78,
+    "clarity": 76,
+    "synergy": 82,
+    "originality": 68,
+    "accuracy": 84,
+    "mobile": 78,
+    "satisfaction": 86
+   },
+   "note": "clear story promise"
+  }
+ ],
+ "winner": {
+  "title": "Where Do Your Skin Cells Go?",
+  "thumbnail": "A",
+  "thumbnailText": "Day 1",
+  "why": "A plain question with a hidden answer, and the thumbnail starts the journey without repeating it."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": false,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point and any text inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: one amber-lit skin cell at the base of a cut-away layered skin block, a faint trail of translucent cells rising to the surface.\nComposition: The cell low left in the lower third, the trail rising diagonally to the upper right, large ivory negative space above.\nLighting and treatment: Soft warm key from upper left, shallow depth of field, peach and rose layers, subtle grain.\nMood: quiet wonder.\nText: \"Day 1\" in a navy editorial serif, upper centre.\nScientific accuracy: epidermal cells rise from the base layer to the surface over roughly four weeks (verify); the picture is an illustration, not to scale.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, shocked expressions, or anything that looks like a real medical photo. Style: premium medical-editorial documentary illustration, ivory page, one light skin tone, peach and rose tissue, deep green #00685F accent, navy serif type; distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 4.0,
+  "text": "Day 1"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

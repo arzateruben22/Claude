@@ -1,0 +1,131 @@
+{
+ "version": 1,
+ "format": "short",
+ "status": "slate draft: titles and thumbnails are hypotheses until the script's claims are sourced (truth check held false); nothing is rendered yet",
+ "hook": "A pimple starts as a plug deep inside a pore, before anything shows on the surface. (claims to source: follicle plugging as the start, the roles of oil, C. acnes and inflammation)",
+ "titles": [
+  {
+   "text": "How One Pore Turns Into a Pimple",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "A Pimple Begins Before You See It",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "The Bacteria That Live in Your Pores",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "Inside a Pore: A Pimple's Secret Start",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "What Really Happens Inside a Clogged Pore",
+   "mechanism": "personal relevance"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "cross-section of one pore with a soft amber plug at its neck, oil pooled below it, a few pearl-white cells drifting in",
+   "composition": "the plug dead centre, the pore wall curving around it, ivory negative space",
+   "lighting": "warm side light, shallow depth, peach and rose walls, never on a face or skin surface",
+   "trigger": "curiosity about a hidden process",
+   "text": "",
+   "complements": "nothing visible on skin; all inside the pore"
+  },
+  {
+   "id": "B",
+   "subject": "the same pore a moment later, the wall slightly swollen, a soft rose glow at the base (illustrated)",
+   "composition": "plug upper third, glow lower third",
+   "lighting": "soft rose glow, calm, not alarming",
+   "trigger": "process, not danger",
+   "text": "Day 3",
+   "complements": "adds time; the title asks how"
+  },
+  {
+   "id": "C",
+   "subject": "a small cluster of translucent bacteria beads resting in the pore's oil",
+   "composition": "beads low right, plug upper left",
+   "lighting": "gentle blue-white rim light",
+   "trigger": "surprise that they live there",
+   "text": "",
+   "complements": "pairs with the bacteria title"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 82,
+    "curiosity": 86,
+    "clarity": 84,
+    "synergy": 82,
+    "originality": 76,
+    "accuracy": 84,
+    "mobile": 84,
+    "satisfaction": 84
+   },
+   "note": "mechanism and a visual that holds on its own"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 74,
+    "curiosity": 84,
+    "clarity": 80,
+    "synergy": 76,
+    "originality": 78,
+    "accuracy": 82,
+    "mobile": 80,
+    "satisfaction": 82
+   },
+   "note": "time adds mystery"
+  },
+  {
+   "title": 3,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 68,
+    "curiosity": 76,
+    "clarity": 76,
+    "synergy": 74,
+    "originality": 72,
+    "accuracy": 84,
+    "mobile": 78,
+    "satisfaction": 80
+   },
+   "note": "safe, informative"
+  }
+ ],
+ "winner": {
+  "title": "How One Pore Turns Into a Pimple",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The exact question a viewer has, answered with an image that shows only the inside of a pore."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": false,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point and any text inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a cross-section of one skin pore: a soft amber plug at its neck, oil pooled below it, a few pearl-white cells drifting in.\nComposition: The plug dead centre, the pore wall curving around it, ivory negative space; never on a face or a skin surface.\nLighting and treatment: Warm side light, shallow depth of field, peach and rose walls, calm and clinical, no alarm colours.\nMood: curiosity.\nText: No text.\nScientific accuracy: a pore plugged with oil and dead cells is how acne starts (verify); an illustration inside a pore, not to scale. No treatment, product or advice.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, shocked expressions, or anything that looks like a real medical photo. Style: premium medical-editorial documentary illustration, ivory page, one light skin tone, peach and rose tissue, deep green #00685F accent, navy serif type; distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 6.0,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

@@ -132,3 +132,7 @@ Nothing posts until a person has opened every source and a **board-certified der
   2. Mechanism only: oil, dead cells, the pore, C. acnes, inflammation as a process. No treatment, product, ingredient or routine advice.
   3. The end line is "Talk to a dermatologist about your own skin." plus both disclaimers.
   4. The risk-word rule still applies: no fear words over skin art. Put them on ivory plates if needed.
+
+## 12. Packaging (owner's standing rule, 10 Nov 2026)
+
+Every new episode, short and long video writes `out/packaging.json` and renders its winning 9:16 cover, following `PACKAGING.md` (a copy of the owner's rule, `films/channels/PACKAGING.md` on claude/made-with-claude-film): the one hook, 5 titles on different curiosity mechanisms, 3 thumbnail concepts, the 3 best pairings scored on 8 axes (creative judgment, not CTR), the winner and 7 checks, and a self-contained ChatGPT image prompt. The thumbnail never repeats the title and uses 0 to 4 words. Skin Sense keeps its rules: one skin tone, no disease, risk or damage words over skin art, acne only inside a pore and never on a face, no products or advice, AI illustration disclosed. The YouTube title is the winner title alone.

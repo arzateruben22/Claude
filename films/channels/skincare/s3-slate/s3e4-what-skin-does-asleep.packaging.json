@@ -1,0 +1,131 @@
+{
+ "version": 1,
+ "format": "short",
+ "status": "slate draft: titles and thumbnails are hypotheses until the script's claims are sourced (truth check held false); nothing is rendered yet",
+ "hook": "At night your skin loses water faster and its blood flow and temperature shift, a daily rhythm. (claims to source: nightly water loss, blood flow and temperature rhythms, cell division timing; some may be too weak to state)",
+ "titles": [
+  {
+   "text": "What Your Skin Does While You Sleep",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "Your Skin Works a Night Shift",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Your Skin at 3 A.M. Is Not Your Skin at Noon",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Why Your Skin Feels Different in the Morning",
+   "mechanism": "personal relevance"
+  },
+  {
+   "text": "The Hidden Night Life of Your Skin",
+   "mechanism": "unanswered question"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a light-toned forearm resting on pale linen in cool moonlit blue with a warm amber glow under the skin",
+   "composition": "arm across the lower middle, window light from the top left",
+   "lighting": "low-key blue-navy and ivory, skin warm",
+   "trigger": "calm curiosity",
+   "text": "3 a.m.",
+   "complements": "adds a time that the title does not give"
+  },
+  {
+   "id": "B",
+   "subject": "a cut-away block under a night sky gradient",
+   "composition": "block lower half, sky above",
+   "lighting": "navy to peach gradient dusk",
+   "trigger": "dusk",
+   "text": "",
+   "complements": "visual of two states"
+  },
+  {
+   "id": "C",
+   "subject": "two halves of one forearm, day and night light",
+   "composition": "split vertically",
+   "lighting": "warm left, cool right",
+   "trigger": "contrast",
+   "text": "",
+   "complements": "shows the change"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 2,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 76,
+    "curiosity": 84,
+    "clarity": 80,
+    "synergy": 82,
+    "originality": 70,
+    "accuracy": 70,
+    "mobile": 82,
+    "satisfaction": 82
+   },
+   "note": "strong pair if the claim survives sourcing"
+  },
+  {
+   "title": 0,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 72,
+    "curiosity": 80,
+    "clarity": 84,
+    "synergy": 72,
+    "originality": 66,
+    "accuracy": 76,
+    "mobile": 78,
+    "satisfaction": 84
+   },
+   "note": "clear"
+  },
+  {
+   "title": 3,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 76,
+    "clarity": 78,
+    "synergy": 76,
+    "originality": 70,
+    "accuracy": 76,
+    "mobile": 80,
+    "satisfaction": 80
+   },
+   "note": "visual contrast"
+  }
+ ],
+ "winner": {
+  "title": "Your Skin at 3 A.M. Is Not Your Skin at Noon",
+  "thumbnail": "A",
+  "thumbnailText": "3 a.m.",
+  "why": "A contradiction a viewer can feel, if the sourced claims support it; otherwise fall back to the knowledge-gap title."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": false,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point and any text inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a light-toned forearm resting on pale linen in cool moonlit blue, a warm amber glow under the skin.\nComposition: The arm across the lower middle, window light from the upper left, deep negative space above.\nLighting and treatment: Low-key blue-navy and ivory, warm skin, gentle bloom.\nMood: calm curiosity.\nText: \"3 a.m.\" in a navy serif, upper centre.\nScientific accuracy: daily rhythms in skin water loss, blood flow and temperature (verify); an illustration, not a photograph. No advice.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, shocked expressions, or anything that looks like a real medical photo. Style: premium medical-editorial documentary illustration, ivory page, one light skin tone, peach and rose tissue, deep green #00685F accent, navy serif type; distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 3.0,
+  "text": "3 a.m."
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

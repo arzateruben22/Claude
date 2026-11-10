@@ -1,0 +1,131 @@
+{
+ "version": 1,
+ "format": "short",
+ "status": "slate draft: titles and thumbnails are hypotheses until the script's claims are sourced (truth check held false); nothing is rendered yet",
+ "hook": "Every hair is already on a schedule: it grows, stops, rests, and is pushed out by its replacement. (claims to source: the three-phase cycle, typical durations, the bulge stem cells)",
+ "titles": [
+  {
+   "text": "Every Hair on You Is Scheduled to Fall Out",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "How Long Does One Hair Live?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Your Hairs Take Turns Resting",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Why a Hair Stops Growing",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "The Replacement Waiting Under Each Hair",
+   "mechanism": "unexpected consequence"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a follicle cut-away: a resting old hair above and a small glowing new one rising beneath it",
+   "composition": "the two hairs in one vertical line, centred",
+   "lighting": "amber warm glow at the new bulb",
+   "trigger": "anticipation",
+   "text": "",
+   "complements": "shows the replacement; title gives the schedule"
+  },
+  {
+   "id": "B",
+   "subject": "a single hair bulb glowing amber in a dark-ivory gradient",
+   "composition": "bulb lower third, shaft rising",
+   "lighting": "soft rim light",
+   "trigger": "wonder",
+   "text": "",
+   "complements": "pure visual"
+  },
+  {
+   "id": "C",
+   "subject": "three hairs at three heights, growing, resting, leaving",
+   "composition": "three vertical hairs left to right",
+   "lighting": "even soft light",
+   "trigger": "order",
+   "text": "3 stages",
+   "complements": "explains the three phases"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 82,
+    "synergy": 84,
+    "originality": 74,
+    "accuracy": 84,
+    "mobile": 84,
+    "satisfaction": 86
+   },
+   "note": "contradiction plus the replacement visual"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 72,
+    "curiosity": 82,
+    "clarity": 80,
+    "synergy": 72,
+    "originality": 70,
+    "accuracy": 86,
+    "mobile": 82,
+    "satisfaction": 80
+   },
+   "note": "question"
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 78,
+    "clarity": 78,
+    "synergy": 80,
+    "originality": 68,
+    "accuracy": 86,
+    "mobile": 78,
+    "satisfaction": 84
+   },
+   "note": "clear"
+  }
+ ],
+ "winner": {
+  "title": "Every Hair on You Is Scheduled to Fall Out",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "A true and slightly startling statement, paid off by the replacement already waiting."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": false,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point and any text inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a hair follicle cut-away: a resting old hair above and a small glowing new hair rising beneath it.\nComposition: The two hairs in one vertical line, centred, ivory negative space left and right.\nLighting and treatment: Warm amber glow at the new bulb, soft rim light, peach tissue.\nMood: anticipation.\nText: No text.\nScientific accuracy: hairs cycle through growth, regression and rest, and a new hair replaces the old (verify); an illustration, not to scale.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, shocked expressions, or anything that looks like a real medical photo. Style: premium medical-editorial documentary illustration, ivory page, one light skin tone, peach and rose tissue, deep green #00685F accent, navy serif type; distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 4.0,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

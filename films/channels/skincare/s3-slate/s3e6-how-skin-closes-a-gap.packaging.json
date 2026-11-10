@@ -1,0 +1,131 @@
+{
+ "version": 1,
+ "format": "short",
+ "status": "slate draft: titles and thumbnails are hypotheses until the script's claims are sourced (truth check held false); nothing is rendered yet",
+ "hook": "Skin keeps remodelling a closed gap for months after it looks finished. (claims to source: the four overlapping phases, how long remodelling lasts)",
+ "titles": [
+  {
+   "text": "Your Skin Is Still Healing After It Looks Healed",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "How Skin Seals a Gap in Four Steps",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "The Quiet Months After a Cut Closes",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "What Skin Does the Moment It's Opened",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Four Steps Skin Takes to Close Itself",
+   "mechanism": "knowledge gap"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a cut-away skin block with a thin seam closing, fine rose-gold threads knitting across it",
+   "composition": "the seam at the centre, threads glowing softly",
+   "lighting": "warm side light, no blood colours",
+   "trigger": "quiet repair",
+   "text": "Month 3",
+   "complements": "adds the time the title hints"
+  },
+  {
+   "id": "B",
+   "subject": "a neat row of four small blocks, each a step of the seam closing",
+   "composition": "four vertical blocks",
+   "lighting": "even soft light",
+   "trigger": "order",
+   "text": "",
+   "complements": "shows the four steps"
+  },
+  {
+   "id": "C",
+   "subject": "a single rose-gold thread crossing a seam in extreme close-up",
+   "composition": "thread diagonal",
+   "lighting": "shallow depth",
+   "trigger": "delicacy",
+   "text": "",
+   "complements": "pure mystery"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 80,
+    "synergy": 84,
+    "originality": 76,
+    "accuracy": 70,
+    "mobile": 82,
+    "satisfaction": 84
+   },
+   "note": "strong if remodelling duration is sourced"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 74,
+    "curiosity": 80,
+    "clarity": 86,
+    "synergy": 76,
+    "originality": 68,
+    "accuracy": 84,
+    "mobile": 80,
+    "satisfaction": 82
+   },
+   "note": "clear promise"
+  },
+  {
+   "title": 3,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 78,
+    "clarity": 76,
+    "synergy": 78,
+    "originality": 72,
+    "accuracy": 84,
+    "mobile": 80,
+    "satisfaction": 80
+   },
+   "note": "curious"
+  }
+ ],
+ "winner": {
+  "title": "Your Skin Is Still Healing After It Looks Healed",
+  "thumbnail": "A",
+  "thumbnailText": "Month 3",
+  "why": "A contradiction that is true of remodelling, with a thumbnail that adds a time and no injury."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": false,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point and any text inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a cut-away skin block with a thin seam closing, fine rose-gold threads knitting across it.\nComposition: The seam at the centre of the frame, ivory negative space; no injury on any person and no blood colours.\nLighting and treatment: Warm side light, shallow depth of field, peach and rose, gentle gold glow on the threads.\nMood: quiet repair.\nText: \"Month 3\" in a navy serif, upper centre.\nScientific accuracy: wound repair has overlapping phases and remodelling continues for months (verify); an illustration inside a block, not to scale.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, shocked expressions, or anything that looks like a real medical photo. Style: premium medical-editorial documentary illustration, ivory page, one light skin tone, peach and rose tissue, deep green #00685F accent, navy serif type; distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 5.0,
+  "text": "Month 3"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
