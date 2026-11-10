@@ -40,3 +40,12 @@ RESULTS = {
 if __name__ == "__main__":
     for k, v in RESULTS.items():
         print(k, v)
+
+
+# ---- PREM-like real Earth: speed at the centre from v = sqrt(2 * integral g dr) (rough; g anchors from PREM) ----
+# (radius km, g m/s^2): centre, inner-core boundary, core-mantle boundary, mid-mantle, surface
+_G = [(0, 0.0), (1221.5, 4.40), (3480.0, 10.68), (4925.0, 10.05), (6371.0, 9.82)]
+PREM_INT_G = sum((a[1] + b[1]) / 2 * (b[0] - a[0]) * 1e3 for a, b in zip(_G, _G[1:]))
+PREM_V_CENTRE_KMS = (2 * PREM_INT_G) ** 0.5 / 1e3
+if __name__ == "__main__":
+    print("PREM-like: integral g dr = %.3e m2/s2, v_centre = %.2f km/s (uniform Earth 7.91)" % (PREM_INT_G, PREM_V_CENTRE_KMS))

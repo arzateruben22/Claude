@@ -13,7 +13,7 @@ Hook lines marked (=) are the long film's own opening line.
 4. Hook: "The oceans are sliding toward the equator." / Outro: "And the weather is about to change completely."
 5. Hook: "Storms are turning faster, and the days are six hours long." / Outro: "And the calendar is about to break."
 6. Hook: "Now a year has more than a thousand days in it." / Outro: "And the days keep getting shorter."
-7. Hook: "Three hours, then two: a day is shorter than a movie." / Outro: "And at one and a half hours, you start to feel lighter."
+7. Hook: "Three hours, then two: a day is as long as a movie." / Outro: "And at an hour and a half, you are almost weightless."
 8. Hook: "A day now lasts about an hour and a half." / Outro: "One more nudge, and something changes completely."
 
 ## Season 4: What If You Fell Into a Hole Through the Earth?
@@ -32,6 +32,6 @@ Hook lines marked (=) are the long film's own opening line.
 3. Hook: "It's minus eighty degrees, and the clouds are gone: they've frozen out of the sky." / Outro: "And then the air itself starts to lose a gas."
 4. Hook: "The air has just lost its first gas." / Outro: "And at minus one hundred and ninety-one, the air itself starts to turn to liquid."
 5. Hook: "The sky is raining." / Outro: "And a few last gases are still holding on."
-6. Hook: "Only a few traces of gas are left." / Outro: "But the coldest place of all isn't on Earth."
+6. Hook: "Only a few traces of gas are left." / Outro: "But the coldest natural place we know isn't on Earth."
 7. Hook: "Leave the Earth, and you find a few places this cold." / Outro: "But the floor is still ahead, and the number can't reach it."
 8. Hook: "You are almost at the bottom of the scale." / Outro: "But even the coldest thing in the universe is hiding something."
