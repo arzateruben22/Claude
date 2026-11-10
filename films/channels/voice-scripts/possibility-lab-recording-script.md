@@ -9,7 +9,7 @@ re-check the fact (the on-screen captions are rebuilt from your recording, so th
 - **Phone:** Voice Memos is fine. Hold it **about a hand's width (15–20 cm) from your mouth**, slightly to the side so your breath doesn't hit it. Same spot every session.
 - **One file per episode.** Read the lines in order with a **2-second pause** between them. Flubbed one? Pause, then read **that whole line again**; we keep the last take.
 - Start every file by saying its name, e.g. *"Possibility Lab, Season 2, Episode 1"*, then pause and begin.
-- **Name the files** like `pl-s2e01.m4a` … `pl-s2e06.m4a`, `pl-spin.m4a` (Season 3), `pl-s4.m4a`, `pl-s5.m4a` (Seasons 4 and 5), `pl-s3-parts.m4a`, `pl-s4-parts.m4a`, `pl-s5-parts.m4a` and `pl-part-closers.m4a` (the short parts' lines, below).
+- **Name the files** like `pl-s2e01.m4a` … `pl-s2e06.m4a`, `pl-s2-long.m4a` (Season 2 long video's extra lines), `pl-spin.m4a` (Season 3), `pl-s4.m4a`, `pl-s5.m4a` (Seasons 4 and 5), `pl-s3-parts.m4a`, `pl-s4-parts.m4a`, `pl-s5-parts.m4a` and `pl-part-closers.m4a` (the short parts' lines, below).
 - **Upload** them on GitHub here: https://github.com/arzateruben22/claude/upload/claude/whatif-s2/films/channels/whatif/voice-owner
 
 ### How it should sound
@@ -128,6 +128,27 @@ You're a friend working out a wild puzzle out loud, curious and a little amused,
 **7.** Catching it is the real problem. Most of a flash becomes heat, light and sound, and each bolt is over in a split **second**.
 
 **8.** Next envelope: **your** what-if.
+
+
+## Season 2 long video: the extra lines
+
+The Season 2 long video reuses your six episodes above, joined into one story so it runs past 8 minutes (needed for
+mid-roll ads). Record only these seven extra pieces: an opening, five bridges and a finale. File: `pl-s2-long.m4a`.
+The bridges are cliffhangers, so lift the last question. Let the finale build slowly, and enjoy the "Wait, what?".
+
+**Opening.** Six questions. Each one sounds impossible, and each has an answer you can work out on the back of an envelope. One simple calculation, again and again, beats gut feeling. Let's open the first **envelope**.
+
+**Bridge 1.** Twenty-six years to walk to the Moon, a working day at a time. Now imagine everyone on Earth holding hands. How far would that chain **reach**?
+
+**Bridge 2.** A chain that wraps the Earth about three hundred times. Let's go back to a single loop around the planet, and one **rope**.
+
+**Bridge 3.** Lift that rope one meter, and you need only about six meters more, on a planet of any size. Now for a number almost too big to say: a shuffled **deck**.
+
+**Bridge 4.** Sixty-eight digits, from a single deck of cards. Now something huge in size instead: all the water on Earth, gathered into one **ball**.
+
+**Bridge 5.** A ball of water fourteen hundred kilometers across. Now something fast and wild: could we catch all the lightning on **Earth**?
+
+**Finale.** Six envelopes. Here they are, from the smallest surprise to the biggest. Walking to the Moon: twenty-six years, long, but easy to believe. A whole year of lightning: roughly five days of the world's electricity. All the water in one ball: fourteen hundred kilometers. Everyone holding hands: three hundred laps around the planet. A shuffled deck: an answer with sixty-eight digits. And the rope: just six more meters, whatever the size of the planet. **Wait, what?**
 
 
 ---
