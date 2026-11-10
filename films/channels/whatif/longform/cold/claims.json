@@ -60,7 +60,7 @@
  {
   "id": "c6",
   "sentence": "in air, CO2 is a trace, so it frosts out at about minus 140",
-  "claim": "HEDGED: CO2 is ~0.04% of air, so its partial pressure is ~40 Pa and the frost point is far below -78.5 C; the exact value is about -140 C by vapour-pressure data and is a derived estimate.",
+  "claim": "HEDGED: CO2 is ~0.04% of air (partial pressure ~40 Pa), so its frost point is about -140 to -143 C, not the pure-gas -78.5 C; derived from the vapour-pressure curve, a person must confirm.",
   "source_url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=4",
   "source_title": "NIST Chemistry WebBook, carbon dioxide (vapour pressure)",
   "verified_via": "not read",
@@ -71,10 +71,10 @@
  },
  {
   "id": "c7",
-  "sentence": "coldest measured, minus 89.2 at Vostok in 1983 (about 184 K)",
-  "claim": "The lowest air temperature recorded on Earth is -89.2 C at Vostok Station, Antarctica, on 21 July 1983.",
-  "source_url": "https://wmo.int/media/news/wmo-recognizes-new-record-low-temperature-antarctica",
-  "source_title": "WMO, extremes archive",
+  "sentence": "coldest weather-station air temperature -89.2 at Vostok in 1983; satellites about -98 at the snow surface",
+  "claim": "The lowest air temperature recorded at a weather station is -89.2 C at Vostok, Antarctica, 21 July 1983 (WMO archive of extremes: wmo.asu.edu). Satellites have read about -98 C at the snow surface (not a station air temperature).",
+  "source_url": "",
+  "source_title": "(source not yet found: a person must locate it)",
   "verified_via": "not read",
   "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the page and confirm it.",
   "accessed": "2026-11-10",
@@ -83,8 +83,8 @@
  },
  {
   "id": "c8",
-  "sentence": "oxygen liquid at -183; argon -186; nitrogen -196; hydrogen -253; helium -269",
-  "claim": "Boiling points at 1 atm: O2 90.2 K (-183.0 C), Ar 87.3 K (-185.9 C), N2 77.4 K (-195.8 C), H2 20.3 K (-252.9 C), He-4 4.22 K (-268.9 C).",
+  "sentence": "a jar of pure oxygen boils at -183 (pure-substance points)",
+  "claim": "Boiling points at 1 atm of the PURE substances: O2 90.2 K (-183.0 C), N2 77.4 K (-195.8 C), H2 20.3 K (-252.9 C), He-4 4.22 K (-268.9 C). Real air is a mixture (c22-c24).",
   "source_url": "https://webbook.nist.gov/chemistry/",
   "source_title": "NIST Chemistry WebBook, phase-change data",
   "verified_via": "not read",
@@ -154,12 +154,12 @@
  },
  {
   "id": "c14",
-  "sentence": "coldest anything has been: 38 trillionths of a degree, atoms held by lasers and magnets",
-  "claim": "In 2021 a cloud of atoms in a microgravity-simulating drop tower was cooled to ~38 picokelvin (a reported record).",
-  "source_url": "https://www.nature.com/articles/nature.2021.00000",
-  "source_title": "Reported lab record, ~38 pK (find primary paper)",
+  "sentence": "a cloud of atoms, dropped down a tower and slowed with magnetic fields, moved as if it were 38 trillionths of a degree above absolute zero",
+  "claim": "In 2021 a cloud of atoms in free fall in the Bremen drop tower, slowed with a magnetic lens, reached an effective expansion temperature of 38 pK. Likely primary paper: Deppner et al., Phys. Rev. Lett. 127, 100401 (2021).",
+  "source_url": "",
+  "source_title": "(source not yet found: a person must locate it)",
   "verified_via": "not read",
-  "note": "OPEN: the link is a placeholder; a person must find the primary paper and confirm the number, year and method.",
+  "note": "OPEN: no URL given on purpose; a person must open the PRL paper and confirm number, year and wording.",
   "accessed": "2026-11-10",
   "status": "TODO open link",
   "kind": "source"
@@ -190,15 +190,15 @@
  },
  {
   "id": "c17",
-  "sentence": "the Earth's own heat keeps the deep ocean liquid and ice insulates; deep water could stay liquid a long while",
-  "claim": "HEDGED: Earth's geothermal heat flux (~0.09 W/m2) and ice's low conductivity slow freezing at the sea floor; no timescale is claimed.",
-  "source_url": "https://www.usgs.gov/",
-  "source_title": "USGS, Earth heat flow (find specific page)",
-  "verified_via": "not read",
-  "note": "OPEN: candidate, hedged, with no number given in the film.",
+  "sentence": "minutes of film: ice only centimetres thick; tens of thousands of years to freeze the oceans through",
+  "claim": "HEDGED: a lid of ice slows cooling; geothermal heat is small, so with no Sun the oceans would take on the order of tens of thousands of years to freeze through (rough Stefan-law estimate, not sourced).",
+  "source_url": "",
+  "source_title": "(source not yet found: a person must locate it)",
+  "verified_via": "calculation",
+  "note": "ESTIMATE: rough Stefan-law check by the coordinator; a person must redo it. No source claimed.",
   "accessed": "2026-11-10",
   "status": "TODO open link",
-  "kind": "source"
+  "kind": "derivation"
  },
  {
   "id": "c18",
@@ -214,10 +214,10 @@
  },
  {
   "id": "c19",
-  "sentence": "rubber goes stiff and many metals turn brittle in extreme cold",
-  "claim": "HEDGED: elastomers pass a glass transition and many body-centred-cubic steels show a ductile-to-brittle transition at low temperature.",
-  "source_url": "https://www.britannica.com/science/glass-transition",
-  "source_title": "Encyclopaedia Britannica, glass transition (find steel page)",
+  "sentence": "rubber goes stiff and some metals, like ordinary steel, turn brittle",
+  "claim": "HEDGED: body-centred-cubic steels show a ductile-to-brittle transition at low temperature; elastomers stiffen at their glass transition. Face-centred-cubic metals do not become brittle.",
+  "source_url": "",
+  "source_title": "(source not yet found: a person must locate it)",
   "verified_via": "not read",
   "note": "OPEN: general statement, hedged; no temperature is given.",
   "accessed": "2026-11-10",
@@ -238,8 +238,8 @@
  },
  {
   "id": "c21",
-  "sentence": "mercury at about 4 K carries a current for years without fading",
-  "claim": "Mercury becomes superconducting at 4.15 K (Onnes, 1911); persistent currents in superconducting rings decay on timescales exceeding years.",
+  "sentence": "a ring of lead below about seven kelvin carries a current for years",
+  "claim": "Lead becomes superconducting at about 7.2 K; persistent currents in a lead ring (Collins, 1950s) were observed for years without measurable decay. (Mercury, 4.15 K, Onnes 1911, was the first superconductor.)",
   "source_url": "https://www.britannica.com/science/superconductivity",
   "source_title": "Encyclopaedia Britannica, superconductivity",
   "verified_via": "not read",
@@ -247,5 +247,38 @@
   "accessed": "2026-11-10",
   "status": "TODO open link",
   "kind": "source"
+ },
+ {
+  "id": "c22",
+  "sentence": "air starts to condense at about -191; first drops oxygen-rich and pale blue; fully liquid by about -194",
+  "claim": "Air at 1 atm: dew point ~82.1 K (-191.1 C), bubble point ~79.0 K (-194.2 C) in the calc.py model; the first liquid is oxygen-rich.",
+  "source_title": "Derivation (calc.py): rough Clausius-Clapeyron + Raoult model using NIST normal boiling points and heats of vaporisation; to be redone from the NIST WebBook vapour-pressure curves",
+  "verified_via": "calculation",
+  "accessed": "2026-11-10",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "ESTIMATE: rough ideal-mixture model, not a source; OPEN until a person redoes it from NIST curves."
+ },
+ {
+  "id": "c23",
+  "sentence": "about four fifths still gas at -196, about a third at -203, under 1% at -223",
+  "claim": "Fraction of the air still gas: -196 C 0.82, -200 C 0.50, -203 C 0.34, -210 C 0.12 (nitrogen freezes near -210), -216 C 0.04, -223 C 0.007 (calc.py GAS_LEFT).",
+  "source_title": "Derivation (calc.py): rough Clausius-Clapeyron + Raoult model using NIST normal boiling points and heats of vaporisation; to be redone from the NIST WebBook vapour-pressure curves",
+  "verified_via": "calculation",
+  "accessed": "2026-11-10",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "ESTIMATE: rough ideal-mixture model, not a source; OPEN until a person redoes it from NIST curves."
+ },
+ {
+  "id": "c24",
+  "sentence": "neon lasts to about 12 K, hydrogen about 6 K, helium below 1 K",
+  "claim": "Trace-gas frost points at their partial pressures: Ne 1.8 Pa -> ~11 K, H2 0.056 Pa -> ~5.5 K, He 0.53 Pa -> ~0.7 K (calc.py TRACE_FROST_K; helium needs a better vapour-pressure curve).",
+  "source_title": "Derivation (calc.py): rough Clausius-Clapeyron + Raoult model using NIST normal boiling points and heats of vaporisation; to be redone from the NIST WebBook vapour-pressure curves",
+  "verified_via": "calculation",
+  "accessed": "2026-11-10",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "ESTIMATE: rough ideal-mixture model, not a source; OPEN until a person redoes it from NIST curves."
  }
 ]

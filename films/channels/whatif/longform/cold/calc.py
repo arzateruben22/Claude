@@ -30,3 +30,30 @@ RESULTS = {
 if __name__ == "__main__":
     for k, v in RESULTS.items():
         print(k, v)
+
+
+# ---- v2: air is a MIXTURE (Clausius-Clapeyron + Raoult; rough estimates, redo from NIST curves) ----
+import math as _m
+_R = 8.314462618
+def _psat(T, Lv, Tb, P0=101325.0):
+    return P0 * _m.exp(-Lv / _R * (1 / T - 1 / Tb))
+_N2 = (5570.0, 77.36); _O2 = (6820.0, 90.19)
+_xn, _xo = 0.788, 0.212            # N2/O2 only (argon dissolves in the liquid)
+def _mix_psat(T):                  # liquid ~ air composition
+    return _xn * _psat(T, *_N2) + _xo * _psat(T, *_O2)
+def _solve(f, lo, hi):
+    for _ in range(80):
+        mid = (lo + hi) / 2
+        (lo, hi) = (mid, hi) if f(mid) < 0 else (lo, mid)
+    return (lo + hi) / 2
+BUBBLE_K = _solve(lambda T: _mix_psat(T) - 101325.0, 60, 100)
+# dew point: sum(y_i P / Psat_i) = 1 at total P = 1 atm with y = air
+DEW_K = _solve(lambda T: -(_xn * 101325 / _psat(T, *_N2) + _xo * 101325 / _psat(T, *_O2) - 1.0), 60, 100)
+GAS_LEFT = {c: round(min(1.0, _mix_psat(c + 273.15) / 101325.0), 3) for c in (-196, -200, -203, -210, -216, -223)}
+PARTIAL_PA = {"Ne": 18.2e-6 * 101325, "H2": 0.55e-6 * 101325, "He": 5.24e-6 * 101325}
+_TR = {"Ne": (1730.0, 27.07), "H2": (900.0, 20.28), "He": (83.0, 4.22)}
+TRACE_FROST_K = {g: round(_solve(lambda T, g=g: _psat(T, *_TR[g]) - PARTIAL_PA[g], 0.3, 40), 2) for g in _TR}
+if __name__ == "__main__":
+    print("bubble", round(BUBBLE_K, 1), "K =", round(BUBBLE_K - 273.15, 1), "C; dew", round(DEW_K, 1), "K =", round(DEW_K - 273.15, 1), "C")
+    print("gas left (fraction of air) at C:", GAS_LEFT)
+    print("trace partial Pa:", {k: round(v, 3) for k, v in PARTIAL_PA.items()}, "frost K:", TRACE_FROST_K)
