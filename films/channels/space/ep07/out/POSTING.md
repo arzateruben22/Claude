@@ -1,4 +1,4 @@
-# Posting sheet: One More Orbit · Season 2 · Episode 1, "Trees or stars?"
+# Posting sheet: One More Orbit · Season 2 · Episode 1, "Earth Probably Has More Trees Than the Milky Way Has Stars"
 
 Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel). **Before posting, a person opens every source link** (the builder read the pages; no claim is person-verified yet).
 
@@ -7,14 +7,14 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-Trees or stars? | One More Orbit · Season 2 · Episode 1
+Earth Probably Has More Trees Than the Milky Way Has Stars
 
 **Description**
 
 ```
-More trees, or more stars? Guess first.
+Probably more trees than stars in our galaxy. Guess first.
 
-There are more trees on Earth than stars in our galaxy. Big numbers hide in ordinary places.
+There are probably more trees on Earth than stars in our galaxy, both counts being estimates. Big numbers hide in ordinary places.
 
 Series: One More Orbit · Season 2 · Episode 1.
 
@@ -57,7 +57,7 @@ Sources
 **Caption**
 
 ```
-More trees, or more stars? Guess first. #space #astronomy #learnontiktok #science #cosmos
+Probably more trees than stars in our galaxy. Guess first. #space #astronomy #learnontiktok #science #cosmos
 ```
 
 **Pinned comment** (150-character limit)
@@ -70,9 +70,9 @@ Sources: science.nasa.gov; news.yale.edu. Synthetic (AI) voice; code-rendered an
 **Caption**
 
 ```
-More trees, or more stars? Guess first.
+Probably more trees than stars in our galaxy. Guess first.
 
-There are more trees on Earth than stars in our galaxy. Big numbers hide in ordinary places.
+There are probably more trees on Earth than stars in our galaxy, both counts being estimates. Big numbers hide in ordinary places.
 
 One More Orbit · Season 2 · Episode 1.
 
