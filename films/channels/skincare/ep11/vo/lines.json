@@ -69,6 +69,17 @@
    "sha256": "44380821222782df5960098b542e126df35e05a7cf6631e365605343c8aa9a69"
   },
   {
+   "id": "vo05c",
+   "beat": "cta",
+   "text": "Okay, tiny pause! If your skin just got more interesting, tap like and follow.",
+   "stars": [],
+   "phonemes": "əʊkˈeɪ, tˈaɪni pˈɔːz! ɪf jɔː skˈɪn dʒˈʌst ɡɒt mˈɔːɹ ˈɪntɹɛstɪŋ, tˈap lˈaɪk and fˈɒləʊ.",
+   "speed": 1.22,
+   "file": "05c.wav",
+   "dur": 3.817,
+   "sha256": "d6ad40389b61f9a2db792b0f323979f76fa59a8e9580fd0ee201ee6d6dff550f"
+  },
+  {
    "id": "vo06",
    "beat": "takeaway",
    "text": "So your skin's wall is bricks and fats, working as a team. The fats are the seal.",

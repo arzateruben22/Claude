@@ -140,7 +140,7 @@
      "heard": true
     },
     {
-     "w": "tough",
+     "w": "dead",
      "start": 3.735,
      "end": 4.0,
      "heard": true
@@ -770,6 +770,97 @@
      "w": "mortar.",
      "start": 9.085,
      "end": 9.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05c",
+   "text": "Okay, tiny pause! If your skin just got more interesting, tap like and follow.",
+   "heard": "Okay tiny pause. If your skin just got more interesting tap like and follow.",
+   "words": [
+    {
+     "w": "Okay,",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 0.38,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "pause!",
+     "start": 0.75,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "If",
+     "start": 1.445,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.475,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 1.505,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 1.93,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "got",
+     "start": 2.11,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 2.21,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "interesting,",
+     "start": 2.575,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 2.955,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 3.17,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.365,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 3.505,
+     "end": 3.76,
      "heard": true
     }
    ]

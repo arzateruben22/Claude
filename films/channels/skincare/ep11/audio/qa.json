@@ -1,38 +1,31 @@
 {
- "compose_s": 5.4,
- "master_s": 8.2,
+ "compose_s": 7.8,
+ "master_s": 11.5,
  "master": {
-  "gain_db": 1.52,
+  "gain_db": 1.61,
   "iterations": 2,
   "lufs": -14.07,
   "true_peak_db": -2.0,
   "ceiling_db": -2.0,
-  "limiting_max_db": -3.59,
+  "limiting_max_db": -4.13,
   "aac": {
    "lufs": -14.1,
    "true_peak_db": -2.0,
-   "lra": 3.0
+   "lra": 2.9
   },
   "stems_sum_error_db": -240.0
  },
  "sync": {
   "per_kind": {
    "label": {
-    "n": 7,
-    "max_ms": 1.0,
-    "median_ms": 0.0,
+    "n": 2,
+    "max_ms": 5.0,
+    "median_ms": 2.5,
     "slow": false,
     "pass": true
    },
-   "scale.jump": {
-    "n": 7,
-    "max_ms": 2.0,
-    "median_ms": 0.0,
-    "slow": true,
-    "pass": true
-   },
    "section": {
-    "n": 6,
+    "n": 7,
     "max_ms": 0.0,
     "median_ms": 0.0,
     "slow": true,
@@ -47,8 +40,8 @@
    },
    "swell": {
     "n": 1,
-    "max_ms": 52.0,
-    "median_ms": 52.0,
+    "max_ms": 46.0,
+    "median_ms": 46.0,
     "slow": true,
     "pass": true
    }
@@ -70,38 +63,17 @@
     "err_ms": -0.0
    },
    {
-    "kind": "scale.jump",
-    "tag": "c4",
-    "show": 8.5,
-    "method": "shape",
-    "err_ms": 0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l1",
-    "show": 9.9333,
-    "method": "rise",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l2",
-    "show": 11.9667,
-    "method": "rise",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l3",
-    "show": 13.1,
-    "method": "rise",
-    "err_ms": 0.0
-   },
-   {
     "kind": "section",
     "tag": null,
     "show": 16.6333,
     "method": "peak",
+    "err_ms": -0.0
+   },
+   {
+    "kind": "label",
+    "tag": "l0",
+    "show": 18.2667,
+    "method": "rise",
     "err_ms": -0.0
    },
    {
@@ -112,25 +84,11 @@
     "err_ms": -0.0
    },
    {
-    "kind": "scale.jump",
-    "tag": "c9",
-    "show": 27.1333,
-    "method": "shape",
-    "err_ms": -0.0
-   },
-   {
     "kind": "label",
-    "tag": "l4",
-    "show": 32.9333,
+    "tag": "l1",
+    "show": 37.6,
     "method": "rise",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "scale.jump",
-    "tag": "c12",
-    "show": 37.5,
-    "method": "shape",
-    "err_ms": -0.0
+    "err_ms": 5.0
    },
    {
     "kind": "section",
@@ -140,39 +98,11 @@
     "err_ms": 0.0
    },
    {
-    "kind": "scale.jump",
-    "tag": "c14",
-    "show": 41.2,
-    "method": "shape",
-    "err_ms": -0.0
-   },
-   {
     "kind": "swell",
     "tag": "whoa",
     "show": 41.2,
     "method": "shape",
-    "err_ms": 52.0
-   },
-   {
-    "kind": "scale.jump",
-    "tag": "c17",
-    "show": 44.1333,
-    "method": "shape",
-    "err_ms": -2.0
-   },
-   {
-    "kind": "label",
-    "tag": "l5",
-    "show": 45.6333,
-    "method": "rise",
-    "err_ms": -0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l6",
-    "show": 49.7667,
-    "method": "rise",
-    "err_ms": -0.0
+    "err_ms": -46.0
    },
    {
     "kind": "section",
@@ -182,37 +112,23 @@
     "err_ms": 0.0
    },
    {
-    "kind": "scale.jump",
-    "tag": "c20",
-    "show": 52.1,
-    "method": "shape",
-    "err_ms": 0.0
-   },
-   {
-    "kind": "scale.jump",
-    "tag": "c21",
-    "show": 53.8,
-    "method": "shape",
-    "err_ms": 0.0
-   },
-   {
-    "kind": "label",
-    "tag": "l7",
-    "show": 54.6,
-    "method": "rise",
-    "err_ms": -1.0
+    "kind": "section",
+    "tag": null,
+    "show": 56.3333,
+    "method": "peak",
+    "err_ms": -0.0
    },
    {
     "kind": "section",
     "tag": null,
-    "show": 59.1667,
+    "show": 63.6667,
     "method": "peak",
     "err_ms": -0.0
    },
    {
     "kind": "signature",
     "tag": "end",
-    "show": 59.4667,
+    "show": 63.9667,
     "method": "rise",
     "err_ms": 11.0
    }
@@ -221,7 +137,7 @@
  "picture_sync": [],
  "under_voice": {
   "music_lufs": -29.2,
-  "dialog_lufs": -13.7,
+  "dialog_lufs": -13.6,
   "gap_lu": 15.5,
   "pass": true
  },

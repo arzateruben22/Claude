@@ -7,7 +7,7 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-The brick wall on your skin | Skin Sense S2 · Ep 5
+The Bricks Aren't What Keep Water In
 
 **Description**
 
@@ -23,7 +23,7 @@ Sources
 2. The skin barrier is the first line of protection against pathogens, allergens and transepidermal water loss. — NIH: https://pubmed.ncbi.nlm.nih.gov/42955253/
 3. Fingerprint ridges form in waves spreading from variable initiation sites, before birth. — NIH: https://pubmed.ncbi.nlm.nih.gov/36764291/
 
-Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code, no stock footage. Every number's source is listed in this description.
+Narration: synthetic voice (AI). Illustrations: AI-generated and 3-D animation made in code, no stock footage. Every number's source is listed in this description.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
@@ -50,7 +50,7 @@ Sources
 **Caption**
 
 ```
-Why don't you dry out? So your skin's wall is bricks and fats, working as a team. Education, not medical advice. #skincare #skinscience #learnontiktok #dermatology #skinbarrier
+Why don't you dry out? So your skin's wall is bricks and fats, working as a team. Education, not medical advice. #fyp #skincare #skinscience #learnontiktok #dermatology #skinbarrier
 ```
 
 **Pinned comment + replies (full sources)**
@@ -76,7 +76,7 @@ Sources in the first comment. AI voice and AI-generated illustrations.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
-#skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
+#fyp #skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
 ```
 
 **First comment** (2,200-character limit)

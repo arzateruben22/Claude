@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "The bricks of your skin's outer wall are not what holds water in: the fats between them do that work.",
+ "titles": [
+  {
+   "text": "The Bricks Aren't What Keep Water In",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Why Don't You Dry Out?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Your Skin Is a Brick Wall. The Fats Hold the Water.",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "A Scientist Called Your Skin a Brick Wall",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "The Seal in Your Skin Isn't the Cells",
+   "mechanism": "unexpected consequence"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a section of the skin's outer wall: staggered flat, smooth peach cells (the bricks) in golden fat (the mortar), a few clear water beads below the wall",
+   "composition": "the wall as a horizontal band across the middle third, ivory negative space above and below",
+   "lighting": "warm light from the side, the gold lipid lines luminous, soft depth of field",
+   "trigger": "the surprise that the obvious part isn't the answer",
+   "text": "",
+   "complements": "the title makes the claim; the picture shows which part is working"
+  },
+  {
+   "id": "B",
+   "subject": "two flat cells with a thin gold seam, a water bead pressing on it",
+   "composition": "close macro, seam diagonal",
+   "lighting": "warm glow",
+   "trigger": "tiny barrier",
+   "text": "The mortar",
+   "complements": "names the hero"
+  },
+  {
+   "id": "C",
+   "subject": "a forearm with a few beads of water on light skin",
+   "composition": "arm across the lower third",
+   "lighting": "soft",
+   "trigger": "familiar",
+   "text": "Why not dry?",
+   "complements": "the question"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 84,
+    "synergy": 84,
+    "originality": 76,
+    "accuracy": 86,
+    "mobile": 84,
+    "satisfaction": 84
+   },
+   "note": "claim and the evidence image"
+  },
+  {
+   "title": 2,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 76,
+    "curiosity": 82,
+    "clarity": 80,
+    "synergy": 82,
+    "originality": 74,
+    "accuracy": 86,
+    "mobile": 80,
+    "satisfaction": 82
+   },
+   "note": "cause named"
+  },
+  {
+   "title": 1,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 72,
+    "curiosity": 78,
+    "clarity": 84,
+    "synergy": 70,
+    "originality": 62,
+    "accuracy": 90,
+    "mobile": 84,
+    "satisfaction": 78
+   },
+   "note": "plain question"
+  }
+ ],
+ "winner": {
+  "title": "The Bricks Aren't What Keep Water In",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The video proves exactly this twist; the thumbnail shows the gold mortar doing the holding without repeating the claim."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "skin-sense-011-cover.jpg",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a cross-section of the outer skin wall: staggered flat, pale peach cells like bricks (light skin tone, about RGB 236, 190, 160) with golden fat between them as thin luminous seams, and a few clear water beads below the wall.\nComposition: the wall fills the lower two thirds, the golden seams are the focal lines, ivory negative space above.\nLighting and treatment: warm side light, soft depth of field, ivory ground (#F7EFE3), deep green #00685F as the only accent.\nMood: quiet surprise.\nText: No text.\nScientific accuracy: in the skin's outer layer, flat cells are the bricks and stacked fat sheets between them are the mortar; the fats are what water cannot easily cross (Elias's bricks-and-mortar model, verify); an illustration, not to scale, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 12.0,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

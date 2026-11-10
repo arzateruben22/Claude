@@ -69,6 +69,17 @@
    "sha256": "bf46e8a7bb536596ee1c5d0ed08187e8d1b6b92b44b97cc0ba81c8054eb50940"
   },
   {
+   "id": "vo05c",
+   "beat": "cta",
+   "text": "Quick thing: like and follow. Your skin has plenty more secrets.",
+   "stars": [],
+   "phonemes": "kwˈɪk θˈɪŋ: lˈaɪk and fˈɒləʊ. jɔː skˈɪn hɐz plˈɛnti mˈɔː sˈiːkɹɪts.",
+   "speed": 1.05,
+   "file": "05c.wav",
+   "dur": 3.469,
+   "sha256": "6a184770b7d4fae606acabc06e9199fd8e75caa1f11c1307e6ca2d77a9f543a0"
+  },
+  {
    "id": "vo06",
    "beat": "takeaway",
    "text": "So a fingerprint is a pattern of waves, set before birth. Yours is one of endless variations.",
