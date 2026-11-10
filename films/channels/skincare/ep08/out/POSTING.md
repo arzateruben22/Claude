@@ -7,7 +7,7 @@ Generated from the script and claims. Turn on each platform's AI / synthetic con
 ## YouTube Shorts
 **Title**
 
-Why fingers wrinkle in water | Skin Sense S2 · Ep 2
+Your Fingers Wrinkle on Orders From Your Nerves
 
 **Description**
 
@@ -26,7 +26,7 @@ Sources
 5. A later study (n = 40) found wrinkling did not improve dexterity in handling wet objects nor affect touch sensitivity. — NIH: https://pubmed.ncbi.nlm.nih.gov/24416318/
 6. Sweat evaporation from the skin surface plays a critical role in human thermoregulation. — NIH: https://pubmed.ncbi.nlm.nih.gov/31608304/
 
-Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code, no stock footage. Every number's source is listed in this description.
+Narration: synthetic voice (AI). Illustrations: AI-generated and 3-D animation made in code, no stock footage. Every number's source is listed in this description.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
@@ -56,7 +56,7 @@ Sources
 **Caption**
 
 ```
-Why do fingers wrinkle? So wrinkled fingers are your nerves at work. Education, not medical advice. #skincare #skinscience #learnontiktok #dermatology #skinbarrier
+Why do fingers wrinkle? So wrinkled fingers are your nerves at work. Education, not medical advice. #fyp #skincare #skinscience #learnontiktok #dermatology #skinbarrier
 ```
 
 **Pinned comment + replies (full sources)**
@@ -86,7 +86,7 @@ Sources in the first comment. AI voice and AI-generated illustrations.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
-#skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
+#fyp #skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
 ```
 
 **First comment** (2,200-character limit)

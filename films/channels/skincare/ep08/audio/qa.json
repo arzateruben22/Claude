@@ -1,6 +1,6 @@
 {
- "compose_s": 7.6,
- "master_s": 8.8,
+ "compose_s": 7.0,
+ "master_s": 8.6,
  "master": {
   "gain_db": 1.53,
   "iterations": 2,

@@ -16,9 +16,9 @@ export async function create(args) {
 
   // ── textures: skin with a fingerprint (whorl), bump from the same lines ──────────────────────────────────
   const skinC = mkCanvas(512, 1024), sg = skinC.getContext("2d"), bumpC = mkCanvas(512, 1024), bg = bumpC.getContext("2d");
-  { sg.fillStyle = "#bd6a47"; sg.fillRect(0, 0, 512, 1024); for (let i = 0; i < 160; i++) { sg.fillStyle = `rgba(${200 + rnd() * 30 | 0},${105 + rnd() * 40 | 0},${70 + rnd() * 30 | 0},.08)`; sg.beginPath(); sg.arc(rnd() * 512, rnd() * 1024, 12 + rnd() * 40, 0, 7); sg.fill(); }
+  { sg.fillStyle = "#d89b7c"; sg.fillRect(0, 0, 512, 1024); for (let i = 0; i < 160; i++) { sg.fillStyle = `rgba(${215 + rnd() * 25 | 0},${140 + rnd() * 40 | 0},${110 + rnd() * 30 | 0},.08)`; sg.beginPath(); sg.arc(rnd() * 512, rnd() * 1024, 12 + rnd() * 40, 0, 7); sg.fill(); }
     bg.fillStyle = "#808080"; bg.fillRect(0, 0, 512, 1024);
-    for (let i = 1; i < 110; i++) { const rx = i * 7.4, ry = i * 11.8, a = Math.min(0.5, 0.15 + i * 0.004); sg.strokeStyle = `rgba(120,52,30,${a * 0.55})`; sg.lineWidth = 1.5; sg.beginPath(); sg.ellipse(256, 940, rx, ry, 0, 0, Math.PI * 2); sg.stroke(); bg.strokeStyle = "#d8d8d8"; bg.lineWidth = 2.4; bg.beginPath(); bg.ellipse(256, 940, rx, ry, 0, 0, Math.PI * 2); bg.stroke(); } }
+    for (let i = 1; i < 110; i++) { const rx = i * 7.4, ry = i * 11.8, a = Math.min(0.5, 0.15 + i * 0.004); sg.strokeStyle = `rgba(150,80,58,${a * 0.5})`; sg.lineWidth = 1.5; sg.beginPath(); sg.ellipse(256, 940, rx, ry, 0, 0, Math.PI * 2); sg.stroke(); bg.strokeStyle = "#d8d8d8"; bg.lineWidth = 2.4; bg.beginPath(); bg.ellipse(256, 940, rx, ry, 0, 0, Math.PI * 2); bg.stroke(); } }
   const wrC = mkCanvas(1024, 1024), wg = wrC.getContext("2d"); { wg.fillStyle = "#6a6a6a"; wg.fillRect(0, 0, 1024, 1024);
     const ridge = (x0, y0, len, w, ph) => { wg.beginPath(); for (let k = 0; k <= 40; k++) { const v = k / 40, y = y0 + v * len, x = x0 + Math.sin(v * 7 + ph) * 26 + Math.sin(v * 17 + ph * 2) * 8; k ? wg.lineTo(x, y) : wg.moveTo(x, y); } for (const [lw, col] of [[w, "#9a9a9a"], [w * 0.62, "#c0c0c0"], [w * 0.28, "#e8e8e8"]]) { wg.lineWidth = lw; wg.strokeStyle = col; wg.lineCap = "round"; wg.stroke(); } };
     for (let i = 0; i < 20; i++) ridge(i * 52 + 20 + (rnd() - 0.5) * 14, 40 + rnd() * 160, 500 + rnd() * 400, 22 + rnd() * 10, rnd() * 6);
@@ -30,24 +30,25 @@ export async function create(args) {
   // ── a fingertip: a capsule whose pad folds with `A` (0 smooth … 1 deeply wrinkled) ───────────────────────
   const RAD = 2.1, LC = 9.0, STOT = LC + RAD, NXR = 110, NT = 72;
   const makeFinger = (seed, parent) => {
-    const g = new THREE.PlaneGeometry(1, 1, NT, NXR), P = g.attributes.position, UV = g.attributes.uv;
+    const g = new THREE.PlaneGeometry(1, 1, NT, NXR), P = g.attributes.position, UV = g.attributes.uv; { const ix = g.index.array; for (let q = 0; q < ix.length; q += 3) { const tmp = ix[q + 1]; ix[q + 1] = ix[q + 2]; ix[q + 2] = tmp; } g.index.needsUpdate = true; }   // outward-facing
     const meta = []; for (let j = 0; j <= NXR; j++) for (let i = 0; i <= NT; i++) { const k = j * (NT + 1) + i; const th = (i / NT) * Math.PI * 2 - Math.PI, s = (j / NXR) * STOT; meta.push([th, s]); UV.setXY(k, i / NT, 1 - s / STOT * 0.9); }
     const m = mat({ map: skinTex, bumpMap: bumpTex, bumpScale: 0.05, color: new THREE.Color(0.95, 0.9, 0.88), roughness: 0.55, sheen: 0.4, sheenColor: new THREE.Color(1, 0.75, 0.65), clearcoat: 0.08, clearcoatRoughness: 0.5 });
     const mesh = new THREE.Mesh(g, m); mesh.castShadow = true; mesh.receiveShadow = true; mesh.frustumCulled = false; parent.add(mesh);
-    const set = (A, wet = 0) => { m.bumpScale = 0.05 + 6.5 * A; m.color.setRGB(0.95 - 0.06 * A, 0.9 - 0.08 * A, 0.88 - 0.08 * A);
+    const nail = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 16), mat({ color: 0xf6dccb, roughness: 0.25, clearcoat: 0.9, transparent: true, opacity: 0.95 })); nail.scale.set(1.25, 2.3, 0.28); nail.position.set(0, LC - 0.4, -RAD * 0.82 * 0.86); mesh.add(nail);
+    const set = (A, wet = 0) => { m.bumpScale = 0.05 + 6.5 * A; m.color.setRGB(0.84 - 0.05 * A, 0.76 - 0.07 * A, 0.72 - 0.07 * A);
       m.clearcoat = 0.08 + 0.7 * wet; m.clearcoatRoughness = 0.5 - 0.35 * wet;
       for (let k = 0; k < meta.length; k++) { const [th, s] = meta[k]; let r, y, ny = 0, nr = 1;
-        if (s <= LC) { r = RAD; y = s; } else { const ph = (s - LC) / RAD; const a = Math.min(Math.PI / 2, ph * (Math.PI / 2)); r = RAD * Math.cos(a); y = LC + RAD * Math.sin(a); nr = Math.cos(a); ny = Math.sin(a); }
+        const rb = RAD * (1.1 - 0.2 * clamp(s / LC)); if (s <= LC) { r = rb; y = s; } else { const ph = (s - LC) / RAD; const a = Math.min(Math.PI / 2, ph * (Math.PI / 2)); r = rb * Math.cos(a); y = LC + RAD * Math.sin(a); nr = Math.cos(a); ny = Math.sin(a); }
         const pad = Math.pow(clamp(Math.cos(th) + 0.1, 0, 1), 1.2), tipw = sm(clamp((s - 1.5) / 4)), q = th * RAD;
         const f = Math.sin(q * 4.4 + 1.6 * Math.sin(s * 0.9 + seed) + 1.0 * Math.sin(s * 0.33 + q * 0.7 + seed * 2)), cr = 0.45 * Math.sin(s * 2.4 + q * 1.3 + 2 * Math.sin(q * 0.9 + seed)), d = A * 0.42 * (f * 0.75 + cr * 0.5) * pad * tipw * Math.min(1, nr * 1.6);
         const nx = nr * Math.sin(th), nz = nr * Math.cos(th);
-        P.setXYZ(k, (r + d * nr) * Math.sin(th), y + d * ny * 0.3, (r + d * nr) * Math.cos(th)); }
+        const bulge = 1 + 0.1 * sm(clamp((s - 5.5) / 4)) * clamp(Math.cos(th) + 0.2, 0, 1); P.setXYZ(k, (r + d * nr) * Math.sin(th) * 1.05, y + d * ny * 0.3, (r + d * nr) * Math.cos(th) * 0.86 * bulge); }
       P.needsUpdate = true; g.computeVertexNormals(); };
     set(0); return { mesh, set };
   };
 
   // ── set F: two fingers (hook, water), ripples, bubbles ───────────────────────────────────────────────────
-  const fL = makeFinger(1.3, groups.F), fR = makeFinger(4.1, groups.F); fL.mesh.position.set(-2.35, -9, 0); fR.mesh.position.set(2.35, -9, 0);
+  const fL = makeFinger(1.3, groups.F), fR = makeFinger(4.1, groups.F); fL.mesh.position.set(-2.35, -9, 0); fR.mesh.position.set(2.35, -9, 0); fL.mesh.rotation.y = 0.95; fR.mesh.rotation.y = -0.3;
   const WY = 4.6;                                                                               // the water surface, over the fingertips
   const water = new THREE.Mesh(new THREE.PlaneGeometry(30, 22, 90, 66), new THREE.MeshPhysicalMaterial({ color: 0xcfe8f2, transparent: true, opacity: 0.1, roughness: 0.15, clearcoat: 0.4, clearcoatRoughness: 0.2, depthWrite: false, side: THREE.DoubleSide, envMapIntensity: 0.35 }));
   water.rotation.x = -Math.PI / 2; water.position.y = WY; groups.F.add(water);
@@ -59,7 +60,7 @@ export async function create(args) {
   // ── set S: the section ────────────────────────────────────────────────────────────────────────────────────
   const SWd = 17, SHt = 6.4, NXs = 170, NYs = 16;
   const faceC = mkCanvas(1024, 400), fg = faceC.getContext("2d");
-  { fg.fillStyle = "#e9b09b"; fg.fillRect(0, 0, 1024, 400); const gr = fg.createLinearGradient(0, 0, 0, 400); gr.addColorStop(0, "#c27749"); gr.addColorStop(0.12, "#b66a41"); gr.addColorStop(0.145, "#8f4a2c"); gr.addColorStop(0.17, "#f3cdb9"); gr.addColorStop(0.5, "#eeb7a3"); gr.addColorStop(0.8, "#eaa58f"); gr.addColorStop(0.83, "#f2cd82"); gr.addColorStop(1, "#ecc064"); fg.fillStyle = gr; fg.fillRect(0, 0, 1024, 400);
+  { fg.fillStyle = "#e9b09b"; fg.fillRect(0, 0, 1024, 400); const gr = fg.createLinearGradient(0, 0, 0, 400); gr.addColorStop(0, "#e0a98a"); gr.addColorStop(0.12, "#d89b7a"); gr.addColorStop(0.145, "#b9755a"); gr.addColorStop(0.17, "#f3cdb9"); gr.addColorStop(0.5, "#eeb7a3"); gr.addColorStop(0.8, "#eaa58f"); gr.addColorStop(0.83, "#f2cd82"); gr.addColorStop(1, "#ecc064"); fg.fillStyle = gr; fg.fillRect(0, 0, 1024, 400);
     for (let i = 0; i < 90; i++) { fg.strokeStyle = `rgba(120,58,30,${0.1 + rnd() * 0.12})`; fg.lineWidth = 1.2; const x = rnd() * 1024; fg.beginPath(); fg.moveTo(x, 4 + rnd() * 10); fg.bezierCurveTo(x + 8, 20, x - 8, 30, x + 3, 44); fg.stroke(); }
     fg.save(); fg.beginPath(); fg.rect(0, 68, 1024, 260); fg.clip(); fibres(fg, 1024, 400, 520, ["#fdf0e6", "#f6d3c4", "#e6a08e", "#fff7f0"], 200, 2.2); fg.restore();
     fg.save(); fg.beginPath(); fg.rect(0, 332, 1024, 70); fg.clip(); for (let i = 0; i < 160; i++) { const x = rnd() * 1024, y = 330 + rnd() * 70, r = 12 + rnd() * 16; fg.strokeStyle = "rgba(226,160,60,.5)"; fg.fillStyle = `rgba(250,${210 + rnd() * 30 | 0},${110 + rnd() * 50 | 0},.5)`; fg.lineWidth = 2; fg.beginPath(); fg.ellipse(x, y, r, r * 0.85, 0, 0, 7); fg.fill(); fg.stroke(); } fg.restore(); }
@@ -72,10 +73,12 @@ export async function create(args) {
   const backMesh = new THREE.Mesh(new THREE.PlaneGeometry(40, 20), new THREE.MeshBasicMaterial({ color: 0xf5ecdf })); backMesh.position.set(0, -2, -6); groups.S.add(backMesh);
   const fold = (x) => Math.sin(x * 1.25 + 0.6) * 0.9 + Math.sin(x * 2.7 + 1.7) * 0.42 + Math.sin(x * 0.55 + 3.1) * 0.5;
   const MV = { vessel: mat({ color: 0xd9485a, roughness: 0.38, clearcoat: 0.5, clearcoatRoughness: 0.25 }), vline: new THREE.MeshBasicMaterial({ color: 0x8e2736, side: THREE.BackSide, toneMapped: false }), nerve: mat({ color: 0xf0bb55, roughness: 0.3, emissive: 0xc88a1a, emissiveIntensity: 0.1, clearcoat: 0.6 }) };
-  const sv = []; const vessel = (r0) => ({ t: makeTube(30, 12, MV.vessel, false), l: makeTube(30, 12, MV.vline, false) }); [0, 1, 2, 3].forEach(() => sv.push(vessel()));
-  sv.forEach((v) => { groups.S.add(v.t.mesh, v.l.mesh); });
-  const vPath = [ (x) => -1.75 + 0.18 * Math.sin(x * 0.7), (x) => -1.15 + 0.12 * Math.sin(x * 1.1 + 1), (x) => -2.6 + 0.2 * Math.sin(x * 0.9 + 2), (x) => -0.8 + 0.1 * Math.sin(x * 1.4) ];
-  const vX = [[-7.5, 8], [-6, 7], [-7, 7.5], [-5, 6.5]], vR = [0.26, 0.15, 0.17, 0.11];
+  const MAINY = (x) => -1.75 + 0.18 * Math.sin(x * 0.7), TREE = [];
+  { TREE.push({ x0: -7.5, x1: 8, y: MAINY, r: 0.26 });                                                // the main vessel
+    for (let i = 0; i < 6; i++) { const xb = -6 + i * 2.5 + (hash(i * 3.3) - 0.5) * 0.8, up = hash(i * 5.1) < 0.5 ? 1 : -1, len = 0.9 + hash(i * 7.7) * 0.9, dx = (hash(i * 9.1) - 0.5) * 2.2, y0 = (x) => MAINY(x);
+      TREE.push({ branch: true, xb, up, len, dx, r: 0.14, y0 });                                         // a branch rising toward the surface
+      for (let k = 0; k < 2; k++) TREE.push({ branch: true, sub: true, xb: xb + dx * 0.55, yb: len * 0.55, up, len: 0.55 + hash(i * 13 + k) * 0.35, dx: (k ? 1 : -1) * (0.7 + hash(i * 17 + k) * 0.8), r: 0.075, y0 }); } }
+  const sv = TREE.map(() => ({ t: makeTube(24, 10, MV.vessel, false), l: makeTube(24, 10, MV.vline, false) })); sv.forEach((v) => { groups.S.add(v.t.mesh, v.l.mesh); });
   const sNerve = NV([[7.8, -5.7, 0.3], [6.4, -4.6, 0.36], [5.0, -4.0, 0.3], [3.8, -3.1, 0.36], [2.9, -2.4, 0.3], [2.4, -1.9, 0.3]]); const nTube = new THREE.Mesh(new THREE.TubeGeometry(sNerve, 60, 0.07, 8, false), MV.nerve); groups.S.add(nTube);
   const nB1 = new THREE.Mesh(new THREE.TubeGeometry(NV([[5.0, -4.0, 0.3], [5.6, -3.0, 0.2], [6.6, -2.2, 0.2]]), 24, 0.045, 8, false), MV.nerve); groups.S.add(nB1);
   const nB2 = new THREE.Mesh(new THREE.TubeGeometry(NV([[3.8, -3.1, 0.36], [2.4, -3.5, 0.2], [1.2, -4.3, 0.2]]), 24, 0.045, 8, false), MV.nerve); groups.S.add(nB2);
@@ -91,7 +94,7 @@ export async function create(args) {
   for (let f = 0; f < 6; f++) { const ph = f * Math.PI / 3; const a = new THREE.Mesh(new THREE.TubeGeometry(twist(cA, ph, 0.2), 90, 0.075, 8, false), matA), b = new THREE.Mesh(new THREE.TubeGeometry(twist(cB, ph + 0.5, 0.2), 90, 0.075, 8, false), matB); a.castShadow = b.castShadow = true; groups.N.add(a, b); }
   groups.N.add(new THREE.Mesh(new THREE.TubeGeometry(cA, 60, 0.42, 16, false), sheathM), new THREE.Mesh(new THREE.TubeGeometry(cB, 60, 0.42, 16, false), sheathM));
   const capM = mat({ color: 0xd9485a, roughness: 0.36, clearcoat: 0.55 }), capL = new THREE.MeshBasicMaterial({ color: 0x8e2736, side: THREE.BackSide, toneMapped: false });
-  const cap = makeTube(40, 18, capM, false), capO = makeTube(40, 18, capL, false); groups.N.add(cap.mesh, capO.mesh);
+  const cap = makeTube(40, 18, capM, false), capO = makeTube(40, 18, capL, false); groups.N.add(cap.mesh, capO.mesh); const capEnd = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 18), capM); groups.N.add(capEnd);
   const cap2 = makeTube(30, 12, capM, false), cap2O = makeTube(30, 12, capL, false); groups.N.add(cap2.mesh, cap2O.mesh);
   const nBack = new THREE.Mesh(new THREE.PlaneGeometry(60, 30), new THREE.MeshBasicMaterial({ color: 0xf2e5d6 })); nBack.position.z = -5; groups.N.add(nBack);
   const hazeC = mkCanvas(512, 256), hz = hazeC.getContext("2d"); fibres(hz, 512, 256, 300, ["#fdeee2", "#f2c2b0", "#fff6ee"], 180, 3); hz.globalAlpha = 1; const hazeTex = tex(hazeC, [1, 1]);
@@ -100,10 +103,10 @@ export async function create(args) {
 
   // ── set P: wet pebbles, wrinkled and smooth fingers, a table ──────────────────────────────────────────────
   const pt = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), new THREE.MeshStandardMaterial({ color: 0xf1e7d8, roughness: 0.85 })); pt.rotation.x = -Math.PI / 2; pt.receiveShadow = true; groups.P.add(pt);
-  const pebG = (() => { const g = new THREE.SphereGeometry(1, 64, 40), p = g.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i), n = 1 + 0.06 * Math.sin(x * 4.1 + z * 3.3) + 0.04 * Math.sin(y * 6 + x * 2); p.setXYZ(i, x * n * 2.2, y * n * 1.35, z * n * 1.7); } g.computeVertexNormals(); return g; })();
-  const pebM = mat({ color: 0x7b7266, roughness: 0.25, clearcoat: 0.8, clearcoatRoughness: 0.15, bumpScale: 1 });
+  const pebGs = [0, 1].map((sd) => { const g = new THREE.SphereGeometry(1, 64, 40), p = g.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i), n = 1 + 0.06 * Math.sin(x * 4.1 + z * 3.3) + 0.04 * Math.sin(y * 6 + x * 2); p.setXYZ(i, x * n * (2.2 - 0.5 * sd), y * n * (1.35 + 0.2 * sd), z * n * (1.7 + 0.4 * sd)); } g.computeVertexNormals(); return g; });
+  const pebM = mat({ color: 0x5d554b, roughness: 0.2, clearcoat: 0.8, clearcoatRoughness: 0.12, envMapIntensity: 0.9 });
   const dropM = mat({ color: 0xeaf6fb, roughness: 0.02, clearcoat: 1, transparent: true, opacity: 0.55 });
-  const pairs = [-1, 1].map((sd, pi) => { const g = new THREE.Group(); g.position.set(sd * 4.6, 0, 0); groups.P.add(g); const peb = new THREE.Mesh(pebG, pebM); peb.castShadow = peb.receiveShadow = true; peb.position.y = 1.35; g.add(peb);
+  const pairs = [-1, 1].map((sd, pi) => { const g = new THREE.Group(); { const sheen = new THREE.Mesh(new THREE.CircleGeometry(2.9, 40), new THREE.MeshPhysicalMaterial({ color: 0xdff0f6, transparent: true, opacity: 0.35, roughness: 0.03, clearcoat: 1, depthWrite: false })); sheen.rotation.x = -Math.PI / 2; sheen.position.y = 0.02; sheen.scale.set(1.2, 0.8, 1); g.add(sheen); } g.position.set(sd * 4.6, 0, 0); groups.P.add(g); const peb = new THREE.Mesh(pebGs[pi], pebM); peb.castShadow = peb.receiveShadow = true; peb.position.y = 1.35; g.add(peb);
     for (let i = 0; i < 12; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(0.08 + hash(i + pi * 9) * 0.1, 16, 12), dropM); const a = hash(i * 3.3 + pi) * 6.28, r = hash(i * 1.9 + pi) * 1.2; d.position.set(Math.cos(a) * r, 1.35 + 1.1 * Math.sqrt(Math.max(0.1, 1 - (r / 2) ** 2)) * 0.95, Math.sin(a) * r * 0.7); g.add(d); }
     const fg2 = new THREE.Group(); g.add(fg2); const fin = makeFinger(pi ? 4.1 : 1.3, fg2); fin.mesh.position.set(0, 0, 0); fg2.rotation.z = 140 * D2R; fg2.position.set(2.9, 6.1, 0); fg2.scale.setScalar(0.4);   // the finger lies toward the pebble
     return { g, peb, fin, fg2, A: pi ? 1 : 0 }; });
@@ -113,7 +116,7 @@ export async function create(args) {
   const AF = (t) => ({ L: eo(seg(t, 5.6, 12.4)) * (1 - eo(seg(t, 60, 61.4)) * 0) * (t > 35 ? 1 - eo(seg(t, 35, 35.4)) : 1) * 1, R: 1 });
   const WATER_ON = (t) => Math.max(sm(seg(t, 4.2, 5.0)) * (1 - sm(seg(t, 16.4, 17.2))), sm(seg(t, 35.2, 36.0)) * (1 - sm(seg(t, 42.6, 43.2))));
   const fire = [17.9, 19.6, 21.2, 22.9, 24.6, 26.2];
-  const nFire = [28.3, 29.2, 30.1, 31.0, 31.9, 32.8, 37.8, 38.7, 39.6, 40.5, 41.4];
+  const nFire = [27.7, 28.5, 29.3, 30.1, 31.0, 31.9, 32.8, 37.8, 38.7, 39.6, 40.5, 41.4];
   const BREAK = [33.0, 37.7];                                                                  // the nerve stops working, then works again
 
   const setF = (t) => {
@@ -131,7 +134,13 @@ export async function create(args) {
     for (let i = 0; i < fp.count; i++) { const x = fx0[i], y0 = fy0[i], k = clamp(1 + y0 / 1.8); fp.setY(i, y0 + (-S + 0.5 * foldA * fold(x)) * k); }
     fp.needsUpdate = true; face.computeVertexNormals();
     for (let i = 0; i < tp.count; i++) tp.setY(i, -S + 0.5 * foldA * fold(tx0[i])); tp.needsUpdate = true; top.computeVertexNormals();
-    sv.forEach((v, j) => { const pts = [], rad = []; const [x0, x1] = vX[j]; for (let i = 0; i <= 30; i++) { const x = lerp(x0, x1, i / 30), s = 0.9 * foldA * fold(x) * 0.5 * 0.5; pts.push([x, vPath[j](x) - S * 0.8 + s * 0, 0.18]); rad.push(vR[j] * (1 - 0.55 * narrow) * (0.9 + 0.1 * Math.sin(x * 2 + j))); } v.t.set(pts, rad); v.l.set(pts, rad.map((r) => r + 0.04)); });
+    sv.forEach((v, j) => { const T2 = TREE[j], pts = [], rad = []; const rr = T2.r * (1 - 0.55 * narrow);
+      for (let i = 0; i <= 24; i++) { const u = i / 24; let x, y;
+        if (!T2.branch) { x = lerp(T2.x0, T2.x1, u); y = T2.y(x); }
+        else if (!T2.sub) { const y0 = T2.y0(T2.xb); x = T2.xb + T2.dx * u * u + Math.sin(u * 5 + j) * 0.12; y = y0 + T2.up * T2.len * u * 1.3 + Math.sin(u * 3 + j) * 0.06; }
+        else { const y0 = T2.y0(T2.xb) + T2.up * T2.yb; x = T2.xb + T2.dx * u; y = y0 + T2.up * T2.len * u * 1.2; }
+        pts.push([x, Math.min(-0.45, y) - S * 0.8, 0.18]); rad.push(rr * (T2.sub ? lerp(1, 0.45, u) : T2.branch ? lerp(1, 0.6, u) : 0.9 + 0.1 * Math.sin(x * 2))); }
+      v.t.set(pts, rad); v.l.set(pts, rad.map((r) => r + 0.035)); });
     sSig.forEach((s) => (s.material.opacity = 0)); let si = 0;
     for (const ft of fire) { const k = (t - ft) / 1.9; if (k < 0 || k > 1.1) continue; const br = Math.sin(clamp(k) * Math.PI) ** 0.6; for (let q = 0; q < 3; q++) { if (si >= sSig.length) break; const p = sNerve.getPoint(clamp(k - q * 0.07)), s = sSig[si++]; s.position.set(p.x, p.y, p.z + 0.12); s.scale.setScalar(0.62 - q * 0.14); s.material.opacity = br * (0.9 - q * 0.25); } }
   };
@@ -144,7 +153,7 @@ export async function create(args) {
       if (!blocked) { const ta = ft + 1.6 * 0.98; arrive += Math.exp(-Math.max(0, t - ta) / 0.7) * (t >= ta ? 1 : 0); } }
     const nr = clamp(arrive, 0, 1);
     const pts = [], rad = []; for (let i = 0; i <= 40; i++) { const x = lerp(1.2, 14, i / 40); pts.push([x, 0 - 0.04 * (x - 1.2) + 0.18 * Math.sin(x * 0.6), 0.1]); rad.push(0.85 * (1 - 0.5 * nr) * (0.92 + 0.08 * Math.sin(x * 2.4)) * (1 - 0.18 * seg(x, 1.2, 2.2) * 0) ); }
-    cap.set(pts, rad); capO.set(pts, rad.map((r) => r + 0.05));
+    cap.set(pts, rad); capO.set(pts, rad.map((r) => r + 0.05)); capEnd.position.set(pts[0][0], pts[0][1], pts[0][2]); capEnd.scale.setScalar(rad[0]);
     const p2 = [], r2 = []; for (let i = 0; i <= 30; i++) { const x = lerp(4, 11, i / 30); p2.push([x, 1.4 + 0.5 * Math.sin(x * 0.5), -0.3 + 0.0 * x]); r2.push(0.3 * (1 - 0.45 * nr)); } cap2.set(p2, r2); cap2O.set(p2, r2.map((r) => r + 0.04));
   };
   let pebbleX = [0, 0];
@@ -160,7 +169,7 @@ export async function create(args) {
   const V = new THREE.Vector3();
   const ANC = {
     epi: () => [CX.S - 0.8, 0.5 * foldA * fold(-0.8) - 0.34 * shrink + 0.15, 0.2],
-    vessel: () => [CX.S + 1.0, vPath[0](1.0) - 0.34 * shrink * 0.8, 0.3],
+    vessel: () => [CX.S + 1.0, MAINY(1.0) - 0.34 * shrink * 0.8, 0.3],
     nerve: () => { const p = sNerve.getPoint(0.4); return [CX.S + p.x, p.y, p.z]; },
     tipL: () => [-2.35, -9 + STOT - 0.2, RAD], tipR: () => [2.35, -9 + STOT - 0.2, RAD],
   };
@@ -168,7 +177,7 @@ export async function create(args) {
   return {
     renderer,
     seek(t) {
-      const c = W3.camAt(t); curSc = c.sc || "F"; for (const k in groups) groups[k].visible = k === curSc;
+      const c = T.coverCam ? { ...T.coverCam, roll: 0, sc: "F" } : W3.camAt(t); curSc = c.sc || "F"; for (const k in groups) groups[k].visible = k === curSc;
       W3.camPose(t, c);
       if (curSc === "F") setF(t); else if (curSc === "S") setS(t); else if (curSc === "N") setN(t); else if (curSc === "P") setP(t);
       const cx = CX[curSc]; key.target.position.set(cx, -1, 0); key.position.set(cx - 9, 12, 11); key.target.updateMatrixWorld(); W3.paintSet(t);

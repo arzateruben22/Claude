@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "Your fingers wrinkle because your nervous system tells the blood vessels in your fingertips to narrow, not only because of the water.",
+ "titles": [
+  {
+   "text": "Your Fingers Wrinkle on Orders From Your Nerves",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Why Do Your Fingers Wrinkle in Water?",
+   "mechanism": "personal relevance"
+  },
+  {
+   "text": "Water Isn't the Whole Reason Fingers Wrinkle",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "A Wrinkled Finger Means Your Nerves Work",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Do Wrinkled Fingers Really Grip Better?",
+   "mechanism": "unanswered question"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "two fingertips side by side in the series' one skin tone, one smooth and one deeply wrinkled",
+   "composition": "pad-on, fingers rising from the lower edge to the upper third, ivory negative space above",
+   "lighting": "warm key from the upper left, soft depth of field, fine fingerprint ridges on the smooth one",
+   "trigger": "a familiar thing seen as a before and after of itself",
+   "text": "",
+   "complements": "the title names the cause (nerves); the picture shows only the effect"
+  },
+  {
+   "id": "B",
+   "subject": "one wrinkled fingertip with a thin gold nerve glowing beneath the skin",
+   "composition": "fingertip centred, nerve rising from the bottom",
+   "lighting": "warm amber glow under the skin",
+   "trigger": "a hidden wire",
+   "text": "Wired",
+   "complements": "adds the idea of wiring"
+  },
+  {
+   "id": "C",
+   "subject": "a wrinkled fingertip on a wet pebble",
+   "composition": "low angle, pebble lower third",
+   "lighting": "soft rim light, water highlights",
+   "trigger": "does it help?",
+   "text": "Grip?",
+   "complements": "poses the debate"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 80,
+    "curiosity": 84,
+    "clarity": 84,
+    "synergy": 84,
+    "originality": 74,
+    "accuracy": 84,
+    "mobile": 86,
+    "satisfaction": 84
+   },
+   "note": "cause in the title, effect in the picture"
+  },
+  {
+   "title": 3,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 76,
+    "curiosity": 84,
+    "clarity": 78,
+    "synergy": 82,
+    "originality": 76,
+    "accuracy": 84,
+    "mobile": 82,
+    "satisfaction": 82
+   },
+   "note": "wired idea"
+  },
+  {
+   "title": 4,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 72,
+    "curiosity": 80,
+    "clarity": 82,
+    "synergy": 80,
+    "originality": 72,
+    "accuracy": 88,
+    "mobile": 82,
+    "satisfaction": 78
+   },
+   "note": "the debate"
+  }
+ ],
+ "winner": {
+  "title": "Your Fingers Wrinkle on Orders From Your Nerves",
+  "thumbnail": "A",
+  "thumbnailText": "",
+  "why": "The title promises the hidden cause; the thumbnail shows the effect without naming it, so nothing repeats."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "skin-sense-008-cover.jpg",
+ "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: two human fingertips side by side, pad-on, one smooth with fine fingerprint ridges and one deeply wrinkled, in one light peach skin tone.\nComposition: the fingers rise from the lower edge to the upper third, ivory negative space above.\nLighting and treatment: warm key light from the upper left, soft depth of field, peach and rose tones, deep green #00685F as the only accent.\nMood: quiet curiosity.\nText: No text.\nScientific accuracy: fingertip skin wrinkles after about fifteen minutes in water, and this is driven by the nervous system narrowing fingertip blood vessels; an illustration, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 3.6,
+  "text": ""
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
