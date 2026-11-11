@@ -170,6 +170,9 @@
    ]
   ]
  },
+ "disclosures": {
+  "aiVoice": true
+ },
  "cue": {
   "fps": 30,
   "float": [
@@ -214,10 +217,10 @@
  ],
  "title": {
   "series": "Possibility Lab",
-  "title": "",
-  "t0": 0.2,
-  "t1": 2.2,
-  "sig": 0.2
+  "title": "Storms and the six hour day",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
  },
  "endCard": 71.83333333333333,
  "end": {

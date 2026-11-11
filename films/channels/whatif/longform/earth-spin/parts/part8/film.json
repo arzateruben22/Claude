@@ -143,6 +143,9 @@
    ]
   ]
  },
+ "disclosures": {
+  "aiVoice": true
+ },
  "cue": {
   "fps": 30,
   "float": [
@@ -187,10 +190,10 @@
  ],
  "title": {
   "series": "Possibility Lab",
-  "title": "",
-  "t0": 0.2,
-  "t1": 2.2,
-  "sig": 0.2
+  "title": "The ninety minute day",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
  },
  "endCard": 59.96666666666667,
  "end": {

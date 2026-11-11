@@ -22,20 +22,22 @@ vo = [m for m in (re.match(r"^vo: (.*)$", l) for l in script) if m]
 def sentences(line_no):
     parts = re.findall(r"(.+?[.?!])((?:\s*\{[^}]*\})*)\s*", vo[line_no - 1].group(1))
     return [(re.sub(r"\s+", " ", re.sub(r"\{[^}]*\}", "", s)).strip(), re.findall(r"\{([^}]*)\}", t)) for s, t in parts]
-used, lines_out = [], []
+used, hook_l, body_l, tease_l = [], [], [], []
 for it in items:
     if it["kind"] == "sent":
         ln, si = it["key"][1:].split("."); ln, si = int(ln), int(si)
         s, tags = sentences(ln)[si - 1]
-        lines_out.append(f"{s} " + "".join("{%s}" % t for t in tags))
+        body_l.append(f"{s} " + "".join("{%s}" % t for t in tags) if tags else f"{s} {{-}}")
         for t in tags:
             for cid in re.split(r"[,\s]+", t):
                 if cid in claims_all and cid not in used: used.append(cid)
-    else:
-        lines_out.append(f"[{it['kind']}] {it['text']} {{-}}")
+    elif it["kind"] == "open": hook_l.append(f"{it['text']} {{-}}")
+    elif it["kind"] == "closer": tease_l.append(f"{it['text']} {{-}}")
+    else: body_l.append(f"{it['text']} {{-}}")
 title = film["title"]["title"]
 (EP / "out").mkdir(parents=True, exist_ok=True)
-(EP / "script.md").write_text(f"# Possibility Lab Season 3 · Part {N} of 8: \"{title}\" (cut from the long film \"What If Earth Spun Faster and Couldn't Stop?\")\n\n" + "\n\n".join(f"vo: {l}" for l in lines_out) + "\n")
+(EP / "script.md").write_text(f"# Possibility Lab Season 3 · Part {N} of 8: \"{title}\" (cut from the long film \"What If Earth Spun Faster and Couldn't Stop?\")\n\nOne part of the long film: its own opening, the chapter's narration, one like/follow line, the cliffhanger, then the closer.\n\n"
+    f"## hook {{shot: the figure on the equator · energy: 0.6}}\nvo: {' '.join(hook_l)}\n\n## body {{shot: the day-length readout and the chapter's scene · energy: 0.6}}\nvo: {' '.join(body_l)}\n\n## tease {{end card held · energy: 0.4}}\nvo: {' '.join(tease_l)}\n")
 (EP / "claims.json").write_text(json.dumps([claims_all[c] for c in used], indent=1, ensure_ascii=False))
 film["title"] = {**film["title"], "title": title}
 film["disclosures"] = {"aiVoice": True}
