@@ -94,12 +94,13 @@ Take as long as it needs: the usage of about three Season 2 episodes goes into o
   it; the cinema kit's film finish (depth of field, motion blur, bloom, grain); real sound design and an original
   score under the voice. Almost no on-screen text: one number or one word at the key moment, plus the captions. Skin
   Sense keeps its own identity (ivory, peach, rose, deep green `#00685F`, navy serif), never Lumevina's black, rose or gold.
-- **The look (owner, 11 Nov 2026): the vibe of Lumevina's Skin School course, with whispers.** The owner asked twice for
-  this, so it replaces the green-black "night look" drafted earlier the same day. Reference: `films/skin-school-pilot/`
-  (out/8-2-9x16.jpg): a soft 3-D voxel world of rounded cubes for the skin layers, soft studio light, a dark near-black
-  ground with a warm glow where the skin meets the dark, a clean sans for captions (Inter) on a dark rounded plate. The
-  skin layers take each episode's one skin tone (top layers in that tone, deeper layers warmer and rosier). Still Skin
-  Sense: no Lumevina name, logo, products or links, and no advice; get Evelyn's OK for borrowing her course's look.
+- **The look (owner, 11 Nov 2026): strongly influenced by Lumevina's Skin School course, not a copy.** Reference:
+  `films/skin-school-pilot/` (out/8-2-9x16.jpg). Take its vibe: soft, tactile 3-D voxel skin layers, soft studio light, a
+  dark ground with a warm glow where the skin meets the dark, a calm camera. Give it Skin Sense's own touches: a very dark
+  green-black ground `#0B1513` (not neutral black); voxels a little softer and slightly translucent, glowing from within;
+  teal `#3FBFAE` as the only accent (signals, highlights; never rose, red or gold); captions in a small ivory serif
+  `#F4EDE3` (Newsreader) on a dark rounded plate. The skin layers take each episode's one skin tone. No Lumevina name,
+  logo, products or links, and no advice; get Evelyn's OK, since the look draws on her course.
 - **Look gate:** before an episode is built, the owner approves one still frame and a 10-second test clip.
 - **Voice: Evelyn, soft and close.** An ASMR-style lesson: close to the mic, unhurried, warm, every word clear, so it
   sounds like a lesson where you actually learn something. Music stays low and captions are always on.
