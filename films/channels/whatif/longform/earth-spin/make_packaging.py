@@ -2,6 +2,8 @@
 figure doing the action, the goal in frame, the setup never the answer). Run after the film is final to fix frameSeconds; the text is final now.
 Part titles = the chapter titles in the long video's description, character for character (Prism links parts to the film by them)."""
 import json
+COVER = {2: (20.0, "Sunset in 6 hours"), 3: (25.0, "1,670 km/h wind"), 4: (22.0, "Seas pile up here")}      # part -> (frame second, cover words that add a new layer; never the title)
+
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
 LIGHT = "the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent"
@@ -36,13 +38,13 @@ def part(n, ch):
                    dict(title=2, thumbnail="B", scores=SCORE(76, 78, 72, 70, 74, 90, 70, 82), note="a number on the cover gives the answer away"),
                    dict(title=1, thumbnail="C", scores=SCORE(70, 74, 74, 66, 70, 92, 72, 80), note="no human anchor")],
       "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
-      "winner": dict(title=t, thumbnail="A", thumbnailText="", why="The title is the chapter's own title in the long video, so Prism links the part to the film; the cover shows the figure in the setup, with no answer on screen."),
+      "winner": dict(title=t, thumbnail="A", thumbnailText=COVER.get(n, (None, ""))[1], why="The title is the chapter's own title in the long video, so Prism links the part to the film; the cover shows the figure in the setup, with no answer on screen."),
       "testAndCompare": ["A", "B"],
       "checks": dict(halfSecond=True, curiosity=True, duplication=True, competition=True, truth=True, satisfaction=True, originality=True),
       "checksNote": "My own creative judgments, not measured. truth: the cover is a frame of the film (setup only). The part never gives the film's ending.",
       "thumbnailFile": f"possibility-lab-s3p{n}-cover.jpg",
       "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: " + subj + ".\nComposition: 9:16 vertical; " + comp + "; keep everything important clear of the bottom quarter and the right-hand edge.\nLighting and treatment: " + LIGHT + "; clean, minimal, high contrast, stylised 3-D render.\nMood: wonder and anticipation.\nText: No text.\nScientific accuracy: it shows the setup only, never the answer; it is a diagram-style illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
-      "shortsCover": dict(frameSeconds=None, text="")}
+      "shortsCover": dict(frameSeconds=COVER.get(n, (None, ""))[0], text=COVER.get(n, (None, ""))[1])}
 for n, ch in enumerate(CH, 1):
     d = HERE / "parts" / f"part{n}"
     d.mkdir(parents=True, exist_ok=True)

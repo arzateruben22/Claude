@@ -199,6 +199,30 @@
  "counters": [],
  "work": null,
  "cam": {},
+ "cams": [
+  {
+   "t0": 13.2,
+   "mode": "ground"
+  },
+  {
+   "t0": 32.55,
+   "mode": "push"
+  },
+  {
+   "t0": 44.85,
+   "mode": "wide"
+  },
+  {
+   "t0": 57.3,
+   "mode": "base"
+  }
+ ],
+ "fx": {
+  "wind": [
+   13.2,
+   47.9
+  ]
+ },
  "captions": [],
  "voice": [],
  "thumb": true

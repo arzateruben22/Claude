@@ -106,11 +106,25 @@ TITLE = {"series": "Possibility Lab", "title": PART_TITLES[N - 1], "t0": -20.0, 
 ORD = ["one", "two", "three", "four", "five", "six", "seven", "eight"]
 END = {"title": "Full video on YouTube: *What If Earth Spun Faster…*", "follow": f"Possibility Lab · Part {N} of 8", "next": "Every number's source is in the description."}
 dummy = [999.0, 1000.0]
+# camera moves (scene.mjs blends each in over 1.6 s) and visual aids, per part: (fraction of the runtime, pose) snapped to the nearest beat start
+CAM_PLAN = {2: [(.2, "ground"), (.45, "wide"), (.68, "push"), (.84, "base")], 3: [(.18, "ground"), (.5, "push"), (.72, "wide"), (.86, "base")],
+            4: [(.2, "wide"), (.44, "ground"), (.66, "push"), (.82, "wide")], 5: [(.2, "wide"), (.5, "ground"), (.72, "push"), (.86, "base")],
+            6: [(.2, "ground"), (.55, "wide"), (.8, "push")], 7: [(.2, "ground"), (.45, "wide"), (.68, "push"), (.84, "base")], 8: [(.2, "wide"), (.45, "ground"), (.68, "push"), (.84, "base")]}
+FX_PLAN = {3: ("wind", .18, .72), 4: ("ocean", .1, .92)}
+_starts = [b["t0"] for b in BEATS if b["id"] not in ("open", "cta", "cliff", "tease") and b["t0"] > 6]
+def _snap(x): return round(min(_starts, key=lambda v: abs(v - x * t_end)), 4) if _starts else round(x * t_end, 4)
+CAMS = []
+for fr, m in CAM_PLAN.get(N, []):
+    t0 = _snap(fr)
+    if not CAMS or t0 >= CAMS[-1]["t0"] + 6: CAMS.append({"t0": t0, "mode": m})
+FX = {}
+if N in FX_PLAN:
+    k, a, b = FX_PLAN[N]; FX[k] = [_snap(a), round(b * t_end, 2)]
 CUE = {"fps": FPS, "float": dummy, "break": dummy, "cost": dummy, "weather": dummy, "wind": dummy, "oceans": dummy, "poles": dummy, "end": t_end, "seed": 3}
 film = {"id": f"possibility-lab-earth-spin-part{N}", "theme": "../../../../theme.json", "scene": "../../scene.mjs", "fps": FPS, "bpm": BPM, "dur": f.duration,
         "poster": round(min(f.duration - 6, BEATS[len(BEATS) // 2]["t0"]), 4),
         "shots": SHOTS, "beats": BEATS, "world": {"cycleS": 16.0, "keys": KEYS, "dry": DRY, "tOrbH": T_ORB / 3600, "t0H": 23.934, "rEq": R_EQ / 1000, "gm": 3.986004418e14, "eNow": E_NOW, "eOrb": E_ORB, "weightWins": WW},
-        "disclosures": {"aiVoice": True}, "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {},
+        "disclosures": {"aiVoice": True}, "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {}, "cams": CAMS, "fx": FX,
         "captions": [p for p in lead(f.captions(max_chars=26, balance=True)) if p["t0"] < t_end - 0.3],
         "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines]}
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] != "tease"]

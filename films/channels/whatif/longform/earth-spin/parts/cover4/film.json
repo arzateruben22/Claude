@@ -189,6 +189,26 @@
  "counters": [],
  "work": null,
  "cam": {},
+ "cams": [
+  {
+   "t0": 14.85,
+   "mode": "wide"
+  },
+  {
+   "t0": 32.1,
+   "mode": "ground"
+  },
+  {
+   "t0": 44.1,
+   "mode": "push"
+  }
+ ],
+ "fx": {
+  "ocean": [
+   7.2,
+   59.43
+  ]
+ },
  "captions": [],
  "voice": [],
  "thumb": true
