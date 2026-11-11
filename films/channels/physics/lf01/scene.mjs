@@ -6,6 +6,7 @@ import { stage, seg, E, ease, rng } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
 import { SPINE_CSS, placeSpine } from "../set/spine.js";
 import { dropTitle } from "../set/title.js";
+import { createPlates } from "../set/plates.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
 const EV = FILM.ev, CAL = FILM.calc, ES = FILM.endShow, T = new Proxy(FILM.cue.cuts, { get: (o, k) => (k in o ? o[k] : 1e9) });   // a part has only its own beats: the others are never
@@ -19,7 +20,8 @@ const scene = new THREE.Scene();
 const VFOV = 30;
 const camera = new THREE.PerspectiveCamera(VFOV, W / H, 0.0001, 80);
 const INK = "#1B1E24", COB = TK.force || "#1F3BD1", AMB = "#E8A356";
-window.SCENE_READY = Promise.resolve();
+const plates = createPlates({ scene, camera, W, H, FILM });     // photographic plates behind the code subjects (film.json "plates"); none listed = the code kitchen as before
+window.SCENE_READY = plates.ready;
 window.CINEMA_FOCUS = (t) => (window.FILM && window.FILM.ev && window.FILM.ev.bird && t >= window.FILM.ev.bird[0] && t < window.FILM.ev.bird[1]) ? { point: [-1.4, 1.86, -1.45], fstop: 0.7 } : { fstop: 0 };
 
 // ── the slow-motion factor: k = log10 F (keys from compile.py), the light front's radius R(t) = integral of c / F dt ─────────────────
@@ -299,7 +301,7 @@ const camNow = (t) => {
   return { look: [0, 1, 2].map((j) => lerp(a.look[j], b.look[j], u)), fitW: lw(a.fitW, b.fitW), yaw: lerp(a.yaw, b.yaw, u), pitch: lerp(a.pitch ?? 3, b.pitch ?? 3, u) };
 };
 const placeCam = (t) => {
-  const c = camNow(t), dr = driftAt(t), dist = c.fitW * (1 - 0.034 * dr) / (2 * Math.tan((VFOV * Math.PI) / 360) * (W / H)), y = ((c.yaw + 1.6 * dr + 0.9 * Math.sin(t * 0.55)) * Math.PI) / 180, p = ((c.pitch + 0.45 * Math.sin(t * 0.37 + 1.0)) * Math.PI) / 180;   // a slow sway: nothing is ever perfectly still
+  const c = plates.cam(t) || camNow(t), dr = driftAt(t), dist = c.fitW * (1 - 0.034 * dr) / (2 * Math.tan((VFOV * Math.PI) / 360) * (W / H)), y = ((c.yaw + 1.6 * dr + 0.9 * Math.sin(t * 0.55)) * Math.PI) / 180, p = ((c.pitch + 0.45 * Math.sin(t * 0.37 + 1.0)) * Math.PI) / 180;   // a slow sway: nothing is ever perfectly still
   camera.position.set(c.look[0] + dist * Math.sin(y) * Math.cos(p), c.look[1] + dist * Math.sin(p), c.look[2] + dist * Math.cos(y) * Math.cos(p));
   camera.near = Math.max(1e-5, dist * 0.05); camera.far = 80; camera.fov = VFOV; camera.updateProjectionMatrix(); camera.lookAt(c.look[0], c.look[1], c.look[2]); camera.updateMatrixWorld();
 };
@@ -331,10 +333,11 @@ const driftAt = (t) => { for (const [a, b] of (FILM.drifts || (FILM.part ? [] : 
 window.seek = function (t) {
   stage(t);
   placeCam(t);
+  const plateOn = plates.apply(t);
   const k = kAt(t), F = Math.pow(10, k);
   const inLab = t >= EV.lab[0] && t < EV.lab[1], inMacro = t >= EV.hair[0] - 0.3 && t < EV.hair[1] + 4.1 && !inLab;
   fadeMat.uniforms.uA.value = dip(t);
-  kitchen.visible = !inLab && !inMacro; wires.visible = kitchen.visible; sky.visible = storm.visible = kitchen.visible; feeder.visible = kitchen.visible && t < T.pop;
+  kitchen.visible = !inLab && !inMacro && !plateOn; wires.visible = kitchen.visible; sky.visible = storm.visible = kitchen.visible; feeder.visible = kitchen.visible && t < T.pop;
   macro.visible = inMacro; lab.visible = inLab;
   // the kitchen is drawn on (wireframe -> solid behind a sweeping line) during the method lines
   const [w0, w1] = EV.wire;
