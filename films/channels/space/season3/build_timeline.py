@@ -5,7 +5,52 @@ import json, os, re, sys
 YT = os.environ.get("VARIANT") == "yt"; YTV = "subscribe" if YT else "follow"; SUF = "-yt" if YT else ""   # VARIANT=yt: the parts with the 'subscribe' CTA line (for the YouTube files) -> out/part<n>-yt.json
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
 L1 = f"{ROOT}/films/channels/space/long01"; OUT = L1 + "/out"; os.makedirs(OUT, exist_ok=True)
-lines = {x["id"]: x for x in json.load(open(L1 + "/voice/lines.json"))["lines"]}; ST = json.load(open(L1 + "/stages.json")); G = 0.35
+sys.path.insert(0, f"{ROOT}/kits/cinema/film"); from numerals import to_display   # captions show numerals and unit symbols; the voice still says them in words
+lines = {x["id"]: x for x in json.load(open(L1 + "/voice/lines.json"))["lines"]}; ST = json.load(open(L1 + "/stages.json")); G = 0.35; BEATS = json.load(open(L1 + "/beats.json"))
+def resolve_beats(chapters, caps, is_long):
+    """beats.json -> [(T, dur, kind, arrives)] in the timeline's current (pre-insertion) time: T = the boundary after the sentence that starts with `after`"""
+    items = []
+    for ch in chapters:
+        for b in BEATS.get(f"ch{ch}" if ch != "close" else "close", []):
+            if b.get("long_only") and not is_long: continue
+            if not is_long and ch == "close": continue
+            line = f"ch{ch}_vo" if ch != "close" else "close_vo"; own = [c for c in caps if c["line"] == line]
+            if not own: continue
+            if b["after"] == "__start__": T = own[0]["t0"] - 0.05
+            else:
+                i = next((j for j, c in enumerate(own) if c["text"].startswith(b["after"]) or b["after"] in c["text"]), None)
+                if i is None: print("WARN no sentence for beat", ch, b["after"]); continue
+                nxt = next((c for c in caps if c["t0"] > own[i]["t0"]), None); T = (own[i]["t1"] + (nxt["t0"] if nxt else own[i]["t1"] + 0.3)) / 2 if nxt else own[i]["t1"] + 0.1
+                T = min(T, (nxt["t0"] - 0.02) if nxt else T)
+            items.append((round(T, 3), b["ldur"] if is_long and "ldur" in b else b["dur"], b["kind"], b.get("arrives")))
+    items.sort(key=lambda x: x[0]); return items
+def warp(t, items): return t + sum(d for (T, d, *_ ) in items if t >= T)
+def insert_beats(clips, caps, km, tracks, items, extra_times=()):
+    """open a silent gap of `dur` at each boundary T: later things shift; a voice clip that spans T is cut in two (from/dur); approach beats make the counter arrive as the beat ends"""
+    nclips = []
+    for c in clips:
+        cuts = [T for (T, d, *_ ) in items if c["t"] + 0.02 < T < c["t"] + c["dur"] - 0.02]; a = c["t"]; frm = c.get("from", 0.0)
+        for T in cuts + [None]:
+            end = T if T is not None else c["t"] + c["dur"]; nclips.append({**c, "t": round(warp(a, items), 3), "dur": round(end - a, 3), "from": round(frm + (a - c["t"]), 3)}); a = end
+    ncaps = []
+    for c in caps:
+        t1 = c["t1"]
+        for (T, d, *_ ) in items:
+            if c["t0"] < T <= t1: t1 = T - 0.03
+        ncaps.append({**c, "t0": round(warp(c["t0"], items), 3), "t1": round(warp(t1, items), 3)})
+    nkm = [[round(warp(t, items), 3), v] for t, v in km]; ntr = {k: [[round(warp(t, items), 3), v] for t, v in arr] for k, arr in tracks.items()}
+    beats = []; shift = 0.0
+    for (T, d, kind, arr) in items:
+        t0 = T + shift; t1 = t0 + d; shift += d; beats.append({"t0": round(t0, 3), "t1": round(t1, 3), "kind": kind})
+        if arr:   # the counter arrives as the beat ends, gliding through the beat
+            for k in nkm:
+                if k[1] == arr:
+                    ta = k[0]; k[0] = round(t1, 3); k[:] = k[:2] + [round(d, 3)]
+                    for o in nkm:
+                        if o is not k and o[0] == ta and o[1] == arr: o[0] = round(t1, 3)   # the next stage's 'hold' key moves with the arrival
+                    break
+    nkm.sort(key=lambda k: k[0])
+    return nclips, ncaps, nkm, ntr, beats, [round(warp(t, items), 3) for t in extra_times]
 def place(seq, t0=0.4):
     """seq: ids in order -> clips with start times (gap G between lines)"""
     t, clips = t0, []
@@ -81,7 +126,10 @@ if b0: tracks["moon"] += [[b0["t0"] - 0.1, 1], [b0["t0"] + 1.3, 0]]; tracks["brk
 if r0: tracks["brk"] += [[r0["t0"] - 0.1, 1], [r0["t0"] + 2.6, 0]]; tracks["ring"] += [[r0["t0"] - 0.1, 0], [r0["t0"] + 2.6, 1]]
 if n0: tracks["ring"] += [[n0["t0"] - 0.2, 1], [n0["t0"] + 2.0, 0]]; tracks["tonight"] += [[n0["t0"] - 0.2, 0], [n0["t0"] + 2.0, 1]]
 if n0: km += [[round(n0["t0"] + 0.4, 3), km[-1][1]], [round(n0["t0"] + 2.2, 3), 384400]]   # the Moon is fine: the counter is back where it began (the loop)
-tl["long"] = {"name": "long", "mode": "land", "dur": dur, "clips": clips, "captions": split_caps(caps, 100), "km": km, "tracks": tracks}
+items = resolve_beats([1, 2, 3, 4, 5, 6, 7, 8, "close"], caps, True)
+clips, caps, km, tracks, beats, (dur,) = insert_beats(clips, caps, km, tracks, items, [dur])
+for c in caps: c["spoken"] = c["text"]; c["text"] = to_display(c["text"])
+tl["long"] = {"name": "long", "mode": "land", "dur": dur, "clips": clips, "captions": split_caps(caps, 100), "km": km, "tracks": tracks, "beats": beats}
 # ---- the eight parts (9:16): hook, chapter, cliffhanger, closer, one like/follow line at 70-85% of the runtime, the ending left out
 for i in range(1, 9):
     ch = f"ch{i}"; vo = lines[ch + "_vo"]; sents = vo["sentences"]; cta = f"cta{(i - 1) % 4 + 1}_{YTV}"
@@ -127,7 +175,10 @@ for i in range(1, 9):
     if i == 5:
         e0 = find(caps, "The sky goes dim"); e1 = find(caps, "And then you look at the Moon again")
         if e0 and e1: tracks["eclipse"] += [[e0["t0"] - 0.2, 0], [e0["t0"] + 1.6, 1], [e1["t0"] - 0.1, 1], [e1["t0"] + 1.6, 0]]
-    tl[f"part{i}{SUF}"] = {"name": f"part{i}{SUF}", "mode": "port", "dur": dur_p, "clips": clips, "captions": split_caps(caps, 68), "km": kk, "tracks": tracks, "cta_at": round(cc["t"], 3), "cta_frac": round(cc["t"] / dur_p, 3)}
+    items = resolve_beats([i], caps, False)
+    clips, caps, kk, tracks, beats, (dur_p, cta_t) = insert_beats(clips, caps, kk, tracks, items, [dur_p, cc["t"]])
+    for c in caps: c["spoken"] = c["text"]; c["text"] = to_display(c["text"])
+    tl[f"part{i}{SUF}"] = {"name": f"part{i}{SUF}", "mode": "port", "dur": dur_p, "clips": clips, "captions": split_caps(caps, 68), "km": kk, "tracks": tracks, "beats": beats, "cta_at": cta_t, "cta_frac": round(cta_t / dur_p, 3)}
 for k, v in tl.items():
     if YT and not k.endswith("-yt"): continue
     json.dump(v, open(f"{OUT}/{k}.json", "w"), indent=1, ensure_ascii=False)

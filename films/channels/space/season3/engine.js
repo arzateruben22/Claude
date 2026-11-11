@@ -12,12 +12,13 @@ const track = (arr, t) => { if (!arr || !arr.length) return 0; if (t <= arr[0][0
 function dVis(t) { return dCount(t); }
 // chapter 1 beats (found by caption text; only the timelines that carry the opening chapter have them)
 function beats() {
-  if (TL._b !== undefined) return TL._b; const c = TL.captions, f = (x) => c.find((q) => q.text.includes(x)), o = f("It only ever goes down"), dr = f("drifting away");
+  if (TL._b !== undefined) return TL._b; const c = TL.captions, f = (x) => c.find((q) => (q.spoken || q.text).includes(x)), o = f("It only ever goes down"), dr = f("drifting away");
   if (!o || !dr) return (TL._b = null); const ch = c.filter((q) => (q.line || "").startsWith("ch1"));
-  return (TL._b = { start: Math.min(...ch.map((q) => q.t0)), calm: f("The sea is calm") || dr, drift: dr, size: f("half a degree wide") || f("About the same size"), sun: f("About the same size as the Sun"), light: f("Its light takes"), mlight: f("Moonlight is just sunlight"), only: o, end: Math.max(...ch.map((q) => q.t1)) });
+  const ext = (cap, kind) => { const bt = (TL.beats || []).find((x) => x.kind === kind && cap && x.t0 >= cap.t1 - 0.6 && x.t0 <= cap.t1 + 0.6); return bt ? { ...cap, t1: bt.t1 } : cap; };
+  return (TL._b = { start: Math.min(...ch.map((q) => q.t0)), calm: f("The sea is calm") || dr, drift: dr, size: f("half a degree wide") || f("About the same size"), sun: ext(f("About the same size as the Sun"), "sun"), light: f("Its light takes"), mlight: ext(f("Moonlight is just sunlight"), "sunbeam"), only: o, end: Math.max(...ch.map((q) => q.t1)) });
 }
 function dCount(t) { const d = dCount0(t), b = beats(); if (!b || t < b.only.t0) return d; const tick = sm((t - b.only.t0) / 5.0), gp = clamp01((Math.log(D0) - Math.log(d)) / (Math.log(D0) - Math.log(288300))); return d * (1 - 0.0086 * tick * (1 - gp)); }
-function dCount0(t) { const k = TL.km; if (t <= k[0][0]) return k[0][1]; for (let i = 1; i < k.length; i++) if (t <= k[i][0]) { const a = k[i - 1], b = k[i]; if (a[1] === b[1]) return a[1]; const g0 = Math.max(a[0], b[0] - 8.0); return t < g0 ? a[1] : Math.exp(lerp(Math.log(a[1]), Math.log(b[1]), sm((t - g0) / (b[0] - g0)))); } return k[k.length - 1][1]; }
+function dCount0(t) { const k = TL.km; if (t <= k[0][0]) return k[0][1]; for (let i = 1; i < k.length; i++) if (t <= k[i][0]) { const a = k[i - 1], b = k[i]; if (a[1] === b[1]) return a[1]; const g0 = Math.max(a[0], b[0] - (b[2] || 8.0)); return t < g0 ? a[1] : Math.exp(lerp(Math.log(a[1]), Math.log(b[1]), sm((t - g0) / (b[0] - g0)))); } return k[k.length - 1][1]; }
 function geom() {
   if (MODE === "land") return { r0: 69 / 941 * H, cx0: 0.68 * W, cy0: 312 / 941 * H, cx1: 0.553 * W, yb1: 0.774 * H, horizon: 0.715 * H, shore: 0.80 * H, plate: "beach-clean", flood: "flood-clean" };
   return { r0: 73, cx0: 0.62 * W, cy0: 807, cx1: 0.553 * W, yb1: 1450, horizon: 1414, shore: 1535, plate: "beach-clean-9x16", flood: "flood-clean-9x16" };
@@ -36,7 +37,7 @@ function drawPlate(img, a, scale = 1, ox = 0, oy = 0) { if (a <= 0) return; ctx.
 function moonState(d, G) { const m = sizeX(d), r = G.r0 * m, u = sm((m - 1) / 8.5), yb = lerp(G.cy0 + G.r0, G.yb1, u), cx = lerp(G.cx0, G.cx1, sm((m - 1) / 6)); return { m, r, cx, cy: yb - r }; }
 function sceneComposite(t, d, ecl, moonAlpha, G) {
   const cam = 1.02 + 0.026 * Math.sin(t * 0.37) + 0.02 * (t / (TL.dur || 1)), ox = 26 * U * Math.sin(t * 0.43), oy = 12 * U * Math.sin(t * 0.31 + 1);
-  const tide = clamp01(Math.log10(Math.pow(D0 / d, 3)) / Math.log10(900)) * moonAlpha, lightx = 1 + (Math.pow(D0 / d, 2) - 1) * moonAlpha, mo = moonState(d, G);
+  const tide = clamp01(Math.log10(Math.pow(D0 / d, 3)) / Math.log10(900) + tideBoost(t)) * moonAlpha, lightx = 1 + (Math.pow(D0 / d, 2) - 1) * moonAlpha, mo = moonState(d, G); mo.cx += slideOff(t);
   ctx.save(); ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
   drawPlateWaves(IM[G.plate], 1, t, G, cam, ox, oy);
   // stars twinkle in the plate's sky (a few more than the painting has)
@@ -44,7 +45,7 @@ function sceneComposite(t, d, ecl, moonAlpha, G) {
   ctx.save(); ctx.globalCompositeOperation = "screen"; const cr = rnd(21); for (let i = 0; i < 5; i++) { const y = (0.12 + 0.5 * cr()) * G.horizon, sp = (12 + 20 * cr()) * U, x = (((cr() * (W + 1200 * U) - t * sp) % (W + 1200 * U)) + (W + 1200 * U)) % (W + 1200 * U) - 600 * U, wd = (500 + 500 * cr()) * U;
     ctx.save(); ctx.filter = `blur(${30 * U}px)`; const g = ctx.createRadialGradient(x, y, 0, x, y, wd); g.addColorStop(0, `rgba(120,140,210,${0.13 + 0.12 * swayAmp(t)})`); g.addColorStop(1, "rgba(120,140,210,0)"); ctx.translate(x, y); ctx.scale(1, 0.22); ctx.translate(-x, -y); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, wd, 0, 6.283); ctx.fill(); ctx.restore(); } ctx.restore();
   // the sky: brighter as the Moon comes in (inverse square), and the dim 'noon' of the eclipse
-  const skyLift = clamp01(0.11 * Math.log2(lightx)), sky = ctx.createLinearGradient(0, 0, 0, G.horizon);
+  const skyLift = clamp01(0.11 * Math.log2(lightx) + 0.10 * flareBoost(t)), sky = ctx.createLinearGradient(0, 0, 0, G.horizon);
   ctx.save(); ctx.globalCompositeOperation = "screen"; sky.addColorStop(0, `rgba(40,70,120,${skyLift * 0.55})`); sky.addColorStop(1, `rgba(110,140,190,${skyLift * 0.85})`); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, G.horizon + 2); ctx.restore();
   if (ecl > 0) { const g = ctx.createLinearGradient(0, 0, 0, G.horizon); g.addColorStop(0, `rgba(26,52,104,${0.55 * ecl})`); g.addColorStop(1, `rgba(120,98,150,${0.65 * ecl})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, G.horizon + 2); }
   // the Moon: lit disc (fades as the eclipse darkens it) and the corona around the dark disc
@@ -98,16 +99,29 @@ const MOVES = {
   7: [["The Moon is nearly eight", 0, 1.3, "moon"], ["One lap now takes", 0, 1.0, "moon"], ["Watch the number", 0, 1.6, "moon"], ["Then it begins to slide", -0.3, 1.25, "moon"], ["The Moon rises in the west", 0, 1.0, "moon"]],
   8: [["At eighteen thousand", 0, 1.3, "moon"], ["It is a wall of grey", 0, 1.15, "moon"], ["The tide is enormous", 0, 1.3, "sea"], ["And then the Moon does", -0.3, 1.0, "sea"]],
 };
+
+// picture-led beats (timeline.beats: [{t0, t1, kind}]): a silent stretch where the idea plays out on the painting
+const BK = { approach: ["moon", 1.35], grow: ["moon", 1.5], tide: ["fig", 1.6], pull: ["moon", 1.2], bright: ["moon", 1.35], eclipse: ["moon", 1.5], flex: ["fig", 1.7], rise: ["moon", 1.25], slide: ["moon", 1.3], strain: ["moon", 1.15], stretch: ["moon", 1.0], band: ["moon", 1.0], ring: ["fig", 1.0], drift: ["moon", 1.0], sun: ["moon", 1.0], sunbeam: ["moon", 1.0], tick: ["moon", 1.0] };
+const beatPhase = (t, kind, tail) => { let v = 0; for (const b of (TL.beats || [])) if (b.kind === kind) { if (t >= b.t0 && t < b.t1) v = Math.max(v, sm((t - b.t0) / (b.t1 - b.t0))); else if (t >= b.t1 && t < b.t1 + tail) v = Math.max(v, 1 - sm((t - b.t1) / tail)); } return v; };
+const tideBoost = (t) => 0.13 * beatPhase(t, "tide", 2.5);
+const flareBoost = (t) => beatPhase(t, "bright", 2.0);
+const slideOff = (t) => -0.30 * W * beatPhase(t, "slide", 3.0);
+const shakeAmp = (t) => Math.max(beatPhase(t, "flex", 0.8), 0.45 * beatPhase(t, "strain", 0.8));
+function beatKeys() {
+  if (TL._bk !== undefined) return TL._bk; const bs = TL.beats || []; if (!bs.length) return (TL._bk = null); const keys = [];
+  for (const b of bs) { const [pv, sc] = BK[b.kind] || ["moon", 1.0]; if (sc <= 1.0) continue; keys.push({ t: b.t0 - 0.1, s: sc, pv }); keys.push({ t: b.t1 + 0.2, s: 1.0, pv }); }
+  keys.sort((a, c) => a.t - c.t); return (TL._bk = keys.length ? keys : null);
+}
 function partKeys() {
-  if (TL._pk !== undefined) return TL._pk; const m = /^part(\d)/.exec(TL.name || ""); const n = m ? Number(m[1]) : 0; if (n < 2 || !MOVES[n]) return (TL._pk = null);
-  const keys = []; for (const [txt, off, sc, pv] of MOVES[n]) { const c = TL.captions.find((q) => q.text.includes(txt)); if (c) keys.push({ t: c.t0 + off, s: sc, pv }); }
+  if (TL._pk !== undefined) return TL._pk; const bk = beatKeys(); if (bk) return (TL._pk = bk); const m = /^part(\d)/.exec(TL.name || ""); const n = m ? Number(m[1]) : 0; if (n < 2 || !MOVES[n]) return (TL._pk = null);
+  const keys = []; for (const [txt, off, sc, pv] of MOVES[n]) { const c = TL.captions.find((q) => (q.spoken || q.text).includes(txt)); if (c) keys.push({ t: c.t0 + off, s: sc, pv }); }
   return (TL._pk = keys.length ? keys : null);
 }
 function pivotOf(pv, t, G) { if (pv === "fig") return { F: figPos(), k: 0 }; if (pv === "sea") return { F: { x: W * 0.5, y: G.horizon + 0.2 * (H - G.horizon) }, k: 0 }; const mo = moonState(Math.max(dVis(t), 17000), G); return { F: { x: mo.cx, y: mo.cy }, k: 0.9 }; }
 function movesState(t, G) {
   const ks = partKeys(); if (!ks) return null; let i = -1; for (let j = 0; j < ks.length; j++) if (t >= ks[j].t) i = j;
   if (i < 0) { const P = pivotOf(ks[0].pv, t, G); return { s: 1, F: P.F, k: P.k }; }
-  const k = ks[i], p = i > 0 ? ks[i - 1] : { s: 1, pv: k.pv }, u = sm((t - k.t) / 1.7), A = pivotOf(p.pv, t, G), B = pivotOf(k.pv, t, G);
+  const k = ks[i], p = i > 0 ? ks[i - 1] : { s: 1, pv: k.pv }, u = sm((t - k.t) / (k.s === 1.0 ? 1.8 : 1.4)), A = pivotOf(p.pv, t, G), B = pivotOf(k.pv, t, G);
   return { s: lerp(p.s, k.s, u), F: { x: lerp(A.F.x, B.F.x, u), y: lerp(A.F.y, B.F.y, u) }, k: lerp(A.k, B.k, u) };
 }
 function zoomState(t, b, mo) {   // {s, F (world pivot), k (0 = pivot stays put, 1 = pivot goes to the screen anchor)}
@@ -147,7 +161,7 @@ function ch1Overlays(t, b, mo, G) {
 }
 window.renderAt = (t) => {
   const G = geom(), ecl = track(TL.tracks.eclipse, t), moonA = track(TL.tracks.moon, t), brk = track(TL.tracks.brk, t), ring = track(TL.tracks.ring, t), tn = track(TL.tracks.tonight, t), d = dVis(t);
-  const A = swayAmp(t); ctx.save(); if (A > 0.001) { const sc = 1 + 0.016 * A; ctx.translate(W / 2 + 16 * U * A * Math.sin(t * 0.55), H / 2 + 8 * U * A * Math.sin(t * 0.4)); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); }
+  const A = swayAmp(t), SH = shakeAmp(t); ctx.save(); if (SH > 0.001) ctx.translate(9 * U * SH * Math.sin(t * 43), 6 * U * SH * Math.sin(t * 57 + 1)); if (A > 0.001) { const sc = 1 + 0.016 * A; ctx.translate(W / 2 + 16 * U * A * Math.sin(t * 0.55), H / 2 + 8 * U * A * Math.sin(t * 0.4)); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); }
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; ctx.save();
   const mv = !b ? movesState(t, G) : null;
   if (mv) { let tx = lerp(mv.F.x, W * 0.54, mv.k), ty = lerp(mv.F.y, H * 0.46, mv.k); tx = Math.max(W - (W - mv.F.x) * mv.s, Math.min(mv.F.x * mv.s, tx)); ty = Math.max(H - (H - mv.F.y) * mv.s, Math.min(mv.F.y * mv.s, ty)); ctx.translate(tx, ty); ctx.scale(mv.s, mv.s); ctx.translate(-mv.F.x, -mv.F.y); }

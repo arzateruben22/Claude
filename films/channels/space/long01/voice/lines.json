@@ -96,122 +96,90 @@
   },
   {
    "id": "ch1_vo",
-   "text": "The sea is calm, and the Moon hangs over the water. Right now, it is drifting away from you. About three point eight centimeters a year. Tonight, imagine it reverses. It starts coming closer, and it never stops. Nothing here is a forecast. It is a thought experiment, built from real physics. First, where it really is. On average, the Moon is about three hundred eighty-four thousand kilometers away. From the beach, it looks about half a degree wide. About the same size as the Sun. Its light takes about a second and a quarter to reach you. Moonlight is just sunlight, bounced off grey rock. Same sea, same sand, same Moon. Only one thing will change. Keep an eye on the number in the corner. It only ever goes down.",
+   "text": "The sea is calm, and the Moon hangs over the water. Right now, it is drifting away from you, about three point eight centimeters a year. Tonight, imagine it reverses. It starts coming closer, and it never stops. This is a thought experiment, built from real physics. On average, the Moon is about three hundred eighty-four thousand kilometers away. From the beach, it looks about half a degree wide. About the same size as the Sun. Its light takes about a second and a quarter to reach you. Moonlight is just sunlight, bounced off grey rock. Keep an eye on the number in the corner. It only ever goes down.",
    "file": "voice/wav/03.wav",
-   "dur": 49.605,
+   "dur": 41.98,
    "sentences": [
     {
      "text": "The sea is calm, and the Moon hangs over the water.",
      "t0": 0.02,
-     "t1": 3.44,
+     "t1": 3.68,
      "claims": []
     },
     {
-     "text": "Right now, it is drifting away from you.",
-     "t0": 3.54,
-     "t1": 6.08,
-     "claims": [
-      "c2"
-     ]
-    },
-    {
-     "text": "About three point eight centimeters a year.",
-     "t0": 6.13,
-     "t1": 8.96,
+     "text": "Right now, it is drifting away from you, about three point eight centimeters a year.",
+     "t0": 3.815,
+     "t1": 9.28,
      "claims": [
       "c2"
      ]
     },
     {
      "text": "Tonight, imagine it reverses.",
-     "t0": 9.04,
-     "t1": 11.44,
+     "t0": 9.355,
+     "t1": 12.08,
      "claims": []
     },
     {
      "text": "It starts coming closer, and it never stops.",
-     "t0": 11.545,
-     "t1": 14.32,
+     "t0": 12.16,
+     "t1": 15.2,
      "claims": []
     },
     {
-     "text": "Nothing here is a forecast.",
-     "t0": 14.38,
-     "t1": 16.32,
-     "claims": []
-    },
-    {
-     "text": "It is a thought experiment, built from real physics.",
-     "t0": 16.455,
-     "t1": 19.84,
-     "claims": []
-    },
-    {
-     "text": "First, where it really is.",
-     "t0": 19.835,
-     "t1": 22.16,
+     "text": "This is a thought experiment, built from real physics.",
+     "t0": 15.275,
+     "t1": 18.88,
      "claims": []
     },
     {
      "text": "On average, the Moon is about three hundred eighty-four thousand kilometers away.",
-     "t0": 22.25,
-     "t1": 27.36,
+     "t0": 18.955,
+     "t1": 24.24,
      "claims": [
       "c1"
      ]
     },
     {
      "text": "From the beach, it looks about half a degree wide.",
-     "t0": 27.46,
-     "t1": 30.48,
+     "t0": 24.35,
+     "t1": 27.76,
      "claims": [
       "c3"
      ]
     },
     {
      "text": "About the same size as the Sun.",
-     "t0": 30.5,
-     "t1": 32.8,
+     "t0": 27.775,
+     "t1": 30.08,
      "claims": [
       "c4"
      ]
     },
     {
      "text": "Its light takes about a second and a quarter to reach you.",
-     "t0": 32.915,
-     "t1": 36.16,
+     "t0": 30.215,
+     "t1": 33.6,
      "claims": [
       "c28"
      ]
     },
     {
      "text": "Moonlight is just sunlight, bounced off grey rock.",
-     "t0": 36.235,
-     "t1": 40.0,
-     "claims": []
-    },
-    {
-     "text": "Same sea, same sand, same Moon.",
-     "t0": 39.995,
-     "t1": 43.2,
-     "claims": []
-    },
-    {
-     "text": "Only one thing will change.",
-     "t0": 43.255,
-     "t1": 45.28,
+     "t0": 33.685,
+     "t1": 37.6,
      "claims": []
     },
     {
      "text": "Keep an eye on the number in the corner.",
-     "t0": 45.405,
-     "t1": 47.92,
+     "t0": 37.73,
+     "t1": 40.24,
      "claims": []
     },
     {
      "text": "It only ever goes down.",
-     "t0": 47.995,
-     "t1": 49.52,
+     "t0": 40.345,
+     "t1": 41.92,
      "claims": []
     }
    ],
@@ -223,653 +191,548 @@
     },
     {
      "w": "sea",
-     "start": 0.25,
-     "end": 0.48
+     "start": 0.275,
+     "end": 0.56
     },
     {
      "w": "is",
-     "start": 0.575,
-     "end": 0.64
+     "start": 0.665,
+     "end": 0.72
     },
     {
      "w": "calm,",
-     "start": 0.63,
-     "end": 1.12
+     "start": 0.695,
+     "end": 1.2
     },
     {
      "w": "and",
-     "start": 1.165,
-     "end": 1.28
+     "start": 1.265,
+     "end": 1.36
     },
     {
      "w": "the",
-     "start": 1.195,
-     "end": 1.44
+     "start": 1.295,
+     "end": 1.52
     },
     {
      "w": "Moon",
-     "start": 1.335,
-     "end": 1.76
+     "start": 1.515,
+     "end": 1.92
     },
     {
      "w": "hangs",
-     "start": 1.775,
-     "end": 2.24
-    },
-    {
-     "w": "over",
-     "start": 2.285,
+     "start": 1.925,
      "end": 2.4
     },
     {
+     "w": "over",
+     "start": 2.485,
+     "end": 2.64
+    },
+    {
      "w": "the",
-     "start": 2.365,
-     "end": 2.56
+     "start": 2.585,
+     "end": 2.88
     },
     {
      "w": "water.",
-     "start": 2.525,
-     "end": 3.44
+     "start": 2.765,
+     "end": 3.68
     },
     {
      "w": "Right",
-     "start": 3.54,
-     "end": 3.76
+     "start": 3.815,
+     "end": 4.08
     },
     {
      "w": "now,",
-     "start": 3.75,
-     "end": 4.0
+     "start": 4.065,
+     "end": 4.48
     },
     {
      "w": "it",
-     "start": 4.17,
-     "end": 4.24
+     "start": 4.61,
+     "end": 4.72
     },
     {
      "w": "is",
-     "start": 4.2,
-     "end": 4.4
+     "start": 4.64,
+     "end": 4.88
     },
     {
      "w": "drifting",
-     "start": 4.455,
-     "end": 4.96
+     "start": 4.905,
+     "end": 5.36
     },
     {
      "w": "away",
-     "start": 4.955,
-     "end": 5.28
+     "start": 5.425,
+     "end": 5.68
     },
     {
      "w": "from",
-     "start": 5.27,
-     "end": 5.52
+     "start": 5.77,
+     "end": 5.92
     },
     {
-     "w": "you.",
-     "start": 5.59,
-     "end": 6.08
+     "w": "you,",
+     "start": 5.8,
+     "end": 6.24
     },
     {
-     "w": "About",
-     "start": 6.13,
-     "end": 6.4
+     "w": "about",
+     "start": 6.165,
+     "end": 6.56
     },
     {
      "w": "three",
-     "start": 6.415,
-     "end": 7.36
+     "start": 6.515,
+     "end": 7.6
     },
     {
      "w": "point",
-     "start": 6.445,
-     "end": 7.36
+     "start": 6.545,
+     "end": 7.6
     },
     {
      "w": "eight",
-     "start": 6.475,
-     "end": 7.36
+     "start": 6.575,
+     "end": 7.6
     },
     {
      "w": "centimeters",
-     "start": 7.355,
-     "end": 8.16
-    },
-    {
-     "w": "a",
-     "start": 8.19,
+     "start": 7.585,
      "end": 8.4
     },
     {
+     "w": "a",
+     "start": 8.445,
+     "end": 8.64
+    },
+    {
      "w": "year.",
-     "start": 8.495,
-     "end": 8.96
+     "start": 8.73,
+     "end": 9.28
     },
     {
      "w": "Tonight,",
-     "start": 9.04,
-     "end": 9.6
+     "start": 9.355,
+     "end": 10.08
     },
     {
      "w": "imagine",
-     "start": 9.595,
-     "end": 10.16
+     "start": 10.105,
+     "end": 10.72
     },
     {
      "w": "it",
-     "start": 10.255,
-     "end": 10.32
+     "start": 10.8,
+     "end": 10.88
     },
     {
      "w": "reverses.",
-     "start": 10.305,
-     "end": 11.44
+     "start": 10.88,
+     "end": 12.08
     },
     {
      "w": "It",
-     "start": 11.545,
-     "end": 11.6
+     "start": 12.16,
+     "end": 12.24
     },
     {
      "w": "starts",
-     "start": 11.62,
-     "end": 12.0
+     "start": 12.19,
+     "end": 12.64
     },
     {
      "w": "coming",
-     "start": 12.045,
-     "end": 12.32
-    },
-    {
-     "w": "closer,",
-     "start": 12.335,
-     "end": 12.8
-    },
-    {
-     "w": "and",
-     "start": 12.76,
+     "start": 12.655,
      "end": 12.96
     },
     {
-     "w": "it",
-     "start": 12.965,
-     "end": 13.12
-    },
-    {
-     "w": "never",
-     "start": 13.135,
-     "end": 13.36
-    },
-    {
-     "w": "stops.",
-     "start": 13.425,
-     "end": 14.32
-    },
-    {
-     "w": "Nothing",
-     "start": 14.38,
-     "end": 14.72
-    },
-    {
-     "w": "here",
-     "start": 14.62,
-     "end": 14.96
-    },
-    {
-     "w": "is",
-     "start": 15.005,
-     "end": 15.12
-    },
-    {
-     "w": "a",
-     "start": 15.21,
-     "end": 15.28
-    },
-    {
-     "w": "forecast.",
-     "start": 15.295,
-     "end": 16.32
-    },
-    {
-     "w": "It",
-     "start": 16.455,
-     "end": 16.505
-    },
-    {
-     "w": "is",
-     "start": 16.485,
-     "end": 16.64
-    },
-    {
-     "w": "a",
-     "start": 16.735,
-     "end": 16.88
-    },
-    {
-     "w": "thought",
-     "start": 16.875,
-     "end": 17.2
-    },
-    {
-     "w": "experiment,",
-     "start": 17.205,
-     "end": 17.84
-    },
-    {
-     "w": "built",
-     "start": 17.8,
-     "end": 18.24
-    },
-    {
-     "w": "from",
-     "start": 18.18,
-     "end": 18.4
-    },
-    {
-     "w": "real",
-     "start": 18.435,
-     "end": 18.64
-    },
-    {
-     "w": "physics.",
-     "start": 18.705,
-     "end": 19.84
-    },
-    {
-     "w": "First,",
-     "start": 19.835,
-     "end": 20.56
-    },
-    {
-     "w": "where",
-     "start": 20.595,
-     "end": 20.8
-    },
-    {
-     "w": "it",
-     "start": 20.88,
-     "end": 21.04
-    },
-    {
-     "w": "really",
-     "start": 20.925,
-     "end": 21.28
-    },
-    {
-     "w": "is.",
-     "start": 21.685,
-     "end": 22.16
-    },
-    {
-     "w": "On",
-     "start": 22.25,
-     "end": 22.4
-    },
-    {
-     "w": "average,",
-     "start": 22.475,
-     "end": 23.04
-    },
-    {
-     "w": "the",
-     "start": 23.04,
-     "end": 23.2
-    },
-    {
-     "w": "Moon",
-     "start": 23.195,
-     "end": 23.52
-    },
-    {
-     "w": "is",
-     "start": 23.53,
-     "end": 23.76
-    },
-    {
-     "w": "about",
-     "start": 23.725,
-     "end": 24.0
-    },
-    {
-     "w": "three",
-     "start": 23.965,
-     "end": 25.92
-    },
-    {
-     "w": "hundred",
-     "start": 23.995,
-     "end": 25.92
-    },
-    {
-     "w": "eighty-four",
-     "start": 24.025,
-     "end": 25.92
-    },
-    {
-     "w": "thousand",
-     "start": 24.055,
-     "end": 25.92
-    },
-    {
-     "w": "kilometers",
-     "start": 25.97,
-     "end": 26.72
-    },
-    {
-     "w": "away.",
-     "start": 26.605,
-     "end": 27.36
-    },
-    {
-     "w": "From",
-     "start": 27.46,
-     "end": 27.6
-    },
-    {
-     "w": "the",
-     "start": 27.49,
-     "end": 27.76
-    },
-    {
-     "w": "beach,",
-     "start": 27.82,
-     "end": 28.08
-    },
-    {
-     "w": "it",
-     "start": 28.175,
-     "end": 28.32
-    },
-    {
-     "w": "looks",
-     "start": 28.415,
-     "end": 28.56
-    },
-    {
-     "w": "about",
-     "start": 28.445,
-     "end": 28.8
-    },
-    {
-     "w": "half",
-     "start": 28.74,
-     "end": 29.04
-    },
-    {
-     "w": "a",
-     "start": 29.085,
-     "end": 29.2
-    },
-    {
-     "w": "degree",
-     "start": 29.115,
-     "end": 29.68
-    },
-    {
-     "w": "wide.",
-     "start": 29.66,
-     "end": 30.48
-    },
-    {
-     "w": "About",
-     "start": 30.5,
-     "end": 30.72
-    },
-    {
-     "w": "the",
-     "start": 30.745,
-     "end": 30.96
-    },
-    {
-     "w": "same",
-     "start": 30.945,
-     "end": 31.2
-    },
-    {
-     "w": "size",
-     "start": 31.19,
-     "end": 31.68
-    },
-    {
-     "w": "as",
-     "start": 31.685,
-     "end": 31.92
-    },
-    {
-     "w": "the",
-     "start": 31.91,
-     "end": 32.08
-    },
-    {
-     "w": "Sun.",
-     "start": 32.135,
-     "end": 32.8
-    },
-    {
-     "w": "Its",
-     "start": 32.915,
-     "end": 33.04
-    },
-    {
-     "w": "light",
-     "start": 32.995,
-     "end": 33.44
-    },
-    {
-     "w": "takes",
-     "start": 33.455,
-     "end": 33.76
-    },
-    {
-     "w": "about",
-     "start": 33.645,
-     "end": 33.92
-    },
-    {
-     "w": "a",
-     "start": 33.905,
-     "end": 34.08
-    },
-    {
-     "w": "second",
-     "start": 34.135,
-     "end": 34.4
+     "w": "closer,",
+     "start": 13.01,
+     "end": 13.52
     },
     {
      "w": "and",
-     "start": 34.29,
-     "end": 34.56
+     "start": 13.48,
+     "end": 13.68
     },
     {
-     "w": "a",
-     "start": 34.635,
-     "end": 34.72
+     "w": "it",
+     "start": 13.705,
+     "end": 13.84
     },
     {
-     "w": "quarter",
-     "start": 34.665,
-     "end": 35.04
+     "w": "never",
+     "start": 13.735,
+     "end": 14.16
     },
     {
-     "w": "to",
-     "start": 35.005,
-     "end": 35.2
+     "w": "stops.",
+     "start": 14.2,
+     "end": 15.2
     },
     {
-     "w": "reach",
-     "start": 35.295,
-     "end": 35.6
-    },
-    {
-     "w": "you.",
-     "start": 35.8,
-     "end": 36.16
-    },
-    {
-     "w": "Moonlight",
-     "start": 36.235,
-     "end": 36.88
+     "w": "This",
+     "start": 15.275,
+     "end": 15.44
     },
     {
      "w": "is",
-     "start": 36.875,
-     "end": 37.04
+     "start": 15.52,
+     "end": 15.68
+    },
+    {
+     "w": "a",
+     "start": 15.76,
+     "end": 15.92
+    },
+    {
+     "w": "thought",
+     "start": 15.905,
+     "end": 16.16
+    },
+    {
+     "w": "experiment,",
+     "start": 16.26,
+     "end": 16.88
+    },
+    {
+     "w": "built",
+     "start": 16.88,
+     "end": 17.36
+    },
+    {
+     "w": "from",
+     "start": 17.295,
+     "end": 17.6
+    },
+    {
+     "w": "real",
+     "start": 17.525,
+     "end": 17.84
+    },
+    {
+     "w": "physics.",
+     "start": 17.91,
+     "end": 18.88
+    },
+    {
+     "w": "On",
+     "start": 18.955,
+     "end": 19.12
+    },
+    {
+     "w": "average,",
+     "start": 19.195,
+     "end": 19.68
+    },
+    {
+     "w": "the",
+     "start": 19.745,
+     "end": 19.92
+    },
+    {
+     "w": "Moon",
+     "start": 19.805,
+     "end": 20.24
+    },
+    {
+     "w": "is",
+     "start": 20.255,
+     "end": 20.48
+    },
+    {
+     "w": "about",
+     "start": 20.45,
+     "end": 20.72
+    },
+    {
+     "w": "three",
+     "start": 20.685,
+     "end": 22.64
+    },
+    {
+     "w": "hundred",
+     "start": 20.715,
+     "end": 22.64
+    },
+    {
+     "w": "eighty-four",
+     "start": 20.745,
+     "end": 22.64
+    },
+    {
+     "w": "thousand",
+     "start": 20.775,
+     "end": 22.64
+    },
+    {
+     "w": "kilometers",
+     "start": 22.665,
+     "end": 23.44
+    },
+    {
+     "w": "away.",
+     "start": 23.41,
+     "end": 24.24
+    },
+    {
+     "w": "From",
+     "start": 24.35,
+     "end": 24.48
+    },
+    {
+     "w": "the",
+     "start": 24.38,
+     "end": 24.64
+    },
+    {
+     "w": "beach,",
+     "start": 24.695,
+     "end": 25.2
+    },
+    {
+     "w": "it",
+     "start": 25.275,
+     "end": 25.36
+    },
+    {
+     "w": "looks",
+     "start": 25.365,
+     "end": 25.68
+    },
+    {
+     "w": "about",
+     "start": 25.565,
+     "end": 25.92
+    },
+    {
+     "w": "half",
+     "start": 25.895,
+     "end": 26.24
+    },
+    {
+     "w": "a",
+     "start": 26.305,
+     "end": 26.4
+    },
+    {
+     "w": "degree",
+     "start": 26.335,
+     "end": 26.88
+    },
+    {
+     "w": "wide.",
+     "start": 26.765,
+     "end": 27.76
+    },
+    {
+     "w": "About",
+     "start": 27.775,
+     "end": 28.0
+    },
+    {
+     "w": "the",
+     "start": 28.035,
+     "end": 28.24
+    },
+    {
+     "w": "same",
+     "start": 28.245,
+     "end": 28.48
+    },
+    {
+     "w": "size",
+     "start": 28.445,
+     "end": 28.96
+    },
+    {
+     "w": "as",
+     "start": 28.95,
+     "end": 29.2
+    },
+    {
+     "w": "the",
+     "start": 29.185,
+     "end": 29.36
+    },
+    {
+     "w": "Sun.",
+     "start": 29.43,
+     "end": 30.08
+    },
+    {
+     "w": "Its",
+     "start": 30.215,
+     "end": 30.4
+    },
+    {
+     "w": "light",
+     "start": 30.295,
+     "end": 30.72
+    },
+    {
+     "w": "takes",
+     "start": 30.775,
+     "end": 31.04
+    },
+    {
+     "w": "about",
+     "start": 30.965,
+     "end": 31.28
+    },
+    {
+     "w": "a",
+     "start": 31.26,
+     "end": 31.44
+    },
+    {
+     "w": "second",
+     "start": 31.485,
+     "end": 31.76
+    },
+    {
+     "w": "and",
+     "start": 31.66,
+     "end": 31.92
+    },
+    {
+     "w": "a",
+     "start": 32.01,
+     "end": 32.08
+    },
+    {
+     "w": "quarter",
+     "start": 32.04,
+     "end": 32.4
+    },
+    {
+     "w": "to",
+     "start": 32.38,
+     "end": 32.56
+    },
+    {
+     "w": "reach",
+     "start": 32.505,
+     "end": 33.04
+    },
+    {
+     "w": "you.",
+     "start": 33.055,
+     "end": 33.6
+    },
+    {
+     "w": "Moonlight",
+     "start": 33.685,
+     "end": 34.32
+    },
+    {
+     "w": "is",
+     "start": 34.33,
+     "end": 34.48
     },
     {
      "w": "just",
-     "start": 37.01,
-     "end": 37.28
+     "start": 34.485,
+     "end": 34.72
     },
     {
      "w": "sunlight,",
-     "start": 37.21,
-     "end": 37.92
+     "start": 34.72,
+     "end": 35.52
     },
     {
      "w": "bounced",
-     "start": 37.875,
-     "end": 38.4
+     "start": 35.485,
+     "end": 36.08
     },
     {
      "w": "off",
-     "start": 38.365,
-     "end": 38.64
+     "start": 35.98,
+     "end": 36.32
     },
     {
      "w": "grey",
-     "start": 38.65,
-     "end": 39.2
+     "start": 36.325,
+     "end": 36.88
     },
     {
      "w": "rock.",
-     "start": 39.08,
-     "end": 40.0
-    },
-    {
-     "w": "Same",
-     "start": 39.995,
-     "end": 40.4
-    },
-    {
-     "w": "sea,",
-     "start": 40.38,
-     "end": 41.04
-    },
-    {
-     "w": "same",
-     "start": 40.93,
-     "end": 41.36
-    },
-    {
-     "w": "sand,",
-     "start": 41.35,
-     "end": 42.08
-    },
-    {
-     "w": "same",
-     "start": 42.085,
-     "end": 42.32
-    },
-    {
-     "w": "Moon.",
-     "start": 42.32,
-     "end": 43.2
-    },
-    {
-     "w": "Only",
-     "start": 43.255,
-     "end": 43.6
-    },
-    {
-     "w": "one",
-     "start": 43.635,
-     "end": 43.84
-    },
-    {
-     "w": "thing",
-     "start": 43.845,
-     "end": 44.08
-    },
-    {
-     "w": "will",
-     "start": 43.995,
-     "end": 44.32
-    },
-    {
-     "w": "change.",
-     "start": 44.45,
-     "end": 45.28
+     "start": 36.975,
+     "end": 37.6
     },
     {
      "w": "Keep",
-     "start": 45.405,
-     "end": 45.6
+     "start": 37.73,
+     "end": 37.92
     },
     {
      "w": "an",
-     "start": 45.615,
-     "end": 45.84
+     "start": 37.92,
+     "end": 38.16
     },
     {
      "w": "eye",
-     "start": 45.86,
-     "end": 46.24
+     "start": 38.16,
+     "end": 38.56
     },
     {
      "w": "on",
-     "start": 46.295,
-     "end": 46.4
+     "start": 38.59,
+     "end": 38.72
     },
     {
      "w": "the",
-     "start": 46.325,
-     "end": 46.56
+     "start": 38.625,
+     "end": 38.88
     },
     {
      "w": "number",
-     "start": 46.53,
-     "end": 46.88
+     "start": 38.97,
+     "end": 39.2
     },
     {
      "w": "in",
-     "start": 46.76,
-     "end": 47.04
+     "start": 39.08,
+     "end": 39.36
     },
     {
      "w": "the",
-     "start": 47.1,
-     "end": 47.2
+     "start": 39.45,
+     "end": 39.52
     },
     {
      "w": "corner.",
-     "start": 47.175,
-     "end": 47.92
+     "start": 39.535,
+     "end": 40.24
     },
     {
      "w": "It",
-     "start": 47.995,
-     "end": 48.16
+     "start": 40.345,
+     "end": 40.48
     },
     {
      "w": "only",
-     "start": 48.125,
-     "end": 48.4
+     "start": 40.475,
+     "end": 40.8
     },
     {
      "w": "ever",
-     "start": 48.515,
-     "end": 48.8
+     "start": 40.865,
+     "end": 41.12
     },
     {
      "w": "goes",
-     "start": 48.79,
-     "end": 49.12
+     "start": 41.135,
+     "end": 41.44
     },
     {
      "w": "down.",
-     "start": 49.085,
-     "end": 49.52
+     "start": 41.45,
+     "end": 41.92
     }
    ]
   },
@@ -998,98 +861,74 @@
   },
   {
    "id": "ch2_vo",
-   "text": "One quarter of the way in. Three quarters of today's distance: about two hundred eighty-eight thousand kilometers. The Moon looks one and a third times wider. You'd notice it right away, like a coin held a little closer. Its light now takes about a second to reach you. Even so, there is one thing the sea already feels. The Moon's pull on the Earth gets stronger as it comes in. At this distance, its tidal pull is more than twice what it is today. Not enough to see on the beach, not yet. Today, the Sun pulls on the tides too, with about half the Moon's effect. Bring the Moon closer, and the Sun's share stays the same while the Moon's grows. So the Moon would take over even more. But the number keeps falling, and the sea is about to start to move.",
+   "text": "One quarter of the way in. Three quarters of today's distance: about two hundred eighty-eight thousand kilometers. The Moon looks one and a third times wider. Its light now takes about a second to reach you. The Moon's pull on the Earth gets stronger as it comes in. At this distance, its tidal pull is more than twice what it is today. Not enough to see on the beach, not yet. The Sun pulls on the tides too, with about half the Moon's effect. But the number keeps falling, and the sea is about to start to move.",
    "file": "voice/wav/06.wav",
-   "dur": 50.148,
+   "dur": 35.259,
    "sentences": [
     {
      "text": "One quarter of the way in.",
      "t0": 0.02,
-     "t1": 1.84,
+     "t1": 1.92,
      "claims": []
     },
     {
      "text": "Three quarters of today's distance: about two hundred eighty-eight thousand kilometers.",
-     "t0": 1.815,
-     "t1": 7.6,
+     "t0": 1.915,
+     "t1": 7.92,
      "claims": [
       "c5"
      ]
     },
     {
      "text": "The Moon looks one and a third times wider.",
-     "t0": 7.665,
-     "t1": 10.96,
+     "t0": 7.995,
+     "t1": 11.36,
      "claims": [
       "c5"
      ]
     },
     {
-     "text": "You'd notice it right away, like a coin held a little closer.",
-     "t0": 11.02,
-     "t1": 15.04,
-     "claims": []
-    },
-    {
      "text": "Its light now takes about a second to reach you.",
-     "t0": 15.19,
-     "t1": 18.08,
+     "t0": 11.485,
+     "t1": 14.56,
      "claims": [
       "c29"
      ]
     },
     {
-     "text": "Even so, there is one thing the sea already feels.",
-     "t0": 18.12,
-     "t1": 21.84,
-     "claims": []
-    },
-    {
      "text": "The Moon's pull on the Earth gets stronger as it comes in.",
-     "t0": 21.97,
-     "t1": 25.68,
+     "t0": 14.72,
+     "t1": 18.48,
      "claims": [
       "c8"
      ]
     },
     {
      "text": "At this distance, its tidal pull is more than twice what it is today.",
-     "t0": 25.75,
-     "t1": 30.16,
+     "t0": 18.6,
+     "t1": 23.28,
      "claims": [
       "c30"
      ]
     },
     {
      "text": "Not enough to see on the beach, not yet.",
-     "t0": 30.205,
-     "t1": 32.96,
+     "t0": 23.39,
+     "t1": 26.32,
      "claims": []
     },
     {
-     "text": "Today, the Sun pulls on the tides too, with about half the Moon's effect.",
-     "t0": 33.015,
-     "t1": 38.16,
+     "text": "The Sun pulls on the tides too, with about half the Moon's effect.",
+     "t0": 26.45,
+     "t1": 31.2,
      "claims": [
       "c42"
      ]
     },
     {
-     "text": "Bring the Moon closer, and the Sun's share stays the same while the Moon's grows.",
-     "t0": 38.265,
-     "t1": 43.52,
-     "claims": []
-    },
-    {
-     "text": "So the Moon would take over even more.",
-     "t0": 43.55,
-     "t1": 46.16,
-     "claims": []
-    },
-    {
      "text": "But the number keeps falling, and the sea is about to start to move.",
-     "t0": 46.34,
-     "t1": 50.08,
+     "t0": 31.325,
+     "t1": 35.2,
      "claims": []
     }
    ],
@@ -1097,7 +936,7 @@
     {
      "w": "One",
      "start": 0.02,
-     "end": 0.32
+     "end": 0.16
     },
     {
      "w": "quarter",
@@ -1106,713 +945,483 @@
     },
     {
      "w": "of",
-     "start": 0.77,
-     "end": 0.82
+     "start": 0.79,
+     "end": 0.88
     },
     {
      "w": "the",
-     "start": 0.8,
-     "end": 0.96
+     "start": 0.82,
+     "end": 1.04
     },
     {
      "w": "way",
-     "start": 0.88,
-     "end": 1.2
+     "start": 0.92,
+     "end": 1.28
     },
     {
      "w": "in.",
-     "start": 1.295,
-     "end": 1.84
+     "start": 1.36,
+     "end": 1.92
     },
     {
      "w": "Three",
-     "start": 1.815,
-     "end": 2.0
+     "start": 1.915,
+     "end": 2.08
     },
     {
      "w": "quarters",
-     "start": 2.115,
-     "end": 2.56
-    },
-    {
-     "w": "of",
-     "start": 2.655,
+     "start": 2.245,
      "end": 2.72
     },
     {
+     "w": "of",
+     "start": 2.815,
+     "end": 2.88
+    },
+    {
      "w": "today's",
-     "start": 2.695,
-     "end": 3.2
+     "start": 2.86,
+     "end": 3.36
     },
     {
      "w": "distance:",
-     "start": 3.15,
-     "end": 4.08
+     "start": 3.31,
+     "end": 4.32
     },
     {
      "w": "about",
-     "start": 4.1,
-     "end": 4.4
+     "start": 4.325,
+     "end": 4.64
     },
     {
      "w": "two",
-     "start": 4.46,
-     "end": 6.32
+     "start": 4.69,
+     "end": 6.64
     },
     {
      "w": "hundred",
-     "start": 4.49,
-     "end": 6.32
+     "start": 4.72,
+     "end": 6.64
     },
     {
      "w": "eighty-eight",
-     "start": 4.52,
-     "end": 6.32
+     "start": 4.75,
+     "end": 6.64
     },
     {
      "w": "thousand",
-     "start": 4.55,
-     "end": 6.32
+     "start": 4.78,
+     "end": 6.64
     },
     {
      "w": "kilometers.",
-     "start": 6.345,
-     "end": 7.6
+     "start": 6.625,
+     "end": 7.92
     },
     {
      "w": "The",
-     "start": 7.665,
-     "end": 7.76
+     "start": 7.995,
+     "end": 8.08
     },
     {
      "w": "Moon",
-     "start": 7.695,
-     "end": 8.16
+     "start": 8.025,
+     "end": 8.56
     },
     {
      "w": "looks",
-     "start": 8.205,
-     "end": 8.48
+     "start": 8.675,
+     "end": 8.88
     },
     {
      "w": "one",
-     "start": 8.445,
-     "end": 8.72
+     "start": 8.795,
+     "end": 9.12
     },
     {
      "w": "and",
-     "start": 8.845,
-     "end": 8.96
+     "start": 9.25,
+     "end": 9.36
     },
     {
      "w": "a",
-     "start": 8.875,
-     "end": 9.04
+     "start": 9.28,
+     "end": 9.44
     },
     {
      "w": "third",
-     "start": 9.175,
-     "end": 9.6
-    },
-    {
-     "w": "times",
-     "start": 9.545,
+     "start": 9.58,
      "end": 10.0
     },
     {
+     "w": "times",
+     "start": 9.995,
+     "end": 10.48
+    },
+    {
      "w": "wider.",
-     "start": 9.975,
-     "end": 10.96
-    },
-    {
-     "w": "You'd",
-     "start": 11.02,
-     "end": 11.2
-    },
-    {
-     "w": "notice",
-     "start": 11.175,
-     "end": 11.68
-    },
-    {
-     "w": "it",
-     "start": 11.72,
-     "end": 11.84
-    },
-    {
-     "w": "right",
-     "start": 11.75,
-     "end": 12.08
-    },
-    {
-     "w": "away,",
-     "start": 11.99,
-     "end": 12.64
-    },
-    {
-     "w": "like",
-     "start": 12.69,
-     "end": 12.8
-    },
-    {
-     "w": "a",
-     "start": 12.835,
-     "end": 13.04
-    },
-    {
-     "w": "coin",
-     "start": 12.995,
-     "end": 13.52
-    },
-    {
-     "w": "held",
-     "start": 13.52,
-     "end": 13.84
-    },
-    {
-     "w": "a",
-     "start": 13.905,
-     "end": 13.955
-    },
-    {
-     "w": "little",
-     "start": 14.015,
-     "end": 14.16
-    },
-    {
-     "w": "closer.",
-     "start": 14.07,
-     "end": 15.04
+     "start": 10.425,
+     "end": 11.36
     },
     {
      "w": "Its",
-     "start": 15.19,
-     "end": 15.28
+     "start": 11.485,
+     "end": 11.6
     },
     {
      "w": "light",
-     "start": 15.275,
-     "end": 15.76
+     "start": 11.575,
+     "end": 12.08
     },
     {
      "w": "now",
-     "start": 15.645,
-     "end": 16.0
+     "start": 11.98,
+     "end": 12.32
     },
     {
      "w": "takes",
-     "start": 16.025,
-     "end": 16.32
+     "start": 12.39,
+     "end": 12.64
     },
     {
      "w": "about",
-     "start": 16.215,
-     "end": 16.48
+     "start": 12.595,
+     "end": 12.88
     },
     {
      "w": "a",
-     "start": 16.36,
-     "end": 16.64
+     "start": 12.76,
+     "end": 13.12
     },
     {
      "w": "second",
-     "start": 16.715,
-     "end": 17.04
+     "start": 13.215,
+     "end": 13.44
     },
     {
      "w": "to",
-     "start": 16.995,
-     "end": 17.2
+     "start": 13.425,
+     "end": 13.6
     },
     {
      "w": "reach",
-     "start": 17.315,
-     "end": 17.52
+     "start": 13.48,
+     "end": 14.0
     },
     {
      "w": "you.",
-     "start": 17.605,
-     "end": 18.08
-    },
-    {
-     "w": "Even",
-     "start": 18.12,
-     "end": 18.48
-    },
-    {
-     "w": "so,",
-     "start": 18.54,
-     "end": 18.88
-    },
-    {
-     "w": "there",
-     "start": 18.925,
-     "end": 19.12
-    },
-    {
-     "w": "is",
-     "start": 19.215,
-     "end": 19.36
-    },
-    {
-     "w": "one",
-     "start": 19.265,
-     "end": 19.6
-    },
-    {
-     "w": "thing",
-     "start": 19.595,
-     "end": 19.84
-    },
-    {
-     "w": "the",
-     "start": 19.88,
-     "end": 20.08
-    },
-    {
-     "w": "sea",
-     "start": 20.155,
-     "end": 20.4
-    },
-    {
-     "w": "already",
-     "start": 20.405,
-     "end": 20.96
-    },
-    {
-     "w": "feels.",
-     "start": 20.89,
-     "end": 21.84
+     "start": 14.11,
+     "end": 14.56
     },
     {
      "w": "The",
-     "start": 21.97,
-     "end": 22.02
+     "start": 14.72,
+     "end": 14.8
     },
     {
      "w": "Moon's",
-     "start": 22.0,
-     "end": 22.56
+     "start": 14.75,
+     "end": 15.28
     },
     {
      "w": "pull",
-     "start": 22.6,
-     "end": 22.88
+     "start": 15.355,
+     "end": 15.6
     },
     {
      "w": "on",
-     "start": 22.93,
-     "end": 23.12
+     "start": 15.605,
+     "end": 15.76
     },
     {
      "w": "the",
-     "start": 23.25,
-     "end": 23.3
+     "start": 15.85,
+     "end": 15.92
     },
     {
      "w": "Earth",
-     "start": 23.28,
-     "end": 23.6
+     "start": 15.95,
+     "end": 16.32
     },
     {
      "w": "gets",
-     "start": 23.58,
-     "end": 23.92
+     "start": 16.325,
+     "end": 16.64
     },
     {
      "w": "stronger",
-     "start": 23.935,
-     "end": 24.4
+     "start": 16.73,
+     "end": 17.2
     },
     {
      "w": "as",
-     "start": 24.28,
-     "end": 24.56
+     "start": 17.09,
+     "end": 17.44
     },
     {
      "w": "it",
-     "start": 24.695,
-     "end": 24.745
+     "start": 17.525,
+     "end": 17.6
     },
     {
      "w": "comes",
-     "start": 24.725,
-     "end": 25.12
+     "start": 17.555,
+     "end": 17.92
     },
     {
      "w": "in.",
-     "start": 25.215,
-     "end": 25.68
+     "start": 18.015,
+     "end": 18.48
     },
     {
      "w": "At",
-     "start": 25.75,
-     "end": 25.92
+     "start": 18.6,
+     "end": 18.72
     },
     {
      "w": "this",
-     "start": 25.89,
-     "end": 26.08
+     "start": 18.74,
+     "end": 18.96
     },
     {
      "w": "distance,",
-     "start": 26.115,
-     "end": 26.64
+     "start": 18.975,
+     "end": 19.6
     },
     {
      "w": "its",
-     "start": 26.65,
-     "end": 26.88
+     "start": 19.68,
+     "end": 19.84
     },
     {
      "w": "tidal",
-     "start": 26.875,
-     "end": 27.36
+     "start": 19.905,
+     "end": 20.4
     },
     {
      "w": "pull",
-     "start": 27.36,
-     "end": 27.68
+     "start": 20.395,
+     "end": 20.8
     },
     {
      "w": "is",
-     "start": 27.685,
-     "end": 27.92
+     "start": 20.75,
+     "end": 20.96
     },
     {
      "w": "more",
-     "start": 27.835,
-     "end": 28.08
+     "start": 20.9,
+     "end": 21.2
     },
     {
      "w": "than",
-     "start": 28.145,
-     "end": 28.32
+     "start": 21.245,
+     "end": 21.44
     },
     {
      "w": "twice",
-     "start": 28.34,
-     "end": 28.72
+     "start": 21.45,
+     "end": 21.84
     },
     {
      "w": "what",
-     "start": 28.8,
-     "end": 28.88
+     "start": 21.915,
+     "end": 22.08
     },
     {
      "w": "it",
-     "start": 28.83,
-     "end": 29.12
+     "start": 22.015,
+     "end": 22.24
     },
     {
      "w": "is",
-     "start": 29.185,
-     "end": 29.28
+     "start": 22.315,
+     "end": 22.48
     },
     {
      "w": "today.",
-     "start": 29.215,
-     "end": 30.16
+     "start": 22.36,
+     "end": 23.28
     },
     {
      "w": "Not",
-     "start": 30.205,
-     "end": 30.32
+     "start": 23.39,
+     "end": 23.84
     },
     {
      "w": "enough",
-     "start": 30.235,
-     "end": 30.64
+     "start": 23.42,
+     "end": 23.84
     },
     {
      "w": "to",
-     "start": 30.68,
-     "end": 30.8
+     "start": 23.89,
+     "end": 24.0
     },
     {
      "w": "see",
-     "start": 30.71,
-     "end": 31.04
+     "start": 23.92,
+     "end": 24.24
     },
     {
      "w": "on",
-     "start": 31.095,
-     "end": 31.28
+     "start": 24.29,
+     "end": 24.48
     },
     {
      "w": "the",
-     "start": 31.375,
-     "end": 31.425
+     "start": 24.575,
+     "end": 24.64
     },
     {
      "w": "beach,",
-     "start": 31.405,
-     "end": 31.92
+     "start": 24.62,
+     "end": 25.2
     },
     {
      "w": "not",
-     "start": 32.01,
-     "end": 32.16
+     "start": 25.12,
+     "end": 25.44
     },
     {
      "w": "yet.",
-     "start": 32.07,
-     "end": 32.96
+     "start": 25.425,
+     "end": 26.32
     },
     {
-     "w": "Today,",
-     "start": 33.015,
-     "end": 33.6
-    },
-    {
-     "w": "the",
-     "start": 33.67,
-     "end": 33.76
+     "w": "The",
+     "start": 26.45,
+     "end": 26.56
     },
     {
      "w": "Sun",
-     "start": 33.7,
-     "end": 34.16
+     "start": 26.48,
+     "end": 27.04
     },
     {
      "w": "pulls",
-     "start": 34.235,
-     "end": 34.56
+     "start": 27.075,
+     "end": 27.44
     },
     {
      "w": "on",
-     "start": 34.575,
-     "end": 34.72
+     "start": 27.385,
+     "end": 27.6
     },
     {
      "w": "the",
-     "start": 34.815,
-     "end": 34.88
+     "start": 27.695,
+     "end": 27.76
     },
     {
      "w": "tides",
-     "start": 34.87,
-     "end": 35.44
+     "start": 27.75,
+     "end": 28.32
     },
     {
      "w": "too,",
-     "start": 35.415,
-     "end": 35.68
+     "start": 28.32,
+     "end": 28.56
     },
     {
      "w": "with",
-     "start": 35.815,
-     "end": 36.0
+     "start": 28.81,
+     "end": 28.88
     },
     {
      "w": "about",
-     "start": 35.925,
-     "end": 36.24
+     "start": 28.84,
+     "end": 29.12
     },
     {
      "w": "half",
-     "start": 36.185,
-     "end": 36.56
+     "start": 29.12,
+     "end": 29.52
     },
     {
      "w": "the",
-     "start": 36.58,
-     "end": 36.72
+     "start": 29.575,
+     "end": 29.68
     },
     {
      "w": "Moon's",
-     "start": 36.61,
-     "end": 37.28
+     "start": 29.605,
+     "end": 30.32
     },
     {
      "w": "effect.",
-     "start": 37.325,
-     "end": 38.16
-    },
-    {
-     "w": "Bring",
-     "start": 38.265,
-     "end": 38.48
-    },
-    {
-     "w": "the",
-     "start": 38.555,
-     "end": 38.64
-    },
-    {
-     "w": "Moon",
-     "start": 38.585,
-     "end": 39.04
-    },
-    {
-     "w": "closer,",
-     "start": 38.99,
-     "end": 39.6
-    },
-    {
-     "w": "and",
-     "start": 39.645,
-     "end": 39.76
-    },
-    {
-     "w": "the",
-     "start": 39.675,
-     "end": 39.92
-    },
-    {
-     "w": "Sun's",
-     "start": 39.985,
-     "end": 40.32
-    },
-    {
-     "w": "share",
-     "start": 40.405,
-     "end": 40.72
-    },
-    {
-     "w": "stays",
-     "start": 40.8,
-     "end": 41.12
-    },
-    {
-     "w": "the",
-     "start": 41.1,
-     "end": 41.36
-    },
-    {
-     "w": "same",
-     "start": 41.335,
-     "end": 41.6
-    },
-    {
-     "w": "while",
-     "start": 41.67,
-     "end": 41.92
-    },
-    {
-     "w": "the",
-     "start": 41.87,
-     "end": 42.0
-    },
-    {
-     "w": "Moon's",
-     "start": 41.9,
-     "end": 42.56
-    },
-    {
-     "w": "grows.",
-     "start": 42.505,
-     "end": 43.52
-    },
-    {
-     "w": "So",
-     "start": 43.55,
-     "end": 43.68
-    },
-    {
-     "w": "the",
-     "start": 43.58,
-     "end": 43.84
-    },
-    {
-     "w": "Moon",
-     "start": 43.735,
-     "end": 44.24
-    },
-    {
-     "w": "would",
-     "start": 44.335,
-     "end": 44.48
-    },
-    {
-     "w": "take",
-     "start": 44.42,
-     "end": 44.8
-    },
-    {
-     "w": "over",
-     "start": 44.685,
-     "end": 45.12
-    },
-    {
-     "w": "even",
-     "start": 45.1,
-     "end": 45.36
-    },
-    {
-     "w": "more.",
-     "start": 45.25,
-     "end": 46.16
+     "start": 30.33,
+     "end": 31.2
     },
     {
      "w": "But",
-     "start": 46.34,
-     "end": 46.4
+     "start": 31.325,
+     "end": 31.375
     },
     {
      "w": "the",
-     "start": 46.43,
-     "end": 46.56
+     "start": 31.405,
+     "end": 31.52
     },
     {
      "w": "number",
-     "start": 46.46,
-     "end": 46.8
+     "start": 31.435,
+     "end": 31.84
     },
     {
      "w": "keeps",
-     "start": 46.885,
-     "end": 47.2
+     "start": 31.865,
+     "end": 32.24
     },
     {
      "w": "falling,",
-     "start": 47.095,
-     "end": 47.76
+     "start": 32.27,
+     "end": 32.88
     },
     {
      "w": "and",
-     "start": 47.92,
-     "end": 48.0
+     "start": 33.0,
+     "end": 33.12
     },
     {
      "w": "the",
-     "start": 47.95,
-     "end": 48.16
+     "start": 33.03,
+     "end": 33.28
     },
     {
      "w": "sea",
-     "start": 48.255,
-     "end": 48.56
+     "start": 33.375,
+     "end": 33.6
     },
     {
      "w": "is",
-     "start": 48.525,
-     "end": 48.72
+     "start": 33.55,
+     "end": 33.84
     },
     {
      "w": "about",
-     "start": 48.775,
-     "end": 48.96
+     "start": 33.88,
+     "end": 34.08
     },
     {
      "w": "to",
-     "start": 49.055,
-     "end": 49.2
+     "start": 34.16,
+     "end": 34.32
     },
     {
      "w": "start",
-     "start": 49.26,
-     "end": 49.44
+     "start": 34.37,
+     "end": 34.56
     },
     {
      "w": "to",
-     "start": 49.475,
-     "end": 49.6
+     "start": 34.585,
+     "end": 34.72
     },
     {
      "w": "move.",
-     "start": 49.515,
-     "end": 50.08
+     "start": 34.62,
+     "end": 35.2
     }
    ]
   },
@@ -1941,90 +1550,72 @@
   },
   {
    "id": "ch3_vo",
-   "text": "Half the distance: about one hundred ninety-two thousand kilometers. The Moon now looks twice as wide as it does tonight. Tides come from the difference in the Moon's pull across the Earth. That difference falls off with the cube of the distance. So half the distance means about eight times the tidal force. Here is the idea, not a measured height: the water at your feet starts to climb the beach. Slowly, in long swells, hours at a time. The waterline reaches the dry sand, and keeps going. Imagine the foam line creeping up toward your feet. It is a slow, patient rise, as if the whole ocean were being lifted from above. The Moon is no longer a calm light in the sky. It is something that pulls.",
+   "text": "Half the distance: about one hundred ninety-two thousand kilometers. The Moon now looks twice as wide as it does tonight. Tides come from the difference in the Moon's pull across the Earth. That difference falls off with the cube of the distance. So half the distance means about eight times the tidal force. Not a measured height, just the idea: the water at your feet starts to climb the beach. Slowly, in long swells, hours at a time. The Moon is no longer a calm light in the sky. It is something that pulls.",
    "file": "voice/wav/09.wav",
-   "dur": 48.738,
+   "dur": 35.627,
    "sentences": [
     {
      "text": "Half the distance: about one hundred ninety-two thousand kilometers.",
      "t0": 0.025,
-     "t1": 4.72,
+     "t1": 5.2,
      "claims": [
       "c6"
      ]
     },
     {
      "text": "The Moon now looks twice as wide as it does tonight.",
-     "t0": 4.785,
-     "t1": 8.16,
+     "t0": 5.285,
+     "t1": 8.96,
      "claims": [
       "c7"
      ]
     },
     {
      "text": "Tides come from the difference in the Moon's pull across the Earth.",
-     "t0": 8.285,
-     "t1": 12.24,
+     "t0": 9.035,
+     "t1": 13.2,
      "claims": [
       "c8"
      ]
     },
     {
      "text": "That difference falls off with the cube of the distance.",
-     "t0": 12.335,
-     "t1": 15.6,
+     "t0": 13.24,
+     "t1": 16.64,
      "claims": [
       "c9"
      ]
     },
     {
      "text": "So half the distance means about eight times the tidal force.",
-     "t0": 15.675,
-     "t1": 20.16,
+     "t0": 16.66,
+     "t1": 20.8,
      "claims": [
       "c10"
      ]
     },
     {
-     "text": "Here is the idea, not a measured height: the water at your feet starts to climb the beach.",
-     "t0": 20.205,
-     "t1": 26.48,
+     "text": "Not a measured height, just the idea: the water at your feet starts to climb the beach.",
+     "t0": 20.875,
+     "t1": 26.72,
      "claims": []
     },
     {
      "text": "Slowly, in long swells, hours at a time.",
-     "t0": 26.43,
-     "t1": 30.0,
-     "claims": []
-    },
-    {
-     "text": "The waterline reaches the dry sand, and keeps going.",
-     "t0": 30.145,
-     "t1": 33.92,
-     "claims": []
-    },
-    {
-     "text": "Imagine the foam line creeping up toward your feet.",
-     "t0": 33.995,
-     "t1": 37.36,
-     "claims": []
-    },
-    {
-     "text": "It is a slow, patient rise, as if the whole ocean were being lifted from above.",
-     "t0": 37.49,
-     "t1": 43.44,
+     "t0": 26.715,
+     "t1": 30.32,
      "claims": []
     },
     {
      "text": "The Moon is no longer a calm light in the sky.",
-     "t0": 43.53,
-     "t1": 47.04,
+     "t0": 30.445,
+     "t1": 34.0,
      "claims": []
     },
     {
      "text": "It is something that pulls.",
-     "t0": 47.165,
-     "t1": 48.72,
+     "t0": 34.105,
+     "t1": 35.6,
      "claims": []
     }
    ],
@@ -2036,643 +1627,468 @@
     },
     {
      "w": "the",
-     "start": 0.305,
+     "start": 0.31,
      "end": 0.56
     },
     {
      "w": "distance:",
      "start": 0.475,
-     "end": 1.44
+     "end": 1.52
     },
     {
      "w": "about",
-     "start": 1.415,
-     "end": 1.68
+     "start": 1.49,
+     "end": 1.84
     },
     {
      "w": "one",
-     "start": 1.71,
-     "end": 3.52
+     "start": 1.815,
+     "end": 3.92
     },
     {
      "w": "hundred",
-     "start": 1.74,
-     "end": 3.52
+     "start": 1.845,
+     "end": 3.92
     },
     {
      "w": "ninety-two",
-     "start": 1.77,
-     "end": 3.52
+     "start": 1.875,
+     "end": 3.92
     },
     {
      "w": "thousand",
-     "start": 1.8,
-     "end": 3.52
+     "start": 1.905,
+     "end": 3.92
     },
     {
      "w": "kilometers.",
-     "start": 3.535,
-     "end": 4.72
+     "start": 3.915,
+     "end": 5.2
     },
     {
      "w": "The",
-     "start": 4.785,
-     "end": 4.88
+     "start": 5.285,
+     "end": 5.36
     },
     {
      "w": "Moon",
-     "start": 4.815,
-     "end": 5.28
-    },
-    {
-     "w": "now",
-     "start": 5.345,
-     "end": 5.52
-    },
-    {
-     "w": "looks",
-     "start": 5.505,
+     "start": 5.315,
      "end": 5.84
     },
     {
-     "w": "twice",
-     "start": 5.795,
-     "end": 6.16
+     "w": "now",
+     "start": 5.92,
+     "end": 6.08
     },
     {
-     "w": "as",
-     "start": 6.185,
+     "w": "looks",
+     "start": 6.16,
      "end": 6.4
     },
     {
-     "w": "wide",
-     "start": 6.395,
-     "end": 6.72
+     "w": "twice",
+     "start": 6.425,
+     "end": 6.8
     },
     {
      "w": "as",
-     "start": 6.765,
-     "end": 6.96
+     "start": 6.84,
+     "end": 7.04
+    },
+    {
+     "w": "wide",
+     "start": 7.015,
+     "end": 7.44
+    },
+    {
+     "w": "as",
+     "start": 7.47,
+     "end": 7.68
     },
     {
      "w": "it",
-     "start": 7.055,
-     "end": 7.12
+     "start": 7.74,
+     "end": 7.84
     },
     {
      "w": "does",
-     "start": 7.085,
-     "end": 7.36
+     "start": 7.805,
+     "end": 8.08
     },
     {
      "w": "tonight.",
-     "start": 7.345,
-     "end": 8.16
+     "start": 8.05,
+     "end": 8.96
     },
     {
      "w": "Tides",
-     "start": 8.285,
-     "end": 8.8
+     "start": 9.035,
+     "end": 9.6
     },
     {
      "w": "come",
-     "start": 8.82,
-     "end": 9.04
+     "start": 9.61,
+     "end": 9.84
     },
     {
      "w": "from",
-     "start": 9.1,
-     "end": 9.2
+     "start": 9.9,
+     "end": 10.0
     },
     {
      "w": "the",
-     "start": 9.13,
-     "end": 9.36
+     "start": 9.93,
+     "end": 10.16
     },
     {
      "w": "difference",
-     "start": 9.36,
-     "end": 9.76
-    },
-    {
-     "w": "in",
-     "start": 9.785,
-     "end": 9.92
-    },
-    {
-     "w": "the",
-     "start": 9.835,
-     "end": 10.08
-    },
-    {
-     "w": "Moon's",
-     "start": 9.99,
+     "start": 10.175,
      "end": 10.56
     },
     {
-     "w": "pull",
-     "start": 10.6,
+     "w": "in",
+     "start": 10.55,
+     "end": 10.72
+    },
+    {
+     "w": "the",
+     "start": 10.635,
      "end": 10.88
     },
     {
-     "w": "across",
-     "start": 10.91,
-     "end": 11.28
-    },
-    {
-     "w": "the",
-     "start": 11.255,
+     "w": "Moon's",
+     "start": 10.84,
      "end": 11.44
     },
     {
+     "w": "pull",
+     "start": 11.475,
+     "end": 11.76
+    },
+    {
+     "w": "across",
+     "start": 11.79,
+     "end": 12.16
+    },
+    {
+     "w": "the",
+     "start": 12.135,
+     "end": 12.32
+    },
+    {
      "w": "Earth.",
-     "start": 11.395,
-     "end": 12.24
+     "start": 12.275,
+     "end": 13.2
     },
     {
      "w": "That",
-     "start": 12.335,
-     "end": 12.48
-    },
-    {
-     "w": "difference",
-     "start": 12.51,
-     "end": 12.96
-    },
-    {
-     "w": "falls",
-     "start": 13.035,
+     "start": 13.24,
      "end": 13.44
     },
     {
-     "w": "off",
-     "start": 13.32,
-     "end": 13.68
+     "w": "difference",
+     "start": 13.465,
+     "end": 13.92
     },
     {
-     "w": "with",
-     "start": 13.74,
-     "end": 13.84
-    },
-    {
-     "w": "the",
-     "start": 13.845,
-     "end": 14.0
-    },
-    {
-     "w": "cube",
-     "start": 14.01,
+     "w": "falls",
+     "start": 14.005,
      "end": 14.4
     },
     {
-     "w": "of",
-     "start": 14.475,
-     "end": 14.56
+     "w": "off",
+     "start": 14.4,
+     "end": 14.64
+    },
+    {
+     "w": "with",
+     "start": 14.72,
+     "end": 14.8
     },
     {
      "w": "the",
-     "start": 14.615,
-     "end": 14.665
+     "start": 14.845,
+     "end": 15.04
+    },
+    {
+     "w": "cube",
+     "start": 14.985,
+     "end": 15.44
+    },
+    {
+     "w": "of",
+     "start": 15.52,
+     "end": 15.57
+    },
+    {
+     "w": "the",
+     "start": 15.55,
+     "end": 15.68
     },
     {
      "w": "distance.",
-     "start": 14.645,
-     "end": 15.6
+     "start": 15.67,
+     "end": 16.64
     },
     {
      "w": "So",
-     "start": 15.675,
-     "end": 15.84
+     "start": 16.66,
+     "end": 16.88
     },
     {
      "w": "half",
-     "start": 15.87,
-     "end": 16.16
-    },
-    {
-     "w": "the",
-     "start": 16.195,
-     "end": 16.32
-    },
-    {
-     "w": "distance",
-     "start": 16.225,
-     "end": 16.8
-    },
-    {
-     "w": "means",
-     "start": 16.825,
+     "start": 16.76,
      "end": 17.2
     },
     {
+     "w": "the",
+     "start": 17.205,
+     "end": 17.36
+    },
+    {
+     "w": "distance",
+     "start": 17.345,
+     "end": 17.84
+    },
+    {
+     "w": "means",
+     "start": 17.84,
+     "end": 18.16
+    },
+    {
      "w": "about",
-     "start": 17.275,
-     "end": 17.52
+     "start": 18.175,
+     "end": 18.4
     },
     {
      "w": "eight",
-     "start": 17.67,
-     "end": 18.0
+     "start": 18.46,
+     "end": 18.72
     },
     {
      "w": "times",
-     "start": 17.92,
-     "end": 18.32
+     "start": 18.7,
+     "end": 19.12
     },
     {
      "w": "the",
-     "start": 18.41,
-     "end": 18.56
+     "start": 19.165,
+     "end": 19.28
     },
     {
      "w": "tidal",
-     "start": 18.575,
-     "end": 19.2
+     "start": 19.315,
+     "end": 19.92
     },
     {
      "w": "force.",
-     "start": 19.135,
-     "end": 20.16
+     "start": 19.87,
+     "end": 20.8
     },
     {
-     "w": "Here",
-     "start": 20.205,
-     "end": 20.48
-    },
-    {
-     "w": "is",
-     "start": 20.56,
-     "end": 20.72
-    },
-    {
-     "w": "the",
-     "start": 20.645,
+     "w": "Not",
+     "start": 20.875,
      "end": 20.96
     },
     {
-     "w": "idea,",
-     "start": 21.05,
-     "end": 21.68
-    },
-    {
-     "w": "not",
-     "start": 21.7,
-     "end": 21.84
-    },
-    {
      "w": "a",
-     "start": 21.73,
-     "end": 22.0
+     "start": 20.905,
+     "end": 21.12
     },
     {
      "w": "measured",
-     "start": 22.055,
-     "end": 22.48
+     "start": 21.05,
+     "end": 21.6
     },
     {
-     "w": "height:",
-     "start": 22.395,
-     "end": 23.2
+     "w": "height,",
+     "start": 21.58,
+     "end": 22.08
+    },
+    {
+     "w": "just",
+     "start": 22.025,
+     "end": 22.32
     },
     {
      "w": "the",
-     "start": 23.32,
+     "start": 22.345,
+     "end": 22.56
+    },
+    {
+     "w": "idea:",
+     "start": 22.65,
      "end": 23.44
     },
     {
-     "w": "water",
-     "start": 23.35,
-     "end": 23.84
+     "w": "the",
+     "start": 23.515,
+     "end": 23.6
     },
     {
-     "w": "at",
-     "start": 23.93,
+     "w": "water",
+     "start": 23.545,
      "end": 24.0
     },
     {
+     "w": "at",
+     "start": 24.095,
+     "end": 24.16
+    },
+    {
      "w": "your",
-     "start": 23.97,
-     "end": 24.24
+     "start": 24.125,
+     "end": 24.32
     },
     {
      "w": "feet",
-     "start": 24.28,
-     "end": 24.56
+     "start": 24.4,
+     "end": 24.64
     },
     {
      "w": "starts",
-     "start": 24.635,
-     "end": 24.88
+     "start": 24.725,
+     "end": 24.96
     },
     {
      "w": "to",
-     "start": 24.93,
-     "end": 25.04
+     "start": 25.015,
+     "end": 25.12
     },
     {
      "w": "climb",
-     "start": 25.045,
-     "end": 25.44
+     "start": 25.15,
+     "end": 25.52
     },
     {
      "w": "the",
-     "start": 25.5,
-     "end": 25.6
+     "start": 25.55,
+     "end": 25.68
     },
     {
      "w": "beach.",
-     "start": 25.635,
-     "end": 26.48
+     "start": 25.695,
+     "end": 26.72
     },
     {
      "w": "Slowly,",
-     "start": 26.43,
-     "end": 27.04
-    },
-    {
-     "w": "in",
-     "start": 27.055,
+     "start": 26.715,
      "end": 27.28
     },
     {
+     "w": "in",
+     "start": 27.38,
+     "end": 27.6
+    },
+    {
      "w": "long",
-     "start": 27.305,
-     "end": 27.52
+     "start": 27.595,
+     "end": 27.84
     },
     {
      "w": "swells,",
-     "start": 27.77,
-     "end": 28.4
+     "start": 28.095,
+     "end": 28.72
     },
     {
      "w": "hours",
-     "start": 28.395,
-     "end": 28.88
+     "start": 28.73,
+     "end": 29.2
     },
     {
      "w": "at",
-     "start": 28.87,
-     "end": 29.12
+     "start": 29.18,
+     "end": 29.44
     },
     {
      "w": "a",
-     "start": 29.095,
-     "end": 29.36
+     "start": 29.43,
+     "end": 29.68
     },
     {
      "w": "time.",
-     "start": 29.49,
-     "end": 30.0
+     "start": 29.76,
+     "end": 30.32
     },
     {
      "w": "The",
-     "start": 30.145,
-     "end": 30.24
-    },
-    {
-     "w": "waterline",
-     "start": 30.175,
-     "end": 30.96
-    },
-    {
-     "w": "reaches",
-     "start": 30.99,
-     "end": 31.36
-    },
-    {
-     "w": "the",
-     "start": 31.36,
-     "end": 31.52
-    },
-    {
-     "w": "dry",
-     "start": 31.495,
-     "end": 32.0
-    },
-    {
-     "w": "sand,",
-     "start": 32.035,
-     "end": 32.4
-    },
-    {
-     "w": "and",
-     "start": 32.43,
-     "end": 32.64
-    },
-    {
-     "w": "keeps",
-     "start": 32.595,
-     "end": 33.2
-    },
-    {
-     "w": "going.",
-     "start": 33.305,
-     "end": 33.92
-    },
-    {
-     "w": "Imagine",
-     "start": 33.995,
-     "end": 34.48
-    },
-    {
-     "w": "the",
-     "start": 34.365,
-     "end": 34.72
-    },
-    {
-     "w": "foam",
-     "start": 34.785,
-     "end": 35.12
-    },
-    {
-     "w": "line",
-     "start": 35.075,
-     "end": 35.52
-    },
-    {
-     "w": "creeping",
-     "start": 35.515,
-     "end": 35.92
-    },
-    {
-     "w": "up",
-     "start": 36.055,
-     "end": 36.105
-    },
-    {
-     "w": "toward",
-     "start": 36.1,
-     "end": 36.4
-    },
-    {
-     "w": "your",
-     "start": 36.395,
-     "end": 36.64
-    },
-    {
-     "w": "feet.",
-     "start": 36.66,
-     "end": 37.36
-    },
-    {
-     "w": "It",
-     "start": 37.49,
-     "end": 37.54
-    },
-    {
-     "w": "is",
-     "start": 37.52,
-     "end": 37.68
-    },
-    {
-     "w": "a",
-     "start": 37.66,
-     "end": 37.92
-    },
-    {
-     "w": "slow,",
-     "start": 37.995,
-     "end": 38.48
-    },
-    {
-     "w": "patient",
-     "start": 38.585,
-     "end": 39.2
-    },
-    {
-     "w": "rise,",
-     "start": 39.085,
-     "end": 39.92
-    },
-    {
-     "w": "as",
-     "start": 39.97,
-     "end": 40.16
-    },
-    {
-     "w": "if",
-     "start": 40.045,
-     "end": 40.32
-    },
-    {
-     "w": "the",
-     "start": 40.315,
-     "end": 40.48
-    },
-    {
-     "w": "whole",
-     "start": 40.53,
-     "end": 40.8
-    },
-    {
-     "w": "ocean",
-     "start": 40.86,
-     "end": 41.28
-    },
-    {
-     "w": "were",
-     "start": 41.17,
-     "end": 41.52
-    },
-    {
-     "w": "being",
-     "start": 41.47,
-     "end": 41.68
-    },
-    {
-     "w": "lifted",
-     "start": 41.565,
-     "end": 42.24
-    },
-    {
-     "w": "from",
-     "start": 42.245,
-     "end": 42.48
-    },
-    {
-     "w": "above.",
-     "start": 42.46,
-     "end": 43.44
-    },
-    {
-     "w": "The",
-     "start": 43.53,
-     "end": 43.6
+     "start": 30.445,
+     "end": 30.56
     },
     {
      "w": "Moon",
-     "start": 43.56,
-     "end": 44.08
+     "start": 30.475,
+     "end": 30.96
     },
     {
      "w": "is",
-     "start": 44.045,
-     "end": 44.24
+     "start": 30.975,
+     "end": 31.2
     },
     {
      "w": "no",
-     "start": 44.175,
-     "end": 44.48
+     "start": 31.085,
+     "end": 31.44
     },
     {
      "w": "longer",
-     "start": 44.45,
-     "end": 44.88
+     "start": 31.375,
+     "end": 31.76
     },
     {
      "w": "a",
-     "start": 44.935,
-     "end": 45.04
+     "start": 31.71,
+     "end": 32.0
     },
     {
      "w": "calm",
-     "start": 45.085,
-     "end": 45.52
+     "start": 31.995,
+     "end": 32.48
     },
     {
      "w": "light",
-     "start": 45.555,
-     "end": 45.92
+     "start": 32.46,
+     "end": 32.88
     },
     {
      "w": "in",
-     "start": 45.925,
-     "end": 46.08
+     "start": 32.865,
+     "end": 33.04
     },
     {
      "w": "the",
-     "start": 46.095,
-     "end": 46.24
+     "start": 33.045,
+     "end": 33.2
     },
     {
      "w": "sky.",
-     "start": 46.265,
-     "end": 47.04
+     "start": 33.225,
+     "end": 34.0
     },
     {
      "w": "It",
-     "start": 47.165,
-     "end": 47.215
+     "start": 34.105,
+     "end": 34.16
     },
     {
      "w": "is",
-     "start": 47.195,
-     "end": 47.44
+     "start": 34.17,
+     "end": 34.4
     },
     {
      "w": "something",
-     "start": 47.485,
-     "end": 47.76
+     "start": 34.425,
+     "end": 34.72
     },
     {
      "w": "that",
-     "start": 47.68,
-     "end": 48.0
+     "start": 34.62,
+     "end": 34.96
     },
     {
      "w": "pulls.",
-     "start": 48.11,
-     "end": 48.72
+     "start": 35.045,
+     "end": 35.6
     }
    ]
   },
@@ -2780,112 +2196,86 @@
   },
   {
    "id": "ch4_vo",
-   "text": "One hundred fifty thousand kilometers. The Moon looks about two and a half times wider. Look around you. The beach is brighter. Moonlight falls off with the square of the distance, for the same phase. So at this distance, a full Moon gives about six and a half times the light. Your shadow on the sand is sharp. The wet sand shines like a mirror. Even the headland is lit. And the Moon is crossing the sky faster. Closer orbits are faster orbits. At this distance, one lap takes about seven days, not twenty-seven. The water has a silver road across it, wider than any you have seen. Night is not as dark as it used to be, and it is about to get a different kind of strange. By now, the Moon looks far bigger than the Sun.",
+   "text": "One hundred fifty thousand kilometers. The Moon looks about two and a half times wider. The beach is brighter. Moonlight falls off with the square of the distance. So a full Moon gives about six and a half times the light. Your shadow on the sand is sharp. The wet sand shines like a mirror. The Moon is crossing the sky faster too. At this distance, one lap takes about seven days, not twenty-seven. The water has a silver road across it, wider than any you have seen. By now, the Moon looks far bigger than the Sun.",
    "file": "voice/wav/12.wav",
-   "dur": 49.754,
+   "dur": 36.901,
    "sentences": [
     {
      "text": "One hundred fifty thousand kilometers.",
      "t0": 0.02,
-     "t1": 2.72,
+     "t1": 2.8,
      "claims": [
       "c31"
      ]
     },
     {
      "text": "The Moon looks about two and a half times wider.",
-     "t0": 2.835,
-     "t1": 5.6,
+     "t0": 2.865,
+     "t1": 6.0,
      "claims": [
       "c32"
      ]
     },
     {
-     "text": "Look around you.",
-     "t0": 5.57,
-     "t1": 6.8,
-     "claims": []
-    },
-    {
      "text": "The beach is brighter.",
-     "t0": 6.87,
-     "t1": 8.4,
+     "t0": 6.07,
+     "t1": 7.68,
      "claims": []
     },
     {
-     "text": "Moonlight falls off with the square of the distance, for the same phase.",
-     "t0": 8.525,
-     "t1": 12.88,
+     "text": "Moonlight falls off with the square of the distance.",
+     "t0": 7.805,
+     "t1": 11.04,
      "claims": [
       "c11"
      ]
     },
     {
-     "text": "So at this distance, a full Moon gives about six and a half times the light.",
-     "t0": 12.95,
-     "t1": 17.84,
+     "text": "So a full Moon gives about six and a half times the light.",
+     "t0": 11.13,
+     "t1": 15.12,
      "claims": [
       "c33"
      ]
     },
     {
      "text": "Your shadow on the sand is sharp.",
-     "t0": 17.92,
-     "t1": 20.48,
+     "t0": 15.17,
+     "t1": 17.6,
      "claims": []
     },
     {
      "text": "The wet sand shines like a mirror.",
-     "t0": 20.66,
-     "t1": 23.28,
+     "t0": 17.715,
+     "t1": 20.4,
      "claims": []
     },
     {
-     "text": "Even the headland is lit.",
-     "t0": 23.29,
-     "t1": 25.2,
-     "claims": []
-    },
-    {
-     "text": "And the Moon is crossing the sky faster.",
-     "t0": 25.235,
-     "t1": 27.92,
-     "claims": [
-      "c13"
-     ]
-    },
-    {
-     "text": "Closer orbits are faster orbits.",
-     "t0": 28.055,
-     "t1": 30.64,
+     "text": "The Moon is crossing the sky faster too.",
+     "t0": 20.49,
+     "t1": 23.52,
      "claims": [
       "c13"
      ]
     },
     {
      "text": "At this distance, one lap takes about seven days, not twenty-seven.",
-     "t0": 30.755,
-     "t1": 35.6,
+     "t0": 23.65,
+     "t1": 28.56,
      "claims": [
       "c34"
      ]
     },
     {
      "text": "The water has a silver road across it, wider than any you have seen.",
-     "t0": 35.705,
-     "t1": 40.88,
-     "claims": []
-    },
-    {
-     "text": "Night is not as dark as it used to be, and it is about to get a different kind of strange.",
-     "t0": 41.01,
-     "t1": 46.8,
+     "t0": 28.57,
+     "t1": 33.92,
      "claims": []
     },
     {
      "text": "By now, the Moon looks far bigger than the Sun.",
-     "t0": 46.885,
-     "t1": 49.68,
+     "t0": 33.995,
+     "t1": 36.88,
      "claims": [
       "c15"
      ]
@@ -2895,697 +2285,492 @@
     {
      "w": "One",
      "start": 0.02,
-     "end": 1.52
+     "end": 1.6
     },
     {
      "w": "hundred",
      "start": 0.05,
-     "end": 1.52
+     "end": 1.6
     },
     {
      "w": "fifty",
      "start": 0.08,
-     "end": 1.52
+     "end": 1.6
     },
     {
      "w": "thousand",
      "start": 0.11,
-     "end": 1.52
+     "end": 1.6
     },
     {
      "w": "kilometers.",
-     "start": 1.54,
-     "end": 2.72
+     "start": 1.595,
+     "end": 2.8
     },
     {
      "w": "The",
-     "start": 2.835,
-     "end": 2.885
+     "start": 2.865,
+     "end": 2.96
     },
     {
      "w": "Moon",
-     "start": 2.865,
-     "end": 3.28
+     "start": 2.895,
+     "end": 3.36
     },
     {
      "w": "looks",
-     "start": 3.345,
-     "end": 3.6
+     "start": 3.4,
+     "end": 3.68
     },
     {
      "w": "about",
-     "start": 3.58,
-     "end": 3.76
-    },
-    {
-     "w": "two",
-     "start": 3.86,
+     "start": 3.615,
      "end": 3.92
     },
     {
+     "w": "two",
+     "start": 3.985,
+     "end": 4.035
+    },
+    {
      "w": "and",
-     "start": 3.94,
-     "end": 4.16
+     "start": 4.08,
+     "end": 4.32
     },
     {
      "w": "a",
-     "start": 4.24,
-     "end": 4.29
+     "start": 4.4,
+     "end": 4.45
     },
     {
      "w": "half",
-     "start": 4.27,
-     "end": 4.56
+     "start": 4.43,
+     "end": 4.72
     },
     {
      "w": "times",
-     "start": 4.51,
-     "end": 4.88
+     "start": 4.695,
+     "end": 5.12
     },
     {
      "w": "wider.",
-     "start": 4.885,
-     "end": 5.6
-    },
-    {
-     "w": "Look",
-     "start": 5.57,
-     "end": 5.92
-    },
-    {
-     "w": "around",
-     "start": 5.86,
-     "end": 6.24
-    },
-    {
-     "w": "you.",
-     "start": 6.325,
-     "end": 6.8
+     "start": 5.065,
+     "end": 6.0
     },
     {
      "w": "The",
-     "start": 6.87,
-     "end": 6.96
+     "start": 6.07,
+     "end": 6.16
     },
     {
      "w": "beach",
-     "start": 7.04,
-     "end": 7.36
+     "start": 6.25,
+     "end": 6.56
     },
     {
      "w": "is",
-     "start": 7.24,
-     "end": 7.6
+     "start": 6.465,
+     "end": 6.8
     },
     {
      "w": "brighter.",
-     "start": 7.575,
-     "end": 8.4
+     "start": 6.8,
+     "end": 7.68
     },
     {
      "w": "Moonlight",
-     "start": 8.525,
-     "end": 9.12
+     "start": 7.805,
+     "end": 8.4
     },
     {
      "w": "falls",
-     "start": 9.045,
-     "end": 9.52
+     "start": 8.32,
+     "end": 8.88
     },
     {
      "w": "off",
-     "start": 9.42,
-     "end": 9.76
+     "start": 8.8,
+     "end": 9.04
     },
     {
      "w": "with",
-     "start": 9.81,
-     "end": 9.92
+     "start": 9.14,
+     "end": 9.28
     },
     {
      "w": "the",
-     "start": 9.91,
-     "end": 10.08
+     "start": 9.25,
+     "end": 9.44
     },
     {
      "w": "square",
-     "start": 10.16,
-     "end": 10.48
+     "start": 9.5,
+     "end": 9.84
     },
     {
      "w": "of",
-     "start": 10.535,
-     "end": 10.585
+     "start": 9.9,
+     "end": 9.95
     },
     {
      "w": "the",
-     "start": 10.565,
-     "end": 10.72
+     "start": 9.93,
+     "end": 10.08
     },
     {
-     "w": "distance,",
-     "start": 10.685,
-     "end": 11.2
-    },
-    {
-     "w": "for",
-     "start": 11.085,
-     "end": 11.36
-    },
-    {
-     "w": "the",
-     "start": 11.24,
-     "end": 11.52
-    },
-    {
-     "w": "same",
-     "start": 11.515,
-     "end": 11.76
-    },
-    {
-     "w": "phase.",
-     "start": 11.855,
-     "end": 12.88
+     "w": "distance.",
+     "start": 10.07,
+     "end": 11.04
     },
     {
      "w": "So",
-     "start": 12.95,
-     "end": 13.12
-    },
-    {
-     "w": "at",
-     "start": 13.035,
-     "end": 13.28
-    },
-    {
-     "w": "this",
-     "start": 13.32,
-     "end": 13.52
-    },
-    {
-     "w": "distance,",
-     "start": 13.565,
-     "end": 14.16
+     "start": 11.13,
+     "end": 11.28
     },
     {
      "w": "a",
-     "start": 14.225,
-     "end": 14.32
+     "start": 11.37,
+     "end": 11.44
     },
     {
      "w": "full",
-     "start": 14.415,
-     "end": 14.64
+     "start": 11.49,
+     "end": 11.76
     },
     {
      "w": "Moon",
-     "start": 14.615,
-     "end": 15.04
+     "start": 11.695,
+     "end": 12.16
     },
     {
      "w": "gives",
-     "start": 15.105,
-     "end": 15.44
+     "start": 12.235,
+     "end": 12.56
     },
     {
      "w": "about",
-     "start": 15.4,
-     "end": 15.6
+     "start": 12.555,
+     "end": 12.72
     },
     {
      "w": "six",
-     "start": 15.605,
-     "end": 16.56
+     "start": 12.765,
+     "end": 13.12
     },
     {
      "w": "and",
-     "start": 15.635,
-     "end": 16.56
+     "start": 13.075,
+     "end": 13.28
     },
     {
      "w": "a",
-     "start": 15.665,
-     "end": 16.56
+     "start": 13.16,
+     "end": 13.36
     },
     {
      "w": "half",
-     "start": 15.695,
-     "end": 16.56
+     "start": 13.365,
+     "end": 13.68
     },
     {
      "w": "times",
-     "start": 16.47,
-     "end": 16.88
+     "start": 13.68,
+     "end": 14.08
     },
     {
      "w": "the",
-     "start": 16.895,
-     "end": 17.04
+     "start": 14.14,
+     "end": 14.24
     },
     {
      "w": "light.",
-     "start": 16.925,
-     "end": 17.84
+     "start": 14.17,
+     "end": 15.12
     },
     {
      "w": "Your",
-     "start": 17.92,
-     "end": 18.08
+     "start": 15.17,
+     "end": 15.36
     },
     {
      "w": "shadow",
-     "start": 18.055,
-     "end": 18.56
+     "start": 15.31,
+     "end": 15.84
     },
     {
      "w": "on",
-     "start": 18.575,
-     "end": 18.72
+     "start": 15.935,
+     "end": 16.0
     },
     {
      "w": "the",
-     "start": 18.79,
-     "end": 18.96
+     "start": 16.04,
+     "end": 16.16
     },
     {
      "w": "sand",
-     "start": 18.94,
-     "end": 19.36
+     "start": 16.195,
+     "end": 16.56
     },
     {
      "w": "is",
-     "start": 19.4,
-     "end": 19.6
+     "start": 16.655,
+     "end": 16.8
     },
     {
      "w": "sharp.",
-     "start": 19.68,
-     "end": 20.48
+     "start": 16.87,
+     "end": 17.6
     },
     {
      "w": "The",
-     "start": 20.66,
-     "end": 20.72
+     "start": 17.715,
+     "end": 17.765
     },
     {
      "w": "wet",
-     "start": 20.69,
-     "end": 21.12
+     "start": 17.745,
+     "end": 18.16
     },
     {
      "w": "sand",
-     "start": 21.11,
-     "end": 21.52
+     "start": 18.045,
+     "end": 18.64
     },
     {
      "w": "shines",
-     "start": 21.48,
-     "end": 22.0
+     "start": 18.73,
+     "end": 19.12
     },
     {
      "w": "like",
-     "start": 22.08,
-     "end": 22.24
+     "start": 19.175,
+     "end": 19.36
     },
     {
      "w": "a",
-     "start": 22.26,
-     "end": 22.4
+     "start": 19.365,
+     "end": 19.52
     },
     {
      "w": "mirror.",
-     "start": 22.29,
-     "end": 23.28
-    },
-    {
-     "w": "Even",
-     "start": 23.29,
-     "end": 23.52
-    },
-    {
-     "w": "the",
-     "start": 23.605,
-     "end": 23.68
-    },
-    {
-     "w": "headland",
-     "start": 23.765,
-     "end": 24.32
-    },
-    {
-     "w": "is",
-     "start": 24.415,
-     "end": 24.48
-    },
-    {
-     "w": "lit.",
-     "start": 24.445,
-     "end": 25.2
-    },
-    {
-     "w": "And",
-     "start": 25.235,
-     "end": 25.36
-    },
-    {
-     "w": "the",
-     "start": 25.265,
-     "end": 25.52
-    },
-    {
-     "w": "Moon",
-     "start": 25.405,
-     "end": 25.84
-    },
-    {
-     "w": "is",
-     "start": 25.935,
-     "end": 26.0
-    },
-    {
-     "w": "crossing",
-     "start": 25.985,
-     "end": 26.48
-    },
-    {
-     "w": "the",
-     "start": 26.53,
-     "end": 26.64
-    },
-    {
-     "w": "sky",
-     "start": 26.695,
-     "end": 27.04
-    },
-    {
-     "w": "faster.",
-     "start": 27.085,
-     "end": 27.92
-    },
-    {
-     "w": "Closer",
-     "start": 28.055,
-     "end": 28.48
-    },
-    {
-     "w": "orbits",
-     "start": 28.525,
-     "end": 29.04
-    },
-    {
-     "w": "are",
-     "start": 28.995,
-     "end": 29.2
-    },
-    {
-     "w": "faster",
-     "start": 29.24,
-     "end": 29.76
-    },
-    {
-     "w": "orbits.",
-     "start": 29.73,
-     "end": 30.64
-    },
-    {
-     "w": "At",
-     "start": 30.755,
-     "end": 30.88
-    },
-    {
-     "w": "this",
-     "start": 30.905,
-     "end": 31.12
-    },
-    {
-     "w": "distance,",
-     "start": 31.145,
-     "end": 31.84
-    },
-    {
-     "w": "one",
-     "start": 31.96,
-     "end": 32.08
-    },
-    {
-     "w": "lap",
-     "start": 31.99,
-     "end": 32.48
-    },
-    {
-     "w": "takes",
-     "start": 32.545,
-     "end": 32.88
-    },
-    {
-     "w": "about",
-     "start": 32.765,
-     "end": 33.12
-    },
-    {
-     "w": "seven",
-     "start": 33.115,
-     "end": 33.6
-    },
-    {
-     "w": "days,",
-     "start": 33.575,
-     "end": 34.08
-    },
-    {
-     "w": "not",
-     "start": 33.99,
-     "end": 34.32
-    },
-    {
-     "w": "twenty-seven.",
-     "start": 34.31,
-     "end": 35.6
+     "start": 19.575,
+     "end": 20.4
     },
     {
      "w": "The",
-     "start": 35.705,
-     "end": 35.76
-    },
-    {
-     "w": "water",
-     "start": 35.735,
-     "end": 36.24
-    },
-    {
-     "w": "has",
-     "start": 36.12,
-     "end": 36.4
-    },
-    {
-     "w": "a",
-     "start": 36.4,
-     "end": 36.64
-    },
-    {
-     "w": "silver",
-     "start": 36.73,
-     "end": 37.12
-    },
-    {
-     "w": "road",
-     "start": 37.115,
-     "end": 37.52
-    },
-    {
-     "w": "across",
-     "start": 37.55,
-     "end": 38.0
-    },
-    {
-     "w": "it,",
-     "start": 38.08,
-     "end": 38.48
-    },
-    {
-     "w": "wider",
-     "start": 38.54,
-     "end": 39.04
-    },
-    {
-     "w": "than",
-     "start": 39.06,
-     "end": 39.28
-    },
-    {
-     "w": "any",
-     "start": 39.28,
-     "end": 39.6
-    },
-    {
-     "w": "you",
-     "start": 39.555,
-     "end": 39.76
-    },
-    {
-     "w": "have",
-     "start": 39.81,
-     "end": 40.0
-    },
-    {
-     "w": "seen.",
-     "start": 40.255,
-     "end": 40.88
-    },
-    {
-     "w": "Night",
-     "start": 41.01,
-     "end": 41.36
-    },
-    {
-     "w": "is",
-     "start": 41.425,
-     "end": 41.6
-    },
-    {
-     "w": "not",
-     "start": 41.55,
-     "end": 41.84
-    },
-    {
-     "w": "as",
-     "start": 41.82,
-     "end": 42.0
-    },
-    {
-     "w": "dark",
-     "start": 42.06,
-     "end": 42.4
-    },
-    {
-     "w": "as",
-     "start": 42.395,
-     "end": 42.64
-    },
-    {
-     "w": "it",
-     "start": 42.675,
-     "end": 42.8
-    },
-    {
-     "w": "used",
-     "start": 42.705,
-     "end": 43.04
-    },
-    {
-     "w": "to",
-     "start": 43.01,
-     "end": 43.2
-    },
-    {
-     "w": "be,",
-     "start": 43.17,
-     "end": 43.68
-    },
-    {
-     "w": "and",
-     "start": 43.72,
-     "end": 43.84
-    },
-    {
-     "w": "it",
-     "start": 43.8,
-     "end": 44.0
-    },
-    {
-     "w": "is",
-     "start": 43.98,
-     "end": 44.16
-    },
-    {
-     "w": "about",
-     "start": 44.24,
-     "end": 44.4
-    },
-    {
-     "w": "to",
-     "start": 44.51,
-     "end": 44.56
-    },
-    {
-     "w": "get",
-     "start": 44.61,
-     "end": 44.8
-    },
-    {
-     "w": "a",
-     "start": 44.895,
-     "end": 44.96
-    },
-    {
-     "w": "different",
-     "start": 45.055,
-     "end": 45.2
-    },
-    {
-     "w": "kind",
-     "start": 45.22,
-     "end": 45.44
-    },
-    {
-     "w": "of",
-     "start": 45.49,
-     "end": 45.68
-    },
-    {
-     "w": "strange.",
-     "start": 45.655,
-     "end": 46.8
-    },
-    {
-     "w": "By",
-     "start": 46.885,
-     "end": 47.12
-    },
-    {
-     "w": "now,",
-     "start": 47.07,
-     "end": 47.52
-    },
-    {
-     "w": "the",
-     "start": 47.59,
-     "end": 47.76
+     "start": 20.49,
+     "end": 20.56
     },
     {
      "w": "Moon",
-     "start": 47.64,
-     "end": 48.08
+     "start": 20.52,
+     "end": 20.96
     },
     {
-     "w": "looks",
-     "start": 48.16,
-     "end": 48.4
+     "w": "is",
+     "start": 20.96,
+     "end": 21.12
     },
     {
-     "w": "far",
-     "start": 48.49,
-     "end": 48.72
-    },
-    {
-     "w": "bigger",
-     "start": 48.81,
-     "end": 49.04
-    },
-    {
-     "w": "than",
-     "start": 48.965,
-     "end": 49.2
+     "w": "crossing",
+     "start": 21.155,
+     "end": 21.6
     },
     {
      "w": "the",
-     "start": 49.09,
-     "end": 49.36
+     "start": 21.515,
+     "end": 21.76
+    },
+    {
+     "w": "sky",
+     "start": 21.795,
+     "end": 22.16
+    },
+    {
+     "w": "faster",
+     "start": 22.22,
+     "end": 22.72
+    },
+    {
+     "w": "too.",
+     "start": 22.63,
+     "end": 23.52
+    },
+    {
+     "w": "At",
+     "start": 23.65,
+     "end": 23.76
+    },
+    {
+     "w": "this",
+     "start": 23.8,
+     "end": 24.0
+    },
+    {
+     "w": "distance,",
+     "start": 24.045,
+     "end": 24.8
+    },
+    {
+     "w": "one",
+     "start": 24.875,
+     "end": 25.04
+    },
+    {
+     "w": "lap",
+     "start": 24.925,
+     "end": 25.44
+    },
+    {
+     "w": "takes",
+     "start": 25.495,
+     "end": 25.84
+    },
+    {
+     "w": "about",
+     "start": 25.725,
+     "end": 26.16
+    },
+    {
+     "w": "seven",
+     "start": 26.11,
+     "end": 26.56
+    },
+    {
+     "w": "days,",
+     "start": 26.57,
+     "end": 27.04
+    },
+    {
+     "w": "not",
+     "start": 26.975,
+     "end": 27.28
+    },
+    {
+     "w": "twenty-seven.",
+     "start": 27.305,
+     "end": 28.56
+    },
+    {
+     "w": "The",
+     "start": 28.57,
+     "end": 28.8
+    },
+    {
+     "w": "water",
+     "start": 28.7,
+     "end": 29.2
+    },
+    {
+     "w": "has",
+     "start": 29.1,
+     "end": 29.44
+    },
+    {
+     "w": "a",
+     "start": 29.455,
+     "end": 29.6
+    },
+    {
+     "w": "silver",
+     "start": 29.655,
+     "end": 30.08
+    },
+    {
+     "w": "road",
+     "start": 30.115,
+     "end": 30.56
+    },
+    {
+     "w": "across",
+     "start": 30.57,
+     "end": 31.04
+    },
+    {
+     "w": "it,",
+     "start": 31.13,
+     "end": 31.52
+    },
+    {
+     "w": "wider",
+     "start": 31.565,
+     "end": 32.08
+    },
+    {
+     "w": "than",
+     "start": 32.175,
+     "end": 32.24
+    },
+    {
+     "w": "any",
+     "start": 32.25,
+     "end": 32.56
+    },
+    {
+     "w": "you",
+     "start": 32.525,
+     "end": 32.8
+    },
+    {
+     "w": "have",
+     "start": 32.81,
+     "end": 33.12
+    },
+    {
+     "w": "seen.",
+     "start": 33.0,
+     "end": 33.92
+    },
+    {
+     "w": "By",
+     "start": 33.995,
+     "end": 34.24
+    },
+    {
+     "w": "now,",
+     "start": 34.2,
+     "end": 34.64
+    },
+    {
+     "w": "the",
+     "start": 34.705,
+     "end": 34.88
+    },
+    {
+     "w": "Moon",
+     "start": 34.76,
+     "end": 35.2
+    },
+    {
+     "w": "looks",
+     "start": 35.285,
+     "end": 35.52
+    },
+    {
+     "w": "far",
+     "start": 35.6,
+     "end": 35.84
+    },
+    {
+     "w": "bigger",
+     "start": 35.935,
+     "end": 36.16
+    },
+    {
+     "w": "than",
+     "start": 36.05,
+     "end": 36.32
+    },
+    {
+     "w": "the",
+     "start": 36.2,
+     "end": 36.48
     },
     {
      "w": "Sun.",
-     "start": 49.44,
-     "end": 49.68
+     "start": 36.56,
+     "end": 36.88
     }
    ]
   },
@@ -3728,102 +2913,66 @@
   },
   {
    "id": "ch5_vo",
-   "text": "One hundred thousand kilometers. The Moon is nearly four times wider than tonight. The Sun and the Moon look about the same size from Earth today. That is why a total solar eclipse is possible at all. Today, a total solar eclipse happens somewhere on Earth about every year and a half. So when they line up, its shadow on Earth is wider. And eclipses would be far more common. Not every month, though, because the Moon's orbit is tilted by a few degrees. But often. The sky goes dim, and the stars come out in the daytime. The air cools, even if only a little. A long dark noon, with a faint glow around a huge black disc. And then you look at the Moon again, and it has moved.",
+   "text": "One hundred thousand kilometers. The Moon is nearly four times wider than tonight. Today, the Sun and the Moon look about the same size. That is why total solar eclipses are possible. Now the Moon's shadow on Earth is wider, and eclipses would be far more common. The sky goes dim, and the stars come out in the daytime. A long dark noon, with a faint glow around a huge black disc. And then you look at the Moon again, and it has moved.",
    "file": "voice/wav/15.wav",
-   "dur": 47.19,
+   "dur": 29.092,
    "sentences": [
     {
      "text": "One hundred thousand kilometers.",
      "t0": 0.02,
-     "t1": 2.4,
+     "t1": 2.32,
      "claims": [
       "c35"
      ]
     },
     {
      "text": "The Moon is nearly four times wider than tonight.",
-     "t0": 2.46,
-     "t1": 5.84,
+     "t0": 2.425,
+     "t1": 5.6,
      "claims": [
       "c36"
      ]
     },
     {
-     "text": "The Sun and the Moon look about the same size from Earth today.",
-     "t0": 5.97,
-     "t1": 10.08,
+     "text": "Today, the Sun and the Moon look about the same size.",
+     "t0": 5.695,
+     "t1": 9.12,
      "claims": [
       "c4"
      ]
     },
     {
-     "text": "That is why a total solar eclipse is possible at all.",
-     "t0": 10.215,
-     "t1": 14.165,
+     "text": "That is why total solar eclipses are possible.",
+     "t0": 9.225,
+     "t1": 12.24,
      "claims": [
       "c15"
      ]
     },
     {
-     "text": "Today, a total solar eclipse happens somewhere on Earth about every year and a half.",
-     "t0": 14.145,
-     "t1": 20.16,
-     "claims": [
-      "c16"
-     ]
-    },
-    {
-     "text": "So when they line up, its shadow on Earth is wider.",
-     "t0": 20.2,
-     "t1": 23.92,
+     "text": "Now the Moon's shadow on Earth is wider, and eclipses would be far more common.",
+     "t0": 12.355,
+     "t1": 17.28,
      "claims": [
       "c15"
      ]
-    },
-    {
-     "text": "And eclipses would be far more common.",
-     "t0": 23.98,
-     "t1": 26.56,
-     "claims": [
-      "c15"
-     ]
-    },
-    {
-     "text": "Not every month, though, because the Moon's orbit is tilted by a few degrees.",
-     "t0": 26.655,
-     "t1": 31.2,
-     "claims": [
-      "c17"
-     ]
-    },
-    {
-     "text": "But often.",
-     "t0": 31.255,
-     "t1": 32.4,
-     "claims": []
     },
     {
      "text": "The sky goes dim, and the stars come out in the daytime.",
-     "t0": 32.475,
-     "t1": 36.32,
-     "claims": []
-    },
-    {
-     "text": "The air cools, even if only a little.",
-     "t0": 36.435,
-     "t1": 39.28,
+     "t0": 17.41,
+     "t1": 21.36,
      "claims": []
     },
     {
      "text": "A long dark noon, with a faint glow around a huge black disc.",
-     "t0": 39.375,
-     "t1": 44.48,
+     "t0": 21.48,
+     "t1": 26.48,
      "claims": []
     },
     {
      "text": "And then you look at the Moon again, and it has moved.",
-     "t0": 44.485,
-     "t1": 47.12,
+     "t0": 26.555,
+     "t1": 29.04,
      "claims": []
     }
    ],
@@ -3845,643 +2994,408 @@
     },
     {
      "w": "kilometers.",
-     "start": 1.215,
-     "end": 2.4
+     "start": 1.17,
+     "end": 2.32
     },
     {
      "w": "The",
-     "start": 2.46,
-     "end": 2.56
+     "start": 2.425,
+     "end": 2.48
     },
     {
      "w": "Moon",
-     "start": 2.49,
-     "end": 2.96
+     "start": 2.455,
+     "end": 2.88
     },
     {
      "w": "is",
-     "start": 3.02,
-     "end": 3.12
+     "start": 2.865,
+     "end": 3.04
     },
     {
      "w": "nearly",
-     "start": 3.1,
-     "end": 3.52
+     "start": 3.005,
+     "end": 3.36
     },
     {
      "w": "four",
-     "start": 3.585,
-     "end": 3.68
+     "start": 3.455,
+     "end": 3.52
     },
     {
      "w": "times",
-     "start": 3.895,
-     "end": 4.24
+     "start": 3.735,
+     "end": 4.08
     },
     {
      "w": "wider",
-     "start": 4.315,
-     "end": 4.8
+     "start": 4.14,
+     "end": 4.64
     },
     {
      "w": "than",
-     "start": 4.78,
-     "end": 4.96
+     "start": 4.605,
+     "end": 4.8
     },
     {
      "w": "tonight.",
-     "start": 4.94,
-     "end": 5.84
-    },
-    {
-     "w": "The",
-     "start": 5.97,
-     "end": 6.08
-    },
-    {
-     "w": "Sun",
-     "start": 6.0,
-     "end": 6.48
-    },
-    {
-     "w": "and",
-     "start": 6.495,
-     "end": 6.64
-    },
-    {
-     "w": "the",
-     "start": 6.535,
-     "end": 6.8
-    },
-    {
-     "w": "Moon",
-     "start": 6.715,
-     "end": 7.12
-    },
-    {
-     "w": "look",
-     "start": 7.125,
-     "end": 7.36
-    },
-    {
-     "w": "about",
-     "start": 7.315,
-     "end": 7.6
-    },
-    {
-     "w": "the",
-     "start": 7.59,
-     "end": 7.84
-    },
-    {
-     "w": "same",
-     "start": 7.81,
-     "end": 8.08
-    },
-    {
-     "w": "size",
-     "start": 8.06,
-     "end": 8.56
-    },
-    {
-     "w": "from",
-     "start": 8.725,
-     "end": 8.88
-    },
-    {
-     "w": "Earth",
-     "start": 8.925,
-     "end": 9.28
-    },
-    {
-     "w": "today.",
-     "start": 9.18,
-     "end": 10.08
-    },
-    {
-     "w": "That",
-     "start": 10.215,
-     "end": 10.32
-    },
-    {
-     "w": "is",
-     "start": 10.245,
-     "end": 10.56
-    },
-    {
-     "w": "why",
-     "start": 10.53,
-     "end": 10.8
-    },
-    {
-     "w": "a",
-     "start": 10.95,
-     "end": 11.0
-    },
-    {
-     "w": "total",
-     "start": 11.03,
-     "end": 11.36
-    },
-    {
-     "w": "solar",
-     "start": 11.3,
-     "end": 11.84
-    },
-    {
-     "w": "eclipse",
-     "start": 11.985,
-     "end": 12.32
-    },
-    {
-     "w": "is",
-     "start": 12.495,
-     "end": 12.56
-    },
-    {
-     "w": "possible",
-     "start": 12.575,
-     "end": 13.2
-    },
-    {
-     "w": "at",
-     "start": 13.14,
-     "end": 13.44
-    },
-    {
-     "w": "all.",
-     "start": 14.115,
-     "end": 14.165
+     "start": 4.765,
+     "end": 5.6
     },
     {
      "w": "Today,",
-     "start": 14.145,
-     "end": 14.88
+     "start": 5.695,
+     "end": 6.16
     },
     {
-     "w": "a",
-     "start": 15.025,
-     "end": 15.075
+     "w": "the",
+     "start": 6.27,
+     "end": 6.4
     },
     {
-     "w": "total",
-     "start": 15.155,
-     "end": 15.52
-    },
-    {
-     "w": "solar",
-     "start": 15.5,
-     "end": 16.0
-    },
-    {
-     "w": "eclipse",
-     "start": 16.065,
-     "end": 16.56
-    },
-    {
-     "w": "happens",
-     "start": 16.485,
-     "end": 16.96
-    },
-    {
-     "w": "somewhere",
-     "start": 17.055,
-     "end": 17.44
-    },
-    {
-     "w": "on",
-     "start": 17.41,
-     "end": 17.68
-    },
-    {
-     "w": "Earth",
-     "start": 17.695,
-     "end": 18.08
-    },
-    {
-     "w": "about",
-     "start": 18.035,
-     "end": 18.4
-    },
-    {
-     "w": "every",
-     "start": 18.49,
-     "end": 18.72
-    },
-    {
-     "w": "year",
-     "start": 18.6,
-     "end": 18.96
+     "w": "Sun",
+     "start": 6.3,
+     "end": 6.72
     },
     {
      "w": "and",
-     "start": 18.95,
-     "end": 19.12
-    },
-    {
-     "w": "a",
-     "start": 19.165,
-     "end": 19.28
-    },
-    {
-     "w": "half.",
-     "start": 19.195,
-     "end": 20.16
-    },
-    {
-     "w": "So",
-     "start": 20.2,
-     "end": 20.32
-    },
-    {
-     "w": "when",
-     "start": 20.23,
-     "end": 20.56
-    },
-    {
-     "w": "they",
-     "start": 20.565,
-     "end": 20.72
-    },
-    {
-     "w": "line",
-     "start": 20.7,
-     "end": 21.12
-    },
-    {
-     "w": "up,",
-     "start": 21.065,
-     "end": 21.52
-    },
-    {
-     "w": "its",
-     "start": 21.615,
-     "end": 21.76
-    },
-    {
-     "w": "shadow",
-     "start": 21.695,
-     "end": 22.24
-    },
-    {
-     "w": "on",
-     "start": 22.235,
-     "end": 22.48
-    },
-    {
-     "w": "Earth",
-     "start": 22.54,
-     "end": 22.88
-    },
-    {
-     "w": "is",
-     "start": 22.89,
-     "end": 23.04
-    },
-    {
-     "w": "wider.",
-     "start": 23.03,
-     "end": 23.92
-    },
-    {
-     "w": "And",
-     "start": 23.98,
-     "end": 24.08
-    },
-    {
-     "w": "eclipses",
-     "start": 24.185,
-     "end": 24.72
-    },
-    {
-     "w": "would",
-     "start": 24.7,
-     "end": 24.88
-    },
-    {
-     "w": "be",
-     "start": 24.825,
-     "end": 25.04
-    },
-    {
-     "w": "far",
-     "start": 25.11,
-     "end": 25.44
-    },
-    {
-     "w": "more",
-     "start": 25.325,
-     "end": 25.68
-    },
-    {
-     "w": "common.",
-     "start": 25.65,
-     "end": 26.56
-    },
-    {
-     "w": "Not",
-     "start": 26.655,
-     "end": 26.88
-    },
-    {
-     "w": "every",
-     "start": 26.86,
-     "end": 27.12
-    },
-    {
-     "w": "month,",
-     "start": 27.01,
-     "end": 27.52
-    },
-    {
-     "w": "though,",
-     "start": 27.435,
-     "end": 27.84
-    },
-    {
-     "w": "because",
-     "start": 27.885,
-     "end": 28.08
+     "start": 6.75,
+     "end": 6.8
     },
     {
      "w": "the",
-     "start": 28.08,
-     "end": 28.24
-    },
-    {
-     "w": "Moon's",
-     "start": 28.12,
-     "end": 28.72
-    },
-    {
-     "w": "orbit",
-     "start": 28.715,
-     "end": 29.04
-    },
-    {
-     "w": "is",
-     "start": 29.05,
-     "end": 29.2
-    },
-    {
-     "w": "tilted",
-     "start": 29.255,
-     "end": 29.68
-    },
-    {
-     "w": "by",
-     "start": 29.7,
-     "end": 29.92
-    },
-    {
-     "w": "a",
-     "start": 30.015,
-     "end": 30.065
-    },
-    {
-     "w": "few",
-     "start": 30.045,
-     "end": 30.24
-    },
-    {
-     "w": "degrees.",
-     "start": 30.295,
-     "end": 31.2
-    },
-    {
-     "w": "But",
-     "start": 31.255,
-     "end": 31.36
-    },
-    {
-     "w": "often.",
-     "start": 31.32,
-     "end": 32.4
-    },
-    {
-     "w": "The",
-     "start": 32.475,
-     "end": 32.56
-    },
-    {
-     "w": "sky",
-     "start": 32.505,
-     "end": 33.04
-    },
-    {
-     "w": "goes",
-     "start": 33.03,
-     "end": 33.36
-    },
-    {
-     "w": "dim,",
-     "start": 33.445,
-     "end": 33.84
-    },
-    {
-     "w": "and",
-     "start": 33.84,
-     "end": 34.0
-    },
-    {
-     "w": "the",
-     "start": 33.885,
-     "end": 34.16
-    },
-    {
-     "w": "stars",
-     "start": 34.17,
-     "end": 34.64
-    },
-    {
-     "w": "come",
-     "start": 34.65,
-     "end": 34.88
-    },
-    {
-     "w": "out",
-     "start": 34.825,
-     "end": 35.12
-    },
-    {
-     "w": "in",
-     "start": 35.075,
-     "end": 35.28
-    },
-    {
-     "w": "the",
-     "start": 35.325,
-     "end": 35.44
-    },
-    {
-     "w": "daytime.",
-     "start": 35.54,
-     "end": 36.32
-    },
-    {
-     "w": "The",
-     "start": 36.435,
-     "end": 36.485
-    },
-    {
-     "w": "air",
-     "start": 36.59,
-     "end": 36.88
-    },
-    {
-     "w": "cools,",
-     "start": 36.885,
-     "end": 37.44
-    },
-    {
-     "w": "even",
-     "start": 37.515,
-     "end": 37.84
-    },
-    {
-     "w": "if",
-     "start": 37.935,
-     "end": 38.08
-    },
-    {
-     "w": "only",
-     "start": 38.005,
-     "end": 38.32
-    },
-    {
-     "w": "a",
-     "start": 38.24,
-     "end": 38.64
-    },
-    {
-     "w": "little.",
-     "start": 38.73,
-     "end": 39.28
-    },
-    {
-     "w": "A",
-     "start": 39.375,
-     "end": 39.52
-    },
-    {
-     "w": "long",
-     "start": 39.56,
-     "end": 39.76
-    },
-    {
-     "w": "dark",
-     "start": 39.99,
-     "end": 40.32
-    },
-    {
-     "w": "noon,",
-     "start": 40.33,
-     "end": 40.8
-    },
-    {
-     "w": "with",
-     "start": 40.79,
-     "end": 41.12
-    },
-    {
-     "w": "a",
-     "start": 41.06,
-     "end": 41.28
-    },
-    {
-     "w": "faint",
-     "start": 41.315,
-     "end": 41.68
-    },
-    {
-     "w": "glow",
-     "start": 41.645,
-     "end": 42.16
-    },
-    {
-     "w": "around",
-     "start": 42.21,
-     "end": 42.48
-    },
-    {
-     "w": "a",
-     "start": 42.545,
-     "end": 42.72
-    },
-    {
-     "w": "huge",
-     "start": 42.745,
-     "end": 43.12
-    },
-    {
-     "w": "black",
-     "start": 43.21,
-     "end": 43.6
-    },
-    {
-     "w": "disc.",
-     "start": 43.515,
-     "end": 44.48
-    },
-    {
-     "w": "And",
-     "start": 44.485,
-     "end": 44.64
-    },
-    {
-     "w": "then",
-     "start": 44.55,
-     "end": 44.8
-    },
-    {
-     "w": "you",
-     "start": 44.68,
-     "end": 44.96
-    },
-    {
-     "w": "look",
-     "start": 44.96,
-     "end": 45.12
-    },
-    {
-     "w": "at",
-     "start": 45.245,
-     "end": 45.295
-    },
-    {
-     "w": "the",
-     "start": 45.275,
-     "end": 45.44
+     "start": 6.78,
+     "end": 6.96
     },
     {
      "w": "Moon",
-     "start": 45.325,
-     "end": 45.76
+     "start": 6.925,
+     "end": 7.28
     },
     {
-     "w": "again,",
-     "start": 45.78,
-     "end": 46.08
+     "w": "look",
+     "start": 7.375,
+     "end": 7.52
+    },
+    {
+     "w": "about",
+     "start": 7.415,
+     "end": 7.76
+    },
+    {
+     "w": "the",
+     "start": 7.685,
+     "end": 7.92
+    },
+    {
+     "w": "same",
+     "start": 7.87,
+     "end": 8.16
+    },
+    {
+     "w": "size.",
+     "start": 8.215,
+     "end": 9.12
+    },
+    {
+     "w": "That",
+     "start": 9.225,
+     "end": 9.28
+    },
+    {
+     "w": "is",
+     "start": 9.255,
+     "end": 9.44
+    },
+    {
+     "w": "why",
+     "start": 9.465,
+     "end": 9.68
+    },
+    {
+     "w": "total",
+     "start": 9.705,
+     "end": 10.08
+    },
+    {
+     "w": "solar",
+     "start": 10.025,
+     "end": 10.48
+    },
+    {
+     "w": "eclipses",
+     "start": 10.63,
+     "end": 11.2
+    },
+    {
+     "w": "are",
+     "start": 11.285,
+     "end": 11.36
+    },
+    {
+     "w": "possible.",
+     "start": 11.365,
+     "end": 12.24
+    },
+    {
+     "w": "Now",
+     "start": 12.355,
+     "end": 12.48
+    },
+    {
+     "w": "the",
+     "start": 12.63,
+     "end": 12.72
+    },
+    {
+     "w": "Moon's",
+     "start": 12.66,
+     "end": 13.12
+    },
+    {
+     "w": "shadow",
+     "start": 13.155,
+     "end": 13.52
+    },
+    {
+     "w": "on",
+     "start": 13.615,
+     "end": 13.68
+    },
+    {
+     "w": "Earth",
+     "start": 13.725,
+     "end": 14.0
+    },
+    {
+     "w": "is",
+     "start": 14.015,
+     "end": 14.24
+    },
+    {
+     "w": "wider,",
+     "start": 14.145,
+     "end": 14.72
     },
     {
      "w": "and",
-     "start": 46.2,
-     "end": 46.25
+     "start": 14.745,
+     "end": 14.88
+    },
+    {
+     "w": "eclipses",
+     "start": 14.965,
+     "end": 15.52
+    },
+    {
+     "w": "would",
+     "start": 15.44,
+     "end": 15.68
+    },
+    {
+     "w": "be",
+     "start": 15.59,
+     "end": 15.84
+    },
+    {
+     "w": "far",
+     "start": 15.84,
+     "end": 16.16
+    },
+    {
+     "w": "more",
+     "start": 16.255,
+     "end": 16.4
+    },
+    {
+     "w": "common.",
+     "start": 16.325,
+     "end": 17.28
+    },
+    {
+     "w": "The",
+     "start": 17.41,
+     "end": 17.46
+    },
+    {
+     "w": "sky",
+     "start": 17.44,
+     "end": 17.92
+    },
+    {
+     "w": "goes",
+     "start": 17.955,
+     "end": 18.24
+    },
+    {
+     "w": "dim,",
+     "start": 18.33,
+     "end": 18.72
+    },
+    {
+     "w": "and",
+     "start": 18.89,
+     "end": 18.96
+    },
+    {
+     "w": "the",
+     "start": 18.92,
+     "end": 19.12
+    },
+    {
+     "w": "stars",
+     "start": 19.2,
+     "end": 19.6
+    },
+    {
+     "w": "come",
+     "start": 19.655,
+     "end": 19.84
+    },
+    {
+     "w": "out",
+     "start": 19.77,
+     "end": 20.08
+    },
+    {
+     "w": "in",
+     "start": 20.04,
+     "end": 20.24
+    },
+    {
+     "w": "the",
+     "start": 20.275,
+     "end": 20.4
+    },
+    {
+     "w": "daytime.",
+     "start": 20.495,
+     "end": 21.36
+    },
+    {
+     "w": "A",
+     "start": 21.48,
+     "end": 21.6
+    },
+    {
+     "w": "long",
+     "start": 21.65,
+     "end": 21.84
+    },
+    {
+     "w": "dark",
+     "start": 22.09,
+     "end": 22.48
+    },
+    {
+     "w": "noon,",
+     "start": 22.415,
+     "end": 22.88
+    },
+    {
+     "w": "with",
+     "start": 23.15,
+     "end": 23.28
+    },
+    {
+     "w": "a",
+     "start": 23.23,
+     "end": 23.44
+    },
+    {
+     "w": "faint",
+     "start": 23.465,
+     "end": 23.76
+    },
+    {
+     "w": "glow",
+     "start": 23.75,
+     "end": 24.24
+    },
+    {
+     "w": "around",
+     "start": 24.26,
+     "end": 24.56
+    },
+    {
+     "w": "a",
+     "start": 24.655,
+     "end": 24.72
+    },
+    {
+     "w": "huge",
+     "start": 24.775,
+     "end": 25.12
+    },
+    {
+     "w": "black",
+     "start": 25.215,
+     "end": 25.6
+    },
+    {
+     "w": "disc.",
+     "start": 25.605,
+     "end": 26.48
+    },
+    {
+     "w": "And",
+     "start": 26.555,
+     "end": 26.64
+    },
+    {
+     "w": "then",
+     "start": 26.585,
+     "end": 26.8
+    },
+    {
+     "w": "you",
+     "start": 26.685,
+     "end": 26.96
+    },
+    {
+     "w": "look",
+     "start": 27.09,
+     "end": 27.14
+    },
+    {
+     "w": "at",
+     "start": 27.225,
+     "end": 27.275
+    },
+    {
+     "w": "the",
+     "start": 27.255,
+     "end": 27.36
+    },
+    {
+     "w": "Moon",
+     "start": 27.29,
+     "end": 27.76
+    },
+    {
+     "w": "again,",
+     "start": 27.77,
+     "end": 28.0
+    },
+    {
+     "w": "and",
+     "start": 28.1,
+     "end": 28.24
     },
     {
      "w": "it",
-     "start": 46.23,
-     "end": 46.4
+     "start": 28.13,
+     "end": 28.4
     },
     {
      "w": "has",
-     "start": 46.375,
-     "end": 46.56
+     "start": 28.45,
+     "end": 28.56
     },
     {
      "w": "moved.",
-     "start": 46.525,
-     "end": 47.12
+     "start": 28.48,
+     "end": 29.04
     }
    ]
   },
@@ -4637,84 +3551,72 @@
   },
   {
    "id": "ch6_vo",
-   "text": "Seventy thousand kilometers. The Moon is about five and a half times wider than tonight. Its tidal pull is more than a hundred sixty times today's. The sea is not the only thing that moves. The solid Earth already rises and falls a little with the Moon, tens of centimeters a day. With far more pull, it would flex far more. What that would do to faults and volcanoes, this film cannot tell you. In real life, tides are why the Moon drifts away: they steal a little of Earth's spin and hand it to the Moon's orbit. To make it come closer, our thought experiment has to break that rule. That is one more reason this is a thought experiment, not a forecast. And the number keeps falling.",
+   "text": "Seventy thousand kilometers. The Moon is about five and a half times wider than tonight. Its tidal pull is more than a hundred sixty times today's. The solid Earth already rises and falls a little with the Moon, tens of centimeters a day. With far more pull, it would flex far more. What that would do to faults and volcanoes, this film cannot tell you. In real life, tides are why the Moon drifts away. To make it come closer, our thought experiment has to break that rule. The number keeps falling.",
    "file": "voice/wav/18.wav",
-   "dur": 46.711,
+   "dur": 35.248,
    "sentences": [
     {
      "text": "Seventy thousand kilometers.",
      "t0": 0.03,
-     "t1": 2.24,
+     "t1": 2.32,
      "claims": [
       "c37"
      ]
     },
     {
      "text": "The Moon is about five and a half times wider than tonight.",
-     "t0": 2.315,
-     "t1": 6.16,
+     "t0": 2.465,
+     "t1": 6.4,
      "claims": [
       "c38"
      ]
     },
     {
      "text": "Its tidal pull is more than a hundred sixty times today's.",
-     "t0": 6.23,
-     "t1": 10.56,
+     "t0": 6.545,
+     "t1": 10.96,
      "claims": [
       "c39"
      ]
     },
     {
-     "text": "The sea is not the only thing that moves.",
-     "t0": 10.675,
-     "t1": 13.44,
-     "claims": []
-    },
-    {
      "text": "The solid Earth already rises and falls a little with the Moon, tens of centimeters a day.",
-     "t0": 13.875,
-     "t1": 20.08,
+     "t0": 11.125,
+     "t1": 17.44,
      "claims": [
       "c18"
      ]
     },
     {
      "text": "With far more pull, it would flex far more.",
-     "t0": 20.22,
-     "t1": 23.2,
+     "t0": 17.54,
+     "t1": 20.56,
      "claims": []
     },
     {
      "text": "What that would do to faults and volcanoes, this film cannot tell you.",
-     "t0": 23.27,
-     "t1": 27.52,
+     "t0": 20.685,
+     "t1": 25.12,
      "claims": []
     },
     {
-     "text": "In real life, tides are why the Moon drifts away: they steal a little of Earth's spin and hand it to the Moon's orbit.",
-     "t0": 27.63,
-     "t1": 35.92,
+     "text": "In real life, tides are why the Moon drifts away.",
+     "t0": 25.17,
+     "t1": 29.2,
      "claims": [
       "c43"
      ]
     },
     {
      "text": "To make it come closer, our thought experiment has to break that rule.",
-     "t0": 36.09,
-     "t1": 40.56,
+     "t0": 29.345,
+     "t1": 33.76,
      "claims": []
     },
     {
-     "text": "That is one more reason this is a thought experiment, not a forecast.",
-     "t0": 40.655,
-     "t1": 45.2,
-     "claims": []
-    },
-    {
-     "text": "And the number keeps falling.",
-     "t0": 45.295,
-     "t1": 46.64,
+     "text": "The number keeps falling.",
+     "t0": 33.86,
+     "t1": 35.2,
      "claims": []
     }
    ],
@@ -4722,647 +3624,462 @@
     {
      "w": "Seventy",
      "start": 0.03,
-     "end": 1.04
+     "end": 1.12
     },
     {
      "w": "thousand",
      "start": 0.06,
-     "end": 1.04
+     "end": 1.12
     },
     {
      "w": "kilometers.",
-     "start": 1.02,
-     "end": 2.24
+     "start": 1.095,
+     "end": 2.32
     },
     {
      "w": "The",
-     "start": 2.315,
-     "end": 2.4
+     "start": 2.465,
+     "end": 2.56
     },
     {
      "w": "Moon",
-     "start": 2.345,
-     "end": 2.8
+     "start": 2.495,
+     "end": 2.96
     },
     {
      "w": "is",
-     "start": 2.815,
-     "end": 3.04
+     "start": 2.965,
+     "end": 3.2
     },
     {
      "w": "about",
-     "start": 3.025,
-     "end": 3.28
+     "start": 3.175,
+     "end": 3.44
     },
     {
      "w": "five",
-     "start": 3.225,
-     "end": 4.32
+     "start": 3.41,
+     "end": 3.84
     },
     {
      "w": "and",
-     "start": 3.255,
-     "end": 4.32
+     "start": 3.87,
+     "end": 4.0
     },
     {
      "w": "a",
-     "start": 3.285,
-     "end": 4.32
+     "start": 4.085,
+     "end": 4.135
     },
     {
      "w": "half",
-     "start": 3.315,
-     "end": 4.32
+     "start": 4.115,
+     "end": 4.48
     },
     {
      "w": "times",
-     "start": 4.24,
-     "end": 4.64
+     "start": 4.455,
+     "end": 4.88
     },
     {
      "w": "wider",
-     "start": 4.645,
-     "end": 5.12
-    },
-    {
-     "w": "than",
-     "start": 5.14,
+     "start": 4.87,
      "end": 5.36
     },
     {
-     "w": "tonight.",
-     "start": 5.285,
-     "end": 6.16
+     "w": "than",
+     "start": 5.395,
+     "end": 5.6
     },
     {
-     "w": "Its",
-     "start": 6.23,
+     "w": "tonight.",
+     "start": 5.545,
      "end": 6.4
     },
     {
+     "w": "Its",
+     "start": 6.545,
+     "end": 6.72
+    },
+    {
      "w": "tidal",
-     "start": 6.45,
-     "end": 6.88
+     "start": 6.76,
+     "end": 7.2
     },
     {
      "w": "pull",
-     "start": 6.915,
-     "end": 7.28
+     "start": 7.245,
+     "end": 7.6
     },
     {
      "w": "is",
-     "start": 7.305,
-     "end": 7.52
+     "start": 7.645,
+     "end": 7.84
     },
     {
      "w": "more",
-     "start": 7.455,
-     "end": 7.76
+     "start": 7.78,
+     "end": 8.08
     },
     {
      "w": "than",
-     "start": 7.825,
-     "end": 7.92
+     "start": 8.165,
+     "end": 8.32
     },
     {
      "w": "a",
-     "start": 7.855,
-     "end": 9.04
+     "start": 8.405,
+     "end": 9.36
     },
     {
      "w": "hundred",
-     "start": 7.925,
-     "end": 9.04
+     "start": 8.435,
+     "end": 9.36
     },
     {
      "w": "sixty",
-     "start": 7.955,
-     "end": 9.04
+     "start": 8.465,
+     "end": 9.36
     },
     {
      "w": "times",
-     "start": 8.975,
-     "end": 9.44
+     "start": 9.355,
+     "end": 9.84
     },
     {
      "w": "today's.",
-     "start": 9.435,
-     "end": 10.56
+     "start": 9.81,
+     "end": 10.96
     },
     {
      "w": "The",
-     "start": 10.675,
-     "end": 10.8
-    },
-    {
-     "w": "sea",
-     "start": 10.705,
+     "start": 11.125,
      "end": 11.2
     },
     {
-     "w": "is",
-     "start": 11.275,
-     "end": 11.36
-    },
-    {
-     "w": "not",
-     "start": 11.305,
-     "end": 11.6
-    },
-    {
-     "w": "the",
-     "start": 11.575,
-     "end": 11.92
-    },
-    {
-     "w": "only",
-     "start": 12.005,
-     "end": 12.16
-    },
-    {
-     "w": "thing",
-     "start": 12.21,
-     "end": 12.4
-    },
-    {
-     "w": "that",
-     "start": 12.46,
-     "end": 12.72
-    },
-    {
-     "w": "moves.",
-     "start": 12.62,
-     "end": 13.44
-    },
-    {
-     "w": "The",
-     "start": 13.875,
-     "end": 13.925
-    },
-    {
      "w": "solid",
-     "start": 13.905,
-     "end": 14.48
+     "start": 11.155,
+     "end": 11.76
     },
     {
      "w": "Earth",
-     "start": 14.52,
-     "end": 14.96
+     "start": 11.795,
+     "end": 12.24
     },
     {
      "w": "already",
-     "start": 14.91,
-     "end": 15.36
+     "start": 12.21,
+     "end": 12.64
     },
     {
      "w": "rises",
-     "start": 15.315,
-     "end": 15.92
+     "start": 12.595,
+     "end": 13.2
     },
     {
      "w": "and",
-     "start": 15.805,
-     "end": 16.16
+     "start": 13.085,
+     "end": 13.44
     },
     {
      "w": "falls",
-     "start": 16.24,
-     "end": 16.56
+     "start": 13.52,
+     "end": 13.84
     },
     {
      "w": "a",
-     "start": 16.495,
-     "end": 16.72
+     "start": 13.86,
+     "end": 14.0
     },
     {
      "w": "little",
-     "start": 16.815,
-     "end": 16.96
+     "start": 14.06,
+     "end": 14.24
     },
     {
      "w": "with",
-     "start": 17.055,
-     "end": 17.12
+     "start": 14.375,
+     "end": 14.425
     },
     {
      "w": "the",
-     "start": 17.125,
-     "end": 17.28
+     "start": 14.405,
+     "end": 14.56
     },
     {
      "w": "Moon,",
-     "start": 17.175,
-     "end": 17.92
+     "start": 14.495,
+     "end": 15.28
     },
     {
      "w": "tens",
-     "start": 17.985,
-     "end": 18.24
+     "start": 15.34,
+     "end": 15.6
     },
     {
      "w": "of",
-     "start": 18.25,
-     "end": 18.4
+     "start": 15.625,
+     "end": 15.76
     },
     {
      "w": "centimeters",
-     "start": 18.34,
-     "end": 19.2
+     "start": 15.75,
+     "end": 16.64
     },
     {
      "w": "a",
-     "start": 19.275,
-     "end": 19.44
+     "start": 16.73,
+     "end": 16.88
     },
     {
      "w": "day.",
-     "start": 19.535,
-     "end": 20.08
+     "start": 16.975,
+     "end": 17.44
     },
     {
      "w": "With",
-     "start": 20.22,
-     "end": 20.32
+     "start": 17.54,
+     "end": 17.68
     },
     {
      "w": "far",
-     "start": 20.25,
-     "end": 20.72
+     "start": 17.76,
+     "end": 18.0
     },
     {
      "w": "more",
-     "start": 20.75,
-     "end": 20.96
+     "start": 18.025,
+     "end": 18.24
     },
     {
      "w": "pull,",
-     "start": 21.015,
-     "end": 21.52
+     "start": 18.36,
+     "end": 18.72
     },
     {
      "w": "it",
-     "start": 21.515,
-     "end": 21.6
+     "start": 18.71,
+     "end": 18.88
     },
     {
      "w": "would",
-     "start": 21.62,
-     "end": 21.76
+     "start": 18.81,
+     "end": 19.04
     },
     {
      "w": "flex",
-     "start": 21.745,
-     "end": 22.24
+     "start": 19.13,
+     "end": 19.52
     },
     {
      "w": "far",
-     "start": 22.275,
-     "end": 22.64
+     "start": 19.485,
+     "end": 19.92
     },
     {
      "w": "more.",
-     "start": 22.705,
-     "end": 23.2
+     "start": 20.0,
+     "end": 20.56
     },
     {
      "w": "What",
-     "start": 23.27,
-     "end": 23.44
+     "start": 20.685,
+     "end": 20.8
     },
     {
      "w": "that",
-     "start": 23.475,
-     "end": 23.6
+     "start": 20.895,
+     "end": 21.04
     },
     {
      "w": "would",
-     "start": 23.63,
-     "end": 23.84
+     "start": 21.035,
+     "end": 21.2
     },
     {
      "w": "do",
-     "start": 23.85,
-     "end": 24.0
+     "start": 21.265,
+     "end": 21.44
     },
     {
      "w": "to",
-     "start": 24.005,
-     "end": 24.16
+     "start": 21.45,
+     "end": 21.6
     },
     {
      "w": "faults",
-     "start": 24.245,
-     "end": 24.64
+     "start": 21.685,
+     "end": 22.08
     },
     {
      "w": "and",
-     "start": 24.58,
-     "end": 24.8
+     "start": 21.97,
+     "end": 22.24
     },
     {
      "w": "volcanoes,",
-     "start": 24.735,
-     "end": 25.52
+     "start": 22.195,
+     "end": 23.12
     },
     {
      "w": "this",
-     "start": 25.625,
-     "end": 25.84
+     "start": 23.085,
+     "end": 23.36
     },
     {
      "w": "film",
-     "start": 25.93,
-     "end": 26.24
+     "start": 23.4,
+     "end": 23.76
     },
     {
      "w": "cannot",
-     "start": 26.195,
-     "end": 26.72
+     "start": 23.735,
+     "end": 24.24
     },
     {
      "w": "tell",
-     "start": 26.62,
-     "end": 26.96
+     "start": 24.16,
+     "end": 24.48
     },
     {
      "w": "you.",
-     "start": 27.07,
-     "end": 27.52
+     "start": 24.57,
+     "end": 25.12
     },
     {
      "w": "In",
-     "start": 27.63,
-     "end": 27.84
+     "start": 25.17,
+     "end": 25.36
     },
     {
      "w": "real",
-     "start": 27.825,
-     "end": 28.16
+     "start": 25.37,
+     "end": 25.68
     },
     {
      "w": "life,",
-     "start": 28.165,
-     "end": 28.8
+     "start": 25.745,
+     "end": 26.4
     },
     {
      "w": "tides",
-     "start": 28.885,
-     "end": 29.36
+     "start": 26.425,
+     "end": 26.96
     },
     {
      "w": "are",
-     "start": 29.345,
-     "end": 29.52
+     "start": 26.905,
+     "end": 27.12
     },
     {
      "w": "why",
-     "start": 29.575,
-     "end": 29.76
+     "start": 27.135,
+     "end": 27.36
     },
     {
      "w": "the",
-     "start": 29.81,
-     "end": 29.92
+     "start": 27.375,
+     "end": 27.52
     },
     {
      "w": "Moon",
-     "start": 29.84,
-     "end": 30.32
+     "start": 27.405,
+     "end": 27.92
     },
     {
      "w": "drifts",
-     "start": 30.355,
-     "end": 30.88
+     "start": 27.97,
+     "end": 28.48
     },
     {
-     "w": "away:",
-     "start": 30.81,
-     "end": 31.6
-    },
-    {
-     "w": "they",
-     "start": 31.725,
-     "end": 31.84
-    },
-    {
-     "w": "steal",
-     "start": 31.755,
-     "end": 32.32
-    },
-    {
-     "w": "a",
-     "start": 32.36,
-     "end": 32.48
-    },
-    {
-     "w": "little",
-     "start": 32.39,
-     "end": 32.64
-    },
-    {
-     "w": "of",
-     "start": 32.735,
-     "end": 32.8
-    },
-    {
-     "w": "Earth's",
-     "start": 32.855,
-     "end": 33.28
-    },
-    {
-     "w": "spin",
-     "start": 33.39,
-     "end": 33.68
-    },
-    {
-     "w": "and",
-     "start": 33.635,
-     "end": 33.84
-    },
-    {
-     "w": "hand",
-     "start": 33.825,
-     "end": 34.16
-    },
-    {
-     "w": "it",
-     "start": 34.28,
-     "end": 34.33
-    },
-    {
-     "w": "to",
-     "start": 34.33,
-     "end": 34.4
-    },
-    {
-     "w": "the",
-     "start": 34.36,
-     "end": 34.56
-    },
-    {
-     "w": "Moon's",
-     "start": 34.44,
-     "end": 35.04
-    },
-    {
-     "w": "orbit.",
-     "start": 35.03,
-     "end": 35.92
+     "w": "away.",
+     "start": 28.415,
+     "end": 29.2
     },
     {
      "w": "To",
-     "start": 36.09,
-     "end": 36.14
+     "start": 29.345,
+     "end": 29.44
     },
     {
      "w": "make",
-     "start": 36.12,
-     "end": 36.32
+     "start": 29.4,
+     "end": 29.68
     },
     {
      "w": "it",
-     "start": 36.34,
-     "end": 36.48
+     "start": 29.795,
+     "end": 29.845
     },
     {
      "w": "come",
-     "start": 36.475,
-     "end": 36.72
+     "start": 29.825,
+     "end": 30.08
     },
     {
      "w": "closer,",
-     "start": 36.695,
-     "end": 37.44
+     "start": 30.045,
+     "end": 30.72
     },
     {
      "w": "our",
-     "start": 37.575,
-     "end": 37.68
+     "start": 30.745,
+     "end": 30.96
     },
     {
      "w": "thought",
-     "start": 37.77,
-     "end": 37.92
+     "start": 31.045,
+     "end": 31.2
     },
     {
      "w": "experiment",
-     "start": 38.135,
-     "end": 38.72
+     "start": 31.375,
+     "end": 32.0
     },
     {
      "w": "has",
-     "start": 38.675,
-     "end": 38.88
+     "start": 31.9,
+     "end": 32.16
     },
     {
      "w": "to",
-     "start": 38.92,
-     "end": 39.04
+     "start": 32.18,
+     "end": 32.32
     },
     {
      "w": "break",
-     "start": 39.085,
-     "end": 39.44
+     "start": 32.345,
+     "end": 32.72
     },
     {
      "w": "that",
-     "start": 39.33,
-     "end": 39.68
+     "start": 32.655,
+     "end": 32.88
     },
     {
      "w": "rule.",
-     "start": 39.575,
-     "end": 40.56
+     "start": 32.84,
+     "end": 33.76
     },
     {
-     "w": "That",
-     "start": 40.655,
-     "end": 40.8
-    },
-    {
-     "w": "is",
-     "start": 40.685,
-     "end": 40.96
-    },
-    {
-     "w": "one",
-     "start": 40.97,
-     "end": 41.2
-    },
-    {
-     "w": "more",
-     "start": 41.22,
-     "end": 41.52
-    },
-    {
-     "w": "reason",
-     "start": 41.54,
-     "end": 42.0
-    },
-    {
-     "w": "this",
-     "start": 42.03,
-     "end": 42.16
-    },
-    {
-     "w": "is",
-     "start": 42.21,
-     "end": 42.32
-    },
-    {
-     "w": "a",
-     "start": 42.24,
-     "end": 42.56
-    },
-    {
-     "w": "thought",
-     "start": 42.58,
-     "end": 42.88
-    },
-    {
-     "w": "experiment,",
-     "start": 42.91,
-     "end": 43.68
-    },
-    {
-     "w": "not",
-     "start": 43.615,
-     "end": 43.84
-    },
-    {
-     "w": "a",
-     "start": 43.89,
-     "end": 44.0
-    },
-    {
-     "w": "forecast.",
-     "start": 44.045,
-     "end": 45.2
-    },
-    {
-     "w": "And",
-     "start": 45.295,
-     "end": 45.36
-    },
-    {
-     "w": "the",
-     "start": 45.325,
-     "end": 45.52
+     "w": "The",
+     "start": 33.86,
+     "end": 33.92
     },
     {
      "w": "number",
-     "start": 45.45,
-     "end": 45.76
+     "start": 33.89,
+     "end": 34.24
     },
     {
      "w": "keeps",
-     "start": 45.865,
-     "end": 46.16
+     "start": 34.355,
+     "end": 34.64
     },
     {
      "w": "falling.",
-     "start": 46.08,
-     "end": 46.64
+     "start": 34.565,
+     "end": 35.2
     }
    ]
   },
@@ -5505,13 +4222,13 @@
   },
   {
    "id": "ch7_vo",
-   "text": "Fifty thousand kilometers. The Moon is nearly eight times wider than tonight. The pull is about four hundred fifty times today's. One lap now takes about a day and a quarter. That is close to how fast the Earth turns. A moon that orbits slower than the Earth turns rises in the east, like today. A moon that orbits faster than the Earth turns rises in the west. The line between them is about forty-two thousand kilometers. In this picture its orbit is right over the equator. Watch the number. Forty-two thousand. The Moon hangs in your sky, almost still. Then it begins to slide the wrong way across it. The Moon rises in the west. But the number keeps falling.",
+   "text": "Fifty thousand kilometers. The Moon is nearly eight times wider than tonight. One lap now takes about a day and a quarter. A moon that orbits slower than the Earth turns rises in the east, like today. A moon that orbits faster rises in the west. The line between them is about forty-two thousand kilometers. Forty-two thousand. The Moon hangs in your sky, almost still. Then it begins to slide the wrong way across it. The Moon rises in the west. But the number keeps falling.",
    "file": "voice/wav/21.wav",
-   "dur": 46.936,
+   "dur": 31.921,
    "sentences": [
     {
      "text": "Fifty thousand kilometers.",
-     "t0": 0.03,
+     "t0": 0.025,
      "t1": 2.08,
      "claims": [
       "c40"
@@ -5519,110 +4236,84 @@
     },
     {
      "text": "The Moon is nearly eight times wider than tonight.",
-     "t0": 2.2,
-     "t1": 5.52,
+     "t0": 2.155,
+     "t1": 5.2,
      "claims": [
       "c19"
      ]
     },
     {
-     "text": "The pull is about four hundred fifty times today's.",
-     "t0": 5.645,
-     "t1": 9.28,
-     "claims": [
-      "c20"
-     ]
-    },
-    {
      "text": "One lap now takes about a day and a quarter.",
-     "t0": 9.405,
-     "t1": 12.32,
+     "t0": 5.35,
+     "t1": 8.08,
      "claims": [
       "c21"
      ]
     },
     {
-     "text": "That is close to how fast the Earth turns.",
-     "t0": 12.41,
-     "t1": 15.36,
-     "claims": []
-    },
-    {
      "text": "A moon that orbits slower than the Earth turns rises in the east, like today.",
-     "t0": 15.44,
-     "t1": 21.12,
+     "t0": 8.13,
+     "t1": 12.72,
      "claims": [
       "c22"
      ]
     },
     {
-     "text": "A moon that orbits faster than the Earth turns rises in the west.",
-     "t0": 21.24,
-     "t1": 25.6,
+     "text": "A moon that orbits faster rises in the west.",
+     "t0": 13.055,
+     "t1": 16.24,
      "claims": [
       "c22"
      ]
     },
     {
      "text": "The line between them is about forty-two thousand kilometers.",
-     "t0": 25.67,
-     "t1": 29.76,
+     "t0": 16.365,
+     "t1": 20.16,
      "claims": [
       "c22"
      ]
     },
     {
-     "text": "In this picture its orbit is right over the equator.",
-     "t0": 29.83,
-     "t1": 33.28,
-     "claims": []
-    },
-    {
-     "text": "Watch the number.",
-     "t0": 33.345,
-     "t1": 34.56,
-     "claims": []
-    },
-    {
      "text": "Forty-two thousand.",
-     "t0": 34.54,
-     "t1": 36.24,
+     "t0": 20.145,
+     "t1": 21.76,
      "claims": []
     },
     {
      "text": "The Moon hangs in your sky, almost still.",
-     "t0": 36.32,
-     "t1": 39.52,
+     "t0": 21.85,
+     "t1": 24.8,
      "claims": []
     },
     {
      "text": "Then it begins to slide the wrong way across it.",
-     "t0": 39.635,
-     "t1": 43.07,
+     "t0": 24.905,
+     "t1": 28.08,
      "claims": []
     },
     {
      "text": "The Moon rises in the west.",
-     "t0": 43.05,
-     "t1": 45.28,
+     "t0": 28.14,
+     "t1": 30.4,
      "claims": []
     },
     {
      "text": "But the number keeps falling.",
-     "t0": 45.41,
-     "t1": 46.88,
+     "t0": 30.495,
+     "t1": 31.84,
      "claims": []
     }
    ],
    "words": [
     {
      "w": "Fifty",
-     "start": 0.03,
+     "start": 0.025,
      "end": 0.96
     },
     {
      "w": "thousand",
-     "start": 0.06,
+     "start": 0.055,
      "end": 0.96
     },
     {
@@ -5632,593 +4323,418 @@
     },
     {
      "w": "The",
-     "start": 2.2,
-     "end": 2.32
+     "start": 2.155,
+     "end": 2.24
     },
     {
      "w": "Moon",
-     "start": 2.23,
-     "end": 2.72
+     "start": 2.185,
+     "end": 2.64
     },
     {
      "w": "is",
-     "start": 2.7,
-     "end": 2.88
+     "start": 2.735,
+     "end": 2.8
     },
     {
      "w": "nearly",
-     "start": 2.84,
-     "end": 3.28
+     "start": 2.765,
+     "end": 3.12
     },
     {
      "w": "eight",
-     "start": 3.315,
-     "end": 3.6
+     "start": 3.19,
+     "end": 3.44
     },
     {
      "w": "times",
-     "start": 3.58,
-     "end": 4.0
+     "start": 3.435,
+     "end": 3.84
     },
     {
      "w": "wider",
-     "start": 4.01,
-     "end": 4.48
+     "start": 3.83,
+     "end": 4.32
     },
     {
      "w": "than",
-     "start": 4.495,
-     "end": 4.72
+     "start": 4.295,
+     "end": 4.48
     },
     {
      "w": "tonight.",
-     "start": 4.65,
+     "start": 4.455,
+     "end": 5.2
+    },
+    {
+     "w": "One",
+     "start": 5.35,
      "end": 5.52
     },
     {
-     "w": "The",
-     "start": 5.645,
-     "end": 5.695
+     "w": "lap",
+     "start": 5.6,
+     "end": 5.92
     },
     {
-     "w": "pull",
-     "start": 5.78,
+     "w": "now",
+     "start": 5.87,
      "end": 6.16
     },
     {
-     "w": "is",
-     "start": 6.13,
+     "w": "takes",
+     "start": 6.155,
      "end": 6.4
     },
     {
      "w": "about",
-     "start": 6.37,
+     "start": 6.325,
      "end": 6.64
     },
     {
-     "w": "four",
-     "start": 6.6,
-     "end": 7.84
-    },
-    {
-     "w": "hundred",
-     "start": 6.63,
-     "end": 7.84
-    },
-    {
-     "w": "fifty",
-     "start": 6.66,
-     "end": 7.84
-    },
-    {
-     "w": "times",
-     "start": 7.83,
-     "end": 8.24
-    },
-    {
-     "w": "today's.",
-     "start": 8.245,
-     "end": 9.28
-    },
-    {
-     "w": "One",
-     "start": 9.405,
-     "end": 9.6
-    },
-    {
-     "w": "lap",
-     "start": 9.68,
-     "end": 10.0
-    },
-    {
-     "w": "now",
-     "start": 9.94,
-     "end": 10.24
-    },
-    {
-     "w": "takes",
-     "start": 10.235,
-     "end": 10.56
-    },
-    {
-     "w": "about",
-     "start": 10.5,
-     "end": 10.72
-    },
-    {
      "w": "a",
-     "start": 10.815,
-     "end": 10.96
+     "start": 6.73,
+     "end": 6.8
     },
     {
      "w": "day",
-     "start": 10.87,
-     "end": 11.2
+     "start": 6.765,
+     "end": 7.04
     },
     {
      "w": "and",
-     "start": 11.2,
-     "end": 11.36
+     "start": 7.07,
+     "end": 7.2
     },
     {
      "w": "a",
-     "start": 11.425,
-     "end": 11.52
+     "start": 7.3,
+     "end": 7.36
     },
     {
      "w": "quarter.",
-     "start": 11.525,
-     "end": 12.32
-    },
-    {
-     "w": "That",
-     "start": 12.41,
-     "end": 12.56
-    },
-    {
-     "w": "is",
-     "start": 12.44,
-     "end": 12.72
-    },
-    {
-     "w": "close",
-     "start": 12.725,
-     "end": 13.04
-    },
-    {
-     "w": "to",
-     "start": 13.075,
-     "end": 13.28
-    },
-    {
-     "w": "how",
-     "start": 13.2,
-     "end": 13.44
-    },
-    {
-     "w": "fast",
-     "start": 13.415,
-     "end": 13.92
-    },
-    {
-     "w": "the",
-     "start": 13.95,
-     "end": 14.08
-    },
-    {
-     "w": "Earth",
-     "start": 14.12,
-     "end": 14.4
-    },
-    {
-     "w": "turns.",
-     "start": 14.39,
-     "end": 15.36
+     "start": 7.4,
+     "end": 8.08
     },
     {
      "w": "A",
-     "start": 15.44,
-     "end": 15.6
+     "start": 8.13,
+     "end": 8.32
     },
     {
      "w": "moon",
-     "start": 15.59,
-     "end": 15.92
+     "start": 8.22,
+     "end": 8.64
     },
     {
      "w": "that",
-     "start": 15.98,
-     "end": 16.16
+     "start": 8.705,
+     "end": 8.8
     },
     {
      "w": "orbits",
-     "start": 16.185,
-     "end": 16.64
+     "start": 8.915,
+     "end": 9.36
     },
     {
      "w": "slower",
-     "start": 16.705,
-     "end": 17.04
+     "start": 9.39,
+     "end": 9.6
     },
     {
      "w": "than",
-     "start": 17.105,
-     "end": 17.28
+     "start": 9.705,
+     "end": 9.84
     },
     {
      "w": "the",
-     "start": 17.42,
-     "end": 17.47
+     "start": 9.93,
+     "end": 10.0
     },
     {
      "w": "Earth",
-     "start": 17.45,
-     "end": 17.76
+     "start": 10.02,
+     "end": 10.32
     },
     {
      "w": "turns",
-     "start": 17.715,
-     "end": 18.24
+     "start": 10.295,
+     "end": 10.64
     },
     {
      "w": "rises",
-     "start": 18.125,
-     "end": 18.72
+     "start": 10.68,
+     "end": 11.2
     },
     {
      "w": "in",
-     "start": 18.745,
-     "end": 18.88
+     "start": 11.185,
+     "end": 11.36
     },
     {
      "w": "the",
-     "start": 18.97,
-     "end": 19.04
+     "start": 11.455,
+     "end": 11.52
     },
     {
      "w": "east,",
-     "start": 19.1,
-     "end": 19.84
+     "start": 11.555,
+     "end": 11.84
     },
     {
      "w": "like",
-     "start": 19.8,
-     "end": 20.16
+     "start": 12.15,
+     "end": 12.24
     },
     {
      "w": "today.",
-     "start": 20.05,
-     "end": 21.12
+     "start": 12.18,
+     "end": 12.72
     },
     {
      "w": "A",
-     "start": 21.24,
-     "end": 21.36
+     "start": 13.055,
+     "end": 13.2
     },
     {
      "w": "moon",
-     "start": 21.27,
-     "end": 21.68
+     "start": 13.145,
+     "end": 13.52
     },
     {
      "w": "that",
-     "start": 21.77,
-     "end": 21.92
+     "start": 13.555,
+     "end": 13.68
     },
     {
      "w": "orbits",
-     "start": 21.99,
-     "end": 22.48
+     "start": 13.745,
+     "end": 14.16
     },
     {
      "w": "faster",
-     "start": 22.475,
-     "end": 22.88
-    },
-    {
-     "w": "than",
-     "start": 22.81,
-     "end": 23.04
-    },
-    {
-     "w": "the",
-     "start": 22.945,
-     "end": 23.2
-    },
-    {
-     "w": "Earth",
-     "start": 23.24,
-     "end": 23.52
-    },
-    {
-     "w": "turns",
-     "start": 23.515,
-     "end": 24.08
+     "start": 14.19,
+     "end": 14.56
     },
     {
      "w": "rises",
-     "start": 23.99,
-     "end": 24.56
+     "start": 14.605,
+     "end": 15.12
     },
     {
      "w": "in",
-     "start": 24.545,
-     "end": 24.72
+     "start": 15.155,
+     "end": 15.28
     },
     {
      "w": "the",
-     "start": 24.805,
-     "end": 24.88
+     "start": 15.28,
+     "end": 15.44
     },
     {
      "w": "west.",
-     "start": 24.835,
-     "end": 25.6
+     "start": 15.415,
+     "end": 16.24
     },
     {
      "w": "The",
-     "start": 25.67,
-     "end": 25.76
+     "start": 16.365,
+     "end": 16.48
     },
     {
      "w": "line",
-     "start": 25.7,
-     "end": 26.24
+     "start": 16.395,
+     "end": 16.88
     },
     {
      "w": "between",
-     "start": 26.305,
-     "end": 26.56
+     "start": 16.96,
+     "end": 17.2
     },
     {
      "w": "them",
-     "start": 26.445,
-     "end": 26.8
+     "start": 17.14,
+     "end": 17.44
     },
     {
      "w": "is",
-     "start": 26.82,
-     "end": 27.04
+     "start": 17.44,
+     "end": 17.68
     },
     {
      "w": "about",
-     "start": 27.035,
-     "end": 27.28
+     "start": 17.665,
+     "end": 17.92
     },
     {
      "w": "forty-two",
-     "start": 27.255,
-     "end": 28.56
+     "start": 17.885,
+     "end": 19.12
     },
     {
      "w": "thousand",
-     "start": 27.285,
-     "end": 28.56
+     "start": 17.915,
+     "end": 19.12
     },
     {
      "w": "kilometers.",
-     "start": 28.55,
-     "end": 29.76
-    },
-    {
-     "w": "In",
-     "start": 29.83,
-     "end": 29.92
-    },
-    {
-     "w": "this",
-     "start": 29.86,
-     "end": 30.16
-    },
-    {
-     "w": "picture",
-     "start": 30.24,
-     "end": 30.56
-    },
-    {
-     "w": "its",
-     "start": 30.675,
-     "end": 30.88
-    },
-    {
-     "w": "orbit",
-     "start": 30.95,
-     "end": 31.36
-    },
-    {
-     "w": "is",
-     "start": 31.385,
-     "end": 31.6
-    },
-    {
-     "w": "right",
-     "start": 31.545,
-     "end": 31.84
-    },
-    {
-     "w": "over",
-     "start": 31.88,
-     "end": 32.08
-    },
-    {
-     "w": "the",
-     "start": 32.175,
-     "end": 32.32
-    },
-    {
-     "w": "equator.",
-     "start": 32.42,
-     "end": 33.28
-    },
-    {
-     "w": "Watch",
-     "start": 33.345,
-     "end": 33.68
-    },
-    {
-     "w": "the",
-     "start": 33.62,
-     "end": 33.92
-    },
-    {
-     "w": "number.",
-     "start": 34.015,
-     "end": 34.56
+     "start": 19.11,
+     "end": 20.16
     },
     {
      "w": "Forty-two",
-     "start": 34.54,
-     "end": 36.24
+     "start": 20.145,
+     "end": 21.76
     },
     {
      "w": "thousand.",
-     "start": 34.57,
-     "end": 36.24
+     "start": 20.175,
+     "end": 21.76
     },
     {
      "w": "The",
-     "start": 36.32,
-     "end": 36.4
+     "start": 21.85,
+     "end": 21.92
     },
     {
      "w": "Moon",
-     "start": 36.35,
-     "end": 36.8
+     "start": 21.88,
+     "end": 22.32
     },
     {
      "w": "hangs",
-     "start": 36.83,
-     "end": 37.2
+     "start": 22.26,
+     "end": 22.64
     },
     {
      "w": "in",
-     "start": 37.215,
-     "end": 37.36
+     "start": 22.68,
+     "end": 22.8
     },
     {
      "w": "your",
-     "start": 37.455,
-     "end": 37.6
+     "start": 22.88,
+     "end": 23.04
     },
     {
      "w": "sky,",
-     "start": 37.65,
-     "end": 38.08
+     "start": 23.06,
+     "end": 23.44
     },
     {
      "w": "almost",
-     "start": 38.125,
-     "end": 38.72
+     "start": 23.51,
+     "end": 24.08
     },
     {
      "w": "still.",
-     "start": 38.755,
-     "end": 39.52
+     "start": 24.115,
+     "end": 24.8
     },
     {
      "w": "Then",
-     "start": 39.635,
-     "end": 39.76
+     "start": 24.905,
+     "end": 25.04
     },
     {
      "w": "it",
-     "start": 39.665,
-     "end": 40.0
+     "start": 25.13,
+     "end": 25.2
     },
     {
      "w": "begins",
-     "start": 39.965,
-     "end": 40.4
+     "start": 25.175,
+     "end": 25.6
     },
     {
      "w": "to",
-     "start": 40.385,
-     "end": 40.56
+     "start": 25.595,
+     "end": 25.76
     },
     {
      "w": "slide",
-     "start": 40.635,
-     "end": 41.04
+     "start": 25.835,
+     "end": 26.24
     },
     {
      "w": "the",
-     "start": 41.055,
-     "end": 41.2
+     "start": 26.235,
+     "end": 26.4
     },
     {
      "w": "wrong",
-     "start": 41.21,
-     "end": 41.6
+     "start": 26.395,
+     "end": 26.72
     },
     {
      "w": "way",
-     "start": 41.55,
-     "end": 41.84
+     "start": 26.755,
+     "end": 26.96
     },
     {
      "w": "across",
-     "start": 41.875,
-     "end": 42.32
+     "start": 27.06,
+     "end": 27.44
     },
     {
      "w": "it.",
-     "start": 43.02,
-     "end": 43.07
+     "start": 27.5,
+     "end": 28.08
     },
     {
      "w": "The",
-     "start": 43.05,
-     "end": 43.12
+     "start": 28.14,
+     "end": 28.24
     },
     {
      "w": "Moon",
-     "start": 43.08,
-     "end": 43.6
+     "start": 28.17,
+     "end": 28.72
     },
     {
      "w": "rises",
-     "start": 43.57,
-     "end": 44.16
+     "start": 28.71,
+     "end": 29.28
     },
     {
      "w": "in",
-     "start": 44.15,
-     "end": 44.32
+     "start": 29.305,
+     "end": 29.44
     },
     {
      "w": "the",
-     "start": 44.32,
-     "end": 44.48
+     "start": 29.535,
+     "end": 29.6
     },
     {
      "w": "west.",
-     "start": 44.47,
-     "end": 45.28
+     "start": 29.57,
+     "end": 30.4
     },
     {
      "w": "But",
-     "start": 45.41,
-     "end": 45.46
+     "start": 30.495,
+     "end": 30.56
     },
     {
      "w": "the",
-     "start": 45.52,
-     "end": 45.68
+     "start": 30.6,
+     "end": 30.72
     },
     {
      "w": "number",
-     "start": 45.585,
-     "end": 45.92
+     "start": 30.63,
+     "end": 31.04
     },
     {
      "w": "keeps",
-     "start": 46.02,
-     "end": 46.32
+     "start": 31.08,
+     "end": 31.36
     },
     {
      "w": "falling.",
-     "start": 46.235,
-     "end": 46.88
+     "start": 31.29,
+     "end": 31.84
     }
    ]
   },
@@ -6356,759 +4872,564 @@
   },
   {
    "id": "ch8_vo",
-   "text": "Thirty-five thousand kilometers. Thirty thousand. Twenty-five. Twenty. There is a distance where tides pull harder on a body than its own gravity holds it together. It is called the Roche limit. For a Moon like ours around Earth, it is around eighteen thousand kilometers, if the Moon behaves like a fluid. Around nine and a half thousand, if it is perfectly rigid. A real Moon sits somewhere in between. At eighteen thousand kilometers, it looks more than twenty times wider than tonight. It is at least as wide as a fist held out at arm's length, and wider still overhead. It is not a Moon you look at any more. It is a wall of grey, and its surface is straining. Eighteen thousand. Seventeen. The tide is enormous.",
+   "text": "Thirty-five thousand kilometers. Thirty thousand. Twenty-five. Twenty. There is a distance where tides pull harder on a body than its own gravity holds it together. It is called the Roche limit. For a Moon like ours around Earth, it is around eighteen thousand kilometers, if the Moon behaves like a fluid. Around nine and a half thousand, if it is perfectly rigid. At eighteen thousand kilometers, it looks more than twenty times wider than tonight. It is a wall of grey, and its surface is straining. Eighteen thousand. Seventeen. The tide is enormous.",
    "file": "voice/wav/24.wav",
-   "dur": 49.253,
+   "dur": 39.257,
    "sentences": [
     {
      "text": "Thirty-five thousand kilometers.",
-     "t0": 0.035,
-     "t1": 2.56,
+     "t0": 0.025,
+     "t1": 2.64,
      "claims": []
     },
     {
      "text": "Thirty thousand.",
-     "t0": 2.635,
-     "t1": 4.96,
+     "t0": 2.715,
+     "t1": 5.2,
      "claims": []
     },
     {
      "text": "Twenty-five.",
-     "t0": 2.695,
-     "t1": 4.96,
+     "t0": 2.775,
+     "t1": 5.2,
      "claims": []
     },
     {
      "text": "Twenty.",
-     "t0": 5.02,
-     "t1": 6.0,
+     "t0": 5.3,
+     "t1": 6.16,
      "claims": []
     },
     {
      "text": "There is a distance where tides pull harder on a body than its own gravity holds it together.",
-     "t0": 6.14,
-     "t1": 11.52,
+     "t0": 6.44,
+     "t1": 12.0,
      "claims": [
       "c23"
      ]
     },
     {
      "text": "It is called the Roche limit.",
-     "t0": 11.565,
-     "t1": 13.52,
+     "t0": 12.095,
+     "t1": 14.16,
      "claims": [
       "c23"
      ]
     },
     {
      "text": "For a Moon like ours around Earth, it is around eighteen thousand kilometers, if the Moon behaves like a fluid.",
-     "t0": 13.67,
-     "t1": 21.28,
+     "t0": 14.25,
+     "t1": 22.08,
      "claims": [
       "c24"
      ]
     },
     {
      "text": "Around nine and a half thousand, if it is perfectly rigid.",
-     "t0": 21.3,
-     "t1": 25.04,
+     "t0": 22.1,
+     "t1": 25.76,
      "claims": [
       "c25"
      ]
     },
     {
-     "text": "A real Moon sits somewhere in between.",
-     "t0": 25.085,
-     "t1": 28.08,
-     "claims": []
-    },
-    {
      "text": "At eighteen thousand kilometers, it looks more than twenty times wider than tonight.",
-     "t0": 28.2,
-     "t1": 33.12,
+     "t0": 25.825,
+     "t1": 30.88,
      "claims": [
       "c26"
      ]
     },
     {
-     "text": "It is at least as wide as a fist held out at arm's length, and wider still overhead.",
-     "t0": 33.235,
-     "t1": 38.8,
-     "claims": [
-      "c41"
-     ]
-    },
-    {
-     "text": "It is not a Moon you look at any more.",
-     "t0": 38.91,
-     "t1": 41.12,
-     "claims": []
-    },
-    {
      "text": "It is a wall of grey, and its surface is straining.",
-     "t0": 41.225,
-     "t1": 44.88,
+     "t0": 31.005,
+     "t1": 34.72,
      "claims": []
     },
     {
      "text": "Eighteen thousand.",
-     "t0": 44.965,
-     "t1": 46.32,
+     "t0": 34.805,
+     "t1": 36.24,
      "claims": []
     },
     {
      "text": "Seventeen.",
-     "t0": 46.325,
-     "t1": 47.52,
+     "t0": 36.27,
+     "t1": 37.44,
      "claims": []
     },
     {
      "text": "The tide is enormous.",
-     "t0": 47.605,
-     "t1": 49.2,
+     "t0": 37.55,
+     "t1": 39.2,
      "claims": []
     }
    ],
    "words": [
     {
      "w": "Thirty-five",
-     "start": 0.035,
+     "start": 0.025,
      "end": 1.44
     },
     {
      "w": "thousand",
-     "start": 0.065,
+     "start": 0.055,
      "end": 1.44
     },
     {
      "w": "kilometers.",
-     "start": 1.405,
-     "end": 2.56
+     "start": 1.455,
+     "end": 2.64
     },
     {
      "w": "Thirty",
-     "start": 2.635,
-     "end": 4.96
+     "start": 2.715,
+     "end": 5.2
     },
     {
      "w": "thousand.",
-     "start": 2.665,
-     "end": 4.96
+     "start": 2.745,
+     "end": 5.2
     },
     {
      "w": "Twenty-five.",
-     "start": 2.695,
-     "end": 4.96
+     "start": 2.775,
+     "end": 5.2
     },
     {
      "w": "Twenty.",
-     "start": 5.02,
-     "end": 6.0
+     "start": 5.3,
+     "end": 6.16
     },
     {
      "w": "There",
-     "start": 6.14,
-     "end": 6.24
+     "start": 6.44,
+     "end": 6.49
     },
     {
      "w": "is",
-     "start": 6.17,
-     "end": 6.4
+     "start": 6.47,
+     "end": 6.72
     },
     {
      "w": "a",
-     "start": 6.495,
-     "end": 6.56
+     "start": 6.81,
+     "end": 6.88
     },
     {
      "w": "distance",
-     "start": 6.565,
-     "end": 6.96
+     "start": 6.865,
+     "end": 7.36
     },
     {
      "w": "where",
-     "start": 7.065,
-     "end": 7.2
+     "start": 7.395,
+     "end": 7.6
     },
     {
      "w": "tides",
-     "start": 7.26,
-     "end": 7.76
-    },
-    {
-     "w": "pull",
-     "start": 7.825,
+     "start": 7.59,
      "end": 8.08
     },
     {
-     "w": "harder",
-     "start": 8.1,
+     "w": "pull",
+     "start": 8.18,
      "end": 8.48
     },
     {
+     "w": "harder",
+     "start": 8.465,
+     "end": 8.8
+    },
+    {
      "w": "on",
-     "start": 8.46,
-     "end": 8.64
+     "start": 8.69,
+     "end": 8.96
     },
     {
      "w": "a",
-     "start": 8.715,
-     "end": 8.765
+     "start": 9.055,
+     "end": 9.12
     },
     {
      "w": "body",
-     "start": 8.745,
-     "end": 9.04
-    },
-    {
-     "w": "than",
-     "start": 9.1,
-     "end": 9.28
-    },
-    {
-     "w": "its",
-     "start": 9.295,
+     "start": 9.095,
      "end": 9.44
     },
     {
-     "w": "own",
-     "start": 9.43,
+     "w": "than",
+     "start": 9.53,
      "end": 9.68
     },
     {
+     "w": "its",
+     "start": 9.74,
+     "end": 9.92
+    },
+    {
+     "w": "own",
+     "start": 9.885,
+     "end": 10.16
+    },
+    {
      "w": "gravity",
-     "start": 9.745,
-     "end": 10.24
-    },
-    {
-     "w": "holds",
-     "start": 10.26,
-     "end": 10.56
-    },
-    {
-     "w": "it",
-     "start": 10.66,
+     "start": 10.21,
      "end": 10.72
     },
     {
+     "w": "holds",
+     "start": 10.74,
+     "end": 11.04
+    },
+    {
+     "w": "it",
+     "start": 11.165,
+     "end": 11.215
+    },
+    {
      "w": "together.",
-     "start": 10.7,
-     "end": 11.52
+     "start": 11.205,
+     "end": 12.0
     },
     {
      "w": "It",
-     "start": 11.565,
-     "end": 11.68
+     "start": 12.095,
+     "end": 12.16
     },
     {
      "w": "is",
-     "start": 11.595,
-     "end": 11.84
+     "start": 12.125,
+     "end": 12.4
     },
     {
      "w": "called",
-     "start": 11.845,
-     "end": 12.08
+     "start": 12.395,
+     "end": 12.56
     },
     {
      "w": "the",
-     "start": 12.17,
-     "end": 12.24
+     "start": 12.47,
+     "end": 12.72
     },
     {
      "w": "Roche",
-     "start": 12.2,
-     "end": 12.88
+     "start": 12.705,
+     "end": 13.44
     },
     {
      "w": "limit.",
-     "start": 12.99,
-     "end": 13.52
+     "start": 13.535,
+     "end": 14.16
     },
     {
      "w": "For",
-     "start": 13.67,
-     "end": 13.76
-    },
-    {
-     "w": "a",
-     "start": 13.7,
-     "end": 13.92
-    },
-    {
-     "w": "Moon",
-     "start": 13.875,
+     "start": 14.25,
      "end": 14.32
     },
     {
-     "w": "like",
-     "start": 14.34,
+     "w": "a",
+     "start": 14.28,
      "end": 14.56
     },
     {
-     "w": "ours",
-     "start": 14.635,
+     "w": "Moon",
+     "start": 14.46,
      "end": 14.96
     },
     {
-     "w": "around",
-     "start": 15.125,
-     "end": 15.44
+     "w": "like",
+     "start": 14.93,
+     "end": 15.2
     },
     {
-     "w": "Earth,",
-     "start": 15.475,
+     "w": "ours",
+     "start": 15.215,
+     "end": 15.68
+    },
+    {
+     "w": "around",
+     "start": 15.73,
      "end": 16.0
     },
     {
-     "w": "it",
-     "start": 16.075,
-     "end": 16.16
-    },
-    {
-     "w": "is",
+     "w": "Earth,",
      "start": 16.105,
-     "end": 16.4
-    },
-    {
-     "w": "around",
-     "start": 16.415,
      "end": 16.72
     },
     {
+     "w": "it",
+     "start": 16.745,
+     "end": 16.88
+    },
+    {
+     "w": "is",
+     "start": 16.83,
+     "end": 17.12
+    },
+    {
+     "w": "around",
+     "start": 17.095,
+     "end": 17.36
+    },
+    {
      "w": "eighteen",
-     "start": 16.815,
-     "end": 17.76
+     "start": 17.515,
+     "end": 18.48
     },
     {
      "w": "thousand",
-     "start": 16.845,
-     "end": 17.76
+     "start": 17.545,
+     "end": 18.48
     },
     {
      "w": "kilometers,",
-     "start": 17.8,
-     "end": 18.64
+     "start": 18.53,
+     "end": 19.44
     },
     {
      "w": "if",
-     "start": 18.685,
-     "end": 18.8
+     "start": 19.49,
+     "end": 19.6
     },
     {
      "w": "the",
-     "start": 18.715,
-     "end": 18.96
+     "start": 19.64,
+     "end": 19.76
     },
     {
      "w": "Moon",
-     "start": 18.845,
-     "end": 19.36
-    },
-    {
-     "w": "behaves",
-     "start": 19.35,
-     "end": 19.84
-    },
-    {
-     "w": "like",
-     "start": 19.83,
-     "end": 20.0
-    },
-    {
-     "w": "a",
-     "start": 20.0,
+     "start": 19.67,
      "end": 20.16
     },
     {
+     "w": "behaves",
+     "start": 20.185,
+     "end": 20.72
+    },
+    {
+     "w": "like",
+     "start": 20.685,
+     "end": 20.88
+    },
+    {
+     "w": "a",
+     "start": 20.855,
+     "end": 21.04
+    },
+    {
      "w": "fluid.",
-     "start": 20.25,
-     "end": 21.28
+     "start": 21.105,
+     "end": 22.08
     },
     {
      "w": "Around",
-     "start": 21.3,
-     "end": 21.6
+     "start": 22.1,
+     "end": 22.4
     },
     {
      "w": "nine",
-     "start": 21.59,
-     "end": 23.04
+     "start": 22.425,
+     "end": 23.76
     },
     {
      "w": "and",
-     "start": 21.62,
-     "end": 23.04
+     "start": 22.455,
+     "end": 23.76
     },
     {
      "w": "a",
-     "start": 21.65,
-     "end": 23.04
+     "start": 22.485,
+     "end": 23.76
     },
     {
      "w": "half",
-     "start": 21.68,
-     "end": 23.04
+     "start": 22.515,
+     "end": 23.76
     },
     {
      "w": "thousand,",
-     "start": 21.71,
-     "end": 23.04
+     "start": 22.545,
+     "end": 23.76
     },
     {
      "w": "if",
-     "start": 23.035,
-     "end": 23.2
+     "start": 23.79,
+     "end": 23.92
     },
     {
      "w": "it",
-     "start": 23.195,
-     "end": 23.36
+     "start": 23.915,
+     "end": 24.08
     },
     {
      "w": "is",
-     "start": 23.58,
-     "end": 23.63
+     "start": 24.235,
+     "end": 24.285
     },
     {
      "w": "perfectly",
-     "start": 23.61,
-     "end": 24.16
+     "start": 24.315,
+     "end": 24.8
     },
     {
      "w": "rigid.",
-     "start": 24.05,
-     "end": 25.04
-    },
-    {
-     "w": "A",
-     "start": 25.085,
-     "end": 25.28
-    },
-    {
-     "w": "real",
-     "start": 25.235,
-     "end": 25.52
-    },
-    {
-     "w": "Moon",
-     "start": 25.555,
-     "end": 26.0
-    },
-    {
-     "w": "sits",
-     "start": 26.04,
-     "end": 26.4
-    },
-    {
-     "w": "somewhere",
-     "start": 26.445,
-     "end": 27.04
-    },
-    {
-     "w": "in",
-     "start": 27.17,
-     "end": 27.28
-    },
-    {
-     "w": "between.",
-     "start": 27.29,
-     "end": 28.08
+     "start": 24.685,
+     "end": 25.76
     },
     {
      "w": "At",
-     "start": 28.2,
-     "end": 28.32
+     "start": 25.825,
+     "end": 26.0
     },
     {
      "w": "eighteen",
-     "start": 28.39,
-     "end": 29.28
+     "start": 26.125,
+     "end": 27.04
     },
     {
      "w": "thousand",
-     "start": 28.42,
-     "end": 29.28
+     "start": 26.155,
+     "end": 27.04
     },
     {
      "w": "kilometers,",
-     "start": 29.3,
-     "end": 30.0
+     "start": 27.045,
+     "end": 27.68
     },
     {
      "w": "it",
-     "start": 30.01,
-     "end": 30.16
+     "start": 27.805,
+     "end": 28.0
     },
     {
      "w": "looks",
-     "start": 30.27,
-     "end": 30.4
+     "start": 28.065,
+     "end": 28.24
     },
     {
      "w": "more",
-     "start": 30.38,
-     "end": 30.64
+     "start": 28.17,
+     "end": 28.4
     },
     {
      "w": "than",
-     "start": 30.655,
-     "end": 30.8
+     "start": 28.425,
+     "end": 28.64
     },
     {
      "w": "twenty",
-     "start": 30.855,
-     "end": 31.28
+     "start": 28.645,
+     "end": 29.04
     },
     {
      "w": "times",
-     "start": 31.205,
-     "end": 31.6
+     "start": 29.025,
+     "end": 29.44
     },
     {
      "w": "wider",
-     "start": 31.625,
-     "end": 32.16
+     "start": 29.47,
+     "end": 30.0
     },
     {
      "w": "than",
-     "start": 32.255,
-     "end": 32.32
+     "start": 29.965,
+     "end": 30.16
     },
     {
      "w": "tonight.",
-     "start": 32.285,
-     "end": 33.12
+     "start": 30.115,
+     "end": 30.88
     },
     {
      "w": "It",
-     "start": 33.235,
-     "end": 33.285
+     "start": 31.005,
+     "end": 31.055
     },
     {
      "w": "is",
-     "start": 33.265,
-     "end": 33.52
-    },
-    {
-     "w": "at",
-     "start": 33.555,
-     "end": 33.605
-    },
-    {
-     "w": "least",
-     "start": 33.585,
-     "end": 33.84
-    },
-    {
-     "w": "as",
-     "start": 33.865,
-     "end": 34.08
-    },
-    {
-     "w": "wide",
-     "start": 34.065,
-     "end": 34.4
-    },
-    {
-     "w": "as",
-     "start": 34.45,
-     "end": 34.56
+     "start": 31.035,
+     "end": 31.28
     },
     {
      "w": "a",
-     "start": 34.655,
-     "end": 34.8
-    },
-    {
-     "w": "fist",
-     "start": 34.845,
-     "end": 35.2
-    },
-    {
-     "w": "held",
-     "start": 35.085,
-     "end": 35.44
-    },
-    {
-     "w": "out",
-     "start": 35.36,
-     "end": 35.6
-    },
-    {
-     "w": "at",
-     "start": 35.61,
-     "end": 35.84
-    },
-    {
-     "w": "arm's",
-     "start": 35.78,
-     "end": 36.24
-    },
-    {
-     "w": "length,",
-     "start": 36.165,
-     "end": 36.64
-    },
-    {
-     "w": "and",
-     "start": 36.625,
-     "end": 36.8
-    },
-    {
-     "w": "wider",
-     "start": 36.82,
-     "end": 37.36
-    },
-    {
-     "w": "still",
-     "start": 37.385,
-     "end": 37.68
-    },
-    {
-     "w": "overhead.",
-     "start": 37.635,
-     "end": 38.8
-    },
-    {
-     "w": "It",
-     "start": 38.91,
-     "end": 38.96
-    },
-    {
-     "w": "is",
-     "start": 38.94,
-     "end": 39.2
-    },
-    {
-     "w": "not",
-     "start": 39.15,
-     "end": 39.36
-    },
-    {
-     "w": "a",
-     "start": 39.405,
-     "end": 39.52
-    },
-    {
-     "w": "Moon",
-     "start": 39.435,
-     "end": 39.84
-    },
-    {
-     "w": "you",
-     "start": 39.925,
-     "end": 40.0
-    },
-    {
-     "w": "look",
-     "start": 40.145,
-     "end": 40.195
-    },
-    {
-     "w": "at",
-     "start": 40.175,
-     "end": 40.32
-    },
-    {
-     "w": "any",
-     "start": 40.245,
-     "end": 41.12
-    },
-    {
-     "w": "more.",
-     "start": 40.275,
-     "end": 41.12
-    },
-    {
-     "w": "It",
-     "start": 41.225,
-     "end": 41.28
-    },
-    {
-     "w": "is",
-     "start": 41.255,
-     "end": 41.44
-    },
-    {
-     "w": "a",
-     "start": 41.525,
-     "end": 41.6
+     "start": 31.335,
+     "end": 31.44
     },
     {
      "w": "wall",
-     "start": 41.61,
-     "end": 41.92
+     "start": 31.365,
+     "end": 31.76
     },
     {
      "w": "of",
-     "start": 42.01,
-     "end": 42.08
+     "start": 31.83,
+     "end": 31.92
     },
     {
      "w": "grey,",
-     "start": 42.145,
-     "end": 42.64
+     "start": 31.975,
+     "end": 32.48
     },
     {
      "w": "and",
-     "start": 42.73,
-     "end": 42.8
+     "start": 32.515,
+     "end": 32.64
     },
     {
      "w": "its",
-     "start": 42.895,
-     "end": 43.04
+     "start": 32.725,
+     "end": 32.8
     },
     {
      "w": "surface",
-     "start": 42.93,
-     "end": 43.52
+     "start": 32.755,
+     "end": 33.28
     },
     {
      "w": "is",
-     "start": 43.59,
-     "end": 43.76
+     "start": 33.355,
+     "end": 33.52
     },
     {
      "w": "straining.",
-     "start": 43.84,
-     "end": 44.88
+     "start": 33.61,
+     "end": 34.72
     },
     {
      "w": "Eighteen",
-     "start": 44.965,
-     "end": 46.32
+     "start": 34.805,
+     "end": 36.24
     },
     {
      "w": "thousand.",
-     "start": 44.995,
-     "end": 46.32
+     "start": 34.835,
+     "end": 36.24
     },
     {
      "w": "Seventeen.",
-     "start": 46.325,
-     "end": 47.52
+     "start": 36.27,
+     "end": 37.44
     },
     {
      "w": "The",
-     "start": 47.605,
-     "end": 47.68
+     "start": 37.55,
+     "end": 37.68
     },
     {
      "w": "tide",
-     "start": 47.73,
-     "end": 48.16
+     "start": 37.675,
+     "end": 38.16
     },
     {
      "w": "is",
-     "start": 48.255,
-     "end": 48.4
+     "start": 38.255,
+     "end": 38.4
     },
     {
      "w": "enormous.",
-     "start": 48.46,
-     "end": 49.2
+     "start": 38.455,
+     "end": 39.2
     }
    ]
   },
@@ -7180,154 +5501,136 @@
   },
   {
    "id": "close_vo",
-   "text": "And then it comes apart. Not an explosion. A stretch. The side facing you is pulled harder than the side facing away, until the Moon cannot hold together. Rock and dust spread along its old orbit. Not all of it would stay in one band. Material inside the Roche limit tends to spread into rings, while material outside tends to clump into small moons. How fast any of that happens, this film cannot tell you. Over time, material like that can flatten into a ring around a planet. Tonight you look up. There is no Moon. A thin, bright band crosses the sky from horizon to horizon. That is how a ring looks from the ground. Saturn's rings are the famous example, though they are made mostly of water ice, not rock. And the night is darker now, with no moonlight at all. Tides would not vanish: the Sun would still pull, at about half the Moon's old strength. And with no Moon, there would be no solar eclipses at all. The real Moon is still drifting away, three point eight centimeters a year. We know because laser light bounces off mirrors the Apollo astronauts left behind. Every source is in the description. Tonight's Moon is fine. Thanks for watching this thought experiment.",
+   "text": "And then it comes apart. Not an explosion. A stretch. The side facing you is pulled harder than the side facing away, until the Moon cannot hold together. Rock and dust spread along its old orbit. Material inside the Roche limit tends to spread into rings, while material outside tends to clump into small moons. How fast any of that happens, this film cannot tell you. Over time, material like that can flatten into a ring around a planet. Tonight you look up. There is no Moon. A thin, bright band crosses the sky from horizon to horizon. Saturn's rings are the famous example, though they are made mostly of water ice, not rock. And the night is darker now, with no moonlight at all. The Sun would still pull on the tides, at about half the Moon's old strength. And with no Moon, there would be no solar eclipses at all. The real Moon is still drifting away, three point eight centimeters a year. We know because laser light bounces off mirrors the Apollo astronauts left behind. Every source is in the description. Tonight's Moon is fine.",
    "file": "voice/wav/26.wav",
-   "dur": 80.037,
+   "dur": 73.675,
    "sentences": [
     {
      "text": "And then it comes apart.",
      "t0": 0.075,
-     "t1": 1.6,
+     "t1": 1.68,
      "claims": []
     },
     {
      "text": "Not an explosion.",
-     "t0": 1.665,
-     "t1": 3.12,
+     "t0": 1.715,
+     "t1": 3.2,
      "claims": []
     },
     {
      "text": "A stretch.",
-     "t0": 3.21,
-     "t1": 4.32,
+     "t0": 3.26,
+     "t1": 4.48,
      "claims": []
     },
     {
      "text": "The side facing you is pulled harder than the side facing away, until the Moon cannot hold together.",
-     "t0": 4.44,
-     "t1": 11.04,
+     "t0": 4.54,
+     "t1": 11.2,
      "claims": [
       "c23"
      ]
     },
     {
      "text": "Rock and dust spread along its old orbit.",
-     "t0": 11.095,
-     "t1": 14.08,
-     "claims": []
-    },
-    {
-     "text": "Not all of it would stay in one band.",
-     "t0": 14.12,
-     "t1": 16.72,
+     "t0": 11.25,
+     "t1": 14.48,
      "claims": []
     },
     {
      "text": "Material inside the Roche limit tends to spread into rings, while material outside tends to clump into small moons.",
-     "t0": 16.835,
-     "t1": 25.04,
+     "t0": 14.555,
+     "t1": 22.88,
      "claims": [
       "c44"
      ]
     },
     {
      "text": "How fast any of that happens, this film cannot tell you.",
-     "t0": 25.12,
-     "t1": 28.56,
+     "t0": 22.985,
+     "t1": 26.48,
      "claims": []
     },
     {
      "text": "Over time, material like that can flatten into a ring around a planet.",
-     "t0": 28.695,
-     "t1": 32.96,
+     "t0": 26.555,
+     "t1": 30.96,
      "claims": [
       "c27"
      ]
     },
     {
      "text": "Tonight you look up.",
-     "t0": 33.08,
-     "t1": 34.48,
+     "t0": 31.045,
+     "t1": 32.56,
      "claims": []
     },
     {
      "text": "There is no Moon.",
-     "t0": 34.525,
-     "t1": 35.92,
+     "t0": 32.615,
+     "t1": 34.08,
      "claims": []
     },
     {
      "text": "A thin, bright band crosses the sky from horizon to horizon.",
-     "t0": 36.03,
-     "t1": 40.64,
-     "claims": []
-    },
-    {
-     "text": "That is how a ring looks from the ground.",
-     "t0": 40.735,
-     "t1": 43.36,
+     "t0": 34.22,
+     "t1": 39.12,
      "claims": []
     },
     {
      "text": "Saturn's rings are the famous example, though they are made mostly of water ice, not rock.",
-     "t0": 43.45,
-     "t1": 49.68,
+     "t0": 39.2,
+     "t1": 45.6,
      "claims": [
       "c45"
      ]
     },
     {
      "text": "And the night is darker now, with no moonlight at all.",
-     "t0": 49.73,
-     "t1": 53.12,
+     "t0": 45.695,
+     "t1": 49.2,
      "claims": []
     },
     {
-     "text": "Tides would not vanish: the Sun would still pull, at about half the Moon's old strength.",
-     "t0": 53.205,
-     "t1": 58.8,
+     "text": "The Sun would still pull on the tides, at about half the Moon's old strength.",
+     "t0": 49.27,
+     "t1": 54.32,
      "claims": [
       "c42"
      ]
     },
     {
      "text": "And with no Moon, there would be no solar eclipses at all.",
-     "t0": 58.83,
-     "t1": 62.4,
+     "t0": 54.395,
+     "t1": 58.44,
      "claims": []
     },
     {
      "text": "The real Moon is still drifting away, three point eight centimeters a year.",
-     "t0": 62.565,
-     "t1": 67.36,
+     "t0": 58.42,
+     "t1": 63.44,
      "claims": [
       "c2"
      ]
     },
     {
      "text": "We know because laser light bounces off mirrors the Apollo astronauts left behind.",
-     "t0": 67.43,
-     "t1": 73.36,
+     "t0": 63.555,
+     "t1": 69.6,
      "claims": [
       "c48"
      ]
     },
     {
      "text": "Every source is in the description.",
-     "t0": 73.435,
-     "t1": 75.68,
+     "t0": 69.69,
+     "t1": 71.92,
      "claims": []
     },
     {
      "text": "Tonight's Moon is fine.",
-     "t0": 75.805,
-     "t1": 77.76,
-     "claims": []
-    },
-    {
-     "text": "Thanks for watching this thought experiment.",
-     "t0": 77.9,
-     "t1": 80.0,
+     "t0": 72.085,
+     "t1": 73.6,
      "claims": []
     }
    ],
@@ -7339,7 +5642,7 @@
     },
     {
      "w": "then",
-     "start": 0.2,
+     "start": 0.195,
      "end": 0.4
     },
     {
@@ -7355,1047 +5658,922 @@
     {
      "w": "apart.",
      "start": 0.835,
-     "end": 1.6
+     "end": 1.68
     },
     {
      "w": "Not",
-     "start": 1.665,
-     "end": 1.84
+     "start": 1.715,
+     "end": 1.92
     },
     {
      "w": "an",
-     "start": 1.84,
+     "start": 1.96,
      "end": 2.08
     },
     {
      "w": "explosion.",
-     "start": 2.245,
-     "end": 3.12
+     "start": 2.1,
+     "end": 3.2
     },
     {
      "w": "A",
-     "start": 3.21,
-     "end": 3.36
+     "start": 3.26,
+     "end": 3.44
     },
     {
      "w": "stretch.",
-     "start": 3.415,
-     "end": 4.32
+     "start": 3.49,
+     "end": 4.48
     },
     {
      "w": "The",
-     "start": 4.44,
-     "end": 4.56
+     "start": 4.54,
+     "end": 4.72
     },
     {
      "w": "side",
-     "start": 4.47,
-     "end": 4.96
+     "start": 4.75,
+     "end": 5.12
     },
     {
      "w": "facing",
-     "start": 5.055,
-     "end": 5.44
+     "start": 5.05,
+     "end": 5.6
     },
     {
      "w": "you",
-     "start": 5.34,
-     "end": 5.68
+     "start": 5.6,
+     "end": 5.76
     },
     {
      "w": "is",
-     "start": 5.71,
-     "end": 5.84
+     "start": 5.77,
+     "end": 5.92
     },
     {
      "w": "pulled",
-     "start": 5.895,
-     "end": 6.24
+     "start": 6.0,
+     "end": 6.32
     },
     {
      "w": "harder",
-     "start": 6.135,
-     "end": 6.64
+     "start": 6.235,
+     "end": 6.72
     },
     {
      "w": "than",
-     "start": 6.645,
-     "end": 6.8
+     "start": 6.75,
+     "end": 6.96
     },
     {
      "w": "the",
-     "start": 6.855,
-     "end": 7.04
+     "start": 6.955,
+     "end": 7.12
     },
     {
      "w": "side",
-     "start": 7.005,
-     "end": 7.36
+     "start": 7.105,
+     "end": 7.44
     },
     {
      "w": "facing",
-     "start": 7.455,
-     "end": 7.92
+     "start": 7.45,
+     "end": 8.0
     },
     {
      "w": "away,",
-     "start": 7.935,
-     "end": 8.4
+     "start": 8.025,
+     "end": 8.56
     },
     {
      "w": "until",
-     "start": 8.46,
-     "end": 8.8
-    },
-    {
-     "w": "the",
-     "start": 8.7,
+     "start": 8.565,
      "end": 8.96
     },
     {
+     "w": "the",
+     "start": 8.92,
+     "end": 9.12
+    },
+    {
      "w": "Moon",
-     "start": 8.84,
-     "end": 9.36
+     "start": 9.015,
+     "end": 9.52
     },
     {
      "w": "cannot",
-     "start": 9.365,
-     "end": 9.84
+     "start": 9.495,
+     "end": 9.92
     },
     {
      "w": "hold",
-     "start": 9.8,
-     "end": 10.16
+     "start": 9.925,
+     "end": 10.24
     },
     {
      "w": "together.",
-     "start": 10.07,
-     "end": 11.04
+     "start": 10.195,
+     "end": 11.2
     },
     {
      "w": "Rock",
-     "start": 11.095,
-     "end": 11.44
-    },
-    {
-     "w": "and",
-     "start": 11.485,
+     "start": 11.25,
      "end": 11.68
     },
     {
+     "w": "and",
+     "start": 11.66,
+     "end": 11.84
+    },
+    {
      "w": "dust",
-     "start": 11.715,
-     "end": 12.08
+     "start": 11.89,
+     "end": 12.32
     },
     {
      "w": "spread",
-     "start": 12.04,
-     "end": 12.48
+     "start": 12.455,
+     "end": 12.72
     },
     {
      "w": "along",
-     "start": 12.4,
-     "end": 12.8
+     "start": 12.63,
+     "end": 13.04
     },
     {
      "w": "its",
-     "start": 12.865,
-     "end": 12.96
-    },
-    {
-     "w": "old",
-     "start": 12.895,
+     "start": 13.115,
      "end": 13.28
     },
     {
+     "w": "old",
+     "start": 13.245,
+     "end": 13.52
+    },
+    {
      "w": "orbit.",
-     "start": 13.285,
-     "end": 14.08
-    },
-    {
-     "w": "Not",
-     "start": 14.12,
-     "end": 14.32
-    },
-    {
-     "w": "all",
-     "start": 14.385,
-     "end": 14.56
-    },
-    {
-     "w": "of",
-     "start": 14.585,
-     "end": 14.72
-    },
-    {
-     "w": "it",
-     "start": 14.815,
-     "end": 14.88
-    },
-    {
-     "w": "would",
-     "start": 14.865,
-     "end": 15.12
-    },
-    {
-     "w": "stay",
-     "start": 15.195,
-     "end": 15.44
-    },
-    {
-     "w": "in",
-     "start": 15.405,
-     "end": 15.68
-    },
-    {
-     "w": "one",
-     "start": 15.635,
-     "end": 15.92
-    },
-    {
-     "w": "band.",
-     "start": 15.885,
-     "end": 16.72
+     "start": 13.59,
+     "end": 14.48
     },
     {
      "w": "Material",
-     "start": 16.835,
-     "end": 17.44
+     "start": 14.555,
+     "end": 15.2
     },
     {
      "w": "inside",
-     "start": 17.555,
-     "end": 18.0
+     "start": 15.305,
+     "end": 15.76
     },
     {
      "w": "the",
-     "start": 18.085,
-     "end": 18.16
+     "start": 15.68,
+     "end": 15.92
     },
     {
      "w": "Roche",
-     "start": 18.115,
-     "end": 18.72
+     "start": 15.89,
+     "end": 16.48
     },
     {
      "w": "limit",
-     "start": 18.635,
-     "end": 19.04
+     "start": 16.405,
+     "end": 16.8
     },
     {
      "w": "tends",
-     "start": 18.97,
-     "end": 19.28
+     "start": 16.77,
+     "end": 17.04
     },
     {
      "w": "to",
-     "start": 19.275,
-     "end": 19.44
+     "start": 17.075,
+     "end": 17.2
     },
     {
      "w": "spread",
-     "start": 19.55,
-     "end": 19.84
+     "start": 17.355,
+     "end": 17.6
     },
     {
      "w": "into",
-     "start": 19.865,
-     "end": 20.0
+     "start": 17.695,
+     "end": 17.84
     },
     {
      "w": "rings,",
-     "start": 19.905,
-     "end": 20.88
+     "start": 17.73,
+     "end": 18.72
     },
     {
      "w": "while",
-     "start": 20.97,
-     "end": 21.12
+     "start": 18.82,
+     "end": 18.96
     },
     {
      "w": "material",
-     "start": 21.215,
-     "end": 21.84
+     "start": 19.0,
+     "end": 19.68
     },
     {
      "w": "outside",
-     "start": 21.845,
-     "end": 22.56
+     "start": 19.695,
+     "end": 20.4
     },
     {
      "w": "tends",
-     "start": 22.645,
-     "end": 22.88
+     "start": 20.47,
+     "end": 20.72
     },
     {
      "w": "to",
-     "start": 22.95,
-     "end": 23.04
+     "start": 20.78,
+     "end": 20.88
     },
     {
      "w": "clump",
-     "start": 23.1,
-     "end": 23.44
+     "start": 20.895,
+     "end": 21.28
     },
     {
      "w": "into",
-     "start": 23.4,
-     "end": 23.68
+     "start": 21.225,
+     "end": 21.52
     },
     {
      "w": "small",
-     "start": 23.755,
-     "end": 24.16
+     "start": 21.575,
+     "end": 22.0
     },
     {
      "w": "moons.",
-     "start": 24.1,
-     "end": 25.04
+     "start": 21.93,
+     "end": 22.88
     },
     {
      "w": "How",
-     "start": 25.12,
-     "end": 25.36
+     "start": 22.985,
+     "end": 23.2
     },
     {
      "w": "fast",
-     "start": 25.435,
-     "end": 25.68
+     "start": 23.29,
+     "end": 23.6
     },
     {
      "w": "any",
-     "start": 25.725,
-     "end": 25.92
+     "start": 23.595,
+     "end": 23.76
     },
     {
      "w": "of",
-     "start": 26.005,
-     "end": 26.08
+     "start": 23.855,
+     "end": 23.92
     },
     {
      "w": "that",
-     "start": 26.16,
-     "end": 26.24
+     "start": 23.885,
+     "end": 24.16
     },
     {
      "w": "happens,",
-     "start": 26.19,
-     "end": 26.72
+     "start": 24.255,
+     "end": 24.64
     },
     {
      "w": "this",
-     "start": 26.745,
-     "end": 26.96
+     "start": 24.605,
+     "end": 24.8
     },
     {
      "w": "film",
-     "start": 27.03,
-     "end": 27.36
+     "start": 24.88,
+     "end": 25.2
     },
     {
      "w": "cannot",
-     "start": 27.265,
-     "end": 27.76
+     "start": 25.135,
+     "end": 25.68
     },
     {
      "w": "tell",
-     "start": 27.695,
-     "end": 28.0
+     "start": 25.565,
+     "end": 25.92
     },
     {
      "w": "you.",
-     "start": 28.11,
-     "end": 28.56
+     "start": 26.015,
+     "end": 26.48
     },
     {
      "w": "Over",
-     "start": 28.695,
-     "end": 28.96
+     "start": 26.555,
+     "end": 26.88
     },
     {
      "w": "time,",
-     "start": 28.92,
-     "end": 29.44
+     "start": 26.795,
+     "end": 27.28
     },
     {
      "w": "material",
-     "start": 29.53,
-     "end": 30.08
+     "start": 27.295,
+     "end": 28.0
     },
     {
      "w": "like",
-     "start": 30.04,
-     "end": 30.32
+     "start": 27.96,
+     "end": 28.24
     },
     {
      "w": "that",
-     "start": 30.325,
-     "end": 30.56
+     "start": 28.245,
+     "end": 28.48
     },
     {
      "w": "can",
-     "start": 30.565,
-     "end": 30.72
+     "start": 28.51,
+     "end": 28.64
     },
     {
      "w": "flatten",
-     "start": 30.6,
-     "end": 31.2
+     "start": 28.54,
+     "end": 29.12
     },
     {
      "w": "into",
-     "start": 31.265,
-     "end": 31.36
+     "start": 29.045,
+     "end": 29.36
     },
     {
      "w": "a",
-     "start": 31.32,
-     "end": 31.52
+     "start": 29.29,
+     "end": 29.52
     },
     {
      "w": "ring",
-     "start": 31.54,
-     "end": 31.92
+     "start": 29.505,
+     "end": 29.84
     },
     {
      "w": "around",
-     "start": 31.85,
-     "end": 32.16
+     "start": 29.885,
+     "end": 30.08
     },
     {
      "w": "a",
-     "start": 32.225,
-     "end": 32.275
+     "start": 30.19,
+     "end": 30.24
     },
     {
      "w": "planet.",
-     "start": 32.315,
-     "end": 32.96
+     "start": 30.28,
+     "end": 30.96
     },
     {
      "w": "Tonight",
-     "start": 33.08,
-     "end": 33.44
+     "start": 31.045,
+     "end": 31.44
     },
     {
      "w": "you",
-     "start": 33.445,
-     "end": 33.68
+     "start": 31.465,
+     "end": 31.68
     },
     {
      "w": "look",
-     "start": 33.785,
-     "end": 33.92
+     "start": 31.8,
+     "end": 31.92
     },
     {
      "w": "up.",
-     "start": 34.095,
-     "end": 34.48
+     "start": 32.115,
+     "end": 32.56
     },
     {
      "w": "There",
-     "start": 34.525,
-     "end": 34.64
+     "start": 32.615,
+     "end": 32.72
     },
     {
      "w": "is",
-     "start": 34.555,
-     "end": 34.88
+     "start": 32.645,
+     "end": 32.96
     },
     {
      "w": "no",
-     "start": 34.775,
-     "end": 35.12
+     "start": 32.875,
+     "end": 33.2
     },
     {
      "w": "Moon.",
-     "start": 35.12,
-     "end": 35.92
+     "start": 33.125,
+     "end": 34.08
     },
     {
      "w": "A",
-     "start": 36.03,
-     "end": 36.16
+     "start": 34.22,
+     "end": 34.32
     },
     {
      "w": "thin,",
-     "start": 36.245,
-     "end": 36.64
+     "start": 34.415,
+     "end": 34.88
     },
     {
      "w": "bright",
-     "start": 36.685,
-     "end": 37.04
+     "start": 34.93,
+     "end": 35.28
     },
     {
      "w": "band",
-     "start": 36.95,
-     "end": 37.44
+     "start": 35.19,
+     "end": 35.68
     },
     {
      "w": "crosses",
-     "start": 37.455,
-     "end": 37.92
+     "start": 35.72,
+     "end": 36.16
     },
     {
      "w": "the",
-     "start": 37.925,
-     "end": 38.08
+     "start": 36.195,
+     "end": 36.32
     },
     {
      "w": "sky",
-     "start": 38.18,
-     "end": 38.48
+     "start": 36.445,
+     "end": 36.8
     },
     {
      "w": "from",
-     "start": 38.575,
-     "end": 38.72
+     "start": 36.875,
+     "end": 36.96
     },
     {
      "w": "horizon",
-     "start": 38.715,
-     "end": 39.28
+     "start": 36.905,
+     "end": 37.6
     },
     {
      "w": "to",
-     "start": 39.355,
-     "end": 39.52
+     "start": 37.65,
+     "end": 37.84
     },
     {
      "w": "horizon.",
-     "start": 39.405,
-     "end": 40.64
-    },
-    {
-     "w": "That",
-     "start": 40.735,
-     "end": 40.88
-    },
-    {
-     "w": "is",
-     "start": 40.765,
-     "end": 41.04
-    },
-    {
-     "w": "how",
-     "start": 41.03,
-     "end": 41.2
-    },
-    {
-     "w": "a",
-     "start": 41.27,
-     "end": 41.44
-    },
-    {
-     "w": "ring",
-     "start": 41.42,
-     "end": 41.76
-    },
-    {
-     "w": "looks",
-     "start": 41.845,
-     "end": 42.16
-    },
-    {
-     "w": "from",
-     "start": 42.14,
-     "end": 42.32
-    },
-    {
-     "w": "the",
-     "start": 42.35,
-     "end": 42.56
-    },
-    {
-     "w": "ground.",
-     "start": 42.65,
-     "end": 43.36
+     "start": 37.805,
+     "end": 39.12
     },
     {
      "w": "Saturn's",
-     "start": 43.45,
-     "end": 44.08
+     "start": 39.2,
+     "end": 39.92
     },
     {
      "w": "rings",
-     "start": 44.07,
-     "end": 44.48
+     "start": 39.85,
+     "end": 40.32
     },
     {
      "w": "are",
-     "start": 44.47,
-     "end": 44.64
+     "start": 40.235,
+     "end": 40.48
     },
     {
      "w": "the",
-     "start": 44.67,
-     "end": 44.8
+     "start": 40.46,
+     "end": 40.64
     },
     {
      "w": "famous",
-     "start": 44.895,
-     "end": 45.36
+     "start": 40.665,
+     "end": 41.12
     },
     {
      "w": "example,",
-     "start": 45.31,
-     "end": 46.0
+     "start": 41.01,
+     "end": 41.84
     },
     {
      "w": "though",
-     "start": 46.09,
-     "end": 46.24
+     "start": 41.925,
+     "end": 42.16
     },
     {
      "w": "they",
-     "start": 46.27,
-     "end": 46.4
+     "start": 42.125,
+     "end": 42.32
     },
     {
      "w": "are",
-     "start": 46.3,
-     "end": 46.64
+     "start": 42.365,
+     "end": 42.48
     },
     {
      "w": "made",
-     "start": 46.66,
-     "end": 46.88
+     "start": 42.395,
+     "end": 42.72
     },
     {
      "w": "mostly",
-     "start": 46.815,
-     "end": 47.28
+     "start": 42.7,
+     "end": 43.12
     },
     {
      "w": "of",
-     "start": 47.225,
-     "end": 47.52
+     "start": 43.07,
+     "end": 43.36
     },
     {
      "w": "water",
-     "start": 47.46,
-     "end": 48.48
+     "start": 43.35,
+     "end": 43.84
     },
     {
      "w": "ice,",
-     "start": 47.49,
-     "end": 48.48
+     "start": 43.875,
+     "end": 44.48
     },
     {
      "w": "not",
+     "start": 44.39,
+     "end": 44.72
+    },
+    {
+     "w": "rock.",
+     "start": 44.64,
+     "end": 45.6
+    },
+    {
+     "w": "And",
+     "start": 45.695,
+     "end": 45.76
+    },
+    {
+     "w": "the",
+     "start": 45.725,
+     "end": 45.92
+    },
+    {
+     "w": "night",
+     "start": 45.935,
+     "end": 46.24
+    },
+    {
+     "w": "is",
+     "start": 46.275,
+     "end": 46.4
+    },
+    {
+     "w": "darker",
+     "start": 46.47,
+     "end": 47.04
+    },
+    {
+     "w": "now,",
+     "start": 47.12,
+     "end": 47.2
+    },
+    {
+     "w": "with",
+     "start": 47.335,
+     "end": 47.52
+    },
+    {
+     "w": "no",
+     "start": 47.53,
+     "end": 47.76
+    },
+    {
+     "w": "moonlight",
+     "start": 47.75,
+     "end": 48.48
+    },
+    {
+     "w": "at",
      "start": 48.425,
      "end": 48.72
     },
     {
-     "w": "rock.",
-     "start": 48.7,
-     "end": 49.68
-    },
-    {
-     "w": "And",
-     "start": 49.73,
-     "end": 49.84
-    },
-    {
-     "w": "the",
-     "start": 49.76,
-     "end": 49.92
-    },
-    {
-     "w": "night",
-     "start": 49.95,
-     "end": 50.24
-    },
-    {
-     "w": "is",
-     "start": 50.255,
-     "end": 50.48
-    },
-    {
-     "w": "darker",
-     "start": 50.515,
-     "end": 51.04
-    },
-    {
-     "w": "now,",
-     "start": 51.13,
-     "end": 51.36
-    },
-    {
-     "w": "with",
-     "start": 51.37,
-     "end": 51.52
-    },
-    {
-     "w": "no",
-     "start": 51.54,
-     "end": 51.76
-    },
-    {
-     "w": "moonlight",
-     "start": 51.74,
-     "end": 52.48
-    },
-    {
-     "w": "at",
-     "start": 52.385,
-     "end": 52.64
-    },
-    {
      "w": "all.",
-     "start": 52.56,
-     "end": 53.12
-    },
-    {
-     "w": "Tides",
-     "start": 53.205,
-     "end": 53.68
-    },
-    {
-     "w": "would",
-     "start": 53.63,
-     "end": 53.84
-    },
-    {
-     "w": "not",
-     "start": 53.75,
-     "end": 54.08
-    },
-    {
-     "w": "vanish:",
-     "start": 53.99,
-     "end": 54.96
-    },
-    {
-     "w": "the",
-     "start": 55.0,
-     "end": 55.12
-    },
-    {
-     "w": "Sun",
-     "start": 55.03,
-     "end": 55.44
-    },
-    {
-     "w": "would",
-     "start": 55.46,
-     "end": 55.68
-    },
-    {
-     "w": "still",
-     "start": 55.705,
-     "end": 55.92
-    },
-    {
-     "w": "pull,",
-     "start": 55.95,
-     "end": 56.4
-    },
-    {
-     "w": "at",
-     "start": 56.41,
-     "end": 56.56
-    },
-    {
-     "w": "about",
-     "start": 56.57,
-     "end": 56.8
-    },
-    {
-     "w": "half",
-     "start": 56.73,
-     "end": 57.04
-    },
-    {
-     "w": "the",
-     "start": 57.115,
-     "end": 57.2
-    },
-    {
-     "w": "Moon's",
-     "start": 57.145,
-     "end": 57.68
-    },
-    {
-     "w": "old",
-     "start": 57.65,
-     "end": 57.92
-    },
-    {
-     "w": "strength.",
-     "start": 58.04,
-     "end": 58.8
-    },
-    {
-     "w": "And",
-     "start": 58.83,
-     "end": 58.96
-    },
-    {
-     "w": "with",
-     "start": 58.88,
-     "end": 59.12
-    },
-    {
-     "w": "no",
-     "start": 59.085,
-     "end": 59.36
-    },
-    {
-     "w": "Moon,",
-     "start": 59.325,
-     "end": 59.68
-    },
-    {
-     "w": "there",
-     "start": 59.845,
-     "end": 59.92
-    },
-    {
-     "w": "would",
-     "start": 60.015,
-     "end": 60.08
-    },
-    {
-     "w": "be",
-     "start": 60.045,
-     "end": 60.24
-    },
-    {
-     "w": "no",
-     "start": 60.14,
-     "end": 60.4
-    },
-    {
-     "w": "solar",
-     "start": 60.38,
-     "end": 60.88
-    },
-    {
-     "w": "eclipses",
-     "start": 61.02,
-     "end": 61.68
-    },
-    {
-     "w": "at",
-     "start": 61.6,
-     "end": 61.92
-    },
-    {
-     "w": "all.",
-     "start": 61.935,
-     "end": 62.4
+     "start": 48.815,
+     "end": 49.2
     },
     {
      "w": "The",
-     "start": 62.565,
-     "end": 62.64
+     "start": 49.27,
+     "end": 49.36
     },
     {
-     "w": "real",
-     "start": 62.595,
-     "end": 62.96
+     "w": "Sun",
+     "start": 49.3,
+     "end": 49.84
     },
     {
-     "w": "Moon",
-     "start": 62.97,
-     "end": 63.44
-    },
-    {
-     "w": "is",
-     "start": 63.415,
-     "end": 63.6
+     "w": "would",
+     "start": 49.895,
+     "end": 50.0
     },
     {
      "w": "still",
-     "start": 63.63,
-     "end": 63.76
+     "start": 50.035,
+     "end": 50.16
     },
     {
-     "w": "drifting",
-     "start": 63.85,
-     "end": 64.4
+     "w": "pull",
+     "start": 50.265,
+     "end": 50.48
     },
     {
-     "w": "away,",
-     "start": 64.385,
-     "end": 64.96
-    },
-    {
-     "w": "three",
-     "start": 64.975,
-     "end": 65.84
-    },
-    {
-     "w": "point",
-     "start": 65.005,
-     "end": 65.84
-    },
-    {
-     "w": "eight",
-     "start": 65.035,
-     "end": 65.84
-    },
-    {
-     "w": "centimeters",
-     "start": 65.895,
-     "end": 66.56
-    },
-    {
-     "w": "a",
-     "start": 66.57,
-     "end": 66.8
-    },
-    {
-     "w": "year.",
-     "start": 66.845,
-     "end": 67.36
-    },
-    {
-     "w": "We",
-     "start": 67.43,
-     "end": 67.6
-    },
-    {
-     "w": "know",
-     "start": 67.485,
-     "end": 67.84
-    },
-    {
-     "w": "because",
-     "start": 67.965,
-     "end": 68.16
-    },
-    {
-     "w": "laser",
-     "start": 68.155,
-     "end": 68.64
-    },
-    {
-     "w": "light",
-     "start": 68.635,
-     "end": 68.96
-    },
-    {
-     "w": "bounces",
-     "start": 68.96,
-     "end": 69.6
-    },
-    {
-     "w": "off",
-     "start": 69.605,
-     "end": 69.84
-    },
-    {
-     "w": "mirrors",
-     "start": 69.875,
-     "end": 70.48
+     "w": "on",
+     "start": 50.445,
+     "end": 50.64
     },
     {
      "w": "the",
-     "start": 70.46,
-     "end": 70.56
+     "start": 50.74,
+     "end": 50.8
     },
     {
-     "w": "Apollo",
-     "start": 70.71,
-     "end": 71.2
+     "w": "tides,",
+     "start": 50.77,
+     "end": 51.68
     },
     {
-     "w": "astronauts",
-     "start": 71.235,
-     "end": 72.0
+     "w": "at",
+     "start": 51.735,
+     "end": 51.84
     },
     {
-     "w": "left",
-     "start": 71.91,
-     "end": 72.32
+     "w": "about",
+     "start": 51.765,
+     "end": 52.08
     },
     {
-     "w": "behind.",
-     "start": 72.225,
-     "end": 73.36
-    },
-    {
-     "w": "Every",
-     "start": 73.435,
-     "end": 73.68
-    },
-    {
-     "w": "source",
-     "start": 73.695,
-     "end": 74.24
-    },
-    {
-     "w": "is",
-     "start": 74.255,
-     "end": 74.4
-    },
-    {
-     "w": "in",
-     "start": 74.285,
-     "end": 74.56
+     "w": "half",
+     "start": 52.085,
+     "end": 52.48
     },
     {
      "w": "the",
-     "start": 74.62,
-     "end": 74.72
+     "start": 52.49,
+     "end": 52.64
     },
     {
-     "w": "description.",
-     "start": 74.84,
-     "end": 75.68
+     "w": "Moon's",
+     "start": 52.55,
+     "end": 53.12
     },
     {
-     "w": "Tonight's",
-     "start": 75.805,
-     "end": 76.32
+     "w": "old",
+     "start": 53.075,
+     "end": 53.36
+    },
+    {
+     "w": "strength.",
+     "start": 53.445,
+     "end": 54.32
+    },
+    {
+     "w": "And",
+     "start": 54.395,
+     "end": 54.48
+    },
+    {
+     "w": "with",
+     "start": 54.425,
+     "end": 54.64
+    },
+    {
+     "w": "no",
+     "start": 54.625,
+     "end": 54.88
+    },
+    {
+     "w": "Moon,",
+     "start": 54.87,
+     "end": 55.36
+    },
+    {
+     "w": "there",
+     "start": 55.395,
+     "end": 55.52
+    },
+    {
+     "w": "would",
+     "start": 55.425,
+     "end": 55.68
+    },
+    {
+     "w": "be",
+     "start": 55.695,
+     "end": 55.84
+    },
+    {
+     "w": "no",
+     "start": 55.815,
+     "end": 56.08
+    },
+    {
+     "w": "solar",
+     "start": 56.08,
+     "end": 56.56
+    },
+    {
+     "w": "eclipses",
+     "start": 56.63,
+     "end": 57.44
+    },
+    {
+     "w": "at",
+     "start": 57.425,
+     "end": 57.68
+    },
+    {
+     "w": "all.",
+     "start": 58.39,
+     "end": 58.44
+    },
+    {
+     "w": "The",
+     "start": 58.42,
+     "end": 58.48
+    },
+    {
+     "w": "real",
+     "start": 58.53,
+     "end": 58.8
     },
     {
      "w": "Moon",
-     "start": 76.25,
-     "end": 76.72
+     "start": 58.795,
+     "end": 59.28
     },
     {
      "w": "is",
-     "start": 76.69,
-     "end": 76.96
+     "start": 59.295,
+     "end": 59.44
+    },
+    {
+     "w": "still",
+     "start": 59.51,
+     "end": 59.68
+    },
+    {
+     "w": "drifting",
+     "start": 59.73,
+     "end": 60.32
+    },
+    {
+     "w": "away,",
+     "start": 60.275,
+     "end": 60.96
+    },
+    {
+     "w": "three",
+     "start": 60.965,
+     "end": 61.84
+    },
+    {
+     "w": "point",
+     "start": 60.995,
+     "end": 61.84
+    },
+    {
+     "w": "eight",
+     "start": 61.025,
+     "end": 61.84
+    },
+    {
+     "w": "centimeters",
+     "start": 61.75,
+     "end": 62.64
+    },
+    {
+     "w": "a",
+     "start": 62.64,
+     "end": 62.88
+    },
+    {
+     "w": "year.",
+     "start": 62.955,
+     "end": 63.44
+    },
+    {
+     "w": "We",
+     "start": 63.555,
+     "end": 63.68
+    },
+    {
+     "w": "know",
+     "start": 63.585,
+     "end": 64.0
+    },
+    {
+     "w": "because",
+     "start": 64.1,
+     "end": 64.32
+    },
+    {
+     "w": "laser",
+     "start": 64.34,
+     "end": 64.88
+    },
+    {
+     "w": "light",
+     "start": 64.835,
+     "end": 65.2
+    },
+    {
+     "w": "bounces",
+     "start": 65.165,
+     "end": 65.6
+    },
+    {
+     "w": "off",
+     "start": 65.825,
+     "end": 66.08
+    },
+    {
+     "w": "mirrors",
+     "start": 66.105,
+     "end": 66.72
+    },
+    {
+     "w": "the",
+     "start": 66.715,
+     "end": 66.8
+    },
+    {
+     "w": "Apollo",
+     "start": 66.745,
+     "end": 67.52
+    },
+    {
+     "w": "astronauts",
+     "start": 67.49,
+     "end": 68.24
+    },
+    {
+     "w": "left",
+     "start": 68.19,
+     "end": 68.64
+    },
+    {
+     "w": "behind.",
+     "start": 68.635,
+     "end": 69.6
+    },
+    {
+     "w": "Every",
+     "start": 69.69,
+     "end": 70.0
+    },
+    {
+     "w": "source",
+     "start": 69.95,
+     "end": 70.48
+    },
+    {
+     "w": "is",
+     "start": 70.525,
+     "end": 70.64
+    },
+    {
+     "w": "in",
+     "start": 70.555,
+     "end": 70.8
+    },
+    {
+     "w": "the",
+     "start": 70.895,
+     "end": 70.96
+    },
+    {
+     "w": "description.",
+     "start": 70.925,
+     "end": 71.92
+    },
+    {
+     "w": "Tonight's",
+     "start": 72.085,
+     "end": 72.56
+    },
+    {
+     "w": "Moon",
+     "start": 72.53,
+     "end": 72.96
+    },
+    {
+     "w": "is",
+     "start": 72.97,
+     "end": 73.12
     },
     {
      "w": "fine.",
-     "start": 76.95,
-     "end": 77.76
-    },
-    {
-     "w": "Thanks",
-     "start": 77.9,
-     "end": 78.16
-    },
-    {
-     "w": "for",
-     "start": 78.22,
-     "end": 78.32
-    },
-    {
-     "w": "watching",
-     "start": 78.25,
-     "end": 78.88
-    },
-    {
-     "w": "this",
-     "start": 78.915,
-     "end": 79.12
-    },
-    {
-     "w": "thought",
-     "start": 79.175,
-     "end": 79.44
-    },
-    {
-     "w": "experiment.",
-     "start": 79.47,
-     "end": 80.0
+     "start": 73.21,
+     "end": 73.6
     }
    ]
   },

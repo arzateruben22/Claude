@@ -1,45 +1,63 @@
 {
  "name": "part6",
  "mode": "port",
- "dur": 63.061,
+ "dur": 64.598,
  "clips": [
   {
    "id": "ch6_hook",
    "file": "voice/wav/17.wav",
    "t": 0.15,
-   "dur": 2.97
+   "dur": 2.97,
+   "from": 0.0
   },
   {
    "id": "ch6_vo",
    "file": "voice/wav/18.wav",
-   "t": 3.47,
-   "dur": 45.248,
+   "t": 6.97,
+   "dur": 11.105,
    "from": 0.0
+  },
+  {
+   "id": "ch6_vo",
+   "file": "voice/wav/18.wav",
+   "t": 21.075,
+   "dur": 9.56,
+   "from": 11.105
+  },
+  {
+   "id": "ch6_vo",
+   "file": "voice/wav/18.wav",
+   "t": 34.135,
+   "dur": 13.145,
+   "from": 20.665
   },
   {
    "id": "cta2_follow",
    "file": "voice/wav/37.wav",
-   "t": 49.018,
-   "dur": 3.796
+   "t": 50.58,
+   "dur": 3.796,
+   "from": 0.0
   },
   {
    "id": "ch6_vo",
    "file": "voice/wav/18.wav",
-   "t": 53.114,
-   "dur": 1.463,
-   "from": 45.248
+   "t": 54.676,
+   "dur": 1.438,
+   "from": 33.81
   },
   {
    "id": "ch6_loop",
    "file": "voice/wav/19.wav",
-   "t": 54.927,
-   "dur": 3.869
+   "t": 56.464,
+   "dur": 3.869,
+   "from": 0.0
   },
   {
    "id": "closer6",
    "file": "voice/wav/33.wav",
-   "t": 59.146,
-   "dur": 2.965
+   "t": 60.683,
+   "dur": 2.965,
+   "from": 0.0
   }
  ],
  "captions": [
@@ -47,145 +65,141 @@
    "t0": 0.245,
    "t1": 1.79,
    "text": "It's not just the sea.",
-   "line": "ch6_hook"
+   "line": "ch6_hook",
+   "spoken": "It's not just the sea."
   },
   {
    "t0": 1.81,
    "t1": 2.5,
    "text": "The ground moves too.",
-   "line": "ch6_hook"
+   "line": "ch6_hook",
+   "spoken": "The ground moves too."
   },
   {
-   "t0": 3.5,
-   "t1": 5.765,
-   "text": "Seventy thousand kilometers.",
-   "line": "ch6_vo"
+   "t0": 7.0,
+   "t1": 9.415,
+   "text": "70,000 km.",
+   "line": "ch6_vo",
+   "spoken": "Seventy thousand kilometers."
   },
   {
-   "t0": 5.785,
-   "t1": 9.68,
-   "text": "The Moon is about five and a half times wider than tonight.",
-   "line": "ch6_vo"
+   "t0": 9.435,
+   "t1": 13.495,
+   "text": "The Moon is about 5.5 times wider than tonight.",
+   "line": "ch6_vo",
+   "spoken": "The Moon is about five and a half times wider than tonight."
   },
   {
-   "t0": 9.7,
-   "t1": 14.125,
-   "text": "Its tidal pull is more than a hundred sixty times today's.",
-   "line": "ch6_vo"
+   "t0": 13.515,
+   "t1": 18.045,
+   "text": "Its tidal pull is more than 160 times today's.",
+   "line": "ch6_vo",
+   "spoken": "Its tidal pull is more than a hundred sixty times today's."
   },
   {
-   "t0": 14.145,
-   "t1": 17.16,
-   "text": "The sea is not the only thing that moves.",
-   "line": "ch6_vo"
-  },
-  {
-   "t0": 17.345,
-   "t1": 20.736,
+   "t0": 21.095,
+   "t1": 24.524,
    "text": "The solid Earth already rises and falls a little",
-   "line": "ch6_vo"
+   "line": "ch6_vo",
+   "spoken": "The solid Earth already rises and falls a little with the Moon, tens of centimeters a day."
   },
   {
-   "t0": 20.756,
-   "t1": 23.67,
+   "t0": 24.544,
+   "t1": 27.49,
    "text": "with the Moon, tens of centimeters a day.",
-   "line": "ch6_vo"
+   "line": "ch6_vo",
+   "spoken": "The solid Earth already rises and falls a little with the Moon, tens of centimeters a day."
   },
   {
-   "t0": 23.69,
-   "t1": 26.72,
+   "t0": 27.51,
+   "t1": 30.605,
    "text": "With far more pull, it would flex far more.",
-   "line": "ch6_vo"
+   "line": "ch6_vo",
+   "spoken": "With far more pull, it would flex far more."
   },
   {
-   "t0": 26.74,
-   "t1": 29.425,
+   "t0": 34.155,
+   "t1": 36.918,
    "text": "What that would do to faults and volcanoes,",
-   "line": "ch6_vo"
+   "line": "ch6_vo",
+   "spoken": "What that would do to faults and volcanoes, this film cannot tell you."
   },
   {
-   "t0": 29.445,
-   "t1": 31.08,
+   "t0": 36.938,
+   "t1": 38.62,
    "text": "this film cannot tell you.",
-   "line": "ch6_vo"
+   "line": "ch6_vo",
+   "spoken": "What that would do to faults and volcanoes, this film cannot tell you."
   },
   {
-   "t0": 31.1,
-   "t1": 35.408,
-   "text": "In real life, tides are why the Moon drifts away: they steal",
-   "line": "ch6_vo"
+   "t0": 38.64,
+   "t1": 42.795,
+   "text": "In real life, tides are why the Moon drifts away.",
+   "line": "ch6_vo",
+   "spoken": "In real life, tides are why the Moon drifts away."
   },
   {
-   "t0": 35.428,
-   "t1": 39.54,
-   "text": "a little of Earth's spin and hand it to the Moon's orbit.",
-   "line": "ch6_vo"
-  },
-  {
-   "t0": 39.56,
-   "t1": 41.845,
+   "t0": 42.815,
+   "t1": 45.161,
    "text": "To make it come closer, our thought",
-   "line": "ch6_vo"
+   "line": "ch6_vo",
+   "spoken": "To make it come closer, our thought experiment has to break that rule."
   },
   {
-   "t0": 41.865,
-   "t1": 44.105,
+   "t0": 45.181,
+   "t1": 47.48,
    "text": "experiment has to break that rule.",
-   "line": "ch6_vo"
+   "line": "ch6_vo",
+   "spoken": "To make it come closer, our thought experiment has to break that rule."
   },
   {
-   "t0": 44.125,
-   "t1": 46.079,
-   "text": "That is one more reason this",
-   "line": "ch6_vo"
-  },
-  {
-   "t0": 46.099,
-   "t1": 48.92,
-   "text": "is a thought experiment, not a forecast.",
-   "line": "ch6_vo"
-  },
-  {
-   "t0": 49.043,
-   "t1": 50.118,
+   "t0": 50.605,
+   "t1": 51.68,
    "text": "Still looking up?",
-   "line": "cta2_follow"
+   "line": "cta2_follow",
+   "spoken": "Still looking up?"
   },
   {
-   "t0": 50.138,
-   "t1": 51.418,
+   "t0": 51.7,
+   "t1": 52.98,
    "text": "Tap like and follow.",
-   "line": "cta2_follow"
+   "line": "cta2_follow",
+   "spoken": "Tap like and follow."
   },
   {
-   "t0": 51.438,
-   "t1": 53.028,
+   "t0": 53.0,
+   "t1": 54.59,
    "text": "There's plenty more sky.",
-   "line": "cta2_follow"
+   "line": "cta2_follow",
+   "spoken": "There's plenty more sky."
   },
   {
-   "t0": 53.161,
-   "t1": 54.756,
-   "text": "And the number keeps falling.",
-   "line": "ch6_vo"
+   "t0": 54.726,
+   "t1": 56.316,
+   "text": "The number keeps falling.",
+   "line": "ch6_vo",
+   "spoken": "The number keeps falling."
   },
   {
-   "t0": 54.947,
-   "t1": 59.017,
+   "t0": 56.484,
+   "t1": 60.554,
    "text": "Because soon, the Moon will rise from the wrong side of the sky.",
-   "line": "ch6_loop"
+   "line": "ch6_loop",
+   "spoken": "Because soon, the Moon will rise from the wrong side of the sky."
   },
   {
-   "t0": 59.166,
-   "t1": 60.526,
-   "text": "Part six of eight.",
-   "line": "closer6"
+   "t0": 60.703,
+   "t1": 62.063,
+   "text": "Part 6 of 8.",
+   "line": "closer6",
+   "spoken": "Part six of eight."
   },
   {
-   "t0": 60.546,
-   "t1": 62.356,
+   "t0": 62.083,
+   "t1": 63.893,
    "text": "Full video on YouTube.",
-   "line": "closer6"
+   "line": "closer6",
+   "spoken": "Full video on YouTube."
   }
  ],
  "km": [
@@ -198,8 +212,9 @@
    100000
   ],
   [
-   5.515,
-   70000
+   6.95,
+   70000,
+   3.5
   ]
  ],
  "tracks": {
@@ -234,6 +249,28 @@
    ]
   ]
  },
- "cta_at": 49.018,
- "cta_frac": 0.777
+ "beats": [
+  {
+   "t0": 3.45,
+   "t1": 6.95,
+   "kind": "approach"
+  },
+  {
+   "t0": 18.075,
+   "t1": 21.075,
+   "kind": "tide"
+  },
+  {
+   "t0": 30.635,
+   "t1": 34.135,
+   "kind": "flex"
+  },
+  {
+   "t0": 47.542,
+   "t1": 50.542,
+   "kind": "grow"
+  }
+ ],
+ "cta_at": 50.58,
+ "cta_frac": 0.783
 }

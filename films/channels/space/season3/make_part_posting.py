@@ -1,7 +1,8 @@
 """make_part_posting.py <n> "<title>" "<hook caption>" "<takeaway>" "<tags csv>": the posting pack for part n of the Moon film (posting.json + POSTING.md).
 The part's title is the chapter title of the long film (Prism links by exact match); YouTube title = the winner title alone."""
 import json, os, sys
-n, title, hook, take, tags = sys.argv[1:6]; n = int(n)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'kits', 'cinema', 'film'))); from numerals import to_display
+n, title, hook, take, tags = sys.argv[1:6]; n = int(n); hook, take = to_display(hook), to_display(take)
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
 O = f"{ROOT}/films/channels/space/long01/out"; claims = json.load(open(f"{ROOT}/films/channels/space/long01/claims.json"))
 tl = json.load(open(f"{O}/part{n}.json")); used = sorted({c for cap in [x["text"] for x in tl["captions"]] for c in []})

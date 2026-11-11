@@ -1,0 +1,54 @@
+{
+ "_comment": "Picture-led beats: a silent stretch of `dur` seconds (parts) / `ldur` (the long film) inserted after the sentence that starts with `after`, while the idea plays out on the painting (counter gliding, tide climbing, push-ins) with music and SFX. `approach` beats carry `arrives`: the counter reaches that distance as the beat ends.",
+ "ch1": [
+  {"after": "Right now, it is drifting away", "kind": "drift", "dur": 3.0, "ldur": 4.0},
+  {"after": "About the same size as the Sun.", "kind": "sun", "dur": 2.5, "ldur": 3.0},
+  {"after": "Moonlight is just sunlight", "kind": "sunbeam", "dur": 3.0, "ldur": 3.0},
+  {"after": "It only ever goes down.", "kind": "tick", "dur": 3.5, "ldur": 4.0}
+ ],
+ "ch2": [
+  {"after": "One quarter of the way in.", "kind": "approach", "dur": 4.0, "ldur": 4.5, "arrives": 288300},
+  {"after": "The Moon looks one and a third times wider.", "kind": "grow", "dur": 3.5, "ldur": 3.5},
+  {"after": "Not enough to see on the beach", "kind": "tide", "dur": 3.5, "ldur": 3.5}
+ ],
+ "ch3": [
+  {"after": "__start__", "kind": "approach", "dur": 3.5, "ldur": 4.5, "arrives": 192200},
+  {"after": "So half the distance means about eight times", "kind": "tide", "dur": 3.5, "ldur": 5.0},
+  {"after": "Slowly, in long swells", "kind": "tide", "dur": 3.0, "ldur": 3.5},
+  {"after": "It is something that pulls.", "kind": "pull", "dur": 3.0, "ldur": 3.5}
+ ],
+ "ch4": [
+  {"after": "__start__", "kind": "approach", "dur": 3.5, "ldur": 4.5, "arrives": 150000},
+  {"after": "So a full Moon gives about six and a half times", "kind": "bright", "dur": 3.5, "ldur": 4.5},
+  {"after": "The wet sand shines like a mirror.", "kind": "bright", "dur": 3.0, "ldur": 3.5},
+  {"after": "The water has a silver road", "kind": "grow", "dur": 3.0, "ldur": 3.5}
+ ],
+ "ch5": [
+  {"after": "__start__", "kind": "approach", "dur": 4.0, "ldur": 4.5, "arrives": 100000},
+  {"after": "That is why total solar eclipses are possible.", "kind": "grow", "dur": 3.5, "ldur": 3.5},
+  {"after": "The sky goes dim", "kind": "eclipse", "dur": 4.5, "ldur": 5.0},
+  {"after": "A long dark noon", "kind": "eclipse", "dur": 4.0, "ldur": 4.5}
+ ],
+ "ch6": [
+  {"after": "__start__", "kind": "approach", "dur": 3.5, "ldur": 4.5, "arrives": 70000},
+  {"after": "Its tidal pull is more than a hundred sixty", "kind": "tide", "dur": 3.0, "ldur": 3.5},
+  {"after": "With far more pull, it would flex far more.", "kind": "flex", "dur": 3.5, "ldur": 4.5},
+  {"after": "To make it come closer", "kind": "grow", "dur": 3.0, "ldur": 3.5}
+ ],
+ "ch7": [
+  {"after": "__start__", "kind": "approach", "dur": 3.5, "ldur": 4.5, "arrives": 50000},
+  {"after": "A moon that orbits faster rises in the west.", "kind": "rise", "dur": 3.0, "ldur": 4.0},
+  {"after": "The Moon hangs in your sky, almost still.", "kind": "grow", "dur": 3.0, "ldur": 3.5},
+  {"after": "Then it begins to slide the wrong way", "kind": "slide", "dur": 3.5, "ldur": 5.0}
+ ],
+ "ch8": [
+  {"after": "__start__", "kind": "approach", "dur": 3.0, "ldur": 4.0, "arrives": 35000},
+  {"after": "It is a wall of grey", "kind": "strain", "dur": 3.5, "ldur": 5.5},
+  {"after": "Seventeen.", "kind": "tide", "dur": 3.5, "ldur": 4.5}
+ ],
+ "close": [
+  {"after": "A stretch.", "kind": "stretch", "long_only": true, "ldur": 5.0},
+  {"after": "Rock and dust spread along", "kind": "band", "long_only": true, "ldur": 5.0},
+  {"after": "There is no Moon.", "kind": "ring", "long_only": true, "ldur": 5.0}
+ ]
+}

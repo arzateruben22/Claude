@@ -4,6 +4,9 @@ Then every part's claims.json (ep13..ep20) is rewritten from long01/claims.json 
 import json, os, re
 R = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")); L1 = R + "/long01"
 cl = json.load(open(L1 + "/claims.json"))
+used = set(re.findall(r"\{(c\d+)\}", open(L1 + "/script.md").read()))
+dropped = [c["id"] for c in cl if c["id"] not in used]; cl = [c for c in cl if c["id"] in used]      # claims for lines that were cut leave long01 too
+print("dropped (no longer said in the film):", dropped)
 PLAIN = {
 "c1": "On average the Moon is about 384,400 km from Earth.",
 "c2": "The Moon is drifting away from Earth by about 3.8 centimeters a year.",
