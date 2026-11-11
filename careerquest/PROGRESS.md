@@ -203,6 +203,19 @@ Requests **not** applied, and why (candidates for a later stage):
 - Needs from the user: their résumé (paste into the page, or into chat) to replace the assumed beginner
   profile and produce real tailored résumés; optionally approval to allow job-site hosts in the environment
   so postings can be opened directly instead of read from search extracts.
+- **Résumé-matched pass (same day, after the résumé was provided):** `jobfinder/resume-sweep.workflow.js`
+  (requirement-by-requirement match against the résumé), `jobfinder/apply-kit.workflow.js` (tailored résumé,
+  cover letter, outreach note, second-agent fact-check, publicly posted hiring contacts) and
+  `scripts/jobfinder-resume-build.ts`. Engine: "Résumé match" factor, degree-with-no-alternative rules a job
+  out, minimum résumé fit 35%. 29 unit tests.
+- **The repository is public**, so the résumé and everything derived from it stay out of it: that run's data
+  and page were built outside the repository and published only to the private artifact; tailored documents
+  are stored only in the applicant's private artifact records. The profile and role families are workflow
+  arguments, not file contents.
+- Résumé-matched result: 9 role families searched, 19 postings found, 6 held up (all "stretch": each asks for
+  something the résumé does not show), 13 ruled out (closed, degree required, outside LA/OC, or under 35%
+  résumé match). Short of the 10 requested. Cause: web search surfaced about two usable employer postings per
+  twelve searches and the 200-call allowance ran out; job sites are not on the environment's allowed hosts.
 - Next exact step when asked: re-run `jobfinder/sweep.workflow.js` with `leadIdx` for the listed leads to
   refresh open status (postings age quickly), plus finders for slices not yet covered (see the watch list in
   `data/jobs/2026-11-11.json`); rebuild with `--leads data/jobs/<date>.leads.json` and republish.

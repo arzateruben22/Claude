@@ -138,6 +138,23 @@ describe("scoreRow", () => {
     expect(onlyConditions.list).toBe("best_fit");
     expect(onlyConditions.gaps.soft).toEqual([]);
   });
+  it("scores against the resume when the checker compared it requirement by requirement", () => {
+    const fit = scoreRow(row({ verdict: verdict({ resumeFit: 0.9, resumeFitReason: "all minimums shown", gapsForApplicant: [], gapsForBeginner: undefined }) }));
+    expect(fit.fitBasis).toBe("resume");
+    expect(fit.list).toBe("best_fit");
+    expect(fit.breakdown.interest.value).toBeCloseTo(0.9);
+    expect(fit.breakdown.interest.note).toMatch(/Resume match 90%/);
+    expect(fit.breakdown.access.note).toMatch(/resume shows every posted minimum/i);
+    const stretch = scoreRow(row({ verdict: verdict({ resumeFit: 0.6, gapsForApplicant: ["SOFT: 5 years of construction coordination - resume shows about 3"] }) }));
+    expect(stretch.list).toBe("stretch");
+    const miss = scoreRow(row({ verdict: verdict({ resumeFit: 0.25, gapsForApplicant: ["SOFT: maritime operations knowledge not shown"] }) }));
+    expect(miss.list).toBe("ruled_out");
+    expect(miss.ruledOutReason).toMatch(/too few of the posted minimums/);
+    const degree = scoreRow(row({ verdict: verdict({ resumeFit: 0.7, gapsForApplicant: ["HARD: College degree in business required with no experience alternative stated; resume shows no degree"] }) }));
+    expect(degree.list).toBe("ruled_out");
+    expect(degree.ruledOutReason).toMatch(/credential/);
+    expect(scoreRow(row({ verdict: verdict({}) })).fitBasis).toBe("goals");
+  });
   it("merges the same posting written two ways and prefers the checked copy", () => {
     const first = scoreRow(row({ employer: "Los Angeles Department of Water and Power (LADWP)", title: "Utility Pre-Craft Trainee (UPCT)", postingUrl: "https://example.org/a", verdict: null }));
     const second = scoreRow(row({ employer: "Los Angeles Department of Water and Power", title: "Utility Pre-Craft Trainee (UPCT) - Local 18 list", postingUrl: "https://example.org/b", verdict: verdict({ stillOpenConfidence: 0.4 }) }));

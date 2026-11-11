@@ -12,6 +12,9 @@ links, honest gap notes, cover-letter drafts and an "applied" tracker.
 | `../src/lib/jobfinder/score.ts` | Pure ranking engine: 0–100 fit score with a per-factor breakdown, list assignment (best fit / stretch / below pay target / ruled out) and the reason for every exclusion. Tests: `tests/unit/jobfinder-score.test.ts`. |
 | `../src/lib/jobfinder/geo.ts` | Home base (Canoga Park), city coordinates for LA and Orange counties, straight-line distance, the LA/OC area split and the distance-based pay target. |
 | `../scripts/jobfinder-build.ts` | Reads the sweep's journals, scores and selects, writes `data/jobs/<date>.json` and renders the page from `page-template.html`. |
+| `resume-sweep.workflow.js` | The same sweep once a résumé is available: finders per role family, then a checker that compares every posted minimum with the résumé (`requirementMatch`, `resumeFit`, `gapsForApplicant`). The anonymized profile and the role families are passed in as arguments, never stored in the file. |
+| `apply-kit.workflow.js` | For each selected job: writes a tailored résumé, cover letter and outreach note from the résumé only, has a second agent fact-check every line against the original, and researches publicly posted hiring contacts (no guessed addresses). |
+| `../scripts/jobfinder-resume-build.ts` | Build for a résumé-matched run: top N by fit, earlier trade leads carried in a separate tab, contact research attached per job. |
 | `page-template.html` | The published page. Job data is embedded; per-person status, ticks and letter edits are stored privately (artifact `db` + `user` capabilities, with a local fallback). |
 | `latest.html` | The last built page, as published at https://claude.ai/artifact/F1YK2dnRzYcaE7j5ke3xyR (capabilities: `db`, `user`, `sample`). |
 | `../data/jobs/<date>.json` | The ranked result of each run, including what was ruled out and why. |
@@ -36,6 +39,19 @@ links, honest gap notes, cover-letter drafts and an "applied" tracker.
 - Checked locally with a stand-in runtime (`db`, `user`, `sample`): sync, restore on a second device,
   no write on load, tailoring hidden when unavailable. The live Claude call itself was not exercised.
 
+## Privacy: this repository is public
+
+- The applicant's résumé, name, contact details and everything written from them (the anonymized
+  profile, requirement-by-requirement match notes, tailored résumés, letters, outreach notes) are
+  never committed. A résumé-matched run writes its data and page outside the repository and
+  publishes the page to the private artifact; the tailored documents go only to the applicant's
+  private per-user records in the artifact database (`data/users/<id>/jobfinder` and
+  `data/users/<id>/jf-<jobId>`).
+- `data/jobs/` and `latest.html` in the repository therefore hold only the earlier run that was
+  scored without a résumé.
+- Search agents are never given the applicant's name or contact details, and are told not to put
+  anything identifying in a query.
+
 ## Rules the engine enforces
 
 - A posting the second pass looked for and could not find on the employer's site is ruled out.
@@ -53,6 +69,12 @@ links, honest gap notes, cover-letter drafts and an "applied" tracker.
 - Driving requirements are flagged and scored, never assumed about the applicant. Paperwork
   (ID, diploma, residency) is listed as "have ready", not as a gap.
 - Nothing is padded: if fewer postings survive than were asked for, the page says so.
+- With a résumé: the "Your priorities" factor becomes "Résumé match" (the checker's share of posted
+  minimums the résumé shows); a degree or licence required with no experience alternative rules a
+  job out; a posting whose minimums the résumé barely touches (under 35%) is left out rather than
+  called a stretch.
+- Outreach: only contact routes published by the employer, the posting or the person in a
+  professional capacity are reported, each with its source. Nothing is ever sent.
 
 ## Running a pass
 
@@ -65,12 +87,24 @@ links, honest gap notes, cover-letter drafts and an "applied" tracker.
 2. Build: `npx tsx scripts/jobfinder-build.ts --journals <workflow transcript dir>[,<dir>] --leads data/jobs/YYYY-MM-DD.leads.json --date YYYY-MM-DD --out data/jobs/YYYY-MM-DD.json --html jobfinder/latest.html`
 3. Publish `jobfinder/latest.html` to the existing artifact so the link and saved statuses are kept.
 
+## Running a résumé-matched pass
+
+1. Keep the anonymized profile, the role families and the résumé text (with `[YOUR NAME]`,
+   `[phone]`, `[email]` in place of identity) in a private directory outside the repository.
+2. Run `resume-sweep.workflow.js` with `args = { today, profile, slices, keys, findCap, verifyCap, verifyTop }`.
+3. `npx tsx scripts/jobfinder-resume-build.ts --journals <dirs> --date YYYY-MM-DD --trade data/jobs/<date>.json --out <private>/run.json --html <private>/jobfinder.html --jobs-out <private>/top-jobs.json`
+4. Run `apply-kit.workflow.js` with `args = { today, resume, jobs: <top-jobs.json>, cautions }`, rebuild
+   with `--kits <kit run dirs>`, write the documents to the applicant's private records, publish.
+
 ## Limits to know about
 
 - The sandbox this ran in cannot open job sites (hosts are not on the environment's network
   allow-list), so postings are confirmed from search-result extracts, not from the live page.
-- The applicant's résumé has not been provided. Fit is scored against stated goals and an assumed
-  beginner background; cover letters use [brackets] for facts only the applicant knows, and the
-  tailored résumé slot on each job stays empty until a résumé is pasted into the page.
+- The run stored in this repository was made before the résumé was provided: fit there is scored
+  against stated goals and an assumed beginner background. The résumé-matched run lives only in
+  the private artifact (see Privacy above).
+- Web search surfaces few live employer postings per query (roughly two usable per twelve searches
+  on 2026-11-11) and is capped at 200 calls per turn. Reaching ten strong matches needs direct
+  access to applicant-system hosts.
 - Distances are straight-line from Canoga Park to the city centre, not drive times. A posting that
   says only "Los Angeles" is placed downtown and marked as an estimate on its card.

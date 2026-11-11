@@ -54,9 +54,17 @@ export type Verdict = {
     Pick<Candidate, "title" | "city" | "payText" | "payMinAnnual" | "payMaxAnnual" | "postingUrl" | "postedDate" | "closingDate" | "drivingRequirement" | "minimumRequirements">
   >;
   independentEvidence: Evidence[];
-  gapsForBeginner: string[];
+  /** First runs (no resume): what a beginner probably lacks. */
+  gapsForBeginner?: string[];
+  /** Resume runs: only the posted requirements the applicant's resume does not show. */
+  gapsForApplicant?: string[];
+  /** Resume runs: every posted minimum judged against the resume. */
+  requirementMatch?: { requirement: string; status: "met" | "partly" | "not_shown"; resumeEvidence: string }[];
+  /** Resume runs: 0..1 share of the posted minimums the resume demonstrably meets. */
+  resumeFit?: number;
+  resumeFitReason?: string;
   aiExposure: { level: AiLevel; reason: string };
-  coverLetter: string;
+  coverLetter?: string;
   resumeEmphasis: string[];
   doNotClaim: string[];
 };
@@ -87,9 +95,13 @@ export type ScoredJob = Candidate & {
   list: ListName;
   ruledOutReason: string | null;
   needsOpenCheck: boolean;
+  /** "resume" when fit was judged against the applicant's actual resume, "goals" when it was assumed. */
+  fitBasis: "resume" | "goals";
 };
 
 export const TARGET_ANNUAL = 80_000;
+/** Below this share of posted minimums shown on the resume, a posting is left out rather than called a stretch. */
+export const MIN_RESUME_FIT = 0.35;
 
 export const WEIGHTS = { access: 0.22, pay: 0.2, interest: 0.16, ai: 0.12, open: 0.14, distance: 0.1, driving: 0.06 } as const;
 
@@ -104,6 +116,12 @@ export const FIELD_INTEREST: Record<string, number> = {
   plumbing_pipefitting: 0.82,
   construction_office: 0.75,
   other_trade: 0.7,
+  // Role families used once the resume was available; a found-once lead falls back on these.
+  dispatch_scheduling: 0.9,
+  project_coordination: 0.9,
+  safety_compliance: 0.88,
+  operations_logistics: 0.82,
+  executive_admin: 0.7,
 };
 
 export const FIELD_LABELS: Record<string, string> = {
@@ -116,6 +134,11 @@ export const FIELD_LABELS: Record<string, string> = {
   plumbing_pipefitting: "Plumbing & pipefitting",
   construction_office: "Construction office",
   other_trade: "Other trade",
+  dispatch_scheduling: "Dispatch & field scheduling",
+  project_coordination: "Project coordination",
+  safety_compliance: "Safety & compliance",
+  operations_logistics: "Operations & logistics",
+  executive_admin: "Executive & office administration",
 };
 
 const DRIVING_VALUE: Record<string, number> = {
@@ -186,7 +209,8 @@ export function parseGaps(lines: string[] | undefined): Gaps {
     const labelledHard = Boolean(m && m[1]!.toLowerCase() === "hard");
     // Judge by the requirement itself (the leading clause), not by the commentary that follows it.
     const lead = leadClause(text);
-    const isExperience = /\bplus\b|experience|\byears?\b/i.test(lead);
+    // "No experience alternative stated" is not an experience requirement.
+    const isExperience = /\bplus\b|experience|\byears?\b/i.test(stripNegated(lead));
     // "Preferred" is usually said in a bracket right after the requirement, so look a little further.
     const head = text.slice(0, 200);
     if (DRIVING_RE.test(lead)) gaps.driving.push(text);
@@ -242,12 +266,14 @@ export function payFactor(
   return { value: clamp01(value), note };
 }
 
-export function accessFactor(softGaps: number, hardGaps: number): { value: number; note: string } {
-  if (hardGaps > 0) return { value: 0, note: `${hardGaps} mandatory requirement${hardGaps === 1 ? "" : "s"} a beginner is unlikely to meet` };
+export function accessFactor(softGaps: number, hardGaps: number, basis: "resume" | "goals" = "goals"): { value: number; note: string } {
+  const resume = basis === "resume";
+  if (hardGaps > 0) return { value: 0, note: `${hardGaps} mandatory requirement${hardGaps === 1 ? "" : "s"} ${resume ? "your resume does not show" : "a beginner is unlikely to meet"}` };
   const table = [1, 0.8, 0.6, 0.45];
   const value = softGaps < table.length ? table[softGaps]! : 0.3;
-  const note = softGaps === 0 ? "No listed requirement appears out of reach for a beginner" : `${softGaps} experience or preference gap${softGaps === 1 ? "" : "s"} to address honestly`;
-  return { value, note };
+  const none = resume ? "Your resume shows every posted minimum" : "No listed requirement appears out of reach for a beginner";
+  const some = resume ? `${softGaps} posted requirement${softGaps === 1 ? "" : "s"} your resume does not show; address ${softGaps === 1 ? "it" : "them"} honestly` : `${softGaps} experience or preference gap${softGaps === 1 ? "" : "s"} to address honestly`;
+  return { value, note: softGaps === 0 ? none : some };
 }
 
 /** Apply the verifier's corrections on top of the finder's claim. */
@@ -267,7 +293,8 @@ export function scoreRow(input: RawRow): ScoredJob {
   const v = row.verdict;
   const state = verdictState(v);
   const checked = state === "checked";
-  const gaps = parseGaps(v?.gapsForBeginner);
+  const fitBasis: "resume" | "goals" = v && (typeof v.resumeFit === "number" || Array.isArray(v.gapsForApplicant)) ? "resume" : "goals";
+  const gaps = parseGaps(v?.gapsForApplicant ?? v?.gapsForBeginner);
   const open = clamp01(checked ? v!.stillOpenConfidence : row.openConfidence);
   const loc = locate(row.city, row.county);
   const target = targetHourly(loc.miles);
@@ -278,13 +305,16 @@ export function scoreRow(input: RawRow): ScoredJob {
   // A second pass that could not run only speculates about gaps, so reach is judged from the first
   // pass's reading of the posted minimums (its tier) instead of counting those unverified notes.
   const access = checked
-    ? accessFactor(gaps.soft.length + (gaps.preferred.length >= 2 ? 1 : 0), gaps.hard.length)
+    ? accessFactor(gaps.soft.length + (gaps.preferred.length >= 2 ? 1 : 0), gaps.hard.length, fitBasis)
     : gaps.hard.length > 0
       ? accessFactor(0, gaps.hard.length)
       : row.tier === "best_fit"
         ? { value: 0.9, note: "The posted minimums looked reachable for a beginner on first reading; not double-checked" }
         : { value: 0.5, note: "The posting asks for experience a beginner probably lacks; not double-checked" };
-  const interestValue = FIELD_INTEREST[row.field] ?? FIELD_INTEREST.other_trade!;
+  // With a resume, "how much does this suit the applicant" is the checker's requirement-by-requirement
+  // match; without one it is the stated order of fields of interest.
+  const byResume = checked && typeof v!.resumeFit === "number";
+  const interestValue = byResume ? clamp01(v!.resumeFit!) : (FIELD_INTEREST[row.field] ?? FIELD_INTEREST.other_trade!);
   const aiLevel: AiLevel = v?.aiExposure.level ?? "medium";
   const drivingValue = DRIVING_VALUE[row.drivingRequirement] ?? DRIVING_VALUE.unknown!;
 
@@ -293,7 +323,13 @@ export function scoreRow(input: RawRow): ScoredJob {
   const breakdown: ScoredJob["breakdown"] = {
     access: mk(access.value, WEIGHTS.access, access.note),
     pay: mk(pay.value, WEIGHTS.pay, pay.note),
-    interest: mk(interestValue, WEIGHTS.interest, `${FIELD_LABELS[row.field] ?? "Other trade"} is ${interestValue >= 0.95 ? "at the top of" : interestValue >= 0.85 ? "high on" : "lower on"} your stated list`),
+    interest: mk(
+      interestValue,
+      WEIGHTS.interest,
+      byResume
+        ? `Resume match ${Math.round(interestValue * 100)}%: ${v!.resumeFitReason ?? "share of the posted minimums your resume shows"}`
+        : `${FIELD_LABELS[row.field] ?? "Other trade"} is ${interestValue >= 0.95 ? "at the top of" : interestValue >= 0.85 ? "high on" : "lower on"} your stated list`,
+    ),
     ai: mk(AI_VALUE[aiLevel], WEIGHTS.ai, v ? `${aiLevel[0]!.toUpperCase()}${aiLevel.slice(1)} AI exposure (estimate): ${v.aiExposure.reason}` : "Not assessed"),
     open: mk(open, WEIGHTS.open, checked ? `Second pass's confidence it is still open: ${pct}%` : `Found once in search results and not double-checked; the finder's own confidence it is still open: ${pct}%`),
     distance: mk(proximityValue(loc.miles), WEIGHTS.distance, `About ${loc.miles} miles from Canoga Park in a straight line${loc.estimated ? " (the exact work site is not stated, so this assumes " + loc.place + ")" : ""}`),
@@ -310,6 +346,8 @@ export function scoreRow(input: RawRow): ScoredJob {
   else if (checked && !v!.inLaOrOc) ruledOutReason = "The work location is outside Los Angeles and Orange counties";
   else if (open < 0.35) ruledOutReason = checked ? "It appears to have closed" : "Even the search that found it rated it unlikely to still be open";
   else if (gaps.hard.length > 0) ruledOutReason = `It requires a credential you would need first: ${gaps.hard[0]}`;
+  // With a real resume in hand, a posting whose minimums it barely touches is not a stretch, it is a miss.
+  else if (byResume && v!.resumeFit! < MIN_RESUME_FIT) ruledOutReason = `Your resume shows too few of the posted minimums (about ${Math.round(v!.resumeFit! * 100)}%)`;
 
   // "Around" the target: the top of the range must come within 5% of it.
   const belowPay = payMaxHourly !== null && payMaxHourly < target * 0.95;
@@ -338,6 +376,7 @@ export function scoreRow(input: RawRow): ScoredJob {
     list,
     ruledOutReason,
     needsOpenCheck: list !== "ruled_out" && (!checked || open < 0.6),
+    fitBasis,
   };
 }
 

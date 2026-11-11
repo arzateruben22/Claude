@@ -105,6 +105,17 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
 .area-h span { font-family: var(--mono); font-size: 13px; color: var(--subtle); font-weight: 500; }
 .fact p em { display: block; font-style: normal; font-weight: 400; color: var(--gold); font-size: 13px; }
 .doc { min-height: 320px; font-family: var(--mono); font-size: 13px; }
+.match { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 8px; }
+.match li { display: grid; grid-template-columns: 92px 1fr; gap: 10px; align-items: start; font-size: 14px; }
+.match .st { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; padding: 3px 6px; border-radius: 6px; text-align: center; border: 1px solid var(--line); }
+.match .st.met { color: var(--ok); border-color: var(--ok); }
+.match .st.partly { color: var(--gold); border-color: var(--gold); }
+.match .st.not_shown { color: var(--subtle); }
+.match small { display: block; color: var(--subtle); }
+.contacts { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 8px; }
+.contacts li { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 14px; overflow-wrap: anywhere; }
+.contacts small { display: block; color: var(--subtle); }
+.verdict { font-weight: 600; }
 .batch { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 12px; }
 .me { margin-top: 18px; border-top: 1px solid var(--line); }
 .me summary { padding-top: 0; }
@@ -183,7 +194,7 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
   var remoteRef = null, remoteCol = null, saveTimer = null, saving = false, dirty = false;
   // A written résumé and letter per job would outgrow one stored document, so each job's
   // documents are kept in their own record and the main record holds only the light tracker.
-  var HEAVY = ["letter", "resumeDoc", "resumeNotes"], savedHeavy = {};
+  var HEAVY = ["letter", "resumeDoc", "resumeNotes", "outreach"], savedHeavy = {};
   function heavyOf(st) { var o = {}; HEAVY.forEach(function (k) { if (st && st[k] != null && st[k] !== "") o[k] = st[k]; }); return o; }
   function lightState() {
     var out = JSON.parse(JSON.stringify(state));
@@ -350,8 +361,9 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
 
   var MORE = DATA.bench || [];
   var BELOW = DATA.belowPay || [];
-  var LISTS = { best: DATA.bestFit, stretch: DATA.stretch.concat(MORE), below: BELOW, ruled: DATA.ruledOut };
-  var tracked = DATA.bestFit.concat(DATA.stretch, MORE, BELOW);
+  var TRADE = DATA.tradeLeads || [], RESUME_MODE = DATA.mode === "resume";
+  var LISTS = { best: DATA.bestFit, stretch: DATA.stretch.concat(MORE), below: BELOW, trade: TRADE, ruled: DATA.ruledOut };
+  var tracked = DATA.bestFit.concat(DATA.stretch, MORE, BELOW, TRADE);
 
   function drives(j) { return j.drivingRequirement !== "none stated" && j.drivingRequirement !== "unknown"; }
   function visible(j) {
@@ -372,7 +384,9 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
   }
 
   function tabs() {
-    var defs = [["best", "Best fit", DATA.bestFit.length], ["stretch", "Stretch", DATA.stretch.length + MORE.length], ["below", "Below your pay target", BELOW.length], ["routes", "Apprenticeship routes", (DATA.programs || []).length], ["watch", "Watch list", (DATA.watch || []).reduce(function (a, g) { return a + g.items.length; }, 0)], ["ruled", "Ruled out", DATA.ruledOut.length]];
+    var defs = [["best", "Best fit", DATA.bestFit.length], ["stretch", "Stretch", DATA.stretch.length + MORE.length], ["below", "Below your pay target", BELOW.length], ["trade", "Trade leads", TRADE.length], ["routes", "Apprenticeship routes", (DATA.programs || []).length], ["watch", "Watch list", (DATA.watch || []).reduce(function (a, g) { return a + g.items.length; }, 0)], ["ruled", "Ruled out", DATA.ruledOut.length]];
+    // Tabs with nothing behind them in this run are left out, except the main three.
+    defs = defs.filter(function (d) { return d[2] > 0 || d[0] === "best" || d[0] === "stretch" || d[0] === "ruled"; });
     $("tabs").innerHTML = defs.map(function (d) {
       return '<button type="button" class="tab" role="tab" data-view="' + d[0] + '" aria-selected="' + (view === d[0]) + '">' + d[1] + '<span class="n">' + d[2] + "</span></button>";
     }).join("");
@@ -412,6 +426,8 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
     h.push('<div class="fact"><small>Dates</small><p>' + (j.closingDate ? "Closes " + esc(j.closingDate) : "No closing date listed") + "<span>" + (j.postedDate ? "Posted " + esc(j.postedDate) : "Posting date not shown") + "</span></p></div>");
     h.push('<div class="fact"><small>Driving</small><p>' + esc(j.drivingRequirement.charAt(0).toUpperCase() + j.drivingRequirement.slice(1)) + "</p></div></div>");
     var chips = [chip(j.area === "OC" ? "Orange County" : "Los Angeles area"), chip(DATA.fieldLabels[j.field] || j.field)];
+    if (j.extra) chips.push(chip("Beyond the first 10"));
+    if (j.fitBasis === "resume" && j.checked) chips.push(chip("Résumé match " + Math.round(j.breakdown.interest.value * 100) + "%"));
     if (ai) chips.push(chip(ai.charAt(0).toUpperCase() + ai.slice(1) + " AI exposure", ai === "low" ? "ok" : ai === "medium" ? "warn" : "bad"));
     if (j.unionOrProgram) chips.push(chip(j.unionOrProgram));
     if (j.employmentType) chips.push(chip(j.employmentType));
@@ -424,8 +440,8 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
     if ((j.gaps.driving || []).length) h.push('<p class="why">Driving: ' + esc(j.gaps.driving.join(" · ")) + "</p>");
     if (j.gaps.soft.length) {
       var gt = j.list === "stretch" ? "You may not meet every requirement." : "Check these against the posting.";
-      var gs = !j.checked ? " These notes were written without being able to read the posting, so treat them as questions to answer on the page:" : " The posting asks for:";
-      h.push('<div class="alert"><b>' + gt + "</b>" + gs + "<ul>" + j.gaps.soft.slice(0, 6).map(function (g) { return "<li>" + esc(g) + "</li>"; }).join("") + "</ul>" + (j.list === "stretch" ? "The cover letter and résumé notes below are written to be upfront about this. Nothing in them claims experience you have not told me about." : "") + "</div>");
+      var gs = !j.checked ? " These notes were written without being able to read the posting, so treat them as questions to answer on the page:" : j.fitBasis === "resume" ? " The posting asks for these and your résumé does not show them:" : " The posting asks for:";
+      h.push('<div class="alert"><b>' + gt + "</b>" + gs + "<ul>" + j.gaps.soft.slice(0, 6).map(function (g) { return "<li>" + esc(g) + "</li>"; }).join("") + "</ul>" + (j.list === "stretch" ? (j.fitBasis === "resume" ? "The cover letter below says this in one plain sentence and points to your nearest real experience. Nothing in it or in the tailored résumé claims these." : "The cover letter and résumé notes below are written to be upfront about this. Nothing in them claims experience you have not told me about.") : "") + "</div>");
     }
     if ((j.gaps.conditions || []).length) h.push('<p class="why">Conditions of the job: ' + esc(j.gaps.conditions.slice(0, 4).join(" · ")) + "</p>");
     if ((j.gaps.preferred || []).length) h.push('<p class="why">Preferred, not required: ' + esc(j.gaps.preferred.slice(0, 4).join(" · ")) + "</p>");
@@ -442,17 +458,39 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
       reqs.map(function (r, k) { return '<label class="req" for="r-' + esc(j.id) + "-" + k + '"><input type="checkbox" id="r-' + esc(j.id) + "-" + k + '" data-req="' + k + '"' + (st.checks[k] ? " checked" : "") + "><span>" + esc(r) + "</span></label>"; }).join("") +
       ((j.preferredQualifications || []).length ? "<h4>Preferred, not required</h4><ul>" + j.preferredQualifications.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>" : "") + "</div></details>");
 
+    if ((v.requirementMatch || []).length) {
+      var met = v.requirementMatch.filter(function (m) { return m.status === "met"; }).length;
+      var words = { met: "Shown", partly: "Partly", not_shown: "Not shown" };
+      h.push('<details><summary>How your résumé matches <span>' + met + " of " + v.requirementMatch.length + ' posted minimums shown</span></summary><div class="sect"><ul class="match">' + v.requirementMatch.map(function (m) {
+        var s = words[m.status] ? m.status : "not_shown";
+        return '<li><span class="st ' + s + '">' + words[s] + "</span><div>" + esc(m.requirement) + "<small>" + esc(m.resumeEvidence) + "</small></div></li>";
+      }).join("") + "</ul></div></details>");
+    }
+    if (j.contact || st.outreach) {
+      var c = j.contact || {}, vw = { good_option: "Yes, worth doing", after_applying: "Yes, after you apply", not_recommended: "Not recommended here" };
+      var rows = (c.contacts || []).map(function (x) {
+        var src = safeUrl(x.sourceUrl), kind = { email: "Email", phone: "Phone", professional_profile: "Professional profile", contact_form: "Contact form", office: "Office" }[x.channel] || "Contact";
+        return "<li><b>" + esc(x.name || x.role) + "</b>" + (x.name ? " · " + esc(x.role) : "") + "<br>" + kind + ": " + esc(x.value) + "<small>" + (x.note ? esc(x.note) + " " : "") + (src ? 'Published at <a href="' + esc(src) + '" target="_blank" rel="noopener noreferrer">' + esc(host(src)) + "</a>" : "") + "</small></li>";
+      }).join("");
+      h.push('<details><summary>Should you write to someone directly? <span>' + esc(vw[c.outreachVerdict] || "not researched") + '</span></summary><div class="sect">' +
+        (c.outreachVerdict ? '<p><span class="verdict">' + esc(vw[c.outreachVerdict]) + ".</span> " + esc(c.reason || "") + "</p>" : "") +
+        (c.employerPolicy ? "<p>What the employer says about contact: " + esc(c.employerPolicy) + "</p>" : "") +
+        (rows ? "<h4>Publicly posted contact routes</h4><ul class=\"contacts\">" + rows + "</ul>" : (j.contact ? "<p>No named contact or address is published for this role." + (c.whoToAddress ? " Look for: " + esc(c.whoToAddress) + "." : "") + "</p>" : "")) +
+        (rows && c.whoToAddress ? "<p>If none of these fits, look for: " + esc(c.whoToAddress) + ".</p>" : "") +
+        "<p>No address was guessed, and nothing has been sent. Apply on the employer's site first, then send this from your own account if you choose to.</p>" +
+        '<label class="sync" for="o-' + esc(j.id) + '">Message you could send</label><textarea id="o-' + esc(j.id) + '" data-outreach spellcheck="true">' + esc(st.outreach || "") + '</textarea><div class="actions"><button type="button" class="btn" data-copy-outreach>Copy message</button><span class="sync" data-msg role="status"></span></div></div></details>');
+    }
     if (j.letterDraft) {
       h.push('<details><summary>Cover letter for this job <span>' + (st.letterTailored ? "tailored to your résumé" : "draft with blanks to fill") + '</span></summary><div class="sect"><p>' + (j.letterIsGeneric ? "This posting was not double-checked, so this is a plain starting letter built from the posting only. " : "") + 'Replace every [bracketed] part with your own facts before sending. Delete any sentence that is not true for you.</p><label class="sync" for="l-' + esc(j.id) + '">Cover letter</label><textarea id="l-' + esc(j.id) + '" data-letter spellcheck="true">' + esc(st.letter != null ? st.letter : fill(j.letterDraft)) + '</textarea><div class="actions"><button type="button" class="btn" data-copy>Copy letter</button><button type="button" class="btn ai" data-tailor' + (sampleFn ? "" : " hidden") + '>Tailor to my résumé</button><button type="button" class="btn" data-reset>Reset to draft</button><span class="sync" data-msg role="status"></span></div></div></details>');
     }
-    h.push('<details><summary>Tailored résumé for this job <span>' + (st.resumeDoc ? "ready to copy" : "not written yet") + '</span></summary><div class="sect"><p>' + (st.resumeDoc ? "Written from your résumé for this job. Check every line is true before you send it." : "Nothing is attached yet because your résumé has not been shared. Paste it under “Your details and résumé” at the top, then press the button. Only facts in your résumé are used.") + '</p><label class="sync" for="t-' + esc(j.id) + '">Tailored résumé</label><textarea class="doc" id="t-' + esc(j.id) + '" data-resume-doc spellcheck="true">' + esc(st.resumeDoc || "") + '</textarea><div class="actions"><button type="button" class="btn ai" data-resumedoc' + (sampleFn ? "" : " hidden") + '>Write my tailored résumé</button><button type="button" class="btn" data-copy-resume>Copy résumé</button><span class="sync" data-msg role="status"></span></div></div></details>');
+    h.push('<details><summary>Tailored résumé for this job <span>' + (st.resumeDoc ? "ready to copy" : "not written yet") + '</span></summary><div class="sect"><p>' + (st.resumeDoc ? "Written from your résumé for this job: same facts, reordered and reworded. Check every line is true before you send it." + (st.resumeNotes ? " What was changed is listed under “Résumé adjustments” below." : "") : (RESUME_MODE ? "Not written yet for this job. Press the button to have it written from the résumé saved under “Your details and résumé”. Only facts in your résumé are used." : "Nothing is attached yet because your résumé has not been shared. Paste it under “Your details and résumé” at the top, then press the button. Only facts in your résumé are used.")) + '</p><label class="sync" for="t-' + esc(j.id) + '">Tailored résumé</label><textarea class="doc" id="t-' + esc(j.id) + '" data-resume-doc spellcheck="true">' + esc(st.resumeDoc || "") + '</textarea><div class="actions"><button type="button" class="btn ai" data-resumedoc' + (sampleFn ? "" : " hidden") + '>Write my tailored résumé</button><button type="button" class="btn" data-copy-resume>Copy résumé</button><span class="sync" data-msg role="status"></span></div></div></details>');
     if ((v.resumeEmphasis || []).length || (v.doNotClaim || []).length) {
       h.push('<details><summary>Résumé adjustments for this job <span>what to bring forward, what not to claim</span></summary><div class="sect">' +
         ((v.resumeEmphasis || []).length ? "<h4>Bring forward, where true</h4><ul>" + v.resumeEmphasis.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
         ((v.doNotClaim || []).length ? "<h4>Do not claim unless it is true for you</h4><ul>" + v.doNotClaim.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
         '<div class="actions"><button type="button" class="btn ai" data-resume' + (sampleFn ? "" : " hidden") + '>Suggest résumé changes for this job</button><span class="sync" data-msg role="status"></span></div><div class="ai-out" data-resume-out>' + esc(st.resumeNotes || "") + "</div></div></details>");
     }
-    var order = ["access", "pay", "interest", "ai", "open", "distance", "driving"], names = { access: "Within reach", pay: "Pay", interest: "Your priorities", ai: "AI resilience", open: "Still open", distance: "Distance", driving: "Driving" };
+    var order = ["access", "pay", "interest", "ai", "open", "distance", "driving"], names = { access: "Within reach", pay: "Pay", interest: j.fitBasis === "resume" ? "Résumé match" : "Your priorities", ai: "AI resilience", open: "Still open", distance: "Distance", driving: "Driving" };
     h.push('<details><summary>Why it scored ' + esc(j.score) + "</summary><div class=\"sect\">" + order.map(function (k) {
       var f = j.breakdown[k];
       return '<div class="row"><span>' + names[k] + '</span><div class="track"><div class="fill" style="width:' + Math.round(f.value * 100) + '%"></div></div><b>' + f.points.toFixed(1) + "</b></div><p>" + esc(f.note) + "</p>";
@@ -492,7 +530,7 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
       html = src.length ? '<p class="lede">Found during the search and left out. Listed so you can see what was considered and why.</p>' + src.map(ruled).join("") : '<div class="empty">Nothing was ruled out.</div>';
     } else {
       var shown = src.filter(visible);
-      html = view === "below" ? '<p class="lede">These pay less than your rule asks for at their distance from ' + esc(DATA.home) + ". They are listed so you can decide for yourself; some are paid training routes with a documented path to higher pay.</p>" : "";
+      html = view === "trade" ? '<p class="lede">Skilled-trade openings from the earlier search, kept in case you want the career change. They were scored for someone new to the trades, not against your résumé, and several pay below your rule.</p>' : view === "below" ? '<p class="lede">These pay less than your rule asks for at their distance from ' + esc(DATA.home) + ". They are listed so you can decide for yourself; some are paid training routes with a documented path to higher pay.</p>" : "";
       [["LA", "Los Angeles area"], ["OC", "Orange County area"]].forEach(function (g) {
         if (fArea !== "all" && fArea !== g[0]) return;
         var inArea = shown.filter(function (j) { return j.area === g[0]; });
@@ -504,9 +542,9 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
   }
 
   function method() {
-    var w = DATA.weights, rows = [["Within reach", w.access, "Requirements a beginner can meet. Any mandatory credential you lack rules a job out entirely."], ["Pay", w.pay, "Posted range against your target for that distance. Paid apprenticeships with a documented progression are not penalised as heavily."], ["Your priorities", w.interest, "Electrician first, then the other fields in the order you listed them."], ["AI resilience", w.ai, "An estimate of how exposed the role's daily tasks are to automation. Hands-on, on-site work scores highest."], ["Still open", w.open, "The independent checker's confidence that it is accepting applications."], ["Distance", w.distance, "Straight-line miles from " + esc(DATA.home) + ". Closer scores higher."], ["Driving", w.driving, "What the posting says about a licence, DMV record or company vehicle. Flagged, never assumed about you."]];
+    var w = DATA.weights, rows = [["Within reach", w.access, RESUME_MODE ? "How many posted requirements your résumé does not show. A mandatory credential or degree you lack rules a job out entirely." : "Requirements a beginner can meet. Any mandatory credential you lack rules a job out entirely."], ["Pay", w.pay, "Posted range against your target for that distance. Paid apprenticeships with a documented progression are not penalised as heavily."], [RESUME_MODE ? "Résumé match" : "Your priorities", w.interest, RESUME_MODE ? "The share of the posted minimums your résumé demonstrably meets, judged one requirement at a time." : "Electrician first, then the other fields in the order you listed them."], ["AI resilience", w.ai, "An estimate of how exposed the role's daily tasks are to automation. Hands-on, on-site work scores highest."], ["Still open", w.open, "The independent checker's confidence that it is accepting applications."], ["Distance", w.distance, "Straight-line miles from " + esc(DATA.home) + ". Closer scores higher."], ["Driving", w.driving, "What the posting says about a licence, DMV record or company vehicle. Flagged, never assumed about you."]];
     $("method").innerHTML = "<h2>How the ranking works</h2><p>" + esc(DATA.methodNote) + "</p><div class=\"scroll\"><table><tr><th>Factor</th><th>Weight</th><th>What it measures</th></tr>" +
-      rows.map(function (r) { return "<tr><td>" + r[0] + "</td><td>" + Math.round(r[1] * 100) + "%</td><td>" + r[2] + "</td></tr>"; }).join("") + "</table></div><p>Your pay rule, as applied: about $" + esc(DATA.payRule.baseHourly) + " an hour within " + esc(DATA.payRule.freeMiles) + " miles of " + esc(DATA.home) + ", plus $" + Number(DATA.payRule.perMile).toFixed(2) + " an hour for every mile beyond that. The mileage figure is an assumption: about 70 cents a mile to drive both ways, plus the extra commute time valued at the base wage. A job counts as meeting the rule when the top of its posted range comes within 5% of the target. Distances are straight-line estimates from city centres.</p><p>Assumptions used until your résumé is shared: " + esc(DATA.assumptions) + "</p><p>“Copy tracker CSV” puts every job and its status on your clipboard in a format the CareerQuest application tracker imports under Applications → Import → Spreadsheet.</p>";
+      rows.map(function (r) { return "<tr><td>" + r[0] + "</td><td>" + Math.round(r[1] * 100) + "%</td><td>" + r[2] + "</td></tr>"; }).join("") + "</table></div><p>Your pay rule, as applied: about $" + esc(DATA.payRule.baseHourly) + " an hour within " + esc(DATA.payRule.freeMiles) + " miles of " + esc(DATA.home) + ", plus $" + Number(DATA.payRule.perMile).toFixed(2) + " an hour for every mile beyond that. The mileage figure is an assumption: about 70 cents a mile to drive both ways, plus the extra commute time valued at the base wage. A job counts as meeting the rule when the top of its posted range comes within 5% of the target. Distances are straight-line estimates from city centres.</p>" + (DATA.assumptions ? "<p>Assumptions used until your résumé is shared: " + esc(DATA.assumptions) + "</p>" : "") + "<p>“Copy tracker CSV” puts every job and its status on your clipboard in a format the CareerQuest application tracker imports under Applications → Import → Spreadsheet.</p>";
   }
 
   function csv() {
@@ -547,6 +585,12 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
     if (t.hasAttribute("data-tailor")) { runAi(t, cardEl, id, "letter"); return; }
     if (t.hasAttribute("data-resume")) { runAi(t, cardEl, id, "resume"); return; }
     if (t.hasAttribute("data-resumedoc")) { runAi(t, cardEl, id, "resumeDoc"); return; }
+    if (t.hasAttribute("data-copy-outreach")) {
+      var oEl = cardEl.querySelector("textarea[data-outreach]"), m3 = t.parentElement.querySelector("[data-msg]");
+      if (!oEl.value.trim()) { if (m3) m3.textContent = "There is no message for this job yet."; return; }
+      copy(oEl.value, function (ok) { if (!ok) { oEl.focus(); oEl.select(); } if (m3) m3.textContent = ok ? "Copied to clipboard" : "Select all and copy manually"; });
+      return;
+    }
     if (t.hasAttribute("data-copy-resume")) {
       var docEl = cardEl.querySelector("textarea[data-resume-doc]"), m2 = t.parentElement.querySelector("[data-msg]");
       if (!docEl.value.trim()) { if (m2) m2.textContent = "There is no tailored résumé for this job yet."; return; }
@@ -585,14 +629,14 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
   });
   document.addEventListener("input", function (e) {
     var t = e.target;
-    if (!t.matches || !t.matches("textarea[data-letter], textarea[data-resume-doc]")) return;
+    if (!t.matches || !t.matches("textarea[data-letter], textarea[data-resume-doc], textarea[data-outreach]")) return;
     var cardEl = t.closest(".card"); if (!cardEl) return;
-    if (t.hasAttribute("data-letter")) js(cardEl.dataset.id).letter = t.value; else js(cardEl.dataset.id).resumeDoc = t.value;
+    if (t.hasAttribute("data-letter")) js(cardEl.dataset.id).letter = t.value; else if (t.hasAttribute("data-outreach")) js(cardEl.dataset.id).outreach = t.value; else js(cardEl.dataset.id).resumeDoc = t.value;
     persist();
   });
 
   var hash = (location.hash || "").replace("#", "");
-  if (["best", "stretch", "below", "routes", "watch", "ruled"].indexOf(hash) >= 0) view = hash;
+  if (["best", "stretch", "below", "trade", "routes", "watch", "ruled"].indexOf(hash) >= 0) view = hash;
   header(); fieldFilter(); method(); meForm(); render();
   setSync("Saved on this device");
   connect();

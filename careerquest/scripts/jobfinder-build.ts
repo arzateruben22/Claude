@@ -94,7 +94,7 @@ export function defaultLetter(j: ScoredJob): string {
   ].join("\n");
 }
 
-const trimJob = (j: ScoredJob) => ({
+export const trimJob = (j: ScoredJob) => ({
   ...j,
   letterDraft: j.verdict?.coverLetter?.trim() || defaultLetter(j),
   letterIsGeneric: !j.verdict?.coverLetter?.trim(),
@@ -102,7 +102,7 @@ const trimJob = (j: ScoredJob) => ({
   verdict: j.verdict ? { ...j.verdict, independentEvidence: (j.verdict.independentEvidence ?? []).slice(0, 3) } : null,
 });
 
-const SLICE_LABELS: Record<string, string> = {
+export const SLICE_LABELS: Record<string, string> = {
   "city-utilities": "City of Los Angeles, LADWP, LA Metro, ports and airports",
   "counties-districts": "Counties, cities and water or sanitation districts",
   "campus-hospital": "Universities, colleges and hospitals",
@@ -119,8 +119,8 @@ const SLICE_LABELS: Record<string, string> = {
 };
 
 /** Keep the finder notes that tell the applicant something actionable: a date, a window, a place to check. */
-const WATCH_RE = /\b(open|opens|opening|closed|closes|window|filing|watch|check|next cycle|tentative|re-check|recheck|waitlist|accept)/i;
-const NOISE_RE = /^(coverage limit|not searched|no best_fit|search budget|attempted but not)/i;
+export const WATCH_RE = /\b(open|opens|opening|closed|closes|window|filing|watch|check|next cycle|tentative|re-check|recheck|waitlist|accept)/i;
+export const NOISE_RE = /^(coverage limit|not searched|no best_fit|search budget|attempted but not)/i;
 
 const normKey = (c: { employer: string; title: string }) => `${c.employer}|${c.title}`.toLowerCase().replace(/[^a-z0-9|]+/g, " ").trim();
 
