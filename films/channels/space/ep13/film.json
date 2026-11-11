@@ -8,146 +8,127 @@
   "aiVoice": true,
   "aiVisuals": true
  },
- "dur": 65.186,
+ "dur": 69.561,
  "fps": 30,
  "captions": [
   {
    "t0": 0.245,
    "t1": 2.64,
    "text": "Imagine the Moon never stopped coming.",
-   "line": "ch1_hook"
+   "line": "ch1_hook",
+   "spoken": "Imagine the Moon never stopped coming."
   },
   {
    "t0": 2.767,
-   "t1": 6.267,
+   "t1": 6.542,
    "text": "The sea is calm, and the Moon hangs over the water.",
-   "line": "ch1_vo"
+   "line": "ch1_vo",
+   "spoken": "The sea is calm, and the Moon hangs over the water."
   },
   {
-   "t0": 6.287,
-   "t1": 8.857,
-   "text": "Right now, it is drifting away from you.",
-   "line": "ch1_vo"
+   "t0": 6.562,
+   "t1": 12.052,
+   "text": "Right now, it is drifting away from you, about 3.8 cm a year.",
+   "line": "ch1_vo",
+   "spoken": "Right now, it is drifting away from you, about three point eight centimeters a year."
   },
   {
-   "t0": 8.877,
-   "t1": 11.767,
-   "text": "About three point eight centimeters a year.",
-   "line": "ch1_vo"
-  },
-  {
-   "t0": 11.787,
-   "t1": 14.272,
+   "t0": 15.102,
+   "t1": 17.887,
    "text": "Tonight, imagine it reverses.",
-   "line": "ch1_vo"
+   "line": "ch1_vo",
+   "spoken": "Tonight, imagine it reverses."
   },
   {
-   "t0": 14.292,
-   "t1": 17.107,
+   "t0": 17.907,
+   "t1": 21.002,
    "text": "It starts coming closer, and it never stops.",
-   "line": "ch1_vo"
+   "line": "ch1_vo",
+   "spoken": "It starts coming closer, and it never stops."
   },
   {
-   "t0": 17.127,
-   "t1": 19.182,
-   "text": "Nothing here is a forecast.",
-   "line": "ch1_vo"
+   "t0": 21.022,
+   "t1": 24.682,
+   "text": "This is a thought experiment, built from real physics.",
+   "line": "ch1_vo",
+   "spoken": "This is a thought experiment, built from real physics."
   },
   {
-   "t0": 19.202,
-   "t1": 22.562,
-   "text": "It is a thought experiment, built from real physics.",
-   "line": "ch1_vo"
+   "t0": 24.702,
+   "t1": 30.077,
+   "text": "On average, the Moon is about 384,000 km away.",
+   "line": "ch1_vo",
+   "spoken": "On average, the Moon is about three hundred eighty-four thousand kilometers away."
   },
   {
-   "t0": 22.582,
-   "t1": 24.977,
-   "text": "First, where it really is.",
-   "line": "ch1_vo"
-  },
-  {
-   "t0": 24.997,
-   "t1": 27.767,
-   "text": "On average, the Moon is about three hundred",
-   "line": "ch1_vo"
-  },
-  {
-   "t0": 27.787,
-   "t1": 30.187,
-   "text": "eighty-four thousand kilometers away.",
-   "line": "ch1_vo"
-  },
-  {
-   "t0": 30.207,
-   "t1": 33.227,
+   "t0": 30.097,
+   "t1": 33.502,
    "text": "From the beach, it looks about half a degree wide.",
-   "line": "ch1_vo"
+   "line": "ch1_vo",
+   "spoken": "From the beach, it looks about half a degree wide."
   },
   {
-   "t0": 33.247,
-   "t1": 35.642,
+   "t0": 33.522,
+   "t1": 35.912,
    "text": "About the same size as the Sun.",
-   "line": "ch1_vo"
+   "line": "ch1_vo",
+   "spoken": "About the same size as the Sun."
   },
   {
-   "t0": 35.662,
-   "t1": 38.962,
+   "t0": 38.462,
+   "t1": 41.912,
    "text": "Its light takes about a second and a quarter to reach you.",
-   "line": "ch1_vo"
+   "line": "ch1_vo",
+   "spoken": "Its light takes about a second and a quarter to reach you."
   },
   {
-   "t0": 38.982,
-   "t1": 42.722,
+   "t0": 41.932,
+   "t1": 45.927,
    "text": "Moonlight is just sunlight, bounced off grey rock.",
-   "line": "ch1_vo"
+   "line": "ch1_vo",
+   "spoken": "Moonlight is just sunlight, bounced off grey rock."
   },
   {
-   "t0": 42.742,
-   "t1": 45.982,
-   "text": "Same sea, same sand, same Moon.",
-   "line": "ch1_vo"
-  },
-  {
-   "t0": 46.002,
-   "t1": 48.277,
-   "text": "Only one thing will change.",
-   "line": "ch1_vo"
-  },
-  {
-   "t0": 48.41,
-   "t1": 52.72,
-   "text": "Quick thing: if that made the sky feel bigger, tap like and follow.",
-   "line": "cta1_follow"
-  },
-  {
-   "t0": 52.87,
-   "t1": 55.44,
+   "t0": 48.977,
+   "t1": 51.737,
    "text": "Keep an eye on the number in the corner.",
-   "line": "ch1_vo"
+   "line": "ch1_vo",
+   "spoken": "Keep an eye on the number in the corner."
   },
   {
-   "t0": 55.46,
-   "t1": 57.235,
+   "t0": 51.86,
+   "t1": 56.17,
+   "text": "Quick thing: if that made the sky feel bigger, tap like and follow.",
+   "line": "cta1_follow",
+   "spoken": "Quick thing: if that made the sky feel bigger, tap like and follow."
+  },
+  {
+   "t0": 56.31,
+   "t1": 58.135,
    "text": "It only ever goes down.",
-   "line": "ch1_vo"
+   "line": "ch1_vo",
+   "spoken": "It only ever goes down."
   },
   {
-   "t0": 57.51,
-   "t1": 61.27,
+   "t0": 61.885,
+   "t1": 65.645,
    "text": "And the first thing that changes is not what you'd expect.",
-   "line": "ch1_loop"
+   "line": "ch1_loop",
+   "spoken": "And the first thing that changes is not what you'd expect."
   },
   {
-   "t0": 61.416,
-   "t1": 62.641,
-   "text": "Part one of eight.",
-   "line": "closer1"
+   "t0": 65.791,
+   "t1": 67.016,
+   "text": "Part 1 of 8.",
+   "line": "closer1",
+   "spoken": "Part one of eight."
   },
   {
-   "t0": 62.661,
-   "t1": 64.446,
+   "t0": 67.036,
+   "t1": 68.821,
    "text": "Full video on YouTube.",
-   "line": "closer1"
+   "line": "closer1",
+   "spoken": "Full video on YouTube."
   }
  ],
  "km": [
@@ -193,39 +174,64 @@
    "id": "ch1_hook",
    "file": "voice/wav/02.wav",
    "t": 0.15,
-   "dur": 2.247
+   "dur": 2.247,
+   "from": 0.0
   },
   {
    "id": "ch1_vo",
    "file": "voice/wav/03.wav",
    "t": 2.747,
-   "dur": 45.343,
+   "dur": 9.335,
    "from": 0.0
-  },
-  {
-   "id": "cta1_follow",
-   "file": "voice/wav/36.wav",
-   "t": 48.39,
-   "dur": 4.118
   },
   {
    "id": "ch1_vo",
    "file": "voice/wav/03.wav",
-   "t": 52.808,
-   "dur": 4.262,
-   "from": 45.343
+   "t": 15.082,
+   "dur": 20.86,
+   "from": 9.335
+  },
+  {
+   "id": "ch1_vo",
+   "file": "voice/wav/03.wav",
+   "t": 38.442,
+   "dur": 7.515,
+   "from": 30.195
+  },
+  {
+   "id": "ch1_vo",
+   "file": "voice/wav/03.wav",
+   "t": 48.957,
+   "dur": 2.583,
+   "from": 37.71
+  },
+  {
+   "id": "cta1_follow",
+   "file": "voice/wav/36.wav",
+   "t": 51.84,
+   "dur": 4.118,
+   "from": 0.0
+  },
+  {
+   "id": "ch1_vo",
+   "file": "voice/wav/03.wav",
+   "t": 56.258,
+   "dur": 1.687,
+   "from": 40.293
   },
   {
    "id": "ch1_loop",
    "file": "voice/wav/04.wav",
-   "t": 57.42,
-   "dur": 3.626
+   "t": 61.795,
+   "dur": 3.626,
+   "from": 0.0
   },
   {
    "id": "closer1",
    "file": "voice/wav/28.wav",
-   "t": 61.396,
-   "dur": 2.84
+   "t": 65.771,
+   "dur": 2.84,
+   "from": 0.0
   }
  ],
  "source": "season3/engine.js via long01/out/part1.json"
