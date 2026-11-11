@@ -1,0 +1,121 @@
+{
+ "voice": "recorded",
+ "speaker": "a real person (credit pending her confirmation)",
+ "speed": null,
+ "lang": "en-us",
+ "style": "whisper",
+ "source": "voice-evelyn/evelyn-s3-full.m4a",
+ "made_by": "polish.py --style whisper on the whole recording, cut by word alignment (set/s3_cut.py)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "A pimple begins deep inside a pore, long before you see anything.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 6.88,
+   "sha256": "088ceba2babc29a1eb112c9b04fd80bde779f20215421b70e6759996d2c89557"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Usually, old cells drift up and out with the oil.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 5.2,
+   "sha256": "ff3db447edf39ef25641a1b2ad1c60e881e6143427c7998228c68b0472a496e7"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "But sometimes they cling together instead.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 4.16,
+   "sha256": "5fa4c0006aacae0de18e9b6c2cad90e89149ba701fea509f1840d133a9d072b7"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Oil and cells pack into a tiny plug… and the doorway starts to close.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 6.8,
+   "sha256": "61392558a85b5002f7cf454cd1823702ae0a8940af877cedaeff81fef69560f8"
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "If the top stays open, the plug can darken in the air. That's a blackhead, and that dark color isn't dirt.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 9.92,
+   "sha256": "98bbff5c5ac5ef19ac5f1a710305cab108cfa0a0f926483987d228c71b92ef01"
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "If skin closes over it, it stays pale.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 3.92,
+   "sha256": "daeb71fcbbb16bea6496bf59b87732e2348a8a95379aa30ffaafca276d3d2ab7"
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "Behind the plug, oil keeps arriving. With nowhere to go, the pore slowly swells.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 9.12,
+   "sha256": "f9b01a24488ae7886454db1ac3bb04d36870fb14613d16c6af7d9a6c108f7465"
+  },
+  {
+   "id": "vo08",
+   "beat": "whoa",
+   "text": "The microbes inside have a feast… and your body notices.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 4.96,
+   "sha256": "5c96d9748cf8528b2c4d07d6f6ac1c665d0d87c9bc00e616be4ebabd1b1ecbf8"
+  },
+  {
+   "id": "vo09",
+   "beat": "takeaway",
+   "text": "Immune cells gather, and the spot turns red, warm, and swollen.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 5.92,
+   "sha256": "cc6d2578825189acf78fef2d4fac3bd47f7a12a1d2b7ccf87a73a682e4a47324"
+  },
+  {
+   "id": "vo10",
+   "beat": "takeaway",
+   "text": "That's the pimple you finally see. A small, blocked doorway… and your body, working to clear it.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 9.52,
+   "sha256": "7992d42254cd93431e6220f7c4fe071edf1a6a9444961c3b4563252147e82051"
+  },
+  {
+   "id": "vo11",
+   "beat": "cta",
+   "text": "If you're feeling a little calmer, tap like and follow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 4.96,
+   "sha256": "32504b87c353e46b6c8f707095462214fa6130f3029ae1234c5972f6579599cb"
+  }
+ ]
+}

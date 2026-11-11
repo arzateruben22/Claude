@@ -1,0 +1,880 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "A pimple begins deep inside a pore, long before you see anything.",
+   "heard": "A pimple begins deep inside a pore, long before you see anything.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.2,
+     "end": 0.25,
+     "heard": true
+    },
+    {
+     "w": "pimple",
+     "start": 0.37,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "begins",
+     "start": 0.995,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "deep",
+     "start": 1.605,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 1.985,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.295,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "pore,",
+     "start": 2.565,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 3.775,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "before",
+     "start": 4.305,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 4.71,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "see",
+     "start": 5.225,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "anything.",
+     "start": 5.275,
+     "end": 6.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Usually, old cells drift up and out with the oil.",
+   "heard": "Usually old cells stripped up and out with the oil.",
+   "words": [
+    {
+     "w": "Usually,",
+     "start": 0.12,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "old",
+     "start": 1.32,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 1.57,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "drift",
+     "start": 2.16,
+     "end": 2.56,
+     "heard": false
+    },
+    {
+     "w": "up",
+     "start": 2.795,
+     "end": 2.845,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.91,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 3.295,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 3.4,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.575,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "oil.",
+     "start": 3.705,
+     "end": 4.88,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "But sometimes they cling together instead.",
+   "heard": "But sometimes they cling together instead.",
+   "words": [
+    {
+     "w": "But",
+     "start": 0.21,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "sometimes",
+     "start": 0.49,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 1.2,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "cling",
+     "start": 1.415,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "together",
+     "start": 1.97,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "instead.",
+     "start": 2.675,
+     "end": 3.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Oil and cells pack into a tiny plug… and the doorway starts to close.",
+   "heard": "Oil and cells pack into a tiny plug and the doorway starts to close.",
+   "words": [
+    {
+     "w": "Oil",
+     "start": 0.195,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.64,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 0.695,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "pack",
+     "start": 1.7,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 1.915,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.135,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 2.43,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "plug…",
+     "start": 2.865,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.76,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.885,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "doorway",
+     "start": 4.1,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 4.715,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.225,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "close.",
+     "start": 5.415,
+     "end": 6.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "If the top stays open, the plug can darken in the air. That's a blackhead, and that dark color isn't dirt.",
+   "heard": "If the top stays open, the blood can darken in the air. That's a blackhead, and that dark color isn't dirt.",
+   "words": [
+    {
+     "w": "If",
+     "start": 0.2,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.42,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "top",
+     "start": 0.575,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "stays",
+     "start": 0.865,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "open,",
+     "start": 1.54,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.39,
+     "end": 2.44,
+     "heard": true
+    },
+    {
+     "w": "plug",
+     "start": 2.52,
+     "end": 2.96,
+     "heard": false
+    },
+    {
+     "w": "can",
+     "start": 2.885,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "darken",
+     "start": 3.08,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 3.585,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.805,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "air.",
+     "start": 4.075,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "That's",
+     "start": 5.025,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.575,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "blackhead,",
+     "start": 5.76,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.675,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 6.89,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "dark",
+     "start": 7.35,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "color",
+     "start": 7.575,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "isn't",
+     "start": 8.08,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "dirt.",
+     "start": 8.72,
+     "end": 9.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "If skin closes over it, it stays pale.",
+   "heard": "If skin closes over it, it stays pale.",
+   "words": [
+    {
+     "w": "If",
+     "start": 0.145,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 0.52,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "closes",
+     "start": 0.865,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 1.395,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 1.665,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.96,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "stays",
+     "start": 2.115,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "pale.",
+     "start": 2.715,
+     "end": 3.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Behind the plug, oil keeps arriving. With nowhere to go, the pore slowly swells.",
+   "heard": "Behind the plug, oil keeps arriving. With nowhere to go, the pour slowly swells.",
+   "words": [
+    {
+     "w": "Behind",
+     "start": 0.185,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.655,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "plug,",
+     "start": 0.815,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "oil",
+     "start": 1.935,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 2.48,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "arriving.",
+     "start": 2.79,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "With",
+     "start": 4.465,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "nowhere",
+     "start": 4.725,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.47,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "go,",
+     "start": 5.765,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.41,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "pore",
+     "start": 6.62,
+     "end": 7.28,
+     "heard": false
+    },
+    {
+     "w": "slowly",
+     "start": 7.325,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "swells.",
+     "start": 7.65,
+     "end": 8.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "The microbes inside have a feast… and your body notices.",
+   "heard": "The microbes inside have a feast and your body notices.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.195,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "microbes",
+     "start": 0.28,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 1.01,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 1.535,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.59,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "feast…",
+     "start": 1.755,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.575,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.67,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "body",
+     "start": 2.94,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "notices.",
+     "start": 3.605,
+     "end": 4.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "text": "Immune cells gather, and the spot turns red, warm, and swollen.",
+   "heard": "Immune cells gather and the spot turns red, warm, and swollen.",
+   "words": [
+    {
+     "w": "Immune",
+     "start": 0.195,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 0.715,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "gather,",
+     "start": 1.075,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.63,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.72,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "spot",
+     "start": 2.095,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "turns",
+     "start": 2.52,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "red,",
+     "start": 2.795,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "warm,",
+     "start": 3.445,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.025,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "swollen.",
+     "start": 4.125,
+     "end": 5.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo10",
+   "text": "That's the pimple you finally see. A small, blocked doorway… and your body, working to clear it.",
+   "heard": "That's the pimple you finally see. A small black doorway and your body working to clear it.",
+   "words": [
+    {
+     "w": "That's",
+     "start": 0.175,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.405,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "pimple",
+     "start": 0.74,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.16,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "finally",
+     "start": 1.52,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "see.",
+     "start": 1.985,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 3.0,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "small,",
+     "start": 3.2,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "blocked",
+     "start": 3.965,
+     "end": 4.88,
+     "heard": false
+    },
+    {
+     "w": "doorway…",
+     "start": 5.02,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.185,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 6.335,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "body,",
+     "start": 6.615,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "working",
+     "start": 7.175,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.645,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "clear",
+     "start": 7.835,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 8.385,
+     "end": 8.88,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo11",
+   "text": "If you're feeling a little calmer, tap like and follow.",
+   "heard": "If you're feeling a little calmer, tap like and follow.",
+   "words": [
+    {
+     "w": "If",
+     "start": 0.135,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 0.26,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "feeling",
+     "start": 0.505,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.065,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 1.095,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "calmer,",
+     "start": 1.545,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 2.095,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.44,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.505,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 3.785,
+     "end": 4.64,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

@@ -5,9 +5,11 @@ Reads <ep>/cut.json: {"lines": [{"id","beat","text","a","b"}], "cta": {"follow":
 import json, sys, hashlib
 from pathlib import Path
 import numpy as np, soundfile as sf
-R = Path(__file__).resolve().parent.parent; ep = sys.argv[1]; d = R / ep; (d / "vo/yt").mkdir(parents=True, exist_ok=True)
-a_, sr = sf.read(R / "ep13/work/polish/after.wav", dtype="float32"); a_ = a_.mean(1) if a_.ndim > 1 else a_
-words = json.loads((R / "ep13/work/full_words.json").read_text()); cfg = json.loads((d / "cut.json").read_text())
+R = Path(__file__).resolve().parent.parent; ep = sys.argv[1]; d = R / ep
+V2 = len(sys.argv) > 2 and sys.argv[2] == "v2"     # v2: cut from the clarity.py-cleaned recording into <ep>v2/vo (cut.json is read from <ep>/)
+srcd = R / ep.removesuffix("v2") if V2 else d; d = R / (ep.removesuffix("v2") + "v2") if V2 else d; (d / "vo/yt").mkdir(parents=True, exist_ok=True)
+a_, sr = sf.read(R / ("ep13/work/clarity/clean.wav" if V2 else "ep13/work/polish/after.wav"), dtype="float32"); a_ = a_.mean(1) if a_.ndim > 1 else a_
+words = json.loads((R / "ep13/work/full_words.json").read_text()); cfg = json.loads((srcd / "cut.json").read_text())
 def span(a, b):
     ws = [w for w in words if w[1] >= a - 0.06 and w[2] <= b + 0.06]; assert ws, (a, b); nxt = [w[1] for w in words if w[1] >= ws[-1][2] - 1e-3 and w is not ws[-1] and w[1] > ws[-1][1]]; return ws[0][1], ws[-1][2], (nxt[0] if nxt else 1e9)
 def cut(s, e, path, nxt=1e9):

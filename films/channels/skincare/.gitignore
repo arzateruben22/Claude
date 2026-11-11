@@ -50,3 +50,12 @@ ep16y/out/
 ep16c/build/
 ep16/out/*-draft-plain.*
 ep16/out/*-final-plain.*
+ep16v2/bed.wav
+ep16v2/bed-yt.wav
+ep16v2/build/
+ep16v2/work/
+ep16v2/out/*.mp4
+ep16v2y/build/
+ep16v2y/work/
+ep16v2y/out/
+*.part*

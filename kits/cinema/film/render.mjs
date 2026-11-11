@@ -77,7 +77,7 @@ const USAGE = `usage: node kits/cinema/film/render.mjs --film <dir> [options]   
   --where                      print this run's build folder
   --delivery-crf N             with --assemble: x264 CRF of the delivery file (default 15; lower is finer)`;
 const SPEC = { film: 1, tier: 1, aspect: 1, fps: 1, from: 1, to: 1, times: 1, chunk: 1, build: 1, out: 1, name: 1, audio: 1, poster: 1,
-  "page-frames": 1, "frame-timeout": 1, "delivery-crf": 1, resume: 0, fresh: 0, "force-mixed": 0, "keep-png": 0, assemble: 0, plain: 0, cues: 0, where: 0, help: 0, "share-cpu": 0,
+  "page-frames": 1, "frame-timeout": 1, "delivery-crf": 1, speed: 1, size: 1, resume: 0, fresh: 0, "force-mixed": 0, "keep-png": 0, assemble: 0, plain: 0, cues: 0, where: 0, help: 0, "share-cpu": 0,
   "fallback-fonts": 0 };
 const A = {};
 {
@@ -125,11 +125,12 @@ const tier = A.tier || "final", aspect = A.aspect || "9x16";
 if (!TIERS[tier]) die(2, `--tier is final, draft or animatic, not "${tier}"`);
 if (!TIERS[tier].size[aspect]) die(2, `--aspect is 9x16 or 16x9, one per run, not "${aspect}"`);
 const deliveryFps = num("fps", FILM.fps || 30);
-const [W, H] = TIERS[tier].size[aspect];
+const [W, H] = A.size ? String(A.size).split('x').map(Number) : TIERS[tier].size[aspect];   // --size WxH: a native size beyond the tier's (e.g. 1440x2560)
+const speed = num("speed", 1);   // --speed S: sample the scene at t = n*S/fps (S=1.2 plays 20% faster; every rendered frame is used)
 const fps = TIERS[tier].fps || deliveryFps;
 const plain = TIERS[tier].plain || A.plain === true;     // no finish: the scene's own renderer, as written
 const kMax = plain ? null : TIERS[tier].kMax;
-const tierDir = tier + (A.plain && !TIERS[tier].plain ? "-plain" : "");
+const tierDir = tier + (A.plain && !TIERS[tier].plain ? "-plain" : "") + (A.size ? "-" + W : "");
 const buildRoot = path.resolve(A.build || path.join(filmDir, "build"));
 const base = path.join(buildRoot, tierDir, aspect);
 if (A.where) { console.log(base); process.exit(0); }
@@ -229,7 +230,7 @@ const info = { "page.mjs": sha256File(path.join(here, "page.mjs")), "render.mjs"
   fontsMissing: theme.missing.map((f) => rel(f.file)) };
 
 // ───────── frames, chunks and their records ─────────
-const total = Math.round(FILM.dur * fps);
+const total = Math.round(FILM.dur / speed * fps);
 const chunkSec = num("chunk", 10), chunkFrames = Math.round(chunkSec * fps);
 if (chunkFrames < 1 || Math.abs(chunkSec * fps - chunkFrames) > 1e-6) die(2, `--chunk ${chunkSec} s is ${chunkSec * fps} frames at ${fps} fps: it must be a whole number of frames`);
 const nChunks = Math.ceil(total / chunkFrames);
@@ -457,7 +458,7 @@ const startChunk = (k) => {
   chunksStarted.add(k);
 };
 const renderFrame = async (f) => {
-  const t = f / fps, k = chunkOf(f), t0 = Date.now(), Q = P;
+  const t = f * speed / fps, k = chunkOf(f), t0 = Date.now(), Q = P;
   const kind = await injectFault(f);
   const work = (async () => {
     if (kind === "hang") await Q.pg.evaluate(() => new Promise(() => {}));
@@ -510,7 +511,7 @@ const finishChunk = async (k) => {
 
 // ───────── the manifest: refuse to mix versions ─────────
 let manifest = null;
-const settingsNow = () => ({ scene: filmId, dur: FILM.dur, frames: total, width: W, height: H, fps, shutterFps: plain ? null : deliveryFps, kMax, plain, chunkSeconds: chunkSec, chunkFrames });
+const settingsNow = () => ({ scene: filmId, dur: FILM.dur, frames: total, width: W, height: H, speed, fps, shutterFps: plain ? null : deliveryFps, kMax, plain, chunkSeconds: chunkSec, chunkFrames });
 const gate = (work) => {
   const man = readJson(manifestFile, null), settings = settingsNow(), now = new Date().toISOString();
   if (!work.length || !man) {
