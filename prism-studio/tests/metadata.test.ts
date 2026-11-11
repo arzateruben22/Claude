@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildMetadata, captionBody, withFyp, clean, composePostText, cut, handOffText, LIMITS, parsePostingNotes, postingNotesFor, postingSheet, sourcesThread, type MetaInput } from "../src/domain/metadata";
+import { buildMetadata, captionBody, withFyp, clean, composePostText, cut, handOffText, hookQuestion, LIMITS, parsePostingNotes, postingNotesFor, postingSheet, sourcesThread, withoutCta, type MetaInput } from "../src/domain/metadata";
 
 const input: MetaInput = {
   channel: { name: "Rest Frame", label: "PHYSICS", tagline: "Everyday things, slowed down until the physics shows.", topic: "physics" },
@@ -258,5 +258,75 @@ describe("the sources thread", () => {
     expect(yt.startsWith(`TITLE\n${m.youtube.title}\n`)).toBe(true);
     expect(yt).toContain("PINNED COMMENT\nSources\n1. ");
     expect(handOffText({ title: "", caption: "Hi", hashtags: "", postingNotes: "" }, "instagram", "@x on instagram")).toBe("CAPTION\nHi\n\nPOST TO\n@x on instagram\n");
+  });
+});
+
+describe("Season 3: real voices, parts with a body, statement hooks", () => {
+  const part: MetaInput = {
+    ...input,
+    episode: { number: 13, title: "Watch a wing, slowed ten times", seriesTitle: "Season 3: One second, slowed down", seriesOrder: 1, seriesTotal: 8, season: 3 },
+    beats: [
+      { beat: "hook", vo: "Watch a wing, slowed ten times. {-}" },
+      { beat: "body", vo: "Ten times slower. {-} Its wings beat about fifty times a second. {c1} Quick pause: if that one got you, tap like and follow. {-} Okay, back to it. {-} But look at the fly by the cup. {-}" },
+      { beat: "tease", vo: "Part 1 of 8. {-} Full video on YouTube. {-}" },
+    ],
+    next: null,
+  };
+  it("a real voice: no synthetic-voice line anywhere, no AI label to turn on", () => {
+    const m = buildMetadata({ ...part, disclosures: { aiVoice: false, aiVisuals: false } });
+    for (const p of ["youtube", "tiktok", "instagram"] as const) {
+      expect(m[p].caption).not.toMatch(/synthetic|AI voice/i);
+      expect(m[p].pinnedComment).not.toMatch(/synthetic|AI/);
+      expect(m[p].aiLabel).toBe(false);
+      expect(postingNotesFor(m[p])).not.toMatch(/synthetic content label/);
+      expect(parsePostingNotes(postingNotesFor(m[p]))).toMatchObject({ aiLabel: false, captionsOff: true, other: [] });
+    }
+    expect(m.youtube.caption).toContain("Animation: code-rendered, no stock footage. Every number's source is listed in this description.");
+    expect(postingSheet({ ...part, disclosures: { aiVoice: false, aiVisuals: false } })).not.toMatch(/synthetic content label/);
+  });
+  it("a real voice over AI illustrations: the illustration line stays, the voice line goes", () => {
+    const m = buildMetadata({ ...part, disclosures: { aiVoice: false, aiVisuals: true } });
+    expect(m.youtube.caption).toContain("Illustrations: AI-generated, animated in code, no stock footage.");
+    expect(m.youtube.caption).not.toMatch(/Narration|synthetic/);
+    expect(m.instagram.caption).toContain("AI-generated illustrations, animated in code.");
+    expect(m.instagram.caption).not.toContain("AI voice");
+    expect(m.tiktok.pinnedComment).toContain("AI-generated illustrations, animated in code.");
+    expect(m.youtube.aiLabel).toBe(true);
+    expect(postingNotesFor(m.youtube)).toMatch(/synthetic content label/);
+  });
+  it("a synthetic voice keeps exactly today's wording", () => {
+    const m = buildMetadata({ ...input, disclosures: { aiVoice: true, aiVisuals: true } });
+    expect(m.youtube.caption).toContain("Narration: synthetic voice (AI). Illustrations: AI-generated, animated in code, no stock footage.");
+    expect(m.instagram.caption).toContain("AI voice and AI-generated illustrations.");
+    expect(m.tiktok.pinnedComment).toContain("Synthetic (AI) voice; code-rendered animation.");
+    expect(postingNotesFor(m.youtube).startsWith("Turn on the platform's AI-generated/synthetic content label.")).toBe(true);
+    // a PlatformMeta without the flag (written before it existed) still asks for the label
+    expect(postingNotesFor({ ...m.youtube, aiLabel: undefined }).startsWith("Turn on the platform's AI-generated/synthetic content label.")).toBe(true);
+  });
+  it("a part with hook, body and tease: the body is the posting text, without the like/follow moment", () => {
+    const m = buildMetadata({ ...part, disclosures: { aiVoice: true, aiVisuals: false } });
+    expect(m.youtube.caption).toContain("Watch a wing, slowed ten times.\n\nTen times slower. Its wings beat about fifty times a second. But look at the fly by the cup.");
+    expect(m.youtube.caption).not.toMatch(/tap like|back to it|Part 1 of 8\./);
+    expect(m.youtube.caption).toContain("Series: Season 3: One second, slowed down, part 1 of 8.");
+    expect(m.youtube.warnings).not.toContain("no hook line found in the script");
+    expect(m.tiktok.caption.startsWith("Watch a wing, slowed ten times. Ten times slower.")).toBe(true);
+    // Instagram: the body's first sentence once, even when it is also the one-liner
+    expect(m.instagram.caption.split("Ten times slower.").length - 1).toBe(1);
+    expect(m.youtube.title).toBe("Watch a wing, slowed ten times | Rest Frame S3 · Ep 1");
+    // a why beat still wins over a body (Seasons 1 and 2 unchanged)
+    expect(buildMetadata({ ...input, beats: [...input.beats, { beat: "body", vo: "Not this." }] })).toEqual(buildMetadata(input));
+  });
+  it("drops the like/follow line with its short lead-in or return line, nothing else", () => {
+    expect(withoutCta("A fact here. Hang on. If you're enjoying this, tap like and follow. Okay, back to the math. The next fact.")).toBe("A fact here. The next fact.");
+    expect(withoutCta("Still with me? Tap like and subscribe. There's plenty more where that came from.")).toBe("There's plenty more where that came from.");
+    expect(withoutCta("Nothing to drop here. Follow the light.")).toBe("Nothing to drop here. Follow the light.");
+    expect(withoutCta("")).toBe("");
+  });
+  it("the hook question: a question up to its mark, a statement as it is", () => {
+    expect(hookQuestion("Which ball lands first? One thrown sideways, one just dropped.")).toBe("Which ball lands first?");
+    expect(hookQuestion("Watch a wing, slowed ten times.")).toBe("Watch a wing, slowed ten times.");
+    expect(hookQuestion("Watch a wing, slowed ten times. Then watch a fly.")).toBe("Watch a wing, slowed ten times.");
+    expect(hookQuestion("Drop a slinky. Why does the bottom wait? It does.")).toBe("Drop a slinky. Why does the bottom wait?");
+    expect(hookQuestion("")).toBe("");
   });
 });

@@ -37,12 +37,28 @@ qualified. Long-form watch hours are also what unlock the Partner Program (short
 ## Files (so Prism imports and links everything)
 
 - Long film: `films/channels/<channel>/compilations/<film-slug>/` with `<film-slug>-16x9.mp4`, the 1440p version,
-  `description.md` (title line and chapter list), `packaging.json` and the thumbnail. Prism registers it as a long
-  video ("lesson").
-- Parts: the next free `films/channels/<channel>/epNN/` folders, one per part, each with script.md, claims.json,
-  film.json, `out/` (the 9:16 final, cover and packaging.json) as for any episode.
-- Prism links parts to the film only if each `description.md` chapter title matches a part's title exactly, so
-  keep them identical.
+  `chapters.txt`, `description.md` (title line first), `packaging.json`, `thumbnail.jpg` and `qa.json`. Prism
+  registers it as a long video ("lesson"). The folder name is its key: never rename the folder.
+- Parts: the season's own `epNN` folders, one per part. Season 3 is `ep13`-`ep20` (Skin Sense: `ep13`-`ep18`); Season
+  4 starts at `ep21` (Skin Sense: `ep19`). Prism imports nothing from a folder outside its season. Each part has
+  script.md, claims.json, film.json and `out/` (the 9:16 final, cover and packaging.json), as for any episode.
+- **Parts link to the film through `chapters.txt` only.** Each line is `M:SS Title`, the first at `0:00`. Prism links
+  the parts only when every line's title equals one part's title exactly (capital letters, `*stars*` and extra spaces
+  aside), no part twice, and none already in another long video. If one line fails, nothing links. So `chapters.txt`
+  has exactly one line per part, in order, and nothing else: put the cold open inside part 1's line at `0:00` and the
+  close inside part 8's line, with no "Intro" or "Finale" line. `description.md` links nothing; Prism reads only its
+  first line, as the long video's title.
+- A part's title in Prism is its `film.json` `title.title` (stars removed). When that is empty, Prism uses the
+  season's placeholder title from `prism-studio/scripts/import-episodes.ts`. The packaging winner is never the part's
+  title (it is only the YouTube title). So write each chapter title into its part's `film.json` `title.title`.
+- `film.json` `disclosures`: `aiVoice: false` for a real person's recording (the owner, Evelyn), `true` for any
+  synthetic voice, a stand-in or a clone included; `aiVisuals: true` when an AI-made image appears. With no `aiVoice`,
+  Prism labels the narration synthetic.
+- `script.md`: Prism reads `## <beat> {...}` headings, each with a `vo:` line (a part: `hook`, `body`, `tease`). The
+  hook's first sentence is the episode's hook line, and the body is its posting text.
+- The order of pushes doesn't matter. A film imported before its parts, or with a chapter line fixed later, links on
+  the next import as long as none of its parts are linked yet. A corrected `chapters.txt` or `description.md` with the
+  same video is picked up too, but a description the owner edited in Prism is kept.
 - Push each with push-one.sh (`compilations/<film-slug>` or `epNN`), then POST the import.
 
 ## Voice (owner, 10 Nov 2026: one recording-script format for every future season)

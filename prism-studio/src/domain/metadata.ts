@@ -35,6 +35,8 @@ export interface PlatformMeta {
    *  empty when they do. Each is within the platform's comment limit. */
   replies: string[];
   warnings: string[];
+  /** whether the platform's AI / synthetic content label goes on (a synthetic voice or AI-made pictures); absent = on */
+  aiLabel?: boolean;
 }
 
 export const LIMITS = {
@@ -73,6 +75,26 @@ const firstSentence = (s: string) => sentences(s)[0] ?? "";
 const firstStatement = (s: string) => sentences(s).find((x) => !/\?\s*$/.test(x)) ?? "";
 /** A beat's narration as written copy: markup removed, numbers in written form. */
 const beat = (beats: MetaInput["beats"], ...names: string[]) => { for (const n of names) { const b = beats.find((x) => x.beat === n); if (b && clean(b.vo)) return writtenForms(clean(b.vo)); } return ""; };
+
+/** The episode's hook as its "question" line: up to and including the first question mark when the hook asks one, else
+ *  its first sentence exactly as it is (a statement such as "Watch a wing, slowed ten times." never gains a "?"). */
+export function hookQuestion(hookLine: string): string {
+  const s = clean(hookLine);
+  if (s.includes("?")) return s.split("?")[0] ? `${s.split("?")[0]}?` : "";
+  return s.split(/(?<=[.!…])\s+/)[0] ?? "";
+}
+
+/** A like/follow request ("tap like and follow", "like and subscribe"; films/channels/CTA.md). */
+const CTA = /\blike and (?:follow|subscribe)\b/i;
+/** Narration as posting text, without the like/follow moment: the sentence that asks for it is dropped, with a short
+ *  lead-in or return line right next to it ("Hang on.", "Okay, back to it."; five words at most). */
+export function withoutCta(text: string): string {
+  const xs = sentences(text), drop = new Set<number>();
+  const short = (i: number) => i >= 0 && i < xs.length && !drop.has(i) && xs[i].split(/\s+/).length <= 5;
+  xs.forEach((x, i) => { if (CTA.test(x)) drop.add(i); });
+  for (const i of [...drop]) { if (short(i - 1)) drop.add(i - 1); if (short(i + 1)) drop.add(i + 1); }
+  return xs.filter((_, i) => !drop.has(i)).join(" ");
+}
 
 /** Cut at a word boundary with an ellipsis, never mid-word, never over `max`. */
 export function cut(s: string, max: number): string {
@@ -131,16 +153,18 @@ const uniqueSources = (sources: MetaInput["sources"]) => {
 export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> {
   const ch = channelName(input.channel), topic = input.channel.topic, ep = input.episode;
   const hook = beat(input.beats, "hook");
-  const why = beat(input.beats, "why");
+  // a Season 3 part has hook, body and tease (no why or takeaway): its body carries the explanation, without the
+  // like/follow moment, so the posting text is more than the two-second hook
+  const why = beat(input.beats, "why") || withoutCta(beat(input.beats, "body"));
   const takeaway = beat(input.beats, "takeaway", "whoa");
   const question = hook.includes("?") ? hook.slice(0, hook.indexOf("?") + 1) : hook;
   const oneLiner = firstStatement(takeaway) || firstStatement(why);
   const srcs = uniqueSources(input.sources);
   const series = ep.seriesTitle ? `${ep.seriesTitle}${ep.seriesOrder ? `, part ${ep.seriesOrder}${ep.seriesTotal ? ` of ${ep.seriesTotal}` : ""}` : ""}` : "";
   const next = input.next ? clean(input.next).replace(/^next:\s*/i, "") : "";
-  const ai = input.disclosures.aiVoice || input.disclosures.aiVisuals
-    ? `Narration: synthetic voice (AI)${input.disclosures.aiVisuals ? ". Illustrations: AI-generated, animated in code" : ". Animation: code-rendered"}, no stock footage. Every number's source is listed in this description.`
-    : "Animation: code-rendered, no stock footage. Every number's source is listed in this description.";
+  // a real person's voice (disclosures.aiVoice false) gets no narration line; AI-made pictures are always named
+  const { aiVoice, aiVisuals } = input.disclosures, aiLabel = aiVoice || aiVisuals;
+  const ai = `${aiVoice ? "Narration: synthetic voice (AI). " : ""}${aiVisuals ? "Illustrations: AI-generated, animated in code" : "Animation: code-rendered"}, no stock footage. Every number's source is listed in this description.`;
   const sourceLines = srcs.map((s, i) => `${i + 1}. ${clean(s.claim)} — ${sourceLabel(s)}${s.url ? `: ${s.url}` : ""}`);
   const sourceShort = srcs.map(sourceLabel).filter((v, i, a) => a.indexOf(v) === i);
   /** the numbered source lines as a thread of comments within `limit` ("Sources" / "Sources 1/2", one source per line) */
@@ -188,7 +212,7 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   if (ttCaption.length > LIMITS.tiktok.caption) { ttCaption = cut(ttCaption, LIMITS.tiktok.caption); tw.push("caption cut to 2,200 characters"); }
   // the publishers, "; "-separated; the first comment also carries the production note. Too many for 150 characters: a
   // thread ("Sources 1/2: OpenStax; NASA. Synthetic (AI) voice; …" then "Sources 2/2: ESA; IAU.")
-  const ttNote = input.disclosures.aiVoice ? "Synthetic (AI) voice; code-rendered animation." : "Code-rendered animation.";
+  const ttNote = aiVoice ? "Synthetic (AI) voice; code-rendered animation." : aiVisuals ? "AI-generated illustrations, animated in code." : "Code-rendered animation.";
   const tt = sourceShort.length
     ? sourcesThread(sourceShort, { limit: LIMITS.tiktok.comment, sep: "; ", head: (i, n) => (n === 1 ? "Sources: " : `Sources ${i}/${n}: `), tail: (i) => (i === 1 ? `. ${ttNote}` : ".") })
     : { comments: [ttNote], oversize: [] as number[] };   // no sources: the production note is still the pinned comment
@@ -199,8 +223,8 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
   const iw: string[] = [];
   const igTags = withFyp(HASHTAG_SETS[topic].instagram).slice(0, LIMITS.instagram.hashtags);
   // a short AI line in the caption as well as Instagram's own AI label (the owner's call, 9 Nov 2026)
-  const igNote = input.disclosures.aiVisuals ? "AI voice and AI-generated illustrations." : input.disclosures.aiVoice ? "AI voice; animation made in code." : "Animation made in code.";
-  const igText = [hook, [why ? firstSentence(why) : "", oneLiner].filter(Boolean).join(" "), series ? `${series}.` : "", srcs.length ? `Sources in the first comment. ${igNote}` : igNote, HEALTH_NOTE[topic] ?? ""].filter(Boolean).join("\n\n");
+  const igNote = aiVisuals ? (aiVoice ? "AI voice and AI-generated illustrations." : "AI-generated illustrations, animated in code.") : aiVoice ? "AI voice; animation made in code." : "Animation made in code.";
+  const igText = [hook, [why ? firstSentence(why) : "", oneLiner].filter((x, i, a) => x && a.indexOf(x) === i).join(" "), series ? `${series}.` : "", srcs.length ? `Sources in the first comment. ${igNote}` : igNote, HEALTH_NOTE[topic] ?? ""].filter(Boolean).join("\n\n");
   let igCaption = `${igText}\n\n${igTags.join(" ")}`;
   if (igCaption.length > LIMITS.instagram.caption) { igCaption = `${cut(igText, LIMITS.instagram.caption - igTags.join(" ").length - 2)}\n\n${igTags.join(" ")}`; iw.push("caption cut to 2,200 characters"); }
   const igThread = listThread(LIMITS.instagram.comment, "Instagram", iw);
@@ -208,20 +232,25 @@ export function buildMetadata(input: MetaInput): Record<Platform, PlatformMeta> 
 
   const [ytFirst = "", ...ytReplies] = ytThread, [ttFirst = "", ...ttReplies] = tt.comments, [igFirst = "", ...igReplies] = igThread;
   return {
-    youtube: { title, caption: description, hashtags: ytTags.join(" "), tags, pinnedComment: ytFirst, replies: ytReplies, warnings: yw },
-    tiktok: { title: `${ep.title} (${ch} ${epLabel(ep)})`, caption: ttCaption, hashtags: ttTags, tags: [], pinnedComment: ttFirst, replies: ttReplies, warnings: tw },
-    instagram: { title: `${ep.title} (${ch} ${epLabel(ep)})`, caption: igCaption, hashtags: igTags.join(" "), tags: [], pinnedComment: igFirst, replies: igReplies, warnings: iw },
+    youtube: { title, caption: description, hashtags: ytTags.join(" "), tags, pinnedComment: ytFirst, replies: ytReplies, warnings: yw, aiLabel },
+    tiktok: { title: `${ep.title} (${ch} ${epLabel(ep)})`, caption: ttCaption, hashtags: ttTags, tags: [], pinnedComment: ttFirst, replies: ttReplies, warnings: tw, aiLabel },
+    instagram: { title: `${ep.title} (${ch} ${epLabel(ep)})`, caption: igCaption, hashtags: igTags.join(" "), tags: [], pinnedComment: igFirst, replies: igReplies, warnings: iw, aiLabel },
   };
 }
 
 /** The first comment's name on each platform: YouTube and TikTok pin it; on Instagram it is simply the first. */
 export const FIRST_COMMENT: Record<Platform, string> = { youtube: "Pinned comment", tiktok: "Pinned comment", instagram: "First comment" };
 
+/** The posting notes' first block: the AI label (only when the episode has a synthetic voice or AI-made pictures) and
+ *  the burned-in captions. */
+const LABEL_NOTE = "Turn on the platform's AI-generated/synthetic content label. Captions are burned in: leave auto-captions off.";
+const CAPTIONS_NOTE = "Captions are burned in: leave auto-captions off.";
+
 /** An export's posting notes, as regenerateExports and the episode import store them: the label instructions, the
  *  first/pinned comment, its replies, the YouTube tags and anything to check, as blocks separated by a blank line
- *  (parsePostingNotes reads them back). */
+ *  (parsePostingNotes reads them back). No AI label instruction when nothing in the episode is AI-made (`aiLabel` false). */
 export function postingNotesFor(m: PlatformMeta): string {
-  return ["Turn on the platform's AI-generated/synthetic content label. Captions are burned in: leave auto-captions off.",
+  return [m.aiLabel === false ? CAPTIONS_NOTE : LABEL_NOTE,
     m.pinnedComment ? `Pinned/first comment:\n${m.pinnedComment}` : "", ...(m.replies ?? []).map((r, k) => `Reply ${k + 1}:\n${r}`),
     m.tags.length ? `Tags: ${m.tags.join(", ")}` : "", m.warnings.length ? `Check: ${m.warnings.join("; ")}` : ""].filter(Boolean).join("\n\n");
 }
@@ -239,7 +268,7 @@ export function postingSheet(input: MetaInput, meta = buildMetadata(input)): str
   };
   return [
     `# Posting sheet: ${ch} ${epLabel(input.episode)}, "${input.episode.title}"`, "",
-    `Generated from the script and claims. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).`, "",
+    `Generated from the script and claims.${input.disclosures.aiVoice || input.disclosures.aiVisuals ? " Turn on each platform's AI / synthetic content label." : ""} Captions are burned in: leave auto-captions off. Post as a vertical video (Shorts / TikTok / Reel).`, "",
     block("youtube", "YouTube Shorts", ["**Title**", "", meta.youtube.title, "", "**Description**", "", "```", meta.youtube.caption, "```", "", `**Tags**: ${meta.youtube.tags.join(", ")}`, "", "**Captions**: upload the .srt (English).", "", ...thread("youtube", "10,000")]),
     block("tiktok", "TikTok", ["**Caption**", "", "```", meta.tiktok.caption, "```", "", ...thread("tiktok", "150")]),
     block("instagram", "Instagram Reel (shared account)", ["**Caption**", "", "```", meta.instagram.caption, "```", "", ...thread("instagram", "2,200")]),
@@ -280,6 +309,7 @@ export function parsePostingNotes(notes: string | null | undefined) {
     else if (/^Tags:/i.test(b)) out.tags = b.replace(/^Tags:\s*/i, "").trim();
     else if (/^Check:/i.test(b)) out.checks.push(...b.replace(/^Check:\s*/i, "").split(/;\s*/).filter(Boolean));
     else if (/synthetic content label/i.test(b) && b.length < 200) { out.aiLabel = true; out.captionsOff = /auto-captions off/i.test(b); }
+    else if (b === CAPTIONS_NOTE) out.captionsOff = true;
     else out.other.push(b);
   }
   out.replies = replies.sort((a, b) => a[0] - b[0]).map(([, t]) => t);

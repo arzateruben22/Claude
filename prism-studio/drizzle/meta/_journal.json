@@ -71,6 +71,13 @@
       "when": 1794271313565,
       "tag": "0009_packaging",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794395138130,
+      "tag": "0010_lesson_imported_description",
+      "breakpoints": true
     }
   ]
 }
