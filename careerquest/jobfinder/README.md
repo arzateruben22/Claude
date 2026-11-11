@@ -12,8 +12,20 @@ links, honest gap notes, cover-letter drafts and an "applied" tracker.
 | `../src/lib/jobfinder/score.ts` | Pure ranking engine: 0–100 fit score with a per-factor breakdown, list assignment (best fit / stretch / ruled out) and the reason for every exclusion. Tests: `tests/unit/jobfinder-score.test.ts`. |
 | `../scripts/jobfinder-build.ts` | Reads the sweep's journals, scores and selects, writes `data/jobs/<date>.json` and renders the page from `page-template.html`. |
 | `page-template.html` | The published page. Job data is embedded; per-person status, ticks and letter edits are stored privately (artifact `db` + `user` capabilities, with a local fallback). |
-| `latest.html` | The last built page, as published. |
+| `latest.html` | The last built page, as published at https://claude.ai/artifact/F1YK2dnRzYcaE7j5ke3xyR (capabilities: `db`, `user`, `sample`). |
 | `../data/jobs/<date>.json` | The ranked result of each run, including what was ruled out and why. |
+
+## What the page lets the applicant do
+
+- Enter name, city, phone and email once; they replace the matching [placeholders] in every draft.
+- Paste a résumé. "Tailor to my résumé" and "Suggest résumé changes for this job" ask Claude, on the
+  viewer's own account, to rewrite using only facts in that résumé (the prompt forbids invented
+  experience, credentials or dates). The résumé is sent only when one of those buttons is pressed.
+- Tick the posted requirements that are true, mark each job To do / Applied / Skip, and copy a CSV
+  that the CareerQuest tracker imports. State lives in the viewer's private `data/users/<id>/jobfinder`
+  document, so it follows them across devices, with browser storage as the fallback.
+- Checked locally with a stand-in runtime (`db`, `user`, `sample`): sync, restore on a second device,
+  no write on load, tailoring hidden when unavailable. The live Claude call itself was not exercised.
 
 ## Rules the engine enforces
 
