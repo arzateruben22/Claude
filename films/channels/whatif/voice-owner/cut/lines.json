@@ -1,0 +1,473 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "speed": null,
+ "lang": "en-us",
+ "style": "normal",
+ "source": "pl-s3-parts-closers-cta.m4a",
+ "source_sha256": "44ce6924a429a7bcf09ce9b2ee7bd5995844df2c5546c8c48c3925aeddd8b384",
+ "chain": [
+  "volume=24.20dB",
+  "highpass=f=80:p=2",
+  "denoise(room tone profile, at most -15 dB per bin)",
+  "bass=g=1.5:f=140:w=0.7",
+  "equalizer=f=320:t=q:w=1.1:g=-3",
+  "equalizer=f=3200:t=q:w=0.9:g=2.5",
+  "highshelf=f=9000:g=3.0",
+  "acompressor=threshold=-24dB:ratio=2:attack=15:release=200:knee=6",
+  "acompressor=threshold=-14dB:ratio=4:attack=2:release=60:knee=3",
+  "agate=threshold=0.001577:ratio=2.5:range=0.125:attack=5:release=200:knee=3",
+  "deess(5-10 kHz, -6.0 dB, max 8.0 dB)"
+ ],
+ "made_by": "films/channels/whatif/voice-owner/cut.py (word-aligned cuts, kits/cinema/voice/polish.py chain)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "p1-open",
+   "text": "What if Earth spun faster, and couldn't stop?",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 2.32,
+   "sha256": "e19e8bc46ddc13ff14427becddfcf20c9affcf7b73a59d37b8b84fc9d6f506d9",
+   "take_of": 1,
+   "source_s": [
+    3.52,
+    6.75
+   ],
+   "match": 0.75
+  },
+  {
+   "id": "vo02",
+   "beat": "p1-cliff",
+   "text": "And the spin has only just begun to speed up.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 2.26,
+   "sha256": "3aca2ed631afdab829ada5716dd46290696656e5f0bf8eaa6377565c2cc2f7dd",
+   "take_of": 1,
+   "source_s": [
+    10.6,
+    13.76
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo03",
+   "beat": "p2-open",
+   "text": "The day is now twelve hours long.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 3.05,
+   "sha256": "389a90682c24c0b512d27b0024cd2d702c2801943ca98292eebeab7915c38401",
+   "take_of": 2,
+   "source_s": [
+    14.66,
+    17.78
+   ],
+   "match": 0.83
+  },
+  {
+   "id": "vo04",
+   "beat": "p2-cliff",
+   "text": "And then the wind starts to blow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 1.83,
+   "sha256": "103d38c4261304ab9f4ddf2837a88bfaa5869a87545afafce7a1f0a13aa12a3a",
+   "take_of": 2,
+   "source_s": [
+    17.77,
+    20.3
+   ],
+   "match": 0.92
+  },
+  {
+   "id": "vo05",
+   "beat": "p3-open",
+   "text": "The air can't keep up with the ground.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 2.65,
+   "sha256": "ea977d4a95593f36b40daed6666896f28a5431144218922e22304d54a23df96e",
+   "take_of": 1,
+   "source_s": [
+    20.62,
+    23.37
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo06",
+   "beat": "p3-cliff",
+   "text": "And then the oceans start to move.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 2.03,
+   "sha256": "ed6267eccba88081866725a076dc3c93e678f21fc1cf95fe3fee664f412826dd",
+   "take_of": 1,
+   "source_s": [
+    23.7,
+    26.65
+   ],
+   "match": 0.71
+  },
+  {
+   "id": "vo07",
+   "beat": "p4-open",
+   "text": "The oceans are sliding toward the equator.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 3.41,
+   "sha256": "e6f984b6e22bbfe5c6a55aad8c0792bb218a11b460afdf69238d7140a951ef16",
+   "take_of": 1,
+   "source_s": [
+    26.65,
+    30.1
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo08",
+   "beat": "p4-cliff",
+   "text": "And the weather is about to change completely.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 2.04,
+   "sha256": "329584667e82b18664ed67dff99128361bf1fdf28cf6895fc3720739cc8ccfbf",
+   "take_of": 2,
+   "source_s": [
+    30.14,
+    32.94
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo09",
+   "beat": "p5-open",
+   "text": "Storms are turning faster, and the days are six hours long.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 2.73,
+   "sha256": "316899d12c33ad0aee9da76ea7a50802465b17a16dd45f68ccc8f4b1732b8628",
+   "take_of": 1,
+   "source_s": [
+    33.39,
+    37.15
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo10",
+   "beat": "p5-cliff",
+   "text": "And the calendar is about to break.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 1.82,
+   "sha256": "17bee6b62ff292f581a74f9b8a5b65f6f1669f7b711ae9b8be43b6936d551450",
+   "take_of": 1,
+   "source_s": [
+    37.15,
+    40.3
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo11",
+   "beat": "p6-open",
+   "text": "Now a year has more than a thousand days in it.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 2.34,
+   "sha256": "f35a13f81cf97611feb9ac71e85f2b02876eb39326e45283482b77e1a6217d1a",
+   "take_of": 1,
+   "source_s": [
+    40.3,
+    43.83
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo12",
+   "beat": "p6-cliff",
+   "text": "And the days keep getting shorter.",
+   "stars": [],
+   "phonemes": null,
+   "file": "12.wav",
+   "dur": 1.94,
+   "sha256": "bf14cace3c1b7f27746283e15ea83eb38bf1f95e7f401a1046606af1f7843023",
+   "take_of": 1,
+   "source_s": [
+    43.83,
+    46.35
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo13",
+   "beat": "p7-open",
+   "text": "Three hours, then two: a day is as long as a movie.",
+   "stars": [],
+   "phonemes": null,
+   "file": "13.wav",
+   "dur": 4.67,
+   "sha256": "5865ff2324b8c8fd34be9522df66a6133b7ff26ffdce2e8506342a6bb7c39786",
+   "take_of": 1,
+   "source_s": [
+    47.05,
+    51.97
+   ],
+   "match": 0.92
+  },
+  {
+   "id": "vo14",
+   "beat": "p7-cliff",
+   "text": "And at an hour and a half, you are almost weightless.",
+   "stars": [],
+   "phonemes": null,
+   "file": "14.wav",
+   "dur": 2.91,
+   "sha256": "27fbe3e3548e18c29ff3aac0a5e40d8fe5c96ccb4a4a9c7383b24d020db2cbd5",
+   "take_of": 1,
+   "source_s": [
+    52.86,
+    56.26
+   ],
+   "match": 0.95
+  },
+  {
+   "id": "vo15",
+   "beat": "p8-open",
+   "text": "A day now lasts about an hour and a half.",
+   "stars": [],
+   "phonemes": null,
+   "file": "15.wav",
+   "dur": 2.1,
+   "sha256": "a1e4591cb68c06510d7793e33cf441b03a6bcb5bdd62c50d1ca9bb989ba09b99",
+   "take_of": 1,
+   "source_s": [
+    56.72,
+    59.55
+   ],
+   "match": 0.89
+  },
+  {
+   "id": "vo16",
+   "beat": "p8-cliff",
+   "text": "One more nudge, and something changes completely.",
+   "stars": [],
+   "phonemes": null,
+   "file": "16.wav",
+   "dur": 3.26,
+   "sha256": "59658ef36f874b09e48607e65af1640b1a2a3c5f361b71af9ef44d878da33ab3",
+   "take_of": 1,
+   "source_s": [
+    59.55,
+    63.11
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo17",
+   "beat": "closer1",
+   "text": "Part one of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "17.wav",
+   "dur": 3.38,
+   "sha256": "ca18ced85ab2581bf8e28f017b794cfd7487f299b2135a6a9ae4fa07344975c6",
+   "take_of": 1,
+   "source_s": [
+    64.91,
+    68.34
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo18",
+   "beat": "closer2",
+   "text": "Part two of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "18.wav",
+   "dur": 2.15,
+   "sha256": "545f241d84142cc8e81420e32090c92caeff258fa85ee4fe21d2c75e67533e19",
+   "take_of": 1,
+   "source_s": [
+    68.61,
+    71.69
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo19",
+   "beat": "closer3",
+   "text": "Part three of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "19.wav",
+   "dur": 2.2,
+   "sha256": "ae94bd3a7c4512bb053a5ec73959bc63f3b46fe2802a53a113a90d422376c986",
+   "take_of": 1,
+   "source_s": [
+    72.51,
+    76.08
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo20",
+   "beat": "closer4",
+   "text": "Part four of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "20.wav",
+   "dur": 2.58,
+   "sha256": "026ffec06fdb58774396ae888222f3169f165d28069eeb575575a7188db4cc5a",
+   "take_of": 1,
+   "source_s": [
+    76.61,
+    79.81
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo21",
+   "beat": "closer5",
+   "text": "Part five of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "21.wav",
+   "dur": 2.87,
+   "sha256": "def008ec4542c0abe152c95a5a93d0492a7d499feed99988f5123a1a81d58bae",
+   "take_of": 1,
+   "source_s": [
+    80.23,
+    83.81
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo22",
+   "beat": "closer6",
+   "text": "Part six of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "22.wav",
+   "dur": 3.1,
+   "sha256": "91270d23328cff332021426b5df189fa757696e1d1263f18a64ea5d46470f220",
+   "take_of": 1,
+   "source_s": [
+    83.87,
+    87.34
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo23",
+   "beat": "closer7",
+   "text": "Part seven of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "23.wav",
+   "dur": 2.63,
+   "sha256": "433ce51c5188548d8ffa00eaffa1a234e61fea2a62de968e1a3043aee17424e3",
+   "take_of": 1,
+   "source_s": [
+    87.65,
+    90.59
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo24",
+   "beat": "closer8",
+   "text": "Part eight of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "24.wav",
+   "dur": 2.07,
+   "sha256": "6d27151a6274d07a43b771fd2197c4dcadafc296ef58e3bffb34c499c5818997",
+   "take_of": 1,
+   "source_s": [
+    91.42,
+    94.17
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo25",
+   "beat": "cta-hang-follow",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "stars": [],
+   "phonemes": null,
+   "file": "25.wav",
+   "dur": 4.03,
+   "sha256": "5ed901cc5a87bb8e232cd6275c084613b3a298c16aa12569c84f30098ae01bba",
+   "take_of": 1,
+   "source_s": [
+    96.99,
+    101.26
+   ],
+   "match": 0.97
+  },
+  {
+   "id": "vo26",
+   "beat": "cta-hang-subscribe",
+   "text": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math.",
+   "stars": [],
+   "phonemes": null,
+   "file": "26.wav",
+   "dur": 4.11,
+   "sha256": "dd1f9584430ab1b517b71e957527542736a66bcc0d01a190cc210ecb6068a4db",
+   "take_of": 1,
+   "source_s": [
+    108.79,
+    113.22
+   ],
+   "match": 0.97
+  },
+  {
+   "id": "vo27",
+   "beat": "cta-break-follow",
+   "text": "Quick break: like and follow. Then let's see how bad this gets.",
+   "stars": [],
+   "phonemes": null,
+   "file": "27.wav",
+   "dur": 3.04,
+   "sha256": "94c58b0dbe3cb24374aa07321610b6ea7629ddb6f847a758e0a8807f659cf765",
+   "take_of": 1,
+   "source_s": [
+    114.2,
+    118.08
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo28",
+   "beat": "cta-break-subscribe",
+   "text": "Quick break: like and subscribe. Then let's see how bad this gets.",
+   "stars": [],
+   "phonemes": null,
+   "file": "28.wav",
+   "dur": 3.29,
+   "sha256": "29455fc02d46967ba87a933cb32150f49db161ab810817063c2d7e49a7fd93da",
+   "take_of": 1,
+   "source_s": [
+    121.53,
+    125.8
+   ],
+   "match": 1.0
+  }
+ ]
+}
