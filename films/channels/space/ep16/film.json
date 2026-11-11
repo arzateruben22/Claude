@@ -1,0 +1,246 @@
+{
+ "id": "one-more-orbit-s3-part4",
+ "title": {
+  "title": "The Night Gets Too Bright",
+  "series": "One More Orbit · Season 3 · Part 4 of 8"
+ },
+ "disclosures": {
+  "aiVoice": true,
+  "aiVisuals": true
+ },
+ "dur": 64.534,
+ "fps": 30,
+ "captions": [
+  {
+   "t0": 0.17,
+   "t1": 2.24,
+   "text": "The night is getting too bright.",
+   "line": "ch4_hook"
+  },
+  {
+   "t0": 2.386,
+   "t1": 5.181,
+   "text": "One hundred fifty thousand kilometers.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 5.201,
+   "t1": 7.916,
+   "text": "The Moon looks about two and a half times wider.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 7.936,
+   "t1": 9.216,
+   "text": "Look around you.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 9.236,
+   "t1": 10.871,
+   "text": "The beach is brighter.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 10.891,
+   "t1": 13.042,
+   "text": "Moonlight falls off with the square",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 13.062,
+   "t1": 15.296,
+   "text": "of the distance, for the same phase.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 15.316,
+   "t1": 17.804,
+   "text": "So at this distance, a full Moon gives",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 17.824,
+   "t1": 20.266,
+   "text": "about six and a half times the light.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 20.286,
+   "t1": 23.006,
+   "text": "Your shadow on the sand is sharp.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 23.026,
+   "t1": 25.636,
+   "text": "The wet sand shines like a mirror.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 25.656,
+   "t1": 27.581,
+   "text": "Even the headland is lit.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 27.601,
+   "t1": 30.401,
+   "text": "And the Moon is crossing the sky faster.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 30.421,
+   "t1": 33.101,
+   "text": "Closer orbits are faster orbits.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 33.121,
+   "t1": 38.051,
+   "text": "At this distance, one lap takes about seven days, not twenty-seven.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 38.071,
+   "t1": 43.356,
+   "text": "The water has a silver road across it, wider than any you have seen.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 43.376,
+   "t1": 45.935,
+   "text": "Night is not as dark as it used to be,",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 45.955,
+   "t1": 49.416,
+   "text": "and it is about to get a different kind of strange.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 49.604,
+   "t1": 52.719,
+   "text": "If you want one more orbit, tap like and follow.",
+   "line": "cta4_follow"
+  },
+  {
+   "t0": 52.843,
+   "t1": 55.888,
+   "text": "By now, the Moon looks far bigger than the Sun.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 56.082,
+   "t1": 58.483,
+   "text": "Which means the next time they line up,",
+   "line": "ch4_loop"
+  },
+  {
+   "t0": 58.503,
+   "t1": 60.552,
+   "text": "something happens in the daytime.",
+   "line": "ch4_loop"
+  },
+  {
+   "t0": 60.742,
+   "t1": 61.997,
+   "text": "Part four of eight.",
+   "line": "closer4"
+  },
+  {
+   "t0": 62.017,
+   "t1": 63.772,
+   "text": "Full video on YouTube.",
+   "line": "closer4"
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   192200
+  ],
+  [
+   0.0,
+   192200
+  ],
+  [
+   4.931,
+   150000
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "clips": [
+  {
+   "id": "ch4_hook",
+   "file": "voice/wav/11.wav",
+   "t": 0.15,
+   "dur": 1.866
+  },
+  {
+   "id": "ch4_vo",
+   "file": "voice/wav/12.wav",
+   "t": 2.366,
+   "dur": 46.843,
+   "from": 0.0
+  },
+  {
+   "id": "cta4_follow",
+   "file": "voice/wav/39.wav",
+   "t": 49.509,
+   "dur": 2.992
+  },
+  {
+   "id": "ch4_vo",
+   "file": "voice/wav/12.wav",
+   "t": 52.801,
+   "dur": 2.911,
+   "from": 46.843
+  },
+  {
+   "id": "ch4_loop",
+   "file": "voice/wav/13.wav",
+   "t": 56.062,
+   "dur": 4.31
+  },
+  {
+   "id": "closer4",
+   "file": "voice/wav/31.wav",
+   "t": 60.722,
+   "dur": 2.862
+  }
+ ],
+ "source": "season3/engine.js via long01/out/part4.json"
+}

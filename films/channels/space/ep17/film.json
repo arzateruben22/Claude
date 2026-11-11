@@ -1,0 +1,250 @@
+{
+ "id": "one-more-orbit-s3-part5",
+ "title": {
+  "title": "A Moon Bigger Than the Sun",
+  "series": "One More Orbit · Season 3 · Part 5 of 8"
+ },
+ "disclosures": {
+  "aiVoice": true,
+  "aiVisuals": true
+ },
+ "dur": 63.303,
+ "fps": 30,
+ "captions": [
+  {
+   "t0": 0.17,
+   "t1": 2.8,
+   "text": "What happens when the Moon outgrows the Sun?",
+   "line": "ch5_hook"
+  },
+  {
+   "t0": 2.982,
+   "t1": 5.402,
+   "text": "One hundred thousand kilometers.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 5.422,
+   "t1": 8.912,
+   "text": "The Moon is nearly four times wider than tonight.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 8.932,
+   "t1": 13.157,
+   "text": "The Sun and the Moon look about the same size from Earth today.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 13.177,
+   "t1": 17.087,
+   "text": "That is why a total solar eclipse is possible at all.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 17.107,
+   "t1": 20.432,
+   "text": "Today, a total solar eclipse happens somewhere",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 20.452,
+   "t1": 23.142,
+   "text": "on Earth about every year and a half.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 23.162,
+   "t1": 26.922,
+   "text": "So when they line up, its shadow on Earth is wider.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 26.942,
+   "t1": 29.597,
+   "text": "And eclipses would be far more common.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 29.617,
+   "t1": 32.188,
+   "text": "Not every month, though, because the Moon's",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 32.208,
+   "t1": 34.197,
+   "text": "orbit is tilted by a few degrees.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 34.217,
+   "t1": 35.417,
+   "text": "But often.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 35.437,
+   "t1": 39.377,
+   "text": "The sky goes dim, and the stars come out in the daytime.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 39.397,
+   "t1": 42.317,
+   "text": "The air cools, even if only a little.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 42.337,
+   "t1": 47.692,
+   "text": "A long dark noon, with a faint glow around a huge black disc.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 47.765,
+   "t1": 52.075,
+   "text": "Quick thing: if that made the sky feel bigger, tap like and follow.",
+   "line": "cta1_follow"
+  },
+  {
+   "t0": 52.165,
+   "t1": 55.05,
+   "text": "And then you look at the Moon again, and it has moved.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 55.255,
+   "t1": 55.88,
+   "text": "Closer.",
+   "line": "ch5_loop"
+  },
+  {
+   "t0": 55.9,
+   "t1": 56.87,
+   "text": "Faster.",
+   "line": "ch5_loop"
+  },
+  {
+   "t0": 56.89,
+   "t1": 59.31,
+   "text": "And the ground under you is feeling it too.",
+   "line": "ch5_loop"
+  },
+  {
+   "t0": 59.461,
+   "t1": 60.766,
+   "text": "Part five of eight.",
+   "line": "closer5"
+  },
+  {
+   "t0": 60.786,
+   "t1": 62.571,
+   "text": "Full video on YouTube.",
+   "line": "closer5"
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   150000
+  ],
+  [
+   0.0,
+   150000
+  ],
+  [
+   5.152,
+   100000
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ],
+   [
+    35.236999999999995,
+    0
+   ],
+   [
+    37.037,
+    1
+   ],
+   [
+    52.065,
+    1
+   ],
+   [
+    53.765,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "clips": [
+  {
+   "id": "ch5_hook",
+   "file": "voice/wav/14.wav",
+   "t": 0.15,
+   "dur": 2.462
+  },
+  {
+   "id": "ch5_vo",
+   "file": "voice/wav/15.wav",
+   "t": 2.962,
+   "dur": 44.483,
+   "from": 0.0
+  },
+  {
+   "id": "cta1_follow",
+   "file": "voice/wav/36.wav",
+   "t": 47.745,
+   "dur": 4.118
+  },
+  {
+   "id": "ch5_vo",
+   "file": "voice/wav/15.wav",
+   "t": 52.163,
+   "dur": 2.707,
+   "from": 44.483
+  },
+  {
+   "id": "ch5_loop",
+   "file": "voice/wav/16.wav",
+   "t": 55.22,
+   "dur": 3.871
+  },
+  {
+   "id": "closer5",
+   "file": "voice/wav/32.wav",
+   "t": 59.441,
+   "dur": 2.912
+  }
+ ],
+ "source": "season3/engine.js via long01/out/part5.json"
+}

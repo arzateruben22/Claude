@@ -1,0 +1,87 @@
+[
+ {
+  "id": "c18",
+  "sentence": "The solid Earth already rises and falls a little with the Moon, tens of centimeters a day.",
+  "claim": "Solid-Earth tides lift and lower the ground by tens of centimeters a day.",
+  "source_url": "https://www.jtbullitt.com/earthsound/solid_earth_tides/index.html",
+  "source_title": "Solid Earth tides (J. T. Bullitt) — secondary source found by search; a person should confirm against a USGS or NASA page",
+  "accessed": "2026-11-09",
+  "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK. Source not readable from the build machine; a person should open https://www.jtbullitt.com/earthsound/solid_earth_tides/index.html.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI): search excerpt only, page not opened",
+   "quote": "",
+   "qualification": "Not yet read."
+  }
+ },
+ {
+  "id": "c37",
+  "sentence": "Seventy thousand kilometers.",
+  "claim": "70,000 km is a waypoint chosen for the film; no physics claim.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN CHOICE: a waypoint, not a physics claim.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c38",
+  "sentence": "The Moon is about five and a half times wider than tonight.",
+  "claim": "At 70,000 km the Moon's angular width is 5.5x today's (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c39",
+  "sentence": "Its tidal pull is more than a hundred sixty times today's.",
+  "claim": "With tidal force ~ 1/d^3, at 70,000 km the TIDAL pull is (384,400/70,000)^3 = 166x today's, more than a hundred sixty times (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c43",
+  "sentence": "In real life, tides are why the Moon drifts away: they steal a little of Earth's spin and hand it to the Moon's orbit.",
+  "claim": "Tidal friction transfers angular momentum from Earth's spin to the Moon's orbit, which is why the Moon recedes.",
+  "source_url": "https://www.discovermagazine.com/the-moon-is-moving-farther-from-earth-each-year-and-the-reason-why-comes-down-to-the-tides-48035",
+  "source_title": "The Moon Is Moving Farther From Earth Each Year, and Tides Are the Reason (Discover)",
+  "accessed": "2026-11-11",
+  "note": "Secondary source; a NASA/JPL page is better. Source not readable from the build machine; a person should open https://www.discovermagazine.com/the-moon-is-moving-farther-from-earth-each-year-and-the-reason-why-comes-down-to-the-tides-48035.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-11",
+   "by": "builder (an AI): source not yet read",
+   "quote": "",
+   "qualification": "Not yet read."
+  }
+ }
+]
