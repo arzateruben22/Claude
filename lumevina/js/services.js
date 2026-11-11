@@ -21,7 +21,8 @@
  *   note      a short tag shown beside the name
  *   options   GlossGenius's "2 options": each one books on its own, at its
  *             own price and time ({ id, name, short, price, min }); short is
- *             the line under the service in the menu
+ *             the line under the service in the menu; extra, a paragraph the
+ *             service's pop-up adds when that option is picked
  *
  * Not offered any more (hidden, ids kept so old bookings still read):
  *   couples-facial, back-facial-half/full,
@@ -32,26 +33,33 @@
 (function (root) {
   "use strict";
 
+  /* what dermaplaning adds, in Evelyn's words (her Skin Playbook:
+     knowledge/treatments/explained/explain-dermaplaning.md), shown when
+     "With dermaplaning" is picked in a service's pop-up */
+  var DERMAPLANING = "With dermaplaning: on clean, dry skin, a sterile blade glides over the face at an angle, lifting dead surface cells and the fine vellus hair. " +
+    "It’s painless, a light scraping like a soft brush. Instantly smoother, brighter skin and makeup that sits better, and products and peels absorb better afterwards. " +
+    "The hair grows back exactly as it was, not thicker or darker. Not for active breakouts, open skin, very reactive skin or cold sores.";
+
   var MENU = [
     { group: "Facials", key: "facials", items: [
       { id: "new-client-menu", name: "New Clients Start Here", price: 220, from: true, min: 60, deposit: 0, note: "New clients",
         options: [
           { id: "new-client-consultation", name: "New Clients Start Here", short: "Consultation + custom facial", price: 220, min: 60 },
-          { id: "new-client-dermaplaning", name: "New Client Treatment + Dermaplaning", short: "With dermaplaning", price: 260, from: true, min: 80 }
+          { id: "new-client-dermaplaning", name: "New Client Treatment + Dermaplaning", short: "With dermaplaning", price: 260, from: true, min: 80, extra: DERMAPLANING }
         ],
         desc: "Consultation, a review of your current routine, and a fully customized facial. For non-acne skin; for acne, start with the Acne Bootcamp.",
         about: "Ready to understand your skin and what truly works for you? This service includes a consultation, review of your current routine, and a fully customized facial based on your skin’s needs. All facials include a double cleanse, enzyme exfoliation, extractions, targeted mask, relaxing massage, LED, and cryo globes. This service is for non-acne clients. For acne concerns, select “Acne Program” or “New Client Consultation + Treatment.”" },
       { id: "custom-facial-menu", name: "Lumevina Custom Facial", price: 200, from: true, min: 60, deposit: 0, note: "Returning clients",
         options: [
           { id: "lumevina-custom-facial", name: "Lumevina Custom Facial", short: "Custom facial", price: 200, min: 60 },
-          { id: "custom-facial-dermaplaning", name: "Custom Facial + Dermaplaning", short: "With dermaplaning", price: 230, from: true, min: 60 }
+          { id: "custom-facial-dermaplaning", name: "Custom Facial + Dermaplaning", short: "With dermaplaning", price: 230, from: true, min: 60, extra: DERMAPLANING }
         ],
         desc: "Double cleanse, enzyme or gentle acid exfoliation, extractions as needed, targeted mask, massage, LED and cryo globes.",
         about: "A customized facial for returning clients that includes a double cleanse, enzyme or gentle acid exfoliation, extractions (as needed), targeted mask, facial massage, LED therapy, and cryo globes. Best for clients following a customized skincare routine for continued skin progress. New clients: please book New Clients Start Here. Acne concerns: please book the Acne Program. If you’re unsure what to book, feel free to reach out." },
       { id: "ageless-grace-menu", name: "Ageless Grace Facial", price: 240, from: true, min: 75, deposit: 0, note: "Signature",
         options: [
           { id: "ageless-grace-facial", name: "Ageless Grace Facial", short: "Ageless Grace", price: 240, min: 75 },
-          { id: "ageless-grace-dermaplaning", name: "Ageless Grace Facial + Dermaplaning", short: "With dermaplaning", price: 280, min: 85 }
+          { id: "ageless-grace-dermaplaning", name: "Ageless Grace Facial + Dermaplaning", short: "With dermaplaning", price: 280, min: 85, extra: DERMAPLANING }
         ],
         desc: "Lift, firm and brighten: oxygen therapy and a professional Tightening Protein Booster. Add dermaplaning or a peel for more glow.",
         about: "Lift, firm, and brighten your skin with this advanced age-supporting facial. Featuring oxygen therapy and a professional Tightening Protein Booster, this treatment helps improve circulation, boost hydration, and leave your skin firmer, smoother, and more radiant. Suitable for all skin types. For enhanced results, add dermaplaning and/or a chemical peel to maximize exfoliation, hydration, and glow. I’ll help determine whether one or both add-ons are the best fit for your skin and goals." },
@@ -74,14 +82,14 @@
       { id: "refresh-peel-menu", name: "Refresh Peel", price: 230, from: true, min: 10, deposit: 0,
         options: [
           { id: "refresh-peel", name: "Refresh Peel", short: "No-downtime peel", price: 230, min: 10 },
-          { id: "refresh-peel-dermaplaning", name: "Refresh Peel + Dermaplaning", short: "With dermaplaning", price: 270, min: 15 }
+          { id: "refresh-peel-dermaplaning", name: "Refresh Peel + Dermaplaning", short: "With dermaplaning", price: 270, min: 15, extra: DERMAPLANING }
         ],
         desc: "Gentle renewal with minimal downtime; maybe 2–3 days of light flaking. A great first peel. Aftercare products required for a series.",
         about: "Perfect for new and existing clients, this peel gently exfoliates to renew and brighten the skin with minimal downtime. Some clients may experience 2–3 days of light flaking, while others may not visibly peel, and both are completely normal. Ideal as your first peel or for deeper exfoliation during the summer months. A series is recommended for optimal results. Required aftercare products must be purchased before beginning a peel series." },
       { id: "corrective-peel-menu", name: "Corrective Peel", price: 230, from: true, min: 60, deposit: 0, note: "Existing clients",
         options: [
           { id: "corrective-peel", name: "Corrective Peel", short: "Medium chemical peel", price: 230, min: 60 },
-          { id: "corrective-peel-dermaplaning", name: "Corrective Peel + Dermaplaning", short: "With dermaplaning", price: 270, min: 60 }
+          { id: "corrective-peel-dermaplaning", name: "Corrective Peel + Dermaplaning", short: "With dermaplaning", price: 270, min: 60, extra: DERMAPLANING }
         ],
         desc: "Medium depth, for sun damage, fine lines, wrinkles and acne scars. Peeling up to a week. Prep and a homecare routine come first.",
         about: "This is a medium-depth peel for existing clients only. Peeling may last up to one week; results and visible peeling may vary. This treatment helps improve sun damage, fine lines, wrinkles, and acne scars by deeply exfoliating and renewing the skin. A series is recommended for best results. Prep and a specific homecare routine are required before booking this service." }

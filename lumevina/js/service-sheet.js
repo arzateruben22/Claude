@@ -80,21 +80,16 @@
   var $ = function (sel) { return sheet.querySelector(sel); };
 
   var lastFocus = null, openId = null;
-  var open = function (id, from) {
-    var s = find(id);
-    if (!s) return;
-    openId = id;
-    lastFocus = from || document.activeElement;
+  /* what the sheet says: the service, or the option picked in it. Each option
+     has its own name, price and time, and some add a line of their own (what
+     dermaplaning adds, in Evelyn's words). Tapping an option picks it. */
+  var paint = function (s, pick) {
     var opts = s.options || null;
-    /* its photo (js/services.js → photo), or the one on its featured card */
-    var card = document.querySelector('.product-card[data-service="' + s.id + '"] .product-visual img');
-    var photo = (S.photo && S.photo(s.id)) || (card && (card.currentSrc || card.src));
-    $(".svc-photo").hidden = !photo;
-    if (photo) $(".svc-photo img").src = photo;
+    var o = opts ? (opts.filter(function (x) { return x.id === pick; })[0] || opts[0]) : null;
+    var it = o || s;
     $(".svc-k").textContent = [s.sectorName, s.sub].filter(Boolean).join(" · ") + (s.note ? " · " + s.note : "");
-    $(".svc-title").textContent = s.name;
-    var meta = opts ? ["from " + money(Math.min.apply(null, opts.map(function (o) { return o.price; })))]
-      : [(s.from ? "from " : "") + money(s.price), mins(s.min)];
+    $(".svc-title").textContent = it.name;
+    var meta = [it.price > 0 ? (it.from ? "from " : "") + money(it.price) : opts ? "Already paid" : "", mins(it.min)];
     if (s.deposit) meta.push(money(s.deposit) + " deposit when you book");
     else if (!s.ask && !s.addon) meta.push("Nothing due until your visit");
     if (s.ask) meta.push("Message Evelyn first");
@@ -102,25 +97,37 @@
     $(".svc-meta").textContent = meta.filter(Boolean).join(" · ");
     var about = $(".svc-about");
     about.textContent = "";
-    String(s.about || s.desc || "").split(/\n+/).filter(Boolean).forEach(function (para) {
+    String(s.about || s.desc || "").split(/\n+/).concat(o && o.extra ? [o.extra] : []).filter(Boolean).forEach(function (para, i, all) {
       var p = document.createElement("p");
       p.textContent = para;
+      if (o && o.extra && i === all.length - 1) p.className = "svc-extra";
       about.appendChild(p);
     });
     var list = $(".svc-options"), foot = $(".svc-foot");
     list.textContent = ""; foot.textContent = "";
     list.hidden = !opts;
     if (opts) {
-      opts.forEach(function (o) {
+      opts.forEach(function (x) {
+        var on = x === o;
         var li = document.createElement("li");
-        li.className = "svc-option" + (o.id === id ? " is-picked" : "");
-        var t = document.createElement("span");
+        li.className = "svc-option" + (on ? " is-picked" : "");
+        var t = document.createElement("button");
+        t.type = "button";
         t.className = "svc-option-t";
+        t.setAttribute("aria-pressed", String(on));
         t.innerHTML = "<strong></strong><small></small>";
-        t.querySelector("strong").textContent = o.short || o.name;
-        t.querySelector("small").textContent = [(o.from ? "from " : "") + money(o.price), mins(o.min)].filter(Boolean).join(" · ");
+        t.querySelector("strong").textContent = x.short || x.name;
+        t.querySelector("small").textContent = [x.price > 0 ? (x.from ? "from " : "") + money(x.price) : "Already paid", mins(x.min)].filter(Boolean).join(" · ");
         li.appendChild(t);
-        li.appendChild(bookFor(o.id, "Book", o.id === id || (id === s.id && o === opts[0])));
+        li.appendChild(bookFor(x.id, "Book", on));
+        /* a tap anywhere on the option but its Book button picks it */
+        li.addEventListener("click", function (e) {
+          if (on || (e.target.closest && e.target.closest(".svc-book, a, .add-to-cart, .wax-book, .wax-ask"))) return;
+          paint(s, x.id);
+          var picked = list.querySelector(".is-picked .svc-option-t");
+          if (picked) picked.focus({ preventScroll: true });
+          if (!calm && about.animate) about.animate([{ opacity: 0.35 }, { opacity: 1 }], { duration: 220, easing: "ease-out" });
+        });
         list.appendChild(li);
       });
     } else {
@@ -132,6 +139,19 @@
     keep.textContent = "Keep looking";
     keep.addEventListener("click", function () { close(); });
     foot.appendChild(keep);
+  };
+
+  var open = function (id, from) {
+    var s = find(id);
+    if (!s) return;
+    openId = id;
+    lastFocus = from || document.activeElement;
+    /* its photo (js/services.js → photo), or the one on its featured card */
+    var card = document.querySelector('.product-card[data-service="' + s.id + '"] .product-visual img');
+    var photo = (S.photo && S.photo(s.id)) || (card && (card.currentSrc || card.src));
+    $(".svc-photo").hidden = !photo;
+    if (photo) $(".svc-photo img").src = photo;
+    paint(s, id);
 
     overlay.hidden = false;
     sheet.hidden = false;
