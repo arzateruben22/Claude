@@ -90,8 +90,8 @@ say so wherever they are shown. A check that fails means revise before rendering
 - **Skin Sense:** premium medical-editorial. Ivory page, the painted or 3-D skin in the series' one skin tone,
   peach and rose, deep green accent `#00685F`, navy serif type. Surprising anatomical close-ups and hidden processes.
   No faces for acne topics (inside a pore only). No disease, risk or damage words over skin art. No products,
-  brands, before/after or advice. AI illustrations disclosed. **From Season 3: the night look** (SEASON-FORMAT.md): a deep
-  green-black ground `#0B1513`, skin glowing from within, teal `#3FBFAE` the only accent, small ivory serif type.
+  brands, before/after or advice. AI illustrations disclosed. **From Season 3: the Skin School vibe** (SEASON-FORMAT.md): soft
+  3-D voxel skin layers in the episode's tone on a dark near-black ground, soft studio light, a clean sans.
 - **Reality Rulebook:** physics that looks impossible. A daylight lab or an everyday room, one frozen moment
   (a splash crown, a bullet's shock cone, a light front), strobe ghost stamps, blue `#2F5BFF`. Clean and exact.
 - **Possibility Lab:** an extraordinary but reasoned situation with you in it. A human-scale anchor against a
