@@ -1,0 +1,48 @@
+[
+ {
+  "id": "c7",
+  "sentence": "For the first hours, the air is left behind; at a twelve hour day the ground moves through the air at about 460 m/s",
+  "claim": "If the air still turns at the old rate, the relative wind is (v_new - v_old) = 463 m/s at a 12 h day, 1390 m/s at 6 h. Friction drags the air along over hours to days; only the first hours are claimed.",
+  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+ },
+ {
+  "id": "c14",
+  "sentence": "nearly three times the speed of sound; faster than the speed of sound",
+  "claim": "The speed of sound in air at sea level is about 340 m/s (343 m/s at 20 degrees C): 929 m/s / 343 = 2.7; 463 m/s / 343 = 1.35.",
+  "source_url": "https://www.grc.nasa.gov/www/k-12/airplane/sound.html",
+  "source_title": "NASA Glenn, Speed of sound",
+  "accessed": "2026-11-09",
+  "verified_via": "not read",
+  "status": "TODO open link",
+  "kind": "source",
+  "note": "OPEN: not read by anyone; the value is a candidate from memory. The ratios are arithmetic; the speed of sound is the sourced input."
+ },
+ {
+  "id": "c23",
+  "sentence": "the wind is about 1,670 km/h, about four times the strongest gust",
+  "claim": "463 m/s x 3.6 = 1,667 km/h (c7); 1,667 / 408 = 4.1 (c24).",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "verified_via": "calculation",
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
+ },
+ {
+  "id": "c24",
+  "sentence": "the strongest gust ever measured on Earth was about 408 km/h",
+  "claim": "Highest surface wind gust recorded on Earth: 408 km/h (113 m/s) at Barrow Island, Australia, during tropical cyclone Olivia, 10 April 1996.",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "source",
+  "source_url": "",
+  "source_title": "WMO Archive of Weather and Climate Extremes (wmo.asu.edu): highest surface wind gust (not yet found by a person)",
+  "verified_via": "not read",
+  "note": "OPEN: from memory; no URL given on purpose; a person must find the WMO entry."
+ }
+]
