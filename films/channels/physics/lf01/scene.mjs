@@ -157,13 +157,23 @@ for (const m of edgeSrc) { const e = new THREE.LineSegments(new THREE.EdgesGeome
 
 // ── flyers: a body, a head and wings that sweep and flip; ghost copies stand in for what the eye blends ──
 const GHOSTS = 14;
-const mkFlyer = (scale, body, wingCol) => {
-  const g = new THREE.Group(); const bodyM = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 10), new THREE.MeshStandardMaterial({ color: body, roughness: 0.6 })); bodyM.scale.set(1.0, 0.45, 0.45); g.add(bodyM);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.34, 10, 8), new THREE.MeshStandardMaterial({ color: body, roughness: 0.6 })); head.position.set(1.0, 0.05, 0); g.add(head);
+const mkFlyer = (scale, body, wingCol, kind = "fly") => {      // a fly or a mosquito: thorax, banded abdomen, head with big eyes, legs, and two veined translucent wings that sweep and flip
+  const g = new THREE.Group(), M = (c, r = 0.5, m = 0.05) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m }), mq = kind === "mosq";
+  const th = new THREE.Mesh(new THREE.SphereGeometry(1, 18, 12), M(body, 0.45, 0.12)); th.scale.set(mq ? 0.5 : 0.6, mq ? 0.36 : 0.45, mq ? 0.36 : 0.45); th.position.set(0.25, 0.05, 0); g.add(th);
+  const ab = new THREE.Mesh(new THREE.SphereGeometry(1, 18, 12), M(body, 0.5, 0.05)); ab.scale.set(mq ? 1.1 : 0.85, mq ? 0.2 : 0.4, mq ? 0.2 : 0.4); ab.position.set(mq ? -0.95 : -0.7, -0.03, 0); ab.rotation.z = mq ? -0.12 : -0.1; g.add(ab);
+  for (let k = 0; k < 4; k++) { const band = new THREE.Mesh(new THREE.TorusGeometry(mq ? 0.2 : 0.4, 0.035, 6, 18), M(0xCFC8B8, 0.6)); band.rotation.y = Math.PI / 2; band.scale.set(1, 1, 1); band.position.set((mq ? -0.55 : -0.45) - k * (mq ? 0.32 : 0.24), -0.03, 0); g.add(band); }
+  const hd = new THREE.Mesh(new THREE.SphereGeometry(0.28, 14, 10), M(body, 0.5, 0.1)); hd.position.set(0.9, 0.04, 0); g.add(hd);
+  for (const sd of [-1, 1]) { const ey = new THREE.Mesh(new THREE.SphereGeometry(mq ? 0.14 : 0.2, 12, 9), M(mq ? 0x1B1B1B : 0x8E2A1E, 0.3, 0.2)); ey.position.set(1.0, 0.12, sd * 0.2); g.add(ey);
+    for (let k = 0; k < 3; k++) { const lg = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.012, mq ? 1.2 : 0.7, 5), M(0x2A2A2A, 0.6)); lg.position.set(0.35 - k * 0.32, -0.45, sd * (0.18 + 0.08 * k)); lg.rotation.z = (k - 1) * 0.35; lg.rotation.x = sd * 0.4; g.add(lg); } }
+  if (mq) { const pr = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.025, 0.7, 6), M(0x222222)); pr.rotation.z = -Math.PI / 2; pr.position.set(1.5, -0.04, 0); g.add(pr); }
+  const wsh = new THREE.Shape(); wsh.moveTo(0, 0); wsh.bezierCurveTo(mq ? 0.16 : 0.34, 0.2, mq ? 0.16 : 0.34, 0.95, 0.02, mq ? 1.7 : 1.3); wsh.bezierCurveTo(-0.1, 0.8, -0.14, 0.3, 0, 0);
   const wings = [];
   for (let i = 0; i < GHOSTS; i++) for (const side of [-1, 1]) {
-    const hinge = new THREE.Group(); hinge.position.set(0.1, 0.28, side * 0.14); const wg = new THREE.ConeGeometry(0.17, 1.15, 10); wg.scale(1.25, 1, 0.12); wg.translate(0, 0.575, 0); const wm = new THREE.Mesh(wg, new THREE.MeshBasicMaterial({ color: wingCol, transparent: true, opacity: 0.5, depthWrite: false, side: THREE.DoubleSide }));
-    hinge.add(wm); g.add(hinge); wings.push({ hinge, wm, i, side });   // the wing blade stands up from the shoulder; the stroke sweeps it forward and back in the picture plane
+    const hinge = new THREE.Group(); hinge.position.set(0.1, 0.3, side * 0.14); hinge.rotation.order = "ZXY";
+    const wm = new THREE.Mesh(new THREE.ShapeGeometry(wsh, 10), new THREE.MeshBasicMaterial({ color: wingCol, transparent: true, opacity: 0.5, depthWrite: false, side: THREE.DoubleSide }));
+    hinge.add(wm);
+    const vein = new THREE.Mesh(new THREE.PlaneGeometry(0.012, mq ? 1.5 : 1.15), new THREE.MeshBasicMaterial({ color: 0x55616B, transparent: true, opacity: 0.7, depthWrite: false })); vein.position.set(0.05, (mq ? 1.5 : 1.15) / 2, 0.001); wm.add(vein); wm.userData.vein = vein;
+    g.add(hinge); wings.push({ hinge, wm, i, side });
   }
   g.scale.setScalar(scale); scene.add(g); return { g, wings, scale };
 };
@@ -174,10 +184,10 @@ const poseFlyer = (fl, hz, tReal, blur, amp = 1.0) => {                         
     const a = Math.sin(ph * Math.PI * 2) * 1.0 * amp, fl2 = Math.cos(ph * Math.PI * 2);
     w.hinge.rotation.set(w.side * fl2 * 0.7, 0, 0); w.hinge.rotation.y = -a * 0.9 * w.side * 0 + 0; w.hinge.rotation.z = 0;
     w.hinge.rotation.set(0, 0, -a * 0.95 + 0.1); void fl2;   // a flap: both wings up and down about the body's long axis
-    w.wm.material.opacity = blur > 0.01 ? 0.08 + 0.05 * (1 - blur) : 0.92;
+    w.wm.material.opacity = blur > 0.01 ? 0.08 + 0.05 * (1 - blur) : 0.55; if (w.wm.userData.vein) w.wm.userData.vein.material.opacity = blur > 0.01 ? 0.03 : 0.7; w.hinge.rotation.x = w.side * 0.25 * Math.sin(2 * ph * Math.PI * 2 + 0.6); w.hinge.rotation.y = w.side * 0.5 * Math.cos(ph * Math.PI * 2);
   }
 };
-const flyH = mkFlyer(0.03, 0x20232A, 0xDDE6EE), flyC = mkFlyer(0.03, 0x20232A, 0xDDE6EE), mosq = mkFlyer(0.034, 0x3B3F46, 0xDDE6EE);
+const flyH = mkFlyer(0.03, 0x2B2E34, 0xDDE6EE), flyC = mkFlyer(0.03, 0x2B2E34, 0xDDE6EE), mosq = mkFlyer(0.034, 0x3B3F46, 0xDDE6EE, "mosq");
 // the hummingbird: a tapered body (emerald back, pale belly), a ruby throat, a small head with a long thin bill and an eye with a highlight, a forked tail, and two long narrow wings that
 // beat in a figure of eight (sweep forward and back, tip loops via a second-harmonic tilt, flip at each end of the stroke); the ghosts stand in for what the eye blends at full speed
 const mkBird = () => {
