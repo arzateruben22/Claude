@@ -1,0 +1,2 @@
+const { chromium } = require(process.cwd() + '/node_modules/playwright');
+(async () => { try { const b = await chromium.launch(); console.log('local launch ok', b.version()); await b.close(); } catch (e) { console.log('local launch failed:', String(e).split('\n')[0]); const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' }).catch(e2 => { console.log('exec path failed', String(e2).split('\n')[0]); }); if (b) { console.log('exec path ok', b.version()); await b.close(); } } })();
