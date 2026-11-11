@@ -86,6 +86,29 @@ window.setup = async (tl, assets, mode, w, h) => {
 // Gated by time so the segments rendered separately join without a pop (it is 0 at 345.1 s).
 const swayAmp = (t) => (MODE !== "land" || TL.dur < 300) ? ((TL.name || "").startsWith("part8") ? sm((t - 0.5) / 1.5) : 0) : Math.max(sm((t - 346) / 4), (beats() && t > beats().calm.t1 + 1 && t < beats().size.t0 - 0.2) ? sm((t - beats().calm.t1 - 1) / 2) * sm((beats().size.t0 - 0.2 - t) / 1) : 0);
 const figPos = () => (MODE === "land" ? { x: 0.342 * W, y: 0.831 * H } : { x: 0.38 * W, y: 0.81 * H });
+
+// camera beats for parts 2-8: 2-3 moves tied to the part's idea (keyed by caption text); each key eases the zoom to s about a pivot (the Moon, the figure or the sea)
+const MOVES = {
+  2: [["The Moon looks one and a third", 0, 1.55, "moon"], ["Its light now takes", -0.3, 1.0, "moon"], ["The Moon's pull on the Earth", 0, 1.3, "sea"], ["Today, the Sun pulls", 0, 1.0, "sea"]],
+  3: [["The Moon now looks twice", 0, 1.45, "moon"], ["Tides come from the difference", -0.2, 1.0, "moon"], ["the water at your feet", 0, 1.45, "sea"], ["Imagine the foam line", 0, 1.8, "fig"], ["The Moon is no longer", -0.3, 1.0, "fig"]],
+  4: [["The beach is brighter", 0, 1.25, "sea"], ["about six and a half", -2.5, 1.5, "moon"], ["Your shadow on the sand", 0, 1.6, "fig"], ["The water has a silver road", 0, 1.15, "sea"], ["Night is not as dark", -0.3, 1.0, "sea"]],
+  5: [["The Moon is nearly four", 0, 1.3, "moon"], ["The Sun and the Moon look", 0, 1.0, "moon"], ["The sky goes dim", -0.3, 1.5, "moon"], ["A long dark noon", 0, 1.5, "moon"], ["And then you look", -0.3, 1.0, "moon"]],
+  6: [["The solid Earth already", -0.5, 1.5, "fig"], ["With far more pull", 0, 1.6, "fig"], ["In real life, tides", -0.3, 1.0, "fig"]],
+  7: [["The Moon is nearly eight", 0, 1.3, "moon"], ["One lap now takes", 0, 1.0, "moon"], ["Watch the number", 0, 1.6, "moon"], ["Then it begins to slide", -0.3, 1.25, "moon"], ["The Moon rises in the west", 0, 1.0, "moon"]],
+  8: [["At eighteen thousand", 0, 1.3, "moon"], ["It is a wall of grey", 0, 1.15, "moon"], ["The tide is enormous", 0, 1.3, "sea"], ["And then the Moon does", -0.3, 1.0, "sea"]],
+};
+function partKeys() {
+  if (TL._pk !== undefined) return TL._pk; const m = /^part(\d)/.exec(TL.name || ""); const n = m ? Number(m[1]) : 0; if (n < 2 || !MOVES[n]) return (TL._pk = null);
+  const keys = []; for (const [txt, off, sc, pv] of MOVES[n]) { const c = TL.captions.find((q) => q.text.includes(txt)); if (c) keys.push({ t: c.t0 + off, s: sc, pv }); }
+  return (TL._pk = keys.length ? keys : null);
+}
+function pivotOf(pv, t, G) { if (pv === "fig") return { F: figPos(), k: 0 }; if (pv === "sea") return { F: { x: W * 0.5, y: G.horizon + 0.2 * (H - G.horizon) }, k: 0 }; const mo = moonState(Math.max(dVis(t), 17000), G); return { F: { x: mo.cx, y: mo.cy }, k: 0.9 }; }
+function movesState(t, G) {
+  const ks = partKeys(); if (!ks) return null; let i = -1; for (let j = 0; j < ks.length; j++) if (t >= ks[j].t) i = j;
+  if (i < 0) { const P = pivotOf(ks[0].pv, t, G); return { s: 1, F: P.F, k: P.k }; }
+  const k = ks[i], p = i > 0 ? ks[i - 1] : { s: 1, pv: k.pv }, u = sm((t - k.t) / 1.7), A = pivotOf(p.pv, t, G), B = pivotOf(k.pv, t, G);
+  return { s: lerp(p.s, k.s, u), F: { x: lerp(A.F.x, B.F.x, u), y: lerp(A.F.y, B.F.y, u) }, k: lerp(A.k, B.k, u) };
+}
 function zoomState(t, b, mo) {   // {s, F (world pivot), k (0 = pivot stays put, 1 = pivot goes to the screen anchor)}
   const fg = figPos(), mp = { x: mo.cx, y: mo.cy }, e = (a, c, u) => lerp(a, c, sm(u));
   const A = b.start, calm = b.calm, lt = b.light.t0, sz = b.size.t0;
@@ -125,6 +148,8 @@ window.renderAt = (t) => {
   const G = geom(), ecl = track(TL.tracks.eclipse, t), moonA = track(TL.tracks.moon, t), brk = track(TL.tracks.brk, t), ring = track(TL.tracks.ring, t), tn = track(TL.tracks.tonight, t), d = dVis(t);
   const A = swayAmp(t); ctx.save(); if (A > 0.001) { const sc = 1 + 0.016 * A; ctx.translate(W / 2 + 16 * U * A * Math.sin(t * 0.55), H / 2 + 8 * U * A * Math.sin(t * 0.4)); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); }
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; ctx.save();
+  const mv = !b ? movesState(t, G) : null;
+  if (mv) { let tx = lerp(mv.F.x, W * 0.54, mv.k), ty = lerp(mv.F.y, H * 0.46, mv.k); tx = Math.max(W - (W - mv.F.x) * mv.s, Math.min(mv.F.x * mv.s, tx)); ty = Math.max(H - (H - mv.F.y) * mv.s, Math.min(mv.F.y * mv.s, ty)); ctx.translate(tx, ty); ctx.scale(mv.s, mv.s); ctx.translate(-mv.F.x, -mv.F.y); }
   if (inCh1) { const mo0 = moonState(384400, G), z = zoomState(t, b, mo0); let tx = lerp(z.F.x, W * 0.54, z.k), ty = lerp(z.F.y, H * 0.46, z.k);
     tx = Math.max(W - (W - z.F.x) * z.s, Math.min(z.F.x * z.s, tx)); ty = Math.max(H - (H - z.F.y) * z.s, Math.min(z.F.y * z.s, ty));   // never show past the painting
     ctx.translate(tx, ty); ctx.scale(z.s, z.s); ctx.translate(-z.F.x, -z.F.y); }
