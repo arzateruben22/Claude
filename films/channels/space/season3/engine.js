@@ -84,7 +84,7 @@ window.setup = async (tl, assets, mode, w, h) => {
 };
 // extra life for the long film's still stretches (the hold in chapter 1 and everything from the break-up on): a slow camera sway, the Moon's libration, drifting dust.
 // Gated by time so the segments rendered separately join without a pop (it is 0 at 345.1 s).
-const swayAmp = (t) => (MODE !== "land" || TL.dur < 300) ? 0 : Math.max(sm((t - 346) / 4), (beats() && t > beats().calm.t1 + 1 && t < beats().size.t0 - 0.2) ? sm((t - beats().calm.t1 - 1) / 2) * sm((beats().size.t0 - 0.2 - t) / 1) : 0);
+const swayAmp = (t) => (MODE !== "land" || TL.dur < 300) ? (TL.name === "part8" ? sm((t - 0.5) / 1.5) : 0) : Math.max(sm((t - 346) / 4), (beats() && t > beats().calm.t1 + 1 && t < beats().size.t0 - 0.2) ? sm((t - beats().calm.t1 - 1) / 2) * sm((beats().size.t0 - 0.2 - t) / 1) : 0);
 const figPos = () => (MODE === "land" ? { x: 0.342 * W, y: 0.831 * H } : { x: 0.423 * W, y: 0.681 * H });
 function zoomState(t, b, mo) {   // {s, F (world pivot), k (0 = pivot stays put, 1 = pivot goes to the screen anchor)}
   const fg = figPos(), mp = { x: mo.cx, y: mo.cy }, e = (a, c, u) => lerp(a, c, sm(u));

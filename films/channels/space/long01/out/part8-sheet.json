@@ -1,0 +1,53 @@
+{
+ "duration": 63.751,
+ "fps": 30,
+ "preset": "lightminute-vacuum",
+ "sections": [
+  {
+   "id": "part8",
+   "t0": 0.0,
+   "t1": 63.751,
+   "energy": 0.42
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "part8",
+   "t1": 63.751
+  }
+ ],
+ "voice": [
+  {
+   "id": "c0",
+   "t": 0.15,
+   "file": "voice/cut/part8/00.wav"
+  },
+  {
+   "id": "c1",
+   "t": 3.359,
+   "file": "voice/cut/part8/01.wav"
+  },
+  {
+   "id": "c2",
+   "t": 48.581,
+   "file": "voice/cut/part8/02.wav"
+  },
+  {
+   "id": "c3",
+   "t": 51.873,
+   "file": "voice/cut/part8/03.wav"
+  },
+  {
+   "id": "c4",
+   "t": 56.554,
+   "file": "voice/cut/part8/04.wav"
+  },
+  {
+   "id": "c5",
+   "t": 60.086,
+   "file": "voice/cut/part8/05.wav"
+  }
+ ]
+}

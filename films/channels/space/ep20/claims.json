@@ -1,0 +1,87 @@
+[
+ {
+  "id": "c23",
+  "sentence": "There is a distance where tides pull harder on a body than its own gravity holds it together.",
+  "claim": "The Roche limit is the distance inside which tidal forces overcome a body's own gravity, so it is torn apart.",
+  "source_url": "https://en.wikipedia.org/wiki/Roche_limit",
+  "source_title": "Roche limit (Wikipedia) — secondary source found by search; a person should confirm against NASA or a textbook",
+  "accessed": "2026-11-09",
+  "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK. Second source (found by search, page NOT read): SFU PHYS 390 lecture notes on tides and Roche limit https://www.sfu.ca/~boal/390lecs/390lec8.pdf (equal-density Roche limit ~2.456 Rp, disrupted material forms rings); Leinhardt et al., 'Tidal disruption of satellites and formation of narrow rings' https://arxiv.org/abs/1206.2677 (a rubble pile disrupts closer in than a fluid body; real result depends on the Moon's strength). Source not readable from the build machine; a person should open https://en.wikipedia.org/wiki/Roche_limit.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI): search excerpt only, page not opened",
+   "quote": "",
+   "qualification": "Not yet read."
+  }
+ },
+ {
+  "id": "c24",
+  "sentence": "For a Moon like ours around Earth, it is around eighteen thousand kilometers, if the Moon behaves like a fluid.",
+  "claim": "fluid Roche limit = 2.44 R_Earth (rho_Earth/rho_Moon)^(1/3) = 18,365 km; densities from NASA fact sheets. Wikipedia's table lists ~18,381 km.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-09",
+  "note": "OWN INFERENCE (calc.py): fluid Roche limit = 2.44 R_Earth (rho_Earth/rho_Moon)^(1/3) = 18,365 km; densities from NASA fact sheets. Wikipedia's table lists ~18,381 km. Second source (found by search, page NOT read): SFU PHYS 390 lecture notes on tides and Roche limit https://www.sfu.ca/~boal/390lecs/390lec8.pdf (equal-density Roche limit ~2.456 Rp, disrupted material forms rings); Leinhardt et al., 'Tidal disruption of satellites and formation of narrow rings' https://arxiv.org/abs/1206.2677 (a rubble pile disrupts closer in than a fluid body; real result depends on the Moon's strength).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c25",
+  "sentence": "Around nine and a half thousand, if it is perfectly rigid.",
+  "claim": "rigid Roche limit = 1.26 R_Earth (rho_Earth/rho_Moon)^(1/3) = 9,484 km. Wikipedia's table lists ~9,492 km.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-09",
+  "note": "OWN INFERENCE (calc.py): rigid Roche limit = 1.26 R_Earth (rho_Earth/rho_Moon)^(1/3) = 9,484 km. Wikipedia's table lists ~9,492 km. Second source (found by search, page NOT read): SFU PHYS 390 lecture notes on tides and Roche limit https://www.sfu.ca/~boal/390lecs/390lec8.pdf (equal-density Roche limit ~2.456 Rp, disrupted material forms rings); Leinhardt et al., 'Tidal disruption of satellites and formation of narrow rings' https://arxiv.org/abs/1206.2677 (a rubble pile disrupts closer in than a fluid body; real result depends on the Moon's strength).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c26",
+  "sentence": "At eighteen thousand kilometers, it looks more than twenty times wider than tonight.",
+  "claim": "At 18,000 km centre to centre the Moon's angular width is 21x today's (horizon view); overhead, one Earth radius closer (about 11,600 km), it is about 17 deg wide, about 33x (calc.py). The film says 'more than twenty times'.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-09",
+  "note": "OWN INFERENCE (arithmetic): at 18,000 km the Moon's angular width is 21x today's (calc.py).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c41",
+  "sentence": "It is at least as wide as a fist held out at arm's length, and wider still overhead.",
+  "claim": "At 18,000 km the Moon spans 11 deg at the horizon and about 17 deg overhead (calc.py); a closed fist at arm's length spans about 10 deg (common observing rule of thumb; a person should confirm against an astronomy-outreach page). The film says 'at least as wide as a fist ... and wider still overhead'.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ }
+]
