@@ -379,6 +379,42 @@ that hand on the aim line. Both are for the same design pass.
     bar's Low draws standard materials and the toon half of S3a's "Low stays Retro" check can't run yet (the
     shader-error half ran: see the progress log).
 
+### From the sports bar's S4 (2026-11-09; `PROJECT_OC_SPORTS_BAR.md` open items O15, O16, O26, O29 and O37)
+
+14. **The bar's Low shares Lot 57's Retro module** (O15). RS1 (`src/game/render/style.ts`) still isn't on any branch
+    merged here (`origin` has no `claude/modes`; `claude/modes-trim` has no `style.ts`), so the bar's Low draws through
+    Lot 57's P1d `lot57/retro.ts` (`Toon` and `RetroPass`) by a one-line facade, `engine/retro.ts`: one Retro look for
+    both venues, as decision 15 asks. The bar's `BarToon` (in `venues/sportsbar/look.ts`) skips meshes marked
+    `retroSkip`; Lot 57's `Toon` doesn't read the flag, so a LOD 0 body's hair cap and hair cards would be converted and
+    fail to compile at Low (item 13). Lot 57 builds LOD 0 only at HD and Ultra, so nothing shows it today; at E0 the
+    shared `Toon` should honour `retroSkip`. When RS1 lands, both pages move to it together at E0.
+15. **E0 wasn't run in S4** (O26). Lot 57's P1d is committed, but this run's rules forbid edits to `lot57/`,
+    `src/onfoot/main.ts`, `index.html` and `people/`, and the parallel lane on `claude/venues-in-game` is turning both
+    pages' `main.ts` into mountable modules; a mechanical move now would collide with it. E0 stays the first task of
+    whoever next touches both venues, after that lane merges.
+16. **The bar's sound is new in S4** (`venues/sportsbar/audio.ts`, `sfx.ts`): no phase before built any audio, on
+    either page. Built: the murmur (four voices at the nearest live guests, by the head count), the wordless broadcast
+    bed, the crowd's cheers and groans summed per frame, pool clicks, cushions and pots from the physics, the dart's
+    thunk, the puck's slide and clack, a glass clink and the pass bell when your order arrives, the jukebox playing the
+    game's own code-composed KFWY 96.9 (`src/game/audio/Radio.ts`) through a speaker filter, the I-5's hum, a chime
+    for a moodlet and a spark for tokens; an 0.8 s code-made room reverb (the patio drier), the voice caps (12, 24,
+    32; at the cap a sound takes a lower one's slot, the crowd's swell first), HRTF at HD and Ultra and equal-power at
+    Low, and four mix sliders kept on the device. **Not built:** the fryer
+    and the ice scoop, the substation's 120 Hz hum, car doors in the lot, the "ooh" and the menus' ticks. Nothing was
+    listened to: the checks measure levels and events, not how it sounds. Lot 57 has no audio; at E0 the shared parts
+    (the murmur, the reverb, the mix) belong in `engine/`.
+17. **Ultra's entitlement** (O29). RS2's shared entitlement still hasn't landed on a kept commit (only a WIP
+    `src/store/entitlements.ts` on `claude/wip-modes`), so `venues/sportsbar/ultra.ts` reads the game's settings' owner
+    flag, this device's owner flag and the test build's `?ultra=1`; RS2's reader goes first there when it lands. A
+    locked Ultra reads "Ultra · locked", opens nothing and shows no price.
+18. **For the in-game mount (`claude/venues-in-game`): release S4's look and sound when the venue is left.** S4's
+    repair added `BarLook.dispose()` (`venues/sportsbar/look.ts`) and `BarAudio.dispose()` (`audio.ts`), called
+    together as `releaseS4` in `venues/sportsbar/main.ts`. The standalone page calls it on `pagehide` (not when kept
+    in the back-forward cache); the mount layer should call the same function when it takes the venue down, before
+    it disposes the renderer. `window.__onfoot.releaseS4()` runs it and reports `renderer.info.memory` before and
+    after (`tests/sportsbar-s4.mjs --only=release`). `main.ts` still has no exports of its own: the mount layer's
+    wrapping is that lane's work.
+
 ## Owner questions (open)
 
 - **The sports bar's Low and the sun map** (`PROJECT_OC_SPORTS_BAR.md`, "Owner questions", 1). Decision 15 lists
@@ -395,6 +431,11 @@ that hand on the aim line. Both are for the same design pass.
   fix needs a worker or step-wise build in `people/` (F5's builders and Lot 57's P1d own it). Not settled: accept the
   fill's stalls and LOD 1 for the person you talk to, or ask for that build before the bar's S3a (with it, NPC LOD 0
   comes back; at Low inside it needs Low's first fallback).
+- **Friendship climbs fast within one visit** (the sports bar's O37). Accepted Jokes one after another (+9 each) take
+  a stranger to Good friend (90) in one visit; nothing limits repeats of one interaction. Two options, either a small
+  change in `engine/sim/relations.ts` whose tests' hand-worked numbers move with it: diminishing returns for the same
+  interaction with the same person (say each repeat within 10 sim minutes counts half the one before), or a cap on
+  friendship's rise per visit (say +30). S4 left it as built: it changes how the game feels, so it's the owner's call.
 - **For RS3 and `people/`'s owners (from the sports bar plan):** a toon path for the people builder's skin. Under the
   Retro Stylizer's hook-fit rule `skinMaterial` stays physically lit (its hook adds `computeSpecularOcclusion`), so a
   LOD 0 body in view at Low would have toon clothes and physical skin. The bar draws no LOD 0 at Low, so nothing shows

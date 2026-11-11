@@ -8,6 +8,7 @@
 // sticks, the pucks as discs, their matrices set from the physics each frame; nothing else is drawn for them (the aim
 // and the power are HTML, the guide line a stick and a disc). Results: the winner's moodlet and 5 house tokens, or
 // "Lost a close one" (life.ts). Nothing is wagered.
+import { sfx, type SfxKind } from './sfx';
 import * as THREE from 'three';
 import type { Frame } from '../../engine/frame';
 import type { P2 } from '../../engine/venue-def';
@@ -100,6 +101,16 @@ abstract class Spot {
   startW: P2 = [0, 0];
   constructor(public id: string, protected g: Games) {}
   bump() { this.ver++; }
+  /** S4: the sounds of a step (sfx.ts), at the spot: the counts since the last call, as one event each kind */
+  private heard = { a: 0, b: 0, c: 0 };
+  protected sounds(a: number, b: number, c: number, kinds: [SfxKind, SfxKind, SfxKind]) {
+    const h = this.heard, at = this.startW;
+    if (a < h.a || b < h.b || c < h.c) { h.a = a; h.b = b; h.c = c; return; }            // a new game: start counting again
+    if (a > h.a) sfx(kinds[0], at[0], at[1], Math.min(3, a - h.a));
+    if (b > h.b) sfx(kinds[1], at[0], at[1], Math.min(3, b - h.b));
+    if (c > h.c) sfx(kinds[2], at[0], at[1], Math.min(3, c - h.c));
+    h.a = a; h.b = b; h.c = c;
+  }
   abstract begin(): void;
   abstract get playing(): boolean;
   /** your turn, waiting for your input */
@@ -256,7 +267,7 @@ export class PoolSpot extends Spot {
       }
       return;
     }
-    if (g.state === 'rolling') { if (g.step(dS)) this.after(); return; }
+    if (g.state === 'rolling') { const done = g.step(dS); this.sounds(g.clicksN, g.cushionsN, g.pottedN, ['click', 'cushion', 'pot']); if (done) this.after(); return; }
     if (g.turn === 1) this.houseTurn(dS);
   }
   private after() {
@@ -526,7 +537,7 @@ export class PoolSpot extends Spot {
     const m = this.npc!, g = m.game;
     if (g.winner !== null) return;
     if (m.mode === 'stat') { m.statT -= dS; if (m.statT <= 0) this.npcStat(m); return; }
-    if (g.state === 'rolling') { if (g.step(dS)) this.npcAfter(m); return; }
+    if (g.state === 'rolling') { const done = g.step(dS); this.sounds(g.clicksN, g.cushionsN, g.pottedN, ['click', 'cushion', 'pot']); if (done) this.npcAfter(m); return; }
     const sh = m.sides[g.turn].opp;
     if (!m.plan) {
       const pl = g.plan(hash32(m.seed, g.shots), m.sides[g.turn].competitive);
@@ -698,6 +709,7 @@ class DartsSpot extends Spot {
     if (g.turn === 1) this.houseTurn(dS);
   }
   private landed(side: number, to: P2) {
+    sfx('thunk', this.startW[0], this.startW[1]);
     const g = this.game!; if (g.turn !== side) return;
     const res = g.land(to[0], to[1], g.thrown.length);
     this.bump();
@@ -863,6 +875,7 @@ class DartsSpot extends Spot {
   }
   /** a guest's dart lands: 301's rules; true when the match ended */
   private npcLanded(m: NpcThrows, g: DartsGame, side: number, to: P2) {
+    sfx('thunk', this.startW[0], this.startW[1]);
     if (g.turn !== side) return false;
     const res = g.land(to[0], to[1], g.thrown.length);
     this.bump();
@@ -976,6 +989,7 @@ class ShuffleSpot extends Spot {
   private slide(speed: number, line: number, y0: number, side: number) {
     const g = this.game!;
     if (!g.slide(speed, line, y0)) return false;
+    sfx('slide', this.startW[0], this.startW[1], Math.min(1.5, speed / 2.5));
     const body = side === 0 ? this.g.ctx.person() : this.g.opp().p;
     if (body) this.g.ctx.clips.play(body, 'shuffle-slide');
     if (side === 0) { this.lastSpeed = speed; this.lastLine = line; this.follow = g.pucks[g.pucks.length - 1]; }
@@ -990,7 +1004,7 @@ class ShuffleSpot extends Spot {
       if (this.hold <= 0) { this.bump(); if (g.turn === 0 && this.mine) this.yourSetup(); else this.standYou(this.asideAt, this.asideYaw); }
       return;
     }
-    if (g.state === 'sliding') { const f0 = g.frame; if (g.step(dS)) this.after(f0); return; }
+    if (g.state === 'sliding') { const f0 = g.frame; const done = g.step(dS); this.sounds(g.clacks, 0, 0, ['clack', 'clack', 'clack']); if (done) this.after(f0); return; }
     if (g.turn === 1) this.houseTurn(dS);
   }
   private after(frame0: number) {
@@ -1130,7 +1144,7 @@ class ShuffleSpot extends Spot {
     const m = this.npc!, g = this.npcGame!;
     if (g.winner !== null) return;
     if (m.mode === 'stat') { m.statT -= dS; if (m.statT <= 0 && !m.sides.some((x) => x.opp.walking)) this.npcStatFrame(m, g); return; }
-    if (g.state === 'sliding') { if (g.step(dS)) this.npcAfter(m, g); return; }
+    if (g.state === 'sliding') { const done = g.step(dS); this.sounds(g.clacks, 0, 0, ['clack', 'clack', 'clack']); if (done) this.npcAfter(m, g); return; }
     if (m.phase === 'hold') {
       m.wait -= dS; if (m.wait > 0) return;
       this.bump(); this.npcPlace(); return;
@@ -1142,6 +1156,7 @@ class ShuffleSpot extends Spot {
     const pl = g.housePlan(hash32(m.seed, g.frame, g.thrown), m.sides[g.turn].competitive);
     this.npcFrame0 = g.frame;
     if (!g.slide(pl.speed, pl.line, pl.y0)) return;
+    sfx('slide', this.startW[0], this.startW[1], Math.min(1.5, pl.speed / 2.5));
     if (th.p) this.g.ctx.clips.play(th.p, 'shuffle-slide');
     m.wait = 1.0; this.bump();
   }

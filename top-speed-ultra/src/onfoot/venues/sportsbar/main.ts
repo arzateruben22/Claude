@@ -46,6 +46,9 @@ import { BAR_NAME } from './brand';
 import { FRONT, fd, DOOR_START, HANDOFF, TREES, ZONES, PZONES, furniture } from './layout';
 import { pointInPoly as pointInRing } from '../../engine/geom';
 import { BarLife } from './life';
+import { BarLook, withFillRim, RIM_GAIN, FILL_GAIN } from './look';
+import { ultraEntitlement, asQuality } from './ultra';
+import { BarAudio } from './audio';
 
 const q = new URLSearchParams(location.search);
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
@@ -53,10 +56,10 @@ const sysReduced = typeof matchMedia === 'function' && matchMedia('(prefers-redu
 // Ultra is an entitlement flag only (decision 15): owner mode and the test build unlock it; there's no price and no
 // purchase path anywhere. Until RS2's shared entitlement lands (S4), the flag is the page's own: ?ultra=1, the owner
 // flag on this device, or the test hooks.
-let ultraUnlocked = q.get('ultra') === '1' || q.get('quality') === 'ultra' || (() => { try { return localStorage.getItem('tsu.owner') === '1'; } catch { return false; } })();
-/** the tiers are low, hd and ultra (Lot 57's P1d names); 'high' is still read as HD */
-const asQuality = (v: string | null) => (v === 'high' ? 'hd' : v) as Quality | null;
-let quality: Quality = (['low', 'hd', 'ultra'].includes(asQuality(q.get('quality')) ?? '') ? asQuality(q.get('quality')) : coarse ? 'low' : 'hd') as Quality;
+// S4: ultra.ts reads the flags that exist until RS2's shared entitlement lands (O29)
+const entitlement = ultraEntitlement(q);
+let ultraUnlocked = entitlement.unlocked;
+let quality: Quality = asQuality(q.get('quality')) ?? (coarse ? 'low' : 'hd');
 if (quality === 'ultra' && !ultraUnlocked) quality = 'hd';
 let reduced = q.get('motion') === 'reduced' || sysReduced;
 
@@ -153,6 +156,11 @@ async function main() {
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(3200, 3200), mats.ground);
   ground.rotation.x = -Math.PI / 2; ground.position.y = -0.03; ground.receiveShadow = true; ground.name = 'ground'; world.add(ground);
   const byName = (n: string) => worldMeshes.find((m) => m.name === n) ?? null;
+  // S4: the look at each mode (look.ts): the materials' upgrades, the relief, the reflection cube, the grade, the dance lights
+  const barLook = new BarLook(renderer, scene, mats, F);
+  const sound = new BarAudio();                                             // S4: the sound (audio.ts), attached below
+  barLook.bind([...worldMeshes, ...venue.pool.map((p) => p.table)] as THREE.Mesh[]);
+  const cubeAt = (() => { const c = L(18, 7.5); return new THREE.Vector3(c[0], 1.6, c[1]); })();
   // the lot heads' glow, and the pool of light on the ground under each (the asphalt's dark albedo swallows the baked
   // light, as at Lot 57): one draw call each
   {
@@ -298,6 +306,9 @@ async function main() {
   const fillShare = () => (open ? clamp(0.12 + share * 0.92, 0, 0.96) : 0.05);
   // S2a: the life-sim layer (venues/sportsbar/life.ts); made here because the crowd's x1.25 reads its TV schedule
   const life = new BarLife(def);
+  /** the real lights' levels follow the clock too (S4's repair: they were set only on a change of graphics, so a page
+   *  loaded at noon kept Ultra's patio lights off after a set clock moved it to the night); set once the lights exist */
+  let relight = () => {};
   const applyClock = (firstTime = false, tick = false) => {
     simDate = live ? new Date() : C.anaheimDate(clock.day, clock.hour);
     if (live) clock = C.liveClock();
@@ -309,7 +320,9 @@ async function main() {
     env.update(1000, simDate); dimEnvGround(); env.update(1000, simDate);
     night = Math.pow(1 - env.daylight, 0.75);
     setBarNight(mats, night, open);
-    tuneBloom();
+    barLook.setNight(night, open, env.sunDir.y, env.daylight);
+    if (!firstTime) barLook.bake(cubeAt, night);
+    tuneBloom(); relight();
     for (const d of venue.doors) d.collider.on = !open;
     mats.bladeSign.draw(bladeN, open ? null : `opens ${Sch.opensAt(S, clock.day, clock.hour)}`);
     // parked cars: Lot 57's share rule and seed (L6), divided by the fill bias its rule gives these stalls
@@ -351,8 +364,8 @@ async function main() {
     }
     if (qq === 'ultra') {
       const tv = L(35.5, 4.75), back = L(20.4, 15.6);
-      const r1 = new THREE.RectAreaLight(0x9ab0ff, 0, 3.2, 1.8); r1.position.set(tv[0], 2.35, tv[1]); r1.lookAt(...((): [number, number, number] => { const t = L(30, 4.75); return [t[0], 2.0, t[1]]; })());
-      const r2 = new THREE.RectAreaLight(0xffc890, 0, 12, 0.4); r2.position.set(back[0], 2.4, back[1]); r2.lookAt(...((): [number, number, number] => { const t = L(20.4, 12); return [t[0], 1.2, t[1]]; })());
+      const r1 = new THREE.RectAreaLight(0x9fe0c4, 0, 3.2, 1.8); r1.name = 'tv-glow'; r1.position.set(tv[0], 2.35, tv[1]); r1.lookAt(...((): [number, number, number] => { const t = L(30, 4.75); return [t[0], 2.0, t[1]]; })());
+      const r2 = new THREE.RectAreaLight(0xffc890, 0, 12, 0.4); r2.name = 'back-bar'; r2.position.set(back[0], 2.4, back[1]); r2.lookAt(...((): [number, number, number] => { const t = L(20.4, 12); return [t[0], 1.2, t[1]]; })());
       scene.add(r1, r2); realLights.push(r1, r2);
       for (const h of [[12.9, -3.95], [20.95, -3.95]] as P2[]) { const [x, z] = L(h[0], h[1]); const l = new THREE.PointLight(0xff9a50, 0, 5, 2); l.position.set(x, 2.2, z); scene.add(l); realLights.push(l); }
     }
@@ -361,9 +374,11 @@ async function main() {
     for (const l of realLights) {
       const inside = !(l instanceof THREE.PointLight && l.color.getHex() === 0xff9a50);
       const k = inside ? (open ? 1 : 0) : open ? night : 0;
-      if (l instanceof THREE.SpotLight) l.intensity = 9 * k; else if (l instanceof THREE.RectAreaLight) l.intensity = 2.2 * k; else if (l instanceof THREE.PointLight) l.intensity = (inside ? 4 : 6) * k;
+      // S4's repair: Ultra's TV-wall glow up (2.2 to 3.6 after dark), so the screens' light reads on the standing crowd
+      if (l instanceof THREE.SpotLight) l.intensity = 9 * k; else if (l instanceof THREE.RectAreaLight) l.intensity = (l.name === 'tv-glow' ? 2.2 + 1.4 * night : 2.2) * k; else if (l instanceof THREE.PointLight) l.intensity = (inside ? 4 : 6) * k;
     }
   };
+  relight = lightLevels;
   let farMode = PRESET[quality].far;
   // the walls the overhead view can cut, with their midpoints and outward normals in local metres, worked out once:
   // setOverheadCut runs every frame in the overhead view and allocates nothing
@@ -387,7 +402,7 @@ async function main() {
     renderer.shadowMap.enabled = P.shadows > 0;
     // release the old post chain: EffectComposer.dispose() frees only its two targets and its copy pass, so each pass
     // (the render pass, GTAO's targets and materials, bloom's mip chain, the output pass) is disposed first
-    if (composer) { for (const ps of composer.passes) ps.dispose(); composer.dispose(); }
+    if (composer) { for (const ps of composer.passes) if (ps !== barLook.grade) ps.dispose(); composer.dispose(); }
     composer = null; bloom = null; gtao = null;
     const pr = clamp((devicePixelRatio || 1) * P.scale, P.minPR, P.maxPR);
     renderer.setPixelRatio(pr); renderer.setSize(innerWidth, innerHeight, false);
@@ -397,7 +412,9 @@ async function main() {
       const c = new EffectComposer(renderer, rt);
       c.addPass(new RenderPass(scene, camera));
       if (P.ao) {
-        gtao = new GTAOPass(scene, camera, size.x, size.y); gtao.blendIntensity = 0.8; c.addPass(gtao);
+        // S4's repair: a wider radius and a stronger blend, so the contact shading under feet, tables and stools and
+        // in the corners reads in the frame (the defaults, 0.25 m and 0.8, barely showed beside HD)
+        gtao = new GTAOPass(scene, camera, size.x, size.y); gtao.blendIntensity = 1; gtao.updateGtaoMaterial({ radius: 0.5, thickness: 1.5, scale: 1.3 }); c.addPass(gtao);
         // the AO's own normal and depth pass draws every visible mesh opaque with a normal material: the overlays
         // that write no depth (the lot's light pools, glass, blob shadows, the wordmark) would read as solid
         // surfaces there, and a mesh with no normals (the pools, the game's mountain ring) reads as a surface
@@ -411,6 +428,7 @@ async function main() {
       }
       if (P.bloom) { bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.32, 0.55, 0.88); tuneBloom(); c.addPass(bloom); }
       c.addPass(new OutputPass());
+      if (!barLook.disposed) c.addPass(barLook.grade);                         // S4: the grade, in display space (look.ts)
       c.setPixelRatio(pr); c.setSize(innerWidth, innerHeight);
       composer = c;
     }
@@ -436,6 +454,7 @@ async function main() {
     vis.update(camera, view, qq, nearPoint(), true);
     vis.applyCasting(qq);
     life.setQuality(qq, rebuildPeople);
+    barLook.setQuality(qq); barLook.bake(cubeAt, night); sound.setQuality(qq);
     renderer.compile(scene, camera);
   };
   /** the point the parked cars' near set is taken round: the overhead's target, or the camera (one object, reused) */
@@ -444,7 +463,7 @@ async function main() {
   const onResize = () => {
     const P = PRESET[quality], pr = clamp((devicePixelRatio || 1) * P.scale, P.minPR, P.maxPR);
     renderer.setPixelRatio(pr); renderer.setSize(innerWidth, innerHeight, false);
-    composer?.setPixelRatio(pr); composer?.setSize(innerWidth, innerHeight);
+    composer?.setPixelRatio(pr); composer?.setSize(innerWidth, innerHeight); barLook.resize();
     camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
   };
   addEventListener('resize', onResize);
@@ -496,6 +515,8 @@ async function main() {
   const setView = (v?: BarView | string) => {
     const nv: BarView = (['first', 'third', 'overhead'].includes(String(v)) ? v : nextView(view)) as BarView;
     if (nv === 'overhead' && view !== 'overhead') { const t = new THREE.Vector3(player.x, 0.5, player.z); overhead.moveTo({ target: t }); }
+    // S4's repair: a short dip covers the cut into or out of the overhead view (none under reduced motion)
+    if ((nv === 'overhead') !== (view === 'overhead') && !reduced) { const f = document.getElementById('fade'); if (f) { f.classList.remove('dip'); void f.offsetWidth; f.classList.add('dip'); } }
     view = nv; if (nv !== 'overhead') player.view = nv;
     bin.setOverhead(nv === 'overhead');
     barHud.setView(nv); avDirty = true;
@@ -515,7 +536,7 @@ async function main() {
     preparingUltra = true; barHud.busy(ultraNow ? 'Preparing Ultra…' : `Switching to ${LABEL[qq]}…`);
     requestAnimationFrame(() => requestAnimationFrame(() => { applyQuality(qq, rebuild); if (qq === 'ultra') buildLod0(); barHud.busy(null); preparingUltra = false; }));
   };
-  hud.onQuality = (qq) => { if (qq === 'ultra' && !ultraUnlocked) { hud.toast('Ultra is locked on this device.', 3); return; } switchQuality(qq); };
+  hud.onQuality = (q0) => { const qq = asQuality(q0); if (!qq) return; if (qq === 'ultra' && !ultraUnlocked) { hud.toast('Ultra is locked on this device.', 3); return; } switchQuality(qq); };
   hud.onClock = (c) => { live = c.live; if (!c.live) clock = { day: c.day, hour: c.hour }; applyClock(); };
   hud.onMotion = (rm) => { reduced = rm; player.reducedMotion = rm; overhead.reducedMotion = rm; hud.setMotion(rm); };
   hud.onPause = (on) => { input.enabled = !on && view !== 'overhead'; };
@@ -600,6 +621,7 @@ async function main() {
   if (!coarse) { const el = document.getElementById('hint'); if (el) el.textContent = 'W A S D to walk · drag to look · click to go · E to act · V or O for the view'; }
   try { localStorage.setItem('sportsbar.seen', '1'); } catch { /* a convenience */ }
   const _follow = new THREE.Vector3();
+  const avFill = { value: new THREE.Color(0, 0, 0) };
   const shownAct: [string | null, string | null] = [null, null];
   hud.setActions(null, null);
   let fixedCam: { p: THREE.Vector3; t: THREE.Vector3 } | null = null;
@@ -614,6 +636,7 @@ async function main() {
     const close = view === 'third' && third && ultra && lod0Ready;
     p.setLod(close ? 0 : 1);
     const lod1 = p.group.getObjectByName('lod1') as THREE.Mesh | undefined;
+    for (const n of ['lod1', 'lod2']) { const m = p.group.getObjectByName(n) as THREE.Mesh | undefined; if (m) withFillRim(m.material as THREE.Material, avFill); }
     p.group.visible = true;
     p.group.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = false; m.receiveShadow = true; m.layers.set(0); } });
     if (!lod1) return;
@@ -631,6 +654,8 @@ async function main() {
     p.play(player.seat ? 'sit' : sp > 0.15 ? 'walk' : 'idle');
     const k = sp > 0.15 && !player.seat ? clamp(sp / 1.25, 0.6, 2.2) : 1;
     p.update(dt * k);
+    // S4: your avatar's own fill, as the crowd's (the room's light inside while open, a little at night outside)
+    { const kq = quality === 'low' ? 1 : 0.55; if (indoorAt(player.x, player.z) && open) avFill.value.setRGB(0.34 * kq, 0.29 * kq, 0.24 * kq); else avFill.value.setRGB(0.12 * night, 0.11 * night, 0.1 * night); }
     const gameShow = !life.gameCamOn ? '' : life.gameHidesYou ? 'hide' : 'show';
     if (avDirty || avLast.view !== view || avLast.lod0 !== lod0Ready || avLast.quality !== quality || avLast.hide !== hide || avLast.game !== gameShow) {
       avDirty = false; avLast.view = view; avLast.lod0 = lod0Ready; avLast.quality = quality; avLast.hide = hide; avLast.game = gameShow;
@@ -651,9 +676,9 @@ async function main() {
     renderer.info.reset();
     // the shadow maps once a frame: the frame's first render draws them and clears the flag
     renderer.shadowMap.needsUpdate = renderer.shadowMap.enabled;
-    if (composer) composer.render(); else renderer.render(scene, camera);
+    if (barLook.retroOn) barLook.renderRetro(camera); else if (composer) composer.render(); else renderer.render(scene, camera);
     frameStats.calls = renderer.info.render.calls; frameStats.tris = renderer.info.render.triangles;
-    env.renderFlare();
+    if (barLook.retroOn) barLook.catchUp(); else env.renderFlare();         // S4: no lens flare in the Retro look
   };
   const placeCamera = (dt: number) => {
     const fov = innerHeight > innerWidth ? 78 : 62;
@@ -714,7 +739,9 @@ async function main() {
     if (view === 'overhead') cutNow = setOverheadCut();
     env.update(dt, live ? new Date() : simDate);
     env.follow(_follow.set(view === 'overhead' ? overhead.target.x : player.x, player.y, view === 'overhead' ? overhead.target.z : player.z), camera, now / 1000, dt);
-    streams.update(simTime, camera, night > 0.25, streamCars(quality));
+    streams.update(simTime, camera, night > 0.25, streamCars(quality), barLook.streamLook);
+    barLook.update(dt, camera.aspect, open && night > 0.2 && life.gameNightNow(), reduced);
+    sound.update(dt);                                                         // S4: the sound (audio.ts)
     const av = available();
     if (av[0] !== shownAct[0] || av[1] !== shownAct[1]) { shownAct[0] = av[0]; shownAct[1] = av[1]; hud.setActions(av[0], av[1]); }
     hud.tick(dt);
@@ -739,7 +766,17 @@ async function main() {
     clock: () => { lifeClock.day = clock.day; lifeClock.hour = clock.hour; lifeClock.live = live; lifeClock.open = open; lifeClock.night = night; lifeClock.share = share; return lifeClock; }, worldMeshes, shadowHooks: { before: vis.before, after: vis.after }, input, walkToCar: () => walkToCar(false), canvas,
     // S3a: the crowd's own needs from the page
     renderer, overheadTarget: () => overhead.target, visState: () => vis.state, avatarDrawn: () => (avLast.view === 'first' || avLast.hide || (life.gameCamOn && life.gameHidesYou) ? 0 : quality === 'ultra' && lod0Ready && view === 'third' ? 2 : view === 'overhead' || view === 'third' ? 1 : 0) });
+  // S4's repair: the screens life.ts draws the broadcast on (bar-screens-tv, made in attach) take the unlit material at
+  // HD and Ultra too (the old bar-screens mesh, bound above, is hidden behind them)
+  { const tv = scene.getObjectByName('bar-screens-tv') as THREE.Mesh | undefined; if (tv) barLook.bind([tv]); }
   applyQuality(quality, false);
+  // S4: the sound, made in code (audio.ts); it starts on the first tap or key
+  sound.attach({ life, F, camera, quality: () => quality, indoor: indoorAt, open: () => open, night: () => night, dance: () => open && night > 0.2 && life.gameNightNow(), freeway: streams.paths });
+  // S4's repair: leaving the venue releases what S4's look and sound made (look.ts, audio.ts dispose()). The page today
+  // is left only by closing it (pagehide, not kept in the back-forward cache); the live game's mount layer calls the
+  // same release when it takes the venue down. The rest of the page's release paths are unchanged
+  const releaseS4 = () => { sound.dispose(); barLook.dispose(); };
+  addEventListener('pagehide', (e) => { if (!(e as PageTransitionEvent).persisted) releaseS4(); });
 
   // ------------------------------------------------------------------------------------------ measuring (the budgets)
   /** the scene drawn once from the camera: one plain render between info resets, the maps not updating, no composer */
@@ -871,7 +908,7 @@ async function main() {
     setClock(day: number | string, hour: number) { live = false; clock = { day: C.parseDay(day), hour: clamp(hour, 0, 23.99) }; applyClock(); return hooks.clock(); },
     liveClock() { live = true; applyClock(); return hooks.clock(); },
     clock() { return { day: clock.day, hour: clock.hour, label: C.fmtClock(clock), open, level, share: +share.toFixed(3), night: +night.toFixed(3), business: Sch.businessDay(S, clock.day, clock.hour) }; },
-    setQuality(qq: Quality) { qq = asQuality(qq) ?? qq; if (!PRESET[qq]) throw new Error('quality: low, hd or ultra'); if (qq === 'ultra') { ultraUnlocked = true; barHud.setUltra(true); } const rebuild = PRESET[qq].people !== PRESET[quality].people; applyQuality(qq, rebuild); if (qq === 'ultra') buildLod0(); avDirty = true; return quality; },
+    setQuality(q0: Quality | 'high') { const qq = asQuality(q0); if (!qq || !PRESET[qq]) throw new Error('quality: low, hd (or high) or ultra'); if (qq === 'ultra') { ultraUnlocked = true; barHud.setUltra(true); } const rebuild = PRESET[qq].people !== PRESET[quality].people; applyQuality(qq, rebuild); if (qq === 'ultra') buildLod0(); avDirty = true; return quality; },
     stats() {
       const pass = measurePass(), maps = measureMaps(pass), ao = measureAo();
       // the frame's own count again (the measuring renders above don't touch the last frame's figures)
@@ -955,6 +992,25 @@ async function main() {
     // rule; a radial menu pinned to the old view closes
     pose(name: string) { const f = POSES[name]; if (!f) throw new Error('poses: ' + Object.keys(POSES).join(', ')); life.closeRadial(); hooks.setClock('Sat', 21); fixedCam = null; f(); placeCamera(0); camera.updateMatrixWorld(); life.crowd.buildAll(); vis.update(camera, view, quality, nearPoint(), true); cutNow = setOverheadCut(); updateAvatar(0, view === 'first'); return { pose: name, state: vis.state, view, camera: { ...G(camera.position.x, camera.position.z), y: +camera.position.y.toFixed(2) } }; },
     vis() { return visReport(); },
+    /** S4: the look at this mode (look.ts), the Retro style's state (O15) and the Ultra entitlement (O29) */
+    lookInfo() { return { ...barLook.report(), retroModule: 'lot57/retro.ts (Lot 57 P1d, through engine/retro.ts); RS1 (src/game/render/style.ts) not merged', pixelRatio: renderer.getPixelRatio(), scale: PRESET[quality].scale, composer: composer ? composer.passes.map((p, i) => (p === barLook.grade ? 'Grade' : p === gtao ? 'GTAO' : p === bloom ? 'Bloom' : i === 0 ? 'Render' : 'Output') + (p.enabled ? '' : ' (off)')) : null, entitlement: { unlocked: ultraUnlocked, by: entitlement.by }, ultraButton: document.querySelector('#segQ [data-q="ultra"]')?.textContent ?? null }; },
+    bakeCube() { return barLook.bake(cubeAt, night, true); },
+    /** S4's repair: release S4's look and sound as leaving the venue does, and report the renderer's memory before and
+     *  after (the page stops drawing S4's look after it: a test hook, the last call of a check) */
+    releaseS4() { renderer.renderLists.dispose(); const before = { ...renderer.info.memory, programs: renderer.info.programs?.length ?? 0 }; releaseS4(); if (composer) { composer.passes = composer.passes.filter((p) => p !== barLook.grade); } const ctxState = sound.ctx ? 'open' : 'closed'; renderer.render(scene, camera); return { before, after: { ...renderer.info.memory, programs: renderer.info.programs?.length ?? 0 }, look: barLook.disposed, sound: ctxState, inScene: ['dance-lights', 'pendant-cones', 'pendant-dust'].filter((n) => !!scene.getObjectByName(n)) }; },
+    /** S4's repair: the people's rim and fill gains, to see what they do to a near body (null leaves one as it is;
+     *  the next change of graphics sets the rim back to the mode's) */
+    peopleLight(rim: number | null, fill: number | null) { if (rim !== null) RIM_GAIN.value = rim; if (fill !== null) FILL_GAIN.value = fill; return { rim: RIM_GAIN.value, fill: FILL_GAIN.value }; },
+    /** S4's repair: where a point in the frame's (u, v) at height y lands on the screen, in CSS pixels (the shots'
+     *  pixel counts read the hero screen's centre circle through it), and whether it's in front of the camera */
+    project(u: number, v: number, y: number) { const [x, z] = L(u, v), p = new THREE.Vector3(x, y, z).project(camera); return { x: +((p.x + 1) / 2 * innerWidth).toFixed(1), y: +((1 - p.y) / 2 * innerHeight).toFixed(1), front: p.z < 1 }; },
+    /** S4's repair: the light streams' chains in the frame's (u, v) and their height, every 60 m (for framing the patio) */
+    /** S4's performance pass: the light streams' update timed over n calls at this mode's car count, at night (ms a call) */
+    timeStreams(n = 200) { const t0 = performance.now(); for (let k = 0; k < n; k++) streams.update(simTime + k * 0.016, camera, true, streamCars(quality), barLook.streamLook); const ms = (performance.now() - t0) / n; streams.update(simTime, camera, night > 0.25, streamCars(quality), barLook.streamLook); return { cars: streamCars(quality), ms: +ms.toFixed(4) }; },
+    streamPath() { return streams.paths.map((p) => p.pts.filter((_, i) => i % 10 === 0).map((q, i) => { const [u, v] = F.toFrame(q[0], q[1]); return [+u.toFixed(1), +v.toFixed(1), +p.ys[i * 10].toFixed(1)]; })); },
+    /** S4: the sound: start it (as a tap would), its state and levels; the mix's sliders by bus */
+    audio(on = true) { if (on) sound.start(); return sound.report(); },
+    setMix(bus: 'room' | 'screens' | 'music' | 'effects', v: number) { sound.setMix(bus, v); return sound.report().mix; },
     /** S1's check budget for the pass without people or items, at this preset and state */
     budget() { return { noPeople: NO_PEOPLE[quality][vis.state], budget: def.budgets[quality], alloc: ALLOC[quality] }; },
     /** the street sets as built, whatever the camera sees (every batch, the light streams at this preset's night count):
