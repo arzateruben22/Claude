@@ -51,7 +51,7 @@ export function Lessons({ channelId, channelName, ytHandle, lessons, parts, avai
         const fails = qaFails(l.qa);
         const qa = l.qa as { dur?: number; lufs?: number; true_peak_db?: number } | null;
         return (
-          <article key={l.id} className="card topic stack-sm">
+          <article key={l.id} id={`lesson-${l.id}`} className="card topic stack-sm">
             <div className="row spread top">
               <div>
                 <div className="kicker" style={{ color: "var(--topic-ink)" }}>{l.name} · {mine.length ? `${mine.length} episodes` : chapters.length ? `${chapters.length} chapters` : "built outside Prism"}{l.isDemo ? " · " : ""}{l.isDemo ? <span className="demo-tag">DEMO</span> : null}</div>

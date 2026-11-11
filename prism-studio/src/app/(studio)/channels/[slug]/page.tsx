@@ -15,12 +15,18 @@ import { Lessons } from "@/components/Lessons";
 import { availableForLesson } from "@/domain/lessons";
 import { demoFilter } from "@/domain/demo";
 import { canUsePaidGeneration, costTotals } from "@/domain/costs";
-import { localMonth } from "@/domain/time";
+import { formatLocal, localMonth } from "@/domain/time";
 import { ScrollTabs } from "@/components/ScrollTabs";
 import { ArchivedNote } from "@/components/ArchivedSeasons";
 import { inArchivedSeason, lessonOnWorkingSeason, seasonStateOfSeries, seriesOnWorkingSeason } from "@/domain/season-archive";
+import { episodePublishedState, episodeSeason, lessonPublishedState, lessonSeason, loadSeasonIndex, longVideoLabel, publishedPubs, seasonTag } from "@/domain/published";
 
-const TABS = [["overview", "Overview"], ["episodes", "Episodes"], ["lessons", "Lessons"], ["series", "Series"], ["accounts", "Accounts"], ["editorial", "Editorial"]] as const;
+const TABS = [["overview", "Overview"], ["published", "Published"], ["episodes", "Episodes"], ["lessons", "Lessons"], ["series", "Series"], ["accounts", "Accounts"], ["editorial", "Editorial"]] as const;
+
+/** "S3 · E1" (when the episode is in a season) ahead of "No. 013": small and muted; on a phone it wraps above the title. */
+function EpisodeNo({ tag, number }: { tag: string | null; number: number }) {
+  return <>{tag ? <><span className="num faint ep-season">{tag}</span>{" "}</> : null}<span className="num faint">No. {String(number).padStart(3, "0")}</span></>;
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const c = await channelBySlug((await params).slug);
@@ -43,6 +49,13 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
     costTotals(db(), [month]), canUsePaidGeneration(db(), c.id, 1),
   ]);
   const eps = allEps.filter((e) => !inArchivedSeason(a, e));
+  // Published (src/domain/published.ts): an episode on all three platforms, or 24 h past its first Uploaded press, leaves
+  // the Episodes tab for Published; a long video 24 h after its press. Worked out now, from the report times.
+  const now = new Date();
+  const [pubRows, seasonIdx] = await Promise.all([publishedPubs(db(), eps.map((e) => e.id)), loadSeasonIndex(db(), [c.id])]);
+  const pubState = new Map(eps.map((e) => [e.id, episodePublishedState(pubRows.filter((p) => p.episodeId === e.id), now)]));
+  const working = eps.filter((e) => !pubState.get(e.id)!.done);
+  const tagOf = (e: { seasonId: string | null; seriesId: string | null; seriesOrder: number | null }) => seasonTag(episodeSeason(e, seasonIdx), e.seriesOrder);
   const archived = a.archived.filter((x) => x.channelId === c.id);
   const real = allEps.filter((e) => !e.isDemo);   // the overview's counts: every real episode (archived seasons too), never demo
   const spend = costs.scope(c.id, month);
@@ -52,6 +65,20 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
   const name = c.name.replace(/ \(name TBD\)$/, "");
   const pct = (w.xp.xp - w.xp.levelStart) / Math.max(1, w.xp.next - w.xp.levelStart);
   const firstOpen = w.reqs.find((r) => !r.met);
+  const day = (at: Date | null) => (at ? formatLocal(at, s.timezone, { month: "short", day: "numeric" }) : "");
+  // the Published list: episodes and long videos together, newest first (by the first upload)
+  const published = [
+    ...eps.flatMap((e) => {
+      const st = pubState.get(e.id)!;
+      return st.done ? [{ kind: "episode" as const, id: e.id, at: st.firstAt, number: e.number, e, st }] : [];
+    }),
+    ...lessonRows.flatMap((l) => {
+      const st = lessonPublishedState(l, now);
+      if (!st.done || l.isDemo) return [];
+      const season = lessonSeason(l, lessonParts.filter((p) => p.lessonId === l.id).map((p) => p.episode), seasonIdx);
+      return [{ kind: "long" as const, id: l.id, at: st.at, number: 0, l, label: longVideoLabel(l.name, season) }];
+    }),
+  ].sort((x, y) => (y.at?.getTime() ?? 0) - (x.at?.getTime() ?? 0) || y.number - x.number);
   return (
     <div style={topicStyle(c)}>
       <div className="kicker" style={{ color: "var(--topic-ink)" }}>{c.label}{c.nameProvisional ? " · working name" : ""}</div>
@@ -103,17 +130,42 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
         </div>
       ) : null}
 
+      {tab === "published" ? (
+        <div className="card">
+          <ul className="list" style={{ listStyle: "none", margin: 0, padding: 0 }}>
+            {published.map((x) => x.kind === "episode" ? (
+              <li key={x.id} className="row spread ep-row published-row">
+                <Link href={`/episodes/${x.id}`} style={{ textDecoration: "none" }}><EpisodeNo tag={tagOf(x.e)} number={x.e.number} /> <b>{x.e.title}</b></Link>
+                <span className="row published-marks">
+                  {x.st.platforms.map((p) => (
+                    <span key={p.platform} className={`chip${p.uploaded ? " good" : ""}`}>{PLATFORM_LABEL[p.platform]}{p.uploaded ? (p.at ? ` · ${day(p.at)}` : " · uploaded") : " · not marked"}</span>
+                  ))}
+                </span>
+              </li>
+            ) : (
+              <li key={x.id} className="row spread ep-row published-row">
+                <Link href={`/channels/${slug}?tab=lessons#lesson-${x.id}`} style={{ textDecoration: "none" }}><span className="num faint ep-season">{x.label}</span> <span className="num faint">Long video</span> <b>{x.l.title}</b></Link>
+                <span className="row published-marks"><span className="chip good">YouTube{x.at ? ` · ${day(x.at)}` : " · uploaded"}</span></span>
+              </li>
+            ))}
+          </ul>
+          {!published.length ? <p className="muted">Nothing published yet.</p> : null}
+          <p className="faint published-note">An episode moves here once it is marked uploaded on YouTube, TikTok and Instagram, or 24 hours after its first Uploaded button; a long video 24 hours after its button. Undo brings it back to its tab.</p>
+          <ArchivedNote slug={slug} seasons={archived} />
+        </div>
+      ) : null}
+
       {tab === "episodes" ? (
         <div className="card">
           <ul className="list" style={{ listStyle: "none", margin: 0, padding: 0 }}>
-            {eps.map((e) => (
+            {working.map((e) => (
               <li key={e.id} className="row spread ep-row">
-                <Link href={`/episodes/${e.id}`} style={{ textDecoration: "none" }}><span className="num faint">No. {String(e.number).padStart(3, "0")}</span> <b>{e.title}</b>{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</Link>
+                <Link href={`/episodes/${e.id}`} style={{ textDecoration: "none" }}><EpisodeNo tag={tagOf(e)} number={e.number} /> <b>{e.title}</b>{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null}</Link>
                 <span className={`chip ${stateTone(e.state)}`}>{STATE_LABEL[e.state]}</span>
               </li>
             ))}
           </ul>
-          {!eps.length ? <p className="muted">{archived.length ? "Nothing in the working seasons." : "No episodes yet."}</p> : null}
+          {!working.length ? <p className="muted">{eps.length ? <>Every episode is published: see <Link href={`/channels/${slug}?tab=published`}>Published</Link>.</> : archived.length ? "Nothing in the working seasons." : "No episodes yet."}</p> : null}
           <ArchivedNote slug={slug} seasons={archived} />
         </div>
       ) : null}

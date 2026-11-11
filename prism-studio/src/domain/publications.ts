@@ -77,7 +77,8 @@ export async function markUploaded(d: DB, id: string, v: { postUrl?: string; sch
   });
 }
 
-const REPORTED: PubStatus[] = ["owner_reported", "scheduled_on_platform", "verified_published"];
+/** The statuses that mean "posted" (the owner pressed an Uploaded button, or the platform verified it). */
+export const REPORTED: PubStatus[] = ["owner_reported", "scheduled_on_platform", "verified_published"];
 
 /** Backfill: record posts the owner made by hand before the studio tracked them. It is owner-reported (never
  *  "verified"), skips the Review approval on purpose because the post already happened, labels every row in its note

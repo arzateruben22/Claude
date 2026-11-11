@@ -21,6 +21,7 @@ import {
   archivedSeasonOf, inArchivedSeason, lessonOnWorkingSeason, onWorkingSeason, seasonArchive, seriesOnWorkingSeason, type ArchivedSeason, type SeasonArchive,
 } from "@/domain/season-archive";
 import { slotsForDate } from "@/domain/schedule";
+import { lessonPublished, lessonSeasons, loadSeasonIndex, longVideoLabel, PUBLISHED_AFTER_MS } from "@/domain/published";
 import { addDays, formatLocal, localDate, localMonth, zonedTimeToUtc } from "@/domain/time";
 import { INSTAGRAM_SLUG, rigLayout, type RigPosition } from "@/lib/rig";
 import { resolveMedia } from "@/lib/media";
@@ -529,22 +530,30 @@ export async function rigView() {
     ledLabel: igLed === "ready" ? "ready to post today" : igLed === "review" ? "needs a render" : "nothing queued today", slots,
   });
   const reviewCount = eps.filter((e) => e.state === "ready_for_review").length;
-  // built long videos (lessons) not recorded as uploaded on YouTube yet, and those recorded today (so a mis-press can be
-  // undone right there): the Home card's "Uploaded on YouTube" buttons. No approval needed; working seasons only.
-  const startOfToday = zonedTimeToUtc(today, "00:00", tz);
-  const longVideos = (await d.select().from(S.lessons)
+  // built long videos (lessons) not recorded as uploaded on YouTube yet, newest season first ("S3" above "S2" above
+  // "Vol 1"), and below them those recorded in the last 24 hours, so a mis-press can be undone right there; after that
+  // they move to their channel's Published tab (src/domain/published.ts). The Home card's "Uploaded on YouTube" buttons.
+  // No approval needed; working seasons only.
+  const now = new Date();
+  const lessonRows = (await d.select().from(S.lessons)
     .where(and(eq(S.lessons.isDemo, false), eq(S.lessons.isTestFixture, false), ne(S.lessons.videoPath, ""), onActiveChannel(S.lessons.channelId),
-      or(ne(S.lessons.state, "published"), gte(S.lessons.reportedAt, startOfToday)), lessonOnWorkingSeason(arch, S.lessons.id)))
-    .orderBy(asc(S.lessons.createdAt)))
-    .map((lesson) => ({ lesson, channel: chans.find((c) => c.id === lesson.channelId)! })).filter((x) => !!x.channel);
-  const longToUpload = longVideos.filter((x) => x.lesson.state !== "published");
+      or(ne(S.lessons.state, "published"), gte(S.lessons.reportedAt, new Date(now.getTime() - PUBLISHED_AFTER_MS))), lessonOnWorkingSeason(arch, S.lessons.id)))
+    .orderBy(desc(S.lessons.createdAt))).filter((l) => !lessonPublished(l, now));
+  const seasonOf = lessonRows.length ? await lessonSeasons(d, lessonRows, await loadSeasonIndex(d, chans.map((c) => c.id))) : new Map<string, number | null>();
+  const longs = lessonRows.map((lesson) => {
+    const season = seasonOf.get(lesson.id) ?? null;
+    return { lesson, channel: chans.find((c) => c.id === lesson.channelId)!, season, label: longVideoLabel(lesson.name, season) };
+  }).filter((x) => !!x.channel);
+  const longToUpload = longs.filter((x) => x.lesson.state !== "published").sort((a, b) => (b.season ?? 0) - (a.season ?? 0));   // stable: newest first within a season
+  const longJustUploaded = longs.filter((x) => x.lesson.state === "published").sort((a, b) => (b.lesson.reportedAt?.getTime() ?? 0) - (a.lesson.reportedAt?.getTime() ?? 0));
+  const longVideos = [...longToUpload, ...longJustUploaded];
   const unseenEvolutions = (await d.select({ channelId: S.evolutions.channelId }).from(S.evolutions).where(and(isNotNull(S.evolutions.evolvedAt), isNull(S.evolutions.seenAt))))
     .map((x) => chans.find((c) => c.id === x.channelId)).filter((c): c is Channel => !!c);
   const unseenAchievements = await d.select({ title: S.milestoneRules.title, demo: S.achievementEvents.isDemo }).from(S.achievementEvents)
     .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId))
     .where(and(isNull(S.achievementEvents.seenAt), achievementOnActiveChannel(S.achievementEvents.scopeKey, S.achievementEvents.channelId)));
   return {
-    tz, today, monitors, reviewCount, longVideos, longToUpload, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length,
+    tz, today, monitors, reviewCount, longVideos, longToUpload, longJustUploaded, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length,
     instagram: { toPlan: s.globalPause ? 0 : unplanned, day }, paused: s.globalPause, stopExternal: s.stopExternalActions,
   };
 }

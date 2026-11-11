@@ -315,6 +315,7 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .home-long-title a:hover { text-decoration: underline; }
 .home-longs .uploaded-bar { flex: 0 1 230px; }
 .home-longs > p { margin: 0; font-size: 12.5px; }
+.home-longs-done { display: grid; gap: 4px; padding-top: 4px; }   /* recorded in the last 24 hours, with Undo */
 @media (min-width: 1100px) { .home-brand { font-size: 30px; } }
 @media (max-width: 899px) {
   /* the brand and the day at the top, then a band of open skyline (the portrait wallpaper's spire) above the monitors */
@@ -781,6 +782,12 @@ a.budget-name:hover { text-decoration: underline; }
 .archived-longs .kicker { display: block; }
 .archived-longs .uploaded-bar { flex: 0 1 230px; }
 .archived-note { margin: var(--s3) 0 0; font-size: 13.5px; }
+/* a channel's Published tab (src/domain/published.ts): each row's platforms and dates; "S3 · E1" ahead of "No. 013" */
+.published-row > a { min-width: 0; overflow-wrap: anywhere; }
+.published-marks { gap: 2px 14px; }
+.published-note { margin: var(--s3) 0 0; font-size: 13.5px; }
+.ep-season { white-space: nowrap; margin-right: .45em; }
+@media (max-width: 899px), (pointer: coarse) { .list > .ep-row.published-row { padding-block: 2px 10px; row-gap: 2px; } }
 
 /* ── channel identities (src/lib/identity.ts) ─────────────────────────────
    Two channels bring their films' look onto the wall and their screen; the studio around them stays night glass.

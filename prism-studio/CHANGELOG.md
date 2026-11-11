@@ -1,6 +1,16 @@
 # Changelog
 
 ## Unreleased
+- A channel's **Published** tab, next to Overview (owner's request, 11 Nov 2026): an episode leaves the Episodes tab for
+  Published once YouTube, TikTok and Instagram are all marked uploaded, or 24 hours after its first Uploaded press
+  (`src/domain/published.ts`, from `publications.reported_at`; derived at read time, no job or migration, so an Undo
+  brings it back). Each row shows which platforms are marked and when, newest first by first upload. A long video is
+  done 24 hours after its "Uploaded on YouTube" press: until then Home's Long videos card keeps it below the ones still
+  to upload, with its Undo; after that it is listed in Published. The card lists what is still to upload newest season
+  first, and its counter counts only those. Archived seasons are unchanged (Library → Archived seasons).
+  Season numbers next to episodes: "S3 · E1" ahead of "No. 013" in Episodes and Published (from the episode's season
+  row, else its series; nothing for an episode in no season), and "S1"/"S3" on a long video whose season the data says
+  (its episodes and series), else "Vol 1".
 - Season 3 imports (films/channels/SEASON-FORMAT.md). `SEASON3` slates in `scripts/import-episodes.ts`: Reality
   Rulebook, One More Orbit and Possibility Lab get 8 parts each (ep13-ep20), Skin Sense 6 episodes (ep13-ep18), under
   stable series titles. `seasonsFor` now derives each season's first folder from the earlier slates (Season 4 needs
