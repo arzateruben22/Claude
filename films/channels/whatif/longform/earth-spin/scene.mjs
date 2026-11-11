@@ -83,12 +83,12 @@ const NF = 320, dustF = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 8), 
 { for (let i = 0; i < NF; i++) { const r = 0.012 + rnd(i, 5) * rnd(i, 6) * 0.04; S3.set(r, r, 1); P3.set((rnd(i, 7) - 0.5) * 24, 0.2 + rnd(i, 8) * 7, -3 - rnd(i, 9) * 40); Mx.compose(P3, Q0, S3); dustF.setMatrixAt(i, Mx); } dustF.instanceMatrix.needsUpdate = true; }
 
 // ── the globe ───────────────────────────────────────────────────────────────
-const GVS = `varying vec3 vN; void main() { vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
-const GFS = `precision highp float; uniform vec3 uCol, uDark, uLight; uniform float uExposure, uSpin, uDry; uniform sampler2D uMap; varying vec3 vN;
+const GVS = `varying vec3 vN, vO; void main() { vO = normalize(normal); vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
+const GFS = `precision highp float; uniform vec3 uCol, uDark, uLight; uniform float uExposure, uSpin, uDry; uniform sampler2D uMap; varying vec3 vN, vO;
 ${ACES_INV_GLSL}
 void main() {
   vec3 n = normalize(vN); float lam = 0.5 + 0.5 * dot(n, normalize(uLight)); vec3 col = mix(uDark, uCol, lam);
-  float lon = atan(n.x, n.z) + uSpin, lat = asin(clamp(n.y, -1.0, 1.0));
+  vec3 o = normalize(vO); float lon = atan(o.x, o.z) + uSpin, lat = asin(clamp(o.y, -1.0, 1.0));
   vec3 tx = texture2D(uMap, vec2(lon / 6.2831853 + 0.5, lat / 3.1415927 + 0.5)).rgb;
   float water = step(tx.r + 0.04, tx.b);
   float dry = step(uDry * 0.0174533, abs(lat)) * water;
@@ -108,7 +108,10 @@ const markers = dotMesh(ANCH, 9, 3);                          // you at the equa
 const arrows = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), basic(AMB, 1, false), 3); arrows.frustumCulled = false; arrows.renderOrder = 9; arrows.userData.noProbe = true; arrows.visible = false; scene.add(arrows);
 const NS = 3, NSP = 130, storms = dotMesh(CHALK, 7, NS * NSP);
 const ND = 520, debris = dotMesh(AMB, 7, ND);
+const planetG = new THREE.Group(); scene.add(planetG);
 const eqGlow = new THREE.Mesh(new THREE.TorusGeometry(1, 0.012, 8, 160), basic(AMB, 0.0, false)); eqGlow.rotation.x = Math.PI / 2; eqGlow.renderOrder = 8; eqGlow.userData.noProbe = true; eqGlow.visible = false; scene.add(eqGlow);
+planetG.add(globe, markers, arrows, storms, debris, eqGlow);
+planetG.rotation.z = -Math.PI / 2;                              // the pole axis is horizontal: the figure on the top is ON the equator
 
 // ── the tower: all the spin energy, then and now ────────────────────────────
 const TW = 6, TH = 58, tower = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), basic(ANCH, 0.85, false)); tower.renderOrder = 5; tower.userData.noProbe = true; tower.visible = false; scene.add(tower);
@@ -117,6 +120,7 @@ const towerE = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeome
 
 // ── the overlay ─────────────────────────────────────────────────────────────
 const hud = createHud({ camera, shots: FILM.shots });
+document.documentElement.style.setProperty("--hud-plate", "rgba(8, 9, 11, .88)");           // every caption keeps a dark plate, even over the Sun
 hud.captions(FILM.captions);
 const titleEl = hud.title(FILM.title);
 const tFlap = titleFlap(titleEl, { t0: FILM.title.t0 ?? 0, sig: FILM.title.sig });
@@ -154,48 +158,49 @@ window.seek = function (t) {
   // photosensitivity: when one day takes only a second or two of film, shrink the day/night swing so the light only pulses gently
   const cycP = WD.cycleS * T / WD.t0H, amp = Math.max(0.08, Math.min(1, (cycP - 0.8) / 5.2)), day = 0.5 + (day0 - 0.5) * amp;
 
-  // the sky, stars, sun and the ground
-  sky.visible = pov; stars.visible = pov; sunDisk.visible = pov; sunHalo.visible = pov;
-  skyU.uSun.value.copy(sunDir); skyU.uDay.value = day; skyU.uGlow.value = 0.25 + 0.75 * amp; const gs = 0.3 + 0.7 * amp; stars.rotation.x = ph; starM.opacity = 0.9 * (1 - day);
+  // the planet staging: a big Earth, you standing on its equator (the top), the sky circling round the pole axis (the figure's own frame: the Sun and the stars go round, the planet stays)
+  const gl = shot === "globe", sp = shot !== "tower", beatId = (FILM.beats.find((b) => t >= b.t0 && t < b.t1) || {}).id;
+  const fixedL = new THREE.Vector3(-0.45, 0.35, 0.8).normalize(), lightV = fixedL.clone().lerp(sunDir, amp).normalize();     // the light swings less and less as the days get short (photosensitivity)
+  sky.visible = stars.visible = sunDisk.visible = sunHalo.visible = sp;
+  skyU.uSun.value.copy(sunDir); skyU.uDay.value = 0; skyU.uGlow.value = 0.25 + 0.75 * amp; const gs = 0.3 + 0.7 * amp; stars.rotation.x = 0.04 * ph; starM.opacity = 0.9;
   sunDisk.position.copy(sunDir).multiplyScalar(1200); sunDisk.scale.setScalar(52 * gs); sunDisk.lookAt(camera.position);
   sunHalo.position.copy(sunDir).multiplyScalar(1190); sunHalo.scale.setScalar(260 * gs); sunHalo.lookAt(camera.position);
-  sunDisk.visible = pov && sunDir.y > -0.05; sunHalo.visible = sunDisk.visible;
-  desk.group.visible = pov;
-  desk.update({ grid: 1, pool: [0, -2], casters: [], span: 3000 }); desk.uniforms.uExposure.value = 0.45 + 0.85 * day;
-  dustF.visible = pov;
+  desk.group.visible = false; dustF.visible = false; sunDisk.material.depthTest = true; sunHalo.material.depthTest = true;   // the planet hides the Sun when it is behind it
+  gU.uLight.value.copy(lightV); gU.uExposure.value = 0.9 + 0.35 * day;
 
   // you and the camera
   const liftU = shot === "lift" ? E.inout2(seg(t, CUE.float[0] + 4, CUE.float[1] - 2)) : 0, rise = 7 * liftU;
-  const shake = 0.0016 * spinU * Math.sin(t * 31) + 0.0008 * spinU * Math.sin(t * 17.3);
-  if (shot === "eye") {
-    const yaw = 0.05 * Math.sin(t * 0.21), pit = 0.19 + 0.03 * Math.sin(t * 0.17);
-    camera.fov = PORT ? 70 : 56; camera.position.set(0, 1.7, 0.2); camera.rotation.set(pit + shake, yaw, 0, "YXZ");
-  } else if (pov) {
-    const a = 0.12 * Math.sin(t * 0.15);
-    camera.fov = PORT ? 62 : 44; camera.position.set(PORT ? 0.8 : 1.1 + 0.4 * Math.sin(t * 0.13), 2.15 + 0.5 * liftU + rise * 0.9, 3.6 + 0.3 * rise);
-    camera.lookAt(-0.35 + a, 1.5 + rise * 0.85, -6); camera.rotation.z += shake;
+  const sw = 0.05 * Math.sin(t * 0.37), sh = 0.035 * Math.sin(t * 0.23);
+  let pcx = 0, pcy = 0;
+  if (PORT) {
+    camera.fov = 34;
+    if (!gl) { pcy = -1.25; camera.position.set(sw, 0.3 + sh, 6.3); camera.lookAt(0, -0.3, 0); }
+    else { pcy = -0.6; camera.position.set(sw, 0.3 + sh, beatId === "break" ? 9.4 : 7.0); camera.lookAt(0, 0.05, 0); }
+  } else if (!gl) {
+    pcx = 0.9; pcy = -1.48; camera.fov = 32; camera.position.set(0.9 + sw, -0.1 + sh, 3.2); camera.lookAt(0.9, -0.3, 0);
+  } else { camera.fov = 30; camera.position.set(-1.6, 0.9 + 0.2 * Math.sin(t * 0.1), beatId === "break" ? 6.2 : 5.4); camera.lookAt(-1.4, 0.1, 0); }
+  planetG.position.set(pcx, pcy, 0);
+  window.__focus = shot === "tower" ? [0, 20, 0] : [pcx, pcy + 1, 0];
+  const ysc = (gl ? 0.6 : 1) * (PORT ? 0.26 : 0.15);
+  you.group.visible = sp && shot !== "end";
+  if (you.group.visible) {
+    you.set({ at: [0, 0, 0], arms: 0.06 + 0.5 * liftU + 0.03 * Math.sin(t * 1.3), tilt: 0 });
+    you.group.scale.set(ysc, ysc * (1 + 0.012 * Math.sin(t * 1.7)), ysc); you.group.position.set(pcx, pcy + 1.0 + (0.85 + rise) * ysc, 0); you.group.rotation.set(0, Math.PI, 0.02 * Math.sin(t * 0.9));
   }
-  window.__focus = shot === "eye" ? [0, 1.7, -12] : shot === "globe" ? [PORT ? 0 : -1.4, 0.1, 0] : shot === "tower" ? [0, 20, 0] : [0, 1.4 + rise * 0.6, 0];
-  you.group.visible = shot === "shoulder" || shot === "lift" || shot === "end";
-  if (you.group.visible) { you.set({ at: [0, 0.85 + rise, 0], arms: 0.06 + 0.5 * liftU, tilt: 0 }); you.group.rotation.y = Math.PI; }
 
   // the wind: streaks blowing at you (the air is left behind by the spinning ground)
   const wu = shot === "eye" ? E.inout2(seg(t, CUE.wind[0] + 7, CUE.wind[0] + 11)) * (1 - E.inout2(seg(t, CUE.wind[1] - 3, CUE.wind[1]))) : 0;
   wind.visible = wu > 0.01; wind.material.opacity = 0.55 * wu;
-  if (wind.visible) for (let i = 0; i < NW; i++) { const sp = 55 + 40 * rnd(i, 3), z = -70 + (((rnd(i, 4) * 70 + t * sp) % 70)), len = 3 + 6 * rnd(i, 5);
-    P3.set((rnd(i, 1) - 0.5) * 18, 0.25 + rnd(i, 2) * 6, z); S3.set(0.02 + 0.02 * rnd(i, 6), 0.02, len); Mx.compose(P3, Q0, S3); wind.setMatrixAt(i, Mx); }
+  if (wind.visible) for (let i = 0; i < NW; i++) { const sp2 = 5 + 4 * rnd(i, 3), x = pcx + 6 - (((rnd(i, 4) * 12 + t * sp2) % 12)), len = 0.3 + 0.7 * rnd(i, 5);
+    P3.set(x, pcy + 1.0 + 0.05 + rnd(i, 2) * 1.3, (rnd(i, 1) - 0.5) * 1.4); S3.set(len, 0.006 + 0.004 * rnd(i, 6), 0.006); Mx.compose(P3, Q0, S3); wind.setMatrixAt(i, Mx); }
   if (wind.visible) wind.instanceMatrix.needsUpdate = true;
 
   // the globe (planet shots): flattening, drying poles, storms, markers, debris
-  const gl = shot === "globe", beatId = (FILM.beats.find((b) => t >= b.t0 && t < b.t1) || {}).id;
-  globe.visible = gl;
+  globe.visible = sp;
   const f = 0.02 + 0.28 * Math.pow(spinU, 1.4), gph = ph * 0.5;
-  globe.scale.set(1, 1 - f, 1); gU.uSpin.value = gph; gU.uDry.value = dryAt(t);
+  globe.scale.set(1, 1 - f, 1); gU.uSpin.value = gl ? gph : 0.03 * t; gU.uDry.value = dryAt(t);
   if (gl) {
     const pulling = beatId === "break" ? E.inout2(seg(t, CUE.break[0] + 1.5, CUE.break[1] - 2)) : 0;
-    camera.fov = 30; const cam = beatId === "break" ? 6.2 : 5.4;
-    if (PORT) { camera.position.set(0, 1.4 + 0.2 * Math.sin(t * 0.1), beatId === "break" ? 24.5 : 18.0); camera.lookAt(0, -1.95, 0); }
-    else { camera.position.set(-1.6 + 0.0, 0.9 + 0.2 * Math.sin(t * 0.1), cam); camera.lookAt(-1.4, 0.1, 0); }
     // markers and arrows (poles beat)
     const mo = beatId === "poles" ? E.inout2(seg(t, CUE.poles[0] + 5, CUE.poles[0] + 7)) * (1 - E.inout2(seg(t, CUE.poles[1] - 2, CUE.poles[1] - 0.5))) : 0;
     markers.visible = (beatId === "poles" || beatId === "premise") && (mo > 0.01 || beatId === "premise"); arrows.visible = mo > 0.01;
