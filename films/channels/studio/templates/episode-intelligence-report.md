@@ -1,7 +1,8 @@
 # Episode Intelligence Report: `<episode id>` "<title>"
 
 Copy this file to `review/intelligence-report.md` in the episode folder (a long video: in its working folder) and
-fill it in when the episode is delivered. Guide: [../reports/README.md](../reports/README.md).
+fill it in when the episode is delivered. Guide: `films/channels/studio/reports/README.md` on
+`claude/made-with-claude-film`. Paths below that start `films/channels/studio/` are on that branch too.
 
 | Field | Value |
 |---|---|
@@ -27,7 +28,7 @@ Three rules for this file:
 |---|---|---|
 | Master file | | `out/<name>-9x16.mp4` or `compilations/<name>/<name>-16x9.mp4` |
 | Size in pixels; rendered natively at | | `review/qa-report.json` `measurements.video`; `episode.json` `format.nativeSize` |
-| Honest label ("1080 native", "1440 upscale", ...) | | [../README.md](../README.md), "Master resolution per format" |
+| Honest label ("1080 native", "1440 upscale", ...) | | `films/channels/studio/README.md`, "Master resolution per format" |
 | Length | | `review/qa-report.json` `measurements.video.durationS` |
 | Loudness, true peak | | `review/qa-report.json` `measurements.audio` |
 | File size | | `review/qa-report.json` `measurements.container.sizeMb` |
@@ -50,7 +51,7 @@ Three rules for this file:
 
 | Measure | Value | Source |
 |---|---|---|
-| Frames in the final | | `build/final/<aspect>/manifest.json` |
+| Frames in the final | | `build/final/<aspect>/manifest.json` (Skin Sense's plain path: `build/final-plain/`) |
 | Render seconds per frame, average; blur samples (K) average and max | | `kits/cinema/film/scorecard.py`, or the chunk lines of the render log |
 | Render hours for the final | | the same |
 | Machine and what else ran on it | | the render log; note other jobs |
@@ -115,7 +116,7 @@ prove a rule for the channel.
 
 ## Part 3: Reusable assets
 
-| Asset (scene module, world, rig, material, prop, score preset, painting, tool) | Where it is (`branch:path`) | Ready to reuse, or needs lifting into `set/` or the kit | Listed in [LIBRARY.md](../LIBRARY.md)? |
+| Asset (scene module, world, rig, material, prop, score preset, painting, tool) | Where it is (`branch:path`) | Ready to reuse, or needs lifting into `set/` or the kit | Listed in `films/channels/studio/LIBRARY.md`? |
 |---|---|---|---|
 | | | | |
 

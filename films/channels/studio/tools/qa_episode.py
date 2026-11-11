@@ -222,7 +222,11 @@ def audio_levels(video, prof):
     r = run(["ffmpeg", "-hide_banner", "-nostats", "-i", str(video), "-map", "0:a:0", "-af",
              f"silencedetect=n={sil['db']}dB:d={sil['s']},ebur128=peak=true:framelog=verbose", "-f", "null", "-"])
     s = r.stderr[r.stderr.rfind("Summary:"):] if "Summary:" in r.stderr else ""
-    get = lambda pat: (lambda m: float(m.group(1)) if m and m.group(1) not in ("-inf", "inf", "nan") else None)(re.search(pat, s))
+
+    def get(pat):
+        m = re.search(pat, s)
+        return float(m.group(1)) if m and m.group(1) not in ("-inf", "inf", "nan") else None
+
     return {"lufs": get(r"I:\s+(-?[\d.]+|-inf) LUFS"), "truePeakDb": get(r"Peak:\s+(-?[\d.]+|-inf) dBFS"),
             "lra": get(r"LRA:\s+(-?[\d.]+) LU")}, r.stderr
 
@@ -877,7 +881,7 @@ def summary(report, G, out):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("video", nargs="?")
     ap.add_argument("--episode")
     ap.add_argument("--kind", choices=KINDS)

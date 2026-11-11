@@ -16,7 +16,7 @@ Machine-readable copy of everything below: [qa/rubric.json](qa/rubric.json). The
 | Layer | What it is | Where it is written | Who decides |
 |---|---|---|---|
 | Hard gates | 26 pass-or-fail rules. 12 are measured from the delivered file, 8 are read from files beside it, 6 are recorded by people | `hardGates` in [qa/rubric.json](qa/rubric.json); section 3 | Tool, builder, coordinator, owner |
-| The (a) to (h) gate | The reviewer's eight scores, 1 to 5. Binding since Season 1. It is one of the hard gates | [../STUDIO-STYLE.md](../STUDIO-STYLE.md), "Quality gate" | Reviewer (the coordinator) |
+| The (a) to (h) gate | The reviewer's eight scores, 1 to 5, on every episode. It stays binding, and is one of the hard gates | [../STUDIO-STYLE.md](../STUDIO-STYLE.md), "Quality gate" | Reviewer (the coordinator) |
 | The 100-point rubric | 42 criteria in ten categories. 30 points are scored by the tool, 70 by people. Target: 95 | `categories` in [qa/rubric.json](qa/rubric.json); section 4 | Tool, builder, coordinator, owner |
 
 Release needs both: every hard gate passed, and 95 points or more. Neither replaces the other. The rubric is layered
@@ -142,7 +142,7 @@ Both are finished and approved. Measured 11 Nov 2026 with `qa_episode.py`; frame
 | Mono | Correlation 0.91, loss 0.1 dB | Correlation 0.91, loss 0.1 dB |
 | Silence in the mix | None | None |
 | Flashes | Worst 1 in a second, transitions at frames 1 and 1098 (the kit's own record: the same) | Worst 2 in a second |
-| Frozen picture | One hold, 63.2 s to the end: the end card, 5.23 s | 14 stretches, 131.5 s in all: narrated still cards |
+| Frozen picture | One hold, 63.2 s to the end: the end card, 5.23 s | 14 stretches, 131.5 s in all, besides a 7.2 s end card. Frame grabs at ten points showed still cards each time: the opening, an episode's own end card, a bridge, the finale. Their narration is in `compilations/vol02/voice/` |
 | First frame | Composed | One black frame, then a fade-in |
 | Voiceless gaps (stem) | Longest 1.21 s | No stem available |
 
