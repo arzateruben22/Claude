@@ -4,6 +4,23 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-11: Final live merge 3: fixes
+
+Drop 1 of 2 went live on claude/final-live (on top of c3962c5, the live v14 game). Three reviewed branches were merged by exact hash:
+- claude/hypercar (c619de5, merge 89027d5): more body detail on the OC Hypercar (M1b): satin frit, tinted glass, exterior carbon and side scoops, with the live mirror paint kept.
+- claude/sport-wheel (a9c9998, merge eb4584f): the new sport steering wheel, with dial widgets and shift lights that work.
+- claude/nav-hud (cf9bc11, merge fc2f7e1): the destination HUD fix, so the destination panel fits on phones and desktops.
+
+Conflicts were resolved by keeping both sides (paint() and carbon() options, mirror paint next to the M1b materials). One call: a store paint finish on the hypercar does not get M1b's env and lift; before this merge no hypercar paint had them, so nothing got worse.
+
+Skipped on purpose: the debris fix and Stoppage Time S4 wait for drop 2, so the I-5 Disney Way/Katella frame and the S4 checks were not run. The render and venues-trips suite groups were skipped because their lanes passed them on the same code.
+
+Checks: tsc clean on both configs; build 3681 KB js with exactly 1 data-build="owner-test". Suites: boot 6/6 (1m03s), modes 9/9 (3m23s), phone 18/18 (13m50s, including the sport wheel check), nav-hud 3/3 (4m55s), venues 13/13 (5m34s; one Go To / Get out / Drive back per venue, no page errors). Heap: not measured this run, since venues-trips (which takes heap readings) was skipped. Protected files are byte-identical to c3962c5.
+
+Frames (tests/out/final-live-3/): menu-1450x767.png, menu-390x844.png; wheel-rossini-gt-1450x767.png, wheel-rossini-gt-390x844.png, wheel-oc-hyper-1450x767.png, wheel-oc-hyper-390x844.png; hud-stoppage-time-1450x767.png, hud-stoppage-time-1350x750.png, hud-stoppage-time-390x844.png; garage-hyper-1450x767.png, garage-hyper-390x844.png.
+
+Passed 3 review lenses: ours, theirs and cars. Nothing was pushed.
+
 ## 2026-11-11: The driving HUD fits with a destination set
 
 The owner asked to fix the interface when a destination is chosen: at 1450 x 767 and 1350 x 750 in the OC Hypercar
