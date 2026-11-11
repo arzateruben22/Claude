@@ -19,13 +19,15 @@ function tiled(maps: X.SurfaceMaps, tile: number) {
 const S = (q: Quality, high: number, phone: number) => (q === 'high' ? high : phone);
 
 // ------------------------------------------------------------------------------------------------ interior
-export function carbon(q: Quality, tile = 0.064) {
-  return once('carbon' + q + tile, () => {
+// o.env / o.cc: a calmer reflection (envMapIntensity, clearcoat roughness), e.g. the sport steering wheel's rim, whose
+// carbon read pale grey at night under the full sky reflection
+export function carbon(q: Quality, tile = 0.064, o: { env?: number; cc?: number } = {}) {
+  return once('carbon' + q + tile + (o.env ?? '') + '|' + (o.cc ?? ''), () => {
     const t = tiled(X.carbonMaps(S(q, 512, 256)), tile);
     const m = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(1.9, 1.9, 2.0), map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.5, 0.5),
-      roughnessMap: t.roughnessMap, roughness: 1, metalness: 0.55, clearcoat: 1, clearcoatRoughness: 0.035,
-      anisotropy: q === 'high' ? 0.75 : 0, anisotropyMap: q === 'high' ? t.anisotropyMap : null, envMapIntensity: 1,
+      roughnessMap: t.roughnessMap, roughness: 1, metalness: 0.55, clearcoat: 1, clearcoatRoughness: o.cc ?? 0.035,
+      anisotropy: q === 'high' ? 0.75 : 0, anisotropyMap: q === 'high' ? t.anisotropyMap : null, envMapIntensity: o.env ?? 1,
     });
     m.name = 'carbon';
     return withAO(m);
