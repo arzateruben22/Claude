@@ -1,0 +1,87 @@
+[
+ {
+  "id": "c1",
+  "sentence": "On average, the Moon is about three hundred eighty-four thousand kilometers away.",
+  "claim": "The Moon's mean distance from Earth is about 384,400 km.",
+  "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
+  "source_title": "Moon Fact Sheet (NASA NSSDC)",
+  "accessed": "2026-11-09",
+  "note": "SOURCE-READ 11 Nov: Moon Fact Sheet shows semimajor axis 0.3844 x 10^6 km (= 384,400 km).",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
+  "source_read": {
+   "date": "2026-11-11",
+   "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
+   "quote": "Semimajor axis (10^6 km) 0.3844",
+   "qualification": "A person still opens the page before OK."
+  }
+ },
+ {
+  "id": "c2",
+  "sentence": "Right now, it is drifting away from you.",
+  "claim": "Lunar laser ranging shows the Moon receding from Earth by about 3.8 cm a year.",
+  "source_url": "https://www.jpl.nasa.gov/news/the-apollo-experiment-that-keeps-on-giving/",
+  "source_title": "The Apollo experiment that keeps on giving (NASA JPL)",
+  "accessed": "2026-11-09",
+  "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI): search excerpt only, page not opened",
+   "quote": "",
+   "qualification": "Not yet read."
+  }
+ },
+ {
+  "id": "c3",
+  "sentence": "From the beach, it looks about half a degree wide.",
+  "claim": "the Moon's angular diameter is 2*atan(1,737.4 / 384,400) = 0.52 deg (calc.py); radius and distance from NASA's Moon fact sheet.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-09",
+  "note": "OWN INFERENCE (arithmetic): the Moon's angular diameter is 2*atan(1,737.4 / 384,400) = 0.52 deg (calc.py); radius and distance from NASA's Moon fact sheet.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c4",
+  "sentence": "About the same size as the Sun.",
+  "claim": "The Sun's mean angular diameter is about 0.53 deg, close to the Moon's: they look about the same size from Earth.",
+  "source_url": "https://science.nasa.gov/eclipses/geometry",
+  "source_title": "Why Do Eclipses Happen? (NASA Science)",
+  "accessed": "2026-11-09",
+  "note": "SOURCE-READ 11 Nov at science.nasa.gov/eclipses/geometry (page title 'Why Do Eclipses Happen?').",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
+  "source_read": {
+   "date": "2026-11-11",
+   "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
+   "quote": "Even though the Sun is about 400 times bigger than the Moon, it is also about 400 times farther away. This makes the Sun and the Moon appear almost exactly the same size in our sky.",
+   "qualification": "A person still opens the page before OK."
+  }
+ },
+ {
+  "id": "c28",
+  "sentence": "Its light takes about a second and a quarter to reach you.",
+  "claim": "Light covers the Moon's mean distance (384,400 km) in 1.28 s (384,400 km / 299,792 km/s), about a second and a quarter (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ }
+]

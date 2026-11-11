@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "The real Moon is drifting away from you by about 3.8 centimeters a year, and this film imagines it reversing and never stopping.",
+ "titles": [
+  {
+   "text": "The Moon Is Drifting Away. Imagine It Reversed.",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "The Moon Moves 3.8 cm Farther Away Every Year",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "How Do We Know the Moon Is Moving Away?",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "What If the Moon Never Stopped Coming?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "A Moon That Drifts Off at Fingernail Speed",
+   "mechanism": "hidden mechanism"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a tiny figure on a night beach looking up at a small Moon over a calm sea (the owner's painting)",
+   "composition": "figure lower left, Moon upper right, wide calm sea, negative space for two lines",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "human anchor facing the huge thing",
+   "text": "3.8 cm a year",
+   "complements": "the title names the reversal; the text is the real number"
+  },
+  {
+   "id": "B",
+   "subject": "the Moon alone, large, over the sea",
+   "composition": "Moon upper centre",
+   "lighting": "teal glow",
+   "trigger": "scale",
+   "text": "",
+   "complements": "image only"
+  },
+  {
+   "id": "C",
+   "subject": "a ruler laid along the sand with the Moon above",
+   "composition": "ruler foreground",
+   "lighting": "moonlit",
+   "trigger": "curiosity",
+   "text": "3.8 cm",
+   "complements": "the measure"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 82,
+    "clarity": 82,
+    "synergy": 84,
+    "originality": 72,
+    "accuracy": 92,
+    "mobile": 82,
+    "satisfaction": 84
+   },
+   "note": "Human anchor and a calm sea; the real number adds the layer."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 76,
+    "clarity": 80,
+    "synergy": 72,
+    "originality": 66,
+    "accuracy": 92,
+    "mobile": 80,
+    "satisfaction": 82
+   },
+   "note": "Plain fact, less pull."
+  },
+  {
+   "title": 3,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 74,
+    "clarity": 72,
+    "synergy": 70,
+    "originality": 70,
+    "accuracy": 90,
+    "mobile": 74,
+    "satisfaction": 80
+   },
+   "note": "Clear but less of a mystery."
+  }
+ ],
+ "winner": {
+  "title": "The Moon Is Drifting Away. Imagine It Reversed.",
+  "thumbnail": "A",
+  "thumbnailText": "3.8 cm a year",
+  "why": "A true surprise (it really is moving away) with a clear hypothetical; the thumbnail is the owner's painted figure and Moon and the words add the real number."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "one-more-orbit-s3-part1-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area: clear of the bottom 25% and of the right-hand button column.\nSubject: a tiny figure standing on a calm night beach, seen from behind, looking up at a small full Moon over a quiet sea (a painted illustration).\nComposition: the Moon in the upper centre, the figure small in the lower-centre foreground, a wide calm sea between, a dark headland on the left; text in the lower middle inside the safe area.\nLighting and treatment: teal (#4FE3C6) and violet (#5B3FD0) night, a silver road of moonlight on the water, indigo sky (#0B0F2A), painterly, soft grain.\nMood: quiet wonder.\nText: \"3.8 cm a year\" in a clean geometric sans (Lexend style), white with the number teal, centred in the lower middle.\nScientific accuracy: the real Moon is drifting away from Earth at about 3.8 centimeters a year; this video is a thought experiment about the opposite.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news or NASA photo.\nStyle: premium editorial science documentary, painterly, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": 1.0,
+  "text": "3.8 cm a year"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
