@@ -289,8 +289,9 @@ if (want('data')) {
   await check(`data: the light streams at ${PRESETS.join(', ')}: both I-5 carriageways carry the preset's cars, shared by length`, async () => {
     const notes = [];
     for (const [q, x] of Object.entries(perPreset)) {
-      const st = x.sets.streams, want = { low: 100, high: 200, ultra: 400 }[q];
-      expect(st.cars === want && st.head === want && st.tail === want, `${q}: ${st.head}/${st.tail} drawn, ${st.cars} wanted ${want}`);
+      const st = x.sets.streams, want = { low: 100, high: 200, hd: 200, ultra: 400 }[q];
+      // (S4's second repair: a pair of lamps a car, white heads toward you or red tails going away: 2 lamps a car in all)
+      expect(st.cars === want && st.head + st.tail === 2 * want && st.head % 2 === 0, `${q}: ${st.head}/${st.tail} lamps drawn, ${st.cars} wanted ${want}`);
       expect(st.perPath.length === 2 && st.perPath.every((n) => n > 0) && st.perPath[0] + st.perPath[1] === want, `${q}: per chain ${st.perPath}`);
       const share = st.perPath[0] / want, byLength = st.paths[0].length / (st.paths[0].length + st.paths[1].length);
       expect(Math.abs(share - byLength) < 0.02, `${q}: northbound ${share.toFixed(3)} of the cars, ${byLength.toFixed(3)} of the length`);

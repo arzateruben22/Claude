@@ -8,8 +8,8 @@ import * as T from '../../engine/tex';
 import { GLOW, glowify } from '../../engine/mats';
 import * as Props from '../../../game/road/props';
 import { ground } from '../../../game/textures';
-import { wordmarkTex, bladeTex, testCardTex, signsAtlas } from './tex';
-import type { StreetMats } from '../../engine/streets';
+import { wordmarkTex, bladeTex, testCardTex, signsAtlas, barFloorTex, barConcreteTex } from './tex';
+import { streakTex, type StreetMats } from '../../engine/streets';
 
 const WARM_A = new THREE.Color(1.0, 0.7, 0.42);      // the pergola's warm linear lights, about 2400 K
 const WARM_B = new THREE.Color(1.0, 0.86, 0.68);     // 3000 K LED street and lot heads
@@ -19,7 +19,7 @@ export function makeBarMats() {
   const std = (o: THREE.MeshStandardMaterialParameters) => glowify(new THREE.MeshStandardMaterial({ vertexColors: true, ...o }));
   const offset = <M extends THREE.Material>(m: M, f: number): M => { m.polygonOffset = true; m.polygonOffsetFactor = f; m.polygonOffsetUnits = f * 2; return m; };
   const g = ground();
-  const concreteMap = T.concreteTex();
+  const concreteMap = barConcreteTex();                // (S4's second repair: the bar's own, finer grain)
   const blade = bladeTex(), card = testCardTex(), atlas = signsAtlas(), word = wordmarkTex();
   const m = {
     // the ground plane under everything (one 3200 m quad) is pushed back in depth: the lot's asphalt lies 4.2 cm over
@@ -44,13 +44,14 @@ export function makeBarMats() {
     walls: std({ map: T.blockTex(), roughness: 0.9 }),
     far: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.92 }),
     // the bar
-    floor: offset(std({ map: T.polishedTex(), roughness: 0.3, envMapIntensity: 0.8, color: 0xb9b4ac }), -2),
+    floor: offset(std({ map: barFloorTex(), roughness: 0.3, envMapIntensity: 0.8, color: 0xb9b4ac }), -2),          // (S4's second repair: the bar's own, cleaner floor map)
     inlay: offset(new THREE.MeshStandardMaterial({ color: 0xf1efe7, roughness: 0.5 }), -6),
     oak: std({ map: T.woodTex(), roughness: 0.55 }),
     vinyl: std({ roughness: 0.42, metalness: 0.0 }),
     cloth: std({ roughness: 0.95 }),
     paint: std({ roughness: 0.62, metalness: 0.05 }),
-    interior: std({ roughness: 0.8 }),
+    // the ceiling (S4's second repair: matte and less lit by the sky's environment, so it sits below the lights)
+    interior: std({ roughness: 0.95, envMapIntensity: 0.35 }),
     facade: std({ map: concreteMap, roughness: 0.82 }),
     glass: new THREE.MeshStandardMaterial({ color: 0x8fa8b8, roughness: 0.05, metalness: 0.2, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide }),
     doorLeaf: new THREE.MeshStandardMaterial({ vertexColors: true, transparent: true, roughness: 0.15, metalness: 0.4, depthWrite: false, side: THREE.DoubleSide }),
@@ -69,8 +70,9 @@ export function makeBarMats() {
     pool: new THREE.MeshBasicMaterial({ map: T.poolTex(), color: 0xffe0b4, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -8 }),
     blob: new THREE.MeshBasicMaterial({ color: 0x000000, alphaMap: T.blobTex(), transparent: true, opacity: 0.5, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -3, polygonOffsetUnits: -6 }),
     dots: new THREE.MeshBasicMaterial({ color: 0xc3f23a, transparent: true, opacity: 0.7, depthWrite: false }),
-    streamHead: new THREE.MeshBasicMaterial({ color: 0xfff4dc, transparent: true, opacity: 0.95, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }),
-    streamTail: new THREE.MeshBasicMaterial({ color: 0xff3020, transparent: true, opacity: 0.9, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }),
+    // the I-5's lamps: soft streaks (S4's repair; their brightness by mode is look.ts's)
+    streamHead: new THREE.MeshBasicMaterial({ color: 0xfff4dc, alphaMap: streakTex(), transparent: true, opacity: 0.95, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }),
+    streamTail: new THREE.MeshBasicMaterial({ color: 0xff3020, alphaMap: streakTex(), transparent: true, opacity: 0.9, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }),
     standin: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.45, metalness: 0.3 }),
     palmTrunk: Props.mats.bark(), palmCrown: Props.mats.frond(), foliage: Props.mats.foliage(), trunk: Props.mats.trunk(),
   };
@@ -88,7 +90,8 @@ export function streetMats(m: BarMats): StreetMats {
 
 /** the night lighting (k = 0 day .. 1 full night); open = the bar is open. Closed, the bar is dark but the exit signs */
 export function setBarNight(m: BarMats, k: number, open: boolean) {
-  GLOW.a.value.copy(WARM_A).multiplyScalar(open ? k * 0.5 : 0);
+  // the venue's own lights (S4's repair: the pergola up from 0.5, so the patio at night reads past the rail)
+  GLOW.a.value.copy(WARM_A).multiplyScalar(open ? k * 0.78 : 0);
   GLOW.b.value.copy(WARM_B).multiplyScalar(k * 0.5);
   GLOW.c.value.copy(WARM_C).multiplyScalar(open ? 0.26 + k * 0.42 : 0);
   m.lampHead.emissiveIntensity = k * 5; m.farGlow.emissiveIntensity = k * 5;
