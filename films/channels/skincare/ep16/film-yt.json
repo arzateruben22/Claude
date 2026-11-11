@@ -1,0 +1,1013 @@
+{
+ "id": "skin-sense-016",
+ "title": {
+  "series": "Skin Sense \u00b7 Season 3",
+  "title": "How One Pore Turns Into a Pimple"
+ },
+ "fps": 30,
+ "dur": 88.4,
+ "poster": 30,
+ "theme": "../theme.json",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "main"
+  }
+ ],
+ "qaProfile": "asmr",
+ "disclosures": {
+  "aiVoice": false,
+  "realVoice": true,
+  "aiVisuals": true
+ },
+ "captions": [
+  {
+   "w": "A",
+   "t0": 2.4,
+   "t1": 2.45,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "pimple",
+   "t0": 2.57,
+   "t1": 3.0,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "begins",
+   "t0": 3.195,
+   "t1": 3.72,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "deep",
+   "t0": 3.805,
+   "t1": 4.12,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "inside",
+   "t0": 4.185,
+   "t1": 4.6,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "a",
+   "t0": 4.495,
+   "t1": 4.84,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "pore,",
+   "t0": 4.865,
+   "t1": 5.96,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "long",
+   "t0": 5.87,
+   "t1": 6.2,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "before",
+   "t0": 6.555,
+   "t1": 6.84,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "you",
+   "t0": 6.915,
+   "t1": 7.16,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "see",
+   "t0": 7.24,
+   "t1": 7.48,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "anything.",
+   "t0": 7.475,
+   "t1": 8.76,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "Usually,",
+   "t0": 10.4,
+   "t1": 11.16,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "old",
+   "t0": 11.425,
+   "t1": 11.72,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "cells",
+   "t0": 11.84,
+   "t1": 12.36,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "slip",
+   "t0": 12.44,
+   "t1": 12.92,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "up",
+   "t0": 13.045,
+   "t1": 13.095,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "and",
+   "t0": 13.19,
+   "t1": 13.32,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "out",
+   "t0": 13.575,
+   "t1": 13.64,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "with",
+   "t0": 13.675,
+   "t1": 13.88,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 13.855,
+   "t1": 14.04,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "oil.",
+   "t0": 13.99,
+   "t1": 15.16,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "But",
+   "t0": 16.895,
+   "t1": 17.08,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "sometimes",
+   "t0": 17.125,
+   "t1": 17.8,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "they",
+   "t0": 17.88,
+   "t1": 18.04,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "cling",
+   "t0": 18.12,
+   "t1": 18.6,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "together",
+   "t0": 18.655,
+   "t1": 19.24,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "instead.",
+   "t0": 19.345,
+   "t1": 20.52,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "Oil",
+   "t0": 22.235,
+   "t1": 22.6,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "and",
+   "t0": 22.685,
+   "t1": 22.84,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "cells",
+   "t0": 22.735,
+   "t1": 23.48,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "pack",
+   "t0": 23.635,
+   "t1": 24.04,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "into",
+   "t0": 23.985,
+   "t1": 24.28,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "a",
+   "t0": 24.17,
+   "t1": 24.44,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "tiny",
+   "t0": 24.47,
+   "t1": 24.92,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "plug\u2026",
+   "t0": 24.9,
+   "t1": 25.4,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "and",
+   "t0": 25.775,
+   "t1": 25.96,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 25.925,
+   "t1": 26.12,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "doorway",
+   "t0": 26.145,
+   "t1": 26.68,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "starts",
+   "t0": 26.75,
+   "t1": 27.24,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "to",
+   "t0": 27.265,
+   "t1": 27.48,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "close.",
+   "t0": 27.455,
+   "t1": 28.52,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "If",
+   "t0": 30.24,
+   "t1": 30.44,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 30.46,
+   "t1": 30.6,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "top",
+   "t0": 30.615,
+   "t1": 31.0,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "stays",
+   "t0": 30.905,
+   "t1": 31.64,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "open,",
+   "t0": 31.585,
+   "t1": 32.28,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 32.43,
+   "t1": 32.48,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "plug",
+   "t0": 32.56,
+   "t1": 33.0,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "can",
+   "t0": 32.925,
+   "t1": 33.16,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "darken",
+   "t0": 33.12,
+   "t1": 33.64,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "in",
+   "t0": 33.625,
+   "t1": 33.8,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 33.845,
+   "t1": 34.04,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "air.",
+   "t0": 34.115,
+   "t1": 35.0,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "That's",
+   "t0": 35.06,
+   "t1": 35.48,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "a",
+   "t0": 35.615,
+   "t1": 35.72,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "blackhead,",
+   "t0": 35.805,
+   "t1": 36.76,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "and",
+   "t0": 36.715,
+   "t1": 36.92,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "that",
+   "t0": 36.93,
+   "t1": 37.16,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "dark",
+   "t0": 37.39,
+   "t1": 37.64,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "color",
+   "t0": 37.615,
+   "t1": 38.04,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "isn't",
+   "t0": 38.12,
+   "t1": 38.52,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "dirt.",
+   "t0": 38.75,
+   "t1": 39.64,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "If",
+   "t0": 41.245,
+   "t1": 41.56,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "skin",
+   "t0": 41.68,
+   "t1": 42.04,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "closes",
+   "t0": 42.055,
+   "t1": 42.6,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "over",
+   "t0": 42.555,
+   "t1": 42.84,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "it,",
+   "t0": 42.825,
+   "t1": 43.16,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "it",
+   "t0": 43.115,
+   "t1": 43.32,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "stays",
+   "t0": 43.275,
+   "t1": 43.8,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "pale.",
+   "t0": 43.875,
+   "t1": 44.76,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "Behind",
+   "t0": 46.465,
+   "t1": 46.92,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 46.935,
+   "t1": 47.08,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "plug,",
+   "t0": 47.095,
+   "t1": 48.2,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "oil",
+   "t0": 48.18,
+   "t1": 48.6,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "keeps",
+   "t0": 48.76,
+   "t1": 49.08,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "arriving.",
+   "t0": 49.07,
+   "t1": 50.36,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "With",
+   "t0": 50.73,
+   "t1": 51.0,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "nowhere",
+   "t0": 51.04,
+   "t1": 51.72,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "to",
+   "t0": 51.75,
+   "t1": 52.04,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "go,",
+   "t0": 52.045,
+   "t1": 52.44,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 52.78,
+   "t1": 52.92,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "pore",
+   "t0": 52.9,
+   "t1": 53.56,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "slowly",
+   "t0": 53.61,
+   "t1": 54.04,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "swells.",
+   "t0": 53.93,
+   "t1": 55.08,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "The",
+   "t0": 56.795,
+   "t1": 56.92,
+   "line": "vo08",
+   "beat": "whoa"
+  },
+  {
+   "w": "microbes",
+   "t0": 56.87,
+   "t1": 57.56,
+   "line": "vo08",
+   "beat": "whoa"
+  },
+  {
+   "w": "inside",
+   "t0": 57.54,
+   "t1": 58.04,
+   "line": "vo08",
+   "beat": "whoa"
+  },
+  {
+   "w": "have",
+   "t0": 58.13,
+   "t1": 58.2,
+   "line": "vo08",
+   "beat": "whoa"
+  },
+  {
+   "w": "a",
+   "t0": 58.185,
+   "t1": 58.28,
+   "line": "vo08",
+   "beat": "whoa"
+  },
+  {
+   "w": "feast\u2026",
+   "t0": 58.41,
+   "t1": 58.84,
+   "line": "vo08",
+   "beat": "whoa"
+  },
+  {
+   "w": "and",
+   "t0": 59.175,
+   "t1": 59.32,
+   "line": "vo08",
+   "beat": "whoa"
+  },
+  {
+   "w": "your",
+   "t0": 59.27,
+   "t1": 59.56,
+   "line": "vo08",
+   "beat": "whoa"
+  },
+  {
+   "w": "body",
+   "t0": 59.54,
+   "t1": 60.04,
+   "line": "vo08",
+   "beat": "whoa"
+  },
+  {
+   "w": "notices.",
+   "t0": 60.09,
+   "t1": 61.24,
+   "line": "vo08",
+   "beat": "whoa"
+  },
+  {
+   "w": "Immune",
+   "t0": 62.93,
+   "t1": 63.48,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "cells",
+   "t0": 63.475,
+   "t1": 63.88,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "gather,",
+   "t0": 63.88,
+   "t1": 64.28,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "and",
+   "t0": 64.39,
+   "t1": 64.6,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "the",
+   "t0": 64.48,
+   "t1": 64.76,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "spot",
+   "t0": 64.855,
+   "t1": 65.32,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "turns",
+   "t0": 65.28,
+   "t1": 65.64,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "red,",
+   "t0": 65.55,
+   "t1": 66.2,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "warm,",
+   "t0": 66.205,
+   "t1": 66.76,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "and",
+   "t0": 66.79,
+   "t1": 67.0,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "swollen.",
+   "t0": 66.885,
+   "t1": 68.36,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "That's",
+   "t0": 70.05,
+   "t1": 70.36,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "the",
+   "t0": 70.47,
+   "t1": 70.52,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "pimple",
+   "t0": 70.62,
+   "t1": 71.0,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "you",
+   "t0": 71.075,
+   "t1": 71.32,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "finally",
+   "t0": 71.4,
+   "t1": 71.88,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "see.",
+   "t0": 71.885,
+   "t1": 72.84,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "A",
+   "t0": 72.87,
+   "t1": 73.16,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "small",
+   "t0": 73.26,
+   "t1": 73.72,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "black",
+   "t0": 74.0,
+   "t1": 74.6,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "doorway\u2026",
+   "t0": 74.895,
+   "t1": 75.72,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "in",
+   "t0": 75.685,
+   "t1": 76.28,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "your",
+   "t0": 76.215,
+   "t1": 76.52,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "body",
+   "t0": 76.495,
+   "t1": 77.0,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "working",
+   "t0": 77.02,
+   "t1": 77.56,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "to",
+   "t0": 77.595,
+   "t1": 77.72,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "clear",
+   "t0": 77.72,
+   "t1": 78.28,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "it.",
+   "t0": 78.265,
+   "t1": 78.76,
+   "line": "vo10",
+   "beat": "takeaway"
+  },
+  {
+   "w": "If",
+   "t0": 81.675,
+   "t1": 81.84,
+   "line": "vo11",
+   "beat": "cta"
+  },
+  {
+   "w": "you're",
+   "t0": 81.805,
+   "t1": 82.08,
+   "line": "vo11",
+   "beat": "cta"
+  },
+  {
+   "w": "feeling",
+   "t0": 82.045,
+   "t1": 82.32,
+   "line": "vo11",
+   "beat": "cta"
+  },
+  {
+   "w": "a",
+   "t0": 82.405,
+   "t1": 82.48,
+   "line": "vo11",
+   "beat": "cta"
+  },
+  {
+   "w": "little",
+   "t0": 82.435,
+   "t1": 82.64,
+   "line": "vo11",
+   "beat": "cta"
+  },
+  {
+   "w": "calmer,",
+   "t0": 82.715,
+   "t1": 83.2,
+   "line": "vo11",
+   "beat": "cta"
+  },
+  {
+   "w": "tap",
+   "t0": 83.22,
+   "t1": 83.6,
+   "line": "vo11",
+   "beat": "cta"
+  },
+  {
+   "w": "like",
+   "t0": 83.535,
+   "t1": 83.76,
+   "line": "vo11",
+   "beat": "cta"
+  },
+  {
+   "w": "and",
+   "t0": 83.885,
+   "t1": 84.08,
+   "line": "vo11",
+   "beat": "cta"
+  },
+  {
+   "w": "subscribe.",
+   "t0": 84.135,
+   "t1": 84.88,
+   "line": "vo11",
+   "beat": "cta"
+  }
+ ],
+ "lines": {
+  "vo01": [
+   2.2,
+   9.08,
+   "hook"
+  ],
+  "vo02": [
+   10.28,
+   15.48,
+   "normal"
+  ],
+  "vo03": [
+   16.68,
+   20.84,
+   "change"
+  ],
+  "vo04": [
+   22.04,
+   28.84,
+   "why"
+  ],
+  "vo05": [
+   30.04,
+   39.96,
+   "why"
+  ],
+  "vo06": [
+   41.16,
+   45.08,
+   "whoa"
+  ],
+  "vo07": [
+   46.28,
+   55.4,
+   "whoa"
+  ],
+  "vo08": [
+   56.6,
+   61.56,
+   "whoa"
+  ],
+  "vo09": [
+   62.76,
+   68.68,
+   "takeaway"
+  ],
+  "vo10": [
+   69.88,
+   79.4,
+   "takeaway"
+  ],
+  "vo11": [
+   81.6,
+   85.2,
+   "cta"
+  ]
+ }
+}

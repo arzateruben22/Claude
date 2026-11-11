@@ -1,0 +1,86 @@
+{
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "A pimple begins deep inside a pore, long before you see anything.",
+   "a": 226.25,
+   "b": 232.88
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Usually, old cells slip up and out with the oil.",
+   "a": 233.53,
+   "b": 238.65
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "But sometimes they cling together instead.",
+   "a": 238.65,
+   "b": 242.56
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Oil and cells pack into a tiny plug… and the doorway starts to close.",
+   "a": 242.88,
+   "b": 249.6
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "If the top stays open, the plug can darken in the air. That's a blackhead, and that dark color isn't dirt.",
+   "a": 249.6,
+   "b": 259.29
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "If skin closes over it, it stays pale.",
+   "a": 259.61,
+   "b": 263.29
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "Behind the plug, oil keeps arriving. With nowhere to go, the pore slowly swells.",
+   "a": 263.61,
+   "b": 272.64
+  },
+  {
+   "id": "vo08",
+   "beat": "whoa",
+   "text": "The microbes inside have a feast… and your body notices.",
+   "a": 272.64,
+   "b": 277.52
+  },
+  {
+   "id": "vo09",
+   "beat": "takeaway",
+   "text": "Immune cells gather, and the spot turns red, warm, and swollen.",
+   "a": 277.52,
+   "b": 283.2
+  },
+  {
+   "id": "vo10",
+   "beat": "takeaway",
+   "text": "That's the pimple you finally see. A small black doorway… in your body working to clear it.",
+   "a": 283.52,
+   "b": 292.81
+  }
+ ],
+ "cta": {
+  "follow": [
+   521.0,
+   525.74,
+   "If you're feeling a little calmer, tap like and follow."
+  ],
+  "subscribe": [
+   526.04,
+   529.42,
+   "If you're feeling a little calmer, tap like and subscribe."
+  ]
+ }
+}
