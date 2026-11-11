@@ -17,10 +17,10 @@ The ground speeds up at once and the air is left behind: for the first hours, a 
 Part 3 of 8 of "What If Earth Spun Faster and Couldn't Stop?" — the full video is on this channel.
 
 Sources
-1. If the air still turns at the old rate, the relative wind is (v_new - v_old) = 463 m/s at a 12 h day, 1390 m/s at 6 h. Friction drags the air along over hours to days; only the first hours are claimed. — Derivation (no outside page; arithmetic shown in the film)
-2. The speed of sound in air at sea level is about 340 m/s (343 m/s at 20 degrees C): 929 m/s / 343 = 2.7; 463 m/s / 343 = 1.35. — https://www.grc.nasa.gov/www/k-12/airplane/sound.html
-3. 463 m/s x 3.6 = 1,667 km/h (c7); 1,667 / 408 = 4.1 (c24). — Derivation (no outside page; arithmetic shown in the film)
-4. Highest surface wind gust recorded on Earth: 408 km/h (113 m/s) at Barrow Island, Australia, during tropical cyclone Olivia, 10 April 1996. — source to be found
+1. If the air still turns at the old rate, the relative wind is (v_new - v_old) = 463 m/s at a 12 h day, 1390 m/s at 6 h. Friction drags the air along over hours to days; only the first hours are claimed. (our calculation; the arithmetic is shown in the film)
+2. The speed of sound in air at sea level is about 340 m/s (343 m/s at 20 degrees C): 929 m/s / 343 = 2.7; 463 m/s / 343 = 1.35. — NASA Glenn, Speed of sound: https://www.grc.nasa.gov/www/k-12/airplane/sound.html
+3. The wind relative to the ground at a 12 h day is 463 m/s, which is 1,667 km/h, about 4.1 times the strongest gust ever recorded (408 km/h). (our calculation; the arithmetic is shown in the film)
+4. Highest surface wind gust recorded on Earth: 408 km/h (113 m/s) at Barrow Island, Australia, during tropical cyclone Olivia, 10 April 1996. (source to be added)
 
 Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
 

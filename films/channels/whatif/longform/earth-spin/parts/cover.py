@@ -6,13 +6,14 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 N, T = int(sys.argv[1]), float(sys.argv[2])
 arg = lambda k, d=None: sys.argv[sys.argv.index(k) + 1] if k in sys.argv else d
-STREAK = float(arg("--streak", 0)); CAM = arg("--cam"); HERO = arg("--hero"); KEYS = arg("--keys"); TEXT = arg("--text", ""); TY = float(arg("--ty", 0.12))   # --streak S: lighten-blend 12 frames over S seconds (the Sun/air as streaks); --text: 1-4 words
+STREAK = float(arg("--streak", 0)); CAM = arg("--cam"); HERO = arg("--hero"); KEYS = arg("--keys"); FX = arg("--fx"); TEXT = arg("--text", ""); TY = float(arg("--ty", 0.12))   # --streak S: lighten-blend 12 frames over S seconds (the Sun/air as streaks); --text: 1-4 words
 D = HERE / f"part{N}"
 f = json.loads((D / "film.json").read_text())
 f.update(captions=[], badges=[], voice=[], thumb=True)
 f["title"] = {**f["title"], "t0": -20.0, "t1": -19.0, "sig": -18.0}
 if CAM: f["cams"] = [{"t0": -1.0, "mode": CAM}]
 if HERO: h = [float(x) for x in HERO.split(",")]; f["hero"] = {"arms": h[0], "tilt": h[1], "lift": h[2] if len(h) > 2 else 0.0}   # the figure's pose on the cover
+if FX: f["fx"] = {FX: [-5.0, 9999.0]}
 if KEYS: f["world"] = {**f["world"], "keys": [[0.0, float(KEYS)], [9999.0, float(KEYS)]]}
 f["end"] = dict(f["end"]); f["endCard"] = 9999.0
 C = HERE / f"cover{N}"; C.mkdir(exist_ok=True)

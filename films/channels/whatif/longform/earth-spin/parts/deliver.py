@@ -48,11 +48,29 @@ for src, dst in [(D / "out" / f"{base}-9x16.mp4", f"{base}-9x16.mp4"), (D / "out
                  (D / "out" / f"{base}-cover.jpg", f"{base}-cover.jpg"), (D / "out" / f"{base}-cover-480.jpg", f"{base}-cover-480.jpg"), (D / "out" / f"{base}-9x16.jpg", f"{base}-9x16.jpg")]:
     if src.exists(): shutil.copy2(src, EP / "out" / dst)
 # posting sheet
+PLAIN = {   # claims whose stored text is raw data or notation: the sentence a viewer reads
+ "c2": "Speed of the ground at the equator: one trip around the equator (circumference) divided by the length of the day gives about 1,674 km/h (465 m/s), roughly 1/17 of the speed needed to orbit.",
+ "c3": "The spin makes you about 0.35% lighter today: the outward push of the spin is 0.034 m/s² against gravity's 9.8 m/s².",
+ "c8": "The day length at which the equator's speed matches orbital speed: about 84.5 minutes (1.41 h), where the ground moves at 7.9 km/s; today's 0.465 km/s is 1/17 of that.",
+ "c15": "Storm steering (the Coriolis effect) grows in direct proportion to the spin rate: 23.93 h ÷ 6 h = 4.0 times today, and 23.93 h ÷ 1.4 h = about 17 times.",
+ "c16": "Days in a year at a 1 h 24 min day: 365.25 × 23.93 h ÷ 1.41 h = about 6,200.",
+ "c17": "At 45° north your speed is 71% of the equator's (cos 45°) and the outward push on you is 50% (cos² 45°).",
+ "c20": "Days in a year at a 6 h day: 365.25 days × 24 h ÷ 6 h = 1,461.",
+ "c22": "Days in a year: 365.25 × 24 h ÷ the day length gives 730 at 12 h, 1,461 at 6 h, 2,922 at 3 h, 4,383 at 2 h and 5,844 at 1.5 h.",
+ "c23": "The wind relative to the ground at a 12 h day is 463 m/s, which is 1,667 km/h, about 4.1 times the strongest gust ever recorded (408 km/h).",
+ "c28": "Storm steering compared with today: 23.934 h ÷ 12 h = 2×, ÷ 3 h = 8×, ÷ 2 h = 12×, ÷ 1.5 h = 16×.",
+ "c4": "Speed of the ground at the equator: 1,674 km/h today, 3,340 km/h at a 12 h day, 6,679 km/h at 6 h, 13,358 km/h at 3 h, 20,038 km/h at 2 h, 26,717 km/h at 1.5 h; the Sun is up for half of each day.",
+ "c5": "Your weight as a share of what it would be on a non-spinning Earth: 99.7% today, 98.6% at a 12 h day, 94.5% at 6 h, 78.0% at 3 h, 50.4% at 2 h, 11.9% at 1.5 h; a 70 kg person weighs 69 kg at 12 h and 55 kg at 3 h.",
+}
 def srcs():
     out = []
     for i, cid in enumerate(used, 1):
-        c = claims_all[cid]; t = re.sub(r"\s+", " ", c["claim"]).strip()
-        out.append(f"{i}. {t} — " + (f"{c['source_url']}" if c.get("source_url") else ("Derivation (no outside page; arithmetic shown in the film)" if c["kind"] == "derivation" else "source to be found")))
+        c = claims_all[cid]; t = PLAIN.get(cid) or re.sub(r"\s+", " ", c["claim"]).strip()
+        if c.get("source_url"): tail = f" — {c.get('source_title') or 'source'}: {c['source_url']}"
+        elif c["kind"] == "derivation": tail = " (our calculation; the arithmetic is shown in the film)"
+        elif c["kind"] == "assumption": tail = " (our assumption)"
+        else: tail = " (source to be added)"
+        out.append(f"{i}. {t}{tail}")
     return "Sources\n" + "\n".join(out)
 hook = pk["hook"]
 AI_ART = {2, 4, 8}       # covers made from the owner's AI illustrations (art/owner)

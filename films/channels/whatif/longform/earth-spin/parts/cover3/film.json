@@ -201,5 +201,22 @@
  "cam": {},
  "captions": [],
  "voice": [],
- "thumb": true
+ "thumb": true,
+ "cams": [
+  {
+   "t0": -1.0,
+   "mode": "hero"
+  }
+ ],
+ "hero": {
+  "arms": 0.1,
+  "tilt": 0.28,
+  "lift": 0.0
+ },
+ "fx": {
+  "wind": [
+   -5.0,
+   9999.0
+  ]
+ }
 }
