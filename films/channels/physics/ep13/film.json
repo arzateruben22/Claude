@@ -312,7 +312,10 @@
   }
  ],
  "captionY": 0.7,
- "title": null,
+ "title": {
+  "series": "Reality Rulebook · Season 3 · Part 1 of 8",
+  "title": "Watch a wing, slowed ten times"
+ },
  "captions": [
   {
    "t0": 0.12,
@@ -1429,5 +1432,8 @@
    "text": "Part 1 of 8. Full video on YouTube."
   }
  ],
- "theme": "../theme.json"
+ "theme": "../theme.json",
+ "disclosures": {
+  "aiVoice": true
+ }
 }
