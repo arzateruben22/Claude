@@ -248,7 +248,7 @@ TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A p
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
 if PART:
     END = {"title": f"Part {PART} of *8*", "follow": "Full video on YouTube · Follow Reality Rulebook", "foot": "Reality Rulebook · Season 3"}
-    CAPCH, CAPY = 20, (0.51 if PART == 1 else 0.66 if PART == 2 else 0.62)
+    CAPCH, CAPY = 20, (0.55 if PART == 1 else 0.66 if PART == 2 else 0.62)
 else:
     END = {"title": "Next drop: why the sky is *blue*", "follow": "Follow Reality Rulebook", "foot": "Velten et al., femto-photography (2012-2013)."}
     CAPCH, CAPY = 44, 0.77
