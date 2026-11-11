@@ -19,8 +19,8 @@ function beats() {
 function dCount(t) { const d = dCount0(t), b = beats(); if (!b || t < b.only.t0) return d; const tick = sm((t - b.only.t0) / 5.0), gp = clamp01((Math.log(D0) - Math.log(d)) / (Math.log(D0) - Math.log(288300))); return d * (1 - 0.0086 * tick * (1 - gp)); }
 function dCount0(t) { const k = TL.km; if (t <= k[0][0]) return k[0][1]; for (let i = 1; i < k.length; i++) if (t <= k[i][0]) { const a = k[i - 1], b = k[i]; if (a[1] === b[1]) return a[1]; const g0 = Math.max(a[0], b[0] - 8.0); return t < g0 ? a[1] : Math.exp(lerp(Math.log(a[1]), Math.log(b[1]), sm((t - g0) / (b[0] - g0)))); } return k[k.length - 1][1]; }
 function geom() {
-  if (MODE === "land") return { r0: 69 / 941 * H, cx0: 0.68 * W, cy0: 312 / 941 * H, cx1: 0.5 * W, yb1: 0.67 * H, horizon: 0.715 * H, shore: 0.80 * H, plate: "plate-beach", flood: "plate-flood" };
-  return { r0: 73, cx0: 0.62 * W, cy0: 807, cx1: 0.5 * W, yb1: 1180, horizon: 1190, shore: 1190 + 0.115 * 1000 * 1.0 + 60, plate: "plate-beach-9x16", flood: "plate-flood-9x16" };
+  if (MODE === "land") return { r0: 69 / 941 * H, cx0: 0.68 * W, cy0: 312 / 941 * H, cx1: 0.553 * W, yb1: 0.774 * H, horizon: 0.715 * H, shore: 0.80 * H, plate: "plate-beach", flood: "flood-clean" };
+  return { r0: 73, cx0: 0.62 * W, cy0: 807, cx1: 0.553 * W, yb1: 1450, horizon: 1414, shore: 1535, plate: "beach-clean-9x16", flood: "flood-clean-9x16" };
 }
 function camT(cam, ox, oy) { ctx.translate(W / 2 + ox, H * 0.72 + oy); ctx.scale(cam, cam); ctx.translate(-W / 2, -H * 0.72); }
 function drawPlateWaves(img, a, t, G, cam, ox, oy) {
@@ -51,7 +51,7 @@ function sceneComposite(t, d, ecl, moonAlpha, G) {
   if (moonAlpha > 0.002) {
     const x = mo.cx + (ecl > 0 ? 0 : 0), y = mo.cy, r = mo.r;
     ctx.save(); ctx.globalAlpha = moonAlpha * (1 - ecl); const gl = ctx.createRadialGradient(x, y, r * 0.9, x, y, r * 1.7); gl.addColorStop(0, "rgba(170,225,225,.28)"); gl.addColorStop(1, "rgba(170,225,225,0)"); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(x, y, r * 1.7, 0, 6.283); ctx.fill(); { const sa = swayAmp(t), rot = sa * (0.035 * Math.sin(t * 0.23) + 0.014 * Math.sin(t * 0.61 + 1)); ctx.translate(x, y); ctx.rotate(rot); ctx.translate(-x, -y); } ctx.drawImage(r > 900 ? IM["moon-disc-hi"] : IM["moon-disc"], x - r, y - r, 2 * r, 2 * r); ctx.restore();
-    if (ecl > 0) { ctx.save(); ctx.globalAlpha = moonAlpha * ecl; const cs = r / 512; ctx.drawImage(IM["eclipse"], x - 1024 * cs, y - 1024 * cs, 2048 * cs, 2048 * cs); ctx.fillStyle = "#06080f"; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill(); ctx.restore(); }
+    if (ecl > 0) { ctx.save(); ctx.globalAlpha = moonAlpha * ecl; const cs = r / 512; ctx.drawImage(IM[MODE === "land" ? "eclipse" : "eclipse-9x16"], x - 1024 * cs, y - 1024 * cs, 2048 * cs, 2048 * cs); ctx.fillStyle = "#06080f"; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill(); ctx.restore(); }
   }
   // the tide: the sea over the sand, the waterline climbing the beach in long swells
   if (tide > 0.01) {
@@ -85,13 +85,13 @@ window.setup = async (tl, assets, mode, w, h) => {
 // extra life for the long film's still stretches (the hold in chapter 1 and everything from the break-up on): a slow camera sway, the Moon's libration, drifting dust.
 // Gated by time so the segments rendered separately join without a pop (it is 0 at 345.1 s).
 const swayAmp = (t) => (MODE !== "land" || TL.dur < 300) ? ((TL.name || "").startsWith("part8") ? sm((t - 0.5) / 1.5) : 0) : Math.max(sm((t - 346) / 4), (beats() && t > beats().calm.t1 + 1 && t < beats().size.t0 - 0.2) ? sm((t - beats().calm.t1 - 1) / 2) * sm((beats().size.t0 - 0.2 - t) / 1) : 0);
-const figPos = () => (MODE === "land" ? { x: 0.342 * W, y: 0.831 * H } : { x: 0.423 * W, y: 0.681 * H });
+const figPos = () => (MODE === "land" ? { x: 0.342 * W, y: 0.831 * H } : { x: 0.38 * W, y: 0.81 * H });
 function zoomState(t, b, mo) {   // {s, F (world pivot), k (0 = pivot stays put, 1 = pivot goes to the screen anchor)}
   const fg = figPos(), mp = { x: mo.cx, y: mo.cy }, e = (a, c, u) => lerp(a, c, sm(u));
   const A = b.start, calm = b.calm, lt = b.light.t0, sz = b.size.t0;
-  if (t < calm.t0) return { s: 1.3, F: fg, k: 0 };
+  if (t < calm.t0) return { s: MODE === "land" ? 1.3 : 1.15, F: fg, k: 0 };
   const tr = calm.t0 + Math.max(1.5, calm.t1 - calm.t0 + 0.6);
-  if (t < tr) { const u = (t - calm.t0) / (tr - calm.t0); return { s: 1.3, F: { x: e(fg.x, mp.x, u), y: e(fg.y, mp.y, u) }, k: sm(u) }; }
+  if (t < tr) { const u = (t - calm.t0) / (tr - calm.t0); return { s: e(MODE === "land" ? 1.3 : 1.15, 1.3, u), F: { x: e(fg.x, mp.x, u), y: e(fg.y, mp.y, u) }, k: sm(u) }; }
   if (t < sz - 0.1) return { s: 1.3 + 0.2 * clamp01((t - tr) / Math.max(1, sz - 0.1 - tr)), F: mp, k: 1 };      // a slow push toward the Moon while the ruler ticks
   if (t < sz + 1.4) { const u = (t - (sz - 0.1)) / 1.5; return { s: e(1.5, 2.3, u), F: mp, k: 1 }; }
   if (t < lt - 0.3) return { s: 2.3 + 0.16 * sm((t - (sz + 1.4)) / Math.max(1, lt - 0.3 - sz - 1.4)), F: mp, k: 1 };
@@ -132,7 +132,7 @@ window.renderAt = (t) => {
   if (inCh1) ch1Overlays(t, b, moonState(384400, G), G);
   ctx.restore();
   if (brk > 0.001) { ctx.save(); ctx.globalAlpha = brk; const sc = 1.02 + 0.03 * (t / TL.dur) + 0.01 * Math.sin(t * 0.3) + 0.018 * A * Math.sin(t * 0.45); ctx.translate(W / 2, H / 2); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); ctx.drawImage(IM["plate-breakup"], 0, 0, W, H); ctx.restore(); }
-  if (ring > 0.001) { ctx.save(); ctx.globalAlpha = ring; ctx.translate(W / 2, H / 2); ctx.scale(1 + 0.02 * A * Math.sin(t * 0.4), 1 + 0.02 * A * Math.sin(t * 0.4)); ctx.translate(-W / 2, -H / 2); ctx.drawImage(IM["ring"], 0, -20 * U * Math.sin(t * 0.2), W, H); ctx.restore(); }
+  if (ring > 0.001) { ctx.save(); ctx.globalAlpha = ring; ctx.translate(W / 2, H / 2); ctx.scale(1 + 0.02 * A * Math.sin(t * 0.4), 1 + 0.02 * A * Math.sin(t * 0.4)); ctx.translate(-W / 2, -H / 2); ctx.drawImage(IM["plate-ring"], 0, 0, W, H); ctx.restore(); }
   if (tn > 0.001) { ctx.save(); ctx.globalAlpha = tn; ctx.drawImage(IM["plate-tonight"], 0, 0, W, H); ctx.restore(); }
   if (A > 0.01 && (brk + ring + tn > 0.01)) { const mr = rnd(77); ctx.save(); ctx.globalCompositeOperation = "screen"; for (let i = 0; i < 70; i++) { const sp = (6 + 20 * mr()) * U, x = (((mr() * W - t * sp * (mr() > 0.5 ? 1 : -1)) % W) + W) % W, y = (((mr() * H - t * sp * 0.4) % H) + H) % H, rr = (1 + 2.4 * mr()) * U; ctx.globalAlpha = A * (0.15 + 0.35 * mr()) * (0.6 + 0.4 * Math.sin(t * 1.5 + i)); ctx.fillStyle = "#cfe9ff"; ctx.beginPath(); ctx.arc(x, y, rr, 0, 6.283); ctx.fill(); } ctx.restore(); }
   ctx.restore();

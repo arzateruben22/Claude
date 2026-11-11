@@ -33,3 +33,40 @@ alpha = np.clip((1.0 - dist) / 0.012, 0, 1)                    # a soft 1.2% lim
 rgba = np.dstack([np.asarray(crop), (alpha * 255).astype("uint8")]); disc = Image.fromarray(rgba, "RGBA")
 disc.resize((2048, 2048), Image.LANCZOS).save(f"{ART}/moon-disc.png"); disc.resize((2560, 2560), Image.LANCZOS).filter(ImageFilter.UnsharpMask(radius=2, percent=40, threshold=3)).save(f"{ART}/moon-disc-hi.png")
 print("moon disc", side, "px;", "plates written")
+
+# ---- the figure comes out of the plates that carry moving water (so the sea can ripple without bending it) and is drawn as its own upright layer
+from scipy import ndimage as ndi
+def remove_box(im, box):
+    """paint the figure out with the neighbouring texture (the same rows, a figure-width to the right), feathered; the sea's foam lines carry on"""
+    a = np.asarray(im).astype(float); x0, y0, x1, y1 = box; w = x1 - x0 + 8; dx = w + 10
+    out = a.copy(); m = np.zeros(a.shape[:2]); m[y0 - 2:y1 + 3, x0 - 4:x1 + 5] = 1; m = ndi.gaussian_filter(m, 2.2)[..., None]
+    shifted = np.roll(a, -dx, axis=1); shifted = shifted * 0.85 + ndi.uniform_filter(a, size=(1, 25, 1)) * 0.15
+    # match the local brightness of the patch to what surrounds the hole, row by row
+    for y in range(y0 - 2, y1 + 3):
+        ref = a[y, [x0 - 9, x0 - 8, x0 - 7, x1 + 7, x1 + 8, x1 + 9]].mean(axis=0); got = shifted[y, [x0 - 9, x0 - 8, x0 - 7, x1 + 7, x1 + 8, x1 + 9]].mean(axis=0); shifted[y, x0 - 8:x1 + 9] += (ref - got) * 0.7
+    out = a * (1 - m) + shifted * m
+    return Image.fromarray(np.clip(out, 0, 255).astype("uint8"))
+def figure_layer(orig, clean, box, size, scale):
+    x0, y0, x1, y1 = box; o = np.asarray(orig).astype(float); c = np.asarray(clean).astype(float)
+    d = np.abs(o - c).mean(axis=2); al = np.zeros(d.shape); al[y0:y1 + 1, x0 - 3:x1 + 4] = np.clip((d[y0:y1 + 1, x0 - 3:x1 + 4] - 5) / 16, 0, 1)
+    al = ndi.gaussian_filter(al, 0.7); rgba = np.dstack([o, al * 255]).astype("uint8"); im = Image.fromarray(rgba, "RGBA")
+    return im.resize((int(im.width * scale), int(im.height * scale)), Image.LANCZOS)
+FIG = {1: (338, 1310, 380, 1399), 5: (316, 1484, 358, 1596), 7: (338, 1311, 380, 1399), 4: (544, 796, 584, 906)}
+def clean_up(n, size):
+    im = src(n); cl = remove_box(im, FIG[n]); return im, cl
+# portrait: beach (1), flood (5), eclipse scene (7) cleaned; the figure layer from painting 1
+im1, cl1 = clean_up(1, (1080, 1920)); up(cl1, (1080, 1920)).save(f"{ART}/beach-clean-9x16.png")
+fl = figure_layer(im1, cl1, FIG[1], None, 1080 / 941); fp = Image.new("RGBA", (1080, 1920), (0, 0, 0, 0)); fp.alpha_composite(fl); fp.save(f"{ART}/figure-layer-9x16.png")
+_, cl5 = clean_up(5, None); up(cl5, (1080, 1920)).save(f"{ART}/flood-clean-9x16.png")
+_, cl4 = clean_up(4, None); up(cl4, (2560, 1440)).save(f"{ART}/flood-clean.png")
+# the eclipse as a sprite (2048 px, the black disc's radius 512 px), cut from paintings 6 (16:9) and 7 (9:16): the engine puts it at its own Moon position and size
+def eclipse_sprite(n, out):
+    im = src(n); a = np.asarray(im).astype(float).mean(axis=2); lab, k = ndi.label(a < 26)
+    sizes = ndi.sum(np.ones_like(a), lab, range(1, k + 1)); j = int(np.argmax(sizes)) + 1; ys, xs = np.where(lab == j)
+    cx, cy, r = (xs.min() + xs.max()) / 2, (ys.min() + ys.max()) / 2, ((xs.max() - xs.min()) + (ys.max() - ys.min())) / 4; s = 512 / r
+    big = im.resize((int(im.width * s), int(im.height * s)), Image.LANCZOS).convert("RGBA"); sp = Image.new("RGBA", (2048, 2048), (0, 0, 0, 0)); sp.paste(big, (int(1024 - cx * s), int(1024 - cy * s)))
+    # the painted black disc and its inner corona (the painting ends 1.3 disc-radii above the disc, so only that much is usable) over the code-made outer glow
+    yy, xx = np.mgrid[0:2048, 0:2048]; d = np.hypot(xx - 1024, yy - 1024) / 512; al = np.clip((1.27 - d) / 0.17, 0, 1)
+    arr = np.asarray(sp).copy(); arr[..., 3] = (arr[..., 3] * al).astype("uint8"); base = Image.open(f"{ART}/eclipse-code.png").convert("RGBA")
+    base.alpha_composite(Image.fromarray(arr, "RGBA")); base.save(out); return cx, cy, r
+print("eclipse 6:", eclipse_sprite(6, f"{ART}/eclipse.png"), "eclipse 7:", eclipse_sprite(7, f"{ART}/eclipse-9x16.png"))
