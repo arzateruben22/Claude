@@ -2,67 +2,73 @@
 {
 "id": "c16",
 "sentence": "A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second.",
-"claim": "Edgerton's famous photograph shows a .30-calibre bullet at about 2,800 feet per second (about 850 m/s) passing through an apple.",
+"claim": "Harold Edgerton's famous photograph shows a rifle bullet at about 850 meters a second (about 2,800 feet a second) passing through an apple.",
 "source_url": "https://edgerton.mit.edu/",
 "source_title": "MIT Edgerton Center (the photograph and its bullet speed; recalled, not opened; page address from memory)",
 "accessed": "2026-11-10",
 "verified_via": "from memory",
 "status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED: a person must open the Edgerton Center / MIT Museum page for the photograph and check the bullet speed (about 2,800 ft/s) and the caliber. Rifle bullets run about 700 to 1,000 m/s, so 850 m/s is typical. LEAD (not opened): secondary pages repeat about 2,800 ft/s for the .30-caliber bullet in the 1964 photograph."
+"note": "FROM MEMORY, NOT OPENED: a person must open the Edgerton Center / MIT Museum page for the photograph and check the bullet speed (about 2,800 ft/s) and the caliber. Rifle bullets run about 700 to 1,000 m/s, so 850 m/s is typical. LEAD (not opened): secondary pages repeat about 2,800 ft/s for the .30-caliber bullet in the 1964 photograph.",
+"derivation": "Edgerton's famous photograph shows a .30-calibre bullet at about 2,800 feet per second (about 850 m/s) passing through an apple."
 },
 {
 "id": "c17",
 "sentence": "The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second.",
-"claim": "0.08 m / 850 m/s = 94 microseconds.",
+"claim": "At that speed a bullet crosses an 8-centimeter apple in under a ten-thousandth of a second (about 94 millionths).",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. Apple width (8 cm) is our assumption (typical apples are about 7 to 9 cm)."
+"note": "DERIVATION (our calculation, run it); no outside source. Apple width (8 cm) is our assumption (typical apples are about 7 to 9 cm).",
+"derivation": "0.08 m / 850 m/s = 94 microseconds."
 },
 {
 "id": "c18",
 "sentence": "Here, that takes about one second.",
-"claim": "94 microseconds x 10,000 = 0.94 s.",
+"claim": "Slowed 10,000 times, that crossing takes about one second.",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. "
+"note": "DERIVATION (our calculation, run it); no outside source. ",
+"derivation": "94 microseconds x 10,000 = 0.94 s."
 },
 {
 "id": "c19",
 "sentence": "It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it.",
-"claim": "A body moving faster than sound makes a cone-shaped shock wave (Mach cone); 850 m/s is Mach 2.5 (half-angle of the cone about 24 degrees).",
+"claim": "A bullet faster than sound drags a cone-shaped shock wave behind it; at Mach 2.5 the cone's half-angle is about 24 degrees.",
 "source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-8-shock-waves",
-"source_title": "OpenStax, University Physics Vol. 1, 17.8 Shock Waves (recalled, not opened)",
+"source_title": "OpenStax, University Physics Vol. 1, 17.8 Shock Waves",
 "accessed": "2026-11-10",
 "verified_via": "from memory",
 "status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. At 850 m/s the bullet is Mach 2.5 (calc.py), so the cone is narrow."
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. At 850 m/s the bullet is Mach 2.5 (our calculation), so the cone is narrow.",
+"derivation": "A body moving faster than sound makes a cone-shaped shock wave (Mach cone); 850 m/s is Mach 2.5 (half-angle of the cone about 24 degrees)."
 },
 {
 "id": "c32",
 "sentence": "Even now, a table a meter wide would take it about twelve seconds to cross.",
-"claim": "1 m / 850 m/s = 1.18 ms; x 10,000 = 11.8 s.",
+"claim": "A bullet at 850 m/s crosses a 1-meter table in about 1.2 thousandths of a second: about 12 seconds at 10,000 times slower.",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. The 1 m table is our assumption."
+"note": "DERIVATION (our calculation, run it); no outside source. The 1 m table is our assumption.",
+"derivation": "1 m / 850 m/s = 1.18 ms; x 10,000 = 11.8 s."
 },
 {
 "id": "c40",
 "sentence": "In real time, that was far too quick to blink.",
-"claim": "A human blink takes roughly 100 to 400 milliseconds; the bullet crosses the apple in 94 microseconds.",
+"claim": "A human blink takes roughly a tenth to four tenths of a second, far longer than a bullet needs to cross an apple.",
 "source_url": "https://en.wikipedia.org/wiki/Blinking",
-"source_title": "Wikipedia, Blinking (recalled, not opened)",
+"source_title": "Wikipedia, Blinking",
 "accessed": "2026-11-10",
 "verified_via": "from memory",
 "status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The 94 microseconds is a derivation (calc.py); the blink duration is a hedge ('roughly a tenth of a second or more')."
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The 94 microseconds is a derivation (our calculation); the blink duration is a hedge ('roughly a tenth of a second or more').",
+"derivation": "A human blink takes roughly 100 to 400 milliseconds; the bullet crosses the apple in 94 microseconds."
 }
 ]

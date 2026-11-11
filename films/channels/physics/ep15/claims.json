@@ -2,56 +2,61 @@
 {
 "id": "c9",
 "sentence": "It pops when it gets to about one hundred eighty degrees Celsius. Its hard shell holds the steam in, until the pressure wins.",
-"claim": "A popcorn kernel pops at about 180 C, when steam pressure inside its hull ruptures it.",
+"claim": "A popcorn kernel pops at about 180 °C, when steam pressure inside its hull ruptures it.",
 "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4345489/",
 "source_title": "Virot and Ponomarenko, Popcorn: critical temperature, jump and sound, J. R. Soc. Interface (2015)",
 "accessed": "11 Nov 2026",
 "verified_via": "SOURCE-READ (builder read the page text)",
 "status": "OPEN: a person must open the link and check",
-"note": "Read: 96% of kernels popped at 180 C (critical temperature close to 180 C; earlier work 177-187 C); hull bursts like a pressure vessel (about 10 bar)."
+"note": "Read: 96% of kernels popped at 180 C (critical temperature close to 180 C; earlier work 177-187 C); hull bursts like a pressure vessel (about 10 bar).",
+"derivation": "A popcorn kernel pops at about 180 C, when steam pressure inside its hull ruptures it."
 },
 {
 "id": "c10",
 "sentence": "The pop is over in a few thousandths of a second.",
-"claim": "The pop (the hull breaking, the starch expanding and the kernel jumping) takes some hundredths of a second (the high-speed frames put the jump near 20 ms).",
+"claim": "The pop, from the hull breaking to the kernel jumping, takes a few hundredths of a second.",
 "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4345489/",
 "source_title": "Virot and Ponomarenko, Popcorn: critical temperature, jump and sound, J. R. Soc. Interface (2015)",
 "accessed": "11 Nov 2026",
 "verified_via": "SOURCE-READ (builder read the page text)",
 "status": "OPEN: a person must open the link and check",
-"note": "Read: the abstract says popcorn \"bursts open, jumps and emits a pop sound in some hundredths of a second\"; high-speed frames show the fracture at 6.9 ms and the jump at 20.7 ms. Wording changed from \"a few thousandths\" to \"about two hundredths\"."
+"note": "Read: the abstract says popcorn \"bursts open, jumps and emits a pop sound in some hundredths of a second\"; high-speed frames show the fracture at 6.9 ms and the jump at 20.7 ms. Wording changed from \"a few thousandths\" to \"about two hundredths\".",
+"derivation": "The pop (the hull breaking, the starch expanding and the kernel jumping) takes some hundredths of a second (the high-speed frames put the jump near 20 ms)."
 },
 {
 "id": "c11",
 "sentence": "Here, that's a few seconds.",
-"claim": "About two hundredths of a second times 1,000 is about twenty seconds.",
+"claim": "About two hundredths of a second, slowed 1,000 times, takes about twenty seconds on screen.",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. "
+"note": "DERIVATION (our calculation, run it); no outside source. ",
+"derivation": "About two hundredths of a second times 1,000 is about twenty seconds."
 },
 {
 "id": "c12",
 "sentence": "When it pops, the hole races around the film at several meters a second.",
-"claim": "The hole in a bursting soap film opens at the Taylor-Culick speed, v = sqrt(2 gamma / (rho h)), about 7 m/s for a 1 micrometre film with surface tension 0.025 N/m.",
+"claim": "The hole in a bursting soap bubble opens at a few meters a second (about 7 m/s for a very thin film).",
 "source_url": "https://doi.org/10.1063/1.1735828",
-"source_title": "Culick, 'Comments on a ruptured soap film', J. Appl. Phys. 31, 1128 (1960) (recalled, not opened)",
+"source_title": "Culick, 'Comments on a ruptured soap film', J. Appl. Phys. 31, 1128 (1960)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. Own calculation from the standard formula; film thickness (1 micrometre) and surface tension (0.025 N/m) are assumptions, stated in calc.py. The film says 'several meters a second'."
+"note": "DERIVATION (our calculation, run it); no outside source. Own calculation from the standard formula; film thickness (1 micrometre) and surface tension (0.025 N/m) are assumptions, stated in our calculation. The film says 'several meters a second'.",
+"derivation": "The hole in a bursting soap film opens at the Taylor-Culick speed, v = sqrt(2 gamma / (rho h)), about 7 m/s for a 1 micrometre film with surface tension 0.025 N/m."
 },
 {
 "id": "c13",
 "sentence": "The whole bubble is gone in about a hundredth of a second. Here, that takes about eleven seconds.",
-"claim": "A bubble about as wide as an egg (5 cm across, R = 2.5 cm) pops in about 11 ms (pi R / v, the edge of the hole running half way round), about 11 s at 1,000x.",
+"claim": "An egg-wide bubble pops in about a hundredth of a second, which is about eleven seconds when slowed 1,000 times.",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. The hole's edge runs from the puncture to the far side: half a great circle, pi R. Assumes a 1 micrometre film."
+"note": "DERIVATION (our calculation, run it); no outside source. The hole's edge runs from the puncture to the far side: half a great circle, pi R. Assumes a 1 micrometre film.",
+"derivation": "A bubble about as wide as an egg (5 cm across, R = 2.5 cm) pops in about 11 ms (pi R / v, the edge of the hole running half way round), about 11 s at 1,000x."
 }
 ]

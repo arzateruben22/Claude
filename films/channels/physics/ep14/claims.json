@@ -2,67 +2,73 @@
 {
 "id": "c5",
 "sentence": "A housefly beats its wings about two hundred times a second.",
-"claim": "Flies beat their wings roughly 140 to 200 times a second (blow flies about 160 to 200); the film says \"close to two hundred\" for a fly.",
+"claim": "Flies beat their wings roughly 140 to 200 times a second.",
 "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4685551/",
 "source_title": "Kinematic diversity suggests expanded roles for fly halteres (wingbeat frequencies of many fly families), Biology Letters (2015)",
 "accessed": "11 Nov 2026",
 "verified_via": "SOURCE-READ (builder read the page text)",
 "status": "OPEN: a person must open the link and check",
-"note": "Read the table: wingbeat frequencies of flies in this survey run from about 137 to about 200 Hz (blow flies about 160 to 200). A housefly was not read separately, so the script says \"a fly\" and \"close to two hundred\"."
+"note": "Read the table: wingbeat frequencies of flies in this survey run from about 137 to about 200 Hz (blow flies about 160 to 200). A housefly was not read separately, so the script says \"a fly\" and \"close to two hundred\".",
+"derivation": "Flies beat their wings roughly 140 to 200 times a second (blow flies about 160 to 200); the film says \"close to two hundred\" for a fly."
 },
 {
 "id": "c6",
 "sentence": "Slow it a hundred times, and that's two beats a second.",
-"claim": "About 200 / 100 = about 2 beats per second of screen time.",
+"claim": "Slowed 100 times, a fly's 200-beat-a-second wing beats about twice a second on screen.",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. "
+"note": "DERIVATION (our calculation, run it); no outside source. ",
+"derivation": "About 200 / 100 = about 2 beats per second of screen time."
 },
 {
 "id": "c7",
 "sentence": "It hits, and the water climbs into a crown. The whole crown forms in a few hundredths of a second.",
-"claim": "A falling water drop hitting a thin layer of water forms a crown within a few hundredths of a second (tens of milliseconds).",
+"claim": "A water drop landing in a thin layer of water throws up a crown within a few hundredths of a second.",
 "source_url": "https://doi.org/10.1146/annurev.fluid.38.050304.092144",
-"source_title": "Yarin, 'Drop impact dynamics: splashing, spreading, receding, bouncing', Annu. Rev. Fluid Mech. 38, 159 (2006) (recalled, not opened; DOI from memory)",
+"source_title": "Yarin, 'Drop impact dynamics: splashing, spreading, receding, bouncing', Annu. Rev. Fluid Mech. 38, 159 (2006)",
 "accessed": "2026-11-10",
 "verified_via": "from memory",
 "status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Crown timescales depend on drop size, speed and the liquid layer; 'a few hundredths of a second' is a hedge, not a measurement. LEAD: a search summary says the crown (corolla) emerges on the drop-film merger time scale of about 1 ms and grows over tens of milliseconds; the film says \"a few hundredths\", still unverified."
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Crown timescales depend on drop size, speed and the liquid layer; 'a few hundredths of a second' is a hedge, not a measurement. LEAD: a search summary says the crown (corolla) emerges on the drop-film merger time scale of about 1 ms and grows over tens of milliseconds; the film says \"a few hundredths\", still unverified.",
+"derivation": "A falling water drop hitting a thin layer of water forms a crown within a few hundredths of a second (tens of milliseconds)."
 },
 {
 "id": "c8",
 "sentence": "At this speed, that takes a few seconds.",
-"claim": "A few hundredths of a second times 100 is a few seconds.",
+"claim": "A few hundredths of a second, slowed 100 times, takes a few seconds on screen.",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. "
+"note": "DERIVATION (our calculation, run it); no outside source. ",
+"derivation": "A few hundredths of a second times 100 is a few seconds."
 },
 {
 "id": "c30",
 "sentence": "A mosquito's wings beat about five hundred times a second.",
-"claim": "Mosquito wingbeats are several hundred per second (reports range roughly 300 to 800); the film uses 500 as one round value.",
+"claim": "Mosquitoes beat their wings several hundred times a second (about 340 to 740 in one survey; 500 is a round value).",
 "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8113239/",
 "source_title": "Infrared light sensors permit rapid recording of wingbeat frequency and bioacoustic species identification of mosquitoes (Scientific Reports, 2021)",
 "accessed": "11 Nov 2026",
 "verified_via": "SOURCE-READ (builder read the page text)",
 "status": "OPEN: a person must open the link and check",
-"note": "Read Table 1: mean wingbeat frequency of 29 North American mosquito species spans about 342 Hz (Culex restuans) to about 737 Hz; Aedes aegypti mean about 498 Hz. 500 is a fair round value."
+"note": "Read Table 1: mean wingbeat frequency of 29 North American mosquito species spans about 342 Hz (Culex restuans) to about 737 Hz; Aedes aegypti mean about 498 Hz. 500 is a fair round value.",
+"derivation": "Mosquito wingbeats are several hundred per second (reports range roughly 300 to 800); the film uses 500 as one round value."
 },
 {
 "id": "c38",
 "sentence": "Here, that's five beats a second.",
-"claim": "500 beats a second / 100 = 5 beats per second of screen time.",
+"claim": "Slowed 100 times, a mosquito's 500 beats a second becomes 5 a second on screen.",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. "
+"note": "DERIVATION (our calculation, run it); no outside source. ",
+"derivation": "500 beats a second / 100 = 5 beats per second of screen time."
 }
 ]

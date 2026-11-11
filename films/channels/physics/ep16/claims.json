@@ -2,45 +2,49 @@
 {
 "id": "c14",
 "sentence": "In a room, it moves about three hundred forty meters a second.",
-"claim": "The speed of sound in air at 20 C is about 343 m/s.",
+"claim": "Sound travels through room-temperature air at about 343 meters a second.",
 "source_url": "https://openstax.org/books/college-physics-2e/pages/17-2-speed-of-sound-frequency-and-wavelength",
 "source_title": "OpenStax College Physics 2e, 17.2 Speed of Sound, Frequency, and Wavelength",
 "accessed": "11 Nov 2026",
 "verified_via": "SOURCE-READ (builder read the page text)",
 "status": "OPEN: a person must open the link and check",
-"note": "Read: speed of sound is 331 m/s at 0 C and 343 m/s at 20 C."
+"note": "Read: speed of sound is 331 m/s at 0 C and 343 m/s at 20 C.",
+"derivation": "The speed of sound in air at 20 C is about 343 m/s."
 },
 {
 "id": "c15",
 "sentence": "The room is five meters across, so the clap crosses it in about fifteen thousandths of a second. Here, that's fifteen seconds. ... would still take about two and a half minutes to arrive.",
-"claim": "5 m / 343 m/s = 14.6 ms; at 1,000x that is 14.6 s; at 10,000x it is 146 s (2.4 minutes).",
+"claim": "Sound crosses a 5-meter room in about 15 thousandths of a second: 15 seconds at 1,000 times slower.",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. The kitchen width (5 m) is our assumption."
+"note": "DERIVATION (our calculation, run it); no outside source. The kitchen width (5 m) is our assumption.",
+"derivation": "5 m / 343 m/s = 14.6 ms; at 1,000x that is 14.6 s; at 10,000x it is 146 s (2.4 minutes)."
 },
 {
 "id": "c35",
 "sentence": "Sound covers about a kilometer in three seconds.",
-"claim": "1,000 m / 343 m/s = 2.9 s.",
+"claim": "Sound covers about a kilometer in three seconds, so counting the seconds between a flash and its thunder and dividing by three gives the distance in kilometers.",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. "
+"note": "DERIVATION (our calculation, run it); no outside source. ",
+"derivation": "1,000 m / 343 m/s = 2.9 s."
 },
 {
 "id": "c39",
 "sentence": "Without air, there would be nothing to push, and no sound at all.",
-"claim": "Sound is a pressure wave in a medium (air, water, a solid) and cannot travel through a vacuum.",
+"claim": "Sound is a pressure wave in air, water or a solid, and cannot travel through empty space.",
 "source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-1-sound-waves",
-"source_title": "OpenStax, University Physics Vol. 1, 17.1 Sound Waves (recalled, not opened)",
+"source_title": "OpenStax, University Physics Vol. 1, 17.1 Sound Waves",
 "accessed": "2026-11-10",
 "verified_via": "from memory",
 "status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Standard physics; in space there is no air to carry a clap."
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Standard physics; in space there is no air to carry a clap.",
+"derivation": "Sound is a pressure wave in a medium (air, water, a solid) and cannot travel through a vacuum."
 }
 ]

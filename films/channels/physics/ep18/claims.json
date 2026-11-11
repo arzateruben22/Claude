@@ -2,67 +2,73 @@
 {
 "id": "c20",
 "sentence": "First, a faint path of electric charge reaches down from the cloud, in jumps. Each jump is tens of meters long. Each takes about a microsecond.",
-"claim": "The stepped leader of a lightning flash advances in steps tens of meters long, each about a microsecond, with pauses of tens of microseconds between them.",
+"claim": "A lightning leader advances in jumps about 50 meters long, each lasting about a millionth of a second.",
 "source_url": "https://www.weather.gov/mlb/what_is_lightning",
 "source_title": "NWS Melbourne, What is Lightning?",
 "accessed": "11 Nov 2026",
 "verified_via": "SOURCE-READ (builder read the page text)",
 "status": "OPEN: a person must open the link and check",
-"note": "Read: the stepped leader moves in luminous steps about 50 m long and 1 microsecond long."
+"note": "Read: the stepped leader moves in luminous steps about 50 m long and 1 microsecond long.",
+"derivation": "The stepped leader of a lightning flash advances in steps tens of meters long, each about a microsecond, with pauses of tens of microseconds between them."
 },
 {
 "id": "c21",
 "sentence": "At this speed, a microsecond lasts one whole second.",
-"claim": "1 microsecond x 1,000,000 = 1 second.",
+"claim": "A millionth of a second, slowed a million times, lasts one second.",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. "
+"note": "DERIVATION (our calculation, run it); no outside source. ",
+"derivation": "1 microsecond x 1,000,000 = 1 second."
 },
 {
 "id": "c22",
 "sentence": "At last it touches the ground, and a bright flash runs back up the three-kilometer path. That flash travels up to about a third of the speed of light.",
-"claim": "The return stroke races up the leader channel at up to roughly a third of the speed of light (the literature range is about 1/10 to 1/2 of c); the channel here is taken to be 3 km long (our assumption).",
+"claim": "The bright return stroke races up the lightning channel at up to roughly a third of the speed of light.",
 "source_url": "https://www.weather.gov/safety/lightning-science",
-"source_title": "NOAA / National Weather Service, lightning science (text not read); Rakov and Uman, Lightning: Physics and Effects (2003) (recalled, not opened)",
+"source_title": "NOAA / National Weather Service, lightning science (text not read); Rakov and Uman, Lightning: Physics and Effects (2003)",
 "accessed": "2026-11-10",
 "verified_via": "from memory",
 "status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Return-stroke speeds are reported from about 1/10 to 1/3 of c; the film says 'about a third'. Change to 'up to a third' if a person prefers. LEAD (Britannica, not opened because the site blocks automated reads): return stroke about 5e7 to 2e8 m/s, roughly a third of the speed of light."
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Return-stroke speeds are reported from about 1/10 to 1/3 of c; the film says 'about a third'. Change to 'up to a third' if a person prefers. LEAD (Britannica, not opened because the site blocks automated reads): return stroke about 5e7 to 2e8 m/s, roughly a third of the speed of light.",
+"derivation": "The return stroke races up the leader channel at up to roughly a third of the speed of light (the literature range is about 1/10 to 1/2 of c); the channel here is taken to be 3 km long (our assumption)."
 },
 {
 "id": "c23",
 "sentence": "Even at a million times slower, it takes at least thirty seconds to climb.",
-"claim": "3 km / (c/3) = 30 microseconds at the top speed; x 1,000,000 = 30 s, so at least thirty seconds for a slower stroke. The 3 km channel length is our assumption, and the narration says it (three-kilometer path).",
+"claim": "Over a 3-kilometer path, a return stroke at a third of light speed takes about 30 millionths of a second, which is 30 seconds at a million times slower (the 3 km path is our assumption).",
 "source_url": "",
-"source_title": "Our own arithmetic (calc.py)",
+"source_title": "Our calculation (shown in the film)",
 "accessed": "2026-11-10",
 "verified_via": "derivation",
 "status": "TODO open link",
-"note": "DERIVATION (calc.py, run it); no outside source. Channel length of 3 km is our assumption (clouds are typically a few km up)."
+"note": "DERIVATION (our calculation, run it); no outside source. Channel length of 3 km is our assumption (clouds are typically a few km up).",
+"derivation": "3 km / (c/3) = 30 microseconds at the top speed; x 1,000,000 = 30 s, so at least thirty seconds for a slower stroke. The 3 km channel length is our assumption, and the narration says it (three-kilometer path)."
 },
 {
 "id": "c31",
 "sentence": "The whole fall from the cloud takes tens of thousandths of a second. At this speed, that would take hours.",
-"claim": "A stepped leader takes tens of milliseconds to reach the ground; at 1,000,000x slower, 20 ms is about 5.6 hours.",
+"claim": "A lightning leader takes tens of thousandths of a second to reach the ground; at a million times slower that is hours.",
 "source_url": "https://www.weather.gov/safety/lightning-science",
-"source_title": "NOAA / National Weather Service, lightning science (page reached from the builder session, text not read); Uman, The Lightning Discharge (recalled, not opened)",
+"source_title": "NOAA / National Weather Service, lightning science (page reached from the builder session, text not read); Uman, The Lightning Discharge",
 "accessed": "2026-11-10",
 "verified_via": "from memory",
 "status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The descent time is a hedge ('tens of thousandths'); 20 ms is used for the hours figure (calc.py). The film says it is skipping ahead."
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. The descent time is a hedge ('tens of thousandths'); 20 ms is used for the hours figure (our calculation). The film says it is skipping ahead.",
+"derivation": "A stepped leader takes tens of milliseconds to reach the ground; at 1,000,000x slower, 20 ms is about 5.6 hours."
 },
 {
 "id": "c33",
 "sentence": "Then the path waits, about thirty to fifty microseconds. Here, that's half a minute or more.",
-"claim": "Between leader steps there is a pause of about 50 microseconds; x 1,000,000 = about 50 s.",
+"claim": "Between lightning leader steps there is a pause of about 50 millionths of a second.",
 "source_url": "https://www.weather.gov/mlb/what_is_lightning",
 "source_title": "NWS Melbourne, What is Lightning?",
 "accessed": "11 Nov 2026",
 "verified_via": "SOURCE-READ (builder read the page text)",
 "status": "OPEN: a person must open the link and check",
-"note": "Read: \"Between steps there is a pause of about 50 microseconds\". Wording changed from \"thirty to fifty\" to \"about fifty\"; the film says \"almost a minute\"."
+"note": "Read: \"Between steps there is a pause of about 50 microseconds\". Wording changed from \"thirty to fifty\" to \"about fifty\"; the film says \"almost a minute\".",
+"derivation": "Between leader steps there is a pause of about 50 microseconds; x 1,000,000 = about 50 s."
 }
 ]
