@@ -75,3 +75,4 @@ The close
 
 Narration: synthetic voice (AI). Every picture is drawn by code from the physics (badged Model or Illustration). Music and sound design are original.
 TODO before posting: the channel handle and links, a physicist's sign-off, and YouTube's altered/synthetic content setting.
+Thumbnail illustration made with AI.

@@ -104,7 +104,7 @@
   "title": "How Much Would You Slow Time to Watch Light Move?",
   "thumbnail": "A",
   "thumbnailText": "32 YEARS in one second",
-  "why": "The title is a question people can guess at; the frame is the light front the film really delivers at a billion times slower (one second lasts about 32 years); the number on the thumbnail is not in the title. No human figure exists in the film, so the human anchor from 'What's working' is skipped."
+  "why": "The title is a question people can guess at; the frame is the light front the film really delivers at a billion times slower (one second lasts about 32 years); the number on the thumbnail is not in the title. No human figure exists in the film, so the human anchor from 'What's working' is skipped. The picture is the owner's AI illustration (ChatGPT) of a sheet of light crossing a kitchen table; the words are added in code. The code-drawn frame is kept as option B (thumb-options/)."
  },
  "testAndCompare": [
   "A",
@@ -122,5 +122,6 @@
  },
  "thumbnailFile": "thumbnail.jpg",
  "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080). Subject: a bright front of light caught halfway across a dim kitchen counter, the lit side warm and the far side in shadow, a water drop falling from a tap above a white cup. Composition: tap and cup centre, the front arcing across the counter, dark wall at upper right for text. Lighting and treatment: a single warm light front against shadow, warm wooden counter, premium editorial science documentary look, clearly a code-rendered illustration rather than a photograph. Mood: curiosity. Text: '32 YEARS' very large in cream white above 'in one second' in warm yellow, upper right. Scientific accuracy: at a billion times slower one real second lasts about 32 years and light moves about 30 centimeters per screen second. Avoid: no arrows, circles, faces, logos, watermarks, extra text. Style: distinctive, not generic AI art.",
- "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "thumbnailIllustration": "Thumbnail illustration made with AI (owner's ChatGPT art, lf01/art/owner/light-front-table.png)"
 }
