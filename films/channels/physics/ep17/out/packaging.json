@@ -1,128 +1,131 @@
 {
- "version": 1,
- "format": "short",
- "hook": "A rifle bullet crosses an apple in under a ten-thousandth of a second: slow time 10,000 times and it takes one second.",
- "titles": [
-  {
-   "text": "This Bullet Takes a Full Second to Cross an Apple",
-   "mechanism": "scale shock"
+  "version": 1,
+  "format": "short",
+  "hook": "A rifle bullet crosses an apple in under a ten-thousandth of a second: slow time 10,000 times and it takes one second.",
+  "titles": [
+    {
+      "text": "This Bullet Takes a Full Second to Cross an Apple",
+      "mechanism": "scale shock"
+    },
+    {
+      "text": "What the Apple Does Before It Knows",
+      "mechanism": "hidden mechanism"
+    },
+    {
+      "text": "The Cone of Air Behind a Bullet",
+      "mechanism": "knowledge gap"
+    },
+    {
+      "text": "Why Doesn't the Apple Move First?",
+      "mechanism": "unanswered question"
+    },
+    {
+      "text": "A Bullet Is Faster Than Sound. Here's the Proof",
+      "mechanism": "contradiction"
+    }
+  ],
+  "thumbnails": [
+    {
+      "id": "A",
+      "subject": "a bullet entering an apple, the skin dimpled, a narrow blue shock cone trailing behind the bullet",
+      "composition": "apple large centre, bullet at the left edge of the apple, cone sweeping left",
+      "lighting": "warm side light, dark background",
+      "trigger": "suspense",
+      "text": "ONE SECOND",
+      "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+    },
+    {
+      "id": "B",
+      "subject": "the back of the apple blowing outward in a spray",
+      "composition": "apple centre",
+      "lighting": "dark",
+      "trigger": "drama",
+      "text": "",
+      "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+    },
+    {
+      "id": "C",
+      "subject": "the shock cone alone as a blue wedge",
+      "composition": "",
+      "lighting": "",
+      "trigger": "",
+      "text": "",
+      "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+    }
+  ],
+  "pairings": [
+    {
+      "title": 0,
+      "thumbnail": "A",
+      "scores": {
+        "scroll": 90,
+        "curiosity": 86,
+        "clarity": 88,
+        "synergy": 92,
+        "originality": 74,
+        "accuracy": 96,
+        "mobile": 92,
+        "satisfaction": 88
+      },
+      "note": "The dimple and cone make the frozen moment unmistakable; the title gives the scale."
+    },
+    {
+      "title": 1,
+      "thumbnail": "B",
+      "scores": {
+        "scroll": 74,
+        "curiosity": 78,
+        "clarity": 70,
+        "synergy": 74,
+        "originality": 72,
+        "accuracy": 96,
+        "mobile": 84,
+        "satisfaction": 82
+      },
+      "note": "Strong picture; title is vaguer."
+    },
+    {
+      "title": 4,
+      "thumbnail": "C",
+      "scores": {
+        "scroll": 62,
+        "curiosity": 70,
+        "clarity": 66,
+        "synergy": 64,
+        "originality": 70,
+        "accuracy": 90,
+        "mobile": 78,
+        "satisfaction": 74
+      },
+      "note": "Abstract."
+    }
+  ],
+  "winner": {
+    "title": "This Bullet Takes a Full Second to Cross an Apple",
+    "thumbnail": "A",
+    "thumbnailText": "10,000× Slower",
+    "why": "The part shows exactly this at ten thousand times slower (about 0.94 s). The thumbnail's frozen dimple and cone add the new layer."
   },
-  {
-   "text": "What the Apple Does Before It Knows",
-   "mechanism": "hidden mechanism"
+  "testAndCompare": [
+    "A",
+    "B",
+    "C"
+  ],
+  "checks": {
+    "halfSecond": true,
+    "curiosity": true,
+    "duplication": true,
+    "competition": true,
+    "truth": true,
+    "satisfaction": true,
+    "originality": true
   },
-  {
-   "text": "The Cone of Air Behind a Bullet",
-   "mechanism": "knowledge gap"
-  },
-  {
-   "text": "Why Doesn't the Apple Move First?",
-   "mechanism": "unanswered question"
-  },
-  {
-   "text": "A Bullet Is Faster Than Sound. Here's the Proof",
-   "mechanism": "contradiction"
-  }
- ],
- "thumbnails": [
-  {
-   "id": "A",
-   "subject": "a bullet entering an apple, the skin dimpled, a narrow blue shock cone trailing behind the bullet",
-   "composition": "apple large centre, bullet at the left edge of the apple, cone sweeping left",
-   "lighting": "warm side light, dark background",
-   "trigger": "suspense",
-   "text": "ONE SECOND",
-   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
-  },
-  {
-   "id": "B",
-   "subject": "the back of the apple blowing outward in a spray",
-   "composition": "apple centre",
-   "lighting": "dark",
-   "trigger": "drama",
-   "text": "",
-   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
-  },
-  {
-   "id": "C",
-   "subject": "the shock cone alone as a blue wedge",
-   "composition": "",
-   "lighting": "",
-   "trigger": "",
-   "text": "",
-   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
-  }
- ],
- "pairings": [
-  {
-   "title": 0,
-   "thumbnail": "A",
-   "scores": {
-    "scroll": 90,
-    "curiosity": 86,
-    "clarity": 88,
-    "synergy": 92,
-    "originality": 74,
-    "accuracy": 96,
-    "mobile": 92,
-    "satisfaction": 88
-   },
-   "note": "The dimple and cone make the frozen moment unmistakable; the title gives the scale."
-  },
-  {
-   "title": 1,
-   "thumbnail": "B",
-   "scores": {
-    "scroll": 74,
-    "curiosity": 78,
-    "clarity": 70,
-    "synergy": 74,
-    "originality": 72,
-    "accuracy": 96,
-    "mobile": 84,
-    "satisfaction": 82
-   },
-   "note": "Strong picture; title is vaguer."
-  },
-  {
-   "title": 4,
-   "thumbnail": "C",
-   "scores": {
-    "scroll": 62,
-    "curiosity": 70,
-    "clarity": 66,
-    "synergy": 64,
-    "originality": 70,
-    "accuracy": 90,
-    "mobile": 78,
-    "satisfaction": 74
-   },
-   "note": "Abstract."
-  }
- ],
- "winner": {
-  "title": "This Bullet Takes a Full Second to Cross an Apple",
-  "thumbnail": "A",
-  "thumbnailText": "10,000× Slower",
-  "why": "The part shows exactly this at ten thousand times slower (about 0.94 s). The thumbnail's frozen dimple and cone add the new layer."
- },
- "testAndCompare": [
-  "A",
-  "B",
-  "C"
- ],
- "checks": {
-  "halfSecond": true,
-  "curiosity": true,
-  "duplication": true,
-  "competition": true,
-  "truth": true,
-  "satisfaction": true,
-  "originality": true
- },
- "thumbnailFile": "reality-rulebook-s3p5-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a bullet entering a red apple, the skin dimpled around it, a narrow translucent blue shock cone trailing behind the bullet. Composition: apple large centre, bullet at the left edge of the apple, cone sweeping left. Lighting and treatment: warm side light, dark background; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: suspense. Text: \"ONE SECOND\" in a bold geometric sans, placed upper third. Scientific accuracy: the bullet in Edgerton's famous photograph flew about 850 m/s, Mach 2.5; the apple is about 8 cm; it crosses it in about 94 microseconds. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
- "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
- "note": "Cover re-cut from a HUD-free render of the part itself; there is no hand or figure in the film, so the human-anchor idea from PACKAGING.md was skipped. Cover text does not repeat the title.",
- "coverGrid": "cover-grid-3x4.jpg is the centre 1080x1440 band (TikTok / Instagram profile-grid crop); subject and text sit inside it"
+  "thumbnailFile": "reality-rulebook-s3p5-cover.jpg",
+  "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a bullet entering a red apple, the skin dimpled around it, a narrow translucent blue shock cone trailing behind the bullet. Composition: apple large centre, bullet at the left edge of the apple, cone sweeping left. Lighting and treatment: warm side light, dark background; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: suspense. Text: \"ONE SECOND\" in a bold geometric sans, placed upper third. Scientific accuracy: the bullet in Edgerton's famous photograph flew about 850 m/s, Mach 2.5; the apple is about 8 cm; it crosses it in about 94 microseconds. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
+  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+  "note": "Cover re-cut from a HUD-free render of the part itself; there is no hand or figure in the film, so the human-anchor idea from PACKAGING.md was skipped. Cover text does not repeat the title.",
+  "coverGrid": "cover-grid-3x4.jpg is the centre 1080x1440 band (TikTok / Instagram profile-grid crop); subject and text sit inside it",
+  "postingCopyLines": [
+    "Kitchen illustration made with AI. The apple's photo is an illustration; the bullet and the flying bits are drawn by code."
+  ]
 }

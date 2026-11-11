@@ -81,5 +81,5 @@ The close
 - MIT researchers built a camera that records about a trillion frames a second and filmed a pulse of light crossing a bottle, assembled from many repeated pulses. Source: MIT News, Trillion-frame-per-second video (Hardesty, 13 Dec 2011), https://news.mit.edu/2011/trillion-fps-camera-1213
 
 Narration: synthetic voice (AI). Every picture is drawn by code from the physics (badged Model or Illustration). Music and sound design are original.
-Thumbnail illustration made with AI.
+Thumbnail and kitchen illustrations made with AI. Everything that moves is drawn by code.
 TODO before posting: the channel handle and links, a physicist's sign-off, and YouTube's altered/synthetic content setting.

@@ -296,7 +296,13 @@ elif PART == 5 and (HERE / "art/owner/plates/plate-06-apple-16x9.png").exists():
 elif PART == 4 and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists():
     PLATES = [dict(_p01, t0=0.0, t1=R(ENDSHOW))]
 elif not PART and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists() and "sound" in CUTS and "bullet" in CUTS:
-    PLATES = [dict(_p02, t0=R(EV["bird"][0]), t1=R(EV["bird"][1]), fade=0.3), dict(_p01, t0=R(CUTS["sound"]), t1=R(CUTS["bullet"]))]   # the wings chapter and the sound chapter stand on the owner's kitchen plates
+    PLATES = [dict(_p02, t0=R(EV["bird"][0]), t1=R(EV["bird"][1]), fade=0.3), dict(_p01, t0=R(CUTS["sound"]), t1=R(CUTS["bullet"]))]
+    if (HERE / "art/owner/plates/plate-03-tap-mug-clean-16x9.png").exists():
+        PLATES.append(dict(_p03, t0=R(EV["tapdrop"][0] - 1.0), t1=R(EV["tapdrop"][2] + 11.0), swap={"t": R(EV["tapdrop"][1]), "file": PLATE03C, "file9": PLATE03C}))
+    if (HERE / "art/owner/plates/plate-05-sink-16x9.png").exists():
+        PLATES.append(dict(_p05, t0=R(EV["bubble"]["in"] - 1.5), t1=R(EV["bubble"]["pop"] + 11.5)))
+    if (HERE / "art/owner/plates/plate-06-apple-16x9.png").exists():
+        PLATES.append(dict(_p06, t0=R(EV["bullet"]["approach"] - 1.5), t1=R(EV["bullet"]["enter"] + 6.0)))
 else:
     PLATES = []
 # on plate shots the corner tag says what is illustration and what is code; the old tag stays on code-kitchen shots

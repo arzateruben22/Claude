@@ -126,6 +126,18 @@
    "t1": 149.0667
   },
   {
+   "t": 103.7,
+   "kind": "badge",
+   "tag": "code-p3",
+   "text": "Kitchen: AI illustration · splash drawn by code"
+  },
+  {
+   "t": 121.8333,
+   "kind": "badge",
+   "tag": "code-s4",
+   "text": "Drawn by code · model"
+  },
+  {
    "t": 149.0667,
    "kind": "section",
    "id": "pop",
@@ -137,9 +149,21 @@
    "tag": "pop"
   },
   {
+   "t": 184.1333,
+   "kind": "badge",
+   "tag": "code-p5",
+   "text": "Kitchen: AI illustration · bubble drawn by code"
+  },
+  {
+   "t": 204.5333,
+   "kind": "badge",
+   "tag": "code-s6",
+   "text": "Drawn by code · model"
+  },
+  {
    "t": 208.5166,
    "kind": "badge",
-   "tag": "code-p3",
+   "tag": "code-p7",
    "text": "Kitchen: AI illustration · wave drawn by code"
   },
   {
@@ -156,7 +180,7 @@
   {
    "t": 265.85,
    "kind": "badge",
-   "tag": "code-s4",
+   "tag": "code-s8",
    "text": "Drawn by code · model"
   },
   {
@@ -166,9 +190,21 @@
    "t1": 324.8
   },
   {
+   "t": 288.3,
+   "kind": "badge",
+   "tag": "code-p9",
+   "text": "Kitchen: AI illustration · bullet and apple bits drawn by code"
+  },
+  {
    "t": 298.8,
    "kind": "contact",
    "tag": "bullet"
+  },
+  {
+   "t": 304.8,
+   "kind": "badge",
+   "tag": "code-s10",
+   "text": "Drawn by code · model"
   },
   {
    "t": 324.8,

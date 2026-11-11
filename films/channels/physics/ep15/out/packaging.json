@@ -1,129 +1,132 @@
 {
- "version": 1,
- "format": "short",
- "hook": "A soap bubble about as wide as an egg pops in about a hundredth of a second: slowed 1,000 times, that takes eleven seconds.",
- "titles": [
-  {
-   "text": "A Soap Bubble Takes 11 Seconds to Pop (Slowed 1,000×)",
-   "mechanism": "scale shock"
+  "version": 1,
+  "format": "short",
+  "hook": "A soap bubble about as wide as an egg pops in about a hundredth of a second: slowed 1,000 times, that takes eleven seconds.",
+  "titles": [
+    {
+      "text": "A Soap Bubble Takes 11 Seconds to Pop (Slowed 1,000×)",
+      "mechanism": "scale shock"
+    },
+    {
+      "text": "The Pop Is Over in a Few Thousandths of a Second",
+      "mechanism": "hidden mechanism"
+    },
+    {
+      "text": "What Really Happens Inside Popping Popcorn",
+      "mechanism": "knowledge gap"
+    },
+    {
+      "text": "Why Does a Bubble Pop From a Hole?",
+      "mechanism": "unanswered question"
+    },
+    {
+      "text": "A Popcorn Kernel Jumps Before It Pops",
+      "mechanism": "unexpected consequence"
+    }
+  ],
+  "thumbnails": [
+    {
+      "id": "A",
+      "subject": "a soap bubble with a circular hole opening, the film's rainbow colours swirling around the rim",
+      "composition": "bubble large centre, hole at upper right, dark kitchen cabinet behind for contrast",
+      "lighting": "backlit, thin-film colours",
+      "trigger": "wonder",
+      "text": "ELEVEN SECONDS",
+      "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+    },
+    {
+      "id": "B",
+      "subject": "a popcorn kernel split open with white foam bursting out",
+      "composition": "kernel centre in a dark pan",
+      "lighting": "warm kitchen light",
+      "trigger": "delight",
+      "text": "",
+      "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+    },
+    {
+      "id": "C",
+      "subject": "half a bubble, half a popcorn pop",
+      "composition": "split frame",
+      "lighting": "daylight",
+      "trigger": "curiosity",
+      "text": "",
+      "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+    }
+  ],
+  "pairings": [
+    {
+      "title": 0,
+      "thumbnail": "A",
+      "scores": {
+        "scroll": 84,
+        "curiosity": 86,
+        "clarity": 86,
+        "synergy": 88,
+        "originality": 70,
+        "accuracy": 96,
+        "mobile": 88,
+        "satisfaction": 86
+      },
+      "note": "The open hole shows the pop mid-way; text adds the time."
+    },
+    {
+      "title": 2,
+      "thumbnail": "B",
+      "scores": {
+        "scroll": 74,
+        "curiosity": 78,
+        "clarity": 70,
+        "synergy": 72,
+        "originality": 66,
+        "accuracy": 94,
+        "mobile": 84,
+        "satisfaction": 80
+      },
+      "note": "Popcorn draws clicks but the part is half bubble."
+    },
+    {
+      "title": 1,
+      "thumbnail": "C",
+      "scores": {
+        "scroll": 60,
+        "curiosity": 70,
+        "clarity": 62,
+        "synergy": 66,
+        "originality": 74,
+        "accuracy": 92,
+        "mobile": 76,
+        "satisfaction": 72
+      },
+      "note": "Cluttered."
+    }
+  ],
+  "winner": {
+    "title": "A Soap Bubble Takes 11 Seconds to Pop (Slowed 1,000×)",
+    "thumbnail": "A",
+    "thumbnailText": "Egg-Sized",
+    "why": "The hole mid-pop is the mystery; the title gives the scale. The part really shows the bubble popping over about eleven seconds."
   },
-  {
-   "text": "The Pop Is Over in a Few Thousandths of a Second",
-   "mechanism": "hidden mechanism"
+  "testAndCompare": [
+    "A",
+    "B",
+    "C"
+  ],
+  "checks": {
+    "halfSecond": true,
+    "curiosity": true,
+    "duplication": true,
+    "competition": true,
+    "truth": true,
+    "satisfaction": true,
+    "originality": true
   },
-  {
-   "text": "What Really Happens Inside Popping Popcorn",
-   "mechanism": "knowledge gap"
-  },
-  {
-   "text": "Why Does a Bubble Pop From a Hole?",
-   "mechanism": "unanswered question"
-  },
-  {
-   "text": "A Popcorn Kernel Jumps Before It Pops",
-   "mechanism": "unexpected consequence"
-  }
- ],
- "thumbnails": [
-  {
-   "id": "A",
-   "subject": "a soap bubble with a circular hole opening, the film's rainbow colours swirling around the rim",
-   "composition": "bubble large centre, hole at upper right, dark kitchen cabinet behind for contrast",
-   "lighting": "backlit, thin-film colours",
-   "trigger": "wonder",
-   "text": "ELEVEN SECONDS",
-   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
-  },
-  {
-   "id": "B",
-   "subject": "a popcorn kernel split open with white foam bursting out",
-   "composition": "kernel centre in a dark pan",
-   "lighting": "warm kitchen light",
-   "trigger": "delight",
-   "text": "",
-   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
-  },
-  {
-   "id": "C",
-   "subject": "half a bubble, half a popcorn pop",
-   "composition": "split frame",
-   "lighting": "daylight",
-   "trigger": "curiosity",
-   "text": "",
-   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
-  }
- ],
- "pairings": [
-  {
-   "title": 0,
-   "thumbnail": "A",
-   "scores": {
-    "scroll": 84,
-    "curiosity": 86,
-    "clarity": 86,
-    "synergy": 88,
-    "originality": 70,
-    "accuracy": 96,
-    "mobile": 88,
-    "satisfaction": 86
-   },
-   "note": "The open hole shows the pop mid-way; text adds the time."
-  },
-  {
-   "title": 2,
-   "thumbnail": "B",
-   "scores": {
-    "scroll": 74,
-    "curiosity": 78,
-    "clarity": 70,
-    "synergy": 72,
-    "originality": 66,
-    "accuracy": 94,
-    "mobile": 84,
-    "satisfaction": 80
-   },
-   "note": "Popcorn draws clicks but the part is half bubble."
-  },
-  {
-   "title": 1,
-   "thumbnail": "C",
-   "scores": {
-    "scroll": 60,
-    "curiosity": 70,
-    "clarity": 62,
-    "synergy": 66,
-    "originality": 74,
-    "accuracy": 92,
-    "mobile": 76,
-    "satisfaction": 72
-   },
-   "note": "Cluttered."
-  }
- ],
- "winner": {
-  "title": "A Soap Bubble Takes 11 Seconds to Pop (Slowed 1,000×)",
-  "thumbnail": "A",
-  "thumbnailText": "Egg-Sized",
-  "why": "The hole mid-pop is the mystery; the title gives the scale. The part really shows the bubble popping over about eleven seconds."
- },
- "testAndCompare": [
-  "A",
-  "B",
-  "C"
- ],
- "checks": {
-  "halfSecond": true,
-  "curiosity": true,
-  "duplication": true,
-  "competition": true,
-  "truth": true,
-  "satisfaction": true,
-  "originality": true
- },
- "thumbnailFile": "reality-rulebook-s3p3-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a soap bubble about as wide as an egg with a round hole opening in its film, iridescent thin-film colours around the rim, dark kitchen cabinet behind. Composition: bubble large centre, hole at upper right, dark kitchen cabinet behind for contrast. Lighting and treatment: backlit, thin-film colours; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: wonder. Text: \"ELEVEN SECONDS\" in a bold geometric sans, placed upper third. Scientific accuracy: the hole in a bursting bubble opens at several meters per second; the whole egg-sized bubble is gone in about a hundredth of a second. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
- "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
- "note": "Cover is the owner's AI illustration fitted to the 9:16 width (whole image, soft blurred extension above and below) with words added in code; the words do not repeat the title.",
- "thumbnailIllustration": "Thumbnail illustration made with AI (owner's ChatGPT art, lf01/art/owner/bubble-bursting.png); the film itself is code-drawn",
- "coverGrid": "cover-grid-3x4.jpg is the centre 1080x1440 band (TikTok / Instagram profile-grid crop); subject and text sit inside it"
+  "thumbnailFile": "reality-rulebook-s3p3-cover.jpg",
+  "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a soap bubble about as wide as an egg with a round hole opening in its film, iridescent thin-film colours around the rim, dark kitchen cabinet behind. Composition: bubble large centre, hole at upper right, dark kitchen cabinet behind for contrast. Lighting and treatment: backlit, thin-film colours; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: wonder. Text: \"ELEVEN SECONDS\" in a bold geometric sans, placed upper third. Scientific accuracy: the hole in a bursting bubble opens at several meters per second; the whole egg-sized bubble is gone in about a hundredth of a second. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
+  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+  "note": "Cover is the owner's AI illustration fitted to the 9:16 width (whole image, soft blurred extension above and below) with words added in code; the words do not repeat the title.",
+  "thumbnailIllustration": "Thumbnail illustration made with AI (owner's ChatGPT art, lf01/art/owner/bubble-bursting.png); the film itself is code-drawn",
+  "coverGrid": "cover-grid-3x4.jpg is the centre 1080x1440 band (TikTok / Instagram profile-grid crop); subject and text sit inside it",
+  "postingCopyLines": [
+    "Kitchen illustration made with AI. The soap bubble is drawn by code."
+  ]
 }

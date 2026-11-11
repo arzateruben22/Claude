@@ -1228,11 +1228,43 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 72.7,
-   "t1": 208.5166,
+   "t1": 103.7,
    "slot": "tr"
   },
   {
    "id": "code-p3",
+   "kind": "tag",
+   "text": "Kitchen: AI illustration · splash drawn by code",
+   "t0": 103.7,
+   "t1": 121.8333,
+   "slot": "tr"
+  },
+  {
+   "id": "code-s4",
+   "kind": "tag",
+   "text": "Drawn by code · model",
+   "t0": 121.8333,
+   "t1": 184.1333,
+   "slot": "tr"
+  },
+  {
+   "id": "code-p5",
+   "kind": "tag",
+   "text": "Kitchen: AI illustration · bubble drawn by code",
+   "t0": 184.1333,
+   "t1": 204.5333,
+   "slot": "tr"
+  },
+  {
+   "id": "code-s6",
+   "kind": "tag",
+   "text": "Drawn by code · model",
+   "t0": 204.5333,
+   "t1": 208.5166,
+   "slot": "tr"
+  },
+  {
+   "id": "code-p7",
    "kind": "tag",
    "text": "Kitchen: AI illustration · wave drawn by code",
    "t0": 208.5166,
@@ -1240,10 +1272,26 @@
    "slot": "tr"
   },
   {
-   "id": "code-s4",
+   "id": "code-s8",
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 265.85,
+   "t1": 288.3,
+   "slot": "tr"
+  },
+  {
+   "id": "code-p9",
+   "kind": "tag",
+   "text": "Kitchen: AI illustration · bullet and apple bits drawn by code",
+   "t0": 288.3,
+   "t1": 304.8,
+   "slot": "tr"
+  },
+  {
+   "id": "code-s10",
+   "kind": "tag",
+   "text": "Drawn by code · model",
+   "t0": 304.8,
    "t1": 546.6166,
    "slot": "tr"
   },
@@ -1364,6 +1412,126 @@
    },
    "t0": 208.5166,
    "t1": 265.85
+  },
+  {
+   "id": "tapmug",
+   "file": "../lf01/art/owner/plates/plate-03-tap-mug-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-03-tap-mug-16x9.png",
+   "push": 0.04,
+   "parallax": 0,
+   "fade": 0.3,
+   "cam3": {
+    "pos": [
+     0,
+     0.4,
+     0
+    ],
+    "target": [
+     0,
+     0.396,
+     -1
+    ],
+    "fov": 29.5
+   },
+   "anchor": {
+    "rig": {
+     "pos": [
+      0.0047,
+      0.3786,
+      -0.31
+     ],
+     "scale": 0.9075,
+     "rotX": 0.227,
+     "tipY": 0.0431,
+     "drop": 0.85,
+     "rad": 0.62
+    }
+   },
+   "t0": 103.7,
+   "t1": 121.8333,
+   "swap": {
+    "t": 109.0667,
+    "file": "../lf01/art/owner/plates/plate-03-tap-mug-clean-16x9.png",
+    "file9": "../lf01/art/owner/plates/plate-03-tap-mug-clean-16x9.png"
+   }
+  },
+  {
+   "id": "sink",
+   "file": "../lf01/art/owner/plates/plate-05-sink-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-05-sink-16x9.png",
+   "push": 0.04,
+   "parallax": 0,
+   "fade": 0.3,
+   "shift9": {
+    "x": -0.1095,
+    "ppm": 1790.0
+   },
+   "cam3": {
+    "pos": [
+     0,
+     0.4,
+     0
+    ],
+    "target": [
+     0,
+     0.396,
+     -1
+    ],
+    "fov": 29.5
+   },
+   "anchor": {
+    "rig": {
+     "kind": "bubble",
+     "pos": [
+      -0.1318,
+      0.417,
+      -1.0
+     ],
+     "scale": 1.2291,
+     "rotX": 0
+    }
+   },
+   "t0": 184.1333,
+   "t1": 204.5333
+  },
+  {
+   "id": "applep",
+   "file": "../lf01/art/owner/plates/plate-06-apple-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-06-apple-16x9.png",
+   "push": 0.04,
+   "parallax": 0,
+   "fade": 0.3,
+   "shift9": {
+    "x": 0.1391,
+    "ppm": 1790.0
+   },
+   "cam3": {
+    "pos": [
+     0,
+     0.4,
+     0
+    ],
+    "target": [
+     0,
+     0.396,
+     -1
+    ],
+    "fov": 29.5
+   },
+   "anchor": {
+    "rig": {
+     "kind": "apple",
+     "pos": [
+      0.1095,
+      0.3751,
+      -1.0
+     ],
+     "scale": 2.3324,
+     "rotX": 0
+    }
+   },
+   "t0": 288.3,
+   "t1": 304.8
   }
  ],
  "captions": [
