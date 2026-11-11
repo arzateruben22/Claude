@@ -1,12 +1,12 @@
 {
- "duration": 64.447,
+ "duration": 64.336,
  "fps": 30,
  "preset": "lightminute-vacuum",
  "sections": [
   {
    "id": "part3",
    "t0": 0.0,
-   "t1": 64.447,
+   "t1": 64.336,
    "energy": 0.42
   }
  ],
@@ -15,7 +15,41 @@
    "t": 0.0,
    "kind": "section",
    "id": "part3",
-   "t1": 64.447
+   "t1": 64.336
+  },
+  {
+   "t": 3.218,
+   "kind": "swell",
+   "t1": 6.718
+  },
+  {
+   "t": 3.218,
+   "kind": "scale.jump",
+   "t1": 6.718
+  },
+  {
+   "t": 6.718,
+   "kind": "arrive"
+  },
+  {
+   "t": 27.598,
+   "kind": "swell",
+   "t1": 31.098
+  },
+  {
+   "t": 40.668,
+   "kind": "swell",
+   "t1": 43.668
+  },
+  {
+   "t": 54.559,
+   "kind": "swell",
+   "t1": 57.559
+  },
+  {
+   "t": 54.559,
+   "kind": "scale.jump",
+   "t1": 57.559
   }
  ],
  "voice": [
@@ -26,28 +60,38 @@
   },
   {
    "id": "c1",
-   "t": 3.243,
+   "t": 6.743,
    "file": "voice/cut/part3/01.wav"
   },
   {
    "id": "c2",
-   "t": 47.028,
+   "t": 31.098,
    "file": "voice/cut/part3/02.wav"
   },
   {
    "id": "c3",
-   "t": 52.086,
+   "t": 43.668,
    "file": "voice/cut/part3/03.wav"
   },
   {
    "id": "c4",
-   "t": 57.689,
+   "t": 47.595,
    "file": "voice/cut/part3/04.wav"
   },
   {
    "id": "c5",
-   "t": 60.608,
+   "t": 52.653,
    "file": "voice/cut/part3/05.wav"
+  },
+  {
+   "id": "c6",
+   "t": 57.578,
+   "file": "voice/cut/part3/06.wav"
+  },
+  {
+   "id": "c7",
+   "t": 60.497,
+   "file": "voice/cut/part3/07.wav"
   }
  ]
 }
