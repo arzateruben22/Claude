@@ -58,6 +58,9 @@ def main():
     ap.add_argument("--recording", default=str(HERE / "pl-s3-parts-closers-cta.m4a"))
     ap.add_argument("--out", default=str(HERE / "cut"))
     ap.add_argument("--style", default="normal")
+    ap.add_argument("--script", help="an episode script.md: cut its vo lines (Part A) instead of the 28 part/closer/CTA lines")
+    ap.add_argument("--first", type=int, default=1)
+    ap.add_argument("--last", type=int, default=999)
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     raw = polish.decode(a.recording)
@@ -75,6 +78,12 @@ def main():
     heard = align.asr(rec, x16, s16)
     H = [toks(w)[0] if toks(w) else w for w, _, _ in heard]
     env = align.envelope(x16, s16)
+    global LINES
+    if a.script:
+        txt = Path(a.script).read_text()
+        vo = [re.sub(r"\s+", " ", re.sub(r"\{[^}]*\}", "", m)).strip().replace("*", "") for m in re.findall(r"^vo: (.*)$", txt, re.M)]
+        names = re.findall(r"^## (\S+)", txt, re.M)
+        LINES = [(names[i], vo[i]) for i in range(a.first - 1, min(a.last, len(vo)))]
     pos = 0
     picks = []
     for idx, (lid, text) in enumerate(LINES):

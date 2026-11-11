@@ -1,0 +1,153 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "speed": null,
+ "lang": "en-us",
+ "style": "normal",
+ "source": "pl-s3-partA-1.m4a",
+ "source_sha256": "d8ea01fb477f094e2db097daa62165b94c40d791698e0b1b7832aa28df4c7d15",
+ "chain": [
+  "volume=18.30dB",
+  "highpass=f=80:p=2",
+  "denoise(room tone profile, at most -15 dB per bin)",
+  "bass=g=1.5:f=140:w=0.7",
+  "equalizer=f=320:t=q:w=1.1:g=-3",
+  "equalizer=f=3200:t=q:w=0.9:g=2.5",
+  "highshelf=f=9000:g=3.0",
+  "acompressor=threshold=-24dB:ratio=2:attack=15:release=200:knee=6",
+  "acompressor=threshold=-14dB:ratio=4:attack=2:release=60:knee=3",
+  "agate=threshold=0.003592:ratio=2.5:range=0.125:attack=5:release=200:knee=3",
+  "deess(5-10 kHz, -6.0 dB, max 8.0 dB)"
+ ],
+ "made_by": "films/channels/whatif/voice-owner/cut.py (word-aligned cuts, kits/cinema/voice/polish.py chain)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "What if the Earth started to spin faster, a little more every second, and nothing in the universe could stop it? You are standing on the equator, and you are going to watch what happens, minute by minute, until the planet can't take it anymore.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 14.57,
+   "sha256": "0f9d560a6037f3869ffe1e67f4bf98279228f4262eb9009571dc38f9399ac4e6",
+   "take_of": 1,
+   "source_s": [
+    4.83,
+    20.66
+   ],
+   "match": 1.0
+  },
+  {
+   "id": "vo02",
+   "beat": "premise",
+   "text": "Here are the rules. The Earth keeps its size, its shape, its air and its water. Only the spin changes, and it only ever gets faster. On screen there is one number that matters: the length of a day. It starts at twenty-four hours, and by the end it will have fallen to about an hour and twenty-four minutes. Under it is the second number: how fast the ground is moving under your feet. Nothing resets, and nothing slows. The planet is not a perfect ball, and we will skip a great deal of real physics, so treat every number as a first guess.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 36.96,
+   "sha256": "789b7002ac26c3b71e769c227a935967521a97c23590c33e47e1007551e95c8d",
+   "take_of": 1,
+   "source_s": [
+    26.61,
+    64.96
+   ],
+   "match": 0.84
+  },
+  {
+   "id": "vo03",
+   "beat": "today",
+   "text": "Right now, one day lasts twenty-four hours. Or almost: the Earth turns once in twenty-three hours, fifty-six minutes. Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour. You never feel it, because everything moves with you. What you do feel is a tiny push outward. You weigh about a third of a percent less than you would on a planet that did not spin.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 28.21,
+   "sha256": "6fe33c66e94a7cb2d0f0fa6688bb1de640728121dc2c00cad729e5fba260cecb",
+   "take_of": 1,
+   "source_s": [
+    64.96,
+    94.51
+   ],
+   "match": 0.82
+  },
+  {
+   "id": "vo04",
+   "beat": "spinup",
+   "text": "Now the spin begins to speed up. At twenty hours, you can see the shadows sweep. At sixteen, the Sun climbs the sky like a slow elevator. The rule never changes. A day only ever gets shorter, and you cannot turn it back.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 13.42,
+   "sha256": "2ead6e1d32c50b5aed74b389b02b40aed5a2baa1b4102397f6ebd331132e544f",
+   "take_of": 1,
+   "source_s": [
+    94.98,
+    109.31
+   ],
+   "match": 0.93
+  },
+  {
+   "id": "vo05",
+   "beat": "twelve",
+   "text": "At a twelve hour day, sunrise to sunset takes six hours. The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound. You weigh one point four percent less than on a still Earth, four times what you feel today. A seventy kilogram person feels like about sixty-nine.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 23.86,
+   "sha256": "01a739053c7942cc6f31de82169c6ea72fc6a0fff89cd0084f1132138fff8553",
+   "take_of": 1,
+   "source_s": [
+    115.04,
+    138.98
+   ],
+   "match": 0.73
+  },
+  {
+   "id": "vo06",
+   "beat": "wind",
+   "text": "But the air has a problem. The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time. For the first hours, the air is left behind. At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound. Winds like that would strip the surface, and they would only be the beginning.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 19.205,
+   "sha256": "1bd7251ac219b40d4defdc916c1bf2616d904165f3a588c446b2bb4c64229f1c",
+   "take_of": 1,
+   "source_s": [
+    138.97,
+    158.18
+   ],
+   "match": 0.84
+  },
+  {
+   "id": "vo07",
+   "beat": "oceans",
+   "text": "And then the oceans begin to move. A spinning planet pushes water outward, toward the equator, exactly as it pushes you. Today the Earth already bulges about twenty-one kilometers wider at the equator than from pole to pole, and the ground has had billions of years to settle into that shape. Speed the spin up quickly and the ground cannot adjust in time. At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today. The whole ocean is only about three point seven kilometers deep. So the water does not simply rise. It drains toward a belt around the equator, while the poles dry out. This is a rough, first guess, but the direction is certain: land near the poles emerges, and your own coast is flooded.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 44.27,
+   "sha256": "fb043edf2ebea57060ed4b1231a3a8b617e74e8106178f7a135f065b544f8e73",
+   "take_of": 1,
+   "source_s": [
+    158.22,
+    202.57
+   ],
+   "match": 0.79
+  },
+  {
+   "id": "vo08",
+   "beat": "weather",
+   "text": "The sky has another problem. Storms are steered by the planet's spin, through the Coriolis effect, and that steering grows in step with the spin rate. At a six hour day it is four times stronger than today. At the edge of floating, it is seventeen times stronger. Weather systems would be squeezed into tight, fast bands, and the calm of an ordinary afternoon would be gone. Nobody could forecast it, because nobody has seen a planet like this.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 22.59,
+   "sha256": "d61252f7251f92d4685530cb985a11062f6653ce4804f820de2e6b78bfec1170",
+   "take_of": 1,
+   "source_s": [
+    215.07,
+    237.89
+   ],
+   "match": 0.82
+  }
+ ]
+}
