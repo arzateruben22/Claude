@@ -75,7 +75,7 @@
    -1000000000.0,
    [
     0.5,
-    0.29
+    0.56
    ]
   ]
  ],
@@ -311,6 +311,54 @@
  "disclosures": {
   "aiVoice": true
  },
+ "drifts": null,
+ "plates": [
+  {
+   "id": "feeder",
+   "file": "../lf01/art/owner/plates/plate-02-feeder-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-02-feeder-16x9.png",
+   "push": 0.05,
+   "parallax": 0,
+   "fade": 0.05,
+   "cam3": {
+    "pos": [
+     0,
+     0.4,
+     0
+    ],
+    "target": [
+     0,
+     0.396,
+     -1
+    ],
+    "fov": 29.5
+   },
+   "anchor": {
+    "bird": {
+     "pos": [
+      -0.1011,
+      0.455,
+      -1.0
+     ],
+     "scale": 0.027,
+     "yaw": -0.3,
+     "tilt": 0.16
+    },
+    "shadow": {
+     "pos": [
+      -0.0134,
+      0.4406,
+      -1.002
+     ],
+     "w": 0.075,
+     "h": 0.03,
+     "opacity": 0.32
+    }
+   },
+   "t0": 0.0,
+   "t1": 53.2333
+  }
+ ],
  "captions": [
   {
    "t0": 0.355,

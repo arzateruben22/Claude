@@ -30,13 +30,13 @@ export const createPlates = ({ scene, camera, W, H, FILM }) => {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: false, depthWrite: false, toneMapped: false }));
     m.renderOrder = -100 + z; m.visible = false; m.frustumCulled = false; camera.add(m); return m;
   };
-  const cover = (tex, m) => { m.userData.ia = tex.image.width / tex.image.height; };   // fit the image to cover the frame (no stretch), centred: sized every frame from the camera's field of view
+  const cover = (tex, m) => { m.userData.ia = tex.image.width / tex.image.height; m.userData.alpha = !!m.userData.layerAlpha; };   // fit the image to cover the frame (no stretch), centred: sized every frame from the camera's field of view
   const items = list.map((p) => ({ p, quads: [], ok: false }));
   const ready = Promise.all(items.map(async (it) => {
     const layers = it.p.layers && it.p.layers.length ? it.p.layers : [{ file: it.p.file, file9: it.p.file9, depth: 0 }];
     const texs = await Promise.all(layers.map((l) => load(nine ? l.file9 || l.file : l.file)));
     if (texs.some((t) => !t)) { it.ok = false; return; }
-    it.quads = texs.map((tex, i) => { const m = mkQuad(tex, i); cover(tex, m); m.userData.depth = layers[i].depth || 0; return m; });
+    it.quads = texs.map((tex, i) => { const m = mkQuad(tex, i); m.userData.layerAlpha = i > 0; cover(tex, m); m.userData.depth = layers[i].depth || 0; return m; });
     it.ok = true;
   })).catch(() => {});
   const active = (t) => { for (const it of items) if (it.ok && t >= it.p.t0 && t < it.p.t1) return it; return null; };
@@ -49,7 +49,7 @@ export const createPlates = ({ scene, camera, W, H, FILM }) => {
     it.quads.forEach((m) => {
       const ia = m.userData.ia, fa = W / H, bw = ia > fa ? qh * ia : qw, bh = ia > fa ? qh : qw / ia;
       const s = 1 + push * d * (p.cam3 ? 1 : 1 + 0.6 * (m.userData.depth || 0)), shift = par * (d - 0.5) * qw * (1 + (m.userData.depth || 0));
-      m.visible = true; m.position.set(shift, 0, -D); m.scale.set(bw * s * over, bh * s * over, 1); m.material.opacity = Math.max(0, Math.min(1, a));
+      m.visible = true; m.position.set(shift, 0, -D); m.scale.set(bw * s * over, bh * s * over, 1); m.material.opacity = Math.max(0, Math.min(1, a)); m.material.transparent = a < 0.999 || !!m.userData.alpha;   // opaque while fully in, so it draws before the code subjects (a transparent quad would be drawn over them)
     });
     return true;
   };

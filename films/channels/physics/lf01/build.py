@@ -243,7 +243,7 @@ for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
         LBL.append([R(t1 + 0.9), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
-SPINE_AT = [[-1e9, [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
+SPINE_AT = [[-1e9, [0.5, 0.56 if PART == 1 else 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
 TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen", "A bullet, through an apple, slowly",
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
 if PART:
@@ -254,12 +254,23 @@ else:
     CAPCH, CAPY = 44, 0.77
 
 # the owner's photographic plates (set/plates.js): plate-01, the wide kitchen from the doorway, behind the sound shell (Part 4 and the film's sound chapter); the code kitchen is the fallback
+PLATE02 = "../lf01/art/owner/plates/plate-02-feeder-16x9.png"
+PLATE02_9 = "../lf01/art/owner/plates/plate-02-feeder-9x16.png" if (HERE / "art/owner/plates/plate-02-feeder-9x16.png").exists() else PLATE02
+# plate-02: the window with the hanging feeder (ports at about x 770-895, y 378 px of 1672x941). A pinhole camera at the origin: 1790 px per meter at 1 m, so the dish (215 px) is 12 cm; the bird (about 10 cm) hovers left of the left port, beak at the port.
+_PX = 1790.0
+_w = lambda px, py, z=-1.0: [round((px - 836) / _PX * -z, 4), round(0.4 + (470.5 - py) / _PX * -z, 4), z]   # the camera sits 0.4 m up (a camera at the exact origin makes the finish's motion estimate NaN)
+_p02 = {"id": "feeder", "file": PLATE02, "file9": PLATE02_9, "push": 0.05, "parallax": 0, "fade": 0.05,
+        "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},   # a hair of pitch: a camera looking exactly level makes the finish's motion probe NaN
+        "anchor": {"bird": {"pos": _w(655, 372), "scale": 0.027, "yaw": -0.3, "tilt": 0.16},
+                   "shadow": {"pos": _w(812, 398, -1.002), "w": 0.075, "h": 0.03, "opacity": 0.32}}}
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
 _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parallax": 0, "fade": 0.35,
         "cam3": {"pos": [0, 1.06, 0], "target": [0, 1.001, -1], "fov": 50.4},
         "anchor": {"pos": [0.05, 1.0, -3.1], "mirror": [0.05, 1.0, -4.5], "proxy": True, "tint": [[0.5, 0.3, 0.08], [0.38, 0.2, 0.04], 0xE89030, 0xB07020]}}
-if PART == 4 and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists():
+if PART == 1 and (HERE / "art/owner/plates/plate-02-feeder-16x9.png").exists():
+    PLATES = [dict(_p02, t0=0.0, t1=R(W("wings", "But") - 0.2))]
+elif PART == 4 and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists():
     PLATES = [dict(_p01, t0=0.0, t1=R(ENDSHOW))]
 elif not PART and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists() and "sound" in CUTS and "bullet" in CUTS:
     PLATES = [dict(_p01, t0=R(CUTS["sound"]), t1=R(CUTS["bullet"]))]

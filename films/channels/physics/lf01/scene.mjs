@@ -22,7 +22,7 @@ const camera = new THREE.PerspectiveCamera(VFOV, W / H, 0.0001, 80);
 const INK = "#1B1E24", COB = TK.force || "#1F3BD1", AMB = "#E8A356";
 const plates = createPlates({ scene, camera, W, H, FILM });     // photographic plates behind the code subjects (film.json "plates"); none listed = the code kitchen as before
 window.SCENE_READY = plates.ready;
-window.CINEMA_FOCUS = (t) => (window.FILM && window.FILM.ev && window.FILM.ev.bird && t >= window.FILM.ev.bird[0] && t < window.FILM.ev.bird[1]) ? { point: [-1.4, 1.86, -1.45], fstop: 0.7 } : { fstop: 0 };
+window.CINEMA_FOCUS = (t) => plates.active(t) ? { fstop: 0 } : (window.FILM && window.FILM.ev && window.FILM.ev.bird && t >= window.FILM.ev.bird[0] && t < window.FILM.ev.bird[1]) ? { point: [-1.4, 1.86, -1.45], fstop: 0.7 } : { fstop: 0 };
 
 // ── the slow-motion factor: k = log10 F (keys from compile.py), the light front's radius R(t) = integral of c / F dt ─────────────────
 const FK = FILM.factorKeys;
@@ -232,6 +232,8 @@ const poseBird = (fl, hz, tReal, blur) => {
   }
 };
 const hum = mkBird();
+const birdShadow = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 64; const cx = cv.getContext("2d"), gr = cx.createRadialGradient(32, 32, 2, 32, 32, 30); gr.addColorStop(0, "rgba(30,24,18,0.7)"); gr.addColorStop(1, "rgba(30,24,18,0)"); cx.fillStyle = gr; cx.fillRect(0, 0, 64, 64);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, depthWrite: false })); m.visible = false; scene.add(m); return m; })();   // the bird's soft shadow on a plate's feeder dish
 const trail = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 6), new THREE.MeshBasicMaterial({ color: 0x20232A, transparent: true, opacity: 0.25 })); m.visible = false; scene.add(m); trail.push(m); }
 
 // ── the splash: a crown of spikes at the rim, droplets that pinch off, ripples; the cup rings ──
@@ -371,7 +373,10 @@ window.seek = function (t) {
   if (t >= EV.bird[0] && t < EV.bird[1]) {
     const r = (t - EV.bird[0]) / 10, b2 = EV.blur2 ? 1 - E.inout2(seg(t, EV.blur2[1] - 0.5, EV.blur2[1])) : 0, blurMix = Math.max(b2, E.inout2(seg(t, EV.blur[0], EV.blur[0] + 0.8)) * (1 - E.inout2(seg(t, EV.blur[1] - 0.6, EV.blur[1]))));
     const fr = blurMix > 0.01 ? Math.max(0.0, 1) : 1;
-    place(hum, -1.5 + 0.012 * Math.sin(r * 3), 1.86 + 0.01 * Math.sin(r * 7), -1.45, -0.4); hum.g.rotation.z = 0.2;
+    { const ab = plates.anchor(t), bd = ab && ab.bird;   // a plate with a feeder: the bird hovers at its port, at the plate's scale
+      if (bd) { place(hum, bd.pos[0] + 0.004 * Math.sin(r * 3), bd.pos[1] + 0.003 * Math.sin(r * 7), bd.pos[2], bd.yaw ?? -0.35); hum.g.rotation.z = bd.tilt ?? 0.18; hum.g.scale.setScalar(bd.scale); }
+      else { hum.g.scale.setScalar(0.075); place(hum, -1.5 + 0.012 * Math.sin(r * 3), 1.86 + 0.01 * Math.sin(r * 7), -1.45, -0.4); hum.g.rotation.z = 0.2; }
+      birdShadow.visible = !!bd; if (bd && ab.shadow) { birdShadow.position.set(...ab.shadow.pos); birdShadow.scale.set(ab.shadow.w, ab.shadow.h, 1); birdShadow.material.opacity = ab.shadow.opacity ?? 0.3; } }
     poseBird(hum, CAL.hz.hum, blurMix > 0.01 ? (t - EV.bird[0]) / 1 : r, blurMix);
     if (blurMix <= 0.01) poseBird(hum, CAL.hz.hum, r, 0);
     void fr;
