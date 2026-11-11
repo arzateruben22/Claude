@@ -22,8 +22,13 @@ export const PROFILE = {
 export const PIN = 1e10;
 
 const G = 9.81;
-// the rows: a second difference over 2 m (smoothing), over L (a crest or dip), and a rise over L (a grade)
-const D2 = [1, -2, 1], O3 = [-1, 0, 1], CK = [1, -2, 1], OK = [-PROFILE.B, 0, PROFILE.B], CG = [-1, 1], OG = [0, PROFILE.B];
+// the rows: a second difference over 2 m (smoothing), over L (a crest or dip), and a rise over L (a grade); and the
+// same crest, dip and grade limits over one sample (2 m). Held over L alone, a road pressed against a limit by heights it
+// can't reach (a follow the grade won't allow) met every 10 m row while it went down in 2 m steps of 14% and back up 8%
+// once in each 10 m: a saw-tooth with 0.45 m kinks every 10 m (ramp 1262, and ramps 403, 626, 800, 495, 940, 1164 and
+// 305 under the clearance rule's follows), and a 9 cm step every 10 m for 700 m on the CA-241 North into the 91 West
+// (3.7 g at 38 m/s; the map's own there, 1.2 g).
+const D2 = [1, -2, 1], O3 = [-1, 0, 1], CK = [1, -2, 1], OK = [-PROFILE.B, 0, PROFILE.B], CG = [-1, 1], OG = [0, PROFILE.B], OG1 = [0, 1];
 // the solver works to a margin inside the test's limits
 const MARGIN_V = 1.03, MARGIN_TOL = 0.97, MARGIN_GRADE = 0.002;
 // smoothing on the change from what's wanted (so a correction spreads over tens of metres, not one sample), and the
@@ -42,17 +47,20 @@ export function limitProfile(base: Float32Array, want: Float32Array, weight: Flo
   const F = (main ? PROFILE.floor.main : PROFILE.floor.ramp) * MARGIN_V, K = (G / (F * F)) * L * L;   // in metres over L
   const GL = ((main ? PROFILE.grade.main : PROFILE.grade.ramp) - MARGIN_GRADE) * L;
   const T2 = MARGIN_TOL * MARGIN_TOL;
-  // a row is a second difference over L (kind 0, rows B .. n-B-1) or a rise over L (kind 1, rows 0 .. n-B-1)
-  const val = (y: ArrayLike<number>, i: number, kind: number) => (kind ? y[i + B] - y[i] : y[i + B] - 2 * y[i] + y[i - B]);
+  // a row is a second difference over L (kind 0, rows B .. n-B-1), a rise over L (kind 1, rows 0 .. n-B-1), a rise over
+  // one sample (kind 2, rows 0 .. n-2) or a second difference over one sample (kind 3, rows 1 .. n-2)
+  const span = (kind: number) => (kind >= 2 ? 1 : B), grade = (kind: number) => kind === 1 || kind === 2;
+  const val = (y: ArrayLike<number>, i: number, kind: number) => { const b = span(kind); return grade(kind) ? y[i + b] - y[i] : y[i + b] - 2 * y[i] + y[i - b]; };
   // a row's limits [lo, hi]: the floor's, or the map's own sharpest crest and dip (steepest grade) within ±WIN
   const lim = [0, 0];
   const limits = (i: number, kind: number) => {
     let a = 0, b = 0;
-    for (let j = Math.max(kind ? 0 : B, i - W), j1 = Math.min(n - B - 1, i + W); j <= j1; j++) {
+    const sb = span(kind), gk = grade(kind), f = sb / B;
+    for (let j = Math.max(gk ? 0 : sb, i - W), j1 = Math.min(n - sb - 1, i + W); j <= j1; j++) {
       const v = val(base, j, kind);
-      if (kind) { a = Math.max(a, Math.abs(v)); } else { a = Math.min(a, v); b = Math.max(b, v); }
+      if (gk) { a = Math.max(a, Math.abs(v)); } else { a = Math.min(a, v); b = Math.max(b, v); }
     }
-    if (kind) { lim[0] = -Math.max(GL, a); lim[1] = Math.max(GL, a); } else { lim[0] = Math.min(-K, a / T2); lim[1] = Math.max(K, b / T2); }
+    if (gk) { lim[0] = -Math.max(GL * f, a); lim[1] = Math.max(GL * f, a); } else { lim[0] = Math.min(-K * f * f, a / T2); lim[1] = Math.max(K * f * f, b / T2); }
     return lim;
   };
   // where does what's wanted break a limit? (a row within the floor's limits is within its own: they're never tighter)
@@ -71,11 +79,14 @@ export function limitProfile(base: Float32Array, want: Float32Array, weight: Flo
   if (v0 < 0) return null;
   // solve on a window around them; the samples at its ends (and pinned ones) stay as wanted
   const a0 = Math.max(0, v0 - B - PAD), a1 = Math.min(n - 1, v1 + B + PAD), m = a1 - a0 + 1, HB = 2 * B, S = HB + 1;
-  const fixed = (i: number) => i < a0 + B || i > a1 - B || weight[i] >= PIN;
+  // (not at the road's own ends, which only a junction holds: ramp 1164, 21 samples, held at both ends of a window
+  // that was the whole road, kept a crest at 49 m/s once the 2 m rows came in)
+  const fixed = (i: number) => (i < a0 + B && a0 > 0) || (i > a1 - B && a1 < n - 1) || weight[i] >= PIN;
   // the rows in the window, with their limits
   const rows: number[] = [], lo: number[] = [], hi: number[] = [];
-  for (let kind = 0; kind < 2; kind++) for (let i = kind ? a0 : Math.max(a0 + B, B); i <= Math.min(a1 - B, n - B - 1); i++) {
-    limits(i, kind); rows.push(i * 2 + kind); lo.push(lim[0]); hi.push(lim[1]);
+  for (let kind = 0; kind < 4; kind++) {
+    const sb = span(kind);
+    for (let i = grade(kind) ? a0 : Math.max(a0 + sb, sb); i <= Math.min(a1 - sb, n - sb - 1); i++) { limits(i, kind); rows.push(i * 4 + kind); lo.push(lim[0]); hi.push(lim[1]); }
   }
   const wk = new Float64Array(m), wt = new Float64Array(m);
   for (let k = 0; k < m; k++) { wk[k] = fixed(a0 + k) ? PIN : weight[a0 + k]; wt[k] = want[a0 + k]; }
@@ -93,7 +104,7 @@ export function limitProfile(base: Float32Array, want: Float32Array, weight: Flo
   for (let k = 0; k < m; k++) { A[k * S] += wk[k]; rhs[k] += wk[k] * wt[k]; }
   for (let k = 1; k < m - 1; k++) put(k, O3, D2, wt[k - 1] - 2 * wt[k] + wt[k + 1], BETA);
   const A0 = Float64Array.from(A), rhs0 = Float64Array.from(rhs);
-  const rv = (y: Float64Array, c: number) => { const k = (c >> 1) - a0; return c & 1 ? y[k + B] - y[k] : y[k + B] - 2 * y[k] + y[k - B]; };
+  const rv = (y: Float64Array, c: number) => { const k = (c >> 2) - a0, kind = c & 3, b = span(kind); return grade(kind) ? y[k + b] - y[k] : y[k + b] - 2 * y[k] + y[k - b]; };
   // the penalised objective: closeness to what's wanted, smoothness of the change, and each limit broken, squared
   const f = (y: Float64Array) => {
     let e = 0;
@@ -112,8 +123,8 @@ export function limitProfile(base: Float32Array, want: Float32Array, weight: Flo
     for (let r = 0; r < rows.length; r++) {
       const c = rows[r], v = rv(y, c), b = v < lo[r] ? lo[r] : v > hi[r] ? hi[r] : NaN;
       if (isNaN(b)) continue;
-      const k = (c >> 1) - a0; held++;
-      if (c & 1) put(k, OG, CG, b, MU); else put(k, OK, CK, b, MU);
+      const k = (c >> 2) - a0, kind = c & 3; held++;
+      if (kind === 1) put(k, OG, CG, b, MU); else if (kind === 0) put(k, OK, CK, b, MU); else if (kind === 2) put(k, OG1, CG, b, MU); else put(k, O3, D2, b, MU);
     }
     if (stats) { stats.iters = it + 1; stats.active = held; }
     if (!cholSolve(A, rhs, yn, m, HB)) return null;
