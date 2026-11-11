@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "When the Moon looks bigger than the Sun, a total eclipse covers more of the sky and lasts longer; here is what it looks like.",
+ "titles": [
+  {
+   "text": "A Moon Bigger Than the Sun",
+   "mechanism": "visual paradox"
+  },
+  {
+   "text": "What an Eclipse Looks Like With a Bigger Moon",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "A Long Dark Noon: Eclipses With a Closer Moon",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "Why Eclipses Are Possible at All",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "The Daytime Sky Goes Dark Over the Beach",
+   "mechanism": "unexpected consequence"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a black disc with a thin silver corona over a dusk-lit sea",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "A dark noon",
+   "complements": "the title states the idea; the picture shows it"
+  },
+  {
+   "id": "B",
+   "subject": "the daytime sky dim and violet, stars out, the figure small",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "",
+   "complements": "the title states the idea; the picture shows it"
+  },
+  {
+   "id": "C",
+   "subject": "the Sun and Moon discs, the Moon clearly larger",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "",
+   "complements": "the title states the idea; the picture shows it"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 80,
+    "clarity": 80,
+    "synergy": 82,
+    "originality": 72,
+    "accuracy": 92,
+    "mobile": 82,
+    "satisfaction": 84
+   },
+   "note": "The picture is the hook: a huge black disc in a daytime sky."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 76,
+    "clarity": 78,
+    "synergy": 72,
+    "originality": 68,
+    "accuracy": 92,
+    "mobile": 80,
+    "satisfaction": 80
+   },
+   "note": "Plainer, less pull."
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 74,
+    "clarity": 72,
+    "synergy": 70,
+    "originality": 70,
+    "accuracy": 90,
+    "mobile": 78,
+    "satisfaction": 78
+   },
+   "note": "Needs a second look."
+  }
+ ],
+ "winner": {
+  "title": "A Moon Bigger Than the Sun",
+  "thumbnail": "A",
+  "thumbnailText": "A dark noon",
+  "why": "The picture is the hook: a huge black disc in a daytime sky."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "one-more-orbit-s3-part5-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area. Subject: a black disc with a thin silver corona over a dusk-lit sea. Text: \"A dark noon\" in a clean geometric sans (Lexend style), white with one teal word (#4FE3C6). Palette: indigo night (#0B0F2A), teal glow. Avoid arrows, circles, faces, logos, watermarks, anything that looks like a real NASA photo. It must read as a painted illustration. Scientific accuracy: this is a thought experiment, the real Moon is not coming closer.",
+ "shortsCover": {
+  "frameSeconds": 45,
+  "text": "A dark noon"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

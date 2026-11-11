@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "Halve the Moon's distance and its tidal pull grows about eightfold; this is when the ocean starts to climb the beach.",
+ "titles": [
+  {
+   "text": "When the Ocean Starts to Climb",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Half the Distance, Eight Times the Tide",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "What Happens to the Sea If the Moon Gets Closer?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Tide Line Climbs Past You",
+   "mechanism": "visual paradox"
+  },
+  {
+   "text": "Why a Closer Moon Pulls the Ocean Up the Beach",
+   "mechanism": "hidden mechanism"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "the waterline high on the sand, the figure standing back, a bigger Moon above",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "8x the tides",
+   "complements": "the title states the idea; the picture shows it"
+  },
+  {
+   "id": "B",
+   "subject": "the sea piled up against a big Moon, a wide dark sky",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "",
+   "complements": "the title states the idea; the picture shows it"
+  },
+  {
+   "id": "C",
+   "subject": "a tide marker post with the water at the top",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "8x",
+   "complements": "the title states the idea; the picture shows it"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 76,
+    "curiosity": 80,
+    "clarity": 80,
+    "synergy": 82,
+    "originality": 72,
+    "accuracy": 92,
+    "mobile": 82,
+    "satisfaction": 84
+   },
+   "note": "Eight times is the whole story in two words and it is the true tide scaling at half the distance."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 76,
+    "clarity": 78,
+    "synergy": 72,
+    "originality": 68,
+    "accuracy": 92,
+    "mobile": 80,
+    "satisfaction": 80
+   },
+   "note": "Plainer, less pull."
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 74,
+    "clarity": 72,
+    "synergy": 70,
+    "originality": 70,
+    "accuracy": 90,
+    "mobile": 78,
+    "satisfaction": 78
+   },
+   "note": "Needs a second look."
+  }
+ ],
+ "winner": {
+  "title": "When the Ocean Starts to Climb",
+  "thumbnail": "A",
+  "thumbnailText": "8× the tides",
+  "why": "Eight times is the whole story in two words and it is the true tide scaling at half the distance."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "one-more-orbit-s3-part3-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area. Subject: the waterline high on the sand, the figure standing back, a bigger Moon above. Text: \"8× the tides\" in a clean geometric sans (Lexend style), white with one teal word (#4FE3C6). Palette: indigo night (#0B0F2A), teal glow. Avoid arrows, circles, faces, logos, watermarks, anything that looks like a real NASA photo. It must read as a painted illustration. Scientific accuracy: this is a thought experiment, the real Moon is not coming closer.",
+ "shortsCover": {
+  "frameSeconds": 20,
+  "text": "8× the tides"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

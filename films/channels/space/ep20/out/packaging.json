@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "There is a distance where a moon is torn apart by tides; this film shows how close that is for our Moon, and stops just before it happens.",
+ "titles": [
+  {
+   "text": "The Distance No Moon Survives",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "How Close Can the Moon Get Before It Breaks?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Roche Limit: Where a Moon Comes Apart",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "The Last Safe Distance for the Moon",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "A Moon That Fills the Sky and Is About to Break",
+   "mechanism": "scale shock"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a Moon filling most of the frame over a thin beach, cracks of shadow",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "Too close",
+   "complements": "the title states the idea; the picture shows it"
+  },
+  {
+   "id": "B",
+   "subject": "the Moon stretched slightly egg-shaped",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "",
+   "complements": "the title states the idea; the picture shows it"
+  },
+  {
+   "id": "C",
+   "subject": "a distance marker reading about 18,000 km",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "",
+   "complements": "the title states the idea; the picture shows it"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 80,
+    "clarity": 80,
+    "synergy": 82,
+    "originality": 72,
+    "accuracy": 92,
+    "mobile": 82,
+    "satisfaction": 84
+   },
+   "note": "One strong picture and a feeling, with the fix for the answer in the full video."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 76,
+    "clarity": 78,
+    "synergy": 72,
+    "originality": 68,
+    "accuracy": 92,
+    "mobile": 80,
+    "satisfaction": 80
+   },
+   "note": "Plainer, less pull."
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 74,
+    "clarity": 72,
+    "synergy": 70,
+    "originality": 70,
+    "accuracy": 90,
+    "mobile": 78,
+    "satisfaction": 78
+   },
+   "note": "Needs a second look."
+  }
+ ],
+ "winner": {
+  "title": "The Distance No Moon Survives",
+  "thumbnail": "A",
+  "thumbnailText": "Too close",
+  "why": "One strong picture and a feeling, with the fix for the answer in the full video."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "one-more-orbit-s3-part8-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area. Subject: a Moon filling most of the frame over a thin beach, cracks of shadow. Text: \"Too close\" in a clean geometric sans (Lexend style), white with one teal word (#4FE3C6). Palette: indigo night (#0B0F2A), teal glow. Avoid arrows, circles, faces, logos, watermarks, anything that looks like a real NASA photo. It must read as a painted illustration. Scientific accuracy: this is a thought experiment, the real Moon is not coming closer.",
+ "shortsCover": {
+  "frameSeconds": 30,
+  "text": "Too close"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}

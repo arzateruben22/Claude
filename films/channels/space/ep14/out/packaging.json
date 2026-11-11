@@ -1,0 +1,130 @@
+{
+ "version": 1,
+ "format": "short",
+ "hook": "A quarter of the way closer, the Moon would look about a third wider and the tides would already be stronger.",
+ "titles": [
+  {
+   "text": "One Quarter Closer",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "What If the Moon Came 25% Closer?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "A Moon One Third Wider Would Change the Tides",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "How Much Bigger Is a Moon a Quarter Closer?",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "The First Thing a Closer Moon Changes",
+   "mechanism": "unexpected consequence"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a small figure on a night beach under a Moon one third wider than tonight",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "1.3x wider",
+   "complements": "the title states the idea; the picture shows it"
+  },
+  {
+   "id": "B",
+   "subject": "two Moon discs side by side, today's and the closer one",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "1.3x",
+   "complements": "the title states the idea; the picture shows it"
+  },
+  {
+   "id": "C",
+   "subject": "the sea with a faint tide line climbing the sand under the Moon",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "",
+   "complements": "the title states the idea; the picture shows it"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 78,
+    "curiosity": 80,
+    "clarity": 80,
+    "synergy": 82,
+    "originality": 72,
+    "accuracy": 92,
+    "mobile": 82,
+    "satisfaction": 84
+   },
+   "note": "A single clear number the viewer can picture, over the owner's beach."
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 76,
+    "clarity": 78,
+    "synergy": 72,
+    "originality": 68,
+    "accuracy": 92,
+    "mobile": 80,
+    "satisfaction": 80
+   },
+   "note": "Plainer, less pull."
+  },
+  {
+   "title": 2,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 74,
+    "clarity": 72,
+    "synergy": 70,
+    "originality": 70,
+    "accuracy": 90,
+    "mobile": 78,
+    "satisfaction": 78
+   },
+   "note": "Needs a second look."
+  }
+ ],
+ "winner": {
+  "title": "One Quarter Closer",
+  "thumbnail": "A",
+  "thumbnailText": "1.3× wider",
+  "why": "A single clear number the viewer can picture, over the owner's beach."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "one-more-orbit-s3-part2-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area. Subject: a small figure on a night beach under a Moon one third wider than tonight. Text: \"1.3× wider\" in a clean geometric sans (Lexend style), white with one teal word (#4FE3C6). Palette: indigo night (#0B0F2A), teal glow. Avoid arrows, circles, faces, logos, watermarks, anything that looks like a real NASA photo. It must read as a painted illustration. Scientific accuracy: this is a thought experiment, the real Moon is not coming closer.",
+ "shortsCover": {
+  "frameSeconds": 20,
+  "text": "1.3× wider"
+ },
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
