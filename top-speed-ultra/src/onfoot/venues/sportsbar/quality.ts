@@ -1,8 +1,10 @@
 // COPY of lot57 main.ts PRESET: E0 replaces it with engine/quality.ts (PROJECT_OC_SPORTS_BAR.md, the module map's
-// main.ts row). The High and Ultra rows are L1 as measured at claude/onfoot ab9fbe1 (2026-11-02); the Low row differs
-// from L1 on purpose, per decision 15 (the Retro look at full resolution: render scale 1, pixel ratio up to 2 and
-// never under 1, the Retro style on, still no shadow map; until claude/modes merges, Low draws with the standard
-// materials at full resolution). The pause sheet's buttons read Low, HD and Ultra over these ids.
+// main.ts row). Re-synced at S4 (2026-11-09) with Lot 57's P1d (claude/onfoot 3386549, merged at 5c572f6; L1
+// re-measured): the ids are low, hd and ultra; the HD and Ultra rows equal Lot 57's field for field. The Low row
+// differs from Lot 57's in one field, on purpose: no shadow map (Lot 57's P1d Low draws a 1024 hard sun map; the bar's
+// Low doesn't, for its whole-frame budget: owner question 1, O18). Like Lot 57's, Low is the Retro look at full
+// resolution (render scale 1, pixel ratio up to 2; the bar also never goes under 1), drawn by Lot 57's Retro module
+// (look.ts). minPR, style, cars and far are the bar's own fields. The pause sheet's buttons read Low, HD and Ultra.
 import type { Quality } from '../../engine/mats';
 
 export interface Preset { shadows: number; post: boolean; bloom: boolean; ao: boolean; msaa: number; maxPR: number; minPR: number; scale: number; lights: number; people: 'phone' | 'high'; tex: number; style: 'retro' | 'standard'; cars: 'phone' | 'high'; far: 'simple' | 'full' }
