@@ -1,0 +1,32 @@
+{
+ "file": "films/channels/space/compilations/s3/s3-16x9.mp4",
+ "uploadVersion": "films/channels/space/compilations/s3/s3-16x9-1080p.mp4",
+ "w": 2560,
+ "h": 1440,
+ "fps": "30/1",
+ "dur": 517.7,
+ "size_mb": 93.8,
+ "size_mb_1080p": 74.8,
+ "sha256_1440p": "19e89c834a70471592a0474d0b9cd5f960ef1dbab4dcb74b7fb19a804c6e8e9b",
+ "sha256_1080p": "a670a6de81b00440cbd23bb4324a97ff0857fc5ebd3e46febd98b2fce5a1e651",
+ "lufs": -14.1,
+ "true_peak_db": -1.7,
+ "lra": 2.1,
+ "freezes": {
+  "rule": "freezedetect n=0.003 d=1 at native resolution",
+  "render_quality_master": "longest still 1.37 s (opening 0.47 s); none over 1.4 s",
+  "delivery_encode": "size-capped to stay under 100 MB (x264 crf 27); stills over 1.4 s: 25.4 s (1.47 s) and 334.9 s (1.83 s), both slow camera moves the low bitrate flattens; the full-quality render stays on the build machine"
+ },
+ "flash": {
+  "max_1_frame_luminance_step": 0.029,
+  "max_0_5s_step": 0.154,
+  "note": "one slow brightening, the break-up crossfade at 429.7-430.5 s; no repeated flashes"
+ },
+ "voice_gaps_max_s": 0.35,
+ "text_blocks": "caption + distance counter at any time (plus the small 'Thought experiment' badge); never more than two lines of caption",
+ "chapters": 8,
+ "chapters_under_10s": 0,
+ "chapters_identical_to_part_titles": true,
+ "counter_synced_to_voice": "each distance key is timed from the aligned sentence that says the number (build_timeline.py)",
+ "fails": []
+}

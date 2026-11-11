@@ -21,7 +21,7 @@ Sources (each number's source; figures are rounded and hedged in the film)
 - Roche limit (Wikipedia) — secondary source found by search; a person should confirm against NASA or a textbook: https://en.wikipedia.org/wiki/Roche_limit
 - Roche limit (Wikipedia) — secondary source; HEDGED ('would'): https://en.wikipedia.org/wiki/Roche_limit
 - SFU PHYS 390 lecture on tides and the Roche limit: https://www.sfu.ca/~boal/390lecs/390lec8.pdf
-- Saturn Rings (NASA Science): https://science.nasa.gov/saturn/rings/
+- Saturn Facts (NASA Science): https://science.nasa.gov/saturn/facts/
 - Solid Earth tides (J. T. Bullitt) — secondary source found by search; a person should confirm against a USGS or NASA page: https://www.jtbullitt.com/earthsound/solid_earth_tides/index.html
 - The Apollo experiment that keeps on giving (NASA JPL): https://www.jpl.nasa.gov/news/the-apollo-experiment-that-keeps-on-giving/
 - The Moon Is Moving Farther From Earth Each Year, and Tides Are the Reason (Discover): https://www.discovermagazine.com/the-moon-is-moving-farther-from-earth-each-year-and-the-reason-why-comes-down-to-the-tides-48035
