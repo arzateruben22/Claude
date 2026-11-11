@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "slug": "whatif",
+  "name": "Possibility Lab",
+  "prefix": "pl",
+  "branch": "claude/whatif-s2",
+  "filmsPath": "films/channels/whatif",
+  "tagline": "Impossible questions, honest assumptions, real calculations.",
+  "promise": "One impossible question worked out in the open: the assumptions on screen, the sum built term by term, and one boxed answer said with honest precision.",
+  "identity": {
+    "palette": {
+      "graphite": "#171A1E",
+      "graphite-hi": "#21242A",
+      "surface": "#25282E",
+      "chalk": "#F4F2EC",
+      "chalk-2": "#A7AAB2",
+      "marker": "#EB63FF",
+      "assume": "#3DDC84",
+      "anchor": "#4DA3FF"
+    },
+    "type": {
+      "display": "Bricolage Grotesque",
+      "body": "Figtree",
+      "mono": "JetBrains Mono"
+    },
+    "look": "Graphite and marker: a chalk-and-graphite model standing on an endless graph-paper desk. Marker magenta is the calculation, green is an assumption only, blue is the human-scale anchor only. Caveat is the hand face for scribbles on the paper, never for captions or a number the viewer must read.",
+    "lighting": "One warm-white desk light (#FFF6E8) plus a 6% graphite hemisphere fill. No shadow maps today. Nothing blooms except the marker core at the payoff (threshold 0.9); text never does.",
+    "camera": "An orbit rig around a target (set/rig.js), never handheld: distance eased in log space, elevation and azimuth at most 3 degrees a second. The bible asks for pushes between scales; the built episodes also use hard cuts between scales.",
+    "materials": "Custom shaders for the chalk model and the graph paper, with colours fed through the finish's ACES inverse (set/look.js, set/aces.js) so they land on the theme tokens. The blue anchor figure is a simple, flat-shaded faceless silhouette (set/anchor.js), not a glossy material.",
+    "signatureDevices": [
+      "Running-sum spine readout: the calculation written term by term in mono",
+      "Boxed answer: the final number in a hand-drawn marker box, one per episode (also the avatar)",
+      "Green assumption badges: 'no air', 'estimate', 'thought experiment', 'not to scale'",
+      "Blue human-scale anchor figure, at least once per episode",
+      "The loop: the last frame returns to frame 0's composition",
+      "'Show your work' segment: the whole sum on one line with its assumptions"
+    ]
+  },
+  "seasonLooks": {
+    "s3": {
+      "summary": "First person on the graph-paper equator, from the eye line and over the shoulder, under a sky that visibly speeds up. One big live number ('length of a day', falling from 24 h to 1.4 h) never resets. 'Thought experiment' badge throughout.",
+      "palette": {},
+      "notes": "Film: 'What If Earth Spun Faster and Couldn't Stop?'. Source: longform/earth-spin/script.md (final v3.1 at 2393abe) and compile.py on the channel branch. Voice, as decided by the owner on 11 Nov 2026: the videos are made NOW with the channel's stock synthetic voice (am_puck, about 2.5 words a second), and his own voice is swapped in later without redoing the picture work. For the swap he chose a synthetic clone of his own voice (his words in the production chat, 11 Nov 2026: \"let's utilize fable to make a more human like voice easily accessible to every future episode\"; asked how to fix the reading pace, he chose \"Use my cloned voice\"). The clone tool is not built yet (trial paused: Roadmap 3.10). His real takes (voice-owner/: Parts A-D, cut into voice-owner/cut and cutA) are the reference and the alternate set; he read about a third faster than planned, so the film is timed to the planned pace. disclosures.aiVoice is true for the stock voice and for the clone. Parts are ep13-ep20 and the film goes in compilations/<slug>/.",
+      "status": "pending look gate"
+    }
+  },
+  "voice": {
+    "kind": "owner",
+    "id": "voice-owner",
+    "tone": "A friend working out a wild puzzle out loud: curious, a little amused, never lecturing.",
+    "wpm": 155
+  },
+  "sound": {
+    "music": "Preset envelope-working (kits/cinema/studio/vibes/envelope-working.json): A lydian at 50 BPM, so a 16th note is 9 frames; pizzicato plucks.",
+    "foley": "Pencil foley. Signature plucks A4, E5, D#5, 9 frames apart.",
+    "loudnessLufs": -14,
+    "rules": [
+      "Delivered AAC: integrated loudness -15 to -13 LUFS, true peak at most -1 dBTP, mono-safe (kits/cinema/film/qa.py).",
+      "Sound transients land within one frame of their picture event (kits/cinema/studio/qa.py).",
+      "Shorts loop: the music tail is fixed for the cut back to frame 0 (epNN/loopfix.sh).",
+      "Pace a long film with picture-only beats and pauses between sentences, never by slowing the owner's voice."
+    ]
+  },
+  "formats": {
+    "short": {
+      "aspect": "9:16",
+      "size": [
+        1080,
+        1920
+      ],
+      "fps": 30,
+      "durationS": [
+        61,
+        75
+      ],
+      "notes": "Seasons 1 and 2. Native 1080x1920 render; the -9x16-youtube.mp4 file is a 1440x2560 Lanczos upscale, labelled '1440 upscale'. 150 to 180 words (kits/cinema/script/lint.py)."
+    },
+    "part": {
+      "aspect": "9:16",
+      "size": [
+        1080,
+        1920
+      ],
+      "fps": 30,
+      "durationS": [
+        61,
+        75
+      ],
+      "notes": "Season 3 on: one of the long film's 8 chapters, cut from the film's own 9:16 render (never a crop of the 16:9). Opens with its own 2 s hook line, ends on its cliffhanger, then 'Part N of 8. Full video on YouTube.' Part 8 stops before the payoff."
+    },
+    "long": {
+      "aspect": "16:9",
+      "size": [
+        2560,
+        1440
+      ],
+      "fps": 30,
+      "durationS": [
+        510,
+        570
+      ],
+      "notes": "Season 3 on: one continuous 16:9 film. Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4 at 2560x1440. kits/cinema/film/render.mjs draws the film at 1920x1080; no tool writes the 2560x1440 file yet for one continuous film (Roadmap 2.2). Once it is built by upscale, label it '2560x1440 upscale of a 1080 render', never native 1440p. Seasons 1 and 2 were joined from episodes by kits/cinema/film/compilation.mjs: a 2560x1440 frame with cards drawn at that size and each episode's 1080x1920 master scaled down to 810x1440 (label: '2560x1440 upload; episode picture 810x1440 from the 1080x1920 master'). Runs 8:30 to 9:30, never by padding."
+    }
+  },
+  "packaging": {
+    "dna": "An extraordinary but reasoned situation with you in it. A human-scale anchor against a dramatic consequence, one big readout number, magenta accents. The scenario must read as a thought experiment. Keep the figure-on-a-journey covers: show the setup, never the answer.",
+    "accent": "#EB63FF"
+  },
+  "cta": {
+    "section": "Possibility Lab"
+  },
+  "rules": [
+    "Every factual sentence carries a claims.json tag. A claim is OK only after a person opens the source; anything checked from a search excerpt stays OPEN.",
+    "Every number in the voice and on screen comes from the episode's calc.py; claims.json marks each sentence as sourced or a derivation.",
+    "One or two significant figures, said with 'about' or 'nearly'.",
+    "A scenario is a thought experiment, never a prediction: badge it.",
+    "Every assumption is on screen as a green badge when it starts to matter.",
+    "One text element per idea (declutter.py); at most two text blocks besides the series line, badges and disclaimers.",
+    "python3 -I kits/cinema/sci/contrast.py whatif reports 0 fails.",
+    "Compelling pass: seven lenses, each at least 4.",
+    "The owner's real recordings are used as recorded: cut by word alignment, keep the last take, never re-voice a recording. AI stand-in for drafts: voice am_puck (kits/cinema/voice/tts.py), labelled as AI.",
+    "Season 3: rendered first with the stock synthetic voice (am_puck); the owner's own voice (a clone of it, or his real takes) replaces it later. Any synthetic voice keeps disclosures.aiVoice true and its AI label ('Narration: a synthetic version of the owner's own voice (AI)' once the clone is used). In episode.json, set voice.synthetic true and record the owner's consent (11 Nov 2026, production chat) in voice.consent.",
+    "A clone of the owner's own voice is allowed only with his consent and an AI label. He gave it on 11 Nov 2026 in the production chat (newer than voice-owner/README.md's 'never clone'). No clone tool is built yet: an earlier toolchain is on claude/voice-clone (kits/cinema/voice/CLONE.md, with a consent gate) and a new trial is paused: Roadmap 3.10. Never clone anyone else's voice (Evelyn's is real recordings only).",
+    "A part shorter than 61 s gets real add-on narration from calc.py facts, never padding.",
+    "One Chromium render job per machine."
+  ],
+  "never": [
+    "Never a prediction, never advice, nothing to try at home.",
+    "Never an answer with fake precision (for example '37.84 minutes').",
+    "No amber, gold, rose, coral, espresso, teal or chartreuse.",
+    "Never show a crowd crush: say the safe density.",
+    "Never the answer on a cover or thumbnail.",
+    "No more than 3 flashes a second; the box and term flashes are fades of at least 0.2 s.",
+    "No title or thumbnail that claims more than the script.",
+    "Never claim a technique, resolution or metric the engine did not deliver (films/channels/studio/README.md, 'Maximum-fidelity standard').",
+    "Nothing posts without the owner; publishing is manual."
+  ],
+  "sources": [
+    "claude/whatif-s2:films/channels/whatif/theme.json",
+    "claude/whatif-s2:films/channels/whatif/bible.md",
+    "claude/whatif-s2:films/channels/whatif/set/rig.js",
+    "claude/whatif-s2:films/channels/whatif/set/anchor.js",
+    "claude/whatif-s2:films/channels/whatif/voice-owner/README.md",
+    "claude/whatif-s2:films/channels/whatif/longform/earth-spin/script.md",
+    "claude/whatif-s2:films/channels/whatif/longform/earth-spin/compile.py",
+    "claude/whatif-s2:films/channels/whatif/longform/earth-spin/parts/make_part.py",
+    "films/channels/PACKAGING.md",
+    "films/channels/SEASON-FORMAT.md",
+    "films/channels/CTA.md",
+    "films/channels/STUDIO-STYLE.md",
+    "films/channels/voice-scripts/make_recording_script.py",
+    "kits/cinema/studio/vibes/envelope-working.json",
+    "kits/cinema/film/qa.py"
+  ]
+}

@@ -3,3 +3,6 @@ __pycache__/
 los-gueros-preview.html
 films/*/build/
 films/*/motion/.tmp/
+
+# scaffolds made by films/channels/studio/tools/new_episode.py (scratch)
+/new-episodes/

@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Master episode spec (episode.json)",
+  "description": "One file per episode, long film or part, on any of the four channels. It says what the episode is before anything is built: the question, the format, the voice, the look, the beats and where its other files live. The channel's own compile step still writes film.json (the clock the renderer reads); this file is the plan that compile step follows. Written by films/channels/studio/tools/new_episode.py, checked by films/channels/studio/tools/validate.py. How to use it: films/channels/studio/NEW-EPISODE.md. Keys that start with 'x-' are free for a channel's own notes.",
+  "type": "object",
+  "additionalProperties": false,
+  "patternProperties": { "^x-": {} },
+  "required": [
+    "version", "id", "channel", "season", "number", "folder", "title", "topic", "question", "hook", "payoff",
+    "format", "voice", "look", "sound", "story", "files", "cta", "status", "assumptions"
+  ],
+  "properties": {
+    "version": { "const": 1, "description": "Schema version. Always 1 for now." },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z]{2,4}-s[1-9][0-9]*e[0-9]{2}$",
+      "description": "<prefix>-s<season>e<nn>, for example ss-s3e01. The prefix is the channel identity's prefix (ss, rr, pl, oo). A season's long film takes number 00, for example pl-s3e00."
+    },
+    "channel": {
+      "enum": ["skincare", "physics", "whatif", "space"],
+      "description": "Channel slug. An identity file films/channels/studio/identities/<slug>.json must exist. Adding a fifth channel means adding its identity file and its slug here."
+    },
+    "season": { "type": "integer", "minimum": 1 },
+    "number": {
+      "type": "integer", "minimum": 0, "maximum": 99,
+      "description": "Order inside the season, from 1. For a part it is the part number. 0 is the season's long film."
+    },
+    "folder": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Folder name on the channel's branch, under the identity's filmsPath. Episodes and parts: epNN, two digits (Prism imports only those). A long film: its name under compilations/, lower case with hyphens. No spaces: Prism's media push skips names with spaces."
+    },
+    "title": {
+      "type": "string", "minLength": 3, "maxLength": 100,
+      "description": "Working title until status.title is 'chosen'. The final title is the winner in packaging.json (films/channels/PACKAGING.md asks for 35 to 55 characters). A part's title must equal its line in the long film's chapters.txt exactly, or Prism will not link them."
+    },
+    "topic": { "type": "string", "minLength": 3, "description": "The subject, in plain words, as the owner gave it." },
+    "question": { "type": "string", "minLength": 3, "description": "The one question the episode answers. One story per episode." },
+    "hook": { "type": "string", "minLength": 3, "description": "The first line and the first picture. For a short, a question spoken by 2.0 s (kits/cinema/script/WRITING.md)." },
+    "payoff": { "type": "string", "minLength": 3, "description": "What the viewer knows or feels at the end that they did not at the start. The like/follow moment comes after it." },
+    "format": { "$ref": "#/$defs/format" },
+    "voice": { "$ref": "#/$defs/voice" },
+    "look": { "$ref": "#/$defs/look" },
+    "sound": { "$ref": "#/$defs/sound" },
+    "story": {
+      "type": "object",
+      "required": ["beats"],
+      "properties": {
+        "beats": {
+          "type": "array", "minItems": 1,
+          "items": { "$ref": "#/$defs/beat" },
+          "description": "The story in order. Windows are a plan until the voice is measured; they must run from 0 to the planned length with no gap or overlap."
+        },
+        "thread": { "type": "string", "description": "Optional. One sentence: the single thread from hook to payoff." }
+      }
+    },
+    "files": {
+      "type": "object",
+      "required": ["script", "claims", "shots", "packaging"],
+      "properties": {
+        "script": { "type": "string", "minLength": 1, "description": "The script in the kit's format (kits/cinema/script/README.md). Usually script.md." },
+        "claims": { "type": "string", "minLength": 1, "description": "The claims ledger. Usually claims.json." },
+        "shots": { "type": "string", "minLength": 1, "description": "The shot manifest (shot.schema.json). Usually shots.json." },
+        "packaging": { "type": "string", "minLength": 1, "description": "out/packaging.json for an episode or part; packaging.json for a long film (films/channels/PACKAGING.md)." }
+      },
+      "additionalProperties": { "type": "string" },
+      "description": "Paths relative to the episode folder."
+    },
+    "cta": { "$ref": "#/$defs/cta" },
+    "status": { "$ref": "#/$defs/status" },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 3 },
+      "description": "Everything that was defaulted or guessed rather than decided, one sentence each. An empty list means every value here was decided by a person or read from a file."
+    },
+    "disclosures": {
+      "type": "object",
+      "required": ["aiVoice", "aiVisuals"],
+      "properties": {
+        "aiVoice": { "type": "boolean", "description": "True when any narration in the delivered file is synthetic, including a stand-in voice or a clone of the owner's own voice." },
+        "aiVisuals": { "type": "boolean", "description": "True when any AI-made image appears in the picture, whole or in part (films/channels/studio/SHOTS.md, 'Owner-made AI art'). The compile step copies it to film.json disclosures.aiVisuals, which Prism reads." },
+        "labels": { "type": "array", "items": { "type": "string" }, "description": "The exact label lines the episode carries on screen or in its description." }
+      },
+      "description": "What the episode must tell viewers. Optional in the schema; validate.py warns when it is missing."
+    },
+    "partOf": {
+      "type": "object",
+      "required": ["film", "part", "of"],
+      "properties": {
+        "film": { "type": "string", "minLength": 1, "description": "The long film's id or folder name." },
+        "part": { "type": "integer", "minimum": 1 },
+        "of": { "type": "integer", "minimum": 1 }
+      },
+      "description": "For a part: which long film it is cut from (films/channels/SEASON-FORMAT.md)."
+    },
+    "created": { "type": "string", "description": "Date the spec was first written, YYYY-MM-DD." },
+    "generatedBy": { "type": "string", "description": "The tool and inputs that wrote the first version." }
+  },
+  "$defs": {
+    "window": {
+      "type": "array",
+      "prefixItems": [ { "type": "number", "minimum": 0 }, { "type": "number", "exclusiveMinimum": 0 } ],
+      "items": false, "minItems": 2, "maxItems": 2,
+      "description": "[start, end] in seconds."
+    },
+    "hex": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+    "format": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "aspect", "size", "fps", "durationS"],
+      "properties": {
+        "kind": {
+          "enum": ["short", "premium", "part", "long"],
+          "description": "short: a 9:16 episode of about 61 to 75 s (Seasons 1 and 2). premium: a Skin Sense Season 3 lesson, 9:16, 70 to 90 s. part: one of the 8 chapters of a long film, 9:16, 1:01 to 1:15. long: a 16:9 film or joined long video, 8:30 to 9:30."
+        },
+        "aspect": { "enum": ["9:16", "16:9"], "description": "Each aspect is its own composition, never a crop of the other." },
+        "shape": {
+          "enum": ["film", "joined"],
+          "description": "Optional, for kind 'long' only. film: one continuous 16:9 film (Season 3 on the three film channels). joined: finished 9:16 episodes joined with narrated cards by kits/cinema/film/compilation.mjs (Seasons 1 and 2; Skin Sense Season 3). A joined video has no nativeSize, and its QA runs with qa_episode.py --cards."
+        },
+        "size": {
+          "type": "array",
+          "prefixItems": [ { "type": "integer", "minimum": 1 }, { "type": "integer", "minimum": 1 } ],
+          "items": false, "minItems": 2, "maxItems": 2,
+          "description": "[width, height] in pixels of the delivered master, the file Prism imports."
+        },
+        "nativeSize": {
+          "type": "array",
+          "prefixItems": [ { "type": "integer", "minimum": 1 }, { "type": "integer", "minimum": 1 } ],
+          "items": false, "minItems": 2, "maxItems": 2,
+          "description": "[width, height] the picture is really rendered at. Today the renderer's final tier draws 1080x1920 or 1920x1080 only (kits/cinema/film/render.mjs). When nativeSize is smaller than size, the master is an upscale and must be labelled as one. Leave it out for a joined long video (shape 'joined'): its cards are drawn at 2560x1440 and each episode's 1080x1920 master is scaled down to 810x1440, so no single render size is true of it."
+        },
+        "fps": { "type": "integer", "minimum": 12, "maximum": 60 },
+        "durationS": {
+          "type": "array",
+          "prefixItems": [ { "type": "number", "exclusiveMinimum": 0 }, { "type": "number", "exclusiveMinimum": 0 } ],
+          "items": false, "minItems": 2, "maxItems": 2,
+          "description": "[shortest, longest] allowed length in seconds for this format on this channel, copied from the channel identity. validate.py fails a window wider than the identity's."
+        },
+        "targetS": { "type": "number", "exclusiveMinimum": 0, "description": "The length the plan aims for, in seconds." },
+        "durationForced": { "type": "boolean", "description": "True when the target was accepted outside durationS on purpose (new_episode.py --force). It covers planning only: validate.py warns instead of failing until stage 'editing', and fails from then on. A long video under 510 s and a premium lesson under 60 s fail even when forced." },
+        "deliveries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "size", "native"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "size": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "minItems": 2, "maxItems": 2 },
+              "native": { "type": "boolean", "description": "True when every pixel of the file was drawn at this size. False for an upscale, and for a joined long video, whose frame mixes cards drawn at full size with episode pictures scaled from their masters; 'how' says which." },
+              "how": { "type": "string" }
+            }
+          },
+          "description": "Every file the episode ships, with whether its pixels are native or an upscale."
+        },
+        "notes": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "enum": ["short", "premium", "part"] } }, "required": ["kind"] },
+          "then": { "properties": { "aspect": { "const": "9:16" } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "long" } }, "required": ["kind"] },
+          "then": {
+            "properties": {
+              "aspect": { "const": "16:9" },
+              "durationS": { "prefixItems": [ { "minimum": 510 }, {} ] }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "aspect": { "const": "9:16" } }, "required": ["aspect"] },
+          "then": { "properties": {
+            "size": { "enum": [[1080, 1920], [1440, 2560], [2160, 3840]] },
+            "nativeSize": { "enum": [[1080, 1920], [1440, 2560], [2160, 3840]] }
+          } }
+        },
+        {
+          "if": { "properties": { "aspect": { "const": "16:9" } }, "required": ["aspect"] },
+          "then": { "properties": {
+            "size": { "enum": [[1920, 1080], [2560, 1440], [3840, 2160]] },
+            "nativeSize": { "enum": [[1920, 1080], [2560, 1440], [3840, 2160]] }
+          } }
+        }
+      ]
+    },
+    "voice": {
+      "type": "object",
+      "required": ["kind", "id", "tone", "wpm"],
+      "properties": {
+        "kind": { "enum": ["tts", "owner", "guest"], "description": "tts: a synthetic voice. owner: the channel owner. guest: another real person, with their written OK." },
+        "id": { "type": "string", "minLength": 1, "description": "The voice's id: a synthetic voice name, or the folder the recordings live in." },
+        "tone": { "type": "string", "minLength": 3 },
+        "wpm": { "type": "number", "minimum": 40, "maximum": 220, "description": "The voice's reading pace in words a minute, as the channel identity and films/channels/voice-scripts/make_recording_script.py use it. Word budget = runtime in minutes x wpm x talkShare." },
+        "talkShare": { "type": "number", "exclusiveMinimum": 0, "maximum": 1, "description": "The share of the runtime the voice is speaking. 1 for shorts and parts (kits/cinema/script/lint.py estimates length the same way); lower for ASMR lessons and long films, which leave picture-only time." },
+        "name": { "type": "string", "description": "The speaker's name, when they are credited." },
+        "synthetic": { "type": "boolean", "description": "True when the audio is generated, including a clone of the owner's own voice. Then disclosures.aiVoice must be true. Never true for a guest: a guest's voice is never synthesised." },
+        "standIn": { "type": "string", "description": "The synthetic voice used for drafts until the recording arrives. Always labelled as AI." },
+        "source": { "type": "string", "description": "Where the recording lives." },
+        "consent": { "type": "string", "description": "For a guest or a cloned voice: where the written OK is recorded, or a TODO for the owner. An owner's cloned voice cannot reach export while this holds a TODO." }
+      }
+    },
+    "look": {
+      "type": "object",
+      "required": ["season", "summary", "palette"],
+      "properties": {
+        "season": { "type": "string", "pattern": "^(s[1-9][0-9]*|base)$", "description": "Which look from the channel identity: a seasonLooks key such as s3, or base for the channel's standing identity." },
+        "summary": { "type": "string", "minLength": 3 },
+        "palette": { "type": "object", "additionalProperties": { "$ref": "#/$defs/hex" }, "description": "Token name to #RRGGBB. Only this channel's colours." },
+        "notes": { "type": "string" },
+        "status": { "type": "string", "description": "The season look's own status in the identity file, for example 'approved' or 'pending look gate'." }
+      }
+    },
+    "sound": {
+      "type": "object",
+      "properties": {
+        "music": { "type": "string" },
+        "foley": { "type": "string" },
+        "loudnessLufs": { "type": "number", "minimum": -30, "maximum": -8, "description": "Integrated loudness target on the delivered AAC. kits/cinema/film/qa.py passes -15 to -13." },
+        "truePeakDbtp": { "type": "number", "maximum": 0 },
+        "rules": { "type": "array", "items": { "type": "string" } }
+      },
+      "description": "The channel's sound, with any change for this episode."
+    },
+    "beat": {
+      "type": "object",
+      "required": ["id", "purpose", "seconds"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "The beat's heading in script.md. Letters, digits and underscores only, no hyphen: Prism's importer reads the heading as \\w+ (prism-studio/scripts/import-episodes.ts) and drops a beat it cannot read." },
+        "purpose": { "type": "string", "minLength": 3, "description": "The beat's job in the story." },
+        "seconds": { "$ref": "#/$defs/window" },
+        "words": { "type": "integer", "minimum": 0, "description": "Word budget for the beat at the voice's pace." },
+        "lines": { "type": "array", "items": { "type": "string" }, "description": "Narration line ids spoken in this beat." }
+      }
+    },
+    "cta": {
+      "type": "object",
+      "required": ["line", "at"],
+      "properties": {
+        "line": { "type": "string", "minLength": 3, "description": "The like/follow line as spoken on the master (the 'follow' wording). From films/channels/CTA.md." },
+        "at": { "type": "string", "minLength": 3, "description": "Where it goes, in words. Shorts: right after the payoff, about 70 to 85% through, never in the first 20 s." },
+        "seconds": { "$ref": "#/$defs/window" },
+        "section": { "type": "string", "description": "The heading in films/channels/CTA.md the line came from." },
+        "variants": {
+          "type": "object",
+          "properties": { "follow": { "type": "string" }, "subscribe": { "type": "string" } },
+          "description": "The same line for TikTok and Instagram (follow) and for the YouTube file (subscribe)."
+        },
+        "moments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["line", "at"],
+            "properties": { "line": { "type": "string", "minLength": 3 }, "at": { "type": "string", "minLength": 3 }, "seconds": { "$ref": "#/$defs/window" } }
+          },
+          "description": "Long videos have two moments. List both here; 'line' repeats the first."
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "required": ["stage", "lookGate"],
+      "properties": {
+        "stage": {
+          "enum": ["concept", "research", "narrative", "script", "storyboard", "visual", "motion", "sound", "editing", "qa", "export", "archive"],
+          "description": "The pipeline stage the episode is in: concept, research, narrative, script, storyboard, visual production, motion, narration and sound, editing, QA, export, archiving."
+        },
+        "lookGate": {
+          "enum": ["pending", "changes-requested", "approved"],
+          "description": "The owner's approval of this episode's stills (and, for Skin Sense Season 3, a 10 s clip) before the full render. Only the owner sets 'approved'."
+        },
+        "sources": {
+          "enum": ["open", "ok"],
+          "description": "ok only when a person has opened every source in claims.json. A search excerpt is not enough."
+        },
+        "title": { "enum": ["working", "chosen"], "description": "chosen when the owner has picked the packaging winner." },
+        "recording": { "enum": ["not needed", "waiting", "received"], "description": "For an owner or guest voice: whether the real recording has arrived. A guest-voiced episode needs 'received' from stage 'editing' on." },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

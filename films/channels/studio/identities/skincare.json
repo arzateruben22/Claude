@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "slug": "skincare",
+  "name": "Skin Sense",
+  "prefix": "ss",
+  "branch": "claude/outer-layer-s1-b",
+  "filmsPath": "films/channels/skincare",
+  "tagline": "Skin biology, ingredients and routines, with the evidence on the screen.",
+  "promise": "One real thing about skin, followed from the surface into the hidden machinery and back out, with the evidence on screen. Education, not medical advice.",
+  "identity": {
+    "palette": {
+      "ivory": "#F8F2E7",
+      "ivory-hi": "#FBF6EC",
+      "card": "#FBF7EE",
+      "navy": "#0E1B3D",
+      "navy-2": "#4A5470",
+      "deep-green": "#00685F",
+      "card-accent": "#1F6F68",
+      "teal": "#2F8F86"
+    },
+    "type": {
+      "display": "Newsreader",
+      "body": "Red Hat Text",
+      "mono": "Red Hat Mono"
+    },
+    "look": "Premium medical-editorial: an ivory page, painted or 3-D skin in the episode's one skin tone, peach and rose tissue (they come from the art; no token hex is recorded), a deep green accent and navy serif headlines. Season 2: the owner's paintings dissolve into 3-D scenes on an ivory studio.",
+    "lighting": "Ivory studio (set/w3d.js): a procedural soft-box environment through PMREM, a warm key, a cool rim and 2048 px soft shadows (PCFSoftShadowMap).",
+    "camera": "A keyed camera spline through one world per episode, with close-up moves on the paintings and hard cuts between sets in the Season 2 scenes. Calm; never handheld.",
+    "materials": "Skin and tissue as MeshPhysicalMaterial with sheen and clearcoat in each Season 2 scene (set/goose3d.js to set/print3d.js). The helper skinMaterial in set/studio.js (sheen, clearcoat, an attenuation tint through a little transmission; used by ep01 to ep03) approximates subsurface scattering. The channel's own finish in set/w3d.js: 4x MSAA, a 20-tap depth of field, bloom, ACES with the ivory ground exempt. Season 2 renders with --plain, so there is no motion blur.",
+    "signatureDevices": [
+      "The owner's paintings dissolving into 3-D scenes",
+      "One skin tone per episode, matched across its art with set/labmatch.py",
+      "Word-lit captions and ivory pills with pinned leaders (set/ss3.mjs)",
+      "Honesty labels: 'model, not a photo', 'illustration', 'in mice', 'one study', 'debated'",
+      "'Education, not medical advice' in the captions"
+    ]
+  },
+  "seasonLooks": {
+    "s3": {
+      "summary": "Strongly influenced by the Skin School course, not a copy: soft, glowing voxel skin layers on a dark green-black ground, teal as the only accent, small ivory serif captions, and an ASMR voice by Evelyn.",
+      "palette": {
+        "ground": "#0B1513",
+        "teal": "#3FBFAE",
+        "caption": "#F4EDE3"
+      },
+      "notes": "Owner, 11 Nov 2026 (films/channels/SEASON-FORMAT.md, 'Skin Sense Season 3'). Reference: films/skin-school-pilot/out/8-2-9x16.jpg. Voxels a little softer and slightly translucent, glowing from within; a warm glow where the skin meets the dark; soft studio light; a calm camera. Captions in Newsreader on a dark rounded plate. The skin layers take the episode's one skin tone. Six lessons of 70 to 90 s, then one joined long video. Open: the owner's approval of one still and a 10 s clip; Evelyn's written OK for the voice and the look, and her credit choice. The directive restates the ivory identity, so the owner is asked to confirm that this look is the one for Season 3. A 10 s look test exists on the channel branch (voxel take: set/voxel3d.js through s3-looktest/scene.mjs, rendered on the --plain path with grain 0.02 in set/w3d.js, no motion blur; out/skin-sense-s3-looktest.mp4 and -still.png). It awaits the owner's look gate. It is not yet a reusable world or a theme file. s3-looktest/BRIEF.md and bible.md on the channel branch are older than this decision.",
+      "status": "pending look gate"
+    }
+  },
+  "voice": {
+    "kind": "guest",
+    "id": "voice-evelyn",
+    "tone": "ASMR: soft-spoken, close and unhurried; a light whisper is fine if every word stays clear. Slower than feels natural, steady volume, the last line of each lesson softest of all.",
+    "wpm": 115
+  },
+  "sound": {
+    "music": "Season 3: very low, slow music under the voice. Seasons 1 and 2: preset outerlayer-slide (kits/cinema/studio/vibes/outerlayer-slide.json), F major at 64.29 BPM, a soft pad and a breathy reed.",
+    "foley": "Season 3: gentle foley only (soft brushing, droplets, a low warm hum). Seasons 1 and 2: reed signature F5, C6, A5.",
+    "loudnessLufs": -14,
+    "rules": [
+      "Delivered AAC: integrated loudness -15 to -13 LUFS, true peak at most -1 dBTP, mono-safe (kits/cinema/film/qa.py).",
+      "The look-test brief's target of about -16 LUFS fails that gate. Deliver at -14 until an ASMR loudness profile exists (Roadmap stage 4).",
+      "ASMR: no hits, stings, whooshes or sudden loudness changes, and no like-button sound.",
+      "Use the recording's 10 s of room tone for noise reduction; keep her breaths soft rather than cut to silence.",
+      "Captions are always on.",
+      "No bells, plucks, pings, mallets or blips."
+    ]
+  },
+  "formats": {
+    "short": {
+      "aspect": "9:16",
+      "size": [1080, 1920],
+      "fps": 30,
+      "durationS": [61, 75],
+      "notes": "Seasons 1 and 2. Native 1080x1920 render; the -9x16-youtube.mp4 file is a 1440x2560 Lanczos upscale, labelled '1440 upscale'. 150 to 180 words (kits/cinema/script/lint.py)."
+    },
+    "premium": {
+      "aspect": "9:16",
+      "size": [1080, 1920],
+      "fps": 30,
+      "durationS": [70, 90],
+      "notes": "Season 3: six lessons, each landing at about 75 to 80 s, never under 60 s. Native 1080x1920 render; the YouTube file is a 1440x2560 upscale. kits/cinema/film/qa.py's 60 to 75 s gate and kits/cinema/script/lint.py's length and pace gates fail this format until per-format profiles exist (Roadmap stage 1 for lint, stage 4 for QA)."
+    },
+    "long": {
+      "aspect": "16:9",
+      "size": [2560, 1440],
+      "fps": 30,
+      "durationS": [510, 570],
+      "notes": "Season 3: the six lessons joined with an opening, bridges and a finale (about a minute of new narration). Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4, a 2560x1440 frame built by kits/cinema/film/compilation.mjs: the cards are drawn at that size, and each lesson's picture is its 1080x1920 master scaled down to 810x1440 in the centre slot. Label: '2560x1440 upload; episode picture 810x1440 from the 1080x1920 master'. Never label it native 1440p. Runs 8:30 to 9:30, never by padding."
+    }
+  },
+  "packaging": {
+    "dna": "Premium medical-editorial. Surprising anatomical close-ups and hidden processes; one hand, finger or forearm in the episode's skin tone doing the action, never a face. From Season 3: soft, glowing voxel skin layers on a dark green-black ground, teal accent, small ivory serif.",
+    "accent": "#00685F"
+  },
+  "cta": {
+    "section": "Skin Sense (ASMR, Season 3 on)"
+  },
+  "rules": [
+    "Every factual sentence carries a claims.json tag. A claim is OK only after a person opens the source; anything checked from a search excerpt stays OPEN.",
+    "One skin tone per episode, matched to its art; never change tone inside an episode's story.",
+    "Captions carry 'Education, not medical advice'.",
+    "AI illustrations are disclosed: set disclosures.aiVisuals true (episode.json, copied to film.json) whenever an AI-made image is shown. A world drawn only in code keeps it false.",
+    "Look gate: the owner approves one still and a 10 s test clip before any Season 3 episode is built.",
+    "Evelyn's real recordings only (voice-evelyn/). The owner gets her OK in writing and asks whether she wants credit; the studio never contacts her.",
+    "A soft AI voice (bf_isabella, kits/cinema/voice/tts.py) stands in for look tests and drafts only, labelled as AI. Finals wait for her recording.",
+    "A dermatologist review is the owner's decision (films/channels/briefs/coordinator-handoff.md; the channel bible asks for a board-certified dermatologist). Until the owner decides, it is a TODO in every handoff.",
+    "Season 3: almost no on-screen text. One number or one word at the key moment, plus the captions.",
+    "Season 3: teal #3FBFAE is the only accent.",
+    "Honesty labels on every comparison, illustration, animal result and single study.",
+    "A cover must be newer than its mp4, or Prism falls back to the poster frame.",
+    "One Chromium render job per machine."
+  ],
+  "never": [
+    "Never a face; acne only inside a pore.",
+    "No disease, risk or damage words over skin art; never a risk line over skin of one tone.",
+    "No products, brands, before/after, diagnosis or advice.",
+    "No Lumevina name, logo, products or links; never Lumevina's black, rose or gold.",
+    "Never an AI copy of Evelyn's voice.",
+    "Season 3: no gold, rose or red accent and no neutral black ground (films/channels/SEASON-FORMAT.md). The base look's peach and rose come from the art of Seasons 1 and 2.",
+    "In every season: set/ss3.mjs's #B8862B is the dashed placeholder marker only, never an identity colour.",
+    "No title or thumbnail that claims more than the script.",
+    "Never claim a technique, resolution or metric the engine did not deliver (films/channels/studio/README.md, 'Maximum-fidelity standard').",
+    "Nothing posts without the owner; publishing is manual."
+  ],
+  "sources": [
+    "claude/outer-layer-s1-b:films/channels/skincare/set/ss3.mjs",
+    "claude/outer-layer-s1-b:films/channels/skincare/theme-ivory.json",
+    "claude/outer-layer-s1-b:films/channels/skincare/theme.json",
+    "claude/outer-layer-s1-b:films/channels/skincare/bible.md",
+    "claude/outer-layer-s1-b:films/channels/skincare/PRODUCTION.md",
+    "claude/outer-layer-s1-b:films/channels/skincare/set/w3d.js",
+    "claude/outer-layer-s1-b:films/channels/skincare/set/studio.js",
+    "claude/outer-layer-s1-b:films/channels/skincare/set/final.sh",
+    "claude/outer-layer-s1-b:films/channels/skincare/s3-looktest/BRIEF.md",
+    "claude/outer-layer-s1-b:films/channels/skincare/s3-looktest/episode.json",
+    "claude/outer-layer-s1-b:films/channels/skincare/set/voxel3d.js",
+    "films/channels/briefs/coordinator-handoff.md",
+    "films/channels/PACKAGING.md",
+    "films/channels/SEASON-FORMAT.md",
+    "films/channels/CTA.md",
+    "films/channels/STUDIO-STYLE.md",
+    "films/channels/voice-scripts/make_recording_script.py",
+    "films/channels/voice-scripts/skin-sense-season-3-recording-script.md",
+    "kits/cinema/studio/vibes/outerlayer-slide.json",
+    "kits/cinema/film/qa.py"
+  ]
+}
