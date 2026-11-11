@@ -1,0 +1,132 @@
+{
+ "version": 1,
+ "format": "long",
+ "channel": "One More Orbit",
+ "video": "long01",
+ "hook": "Bring the Moon closer, one step at a time, until it breaks apart and leaves a ring.",
+ "titles": [
+  {
+   "text": "The Moon Starts Coming Closer. It Won't Stop.",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "What If the Moon Never Stopped Coming Closer?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Earth Could Have Rings. There's a Catch.",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Why the Moon Would Rise in the West",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Bring the Moon Close Enough and It Breaks",
+   "mechanism": "scale shock"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "a Moon about eight times wider than tonight over a calm night beach, one tiny figure on the sand",
+   "composition": "telephoto compression: the Moon fills the upper-right half, the figure small at lower left, the waterline high on the beach",
+   "lighting": "indigo night, cold silver moonlight, a sharp shadow from the figure",
+   "trigger": "scale shock",
+   "text": "50,000 KM",
+   "complements": "the number shows how close without saying what happens next"
+  },
+  {
+   "id": "B",
+   "subject": "the Moon stretched into an egg shape, a stream of rock peeling off and spreading along its orbit, Earth's limb below",
+   "composition": "Moon upper centre, debris arc sweeping right, Earth's curve across the bottom",
+   "lighting": "hard sunlight, indigo space, teal light front on the debris",
+   "trigger": "visual paradox: the Moon coming apart",
+   "text": "",
+   "complements": "shows the climax; risks reading as a real threat out of context"
+  },
+  {
+   "id": "C",
+   "subject": "a calm night beach with NO Moon; a thin bright silver ring arcs across the whole sky; one small person looks up",
+   "composition": "wide; the ring arc spans the full width, peaking in the upper third; the person tiny at lower right; the sea reflects the ring",
+   "lighting": "deep indigo sky, the ring silver-white with a faint teal edge, soft silver light on wet sand",
+   "trigger": "mystery: where did the Moon go?",
+   "text": "WHERE'S THE MOON?",
+   "complements": "the title says the Moon is coming; the picture shows it gone, and the gap is the whole film"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 87,
+    "curiosity": 93,
+    "clarity": 80,
+    "synergy": 94,
+    "originality": 90,
+    "accuracy": 90,
+    "mobile": 78,
+    "satisfaction": 92
+   },
+   "note": "strongest gap; a ringed Earth reads as hypothetical at a glance, which keeps the statement title honest"
+  },
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 82,
+    "clarity": 92,
+    "synergy": 78,
+    "originality": 66,
+    "accuracy": 88,
+    "mobile": 90,
+    "satisfaction": 88
+   },
+   "note": "instantly clear, but huge-Moon images are common in the feed"
+  },
+  {
+   "title": 2,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 84,
+    "curiosity": 86,
+    "clarity": 76,
+    "synergy": 82,
+    "originality": 82,
+    "accuracy": 80,
+    "mobile": 74,
+    "satisfaction": 86
+   },
+   "note": "a breaking Moon out of context edges toward a fabricated threat; lower accuracy score"
+  }
+ ],
+ "winner": {
+  "title": "How Close Can the Moon Get Before It Breaks?",
+  "thumbnail": "thumbnail.jpg",
+  "text": "HOW CLOSE?"
+ },
+ "testAndCompare": [
+  "C",
+  "A",
+  "B"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "notes": "Truth: a statement title about a hypothetical needs the thought-experiment cue. Here the ringed sky gives it, and the description's first line must say 'A thought experiment'. The rings beat ends 'Tonight's Moon is fine' (c2). The ring is shown thin and in Earth's equatorial plane (c27).",
+ "thumbnailFile": "thumbnail.jpg",
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: a calm beach at night with NO Moon in the sky. Instead, one bright, thin silver ring arcs across the whole sky from the left horizon to the right horizon, high over the sea, the way Saturn's rings would look from below. One small person stands alone on the wet sand, looking up at it.\nComposition: wide shot. The ring arc spans the full width and peaks in the upper third. The person is tiny and silhouetted at the lower right third. A calm sea in the lower third reflects the ring. Lots of dark sky.\nLighting and treatment: deep indigo night sky (#1B1640 fading to #0B0A1F), the ring glowing silver-white with a faint teal (#3FE0C5) edge, a few stars, soft silver light on the wet sand and water. Quiet, cinematic, very clean, violet (#5B3FD0) undertone.\nMood: quiet awe with a chill: where did the Moon go?\nText: \"WHERE'S THE MOON?\" in bold white sans-serif, upper left, medium size. No other text.\nScientific accuracy: the ring is one thin, flat band of rock and dust in Earth's equatorial plane, seen as a single arc. No Moon anywhere in the frame, no other planets or moons.\nAvoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, NASA-style captions, explosions, meteors hitting Earth, or anything that looks like a real photograph or a news image.\nStyle: premium editorial science documentary, distinctive and art-directed, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": null,
+  "text": "WHERE'S THE MOON?",
+  "note": "Shorts from the opening: Part 1 cover = the beach with a Moon twice as wide; Part 2 = the 50,000 km Moon."
+ }
+}
