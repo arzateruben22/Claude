@@ -1,0 +1,209 @@
+{
+ "name": "part6",
+ "mode": "port",
+ "dur": 63.061,
+ "clips": [
+  {
+   "id": "ch6_hook",
+   "file": "voice/wav/17.wav",
+   "t": 0.15,
+   "dur": 2.97
+  },
+  {
+   "id": "ch6_vo",
+   "file": "voice/wav/18.wav",
+   "t": 3.47,
+   "dur": 45.248,
+   "from": 0.0
+  },
+  {
+   "id": "cta2_follow",
+   "file": "voice/wav/37.wav",
+   "t": 49.018,
+   "dur": 3.796
+  },
+  {
+   "id": "ch6_vo",
+   "file": "voice/wav/18.wav",
+   "t": 53.114,
+   "dur": 1.463,
+   "from": 45.248
+  },
+  {
+   "id": "ch6_loop",
+   "file": "voice/wav/19.wav",
+   "t": 54.927,
+   "dur": 3.869
+  },
+  {
+   "id": "closer6",
+   "file": "voice/wav/33.wav",
+   "t": 59.146,
+   "dur": 2.965
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.245,
+   "t1": 1.79,
+   "text": "It's not just the sea.",
+   "line": "ch6_hook"
+  },
+  {
+   "t0": 1.81,
+   "t1": 3.36,
+   "text": "The ground moves too.",
+   "line": "ch6_hook"
+  },
+  {
+   "t0": 3.5,
+   "t1": 5.765,
+   "text": "Seventy thousand kilometers.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 5.785,
+   "t1": 9.68,
+   "text": "The Moon is about five and a half times wider than tonight.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 9.7,
+   "t1": 14.125,
+   "text": "Its tidal pull is more than a hundred sixty times today's.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 14.145,
+   "t1": 17.16,
+   "text": "The sea is not the only thing that moves.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 17.345,
+   "t1": 23.67,
+   "text": "The solid Earth already rises and falls a little with the Moon, tens of centimeters a day.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 23.69,
+   "t1": 26.72,
+   "text": "With far more pull, it would flex far more.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 26.74,
+   "t1": 31.08,
+   "text": "What that would do to faults and volcanoes, this film cannot tell you.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 31.1,
+   "t1": 39.54,
+   "text": "In real life, tides are why the Moon drifts away: they steal a little of Earth's spin and hand it to the Moon's orbit.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 39.56,
+   "t1": 44.105,
+   "text": "To make it come closer, our thought experiment has to break that rule.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 44.125,
+   "t1": 48.92,
+   "text": "That is one more reason this is a thought experiment, not a forecast.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 49.043,
+   "t1": 50.118,
+   "text": "Still looking up?",
+   "line": "cta2_follow"
+  },
+  {
+   "t0": 50.138,
+   "t1": 51.418,
+   "text": "Tap like and follow.",
+   "line": "cta2_follow"
+  },
+  {
+   "t0": 51.438,
+   "t1": 53.028,
+   "text": "There's plenty more sky.",
+   "line": "cta2_follow"
+  },
+  {
+   "t0": 53.161,
+   "t1": 54.756,
+   "text": "And the number keeps falling.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 54.947,
+   "t1": 59.017,
+   "text": "Because soon, the Moon will rise from the wrong side of the sky.",
+   "line": "ch6_loop"
+  },
+  {
+   "t0": 59.166,
+   "t1": 60.526,
+   "text": "Part six of eight.",
+   "line": "closer6"
+  },
+  {
+   "t0": 60.546,
+   "t1": 62.356,
+   "text": "Full video on YouTube.",
+   "line": "closer6"
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   100000
+  ],
+  [
+   0.0,
+   100000
+  ],
+  [
+   5.515,
+   70000
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "cta_at": 49.018,
+ "cta_frac": 0.777
+}

@@ -98,3 +98,17 @@ episode re-voiced where needed, recompiled and rendered fresh); citation-only fi
 
 ## Kit changes
 See `KIT-CHANGES.md`.
+
+
+## Season 3 build (the Moon film) and how the owner's voice replaces the AI stand-in
+
+Everything downstream of the voice is driven by **`long01/voice/lines.json`**: one entry per spoken line (`ch3_vo`, `ch3_loop`, `ch3_hook`, `closer3`, `cta3_follow`, ...) with its file,
+duration, aligned word times and its sentences (`t0`/`t1`, claim tags). Nothing in the picture code knows a time: `season3/build_timeline.py` turns lines.json + `long01/stages.json`
+(the distance the narration says per chapter) into `long01/out/long.json` and `part1..8.json` (placed clips, captions, the distance counter's keyframes, the eclipse/break-up/ring tracks),
+`season3/engine.js` draws any frame from a timeline, `season3/render_s3.mjs` renders it, `season3/assemble_s3.py` cuts the voice, mixes it with the music and muxes the file.
+
+**A swap needs only this:** (1) cut the owner's recordings (`voice-owner/oo-s3.m4a`, `oo-s3-parts.m4a`, `part-closers.m4a`, `oo-cta.m4a`) into the same line ids (wav per line);
+(2) write them to `long01/voice/wav/NN.wav` in the order of `voice/script_voice.md` (or change `file` in lines.json) and align them (`kits/cinema/voice/align.py`), which rewrites each line's words and `sentences` timing;
+(3) re-run `build_timeline.py` and `assemble_s3.py`; the captions, the counter (it reaches each value when the voice has said it), the part lengths and the CTA position all re-time themselves.
+(4) Re-render only if a part's length or a beat's timing changed enough to matter; the paintings and plates are untouched. Check each part is still 61-75 s and the long film 8:30-9:30.
+Voice pace of the stand-in: Kokoro am_michael at 0.92 (calm).

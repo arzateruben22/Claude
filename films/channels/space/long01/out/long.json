@@ -1,0 +1,1197 @@
+{
+ "name": "long",
+ "mode": "land",
+ "dur": 517.693,
+ "clips": [
+  {
+   "id": "ch1_bridge",
+   "file": "voice/wav/01.wav",
+   "t": 0.4,
+   "dur": 1.433
+  },
+  {
+   "id": "ch1_vo",
+   "file": "voice/wav/03.wav",
+   "t": 2.183,
+   "dur": 49.605
+  },
+  {
+   "id": "ch1_loop",
+   "file": "voice/wav/04.wav",
+   "t": 52.138,
+   "dur": 3.626
+  },
+  {
+   "id": "ch2_vo",
+   "file": "voice/wav/06.wav",
+   "t": 56.114,
+   "dur": 50.148
+  },
+  {
+   "id": "ch2_loop",
+   "file": "voice/wav/07.wav",
+   "t": 106.612,
+   "dur": 3.291
+  },
+  {
+   "id": "ch3_vo",
+   "file": "voice/wav/09.wav",
+   "t": 110.253,
+   "dur": 48.738
+  },
+  {
+   "id": "ch3_loop",
+   "file": "voice/wav/10.wav",
+   "t": 159.341,
+   "dur": 2.569
+  },
+  {
+   "id": "cta3_subscribe",
+   "file": "voice/wav/40.wav",
+   "t": 162.26,
+   "dur": 5.083
+  },
+  {
+   "id": "ch4_vo",
+   "file": "voice/wav/12.wav",
+   "t": 167.693,
+   "dur": 49.754
+  },
+  {
+   "id": "ch4_loop",
+   "file": "voice/wav/13.wav",
+   "t": 217.797,
+   "dur": 4.31
+  },
+  {
+   "id": "ch5_vo",
+   "file": "voice/wav/15.wav",
+   "t": 222.457,
+   "dur": 47.19
+  },
+  {
+   "id": "ch5_loop",
+   "file": "voice/wav/16.wav",
+   "t": 269.997,
+   "dur": 3.871
+  },
+  {
+   "id": "ch6_vo",
+   "file": "voice/wav/18.wav",
+   "t": 274.218,
+   "dur": 46.711
+  },
+  {
+   "id": "ch6_loop",
+   "file": "voice/wav/19.wav",
+   "t": 321.279,
+   "dur": 3.869
+  },
+  {
+   "id": "ch7_vo",
+   "file": "voice/wav/21.wav",
+   "t": 325.498,
+   "dur": 46.936
+  },
+  {
+   "id": "ch7_loop",
+   "file": "voice/wav/22.wav",
+   "t": 372.784,
+   "dur": 3.722
+  },
+  {
+   "id": "ch8_vo",
+   "file": "voice/wav/24.wav",
+   "t": 376.856,
+   "dur": 49.253
+  },
+  {
+   "id": "ch8_loop",
+   "file": "voice/wav/25.wav",
+   "t": 426.459,
+   "dur": 3.182
+  },
+  {
+   "id": "close_vo",
+   "file": "voice/wav/26.wav",
+   "t": 429.991,
+   "dur": 80.037
+  },
+  {
+   "id": "cta4_subscribe",
+   "file": "voice/wav/41.wav",
+   "t": 510.378,
+   "dur": 3.382
+  },
+  {
+   "id": "close_loop",
+   "file": "voice/wav/27.wav",
+   "t": 514.11,
+   "dur": 1.433
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.435,
+   "t1": 2.01,
+   "text": "You're on a beach at night.",
+   "line": "ch1_bridge"
+  },
+  {
+   "t0": 2.203,
+   "t1": 5.703,
+   "text": "The sea is calm, and the Moon hangs over the water.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 5.723,
+   "t1": 8.293,
+   "text": "Right now, it is drifting away from you.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 8.313,
+   "t1": 11.203,
+   "text": "About three point eight centimeters a year.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 11.223,
+   "t1": 13.708,
+   "text": "Tonight, imagine it reverses.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 13.728,
+   "t1": 16.543,
+   "text": "It starts coming closer, and it never stops.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 16.563,
+   "t1": 18.618,
+   "text": "Nothing here is a forecast.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 18.638,
+   "t1": 21.998,
+   "text": "It is a thought experiment, built from real physics.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 22.018,
+   "t1": 24.413,
+   "text": "First, where it really is.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 24.433,
+   "t1": 29.623,
+   "text": "On average, the Moon is about three hundred eighty-four thousand kilometers away.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 29.643,
+   "t1": 32.663,
+   "text": "From the beach, it looks about half a degree wide.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 32.683,
+   "t1": 35.078,
+   "text": "About the same size as the Sun.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 35.098,
+   "t1": 38.398,
+   "text": "Its light takes about a second and a quarter to reach you.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 38.418,
+   "t1": 42.158,
+   "text": "Moonlight is just sunlight, bounced off grey rock.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 42.178,
+   "t1": 45.418,
+   "text": "Same sea, same sand, same Moon.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 45.438,
+   "t1": 47.568,
+   "text": "Only one thing will change.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 47.588,
+   "t1": 50.158,
+   "text": "Keep an eye on the number in the corner.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 50.178,
+   "t1": 51.953,
+   "text": "It only ever goes down.",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 52.228,
+   "t1": 55.988,
+   "text": "And the first thing that changes is not what you'd expect.",
+   "line": "ch1_loop"
+  },
+  {
+   "t0": 56.134,
+   "t1": 57.909,
+   "text": "One quarter of the way in.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 57.929,
+   "t1": 63.759,
+   "text": "Three quarters of today's distance: about two hundred eighty-eight thousand kilometers.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 63.779,
+   "t1": 67.114,
+   "text": "The Moon looks one and a third times wider.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 67.134,
+   "t1": 71.284,
+   "text": "You'd notice it right away, like a coin held a little closer.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 71.304,
+   "t1": 74.214,
+   "text": "Its light now takes about a second to reach you.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 74.234,
+   "t1": 78.064,
+   "text": "Even so, there is one thing the sea already feels.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 78.084,
+   "t1": 81.844,
+   "text": "The Moon's pull on the Earth gets stronger as it comes in.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 81.864,
+   "t1": 86.299,
+   "text": "At this distance, its tidal pull is more than twice what it is today.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 86.319,
+   "t1": 89.109,
+   "text": "Not enough to see on the beach, not yet.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 89.129,
+   "t1": 94.359,
+   "text": "Today, the Sun pulls on the tides too, with about half the Moon's effect.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 94.379,
+   "t1": 99.644,
+   "text": "Bring the Moon closer, and the Sun's share stays the same while the Moon's grows.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 99.664,
+   "t1": 102.434,
+   "text": "So the Moon would take over even more.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 102.454,
+   "t1": 106.444,
+   "text": "But the number keeps falling, and the sea is about to start to move.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 106.672,
+   "t1": 110.142,
+   "text": "Half the distance is where the water starts to climb.",
+   "line": "ch2_loop"
+  },
+  {
+   "t0": 110.278,
+   "t1": 115.018,
+   "text": "Half the distance: about one hundred ninety-two thousand kilometers.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 115.038,
+   "t1": 118.518,
+   "text": "The Moon now looks twice as wide as it does tonight.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 118.538,
+   "t1": 122.568,
+   "text": "Tides come from the difference in the Moon's pull across the Earth.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 122.588,
+   "t1": 125.908,
+   "text": "That difference falls off with the cube of the distance.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 125.928,
+   "t1": 130.438,
+   "text": "So half the distance means about eight times the tidal force.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 130.458,
+   "t1": 136.663,
+   "text": "Here is the idea, not a measured height: the water at your feet starts to climb the beach.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 136.683,
+   "t1": 140.378,
+   "text": "Slowly, in long swells, hours at a time.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 140.398,
+   "t1": 144.228,
+   "text": "The waterline reaches the dry sand, and keeps going.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 144.248,
+   "t1": 147.723,
+   "text": "Imagine the foam line creeping up toward your feet.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 147.743,
+   "t1": 153.763,
+   "text": "It is a slow, patient rise, as if the whole ocean were being lifted from above.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 153.783,
+   "t1": 157.398,
+   "text": "The Moon is no longer a calm light in the sky.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 157.418,
+   "t1": 159.223,
+   "text": "It is something that pulls.",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 159.431,
+   "t1": 162.151,
+   "text": "And the night itself is about to change.",
+   "line": "ch3_loop"
+  },
+  {
+   "t0": 162.28,
+   "t1": 167.55,
+   "text": "Real quick: like and subscribe, if space just got a little stranger for you.",
+   "line": "cta3_subscribe"
+  },
+  {
+   "t0": 167.713,
+   "t1": 170.508,
+   "text": "One hundred fifty thousand kilometers.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 170.528,
+   "t1": 173.243,
+   "text": "The Moon looks about two and a half times wider.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 173.263,
+   "t1": 174.543,
+   "text": "Look around you.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 174.563,
+   "t1": 176.198,
+   "text": "The beach is brighter.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 176.218,
+   "t1": 180.623,
+   "text": "Moonlight falls off with the square of the distance, for the same phase.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 180.643,
+   "t1": 185.593,
+   "text": "So at this distance, a full Moon gives about six and a half times the light.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 185.613,
+   "t1": 188.333,
+   "text": "Your shadow on the sand is sharp.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 188.353,
+   "t1": 190.963,
+   "text": "The wet sand shines like a mirror.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 190.983,
+   "t1": 192.908,
+   "text": "Even the headland is lit.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 192.928,
+   "t1": 195.728,
+   "text": "And the Moon is crossing the sky faster.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 195.748,
+   "t1": 198.428,
+   "text": "Closer orbits are faster orbits.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 198.448,
+   "t1": 203.378,
+   "text": "At this distance, one lap takes about seven days, not twenty-seven.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 203.398,
+   "t1": 208.683,
+   "text": "The water has a silver road across it, wider than any you have seen.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 208.703,
+   "t1": 214.558,
+   "text": "Night is not as dark as it used to be, and it is about to get a different kind of strange.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 214.578,
+   "t1": 217.623,
+   "text": "By now, the Moon looks far bigger than the Sun.",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 217.817,
+   "t1": 222.287,
+   "text": "Which means the next time they line up, something happens in the daytime.",
+   "line": "ch4_loop"
+  },
+  {
+   "t0": 222.477,
+   "t1": 224.897,
+   "text": "One hundred thousand kilometers.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 224.917,
+   "t1": 228.407,
+   "text": "The Moon is nearly four times wider than tonight.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 228.427,
+   "t1": 232.652,
+   "text": "The Sun and the Moon look about the same size from Earth today.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 232.672,
+   "t1": 236.582,
+   "text": "That is why a total solar eclipse is possible at all.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 236.602,
+   "t1": 242.637,
+   "text": "Today, a total solar eclipse happens somewhere on Earth about every year and a half.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 242.657,
+   "t1": 246.417,
+   "text": "So when they line up, its shadow on Earth is wider.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 246.437,
+   "t1": 249.092,
+   "text": "And eclipses would be far more common.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 249.112,
+   "t1": 253.692,
+   "text": "Not every month, though, because the Moon's orbit is tilted by a few degrees.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 253.712,
+   "t1": 254.912,
+   "text": "But often.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 254.932,
+   "t1": 258.872,
+   "text": "The sky goes dim, and the stars come out in the daytime.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 258.892,
+   "t1": 261.812,
+   "text": "The air cools, even if only a little.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 261.832,
+   "t1": 266.922,
+   "text": "A long dark noon, with a faint glow around a huge black disc.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 266.942,
+   "t1": 269.827,
+   "text": "And then you look at the Moon again, and it has moved.",
+   "line": "ch5_vo"
+  },
+  {
+   "t0": 270.032,
+   "t1": 270.657,
+   "text": "Closer.",
+   "line": "ch5_loop"
+  },
+  {
+   "t0": 270.677,
+   "t1": 271.647,
+   "text": "Faster.",
+   "line": "ch5_loop"
+  },
+  {
+   "t0": 271.667,
+   "t1": 274.087,
+   "text": "And the ground under you is feeling it too.",
+   "line": "ch5_loop"
+  },
+  {
+   "t0": 274.248,
+   "t1": 276.513,
+   "text": "Seventy thousand kilometers.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 276.533,
+   "t1": 280.428,
+   "text": "The Moon is about five and a half times wider than tonight.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 280.448,
+   "t1": 284.873,
+   "text": "Its tidal pull is more than a hundred sixty times today's.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 284.893,
+   "t1": 287.908,
+   "text": "The sea is not the only thing that moves.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 288.093,
+   "t1": 294.418,
+   "text": "The solid Earth already rises and falls a little with the Moon, tens of centimeters a day.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 294.438,
+   "t1": 297.468,
+   "text": "With far more pull, it would flex far more.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 297.488,
+   "t1": 301.828,
+   "text": "What that would do to faults and volcanoes, this film cannot tell you.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 301.848,
+   "t1": 310.288,
+   "text": "In real life, tides are why the Moon drifts away: they steal a little of Earth's spin and hand it to the Moon's orbit.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 310.308,
+   "t1": 314.853,
+   "text": "To make it come closer, our thought experiment has to break that rule.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 314.873,
+   "t1": 319.493,
+   "text": "That is one more reason this is a thought experiment, not a forecast.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 319.513,
+   "t1": 321.108,
+   "text": "And the number keeps falling.",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 321.299,
+   "t1": 325.369,
+   "text": "Because soon, the Moon will rise from the wrong side of the sky.",
+   "line": "ch6_loop"
+  },
+  {
+   "t0": 325.528,
+   "t1": 327.678,
+   "text": "Fifty thousand kilometers.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 327.698,
+   "t1": 331.123,
+   "text": "The Moon is nearly eight times wider than tonight.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 331.143,
+   "t1": 334.883,
+   "text": "The pull is about four hundred fifty times today's.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 334.903,
+   "t1": 337.888,
+   "text": "One lap now takes about a day and a quarter.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 337.908,
+   "t1": 340.918,
+   "text": "That is close to how fast the Earth turns.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 340.938,
+   "t1": 346.718,
+   "text": "A moon that orbits slower than the Earth turns rises in the east, like today.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 346.738,
+   "t1": 351.148,
+   "text": "A moon that orbits faster than the Earth turns rises in the west.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 351.168,
+   "t1": 355.308,
+   "text": "The line between them is about forty-two thousand kilometers.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 355.328,
+   "t1": 358.823,
+   "text": "In this picture its orbit is right over the equator.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 358.843,
+   "t1": 360.018,
+   "text": "Watch the number.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 360.038,
+   "t1": 361.798,
+   "text": "Forty-two thousand.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 361.818,
+   "t1": 365.113,
+   "text": "The Moon hangs in your sky, almost still.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 365.133,
+   "t1": 368.528,
+   "text": "Then it begins to slide the wrong way across it.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 368.548,
+   "t1": 370.888,
+   "text": "The Moon rises in the west.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 370.908,
+   "t1": 372.628,
+   "text": "But the number keeps falling.",
+   "line": "ch7_vo"
+  },
+  {
+   "t0": 372.854,
+   "t1": 376.714,
+   "text": "And there is a line ahead that nothing can hold together past.",
+   "line": "ch7_loop"
+  },
+  {
+   "t0": 376.891,
+   "t1": 379.471,
+   "text": "Thirty-five thousand kilometers.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 379.491,
+   "t1": 379.531,
+   "text": "Thirty thousand.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 379.551,
+   "t1": 381.856,
+   "text": "Twenty-five.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 381.876,
+   "t1": 382.976,
+   "text": "Twenty.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 382.996,
+   "t1": 388.401,
+   "text": "There is a distance where tides pull harder on a body than its own gravity holds it together.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 388.421,
+   "t1": 390.506,
+   "text": "It is called the Roche limit.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 390.526,
+   "t1": 398.136,
+   "text": "For a Moon like ours around Earth, it is around eighteen thousand kilometers, if the Moon behaves like a fluid.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 398.156,
+   "t1": 401.921,
+   "text": "Around nine and a half thousand, if it is perfectly rigid.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 401.941,
+   "t1": 405.036,
+   "text": "A real Moon sits somewhere in between.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 405.056,
+   "t1": 410.071,
+   "text": "At eighteen thousand kilometers, it looks more than twenty times wider than tonight.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 410.091,
+   "t1": 415.746,
+   "text": "It is at least as wide as a fist held out at arm's length, and wider still overhead.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 415.766,
+   "t1": 418.061,
+   "text": "It is not a Moon you look at any more.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 418.081,
+   "t1": 421.801,
+   "text": "It is a wall of grey, and its surface is straining.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 421.821,
+   "t1": 423.161,
+   "text": "Eighteen thousand.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 423.181,
+   "t1": 424.441,
+   "text": "Seventeen.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 424.461,
+   "t1": 426.306,
+   "text": "The tide is enormous.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 426.554,
+   "t1": 429.829,
+   "text": "And then the Moon does something no Moon should survive.",
+   "line": "ch8_loop"
+  },
+  {
+   "t0": 430.066,
+   "t1": 431.636,
+   "text": "And then it comes apart.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 431.656,
+   "t1": 433.181,
+   "text": "Not an explosion.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 433.201,
+   "t1": 434.411,
+   "text": "A stretch.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 434.431,
+   "t1": 441.066,
+   "text": "The side facing you is pulled harder than the side facing away, until the Moon cannot hold together.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 441.086,
+   "t1": 444.091,
+   "text": "Rock and dust spread along its old orbit.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 444.111,
+   "t1": 446.806,
+   "text": "Not all of it would stay in one band.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 446.826,
+   "t1": 455.091,
+   "text": "Material inside the Roche limit tends to spread into rings, while material outside tends to clump into small moons.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 455.111,
+   "t1": 458.666,
+   "text": "How fast any of that happens, this film cannot tell you.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 458.686,
+   "t1": 463.051,
+   "text": "Over time, material like that can flatten into a ring around a planet.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 463.071,
+   "t1": 464.496,
+   "text": "Tonight you look up.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 464.516,
+   "t1": 466.001,
+   "text": "There is no Moon.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 466.021,
+   "t1": 470.706,
+   "text": "A thin, bright band crosses the sky from horizon to horizon.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 470.726,
+   "t1": 473.421,
+   "text": "That is how a ring looks from the ground.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 473.441,
+   "t1": 479.701,
+   "text": "Saturn's rings are the famous example, though they are made mostly of water ice, not rock.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 479.721,
+   "t1": 483.176,
+   "text": "And the night is darker now, with no moonlight at all.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 483.196,
+   "t1": 488.801,
+   "text": "Tides would not vanish: the Sun would still pull, at about half the Moon's old strength.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 488.821,
+   "t1": 492.536,
+   "text": "And with no Moon, there would be no solar eclipses at all.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 492.556,
+   "t1": 497.401,
+   "text": "The real Moon is still drifting away, three point eight centimeters a year.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 497.421,
+   "t1": 503.406,
+   "text": "We know because laser light bounces off mirrors the Apollo astronauts left behind.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 503.426,
+   "t1": 505.776,
+   "text": "Every source is in the description.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 505.796,
+   "t1": 507.871,
+   "text": "Tonight's Moon is fine.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 507.891,
+   "t1": 510.241,
+   "text": "Thanks for watching this thought experiment.",
+   "line": "close_vo"
+  },
+  {
+   "t0": 510.473,
+   "t1": 513.988,
+   "text": "If you want one more orbit, tap like and subscribe.",
+   "line": "cta4_subscribe"
+  },
+  {
+   "t0": 514.145,
+   "t1": 515.72,
+   "text": "You're on a beach at night.",
+   "line": "close_loop"
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   384400
+  ],
+  [
+   62.434,
+   288300
+  ],
+  [
+   113.773,
+   192200
+  ],
+  [
+   169.213,
+   150000
+  ],
+  [
+   223.657,
+   100000
+  ],
+  [
+   275.258,
+   70000
+  ],
+  [
+   326.458,
+   50000
+  ],
+  [
+   354.058,
+   42164
+  ],
+  [
+   372.378,
+   40000
+  ],
+  [
+   378.296,
+   35000
+  ],
+  [
+   381.816,
+   30000
+  ],
+  [
+   382.316,
+   25000
+  ],
+  [
+   382.816,
+   20000
+  ],
+  [
+   423.176,
+   18000
+  ],
+  [
+   424.191,
+   17000
+  ],
+  [
+   506.196,
+   17000
+  ],
+  [
+   507.996,
+   384400
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ],
+   [
+    254.732,
+    0
+   ],
+   [
+    256.532,
+    1
+   ],
+   [
+    266.842,
+    1
+   ],
+   [
+    268.54200000000003,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ],
+   [
+    429.96599999999995,
+    1
+   ],
+   [
+    431.366,
+    0
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ],
+   [
+    429.96599999999995,
+    0
+   ],
+   [
+    431.366,
+    1
+   ],
+   [
+    458.58599999999996,
+    1
+   ],
+   [
+    461.286,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ],
+   [
+    458.58599999999996,
+    0
+   ],
+   [
+    461.286,
+    1
+   ],
+   [
+    505.596,
+    1
+   ],
+   [
+    507.796,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    1
+   ],
+   [
+    1.5,
+    1
+   ],
+   [
+    3.2,
+    0
+   ],
+   [
+    505.596,
+    0
+   ],
+   [
+    507.796,
+    1
+   ]
+  ]
+ }
+}

@@ -1,0 +1,261 @@
+{
+ "name": "part8",
+ "mode": "port",
+ "dur": 63.751,
+ "clips": [
+  {
+   "id": "ch8_hook",
+   "file": "voice/wav/23.wav",
+   "t": 0.15,
+   "dur": 2.859
+  },
+  {
+   "id": "ch8_vo",
+   "file": "voice/wav/24.wav",
+   "t": 3.359,
+   "dur": 44.922,
+   "from": 0.0
+  },
+  {
+   "id": "cta4_follow",
+   "file": "voice/wav/39.wav",
+   "t": 48.581,
+   "dur": 2.992
+  },
+  {
+   "id": "ch8_vo",
+   "file": "voice/wav/24.wav",
+   "t": 51.873,
+   "dur": 4.331,
+   "from": 44.922
+  },
+  {
+   "id": "ch8_loop",
+   "file": "voice/wav/25.wav",
+   "t": 56.554,
+   "dur": 3.182
+  },
+  {
+   "id": "closer8",
+   "file": "voice/wav/35.wav",
+   "t": 60.086,
+   "dur": 2.715
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.17,
+   "t1": 3.2,
+   "text": "There is a distance no moon can survive.",
+   "line": "ch8_hook"
+  },
+  {
+   "t0": 3.394,
+   "t1": 5.974,
+   "text": "Thirty-five thousand kilometers.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 5.994,
+   "t1": 6.034,
+   "text": "Thirty thousand.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 6.054,
+   "t1": 8.359,
+   "text": "Twenty-five.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 8.379,
+   "t1": 9.479,
+   "text": "Twenty.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 9.499,
+   "t1": 14.904,
+   "text": "There is a distance where tides pull harder on a body than its own gravity holds it together.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 14.924,
+   "t1": 17.009,
+   "text": "It is called the Roche limit.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 17.029,
+   "t1": 24.639,
+   "text": "For a Moon like ours around Earth, it is around eighteen thousand kilometers, if the Moon behaves like a fluid.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 24.659,
+   "t1": 28.424,
+   "text": "Around nine and a half thousand, if it is perfectly rigid.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 28.444,
+   "t1": 31.539,
+   "text": "A real Moon sits somewhere in between.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 31.559,
+   "t1": 36.574,
+   "text": "At eighteen thousand kilometers, it looks more than twenty times wider than tonight.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 36.594,
+   "t1": 42.249,
+   "text": "It is at least as wide as a fist held out at arm's length, and wider still overhead.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 42.269,
+   "t1": 44.564,
+   "text": "It is not a Moon you look at any more.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 44.584,
+   "t1": 48.489,
+   "text": "It is a wall of grey, and its surface is straining.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 48.676,
+   "t1": 51.791,
+   "text": "If you want one more orbit, tap like and follow.",
+   "line": "cta4_follow"
+  },
+  {
+   "t0": 51.916,
+   "t1": 53.256,
+   "text": "Eighteen thousand.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 53.276,
+   "t1": 54.536,
+   "text": "Seventeen.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 54.556,
+   "t1": 56.401,
+   "text": "The tide is enormous.",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 56.649,
+   "t1": 59.924,
+   "text": "And then the Moon does something no Moon should survive.",
+   "line": "ch8_loop"
+  },
+  {
+   "t0": 60.106,
+   "t1": 61.201,
+   "text": "Part eight of eight.",
+   "line": "closer8"
+  },
+  {
+   "t0": 61.221,
+   "t1": 62.976,
+   "text": "Full video on YouTube.",
+   "line": "closer8"
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   40000
+  ],
+  [
+   0.0,
+   40000
+  ],
+  [
+   5.724,
+   35000
+  ],
+  [
+   5.724,
+   35000
+  ],
+  [
+   6.224,
+   30000
+  ],
+  [
+   6.224,
+   30000
+  ],
+  [
+   8.109,
+   25000
+  ],
+  [
+   8.109,
+   25000
+  ],
+  [
+   9.229,
+   20000
+  ],
+  [
+   9.229,
+   20000
+  ],
+  [
+   53.006,
+   18000
+  ],
+  [
+   53.006,
+   18000
+  ],
+  [
+   54.286,
+   17000
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "cta_at": 48.581,
+ "cta_frac": 0.762
+}

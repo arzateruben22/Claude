@@ -1,0 +1,6 @@
+voice/wav/
+voice/cut/
+out/*-audio/
+out/*-picture.mp4
+out/.*
+out/*.mp4

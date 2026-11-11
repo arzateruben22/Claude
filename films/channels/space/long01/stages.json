@@ -1,0 +1,12 @@
+{
+ "_comment": "Distance the narration says, per chapter: the counter reaches each value when the voice finishes saying it (match = start of the sentence). start = distance at the chapter's first line. Distances come from calc.py / the script; nothing here is read from the picture code.",
+ "ch1": {"start": 384400, "keys": []},
+ "ch2": {"start": 384400, "keys": [{"match": "Three quarters of today's distance", "km": 288300}]},
+ "ch3": {"start": 288300, "keys": [{"match": "Half the distance: about one hundred ninety-two", "km": 192200}]},
+ "ch4": {"start": 192200, "keys": [{"match": "One hundred fifty thousand kilometers", "km": 150000}]},
+ "ch5": {"start": 150000, "keys": [{"match": "One hundred thousand kilometers", "km": 100000}]},
+ "ch6": {"start": 100000, "keys": [{"match": "Seventy thousand kilometers", "km": 70000}]},
+ "ch7": {"start": 70000, "keys": [{"match": "Fifty thousand kilometers", "km": 50000}, {"match": "The line between them is about forty-two thousand", "km": 42164}, {"match": "But the number keeps falling", "km": 40000}]},
+ "ch8": {"start": 40000, "keys": [{"match": "Thirty-five thousand", "km": 35000}, {"match": "Thirty thousand", "km": 30000}, {"match": "Twenty-five", "km": 25000}, {"match": "Twenty.", "km": 20000}, {"match": "Eighteen thousand", "km": 18000}, {"match": "Seventeen", "km": 17000}]},
+ "close": {"start": 17000, "keys": []}
+}

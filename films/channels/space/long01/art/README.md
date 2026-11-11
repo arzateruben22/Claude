@@ -28,3 +28,24 @@ Closer. It Won't Stop." is retired: it reads like a real event. Regenerate the r
 The owner is making a Moon-free beach plate, a flooded-beach plate and the Moon alone (real near side, on black), so the
 Moon is composited in code at each stage's exact angular size from calc.py, and the water level animates between the two
 plates. Extra paintings coming: a daytime eclipse, the break-up as a smooth arc along the orbit, and the ring across the sky.
+
+
+## Plates the engine reads (fixed file names; a new painting dropped over any name replaces only that scene)
+
+`season3/make_plates.py` builds every code-made plate below from the owner's three paintings; `season3/engine.js` reads them by name. To swap one:
+paint it at 2560x1440 (16:9) and/or 1080x1920 (9:16), save it over the name, and re-render only the beats that show it.
+
+| File | What it is | Shown at |
+|---|---|---|
+| `plate-beach.png` / `plate-beach-9x16.png` | the "tonight" beach with its painted Moon painted out (the Moon is its own layer) | every stage |
+| `plate-flood.png` / `plate-flood-9x16.png` | the same beach with the sea over the sand; the engine wipes it up the beach as the tide climbs | ch3-ch8 |
+| `moon-disc.png`, `moon-disc-hi.png` | the Moon alone with the real near-side pattern of dark seas (Procellarum, Imbrium, Serenitatis, Tranquillitatis, Crisium...), drawn at each stage's exact angular width | every stage with a Moon |
+| `eclipse.png` | the faint corona around the dark disc (the engine draws the disc: the Sun is fully hidden behind a Moon ~4x wider) | ch5 |
+| `plate-breakup.png` | `moon-03-breakup` upscaled: the Moon stretched into an arc along its orbit (not an explosion) | long film only, the payoff |
+| `ring.png` | the thin silver ring across the sky, horizon to horizon (16:9 only; the ending is long-film only) | long film only |
+| `plate-tonight.png` | `moon-01-tonight` upscaled: the opening and the last shot (the loop) | long film |
+| `plate-close.png` | `moon-02-close` upscaled: the Moon ~8-10x wider; the long-film thumbnail and the Part 7 cover | thumbnail / covers |
+
+The 9:16 parts are their own composition: the painting sits in the middle of the frame and the sky and sea are extended in code (`portrait()` in make_plates.py);
+the break-up and the ring have no 9:16 version because the ending stays in the long film.
+All three paintings are AI illustrations (the owner's, made with ChatGPT): say so in every description.
