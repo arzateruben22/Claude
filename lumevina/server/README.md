@@ -272,7 +272,7 @@ again updates names but keeps her stock, prices and hidden flags).
 1. The cart posts to `create-checkout`: it re-prices everything from
    `products` (never the browser's prices), refuses more than is on the
    shelf, saves a `pending` order and opens Stripe Checkout. Shipping is
-   $8, free over $75 (as on the site); pickup is free. Gift certificates
+   $8 an order, free for members (as on the site); pickup is free. Gift certificates
    are $25–$1,000, not taxed.
 2. Stripe sends the buyer back to `SITE_URL?order=done`; the site clears
    the cart and says thank you.

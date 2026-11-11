@@ -113,10 +113,12 @@
     }, 0);
     return Math.round(retail * rate * 100) / 100;
   };
-  /* Shipping for shelf products: free for members, otherwise $8 and free
-     over $75 (after any member discount). Pickup at a visit is always free.
+  /* Shipping for shelf products: $8 an order, free for Glow members (v3).
+     Pickup at a visit is always free. FREE_OVER = 0: no free-shipping line
+     (Evelyn, Nov 11: free shipping only as a membership perk); a number
+     brings one back (free from that subtotal, after any member discount).
      SHIP_COST is what a small box really costs (postage + packaging), for the books. */
-  var SHIP_FEE = 8, FREE_OVER = 75, SHIP_COST = 9;
+  var SHIP_FEE = 8, FREE_OVER = 0, SHIP_COST = 9;
   var retailSubtotal = function () {
     return Object.keys(cart).reduce(function (sum, id) {
       return id.indexOf("retail-") === 0 ? sum + cart[id].price * cart[id].qty : sum;
@@ -137,7 +139,7 @@
   var shipping = function () {
     if (!cartHasRetail() || delivery() !== "ship") return { fee: 0, why: delivery() === "pickup" ? "pickup" : "" };
     if (isMember()) return { fee: 0, why: "member" };
-    if (retailSubtotal() - memberOff() >= FREE_OVER) return { fee: 0, why: "over" };
+    if (FREE_OVER && retailSubtotal() - memberOff() >= FREE_OVER) return { fee: 0, why: "over" };
     return { fee: SHIP_FEE, why: "" };
   };
   var orderTotal = function () { return subtotal() - memberOff() + shipping().fee; };
@@ -545,13 +547,14 @@
     if (cartHasRetail()) {
       var sh = shipping();
       addLine("co-ship-line", delivery() === "pickup" ? "Pickup at your visit" :
-        sh.why === "member" ? "Shipping · free for members" : sh.why === "over" ? "Shipping · free over $75" : "Shipping",
+        sh.why === "member" ? "Shipping · free for members" : sh.why === "over" ? "Shipping · free over $" + FREE_OVER : "Shipping",
         sh.fee ? money(sh.fee) : "Free");
       /* the note under "Ship it to me" says what this cart gets */
       var note = modal.querySelector(".ship-note");
-      var member = isMember(), over = retailSubtotal() - off >= FREE_OVER;
-      note.textContent = member ? "Free: a member perk" : over ? "Free on orders over $75" :
-        (window.LumevinaMembership ? "$8 · free over $75, or free for members" : "$8 · free on orders over $75");
+      var member = isMember(), over = !!FREE_OVER && retailSubtotal() - off >= FREE_OVER;
+      var base = "$" + SHIP_FEE + (FREE_OVER ? " · free on orders over $" + FREE_OVER : " an order");
+      note.textContent = member ? "Free: a member perk" : over ? "Free on orders over $" + FREE_OVER :
+        (window.LumevinaMembership ? base + (FREE_OVER ? ", or free for members" : " · free for members") : base);
       note.classList.toggle("is-free", member || over);
     }
     totalEl.textContent = money(orderTotal());
@@ -916,7 +919,7 @@
           var shipNow = shipping();
           if (cartHasRetail() && delivery() === "ship") {
             var shipLabel = shipNow.why === "member" ? "Shipping · member, free" :
-              shipNow.why === "over" ? "Shipping · free over $75" : "Shipping";
+              shipNow.why === "over" ? "Shipping · free over $" + FREE_OVER : "Shipping";
             var SH = window.LumevinaShip;
             if (SH) {
               var shipRec = SH.add({ source: "shop", order: result.id, name: checkoutForm.elements.name.value.trim(),

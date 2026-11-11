@@ -27,7 +27,9 @@ import { isLive, memberFor, PLANS } from "../_shared/membership.ts";
 import { approvedFor, mayBuy } from "../_shared/consults.ts";
 import { tooMany } from "../_shared/guard.ts";
 
-const SHIP_CENTS = 800, FREE_OVER_CENTS = 7500;           // same rule as js/cart.js
+// $8 an order; members ship free. FREE_OVER_CENTS = 0: no free-shipping line
+// (Evelyn, Nov 11). Same rule as js/cart.js.
+const SHIP_CENTS = 800, FREE_OVER_CENTS = 0;
 const GIFT_MIN = 25, GIFT_MAX = 1000;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TAX_GOODS = "txcd_99999999", TAX_NONE = "txcd_00000000", TAX_SHIPPING = "txcd_92010001", TAX_SERVICES = "txcd_20030000";   // services: the online consult
@@ -101,7 +103,8 @@ Deno.serve(async (req) => {
   const retailCents = items.reduce((s, i) => s + i.price_cents * i.qty, 0);
   const physicalCents = physical.reduce((s, i) => s + i.price_cents * i.qty, 0);
   const delivery = !physical.length ? "none" : body.delivery === "pickup" ? "pickup" : "ship";
-  const shippingCents = delivery === "ship" && !rate && physicalCents < FREE_OVER_CENTS ? SHIP_CENTS : 0;
+  const freeOver = FREE_OVER_CENTS > 0 && physicalCents >= FREE_OVER_CENTS;
+  const shippingCents = delivery === "ship" && !rate && !freeOver ? SHIP_CENTS : 0;
   const subtotal = retailCents + gifts.reduce((s, g) => s + g.amount_cents, 0);
 
   // ── the pending order ──
@@ -143,7 +146,7 @@ Deno.serve(async (req) => {
     f.set("shipping_options[0][shipping_rate_data][type]", "fixed_amount");
     f.set("shipping_options[0][shipping_rate_data][fixed_amount][amount]", String(shippingCents));
     f.set("shipping_options[0][shipping_rate_data][fixed_amount][currency]", "usd");
-    f.set("shipping_options[0][shipping_rate_data][display_name]", shippingCents ? "Shipping (USPS)" : rate ? "Free shipping (members)" : "Free shipping (orders over $75)");
+    f.set("shipping_options[0][shipping_rate_data][display_name]", shippingCents ? "Shipping (USPS)" : rate ? "Free shipping (members)" : `Free shipping (orders over $${FREE_OVER_CENTS / 100})`);
     if (tax) {
       f.set("shipping_options[0][shipping_rate_data][tax_behavior]", "exclusive");
       f.set("shipping_options[0][shipping_rate_data][tax_code]", TAX_SHIPPING);

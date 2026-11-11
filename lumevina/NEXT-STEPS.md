@@ -48,10 +48,8 @@ The look: warm beige, white and classic black (tokens at the top of `css/styles.
 
 ## Still to confirm with Evelyn
 
-- The invisiClear patches price ($10, partly cut off in her screenshot).
-- How many Retinal B3 Serums she has.
-- The $83.20 Barrier Repair Cream price (the 4 fl oz Elite tube).
-- Shipping: her inventory has a $6.00 shipping fee; the site charges $8, free over $75.
+Answered Nov 11 in her launch questions (https://claude.ai/artifact/XfuMJKhS4Fm8fdYF5fgYwk; EVELYN-NOTES.md → "Her launch answers"): invisiClear $10, Retinal B3 count 2, Barrier Repair Cream $104, shipping $8 with no free-shipping minimum (members ship free).
+
 - The policies say cash is preferred, but she didn't pick cash in her answers.
 - Which products need a consultation before purchase.
 

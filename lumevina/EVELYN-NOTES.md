@@ -395,3 +395,31 @@ Ten new texture photos (made with ChatGPT in the site's palette, no people, no t
 ## Questions before launch, as a page she fills in (Nov 11)
 
 `docs/launch-questions.html` is the pre-launch checklist as a page Evelyn can fill in on her phone, published at https://claude.ai/artifact/XfuMJKhS4Fm8fdYF5fgYwk. It has 24 questions, quickest first: yes or no, quick facts, short tasks (with the brand email ready to copy) and the launch session times. Most answers are one tap, and notes are optional. Answers save as she goes, one document per question in the page's `answers` collection, so they reach the owner's copy live. On a link that can't save online, answers stay on her phone, and **Copy all my answers** gives her the text to send. To change a question, edit the file and republish the same path.
+
+## Her launch answers (Nov 11)
+
+From her launch questions page (https://claude.ai/artifact/XfuMJKhS4Fm8fdYF5fgYwk), as she answered them, and what changed:
+
+| Question | Her answer | What changed |
+|---|---|---|
+| Shipping, $8 and free over $75? | "No free shipping, unless they have membership perks." | $8 an order, no free-shipping minimum; Glow members (v3) still ship free; pickup free. Cart, checkout function, page copy, chat, reminder email, ad and shipping kit. |
+| Barrier Repair Cream $83.20? | Different price: $104 | $104 on the site, the server seed and the product feeds. |
+| invisiClear $10? | That's right | Nothing to change. |
+| How many Retinal B3 Serums? | 2 | Counted at 2 (`counted: true` in js/catalog.js keeps her own count while the rest of the shelf isn't counted). |
+| Older sunscreens still sold? | Yes, keep them | They stay on the shelf. |
+| Seller's permit? | Yes | GO-LIVE step 4b. |
+| LA business tax certificate covers retail? | Not sure | Asked again as a short task on her page. |
+| Own a domain? | No, OK to buy one in her name | Bought in the launch session (GO-LIVE step 7). |
+| Stripe account? | Yes | Use hers in the launch session. |
+| Booking? | Keep GlossGenius for now | Already so (`booking.mode: "glossgenius"`). |
+| Deposits for facials, peels, ProCell online? | Yes, "but clients aren't booking through this website yet" | Nothing yet (booking stays on GlossGenius); the amount is a follow-up on her page, set in js/services.js when website booking turns on. |
+| WELCOME10? | Yes | Set up the code in Stripe at launch (GO-LIVE). |
+| Pay later? | Yes | Checkout says Klarna, Afterpay or Affirm; switch them on in Stripe at launch. |
+| Text reminders? | Later | Twilio stays off. |
+| Order alerts email | Given | Kept out of this public repo: it goes in the `OWNER_EMAIL` server secret at launch. |
+| ProCell: $350 single, 4 for $1,100 (first 10 clients)? | Both right | Nothing to change. |
+| Google review link | Given | The `REVIEW_URL` server secret at launch (the "how was your visit" email). |
+| Studio address for confirmations | Given | The `STUDIO_ADDRESS` server secret at launch. Kept out of this public repo; the site keeps saying Woodland Hills. |
+| A bigger Dew Drop photo | She'll send one | Swap `img/products/` when it arrives. |
+
+Still waiting on: the Dew Drop photo, the brand emails, insurance, the Skin Playbook, launch session times, ad accounts, and the two follow-ups (deposit amount, the LA certificate).

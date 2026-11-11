@@ -30,7 +30,7 @@ Everything here is ready to paste into Ads Manager and Google Ads. Budgets are s
 - Creatives: `pickup-square`, `pickup-story`, `shelf-square`, `shelf-story`.
 - Primary text (3 variants; keep under 125 characters where it shows above the fold):
   1. The skincare from Evelyn's treatment room, now online. Pick it up free at your facial in Woodland Hills, or we ship.
-  2. Face Reality, GlyMed Plus, Mixi, Circadia: the professional shelf, for home. Free pickup at the studio. $8 shipping, free over $75.
+  2. Face Reality, GlyMed Plus, Mixi, Circadia: the professional shelf, for home. Free pickup at the studio. $8 shipping.
   3. Running low on your cleanser? Reorder from Evelyn's shelf and collect it at your next visit.
 - Headline (40 chars): "Her shelf, online" · "Free pickup in Woodland Hills" · "Professional skincare, for home"
 - Description: "Lumevina Aesthetics Spa · Woodland Hills" · Call to action: Shop Now.

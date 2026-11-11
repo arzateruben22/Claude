@@ -85,8 +85,8 @@ smallest size: $8.39 nearby and $14.36 across the country. For a small box over 
 usually the cheaper option; Pirate Ship shows both.
 
 **The $8 fee.** Most orders go to the LA area: a mailer is about $7.33 all in and a small box about $8
-to $9.50, so $8 roughly breaks even. Members and orders over $75 ship free, by design. If the Shipping
-card's monthly average stays above $9, raise `SHIP_FEE` to 9 or `FREE_OVER` to 85 in `js/cart.js`.
+to $9.50, so $8 roughly breaks even. Members ship free, by design; there is no free-shipping minimum (Evelyn, Nov 11). If the Shipping
+card's monthly average stays above $9, raise `SHIP_FEE` to 9 in `js/cart.js` (and `SHIP_CENTS` in `functions/create-checkout`).
 
 ## Good to know
 

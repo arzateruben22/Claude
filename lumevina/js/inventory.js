@@ -49,7 +49,7 @@
       var s = saved[c.id] || {};
       var p = {};
       Object.keys(c).forEach(function (k) { p[k] = c[k]; });
-      if (notCounting()) p.stock = null;   // the guide's counts came from screenshots: not trusted yet
+      if (notCounting() && !c.counted) p.stock = null;   // the guide's counts came from screenshots: not trusted yet (a count Evelyn gave herself stands)
       if (s.stock !== undefined) p.stock = s.stock;
       if (s.price != null && s.priceSet) { p.price = s.price; p.priceSet = true; }
       if (s.cost != null) p.cost = s.cost;

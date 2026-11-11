@@ -183,6 +183,7 @@
       { id: "email", q: "Which email should order alerts and the morning summary go to?", type: "text", input: "email", placeholder: "Your email address" }
     ] },
     { id: "facts", title: "Quick facts", sub: "A few minutes. Prices and details to check before the shop opens.", qs: [
+      { id: "depamt", q: "Follow-up: how much should the deposit be for facials, peels and ProCell, once booking moves to the website?", hint: "You said yes to deposits. Nothing changes until booking moves here.", type: "one", opts: ["$30", "$50", "25% of the service"], note: "Or another amount (optional)" },
       { id: "invisiclear", q: "invisiClear patches: $10?", type: "one", opts: ["That's right", "Different price"], note: "The right price (optional)" },
       { id: "barrier", q: "GlyMed Plus Barrier Repair Cream: $83.20?", type: "one", opts: ["That's right", "Different price"], note: "The right price (optional)" },
       { id: "spf", q: "Are the older sunscreens still for sale?", type: "one", opts: ["Yes, keep them", "No, take them off", "Some of them"], note: "Which ones? (optional)" },
@@ -194,6 +195,7 @@
     ] },
     { id: "tasks", title: "Short tasks", sub: "Ten to thirty minutes each, whenever you have a moment.", qs: [
       { id: "brands", q: "Email the brands: may you sell their products on your own website?", hint: "Send it from your email to each rep. Circadia may say no to online sales; then its one product stays in the studio only.", type: "many", label: "Sent to", opts: ["Face Reality", "GlyMed Plus", "Mixi", "Circadia"], email: true, note: "Any replies? Paste them here (optional)", area: true },
+      { id: "lacheck", q: "Follow-up: does your City of LA business tax certificate cover selling products?", hint: "You weren't sure. It's printed on the certificate, or the LA Office of Finance can tell you.", type: "one", opts: ["It covers it", "It doesn't", "Haven't checked yet"], note: "Note (optional)" },
       { id: "insurance", q: "Call your liability insurance: are product sales covered?", hint: "Usually a ten-minute call.", type: "one", opts: ["Covered", "Not covered", "Haven't called yet"], note: "What did they say? (optional)" },
       { id: "playbook", q: "10 minutes in the Skin Playbook", hint: "Tap “Talk it through.” Every answer means the chat replies in your words instead of passing the question to you.", type: "one", opts: ["Done", "Not yet"], link: { href: PLAYBOOK, text: "Open the Skin Playbook" } }
     ] },

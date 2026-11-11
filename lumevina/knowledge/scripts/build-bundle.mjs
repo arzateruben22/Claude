@@ -101,7 +101,7 @@ const factsFor = (v) => [
   "Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romero. Every treatment is with her.",
   BOOKING[v],
   "Her menu: every treatment, with prices, times and her own descriptions, is under \"Her treatments, in her words\" below. " + NOT_OFFERED,
-  "Shop: her professional skincare is sold on the website, shipped ($8, free on orders over $75) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.",
+  "Shop: her professional skincare is sold on the website, shipped ($8 an order) or picked up free at a visit. Out-of-stock products can be requested on the site and she orders them in.",
   "Contact: the website's Contact form (replies within two days), email Lumevina.aesthetics@gmail.com, or Instagram @lumevina.",
   ...(v === "v3" ? [MEMBERSHIP_V3, POINTS_V3, ...(SCHOOL_ON ? [SCHOOL, "Not offered: lashes, brows or nails."] : ["Not offered: lashes, brows, nails, or an online course."])]
     : [...(SCHOOL_ON ? [SCHOOL] : []), "Not offered: lashes, brows, nails, memberships" + (SCHOOL_ON ? "" : ", an online course") + " or a rewards program (those are paused)."]),

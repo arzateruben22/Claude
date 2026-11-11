@@ -24,7 +24,7 @@ const photo = (id) => { const p = CAT.products.find((x) => x.id === id); return 
 
 // ── the concepts ──
 const CONCEPTS = [
-  { id: "pickup", eyebrow: "Woodland Hills", h: "Pick it up at your facial.", sub: "Evelyn's professional shelf is online. Free pickup at the studio; $8 shipping anywhere, free over $75.",
+  { id: "pickup", eyebrow: "Woodland Hills", h: "Pick it up at your facial.", sub: "Evelyn's professional shelf is online. Free pickup at the studio; $8 shipping anywhere.",
     products: ["fr-ultra-gentle-cleanser", "fr-8pct-mandelic-serum", "fr-brilliant-defense-50"], cta: "Shop on the website" },
   { id: "shelf", eyebrow: "The shelf", h: "The skincare from her treatment room, for home.", sub: "Face Reality · GlyMed Plus · Mixi Skincare · Circadia. Every product is one Evelyn stocks for her clients.",
     products: ["fr-barrier-cream-cleanser", "fr-hydraremedy-gel-serum", "fr-cran-peptide-cream", "fr-powdermineral-spf-50"], cta: "Shop on the website" },

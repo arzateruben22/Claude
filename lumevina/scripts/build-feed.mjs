@@ -37,7 +37,7 @@ const image = (p) => p.photo ? `${site}/${p.photo}` : "";
 // js/site-config.js shop.countStock: false = the shelf isn't counted yet, so every product is listed in stock
 // (the catalog's counts came from screenshots); once she types counts in the dashboard, set it back and rebuild
 const counting = !/countStock:\s*false/.test(fs.readFileSync(path.join(root, "js/site-config.js"), "utf8"));
-const availability = (p) => !counting || p.stock == null ? "in_stock" : p.stock > 0 ? "in_stock" : "out_of_stock";
+const availability = (p) => (!counting && !p.counted) || p.stock == null ? "in_stock" : p.stock > 0 ? "in_stock" : "out_of_stock";
 const description = (p) => [p.about, p.size ? `${p.size}.` : "", `Professional skincare from Evelyn Romero's treatment room at Lumevina Aesthetics Spa, Woodland Hills. Free pickup at your visit, or shipped.`].filter(Boolean).join(" ");
 
 const live = CAT.products.filter((p) => !p.draft && !p.hidden && p.kind !== "consult");

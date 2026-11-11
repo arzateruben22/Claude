@@ -37,13 +37,13 @@ Everything in the code is built; what's left is accounts and settings, done with
 2. **Secrets:** paste the keys into Supabase (Project → Edge Functions → Secrets): Stripe, Anthropic, Resend, the three Google ones from `server/scripts/google-auth.mjs`, and a **`STUDIO_KEY`**: a long phrase only Evelyn knows, which lets her dashboard use gift certificates, save skin plans, change stock and see orders. She types it once into the dashboard (Lumevina Studio, at the top) and that device remembers it. Also: **`COUNT_STOCK=off`** (the shelf isn't counted yet: the chat treats a product with no count as in stock; delete it once the counts are in), **`SITE_URL`** (the website's address), **`OWNER_EMAIL`** (where her order alerts and morning email go), and **`VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`** for phone notifications (make the pair once with `npx web-push generate-vapid-keys`).
 3. **Deploy** the server functions: `supabase functions deploy` (the list is in `server/README.md`).
 4. **Stripe webhook:** in Stripe → Developers → Webhooks, point it at the `stripe-webhook` function's address, with the events in `server/README.md` → Turning on v3 → Stripe (the checkout.session.* ones for the shop; v3 adds invoice.paid and customer.subscription.*).
-4b. **Stripe for the shop:** Settings → Payment methods: turn on Apple Pay, Google Pay and any of Klarna / Afterpay / Affirm she wants. **Sales tax:** set up Stripe Tax (her business address and California registration), then add the secret `STRIPE_TAX=on`. Selling products in California generally needs a seller's permit; her accountant should confirm the setup.
+4b. **Stripe for the shop:** she already has a Stripe account (her answer, Nov 11): sign in to it rather than opening a new one. Settings → Payment methods: turn on Apple Pay, Google Pay, and Klarna, Afterpay and Affirm (she said yes to pay later; the checkout page already says so). **Sales tax:** set up Stripe Tax (her business address and California registration), then add the secret `STRIPE_TAX=on`. Selling products in California needs a seller's permit: she has one (Nov 11). Still to check: that her City of LA business tax certificate covers retail (she wasn't sure).
 5. **GlossGenius:** turn on Google Calendar sync, both ways.
 5b. **Client sign-in:** in Supabase → Authentication → URL Configuration, set the Site URL to the website's address and add it to Redirect URLs (the emailed sign-in link comes back there).
 6. **The website's settings** (`js/site-config.js`): fill in the Supabase address and public key for the shop, the calendar sync and Ask Lumevina.
 6b. **Morning email:** schedule `studio-digest` once with Supabase cron (`server/README.md` → Lumevina Studio).
 6c. **Evelyn's phone:** open `<her site>/dashboard.html` in Safari → Share → Add to Home Screen → open **Studio** → add the studio key → Turn on notifications → Send a test.
-7. **Domain:** point it at Netlify or Cloudflare (they show the two records to add).
+7. **Domain:** she doesn't own one yet and is OK buying one in her name (Nov 11): buy it during the launch session (lumevina.com if it's free), then point it at Netlify or Cloudflare (they show the two records to add).
 
 ## 4. Test before real money
 
@@ -74,7 +74,7 @@ How it's built, so nothing here is a surprise: **no card number ever touches the
 - [ ] **Stripe Tax** on, with the studio's address, then `STRIPE_TAX=on`; check one test order shows California sales tax.
 - [ ] **One real $1 test**: buy the cheapest item with a real card, see the order, stock, receipt and her notification, then refund it in Stripe and check the refund email arrives.
 - [ ] **Two-step sign-in** on Stripe, Supabase, the domain registrar and Google (her calendar), with the recovery codes in her password manager.
-- [ ] **Who gets alerts:** `OWNER_EMAIL` is hers, and Stripe → Settings → Team has only her (and Ruben if she wants, as Developer, not Administrator).
+- [ ] **Who gets alerts:** `OWNER_EMAIL` is the alerts address she gave in her launch questions (read it from that page; it's kept out of this public repo), and Stripe → Settings → Team has only her (and Ruben if she wants, as Developer, not Administrator).
 
 ## 5. Launch
 
@@ -88,7 +88,7 @@ How it's built, so nothing here is a surprise: **no card number ever touches the
 One switch, when Evelyn is ready: everything below is built and tested; it needs the accounts above and these steps (`server/README.md` → Turning on v3 has the commands).
 
 1. **Preview it first.** Open the site with `?preview=v3` at the end of the address (and `dashboard.html?preview=v3`). Only that browser sees it; "Previewing v3 · leave" in the corner ends it.
-2. **Server:** run the current `server/schema.sql`, add the v3 secrets (`SITE_VERSION=v3`; Twilio, `REVIEW_URL` and `STUDIO_ADDRESS` if wanted), deploy the v3 functions, add the webhook events, turn on Stripe's customer portal, and schedule `client-reminders` hourly.
+2. **Server:** run the current `server/schema.sql`, add the v3 secrets (`SITE_VERSION=v3`; `REVIEW_URL` and `STUDIO_ADDRESS` from her launch questions page; Twilio later, as she chose), deploy the v3 functions, add the webhook events, turn on Stripe's customer portal, and schedule `client-reminders` hourly.
 3. **Her dashboard:** check her hours; Clients → choose the GlossGenius client export (a CSV) → Import. Nothing is sent yet.
 4. **Test mode run** (Stripe test keys, card 4242 4242 4242 4242):
    - [ ] A guest books a Brazilian: Stripe's page takes the $30 deposit; the confirmation email has "Cancel or move it"; it's in her Google Calendar and Appointments.
@@ -126,7 +126,7 @@ Prices in v3: Glow **$185**, Ageless **$235** a month; the first 25 members keep
 
 1. **Google Business Profile, Nextdoor, Yelp, Apple Maps:** claim them with the copy in `marketing/local-listings.md`; the booking link with its UTM tag.
 2. **Product feeds:** `node scripts/build-feed.mjs --site https://<her domain>` → `feed/google.xml` (Google Merchant Center: free Shopping listings and Maps) and `feed/meta.csv` (Meta Commerce Manager: Instagram and Facebook Shop, checkout on the website). Publish the `feed/` folder with the site and point each platform's scheduled fetch at it. Add barcodes to `scripts/gtins.json` as she reads them off the boxes.
-3. **The welcome code:** Stripe → Coupons → 10% once → Promotion code WELCOME10, first-time order only (`marketing/welcome-offer.md`). Checkout already accepts codes.
+3. **The welcome code** (she said yes, Nov 11): Stripe → Coupons → 10% once → Promotion code WELCOME10, first-time order only (`marketing/welcome-offer.md`). Checkout already accepts codes.
 4. **Ads, when she's ready:** a Meta ad account and a Google Ads account in her name, her card; the Meta pixel and Google conversion tags on the site (Ruben); then the campaigns in `marketing/campaigns.md`, starting at $10/day each, 20 miles around Woodland Hills. Creatives: `node marketing/ads/build-ads.mjs` → `marketing/ads/out/`.
 5. **Every Monday** Claude drafts the week's posts and ad variants into `marketing/weekly/`; she posts what she likes.
 6. **Search and shares, already on the page:** `robots.txt` keeps the dashboard and the working folders out of search; `js/seo.js` writes the studio (hours, Woodland Hills, Instagram) and the whole shelf (price, stock, photo, the product's own link) as structured data for Google; the share tags in `index.html` give iMessage, Instagram DMs and the TikTok bio a title and the pore clip's poster. Once the domain exists: make the `og:image` address absolute (`https://<her domain>/img/school/video/8-2.jpg`), add `Sitemap: https://<her domain>/sitemap.xml` to `robots.txt` with a three-line sitemap (the home page, `docs/school/school.html`, `privacy.html`), and submit it in Google Search Console.

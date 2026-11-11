@@ -286,7 +286,7 @@
       return "Two plans. Glow, " + memPrice("glow") + " a month: a Custom Facial or the Monthly Acne Treatment every month. Ageless, " + memPrice("ageless") + ": everything in Glow plus the Ageless Grace Facial and dermaplaning every other visit. Members book with no deposit, bank a facial they can’t use, pause once a year, save on the shelf with free shipping, and ask Evelyn anything with a reply within 24 hours." + foundingNote(); },
       acts: [["See memberships", "#membership"]] },
     { id: "shelf", k: /product|serum|cleanser|\bspf\b|sunscreen|moisturi|skincare|\bshop\b|toner|mask|what do you sell/, a: function () {
-      return "Evelyn’s shelf is on this site: Face Reality, GlyMed Plus, Mixi and Circadia, the lines she uses in the room. Shipping is $8, free over $75, or pick up free at your visit. Not sure what’s right for your skin? Tell me if it’s more dry or oily and I’ll show you her routine for it."; },
+      return "Evelyn’s shelf is on this site: Face Reality, GlyMed Plus, Mixi and Circadia, the lines she uses in the room. Shipping is $8 an order, or pick up free at your visit. Not sure what’s right for your skin? Tell me if it’s more dry or oily and I’ll show you her routine for it."; },
       acts: [["See the shop", "#shop"], ["Show me her routine", "t:Which products should I use for my skin?"]] },
     { id: "lashes", k: /lash|nails?\b|manicure|pedicure|tint|lamination/, a: function () {
       return "Lumevina’s menu is facials, peels and waxing. For lashes, brows and nails, Evelyn is happy to point you to artists she trusts."; } }

@@ -39,6 +39,8 @@ if not s.lstrip().lower().startswith("<!doctype"):
 open(sys.argv[2], "w", encoding="utf-8").write(s)
 PY
 done
+# the shipping kit's links to the website go to the hub's copy of the site too
+sed -i 's/data-site-link href="index.html/data-site-link href="site.html/g' "$OUT/shipping.html"
 python3 scripts/preview/fold-guide.py docs/product-guide/index.html "$OUT/guide.html" && cp docs/Lumevina-Product-Guide.pdf "$OUT/"
 cp docs/hub/index.html "$OUT/index.html"
 # each card's picture of the page it opens (docs/hub/img; refresh with scripts/preview/hub-shots.mjs "$OUT")

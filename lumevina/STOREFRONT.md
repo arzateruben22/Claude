@@ -32,7 +32,7 @@ Ready-to-send text:
 3. **Stripe, live, in her name** (GO-LIVE.md section 2), with Stripe Tax switched on and her bank account connected.
 4. **A shipping account**: USPS Ground Advantage through Pirate Ship or Stripe's shipping partner; a stack of the small flat boxes and bubble mailers. Cosmetics ship by ground without paperwork; nothing on her shelf is an aerosol.
 5. **Insurance**: ask her esthetician liability carrier to confirm product sales are covered (most policies include "products-completed operations"; the call takes ten minutes).
-6. **Policies on the site**: shipping (ships from Woodland Hills, USPS Ground Advantage 2 to 5 days, free over $75, free pickup at the studio), returns (unopened within 14 days, opened products are not returnable, damaged in transit replaced), privacy (exists). Claude writes these pages; she reads them once.
+6. **Policies on the site**: shipping (ships from Woodland Hills, USPS Ground Advantage 2 to 5 days, $8 an order, free for members, free pickup at the studio), returns (unopened within 14 days, opened products are not returnable, damaged in transit replaced), privacy (exists). Claude writes these pages; she reads them once.
 7. **Labeling and FDA**: the brands own the labels and the registrations; a retailer has nothing to file. Benzoyl peroxide products are over-the-counter drugs and sell retail normally.
 
 ## Step 2 · The shop, public and compliant (built October 21; the rest as the brands answer)
