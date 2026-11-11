@@ -36,7 +36,7 @@ line needs to change, we'll only ask you to re-read that one line.
 
 **4.** First, the little blood vessels near your skin **narrow**. Warm blood stays deeper inside you.
 
-**5.** Then, if you're still cold… your muscles begin to **tremble**. Not on purpose. Tiny, quick tightenings, over and over.
+**5.** Then, if you're cold… your muscles begin to **tremble**. Not on purpose. Tiny, quick tightenings, over and over.
 
 **6.** They do just one thing. They make **heat**. A strong shiver makes several times more than your body makes at rest.
 
@@ -56,7 +56,7 @@ line needs to change, we'll only ask you to re-read that one line.
 
 **5.** So the skin you can touch right now is made of cells that have **finished their lives**.
 
-**6.** Stacked like bricks, they seal water in.
+**6.** Stacked like bricks, they seal in water.
 
 **7.** The whole journey takes about a **month**.
 
