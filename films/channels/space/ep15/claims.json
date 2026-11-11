@@ -2,9 +2,9 @@
  {
   "id": "c6",
   "sentence": "Half the distance: about one hundred ninety-two thousand kilometers.",
-  "claim": "half of 384,400 km is 192,200 km.",
+  "claim": "Half of today's distance is about 192,000 km.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "note": "OWN INFERENCE (arithmetic): half of 384,400 km is 192,200 km.",
   "verified_via": "not read",
@@ -14,16 +14,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "half of 384,400 km is 192,200 km."
  },
  {
   "id": "c7",
   "sentence": "The Moon now looks twice as wide as it does tonight.",
-  "claim": "at half the distance the Moon's angular width is about 2x today's (calc.py, small-angle ratio).",
+  "claim": "A Moon at half the distance would look about twice as wide.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): at half the distance the Moon's angular width is about 2x today's (calc.py, small-angle ratio).",
+  "note": "OWN INFERENCE (arithmetic): at half the distance the Moon's angular width is about 2x today's (our calculation, small-angle ratio).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -31,12 +32,13 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "at half the distance the Moon's angular width is about 2x today's (calc.py, small-angle ratio)."
  },
  {
   "id": "c8",
   "sentence": "The Moon's pull on the Earth gets stronger as it comes in.",
-  "claim": "Tides come from the difference in the Moon's gravitational pull across the Earth (the tide-generating force).",
+  "claim": "Tides come from the difference in the Moon's pull across the Earth.",
   "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
   "source_title": "What causes tides? (NOAA Ocean Service)",
   "accessed": "2026-11-09",
@@ -48,12 +50,13 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "Tides come from the difference in the Moon's gravitational pull across the Earth (the tide-generating force)."
  },
  {
   "id": "c9",
   "sentence": "That difference falls off with the cube of the distance.",
-  "claim": "The tide-generating force falls off with the cube of the distance to the tide-raising body.",
+  "claim": "The tide-raising pull gets weaker with the cube of the distance.",
   "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
   "source_title": "What causes tides? (NOAA Ocean Service)",
   "accessed": "2026-11-09",
@@ -65,16 +68,17 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "The tide-generating force falls off with the cube of the distance to the tide-raising body."
  },
  {
   "id": "c10",
   "sentence": "So half the distance means about eight times the tidal force.",
-  "claim": "with force ~ 1/d^3, half the distance gives 2^3 = 8x the tidal force (calc.py).",
+  "claim": "At half the distance, the Moon's tidal pull would be about eight times stronger.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): with force ~ 1/d^3, half the distance gives 2^3 = 8x the tidal force (calc.py).",
+  "note": "OWN INFERENCE (arithmetic): with force ~ 1/d^3, half the distance gives 2^3 = 8x the tidal force (our calculation).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -82,6 +86,7 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "with force ~ 1/d^3, half the distance gives 2^3 = 8x the tidal force (calc.py)."
  }
 ]

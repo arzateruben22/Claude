@@ -108,6 +108,13 @@ for i in range(1, 9):
     for si, s in enumerate(sents): base = (c1["t"] if si <= k else c2["t"] - split); caps.append({"t0": round(base + s["t0"], 3), "t1": round(base + s["t1"] + 0.25, 3), "text": s["text"], "line": ch + "_vo"})
     caps += [{"t0": round(cc["t"] + s["t0"], 3), "t1": round(cc["t"] + s["t1"] + 0.25, 3), "text": s["text"], "line": cta} for s in lines[cta]["sentences"]]
     caps.sort(key=lambda c: c["t0"])
+    if i >= 5:   # the opening (first 2.5 s): a hook text of at most 6 words in the top third, gone by 2.5 s
+        HOOK = {5: "Moon bigger than the Sun?", 7: "It rises in the west", 8: "A distance no moon survives"}
+        hk = [c for c in caps if c["line"] == ch + "_hook"]
+        if i in HOOK and hk: hk[0]["text"] = HOOK[i]; hk[0]["t1"] = max(c["t1"] for c in hk); caps = [c for c in caps if c is hk[0] or c["line"] != ch + "_hook"]
+        for c in caps:
+            if c["line"] == ch + "_hook": c["t1"] = min(c["t1"], 2.5)
+        caps = [c for c in caps if c["t0"] < c["t1"]]
     for a, b in zip(caps, caps[1:]): a["t1"] = round(min(a["t1"], b["t0"] - 0.02), 3) if b["t0"] > a["t0"] else a["t1"]
     dur_p = round(t_end2 + 0.6, 3)
     # distance keys for this chapter, timed from the (re-placed) captions; words come from the chapter's line placed at its real offsets

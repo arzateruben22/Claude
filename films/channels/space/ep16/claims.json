@@ -2,9 +2,9 @@
  {
   "id": "c11",
   "sentence": "Moonlight falls off with the square of the distance, for the same phase.",
-  "claim": "reflected sunlight from a body at fixed phase falls off as 1/d^2 (inverse-square law).",
+  "claim": "Reflected moonlight gets weaker with the square of the distance, so a closer Moon would be brighter.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "note": "OWN INFERENCE (physics): reflected sunlight from a body at fixed phase falls off as 1/d^2 (inverse-square law).",
   "verified_via": "not read",
@@ -14,14 +14,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "reflected sunlight from a body at fixed phase falls off as 1/d^2 (inverse-square law)."
  },
  {
   "id": "c13",
   "sentence": "And the Moon is crossing the sky faster.",
-  "claim": "orbital speed rises as the orbit shrinks; the Moon would cross the sky faster. No page needed beyond Kepler's third law.",
+  "claim": "A Moon on a smaller orbit would travel faster across the sky.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "note": "OWN INFERENCE (Kepler): orbital speed rises as the orbit shrinks; the Moon would cross the sky faster. No page needed beyond Kepler's third law.",
   "verified_via": "not read",
@@ -31,14 +32,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "orbital speed rises as the orbit shrinks; the Moon would cross the sky faster. No page needed beyond Kepler's third law."
  },
  {
   "id": "c15",
   "sentence": "By now, the Moon looks far bigger than the Sun.",
-  "claim": "a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film.",
+  "claim": "A Moon that looks bigger than the Sun covers it completely when the two line up, and its shadow on Earth is wider.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "note": "OWN INFERENCE: a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film.",
   "verified_via": "not read",
@@ -48,14 +50,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film."
  },
  {
   "id": "c31",
   "sentence": "One hundred fifty thousand kilometers.",
-  "claim": "150,000 km is a waypoint chosen for the film; no physics claim.",
+  "claim": "In our thought experiment the Moon is brought to 150,000 km.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our thought experiment (not a measurement)",
   "accessed": "2026-11-10",
   "note": "OWN CHOICE: a waypoint, not a physics claim.",
   "verified_via": "not read",
@@ -65,16 +68,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "150,000 km is a waypoint chosen for the film; no physics claim."
  },
  {
   "id": "c32",
   "sentence": "The Moon looks about two and a half times wider.",
-  "claim": "At 150,000 km the Moon's angular width is 2.56x today's, about two and a half (calc.py).",
+  "claim": "A Moon at 150,000 km would look about two and a half times wider.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -82,16 +86,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 150,000 km the Moon's angular width is 2.56x today's, about two and a half (calc.py)."
  },
  {
   "id": "c33",
   "sentence": "So at this distance, a full Moon gives about six and a half times the light.",
-  "claim": "At 150,000 km, same phase, (384,400/150,000)^2 = 6.57x the moonlight, about six and a half (calc.py; inverse-square law).",
+  "claim": "A Moon at 150,000 km would give about six and a half times the moonlight.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -99,16 +104,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 150,000 km, same phase, (384,400/150,000)^2 = 6.57x the moonlight, about six and a half (calc.py; inverse-square law)."
  },
  {
   "id": "c34",
   "sentence": "At this distance, one lap takes about seven days, not twenty-seven.",
-  "claim": "At 150,000 km, Kepler's third law gives an orbital period of 160.6 h = 6.7 days versus 27.5 days today (calc.py, Earth GM 398,600.4 km3/s2).",
+  "claim": "At 150,000 km, one lap around Earth would take about seven days instead of 27.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -116,6 +122,7 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 150,000 km, Kepler's third law gives an orbital period of 160.6 h = 6.7 days versus 27.5 days today (calc.py, Earth GM 398,600.4 km3/s2)."
  }
 ]

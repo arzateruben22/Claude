@@ -2,7 +2,7 @@
  {
   "id": "c4",
   "sentence": "About the same size as the Sun.",
-  "claim": "The Sun's mean angular diameter is about 0.53 deg, close to the Moon's: they look about the same size from Earth.",
+  "claim": "The Sun and the Moon look about the same size in our sky.",
   "source_url": "https://science.nasa.gov/eclipses/geometry",
   "source_title": "Why Do Eclipses Happen? (NASA Science)",
   "accessed": "2026-11-09",
@@ -14,14 +14,15 @@
    "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
    "quote": "Even though the Sun is about 400 times bigger than the Moon, it is also about 400 times farther away. This makes the Sun and the Moon appear almost exactly the same size in our sky.",
    "qualification": "A person still opens the page before OK."
-  }
+  },
+  "derivation": "The Sun's mean angular diameter is about 0.53 deg, close to the Moon's: they look about the same size from Earth."
  },
  {
   "id": "c15",
   "sentence": "By now, the Moon looks far bigger than the Sun.",
-  "claim": "a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film.",
+  "claim": "A Moon that looks bigger than the Sun covers it completely when the two line up, and its shadow on Earth is wider.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "note": "OWN INFERENCE: a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film.",
   "verified_via": "not read",
@@ -31,14 +32,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film."
  },
  {
   "id": "c16",
   "sentence": "Today, a total solar eclipse happens somewhere on Earth about every year and a half.",
-  "claim": "A total solar eclipse is visible somewhere on Earth about every 18 months.",
+  "claim": "A total solar eclipse can be seen somewhere on Earth roughly every year and a half.",
   "source_url": "https://science.nasa.gov/eclipses/geometry",
-  "source_title": "Eclipse geometry (NASA Science) — URL found by search, page not read",
+  "source_title": "Eclipse geometry (NASA Science)",
   "accessed": "2026-11-09",
   "note": "Looked 11 Nov: https://science.nasa.gov/eclipses/ and /future-eclipses/ list individual eclipses but do not state 'about every 18 months'; the eclipse-geometry page did not either. Not found on a readable NASA page; a person should open https://science.nasa.gov/eclipses/ and find or replace the source. OPEN.",
   "verified_via": "not read",
@@ -48,12 +50,13 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "A total solar eclipse is visible somewhere on Earth about every 18 months."
  },
  {
   "id": "c17",
   "sentence": "Not every month, though, because the Moon's orbit is tilted by a few degrees.",
-  "claim": "the Moon's orbit is inclined about 5 deg to the ecliptic, so the alignment does not happen every new moon. The 5 deg figure comes from NASA's Moon fact sheet (orbit inclination).",
+  "claim": "The Moon's orbit is tilted about 5 degrees, so eclipses do not happen every month.",
   "source_url": "https://science.nasa.gov/eclipses/geometry",
   "source_title": "Why Do Eclipses Happen? (NASA Science); Moon Fact Sheet (NASA NSSDC): inclination to ecliptic 5.145 deg",
   "accessed": "2026-11-09",
@@ -65,14 +68,15 @@
    "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
    "quote": "Although a new moon happens about once a month, solar eclipses do not. ... Because the Moon's orbit is tilted ... (Moon Fact Sheet: Inclination to ecliptic 5.145 deg)",
    "qualification": "A person still opens the page before OK."
-  }
+  },
+  "derivation": "the Moon's orbit is inclined about 5 deg to the ecliptic, so the alignment does not happen every new moon. The 5 deg figure comes from NASA's Moon fact sheet (orbit inclination)."
  },
  {
   "id": "c35",
   "sentence": "One hundred thousand kilometers.",
-  "claim": "100,000 km is a waypoint chosen for the film; no physics claim.",
+  "claim": "In our thought experiment the Moon is brought to 100,000 km.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our thought experiment (not a measurement)",
   "accessed": "2026-11-10",
   "note": "OWN CHOICE: a waypoint, not a physics claim.",
   "verified_via": "not read",
@@ -82,16 +86,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "100,000 km is a waypoint chosen for the film; no physics claim."
  },
  {
   "id": "c36",
   "sentence": "The Moon is nearly four times wider than tonight.",
-  "claim": "At 100,000 km the Moon's angular width is 3.8x today's, nearly four times (calc.py).",
+  "claim": "A Moon at 100,000 km would look nearly four times wider.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -99,6 +104,7 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 100,000 km the Moon's angular width is 3.8x today's, nearly four times (calc.py)."
  }
 ]

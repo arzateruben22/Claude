@@ -2,7 +2,7 @@
  {
   "id": "c1",
   "sentence": "On average, the Moon is about three hundred eighty-four thousand kilometers away.",
-  "claim": "The Moon's mean distance from Earth is about 384,400 km.",
+  "claim": "On average the Moon is about 384,400 km from Earth.",
   "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
   "source_title": "Moon Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-09",
@@ -14,12 +14,13 @@
    "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
    "quote": "Semimajor axis (10^6 km) 0.3844",
    "qualification": "A person still opens the page before OK."
-  }
+  },
+  "derivation": "The Moon's mean distance from Earth is about 384,400 km."
  },
  {
   "id": "c2",
   "sentence": "Right now, it is drifting away from you.",
-  "claim": "Lunar laser ranging shows the Moon receding from Earth by about 3.8 cm a year.",
+  "claim": "The Moon is drifting away from Earth by about 3.8 centimeters a year.",
   "source_url": "https://www.jpl.nasa.gov/news/the-apollo-experiment-that-keeps-on-giving/",
   "source_title": "The Apollo experiment that keeps on giving (NASA JPL)",
   "accessed": "2026-11-09",
@@ -31,16 +32,17 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "Lunar laser ranging shows the Moon receding from Earth by about 3.8 cm a year."
  },
  {
   "id": "c3",
   "sentence": "From the beach, it looks about half a degree wide.",
-  "claim": "the Moon's angular diameter is 2*atan(1,737.4 / 384,400) = 0.52 deg (calc.py); radius and distance from NASA's Moon fact sheet.",
+  "claim": "Seen from Earth, the Moon looks about half a degree wide.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): the Moon's angular diameter is 2*atan(1,737.4 / 384,400) = 0.52 deg (calc.py); radius and distance from NASA's Moon fact sheet.",
+  "note": "OWN INFERENCE (arithmetic): the Moon's angular diameter is 2*atan(1,737.4 / 384,400) = 0.52 deg (our calculation); radius and distance from NASA's Moon fact sheet.",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -48,12 +50,13 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "the Moon's angular diameter is 2*atan(1,737.4 / 384,400) = 0.52 deg (calc.py); radius and distance from NASA's Moon fact sheet."
  },
  {
   "id": "c4",
   "sentence": "About the same size as the Sun.",
-  "claim": "The Sun's mean angular diameter is about 0.53 deg, close to the Moon's: they look about the same size from Earth.",
+  "claim": "The Sun and the Moon look about the same size in our sky.",
   "source_url": "https://science.nasa.gov/eclipses/geometry",
   "source_title": "Why Do Eclipses Happen? (NASA Science)",
   "accessed": "2026-11-09",
@@ -65,16 +68,17 @@
    "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
    "quote": "Even though the Sun is about 400 times bigger than the Moon, it is also about 400 times farther away. This makes the Sun and the Moon appear almost exactly the same size in our sky.",
    "qualification": "A person still opens the page before OK."
-  }
+  },
+  "derivation": "The Sun's mean angular diameter is about 0.53 deg, close to the Moon's: they look about the same size from Earth."
  },
  {
   "id": "c5",
   "sentence": "Three quarters of today's distance: about two hundred eighty-eight thousand kilometers.",
-  "claim": "at 0.75 of today's distance (288,300 km) the Moon's width in the sky is 1.33x today's (calc.py).",
+  "claim": "A Moon at three quarters of today's distance would look about one and a third times wider.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): at 0.75 of today's distance (288,300 km) the Moon's width in the sky is 1.33x today's (calc.py).",
+  "note": "OWN INFERENCE (arithmetic): at 0.75 of today's distance (288,300 km) the Moon's width in the sky is 1.33x today's (our calculation).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -82,14 +86,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "at 0.75 of today's distance (288,300 km) the Moon's width in the sky is 1.33x today's (calc.py)."
  },
  {
   "id": "c6",
   "sentence": "Half the distance: about one hundred ninety-two thousand kilometers.",
-  "claim": "half of 384,400 km is 192,200 km.",
+  "claim": "Half of today's distance is about 192,000 km.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "note": "OWN INFERENCE (arithmetic): half of 384,400 km is 192,200 km.",
   "verified_via": "not read",
@@ -99,16 +104,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "half of 384,400 km is 192,200 km."
  },
  {
   "id": "c7",
   "sentence": "The Moon now looks twice as wide as it does tonight.",
-  "claim": "at half the distance the Moon's angular width is about 2x today's (calc.py, small-angle ratio).",
+  "claim": "A Moon at half the distance would look about twice as wide.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): at half the distance the Moon's angular width is about 2x today's (calc.py, small-angle ratio).",
+  "note": "OWN INFERENCE (arithmetic): at half the distance the Moon's angular width is about 2x today's (our calculation, small-angle ratio).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -116,12 +122,13 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "at half the distance the Moon's angular width is about 2x today's (calc.py, small-angle ratio)."
  },
  {
   "id": "c8",
   "sentence": "The Moon's pull on the Earth gets stronger as it comes in.",
-  "claim": "Tides come from the difference in the Moon's gravitational pull across the Earth (the tide-generating force).",
+  "claim": "Tides come from the difference in the Moon's pull across the Earth.",
   "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
   "source_title": "What causes tides? (NOAA Ocean Service)",
   "accessed": "2026-11-09",
@@ -133,12 +140,13 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "Tides come from the difference in the Moon's gravitational pull across the Earth (the tide-generating force)."
  },
  {
   "id": "c9",
   "sentence": "That difference falls off with the cube of the distance.",
-  "claim": "The tide-generating force falls off with the cube of the distance to the tide-raising body.",
+  "claim": "The tide-raising pull gets weaker with the cube of the distance.",
   "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
   "source_title": "What causes tides? (NOAA Ocean Service)",
   "accessed": "2026-11-09",
@@ -150,16 +158,17 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "The tide-generating force falls off with the cube of the distance to the tide-raising body."
  },
  {
   "id": "c10",
   "sentence": "So half the distance means about eight times the tidal force.",
-  "claim": "with force ~ 1/d^3, half the distance gives 2^3 = 8x the tidal force (calc.py).",
+  "claim": "At half the distance, the Moon's tidal pull would be about eight times stronger.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): with force ~ 1/d^3, half the distance gives 2^3 = 8x the tidal force (calc.py).",
+  "note": "OWN INFERENCE (arithmetic): with force ~ 1/d^3, half the distance gives 2^3 = 8x the tidal force (our calculation).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -167,14 +176,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "with force ~ 1/d^3, half the distance gives 2^3 = 8x the tidal force (calc.py)."
  },
  {
   "id": "c11",
   "sentence": "Moonlight falls off with the square of the distance, for the same phase.",
-  "claim": "reflected sunlight from a body at fixed phase falls off as 1/d^2 (inverse-square law).",
+  "claim": "Reflected moonlight gets weaker with the square of the distance, so a closer Moon would be brighter.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "note": "OWN INFERENCE (physics): reflected sunlight from a body at fixed phase falls off as 1/d^2 (inverse-square law).",
   "verified_via": "not read",
@@ -184,14 +194,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "reflected sunlight from a body at fixed phase falls off as 1/d^2 (inverse-square law)."
  },
  {
   "id": "c13",
   "sentence": "And the Moon is crossing the sky faster.",
-  "claim": "orbital speed rises as the orbit shrinks; the Moon would cross the sky faster. No page needed beyond Kepler's third law.",
+  "claim": "A Moon on a smaller orbit would travel faster across the sky.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "note": "OWN INFERENCE (Kepler): orbital speed rises as the orbit shrinks; the Moon would cross the sky faster. No page needed beyond Kepler's third law.",
   "verified_via": "not read",
@@ -201,14 +212,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "orbital speed rises as the orbit shrinks; the Moon would cross the sky faster. No page needed beyond Kepler's third law."
  },
  {
   "id": "c15",
   "sentence": "By now, the Moon looks far bigger than the Sun.",
-  "claim": "a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film.",
+  "claim": "A Moon that looks bigger than the Sun covers it completely when the two line up, and its shadow on Earth is wider.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "note": "OWN INFERENCE: a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film.",
   "verified_via": "not read",
@@ -218,14 +230,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film."
  },
  {
   "id": "c16",
   "sentence": "Today, a total solar eclipse happens somewhere on Earth about every year and a half.",
-  "claim": "A total solar eclipse is visible somewhere on Earth about every 18 months.",
+  "claim": "A total solar eclipse can be seen somewhere on Earth roughly every year and a half.",
   "source_url": "https://science.nasa.gov/eclipses/geometry",
-  "source_title": "Eclipse geometry (NASA Science) \u2014 URL found by search, page not read",
+  "source_title": "Eclipse geometry (NASA Science)",
   "accessed": "2026-11-09",
   "note": "Looked 11 Nov: https://science.nasa.gov/eclipses/ and /future-eclipses/ list individual eclipses but do not state 'about every 18 months'; the eclipse-geometry page did not either. Not found on a readable NASA page; a person should open https://science.nasa.gov/eclipses/ and find or replace the source. OPEN.",
   "verified_via": "not read",
@@ -235,12 +248,13 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "A total solar eclipse is visible somewhere on Earth about every 18 months."
  },
  {
   "id": "c17",
   "sentence": "Not every month, though, because the Moon's orbit is tilted by a few degrees.",
-  "claim": "the Moon's orbit is inclined about 5 deg to the ecliptic, so the alignment does not happen every new moon. The 5 deg figure comes from NASA's Moon fact sheet (orbit inclination).",
+  "claim": "The Moon's orbit is tilted about 5 degrees, so eclipses do not happen every month.",
   "source_url": "https://science.nasa.gov/eclipses/geometry",
   "source_title": "Why Do Eclipses Happen? (NASA Science); Moon Fact Sheet (NASA NSSDC): inclination to ecliptic 5.145 deg",
   "accessed": "2026-11-09",
@@ -252,14 +266,15 @@
    "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
    "quote": "Although a new moon happens about once a month, solar eclipses do not. ... Because the Moon's orbit is tilted ... (Moon Fact Sheet: Inclination to ecliptic 5.145 deg)",
    "qualification": "A person still opens the page before OK."
-  }
+  },
+  "derivation": "the Moon's orbit is inclined about 5 deg to the ecliptic, so the alignment does not happen every new moon. The 5 deg figure comes from NASA's Moon fact sheet (orbit inclination)."
  },
  {
   "id": "c18",
   "sentence": "The solid Earth already rises and falls a little with the Moon, tens of centimeters a day.",
-  "claim": "Solid-Earth tides lift and lower the ground by tens of centimeters a day.",
+  "claim": "The solid ground is lifted and lowered by the Moon's pull by tens of centimeters a day.",
   "source_url": "https://www.jtbullitt.com/earthsound/solid_earth_tides/index.html",
-  "source_title": "Solid Earth tides (J. T. Bullitt) \u2014 secondary source found by search; a person should confirm against a USGS or NASA page",
+  "source_title": "Solid Earth tides (J. T. Bullitt)",
   "accessed": "2026-11-09",
   "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK. Source not readable from the build machine; a person should open https://www.jtbullitt.com/earthsound/solid_earth_tides/index.html.",
   "verified_via": "not read",
@@ -269,16 +284,17 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "Solid-Earth tides lift and lower the ground by tens of centimeters a day."
  },
  {
   "id": "c19",
   "sentence": "The Moon is nearly eight times wider than tonight.",
-  "claim": "at 50,000 km the Moon's angular width is 7.7x today's (calc.py).",
+  "claim": "A Moon at 50,000 km would look nearly eight times wider than tonight's.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): at 50,000 km the Moon's angular width is 7.7x today's (calc.py).",
+  "note": "OWN INFERENCE (arithmetic): at 50,000 km the Moon's angular width is 7.7x today's (our calculation).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -286,16 +302,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "at 50,000 km the Moon's angular width is 7.7x today's (calc.py)."
  },
  {
   "id": "c20",
   "sentence": "The pull is about four hundred fifty times today's.",
-  "claim": "(384,400/50,000)^3 = 454x the tidal force (calc.py).",
+  "claim": "At 50,000 km the Moon's tidal pull would be about 450 times today's.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): (384,400/50,000)^3 = 454x the tidal force (calc.py).",
+  "note": "OWN INFERENCE (arithmetic): (384,400/50,000)^3 = 454x the tidal force (our calculation).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -303,16 +320,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "(384,400/50,000)^3 = 454x the tidal force (calc.py)."
  },
  {
   "id": "c21",
   "sentence": "One lap now takes about a day and a quarter.",
-  "claim": "at 50,000 km the period is 30.9 h.",
+  "claim": "At 50,000 km a lap around Earth would take about a day and a quarter.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (Kepler's third law, calc.py): at 50,000 km the period is 30.9 h.",
+  "note": "OWN INFERENCE (Kepler's third law, our calculation): at 50,000 km the period is 30.9 h.",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -320,16 +338,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "at 50,000 km the period is 30.9 h."
  },
  {
   "id": "c22",
   "sentence": "A moon that orbits slower than the Earth turns rises in the east, like today.",
-  "claim": "a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day.",
+  "claim": "A moon closer than about 42,000 km orbits faster than the Earth turns, so it would rise in the west.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (Kepler, calc.py): a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day.",
+  "note": "OWN INFERENCE (Kepler, our calculation): a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day.",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -337,14 +356,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day."
  },
  {
   "id": "c23",
   "sentence": "There is a distance where tides pull harder on a body than its own gravity holds it together.",
-  "claim": "The Roche limit is the distance inside which tidal forces overcome a body's own gravity, so it is torn apart.",
+  "claim": "Inside the Roche limit, a body's own gravity can no longer hold it together against tides.",
   "source_url": "https://en.wikipedia.org/wiki/Roche_limit",
-  "source_title": "Roche limit (Wikipedia) \u2014 secondary source found by search; a person should confirm against NASA or a textbook",
+  "source_title": "Roche limit (Wikipedia)",
   "accessed": "2026-11-09",
   "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK. Second source (found by search, page NOT read): SFU PHYS 390 lecture notes on tides and Roche limit https://www.sfu.ca/~boal/390lecs/390lec8.pdf (equal-density Roche limit ~2.456 Rp, disrupted material forms rings); Leinhardt et al., 'Tidal disruption of satellites and formation of narrow rings' https://arxiv.org/abs/1206.2677 (a rubble pile disrupts closer in than a fluid body; real result depends on the Moon's strength). Source not readable from the build machine; a person should open https://en.wikipedia.org/wiki/Roche_limit.",
   "verified_via": "not read",
@@ -354,16 +374,17 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "The Roche limit is the distance inside which tidal forces overcome a body's own gravity, so it is torn apart."
  },
  {
   "id": "c24",
   "sentence": "For a Moon like ours around Earth, it is around eighteen thousand kilometers, if the Moon behaves like a fluid.",
-  "claim": "fluid Roche limit = 2.44 R_Earth (rho_Earth/rho_Moon)^(1/3) = 18,365 km; densities from NASA fact sheets. Wikipedia's table lists ~18,381 km.",
+  "claim": "For a fluid Moon, the Roche limit is about 18,000 km from Earth's centre.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (calc.py): fluid Roche limit = 2.44 R_Earth (rho_Earth/rho_Moon)^(1/3) = 18,365 km; densities from NASA fact sheets. Wikipedia's table lists ~18,381 km. Second source (found by search, page NOT read): SFU PHYS 390 lecture notes on tides and Roche limit https://www.sfu.ca/~boal/390lecs/390lec8.pdf (equal-density Roche limit ~2.456 Rp, disrupted material forms rings); Leinhardt et al., 'Tidal disruption of satellites and formation of narrow rings' https://arxiv.org/abs/1206.2677 (a rubble pile disrupts closer in than a fluid body; real result depends on the Moon's strength).",
+  "note": "OWN INFERENCE (our calculation): fluid Roche limit = 2.44 R_Earth (rho_Earth/rho_Moon)^(1/3) = 18,365 km; densities from NASA fact sheets. Wikipedia's table lists ~18,381 km. Second source (found by search, page NOT read): SFU PHYS 390 lecture notes on tides and Roche limit https://www.sfu.ca/~boal/390lecs/390lec8.pdf (equal-density Roche limit ~2.456 Rp, disrupted material forms rings); Leinhardt et al., 'Tidal disruption of satellites and formation of narrow rings' https://arxiv.org/abs/1206.2677 (a rubble pile disrupts closer in than a fluid body; real result depends on the Moon's strength).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -371,16 +392,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "fluid Roche limit = 2.44 R_Earth (rho_Earth/rho_Moon)^(1/3) = 18,365 km; densities from NASA fact sheets. Wikipedia's table lists ~18,381 km."
  },
  {
   "id": "c25",
   "sentence": "Around nine and a half thousand, if it is perfectly rigid.",
-  "claim": "rigid Roche limit = 1.26 R_Earth (rho_Earth/rho_Moon)^(1/3) = 9,484 km. Wikipedia's table lists ~9,492 km.",
+  "claim": "For a rigid Moon, the Roche limit is about 9,500 km from Earth's centre.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (calc.py): rigid Roche limit = 1.26 R_Earth (rho_Earth/rho_Moon)^(1/3) = 9,484 km. Wikipedia's table lists ~9,492 km. Second source (found by search, page NOT read): SFU PHYS 390 lecture notes on tides and Roche limit https://www.sfu.ca/~boal/390lecs/390lec8.pdf (equal-density Roche limit ~2.456 Rp, disrupted material forms rings); Leinhardt et al., 'Tidal disruption of satellites and formation of narrow rings' https://arxiv.org/abs/1206.2677 (a rubble pile disrupts closer in than a fluid body; real result depends on the Moon's strength).",
+  "note": "OWN INFERENCE (our calculation): rigid Roche limit = 1.26 R_Earth (rho_Earth/rho_Moon)^(1/3) = 9,484 km. Wikipedia's table lists ~9,492 km. Second source (found by search, page NOT read): SFU PHYS 390 lecture notes on tides and Roche limit https://www.sfu.ca/~boal/390lecs/390lec8.pdf (equal-density Roche limit ~2.456 Rp, disrupted material forms rings); Leinhardt et al., 'Tidal disruption of satellites and formation of narrow rings' https://arxiv.org/abs/1206.2677 (a rubble pile disrupts closer in than a fluid body; real result depends on the Moon's strength).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -388,16 +410,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "rigid Roche limit = 1.26 R_Earth (rho_Earth/rho_Moon)^(1/3) = 9,484 km. Wikipedia's table lists ~9,492 km."
  },
  {
   "id": "c26",
   "sentence": "At eighteen thousand kilometers, it looks more than twenty times wider than tonight.",
-  "claim": "At 18,000 km centre to centre the Moon's angular width is 21x today's (horizon view); overhead, one Earth radius closer (about 11,600 km), it is about 17 deg wide, about 33x (calc.py). The film says 'more than twenty times'.",
+  "claim": "At 18,000 km the Moon would look more than 20 times wider than tonight's.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): at 18,000 km the Moon's angular width is 21x today's (calc.py).",
+  "note": "OWN INFERENCE (arithmetic): at 18,000 km the Moon's angular width is 21x today's (our calculation).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -405,14 +428,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 18,000 km centre to centre the Moon's angular width is 21x today's (horizon view); overhead, one Earth radius closer (about 11,600 km), it is about 17 deg wide, about 33x (calc.py). The film says 'more than twenty times'."
  },
  {
   "id": "c27",
   "sentence": "Over time, material like that can flatten into a ring around a planet.",
-  "claim": "Material torn from a satellite inside the Roche limit can spread into a ring around the planet (as in planetary-ring theory).",
+  "claim": "Material torn from a moon inside the Roche limit can spread out into a ring.",
   "source_url": "https://en.wikipedia.org/wiki/Roche_limit",
-  "source_title": "Roche limit (Wikipedia) \u2014 secondary source; HEDGED ('would')",
+  "source_title": "Roche limit (Wikipedia)",
   "accessed": "2026-11-09",
   "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK. Second source (found by search, page NOT read): SFU PHYS 390 lecture notes on tides and Roche limit https://www.sfu.ca/~boal/390lecs/390lec8.pdf (equal-density Roche limit ~2.456 Rp, disrupted material forms rings); Leinhardt et al., 'Tidal disruption of satellites and formation of narrow rings' https://arxiv.org/abs/1206.2677 (a rubble pile disrupts closer in than a fluid body; real result depends on the Moon's strength). Source not readable from the build machine; a person should open https://en.wikipedia.org/wiki/Roche_limit.",
   "verified_via": "not read",
@@ -422,16 +446,17 @@
    "by": "builder (an AI): search excerpt only, page not opened",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "Material torn from a satellite inside the Roche limit can spread into a ring around the planet (as in planetary-ring theory)."
  },
  {
   "id": "c28",
   "sentence": "Its light takes about a second and a quarter to reach you.",
-  "claim": "Light covers the Moon's mean distance (384,400 km) in 1.28 s (384,400 km / 299,792 km/s), about a second and a quarter (calc.py).",
+  "claim": "Light takes about a second and a quarter to travel from the Moon to Earth.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -439,16 +464,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "Light covers the Moon's mean distance (384,400 km) in 1.28 s (384,400 km / 299,792 km/s), about a second and a quarter (calc.py)."
  },
  {
   "id": "c29",
   "sentence": "Its light takes about a second to reach you now.",
-  "claim": "At three quarters of today's distance (288,300 km) light takes 0.96 s, about a second (calc.py).",
+  "claim": "At three quarters of the distance, moonlight would take about one second to arrive.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -456,16 +482,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At three quarters of today's distance (288,300 km) light takes 0.96 s, about a second (calc.py)."
  },
  {
   "id": "c30",
   "sentence": "At this distance, its tidal pull is more than twice what it is today.",
-  "claim": "With tidal force ~ 1/d^3, three quarters of the distance gives (1/0.75)^3 = 2.37x the TIDAL pull, more than twice today's (calc.py). Plain gravity would be only (1/0.75)^2 = 1.78x, so the film says 'tidal pull'.",
+  "claim": "At three quarters of the distance, the tidal pull would be more than twice today's.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -473,14 +500,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "With tidal force ~ 1/d^3, three quarters of the distance gives (1/0.75)^3 = 2.37x the TIDAL pull, more than twice today's (calc.py). Plain gravity would be only (1/0.75)^2 = 1.78x, so the film says 'tidal pull'."
  },
  {
   "id": "c31",
   "sentence": "One hundred fifty thousand kilometers.",
-  "claim": "150,000 km is a waypoint chosen for the film; no physics claim.",
+  "claim": "In our thought experiment the Moon is brought to 150,000 km.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our thought experiment (not a measurement)",
   "accessed": "2026-11-10",
   "note": "OWN CHOICE: a waypoint, not a physics claim.",
   "verified_via": "not read",
@@ -490,16 +518,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "150,000 km is a waypoint chosen for the film; no physics claim."
  },
  {
   "id": "c32",
   "sentence": "The Moon looks about two and a half times wider.",
-  "claim": "At 150,000 km the Moon's angular width is 2.56x today's, about two and a half (calc.py).",
+  "claim": "A Moon at 150,000 km would look about two and a half times wider.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -507,16 +536,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 150,000 km the Moon's angular width is 2.56x today's, about two and a half (calc.py)."
  },
  {
   "id": "c33",
   "sentence": "So at this distance, a full Moon gives about six and a half times the light.",
-  "claim": "At 150,000 km, same phase, (384,400/150,000)^2 = 6.57x the moonlight, about six and a half (calc.py; inverse-square law).",
+  "claim": "A Moon at 150,000 km would give about six and a half times the moonlight.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -524,16 +554,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 150,000 km, same phase, (384,400/150,000)^2 = 6.57x the moonlight, about six and a half (calc.py; inverse-square law)."
  },
  {
   "id": "c34",
   "sentence": "At this distance, one lap takes about seven days, not twenty-seven.",
-  "claim": "At 150,000 km, Kepler's third law gives an orbital period of 160.6 h = 6.7 days versus 27.5 days today (calc.py, Earth GM 398,600.4 km3/s2).",
+  "claim": "At 150,000 km, one lap around Earth would take about seven days instead of 27.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -541,14 +572,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 150,000 km, Kepler's third law gives an orbital period of 160.6 h = 6.7 days versus 27.5 days today (calc.py, Earth GM 398,600.4 km3/s2)."
  },
  {
   "id": "c35",
   "sentence": "One hundred thousand kilometers.",
-  "claim": "100,000 km is a waypoint chosen for the film; no physics claim.",
+  "claim": "In our thought experiment the Moon is brought to 100,000 km.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our thought experiment (not a measurement)",
   "accessed": "2026-11-10",
   "note": "OWN CHOICE: a waypoint, not a physics claim.",
   "verified_via": "not read",
@@ -558,16 +590,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "100,000 km is a waypoint chosen for the film; no physics claim."
  },
  {
   "id": "c36",
   "sentence": "The Moon is nearly four times wider than tonight.",
-  "claim": "At 100,000 km the Moon's angular width is 3.8x today's, nearly four times (calc.py).",
+  "claim": "A Moon at 100,000 km would look nearly four times wider.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -575,14 +608,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 100,000 km the Moon's angular width is 3.8x today's, nearly four times (calc.py)."
  },
  {
   "id": "c37",
   "sentence": "Seventy thousand kilometers.",
-  "claim": "70,000 km is a waypoint chosen for the film; no physics claim.",
+  "claim": "In our thought experiment the Moon is brought to 70,000 km.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our thought experiment (not a measurement)",
   "accessed": "2026-11-10",
   "note": "OWN CHOICE: a waypoint, not a physics claim.",
   "verified_via": "not read",
@@ -592,16 +626,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "70,000 km is a waypoint chosen for the film; no physics claim."
  },
  {
   "id": "c38",
   "sentence": "The Moon is about five and a half times wider than tonight.",
-  "claim": "At 70,000 km the Moon's angular width is 5.5x today's (calc.py).",
+  "claim": "A Moon at 70,000 km would look about five and a half times wider.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -609,16 +644,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 70,000 km the Moon's angular width is 5.5x today's (calc.py)."
  },
  {
   "id": "c39",
   "sentence": "Its tidal pull is more than a hundred sixty times today's.",
-  "claim": "With tidal force ~ 1/d^3, at 70,000 km the TIDAL pull is (384,400/70,000)^3 = 166x today's, more than a hundred sixty times (calc.py).",
+  "claim": "At 70,000 km the Moon's tidal pull would be more than 160 times today's.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -626,14 +662,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "With tidal force ~ 1/d^3, at 70,000 km the TIDAL pull is (384,400/70,000)^3 = 166x today's, more than a hundred sixty times (calc.py)."
  },
  {
   "id": "c40",
   "sentence": "Fifty thousand kilometers.",
-  "claim": "50,000 km is a waypoint chosen for the film; no physics claim.",
+  "claim": "In our thought experiment the Moon is brought to 50,000 km.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our thought experiment (not a measurement)",
   "accessed": "2026-11-10",
   "note": "OWN CHOICE: a waypoint, not a physics claim.",
   "verified_via": "not read",
@@ -643,16 +680,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "50,000 km is a waypoint chosen for the film; no physics claim."
  },
  {
   "id": "c41",
   "sentence": "It is at least as wide as a fist held out at arm's length, and wider still overhead.",
-  "claim": "At 18,000 km the Moon spans 11 deg at the horizon and about 17 deg overhead (calc.py); a closed fist at arm's length spans about 10 deg (common observing rule of thumb; a person should confirm against an astronomy-outreach page). The film says 'at least as wide as a fist ... and wider still overhead'.",
+  "claim": "At 18,000 km the Moon would span roughly 11 degrees at the horizon, wider than a fist held at arm's length.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -660,12 +698,13 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "At 18,000 km the Moon spans 11 deg at the horizon and about 17 deg overhead (calc.py); a closed fist at arm's length spans about 10 deg (common observing rule of thumb; a person should confirm against an astronomy-outreach page). The film says 'at least as wide as a fist ... and wider still overhead'."
  },
  {
   "id": "c42",
   "sentence": "Today, the Sun pulls on the tides too, with about half the Moon's effect.",
-  "claim": "The Sun's tidal effect is roughly half the Moon's.",
+  "claim": "The Sun's tidal effect on Earth is roughly half the Moon's.",
   "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
   "source_title": "What causes tides? (NOAA Ocean Service)",
   "accessed": "2026-11-11",
@@ -677,12 +716,13 @@
    "by": "builder (an AI): source not yet read",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "The Sun's tidal effect is roughly half the Moon's."
  },
  {
   "id": "c43",
   "sentence": "In real life, tides are why the Moon drifts away: they steal a little of Earth's spin and hand it to the Moon's orbit.",
-  "claim": "Tidal friction transfers angular momentum from Earth's spin to the Moon's orbit, which is why the Moon recedes.",
+  "claim": "Tides slow the Earth's spin and push the Moon's orbit outward, which is why it drifts away.",
   "source_url": "https://www.discovermagazine.com/the-moon-is-moving-farther-from-earth-each-year-and-the-reason-why-comes-down-to-the-tides-48035",
   "source_title": "The Moon Is Moving Farther From Earth Each Year, and Tides Are the Reason (Discover)",
   "accessed": "2026-11-11",
@@ -694,12 +734,13 @@
    "by": "builder (an AI): source not yet read",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "Tidal friction transfers angular momentum from Earth's spin to the Moon's orbit, which is why the Moon recedes."
  },
  {
   "id": "c44",
   "sentence": "Material inside the Roche limit tends to spread into rings, while material outside tends to clump into small moons.",
-  "claim": "Inside the Roche limit, orbiting material tends to disperse and form rings; outside it, material tends to coalesce.",
+  "claim": "Inside the Roche limit material spreads into rings; outside it, material clumps into moons.",
   "source_url": "https://www.sfu.ca/~boal/390lecs/390lec8.pdf",
   "source_title": "SFU PHYS 390 lecture on tides and the Roche limit",
   "accessed": "2026-11-11",
@@ -711,12 +752,13 @@
    "by": "builder (an AI): source not yet read",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "Inside the Roche limit, orbiting material tends to disperse and form rings; outside it, material tends to coalesce."
  },
  {
   "id": "c45",
   "sentence": "Saturn's rings are the famous example, though they are made mostly of water ice, not rock.",
-  "claim": "Saturn's rings are made mostly of water ice.",
+  "claim": "Saturn's rings are made of ice and rock, mostly small icy grains.",
   "source_url": "https://science.nasa.gov/saturn/facts/",
   "source_title": "Saturn Facts (NASA Science)",
   "accessed": "2026-11-11",
@@ -728,12 +770,13 @@
    "by": "builder (an AI): source not yet read",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "Saturn's rings are made mostly of water ice."
  },
  {
   "id": "c48",
   "sentence": "We know because laser light bounces off mirrors the Apollo astronauts left behind.",
-  "claim": "The Moon's distance is measured by lunar laser ranging, laser pulses bounced off retroreflectors left by the Apollo missions.",
+  "claim": "The Moon's distance is measured by bouncing laser pulses off mirrors left by the Apollo missions.",
   "source_url": "https://www.jpl.nasa.gov/news/the-apollo-experiment-that-keeps-on-giving/",
   "source_title": "The Apollo experiment that keeps on giving (NASA JPL)",
   "accessed": "2026-11-11",
@@ -745,6 +788,7 @@
    "by": "builder (an AI): source not yet read",
    "quote": "",
    "qualification": "Not yet read."
-  }
+  },
+  "derivation": "The Moon's distance is measured by lunar laser ranging, laser pulses bounced off retroreflectors left by the Apollo missions."
  }
 ]

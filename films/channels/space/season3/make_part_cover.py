@@ -20,7 +20,7 @@ for w in words:
     t = (cur + " " + w).strip()
     if d.textlength(t, font=f) <= 820: cur = t
     else: lines.append(cur); cur = w
-lines.append(cur); y = int(os.environ.get("TEXT_Y", "1030"))
+lines.append(cur); y = int(os.environ.get("TEXT_Y", "300"))
 shade = Image.new("RGBA", im.size, (0, 0, 0, 0)); sd = ImageDraw.Draw(shade)
 sd.rectangle((0, y - 40, 1080, y + len(lines) * 160 + 30), fill=(8, 10, 28, 120)); im = Image.alpha_composite(im.convert("RGBA"), shade).convert("RGB"); d = ImageDraw.Draw(im)
 for ln in lines:
@@ -29,4 +29,5 @@ for ln in lines:
         col = (79, 227, 198) if w.strip(".,?!").lower() == accent.lower() else (238, 240, 255)
         d.text((x + 3, y + 3), w, font=f, fill=(8, 10, 28)); d.text((x, y), w, font=f, fill=col); x += d.textlength(w + " ", font=f)
     y += 160
-im.save(f"{O}/part{n}-cover.jpg", quality=92); im.resize((480, 853), Image.LANCZOS).save(f"{O}/part{n}-cover-480.jpg", quality=88); os.remove(tmp); os.remove(fr); print("cover", f"{O}/part{n}-cover.jpg")
+im.save(f"{O}/part{n}-cover.jpg", quality=92); im.crop((0, 240, 1080, 1680)).save(f"{O}/part{n}-cover-grid-3x4.jpg", quality=90);   # the 3:4 crop the TikTok / Instagram grids show
+im.resize((480, 853), Image.LANCZOS).save(f"{O}/part{n}-cover-480.jpg", quality=88); os.remove(tmp); os.remove(fr); print("cover", f"{O}/part{n}-cover.jpg")

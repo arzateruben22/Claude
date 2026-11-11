@@ -2,11 +2,11 @@
  {
   "id": "c19",
   "sentence": "The Moon is nearly eight times wider than tonight.",
-  "claim": "at 50,000 km the Moon's angular width is 7.7x today's (calc.py).",
+  "claim": "A Moon at 50,000 km would look nearly eight times wider than tonight's.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): at 50,000 km the Moon's angular width is 7.7x today's (calc.py).",
+  "note": "OWN INFERENCE (arithmetic): at 50,000 km the Moon's angular width is 7.7x today's (our calculation).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -14,16 +14,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "at 50,000 km the Moon's angular width is 7.7x today's (calc.py)."
  },
  {
   "id": "c20",
   "sentence": "The pull is about four hundred fifty times today's.",
-  "claim": "(384,400/50,000)^3 = 454x the tidal force (calc.py).",
+  "claim": "At 50,000 km the Moon's tidal pull would be about 450 times today's.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): (384,400/50,000)^3 = 454x the tidal force (calc.py).",
+  "note": "OWN INFERENCE (arithmetic): (384,400/50,000)^3 = 454x the tidal force (our calculation).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -31,16 +32,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "(384,400/50,000)^3 = 454x the tidal force (calc.py)."
  },
  {
   "id": "c21",
   "sentence": "One lap now takes about a day and a quarter.",
-  "claim": "at 50,000 km the period is 30.9 h.",
+  "claim": "At 50,000 km a lap around Earth would take about a day and a quarter.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (Kepler's third law, calc.py): at 50,000 km the period is 30.9 h.",
+  "note": "OWN INFERENCE (Kepler's third law, our calculation): at 50,000 km the period is 30.9 h.",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -48,16 +50,17 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "at 50,000 km the period is 30.9 h."
  },
  {
   "id": "c22",
   "sentence": "A moon that orbits slower than the Earth turns rises in the east, like today.",
-  "claim": "a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day.",
+  "claim": "A moon closer than about 42,000 km orbits faster than the Earth turns, so it would rise in the west.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (Kepler, calc.py): a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day.",
+  "note": "OWN INFERENCE (Kepler, our calculation): a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day.",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -65,14 +68,15 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day."
  },
  {
   "id": "c40",
   "sentence": "Fifty thousand kilometers.",
-  "claim": "50,000 km is a waypoint chosen for the film; no physics claim.",
+  "claim": "In our thought experiment the Moon is brought to 50,000 km.",
   "source_url": "",
-  "source_title": "",
+  "source_title": "Our thought experiment (not a measurement)",
   "accessed": "2026-11-10",
   "note": "OWN CHOICE: a waypoint, not a physics claim.",
   "verified_via": "not read",
@@ -82,6 +86,7 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
-  }
+  },
+  "derivation": "50,000 km is a waypoint chosen for the film; no physics claim."
  }
 ]

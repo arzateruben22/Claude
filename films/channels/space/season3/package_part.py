@@ -6,7 +6,7 @@ L1 = f"{ROOT}/films/channels/space/long01"; O = L1 + "/out"; ep = f"{ROOT}/films
 T = json.load(open(L1 + "/part_titles.json")); title = T["parts"][str(n)]; tl = json.load(open(f"{O}/part{n}.json")); lines = {x["id"]: x for x in json.load(open(L1 + "/voice/lines.json"))["lines"]}
 name = f"one-more-orbit-s3-part{n}"
 shutil.copy(f"{O}/part{n}.mp4", f"{out}/{name}-9x16.mp4")
-for a, b in ((f"part{n}-cover.jpg", f"{name}-cover.jpg"), (f"part{n}-cover-480.jpg", f"{name}-cover-480.jpg"), (f"part{n}-posting.json", "posting.json"), (f"part{n}-POSTING.md", "POSTING.md")):
+for a, b in ((f"part{n}-cover.jpg", f"{name}-cover.jpg"), (f"part{n}-cover-480.jpg", f"{name}-cover-480.jpg"), (f"part{n}-cover-grid-3x4.jpg", f"{name}-cover-grid-3x4.jpg"), (f"part{n}-posting.json", "posting.json"), (f"part{n}-POSTING.md", "POSTING.md")):
     if os.path.exists(f"{O}/{a}"): shutil.copy(f"{O}/{a}", f"{out}/{b}")
 sc = open(L1 + "/script.md").read(); ch = f"ch{n}"; sec = re.search(rf"## {ch} .*?(?=\n## |\Z)", sc, re.S).group(0)
 g = lambda k: (re.search(rf"^{k}: (.*)$", sec, re.M) or [None, ""])[1]
