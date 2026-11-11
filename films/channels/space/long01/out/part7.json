@@ -81,38 +81,26 @@
   },
   {
    "t0": 18.257,
-   "t1": 20.823,
-   "text": "A moon that orbits slower than the",
+   "t1": 21.279,
+   "text": "A moon that orbits slower than the Earth",
    "line": "ch7_vo"
   },
   {
-   "t0": 20.843,
+   "t0": 21.299,
    "t1": 24.037,
-   "text": "Earth turns rises in the east, like today.",
+   "text": "turns rises in the east, like today.",
    "line": "ch7_vo"
   },
   {
    "t0": 24.057,
-   "t1": 26.104,
-   "text": "A moon that orbits faster than",
-   "line": "ch7_vo"
-  },
-  {
-   "t0": 26.124,
    "t1": 28.467,
-   "text": "the Earth turns rises in the west.",
+   "text": "A moon that orbits faster than the Earth turns rises in the west.",
    "line": "ch7_vo"
   },
   {
    "t0": 28.487,
-   "t1": 30.537,
-   "text": "The line between them is about",
-   "line": "ch7_vo"
-  },
-  {
-   "t0": 30.557,
    "t1": 32.627,
-   "text": "forty-two thousand kilometers.",
+   "text": "The line between them is about forty-two thousand kilometers.",
    "line": "ch7_vo"
   },
   {
@@ -153,14 +141,14 @@
   },
   {
    "t0": 48.482,
-   "t1": 51.006,
-   "text": "Real quick: like and follow, if space",
+   "t1": 50.387,
+   "text": "Real quick: like and follow,",
    "line": "cta3_follow"
   },
   {
-   "t0": 51.026,
+   "t0": 50.407,
    "t1": 53.432,
-   "text": "just got a little stranger for you.",
+   "text": "if space just got a little stranger for you.",
    "line": "cta3_follow"
   },
   {
@@ -171,14 +159,8 @@
   },
   {
    "t0": 55.531,
-   "t1": 57.409,
-   "text": "And there is a line ahead that",
-   "line": "ch7_loop"
-  },
-  {
-   "t0": 57.429,
    "t1": 59.391,
-   "text": "nothing can hold together past.",
+   "text": "And there is a line ahead that nothing can hold together past.",
    "line": "ch7_loop"
   },
   {

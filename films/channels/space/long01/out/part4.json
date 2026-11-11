@@ -129,38 +129,26 @@
   },
   {
    "t0": 33.121,
-   "t1": 35.417,
-   "text": "At this distance, one lap takes",
-   "line": "ch4_vo"
-  },
-  {
-   "t0": 35.437,
    "t1": 38.051,
-   "text": "about seven days, not twenty-seven.",
+   "text": "At this distance, one lap takes about seven days, not twenty-seven.",
    "line": "ch4_vo"
   },
   {
    "t0": 38.071,
-   "t1": 40.733,
-   "text": "The water has a silver road across",
-   "line": "ch4_vo"
-  },
-  {
-   "t0": 40.753,
    "t1": 43.356,
-   "text": "it, wider than any you have seen.",
+   "text": "The water has a silver road across it, wider than any you have seen.",
    "line": "ch4_vo"
   },
   {
    "t0": 43.376,
-   "t1": 46.206,
-   "text": "Night is not as dark as it used to be, and",
+   "t1": 45.935,
+   "text": "Night is not as dark as it used to be,",
    "line": "ch4_vo"
   },
   {
-   "t0": 46.226,
+   "t0": 45.955,
    "t1": 49.416,
-   "text": "it is about to get a different kind of strange.",
+   "text": "and it is about to get a different kind of strange.",
    "line": "ch4_vo"
   },
   {
@@ -177,14 +165,14 @@
   },
   {
    "t0": 56.082,
-   "t1": 58.235,
-   "text": "Which means the next time they line",
+   "t1": 58.483,
+   "text": "Which means the next time they line up,",
    "line": "ch4_loop"
   },
   {
-   "t0": 58.255,
+   "t0": 58.503,
    "t1": 60.552,
-   "text": "up, something happens in the daytime.",
+   "text": "something happens in the daytime.",
    "line": "ch4_loop"
   },
   {

@@ -63,26 +63,14 @@
   },
   {
    "t0": 5.785,
-   "t1": 7.511,
-   "text": "The Moon is about five and",
-   "line": "ch6_vo"
-  },
-  {
-   "t0": 7.531,
    "t1": 9.68,
-   "text": "a half times wider than tonight.",
+   "text": "The Moon is about five and a half times wider than tonight.",
    "line": "ch6_vo"
   },
   {
    "t0": 9.7,
-   "t1": 11.776,
-   "text": "Its tidal pull is more than",
-   "line": "ch6_vo"
-  },
-  {
-   "t0": 11.796,
    "t1": 14.125,
-   "text": "a hundred sixty times today's.",
+   "text": "Its tidal pull is more than a hundred sixty times today's.",
    "line": "ch6_vo"
   },
   {
@@ -93,14 +81,14 @@
   },
   {
    "t0": 17.345,
-   "t1": 20.239,
-   "text": "The solid Earth already rises and falls a",
+   "t1": 20.736,
+   "text": "The solid Earth already rises and falls a little",
    "line": "ch6_vo"
   },
   {
-   "t0": 20.259,
+   "t0": 20.756,
    "t1": 23.67,
-   "text": "little with the Moon, tens of centimeters a day.",
+   "text": "with the Moon, tens of centimeters a day.",
    "line": "ch6_vo"
   },
   {
@@ -111,32 +99,26 @@
   },
   {
    "t0": 26.74,
-   "t1": 28.733,
-   "text": "What that would do to faults and",
+   "t1": 29.425,
+   "text": "What that would do to faults and volcanoes,",
    "line": "ch6_vo"
   },
   {
-   "t0": 28.753,
+   "t0": 29.445,
    "t1": 31.08,
-   "text": "volcanoes, this film cannot tell you.",
+   "text": "this film cannot tell you.",
    "line": "ch6_vo"
   },
   {
    "t0": 31.1,
-   "t1": 35.009,
-   "text": "In real life, tides are why the Moon drifts away: they",
+   "t1": 35.408,
+   "text": "In real life, tides are why the Moon drifts away: they steal",
    "line": "ch6_vo"
   },
   {
-   "t0": 35.029,
-   "t1": 37.192,
-   "text": "steal a little of Earth's spin",
-   "line": "ch6_vo"
-  },
-  {
-   "t0": 37.212,
+   "t0": 35.428,
    "t1": 39.54,
-   "text": "and hand it to the Moon's orbit.",
+   "text": "a little of Earth's spin and hand it to the Moon's orbit.",
    "line": "ch6_vo"
   },
   {
@@ -153,14 +135,14 @@
   },
   {
    "t0": 44.125,
-   "t1": 46.291,
-   "text": "That is one more reason this is",
+   "t1": 46.079,
+   "text": "That is one more reason this",
    "line": "ch6_vo"
   },
   {
-   "t0": 46.311,
+   "t0": 46.099,
    "t1": 48.92,
-   "text": "a thought experiment, not a forecast.",
+   "text": "is a thought experiment, not a forecast.",
    "line": "ch6_vo"
   },
   {
@@ -189,14 +171,8 @@
   },
   {
    "t0": 54.947,
-   "t1": 56.994,
-   "text": "Because soon, the Moon will rise",
-   "line": "ch6_loop"
-  },
-  {
-   "t0": 57.014,
    "t1": 59.017,
-   "text": "from the wrong side of the sky.",
+   "text": "Because soon, the Moon will rise from the wrong side of the sky.",
    "line": "ch6_loop"
   },
   {

@@ -13,10 +13,10 @@ if "--text-only" not in sys.argv:
     im = Image.open(L1 + "/art/plate-close.png").convert("RGB").resize((1920, 1080), Image.LANCZOS)
     g = Image.new("L", (1920, 1080), 0); gd = ImageDraw.Draw(g); gd.rectangle((1000, 800, 1920, 1080), fill=150); g = g.filter(ImageFilter.GaussianBlur(120))
     im = Image.composite(Image.new("RGB", im.size, (6, 8, 24)), im, g); d = ImageDraw.Draw(im)
-    f = ImageFont.truetype(R + "/fonts/Lexend-VF.ttf", 190)
+    f = ImageFont.truetype(R + "/fonts/Lexend-VF.ttf", 150)
     try: f.set_variation_by_axes([800])
     except Exception: pass
-    d.text((1840, 960), "HOW CLOSE?", font=f, fill=(238, 240, 255), anchor="rs"); im.save(D + "/thumbnail.jpg", quality=90, optimize=True)
+    d.text((1860, 1000), "HOW CLOSE?", font=f, fill=(238, 240, 255), anchor="rs"); im.save(D + "/thumbnail.jpg", quality=90, optimize=True)
 # description
 secs = {}
 for c in claims: secs.setdefault((c["source_title"], c["source_url"]), []).append(c["id"])

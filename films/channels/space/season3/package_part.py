@@ -21,5 +21,5 @@ json.dump(film, open(ep + "/film.json", "w"), indent=1, ensure_ascii=False)
 if os.path.exists(f"{O}/packaging.json"): os.replace(f"{O}/packaging.json", f"{out}/packaging.json")
 print("packaged", ep, title)
 import subprocess
-subprocess.run(["python3", "-I", f"{ROOT}/kits/cinema/film/youtube1440.py", ep, "--force"], check=True, capture_output=True)
+if not os.environ.get("SKIP_YT"): subprocess.run(["python3", "-I", f"{ROOT}/kits/cinema/film/youtube1440.py", ep, "--force"], check=True, capture_output=True)
 print("youtube 1440p:", [f for f in os.listdir(out) if f.endswith("youtube.mp4")])

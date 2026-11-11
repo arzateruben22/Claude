@@ -63,14 +63,8 @@
   },
   {
    "t0": 8.932,
-   "t1": 11.024,
-   "text": "The Sun and the Moon look about",
-   "line": "ch5_vo"
-  },
-  {
-   "t0": 11.044,
    "t1": 13.157,
-   "text": "the same size from Earth today.",
+   "text": "The Sun and the Moon look about the same size from Earth today.",
    "line": "ch5_vo"
   },
   {
@@ -105,14 +99,14 @@
   },
   {
    "t0": 29.617,
-   "t1": 31.766,
-   "text": "Not every month, though, because the",
+   "t1": 32.188,
+   "text": "Not every month, though, because the Moon's",
    "line": "ch5_vo"
   },
   {
-   "t0": 31.786,
+   "t0": 32.208,
    "t1": 34.197,
-   "text": "Moon's orbit is tilted by a few degrees.",
+   "text": "orbit is tilted by a few degrees.",
    "line": "ch5_vo"
   },
   {
@@ -135,26 +129,14 @@
   },
   {
    "t0": 42.337,
-   "t1": 44.995,
-   "text": "A long dark noon, with a faint",
-   "line": "ch5_vo"
-  },
-  {
-   "t0": 45.015,
    "t1": 47.692,
-   "text": "glow around a huge black disc.",
+   "text": "A long dark noon, with a faint glow around a huge black disc.",
    "line": "ch5_vo"
   },
   {
    "t0": 47.765,
-   "t1": 49.9,
-   "text": "Quick thing: if that made the sky",
-   "line": "cta1_follow"
-  },
-  {
-   "t0": 49.92,
    "t1": 52.075,
-   "text": "feel bigger, tap like and follow.",
+   "text": "Quick thing: if that made the sky feel bigger, tap like and follow.",
    "line": "cta1_follow"
   },
   {

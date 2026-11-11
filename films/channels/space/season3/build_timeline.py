@@ -17,16 +17,22 @@ def captions(clips):
     for a, b in zip(caps, caps[1:]): a["t1"] = round(min(a["t1"], b["t0"] - 0.02), 3) if b["t0"] > a["t0"] else a["t1"]
     return caps
 def split_caps(caps, lim):
-    """two lines at most on screen: a caption longer than lim characters is shown in pieces, each for a share of the time (by length), cut at a word boundary near the middle"""
+    """two lines at most on screen: a caption longer than lim characters is shown in pieces, each for a share of the time (by length).
+    The cut is the word boundary nearest the middle (a comma or a clause word is preferred), and never leaves 'a', 'the', 'and', 'of' ... at the end of a piece."""
+    WEAK = {"a", "an", "the", "and", "or", "of", "to", "in", "on", "at", "is", "it", "as", "by", "for", "with", "than", "that", "but", "so", "its", "your", "from", "into"}
+    def cut(txt):
+        w = txt.split(" "); best, bs = 1, 1e9; tot = len(txt)
+        for k in range(1, len(w)):
+            left = " ".join(w[:k]); sc = abs(len(left) - tot / 2)
+            if w[k - 1].lower().strip(",.;:") in WEAK and not w[k - 1].endswith(","): sc += 25
+            if w[k - 1].endswith(","): sc -= 8
+            if sc < bs: best, bs = k, sc
+        return " ".join(w[:best]), " ".join(w[best:])
     out = []
     for c in caps:
-        txt, parts = c["text"], [c["text"]]
+        parts = [c["text"]]
         while max(len(x) for x in parts) > lim:
-            i = max(range(len(parts)), key=lambda j: len(parts[j])); w = parts[i].split(" "); half = len(parts[i]) / 2; acc = 0; cut = 1
-            for k, x in enumerate(w[:-1]):
-                acc += len(x) + 1
-                if acc >= half * 0.9: cut = k + 1; break
-            parts[i:i + 1] = [" ".join(w[:cut]), " ".join(w[cut:])]
+            i = max(range(len(parts)), key=lambda j: len(parts[j])); a, b = cut(parts[i]); parts[i:i + 1] = [a, b]
         if len(parts) == 1: out.append(c); continue
         tot = sum(len(x) for x in parts); t = c["t0"]; span = c["t1"] - c["t0"]
         for x in parts:
@@ -113,6 +119,6 @@ for i in range(1, 9):
     if i == 5:
         e0 = find(caps, "The sky goes dim"); e1 = find(caps, "And then you look at the Moon again")
         if e0 and e1: tracks["eclipse"] += [[e0["t0"] - 0.2, 0], [e0["t0"] + 1.6, 1], [e1["t0"] - 0.1, 1], [e1["t0"] + 1.6, 0]]
-    tl[f"part{i}"] = {"name": f"part{i}", "mode": "port", "dur": dur_p, "clips": clips, "captions": split_caps(caps, 56), "km": kk, "tracks": tracks, "cta_at": round(cc["t"], 3), "cta_frac": round(cc["t"] / dur_p, 3)}
+    tl[f"part{i}"] = {"name": f"part{i}", "mode": "port", "dur": dur_p, "clips": clips, "captions": split_caps(caps, 68), "km": kk, "tracks": tracks, "cta_at": round(cc["t"], 3), "cta_frac": round(cc["t"] / dur_p, 3)}
 for k, v in tl.items(): json.dump(v, open(f"{OUT}/{k}.json", "w"), indent=1, ensure_ascii=False)
 print({k: round(v["dur"], 1) for k, v in tl.items()}); print("CTA at", {k: v.get("cta_frac") for k, v in tl.items() if k != "long"})
