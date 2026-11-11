@@ -22,10 +22,10 @@ Disclose as above. Files go in `plates/` as `plate-NN-<name>-16x9.png` / `-9x16.
 |---|---|---|---|---|
 | 01 | wide kitchen from the doorway (stove left, sink right, window centre, table and four chairs) | the sound wave crossing the room (Part 4, film sound chapter); establishing shots | `plate-01-wide-16x9.png` | to come |
 | 02 | window with a red hummingbird feeder hanging inside it, centre; trees beyond, counter below, blue mug right | the wing slowed 10x (Part 1) | `plate-02-feeder-16x9.png` | to come |
-| 03 | tap and the blue mug, close | the drop and the crown splash (Part 2) | to come | to come |
+| 03 | the tap and the blue mug, close: a drop forming at the tap lip, the mug full to the brim below it, sink and window behind | the drop and the crown splash (Part 2) | `plate-03-tap-mug-16x9.png` | to come |
 | 04 | stove pan from above | the popcorn pop (Part 3) | to come | to come |
-| 05 | over the sink, backlit | the soap bubble (Part 3) | to come | to come |
-| 06 | apple on the counter, low angle | the bullet (Part 5) | to come | to come |
+| 05 | the farmhouse sink and tap at eye level under the window, empty air above; blue mug left, blue towel right | the soap bubble (Part 3) | `plate-05-sink-16x9.png` | to come |
+| 06 | one red apple on the oak counter, low angle, clear space left and right, backsplash and window soft behind | the bullet (Part 5) | `plate-06-apple-16x9.png` | to come |
 | 07 | window at dusk, storm | lightning (Part 6) | to come | to come |
 | 08 | table in near-darkness | light crawling (Part 7) | to come | to come |
 | 09 | night kitchen, one under-cabinet light | slower than a snail (Part 8) | to come | to come |
