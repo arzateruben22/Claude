@@ -408,7 +408,7 @@ From her launch questions page (https://claude.ai/artifact/XfuMJKhS4Fm8fdYF5fgYw
 | How many Retinal B3 Serums? | 2 | Counted at 2 (`counted: true` in js/catalog.js keeps her own count while the rest of the shelf isn't counted). |
 | Older sunscreens still sold? | Yes, keep them | They stay on the shelf. |
 | Seller's permit? | Yes | GO-LIVE step 4b. |
-| LA business tax certificate covers retail? | Not sure | Asked again as a short task on her page. |
+| LA business tax certificate covers retail? | Not sure, then checked: it covers it | Nothing to do. |
 | Own a domain? | No, OK to buy one in her name | Bought in the launch session (GO-LIVE step 7). |
 | Stripe account? | Yes | Use hers in the launch session. |
 | Booking? | Keep GlossGenius for now | Already so (`booking.mode: "glossgenius"`). |
@@ -421,5 +421,11 @@ From her launch questions page (https://claude.ai/artifact/XfuMJKhS4Fm8fdYF5fgYw
 | Google review link | Given | The `REVIEW_URL` server secret at launch (the "how was your visit" email). |
 | Studio address for confirmations | Given | The `STUDIO_ADDRESS` server secret at launch. Kept out of this public repo; the site keeps saying Woodland Hills. |
 | A bigger Dew Drop photo | She'll send one | Swap `img/products/` when it arrives. |
+| Liability insurance covers product sales? | Covered | Nothing to do. |
+| Brand emails sent? | Not yet ("no") | The one real blocker before the shop goes public (STOREFRONT.md step 0). |
+| 10 minutes in the Skin Playbook | Not yet | Not blocking; the chat already has her earlier answers. |
+| Launch session times | Sunday or Monday, afternoons | Pick the date with her. |
+| Ad accounts on Meta and Google | Not yet | Later, before any paid ads. |
+| Anything else? | No | |
 
-Still waiting on: the Dew Drop photo, the brand emails, insurance, the Skin Playbook, launch session times, ad accounts, and the two follow-ups (deposit amount, the LA certificate).
+Still waiting on: the deposit amount (the one question left on her page), the brand emails, the Skin Playbook and the Dew Drop photo.
