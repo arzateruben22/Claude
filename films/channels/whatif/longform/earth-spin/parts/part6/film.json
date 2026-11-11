@@ -1,6 +1,6 @@
 {
  "id": "possibility-lab-earth-spin-part6",
- "theme": "../../../../../theme.json",
+ "theme": "../../../../theme.json",
  "scene": "../../scene.mjs",
  "fps": 30,
  "bpm": 50,

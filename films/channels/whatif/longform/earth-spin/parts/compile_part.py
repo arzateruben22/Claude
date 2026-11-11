@@ -105,7 +105,7 @@ ORD = ["one", "two", "three", "four", "five", "six", "seven", "eight"]
 END = {"title": "Full video on YouTube: *What If Earth Spun Faster…*", "follow": f"Possibility Lab · Part {N} of 8", "next": "Every number's source is in the description."}
 dummy = [999.0, 1000.0]
 CUE = {"fps": FPS, "float": dummy, "break": dummy, "cost": dummy, "weather": dummy, "wind": dummy, "oceans": dummy, "poles": dummy, "end": t_end, "seed": 3}
-film = {"id": f"possibility-lab-earth-spin-part{N}", "theme": "../../../../../theme.json", "scene": "../../scene.mjs", "fps": FPS, "bpm": BPM, "dur": f.duration,
+film = {"id": f"possibility-lab-earth-spin-part{N}", "theme": "../../../../theme.json", "scene": "../../scene.mjs", "fps": FPS, "bpm": BPM, "dur": f.duration,
         "poster": round(min(f.duration - 6, BEATS[len(BEATS) // 2]["t0"]), 4),
         "shots": SHOTS, "beats": BEATS, "world": {"cycleS": 16.0, "keys": KEYS, "dry": DRY, "tOrbH": T_ORB / 3600, "t0H": 23.934, "rEq": R_EQ / 1000, "gm": 3.986004418e14, "eNow": E_NOW, "eOrb": E_ORB, "weightWins": WW},
         "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {},

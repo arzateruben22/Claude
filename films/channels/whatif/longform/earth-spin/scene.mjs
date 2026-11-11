@@ -122,7 +122,6 @@ const titleEl = hud.title(FILM.title);
 const tFlap = titleFlap(titleEl, { t0: FILM.title.t0 ?? 0, sig: FILM.title.sig });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, t0: b.t0, t1: b.t1, slot: b.slot });
 const beat = (id) => FILM.beats.find((b) => b.id === id);
-const WW = WD.weightWin || [beat("today").t0 + 19, beat("break").t0 - 0.2];
 // (the weight now shows in the readout's second line during the weight beats)
 const endEl = hud.end({ t0: FILM.endCard, ...FILM.end, y: PORT ? 0.34 : 0.3 });
 const endT = endEl.querySelector(".t"), endFo = endEl.querySelector(".fo"); if (endT) endT.style.fontSize = "7vmin"; if (endFo) endFo.style.marginTop = "2vmin";
