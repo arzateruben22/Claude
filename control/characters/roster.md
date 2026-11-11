@@ -16,3 +16,5 @@ UPDATE Nov 11 ~12:40 PM PT: the owner clarified "realistically" meant "images yo
 - 05 Jas Cruz: received Nov 11 ~1:20 PM PT (body-sheet.webp, face-sheet.webp). Both usable. Hair tie on her right wrist in every view.
 - 04 Leila Farahani: received Nov 11 ~1:25 PM PT (body-sheet.webp, face-sheet.webp). Both usable.
 - 01 Mateo Reyes: received Nov 11 ~1:30 PM PT (body-sheet.webp, face-sheet.webp). Both usable. The jacket came out as a zip-front charcoal canvas jacket (prompt: open work jacket): build as drawn. ALL SIX RECEIVED.
+
+PLAN NOTE (21:15 UTC): src/onfoot/people/ is a parametric builder (params.ts, garments.ts, hair.ts, face.ts, skin.ts, acc.ts...). Plan: the six as presets in a new file of ours (e.g. src/onfoot/cast.ts) calling the people API + a picker; missing hair/garment/accessory types requested from the other session (session_01SwssTo7t6RP6BjTKo6BMvm), messaged at 21:15 UTC with the plan and the wip-control paths; wait for its reply before touching people/* or hands*.
