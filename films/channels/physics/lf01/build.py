@@ -253,7 +253,9 @@ film = {
     "spine": SPINE, "spineAt": SPINE_AT, "factorKeys": KEYS, "ramp": RAMP, "labelKeys": LBL, "ev": EV, "cam": CAM,
     "calc": {"c": CALC["c"], "hz": {"hum": 50.0, "fly": 200.0, "mosq": 500.0}, "bubble_t": CALC["bubble"]["t_s"], "bullet": CALC["bullet"],
              "sound": 343.0, "leader": CALC["leader"], "light": CALC["light"]["m_per_ns"], "hair_m": CALC["hair"]["m"]},
-    "badges": BADGES, "captionY": CAPY, "title": None,
+    "badges": BADGES, "captionY": CAPY,
+    "title": ({"series": f"Reality Rulebook · Season 3 · Part {PART} of 8", "title": TITLES[PART - 1]} if PART else {"series": "Reality Rulebook · Season 3", "title": "How Much Would You Slow Time to Watch Light Move?"}),
+    "disclosures": {"aiVoice": True},
     "captions": [pg for pg in phrase_captions(f, max_chars=CAPCH, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "endCard": EC, "end": END,
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
