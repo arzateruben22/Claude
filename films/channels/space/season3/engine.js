@@ -84,7 +84,8 @@ window.setup = async (tl, assets, mode, w, h) => {
 };
 // extra life for the long film's still stretches (the hold in chapter 1 and everything from the break-up on): a slow camera sway, the Moon's libration, drifting dust.
 // Gated by time so the segments rendered separately join without a pop (it is 0 at 345.1 s).
-const swayAmp = (t) => (MODE !== "land" || TL.dur < 300) ? ((TL.name || "").startsWith("part8") ? sm((t - 0.5) / 1.5) : 0) : Math.max(sm((t - 346) / 4), (beats() && t > beats().calm.t1 + 1 && t < beats().size.t0 - 0.2) ? sm((t - beats().calm.t1 - 1) / 2) * sm((beats().size.t0 - 0.2 - t) / 1) : 0);
+const holdAmp = (t) => { const b = beats(); return (b && t > b.calm.t1 + 1 && t < b.size.t0 - 0.2) ? sm((t - b.calm.t1 - 1) / 2) * sm((b.size.t0 - 0.2 - t) / 1) : 0; };
+const swayAmp = (t) => (MODE !== "land" || TL.dur < 300) ? (((TL.name || "").startsWith("part8")) ? sm((t - 0.5) / 1.5) : holdAmp(t)) : Math.max(sm((t - 346) / 4), holdAmp(t));
 const figPos = () => (MODE === "land" ? { x: 0.342 * W, y: 0.831 * H } : { x: 0.38 * W, y: 0.81 * H });
 
 // camera beats for parts 2-8: 2-3 moves tied to the part's idea (keyed by caption text); each key eases the zoom to s about a pivot (the Moon, the figure or the sea)
