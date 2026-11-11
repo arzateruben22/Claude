@@ -28,22 +28,27 @@ export async function create(args) {
       cells.push({ x, y, z, c: colOf(y).clone().offsetHSL((hash(x * 7 + y * 13 + z * 3) - 0.5) * 0.02, 0, (hash(x * 3 + y * 5 + z * 11) - 0.5) * 0.06 + (z < 0 && y < -1 ? -0.03 * Math.min(3, -z) : 0)) }); } }
   const block = new THREE.InstancedMesh(rbox(0.97, 0.13, 4), cubeM, cells.length); block.frustumCulled = false; const D = new THREE.Object3D();
   cells.forEach((c, i) => { D.position.set(c.x, c.y, c.z); D.updateMatrix(); block.setMatrixAt(i, D.matrix); block.setColorAt(i, c.c); }); scene.add(block);
-  const lining = new THREE.Mesh(new THREE.PlaneGeometry(21, 14.2), new THREE.MeshBasicMaterial({ color: new THREE.Color(0x6a3a30) })); lining.position.set(0, -8.1, -2.7); scene.add(lining);          // the chamber's and channel's back wall
+  const lining = new THREE.Mesh(new THREE.PlaneGeometry(21, 14.2), new THREE.MeshBasicMaterial({ color: new THREE.Color(0x1c0f0b) })); lining.position.set(0, -8.1, -3.6); scene.add(lining);          // the chamber's and channel's back wall
+  const TN = []; for (let y = -1; y >= -9; y--) for (let k = 0; k < 9; k++) { const ph = (k / 8) * Math.PI, r = 1.18 + 0.06 * hash(y * 3 + k), dp = Math.min(1, (-y - 1) / 8);
+    TN.push({ x: -0.5 + r * Math.cos(ph), y, z: -1 - r * Math.sin(ph), c: new THREE.Color(0xb27562).lerp(new THREE.Color(0x6e3a2c), 0.25 + 0.55 * dp).offsetHSL(0, 0, (hash(k * 7 + y * 5) - 0.5) * 0.05) }); }
+  const tunnel = new THREE.InstancedMesh(rbox(0.9, 0.14, 4), cubeM, TN.length); tunnel.frustumCulled = false;
+  TN.forEach((c, i) => { D.position.set(c.x, c.y, c.z); D.rotation.set(0, Math.atan2(c.x + 0.5, c.z + 1) , 0); D.scale.set(0.85, 1, 0.85); D.updateMatrix(); tunnel.setMatrixAt(i, D.matrix); tunnel.setColorAt(i, c.c); }); D.rotation.set(0, 0, 0); D.scale.set(1, 1, 1); scene.add(tunnel);
+  const deepGlow = mkGlow(1, 0xff9a55)[0]; deepGlow.scale.set(5, 9, 1); deepGlow.position.set(-0.5, -7.5, -1.8); deepGlow.material.opacity = 0.22; deepGlow.material.fog = false; scene.add(deepGlow);
   const glowBack = mkGlow(1, 0xff8a4a)[0]; glowBack.scale.set(46, 46, 1); glowBack.position.set(0, -5, -9); glowBack.material.opacity = 0.08; glowBack.material.fog = false; scene.add(glowBack);
 
   // ── the hair: grows up from its bulb, out through the pore ────────────────────────────────────────────────────────────────────────────────────────────
   const hairPts = [[-0.5, -8.2, -1.0], [-0.55, -6.0, -1.1], [-0.45, -3.5, -1.0], [-0.5, -1.0, -0.9], [-0.35, 1.0, -0.7], [0.1, 2.6, -0.5], [0.8, 3.9, -0.3]].map((p) => new THREE.Vector3(...p));
-  const hairCurve = new THREE.CatmullRomCurve3(hairPts), HS = 90, hairGeo = new THREE.TubeGeometry(hairCurve, HS, 0.1, 8, false), hairIdx = hairGeo.index.count;
-  const hairM = mat({ color: 0x1a0d08, roughness: 0.45, emissive: 0x3a1a0a, emissiveIntensity: 0.5 }), hair = new THREE.Mesh(hairGeo, hairM); hair.frustumCulled = false; scene.add(hair);
+  const hairCurve = new THREE.CatmullRomCurve3(hairPts), HS = 90, hairGeo = new THREE.TubeGeometry(hairCurve, HS, 0.15, 10, false), hairIdx = hairGeo.index.count;
+  const hairM = mat({ color: 0x241108, roughness: 0.22, metalness: 0.15, emissive: 0x4a2410, emissiveIntensity: 0.6 }), hair = new THREE.Mesh(hairGeo, hairM); hair.frustumCulled = false; scene.add(hair);
   const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.42, 16, 12), mat({ color: 0xd9b48c, roughness: 0.5, emissive: 0xff9a55, emissiveIntensity: 0.2 })); bulb.position.set(-0.5, -8.5, -1.0); bulb.scale.y = 1.2; scene.add(bulb);
 
   // ── the gland: lobes of cells that fill with oil and break down; a duct to the follicle ─────────────────────────────────────────────────────────────────
   const lobeC = [[3.4, -4.4, -0.6], [5.0, -4.2, -0.8], [6.4, -4.8, -0.6], [3.8, -6.0, -0.5], [5.4, -6.0, -0.7], [6.6, -6.6, -0.6], [4.2, -7.3, -0.5], [5.8, -7.4, -0.6]];
-  const lobeM = mat({ color: 0xe8d4a8, roughness: 0.35, transparent: true, opacity: 0.55, emissive: 0xc88a30, emissiveIntensity: 0.15, depthWrite: false });
+  const lobeM = mat({ color: 0xe6c88e, roughness: 0.18, transparent: true, opacity: 0.2, emissive: 0xc88a30, emissiveIntensity: 0.1, depthWrite: false });
   const lobes = lobeC.map(([x, y, z], i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.95 + 0.12 * hash(i), 22, 16), lobeM); m.position.set(x, y, z); scene.add(m); return m; });
-  const cellG = new THREE.SphereGeometry(0.5, 12, 10), cellM = mat({ color: 0xf0e0b8, roughness: 0.45, emissive: 0xb8863a, emissiveIntensity: 0.25 }), NCL = 14 * lobeC.length, cellI = new THREE.InstancedMesh(cellG, cellM, NCL); cellI.frustumCulled = false; scene.add(cellI);
-  const oilM = mat({ color: 0xf2b84a, roughness: 0.2, emissive: 0xe08a1a, emissiveIntensity: 0.55, transparent: true, opacity: 0.92 }), oilI = new THREE.InstancedMesh(new THREE.SphereGeometry(0.5, 14, 10), oilM, NCL); oilI.frustumCulled = false; scene.add(oilI);
-  const duct = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(2.8, -5.0, -0.5), new THREE.Vector3(1.8, -5.0, -0.5), new THREE.Vector3(0.6, -4.7, -0.6)]), 20, 0.3, 10, false), new THREE.MeshStandardMaterial({ color: 0xe8c47a, roughness: 0.3, transparent: true, opacity: 0.6, emissive: 0xc88a30, emissiveIntensity: 0.2 })); scene.add(duct);
+  const cellG = new THREE.SphereGeometry(0.5, 12, 10), cellM = mat({ color: 0xf0e0b8, roughness: 0.4, emissive: 0xb8863a, emissiveIntensity: 0.3 }), NCL = 14 * lobeC.length, cellI = new THREE.InstancedMesh(cellG, cellM, NCL); cellI.frustumCulled = false; scene.add(cellI);
+  const oilM = mat({ color: 0xf0a428, roughness: 0.18, emissive: 0xe07408, emissiveIntensity: 0.6, transparent: true, opacity: 0.92 }), oilI = new THREE.InstancedMesh(new THREE.SphereGeometry(0.5, 14, 10), oilM, NCL); oilI.frustumCulled = false; scene.add(oilI);
+  const duct = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(2.8, -5.0, -0.9), new THREE.Vector3(1.8, -5.0, -0.9), new THREE.Vector3(0.6, -4.7, -0.9)]), 20, 0.2, 14, false), new THREE.MeshStandardMaterial({ color: 0xf0b848, roughness: 0.25, transparent: true, opacity: 0, emissive: 0xd88a22, emissiveIntensity: 0.4 })); scene.add(duct);
 
   // ── sebum: beads gliding duct -> follicle -> up along the hair -> out, then a thin coat spreading on the surface; microbes feeding ────────────────────────
   const sebPath = new THREE.CatmullRomCurve3([[3.0, -5.0, -0.4], [1.8, -4.95, -0.4], [0.8, -4.6, -0.5], [0.1, -3.6, -0.6], [0.0, -2.0, -0.6], [0.1, -0.6, -0.5], [0.3, 0.2, -0.3]].map((p) => new THREE.Vector3(...p)));
@@ -72,11 +77,11 @@ export async function create(args) {
       // hair growth: draw the tube up to its growing length
       const g = 0.62 + 0.38 * sm(seg(t, T0.grow0, T0.grow1)); hairGeo.setDrawRange(0, Math.floor(hairIdx * g / 3) * 3);
       // gland: cells fill with oil, then break down into oil
-      const fill = sm(seg(t, T0.fill0, T0.fill1)), glow = sm(seg(t, S("vo04", 0.5), S("vo05", 2))) * (1 - 0.5 * sm(seg(t, T0.seb0, T0.seb1 + 3)));
+      const dv = sm(seg(t, S("vo04", 1.0), S("vo04", 3.0))), fill = sm(seg(t, T0.fill0, T0.fill1)), glow = sm(seg(t, S("vo04", 0.5), S("vo05", 2))) * (1 - 0.5 * sm(seg(t, T0.seb0, T0.seb1 + 3)));
       let ci = 0; lobeC.forEach(([x, y, z], i) => { for (let k = 0; k < 14; k++) { const a = hash(i * 31 + k * 7) * 6.28, b = Math.acos(2 * hash(i * 17 + k * 3) - 1), r = 0.55 * Math.cbrt(hash(i * 13 + k)), px = x + r * Math.sin(b) * Math.cos(a), py = y + r * Math.sin(b) * Math.sin(a) * 0.9, pz = z + r * Math.cos(b) * 0.7;
           const ph = clamp(fill * 1.3 - hash(i * 5 + k) * 0.3), cell = (1 - sm(seg(ph, 0.55, 1.0))) * 0.34, oil = (sm(seg(ph, 0.1, 0.9)) * 0.26 + sm(seg(ph, 0.6, 1.0)) * 0.16);
-          D.position.set(px, py, pz); D.rotation.set(0, 0, 0); D.scale.set(cell, cell, cell); D.updateMatrix(); cellI.setMatrixAt(ci, D.matrix); D.position.set(px, py, pz + 0.05); D.scale.set(oil, oil, oil); D.updateMatrix(); oilI.setMatrixAt(ci, D.matrix); ci++; } lobeGlow[i].material.opacity = 0.28 * glow; });
-      cellI.instanceMatrix.needsUpdate = oilI.instanceMatrix.needsUpdate = true; lobeM.emissiveIntensity = 0.15 + 0.5 * fill; oilM.emissiveIntensity = 0.45 + 0.3 * Math.sin(t * 1.3);
+          D.position.set(px, py, pz); D.rotation.set(0, 0, 0); D.scale.set(cell, cell, cell); D.updateMatrix(); cellI.setMatrixAt(ci, D.matrix); D.position.set(px, py, pz + 0.05); D.scale.set(oil, oil, oil); D.updateMatrix(); oilI.setMatrixAt(ci, D.matrix); ci++; } lobeGlow[i].material.opacity = 0.12 * glow; });
+      cellI.instanceMatrix.needsUpdate = oilI.instanceMatrix.needsUpdate = true; lobeM.emissiveIntensity = 0.1 + 0.4 * fill; cellM.color.set(0xf0e0b8).lerp(new THREE.Color(0xf2b038), fill); cellM.emissive.set(0xb8863a).lerp(new THREE.Color(0xe08a10), fill); duct.material.opacity = 0.9 * dv; duct.visible = dv > 0.01; oilM.emissiveIntensity = 0.45 + 0.3 * Math.sin(t * 1.3);
       // sebum beads along the path, in a steady stream while it flows
       const flow = sm(seg(t, T0.seb0 - 0.5, T0.seb0 + 1.5)) * (1 - 0.7 * sm(seg(t, E("vo07", 2), E("vo08", 0))));
       for (let i = 0; i < NB; i++) { const k = ((t - T0.seb0) * 0.1 + i / NB) % 1, kk = (k + 1) % 1, u = clamp(kk), vis = flow * (t > T0.seb0 - 0.5 ? 1 : 0) * Math.min(1, u * 8) * Math.min(1, (1 - u) * 6); sebPath.getPoint(u, pt); D.position.set(pt.x + 0.12 * Math.sin(i * 2.3 + t), pt.y, pt.z + 0.12 * Math.cos(i * 1.7)); const sz = 0.2 * vis * (0.8 + 0.4 * hash(i)); D.scale.set(sz, sz, sz); D.updateMatrix(); bead.setMatrixAt(i, D.matrix); }
