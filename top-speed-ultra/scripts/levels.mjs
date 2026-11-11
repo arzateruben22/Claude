@@ -1,6 +1,6 @@
 // Bakes the heights the network's load-time passes give every road (Network.bridgeSags, levelOverlaps and the profile
-// limits) into src/data/oc-levels.json, so a browser doesn't run them on every boot: the offsets from the map's heights
-// of each road that moves, in millimetres (centimetres made the 10 m crest test fail by rounding alone), as
+// limits), and where trimEnds cuts roads back, into src/data/oc-levels.json, so a browser doesn't run them on every
+// boot: the offsets from the map's heights of each road that moves, in millimetres (centimetres made the 10 m crest test fail by rounding alone), as
 // gzipped int16 steps along it. `npm run build` runs it first. Network uses
 // the file only when it was made from the same data (`sig`) with the same version of the passes (`LEVELS`), and npm test
 // checks the baked heights against the passes.
@@ -38,5 +38,7 @@ for (const p of net.paths) {
 }
 const bin = Buffer.from(new Int16Array(steps).buffer);
 const data = gzipSync(bin, { level: 9 }).toString('base64');
-writeFileSync(out, JSON.stringify({ version: LEVELS, sig: net.sig, runs, data }) + '\n');
-console.log(`levels: ${runs.length} roads moved, ${steps.length} samples, ${data.length} bytes (passes ${ms} ms under Node)`);
+// and where each road cut back off a carriageway's lanes ends (Network.trimEnds), to the millimetre
+const ends = net.paths.filter((p) => p.end < p.len).map((p) => [p.id, Math.round(p.end * 1e3) / 1e3]);
+writeFileSync(out, JSON.stringify({ version: LEVELS, sig: net.sig, runs, data, ends }) + '\n');
+console.log(`levels: ${runs.length} roads moved, ${steps.length} samples, ${data.length} bytes, ${ends.length} roads cut back (passes ${ms} ms under Node, of them trimEnds ${net.loadMs.trim.toFixed(0)} ms)`);

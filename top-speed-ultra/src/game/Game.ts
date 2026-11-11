@@ -883,7 +883,7 @@ export class Game {
     p.step(dt, this.over ? { ...c, throttle: 0, brake: 0.3 } : c, this.path, this.net);
     this.trackPath();
     // the end of the road: turned around or put back on, and the route planned again from there
-    if (!this.path.next && p.s > this.path.len - 30 && p.vx > 0.5) { this.rejoin(); this.route = []; this.followRoute(this.path, this.phys.s); }
+    if (!this.path.next && p.s > this.path.end - 30 && p.vx > 0.5) { this.rejoin(); this.route = []; this.followRoute(this.path, this.phys.s); }
     this.car.snapshot(p);
     const playing = !this.attract && !this.over;
     // walls
