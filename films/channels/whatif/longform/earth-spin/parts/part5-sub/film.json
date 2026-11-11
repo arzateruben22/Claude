@@ -1,0 +1,1152 @@
+{
+ "id": "possibility-lab-earth-spin-part5",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 70.65,
+ "poster": 34.2,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "globe",
+   "beat": "weather"
+  },
+  {
+   "at": 34.2,
+   "name": "eye",
+   "beat": "six"
+  },
+  {
+   "at": 66.43333333333334,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 4.95,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "weather-1",
+   "t0": 4.95,
+   "t1": 7.35,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "weather-2",
+   "t0": 7.35,
+   "t1": 16.5,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "weather-3",
+   "t0": 16.5,
+   "t1": 20.85,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "weather-4",
+   "t0": 20.85,
+   "t1": 25.2,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "weather-5",
+   "t0": 25.2,
+   "t1": 34.2,
+   "line": "vo06",
+   "energy": 0.6
+  },
+  {
+   "id": "six-1",
+   "t0": 34.2,
+   "t1": 40.5,
+   "line": "vo07",
+   "energy": 0.6
+  },
+  {
+   "id": "six-2",
+   "t0": 40.5,
+   "t1": 45.75,
+   "line": "vo08",
+   "energy": 0.6
+  },
+  {
+   "id": "six-3",
+   "t0": 45.75,
+   "t1": 48.6,
+   "line": "vo09",
+   "energy": 0.6
+  },
+  {
+   "id": "six-4",
+   "t0": 48.6,
+   "t1": 55.5,
+   "line": "vo10",
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 55.5,
+   "t1": 62.25,
+   "line": "vo11",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 62.25,
+   "t1": 64.95,
+   "line": "vo12",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 64.95,
+   "t1": 70.65,
+   "line": "vo13",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    12.0
+   ],
+   [
+    6.2157,
+    12.0
+   ],
+   [
+    18.2225,
+    6.0
+   ],
+   [
+    70.65,
+    6.0
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    51.95
+   ],
+   [
+    34.2237,
+    50.0
+   ],
+   [
+    70.65,
+    49.76
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": [
+   [
+    51.4881,
+    55.1907
+   ]
+  ]
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 66.43333333333334,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 70.45,
+   "slot": "bl"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "Storms and the six hour day",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 66.43333333333334,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster…*",
+  "follow": "Possibility Lab · Part 5 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "cams": [
+  {
+   "t0": 16.5,
+   "mode": "wide"
+  },
+  {
+   "t0": 34.2,
+   "mode": "ground"
+  },
+  {
+   "t0": 48.6,
+   "mode": "push"
+  }
+ ],
+ "fx": {},
+ "captions": [
+  {
+   "t0": 0.245,
+   "t1": 2.125,
+   "lines": [
+    [
+     [
+      "Storms",
+      0.385
+     ],
+     [
+      "are",
+      0.92
+     ],
+     [
+      "turning",
+      0.965
+     ],
+     [
+      "faster,",
+      1.375
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 2.295,
+   "t1": 4.645,
+   "lines": [
+    [
+     [
+      "and",
+      2.295
+     ],
+     [
+      "the",
+      2.325
+     ],
+     [
+      "days",
+      2.575
+     ]
+    ],
+    [
+     [
+      "are",
+      2.945
+     ],
+     [
+      "6",
+      3.22
+     ],
+     [
+      "hours",
+      3.37
+     ],
+     [
+      "long.",
+      3.895
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.865,
+   "t1": 7.0,
+   "lines": [
+    [
+     [
+      "The",
+      5.005
+     ],
+     [
+      "sky",
+      5.265
+     ],
+     [
+      "has",
+      5.76
+     ]
+    ],
+    [
+     [
+      "another",
+      6.03
+     ],
+     [
+      "problem.",
+      6.25
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.515,
+   "t1": 10.37,
+   "lines": [
+    [
+     [
+      "Storms",
+      7.655
+     ],
+     [
+      "are",
+      8.07
+     ],
+     [
+      "steered",
+      8.4
+     ]
+    ],
+    [
+     [
+      "by",
+      8.77
+     ],
+     [
+      "the",
+      8.97
+     ],
+     [
+      "planet's",
+      9.1
+     ],
+     [
+      "spin,",
+      9.805
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.37,
+   "t1": 13.575,
+   "lines": [
+    [
+     [
+      "through",
+      10.37
+     ],
+     [
+      "the",
+      10.675
+     ],
+     [
+      "Coriolis",
+      10.82
+     ]
+    ],
+    [
+     [
+      "effect,",
+      12.02
+     ],
+     [
+      "and",
+      12.565
+     ],
+     [
+      "that",
+      12.595
+     ],
+     [
+      "steering",
+      12.885
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.575,
+   "t1": 16.37,
+   "lines": [
+    [
+     [
+      "grows",
+      13.575
+     ],
+     [
+      "in",
+      14.075
+     ],
+     [
+      "step",
+      14.49
+     ]
+    ],
+    [
+     [
+      "with",
+      14.715
+     ],
+     [
+      "the",
+      15.035
+     ],
+     [
+      "spin",
+      15.065
+     ],
+     [
+      "rate.",
+      15.62
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.453,
+   "t1": 20.578,
+   "lines": [
+    [
+     [
+      "At",
+      16.593
+     ],
+     [
+      "a",
+      16.808
+     ],
+     [
+      "6",
+      16.943
+     ],
+     [
+      "hour",
+      17.238
+     ],
+     [
+      "day",
+      17.548
+     ],
+     [
+      "it",
+      17.873
+     ],
+     [
+      "is",
+      18.148
+     ],
+     [
+      "four",
+      18.208
+     ]
+    ],
+    [
+     [
+      "times",
+      18.598
+     ],
+     [
+      "stronger",
+      19.183
+     ],
+     [
+      "than",
+      19.653
+     ],
+     [
+      "today.",
+      19.828
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.82,
+   "t1": 24.8,
+   "lines": [
+    [
+     [
+      "At",
+      20.96
+     ],
+     [
+      "the",
+      21.15
+     ],
+     [
+      "edge",
+      21.315
+     ],
+     [
+      "of",
+      21.525
+     ],
+     [
+      "floating,",
+      21.77
+     ]
+    ],
+    [
+     [
+      "it",
+      22.54
+     ],
+     [
+      "is",
+      22.57
+     ],
+     [
+      "17",
+      22.915
+     ],
+     [
+      "times",
+      23.455
+     ],
+     [
+      "stronger.",
+      24.05
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 25.187,
+   "t1": 27.642,
+   "lines": [
+    [
+     [
+      "Weather",
+      25.327
+     ],
+     [
+      "systems",
+      26.077
+     ]
+    ],
+    [
+     [
+      "would",
+      26.417
+     ],
+     [
+      "be",
+      26.632
+     ],
+     [
+      "squeezed",
+      26.942
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.642,
+   "t1": 30.742,
+   "lines": [
+    [
+     [
+      "into",
+      27.642
+     ],
+     [
+      "tight,",
+      27.852
+     ],
+     [
+      "fast",
+      28.387
+     ],
+     [
+      "bands,",
+      29.042
+     ]
+    ],
+    [
+     [
+      "and",
+      29.927
+     ],
+     [
+      "the",
+      29.957
+     ],
+     [
+      "calm",
+      30.187
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.742,
+   "t1": 33.872,
+   "lines": [
+    [
+     [
+      "of",
+      30.742
+     ],
+     [
+      "an",
+      30.772
+     ],
+     [
+      "ordinary",
+      31.147
+     ]
+    ],
+    [
+     [
+      "afternoon",
+      31.932
+     ],
+     [
+      "would",
+      32.682
+     ],
+     [
+      "be",
+      32.962
+     ],
+     [
+      "gone.",
+      33.122
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.098,
+   "t1": 35.738,
+   "lines": [
+    [
+     [
+      "At",
+      34.238
+     ],
+     [
+      "a",
+      34.488
+     ],
+     [
+      "6",
+      34.728
+     ],
+     [
+      "hour",
+      34.758
+     ],
+     [
+      "day,",
+      35.313
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 35.738,
+   "t1": 40.188,
+   "lines": [
+    [
+     [
+      "the",
+      35.738
+     ],
+     [
+      "Sun",
+      35.958
+     ],
+     [
+      "races",
+      36.323
+     ],
+     [
+      "from",
+      36.893
+     ],
+     [
+      "horizon",
+      37.043
+     ]
+    ],
+    [
+     [
+      "to",
+      37.883
+     ],
+     [
+      "horizon",
+      38.088
+     ],
+     [
+      "in",
+      38.838
+     ],
+     [
+      "3",
+      39.113
+     ],
+     [
+      "hours.",
+      39.438
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 40.448,
+   "t1": 42.618,
+   "lines": [
+    [
+     [
+      "The",
+      40.588
+     ],
+     [
+      "equator",
+      40.868
+     ]
+    ],
+    [
+     [
+      "moves",
+      41.323
+     ],
+     [
+      "at",
+      41.913
+     ],
+     [
+      "nearly",
+      42.003
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 42.618,
+   "t1": 45.438,
+   "lines": [
+    [
+     [
+      "7,000",
+      42.618
+     ],
+     [
+      "kilometers",
+      43.618
+     ],
+     [
+      "an",
+      44.493
+     ],
+     [
+      "hour.",
+      44.688
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 45.72,
+   "t1": 48.23,
+   "lines": [
+    [
+     [
+      "You",
+      45.86
+     ],
+     [
+      "are",
+      46.135
+     ],
+     [
+      "5.5",
+      46.245
+     ],
+     [
+      "percent",
+      47.065
+     ]
+    ],
+    [
+     [
+      "lighter.",
+      47.48
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 48.587,
+   "t1": 51.592,
+   "lines": [
+    [
+     [
+      "Jumping",
+      48.727
+     ],
+     [
+      "now",
+      49.387
+     ],
+     [
+      "takes",
+      49.737
+     ]
+    ],
+    [
+     [
+      "you",
+      49.997
+     ],
+     [
+      "noticeably",
+      50.222
+     ],
+     [
+      "higher",
+      51.137
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 51.592,
+   "t1": 55.407,
+   "lines": [
+    [
+     [
+      "than",
+      51.592
+     ],
+     [
+      "it",
+      51.862
+     ],
+     [
+      "should,",
+      52.077
+     ],
+     [
+      "and",
+      52.632
+     ],
+     [
+      "every",
+      52.832
+     ]
+    ],
+    [
+     [
+      "step",
+      53.037
+     ],
+     [
+      "feels",
+      53.562
+     ],
+     [
+      "slightly",
+      53.952
+     ],
+     [
+      "wrong.",
+      54.657
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 55.552,
+   "t1": 56.807,
+   "lines": [
+    [
+     [
+      "Hang",
+      55.692
+     ],
+     [
+      "on.",
+      56.057
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 56.912,
+   "t1": 59.732,
+   "lines": [
+    [
+     [
+      "If",
+      56.912
+     ],
+     [
+      "you're",
+      57.047
+     ],
+     [
+      "enjoying",
+      57.357
+     ],
+     [
+      "this,",
+      57.877
+     ]
+    ],
+    [
+     [
+      "tap",
+      58.267
+     ],
+     [
+      "like",
+      58.562
+     ],
+     [
+      "and",
+      58.757
+     ],
+     [
+      "subscribe.",
+      58.982
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.942,
+   "t1": 61.667,
+   "lines": [
+    [
+     [
+      "Okay,",
+      60.082
+     ],
+     [
+      "back",
+      60.562
+     ],
+     [
+      "to",
+      60.832
+     ],
+     [
+      "the",
+      60.862
+     ],
+     [
+      "math.",
+      60.917
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 62.18,
+   "t1": 64.665,
+   "lines": [
+    [
+     [
+      "And",
+      62.32
+     ],
+     [
+      "the",
+      62.545
+     ],
+     [
+      "calendar",
+      62.595
+     ]
+    ],
+    [
+     [
+      "is",
+      63.215
+     ],
+     [
+      "about",
+      63.505
+     ],
+     [
+      "to",
+      63.755
+     ],
+     [
+      "break.",
+      63.915
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 64.818,
+   "t1": 66.478,
+   "lines": [
+    [
+     [
+      "Part",
+      64.958
+     ],
+     [
+      "five",
+      65.243
+     ],
+     [
+      "of",
+      65.698
+     ],
+     [
+      "eight.",
+      65.728
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.2,
+   "dur": 4.313,
+   "file": "vo/01.wav",
+   "text": "Storms are turning faster, and the days are six hours long."
+  },
+  {
+   "id": "vo02",
+   "t": 5.0,
+   "dur": 2.058,
+   "file": "vo/02.wav",
+   "text": "The sky has another problem."
+  },
+  {
+   "id": "vo03",
+   "t": 7.4,
+   "dur": 8.805,
+   "file": "vo/03.wav",
+   "text": "Storms are steered by the planet's spin, through the Coriolis effect, and that steering grows in step with the spin rate."
+  },
+  {
+   "id": "vo04",
+   "t": 16.533333333333335,
+   "dur": 4.058,
+   "file": "vo/04.wav",
+   "text": "At a six hour day it is four times stronger than today."
+  },
+  {
+   "id": "vo05",
+   "t": 20.9,
+   "dur": 4.016,
+   "file": "vo/05.wav",
+   "text": "At the edge of floating, it is seventeen times stronger."
+  },
+  {
+   "id": "vo06",
+   "t": 25.266666666666666,
+   "dur": 8.538,
+   "file": "vo/06.wav",
+   "text": "Weather systems would be squeezed into tight, fast bands, and the calm of an ordinary afternoon would be gone."
+  },
+  {
+   "id": "vo07",
+   "t": 34.233333333333334,
+   "dur": 5.96,
+   "file": "vo/07.wav",
+   "text": "At a six hour day, the Sun races from horizon to horizon in three hours."
+  },
+  {
+   "id": "vo08",
+   "t": 40.53333333333333,
+   "dur": 4.818,
+   "file": "vo/08.wav",
+   "text": "The equator moves at nearly seven thousand kilometers an hour."
+  },
+  {
+   "id": "vo09",
+   "t": 45.8,
+   "dur": 2.471,
+   "file": "vo/09.wav",
+   "text": "You are five and a half percent lighter."
+  },
+  {
+   "id": "vo10",
+   "t": 48.666666666666664,
+   "dur": 6.524,
+   "file": "vo/10.wav",
+   "text": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong."
+  },
+  {
+   "id": "vo11",
+   "t": 55.666666666666664,
+   "dur": 6.197,
+   "file": "vo/11.wav",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
+  },
+  {
+   "id": "vo12",
+   "t": 62.3,
+   "dur": 2.26,
+   "file": "vo/12.wav",
+   "text": "And the calendar is about to break."
+  },
+  {
+   "id": "vo13",
+   "t": 64.93333333333334,
+   "dur": 3.3,
+   "file": "vo/13.wav",
+   "text": "Part five of eight. Full video on YouTube."
+  }
+ ]
+}

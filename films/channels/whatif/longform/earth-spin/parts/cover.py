@@ -32,14 +32,29 @@ if TEXT:
     f = ImageFont.truetype(str(HERE.parents[2] / "fonts/BricolageGrotesque-VF.ttf"), 150); f.set_variation_by_axes([96, 800, 100][:len(f.get_variation_axes())]) if False else None
     try: f.set_variation_by_name("ExtraBold")
     except Exception: pass
-    words = TEXT.split(); lines = [" ".join(words)] if len(words) <= 2 else [" ".join(words[:2]), " ".join(words[2:])]
+    words = TEXT.split(); dm = ImageDraw.Draw(im)
+    def width(ln, fnt): return dm.textlength(ln, font=fnt)
+    best = None
+    for k in range(1, len(words) + 1):                       # the split with the narrowest widest line, then the font size that fits 90 % of the width
+        ls = [" ".join(words[:k]), " ".join(words[k:])] if k < len(words) else [" ".join(words)]
+        wmax = max(width(l, f) for l in ls)
+        if best is None or wmax < best[0]: best = (wmax, ls)
+    lines = best[1]; fs = 150
+    def mk(sz):
+        g = ImageFont.truetype(str(HERE.parents[2] / "fonts/BricolageGrotesque-VF.ttf"), sz)
+        try: g.set_variation_by_name("ExtraBold")
+        except Exception: pass
+        return g
+    while fs > 70 and max(mk(fs).getlength(l) for l in lines) > 0.9 * im.width: fs -= 6
+    f = mk(fs)
+    LH = int(fs * 1.13)
     sh = Image.new("RGBA", im.size, (0, 0, 0, 0)); d = ImageDraw.Draw(sh); y = int(im.height * TY)
     for ln in lines:
-        w = d.textlength(ln, font=f); d.text(((im.width - w) / 2, y), ln, font=f, fill=(0, 0, 0, 235)); y += 170
+        w = d.textlength(ln, font=f); d.text(((im.width - w) / 2, y), ln, font=f, fill=(0, 0, 0, 235)); y += LH
     sh = sh.filter(ImageFilter.GaussianBlur(14)); im = Image.alpha_composite(im.convert("RGBA"), sh)
     d = ImageDraw.Draw(im); y = int(im.height * TY)
     for ln in lines:
-        w = d.textlength(ln, font=f); d.text(((im.width - w) / 2, y), ln, font=f, fill=(255, 255, 255, 255), stroke_width=3, stroke_fill=(12, 14, 18, 255)); y += 170
+        w = d.textlength(ln, font=f); d.text(((im.width - w) / 2, y), ln, font=f, fill=(255, 255, 255, 255), stroke_width=3, stroke_fill=(12, 14, 18, 255)); y += LH
     im = im.convert("RGB")
 out = D / "out"; out.mkdir(exist_ok=True)
 im.save(out / f"possibility-lab-s3p{N}-cover.jpg", quality=92, subsampling=0)

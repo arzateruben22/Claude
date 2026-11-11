@@ -1,0 +1,231 @@
+{
+ "id": "possibility-lab-earth-spin-part5",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 70.65,
+ "poster": 34.2,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "globe",
+   "beat": "weather"
+  },
+  {
+   "at": 34.2,
+   "name": "eye",
+   "beat": "six"
+  },
+  {
+   "at": 66.43333333333334,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 4.95,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "weather-1",
+   "t0": 4.95,
+   "t1": 7.35,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "weather-2",
+   "t0": 7.35,
+   "t1": 16.5,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "weather-3",
+   "t0": 16.5,
+   "t1": 20.85,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "weather-4",
+   "t0": 20.85,
+   "t1": 25.2,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "weather-5",
+   "t0": 25.2,
+   "t1": 34.2,
+   "line": "vo06",
+   "energy": 0.6
+  },
+  {
+   "id": "six-1",
+   "t0": 34.2,
+   "t1": 40.5,
+   "line": "vo07",
+   "energy": 0.6
+  },
+  {
+   "id": "six-2",
+   "t0": 40.5,
+   "t1": 45.75,
+   "line": "vo08",
+   "energy": 0.6
+  },
+  {
+   "id": "six-3",
+   "t0": 45.75,
+   "t1": 48.6,
+   "line": "vo09",
+   "energy": 0.6
+  },
+  {
+   "id": "six-4",
+   "t0": 48.6,
+   "t1": 55.5,
+   "line": "vo10",
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 55.5,
+   "t1": 62.25,
+   "line": "vo11",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 62.25,
+   "t1": 64.95,
+   "line": "vo12",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 64.95,
+   "t1": 70.65,
+   "line": "vo13",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    6.0
+   ],
+   [
+    9999.0,
+    6.0
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    51.95
+   ],
+   [
+    34.2237,
+    50.0
+   ],
+   [
+    70.65,
+    49.76
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": [
+   [
+    51.4881,
+    55.1907
+   ]
+  ]
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 66.43333333333334,
+  "seed": 3
+ },
+ "badges": [],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "Storms and the six hour day",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 9999.0,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster\u2026*",
+  "follow": "Possibility Lab \u00b7 Part 5 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "cams": [
+  {
+   "t0": -1.0,
+   "mode": "hero"
+  }
+ ],
+ "fx": {},
+ "captions": [],
+ "voice": [],
+ "thumb": true,
+ "hero": {
+  "arms": 0.15,
+  "tilt": -0.22,
+  "lift": 0.0
+ }
+}

@@ -1,0 +1,46 @@
+[
+ {
+  "id": "c15",
+  "sentence": "Storms are steered by the spin through the Coriolis effect, and that steering grows in step with the spin rate: four times at a six hour day, seventeen times at 1.4 hours.",
+  "claim": "The Coriolis parameter f = 2 Omega sin(latitude) is proportional to the spin rate Omega = 2 pi / T, so 23.93 h / 6 h = 4.0 and 23.93 h / 1.41 h = 17.",
+  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+ },
+ {
+  "id": "c4",
+  "sentence": "Sunrise to sunset, speed and weight at 12, 6, 3 and 2 hours",
+  "claim": "{\"now\": {\"sun_min\": 718, \"v_kmh\": 1674}, \"h12\": {\"sun_min\": 360, \"v_kmh\": 3340}, \"h6\": {\"sun_min\": 180, \"v_kmh\": 6679}, \"h3\": {\"sun_min\": 90, \"v_kmh\": 13358}, \"h2\": {\"sun_min\": 60, \"v_kmh\": 20038}, \"h1_5\": {\"sun_min\": 45, \"v_kmh\": 26717}}",
+  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+ },
+ {
+  "id": "c2",
+  "sentence": "Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour.",
+  "claim": "v = 2 pi R / T = 465 m/s = 1,674 km/h from R = 6,378 km and T = 23.934 h; and 7.9 km/s / 0.465 km/s = 17.",
+  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+ },
+ {
+  "id": "c5",
+  "sentence": "Weight at 12, 6, 3, 2 and 1.5 hour days",
+  "claim": "{\"now\": 99.7, \"h12\": 98.6, \"h6\": 94.5, \"h3\": 78.0, \"h2\": 50.4, \"h1_5\": 11.9} (percent of the weight on a non-spinning Earth); 70 kg x 0.986 = 69 kg and 70 kg x 0.78 = 55 kg.",
+  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+ }
+]
