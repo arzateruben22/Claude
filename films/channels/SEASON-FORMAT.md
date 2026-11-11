@@ -94,6 +94,12 @@ Take as long as it needs: the usage of about three Season 2 episodes goes into o
   it; the cinema kit's film finish (depth of field, motion blur, bloom, grain); real sound design and an original
   score under the voice. Almost no on-screen text: one number or one word at the key moment, plus the captions. Skin
   Sense keeps its own identity (ivory, peach, rose, deep green `#00685F`, navy serif), never Lumevina's black, rose or gold.
+- **The night look (owner, 11 Nov 2026): dark and intimate, for whispered ASMR.** The owner likes a dark undertone with the
+  whispers. Season 3 drops the ivory page for a **deep green-black ground `#0B1513`**: skin and tissue glow softly from
+  within in the episode's one skin tone, out of the dark, with one soft key light and slow drifting particles. **Teal
+  `#3FBFAE`** (the channel's green, lit for the dark) is the only accent; type is a small **ivory serif `#F4EDE3`**.
+  It is Skin Sense's own dark, not Lumevina's look (Lumevina is a client brand, and Skin Sense stays unbranded): no
+  neutral black ground, no gold anywhere, no rose as an accent (rose only where tissue really is rose), no glass bells.
 - **Look gate:** before an episode is built, the owner approves one still frame and a 10-second test clip.
 - **Voice: Evelyn, soft and close.** An ASMR-style lesson: close to the mic, unhurried, warm, every word clear, so it
   sounds like a lesson where you actually learn something. Music stays low and captions are always on.
