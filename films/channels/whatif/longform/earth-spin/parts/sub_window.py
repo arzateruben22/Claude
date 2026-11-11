@@ -33,7 +33,7 @@ shutil.copytree(D / "build/final", B / "final")
 for c in range(c0, c1 + 1):
     (B / f"final/9x16/chunks/{c:03d}.mp4").unlink(missing_ok=True)
     shutil.rmtree(B / f"final/9x16/frames/{c:03d}", ignore_errors=True)
-node = ["node", str(REPO / "kits/cinema/film/render.mjs"), "--film", str(S), "--tier", "final", "--aspect", "9x16", "--build", str(B), "--force-mixed"]
+node = ["node", str(REPO / "kits/cinema/film/render.mjs"), "--film", str(S), "--tier", "final", "--aspect", "9x16", "--build", str(B), "--force-mixed", "--share-cpu"]
 subprocess.run(node + ["--from", str(c0 * CH), "--to", str(min(film["dur"], (c1 + 1) * CH))], check=True, capture_output=True)
 out = Path(f"/tmp/sub{N}-out"); out.mkdir(exist_ok=True)
 subprocess.run(node + ["--assemble", "--audio", str(D / "build/audio-sub/mix.m4a"), "--name", f"possibility-lab-s3p{N}-9x16", "--out", str(out)], check=True, capture_output=True)

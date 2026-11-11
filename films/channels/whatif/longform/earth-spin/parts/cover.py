@@ -15,7 +15,7 @@ json.dump(f, open(C / "film.json", "w"), indent=1)
 f2 = json.loads((C / "film.json").read_text()); f2["theme"] = "../../../../theme.json"; f2["scene"] = "../../scene.mjs"
 (C / "film.json").write_text(json.dumps(f2, indent=1))
 repo = HERE.parents[5]
-subprocess.run(["node", str(repo / "kits/cinema/film/render.mjs"), "--film", str(C), "--tier", "final", "--aspect", "9x16", "--times", str(T), "--build", f"/tmp/cover{N}"], check=True, capture_output=True)
+subprocess.run(["node", str(repo / "kits/cinema/film/render.mjs"), "--film", str(C), "--tier", "final", "--aspect", "9x16", "--times", str(T), "--build", f"/tmp/cover{N}", "--share-cpu"], check=True, capture_output=True)
 import glob
 from PIL import Image
 png = glob.glob(f"/tmp/cover{N}/final/9x16/frames/*/*.png")[0]
