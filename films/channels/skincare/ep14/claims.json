@@ -1,0 +1,112 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Deep in your skin, right now, a new cell is being born.",
+  "claim": "New skin cells are produced continuously in the deepest layer of the epidermis (the basal layer, where stem cells divide).",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299",
+  "source_title": "StatPearls: Histology, Stratum Corneum (NBK513299)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] basal-layer keratinocytes are the proliferative cells of the epidermis. Wording 'right now … being born' is a plain-language version of continuous production. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "It starts at the very bottom… and slowly begins to rise.",
+  "claim": "Cells made in the basal layer move upward through the epidermis as they differentiate.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299",
+  "source_title": "StatPearls: Histology, Stratum Corneum (NBK513299)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] as keratinocytes mature up the epidermis they lose proliferative potential and undergo programmed destruction. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "As it climbs, it fills with a tough protein called keratin. It grows flatter… and flatter.",
+  "claim": "Keratinocytes produce keratin as they move up and become progressively flatter.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299",
+  "source_title": "StatPearls: Histology, Stratum Corneum (NBK513299)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] corneocytes retain keratin filaments in a filaggrin matrix and flatten, stacking as layers; 'a tough protein called keratin' is plain language. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "Near the top, it lets go of its nucleus… and its life gently ends.",
+  "claim": "In the outer layer the cells lose their nuclei and organelles and become dead, flattened corneocytes.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299",
+  "source_title": "StatPearls: Histology, Stratum Corneum (NBK513299)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] finally differentiated, enucleated keratinocytes are termed corneocytes (no nucleus); the cell's end is programmed. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "So the skin you can touch right now is made of cells that have finished their lives.",
+  "claim": "The outermost layer (stratum corneum) is made of dead corneocytes.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299",
+  "source_title": "StatPearls: Histology, Stratum Corneum (NBK513299)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] the outermost layer (stratum corneum) is made of these flattened, enucleated corneocytes. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "Stacked like bricks, they seal in water.",
+  "claim": "Corneocytes embedded in lipids form a barrier that limits water loss (the bricks-and-mortar model).",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7592940",
+  "source_title": "Schmitt & Neubert 2020, review of the stratum corneum barrier (PMC7592940)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] the lipid matrix holds the main penetration barrier; corneocytes are the 'bricks' (Elias 1988 brick-and-mortar model). The model is debated; the film says only that the stack seals water in. She reads 'they seal in water'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "The whole journey takes about a month.",
+  "claim": "Epidermal turnover takes roughly a month (about 28 days or more, varying with age and site).",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299",
+  "source_title": "StatPearls: Histology, Stratum Corneum (NBK513299) (turnover time NOT confirmed)",
+  "accessed": "2026-11-11",
+  "note": "[NOT CONFIRMED] the search did not return a turnover figure; epidermal turnover of roughly 28 days or more is commonly quoted but needs a source that says it. Keep OPEN. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "Then, quietly, the top cells drift away, far too small to see.",
+  "claim": "The outermost corneocytes are continually shed (desquamation) as microscopic flakes.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299",
+  "source_title": "StatPearls: Histology, Stratum Corneum (NBK513299)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] cells are shed (desquamate) when adhesion between corneocytes weakens. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c9",
+  "sentence": "Some of the dust in your home… began as you.",
+  "claim": "Household dust contains shed human skin cells.",
+  "source_url": "https://www.livescience.com/32337-is-house-dust-mostly-dead-skin.html",
+  "source_title": "Live Science: Is house dust mostly dead skin? (secondary source)",
+  "accessed": "2026-11-11",
+  "note": "[WEAK SOURCE] skin cells are a real but minority share of house dust (estimates vary widely; the 'mostly skin' claim is a myth). The line says only 'some of the dust', which fits. A primary study should replace this link. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c10",
+  "sentence": "Underneath, new cells are already rising. Always rebuilding… from the bottom up.",
+  "claim": "The epidermis renews itself continuously from the basal layer.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK513299",
+  "source_title": "StatPearls: Histology, Stratum Corneum (NBK513299)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] basal keratinocytes keep producing new cells that move up. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ }
+]

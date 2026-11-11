@@ -1,0 +1,79 @@
+{
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Deep in your skin, right now, a new cell is being born.",
+   "a": 77.44,
+   "b": 82.0
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "It starts at the very bottom… and slowly begins to rise.",
+   "a": 82.32,
+   "b": 87.68
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "As it climbs, it fills with a tough protein called keratin. It grows flatter… and flatter.",
+   "a": 88.0,
+   "b": 95.76
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Near the top, it lets go of its nucleus… and its life gently ends.",
+   "a": 96.08,
+   "b": 103.36
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "So the skin you can touch right now is made of cells that have finished their lives.",
+   "a": 112.96,
+   "b": 119.04
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "Stacked like bricks, they seal in water.",
+   "a": 119.04,
+   "b": 123.12
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "The whole journey takes about a month.",
+   "a": 123.44,
+   "b": 126.8
+  },
+  {
+   "id": "vo08",
+   "beat": "takeaway",
+   "text": "Then, quietly, the top cells drift away, far too small to see. Some of the dust in your home… began as you.",
+   "a": 127.12,
+   "b": 137.04
+  },
+  {
+   "id": "vo09",
+   "beat": "takeaway",
+   "text": "Underneath, new cells are already rising. Always rebuilding… from the bottom up.",
+   "a": 138.0,
+   "b": 145.84
+  }
+ ],
+ "cta": {
+  "follow": [
+   529.74,
+   533.9,
+   "Your skin has plenty more quiet secrets. Tap like and follow."
+  ],
+  "subscribe": [
+   534.22,
+   539.9,
+   "Your skin has plenty more quiet secrets. Tap like and subscribe."
+  ]
+ }
+}

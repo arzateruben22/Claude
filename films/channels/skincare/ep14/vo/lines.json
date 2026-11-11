@@ -1,0 +1,111 @@
+{
+ "voice": "recorded",
+ "speaker": "a real person (credit pending her confirmation)",
+ "speed": null,
+ "lang": "en-us",
+ "style": "whisper",
+ "source": "voice-evelyn/evelyn-s3-full.m4a",
+ "made_by": "polish.py --style whisper on the whole recording, cut by word alignment (set/s3_cut.py)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Deep in your skin, right now, a new cell is being born.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 4.8,
+   "sha256": "0d799db5e81cbf65ccd15126a71822ab48322b3166f4d7754939fac5739c2d1a"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "It starts at the very bottom… and slowly begins to rise.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 5.6,
+   "sha256": "297ca21c0c34aacac7af0e83633cce39f1e31e39462d024f72e9561a78330885"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "As it climbs, it fills with a tough protein called keratin. It grows flatter… and flatter.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 8.0,
+   "sha256": "cdb6cc812021ae8ddcb0191ec95df2f027b3727732873b02e6557add9f8025aa"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Near the top, it lets go of its nucleus… and its life gently ends.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 7.52,
+   "sha256": "67904c82184a154b5264ae66c29b31085b69ca8f0ab726b68f26360f607fa303"
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "So the skin you can touch right now is made of cells that have finished their lives.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 6.16,
+   "sha256": "fe8a0c889bf8616bdb1c72b0b2615c2a70b0b4146019ec6b4671e6a4ce8ca378"
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "Stacked like bricks, they seal in water.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 4.32,
+   "sha256": "f5c955037bd83475e7130d515f02b9cfb3ecb40903cadf55bd081fb3136564e5"
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "The whole journey takes about a month.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 3.6,
+   "sha256": "f04ffdf06cf0c558d6054c23191599b4be491fde872aaefcd01c557a9974fd9c"
+  },
+  {
+   "id": "vo08",
+   "beat": "takeaway",
+   "text": "Then, quietly, the top cells drift away, far too small to see. Some of the dust in your home… began as you.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 10.16,
+   "sha256": "7430c1fada709592cb62ff154028b641fda2f000421654099059bfcf3840f771"
+  },
+  {
+   "id": "vo09",
+   "beat": "takeaway",
+   "text": "Underneath, new cells are already rising. Always rebuilding… from the bottom up.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 8.08,
+   "sha256": "7cddd57ead4fa3f0d7dc1a22d12f99570121d857aeae60a18e8fc1b70f28ca28"
+  },
+  {
+   "id": "vo10",
+   "beat": "cta",
+   "text": "Your skin has plenty more quiet secrets. Tap like and follow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 4.4,
+   "sha256": "ec0ef9bcf5f103211a1823af10d24e001d822b50f42f0ec43c5000f9c4d5f931"
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "voice": "recorded",
+ "lines": [
+  {
+   "id": "vo10",
+   "beat": "cta",
+   "text": "Your skin has plenty more quiet secrets. Tap like and subscribe.",
+   "file": "10y.wav",
+   "dur": 5.92,
+   "sha256": "f548d92f3f58eefc89814db21f6453c1dc9eef572ec5851954da55e7cd31d3b4"
+  }
+ ]
+}
