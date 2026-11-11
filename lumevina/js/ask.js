@@ -797,10 +797,10 @@
     '<div class="ask-chips-wrap"><button type="button" class="ask-nav prev" aria-label="Scroll topics left" hidden>&lsaquo;</button>' +
     '<div class="ask-chips" role="group" aria-label="Common questions"></div>' +
     '<button type="button" class="ask-nav next" aria-label="Scroll topics right" hidden>&rsaquo;</button></div>' +
-    '<form class="ask-form"><label class="sr-only" for="ask-in">Your question</label>' +
-    '<input id="ask-in" type="text" autocomplete="off" placeholder="Ask about prices, prep, your skin…" maxlength="600">' +
+    '<form class="ask-form is-empty"><label class="sr-only" for="ask-in">Your question</label>' +
+    '<textarea id="ask-in" rows="1" autocomplete="off" placeholder="Ask about prices, prep, your skin…" maxlength="600"></textarea>' +
     '<button type="submit" class="ask-send" aria-label="Send">' +
-    '<svg class="ask-send-go" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
+    '<svg class="ask-send-go" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>' +
     '<svg class="ask-send-stop" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor"/></svg></button></form>' +
     '<p class="ask-fine">Not medical advice. In an emergency, call 911.</p>';
 
@@ -918,7 +918,7 @@
     return t;
   };
   var thinkPlan = function (text, file) {
-    return [/\n/.test(text) ? "Reading your messages" : "Reading your message"]
+    return [batched > 1 ? "Reading your messages" : "Reading your message"]
       .concat(file ? ["Opening your client file"] : [], ["Checking Evelyn’s notes", "Putting the answer together"]);
   };
   var thoughtHtml = function (th, i, open) {
@@ -1367,11 +1367,12 @@
      answer. If they start typing while an answer is still being worked out (not yet showing), it's set
      aside and everything they've sent is answered together. A tapped button answers straight away. ── */
   var WAIT_SENT = 1300, WAIT_TYPING = 7000;
-  var queued = [], waitT = 0, turn = 0, inflight = null;
+  var queued = [], waitT = 0, turn = 0, inflight = null, batched = 1;
   var answerNow = function () {
     clearTimeout(waitT); waitT = 0;
     if (!queued.length) return;
     var text = queued.join("\n");
+    batched = queued.length;
     queued = [];
     respond(text);
   };
@@ -1397,7 +1398,19 @@
     queued.push(text);
     if (now) answerNow(); else answerSoon();
   };
+  var fitInput = function () {
+    input.style.height = "auto";
+    input.style.height = Math.min(input.scrollHeight, 132) + "px";
+    form.classList.toggle("is-empty", !input.value.trim());
+  };
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing && e.keyCode !== 229) {
+      e.preventDefault();
+      if (form.requestSubmit) form.requestSubmit(); else form.dispatchEvent(new Event("submit", { cancelable: true }));
+    }
+  });
   input.addEventListener("input", function () {
+    fitInput();
     if (input.value.trim()) holdAnswer();
     if (queued.length) answerSoon();
   });
@@ -1566,13 +1579,44 @@
       input.focus();
       return;
     }
-    var t = input.value; input.value = ""; ask(t);
+    var t = input.value;
+    if (!t.trim()) return;
+    var from = !calm && input.getBoundingClientRect ? input.getBoundingClientRect() : null;
+    input.value = "";
+    fitInput();
+    ask(t);
+    if (from) flyIn(from);
   });
+  /* the question leaves the text box and settles into the conversation: a copy flies from where the words
+     were typed to where the message now sits (it can't be clipped by the conversation's edge), then the
+     message itself takes over */
+  var flyIn = function (from) {
+    var msgs = logEl.querySelectorAll(".ask-msg.you"), el = msgs[msgs.length - 1];
+    if (!el || !el.animate) return;
+    var to = el.getBoundingClientRect();
+    if (!to.width || !from.width) return;
+    var ghost = el.cloneNode(true);
+    ghost.classList.remove("is-new");
+    ghost.classList.add("ask-ghost");
+    ghost.style.cssText = "position:fixed;left:" + to.left + "px;top:" + to.top + "px;width:" + to.width + "px;height:" + to.height + "px;margin:0;transform-origin:0 0;";
+    document.body.appendChild(ghost);
+    el.style.animation = "none";
+    el.style.visibility = "hidden";
+    var pad = 10, fw = Math.min(from.width, to.width * 2), fh = Math.max(24, Math.min(from.height, 60));
+    var a = ghost.animate([
+      { transform: "translate(" + (from.left + pad - to.left) + "px," + (from.top + 4 - to.top) + "px) scale(" + Math.max(0.4, fw / to.width).toFixed(3) + "," + Math.max(0.4, fh / to.height).toFixed(3) + ")", opacity: 0.6 },
+      { transform: "none", opacity: 1 }
+    ], { duration: 560, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
+    var done = function () { if (ghost.parentNode) ghost.parentNode.removeChild(ghost); el.style.visibility = ""; };
+    a.onfinish = done; a.oncancel = done;
+  };
   /* one step of a menu: show what they picked, then the next step */
   var go = function (label, target) {
     if (target === "skin") {
       input.value = "About my skin: ";
+      fitInput();
       input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
       return;
     }
     if (target.indexOf("t:") === 0) return ask(target.slice(2), true);

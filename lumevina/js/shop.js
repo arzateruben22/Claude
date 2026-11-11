@@ -6,19 +6,14 @@
  *
  *   Hero shelf   what's on the shelf right now, one tap to add
  *   The shop     search, brand and category, "in stock now", and every
- *                type of product on its own floating shelf: the products
- *                stand on it (their photos cut out, js/shelf-art.js), with
- *                each one's name, price, stock and button under the shelf
- *   The page     tap a product and it leaves its place on the shelf for
- *                the left of its own page; drag it to tilt it under the
- *                light. "Shelf", Back or Escape puts it back in its spot.
+ *                product's price and availability at a glance
  *
  * Out of stock is never a dead end: "Request it" fills in the Contact
  * form with that product, so Evelyn can order it in.
  *
- * A product without a photo shows its label instead: the brand, the name,
- * and a strength like "11%" set large, which is how clients tell the
- * mandelic serums apart.
+ * Product cards are labels, not photos, until Evelyn's photos arrive:
+ * the brand, the name, and a strength like "11%" set large, which is how
+ * clients tell the mandelic serums apart.
  */
 (function () {
   "use strict";
@@ -94,38 +89,13 @@
     return b;
   };
 
-  /* the shelf pictures: each product photo cut out of its studio background
-     (scripts/shelf-art.py → js/shelf-art.js), so the product stands on the shelf */
-  var ART = window.LUMEVINA_SHELF_ART || {};
-  var artOf = function (p) { return (p && p.photo && ART[p.photo]) || null; };
-  var mlOf = function (p) {
-    var ml = /([\d.]+)\s*ml/i.exec(p.size || ""), oz = /([\d.]+)\s*(?:fl\.?\s*)?oz/i.exec(p.size || "");
-    return ml ? Number(ml[1]) : oz ? Number(oz[1]) * 29.57 : 0;
-  };
-  /* how tall it stands, from the size on its label: a 10 ml eye cream about
-     two thirds as tall as an 8 fl oz cleanser; softgels and patches in between */
-  var standK = function (p) {
-    var ml = mlOf(p);
-    if (!ml) return 0.86;
-    return 0.64 + 0.36 * Math.max(0, Math.min(1, Math.log(ml / 10) / Math.log(236 / 10)));
-  };
-  /* the same product in another size (the 2 and 6 fl oz toner, the 2 and 6 fl oz gel cleanser):
-     their photos differ only by the size at the end of the name */
-  var sizeKey = function (p) { return p.photo ? p.photo.replace(/-\d+oz(?=\.webp$)/, "") : "id:" + p.id; };
-  var sizesOf = function (p) {
-    var k = sizeKey(p);
-    var list = shelf().filter(function (x) { return x.brand === p.brand && sizeKey(x) === k; });
-    return list.length > 1 ? list.sort(function (a, b) { return mlOf(a) - mlOf(b); }) : [];
-  };
-
-  /* the product's picture: its shelf picture or photo, or its label when there's no photo */
+  /* the product's picture: its photo, or its label until a photo arrives */
   var picture = function (p, cls) {
-    var art = artOf(p);
-    var box = el("span", cls + (p.photo ? " has-photo" : "") + (art ? " has-cut" : ""));
+    var box = el("span", cls + (p.photo ? " has-photo" : ""));
     if (p.photo) {
       var img = el("img");
-      img.src = art ? art.src : p.photo; img.alt = ""; img.loading = "lazy"; img.decoding = "async";
-      img.width = art ? art.w : 1000; img.height = art ? art.h : 1000;
+      img.src = p.photo; img.alt = ""; img.loading = "lazy"; img.decoding = "async";
+      img.width = 1000; img.height = 1000;
       box.appendChild(img);
     }
     box.appendChild(el("span", "sh-brand", p.brand));
@@ -159,80 +129,19 @@
     return c;
   };
 
-  /* ── the product's page. The product leaves its place on the shelf for the
-     left of the page (the spot on the shelf stays empty) and sways once under
-     the light; drag it and it tilts with you, let go and it carries your speed
-     back to facing front. "Shelf", Back or Escape flies it home. The motion is
-     critically damped springs, the same both ways; with reduced motion, a
-     cross-fade. A product opened from search, a link or the chat simply fades in. ── */
-  var sheet = null, lastOpener = null, current = null, hidden = null, closing = false;
-  var EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
-  var tilt = { x: 0, raf: 0, drag: null };
-  var q$ = function (s) { return sheet.querySelector(s); };
-  /* the product on the shelf, if it's there to fly to or from */
-  var onShelf = function (id) {
-    var img = document.querySelector('.sf-prod[data-id="' + id + '"] .sf-art');
-    if (!img) return null;
-    var r = img.getBoundingClientRect();
-    return r.width && r.bottom > 0 && r.top < window.innerHeight ? img : null;
-  };
-  var hideOnShelf = function (img) {
-    if (hidden && hidden !== img) hidden.style.visibility = "";
-    hidden = img || null;
-    if (hidden) hidden.style.visibility = "hidden";
-  };
-  /* the picture as big as the stage allows, keeping its shape */
-  var fitArt = function () {
-    if (!sheet || !current || !current.art) return;
-    var stand = q$(".pp-stand"), box = q$(".pp-art");
-    var w = stand.clientWidth * 0.92, h = stand.clientHeight, ratio = current.art.w / current.art.h;
-    var hh = Math.min(h, w / ratio);
-    box.style.height = Math.round(hh) + "px";
-    box.style.width = Math.round(hh * ratio) + "px";
-  };
-  var setTilt = function (x) {
-    x = Math.max(-40, Math.min(40, x));
-    tilt.x = x;
-    q$(".pp-stand").style.transform = x ? "rotateY(" + x.toFixed(2) + "deg)" : "";
-    var g = q$(".pp-gloss");
-    g.style.setProperty("--g", (x / 30).toFixed(3));
-    g.style.opacity = Math.min(1, Math.abs(x) / 12).toFixed(3);
-  };
-  /* a critically damped spring home to facing front, from where it is, at the speed it was given */
-  var settle = function (v0) {
-    cancelAnimationFrame(tilt.raf);
-    var w = 7.5, x0 = tilt.x, v = v0 || 0, t0 = 0;
-    var step = function (now) {
-      if (!t0) t0 = now;
-      var t = (now - t0) / 1000, x = (x0 + (v + w * x0) * t) * Math.exp(-w * t);
-      if (t > 0.25 && Math.abs(x) < 0.04) { setTilt(0); return; }
-      setTilt(x);
-      tilt.raf = requestAnimationFrame(step);
-    };
-    tilt.raf = requestAnimationFrame(step);
-  };
-  var stopTilt = function () { cancelAnimationFrame(tilt.raf); tilt.drag = null; if (sheet) setTilt(0); };
-
+  /* ── the detail view: a sheet from the bottom on phones, a panel on desktop ── */
+  var sheet = null, lastOpener = null;
   var buildSheet = function () {
-    sheet = el("dialog", "pp");
+    sheet = el("dialog", "pd");
     sheet.setAttribute("aria-labelledby", "pd-name");
     sheet.innerHTML =
-      '<div class="pp-bg" aria-hidden="true"></div>' +
-      '<div class="pp-page">' +
-        '<div class="pp-stage">' +
-          '<div class="pp-stand">' +
-            '<div class="pp-art"><img class="pp-img" alt="" draggable="false"><span class="pp-gloss" aria-hidden="true"></span></div>' +
-            '<div class="pp-label"></div>' +
-          '</div>' +
-          '<div class="pp-surface" aria-hidden="true"></div>' +
-          '<p class="pp-hint" aria-hidden="true">Drag to tilt</p>' +
-        '</div>' +
-        '<div class="pp-info">' +
-          '<button class="pp-back" type="button"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Shelf</button>' +
+      '<div class="pd-inner">' +
+        '<button class="pd-close" type="button" aria-label="Close">&times;</button>' +
+        '<div class="pd-pic"></div>' +
+        '<div class="pd-info">' +
           '<p class="pd-brand"></p>' +
           '<h2 class="pd-name" id="pd-name"></h2>' +
           '<p class="pd-size"></p>' +
-          '<div class="pp-sizes" role="group" aria-label="Size"></div>' +
           '<p class="pd-about"></p>' +
           '<div class="pd-buy"><span class="pd-price"></span><span class="pd-stock"></span></div>' +
           '<div class="pd-action"></div>' +
@@ -245,111 +154,54 @@
         '</div>' +
       '</div>';
     document.body.appendChild(sheet);
-    q$(".pp-back").addEventListener("click", function () { closeDetail(); });
-    /* Escape flies it home too */
-    sheet.addEventListener("cancel", function (e) { e.preventDefault(); closeDetail(); });
+    sheet.querySelector(".pd-close").addEventListener("click", function () { sheet.close(); });
+    /* a tap on the dimmed backdrop closes it */
+    sheet.addEventListener("click", function (e) { if (e.target === sheet) sheet.close(); });
     sheet.addEventListener("close", function () {
-      closing = false;
-      stopTilt();
-      sheet.getAnimations ? sheet.getAnimations({ subtree: true }).forEach(function (a) { a.cancel(); }) : 0;
-      hideOnShelf(null);
       document.documentElement.classList.remove("pd-open");
       /* back to the product it came from, unless something else took focus (the cart, opened by Add to cart) */
       var a = document.activeElement;
-      if (lastOpener && document.contains(lastOpener) && (!a || a === document.body || sheet.contains(a))) lastOpener.focus({ preventScroll: true });
+      if (lastOpener && document.contains(lastOpener) && (!a || a === document.body || sheet.contains(a))) lastOpener.focus();
     });
-    /* adding to the cart opens the cart: the page steps aside at once */
+    /* adding to the cart opens the cart: the sheet steps aside */
     sheet.addEventListener("click", function (e) {
-      if (e.target.closest && e.target.closest(".add-to-cart")) closeDetail(true);
+      if (e.target.closest && e.target.closest(".add-to-cart")) sheet.close();
     }, true);
-    /* drag to tilt: 1:1 while held, then the release speed carries it home */
-    var stand = q$(".pp-stand");
-    stand.addEventListener("pointerdown", function (e) {
-      if (!current || !current.art || calm.matches || e.button > 0) return;
-      cancelAnimationFrame(tilt.raf);
-      try { stand.setPointerCapture(e.pointerId); } catch (err) { /* already released */ }
-      tilt.drag = { x: e.clientX, from: tilt.x, samples: [{ x: e.clientX, t: e.timeStamp }] };
-    });
-    stand.addEventListener("pointermove", function (e) {
-      var d = tilt.drag;
-      if (!d) return;
-      setTilt(d.from + (e.clientX - d.x) * 0.22);
-      d.samples.push({ x: e.clientX, t: e.timeStamp });
-      if (d.samples.length > 5) d.samples.shift();
-    });
-    var release = function () {
-      var d = tilt.drag;
-      tilt.drag = null;
-      if (!d) return;
-      var a = d.samples[0], b = d.samples[d.samples.length - 1];
-      settle(b.t > a.t ? (b.x - a.x) / (b.t - a.t) * 1000 * 0.22 : 0);
-    };
-    stand.addEventListener("pointerup", release);
-    stand.addEventListener("pointercancel", release);
-    window.addEventListener("resize", function () { if (sheet.open) fitArt(); });
   };
-
-  /* what the page says about p */
-  var fill = function (p) {
-    var s = INV.status(p), art = artOf(p);
-    current = { p: p, art: art };
-    var box = q$(".pp-art"), label = q$(".pp-label");
-    box.hidden = !art;
-    label.hidden = !!art;
-    q$(".pp-hint").hidden = !art || calm.matches;
-    if (art) {
-      var img = q$(".pp-img");
-      img.src = art.src; img.width = art.w; img.height = art.h;
-      img.alt = p.name + " by " + p.brand;
-      /* a full address: a relative one inside a custom property would resolve against the stylesheet */
-      q$(".pp-gloss").style.setProperty("--art", 'url("' + new URL(art.src, document.baseURI).href + '")');
-      fitArt();
-    } else {
-      label.textContent = "";
-      label.appendChild(picture(p, "sh-label pd-label sh-" + (BRAND_KEY[p.brand] || "x")));
-    }
-    q$(".pd-brand").textContent = p.brand + " · " + p.cat;
-    q$(".pd-name").textContent = p.name;
-    /* two sizes of the same product: pick one here */
-    var sizes = sizesOf(p), group = q$(".pp-sizes"), size = q$(".pd-size");
-    group.textContent = "";
-    group.hidden = !sizes.length;
+  var showDetail = function (p, opener) {
+    if (!sheet) buildSheet();
+    lastOpener = opener || null;
+    var s = INV.status(p);
+    var pic = sheet.querySelector(".pd-pic");
+    pic.textContent = "";
+    var big = picture(p, "sh-label pd-label sh-" + (BRAND_KEY[p.brand] || "x"));
+    var bigImg = big.querySelector("img");
+    if (bigImg) { bigImg.loading = "eager"; bigImg.alt = p.name + " by " + p.brand; }
+    pic.appendChild(big);
+    sheet.querySelector(".pd-brand").textContent = p.brand + " · " + p.cat;
+    sheet.querySelector(".pd-name").textContent = p.name;
+    var size = sheet.querySelector(".pd-size");
     size.textContent = p.size || "";
-    size.hidden = !p.size || sizes.length > 0;
-    sizes.forEach(function (x) {
-      var b = el("button", "pp-size");
-      b.type = "button";
-      b.setAttribute("aria-pressed", String(x.id === p.id));
-      b.appendChild(el("span", "pp-size-k", (x.size || "").split(" / ")[0]));
-      b.appendChild(el("span", "pp-size-p", money(x.price)));
-      b.addEventListener("click", function () {
-        if (x.id === current.p.id) return;
-        fill(x);
-        hideOnShelf(onShelf(x.id));
-        if (!calm.matches && box.animate) box.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: "ease-out" });
-        q$('.pp-size[aria-pressed="true"]').focus();
-      });
-      group.appendChild(b);
-    });
-    var about = q$(".pd-about");
+    size.hidden = !p.size;
+    var about = sheet.querySelector(".pd-about");
     about.textContent = p.about || "";
     about.hidden = !p.about;
-    q$(".pd-price").textContent = money(p.price);
-    var st = q$(".pd-stock");
+    sheet.querySelector(".pd-price").textContent = money(p.price);
+    var st = sheet.querySelector(".pd-stock");
     st.textContent = stockText(p);
     st.className = "pd-stock sh-stock is-" + s;
-    var act = q$(".pd-action");
+    var act = sheet.querySelector(".pd-action");
     act.textContent = "";
-    var pc = q$(".pd-consult");
+    var pc = sheet.querySelector(".pd-consult");
     if (pc) pc.hidden = !(p.consult && window.LumevinaConsult && !window.LumevinaConsult.approved(p.id));
     var b = buyButton(p, false);
-    if (b.classList.contains("sh-request")) b.addEventListener("click", function () { closeDetail(true); }, true);
+    if (b.classList.contains("sh-request")) b.addEventListener("click", function () { sheet.close(); });
     act.appendChild(b);
     /* the lesson behind it (js/shop-lessons.js), only while Skin School is switched on */
-    var pl = q$(".pd-lesson"), LS = window.LumevinaLessons, lesson = LS && LS.on() ? LS.for(p) : null;
+    var pl = sheet.querySelector(".pd-lesson"), LS = window.LumevinaLessons, lesson = LS && LS.on() ? LS.for(p) : null;
     if (pl) { pl.hidden = !lesson; if (lesson) { var a = pl.querySelector(".pd-lesson-link"); a.textContent = lesson.title; a.href = lesson.href; } }
-    q$(".pd-ask").onclick = function () {
-      closeDetail(true);
+    sheet.querySelector(".pd-ask").onclick = function () {
+      sheet.close();
       var form = document.querySelector(".contact-form");
       var msg = form && form.querySelector("#ct-msg");
       var topic = form && form.querySelector("#ct-topic");
@@ -359,57 +211,9 @@
       if (target) target.scrollIntoView({ block: "start" });
       if (msg) setTimeout(function () { msg.focus({ preventScroll: true }); }, 200);
     };
-  };
-
-  var showDetail = function (p, opener) {
-    if (!sheet) buildSheet();
-    if (sheet.open) { fill(p); hideOnShelf(onShelf(p.id)); return; }
-    lastOpener = opener || null;
-    closing = false;
-    fill(p);
     document.documentElement.classList.add("pd-open");
     if (sheet.showModal) sheet.showModal(); else sheet.setAttribute("open", "");
-    sheet.scrollTop = 0;
-    fitArt();
-    q$(".pp-back").focus({ preventScroll: true });
-    if (calm.matches || !sheet.animate) return;
-    var box = current.art ? q$(".pp-art") : q$(".pp-label");
-    var from = current.art && opener && opener.classList && opener.classList.contains("sf-prod") ? onShelf(p.id) : null;
-    q$(".pp-bg").animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: "ease-out" });
-    [q$(".pp-surface"), q$(".pp-hint")].forEach(function (n) { n.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: "ease-out" }); });
-    q$(".pp-info").animate([{ opacity: 0, transform: "translateX(24px)" }, { opacity: 1, transform: "none" }],
-      { duration: 520, delay: 50, easing: EASE, fill: "backwards" });
-    if (from) {
-      var f = from.getBoundingClientRect(), t = box.getBoundingClientRect();
-      hideOnShelf(from);
-      box.animate([
-        { transform: "translate(" + (f.left - t.left) + "px," + (f.top - t.top) + "px) scale(" + (f.width / t.width) + ")" },
-        { transform: "none" }
-      ], { duration: 560, easing: EASE });
-    } else {
-      box.animate([{ opacity: 0, transform: "translateY(16px) scale(0.96)" }, { opacity: 1, transform: "none" }], { duration: 440, easing: EASE });
-    }
-    /* one sway as it lands, the light running across it */
-    if (current.art) setTimeout(function () { if (sheet.open && !tilt.drag) { tilt.x = 0; settle(-260); } }, from ? 260 : 120);
-  };
-
-  /* back to its spot on the shelf; `now` (adding to the cart, asking Evelyn) skips the flight */
-  var closeDetail = function (now) {
-    if (!sheet || !sheet.open || closing) return;
-    var to = !now && !calm.matches && sheet.animate && current && current.art ? onShelf(current.p.id) : null;
-    if (!to) { sheet.close(); return; }
-    closing = true;
-    stopTilt();
-    hideOnShelf(to);
-    var box = q$(".pp-art"), f = box.getBoundingClientRect(), t = to.getBoundingClientRect();
-    var fly = box.animate([
-      { transform: "none" },
-      { transform: "translate(" + (t.left - f.left) + "px," + (t.top - f.top) + "px) scale(" + (t.width / f.width) + ")" }
-    ], { duration: 480, easing: EASE, fill: "forwards" });
-    q$(".pp-bg").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 380, easing: "ease-in", fill: "forwards" });
-    [q$(".pp-surface"), q$(".pp-hint")].forEach(function (n) { n.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: "ease-in", fill: "forwards" }); });
-    q$(".pp-info").animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateX(24px)" }], { duration: 260, easing: "ease-in", fill: "forwards" });
-    fly.onfinish = function () { if (sheet.open) sheet.close(); };
+    sheet.querySelector(".pd-close").focus();
   };
 
   /* the cart and checkout show each product's photo (js/cart.js) */
@@ -670,64 +474,6 @@
     return true;
   };
 
-  /* ── the shelves: each type of product on its own floating shelf, the
-     products standing on it, each one's name, price, stock and button under
-     it. Phones: one long shelf per type to swipe along; wider: rows of 3 to 5. ── */
-  var MQ_PHONE = matchMedia("(max-width: 600px)"), MQ_MID = matchMedia("(min-width: 800px)"), MQ_WIDE = matchMedia("(min-width: 1100px)");
-  var perShelf = function () { return MQ_PHONE.matches ? 0 : MQ_WIDE.matches ? 5 : MQ_MID.matches ? 4 : 3; };
-  var shelfItem = function (p) {
-    var s = INV.status(p), art = artOf(p);
-    var li = el("li", "sf-item sh-" + (BRAND_KEY[p.brand] || "x") + (s === "out" ? " is-out" : ""));
-    var stage = el("div", "sf-stage");
-    var b = el("button", "sf-prod");
-    b.type = "button";
-    b.dataset.id = p.id;
-    b.setAttribute("aria-label", p.name + ", " + p.brand + ", " + money(p.price) + ". See details");
-    if (art) {
-      var img = el("img", "sf-art");
-      img.src = art.src; img.width = art.w; img.height = art.h;
-      img.alt = ""; img.loading = "lazy"; img.decoding = "async"; img.draggable = false;
-      b.style.setProperty("--k", standK(p).toFixed(3));
-      b.appendChild(img);
-    } else {
-      b.classList.add("sf-prod--label");
-      b.appendChild(picture(p, "sh-label sf-label"));
-    }
-    b.addEventListener("click", function () { showDetail(p, b); });
-    stage.appendChild(b);
-    li.appendChild(stage);
-    var tag = el("div", "sf-tag");
-    tag.appendChild(el("h4", "sf-name", p.name));
-    tag.appendChild(el("p", "sf-meta", p.size ? p.size.split(" / ")[0] : p.brand));
-    var line = el("p", "sf-line");
-    line.appendChild(el("span", "sh-price", money(p.price)));
-    line.appendChild(el("span", "sh-stock is-" + s, stockText(p)));
-    tag.appendChild(line);
-    tag.appendChild(buyButton(p, true));
-    li.appendChild(tag);
-    return li;
-  };
-  var shelves = function (items) {
-    var n = perShelf(), wrap = el("div", "sf" + (n ? "" : " sf--swipe")), rows = [];
-    if (!n) rows.push(items);
-    else for (var i = 0; i < items.length; i += n) rows.push(items.slice(i, i + n));
-    rows.forEach(function (row) {
-      var ul = el("ul", "sf-shelf");
-      ul.setAttribute("role", "list");
-      if (n) ul.style.setProperty("--cols", n);
-      row.forEach(function (p) { ul.appendChild(shelfItem(p)); });
-      /* a short row: the shelf still runs the full width */
-      for (var k = row.length; n && k < n; k++) {
-        var gap = el("li", "sf-item sf-item--empty");
-        gap.setAttribute("aria-hidden", "true");
-        gap.appendChild(el("div", "sf-stage"));
-        ul.appendChild(gap);
-      }
-      wrap.appendChild(ul);
-    });
-    return wrap;
-  };
-
   var paintGrid = function () {
     if (!grid) return;
     var list = sorted(shelf().filter(matches));
@@ -748,7 +494,10 @@
       head.appendChild(el("span", "sh-sec-n", g.items.length + (g.items.length === 1 ? " product" : " products") +
         (inHere ? " · " + inHere + " in stock" : "")));
       sec.appendChild(head);
-      sec.appendChild(shelves(g.items));
+      var row = el("ul", "sh-row");
+      row.setAttribute("role", "list");
+      g.items.forEach(function (p) { var li = el("li"); li.appendChild(card(p)); row.appendChild(li); });
+      sec.appendChild(row);
       grid.appendChild(sec);
     });
     if (!list.length) {
@@ -920,11 +669,6 @@
   });
 
   var paintAll = function () { buildChips(); paintChips(); paintGrid(); paintRail(); };
-  /* a phone turned sideways, a window resized past a breakpoint: the shelves re-stack */
-  [MQ_PHONE, MQ_MID, MQ_WIDE].forEach(function (m) {
-    var again = function () { paintGrid(); };
-    if (m.addEventListener) m.addEventListener("change", again); else if (m.addListener) m.addListener(again);
-  });
   INV.onChange(paintAll);
   /* Evelyn approved an active for this client: its button turns into Add to cart */
   document.addEventListener("lumevina:consult-changed", function () { paintGrid(); paintRail(); });
