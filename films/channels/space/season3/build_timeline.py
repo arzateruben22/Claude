@@ -16,6 +16,22 @@ def captions(clips):
         for s in lines[c["id"]]["sentences"]: caps.append({"t0": round(c["t"] + s["t0"], 3), "t1": round(c["t"] + s["t1"] + 0.25, 3), "text": s["text"], "line": c["id"]})
     for a, b in zip(caps, caps[1:]): a["t1"] = round(min(a["t1"], b["t0"] - 0.02), 3) if b["t0"] > a["t0"] else a["t1"]
     return caps
+def split_caps(caps, lim):
+    """two lines at most on screen: a caption longer than lim characters is shown in pieces, each for a share of the time (by length), cut at a word boundary near the middle"""
+    out = []
+    for c in caps:
+        txt, parts = c["text"], [c["text"]]
+        while max(len(x) for x in parts) > lim:
+            i = max(range(len(parts)), key=lambda j: len(parts[j])); w = parts[i].split(" "); half = len(parts[i]) / 2; acc = 0; cut = 1
+            for k, x in enumerate(w[:-1]):
+                acc += len(x) + 1
+                if acc >= half * 0.9: cut = k + 1; break
+            parts[i:i + 1] = [" ".join(w[:cut]), " ".join(w[cut:])]
+        if len(parts) == 1: out.append(c); continue
+        tot = sum(len(x) for x in parts); t = c["t0"]; span = c["t1"] - c["t0"]
+        for x in parts:
+            d = span * len(x) / tot; out.append({**c, "t0": round(t, 3), "t1": round(t + d - (0.02 if x is not parts[-1] else 0), 3), "text": x}); t += d
+    return out
 def km_track(clips, chapter, caps):
     st = ST[chapter]; keys = [[0.0, st["start"]]]; prev_t = 0.0
     for k in st["keys"]:
@@ -58,7 +74,7 @@ if b0: tracks["moon"] += [[b0["t0"] - 0.1, 1], [b0["t0"] + 1.3, 0]]; tracks["brk
 if r0: tracks["brk"] += [[r0["t0"] - 0.1, 1], [r0["t0"] + 2.6, 0]]; tracks["ring"] += [[r0["t0"] - 0.1, 0], [r0["t0"] + 2.6, 1]]
 if n0: tracks["ring"] += [[n0["t0"] - 0.2, 1], [n0["t0"] + 2.0, 0]]; tracks["tonight"] += [[n0["t0"] - 0.2, 0], [n0["t0"] + 2.0, 1]]
 if n0: km += [[round(n0["t0"] + 0.4, 3), km[-1][1]], [round(n0["t0"] + 2.2, 3), 384400]]   # the Moon is fine: the counter is back where it began (the loop)
-tl["long"] = {"name": "long", "mode": "land", "dur": dur, "clips": clips, "captions": caps, "km": km, "tracks": tracks}
+tl["long"] = {"name": "long", "mode": "land", "dur": dur, "clips": clips, "captions": split_caps(caps, 100), "km": km, "tracks": tracks}
 # ---- the eight parts (9:16): hook, chapter, cliffhanger, closer, one like/follow line at 70-85% of the runtime, the ending left out
 for i in range(1, 9):
     ch = f"ch{i}"; vo = lines[ch + "_vo"]; sents = vo["sentences"]; cta = f"cta{(i - 1) % 4 + 1}_follow"
@@ -97,6 +113,6 @@ for i in range(1, 9):
     if i == 5:
         e0 = find(caps, "The sky goes dim"); e1 = find(caps, "And then you look at the Moon again")
         if e0 and e1: tracks["eclipse"] += [[e0["t0"] - 0.2, 0], [e0["t0"] + 1.6, 1], [e1["t0"] - 0.1, 1], [e1["t0"] + 1.6, 0]]
-    tl[f"part{i}"] = {"name": f"part{i}", "mode": "port", "dur": dur_p, "clips": clips, "captions": caps, "km": kk, "tracks": tracks, "cta_at": round(cc["t"], 3), "cta_frac": round(cc["t"] / dur_p, 3)}
+    tl[f"part{i}"] = {"name": f"part{i}", "mode": "port", "dur": dur_p, "clips": clips, "captions": split_caps(caps, 56), "km": kk, "tracks": tracks, "cta_at": round(cc["t"], 3), "cta_frac": round(cc["t"] / dur_p, 3)}
 for k, v in tl.items(): json.dump(v, open(f"{OUT}/{k}.json", "w"), indent=1, ensure_ascii=False)
 print({k: round(v["dur"], 1) for k, v in tl.items()}); print("CTA at", {k: v.get("cta_frac") for k, v in tl.items() if k != "long"})
