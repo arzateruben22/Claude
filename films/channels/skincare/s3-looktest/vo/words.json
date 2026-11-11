@@ -1,0 +1,126 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Feel that? A shiver. Tiny sensors in your skin feel the air cool, and quietly let your brain know.",
+   "heard": "Feel that a shiver. Tiny sensors in your skin feel the air cool and quietly let your brain know.",
+   "words": [
+    {
+     "w": "Feel",
+     "start": 0.52,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "that?",
+     "start": 0.94,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 1.78,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "shiver.",
+     "start": 1.97,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "Tiny",
+     "start": 3.445,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "sensors",
+     "start": 3.915,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 4.49,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 4.62,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 4.685,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 5.305,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.69,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 5.72,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "cool,",
+     "start": 6.05,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.9,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "quietly",
+     "start": 7.045,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "let",
+     "start": 7.665,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 7.855,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "brain",
+     "start": 8.045,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "know.",
+     "start": 8.9,
+     "end": 9.6,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

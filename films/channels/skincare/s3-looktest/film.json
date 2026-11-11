@@ -1,0 +1,163 @@
+{
+ "id": "skin-sense-s3-looktest",
+ "title": {
+  "series": "Skin Sense \u00b7 Season 3",
+  "title": "Look test"
+ },
+ "fps": 30,
+ "dur": 10.0,
+ "poster": 5.0,
+ "theme": "../theme.json",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "main"
+  }
+ ],
+ "disclosures": {
+  "aiVoice": false,
+  "aiVisuals": true
+ },
+ "captions": [
+  {
+   "w": "Feel",
+   "t0": 0.52,
+   "t1": 0.96,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "that?",
+   "t0": 0.94,
+   "t1": 1.2,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "A",
+   "t0": 1.78,
+   "t1": 2.08,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "shiver.",
+   "t0": 1.97,
+   "t1": 3.36,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "Tiny",
+   "t0": 3.445,
+   "t1": 3.84,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "sensors",
+   "t0": 3.915,
+   "t1": 4.4,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "in",
+   "t0": 4.49,
+   "t1": 4.64,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "your",
+   "t0": 4.62,
+   "t1": 4.8,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "skin",
+   "t0": 4.685,
+   "t1": 5.2,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "feel",
+   "t0": 5.305,
+   "t1": 5.52,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "the",
+   "t0": 5.69,
+   "t1": 5.76,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "air",
+   "t0": 5.72,
+   "t1": 6.08,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "cool,",
+   "t0": 6.05,
+   "t1": 6.56,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "and",
+   "t0": 6.9,
+   "t1": 7.12,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "quietly",
+   "t0": 7.045,
+   "t1": 7.68,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "let",
+   "t0": 7.665,
+   "t1": 7.92,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "your",
+   "t0": 7.855,
+   "t1": 8.16,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "brain",
+   "t0": 8.045,
+   "t1": 8.88,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "know.",
+   "t0": 8.9,
+   "t1": 9.6,
+   "line": "vo01",
+   "beat": "hook"
+  }
+ ],
+ "lines": {
+  "vo01": [
+   0.0,
+   9.88,
+   "hook"
+  ]
+ }
+}
