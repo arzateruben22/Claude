@@ -1208,7 +1208,7 @@
  },
  "badges": [
   {
-   "id": "code",
+   "id": "code-s0",
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 0.6,
@@ -1224,7 +1224,7 @@
    "slot": "tr"
   },
   {
-   "id": "code",
+   "id": "code-s2",
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 72.7,
@@ -1240,7 +1240,7 @@
    "slot": "tr"
   },
   {
-   "id": "code",
+   "id": "code-s4",
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 265.85,

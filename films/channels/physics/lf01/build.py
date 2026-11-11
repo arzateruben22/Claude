@@ -287,11 +287,11 @@ def _retag():
         for p in sorted(PLATES, key=lambda q: q["t0"]):
             t0, t1 = max(p["t0"], cur[0]), min(p["t1"], cur[1])
             if t1 <= t0: continue
-            if t0 > cur[0] + 0.05: segs.append(dict(b, t0=cur[0], t1=R(t0)))
+            if t0 > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=cur[0], t1=R(t0)))
             what = "bird" if p["id"] == "feeder" else "wave"
             segs.append(dict(b, id="code-p" + str(len(segs)), text="Kitchen: AI illustration \u00b7 %s drawn by code" % what, t0=R(t0), t1=R(t1)))
             cur[0] = t1
-        if cur[1] > cur[0] + 0.05: segs.append(dict(b, t0=R(cur[0]), t1=b["t1"]))
+        if cur[1] > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=R(cur[0]), t1=b["t1"]))
         out += segs or [b]
     BADGES = out
 _retag()
