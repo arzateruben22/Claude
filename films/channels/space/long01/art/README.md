@@ -16,3 +16,15 @@ Notes for the build:
 - The near side of the Moon always faces us: where the face shows, use the real pattern of dark seas.
 - The tides should climb as the Moon comes closer; these paintings show a normal sea.
 - The script says the break-up is "not an explosion, a stretch": the debris spreads along the orbit into a band.
+
+## Title (owner's choice, 11 Nov 2026)
+
+**How Close Can the Moon Get Before It Breaks?** (a real physics question with a real answer, so viewers guess a
+distance). Backup: "What If the Moon Never Stopped Getting Closer?". The old working title "The Moon Starts Coming
+Closer. It Won't Stop." is retired: it reads like a real event. Regenerate the recording script with the new title.
+
+## Build approach (coordinator, 11 Nov 2026)
+
+The owner is making a Moon-free beach plate, a flooded-beach plate and the Moon alone (real near side, on black), so the
+Moon is composited in code at each stage's exact angular size from calc.py, and the water level animates between the two
+plates. Extra paintings coming: a daytime eclipse, the break-up as a smooth arc along the orbit, and the ring across the sky.
