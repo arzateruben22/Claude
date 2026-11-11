@@ -3,37 +3,43 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Slow light until it crawls.",
-   "heard": "Slow light until it crawls.",
+   "text": "Light crosses a kitchen: seventeen seconds.",
+   "heard": "Light crosses a kitchen. 17 seconds.",
    "words": [
     {
-     "w": "Slow",
-     "start": 0.155,
-     "end": 0.48,
+     "w": "Light",
+     "start": 0.02,
+     "end": 0.32,
      "heard": true
     },
     {
-     "w": "light",
-     "start": 0.575,
-     "end": 0.72,
+     "w": "crosses",
+     "start": 0.405,
+     "end": 0.88,
      "heard": true
     },
     {
-     "w": "until",
-     "start": 0.68,
-     "end": 0.96,
+     "w": "a",
+     "start": 0.915,
+     "end": 0.965,
      "heard": true
     },
     {
-     "w": "it",
-     "start": 1.045,
-     "end": 1.12,
+     "w": "kitchen:",
+     "start": 1.085,
+     "end": 1.76,
      "heard": true
     },
     {
-     "w": "crawls.",
-     "start": 1.13,
-     "end": 1.6,
+     "w": "seventeen",
+     "start": 1.79,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "seconds.",
+     "start": 2.45,
+     "end": 2.96,
      "heard": true
     }
    ]

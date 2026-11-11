@@ -11,12 +11,12 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Slower than a snail: light.",
+   "text": "Is light slower than a snail?",
    "stars": [],
-   "phonemes": "slˈoʊɚ ðˌænə snˈeɪl: lˈaɪt.",
+   "phonemes": "ɪz lˈaɪt slˈoʊɚ ðˌænə snˈeɪl?",
    "file": "01.wav",
-   "dur": 2.082,
-   "sha256": "aa26a372569f60c8d5d3028f4cfb2d1dbbf893496a63933ee8c4e143fde35e97"
+   "dur": 1.656,
+   "sha256": "69b8533c8b96edcbe15cef77fc2cc693bee534584704def4852e3619f31c99cd"
   },
   {
    "id": "vo02",

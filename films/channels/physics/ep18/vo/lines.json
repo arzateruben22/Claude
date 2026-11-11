@@ -11,12 +11,12 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Lightning, a million times slower.",
+   "text": "Does lightning strike all at once?",
    "stars": [],
-   "phonemes": "lˈaɪtnɪŋ, ɐ mˈɪliən tˈaɪmz slˈoʊɚ.",
+   "phonemes": "dˈʌz lˈaɪtnɪŋ stɹˈaɪk ˈɔːl ɐtwˈʌns?",
    "file": "01.wav",
-   "dur": 2.327,
-   "sha256": "6d7e6672911d17db9333d2a4db90b9e40c5ec4ba791161e9b9490d00625535f8"
+   "dur": 1.768,
+   "sha256": "d0433eea0a9680ff4cc021d56a58ffb964cf1a7e0e4e30c8b9a367977c184e15"
   },
   {
    "id": "vo02",

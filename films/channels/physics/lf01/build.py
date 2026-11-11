@@ -98,10 +98,10 @@ if has("wings"):
         CAM += [ck(W("wings", "No"), WIDE[0], WIDE[1], 0.0), ck(W("wings", "Ten") - 1.5, WIDE[0], 5.2, 3.0, "sine")]
         plateau(W("wings", "Ten"), 0.602, 1.0)
     else:
-        EV["wire"] = [R(W("wings", "No") + 0.2), R(W("wings", "Ten") - 0.6)]
-        CAM += [ck(0.0, WIDE[0], WIDE[1], -4.0), ck(W("wings", "No"), WIDE[0], WIDE[1], 0.0), ck(W("wings", "Ten") - 1.5, WIDE[0], 5.2, 3.0, "sine")]
+        CAM += [ck(0.0, HUM, 0.8, -2.0)]     # the part opens on the bird itself, blurred at full speed, and slows at "ten times"
         plateau(W("wings", "Ten"), 0.0, 1.0)
-    EV["bird"] = [R(W("wings", "hummingbird") - 0.6), R(W("wings", "But") - 0.2)]
+    EV["bird"] = [0.0 if PART else R(W("wings", "hummingbird") - 0.6), R(W("wings", "But") - 0.2)]
+    if PART: EV["blur2"] = [0.0, R(W("wings", "Ten") - 0.2)]
     EV["blur"] = [R(W("wings", "Here's")), R(W("wings", "But") - 0.3)]
     EV["cupfly"] = [R(W("wings", "But") + 0.2), R(W("wings", "But") + 24.0)]
     CAM += [ck(W("wings", "hummingbird") - 0.9, HUM, 0.8, -2.0), ck(W("wings", "Here's") - 0.5, HUM, 0.72, 2.0, "sine"), ck(W("wings", "But") - 0.5, HUM, 0.72, 1.0, "sine"),

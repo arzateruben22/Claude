@@ -11,12 +11,12 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Slow light until it crawls.",
+   "text": "Light crosses a kitchen: seventeen seconds.",
    "stars": [],
-   "phonemes": "slˈoʊ lˈaɪt ʌntˈɪl ɪt kɹˈɔːlz.",
+   "phonemes": "lˈaɪt kɹˈɔsᵻz ɐ kˈɪtʃən: sˈɛvəntˌiːn sˈɛkəndz.",
    "file": "01.wav",
-   "dur": 1.637,
-   "sha256": "0a3c3d3e4a0667140ba1ea785562d127a2bcaab0a0b75b0672786e9ca4524ff0"
+   "dur": 2.965,
+   "sha256": "7b8b0e94b7506f558cda378d333806138bd421c3b68d775a7b2d4d72828e467e"
   },
   {
    "id": "vo02",

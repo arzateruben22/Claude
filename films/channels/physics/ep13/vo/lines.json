@@ -11,12 +11,12 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "Watch a wing, slowed ten times.",
+   "text": "Fifty beats a second. Watch them.",
    "stars": [],
-   "phonemes": "wˈɑːtʃ ɐ wˈɪŋ, slˈoʊd tˈɛn tˈaɪmz.",
+   "phonemes": "fˈɪfti bˈiːts ɐ sˈɛkənd. wˈɑːtʃ ðˌɛm.",
    "file": "01.wav",
-   "dur": 2.252,
-   "sha256": "d648fd82713b89855e48b6d3a4b8b9f7d69444531709803e46bb119c04ef0dbf"
+   "dur": 2.233,
+   "sha256": "53969c71e58ef310e4c04212695e8a44ac73755e14ae33517c17c1bb6c8a3df4"
   },
   {
    "id": "vo02",

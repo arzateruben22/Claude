@@ -6,7 +6,7 @@ Hook line (2 s) in place of the long film's bridge; the chapter; its cliffhanger
 Shot: an apple on the table; a bullet passes through it from left to right; the shock cone
 
 ## hook {chapter: 5 · part hook · energy: 0.6 · pre: 0.1} (0.0–3.0 s)
-vo: A bullet, through an apple, slowly. {-}
+vo: How long does a bullet take? {-}
 
 ## body {chapter: bullet · shot: an apple on the table; a bullet passes through it from left to right; the shock cone · energy: 0.7 · pre: 0.15} (3.0–60.0 s)
 vo: A famous old photograph by Harold Edgerton shows a bullet going through an apple. {c16} That bullet flew at about eight hundred fifty meters a second. {c16} The apple is about eight centimeters across. {c17} So the bullet crosses it in less than a ten-thousandth of a second. {c17} Here, that takes about one second. {c18} The bullet is a small, dark shape. {-} At this speed, you can watch it drift into the apple like a slow fish. {-} The skin dimples. {-} Then the back of the apple blows outward, in a spray. {-} Pieces of the apple trail behind it, one at a time. {-} And the bullet is already past. {-} In real time, that was far too quick to blink. {c40} It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. {c19} Quick pause: if that one got you, tap like and follow. Okay, back to it. {-} Even now, a table a meter wide would take it about twelve seconds to cross. {c32} A bullet is fast. {-} But out the window, something is about to be much faster. {-}

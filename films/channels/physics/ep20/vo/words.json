@@ -3,37 +3,43 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "Slower than a snail: light.",
-   "heard": "Slower than a snail. Light.",
+   "text": "Is light slower than a snail?",
+   "heard": "Is light slower than a snail?",
    "words": [
     {
-     "w": "Slower",
-     "start": 0.165,
-     "end": 0.56,
+     "w": "Is",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 0.18,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "slower",
+     "start": 0.585,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "than",
-     "start": 0.49,
-     "end": 0.72,
+     "start": 0.88,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.815,
-     "end": 0.865,
+     "start": 1.135,
+     "end": 1.185,
      "heard": true
     },
     {
-     "w": "snail:",
-     "start": 0.845,
-     "end": 1.52,
-     "heard": true
-    },
-    {
-     "w": "light.",
-     "start": 1.565,
-     "end": 2.0,
+     "w": "snail?",
+     "start": 1.205,
+     "end": 1.6,
      "heard": true
     }
    ]

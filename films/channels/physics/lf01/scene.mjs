@@ -350,7 +350,7 @@ window.seek = function (t) {
     for (let i = 0; i < trail.length; i++) { const [tx, ty, tz] = flightAt(Math.max(0, u - (i + 1) * 0.014)); trail[i].visible = u > (i + 1) * 0.014; trail[i].position.set(tx, ty, tz); trail[i].material.opacity = 0.28 * (1 - i / trail.length); }
   }
   if (t >= EV.bird[0] && t < EV.bird[1]) {
-    const r = (t - EV.bird[0]) / 10, blurMix = E.inout2(seg(t, EV.blur[0], EV.blur[0] + 0.8)) * (1 - E.inout2(seg(t, EV.blur[1] - 0.6, EV.blur[1])));
+    const r = (t - EV.bird[0]) / 10, b2 = EV.blur2 ? 1 - E.inout2(seg(t, EV.blur2[1] - 0.5, EV.blur2[1])) : 0, blurMix = Math.max(b2, E.inout2(seg(t, EV.blur[0], EV.blur[0] + 0.8)) * (1 - E.inout2(seg(t, EV.blur[1] - 0.6, EV.blur[1]))));
     const fr = blurMix > 0.01 ? Math.max(0.0, 1) : 1;
     place(hum, -1.5 + 0.012 * Math.sin(r * 3), 1.86 + 0.01 * Math.sin(r * 7), -1.45, -0.4); hum.g.rotation.z = 0.2;
     poseBird(hum, CAL.hz.hum, blurMix > 0.01 ? (t - EV.bird[0]) / 1 : r, blurMix);

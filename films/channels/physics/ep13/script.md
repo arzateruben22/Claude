@@ -6,7 +6,7 @@ Hook line (2 s) in place of the long film's bridge; the chapter; its cliffhanger
 Shot: the kitchen freezes into a wireframe, then a hummingbird at the window feeder; wings blur, then separate; the fly by the cup still blurs
 
 ## hook {chapter: 1 · part hook · energy: 0.6 · pre: 0.1} (0.0–3.0 s)
-vo: Watch a wing, slowed ten times. {-}
+vo: Fifty beats a second. Watch them. {-}
 
 ## body {chapter: wings · shot: the kitchen freezes into a wireframe, then a hummingbird at the window feeder; wings blur, then separate; the fly by the cup still blurs · energy: 0.7 · pre: 0.15} (3.0–60.0 s)
 vo: No camera on Earth could film all of this. {-} So every picture here is drawn by a computer, from the physics. {-} When a number was measured by someone, I'll say so. {-} When a picture is just an idea, it will wear a badge. {-} Ten times slower. {-} One second now takes ten. {c2} A small hummingbird hovers at the window. {-} Its wings beat about fifty times a second. {c3} At ten times slower, that's five beats a second. {c4} Now you can *see* them. {-} Not a blur anymore, just wings, going up and down. {-} The wings are doing all the work of holding it still. {-} Each wing sweeps forward, flips, and sweeps back. {c37} Watch the wing tips: they trace tiny loops in the air. {c37} Here's why they blur at full speed. {-} Your eyes blend flashes that come faster than about sixty a second. {c34} So fifty wing beats a second just smear together. {-} Quick pause: if that one got you, tap like and follow. Okay, back to it. {-} But look at the fly by the cup. {-} Even at ten times slower, its wings are still a blur. {-}

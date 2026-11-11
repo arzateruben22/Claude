@@ -3,43 +3,43 @@
  "lines": [
   {
    "id": "vo01",
-   "text": "A bullet, through an apple, slowly.",
-   "heard": "A bullet through an apple slowly.",
+   "text": "How long does a bullet take?",
+   "heard": "How long does a bullet take?",
    "words": [
     {
-     "w": "A",
+     "w": "How",
      "start": 0.02,
-     "end": 0.24,
+     "end": 0.32,
      "heard": true
     },
     {
-     "w": "bullet,",
-     "start": 0.215,
-     "end": 0.8,
+     "w": "long",
+     "start": 0.32,
+     "end": 0.48,
      "heard": true
     },
     {
-     "w": "through",
-     "start": 0.945,
-     "end": 0.995,
+     "w": "does",
+     "start": 0.55,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "an",
-     "start": 1.215,
-     "end": 1.28,
+     "w": "a",
+     "start": 0.735,
+     "end": 0.785,
      "heard": true
     },
     {
-     "w": "apple,",
-     "start": 1.245,
-     "end": 1.68,
+     "w": "bullet",
+     "start": 0.78,
+     "end": 1.12,
      "heard": true
     },
     {
-     "w": "slowly.",
-     "start": 1.585,
-     "end": 2.24,
+     "w": "take?",
+     "start": 1.075,
+     "end": 1.44,
      "heard": true
     }
    ]

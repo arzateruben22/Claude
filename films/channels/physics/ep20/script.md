@@ -6,7 +6,7 @@ Hook line (2 s) in place of the long film's bridge; the chapter; its cliffhanger
 Shot: a processor chip beside the table ticks; the pulse crosses the table and the cup, then crawls on the wall; the counter climbs to a trillion
 
 ## hook {chapter: 8 · part hook · energy: 0.6 · pre: 0.1} (0.0–3.0 s)
-vo: Slower than a snail: light. {-}
+vo: Is light slower than a snail? {-}
 
 ## body {chapter: still · shot: a processor chip beside the table ticks; the pulse crosses the table and the cup, then crawls on the wall; the counter climbs to a trillion · energy: 0.7 · pre: 0.15} (3.0–60.0 s)
 vo: A computer chip ticks about three billion times a second. {c27} Here, it ticks three times a second. {c27} Tick. Tick. Tick. {-} Keep going. {-} Ten billion times slower. {-} Now, light moves three centimeters a second. {c25} A hundred billion, and it moves three millimeters a second. {c25} And at a trillion times slower, the light moves about a third of a millimeter a second. {c25} That's slower than a garden snail. {c28} One second of your life now lasts about thirty-two thousand years. {c2} The room would take about four and a half hours to cross. {c26} Here's another way to see it. {-} A human hair is about a tenth of a millimeter wide. {c36} Light crosses a hair in about a third of a trillionth of a second. {c36} At this speed, that takes about a third of a second. {c36} Real quick: like and follow. It genuinely helps. Now, where were we? {-} Light hasn't stopped. {-} But in the time of one slow second, it has barely moved at all. {c25} It looks almost frozen. {-} But is any of this real? {-} Has anyone ever filmed light crawling like this? {-}

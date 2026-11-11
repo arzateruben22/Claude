@@ -11,12 +11,12 @@
   {
    "id": "vo01",
    "beat": "hook",
-   "text": "A bullet, through an apple, slowly.",
+   "text": "How long does a bullet take?",
    "stars": [],
-   "phonemes": "ɐ bˈʊlɪt, θɹuː ɐn ˈæpəl, slˈoʊli.",
+   "phonemes": "hˌaʊ lˈɔŋ dˈʌz ɐ bˈʊlɪt tˈeɪk?",
    "file": "01.wav",
-   "dur": 2.307,
-   "sha256": "c7eea44cb293ffd36bd5795ea7246e0465d3cfd7bf6e5c4c534d38697bf9c74b"
+   "dur": 1.475,
+   "sha256": "e2747e833f02ef043ba844b0766d48b9cbb63e8915f6cac658829ad2afecc527"
   },
   {
    "id": "vo02",
