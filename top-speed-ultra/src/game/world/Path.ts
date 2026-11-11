@@ -24,6 +24,12 @@ export class Path {
   inc: Junction[] = [];                    // where other paths join it
   next: Path | null = null;                // where the travel lanes carry on past the end, if anywhere
   prev: Path | null = null;
+  // how far along it the road is drawn and driven: its length, or less where a road that just stops was cut back off
+  // another road's travel lanes (Network.trimEnds)
+  end = 0;
+  // whether nothing of another road may be under clearance over its drawn travel lanes (Network.CLEAR): every carriageway,
+  // and the exit ramps of the Go To routes to the venues (Network.GO_TO_RAMPS)
+  lanesClear = false;
   label = '';
   // filled in by the network
   minX = 0; maxX = 0; minZ = 0; maxZ = 0;
@@ -70,6 +76,7 @@ export class Path {
     const cum = new Float64Array(nd);
     for (let i = 1; i < nd; i++) cum[i] = cum[i - 1] + Math.hypot(dense[i * 3] - dense[i * 3 - 3], dense[i * 3 + 1] - dense[i * 3 - 2]);
     this.len = cum[nd - 1];
+    this.end = this.len;
     this.ctrlS = new Float32Array(ctrlDense.map((i) => cum[i]));
     const n = Math.max(2, Math.floor(this.len / STEP) + 2);
     this.n = n;

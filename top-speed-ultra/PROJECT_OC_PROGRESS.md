@@ -4,6 +4,74 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-11: freeway debris, repair r5 (branch claude/fix-road, uncommitted, not reviewed yet)
+
+The owner (2026-11-09, screenshot of the live game c3962c5, lost in the machine reset): "also fix all this freway
+debris", on the I-5 North at the Disney Way / Katella Avenue exit, on the route to Stoppage Time. The worktree was
+restored from backup (HEAD 8b13bf9 plus the uncommitted work of three repairs and an interrupted fourth); r5 keeps that
+work and finishes it. "Live" is c3962c5, "base" is 8b13bf9, both built in a scratch folder.
+
+- **The Disney Way / Katella spot (I-5 North s ≈ 65,195-65,290, ramp 124's diverge at 65,213).** Every piece of
+  another road from 0.05 to 4.5 m over the 5's pavement there, on the live build (a scan of every mesh of every chunk
+  and street bridge nearby): East Gene Autry Way's street bridge, its sloped approach asphalt 0.17 to 4.48 m over all
+  five lanes and both shoulders at s 65,219-65,290 (the grey slabs slanting across at car height); ramp 1164, a 39 m
+  stub toward Gene Autry Way that the map ends 5 m over the 5's left lanes, hanging 2.7 to 2.8 m over them (d -12.1 to
+  -1.6) with its asphalt, shoulder, paint, barriers (1.3 to 3.7 m), soffit (1.2 to 2.8 m) and crash cushion (2.7 to
+  3.8 m). The tan brick wall is the I-5 North's own right sound wall (d 12.5 to 13.1, behind its right shoulder) ending
+  at ramp 124's gore. On r5: the street bridge only spans (its approaches left out), ramp 1164 is cut back to 26 m
+  (`Network.trimEnds`) and closed by an end wall behind the 5's left barrier (d -12.3 to -12.5), and nothing else of
+  another road is over the 5's pavement there but ramp 124's gore barrier (0.07 to 0.41 m, d 12.3 to 13.1, off the
+  pavement). Frames: `tests/out/debris/pairs/disney-day-r5.png`, `disney-night-r5.png` (live on top).
+- **The two structures the last review rejected.** I-5 North 57,378-57,514: on base, ramp 800's surface, barriers and
+  soffit 2.2 to 4.5 m over the left lanes; on r5 nothing of it in the lanes (its shoulder and cut side 0.05 to 0.57 m
+  over the 5's left shoulder edge, d -11.5 to -12.0); overhead only ramp 1203 (5.0 m and up) and East 4th Street (5.5 m
+  and up). CA-241 North 30,880-30,888: no cut side any more (the free-wall rule, `Roads.sideGround`); ramp 961's surface
+  is 1.1 to 1.7 m over the outer 0.9 m of the 241's left shoulder, as on base.
+- **The interchanges the owner drives** (a scan of every mesh of every chunk, 0.05 to 4.5 m over the pavement and
+  shoulders): I-5 North 61,000-76,500 (581 chunks) and I-5 South 18,000-33,700 (584 chunks): nothing in the travel
+  lanes; the rest is at the outer edge of a shoulder (gore barrier ends, cut sides to 0.3 m), except ramp 1196's deck
+  1.0 to 2.0 m over the I-5 South's left shoulder edge at 31,975-31,992 (d -10.9 to -12.0, the lanes end at -9.15).
+  The 28 exit ramps to Stoppage Time and Lot 57 (from the live build's venue links): ramp 797 (I-5 North to Ball Road /
+  Harbor Boulevard) runs under ramp 895, whose deck is 2.7 to 4.4 m and surface 4.1 to 4.4 m over 797's lane at 797's
+  s 161-175; small at-grade overlaps (0.06 to 0.25 m) on ramps 1054 and 149. Not fixed: the clearance rule covers
+  carriageways' lanes only. Over all ramps, 413 spots of another road in a ramp's lanes, 203 of them 0.5 m or more up;
+  queued as F7 in `PROJECT_OC_HANDOFF.md` (levelling design).
+- **New in r5: the profile limits over 2 m.** The autopilot drive showed the CA-241 North at 3.66 g at s 39,070 (base
+  1.24 g): the limits were held over 10 m only, and where the clearance rule's follows pressed a road against them the
+  solver met every 10 m row with a saw-tooth (2 m steps of 14% then a rise of 8%, kinks to 0.46 m every 10 m on ramps
+  1262, 403, 626, 800, 495, 940, 1164 and 305; a 9 cm step every 10 m for 700 m on the 241 North). `limitProfile`
+  (`world/Profile.ts`) now holds the crest, dip and grade limits over one sample as well, and leaves a road's own ends
+  free unless a junction holds them; `LEVELS` 3, rebaked. The suite's profile check now also fails a 2 m crest or dip
+  under 40% of the floor speed and half the map's own, or a 2 m grade 3 points over the map's and half a point over the
+  limit (base fails it at 3 spots, e.g. the CA-241 North at 39,766 m, 17 m/s; r5 passes). A Node scan of 2 m kinks over
+  the map's by more than 2 cm: base 2 roads, r5 before this 13, r5 now 0.
+- **Checks** (final build): `npx tsc --noEmit` exit 0; `npm run build` ok. Suite, split by group (one Playwright at a
+  time, load 20-27 on 4 cores): boot "14/14 passed" (lanes check "8,773 chunks and bridges built, 25,428,462
+  triangles: nothing in a travel lane from 0.05 to 4.5 m up"; cut edges "6,510 chunks ..., 5,284 cut edges closed
+  (1,452 more left open ...)"; "9,144 chunks: 265,982 cut-side feet, every one on another road's pavement; no road ends
+  over a carriageway's lanes (3 cut back off them)"; profile "968 roads moved, 129,193 10 m stretches checked"),
+  interchanges 7/7, survival and race 13/13, abilities and progression 9/9, render 13/13, phone 8/8, launch 4/5 twice:
+  "the run card downloads as a 1080 × 1350 PNG" timed out waiting 90 s for the download; run alone with a 300 s wait it
+  downloaded oc-ultra-free-702.png, 1080 × 1350, 945 KB after 86.5 s (load 27; it passed at 91 s in the first full pass
+  today, before the 2 m change). The open-edge exemptions (1,452) are all edges at the outer 0.6 m of another road's
+  shoulder beside a road on the ground, as on base, where the terrain closes them.
+- **Autopilot drive** of the 20 carriageways end to end (Moderate traffic, seed 7, 38 m/s cruise, 1/120 s steps;
+  vertical acceleration as the second difference of the car's height over 0.05 s): no stop of 1 s or more on any; the
+  largest, I-5 North 0.91 g, I-5 South 1.04, I-405 North 1.12, I-405 South 0.57 then 0.23 from 11.5 km (the autopilot
+  took the CA-22 East exit at 11 km on the first run), CA-22 East 1.26 (26 traffic contacts and a slowest 0.9 m/s, the
+  same on base), CA-22 West 0.63, CA-55 North 1.23 (base 1.23), CA-55 South 0.78, CA-57 North 1.18, CA-57 South 2.97
+  at 14,724 m (base 2.98, the map's own), CA-73 North 1.44 (base 1.44), CA-73 South 1.19, CA-91 East 1.93 (base 2.02),
+  CA-91 West 1.17, CA-133 North 2.95 at 934 m (base 2.95), CA-133 South 2.23 (base 2.23), CA-241 North 0.87 (base
+  1.24), CA-241 South 0.87, CA-261 North 0.25, CA-261 South 0.30. The CA-241 North from 38,900 m into the 91 West:
+  0.76 g (base 4.95 g, r5 before the 2 m change 4.47 g). Traffic contacts are with the moderate traffic.
+- **Sign bridges**: 827, none dropped, 28 moved (base 28); the I-5 North's "Grand Ave" sign for s 57,436 now stands 40
+  m before it instead of 50 m after, behind the camera in the 57,440 frames.
+- **Frames** (`tests/out/debris/pairs/*-r5.png`, local, not committed; base or live on top, r5 below; seat, hood,
+  chase; 1280 × 720 Day and 844 × 390 Night, Low, no traffic): `disney`, `i5n-57470`, `241n-30875`, `241n-91w`,
+  `55n-25176`, `73s-455`, each `-day-r5.png` and `-night-r5.png`. Lanes clean on r5 in all 36 r5 frames. Still as
+  before (non-blocking): the CA-241 North's left lane left out over the 91 West's at 39,700 (a seam and a low cut side
+  beside the car, where base had a Jersey barrier slanting into the lane).
+
 ## 2026-10-20: freeway debris fix, committed as work in progress (branch claude/fix-road, not accepted yet)
 
 - **What the owner saw**: "there seems to be debris in some parts of the freeway". Plants, ground, ramp decks,
