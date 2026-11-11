@@ -309,8 +309,9 @@ and Time Trial HUD, results and bests). `settings.modeOf()` reads any other save
 
 - `tests/regression.mjs` drives the built `dist/top-speed-ultra.html` through `window.__game` and prints PASS or FAIL
   with the numbers each check saw. Run `npm run build` first. It takes about 10 minutes here.
-- Groups: `boot`, `interchanges`, `survival`, `modes`, `abilities`, `progression`, `render`, `phone`, `launch`, `store`,
-  `store-live`, `venues`. Run some with
+- Groups: `boot`, `interchanges`, `survival`, `modes`, `abilities`, `progression`, `render`, `phone`, `nav-hud` (the
+  driving HUD with a destination set, phone at DPR 3 and desktop), `launch`, `store`, `store-live`, `venues`,
+  `venues-trips` (three Lot 57 round trips and the memory after each). Run some with
   `npm test -- --only=modes,survival`. Add `--slow` to render the High and Ultra presets too.
 - `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
 - `SUITE_HANDLING=0.9 npm test` drives every group at that handling value (Arcade 0.15, Sport 0.5, Simulation 0.9).
