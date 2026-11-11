@@ -1,0 +1,1204 @@
+{
+ "id": "possibility-lab-earth-spin-part1",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 73.05,
+ "poster": 35.4,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "shoulder",
+   "beat": "hook"
+  },
+  {
+   "at": 13.35,
+   "name": "globe",
+   "beat": "premise"
+  },
+  {
+   "at": 35.4,
+   "name": "eye",
+   "beat": "today"
+  },
+  {
+   "at": 68.93333333333334,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 3.45,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "hook-1",
+   "t0": 3.45,
+   "t1": 13.35,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "premise-1",
+   "t0": 13.35,
+   "t1": 17.85,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "premise-2",
+   "t0": 17.85,
+   "t1": 22.5,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "premise-3",
+   "t0": 22.5,
+   "t1": 27.45,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "premise-4",
+   "t0": 27.45,
+   "t1": 35.4,
+   "line": "vo06",
+   "energy": 0.6
+  },
+  {
+   "id": "today-1",
+   "t0": 35.4,
+   "t1": 38.7,
+   "line": "vo07",
+   "energy": 0.6
+  },
+  {
+   "id": "today-2",
+   "t0": 38.7,
+   "t1": 47.7,
+   "line": "vo08",
+   "energy": 0.6
+  },
+  {
+   "id": "today-3",
+   "t0": 47.7,
+   "t1": 51.15,
+   "line": "vo09",
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 51.15,
+   "t1": 57.9,
+   "line": "vo10",
+   "energy": 0.6
+  },
+  {
+   "id": "today-4",
+   "t0": 57.9,
+   "t1": 64.05,
+   "line": "vo11",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 64.05,
+   "t1": 67.65,
+   "line": "vo12",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 67.65,
+   "t1": 73.05,
+   "line": "vo13",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    23.934
+   ],
+   [
+    73.05,
+    23.934
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    73.05,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": [
+   [
+    50.4974,
+    63.7423
+   ]
+  ]
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 68.93333333333334,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 72.85,
+   "slot": "bl"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "What If Earth Spun Faster?",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 68.93333333333334,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster…*",
+  "follow": "Possibility Lab · Part 1 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "captions": [
+  {
+   "t0": 0.085,
+   "t1": 3.195,
+   "lines": [
+    [
+     [
+      "What",
+      0.225
+     ],
+     [
+      "if",
+      0.535
+     ],
+     [
+      "Earth",
+      0.6
+     ],
+     [
+      "spun",
+      1.055
+     ],
+     [
+      "faster,",
+      1.33
+     ]
+    ],
+    [
+     [
+      "and",
+      1.955
+     ],
+     [
+      "couldn't",
+      2.095
+     ],
+     [
+      "stop?",
+      2.445
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.42,
+   "t1": 5.8,
+   "lines": [
+    [
+     [
+      "You",
+      3.56
+     ],
+     [
+      "are",
+      3.7
+     ],
+     [
+      "standing",
+      4.155
+     ]
+    ],
+    [
+     [
+      "on",
+      4.695
+     ],
+     [
+      "the",
+      4.955
+     ],
+     [
+      "equator,",
+      5.05
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.82,
+   "t1": 8.32,
+   "lines": [
+    [
+     [
+      "and",
+      5.82
+     ],
+     [
+      "you",
+      6.015
+     ],
+     [
+      "are",
+      6.31
+     ],
+     [
+      "going",
+      6.38
+     ]
+    ],
+    [
+     [
+      "to",
+      6.655
+     ],
+     [
+      "watch",
+      6.835
+     ],
+     [
+      "what",
+      7.3
+     ],
+     [
+      "happens,",
+      7.57
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.325,
+   "t1": 9.675,
+   "lines": [
+    [
+     [
+      "minute",
+      8.325
+     ],
+     [
+      "by",
+      8.75
+     ],
+     [
+      "minute,",
+      9.07
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.675,
+   "t1": 12.445,
+   "lines": [
+    [
+     [
+      "until",
+      9.675
+     ],
+     [
+      "the",
+      10.14
+     ],
+     [
+      "planet",
+      10.19
+     ]
+    ],
+    [
+     [
+      "can't",
+      10.74
+     ],
+     [
+      "take",
+      11.195
+     ],
+     [
+      "it",
+      11.455
+     ],
+     [
+      "anymore.",
+      11.695
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.32,
+   "t1": 15.145,
+   "lines": [
+    [
+     [
+      "The",
+      13.46
+     ],
+     [
+      "Earth",
+      13.705
+     ],
+     [
+      "keeps",
+      14.07
+     ],
+     [
+      "its",
+      14.25
+     ],
+     [
+      "size,",
+      14.5
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 15.145,
+   "t1": 17.485,
+   "lines": [
+    [
+     [
+      "its",
+      15.145
+     ],
+     [
+      "shape,",
+      15.23
+     ]
+    ],
+    [
+     [
+      "its",
+      15.795
+     ],
+     [
+      "air",
+      15.995
+     ],
+     [
+      "and",
+      16.4
+     ],
+     [
+      "its",
+      16.605
+     ],
+     [
+      "water.",
+      16.735
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.82,
+   "t1": 22.02,
+   "lines": [
+    [
+     [
+      "Only",
+      17.96
+     ],
+     [
+      "the",
+      18.395
+     ],
+     [
+      "spin",
+      18.67
+     ],
+     [
+      "changes,",
+      19.1
+     ],
+     [
+      "and",
+      19.895
+     ]
+    ],
+    [
+     [
+      "it",
+      19.96
+     ],
+     [
+      "only",
+      20.175
+     ],
+     [
+      "ever",
+      20.6
+     ],
+     [
+      "gets",
+      20.92
+     ],
+     [
+      "faster.",
+      21.27
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.448,
+   "t1": 24.523,
+   "lines": [
+    [
+     [
+      "On",
+      22.588
+     ],
+     [
+      "screen",
+      23.018
+     ],
+     [
+      "there",
+      23.483
+     ]
+    ],
+    [
+     [
+      "is",
+      23.718
+     ],
+     [
+      "one",
+      23.773
+     ],
+     [
+      "number",
+      24.133
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.523,
+   "t1": 27.268,
+   "lines": [
+    [
+     [
+      "that",
+      24.523
+     ],
+     [
+      "matters:",
+      24.708
+     ]
+    ],
+    [
+     [
+      "the",
+      25.708
+     ],
+     [
+      "length",
+      25.738
+     ],
+     [
+      "of",
+      26.158
+     ],
+     [
+      "a",
+      26.463
+     ],
+     [
+      "day.",
+      26.518
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.42,
+   "t1": 31.385,
+   "lines": [
+    [
+     [
+      "It",
+      27.56
+     ],
+     [
+      "starts",
+      27.93
+     ],
+     [
+      "at",
+      28.195
+     ],
+     [
+      "24",
+      28.435
+     ],
+     [
+      "hours,",
+      29.265
+     ],
+     [
+      "and",
+      29.995
+     ]
+    ],
+    [
+     [
+      "by",
+      30.145
+     ],
+     [
+      "the",
+      30.385
+     ],
+     [
+      "end",
+      30.59
+     ],
+     [
+      "it",
+      30.93
+     ],
+     [
+      "will",
+      30.96
+     ],
+     [
+      "have",
+      31.21
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.385,
+   "t1": 35.0,
+   "lines": [
+    [
+     [
+      "fallen",
+      31.385
+     ],
+     [
+      "to",
+      31.905
+     ],
+     [
+      "about",
+      32.235
+     ],
+     [
+      "an",
+      32.455
+     ],
+     [
+      "hour",
+      32.665
+     ]
+    ],
+    [
+     [
+      "and",
+      33.365
+     ],
+     [
+      "24",
+      33.545
+     ],
+     [
+      "minutes.",
+      34.25
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 35.293,
+   "t1": 38.363,
+   "lines": [
+    [
+     [
+      "Right",
+      35.433
+     ],
+     [
+      "now,",
+      35.668
+     ]
+    ],
+    [
+     [
+      "one",
+      35.983
+     ],
+     [
+      "day",
+      36.233
+     ],
+     [
+      "lasts",
+      36.438
+     ],
+     [
+      "24",
+      36.903
+     ],
+     [
+      "hours.",
+      37.613
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.648,
+   "t1": 42.003,
+   "lines": [
+    [
+     [
+      "Standing",
+      38.788
+     ],
+     [
+      "on",
+      39.478
+     ],
+     [
+      "the",
+      39.693
+     ],
+     [
+      "equator,",
+      39.948
+     ]
+    ],
+    [
+     [
+      "the",
+      40.748
+     ],
+     [
+      "ground",
+      40.873
+     ],
+     [
+      "carries",
+      41.383
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 42.003,
+   "t1": 47.438,
+   "lines": [
+    [
+     [
+      "you",
+      42.003
+     ],
+     [
+      "around",
+      42.293
+     ],
+     [
+      "at",
+      42.818
+     ],
+     [
+      "about",
+      43.103
+     ]
+    ],
+    [
+     [
+      "1,670",
+      43.368
+     ],
+     [
+      "kilometers",
+      45.543
+     ],
+     [
+      "an",
+      46.493
+     ],
+     [
+      "hour.",
+      46.688
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.653,
+   "t1": 50.723,
+   "lines": [
+    [
+     [
+      "What",
+      47.793
+     ],
+     [
+      "you",
+      47.948
+     ],
+     [
+      "do",
+      48.123
+     ],
+     [
+      "feel",
+      48.443
+     ]
+    ],
+    [
+     [
+      "is",
+      48.793
+     ],
+     [
+      "a",
+      48.823
+     ],
+     [
+      "tiny",
+      49.093
+     ],
+     [
+      "push",
+      49.598
+     ],
+     [
+      "outward.",
+      49.973
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 51.185,
+   "t1": 52.44,
+   "lines": [
+    [
+     [
+      "Hang",
+      51.325
+     ],
+     [
+      "on.",
+      51.69
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 52.545,
+   "t1": 55.365,
+   "lines": [
+    [
+     [
+      "If",
+      52.545
+     ],
+     [
+      "you're",
+      52.68
+     ],
+     [
+      "enjoying",
+      52.99
+     ],
+     [
+      "this,",
+      53.51
+     ]
+    ],
+    [
+     [
+      "tap",
+      53.9
+     ],
+     [
+      "like",
+      54.195
+     ],
+     [
+      "and",
+      54.39
+     ],
+     [
+      "follow.",
+      54.615
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 55.575,
+   "t1": 57.3,
+   "lines": [
+    [
+     [
+      "Okay,",
+      55.715
+     ],
+     [
+      "back",
+      56.195
+     ],
+     [
+      "to",
+      56.465
+     ],
+     [
+      "the",
+      56.495
+     ],
+     [
+      "math.",
+      56.55
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 57.853,
+   "t1": 60.958,
+   "lines": [
+    [
+     [
+      "You",
+      57.993
+     ],
+     [
+      "weigh",
+      58.258
+     ],
+     [
+      "about",
+      58.738
+     ],
+     [
+      "a",
+      58.908
+     ],
+     [
+      "third",
+      59.193
+     ]
+    ],
+    [
+     [
+      "of",
+      59.623
+     ],
+     [
+      "a",
+      59.753
+     ],
+     [
+      "percent",
+      59.783
+     ],
+     [
+      "less",
+      60.318
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 60.958,
+   "t1": 63.878,
+   "lines": [
+    [
+     [
+      "than",
+      60.958
+     ],
+     [
+      "you",
+      61.083
+     ],
+     [
+      "would",
+      61.298
+     ],
+     [
+      "on",
+      61.588
+     ],
+     [
+      "a",
+      61.853
+     ],
+     [
+      "planet",
+      61.883
+     ]
+    ],
+    [
+     [
+      "that",
+      62.468
+     ],
+     [
+      "did",
+      62.648
+     ],
+     [
+      "not",
+      62.788
+     ],
+     [
+      "spin.",
+      63.128
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.98,
+   "t1": 67.58,
+   "lines": [
+    [
+     [
+      "And",
+      64.12
+     ],
+     [
+      "the",
+      64.435
+     ],
+     [
+      "spin",
+      64.54
+     ],
+     [
+      "has",
+      65.145
+     ],
+     [
+      "only",
+      65.2
+     ]
+    ],
+    [
+     [
+      "just",
+      65.625
+     ],
+     [
+      "begun",
+      65.915
+     ],
+     [
+      "to",
+      66.3
+     ],
+     [
+      "speed",
+      66.33
+     ],
+     [
+      "up.",
+      66.83
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 67.653,
+   "t1": 69.123,
+   "lines": [
+    [
+     [
+      "Part",
+      67.653
+     ],
+     [
+      "one",
+      67.983
+     ],
+     [
+      "of",
+      68.168
+     ],
+     [
+      "eight.",
+      68.433
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.2,
+   "dur": 2.807,
+   "file": "vo/01.wav",
+   "text": "What if Earth spun faster, and couldn't stop?"
+  },
+  {
+   "id": "vo02",
+   "t": 3.5,
+   "dur": 9.575,
+   "file": "vo/02.wav",
+   "text": "You are standing on the equator, and you are going to watch what happens, minute by minute, until the planet can't take it anymore."
+  },
+  {
+   "id": "vo03",
+   "t": 13.4,
+   "dur": 4.105,
+   "file": "vo/03.wav",
+   "text": "The Earth keeps its size, its shape, its air and its water."
+  },
+  {
+   "id": "vo04",
+   "t": 17.9,
+   "dur": 4.35,
+   "file": "vo/04.wav",
+   "text": "Only the spin changes, and it only ever gets faster."
+  },
+  {
+   "id": "vo05",
+   "t": 22.533333333333335,
+   "dur": 4.644,
+   "file": "vo/05.wav",
+   "text": "On screen there is one number that matters: the length of a day."
+  },
+  {
+   "id": "vo06",
+   "t": 27.5,
+   "dur": 7.544,
+   "file": "vo/06.wav",
+   "text": "It starts at twenty-four hours, and by the end it will have fallen to about an hour and twenty-four minutes."
+  },
+  {
+   "id": "vo07",
+   "t": 35.43333333333333,
+   "dur": 2.949,
+   "file": "vo/07.wav",
+   "text": "Right now, one day lasts twenty-four hours."
+  },
+  {
+   "id": "vo08",
+   "t": 38.733333333333334,
+   "dur": 8.67,
+   "file": "vo/08.wav",
+   "text": "Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour."
+  },
+  {
+   "id": "vo09",
+   "t": 47.733333333333334,
+   "dur": 3.121,
+   "file": "vo/09.wav",
+   "text": "What you do feel is a tiny push outward."
+  },
+  {
+   "id": "vo10",
+   "t": 51.3,
+   "dur": 6.197,
+   "file": "vo/10.wav",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
+  },
+  {
+   "id": "vo11",
+   "t": 57.93333333333333,
+   "dur": 5.809,
+   "file": "vo/11.wav",
+   "text": "You weigh about a third of a percent less than you would on a planet that did not spin."
+  },
+  {
+   "id": "vo12",
+   "t": 64.1,
+   "dur": 3.212,
+   "file": "vo/12.wav",
+   "text": "And the spin has only just begun to speed up."
+  },
+  {
+   "id": "vo13",
+   "t": 67.63333333333334,
+   "dur": 3.082,
+   "file": "vo/13.wav",
+   "text": "Part one of eight. Full video on YouTube."
+  }
+ ]
+}

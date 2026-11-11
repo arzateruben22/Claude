@@ -137,6 +137,7 @@ roEl.innerHTML = '<div style="font:700 2.1vh/1 var(--font-text);letter-spacing:.
 const scrim = document.createElement("div");
 scrim.style.cssText = "position:absolute;left:0;top:0;width:" + (PORT ? "100vw" : "64vw") + ";height:" + (PORT ? "46vh" : "70vh") + ";z-index:4;pointer-events:none;background:radial-gradient(ellipse farthest-side at 28% 36%, rgba(6,9,16,.66) 0%, rgba(6,9,16,.5) 45%, rgba(6,9,16,0) 100%)";
 document.body.appendChild(scrim); document.body.appendChild(roEl);
+if (FILM.thumb) { roEl.style.display = "none"; scrim.style.display = "none"; }   // cover mode (film.json "thumb": true): the picture only, no readout
 const roT = roEl.querySelector("#roT"), roV = roEl.querySelector("#roV"), roL2 = roEl.querySelector("#roL2");
 const WWINS = WD.weightWins || [], inWeight = (t) => WWINS.some(([a, b]) => t >= a && t < b);
 const fmtT = (T) => T >= 10 ? Math.round(T) + " h" : T >= 1.995 ? T.toFixed(1) + " h" : Math.floor(T + 1e-6) + " h " + String(Math.round((T - Math.floor(T + 1e-6)) * 60)).padStart(2, "0") + " min";
