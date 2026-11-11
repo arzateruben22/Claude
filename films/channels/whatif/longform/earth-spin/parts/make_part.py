@@ -80,7 +80,8 @@ for i in sent_idx:
 items.insert(best[0] + 1, dict(kind="cta", wav=str(byname[cta_name]), text=textof[cta_name], beat=items[best[0]]["beat"], key="cta"))
 clip(byname[f"p{N}-cliff"], "cliff", textof[f"p{N}-cliff"], items[-1]["beat"], "cliff")
 clip(byname[f"closer{N}"], "closer", textof[f"closer{N}"], "tease", "closer")
-D = HERE / f"part{N}"
+import os as _os
+D = HERE / f"part{N}{_os.environ.get('PART_SUFFIX', '')}"
 (D / "vo").mkdir(parents=True, exist_ok=True)
 lines, out_items, beats_n = [], [], {}
 for k, it in enumerate(items, 1):

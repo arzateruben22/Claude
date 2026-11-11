@@ -1,6 +1,6 @@
 """Covers and thumbnails from the owner's AI illustrations (art/owner/*.png, 1672x941): extend the dark sky (no stretching), upscale, sharpen, add the words in code.
   python3 -I .../parts/art_cover.py            writes the 16:9 thumbnail options, the long-film thumbnail and the Part 2/4/8 9:16 covers"""
-import json, shutil
+import json, os, shutil
 from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
@@ -56,7 +56,9 @@ sun, sea, flt = load("sun-streak-90-minute-day.png"), load("oceans-bulge-equator
 storm, arc1, arc2 = load("storm-fury.png"), load("sunrises-arc-1.png"), load("sunrises-arc-2.png")
 BOXES = {2: (sun, (350, -40, 910, 956), ["Sunset in", "6 hours"]), 3: (storm, (0, 0, 941, 1672), ["1,670 km/h", "wind"]), 4: (sea, (236, -700, 1436, 1433), ["Seas pile", "up here"]),
          5: (storm, (0, -190, 941, 1482), ["Calm afternoons", "end"]), 6: (arc1, (103, 0, 947, 1500), ["6,000 days", "a year"]), 7: (arc2, (0, 0, 941, 1672), ["Sunset", "in 1 hour"]), 8: (flt, (536, -446, 1483, 1238), ["Jump 4", "meters high"])}
-if __name__ == "__main__":
+if __name__ == "__main__" and os.environ.get("GLOSSY") != "1":      # the robot covers (robot_cover.py) replaced the glossy-figure covers; GLOSSY=1 regenerates the old ones
+    print("art_cover: skipped (robot covers are current; GLOSSY=1 to rebuild the glossy-figure ones)")
+elif __name__ == "__main__":
     S3 = W / "compilations/s3"
     # 16:9: the long-film thumbnail and the two other options
     A = words(finish(sun, (1920, 1080)), "", 70, 60, 190, lines=["90-MINUTE", "DAY"])

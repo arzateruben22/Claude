@@ -15,9 +15,9 @@ const key = new THREE.DirectionalLight(0xffffff, 2.2), rim = new THREE.Direction
 scene.add(key, rim, fill, warm); let envTex = null;
 window.draw = (o) => {
   renderer.setSize(o.w, o.h, false); camera.aspect = o.w / o.h; camera.fov = o.fov || 28;
-  const l = o.light || {}; key.position.set(...(l.key || [2.2, 3, 3.2])); key.intensity = l.keyK ?? 2.2;
+  const l = o.light || {}; key.color.set(l.keyColor || "#ffffff"); key.position.set(...(l.key || [2.2, 3, 3.2])); key.intensity = l.keyK ?? 2.2;
   rim.position.set(...(l.rim || [-3, 1.6, -2.5])); rim.color.set(l.rimColor || "#5aa0ff"); rim.intensity = l.rimK ?? 2.0;
-  warm.position.set(...(l.warm || [2.5, 1.5, -2])); warm.intensity = l.warmK ?? 0;
+  warm.color.set(l.warmColor || "#ffa860"); warm.position.set(...(l.warm || [2.5, 1.5, -2])); warm.intensity = l.warmK ?? 0;
   fill.intensity = l.fillK ?? 0.7;
   envTex = makeEnv(renderer, l.env || {}); scene.environment = envTex;
   const pose = { ...(POSES[o.pose] || {}), ...(o.over || {}) }; if (o.expr) pose.expr = o.expr; pose.yaw = o.yaw ?? pose.yaw ?? 0;

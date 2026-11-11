@@ -53,7 +53,7 @@ export const createRobot = (o = {}) => {
   [-1, 1].forEach((s) => {
     const g = new THREE.Group(); const x = s * 0.085, y = 0.02; g.position.set(x, VY + y, onVisor(x, y)); head.add(g);
     const oval = ell(1, 1, 1, 0.008, eyeMat, [20, 14]);
-    const arc = new THREE.Mesh(new THREE.TorusGeometry(1, 0.2, 8, 24, Math.PI), eyeMat); arc.visible = false;
+    const arc = new THREE.Mesh(new THREE.TorusGeometry(1, 0.3, 8, 24, Math.PI), eyeMat); arc.visible = false;
     g.add(oval, arc); eyes.push({ g, oval, arc, s, x, y });
   });
   // a soft specular blob on the visor, upper right (as in the reference)

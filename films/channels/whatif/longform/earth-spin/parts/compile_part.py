@@ -17,7 +17,8 @@ import importlib.util as _iu
 _sp = _iu.spec_from_file_location("numerals_units", str(ES.parents[4] / "kits/cinema/film/numerals.py")); _nu = _iu.module_from_spec(_sp); _sp.loader.exec_module(_nu)
 from calc import T_ORB, R as R_EQ, E_ORB, E_NOW   # noqa: E402
 N = int(sys.argv[1])
-D = HERE / f"part{N}"
+import os as _os
+D = HERE / f"part{N}{_os.environ.get('PART_SUFFIX', '')}"
 FPS, BPM = 30, 50
 items = json.loads((D / "items.json").read_text())
 f = Film(D / "script.md", D / "vo", fps=FPS, bpm=BPM, grid=0.125)
