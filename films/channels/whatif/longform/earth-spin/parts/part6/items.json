@@ -1,0 +1,196 @@
+[
+ {
+  "kind": "open",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/11.wav",
+  "text": "Now a year has more than a thousand days in it.",
+  "beat": "calendar",
+  "key": "open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 2.34
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/10.wav",
+  "text": "Meanwhile, the calendar breaks.",
+  "beat": "calendar",
+  "key": "L10.1",
+  "slice": [
+   0.0,
+   2.06
+  ],
+  "uid": "calendar-1",
+  "vo": "vo02",
+  "dur": 2.06
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/10.wav",
+  "text": "The year does not change, because the Earth still goes round the Sun once.",
+  "beat": "calendar",
+  "key": "L10.2",
+  "slice": [
+   2.86,
+   5.795
+  ],
+  "uid": "calendar-2",
+  "vo": "vo03",
+  "dur": 2.935
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/10.wav",
+  "text": "But every day gets shorter, so a year contains more days.",
+  "beat": "calendar",
+  "key": "L10.3",
+  "slice": [
+   6.595,
+   10.01
+  ],
+  "uid": "calendar-3",
+  "vo": "vo04",
+  "dur": 3.415
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/10.wav",
+  "text": "Right now, at a six hour day, a year already holds about fourteen hundred and sixty days.",
+  "beat": "calendar",
+  "key": "L10.4",
+  "slice": [
+   10.81,
+   14.115
+  ],
+  "uid": "calendar-4",
+  "vo": "vo05",
+  "dur": 3.305
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/10.wav",
+  "text": "By the end, it would hold over six thousand, with a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
+  "beat": "calendar",
+  "key": "L10.5",
+  "slice": [
+   14.915,
+   23.85
+  ],
+  "uid": "calendar-5",
+  "vo": "vo06",
+  "dur": 8.935
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/11.wav",
+  "text": "Not everyone on Earth would feel the same thing.",
+  "beat": "poles",
+  "key": "L11.1",
+  "slice": [
+   0.0,
+   1.98
+  ],
+  "uid": "poles-1",
+  "vo": "vo07",
+  "dur": 1.98
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/11.wav",
+  "text": "At the poles, the ground only turns on the spot.",
+  "beat": "poles",
+  "key": "L11.2",
+  "slice": [
+   2.78,
+   4.72
+  ],
+  "uid": "poles-2",
+  "vo": "vo08",
+  "dur": 1.94
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/11.wav",
+  "text": "Nobody there is carried around at all, and they would weigh the same as ever.",
+  "beat": "poles",
+  "key": "L11.3",
+  "slice": [
+   5.52,
+   8.925
+  ],
+  "uid": "poles-3",
+  "vo": "vo09",
+  "dur": 3.405
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/11.wav",
+  "text": "At forty-five degrees north, you move at seventy percent of the equator's speed, and the push outward is only half as strong.",
+  "beat": "poles",
+  "key": "L11.4",
+  "slice": [
+   9.725,
+   16.13
+  ],
+  "uid": "poles-4",
+  "vo": "vo10",
+  "dur": 6.405
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/11.wav",
+  "text": "The farther you stand from the equator, the longer you keep your weight.",
+  "beat": "poles",
+  "key": "L11.5",
+  "slice": [
+   16.93,
+   20.18
+  ],
+  "uid": "poles-5",
+  "vo": "vo11",
+  "dur": 3.25
+ },
+ {
+  "kind": "cta",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/27.wav",
+  "text": "Quick break: like and follow. Then let's see how bad this gets.",
+  "beat": "poles",
+  "key": "cta",
+  "uid": "cta",
+  "vo": "vo12",
+  "dur": 3.04
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/11.wav",
+  "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
+  "beat": "poles",
+  "key": "L11.6",
+  "slice": [
+   20.98,
+   26.92
+  ],
+  "uid": "poles-6",
+  "vo": "vo13",
+  "dur": 5.94
+ },
+ {
+  "kind": "cliff",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/12.wav",
+  "text": "And the days keep getting shorter.",
+  "beat": "poles",
+  "key": "cliff",
+  "uid": "cliff",
+  "vo": "vo14",
+  "dur": 1.94
+ },
+ {
+  "kind": "closer",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/22.wav",
+  "text": "Part six of eight. Full video on YouTube.",
+  "beat": "tease",
+  "key": "closer",
+  "uid": "tease",
+  "vo": "vo15",
+  "dur": 3.1
+ }
+]

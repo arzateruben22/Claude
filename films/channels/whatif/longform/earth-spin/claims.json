@@ -227,7 +227,7 @@
  {
   "id": "c21",
   "sentence": "the Sun slides its own width every minute (12 h), 16 s (3 h), 8 s (1.5 h)",
-  "claim": "The Sun's apparent motion is 360 deg / T: 0.50 deg/min at a 12 h day, 2.0 deg/min at 3 h, 4.0 deg/min at 1.5 h. Its disk is about 0.53 deg wide, so it moves its own width every 64 s, 16 s and 8 s.",
+  "claim": "The Sun's apparent motion is 360 deg / T: 0.50 deg/min at a 12 h day, 2.0 deg/min at 3 h, 4.0 deg/min at 1.5 h. Its disk is about 0.53 deg wide, so it moves its own width every 64 s, 16 s and 8 s. At a 12 h day the Sun moves 0.5 deg/min, the same as a clock's hour hand (360 deg in 12 h).",
   "accessed": "2026-11-11",
   "status": "TODO open link",
   "kind": "source",
@@ -295,8 +295,8 @@
  },
  {
   "id": "c28",
-  "sentence": "storms are steered 8x / 12x / 16x harder than today",
-  "claim": "Coriolis steering is proportional to the spin rate (c15): 23.934 h / 3 h = 8.0, / 2 h = 12.0, / 1.5 h = 16.0.",
+  "sentence": "storms are steered 2x / 8x / 12x / 16x harder than today",
+  "claim": "Coriolis steering is proportional to the spin rate (c15): 23.934 h / 12 h = 2.0, / 3 h = 8.0, / 2 h = 12.0, / 1.5 h = 16.0.",
   "accessed": "2026-11-11",
   "status": "TODO open link",
   "kind": "derivation",

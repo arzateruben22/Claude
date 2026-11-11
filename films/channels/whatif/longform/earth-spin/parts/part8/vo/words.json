@@ -1,0 +1,493 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "A day now lasts about an hour and a half.",
+   "heard": "The date now lasts about an hour and a half.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": false
+    },
+    {
+     "w": "day",
+     "start": 0.05,
+     "end": 0.4,
+     "heard": false
+    },
+    {
+     "w": "now",
+     "start": 0.34,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "lasts",
+     "start": 0.65,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.815,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 1.03,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 1.06,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.41,
+     "end": 1.46,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.44,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "half.",
+     "start": 1.595,
+     "end": 2.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "At an hour and a half, you are almost weightless.",
+   "heard": "At an hour and a half drive almost weekly's.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.01,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 0.235,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.265,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.505,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.535,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "half,",
+     "start": 0.565,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.8,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "are",
+     "start": 0.83,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "almost",
+     "start": 1.115,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "weightless.",
+     "start": 1.145,
+     "end": 1.5,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "You weigh about one eighth of what you did.",
+   "heard": "You weigh about one eighth of what you do.",
+   "words": [
+    {
+     "w": "You",
+     "start": 0.03,
+     "end": 0.08,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 0.07,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.305,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.51,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "eighth",
+     "start": 0.685,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.865,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 0.96,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.25,
+     "end": 1.3,
+     "heard": true
+    },
+    {
+     "w": "did.",
+     "start": 1.28,
+     "end": 1.5,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "The equator moves at twenty-seven thousand kilometers an hour.",
+   "heard": "The crater moves at 27,000 kilometers an hour.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.005,
+     "end": 0.08,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 0.065,
+     "end": 0.48,
+     "heard": false
+    },
+    {
+     "w": "moves",
+     "start": 0.45,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.755,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "twenty-seven",
+     "start": 0.94,
+     "end": 1.84,
+     "heard": false
+    },
+    {
+     "w": "thousand",
+     "start": 0.97,
+     "end": 1.84,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 1.835,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 2.395,
+     "end": 2.445,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 2.425,
+     "end": 2.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "One more nudge, and something changes completely.",
+   "heard": "One more nudge and something changes completely.",
+   "words": [
+    {
+     "w": "One",
+     "start": 0.005,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 0.205,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "nudge,",
+     "start": 0.4,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.76,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "something",
+     "start": 0.965,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "changes",
+     "start": 1.11,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "completely.",
+     "start": 1.525,
+     "end": 2.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Quick break: like and follow. Then let's see how bad this gets.",
+   "heard": "Quick break, like and follow, then let's see how bad this gets.",
+   "words": [
+    {
+     "w": "Quick",
+     "start": 0.28,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "break:",
+     "start": 0.465,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.05,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.305,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 1.335,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "Then",
+     "start": 1.735,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "let's",
+     "start": 1.875,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "see",
+     "start": 1.96,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 2.31,
+     "end": 2.36,
+     "heard": true
+    },
+    {
+     "w": "bad",
+     "start": 2.34,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 2.46,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "gets.",
+     "start": 2.645,
+     "end": 2.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "One more nudge, and something changes completely.",
+   "heard": "One more knowledge and something changes completely.",
+   "words": [
+    {
+     "w": "One",
+     "start": 0.01,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 0.245,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "nudge,",
+     "start": 0.41,
+     "end": 0.96,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 0.995,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "something",
+     "start": 1.215,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "changes",
+     "start": 1.245,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "completely.",
+     "start": 1.88,
+     "end": 2.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Part eight of eight. Full video on YouTube.",
+   "heard": "R8 being full video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.06,
+     "end": 0.88,
+     "heard": false
+    },
+    {
+     "w": "eight",
+     "start": 0.09,
+     "end": 0.88,
+     "heard": false
+    },
+    {
+     "w": "of",
+     "start": 0.12,
+     "end": 0.88,
+     "heard": false
+    },
+    {
+     "w": "eight.",
+     "start": 0.15,
+     "end": 0.88,
+     "heard": false
+    },
+    {
+     "w": "Full",
+     "start": 0.935,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.105,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.345,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.655,
+     "end": 1.92,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

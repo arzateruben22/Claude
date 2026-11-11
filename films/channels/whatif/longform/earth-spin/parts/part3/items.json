@@ -1,0 +1,112 @@
+[
+ {
+  "kind": "open",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/05.wav",
+  "text": "The air can't keep up with the ground.",
+  "beat": "wind",
+  "key": "open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 2.65
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/06.wav",
+  "text": "But the air has a problem.",
+  "beat": "wind",
+  "key": "L6.1",
+  "slice": [
+   0.0,
+   1.05
+  ],
+  "uid": "wind-1",
+  "vo": "vo02",
+  "dur": 1.05
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/06.wav",
+  "text": "The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time.",
+  "beat": "wind",
+  "key": "L6.2",
+  "slice": [
+   1.85,
+   5.92
+  ],
+  "uid": "wind-2",
+  "vo": "vo03",
+  "dur": 4.07
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/06.wav",
+  "text": "For the first hours, the air is left behind.",
+  "beat": "wind",
+  "key": "L6.3",
+  "slice": [
+   6.72,
+   8.66
+  ],
+  "uid": "wind-3",
+  "vo": "vo04",
+  "dur": 1.94
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/06.wav",
+  "text": "At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound.",
+  "beat": "wind",
+  "key": "L6.4",
+  "slice": [
+   9.46,
+   15.41
+  ],
+  "uid": "wind-4",
+  "vo": "vo05",
+  "dur": 5.95
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/06.wav",
+  "text": "Winds like that would strip the surface, and they would only be the beginning.",
+  "beat": "wind",
+  "key": "L6.5",
+  "slice": [
+   16.21,
+   18.46
+  ],
+  "uid": "wind-5",
+  "vo": "vo06",
+  "dur": 2.25
+ },
+ {
+  "kind": "cta",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/25.wav",
+  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+  "beat": "wind",
+  "key": "cta",
+  "uid": "cta",
+  "vo": "vo07",
+  "dur": 4.03
+ },
+ {
+  "kind": "cliff",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/06.wav",
+  "text": "And then the oceans start to move.",
+  "beat": "wind",
+  "key": "cliff",
+  "uid": "cliff",
+  "vo": "vo08",
+  "dur": 2.03
+ },
+ {
+  "kind": "closer",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/19.wav",
+  "text": "Part three of eight. Full video on YouTube.",
+  "beat": "tease",
+  "key": "closer",
+  "uid": "tease",
+  "vo": "vo09",
+  "dur": 2.2
+ }
+]

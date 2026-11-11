@@ -1,0 +1,128 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/make_part.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "Three hours, then two: a day is as long as a movie.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 4.67,
+   "sha256": "5865ff2324b8c8fd34be9522df66a6133b7ff26ffdce2e8506342a6bb7c39786"
+  },
+  {
+   "id": "vo02",
+   "beat": "three-1",
+   "text": "At a three hour day, the Sun crosses the sky in just ninety minutes.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 2.83,
+   "sha256": "74ca644be524ff9b9af16847e36e573f2089edc1cbcf053310b317b2b7bf3f16"
+  },
+  {
+   "id": "vo03",
+   "beat": "three-2",
+   "text": "The ground now moves at over thirteen thousand kilometers an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 3.455,
+   "sha256": "8f525fc462cac108b91d7180ebf0511d8a5fb8602d3c49ecdd85068c66032cca"
+  },
+  {
+   "id": "vo04",
+   "beat": "three-3",
+   "text": "You weigh twenty-two percent less.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 2.105,
+   "sha256": "23dd398c1af6745605acc01ea751287e007e666f397edd74d45002d6a25aa318"
+  },
+  {
+   "id": "vo05",
+   "beat": "three-4",
+   "text": "Seventy kilograms feels like fifty-five.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 1.17,
+   "sha256": "e9fe6ba5617d6ed1524d7074db587fd915334965c91f199a272a3005d85e31fa"
+  },
+  {
+   "id": "vo06",
+   "beat": "two-1",
+   "text": "At two hours, you weigh half of what you did.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 1.94,
+   "sha256": "dbdc66a7c76324ba94029ac3a6cdf5e96197ed395ac07b6b86ba12eb5970c424"
+  },
+  {
+   "id": "vo07",
+   "beat": "two-2",
+   "text": "Twenty thousand kilometers an hour; the Sun crosses the whole sky in an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 3.6,
+   "sha256": "516bd6ca7e3c35466cbba4bceff447409b4b4585eee5f03c97da7707d536624e"
+  },
+  {
+   "id": "vo08",
+   "beat": "two-3",
+   "text": "Every object near the equator is half as heavy as it should be.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 2.77,
+   "sha256": "fd9e87447d66d2ecc08f4096353c812ca3705882b5ae4810414ecb6b4ec920be"
+  },
+  {
+   "id": "vo09",
+   "beat": "two-4",
+   "text": "Buildings, bridges and oceans are all being asked to hold on with half the force.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 3.03,
+   "sha256": "425f5aab05b9ba471f08a3aea16dc28bf038ec21b50a0904141a1851d38610ce"
+  },
+  {
+   "id": "vo10",
+   "beat": "cta",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 4.03,
+   "sha256": "5ed901cc5a87bb8e232cd6275c084613b3a298c16aa12569c84f30098ae01bba"
+  },
+  {
+   "id": "vo11",
+   "beat": "cliff",
+   "text": "And at an hour and a half, you are almost weightless.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 2.91,
+   "sha256": "27fbe3e3548e18c29ff3aac0a5e40d8fe5c96ccb4a4a9c7383b24d020db2cbd5"
+  },
+  {
+   "id": "vo12",
+   "beat": "tease",
+   "text": "Part seven of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "12.wav",
+   "dur": 2.63,
+   "sha256": "433ce51c5188548d8ffa00eaffa1a234e61fea2a62de968e1a3043aee17424e3"
+  }
+ ]
+}

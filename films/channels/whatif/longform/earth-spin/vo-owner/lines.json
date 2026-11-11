@@ -21,13 +21,17 @@
      "t0": 0.0,
      "t1": 6.66,
      "text": "What if the Earth started to spin faster, a little more every second, and nothing in the universe could stop it?",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L1.1",
+     "file": "cutA/s001.wav"
     },
     {
      "t0": 7.46,
      "t1": 14.31,
      "text": "You are standing on the equator, and you are going to watch what happens, minute by minute, until the planet can't take it anymore.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L1.2",
+     "file": "cutA/s002.wav"
     }
    ],
    "beat": "hook",
@@ -45,49 +49,65 @@
      "t0": 0.0,
      "t1": 0.94,
      "text": "Here are the rules.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L2.1",
+     "file": "cutA/s003.wav"
     },
     {
      "t0": 1.74,
      "t1": 5.25,
      "text": "The Earth keeps its size, its shape, its air and its water.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L2.2",
+     "file": "cutA/s004.wav"
     },
     {
      "t0": 6.05,
      "t1": 9.1,
      "text": "Only the spin changes, and it only ever gets faster.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L2.3",
+     "file": "cutA/s005.wav"
     },
     {
      "t0": 9.9,
      "t1": 13.92,
      "text": "On screen there is one number that matters: the length of a day.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L2.4",
+     "file": "cutA/s006.wav"
     },
     {
      "t0": 14.72,
      "t1": 19.93,
      "text": "It starts at twenty-four hours, and by the end it will have fallen to about an hour and twenty-four minutes.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L2.5",
+     "file": "cutA/s007.wav"
     },
     {
      "t0": 20.73,
      "t1": 23.87,
      "text": "Under it is the second number: how fast the ground is moving under your feet.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L2.6",
+     "file": "cutA/s008.wav"
     },
     {
      "t0": 24.67,
      "t1": 26.55,
      "text": "Nothing resets, and nothing slows.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L2.7",
+     "file": "cutA/s009.wav"
     },
     {
      "t0": 27.35,
      "t1": 33.11,
      "text": "The planet is not a perfect ball, and we will skip a great deal of real physics, so treat every number as a first guess.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L2.8",
+     "file": "cutA/s010.wav"
     }
    ],
    "beat": "premise",
@@ -105,37 +125,49 @@
      "t0": 0.0,
      "t1": 2.85,
      "text": "Right now, one day lasts twenty-four hours.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L3.1",
+     "file": "cutA/s011.wav"
     },
     {
      "t0": 3.65,
      "t1": 8.54,
      "text": "Or almost: the Earth turns once in twenty-three hours, fifty-six minutes.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L3.2",
+     "file": "cutA/s012.wav"
     },
     {
      "t0": 9.34,
      "t1": 16.145,
      "text": "Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L3.3",
+     "file": "cutA/s013.wav"
     },
     {
      "t0": 16.945,
      "t1": 18.785,
      "text": "You never feel it, because everything moves with you.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L3.4",
+     "file": "cutA/s014.wav"
     },
     {
      "t0": 19.585,
      "t1": 20.91,
      "text": "What you do feel is a tiny push outward.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L3.5",
+     "file": "cutA/s015.wav"
     },
     {
      "t0": 21.71,
      "t1": 25.49,
      "text": "You weigh about a third of a percent less than you would on a planet that did not spin.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L3.6",
+     "file": "cutA/s016.wav"
     }
    ],
    "beat": "today",
@@ -153,31 +185,41 @@
      "t0": 0.0,
      "t1": 2.05,
      "text": "Now the spin begins to speed up.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L4.1",
+     "file": "cutA/s017.wav"
     },
     {
      "t0": 2.85,
      "t1": 5.0,
      "text": "At twenty hours, you can see the shadows sweep.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L4.2",
+     "file": "cutA/s018.wav"
     },
     {
      "t0": 5.8,
      "t1": 9.095,
      "text": "At sixteen, the Sun climbs the sky like a slow elevator.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L4.3",
+     "file": "cutA/s019.wav"
     },
     {
      "t0": 9.895,
      "t1": 11.585,
      "text": "The rule never changes.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L4.4",
+     "file": "cutA/s020.wav"
     },
     {
      "t0": 12.385,
      "t1": 15.305,
      "text": "A day only ever gets shorter, and you cannot turn it back.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L4.5",
+     "file": "cutA/s021.wav"
     }
    ],
    "beat": "spinup",
@@ -195,25 +237,33 @@
      "t0": 0.0,
      "t1": 3.06,
      "text": "At a twelve hour day, sunrise to sunset takes six hours.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L5.1",
+     "file": "cutA/s022.wav"
     },
     {
      "t0": 3.86,
      "t1": 9.49,
      "text": "The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L5.2",
+     "file": "cutA/s023.wav"
     },
     {
      "t0": 10.29,
      "t1": 15.65,
      "text": "You weigh one point four percent less than on a still Earth, four times what you feel today.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L5.3",
+     "file": "cutA/s024.wav"
     },
     {
      "t0": 16.45,
      "t1": 18.555,
      "text": "A seventy kilogram person feels like about sixty-nine.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L5.4",
+     "file": "cutA/s025.wav"
     }
    ],
    "beat": "twelve",
@@ -231,31 +281,41 @@
      "t0": 0.0,
      "t1": 1.05,
      "text": "But the air has a problem.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L6.1",
+     "file": "cutA/s026.wav"
     },
     {
      "t0": 1.85,
      "t1": 5.92,
      "text": "The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L6.2",
+     "file": "cutA/s027.wav"
     },
     {
      "t0": 6.72,
      "t1": 8.66,
      "text": "For the first hours, the air is left behind.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L6.3",
+     "file": "cutA/s028.wav"
     },
     {
      "t0": 9.46,
      "t1": 15.41,
      "text": "At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L6.4",
+     "file": "cutA/s029.wav"
     },
     {
      "t0": 16.21,
      "t1": 18.46,
      "text": "Winds like that would strip the surface, and they would only be the beginning.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L6.5",
+     "file": "cutA/s030.wav"
     }
    ],
    "beat": "wind",
@@ -273,55 +333,73 @@
      "t0": 0.0,
      "t1": 1.58,
      "text": "And then the oceans begin to move.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L7.1",
+     "file": "cutA/s031.wav"
     },
     {
      "t0": 2.38,
      "t1": 7.75,
      "text": "A spinning planet pushes water outward, toward the equator, exactly as it pushes you.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L7.2",
+     "file": "cutA/s032.wav"
     },
     {
      "t0": 8.55,
      "t1": 16.14,
      "text": "Today the Earth already bulges about twenty-one kilometers wider at the equator than from pole to pole, and the ground has had billions of years to settle into that shape.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L7.3",
+     "file": "cutA/s033.wav"
     },
     {
      "t0": 16.94,
      "t1": 19.44,
      "text": "Speed the spin up quickly and the ground cannot adjust in time.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L7.4",
+     "file": "cutA/s034.wav"
     },
     {
      "t0": 20.24,
      "t1": 25.65,
      "text": "At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L7.5",
+     "file": "cutA/s035.wav"
     },
     {
      "t0": 26.45,
      "t1": 30.29,
      "text": "The whole ocean is only about three point seven kilometers deep.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L7.6",
+     "file": "cutA/s036.wav"
     },
     {
      "t0": 31.09,
      "t1": 32.86,
      "text": "So the water does not simply rise.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L7.7",
+     "file": "cutA/s037.wav"
     },
     {
      "t0": 33.66,
      "t1": 36.69,
      "text": "It drains toward a belt around the equator, while the poles dry out.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L7.8",
+     "file": "cutA/s038.wav"
     },
     {
      "t0": 37.49,
      "t1": 43.41,
      "text": "This is a rough, first guess, but the direction is certain: land near the poles emerges, and your own coast is flooded.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L7.9",
+     "file": "cutA/s039.wav"
     }
    ],
    "beat": "oceans",
@@ -339,37 +417,49 @@
      "t0": 0.0,
      "t1": 1.185,
      "text": "The sky has another problem.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L8.1",
+     "file": "cutA/s040.wav"
     },
     {
      "t0": 1.985,
      "t1": 9.98,
      "text": "Storms are steered by the planet's spin, through the Coriolis effect, and that steering grows in step with the spin rate.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L8.2",
+     "file": "cutA/s041.wav"
     },
     {
      "t0": 10.78,
      "t1": 12.83,
      "text": "At a six hour day it is four times stronger than today.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L8.3",
+     "file": "cutA/s042.wav"
     },
     {
      "t0": 13.63,
      "t1": 16.41,
      "text": "At the edge of floating, it is seventeen times stronger.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L8.4",
+     "file": "cutA/s043.wav"
     },
     {
      "t0": 17.21,
      "t1": 21.1,
      "text": "Weather systems would be squeezed into tight, fast bands, and the calm of an ordinary afternoon would be gone.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L8.5",
+     "file": "cutA/s044.wav"
     },
     {
      "t0": 21.9,
      "t1": 25.42,
      "text": "Nobody could forecast it, because nobody has seen a planet like this.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L8.6",
+     "file": "cutA/s045.wav"
     }
    ],
    "beat": "weather",
@@ -387,25 +477,33 @@
      "t0": 0.0,
      "t1": 3.615,
      "text": "At a six hour day, the Sun races from horizon to horizon in three hours.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L9.1",
+     "file": "cutA/s046.wav"
     },
     {
      "t0": 4.415,
      "t1": 6.835,
      "text": "The equator moves at nearly seven thousand kilometers an hour.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L9.2",
+     "file": "cutA/s047.wav"
     },
     {
      "t0": 7.635,
      "t1": 9.095,
      "text": "You are five and a half percent lighter.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L9.3",
+     "file": "cutA/s048.wav"
     },
     {
      "t0": 9.895,
      "t1": 13.375,
      "text": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L9.4",
+     "file": "cutA/s049.wav"
     }
    ],
    "beat": "six",
@@ -423,31 +521,41 @@
      "t0": 0.0,
      "t1": 2.06,
      "text": "Meanwhile, the calendar breaks.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L10.1",
+     "file": "cutA/s050.wav"
     },
     {
      "t0": 2.86,
      "t1": 5.795,
      "text": "The year does not change, because the Earth still goes round the Sun once.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L10.2",
+     "file": "cutA/s051.wav"
     },
     {
      "t0": 6.595,
      "t1": 10.01,
      "text": "But every day gets shorter, so a year contains more days.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L10.3",
+     "file": "cutA/s052.wav"
     },
     {
      "t0": 10.81,
      "t1": 14.115,
      "text": "Right now, at a six hour day, a year already holds about fourteen hundred and sixty days.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L10.4",
+     "file": "cutA/s053.wav"
     },
     {
      "t0": 14.915,
      "t1": 23.85,
-     "text": "By the end, it would hold over six thousand, {c16} with a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
-     "kind": "rec"
+     "text": "By the end, it would hold over six thousand, with a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
+     "kind": "rec",
+     "key": "L10.5",
+     "file": "cutA/s054.wav"
     }
    ],
    "beat": "calendar",
@@ -465,37 +573,49 @@
      "t0": 0.0,
      "t1": 1.98,
      "text": "Not everyone on Earth would feel the same thing.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L11.1",
+     "file": "cutA/s055.wav"
     },
     {
      "t0": 2.78,
      "t1": 4.72,
      "text": "At the poles, the ground only turns on the spot.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L11.2",
+     "file": "cutA/s056.wav"
     },
     {
      "t0": 5.52,
      "t1": 8.925,
      "text": "Nobody there is carried around at all, and they would weigh the same as ever.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L11.3",
+     "file": "cutA/s057.wav"
     },
     {
      "t0": 9.725,
      "t1": 16.13,
      "text": "At forty-five degrees north, you move at seventy percent of the equator's speed, and the push outward is only half as strong.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L11.4",
+     "file": "cutA/s058.wav"
     },
     {
      "t0": 16.93,
      "t1": 20.18,
      "text": "The farther you stand from the equator, the longer you keep your weight.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L11.5",
+     "file": "cutA/s059.wav"
     },
     {
      "t0": 20.98,
      "t1": 26.92,
      "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L11.6",
+     "file": "cutA/s060.wav"
     }
    ],
    "beat": "poles",
@@ -513,25 +633,33 @@
      "t0": 0.0,
      "t1": 2.83,
      "text": "At a three hour day, the Sun crosses the sky in just ninety minutes.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L12.1",
+     "file": "cutA/s061.wav"
     },
     {
      "t0": 3.63,
      "t1": 7.085,
      "text": "The ground now moves at over thirteen thousand kilometers an hour.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L12.2",
+     "file": "cutA/s062.wav"
     },
     {
      "t0": 7.885,
      "t1": 9.99,
      "text": "You weigh twenty-two percent less.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L12.3",
+     "file": "cutA/s063.wav"
     },
     {
      "t0": 10.79,
      "t1": 11.96,
      "text": "Seventy kilograms feels like fifty-five.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L12.4",
+     "file": "cutA/s064.wav"
     }
    ],
    "beat": "three",
@@ -549,25 +677,33 @@
      "t0": 0.0,
      "t1": 1.94,
      "text": "At two hours, you weigh half of what you did.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L13.1",
+     "file": "cutA/s065.wav"
     },
     {
      "t0": 2.74,
      "t1": 6.34,
      "text": "Twenty thousand kilometers an hour; the Sun crosses the whole sky in an hour.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L13.2",
+     "file": "cutA/s066.wav"
     },
     {
      "t0": 7.14,
      "t1": 9.91,
      "text": "Every object near the equator is half as heavy as it should be.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L13.3",
+     "file": "cutA/s067.wav"
     },
     {
      "t0": 10.71,
      "t1": 13.74,
      "text": "Buildings, bridges and oceans are all being asked to hold on with half the force.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L13.4",
+     "file": "cutA/s068.wav"
     }
    ],
    "beat": "two",
@@ -585,25 +721,33 @@
      "t0": 0.0,
      "t1": 1.83,
      "text": "At an hour and a half, you are almost weightless.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L14.1",
+     "file": "cutA/s069.wav"
     },
     {
      "t0": 2.63,
      "t1": 4.56,
      "text": "You weigh about one eighth of what you did.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L14.2",
+     "file": "cutA/s070.wav"
     },
     {
      "t0": 5.36,
      "t1": 8.225,
      "text": "The equator moves at twenty-seven thousand kilometers an hour.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L14.3",
+     "file": "cutA/s071.wav"
     },
     {
      "t0": 9.025,
      "t1": 11.735,
      "text": "One more nudge, and something changes completely.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L14.4",
+     "file": "cutA/s072.wav"
     }
    ],
    "beat": "one-five",
@@ -621,37 +765,49 @@
      "t0": 0.0,
      "t1": 6.335,
      "text": "At a day of about an hour and twenty-four minutes, the ground under you moves at seven point nine kilometers a second.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L15.1",
+     "file": "cutA/s073.wav"
     },
     {
      "t0": 7.135,
      "t1": 9.24,
      "text": "That is the speed of a satellite in a low orbit.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L15.2",
+     "file": "cutA/s074.wav"
     },
     {
      "t0": 10.04,
      "t1": 13.435,
      "text": "At that speed, the push outward exactly cancels gravity.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L15.3",
+     "file": "cutA/s075.wav"
     },
     {
      "t0": 14.235,
      "t1": 15.255,
      "text": "You weigh nothing.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L15.4",
+     "file": "cutA/s076.wav"
     },
     {
      "t0": 16.055,
      "t1": 17.415,
      "text": "You are no longer standing on the Earth.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L15.5",
+     "file": "cutA/s077.wav"
     },
     {
      "t0": 18.215,
      "t1": 21.525,
      "text": "You are orbiting it, one stride above the surface, with the whole equator going by beneath you.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L15.6",
+     "file": "cutA/s078.wav"
     }
    ],
    "beat": "float",
@@ -669,31 +825,41 @@
      "t0": 0.0,
      "t1": 2.995,
      "text": "And past that point, the equator can no longer keep its own rock.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L16.1",
+     "file": "cutA/s079.wav"
     },
     {
      "t0": 3.795,
      "t1": 6.115,
      "text": "This is as far as a simple sum can honestly take us.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L16.2",
+     "file": "cutA/s080.wav"
     },
     {
      "t0": 6.915,
      "t1": 11.155,
      "text": "A real planet is not a perfect ball, and what happens next depends on how strong the Earth is.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L16.3",
+     "file": "cutA/s081.wav"
     },
     {
      "t0": 11.955,
      "t1": 15.205,
      "text": "But the direction is clear: the spin would tear the equator apart.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L16.4",
+     "file": "cutA/s082.wav"
     },
     {
      "t0": 16.005,
      "t1": 18.735,
      "text": "First the loose things would go, then the sea, then the rock.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L16.5",
+     "file": "cutA/s083.wav"
     }
    ],
    "beat": "break",
@@ -711,19 +877,25 @@
      "t0": 0.0,
      "t1": 2.33,
      "text": "Of course, nothing in the real universe could ever do this.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L17.1",
+     "file": "cutA/s084.wav"
     },
     {
      "t0": 3.13,
      "t1": 12.33,
      "text": "To spin the Earth that fast you would have to put in about six times ten to the thirty-first joules, nearly three hundred times the spin energy it has today.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L17.2",
+     "file": "cutA/s085.wav"
     },
     {
      "t0": 13.13,
      "t1": 17.12,
      "text": "That is every drop of sunlight the Earth receives, for about eleven million years.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L17.3",
+     "file": "cutA/s086.wav"
     }
    ],
    "beat": "cost",
@@ -741,37 +913,49 @@
      "t0": 0.0,
      "t1": 3.545,
      "text": "So the next time you stand still, remember the speed you are carrying.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L18.1",
+     "file": "cutA/s087.wav"
     },
     {
      "t0": 4.345,
      "t1": 7.445,
      "text": "You are already moving at sixteen hundred kilometers an hour.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L18.2",
+     "file": "cutA/s088.wav"
     },
     {
      "t0": 8.245,
      "t1": 11.075,
      "text": "You only have to go about seventeen times faster to leave the ground behind.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L18.3",
+     "file": "cutA/s089.wav"
     },
     {
      "t0": 11.875,
      "t1": 15.885,
      "text": "The day would have to shrink from twenty-four hours to an hour and twenty-four minutes.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L18.4",
+     "file": "cutA/s090.wav"
     },
     {
      "t0": 16.685,
      "t1": 21.495,
      "text": "That is the whole distance between standing and flying, and it is why a planet's spin can never be a small thing.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L18.5",
+     "file": "cutA/s091.wav"
     },
     {
      "t0": 22.295,
      "t1": 23.405,
      "text": "Thanks for watching.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L18.6",
+     "file": "cutA/s092.wav"
     }
    ],
    "beat": "close",
@@ -789,7 +973,9 @@
      "t0": 0.0,
      "t1": 2.17,
      "text": "Subscribe, for the next what-if.",
-     "kind": "rec"
+     "kind": "rec",
+     "key": "L19.1",
+     "file": "cutA/s093.wav"
     }
    ],
    "beat": "tease",

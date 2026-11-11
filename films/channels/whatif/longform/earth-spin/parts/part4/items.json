@@ -1,0 +1,168 @@
+[
+ {
+  "kind": "open",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/07.wav",
+  "text": "The oceans are sliding toward the equator.",
+  "beat": "oceans",
+  "key": "open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 3.41
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "text": "And then the oceans begin to move.",
+  "beat": "oceans",
+  "key": "L7.1",
+  "slice": [
+   0.0,
+   1.58
+  ],
+  "uid": "oceans-1",
+  "vo": "vo02",
+  "dur": 1.58
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "text": "A spinning planet pushes water outward, toward the equator, exactly as it pushes you.",
+  "beat": "oceans",
+  "key": "L7.2",
+  "slice": [
+   2.38,
+   7.75
+  ],
+  "uid": "oceans-2",
+  "vo": "vo03",
+  "dur": 5.37
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "text": "Today the Earth already bulges about twenty-one kilometers wider at the equator than from pole to pole, and the ground has had billions of years to settle into that shape.",
+  "beat": "oceans",
+  "key": "L7.3",
+  "slice": [
+   8.55,
+   16.14
+  ],
+  "uid": "oceans-3",
+  "vo": "vo04",
+  "dur": 7.59
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "text": "Speed the spin up quickly and the ground cannot adjust in time.",
+  "beat": "oceans",
+  "key": "L7.4",
+  "slice": [
+   16.94,
+   19.44
+  ],
+  "uid": "oceans-4",
+  "vo": "vo05",
+  "dur": 2.5
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "text": "At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today.",
+  "beat": "oceans",
+  "key": "L7.5",
+  "slice": [
+   20.24,
+   25.65
+  ],
+  "uid": "oceans-5",
+  "vo": "vo06",
+  "dur": 5.41
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "text": "The whole ocean is only about three point seven kilometers deep.",
+  "beat": "oceans",
+  "key": "L7.6",
+  "slice": [
+   26.45,
+   30.29
+  ],
+  "uid": "oceans-6",
+  "vo": "vo07",
+  "dur": 3.84
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "text": "So the water does not simply rise.",
+  "beat": "oceans",
+  "key": "L7.7",
+  "slice": [
+   31.09,
+   32.86
+  ],
+  "uid": "oceans-7",
+  "vo": "vo08",
+  "dur": 1.77
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "text": "It drains toward a belt around the equator, while the poles dry out.",
+  "beat": "oceans",
+  "key": "L7.8",
+  "slice": [
+   33.66,
+   36.69
+  ],
+  "uid": "oceans-8",
+  "vo": "vo09",
+  "dur": 3.03
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "text": "This is a rough, first guess, but the direction is certain: land near the poles emerges, and your own coast is flooded.",
+  "beat": "oceans",
+  "key": "L7.9",
+  "slice": [
+   37.49,
+   43.41
+  ],
+  "uid": "oceans-9",
+  "vo": "vo10",
+  "dur": 5.92
+ },
+ {
+  "kind": "cta",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/27.wav",
+  "text": "Quick break: like and follow. Then let's see how bad this gets.",
+  "beat": "oceans",
+  "key": "cta",
+  "uid": "cta",
+  "vo": "vo11",
+  "dur": 3.04
+ },
+ {
+  "kind": "cliff",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/08.wav",
+  "text": "And the weather is about to change completely.",
+  "beat": "oceans",
+  "key": "cliff",
+  "uid": "cliff",
+  "vo": "vo12",
+  "dur": 2.04
+ },
+ {
+  "kind": "closer",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/20.wav",
+  "text": "Part four of eight. Full video on YouTube.",
+  "beat": "tease",
+  "key": "closer",
+  "uid": "tease",
+  "vo": "vo13",
+  "dur": 2.58
+ }
+]

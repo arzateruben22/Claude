@@ -1,0 +1,88 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/make_part.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "A day now lasts about an hour and a half.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 2.1,
+   "sha256": "a1e4591cb68c06510d7793e33cf441b03a6bcb5bdd62c50d1ca9bb989ba09b99"
+  },
+  {
+   "id": "vo02",
+   "beat": "one-five-1",
+   "text": "At an hour and a half, you are almost weightless.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 1.83,
+   "sha256": "feca44c9052885397c3101df72845382b243944ca0db105180f72790cc151d89"
+  },
+  {
+   "id": "vo03",
+   "beat": "one-five-2",
+   "text": "You weigh about one eighth of what you did.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 1.93,
+   "sha256": "cf9abc58875488617f42c7b24ec3e110ec33356056f0cedb695ca22380da596e"
+  },
+  {
+   "id": "vo04",
+   "beat": "one-five-3",
+   "text": "The equator moves at twenty-seven thousand kilometers an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 2.865,
+   "sha256": "ba2120257b0ebd844d014c37ab2a847f3f5bc6b5b9b67b51c7f4117016719097"
+  },
+  {
+   "id": "vo05",
+   "beat": "one-five-4",
+   "text": "One more nudge, and something changes completely.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 2.71,
+   "sha256": "a88a319119743f3fb9f4edbec051fa740965342e385871e3510987c14fce1901"
+  },
+  {
+   "id": "vo06",
+   "beat": "cta",
+   "text": "Quick break: like and follow. Then let's see how bad this gets.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 3.04,
+   "sha256": "94c58b0dbe3cb24374aa07321610b6ea7629ddb6f847a758e0a8807f659cf765"
+  },
+  {
+   "id": "vo07",
+   "beat": "cliff",
+   "text": "One more nudge, and something changes completely.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 3.26,
+   "sha256": "59658ef36f874b09e48607e65af1640b1a2a3c5f361b71af9ef44d878da33ab3"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Part eight of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 2.07,
+   "sha256": "6d27151a6274d07a43b771fd2197c4dcadafc296ef58e3bffb34c499c5818997"
+  }
+ ]
+}

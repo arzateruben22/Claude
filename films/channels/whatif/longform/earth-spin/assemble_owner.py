@@ -58,19 +58,19 @@ def main():
                 tg = tg.replace(",", "}{")
                 ps = [x for x in re.split(r"(?<=[.?!])\s+", ad["text"].strip()) if x]
                 for k, p in enumerate(ps):
-                    items.append(("addon", p + (" " + tg if k == len(ps) - 1 else ""), p, addw[ad["id"]][k]))
+                    items.append(("addon", p + (" " + tg if k == len(ps) - 1 else ""), p, addw[ad["id"]][k], ad["id"] + ("" if k == 0 else f".{k + 1}")))
                 add_after(ad["id"])
         for si, (sent, tags) in enumerate(parts, 1):
-            plain = re.sub(r"\s+", " ", sent).strip()
-            items.append(("rec", sent + tags, plain.replace("*", ""), sents[(vo_i, si)]))
+            plain = re.sub(r"\s+", " ", re.sub(r"\{[^}]*\}", "", sent)).strip()
+            items.append(("rec", sent + tags, plain.replace("*", ""), sents[(vo_i, si)], f"L{vo_i}.{si}"))
             add_after(f"L{vo_i}.{si}")
-        out_lines.append("vo: " + " ".join(t for _, t, _, _ in items))
+        out_lines.append("vo: " + " ".join(it[1] for it in items))
         # audio
         audio, t, sl = [], 0.0, []
-        for k, (kind, tt, plain, wav) in enumerate(items):
+        for k, (kind, tt, plain, wav, key) in enumerate(items):
             x, sr = sf.read(wav)
             if k: audio.append(gap[: int(a.gap * sr)] if sr == 48000 else np.zeros(int(a.gap * sr))); t += a.gap
-            sl.append({"t0": round(t, 3), "t1": round(t + len(x) / sr, 3), "text": plain, "kind": kind})
+            sl.append({"t0": round(t, 3), "t1": round(t + len(x) / sr, 3), "text": plain, "kind": kind, "key": key, "file": str(wav.relative_to(OWN))})
             audio.append(x); t += len(x) / sr
         y = np.concatenate(audio)
         (HERE / "vo-owner").mkdir(exist_ok=True)

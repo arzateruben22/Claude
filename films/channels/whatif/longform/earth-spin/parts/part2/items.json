@@ -1,0 +1,98 @@
+[
+ {
+  "kind": "open",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/03.wav",
+  "text": "The day is now twelve hours long.",
+  "beat": "twelve",
+  "key": "open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 3.05
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/05.wav",
+  "text": "At a twelve hour day, sunrise to sunset takes six hours.",
+  "beat": "twelve",
+  "key": "L5.1",
+  "slice": [
+   0.0,
+   3.06
+  ],
+  "uid": "twelve-1",
+  "vo": "vo02",
+  "dur": 3.06
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/05.wav",
+  "text": "The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
+  "beat": "twelve",
+  "key": "L5.2",
+  "slice": [
+   3.86,
+   9.49
+  ],
+  "uid": "twelve-2",
+  "vo": "vo03",
+  "dur": 5.63
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/05.wav",
+  "text": "You weigh one point four percent less than on a still Earth, four times what you feel today.",
+  "beat": "twelve",
+  "key": "L5.3",
+  "slice": [
+   10.29,
+   15.65
+  ],
+  "uid": "twelve-3",
+  "vo": "vo04",
+  "dur": 5.36
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/05.wav",
+  "text": "A seventy kilogram person feels like about sixty-nine.",
+  "beat": "twelve",
+  "key": "L5.4",
+  "slice": [
+   16.45,
+   18.555
+  ],
+  "uid": "twelve-4",
+  "vo": "vo05",
+  "dur": 2.105
+ },
+ {
+  "kind": "cta",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/27.wav",
+  "text": "Quick break: like and follow. Then let's see how bad this gets.",
+  "beat": "twelve",
+  "key": "cta",
+  "uid": "cta",
+  "vo": "vo06",
+  "dur": 3.04
+ },
+ {
+  "kind": "cliff",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/04.wav",
+  "text": "And then the wind starts to blow.",
+  "beat": "twelve",
+  "key": "cliff",
+  "uid": "cliff",
+  "vo": "vo07",
+  "dur": 1.83
+ },
+ {
+  "kind": "closer",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/18.wav",
+  "text": "Part two of eight. Full video on YouTube.",
+  "beat": "tease",
+  "key": "closer",
+  "uid": "tease",
+  "vo": "vo08",
+  "dur": 2.15
+ }
+]

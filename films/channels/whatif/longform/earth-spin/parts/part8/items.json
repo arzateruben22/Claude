@@ -1,0 +1,98 @@
+[
+ {
+  "kind": "open",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/15.wav",
+  "text": "A day now lasts about an hour and a half.",
+  "beat": "one-five",
+  "key": "open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 2.1
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/14.wav",
+  "text": "At an hour and a half, you are almost weightless.",
+  "beat": "one-five",
+  "key": "L14.1",
+  "slice": [
+   0.0,
+   1.83
+  ],
+  "uid": "one-five-1",
+  "vo": "vo02",
+  "dur": 1.83
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/14.wav",
+  "text": "You weigh about one eighth of what you did.",
+  "beat": "one-five",
+  "key": "L14.2",
+  "slice": [
+   2.63,
+   4.56
+  ],
+  "uid": "one-five-2",
+  "vo": "vo03",
+  "dur": 1.93
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/14.wav",
+  "text": "The equator moves at twenty-seven thousand kilometers an hour.",
+  "beat": "one-five",
+  "key": "L14.3",
+  "slice": [
+   5.36,
+   8.225
+  ],
+  "uid": "one-five-3",
+  "vo": "vo04",
+  "dur": 2.865
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/14.wav",
+  "text": "One more nudge, and something changes completely.",
+  "beat": "one-five",
+  "key": "L14.4",
+  "slice": [
+   9.025,
+   11.735
+  ],
+  "uid": "one-five-4",
+  "vo": "vo05",
+  "dur": 2.71
+ },
+ {
+  "kind": "cta",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/27.wav",
+  "text": "Quick break: like and follow. Then let's see how bad this gets.",
+  "beat": "one-five",
+  "key": "cta",
+  "uid": "cta",
+  "vo": "vo06",
+  "dur": 3.04
+ },
+ {
+  "kind": "cliff",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/16.wav",
+  "text": "One more nudge, and something changes completely.",
+  "beat": "one-five",
+  "key": "cliff",
+  "uid": "cliff",
+  "vo": "vo07",
+  "dur": 3.26
+ },
+ {
+  "kind": "closer",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/24.wav",
+  "text": "Part eight of eight. Full video on YouTube.",
+  "beat": "tease",
+  "key": "closer",
+  "uid": "tease",
+  "vo": "vo08",
+  "dur": 2.07
+ }
+]

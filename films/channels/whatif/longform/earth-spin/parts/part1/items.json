@@ -1,0 +1,266 @@
+[
+ {
+  "kind": "open",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/01.wav",
+  "text": "What if Earth spun faster, and couldn't stop?",
+  "beat": "hook",
+  "key": "open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 2.32
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/01.wav",
+  "text": "You are standing on the equator, and you are going to watch what happens, minute by minute, until the planet can't take it anymore.",
+  "beat": "hook",
+  "key": "L1.2",
+  "slice": [
+   7.46,
+   14.31
+  ],
+  "uid": "hook-1",
+  "vo": "vo02",
+  "dur": 6.85
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/02.wav",
+  "text": "Here are the rules.",
+  "beat": "premise",
+  "key": "L2.1",
+  "slice": [
+   0.0,
+   0.94
+  ],
+  "uid": "premise-1",
+  "vo": "vo03",
+  "dur": 0.94
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/02.wav",
+  "text": "The Earth keeps its size, its shape, its air and its water.",
+  "beat": "premise",
+  "key": "L2.2",
+  "slice": [
+   1.74,
+   5.25
+  ],
+  "uid": "premise-2",
+  "vo": "vo04",
+  "dur": 3.51
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/02.wav",
+  "text": "Only the spin changes, and it only ever gets faster.",
+  "beat": "premise",
+  "key": "L2.3",
+  "slice": [
+   6.05,
+   9.1
+  ],
+  "uid": "premise-3",
+  "vo": "vo05",
+  "dur": 3.05
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/02.wav",
+  "text": "On screen there is one number that matters: the length of a day.",
+  "beat": "premise",
+  "key": "L2.4",
+  "slice": [
+   9.9,
+   13.92
+  ],
+  "uid": "premise-4",
+  "vo": "vo06",
+  "dur": 4.02
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/02.wav",
+  "text": "It starts at twenty-four hours, and by the end it will have fallen to about an hour and twenty-four minutes.",
+  "beat": "premise",
+  "key": "L2.5",
+  "slice": [
+   14.72,
+   19.93
+  ],
+  "uid": "premise-5",
+  "vo": "vo07",
+  "dur": 5.21
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/03.wav",
+  "text": "Right now, one day lasts twenty-four hours.",
+  "beat": "today",
+  "key": "L3.1",
+  "slice": [
+   0.0,
+   2.85
+  ],
+  "uid": "today-1",
+  "vo": "vo08",
+  "dur": 2.85
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/03.wav",
+  "text": "Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour.",
+  "beat": "today",
+  "key": "L3.3",
+  "slice": [
+   9.34,
+   16.145
+  ],
+  "uid": "today-2",
+  "vo": "vo09",
+  "dur": 6.805
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/03.wav",
+  "text": "You never feel it, because everything moves with you.",
+  "beat": "today",
+  "key": "L3.4",
+  "slice": [
+   16.945,
+   18.785
+  ],
+  "uid": "today-3",
+  "vo": "vo10",
+  "dur": 1.84
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/03.wav",
+  "text": "What you do feel is a tiny push outward.",
+  "beat": "today",
+  "key": "L3.5",
+  "slice": [
+   19.585,
+   20.91
+  ],
+  "uid": "today-4",
+  "vo": "vo11",
+  "dur": 1.325
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/03.wav",
+  "text": "You weigh about a third of a percent less than you would on a planet that did not spin.",
+  "beat": "today",
+  "key": "L3.6",
+  "slice": [
+   21.71,
+   25.49
+  ],
+  "uid": "today-5",
+  "vo": "vo12",
+  "dur": 3.78
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/04.wav",
+  "text": "Now the spin begins to speed up.",
+  "beat": "spinup",
+  "key": "L4.1",
+  "slice": [
+   0.0,
+   2.05
+  ],
+  "uid": "spinup-1",
+  "vo": "vo13",
+  "dur": 2.05
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/04.wav",
+  "text": "At twenty hours, you can see the shadows sweep.",
+  "beat": "spinup",
+  "key": "L4.2",
+  "slice": [
+   2.85,
+   5.0
+  ],
+  "uid": "spinup-2",
+  "vo": "vo14",
+  "dur": 2.15
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/04.wav",
+  "text": "At sixteen, the Sun climbs the sky like a slow elevator.",
+  "beat": "spinup",
+  "key": "L4.3",
+  "slice": [
+   5.8,
+   9.095
+  ],
+  "uid": "spinup-3",
+  "vo": "vo15",
+  "dur": 3.295
+ },
+ {
+  "kind": "cta",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/25.wav",
+  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+  "beat": "spinup",
+  "key": "cta",
+  "uid": "cta",
+  "vo": "vo16",
+  "dur": 4.03
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/04.wav",
+  "text": "The rule never changes.",
+  "beat": "spinup",
+  "key": "L4.4",
+  "slice": [
+   9.895,
+   11.585
+  ],
+  "uid": "spinup-4",
+  "vo": "vo17",
+  "dur": 1.69
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/04.wav",
+  "text": "A day only ever gets shorter, and you cannot turn it back.",
+  "beat": "spinup",
+  "key": "L4.5",
+  "slice": [
+   12.385,
+   15.305
+  ],
+  "uid": "spinup-5",
+  "vo": "vo18",
+  "dur": 2.92
+ },
+ {
+  "kind": "cliff",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/02.wav",
+  "text": "And the spin has only just begun to speed up.",
+  "beat": "spinup",
+  "key": "cliff",
+  "uid": "cliff",
+  "vo": "vo19",
+  "dur": 2.26
+ },
+ {
+  "kind": "closer",
+  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/17.wav",
+  "text": "Part one of eight. Full video on YouTube.",
+  "beat": "tease",
+  "key": "closer",
+  "uid": "tease",
+  "vo": "vo20",
+  "dur": 3.38
+ }
+]

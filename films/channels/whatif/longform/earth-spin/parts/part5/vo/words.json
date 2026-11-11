@@ -1,0 +1,1111 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Storms are turning faster, and the days are six hours long.",
+   "heard": "The storms are turning faster and the days are six hours long.",
+   "words": [
+    {
+     "w": "Storms",
+     "start": 0.065,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 0.47,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "turning",
+     "start": 0.59,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "faster,",
+     "start": 0.835,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.37,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.53,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "days",
+     "start": 1.56,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 1.935,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 1.965,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "hours",
+     "start": 2.15,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "long.",
+     "start": 2.36,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "The sky has another problem.",
+   "heard": "Another problem.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.005,
+     "end": 0.4,
+     "heard": false
+    },
+    {
+     "w": "sky",
+     "start": 0.035,
+     "end": 0.4,
+     "heard": false
+    },
+    {
+     "w": "has",
+     "start": 0.065,
+     "end": 0.4,
+     "heard": false
+    },
+    {
+     "w": "another",
+     "start": 0.395,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "problem.",
+     "start": 0.62,
+     "end": 1.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Storms are steered by the planet's spin, through the Coriolis effect, and that steering grows in step with the spin rate.",
+   "heard": "storms are stirred by the planet span through the Correlius effect and that serum grows and that serum grows in step with the spinner.",
+   "words": [
+    {
+     "w": "Storms",
+     "start": 0.045,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 0.36,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "steered",
+     "start": 0.45,
+     "end": 0.88,
+     "heard": false
+    },
+    {
+     "w": "by",
+     "start": 0.945,
+     "end": 0.995,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.055,
+     "end": 1.105,
+     "heard": true
+    },
+    {
+     "w": "planet's",
+     "start": 1.085,
+     "end": 1.68,
+     "heard": false
+    },
+    {
+     "w": "spin,",
+     "start": 1.115,
+     "end": 1.68,
+     "heard": false
+    },
+    {
+     "w": "through",
+     "start": 1.665,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.8,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "Coriolis",
+     "start": 2.025,
+     "end": 2.72,
+     "heard": false
+    },
+    {
+     "w": "effect,",
+     "start": 2.745,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.02,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.255,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "steering",
+     "start": 3.405,
+     "end": 5.6,
+     "heard": false
+    },
+    {
+     "w": "grows",
+     "start": 5.565,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 6.02,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "step",
+     "start": 6.365,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 6.81,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.005,
+     "end": 7.055,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 7.195,
+     "end": 7.34,
+     "heard": false
+    },
+    {
+     "w": "rate.",
+     "start": 7.225,
+     "end": 7.34,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "At a six hour day it is four times stronger than today.",
+   "heard": "And a successor D is four times stronger than today.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.005,
+     "end": 0.16,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 0.09,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 0.325,
+     "end": 0.8,
+     "heard": false
+    },
+    {
+     "w": "hour",
+     "start": 0.355,
+     "end": 0.8,
+     "heard": false
+    },
+    {
+     "w": "day",
+     "start": 0.385,
+     "end": 0.8,
+     "heard": false
+    },
+    {
+     "w": "it",
+     "start": 0.415,
+     "end": 0.8,
+     "heard": false
+    },
+    {
+     "w": "is",
+     "start": 0.77,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 0.99,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 1.18,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "stronger",
+     "start": 1.355,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 1.685,
+     "end": 1.735,
+     "heard": true
+    },
+    {
+     "w": "today.",
+     "start": 1.855,
+     "end": 2.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "At the edge of floating, it is seventeen times stronger.",
+   "heard": "At the age of twelve young is seventeen times stronger.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.06,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.13,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "edge",
+     "start": 0.16,
+     "end": 0.4,
+     "heard": false
+    },
+    {
+     "w": "of",
+     "start": 0.405,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "floating,",
+     "start": 0.545,
+     "end": 1.12,
+     "heard": false
+    },
+    {
+     "w": "it",
+     "start": 0.575,
+     "end": 1.12,
+     "heard": false
+    },
+    {
+     "w": "is",
+     "start": 1.195,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "seventeen",
+     "start": 1.385,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 1.565,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "stronger.",
+     "start": 1.765,
+     "end": 2.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Weather systems would be squeezed into tight, fast bands, and the calm of an ordinary afternoon would be gone.",
+   "heard": "would be squeezed into type fast bands on the call when an ordinary afternoon would be gone.",
+   "words": [
+    {
+     "w": "Weather",
+     "start": 0.005,
+     "end": 0.4,
+     "heard": false
+    },
+    {
+     "w": "systems",
+     "start": 0.035,
+     "end": 0.4,
+     "heard": false
+    },
+    {
+     "w": "would",
+     "start": 0.405,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 0.435,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "squeezed",
+     "start": 0.655,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 0.985,
+     "end": 1.035,
+     "heard": true
+    },
+    {
+     "w": "tight,",
+     "start": 1.015,
+     "end": 1.36,
+     "heard": false
+    },
+    {
+     "w": "fast",
+     "start": 1.33,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "bands,",
+     "start": 1.64,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.845,
+     "end": 2.0,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 2.075,
+     "end": 2.125,
+     "heard": true
+    },
+    {
+     "w": "calm",
+     "start": 2.105,
+     "end": 2.48,
+     "heard": false
+    },
+    {
+     "w": "of",
+     "start": 2.135,
+     "end": 2.48,
+     "heard": false
+    },
+    {
+     "w": "an",
+     "start": 2.52,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "ordinary",
+     "start": 2.785,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "afternoon",
+     "start": 3.1,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 3.47,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 3.5,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "gone.",
+     "start": 3.605,
+     "end": 3.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Nobody could forecast it, because nobody has seen a planet like this.",
+   "heard": "Nobody could forecast it. Nobody has seen a planet like this.",
+   "words": [
+    {
+     "w": "Nobody",
+     "start": 0.01,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 0.315,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "forecast",
+     "start": 0.455,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 0.985,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "because",
+     "start": 1.16,
+     "end": 1.21,
+     "heard": false
+    },
+    {
+     "w": "nobody",
+     "start": 1.205,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 1.34,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "seen",
+     "start": 1.615,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.785,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 1.99,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.33,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "this.",
+     "start": 2.495,
+     "end": 2.88,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "At a six hour day, the Sun races from horizon to horizon in three hours.",
+   "heard": "At a six hour day the sun rises from horizon to horizon in three hours.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.03,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.205,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 0.405,
+     "end": 0.455,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.435,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "day,",
+     "start": 0.68,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.86,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 0.89,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "races",
+     "start": 1.115,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "from",
+     "start": 1.465,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "horizon",
+     "start": 1.575,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.97,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "horizon",
+     "start": 2.0,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.48,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 2.64,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "hours.",
+     "start": 2.94,
+     "end": 3.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "text": "The equator moves at nearly seven thousand kilometers an hour.",
+   "heard": "The equator moves at nearly seventy thousand kilometers an hour.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.025,
+     "end": 0.08,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 0.06,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 0.41,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.75,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 0.78,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "seven",
+     "start": 0.985,
+     "end": 1.36,
+     "heard": false
+    },
+    {
+     "w": "thousand",
+     "start": 1.375,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "kilometers",
+     "start": 1.635,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 2.205,
+     "end": 2.255,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 2.335,
+     "end": 2.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo10",
+   "text": "You are five and a half percent lighter.",
+   "heard": "You are five and a half percent lighter.",
+   "words": [
+    {
+     "w": "You",
+     "start": 0.055,
+     "end": 0.105,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 0.085,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "five",
+     "start": 0.29,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.445,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.505,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 0.72,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "percent",
+     "start": 0.75,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "lighter.",
+     "start": 1.04,
+     "end": 1.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo11",
+   "text": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
+   "heard": "Jumping out takes you noticeably iron it shed, and every step feels slightly wrong.",
+   "words": [
+    {
+     "w": "Jumping",
+     "start": 0.025,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 0.425,
+     "end": 0.48,
+     "heard": false
+    },
+    {
+     "w": "takes",
+     "start": 0.455,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.715,
+     "end": 0.765,
+     "heard": true
+    },
+    {
+     "w": "noticeably",
+     "start": 0.745,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "higher",
+     "start": 1.045,
+     "end": 1.52,
+     "heard": false
+    },
+    {
+     "w": "than",
+     "start": 1.075,
+     "end": 1.52,
+     "heard": false
+    },
+    {
+     "w": "it",
+     "start": 1.505,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "should,",
+     "start": 1.535,
+     "end": 1.92,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 1.83,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 2.065,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "step",
+     "start": 2.32,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "feels",
+     "start": 2.59,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "slightly",
+     "start": 2.845,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "wrong.",
+     "start": 3.16,
+     "end": 3.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo12",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "heard": "Hang on, if you're enjoying this, tap like and follow. Okay, back to the map.",
+   "words": [
+    {
+     "w": "Hang",
+     "start": 0.335,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "on.",
+     "start": 0.64,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "If",
+     "start": 0.9,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 0.93,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "enjoying",
+     "start": 1.185,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "this,",
+     "start": 1.375,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 1.81,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.985,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.13,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 2.435,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "Okay,",
+     "start": 2.955,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 3.425,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.56,
+     "end": 3.61,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.59,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "math.",
+     "start": 3.67,
+     "end": 3.98,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo13",
+   "text": "And the calendar is about to break.",
+   "heard": "And the calendar is about to break.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.305,
+     "end": 0.355,
+     "heard": true
+    },
+    {
+     "w": "calendar",
+     "start": 0.335,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.815,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.91,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.11,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "break.",
+     "start": 1.24,
+     "end": 1.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo14",
+   "text": "Part five of eight. Full video on YouTube.",
+   "heard": "Part 5 of the full video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.065,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "five",
+     "start": 0.2,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.515,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "eight.",
+     "start": 0.735,
+     "end": 0.88,
+     "heard": false
+    },
+    {
+     "w": "Full",
+     "start": 0.965,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.21,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.52,
+     "end": 1.57,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.705,
+     "end": 2.24,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

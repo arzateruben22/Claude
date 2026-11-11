@@ -1,0 +1,148 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/make_part.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "Storms are turning faster, and the days are six hours long.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 2.73,
+   "sha256": "316899d12c33ad0aee9da76ea7a50802465b17a16dd45f68ccc8f4b1732b8628"
+  },
+  {
+   "id": "vo02",
+   "beat": "weather-1",
+   "text": "The sky has another problem.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 1.185,
+   "sha256": "9f311641d58d0df3c06fd6d30069e388b03bee7648e9184115596c9380d40339"
+  },
+  {
+   "id": "vo03",
+   "beat": "weather-2",
+   "text": "Storms are steered by the planet's spin, through the Coriolis effect, and that steering grows in step with the spin rate.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 7.995,
+   "sha256": "8840374f790e6b713c658b926da6b0d98b9c8bcb1b4e832959453d0908087a35"
+  },
+  {
+   "id": "vo04",
+   "beat": "weather-3",
+   "text": "At a six hour day it is four times stronger than today.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 2.05,
+   "sha256": "ce60bddb79bf6ea07aa274044f2522a361297b9f29703c9457adf89d5127af43"
+  },
+  {
+   "id": "vo05",
+   "beat": "weather-4",
+   "text": "At the edge of floating, it is seventeen times stronger.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 2.78,
+   "sha256": "d17006dd6d9736283d977929f9801294a59f7923cb2525d3c34a23c8eb5943df"
+  },
+  {
+   "id": "vo06",
+   "beat": "weather-5",
+   "text": "Weather systems would be squeezed into tight, fast bands, and the calm of an ordinary afternoon would be gone.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 3.89,
+   "sha256": "940a6769aa4d8d350298c1e669e2c5cc9899189fdd34b5588951b4318089f328"
+  },
+  {
+   "id": "vo07",
+   "beat": "weather-6",
+   "text": "Nobody could forecast it, because nobody has seen a planet like this.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 3.52,
+   "sha256": "246e7b3ed93440abb1d3d95d7710799a9a3337dae4feffa374b2edf90c017532"
+  },
+  {
+   "id": "vo08",
+   "beat": "six-1",
+   "text": "At a six hour day, the Sun races from horizon to horizon in three hours.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 3.615,
+   "sha256": "abe9dfdf7f817426f49fbeb0addabd3ed65733d09f6bd49d7251e686d38df71d"
+  },
+  {
+   "id": "vo09",
+   "beat": "six-2",
+   "text": "The equator moves at nearly seven thousand kilometers an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 2.42,
+   "sha256": "1fcece71b061f47a600f81c038c513aef03ef1c03ecac66d5c01121eb916be3e"
+  },
+  {
+   "id": "vo10",
+   "beat": "six-3",
+   "text": "You are five and a half percent lighter.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 1.46,
+   "sha256": "8216c9d06ebf4b2cc5db97fc12cdaf2b230e5b888e34bcd96fb522b477ae7388"
+  },
+  {
+   "id": "vo11",
+   "beat": "six-4",
+   "text": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 3.48,
+   "sha256": "1167be339495360c1e62794481e5d0b03a27adc7a5842bceff1cea8f1f2741f5"
+  },
+  {
+   "id": "vo12",
+   "beat": "cta",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "stars": [],
+   "phonemes": null,
+   "file": "12.wav",
+   "dur": 4.03,
+   "sha256": "5ed901cc5a87bb8e232cd6275c084613b3a298c16aa12569c84f30098ae01bba"
+  },
+  {
+   "id": "vo13",
+   "beat": "cliff",
+   "text": "And the calendar is about to break.",
+   "stars": [],
+   "phonemes": null,
+   "file": "13.wav",
+   "dur": 1.82,
+   "sha256": "17bee6b62ff292f581a74f9b8a5b65f6f1669f7b711ae9b8be43b6936d551450"
+  },
+  {
+   "id": "vo14",
+   "beat": "tease",
+   "text": "Part five of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "14.wav",
+   "dur": 2.87,
+   "sha256": "def008ec4542c0abe152c95a5a93d0492a7d499feed99988f5123a1a81d58bae"
+  }
+ ]
+}

@@ -1,0 +1,887 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Three hours, then two: a day is as long as a movie.",
+   "heard": "Three hours, then two. A day is as long as a movie.",
+   "words": [
+    {
+     "w": "Three",
+     "start": 0.045,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "hours,",
+     "start": 0.5,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 1.05,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "two:",
+     "start": 1.285,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.185,
+     "end": 2.235,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 2.3,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.5,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.565,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 2.7,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.905,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.12,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "movie.",
+     "start": 3.15,
+     "end": 4.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "At a three hour day, the Sun crosses the sky in just ninety minutes.",
+   "heard": "the sun crosses the sky in just ninety minutes.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.005,
+     "end": 0.72,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 0.035,
+     "end": 0.72,
+     "heard": false
+    },
+    {
+     "w": "three",
+     "start": 0.065,
+     "end": 0.72,
+     "heard": false
+    },
+    {
+     "w": "hour",
+     "start": 0.095,
+     "end": 0.72,
+     "heard": false
+    },
+    {
+     "w": "day,",
+     "start": 0.125,
+     "end": 0.72,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 0.7,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 0.73,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "crosses",
+     "start": 1.015,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.45,
+     "end": 1.5,
+     "heard": true
+    },
+    {
+     "w": "sky",
+     "start": 1.48,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.765,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 1.84,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "ninety",
+     "start": 2.05,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "minutes.",
+     "start": 2.49,
+     "end": 2.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "The ground now moves at over thirteen thousand kilometers an hour.",
+   "heard": "The ground now moves at over 13,000 km/h.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.025,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 0.135,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 0.35,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 0.6,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.925,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 1.03,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "thirteen",
+     "start": 1.285,
+     "end": 1.5,
+     "heard": false
+    },
+    {
+     "w": "thousand",
+     "start": 1.315,
+     "end": 1.5,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 1.345,
+     "end": 1.5,
+     "heard": false
+    },
+    {
+     "w": "an",
+     "start": 1.375,
+     "end": 1.5,
+     "heard": false
+    },
+    {
+     "w": "hour.",
+     "start": 1.405,
+     "end": 1.5,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "You weigh twenty-two percent less.",
+   "heard": "QA 22% less 70%.",
+   "words": [
+    {
+     "w": "You",
+     "start": 0.005,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "weigh",
+     "start": 0.035,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "twenty-two",
+     "start": 0.065,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "percent",
+     "start": 0.095,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "less.",
+     "start": 1.55,
+     "end": 1.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Seventy kilograms feels like fifty-five.",
+   "heard": "Kilograms feels like",
+   "words": [
+    {
+     "w": "Seventy",
+     "start": 0.02,
+     "end": 0.08,
+     "heard": false
+    },
+    {
+     "w": "kilograms",
+     "start": 0.05,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "feels",
+     "start": 0.535,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 0.895,
+     "end": 0.945,
+     "heard": true
+    },
+    {
+     "w": "fifty-five.",
+     "start": 1.045,
+     "end": 1.18,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "At two hours, you weigh half of what you did.",
+   "heard": "And to where is your way half of what you did?",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.015,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "two",
+     "start": 0.045,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "hours,",
+     "start": 0.075,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "you",
+     "start": 0.105,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "weigh",
+     "start": 0.135,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "half",
+     "start": 0.92,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.25,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 1.485,
+     "end": 1.535,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.68,
+     "end": 1.73,
+     "heard": true
+    },
+    {
+     "w": "did.",
+     "start": 1.71,
+     "end": 1.92,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Twenty thousand kilometers an hour; the Sun crosses the whole sky in an hour.",
+   "heard": "Twenty thousand kilometers an hour. The sun crosses all the sky in an hour.",
+   "words": [
+    {
+     "w": "Twenty",
+     "start": 0.06,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "thousand",
+     "start": 0.295,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "kilometers",
+     "start": 0.805,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 1.45,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "hour;",
+     "start": 1.565,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.91,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 1.94,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "crosses",
+     "start": 2.165,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.905,
+     "end": 2.955,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 2.935,
+     "end": 2.985,
+     "heard": false
+    },
+    {
+     "w": "sky",
+     "start": 2.965,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 3.25,
+     "end": 3.3,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 3.28,
+     "end": 3.33,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 3.375,
+     "end": 3.52,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Every object near the equator is half as heavy as it should be.",
+   "heard": "Every object near the equator is half as heavy as it should be.",
+   "words": [
+    {
+     "w": "Every",
+     "start": 0.025,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "object",
+     "start": 0.255,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 0.635,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.705,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 1.03,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.42,
+     "end": 1.47,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 1.45,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 1.735,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "heavy",
+     "start": 1.765,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 2.345,
+     "end": 2.395,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 2.375,
+     "end": 2.425,
+     "heard": true
+    },
+    {
+     "w": "should",
+     "start": 2.49,
+     "end": 2.54,
+     "heard": true
+    },
+    {
+     "w": "be.",
+     "start": 2.575,
+     "end": 2.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "text": "Buildings, bridges and oceans are all being asked to hold on with half the force.",
+   "heard": "notions are obvious so hold on with half the force.",
+   "words": [
+    {
+     "w": "Buildings,",
+     "start": 0.01,
+     "end": 0.32,
+     "heard": false
+    },
+    {
+     "w": "bridges",
+     "start": 0.04,
+     "end": 0.32,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 0.07,
+     "end": 0.32,
+     "heard": false
+    },
+    {
+     "w": "oceans",
+     "start": 0.1,
+     "end": 0.32,
+     "heard": false
+    },
+    {
+     "w": "are",
+     "start": 0.305,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 0.48,
+     "end": 1.2,
+     "heard": false
+    },
+    {
+     "w": "being",
+     "start": 0.51,
+     "end": 1.2,
+     "heard": false
+    },
+    {
+     "w": "asked",
+     "start": 0.54,
+     "end": 1.2,
+     "heard": false
+    },
+    {
+     "w": "to",
+     "start": 0.57,
+     "end": 1.2,
+     "heard": false
+    },
+    {
+     "w": "hold",
+     "start": 1.08,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.44,
+     "end": 1.49,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 1.655,
+     "end": 1.705,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 1.82,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.085,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "force.",
+     "start": 2.25,
+     "end": 2.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo10",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "heard": "Hang on, if you're enjoying this, tap like and follow. Okay, back to the map.",
+   "words": [
+    {
+     "w": "Hang",
+     "start": 0.335,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "on.",
+     "start": 0.64,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "If",
+     "start": 0.9,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 0.93,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "enjoying",
+     "start": 1.185,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "this,",
+     "start": 1.375,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 1.81,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.985,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.13,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 2.435,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "Okay,",
+     "start": 2.955,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 3.425,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.56,
+     "end": 3.61,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.59,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "math.",
+     "start": 3.67,
+     "end": 3.98,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo11",
+   "text": "And at an hour and a half, you are almost weightless.",
+   "heard": "And at an hour and a half we are almost weightless.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.025,
+     "end": 0.08,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.17,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 0.475,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.505,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.845,
+     "end": 0.895,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.875,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "half,",
+     "start": 0.905,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.165,
+     "end": 1.36,
+     "heard": false
+    },
+    {
+     "w": "are",
+     "start": 1.325,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "almost",
+     "start": 1.66,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "weightless.",
+     "start": 1.875,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo12",
+   "text": "Part seven of eight. Full video on YouTube.",
+   "heard": "Part seven of eight, full video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.05,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "seven",
+     "start": 0.22,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.56,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "eight.",
+     "start": 1.035,
+     "end": 1.085,
+     "heard": true
+    },
+    {
+     "w": "Full",
+     "start": 1.065,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.165,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.695,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.785,
+     "end": 2.32,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

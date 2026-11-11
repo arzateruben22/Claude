@@ -1,0 +1,88 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/make_part.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "The day is now twelve hours long.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 3.05,
+   "sha256": "389a90682c24c0b512d27b0024cd2d702c2801943ca98292eebeab7915c38401"
+  },
+  {
+   "id": "vo02",
+   "beat": "twelve-1",
+   "text": "At a twelve hour day, sunrise to sunset takes six hours.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 3.06,
+   "sha256": "8c2b1692792510ac0b2b5b94cae54df5d808c07140d9da0235936058b592702c"
+  },
+  {
+   "id": "vo03",
+   "beat": "twelve-2",
+   "text": "The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 5.63,
+   "sha256": "c597c333f01d06a5b5e2167b6956f74a0ab02d9076d5d99e6808c05fac6a0c6e"
+  },
+  {
+   "id": "vo04",
+   "beat": "twelve-3",
+   "text": "You weigh one point four percent less than on a still Earth, four times what you feel today.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 5.36,
+   "sha256": "1ba7dc49b9cabd756a8222a5c8a0041b0e7a60e8f30751746d687e4d36d7b188"
+  },
+  {
+   "id": "vo05",
+   "beat": "twelve-4",
+   "text": "A seventy kilogram person feels like about sixty-nine.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 2.105,
+   "sha256": "5e168a2b21ec8b08bc67365ee29a47c83500afee48772baa7d1576ef98abbcc0"
+  },
+  {
+   "id": "vo06",
+   "beat": "cta",
+   "text": "Quick break: like and follow. Then let's see how bad this gets.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 3.04,
+   "sha256": "94c58b0dbe3cb24374aa07321610b6ea7629ddb6f847a758e0a8807f659cf765"
+  },
+  {
+   "id": "vo07",
+   "beat": "cliff",
+   "text": "And then the wind starts to blow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 1.83,
+   "sha256": "103d38c4261304ab9f4ddf2837a88bfaa5869a87545afafce7a1f0a13aa12a3a"
+  },
+  {
+   "id": "vo08",
+   "beat": "tease",
+   "text": "Part two of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 2.15,
+   "sha256": "545f241d84142cc8e81420e32090c92caeff258fa85ee4fe21d2c75e67533e19"
+  }
+ ]
+}

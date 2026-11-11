@@ -1,0 +1,98 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/make_part.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "The air can't keep up with the ground.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 2.65,
+   "sha256": "ea977d4a95593f36b40daed6666896f28a5431144218922e22304d54a23df96e"
+  },
+  {
+   "id": "vo02",
+   "beat": "wind-1",
+   "text": "But the air has a problem.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 1.05,
+   "sha256": "5b2ab7be6d4bf38d9cdfe6581625b1cc10af8cffbe96b21587c4ab1859694a0f"
+  },
+  {
+   "id": "vo03",
+   "beat": "wind-2",
+   "text": "The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 4.07,
+   "sha256": "1ab46ed42659ea91923dac0261733817d720d2a75c7aa987d81500c0d969f806"
+  },
+  {
+   "id": "vo04",
+   "beat": "wind-3",
+   "text": "For the first hours, the air is left behind.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 1.94,
+   "sha256": "9f13cf2dca6b0f3707532652cd2b03a5c5503791b249877abc6e925d92f8df0b"
+  },
+  {
+   "id": "vo05",
+   "beat": "wind-4",
+   "text": "At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 5.95,
+   "sha256": "76edc2e50de209ed9021173f3f909a33542b286d2698d98178be730e9f202ecd"
+  },
+  {
+   "id": "vo06",
+   "beat": "wind-5",
+   "text": "Winds like that would strip the surface, and they would only be the beginning.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 2.25,
+   "sha256": "e5a320b68dab5a312b60c04ce564913260f1354f13512e63c5d347d86b2fcbbf"
+  },
+  {
+   "id": "vo07",
+   "beat": "cta",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 4.03,
+   "sha256": "5ed901cc5a87bb8e232cd6275c084613b3a298c16aa12569c84f30098ae01bba"
+  },
+  {
+   "id": "vo08",
+   "beat": "cliff",
+   "text": "And then the oceans start to move.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 2.03,
+   "sha256": "ed6267eccba88081866725a076dc3c93e678f21fc1cf95fe3fee664f412826dd"
+  },
+  {
+   "id": "vo09",
+   "beat": "tease",
+   "text": "Part three of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 2.2,
+   "sha256": "ae94bd3a7c4512bb053a5ec73959bc63f3b46fe2802a53a113a90d422376c986"
+  }
+ ]
+}

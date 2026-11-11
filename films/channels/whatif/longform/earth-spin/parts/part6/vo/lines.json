@@ -1,0 +1,158 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/make_part.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "Now a year has more than a thousand days in it.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 2.34,
+   "sha256": "f35a13f81cf97611feb9ac71e85f2b02876eb39326e45283482b77e1a6217d1a"
+  },
+  {
+   "id": "vo02",
+   "beat": "calendar-1",
+   "text": "Meanwhile, the calendar breaks.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 2.06,
+   "sha256": "99129e9b2373abdbc6a71e34b8e2d500a0a6871a097951a945cbd6356e940d70"
+  },
+  {
+   "id": "vo03",
+   "beat": "calendar-2",
+   "text": "The year does not change, because the Earth still goes round the Sun once.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 2.935,
+   "sha256": "c3a47b5eb2fa941aed85e1fee68438813b2b2d810304ec5bd62a51aa37d21531"
+  },
+  {
+   "id": "vo04",
+   "beat": "calendar-3",
+   "text": "But every day gets shorter, so a year contains more days.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 3.415,
+   "sha256": "1763a88f86d34682a5f7477d9ba3fefcae7d869b6a67702bbff3369cb8303bd5"
+  },
+  {
+   "id": "vo05",
+   "beat": "calendar-4",
+   "text": "Right now, at a six hour day, a year already holds about fourteen hundred and sixty days.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 3.305,
+   "sha256": "710ec0b082a44695e0798978e89df1ff29c44f676c7a9a16c06cc8b69cb7e67d"
+  },
+  {
+   "id": "vo06",
+   "beat": "calendar-5",
+   "text": "By the end, it would hold over six thousand, with a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 8.935,
+   "sha256": "aee2e20b1d96c5bf16f37db635c7c5a26237a04521a6b48b54921c55fe0d3649"
+  },
+  {
+   "id": "vo07",
+   "beat": "poles-1",
+   "text": "Not everyone on Earth would feel the same thing.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 1.98,
+   "sha256": "8c350104cc8b83eb1d6997bb4df508e160e6aadfef6679ea669898c13074a9f8"
+  },
+  {
+   "id": "vo08",
+   "beat": "poles-2",
+   "text": "At the poles, the ground only turns on the spot.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 1.94,
+   "sha256": "0896237cf461edf9ae4da2a176fe731f5fa9b1fa4a008fb88ef131d5fd1ddf25"
+  },
+  {
+   "id": "vo09",
+   "beat": "poles-3",
+   "text": "Nobody there is carried around at all, and they would weigh the same as ever.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 3.405,
+   "sha256": "3a7b30b2a994ba701658faae7fda220405dfcef162ecfe6a15a493eca748a047"
+  },
+  {
+   "id": "vo10",
+   "beat": "poles-4",
+   "text": "At forty-five degrees north, you move at seventy percent of the equator's speed, and the push outward is only half as strong.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 6.405,
+   "sha256": "212f8d6bd2e5b8293f1fa8b8e74d3318a9b34a1a093242daa7e37d36469fdcc9"
+  },
+  {
+   "id": "vo11",
+   "beat": "poles-5",
+   "text": "The farther you stand from the equator, the longer you keep your weight.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 3.25,
+   "sha256": "b52563d762601dc574b408327cd5c921f1f48bddaa153e68ab118f591e5b50de"
+  },
+  {
+   "id": "vo12",
+   "beat": "cta",
+   "text": "Quick break: like and follow. Then let's see how bad this gets.",
+   "stars": [],
+   "phonemes": null,
+   "file": "12.wav",
+   "dur": 3.04,
+   "sha256": "94c58b0dbe3cb24374aa07321610b6ea7629ddb6f847a758e0a8807f659cf765"
+  },
+  {
+   "id": "vo13",
+   "beat": "poles-6",
+   "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
+   "stars": [],
+   "phonemes": null,
+   "file": "13.wav",
+   "dur": 5.94,
+   "sha256": "71b0804ae43b89f10db3dcf383514cb944824784d18a894dfa7fd7aaa46acb38"
+  },
+  {
+   "id": "vo14",
+   "beat": "cliff",
+   "text": "And the days keep getting shorter.",
+   "stars": [],
+   "phonemes": null,
+   "file": "14.wav",
+   "dur": 1.94,
+   "sha256": "bf14cace3c1b7f27746283e15ea83eb38bf1f95e7f401a1046606af1f7843023"
+  },
+  {
+   "id": "vo15",
+   "beat": "tease",
+   "text": "Part six of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "15.wav",
+   "dur": 3.1,
+   "sha256": "91270d23328cff332021426b5df189fa757696e1d1263f18a64ea5d46470f220"
+  }
+ ]
+}

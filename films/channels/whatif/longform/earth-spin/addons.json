@@ -7,10 +7,24 @@
   "claims": "c21"
  },
  {
+  "id": "A1b",
+  "part": 2,
+  "after": "A1",
+  "text": "That is as fast as the hour hand on a clock.",
+  "claims": "c21"
+ },
+ {
   "id": "A2",
   "part": 2,
   "after": "A1",
   "text": "Night is only six hours long, too.",
+  "claims": "c4"
+ },
+ {
+  "id": "A2b",
+  "part": 2,
+  "after": "A2",
+  "text": "Eight hours of sleep no longer fits inside one night.",
   "claims": "c4"
  },
  {
@@ -21,9 +35,16 @@
   "claims": "c22"
  },
  {
-  "id": "A4",
+  "id": "A3b",
   "part": 2,
   "after": "A3",
+  "text": "Storms are steered twice as hard as today.",
+  "claims": "c28"
+ },
+ {
+  "id": "A4",
+  "part": 2,
+  "after": "A3b",
   "text": "Nothing here would feel dangerous yet, only strange.",
   "claims": "-"
  },

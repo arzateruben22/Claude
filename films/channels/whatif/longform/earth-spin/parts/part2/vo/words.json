@@ -1,0 +1,613 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "The day is now twelve hours long.",
+   "heard": "Day is now 12 hours long.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.005,
+     "end": 0.16,
+     "heard": false
+    },
+    {
+     "w": "day",
+     "start": 0.2,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.305,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 0.335,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "twelve",
+     "start": 0.535,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "hours",
+     "start": 0.76,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "long.",
+     "start": 1.53,
+     "end": 2.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "At a twelve hour day, sunrise to sunset takes six hours.",
+   "heard": "On a twelve hour day, sunrise to sunset takes six hours.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.01,
+     "end": 0.16,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 0.15,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "twelve",
+     "start": 0.39,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.655,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "day,",
+     "start": 0.685,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "sunrise",
+     "start": 1.015,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.54,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "sunset",
+     "start": 1.845,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 2.145,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 2.555,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "hours.",
+     "start": 2.585,
+     "end": 3.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
+   "heard": "The ground under your feet now moves at about 300 kilometers an hour, nearly three times the speed of sound.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.005,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 0.16,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 0.45,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.805,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "feet",
+     "start": 1.06,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 1.29,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 1.585,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.705,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.945,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "thirty-three",
+     "start": 2.165,
+     "end": 2.96,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 2.195,
+     "end": 2.96,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 2.88,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 3.685,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "hour,",
+     "start": 3.775,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 4.285,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 4.555,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 4.78,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.945,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 4.975,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 5.2,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "sound.",
+     "start": 5.31,
+     "end": 5.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "You weigh one point four percent less than on a still Earth, four times what you feel today.",
+   "heard": "You ate one point four percent less than on a still earth. Four times what you felt today.",
+   "words": [
+    {
+     "w": "You",
+     "start": 0.045,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 0.32,
+     "end": 0.48,
+     "heard": false
+    },
+    {
+     "w": "one",
+     "start": 0.585,
+     "end": 0.635,
+     "heard": true
+    },
+    {
+     "w": "point",
+     "start": 0.815,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 0.845,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "percent",
+     "start": 1.07,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "less",
+     "start": 1.42,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 2.265,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.46,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.725,
+     "end": 2.775,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 2.915,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 3.085,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 4.18,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 4.375,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 4.55,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 4.735,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 4.87,
+     "end": 5.12,
+     "heard": false
+    },
+    {
+     "w": "today.",
+     "start": 5.06,
+     "end": 5.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "A seventy kilogram person feels like about sixty-nine.",
+   "heard": "person feels like about sixty.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.015,
+     "end": 0.96,
+     "heard": false
+    },
+    {
+     "w": "seventy",
+     "start": 0.045,
+     "end": 0.96,
+     "heard": false
+    },
+    {
+     "w": "kilogram",
+     "start": 0.075,
+     "end": 0.96,
+     "heard": false
+    },
+    {
+     "w": "person",
+     "start": 0.95,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "feels",
+     "start": 1.285,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.62,
+     "end": 1.67,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.65,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "sixty-nine.",
+     "start": 1.83,
+     "end": 2.06,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Quick break: like and follow. Then let's see how bad this gets.",
+   "heard": "Quick break, like and follow, then let's see how bad this gets.",
+   "words": [
+    {
+     "w": "Quick",
+     "start": 0.28,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "break:",
+     "start": 0.465,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.05,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.305,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 1.335,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "Then",
+     "start": 1.735,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "let's",
+     "start": 1.875,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "see",
+     "start": 1.96,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 2.31,
+     "end": 2.36,
+     "heard": true
+    },
+    {
+     "w": "bad",
+     "start": 2.34,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 2.46,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "gets.",
+     "start": 2.645,
+     "end": 2.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "And then the wind starts to blow.",
+   "heard": "And the wind starts to blow.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.01,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 0.16,
+     "end": 0.24,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 0.19,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "wind",
+     "start": 0.41,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 0.72,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 0.995,
+     "end": 1.045,
+     "heard": true
+    },
+    {
+     "w": "blow.",
+     "start": 1.025,
+     "end": 1.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Part two of eight. Full video on YouTube.",
+   "heard": "Part two of a full video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.065,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 0.24,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.36,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "eight.",
+     "start": 0.655,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "Full",
+     "start": 1.045,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.28,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.73,
+     "end": 1.78,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.76,
+     "end": 2.08,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
