@@ -4,6 +4,49 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-11: the driving HUD with a destination set (`claude/nav-hud`, uncommitted)
+
+The owner, 2026-11-09, with screenshots at 1450 × 767 and 1350 × 750 in the OC Hypercar headed for Stoppage Time:
+"lets fix the interface when i choose a destiantion". The destination card sat under the right-hand rail (VIEW over
+"at your pace" and "simulated"), THRUST sat against the speed block, and in the owner's window the HUD ran off the
+top, left, right and bottom.
+
+What changed (`src/ui/HUD.tsx`, `src/ui/App.tsx`, `src/ui/styles.css`):
+- **One navigation panel top left** (`.hud-tl` > `.hud-navs`): the next manoeuvre (arrow, distance, guide sign, the next
+  exit) and, under a hairline, the destination (name, distance, time "at your pace", traffic "simulated"), with the
+  mode's numbers under it in the same column. On a phone they stay lines of the plate, ordered.
+- **The rail** fills the band between the sky camera and the speed block and is a size container: labelled rows when
+  they fit, icons (hidden label plus tooltip) in one, two or three columns on a short window.
+- **The bottom-right cluster** is sized from one set of tokens (`--spd-w`, `--spd-h`, `--spd-b`, `--act`): the ability
+  and THRUST sit left of the speed block, the tank panel over them, never over the speed or the rail.
+- **A host frame bigger than the window** (what the owner's screenshots showed): `useVisibleInsets` reads the visible
+  part of the page with an IntersectionObserver and feeds the cut-off edges into the HUD's safe areas (`--vis-*` into
+  `--sa-*`). `.app` is `overflow: clip`, so focus cannot scroll the game sideways.
+
+Checked (headless Chromium, SwiftShader; the machine at a load average of about 23):
+- A scratch DOM scan, destination Stoppage Time set, Auto-drive off and on: no two visible HUD boxes overlap, every
+  box inside the viewport minus safe areas, "at your pace" and "simulated" whole, no sideways scroll, at 1450 × 767,
+  1350 × 750, 1366 × 768, 1280 × 720, 1440 × 900, 1920 × 1080, 1280 × 600 and on a phone (DPR 3, touch) at 390 × 844
+  and 844 × 390: OC Hypercar Modern with the sky camera, OC Hypercar Modern and Minimal with the map dial (plus
+  cockpit and hood at 1350 × 750 and 1280 × 600), Rossini GT Modern and Minimal: 0 failures in 98 measurements.
+  The same scan on c3962c5 failed at all four desktop sizes run (1450 × 767, 1350 × 750, 1280 × 600, 1920 × 1080: the
+  destination card under the rail; the ability over the speed block; at 1280 × 600 the tank panel under Pause); its
+  two phone sizes passed. Not separately confirmed: Minimal's tucked state (in the scan the rail was still showing
+  after 5.5 s; tucking only hides boxes, and the phone group's Minimal check covers the tuck itself).
+- The game in a frame larger than its window (cut 20/30 px and 10/20/90/30 px): the observer read the crop exactly and
+  no HUD box fell outside the visible part; c3962c5 in the same frame cut the rail, the sky camera, the speed block,
+  THRUST and the clock, as in the owner's screenshots. Whether claude.ai's viewer crops this way is inferred from those
+  screenshots, not measured in the viewer.
+- New regression check (phone group): "destination set in the OC Hypercar: no HUD boxes overlap, all inside the
+  viewport and its safe areas", at 1450 × 767, 1350 × 750, 1280 × 600 (also with Auto-drive), 390 × 844 and 844 × 390.
+- Frames: `tests/out/nav-hud/before-*.png` and `after-*.png`.
+- `npx tsc --noEmit` clean; `npm run build` (artifact page marked as the owner test build). Suite, one group a run:
+  boot 6/6; venues 14/14; phone 17/18 on the final test file (the new check passed, 346 s: the phone part 65 s, the
+  desktop 281 s). The one failure was "sky camera: a sharp live picture inside its frame", its 60 s wait for the
+  Minimal tuck timing out at a load average of about 24; it failed 2 of 4 full phone runs here and passed 2 (78.5 s
+  and 125.9 s for the whole check when it passed). An earlier phone run, before the check released the phone's page,
+  was 18/18 (the new check 1,680 s). A c3962c5 phone run to compare was cut short when its browser closed under it.
+
 ## 2026-11-09: the final live merge (`claude/final-live`): what the main link now carries
 
 Built on `origin/local/live-preview` (a29015a: GPS follow, the venues in the game, the two modes) and merged, one at a

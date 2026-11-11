@@ -6,7 +6,8 @@
 // route the guidance and destination lines. The compass is the ring round the round map (App.tsx draws the map), and
 // the road is a small chip under it. The clock and the temperature leave the driving HUD for the pause screen (and, on
 // a desktop, a caption over the map dial). On a desktop the plate is `display: contents` and its parts keep the
-// reference layout: the numbers top left, the speed block bottom right, the road's guide sign top centre.
+// reference layout: one column top left (`.hud-tl`: the navigation panel, the manoeuvre and the destination as one, then
+// the numbers), the speed block bottom right, the road's guide sign top centre.
 //
 // The readouts sit in `.hud-read`, hidden from assistive tech (they change ten times a second); the ability button is
 // outside it, so a screen reader and the keyboard reach it. The root carries what the CSS keys off: `data-view` (the
@@ -24,7 +25,8 @@ const miles = (m: number) => (m / 1609.344).toFixed(m < 1609 ? 2 : 1) + ' mi';
 // how far to the next manoeuvre
 const toGo = (m: number) => (m > 1609 ? miles(m) : Math.round(m * 3.281 / 10) * 10 + ' ft');
 // the time to the destination at your pace
-const eta = (s: number) => (s < 0 ? '–' : s < 60 ? 'Under 1 min' : s < 3600 ? `${Math.round(s / 60)} min` : `${Math.floor(s / 3600)} h ${String(Math.round(s / 60) % 60).padStart(2, '0')} min`);
+// below a walking pace there is no pace to time yet (Game.ts gives -1): say so rather than a bare dash (2026-11-11 review)
+const eta = (s: number) => (s < 0 ? 'Timing…' : s < 60 ? 'Under 1 min' : s < 3600 ? `${Math.round(s / 60)} min` : `${Math.floor(s / 3600)} h ${String(Math.round(s / 60) % 60).padStart(2, '0')} min`);
 const CARDINAL = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ROAD_MS = 8000;      // the road chip shows this long after the road changes
@@ -229,29 +231,34 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
               <span className="hud-cam" ref={cam} />
             </div>
           </div>
-          {/* line 2: the mode's numbers */}
-          <div className="hud-stats" ref={big}>
-            <OcMark size="sm" />
-            <em className="hud-mode" ref={modeEl as El} />
-            <div><b ref={k1 as El}>Distance</b><span ref={v1 as El}>0.00 mi</span></div>
-            <div><b ref={k2 as El} /><span ref={v2 as El} /></div>
-            <div><b ref={k3 as El} /><span ref={v3 as El} /></div>
-          </div>
           {/* the guidance: the errand's exit (and, without a route card, the route's next manoeuvre) */}
           <div className="hud-next" ref={next} hidden />
-          <div className="hud-navs">
-            <div className="hud-nav" ref={nav} hidden>
-              <TurnArrow size={40} className="hud-nav-arrow" />
-              <div className="hud-nav-dist"><b ref={navDist as El} /><span ref={navAct} /></div>
-              <div className="hud-nav-sign" ref={navTo} />
-              <span className="hud-nav-lanes" ref={lanes} hidden>{[0, 1, 2, 3, 4, 5, 6].map((k) => <i key={k} hidden />)}</span>
-              <div className="hud-nav-exit"><i ref={exitKey as El} /><span ref={exitText} /></div>
+          {/* the top-left column on a desktop (styles.css): the navigation panel (the manoeuvre, then the destination,
+              one panel) with the mode's numbers under it; on a phone it is `display: contents` and its parts are lines of
+              the plate, in the order styles.css gives them */}
+          <div className="hud-tl">
+            <div className="hud-navs">
+              <div className="hud-nav" ref={nav} hidden>
+                <TurnArrow size={40} className="hud-nav-arrow" />
+                <div className="hud-nav-dist"><b ref={navDist as El} /><span ref={navAct} /></div>
+                <div className="hud-nav-sign" ref={navTo} />
+                <span className="hud-nav-lanes" ref={lanes} hidden>{[0, 1, 2, 3, 4, 5, 6].map((k) => <i key={k} hidden />)}</span>
+                <div className="hud-nav-exit"><i ref={exitKey as El} /><span ref={exitText} /></div>
+              </div>
+              <div className="hud-dest" ref={dest} hidden>
+                <small>Destination</small>
+                <div className="dest-road"><Icon d={ICONS.pin} /><b ref={destRoad as El} /><em ref={destDist as El} /></div>
+                <div className="dest-eta"><Icon d={ICONS.clock} /><b ref={destEta as El} /><em>at your pace</em></div>
+                <div className="dest-traffic"><Icon d={ICONS.car} /><b ref={traffic as El} /><em>simulated</em></div>
+              </div>
             </div>
-            <div className="hud-dest" ref={dest} hidden>
-              <small>Destination</small>
-              <div className="dest-road"><Icon d={ICONS.pin} /><b ref={destRoad as El} /><em ref={destDist as El} /></div>
-              <div className="dest-eta"><Icon d={ICONS.clock} /><b ref={destEta as El} /><em>at your pace</em></div>
-              <div className="dest-traffic"><Icon d={ICONS.car} /><b ref={traffic as El} /><em>simulated</em></div>
+            {/* line 2: the mode's numbers */}
+            <div className="hud-stats" ref={big}>
+              <OcMark size="sm" />
+              <em className="hud-mode" ref={modeEl as El} />
+              <div><b ref={k1 as El}>Distance</b><span ref={v1 as El}>0.00 mi</span></div>
+              <div><b ref={k2 as El} /><span ref={v2 as El} /></div>
+              <div><b ref={k3 as El} /><span ref={v3 as El} /></div>
             </div>
           </div>
           {showFps && <span className="hud-fps" ref={fps}>-- fps</span>}
