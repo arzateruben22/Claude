@@ -69,11 +69,18 @@ export function readKits(dirs: string[]): Map<string, KitInfo> {
   return out;
 }
 
+/**
+ * Contact-data brokers infer or resell addresses; an address seen only there was not published by
+ * the employer or by the person, so it is treated like a guessed one and dropped.
+ */
+const BROKER_RE = /rocketreach|zoominfo|contactout|signalhire|lusha|apollo\.io|hunter\.io|leadiq|datanyze|email-format|anymailfinder|snov\.io|clearbit|seamless\.ai|uplead|adapt\.io|kendo|skrapp|voilanorbert|peopledatalabs|spokeo|beenverified|whitepages|truepeoplesearch|radaris/i;
+
 /** Only https links and plain text reach the page; anything else a search extract produced is dropped. */
-function cleanContact(c: ContactResearch | null): ContactResearch | null {
+export function cleanContact(c: ContactResearch | null): ContactResearch | null {
   if (!c) return null;
-  const okUrl = (u: string) => /^https:\/\//i.test(String(u ?? ""));
-  return { ...c, contacts: (c.contacts ?? []).filter((x) => x && x.value && okUrl(x.sourceUrl)).slice(0, 5) };
+  const okUrl = (u: string) => /^https:\/\//i.test(String(u ?? "")) && !BROKER_RE.test(String(u));
+  const personal = (x: Contact) => x.channel === "email" && /@(gmail|yahoo|hotmail|outlook|icloud|aol|proton|protonmail|me|live|msn)\./i.test(x.value);
+  return { ...c, contacts: (c.contacts ?? []).filter((x) => x && x.value && okUrl(x.sourceUrl) && !personal(x)).slice(0, 5) };
 }
 
 export function buildResume(dirs: string[], date: string, opts: { tradeFile?: string; kitDirs?: string[]; top?: number; leads?: Candidate[] } = {}) {
@@ -82,7 +89,9 @@ export function buildResume(dirs: string[], date: string, opts: { tradeFile?: st
   const sel = select(scored, { best: 99, stretch: 99, maxPerEmployer: 2 });
   const top = opts.top ?? 10;
   // "Stop after N": best fits first, then stretch leads, each by score.
-  const ranked = [...sel.bestFit, ...sel.stretch];
+  // Within each list, leads that went through the second check come before found-once leads.
+  const byTrust = (a: ScoredJob, b: ScoredJob) => Number(b.checked) - Number(a.checked) || b.score - a.score;
+  const ranked = [...[...sel.bestFit].sort(byTrust), ...[...sel.stretch].sort(byTrust)];
   const chosen = ranked.slice(0, top);
   const chosenIds = new Set(chosen.map((j) => j.id));
   const more = [...ranked.filter((j) => !chosenIds.has(j.id)), ...sel.bench];
