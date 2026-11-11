@@ -18,9 +18,6 @@ vo: At the edge of floating, it is seventeen times stronger. {-}
 ## weather-5 {shot: see compile_part.py · energy: 0.6} (__)
 vo: Weather systems would be squeezed into tight, fast bands, and the calm of an ordinary afternoon would be gone. {-}
 
-## weather-6 {shot: see compile_part.py · energy: 0.6} (__)
-vo: Nobody could forecast it, because nobody has seen a planet like this. {-}
-
 ## six-1 {shot: see compile_part.py · energy: 0.6} (__)
 vo: At a six hour day, the Sun races from horizon to horizon in three hours. {-}
 
@@ -30,11 +27,11 @@ vo: The equator moves at nearly seven thousand kilometers an hour. {-}
 ## six-3 {shot: see compile_part.py · energy: 0.6} (__)
 vo: You are five and a half percent lighter. {-}
 
-## cta {shot: see compile_part.py · energy: 0.6} (__)
-vo: Hang on. If you're enjoying this, tap like and follow. Okay, back to the math. {-}
-
 ## six-4 {shot: see compile_part.py · energy: 0.6} (__)
 vo: Jumping now takes you noticeably higher than it should, and every step feels slightly wrong. {-}
+
+## cta {shot: see compile_part.py · energy: 0.6} (__)
+vo: Hang on. If you're enjoying this, tap like and follow. Okay, back to the math. {-}
 
 ## cliff {shot: see compile_part.py · energy: 0.6} (__)
 vo: And the calendar is about to break. {-}

@@ -513,85 +513,6 @@
   },
   {
    "id": "vo07",
-   "text": "Nobody could forecast it, because nobody has seen a planet like this.",
-   "heard": "Nobody could forecast it because nobody has seen a planet like this.",
-   "words": [
-    {
-     "w": "Nobody",
-     "start": 0.06,
-     "end": 0.8,
-     "heard": true
-    },
-    {
-     "w": "could",
-     "start": 0.79,
-     "end": 1.04,
-     "heard": true
-    },
-    {
-     "w": "forecast",
-     "start": 1.13,
-     "end": 1.92,
-     "heard": true
-    },
-    {
-     "w": "it,",
-     "start": 2.02,
-     "end": 2.08,
-     "heard": true
-    },
-    {
-     "w": "because",
-     "start": 2.135,
-     "end": 2.56,
-     "heard": true
-    },
-    {
-     "w": "nobody",
-     "start": 2.475,
-     "end": 3.04,
-     "heard": true
-    },
-    {
-     "w": "has",
-     "start": 3.015,
-     "end": 3.28,
-     "heard": true
-    },
-    {
-     "w": "seen",
-     "start": 3.315,
-     "end": 3.68,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 3.745,
-     "end": 3.84,
-     "heard": true
-    },
-    {
-     "w": "planet",
-     "start": 3.775,
-     "end": 4.4,
-     "heard": true
-    },
-    {
-     "w": "like",
-     "start": 4.285,
-     "end": 4.64,
-     "heard": true
-    },
-    {
-     "w": "this.",
-     "start": 4.625,
-     "end": 5.04,
-     "heard": true
-    }
-   ]
-  },
-  {
-   "id": "vo08",
    "text": "At a six hour day, the Sun races from horizon to horizon in three hours.",
    "heard": "At a six-hour day, the sun races from horizon to horizon in three hours.",
    "words": [
@@ -688,7 +609,7 @@
    ]
   },
   {
-   "id": "vo09",
+   "id": "vo08",
    "text": "The equator moves at nearly seven thousand kilometers an hour.",
    "heard": "The equator moves at nearly seven thousand kilometers an hour.",
    "words": [
@@ -755,7 +676,7 @@
    ]
   },
   {
-   "id": "vo10",
+   "id": "vo09",
    "text": "You are five and a half percent lighter.",
    "heard": "You are five and a half per cent lighter.",
    "words": [
@@ -805,6 +726,103 @@
      "w": "lighter.",
      "start": 1.68,
      "end": 2.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo10",
+   "text": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
+   "heard": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
+   "words": [
+    {
+     "w": "Jumping",
+     "start": 0.06,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 0.72,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 1.07,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.33,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "noticeably",
+     "start": 1.555,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "higher",
+     "start": 2.47,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 2.925,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.195,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "should,",
+     "start": 3.41,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.965,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 4.165,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "step",
+     "start": 4.37,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "feels",
+     "start": 4.895,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "slightly",
+     "start": 5.285,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "wrong.",
+     "start": 5.99,
+     "end": 6.48,
      "heard": true
     }
    ]
@@ -908,103 +926,6 @@
   },
   {
    "id": "vo12",
-   "text": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
-   "heard": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
-   "words": [
-    {
-     "w": "Jumping",
-     "start": 0.06,
-     "end": 0.72,
-     "heard": true
-    },
-    {
-     "w": "now",
-     "start": 0.72,
-     "end": 0.96,
-     "heard": true
-    },
-    {
-     "w": "takes",
-     "start": 1.07,
-     "end": 1.36,
-     "heard": true
-    },
-    {
-     "w": "you",
-     "start": 1.33,
-     "end": 1.6,
-     "heard": true
-    },
-    {
-     "w": "noticeably",
-     "start": 1.555,
-     "end": 2.4,
-     "heard": true
-    },
-    {
-     "w": "higher",
-     "start": 2.47,
-     "end": 2.96,
-     "heard": true
-    },
-    {
-     "w": "than",
-     "start": 2.925,
-     "end": 3.2,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 3.195,
-     "end": 3.44,
-     "heard": true
-    },
-    {
-     "w": "should,",
-     "start": 3.41,
-     "end": 3.92,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 3.965,
-     "end": 4.16,
-     "heard": true
-    },
-    {
-     "w": "every",
-     "start": 4.165,
-     "end": 4.48,
-     "heard": true
-    },
-    {
-     "w": "step",
-     "start": 4.37,
-     "end": 4.96,
-     "heard": true
-    },
-    {
-     "w": "feels",
-     "start": 4.895,
-     "end": 5.36,
-     "heard": true
-    },
-    {
-     "w": "slightly",
-     "start": 5.285,
-     "end": 6.0,
-     "heard": true
-    },
-    {
-     "w": "wrong.",
-     "start": 5.99,
-     "end": 6.48,
-     "heard": true
-    }
-   ]
-  },
-  {
-   "id": "vo13",
    "text": "And the calendar is about to break.",
    "heard": "and the calendar is about to break.",
    "words": [
@@ -1053,7 +974,7 @@
    ]
   },
   {
-   "id": "vo14",
+   "id": "vo13",
    "text": "Part five of eight. Full video on YouTube.",
    "heard": "Part 5 of 8. Full video on YouTube.",
    "words": [

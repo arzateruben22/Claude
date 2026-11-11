@@ -1,0 +1,226 @@
+{
+ "id": "possibility-lab-earth-spin-part2",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 69.15,
+ "poster": 24.9,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "eye",
+   "beat": "spinup"
+  },
+  {
+   "at": 19.8,
+   "name": "shoulder",
+   "beat": "twelve"
+  },
+  {
+   "at": 65.03333333333333,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 2.7,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "spinup-1",
+   "t0": 2.7,
+   "t1": 5.7,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "spinup-2",
+   "t0": 5.7,
+   "t1": 9.6,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "spinup-3",
+   "t0": 9.6,
+   "t1": 14.85,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "spinup-4",
+   "t0": 14.85,
+   "t1": 19.8,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "twelve-1",
+   "t0": 19.8,
+   "t1": 24.9,
+   "line": "vo06",
+   "energy": 0.6
+  },
+  {
+   "id": "twelve-2",
+   "t0": 24.9,
+   "t1": 32.7,
+   "line": "vo07",
+   "energy": 0.6
+  },
+  {
+   "id": "twelve-3",
+   "t0": 32.7,
+   "t1": 43.35,
+   "line": "vo08",
+   "energy": 0.6
+  },
+  {
+   "id": "twelve-4",
+   "t0": 43.35,
+   "t1": 51.0,
+   "line": "vo09",
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 51.0,
+   "t1": 56.4,
+   "line": "vo10",
+   "energy": 0.6
+  },
+  {
+   "id": "twelve-5",
+   "t0": 56.4,
+   "t1": 60.9,
+   "line": "vo11",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 60.9,
+   "t1": 63.6,
+   "line": "vo12",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 63.6,
+   "t1": 69.15,
+   "line": "vo13",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    23.934
+   ],
+   [
+    3.0648,
+    23.934
+   ],
+   [
+    5.6568,
+    20.0
+   ],
+   [
+    10.177,
+    16.0
+   ],
+   [
+    19.9627,
+    12.0
+   ],
+   [
+    69.15,
+    12.0
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    69.15,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": []
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 65.03333333333333,
+  "seed": 3
+ },
+ "badges": [],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "The day is shrinking fast",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 9999.0,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster\u2026*",
+  "follow": "Possibility Lab \u00b7 Part 2 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "captions": [],
+ "voice": [],
+ "thumb": true
+}
