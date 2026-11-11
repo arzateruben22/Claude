@@ -13,3 +13,4 @@ UPDATE Nov 11 ~12:40 PM PT: the owner clarified "realistically" meant "images yo
 - 02 Danny Tran: received Nov 11 ~1:05 PM PT (body-sheet.webp: front/3-4/side/back A-pose; face-sheet.webp: front/profile/3-4 smile). Both usable.
 - 06 Kate Morgan: received Nov 11 ~1:10 PM PT (body-sheet.webp, face-sheet.webp). Both usable.
 - 03 Marcus Bell: received Nov 11 ~1:15 PM PT (body-sheet.webp, face-sheet.webp). Both usable. The eyebrow scar is on his RIGHT eyebrow in both views (prompt said left): build it as drawn.
+- 05 Jas Cruz: received Nov 11 ~1:20 PM PT (body-sheet.webp, face-sheet.webp). Both usable. Hair tie on her right wrist in every view.
