@@ -5,6 +5,8 @@
 //   npm test -- --only=modes,survival     some groups (boot, interchanges, survival, modes, abilities,
 //                                         progression, render, phone, launch, store, store-live, venues)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
+//   npm test -- --only=phone --check=wheel  in those groups, only the checks whose names contain that text (and the
+//                                         group's page-error check); the group still opens its page
 //   SUITE_HANDLING=0.9 npm test -- ...    every group at that handling value: Settings' Arcade is 0.15, Sport 0.5,
 //                                         Simulation 0.9 (src/game/settings.ts PROFILES). Without it the suite drives at
 //                                         0.35, the value its checks were tuned at (the game's default was 0.35 until
@@ -27,6 +29,7 @@ const OUT = path.join(ROOT, 'tests', 'out');
 const MPH = 2.236936;
 const only = (process.argv.find((a) => a.startsWith('--only=')) ?? '').slice(7).split(',').filter(Boolean);
 const slow = process.argv.includes('--slow');
+const checkOnly = (process.argv.find((a) => a.startsWith('--check=')) ?? '').slice(8);
 const HANDLING = process.env.SUITE_HANDLING ? Number(process.env.SUITE_HANDLING) : 0.35;
 if (!(HANDLING >= 0 && HANDLING <= 1)) { console.error(`SUITE_HANDLING must be 0..1, not ${process.env.SUITE_HANDLING}`); process.exit(2); }
 // the driving profiles as Settings names them (the spec the UI is checked against), and what the suite's value reads as
@@ -42,6 +45,7 @@ const results = [];
 const fmt = (v) => (typeof v === 'number' ? Math.round(v * 100) / 100 : v);
 function expect(ok, msg) { if (!ok) throw new Error(msg); }
 async function check(name, fn) {
+  if (checkOnly && !name.includes(checkOnly) && !name.endsWith(': no page errors')) return;
   const t0 = Date.now();
   try {
     const note = (await fn()) ?? '';
@@ -2107,6 +2111,55 @@ await group('phone', async (use) => {
     }
     await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
     return out.join('; ');
+  });
+  // the sport steering wheel (owner, 2026-11-09: "looks all fresh ... with the button widgets attached"): the Rossini GT,
+  // the Corsa and the OC Hypercar carry its named parts (the two dials' displays, the knurled rotary rings, the thumb
+  // pads, the 12 o'clock stripe, carbon, Alcantara, stitching, the shift lights' three banks); the Brio and the Vela E
+  // keep their own wheels with the thumb pads and no dials. The left dial shows the handling profile and is drawn only
+  // when its word changes: Arcade, Sport, Sim and the suite's own value in turn (at SUITE_HANDLING 0.15 the first step
+  // and at 0.9 the last one ask for the word already shown, so those steps must draw nothing), then nothing new while
+  // it stays put. The shift lights' banks light with the revs: none at 50 % of the redline, green and amber at 80 %, all
+  // three at 92 %.
+  await check('steering wheel: each car\'s parts by name; the left dial follows the profile and redraws only on a change; shift lights', async () => {
+    const SPORT = ['wheel-dial-left', 'wheel-dial-right', 'wheel-knurl', 'wheel-thumb-pads', 'wheel-stripe', 'carbon', 'alcW', 'stitch', 'led', 'ledA', 'ledR'];
+    const out = [];
+    for (const car of ['rossini-gt', 'rossini-corsa', 'oc-hyper', 'rossini-brio', 'vela-e']) {
+      const names = await game(page, (c) => { const g = window.__game; g.car.configure({ ...g.car.config, car: c }); const n = []; g.car.interior.wheel.traverse((o) => { if (o.isMesh) n.push(o.name); }); return n; }, car);
+      const own = car === 'rossini-brio' || car === 'vela-e', want = own ? ['wheel-thumb-pads'] : SPORT;
+      const missing = want.filter((k) => !names.includes(k));
+      expect(!missing.length, `${car}: no ${missing.join(', ')} (has ${names.join(', ')})`);
+      expect(!own || !names.includes('wheel-dial-left'), `${car}: carries the sport wheel's dials`);
+      out.push(`${car} ${names.length} meshes`);
+    }
+    await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); });
+    const dialState = () => game(page, () => {
+      const w = window.__game.car.interior.wheel, d = w.userData.dials, m = w.getObjectByName('wheel-dial-left');
+      return { left: d?.left, right: d?.right, draws: d?.draws, ver: m?.material.emissiveMap.version };
+    });
+    const seen = [];
+    let redraws = 0;
+    for (const [h, word] of [[0.15, 'ARCADE'], [0.5, 'SPORT'], [0.9, 'SIM'], [HANDLING, profileName(HANDLING).replace('Simulation', 'Sim').toUpperCase()]]) {
+      const before = await dialState();
+      await game(page, (v) => { const g = window.__game; g.updateSettings({ ...g.settings, handling: v }); }, h);
+      await page.waitForFunction((w) => window.__game.car.interior.wheel.userData.dials?.left === w, word, { timeout: FRAMES_MS, polling: 200 });
+      // the same word as before: give the dial a few of its 0.1 s looks to (wrongly) draw it again
+      if (before.left === word) await frames(page, 4);
+      const after = await dialState();
+      if (before.left === word) expect(after.ver === before.ver, `handling ${h}: ${word} again, yet the display was redrawn (${JSON.stringify({ before, after })})`);
+      else { expect(after.ver > before.ver, `handling ${h}: ${before.left} -> ${word}, the display was not redrawn (${JSON.stringify({ before, after })})`); redraws++; }
+      seen.push(`${h} ${after.left}${before.left === word ? ' (unchanged, not drawn)' : ''}`);
+    }
+    expect(redraws >= 2, `only ${redraws} redraws`);
+    // nothing changes: a few frames later the left display has not been drawn again (the right one follows the gear)
+    const a = await dialState(); await frames(page, 6); const b = await dialState();
+    expect(b.ver === a.ver, `the left display redrawn with nothing changed: version ${a.ver} -> ${b.ver}`);
+    // the shift lights, read in one go (the frame loop feeds the real revs between calls)
+    const lit = await game(page, () => {
+      const c = window.__game.car.interior, w = c.wheel, mat = (n) => w.getObjectByName(n).material;
+      return [0.5, 0.8, 0.92].map((rpmFrac) => { c.setInstruments({ rpmFrac }); c.update(0); return ['led', 'ledA', 'ledR'].map((n) => (mat(n).emissiveIntensity > 0 ? 1 : 0)).join(''); });
+    });
+    expect(lit.join(',') === '000,110,111', `shift lights at 50/80/92 % of the redline: ${lit.join(', ')} (want 000, 110, 111)`);
+    return `${out.join(', ')}; left dial ${seen.join(', ')}; right "${b.right}"; no redraw while unchanged; shift lights ${lit.join(' ')}`;
   });
   await check('Go to lists all twenty carriageways', async () => {
     await page.getByRole('button', { name: 'Go to' }).click();

@@ -4,6 +4,58 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-11: the sport steering wheel, repaired after review (branch `claude/sport-wheel`, not committed)
+
+The owner (2026-11-09): "Make sure the steering wheel is updated and looks all fresh like the [a real maker's] Alcantara
+Carbon Fiber sports steering wheel ... with the button widgets attached too". Built as our own design in the modern
+sport-wheel family (no real maker's names, logos, shapes or layouts): `src/preview/wheel-sport.ts` (new) and the
+wheel section of `src/preview/cockpit.ts`; `PlayerCar.ts` and `Game.ts` feed the dials (handling profile, Thrust tank,
+TCS). The Rossini GT (black Alcantara, cognac stitching and stripe), the Corsa (yellow) and the OC Hypercar (ice blue)
+get the sport wheel: a flat bottom made by the bottom carbon only (`sportRimAt` is `spec.ts` `rimAt` everywhere above
+y = -0.74 R, so the rim under the hands at GRIP 32 and 148 degrees is unchanged), 2x2 twill carbon top and bottom,
+Alcantara grips with double contrast stitching, a 12 o'clock stripe, slim gloss-black spokes with brushed edges, two
+thumb pads, a knurled rotary dial round a live round display plus a toggle on each lower spoke (left: Arcade / Sport /
+Sim / Custom; right: the hypercar's Thrust tank and tune, the others' gear and TCS; each redrawn only when its value
+changes), brushed paddles, the shift lights and the car's badge. The Brio and the Vela E keep their wheels and get the
+thumb pads. `spec.ts`, `hands*`, `onfoot/people`, `car-wheel.ts` and `Physics.ts` are untouched.
+
+The review kept the art and rejected the code on two points; this repair:
+- **Suite.** The wheel check now asks for a redraw only when the dial's word changes, and checks that a step asking for
+  the word already shown draws nothing (at SUITE_HANDLING 0.15 the first step, at 0.9 the last one). It also checks
+  the shift lights. New suite option `--check=<text>` runs only the matching checks of the chosen groups.
+- **Brushed paddles.** The whole blade is now brushed metal (a mid tone, `envMapIntensity` 0.4 so it doesn't glare
+  through the wheel) with the brighter brushed pull face kept at its tip; the Brio and Vela keep dark anodised paddles.
+- **Shift lights** (asked for a frame of them lit): they never lit before (base c3962c5 too: one dark lens material).
+  Now three banks, four green, three amber, three red, lighting at 62 / 76 / 88 % of the redline and flashing at the
+  limiter; only `emissiveIntensity` changes, no allocation.
+- Hypercar right dial: THRUST moved inside the arc, clear of it; the figure and the tune moved to match.
+- Night: the grips' Alcantara a shade lighter (0x353539) and the wheel's thread glows a little (emissive 0.25 of its
+  own colour, wheel only), so the double stitching reads at 390 x 844 at night.
+- The stripe is Alcantara in the trim colour (brightened up to 1.4x in linear light without shifting the hue) with its
+  edges rolled down to the rim over 3 mm.
+- The rim's carbon uses a finer repeat (4 cm, the dash keeps 6.4 cm).
+- The brushed rings at the grip joins are gone (hidden by the hands or never readable; about 2,560 triangles saved on
+  high).
+- Alcantara grips no longer cast shadows (as before the wheel). The header comment now says a 32 mm ring round a
+  25 mm display. The Vela's spoke inlay, which hung 9 mm below its slim spoke in the air (in base too), is gone.
+
+Checked (headless Chromium, SwiftShader, load average 20 to 34 from other lanes): `npx tsc --noEmit` clean; `npm run
+build` (dist/artifact.html carries data-build="owner-test"); `--only=boot,modes` 15/15; the wheel check alone
+(`--only=phone --check="steering wheel"`) at SUITE_HANDLING 0.15 (ARCADE unchanged and not drawn, then SPORT, SIM,
+ARCADE) and 0.9 (ARCADE, SPORT, SIM, then SIM unchanged and not drawn), shift lights 000 / 110 / 111 at 50 / 80 / 92 %
+of the redline; `--only=phone` 18/18 in 700 s at the default 0.35 (the wheel check: Arcade, Sport, Sim, Custom each drawn once; the sky-camera checks passed this time). Wheel triangles (high / phone): GT 20,964 / 11,424 (base 21,696 / 13,616), Corsa and
+Hypercar 20,964 / 11,424 (base 18,212 / 10,552: +15 % / +8 %), Brio 17,452 / 9,372, Vela E 14,544 / 7,024; 17 wheel
+meshes on the sport wheel (the shift lights' three banks). The sky-camera checks: a phone run of base c3962c5 earlier
+on 2026-11-11 (no wheel check in it) failed both on a 60 s timeout under load, so that failure is not the wheel's.
+
+Frames in `tests/out/sport-wheel/` (`after-r1-*`; the `before-*` frames are from base c3962c5, built in a scratch copy):
+seat view with hands at 1280 x 720 and 390 x 844, Day and Night, for the GT, Corsa and Hypercar (the Hypercar from a
+real Hypercar Free Drive run: the right dial reads 100 / UNLEASHED); the Brio and Vela E at 1280 x 720 Day with
+close-ups of their thumb pads (`after-r1-closeup-pads-*`); close-ups of the wheel, both dials, the top and the bottom
+for the GT, Corsa and Hypercar; the shift lights lit (`after-r1-shiftlights-*`, revs set to 93 % through the cockpit's
+own `setInstruments` just before a direct render, since the frame loop feeds the real revs). Not seen on a real phone
+or GPU.
+
 ## 2026-11-09: the final live merge (`claude/final-live`): what the main link now carries
 
 Built on `origin/local/live-preview` (a29015a: GPS follow, the venues in the game, the two modes) and merged, one at a
