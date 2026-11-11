@@ -8,134 +8,127 @@
   "aiVoice": true,
   "aiVisuals": true
  },
- "dur": 64.447,
+ "dur": 64.336,
  "fps": 30,
  "captions": [
   {
    "t0": 0.195,
    "t1": 1.455,
    "text": "Half the distance.",
-   "line": "ch3_hook"
+   "line": "ch3_hook",
+   "spoken": "Half the distance."
   },
   {
    "t0": 1.475,
    "t1": 3.12,
    "text": "Now the ocean moves.",
-   "line": "ch3_hook"
+   "line": "ch3_hook",
+   "spoken": "Now the ocean moves."
   },
   {
-   "t0": 3.268,
-   "t1": 8.008,
-   "text": "Half the distance: about one hundred ninety-two thousand kilometers.",
-   "line": "ch3_vo"
+   "t0": 6.768,
+   "t1": 12.008,
+   "text": "Half the distance: about 192,000 km.",
+   "line": "ch3_vo",
+   "spoken": "Half the distance: about one hundred ninety-two thousand kilometers."
   },
   {
-   "t0": 8.028,
-   "t1": 11.508,
+   "t0": 12.028,
+   "t1": 15.758,
    "text": "The Moon now looks twice as wide as it does tonight.",
-   "line": "ch3_vo"
+   "line": "ch3_vo",
+   "spoken": "The Moon now looks twice as wide as it does tonight."
   },
   {
-   "t0": 11.528,
-   "t1": 15.558,
+   "t0": 15.778,
+   "t1": 19.963,
    "text": "Tides come from the difference in the Moon's pull across the Earth.",
-   "line": "ch3_vo"
+   "line": "ch3_vo",
+   "spoken": "Tides come from the difference in the Moon's pull across the Earth."
   },
   {
-   "t0": 15.578,
-   "t1": 18.898,
+   "t0": 19.983,
+   "t1": 23.383,
    "text": "That difference falls off with the cube of the distance.",
-   "line": "ch3_vo"
+   "line": "ch3_vo",
+   "spoken": "That difference falls off with the cube of the distance."
   },
   {
-   "t0": 18.918,
-   "t1": 23.428,
-   "text": "So half the distance means about eight times the tidal force.",
-   "line": "ch3_vo"
+   "t0": 23.403,
+   "t1": 27.568,
+   "text": "So half the distance means about 8 times the tidal force.",
+   "line": "ch3_vo",
+   "spoken": "So half the distance means about eight times the tidal force."
   },
   {
-   "t0": 23.448,
-   "t1": 26.217,
-   "text": "Here is the idea, not a measured height:",
-   "line": "ch3_vo"
+   "t0": 31.118,
+   "t1": 34.279,
+   "text": "Not a measured height, just the idea: the water",
+   "line": "ch3_vo",
+   "spoken": "Not a measured height, just the idea: the water at your feet starts to climb the beach."
   },
   {
-   "t0": 26.237,
-   "t1": 29.653,
-   "text": "the water at your feet starts to climb the beach.",
-   "line": "ch3_vo"
+   "t0": 34.299,
+   "t1": 36.938,
+   "text": "at your feet starts to climb the beach.",
+   "line": "ch3_vo",
+   "spoken": "Not a measured height, just the idea: the water at your feet starts to climb the beach."
   },
   {
-   "t0": 29.673,
-   "t1": 33.368,
+   "t0": 36.958,
+   "t1": 40.638,
    "text": "Slowly, in long swells, hours at a time.",
-   "line": "ch3_vo"
+   "line": "ch3_vo",
+   "spoken": "Slowly, in long swells, hours at a time."
   },
   {
-   "t0": 33.388,
-   "t1": 37.218,
-   "text": "The waterline reaches the dry sand, and keeps going.",
-   "line": "ch3_vo"
-  },
-  {
-   "t0": 37.238,
-   "t1": 40.713,
-   "text": "Imagine the foam line creeping up toward your feet.",
-   "line": "ch3_vo"
-  },
-  {
-   "t0": 40.733,
-   "t1": 44.131,
-   "text": "It is a slow, patient rise, as if the whole",
-   "line": "ch3_vo"
-  },
-  {
-   "t0": 44.151,
-   "t1": 46.933,
-   "text": "ocean were being lifted from above.",
-   "line": "ch3_vo"
-  },
-  {
-   "t0": 47.048,
-   "t1": 48.953,
-   "text": "Real quick: like and follow,",
-   "line": "cta3_follow"
-  },
-  {
-   "t0": 48.973,
-   "t1": 51.998,
-   "text": "if space just got a little stranger for you.",
-   "line": "cta3_follow"
-  },
-  {
-   "t0": 52.131,
-   "t1": 55.746,
+   "t0": 43.688,
+   "t1": 47.493,
    "text": "The Moon is no longer a calm light in the sky.",
-   "line": "ch3_vo"
+   "line": "ch3_vo",
+   "spoken": "The Moon is no longer a calm light in the sky."
   },
   {
-   "t0": 55.766,
-   "t1": 57.571,
+   "t0": 47.615,
+   "t1": 49.52,
+   "text": "Real quick: like and follow,",
+   "line": "cta3_follow",
+   "spoken": "Real quick: like and follow, if space just got a little stranger for you."
+  },
+  {
+   "t0": 49.54,
+   "t1": 52.565,
+   "text": "if space just got a little stranger for you.",
+   "line": "cta3_follow",
+   "spoken": "Real quick: like and follow, if space just got a little stranger for you."
+  },
+  {
+   "t0": 52.706,
+   "t1": 54.451,
    "text": "It is something that pulls.",
-   "line": "ch3_vo"
+   "line": "ch3_vo",
+   "spoken": "It is something that pulls."
   },
   {
-   "t0": 57.779,
-   "t1": 60.499,
+   "t0": 57.668,
+   "t1": 60.388,
    "text": "And the night itself is about to change.",
-   "line": "ch3_loop"
+   "line": "ch3_loop",
+   "spoken": "And the night itself is about to change."
   },
   {
-   "t0": 60.628,
-   "t1": 61.908,
-   "text": "Part three of eight.",
-   "line": "closer3"
+   "t0": 60.517,
+   "t1": 61.797,
+   "text": "Part 3 of 8.",
+   "line": "closer3",
+   "spoken": "Part three of eight."
   },
   {
-   "t0": 61.928,
-   "t1": 63.738,
+   "t0": 61.817,
+   "t1": 63.627,
    "text": "Full video on YouTube.",
-   "line": "closer3"
+   "line": "closer3",
+   "spoken": "Full video on YouTube."
   }
  ],
  "km": [
@@ -148,8 +141,9 @@
    288300
   ],
   [
-   7.758,
-   192200
+   6.718,
+   192200,
+   3.5
   ]
  ],
  "tracks": {
@@ -189,39 +183,57 @@
    "id": "ch3_hook",
    "file": "voice/wav/08.wav",
    "t": 0.15,
-   "dur": 2.743
+   "dur": 2.743,
+   "from": 0.0
   },
   {
    "id": "ch3_vo",
    "file": "voice/wav/09.wav",
-   "t": 3.243,
-   "dur": 43.485,
+   "t": 6.743,
+   "dur": 20.855,
    "from": 0.0
+  },
+  {
+   "id": "ch3_vo",
+   "file": "voice/wav/09.wav",
+   "t": 31.098,
+   "dur": 9.57,
+   "from": 20.855
+  },
+  {
+   "id": "ch3_vo",
+   "file": "voice/wav/09.wav",
+   "t": 43.668,
+   "dur": 3.627,
+   "from": 30.425
   },
   {
    "id": "cta3_follow",
    "file": "voice/wav/38.wav",
-   "t": 47.028,
-   "dur": 4.758
+   "t": 47.595,
+   "dur": 4.758,
+   "from": 0.0
   },
   {
    "id": "ch3_vo",
    "file": "voice/wav/09.wav",
-   "t": 52.086,
-   "dur": 5.253,
-   "from": 43.485
+   "t": 52.653,
+   "dur": 1.575,
+   "from": 34.052
   },
   {
    "id": "ch3_loop",
    "file": "voice/wav/10.wav",
-   "t": 57.689,
-   "dur": 2.569
+   "t": 57.578,
+   "dur": 2.569,
+   "from": 0.0
   },
   {
    "id": "closer3",
    "file": "voice/wav/30.wav",
-   "t": 60.608,
-   "dur": 2.889
+   "t": 60.497,
+   "dur": 2.889,
+   "from": 0.0
   }
  ],
  "source": "season3/engine.js via long01/out/part3.json"
