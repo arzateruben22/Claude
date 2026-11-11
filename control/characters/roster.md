@@ -12,3 +12,4 @@ UPDATE Nov 11 ~12:30 PM PT: the owner asked whether photoreal photos make sense 
 UPDATE Nov 11 ~12:40 PM PT: the owner clarified "realistically" meant "images you can realistically use", not photoreal. Final prompts: Prompt 1 = the stylized-realistic 3D render turnaround per character (sent in chat); Prompt 2 = ONE shared face prompt in the same 3D render style (front + profile + a 3/4 portrait for the select screen), run in the same chat after Prompt 1. No photoreal images anywhere.
 - 02 Danny Tran: received Nov 11 ~1:05 PM PT (body-sheet.webp: front/3-4/side/back A-pose; face-sheet.webp: front/profile/3-4 smile). Both usable.
 - 06 Kate Morgan: received Nov 11 ~1:10 PM PT (body-sheet.webp, face-sheet.webp). Both usable.
+- 03 Marcus Bell: received Nov 11 ~1:15 PM PT (body-sheet.webp, face-sheet.webp). Both usable. The eyebrow scar is on his RIGHT eyebrow in both views (prompt said left): build it as drawn.
