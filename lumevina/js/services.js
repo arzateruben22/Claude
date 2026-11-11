@@ -160,10 +160,47 @@
     });
   });
 
+  /* each service's photo: one set of ten, in one style (img/services/), so a
+     service's pop-up, the booking picker and the featured cards agree. Close
+     services share one: every peel, every acne visit, the waxes by area. */
+  var PHOTOS = {
+    newClients: "img/services/new-clients.webp",
+    custom: "img/services/custom-facial.webp",
+    ageless: "img/services/ageless-grace.webp",
+    procell: "img/services/procell.webp",
+    peels: "img/services/peels.webp",
+    acne: "img/services/acne-bootcamp.webp",
+    consult: "img/services/consultation.webp",
+    brazilian: "img/services/brazilian-wax.webp",
+    bodyWax: "img/services/body-wax.webp",
+    faceWax: "img/services/face-wax.webp"
+  };
+  var byId = function (id) {
+    for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
+    var hit = null;   /* a service with options (its options are what's booked) */
+    MENU.forEach(function (g) { (g.subs || [{ items: g.items }]).forEach(function (sg) { sg.items.forEach(function (x) { if (x.id === id) hit = x; }); }); });
+    return hit;
+  };
+  var photo = function (id) {
+    var s = byId(id);
+    if (!s) return null;
+    var key = s.parent || s.id;
+    switch (s.sector) {
+      case "facials": return PHOTOS[/^new-client/.test(key) ? "newClients" : /ageless/.test(key) ? "ageless" : "custom"];
+      case "procell": return PHOTOS.procell;
+      case "peels": return PHOTOS.peels;
+      case "acne": return PHOTOS.acne;
+      case "consult": return PHOTOS.consult;
+      case "waxing": return PHOTOS[/brazilian|bikini|inner-thigh|wax-wednesday|vajacial/.test(key) ? "brazilian" : /brow|lip|nostril/.test(key) ? "faceWax" : "bodyWax"];
+    }
+    return null;
+  };
+
   root.LUMEVINA_SERVICES = {
     asOf: "2026-10-19",
     menu: MENU,
     all: all,
-    get: function (id) { for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return null; }
+    get: function (id) { for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return null; },
+    photo: photo
   };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -86,9 +86,11 @@
     openId = id;
     lastFocus = from || document.activeElement;
     var opts = s.options || null;
-    var photo = document.querySelector('.product-card[data-service="' + s.id + '"] .product-visual img');
+    /* its photo (js/services.js → photo), or the one on its featured card */
+    var card = document.querySelector('.product-card[data-service="' + s.id + '"] .product-visual img');
+    var photo = (S.photo && S.photo(s.id)) || (card && (card.currentSrc || card.src));
     $(".svc-photo").hidden = !photo;
-    if (photo) $(".svc-photo img").src = photo.currentSrc || photo.src;
+    if (photo) $(".svc-photo img").src = photo;
     $(".svc-k").textContent = [s.sectorName, s.sub].filter(Boolean).join(" · ") + (s.note ? " · " + s.note : "");
     $(".svc-title").textContent = s.name;
     var meta = opts ? ["from " + money(Math.min.apply(null, opts.map(function (o) { return o.price; })))]

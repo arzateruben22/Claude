@@ -87,7 +87,7 @@ const card = (f) => {
   const s = S.get(f.id);
   return `          <article class="product-card${f.hero ? " product-card--hero" : ""}" data-service="${s.id}" data-reveal data-spotlight>
             <span class="product-badge">${esc(f.badge)}</span>
-            <div class="product-visual ${f.cls}" aria-hidden="true"><img src="img/services/${f.img}.webp" alt="" loading="lazy" decoding="async" width="800" height="600"></div>
+            <div class="product-visual ${f.cls}" aria-hidden="true"><img src="${S.photo(f.id) || `img/services/${f.img}.webp`}" alt="" loading="lazy" decoding="async" width="800" height="600"></div>
             <h3 class="product-name"><button class="svc-open" type="button" aria-label="${esc(s.name)}: full details">${esc(s.name)}</button></h3>
             <p class="product-desc">${esc(s.desc)}</p>
             <div class="product-foot">

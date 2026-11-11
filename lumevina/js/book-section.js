@@ -112,6 +112,8 @@
   };
   var SV = window.LUMEVINA_SERVICES;
   var swatchOf = function (id) {
+    var own = SV && SV.photo && SV.photo(id);
+    if (own) return own;
     var sector = (SV && SV.get(id) || {}).sector;
     if (id === "new-client-consultation" || sector === "consult") return SWATCH.consult;
     if (/ageless/.test(id) || sector === "procell") return SWATCH.ageless;
