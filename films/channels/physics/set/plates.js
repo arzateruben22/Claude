@@ -34,6 +34,7 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
   const items = list.map((p) => ({ p, imgs: [], ok: false }));
   const ready = Promise.all(items.map(async (it) => {
     const layers = it.p.layers && it.p.layers.length ? it.p.layers : [{ file: it.p.file, file9: it.p.file9, depth: 0 }];
+    if (it.p.swap) { const sw = await load(nine ? it.p.swap.file9 || it.p.swap.file : it.p.swap.file); if (sw) { mk(sw, 0); sw.dataset.depth = 0; it.swapImg = sw; } }
     const ims = await Promise.all(layers.map((l) => load(nine ? l.file9 || l.file : l.file)));
     if (ims.some((m) => !m)) { it.ok = false; return; }
     it.imgs = ims.map((im, i) => { mk(im, i); im.dataset.depth = layers[i].depth || 0; return im; });
@@ -41,11 +42,12 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
   })).catch(() => {});
   const active = (t) => { for (const it of items) if (it.ok && t >= it.p.t0 && t < it.p.t1) return it; return null; };
   const apply = (t) => {
-    for (const it of items) for (const im of it.imgs) im.style.display = "none";
+    for (const it of items) { for (const im of it.imgs) im.style.display = "none"; if (it.swapImg) it.swapImg.style.display = "none"; }
     const it = active(t); if (!it) return false;
     const p = it.p, d = Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))), f = p.fade ?? 0.35;
     const a = Math.min(1, (t - p.t0) / f, (p.t1 - t) / f), push = p.push ?? 0.05, par = p.parallax ?? 0.02;
-    it.imgs.forEach((im) => {
+    const swapped = it.swapImg && t >= it.p.swap.t;
+    (swapped ? [it.swapImg] : it.imgs).forEach((im) => {
       const dep = +im.dataset.depth, s = 1 + push * d * (p.cam3 ? 1 : 1 + 0.6 * dep), shift = par * (d - 0.5) * W * (1 + dep), over = p.over ?? (p.cam3 ? 1 : 1.04);
       const cs = Math.max(W / im.naturalWidth, H / im.naturalHeight), sh9 = nine && p.shift9 ? -p.shift9.x * p.shift9.ppm * cs : 0;   // 9:16: the crop is moved so the subject sits at the centre (the camera yaws the same amount)
       im.style.display = "block"; im.style.objectPosition = `calc(50% + ${sh9.toFixed(2)}px) 50%`; im.style.opacity = String(Math.max(0, Math.min(1, a))); im.style.transform = `translate(${shift.toFixed(2)}px,0) scale(${(s * over).toFixed(5)})`;

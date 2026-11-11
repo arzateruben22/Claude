@@ -44,7 +44,7 @@
   {
    "t": 0.6,
    "kind": "badge",
-   "tag": "code",
+   "tag": "code-s0",
    "text": "Drawn by code · model"
   },
   {
@@ -52,6 +52,18 @@
    "kind": "section",
    "id": "body",
    "t1": 68.5333
+  },
+  {
+   "t": 23.0333,
+   "kind": "badge",
+   "tag": "code-p1",
+   "text": "Kitchen: AI illustration · splash drawn by code"
+  },
+  {
+   "t": 41.3333,
+   "kind": "badge",
+   "tag": "code-s2",
+   "text": "Drawn by code · model"
   },
   {
    "t": 68.5333,

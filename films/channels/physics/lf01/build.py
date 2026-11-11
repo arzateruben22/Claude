@@ -248,7 +248,7 @@ TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A p
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
 if PART:
     END = {"title": f"Part {PART} of *8*", "follow": "Full video on YouTube · Follow Reality Rulebook", "foot": "Reality Rulebook · Season 3"}
-    CAPCH, CAPY = 20, (0.51 if PART == 1 else 0.62)
+    CAPCH, CAPY = 20, (0.51 if PART == 1 else 0.66 if PART == 2 else 0.62)
 else:
     END = {"title": "Next drop: why the sky is *blue*", "follow": "Follow Reality Rulebook", "foot": "Velten et al., femto-photography (2012-2013)."}
     CAPCH, CAPY = 44, 0.77
@@ -264,6 +264,12 @@ _p02 = {"id": "feeder", "file": PLATE02, "file9": PLATE02_9, "push": 0.05, "para
         "shift9": {"x": round((735 - 836) / _PX, 4), "ppm": _PX},   # 9:16: bird and feeder in the middle of the crop
         "anchor": {"bird": {"tip": _w(768, 378), "scale": 0.027, "yaw": -0.25, "tilt": 0.5},   # the bill tip goes into the left port flower
                    "shadow": {"pos": _w(790, 396, -1.002), "w": 0.07, "h": 0.026, "opacity": 0.4}}}
+# plate-03: the tap and the cobalt mug (Part 2). The mug's rim (full to the brim) is 415 px wide in the 1672 px picture: 0.0395 m of cup radius at 5240 px per code-metre, drawn at z = -0.31 (5774 px/m)
+PLATE03 = "../lf01/art/owner/plates/plate-03-tap-mug-16x9.png"; PLATE03C = "../lf01/art/owner/plates/plate-03-tap-mug-clean-16x9.png"
+_Z3 = -0.31; _PZ = _PX / -_Z3
+_p03 = {"id": "tapmug", "file": PLATE03, "file9": PLATE03, "push": 0.04, "parallax": 0, "fade": 0.3,
+        "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},
+        "anchor": {"rig": {"pos": [round((863 - 836) / _PZ, 4), round(0.4 + (470.5 - 594) / _PZ, 4), _Z3], "scale": round(5240 / _PZ, 4), "rotX": 0.227, "tipY": round((594 - 368) / 5240, 4), "drop": 0.85, "rad": 0.62}}}   # the crown stands on the mug's water at the drop's x
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
 _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parallax": 0, "fade": 0.35,
@@ -271,6 +277,8 @@ _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parall
         "anchor": {"pos": [0.05, 1.0, -3.1], "mirror": [0.05, 1.0, -4.5], "proxy": True, "tint": [[0.5, 0.3, 0.08], [0.38, 0.2, 0.04], 0xE89030, 0xB07020]}}
 if PART == 1 and (HERE / "art/owner/plates/plate-02-feeder-16x9.png").exists():
     PLATES = [dict(_p02, t0=0.0, t1=R(W("wings", "But") - 0.2))]
+elif PART == 2 and (HERE / "art/owner/plates/plate-03-tap-mug-clean-16x9.png").exists():
+    PLATES = [dict(_p03, t0=R(EV["tapdrop"][0] - 1.0), t1=R(EV["tapdrop"][2] + 11.0), swap={"t": R(EV["tapdrop"][1]), "file": PLATE03C, "file9": PLATE03C})]
 elif PART == 4 and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists():
     PLATES = [dict(_p01, t0=0.0, t1=R(ENDSHOW))]
 elif not PART and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists() and "sound" in CUTS and "bullet" in CUTS:
@@ -288,7 +296,7 @@ def _retag():
             t0, t1 = max(p["t0"], cur[0]), min(p["t1"], cur[1])
             if t1 <= t0: continue
             if t0 > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=cur[0], t1=R(t0)))
-            what = "bird" if p["id"] == "feeder" else "wave"
+            what = {"feeder": "bird", "tapmug": "splash", "sink": "bubble", "apple": "bullet and apple bits"}.get(p["id"], "wave")
             segs.append(dict(b, id="code-p" + str(len(segs)), text="Kitchen: AI illustration \u00b7 %s drawn by code" % what, t0=R(t0), t1=R(t1)))
             cur[0] = t1
         if cur[1] > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=R(cur[0]), t1=b["t1"]))

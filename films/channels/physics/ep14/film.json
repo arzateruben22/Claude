@@ -267,15 +267,31 @@
  },
  "badges": [
   {
-   "id": "code",
+   "id": "code-s0",
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 0.6,
+   "t1": 23.0333,
+   "slot": "tl"
+  },
+  {
+   "id": "code-p1",
+   "kind": "tag",
+   "text": "Kitchen: AI illustration · splash drawn by code",
+   "t0": 23.0333,
+   "t1": 41.3333,
+   "slot": "tl"
+  },
+  {
+   "id": "code-s2",
+   "kind": "tag",
+   "text": "Drawn by code · model",
+   "t0": 41.3333,
    "t1": 68.2166,
    "slot": "tl"
   }
  ],
- "captionY": 0.62,
+ "captionY": 0.66,
  "title": {
   "series": "Reality Rulebook · Season 3 · Part 2 of 8",
   "title": "A fly's wings, then a splash"
@@ -283,6 +299,51 @@
  "disclosures": {
   "aiVoice": true
  },
+ "drifts": null,
+ "plates": [
+  {
+   "id": "tapmug",
+   "file": "../lf01/art/owner/plates/plate-03-tap-mug-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-03-tap-mug-16x9.png",
+   "push": 0.04,
+   "parallax": 0,
+   "fade": 0.3,
+   "cam3": {
+    "pos": [
+     0,
+     0.4,
+     0
+    ],
+    "target": [
+     0,
+     0.396,
+     -1
+    ],
+    "fov": 29.5
+   },
+   "anchor": {
+    "rig": {
+     "pos": [
+      0.0047,
+      0.3786,
+      -0.31
+     ],
+     "scale": 0.9075,
+     "rotX": 0.227,
+     "tipY": 0.0431,
+     "drop": 0.85,
+     "rad": 0.62
+    }
+   },
+   "t0": 23.0333,
+   "t1": 41.3333,
+   "swap": {
+    "t": 28.5333,
+    "file": "../lf01/art/owner/plates/plate-03-tap-mug-clean-16x9.png",
+    "file9": "../lf01/art/owner/plates/plate-03-tap-mug-clean-16x9.png"
+   }
+  }
+ ],
  "captions": [
   {
    "t0": 0.12,

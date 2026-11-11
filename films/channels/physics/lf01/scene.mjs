@@ -257,14 +257,17 @@ const poseBird = (fl, hz, tReal, blur) => {
 const hum = mkBird();
 const birdShadow = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 64; const cx = cv.getContext("2d"), gr = cx.createRadialGradient(32, 32, 2, 32, 32, 30); gr.addColorStop(0, "rgba(30,24,18,0.7)"); gr.addColorStop(1, "rgba(30,24,18,0)"); cx.fillStyle = gr; cx.fillRect(0, 0, 64, 64);
   const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, depthWrite: false })); m.visible = false; scene.add(m); return m; })();   // the bird's soft shadow on a plate's feeder dish
+const plateRig = new THREE.Group(); plateRig.visible = false; scene.add(plateRig);   // a plate's own frame for the code subjects that live in the kitchen (the crown, the drop): origin on the plate's water surface, scaled to the plate's pixels
 const birdRim = new THREE.DirectionalLight(0xFFD9A0, 3.6); birdRim.position.set(0.7, 0.9, -4.0); birdRim.target.position.set(0, 0.4, -1.0); const birdFill = new THREE.DirectionalLight(0xBCD6FF, 1.25); birdFill.position.set(-1.2, 0.2, 3.0); birdFill.target.position.set(0, 0.4, -1.0); birdRim.visible = birdFill.visible = false; scene.add(birdRim, birdRim.target, birdFill, birdFill.target);   // on a plate: the window is behind the bird (a warm back light) and the room fills softly from the front
 const keyLights = [[scene.children.find((o) => o.isHemisphereLight), 1.1], [sun, 1.7], [winLight, 1.1], [rim, 0.5]];
 const trail = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 6), new THREE.MeshBasicMaterial({ color: 0x20232A, transparent: true, opacity: 0.25 })); m.visible = false; scene.add(m); trail.push(m); }
 
 // ── the splash: a crown of spikes at the rim, droplets that pinch off, ripples; the cup rings ──
 const crown = new THREE.Group(); crown.position.set(0, surfY, 0); cupG.add(crown);
-const crownMat = new THREE.MeshPhysicalMaterial({ color: 0xBFDDF2, roughness: 0.1, clearcoat: 1, transparent: true, opacity: 0.88 });
-const spikes = []; const NSP = 22; for (let i = 0; i < NSP; i++) { const m = new THREE.Mesh(new THREE.ConeGeometry(0.0022, 1, 6), crownMat); m.userData.a = (i / NSP) * Math.PI * 2; crown.add(m); spikes.push(m); }
+const crownMat = new THREE.MeshPhysicalMaterial({ color: 0xCFE6F7, roughness: 0.04, clearcoat: 1, clearcoatRoughness: 0.03, transparent: true, opacity: 0.62, envMap: birdEnv, envMapIntensity: 0.8 });
+const sheetMat = new THREE.MeshPhysicalMaterial({ color: 0xDCEEFA, roughness: 0.03, clearcoat: 1, transparent: true, opacity: 0.3, side: THREE.DoubleSide, depthWrite: false, envMap: birdEnv, envMapIntensity: 1.8 });
+const spikes = [], tips = []; const NSP = 30; for (let i = 0; i < NSP; i++) { const tp = new THREE.Mesh(new THREE.SphereGeometry(0.0013, 12, 9), crownMat); crown.add(tp); tips.push(tp); const m = new THREE.Mesh(new THREE.ConeGeometry(0.0013, 1, 8), crownMat); m.userData.a = (i / NSP) * Math.PI * 2; crown.add(m); spikes.push(m); }
+const sheet = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 72, 1, true), sheetMat); crown.add(sheet);   // the thin water wall between the jets
 const crownRing = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0016, 6, 40), crownMat); crownRing.rotation.x = Math.PI / 2; crown.add(crownRing);
 const drops = []; for (let i = 0; i < 12; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.0022, 8, 6), crownMat); m.userData = { a: (i / 12) * Math.PI * 2 + 0.2, v: 0.35 + 0.25 * ((i * 7) % 5) / 5, w: 0.7 + 0.3 * ((i * 3) % 4) / 4 }; crown.add(m); drops.push(m); }
 const ripples = []; for (let i = 0; i < 3; i++) { const m = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0007, 6, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 })); m.rotation.x = Math.PI / 2; crown.add(m); ripples.push(m); }
@@ -421,13 +424,23 @@ window.seek = function (t) {
   const rC = (t - d2) / 100;   // the crown is drawn at 100x (this event's own factor, not the clock's present one)                                                                 // real seconds since the impact
   crown.visible = rC >= 0 && rC < 0.6; crown.position.x = 0; crown.position.z = 0; crown.rotation.set(0, 0, 0);
   if (crown.visible) {
-    const grow = Math.min(1, rC / 0.04), Rc = 0.007 + 0.03 * Math.sqrt(grow), Hc = rC < 0.04 ? 0.026 * Math.sin(Math.min(1, rC / 0.034) * Math.PI * 0.5) : Math.max(0, 0.026 * (1 - (rC - 0.04) / 0.05));
+    const rgK = (() => { const q = plates.anchor(t); return q && q.rig ? q.rig : null; })(), grow = Math.min(1, rC / 0.04), Rc = (0.007 + 0.03 * Math.sqrt(grow)) * (rgK ? rgK.rad : 1), Hc = rC < 0.04 ? 0.026 * Math.sin(Math.min(1, rC / 0.034) * Math.PI * 0.5) : Math.max(0, 0.026 * (1 - (rC - 0.04) / 0.05));
     crownRing.position.y = Hc * 0.85; crownRing.scale.set(Rc, Rc, Rc); crownRing.visible = Hc > 0.0005;
-    spikes.forEach((s) => { const a = s.userData.a, h = Hc * (0.55 + 0.45 * Math.abs(Math.sin(a * 3.0))) + 0.001; s.visible = Hc > 0.001; s.scale.set(1, h, 1); s.position.set(Math.cos(a) * Rc, h / 2, Math.sin(a) * Rc); });
-    drops.forEach((m) => { const sepT = 0.03, rr = rC - sepT; m.visible = rr > 0 && rr < 0.12; if (!m.visible) return; const a = m.userData.a, v = m.userData.v; m.position.set(Math.cos(a) * (Rc + v * 0.2 * rr * 10 * 0.1 + v * rr), 0.022 + 0.32 * rr - 4.9 * rr * rr * 2.2, Math.sin(a) * (Rc + v * rr)); });
+    spikes.forEach((s, i) => { const a = s.userData.a, h = Hc * (0.5 + 0.5 * Math.abs(Math.sin(a * 3.0) * Math.cos(a * 7.0 + 1.0))) + 0.001; s.visible = Hc > 0.001; s.scale.set(1, h, 1); s.position.set(Math.cos(a) * Rc, h / 2, Math.sin(a) * Rc); tips[i].visible = s.visible; tips[i].position.set(Math.cos(a) * Rc, h, Math.sin(a) * Rc); });
+    sheet.visible = Hc > 0.001; sheet.scale.set(Rc * 1.06, Hc * 0.7, Rc * 1.06); sheet.position.y = Hc * 0.35; sheet.scale.x = Rc * 1.0; sheet.scale.z = Rc * 1.0;
+    drops.forEach((m) => { const sepT = 0.03, rr = rC - sepT; m.visible = rr > 0 && rr < 0.12; if (!m.visible) return; const a = m.userData.a, v = m.userData.v; m.position.set(Math.cos(a) * (Rc + (v * 0.2 * rr * 10 * 0.1 + v * rr) * (rgK ? rgK.rad : 1)), 0.022 + 0.32 * rr - 4.9 * rr * rr * 2.2, Math.sin(a) * (Rc + v * rr * (rgK ? rgK.rad : 1))); });
     ripples.forEach((rp, i) => { const q = rC - i * 0.05; rp.visible = q > 0; if (!rp.visible) return; const rad = 0.01 + 0.4 * q * 0.18; rp.scale.set(rad, rad, rad); rp.material.opacity = 0.7 * Math.max(0, 1 - q * 1.6) * (rad < 0.036 ? 1 : 0); });
   }
-  hang.visible = hangV || (t >= EV.light9 - 2.0 && t < T.still + 1.0 && !inMacro && !inLab);
+  { const an = plates.anchor(t), rg = plateOn && an && an.rig ? an.rig : null;   // plate-03: the photo's mug is the cup; the drop and the crown are drawn in the plate's frame
+    if (rg) {
+      plateRig.visible = true; plateRig.position.set(...rg.pos); plateRig.scale.setScalar(rg.scale); plateRig.rotation.set(rg.rotX ?? 0, 0, 0);
+      if (crown.parent !== plateRig) { plateRig.add(crown); plateRig.add(hang); } crown.position.set(0, 0, 0);
+      if (hangV) { const u = t < d1 ? 0 : E.in2(seg(t, d1, d2)); hang.position.set(0, t < d1 ? rg.tipY - 0.0025 * E.in2(seg(t, d0, d1)) : lerp(rg.tipY - 0.0025, 0.003, u), 0); hang.scale.set(rg.drop, rg.drop * (t < d1 ? 1 : 1 + 0.4 * u), rg.drop); }
+      birdRim.visible = birdFill.visible = true; for (const [l, i0] of keyLights) if (l) l.intensity = i0 * 0.35;
+    } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } }
+    hang.visible = hangV || (!rg && t >= EV.light9 - 2.0 && t < T.still + 1.0 && !inMacro && !inLab); }
+  if (!hang.visible) hang.visible = false;
+  void 0;
   if (!hangV && hang.visible) { hang.position.set(CUPX, TOP + 0.005 + surfY + 0.07, CUPZ); hang.scale.setScalar(2.6); }
   const hush = t >= EV.light9 - 2.0 && t < T.still + 1.0;
   // popcorn: the kernel jumps, the pop, the foam; the bubble
