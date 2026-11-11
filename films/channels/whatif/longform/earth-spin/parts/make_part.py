@@ -22,7 +22,7 @@ PL = Path(arg("--partlines", str(OWN / "cut")))
 CTA_KIND = "follow"                     # the picture is built once, with the "follow" line (and its captions); the -sub file only swaps the audio
 # which sentences each part keeps: (line number, "all" or the sentence numbers of that line in the final script)
 PLAN = {
- "own":   {1: [(1, [2]), (2, [1, 2, 3, 4]), (3, "all")], 2: [(4, "all"), (5, "all")], 3: [(6, "all")], 4: [(7, "all")], 5: [(8, "all"), (9, "all")],
+ "own":   {1: [(1, [2]), (2, [2, 3, 4, 5]), (3, "all")], 2: [(4, "all"), (5, "all")], 3: [(6, "all")], 4: [(7, "all")], 5: [(8, "all"), (9, "all")],
            6: [(10, "all"), (11, "all")], 7: [(12, "all"), (13, "all")], 8: [(14, "all")]},
  "owner": {1: [(1, [2]), (2, [1, 3, 4, 5]), (3, [1, 3, 4, 5, 6])], 2: [(4, "all"), (5, "all")], 3: [(6, "all")], 4: [(7, "all")], 5: [(8, "all"), (9, "all")],
            6: [(10, "all"), (11, "all")], 7: [(12, "all"), (13, "all")], 8: [(14, "all")]},
