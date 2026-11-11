@@ -58,5 +58,6 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
   const zoom = (t) => { const it = active(t); if (!it) return 1; const p = it.p; return 1 + (p.push ?? 0.05) * Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))); };
   const cam3 = (t) => { const it = active(t); if (!it || !it.p.cam3) return null; const c = it.p.cam3; return nine && it.p.shift9 ? { ...c, target: [c.target[0] + it.p.shift9.x, c.target[1], c.target[2]] } : c; };
   const anchor = (t) => { const it = active(t); return it && it.p.anchor ? it.p.anchor : null; };
-  return { ready, apply, cam, cam3, zoom, anchor, active, items };
+  const imageOf = (id) => { const it = items.find((q) => q.p.id === id); return it && it.ok ? it.imgs[0] : null; };
+  return { ready, apply, cam, cam3, zoom, anchor, active, items, imageOf };
 };

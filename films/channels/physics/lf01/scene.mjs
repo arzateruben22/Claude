@@ -7,6 +7,7 @@ import { createHud } from "cinema/sci/hud.js";
 import { SPINE_CSS, placeSpine } from "../set/spine.js";
 import { dropTitle } from "../set/title.js";
 import { createPlates } from "../set/plates.js";
+import { ACES_INV_GLSL } from "../set/aces.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, TK = (window.THEME && window.THEME.tokens) || {};
 const EV = FILM.ev, CAL = FILM.calc, ES = FILM.endShow, T = new Proxy(FILM.cue.cuts, { get: (o, k) => (k in o ? o[k] : 1e9) });   // a part has only its own beats: the others are never
@@ -301,12 +302,33 @@ let CLAPX = 2.45, CLAPY = TOP + 0.32, CLAPZ = -0.8;   // where the clap is (a pl
 
 // ── the bullet and the apple's spray ──
 const bullet = new THREE.Group(); scene.add(bullet);
-{ const b = new THREE.Mesh(new THREE.CylinderGeometry(0.0038, 0.0038, 0.02, 12), new THREE.MeshStandardMaterial({ color: 0xB08A4A, roughness: 0.3, metalness: 0.8 })); b.rotation.z = -Math.PI / 2; bullet.add(b);
-  const nose = new THREE.Mesh(new THREE.ConeGeometry(0.0038, 0.014, 12), new THREE.MeshStandardMaterial({ color: 0xB08A4A, roughness: 0.3, metalness: 0.8 })); nose.rotation.z = -Math.PI / 2; nose.position.x = 0.017; bullet.add(nose); }
+{ const b = new THREE.Mesh(new THREE.CylinderGeometry(0.0038, 0.0038, 0.02, 12), new THREE.MeshStandardMaterial({ color: 0xB5651D, roughness: 0.28, metalness: 0.9, envMap: birdEnv, envMapIntensity: 1.4 })); b.rotation.z = -Math.PI / 2; bullet.add(b);
+  const nose = new THREE.Mesh(new THREE.ConeGeometry(0.0038, 0.014, 12), new THREE.MeshStandardMaterial({ color: 0xB5651D, roughness: 0.28, metalness: 0.9, envMap: birdEnv, envMapIntensity: 1.4 })); nose.rotation.z = -Math.PI / 2; nose.position.x = 0.017; bullet.add(nose); }
+// the plate's apple: a proxy mesh textured by CAMERA PROJECTION. Every vertex remembers where it sits in the photo (uvRest), so at rest each pixel is the photo's own pixel (pixel-identical);
+// when the bullet leaves, the exit side bulges and the skin stretches with it, a ragged flesh crater opens, and code fragments fly. The photo's colours go through the finish's inverse curve (set/aces.js).
+const appleU = { uPlate: { value: null }, uExit: { value: 0 }, uEntry: { value: 0 } };
+const appleMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+appleMat.onBeforeCompile = (sh) => { Object.assign(sh.uniforms, appleU);
+  sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nattribute vec2 uvRest; varying vec2 vPUV; varying vec3 vLoc; uniform float uExit, uEntry;")
+    .replace("#include <begin_vertex>", "vLoc = position; vPUV = uvRest; vec3 transformed = position; float yz2 = dot(position.yz, position.yz); transformed.x += exp(-yz2 / 0.00018) * step(0.0, position.x) * uExit * 0.016 + exp(-yz2 / 0.00002) * step(position.x, 0.0) * uEntry * 0.003;");
+  sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec2 vPUV; varying vec3 vLoc; uniform sampler2D uPlate; uniform float uExit, uEntry;\n" + ACES_INV_GLSL)
+    .replace("#include <opaque_fragment>", `
+  vec3 lin = texture2D(uPlate, vPUV).rgb;
+  float dE = length(vLoc.yz), an = atan(vLoc.y, vLoc.z), jag = 0.2 * sin(an * 7.0 + 2.0) + 0.12 * sin(an * 13.0 + 0.5), rE = 0.013 * min(1.0, uExit * 3.0);
+  float wm = smoothstep(rE * (1.0 + jag), rE * (0.8 + jag), dE) * step(0.0, vLoc.x) * step(0.001, uExit);
+  vec3 wc = mix(vec3(0.07, 0.025, 0.02), mix(vec3(0.83, 0.72, 0.46), vec3(0.62, 0.45, 0.26), smoothstep(0.5 * rE, rE, dE)), smoothstep(0.3 * rE, 0.55 * rE, dE));
+  lin = mix(lin, wc, wm * 0.96);
+  float wn = smoothstep(0.0048, 0.0036, dE) * step(vLoc.x, 0.0) * step(0.001, uEntry); lin = mix(lin, vec3(0.05, 0.02, 0.015), wn);
+  outgoingLight = acesInv(lin, 1.0);
+  #include <opaque_fragment>`); };
+const appleP = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 64), appleMat); appleP.geometry.scale(0.040, 0.0378, 0.040); appleP.frustumCulled = false; appleP.renderOrder = 2; let appleUVfor = null;
+const appleUV = (rg) => { if (appleUVfor === rg) return; appleUVfor = rg; const P = appleP.geometry.attributes.position, uv = new Float32Array(P.count * 2);
+  for (let k = 0; k < P.count; k++) { const wx = rg.pos[0] + rg.scale * P.getX(k), wy = rg.pos[1] + rg.scale * P.getY(k), wz = rg.pos[2] + rg.scale * P.getZ(k), d = -wz; uv[2 * k] = (836 + 1790 * wx / d) / 1672; uv[2 * k + 1] = 1 - (470.5 - 1790 * (wy - 0.4) / d) / 941; }
+  appleP.geometry.setAttribute("uvRest", new THREE.BufferAttribute(uv, 2)); };
 const MACH = CAL.bullet.mach, HALFANG = Math.asin(1 / MACH);
-const coneM = new THREE.MeshBasicMaterial({ color: 0x9CB4FF, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide });
+const coneM = new THREE.MeshBasicMaterial({ color: 0x9CB4FF, transparent: true, opacity: 0.12, depthWrite: false, side: THREE.DoubleSide });
 const cone = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 24, 1, true), coneM); scene.add(cone);
-const spray = []; const rs2 = rng(5); for (let i = 0; i < 26; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.004 + 0.004 * rs2(), 8, 6), new THREE.MeshStandardMaterial({ color: i % 3 ? 0xE9D9B0 : 0xB0261C, roughness: 0.6 })); m.userData = { v: [40 + 120 * rs2(), (rs2() - 0.5) * 120, (rs2() - 0.5) * 120], s: 0.5 + rs2() }; m.visible = false; scene.add(m); spray.push(m); }
+const spray = []; const rs2 = rng(5); for (let i = 0; i < 60; i++) { const sz = 0.0028 + 0.005 * rs2() * rs2(), m = new THREE.Mesh(new THREE.IcosahedronGeometry(sz, 0), new THREE.MeshStandardMaterial({ color: i % 3 ? 0xEBDDB4 : 0xB0261C, roughness: i % 3 ? 0.45 : 0.35, flatShading: true })); m.userData = { v: [40 + 120 * rs2(), (rs2() - 0.5) * 120, (rs2() - 0.5) * 120], s: 0.5 + rs2(), spin: [rs2() * 40, rs2() * 40, rs2() * 40] }; m.visible = false; scene.add(m); spray.push(m); }
 
 // ── the storm: a leader tree in the window, a return stroke (drawn in the backdrop plane) ──
 const SL = FILM.ev.leader, LZ = -4.4, TOPY = 6.6, GROUNDY = 0.15, LX0 = -1.2;
@@ -442,10 +464,14 @@ window.seek = function (t) {
     if (rg) {
       plateRig.visible = true; plateRig.position.set(...rg.pos); plateRig.scale.setScalar(rg.scale); plateRig.rotation.set(rg.rotX ?? 0, 0, 0);
       if (rg.kind === "bubble") { if (bubble.parent !== plateRig) { plateRig.add(bubble); plateRig.add(rimR); } }
+      else if (rg.kind === "apple") {
+        if (appleP.parent !== plateRig) plateRig.add(appleP, bullet, cone, ...spray);
+        appleUV(rg); if (!appleU.uPlate.value) { const im = plates.imageOf("applep"); if (im) { const tx = new THREE.Texture(im); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; appleU.uPlate.value = tx; } }
+        appleP.visible = !!appleU.uPlate.value; }
       else { if (crown.parent !== plateRig) { plateRig.add(crown); plateRig.add(hang); } crown.position.set(0, 0, 0); }
-      if (hangV && rg.kind !== "bubble") { const u = t < d1 ? 0 : E.in2(seg(t, d1, d2)); hang.position.set(0, t < d1 ? rg.tipY - 0.0025 * E.in2(seg(t, d0, d1)) : lerp(rg.tipY - 0.0025, 0.003, u), 0); hang.scale.set(rg.drop, rg.drop * (t < d1 ? 1 : 1 + 0.4 * u), rg.drop); }
+      if (hangV && !rg.kind) { const u = t < d1 ? 0 : E.in2(seg(t, d1, d2)); hang.position.set(0, t < d1 ? rg.tipY - 0.0025 * E.in2(seg(t, d0, d1)) : lerp(rg.tipY - 0.0025, 0.003, u), 0); hang.scale.set(rg.drop, rg.drop * (t < d1 ? 1 : 1 + 0.4 * u), rg.drop); }
       birdRim.visible = birdFill.visible = true; for (const [l, i0] of keyLights) if (l) l.intensity = i0 * 0.35;
-    } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } if (bubble.parent === plateRig) { kitchen.add(bubble); kitchen.add(rimR); } }
+    } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } if (bubble.parent === plateRig) { kitchen.add(bubble); kitchen.add(rimR); }  if (appleP.parent === plateRig) { plateRig.remove(appleP); scene.add(bullet, cone, ...spray); } }
     hang.visible = hangV || (!rg && t >= EV.light9 - 2.0 && t < T.still + 1.0 && !inMacro && !inLab); }
   if (!hang.visible) hang.visible = false;
   void 0;
@@ -480,14 +506,15 @@ window.seek = function (t) {
     { const on = r > 0 && r < 0.052, Rs = CAL.sound * r; for (const m of [waveRing, waveFill]) { m.visible = on && sm; m.position.set(CLAPX, CLAPY, CLAPZ); m.scale.setScalar(Math.max(Rs, 1e-3)); m.lookAt(camera.position); } waveRing.material.opacity = 0.3 * (1 - seg(r, 0.03, 0.052)); waveFill.material.opacity = 0.035 * (1 - seg(r, 0.03, 0.052)); }
     const Rr = CAL.sound * r; WV.uSR1.value = r > 0 ? Rr : -9; WV.uSR2.value = r > 0 ? Rr : -9; WV.uSOn.value = r > 0 && r < 0.052 ? 1 : 0; }
   // the bullet, the apple's spray
-  { const Bt = EV.bullet, r = (t - Bt.enter) / 1e4, ap = APPX - 0.04, speed = CAL.bullet.v;
+  { const Bt = EV.bullet, r = (t - Bt.enter) / 1e4, ax = bullet.parent === plateRig ? 0 : APPX, ay = bullet.parent === plateRig ? 0 : APPY, az = bullet.parent === plateRig ? 0 : CUPZ, ap = ax - 0.04, speed = CAL.bullet.v;
     const x = ap + speed * r - 0.0, show = t >= Bt.approach - 1.0 && t < Bt.enter + 70 && x < 3.4;
-    bullet.visible = show && !(Math.abs(x - APPX) < 0.0 && false); bullet.position.set(x, APPY, CUPZ); cone.visible = show;
-    const L = 0.22; cone.scale.set(L * Math.tan(HALFANG) * 1.0, L, L * Math.tan(HALFANG) * 1.0); cone.rotation.z = Math.PI / 2; cone.position.set(x - L / 2 - 0.006, APPY, CUPZ);
+    bullet.visible = show && !(Math.abs(x - APPX) < 0.0 && false); bullet.position.set(x, ay, az); cone.visible = show;
+    const L = 0.22; cone.scale.set(L * Math.tan(HALFANG) * 1.0, L, L * Math.tan(HALFANG) * 1.0); cone.rotation.z = Math.PI / 2; cone.position.set(x - L / 2 - 0.006, ay, az);
     const exit = ap + 0.08, afterExit = x > exit, rEx = (t - (Bt.enter + 0.08 / speed * 1e4)) / 1e4;
-    spray.forEach((m) => { m.visible = rEx > 0 && rEx < 0.0009; if (!m.visible) return; const v = m.userData.v; m.position.set(exit + v[0] * rEx * m.userData.s, APPY + v[1] * rEx * 0.6, CUPZ + v[2] * rEx * 0.6); });
+    spray.forEach((m) => { m.visible = rEx > 0 && rEx < 0.0009; if (!m.visible) return; const v = m.userData.v; m.position.set(exit + v[0] * rEx * m.userData.s, ay + v[1] * rEx * 0.6, az + v[2] * rEx * 0.6); m.rotation.set(m.userData.spin[0] * rEx * 1e3, m.userData.spin[1] * rEx * 1e3, m.userData.spin[2] * rEx * 1e3); });
     const dim = seg(t, Bt.enter - 3.0, Bt.enter - 0.2), shell = afterExit ? 0 : 1; apple.visible = true; apple.scale.set(1 - 0.12 * dim * (afterExit ? 0 : 1) - (afterExit ? 0.0 : 0), 1, 1 - 0.12 * dim); apple.scale.x = t >= Bt.enter + 70 ? 1 : afterExit ? Math.max(0.6, 1 - 0.4 * seg(t, Bt.enter + 0.08 / speed * 1e4, Bt.enter + 0.08 / speed * 1e4 + 2.0)) : 1 - 0.06 * dim; void shell;
-    apple.position.set(APPX, APPY, CUPZ); stem.visible = !afterExit; }
+    apple.position.set(APPX, APPY, CUPZ); stem.visible = !afterExit;
+    if (appleP.parent === plateRig) { const tEx = Bt.enter + 0.08 / speed * 1e4; appleP.position.set(0, 0, 0); appleU.uExit.value = seg(t, tEx - 0.05, tEx + 0.3); appleU.uEntry.value = seg(t, Bt.enter - 0.05, Bt.enter + 0.25); } }
   // the storm's leader: a step every 3 s (1 s of growth, then a skipped wait), branches, the return stroke
   { const Lt = SL.t0, ground = SL.ground, every = SL.stepEvery; let flashV = 0;
     const retK = seg(t, ground, ground + 30), inL = t >= Lt && t < T.light + 6;
