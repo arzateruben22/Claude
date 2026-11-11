@@ -4,3 +4,8 @@ long01/out/segs.txt
 long01/out/long-picture.mp4
 long01/out/part*-render.log
 long01/seg_old/
+long01/out/master.log
+long01/out/master.txt
+long01/out/patch/
+long01/voice/wav_extra/
+long01/out/*-yt-render.log
