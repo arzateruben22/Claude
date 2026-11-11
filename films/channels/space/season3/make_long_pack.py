@@ -18,9 +18,11 @@ if "--text-only" not in sys.argv:
     except Exception: pass
     d.text((1860, 1000), "HOW CLOSE?", font=f, fill=(238, 240, 255), anchor="rs"); im.save(D + "/thumbnail.jpg", quality=90, optimize=True)
 # description
-secs = {}
-for c in claims: secs.setdefault((c["source_title"], c["source_url"]), []).append(c["id"])
-src = "\n".join(f"- {t}: {u}" for (t, u), ids in sorted(secs.items()))
+seen = {}
+for c in claims:
+    u = (c.get("source_url") or "").strip(); t = (c.get("source_title") or "").split(" — ")[0].strip()
+    if u and t and u not in seen: seen[u] = t
+src = "\n".join(f"- {t}: {u}" for u, t in sorted(seen.items(), key=lambda kv: kv[1].lower()))
 desc = f"""A thought experiment: How Close Can the Moon Get Before It Breaks?
 
 One More Orbit · Season 3. Bring the Moon in, step by step, and see what each distance does to the tides, the night sky, eclipses, the weather and the Moon itself, until it reaches the distance no Moon survives. A hypothetical, not a forecast: the real Moon is drifting away by about 3.8 cm a year.
