@@ -75,14 +75,26 @@
   },
   {
    "t0": 10.891,
+   "t1": 13.042,
+   "text": "Moonlight falls off with the square",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 13.062,
    "t1": 15.296,
-   "text": "Moonlight falls off with the square of the distance, for the same phase.",
+   "text": "of the distance, for the same phase.",
    "line": "ch4_vo"
   },
   {
    "t0": 15.316,
+   "t1": 17.804,
+   "text": "So at this distance, a full Moon gives",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 17.824,
    "t1": 20.266,
-   "text": "So at this distance, a full Moon gives about six and a half times the light.",
+   "text": "about six and a half times the light.",
    "line": "ch4_vo"
   },
   {
@@ -117,20 +129,38 @@
   },
   {
    "t0": 33.121,
+   "t1": 35.417,
+   "text": "At this distance, one lap takes",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 35.437,
    "t1": 38.051,
-   "text": "At this distance, one lap takes about seven days, not twenty-seven.",
+   "text": "about seven days, not twenty-seven.",
    "line": "ch4_vo"
   },
   {
    "t0": 38.071,
+   "t1": 40.733,
+   "text": "The water has a silver road across",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 40.753,
    "t1": 43.356,
-   "text": "The water has a silver road across it, wider than any you have seen.",
+   "text": "it, wider than any you have seen.",
    "line": "ch4_vo"
   },
   {
    "t0": 43.376,
+   "t1": 46.206,
+   "text": "Night is not as dark as it used to be, and",
+   "line": "ch4_vo"
+  },
+  {
+   "t0": 46.226,
    "t1": 49.416,
-   "text": "Night is not as dark as it used to be, and it is about to get a different kind of strange.",
+   "text": "it is about to get a different kind of strange.",
    "line": "ch4_vo"
   },
   {
@@ -147,8 +177,14 @@
   },
   {
    "t0": 56.082,
+   "t1": 58.235,
+   "text": "Which means the next time they line",
+   "line": "ch4_loop"
+  },
+  {
+   "t0": 58.255,
    "t1": 60.552,
-   "text": "Which means the next time they line up, something happens in the daytime.",
+   "text": "up, something happens in the daytime.",
    "line": "ch4_loop"
   },
   {

@@ -75,8 +75,14 @@
   },
   {
    "t0": 9.499,
+   "t1": 12.005,
+   "text": "There is a distance where tides pull harder",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 12.025,
    "t1": 14.904,
-   "text": "There is a distance where tides pull harder on a body than its own gravity holds it together.",
+   "text": "on a body than its own gravity holds it together.",
    "line": "ch8_vo"
   },
   {
@@ -87,14 +93,26 @@
   },
   {
    "t0": 17.029,
+   "t1": 20.883,
+   "text": "For a Moon like ours around Earth, it is around eighteen",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 20.903,
    "t1": 24.639,
-   "text": "For a Moon like ours around Earth, it is around eighteen thousand kilometers, if the Moon behaves like a fluid.",
+   "text": "thousand kilometers, if the Moon behaves like a fluid.",
    "line": "ch8_vo"
   },
   {
    "t0": 24.659,
+   "t1": 26.753,
+   "text": "Around nine and a half thousand,",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 26.773,
    "t1": 28.424,
-   "text": "Around nine and a half thousand, if it is perfectly rigid.",
+   "text": "if it is perfectly rigid.",
    "line": "ch8_vo"
   },
   {
@@ -105,14 +123,26 @@
   },
   {
    "t0": 31.559,
+   "t1": 34.016,
+   "text": "At eighteen thousand kilometers, it looks",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 34.036,
    "t1": 36.574,
-   "text": "At eighteen thousand kilometers, it looks more than twenty times wider than tonight.",
+   "text": "more than twenty times wider than tonight.",
    "line": "ch8_vo"
   },
   {
    "t0": 36.594,
+   "t1": 39.095,
+   "text": "It is at least as wide as a fist held",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 39.115,
    "t1": 42.249,
-   "text": "It is at least as wide as a fist held out at arm's length, and wider still overhead.",
+   "text": "out at arm's length, and wider still overhead.",
    "line": "ch8_vo"
   },
   {

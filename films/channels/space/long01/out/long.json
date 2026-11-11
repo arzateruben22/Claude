@@ -649,8 +649,14 @@
   },
   {
    "t0": 301.848,
+   "t1": 305.723,
+   "text": "In real life, tides are why the Moon drifts away: they",
+   "line": "ch6_vo"
+  },
+  {
+   "t0": 305.743,
    "t1": 310.288,
-   "text": "In real life, tides are why the Moon drifts away: they steal a little of Earth's spin and hand it to the Moon's orbit.",
+   "text": "steal a little of Earth's spin and hand it to the Moon's orbit.",
    "line": "ch6_vo"
   },
   {
@@ -811,8 +817,14 @@
   },
   {
    "t0": 390.526,
+   "t1": 394.38,
+   "text": "For a Moon like ours around Earth, it is around eighteen",
+   "line": "ch8_vo"
+  },
+  {
+   "t0": 394.4,
    "t1": 398.136,
-   "text": "For a Moon like ours around Earth, it is around eighteen thousand kilometers, if the Moon behaves like a fluid.",
+   "text": "thousand kilometers, if the Moon behaves like a fluid.",
    "line": "ch8_vo"
   },
   {
@@ -913,8 +925,14 @@
   },
   {
    "t0": 446.826,
+   "t1": 450.576,
+   "text": "Material inside the Roche limit tends to spread into",
+   "line": "close_vo"
+  },
+  {
+   "t0": 450.596,
    "t1": 455.091,
-   "text": "Material inside the Roche limit tends to spread into rings, while material outside tends to clump into small moons.",
+   "text": "rings, while material outside tends to clump into small moons.",
    "line": "close_vo"
   },
   {

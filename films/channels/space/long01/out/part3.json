@@ -57,8 +57,14 @@
   },
   {
    "t0": 3.268,
+   "t1": 5.795,
+   "text": "Half the distance: about one hundred",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 5.815,
    "t1": 8.008,
-   "text": "Half the distance: about one hundred ninety-two thousand kilometers.",
+   "text": "ninety-two thousand kilometers.",
    "line": "ch3_vo"
   },
   {
@@ -69,8 +75,14 @@
   },
   {
    "t0": 11.528,
+   "t1": 13.34,
+   "text": "Tides come from the difference",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 13.36,
    "t1": 15.558,
-   "text": "Tides come from the difference in the Moon's pull across the Earth.",
+   "text": "in the Moon's pull across the Earth.",
    "line": "ch3_vo"
   },
   {
@@ -81,14 +93,26 @@
   },
   {
    "t0": 18.918,
+   "t1": 21.303,
+   "text": "So half the distance means about",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 21.323,
    "t1": 23.428,
-   "text": "So half the distance means about eight times the tidal force.",
+   "text": "eight times the tidal force.",
    "line": "ch3_vo"
   },
   {
    "t0": 23.448,
+   "t1": 26.217,
+   "text": "Here is the idea, not a measured height:",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 26.237,
    "t1": 29.653,
-   "text": "Here is the idea, not a measured height: the water at your feet starts to climb the beach.",
+   "text": "the water at your feet starts to climb the beach.",
    "line": "ch3_vo"
   },
   {
@@ -111,14 +135,26 @@
   },
   {
    "t0": 40.733,
+   "t1": 43.654,
+   "text": "It is a slow, patient rise, as if the",
+   "line": "ch3_vo"
+  },
+  {
+   "t0": 43.674,
    "t1": 46.933,
-   "text": "It is a slow, patient rise, as if the whole ocean were being lifted from above.",
+   "text": "whole ocean were being lifted from above.",
    "line": "ch3_vo"
   },
   {
    "t0": 47.048,
+   "t1": 49.572,
+   "text": "Real quick: like and follow, if space",
+   "line": "cta3_follow"
+  },
+  {
+   "t0": 49.592,
    "t1": 51.998,
-   "text": "Real quick: like and follow, if space just got a little stranger for you.",
+   "text": "just got a little stranger for you.",
    "line": "cta3_follow"
   },
   {
