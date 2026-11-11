@@ -82,7 +82,7 @@
   },
   {
    "id": "vo02",
-   "text": "Usually, old cells slip up and out with the oil.",
+   "text": "Usually, old cells drift up and out with the oil.",
    "heard": "Usually old cells stripped up and out with the oil.",
    "words": [
     {
@@ -104,7 +104,7 @@
      "heard": true
     },
     {
-     "w": "slip",
+     "w": "drift",
      "start": 2.16,
      "end": 2.64,
      "heard": false
@@ -702,7 +702,7 @@
   },
   {
    "id": "vo10",
-   "text": "That's the pimple you finally see. A small black doorway… in your body working to clear it.",
+   "text": "That's the pimple you finally see. A small, blocked doorway… and your body, working to clear it.",
    "heard": "That's the pimple you finally see, a small black doorway and your body working to clear it.",
    "words": [
     {
@@ -748,16 +748,16 @@
      "heard": true
     },
     {
-     "w": "small",
+     "w": "small,",
      "start": 3.38,
      "end": 3.84,
      "heard": true
     },
     {
-     "w": "black",
-     "start": 4.12,
-     "end": 4.72,
-     "heard": true
+     "w": "blocked",
+     "start": 3.94,
+     "end": 4.88,
+     "heard": false
     },
     {
      "w": "doorway…",
@@ -766,10 +766,10 @@
      "heard": true
     },
     {
-     "w": "in",
-     "start": 5.805,
+     "w": "and",
+     "start": 6.185,
      "end": 6.4,
-     "heard": false
+     "heard": true
     },
     {
      "w": "your",
@@ -778,7 +778,7 @@
      "heard": true
     },
     {
-     "w": "body",
+     "w": "body,",
      "start": 6.615,
      "end": 7.12,
      "heard": true

@@ -10,7 +10,7 @@
   {
    "id": "vo02",
    "beat": "normal",
-   "text": "Usually, old cells slip up and out with the oil.",
+   "text": "Usually, old cells drift up and out with the oil.",
    "a": 233.53,
    "b": 238.65
   },
@@ -66,7 +66,7 @@
   {
    "id": "vo10",
    "beat": "takeaway",
-   "text": "That's the pimple you finally see. A small black doorway… in your body working to clear it.",
+   "text": "That's the pimple you finally see. A small, blocked doorway… and your body, working to clear it.",
    "a": 283.52,
    "b": 292.81
   }
