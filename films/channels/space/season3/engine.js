@@ -28,7 +28,7 @@ function drawPlateWaves(img, a, t, G, cam, ox, oy) {
   const hz = Math.floor(G.horizon), sh = img.height / H, STEP = Math.max(3, Math.round(4 * U));
   ctx.drawImage(img, 0, 0, img.width, hz * sh, 0, 0, W, hz);                                  // sky and headland: still
   ctx.drawImage(img, 0, hz * sh, img.width, img.height - hz * sh, 0, hz, W, H - hz);          // still sea under the moving strips (no gap at the edges)
-  for (let y = hz; y < H; y += STEP) { const f = (y - hz) / (H - hz), amp = (2.5 + 27 * f) * U, dx = amp * Math.sin(y / (26 * U) * (1 + f) - t * (0.9 + 0.6 * f)) + 0.45 * amp * Math.sin(y / (9 * U) + t * 1.7); ctx.drawImage(img, 0, y * sh, img.width, STEP * sh, dx, y, W, STEP + 0.6); }
+  for (let y = hz; y < H; y += STEP) { const f = (y - hz) / (H - hz), amp = (2.5 + 27 * f) * U * (1 + 0.7 * swayAmp(t)), dx = amp * Math.sin(y / (26 * U) * (1 + f) - t * (0.9 + 0.6 * f)) + 0.45 * amp * Math.sin(y / (9 * U) + t * 1.7); ctx.drawImage(img, 0, y * sh, img.width, STEP * sh, dx, y, W, STEP + 0.6); }
   ctx.restore();
 }
 function drawPlateWavesNoState(img, t, G) { const hz = Math.floor(G.horizon), sh = img.height / H, STEP = Math.max(3, Math.round(4 * U)); ctx.drawImage(img, 0, hz * sh, img.width, img.height - hz * sh, 0, hz, W, H - hz); for (let y = hz; y < H; y += STEP) { const f = (y - hz) / (H - hz), amp = (3 + 30 * f) * U, dx = amp * Math.sin(y / (24 * U) * (1 + f) - t * (1.0 + 0.6 * f)) + 0.45 * amp * Math.sin(y / (8 * U) + t * 1.9); ctx.drawImage(img, 0, y * sh, img.width, STEP * sh, dx, y, W, STEP + 0.6); } }
@@ -42,7 +42,7 @@ function sceneComposite(t, d, ecl, moonAlpha, G) {
   // stars twinkle in the plate's sky (a few more than the painting has)
   const sr = rnd(5); ctx.save(); for (let i = 0; i < 160; i++) { const x = sr() * W, y = sr() * G.horizon * 0.85, p = sr() * 6.28, s = (0.8 + sr() * 1.8) * U; ctx.globalAlpha = (0.12 + 0.7 * (0.5 + 0.5 * Math.sin(t * (1.2 + 2 * sr()) + p))) * (1 - ecl * 0.3); ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(x, y, s, 0, 6.283); ctx.fill(); } ctx.restore();
   ctx.save(); ctx.globalCompositeOperation = "screen"; const cr = rnd(21); for (let i = 0; i < 5; i++) { const y = (0.12 + 0.5 * cr()) * G.horizon, sp = (12 + 20 * cr()) * U, x = (((cr() * (W + 1200 * U) - t * sp) % (W + 1200 * U)) + (W + 1200 * U)) % (W + 1200 * U) - 600 * U, wd = (500 + 500 * cr()) * U;
-    ctx.save(); ctx.filter = `blur(${30 * U}px)`; const g = ctx.createRadialGradient(x, y, 0, x, y, wd); g.addColorStop(0, "rgba(120,140,210,0.13)"); g.addColorStop(1, "rgba(120,140,210,0)"); ctx.translate(x, y); ctx.scale(1, 0.22); ctx.translate(-x, -y); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, wd, 0, 6.283); ctx.fill(); ctx.restore(); } ctx.restore();
+    ctx.save(); ctx.filter = `blur(${30 * U}px)`; const g = ctx.createRadialGradient(x, y, 0, x, y, wd); g.addColorStop(0, `rgba(120,140,210,${0.13 + 0.12 * swayAmp(t)})`); g.addColorStop(1, "rgba(120,140,210,0)"); ctx.translate(x, y); ctx.scale(1, 0.22); ctx.translate(-x, -y); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, wd, 0, 6.283); ctx.fill(); ctx.restore(); } ctx.restore();
   // the sky: brighter as the Moon comes in (inverse square), and the dim 'noon' of the eclipse
   const skyLift = clamp01(0.11 * Math.log2(lightx)), sky = ctx.createLinearGradient(0, 0, 0, G.horizon);
   ctx.save(); ctx.globalCompositeOperation = "screen"; sky.addColorStop(0, `rgba(40,70,120,${skyLift * 0.55})`); sky.addColorStop(1, `rgba(110,140,190,${skyLift * 0.85})`); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, G.horizon + 2); ctx.restore();
@@ -50,7 +50,7 @@ function sceneComposite(t, d, ecl, moonAlpha, G) {
   // the Moon: lit disc (fades as the eclipse darkens it) and the corona around the dark disc
   if (moonAlpha > 0.002) {
     const x = mo.cx + (ecl > 0 ? 0 : 0), y = mo.cy, r = mo.r;
-    ctx.save(); ctx.globalAlpha = moonAlpha * (1 - ecl); const gl = ctx.createRadialGradient(x, y, r * 0.9, x, y, r * 1.7); gl.addColorStop(0, "rgba(170,225,225,.28)"); gl.addColorStop(1, "rgba(170,225,225,0)"); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(x, y, r * 1.7, 0, 6.283); ctx.fill(); ctx.drawImage(r > 900 ? IM["moon-disc-hi"] : IM["moon-disc"], x - r, y - r, 2 * r, 2 * r); ctx.restore();
+    ctx.save(); ctx.globalAlpha = moonAlpha * (1 - ecl); const gl = ctx.createRadialGradient(x, y, r * 0.9, x, y, r * 1.7); gl.addColorStop(0, "rgba(170,225,225,.28)"); gl.addColorStop(1, "rgba(170,225,225,0)"); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(x, y, r * 1.7, 0, 6.283); ctx.fill(); { const sa = swayAmp(t), rot = sa * (0.035 * Math.sin(t * 0.23) + 0.014 * Math.sin(t * 0.61 + 1)); ctx.translate(x, y); ctx.rotate(rot); ctx.translate(-x, -y); } ctx.drawImage(r > 900 ? IM["moon-disc-hi"] : IM["moon-disc"], x - r, y - r, 2 * r, 2 * r); ctx.restore();
     if (ecl > 0) { ctx.save(); ctx.globalAlpha = moonAlpha * ecl; const cs = r / 512; ctx.drawImage(IM["eclipse"], x - 1024 * cs, y - 1024 * cs, 2048 * cs, 2048 * cs); ctx.fillStyle = "#06080f"; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill(); ctx.restore(); }
   }
   // the tide: the sea over the sand, the waterline climbing the beach in long swells
@@ -82,6 +82,9 @@ window.setup = async (tl, assets, mode, w, h) => {
   await Promise.all(Object.entries(assets).map(([k, src]) => new Promise((res, rej) => { const i = new Image(); i.onload = () => { IM[k] = i; res(); }; i.onerror = () => rej(new Error("asset " + k)); i.src = src; })));
   await document.fonts.ready; document.documentElement.style.setProperty("--u", U + "px");
 };
+// extra life for the long film's still stretches (the hold in chapter 1 and everything from the break-up on): a slow camera sway, the Moon's libration, drifting dust.
+// Gated by time so the segments rendered separately join without a pop (it is 0 at 345.1 s).
+const swayAmp = (t) => (MODE !== "land" || TL.dur < 300) ? 0 : Math.max(sm((t - 346) / 4), (beats() && t > beats().calm.t1 + 1 && t < beats().size.t0 - 0.2) ? sm((t - beats().calm.t1 - 1) / 2) * sm((beats().size.t0 - 0.2 - t) / 1) : 0);
 const figPos = () => (MODE === "land" ? { x: 0.342 * W, y: 0.831 * H } : { x: 0.423 * W, y: 0.681 * H });
 function zoomState(t, b, mo) {   // {s, F (world pivot), k (0 = pivot stays put, 1 = pivot goes to the screen anchor)}
   const fg = figPos(), mp = { x: mo.cx, y: mo.cy }, e = (a, c, u) => lerp(a, c, sm(u));
@@ -89,7 +92,7 @@ function zoomState(t, b, mo) {   // {s, F (world pivot), k (0 = pivot stays put,
   if (t < calm.t0) return { s: 1.5, F: fg, k: 0 };
   const tr = calm.t0 + Math.max(1.5, calm.t1 - calm.t0 + 0.6);
   if (t < tr) { const u = (t - calm.t0) / (tr - calm.t0); return { s: e(1.5, 1.3, u), F: { x: e(fg.x, mp.x, u), y: e(fg.y, mp.y, u) }, k: sm(u) }; }
-  if (t < sz - 0.1) return { s: 1.3 + 0.2 * sm((t - tr) / Math.max(1, sz - 0.1 - tr)), F: mp, k: 1 };      // a slow push toward the Moon while the ruler ticks
+  if (t < sz - 0.1) return { s: 1.3 + 0.2 * clamp01((t - tr) / Math.max(1, sz - 0.1 - tr)), F: mp, k: 1 };      // a slow push toward the Moon while the ruler ticks
   if (t < sz + 1.4) { const u = (t - (sz - 0.1)) / 1.5; return { s: e(1.5, 2.3, u), F: mp, k: 1 }; }
   if (t < lt - 0.3) return { s: 2.3 + 0.16 * sm((t - (sz + 1.4)) / Math.max(1, lt - 0.3 - sz - 1.4)), F: mp, k: 1 };
   if (t < lt + 1.7) { const u = (t - (lt - 0.3)) / 2.0; return { s: e(2.46, 1.0, u), F: mp, k: 1 - sm(u) }; }
@@ -120,6 +123,7 @@ function ch1Overlays(t, b, mo, G) {
 }
 window.renderAt = (t) => {
   const G = geom(), ecl = track(TL.tracks.eclipse, t), moonA = track(TL.tracks.moon, t), brk = track(TL.tracks.brk, t), ring = track(TL.tracks.ring, t), tn = track(TL.tracks.tonight, t), d = dVis(t);
+  const A = swayAmp(t); ctx.save(); if (A > 0.001) { const sc = 1 + 0.016 * A; ctx.translate(W / 2 + 16 * U * A * Math.sin(t * 0.55), H / 2 + 8 * U * A * Math.sin(t * 0.4)); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); }
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; ctx.save();
   if (inCh1) { const mo0 = moonState(384400, G), z = zoomState(t, b, mo0); let tx = lerp(z.F.x, W * 0.54, z.k), ty = lerp(z.F.y, H * 0.46, z.k);
     tx = Math.max(W - (W - z.F.x) * z.s, Math.min(z.F.x * z.s, tx)); ty = Math.max(H - (H - z.F.y) * z.s, Math.min(z.F.y * z.s, ty));   // never show past the painting
@@ -127,8 +131,10 @@ window.renderAt = (t) => {
   sceneComposite(t, Math.max(d, 17000), ecl, moonA, G);
   if (inCh1) ch1Overlays(t, b, moonState(384400, G), G);
   ctx.restore();
-  if (brk > 0.001) { ctx.save(); ctx.globalAlpha = brk; const sc = 1.02 + 0.03 * (t / TL.dur) + 0.01 * Math.sin(t * 0.3); ctx.translate(W / 2, H / 2); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); ctx.drawImage(IM["plate-breakup"], 0, 0, W, H); ctx.restore(); }
-  if (ring > 0.001) { ctx.save(); ctx.globalAlpha = ring; ctx.drawImage(IM["ring"], 0, -20 * U * Math.sin(t * 0.2), W, H); ctx.restore(); }
+  if (brk > 0.001) { ctx.save(); ctx.globalAlpha = brk; const sc = 1.02 + 0.03 * (t / TL.dur) + 0.01 * Math.sin(t * 0.3) + 0.018 * A * Math.sin(t * 0.45); ctx.translate(W / 2, H / 2); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); ctx.drawImage(IM["plate-breakup"], 0, 0, W, H); ctx.restore(); }
+  if (ring > 0.001) { ctx.save(); ctx.globalAlpha = ring; ctx.translate(W / 2, H / 2); ctx.scale(1 + 0.02 * A * Math.sin(t * 0.4), 1 + 0.02 * A * Math.sin(t * 0.4)); ctx.translate(-W / 2, -H / 2); ctx.drawImage(IM["ring"], 0, -20 * U * Math.sin(t * 0.2), W, H); ctx.restore(); }
   if (tn > 0.001) { ctx.save(); ctx.globalAlpha = tn; ctx.drawImage(IM["plate-tonight"], 0, 0, W, H); ctx.restore(); }
+  if (A > 0.01 && (brk + ring + tn > 0.01)) { const mr = rnd(77); ctx.save(); ctx.globalCompositeOperation = "screen"; for (let i = 0; i < 70; i++) { const sp = (6 + 20 * mr()) * U, x = (((mr() * W - t * sp * (mr() > 0.5 ? 1 : -1)) % W) + W) % W, y = (((mr() * H - t * sp * 0.4) % H) + H) % H, rr = (1 + 2.4 * mr()) * U; ctx.globalAlpha = A * (0.15 + 0.35 * mr()) * (0.6 + 0.4 * Math.sin(t * 1.5 + i)); ctx.fillStyle = "#cfe9ff"; ctx.beginPath(); ctx.arc(x, y, rr, 0, 6.283); ctx.fill(); } ctx.restore(); }
+  ctx.restore();
   hud(t);
 };

@@ -1,0 +1,87 @@
+[
+ {
+  "id": "c5",
+  "sentence": "Three quarters of today's distance: about two hundred eighty-eight thousand kilometers.",
+  "claim": "at 0.75 of today's distance (288,300 km) the Moon's width in the sky is 1.33x today's (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-09",
+  "note": "OWN INFERENCE (arithmetic): at 0.75 of today's distance (288,300 km) the Moon's width in the sky is 1.33x today's (calc.py).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c8",
+  "sentence": "The Moon's pull on the Earth gets stronger as it comes in.",
+  "claim": "Tides come from the difference in the Moon's gravitational pull across the Earth (the tide-generating force).",
+  "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
+  "source_title": "What causes tides? (NOAA Ocean Service)",
+  "accessed": "2026-11-09",
+  "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-09",
+   "by": "builder (an AI): search excerpt only, page not opened",
+   "quote": "",
+   "qualification": "Not yet read."
+  }
+ },
+ {
+  "id": "c29",
+  "sentence": "Its light takes about a second to reach you now.",
+  "claim": "At three quarters of today's distance (288,300 km) light takes 0.96 s, about a second (calc.py).",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c30",
+  "sentence": "At this distance, its tidal pull is more than twice what it is today.",
+  "claim": "With tidal force ~ 1/d^3, three quarters of the distance gives (1/0.75)^3 = 2.37x the TIDAL pull, more than twice today's (calc.py). Plain gravity would be only (1/0.75)^2 = 1.78x, so the film says 'tidal pull'.",
+  "source_url": "",
+  "source_title": "",
+  "accessed": "2026-11-10",
+  "note": "OWN INFERENCE (arithmetic/physics from calc.py and the NASA fact-sheet inputs in c1/c3).",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-10",
+   "by": "builder (an AI): derivation, no page read for this step",
+   "quote": "",
+   "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c42",
+  "sentence": "Today, the Sun pulls on the tides too, with about half the Moon's effect.",
+  "claim": "The Sun's tidal effect is roughly half the Moon's.",
+  "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
+  "source_title": "What causes tides? (NOAA Ocean Service)",
+  "accessed": "2026-11-11",
+  "note": "",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-11",
+   "by": "builder (an AI): source not yet read",
+   "quote": "",
+   "qualification": "Not yet read."
+  }
+ }
+]

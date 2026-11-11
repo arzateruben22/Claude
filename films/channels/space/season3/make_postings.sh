@@ -1,0 +1,10 @@
+#!/bin/bash
+# posting packs for parts 2-8 (part 1 was made by hand with the same tool)
+cd /home/user/claude/films/channels/space; P="python3 -I season3/make_part_posting.py"
+$P 2 "One Quarter Closer" "If the Moon came a quarter of the way closer, it would look about a third wider, and the tides would already be stronger. A thought experiment." "Closer by a quarter: a third wider, and a stronger pull on the sea." "space,moon,tides,physics,thoughtexperiment"
+$P 3 "When the Ocean Starts to Climb" "Halve the Moon's distance and its tidal pull grows about eightfold. A thought experiment about when the ocean starts to climb the beach." "At half the distance, the tides are far larger than anything you have seen." "space,moon,tides,ocean,thoughtexperiment"
+$P 4 "The Night Gets Too Bright" "Bring the Moon much closer and moonlight gets far brighter, because light fades with the square of distance. A thought experiment." "Moonlight grows with the square of how close the Moon comes." "space,moon,moonlight,physics,thoughtexperiment"
+$P 5 "A Moon Bigger Than the Sun" "What changes when the Moon looks bigger than the Sun? Eclipses cover more of the sky, for longer. A thought experiment." "A closer Moon makes eclipses bigger and longer." "space,eclipse,moon,sun,thoughtexperiment"
+$P 6 "It's Not Just the Sea" "A closer Moon pulls on solid ground too, not only the oceans. A thought experiment about Earth's crust flexing." "The ground has tides as well as the sea." "space,moon,earth,geology,thoughtexperiment"
+$P 7 "The Moon Rises in the West" "Put the Moon closer than about 42,000 km and it circles faster than Earth turns, so it would rise in the west. A thought experiment." "Closer than the synchronous distance, the Moon outruns the sky." "space,moon,orbit,physics,thoughtexperiment"
+$P 8 "The Distance No Moon Survives" "There is a distance where tides would pull a moon apart, called the Roche limit. A thought experiment about how close that is." "Inside the Roche limit, tidal forces beat a moon's own gravity." "space,moon,rochelimit,physics,thoughtexperiment"

@@ -1,0 +1,270 @@
+{
+ "id": "one-more-orbit-s3-part2",
+ "title": {
+  "title": "One Quarter Closer",
+  "series": "One More Orbit · Season 3 · Part 2 of 8"
+ },
+ "disclosures": {
+  "aiVoice": true,
+  "aiVisuals": true
+ },
+ "dur": 65.507,
+ "fps": 30,
+ "captions": [
+  {
+   "t0": 0.175,
+   "t1": 1.61,
+   "text": "One quarter closer.",
+   "line": "ch2_hook"
+  },
+  {
+   "t0": 1.63,
+   "t1": 3.04,
+   "text": "What changes first?",
+   "line": "ch2_hook"
+  },
+  {
+   "t0": 3.227,
+   "t1": 5.002,
+   "text": "One quarter of the way in.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 5.022,
+   "t1": 7.781,
+   "text": "Three quarters of today's distance: about",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 7.801,
+   "t1": 10.852,
+   "text": "two hundred eighty-eight thousand kilometers.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 10.872,
+   "t1": 14.207,
+   "text": "The Moon looks one and a third times wider.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 14.227,
+   "t1": 16.075,
+   "text": "You'd notice it right away,",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 16.095,
+   "t1": 18.377,
+   "text": "like a coin held a little closer.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 18.397,
+   "t1": 21.307,
+   "text": "Its light now takes about a second to reach you.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 21.327,
+   "t1": 25.157,
+   "text": "Even so, there is one thing the sea already feels.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 25.177,
+   "t1": 27.004,
+   "text": "The Moon's pull on the Earth",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 27.024,
+   "t1": 28.937,
+   "text": "gets stronger as it comes in.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 28.957,
+   "t1": 31.024,
+   "text": "At this distance, its tidal pull",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 31.044,
+   "t1": 33.392,
+   "text": "is more than twice what it is today.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 33.412,
+   "t1": 36.202,
+   "text": "Not enough to see on the beach, not yet.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 36.222,
+   "t1": 38.599,
+   "text": "Today, the Sun pulls on the tides",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 38.619,
+   "t1": 41.452,
+   "text": "too, with about half the Moon's effect.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 41.472,
+   "t1": 43.821,
+   "text": "Bring the Moon closer, and the Sun's",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 43.841,
+   "t1": 46.737,
+   "text": "share stays the same while the Moon's grows.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 46.757,
+   "t1": 49.617,
+   "text": "So the Moon would take over even more.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 49.782,
+   "t1": 50.857,
+   "text": "Still looking up?",
+   "line": "cta2_follow"
+  },
+  {
+   "t0": 50.877,
+   "t1": 52.157,
+   "text": "Tap like and follow.",
+   "line": "cta2_follow"
+  },
+  {
+   "t0": 52.177,
+   "t1": 53.767,
+   "text": "There's plenty more sky.",
+   "line": "cta2_follow"
+  },
+  {
+   "t0": 53.943,
+   "t1": 55.888,
+   "text": "But the number keeps falling, and",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 55.908,
+   "t1": 57.933,
+   "text": "the sea is about to start to move.",
+   "line": "ch2_vo"
+  },
+  {
+   "t0": 58.161,
+   "t1": 61.631,
+   "text": "Half the distance is where the water starts to climb.",
+   "line": "ch2_loop"
+  },
+  {
+   "t0": 61.762,
+   "t1": 62.967,
+   "text": "Part two of eight.",
+   "line": "closer2"
+  },
+  {
+   "t0": 62.987,
+   "t1": 64.792,
+   "text": "Full video on YouTube.",
+   "line": "closer2"
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   384400
+  ],
+  [
+   0.0,
+   384400
+  ],
+  [
+   10.602,
+   288300
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "clips": [
+  {
+   "id": "ch2_hook",
+   "file": "voice/wav/05.wav",
+   "t": 0.15,
+   "dur": 2.707
+  },
+  {
+   "id": "ch2_vo",
+   "file": "voice/wav/06.wav",
+   "t": 3.207,
+   "dur": 46.25,
+   "from": 0.0
+  },
+  {
+   "id": "cta2_follow",
+   "file": "voice/wav/37.wav",
+   "t": 49.757,
+   "dur": 3.796
+  },
+  {
+   "id": "ch2_vo",
+   "file": "voice/wav/06.wav",
+   "t": 53.853,
+   "dur": 3.898,
+   "from": 46.25
+  },
+  {
+   "id": "ch2_loop",
+   "file": "voice/wav/07.wav",
+   "t": 58.101,
+   "dur": 3.291
+  },
+  {
+   "id": "closer2",
+   "file": "voice/wav/29.wav",
+   "t": 61.742,
+   "dur": 2.815
+  }
+ ],
+ "source": "season3/engine.js via long01/out/part2.json"
+}
