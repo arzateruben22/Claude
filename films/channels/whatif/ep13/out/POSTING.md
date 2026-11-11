@@ -17,12 +17,12 @@ You stand on the equator and the Earth begins to spin faster, a little more ever
 Part 1 of 8 of "What If Earth Spun Faster and Couldn't Stop?" — the full video is on this channel.
 
 Sources
-1. a = g0 => T = 2 pi sqrt(R^3/GM) = 84.5 min = 1.41 h; v = sqrt(GM/R) = 7.91 km/s; today's 0.465 km/s is 1/17 of it. (our calculation; the arithmetic is shown in the film)
-2. The Earth turns once in 23 h 56 min 4 s (sidereal rotation period 23.9345 h); equatorial radius 6,378.137 km; polar radius 6,356.752 km. — NASA Goddard, Earth Fact Sheet: https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
-3. v = 2 pi R / T = 465 m/s = 1,674 km/h from R = 6,378 km and T = 23.934 h; and 7.9 km/s / 0.465 km/s = 17. (our calculation; the arithmetic is shown in the film)
-4. a = (2 pi / T)^2 R = 0.034 m/s^2 against g0 = GM/R^2 = 9.8 m/s^2: 0.35 % lighter. (our calculation; the arithmetic is shown in the film)
+1. At a day of about 84.5 minutes (1.41 h) the spin cancels gravity at the equator: the ground moves at 7.9 km/s, and today's 0.465 km/s is 1/17 of that. (our calculation; the arithmetic is shown in the film)
+2. The Earth turns once in 23 hours 56 minutes 4 seconds; its radius is 6,378 km at the equator and 6,357 km at the poles. — NASA Goddard, Earth Fact Sheet: https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
+3. The ground at the equator moves at about 1,674 km/h (465 m/s): one trip around the equator divided by the length of a day. That is about 1/17 of the speed needed to orbit. (our calculation; the arithmetic is shown in the film)
+4. The spin makes you about 0.35% lighter today: the outward push of the spin is 0.034 m/s², against gravity's 9.8 m/s². (our calculation; the arithmetic is shown in the film)
 
-Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
+Narration: synthetic voice (AI). Thumbnail illustration made with AI. Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
 Possibility Lab: Impossible questions, honest assumptions, real calculations.
 

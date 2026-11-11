@@ -17,7 +17,7 @@ At a twelve hour day the water wants to stand about 33 kilometers higher at the 
 Part 4 of 8 of "What If Earth Spun Faster and Couldn't Stop?" — the full video is on this channel.
 
 Sources
-1. Extra rise (compared with today) of the sea's equipotential at the equator relative to the pole = (w^2 - w0^2) R^2 / (2 g0): 33 km at a 12 h day, 165 km at 6 h, 692 km at 3 h; far more than the mean ocean depth (c18), so the water drains toward the equator. First-order only: it ignores the self-gravity of the water and the slow response of the ground; the direction is the claim, not the numbers. (our calculation; the arithmetic is shown in the film)
+1. The faster Earth spins, the higher the sea wants to stand at the equator compared with the poles: 33 km higher at a 12 h day, and far more as the day gets shorter. (our calculation; the arithmetic is shown in the film)
 2. The average depth of the ocean is about 3,688 m. — NOAA National Ocean Service, How deep is the ocean?: https://oceanservice.noaa.gov/facts/oceandepth.html
 
 Narration: synthetic voice (AI). Thumbnail illustration made with AI. Animation: code-rendered, no stock footage. Every number is checked against the sources.

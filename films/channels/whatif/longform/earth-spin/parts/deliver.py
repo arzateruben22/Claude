@@ -65,7 +65,7 @@ PLAIN = {   # claims whose stored text is raw data or notation: the sentence a v
 def srcs():
     out = []
     for i, cid in enumerate(used, 1):
-        c = claims_all[cid]; t = PLAIN.get(cid) or re.sub(r"\s+", " ", c["claim"]).strip()
+        c = claims_all[cid]; t = re.sub(r"\s+", " ", c["claim"]).strip()
         if c.get("source_url"): tail = f" — {c.get('source_title') or 'source'}: {c['source_url']}"
         elif c["kind"] == "derivation": tail = " (our calculation; the arithmetic is shown in the film)"
         elif c["kind"] == "assumption": tail = " (our assumption)"
@@ -73,7 +73,7 @@ def srcs():
         out.append(f"{i}. {t}{tail}")
     return "Sources\n" + "\n".join(out)
 hook = pk["hook"]
-AI_ART = {2, 4, 8}       # covers made from the owner's AI illustrations (art/owner)
+AI_ART = {1, 2, 3, 4, 5, 6, 7, 8}       # covers made from the owner's AI illustrations (art/owner)
 ART_NOTE = " Thumbnail illustration made with AI." if N in AI_ART else ""
 yt_cap = f"{hook}\n\nPart {N} of 8 of \"What If Earth Spun Faster and Couldn't Stop?\" — the full video is on this channel.\n\n{srcs()}\n\nNarration: synthetic voice (AI).{ART_NOTE} Animation: code-rendered, no stock footage. Every number is checked against the sources.\n\nPossibility Lab: Impossible questions, honest assumptions, real calculations.\n\n#Shorts #whatif #science"
 tt_cap = f"{hook} Part {N} of 8. Full video on YouTube (link in bio). #whatif #science #physics"

@@ -2,46 +2,50 @@
  {
   "id": "c8",
   "sentence": "At a day of about an hour and twenty-four minutes the equator moves at 7.9 km/s, the speed of a low orbit; the push outward cancels gravity.",
-  "claim": "a = g0 => T = 2 pi sqrt(R^3/GM) = 84.5 min = 1.41 h; v = sqrt(GM/R) = 7.91 km/s; today's 0.465 km/s is 1/17 of it.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "At a day of about 84.5 minutes (1.41 h) the spin cancels gravity at the equator: the ground moves at 7.9 km/s, and today's 0.465 km/s is 1/17 of that.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "a = g0 => T = 2 pi sqrt(R^3/GM) = 84.5 min = 1.41 h; v = sqrt(GM/R) = 7.91 km/s; today's 0.465 km/s is 1/17 of it."
  },
  {
   "id": "c1",
   "sentence": "Right now, one day lasts twenty-four hours. Or almost: the Earth turns once in twenty-three hours, fifty-six minutes.",
-  "claim": "The Earth turns once in 23 h 56 min 4 s (sidereal rotation period 23.9345 h); equatorial radius 6,378.137 km; polar radius 6,356.752 km.",
+  "claim": "The Earth turns once in 23 hours 56 minutes 4 seconds; its radius is 6,378 km at the equator and 6,357 km at the poles.",
   "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
   "source_title": "NASA Goddard, Earth Fact Sheet",
   "accessed": "2026-11-09",
   "verified_via": "not read",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the sheet and confirm the rotation period and the radii."
+  "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the sheet and confirm the rotation period and the radii.",
+  "derivation": "The Earth turns once in 23 h 56 min 4 s (sidereal rotation period 23.9345 h); equatorial radius 6,378.137 km; polar radius 6,356.752 km."
  },
  {
   "id": "c2",
   "sentence": "Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour.",
-  "claim": "v = 2 pi R / T = 465 m/s = 1,674 km/h from R = 6,378 km and T = 23.934 h; and 7.9 km/s / 0.465 km/s = 17.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "The ground at the equator moves at about 1,674 km/h (465 m/s): one trip around the equator divided by the length of a day. That is about 1/17 of the speed needed to orbit.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "v = 2 pi R / T = 465 m/s = 1,674 km/h from R = 6,378 km and T = 23.934 h; and 7.9 km/s / 0.465 km/s = 17."
  },
  {
   "id": "c3",
   "sentence": "You weigh about a third of a percent less than you would on a planet that did not spin.",
-  "claim": "a = (2 pi / T)^2 R = 0.034 m/s^2 against g0 = GM/R^2 = 9.8 m/s^2: 0.35 % lighter.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "The spin makes you about 0.35% lighter today: the outward push of the spin is 0.034 m/s², against gravity's 9.8 m/s².",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "a = (2 pi / T)^2 R = 0.034 m/s^2 against g0 = GM/R^2 = 9.8 m/s^2: 0.35 % lighter."
  }
 ]

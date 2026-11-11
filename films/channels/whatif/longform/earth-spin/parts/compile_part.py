@@ -11,7 +11,10 @@ HERE = Path(__file__).resolve().parent
 ES = HERE.parent
 sys.path.insert(0, str(ES.parents[4] / "kits/cinema/script"))
 sys.path.insert(0, str(ES))
+sys.path.insert(0, str(ES.parents[4] / "kits/cinema/film"))
 from timeline import Film       # noqa: E402
+import importlib.util as _iu
+_sp = _iu.spec_from_file_location("numerals_units", str(ES.parents[4] / "kits/cinema/film/numerals.py")); _nu = _iu.module_from_spec(_sp); _sp.loader.exec_module(_nu)
 from calc import T_ORB, R as R_EQ, E_ORB, E_NOW   # noqa: E402
 N = int(sys.argv[1])
 D = HERE / f"part{N}"
@@ -99,6 +102,16 @@ def lead(pages, by=0.14):
         prev = pages[i - 1]["t1"] if i else -1.0
         if pg["t0"] - prev >= by + 0.05: pg["t0"] = round(max(0.0, pg["t0"] - by), 4)
     return pages
+def numerals_pass(pages):
+    """units as symbols on screen ("kilometers an hour" -> km/h, "percent" -> %); the voice still says the words. Display tokens keep the time of the first spoken word they cover; line breaks stay where they were."""
+    if N < 7: return pages           # Parts 1-6 are already rendered with the earlier caption text
+    for pg in pages:
+        flat = [(w, t, li) for li, ln in enumerate(pg["lines"]) for w, t in ln]
+        disp = _nu.display_tokens([(w, t) for w, t, _ in flat]); out = [[] for _ in pg["lines"]]; k = 0
+        for tok, times in disp:
+            out[flat[k][2]].append([tok, times[0] if isinstance(times, list) and times else times]); k += len(times) if isinstance(times, list) and times else 1
+        pg["lines"] = [ln for ln in out if ln]
+    return pages
 BADGES = [{"id": "b-thought", "text": "Thought experiment", "t0": 0.3, "t1": round(f.duration - 0.2, 4), "slot": "bl"}]
 PART_TITLES = ["What If Earth Spun Faster?", "The day is shrinking fast", "The air can't keep up with the ground", "The oceans slide toward the equator", "Storms and the six hour day",
                "The year gets thousands of days", "A day as long as a movie", "The ninety minute day"]
@@ -125,7 +138,7 @@ film = {"id": f"possibility-lab-earth-spin-part{N}", "theme": "../../../../theme
         "poster": round(min(f.duration - 6, BEATS[len(BEATS) // 2]["t0"]), 4),
         "shots": SHOTS, "beats": BEATS, "world": {"cycleS": 16.0, "keys": KEYS, "dry": DRY, "tOrbH": T_ORB / 3600, "t0H": 23.934, "rEq": R_EQ / 1000, "gm": 3.986004418e14, "eNow": E_NOW, "eOrb": E_ORB, "weightWins": WW},
         "disclosures": {"aiVoice": True}, "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {}, "cams": CAMS, "fx": FX,
-        "captions": [p for p in lead(f.captions(max_chars=26, balance=True)) if p["t0"] < t_end - 0.3],
+        "captions": [p for p in numerals_pass(lead(f.captions(max_chars=26, balance=True))) if p["t0"] < t_end - 0.3],
         "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines]}
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] != "tease"]
 ev.append({"t": t_end, "kind": "signature", "tag": "end"})

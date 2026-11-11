@@ -2,192 +2,209 @@
  {
   "id": "c1",
   "sentence": "Right now, one day lasts twenty-four hours. Or almost: the Earth turns once in twenty-three hours, fifty-six minutes.",
-  "claim": "The Earth turns once in 23 h 56 min 4 s (sidereal rotation period 23.9345 h); equatorial radius 6,378.137 km; polar radius 6,356.752 km.",
+  "claim": "The Earth turns once in 23 hours 56 minutes 4 seconds; its radius is 6,378 km at the equator and 6,357 km at the poles.",
   "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html",
   "source_title": "NASA Goddard, Earth Fact Sheet",
   "accessed": "2026-11-09",
   "verified_via": "not read",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the sheet and confirm the rotation period and the radii."
+  "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the sheet and confirm the rotation period and the radii.",
+  "derivation": "The Earth turns once in 23 h 56 min 4 s (sidereal rotation period 23.9345 h); equatorial radius 6,378.137 km; polar radius 6,356.752 km."
  },
  {
   "id": "c2",
   "sentence": "Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour.",
-  "claim": "v = 2 pi R / T = 465 m/s = 1,674 km/h from R = 6,378 km and T = 23.934 h; and 7.9 km/s / 0.465 km/s = 17.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "The ground at the equator moves at about 1,674 km/h (465 m/s): one trip around the equator divided by the length of a day. That is about 1/17 of the speed needed to orbit.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "v = 2 pi R / T = 465 m/s = 1,674 km/h from R = 6,378 km and T = 23.934 h; and 7.9 km/s / 0.465 km/s = 17."
  },
  {
   "id": "c3",
   "sentence": "You weigh about a third of a percent less than you would on a planet that did not spin.",
-  "claim": "a = (2 pi / T)^2 R = 0.034 m/s^2 against g0 = GM/R^2 = 9.8 m/s^2: 0.35 % lighter.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "The spin makes you about 0.35% lighter today: the outward push of the spin is 0.034 m/s², against gravity's 9.8 m/s².",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "a = (2 pi / T)^2 R = 0.034 m/s^2 against g0 = GM/R^2 = 9.8 m/s^2: 0.35 % lighter."
  },
  {
   "id": "c4",
   "sentence": "Sunrise to sunset, speed and weight at 12, 6, 3 and 2 hours",
-  "claim": "{\"now\": {\"sun_min\": 718, \"v_kmh\": 1674}, \"h12\": {\"sun_min\": 360, \"v_kmh\": 3340}, \"h6\": {\"sun_min\": 180, \"v_kmh\": 6679}, \"h3\": {\"sun_min\": 90, \"v_kmh\": 13358}, \"h2\": {\"sun_min\": 60, \"v_kmh\": 20038}, \"h1_5\": {\"sun_min\": 45, \"v_kmh\": 26717}}",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "Speed of the ground at the equator: 1,674 km/h today, 3,340 km/h at a 12 h day, 6,679 km/h at 6 h, 13,358 km/h at 3 h, 20,038 km/h at 2 h and 26,717 km/h at 1.5 h. The Sun is up for half of each day.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "{\"now\": {\"sun_min\": 718, \"v_kmh\": 1674}, \"h12\": {\"sun_min\": 360, \"v_kmh\": 3340}, \"h6\": {\"sun_min\": 180, \"v_kmh\": 6679}, \"h3\": {\"sun_min\": 90, \"v_kmh\": 13358}, \"h2\": {\"sun_min\": 60, \"v_kmh\": 20038}, \"h1_5\": {\"sun_min\": 45, \"v_kmh\": 26717}}"
  },
  {
   "id": "c5",
   "sentence": "Weight at 12, 6, 3, 2 and 1.5 hour days",
-  "claim": "{\"now\": 99.7, \"h12\": 98.6, \"h6\": 94.5, \"h3\": 78.0, \"h2\": 50.4, \"h1_5\": 11.9} (percent of the weight on a non-spinning Earth); 70 kg x 0.986 = 69 kg and 70 kg x 0.78 = 55 kg.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "Your weight as a share of what it would be on a non-spinning Earth: 99.7% today, 98.6% at a 12 h day, 94.5% at 6 h, 78.0% at 3 h, 50.4% at 2 h and 11.9% at 1.5 h. A 70 kg person weighs 69 kg at 12 h and 55 kg at 3 h.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "{\"now\": 99.7, \"h12\": 98.6, \"h6\": 94.5, \"h3\": 78.0, \"h2\": 50.4, \"h1_5\": 11.9} (percent of the weight on a non-spinning Earth); 70 kg x 0.986 = 69 kg and 70 kg x 0.78 = 55 kg."
  },
  {
   "id": "c6",
   "sentence": "The oceans: the water wants to be higher at the equator than at the poles; it drains toward an equatorial belt",
-  "claim": "Extra rise (compared with today) of the sea's equipotential at the equator relative to the pole = (w^2 - w0^2) R^2 / (2 g0): 33 km at a 12 h day, 165 km at 6 h, 692 km at 3 h; far more than the mean ocean depth (c18), so the water drains toward the equator. First-order only: it ignores the self-gravity of the water and the slow response of the ground; the direction is the claim, not the numbers.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "The faster Earth spins, the higher the sea wants to stand at the equator compared with the poles: 33 km higher at a 12 h day, and far more as the day gets shorter.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "Extra rise (compared with today) of the sea's equipotential at the equator relative to the pole = (w^2 - w0^2) R^2 / (2 g0): 33 km at a 12 h day, 165 km at 6 h, 692 km at 3 h; far more than the mean ocean depth (c18), so the water drains toward the equator. First-order only: it ignores the self-gravity of the water and the slow response of the ground; the direction is the claim, not the numbers."
  },
  {
   "id": "c7",
   "sentence": "For the first hours, the air is left behind; at a twelve hour day the ground moves through the air at about 460 m/s",
-  "claim": "If the air still turns at the old rate, the relative wind is (v_new - v_old) = 463 m/s at a 12 h day, 1390 m/s at 6 h. Friction drags the air along over hours to days; only the first hours are claimed.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "If the air kept turning at today's rate, the wind relative to the ground would be 463 m/s (1,667 km/h) at a 12 h day and 1,390 m/s at a 6 h day, until friction drags the air along.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "If the air still turns at the old rate, the relative wind is (v_new - v_old) = 463 m/s at a 12 h day, 1390 m/s at 6 h. Friction drags the air along over hours to days; only the first hours are claimed."
  },
  {
   "id": "c8",
   "sentence": "At a day of about an hour and twenty-four minutes the equator moves at 7.9 km/s, the speed of a low orbit; the push outward cancels gravity.",
-  "claim": "a = g0 => T = 2 pi sqrt(R^3/GM) = 84.5 min = 1.41 h; v = sqrt(GM/R) = 7.91 km/s; today's 0.465 km/s is 1/17 of it.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "At a day of about 84.5 minutes (1.41 h) the spin cancels gravity at the equator: the ground moves at 7.9 km/s, and today's 0.465 km/s is 1/17 of that.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "a = g0 => T = 2 pi sqrt(R^3/GM) = 84.5 min = 1.41 h; v = sqrt(GM/R) = 7.91 km/s; today's 0.465 km/s is 1/17 of it."
  },
  {
   "id": "c9",
   "sentence": "About 6 x 10^31 J, nearly three hundred times today's spin energy, about eleven million years of the sunlight the Earth intercepts.",
-  "claim": "E = 1/2 I w^2 with I = 0.3307 M R^2: 2.14e+29 J now, 6.17e+31 J at T = 1.41 h (x289); / (1361 W/m^2 x pi R^2 = 1.74e17 W) = 11.2 million years. Inputs: M, I (c1) and the solar constant (c11).",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "The spin energy of the Earth is about 2.1 × 10²⁹ J today and about 6.2 × 10³¹ J at a 1.41 h day, 289 times more. That is what the Sun delivers to the Earth in about 11 million years.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "E = 1/2 I w^2 with I = 0.3307 M R^2: 2.14e+29 J now, 6.17e+31 J at T = 1.41 h (x289); / (1361 W/m^2 x pi R^2 = 1.74e17 W) = 11.2 million years. Inputs: M, I (c1) and the solar constant (c11)."
  },
  {
   "id": "c10",
   "sentence": "Past that point the equator can no longer keep its own rock; the spin would tear the equator apart.",
-  "claim": "Beyond the speed at which the push outward equals gravity, loose material at the equator is no longer held; how and where a real planet breaks depends on its strength and shape, which the simple sum ignores.",
+  "claim": "Past the speed where the outward push equals gravity, loose material at the equator is no longer held; how a real planet would break up is an assumption, not a calculation.",
   "source_title": "Assumption (hedge): a thought experiment, not a model of the Earth breaking up",
   "accessed": "2026-11-09",
   "verified_via": "assumption (no source)",
   "status": "TODO open link",
   "kind": "assumption",
-  "note": "ASSUMPTION / HEDGE: no source; the film says plainly that a simple sum stops here."
+  "note": "ASSUMPTION / HEDGE: no source; the film says plainly that a simple sum stops here.",
+  "derivation": "Beyond the speed at which the push outward equals gravity, loose material at the equator is no longer held; how and where a real planet breaks depends on its strength and shape, which the simple sum ignores."
  },
  {
   "id": "c11",
   "sentence": "sunlight the Earth receives (solar constant 1,361 W/m2)",
-  "claim": "The total solar irradiance at Earth is about 1,361 W/m^2.",
+  "claim": "The sunlight reaching the Earth is about 1,361 watts per square meter (the solar constant).",
   "source_url": "https://doi.org/10.1029/2010GL045777",
   "source_title": "Kopp and Lean, A new, lower value of total solar irradiance, Geophysical Research Letters 38 (2011)",
   "accessed": "2026-11-09",
   "verified_via": "not read",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the paper and confirm 1,360.8 W/m^2."
+  "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the paper and confirm 1,360.8 W/m^2.",
+  "derivation": "The total solar irradiance at Earth is about 1,361 W/m^2."
  },
  {
   "id": "c12",
   "sentence": "Today the Earth already bulges about twenty-one kilometers wider at the equator than from pole to pole.",
-  "claim": "6,378.137 km - 6,356.752 km = 21.4 km (the radii are claim c1).",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "Today the Earth already bulges about 21 km wider at the equator than pole to pole (6,378 km against 6,357 km).",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum. The radii themselves are claim c1."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum. The radii themselves are claim c1.",
+  "derivation": "6,378.137 km - 6,356.752 km = 21.4 km (the radii are claim c1)."
  },
  {
   "id": "c13",
   "sentence": "A seventy kilogram person (and treat every number as a first guess).",
-  "claim": "70 kg is an illustrative body mass, not a measurement; every figure is a first-order estimate for a perfect ball.",
+  "claim": "We use a 70 kg person as an example, not a measurement; every figure is a first-order estimate for a perfect ball.",
   "source_title": "Assumption: an illustrative 70 kg person",
   "accessed": "2026-11-09",
   "verified_via": "assumption (no source)",
   "status": "TODO open link",
   "kind": "assumption",
-  "note": "ASSUMPTION: illustration only."
+  "note": "ASSUMPTION: illustration only.",
+  "derivation": "70 kg is an illustrative body mass, not a measurement; every figure is a first-order estimate for a perfect ball."
  },
  {
   "id": "c14",
   "sentence": "nearly three times the speed of sound; faster than the speed of sound",
-  "claim": "The speed of sound in air at sea level is about 340 m/s (343 m/s at 20 degrees C): 929 m/s / 343 = 2.7; 463 m/s / 343 = 1.35.",
+  "claim": "The speed of sound in air at sea level is about 340 m/s. The equator moves at 2.7 times that at a 12 h day (929 m/s) and 1.35 times at 6 h (463 m/s).",
   "source_url": "https://www.grc.nasa.gov/www/k-12/airplane/sound.html",
   "source_title": "NASA Glenn, Speed of sound",
   "accessed": "2026-11-09",
   "verified_via": "not read",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: not read by anyone; the value is a candidate from memory. The ratios are arithmetic; the speed of sound is the sourced input."
+  "note": "OPEN: not read by anyone; the value is a candidate from memory. The ratios are arithmetic; the speed of sound is the sourced input.",
+  "derivation": "The speed of sound in air at sea level is about 340 m/s (343 m/s at 20 degrees C): 929 m/s / 343 = 2.7; 463 m/s / 343 = 1.35."
  },
  {
   "id": "c15",
   "sentence": "Storms are steered by the spin through the Coriolis effect, and that steering grows in step with the spin rate: four times at a six hour day, seventeen times at 1.4 hours.",
-  "claim": "The Coriolis parameter f = 2 Omega sin(latitude) is proportional to the spin rate Omega = 2 pi / T, so 23.93 h / 6 h = 4.0 and 23.93 h / 1.41 h = 17.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "Storm steering (the Coriolis effect) grows in direct proportion to the spin rate: 4 times today's at a 6 h day and about 17 times at a 1.4 h day.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "The Coriolis parameter f = 2 Omega sin(latitude) is proportional to the spin rate Omega = 2 pi / T, so 23.93 h / 6 h = 4.0 and 23.93 h / 1.41 h = 17."
  },
  {
   "id": "c16",
   "sentence": "A year would hold over six thousand days at a day of an hour and twenty-four minutes.",
-  "claim": "365.25 x 23.93 h / 1.41 h = about 6,200 days.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "At a day of 1 hour 24 minutes a year holds about 6,200 days (365.25 days × 23.93 h ÷ 1.41 h).",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "365.25 x 23.93 h / 1.41 h = about 6,200 days."
  },
  {
   "id": "c17",
   "sentence": "At forty-five degrees north you move at seventy percent of the equator's speed and the push outward is only half as strong.",
-  "claim": "cos 45 = 0.71 for the speed; the outward push on the vertical scales as cos^2 = 0.50.",
-  "source_title": "Derivation (calc.py): arithmetic on the inputs c1, c19 and c11 where needed; no outside page",
+  "claim": "At 45° north your speed is 71% of the equator's and the outward push on you is 50%.",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
   "verified_via": "calculation",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "cos 45 = 0.71 for the speed; the outward push on the vertical scales as cos^2 = 0.50."
  },
  {
   "id": "c18",
@@ -199,120 +216,131 @@
   "verified_via": "not read",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the page and confirm the figure."
+  "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the page and confirm the figure.",
+  "derivation": "The average depth of the ocean is about 3,688 m."
  },
  {
   "id": "c19",
   "sentence": "(input) the Earth's gravitational parameter GM = 3.986004418e14 m^3/s^2",
-  "claim": "GM of the Earth = 3.986004418 x 10^14 m^3 s^-2.",
+  "claim": "The Earth's gravitational parameter (GM) is 3.986 × 10¹⁴ m³/s².",
   "source_url": "https://www.iers.org/IERS/EN/Publications/TechnicalNotes/tn36.html",
   "source_title": "IERS Conventions (2010), Technical Note 36",
   "accessed": "2026-11-09",
   "verified_via": "not read",
   "status": "TODO open link",
   "kind": "source",
-  "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the document and confirm the value."
+  "note": "OPEN: not read by anyone; the value is a candidate from memory. A person must open the document and confirm the value.",
+  "derivation": "GM of the Earth = 3.986004418 x 10^14 m^3 s^-2."
  },
  {
   "id": "c20",
   "sentence": "at a six hour day, a year already holds about fourteen hundred and sixty days",
-  "claim": "365.25 days x 24 h / 6 h = 1,461 days per year at a 6 h day (calendar days at the Earth's orbital period).",
-  "source_title": "Derivation: arithmetic on the year length (c16)",
+  "claim": "At a 6 h day a year holds 1,461 days (365.25 days × 24 h ÷ 6 h).",
+  "source_title": "Our calculation (shown in the film)",
   "verified_via": "calculation",
   "accessed": "2026-11-10",
   "status": "TODO open link",
   "kind": "derivation",
-  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "365.25 days x 24 h / 6 h = 1,461 days per year at a 6 h day (calendar days at the Earth's orbital period)."
  },
  {
   "id": "c21",
   "sentence": "the Sun slides its own width every minute (12 h), 16 s (3 h), 8 s (1.5 h)",
-  "claim": "The Sun's apparent motion is 360 deg / T: 0.50 deg/min at a 12 h day, 2.0 deg/min at 3 h, 4.0 deg/min at 1.5 h. Its disk is about 0.53 deg wide, so it moves its own width every 64 s, 16 s and 8 s. At a 12 h day the Sun moves 0.5 deg/min, the same as a clock's hour hand (360 deg in 12 h).",
+  "claim": "The Sun's apparent motion is 360° divided by the day length: 0.5° per minute at a 12 h day, 2° per minute at 3 h and 4° per minute at 1.5 h. The Sun's disk is about 0.53° wide, so it moves its own width every 64 s, 16 s and 8 s.",
   "accessed": "2026-11-11",
   "status": "TODO open link",
   "kind": "source",
   "source_url": "https://science.nasa.gov/sun/facts/",
   "source_title": "NASA Science, Sun Facts (angular size about 0.53 degrees)",
   "verified_via": "not read",
-  "note": "OPEN: the 0.53 degree angular diameter is from memory; the rest is arithmetic."
+  "note": "OPEN: the 0.53 degree angular diameter is from memory; the rest is arithmetic.",
+  "derivation": "The Sun's apparent motion is 360 deg / T: 0.50 deg/min at a 12 h day, 2.0 deg/min at 3 h, 4.0 deg/min at 1.5 h. Its disk is about 0.53 deg wide, so it moves its own width every 64 s, 16 s and 8 s. At a 12 h day the Sun moves 0.5 deg/min, the same as a clock's hour hand (360 deg in 12 h)."
  },
  {
   "id": "c22",
   "sentence": "a year holds about 730 / 1,461 / 2,922 / 4,383 / 5,844 days",
-  "claim": "365.25 x 24 h / T: 730 days at 12 h, 1,461 at 6 h, 2,922 at 3 h, 4,383 at 2 h, 5,844 at 1.5 h (calendar days at the Earth's orbital period).",
+  "claim": "Days in a year: 730 at a 12 h day, 1,461 at 6 h, 2,922 at 3 h, 4,383 at 2 h and 5,844 at 1.5 h (365.25 days × 24 h ÷ the day length).",
   "accessed": "2026-11-11",
   "status": "TODO open link",
   "kind": "derivation",
-  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "source_title": "Our calculation (shown in the film)",
   "verified_via": "calculation",
-  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum.",
+  "derivation": "365.25 x 24 h / T: 730 days at 12 h, 1,461 at 6 h, 2,922 at 3 h, 4,383 at 2 h, 5,844 at 1.5 h (calendar days at the Earth's orbital period)."
  },
  {
   "id": "c23",
   "sentence": "the wind is about 1,670 km/h, about four times the strongest gust",
-  "claim": "463 m/s x 3.6 = 1,667 km/h (c7); 1,667 / 408 = 4.1 (c24).",
+  "claim": "At a 12 h day the wind relative to the ground would be about 1,667 km/h, roughly 4.1 times the strongest gust ever recorded (408 km/h).",
   "accessed": "2026-11-11",
   "status": "TODO open link",
   "kind": "derivation",
-  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "source_title": "Our calculation (shown in the film)",
   "verified_via": "calculation",
-  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum.",
+  "derivation": "463 m/s x 3.6 = 1,667 km/h (c7); 1,667 / 408 = 4.1 (c24)."
  },
  {
   "id": "c24",
   "sentence": "the strongest gust ever measured on Earth was about 408 km/h",
-  "claim": "Highest surface wind gust recorded on Earth: 408 km/h (113 m/s) at Barrow Island, Australia, during tropical cyclone Olivia, 10 April 1996.",
+  "claim": "The strongest wind gust recorded on Earth was 408 km/h (113 m/s) at Barrow Island, Australia, during tropical cyclone Olivia, 10 April 1996.",
   "accessed": "2026-11-11",
   "status": "TODO open link",
   "kind": "source",
   "source_url": "",
   "source_title": "WMO Archive of Weather and Climate Extremes (wmo.asu.edu): highest surface wind gust (not yet found by a person)",
   "verified_via": "not read",
-  "note": "OPEN: from memory; no URL given on purpose; a person must find the WMO entry."
+  "note": "OPEN: from memory; no URL given on purpose; a person must find the WMO entry.",
+  "derivation": "Highest surface wind gust recorded on Earth: 408 km/h (113 m/s) at Barrow Island, Australia, during tropical cyclone Olivia, 10 April 1996."
  },
  {
   "id": "c26",
   "sentence": "a jump goes 2x / 8.4x higher; a cup falls 1.4x / 2.9x slower; 70 kg weighs 8.3 kg at 1.5 h",
-  "claim": "With the same push, jump height is proportional to 1/g_eff and fall time to 1/sqrt(g_eff), where g_eff = weight fraction x g (c5): at 2 h (50.4%) the height is 1.98x and the fall time 1.41x; at 1.5 h (11.9%) 8.4x and 2.9x; 70 kg x 0.119 = 8.3 kg.",
+  "claim": "With the same push, jump height grows as gravity shrinks: about 2 times higher at a 2 h day and 8.4 times at 1.5 h; a falling cup takes 1.4 and 2.9 times longer.",
   "accessed": "2026-11-11",
   "status": "TODO open link",
   "kind": "derivation",
-  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "source_title": "Our calculation (shown in the film)",
   "verified_via": "calculation",
-  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum.",
+  "derivation": "With the same push, jump height is proportional to 1/g_eff and fall time to 1/sqrt(g_eff), where g_eff = weight fraction x g (c5): at 2 h (50.4%) the height is 1.98x and the fall time 1.41x; at 1.5 h (11.9%) 8.4x and 2.9x; 70 kg x 0.119 = 8.3 kg."
  },
  {
   "id": "c27",
   "sentence": "higher than a basketball hoop",
-  "claim": "A basketball hoop is 10 feet = 3.05 m above the floor; 0.5 m x 8.4 = 4.2 m.",
+  "claim": "A basketball hoop is 3.05 m (10 feet) above the floor; a 0.5 m jump becomes about 4.2 m when you weigh 1/8.4 as much.",
   "accessed": "2026-11-11",
   "status": "TODO open link",
   "kind": "source",
   "source_url": "https://www.fiba.basketball/",
   "source_title": "FIBA Official Basketball Rules (ring height 3.05 m; find the page)",
   "verified_via": "not read",
-  "note": "OPEN: standard rule, from memory; no specific URL."
+  "note": "OPEN: standard rule, from memory; no specific URL.",
+  "derivation": "A basketball hoop is 10 feet = 3.05 m above the floor; 0.5 m x 8.4 = 4.2 m."
  },
  {
   "id": "c28",
   "sentence": "storms are steered 2x / 8x / 12x / 16x harder than today",
-  "claim": "Coriolis steering is proportional to the spin rate (c15): 23.934 h / 12 h = 2.0, / 3 h = 8.0, / 2 h = 12.0, / 1.5 h = 16.0.",
+  "claim": "Storm steering compared with today: 2 times at a 12 h day, 8 times at 3 h, 12 times at 2 h and 16 times at 1.5 h.",
   "accessed": "2026-11-11",
   "status": "TODO open link",
   "kind": "derivation",
-  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "source_title": "Our calculation (shown in the film)",
   "verified_via": "calculation",
-  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum.",
+  "derivation": "Coriolis steering is proportional to the spin rate (c15): 23.934 h / 12 h = 2.0, / 3 h = 8.0, / 2 h = 12.0, / 1.5 h = 16.0."
  },
  {
   "id": "c29",
   "sentence": "the sea wants to stand about 2,800 km higher at 1.5 h, hundreds of times the ocean's depth",
-  "claim": "Extra rise = (w^2 - w0^2) R^2 / (2 g0) (c6): 2,797 km at a 1.5 h day, a rough first-order guess; the mean ocean depth is about 3.7 km (c18), so 2,800 / 3.7 = about 760 times.",
+  "claim": "At a 1.5 h day the sea would want to stand about 2,800 km higher at the equator, a rough first-order guess, against an average ocean depth of about 3.7 km.",
   "accessed": "2026-11-11",
   "status": "TODO open link",
   "kind": "derivation",
-  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "source_title": "Our calculation (shown in the film)",
   "verified_via": "calculation",
-  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum.",
+  "derivation": "Extra rise = (w^2 - w0^2) R^2 / (2 g0) (c6): 2,797 km at a 1.5 h day, a rough first-order guess; the mean ocean depth is about 3.7 km (c18), so 2,800 / 3.7 = about 760 times."
  }
 ]

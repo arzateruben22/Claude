@@ -5,6 +5,8 @@ import json, subprocess, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
 N, T = int(sys.argv[1]), float(sys.argv[2])
+if N in (2, 3, 4, 5, 6, 7, 8) and "--force-code" not in sys.argv:      # these covers are made from the owner's illustrations by art_cover.py
+    print("cover", N, "kept (art_cover.py)"); sys.exit(0)
 arg = lambda k, d=None: sys.argv[sys.argv.index(k) + 1] if k in sys.argv else d
 STREAK = float(arg("--streak", 0)); CAM = arg("--cam"); HERO = arg("--hero"); KEYS = arg("--keys"); FX = arg("--fx"); TEXT = arg("--text", ""); TY = float(arg("--ty", 0.12))   # --streak S: lighten-blend 12 frames over S seconds (the Sun/air as streaks); --text: 1-4 words
 D = HERE / f"part{N}"

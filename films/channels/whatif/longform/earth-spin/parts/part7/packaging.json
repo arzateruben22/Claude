@@ -106,7 +106,7 @@
  "winner": {
   "title": "A day as long as a movie",
   "thumbnail": "A",
-  "thumbnailText": "",
+  "thumbnailText": "Sunset in 1 hour",
   "why": "The title is the chapter's own title in the long video, so Prism links the part to the film; the cover shows the figure in the setup, with no answer on screen."
  },
  "testAndCompare": [
@@ -127,6 +127,6 @@
  "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the figure standing on tiptoe, arms out, with a glowing outline showing a lighter footstep.\nComposition: 9:16 vertical; figure centre, tiptoe, soft glow beneath its feet; keep everything important clear of the bottom quarter and the right-hand edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: wonder and anticipation.\nText: No text.\nScientific accuracy: it shows the setup only, never the answer; it is a diagram-style illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
  "shortsCover": {
   "frameSeconds": null,
-  "text": ""
+  "text": "Sunset in 1 hour"
  }
 }
