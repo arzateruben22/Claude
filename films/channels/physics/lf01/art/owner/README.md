@@ -10,3 +10,22 @@ description). 1672x941, 16:9: upscale for 1920x1080 and crop or extend for 9:16 
 | `bubble-bursting.png` | a soap bubble over the counter, its film tearing open and shedding droplets | Part 3 (popcorn and bubble) cover |
 | `light-front-table.png` | a thin glowing sheet of light crossing the kitchen table, the edge of a pulse of light | LONG-FILM THUMBNAIL (the title is about watching light move); Part 7/8 cover |
 | `lightning-window.png` | branching lightning seen through the kitchen window, the mug and towel in front | Part 6 (lightning) cover |
+
+## Plates (owner, from 11 Nov 2026): photographic backgrounds behind the code physics
+
+The owner is making a matched set of clean kitchen PLATES in ChatGPT (the same kitchen as the three images above,
+no people, no text), each in 16:9 and 9:16, for set/plates.js: the plate is the room, the code draws only the physics
+(wing, drops and crown, kernels, bubble film, sound shell, bullet, lightning, light front) lit and shadowed to match.
+Disclose as above. Files go in `plates/` as `plate-NN-<name>-16x9.png` / `-9x16.png`.
+
+| # | Plate | Shot use | 16:9 | 9:16 |
+|---|---|---|---|---|
+| 01 | wide kitchen from the doorway (stove left, sink right, window centre, table and four chairs) | the sound wave crossing the room (Part 4, film sound chapter); establishing shots | `plate-01-wide-16x9.png` | to come |
+| 02 | window with a hummingbird feeder | the wing slowed 10x (Part 1) | to come | to come |
+| 03 | tap and the blue mug, close | the drop and the crown splash (Part 2) | to come | to come |
+| 04 | stove pan from above | the popcorn pop (Part 3) | to come | to come |
+| 05 | over the sink, backlit | the soap bubble (Part 3) | to come | to come |
+| 06 | apple on the counter, low angle | the bullet (Part 5) | to come | to come |
+| 07 | window at dusk, storm | lightning (Part 6) | to come | to come |
+| 08 | table in near-darkness | light crawling (Part 7) | to come | to come |
+| 09 | night kitchen, one under-cabinet light | slower than a snail (Part 8) | to come | to come |
