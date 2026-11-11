@@ -100,7 +100,9 @@ def lead(pages, by=0.14):
         if pg["t0"] - prev >= by + 0.05: pg["t0"] = round(max(0.0, pg["t0"] - by), 4)
     return pages
 BADGES = [{"id": "b-thought", "text": "Thought experiment", "t0": 0.3, "t1": round(f.duration - 0.2, 4), "slot": "bl"}]
-TITLE = {"series": "Possibility Lab", "title": "", "t0": 0.2, "t1": 2.2, "sig": round(A("vo01:", 0.0) if False else 0.2, 4)}
+PART_TITLES = ["What If Earth Spun Faster?", "The day is shrinking fast", "The air can't keep up with the ground", "The oceans slide toward the equator", "Storms and the six hour day",
+               "The year gets thousands of days", "A day as long as a movie", "The ninety minute day"]
+TITLE = {"series": "Possibility Lab", "title": PART_TITLES[N - 1], "t0": -20.0, "t1": -19.0, "sig": -18.0}      # the title is metadata (Prism links the part to the film by it): shown nowhere, so the picture keeps its two text blocks
 ORD = ["one", "two", "three", "four", "five", "six", "seven", "eight"]
 END = {"title": "Full video on YouTube: *What If Earth Spun Faster…*", "follow": f"Possibility Lab · Part {N} of 8", "next": "Every number's source is in the description."}
 dummy = [999.0, 1000.0]
@@ -108,7 +110,7 @@ CUE = {"fps": FPS, "float": dummy, "break": dummy, "cost": dummy, "weather": dum
 film = {"id": f"possibility-lab-earth-spin-part{N}", "theme": "../../../../theme.json", "scene": "../../scene.mjs", "fps": FPS, "bpm": BPM, "dur": f.duration,
         "poster": round(min(f.duration - 6, BEATS[len(BEATS) // 2]["t0"]), 4),
         "shots": SHOTS, "beats": BEATS, "world": {"cycleS": 16.0, "keys": KEYS, "dry": DRY, "tOrbH": T_ORB / 3600, "t0H": 23.934, "rEq": R_EQ / 1000, "gm": 3.986004418e14, "eNow": E_NOW, "eOrb": E_ORB, "weightWins": WW},
-        "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {},
+        "disclosures": {"aiVoice": True}, "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {},
         "captions": [p for p in lead(f.captions(max_chars=26, balance=True)) if p["t0"] < t_end - 0.3],
         "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines]}
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] != "tease"]

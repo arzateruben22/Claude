@@ -135,7 +135,7 @@ roEl.innerHTML = '<div style="font:700 2.1vh/1 var(--font-text);letter-spacing:.
   '<div style="margin-top:' + (PORT ? '1.4vh' : '2.4vh') + ';font:700 2.1vh/1 var(--font-text);letter-spacing:.16em;color:var(--hud-text-2)"><span id="roL2">YOUR SPEED AT THE EQUATOR</span></div><div id="roV" style="font:700 ' + (PORT ? 'min(3.6vh,7vw)' : '5.4vh') + '/1.1 var(--font-mono);color:' + AMB + ';margin-top:.8vh;font-variant-numeric:tabular-nums"></div>';
 // soft dark scrim behind the readout so the white numbers hold 4.5:1 on a bright daytime sky
 const scrim = document.createElement("div");
-scrim.style.cssText = "position:absolute;left:0;top:0;width:" + (PORT ? "100vw" : "64vw") + ";height:" + (PORT ? "46vh" : "70vh") + ";z-index:4;pointer-events:none;background:radial-gradient(ellipse farthest-side at 28% 36%, rgba(6,9,16,.55) 0%, rgba(6,9,16,.40) 45%, rgba(6,9,16,0) 100%)";
+scrim.style.cssText = "position:absolute;left:0;top:0;width:" + (PORT ? "100vw" : "64vw") + ";height:" + (PORT ? "46vh" : "70vh") + ";z-index:4;pointer-events:none;background:radial-gradient(ellipse farthest-side at 28% 36%, rgba(6,9,16,.66) 0%, rgba(6,9,16,.5) 45%, rgba(6,9,16,0) 100%)";
 document.body.appendChild(scrim); document.body.appendChild(roEl);
 const roT = roEl.querySelector("#roT"), roV = roEl.querySelector("#roV"), roL2 = roEl.querySelector("#roL2");
 const WWINS = WD.weightWins || [], inWeight = (t) => WWINS.some(([a, b]) => t >= a && t < b);

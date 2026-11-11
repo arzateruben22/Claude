@@ -3,10 +3,10 @@
  "format": "short",
  "channel": "Possibility Lab",
  "video": "Season 3 part 2 of 8",
- "hook": "At a twelve hour day the Sun crosses the sky in six hours and the ground moves at 3,340 km/h.",
+ "hook": "The day falls from 24 hours to 12 and the ground at the equator speeds up to 3,340 km/h.",
  "titles": [
   {
-   "text": "The day is now twelve hours long",
+   "text": "The day is shrinking fast",
    "mechanism": "unanswered question"
   },
   {
@@ -104,7 +104,7 @@
  ],
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
  "winner": {
-  "title": "The day is now twelve hours long",
+  "title": "The day is shrinking fast",
   "thumbnail": "A",
   "thumbnailText": "",
   "why": "The title is the chapter's own title in the long video, so Prism links the part to the film; the cover shows the figure in the setup, with no answer on screen."
