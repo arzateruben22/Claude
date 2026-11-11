@@ -5,7 +5,7 @@
  "disclaimer": "An internal assessment by the studio's own tools and reviewers. It is not proof of quality, not a public number and not a prediction of views. A failed hard gate blocks release whatever the score.",
  "maxScore": 100,
  "passScore": 95,
- "releaseRule": "Release needs every hard gate passed and a score of 95 or more. Neither replaces the other.",
+ "releaseRule": "Release needs every hard gate passed and a score of 95 or more. Neither replaces the other. tools/qa_episode.py --release checks both: it exits 1 while a hard gate is open, or while the score is incomplete or under 95.",
  "howMeasured": {
   "auto": "Scored by films/channels/studio/tools/qa_episode.py with no person involved. 'needs' says whether the delivered video is enough ('video') or a file beside it must exist ('sidecar'). All listed checks pass: full points. Any fails: 0. A check that could not be read: not scored, listed for a person.",
   "builder": "Scored by the channel's builder from the evidence named.",
@@ -70,13 +70,14 @@
    },
    "maxMb": 95,
    "lengthS": [
-    60.0,
-    75.5
+    61.0,
+    75.0
    ],
    "targetS": [
     61.0,
     75.0
-   ]
+   ],
+   "lengthToleranceFrames": 1
   },
   "part": {
    "aspect": "9:16",
@@ -125,12 +126,13 @@
    "maxMb": 95,
    "lengthS": [
     61.0,
-    75.5
+    75.0
    ],
    "targetS": [
     61.0,
     75.0
-   ]
+   ],
+   "lengthToleranceFrames": 1
   },
   "premium": {
    "aspect": "9:16",
@@ -178,13 +180,14 @@
    },
    "maxMb": 95,
    "lengthS": [
-    60.0,
-    90.5
+    70.0,
+    90.0
    ],
    "targetS": [
     70.0,
     90.0
-   ]
+   ],
+   "lengthToleranceFrames": 1
   },
   "long": {
    "aspect": "16:9",
@@ -235,10 +238,12 @@
    "targetS": [
     510.0,
     570.0
-   ]
+   ],
+   "lengthToleranceFrames": 0
   }
  },
- "formatsNote": "The thresholds qa_episode.py applies per format. lengthS is the hard window, targetS the aim. This block is the authority; the tool carries a copy for when this file is missing.",
+ "formatsNote": "The thresholds qa_episode.py applies per format. lengthS is the hard window, targetS the aim; lengthToleranceFrames is the only allowance (one frame on 9:16 files, none on a long video's 8:30). freeze.s (1.4 s) is a tool setting from the coordinator's brief, not yet written in a rule file. This block is the authority; the tool carries a copy for when this file is missing.",
+ "lengthOpenDecision": "Reality Rulebook Season 2 ep09 to ep12 were remixed with the like/follow line voiced over a held end card (channel branch, commit c587b277). The ep12 master measures 77.233 s against 73.33 s in its film.json, so it fails the short window; ep09 to ep11 were changed by the same commit and were not measured. kits/cinema/film/qa.py's 75.5 s limit fails it too. An approved master is not re-cut because of this. The coordinator decides whether to record those four as accepted exceptions or to widen short.lengthS: ROADMAP.md, 'Decisions that wait for the owner'.",
  "hardGates": [
   {
    "id": "size",
@@ -277,7 +282,7 @@
   {
    "id": "length",
    "name": "Length",
-   "rule": "Inside the format's window. short: 60 to 75.5 s. part: 61 to 75.5 s. premium: 60 to 90.5 s (target 70 to 90). long: 8:30 to 11:00 (target 8:30 to 9:30).",
+   "rule": "Inside the format's window, with one frame of tolerance on 9:16 files. short and part: 61 to 75 s. premium: 70 to 90 s. long: 8:30 to 11:00 (target 8:30 to 9:30).",
    "appliesTo": [
     "short",
     "premium",
@@ -288,7 +293,7 @@
    "phase": "file",
    "signsOff": "tool",
    "tool": "films/channels/studio/tools/qa_episode.py",
-   "source": "short 60 to 75.5 s: kits/cinema/film/qa.py. part 1:01 to 1:15 and premium 70 to 90 s, never under 60: films/channels/SEASON-FORMAT.md, with qa.py's half-second allowance. long: at least 8:30 (SEASON-FORMAT.md), at most 11 min (kits/cinema/film/compilation.mjs)",
+   "source": "short and part 61 to 75 s (1:01 to 1:15: films/channels/SEASON-FORMAT.md and the channel identities); premium 70 to 90 s (SEASON-FORMAT.md); one frame of tolerance. kits/cinema/film/qa.py is looser (60 to 75.5 s) and is not the gate. long: at least 8:30 (SEASON-FORMAT.md), at most 11 min (kits/cinema/film/compilation.mjs)",
    "fix": "Too short: add real content (a fact-checked line, a bridge), never a longer hold or slower voice. Too long: cut a decorative line. Then rebuild only the shots after the change."
   },
   {
@@ -361,7 +366,7 @@
   {
    "id": "flashes",
    "name": "Flashing",
-   "rule": "At most 3 flashes in any one second (large-area luminance swings).",
+   "rule": "At most 3 flashes in any one second (large-area luminance swings), counted as the kit counts: every adjacent pair of opposite large transitions. A steady strobe therefore counts about twice WCAG's figure; in practice the limit is 2 full flashes (4 transitions) in any second.",
    "appliesTo": [
     "short",
     "premium",
@@ -372,7 +377,7 @@
    "phase": "file",
    "signsOff": "tool",
    "tool": "films/channels/studio/tools/qa_episode.py",
-   "source": "at most 3 flashes in any second; a transition is a luminance change of 0.1 or more, darker side under 0.8, over 25% of the frame: kits/cinema/film/qa.py (WCAG 2.3.1)",
+   "source": "at most 3 flashes in any second; a transition is a luminance change of 0.1 or more, darker side under 0.8, over 25% of the frame: kits/cinema/film/qa.py (WCAG 2.3.1). Counted as the kit counts: every adjacent pair of opposite transitions, about twice WCAG's figure on a steady strobe",
    "fix": "Find the frames in the report, soften or slow that one transition, re-render its chunk."
   },
   {
@@ -395,7 +400,7 @@
   {
    "id": "freeze",
    "name": "No frozen picture",
-   "rule": "No frozen stretch of 1.4 s or more, except the end card (a hold that reaches the last 3 s, at most 8 s). A long video joined from episodes with narrated cards is run with --cards and a person confirms each card.",
+   "rule": "No frozen stretch of 1.4 s or more, except the end card: a hold inside the last 8 s, or one of at most 8 s that reaches the last 3 s. A long video joined from episodes with narrated cards is run with --cards and a person confirms each card.",
    "appliesTo": [
     "short",
     "premium",
@@ -406,7 +411,7 @@
    "phase": "file",
    "signsOff": "tool; coordinator for --cards",
    "tool": "films/channels/studio/tools/qa_episode.py",
-   "source": "studio standing gate: no frozen picture over about 1.4 s except the end card (channels ran freezedetect on drafts). Noise -60 dB is ffmpeg's default. The end-card allowance (reaches the last 3 s, at most 8 s: the longest card kits/cinema/film/compilation.mjs draws) is this tool's setting",
+   "source": "1.4 s is a tool setting, from the coordinator's brief; not yet written in a rule file (the only written number is the renderer's audit warning at 2.5 s, kits/cinema/film/render.mjs). Noise -60 dB is ffmpeg's default. The end-card allowance (a hold inside the last 8 s, the longest card kits/cinema/film/compilation.mjs draws, or one that reaches the last 3 s) is this tool's setting",
    "fix": "Give the shot a motivated move or a developing picture and re-render its chunk. A frozen render (a bug) is rendered fresh, not resumed."
   },
   {
@@ -463,7 +468,7 @@
   {
    "id": "text_audit",
    "name": "Text inside the safe box",
-   "rule": "The render's text audit has 0 warnings.",
+   "rule": "The render's text audit has 0 warnings (build/final/, or build/final-plain/ on Skin Sense's plain path, where it covers the kit's hud text only).",
    "appliesTo": [
     "short",
     "premium",
@@ -474,7 +479,7 @@
    "phase": "file",
    "signsOff": "tool; builder by frame grabs where no audit exists",
    "tool": "films/channels/studio/tools/qa_episode.py",
-   "source": "0 text-audit warnings: kits/cinema/film/qa.py, from the render's audit.json",
+   "source": "0 text-audit warnings: kits/cinema/film/qa.py, from the render's audit.json (build/final/ or, on the plain path, build/final-plain/). The audit also warns on identical frames for more than 2.5 s",
    "fix": "Move or shorten the one label in the compile step; re-render the chunks that show it."
   },
   {
@@ -497,7 +502,7 @@
   {
    "id": "claims_honest",
    "name": "Claims are marked honestly",
-   "rule": "No claim is marked ok unless a person opened its source. A search excerpt stays OPEN.",
+   "rule": "No claim is marked ok unless a person opened its source. ok is honest only with verified_via 'page' or 'owner opened the page' and a source link; or on a derivation ('calculation', 'derivation', 'own model') whose note or source title names calc.py; or on an 'assumption (no source)' whose note says what is assumed. 'search excerpt', 'not read', 'from memory' or an empty value never carries ok.",
    "appliesTo": [
     "short",
     "premium",
@@ -508,7 +513,7 @@
    "phase": "file",
    "signsOff": "tool",
    "tool": "films/channels/studio/tools/qa_episode.py",
-   "source": "films/channels/STUDIO-STYLE.md: a claim is OK only when a person has opened the source; a search excerpt stays OPEN",
+   "source": "films/channels/STUDIO-STYLE.md: a claim is OK only when a person has opened the source; a search excerpt stays OPEN. The verified_via values that may carry ok are this tool's allow-list (films/channels/studio/QA.md, section 3B)",
    "fix": "Set the claim back to open. Only the person who opened the page sets ok."
   },
   {
@@ -528,7 +533,7 @@
   {
    "id": "sources_opened",
    "name": "Sources opened",
-   "rule": "Before export, a person has opened every source and every claim is ok.",
+   "rule": "Before export, every claim is ok and honestly marked: a person has opened every source page and re-run every calc.py sum.",
    "appliesTo": [
     "short",
     "premium",
@@ -562,7 +567,7 @@
   {
    "id": "packaging",
    "name": "Packaging",
-   "rule": "packaging.json holds five titles, three thumbnails, three pairings and a winner, and every check is true.",
+   "rule": "packaging.json holds five titles, three thumbnails, three pairings and a winner, and every check is true. The thumbnail text has at most 4 words and never repeats the title (PACKAGING.md).",
    "appliesTo": [
     "short",
     "premium",
@@ -573,7 +578,7 @@
    "phase": "release",
    "signsOff": "builder; the owner chooses the title",
    "tool": "films/channels/studio/tools/qa_episode.py",
-   "source": "films/channels/PACKAGING.md: five titles, three thumbnails, three pairings, a winner, every check true",
+   "source": "films/channels/PACKAGING.md: five titles, three thumbnails, three pairings, a winner, every check true; the thumbnail text never repeats the title and has at most 4 words",
    "fix": "Revise the pairing whose check is false. Never ship with a false check."
   },
   {
@@ -682,7 +687,7 @@
     {
      "id": "SA1",
      "points": 3,
-     "text": "The claims ledger is complete: every claim has its sentence, source link and title, access date, how it was verified and a status; none needs rewording.",
+     "text": "The claims ledger is complete: every claim has its sentence, source link and title, access date, how it was verified and a status; none needs rewording. A derivation (verified_via 'calculation', 'derivation' or 'own model') or an 'assumption (no source)' needs no link or title.",
      "how": "auto",
      "evidence": "claims.json",
      "checks": [
@@ -693,7 +698,7 @@
     {
      "id": "SA2",
      "points": 4,
-     "text": "A person has opened every source. Every claim is ok; none rests on a search excerpt.",
+     "text": "A person has opened every source. Every claim is ok, with verified_via 'page' or 'owner opened the page'; every derivation is ok and names calc.py; none rests on a search excerpt, on memory or on an unread page.",
      "how": "owner",
      "evidence": "claims.json statuses; the review/claims-table.md column 'what the source actually says'"
     },
@@ -743,7 +748,7 @@
      "points": 2,
      "text": "All text sits inside the safe box: the render's text audit has no warnings.",
      "how": "auto",
-     "evidence": "build/qa-delivery.json or build/final/*/audit.json",
+     "evidence": "build/qa-delivery.json or build/final*/*/audit.json",
      "checks": [
       "text_audit"
      ],
@@ -792,7 +797,7 @@
     {
      "id": "TS2",
      "points": 3,
-     "text": "The picture never freezes for 1.4 s or more, except the end card.",
+     "text": "The picture never freezes for 1.4 s or more, except the end card (a hold inside the last 8 s).",
      "how": "auto",
      "evidence": "the delivered file",
      "checks": [

@@ -11,7 +11,7 @@ What it measures from the file alone, with ffmpeg and ffprobe:
     size, frame rate, codec, length against the format's window, file size,
     integrated loudness and true peak (ebur128), mono safety (correlation, fold-down loss),
     picture against sound length, silence in the mix (silencedetect, -40 dB, 1.2 s),
-    frozen picture (freezedetect, 1.4 s; a hold that reaches the last 3 s is the end card),
+    frozen picture (freezedetect, 1.4 s; a hold inside the last 8 s is the end card),
     flashes (large luminance swings; more than 3 in any second fails), a blank first frame.
 
 What it reads when the files sit beside the video or the episode spec (skip with --file-only):
@@ -29,15 +29,17 @@ Options:
                      (the Season 2 format): frozen stretches are listed for a person to confirm
                      instead of failing
     --file-only      measure the file and read nothing else
-    --release        exit 1 unless every hard gate has passed, the people's gates included
+    --release        exit 1 unless every hard gate has passed, the people's gates included, and the
+                     internal score is complete and at the pass mark (95)
     --blank-scores   print a fill-in scores file for the people's criteria and gates, then stop
 
 The report holds every measurement, each hard gate (pass, fail, waiting on a person, not checked),
 where each threshold came from, the automated rubric points earned, and the criteria that still
 need a person. The summary goes to stderr.
 
-Exit status: 1 when a hard gate fails (with --release: when any hard gate has not passed), 2 when
-the video or a named file cannot be read, else 0. The score is an internal assessment, not proof of
+Exit status: 1 when a hard gate fails (with --release: also when any hard gate has not passed, or the
+internal score is incomplete or under the pass mark), 2 when the video or a named file cannot be read,
+else 0. The score is an internal assessment, not proof of
 quality: a failed hard gate blocks release whatever the score. Standard library only; ffmpeg and
 ffprobe must be on the PATH.
 """
@@ -75,16 +77,17 @@ _NINE = {
     "freeze": {"noiseDb": -60, "s": 1.4, "endCardWindowS": 3.0, "endCardMaxS": 8.0},
     "firstFrame": {"blankLeadMaxS": 0.0},
     "maxMb": 95,
+    "lengthToleranceFrames": 1,
 }
 FALLBACK_FORMATS = {
-    "short": dict(_NINE, lengthS=[60.0, 75.5], targetS=[61.0, 75.0]),
-    "part": dict(_NINE, lengthS=[61.0, 75.5], targetS=[61.0, 75.0]),
-    "premium": dict(_NINE, lengthS=[60.0, 90.5], targetS=[70.0, 90.0]),
+    "short": dict(_NINE, lengthS=[61.0, 75.0], targetS=[61.0, 75.0]),
+    "part": dict(_NINE, lengthS=[61.0, 75.0], targetS=[61.0, 75.0]),
+    "premium": dict(_NINE, lengthS=[70.0, 90.0], targetS=[70.0, 90.0]),
     "long": dict(_NINE, aspect="16:9", size=[2560, 1440], youtubeSize=None,
                  lufs=[-15.5, -12.5], avLength={"seconds": 0.1},
                  mono={"minCorrelation": 0.3, "maxLossDb": 3.0, "hard": False},
                  voiceGap={"db": -42, "s": 1.2, "toleranceFrames": 1, "hard": False},
-                 firstFrame={"blankLeadMaxS": 0.5},
+                 firstFrame={"blankLeadMaxS": 0.5}, lengthToleranceFrames=0,
                  lengthS=[510.0, 660.0], targetS=[510.0, 570.0]),
 }
 # Where each threshold came from. Printed in the report beside the gate that uses it.
@@ -92,9 +95,10 @@ SOURCES = {
     "size": "kits/cinema/film/qa.py (1080x1920); kits/cinema/film/compilation.mjs (2560x1440 long video); "
             "kits/cinema/film/youtube1440.py (the 1440x2560 YouTube file is an upscale)",
     "fps": "kits/cinema/film/scorecard.py (format target: 30 fps CFR); kits/cinema/film/render.mjs",
-    "length": "short 60 to 75.5 s: kits/cinema/film/qa.py. part 1:01 to 1:15 and premium 70 to 90 s, never "
-              "under 60: films/channels/SEASON-FORMAT.md, with qa.py's half-second allowance. long: at least "
-              "8:30 (SEASON-FORMAT.md), at most 11 min (kits/cinema/film/compilation.mjs)",
+    "length": "short and part 61 to 75 s (1:01 to 1:15: films/channels/SEASON-FORMAT.md and the channel "
+              "identities); premium 70 to 90 s (SEASON-FORMAT.md); one frame of tolerance. kits/cinema/film/qa.py "
+              "is looser (60 to 75.5 s) and is not the gate. long: at least 8:30 (SEASON-FORMAT.md), at most 11 min "
+              "(kits/cinema/film/compilation.mjs)",
     "loudness": "9:16: -15 to -13 LUFS, kits/cinema/film/qa.py. long: -14 LUFS within 1.5, "
                 "kits/cinema/film/compilation.mjs. Measured with ffmpeg ebur128, as the kit does",
     "true_peak": "at most -1 dBTP on the delivered AAC: kits/cinema/film/qa.py, compilation.mjs",
@@ -102,23 +106,27 @@ SOURCES = {
     "mono_safe": "correlation at least 0.3 and fold-down loss at most 3 dB: kits/cinema/film/qa.py. "
                  "compilation.mjs has no such gate, so a long video is measured but not gated",
     "flashes": "at most 3 flashes in any second; a transition is a luminance change of 0.1 or more, darker "
-               "side under 0.8, over 25% of the frame: kits/cinema/film/qa.py (WCAG 2.3.1)",
+               "side under 0.8, over 25% of the frame: kits/cinema/film/qa.py (WCAG 2.3.1). Counted as the kit "
+               "counts: every adjacent pair of opposite transitions, about twice WCAG's figure on a steady strobe",
     "silence": "studio standing gate: no silence of 1.2 s or more (films/channels/CTA.md, 'the voice-gap "
                "rule'); -40 dB on the delivered mix is this tool's setting",
     "voice_gaps": "voiceless gaps of at most 1.2 s on the dialogue stem at -42 dB: One More Orbit "
                   "season2/gaps.py, films/channels/CTA.md. One frame of tolerance is this tool's setting",
-    "freeze": "studio standing gate: no frozen picture over about 1.4 s except the end card (channels ran "
-              "freezedetect on drafts). Noise -60 dB is ffmpeg's default. The end-card allowance (reaches "
-              "the last 3 s, at most 8 s: the longest card kits/cinema/film/compilation.mjs draws) is this "
-              "tool's setting",
+    "freeze": "1.4 s is a tool setting, from the coordinator's brief; not yet written in a rule file (the only "
+              "written number is the renderer's audit warning at 2.5 s, kits/cinema/film/render.mjs). Noise -60 dB "
+              "is ffmpeg's default. The end-card allowance (a hold inside the last 8 s, the longest card "
+              "kits/cinema/film/compilation.mjs draws, or one that reaches the last 3 s) is this tool's setting",
     "first_frame": ".claude/skills/cinema-kit/SKILL.md: frame 0 is already composed (9:16: the platform cover is a "
                    "frame of the video). A long video may fade in from black; the half-second limit is this tool's "
                    "setting, set after the delivered Skin Sense Season 2 long video, which opens on one black frame",
     "file_size": "kits/cinema/film/compilation.mjs fails over 95 MB (GitHub refuses 100 MB)",
-    "text_audit": "0 text-audit warnings: kits/cinema/film/qa.py, from the render's audit.json",
+    "text_audit": "0 text-audit warnings: kits/cinema/film/qa.py, from the render's audit.json "
+                  "(build/final/ or, on the plain path, build/final-plain/). The audit also warns on identical "
+                  "frames for more than 2.5 s",
     "sound_sync": "transients within one frame of their picture event: kits/cinema/studio/qa.py",
     "claims_honest": "films/channels/STUDIO-STYLE.md: a claim is OK only when a person has opened the "
-                     "source; a search excerpt stays OPEN",
+                     "source; a search excerpt stays OPEN. The verified_via values that may carry ok are this "
+                     "tool's allow-list (films/channels/studio/QA.md, section 3B)",
     "sources_opened": "films/channels/STUDIO-STYLE.md; films/channels/studio/tools/validate.py (nothing "
                       "is exported while sources are open)",
     "chapters": "kits/cinema/film/compilation.mjs: the first chapter at 0:00, each at least 10 s, starts "
@@ -126,11 +134,15 @@ SOURCES = {
     "look_gate": "films/channels/SEASON-FORMAT.md; .claude/skills/cinema-kit/SKILL.md (stills before the "
                  "full render)",
     "packaging": "films/channels/PACKAGING.md: five titles, three thumbnails, three pairings, a winner, "
-                 "every check true",
+                 "every check true; the thumbnail text never repeats the title and has at most 4 words",
 }
 FLASH = {"change": 26, "darkBelow": 204, "area": 0.25}   # 0.1 and 0.8 of 255; qa.py's 25% of the frame
 BLANK_SPREAD = 8                                         # luma levels between the 0.05% and 99.95% points
 GRID_LONG_SIDE = 192                                     # half the kit's 216x384 flash grid
+# How a claim may be verified and still be marked ok (QA.md, section 3B). validate.py carries the same lists.
+VIA_PAGE = ("page", "owner opened the page")             # a person read the source itself; needs a source link
+VIA_DERIVED = ("calculation", "derivation", "own model")  # no outside page: the sum is in calc.py, and the row says so
+VIA_ASSUMED = ("assumption (no source)",)                 # a stated assumption or hedge; the note says what is assumed
 
 
 class Stop(Exception):
@@ -273,7 +285,7 @@ def picture_pass(video, w, h, fps, prof):
     lin = r"if(lte(val\,10)\,val/12.92\,255*pow((val/255+0.055)/1.055\,2.4))"
     fz = prof["freeze"]
     graph = (
-        f"[0:v:0]scale={gw}:{gh}:flags=area,split[fz][c];"
+        f"[0:v:0]scale={gw}:{gh}:flags=area,format=rgb24,split[fz][c];"   # rgb24 pinned: freezedetect's result moves with the pixel format
         f"[fz]freezedetect=n={fz['noiseDb']}dB:d={fz['s']},nullsink;"
         f"[c]format=rgb24,lutrgb=r='{lin}':g='{lin}':b='{lin}',"
         "colorchannelmixer=rr=0.2126:rg=0.7152:rb=0.0722:gr=0.2126:gg=0.7152:gb=0.0722:br=0.2126:bg=0.7152:bb=0.0722,"
@@ -402,9 +414,15 @@ def file_gates(G, m, prof, kind, video, cards):
     # length
     lo, hi = prof["lengthS"]
     dur = V["durationS"]
-    G.add("length", "pass" if lo <= dur <= hi else "fail", f"{dur:.3f} s ({stamp(dur)})", f"{lo:g} to {hi:g} s")
+    tol = prof.get("lengthToleranceFrames", 0) / fps + 1e-6
+    in_window = lo - tol <= dur <= hi + tol
+    G.add("length", "pass" if in_window else "fail", f"{dur:.3f} s ({stamp(dur)})",
+          f"{lo:g} to {hi:g} s" + (" (one frame of tolerance)" if prof.get("lengthToleranceFrames") else ""),
+          note=None if in_window or kind == "long" or dur < hi else
+          "An approved master is not re-cut because of this. Season 2 masters remixed with the like/follow line over "
+          "a held end card run long (Reality Rulebook ep12: 77.233 s): the coordinator decides (QA.md, section 3).")
     tlo, thi = prof["targetS"]
-    G.add("length_target", "pass" if tlo <= dur <= thi + 0.5 else "fail", f"{dur:.3f} s", f"{tlo:g} to {thi:g} s (the target)",
+    G.add("length_target", "pass" if tlo - tol <= dur <= thi + tol else "fail", f"{dur:.3f} s", f"{tlo:g} to {thi:g} s (the target)",
           hard=False)
     # sound
     if A is None:
@@ -444,18 +462,17 @@ def file_gates(G, m, prof, kind, video, cards):
           f"at most {prof['flashesPerS']} flashes in any second")
     # freeze
     fz = prof["freeze"]
-    flagged, end_card = [], None
+    flagged, cards = [], []
     for s in m["freezes"]["stretches"]:
-        if s["end"] >= dur - fz["endCardWindowS"] and s["s"] <= fz["endCardMaxS"]:
-            s["endCard"] = True
-            end_card = s
-        else:
-            s["endCard"] = False
-            flagged.append(s)
-    m["freezes"]["endCardS"] = end_card["s"] if end_card else 0.0
-    want = f"no frozen stretch of {fz['s']:g} s or more, except an end card (reaches the last {fz['endCardWindowS']:g} s, at most {fz['endCardMaxS']:g} s)"
+        reaches_end = s["end"] >= dur - fz["endCardWindowS"] and s["s"] <= fz["endCardMaxS"]
+        in_end_zone = s["start"] >= dur - fz["endCardMaxS"]      # a caption change splits one held card into pieces
+        s["endCard"] = bool(reaches_end or in_end_zone)
+        (cards if s["endCard"] else flagged).append(s)
+    m["freezes"]["endCardS"] = round(sum(s["s"] for s in cards), 3)
+    want = (f"no frozen stretch of {fz['s']:g} s or more, except the end card (a hold inside the last {fz['endCardMaxS']:g} s, "
+            f"or one of at most {fz['endCardMaxS']:g} s that reaches the last {fz['endCardWindowS']:g} s)")
     if not flagged:
-        G.add("freeze", "pass", "none" + (f"; end card held {end_card['s']:.2f} s" if end_card else ""), want)
+        G.add("freeze", "pass", "none" + (f"; end card held {m['freezes']['endCardS']:.2f} s" if cards else ""), want)
     else:
         longest = max(flagged, key=lambda s: s["s"])
         got = (f"{len(flagged)} frozen stretch{'es' if len(flagged) != 1 else ''}, {sum(s['s'] for s in flagged):.1f} s in all, "
@@ -519,6 +536,27 @@ def voice_gap_gate(G, m, stem, prof, fps, kind):
                   note="A long film may hold picture-only beats. A person confirms each gap is one, with picture and sound carrying it.")
 
 
+def claim_state(row):
+    """(kind, settled, problem) for one ledger row.
+
+    kind: 'page', 'derived', 'assumed' or 'other'. settled: the row is ok and a person could have signed it (a page
+    a person opened, a sum that names calc.py, or an assumption that says what it assumes). problem: why an ok row
+    is not honest, else None. Any other verified_via ('search excerpt', 'not read', 'from memory', empty) never
+    carries ok."""
+    via = str(row.get("verified_via", "")).strip().lower()
+    ok = str(row.get("status", "")).strip().lower() == "ok"
+    named = (str(row.get("note", "")) + " " + str(row.get("source_title", ""))).lower()
+    if via in VIA_PAGE:
+        kind, problem = "page", None if str(row.get("source_url", "")).strip() else "no source link"
+    elif via in VIA_DERIVED:
+        kind, problem = "derived", None if "calc.py" in named else "a derivation that does not name calc.py"
+    elif via in VIA_ASSUMED:
+        kind, problem = "assumed", None if str(row.get("note", "")).strip() else "an assumption with no note"
+    else:
+        kind, problem = "other", f"verified_via is \"{str(row.get('verified_via', '')).strip()}\""
+    return kind, ok and problem is None, problem if ok else None
+
+
 def claims_gates(G, m, path):
     rows = load_json(path)
     if not isinstance(rows, list) or not all(isinstance(r, dict) for r in rows):
@@ -526,25 +564,42 @@ def claims_gates(G, m, path):
         G.add("claims_honest", "fail", "the ledger cannot be read", "a claims ledger", kind="sidecar")
         return
     need = ("id", "sentence", "claim", "source_url", "source_title", "accessed", "verified_via", "status")
-    missing = [str(r.get("id", "?")) for r in rows if any(not str(r.get(k, "")).strip() for k in need)]
-    wording = [str(r.get("id", "?")) for r in rows if str(r.get("status", "")).strip().lower() == "needs-wording"]
-    ok = [r for r in rows if str(r.get("status", "")).strip().lower() == "ok"]
-    dishonest = [str(r.get("id", "?")) for r in ok if "excerpt" in str(r.get("verified_via", "")).lower()
-                 or not str(r.get("verified_via", "")).strip() or not str(r.get("source_url", "")).strip()]
-    open_ids = [str(r.get("id", "?")) for r in rows if r not in ok]
-    m["sidecars"]["claims"] = {"file": rel(path), "claims": len(rows), "ok": len(ok), "open": len(open_ids)}
+    no_page = ("source_url", "source_title")                 # a derivation or an assumption has no page to link
+    name = lambda r: str(r.get("id", "?"))
+    missing, dishonest, open_ids, kinds, n_ok = [], [], [], Counter(), 0
+    for r in rows:
+        kind, settled, problem = claim_state(r)
+        kinds[kind] += 1
+        n_ok += str(r.get("status", "")).strip().lower() == "ok"
+        if any(not str(r.get(k, "")).strip() for k in need if not (kind in ("derived", "assumed") and k in no_page)):
+            missing.append(name(r))
+        if problem:
+            dishonest.append(f"{name(r)} ({problem})")
+        if not settled:
+            open_ids.append(name(r))
+    wording = [name(r) for r in rows if str(r.get("status", "")).strip().lower() == "needs-wording"]
+    m["sidecars"]["claims"] = {"file": rel(path), "claims": len(rows), "ok": n_ok, "settled": len(rows) - len(open_ids),
+                               "open": len(open_ids), "byKind": dict(kinds)}
     bad = missing or wording or not rows
     G.add("claims_complete", "fail" if bad else "pass",
           f"{len(rows)} claims" + (f"; fields missing in {', '.join(missing[:6])}" if missing else "")
           + (f"; needs-wording: {', '.join(wording[:6])}" if wording else ""),
-          "every claim has its sentence, source link and title, access date, how it was verified and a status; none needs wording",
+          "every claim has its sentence, source link and title, access date, how it was verified and a status (a derivation "
+          "or an assumption needs no link or title); none needs wording",
           hard=False, kind="sidecar")
     G.add("claims_honest", "fail" if dishonest else "pass",
-          "no claim is marked ok on a search excerpt" if not dishonest else f"marked ok without a person opening the page: {', '.join(dishonest[:8])}",
-          "ok only when a person has opened the source", kind="sidecar")
+          (f"{n_ok} marked ok, each by a page a person opened, a calc.py sum or a stated assumption" if n_ok else "no claim is marked ok yet")
+          if not dishonest else f"marked ok without a page a person opened or a calc.py sum: {'; '.join(dishonest[:8])}",
+          "ok only when verified_via is 'page' or 'owner opened the page' (with a source link), or the row is a derivation "
+          "('calculation', 'derivation', 'own model') that names calc.py, or a stated assumption", kind="sidecar")
     G.add("sources_opened", "pass" if rows and not open_ids else "waiting",
-          f"{len(ok)} of {len(rows)} claims ok" + (f"; open: {', '.join(open_ids[:8])}{'…' if len(open_ids) > 8 else ''}" if open_ids else ""),
-          "every claim ok before the episode is exported", kind="sidecar", who="owner or reviewer")
+          f"{len(rows) - len(open_ids)} of {len(rows)} claims settled" + (f"; open: {', '.join(open_ids[:8])}{'…' if len(open_ids) > 8 else ''}" if open_ids else ""),
+          "every claim ok, and marked honestly, before the episode is exported", kind="sidecar", who="owner or reviewer")
+
+
+def words_of(text):
+    """Lower-case words of a title or a thumbnail text, punctuation dropped ("Won't" is wont)."""
+    return re.findall(r"[a-z0-9]+", re.sub(r"['’]", "", str(text or "").lower()))
 
 
 def packaging_gate(G, m, path):
@@ -571,13 +626,32 @@ def packaging_gate(G, m, path):
         problems.append(f"{len(checks)} of 7 checks present")
     if false:
         problems.append("checks not true: " + ", ".join(false))
+    # PACKAGING.md: the thumbnail never repeats the title; its text is optional, at most 4 words. checks.duplication
+    # is the builder's own word for it, so the texts are compared here as well.
+    winner = p.get("winner") if isinstance(p.get("winner"), dict) else {}
+    texts = [("winner.thumbnailText", winner.get("thumbnailText"))]
+    texts += [(f"thumbnail {t.get('id')} text", t.get("text")) for t in p.get("thumbnails") or []
+              if isinstance(t, dict) and t.get("id") is not None and t.get("id") == winner.get("thumbnail")]
+    if isinstance(p.get("shortsCover"), dict):
+        texts.append(("shortsCover.text", p["shortsCover"].get("text")))
+    title_words, seen = set(words_of(title)), set()
+    for label, text in texts:
+        w = tuple(words_of(text)) if isinstance(text, str) else ()
+        if not w or w in seen:
+            continue
+        seen.add(w)
+        if len(w) > 4:
+            problems.append(f"{label} has {len(w)} words (at most 4)")
+        elif title_words and all(x in title_words for x in w):
+            problems.append(f"{label} \"{text.strip()}\" repeats the title")
     note = None
     if title and not 35 <= len(title) <= 55:
         note = f"The winner title has {len(title)} characters; PACKAGING.md aims for 35 to 55."
     m["sidecars"]["packaging"] = {"file": rel(path), "titles": counts[0], "thumbnails": counts[1], "pairings": counts[2],
                                   "winnerTitle": title, "checksTrue": len(checks) - len(false)}
     G.add("packaging", "fail" if problems else "pass", "; ".join(problems) if problems else f"5/3/3 present, winner \"{title}\", every check true",
-          "five titles, three thumbnails, three pairings, a winner, every check true", kind="sidecar", note=note)
+          "five titles, three thumbnails, three pairings, a winner, every check true; the thumbnail text has at most "
+          "4 words and never repeats the title", kind="sidecar", note=note)
 
 
 def chapters_gate(G, m, path, dur):
@@ -686,7 +760,7 @@ def sidecar_gates(G, m, video, kind, episode_path, episode, dialog, prof, fps):
     else:
         G.add("claims_complete", "not_checked", "no claims.json found", "a complete claims ledger", hard=False, kind="sidecar")
         G.add("claims_honest", "not_checked", "no claims.json found", "ok only when a person has opened the source", kind="sidecar")
-        G.add("sources_opened", "not_checked", "no claims.json found", "every claim ok before the episode is exported",
+        G.add("sources_opened", "not_checked", "no claims.json found", "every claim ok, and marked honestly, before the episode is exported",
               kind="sidecar", who="owner or reviewer")
     pack = find("out/packaging.json", "packaging.json", named=files.get("packaging"))
     if pack:
@@ -700,16 +774,19 @@ def sidecar_gates(G, m, video, kind, episode_path, episode, dialog, prof, fps):
     if qd and isinstance(load_json(qd), dict) and isinstance(load_json(qd).get("text_audit"), dict):
         warnings, src = load_json(qd)["text_audit"].get("warnings"), qd
     else:
-        audits = sorted(p for r in roots for p in r.glob("build/final/*/audit.json"))
+        audits = sorted((p for r in roots for p in r.glob("build/final*/*/audit.json")),
+                        key=lambda p: p.stat().st_mtime, reverse=True)      # final/ or final-plain/: the newest render
         if audits and isinstance(load_json(audits[0]), dict):
             warnings, src = len(load_json(audits[0]).get("warnings", [])), audits[0]
     if warnings is None:
-        G.add("text_audit", "not_checked", "no text audit found (build/qa-delivery.json or build/final/*/audit.json)",
+        G.add("text_audit", "not_checked", "no text audit found (build/qa-delivery.json or build/final*/*/audit.json)",
               "0 text-audit warnings", kind="sidecar",
-              note="Skin Sense's plain render path writes no text audit; check the safe box on frame grabs.")
+              note="build/ is not committed: run on the machine that rendered, or check the safe box on frame grabs.")
     else:
         m["sidecars"]["textAudit"] = {"file": rel(src), "warnings": warnings}
-        G.add("text_audit", "pass" if warnings == 0 else "fail", f"{warnings} warnings", "0 text-audit warnings", kind="sidecar")
+        G.add("text_audit", "pass" if warnings == 0 else "fail", f"{warnings} warnings", "0 text-audit warnings", kind="sidecar",
+              note="The plain path's audit covers the kit's hud text only, not Skin Sense's own overlays: check those on "
+                   "frame grabs." if "final-plain" in src.parts else None)
     sq = find("build/audio/qa.json", "audio/qa.json")
     sj = load_json(sq) if sq else None
     if isinstance(sj, dict) and isinstance(sj.get("sync"), dict):
@@ -976,15 +1053,28 @@ def main(argv=None):
         count = Counter(r["result"] for r in hard)
         failed = [r["id"] for r in hard if r["result"] == "fail"]
         open_ = [r["id"] for r in hard if r["result"] in ("waiting", "review", "not_checked")]
+        # release needs both: every hard gate passed, and the internal score complete and at the pass mark
+        rub = score_rubric(G, rubric, scores, kind) if rubric else None
+        pass_score = rub["passScore"] if rub else None
+        total = rub["total"] if rub else None
+        score_met = total is not None and total >= pass_score
+        if rub is None:
+            score_text = "No internal score: qa/rubric.json could not be read."
+        elif total is None:
+            score_text = (f"The internal score is not complete: {rub['pointsStillOpen']} of {rub['maxScore']} points still "
+                          f"need a person (pass mark {pass_score}).")
+        else:
+            score_text = (f"Internal score {total:g} of {rub['maxScore']}, pass mark {pass_score}: "
+                          + ("met." if score_met else "not met, so not ready for release."))
         if failed:
             text = "FAIL: " + ", ".join(failed) + ". Fix the shot or the stage that caused it; the score does not matter until this passes."
         elif open_:
-            text = "No hard gate failed. Not ready for release: " + ", ".join(open_) + " still open."
+            text = "No hard gate failed. Not ready for release: " + ", ".join(open_) + " still open. " + score_text
         elif args.file_only:
             text = "Every gate measured from the file passed. --file-only: the gates that need other files or a person were not checked."
         else:
-            text = "Every hard gate passed."
-        code = 1 if failed or (args.release and (open_ or args.file_only)) else 0
+            text = "Every hard gate passed. " + score_text
+        code = 1 if failed or (args.release and (open_ or args.file_only or not score_met)) else 0
         timing["totalS"] = round(time.time() - t0, 1)
         report = {
             "tool": TOOL, "reportVersion": 1, "made": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
@@ -998,10 +1088,12 @@ def main(argv=None):
             "measurements": m,
             "hardGates": hard, "otherChecks": other,
             "thresholdSources": {r["id"]: r["source"] for r in G.rows.values() if r.get("source")},
-            "rubric": score_rubric(G, rubric, scores, kind) if rubric else None,
+            "rubric": rub,
             "verdict": {"pass": count["pass"], "fail": count["fail"], "waiting": count["waiting"] + count["review"],
                         "notChecked": count["not_checked"], "failed": failed, "open": open_,
-                        "releaseReady": not failed and not open_ and not args.file_only, "exitCode": code, "summary": text},
+                        "score": total, "passScore": pass_score, "scoreMet": score_met,
+                        "releaseReady": not failed and not open_ and not args.file_only and score_met,
+                        "exitCode": code, "summary": text},
             "timing": timing,
         }
         text_out = json.dumps(report, indent=1, ensure_ascii=False)
