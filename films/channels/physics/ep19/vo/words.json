@@ -46,8 +46,8 @@
   },
   {
    "id": "vo02",
-   "text": "Ten million times slower. One second now lasts about one hundred sixteen days. A hundred million times slower, and one second lasts more than three years. At this speed, a flash of light would take almost two seconds to cross the room. A billion times slower. One second now lasts about thirty-two years. Light moves about thirty centimeters in a billionth of a second. So at this speed, it crawls thirty centimeters in one second. Someone flicks on a flashlight. A glowing front of light leaves the lens, and spreads across the room. Behind it, the table is lit. Ahead of it, the table is still dark. The cup lights up on one side first, and its shadow arrives last. The drop of water above the cup hangs there, frozen. If you just replayed that in your head, tap like and follow. It takes about seventeen seconds for the light to reach the far wall. And in the corner, a computer chip is about to start ticking.",
-   "heard": "10 million times slower. One second now lasts about 116 days. 100 million times slower, and one second lasts more than three years. At this speed, a flash of light would take almost two seconds to cross the room. A billion times slower. One second now lasts about 32 years. Light moves about 30 centimeters in a billionth of a second. So at this speed, it crawls 30 centimeters in one second. Someone flicks on a flashlight. A glowing front of light leaves the lens and spreads across the room. Behind it, the table is lit. Ahead of it, the table is still dark. The cup lights up on one side first and its shadow arrives last. The drop of water above the cup hangs there, frozen. If you just replayed that in your head, tap like and follow. It takes about 17 seconds for the light to reach the far wall, and in the corner, a computer chip is about to start ticking.",
+   "text": "Ten million times slower. One second now lasts about one hundred sixteen days. A hundred million times slower, and one second lasts more than three years. At this speed, a flash of light would take almost two seconds to cross the room. A billion times slower. One second now lasts about thirty-two years. Light moves about thirty centimeters in a billionth of a second. So at this speed, it crawls thirty centimeters in one second.",
+   "heard": "10 million times slower. One second now lasts about 116 days. 100 million times slower, and one second lasts more than three years. At this speed, a flash of light would take almost two seconds to cross the room. A billion times slower. One second now lasts about 32 years. Light moves about 30 centimeters in a billionth of a second. So at this speed, it crawls 30 centimeters in one second.",
    "words": [
     {
      "w": "Ten",
@@ -58,1003 +58,884 @@
     {
      "w": "million",
      "start": 0.32,
-     "end": 0.72,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "times",
-     "start": 0.65,
-     "end": 1.12,
+     "start": 0.76,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "slower.",
-     "start": 1.17,
-     "end": 2.0,
+     "start": 1.195,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "One",
-     "start": 2.125,
-     "end": 2.32,
+     "start": 2.175,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "second",
-     "start": 2.415,
-     "end": 2.72,
+     "start": 2.48,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "now",
-     "start": 2.61,
-     "end": 2.96,
+     "start": 2.76,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "lasts",
-     "start": 3.055,
-     "end": 3.28,
+     "start": 3.04,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "about",
-     "start": 3.27,
-     "end": 3.52,
+     "start": 3.305,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "one",
-     "start": 3.445,
-     "end": 4.48,
+     "start": 3.545,
+     "end": 4.64,
      "heard": false
     },
     {
      "w": "hundred",
-     "start": 3.475,
-     "end": 4.48,
+     "start": 3.575,
+     "end": 4.64,
      "heard": false
     },
     {
      "w": "sixteen",
-     "start": 3.58,
-     "end": 4.48,
+     "start": 3.685,
+     "end": 4.64,
      "heard": false
     },
     {
      "w": "days.",
-     "start": 4.445,
-     "end": 5.28,
+     "start": 4.545,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "A",
-     "start": 5.375,
-     "end": 5.425,
+     "start": 5.5,
+     "end": 5.55,
      "heard": false
     },
     {
      "w": "hundred",
-     "start": 5.405,
-     "end": 5.68,
+     "start": 5.53,
+     "end": 5.92,
      "heard": true
     },
     {
      "w": "million",
-     "start": 5.71,
-     "end": 6.24,
+     "start": 5.855,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "times",
-     "start": 6.175,
-     "end": 6.64,
+     "start": 6.35,
+     "end": 6.8,
      "heard": true
     },
     {
      "w": "slower,",
-     "start": 6.695,
-     "end": 7.36,
+     "start": 6.89,
+     "end": 7.6,
      "heard": true
     },
     {
      "w": "and",
-     "start": 7.425,
-     "end": 7.52,
-     "heard": true
-    },
-    {
-     "w": "one",
-     "start": 7.455,
+     "start": 7.65,
      "end": 7.76,
      "heard": true
     },
     {
+     "w": "one",
+     "start": 7.68,
+     "end": 7.92,
+     "heard": true
+    },
+    {
      "w": "second",
-     "start": 7.845,
-     "end": 8.24,
+     "start": 8.07,
+     "end": 8.4,
      "heard": true
     },
     {
      "w": "lasts",
-     "start": 8.12,
-     "end": 8.56,
-     "heard": true
-    },
-    {
-     "w": "more",
-     "start": 8.455,
+     "start": 8.345,
      "end": 8.8,
      "heard": true
     },
     {
-     "w": "than",
-     "start": 8.92,
+     "w": "more",
+     "start": 8.745,
      "end": 9.04,
      "heard": true
     },
     {
-     "w": "three",
-     "start": 8.97,
+     "w": "than",
+     "start": 9.14,
      "end": 9.28,
      "heard": true
     },
     {
-     "w": "years.",
-     "start": 9.51,
-     "end": 10.16,
+     "w": "three",
+     "start": 9.195,
+     "end": 9.52,
      "heard": true
     },
     {
-     "w": "At",
-     "start": 10.295,
+     "w": "years.",
+     "start": 9.735,
      "end": 10.4,
      "heard": true
     },
     {
-     "w": "this",
-     "start": 10.435,
+     "w": "At",
+     "start": 10.515,
      "end": 10.64,
      "heard": true
     },
     {
+     "w": "this",
+     "start": 10.66,
+     "end": 10.88,
+     "heard": true
+    },
+    {
      "w": "speed,",
-     "start": 10.735,
-     "end": 11.28,
+     "start": 10.965,
+     "end": 11.6,
      "heard": true
     },
     {
      "w": "a",
-     "start": 11.4,
-     "end": 11.45,
+     "start": 11.715,
+     "end": 11.765,
      "heard": true
     },
     {
      "w": "flash",
-     "start": 11.51,
-     "end": 11.84,
+     "start": 11.835,
+     "end": 12.16,
      "heard": true
     },
     {
      "w": "of",
-     "start": 11.935,
-     "end": 11.985,
+     "start": 12.205,
+     "end": 12.32,
      "heard": true
     },
     {
      "w": "light",
-     "start": 11.965,
-     "end": 12.24,
-     "heard": true
-    },
-    {
-     "w": "would",
-     "start": 12.24,
-     "end": 12.4,
-     "heard": true
-    },
-    {
-     "w": "take",
-     "start": 12.36,
+     "start": 12.285,
      "end": 12.56,
      "heard": true
     },
     {
-     "w": "almost",
-     "start": 12.525,
+     "w": "would",
+     "start": 12.59,
+     "end": 12.8,
+     "heard": true
+    },
+    {
+     "w": "take",
+     "start": 12.71,
      "end": 12.96,
      "heard": true
     },
     {
+     "w": "almost",
+     "start": 12.875,
+     "end": 13.28,
+     "heard": true
+    },
+    {
      "w": "two",
-     "start": 12.935,
-     "end": 13.2,
+     "start": 13.29,
+     "end": 13.52,
      "heard": true
     },
     {
      "w": "seconds",
-     "start": 13.245,
-     "end": 13.6,
+     "start": 13.595,
+     "end": 13.92,
      "heard": true
     },
     {
      "w": "to",
-     "start": 13.695,
-     "end": 13.745,
-     "heard": true
-    },
-    {
-     "w": "cross",
-     "start": 13.725,
+     "start": 13.995,
      "end": 14.08,
      "heard": true
     },
     {
+     "w": "cross",
+     "start": 14.1,
+     "end": 14.48,
+     "heard": true
+    },
+    {
      "w": "the",
-     "start": 14.06,
-     "end": 14.24,
+     "start": 14.485,
+     "end": 14.64,
      "heard": true
     },
     {
      "w": "room.",
-     "start": 14.33,
-     "end": 14.96,
+     "start": 14.725,
+     "end": 15.44,
      "heard": true
     },
     {
      "w": "A",
-     "start": 15.07,
-     "end": 15.2,
-     "heard": true
-    },
-    {
-     "w": "billion",
-     "start": 15.22,
+     "start": 15.545,
      "end": 15.68,
      "heard": true
     },
     {
+     "w": "billion",
+     "start": 15.71,
+     "end": 16.16,
+     "heard": true
+    },
+    {
      "w": "times",
-     "start": 15.655,
-     "end": 16.08,
+     "start": 16.16,
+     "end": 16.64,
      "heard": true
     },
     {
      "w": "slower.",
-     "start": 16.175,
-     "end": 17.04,
+     "start": 16.74,
+     "end": 17.6,
      "heard": true
     },
     {
      "w": "One",
-     "start": 17.13,
-     "end": 17.36,
+     "start": 17.7,
+     "end": 18.0,
      "heard": true
     },
     {
      "w": "second",
-     "start": 17.43,
-     "end": 17.76,
+     "start": 18.07,
+     "end": 18.4,
      "heard": true
     },
     {
      "w": "now",
-     "start": 17.71,
-     "end": 18.08,
-     "heard": true
-    },
-    {
-     "w": "lasts",
-     "start": 18.08,
-     "end": 18.48,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 18.445,
+     "start": 18.4,
      "end": 18.72,
      "heard": true
     },
     {
+     "w": "lasts",
+     "start": 18.72,
+     "end": 19.12,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 19.0,
+     "end": 19.36,
+     "heard": true
+    },
+    {
      "w": "thirty-two",
-     "start": 18.775,
-     "end": 19.6,
+     "start": 19.425,
+     "end": 20.32,
      "heard": false
     },
     {
      "w": "years.",
-     "start": 19.605,
-     "end": 20.24,
-     "heard": true
-    },
-    {
-     "w": "Light",
-     "start": 20.325,
-     "end": 20.64,
-     "heard": true
-    },
-    {
-     "w": "moves",
-     "start": 20.655,
+     "start": 20.285,
      "end": 20.96,
      "heard": true
     },
     {
+     "w": "Light",
+     "start": 21.05,
+     "end": 21.36,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 21.38,
+     "end": 21.76,
+     "heard": true
+    },
+    {
      "w": "about",
-     "start": 21.025,
-     "end": 21.2,
+     "start": 21.775,
+     "end": 22.0,
      "heard": true
     },
     {
      "w": "thirty",
-     "start": 21.35,
-     "end": 21.6,
-     "heard": true
-    },
-    {
-     "w": "centimeters",
-     "start": 21.685,
-     "end": 22.24,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 22.29,
+     "start": 22.1,
      "end": 22.4,
      "heard": true
     },
     {
+     "w": "centimeters",
+     "start": 22.455,
+     "end": 23.04,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 23.115,
+     "end": 23.2,
+     "heard": true
+    },
+    {
      "w": "a",
-     "start": 22.5,
-     "end": 22.55,
+     "start": 23.295,
+     "end": 23.36,
      "heard": true
     },
     {
      "w": "billionth",
-     "start": 22.53,
-     "end": 22.96,
+     "start": 23.35,
+     "end": 23.84,
      "heard": true
     },
     {
      "w": "of",
-     "start": 22.9,
-     "end": 23.12,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 23.17,
-     "end": 23.28,
-     "heard": true
-    },
-    {
-     "w": "second.",
-     "start": 23.325,
+     "start": 23.75,
      "end": 24.0,
      "heard": true
     },
     {
-     "w": "So",
-     "start": 24.1,
-     "end": 24.24,
-     "heard": true
-    },
-    {
-     "w": "at",
-     "start": 24.355,
-     "end": 24.405,
-     "heard": true
-    },
-    {
-     "w": "this",
-     "start": 24.385,
-     "end": 24.56,
-     "heard": true
-    },
-    {
-     "w": "speed,",
-     "start": 24.69,
-     "end": 25.04,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 25.1,
-     "end": 25.2,
-     "heard": true
-    },
-    {
-     "w": "crawls",
-     "start": 25.215,
-     "end": 25.68,
-     "heard": true
-    },
-    {
-     "w": "thirty",
-     "start": 25.745,
-     "end": 26.0,
-     "heard": true
-    },
-    {
-     "w": "centimeters",
-     "start": 26.085,
-     "end": 26.72,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 26.69,
-     "end": 26.88,
-     "heard": true
-    },
-    {
-     "w": "one",
-     "start": 26.88,
-     "end": 27.12,
+     "w": "a",
+     "start": 24.02,
+     "end": 24.08,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 27.165,
-     "end": 27.92,
+     "start": 24.175,
+     "end": 24.88,
      "heard": true
     },
     {
-     "w": "Someone",
-     "start": 27.99,
-     "end": 28.4,
+     "w": "So",
+     "start": 24.97,
+     "end": 25.12,
      "heard": true
     },
     {
-     "w": "flicks",
-     "start": 28.47,
-     "end": 28.72,
+     "w": "at",
+     "start": 25.26,
+     "end": 25.31,
      "heard": true
     },
     {
-     "w": "on",
-     "start": 28.67,
-     "end": 28.88,
+     "w": "this",
+     "start": 25.29,
+     "end": 25.44,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 28.935,
-     "end": 29.04,
+     "w": "speed,",
+     "start": 25.535,
+     "end": 26.0,
      "heard": true
     },
     {
-     "w": "flashlight.",
-     "start": 29.0,
-     "end": 29.92,
+     "w": "it",
+     "start": 26.115,
+     "end": 26.165,
      "heard": true
     },
     {
-     "w": "A",
-     "start": 30.035,
-     "end": 30.085,
+     "w": "crawls",
+     "start": 26.24,
+     "end": 26.72,
      "heard": true
     },
     {
-     "w": "glowing",
-     "start": 30.14,
-     "end": 30.48,
+     "w": "thirty",
+     "start": 26.82,
+     "end": 27.12,
      "heard": true
     },
     {
-     "w": "front",
-     "start": 30.55,
-     "end": 30.8,
+     "w": "centimeters",
+     "start": 27.125,
+     "end": 27.84,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 30.8,
-     "end": 30.88,
-     "heard": true
-    },
-    {
-     "w": "light",
-     "start": 30.83,
-     "end": 31.12,
-     "heard": true
-    },
-    {
-     "w": "leaves",
-     "start": 31.095,
-     "end": 31.44,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 31.465,
-     "end": 31.6,
-     "heard": true
-    },
-    {
-     "w": "lens,",
-     "start": 31.57,
-     "end": 32.0,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 32.07,
-     "end": 32.24,
-     "heard": true
-    },
-    {
-     "w": "spreads",
-     "start": 32.35,
-     "end": 32.64,
-     "heard": true
-    },
-    {
-     "w": "across",
-     "start": 32.65,
-     "end": 33.04,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 32.955,
-     "end": 33.2,
-     "heard": true
-    },
-    {
-     "w": "room.",
-     "start": 33.295,
-     "end": 33.92,
-     "heard": true
-    },
-    {
-     "w": "Behind",
-     "start": 34.04,
-     "end": 34.4,
-     "heard": true
-    },
-    {
-     "w": "it,",
-     "start": 34.43,
-     "end": 34.64,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 34.665,
-     "end": 34.8,
-     "heard": true
-    },
-    {
-     "w": "table",
-     "start": 34.76,
-     "end": 35.12,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 35.0,
-     "end": 35.28,
-     "heard": true
-    },
-    {
-     "w": "lit.",
-     "start": 35.285,
-     "end": 36.08,
-     "heard": true
-    },
-    {
-     "w": "Ahead",
-     "start": 36.2,
-     "end": 36.4,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 36.445,
-     "end": 36.56,
-     "heard": true
-    },
-    {
-     "w": "it,",
-     "start": 36.715,
-     "end": 36.8,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 36.81,
-     "end": 36.88,
-     "heard": true
-    },
-    {
-     "w": "table",
-     "start": 36.855,
-     "end": 37.2,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 37.185,
-     "end": 37.44,
-     "heard": true
-    },
-    {
-     "w": "still",
-     "start": 37.405,
-     "end": 37.68,
-     "heard": true
-    },
-    {
-     "w": "dark.",
-     "start": 37.645,
-     "end": 38.4,
-     "heard": true
-    },
-    {
-     "w": "The",
-     "start": 38.595,
-     "end": 38.645,
-     "heard": true
-    },
-    {
-     "w": "cup",
-     "start": 38.625,
-     "end": 38.96,
-     "heard": true
-    },
-    {
-     "w": "lights",
-     "start": 38.915,
-     "end": 39.28,
-     "heard": true
-    },
-    {
-     "w": "up",
-     "start": 39.375,
-     "end": 39.44,
-     "heard": true
-    },
-    {
-     "w": "on",
-     "start": 39.405,
-     "end": 39.6,
+     "w": "in",
+     "start": 27.865,
+     "end": 28.0,
      "heard": true
     },
     {
      "w": "one",
-     "start": 39.605,
-     "end": 39.84,
+     "start": 28.065,
+     "end": 28.16,
      "heard": true
     },
     {
-     "w": "side",
-     "start": 39.88,
-     "end": 40.24,
-     "heard": true
-    },
-    {
-     "w": "first,",
-     "start": 40.25,
-     "end": 40.48,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 40.57,
-     "end": 40.72,
-     "heard": true
-    },
-    {
-     "w": "its",
-     "start": 40.765,
-     "end": 40.88,
-     "heard": true
-    },
-    {
-     "w": "shadow",
-     "start": 40.795,
-     "end": 41.36,
-     "heard": true
-    },
-    {
-     "w": "arrives",
-     "start": 41.355,
-     "end": 42.08,
-     "heard": true
-    },
-    {
-     "w": "last.",
-     "start": 42.09,
-     "end": 42.72,
-     "heard": true
-    },
-    {
-     "w": "The",
-     "start": 42.84,
-     "end": 42.89,
-     "heard": true
-    },
-    {
-     "w": "drop",
-     "start": 42.935,
-     "end": 43.2,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 43.23,
-     "end": 43.36,
-     "heard": true
-    },
-    {
-     "w": "water",
-     "start": 43.26,
-     "end": 43.76,
-     "heard": true
-    },
-    {
-     "w": "above",
-     "start": 43.83,
-     "end": 44.08,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 44.09,
-     "end": 44.16,
-     "heard": true
-    },
-    {
-     "w": "cup",
-     "start": 44.19,
-     "end": 44.56,
-     "heard": true
-    },
-    {
-     "w": "hangs",
-     "start": 44.48,
-     "end": 44.96,
-     "heard": true
-    },
-    {
-     "w": "there,",
-     "start": 44.905,
-     "end": 45.28,
-     "heard": true
-    },
-    {
-     "w": "frozen.",
-     "start": 45.275,
-     "end": 46.32,
-     "heard": true
-    },
-    {
-     "w": "If",
-     "start": 46.485,
-     "end": 46.56,
-     "heard": true
-    },
-    {
-     "w": "you",
-     "start": 46.57,
-     "end": 46.72,
-     "heard": true
-    },
-    {
-     "w": "just",
-     "start": 46.72,
-     "end": 46.88,
-     "heard": true
-    },
-    {
-     "w": "replayed",
-     "start": 46.915,
-     "end": 47.44,
-     "heard": true
-    },
-    {
-     "w": "that",
-     "start": 47.44,
-     "end": 47.6,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 47.57,
-     "end": 47.76,
-     "heard": true
-    },
-    {
-     "w": "your",
-     "start": 47.855,
-     "end": 47.92,
-     "heard": true
-    },
-    {
-     "w": "head,",
-     "start": 47.885,
-     "end": 48.4,
-     "heard": true
-    },
-    {
-     "w": "tap",
-     "start": 48.53,
-     "end": 48.8,
-     "heard": true
-    },
-    {
-     "w": "like",
-     "start": 48.83,
-     "end": 48.96,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 49.045,
-     "end": 49.28,
-     "heard": true
-    },
-    {
-     "w": "follow.",
-     "start": 49.31,
-     "end": 50.24,
-     "heard": true
-    },
-    {
-     "w": "It",
-     "start": 50.41,
-     "end": 50.48,
-     "heard": true
-    },
-    {
-     "w": "takes",
-     "start": 50.52,
-     "end": 50.8,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 50.725,
-     "end": 51.04,
-     "heard": true
-    },
-    {
-     "w": "seventeen",
-     "start": 51.055,
-     "end": 51.76,
-     "heard": true
-    },
-    {
-     "w": "seconds",
-     "start": 51.835,
-     "end": 52.16,
-     "heard": true
-    },
-    {
-     "w": "for",
-     "start": 52.195,
-     "end": 52.245,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 52.305,
-     "end": 52.4,
-     "heard": true
-    },
-    {
-     "w": "light",
-     "start": 52.335,
-     "end": 52.72,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 52.695,
-     "end": 52.8,
-     "heard": true
-    },
-    {
-     "w": "reach",
-     "start": 52.74,
-     "end": 53.12,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 53.15,
-     "end": 53.28,
-     "heard": true
-    },
-    {
-     "w": "far",
-     "start": 53.29,
-     "end": 53.68,
-     "heard": true
-    },
-    {
-     "w": "wall.",
-     "start": 53.765,
-     "end": 54.32,
-     "heard": true
-    },
-    {
-     "w": "And",
-     "start": 54.465,
-     "end": 54.56,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 54.495,
-     "end": 54.64,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 54.735,
-     "end": 54.8,
-     "heard": true
-    },
-    {
-     "w": "corner,",
-     "start": 54.775,
-     "end": 55.28,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 55.35,
-     "end": 55.44,
-     "heard": true
-    },
-    {
-     "w": "computer",
-     "start": 55.445,
-     "end": 55.84,
-     "heard": true
-    },
-    {
-     "w": "chip",
-     "start": 55.905,
-     "end": 56.24,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 56.14,
-     "end": 56.4,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 56.385,
-     "end": 56.64,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 56.625,
-     "end": 56.8,
-     "heard": true
-    },
-    {
-     "w": "start",
-     "start": 56.83,
-     "end": 56.96,
-     "heard": true
-    },
-    {
-     "w": "ticking.",
-     "start": 57.07,
-     "end": 57.52,
+     "w": "second.",
+     "start": 28.335,
+     "end": 28.72,
      "heard": true
     }
    ]
   },
   {
    "id": "vo03",
+   "text": "Someone flicks on a flashlight. A glowing front of light leaves the lens, and spreads across the room. Behind it, the table is lit. The drop of water above the cup hangs there, frozen. If you just replayed that in your head, tap like and follow. It takes about seventeen seconds for the light to reach the far wall. And in the corner, a computer chip is about to start ticking.",
+   "heard": "Someone flicks on a flashlight. A glowing front of light leaves the lens and spreads across the room. Behind it, the table is lit. The drop of water above the cup hangs there, frozen. If you just replayed that in your head, tap like and follow. It takes about 17 seconds for the light to reach the far wall, and in the corner, a computer chip is about to start ticking.",
+   "words": [
+    {
+     "w": "Someone",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "flicks",
+     "start": 0.575,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.725,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.055,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "flashlight.",
+     "start": 1.085,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 2.325,
+     "end": 2.375,
+     "heard": true
+    },
+    {
+     "w": "glowing",
+     "start": 2.355,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "front",
+     "start": 2.85,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.06,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 3.09,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "leaves",
+     "start": 3.385,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.755,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "lens,",
+     "start": 3.88,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.43,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "spreads",
+     "start": 4.655,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "across",
+     "start": 5.015,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.32,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "room.",
+     "start": 5.69,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "Behind",
+     "start": 6.45,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 6.935,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.28,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "table",
+     "start": 7.385,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 7.645,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "lit.",
+     "start": 7.945,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 9.02,
+     "end": 9.07,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 9.05,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 9.495,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 9.61,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "above",
+     "start": 10.095,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.395,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "cup",
+     "start": 10.53,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "hangs",
+     "start": 10.865,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "there,",
+     "start": 11.315,
+     "end": 11.76,
+     "heard": true
+    },
+    {
+     "w": "frozen.",
+     "start": 11.795,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "If",
+     "start": 13.065,
+     "end": 13.12,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 13.14,
+     "end": 13.28,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 13.305,
+     "end": 13.52,
+     "heard": true
+    },
+    {
+     "w": "replayed",
+     "start": 13.505,
+     "end": 14.08,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 14.07,
+     "end": 14.32,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 14.22,
+     "end": 14.48,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 14.575,
+     "end": 14.64,
+     "heard": true
+    },
+    {
+     "w": "head,",
+     "start": 14.605,
+     "end": 15.12,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 15.235,
+     "end": 15.44,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 15.53,
+     "end": 15.76,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 15.775,
+     "end": 16.08,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 16.025,
+     "end": 17.04,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 17.17,
+     "end": 17.22,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 17.285,
+     "end": 17.6,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 17.49,
+     "end": 17.84,
+     "heard": true
+    },
+    {
+     "w": "seventeen",
+     "start": 17.82,
+     "end": 18.56,
+     "heard": true
+    },
+    {
+     "w": "seconds",
+     "start": 18.645,
+     "end": 18.96,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 19.01,
+     "end": 19.06,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 19.115,
+     "end": 19.2,
+     "heard": true
+    },
+    {
+     "w": "light",
+     "start": 19.145,
+     "end": 19.52,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 19.505,
+     "end": 19.68,
+     "heard": true
+    },
+    {
+     "w": "reach",
+     "start": 19.64,
+     "end": 19.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 19.955,
+     "end": 20.08,
+     "heard": true
+    },
+    {
+     "w": "far",
+     "start": 20.105,
+     "end": 20.56,
+     "heard": true
+    },
+    {
+     "w": "wall.",
+     "start": 20.635,
+     "end": 21.28,
+     "heard": true
+    },
+    {
+     "w": "And",
+     "start": 21.43,
+     "end": 21.48,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 21.46,
+     "end": 21.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 21.695,
+     "end": 21.76,
+     "heard": true
+    },
+    {
+     "w": "corner,",
+     "start": 21.74,
+     "end": 22.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 22.255,
+     "end": 22.4,
+     "heard": true
+    },
+    {
+     "w": "computer",
+     "start": 22.385,
+     "end": 22.8,
+     "heard": true
+    },
+    {
+     "w": "chip",
+     "start": 22.845,
+     "end": 23.2,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 23.105,
+     "end": 23.36,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 23.35,
+     "end": 23.6,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 23.59,
+     "end": 23.76,
+     "heard": true
+    },
+    {
+     "w": "start",
+     "start": 23.795,
+     "end": 24.0,
+     "heard": true
+    },
+    {
+     "w": "ticking.",
+     "start": 24.065,
+     "end": 24.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
    "text": "Part 7 of 8. Full video on YouTube.",
    "heard": "Part 7 of 8. Full video on YouTube.",
    "words": [

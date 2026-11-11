@@ -41,8 +41,9 @@ def cut(beat):
 CUTS = {b["id"]: (0.0 if b["id"] == "hook" else cut(b["id"])) for b in BEATS}
 # the voice line of each part of the film (long: one line per beat; a part: hook = vo01, the chapter = vo02, the sign-off = vo03)
 if PART:
-    LID = {CHAPTERS[PART - 1]: "vo02", "hook": "vo01", "tease": "vo03"}
-    LAST = "vo03"
+    NL = len(f.lines)    # 3 lines (hook, chapter, sign-off), or 4 when the chapter is split by a silent beat
+    LID = {CHAPTERS[PART - 1]: "vo02", "hook": "vo01", "tease": f"vo{NL:02d}"}
+    LAST = f"vo{NL:02d}"
 else:
     LID = {"hook": "vo01", "wings": "vo02", "fly": "vo03", "pop": "vo04", "sound": "vo05", "bullet": "vo06", "leader": "vo07", "light": "vo08", "still": "vo09",
            "real": "vo10", "takeaway": "vo11", "tease": "vo12"}
@@ -50,6 +51,11 @@ else:
 
 
 def W(ch, word, dt=0.0):
+    if PART and ch == CHAPTERS[PART - 1] and NL == 4:     # a word may be in the first or the second half of a split chapter
+        try:
+            return A(f"vo02:{word}", dt)
+        except Exception:
+            return A(f"vo03:{word}", dt)
     return A(f"{LID[ch]}:{word}", dt)
 
 

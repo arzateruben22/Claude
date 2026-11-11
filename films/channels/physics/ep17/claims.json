@@ -48,18 +48,6 @@
 "derivation": "A body moving faster than sound makes a cone-shaped shock wave (Mach cone); 850 m/s is Mach 2.5 (half-angle of the cone about 24 degrees)."
 },
 {
-"id": "c32",
-"sentence": "Even now, a table a meter wide would take it about twelve seconds to cross.",
-"claim": "A bullet at 850 m/s crosses a 1-meter table in about 1.2 thousandths of a second: about 12 seconds at 10,000 times slower.",
-"source_url": "",
-"source_title": "Our calculation (shown in the film)",
-"accessed": "2026-11-10",
-"verified_via": "derivation",
-"status": "TODO open link",
-"note": "DERIVATION (our calculation, run it); no outside source. The 1 m table is our assumption.",
-"derivation": "1 m / 850 m/s = 1.18 ms; x 10,000 = 11.8 s."
-},
-{
 "id": "c40",
 "sentence": "In real time, that was far too quick to blink.",
 "claim": "A human blink takes roughly a tenth to four tenths of a second, far longer than a bullet needs to cross an apple.",

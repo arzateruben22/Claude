@@ -46,8 +46,8 @@
   },
   {
    "id": "vo02",
-   "text": "A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second. The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples. Then the back of the apple blows outward, in a spray. Pieces of the apple trail behind it, one at a time. And the bullet is already past. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Quick pause: if that one got you, tap like and follow. Okay, back to it. Even now, a table a meter wide would take it about twelve seconds to cross. A bullet is fast. But out the window, something is about to be much faster.",
-   "heard": "A famous old photograph by Harold Edgiton shows a bullet going through an apple. That bullet flew at about 850 meters a second. The apple is about eight centimeters across, so the bullet crosses it in less than a ten thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples. Then the back of the apple blows outward, in a spray. Pieces of the apple trail behind it one at a time. And the bullet is already passed. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Quick pause. If that one got you, tap like and follow. Okay, back to it. Even now, a table a meter wide would take it about 12 seconds to cross. A bullet is fast. But out the window, something is about to be much faster.",
+   "text": "A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second. The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples.",
+   "heard": "A famous old photograph by Harold Edgiton shows a bullet going through an apple. That bullet flew at about 850 meters a second. The apple is about eight centimeters across, so the bullet crosses it in less than a ten thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples.",
    "words": [
     {
      "w": "A",
@@ -63,1064 +63,915 @@
     },
     {
      "w": "old",
-     "start": 0.555,
+     "start": 0.56,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "photograph",
-     "start": 0.85,
-     "end": 1.36,
+     "start": 0.855,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "by",
-     "start": 1.465,
-     "end": 1.52,
+     "start": 1.495,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "Harold",
-     "start": 1.495,
-     "end": 1.84,
+     "start": 1.525,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "Edgerton",
-     "start": 1.93,
-     "end": 2.64,
+     "start": 2.0,
+     "end": 2.72,
      "heard": false
     },
     {
      "w": "shows",
-     "start": 2.61,
-     "end": 2.8,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 2.895,
+     "start": 2.685,
      "end": 2.96,
      "heard": true
     },
     {
+     "w": "a",
+     "start": 3.09,
+     "end": 3.14,
+     "heard": true
+    },
+    {
      "w": "bullet",
-     "start": 2.945,
-     "end": 3.36,
+     "start": 3.12,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "going",
-     "start": 3.28,
-     "end": 3.6,
+     "start": 3.435,
+     "end": 3.76,
      "heard": true
     },
     {
      "w": "through",
-     "start": 3.61,
-     "end": 3.84,
+     "start": 3.77,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "an",
-     "start": 3.925,
-     "end": 4.08,
+     "start": 4.095,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "apple.",
-     "start": 4.165,
-     "end": 4.88,
+     "start": 4.345,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "That",
-     "start": 5.0,
-     "end": 5.12,
+     "start": 5.205,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "bullet",
-     "start": 5.24,
-     "end": 5.52,
+     "start": 5.365,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "flew",
-     "start": 5.5,
-     "end": 5.84,
+     "start": 5.73,
+     "end": 6.08,
      "heard": true
     },
     {
      "w": "at",
-     "start": 5.91,
-     "end": 6.0,
+     "start": 6.14,
+     "end": 6.24,
      "heard": true
     },
     {
      "w": "about",
-     "start": 5.99,
-     "end": 6.16,
+     "start": 6.22,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "eight",
-     "start": 6.17,
-     "end": 7.04,
+     "start": 6.41,
+     "end": 7.28,
      "heard": false
     },
     {
      "w": "hundred",
-     "start": 6.2,
-     "end": 7.04,
+     "start": 6.44,
+     "end": 7.28,
      "heard": false
     },
     {
      "w": "fifty",
-     "start": 6.23,
-     "end": 7.04,
+     "start": 6.47,
+     "end": 7.28,
      "heard": false
     },
     {
      "w": "meters",
-     "start": 6.92,
-     "end": 7.44,
+     "start": 7.175,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "a",
-     "start": 7.39,
-     "end": 7.6,
+     "start": 7.845,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 7.71,
-     "end": 8.32,
+     "start": 7.99,
+     "end": 8.64,
      "heard": true
     },
     {
      "w": "The",
-     "start": 8.405,
-     "end": 8.48,
+     "start": 8.73,
+     "end": 8.8,
      "heard": true
     },
     {
      "w": "apple",
-     "start": 8.435,
-     "end": 8.88,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 8.77,
-     "end": 9.04,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 9.07,
+     "start": 8.87,
      "end": 9.28,
      "heard": true
     },
     {
-     "w": "eight",
-     "start": 9.325,
+     "w": "is",
+     "start": 9.335,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 9.41,
      "end": 9.6,
      "heard": true
     },
     {
+     "w": "eight",
+     "start": 9.705,
+     "end": 9.92,
+     "heard": true
+    },
+    {
      "w": "centimeters",
-     "start": 9.54,
-     "end": 10.32,
+     "start": 9.92,
+     "end": 10.72,
      "heard": true
     },
     {
      "w": "across.",
-     "start": 10.295,
-     "end": 11.2,
+     "start": 10.7,
+     "end": 11.68,
      "heard": true
     },
     {
      "w": "So",
-     "start": 11.355,
-     "end": 11.44,
+     "start": 11.785,
+     "end": 11.84,
      "heard": true
     },
     {
      "w": "the",
-     "start": 11.385,
-     "end": 11.52,
+     "start": 11.815,
+     "end": 12.0,
      "heard": true
     },
     {
      "w": "bullet",
-     "start": 11.615,
-     "end": 11.92,
-     "heard": true
-    },
-    {
-     "w": "crosses",
-     "start": 11.915,
+     "start": 12.04,
      "end": 12.4,
      "heard": true
     },
     {
+     "w": "crosses",
+     "start": 12.37,
+     "end": 12.8,
+     "heard": true
+    },
+    {
      "w": "it",
-     "start": 12.46,
-     "end": 12.56,
+     "start": 12.7,
+     "end": 13.04,
      "heard": true
     },
     {
      "w": "in",
-     "start": 12.49,
-     "end": 12.72,
+     "start": 12.94,
+     "end": 13.2,
      "heard": true
     },
     {
      "w": "less",
-     "start": 12.72,
-     "end": 12.96,
+     "start": 13.2,
+     "end": 13.44,
      "heard": true
     },
     {
      "w": "than",
-     "start": 13.045,
-     "end": 13.12,
+     "start": 13.515,
+     "end": 13.6,
      "heard": true
     },
     {
      "w": "a",
-     "start": 13.25,
-     "end": 13.3,
+     "start": 13.73,
+     "end": 13.78,
      "heard": true
     },
     {
      "w": "ten-thousandth",
-     "start": 13.285,
-     "end": 14.08,
+     "start": 13.77,
+     "end": 14.56,
      "heard": false
     },
     {
      "w": "of",
-     "start": 13.99,
-     "end": 14.24,
+     "start": 14.495,
+     "end": 14.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 14.265,
-     "end": 14.4,
+     "start": 14.77,
+     "end": 14.96,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 14.415,
-     "end": 15.2,
+     "start": 14.92,
+     "end": 15.84,
      "heard": true
     },
     {
      "w": "Here,",
-     "start": 15.305,
-     "end": 15.76,
+     "start": 15.86,
+     "end": 16.4,
      "heard": true
     },
     {
      "w": "that",
-     "start": 15.855,
-     "end": 16.0,
+     "start": 16.53,
+     "end": 16.64,
      "heard": true
     },
     {
      "w": "takes",
-     "start": 16.06,
-     "end": 16.32,
+     "start": 16.745,
+     "end": 17.04,
      "heard": true
     },
     {
      "w": "about",
-     "start": 16.215,
-     "end": 16.56,
+     "start": 16.925,
+     "end": 17.28,
      "heard": true
     },
     {
      "w": "one",
-     "start": 16.47,
-     "end": 16.72,
+     "start": 17.23,
+     "end": 17.44,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 17.015,
-     "end": 17.6,
-     "heard": true
-    },
-    {
-     "w": "The",
-     "start": 17.775,
-     "end": 17.84,
-     "heard": true
-    },
-    {
-     "w": "bullet",
-     "start": 17.91,
-     "end": 18.24,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 18.23,
+     "start": 17.795,
      "end": 18.4,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 18.425,
-     "end": 18.56,
+     "w": "The",
+     "start": 18.575,
+     "end": 18.64,
      "heard": true
     },
     {
-     "w": "small,",
-     "start": 18.57,
+     "w": "bullet",
+     "start": 18.74,
      "end": 19.12,
      "heard": true
     },
     {
+     "w": "is",
+     "start": 19.06,
+     "end": 19.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 19.17,
+     "end": 19.44,
+     "heard": true
+    },
+    {
+     "w": "small,",
+     "start": 19.45,
+     "end": 20.0,
+     "heard": true
+    },
+    {
      "w": "dark",
-     "start": 19.185,
-     "end": 19.52,
+     "start": 20.085,
+     "end": 20.48,
      "heard": true
     },
     {
      "w": "shape.",
-     "start": 19.45,
-     "end": 20.24,
+     "start": 20.4,
+     "end": 21.28,
      "heard": true
     },
     {
      "w": "At",
-     "start": 20.41,
-     "end": 20.56,
+     "start": 21.39,
+     "end": 21.52,
      "heard": true
     },
     {
      "w": "this",
-     "start": 20.555,
-     "end": 20.72,
+     "start": 21.535,
+     "end": 21.76,
      "heard": true
     },
     {
      "w": "speed,",
-     "start": 20.86,
-     "end": 21.36,
+     "start": 21.89,
+     "end": 22.4,
      "heard": true
     },
     {
      "w": "you",
-     "start": 21.48,
-     "end": 21.53,
-     "heard": true
-    },
-    {
-     "w": "can",
-     "start": 21.585,
-     "end": 21.68,
-     "heard": true
-    },
-    {
-     "w": "watch",
-     "start": 21.615,
-     "end": 22.0,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 21.97,
-     "end": 22.16,
-     "heard": true
-    },
-    {
-     "w": "drift",
-     "start": 22.185,
-     "end": 22.48,
-     "heard": true
-    },
-    {
-     "w": "into",
-     "start": 22.455,
+     "start": 22.535,
      "end": 22.64,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 22.655,
+     "w": "can",
+     "start": 22.64,
      "end": 22.8,
      "heard": true
     },
     {
-     "w": "apple",
-     "start": 22.805,
+     "w": "watch",
+     "start": 22.68,
+     "end": 23.04,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 23.025,
      "end": 23.2,
      "heard": true
     },
     {
+     "w": "drift",
+     "start": 23.205,
+     "end": 23.6,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 23.55,
+     "end": 23.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 23.76,
+     "end": 23.92,
+     "heard": true
+    },
+    {
+     "w": "apple",
+     "start": 23.93,
+     "end": 24.4,
+     "heard": true
+    },
+    {
      "w": "like",
-     "start": 23.32,
-     "end": 23.37,
+     "start": 24.495,
+     "end": 24.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 23.35,
-     "end": 23.52,
+     "start": 24.525,
+     "end": 24.72,
      "heard": true
     },
     {
      "w": "slow",
-     "start": 23.585,
-     "end": 24.0,
+     "start": 24.755,
+     "end": 25.2,
      "heard": true
     },
     {
      "w": "fish.",
-     "start": 24.02,
-     "end": 24.88,
+     "start": 25.22,
+     "end": 26.08,
      "heard": true
     },
     {
      "w": "The",
-     "start": 25.04,
-     "end": 25.12,
+     "start": 26.24,
+     "end": 26.32,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 25.07,
-     "end": 25.6,
+     "start": 26.27,
+     "end": 26.8,
      "heard": true
     },
     {
      "w": "dimples.",
-     "start": 25.675,
-     "end": 26.64,
-     "heard": true
-    },
-    {
-     "w": "Then",
-     "start": 26.795,
-     "end": 26.88,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 26.825,
-     "end": 27.04,
-     "heard": true
-    },
-    {
-     "w": "back",
-     "start": 27.08,
-     "end": 27.28,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 27.3,
-     "end": 27.36,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 27.33,
-     "end": 27.52,
-     "heard": true
-    },
-    {
-     "w": "apple",
-     "start": 27.55,
-     "end": 27.92,
-     "heard": true
-    },
-    {
-     "w": "blows",
-     "start": 27.935,
-     "end": 28.32,
-     "heard": true
-    },
-    {
-     "w": "outward,",
-     "start": 28.415,
-     "end": 28.88,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 28.905,
-     "end": 29.04,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 29.05,
-     "end": 29.12,
-     "heard": true
-    },
-    {
-     "w": "spray.",
-     "start": 29.225,
-     "end": 29.92,
-     "heard": true
-    },
-    {
-     "w": "Pieces",
-     "start": 29.995,
-     "end": 30.32,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 30.415,
-     "end": 30.465,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 30.445,
-     "end": 30.56,
-     "heard": true
-    },
-    {
-     "w": "apple",
-     "start": 30.57,
-     "end": 30.96,
-     "heard": true
-    },
-    {
-     "w": "trail",
-     "start": 30.93,
-     "end": 31.36,
-     "heard": true
-    },
-    {
-     "w": "behind",
-     "start": 31.295,
-     "end": 31.68,
-     "heard": true
-    },
-    {
-     "w": "it,",
-     "start": 31.7,
-     "end": 31.84,
-     "heard": true
-    },
-    {
-     "w": "one",
-     "start": 31.895,
-     "end": 32.16,
-     "heard": true
-    },
-    {
-     "w": "at",
-     "start": 32.255,
-     "end": 32.4,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 32.305,
-     "end": 32.64,
-     "heard": true
-    },
-    {
-     "w": "time.",
-     "start": 32.74,
-     "end": 33.2,
-     "heard": true
-    },
-    {
-     "w": "And",
-     "start": 33.315,
-     "end": 33.365,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 33.345,
-     "end": 33.44,
-     "heard": true
-    },
-    {
-     "w": "bullet",
-     "start": 33.55,
-     "end": 33.92,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 33.87,
-     "end": 34.08,
-     "heard": true
-    },
-    {
-     "w": "already",
-     "start": 33.98,
-     "end": 34.4,
-     "heard": true
-    },
-    {
-     "w": "past.",
-     "start": 34.34,
-     "end": 35.2,
-     "heard": false
-    },
-    {
-     "w": "In",
-     "start": 35.335,
-     "end": 35.44,
-     "heard": true
-    },
-    {
-     "w": "real",
-     "start": 35.365,
-     "end": 35.68,
-     "heard": true
-    },
-    {
-     "w": "time,",
-     "start": 35.74,
-     "end": 36.08,
-     "heard": true
-    },
-    {
-     "w": "that",
-     "start": 36.145,
-     "end": 36.24,
-     "heard": true
-    },
-    {
-     "w": "was",
-     "start": 36.27,
-     "end": 36.48,
-     "heard": true
-    },
-    {
-     "w": "far",
-     "start": 36.485,
-     "end": 36.72,
-     "heard": true
-    },
-    {
-     "w": "too",
-     "start": 36.72,
-     "end": 36.88,
-     "heard": true
-    },
-    {
-     "w": "quick",
-     "start": 36.895,
-     "end": 37.12,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 37.125,
-     "end": 37.28,
-     "heard": true
-    },
-    {
-     "w": "blink.",
-     "start": 37.25,
-     "end": 38.0,
-     "heard": true
-    },
-    {
-     "w": "It's",
-     "start": 38.115,
-     "end": 38.24,
-     "heard": true
-    },
-    {
-     "w": "moving",
-     "start": 38.195,
-     "end": 38.64,
-     "heard": true
-    },
-    {
-     "w": "more",
-     "start": 38.52,
-     "end": 38.8,
-     "heard": true
-    },
-    {
-     "w": "than",
-     "start": 38.835,
-     "end": 38.96,
-     "heard": true
-    },
-    {
-     "w": "twice",
-     "start": 39.06,
-     "end": 39.28,
-     "heard": true
-    },
-    {
-     "w": "as",
-     "start": 39.3,
-     "end": 39.44,
-     "heard": true
-    },
-    {
-     "w": "fast",
-     "start": 39.485,
-     "end": 39.76,
-     "heard": true
-    },
-    {
-     "w": "as",
-     "start": 39.735,
-     "end": 39.92,
-     "heard": true
-    },
-    {
-     "w": "sound,",
-     "start": 39.945,
-     "end": 40.32,
-     "heard": true
-    },
-    {
-     "w": "so",
-     "start": 40.415,
-     "end": 40.48,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 40.57,
-     "end": 40.64,
-     "heard": true
-    },
-    {
-     "w": "drags",
-     "start": 40.61,
-     "end": 40.96,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 40.93,
-     "end": 41.12,
-     "heard": true
-    },
-    {
-     "w": "narrow",
-     "start": 41.0,
-     "end": 41.52,
-     "heard": true
-    },
-    {
-     "w": "cone",
-     "start": 41.49,
-     "end": 41.84,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 41.89,
-     "end": 41.94,
-     "heard": true
-    },
-    {
-     "w": "air",
-     "start": 41.92,
-     "end": 42.24,
-     "heard": true
-    },
-    {
-     "w": "behind",
-     "start": 42.125,
-     "end": 42.72,
-     "heard": true
-    },
-    {
-     "w": "it.",
-     "start": 42.92,
-     "end": 43.2,
-     "heard": true
-    },
-    {
-     "w": "Quick",
-     "start": 43.375,
-     "end": 43.6,
-     "heard": true
-    },
-    {
-     "w": "pause:",
-     "start": 43.625,
-     "end": 44.4,
-     "heard": true
-    },
-    {
-     "w": "if",
-     "start": 44.45,
-     "end": 44.56,
-     "heard": true
-    },
-    {
-     "w": "that",
-     "start": 44.59,
-     "end": 44.72,
-     "heard": true
-    },
-    {
-     "w": "one",
-     "start": 44.735,
-     "end": 44.96,
-     "heard": true
-    },
-    {
-     "w": "got",
-     "start": 44.97,
-     "end": 45.2,
-     "heard": true
-    },
-    {
-     "w": "you,",
-     "start": 45.24,
-     "end": 45.44,
-     "heard": true
-    },
-    {
-     "w": "tap",
-     "start": 45.49,
-     "end": 45.76,
-     "heard": true
-    },
-    {
-     "w": "like",
-     "start": 45.765,
-     "end": 45.92,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 46.005,
-     "end": 46.32,
-     "heard": true
-    },
-    {
-     "w": "follow.",
-     "start": 46.23,
-     "end": 47.12,
-     "heard": true
-    },
-    {
-     "w": "Okay,",
-     "start": 47.2,
-     "end": 47.76,
-     "heard": true
-    },
-    {
-     "w": "back",
-     "start": 47.78,
-     "end": 48.0,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 48.005,
-     "end": 48.24,
-     "heard": true
-    },
-    {
-     "w": "it.",
-     "start": 48.35,
-     "end": 48.8,
-     "heard": true
-    },
-    {
-     "w": "Even",
-     "start": 48.815,
-     "end": 49.12,
-     "heard": true
-    },
-    {
-     "w": "now,",
-     "start": 49.12,
-     "end": 49.44,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 49.535,
-     "end": 49.585,
-     "heard": true
-    },
-    {
-     "w": "table",
-     "start": 49.585,
-     "end": 49.92,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 49.815,
-     "end": 50.08,
-     "heard": true
-    },
-    {
-     "w": "meter",
-     "start": 50.08,
-     "end": 50.4,
-     "heard": true
-    },
-    {
-     "w": "wide",
-     "start": 50.375,
-     "end": 50.72,
-     "heard": true
-    },
-    {
-     "w": "would",
-     "start": 50.815,
-     "end": 50.88,
-     "heard": true
-    },
-    {
-     "w": "take",
-     "start": 50.855,
-     "end": 51.04,
-     "heard": true
-    },
-    {
-     "w": "it",
-     "start": 51.055,
-     "end": 51.2,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 51.205,
-     "end": 51.44,
-     "heard": true
-    },
-    {
-     "w": "twelve",
-     "start": 51.445,
-     "end": 51.84,
-     "heard": true
-    },
-    {
-     "w": "seconds",
-     "start": 51.935,
-     "end": 52.24,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 52.28,
-     "end": 52.4,
-     "heard": true
-    },
-    {
-     "w": "cross.",
-     "start": 52.36,
-     "end": 53.04,
-     "heard": true
-    },
-    {
-     "w": "A",
-     "start": 53.21,
-     "end": 53.28,
-     "heard": true
-    },
-    {
-     "w": "bullet",
-     "start": 53.365,
-     "end": 53.76,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 53.695,
-     "end": 54.0,
-     "heard": true
-    },
-    {
-     "w": "fast.",
-     "start": 53.895,
-     "end": 54.72,
-     "heard": true
-    },
-    {
-     "w": "But",
-     "start": 54.855,
-     "end": 54.905,
-     "heard": true
-    },
-    {
-     "w": "out",
-     "start": 54.885,
-     "end": 55.12,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 55.12,
-     "end": 55.28,
-     "heard": true
-    },
-    {
-     "w": "window,",
-     "start": 55.205,
-     "end": 55.84,
-     "heard": true
-    },
-    {
-     "w": "something",
-     "start": 55.8,
-     "end": 56.16,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 56.075,
-     "end": 56.32,
-     "heard": true
-    },
-    {
-     "w": "about",
-     "start": 56.255,
-     "end": 56.56,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 56.605,
-     "end": 56.72,
-     "heard": true
-    },
-    {
-     "w": "be",
-     "start": 56.635,
-     "end": 56.88,
-     "heard": true
-    },
-    {
-     "w": "much",
-     "start": 56.985,
-     "end": 57.12,
-     "heard": true
-    },
-    {
-     "w": "faster.",
-     "start": 57.135,
-     "end": 57.68,
+     "start": 26.86,
+     "end": 27.44,
      "heard": true
     }
    ]
   },
   {
    "id": "vo03",
+   "text": "Then the back of the apple blows outward, in a spray. And the bullet is already past. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Quick pause: if that one got you, tap like and follow. Okay, back to it. A bullet is fast. But out the window, something is about to be much faster.",
+   "heard": "Then the back of the apple blows outward in a spray, and the bullet is already passed. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Quick pause. If that one got you, tap like and follow. Okay, back to it. A bullet is fast. But out the window, something is about to be much faster.",
+   "words": [
+    {
+     "w": "Then",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.375,
+     "end": 0.425,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 0.405,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.59,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.7,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "apple",
+     "start": 0.85,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "blows",
+     "start": 1.225,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "outward,",
+     "start": 1.585,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.015,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.325,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "spray.",
+     "start": 2.42,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "And",
+     "start": 3.345,
+     "end": 3.395,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.375,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "bullet",
+     "start": 3.58,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.9,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "already",
+     "start": 4.01,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "past.",
+     "start": 4.37,
+     "end": 5.28,
+     "heard": false
+    },
+    {
+     "w": "In",
+     "start": 5.42,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "real",
+     "start": 5.45,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "time,",
+     "start": 5.87,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 6.315,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "was",
+     "start": 6.45,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "far",
+     "start": 6.66,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "too",
+     "start": 6.915,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "quick",
+     "start": 7.125,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.33,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "blink.",
+     "start": 7.455,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "It's",
+     "start": 8.39,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "moving",
+     "start": 8.48,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 8.76,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 9.12,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "twice",
+     "start": 9.39,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 9.64,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 9.845,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 10.14,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "sound,",
+     "start": 10.375,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 10.765,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 11.065,
+     "end": 11.115,
+     "heard": true
+    },
+    {
+     "w": "drags",
+     "start": 11.095,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 11.46,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "narrow",
+     "start": 11.6,
+     "end": 12.0,
+     "heard": true
+    },
+    {
+     "w": "cone",
+     "start": 12.035,
+     "end": 12.4,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 12.485,
+     "end": 12.56,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 12.545,
+     "end": 12.88,
+     "heard": true
+    },
+    {
+     "w": "behind",
+     "start": 12.805,
+     "end": 13.44,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 13.64,
+     "end": 14.0,
+     "heard": true
+    },
+    {
+     "w": "Quick",
+     "start": 14.175,
+     "end": 14.48,
+     "heard": true
+    },
+    {
+     "w": "pause:",
+     "start": 14.435,
+     "end": 15.2,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 15.33,
+     "end": 15.44,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 15.47,
+     "end": 15.6,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 15.615,
+     "end": 15.84,
+     "heard": true
+    },
+    {
+     "w": "got",
+     "start": 15.845,
+     "end": 16.08,
+     "heard": true
+    },
+    {
+     "w": "you,",
+     "start": 16.095,
+     "end": 16.32,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 16.385,
+     "end": 16.64,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 16.67,
+     "end": 16.96,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 16.94,
+     "end": 17.2,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 17.185,
+     "end": 18.16,
+     "heard": true
+    },
+    {
+     "w": "Okay,",
+     "start": 18.225,
+     "end": 18.88,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 18.86,
+     "end": 19.12,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 19.13,
+     "end": 19.28,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 19.365,
+     "end": 19.76,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 19.865,
+     "end": 19.92,
+     "heard": true
+    },
+    {
+     "w": "bullet",
+     "start": 20.02,
+     "end": 20.4,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 20.285,
+     "end": 20.64,
+     "heard": true
+    },
+    {
+     "w": "fast.",
+     "start": 20.52,
+     "end": 21.36,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 21.51,
+     "end": 21.56,
+     "heard": true
+    },
+    {
+     "w": "out",
+     "start": 21.54,
+     "end": 21.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 21.825,
+     "end": 21.92,
+     "heard": true
+    },
+    {
+     "w": "window,",
+     "start": 21.855,
+     "end": 22.48,
+     "heard": true
+    },
+    {
+     "w": "something",
+     "start": 22.415,
+     "end": 22.8,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 22.735,
+     "end": 23.04,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 23.1,
+     "end": 23.28,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 23.31,
+     "end": 23.44,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 23.345,
+     "end": 23.6,
+     "heard": true
+    },
+    {
+     "w": "much",
+     "start": 23.69,
+     "end": 23.84,
+     "heard": true
+    },
+    {
+     "w": "faster.",
+     "start": 23.83,
+     "end": 24.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
    "text": "Part 5 of 8. Full video on YouTube.",
    "heard": "Part 5 of 8, Full Video on YouTube.",
    "words": [

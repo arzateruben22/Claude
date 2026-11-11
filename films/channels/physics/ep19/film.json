@@ -2,7 +2,7 @@
  "id": "reality-rulebook-s3p7",
  "fps": 30,
  "bpm": 112.5,
- "dur": 66.4,
+ "dur": 65.3333,
  "poster": 0.0,
  "_doc": "Compiled by build.py from script.md, vo/ and the direction in build.py. Do not edit by hand.",
  "scene": "../lf01/scene.mjs",
@@ -17,7 +17,11 @@
    "name": "body"
   },
   {
-   "at": 61.583333,
+   "at": 32.783333,
+   "name": "body2"
+  },
+  {
+   "at": 60.516633,
    "name": "tease"
   }
  ],
@@ -32,15 +36,22 @@
   {
    "id": "body",
    "t0": 3.4667,
-   "t1": 61.6,
+   "t1": 32.8,
    "line": "vo02",
    "energy": 0.7
   },
   {
-   "id": "tease",
-   "t0": 61.6,
-   "t1": 66.4,
+   "id": "body2",
+   "t0": 32.8,
+   "t1": 60.5333,
    "line": "vo03",
+   "energy": 0.8
+  },
+  {
+   "id": "tease",
+   "t0": 60.5333,
+   "t1": 65.3333,
+   "line": "vo04",
    "energy": 0.4
   }
  ],
@@ -48,13 +59,14 @@
   "cuts": {
    "hook": 0.0,
    "body": 3.450033,
-   "tease": 61.583333
+   "body2": 32.783333,
+   "tease": 60.516633
   }
  },
  "spine": [
   {
    "t0": 0.45,
-   "t1": 61.2833,
+   "t1": 60.2166,
    "label": "slow-motion"
   }
  ],
@@ -81,19 +93,19 @@
    7.0
   ],
   [
-   8.0,
+   8.1333,
    7.0
   ],
   [
-   9.1,
+   9.2333,
    8.0
   ],
   [
-   17.8333,
+   18.3,
    8.0
   ],
   [
-   18.9333,
+   19.4,
    9.0
   ]
  ],
@@ -112,11 +124,11 @@
    "1 real second now lasts 116 days"
   ],
   [
-   10.0,
+   10.1333,
    "1 real second now lasts 3.2 years"
   ],
   [
-   19.8333,
+   20.3,
    "1 real second now lasts 32 years"
   ]
  ],
@@ -176,8 +188,8 @@
    "steps": 8,
    "ground": 1000000000.0
   },
-  "flash8": 14.8,
-  "light9": 34.8333,
+  "flash8": 15.1333,
+  "light9": 38.7667,
   "chip": [
    1000000000.0,
    1000000000.0
@@ -236,7 +248,7 @@
    "ease": "sine"
   },
   {
-   "t": 8.8,
+   "t": 8.9333,
    "look": [
     0.5,
     1.0,
@@ -248,7 +260,7 @@
    "ease": "sine"
   },
   {
-   "t": 14.3,
+   "t": 14.6333,
    "look": [
     0.0,
     1.2,
@@ -260,7 +272,7 @@
    "ease": "sine"
   },
   {
-   "t": 21.8,
+   "t": 22.5,
    "look": [
     0.0,
     1.2,
@@ -272,7 +284,7 @@
    "ease": "sine"
   },
   {
-   "t": 31.4,
+   "t": 35.1333,
    "look": [
     -2.0,
     1.0,
@@ -284,7 +296,7 @@
    "ease": "sine"
   },
   {
-   "t": 36.3333,
+   "t": 40.2667,
    "look": [
     -2.0,
     1.0,
@@ -296,7 +308,7 @@
    "ease": "sine"
   },
   {
-   "t": 38.5715,
+   "t": 42.5049,
    "look": [
     -1.0,
     1.0,
@@ -308,7 +320,7 @@
    "ease": "sine"
   },
   {
-   "t": 46.7715,
+   "t": 50.7049,
    "look": [
     0.15,
     1.0,
@@ -320,7 +332,7 @@
    "ease": "sine"
   },
   {
-   "t": 54.0667,
+   "t": 52.5333,
    "look": [
     0.0,
     1.2,
@@ -332,7 +344,7 @@
    "ease": "sine"
   },
   {
-   "t": 58.1667,
+   "t": 56.8333,
    "look": [
     2.4,
     0.97,
@@ -383,7 +395,7 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 0.6,
-   "t1": 61.2833,
+   "t1": 60.2166,
    "slot": "tl"
   }
  ],
@@ -440,7 +452,7 @@
   },
   {
    "t0": 3.62,
-   "t1": 5.52,
+   "t1": 5.545,
    "lines": [
     [
      [
@@ -449,970 +461,840 @@
      ],
      [
       "times",
-      4.25
+      4.36
      ]
     ],
     [
      [
       "slower.",
-      4.77
+      4.795
      ]
     ]
    ]
   },
   {
-   "t0": 5.725,
-   "t1": 8.795,
+   "t0": 5.775,
+   "t1": 8.895,
    "lines": [
     [
      [
-      "1",
-      5.725
+      "One",
+      5.775
      ],
      [
       "second",
-      6.015
+      6.08
      ],
      [
       "now",
-      6.21
+      6.36
      ],
      [
       "lasts",
-      6.655
+      6.64
      ]
     ],
     [
      [
       "about",
-      6.87
+      6.905
      ],
      [
       "116",
-      7.045
+      7.145
      ],
      [
       "days.",
-      8.045
+      8.145
      ]
     ]
    ]
   },
   {
-   "t0": 8.975,
-   "t1": 11.72,
+   "t0": 9.1,
+   "t1": 11.24,
    "lines": [
     [
      [
       "100 million",
-      8.975
-     ],
-     [
-      "times",
-      9.775
+      9.1
      ]
     ],
     [
      [
+      "times",
+      9.95
+     ],
+     [
       "slower,",
-      10.295
-     ],
-     [
-      "and",
-      11.025
-     ],
-     [
-      "1",
-      11.055
-     ],
-     [
-      "second",
-      11.445
+      10.49
      ]
     ]
    ]
   },
   {
-   "t0": 11.72,
-   "t1": 13.86,
+   "t0": 11.25,
+   "t1": 14.085,
    "lines": [
     [
      [
-      "lasts",
-      11.72
+      "and",
+      11.25
      ],
      [
-      "more",
-      12.055
+      "one",
+      11.28
+     ],
+     [
+      "second",
+      11.67
+     ],
+     [
+      "lasts",
+      11.945
      ]
     ],
     [
      [
-      "than",
-      12.52
+      "more",
+      12.345
      ],
      [
-      "three",
-      12.57
+      "than",
+      12.74
+     ],
+     [
+      "3",
+      12.795
      ],
      [
       "years.",
-      13.11
+      13.335
      ]
     ]
    ]
   },
   {
-   "t0": 13.895,
-   "t1": 15.0,
+   "t0": 14.115,
+   "t1": 15.315,
    "lines": [
     [
      [
       "At",
-      13.895
+      14.115
      ],
      [
       "this",
-      14.035
+      14.26
      ],
      [
       "speed,",
-      14.335
+      14.565
      ]
     ]
    ]
   },
   {
-   "t0": 15.0,
-   "t1": 17.295,
+   "t0": 15.315,
+   "t1": 17.595,
    "lines": [
     [
      [
       "a",
-      15.0
+      15.315
      ],
      [
       "flash",
-      15.11
+      15.435
      ],
      [
       "of",
-      15.535
+      15.805
      ],
      [
       "light",
-      15.565
+      15.885
      ],
      [
       "would",
-      15.84
+      16.19
      ]
     ],
     [
      [
       "take",
-      15.96
+      16.31
      ],
      [
       "almost",
-      16.125
+      16.475
      ],
      [
       "2",
-      16.535
+      16.89
      ],
      [
       "seconds",
-      16.845
+      17.195
      ]
     ]
    ]
   },
   {
-   "t0": 17.295,
-   "t1": 18.67,
+   "t0": 17.595,
+   "t1": 19.075,
    "lines": [
     [
      [
       "to",
-      17.295
+      17.595
      ],
      [
       "cross",
-      17.325
+      17.7
      ],
      [
       "the",
-      17.66
+      18.085
      ],
      [
       "room.",
-      17.93
+      18.325
      ]
     ]
    ]
   },
   {
-   "t0": 18.67,
-   "t1": 20.525,
+   "t0": 19.145,
+   "t1": 21.09,
    "lines": [
     [
      [
       "1 billion",
-      18.67
-     ],
-     [
-      "times",
-      19.255
+      19.145
      ]
     ],
     [
      [
+      "times",
+      19.76
+     ],
+     [
       "slower.",
-      19.775
+      20.34
      ]
     ]
    ]
   },
   {
-   "t0": 20.73,
-   "t1": 23.925,
+   "t0": 21.3,
+   "t1": 24.635,
    "lines": [
     [
      [
-      "1",
-      20.73
+      "One",
+      21.3
      ],
      [
       "second",
-      21.03
+      21.67
      ],
      [
       "now",
-      21.31
+      22.0
      ],
      [
       "lasts",
-      21.68
+      22.32
      ]
     ],
     [
      [
       "about",
-      22.045
+      22.6
      ],
      [
       "32",
-      22.375
+      23.025
      ],
      [
       "years.",
-      23.205
+      23.885
      ]
     ]
    ]
   },
   {
-   "t0": 23.925,
-   "t1": 25.89,
+   "t0": 24.65,
+   "t1": 26.715,
    "lines": [
     [
      [
       "Light",
-      23.925
+      24.65
      ],
      [
       "moves",
-      24.255
+      24.98
      ]
     ],
     [
      [
       "about",
-      24.625
+      25.375
      ],
      [
-      "30",
-      24.95
-     ],
-     [
-      "centimeters",
-      25.285
+      "30 cm",
+      25.7
      ]
     ]
    ]
   },
   {
-   "t0": 25.89,
-   "t1": 27.675,
+   "t0": 26.715,
+   "t1": 28.525,
    "lines": [
     [
      [
       "in",
-      25.89
+      26.715
      ],
      [
       "a",
-      26.1
+      26.895
      ],
      [
       "billionth",
-      26.13
+      26.95
      ]
     ],
     [
      [
       "of",
-      26.5
+      27.35
      ],
      [
       "a",
-      26.77
+      27.62
      ],
      [
       "second.",
-      26.925
+      27.775
      ]
     ]
    ]
   },
   {
-   "t0": 27.7,
-   "t1": 30.29,
+   "t0": 28.57,
+   "t1": 29.715,
    "lines": [
     [
      [
       "So",
-      27.7
+      28.57
      ],
      [
       "at",
-      27.955
+      28.86
      ],
      [
       "this",
-      27.985
+      28.89
      ],
      [
       "speed,",
-      28.29
-     ],
+      29.135
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.715,
+   "t1": 32.685,
+   "lines": [
+    [
      [
       "it",
-      28.7
+      29.715
+     ],
+     [
+      "crawls",
+      29.84
+     ],
+     [
+      "30 cm",
+      30.42
      ]
     ],
     [
      [
-      "crawls",
-      28.815
-     ],
-     [
-      "30",
-      29.345
-     ],
-     [
-      "centimeters",
-      29.685
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 30.29,
-   "t1": 31.515,
-   "lines": [
-    [
-     [
       "in",
-      30.29
+      31.465
      ],
      [
-      "1",
-      30.48
+      "one",
+      31.665
      ],
      [
       "second.",
-      30.765
+      31.935
      ]
     ]
    ]
   },
   {
-   "t0": 31.59,
-   "t1": 33.35,
+   "t0": 35.32,
+   "t1": 37.135,
    "lines": [
     [
      [
       "Someone",
-      31.59
+      35.32
      ],
      [
       "flicks",
-      32.07
+      35.875
      ]
     ],
     [
      [
       "on",
-      32.27
+      36.025
      ],
      [
       "a",
-      32.535
+      36.355
      ],
      [
       "flashlight.",
-      32.6
+      36.385
      ]
     ]
    ]
   },
   {
-   "t0": 33.635,
-   "t1": 35.065,
+   "t0": 37.625,
+   "t1": 39.055,
    "lines": [
     [
      [
       "A",
-      33.635
+      37.625
      ],
      [
       "glowing",
-      33.74
+      37.655
      ],
      [
       "front",
-      34.15
+      38.15
      ]
     ],
     [
      [
       "of",
-      34.4
+      38.36
      ],
      [
       "light",
-      34.43
+      38.39
      ],
      [
       "leaves",
-      34.695
+      38.685
      ]
     ]
    ]
   },
   {
-   "t0": 35.065,
-   "t1": 37.64,
+   "t0": 39.055,
+   "t1": 41.74,
    "lines": [
     [
      [
       "the",
-      35.065
+      39.055
      ],
      [
       "lens,",
-      35.17
+      39.18
      ],
      [
       "and",
-      35.67
+      39.73
      ],
      [
       "spreads",
-      35.95
+      39.955
      ]
     ],
     [
      [
       "across",
-      36.25
+      40.315
      ],
      [
       "the",
-      36.555
+      40.62
      ],
      [
       "room.",
-      36.895
+      40.99
      ]
     ]
    ]
   },
   {
-   "t0": 37.64,
-   "t1": 39.635,
+   "t0": 41.75,
+   "t1": 43.995,
    "lines": [
     [
      [
       "Behind",
-      37.64
+      41.75
      ],
      [
       "it,",
-      38.03
+      42.235
      ]
     ],
     [
      [
       "the",
-      38.265
+      42.58
      ],
      [
       "table",
-      38.36
+      42.685
      ],
      [
       "is",
-      38.6
+      42.945
      ],
      [
       "lit.",
-      38.885
+      43.245
      ]
     ]
    ]
   },
   {
-   "t0": 39.8,
-   "t1": 40.41,
-   "lines": [
-    [
-     [
-      "Ahead",
-      39.8
-     ],
-     [
-      "of",
-      40.045
-     ],
-     [
-      "it,",
-      40.315
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 40.41,
-   "t1": 41.995,
-   "lines": [
-    [
-     [
-      "the",
-      40.41
-     ],
-     [
-      "table",
-      40.455
-     ]
-    ],
-    [
-     [
-      "is",
-      40.785
-     ],
-     [
-      "still",
-      41.005
-     ],
-     [
-      "dark.",
-      41.245
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 42.195,
-   "t1": 44.17,
+   "t0": 44.32,
+   "t1": 46.615,
    "lines": [
     [
      [
       "The",
-      42.195
-     ],
-     [
-      "cup",
-      42.225
-     ],
-     [
-      "lights",
-      42.515
-     ],
-     [
-      "up",
-      42.975
-     ]
-    ],
-    [
-     [
-      "on",
-      43.005
-     ],
-     [
-      "one",
-      43.205
-     ],
-     [
-      "side",
-      43.48
-     ],
-     [
-      "first,",
-      43.85
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 44.17,
-   "t1": 46.44,
-   "lines": [
-    [
-     [
-      "and",
-      44.17
-     ],
-     [
-      "its",
-      44.365
-     ],
-     [
-      "shadow",
-      44.395
-     ]
-    ],
-    [
-     [
-      "arrives",
-      44.955
-     ],
-     [
-      "last.",
-      45.69
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 46.44,
-   "t1": 48.505,
-   "lines": [
-    [
-     [
-      "The",
-      46.44
+      44.32
      ],
      [
       "drop",
-      46.535
+      44.35
      ],
      [
       "of",
-      46.83
+      44.795
      ],
      [
       "water",
-      46.86
+      44.91
      ]
     ],
     [
      [
       "above",
-      47.43
+      45.395
      ],
      [
       "the",
-      47.69
+      45.695
      ],
      [
       "cup",
-      47.79
+      45.83
      ],
      [
       "hangs",
-      48.08
+      46.165
      ]
     ]
    ]
   },
   {
-   "t0": 48.505,
-   "t1": 49.625,
+   "t0": 46.615,
+   "t1": 47.845,
    "lines": [
     [
      [
       "there,",
-      48.505
+      46.615
      ],
      [
       "frozen.",
-      48.875
+      47.095
      ]
     ]
    ]
   },
   {
-   "t0": 50.085,
-   "t1": 52.13,
+   "t0": 48.365,
+   "t1": 50.535,
    "lines": [
     [
      [
       "If",
-      50.085
+      48.365
      ],
      [
       "you",
-      50.17
+      48.44
      ],
      [
       "just",
-      50.32
+      48.605
      ],
      [
       "replayed",
-      50.515
+      48.805
      ]
     ],
     [
      [
       "that",
-      51.04
+      49.37
      ],
      [
       "in",
-      51.17
+      49.52
      ],
      [
       "your",
-      51.455
+      49.875
      ],
      [
       "head,",
-      51.485
+      49.905
      ]
     ]
    ]
   },
   {
-   "t0": 52.13,
-   "t1": 53.66,
+   "t0": 50.535,
+   "t1": 52.075,
    "lines": [
     [
      [
       "tap",
-      52.13
+      50.535
      ],
      [
       "like",
-      52.43
+      50.83
      ],
      [
       "and",
-      52.645
+      51.075
      ],
      [
       "follow.",
-      52.91
+      51.325
      ]
     ]
    ]
   },
   {
-   "t0": 54.01,
-   "t1": 55.795,
+   "t0": 52.47,
+   "t1": 54.31,
    "lines": [
     [
      [
       "It",
-      54.01
+      52.47
      ],
      [
       "takes",
-      54.12
+      52.585
      ]
     ],
     [
      [
       "about",
-      54.325
+      52.79
      ],
      [
       "17",
-      54.655
+      53.12
      ],
      [
       "seconds",
-      55.435
+      53.945
      ]
     ]
    ]
   },
   {
-   "t0": 55.795,
-   "t1": 58.065,
+   "t0": 54.31,
+   "t1": 56.685,
    "lines": [
     [
      [
       "for",
-      55.795
+      54.31
      ],
      [
       "the",
-      55.905
+      54.415
      ],
      [
       "light",
-      55.935
+      54.445
      ]
     ],
     [
      [
       "to",
-      56.295
+      54.805
      ],
      [
       "reach",
-      56.34
+      54.94
      ],
      [
       "the",
-      56.75
+      55.255
      ],
      [
       "far",
-      56.89
+      55.405
      ],
      [
       "wall.",
-      57.365
+      55.935
      ]
     ]
    ]
   },
   {
-   "t0": 58.065,
-   "t1": 59.74,
+   "t0": 56.73,
+   "t1": 58.405,
    "lines": [
     [
      [
       "And",
-      58.065
+      56.73
      ],
      [
       "in",
-      58.095
+      56.76
      ],
      [
       "the",
-      58.335
+      56.995
      ],
      [
       "corner,",
-      58.375
+      57.04
      ]
     ],
     [
      [
       "a",
-      58.95
+      57.555
      ],
      [
       "computer",
-      59.045
+      57.685
      ],
      [
       "chip",
-      59.505
+      58.145
      ]
     ]
    ]
   },
   {
-   "t0": 59.74,
-   "t1": 61.42,
+   "t0": 58.405,
+   "t1": 60.115,
    "lines": [
     [
      [
       "is",
-      59.74
+      58.405
      ],
      [
       "about",
-      59.985
+      58.65
      ],
      [
       "to",
-      60.225
+      58.89
      ],
      [
       "start",
-      60.43
+      59.095
      ]
     ],
     [
      [
       "ticking.",
-      60.67
+      59.365
      ]
     ]
    ]
   },
   {
-   "t0": 61.92,
-   "t1": 63.305,
+   "t0": 60.853,
+   "t1": 62.238,
    "lines": [
     [
      [
       "Part",
-      61.92
+      60.853
      ],
      [
       "7",
-      62.175
+      61.108
      ],
      [
       "of",
-      62.555
+      61.488
      ],
      [
       "8.",
-      62.785
+      61.718
      ]
     ]
    ]
   },
   {
-   "t0": 63.305,
-   "t1": 64.56,
+   "t0": 62.238,
+   "t1": 63.493,
    "lines": [
     [
      [
       "Full",
-      63.305
+      62.238
      ],
      [
       "video",
-      63.585
+      62.518
      ]
     ],
     [
      [
       "on",
-      63.9
+      62.833
      ],
      [
       "YouTube.",
-      64.26
+      63.193
      ]
     ]
    ]
   }
  ],
- "endShow": 64.4,
- "endCard": 64.9,
+ "endShow": 63.3333,
+ "endCard": 63.8333,
  "end": {
   "title": "Part 7 of *8*",
   "follow": "Full video on YouTube · Follow Reality Rulebook",
@@ -1429,15 +1311,22 @@
   {
    "id": "vo02",
    "t": 3.6,
-   "dur": 57.553,
+   "dur": 28.772,
    "file": "vo/02.wav",
-   "text": "Ten million times slower. One second now lasts about one hundred sixteen days. A hundred million times slower, and one second lasts more than three years. At this speed, a flash of light would take almost two seconds to cross the room. A billion times slower. One second now lasts about thirty-two years. Light moves about thirty centimeters in a billionth of a second. So at this speed, it crawls thirty centimeters in one second. Someone flicks on a flashlight. A glowing front of light leaves the lens, and spreads across the room. Behind it, the table is lit. Ahead of it, the table is still dark. The cup lights up on one side first, and its shadow arrives last. The drop of water above the cup hangs there, frozen. If you just replayed that in your head, tap like and follow. It takes about seventeen seconds for the light to reach the far wall. And in the corner, a computer chip is about to start ticking."
+   "text": "Ten million times slower. One second now lasts about one hundred sixteen days. A hundred million times slower, and one second lasts more than three years. At this speed, a flash of light would take almost two seconds to cross the room. A billion times slower. One second now lasts about thirty-two years. Light moves about thirty centimeters in a billionth of a second. So at this speed, it crawls thirty centimeters in one second."
   },
   {
    "id": "vo03",
-   "t": 61.9,
-   "dur": 2.841,
+   "t": 35.3,
+   "dur": 24.58,
    "file": "vo/03.wav",
+   "text": "Someone flicks on a flashlight. A glowing front of light leaves the lens, and spreads across the room. Behind it, the table is lit. The drop of water above the cup hangs there, frozen. If you just replayed that in your head, tap like and follow. It takes about seventeen seconds for the light to reach the far wall. And in the corner, a computer chip is about to start ticking."
+  },
+  {
+   "id": "vo04",
+   "t": 60.833333333333336,
+   "dur": 2.841,
+   "file": "vo/04.wav",
    "text": "Part 7 of 8. Full video on YouTube."
   }
  ],

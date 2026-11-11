@@ -146,8 +146,22 @@ def phrase_captions(f, max_chars=24, linger=0.3, fix=(), until=None, written=Tru
     lines = [[{"w": w["w"], "t": round(ln["t"] + w["start"], 3)} for w in ln["words"]] for ln in f.lines]
     if written:
         from numerals import numerals
-        lines = [numerals(ws) for ws in lines]
         fix = [_written_fix(fx, numerals) for fx in fix]
+        try:   # the owner's 11 Nov 2026 rule: numerals with unit symbols (km, m/s, %, °), "1 million"; the voice still says the words
+            import importlib.util, sys as _sys
+            from pathlib import Path as _P
+            _p = _P(__file__).resolve().parents[4] / "kits/cinema/film/numerals.py"
+            _spec = importlib.util.spec_from_file_location("numerals_display", _p); _m = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_m)
+            def _disp(ws):
+                out = []
+                for d, ts in _m.display_tokens([(w["w"], w["t"]) for w in ws]):
+                    o = {"w": d, "t": round(ts[0], 3)}
+                    if len(ts) > 1: o["tl"] = round(ts[-1], 3)
+                    out.append(o)
+                return out
+            lines = [_disp(ws) for ws in lines]
+        except Exception:   # fall back to the older written-number pass
+            lines = [numerals(ws) for ws in lines]
     return paginate(lines, max_chars, linger, fix, until)
 
 

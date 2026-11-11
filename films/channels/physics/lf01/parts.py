@@ -14,6 +14,14 @@ CH = HERE.parent
 CHAPTERS = ["wings", "fly", "pop", "sound", "bullet", "leader", "light", "still"]
 TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen",
           "A bullet, through an apple, slowly", "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
+# the owner's 11 Nov 2026 asks for parts not yet rendered: about a fifth less talking (restatements and filler out, one line per idea plus its number) and one silent beat of
+# 2.5 s where the slow-motion picture carries the moment (a voice gap is allowed to run to 3 s only while the picture is visibly changing)
+TRIM = {"wings": (["When a number was measured", "When a picture is just an idea", "The wings are doing all"], "Each wing sweeps forward"),
+        "bullet": (["Pieces of the apple trail", "Even now, a table"], "Then the back of the apple"),
+        "leader": (["Lightning looks like it strikes in an instant"], "At last it touches the ground"),
+        "light": (["Ahead of it, the table is still dark", "The cup lights up on one side first"], "Someone flicks on a flashlight"),
+        "still": (["Light hasn't stopped", "It looks almost frozen"], "A human hair is about a tenth")}
+TRIMMED = {"wings", "bullet", "leader", "light", "still"}
 FIRST_EP = 13
 CTA_AFTER = {"wings": "So fifty wing beats", "fly": "The water settles", "pop": "The whole bubble is gone", "sound": "That's roughly how many", "bullet": "It's moving more than twice",
              "leader": "That flash travels", "light": "The drop of water above the cup", "still": "At this speed, that takes about a third"}
@@ -33,13 +41,21 @@ for n, ch in enumerate(CHAPTERS, 1):
         vo = vo.split("{|}", 1)[1].strip()
     # the like/follow moment (CTA.md): the film's own "subscribe" sentences are dropped; the part gets one "follow" line, rotating, right after the chapter's payoff
     sents = [x for x in re.split(r"(?<=\})\s+", vo.strip()) if x and "subscribe" not in x]
+    split_at = None
+    if ch in TRIM:
+        drops, split_at = TRIM[ch]
+        sents = [x for x in sents if not any(x.startswith(d) for d in drops)]
     k = next(i for i, x in enumerate(sents) if x.startswith(CTA_AFTER[ch]))
     sents.insert(k + 1, CTA_LINES[(n - 1) % 4] + " {-}")
-    vo = " ".join(sents)
+    if split_at:
+        k2 = next(i for i, x in enumerate(sents) if x.startswith(split_at))
+        vo, vo2 = " ".join(sents[:k2]), " ".join(sents[k2:])
+    else:
+        vo, vo2 = " ".join(sents), None
     ep = f"ep{FIRST_EP + n - 1}"
     d = CH / ep
     (d / "out").mkdir(parents=True, exist_ok=True)
-    tags = sorted(set(re.findall(r"\{(c\d+)\}", vo)), key=lambda x: int(x[1:]))
+    tags = sorted(set(re.findall(r"\{(c\d+)\}", vo + " " + (vo2 or ""))), key=lambda x: int(x[1:]))
     # the part's claim ledger: the claims its lines cite, with the sentence field left as the lf01 ledger has it
     ledger = [claims[t] for t in tags]
     (d / "claims.json").write_text(json.dumps(ledger, indent=0, ensure_ascii=False))
@@ -55,7 +71,10 @@ vo: {hook} {{-}}
 
 ## body {{chapter: {ch} · shot: {shot} · energy: 0.7 · pre: 0.15}} (3.0–60.0 s)
 vo: {vo}
-
+{("""
+## body2 {chapter: """ + ch + """ · shot: """ + shot + """ · energy: 0.8 · pre: 2.5} (30.0–60.0 s)
+vo: """ + vo2 + """
+""") if vo2 else ""}
 ## tease {{end card held ≥ 1.5 s · signature: knocks D6, B5, G5 at 0, +12, +20 frames · energy: 0.4}} (60.0–66.0 s)
 vo: Part {n} of 8. {{-}} Full video on YouTube. {{-}}
 end card: "Part {n} of 8" · "Full video on YouTube" · footnote: "Reality Rulebook · Season 3"
@@ -65,5 +84,5 @@ end card: "Part {n} of 8" · "Full video on YouTube" · footnote: "Reality Ruleb
 - Every claim is OPEN: a person must open the sources (claims.json; derivations carry no URL). TODO: the handle, a physicist's sign-off, the AI-voice label.
 '''
     (d / "script.md").write_text(text)
-    words = len(re.findall(r"[A-Za-z0-9'’-]+", re.sub(r"\{[^}]*\}", "", vo).replace("*", "")))
+    words = len(re.findall(r"[A-Za-z0-9'’-]+", re.sub(r"\{[^}]*\}", "", vo + ' ' + (vo2 or '')).replace("*", "")))
     print(ep, f"Part {n}: {TITLES[n-1]!r}: hook '{hook}', {words} words, claims {tags}")
