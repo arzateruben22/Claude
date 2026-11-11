@@ -40,28 +40,17 @@ import { setHiddenCaster } from './visibility';
 import { Cards, SEATED, STANDING, CHEERING, CardPose } from './cards';
 import { SCREENS, fd, FRONT, POOL_TABLES } from './layout';
 import type { BarLife } from './life';
+import { withFillRim } from './look';
+import { sfx } from './sfx';
 
 const SECS = 60;
 /**
- * A body's own fill light (Lot 57's withFill, lot57/crowdview.ts, written here so the bar doesn't import Lot 57's
+ * A body's own fill light (Lot 57's withFill, lot57/crowdview.ts, written for the bar so it doesn't import Lot 57's
  * crowd): the room's light is baked into the venue's vertex colours, so the builder's body material, lit only by the
  * sky and the few real lights, drew guests inside as near-black cut-outs at Low. The fill is added as the albedo times
- * its level (the builder's material is wrapped, not changed; its own shader edits run first).
+ * its level; S4 adds the rim at HD and Ultra (look.ts withFillRim, which this now is).
  */
-function withFill(mat: THREE.Material, fill: { value: THREE.Color }) {
-  if ((mat.userData as { filled?: boolean }).filled) return;
-  (mat.userData as { filled?: boolean }).filled = true;
-  const before = mat.onBeforeCompile;
-  mat.onBeforeCompile = (sh, r) => {
-    before.call(mat, sh, r);
-    sh.uniforms.uFill = fill;
-    sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 uFill;')
-      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * uFill;');
-  };
-  mat.customProgramCacheKey = () => 'person-lod-fill';
-  mat.needsUpdate = true;
-}
+const withFill = withFillRim;
 const WALK = 1.25;
 const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 type Slot = { id: string; zone: string; group?: string; kind: 'seat' | 'stand' | 'staff'; at: P2; face: P2; y: number; stand: P2; r: number; x: number; z: number; sx: number; sz: number; seatId?: number };
@@ -1101,6 +1090,8 @@ export class Crowd {
   }
   /** a reaction in front of the current action: the clip, then the action resumes */
   private react(n: Npc, clip: ClipName, delay: number, seconds: number) {
+    // S4: the reaction's sound (audio.ts sums a frame's reactions into one swell, its level by how many reacted)
+    if (clip === 'cheer' || clip === 'groan' || clip === 'clap') sfx(clip, n.x, n.z, 1, delay);
     n.clip = clip; n.clipUntil = this.T + delay + seconds;
     if (clip === 'cheer') n.cheerCardUntil = this.T + delay + seconds;
     const at = this.T + delay;
@@ -1444,11 +1435,13 @@ export class Crowd {
     return f;
   }
   /** the fill on a body where it stands: inside the room's light (more at Low, which has no real lights), outside a
-   *  little at night under the patio's and the lot's lamps */
+   *  little at night under the lot's lamps, and (S4's repair) the pergola's warm light on the patio while open */
   private setFill(p: Person, x: number, z: number) {
     const f = this.fills.get(p); if (!f) return;
     const c = this.c.clock(), inside = this.indoorAt(x, z), k = this.quality === 'low' ? 1 : 0.55;
-    if (inside && c.open) f.value.setRGB(0.34 * k, 0.29 * k, 0.24 * k); else f.value.setRGB(0.12 * c.night, 0.11 * c.night, 0.1 * c.night);
+    if (inside && c.open) { f.value.setRGB(0.34 * k, 0.29 * k, 0.24 * k); return; }
+    const [u, v] = this.F.toFrame(x, z), patio = c.open && u > 2 && u < 24 && v < 0.3 && v > -5.5;
+    if (patio) f.value.setRGB(0.26 * c.night, 0.19 * c.night, 0.13 * c.night); else f.value.setRGB(0.12 * c.night, 0.11 * c.night, 0.1 * c.night);
   }
   private applyBody(p: Person, mode: DrawMode, bits: number, key: string) {
     const sig = `${mode}:${bits}`;
