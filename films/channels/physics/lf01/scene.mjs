@@ -294,7 +294,7 @@ const camNow = (t) => {
   return { look: [0, 1, 2].map((j) => lerp(a.look[j], b.look[j], u)), fitW: lw(a.fitW, b.fitW), yaw: lerp(a.yaw, b.yaw, u), pitch: lerp(a.pitch ?? 3, b.pitch ?? 3, u) };
 };
 const placeCam = (t) => {
-  const c = camNow(t), dist = c.fitW / (2 * Math.tan((VFOV * Math.PI) / 360) * (W / H)), y = ((c.yaw + 0.9 * Math.sin(t * 0.55)) * Math.PI) / 180, p = ((c.pitch + 0.45 * Math.sin(t * 0.37 + 1.0)) * Math.PI) / 180;   // a slow sway: nothing is ever perfectly still
+  const c = camNow(t), dr = driftAt(t), dist = c.fitW * (1 - 0.034 * dr) / (2 * Math.tan((VFOV * Math.PI) / 360) * (W / H)), y = ((c.yaw + 1.6 * dr + 0.9 * Math.sin(t * 0.55)) * Math.PI) / 180, p = ((c.pitch + 0.45 * Math.sin(t * 0.37 + 1.0)) * Math.PI) / 180;   // a slow sway: nothing is ever perfectly still
   camera.position.set(c.look[0] + dist * Math.sin(y) * Math.cos(p), c.look[1] + dist * Math.sin(p), c.look[2] + dist * Math.cos(y) * Math.cos(p));
   camera.near = Math.max(1e-5, dist * 0.05); camera.far = 80; camera.fov = VFOV; camera.updateProjectionMatrix(); camera.lookAt(c.look[0], c.look[1], c.look[2]); camera.updateMatrixWorld();
 };
@@ -320,6 +320,9 @@ const sp = (x, y, z) => new THREE.Vector3(x, y, z);
 const flightAt = (u) => { const x = 2.3 - 4.6 * u; return [x, 1.32 + 0.12 * Math.sin(u * 9) + 0.05 * Math.sin(u * 23), -0.55 + 0.1 * Math.sin(u * 5)]; };
 const place = (fl, x, y, z, yaw = 0) => { fl.g.visible = true; fl.g.position.set(x, y, z); fl.g.rotation.set(0, yaw, 0); };
 
+// a slow push-and-drift (a sine bump: still at both ends) over the holds that read as stills, so nothing sits motionless for more than a beat
+const DRIFTS = [[19.4, 22.0], [343.2, 345.8], [474.7, 477.3], [487.2, 489.8], [498.2, 501.2], [515.4, 518.8], [520.4, 523.0], [531.5, 534.1]];
+const driftAt = (t) => { if (FILM.part) return 0; for (const [a, b] of DRIFTS) if (t > a && t < b) return Math.pow(Math.sin(Math.PI * (t - a) / (b - a)), 2); return 0; };
 window.seek = function (t) {
   stage(t);
   placeCam(t);
