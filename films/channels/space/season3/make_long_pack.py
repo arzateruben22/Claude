@@ -7,7 +7,10 @@ L1 = R + "/long01"; D = R + "/compilations/s3"; os.makedirs(D, exist_ok=True)
 T = json.load(open(L1 + "/part_titles.json")); tl = json.load(open(L1 + "/out/long.json")); claims = json.load(open(L1 + "/claims.json"))
 start = {c["id"].split("_")[0]: c["t"] for c in reversed(tl["clips"]) if c["id"].endswith("_vo")}
 def ts(s): s = int(s); return f"{s // 60}:{s % 60:02d}"
-rows = [(0.0, T["parts"]["1"])] + [(start[f"ch{n}"] - 0.2, T["parts"][str(n)]) for n in range(2, 9)]
+def chap_start(n):
+    t = start[f"ch{n}"]; ap = [b["t0"] for b in tl.get("beats", []) if b["kind"] == "approach" and 0 <= t - b["t1"] <= 1.2]   # the chapter begins with its approach beat
+    return (ap[0] if ap else t) - 0.2
+rows = [(0.0, T["parts"]["1"])] + [(chap_start(n), T["parts"][str(n)]) for n in range(2, 9)]
 open(D + "/chapters.txt", "w").write("\n".join(f"{ts(t)} {n}" for t, n in rows) + "\n")
 if "--text-only" not in sys.argv:
     im = Image.open(L1 + "/art/plate-close.png").convert("RGB").resize((1920, 1080), Image.LANCZOS)

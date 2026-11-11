@@ -36,7 +36,7 @@ function drawPlateWavesNoState(img, t, G) { const hz = Math.floor(G.horizon), sh
 function drawPlate(img, a, scale = 1, ox = 0, oy = 0) { if (a <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.translate(W / 2 + ox, H * 0.72 + oy); ctx.scale(scale, scale); ctx.translate(-W / 2, -H * 0.72); ctx.drawImage(img, 0, 0, W, H); ctx.restore(); }
 function moonState(d, G) { const m = sizeX(d), r = G.r0 * m, u = sm((m - 1) / 8.5), yb = lerp(G.cy0 + G.r0, G.yb1, u), cx = lerp(G.cx0, G.cx1, sm((m - 1) / 6)); return { m, r, cx, cy: yb - r }; }
 function sceneComposite(t, d, ecl, moonAlpha, G) {
-  const cam = 1.02 + 0.026 * Math.sin(t * 0.37) + 0.02 * (t / (TL.dur || 1)), ox = 26 * U * Math.sin(t * 0.43), oy = 12 * U * Math.sin(t * 0.31 + 1);
+  const cam = 1.06 + 0.026 * Math.sin(t * 0.37) + 0.02 * (t / (TL.dur || 1)), ox = 12 * U * Math.sin(t * 0.43), oy = 9 * U * Math.sin(t * 0.31 + 1);   // overscan (>= 2.9%) is always larger than the largest pan, so the painting's edge never shows
   const tide = clamp01(Math.log10(Math.pow(D0 / d, 3)) / Math.log10(900) + tideBoost(t)) * moonAlpha, lightx = 1 + (Math.pow(D0 / d, 2) - 1) * moonAlpha, mo = moonState(d, G); mo.cx += slideOff(t);
   ctx.save(); ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
   drawPlateWaves(IM[G.plate], 1, t, G, cam, ox, oy);
@@ -73,6 +73,14 @@ function sceneComposite(t, d, ecl, moonAlpha, G) {
   ctx.restore();
 }
 
+
+// the global view: slow sway and the beat shake, with an overscan (scale) that always exceeds the largest displacement + 0.6%, so the painting's edge never shows
+function viewShift(t) {
+  const A = swayAmp(t), SH = shakeAmp(t); if (A < 0.001 && SH < 0.001) return { on: false, dx: 0, dy: 0, sc: 1 };
+  const dx = 16 * U * A * Math.sin(t * 0.55) + 9 * U * SH * Math.sin(t * 43), dy = 8 * U * A * Math.sin(t * 0.4) + 6 * U * SH * Math.sin(t * 57 + 1);
+  const mx = 16 * U * A + 9 * U * SH + 0.006 * W, my = 8 * U * A + 6 * U * SH + 0.006 * H, sc = 1 + Math.max(2 * mx / W, 2 * my / H);
+  return { on: true, dx, dy, sc };
+}
 function zoomParams(t, G) {   // the camera at time t: a zoom of s about the world point F, anchored at screen point (tx, ty); null = identity
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; let z = null;
   if (inCh1) { const mo0 = moonState(384400, G), zs = zoomState(t, b, mo0); z = { s: zs.s, F: zs.F, k: zs.k }; } else { const mv = movesState(t, G); if (mv) z = mv; }
@@ -83,8 +91,7 @@ function zoomParams(t, G) {   // the camera at time t: a zoom of s about the wor
 function moonScreen(t) {   // where the Moon is on the screen at time t (centre and radius in canvas px), through the shake, the sway and the camera
   const G = geom(), mo = moonState(Math.max(dVis(t), 17000), G); mo.cx += slideOff(t); let x = mo.cx, y = mo.cy, r = mo.r; const zp = zoomParams(t, G);
   if (zp) { x = zp.tx + (x - zp.Fx) * zp.s; y = zp.ty + (y - zp.Fy) * zp.s; r *= zp.s; }
-  const A = swayAmp(t), SH = shakeAmp(t); if (A > 0.001) { const sc = 1 + 0.016 * A; x = W / 2 + 16 * U * A * Math.sin(t * 0.55) + (x - W / 2) * sc; y = H / 2 + 8 * U * A * Math.sin(t * 0.4) + (y - H / 2) * sc; r *= sc; }
-  if (SH > 0.001) { x += 9 * U * SH * Math.sin(t * 43); y += 6 * U * SH * Math.sin(t * 57 + 1); }
+  const v = viewShift(t); if (v.on) { x = W / 2 + v.dx + (x - W / 2) * v.sc; y = H / 2 + v.dy + (y - H / 2) * v.sc; r *= v.sc; }
   return { x, y, r, vis: track(TL.tracks.moon, t) };
 }
 // the caption pill keeps clear of the Moon: the first slot whose rectangle misses the Moon (plus a margin) at the start, middle and end of the line
@@ -185,7 +192,7 @@ function ch1Overlays(t, b, mo, G) {
 }
 window.renderAt = (t) => {
   const G = geom(), ecl = track(TL.tracks.eclipse, t), moonA = track(TL.tracks.moon, t), brk = track(TL.tracks.brk, t), ring = track(TL.tracks.ring, t), tn = track(TL.tracks.tonight, t), d = dVis(t);
-  const A = swayAmp(t), SH = shakeAmp(t); ctx.save(); if (SH > 0.001) ctx.translate(9 * U * SH * Math.sin(t * 43), 6 * U * SH * Math.sin(t * 57 + 1)); if (A > 0.001) { const sc = 1 + 0.016 * A; ctx.translate(W / 2 + 16 * U * A * Math.sin(t * 0.55), H / 2 + 8 * U * A * Math.sin(t * 0.4)); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); }
+  const A = swayAmp(t), SH = shakeAmp(t); ctx.save(); { const v = viewShift(t); if (v.on) { ctx.translate(W / 2 + v.dx, H / 2 + v.dy); ctx.scale(v.sc, v.sc); ctx.translate(-W / 2, -H / 2); } }
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; ctx.save();
   const zp = zoomParams(t, G); if (zp) { ctx.translate(zp.tx, zp.ty); ctx.scale(zp.s, zp.s); ctx.translate(-zp.Fx, -zp.Fy); }
   sceneComposite(t, Math.max(d, 17000), ecl, moonA, G);
