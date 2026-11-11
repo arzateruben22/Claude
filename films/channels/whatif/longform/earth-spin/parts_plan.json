@@ -11,72 +11,72 @@
    {
     "line": "vo01",
     "sentence": 2,
-    "dur": 9.39,
+    "dur": 6.85,
     "text": "You are standing on the equator, and you are going to watch what happens, minute by minute, until the planet can't take it anymore."
    },
    {
     "line": "vo02",
     "sentence": 1,
-    "dur": 1.12,
+    "dur": 0.94,
     "text": "Here are the rules."
    },
    {
     "line": "vo02",
     "sentence": 2,
-    "dur": 3.92,
+    "dur": 3.51,
     "text": "The Earth keeps its size, its shape, its air and its water."
    },
    {
     "line": "vo02",
     "sentence": 3,
-    "dur": 4.17,
+    "dur": 3.05,
     "text": "Only the spin changes, and it only ever gets faster."
    },
    {
     "line": "vo02",
     "sentence": 4,
-    "dur": 4.46,
+    "dur": 4.02,
     "text": "On screen there is one number that matters: the length of a day."
    },
    {
     "line": "vo02",
     "sentence": 5,
-    "dur": 7.36,
+    "dur": 5.21,
     "text": "It starts at twenty-four hours, and by the end it will have fallen to about an hour and twenty-four minutes."
    },
    {
     "line": "vo03",
     "sentence": 1,
-    "dur": 2.83,
+    "dur": 2.85,
     "text": "Right now, one day lasts twenty-four hours."
    },
    {
     "line": "vo03",
     "sentence": 3,
-    "dur": 8.49,
+    "dur": 6.8,
     "text": "Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour."
    },
    {
     "line": "vo03",
     "sentence": 4,
-    "dur": 3.39,
+    "dur": 1.84,
     "text": "You never feel it, because everything moves with you."
    },
    {
     "line": "vo03",
     "sentence": 5,
-    "dur": 2.94,
+    "dur": 1.32,
     "text": "What you do feel is a tiny push outward."
    },
    {
     "line": "vo03",
     "sentence": 6,
-    "dur": 5.76,
+    "dur": 3.78,
     "text": "You weigh about a third of a percent less than you would on a planet that did not spin."
    }
   ],
-  "est_content_s": 57.8,
-  "est_total_s": 71.4,
+  "est_content_s": 50.2,
+  "est_total_s": 66.2,
   "cta_at_fraction": 0.67
  },
  "2": {
@@ -91,61 +91,61 @@
    {
     "line": "vo04",
     "sentence": 1,
-    "dur": 2.14,
+    "dur": 2.05,
     "text": "Now the spin begins to speed up."
    },
    {
     "line": "vo04",
     "sentence": 2,
-    "dur": 2.99,
+    "dur": 2.15,
     "text": "At twenty hours, you can see the shadows sweep."
    },
    {
     "line": "vo04",
     "sentence": 3,
-    "dur": 4.41,
+    "dur": 3.29,
     "text": "At sixteen, the Sun climbs the sky like a slow elevator."
    },
    {
     "line": "vo04",
     "sentence": 4,
-    "dur": 1.8,
+    "dur": 1.69,
     "text": "The rule never changes."
    },
    {
     "line": "vo04",
     "sentence": 5,
-    "dur": 4.16,
+    "dur": 2.92,
     "text": "A day only ever gets shorter, and you cannot turn it back."
    },
    {
     "line": "vo05",
     "sentence": 1,
-    "dur": 4.29,
+    "dur": 3.06,
     "text": "At a twelve hour day, sunrise to sunset takes six hours."
    },
    {
     "line": "vo05",
     "sentence": 2,
-    "dur": 9.72,
+    "dur": 5.63,
     "text": "The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound."
    },
    {
     "line": "vo05",
     "sentence": 3,
-    "dur": 6.79,
+    "dur": 5.36,
     "text": "You weigh one point four percent less than on a still Earth, four times what you feel today."
    },
    {
     "line": "vo05",
     "sentence": 4,
-    "dur": 3.39,
+    "dur": 2.1,
     "text": "A seventy kilogram person feels like about sixty-nine."
    }
   ],
-  "est_content_s": 42.9,
-  "est_total_s": 54.6,
-  "cta_at_fraction": 0.66
+  "est_content_s": 36.2,
+  "est_total_s": 50.3,
+  "cta_at_fraction": 0.63
  },
  "3": {
   "opening": "p3-open",
@@ -159,37 +159,37 @@
    {
     "line": "vo06",
     "sentence": 1,
-    "dur": 1.71,
+    "dur": 1.05,
     "text": "But the air has a problem."
    },
    {
     "line": "vo06",
     "sentence": 2,
-    "dur": 7.56,
+    "dur": 4.07,
     "text": "The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time."
    },
    {
     "line": "vo06",
     "sentence": 3,
-    "dur": 2.86,
+    "dur": 1.94,
     "text": "For the first hours, the air is left behind."
    },
    {
     "line": "vo06",
     "sentence": 4,
-    "dur": 10.2,
+    "dur": 5.95,
     "text": "At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound."
    },
    {
     "line": "vo06",
     "sentence": 5,
-    "dur": 4.84,
+    "dur": 2.25,
     "text": "Winds like that would strip the surface, and they would only be the beginning."
    }
   ],
-  "est_content_s": 28.8,
-  "est_total_s": 41.3,
-  "cta_at_fraction": 0.65
+  "est_content_s": 19.3,
+  "est_total_s": 34.2,
+  "cta_at_fraction": 0.6
  },
  "4": {
   "opening": "p4-open",
@@ -203,61 +203,61 @@
    {
     "line": "vo07",
     "sentence": 1,
-    "dur": 2.12,
+    "dur": 1.58,
     "text": "And then the oceans begin to move."
    },
    {
     "line": "vo07",
     "sentence": 2,
-    "dur": 6.59,
+    "dur": 5.37,
     "text": "A spinning planet pushes water outward, toward the equator, exactly as it pushes you."
    },
    {
     "line": "vo07",
     "sentence": 3,
-    "dur": 13.98,
+    "dur": 7.59,
     "text": "Today the Earth already bulges about twenty-one kilometers wider at the equator than from pole to pole, and the ground has had billions of years to settle into that shape."
    },
    {
     "line": "vo07",
     "sentence": 4,
-    "dur": 4.54,
+    "dur": 2.5,
     "text": "Speed the spin up quickly and the ground cannot adjust in time."
    },
    {
     "line": "vo07",
     "sentence": 5,
-    "dur": 10.5,
+    "dur": 5.41,
     "text": "At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today."
    },
    {
     "line": "vo07",
     "sentence": 6,
-    "dur": 5.04,
+    "dur": 3.84,
     "text": "The whole ocean is only about three point seven kilometers deep."
    },
    {
     "line": "vo07",
     "sentence": 7,
-    "dur": 2.26,
+    "dur": 1.77,
     "text": "So the water does not simply rise."
    },
    {
     "line": "vo07",
     "sentence": 8,
-    "dur": 4.74,
+    "dur": 3.03,
     "text": "It drains toward a belt around the equator, while the poles dry out."
    },
    {
     "line": "vo07",
     "sentence": 9,
-    "dur": 8.69,
+    "dur": 5.92,
     "text": "This is a rough, first guess, but the direction is certain: land near the poles emerges, and your own coast is flooded."
    }
   ],
-  "est_content_s": 61.7,
-  "est_total_s": 74.3,
-  "cta_at_fraction": 0.59
+  "est_content_s": 45.0,
+  "est_total_s": 60.1,
+  "cta_at_fraction": 0.53
  },
  "5": {
   "opening": "p5-open",
@@ -271,67 +271,67 @@
    {
     "line": "vo08",
     "sentence": 1,
-    "dur": 1.94,
+    "dur": 1.19,
     "text": "The sky has another problem."
    },
    {
     "line": "vo08",
     "sentence": 2,
-    "dur": 8.62,
+    "dur": 8.0,
     "text": "Storms are steered by the planet's spin, through the Coriolis effect, and that steering grows in step with the spin rate."
    },
    {
     "line": "vo08",
     "sentence": 3,
-    "dur": 3.88,
+    "dur": 2.05,
     "text": "At a six hour day it is four times stronger than today."
    },
    {
     "line": "vo08",
     "sentence": 4,
-    "dur": 3.84,
+    "dur": 2.78,
     "text": "At the edge of floating, it is seventeen times stronger."
    },
    {
     "line": "vo08",
     "sentence": 5,
-    "dur": 8.36,
+    "dur": 3.89,
     "text": "Weather systems would be squeezed into tight, fast bands, and the calm of an ordinary afternoon would be gone."
    },
    {
     "line": "vo08",
     "sentence": 6,
-    "dur": 4.95,
+    "dur": 3.52,
     "text": "Nobody could forecast it, because nobody has seen a planet like this."
    },
    {
     "line": "vo09",
     "sentence": 1,
-    "dur": 5.84,
+    "dur": 3.62,
     "text": "At a six hour day, the Sun races from horizon to horizon in three hours."
    },
    {
     "line": "vo09",
     "sentence": 2,
-    "dur": 4.64,
+    "dur": 2.42,
     "text": "The equator moves at nearly seven thousand kilometers an hour."
    },
    {
     "line": "vo09",
     "sentence": 3,
-    "dur": 2.29,
+    "dur": 1.46,
     "text": "You are five and a half percent lighter."
    },
    {
     "line": "vo09",
     "sentence": 4,
-    "dur": 6.4,
+    "dur": 3.48,
     "text": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong."
    }
   ],
-  "est_content_s": 54.4,
-  "est_total_s": 67.4,
-  "cta_at_fraction": 0.64
+  "est_content_s": 41.4,
+  "est_total_s": 56.9,
+  "cta_at_fraction": 0.63
  },
  "6": {
   "opening": "p6-open",
@@ -345,72 +345,72 @@
    {
     "line": "vo10",
     "sentence": 1,
-    "dur": 1.85,
+    "dur": 2.06,
     "text": "Meanwhile, the calendar breaks."
    },
    {
     "line": "vo10",
     "sentence": 2,
-    "dur": 4.86,
+    "dur": 2.94,
     "text": "The year does not change, because the Earth still goes round the Sun once."
    },
    {
     "line": "vo10",
     "sentence": 3,
-    "dur": 4.26,
+    "dur": 3.42,
     "text": "But every day gets shorter, so a year contains more days."
    },
    {
     "line": "vo10",
     "sentence": 4,
-    "dur": 7.03,
+    "dur": 3.31,
     "text": "Right now, at a six hour day, a year already holds about fourteen hundred and sixty days."
    },
    {
     "line": "vo10",
     "sentence": 5,
-    "dur": 9.57,
+    "dur": 8.94,
     "text": "By the end, it would hold over six thousand, with a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day."
    },
    {
     "line": "vo11",
     "sentence": 1,
-    "dur": 2.91,
+    "dur": 1.98,
     "text": "Not everyone on Earth would feel the same thing."
    },
    {
     "line": "vo11",
     "sentence": 2,
-    "dur": 3.22,
+    "dur": 1.94,
     "text": "At the poles, the ground only turns on the spot."
    },
    {
     "line": "vo11",
     "sentence": 3,
-    "dur": 5.04,
+    "dur": 3.4,
     "text": "Nobody there is carried around at all, and they would weigh the same as ever."
    },
    {
     "line": "vo11",
     "sentence": 4,
-    "dur": 9.17,
+    "dur": 6.41,
     "text": "At forty-five degrees north, you move at seventy percent of the equator's speed, and the push outward is only half as strong."
    },
    {
     "line": "vo11",
     "sentence": 5,
-    "dur": 4.58,
+    "dur": 3.25,
     "text": "The farther you stand from the equator, the longer you keep your weight."
    },
    {
     "line": "vo11",
     "sentence": 6,
-    "dur": 6.58,
+    "dur": 5.94,
     "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry."
    }
   ],
-  "est_content_s": 63.1,
-  "est_total_s": 75.1,
+  "est_content_s": 53.6,
+  "est_total_s": 68.0,
   "cta_at_fraction": 0.43
  },
  "7": {
@@ -425,55 +425,55 @@
    {
     "line": "vo12",
     "sentence": 1,
-    "dur": 4.84,
+    "dur": 2.83,
     "text": "At a three hour day, the Sun crosses the sky in just ninety minutes."
    },
    {
     "line": "vo12",
     "sentence": 2,
-    "dur": 4.93,
+    "dur": 3.46,
     "text": "The ground now moves at over thirteen thousand kilometers an hour."
    },
    {
     "line": "vo12",
     "sentence": 3,
-    "dur": 2.02,
+    "dur": 2.1,
     "text": "You weigh twenty-two percent less."
    },
    {
     "line": "vo12",
     "sentence": 4,
-    "dur": 2.32,
+    "dur": 1.17,
     "text": "Seventy kilograms feels like fifty-five."
    },
    {
     "line": "vo13",
     "sentence": 1,
-    "dur": 2.59,
+    "dur": 1.94,
     "text": "At two hours, you weigh half of what you did."
    },
    {
     "line": "vo13",
     "sentence": 2,
-    "dur": 5.86,
+    "dur": 3.6,
     "text": "Twenty thousand kilometers an hour; the Sun crosses the whole sky in an hour."
    },
    {
     "line": "vo13",
     "sentence": 3,
-    "dur": 4.61,
+    "dur": 2.77,
     "text": "Every object near the equator is half as heavy as it should be."
    },
    {
     "line": "vo13",
     "sentence": 4,
-    "dur": 5.91,
+    "dur": 3.03,
     "text": "Buildings, bridges and oceans are all being asked to hold on with half the force."
    }
   ],
-  "est_content_s": 35.9,
-  "est_total_s": 51.7,
-  "cta_at_fraction": 0.46
+  "est_content_s": 27.9,
+  "est_total_s": 46.1,
+  "cta_at_fraction": 0.48
  },
  "8": {
   "opening": "p8-open",
@@ -487,30 +487,30 @@
    {
     "line": "vo14",
     "sentence": 1,
-    "dur": 2.92,
+    "dur": 1.83,
     "text": "At an hour and a half, you are almost weightless."
    },
    {
     "line": "vo14",
     "sentence": 2,
-    "dur": 2.48,
+    "dur": 1.93,
     "text": "You weigh about one eighth of what you did."
    },
    {
     "line": "vo14",
     "sentence": 3,
-    "dur": 4.59,
+    "dur": 2.87,
     "text": "The equator moves at twenty-seven thousand kilometers an hour."
    },
    {
     "line": "vo14",
     "sentence": 4,
-    "dur": 3.43,
+    "dur": 2.71,
     "text": "One more nudge, and something changes completely."
    }
   ],
-  "est_content_s": 14.6,
-  "est_total_s": 26.7,
-  "cta_at_fraction": 0.51
+  "est_content_s": 12.3,
+  "est_total_s": 26.8,
+  "cta_at_fraction": 0.47
  }
 }

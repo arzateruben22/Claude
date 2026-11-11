@@ -1,0 +1,7464 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "What if the Earth started to spin faster, a little more every second, and nothing in the universe could stop it? You are standing on the equator, and you are going to watch what happens, minute by minute, until the planet can't take it anymore.",
+   "heard": "What if the earth started to spin faster, a little more, every second, and nothing in the universe could stop it? You are standing on the equator and you are going to watch what happens minute by minute till the planet can't take it anymore.",
+   "words": [
+    {
+     "w": "What",
+     "start": 0.065,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 0.325,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.5,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 0.53,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "started",
+     "start": 0.945,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.41,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 1.63,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "faster,",
+     "start": 1.84,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.665,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 2.725,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 3.01,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 3.525,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "second,",
+     "start": 3.87,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.7,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "nothing",
+     "start": 4.775,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 5.1,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.39,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "universe",
+     "start": 5.475,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 6.065,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "stop",
+     "start": 6.335,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "it?",
+     "start": 6.545,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 6.805,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 7.055,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "standing",
+     "start": 7.11,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 7.365,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.565,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "equator,",
+     "start": 7.825,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.67,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 8.805,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 8.975,
+     "end": 9.025,
+     "heard": true
+    },
+    {
+     "w": "going",
+     "start": 9.005,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 9.295,
+     "end": 9.345,
+     "heard": true
+    },
+    {
+     "w": "watch",
+     "start": 9.325,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 9.515,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "happens,",
+     "start": 9.735,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "minute",
+     "start": 10.4,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 11.02,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "minute,",
+     "start": 11.2,
+     "end": 11.52,
+     "heard": true
+    },
+    {
+     "w": "until",
+     "start": 11.55,
+     "end": 12.0,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 11.89,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 12.145,
+     "end": 12.56,
+     "heard": true
+    },
+    {
+     "w": "can't",
+     "start": 12.57,
+     "end": 12.88,
+     "heard": true
+    },
+    {
+     "w": "take",
+     "start": 12.89,
+     "end": 13.04,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 13.045,
+     "end": 13.2,
+     "heard": true
+    },
+    {
+     "w": "anymore.",
+     "start": 13.275,
+     "end": 13.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Here are the rules. The Earth keeps its size, its shape, its air and its water. Only the spin changes, and it only ever gets faster. On screen there is one number that matters: the length of a day. It starts at twenty-four hours, and by the end it will have fallen to about an hour and twenty-four minutes. Under it is the second number: how fast the ground is moving under your feet. Nothing resets, and nothing slows. The planet is not a perfect ball, and we will skip a great deal of real physics, so treat every number as a first guess.",
+   "heard": "Here are the rules. The earth keeps its size, its shape, its air, and its water. Only the spin changes, and it only ever gets faster. On screen there is one number that matters, the length of a day. It starts at twenty four hours and by the end it will have fallen to about an hour and twenty four minutes. It's the second number, how fast the ground is moving under your feet. Nothing resets and nothing slows. The planet is not a perfect ball, and we will skip a great deal of real physics, so treat every number as a first guess.",
+   "words": [
+    {
+     "w": "Here",
+     "start": 0.06,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 0.335,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.365,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "rules.",
+     "start": 0.395,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 1.07,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 1.225,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 1.525,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 2.035,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "size,",
+     "start": 2.24,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 2.64,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "shape,",
+     "start": 2.815,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 3.305,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 3.595,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.925,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 4.195,
+     "end": 4.245,
+     "heard": true
+    },
+    {
+     "w": "water.",
+     "start": 4.285,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "Only",
+     "start": 4.985,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.215,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 5.44,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "changes,",
+     "start": 5.825,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.44,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.55,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 6.855,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "ever",
+     "start": 6.94,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 7.27,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "faster.",
+     "start": 7.51,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "On",
+     "start": 8.155,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "screen",
+     "start": 8.43,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "there",
+     "start": 8.815,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 9.055,
+     "end": 9.105,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 9.095,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 9.235,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 9.495,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "matters:",
+     "start": 9.7,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.38,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "length",
+     "start": 10.5,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 10.705,
+     "end": 10.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 10.94,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "day.",
+     "start": 11.295,
+     "end": 12.24,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 13.34,
+     "end": 13.44,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 13.46,
+     "end": 13.84,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 13.955,
+     "end": 14.08,
+     "heard": true
+    },
+    {
+     "w": "twenty-four",
+     "start": 14.12,
+     "end": 14.56,
+     "heard": false
+    },
+    {
+     "w": "hours,",
+     "start": 14.45,
+     "end": 14.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 15.0,
+     "end": 15.2,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 15.155,
+     "end": 15.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 15.395,
+     "end": 15.445,
+     "heard": true
+    },
+    {
+     "w": "end",
+     "start": 15.425,
+     "end": 15.6,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 15.77,
+     "end": 15.92,
+     "heard": true
+    },
+    {
+     "w": "will",
+     "start": 15.805,
+     "end": 16.08,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 16.085,
+     "end": 16.16,
+     "heard": true
+    },
+    {
+     "w": "fallen",
+     "start": 16.145,
+     "end": 16.48,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 16.58,
+     "end": 16.64,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 16.61,
+     "end": 16.88,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 16.915,
+     "end": 17.12,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 17.075,
+     "end": 17.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 17.435,
+     "end": 17.6,
+     "heard": true
+    },
+    {
+     "w": "twenty-four",
+     "start": 17.545,
+     "end": 18.08,
+     "heard": false
+    },
+    {
+     "w": "minutes.",
+     "start": 18.05,
+     "end": 18.64,
+     "heard": true
+    },
+    {
+     "w": "Under",
+     "start": 18.84,
+     "end": 18.96,
+     "heard": false
+    },
+    {
+     "w": "it",
+     "start": 18.87,
+     "end": 18.96,
+     "heard": false
+    },
+    {
+     "w": "is",
+     "start": 18.9,
+     "end": 18.96,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 18.98,
+     "end": 19.12,
+     "heard": true
+    },
+    {
+     "w": "second",
+     "start": 19.26,
+     "end": 19.44,
+     "heard": true
+    },
+    {
+     "w": "number:",
+     "start": 19.54,
+     "end": 19.92,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 19.87,
+     "end": 20.08,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 20.115,
+     "end": 20.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 20.42,
+     "end": 20.56,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 20.515,
+     "end": 20.8,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 20.76,
+     "end": 21.04,
+     "heard": true
+    },
+    {
+     "w": "moving",
+     "start": 21.075,
+     "end": 21.36,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 21.325,
+     "end": 21.52,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 21.695,
+     "end": 21.76,
+     "heard": true
+    },
+    {
+     "w": "feet.",
+     "start": 21.78,
+     "end": 22.08,
+     "heard": true
+    },
+    {
+     "w": "Nothing",
+     "start": 22.14,
+     "end": 22.48,
+     "heard": true
+    },
+    {
+     "w": "resets,",
+     "start": 22.47,
+     "end": 22.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 23.005,
+     "end": 23.12,
+     "heard": true
+    },
+    {
+     "w": "nothing",
+     "start": 23.135,
+     "end": 23.44,
+     "heard": true
+    },
+    {
+     "w": "slows.",
+     "start": 23.43,
+     "end": 24.08,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 24.14,
+     "end": 24.24,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 24.265,
+     "end": 24.64,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 24.595,
+     "end": 24.8,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 24.775,
+     "end": 24.88,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 24.975,
+     "end": 25.04,
+     "heard": true
+    },
+    {
+     "w": "perfect",
+     "start": 25.02,
+     "end": 25.36,
+     "heard": true
+    },
+    {
+     "w": "ball,",
+     "start": 25.43,
+     "end": 26.0,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 26.015,
+     "end": 26.16,
+     "heard": true
+    },
+    {
+     "w": "we",
+     "start": 26.055,
+     "end": 26.24,
+     "heard": true
+    },
+    {
+     "w": "will",
+     "start": 26.245,
+     "end": 26.4,
+     "heard": true
+    },
+    {
+     "w": "skip",
+     "start": 26.465,
+     "end": 26.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 26.72,
+     "end": 26.8,
+     "heard": true
+    },
+    {
+     "w": "great",
+     "start": 26.885,
+     "end": 26.96,
+     "heard": true
+    },
+    {
+     "w": "deal",
+     "start": 26.935,
+     "end": 27.2,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 27.215,
+     "end": 27.36,
+     "heard": true
+    },
+    {
+     "w": "real",
+     "start": 27.255,
+     "end": 27.52,
+     "heard": true
+    },
+    {
+     "w": "physics,",
+     "start": 27.665,
+     "end": 28.16,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 28.255,
+     "end": 28.32,
+     "heard": true
+    },
+    {
+     "w": "treat",
+     "start": 28.315,
+     "end": 28.56,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 28.5,
+     "end": 28.72,
+     "heard": true
+    },
+    {
+     "w": "number",
+     "start": 28.745,
+     "end": 28.96,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 28.95,
+     "end": 29.2,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 29.255,
+     "end": 29.305,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 29.285,
+     "end": 29.44,
+     "heard": true
+    },
+    {
+     "w": "guess.",
+     "start": 29.505,
+     "end": 29.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Right now, one day lasts twenty-four hours. Or almost: the Earth turns once in twenty-three hours, fifty-six minutes. Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour. You never feel it, because everything moves with you. What you do feel is a tiny push outward. You weigh about a third of a percent less than you would on a planet that did not spin.",
+   "heard": "Right now, one day lasts 24 hours. The earth turns once in 23 hours fifty-six minutes, standing on the equator. The ground carries you around about 1670 kilometers an hour. You never feel it because everything moves with you. What do you feel as a tiny? You weigh about a third of a percent less than you would on a planet that cannot spin.",
+   "words": [
+    {
+     "w": "Right",
+     "start": 0.055,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "now,",
+     "start": 0.255,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.645,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.925,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "lasts",
+     "start": 1.24,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "twenty-four",
+     "start": 1.84,
+     "end": 2.48,
+     "heard": false
+    },
+    {
+     "w": "hours.",
+     "start": 2.54,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "Or",
+     "start": 3.225,
+     "end": 3.275,
+     "heard": false
+    },
+    {
+     "w": "almost:",
+     "start": 3.255,
+     "end": 3.305,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 3.285,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 3.34,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "turns",
+     "start": 4.015,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "once",
+     "start": 4.665,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 5.065,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "twenty-three",
+     "start": 5.29,
+     "end": 5.92,
+     "heard": false
+    },
+    {
+     "w": "hours,",
+     "start": 5.825,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "fifty-six",
+     "start": 6.36,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "minutes.",
+     "start": 6.92,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "Standing",
+     "start": 7.62,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 8.445,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.685,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "equator,",
+     "start": 8.88,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.855,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 10.01,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "carries",
+     "start": 10.305,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 10.75,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "around",
+     "start": 10.905,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 11.145,
+     "end": 11.2,
+     "heard": false
+    },
+    {
+     "w": "about",
+     "start": 11.225,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "sixteen",
+     "start": 11.415,
+     "end": 13.12,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 11.445,
+     "end": 13.12,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 11.53,
+     "end": 13.12,
+     "heard": false
+    },
+    {
+     "w": "seventy",
+     "start": 11.56,
+     "end": 13.12,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 13.125,
+     "end": 13.84,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 13.81,
+     "end": 14.08,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 13.96,
+     "end": 14.72,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 14.825,
+     "end": 15.04,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 14.995,
+     "end": 15.28,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 15.365,
+     "end": 15.52,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 15.71,
+     "end": 15.76,
+     "heard": true
+    },
+    {
+     "w": "because",
+     "start": 15.74,
+     "end": 16.0,
+     "heard": true
+    },
+    {
+     "w": "everything",
+     "start": 15.97,
+     "end": 16.32,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 16.375,
+     "end": 16.64,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 16.67,
+     "end": 16.88,
+     "heard": true
+    },
+    {
+     "w": "you.",
+     "start": 17.08,
+     "end": 17.52,
+     "heard": true
+    },
+    {
+     "w": "What",
+     "start": 17.62,
+     "end": 17.68,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 17.995,
+     "end": 18.045,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 18.025,
+     "end": 18.075,
+     "heard": false
+    },
+    {
+     "w": "feel",
+     "start": 18.055,
+     "end": 18.105,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 18.175,
+     "end": 18.4,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 18.575,
+     "end": 18.625,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 18.605,
+     "end": 19.2,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 19.29,
+     "end": 19.34,
+     "heard": false
+    },
+    {
+     "w": "outward.",
+     "start": 19.32,
+     "end": 19.37,
+     "heard": false
+    },
+    {
+     "w": "You",
+     "start": 19.35,
+     "end": 19.4,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 19.38,
+     "end": 19.6,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 19.625,
+     "end": 19.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 19.855,
+     "end": 19.905,
+     "heard": true
+    },
+    {
+     "w": "third",
+     "start": 19.895,
+     "end": 20.08,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 20.06,
+     "end": 20.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 20.245,
+     "end": 20.32,
+     "heard": true
+    },
+    {
+     "w": "percent",
+     "start": 20.275,
+     "end": 20.72,
+     "heard": true
+    },
+    {
+     "w": "less",
+     "start": 20.63,
+     "end": 21.12,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 21.225,
+     "end": 21.36,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 21.41,
+     "end": 21.52,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 21.44,
+     "end": 21.68,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 21.735,
+     "end": 21.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 21.94,
+     "end": 21.99,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 21.97,
+     "end": 22.16,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 22.235,
+     "end": 22.32,
+     "heard": true
+    },
+    {
+     "w": "did",
+     "start": 22.345,
+     "end": 22.72,
+     "heard": false
+    },
+    {
+     "w": "not",
+     "start": 22.375,
+     "end": 22.72,
+     "heard": false
+    },
+    {
+     "w": "spin.",
+     "start": 22.805,
+     "end": 22.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Now the spin begins to speed up. At twenty hours, you can see the shadows sweep. At sixteen, the Sun climbs the sky like a slow elevator. The rule never changes. A day only ever gets shorter, and you cannot turn it back.",
+   "heard": "Now the spin begins to speed up. At twenty hours you can see the shadows sweep. At sixteen the sun climbs the sky like a slow elevator. The road never changes. A day only ever gets shorter and you cannot turn it back.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.06,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.19,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 0.43,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "begins",
+     "start": 0.785,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.025,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 1.46,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 1.84,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 2.405,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "twenty",
+     "start": 2.45,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "hours,",
+     "start": 2.775,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 3.38,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 3.485,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "see",
+     "start": 3.515,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.785,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "shadows",
+     "start": 3.815,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "sweep.",
+     "start": 4.345,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 4.965,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "sixteen,",
+     "start": 5.325,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.935,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 5.965,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "climbs",
+     "start": 6.215,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.655,
+     "end": 6.705,
+     "heard": true
+    },
+    {
+     "w": "sky",
+     "start": 6.685,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 6.98,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.085,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "slow",
+     "start": 7.115,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "elevator.",
+     "start": 7.53,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 8.325,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "rule",
+     "start": 8.355,
+     "end": 8.72,
+     "heard": false
+    },
+    {
+     "w": "never",
+     "start": 8.635,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "changes.",
+     "start": 9.07,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 10.185,
+     "end": 10.235,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 10.215,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 10.36,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "ever",
+     "start": 10.76,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 11.175,
+     "end": 11.28,
+     "heard": true
+    },
+    {
+     "w": "shorter,",
+     "start": 11.205,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 11.675,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 11.77,
+     "end": 11.92,
+     "heard": true
+    },
+    {
+     "w": "cannot",
+     "start": 12.005,
+     "end": 12.32,
+     "heard": true
+    },
+    {
+     "w": "turn",
+     "start": 12.315,
+     "end": 12.56,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 12.655,
+     "end": 12.72,
+     "heard": true
+    },
+    {
+     "w": "back.",
+     "start": 12.83,
+     "end": 13.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "At a twelve hour day, sunrise to sunset takes six hours. The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound. You weigh one point four percent less than on a still Earth, four times what you feel today. A seventy kilogram person feels like about sixty-nine.",
+   "heard": "On a 12-hour day, sunrise to sunset takes six hours. The ground under your feet now moves at about 3,300 kilometers an hour, nearly three times the speed of sound. You weigh 1.4% less than on a still earth, four times what you feel today. A 70-kilogram person feels like about 60%.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.01,
+     "end": 0.16,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 0.15,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "twelve",
+     "start": 0.39,
+     "end": 0.8,
+     "heard": false
+    },
+    {
+     "w": "hour",
+     "start": 0.42,
+     "end": 0.8,
+     "heard": false
+    },
+    {
+     "w": "day,",
+     "start": 0.69,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "sunrise",
+     "start": 1.015,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.54,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "sunset",
+     "start": 1.845,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 2.155,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 2.56,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "hours.",
+     "start": 2.735,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.47,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 3.57,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 3.865,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 4.235,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "feet",
+     "start": 4.47,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 4.75,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 5.0,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 5.115,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 5.355,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "thirty-three",
+     "start": 5.54,
+     "end": 6.32,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 5.57,
+     "end": 6.32,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 6.325,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 7.065,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "hour,",
+     "start": 7.115,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 7.695,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 7.965,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 8.195,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.365,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 8.615,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 8.72,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "sound.",
+     "start": 8.975,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 9.325,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 9.355,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 9.665,
+     "end": 10.8,
+     "heard": false
+    },
+    {
+     "w": "point",
+     "start": 9.695,
+     "end": 10.8,
+     "heard": false
+    },
+    {
+     "w": "four",
+     "start": 9.725,
+     "end": 10.8,
+     "heard": false
+    },
+    {
+     "w": "percent",
+     "start": 9.76,
+     "end": 10.8,
+     "heard": false
+    },
+    {
+     "w": "less",
+     "start": 10.7,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 11.545,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 11.74,
+     "end": 12.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 12.005,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 12.195,
+     "end": 12.4,
+     "heard": true
+    },
+    {
+     "w": "Earth,",
+     "start": 12.675,
+     "end": 13.36,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 13.46,
+     "end": 13.52,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 13.655,
+     "end": 13.92,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 14.015,
+     "end": 14.08,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 14.15,
+     "end": 14.2,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 14.255,
+     "end": 14.32,
+     "heard": true
+    },
+    {
+     "w": "today.",
+     "start": 14.34,
+     "end": 14.88,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 14.915,
+     "end": 14.965,
+     "heard": true
+    },
+    {
+     "w": "seventy",
+     "start": 15.005,
+     "end": 15.92,
+     "heard": false
+    },
+    {
+     "w": "kilogram",
+     "start": 15.035,
+     "end": 15.92,
+     "heard": false
+    },
+    {
+     "w": "person",
+     "start": 15.85,
+     "end": 16.16,
+     "heard": true
+    },
+    {
+     "w": "feels",
+     "start": 16.185,
+     "end": 16.32,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 16.305,
+     "end": 16.48,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 16.53,
+     "end": 16.58,
+     "heard": true
+    },
+    {
+     "w": "sixty-nine.",
+     "start": 16.56,
+     "end": 16.86,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "But the air has a problem. The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time. For the first hours, the air is left behind. At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound. Winds like that would strip the surface, and they would only be the beginning.",
+   "heard": "But the air has a problem. The ground speeds up at once, the atmosphere is pulled along by friction that and that takes time. For the first hours the air is left behind. At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound. Wise like that would strip the surface and that would only be the beginning.",
+   "words": [
+    {
+     "w": "But",
+     "start": 0.055,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.29,
+     "end": 0.34,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 0.32,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 0.475,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.785,
+     "end": 0.835,
+     "heard": true
+    },
+    {
+     "w": "problem.",
+     "start": 0.895,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 1.23,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 1.31,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "speeds",
+     "start": 1.6,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 1.9,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 2.08,
+     "end": 2.13,
+     "heard": true
+    },
+    {
+     "w": "once;",
+     "start": 2.11,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.265,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "atmosphere",
+     "start": 2.485,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.09,
+     "end": 3.14,
+     "heard": true
+    },
+    {
+     "w": "pulled",
+     "start": 3.155,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "along",
+     "start": 3.435,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 3.535,
+     "end": 3.585,
+     "heard": false
+    },
+    {
+     "w": "by",
+     "start": 3.565,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "friction,",
+     "start": 3.725,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.375,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 4.525,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 4.89,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "time.",
+     "start": 4.985,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "For",
+     "start": 5.605,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.755,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 5.815,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "hours,",
+     "start": 6.16,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.545,
+     "end": 6.595,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 6.575,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.805,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "left",
+     "start": 6.945,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "behind.",
+     "start": 7.055,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 7.655,
+     "end": 7.705,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.685,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "twelve",
+     "start": 7.845,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 8.275,
+     "end": 8.325,
+     "heard": true
+    },
+    {
+     "w": "day,",
+     "start": 8.305,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.635,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 8.75,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 9.085,
+     "end": 9.135,
+     "heard": true
+    },
+    {
+     "w": "moving",
+     "start": 9.115,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 9.335,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.425,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 9.455,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 9.64,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 9.88,
+     "end": 10.08,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 10.13,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 10.435,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 10.665,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "sixty",
+     "start": 10.86,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "meters",
+     "start": 11.08,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 11.61,
+     "end": 11.68,
+     "heard": true
+    },
+    {
+     "w": "second,",
+     "start": 11.785,
+     "end": 12.48,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 12.55,
+     "end": 12.8,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 12.81,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 12.87,
+     "end": 13.04,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 13.13,
+     "end": 13.2,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 13.29,
+     "end": 13.34,
+     "heard": true
+    },
+    {
+     "w": "sound.",
+     "start": 13.5,
+     "end": 13.84,
+     "heard": true
+    },
+    {
+     "w": "Winds",
+     "start": 13.98,
+     "end": 14.16,
+     "heard": false
+    },
+    {
+     "w": "like",
+     "start": 14.245,
+     "end": 14.32,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 14.295,
+     "end": 14.345,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 14.325,
+     "end": 14.56,
+     "heard": true
+    },
+    {
+     "w": "strip",
+     "start": 14.545,
+     "end": 14.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 14.795,
+     "end": 14.96,
+     "heard": true
+    },
+    {
+     "w": "surface,",
+     "start": 15.055,
+     "end": 15.2,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 15.35,
+     "end": 15.4,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 15.38,
+     "end": 15.44,
+     "heard": false
+    },
+    {
+     "w": "would",
+     "start": 15.41,
+     "end": 15.52,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 15.6,
+     "end": 15.68,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 15.725,
+     "end": 15.775,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 15.755,
+     "end": 15.84,
+     "heard": true
+    },
+    {
+     "w": "beginning.",
+     "start": 15.92,
+     "end": 16.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "And then the oceans begin to move. A spinning planet pushes water outward, toward the equator, exactly as it pushes you. Today the Earth already bulges about twenty-one kilometers wider at the equator than from pole to pole, and the ground has had billions of years to settle into that shape. Speed the spin up quickly and the ground cannot adjust in time. At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today. The whole ocean is only about three point seven kilometers deep. So the water does not simply rise. It drains toward a belt around the equator, while the poles dry out. This is a rough, first guess, but the direction is certain: land near the poles emerges, and your own coast is flooded.",
+   "heard": "And then the ocean begins to move. A spinning planet pushes you water outward towards the equator exactly as it pushes you. Today the earth already bulges about twenty one kilometers wider at the equator than from pole to pole, and the ground has bad billions of years to stand up to that shape. Speed this spin up quickly and the crown cannot adjust in time. At a twelve hour day the water wants to stand about thirty three kilometers higher at the equator than at the pole is actually compared with today. The whole ocean is only about three point seven kilometers deep. So the water does not simply rise. It drains toward about around the equator while the pole was dry out. This is a rough first guess, but the direction asserted. Land where the pole emerges at and your own coast is flooded.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.06,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 0.195,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.225,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "oceans",
+     "start": 0.305,
+     "end": 0.96,
+     "heard": false
+    },
+    {
+     "w": "begin",
+     "start": 0.335,
+     "end": 0.96,
+     "heard": false
+    },
+    {
+     "w": "to",
+     "start": 0.91,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "move.",
+     "start": 1.085,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 1.93,
+     "end": 1.98,
+     "heard": true
+    },
+    {
+     "w": "spinning",
+     "start": 1.96,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 2.33,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "pushes",
+     "start": 2.665,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 3.365,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "outward,",
+     "start": 3.665,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "toward",
+     "start": 4.44,
+     "end": 5.76,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 5.72,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "equator,",
+     "start": 5.93,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "exactly",
+     "start": 6.32,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 6.6,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.885,
+     "end": 6.935,
+     "heard": true
+    },
+    {
+     "w": "pushes",
+     "start": 6.915,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "you.",
+     "start": 7.48,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "Today",
+     "start": 7.7,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.975,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 8.005,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "already",
+     "start": 8.295,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "bulges",
+     "start": 8.585,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 9.04,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "twenty-one",
+     "start": 9.28,
+     "end": 9.68,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 9.675,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "wider",
+     "start": 10.29,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 10.7,
+     "end": 10.75,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.815,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 10.915,
+     "end": 11.2,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 11.305,
+     "end": 11.52,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 11.56,
+     "end": 11.68,
+     "heard": true
+    },
+    {
+     "w": "pole",
+     "start": 11.79,
+     "end": 12.0,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 12.085,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "pole,",
+     "start": 12.265,
+     "end": 12.48,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 12.525,
+     "end": 12.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 12.72,
+     "end": 12.77,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 12.75,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 12.905,
+     "end": 13.12,
+     "heard": true
+    },
+    {
+     "w": "had",
+     "start": 13.32,
+     "end": 13.6,
+     "heard": false
+    },
+    {
+     "w": "billions",
+     "start": 13.705,
+     "end": 13.84,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 13.95,
+     "end": 14.08,
+     "heard": true
+    },
+    {
+     "w": "years",
+     "start": 14.065,
+     "end": 14.16,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 14.325,
+     "end": 14.48,
+     "heard": true
+    },
+    {
+     "w": "settle",
+     "start": 14.525,
+     "end": 14.96,
+     "heard": false
+    },
+    {
+     "w": "into",
+     "start": 14.555,
+     "end": 14.96,
+     "heard": false
+    },
+    {
+     "w": "that",
+     "start": 14.97,
+     "end": 15.12,
+     "heard": true
+    },
+    {
+     "w": "shape.",
+     "start": 15.64,
+     "end": 15.69,
+     "heard": true
+    },
+    {
+     "w": "Speed",
+     "start": 15.67,
+     "end": 15.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 15.75,
+     "end": 16.08,
+     "heard": false
+    },
+    {
+     "w": "spin",
+     "start": 16.18,
+     "end": 16.24,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 16.45,
+     "end": 16.56,
+     "heard": true
+    },
+    {
+     "w": "quickly",
+     "start": 16.625,
+     "end": 16.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 16.845,
+     "end": 16.895,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 16.98,
+     "end": 17.03,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 17.01,
+     "end": 17.28,
+     "heard": false
+    },
+    {
+     "w": "cannot",
+     "start": 17.335,
+     "end": 17.52,
+     "heard": true
+    },
+    {
+     "w": "adjust",
+     "start": 17.555,
+     "end": 17.76,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 17.905,
+     "end": 17.955,
+     "heard": true
+    },
+    {
+     "w": "time.",
+     "start": 18.01,
+     "end": 18.16,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 18.245,
+     "end": 18.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 18.405,
+     "end": 18.455,
+     "heard": true
+    },
+    {
+     "w": "twelve",
+     "start": 18.435,
+     "end": 18.56,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 18.53,
+     "end": 18.72,
+     "heard": true
+    },
+    {
+     "w": "day,",
+     "start": 18.8,
+     "end": 18.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 19.045,
+     "end": 19.12,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 19.085,
+     "end": 19.36,
+     "heard": true
+    },
+    {
+     "w": "wants",
+     "start": 19.355,
+     "end": 19.52,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 19.46,
+     "end": 19.6,
+     "heard": true
+    },
+    {
+     "w": "stand",
+     "start": 19.685,
+     "end": 19.92,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 19.96,
+     "end": 20.08,
+     "heard": true
+    },
+    {
+     "w": "thirty-three",
+     "start": 20.11,
+     "end": 20.56,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 20.54,
+     "end": 21.04,
+     "heard": true
+    },
+    {
+     "w": "higher",
+     "start": 20.935,
+     "end": 21.28,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 21.365,
+     "end": 21.415,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 21.395,
+     "end": 21.445,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 21.54,
+     "end": 21.76,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 21.865,
+     "end": 21.92,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 21.95,
+     "end": 22.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 22.09,
+     "end": 22.16,
+     "heard": true
+    },
+    {
+     "w": "poles,",
+     "start": 22.225,
+     "end": 22.88,
+     "heard": false
+    },
+    {
+     "w": "extra,",
+     "start": 22.255,
+     "end": 22.88,
+     "heard": false
+    },
+    {
+     "w": "compared",
+     "start": 22.965,
+     "end": 23.12,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 23.255,
+     "end": 23.305,
+     "heard": true
+    },
+    {
+     "w": "today.",
+     "start": 23.465,
+     "end": 23.68,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 23.755,
+     "end": 23.805,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 23.85,
+     "end": 24.0,
+     "heard": true
+    },
+    {
+     "w": "ocean",
+     "start": 24.07,
+     "end": 24.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 24.48,
+     "end": 24.64,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 24.695,
+     "end": 24.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 24.795,
+     "end": 24.96,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 24.975,
+     "end": 25.04,
+     "heard": true
+    },
+    {
+     "w": "point",
+     "start": 25.145,
+     "end": 25.36,
+     "heard": true
+    },
+    {
+     "w": "seven",
+     "start": 25.33,
+     "end": 25.6,
+     "heard": true
+    },
+    {
+     "w": "kilometers",
+     "start": 25.55,
+     "end": 26.24,
+     "heard": true
+    },
+    {
+     "w": "deep.",
+     "start": 26.5,
+     "end": 27.52,
+     "heard": true
+    },
+    {
+     "w": "So",
+     "start": 27.93,
+     "end": 28.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 27.96,
+     "end": 28.16,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 28.235,
+     "end": 28.48,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 28.505,
+     "end": 28.64,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 28.685,
+     "end": 28.8,
+     "heard": true
+    },
+    {
+     "w": "simply",
+     "start": 28.83,
+     "end": 29.2,
+     "heard": true
+    },
+    {
+     "w": "rise.",
+     "start": 29.085,
+     "end": 29.76,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 29.865,
+     "end": 29.92,
+     "heard": true
+    },
+    {
+     "w": "drains",
+     "start": 29.98,
+     "end": 30.24,
+     "heard": true
+    },
+    {
+     "w": "toward",
+     "start": 30.275,
+     "end": 30.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 30.6,
+     "end": 30.96,
+     "heard": false
+    },
+    {
+     "w": "belt",
+     "start": 30.63,
+     "end": 30.96,
+     "heard": false
+    },
+    {
+     "w": "around",
+     "start": 31.055,
+     "end": 31.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 31.12,
+     "end": 31.28,
+     "heard": true
+    },
+    {
+     "w": "equator,",
+     "start": 31.27,
+     "end": 31.6,
+     "heard": true
+    },
+    {
+     "w": "while",
+     "start": 31.745,
+     "end": 31.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 31.985,
+     "end": 32.035,
+     "heard": true
+    },
+    {
+     "w": "poles",
+     "start": 32.015,
+     "end": 32.4,
+     "heard": false
+    },
+    {
+     "w": "dry",
+     "start": 32.375,
+     "end": 32.72,
+     "heard": true
+    },
+    {
+     "w": "out.",
+     "start": 33.21,
+     "end": 33.26,
+     "heard": true
+    },
+    {
+     "w": "This",
+     "start": 33.24,
+     "end": 33.29,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 33.36,
+     "end": 33.41,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 33.39,
+     "end": 33.52,
+     "heard": true
+    },
+    {
+     "w": "rough,",
+     "start": 33.82,
+     "end": 34.0,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 34.08,
+     "end": 34.24,
+     "heard": true
+    },
+    {
+     "w": "guess,",
+     "start": 34.32,
+     "end": 34.64,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 34.67,
+     "end": 34.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 34.785,
+     "end": 34.88,
+     "heard": true
+    },
+    {
+     "w": "direction",
+     "start": 34.885,
+     "end": 35.28,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 35.33,
+     "end": 36.24,
+     "heard": false
+    },
+    {
+     "w": "certain:",
+     "start": 35.36,
+     "end": 36.24,
+     "heard": false
+    },
+    {
+     "w": "land",
+     "start": 36.32,
+     "end": 36.48,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 36.405,
+     "end": 36.8,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 36.875,
+     "end": 36.925,
+     "heard": true
+    },
+    {
+     "w": "poles",
+     "start": 36.905,
+     "end": 37.12,
+     "heard": false
+    },
+    {
+     "w": "emerges,",
+     "start": 37.095,
+     "end": 37.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 37.805,
+     "end": 37.855,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 37.98,
+     "end": 38.08,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 38.22,
+     "end": 38.27,
+     "heard": true
+    },
+    {
+     "w": "coast",
+     "start": 38.39,
+     "end": 38.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 38.595,
+     "end": 38.72,
+     "heard": true
+    },
+    {
+     "w": "flooded.",
+     "start": 38.895,
+     "end": 39.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "The sky has another problem. Storms are steered by the planet's spin, through the Coriolis effect, and that steering grows in step with the spin rate. At a six hour day it is four times stronger than today. At the edge of floating, it is seventeen times stronger. Weather systems would be squeezed into tight, fast bands, and the calm of an ordinary afternoon would be gone. Nobody could forecast it, because nobody has seen a planet like this.",
+   "heard": "Gas and other problems. The storms are stirred by the planet's band through the Corilius effect, and then steering grows and then steering grows in step with the spinner. At this exact day, it is four times stronger than today. At the edge of 12, it is 17 times stronger. The storms would be squeezed into tight fast bands, and the calm in an ordinary afternoon would be gone. Nobody could forecast it, nobody has seen a planet like this.",
+   "words": [
+    {
+     "w": "The",
+     "start": 1.56,
+     "end": 1.61,
+     "heard": true
+    },
+    {
+     "w": "sky",
+     "start": 1.59,
+     "end": 1.64,
+     "heard": false
+    },
+    {
+     "w": "has",
+     "start": 1.685,
+     "end": 1.735,
+     "heard": false
+    },
+    {
+     "w": "another",
+     "start": 1.715,
+     "end": 1.765,
+     "heard": false
+    },
+    {
+     "w": "problem.",
+     "start": 1.745,
+     "end": 1.795,
+     "heard": false
+    },
+    {
+     "w": "Storms",
+     "start": 1.775,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 1.895,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "steered",
+     "start": 1.985,
+     "end": 2.4,
+     "heard": false
+    },
+    {
+     "w": "by",
+     "start": 2.48,
+     "end": 2.53,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.575,
+     "end": 2.625,
+     "heard": true
+    },
+    {
+     "w": "planet's",
+     "start": 2.605,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "spin,",
+     "start": 2.855,
+     "end": 3.2,
+     "heard": false
+    },
+    {
+     "w": "through",
+     "start": 3.2,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.335,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "Coriolis",
+     "start": 3.56,
+     "end": 4.24,
+     "heard": false
+    },
+    {
+     "w": "effect,",
+     "start": 4.28,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.555,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 4.79,
+     "end": 6.72,
+     "heard": false
+    },
+    {
+     "w": "steering",
+     "start": 6.64,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "grows",
+     "start": 7.1,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.555,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "step",
+     "start": 7.9,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 8.54,
+     "end": 8.59,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.57,
+     "end": 8.62,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 8.6,
+     "end": 9.52,
+     "heard": false
+    },
+    {
+     "w": "rate.",
+     "start": 8.655,
+     "end": 9.52,
+     "heard": false
+    },
+    {
+     "w": "At",
+     "start": 9.655,
+     "end": 9.705,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.685,
+     "end": 10.32,
+     "heard": false
+    },
+    {
+     "w": "six",
+     "start": 9.75,
+     "end": 10.32,
+     "heard": false
+    },
+    {
+     "w": "hour",
+     "start": 9.78,
+     "end": 10.32,
+     "heard": false
+    },
+    {
+     "w": "day",
+     "start": 10.285,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 10.42,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 10.64,
+     "end": 10.69,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 10.67,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 10.83,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "stronger",
+     "start": 11.015,
+     "end": 11.36,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 11.505,
+     "end": 11.555,
+     "heard": true
+    },
+    {
+     "w": "today.",
+     "start": 11.575,
+     "end": 11.76,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 11.88,
+     "end": 12.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.955,
+     "end": 12.08,
+     "heard": true
+    },
+    {
+     "w": "edge",
+     "start": 11.985,
+     "end": 12.24,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 12.335,
+     "end": 12.385,
+     "heard": true
+    },
+    {
+     "w": "floating,",
+     "start": 12.37,
+     "end": 12.88,
+     "heard": false
+    },
+    {
+     "w": "it",
+     "start": 12.82,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 13.05,
+     "end": 13.1,
+     "heard": true
+    },
+    {
+     "w": "seventeen",
+     "start": 13.1,
+     "end": 13.28,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 13.385,
+     "end": 13.68,
+     "heard": true
+    },
+    {
+     "w": "stronger.",
+     "start": 13.585,
+     "end": 14.56,
+     "heard": true
+    },
+    {
+     "w": "Weather",
+     "start": 14.985,
+     "end": 15.28,
+     "heard": false
+    },
+    {
+     "w": "systems",
+     "start": 15.015,
+     "end": 15.28,
+     "heard": false
+    },
+    {
+     "w": "would",
+     "start": 15.39,
+     "end": 15.44,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 15.42,
+     "end": 15.52,
+     "heard": true
+    },
+    {
+     "w": "squeezed",
+     "start": 15.635,
+     "end": 15.84,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 15.97,
+     "end": 16.02,
+     "heard": true
+    },
+    {
+     "w": "tight,",
+     "start": 16.095,
+     "end": 16.24,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 16.31,
+     "end": 16.56,
+     "heard": true
+    },
+    {
+     "w": "bands,",
+     "start": 16.62,
+     "end": 16.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 16.94,
+     "end": 16.99,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 17.055,
+     "end": 17.105,
+     "heard": true
+    },
+    {
+     "w": "calm",
+     "start": 17.085,
+     "end": 17.28,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 17.3,
+     "end": 17.44,
+     "heard": false
+    },
+    {
+     "w": "an",
+     "start": 17.52,
+     "end": 17.57,
+     "heard": true
+    },
+    {
+     "w": "ordinary",
+     "start": 17.765,
+     "end": 18.0,
+     "heard": true
+    },
+    {
+     "w": "afternoon",
+     "start": 18.085,
+     "end": 18.32,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 18.45,
+     "end": 18.5,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 18.56,
+     "end": 18.64,
+     "heard": true
+    },
+    {
+     "w": "gone.",
+     "start": 18.595,
+     "end": 19.04,
+     "heard": true
+    },
+    {
+     "w": "Nobody",
+     "start": 19.0,
+     "end": 19.28,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 19.31,
+     "end": 19.44,
+     "heard": true
+    },
+    {
+     "w": "forecast",
+     "start": 19.445,
+     "end": 19.92,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 19.975,
+     "end": 20.08,
+     "heard": true
+    },
+    {
+     "w": "because",
+     "start": 20.15,
+     "end": 20.2,
+     "heard": false
+    },
+    {
+     "w": "nobody",
+     "start": 20.195,
+     "end": 20.4,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 20.33,
+     "end": 20.56,
+     "heard": true
+    },
+    {
+     "w": "seen",
+     "start": 20.685,
+     "end": 20.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 20.775,
+     "end": 20.88,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 20.975,
+     "end": 21.28,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 21.32,
+     "end": 21.6,
+     "heard": true
+    },
+    {
+     "w": "this.",
+     "start": 21.8,
+     "end": 22.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "text": "At a six hour day, the Sun races from horizon to horizon in three hours. The equator moves at nearly seven thousand kilometers an hour. You are five and a half percent lighter. Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
+   "heard": "At a six hour day, the sun rises from horizon to horizon in three hours. The equator moves at nearly seventy thousand kilometers an hour. You are five and a half percent lighter. Jumping out takes you noticeably higher than it should, and every step feels slightly wrong.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.06,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.205,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 0.41,
+     "end": 0.46,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.44,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "day,",
+     "start": 0.685,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.86,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 0.89,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "races",
+     "start": 1.115,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "from",
+     "start": 1.465,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "horizon",
+     "start": 1.58,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.975,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "horizon",
+     "start": 2.005,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.48,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 2.645,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "hours.",
+     "start": 2.94,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.76,
+     "end": 3.81,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 3.795,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 4.16,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 4.485,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 4.515,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "seven",
+     "start": 4.72,
+     "end": 5.12,
+     "heard": false
+    },
+    {
+     "w": "thousand",
+     "start": 5.115,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "kilometers",
+     "start": 5.375,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 5.94,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 6.56,
+     "end": 6.61,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 6.59,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 6.62,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "five",
+     "start": 6.795,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 7.01,
+     "end": 7.06,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.04,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 7.225,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "percent",
+     "start": 7.255,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "lighter.",
+     "start": 7.565,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "Jumping",
+     "start": 8.34,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 8.545,
+     "end": 8.8,
+     "heard": false
+    },
+    {
+     "w": "takes",
+     "start": 8.74,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 8.885,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "noticeably",
+     "start": 9.03,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "higher",
+     "start": 9.36,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 9.64,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 9.82,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "should,",
+     "start": 9.85,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 10.145,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 10.38,
+     "end": 10.56,
+     "heard": true
+    },
+    {
+     "w": "step",
+     "start": 10.635,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "feels",
+     "start": 10.905,
+     "end": 11.12,
+     "heard": true
+    },
+    {
+     "w": "slightly",
+     "start": 11.16,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "wrong.",
+     "start": 11.475,
+     "end": 11.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo10",
+   "text": "Meanwhile, the calendar breaks. The year does not change, because the Earth still goes round the Sun once. But every day gets shorter, so a year contains more days. Right now, at a six hour day, a year already holds about fourteen hundred and sixty days. By the end, it would hold over six thousand, with a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
+   "heard": "Meanwhile, the calendar breaks. The year does not change because our earth still goes around the sun once, but every day gets shorter, so a year contains more days. Right now, at a six-hour day, a year already owned to about 1400 to 60 days. By the end, it would be over 6,000, which is the sunrise every 54 minutes. And you would be asked to sleep 8 times a day.",
+   "words": [
+    {
+     "w": "Meanwhile,",
+     "start": 0.46,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.875,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "calendar",
+     "start": 1.045,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "breaks.",
+     "start": 1.23,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 2.19,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "year",
+     "start": 2.22,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "does",
+     "start": 2.43,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 2.66,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "change,",
+     "start": 2.84,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "because",
+     "start": 3.295,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.325,
+     "end": 3.52,
+     "heard": false
+    },
+    {
+     "w": "Earth",
+     "start": 3.51,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "still",
+     "start": 3.77,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "goes",
+     "start": 3.94,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "round",
+     "start": 4.25,
+     "end": 4.48,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 4.415,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 4.445,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "once.",
+     "start": 4.815,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 5.475,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 5.61,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 5.85,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 6.045,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "shorter,",
+     "start": 6.19,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 6.455,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.745,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "year",
+     "start": 6.775,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "contains",
+     "start": 7.045,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 7.47,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "days.",
+     "start": 7.8,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "Right",
+     "start": 9.29,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "now,",
+     "start": 9.47,
+     "end": 9.52,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 9.615,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 9.725,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 9.925,
+     "end": 10.16,
+     "heard": false
+    },
+    {
+     "w": "hour",
+     "start": 9.955,
+     "end": 10.16,
+     "heard": false
+    },
+    {
+     "w": "day,",
+     "start": 10.19,
+     "end": 10.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 10.42,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "year",
+     "start": 10.45,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "already",
+     "start": 10.715,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "holds",
+     "start": 10.93,
+     "end": 11.36,
+     "heard": false
+    },
+    {
+     "w": "about",
+     "start": 11.35,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "fourteen",
+     "start": 11.51,
+     "end": 12.32,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 11.54,
+     "end": 12.32,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 11.57,
+     "end": 12.32,
+     "heard": false
+    },
+    {
+     "w": "sixty",
+     "start": 12.4,
+     "end": 12.56,
+     "heard": true
+    },
+    {
+     "w": "days.",
+     "start": 12.84,
+     "end": 13.28,
+     "heard": true
+    },
+    {
+     "w": "By",
+     "start": 13.605,
+     "end": 13.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 13.66,
+     "end": 13.92,
+     "heard": true
+    },
+    {
+     "w": "end,",
+     "start": 13.835,
+     "end": 14.08,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 14.075,
+     "end": 14.24,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 14.275,
+     "end": 14.325,
+     "heard": true
+    },
+    {
+     "w": "hold",
+     "start": 14.34,
+     "end": 14.48,
+     "heard": false
+    },
+    {
+     "w": "over",
+     "start": 14.525,
+     "end": 14.72,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 14.81,
+     "end": 17.28,
+     "heard": false
+    },
+    {
+     "w": "thousand,",
+     "start": 14.84,
+     "end": 17.28,
+     "heard": false
+    },
+    {
+     "w": "with",
+     "start": 14.87,
+     "end": 17.28,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 14.9,
+     "end": 17.28,
+     "heard": false
+    },
+    {
+     "w": "sunrise",
+     "start": 17.195,
+     "end": 17.84,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 17.875,
+     "end": 18.16,
+     "heard": true
+    },
+    {
+     "w": "eighty-four",
+     "start": 18.3,
+     "end": 18.96,
+     "heard": false
+    },
+    {
+     "w": "minutes,",
+     "start": 18.945,
+     "end": 20.08,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 20.2,
+     "end": 20.25,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 20.23,
+     "end": 20.4,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 20.51,
+     "end": 20.56,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 20.54,
+     "end": 20.64,
+     "heard": true
+    },
+    {
+     "w": "asked",
+     "start": 20.57,
+     "end": 20.8,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 20.855,
+     "end": 20.905,
+     "heard": true
+    },
+    {
+     "w": "sleep",
+     "start": 20.885,
+     "end": 21.12,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 21.095,
+     "end": 21.36,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 21.435,
+     "end": 21.6,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 21.535,
+     "end": 21.76,
+     "heard": true
+    },
+    {
+     "w": "day.",
+     "start": 21.96,
+     "end": 22.24,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo11",
+   "text": "Not everyone on Earth would feel the same thing. At the poles, the ground only turns on the spot. Nobody there is carried around at all, and they would weigh the same as ever. At forty-five degrees north, you move at seventy percent of the equator's speed, and the push outward is only half as strong. The farther you stand from the equator, the longer you keep your weight. But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
+   "heard": "Not everyone on earth would have felt the same thing. At the poles the ground only turns on the spot. Nobody there is carried around at all, and they would weigh the same as ever. At forty five degrees north you move at a seventy per cent of the equator speed, and the push hour is only half as strong. The farther you stand from the equator, the longer you keep your way. But the water leaves the poles first, so the stillest place on earth would stand high and dry.",
+   "words": [
+    {
+     "w": "Not",
+     "start": 0.05,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "everyone",
+     "start": 0.18,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.66,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 0.69,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 0.92,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 1.07,
+     "end": 1.44,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 1.33,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 1.705,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "thing.",
+     "start": 1.735,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 2.125,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.155,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "poles,",
+     "start": 2.41,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.83,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 2.86,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 3.27,
+     "end": 3.32,
+     "heard": true
+    },
+    {
+     "w": "turns",
+     "start": 3.3,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 3.635,
+     "end": 3.685,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.8,
+     "end": 3.85,
+     "heard": true
+    },
+    {
+     "w": "spot.",
+     "start": 3.83,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "Nobody",
+     "start": 4.425,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "there",
+     "start": 4.81,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 5.145,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "carried",
+     "start": 5.175,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "around",
+     "start": 5.38,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 5.635,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "all,",
+     "start": 5.725,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.08,
+     "end": 6.13,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 6.11,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 6.14,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 6.365,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.7,
+     "end": 6.75,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 6.82,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 6.885,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "ever.",
+     "start": 7.5,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 7.925,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "forty-five",
+     "start": 7.955,
+     "end": 8.48,
+     "heard": false
+    },
+    {
+     "w": "degrees",
+     "start": 8.575,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "north,",
+     "start": 8.82,
+     "end": 9.12,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 9.14,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "move",
+     "start": 9.34,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 9.74,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "seventy",
+     "start": 9.925,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "percent",
+     "start": 10.295,
+     "end": 10.64,
+     "heard": false
+    },
+    {
+     "w": "of",
+     "start": 10.72,
+     "end": 10.77,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.75,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "equator's",
+     "start": 10.92,
+     "end": 11.28,
+     "heard": false
+    },
+    {
+     "w": "speed,",
+     "start": 11.32,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 11.595,
+     "end": 11.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.655,
+     "end": 11.84,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 11.845,
+     "end": 12.0,
+     "heard": true
+    },
+    {
+     "w": "outward",
+     "start": 12.07,
+     "end": 12.4,
+     "heard": false
+    },
+    {
+     "w": "is",
+     "start": 12.395,
+     "end": 12.56,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 12.65,
+     "end": 12.72,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 12.68,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 12.895,
+     "end": 13.2,
+     "heard": true
+    },
+    {
+     "w": "strong.",
+     "start": 13.175,
+     "end": 14.48,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 15.315,
+     "end": 15.365,
+     "heard": true
+    },
+    {
+     "w": "farther",
+     "start": 15.445,
+     "end": 15.84,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 15.72,
+     "end": 16.0,
+     "heard": true
+    },
+    {
+     "w": "stand",
+     "start": 16.065,
+     "end": 16.24,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 16.245,
+     "end": 16.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 16.415,
+     "end": 16.48,
+     "heard": true
+    },
+    {
+     "w": "equator,",
+     "start": 16.445,
+     "end": 16.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 16.945,
+     "end": 17.12,
+     "heard": true
+    },
+    {
+     "w": "longer",
+     "start": 17.05,
+     "end": 17.44,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 17.5,
+     "end": 17.55,
+     "heard": true
+    },
+    {
+     "w": "keep",
+     "start": 17.53,
+     "end": 17.76,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 17.675,
+     "end": 17.92,
+     "heard": true
+    },
+    {
+     "w": "weight.",
+     "start": 18.18,
+     "end": 18.72,
+     "heard": false
+    },
+    {
+     "w": "But",
+     "start": 18.88,
+     "end": 18.93,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 18.91,
+     "end": 19.04,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 19.005,
+     "end": 19.28,
+     "heard": true
+    },
+    {
+     "w": "leaves",
+     "start": 19.34,
+     "end": 19.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 19.685,
+     "end": 19.735,
+     "heard": true
+    },
+    {
+     "w": "poles",
+     "start": 19.715,
+     "end": 20.0,
+     "heard": true
+    },
+    {
+     "w": "first,",
+     "start": 19.97,
+     "end": 20.4,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 20.48,
+     "end": 20.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 20.525,
+     "end": 20.64,
+     "heard": true
+    },
+    {
+     "w": "stillest",
+     "start": 20.555,
+     "end": 22.48,
+     "heard": true
+    },
+    {
+     "w": "place",
+     "start": 22.47,
+     "end": 22.64,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 22.78,
+     "end": 22.88,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 22.98,
+     "end": 23.12,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 23.195,
+     "end": 23.28,
+     "heard": true
+    },
+    {
+     "w": "stand",
+     "start": 23.39,
+     "end": 23.6,
+     "heard": true
+    },
+    {
+     "w": "high",
+     "start": 23.6,
+     "end": 23.76,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 23.9,
+     "end": 24.0,
+     "heard": true
+    },
+    {
+     "w": "dry.",
+     "start": 23.93,
+     "end": 24.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo12",
+   "text": "At a three hour day, the Sun crosses the sky in just ninety minutes. The ground now moves at over thirteen thousand kilometers an hour. You weigh twenty-two percent less. Seventy kilograms feels like fifty-five.",
+   "heard": "In a three-hour day, the sun crosses the sky in just 90 minutes. The ground now moves at over 13,000 kilometers an hour. He weighs 22% less. 70 kilograms feels like 50%.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.01,
+     "end": 0.16,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 0.2,
+     "end": 0.25,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 0.23,
+     "end": 0.56,
+     "heard": false
+    },
+    {
+     "w": "hour",
+     "start": 0.3,
+     "end": 0.56,
+     "heard": false
+    },
+    {
+     "w": "day,",
+     "start": 0.52,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.7,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 0.835,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "crosses",
+     "start": 1.015,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.45,
+     "end": 1.5,
+     "heard": true
+    },
+    {
+     "w": "sky",
+     "start": 1.48,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.765,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 1.84,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "ninety",
+     "start": 2.05,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "minutes.",
+     "start": 2.49,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 3.205,
+     "end": 3.255,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 3.235,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 3.535,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 3.78,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 4.105,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 4.21,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "thirteen",
+     "start": 4.465,
+     "end": 5.12,
+     "heard": false
+    },
+    {
+     "w": "thousand",
+     "start": 4.495,
+     "end": 5.12,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 5.035,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 5.7,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 6.395,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 7.055,
+     "end": 8.24,
+     "heard": false
+    },
+    {
+     "w": "weigh",
+     "start": 7.085,
+     "end": 8.24,
+     "heard": false
+    },
+    {
+     "w": "twenty-two",
+     "start": 7.115,
+     "end": 8.24,
+     "heard": false
+    },
+    {
+     "w": "percent",
+     "start": 7.145,
+     "end": 8.24,
+     "heard": false
+    },
+    {
+     "w": "less.",
+     "start": 8.305,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "Seventy",
+     "start": 8.72,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "kilograms",
+     "start": 9.235,
+     "end": 9.6,
+     "heard": true
+    },
+    {
+     "w": "feels",
+     "start": 9.745,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 9.855,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "fifty-five.",
+     "start": 10.095,
+     "end": 10.3,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo13",
+   "text": "At two hours, you weigh half of what you did. Twenty thousand kilometers an hour; the Sun crosses the whole sky in an hour. Every object near the equator is half as heavy as it should be. Buildings, bridges and oceans are all being asked to hold on with half the force.",
+   "heard": "At two hours you weigh half of what you did. Twenty thousand kilometers an hour The sun crosses the whole sky in an hour. Every object near the equator is half as heavy as it should be. Notions are copy now, so hold on with half the force.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.015,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 0.195,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "hours,",
+     "start": 0.37,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.595,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 0.89,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 0.92,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 1.25,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 1.485,
+     "end": 1.535,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.68,
+     "end": 1.73,
+     "heard": true
+    },
+    {
+     "w": "did.",
+     "start": 1.855,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "Twenty",
+     "start": 2.35,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "thousand",
+     "start": 2.585,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "kilometers",
+     "start": 3.095,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 3.74,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "hour;",
+     "start": 3.77,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.2,
+     "end": 4.25,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 4.23,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "crosses",
+     "start": 4.455,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.76,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 4.93,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "sky",
+     "start": 5.21,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 5.54,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 5.57,
+     "end": 5.68,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 5.775,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "Every",
+     "start": 6.265,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "object",
+     "start": 6.5,
+     "end": 6.88,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 6.88,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.945,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 7.27,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 7.66,
+     "end": 7.71,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 7.69,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 7.975,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "heavy",
+     "start": 8.005,
+     "end": 8.48,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 8.585,
+     "end": 8.64,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 8.615,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "should",
+     "start": 8.82,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "be.",
+     "start": 8.9,
+     "end": 9.2,
+     "heard": true
+    },
+    {
+     "w": "Buildings,",
+     "start": 9.385,
+     "end": 9.68,
+     "heard": false
+    },
+    {
+     "w": "bridges",
+     "start": 9.415,
+     "end": 9.68,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 9.445,
+     "end": 9.68,
+     "heard": false
+    },
+    {
+     "w": "oceans",
+     "start": 9.475,
+     "end": 9.68,
+     "heard": false
+    },
+    {
+     "w": "are",
+     "start": 9.665,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 9.845,
+     "end": 10.56,
+     "heard": false
+    },
+    {
+     "w": "being",
+     "start": 9.875,
+     "end": 10.56,
+     "heard": false
+    },
+    {
+     "w": "asked",
+     "start": 9.905,
+     "end": 10.56,
+     "heard": false
+    },
+    {
+     "w": "to",
+     "start": 9.935,
+     "end": 10.56,
+     "heard": false
+    },
+    {
+     "w": "hold",
+     "start": 10.44,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 10.8,
+     "end": 10.88,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 11.015,
+     "end": 11.065,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 11.18,
+     "end": 11.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.445,
+     "end": 11.6,
+     "heard": true
+    },
+    {
+     "w": "force.",
+     "start": 11.61,
+     "end": 12.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo14",
+   "text": "At an hour and a half, you are almost weightless. You weigh about one eighth of what you did. The equator moves at twenty-seven thousand kilometers an hour. One more nudge, and something changes completely.",
+   "heard": "At an hour and a half, you are almost weightless. You weigh about one-eighth of what you did. The critter moves at 27,000 kilometers an hour. One more notch, and something changes completely.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 0.24,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.27,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.515,
+     "end": 0.565,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.55,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "half,",
+     "start": 0.58,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.8,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 1.13,
+     "end": 1.18,
+     "heard": true
+    },
+    {
+     "w": "almost",
+     "start": 1.16,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "weightless.",
+     "start": 1.315,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 2.21,
+     "end": 2.26,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 2.25,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.485,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 2.69,
+     "end": 3.12,
+     "heard": false
+    },
+    {
+     "w": "eighth",
+     "start": 2.72,
+     "end": 3.12,
+     "heard": false
+    },
+    {
+     "w": "of",
+     "start": 3.14,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 3.265,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 3.43,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "did.",
+     "start": 3.595,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 4.235,
+     "end": 4.285,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 4.295,
+     "end": 4.72,
+     "heard": false
+    },
+    {
+     "w": "moves",
+     "start": 4.685,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 5.17,
+     "end": 5.22,
+     "heard": true
+    },
+    {
+     "w": "twenty-seven",
+     "start": 5.2,
+     "end": 6.08,
+     "heard": false
+    },
+    {
+     "w": "thousand",
+     "start": 5.255,
+     "end": 6.08,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 6.07,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 6.625,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 6.81,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "One",
+     "start": 7.455,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 7.655,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "nudge,",
+     "start": 7.85,
+     "end": 8.16,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 8.205,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "something",
+     "start": 8.41,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "changes",
+     "start": 8.555,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "completely.",
+     "start": 9.065,
+     "end": 9.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo15",
+   "text": "At a day of about an hour and twenty-four minutes, the ground under you moves at seven point nine kilometers a second. That is the speed of a satellite in a low orbit. At that speed, the push outward exactly cancels gravity. You weigh nothing. You are no longer standing on the Earth. You are orbiting it, one stride above the surface, with the whole equator going by beneath you.",
+   "heard": "At a day about an hour and 24 minutes, the ground under you moves at 7.9 kilometers a second. That is the speed of a satellite in low orbit. At that speed, the push outward exactly cancels gravity. You ain't nothing. You are no longer standing on Earth. You are orbiting one stride above the surface with the whole equator going to.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.01,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.23,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.26,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.47,
+     "end": 0.56,
+     "heard": false
+    },
+    {
+     "w": "about",
+     "start": 0.5,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 0.895,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.925,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.385,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "twenty-four",
+     "start": 1.415,
+     "end": 1.84,
+     "heard": false
+    },
+    {
+     "w": "minutes,",
+     "start": 1.825,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.3,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 2.405,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "under",
+     "start": 2.625,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.83,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 3.175,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 3.515,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "seven",
+     "start": 3.79,
+     "end": 4.56,
+     "heard": false
+    },
+    {
+     "w": "point",
+     "start": 3.905,
+     "end": 4.56,
+     "heard": false
+    },
+    {
+     "w": "nine",
+     "start": 3.935,
+     "end": 4.56,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 4.485,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.035,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "second.",
+     "start": 5.32,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "That",
+     "start": 6.71,
+     "end": 6.76,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.74,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.96,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 7.14,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 7.37,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 7.4,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "satellite",
+     "start": 7.43,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 7.97,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 8.02,
+     "end": 8.08,
+     "heard": false
+    },
+    {
+     "w": "low",
+     "start": 8.05,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "orbit.",
+     "start": 8.425,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "At",
+     "start": 9.145,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 9.175,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "speed,",
+     "start": 9.45,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.785,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 9.935,
+     "end": 10.24,
+     "heard": true
+    },
+    {
+     "w": "outward",
+     "start": 10.195,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "exactly",
+     "start": 10.825,
+     "end": 11.2,
+     "heard": true
+    },
+    {
+     "w": "cancels",
+     "start": 11.22,
+     "end": 11.68,
+     "heard": true
+    },
+    {
+     "w": "gravity.",
+     "start": 11.615,
+     "end": 12.56,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 12.695,
+     "end": 12.745,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 12.725,
+     "end": 13.2,
+     "heard": false
+    },
+    {
+     "w": "nothing.",
+     "start": 13.255,
+     "end": 13.92,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 14.055,
+     "end": 14.105,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 14.085,
+     "end": 14.24,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 14.245,
+     "end": 14.4,
+     "heard": true
+    },
+    {
+     "w": "longer",
+     "start": 14.39,
+     "end": 14.64,
+     "heard": true
+    },
+    {
+     "w": "standing",
+     "start": 14.635,
+     "end": 15.04,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 15.025,
+     "end": 15.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 15.185,
+     "end": 15.235,
+     "heard": false
+    },
+    {
+     "w": "Earth.",
+     "start": 15.215,
+     "end": 15.68,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 15.74,
+     "end": 15.84,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 16.005,
+     "end": 16.055,
+     "heard": true
+    },
+    {
+     "w": "orbiting",
+     "start": 16.035,
+     "end": 16.4,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 16.435,
+     "end": 16.64,
+     "heard": false
+    },
+    {
+     "w": "one",
+     "start": 16.675,
+     "end": 16.8,
+     "heard": true
+    },
+    {
+     "w": "stride",
+     "start": 16.705,
+     "end": 17.12,
+     "heard": true
+    },
+    {
+     "w": "above",
+     "start": 17.225,
+     "end": 17.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 17.36,
+     "end": 17.52,
+     "heard": true
+    },
+    {
+     "w": "surface,",
+     "start": 17.405,
+     "end": 17.76,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 17.745,
+     "end": 18.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 18.0,
+     "end": 18.08,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 18.03,
+     "end": 18.24,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 18.335,
+     "end": 18.56,
+     "heard": true
+    },
+    {
+     "w": "going",
+     "start": 18.655,
+     "end": 18.705,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 18.685,
+     "end": 18.94,
+     "heard": false
+    },
+    {
+     "w": "beneath",
+     "start": 18.715,
+     "end": 18.94,
+     "heard": false
+    },
+    {
+     "w": "you.",
+     "start": 18.745,
+     "end": 18.94,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo16",
+   "text": "And past that point, the equator can no longer keep its own rock. This is as far as a simple sum can honestly take us. A real planet is not a perfect ball, and what happens next depends on how strong the Earth is. But the direction is clear: the spin would tear the equator apart. First the loose things would go, then the sea, then the rock.",
+   "heard": "And past that point the equator can no longer keep its own rock. This is as far as the simple sum can honestly take us. A real planet is not a perfect bot, and what happens next depends on how strong the earth is, but the direction is clear. The span would tear the equator apart. First the loose things would go, then the sea, then the rock.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.36,
+     "end": 0.41,
+     "heard": true
+    },
+    {
+     "w": "past",
+     "start": 0.39,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 0.885,
+     "end": 0.935,
+     "heard": true
+    },
+    {
+     "w": "point,",
+     "start": 0.915,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.17,
+     "end": 1.22,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 1.3,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 1.56,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 1.645,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "longer",
+     "start": 1.805,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "keep",
+     "start": 2.085,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 2.225,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 2.3,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "rock.",
+     "start": 2.535,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "This",
+     "start": 3.355,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.385,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 3.645,
+     "end": 3.695,
+     "heard": true
+    },
+    {
+     "w": "far",
+     "start": 3.775,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 3.805,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.985,
+     "end": 4.08,
+     "heard": false
+    },
+    {
+     "w": "simple",
+     "start": 4.015,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "sum",
+     "start": 4.34,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 4.67,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "honestly",
+     "start": 4.775,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "take",
+     "start": 5.38,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "us.",
+     "start": 5.445,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 5.865,
+     "end": 5.915,
+     "heard": true
+    },
+    {
+     "w": "real",
+     "start": 5.895,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 6.165,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 6.36,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "not",
+     "start": 6.455,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.77,
+     "end": 6.82,
+     "heard": true
+    },
+    {
+     "w": "perfect",
+     "start": 6.8,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "ball,",
+     "start": 7.1,
+     "end": 7.52,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 7.51,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 7.635,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "happens",
+     "start": 7.935,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "next",
+     "start": 8.28,
+     "end": 8.33,
+     "heard": true
+    },
+    {
+     "w": "depends",
+     "start": 8.42,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 8.645,
+     "end": 8.88,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 8.86,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "strong",
+     "start": 9.11,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.31,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 9.6,
+     "end": 9.76,
+     "heard": true
+    },
+    {
+     "w": "is.",
+     "start": 9.745,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 10.44,
+     "end": 10.49,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.535,
+     "end": 10.64,
+     "heard": true
+    },
+    {
+     "w": "direction",
+     "start": 10.63,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 11.01,
+     "end": 11.2,
+     "heard": true
+    },
+    {
+     "w": "clear:",
+     "start": 11.13,
+     "end": 12.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 11.89,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 12.19,
+     "end": 12.48,
+     "heard": false
+    },
+    {
+     "w": "would",
+     "start": 12.37,
+     "end": 12.64,
+     "heard": true
+    },
+    {
+     "w": "tear",
+     "start": 12.66,
+     "end": 12.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 12.82,
+     "end": 12.96,
+     "heard": true
+    },
+    {
+     "w": "equator",
+     "start": 13.01,
+     "end": 13.36,
+     "heard": true
+    },
+    {
+     "w": "apart.",
+     "start": 13.335,
+     "end": 13.76,
+     "heard": true
+    },
+    {
+     "w": "First",
+     "start": 13.825,
+     "end": 13.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 14.07,
+     "end": 14.16,
+     "heard": true
+    },
+    {
+     "w": "loose",
+     "start": 14.1,
+     "end": 14.32,
+     "heard": true
+    },
+    {
+     "w": "things",
+     "start": 14.435,
+     "end": 14.72,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 14.73,
+     "end": 14.88,
+     "heard": true
+    },
+    {
+     "w": "go,",
+     "start": 14.79,
+     "end": 15.2,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 15.2,
+     "end": 15.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 15.33,
+     "end": 15.52,
+     "heard": true
+    },
+    {
+     "w": "sea,",
+     "start": 15.58,
+     "end": 15.92,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 15.92,
+     "end": 16.08,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 16.085,
+     "end": 16.16,
+     "heard": true
+    },
+    {
+     "w": "rock.",
+     "start": 16.115,
+     "end": 16.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo17",
+   "text": "Of course, nothing in the real universe could ever do this. To spin the Earth that fast you would have to put in about six times ten to the thirty-first joules, nearly three hundred times the spin energy it has today. That is every drop of sunlight the Earth receives, for about eleven million years.",
+   "heard": "Of course nothing in the real universe could ever do this. To span the earth that fast you'd have to put in about six times ten to the thirty first joules, nearly three hundred times the span energy as to day. That is every drop of cell at the Earth received for about eleven million years.",
+   "words": [
+    {
+     "w": "Of",
+     "start": 0.045,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "course,",
+     "start": 0.205,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "nothing",
+     "start": 0.49,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 0.735,
+     "end": 0.785,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.765,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "real",
+     "start": 0.835,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "universe",
+     "start": 1.165,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "could",
+     "start": 1.445,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "ever",
+     "start": 1.555,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 2.035,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "this.",
+     "start": 2.065,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "To",
+     "start": 2.74,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 2.97,
+     "end": 3.2,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 3.11,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 3.45,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 3.5,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 3.68,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 3.885,
+     "end": 4.16,
+     "heard": false
+    },
+    {
+     "w": "would",
+     "start": 3.915,
+     "end": 4.16,
+     "heard": false
+    },
+    {
+     "w": "have",
+     "start": 4.215,
+     "end": 4.265,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 4.35,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "put",
+     "start": 4.38,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 4.575,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 4.695,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 4.85,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 5.145,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 5.505,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.76,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.915,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "thirty-first",
+     "start": 6.22,
+     "end": 6.8,
+     "heard": false
+    },
+    {
+     "w": "joules,",
+     "start": 6.825,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 8.14,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 8.505,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 9.17,
+     "end": 9.68,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 9.7,
+     "end": 9.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 10.04,
+     "end": 10.09,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 10.155,
+     "end": 10.4,
+     "heard": false
+    },
+    {
+     "w": "energy",
+     "start": 10.31,
+     "end": 10.72,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 10.74,
+     "end": 12.16,
+     "heard": false
+    },
+    {
+     "w": "has",
+     "start": 10.77,
+     "end": 12.16,
+     "heard": false
+    },
+    {
+     "w": "today.",
+     "start": 10.8,
+     "end": 12.16,
+     "heard": false
+    },
+    {
+     "w": "That",
+     "start": 12.25,
+     "end": 12.32,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 12.345,
+     "end": 12.48,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 12.665,
+     "end": 12.715,
+     "heard": true
+    },
+    {
+     "w": "drop",
+     "start": 12.83,
+     "end": 13.04,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 13.08,
+     "end": 13.13,
+     "heard": true
+    },
+    {
+     "w": "sunlight",
+     "start": 13.11,
+     "end": 13.52,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 13.465,
+     "end": 13.6,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 13.685,
+     "end": 13.76,
+     "heard": true
+    },
+    {
+     "w": "receives,",
+     "start": 13.715,
+     "end": 14.24,
+     "heard": false
+    },
+    {
+     "w": "for",
+     "start": 14.295,
+     "end": 14.4,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 14.585,
+     "end": 14.64,
+     "heard": true
+    },
+    {
+     "w": "eleven",
+     "start": 14.615,
+     "end": 15.12,
+     "heard": true
+    },
+    {
+     "w": "million",
+     "start": 15.175,
+     "end": 15.6,
+     "heard": true
+    },
+    {
+     "w": "years.",
+     "start": 15.76,
+     "end": 16.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo18",
+   "text": "So the next time you stand still, remember the speed you are carrying. You are already moving at sixteen hundred kilometers an hour. You only have to go about seventeen times faster to leave the ground behind. The day would have to shrink from twenty-four hours to an hour and twenty-four minutes. That is the whole distance between standing and flying, and it is why a planet's spin can never be a small thing. Thanks for watching.",
+   "heard": "So the next time you stand still, remember the speed you are carrying. You are already moving at 1600 kilometers an hour. You only have to go about seventeen times faster to leave the crowd behind. The day would have to shrink from twenty four hours to an hour and twenty four minutes. That is all the difference between standing and flying. And it is why a planet spin can never be a small thing. Thanks for watching.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.31,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.34,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "next",
+     "start": 0.655,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "time",
+     "start": 0.685,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.885,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "stand",
+     "start": 0.915,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "still,",
+     "start": 1.165,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "remember",
+     "start": 1.485,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.86,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 2.02,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.13,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 2.425,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "carrying.",
+     "start": 2.65,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 3.7,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 3.73,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "already",
+     "start": 3.88,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "moving",
+     "start": 4.12,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 4.28,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "sixteen",
+     "start": 4.57,
+     "end": 5.36,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 4.6,
+     "end": 5.36,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 5.31,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 5.895,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 6.12,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "You",
+     "start": 6.895,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 6.925,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 7.085,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 7.295,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "go",
+     "start": 7.365,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 7.55,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "seventeen",
+     "start": 7.85,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 8.1,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 8.295,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 8.73,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "leave",
+     "start": 8.805,
+     "end": 9.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 9.08,
+     "end": 9.13,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 9.11,
+     "end": 9.44,
+     "heard": false
+    },
+    {
+     "w": "behind.",
+     "start": 9.445,
+     "end": 9.84,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 9.845,
+     "end": 10.0,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 9.975,
+     "end": 10.16,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 10.175,
+     "end": 10.32,
+     "heard": true
+    },
+    {
+     "w": "have",
+     "start": 10.385,
+     "end": 10.435,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 10.415,
+     "end": 10.48,
+     "heard": true
+    },
+    {
+     "w": "shrink",
+     "start": 10.575,
+     "end": 10.8,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 10.805,
+     "end": 11.04,
+     "heard": true
+    },
+    {
+     "w": "twenty-four",
+     "start": 10.97,
+     "end": 11.44,
+     "heard": false
+    },
+    {
+     "w": "hours",
+     "start": 11.515,
+     "end": 11.92,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 11.885,
+     "end": 12.16,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 12.15,
+     "end": 12.32,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 12.355,
+     "end": 12.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 12.735,
+     "end": 12.88,
+     "heard": true
+    },
+    {
+     "w": "twenty-four",
+     "start": 12.92,
+     "end": 13.36,
+     "heard": false
+    },
+    {
+     "w": "minutes.",
+     "start": 13.365,
+     "end": 14.08,
+     "heard": true
+    },
+    {
+     "w": "That",
+     "start": 14.255,
+     "end": 14.305,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 14.285,
+     "end": 14.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 14.705,
+     "end": 14.755,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 14.735,
+     "end": 15.12,
+     "heard": false
+    },
+    {
+     "w": "distance",
+     "start": 14.815,
+     "end": 15.12,
+     "heard": false
+    },
+    {
+     "w": "between",
+     "start": 15.06,
+     "end": 15.28,
+     "heard": true
+    },
+    {
+     "w": "standing",
+     "start": 15.36,
+     "end": 15.76,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 15.87,
+     "end": 15.92,
+     "heard": true
+    },
+    {
+     "w": "flying,",
+     "start": 15.9,
+     "end": 16.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 16.735,
+     "end": 16.8,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 16.78,
+     "end": 16.96,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 17.08,
+     "end": 17.13,
+     "heard": true
+    },
+    {
+     "w": "why",
+     "start": 17.11,
+     "end": 17.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 17.26,
+     "end": 17.31,
+     "heard": true
+    },
+    {
+     "w": "planet's",
+     "start": 17.34,
+     "end": 17.68,
+     "heard": false
+    },
+    {
+     "w": "spin",
+     "start": 17.69,
+     "end": 17.84,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 17.925,
+     "end": 18.16,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 18.045,
+     "end": 18.32,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 18.35,
+     "end": 18.4,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 18.47,
+     "end": 18.56,
+     "heard": true
+    },
+    {
+     "w": "small",
+     "start": 18.605,
+     "end": 18.8,
+     "heard": true
+    },
+    {
+     "w": "thing.",
+     "start": 18.83,
+     "end": 19.12,
+     "heard": true
+    },
+    {
+     "w": "Thanks",
+     "start": 19.19,
+     "end": 19.44,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 19.495,
+     "end": 19.6,
+     "heard": true
+    },
+    {
+     "w": "watching.",
+     "start": 19.71,
+     "end": 20.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo19",
+   "text": "Subscribe, for the next what-if.",
+   "heard": "Subscribe for the next What If?",
+   "words": [
+    {
+     "w": "Subscribe,",
+     "start": 0.065,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 0.635,
+     "end": 0.685,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.71,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "next",
+     "start": 0.74,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "what-if.",
+     "start": 1.01,
+     "end": 1.26,
+     "heard": false
+    }
+   ]
+  }
+ ]
+}

@@ -223,5 +223,96 @@
   "status": "TODO open link",
   "kind": "derivation",
   "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum."
+ },
+ {
+  "id": "c21",
+  "sentence": "the Sun slides its own width every minute (12 h), 16 s (3 h), 8 s (1.5 h)",
+  "claim": "The Sun's apparent motion is 360 deg / T: 0.50 deg/min at a 12 h day, 2.0 deg/min at 3 h, 4.0 deg/min at 1.5 h. Its disk is about 0.53 deg wide, so it moves its own width every 64 s, 16 s and 8 s.",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "source",
+  "source_url": "https://science.nasa.gov/sun/facts/",
+  "source_title": "NASA Science, Sun Facts (angular size about 0.53 degrees)",
+  "verified_via": "not read",
+  "note": "OPEN: the 0.53 degree angular diameter is from memory; the rest is arithmetic."
+ },
+ {
+  "id": "c22",
+  "sentence": "a year holds about 730 / 1,461 / 2,922 / 4,383 / 5,844 days",
+  "claim": "365.25 x 24 h / T: 730 days at 12 h, 1,461 at 6 h, 2,922 at 3 h, 4,383 at 2 h, 5,844 at 1.5 h (calendar days at the Earth's orbital period).",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "verified_via": "calculation",
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
+ },
+ {
+  "id": "c23",
+  "sentence": "the wind is about 1,670 km/h, about four times the strongest gust",
+  "claim": "463 m/s x 3.6 = 1,667 km/h (c7); 1,667 / 408 = 4.1 (c24).",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "verified_via": "calculation",
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
+ },
+ {
+  "id": "c24",
+  "sentence": "the strongest gust ever measured on Earth was about 408 km/h",
+  "claim": "Highest surface wind gust recorded on Earth: 408 km/h (113 m/s) at Barrow Island, Australia, during tropical cyclone Olivia, 10 April 1996.",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "source",
+  "source_url": "",
+  "source_title": "WMO Archive of Weather and Climate Extremes (wmo.asu.edu): highest surface wind gust (not yet found by a person)",
+  "verified_via": "not read",
+  "note": "OPEN: from memory; no URL given on purpose; a person must find the WMO entry."
+ },
+ {
+  "id": "c26",
+  "sentence": "a jump goes 2x / 8.4x higher; a cup falls 1.4x / 2.9x slower; 70 kg weighs 8.3 kg at 1.5 h",
+  "claim": "With the same push, jump height is proportional to 1/g_eff and fall time to 1/sqrt(g_eff), where g_eff = weight fraction x g (c5): at 2 h (50.4%) the height is 1.98x and the fall time 1.41x; at 1.5 h (11.9%) 8.4x and 2.9x; 70 kg x 0.119 = 8.3 kg.",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "verified_via": "calculation",
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
+ },
+ {
+  "id": "c27",
+  "sentence": "higher than a basketball hoop",
+  "claim": "A basketball hoop is 10 feet = 3.05 m above the floor; 0.5 m x 8.4 = 4.2 m.",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "source",
+  "source_url": "https://www.fiba.basketball/",
+  "source_title": "FIBA Official Basketball Rules (ring height 3.05 m; find the page)",
+  "verified_via": "not read",
+  "note": "OPEN: standard rule, from memory; no specific URL."
+ },
+ {
+  "id": "c28",
+  "sentence": "storms are steered 8x / 12x / 16x harder than today",
+  "claim": "Coriolis steering is proportional to the spin rate (c15): 23.934 h / 3 h = 8.0, / 2 h = 12.0, / 1.5 h = 16.0.",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "verified_via": "calculation",
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
+ },
+ {
+  "id": "c29",
+  "sentence": "the sea wants to stand about 2,800 km higher at 1.5 h, hundreds of times the ocean's depth",
+  "claim": "Extra rise = (w^2 - w0^2) R^2 / (2 g0) (c6): 2,797 km at a 1.5 h day, a rough first-order guess; the mean ocean depth is about 3.7 km (c18), so 2,800 / 3.7 = about 760 times.",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "source_title": "Derivation (calc.py): arithmetic on the cited values; no outside page",
+  "verified_via": "calculation",
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum."
  }
 ]

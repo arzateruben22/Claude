@@ -9,17 +9,12 @@ import json, re
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
 OWN = HERE.parents[1] / "voice-owner/cut/lines.json"
-W = json.loads((HERE / "vo/words.json").read_text())["lines"]
+OWNA = json.loads((HERE.parents[1] / "voice-owner/cutA/lines.json").read_text())   # the owner's reading, one file per sentence
 SENT = {}
-for wl in W:
-    sents, cur = [], []
-    for w in wl["words"]:
-        cur.append(w)
-        if re.search(r"[.?!]$", w["w"]): sents.append(cur); cur = []
-    if cur: sents.append(cur)
-    SENT[wl["id"]] = [(round(s[0]["start"], 3), round(s[-1]["end"], 3), " ".join(x["w"] for x in s)) for s in sents]
+for sf_ in OWNA["sentence_files"]:
+    SENT.setdefault(f"vo{sf_['line'] + 1:02d}", []).append((0.0, sf_["dur"], sf_["text"]))
 own = {l["beat"]: l["dur"] for l in json.loads(OWN.read_text())["lines"]}
-GAP = 0.4
+GAP = 1.0     # pause between sentences at most 1.0 s (the 1.2 s voiceless-gap rule still holds)
 # part: [(line id, [sentence numbers])]; payoff = the (line, sentence) after which the like/follow line goes
 PLAN = {
  1: dict(pick=[("vo01", [2]), ("vo02", [1, 2, 3, 4, 5]), ("vo03", [1, 3, 4, 5, 6])], payoff=("vo03", 3)),

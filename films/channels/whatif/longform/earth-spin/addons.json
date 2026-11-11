@@ -1,0 +1,198 @@
+[
+ {
+  "id": "A1",
+  "part": 2,
+  "after": "L5.1",
+  "text": "The Sun now slides across the sky about its own width every minute.",
+  "claims": "c21"
+ },
+ {
+  "id": "A2",
+  "part": 2,
+  "after": "A1",
+  "text": "Night is only six hours long, too.",
+  "claims": "c4"
+ },
+ {
+  "id": "A3",
+  "part": 2,
+  "after": "L5.4",
+  "text": "A year now holds about seven hundred and thirty days.",
+  "claims": "c22"
+ },
+ {
+  "id": "A4",
+  "part": 2,
+  "after": "A3",
+  "text": "Nothing here would feel dangerous yet, only strange.",
+  "claims": "-"
+ },
+ {
+  "id": "B1",
+  "part": 3,
+  "after": "L6.4",
+  "text": "That is about sixteen hundred and seventy kilometers an hour.",
+  "claims": "c23"
+ },
+ {
+  "id": "B2",
+  "part": 3,
+  "after": "B1",
+  "text": "The strongest gust ever measured on Earth was about four hundred and eight kilometers an hour.",
+  "claims": "c24"
+ },
+ {
+  "id": "B3",
+  "part": 3,
+  "after": "B2",
+  "text": "So this wind would be about four times stronger.",
+  "claims": "c23, c24"
+ },
+ {
+  "id": "B4",
+  "part": 3,
+  "after": "B3",
+  "text": "And it would blow from the east, because the ground is running ahead of the air.",
+  "claims": "c7"
+ },
+ {
+  "id": "B5",
+  "part": 3,
+  "after": "B4",
+  "text": "Sand and dust would lift off the ground and race past in a flat, roaring sheet.",
+  "claims": "-"
+ },
+ {
+  "id": "B6",
+  "part": 3,
+  "after": "B5",
+  "text": "Slowly, friction would drag the air up to speed, over hours to days.",
+  "claims": "c7"
+ },
+ {
+  "id": "B7",
+  "part": 3,
+  "after": "B6",
+  "text": "But in those first hours, anything loose, and plenty that is not, would be swept away.",
+  "claims": "-"
+ },
+ {
+  "id": "C1",
+  "part": 4,
+  "after": "L7.8",
+  "text": "Near the equator, the sea would creep far inland over the coasts.",
+  "claims": "c6"
+ },
+ {
+  "id": "C2",
+  "part": 4,
+  "after": "C1",
+  "text": "Near the poles, the sea floor would be left bare.",
+  "claims": "c6"
+ },
+ {
+  "id": "D1",
+  "part": 5,
+  "after": "L9.1",
+  "text": "Day and night each last three hours.",
+  "claims": "c4"
+ },
+ {
+  "id": "D2",
+  "part": 5,
+  "after": "L9.2",
+  "text": "The sea at the equator now wants to stand about a hundred and sixty-five kilometers higher than it does today.",
+  "claims": "c6"
+ },
+ {
+  "id": "D3",
+  "part": 5,
+  "after": "D2",
+  "text": "Again, that is only a rough guess.",
+  "claims": "c6"
+ },
+ {
+  "id": "E1",
+  "part": 7,
+  "after": "L12.1",
+  "text": "It slides its own width every sixteen seconds.",
+  "claims": "c21"
+ },
+ {
+  "id": "E2",
+  "part": 7,
+  "after": "L12.4",
+  "text": "The sea at the equator now wants to stand about seven hundred kilometers higher than it does today, another rough guess.",
+  "claims": "c6"
+ },
+ {
+  "id": "E3",
+  "part": 7,
+  "after": "L13.1",
+  "text": "The same jump that lifts you half a meter today would now lift you about a meter.",
+  "claims": "c26"
+ },
+ {
+  "id": "E4",
+  "part": 7,
+  "after": "L13.4",
+  "text": "Storms are steered twelve times harder than today, and a year holds more than four thousand days.",
+  "claims": "c28, c22"
+ },
+ {
+  "id": "F1",
+  "part": 8,
+  "after": "L14.2",
+  "text": "A seventy kilogram person would weigh about eight kilograms.",
+  "claims": "c5, c26"
+ },
+ {
+  "id": "F2",
+  "part": 8,
+  "after": "F1",
+  "text": "The same jump that lifts you half a meter today would carry you about four meters, higher than a basketball hoop.",
+  "claims": "c26, c27"
+ },
+ {
+  "id": "F3",
+  "part": 8,
+  "after": "F2",
+  "text": "A cup falling off a table would take about three times as long to land.",
+  "claims": "c26"
+ },
+ {
+  "id": "F4",
+  "part": 8,
+  "after": "L14.3",
+  "text": "The Sun now crosses the whole sky in forty-five minutes.",
+  "claims": "c4"
+ },
+ {
+  "id": "F5",
+  "part": 8,
+  "after": "F4",
+  "text": "It slides its own width every eight seconds.",
+  "claims": "c21"
+ },
+ {
+  "id": "F6",
+  "part": 8,
+  "after": "F5",
+  "text": "Storms are steered sixteen times harder than today.",
+  "claims": "c28"
+ },
+ {
+  "id": "F7",
+  "part": 8,
+  "after": "F6",
+  "text": "The sea at the equator now wants to stand about twenty-eight hundred kilometers higher than it does today. That is a rough guess, but it is hundreds of times the depth of the ocean.",
+  "claims": "c29"
+ },
+ {
+  "id": "F8",
+  "part": 8,
+  "after": "F7",
+  "text": "A year now holds nearly six thousand days.",
+  "claims": "c22"
+ }
+]

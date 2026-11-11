@@ -111,8 +111,9 @@ def main():
         x = polish.trim(y[int(a_cut * sr): int(b_cut * sr)], room_cache[ri])
         f = out / f"s{k + 1:03d}.wav"
         polish.write_wav(f, x)
-        sent_files.append(dict(k=k + 1, line=li, si=si, text=text, file=f.name, dur=round(len(x) / sr, 3), src=[ri, round(a_cut, 2), round(b_cut, 2)], match=round(r_, 2), takes=ncl))
-        flag = "" if r_ >= 0.8 else "   <-- low match (ASR noise or a misread)"
+        heard_txt = " ".join(h[0] for h in heard[i0:i1])
+        sent_files.append(dict(k=k + 1, line=li, si=si, text=text, heard=heard_txt, file=f.name, dur=round(len(x) / sr, 3), src=[ri, round(a_cut, 2), round(b_cut, 2)], match=round(r_, 2), takes=ncl))
+        flag = "" if r_ >= 0.8 else f"   <-- low match; heard: {heard_txt}"
         print(f"s{k + 1:03d} L{li + 1:02d}.{si + 1} {len(x) / sr:5.2f}s match {r_:.2f} takes {ncl} src {ri}:{a_cut:6.1f}-{b_cut:6.1f} {text[:50]}{flag}")
     # lines from sentences: the natural gap when two sentences are neighbours in the source, else 0.35 s
     lines = []
