@@ -73,10 +73,16 @@
  "spineAt": [
   [
    -1000000000.0,
-   [
-    0.5,
-    0.56
-   ]
+   {
+    "16x9": [
+     0.74,
+     0.2
+    ],
+    "9x16": [
+     0.5,
+     0.83
+    ]
+   }
   ]
  ],
  "factorKeys": [
@@ -295,15 +301,23 @@
  },
  "badges": [
   {
+   "id": "code-p0",
+   "kind": "tag",
+   "text": "Kitchen: AI illustration · bird drawn by code",
+   "t0": 0.6,
+   "t1": 53.2333,
+   "slot": "tl"
+  },
+  {
    "id": "code",
    "kind": "tag",
    "text": "Drawn by code · model",
-   "t0": 0.6,
+   "t0": 53.2333,
    "t1": 58.8833,
    "slot": "tl"
   }
  ],
- "captionY": 0.62,
+ "captionY": 0.51,
  "title": {
   "series": "Reality Rulebook · Season 3 · Part 1 of 8",
   "title": "Watch a wing, slowed ten times"
@@ -333,26 +347,30 @@
     ],
     "fov": 29.5
    },
+   "shift9": {
+    "x": -0.0564,
+    "ppm": 1790.0
+   },
    "anchor": {
     "bird": {
-     "pos": [
-      -0.1011,
-      0.455,
+     "tip": [
+      -0.038,
+      0.4517,
       -1.0
      ],
      "scale": 0.027,
-     "yaw": -0.3,
-     "tilt": 0.16
+     "yaw": -0.25,
+     "tilt": 0.5
     },
     "shadow": {
      "pos": [
-      -0.0134,
-      0.4406,
+      -0.0257,
+      0.4417,
       -1.002
      ],
-     "w": 0.075,
-     "h": 0.03,
-     "opacity": 0.32
+     "w": 0.07,
+     "h": 0.026,
+     "opacity": 0.4
     }
    },
    "t0": 0.0,

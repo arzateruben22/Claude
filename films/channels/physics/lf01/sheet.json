@@ -108,6 +108,18 @@
    "t1": 78.6667
   },
   {
+   "t": 39.1667,
+   "kind": "badge",
+   "tag": "code-p1",
+   "text": "Kitchen: AI illustration · bird drawn by code"
+  },
+  {
+   "t": 72.7,
+   "kind": "badge",
+   "tag": "code",
+   "text": "Drawn by code · model"
+  },
+  {
    "t": 78.6667,
    "kind": "section",
    "id": "fly",
@@ -125,6 +137,12 @@
    "tag": "pop"
   },
   {
+   "t": 208.5166,
+   "kind": "badge",
+   "tag": "code-p3",
+   "text": "Kitchen: AI illustration · wave drawn by code"
+  },
+  {
    "t": 208.5333,
    "kind": "section",
    "id": "sound",
@@ -134,6 +152,12 @@
    "t": 225.3166,
    "kind": "contact",
    "tag": "clap"
+  },
+  {
+   "t": 265.85,
+   "kind": "badge",
+   "tag": "code",
+   "text": "Drawn by code · model"
   },
   {
    "t": 265.8667,

@@ -186,6 +186,7 @@ const mkFlyer = (scale, body, wingCol, kind = "fly") => {      // a fly or a mos
 const poseFlyer = (fl, hz, tReal, blur, amp = 1.0) => {                                 // blur: 0 = one crisp pose, 1 = many poses of one beat, faint
   for (const w of fl.wings) {
     const on = blur > 0.01 || w.i === 0; w.hinge.visible = on; if (!on) continue;
+    w.tip.visible = blur <= 0.01;
     const ph = hz * tReal + (blur > 0.01 ? w.i / GHOSTS : 0);
     const a = Math.sin(ph * Math.PI * 2) * 1.0 * amp, fl2 = Math.cos(ph * Math.PI * 2);
     w.hinge.rotation.set(w.side * fl2 * 0.7, 0, 0); w.hinge.rotation.y = -a * 0.9 * w.side * 0 + 0; w.hinge.rotation.z = 0;
@@ -196,34 +197,56 @@ const poseFlyer = (fl, hz, tReal, blur, amp = 1.0) => {                         
 const flyH = mkFlyer(0.03, 0x2B2E34, 0xDDE6EE), flyC = mkFlyer(0.03, 0x2B2E34, 0xDDE6EE), mosq = mkFlyer(0.034, 0x3B3F46, 0xDDE6EE, "mosq");
 // the hummingbird: a tapered body (emerald back, pale belly), a ruby throat, a small head with a long thin bill and an eye with a highlight, a forked tail, and two long narrow wings that
 // beat in a figure of eight (sweep forward and back, tip loops via a second-harmonic tilt, flip at each end of the stroke); the ghosts stand in for what the eye blends at full speed
+// a small studio-less "environment" for the bird only: a leafy sky dome, a bright window behind it and a dim room in front, so the clearcoat, throat and iridescence have something to reflect
+const birdEnv = (() => { const es = new THREE.Scene(), dome = new THREE.SphereGeometry(10, 32, 20), P = dome.attributes.position, col = new Float32Array(P.count * 3), c = new THREE.Color();
+  for (let k = 0; k < P.count; k++) { const y = P.getY(k) / 10; if (y > 0.1) c.setRGB(0.55, 0.75, 1.0).multiplyScalar(0.9); else if (y > -0.2) c.setRGB(0.28, 0.5, 0.18).multiplyScalar(0.7); else c.setRGB(0.55, 0.42, 0.3).multiplyScalar(0.6); col.set([c.r, c.g, c.b], k * 3); }
+  dome.setAttribute("color", new THREE.BufferAttribute(col, 3)); es.add(new THREE.Mesh(dome, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
+  const win = new THREE.Mesh(new THREE.PlaneGeometry(7, 5), new THREE.MeshBasicMaterial({ color: new THREE.Color(5.5, 4.8, 3.6) })); win.position.set(0.8, 1, -8); es.add(win);
+  const fill = new THREE.Mesh(new THREE.PlaneGeometry(6, 3), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.9, 0.95, 1.1) })); fill.position.set(-3, 1, 7); fill.lookAt(0, 0, 0); es.add(fill);
+  const pm = new THREE.PMREMGenerator(renderer), tx = pm.fromScene(es, 0.03).texture; pm.dispose(); return tx; })();
+const BILL_TIP = new THREE.Vector3(2.2, 0.07, 0);   // the bill is about a quarter of the bird's length, nose to tail tip
+const featherTex = (() => { const cv = document.createElement("canvas"); cv.width = 256; cv.height = 512; const g = cv.getContext("2d");   // a dark-grey vane: barbs fanning out from the root, translucent toward the trailing edge
+  const gr = g.createLinearGradient(0, 0, 256, 0); gr.addColorStop(0, "rgba(46,54,62,0.96)"); gr.addColorStop(0.55, "rgba(58,67,76,0.82)"); gr.addColorStop(1, "rgba(86,96,106,0.42)"); g.fillStyle = gr; g.fillRect(0, 0, 256, 512);
+  for (let k = 0; k < 26; k++) { const a = -0.22 + (k / 25) * 0.5, x0 = 70 + 8 * Math.sin(k), y0 = 6; g.strokeStyle = k % 2 ? "rgba(18,22,26,0.5)" : "rgba(150,160,170,0.22)"; g.lineWidth = k % 2 ? 2.2 : 1.4; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 + Math.sin(a) * 520 + 160, 500); g.stroke(); }
+  g.strokeStyle = "rgba(14,16,20,0.9)"; g.lineWidth = 3; g.beginPath(); g.moveTo(82, 0); g.quadraticCurveTo(96, 250, 116, 512); g.stroke();
+  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+const tipGeo = new THREE.SphereGeometry(0.01, 4, 3), tipMat = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, depthTest: false });
 const mkBird = () => {
   const g = new THREE.Group();
-  const prof = [[0.07, -0.98], [0.13, -0.82], [0.22, -0.58], [0.31, -0.2], [0.34, 0.2], [0.3, 0.55], [0.21, 0.82], [0.13, 0.95]].map(([r, x]) => new THREE.Vector2(r, x));
-  const bg = new THREE.LatheGeometry(prof, 28); bg.rotateZ(-Math.PI / 2);
-  { const pos = bg.attributes.position, col = new Float32Array(pos.count * 3), back = new THREE.Color(0x1B8A4C), belly = new THREE.Color(0xE9E2CF), c = new THREE.Color();
-    for (let k = 0; k < pos.count; k++) { const m = Math.min(1, Math.max(0, (pos.getY(k) + 0.12) / 0.26)); c.copy(belly).lerp(back, m); col.set([c.r, c.g, c.b], k * 3); }
+  // one smooth skin from tail to head: a spline through the profile, lathed finely (no facets), emerald back shading to teal on the head, pale grey belly
+  const pts = [[0.04, -1.0], [0.1, -0.88], [0.2, -0.64], [0.3, -0.3], [0.34, 0.05], [0.33, 0.4], [0.27, 0.72], [0.25, 0.9], [0.275, 1.05], [0.26, 1.18], [0.17, 1.28], [0.07, 1.33], [0.0, 1.345]].map(([r, x]) => new THREE.Vector2(r * 0.84, x));
+  const spl = new THREE.SplineCurve(pts), prof = spl.getPoints(90).map((v) => new THREE.Vector2(Math.max(0, v.x), v.y));
+  const bg = new THREE.LatheGeometry(prof, 72); bg.rotateZ(-Math.PI / 2);
+  { const pos = bg.attributes.position, col = new Float32Array(pos.count * 3), emerald = new THREE.Color(0x1C9A52), bronze = new THREE.Color(0x5E9A2E), teal = new THREE.Color(0x0E9486), belly = new THREE.Color(0xDAD8CE), c = new THREE.Color(), up = new THREE.Color();
+    for (let k = 0; k < pos.count; k++) { const x = pos.getX(k), y = pos.getY(k), m = Math.min(1, Math.max(0, (y + 0.26) / 0.2)), sm = m * m * (3 - 2 * m);
+      up.copy(emerald).lerp(bronze, Math.min(1, Math.max(0, (-x - 0.1) / 0.8)) * 0.6).lerp(teal, Math.min(1, Math.max(0, (x - 0.7) / 0.5)) * 0.8);
+      c.copy(belly).lerp(up, sm); col.set([c.r, c.g, c.b], k * 3); }
     bg.setAttribute("color", new THREE.BufferAttribute(col, 3)); }
-  g.add(new THREE.Mesh(bg, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.42, metalness: 0.15 })));
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.27, 20, 14), new THREE.MeshStandardMaterial({ color: 0x1E9453, roughness: 0.4, metalness: 0.15 })); head.position.set(1.0, 0.1, 0); g.add(head);
-  const bill = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.04, 1.2, 8), new THREE.MeshStandardMaterial({ color: 0x15171A, roughness: 0.5 })); bill.rotation.z = -Math.PI / 2; bill.position.set(1.85, 0.07, 0); g.add(bill);
-  const gor = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshStandardMaterial({ color: 0xC21A58, roughness: 0.3, metalness: 0.35 })); gor.scale.set(0.3, 0.13, 0.22); gor.position.set(0.86, -0.05, 0); g.add(gor);
+  g.add(new THREE.Mesh(bg, new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.35, metalness: 0.22, clearcoat: 0.7, clearcoatRoughness: 0.28, sheen: 0.6, sheenColor: new THREE.Color(0xBFFFE0), sheenRoughness: 0.5, iridescence: 0.45, iridescenceIOR: 1.6 })));
+  const bill = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.042, 0.92, 12), new THREE.MeshPhysicalMaterial({ color: 0x14161A, roughness: 0.3, clearcoat: 0.6 })); bill.rotation.z = -Math.PI / 2; bill.position.set(1.74, 0.07, 0); g.add(bill);
+  const gorMat = new THREE.MeshPhysicalMaterial({ color: 0xC4144C, roughness: 0.22, metalness: 0.45, clearcoat: 1, clearcoatRoughness: 0.12, iridescence: 1, iridescenceIOR: 1.8, emissive: 0xFF2A5E, emissiveIntensity: 0.15 });
+  const gor = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), gorMat); gor.scale.set(0.27, 0.1, 0.2); gor.position.set(0.98, -0.2, 0); g.add(gor);   // the ruby throat: its glow flashes as the bird turns (set per frame)
   for (const sd of [-1, 1]) {
-    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 8), new THREE.MeshBasicMaterial({ color: 0x0B0B0D })); eye.position.set(1.12, 0.2, sd * 0.22); g.add(eye);
-    const hl = new THREE.Mesh(new THREE.SphereGeometry(0.016, 6, 5), new THREE.MeshBasicMaterial({ color: 0xFFFFFF })); hl.position.set(1.14, 0.225, sd * 0.255); g.add(hl);
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.052, 20, 14), new THREE.MeshPhysicalMaterial({ color: 0x08080A, roughness: 0.05, clearcoat: 1 })); eye.position.set(1.13, 0.12, sd * 0.236); g.add(eye);
+    const hl = new THREE.Mesh(new THREE.SphereGeometry(0.014, 8, 6), new THREE.MeshBasicMaterial({ color: 0xFFFFFF })); hl.position.set(1.15, 0.145, sd * 0.275); g.add(hl);
   }
   { const tsh = new THREE.Shape(); tsh.moveTo(0, 0.1); tsh.lineTo(-0.5, 0.24); tsh.lineTo(-0.38, 0.02); tsh.lineTo(-0.5, -0.22); tsh.lineTo(0, -0.1); tsh.closePath();   // a short forked tail, a fifth of the body
     for (const rx of [-0.38, 0, 0.38]) { const tm = new THREE.Mesh(new THREE.ShapeGeometry(tsh), new THREE.MeshStandardMaterial({ color: 0x14301F, roughness: 0.6, side: THREE.DoubleSide })); tm.position.set(-0.95, -0.02, 0); tm.rotation.x = rx; g.add(tm); } }
   const wings = [], wsh = new THREE.Shape(); wsh.moveTo(-0.06, 0); wsh.bezierCurveTo(0.22, 0.2, 0.22, 0.9, 0.05, 2.0); wsh.bezierCurveTo(-0.06, 1.2, -0.12, 0.5, -0.06, 0);
+  const wgeo = new THREE.ShapeGeometry(wsh, 12); { const P = wgeo.attributes.position, uv = new Float32Array(P.count * 2); for (let k = 0; k < P.count; k++) { uv[2 * k] = (P.getX(k) + 0.14) / 0.4; uv[2 * k + 1] = 1 - P.getY(k) / 2.0; } wgeo.setAttribute("uv", new THREE.BufferAttribute(uv, 2)); }
   for (let i = 0; i < GHOSTS; i++) for (const side of [-1, 1]) {
     const hinge = new THREE.Group(); hinge.position.set(0.3, 0.26, side * 0.12); hinge.rotation.order = "ZXY";
-    const wm = new THREE.Mesh(new THREE.ShapeGeometry(wsh, 12), new THREE.MeshBasicMaterial({ color: 0x2F4048, transparent: true, opacity: 0.92, depthWrite: false, side: THREE.DoubleSide }));
-    hinge.add(wm); g.add(hinge); wings.push({ hinge, wm, i, side });
+    const wm = new THREE.Mesh(wgeo, new THREE.MeshBasicMaterial({ map: featherTex, color: 0xFFFFFF, transparent: true, opacity: 0.92, depthWrite: false, side: THREE.DoubleSide }));
+    const tip = new THREE.Mesh(tipGeo, tipMat); tip.position.set(0.02, 1.7, 0); hinge.add(tip);   // draws nothing, but the finish's motion probe follows it, so the wing tip's speed sets the shutter samples (the real motion blur)
+    hinge.add(wm); g.add(hinge); wings.push({ hinge, wm, i, side, tip });
   }
-  g.scale.setScalar(0.075); scene.add(g); return { g, wings, scale: 0.075 };
+  g.traverse((o) => { if (o.isMesh && o.material && o.material.isMeshPhysicalMaterial) { o.material.envMap = birdEnv; o.material.envMapIntensity = o.material === gorMat ? 1.0 : 0.3; } });
+  g.scale.setScalar(0.075); scene.add(g); return { g, wings, scale: 0.075, gor: gorMat };
 };
 const poseBird = (fl, hz, tReal, blur) => {
   for (const w of fl.wings) {
     const on = blur > 0.01 || w.i === 0; w.hinge.visible = on; if (!on) continue;
+    w.tip.visible = blur <= 0.01;
     const ph = (hz * tReal + (blur > 0.01 ? w.i / GHOSTS : 0)) * Math.PI * 2;
     w.hinge.rotation.z = -Math.sin(ph) * 1.0 + 0.1;                         // the sweep, forward and back
     w.hinge.rotation.x = w.side * 0.38 * Math.sin(2 * ph + 0.6);            // the second harmonic: the tip draws a figure of eight
@@ -234,6 +257,8 @@ const poseBird = (fl, hz, tReal, blur) => {
 const hum = mkBird();
 const birdShadow = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 64; const cx = cv.getContext("2d"), gr = cx.createRadialGradient(32, 32, 2, 32, 32, 30); gr.addColorStop(0, "rgba(30,24,18,0.7)"); gr.addColorStop(1, "rgba(30,24,18,0)"); cx.fillStyle = gr; cx.fillRect(0, 0, 64, 64);
   const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, depthWrite: false })); m.visible = false; scene.add(m); return m; })();   // the bird's soft shadow on a plate's feeder dish
+const birdRim = new THREE.DirectionalLight(0xFFD9A0, 3.6); birdRim.position.set(0.7, 0.9, -4.0); birdRim.target.position.set(0, 0.4, -1.0); const birdFill = new THREE.DirectionalLight(0xBCD6FF, 1.25); birdFill.position.set(-1.2, 0.2, 3.0); birdFill.target.position.set(0, 0.4, -1.0); birdRim.visible = birdFill.visible = false; scene.add(birdRim, birdRim.target, birdFill, birdFill.target);   // on a plate: the window is behind the bird (a warm back light) and the room fills softly from the front
+const keyLights = [[scene.children.find((o) => o.isHemisphereLight), 1.1], [sun, 1.7], [winLight, 1.1], [rim, 0.5]];
 const trail = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 6), new THREE.MeshBasicMaterial({ color: 0x20232A, transparent: true, opacity: 0.25 })); m.visible = false; scene.add(m); trail.push(m); }
 
 // ── the splash: a crown of spikes at the rim, droplets that pinch off, ripples; the cup rings ──
@@ -365,6 +390,8 @@ window.seek = function (t) {
   let flyHook = null;
   for (const [t0, f] of [[EV.fly1, 1], [EV.fly2, 2], [EV.fly3, 4], [EV.fly4, 1]]) { const r = (t - t0) / f; if (r >= 0 && r <= 1.0) flyHook = r; }
   // wings: hummingbird (10x), the blur demonstration, the fly by the cup
+  if (window.CINEMA) window.CINEMA.pxPerSample = (t >= EV.bird[0] && t < EV.bird[1]) ? 9 : 3.5;   // a hovering bird's wing tips move 100 px a frame: fewer, wider shutter steps keep the render time sane
+  birdRim.visible = birdFill.visible = false; for (const [l, i0] of keyLights) if (l) l.intensity = i0;
   hum.g.visible = flyH.g.visible = flyC.g.visible = mosq.g.visible = false; trail.forEach((m) => { m.visible = false; });
   if (flyHook !== null) {
     const u = flyHook, [x, y, z] = flightAt(u); place(flyH, x, y, z, Math.PI); poseFlyer(flyH, CAL.hz.fly, u * 1.0, 1.0);
@@ -374,8 +401,12 @@ window.seek = function (t) {
     const r = (t - EV.bird[0]) / 10, b2 = EV.blur2 ? 1 - E.inout2(seg(t, EV.blur2[1] - 0.5, EV.blur2[1])) : 0, blurMix = Math.max(b2, E.inout2(seg(t, EV.blur[0], EV.blur[0] + 0.8)) * (1 - E.inout2(seg(t, EV.blur[1] - 0.6, EV.blur[1]))));
     const fr = blurMix > 0.01 ? Math.max(0.0, 1) : 1;
     { const ab = plates.anchor(t), bd = ab && ab.bird;   // a plate with a feeder: the bird hovers at its port, at the plate's scale
-      if (bd) { place(hum, bd.pos[0] + 0.004 * Math.sin(r * 3), bd.pos[1] + 0.003 * Math.sin(r * 7), bd.pos[2], bd.yaw ?? -0.35); hum.g.rotation.z = bd.tilt ?? 0.18; hum.g.scale.setScalar(bd.scale); }
+      if (bd) { const bob = [0.003 * Math.sin(r * 3), 0.0025 * Math.sin(r * 7), 0], q = bd.pos || [0, 0, 0]; place(hum, q[0], q[1], q[2], bd.yaw ?? -0.35); hum.g.rotation.z = bd.tilt ?? 0.18; hum.g.scale.setScalar(bd.scale);
+        if (bd.tip) { hum.g.position.set(0, 0, 0); hum.g.updateMatrix(); const o = BILL_TIP.clone().applyMatrix4(hum.g.matrix); hum.g.position.set(bd.tip[0] - o.x + bob[0], bd.tip[1] - o.y + bob[1], bd.tip[2] - o.z); }   // the bill tip is held at the port; the body hovers behind it
+        hum.gor.emissiveIntensity = 0.1 + 1.1 * Math.pow(Math.max(0, Math.sin(t * 1.9 + 0.4)), 5);   // the gorget flashes as it turns
+        hum.g.rotation.y = (bd.yaw ?? -0.35) + 0.16 * Math.sin(t * 0.9); }
       else { hum.g.scale.setScalar(0.075); place(hum, -1.5 + 0.012 * Math.sin(r * 3), 1.86 + 0.01 * Math.sin(r * 7), -1.45, -0.4); hum.g.rotation.z = 0.2; }
+      { const on = !!bd; birdRim.visible = birdFill.visible = on; for (const [l, i0] of keyLights) if (l) l.intensity = on ? i0 * 0.35 : i0; }
       birdShadow.visible = !!bd; if (bd && ab.shadow) { birdShadow.position.set(...ab.shadow.pos); birdShadow.scale.set(ab.shadow.w, ab.shadow.h, 1); birdShadow.material.opacity = ab.shadow.opacity ?? 0.3; } }
     poseBird(hum, CAL.hz.hum, blurMix > 0.01 ? (t - EV.bird[0]) / 1 : r, blurMix);
     if (blurMix <= 0.01) poseBird(hum, CAL.hz.hum, r, 0);

@@ -50,8 +50,8 @@
   {
    "t": 0.6,
    "kind": "badge",
-   "tag": "code",
-   "text": "Drawn by code · model"
+   "tag": "code-p0",
+   "text": "Kitchen: AI illustration · bird drawn by code"
   },
   {
    "t": 2.9333,
@@ -64,6 +64,12 @@
    "kind": "section",
    "id": "body2",
    "t1": 59.2
+  },
+  {
+   "t": 53.2333,
+   "kind": "badge",
+   "tag": "code",
+   "text": "Drawn by code · model"
   },
   {
    "t": 59.2,

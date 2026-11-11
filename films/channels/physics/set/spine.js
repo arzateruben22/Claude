@@ -18,7 +18,7 @@ export const SPINE_AT = [0.5, 0.245];
 export const placeSpine = (opts, el, hud, W, H, keys = SPINE_AT) => {
   const K = Array.isArray(keys) && Array.isArray(keys[0]) ? keys : [[-Infinity, keys]];
   opts.at = (t) => {
-    const [fx, fy] = (K.filter(([k]) => t >= k).pop() || K[0])[1];
+    const v = (K.filter(([k]) => t >= k).pop() || K[0])[1], [fx, fy] = Array.isArray(v) ? v : (H > W ? v["9x16"] : v["16x9"]);   // a key may also be {"16x9": [fx, fy], "9x16": [fx, fy]}
     const w = el.offsetWidth, h = el.offsetHeight, S = hud.safe;
     const x = Math.min(S.r - w / 2, Math.max(S.l + w / 2, fx * W)), y = Math.min(S.b - h / 2, Math.max(S.t + h / 2, fy * H));
     return [x / W, y / H];

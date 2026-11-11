@@ -47,13 +47,14 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
     const a = Math.min(1, (t - p.t0) / f, (p.t1 - t) / f), push = p.push ?? 0.05, par = p.parallax ?? 0.02;
     it.imgs.forEach((im) => {
       const dep = +im.dataset.depth, s = 1 + push * d * (p.cam3 ? 1 : 1 + 0.6 * dep), shift = par * (d - 0.5) * W * (1 + dep), over = p.over ?? (p.cam3 ? 1 : 1.04);
-      im.style.display = "block"; im.style.opacity = String(Math.max(0, Math.min(1, a))); im.style.transform = `translate(${shift.toFixed(2)}px,0) scale(${(s * over).toFixed(5)})`;
+      const cs = Math.max(W / im.naturalWidth, H / im.naturalHeight), sh9 = nine && p.shift9 ? -p.shift9.x * p.shift9.ppm * cs : 0;   // 9:16: the crop is moved so the subject sits at the centre (the camera yaws the same amount)
+      im.style.display = "block"; im.style.objectPosition = `calc(50% + ${sh9.toFixed(2)}px) 50%`; im.style.opacity = String(Math.max(0, Math.min(1, a))); im.style.transform = `translate(${shift.toFixed(2)}px,0) scale(${(s * over).toFixed(5)})`;
     });
     return true;
   };
   const cam = (t) => { const it = active(t); return it && it.p.cam ? it.p.cam : null; };
   const zoom = (t) => { const it = active(t); if (!it) return 1; const p = it.p; return 1 + (p.push ?? 0.05) * Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))); };
-  const cam3 = (t) => { const it = active(t); return it && it.p.cam3 ? it.p.cam3 : null; };
+  const cam3 = (t) => { const it = active(t); if (!it || !it.p.cam3) return null; const c = it.p.cam3; return nine && it.p.shift9 ? { ...c, target: [c.target[0] + it.p.shift9.x, c.target[1], c.target[2]] } : c; };
   const anchor = (t) => { const it = active(t); return it && it.p.anchor ? it.p.anchor : null; };
   return { ready, apply, cam, cam3, zoom, anchor, active, items };
 };
