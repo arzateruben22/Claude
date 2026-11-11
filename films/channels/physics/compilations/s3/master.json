@@ -1,0 +1,15 @@
+{
+ "file": "s3-16x9.mp4",
+ "sha256": "9461784c9ca68c7fcc5ba59db3c5ad719959f130941fc1ff387664d8cf70d9cb",
+ "bytes": 176399172,
+ "mbps": 2.56,
+ "crf": 17,
+ "source": "lf01/build/final/16x9 master.mp4 (the final-tier render, 1920x1080, near-lossless CRF 12 chunks), Lanczos-upscaled to 2560x1440; libx264 High slow CRF 17 maxrate 30M, AAC 320k of the -14 LUFS mix; delivered as 2 parts on branch claude/physics-s3-masters (compilations/s3/master/)",
+ "width": 2560,
+ "height": 1440,
+ "fps": 30,
+ "frames": 16552,
+ "duration_s": 551.733,
+ "freezedetect_n003_d14": "none over 1.4 s after patching (slow push-and-drift over the stills at 20, 344, 475, 488, 499, 516, 521, 532 s)",
+ "preview": "s3-16x9-preview.mp4 is the same cut at about 1.1 Mbps, for review only"
+}

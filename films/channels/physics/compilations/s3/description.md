@@ -12,67 +12,74 @@ Chapters
 6:23 Slow light until it crawls
 7:20 Slower than a snail: light
 
-Sources (every number in this film is a claim in claims.json; a person has not yet opened them all)
+Sources (a person has not yet opened them all)
 
 Introduction and Watch a wing, slowed ten times
-- c1: Slowed a trillion times, light moves only about a third of a millimeter per second of screen time (not literal… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c3: A hovering hummingbird beats its wings roughly 50 times a second (small species faster, large species slower; … — a primary source is still to be added (OPEN)
-- c4: 50 beats per second / 10 = 5 beats per second of screen time.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c34: Human vision stops resolving a flickering light as separate flashes above roughly 50 to 90 flashes a second (t… — a primary source is still to be added (OPEN)
-- c37: A hovering hummingbird sweeps each wing forward and back in a figure-of-eight path, flipping it at each end of… — Warrick, Tobalske, Powers, 'Aerodynamics of the hovering hummingbird', Nature 435, 1094 (2005) (cited from memory, not yet opened; OPEN)
+- Slowed a trillion times, light would crawl about a third of a millimeter per second on screen. (our calculation, shown in the film)
+- At a slow-motion factor of F, one real second lasts F seconds on screen: ten times slower is 10 seconds, a thousand times is about 17 minutes, a billion times is about 32 years. (our calculation, shown in the film)
+- A hovering hummingbird beats its wings roughly 50 times a second (small species faster, large ones slower). (source to be added)
+- Slowed ten times, 50 wingbeats a second becomes 5 a second on screen. (our calculation, shown in the film)
+- Human vision blends flashes faster than roughly 50 to 90 a second into a steady light. (source to be added)
+- A hovering hummingbird sweeps each wing forward and back in a figure-of-eight path, flipping it at each end of the stroke. Source: Warrick, Tobalske, Powers, 'Aerodynamics of the hovering hummingbird', Nature 435, 1094 (2005), https://doi.org/10.1038/nature03843
 
 A fly's wings, then a splash
-- c5: Flies beat their wings roughly 140 to 200 times a second (blow flies about 160 to 200); the film says "close t… — Kinematic diversity suggests expanded roles for fly halteres (wingbeat frequencies of many fly families), Biology Letters (2015) (SOURCE-READ): https://pmc.ncbi.nlm.nih.gov/articles/PMC4685551/
-- c6: About 200 / 100 = about 2 beats per second of screen time.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c7: A falling water drop hitting a thin layer of water forms a crown within a few hundredths of a second (tens of … — Yarin, 'Drop impact dynamics: splashing, spreading, receding, bouncing', Annu. Rev. Fluid Mech. 38, 159 (2006) (cited from memory, not yet opened; OPEN)
-- c8: A few hundredths of a second times 100 is a few seconds.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c30: Mosquito wingbeats are several hundred per second (reports range roughly 300 to 800); the film uses 500 as one… — Infrared light sensors permit rapid recording of wingbeat frequency and bioacoustic species identification of mosquitoes (Scientific Reports, 2021) (SOURCE-READ): https://pmc.ncbi.nlm.nih.gov/articles/PMC8113239/
-- c38: 500 beats a second / 100 = 5 beats per second of screen time.… — own calculation (calc.py) or a source not yet opened (OPEN)
+- At a slow-motion factor of F, one real second lasts F seconds on screen: ten times slower is 10 seconds, a thousand times is about 17 minutes, a billion times is about 32 years. (our calculation, shown in the film)
+- Flies beat their wings roughly 140 to 200 times a second. Source: Kinematic diversity suggests expanded roles for fly halteres (wingbeat frequencies of many fly families), Biology Letters (2015), https://pmc.ncbi.nlm.nih.gov/articles/PMC4685551/
+- Slowed 100 times, a fly's 200-beat-a-second wing beats about twice a second on screen. (our calculation, shown in the film)
+- A water drop landing in a thin layer of water throws up a crown within a few hundredths of a second. Source: Yarin, 'Drop impact dynamics: splashing, spreading, receding, bouncing', Annu. Rev. Fluid Mech. 38, 159 (2006), https://doi.org/10.1146/annurev.fluid.38.050304.092144
+- A few hundredths of a second, slowed 100 times, takes a few seconds on screen. (our calculation, shown in the film)
+- Mosquitoes beat their wings several hundred times a second (about 340 to 740 in one survey; 500 is a round value). Source: Infrared light sensors permit rapid recording of wingbeat frequency and bioacoustic species identification of mosquitoes (Scientific Reports, 2021), https://pmc.ncbi.nlm.nih.gov/articles/PMC8113239/
+- Slowed 100 times, a mosquito's 500 beats a second becomes 5 a second on screen. (our calculation, shown in the film)
 
 A popcorn pop, in slow motion
-- c9: A popcorn kernel pops at about 180 C, when steam pressure inside its hull ruptures it.… — Virot and Ponomarenko, Popcorn: critical temperature, jump and sound, J. R. Soc. Interface (2015) (SOURCE-READ): https://pmc.ncbi.nlm.nih.gov/articles/PMC4345489/
-- c10: The pop (the hull breaking, the starch expanding and the kernel jumping) takes some hundredths of a second (th… — Virot and Ponomarenko, Popcorn: critical temperature, jump and sound, J. R. Soc. Interface (2015) (SOURCE-READ): https://pmc.ncbi.nlm.nih.gov/articles/PMC4345489/
-- c11: About two hundredths of a second times 1,000 is about twenty seconds.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c12: The hole in a bursting soap film opens at the Taylor-Culick speed, v = sqrt(2 gamma / (rho h)), about 7 m/s fo… — Culick, 'Comments on a ruptured soap film', J. Appl. Phys. 31, 1128 (1960) (cited from memory, not yet opened; OPEN)
-- c13: A bubble about as wide as an egg (5 cm across, R = 2.5 cm) pops in about 11 ms (pi R / v, the edge of the hole… — own calculation (calc.py) or a source not yet opened (OPEN)
+- At a slow-motion factor of F, one real second lasts F seconds on screen: ten times slower is 10 seconds, a thousand times is about 17 minutes, a billion times is about 32 years. (our calculation, shown in the film)
+- A popcorn kernel pops at about 180 °C, when steam pressure inside its hull ruptures it. Source: Virot and Ponomarenko, Popcorn: critical temperature, jump and sound, J. R. Soc. Interface (2015), https://pmc.ncbi.nlm.nih.gov/articles/PMC4345489/
+- The pop, from the hull breaking to the kernel jumping, takes a few hundredths of a second. Source: Virot and Ponomarenko, Popcorn: critical temperature, jump and sound, J. R. Soc. Interface (2015), https://pmc.ncbi.nlm.nih.gov/articles/PMC4345489/
+- About two hundredths of a second, slowed 1,000 times, takes about twenty seconds on screen. (our calculation, shown in the film)
+- The hole in a bursting soap bubble opens at a few meters a second (about 7 m/s for a very thin film). Source: Culick, 'Comments on a ruptured soap film', J. Appl. Phys. 31, 1128 (1960), https://doi.org/10.1063/1.1735828
+- An egg-wide bubble pops in about a hundredth of a second, which is about eleven seconds when slowed 1,000 times. (our calculation, shown in the film)
 
 Watch sound cross a kitchen
-- c14: The speed of sound in air at 20 C is about 343 m/s.… — OpenStax College Physics 2e, 17.2 Speed of Sound, Frequency, and Wavelength (SOURCE-READ): https://openstax.org/books/college-physics-2e/pages/17-2-speed-of-sound-frequency-and-wavelength
-- c15: 5 m / 343 m/s = 14.6 ms; at 1,000x that is 14.6 s; at 10,000x it is 146 s (2.4 minutes).… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c35: 1,000 m / 343 m/s = 2.9 s.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c39: Sound is a pressure wave in a medium (air, water, a solid) and cannot travel through a vacuum.… — OpenStax, University Physics Vol. 1, 17.1 Sound Waves (cited from memory, not yet opened; OPEN)
+- Sound travels through room-temperature air at about 343 meters a second. Source: OpenStax College Physics 2e, 17.2 Speed of Sound, Frequency, and Wavelength, https://openstax.org/books/college-physics-2e/pages/17-2-speed-of-sound-frequency-and-wavelength
+- Sound crosses a 5-meter room in about 15 thousandths of a second: 15 seconds at 1,000 times slower. (our calculation, shown in the film)
+- Sound covers about a kilometer in three seconds, so counting the seconds between a flash and its thunder and dividing by three gives the distance in kilometers. (our calculation, shown in the film)
+- Sound is a pressure wave in air, water or a solid, and cannot travel through empty space. Source: OpenStax, University Physics Vol. 1, 17.1 Sound Waves, https://openstax.org/books/university-physics-volume-1/pages/17-1-sound-waves
 
 A bullet, through an apple, slowly
-- c16: Edgerton's famous photograph shows a .30-calibre bullet at about 2,800 feet per second (about 850 m/s) passing… — MIT Edgerton Center (the photograph and its bullet speed; recalled, not opened; page address from memory) (from memory): https://edgerton.mit.edu/
-- c17: 0.08 m / 850 m/s = 94 microseconds.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c18: 94 microseconds x 10,000 = 0.94 s.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c19: A body moving faster than sound makes a cone-shaped shock wave (Mach cone); 850 m/s is Mach 2.5 (half-angle of… — OpenStax, University Physics Vol. 1, 17.8 Shock Waves (cited from memory, not yet opened; OPEN)
-- c32: 1 m / 850 m/s = 1.18 ms; x 10,000 = 11.8 s.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c40: A human blink takes roughly 100 to 400 milliseconds; the bullet crosses the apple in 94 microseconds.… — a primary source is still to be added (OPEN)
+- At a slow-motion factor of F, one real second lasts F seconds on screen: ten times slower is 10 seconds, a thousand times is about 17 minutes, a billion times is about 32 years. (our calculation, shown in the film)
+- Harold Edgerton's famous photograph shows a rifle bullet at about 850 meters a second (about 2,800 feet a second) passing through an apple. Source: MIT Edgerton Center (the photograph and its bullet speed; recalled, not opened; page address from memory), https://edgerton.mit.edu/
+- At that speed a bullet crosses an 8-centimeter apple in under a ten-thousandth of a second (about 94 millionths). (our calculation, shown in the film)
+- Slowed 10,000 times, that crossing takes about one second. (our calculation, shown in the film)
+- A bullet faster than sound drags a cone-shaped shock wave behind it; at Mach 2.5 the cone's half-angle is about 24 degrees. Source: OpenStax, University Physics Vol. 1, 17.8 Shock Waves, https://openstax.org/books/university-physics-volume-1/pages/17-8-shock-waves
+- A bullet at 850 m/s crosses a 1-meter table in about 1.2 thousandths of a second: about 12 seconds at 10,000 times slower. (our calculation, shown in the film)
+- A human blink takes roughly a tenth to four tenths of a second, far longer than a bullet needs to cross an apple. (source to be added)
 
 Lightning, a million times slower
-- c20: The stepped leader of a lightning flash advances in steps tens of meters long, each about a microsecond, with … — NWS Melbourne, What is Lightning? (SOURCE-READ): https://www.weather.gov/mlb/what_is_lightning
-- c21: 1 microsecond x 1,000,000 = 1 second.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c22: The return stroke races up the leader channel at up to roughly a third of the speed of light (the literature r… — NOAA / National Weather Service, lightning science (text not read); Rakov and Uman, Lightning: Physics and Effects (2003) (cited from memory, not yet opened; OPEN)
-- c23: 3 km / (c/3) = 30 microseconds at the top speed; x 1,000,000 = 30 s, so at least thirty seconds for a slower s… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c31: A stepped leader takes tens of milliseconds to reach the ground; at 1,000,000x slower, 20 ms is about 5.6 hour… — NOAA / National Weather Service, lightning science (page reached from the builder session, text not read); Uman, The Lightning Discharge (cited from memory, not yet opened; OPEN)
-- c33: Between leader steps there is a pause of about 50 microseconds; x 1,000,000 = about 50 s.… — NWS Melbourne, What is Lightning? (SOURCE-READ): https://www.weather.gov/mlb/what_is_lightning
+- At a slow-motion factor of F, one real second lasts F seconds on screen: ten times slower is 10 seconds, a thousand times is about 17 minutes, a billion times is about 32 years. (our calculation, shown in the film)
+- A lightning leader advances in jumps about 50 meters long, each lasting about a millionth of a second. Source: NWS Melbourne, What is Lightning?, https://www.weather.gov/mlb/what_is_lightning
+- A millionth of a second, slowed a million times, lasts one second. (our calculation, shown in the film)
+- The bright return stroke races up the lightning channel at up to roughly a third of the speed of light. Source: NOAA / National Weather Service, lightning science (text not read); Rakov and Uman, Lightning: Physics and Effects (2003), https://www.weather.gov/safety/lightning-science
+- Over a 3-kilometer path, a return stroke at a third of light speed takes about 30 millionths of a second, which is 30 seconds at a million times slower (the 3 km path is our assumption). (our calculation, shown in the film)
+- A lightning leader takes tens of thousandths of a second to reach the ground; at a million times slower that is hours. Source: NOAA / National Weather Service, lightning science (page reached from the builder session, text not read); Uman, The Lightning Discharge, https://www.weather.gov/safety/lightning-science
+- Between lightning leader steps there is a pause of about 50 millionths of a second. Source: NWS Melbourne, What is Lightning?, https://www.weather.gov/mlb/what_is_lightning
 
 Slow light until it crawls
-- c24: c = 299,792,458 m/s exactly, so light moves 0.2998 m in one nanosecond.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c25: c / F: 30 cm/s at 10^9x, 3 cm/s at 10^10x, 3 mm/s at 10^11x, 0.30 mm/s at 10^12x.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c26: 5 m / c = 16.7 ns; x 10^8 = 1.7 s; x 10^9 = 16.7 s; x 10^12 = 16,700 s = 4.6 hours.… — own calculation (calc.py) or a source not yet opened (OPEN)
+- At a slow-motion factor of F, one real second lasts F seconds on screen: ten times slower is 10 seconds, a thousand times is about 17 minutes, a billion times is about 32 years. (our calculation, shown in the film)
+- Light moves about 30 centimeters in a billionth of a second. (our calculation, shown in the film)
+- At a billion times slower, light crawls about 30 centimeters a second; at ten billion about 3 centimeters; at a hundred billion about 3 millimeters; at a trillion about 0.3 millimeters. (our calculation, shown in the film)
+- Light crosses a 5-meter room in about 17 billionths of a second: about 17 seconds at a billion times slower, and about 4.6 hours at a trillion. (our calculation, shown in the film)
 
 Slower than a snail: light
-- c25: c / F: 30 cm/s at 10^9x, 3 cm/s at 10^10x, 3 mm/s at 10^11x, 0.30 mm/s at 10^12x.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c26: 5 m / c = 16.7 ns; x 10^8 = 1.7 s; x 10^9 = 16.7 s; x 10^12 = 16,700 s = 4.6 hours.… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c27: A 3 GHz processor ticks 3 billion times a second; at 10^8x slower that is 30 ticks per slowed second; at 10^9x… — own calculation (calc.py) or a source not yet opened (OPEN)
-- c28: 0.3 mm/s is below a common garden snail's crawling speed (reported from about 1 mm/s to about 1 cm/s).… — a primary source is still to be added (OPEN)
-- c36: A hair is about 0.1 mm (50 to 100 micrometres) wide; light crosses 0.1 mm in 0.33 ps; x 10^12 = 0.33 s.… — a primary source is still to be added (OPEN)
+- At a slow-motion factor of F, one real second lasts F seconds on screen: ten times slower is 10 seconds, a thousand times is about 17 minutes, a billion times is about 32 years. (our calculation, shown in the film)
+- At a billion times slower, light crawls about 30 centimeters a second; at ten billion about 3 centimeters; at a hundred billion about 3 millimeters; at a trillion about 0.3 millimeters. (our calculation, shown in the film)
+- Light crosses a 5-meter room in about 17 billionths of a second: about 17 seconds at a billion times slower, and about 4.6 hours at a trillion. (our calculation, shown in the film)
+- A 3 GHz computer chip ticks 3 billion times a second: 30 ticks a second at 100 million times slower, 3 at a billion. (our calculation, shown in the film)
+- A garden snail crawls at roughly 1 millimeter to 1 centimeter a second. (source to be added)
+- A human hair is about a tenth of a millimeter wide; light crosses it in about a third of a trillionth of a second, which is a third of a second at a trillion times slower. (our calculation, shown in the film)
 
 The close
-- c29: Velten and colleagues (MIT Media Lab, Raskar's group) built a 'femto-photography' camera with an effective rat… — MIT News, Trillion-frame-per-second video (Hardesty, 13 Dec 2011) (SOURCE-READ): https://news.mit.edu/2011/trillion-fps-camera-1213
+- MIT researchers built a camera that records about a trillion frames a second and filmed a pulse of light crossing a bottle, assembled from many repeated pulses. Source: MIT News, Trillion-frame-per-second video (Hardesty, 13 Dec 2011), https://news.mit.edu/2011/trillion-fps-camera-1213
 
 Narration: synthetic voice (AI). Every picture is drawn by code from the physics (badged Model or Illustration). Music and sound design are original.
-TODO before posting: the channel handle and links, a physicist's sign-off, and YouTube's altered/synthetic content setting.
 Thumbnail illustration made with AI.
+TODO before posting: the channel handle and links, a physicist's sign-off, and YouTube's altered/synthetic content setting.

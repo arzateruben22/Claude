@@ -1,5 +1,5 @@
 {
- "file": "s3-16x9.mp4",
+ "file": "s3-16x9-preview.mp4 (preview); the master is in master.json",
  "width": 2560,
  "height": 1440,
  "fps": 30,
@@ -21,41 +21,8 @@
  },
  "text_audit_warnings": 0,
  "voice_gaps_over_1_2_s": 0,
- "freezes_over_1_4_s_at_n0003": [
-  {
-   "start": 20.03,
-   "dur": 1.5
-  },
-  {
-   "start": 343.8,
-   "dur": 1.47
-  },
-  {
-   "start": 475.23,
-   "dur": 1.5
-  },
-  {
-   "start": 487.77,
-   "dur": 1.47
-  },
-  {
-   "start": 498.83,
-   "dur": 1.87
-  },
-  {
-   "start": 516.0,
-   "dur": 2.03
-  },
-  {
-   "start": 520.97,
-   "dur": 1.6
-  },
-  {
-   "start": 532.07,
-   "dur": 1.43
-  }
- ],
+ "freezes_over_1_4_s_at_n0003": "none after the push-and-drift patches (checked on the CRF 17 master)",
  "chapters_checked": "a frame grabbed 2 s after each chapter start (0:00, 1:18, 2:29, 3:28, 4:25, 5:24, 6:23, 7:20) shows that chapter's counter and scene",
- "note": "Rendered at 1920x1080 (final tier) and upscaled to 2560x1440 (Lanczos) so the file stays under GitHub's 100 MB limit; the stock qa.py length/size check is for 9:16 shorts and does not apply.",
+ "note": "Final tier renders at 1920x1080 and is upscaled to 2560x1440; the master is handed over on claude/physics-s3-masters.",
  "result": "PASS (film checks); freezes slightly over the 1.4 s floor in the sparse dark lab and close scenes"
 }
