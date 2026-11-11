@@ -391,3 +391,7 @@ Ruben, Oct 20: an interview where Claude asks Evelyn everything the chat needs, 
 ## Service photos, one set (Nov 11)
 
 Ten new texture photos (made with ChatGPT in the site's palette, no people, no text) cover all 36 services: each service's pop-up shows its own, and the four featured cards use Ageless Grace, ProCell, Custom Facial and the Brazilian. Close services share one: New Clients; Custom Facial and After-Hours; Ageless Grace; ProCell and its package; both peels; all three Acne Bootcamp visits; both consultations; Brazilian, bikini and inner thigh; body waxing; brows, lip and nostril. The choice lives in one place (`js/services.js` → photo). The menu list itself stays text only. The older texture photos are still used by the ad creatives and the app sample.
+
+## Questions before launch, as a page she fills in (Nov 11)
+
+`docs/launch-questions.html` is the pre-launch checklist as a page Evelyn can fill in on her phone, published at https://claude.ai/artifact/XfuMJKhS4Fm8fdYF5fgYwk. It has 24 questions, quickest first: yes or no, quick facts, short tasks (with the brand email ready to copy) and the launch session times. Most answers are one tap, and notes are optional. Answers save as she goes, one document per question in the page's `answers` collection, so they reach the owner's copy live. On a link that can't save online, answers stay on her phone, and **Copy all my answers** gives her the text to send. To change a question, edit the file and republish the same path.

@@ -1,0 +1,550 @@
+<title>Questions for Evelyn</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  :root {
+    --ground: #F2EDE6; --card: #FFFFFF; --field: #FBF8F3; --edge: rgba(22, 20, 18, 0.14);
+    --ink: #161412; --ink-soft: #5C564F; --accent: #161412; --on-accent: #FFFFFF;
+    --wash: rgba(120, 104, 88, 0.1); --sage: #4E6A45; --sage-wash: rgba(78, 106, 69, 0.14); --danger: #A4432F;
+    --font: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #1A1715; --card: #242019; --field: #2B261F; --edge: rgba(241, 232, 221, 0.14);
+      --ink: #F1E8DD; --ink-soft: #BFB3A6; --accent: #F1E8DD; --on-accent: #1A1715;
+      --wash: rgba(217, 164, 140, 0.12); --sage: #A4BE96; --sage-wash: rgba(164, 190, 150, 0.16); --danger: #EE9A86; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #1A1715; --card: #242019; --field: #2B261F; --edge: rgba(241, 232, 221, 0.14);
+    --ink: #F1E8DD; --ink-soft: #BFB3A6; --accent: #F1E8DD; --on-accent: #1A1715;
+    --wash: rgba(217, 164, 140, 0.12); --sage: #A4BE96; --sage-wash: rgba(164, 190, 150, 0.16); --danger: #EE9A86; color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font: 400 1rem/1.5 var(--font); -webkit-text-size-adjust: 100%; }
+  .wrap {
+    max-width: 40rem; margin: 0 auto;
+    padding: 1.6rem max(16px, env(safe-area-inset-right)) 3rem max(16px, env(safe-area-inset-left));
+  }
+  h1, h2, h3 { text-wrap: balance; }
+  .eyebrow { margin: 0; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); }
+  h1 { margin: 0.35rem 0 0.5rem; font-size: 1.65rem; line-height: 1.15; font-weight: 650; letter-spacing: -0.01em; }
+  .lede { margin: 0; color: var(--ink-soft); max-width: 34rem; }
+
+  .bar {
+    position: sticky; top: 0; z-index: 5; background: var(--ground);
+    margin: 1.1rem calc(-1 * max(16px, env(safe-area-inset-right))) 0.4rem calc(-1 * max(16px, env(safe-area-inset-left)));
+    padding: calc(0.6rem + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right)) 0.6rem max(16px, env(safe-area-inset-left));
+    border-bottom: 1px solid var(--edge);
+  }
+  .bar-row { display: flex; align-items: center; gap: 0.75rem; min-height: 1.6rem; font-size: 0.82rem; color: var(--ink-soft); }
+  .count { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+  .save { margin-left: auto; white-space: nowrap; }
+  .save.is-ok { color: var(--sage); } .save.is-bad { color: var(--danger); }
+  .nowrap { white-space: nowrap; }
+  .meter { flex: 1; height: 5px; border-radius: 999px; background: var(--wash); overflow: hidden; }
+  .meter span { display: block; height: 100%; width: 0; background: var(--sage); transition: width 300ms ease; }
+  .next {
+    font: inherit; font-size: 0.8rem; font-weight: 600; color: var(--ink); background: none; border: 0; padding: 0.3rem 0; white-space: nowrap;
+    cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+  }
+  .next[hidden] { display: none; }
+
+  section { margin-top: 2rem; }
+  .s-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.25rem; }
+  .s-head h2 { margin: 0; font-size: 1.2rem; line-height: 1.25; font-weight: 650; }
+  .s-head .s-count { margin-left: auto; font-size: 0.78rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .s-sub { margin: 0 0 0.9rem; color: var(--ink-soft); font-size: 0.92rem; }
+
+  .q {
+    background: var(--card); border: 1px solid var(--edge); border-radius: 14px;
+    padding: 0.95rem 1rem 1rem; margin-bottom: 0.65rem; display: grid; gap: 0.6rem;
+    scroll-margin-top: 5.5rem;
+  }
+  .q-head { display: grid; grid-template-columns: 1.25rem 1fr; gap: 0.6rem; align-items: start; }
+  .mark { width: 1.25rem; height: 1.25rem; margin-top: 0.1rem; border-radius: 50%; border: 1.5px solid var(--edge); display: grid; place-items: center; color: var(--card); }
+  .mark svg { width: 0.75rem; height: 0.75rem; opacity: 0; }
+  .q.is-done .mark { background: var(--sage); border-color: var(--sage); }
+  .q.is-done .mark svg { opacity: 1; }
+  .q-t { margin: 0; font-size: 1rem; line-height: 1.35; font-weight: 600; }
+  .q-h { margin: 0; font-size: 0.86rem; color: var(--ink-soft); }
+  .q-h, .chips, .chip-k, .field, .q-x { margin-left: 1.85rem; }
+
+  .chip-k { margin-bottom: -0.25rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .chip {
+    font: inherit; font-size: 0.88rem; line-height: 1.2; color: var(--ink); padding: 0.55rem 0.85rem; min-height: 40px;
+    border-radius: 999px; border: 1px solid var(--edge); background: var(--field); cursor: pointer;
+  }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  input.field, textarea.field {
+    display: block; width: calc(100% - 1.85rem); font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--field);
+    border: 1px solid var(--edge); border-radius: 10px; padding: 0.65rem 0.8rem;
+  }
+  textarea.field { min-height: 4.6rem; resize: vertical; line-height: 1.45; }
+  .field::placeholder { color: var(--ink-soft); opacity: 0.8; }
+
+  .q-x { display: grid; gap: 0.5rem; }
+  .mail { margin: 0; font: inherit; padding: 0.8rem 0.9rem; background: var(--field); border: 1px solid var(--edge); border-radius: 10px; font-size: 0.86rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+  details.q-x > summary { cursor: pointer; font-size: 0.88rem; font-weight: 600; width: fit-content; }
+  .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+  .btn {
+    font: inherit; font-size: 0.88rem; font-weight: 600; line-height: 1.2; min-height: 40px; padding: 0.6rem 1rem;
+    border-radius: 999px; border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent);
+    cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;
+  }
+  .btn.ghost { background: transparent; color: var(--ink); border-color: var(--edge); }
+  .tiny { font-size: 0.8rem; color: var(--ink-soft); }
+
+  .done {
+    margin-top: 2.2rem; padding: 1.1rem 1rem 1.2rem; border-radius: 14px; border: 1px solid var(--edge); background: var(--card);
+    display: grid; gap: 0.7rem;
+  }
+  .done h2 { margin: 0; font-size: 1.2rem; font-weight: 650; }
+  .done p { margin: 0; color: var(--ink-soft); font-size: 0.92rem; }
+  .manual { width: 100%; min-height: 12rem; font: 0.85rem/1.45 var(--font); color: var(--ink); background: var(--field); border: 1px solid var(--edge); border-radius: 10px; padding: 0.7rem; }
+  .manual[hidden] { display: none; }
+
+  button:focus-visible, a:focus-visible, .field:focus-visible, summary:focus-visible, .manual:focus-visible {
+    outline: 2px solid var(--ink); outline-offset: 2px;
+  }
+  .field:focus { border-color: var(--ink-soft); outline: none; }
+  .field:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+  @media (prefers-reduced-motion: reduce) { .meter span { transition: none; } html { scroll-behavior: auto !important; } }
+  @media (min-width: 640px) { h1 { font-size: 1.95rem; } }
+</style>
+
+<main class="wrap">
+  <p class="eyebrow">Lumevina · before launch</p>
+  <h1>A few questions for you, Evelyn</h1>
+  <p class="lede">Quickest first. Most are a single tap, and notes are optional. Your answers save as you go, so you can stop and come back any time.</p>
+
+  <div class="bar">
+    <div class="bar-row">
+      <span class="nowrap"><span class="count" id="count">0 of 0</span> answered</span>
+      <span class="save" id="save">Saved on this phone</span>
+    </div>
+    <div class="bar-row">
+      <div class="meter" aria-hidden="true"><span id="meter"></span></div>
+      <button class="next" id="next" type="button">Next question</button>
+    </div>
+  </div>
+
+  <div id="form"></div>
+
+  <div class="done">
+    <h2>When you're done</h2>
+    <p id="done-note">When the top says <strong>Saved</strong>, Ruben already has your answers. Nothing else to do.</p>
+    <div class="row">
+      <button class="btn" id="copy-all" type="button">Copy all my answers</button>
+      <span class="tiny" id="copy-msg" aria-live="polite"></span>
+    </div>
+    <textarea class="manual" id="manual" readonly hidden aria-label="Your answers as text"></textarea>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var PLAYBOOK = "https://claude.ai/artifact/R1pRrnH79BwaUoBZexefVQ";
+  var COLL = "answers";
+  var LOCAL = "lumevina.launchq.v1";
+
+  var EMAIL = [
+    "Subject: Selling [brand] on my website · Lumevina, Woodland Hills",
+    "",
+    "Hi [rep's name],",
+    "",
+    "I'm Evelyn Romero (account [your account number]), a licensed esthetician in Woodland Hills, CA. I'm opening the shop on my own website to the public, with checkout and shipping handled on my site and a consultation before anyone buys the actives.",
+    "",
+    "Three questions so I stay inside our agreement:",
+    "1. Is selling on my own website to people who aren't yet my clients allowed, and which products need a consult first?",
+    "2. Is there a minimum advertised or minimum selling price I should hold?",
+    "3. Are Instagram Shop and TikTok Shop allowed, either with checkout on my site or in the app?",
+    "",
+    "Thank you,",
+    "Evelyn"
+  ].join("\n");
+
+  var SECTIONS = [
+    { id: "yn", title: "Quick yes or no", sub: "A minute each. A tap is enough.", qs: [
+      { id: "permit", q: "Do you already have a California seller's permit?", hint: "It's free from the CDTFA. If you already sell products in the studio, you probably have one.", type: "one", opts: ["Yes", "No", "Not sure"], note: "Note (optional)" },
+      { id: "lacert", q: "Does your City of LA business tax certificate cover selling products?", type: "one", opts: ["Yes", "No", "Not sure"], note: "Note (optional)" },
+      { id: "domain", q: "Do you own a website address, like lumevina.com?", type: "one", opts: ["Yes, I own one", "No, OK to buy one in my name", "Not sure"], note: "Which address? (optional)" },
+      { id: "stripe", q: "Do you have a Stripe account?", hint: "Stripe is what takes card payments on the website.", type: "one", opts: ["Yes", "No", "Not sure"] },
+      { id: "booking", q: "Booking: keep it on GlossGenius for now, or move it onto the website?", hint: "Either works. The website can run next to GlossGenius until you're ready.", type: "one", opts: ["Keep GlossGenius for now", "Move to the website", "Both for a while"] },
+      { id: "shipping", q: "Shipping: $8, and free over $75. Is that right?", hint: "Your inventory list shows a $6 fee, so we wanted to check.", type: "one", opts: ["That's right", "Change it"], note: "What should it be? (optional)" },
+      { id: "deposits", q: "Should facials, peels and ProCell take a deposit when they're booked online?", type: "one", opts: ["Yes, a deposit", "No, nothing until the visit", "Only some"], note: "How much, or which ones? (optional)" },
+      { id: "welcome", q: "10% off a first online order (code WELCOME10)?", type: "one", opts: ["Yes", "No"] },
+      { id: "paylater", q: "Pay later at checkout (Klarna, Afterpay, Affirm)?", type: "one", opts: ["Yes", "No", "Not sure"] },
+      { id: "texts", q: "A text reminder the day before each visit?", hint: "About $2 a month. Setup takes a few days.", type: "one", opts: ["Yes", "No", "Later"] },
+      { id: "email", q: "Which email should order alerts and the morning summary go to?", type: "text", input: "email", placeholder: "Your email address" }
+    ] },
+    { id: "facts", title: "Quick facts", sub: "A few minutes. Prices and details to check before the shop opens.", qs: [
+      { id: "invisiclear", q: "invisiClear patches: $10?", type: "one", opts: ["That's right", "Different price"], note: "The right price (optional)" },
+      { id: "barrier", q: "GlyMed Plus Barrier Repair Cream: $83.20?", type: "one", opts: ["That's right", "Different price"], note: "The right price (optional)" },
+      { id: "spf", q: "Are the older sunscreens still for sale?", type: "one", opts: ["Yes, keep them", "No, take them off", "Some of them"], note: "Which ones? (optional)" },
+      { id: "retinal", q: "How many Retinal B3 Serums do you have?", type: "text", input: "number", placeholder: "How many" },
+      { id: "procell", q: "ProCell: $350 for one, or 4 for $1,100 for the first 10 clients. Both right?", type: "one", opts: ["Both right", "Change something"], note: "What should change? (optional)" },
+      { id: "review", q: "Your Google review link", hint: "It goes in the “how was your visit” message. In your Google Business Profile, tap Ask for reviews and copy the link.", type: "text", input: "url", placeholder: "Paste the link" },
+      { id: "address", q: "The studio address for booking confirmations", type: "text", input: "area", placeholder: "Street, suite, city" },
+      { id: "dewdrop", q: "Optional: a bigger photo of the Dew Drop bottle", hint: "A clear photo on a plain background. Text it to Ruben.", type: "one", opts: ["I'll send one", "Skip it"] }
+    ] },
+    { id: "tasks", title: "Short tasks", sub: "Ten to thirty minutes each, whenever you have a moment.", qs: [
+      { id: "brands", q: "Email the brands: may you sell their products on your own website?", hint: "Send it from your email to each rep. Circadia may say no to online sales; then its one product stays in the studio only.", type: "many", label: "Sent to", opts: ["Face Reality", "GlyMed Plus", "Mixi", "Circadia"], email: true, note: "Any replies? Paste them here (optional)", area: true },
+      { id: "insurance", q: "Call your liability insurance: are product sales covered?", hint: "Usually a ten-minute call.", type: "one", opts: ["Covered", "Not covered", "Haven't called yet"], note: "What did they say? (optional)" },
+      { id: "playbook", q: "10 minutes in the Skin Playbook", hint: "Tap “Talk it through.” Every answer means the chat replies in your words instead of passing the question to you.", type: "one", opts: ["Done", "Not yet"], link: { href: PLAYBOOK, text: "Open the Skin Playbook" } }
+    ] },
+    { id: "longer", title: "Longer, together", sub: "One sitting with Ruben, and one thing for later.", qs: [
+      { id: "launch", q: "The launch session: about 3 to 5 hours together. Which times work for you?", hint: "Bring your ID and your bank details for Stripe. We set up the accounts, connect them, try a few test purchases, then go live.", type: "many", groups: [{ label: "Days", opts: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] }, { label: "Time of day", opts: ["Morning", "Afternoon", "Evening"] }], note: "Any dates that work best? (optional)" },
+      { id: "ads", q: "Later: ad accounts on Meta and Google", hint: "Only needed before paid ads, so tracking is in place first. Nothing to do now.", type: "one", opts: ["I have them", "Not yet", "What are these?"] },
+      { id: "else", q: "Anything else on your mind?", type: "text", input: "area", placeholder: "Questions, worries, ideas", optional: true }
+    ] }
+  ];
+
+  var BY_ID = {}, ORDER = [];
+  SECTIONS.forEach(function (s) { s.qs.forEach(function (q) { q.section = s; BY_ID[q.id] = q; ORDER.push(q.id); }); });
+  var COUNTED = ORDER.filter(function (id) { return !BY_ID[id].optional; });
+
+  /* ---------- state ---------- */
+  var state = {};        // id -> { pick: "" | [], text: "", at: number }
+  var db = null, canSave = null, failed = false, booted = false;
+  var timers = {}, dirty = {}, inflight = {}, retried = {}, failedIds = {};
+
+  var blank = function (q) { return { pick: q.type === "many" ? [] : "", text: "", at: 0 }; };
+  var get = function (id) { return state[id] || (state[id] = blank(BY_ID[id])); };
+  var has = function (s) {
+    if (!s) return false;
+    var p = Array.isArray(s.pick) ? s.pick.length > 0 : !!s.pick;
+    return p || !!(s.text && String(s.text).trim());
+  };
+  var clean = function (id, raw) {
+    var q = BY_ID[id], b = blank(q);
+    if (!raw || typeof raw !== "object") return b;
+    if (q.type === "many") b.pick = Array.isArray(raw.pick) ? raw.pick.filter(function (v) { return typeof v === "string"; }) : [];
+    else b.pick = typeof raw.pick === "string" ? raw.pick : "";
+    b.text = typeof raw.text === "string" ? raw.text : "";
+    b.at = typeof raw.at === "number" ? raw.at : 0;
+    return b;
+  };
+  var readLocal = function () {
+    try {
+      var raw = JSON.parse(localStorage.getItem(LOCAL)) || {};
+      Object.keys(raw).forEach(function (id) { if (BY_ID[id]) state[id] = clean(id, raw[id]); });
+    } catch (e) { /* storage off */ }
+  };
+  var writeLocal = function () { try { localStorage.setItem(LOCAL, JSON.stringify(state)); } catch (e) { /* storage off */ } };
+
+  /* ---------- building the form ---------- */
+  var h = function (tag, cls, text) {
+    var el = document.createElement(tag);
+    if (cls) el.className = cls;
+    if (text != null) el.textContent = text;
+    return el;
+  };
+  var TICK = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.2 5 8.6l4.5-5"/></svg>';
+
+  var card = function (q) {
+    var el = h("article", "q"); el.id = "q-" + q.id;
+    var head = h("div", "q-head");
+    var mark = h("span", "mark"); mark.innerHTML = TICK; mark.setAttribute("aria-hidden", "true");
+    var t = h("h3", "q-t", q.q); t.id = "t-" + q.id;
+    head.appendChild(mark); head.appendChild(t);
+    el.appendChild(head);
+    if (q.hint) el.appendChild(h("p", "q-h", q.hint));
+
+    if (q.email) {
+      var d = h("details", "q-x");
+      d.appendChild(h("summary", null, "See the email"));
+      d.appendChild(h("pre", "mail", EMAIL));
+      var r = h("div", "row");
+      var cb = h("button", "btn ghost", "Copy the email"); cb.type = "button"; cb.setAttribute("data-copy", "email");
+      var cm = h("span", "tiny"); cm.setAttribute("aria-live", "polite");
+      r.appendChild(cb); r.appendChild(cm);
+      d.appendChild(r);
+      el.appendChild(d);
+    }
+
+    if (q.type === "one" || q.type === "many") {
+      (q.groups || [{ label: q.label, opts: q.opts }]).forEach(function (g) {
+        if (g.label) el.appendChild(h("p", "chip-k", g.label));
+        var row = h("div", "chips");
+        row.setAttribute("role", "group");
+        row.setAttribute("aria-label", g.label ? g.label : q.q);
+        g.opts.forEach(function (o) {
+          var b = h("button", "chip", o);
+          b.type = "button";
+          b.setAttribute("data-q", q.id);
+          b.setAttribute("data-v", o);
+          b.setAttribute("aria-pressed", "false");
+          row.appendChild(b);
+        });
+        el.appendChild(row);
+      });
+    }
+
+    if (q.type === "text" || q.note) {
+      var area = q.input === "area" || q.area;
+      var f = h(area ? "textarea" : "input", "field");
+      if (!area) {
+        f.type = q.input === "email" ? "email" : q.input === "url" ? "url" : "text";
+        if (q.input === "number") f.setAttribute("inputmode", "numeric");
+        if (q.input === "email") f.setAttribute("autocomplete", "email");
+      }
+      f.placeholder = q.placeholder || q.note || "";
+      f.setAttribute("data-q", q.id);
+      f.setAttribute("data-field", "text");
+      if (q.note) f.setAttribute("aria-label", q.q + " — " + q.note);
+      else f.setAttribute("aria-labelledby", "t-" + q.id);
+      el.appendChild(f);
+    }
+
+    if (q.link) {
+      var lr = h("div", "row q-x");
+      var a = h("a", "btn ghost", q.link.text);
+      a.href = q.link.href; a.target = "_blank"; a.rel = "noopener";
+      lr.appendChild(a);
+      el.appendChild(lr);
+    }
+    return el;
+  };
+
+  var build = function () {
+    var form = document.getElementById("form");
+    SECTIONS.forEach(function (s) {
+      var sec = h("section"); sec.id = "s-" + s.id;
+      var head = h("div", "s-head");
+      head.appendChild(h("h2", null, s.title));
+      var sc = h("span", "s-count"); sc.id = "sc-" + s.id;
+      head.appendChild(sc);
+      sec.appendChild(head);
+      sec.appendChild(h("p", "s-sub", s.sub));
+      s.qs.forEach(function (q) { sec.appendChild(card(q)); });
+      form.appendChild(sec);
+    });
+  };
+
+  /* ---------- painting ---------- */
+  var paintQ = function (id) {
+    var q = BY_ID[id], s = get(id), el = document.getElementById("q-" + id);
+    if (!el) return;
+    el.classList.toggle("is-done", has(s));
+    Array.prototype.forEach.call(el.querySelectorAll(".chip"), function (b) {
+      var v = b.getAttribute("data-v");
+      var on = q.type === "many" ? s.pick.indexOf(v) !== -1 : s.pick === v;
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    var f = el.querySelector("[data-field]");
+    if (f && document.activeElement !== f && f.value !== s.text) f.value = s.text;
+  };
+  var paintProgress = function () {
+    var n = COUNTED.filter(function (id) { return has(state[id]); }).length;
+    document.getElementById("count").textContent = n + " of " + COUNTED.length;
+    document.getElementById("meter").style.width = (COUNTED.length ? Math.round(100 * n / COUNTED.length) : 0) + "%";
+    SECTIONS.forEach(function (s) {
+      var c = s.qs.filter(function (q) { return !q.optional; });
+      var d = c.filter(function (q) { return has(state[q.id]); }).length;
+      document.getElementById("sc-" + s.id).textContent = d === c.length ? "All answered" : d + " of " + c.length;
+    });
+    document.getElementById("next").hidden = n === COUNTED.length;
+  };
+  var paintAll = function () { ORDER.forEach(paintQ); paintProgress(); };
+
+  var setSave = function () {
+    var el = document.getElementById("save"), note = document.getElementById("done-note");
+    var busy = ORDER.some(function (id) { return dirty[id] || inflight[id]; });
+    var text, cls = "";
+    if (!db || canSave === false) {
+      text = "Saved on this phone";
+      note.textContent = "This link can't save online, so your answers are kept on this phone. Tap Copy all my answers and text them to Ruben.";
+    } else if (busy) {
+      text = "Saving…";
+    } else if (failed) {
+      text = "Not saved online yet"; cls = "is-bad";
+      note.textContent = "Some answers didn't reach Ruben yet. They're kept on this phone; change any answer to try again, or tap Copy all my answers and text them to him.";
+    } else {
+      text = "Saved"; cls = "is-ok";
+      note.innerHTML = "When the top says <strong>Saved</strong>, Ruben already has your answers. Nothing else to do.";
+    }
+    el.textContent = text;
+    el.className = "save" + (cls ? " " + cls : "");
+  };
+
+  /* ---------- saving ---------- */
+  var flush = function (id) {
+    if (!db || canSave === false || inflight[id] || !dirty[id]) { setSave(); return; }
+    dirty[id] = false; inflight[id] = true; setSave();
+    var s = get(id);
+    var body = { pick: Array.isArray(s.pick) ? s.pick.slice() : s.pick, text: s.text, at: s.at };
+    db.collection(COLL).doc(id).set(body).then(function () {
+      inflight[id] = false; retried[id] = false;
+      failed = ORDER.some(function (k) { return k !== id && failedIds[k]; });
+      delete failedIds[id];
+      if (dirty[id]) flush(id); else setSave();
+    }, function (e) {
+      inflight[id] = false; dirty[id] = true;
+      var code = e && e.code;
+      if ((code === "unavailable" || !code) && !retried[id]) {
+        retried[id] = true;
+        setTimeout(function () { flush(id); }, 700 + Math.floor(Math.random() * 900));
+        return;
+      }
+      if (code === "invalid_argument" || code === "revoked" || code === "not_granted" || code === "capability_disabled" || code === "capability_removed" || code === "quota_exceeded") {
+        canSave = false;
+      } else {
+        failedIds[id] = true; failed = true;
+      }
+      setSave();
+    });
+  };
+  var schedule = function (id, ms) {
+    clearTimeout(timers[id]);
+    if (!db || canSave === false) { setSave(); return; }
+    timers[id] = setTimeout(function () { flush(id); }, ms);
+    setSave();
+  };
+  var touch = function (id, ms) {
+    var s = get(id);
+    s.at = Date.now();
+    dirty[id] = true;
+    retried[id] = false;
+    writeLocal();
+    paintQ(id); paintProgress();
+    schedule(id, ms);
+  };
+
+  /* ---------- input ---------- */
+  document.addEventListener("click", function (ev) {
+    var chip = ev.target.closest && ev.target.closest(".chip");
+    if (chip) {
+      var id = chip.getAttribute("data-q"), v = chip.getAttribute("data-v"), q = BY_ID[id], s = get(id);
+      if (q.type === "many") {
+        var i = s.pick.indexOf(v);
+        if (i === -1) s.pick.push(v); else s.pick.splice(i, 1);
+      } else {
+        s.pick = s.pick === v ? "" : v;
+      }
+      touch(id, 500);
+      return;
+    }
+    var cp = ev.target.closest && ev.target.closest("[data-copy]");
+    if (cp) { copy(EMAIL, cp, cp.nextElementSibling); return; }
+  });
+  document.addEventListener("input", function (ev) {
+    var f = ev.target;
+    if (!f.getAttribute || f.getAttribute("data-field") !== "text") return;
+    var id = f.getAttribute("data-q");
+    get(id).text = f.value;
+    touch(id, 900);
+  });
+  document.addEventListener("focusout", function (ev) {
+    var f = ev.target;
+    if (!f.getAttribute || f.getAttribute("data-field") !== "text") return;
+    var id = f.getAttribute("data-q");
+    if (dirty[id]) schedule(id, 0);
+  });
+
+  document.getElementById("next").addEventListener("click", function () {
+    var id = COUNTED.filter(function (k) { return !has(state[k]); })[0];
+    if (!id) return;
+    var el = document.getElementById("q-" + id);
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    var first = el.querySelector(".chip, .field");
+    if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, reduce ? 0 : 350);
+  });
+
+  /* ---------- copying ---------- */
+  var legacyCopy = function (t) {
+    var ta = document.createElement("textarea");
+    ta.value = t; ta.setAttribute("readonly", "");
+    ta.style.position = "fixed"; ta.style.top = "0"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    ta.remove();
+    return ok;
+  };
+  var copy = function (t, btn, msg) {
+    var done = function () { if (msg) msg.textContent = "Copied"; setTimeout(function () { if (msg) msg.textContent = ""; }, 2500); };
+    var manual = function () {
+      var m = document.getElementById("manual");
+      m.value = t; m.hidden = false; m.focus(); m.select();
+      if (msg) msg.textContent = "Copying is blocked here. Press and hold the text below, Select All, then Copy.";
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(done, function () { if (legacyCopy(t)) done(); else manual(); });
+    } else if (legacyCopy(t)) done(); else manual();
+  };
+  var summary = function () {
+    var day = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    var out = ["Evelyn's answers · questions before launch", day, ""];
+    SECTIONS.forEach(function (s) {
+      out.push(s.title.toUpperCase());
+      s.qs.forEach(function (q) {
+        var a = get(q.id), pick = Array.isArray(a.pick) ? a.pick.join(", ") : a.pick, text = (a.text || "").trim();
+        if (!pick && !text) { if (!q.optional) out.push("• " + q.q + "  (not answered yet)"); return; }
+        out.push("• " + q.q + (pick ? "  " + (q.label ? q.label + ": " : "") + pick : ""));
+        if (text) out.push("    " + (pick ? "Note: " : "") + text.replace(/\n/g, "\n    "));
+      });
+      out.push("");
+    });
+    return out.join("\n").trim() + "\n";
+  };
+  document.getElementById("copy-all").addEventListener("click", function () {
+    copy(summary(), this, document.getElementById("copy-msg"));
+  });
+
+  /* ---------- online saving ---------- */
+  var listen = function () {
+    var first = true;
+    db.collection(COLL).onSnapshot(function (snap) {
+      var remote = {};
+      snap.docs.forEach(function (d) {
+        if (!d.exists || !BY_ID[d.id]) return;
+        remote[d.id] = clean(d.id, d.data());
+      });
+      Object.keys(remote).forEach(function (id) {
+        if (dirty[id] || inflight[id]) return;
+        var r = remote[id], l = state[id];
+        if (!l || r.at > l.at) { state[id] = r; paintQ(id); }
+      });
+      if (first) {
+        first = false;
+        /* anything answered on this phone before it could save online goes up now */
+        ORDER.forEach(function (id) {
+          var l = state[id], r = remote[id];
+          if (l && l.at && (!r || l.at > r.at) && (has(l) || r)) { dirty[id] = true; schedule(id, 0); }
+        });
+      }
+      writeLocal(); paintProgress(); setSave();
+    }, function () { failed = true; setSave(); });
+  };
+
+  var boot = function (hotData) {
+    readLocal();
+    if (hotData && hotData.state) Object.keys(hotData.state).forEach(function (id) {
+      if (BY_ID[id]) { var x = clean(id, hotData.state[id]); if (!state[id] || x.at > state[id].at) state[id] = x; }
+    });
+    build();
+    paintAll();
+    setSave();
+    if (!window.claude || !window.claude.use) return;
+    Promise.all([window.claude.use("db"), window.claude.use("user")]).then(function (r) {
+      booted = true;
+      db = r[0];
+      var user = r[1];
+      if (!db) { setSave(); return; }
+      if (user && user.can) Promise.resolve(user.can("data.write")).then(function (ok) { if (ok === false) { canSave = false; setSave(); } }, function () {});
+      listen();
+      setSave();
+    }, function () { booted = true; setSave(); });
+  };
+
+  var hot = window.claude && window.claude.hot;
+  if (hot && hot.snapshot) hot.snapshot(function () { return { state: state }; });
+  if (hot && hot.ready) hot.ready(boot); else boot(hot && hot.data);
+})();
+</script>
