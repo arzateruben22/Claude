@@ -2,57 +2,57 @@
  "version": 1,
  "format": "long",
  "channel": "Possibility Lab",
- "video": "longform/earth-spin",
- "hook": "Shorten the day to about 1 h 24 min and the ground at the equator moves at orbital speed: you weigh nothing and float, one stride above an ordinary beach.",
+ "video": "compilations/earth-spin",
+ "hook": "Shorten the day to about 1 h 24 min and the ground at the equator moves at orbital speed: you weigh nothing.",
  "titles": [
   {
    "text": "What If Earth Spun Faster and Couldn't Stop?",
    "mechanism": "unexpected consequence"
   },
   {
-   "text": "At 84 Minutes a Day, You'd Weigh Nothing",
-   "mechanism": "scale shock"
+   "text": "How Fast Can the Earth Spin Before You Float?",
+   "mechanism": "unanswered question"
   },
   {
    "text": "Spin Earth Faster and the Poles Run Dry",
    "mechanism": "contradiction"
   },
   {
-   "text": "How Fast Is the Earth Spinning You Right Now?",
-   "mechanism": "personal relevance"
+   "text": "A Day Only 84 Minutes Long: What Would It Do to You?",
+   "mechanism": "scale shock"
   },
   {
-   "text": "How Short Can a Day Get Before You Float?",
-   "mechanism": "unanswered question"
+   "text": "How Fast Are You Moving Right Now?",
+   "mechanism": "personal relevance"
   }
  ],
  "thumbnails": [
   {
    "id": "A",
-   "subject": "a person seen from behind, floating a few centimetres above a flat equatorial beach, pebbles and dust lifting around their feet",
-   "composition": "ground-level camera behind them; figure on the left third at ~40% frame height; low, gently curved horizon; empty sky right for text",
-   "lighting": "the Sun as one long bright streak arcing across a blue-violet dawn sky (a very short day); warm rim light; magenta #EB63FF glow at the horizon",
-   "trigger": "visual paradox and disbelief: an ordinary beach, and someone is floating",
-   "text": "84-MINUTE DAY",
-   "complements": "the title asks what happens; the picture shows the strangest answer and a number the title doesn't explain"
+   "subject": "the blue figure close to the camera on its toes at the equator, the Sun a huge streak across a low horizon, a pale ring of dust lifting at its feet",
+   "composition": "figure large on the left third at about 55% of the frame height, a low curving horizon, a huge sun streak on the right, a big empty sky",
+   "lighting": "the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent; a magenta rim light on the figure",
+   "trigger": "a tiny 'you' on tiptoe; the goal is the racing Sun and no answer is shown",
+   "text": "",
+   "complements": "the title asks the question; the picture shows the setup"
   },
   {
    "id": "B",
-   "subject": "the whole Earth, 3/4 view: the oceans gathered into a band around the equator, the high latitudes showing bare grey seabed",
-   "composition": "globe centred-left, tilted so a pole faces the camera; black space right",
-   "lighting": "hard sunlight from the right, night side soft; magenta rim on the atmosphere",
-   "trigger": "scale shock: a planet without polar seas",
-   "text": "POLES: DRY",
-   "complements": "pairs with a floating or day-length title by adding a second, unexpected consequence"
+   "subject": "the Earth with a band of ocean gathered round the equator and bare grey poles",
+   "composition": "globe large centre-left",
+   "lighting": "the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent",
+   "trigger": "scale shock",
+   "text": "",
+   "complements": "adds a second consequence"
   },
   {
    "id": "C",
-   "subject": "a person at the equator, many faint shadows fanned around their feet like a sundial gone mad, the Sun a streak overhead",
-   "composition": "high three-quarter view looking down, figure centred, shadows radiating",
-   "lighting": "bright noon blur, clean ivory sand, magenta accents",
-   "trigger": "hidden mechanism: days flashing past",
+   "subject": "the figure standing small on a plain with several Suns ghosted across the sky",
+   "composition": "figure lower left, Suns arcing",
+   "lighting": "the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent",
+   "trigger": "visual paradox",
    "text": "",
-   "complements": "silent picture of a day lasting minutes; the title supplies the weight number"
+   "complements": "silent picture of a day lasting minutes"
   }
  ],
  "pairings": [
@@ -69,49 +69,49 @@
     "mobile": 86,
     "satisfaction": 92
    },
-   "note": "premise in the title, payoff in the picture; the Minute Zero format the owner chose"
-  },
-  {
-   "title": 4,
-   "thumbnail": "B",
-   "scores": {
-    "scroll": 84,
-    "curiosity": 85,
-    "clarity": 74,
-    "synergy": 70,
-    "originality": 86,
-    "accuracy": 84,
-    "mobile": 72,
-    "satisfaction": 85
-   },
-   "note": "two different hooks (floating vs oceans) dilute each other; a globe is small on a phone"
+   "note": "premise in the title, the setup in the picture"
   },
   {
    "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 82,
+    "curiosity": 84,
+    "clarity": 74,
+    "synergy": 72,
+    "originality": 84,
+    "accuracy": 86,
+    "mobile": 72,
+    "satisfaction": 85
+   },
+   "note": "two hooks dilute each other"
+  },
+  {
+   "title": 3,
    "thumbnail": "C",
    "scores": {
-    "scroll": 78,
-    "curiosity": 82,
-    "clarity": 76,
-    "synergy": 80,
-    "originality": 84,
+    "scroll": 74,
+    "curiosity": 76,
+    "clarity": 70,
+    "synergy": 68,
+    "originality": 72,
     "accuracy": 90,
-    "mobile": 74,
-    "satisfaction": 88
+    "mobile": 70,
+    "satisfaction": 82
    },
-   "note": "accurate and original but the fanned shadows need a second look"
+   "note": "a number in the title gives the answer away"
   }
  ],
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
  "winner": {
   "title": "What If Earth Spun Faster and Couldn't Stop?",
   "thumbnail": "A",
-  "thumbnailText": "84-MINUTE DAY",
-  "why": "The title sets up the escalation and the picture jumps to the most impossible-looking moment: a person floating over an ordinary beach. The number on it is a second mystery the title doesn't answer."
+  "thumbnailText": "",
+  "why": "The title sets up the escalation and the picture shows the figure in the setup, the Sun racing, with no answer on screen."
  },
  "testAndCompare": [
   "A",
-  "B",
-  "C"
+  "B"
  ],
  "checks": {
   "halfSecond": true,
@@ -122,12 +122,7 @@
   "satisfaction": true,
   "originality": true
  },
- "notes": "Truth: the film reaches weightlessness at about 1 h 24 min (c8), so the figure floats only slightly and doesn't fly upward. The poles running dry is in the oceans/poles beats (c6).",
+ "checksNote": "My own creative judgments, not measured. truth: the cover is a frame of the film; the figure on tiptoe is the 1 h 30 beat.",
  "thumbnailFile": "possibility-lab-earth-spin-thumb-16x9.jpg",
- "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: a smooth, glossy blue mannequin-style figure (simple rounded head and body, no facial features), seen from behind and slightly to the side, floating a few centimetres above a dark ground plane covered in a faint glowing grid, as if its weight has just switched off. A few small glowing specks are lifting off the ground around its feet.\nComposition: low camera close behind the figure. The figure fills the left third, about 55% of the frame height. The grid ground recedes to a low, gently curved horizon, with a large empty sky on the right for the text.\nLighting and treatment: a huge low sun just above the horizon on the right, stretched into a short bright streak as if racing across the sky. A deep blue-violet sky fading to near-black at the top. A magenta (#EB63FF) rim light on the figure and a cool blue glow under its feet. Clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief: is it floating?\nText: \"84-MINUTE DAY\" in heavy white condensed sans-serif, upper right, large. No other text.\nScientific accuracy: the figure floats only slightly, weightless at ground level, not flying upward.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, spaceships, explosions.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
- "shortsCover": {
-  "frameSeconds": null,
-  "text": "84-MINUTE DAY",
-  "note": "Part 1/Part 2 covers: use the floating moment for Part 2 and the 12-hour Sun race for Part 1."
- }
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: a smooth, glossy blue mannequin-style figure (simple rounded head and body, no facial features), seen from behind and slightly to the side, standing on tiptoe on a dark ground plane covered in a faint glowing grid, a few small glowing specks lifting off the ground around its feet.\nComposition: low camera close behind the figure; the figure fills the left third, about 55% of the frame height; the grid ground recedes to a low, gently curved horizon, with a large empty sky on the right.\nLighting and treatment: a huge low sun just above the horizon on the right, stretched into a short bright streak as if racing across the sky; a deep blue-violet sky fading to near-black at the top; a magenta (#EB63FF) rim light on the figure and a cool blue glow under its feet; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief: is it about to float?\nText: No text.\nScientific accuracy: the figure is only a little lighter, standing, not flying; it shows the setup only, never the answer.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, spaceships, explosions.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art."
 }
