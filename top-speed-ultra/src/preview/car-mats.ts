@@ -19,13 +19,15 @@ function tiled(maps: X.SurfaceMaps, tile: number) {
 const S = (q: Quality, high: number, phone: number) => (q === 'high' ? high : phone);
 
 // ------------------------------------------------------------------------------------------------ interior
-export function carbon(q: Quality, tile = 0.064) {
-  return once('carbon' + q + tile, () => {
+// o.env / o.cc: a calmer reflection (envMapIntensity, clearcoat roughness), e.g. the sport steering wheel's rim, whose
+// carbon read pale grey at night under the full sky reflection
+export function carbon(q: Quality, tile = 0.064, o: { env?: number; cc?: number } = {}) {
+  return once('carbon' + q + tile + (o.env ?? '') + '|' + (o.cc ?? ''), () => {
     const t = tiled(X.carbonMaps(S(q, 512, 256)), tile);
     const m = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(1.9, 1.9, 2.0), map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.5, 0.5),
-      roughnessMap: t.roughnessMap, roughness: 1, metalness: 0.55, clearcoat: 1, clearcoatRoughness: 0.035,
-      anisotropy: q === 'high' ? 0.75 : 0, anisotropyMap: q === 'high' ? t.anisotropyMap : null, envMapIntensity: 1,
+      roughnessMap: t.roughnessMap, roughness: 1, metalness: 0.55, clearcoat: 1, clearcoatRoughness: o.cc ?? 0.035,
+      anisotropy: q === 'high' ? 0.75 : 0, anisotropyMap: q === 'high' ? t.anisotropyMap : null, envMapIntensity: o.env ?? 1,
     });
     m.name = 'carbon';
     return withAO(m);
@@ -61,12 +63,13 @@ export function alcantara(q: Quality, color = 0x2a2a2c, tile = 0.08) {
   });
 }
 // brushed aluminium: streaks along u; anisotropy turns the highlight into a streak across them
-export function brushed(q: Quality, color = 0xc8ccd1, o: { tile?: number; rough?: number; aniso?: number; key?: string } = {}) {
+// o.env: a calmer reflection (envMapIntensity), e.g. the sport steering wheel's paddles, seen through the wheel
+export function brushed(q: Quality, color = 0xc8ccd1, o: { tile?: number; rough?: number; aniso?: number; key?: string; env?: number } = {}) {
   return once('brushed' + q + color + JSON.stringify(o), () => {
     const t = tiled(X.brushedMaps(S(q, 512, 256)), o.tile ?? 0.12);
     const m = new THREE.MeshPhysicalMaterial({
       color, metalness: 1, roughness: o.rough ?? 1.1, roughnessMap: t.roughnessMap, map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.12, 0.12),
-      anisotropy: q === 'high' ? (o.aniso ?? 0.8) : 0, envMapIntensity: 1,
+      anisotropy: q === 'high' ? (o.aniso ?? 0.8) : 0, envMapIntensity: o.env ?? 1,
     });
     m.name = 'brushed';
     return withAO(m);
@@ -96,10 +99,12 @@ export function carpet(q: Quality) {
     return withAO(Object.assign(new THREE.MeshStandardMaterial({ color: 0x1b1b1c, map: t.map, normalMap: t.normalMap, roughness: 1, envMapIntensity: 0.4 }), { name: 'carpet' }));
   });
 }
-export function stitch(color: number) {
-  return once('stitch' + color, () => {
+// glow: a little of the thread's own colour as emissive, so contrast stitching on a dark wheel still reads at night
+export function stitch(color: number, glow = 0) {
+  return once('stitch' + color + (glow ? '|' + glow : ''), () => {
     const t = X.stitchTex();
-    return withAO(Object.assign(new THREE.MeshStandardMaterial({ color, map: t, alphaTest: 0.5, roughness: 0.75, side: THREE.DoubleSide, envMapIntensity: 0.5 }), { name: 'stitch' }));
+    return withAO(Object.assign(new THREE.MeshStandardMaterial({ color, map: t, alphaTest: 0.5, roughness: 0.75, side: THREE.DoubleSide, envMapIntensity: 0.5,
+      emissive: glow ? color : 0x000000, emissiveMap: glow ? t : null, emissiveIntensity: glow }), { name: 'stitch' }));
   });
 }
 export function stipple(q: Quality, color = 0x19191a, tile = 0.06) {
