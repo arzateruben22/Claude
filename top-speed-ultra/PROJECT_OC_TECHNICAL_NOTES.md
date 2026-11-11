@@ -76,6 +76,26 @@ traffic code.
     within 5%, a crest a car leaves only at 93 m/s). Where the limits stop a road reaching another's height, its lanes
     are left out over the other's pavement while it's up to 2.5 m off (the CA-241 North over the 91 West for 44 m, up to
     2.5 m above it, as at HEAD; the first version levelled it there with a 12.4% grade and a dip).
+  - **Overhead clearance over a carriageway's travel lanes** (`CLEAR` = 4.5 m, `LEVELS` 2). Nothing of another road
+    (surface, deck, soffit, barrier, paint, the side of a cut, an end wall) may be from 0.05 m to `CLEAR` over a
+    carriageway's drawn travel lanes (widened by `SIDE_CLEAR`, 0.05 m). `laneRuns()` (in `levelOverlaps()`) takes each
+    stretch of a road's deck over a better-ranked carriageway's lanes: alongside it and at grade with it somewhere in
+    the stretch, it follows that carriageway over the whole stretch; crossing it or never near it, it is held
+    `CLEAR_TOP` (4.9 m: `CLEAR` plus a 0.4 m `DECK_MIN` deck) plus 0.1 m over it. What the profile limits don't let it
+    hold, `Roads` cuts back off those lanes (`bandOnRow()`: surface, paint, barriers and deck side go there; the soffit
+    is thinned to clear them). `trimEnds()` cuts a road that just stops back so it ends before such lanes (`Path.end`,
+    0.5 m off their pavement): ramp 1164 at the I-5 North's Disney Way / Gene Autry Way exit (the map ends it 5 m over
+    the 5's left lanes), ramps 261 and 774 on the I-5 South; `Roads` closes the end with a wall to the ground, the
+    physics' end wall and the end-of-road turn-round use `Path.end`.
+  - **Cut edges.** Where a road's surface is left out over a better-ranked road (up to `LEVEL` above it), `cells()`
+    cuts the quads the other road's edge crosses once along that edge, and `cutSides()` closes each edge between
+    what stays and what went with a vertical side (`SIDE_PIECE`, 0.3 m pieces) down to the road under it. A piece
+    stands only where `Roads.sideFoot()` allows (not 0.05 m to `CLEAR` over a carriageway's drawn lanes) and where
+    `Roads.sideGround()` allows (its foot on another road's pavement, not a free wall over 0.6 m tall at the outer
+    0.6 m of a shoulder under a road on the ground: there the terrain closes the gap). Paint goes with the surface
+    under it (`kept()`), the soffit only under what stays. Three boot checks hold this: the lanes check (0.05 m, roads'
+    surfaces 0.1 m, to 4.5 m, every chunk), the cut-edge check, and "no cut side standing on the ground, no road
+    ending over a carriageway's lanes". Ramps' lanes are not covered yet (F7 in the handoff).
   - The passes' working arrays are allocated once at the longest road's length. `net.loadMs` has the time of the
     last load: `baked`, or `sags` and `level`.
 - **Spatial grid.** Cells are 50 m, with a path id and sample index every 8 m, one entry each time a path enters a cell
