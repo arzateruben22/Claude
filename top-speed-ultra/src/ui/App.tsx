@@ -251,6 +251,8 @@ export function App() {
   const idle = useIdle(playing && settings.hudStyle === 'minimal', () => game.current?.input.padAt ?? 0);
   const layout = useHudLayout();
   const cornerPx = MAP_PX[layout][settings.cornerSize] ?? MAP_PX[layout][1];
+  const appRef = useRef<HTMLDivElement>(null);
+  const vis = useVisibleInsets(appRef);
   const start = STARTS.find((s) => s.label === settings.start) ?? STARTS[0];
   // "start at your exit": the key names the carriageway; the exit list gives its sign text
   const exitRoadOf = settings.exit.split(' @ ')[0];
@@ -518,7 +520,8 @@ export function App() {
   );
 
   return (
-    <div className={'app' + (idle ? ' hud-idle' : '') + (settings.hudStyle === 'minimal' ? ' hud-min' : '')} data-hud={layout} style={{ '--map': `${cornerPx}px` } as CSSProperties}>
+    <div ref={appRef} className={'app' + (idle ? ' hud-idle' : '') + (settings.hudStyle === 'minimal' ? ' hud-min' : '')} data-hud={layout}
+      style={{ '--map': `${cornerPx}px`, '--vis-t': `${vis.t}px`, '--vis-r': `${vis.r}px`, '--vis-b': `${vis.b}px`, '--vis-l': `${vis.l}px` } as CSSProperties}>
       <div className="stage" ref={host} />
       <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} chips={chips} onAbility={() => game.current?.useAbility()} onThrust={(on) => game.current?.input.setThrust('touch', on)} />
       {/* the corner window: the road map is a round dial (the compass is its rim, HUD.tsx); the sky camera keeps its
@@ -535,9 +538,11 @@ export function App() {
           while the window is off), each named by its hidden label; on a desktop a labelled rail with Radio too */}
       {playing && (
         <div className="tbar">
-          <button type="button" className="tbtn" onClick={() => game.current?.cycleCam()}><Ico name="camera" /><span className="tlabel">View</span></button>
-          {settings.corner === 'off' && <button type="button" className="tbtn mapbtn" onClick={() => game.current?.cycleCorner()}><Ico name="map" /><span className="tlabel">Map</span></button>}
-          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} onClick={() => setPanel('nav')}><Ico name="nav" /><span className="tlabel">Go to</span></button>
+          {/* the rail's grid (a desktop: labelled rows, icons in two or three columns on a short window; styles.css) */}
+          <div className="tbar-in">
+          <button type="button" className="tbtn" title="View" onClick={() => game.current?.cycleCam()}><Ico name="camera" /><span className="tlabel">View</span></button>
+          {settings.corner === 'off' && <button type="button" className="tbtn mapbtn" title="Map" onClick={() => game.current?.cycleCorner()}><Ico name="map" /><span className="tlabel">Map</span></button>}
+          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} title="Go to" onClick={() => setPanel('nav')}><Ico name="nav" /><span className="tlabel">Go to</span></button>
           {/* with a route in Free Drive: Auto-drive drives it; steering or braking hands the car back (Game.setAutoDrive) */}
           {autoDrive.offer && (
             <button type="button" className={'tbtn auto' + (autoDrive.on ? ' on' : '')} aria-pressed={autoDrive.on} title="Auto-drive the route. Steer or brake to take over."
@@ -549,7 +554,7 @@ export function App() {
               <Ico name="auto" /><span className="tlabel">Auto-drive</span><b className="tcap" aria-hidden="true">Auto</b>
             </button>
           )}
-          <button type="button" className={'tbtn radio' + (radioOpen ? ' on' : '')} aria-expanded={radioOpen} onClick={() => setRadioOpen((o) => !o)}><Ico name="radio" /><span className="tlabel">Radio</span></button>
+          <button type="button" className={'tbtn radio' + (radioOpen ? ' on' : '')} title="Radio" aria-expanded={radioOpen} onClick={() => setRadioOpen((o) => !o)}><Ico name="radio" /><span className="tlabel">Radio</span></button>
           {/* Pause never tucks away. Its name stays "Pause". Tap to pause; hold for the radial quick menu (U3). */}
           <button type="button" className="tbtn menu" aria-haspopup="menu" title="Tap to pause; hold for the quick menu"
             onPointerDown={() => { held.current = false; clearTimeout(holdT.current); holdT.current = window.setTimeout(() => { held.current = true; setRadial({ x: innerWidth / 2, y: innerHeight / 2 }); }, 300); }}
@@ -557,6 +562,7 @@ export function App() {
             onClick={() => { if (!held.current) game.current?.setPaused(true); held.current = false; }}>
             <Ico name="pause" /><span className="tlabel">Pause</span>
           </button>
+          </div>
         </div>
       )}
       {playing && radial && (
@@ -812,6 +818,38 @@ function useHudLayout(): HudLayout {
     return () => { removeEventListener('resize', f); removeEventListener('orientationchange', f); vv?.removeEventListener('resize', f); cancelAnimationFrame(t); clearTimeout(later); };
   }, []);
   return l;
+}
+
+// The part of the page the player can see. A host can show the game in a frame bigger than the window around it: in
+// the claude.ai artifact viewer the owner's HUD ran off all four edges (2026-11-09: the directions card cut at the top
+// and left, the rail, the sky camera and the speed cut at the right, THRUST and the chips at the bottom), at window sizes
+// where the page itself fits them. env(safe-area-inset-*) knows nothing of a host's frame. An IntersectionObserver on
+// the full-page .app does: with no root it reports the part of .app inside the top-level window and every frame and
+// clip between, in this page's coordinates. What is cut off becomes --vis-* insets, which the HUD's safe areas take
+// (styles.css --sa-*). Capped at 30% a side, and only read while most of the page is in view (a frame scrolled away
+// or a hidden tab says nothing about the frame's crop). It looks again on a resize and every 2 s, since a crop that
+// changes inside one threshold step reports nothing.
+type Insets = { t: number; r: number; b: number; l: number };
+function useVisibleInsets(el: React.RefObject<HTMLElement>): Insets {
+  const [ins, setIns] = useState<Insets>({ t: 0, r: 0, b: 0, l: 0 });
+  useEffect(() => {
+    const node = el.current;
+    if (!node || typeof IntersectionObserver !== 'function') return;
+    const io = new IntersectionObserver((es) => {
+      const e = es[es.length - 1];
+      if (!e.isIntersecting || e.intersectionRatio < 0.4) return;
+      const b = e.boundingClientRect, v = e.intersectionRect;
+      const cut = (x: number, size: number) => { const c = Math.min(Math.max(0, x), size * 0.3); return c < 1 ? 0 : Math.ceil(c); };
+      const n = { t: cut(v.top - b.top, b.height), r: cut(b.right - v.right, b.width), b: cut(b.bottom - v.bottom, b.height), l: cut(v.left - b.left, b.width) };
+      setIns((o) => (o.t === n.t && o.r === n.r && o.b === n.b && o.l === n.l ? o : n));
+    }, { threshold: Array.from({ length: 101 }, (_, i) => i / 100) });
+    io.observe(node);
+    const again = () => { io.unobserve(node); io.observe(node); };
+    addEventListener('resize', again);
+    const iv = setInterval(again, 2000);
+    return () => { io.disconnect(); removeEventListener('resize', again); clearInterval(iv); };
+  }, [el]);
+  return ins;
 }
 
 // the run's numbers for the pause screen (the phone's plate shows two of them; here they all are)
