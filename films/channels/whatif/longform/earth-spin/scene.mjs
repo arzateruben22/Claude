@@ -164,7 +164,7 @@ window.seek = function (t) {
   const gl = shot === "globe", sp = shot !== "tower", beatId = (FILM.beats.find((b) => t >= b.t0 && t < b.t1) || {}).id;
   const fixedL = new THREE.Vector3(-0.45, 0.35, 0.8).normalize(), lightV = fixedL.clone().lerp(sunDir, amp).normalize();     // the light swings less and less as the days get short (photosensitivity)
   sky.visible = stars.visible = sunDisk.visible = sunHalo.visible = sp;
-  skyU.uSun.value.copy(sunDir); skyU.uDay.value = 0; skyU.uGlow.value = 0.25 + 0.75 * amp; const gs = 0.3 + 0.7 * amp; stars.rotation.x = 0.04 * ph; starM.opacity = 0.9;
+  skyU.uSun.value.copy(sunDir); skyU.uDay.value = 0; skyU.uGlow.value = 0.25 + 0.75 * amp; const gs = 0.3 + 0.7 * amp; stars.rotation.x = 0.04 * ph; starM.opacity = FILM.thumb ? 0.0 : 0.9;
   sunDisk.position.copy(sunDir).multiplyScalar(1200); sunDisk.scale.setScalar(52 * gs); sunDisk.lookAt(camera.position);
   sunHalo.position.copy(sunDir).multiplyScalar(1190); sunHalo.scale.setScalar((FILM.cams ? 170 : 260) * gs); sunHalo.lookAt(camera.position);
   desk.group.visible = false; dustF.visible = false; sunDisk.material.depthTest = true; sunHalo.material.depthTest = true;   // the planet hides the Sun when it is behind it
@@ -188,16 +188,18 @@ window.seek = function (t) {
     for (const c of (FILM.cams || [])) if (t >= c.t0) { const P = POSE[c.mode] || base0, u = E.inout2(seg(t, c.t0, c.t0 + 1.6));
       cur = { pcy: lm(cur.pcy, P.pcy, u), c: cur.c.map((v, i) => lm(v, P.c[i], u)), l: cur.l.map((v, i) => lm(v, P.l[i], u)), fov: lm(cur.fov, P.fov, u), fs: lm(cur.fs, P.fs, u) }; }
     pcy = cur.pcy; figS = cur.fs; camera.fov = cur.fov; camera.position.set(...cur.c); camera.lookAt(...cur.l);
+  } else if (FILM.hero) {
+    pcx = FILM.hero.px || 0; pcy = FILM.hero.pcy ?? -0.62; figS = FILM.hero.fs || 1.15; camera.fov = FILM.hero.fov || 30; camera.position.set(sw, FILM.hero.cy ?? 0.7 + sh, FILM.hero.cz || 2.8); camera.lookAt(FILM.hero.lx || 0, FILM.hero.ly ?? 0.8, 0);   // the 16:9 thumbnail
   } else if (!gl) {
     pcx = 0.9; pcy = -1.48; camera.fov = 32; camera.position.set(0.9 + sw, -0.1 + sh, 3.2); camera.lookAt(0.9, -0.3, 0);
   } else { camera.fov = 30; camera.position.set(-1.6, 0.9 + 0.2 * Math.sin(t * 0.1), beatId === "break" ? 6.2 : 5.4); camera.lookAt(-1.4, 0.1, 0); }
   planetG.position.set(pcx, pcy, 0);
   window.__focus = shot === "tower" ? [0, 20, 0] : [pcx, pcy + 1, 0];
-  const ysc = (PORT ? figS : gl ? 0.6 : 1) * (PORT ? 0.26 : 0.15), bulge = 0.07 * fxw0("ocean");
+  const ysc = (PORT || FILM.hero ? figS : gl ? 0.6 : 1) * (PORT || FILM.hero ? 0.26 : 0.15), bulge = 0.07 * fxw0("ocean");
   you.group.visible = sp && shot !== "end";
   if (you.group.visible) {
     you.set({ at: [0, 0, 0], arms: (FILM.hero ? FILM.hero.arms : 0.06 + 0.5 * liftU + 0.03 * Math.sin(t * 1.3)), tilt: FILM.hero ? FILM.hero.tilt : 0 });
-    you.group.scale.set(ysc, ysc * (1 + 0.012 * Math.sin(t * 1.7)), ysc); you.group.position.set(pcx, pcy + 1.0 + bulge + (0.85 + rise) * ysc, 0); you.group.rotation.set(0, Math.PI, FILM.hero ? FILM.hero.tilt : 0.02 * Math.sin(t * 0.9));
+    you.group.scale.set(ysc, ysc * (1 + 0.012 * Math.sin(t * 1.7)), ysc); you.group.position.set(pcx, pcy + 1.0 + bulge + (0.85 + rise) * ysc + (FILM.hero ? FILM.hero.lift || 0 : 0), 0); you.group.rotation.set(0, Math.PI, FILM.hero ? FILM.hero.tilt : 0.02 * Math.sin(t * 0.9));
   }
 
   // the wind: streaks blowing at you (the air is left behind by the spinning ground)

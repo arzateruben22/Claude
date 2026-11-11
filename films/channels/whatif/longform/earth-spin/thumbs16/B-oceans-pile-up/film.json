@@ -1,0 +1,382 @@
+{
+ "id": "possibility-lab-earth-spin",
+ "theme": "../../../../theme.json",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 560.1,
+ "poster": 442.3667,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "shoulder",
+   "beat": "hook"
+  },
+  {
+   "at": 18.9,
+   "name": "globe",
+   "beat": "premise"
+  },
+  {
+   "at": 60.6,
+   "name": "eye",
+   "beat": "today"
+  },
+  {
+   "at": 82.8,
+   "name": "eye",
+   "beat": "spinup"
+  },
+  {
+   "at": 98.7,
+   "name": "shoulder",
+   "beat": "twelve"
+  },
+  {
+   "at": 132.6,
+   "name": "eye",
+   "beat": "wind"
+  },
+  {
+   "at": 191.4,
+   "name": "globe",
+   "beat": "oceans"
+  },
+  {
+   "at": 237.0,
+   "name": "globe",
+   "beat": "weather"
+  },
+  {
+   "at": 271.5,
+   "name": "eye",
+   "beat": "six"
+  },
+  {
+   "at": 292.8,
+   "name": "shoulder",
+   "beat": "calendar"
+  },
+  {
+   "at": 317.7,
+   "name": "globe",
+   "beat": "poles"
+  },
+  {
+   "at": 348.9,
+   "name": "shoulder",
+   "beat": "three"
+  },
+  {
+   "at": 369.6,
+   "name": "eye",
+   "beat": "two"
+  },
+  {
+   "at": 396.9,
+   "name": "shoulder",
+   "beat": "one-five"
+  },
+  {
+   "at": 436.5,
+   "name": "lift",
+   "beat": "float"
+  },
+  {
+   "at": 471.0,
+   "name": "globe",
+   "beat": "break"
+  },
+  {
+   "at": 497.4,
+   "name": "tower",
+   "beat": "cost"
+  },
+  {
+   "at": 521.7,
+   "name": "shoulder",
+   "beat": "close"
+  },
+  {
+   "at": 554.7666666666667,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "hook",
+   "t0": 0.0,
+   "t1": 18.9,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "premise",
+   "t0": 18.9,
+   "t1": 60.6,
+   "line": "vo02",
+   "energy": 0.5
+  },
+  {
+   "id": "today",
+   "t0": 60.6,
+   "t1": 82.8,
+   "line": "vo03",
+   "energy": 0.45
+  },
+  {
+   "id": "spinup",
+   "t0": 82.8,
+   "t1": 98.7,
+   "line": "vo04",
+   "energy": 0.55
+  },
+  {
+   "id": "twelve",
+   "t0": 98.7,
+   "t1": 132.6,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "wind",
+   "t0": 132.6,
+   "t1": 191.4,
+   "line": "vo06",
+   "energy": 0.7
+  },
+  {
+   "id": "oceans",
+   "t0": 191.4,
+   "t1": 237.0,
+   "line": "vo07",
+   "energy": 0.75
+  },
+  {
+   "id": "weather",
+   "t0": 237.0,
+   "t1": 271.5,
+   "line": "vo08",
+   "energy": 0.7
+  },
+  {
+   "id": "six",
+   "t0": 271.5,
+   "t1": 292.8,
+   "line": "vo09",
+   "energy": 0.65
+  },
+  {
+   "id": "calendar",
+   "t0": 292.8,
+   "t1": 317.7,
+   "line": "vo10",
+   "energy": 0.5
+  },
+  {
+   "id": "poles",
+   "t0": 317.7,
+   "t1": 348.9,
+   "line": "vo11",
+   "energy": 0.55
+  },
+  {
+   "id": "three",
+   "t0": 348.9,
+   "t1": 369.6,
+   "line": "vo12",
+   "energy": 0.7
+  },
+  {
+   "id": "two",
+   "t0": 369.6,
+   "t1": 396.9,
+   "line": "vo13",
+   "energy": 0.75
+  },
+  {
+   "id": "one-five",
+   "t0": 396.9,
+   "t1": 436.5,
+   "line": "vo14",
+   "energy": 0.8
+  },
+  {
+   "id": "float",
+   "t0": 436.5,
+   "t1": 471.0,
+   "line": "vo15",
+   "energy": 0.9
+  },
+  {
+   "id": "break",
+   "t0": 471.0,
+   "t1": 497.4,
+   "line": "vo16",
+   "energy": 0.85
+  },
+  {
+   "id": "cost",
+   "t0": 497.4,
+   "t1": 521.7,
+   "line": "vo17",
+   "energy": 0.6
+  },
+  {
+   "id": "close",
+   "t0": 521.7,
+   "t1": 554.7,
+   "line": "vo18",
+   "energy": 0.4
+  },
+  {
+   "id": "tease",
+   "t0": 554.7,
+   "t1": 560.1,
+   "line": "vo19",
+   "energy": 0.4
+  }
+ ],
+ "world": {
+  "weightWins": [
+   [
+    76.2667,
+    82.8
+   ],
+   [
+    121.0,
+    132.6
+   ],
+   [
+    283.2,
+    292.8
+   ],
+   [
+    363.4667,
+    369.6
+   ],
+   [
+    369.6,
+    471.0
+   ]
+  ],
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    6
+   ],
+   [
+    9999.0,
+    6
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    205.4,
+    90.0
+   ],
+   [
+    233.0,
+    52.0
+   ],
+   [
+    271.5,
+    50.0
+   ],
+   [
+    471.0,
+    24.0
+   ],
+   [
+    560.1,
+    24.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   436.5,
+   471.0
+  ],
+  "break": [
+   471.0,
+   497.4
+  ],
+  "cost": [
+   497.4,
+   521.7
+  ],
+  "weather": [
+   237.0,
+   271.5
+  ],
+  "wind": [
+   132.6,
+   191.4
+  ],
+  "oceans": [
+   191.4,
+   237.0
+  ],
+  "poles": [
+   317.7,
+   348.9
+  ],
+  "end": 554.7666666666667,
+  "seed": 3
+ },
+ "badges": [],
+ "title": {
+  "series": "Possibility Lab \u00b7 Long form",
+  "title": "What if Earth spun faster and *couldn't stop*?",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 99999.0,
+ "end": {
+  "title": "Subscribe for the next *what-if*",
+  "follow": "Possibility Lab \u00b7 What If Earth Spun Faster and Couldn't Stop?",
+  "next": "Narration: synthetic voice (AI). Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "captions": [],
+ "voice": [],
+ "thumb": true,
+ "hero": {
+  "arms": 0.2,
+  "tilt": 0.0,
+  "px": 0.7,
+  "fs": 1.4,
+  "lx": -0.1,
+  "ly": 0.8,
+  "cy": 0.65,
+  "cz": 2.9
+ },
+ "scene": "../../scene.mjs",
+ "fx": {
+  "ocean": [
+   -5,
+   9999
+  ]
+ }
+}

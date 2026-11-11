@@ -12,7 +12,7 @@ f = json.loads((D / "film.json").read_text())
 f.update(captions=[], badges=[], voice=[], thumb=True)
 f["title"] = {**f["title"], "t0": -20.0, "t1": -19.0, "sig": -18.0}
 if CAM: f["cams"] = [{"t0": -1.0, "mode": CAM}]
-if HERO: a, tl = HERO.split(","); f["hero"] = {"arms": float(a), "tilt": float(tl)}   # the figure's pose on the cover
+if HERO: h = [float(x) for x in HERO.split(",")]; f["hero"] = {"arms": h[0], "tilt": h[1], "lift": h[2] if len(h) > 2 else 0.0}   # the figure's pose on the cover
 if KEYS: f["world"] = {**f["world"], "keys": [[0.0, float(KEYS)], [9999.0, float(KEYS)]]}
 f["end"] = dict(f["end"]); f["endCard"] = 9999.0
 C = HERE / f"cover{N}"; C.mkdir(exist_ok=True)
