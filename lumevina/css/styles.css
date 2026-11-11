@@ -6004,6 +6004,64 @@ html:not(.book-site) .bk-move { display: none; }
 .ask-send { flex: none; width: 42px; height: 42px; display: grid; place-items: center; border: 0; border-radius: 50%; color: var(--on-accent); background: var(--grad-rose); cursor: pointer; }
 .ask-fine { color: var(--ink-35); font-size: 0.7rem; text-align: center; padding: 0 1rem 0.75rem; }
 
+/* ─── Ask Lumevina, while an answer is worked out (js/ask.js): "Thinking it
+   through" with a slow light across it, the seconds, and the steps it takes
+   on a thin timeline. Folded, it becomes "Thought it through · 3s" at the top
+   of the answer, a quiet pill that opens to the same steps. ─── */
+.ask-msg.ask-thinking { align-self: stretch; max-width: 100%; padding: 0.1rem 0.15rem 0.15rem; background: none; border-radius: 0; white-space: normal; }
+.ask-think-head { display: flex; align-items: center; gap: 0.45rem; min-height: 1.6rem; font-size: 0.8rem; font-weight: 500; color: var(--ink-60); }
+.ask-spark { flex: none; color: var(--camel); }
+.ask-think-k {
+  background: linear-gradient(90deg, var(--ink-35) 0%, var(--ink-35) 42%, var(--ink) 50%, var(--ink-35) 58%, var(--ink-35) 100%);
+  background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: ask-shimmer 1.8s linear infinite;
+}
+@keyframes ask-shimmer { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+.ask-think-s { margin-left: auto; font-size: 0.72rem; color: var(--ink-35); font-variant-numeric: tabular-nums; }
+.ask-think-steps {
+  list-style: none; margin: 0.35rem 0 0 0.4rem; padding: 0 0 0 1.05rem; border-left: 1px solid var(--ink-15);
+  display: grid; gap: 0.05rem; white-space: normal;
+}
+.ask-step { position: relative; padding: 0.28rem 0; font-size: 0.78rem; line-height: 1.35; color: var(--ink); }
+.ask-step.is-done { color: var(--ink-60); }
+.ask-step-dot {
+  position: absolute; left: calc(-1.05rem - 6px); top: 0.42rem; width: 11px; height: 11px; display: grid; place-items: center;
+  border-radius: 50%; background: var(--porcelain); box-shadow: 0 0 0 3px var(--porcelain); color: var(--ink);
+}
+.ask-step:not(.is-done) .ask-step-dot::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); animation: ask-pulse 1.2s ease-in-out infinite; }
+@keyframes ask-pulse { 50% { opacity: 0.3; } }
+.ask-step.is-new { animation: ask-step-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes ask-step-in { from { opacity: 0; transform: translateY(8px); } }
+/* folded, at the top of its answer */
+.ask-thought {
+  display: flex; width: fit-content; align-items: center; gap: 0.35rem; margin: 0 0 0.5rem; padding: 0.2rem 0.55rem 0.2rem 0.45rem;
+  border: 1px solid var(--ink-15); border-radius: 999px; background: rgba(var(--glass-rgb), 0.7);
+  font: 500 0.72rem/1.25 var(--font-body); color: var(--ink-60); cursor: pointer; white-space: nowrap;
+}
+.ask-thought:hover { color: var(--ink); border-color: var(--ink-35); }
+.ask-thought:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
+.ask-chev { transition: transform 200ms ease; }
+.ask-thought[aria-expanded="true"] .ask-chev { transform: rotate(90deg); }
+.ask-thought-steps { margin: 0 0 0.6rem 0.45rem; }
+.ask-msg.bot .ask-thought-steps .ask-step-dot { background: var(--surface-2); box-shadow: 0 0 0 3px var(--surface-2); }
+/* reading out (the preview streams its answer): a soft cursor at the end */
+.ask-msg.is-streaming .ask-live::after {
+  content: ""; display: inline-block; width: 4px; height: 0.95em; margin-left: 3px; border-radius: 2px;
+  background: var(--ink); vertical-align: -0.12em; animation: ask-pulse 1s ease-in-out infinite;
+}
+/* the send button turns into Stop while an answer is being worked out */
+.ask-send { position: relative; }
+.ask-send svg { transition: opacity 200ms ease, transform 200ms ease; }
+.ask-send .ask-send-stop { position: absolute; inset: 0; margin: auto; opacity: 0; transform: scale(0.75); }
+.ask-form.is-busy .ask-send .ask-send-go { opacity: 0; transform: scale(0.75); }
+.ask-form.is-busy .ask-send .ask-send-stop { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .ask-think-k { animation: none; background: none; color: var(--ink-60); }
+  .ask-step:not(.is-done) .ask-step-dot::after, .ask-msg.is-streaming .ask-live::after { animation: none; }
+  .ask-step.is-new { animation: none; }
+  .ask-send svg, .ask-chev { transition: none; }
+}
+
 @media (max-width: 640px) {
   .ask-fab { left: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); padding: 0.75rem; }
   .ask-fab .ask-fab-t { display: none; }
@@ -6356,19 +6414,6 @@ html:not(.has-app) [data-feature~="app"] { display: none !important; }
 }
 .sh-sec-title { margin: 0; font-size: 1.4rem; font-weight: 650; letter-spacing: -0.03em; color: var(--plum); }
 .sh-sec-n { font-size: 0.8rem; color: var(--ink-60); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.sh-row { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(13.25rem, 1fr)); gap: 1rem; }
-.sh-row > li { display: flex; min-width: 0; }
-.sh-row .sh-card { width: 100%; }
-@media (max-width: 600px) {
-  /* phones: each section is a row to swipe through */
-  .sh-row {
-    display: flex; gap: 0.7rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
-    margin: 0 calc(-1 * clamp(1.25rem, 5vw, 3rem)); padding: 0 clamp(1.25rem, 5vw, 3rem) 0.4rem;
-    scroll-padding-inline: clamp(1.25rem, 5vw, 3rem);
-  }
-  .sh-row::-webkit-scrollbar { display: none; }
-  .sh-row > li { flex: 0 0 44vw; max-width: 12.5rem; scroll-snap-align: start; }
-}
 
 /* every product picture is square, so rows line up */
 .sh-label { aspect-ratio: 1 / 1; }
@@ -6428,6 +6473,154 @@ html.pd-open { overflow: hidden; }
   .pd-inner { grid-template-columns: 1fr; }
   .pd-pic .sh-label { aspect-ratio: 1 / 1; height: auto; max-height: 46dvh; width: 100%; }
   .pd-info { padding: 1.2rem 1.25rem calc(1.4rem + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* ─── The shelves (js/shop.js): each type of product on a floating shelf ───
+   The products are their photos cut out (js/shelf-art.js), standing on a
+   shelf with a lit top, a crisp front edge and a soft shadow on the wall.
+   Each product draws its own stretch of shelf, past half the gap on each
+   side, so a row's shelf runs unbroken. How tall each one stands (--k)
+   follows the size on its label. */
+.sf { --stage: 13.5rem; display: grid; gap: 2.6rem; }
+.sf-shelf {
+  --gap: clamp(0.9rem, 2.2vw, 1.9rem);
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); column-gap: var(--gap);
+}
+.sf-item { position: relative; display: flex; flex-direction: column; min-width: 0; }
+.sf-stage { position: relative; height: var(--stage); display: flex; align-items: flex-end; justify-content: center; }
+/* each stretch runs from its own left edge to the next product's, so the
+   stretches meet on the same line; the ends overhang by half a gap */
+.sf-stage::before, .sf-stage::after { content: ""; position: absolute; left: 0; right: calc(-1 * var(--gap)); pointer-events: none; }
+.sf-item:first-child .sf-stage::before, .sf-item:first-child .sf-stage::after { left: calc(-0.5 * var(--gap)); }
+.sf-item:last-child .sf-stage::before, .sf-item:last-child .sf-stage::after { right: calc(-0.5 * var(--gap)); }
+/* the shelf: lit top, then the front edge */
+.sf-stage::after {
+  bottom: -14px; height: 14px;
+  background: linear-gradient(to bottom, #DDD1C1 0, #F6F0E7 7px, #FFFFFF 7px, #F3EDE4 11px, #E6DCCF 14px);
+}
+/* its shadow on the wall */
+.sf-stage::before { bottom: -50px; height: 36px; background: linear-gradient(to bottom, rgba(var(--shadow-rgb), 0.15), rgba(var(--shadow-rgb), 0)); }
+.sf-item:first-child .sf-stage::after { border-top-left-radius: 2px; border-bottom-left-radius: 3px; }
+.sf-item:last-child .sf-stage::after { border-top-right-radius: 2px; border-bottom-right-radius: 3px; }
+.sf-prod {
+  position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: center;
+  width: 100%; height: 100%; margin: 0; padding: 0 0 1px; border: 0; border-radius: 14px;
+  background: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.sf-prod:focus-visible { outline: 2px solid var(--mauve); outline-offset: 4px; }
+.sf-art {
+  display: block; width: auto; max-width: 100%; height: calc((var(--stage) - 1.4rem) * var(--k, 0.86));
+  object-fit: contain; object-position: bottom; user-select: none; -webkit-user-drag: none;
+  /* a tight contact line where it stands, a soft spread around it */
+  filter: drop-shadow(0 1px 0.6px rgba(var(--shadow-rgb), 0.38)) drop-shadow(0 10px 12px rgba(var(--shadow-rgb), 0.13));
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) { .sf-prod:hover .sf-art { transform: translateY(-6px); } }
+.sf-prod--label .sf-label { width: 86%; aspect-ratio: 4 / 5; border-radius: 10px; box-shadow: 0 10px 18px -12px rgba(var(--shadow-rgb), 0.4); }
+.sf-item.is-out .sf-art { opacity: 0.5; }
+.sf-tag { display: flex; flex-direction: column; align-items: center; gap: 0.18rem; flex: 1; padding-top: 1.45rem; text-align: center; }
+.sf-name {
+  margin: 0; font-size: 0.92rem; font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; color: var(--plum); text-wrap: balance;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.sf-meta { margin: 0; font-size: 0.76rem; color: var(--ink-60); }
+.sf-line { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0.15rem 0.55rem; margin: 0.15rem 0 0.6rem; }
+.sf-line .sh-stock { text-align: center; }
+.sf-tag > .btn { margin-top: auto; padding: 0.5rem 1.05rem; font-size: 0.85rem; }
+.sf-tag > .btn:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
+@media (max-width: 1099px) { .sf { --stage: 12.5rem; } }
+@media (max-width: 600px) {
+  /* phones: one long shelf per type, swiped along */
+  .sf { --stage: 10rem; }
+  .sf--swipe .sf-shelf {
+    --gap: 0.9rem; display: flex; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+    margin: 0 calc(-1 * clamp(1.25rem, 5vw, 3rem)); padding: 0 clamp(1.25rem, 5vw, 3rem) 0.4rem;
+    scroll-padding-inline: clamp(1.25rem, 5vw, 3rem);
+  }
+  .sf--swipe .sf-shelf::-webkit-scrollbar { display: none; }
+  .sf--swipe .sf-item { flex: 0 0 38vw; max-width: 10.5rem; scroll-snap-align: start; }
+  .sf-name { font-size: 0.86rem; }
+}
+@media (prefers-reduced-motion: reduce) { .sf-art { transition: none; } .sf-prod:hover .sf-art { transform: none; } }
+
+/* the hero's "on the shelf now" cards: the cut-out product on the warm ground */
+.sh-label.has-cut img { object-fit: contain; padding: 11% 16% 9%; mix-blend-mode: normal; filter: drop-shadow(0 8px 10px rgba(var(--shadow-rgb), 0.14)); }
+
+/* ─── A product's page (js/shop.js): the product on the left, standing on a
+   white surface under the light; its name, price and button on the right ─── */
+.pp {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain;
+  background: transparent; color: var(--ink);
+}
+.pp::backdrop { background: transparent; }
+.pp-bg { position: fixed; inset: 0; background: var(--linen); }
+.pp-page {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center;
+  gap: clamp(2rem, 5vw, 3.75rem); max-width: var(--container); min-height: 100%;
+  margin: 0 auto; padding: 4.5rem clamp(1.25rem, 5vw, 3rem) 3rem;
+}
+.pp-stage { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; perspective: 1100px; }
+.pp-stand {
+  position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: center;
+  width: 100%; height: min(62dvh, 36rem); touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab;
+}
+.pp-stand:active { cursor: grabbing; }
+.pp-art { position: relative; flex: none; transform-origin: 0 0; }
+.pp-img { display: block; width: 100%; height: 100%; -webkit-user-drag: none; filter: drop-shadow(0 22px 26px rgba(var(--shadow-rgb), 0.16)); }
+/* the light running across it as it turns */
+.pp-gloss {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  -webkit-mask-image: var(--art); mask-image: var(--art); -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  background: linear-gradient(100deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.5) 49%, rgba(255,255,255,0.12) 53%, rgba(255,255,255,0) 60%);
+  background-size: 260% 100%; background-position: calc(50% - var(--g, 0) * 70%) 0;
+}
+.pp-label { width: min(20rem, 78%); align-self: center; }
+.pp-label .sh-label { border-radius: 16px; aspect-ratio: 4 / 5; padding: 2.4rem 1.6rem 1.6rem; }
+.pp-label .sh-big { font-size: clamp(3rem, 7vw, 4.4rem); }
+.pp-label .sh-label-name { font-size: 1.4rem; }
+.pp-surface {
+  width: 86%; height: 18px; margin-top: -6px; border-radius: 3px;
+  background: linear-gradient(to bottom, #FFFFFF, #ECE4D9); box-shadow: 0 18px 40px -12px rgba(var(--shadow-rgb), 0.22);
+}
+.pp-hint { margin: 1.35rem 0 0; font-size: 0.76rem; color: var(--ink-35); }
+.pp-info { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 0.55rem; min-width: 0; max-width: 34rem; }
+.pp-back {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 0.2rem; margin: 0 0 1.3rem -0.45rem; padding: 0.4rem 0.6rem 0.4rem 0.35rem;
+  border: 0; border-radius: 10px; background: none; color: var(--ink); font: 500 0.95rem/1 var(--font-body); cursor: pointer;
+}
+.pp-back:hover { text-decoration: underline; text-underline-offset: 4px; }
+.pp-back:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
+.pp-sizes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin: 0.45rem 0 0.15rem; }
+.pp-sizes[hidden] { display: none; }
+.pp-size {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.85rem 1rem;
+  border: 1px solid var(--panel-edge); border-radius: 12px; background: var(--porcelain);
+  color: var(--ink); font: 500 0.95rem/1.2 var(--font-body); cursor: pointer; transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.pp-size:hover { border-color: var(--ink-35); }
+.pp-size[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.pp-size:focus-visible { outline: 2px solid var(--mauve); outline-offset: 2px; }
+.pp-size-p { color: var(--ink-60); font-variant-numeric: tabular-nums; }
+@media (max-width: 760px) {
+  /* phones: the product on top, everything else under it; "Shelf" floats top left */
+  .pp-page { grid-template-columns: 1fr; align-items: start; gap: 1.6rem; padding: 4.25rem 1.25rem calc(2rem + env(safe-area-inset-bottom, 0px)); }
+  .pp-stand { height: 42dvh; }
+  .pp-hint { margin-top: 0.9rem; }
+  .pp-back {
+    position: fixed; top: max(0.75rem, env(safe-area-inset-top, 0px)); left: 0.75rem; z-index: 5; margin: 0;
+    padding: 0.55rem 0.9rem 0.55rem 0.6rem; border-radius: 999px;
+    background: rgba(var(--glass-rgb), 0.92); box-shadow: 0 2px 14px rgba(var(--shadow-rgb), 0.12);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  }
+  html.in-app .pp-back { top: 3.9rem; }
+  html.in-app .pp-page { padding-top: 7.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pp[open] { animation: pp-fade 220ms ease-out; }
+  @keyframes pp-fade { from { opacity: 0; } }
+  .pp-stand { cursor: default; }
 }
 
 /* photos in the cart and at checkout */
@@ -6573,7 +6766,6 @@ a.book-btn { text-align: center; }
 .bk-notice strong { color: var(--ink); font-weight: 600; }
 
 /* Ask Lumevina: waiting on the server */
-.ask-msg.thinking { opacity: 0.55; letter-spacing: 0.2em; }
 
 .bkl-after { margin: 0.8rem 0 0; font-size: 0.82rem; line-height: 1.5; color: var(--ink-60); }
 .bkl-after .linklike { font-size: inherit; }
