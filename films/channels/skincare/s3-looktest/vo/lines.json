@@ -1,0 +1,35 @@
+{
+ "voice": "recorded",
+ "speaker": "Evelyn",
+ "speed": null,
+ "lang": "en-us",
+ "style": "whisper",
+ "source": "rec.wav",
+ "source_sha256": "cf45b1654047c71b59c435fabb53a9fc579d1ab3c7e5b1c888d54cd1a141620f",
+ "chain": [
+  "volume=17.80dB",
+  "highpass=f=80:p=2",
+  "denoise(room tone profile, at most -12 dB per bin)",
+  "bass=g=3.0:f=140:w=0.7",
+  "equalizer=f=320:t=q:w=1.1:g=-2",
+  "equalizer=f=3200:t=q:w=0.9:g=1.5",
+  "highshelf=f=9000:g=0.5",
+  "acompressor=threshold=-26dB:ratio=2:attack=15:release=200:knee=6",
+  "acompressor=threshold=-14dB:ratio=4:attack=2:release=60:knee=3",
+  "agate=threshold=0.005063:ratio=2.5:range=0.125:attack=5:release=200:knee=3",
+  "deess(5-10 kHz, -5.0 dB, max 8.0 dB)"
+ ],
+ "made_by": "kits/cinema/voice/polish.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Feel that? A shiver. Tiny sensors in your skin feel the air cool, and quietly let your brain know.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 9.88,
+   "sha256": "d1facae0596b009e1a92675d036207b72036d5eed61ed1ffa7f68585b0b72713"
+  }
+ ]
+}
