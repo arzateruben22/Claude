@@ -33,7 +33,8 @@ BIG = {1_000_000: "million", 1_000_000_000: "billion", 1_000_000_000_000: "trill
 UNIT_WORDS = [  # longest first; (spoken pattern, symbol)
     (r"kilomet(?:er|re)s? (?:an|per|a) hour", "km/h"), (r"met(?:er|re)s? (?:a|per) second", "m/s"),
     (r"kilomet(?:er|re)s?", "km"), (r"centimet(?:er|re)s?", "cm"), (r"millimet(?:er|re)s?", "mm"),
-    (r"met(?:er|re)s?", "m"), (r"kilograms?", "kg"), (r"grams?", "g"), (r"percent", "%"), (r"degrees?", "°"),
+    (r"met(?:er|re)s?", "m"), (r"kilograms?", "kg"), (r"grams?", "g"), (r"percent", "%"),
+    (r"degrees? celsius", "°C"), (r"degrees? fahrenheit", "°F"), (r"degrees?", "°"),
 ]
 WORD = re.compile(r"[A-Za-z]+(?:-[A-Za-z]+)?|\d[\d,]*(?:\.\d+)?|\S")
 
@@ -190,7 +191,7 @@ def _unit_after(words, i, disp):
         text = " ".join(re.sub(r"[^\w]+$", "", w) for w, _ in seg).lower()
         if re.fullmatch(pat, text):
             trail = re.search(r"[^\w]*$", seg[-1][0]).group(0)
-            sep = "" if sym in ("%", "°") else " "
+            sep = "" if sym in ("%", "°", "°C", "°F") else " "
             return disp.rstrip() + sep + sym + trail, len(parts)
     return None
 
@@ -216,6 +217,7 @@ TESTS = [
     ("Your brain answers in two soft steps.", "Your brain answers in 2 soft steps."),
     ("half a degree wide", "half a degree wide"),
     ("about one point two five seconds", "about 1.25 seconds"),
+    ("the oil reaches one hundred eighty degrees Celsius.", "the oil reaches 180°C."),
 ]
 
 if __name__ == "__main__":
