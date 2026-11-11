@@ -243,7 +243,7 @@ for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
         LBL.append([R(t1 + 0.9), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
-SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.5, 0.83]} if PART == 1 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
+SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.5, 0.83]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
 TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen", "A bullet, through an apple, slowly",
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
 if PART:
@@ -270,6 +270,11 @@ _Z3 = -0.31; _PZ = _PX / -_Z3
 _p03 = {"id": "tapmug", "file": PLATE03, "file9": PLATE03, "push": 0.04, "parallax": 0, "fade": 0.3,
         "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},
         "anchor": {"rig": {"pos": [round((863 - 836) / _PZ, 4), round(0.4 + (470.5 - 594) / _PZ, 4), _Z3], "scale": round(5240 / _PZ, 4), "rotX": 0.227, "tipY": round((594 - 368) / 5240, 4), "drop": 0.85, "rad": 0.62}}}   # the crown stands on the mug's water at the drop's x
+# plate-05: the farmhouse sink under the window (Part 3's soap bubble). The bubble (0.025 code-m of radius) is drawn 55 px in radius, 2200 px per code-metre, in the air left of the tap
+PLATE05 = "../lf01/art/owner/plates/plate-05-sink-16x9.png"
+_p05 = {"id": "sink", "file": PLATE05, "file9": PLATE05, "push": 0.04, "parallax": 0, "fade": 0.3, "shift9": {"x": round((640 - 836) / _PX, 4), "ppm": _PX},
+        "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},
+        "anchor": {"rig": {"kind": "bubble", "pos": [round((600 - 836) / _PX, 4), round(0.4 + (470.5 - 440) / _PX, 4), -1.0], "scale": round(2200 / _PX, 4), "rotX": 0}}}
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
 _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parallax": 0, "fade": 0.35,
@@ -279,6 +284,8 @@ if PART == 1 and (HERE / "art/owner/plates/plate-02-feeder-16x9.png").exists():
     PLATES = [dict(_p02, t0=0.0, t1=R(W("wings", "But") - 0.2))]
 elif PART == 2 and (HERE / "art/owner/plates/plate-03-tap-mug-clean-16x9.png").exists():
     PLATES = [dict(_p03, t0=R(EV["tapdrop"][0] - 1.0), t1=R(EV["tapdrop"][2] + 11.0), swap={"t": R(EV["tapdrop"][1]), "file": PLATE03C, "file9": PLATE03C})]
+elif PART == 3 and (HERE / "art/owner/plates/plate-05-sink-16x9.png").exists():
+    PLATES = [dict(_p05, t0=R(EV["bubble"]["in"] - 1.5), t1=R(EV["bubble"]["pop"] + 11.5))]
 elif PART == 4 and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists():
     PLATES = [dict(_p01, t0=0.0, t1=R(ENDSHOW))]
 elif not PART and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists() and "sound" in CUTS and "bullet" in CUTS:

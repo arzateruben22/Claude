@@ -44,7 +44,7 @@
   {
    "t": 0.6,
    "kind": "badge",
-   "tag": "code",
+   "tag": "code-s0",
    "text": "Drawn by code · model"
   },
   {
@@ -57,6 +57,18 @@
    "t": 21.8333,
    "kind": "contact",
    "tag": "pop"
+  },
+  {
+   "t": 33.4667,
+   "kind": "badge",
+   "tag": "code-p1",
+   "text": "Kitchen: AI illustration · bubble drawn by code"
+  },
+  {
+   "t": 54.0667,
+   "kind": "badge",
+   "tag": "code-s2",
+   "text": "Drawn by code · model"
   },
   {
    "t": 61.3333,

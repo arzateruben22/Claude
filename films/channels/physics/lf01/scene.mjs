@@ -274,10 +274,17 @@ const ripples = []; for (let i = 0; i < 3; i++) { const m = new THREE.Mesh(new T
 
 // ── the bubble: a thin film with a hole that opens at the Taylor-Culick speed ──
 const BUBX = -2.05, BUBY = TOP + 0.26, BUBZ = -1.05, BUBR = 0.025;
-const bubMat = new THREE.MeshPhysicalMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.42, roughness: 0.04, metalness: 0.0, iridescence: 1.0, iridescenceIOR: 1.35, iridescenceThicknessRange: [180, 520], clearcoat: 1.0, side: THREE.DoubleSide, depthWrite: false });
+const bubMat = new THREE.MeshPhysicalMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.5, roughness: 0.04, metalness: 0.0, iridescence: 1.0, iridescenceIOR: 1.35, iridescenceThicknessRange: [180, 520], clearcoat: 1.0, side: THREE.DoubleSide, depthWrite: false, envMap: birdEnv, envMapIntensity: 2.4 });
+// a soap film: nearly clear in the middle, bright and rainbow-banded toward the edge (fresnel), so it reads as a bubble in front of any photo
+bubMat.onBeforeCompile = (sh) => { sh.fragmentShader = sh.fragmentShader.replace("#include <opaque_fragment>", `
+  float fr = pow(1.0 - abs(dot(normalize(normal), normalize(vViewPosition))), 2.0);
+  vec3 irid = 0.55 + 0.45 * cos(6.2831 * (vec3(0.0, 0.33, 0.67) + fr * 1.7 + 0.15 * sin(vViewPosition.y * 90.0 + vViewPosition.x * 60.0)));
+  outgoingLight = outgoingLight * 0.25 + irid * fr * 1.15;
+  diffuseColor.a = clamp(0.05 + fr * 0.9, 0.0, 0.96);
+  #include <opaque_fragment>`); };
 let bubTh = -1;
 const bubble = new THREE.Mesh(new THREE.SphereGeometry(BUBR, 40, 28), bubMat); bubble.rotation.x = Math.PI / 2; bubble.position.set(BUBX, BUBY, BUBZ); kitchen.add(bubble);   // the pole points at the camera: the hole opens there and grows to the equator and beyond
-const rimR = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0006, 6, 36), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 })); kitchen.add(rimR);
+const rimR = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0026, 8, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 })); kitchen.add(rimR);
 
 // the proxy room of a plate: black additive surfaces (they add nothing but the wave painter's band and ripples), matched to the plate's walls, floor, ceiling and table
 const proxy = new THREE.Group(); proxy.visible = false; scene.add(proxy);
@@ -434,10 +441,11 @@ window.seek = function (t) {
   { const an = plates.anchor(t), rg = plateOn && an && an.rig ? an.rig : null;   // plate-03: the photo's mug is the cup; the drop and the crown are drawn in the plate's frame
     if (rg) {
       plateRig.visible = true; plateRig.position.set(...rg.pos); plateRig.scale.setScalar(rg.scale); plateRig.rotation.set(rg.rotX ?? 0, 0, 0);
-      if (crown.parent !== plateRig) { plateRig.add(crown); plateRig.add(hang); } crown.position.set(0, 0, 0);
-      if (hangV) { const u = t < d1 ? 0 : E.in2(seg(t, d1, d2)); hang.position.set(0, t < d1 ? rg.tipY - 0.0025 * E.in2(seg(t, d0, d1)) : lerp(rg.tipY - 0.0025, 0.003, u), 0); hang.scale.set(rg.drop, rg.drop * (t < d1 ? 1 : 1 + 0.4 * u), rg.drop); }
+      if (rg.kind === "bubble") { if (bubble.parent !== plateRig) { plateRig.add(bubble); plateRig.add(rimR); } }
+      else { if (crown.parent !== plateRig) { plateRig.add(crown); plateRig.add(hang); } crown.position.set(0, 0, 0); }
+      if (hangV && rg.kind !== "bubble") { const u = t < d1 ? 0 : E.in2(seg(t, d1, d2)); hang.position.set(0, t < d1 ? rg.tipY - 0.0025 * E.in2(seg(t, d0, d1)) : lerp(rg.tipY - 0.0025, 0.003, u), 0); hang.scale.set(rg.drop, rg.drop * (t < d1 ? 1 : 1 + 0.4 * u), rg.drop); }
       birdRim.visible = birdFill.visible = true; for (const [l, i0] of keyLights) if (l) l.intensity = i0 * 0.35;
-    } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } }
+    } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } if (bubble.parent === plateRig) { kitchen.add(bubble); kitchen.add(rimR); } }
     hang.visible = hangV || (!rg && t >= EV.light9 - 2.0 && t < T.still + 1.0 && !inMacro && !inLab); }
   if (!hang.visible) hang.visible = false;
   void 0;
@@ -457,7 +465,8 @@ window.seek = function (t) {
   }
   { const B = EV.bubble, inB = t >= B.in - 0.5 && t < B.pop + 11.5, rB = (t - B.pop) / 1000;
     bubble.visible = inB && !(rB >= CAL.bubble_t * 1.02); rimR.visible = false;
-    bubble.position.set(BUBX + 0.01 * Math.sin(t * 0.7), BUBY + 0.006 * Math.sin(t * 0.9) + 0.03 * (1 - E.out3(seg(t, B.in - 0.5, B.in + 3))), BUBZ);
+    const bb = bubble.parent === plateRig ? [0, 0, 0] : [BUBX, BUBY, BUBZ];
+    bubble.position.set(bb[0] + 0.01 * Math.sin(t * 0.7), bb[1] + 0.006 * Math.sin(t * 0.9) + 0.03 * (1 - E.out3(seg(t, B.in - 0.5, B.in + 3))), bb[2]);
     const th = Math.max(0, Math.min(Math.PI, Math.PI * rB / CAL.bubble_t)); { const thq = Math.round((rB > 0 ? th : 0) * 60) / 60; if (thq !== bubTh) { bubTh = thq; bubble.geometry.dispose(); bubble.geometry = new THREE.SphereGeometry(BUBR, 40, 28, 0, Math.PI * 2, thq, Math.max(0.01, Math.PI - thq)); } }
     if (inB && rB > 0 && rB < CAL.bubble_t) { rimR.visible = true; const rr = BUBR * Math.sin(th); rimR.position.set(bubble.position.x, bubble.position.y, bubble.position.z + BUBR * Math.cos(th)); rimR.scale.set(Math.max(rr, 1e-4), Math.max(rr, 1e-4), 1); } }
   // sound: the clap, a ring from the hands, its bounce off the left wall
