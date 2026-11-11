@@ -5,7 +5,7 @@ The words match what's on screen, so read them as written (every fact is checked
 feel natural in your mouth, say which line and it gets reworded and re-checked (the captions are rebuilt from your
 recording, so they'll match what you say).
 
-**About 9.5 minutes of reading in one session** (about 9.5 if you've already recorded the closers). Until you record, an AI voice stands in; the builder swaps yours in when the files land.
+**About 9.5 minutes of reading in one session** (about 9 if you've already recorded the closers). Until you record, an AI voice stands in; the builder swaps yours in when the files land.
 
 ### How to record
 - **Room:** quiet, with soft stuff around you (a closet of clothes or a bedroom is great; a bathroom or kitchen echoes).

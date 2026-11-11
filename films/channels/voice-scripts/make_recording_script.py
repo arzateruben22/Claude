@@ -28,17 +28,17 @@ from pathlib import Path
 
 CHANNELS = {
     "whatif": dict(name="Possibility Lab", prefix="pl", branch="claude/whatif-s2", cta="Possibility Lab",
-                   tone="You're a friend working out a wild puzzle out loud: curious, a little amused, never lecturing."),
-    "space": dict(name="One More Orbit", prefix="oo", branch="claude/space-s2", cta="One More Orbit",
+                   wpm=155, tone="You're a friend working out a wild puzzle out loud: curious, a little amused, never lecturing."),
+    "space": dict(name="One More Orbit", prefix="oo", branch="claude/space-s2", cta="One More Orbit", wpm=135,
                   tone="Quiet awe. Slower and softer than Possibility Lab, as if you're standing outside at night telling "
                        "one friend what you can see. Let the big numbers land, then breathe."),
-    "physics": dict(name="Reality Rulebook", prefix="rr", branch="claude/physics-s2", cta="Reality Rulebook",
+    "physics": dict(name="Reality Rulebook", prefix="rr", branch="claude/physics-s2", cta="Reality Rulebook", wpm=150,
                     tone="Crisp and curious, like you're slowing a moment down on purpose so a friend can see it."),
-    "skincare": dict(name="Skin Sense", prefix="ss", branch="claude/outer-layer-s1-b", cta="Skin Sense",
+    "skincare": dict(name="Skin Sense", prefix="ss", branch="claude/outer-layer-s1-b", cta="Skin Sense", wpm=130,
                      tone="Bright, warm and genuinely excited, like you can't wait to show someone what their skin just did."),
 }
 WORDS = ["one", "two", "three", "four", "five", "six", "seven", "eight"]
-WPM = 150          # a calm reading pace, pauses included
+WPM = 150          # default reading pace, pauses included; each channel sets its own (its tone sets the pace)
 MAX_MIN = 10       # the owner's cap for one session
 
 
@@ -135,10 +135,11 @@ def build(a) -> str:
             k += 1
     words = (sum(len(x.split()) for x in narration) + sum(len(h.split()) + len(o.split()) for h, o in pairs)
              + sum(len(h.split()) for h in hooks) + 8 * 6 + sum(len(l.split()) for l in cta) * 2)
-    mins = words / WPM
+    wpm = ch.get("wpm", WPM)
+    mins = words / wpm
     if mins > MAX_MIN:
         print(f"WARNING: about {mins:.1f} minutes of reading, over the {MAX_MIN}-minute cap: trim the narration", file=sys.stderr)
-    time = (f"**About {round(mins * 2) / 2:g} minutes of reading in one session** (about {round((mins - 8 * 6 / WPM) * 2) / 2:g} if you've "
+    time = (f"**About {round(mins * 2) / 2:g} minutes of reading in one session** (about {round((mins - 8 * 6 / wpm) * 2) / 2:g} if you've "
             "already recorded the closers). Until you record, an AI voice stands in; the builder swaps yours in when the files land.")
     out += ["---", "", "*Thanks! Upload the files and that's it.*", ""]
     return "\n".join(out).replace("{TIME}", time)

@@ -4,7 +4,7 @@ Thank you for lending your voice to this! Season 3 is six short lessons, each ab
 viewer on a slow, beautiful journey inside the skin. At the end of the season, the six are joined into one longer
 video, which needs a few extra linking lines (Part B).
 
-**About 9 minutes of reading in one session.** Every fact here is being checked against published sources. If a line
+**About 8 minutes of reading in one session.** Every fact here is being checked against published sources. If a line
 needs to change, we'll only ask you to re-read that one line.
 
 ### How to record
