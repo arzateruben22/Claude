@@ -8,9 +8,11 @@
  * posting with a mandatory requirement the applicant lacks is never presented as a match.
  */
 
+import { PAY_RULE, locate, proximityValue, targetHourly, type Area } from "./geo";
+
 export type Tier = "best_fit" | "stretch";
 export type AiLevel = "low" | "medium" | "high";
-export type ListName = "best_fit" | "stretch" | "ruled_out";
+export type ListName = "best_fit" | "stretch" | "below_pay" | "ruled_out";
 
 export type Evidence = { quote: string; sourceUrl: string };
 
@@ -71,7 +73,17 @@ export type ScoredJob = Candidate & {
   /** True only when an independent second pass actually ran its own searches for this posting. */
   checked: boolean;
   score: number;
-  breakdown: Record<"access" | "pay" | "interest" | "ai" | "open" | "driving", Factor>;
+  breakdown: Record<"access" | "pay" | "interest" | "ai" | "open" | "distance" | "driving", Factor>;
+  /** "LA" or "OC", from where the work is done. */
+  area: Area;
+  /** Straight-line miles from the home base (estimate), and whether the place had to be assumed. */
+  milesFromHome: number;
+  locationEstimated: boolean;
+  placeName: string;
+  /** Hourly pay the applicant's distance rule asks for here, and the posting's range in hourly terms. */
+  targetHourly: number;
+  payMinHourly: number | null;
+  payMaxHourly: number | null;
   list: ListName;
   ruledOutReason: string | null;
   needsOpenCheck: boolean;
@@ -79,7 +91,7 @@ export type ScoredJob = Candidate & {
 
 export const TARGET_ANNUAL = 80_000;
 
-export const WEIGHTS = { access: 0.24, pay: 0.22, interest: 0.18, ai: 0.14, open: 0.14, driving: 0.08 } as const;
+export const WEIGHTS = { access: 0.22, pay: 0.2, interest: 0.16, ai: 0.12, open: 0.14, distance: 0.1, driving: 0.06 } as const;
 
 /** Stated priority order of the applicant's fields of interest. */
 export const FIELD_INTEREST: Record<string, number> = {
@@ -137,10 +149,26 @@ export type Gaps = {
   driving: string[];
   /** Paperwork and conditions to have ready (ID, diploma, residency), not qualification gaps. */
   confirm: string[];
+  /** Conditions of the job to be comfortable with (shifts, physical work, own tools, screening). Not gaps. */
+  conditions: string[];
+  /** Items the posting calls preferred or desired. Shown, and counted only lightly. */
+  preferred: string[];
 };
 
+const PREFERRED_RE = /\bprefer|\bdesir|\ba plus\b|nice to have/i;
+const CONDITION_RE =
+  /\bshifts?\b|availab|overtime|on-call|holidays|weekends|\bnights?\b|physical|\bclimb|\blift|heights|hand tools|own tools|tools of the trade|\bdrug\b|screening|background check|medical|color vision|emergenc|re-sign|waiting list|assessment|\binterview|\bexam\b|\btests?\b|^timing|qualification training/i;
+const NOT_A_GAP_RE = /not a gap|^no (trade |prior |years[- ]of[- ])?experience|^no years|^all of the above|likely met|probably met|assumed met|probably a different employer|applicant pool|below the \$/i;
+/** A stated need for prior experience: what makes a posting a stretch for someone new to the field. */
+export const EXPERIENCE_RE = /\bexperience\b|\byears?\b|\bproven\b/i;
+const leadClause = (text: string) => text.split(/[.(;]|\s[-–]\s/)[0]!;
+/** "No years attached" and "no experience minimum" are the opposite of an experience requirement. */
+const stripNegated = (s: string) => s.replace(/\bno (stated |posted |set |minimum |prior |trade )?(years|experience)[^,.;]*/gi, " ");
+export const needsExperience = (gaps: Gaps) =>
+  gaps.soft.some((g) => EXPERIENCE_RE.test(stripNegated(g.slice(0, 160)))) || gaps.preferred.some((g) => /\byears?\b/i.test(g.slice(0, 160)));
+
 const DRIVING_RE = /driver'?s?\s+licen[cs]e|\bdriv(e|ing)\b|\bdmv\b|company vehicle|\bcdl\b/i;
-const PAPERWORK_RE = /birth certificate|high school diploma|\bged\b|photo id|social security|\bresiden(t|cy|ce)\b|at least 18|in person|by appointment/i;
+const PAPERWORK_RE = /birth certificate|high school diploma|\bged\b|photo id|social security|\bresiden(t|cy|ce)\b|at least 18|\bage 18\b|18 or older|in person|by appointment/i;
 const CREDENTIAL_RE = /licen[cs]e|certificat|certified|\bcard\b|\bepa\b|nicet|\bdegree\b|registration|\bpermit\b|credential/i;
 
 /**
@@ -149,7 +177,7 @@ const CREDENTIAL_RE = /licen[cs]e|certificat|certified|\bcard\b|\bepa\b|nicet|\b
  * paperwork are kept apart because the applicant's licence status and documents are never assumed.
  */
 export function parseGaps(lines: string[] | undefined): Gaps {
-  const gaps: Gaps = { hard: [], soft: [], driving: [], confirm: [] };
+  const gaps: Gaps = { hard: [], soft: [], driving: [], confirm: [], conditions: [], preferred: [] };
   for (const raw of lines ?? []) {
     const line = raw.trim();
     if (!line) continue;
@@ -157,11 +185,16 @@ export function parseGaps(lines: string[] | undefined): Gaps {
     const text = m ? m[2]!.trim() : line;
     const labelledHard = Boolean(m && m[1]!.toLowerCase() === "hard");
     // Judge by the requirement itself (the leading clause), not by the commentary that follows it.
-    const lead = text.split(/[.(;]|\s[-–]\s/)[0]!;
+    const lead = leadClause(text);
     const isExperience = /\bplus\b|experience|\byears?\b/i.test(lead);
+    // "Preferred" is usually said in a bracket right after the requirement, so look a little further.
+    const head = text.slice(0, 200);
     if (DRIVING_RE.test(lead)) gaps.driving.push(text);
     else if (PAPERWORK_RE.test(lead) && !isExperience) gaps.confirm.push(text);
     else if (labelledHard && CREDENTIAL_RE.test(lead) && !isExperience) gaps.hard.push(text);
+    else if (NOT_A_GAP_RE.test(head)) continue;
+    else if (PREFERRED_RE.test(head) && !/\brequired\b[^.]{0,40}$/i.test(lead)) gaps.preferred.push(text);
+    else if (CONDITION_RE.test(lead) && !isExperience) gaps.conditions.push(text);
     else gaps.soft.push(text);
   }
   return gaps;
@@ -179,22 +212,28 @@ export function verdictState(v: Verdict | null): "checked" | "unchecked" | "none
   return couldNotRun && (v.independentEvidence ?? []).length === 0 ? "unchecked" : "checked";
 }
 
-export function payFactor(min: number | null | undefined, max: number | null | undefined, hasProgression: boolean): { value: number; note: string } {
+export function payFactor(
+  min: number | null | undefined,
+  max: number | null | undefined,
+  hasProgression: boolean,
+  targetAnnual: number = TARGET_ANNUAL,
+): { value: number; note: string } {
   const lo = min ?? max ?? null;
   const hi = max ?? min ?? null;
   if (lo === null || hi === null || lo <= 0 || hi <= 0) return { value: 0.4, note: "Pay could not be confirmed as a number" };
-  const fmt = (n: number) => `$${Math.round(n / 1000)}K`;
+  const hr = (n: number) => `$${(n / PAY_RULE.fullTimeHours).toFixed(2)}/hr`;
+  const target = `${hr(targetAnnual)} target for this distance`;
   let value: number;
   let note: string;
-  if (lo >= TARGET_ANNUAL) {
+  if (lo >= targetAnnual) {
     value = 1;
-    note = `Whole range (${fmt(lo)}–${fmt(hi)}) is at or above the $80K target`;
-  } else if (hi >= TARGET_ANNUAL) {
-    value = 0.75 + 0.25 * (lo / TARGET_ANNUAL);
-    note = `Top of range (${fmt(hi)}) reaches the $80K target; it starts at ${fmt(lo)}`;
+    note = `Whole range (${hr(lo)} to ${hr(hi)}) is at or above your ${target}`;
+  } else if (hi >= targetAnnual) {
+    value = 0.75 + 0.25 * (lo / targetAnnual);
+    note = `Top of range (${hr(hi)}) reaches your ${target}; it starts at ${hr(lo)}`;
   } else {
-    value = 0.7 * (hi / TARGET_ANNUAL);
-    note = `Tops out at ${fmt(hi)}, below the $80K target`;
+    value = 0.7 * (hi / targetAnnual);
+    note = `Tops out at ${hr(hi)}, below your ${target}`;
   }
   if (hasProgression && value < 0.6) {
     value = 0.6;
@@ -230,11 +269,16 @@ export function scoreRow(input: RawRow): ScoredJob {
   const checked = state === "checked";
   const gaps = parseGaps(v?.gapsForBeginner);
   const open = clamp01(checked ? v!.stillOpenConfidence : row.openConfidence);
-  const pay = payFactor(row.payMinAnnual, row.payMaxAnnual, Boolean(row.progression && row.progression.trim()));
+  const loc = locate(row.city, row.county);
+  const target = targetHourly(loc.miles);
+  const hasProgression = Boolean(row.progression && row.progression.trim());
+  const pay = payFactor(row.payMinAnnual, row.payMaxAnnual, hasProgression, target * PAY_RULE.fullTimeHours);
+  const payMaxHourly = (row.payMaxAnnual ?? row.payMinAnnual) ? Math.round(((row.payMaxAnnual ?? row.payMinAnnual)! / PAY_RULE.fullTimeHours) * 100) / 100 : null;
+  const payMinHourly = (row.payMinAnnual ?? row.payMaxAnnual) ? Math.round(((row.payMinAnnual ?? row.payMaxAnnual)! / PAY_RULE.fullTimeHours) * 100) / 100 : null;
   // A second pass that could not run only speculates about gaps, so reach is judged from the first
   // pass's reading of the posted minimums (its tier) instead of counting those unverified notes.
   const access = checked
-    ? accessFactor(gaps.soft.length, gaps.hard.length)
+    ? accessFactor(gaps.soft.length + (gaps.preferred.length >= 2 ? 1 : 0), gaps.hard.length)
     : gaps.hard.length > 0
       ? accessFactor(0, gaps.hard.length)
       : row.tier === "best_fit"
@@ -252,28 +296,43 @@ export function scoreRow(input: RawRow): ScoredJob {
     interest: mk(interestValue, WEIGHTS.interest, `${FIELD_LABELS[row.field] ?? "Other trade"} is ${interestValue >= 0.95 ? "at the top of" : interestValue >= 0.85 ? "high on" : "lower on"} your stated list`),
     ai: mk(AI_VALUE[aiLevel], WEIGHTS.ai, v ? `${aiLevel[0]!.toUpperCase()}${aiLevel.slice(1)} AI exposure (estimate): ${v.aiExposure.reason}` : "Not assessed"),
     open: mk(open, WEIGHTS.open, checked ? `Second pass's confidence it is still open: ${pct}%` : `Found once in search results and not double-checked; the finder's own confidence it is still open: ${pct}%`),
+    distance: mk(proximityValue(loc.miles), WEIGHTS.distance, `About ${loc.miles} miles from Canoga Park in a straight line${loc.estimated ? " (the exact work site is not stated, so this assumes " + loc.place + ")" : ""}`),
     driving: mk(drivingValue, WEIGHTS.driving, `Posting says: ${row.drivingRequirement}`),
   };
   const score = Math.round(Object.values(breakdown).reduce((s, f) => s + f.points, 0));
 
   let list: ListName = "best_fit";
   let ruledOutReason: string | null = null;
-  if (state === "none") ruledOutReason = "Not assessed at all, so it is not presented as a match";
-  else if (checked && !v!.isReal) ruledOutReason = "The second pass could not find this posting on the employer's own site";
+  // No second-pass verdict at all (the check was capped or never ran) is "found once", like a
+  // check that could not run. It is shown with that label, never as a confirmed match.
+  if (checked && !v!.isReal) ruledOutReason = "The second pass could not find this posting on the employer's own site";
   else if (checked && !v!.directEmployerApply) ruledOutReason = "The application is not on the employer's own site";
   else if (checked && !v!.inLaOrOc) ruledOutReason = "The work location is outside Los Angeles and Orange counties";
   else if (open < 0.35) ruledOutReason = checked ? "It appears to have closed" : "Even the search that found it rated it unlikely to still be open";
   else if (gaps.hard.length > 0) ruledOutReason = `It requires a credential you would need first: ${gaps.hard[0]}`;
 
+  // "Around" the target: the top of the range must come within 5% of it.
+  const belowPay = payMaxHourly !== null && payMaxHourly < target * 0.95;
   if (ruledOutReason) list = "ruled_out";
+  else if (belowPay) list = "below_pay";
   else if (!checked) list = row.tier;
-  else if (gaps.soft.length >= 2 || (row.tier === "stretch" && gaps.soft.length >= 1)) list = "stretch";
+  // A stretch is a posting that asks for experience the applicant has not shown: it says so in as
+  // many words, lists years as preferred, or piles up three or more knowledge gaps. Once a posting
+  // has been checked, that reading replaces the first pass's guess at the tier.
+  else if (needsExperience(gaps) || gaps.soft.length >= 3) list = "stretch";
 
   return {
     ...row,
     id: stableId(row.employer, row.title, row.postingUrl),
     gaps,
     checked,
+    area: loc.area,
+    milesFromHome: loc.miles,
+    locationEstimated: loc.estimated,
+    placeName: loc.place,
+    targetHourly: target,
+    payMinHourly,
+    payMaxHourly,
     score,
     breakdown,
     list,
@@ -283,6 +342,12 @@ export function scoreRow(input: RawRow): ScoredJob {
 }
 
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+/** Employer names vary by how much of the legal name a source prints; compare on the leading words. */
+const sameEmployer = (a: string, b: string) => {
+  const x = norm(a.replace(/\(.*?\)/g, " ")).split(" ").slice(0, 3).join(" ");
+  const y = norm(b.replace(/\(.*?\)/g, " ")).split(" ").slice(0, 3).join(" ");
+  return x === y || norm(a).startsWith(y) || norm(b).startsWith(x);
+};
 
 /** Drop the same posting found by two slices (same URL, or same employer + title + city). */
 export function dedupe(jobs: ScoredJob[]): ScoredJob[] {
@@ -294,13 +359,23 @@ export function dedupe(jobs: ScoredJob[]): ScoredJob[] {
     const k = byUrl.get(urlKey(j)) ?? keyOf(j);
     byUrl.set(urlKey(j), k);
     const cur = best.get(k);
-    const better = !cur || (cur.list === "ruled_out" && j.list !== "ruled_out") || (cur.list === j.list && j.score > cur.score);
+    // A copy that went through the second check always beats one that did not.
+    const better =
+      !cur ||
+      (j.checked && !cur.checked) ||
+      (j.checked === cur.checked && ((cur.list === "ruled_out" && j.list !== "ruled_out") || (cur.list === j.list && j.score > cur.score)));
     if (better) best.set(k, j);
   }
-  return [...best.values()];
+  // The same posting written two ways: same employer and city, one title an extension of the other.
+  const out: ScoredJob[] = [];
+  for (const j of [...best.values()].sort((a, b) => Number(b.checked) - Number(a.checked) || b.score - a.score)) {
+    const twin = out.find((o) => norm(o.city) === norm(j.city) && sameEmployer(o.employer, j.employer) && (norm(o.title).startsWith(norm(j.title)) || norm(j.title).startsWith(norm(o.title))));
+    if (!twin) out.push(j);
+  }
+  return out;
 }
 
-export type Selection = { bestFit: ScoredJob[]; stretch: ScoredJob[]; ruledOut: ScoredJob[]; bench: ScoredJob[] };
+export type Selection = { bestFit: ScoredJob[]; stretch: ScoredJob[]; belowPay: ScoredJob[]; ruledOut: ScoredJob[]; bench: ScoredJob[] };
 
 /**
  * Pick the ranked lists. At most `maxPerEmployer` roles per employer per list so one large employer
@@ -325,5 +400,11 @@ export function select(all: ScoredJob[], opts: { best?: number; stretch?: number
   };
   const b = take(jobs.filter((j) => j.list === "best_fit"), best);
   const s = take(jobs.filter((j) => j.list === "stretch"), stretch);
-  return { bestFit: b.picked, stretch: s.picked, ruledOut: jobs.filter((j) => j.list === "ruled_out"), bench: [...b.rest, ...s.rest] };
+  return {
+    bestFit: b.picked,
+    stretch: s.picked,
+    belowPay: jobs.filter((j) => j.list === "below_pay"),
+    ruledOut: jobs.filter((j) => j.list === "ruled_out"),
+    bench: [...b.rest, ...s.rest],
+  };
 }

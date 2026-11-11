@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { locate, targetHourly } from "@/lib/jobfinder/geo";
 import { accessFactor, dedupe, mergeRow, parseGaps, payFactor, scoreRow, select, stableId, verdictState, WEIGHTS, type RawRow, type Verdict } from "@/lib/jobfinder/score";
 
 const verdict = (over: Partial<Verdict> = {}): Verdict => ({
@@ -98,7 +99,10 @@ describe("scoreRow", () => {
     expect(Math.round(Object.values(j.breakdown).reduce((s, f) => s + f.points, 0))).toBe(j.score);
   });
   it("rules out anything not independently confirmed, off-site, outside the area, closed, or needing a mandatory credential", () => {
-    expect(scoreRow(row({ verdict: null })).ruledOutReason).toMatch(/Not assessed/);
+    const once = scoreRow(row({ verdict: null }));
+    expect(once.ruledOutReason).toBeNull();
+    expect(once.checked).toBe(false);
+    expect(once.list).toBe(once.tier);
     expect(scoreRow(row({ verdict: verdict({ isReal: false }) })).ruledOutReason).toMatch(/could not find/);
     expect(scoreRow(row({ verdict: verdict({ directEmployerApply: false }) })).ruledOutReason).toMatch(/employer's own site/);
     expect(scoreRow(row({ verdict: verdict({ inLaOrOc: false }) })).ruledOutReason).toMatch(/outside/);
@@ -114,7 +118,32 @@ describe("scoreRow", () => {
     expect(scoreRow(row({ verdict: verdict({ gapsForBeginner: ["SOFT: 2 years", "SOFT: Procore"] }) })).list).toBe("stretch");
     expect(scoreRow(row({ tier: "stretch", verdict: verdict({ gapsForBeginner: ["SOFT: 3 years"] }) })).list).toBe("stretch");
     expect(scoreRow(row({ tier: "stretch", verdict: verdict({ gapsForBeginner: [] }) })).list).toBe("best_fit");
-    expect(scoreRow(row({ verdict: verdict({ gapsForBeginner: ["SOFT: 1 year"] }) })).list).toBe("best_fit");
+    // Any stated need for experience makes it a stretch, however the first reading tiered it.
+    expect(scoreRow(row({ verdict: verdict({ gapsForBeginner: ["SOFT: 1 year"] }) })).list).toBe("stretch");
+    expect(scoreRow(row({ verdict: verdict({ gapsForBeginner: ["SOFT: Basic knowledge of machine components"] }) })).list).toBe("best_fit");
+  });
+  it("keeps job conditions and preferred items out of the gap count", () => {
+    const g = parseGaps([
+      "SOFT: Must be able to work a variety of shifts including weekends, nights and holidays",
+      "SOFT: Must provide own tools of the trade.",
+      "SOFT: Hydraulic and pneumatic systems experience (preferred)",
+      "SOFT: Vocational/Technical Diploma (preferred)",
+      "SOFT: No trade experience is asked for, so being a beginner is not a gap here.",
+      "HARD: 2+ years of experience as a Maintenance Mechanic (listed as a basic qualification)",
+    ]);
+    expect(g.conditions).toHaveLength(2);
+    expect(g.preferred).toHaveLength(2);
+    expect(g.soft).toEqual(["2+ years of experience as a Maintenance Mechanic (listed as a basic qualification)"]);
+    const onlyConditions = scoreRow(row({ verdict: verdict({ gapsForBeginner: ["SOFT: Rotating 12-hour shifts", "SOFT: Pass a drug screening"] }) }));
+    expect(onlyConditions.list).toBe("best_fit");
+    expect(onlyConditions.gaps.soft).toEqual([]);
+  });
+  it("merges the same posting written two ways and prefers the checked copy", () => {
+    const first = scoreRow(row({ employer: "Los Angeles Department of Water and Power (LADWP)", title: "Utility Pre-Craft Trainee (UPCT)", postingUrl: "https://example.org/a", verdict: null }));
+    const second = scoreRow(row({ employer: "Los Angeles Department of Water and Power", title: "Utility Pre-Craft Trainee (UPCT) - Local 18 list", postingUrl: "https://example.org/b", verdict: verdict({ stillOpenConfidence: 0.4 }) }));
+    const out = dedupe([first, second]);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.checked).toBe(true);
   });
   it("flags postings that need a quick check before applying", () => {
     expect(scoreRow(row({ verdict: verdict({ stillOpenConfidence: 0.5 }) })).needsOpenCheck).toBe(true);
@@ -182,6 +211,40 @@ describe("driving and residency statements", () => {
   });
 });
 
+describe("distance from Canoga Park and the pay it asks for", () => {
+  it("resolves places, splits LA from OC, and flags assumed locations", () => {
+    expect(locate("Chatsworth", "Los Angeles")).toMatchObject({ area: "LA", estimated: false });
+    expect(locate("Chatsworth").miles).toBeLessThan(6);
+    expect(locate("Anaheim", "Orange")).toMatchObject({ area: "OC", estimated: false });
+    expect(locate("Anaheim").miles).toBeGreaterThan(40);
+    expect(locate("Carson (Wilmington listed as additional location)").place).toBe("Carson");
+    expect(locate("Los Angeles")).toMatchObject({ area: "LA", estimated: true });
+    expect(locate("somewhere unnamed", "Orange")).toMatchObject({ area: "OC", estimated: true, place: "Santa Ana" });
+  });
+  it("asks for $35 nearby and more further away", () => {
+    expect(targetHourly(5)).toBe(35);
+    expect(targetHourly(15)).toBe(35);
+    expect(targetHourly(25)).toBe(39.5);
+    expect(targetHourly(locate("Irvine").miles)).toBeGreaterThan(50);
+  });
+  it("moves a job that tops out below the distance target to its own list, with the numbers", () => {
+    const near = scoreRow(row({ city: "Chatsworth", payMinAnnual: 33 * 2080, payMaxAnnual: 36 * 2080 }));
+    expect(near.list).toBe("best_fit");
+    expect(near.targetHourly).toBe(35);
+    const far = scoreRow(row({ city: "Anaheim", county: "Orange", payMinAnnual: 33 * 2080, payMaxAnnual: 36 * 2080 }));
+    expect(far.list).toBe("below_pay");
+    expect(far.area).toBe("OC");
+    expect(far.breakdown.pay.note).toMatch(/below your \$\d+\.\d\d\/hr target/);
+    const around = scoreRow(row({ city: "Chatsworth", payMinAnnual: 30 * 2080, payMaxAnnual: 33.5 * 2080 }));
+    expect(around.list).toBe("best_fit");
+    expect(scoreRow(row({ city: "Chatsworth", payMinAnnual: 25 * 2080, payMaxAnnual: 31 * 2080 })).list).toBe("below_pay");
+  });
+  it("prefers the closer of two otherwise identical jobs", () => {
+    const pay = { payMinAnnual: 60 * 2080, payMaxAnnual: 70 * 2080 };
+    expect(scoreRow(row({ city: "Van Nuys", ...pay })).score).toBeGreaterThan(scoreRow(row({ city: "Irvine", county: "Orange", ...pay })).score);
+  });
+});
+
 describe("select", () => {
   it("dedupes the same posting found twice and keeps the better copy", () => {
     const a = scoreRow(row({ slice: "a" }));
@@ -197,12 +260,14 @@ describe("select", () => {
       scoreRow(row({ title: "Role B", postingUrl: u(2), payMinAnnual: 90000, payMaxAnnual: 99000 })),
       scoreRow(row({ title: "Role C", postingUrl: u(3), payMinAnnual: 50000, payMaxAnnual: 60000 })),
       scoreRow(row({ employer: "Other Co", title: "Tech", postingUrl: u(4), field: "hvac" })),
-      scoreRow(row({ employer: "Third Co", title: "PM", postingUrl: u(5), field: "construction_office", verdict: verdict({ gapsForBeginner: ["SOFT: a", "SOFT: b"] }) })),
+      scoreRow(row({ title: "Role D", postingUrl: u(7), payMinAnnual: 85000, payMaxAnnual: 95000 })),
+      scoreRow(row({ employer: "Third Co", title: "PM", postingUrl: u(5), field: "construction_office", verdict: verdict({ gapsForBeginner: ["SOFT: 2 years of experience"] }) })),
       scoreRow(row({ employer: "Gone Co", title: "Closed", postingUrl: u(6), verdict: verdict({ stillOpenConfidence: 0.1 }) })),
     ];
     const s = select(jobs, { best: 10, stretch: 5, maxPerEmployer: 2 });
-    expect(s.bestFit.map((j) => j.title)).toEqual(["Role B", "Role A", "Tech"]);
-    expect(s.bench.map((j) => j.title)).toEqual(["Role C"]);
+    expect(s.bestFit.map((j) => j.title)).toEqual(["Role B", "Role D", "Tech"]);
+    expect(s.bench.map((j) => j.title)).toEqual(["Role A"]);
+    expect(s.belowPay.map((j) => j.title)).toEqual(["Role C"]);
     expect(s.stretch.map((j) => j.title)).toEqual(["PM"]);
     expect(s.ruledOut.map((j) => j.title)).toEqual(["Closed"]);
   });
