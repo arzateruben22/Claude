@@ -4,6 +4,103 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-11: M1b repaired and re-proven after the machine reset (branch `claude/hypercar`, not committed)
+
+Still a **procedural model built in code**, not a finished 3D asset. The first M1b build (the entry below) was judged:
+kept by the art review, rejected by the code review (two items undone, and the reason given for one of them didn't
+hold). The machine was reset on 2026-11-10/11; the working tree came back from its backup with a repair half done, and
+none of `tests/out` (so every render, overlay and log the entry below cites is gone, and its figures are superseded
+here). Item by item against the M1b row in `PROJECT_OC_HYPERCAR.md`, which has the figures:
+- **Item 1, the nose in plan (was undone).** Built in the repair (`ShapeParams.noseV`, the body's warp): the nose
+  moves back 0.13 m at the fenders on a V rounded at the badge, so the bonnet comes to a blunt point there. Finished
+  today: the splitter's, its step's and its LED's front edges now have a point every 4 cm, so they bend with the V; with
+  only their end points the warp had left them straight, 0.13 m back across the middle and behind the fins' feet
+  (from the mesh: the splitter's edge at the centre was a straight line between its ends at about −2.29 m, 10 cm
+  behind the lip; now −2.424 m, 2.8 cm ahead of it).
+- **Item 9, the caliper's OC mark (was undone, "needs `car-wheel.ts`").** Nothing to do, and that reason was wrong:
+  the wheels lane re-cut the strip on 2026-10-22 (d80c3a8, ee5dc07), and the mark is whole in a close-up
+  (`hyper-caliper-close.png`) and in HEAD's wheel render; its map is `car.ts`'s `calText` (ours) anyway. It reads
+  along the arc, sideways and small at the wheel camera.
+- **Also in the repair** (kept): the blades 34 mm tall under a deeper socket with a wider core; the bonnet's middle 1 to
+  2.5 cm lower; the scoop in its own polygon-offset material; satin glass borders, 0.45 / 0.3 glass reflections and
+  side masks on the A-pillars (no white arcs across the canopy at night); 5 mm skin stations through the face's step.
+- **Not done:** the reference sheet itself was lost in the reset (it lived in the session scratchpad), so no render
+  could be put beside its reference crop and the hero overlay could not be rebuilt; `tests/out/preview/m1b/pairs.py`
+  adds the sheet's crops as a third column once it is back. The rear view's paint is no lighter than HEAD's
+  ((129, 143, 160) against (134, 149, 165)); the front's is ((155, 164, 181) against (137, 146, 164)). A dark patch on
+  the bonnet in the hero stays with a 512 probe.
+
+**Renders** (`tests/out/preview/m1b/`, 960 × 540, `test-car.ts`, golden-hour test light unless named; HEAD b49f7f3
+rendered from an exported copy with the same cameras): `hyper-<view>.png` against `before-hyper-<view>.png` for front
+and rear (camera 1.0 m up), side, top, top-full, nose-plan (7 m over the bonnet), hero (the sheet's camera), hero-night
+(the showroom key and bloom), rear34, wheel, seat; `hyper-hero-512.png`, `hyper-caliper-close.png`; each pair side by
+side in `pair-<view>.png` and all of them in `m1b-before-after.png`.
+
+**Other cars:** their geometry and materials hash identical to HEAD's (every part's positions, normals, uvs, indices and
+placement, and the material settings, for the full car, the shell and the cockpit, `high` and `phone`); the Corsa's side
+render is pixel for pixel HEAD's; the lineup differs only inside the hypercar's columns (and three floor pixels just
+ahead of its splitter, by one level).
+
+**Budgets** (side view, own cost with shadows): high 28 / 257,966, phone 28 / 120,180 (HEAD 28 / 250,654 and
+28 / 117,648); budget 40 / 260,000 and 36 / 135,000.
+
+**Checks:** `npx tsc --noEmit` on `tsconfig.json` and `tsconfig.game.json` clean; `npm run build` (3522 KB js);
+`node tests/dynamics.mjs` **1742 passed, 0 failed**; `npm test -- --only=boot,phone` **15/15** (654 s for phone);
+RENDER_LINE
+
+## 2026-11-09 (evening): M1b, the hypercar's body brought closer to the reference sheet (branch `claude/hypercar`, not committed)
+
+(This entry's renders, overlays and logs were lost in the machine reset of 2026-11-10/11; its figures are superseded by the
+2026-11-11 entry above.)
+
+Still a **procedural model built in code**, not a finished 3D asset. M1b had been set aside earlier in the day (the
+merge entry below); it was built tonight as the day's leftover. Files: `src/preview/car-shape.ts` (the hypercar's
+numbers), `car-body.ts` (the face's recess, the tail's recess and bar, round arches, fins, deck vents, LEDs),
+`car-mats.ts` (a tinted carbon and a paint reflection option, both used only when a car asks for them), `car.ts` (the
+hypercar's glass, carbon and paint), `test-car.ts` (the `hero-sheet` camera, `&probeRes=`). The other four cars build
+exactly as before. Item by item (the M1b row in `PROJECT_OC_HYPERCAR.md` has the figures):
+- **Face.** A silver lip from 0.33 m at the badge up to the blades' tips and on under them to the fang; below it,
+  inside the fangs, the nose is set back 0.10 m (the body's warp, over a 2.4 cm step) into a gloss-black zone with
+  five carbon fins (a central divider and two pairs); silver fangs down each corner to the splitter, the LED on each
+  fang's inner edge. Not done: the nose's plan rounding (the lip's own V makes the point at the badge).
+- **Bonnet.** A spine 2 cm wide at the badge to 10 cm at the cowl with an arrow tip; a dark socket round each cowl vent.
+- **Splitter.** Proud 0.24 → 0.12 (its edge 3.2 cm ahead of the lip's point); the hypercar's own darker carbon
+  (its top (92, 104, 106) in the front view, was about (132, 139, 136)); end plates 0.22 x 0.10 m.
+- **Side.** The scoop is a dark wedge from the door's rear edge down to the skirt, 0.179 m² (was 0.099); the sill
+  LED runs 1.87 m at 16 mm (was 0.70 m at 8 mm).
+- **Plan.** 0.845 m at the cabin (was 0.925), 1.045 m over the rear wheels; teardrop openings; the channels and the
+  silver cross-ribs gone; the fins on the haunches' crests.
+- **Tail.** Recessed 0.10 m between the valance and the bar, the silver haunches wrapping round it, the plate, mesh
+  and reversing lamps on its floor; the bar follows its top edge and wraps 9 cm round each corner; no stepped
+  carbon notch at the corners; louvred vents under the wing either side of the spine.
+- **Proof.** `hero-sheet`, the sheet's hero camera solved from six landmarks (13 px rms), and a 512 probe for proof
+  shots; dark glass (0.86) and gloss-black A-pillars, so no silver strut on the canopy; round arches; the paint's
+  metalness 0.3 → 0.06 with 1.2x sky reflection: front-view median silver (149, 160, 178), was (137, 143, 149)
+  (the sheet's FRONT (152, 163, 185)). Not done: the caliper's OC mark (`car-wheel.ts` belongs to another session's
+  pass; the change is described in the plan's M1b row).
+
+**Renders** (`tests/out/preview/m1b/`, 960 × 540, `test-car.ts`, golden-hour test light unless named; the sheet's
+panels beside them in `hyper-vs-ref-m1b.png`): `hyper-front.png` and `hyper-rear.png` (camera 1.0 m up),
+`hyper-side.png`, `hyper-top.png`, `hyper-hero.png` and `hyper-hero-night.png` (the sheet's camera; night with the
+preview's showroom key and bloom), `hyper-rear34.png`, `hyper-wheel.png`, `hyper-wing.png`, `hyper-phone-side.png`, `hyper-seat.png` (the seat view,
+unchanged in what the driver sees);
+`before-hyper-hero.png` (HEAD from the same camera); the matched hero overlay `hero-overlay-m1b.png` and
+`hero-sheet-ours-overlay-m1b.png` (the sheet, ours, the 50/50 blend; no hand alignment). What the overlays still
+show: our roof is higher (1.12 m, the shared driver's frame), the sheet's nose is longer and lower, its scoop sits a
+little further forward, and its canopy is wider from above.
+
+**Budgets** (side view, own cost with shadows): high 27 calls / 250,370 triangles, phone 27 / 118,080 (HEAD, b49f7f3, from the same view and pass: 28 / 250,654
+and 28 / 117,648; `hyper-side-head.png`, `hyper-phone-side-head.png`);
+budget 40 / 260,000 and 36 / 135,000. The Corsa from the same pass 31 / 224,597, pixel for pixel the same from HEAD
+and from this tree (`corsa-side.png`, `corsa-side-head.png`); the five-car lineup from both differs only in the
+hypercar's columns (`lineup.png`, `lineup-head.png`); the other four cars' body geometry hashes (positions of every
+part, both builds) are identical to HEAD's.
+
+**Checks:** `npx tsc --noEmit` on `tsconfig.json` and `tsconfig.game.json` clean; `npm run build` (3521 KB js);
+`node tests/dynamics.mjs` **1742 passed, 0 failed**; `npm test -- --only=boot,phone` **15/15**; `npm test -- --only=render` **15/15** in 2196 s (`tests/out/preview/m1b/suite-render.log`;
+the boot and phone log beside it)
+(load average 18-23 on the shared 4 cores).
+
 ## 2026-11-09: the hypercar's two lanes merged and proven together (branch `claude/hypercar`, committed)
 
 Still a **procedural model built in code**, not a finished 3D asset. `origin/claude/hypercar` had nothing new at the
