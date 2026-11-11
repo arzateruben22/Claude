@@ -72,11 +72,35 @@ function sceneComposite(t, d, ecl, moonAlpha, G) {
   }
   ctx.restore();
 }
+
+function zoomParams(t, G) {   // the camera at time t: a zoom of s about the world point F, anchored at screen point (tx, ty); null = identity
+  const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; let z = null;
+  if (inCh1) { const mo0 = moonState(384400, G), zs = zoomState(t, b, mo0); z = { s: zs.s, F: zs.F, k: zs.k }; } else { const mv = movesState(t, G); if (mv) z = mv; }
+  if (!z) return null; let tx = lerp(z.F.x, W * 0.54, z.k), ty = lerp(z.F.y, H * 0.46, z.k);
+  tx = Math.max(W - (W - z.F.x) * z.s, Math.min(z.F.x * z.s, tx)); ty = Math.max(H - (H - z.F.y) * z.s, Math.min(z.F.y * z.s, ty));   // never show past the painting
+  return { tx, ty, s: z.s, Fx: z.F.x, Fy: z.F.y };
+}
+function moonScreen(t) {   // where the Moon is on the screen at time t (centre and radius in canvas px), through the shake, the sway and the camera
+  const G = geom(), mo = moonState(Math.max(dVis(t), 17000), G); mo.cx += slideOff(t); let x = mo.cx, y = mo.cy, r = mo.r; const zp = zoomParams(t, G);
+  if (zp) { x = zp.tx + (x - zp.Fx) * zp.s; y = zp.ty + (y - zp.Fy) * zp.s; r *= zp.s; }
+  const A = swayAmp(t), SH = shakeAmp(t); if (A > 0.001) { const sc = 1 + 0.016 * A; x = W / 2 + 16 * U * A * Math.sin(t * 0.55) + (x - W / 2) * sc; y = H / 2 + 8 * U * A * Math.sin(t * 0.4) + (y - H / 2) * sc; r *= sc; }
+  if (SH > 0.001) { x += 9 * U * SH * Math.sin(t * 43); y += 6 * U * SH * Math.sin(t * 57 + 1); }
+  return { x, y, r, vis: track(TL.tracks.moon, t) };
+}
+// the caption pill keeps clear of the Moon: the first slot whose rectangle misses the Moon (plus a margin) at the start, middle and end of the line
+function placeCaption(cap, el, t) {
+  const b = beats(), land = MODE === "land", w = el.offsetWidth, h = el.offsetHeight;
+  const slots = land ? (b && t < b.end + 0.5 ? [250, 84, 440, 600] : [84, 250, 440, 600]) : [390, 1180, 1000, 640, 1290];
+  const cs = [cap.t0, (cap.t0 + cap.t1) / 2, cap.t1 - 0.05].map(moonScreen).filter((m) => m.vis > 0.3);
+  const clear = (v) => { const px = v * U, x0 = (W - w) / 2, x1 = (W + w) / 2, y0 = land ? H - px - h : px, y1 = y0 + h;
+    return cs.every((m) => { const nx = Math.max(x0, Math.min(m.x, x1)), ny = Math.max(y0, Math.min(m.y, y1)); return Math.hypot(m.x - nx, m.y - ny) > m.r * 1.12 + 20 * U; }); };
+  const pick = slots.find(clear) ?? slots[0]; if (land) { el.style.bottom = `calc(${pick} * var(--u))`; } else { el.style.top = `calc(${pick} * var(--u))`; }
+}
 function hud(t) {
   const d = dCount(t), s = sizeX(dVis(t)), fmt = (n) => Math.round(n).toLocaleString("en-US");
   document.getElementById("num").textContent = fmt(d) + " km"; document.getElementById("size").textContent = "size in the sky ×" + (s < 9.95 ? s.toFixed(1) : Math.round(s));
-  const cap = TL.captions.find((c) => t >= c.t0 && t < c.t1), el = document.getElementById("cap"), b = beats(); if (MODE === "land") el.style.bottom = b && t < b.end + 0.5 ? "calc(250 * var(--u))" : "calc(84 * var(--u))";   // the opening keeps the little figure clear of the caption
-   if (cap) { el.textContent = cap.text; el.style.opacity = 1; } else el.style.opacity = 0;
+  const cap = TL.captions.find((c) => t >= c.t0 && t < c.t1), el = document.getElementById("cap");
+  if (cap) { el.textContent = cap.text; el.style.opacity = 1; placeCaption(cap, el, t); } else el.style.opacity = 0;
 }
 window.setup = async (tl, assets, mode, w, h) => {
   TL = tl; MODE = mode; W = w; H = h; U = mode === "land" ? H / 1080 : W / 1080; cv = document.getElementById("c"); cv.width = W; cv.height = H; ctx = cv.getContext("2d");
@@ -163,11 +187,7 @@ window.renderAt = (t) => {
   const G = geom(), ecl = track(TL.tracks.eclipse, t), moonA = track(TL.tracks.moon, t), brk = track(TL.tracks.brk, t), ring = track(TL.tracks.ring, t), tn = track(TL.tracks.tonight, t), d = dVis(t);
   const A = swayAmp(t), SH = shakeAmp(t); ctx.save(); if (SH > 0.001) ctx.translate(9 * U * SH * Math.sin(t * 43), 6 * U * SH * Math.sin(t * 57 + 1)); if (A > 0.001) { const sc = 1 + 0.016 * A; ctx.translate(W / 2 + 16 * U * A * Math.sin(t * 0.55), H / 2 + 8 * U * A * Math.sin(t * 0.4)); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); }
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; ctx.save();
-  const mv = !b ? movesState(t, G) : null;
-  if (mv) { let tx = lerp(mv.F.x, W * 0.54, mv.k), ty = lerp(mv.F.y, H * 0.46, mv.k); tx = Math.max(W - (W - mv.F.x) * mv.s, Math.min(mv.F.x * mv.s, tx)); ty = Math.max(H - (H - mv.F.y) * mv.s, Math.min(mv.F.y * mv.s, ty)); ctx.translate(tx, ty); ctx.scale(mv.s, mv.s); ctx.translate(-mv.F.x, -mv.F.y); }
-  if (inCh1) { const mo0 = moonState(384400, G), z = zoomState(t, b, mo0); let tx = lerp(z.F.x, W * 0.54, z.k), ty = lerp(z.F.y, H * 0.46, z.k);
-    tx = Math.max(W - (W - z.F.x) * z.s, Math.min(z.F.x * z.s, tx)); ty = Math.max(H - (H - z.F.y) * z.s, Math.min(z.F.y * z.s, ty));   // never show past the painting
-    ctx.translate(tx, ty); ctx.scale(z.s, z.s); ctx.translate(-z.F.x, -z.F.y); }
+  const zp = zoomParams(t, G); if (zp) { ctx.translate(zp.tx, zp.ty); ctx.scale(zp.s, zp.s); ctx.translate(-zp.Fx, -zp.Fy); }
   sceneComposite(t, Math.max(d, 17000), ecl, moonA, G);
   if (inCh1) ch1Overlays(t, b, moonState(384400, G), G);
   ctx.restore();
