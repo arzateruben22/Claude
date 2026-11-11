@@ -94,7 +94,7 @@
   },
   "rules": [
     "Every factual sentence carries a claims.json tag. A claim is OK only after a person opens the source; anything checked from a search excerpt stays OPEN.",
-    "Owner's voice from Season 3, used as recorded (cut, cleaned, levelled). AI stand-in until the recording arrives: Kokoro am_michael, one speed per line, labelled as AI.",
+    "Owner's voice from Season 3, used as recorded (cut, cleaned, levelled). AI stand-in until the recording arrives: voice am_michael (kits/cinema/voice/tts.py), one speed per line, labelled as AI.",
     "A clone of the owner's own voice is allowed only with his recorded consent and an AI label (owner's request, 11 Nov 2026). No tool for it is in the repo yet.",
     "Every cheat is badged; the gravity grid always wears 'analogy' and the Oort cloud 'theory'.",
     "One galactic-centre distance for the whole channel: about 27,000 light-years (theme.json motif.facts).",

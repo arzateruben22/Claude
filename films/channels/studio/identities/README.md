@@ -6,10 +6,10 @@ sounds, which formats it makes, and the rules that bind every episode. A new epi
 
 | File | Channel | Prefix | Branch | Voice from Season 3 | AI stand-in for drafts |
 |---|---|---|---|---|---|
-| [skincare.json](skincare.json) | Skin Sense | `ss` | `claude/outer-layer-s1-b` | guest: Evelyn's recordings (`voice-evelyn/`) | Kokoro `bf_isabella` |
-| [physics.json](physics.json) | Reality Rulebook | `rr` | `claude/physics-s2` | tts: Kokoro `af_bella` at speed 0.85 | none needed |
-| [whatif.json](whatif.json) | Possibility Lab | `pl` | `claude/whatif-s2` | owner's recordings (`voice-owner/`) | Kokoro `am_puck` |
-| [space.json](space.json) | One More Orbit | `oo` | `claude/space-s2` | owner's recordings (`voice-owner/`, none received yet) | Kokoro `am_michael` |
+| [skincare.json](skincare.json) | Skin Sense | `ss` | `claude/outer-layer-s1-b` | guest: Evelyn's recordings (`voice-evelyn/`) | AI voice `bf_isabella` |
+| [physics.json](physics.json) | Reality Rulebook | `rr` | `claude/physics-s2` | tts: AI voice `af_bella` at speed 0.85 | none needed |
+| [whatif.json](whatif.json) | Possibility Lab | `pl` | `claude/whatif-s2` | owner's recordings (`voice-owner/`) | AI voice `am_puck` |
+| [space.json](space.json) | One More Orbit | `oo` | `claude/space-s2` | owner's recordings (`voice-owner/`, none received yet) | AI voice `am_michael` |
 
 Body Backstage is archived and has no identity file.
 
@@ -25,7 +25,7 @@ Body Backstage is archived and has no identity file.
 | `identity.look`, `lighting`, `camera`, `materials` | The look in words, as built today | `bible.md`, `theme.json` `scene`, the `set/` module headers |
 | `identity.signatureDevices` | Recurring devices that make a frame recognisable | `theme.json` `motif`, `bible.md` |
 | `seasonLooks.s<N>` | A season's look on top of the base identity. `palette` holds only the tokens that change. `status` is `approved` or `pending look gate` | the owner's dated decisions in [SEASON-FORMAT.md](../../SEASON-FORMAT.md), the season's script or art notes |
-| `voice` | `kind` is `tts`, `owner` or `guest`. `id` is the Kokoro voice name for `tts`, or the recordings folder inside the channel folder for `owner` and `guest`. `wpm` is the reading pace used to time recording scripts | `make_recording_script.py`, the channel's `vo/lines.json` |
+| `voice` | `kind` is `tts`, `owner` or `guest`. `id` is the voice name passed to `kits/cinema/voice/tts.py --voice` for `tts`, or the recordings folder inside the channel folder for `owner` and `guest`. `wpm` is the reading pace used to time recording scripts | `make_recording_script.py`, the channel's `vo/lines.json` |
 | `sound` | Score preset, foley, loudness target and sound rules | `kits/cinema/studio/vibes/*.json`, `theme.json` `motif.sound`, `kits/cinema/film/qa.py` |
 | `formats.<kind>` | One entry per format the channel makes: `short`, `premium`, `part`, `long`. A missing kind means the channel does not make that format | [SEASON-FORMAT.md](../../SEASON-FORMAT.md), `kits/cinema/film/render.mjs` (`TIERS`) |
 | `packaging` | The channel's title-and-thumbnail DNA and its packaging accent | [PACKAGING.md](../../PACKAGING.md), [STUDIO-STYLE.md](../../STUDIO-STYLE.md) |

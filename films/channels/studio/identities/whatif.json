@@ -100,7 +100,7 @@
     "One text element per idea (declutter.py); at most two text blocks besides the series line, badges and disclaimers.",
     "python3 -I kits/cinema/sci/contrast.py whatif reports 0 fails.",
     "Compelling pass: seven lenses, each at least 4.",
-    "Owner's voice from Season 3, used as recorded: cut by word alignment, keep the last take, never re-voice a recording. AI stand-in until a recording arrives: Kokoro am_puck, labelled as AI.",
+    "Owner's voice from Season 3, used as recorded: cut by word alignment, keep the last take, never re-voice a recording. AI stand-in until a recording arrives: voice am_puck (kits/cinema/voice/tts.py), labelled as AI.",
     "A clone of the owner's own voice is allowed only with his recorded consent and an AI label (owner's request, 11 Nov 2026; newer than voice-owner/README.md's 'never clone'). No tool for it is in the repo yet.",
     "A part shorter than 61 s gets real add-on narration from calc.py facts, never padding.",
     "One Chromium render job per machine."

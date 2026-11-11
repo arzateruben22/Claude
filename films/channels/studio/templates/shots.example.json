@@ -1,0 +1,449 @@
+{
+  "version": 1,
+  "episode": "ss-s3e01",
+  "journey": "One unbroken camera path with no cut: low over the skin, down through the surface at the base of a hair, along a nerve, up to the fine vessels, down to the muscle, back up past the hair's small muscle, and out to the first frame.",
+  "continuity": [
+    "Light: one soft key from upper left above the skin. Under the surface the light comes down through the skin, then up from the glowing muscle. It never jumps sides.",
+    "One skin tone, deep, in every layer and every shot. Never a face.",
+    "Teal #3FBFAE only on nerve signals. No red, rose or gold anywhere. Ground #0B1513.",
+    "Down is deeper: once the camera is inside, the surface stays toward the top of the frame.",
+    "The camera never moves fast enough to streak the tissue with the kit finish, or to judder with the plain one.",
+    "Text: the captions, plus the one word 'heat' in S06. Nothing else.",
+    "Asset paths are relative to the episode folder on the channel branch (films/channels/skincare/ep13/)."
+  ],
+  "shots": [
+    {
+      "id": "S01",
+      "beat": "hook",
+      "purpose": "Start on a feeling the viewer knows: cool air on skin. By the last frame the hairs have risen and the viewer wants to know what happened underneath.",
+      "seconds": [
+        0.0,
+        4.5
+      ],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "keyed-flight",
+        "from": "Low and close over the skin in macro, looking along the surface. Fine hairs lie flat across the lower third; the skin's horizon sits about one third up the frame.",
+        "to": "The same view, drifted forward a little and tilted a few degrees down toward the base of the nearest hair.",
+        "lens": "Field of view about 30 degrees (the Season 2 base camera in set/w3d.js). Shallow focus on the nearest hair; the far skin is soft.",
+        "focus": "The nearest hair shaft. No pull.",
+        "speed": "A slow drift: the frame travels less than a tenth of its width over the shot."
+      },
+      "subject": "The nearest fine hair and the skin around its base.",
+      "motion": "The hairs lie flat and still through 'Feel that?'. On 'A shiver' they rise one after another in a slow wave that travels away from the camera, a small bump lifting under each. A few dust motes drift in the air.",
+      "lighting": "Night look, to build: one soft key from upper left, as the look-test brief asks. The skin glows softly from within (emissive voxels plus bloom) and a warm rim shows where skin meets the dark. No hard shadows.",
+      "environment": "Dark green-black ground #0B1513 above and beyond the skin. Slow particles. Nothing else in frame.",
+      "materials": "Skin as soft, slightly translucent voxels in the deep tone. Starting point: set/studio.js skinMaterial (sheen, clearcoat, attenuation colour), which approximates subsurface scattering. Hairs: thin tubes (set/w3d.js makeTube) with set/studio.js strandMaterial.",
+      "principle": "Cold air on the skin makes body hairs stand up: goosebumps. The reason comes in S08.",
+      "startState": "Frame 0 is already composed: flat hairs, calm glow, the camera already drifting. It is the poster and the loop point for S09.",
+      "endState": "Every hair in view is upright with a small bump at its base. The camera looks slightly down at the base of the nearest hair.",
+      "transitionIn": "open: frame 0 is the poster and the loop point",
+      "transitionOut": "through-the-surface: the camera keeps tilting down and sinks into the skin at the base of the nearest hair",
+      "narration": [
+        "vo01: Feel that? … A shiver."
+      ],
+      "sound": "Room tone and a very low warm drone from frame 0. Soft air under 'Feel that?'. A faint brushing as the hairs rise. No hit on the rise.",
+      "assets": [
+        "../voice-evelyn/evelyn-s3-full.m4a",
+        "../set/w3d.js",
+        "../set/studio.js",
+        "../s3-looktest/BRIEF.md"
+      ],
+      "claims": [
+        "c7"
+      ],
+      "qa": [
+        "Frame 0 works as a poster and matches the last frame of S09.",
+        "Skin surface only: no face, nothing that identifies a person.",
+        "The first hair starts to rise within 3 frames of the start of 'A shiver'.",
+        "Every voxel of skin is the one deep tone.",
+        "The caption plate sits inside the safe box and reads at 4.5:1 or better over the glow."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S02",
+      "beat": "sense",
+      "purpose": "Take the viewer under the skin in one unbroken move, so that everything after it is felt as 'inside you'.",
+      "seconds": [
+        4.5,
+        9.0
+      ],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "keyed-flight",
+        "from": "Just above the surface, looking down at the base of the nearest hair.",
+        "to": "Just below the surface layer, looking level along it. The underside of the surface is now the ceiling, and fine nerve endings reach down into frame from it.",
+        "lens": "Field of view about 30 degrees, opening to about 36 while the camera passes through so the layers read, then back to 30.",
+        "focus": "Moves from the hair base to the nearest nerve ending as the camera clears the surface layer.",
+        "speed": "A constant, slow sink. No acceleration."
+      },
+      "subject": "The surface layer as the camera passes through it, then the first nerve ending.",
+      "motion": "The layers pass the lens as translucent slabs: a lighter band on top, denser tissue below. As the cool arrives ('feel the air cool') the nerve endings nearest the surface brighten faintly.",
+      "lighting": "The key becomes a soft glow coming down through the surface. Built with an emissive ceiling and additive glow sprites (set/w3d.js mkGlow): the engine has no ray-traced or path-traced light.",
+      "environment": "Inside the upper skin: stacked voxel layers fading into dark green-black depth. The slow particles continue.",
+      "materials": "Translucent voxels. Real transmission (MeshPhysicalMaterial) renders correctly but cost about 1.6 s a frame against 0.8 to 1.2 s in the capability test, so use opacity plus emissive unless stills show the difference. Nerve endings: thin tubes with a faint ivory glow, not teal yet.",
+      "principle": "The skin holds nerve endings that sense temperature, close to the surface.",
+      "startState": "As S01 ends: looking down at the hair base, hairs upright.",
+      "endState": "Under the surface, level view. One nerve ending is sharp in the left third; its fibre leads away into the dark to the right.",
+      "transitionIn": "through-the-surface: continues S01's tilt and sink, no cut",
+      "transitionOut": "motivated push: the camera starts to follow the fibre as the signal starts",
+      "narration": [
+        "vo02 (first half): Tiny sensors in your skin feel the air cool…"
+      ],
+      "sound": "The air closes down to a soft, muffled hum as the camera goes under. The drone does not change. No whoosh.",
+      "assets": [
+        "../voice-evelyn/evelyn-s3-full.m4a",
+        "../set/w3d.js",
+        "../set/studio.js"
+      ],
+      "claims": [
+        "c1"
+      ],
+      "qa": [
+        "No cut: tissue stays in frame through the whole pass.",
+        "No frame is fully dark or one flat colour for more than 6 frames.",
+        "No whoosh and no loudness jump in the mix across the pass.",
+        "The flash check passes (at most 3 a second).",
+        "The lighter band reads on top and the denser tissue below."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S03",
+      "beat": "answer",
+      "purpose": "Show the message leaving for the brain and the answer coming back as two soft steps, so the next two shots read as step one and step two.",
+      "seconds": [
+        9.0,
+        18.5
+      ],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "keyed-flight",
+        "from": "Level, beside the nerve ending in the left third.",
+        "to": "A short way along the fibre to the right, holding, with the fibre running diagonally into the dark upper right.",
+        "lens": "Field of view about 30 degrees.",
+        "focus": "Follows the teal pulse. With the kit finish, kits/cinema/keys.js focusTrack follows a live target; in set/w3d.js the focus is the distance to the look target.",
+        "speed": "Follows for about 2 s, then holds."
+      },
+      "subject": "One teal pulse on the nerve fibre.",
+      "motion": "On 'let your brain know' a soft teal pulse starts at the nerve ending and travels away along the fibre into the dark. The camera follows a little, then holds as it fades. On 'two soft steps' two fainter teal pulses come back down a neighbouring fibre, one after the other, and part: the first turns up toward the fine vessels, the second sinks toward the muscle below.",
+      "lighting": "The tissue's inner glow only. The pulse is the brightest thing in frame, and only the pulse blooms.",
+      "environment": "The same layer, deeper into the dark along the fibre.",
+      "materials": "Fibres: thin tubes. Pulse: a teal #3FBFAE emissive segment with a glow sprite. Teal appears here for the first time.",
+      "principle": "The skin's temperature sensors send a nerve signal to the brain, and the brain sends signals back out to the body. Drawing the answer on a neighbouring fibre is a simplification.",
+      "startState": "As S02 ends.",
+      "endState": "The two returning pulses have parted: one glows faintly upward toward the fine vessels near the surface, one has left the bottom of the frame. The camera holds.",
+      "transitionIn": "motivated push: follows the first pulse along the fibre",
+      "transitionOut": "motivated push: the camera follows the upper pulse toward the vessels",
+      "narration": [
+        "vo02 (second half): …and quietly let your brain know.",
+        "vo03: Your brain answers in two soft steps."
+      ],
+      "sound": "A very soft tonal swell with a slow fade-in as the pulse leaves, and two softer ones for the two answers. No attack, no ping. Music stays low.",
+      "assets": [
+        "../voice-evelyn/evelyn-s3-full.m4a",
+        "../set/w3d.js",
+        "../set/studio.js"
+      ],
+      "claims": [
+        "c1"
+      ],
+      "qa": [
+        "Teal appears only on the pulses.",
+        "The pulse is the brightest thing in frame while it travels.",
+        "The two returning pulses can be counted, and each starts within 3 frames of its word.",
+        "The tissue never streaks or judders while the camera follows.",
+        "The reviewer accepts the out-and-back picture as a fair simplification."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S04",
+      "beat": "vessels",
+      "purpose": "Make 'narrow' visible: the small vessels near the surface tighten and the warmth draws inward.",
+      "seconds": [
+        18.5,
+        29.5
+      ],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "keyed-flight",
+        "from": "Rising a little behind the upper pulse, looking up and across at a net of fine vessel loops just under the surface.",
+        "to": "Close on one loop, seen from the side: the surface above it at the top of the frame, deeper tissue and a wider vessel below.",
+        "lens": "Field of view about 30 degrees. Focus on the nearest loop; the wider vessel below is soft but readable.",
+        "speed": "Slow rise for about 3 s, then nearly still."
+      },
+      "subject": "One fine vessel loop near the surface.",
+      "motion": "The teal pulse reaches the loop and fades into its wall. On 'narrow' the loop slowly tightens to a thinner tube. On 'Warm blood stays deeper inside you' the glow in the loop dims while the wider vessel lower in frame brightens a little.",
+      "lighting": "The vessels' inner glow carries the shot: brighter means warmer. The surface above stays dimmer by contrast. No blue tint for cold: teal is the only accent.",
+      "environment": "Just under the surface: the underside of the skin above, the net of loops, darker tissue below.",
+      "materials": "Vessels: translucent tubes in a deeper shade of the skin tone, lit from inside. No red. set/studio.js fluidMaterial is the nearest existing material for what moves inside them.",
+      "principle": "In the cold, small blood vessels near the skin's surface narrow. Less warm blood flows near the surface, so less heat is lost and more stays deeper in the body.",
+      "startState": "As S03 ends, the camera beginning to rise with the upper pulse.",
+      "endState": "The loop is thin and dim. The deeper vessel is the warmest thing in frame.",
+      "transitionIn": "motivated push: follows the upper pulse to the vessels",
+      "transitionOut": "motivated push: the camera tips down and follows the warmth deeper, after the second pulse",
+      "narration": [
+        "vo04: First, the little blood vessels near your skin narrow. Warm blood stays deeper inside you."
+      ],
+      "sound": "The low warm hum thins slightly as the loop narrows, then settles lower. No pitch-drop effect.",
+      "assets": [
+        "../voice-evelyn/evelyn-s3-full.m4a",
+        "../set/w3d.js",
+        "../set/studio.js"
+      ],
+      "claims": [
+        "c2",
+        "c3"
+      ],
+      "qa": [
+        "The narrowing reads with the sound off.",
+        "No red, rose or gold: warmth is brightness in the skin tone.",
+        "No risk or damage word on screen.",
+        "The loop starts to tighten within 3 frames of 'narrow'.",
+        "The loop stays inside the safe box."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S05",
+      "beat": "tremble",
+      "purpose": "Arrive at the muscle and watch it start to tremble by itself.",
+      "seconds": [
+        29.5,
+        42.0
+      ],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "keyed-flight",
+        "from": "Tipping down from the vessels and sinking through the pale layer under the skin.",
+        "to": "Level with a bundle of long muscle fibres that run across the frame, close enough that three or four fibres fill the middle third. Still.",
+        "lens": "Field of view about 30 degrees. Focus on the nearest fibre.",
+        "speed": "Slow sink for about 5 s, settling to a stop before 'tremble'."
+      },
+      "subject": "The nearest muscle fibre.",
+      "motion": "The second teal pulse arrives along a nerve from the upper right and touches the bundle on 'tremble'. The fibres begin short, quick tightenings, slightly out of step with each other, 'over and over'. The movement is small: a tremble, not a shake.",
+      "lighting": "Dim: the muscle only catches the glow from the tissue above. It gains its own glow in S06.",
+      "environment": "Below the skin: a pale, softly lit layer overhead, muscle fibres as long bundles receding into the dark.",
+      "materials": "Muscle fibres: long voxel bundles in a darker shade of the skin tone. The pale layer above: soft warm-ivory voxels (Season 2's section in set/w3d.js used butter yellow; the night look allows no gold).",
+      "principle": "If the body is still cold, muscles begin to shiver: fast, repeated tightenings that are not under conscious control.",
+      "startState": "As S04 ends, the camera tipping down.",
+      "endState": "The fibres tremble steadily, the teal pulse is gone, the camera is level and still.",
+      "transitionIn": "motivated push: follows the second pulse down to the muscle",
+      "transitionOut": "hold: the camera stays and the fibres change",
+      "narration": [
+        "vo05: Then, if you're still cold… your muscles begin to tremble. Not on purpose. Tiny, quick tightenings, over and over."
+      ],
+      "sound": "A soft, low flutter under the voice, like fabric brushed quickly, at a steady level. It follows the tremble and never becomes a rattle. No hit when the pulse arrives.",
+      "assets": [
+        "../voice-evelyn/evelyn-s3-full.m4a",
+        "../set/w3d.js",
+        "../set/studio.js"
+      ],
+      "claims": [
+        "c4"
+      ],
+      "qa": [
+        "The tremble is small: no fibre moves further than its own width.",
+        "The flash check passes: the tremble must not strobe.",
+        "The fibres stay readable with motion blur on, and do not shimmer with the plain finish.",
+        "The tremble starts within 3 frames of 'tremble'.",
+        "No hit or sting when the pulse arrives."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S06",
+      "beat": "heat",
+      "purpose": "The payoff: trembling makes heat. The viewer sees warmth being made and feels it spread.",
+      "seconds": [
+        42.0,
+        56.0
+      ],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "keyed-flight",
+        "from": "Level with the trembling fibres, still.",
+        "to": "Pushed in very slowly until one fibre and its glow fill the middle of the frame.",
+        "lens": "Field of view 30 degrees, closing to about 26. Shallow focus on the nearest fibre.",
+        "speed": "The slowest move in the film: one push over the whole 14 s."
+      },
+      "subject": "The warm glow growing inside the nearest fibre.",
+      "motion": "From 'They make heat', each tightening leaves a little more warm glow in the fibre. The glow builds and spreads into the tissue around it. The word 'heat' appears once, small, on the word, and stays about 3 s. After 'at rest' the picture holds for about 4 s with no words: the glow breathes with the tremble.",
+      "lighting": "The fibres become the light source: an emissive glow in the skin tone, with bloom. It is the brightest moment of the film, and it builds over seconds so it never flashes.",
+      "environment": "The muscle bundle, with the pale layer just visible at the top of the frame.",
+      "materials": "An emissive ramp on the fibre voxels. Glow sprites and bloom carry the spread; set/studio.js createShaft gives additive shafts if stills want them. This approximates volumetric light; the engine has no true volumetrics.",
+      "principle": "Shivering muscles do no outside work, so the energy they use is released as heat. A strong shiver makes several times more heat than the body makes at rest.",
+      "startState": "As S05 ends.",
+      "endState": "The fibres glow warmly and steadily. Warmth fills the lower two thirds of the frame. The camera is still.",
+      "transitionIn": "hold: the same camera; the glow begins",
+      "transitionOut": "motivated push: the camera begins to rise with the spreading warmth",
+      "narration": [
+        "vo06: They do just one thing. They make heat. A strong shiver makes several times more than your body makes at rest."
+      ],
+      "onScreenText": "heat",
+      "sound": "The warm hum swells slowly over the whole shot, by a few decibels and no more; the flutter softens into it. During the picture-only hold: hum and room tone only.",
+      "assets": [
+        "../voice-evelyn/evelyn-s3-full.m4a",
+        "../set/w3d.js",
+        "../set/studio.js"
+      ],
+      "claims": [
+        "c5",
+        "c6"
+      ],
+      "qa": [
+        "The one on-screen word is 'heat', in the ivory serif, once, inside the safe box.",
+        "No other text besides the captions.",
+        "The glow builds over at least 3 s and the flash check passes.",
+        "'Several times' is not turned into a number anywhere on screen.",
+        "The picture-only hold after the line is at least 3 s."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S07",
+      "beat": "cta",
+      "purpose": "Give the like/follow line a calm picture that keeps moving: the warmth spreads upward and the camera starts home.",
+      "seconds": [
+        56.0,
+        61.5
+      ],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "keyed-flight",
+        "from": "Level with the glowing fibres.",
+        "to": "Rising slowly through the pale layer toward the underside of the skin, looking slightly up.",
+        "lens": "Field of view about 30 degrees. Focus on the leading edge of the warm glow.",
+        "speed": "A slow, even rise."
+      },
+      "subject": "The leading edge of the warmth moving up through the tissue.",
+      "motion": "The glow spreads upward ahead of the camera and softly lights layer after layer. Nothing new appears.",
+      "lighting": "The warm glow from below is now the key. The surface above is a dim ceiling.",
+      "environment": "The pale layer and the lower skin, seen from below.",
+      "materials": "As S05 and S06. No new material.",
+      "principle": "No new fact. It is the warmth made in S06, drawn spreading through the tissue: an illustration, not a measured path.",
+      "startState": "As S06 ends.",
+      "endState": "The camera is just under the skin. The base of a hair follicle enters the frame from the top, with a small muscle beside it.",
+      "transitionIn": "motivated push: rises with the warmth",
+      "transitionOut": "motivated push: the rise continues and finds the hair's small muscle",
+      "narration": [
+        "vo07 (like/follow, recording script Part C line 1): If you're feeling a little calmer, tap like and follow."
+      ],
+      "sound": "The same level as the lesson. No like-button sound and no chime. The YouTube file uses the 'subscribe' reading (Part C line 2).",
+      "assets": [
+        "../voice-evelyn/evelyn-s3-full.m4a",
+        "../set/w3d.js",
+        "../set/studio.js",
+        "../../CTA.md"
+      ],
+      "claims": [
+        "c5"
+      ],
+      "qa": [
+        "The line starts no earlier than 70% of the runtime and ends by 85%.",
+        "The caption shows the line like any other. No button graphic, no arrow.",
+        "No new fact appears in the picture or the caption.",
+        "The master carries the 'follow' reading and the YouTube file the 'subscribe' reading.",
+        "The line is as loud as the lesson lines, within 1 LU."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S08",
+      "beat": "goosebumps",
+      "purpose": "Answer the first picture: why the hairs rose. The same kind of signal pulls a tiny muscle, and the hair stands up.",
+      "seconds": [
+        61.5,
+        70.5
+      ],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "keyed-flight",
+        "from": "Just under the skin, looking up at a hair follicle from the side. Its small muscle runs from the follicle up to the underside of the surface.",
+        "to": "Rising alongside the hair shaft as it tilts upright, the surface just above.",
+        "lens": "Field of view about 30 degrees.",
+        "focus": "On the small muscle, then moving to the hair shaft as it lifts.",
+        "speed": "A slow rise that never stops."
+      },
+      "subject": "The tiny muscle attached to the hair follicle.",
+      "motion": "On 'the same signal' a teal pulse arrives along a fine nerve and touches the small muscle. On 'lifts it upright' the muscle shortens and the hair tilts from slanted to upright; the skin above its base rises into a small bump.",
+      "lighting": "The warm glow from below fades. The soft key from above returns through the surface.",
+      "environment": "The upper skin again, from below. The follicle is a slanted tunnel through the voxel layers.",
+      "materials": "Follicle: a darker sheath of voxels around the hair tube. The small muscle: a short band in the muscle shade from S05.",
+      "principle": "Each body hair has a tiny muscle attached to its follicle. A nerve signal makes it tighten, which pulls the hair upright and raises a goosebump.",
+      "startState": "As S07 ends.",
+      "endState": "The hair is upright and the bump has formed. The camera is at the underside of the surface beside the shaft, about to pass through.",
+      "transitionIn": "motivated push: the rise from S07 continues",
+      "transitionOut": "through-the-surface: the camera rises out through the skin beside the hair",
+      "narration": [
+        "vo08: And goosebumps? The same signal reaches the tiny muscle beside each hair… and lifts it upright."
+      ],
+      "sound": "A soft brush as the hair lifts, matching S01's. The warm hum fades back to room tone and drone.",
+      "assets": [
+        "../voice-evelyn/evelyn-s3-full.m4a",
+        "../set/w3d.js",
+        "../set/studio.js"
+      ],
+      "claims": [
+        "c7"
+      ],
+      "qa": [
+        "A healthy hair follicle, seen from inside the skin. Never a face.",
+        "The hair starts to lift within 3 frames of 'upright'.",
+        "The bump matches the bumps seen in S01.",
+        "Teal only on the nerve pulse.",
+        "The reviewer checks the wording 'the same signal' against the source."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S09",
+      "beat": "close",
+      "purpose": "Return to the first frame with new eyes: the same skin, now understood. End soft, and loop.",
+      "seconds": [
+        70.5,
+        80.0
+      ],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "keyed-flight",
+        "from": "Rising out through the surface beside the upright hair.",
+        "to": "Exactly the frame 0 view: low over the skin, hairs across the lower third.",
+        "lens": "Back to frame 0's field of view, about 30 degrees. Focus on the nearest hair.",
+        "speed": "Slows to frame 0's drift by the last line."
+      },
+      "subject": "The field of upright hairs, then the nearest hair.",
+      "motion": "The camera settles into frame 0's position. On 'without asking you' the hairs slowly lie back down, the reverse of S01's wave, and the bumps ease flat, so the last frame equals frame 0.",
+      "lighting": "Frame 0's light: the soft key from upper left, the inner glow, the warm rim at the skin's edge.",
+      "environment": "As S01.",
+      "materials": "As S01.",
+      "principle": "All of it is automatic. Skin, nerves, vessels and muscle answer the cold without a conscious decision.",
+      "startState": "As S08 ends, passing up through the surface.",
+      "endState": "Identical to frame 0, the loop point, held for at least 1.5 s after the last word.",
+      "transitionIn": "through-the-surface: rises out of the skin, no cut",
+      "transitionOut": "loop: the last frame is frame 0",
+      "narration": [
+        "vo09: One cool breeze. Skin, nerves, vessels and muscle, all answering together. All… without asking you."
+      ],
+      "sound": "The slowest, softest line. Drone and room tone, with S01's soft air returning very low. The music tail is shaped for the loop back to frame 0.",
+      "assets": [
+        "../voice-evelyn/evelyn-s3-full.m4a",
+        "../set/w3d.js",
+        "../set/studio.js"
+      ],
+      "claims": [
+        "c8"
+      ],
+      "qa": [
+        "The last frame and frame 0 show no visible difference when flipped back and forth.",
+        "The hold after the last word is at least 1.5 s.",
+        "Captions are on for every line: small ivory serif on a dark rounded plate.",
+        "'Education, not medical advice' appears where the channel puts it.",
+        "The whole episode has no cut: nine shots, one camera path."
+      ],
+      "status": "planned"
+    }
+  ]
+}

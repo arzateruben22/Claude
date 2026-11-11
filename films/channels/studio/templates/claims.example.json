@@ -1,0 +1,90 @@
+[
+  {
+    "id": "c1",
+    "sentence": "Tiny sensors in your skin feel the air cool… and quietly let your brain know.",
+    "claim": "Temperature-sensing nerve endings in the skin respond to cooling and send signals to the brain, which coordinates the body's response to cold.",
+    "source_url": "",
+    "source_title": "TODO: find and open a source",
+    "accessed": "",
+    "verified_via": "",
+    "status": "TODO open link",
+    "note": "Example ledger for the studio templates: it restates the narration. No source has been opened."
+  },
+  {
+    "id": "c2",
+    "sentence": "First, the little blood vessels near your skin narrow.",
+    "claim": "The first response to cold is a narrowing of small blood vessels in the skin, and it comes before shivering.",
+    "source_url": "",
+    "source_title": "TODO: find and open a source",
+    "accessed": "",
+    "verified_via": "",
+    "status": "TODO open link",
+    "note": "Example ledger for the studio templates: it restates the narration. No source has been opened."
+  },
+  {
+    "id": "c3",
+    "sentence": "Warm blood stays deeper inside you.",
+    "claim": "Narrowed skin vessels carry less blood near the surface, so less heat is lost through the skin and more warm blood stays in the body's core.",
+    "source_url": "",
+    "source_title": "TODO: find and open a source",
+    "accessed": "",
+    "verified_via": "",
+    "status": "TODO open link",
+    "note": "Example ledger for the studio templates: it restates the narration. No source has been opened."
+  },
+  {
+    "id": "c4",
+    "sentence": "Then, if you're still cold… your muscles begin to tremble. Not on purpose.",
+    "claim": "If cooling continues, skeletal muscles start to shiver: rapid, repeated contractions that are not under conscious control.",
+    "source_url": "",
+    "source_title": "TODO: find and open a source",
+    "accessed": "",
+    "verified_via": "",
+    "status": "TODO open link",
+    "note": "Example ledger for the studio templates: it restates the narration. No source has been opened."
+  },
+  {
+    "id": "c5",
+    "sentence": "They make heat.",
+    "claim": "Shivering contractions do no outside work, so the energy they use is released as heat.",
+    "source_url": "",
+    "source_title": "TODO: find and open a source",
+    "accessed": "",
+    "verified_via": "",
+    "status": "TODO open link",
+    "note": "Example ledger for the studio templates: it restates the narration. No source has been opened."
+  },
+  {
+    "id": "c6",
+    "sentence": "A strong shiver makes several times more than your body makes at rest.",
+    "claim": "Strong shivering raises the body's heat production to several times its resting level.",
+    "source_url": "",
+    "source_title": "TODO: find and open a source",
+    "accessed": "",
+    "verified_via": "",
+    "status": "TODO open link",
+    "note": "Example ledger for the studio templates: it restates the narration. No source has been opened. The multiple must come from the source; the script hedges with 'several', and no number goes on screen."
+  },
+  {
+    "id": "c7",
+    "sentence": "The same signal reaches the tiny muscle beside each hair… and lifts it upright.",
+    "claim": "Each body hair has a small muscle attached to its follicle. In the cold, nerve signals make it contract, which pulls the hair upright and raises a goosebump.",
+    "source_url": "",
+    "source_title": "TODO: find and open a source",
+    "accessed": "",
+    "verified_via": "",
+    "status": "TODO open link",
+    "note": "Example ledger for the studio templates: it restates the narration. No source has been opened. Check that 'the same signal' is fair wording for the source."
+  },
+  {
+    "id": "c8",
+    "sentence": "All… without asking you.",
+    "claim": "These responses to cold are automatic: the nervous system drives them without a conscious decision.",
+    "source_url": "",
+    "source_title": "TODO: find and open a source",
+    "accessed": "",
+    "verified_via": "",
+    "status": "TODO open link",
+    "note": "Example ledger for the studio templates: it restates the narration. No source has been opened."
+  }
+]

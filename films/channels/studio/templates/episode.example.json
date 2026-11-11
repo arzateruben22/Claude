@@ -1,0 +1,253 @@
+{
+  "version": 1,
+  "id": "ss-s3e01",
+  "channel": "skincare",
+  "season": 3,
+  "number": 1,
+  "folder": "ep13",
+  "title": "What One Shiver Does Inside You",
+  "topic": "What happens under your skin in the few seconds of one shiver",
+  "question": "What does one shiver do inside you?",
+  "hook": "Feel that? A shiver. Frame 0: low over skin in macro, fine hairs lying flat; on 'A shiver' they rise in a slow wave.",
+  "payoff": "The trembling has one job: it makes heat. Then the first picture is answered: the same signal lifts each hair. All of it happens without asking you.",
+  "format": {
+    "kind": "premium",
+    "aspect": "9:16",
+    "size": [
+      1080,
+      1920
+    ],
+    "nativeSize": [
+      1080,
+      1920
+    ],
+    "fps": 30,
+    "durationS": [
+      70,
+      90
+    ],
+    "targetS": 80,
+    "deliveries": [
+      {
+        "name": "master (TikTok, Instagram)",
+        "size": [
+          1080,
+          1920
+        ],
+        "native": true,
+        "how": "kits/cinema/film/render.mjs, final tier"
+      },
+      {
+        "name": "YouTube file",
+        "size": [
+          1440,
+          2560
+        ],
+        "native": false,
+        "how": "Lanczos upscale of the master by kits/cinema/film/youtube1440.py. Label it '1440 upscale', never native."
+      }
+    ],
+    "notes": "A Skin Sense Season 3 lesson: 70 to 90 s, landing at about 75 to 80 s (films/channels/SEASON-FORMAT.md). One 3-D world, one camera path, almost no on-screen text."
+  },
+  "voice": {
+    "kind": "guest",
+    "id": "voice-evelyn",
+    "name": "Evelyn",
+    "tone": "ASMR: soft-spoken or a light whisper, close to the mic, slow, steady volume, every word clear. The last line is the slowest and softest.",
+    "wpm": 115,
+    "talkShare": 0.8,
+    "synthetic": false,
+    "standIn": "The channel's soft synthetic stand-in voice, for look tests and drafts only, always labelled as AI (see the identity file's rules).",
+    "source": "voice-evelyn/evelyn-s3-full.m4a on the channel branch: one 9:02 session; Episode 1's lines are cut from it and polished with kits/cinema/voice/polish.py --style whisper. Her real recording only, never an AI copy.",
+    "consent": "TODO (owner): Evelyn's written OK for the voice and the look, and her choice about being credited by name, are not on record yet."
+  },
+  "look": {
+    "season": "s3",
+    "summary": "Night look: soft, slightly translucent voxel skin layers that glow from within, on a dark green-black ground. Teal is the only accent, used for nerve signals. Captions in a small ivory serif on a dark rounded plate.",
+    "palette": {
+      "ground": "#0B1513",
+      "teal": "#3FBFAE",
+      "caption": "#F4EDE3"
+    },
+    "notes": "Skin tone for this episode: deep, as calibrated for Season 2 ep12 (three.skinHex in ep12/episode.json on the channel branch). Never a face. The look is the owner's 11 Nov 2026 decision in SEASON-FORMAT.md; the owner still has to confirm it over the ivory identity and approve one still and a 10 s clip.",
+    "status": "pending look gate"
+  },
+  "sound": {
+    "music": "Very low, slow music under the voice: a warm drone, no melody that pulls attention.",
+    "foley": "Gentle only: soft air, soft brushing, a low warm hum.",
+    "loudnessLufs": -14,
+    "truePeakDbtp": -1,
+    "rules": [
+      "No hits, stings, whooshes or sudden loudness changes. No like-button sound.",
+      "Use the recording's 10 s of room tone for noise reduction. Keep her breaths soft; do not cut them to silence.",
+      "Captions are always on.",
+      "Deliver at -14 LUFS: kits/cinema/film/qa.py passes -15 to -13 only."
+    ]
+  },
+  "story": {
+    "thread": "One cool breeze, followed from the skin's surface down to the muscle and back up, until the first picture explains itself.",
+    "beats": [
+      {
+        "id": "hook",
+        "purpose": "A feeling everyone knows, on a frame that is already composed.",
+        "seconds": [
+          0.0,
+          4.5
+        ],
+        "words": 4,
+        "lines": [
+          "vo01"
+        ]
+      },
+      {
+        "id": "sense",
+        "purpose": "Go under the surface: the skin feels the cool and tells the brain.",
+        "seconds": [
+          4.5,
+          11.5
+        ],
+        "words": 15,
+        "lines": [
+          "vo02"
+        ]
+      },
+      {
+        "id": "answer",
+        "purpose": "The open loop: the brain answers in two steps.",
+        "seconds": [
+          11.5,
+          18.5
+        ],
+        "words": 7,
+        "lines": [
+          "vo03"
+        ]
+      },
+      {
+        "id": "vessels",
+        "purpose": "Step one: the small vessels near the skin narrow.",
+        "seconds": [
+          18.5,
+          29.5
+        ],
+        "words": 15,
+        "lines": [
+          "vo04"
+        ]
+      },
+      {
+        "id": "tremble",
+        "purpose": "Step two: the muscles tremble on their own.",
+        "seconds": [
+          29.5,
+          42.0
+        ],
+        "words": 19,
+        "lines": [
+          "vo05"
+        ]
+      },
+      {
+        "id": "heat",
+        "purpose": "The payoff: trembling makes heat. One word on screen, then a picture-only hold.",
+        "seconds": [
+          42.0,
+          56.0
+        ],
+        "words": 21,
+        "lines": [
+          "vo06"
+        ]
+      },
+      {
+        "id": "cta",
+        "purpose": "The soft like/follow line, right after the payoff.",
+        "seconds": [
+          56.0,
+          61.5
+        ],
+        "words": 10,
+        "lines": [
+          "vo07"
+        ]
+      },
+      {
+        "id": "goosebumps",
+        "purpose": "The callback: why the hairs rose in the first shot.",
+        "seconds": [
+          61.5,
+          70.5
+        ],
+        "words": 16,
+        "lines": [
+          "vo08"
+        ]
+      },
+      {
+        "id": "close",
+        "purpose": "Back out to the first frame; the reframe; the loop.",
+        "seconds": [
+          70.5,
+          80.0
+        ],
+        "words": 15,
+        "lines": [
+          "vo09"
+        ]
+      }
+    ]
+  },
+  "files": {
+    "script": "script.md",
+    "claims": "claims.json",
+    "shots": "shots.json",
+    "packaging": "out/packaging.json",
+    "recordingScript": "films/channels/voice-scripts/skin-sense-season-3-recording-script.md"
+  },
+  "cta": {
+    "line": "If you're feeling a little calmer, tap like and follow.",
+    "at": "Right after the payoff ('They make heat'), while the camera starts back up. Never before it.",
+    "seconds": [
+      56.5,
+      60.5
+    ],
+    "section": "Skin Sense (ASMR, Season 3 on)",
+    "variants": {
+      "follow": "If you're feeling a little calmer, tap like and follow.",
+      "subscribe": "If you're feeling a little calmer, tap like and subscribe."
+    }
+  },
+  "status": {
+    "stage": "storyboard",
+    "lookGate": "pending",
+    "sources": "open",
+    "title": "working",
+    "recording": "received",
+    "notes": "The narration is recorded. Nothing is built: the Season 3 look test is in progress."
+  },
+  "disclosures": {
+    "aiVoice": false,
+    "aiVisuals": false,
+    "labels": [
+      "Education, not medical advice",
+      "Illustration: 3-D animation made in code"
+    ]
+  },
+  "assumptions": [
+    "Folder ep13 assumes the six Season 3 lessons take ep13 to ep18 on the channel branch, after Season 2's ep07 to ep12.",
+    "This lesson is number 1 because it is first in the recording script. The owner has not fixed the posting order.",
+    "Every time window is a plan: about 2.4 words a second inside a line and 1 to 2 s between lines. Only lines 1 and 2 have a measured length (about 2.1 s and 6.3 s in the look-test cut, s3-looktest/BRIEF.md). kits/cinema/voice/align.py on her recording replaces all of them.",
+    "Word budget: 80 s at the identity's 115 words a minute, with the voice speaking about 0.8 of the runtime, is about 123 words. The lesson has 122 (112 plus the 10-word like/follow line). talkShare 0.8 is this plan's choice, not a measurement.",
+    "Her whole session ran about 97 words a minute (873 script words in 9:02, with pauses, restarts and episode announcements), so the real windows will move once her lines are measured.",
+    "The like/follow line is planned at 4 s at her pace. CTA.md asks for about 2 to 3 s; the soft line has ten words.",
+    "Loudness is -14 LUFS because kits/cinema/film/qa.py passes -15 to -13 only. The look-test brief asked for about -16.",
+    "kits/cinema/film/qa.py's 60 to 75 s length gate fails an 80 s lesson until a per-format profile exists.",
+    "The night look is not built yet. The shots name what exists in the Season 2 code (set/w3d.js, set/studio.js) and mark the rest 'to build'.",
+    "The finish is the builder's call after stills: Season 2 rendered with --plain (depth of field, bloom and ACES in set/w3d.js, no motion blur); the kit finish adds motion blur but has no grain. The shots ask only for what both paths provide, and say so where they differ.",
+    "No AI-made image appears in the picture as planned (a 3-D world drawn in code), so disclosures.aiVisuals is false. It becomes true the moment a painted image is composited in.",
+    "The one on-screen word is 'heat'. SEASON-FORMAT.md allows one number or one word at the key moment; the owner may prefer none.",
+    "Claims c1 to c8 restate the narration. No source has been opened. The Skin Sense builder writes the real ledger, and a person opens every source."
+  ],
+  "created": "2026-11-11",
+  "generatedBy": "Written by hand as the worked example for films/channels/studio/schema/episode.schema.json. Narration: films/channels/voice-scripts/skin-sense-season-3-recording-script.md, Episode 1."
+}

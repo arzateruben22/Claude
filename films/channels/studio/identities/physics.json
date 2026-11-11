@@ -99,7 +99,7 @@
   },
   "rules": [
     "Every factual sentence carries a claims.json tag. A claim is OK only after a person opens the source; anything checked from a search excerpt stays OPEN.",
-    "Kokoro af_bella at speed 0.85 (ep12/vo/lines.json). Synthetic narration is labelled as AI on every film and post.",
+    "AI voice af_bella at speed 0.85 (kits/cinema/voice/tts.py; ep12/vo/lines.json). Synthetic narration is labelled as AI on every film and post.",
     "Every simplification is badged on screen.",
     "Hook: a question spoken and captioned by 2.0 s.",
     "Reading grade at most 7 and no sentence over 22 words (channel gate, review/clarity-review.md; the shared gate is grade 8).",

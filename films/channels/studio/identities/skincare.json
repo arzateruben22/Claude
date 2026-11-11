@@ -103,7 +103,7 @@
     "AI illustrations are disclosed: set film.json disclosures.aiVisuals to true.",
     "Look gate: the owner approves one still and a 10 s test clip before any Season 3 episode is built.",
     "Evelyn's real recordings only (voice-evelyn/). The owner gets her OK in writing and asks whether she wants credit; the studio never contacts her.",
-    "A soft AI voice (Kokoro bf_isabella) stands in for look tests and drafts only, labelled as AI. Finals wait for her recording.",
+    "A soft AI voice (bf_isabella, kits/cinema/voice/tts.py) stands in for look tests and drafts only, labelled as AI. Finals wait for her recording.",
     "Season 3: almost no on-screen text. One number or one word at the key moment, plus the captions.",
     "Season 3: teal #3FBFAE is the only accent.",
     "Honesty labels on every comparison, illustration, animal result and single study.",
