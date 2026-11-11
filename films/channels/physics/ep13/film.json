@@ -317,7 +317,10 @@
    "slot": "tl"
   }
  ],
- "captionY": 0.51,
+ "captionY": {
+  "9x16": 0.51,
+  "16x9": 0.77
+ },
  "title": {
   "series": "Reality Rulebook · Season 3 · Part 1 of 8",
   "title": "Watch a wing, slowed ten times"
@@ -331,9 +334,14 @@
    "id": "feeder",
    "file": "../lf01/art/owner/plates/plate-02-feeder-16x9.png",
    "file9": "../lf01/art/owner/plates/plate-02-feeder-16x9.png",
-   "push": 0.05,
+   "push": 0.35,
    "parallax": 0,
    "fade": 0.05,
+   "shift": {
+    "x": -0.0564,
+    "y": 0.0394,
+    "ppm": 1790.0
+   },
    "cam3": {
     "pos": [
      0,
@@ -349,6 +357,7 @@
    },
    "shift9": {
     "x": -0.0564,
+    "y": 0.0394,
     "ppm": 1790.0
    },
    "anchor": {
@@ -360,7 +369,7 @@
      ],
      "scale": 0.027,
      "yaw": -0.25,
-     "tilt": 0.5
+     "tilt": 0.87
     },
     "shadow": {
      "pos": [

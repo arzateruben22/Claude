@@ -259,10 +259,10 @@ PLATE02_9 = "../lf01/art/owner/plates/plate-02-feeder-9x16.png" if (HERE / "art/
 # plate-02: the window with the hanging feeder (ports at about x 770-895, y 378 px of 1672x941). A pinhole camera at the origin: 1790 px per meter at 1 m, so the dish (215 px) is 12 cm; the bird (about 10 cm) hovers left of the left port, beak at the port.
 _PX = 1790.0
 _w = lambda px, py, z=-1.0: [round((px - 836) / _PX * -z, 4), round(0.4 + (470.5 - py) / _PX * -z, 4), z]   # the camera sits 0.4 m up (a camera at the exact origin makes the finish's motion estimate NaN)
-_p02 = {"id": "feeder", "file": PLATE02, "file9": PLATE02_9, "push": 0.05, "parallax": 0, "fade": 0.05,
+_p02 = {"id": "feeder", "file": PLATE02, "file9": PLATE02_9, "push": 0.35, "parallax": 0, "fade": 0.05, "shift": {"x": round((735 - 836) / _PX, 4), "y": round((470.5 - 400) / _PX, 4), "ppm": _PX},   # a slow push from 1.0x to 1.35x, centred between the bird and the feeder
         "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},   # a hair of pitch: a camera looking exactly level makes the finish's motion probe NaN
-        "shift9": {"x": round((735 - 836) / _PX, 4), "ppm": _PX},   # 9:16: bird and feeder in the middle of the crop
-        "anchor": {"bird": {"tip": _w(768, 378), "scale": 0.027, "yaw": -0.25, "tilt": 0.5},   # the bill tip goes into the left port flower
+        "shift9": {"x": round((735 - 836) / _PX, 4), "y": round((470.5 - 400) / _PX, 4), "ppm": _PX},   # 9:16: bird and feeder in the middle of the crop
+        "anchor": {"bird": {"tip": _w(768, 378), "scale": 0.027, "yaw": -0.25, "tilt": 0.87},   # the bill tip goes into the left port flower
                    "shadow": {"pos": _w(790, 396, -1.002), "w": 0.07, "h": 0.026, "opacity": 0.4}}}
 # plate-03: the tap and the cobalt mug (Part 2). The mug's rim (full to the brim) is 415 px wide in the 1672 px picture: 0.0395 m of cup radius at 5240 px per code-metre, drawn at z = -0.31 (5774 px/m)
 PLATE03 = "../lf01/art/owner/plates/plate-03-tap-mug-16x9.png"; PLATE03C = "../lf01/art/owner/plates/plate-03-tap-mug-clean-16x9.png"
@@ -340,7 +340,7 @@ film = {
     "spine": SPINE, "spineAt": SPINE_AT, "factorKeys": KEYS, "ramp": RAMP, "labelKeys": LBL, "ev": EV, "cam": CAM,
     "calc": {"c": CALC["c"], "hz": {"hum": 50.0, "fly": 200.0, "mosq": 500.0}, "bubble_t": CALC["bubble"]["t_s"], "bullet": CALC["bullet"],
              "sound": 343.0, "leader": CALC["leader"], "light": CALC["light"]["m_per_ns"], "hair_m": CALC["hair"]["m"]},
-    "badges": BADGES, "captionY": CAPY,
+    "badges": BADGES, "captionY": ({"9x16": CAPY, "16x9": 0.77} if PART else CAPY),
     "title": ({"series": f"Reality Rulebook · Season 3 · Part {PART} of 8", "title": TITLES[PART - 1]} if PART else {"series": "Reality Rulebook · Season 3", "title": "How Much Would You Slow Time to Watch Light Move?"}),
     "disclosures": {"aiVoice": True},
     "drifts": ([[18.5, 21.1], [62.0, 64.4], [64.7, 67.7]] if PART == 4 else None),

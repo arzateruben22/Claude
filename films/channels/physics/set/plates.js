@@ -79,6 +79,8 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
     it.ok = true;
   })).catch(() => {});
   const active = (t) => { for (const it of items) if (it.ok && t >= it.p.t0 && t < it.p.t1) return it; return null; };
+  // where the picture is moved so its subject sits at the frame's centre (metres at 1 m, the camera aims the same way): 9:16 uses shift9 at once, a push-in ramps its shift with the push so the picture's edge never shows
+  const shiftAt = (it, t) => { const p = it.p, d = Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))), sh = nine && p.shift9 ? p.shift9 : p.shift; if (!sh) return { x: 0, y: 0, ppm: 1 }; const k = nine && p.shift9 ? 1 : d; return { x: sh.x * k, y: (sh.y || 0) * d, ppm: sh.ppm }; };
   const apply = (t) => {
     for (const it of items) { for (const im of it.imgs) im.style.display = "none"; if (it.swapImg) it.swapImg.style.display = "none"; }
     const it = active(t); if (!it) return false;
@@ -87,16 +89,16 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
     const swapped = it.swapImg && t >= it.p.swap.t;
     (swapped ? [it.swapImg] : it.imgs).forEach((im) => {
       const dep = +im.dataset.depth || 0, s = 1 + push * d * (p.cam3 ? 1 : 1 + 0.6 * dep), shift = par * (d - 0.5) * W * (1 + dep), over = p.over ?? (p.cam3 ? 1 : 1.04);
-      const cs = im.naturalWidth ? Math.max(W / im.naturalWidth, H / im.naturalHeight) : 1, sh9 = nine && p.shift9 ? -p.shift9.x * p.shift9.ppm * cs : 0;   // 9:16: the crop is moved so the subject sits at the centre (the camera yaws the same amount)
-      im.style.display = "block"; if (im.tagName === "IMG") im.style.objectPosition = `calc(50% + ${sh9.toFixed(2)}px) 50%`; im.style.opacity = String(Math.max(0, Math.min(1, a))); im.style.transform = `translate(${shift.toFixed(2)}px,0) scale(${(s * over).toFixed(5)})`;
+      const cs = im.naturalWidth ? Math.max(W / im.naturalWidth, H / im.naturalHeight) : 1, sf = shiftAt(it, t), sh9 = -sf.x * sf.ppm * cs, shy = sf.y * sf.ppm * cs;   // 9:16: the crop is moved so the subject sits at the centre (the camera yaws the same amount)
+      im.style.display = "block"; if (im.tagName === "IMG") im.style.objectPosition = `calc(50% + ${sh9.toFixed(2)}px) calc(50% + ${shy.toFixed(2)}px)`; im.style.opacity = String(Math.max(0, Math.min(1, a))); im.style.transform = `translate(${shift.toFixed(2)}px,0) scale(${(s * over).toFixed(5)})`;
     });
     return true;
   };
   const cam = (t) => { const it = active(t); return it && it.p.cam ? it.p.cam : null; };
   const zoom = (t) => { const it = active(t); if (!it) return 1; const p = it.p; return 1 + (p.push ?? 0.05) * Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))); };
-  const cam3 = (t) => { const it = active(t); if (!it || !it.p.cam3) return null; const c = it.p.cam3; return nine && it.p.shift9 ? { ...c, target: [c.target[0] + it.p.shift9.x, c.target[1], c.target[2]] } : c; };
+  const cam3 = (t) => { const it = active(t); if (!it || !it.p.cam3) return null; const c = it.p.cam3; const sf = shiftAt(it, t); return sf.x || sf.y ? { ...c, target: [c.target[0] + sf.x, c.target[1] + sf.y, c.target[2]] } : c; };
   const anchor = (t) => { const it = active(t); return it && it.p.anchor ? it.p.anchor : null; };
-  const drawNight = (t, R, w) => { const it = active(t); if (!it || !it.night) return false; const sh9 = nine && it.p.shift9 ? -it.p.shift9.x * it.p.shift9.ppm * Math.max(W / 1672, H / 941) : 0; it.night.draw(R, w, sh9); return true; };
+  const drawNight = (t, R, w) => { const it = active(t); if (!it || !it.night) return false; const sf = shiftAt(it, t), sh9 = -sf.x * sf.ppm * Math.max(W / 1672, H / 941); it.night.draw(R, w, sh9); return true; };
   const imageOf = (id) => { const it = items.find((q) => q.p.id === id); return it && it.ok ? it.imgs[0] : null; };
   return { ready, apply, cam, cam3, zoom, anchor, active, items, imageOf, drawNight };
 };

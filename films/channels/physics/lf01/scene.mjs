@@ -206,54 +206,54 @@ const birdEnv = (() => { const es = new THREE.Scene(), dome = new THREE.SphereGe
   const win = new THREE.Mesh(new THREE.PlaneGeometry(7, 5), new THREE.MeshBasicMaterial({ color: new THREE.Color(5.5, 4.8, 3.6) })); win.position.set(0.8, 1, -8); es.add(win);
   const fill = new THREE.Mesh(new THREE.PlaneGeometry(6, 3), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.9, 0.95, 1.1) })); fill.position.set(-3, 1, 7); fill.lookAt(0, 0, 0); es.add(fill);
   const pm = new THREE.PMREMGenerator(renderer), tx = pm.fromScene(es, 0.03).texture; pm.dispose(); return tx; })();
-const BILL_TIP = new THREE.Vector3(2.2, 0.07, 0);   // the bill is about a quarter of the bird's length, nose to tail tip
+const BILL_TIP = new THREE.Vector3(1.99, 0.03, 0);   // the bill is about a quarter of the bird's length, nose to tail tip
 const featherTex = (() => { const cv = document.createElement("canvas"); cv.width = 256; cv.height = 512; const g = cv.getContext("2d");   // a dark-grey vane: barbs fanning out from the root, translucent toward the trailing edge
-  const gr = g.createLinearGradient(0, 0, 256, 0); gr.addColorStop(0, "rgba(46,54,62,0.96)"); gr.addColorStop(0.55, "rgba(58,67,76,0.82)"); gr.addColorStop(1, "rgba(86,96,106,0.42)"); g.fillStyle = gr; g.fillRect(0, 0, 256, 512);
-  for (let k = 0; k < 26; k++) { const a = -0.22 + (k / 25) * 0.5, x0 = 70 + 8 * Math.sin(k), y0 = 6; g.strokeStyle = k % 2 ? "rgba(18,22,26,0.5)" : "rgba(150,160,170,0.22)"; g.lineWidth = k % 2 ? 2.2 : 1.4; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 + Math.sin(a) * 520 + 160, 500); g.stroke(); }
+  const gr = g.createLinearGradient(0, 0, 256, 0); gr.addColorStop(0, "rgba(92,102,112,0.96)"); gr.addColorStop(0.55, "rgba(128,138,148,0.8)"); gr.addColorStop(1, "rgba(176,186,196,0.45)"); g.fillStyle = gr; g.fillRect(0, 0, 256, 512);
+  for (let k = 0; k < 26; k++) { const a = -0.22 + (k / 25) * 0.5, x0 = 70 + 8 * Math.sin(k), y0 = 6; g.strokeStyle = k % 2 ? "rgba(38,44,52,0.5)" : "rgba(220,228,236,0.3)"; g.lineWidth = k % 2 ? 2.2 : 1.4; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 + Math.sin(a) * 520 + 160, 500); g.stroke(); }
   g.strokeStyle = "rgba(14,16,20,0.9)"; g.lineWidth = 3; g.beginPath(); g.moveTo(82, 0); g.quadraticCurveTo(96, 250, 116, 512); g.stroke();
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t; })();
 const tipGeo = new THREE.SphereGeometry(0.01, 4, 3), tipMat = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, depthTest: false });
 const mkBird = () => {
   const g = new THREE.Group();
   // one smooth skin from tail to head: a spline through the profile, lathed finely (no facets), emerald back shading to teal on the head, pale grey belly
-  const pts = [[0.04, -1.0], [0.1, -0.88], [0.2, -0.64], [0.3, -0.3], [0.34, 0.05], [0.33, 0.4], [0.27, 0.72], [0.25, 0.9], [0.275, 1.05], [0.26, 1.18], [0.17, 1.28], [0.07, 1.33], [0.0, 1.345]].map(([r, x]) => new THREE.Vector2(r * 0.84, x));
+  const pts = [[0.04, -0.66], [0.11, -0.54], [0.22, -0.34], [0.31, -0.02], [0.325, 0.2], [0.3, 0.42], [0.215, 0.6], [0.135, 0.72], [0.14, 0.82], [0.17, 0.93], [0.175, 1.03], [0.15, 1.12], [0.09, 1.19], [0.0, 1.225]].map(([r, x]) => new THREE.Vector2(r, x));   // a compact, full-chested body (about 2.4 diameters long), a narrow neck, a round head (60% of the body's width)
   const spl = new THREE.SplineCurve(pts), prof = spl.getPoints(90).map((v) => new THREE.Vector2(Math.max(0, v.x), v.y));
   const bg = new THREE.LatheGeometry(prof, 72); bg.rotateZ(-Math.PI / 2);
   { const pos = bg.attributes.position, col = new Float32Array(pos.count * 3), emerald = new THREE.Color(0x1C9A52), bronze = new THREE.Color(0x5E9A2E), teal = new THREE.Color(0x0E9486), belly = new THREE.Color(0xDAD8CE), c = new THREE.Color(), up = new THREE.Color();
     for (let k = 0; k < pos.count; k++) { const x = pos.getX(k), y = pos.getY(k), m = Math.min(1, Math.max(0, (y + 0.26) / 0.2)), sm = m * m * (3 - 2 * m);
-      up.copy(emerald).lerp(bronze, Math.min(1, Math.max(0, (-x - 0.1) / 0.8)) * 0.6).lerp(teal, Math.min(1, Math.max(0, (x - 0.7) / 0.5)) * 0.8);
+      up.copy(emerald).lerp(bronze, Math.min(1, Math.max(0, (-x - 0.0) / 0.6)) * 0.6).lerp(teal, Math.min(1, Math.max(0, (x - 0.75) / 0.35)) * 0.8);
       c.copy(belly).lerp(up, sm); col.set([c.r, c.g, c.b], k * 3); }
     bg.setAttribute("color", new THREE.BufferAttribute(col, 3)); }
   g.add(new THREE.Mesh(bg, new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.35, metalness: 0.22, clearcoat: 0.7, clearcoatRoughness: 0.28, sheen: 0.6, sheenColor: new THREE.Color(0xBFFFE0), sheenRoughness: 0.5, iridescence: 0.45, iridescenceIOR: 1.6 })));
-  const bill = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.042, 0.92, 12), new THREE.MeshPhysicalMaterial({ color: 0x14161A, roughness: 0.3, clearcoat: 0.6 })); bill.rotation.z = -Math.PI / 2; bill.position.set(1.74, 0.07, 0); g.add(bill);
+  const bill = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.034, 0.78, 12), new THREE.MeshPhysicalMaterial({ color: 0x14161A, roughness: 0.3, clearcoat: 0.6 })); bill.rotation.z = -Math.PI / 2; bill.position.set(1.6, 0.04, 0); g.add(bill);
   const gorMat = new THREE.MeshPhysicalMaterial({ color: 0xC4144C, roughness: 0.22, metalness: 0.45, clearcoat: 1, clearcoatRoughness: 0.12, iridescence: 1, iridescenceIOR: 1.8, emissive: 0xFF2A5E, emissiveIntensity: 0.15 });
-  const gor = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), gorMat); gor.scale.set(0.27, 0.1, 0.2); gor.position.set(0.98, -0.2, 0); g.add(gor);   // the ruby throat: its glow flashes as the bird turns (set per frame)
+  const gor = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), gorMat); gor.scale.set(0.2, 0.085, 0.15); gor.position.set(0.93, -0.13, 0); g.add(gor);   // the ruby throat: its glow flashes as the bird turns (set per frame)
   for (const sd of [-1, 1]) {
-    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.052, 20, 14), new THREE.MeshPhysicalMaterial({ color: 0x08080A, roughness: 0.05, clearcoat: 1 })); eye.position.set(1.13, 0.12, sd * 0.236); g.add(eye);
-    const hl = new THREE.Mesh(new THREE.SphereGeometry(0.014, 8, 6), new THREE.MeshBasicMaterial({ color: 0xFFFFFF })); hl.position.set(1.15, 0.145, sd * 0.275); g.add(hl);
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.042, 20, 14), new THREE.MeshPhysicalMaterial({ color: 0x08080A, roughness: 0.05, clearcoat: 1 })); eye.position.set(1.04, 0.07, sd * 0.158); g.add(eye);
+    const hl = new THREE.Mesh(new THREE.SphereGeometry(0.014, 8, 6), new THREE.MeshBasicMaterial({ color: 0xFFFFFF })); hl.position.set(1.06, 0.085, sd * 0.19); g.add(hl);
   }
   { const tsh = new THREE.Shape(); tsh.moveTo(0, 0.1); tsh.lineTo(-0.5, 0.24); tsh.lineTo(-0.38, 0.02); tsh.lineTo(-0.5, -0.22); tsh.lineTo(0, -0.1); tsh.closePath();   // a short forked tail, a fifth of the body
-    for (const rx of [-0.38, 0, 0.38]) { const tm = new THREE.Mesh(new THREE.ShapeGeometry(tsh), new THREE.MeshStandardMaterial({ color: 0x14301F, roughness: 0.6, side: THREE.DoubleSide })); tm.position.set(-0.95, -0.02, 0); tm.rotation.x = rx; g.add(tm); } }
+    for (const rx of [-0.38, 0, 0.38]) { const tm = new THREE.Mesh(new THREE.ShapeGeometry(tsh), new THREE.MeshStandardMaterial({ color: 0x14301F, roughness: 0.6, side: THREE.DoubleSide })); tm.position.set(-0.62, -0.02, 0); tm.rotation.x = rx * 1.15; g.add(tm); } }
   const wings = [], wsh = new THREE.Shape(); wsh.moveTo(-0.06, 0); wsh.bezierCurveTo(0.22, 0.2, 0.22, 0.9, 0.05, 2.0); wsh.bezierCurveTo(-0.06, 1.2, -0.12, 0.5, -0.06, 0);
   const wgeo = new THREE.ShapeGeometry(wsh, 12); { const P = wgeo.attributes.position, uv = new Float32Array(P.count * 2); for (let k = 0; k < P.count; k++) { uv[2 * k] = (P.getX(k) + 0.14) / 0.4; uv[2 * k + 1] = 1 - P.getY(k) / 2.0; } wgeo.setAttribute("uv", new THREE.BufferAttribute(uv, 2)); }
   for (let i = 0; i < GHOSTS; i++) for (const side of [-1, 1]) {
-    const hinge = new THREE.Group(); hinge.position.set(0.3, 0.26, side * 0.12); hinge.rotation.order = "ZXY";
+    const hinge = new THREE.Group(); hinge.position.set(0.12, 0.22, side * 0.1); hinge.rotation.order = "ZXY";
     const wm = new THREE.Mesh(wgeo, new THREE.MeshBasicMaterial({ map: featherTex, color: 0xFFFFFF, transparent: true, opacity: 0.92, depthWrite: false, side: THREE.DoubleSide }));
     const tip = new THREE.Mesh(tipGeo, tipMat); tip.position.set(0.02, 1.7, 0); hinge.add(tip);   // draws nothing, but the finish's motion probe follows it, so the wing tip's speed sets the shutter samples (the real motion blur)
-    hinge.add(wm); g.add(hinge); wings.push({ hinge, wm, i, side, tip });
+    wm.scale.set(1.2, 1.2, 1); hinge.add(wm); g.add(hinge); wings.push({ hinge, wm, i, side, tip });
   }
   g.traverse((o) => { if (o.isMesh && o.material && o.material.isMeshPhysicalMaterial) { o.material.envMap = birdEnv; o.material.envMapIntensity = o.material === gorMat ? 1.0 : 0.3; } });
   g.scale.setScalar(0.075); scene.add(g); return { g, wings, scale: 0.075, gor: gorMat };
 };
 const poseBird = (fl, hz, tReal, blur) => {
   for (const w of fl.wings) {
-    const on = blur > 0.01 || w.i === 0; w.hinge.visible = on; if (!on) continue;
-    w.tip.visible = blur <= 0.01;
-    const ph = (hz * tReal + (blur > 0.01 ? w.i / GHOSTS : 0)) * Math.PI * 2;
+    const trail = blur <= 0.01 && w.i >= 1 && w.i <= 4, on = blur > 0.01 || w.i === 0 || trail; w.hinge.visible = on; if (!on) continue;   // in a hover the wing keeps a faint trail of its last few positions: the fan
+    w.tip.visible = blur <= 0.01 && w.i === 0;
+    const ph = (hz * tReal + (blur > 0.01 ? w.i / GHOSTS : -w.i * 0.013)) * Math.PI * 2;
     w.hinge.rotation.z = -Math.sin(ph) * 1.0 + 0.1;                         // the sweep, forward and back
     w.hinge.rotation.x = w.side * 0.38 * Math.sin(2 * ph + 0.6);            // the second harmonic: the tip draws a figure of eight
     w.hinge.rotation.y = w.side * 0.7 * Math.cos(ph);                       // the flip at each end of the stroke
-    w.wm.material.opacity = blur > 0.01 ? 0.06 + 0.05 * (1 - blur) : 0.94;
+    w.wm.material.opacity = blur > 0.01 ? 0.06 + 0.05 * (1 - blur) : (trail ? 0.3 * (1 - (w.i - 1) / 4.5) : 0.94);
   }
 };
 const hum = mkBird();
@@ -383,7 +383,7 @@ const fadeQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), fadeMat); fadeQua
 const dip = (t) => { let a = 0; for (const c of EV.fades) a = Math.max(a, 1 - E.inout2(seg(Math.abs(t - c), 0.2, 0.65))); return a; };   // a dip through black, 0.4 s fully black either side of nothing: |t - c| < 0.2 is black, gone by 0.65
 
 // ── the overlay: captions, the factor (the one live number), badges, the end card ──
-const hud = createHud({ camera, captionY: FILM.captionY });
+const hud = createHud({ camera, captionY: typeof FILM.captionY === "object" ? FILM.captionY[H > W ? "9x16" : "16x9"] : FILM.captionY });
 hud.captions(FILM.captions, { fade: 0.001 });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const fmtX = (v) => { if (v >= 1e6) { const [u, n] = v >= 1e12 ? [1e12, "trillion"] : v >= 1e9 ? [1e9, "billion"] : [1e6, "million"], q = v / u, r = q >= 9.95 ? Math.round(q) : Math.round(q * 10) / 10; return (r >= 1000 ? Math.round(r).toLocaleString("en-US") : String(r)) + " " + n; } const k = Math.log10(Math.max(v, 1)); const r = Math.round(k); if (Math.abs(k - r) < 0.012) return Math.round(Math.pow(10, r)).toLocaleString("en-US"); const s = Math.pow(10, k), d = Math.pow(10, Math.max(0, Math.floor(Math.log10(s)) - 1)); return (Math.round(s / d) * d).toLocaleString("en-US"); };
