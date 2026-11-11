@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from studio import meter  # noqa: E402
 from studio.master import measure_file  # noqa: E402
 
+PROFILES = {"short": {"lufs": (-15.0, -13.0), "len": (60.0, 75.5)}, "asmr": {"lufs": (-17.0, -15.0), "len": (70.0, 90.5)}}   # "asmr": Skin Sense from Season 3 (--profile asmr or "qaProfile" in film.json)
 GATES = {"lufs": (-15.0, -13.0), "true_peak_db": -1.0, "corr": 0.3, "mono_loss_db": 3.0, "flashes_per_s": 3}
 
 
@@ -73,6 +74,7 @@ def flashing(f, fps):
 def main(argv):
     film = Path(argv[0])
     opt = dict(zip(argv[1::2], argv[2::2]))
+    prof_name = opt.get("--profile") or json.loads((film / "film.json").read_text()).get("qaProfile") or "short"; prof = PROFILES[prof_name]
     fj = json.loads((film / "film.json").read_text())
     f = Path(opt["--file"]) if "--file" in opt else sorted((film / "out").glob("*-9x16.mp4"))[0]
     j = probe(f)
@@ -96,7 +98,7 @@ def main(argv):
         A = rep["audio"]
         if abs(A["dur"] - rep["video"]["dur"]) > 1 / fps + 1e-6:
             fails.append(f"picture {rep['video']['dur']:.3f} s vs sound {A['dur']:.3f} s")
-        if not GATES["lufs"][0] <= A["lufs"] <= GATES["lufs"][1]:
+        if not prof["lufs"][0] <= A["lufs"] <= prof["lufs"][1]:
             fails.append(f"loudness {A['lufs']} LUFS")
         if A["true_peak_db"] > GATES["true_peak_db"]:
             fails.append(f"true peak {A['true_peak_db']} dBTP")
@@ -104,8 +106,9 @@ def main(argv):
             fails.append("not mono-safe")
     else:
         fails.append("no audio")
-    if not 60 <= rep["video"]["dur"] <= 75.5:
-        fails.append(f"length {rep['video']['dur']:.2f} s outside 60–75 s")
+    lo, hi = prof["len"]
+    if not lo <= rep["video"]["dur"] <= hi:
+        fails.append(f"length {rep['video']['dur']:.2f} s outside {lo:g}–{hi:g} s ({prof_name})")
     rep["flashing"] = flashing(f, round(fps))
     if rep["flashing"]["max_flashes_per_s"] > GATES["flashes_per_s"]:
         fails.append(f"{rep['flashing']['max_flashes_per_s']} flashes in one second")

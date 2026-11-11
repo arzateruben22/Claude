@@ -31,8 +31,8 @@
       "composition": "the nerve ending upper centre with the pulse, layers of cubes filling the frame below, dark space above",
       "lighting": "soft studio light, warm glow where skin meets the dark, teal as the only accent",
       "trigger": "the quiet moment a signal is born",
-      "text": "One shiver",
-      "complements": "the title says what, the picture shows the signal starting"
+      "text": "Without asking you",
+      "complements": "the title asks what happens; the cover says it happens on its own (her last line)"
     },
     {
       "id": "B",
@@ -103,8 +103,8 @@
   "winner": {
     "title": "What One Shiver Does Inside You",
     "thumbnail": "A",
-    "thumbnailText": "One shiver",
-    "why": "The title promises the hidden mechanism of something everyone has felt; the thumbnail shows the first step, a signal starting on a nerve, without repeating the title."
+    "thumbnailText": "Without asking you",
+    "why": "The title promises the hidden mechanism of something everyone has felt; the cover adds her last line, that it all happens without asking you, instead of repeating the title."
   },
   "testAndCompare": [
     "A",
@@ -121,10 +121,10 @@
     "originality": true
   },
   "thumbnailFile": "skin-sense-013-cover.jpg",
-  "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a soft 3-D voxel cut-away of skin made of rounded cubes, the top layers deep warm brown (about RGB 85, 48, 31) and the deeper layers warmer and rosier, glowing softly from within; a thin round glowing teal nerve fibre with fine branching tips near the top and one small bright teal pulse travelling along it. No face, no person.\nComposition: the nerve ending in the upper centre, cubes filling the frame below, a little dark space above for the text.\nLighting and treatment: soft studio light, a warm glow where the skin meets the dark, very dark green-black ground (#0B1513), teal #3FBFAE as the only accent, shallow depth of field, fine film grain.\nMood: quiet, calm, ASMR.\nText: \"One shiver\" in a small ivory (#F4EDE3) editorial serif, upper centre.\nScientific accuracy: skin senses cooling through nerve endings that signal the brain; an illustration, not to scale, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, soft voxel (rounded cube) look, distinctive and art-directed, not generic AI art.",
+  "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a soft 3-D voxel cut-away of skin made of rounded cubes, the top layers deep warm brown (about RGB 85, 48, 31) and the deeper layers warmer and rosier, glowing softly from within; a thin round glowing teal nerve fibre with fine branching tips near the top and one small bright teal pulse travelling along it. No face, no person.\nComposition: the nerve ending in the upper centre, cubes filling the frame below, a little dark space above for the text.\nLighting and treatment: soft studio light, a warm glow where the skin meets the dark, very dark green-black ground (#0B1513), teal #3FBFAE as the only accent, shallow depth of field, fine film grain.\nMood: quiet, calm, ASMR.\nText: \"Without asking you\" in a small ivory (#F4EDE3) editorial serif, upper centre.\nScientific accuracy: skin senses cooling through nerve endings that signal the brain; an illustration, not to scale, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, soft voxel (rounded cube) look, distinctive and art-directed, not generic AI art.",
   "shortsCover": {
     "frameSeconds": 11.5,
-    "text": "One shiver"
+    "text": "Without asking you"
   },
   "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
 }

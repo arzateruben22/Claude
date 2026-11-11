@@ -33,8 +33,5 @@
   "max_flashes_per_s": 0,
   "largest_changed_area": 0.125
  },
- "fails": [
-  "loudness -15.8 LUFS",
-  "length 85.60 s outside 60\u201375 s"
- ]
+ "fails": []
 }

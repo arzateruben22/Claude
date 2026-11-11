@@ -2,7 +2,7 @@
  "id": "skin-sense-013",
  "title": {
   "series": "Skin Sense \u00b7 Season 3",
-  "title": "What one shiver does inside you"
+  "title": "What One Shiver Does Inside You"
  },
  "fps": 30,
  "dur": 84.267,
@@ -914,5 +914,6 @@
    80.84,
    "cta"
   ]
- }
+ },
+ "qaProfile": "asmr"
 }

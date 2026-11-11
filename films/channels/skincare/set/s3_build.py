@@ -22,8 +22,8 @@ def build(lines, words, suffix, cta_file):
     start, end, T = layout(lines, 0)
     dur = round(round((end[lines[-1]["id"]] + TAIL) * 15) / 15, 3)
     caps = [{"w": w["w"], "t0": round(start[L["id"]] + w["start"], 3), "t1": round(start[L["id"]] + w["end"], 3), "line": L["id"], "beat": L["beat"]} for L in lines for w in words[L["id"]]]
-    film = {"id": f"skin-sense-{sys.argv[1][2:].zfill(3)}", "title": {"series": "Skin Sense · Season 3", "title": cfg["title"]}, "fps": 30, "dur": dur, "poster": cfg["poster"], "theme": "../theme.json", "shots": [{"at": 0.0, "name": "main"}],
-            "disclosures": {"aiVoice": False, "realVoice": True, "aiVisuals": True}, "captions": caps, "lines": {L["id"]: [start[L["id"]], end[L["id"]], L["beat"]] for L in lines}}
+    film = {"id": f"skin-sense-{sys.argv[1][2:].zfill(3)}", "title": {"series": "Skin Sense · Season 3", "title": cfg.get("final_title", cfg["title"])}, "fps": 30, "dur": dur, "poster": cfg["poster"], "theme": "../theme.json", "shots": [{"at": 0.0, "name": "main"}],
+            "qaProfile": "asmr", "disclosures": {"aiVoice": False, "realVoice": True, "aiVisuals": True}, "captions": caps, "lines": {L["id"]: [start[L["id"]], end[L["id"]], L["beat"]] for L in lines}}
     (d / f"film{suffix}.json").write_text(json.dumps(film, indent=1))
     # the sound
     n = int(dur * SR); t = np.arange(n) / SR; rng = np.random.default_rng(13); bump = lambda c, w, a: a * np.exp(-((t - c) / w) ** 2)
