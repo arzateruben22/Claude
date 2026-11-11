@@ -1,0 +1,79 @@
+[
+ {
+  "id": "c1",
+  "sentence": "The pores you can see are little doorways, into narrow tunnels called hair follicles.",
+  "claim": "Visible skin pores are the openings of hair follicles (the pilosebaceous unit).",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK470321/",
+  "source_title": "StatPearls: Anatomy, Hair Follicle (NBK470321)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Pilosebaceous unit = follicle + attached sebaceous gland; the follicle opens at the skin surface. Sources do not address pore appearance directly: wording is a plain-language version. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c2",
+  "sentence": "Even where you can't see one… a fine hair is usually growing inside.",
+  "claim": "Most follicles, including on the face, produce fine vellus hair.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK470321/",
+  "source_title": "StatPearls: Anatomy, Hair Follicle (NBK470321)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Vellus hair is fine, soft, largely unpigmented; facial 'peach fuzz'. 'Usually' kept deliberately; palms/soles have no follicles, which the film does not claim. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c3",
+  "sentence": "Partway down sits a small oil gland.",
+  "claim": "Sebaceous glands are attached to hair follicles and empty into the upper follicle.",
+  "source_url": "https://ncbi.nlm.nih.gov/books/NBK499819",
+  "source_title": "StatPearls: Physiology, Sebaceous Glands (NBK499819)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Glands are holocrine, closely associated with follicles (esp. face), secreting into the follicular canal. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c4",
+  "sentence": "Its cells do something strange. Each one slowly fills with oil… until the whole cell breaks down and becomes oil.",
+  "claim": "Sebocytes accumulate lipid as they mature, then disintegrate and release their contents as sebum (holocrine secretion).",
+  "source_url": "https://ncbi.nlm.nih.gov/books/NBK499819",
+  "source_title": "StatPearls: Physiology, Sebaceous Glands (NBK499819)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Holocrine = the whole cell is the secretion; the gland cycle takes about a week (not stated on screen). A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c5",
+  "sentence": "That oil is called sebum. It glides up along the hair, and spreads over your skin in a thin, soft coat.",
+  "claim": "Sebum travels up the follicle and spreads across the skin surface, forming most of its surface lipids.",
+  "source_url": "https://ncbi.nlm.nih.gov/books/NBK499819",
+  "source_title": "StatPearls: Physiology, Sebaceous Glands (NBK499819)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Sebum is about 90% of surface lipids in adolescents and adults. 'Glides up along the hair' is a visual simplification; the film does not name a mechanism. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c6",
+  "sentence": "Tiny microbes live in there too, quietly feeding on that oil.",
+  "claim": "Cutibacterium acnes and other microbes live in the follicle and use sebum lipids (via lipases) as a food source.",
+  "source_url": "https://f1000research.com/articles/7-1953",
+  "source_title": "F1000Research review on C. acnes (7-1953)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] C. acnes is a commensal of the anaerobic part of the follicle; its lipases degrade sebum lipids. Strain/disease links are less settled and NOT claimed in the film. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c7",
+  "sentence": "Until… the doorway gets blocked.",
+  "claim": "Follicle openings can become blocked by sebum and shed cells (the starting point of a comedone), which leads into the next episode.",
+  "source_url": "https://ncbi.nlm.nih.gov/books/NBK499819",
+  "source_title": "StatPearls: Physiology, Sebaceous Glands (NBK499819)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Teaser only, no explanation on screen; sources for the full mechanism belong to ep16 (pimple). Needs a dedicated source check. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ }
+]
