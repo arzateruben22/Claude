@@ -1,0 +1,997 @@
+{
+ "id": "possibility-lab-earth-spin-part4",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 68.7,
+ "poster": 32.1,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "globe",
+   "beat": "oceans"
+  },
+  {
+   "at": 64.6,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 4.05,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-1",
+   "t0": 4.05,
+   "t1": 7.2,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-2",
+   "t0": 7.2,
+   "t1": 14.85,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-3",
+   "t0": 14.85,
+   "t1": 20.55,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-4",
+   "t0": 20.55,
+   "t1": 32.1,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-5",
+   "t0": 32.1,
+   "t1": 38.25,
+   "line": "vo06",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-6",
+   "t0": 38.25,
+   "t1": 44.1,
+   "line": "vo07",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-7",
+   "t0": 44.1,
+   "t1": 53.7,
+   "line": "vo08",
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 53.7,
+   "t1": 59.25,
+   "line": "vo09",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 59.25,
+   "t1": 63.15,
+   "line": "vo10",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 63.15,
+   "t1": 68.7,
+   "line": "vo11",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    12.0
+   ],
+   [
+    68.7,
+    12.0
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    18.102,
+    90.0
+   ],
+   [
+    68.7,
+    59.11
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": []
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 64.6,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 68.5,
+   "slot": "bl"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "The oceans slide toward the equator",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 64.6,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster…*",
+  "follow": "Possibility Lab · Part 4 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "captions": [
+  {
+   "t0": 0.08,
+   "t1": 3.125,
+   "lines": [
+    [
+     [
+      "The",
+      0.22
+     ],
+     [
+      "oceans",
+      0.43
+     ],
+     [
+      "are",
+      1.035
+     ],
+     [
+      "sliding",
+      1.315
+     ]
+    ],
+    [
+     [
+      "toward",
+      1.9
+     ],
+     [
+      "the",
+      2.2
+     ],
+     [
+      "equator.",
+      2.375
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.96,
+   "t1": 6.385,
+   "lines": [
+    [
+     [
+      "And",
+      4.1
+     ],
+     [
+      "then",
+      4.185
+     ],
+     [
+      "the",
+      4.545
+     ],
+     [
+      "oceans",
+      4.575
+     ]
+    ],
+    [
+     [
+      "begin",
+      5.2
+     ],
+     [
+      "to",
+      5.48
+     ],
+     [
+      "move.",
+      5.635
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.153,
+   "t1": 10.348,
+   "lines": [
+    [
+     [
+      "A",
+      7.293
+     ],
+     [
+      "spinning",
+      7.658
+     ],
+     [
+      "planet",
+      8.033
+     ]
+    ],
+    [
+     [
+      "pushes",
+      8.568
+     ],
+     [
+      "water",
+      9.073
+     ],
+     [
+      "outward,",
+      9.598
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.383,
+   "t1": 14.313,
+   "lines": [
+    [
+     [
+      "toward",
+      10.383
+     ],
+     [
+      "the",
+      10.778
+     ],
+     [
+      "equator,",
+      11.023
+     ]
+    ],
+    [
+     [
+      "exactly",
+      11.818
+     ],
+     [
+      "as",
+      12.663
+     ],
+     [
+      "it",
+      13.013
+     ],
+     [
+      "pushes",
+      13.043
+     ],
+     [
+      "you.",
+      13.563
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 14.815,
+   "t1": 16.965,
+   "lines": [
+    [
+     [
+      "Speed",
+      14.955
+     ],
+     [
+      "the",
+      15.48
+     ],
+     [
+      "spin",
+      15.795
+     ],
+     [
+      "up",
+      16.115
+     ],
+     [
+      "quickly",
+      16.22
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.965,
+   "t1": 19.65,
+   "lines": [
+    [
+     [
+      "and",
+      16.965
+     ],
+     [
+      "the",
+      16.995
+     ],
+     [
+      "ground",
+      17.205
+     ],
+     [
+      "cannot",
+      17.69
+     ]
+    ],
+    [
+     [
+      "adjust",
+      18.265
+     ],
+     [
+      "in",
+      18.69
+     ],
+     [
+      "time.",
+      18.9
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.515,
+   "t1": 23.835,
+   "lines": [
+    [
+     [
+      "At",
+      20.655
+     ],
+     [
+      "a",
+      21.005
+     ],
+     [
+      "12",
+      21.035
+     ],
+     [
+      "hour",
+      21.465
+     ],
+     [
+      "day,",
+      21.875
+     ]
+    ],
+    [
+     [
+      "the",
+      22.275
+     ],
+     [
+      "water",
+      22.42
+     ],
+     [
+      "wants",
+      22.89
+     ],
+     [
+      "to",
+      23.085
+     ],
+     [
+      "stand",
+      23.44
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 23.835,
+   "t1": 27.48,
+   "lines": [
+    [
+     [
+      "about",
+      23.835
+     ],
+     [
+      "33",
+      23.865
+     ],
+     [
+      "kilometers",
+      25.03
+     ]
+    ],
+    [
+     [
+      "higher",
+      25.935
+     ],
+     [
+      "at",
+      26.55
+     ],
+     [
+      "the",
+      26.665
+     ],
+     [
+      "equator",
+      26.73
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 27.605,
+   "t1": 31.25,
+   "lines": [
+    [
+     [
+      "than",
+      27.605
+     ],
+     [
+      "at",
+      27.89
+     ],
+     [
+      "the",
+      28.055
+     ],
+     [
+      "poles,",
+      28.085
+     ],
+     [
+      "extra,",
+      28.81
+     ]
+    ],
+    [
+     [
+      "compared",
+      29.65
+     ],
+     [
+      "with",
+      30.255
+     ],
+     [
+      "today.",
+      30.5
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 32.053,
+   "t1": 37.508,
+   "lines": [
+    [
+     [
+      "The",
+      32.193
+     ],
+     [
+      "whole",
+      32.408
+     ],
+     [
+      "ocean",
+      32.723
+     ],
+     [
+      "is",
+      33.348
+     ],
+     [
+      "only",
+      33.613
+     ]
+    ],
+    [
+     [
+      "about",
+      34.133
+     ],
+     [
+      "3.7",
+      34.483
+     ],
+     [
+      "kilometers",
+      35.848
+     ],
+     [
+      "deep.",
+      36.758
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.22,
+   "t1": 41.305,
+   "lines": [
+    [
+     [
+      "It",
+      38.36
+     ],
+     [
+      "drains",
+      38.59
+     ],
+     [
+      "toward",
+      39.165
+     ],
+     [
+      "a",
+      39.59
+     ],
+     [
+      "belt",
+      39.66
+     ]
+    ],
+    [
+     [
+      "around",
+      40.035
+     ],
+     [
+      "the",
+      40.45
+     ],
+     [
+      "equator,",
+      40.555
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 41.33,
+   "t1": 43.31,
+   "lines": [
+    [
+     [
+      "while",
+      41.33
+     ],
+     [
+      "the",
+      41.565
+     ],
+     [
+      "poles",
+      41.595
+     ],
+     [
+      "dry",
+      42.13
+     ],
+     [
+      "out.",
+      42.56
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 44.048,
+   "t1": 47.283,
+   "lines": [
+    [
+     [
+      "This",
+      44.188
+     ],
+     [
+      "is",
+      44.513
+     ],
+     [
+      "a",
+      44.648
+     ],
+     [
+      "rough,",
+      44.893
+     ],
+     [
+      "first",
+      45.323
+     ]
+    ],
+    [
+     [
+      "guess,",
+      45.828
+     ],
+     [
+      "but",
+      46.313
+     ],
+     [
+      "the",
+      46.343
+     ],
+     [
+      "direction",
+      46.588
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 47.283,
+   "t1": 50.588,
+   "lines": [
+    [
+     [
+      "is",
+      47.283
+     ],
+     [
+      "certain:",
+      47.588
+     ],
+     [
+      "land",
+      48.398
+     ],
+     [
+      "near",
+      48.913
+     ]
+    ],
+    [
+     [
+      "the",
+      49.178
+     ],
+     [
+      "poles",
+      49.288
+     ],
+     [
+      "emerges,",
+      49.838
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 50.773,
+   "t1": 52.988,
+   "lines": [
+    [
+     [
+      "and",
+      50.773
+     ],
+     [
+      "your",
+      51.018
+     ],
+     [
+      "own",
+      51.068
+     ]
+    ],
+    [
+     [
+      "coast",
+      51.423
+     ],
+     [
+      "is",
+      51.978
+     ],
+     [
+      "flooded.",
+      52.238
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.958,
+   "t1": 55.723,
+   "lines": [
+    [
+     [
+      "Quick",
+      54.098
+     ],
+     [
+      "break:",
+      54.148
+     ]
+    ],
+    [
+     [
+      "like",
+      54.743
+     ],
+     [
+      "and",
+      54.773
+     ],
+     [
+      "subscribe.",
+      54.973
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 55.963,
+   "t1": 58.278,
+   "lines": [
+    [
+     [
+      "Then",
+      56.103
+     ],
+     [
+      "let's",
+      56.408
+     ],
+     [
+      "see",
+      56.513
+     ]
+    ],
+    [
+     [
+      "how",
+      56.853
+     ],
+     [
+      "bad",
+      57.003
+     ],
+     [
+      "this",
+      57.293
+     ],
+     [
+      "gets.",
+      57.528
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.18,
+   "t1": 62.08,
+   "lines": [
+    [
+     [
+      "And",
+      59.32
+     ],
+     [
+      "the",
+      59.58
+     ],
+     [
+      "weather",
+      59.61
+     ],
+     [
+      "is",
+      60.05
+     ],
+     [
+      "about",
+      60.36
+     ]
+    ],
+    [
+     [
+      "to",
+      60.635
+     ],
+     [
+      "change",
+      60.735
+     ],
+     [
+      "completely.",
+      61.33
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 63.013,
+   "t1": 64.793,
+   "lines": [
+    [
+     [
+      "Part",
+      63.153
+     ],
+     [
+      "four",
+      63.473
+     ],
+     [
+      "of",
+      63.853
+     ],
+     [
+      "eight.",
+      64.093
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.2,
+   "dur": 2.902,
+   "file": "vo/01.wav",
+   "text": "The oceans are sliding toward the equator."
+  },
+  {
+   "id": "vo02",
+   "t": 4.1,
+   "dur": 2.236,
+   "file": "vo/02.wav",
+   "text": "And then the oceans begin to move."
+  },
+  {
+   "id": "vo03",
+   "t": 7.233333333333333,
+   "dur": 6.772,
+   "file": "vo/03.wav",
+   "text": "A spinning planet pushes water outward, toward the equator, exactly as it pushes you."
+  },
+  {
+   "id": "vo04",
+   "t": 14.9,
+   "dur": 4.719,
+   "file": "vo/04.wav",
+   "text": "Speed the spin up quickly and the ground cannot adjust in time."
+  },
+  {
+   "id": "vo05",
+   "t": 20.6,
+   "dur": 10.682,
+   "file": "vo/05.wav",
+   "text": "At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today."
+  },
+  {
+   "id": "vo06",
+   "t": 32.13333333333333,
+   "dur": 5.225,
+   "file": "vo/06.wav",
+   "text": "The whole ocean is only about three point seven kilometers deep."
+  },
+  {
+   "id": "vo07",
+   "t": 38.3,
+   "dur": 4.924,
+   "file": "vo/07.wav",
+   "text": "It drains toward a belt around the equator, while the poles dry out."
+  },
+  {
+   "id": "vo08",
+   "t": 44.13333333333333,
+   "dur": 8.752,
+   "file": "vo/08.wav",
+   "text": "This is a rough, first guess, but the direction is certain: land near the poles emerges, and your own coast is flooded."
+  },
+  {
+   "id": "vo09",
+   "t": 53.833333333333336,
+   "dur": 4.512,
+   "file": "vo/09.wav",
+   "text": "Quick break: like and follow. Then let's see how bad this gets."
+  },
+  {
+   "id": "vo10",
+   "t": 59.3,
+   "dur": 3.047,
+   "file": "vo/10.wav",
+   "text": "And the weather is about to change completely."
+  },
+  {
+   "id": "vo11",
+   "t": 63.13333333333333,
+   "dur": 3.251,
+   "file": "vo/11.wav",
+   "text": "Part four of eight. Full video on YouTube."
+  }
+ ]
+}

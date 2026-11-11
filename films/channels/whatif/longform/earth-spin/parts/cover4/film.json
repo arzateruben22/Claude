@@ -1,0 +1,195 @@
+{
+ "id": "possibility-lab-earth-spin-part4",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 68.7,
+ "poster": 32.1,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "globe",
+   "beat": "oceans"
+  },
+  {
+   "at": 64.6,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 4.05,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-1",
+   "t0": 4.05,
+   "t1": 7.2,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-2",
+   "t0": 7.2,
+   "t1": 14.85,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-3",
+   "t0": 14.85,
+   "t1": 20.55,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-4",
+   "t0": 20.55,
+   "t1": 32.1,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-5",
+   "t0": 32.1,
+   "t1": 38.25,
+   "line": "vo06",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-6",
+   "t0": 38.25,
+   "t1": 44.1,
+   "line": "vo07",
+   "energy": 0.6
+  },
+  {
+   "id": "oceans-7",
+   "t0": 44.1,
+   "t1": 53.7,
+   "line": "vo08",
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 53.7,
+   "t1": 59.25,
+   "line": "vo09",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 59.25,
+   "t1": 63.15,
+   "line": "vo10",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 63.15,
+   "t1": 68.7,
+   "line": "vo11",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    12.0
+   ],
+   [
+    68.7,
+    12.0
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    18.102,
+    90.0
+   ],
+   [
+    68.7,
+    59.11
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": []
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 64.6,
+  "seed": 3
+ },
+ "badges": [],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "The oceans slide toward the equator",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 9999.0,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster\u2026*",
+  "follow": "Possibility Lab \u00b7 Part 4 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "captions": [],
+ "voice": [],
+ "thumb": true
+}
