@@ -47,3 +47,7 @@ talking, not an ad read. It applies to all four active channels, and to everythi
 2. Quick thing: like and {follow}. Your skin has plenty more secrets.
 3. Wait, before we keep going: tap like and {follow}! Okay, back inside the skin.
 4. If you just looked at your own arm, tap like and {follow}!
+
+**Skin Sense (ASMR, Season 3 on)** (Evelyn: soft and slow, no exclamation)
+1. If you're feeling a little calmer, tap like and {follow}.
+2. Your skin has plenty more quiet secrets. Tap like and {follow}.

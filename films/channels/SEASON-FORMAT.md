@@ -101,6 +101,11 @@ Take as long as it needs: the usage of about three Season 2 episodes goes into o
     she wants to be credited by name. The studio never contacts her directly.
   - No Lumevina name, products or links in Skin Sense. The channel's no-brands and no-advice rules still apply.
   - A soft AI voice stands in for the look test and drafts only; the finals wait for her recording.
+  - **It is ASMR (owner, 11 Nov 2026).** Soft-spoken or a light whisper, close to the mic, slow, steady volume. Her script
+    (`films/channels/voice-scripts/skin-sense-season-3-recording-script.md`) asks for 10 s of room tone first; use it for
+    noise reduction, and keep her breaths soft rather than cut to silence. Sound: gentle foley (soft brushing, droplets,
+    low warm hum), music very low and slow, **no hits, stings, whooshes or sudden loudness changes**, no like-button sound.
+    Slow cuts and slow camera. Each lesson lands at about 75-80 s; the like/follow line is the soft ASMR one in CTA.md.
   - Her recording script uses the standard layout, adapted for shorts: Part A is each episode's narration, plus the
     long video's opening, bridges and finale; there are no part openings or closers; Part D is the like/follow lines.
 - **Long video:** at the end of the season, the six episodes are joined with an opening, bridges and a finale into one

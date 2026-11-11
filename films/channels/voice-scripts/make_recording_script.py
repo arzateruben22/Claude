@@ -34,8 +34,9 @@ CHANNELS = {
                        "one friend what you can see. Let the big numbers land, then breathe."),
     "physics": dict(name="Reality Rulebook", prefix="rr", branch="claude/physics-s2", cta="Reality Rulebook", wpm=150,
                     tone="Crisp and curious, like you're slowing a moment down on purpose so a friend can see it."),
-    "skincare": dict(name="Skin Sense", prefix="ss", branch="claude/outer-layer-s1-b", cta="Skin Sense", wpm=130,
-                     tone="Bright, warm and genuinely excited, like you can't wait to show someone what their skin just did."),
+    "skincare": dict(name="Skin Sense", prefix="ss", branch="claude/outer-layer-s1-b", cta="Skin Sense (ASMR, Season 3 on)", wpm=115,
+                     tone="ASMR (Season 3 on, Evelyn): soft-spoken, close and unhurried, a light whisper is fine if every word stays clear. "
+                          "Slower than feels natural; steady volume; the last line of each lesson softest of all."),
 }
 WORDS = ["one", "two", "three", "four", "five", "six", "seven", "eight"]
 WPM = 150          # default reading pace, pauses included; each channel sets its own (its tone sets the pace)
