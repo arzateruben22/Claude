@@ -1,0 +1,37 @@
+{
+ "file": "/home/user/claude/films/channels/skincare/ep16/out/skin-sense-016-9x16.mp4",
+ "size_mb": 71.4,
+ "video": {
+  "codec": "h264",
+  "profile": "High",
+  "w": 1080,
+  "h": 1920,
+  "fps": 30.0,
+  "frames": 2692,
+  "dur": 89.733333,
+  "pix_fmt": "yuv420p",
+  "color": "bt709",
+  "mbps": 6.11
+ },
+ "film_dur": 89.733,
+ "audio": {
+  "codec": "aac",
+  "sr": 48000,
+  "ch": 2,
+  "kbps": 252,
+  "dur": 89.733,
+  "lufs": -15.7,
+  "true_peak_db": -1.4,
+  "lra": 6.0,
+  "corr": 0.98,
+  "mono_loss_db": 0.01
+ },
+ "flashing": {
+  "large_transitions": 0,
+  "transition_frames": [],
+  "flashes": 0,
+  "max_flashes_per_s": 0,
+  "largest_changed_area": 0.045
+ },
+ "fails": []
+}
