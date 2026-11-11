@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "slug": "physics",
+  "name": "Reality Rulebook",
+  "prefix": "rr",
+  "branch": "claude/physics-s2",
+  "filmsPath": "films/channels/physics",
+  "tagline": "Everyday things, slowed down until the physics shows.",
+  "promise": "One everyday event, slowed down and measured on screen until the rule behind it shows. Every number is sourced or computed, and every simplification wears a badge.",
+  "identity": {
+    "palette": {
+      "cyc": "#E6E2D8",
+      "cyc-hi": "#F1EEE7",
+      "shade": "#8A857B",
+      "surface": "#FFFDF7",
+      "ink": "#15171C",
+      "ink-2": "#4B505B",
+      "cobalt": "#1F3BD1",
+      "marker": "#FFD43B",
+      "force": "#1F3BD1",
+      "motion": "#08805A",
+      "energy": "#B8321A",
+      "wave": "#6D3FC8",
+      "pressure": "#0B6F86",
+      "ghost": "#6E6A62"
+    },
+    "type": {
+      "display": "Archivo",
+      "body": "IBM Plex Sans",
+      "mono": "IBM Plex Mono"
+    },
+    "look": "Daylight lab: a warm-paper backdrop curve (the cyc) ruled like a measuring board and lit like a high-speed photo studio. The only light-background channel. Display type is Archivo at weight 800, width 125.",
+    "lighting": "Soft key from above front-left, hemisphere fill, cool rim from behind. No shadow maps today. Bloom threshold 2.5 or more and prop albedo 0.7 or below, so the cyc lands on its token after ACES.",
+    "camera": "Locked 'measure view', square to the grid, long lens (portrait field of view 30 to 36 degrees), deep focus. Slider drifts of 2 to 5 cm a second. One 60 to 90 degree turn per episode, landing on a starred word. Macro pushes into contact moments.",
+    "materials": "Props built from primitives with MeshStandardMaterial. The cyc is an unlit shader fed ACES-inverse values (set/aces.js). Strobe ghosts are opaque and tinted toward the cyc. No transmission: set/straw.js draws glass with a lit, nearly clear standard material.",
+    "signatureDevices": [
+      "Strobe ladder: ghost copies stamped at equal time steps on the ruled backdrop",
+      "Spine readout (one live number from hook to end)",
+      "Honesty badges in mono: 'slowed xN', 'air ignored', 'illustration', 'model'",
+      "A 'measure it' beat with mono readouts",
+      "Title card 'the drop': the title falls onto a ruler line and bounces twice",
+      "Yellow marker band behind the word being spoken"
+    ]
+  },
+  "seasonLooks": {
+    "s3": {
+      "summary": "One daylight kitchen with a window onto a backyard: one second of everyday life, slowed further and further. The slow-motion factor counter is the only text besides the captions.",
+      "palette": {},
+      "notes": "Source: lf01/script.md and lf01/build.py on the channel branch. A 960x540 16:9 draft is rendered; parts ep13 to ep20 are compiled, not rendered. The branch title 'Slow Down One Second Until Light Stands Still' overstates (claim c1 says not literally still); 'How Much Would You Slow Time to Watch Light Move?' awaits the owner. A physicist signs off before it posts. No owner approval of a still is on record.",
+      "status": "pending look gate"
+    }
+  },
+  "voice": {
+    "kind": "tts",
+    "id": "af_bella",
+    "tone": "Crisp and curious, like slowing a moment down on purpose so a friend can see it.",
+    "wpm": 150
+  },
+  "sound": {
+    "music": "Preset restframe-bench (kits/cinema/studio/vibes/restframe-bench.json): G mixolydian at 112.5 BPM, so a 16th note is exactly 4 frames; staccato blips over low pads.",
+    "foley": "Hard and close: knocks, ticks, shutters. Signature: knocks D6, B5, G5 at 0, +12 and +20 frames (a ball bouncing to rest).",
+    "loudnessLufs": -14,
+    "rules": [
+      "Delivered AAC: integrated loudness -15 to -13 LUFS, true peak at most -1 dBTP, mono-safe (kits/cinema/film/qa.py).",
+      "Sound transients land within one frame of their picture event (kits/cinema/studio/qa.py).",
+      "No bells.",
+      "The strobe never flashes: fewer than 3 bright events a second."
+    ]
+  },
+  "formats": {
+    "short": {
+      "aspect": "9:16",
+      "size": [1080, 1920],
+      "fps": 30,
+      "durationS": [61, 75],
+      "notes": "Seasons 1 and 2. Native 1080x1920 render; the -9x16-youtube.mp4 file is a 1440x2560 Lanczos upscale, labelled '1440 upscale'. 150 to 180 words (kits/cinema/script/lint.py)."
+    },
+    "part": {
+      "aspect": "9:16",
+      "size": [1080, 1920],
+      "fps": 30,
+      "durationS": [61, 75],
+      "notes": "Season 3 on: one of the long film's 8 chapters, cut from the film's own 9:16 render (never a crop of the 16:9). Opens with its own 2 s hook line, ends on its cliffhanger, then 'Part N of 8. Full video on YouTube.' Part 8 stops before the payoff."
+    },
+    "long": {
+      "aspect": "16:9",
+      "size": [2560, 1440],
+      "fps": 30,
+      "durationS": [510, 570],
+      "notes": "Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4 at 2560x1440. The picture renders natively at 1920x1080 and is upscaled; only cards are drawn at 2560x1440 (kits/cinema/film/compilation.mjs). Never label it native 1440p. A native 2560x1440 render tier is Roadmap stage 2. Runs 8:30 to 9:30, never by padding."
+    }
+  },
+  "packaging": {
+    "dna": "Physics that looks impossible. A daylight lab or an everyday room, one frozen moment (a splash crown, a bullet's shock cone, a light front), strobe ghost stamps. Clean and exact. A hand or figure caught mid-action at the key frozen moment.",
+    "accent": "#2F5BFF"
+  },
+  "cta": {
+    "section": "Reality Rulebook"
+  },
+  "rules": [
+    "Every factual sentence carries a claims.json tag. A claim is OK only after a person opens the source; anything checked from a search excerpt stays OPEN.",
+    "Kokoro af_bella at speed 0.85 (ep12/vo/lines.json). Synthetic narration is labelled as AI on every film and post.",
+    "Every simplification is badged on screen.",
+    "Hook: a question spoken and captioned by 2.0 s.",
+    "Reading grade at most 7 and no sentence over 22 words (channel gate, review/clarity-review.md; the shared gate is grade 8).",
+    "One 'measure it' beat per episode (kits/cinema/script/lint.py --segment measure).",
+    "Cobalt #1F3BD1 is force and the title's accent word on screen. #2F5BFF is the packaging and Prism accent only.",
+    "The yellow marker is only the band behind the spoken word.",
+    "An opacity of 1/3 keeps about 1/11 of the contrast after ACES: set translucent overlays with set/aces.js screenAlpha.",
+    "Season 3 long film: a physicist signs off before it posts.",
+    "One Chromium render job per machine."
+  ],
+  "never": [
+    "Never present a render as a photo or a measurement: mark it 'Illustration' or 'Model'.",
+    "No Lumevina, Los Güeros or Claude coral colours; no indigo or teal (One More Orbit's).",
+    "No bells.",
+    "No more than 3 flashes a second.",
+    "No title or thumbnail that claims more than the script.",
+    "No exclamation marks, hype words or 'like and subscribe' in the script; the like/follow line comes from films/channels/CTA.md.",
+    "Never claim a technique, resolution or metric the engine did not deliver (films/channels/studio/README.md, 'Maximum-fidelity standard').",
+    "Nothing posts without the owner; publishing is manual."
+  ],
+  "sources": [
+    "claude/physics-s2:films/channels/physics/theme.json",
+    "claude/physics-s2:films/channels/physics/bible.md",
+    "claude/physics-s2:films/channels/physics/ep12/vo/lines.json",
+    "claude/physics-s2:films/channels/physics/ep12/review/clarity-review.md",
+    "claude/physics-s2:films/channels/physics/set/aces.js",
+    "claude/physics-s2:films/channels/physics/lf01/script.md",
+    "films/channels/PACKAGING.md",
+    "films/channels/SEASON-FORMAT.md",
+    "films/channels/CTA.md",
+    "films/channels/STUDIO-STYLE.md",
+    "films/channels/voice-scripts/make_recording_script.py",
+    "kits/cinema/studio/vibes/restframe-bench.json",
+    "kits/cinema/film/qa.py"
+  ]
+}

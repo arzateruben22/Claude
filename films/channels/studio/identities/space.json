@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "slug": "space",
+  "name": "One More Orbit",
+  "prefix": "oo",
+  "branch": "claude/space-s2",
+  "filmsPath": "films/channels/space",
+  "tagline": "One minute, one 'whoa' about the universe, every number sourced.",
+  "promise": "One real 'whoa' about the universe, shown at honest scale with its light-travel time. Every number is sourced and every cheat wears a badge.",
+  "identity": {
+    "palette": {
+      "void": "#080A1C",
+      "void-top": "#11163A",
+      "surface": "#151A3D",
+      "text": "#EEF0FF",
+      "text-2": "#A9B0D9",
+      "teal": "#4FE3C6",
+      "lilac": "#B9A6FF",
+      "ice": "#8FD0FF",
+      "lemon": "#F2EDA6"
+    },
+    "type": {
+      "display": "Unbounded",
+      "body": "Lexend",
+      "mono": "Martian Mono"
+    },
+    "look": "The Orrery: indigo night. Teal means light (fronts, rings, the spoken word); lilac means gravity (orbits, the grid, forces). Scale lives in rungs, one group per scale, so the camera stays in float-safe range.",
+    "lighting": "One key light, the star (a directional light aimed at the subject), plus a 4% void hemisphere fill so night sides keep their shape. No shadows. Only stars, light fronts and the kilonova bloom (threshold 0.9); text never does.",
+    "camera": "A telescope mount (set/rig.js), never handheld: a locked diagram view, slow drifts and arcs, one scale jump per episode; rack focus only when something is near the lens.",
+    "materials": "Custom shaders: baked planet surfaces with a terminator and a Fresnel rim, an emissive limb-darkened star, additive light fronts, point-cloud skies and galaxies. No transmission, shadow maps or environment maps.",
+    "signatureDevices": [
+      "Light-time ring: a thin teal ring printed with its light-travel time, one per episode (also the avatar)",
+      "Honesty badges in mono: 'not to scale', 'time xN', 'orbit sped up xN', 'analogy', 'estimate', 'thought experiment'",
+      "Closing light-time readout",
+      "The word being spoken turns teal",
+      "Label glyphs so colour is never the only cue: body, star, light"
+    ]
+  },
+  "seasonLooks": {
+    "s3": {
+      "summary": "The owner's painted night beach in teal and violet: the same headland and the same small figure in every stage, with the Moon composited in code at each stage's angular size from calc.py.",
+      "palette": {},
+      "notes": "Film: 'How Close Can the Moon Get Before It Breaks?' (owner's title, 11 Nov 2026). Source: long01/art/README.md on the channel branch. The paintings are AI illustrations (disclose them) at 1672x941, so they are upscaled for the film: never call that picture native 1440p. The break-up painting is for the long film only. Script, calc.py and claims exist; nothing is compiled or rendered. Waiting on seven more images and the owner's recording. No composited still has been approved yet.",
+      "status": "pending look gate"
+    }
+  },
+  "voice": {
+    "kind": "owner",
+    "id": "voice-owner",
+    "tone": "Quiet awe. Slower and softer than Possibility Lab, as if standing outside at night telling one friend what you can see. Let the big numbers land, then breathe.",
+    "wpm": 135
+  },
+  "sound": {
+    "music": "Preset lightminute-vacuum (kits/cinema/studio/vibes/lightminute-vacuum.json): E dorian at 56.25 BPM, so a 16th note is 8 frames; a drone and glide fifths, no piano.",
+    "foley": "Tonal only, never an impact: pings for labels and counters. Signature pings E5, B5, F#6, 6 frames apart.",
+    "loudnessLufs": -14,
+    "rules": [
+      "Delivered AAC: integrated loudness -15 to -13 LUFS, true peak at most -1 dBTP, mono-safe (kits/cinema/film/qa.py).",
+      "Sound transients land within one frame of their picture event (kits/cinema/studio/qa.py).",
+      "No glass bells.",
+      "Voiceless gaps of at most 1.2 s (season2/gaps.py).",
+      "Nothing booms in vacuum: every effect is tonal."
+    ]
+  },
+  "formats": {
+    "short": {
+      "aspect": "9:16",
+      "size": [1080, 1920],
+      "fps": 30,
+      "durationS": [61, 75],
+      "notes": "Seasons 1 and 2. Native 1080x1920 render; the -9x16-youtube.mp4 file is a 1440x2560 Lanczos upscale, labelled '1440 upscale'. 150 to 180 words (kits/cinema/script/lint.py)."
+    },
+    "part": {
+      "aspect": "9:16",
+      "size": [1080, 1920],
+      "fps": 30,
+      "durationS": [61, 75],
+      "notes": "Season 3 on: one of the long film's 8 chapters, cut from the film's own 9:16 render (never a crop of the 16:9). Opens with its own 2 s hook line, ends on its cliffhanger, then 'Part N of 8. Full video on YouTube.' Part 8 stops before the payoff."
+    },
+    "long": {
+      "aspect": "16:9",
+      "size": [2560, 1440],
+      "fps": 30,
+      "durationS": [510, 570],
+      "notes": "Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4 at 2560x1440. The picture renders natively at 1920x1080 and is upscaled; only cards are drawn at 2560x1440 (kits/cinema/film/compilation.mjs). Never label it native 1440p. A native 2560x1440 render tier is Roadmap stage 2. Runs 8:30 to 9:30, never by padding."
+    }
+  },
+  "packaging": {
+    "dna": "Vast, beautiful, occasionally unsettling through real scale. Indigo night, teal light fronts, the light-time ring. A tiny figure on the ground facing the cosmic thing. No fabricated cosmic threats, and no render that could pass for a NASA photo.",
+    "accent": "#5B3FD0"
+  },
+  "cta": {
+    "section": "One More Orbit"
+  },
+  "rules": [
+    "Every factual sentence carries a claims.json tag. A claim is OK only after a person opens the source; anything checked from a search excerpt stays OPEN.",
+    "Owner's voice from Season 3, used as recorded (cut, cleaned, levelled). AI stand-in until the recording arrives: Kokoro am_michael, one speed per line, labelled as AI.",
+    "A clone of the owner's own voice is allowed only with his recorded consent and an AI label (owner's request, 11 Nov 2026). No tool for it is in the repo yet.",
+    "Every cheat is badged; the gravity grid always wears 'analogy' and the Oort cloud 'theory'.",
+    "One galactic-centre distance for the whole channel: about 27,000 light-years (theme.json motif.facts).",
+    "Put the qualifier in the opening question (for example 'stars in our galaxy').",
+    "Stars are at least 1.5 px; scale jumps need a motion-blur floor (kits/cinema/events.json); dither indigo gradients, they band.",
+    "The owner's AI paintings are disclosed as AI illustrations (film.json disclosures.aiVisuals).",
+    "Teal #4FE3C6 and lilac #B9A6FF are the on-screen accents. #5B3FD0 is the packaging and Prism accent only.",
+    "One Chromium render job per machine."
+  ],
+  "never": [
+    "No red, amber, gold or rose.",
+    "Never a handheld camera.",
+    "No fabricated cosmic threats and no doom framing.",
+    "No render that could pass for a NASA photo; no NASA or ESA logos that imply endorsement.",
+    "No glass bells and no impact sounds.",
+    "Never a title that reads like a real event (the retired 'The Moon Starts Coming Closer. It Won't Stop.').",
+    "Never the break-up image as a thumbnail or part cover: the ending stays in the long film.",
+    "No title or thumbnail that claims more than the script.",
+    "Never claim a technique, resolution or metric the engine did not deliver (films/channels/studio/README.md, 'Maximum-fidelity standard').",
+    "Nothing posts without the owner; publishing is manual."
+  ],
+  "sources": [
+    "claude/space-s2:films/channels/space/theme.json",
+    "claude/space-s2:films/channels/space/bible.md",
+    "claude/space-s2:films/channels/space/ep12/voice.py",
+    "claude/space-s2:films/channels/space/season2/gaps.py",
+    "claude/space-s2:films/channels/space/long01/art/README.md",
+    "films/channels/PACKAGING.md",
+    "films/channels/SEASON-FORMAT.md",
+    "films/channels/CTA.md",
+    "films/channels/STUDIO-STYLE.md",
+    "films/channels/voice-scripts/make_recording_script.py",
+    "films/channels/voice-scripts/one-more-orbit-season-3-recording-script.md",
+    "kits/cinema/studio/vibes/lightminute-vacuum.json",
+    "kits/cinema/film/qa.py"
+  ]
+}

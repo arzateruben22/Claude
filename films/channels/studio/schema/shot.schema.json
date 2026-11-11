@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Shot manifest (shots.json)",
+  "description": "Every shot of one episode, in order, as one continuous film. A shot is one unbroken camera idea with a start state and an end state; the next shot starts where this one ends. How to plan and fill it: films/channels/studio/SHOTS.md. Checked by films/channels/studio/tools/validate.py together with episode.json (episode.schema.json). Keys that start with 'x-' are free for a channel's own notes.",
+  "type": "object",
+  "additionalProperties": false,
+  "patternProperties": { "^x-": {} },
+  "required": ["version", "episode", "shots"],
+  "properties": {
+    "version": { "const": 1 },
+    "episode": {
+      "type": "string",
+      "pattern": "^[a-z]{2,4}-s[1-9][0-9]*e[0-9]{2}$",
+      "description": "The id in the episode's episode.json."
+    },
+    "journey": { "type": "string", "description": "Optional. One or two sentences: the whole camera path, start to end." },
+    "continuity": {
+      "type": "array", "items": { "type": "string", "minLength": 3 },
+      "description": "Optional. What stays the same in every shot of this episode: light direction, the one skin tone, the spine readout's place, the screen direction of travel."
+    },
+    "shots": {
+      "type": "array", "minItems": 1,
+      "items": { "$ref": "#/$defs/shot" },
+      "description": "In order. Windows start at 0, do not overlap, leave no gap, and end at the episode's planned length."
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 3 },
+    "transition": {
+      "type": "string",
+      "pattern": "^(open|hold|motivated push|scale change|through-the-surface|match cut|cut on sound|dissolve|loop|close)(: .+)?$",
+      "description": "One term from the transition vocabulary in SHOTS.md, then optionally ': ' and the detail. A shot's transitionOut and the next shot's transitionIn describe the same join and use the same term."
+    },
+    "shot": {
+      "type": "object",
+      "additionalProperties": false,
+      "patternProperties": { "^x-": {} },
+      "required": [
+        "id", "purpose", "seconds", "aspect", "camera", "subject", "motion", "lighting", "environment", "materials",
+        "principle", "startState", "endState", "transitionIn", "transitionOut", "narration", "sound", "assets",
+        "claims", "qa", "status"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^S[0-9]{2,3}[a-z]?$", "description": "S01, S02 ... in order. A shot added later between two takes a letter: S04a." },
+        "beat": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "Optional. The story beat (script.md heading) this shot belongs to." },
+        "purpose": { "type": "string", "minLength": 8, "description": "Why the shot exists: what the viewer must understand or feel by its last frame. A shot with no purpose is cut." },
+        "seconds": {
+          "type": "array",
+          "prefixItems": [ { "type": "number", "minimum": 0 }, { "type": "number", "exclusiveMinimum": 0 } ],
+          "items": false, "minItems": 2, "maxItems": 2,
+          "description": "[start, end] in seconds on the episode's clock. A plan until the voice is measured; then the compile step's word anchors replace it."
+        },
+        "aspect": { "enum": ["9:16", "16:9"], "description": "The episode's aspect. A 16:9 film and its 9:16 parts each get their own manifest and their own framing." },
+        "camera": {
+          "type": "object",
+          "required": ["preset", "from", "to", "lens"],
+          "properties": {
+            "preset": { "$ref": "#/$defs/text", "description": "A camera preset name from SHOTS.md (for example locked, keyed-flight, mount-drift), so the builder knows which code to use." },
+            "from": { "$ref": "#/$defs/text", "description": "Where the camera is and what it looks at on the first frame." },
+            "to": { "$ref": "#/$defs/text", "description": "The same for the last frame. Equal to 'from' for a locked shot." },
+            "lens": { "$ref": "#/$defs/text", "description": "Field of view in degrees, and what is in focus. The engine takes a field of view, not a lens in millimetres." },
+            "focus": { "type": "string", "description": "Optional. What the focus follows, and any pull." },
+            "speed": { "type": "string", "description": "Optional. How fast the move is, in the channel's own limits." }
+          }
+        },
+        "subject": { "$ref": "#/$defs/text", "description": "The one thing the eye is on. One line wins." },
+        "motion": { "$ref": "#/$defs/text", "description": "What moves in the world (not the camera), and on which spoken word it lands." },
+        "lighting": { "$ref": "#/$defs/text", "description": "The light in this shot, named with what the code offers today (SHOTS.md, lighting presets). Anything not built yet is marked 'to build'." },
+        "environment": { "$ref": "#/$defs/text", "description": "The place: ground, depth, atmosphere, particles." },
+        "materials": { "$ref": "#/$defs/text", "description": "What things are made of, named with real materials and passes (SHOTS.md, material presets)." },
+        "principle": { "$ref": "#/$defs/text", "description": "The science this shot shows, in one or two plain sentences. It must match the claims listed." },
+        "startState": { "$ref": "#/$defs/text", "description": "The first frame, described so the previous shot's endState can be checked against it." },
+        "endState": { "$ref": "#/$defs/text", "description": "The last frame. The next shot's startState picks it up." },
+        "transitionIn": { "$ref": "#/$defs/transition" },
+        "transitionOut": { "$ref": "#/$defs/transition" },
+        "narration": {
+          "type": "array", "items": { "type": "string", "minLength": 1 },
+          "description": "The lines spoken during the shot: line ids (vo01), or the id and the text. Empty for a picture-only shot."
+        },
+        "sound": { "$ref": "#/$defs/text", "description": "Music level, foley and any sound event, in the channel's sound rules." },
+        "assets": {
+          "type": "array", "items": { "type": "string", "minLength": 1 },
+          "description": "Paths the shot needs: code modules, art, references, recordings. May be empty while planning."
+        },
+        "claims": {
+          "type": "array", "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*[0-9]$" }, "uniqueItems": true,
+          "description": "Ids in the episode's claims.json that this shot's picture or narration states. Empty when the shot states nothing outside the film."
+        },
+        "qa": {
+          "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 3 },
+          "description": "Acceptance checks for this shot: things a person or a script can answer yes or no."
+        },
+        "status": { "enum": ["planned", "built", "approved"], "description": "planned: on paper. built: rendered at least as stills. approved: the owner or reviewer accepted it." },
+        "onScreenText": { "type": "string", "description": "Optional. Any word or number on screen besides the captions." },
+        "aiArt": { "type": "boolean", "description": "Optional. True when an AI-made image appears in this shot's picture. Then the episode's disclosures.aiVisuals must be true." },
+        "reference": { "type": "string", "description": "Optional. Path to a reference frame the builder matches. A reference is not shown in the film." },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
