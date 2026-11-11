@@ -194,6 +194,8 @@ window.seek = function (t) {
     pcx = 0.9; pcy = -1.48; camera.fov = 32; camera.position.set(0.9 + sw, -0.1 + sh, 3.2); camera.lookAt(0.9, -0.3, 0);
   } else { camera.fov = 30; camera.position.set(-1.6, 0.9 + 0.2 * Math.sin(t * 0.1), beatId === "break" ? 6.2 : 5.4); camera.lookAt(-1.4, 0.1, 0); }
   planetG.position.set(pcx, pcy, 0);
+  if (FILM.figOnly) { sky.visible = stars.visible = sunDisk.visible = sunHalo.visible = false;       // the capsule figure alone on a flat black or white backdrop (matted into an alpha PNG for the cover variants)
+    if (!window.__bgPlane) { window.__bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), basic(FILM.figOnly.bg ? "#999999" : "#000000", 1, true)); window.__bgPlane.position.set(0, 0, -30); window.__bgPlane.userData.noProbe = true; scene.add(window.__bgPlane); } }
   window.__focus = shot === "tower" ? [0, 20, 0] : [pcx, pcy + 1, 0];
   const ysc = (PORT || FILM.hero ? figS : gl ? 0.6 : 1) * (PORT || FILM.hero ? 0.26 : 0.15), bulge = 0.07 * fxw0("ocean");
   you.group.visible = sp && shot !== "end";
@@ -210,7 +212,7 @@ window.seek = function (t) {
   if (wind.visible) wind.instanceMatrix.needsUpdate = true;
 
   // the globe (planet shots): flattening, drying poles, storms, markers, debris
-  globe.visible = sp;
+  globe.visible = sp && !FILM.figOnly;
   const f = 0.02 + 0.28 * Math.pow(spinU, 1.4), gph = ph * 0.5;
   globe.scale.set(1, 1 - f, 1); const ow = fxw0("ocean"); water.visible = ow > 0.01; water.scale.set(1 + 0.07 * ow, (1 - f) * 1.003, 1 + 0.07 * ow); gU.uSpin.value = FILM.thumb ? 0.6 : gl ? gph : 0.03 * t; gU.uDry.value = dryAt(t);
   if (gl) {

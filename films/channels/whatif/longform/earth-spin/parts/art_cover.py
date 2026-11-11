@@ -38,29 +38,30 @@ def words(im, text, x, y, fs, align="left", lines=None):
 def save(im, *paths, q=92):
     for p in paths: Path(p).parent.mkdir(parents=True, exist_ok=True); im.save(p, quality=q, subsampling=0)
 S3 = W / "compilations/s3"
-# 16:9: the long-film thumbnail and the two other options
-sun, sea, flt = load("sun-streak-90-minute-day.png"), load("oceans-bulge-equator.png"), load("float-8x-lighter.png")
-A = words(finish(sun, (1920, 1080)), "", 70, 60, 190, lines=["90-MINUTE", "DAY"])
-B = words(finish(sea, (1920, 1080)), "", 70, 50, 170, lines=["OCEANS", "PILE UP"])
-C = words(finish(flt, (1920, 1080)), "", 70, 60, 190, lines=["8x", "LIGHTER"])
-save(A, S3 / "thumb-options/A-90-minute-day-art.jpg", S3 / "thumbnail.jpg"); save(B, S3 / "thumb-options/B-oceans-pile-up-art.jpg"); save(C, S3 / "thumb-options/C-8x-lighter-art.jpg")
 # 9:16 covers (1080x1920) laid out for the 3:4 profile-grid crop (the centre 1080x1440, y 240-1680): the words in the upper half of that band, the subject inside it, the bottom of the band and the right edge clear
-def cover(n, im, box, lines, fs=140, ty=280):
+FS = {3: 112, 5: 140}
+def cover(n, im, box, lines, fs=None, ty=280, save_to=True):
+    fs = fs or FS.get(n, 140)
     size = (1080, 1920); out = extend(im, box); out = finish(out, size)
     f = ImageFont.truetype(str(FONT), fs)
     try: f.set_variation_by_name("ExtraBold")
     except Exception: pass
     while fs > 70 and max(ImageFont.truetype(str(FONT), fs).getlength(l) for l in lines) > 0.9 * size[0]: fs -= 6
     out = words(out, "", 0, ty, fs, align="center", lines=lines)
+    if not save_to: return out
     for base in (W / f"ep{12 + n}/out", ES / f"parts/part{n}/out"):
         save(out, base / f"possibility-lab-s3p{n}-cover.jpg"); out.resize((480, 853), Image.LANCZOS).save(base / f"possibility-lab-s3p{n}-cover-480.jpg", quality=90)
         out.crop((0, 240, 1080, 1680)).save(base / f"possibility-lab-s3p{n}-cover-grid-3x4.jpg", quality=90)
+sun, sea, flt = load("sun-streak-90-minute-day.png"), load("oceans-bulge-equator.png"), load("float-8x-lighter.png")
 storm, arc1, arc2 = load("storm-fury.png"), load("sunrises-arc-1.png"), load("sunrises-arc-2.png")
-cover(2, sun, (350, -40, 910, 956), ["Sunset in", "6 hours"])
-cover(3, storm, (0, 0, 941, 1672), ["1,670 km/h", "wind"])
-cover(4, sea, (236, -700, 1436, 1433), ["Seas pile", "up here"])
-cover(5, storm, (0, -190, 941, 1482), ["Calm afternoons", "end"])
-cover(6, arc1, (103, 0, 947, 1500), ["6,000 days", "a year"])
-cover(7, arc2, (0, 0, 941, 1672), ["Sunset", "in 1 hour"])
-cover(8, flt, (536, -446, 1483, 1238), ["Jump 4", "meters high"])
-print("ok")
+BOXES = {2: (sun, (350, -40, 910, 956), ["Sunset in", "6 hours"]), 3: (storm, (0, 0, 941, 1672), ["1,670 km/h", "wind"]), 4: (sea, (236, -700, 1436, 1433), ["Seas pile", "up here"]),
+         5: (storm, (0, -190, 941, 1482), ["Calm afternoons", "end"]), 6: (arc1, (103, 0, 947, 1500), ["6,000 days", "a year"]), 7: (arc2, (0, 0, 941, 1672), ["Sunset", "in 1 hour"]), 8: (flt, (536, -446, 1483, 1238), ["Jump 4", "meters high"])}
+if __name__ == "__main__":
+    S3 = W / "compilations/s3"
+    # 16:9: the long-film thumbnail and the two other options
+    A = words(finish(sun, (1920, 1080)), "", 70, 60, 190, lines=["90-MINUTE", "DAY"])
+    B = words(finish(sea, (1920, 1080)), "", 70, 50, 170, lines=["OCEANS", "PILE UP"])
+    C = words(finish(flt, (1920, 1080)), "", 70, 60, 190, lines=["8x", "LIGHTER"])
+    save(A, S3 / "thumb-options/A-90-minute-day-art.jpg", S3 / "thumbnail.jpg"); save(B, S3 / "thumb-options/B-oceans-pile-up-art.jpg"); save(C, S3 / "thumb-options/C-8x-lighter-art.jpg")
+    for n, (im, box, lines) in BOXES.items(): cover(n, im, box, lines)
+    print("ok")
