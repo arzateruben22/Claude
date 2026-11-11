@@ -8,6 +8,10 @@
 //   &cy=metres (front and back-ortho: the camera's height, default 0.75)
 //   &paint=hex   &s=metres from the stretch start   &mirrors=live|env   &hands=1 (the hands part on the rim)
 //   &portrait=1 (the game's portrait-phone camera numbers)   &cam=x,y,z&at=x,y,z&fov=deg (any camera, car's frame)
+//   &probeRes=px (the reflection probe's cube size for a proof shot: 128 on high by default, 64 on phone; 512 removes the
+//          blocky tears a coarse probe leaves in the paint's reflections)
+//   hero-sheet: the reference sheet's hero camera for the hypercar (M1b): 0.53 m up, close in front of the left front
+//          corner, a 58 degree horizontal lens (scale the frame 1.848x and keep rows 246 to 706: the sheet's panel)
 //   &lit=1 (outside views: every switched lamp on, as PlayerCar lights them: the brake level on the tail lamps (and the
 //          hypercar's brake haze), the turn signals and the reversing lamps; &head=night the headlamps at the game's night level)
 // The interior views follow the car's driver (car-shape seatOffset: the hypercar's sits lower, further in and forward).
@@ -38,7 +42,7 @@ const interior = ['seat', 'free-left', 'free-right', 'free-up', 'dash', 'mirror'
 
 const FOV: Record<string, number> = {
   seat: portrait ? 96 : 58, 'free-left': 66, 'free-right': 66, 'free-up': 66, hood: portrait ? 92 : 62, chase: portrait ? 80 : 60, sky: 50, 'sky-zoom': 7, back: 62,
-  dash: 50, wheelck: 50, door: 60, wheel: 34, dmirror: 16, grip: 28, garage: 34, hero: 30, rear34: 30, wing: 26,
+  dash: 50, wheelck: 50, door: 60, wheel: 34, dmirror: 16, grip: 28, garage: 34, hero: 30, rear34: 30, wing: 26, 'hero-sheet': 34.7,
 };
 const stage = await makeStage({ stretch: !debug, fov: FOV[view] ?? 30, near: view === 'chase' ? 0.15 : 0.02 });
 const { scene, camera, renderer } = stage;
@@ -147,6 +151,9 @@ if (interior) {
   if (view === 'rear') look(L(-3.4, 1.05, 5.0), L(0.15, 0.55, 0.1));
   // the reference sheet's hero: low and wide from the front left, a long lens; rear34 the same from behind
   if (view === 'hero') look(L(-4.7, 0.8, -6.1), L(0.2, 0.45, 0.25));
+  // (solved from six landmarks on the sheet's hero, 13 px rms on its 1774 x 460 panel: 0.53 m up, 3.2 m out and 4.4 m
+  // ahead of the car's middle, a 58 degree horizontal lens; the panel is this frame scaled 1.848x, rows 246 to 706)
+  if (view === 'hero-sheet') look(L(-3.23, 0.53, -4.43), L(0.03, 0.45, -0.55));
   if (view === 'rear34') look(L(-5.4, 1.1, 7.6), L(0.1, 0.5, -0.1));
   // the wing up close from behind and above the left end plate: the carbon, a swan neck, the plates and their LEDs
   if (view === 'wing') look(L(-1.75, 1.62, 3.55), L(-0.3, 0.98, 1.95));
@@ -215,7 +222,7 @@ if (q.get('key') === 'showroom') {
 if (q.get('probe') !== '0') {
   await new Promise<void>((res) => { let k = 0; stage.onFrame(() => { if (++k === 2) res(); }); });
   const t1 = performance.now();
-  const probe = carProbe(renderer, scene, frame, { res: quality === 'high' ? 128 : 64 });
+  const probe = carProbe(renderer, scene, frame, { res: Number(q.get('probeRes') ?? (quality === 'high' ? 128 : 64)) });
   probe.capture([part]);
   // inside: only what's outside the cabin and the mirrors see the probe; the cabin keeps the darker cabin light
   if (interior) { const b = part.getObjectByName('body'); if (b) probe.apply(b); probe.apply(part, { skip: (m) => !['mirror', 'mirrorDim', 'chrome'].includes(m.name) }); }

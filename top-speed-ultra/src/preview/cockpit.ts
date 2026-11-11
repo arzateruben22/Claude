@@ -164,6 +164,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const ext = carMaterials(paint, q, P.caliper, id);
   const tachT = G.tachTextures(high ? 1024 : 512, P.brand === 'oc' ? 'O C' : undefined);
   const mats: Record<string, THREE.Material> = {
+    ...(ext.scoop ? { scoop: ext.scoop } : {}),   // (the hypercar's side scoop, M1b repair; seen in the mirrors)
     paint: ext.paint, mirrorPaint: ext.mirrorPaint, trim: ext.trim, dark: ext.dark, lamp: ext.lamp, tail: ext.tail, grille: ext.grille, liner: ext.liner, rubber: ext.rubber, badge: ext.badge,
     mirror: M.chrome(0.02, 0x6a6e74), exhaust: ext.exhaust, mirrorDim: M.chrome(0.03, 0x4a4d52), carbonX: ext.carbon, frit: M.gloss(0x040404),
     // black Nappa reflects about 3-4 % (sRGB ~0x33 before the grain map's ~0.86); black Alcantara a little less

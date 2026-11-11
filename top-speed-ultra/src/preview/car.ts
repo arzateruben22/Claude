@@ -44,7 +44,7 @@ export function carPaint(paint: number, q: Quality, id: CarId = 'rossini-gt', fi
   const flake = oc ? 0.2 : vela ? 0.1 : 0.15, lines = mirror ? [] : B.shutLines(), key = mirror ? id + '-mirror' : id;
   // the OC Hypercar: a bright, cool light silver and its gloss-black two-tone drawn by the paint shader (P.masks, body only)
   const masks = oc && !mirror ? P.masks : undefined;
-  if (!finish) return M.paint(paint, q, lines, oc ? { key, flake, rough: P.paintFinish?.rough ?? 0.22, metal: P.paintFinish?.metal ?? 0.8, masks } : { key, flake, rough: vela ? 0.3 : undefined });
+  if (!finish) return M.paint(paint, q, lines, oc ? { key, flake, rough: P.paintFinish?.rough ?? 0.22, metal: P.paintFinish?.metal ?? 0.8, masks, env: P.paintFinish?.env, lift: P.paintFinish?.lift } : { key, flake, rough: vela ? 0.3 : undefined });
   return M.paint(paint, q, lines, { flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness, masks });
 }
 
@@ -72,6 +72,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   // the Founder Edition's LED wake-up (car-wake.ts): the strips, the blades and the red bar light in a sweep. The
   // 'blade' lamps and their tail material are the hypercar's own, so no other car's lights take part
   if (oc && extra.led) { wakeable(extra.led, 'ice', B.ZF, B.ZR); wakeable(lamps.lamp, 'ice', B.ZF, B.ZR); wakeable(lamps.tail, 'bar', B.ZF, B.ZR); }
+  // the hypercar's side scoop (M1b repair): the shared dark, drawn a few depth steps nearer (polygon offset), so the
+  // skin it lies 14 mm over never fights through it, however far off the camera is
+  if (P.face) extra.scoop = once('m.scoop', () => { const m = withAO(new THREE.MeshStandardMaterial({ color: 0x050506, roughness: 0.75 })); m.polygonOffset = true; m.polygonOffsetFactor = -1; m.polygonOffsetUnits = -4; m.name = 'scoop'; return m; });
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));
   return {
     ...extra,
@@ -79,9 +82,13 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     // the door mirrors' pods and stalks: the same paint without the shut lines (the shader draws them by position, so
     // the door's shut line would cross the stalk); PlayerCar.setPaint swaps both
     mirrorPaint: carPaint(paint, q, id, null, true),
-    frit: M.gloss(0x050505), trim: M.gloss(0x070708), dark,
-    glass: M.glass('tint', 0.62, { env: 1.0 }),
-    carbon: M.carbon(q), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
+    // (the hypercar's glass borders, M1b repair: satin, not gloss, black: from a low camera the windscreen's and the side
+    // glass's frit run along the A-pillars, and in gloss they caught the night showroom's overhead strips as two white
+    // arcs that read as struts across the canopy)
+    frit: oc ? once('m.fritOC', () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color: 0x050505, roughness: 0.6, clearcoat: 0.2, clearcoatRoughness: 0.35, envMapIntensity: 0.5 }), { name: 'gloss' }))) : M.gloss(0x050505),
+    trim: M.gloss(0x070708), dark,
+    glass: P.glassTint ? M.glass('tint', P.glassTint[0], { env: P.glassTint[1], ...(P.glassTint[2] === undefined ? {} : { spec: P.glassTint[2] }) }) : M.glass('tint', 0.62, { env: 1.0 }),
+    carbon: P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.064, P.carbonTint), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
     lamp: lamps.lamp, tail: lamps.tail,
     chrome: M.chrome(0.12, 0xd8dadd), mirror: M.chrome(0.015, 0xb9bfc6), rubber: M.rubber(),
     badge: once('m.badge' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03 })),

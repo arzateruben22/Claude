@@ -1767,6 +1767,16 @@ await group('render', async (use) => {
       c.configure({ ...cfg, car: 'oc-hyper', paint: 0xc8d3e8 });
       const ext = c.exterior, lamps = ['sigL', 'sigR', 'reverse', 'brakeGlow'].map((k) => ext.getObjectByName(k));
       const out = { eye: c.eye.position.toArray(), beam: c.beams[1].position.toArray(), built: lamps.every(Boolean), hidden: lamps.every((m) => m && !m.visible) };
+      // how far the beam starts from the nearest vertex of the lit blades (the exterior's 'lamp' meshes), both in the
+      // car's own frame: the beam's position on the car's root against the blades' vertices in the exterior's frame (the
+      // body the exterior hangs on rides and pitches over the root, so world positions would mix in the suspension)
+      out.lampD = Infinity; ext.updateMatrixWorld(true);
+      const bp = c.beams[1].position.clone(), toExt = ext.matrixWorld.clone().invert();
+      ext.traverse((o) => {
+        if (o.name !== 'lamp' || !o.geometry) return;
+        const p = o.geometry.attributes.position, v = bp.clone(), m = toExt.clone().multiply(o.matrixWorld);
+        for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i).applyMatrix4(m); out.lampD = Math.min(out.lampD, v.distanceTo(bp)); }
+      });
       c.update(0, 1, g.phys, true, g.time); out.brake = c.mats.tail.emissiveIntensity; out.glow = lamps[3].visible;
       c.update(0, 1, g.phys, false, g.time); out.free = c.mats.tail.emissiveIntensity; out.levels = c.mats.tail.userData.levels; out.glowOff = !lamps[3].visible;
       const d0 = g.phys.d;
@@ -1808,7 +1818,11 @@ await group('render', async (use) => {
     const warm = (Date.now() - tw) / 1000;
     expect(r.built && r.hidden, `switched lamps built ${r.built}, hidden until lit ${r.hidden}`);
     expect(Math.abs(r.eye[0] + 0.27) < 0.005 && Math.abs(r.eye[1] - 0.96) < 0.005, `the hypercar's eye at ${r.eye.map(fmt)} (want -0.27, 0.96)`);
-    expect(r.beam[2] < -2.2 && r.beam[1] < 0.5 && r.beam[0] > 0.3, `beam at ${r.beam.map(fmt)}: not from the blade`);
+    // (the beam starts on the blade: within 4 cm of a vertex of its lit face, in the car's frame (0.023 m measured; 0.028
+    // at b49f7f3), low and outboard, not at the shared default (0.62, 0.55, -2.2). Was z < -2.2 until M1b, whose plan V
+    // (PROJECT_OC_HYPERCAR.md, M1b item 1) moved the blade's outer half back about 0.1 m: the beam's point on it is now
+    // at z -2.16)
+    expect(r.lampD < 0.04 && r.beam[1] < 0.5 && r.beam[0] > 0.3, `beam at ${r.beam.map(fmt)}, ${fmt(r.lampD)} m from the blade: not from the blade`);
     // (its thin bar: a dim tail light and a bright stop, lampMaterials' 'blade' levels; every other car keeps 1.6 → 5)
     expect(r.free === 0.5 && r.brake === 6 && r.levels?.[0] === 0.5, `red bar ${r.free} → ${r.brake} on the brakes (levels ${JSON.stringify(r.levels)})`);
     expect(r.glow && r.glowOff, `the stop light's haze: on the brakes ${r.glow}, off without ${r.glowOff}`);
@@ -1817,7 +1831,7 @@ await group('render', async (use) => {
     expect(r.rev.gear < 0 && r.rev.on && r.rev.signal === 0, `reversing (lamps on, no signal): ${JSON.stringify(r.rev)}`);
     expect(r.gauge && !r.rearView && r.back === r.was, `gauge pod ${r.gauge}, rear-view ${r.rearView}, back to ${r.back} (was ${r.was})`);
     expect(r.after.gear > 0 && r.after.vx > 20, `left driving forward: ${JSON.stringify(r.after)}`);
-    return `eye ${r.eye.map(fmt)}, beam ${r.beam.map(fmt)}; bar ${r.free} → ${r.brake} and its haze; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); turns at ${r.turn.map((t) => fmt(t.v)).join(' and ')} m/s signal ${r.turn.map((t) => t.signal).join(', ')}; reverse lamps on in gear ${r.rev.gear}, no signal; left driving at ${fmt(r.after.vx)} m/s, 3 frames in ${fmt(warm)} s`;
+    return `eye ${r.eye.map(fmt)}, beam ${r.beam.map(fmt)} (${fmt(r.lampD)} m from the blade); bar ${r.free} → ${r.brake} and its haze; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); turns at ${r.turn.map((t) => fmt(t.v)).join(' and ')} m/s signal ${r.turn.map((t) => t.signal).join(', ')}; reverse lamps on in gear ${r.rev.gear}, no signal; left driving at ${fmt(r.after.vx)} m/s, 3 frames in ${fmt(warm)} s`;
   });
   await check('pause stops the simulation, resume carries on', async () => {
     const r = await game(page, () => { const g = window.__game; g.fastForward(5, {}, 35); return g.phys.s; });
