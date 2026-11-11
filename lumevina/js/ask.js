@@ -459,9 +459,9 @@
     var m = GIFT_CODE.exec(text), G = window.LumevinaGiftCards;
     if (!m || !G) return false;
     var code = m[0].toUpperCase();
-    bubble("bot", "…", "thinking");
-    logEl.scrollTop = logEl.scrollHeight;
-    G.check(code).then(function (c) { settle(text, giftWords(c, code)); }, function () {
+    thinkStart(["Looking up the certificate ending " + code.slice(-4)]);
+    G.check(code).then(function (c) { thinkStop(); settle(text, giftWords(c, code)); }, function () {
+      thinkStop();
       settle(text, { answer: "I couldn’t check that code just now. Try again in a minute, or use Check a gift balance under the gift certificate.", acts: [["Check a balance", "#gift"]] });
     });
     return true;
@@ -800,7 +800,8 @@
     '<form class="ask-form"><label class="sr-only" for="ask-in">Your question</label>' +
     '<input id="ask-in" type="text" autocomplete="off" placeholder="Ask about prices, prep, your skin…" maxlength="600">' +
     '<button type="submit" class="ask-send" aria-label="Send">' +
-    '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></form>' +
+    '<svg class="ask-send-go" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>' +
+    '<svg class="ask-send-stop" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor"/></svg></button></form>' +
     '<p class="ask-fine">Not medical advice. In an emergency, call 911.</p>';
 
   document.body.appendChild(fab);
@@ -842,7 +843,7 @@
     push({ who: "bot", text: STATUS[which].say, acts: STATUS[which].acts });
     render();
   };
-  var push = function (m) { if (m.who === "bot") m.fresh = true; state.log.push(m); if (state.log.length > 80) state.log = state.log.slice(-80); save(); };
+  var push = function (m) { if (m.who === "bot") { m.fresh = true; if (lastThought) { m.thought = lastThought; lastThought = null; } } state.log.push(m); if (state.log.length > 80) state.log = state.log.slice(-80); save(); };
 
   /* answers Evelyn has sent for this browser's questions (live: fetched for a signed-in client, below) */
   var liveReplies = {};
@@ -860,6 +861,72 @@
     d.innerHTML = html;
     logEl.appendChild(d);
     return d;
+  };
+
+  /* ── while an answer is being worked out: a quiet row, "Thinking it through", the seconds counting,
+     and the steps it is actually taking appearing one by one (reading the message, the client's file
+     when they're signed in, Evelyn's notes, putting the answer together). When the answer lands, the
+     row folds into "Thought it through · 3s" at the top of that answer, which opens to show the steps
+     again. Meanwhile the send button turns into Stop, which sets the answer aside. ── */
+  var sendBtn = form.querySelector(".ask-send");
+  var SPARK = '<svg class="ask-spark" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z" fill="currentColor"/></svg>';
+  var TICK = '<svg viewBox="0 0 24 24" width="10" height="10" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var CHEV = '<svg class="ask-chev" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var think = null, lastThought = null;
+  var stepHtml = function (text, done, fresh) {
+    return '<li class="ask-step' + (done ? " is-done" : "") + (fresh ? " is-new" : "") + '"><span class="ask-step-dot">' + (done ? TICK : "") + "</span>" + esc(text) + "</li>";
+  };
+  var thinkPaint = function () {
+    if (!think) return;
+    think.el.querySelector(".ask-think-s").textContent = Math.round((Date.now() - think.t0) / 1000) + "s";
+    think.el.querySelector(".ask-think-steps").innerHTML = think.steps.map(function (st, i) {
+      return stepHtml(st, i < think.steps.length - 1, i >= think.painted);
+    }).join("");
+    think.painted = think.steps.length;
+  };
+  var thinkStop = function () {
+    form.classList.remove("is-busy");
+    sendBtn.setAttribute("aria-label", "Send");
+    if (!think) return;
+    clearInterval(think.tick);
+    think.timers.forEach(clearTimeout);
+    if (think.el.parentNode) think.el.parentNode.removeChild(think.el);
+    think = null;
+  };
+  var thinkStart = function (plan) {
+    thinkStop();
+    var el = document.createElement("div");
+    el.className = "ask-msg bot ask-thinking";
+    el.innerHTML = '<div class="ask-think-head">' + SPARK + '<span class="ask-think-k">Thinking it through</span>' +
+      '<span class="ask-think-s" aria-hidden="true">0s</span></div><ol class="ask-think-steps" role="list"></ol>';
+    logEl.appendChild(el);
+    think = { el: el, t0: Date.now(), plan: plan, steps: [plan[0]], painted: 0, timers: [] };
+    think.tick = setInterval(thinkPaint, 1000);
+    plan.slice(1).forEach(function (st, i) {
+      think.timers.push(setTimeout(function () { if (think) { think.steps.push(st); thinkPaint(); logEl.scrollTop = logEl.scrollHeight; } }, 450 * (i + 1)));
+    });
+    thinkPaint();
+    form.classList.add("is-busy");
+    sendBtn.setAttribute("aria-label", "Stop");
+    logEl.scrollTop = logEl.scrollHeight;
+  };
+  /* the answer is here: how long it took and every step it took, for the answer's own record */
+  var thinkDone = function () {
+    if (!think) return null;
+    var t = { secs: Math.max(1, Math.round((Date.now() - think.t0) / 1000)), steps: think.plan.slice() };
+    thinkStop();
+    return t;
+  };
+  var thinkPlan = function (text, file) {
+    return [/\n/.test(text) ? "Reading your messages" : "Reading your message"]
+      .concat(file ? ["Opening your client file"] : [], ["Checking Evelyn’s notes", "Putting the answer together"]);
+  };
+  var thoughtHtml = function (th, i, open) {
+    if (!th || !th.steps) return "";
+    return '<button type="button" class="ask-thought" aria-expanded="' + (open ? "true" : "false") + '" data-thought="' + i + '">' + SPARK +
+      "Thought it through · " + th.secs + "s" + CHEV + "</button>" +
+      '<ol class="ask-think-steps ask-thought-steps" role="list"' + (open ? "" : " hidden") + ">" +
+      th.steps.map(function (st) { return stepHtml(st, true, false); }).join("") + "</ol>";
   };
   /* the latest answer always carries two or three buttons: its own first (products, links, what the assistant
      suggests next), each action once, then the defaults for this client when there's room */
@@ -966,7 +1033,7 @@
     if (lastBot >= 0 && state.log.slice(lastBot + 1).some(function (m) { return m.who === "you"; })) lastBot = -1;
     state.log.forEach(function (m, i) {
       if (m.who === "you") bubble("you", esc(m.text), m.fresh ? "is-new" : "");
-      else if (m.who === "bot") bubble("bot", esc(m.text) + (i === lastBot ? actsHtml(m.acts, !state.pending) : ""), (m.warn ? "warn" : "") + (m.fresh ? " is-new" : ""));   /* only the latest answer keeps its buttons */
+      else if (m.who === "bot") bubble("bot", thoughtHtml(m.thought, i, m.thoughtOpen) + esc(m.text) + (i === lastBot ? actsHtml(m.acts, !state.pending) : ""), (m.warn ? "warn" : "") + (m.fresh ? " is-new" : ""));   /* only the latest answer keeps its buttons */
       else if (m.who === "note") bubble("note", '<span class="ask-tag">Noted in your skin profile</span>' + esc(m.text) +
         ' <button type="button" class="ask-note-see" data-act="account">See or change it</button>');
       else if (m.who === "sent") {
@@ -992,6 +1059,7 @@
         '<button type="button" class="ask-act" data-act="nevermind">Not now</button></div><p class="ask-err" role="alert">' + esc(sendErr) + '</p>';
       box.appendChild(f);
     }
+    if (think) logEl.appendChild(think.el);   /* still working on an answer: the row stays last */
     var lastM = state.log[state.log.length - 1], lastHasActs = !!(lastM && lastM.who === "bot" && lastM.acts && lastM.acts.length);
     chipsEl.parentNode.hidden = (state.log.length > 0 && !!pending) || !st || lastHasActs;
     chipsEl.innerHTML = chipsFor(st).map(function (c) { return '<button type="button" class="ask-chip" data-go="' + esc(c[1]) + '">' + esc(c[0]) + "</button>"; }).join("");
@@ -1067,22 +1135,24 @@
     if (rk) return false;
     var who = me(), my = ++turn;
     inflight = { text: text };
-    bubble("bot", "…", "thinking");
-    logEl.scrollTop = logEl.scrollHeight;
+    thinkStart(thinkPlan(text, !!who));
     post({ message: text, history: history(), name: who ? who.name : "", email: who ? who.email : "", client: status() }).then(function (r) {
       if (my !== turn) return;                 // set aside: they kept writing
       inflight = null;
+      var th = thinkDone();
       if (r && r.answer) {
         var answer = String(r.answer), ids = Array.isArray(r.products) ? r.products.map(String) : [];
         var links = (Array.isArray(r.links) ? r.links : []).filter(function (l) { return l && /^https:\/\//.test(l.url); })
           .slice(0, 3).map(function (l) { return [String(l.label || "Track my package"), "go:" + l.url]; });
+        lastThought = th;
         settle(text, { answer: answer, acts: bagActs(ids).concat(links, suggested(r.next), nextActs(answer, ids.length > 0)) });
+        lastThought = null;
         noted(Array.isArray(r.remembered) ? r.remembered.map(String) : []);
         if (r.remembered && window.LumevinaProfile) window.LumevinaProfile.remembered();
       } else if (r && r.offtopic) settle(text, { offtopic: String(r.offtopic), quiet: !!r.quiet });
       else if (r && r.handoff) settle(text, { handoff: String(r.handoff), why: r.why ? String(r.why) : "", note: r.note ? String(r.note) : "" });
       else settle(text, classify(text));
-    }, function () { if (my !== turn) return; inflight = null; settle(text, classify(text)); });
+    }, function () { if (my !== turn) return; inflight = null; thinkStop(); settle(text, classify(text)); });
     return true;
   };
 
@@ -1189,31 +1259,37 @@
     if (rk) return false;
     /* her plan, order look-ups and small talk answer here, instantly */
     if (fromPlan(t) || ORDER_ASK.test(t) || ORDER_NO.test(text) || GIFT_LEFT.test(t) || CHITCHAT.test(t)) return false;
-    var who = me(), live = bubble("bot", "…", "thinking"), my = ++turn, flight = inflight = { text: text };
-    logEl.scrollTop = logEl.scrollHeight;
+    var who = me(), live = null, th = null, my = ++turn, flight = inflight = { text: text };
+    thinkStart(thinkPlan(text, false));
     if (asking) asking.abort();
     var ctl = asking = new AbortController();
     sampler([{ role: "user", content: previewRules() }].concat(history()), {
       model: PREVIEW_MODEL, effort: "low", modelTier: "quick", cache: false, signal: ctl.signal,
       onText: function (u) {
         var now = shown(u.text);
-        if (!now || !live.isConnected) return;
+        if (!now || my !== turn) return;
         flight.shown = true;
-        live.classList.remove("thinking");
-        live.textContent = now;
+        if (!live || !live.isConnected) {
+          if (!th) th = thinkDone();
+          live = bubble("bot", thoughtHtml(th, -1, false) + '<span class="ask-live"></span>', "is-streaming");
+        }
+        live.querySelector(".ask-live").textContent = now;
         logEl.scrollTop = logEl.scrollHeight;
       }
     }).then(function (r) {
       if (asking === ctl) asking = null;
       if (my !== turn) return;                 // set aside: they kept writing
       inflight = null;
+      if (!th) th = thinkDone();
       var mk = marks(r.text), answer = shown(r.text);
       if (mk.offtopic) return settle(text, { offtopic: mk.offtopic });
       /* a hand-off has to come from this message (js/ask-rules.js → handOffOk); otherwise what Claude wrote stands,
          or the website's own answer */
       if (mk.handoff && (!RULES || !RULES.handOffOk || RULES.handOffOk(mk.handoff, text))) return settle(text, { handoff: mk.handoff, why: mk.why, note: mk.note });
       if (!answer) return settle(text, local(text));
+      lastThought = th;
       settle(text, { answer: answer, acts: bagActs(mk.ids).concat(suggested(mk.next), nextActs(answer, mk.ids.length > 0)) });
+      lastThought = null;
       var LP = window.LumevinaProfile;
       if (who && LP && LP.note) noted(mk.facts.filter(function (f) { return LP.note(f[0], f[1]); }).map(function (f) { return f[0]; }));
     }, function (e) {
@@ -1221,6 +1297,7 @@
       if (e && e.code === "cancelled") return;
       if (my !== turn) return;
       inflight = null;
+      thinkStop();
       if (e && GONE[e.code]) sampler = null;
       settle(text, local(text));
     });
@@ -1308,7 +1385,8 @@
     if (asking) { asking.abort(); asking = null; }
     queued = inflight.text.split("\n").concat(queued);
     inflight = null;
-    render();                                  // the thinking dots go
+    thinkStop();
+    render();                                  // the thinking row goes
   };
   var ask = function (text, now) {
     text = String(text || "").trim();
@@ -1477,7 +1555,19 @@
   fab.addEventListener("click", function () { if (panel.hidden) open(); else close(); });
   panel.querySelector(".ask-x").addEventListener("click", close);
   panel.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
-  form.addEventListener("submit", function (e) { e.preventDefault(); var t = input.value; input.value = ""; ask(t); });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    /* nothing typed while an answer is being worked out: the button is Stop, and the answer is set aside */
+    if (think && !input.value.trim()) {
+      turn++;
+      if (asking) { asking.abort(); asking = null; }
+      inflight = null;
+      thinkStop();
+      input.focus();
+      return;
+    }
+    var t = input.value; input.value = ""; ask(t);
+  });
   /* one step of a menu: show what they picked, then the next step */
   var go = function (label, target) {
     if (target === "skin") {
@@ -1528,6 +1618,14 @@
   chipsEl.addEventListener("click", function (e) { if (drag && drag.moved) { e.stopImmediatePropagation(); e.preventDefault(); } }, true);
 
   logEl.addEventListener("click", function (e) {
+    var tb = e.target.closest(".ask-thought");
+    if (tb) {
+      var open = tb.getAttribute("aria-expanded") !== "true", m = state.log[+tb.getAttribute("data-thought")];
+      tb.setAttribute("aria-expanded", String(open));
+      if (tb.nextElementSibling) tb.nextElementSibling.hidden = !open;
+      if (m) { m.thoughtOpen = open; save(); }
+      return;
+    }
     var b = e.target.closest("[data-act]");
     if (!b) return;
     var act = b.getAttribute("data-act");
