@@ -49,6 +49,7 @@
  "cover": {
   "text": "From the bottom up",
   "top": 300,
-  "size": 96
+  "size": 96,
+  "grad": 0.6
  }
 }
