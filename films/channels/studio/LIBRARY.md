@@ -71,12 +71,13 @@ Missing:
 | Skin Sense | `set/w3d.js` | The ivory studio (soft environment, warm key, cool rim, soft shadows) |
 | | `set/goose3d.js` to `set/print3d.js` | Six Season 2 skin worlds |
 | | `set/terrain.js`, `set/section.js`, `set/uvcam.js` | Season 1: macro skin terrain, the cut-face section, the UV camera view |
+| | `set/voxel3d.js`, `set/night3d.js`, `set/night.mjs`, `s3-looktest/` | Season 3 look test only (10 s): the voxel take, an earlier night take, and the night overlay. Pending the owner's look gate |
 | Kit | `kits/cinema/sci/ladder.js` | Scale rungs with a log dolly and float-safe re-centring |
 
 Missing:
 
 - Season 3 worlds sit inside one film's `scene.mjs`. Lift the reusable parts into `set/` when the film is delivered. Stage 2.
-- Skin Sense's Season 3 voxel world does not exist yet. Stage 2, after the look gate.
+- Skin Sense's Season 3 world: a 10 s look test exists (voxel take: `set/voxel3d.js`, rendered on the `--plain` path with grain 0.02 in `set/w3d.js`, no motion blur). It awaits the owner's look gate. It is not yet a reusable world or a theme file. Stage 2, after the look gate.
 - No picture catalogue of environments (one still each). Stage 3.
 
 ## 4. Camera presets
@@ -102,7 +103,7 @@ Missing:
 |---|---|
 | `kits/cinema/cinema3d.js` | The finish: motion blur, bokeh depth of field, bloom, ACES and sRGB |
 | `skincare: set/studio.js` | `createStudio` (three-point rig and a soft-box environment), `skinMaterial`, `cellMaterial`, `strandMaterial`, `fluidMaterial`, `createShaft` (light shaft), `createGrain` |
-| `skincare: set/w3d.js` | The ivory studio lights, 2048 px soft shadows, the channel's own finish, tube, glow and texture helpers |
+| `skincare: set/w3d.js` | The ivory studio lights, 2048 px soft shadows, the channel's own finish (with an optional `grain` amount), tube, glow and texture helpers |
 | `skincare: set/prod.js`, `set/look3.js` | The production pass (surface variation, out-of-focus specks), skin, hairs and grain v3 |
 | `physics: set/props.js` | The Bench's light rig (soft key, hemisphere fill, cool rim) and lit props |
 | `physics: set/aces.js`; `whatif: set/aces.js` | Colours fed through the finish's ACES inverse so they land on theme tokens (`screenAlpha` for overlays) |
@@ -115,7 +116,7 @@ Missing, all stage 2:
 - No shared light rigs or material library in the kit: each channel carries its own.
 - `aces.js` and `look.js` are copied between channels.
 - Reality Rulebook, One More Orbit and Possibility Lab cast no shadows.
-- No ambient occlusion pass, and no grain in the kit.
+- No ambient occlusion pass, and no grain in the kit (Skin Sense's own finish in `set/w3d.js` has a `grain` amount).
 - No `.hdr` environments or loader.
 
 What the engine can and cannot do is in [README.md](README.md), "Maximum-fidelity standard".
@@ -164,8 +165,8 @@ Missing:
 
 - No ASMR score preset, and no loudness profile for it. Stage 2 (preset), stage 4 (QA profile).
 - The like/follow remix exists in three forks. One shared tool. Stage 3.
-- No tool in the repo makes a clone of the owner's own voice. If one is added it needs his recorded consent and an AI label. Stage 3.
-- `gaps.py` is One More Orbit's only; every channel has the 1.2 s rule. Move it to the kit. Stage 4.
+- No clone tool on this branch or the channel branches. An earlier toolchain is on `claude/voice-clone` (`kits/cinema/voice/CLONE.md`, with a consent gate) and a new trial is under way: Roadmap 3.10. Any use needs the owner's recorded consent and an AI label.
+- `gaps.py` is One More Orbit's only; every channel has the 1.2 s rule. `tools/qa_episode.py` now measures the same gaps on any dialogue stem; retiring the channel copy is Stage 4.2.
 
 ## 8. Scientific reference library
 
@@ -193,6 +194,9 @@ Missing:
 | Path | What it is |
 |---|---|
 | [QA.md](QA.md) | New: the QA framework and the 100-point internal rubric |
+| `films/channels/studio/tools/qa_episode.py` | New: every hard gate for every format on the delivered video (freeze and voiceless gaps included), the files beside it, and the automated rubric points; writes `review/qa-report.json` |
+| `films/channels/studio/qa/rubric.json` | New: the hard gates, the thresholds per format and the 100 points, as data |
+| `films/channels/studio/tools/validate.py` | New: the plan (`episode.json`, `shots.json`, claims used, human gates) |
 | `kits/cinema/film/qa.py` | Delivery gates on the finished mp4: size, picture against sound, length, loudness, true peak, mono safety, flashing, text audit |
 | `kits/cinema/film/scorecard.py` | The measured table for `review/scorecard.md` |
 | `kits/cinema/studio/qa.py` | Sound sync per event kind |
@@ -209,8 +213,7 @@ Missing:
 Missing:
 
 - `qa.py` has one profile (60 to 75 s shorts). Premium lessons, ASMR and long films need their own. Stage 4.
-- The rubric has no tool that fills in the measured points. Stage 4.
-- Freeze detection and the voiceless-gap check are per-channel habits, not gates. Stage 4.
+- `tools/qa_episode.py` fills in the measured rubric points and measures both frozen picture and voiceless gaps. It is not yet the last step of each channel's final (Stage 4.2).
 - Skin Sense writes `review/qa-delivery.json`, so Prism does not see its QA. Stage 1.
 
 ## 10. Completed-episode archive
@@ -343,4 +346,4 @@ These are the first candidates to move into the kit (Roadmap stage 2 for scene c
 | Covers | `whatif: covers.py`, `space: season2/make_cover.py`, `skincare: set/covers.mjs` |
 | Posting text | `whatif: posting_pack.py`, `space: season2/make_posting.py`, `skincare: set/pack_fix.py`, `prism-studio/scripts/posting-pack.ts` |
 | The like/follow remix | `whatif: cta/remix.py`, `space: season2/cta_remix.py`, `skincare: set/cta_line.py` |
-| Long-video cards and joins | Four forks of `kits/cinema/film/compilation.mjs`, one per branch |
+| Long-video cards and joins | Five versions of `kits/cinema/film/compilation.mjs`: one on each channel branch and one on the shared branch |

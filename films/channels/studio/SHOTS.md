@@ -135,7 +135,7 @@ scene code reads directly does not exist yet: Roadmap stage 2 ([LIBRARY.md](LIBR
 | `diagram-view` | Locked, 60 to 75 degrees above the orbital plane | `set/rig.js` (`createRig`) | One More Orbit | Field of view 18 to 28 degrees for planets, 40 to 50 for galaxies |
 | `mount-drift` | Distance eased in log space | `set/rig.js` | One More Orbit, Possibility Lab | At most 5% a second on One More Orbit |
 | `mount-arc` | A slow arc around the target | `set/rig.js` | One More Orbit, Possibility Lab | One More Orbit: the bible allows 6 degrees a second; the episodes' `compile.py` keeps azimuth at 1.5 or under, because stars are points the motion blur cannot see. Possibility Lab: at most 3 degrees a second |
-| `scale-jump` | A dolly in log space across scale rungs, with crossfades | `kits/cinema/sci/ladder.js` | One More Orbit, Reality Rulebook | One per One More Orbit episode, at most 3 s, with a motion-blur floor |
+| `scale-jump` | A dolly in log space across scale rungs, with crossfades | `kits/cinema/sci/ladder.js` | One More Orbit (ep01, ep02, ep06). Possibility Lab has its own `set/ladder05.js` | One per One More Orbit episode, at most 3 s, with a motion-blur floor |
 | `keyed-flight` | One continuous flight keyed as position, look-at, field of view and roll; focus follows the look target | Skin Sense `set/w3d.js` (`camAt`, `camPose`), keys in the episode's data file | Skin Sense Season 2 | Base field of view 30 degrees |
 | `painting-push` | A slow scale-up on a painting around a focus point, fading into the 3-D scene | Skin Sense `set/w3d.js` `paintings` (`s0`, `s1`, `focus`, `fin`, `fout`) | Skin Sense Season 2 | The painting is AI art: section 9 |
 
@@ -145,7 +145,7 @@ Not built yet:
 |---|---|
 | A named preset library in the kit that `camera.preset` resolves to | Roadmap stage 2 |
 | One shared camera rig (today `set/rig.js` is copied between two channels) | Roadmap stage 2 |
-| A reusable through-the-surface descent rig for Skin Sense Season 3's night look | Roadmap stage 2. Today it is a `keyed-flight` built per episode; the night look itself is not built |
+| A reusable through-the-surface descent rig for Skin Sense Season 3's night look | Roadmap stage 2. Today it is a `keyed-flight` built per episode. A 10 s look test exists (voxel take: `set/voxel3d.js`, rendered on the `--plain` path with grain 0.02 in `set/w3d.js`, no motion blur). It awaits the owner's look gate. It is not yet a reusable world or a theme file |
 | Lens effects: distortion, anamorphic flares, chromatic aberration | Not in the kit. Do not ask for them in a manifest |
 | Camera shake beyond `handheld` | Not in the kit |
 
@@ -164,7 +164,7 @@ Name these in `lighting` and `materials`. Paths are on each channel's own branch
 | `star-key` | The star is the one key light, plus a 4% fill so night sides keep their shape. Bloom only on stars and light fronts | One More Orbit `set/planet.js` (`sunDir` and the night fill, in the shader), `set/star.js`, and the episode's `scene.mjs` | None |
 | `desk-light` | One warm-white desk lamp plus a 6% fill, over a graph-paper desk | Possibility Lab `set/desk.js` (the lamp's pool on the paper), `set/globe.js` (one-lamp shading) | No shadow maps. `set/desk.js` draws soft blob shadows under up to six objects |
 | `ivory-studio` | A procedural soft-box environment, a warm key, a rim and a hemisphere fill | Skin Sense `set/w3d.js`; `set/studio.js` `createStudio` | Soft shadows, 2048 px (`PCFSoftShadowMap`) |
-| `night-look` | Skin Sense Season 3: tissue that glows from within on a dark green-black ground, one soft key | A brief only (`s3-looktest/BRIEF.md`). **To build**, and pending the owner's look gate | To decide at the look test |
+| `night-look` | Skin Sense Season 3: tissue that glows from within on a dark green-black ground, one soft key | A 10 s look test exists (voxel take: `set/voxel3d.js`, rendered on the `--plain` path with grain 0.02 in `set/w3d.js`, no motion blur). It awaits the owner's look gate. It is not yet a reusable world or a theme file. Files: `s3-looktest/scene.mjs`, `set/night.mjs` (the ground and captions), `set/voxel3d.js`; `s3-looktest/BRIEF.md` is older than the voxel decision | The look test's key light casts shadows from a 1024 px map (`set/voxel3d.js`). To confirm at the look gate |
 | `light-shafts` | Additive shaft geometry, glow sprites and bloom | Skin Sense `set/studio.js` `createShaft`, `set/w3d.js` `mkGlow` | An approximation of volumetric light |
 
 ### Materials
@@ -189,8 +189,8 @@ Name these in `lighting` and `materials`. Paths are on each channel's own branch
 | Path | Gives | Does not give |
 |---|---|---|
 | Kit finish, `kits/cinema/cinema3d.js` (Reality Rulebook, One More Orbit, Possibility Lab) | Motion blur, bokeh depth of field, bloom, ACES | Grain; blur on captions and labels |
-| Skin Sense's own finish in `set/w3d.js`, rendered with `--plain` | 4x MSAA, a 20-tap depth of field, bloom, ACES | Motion blur |
-| Grain | A channel helper only: Skin Sense `set/studio.js` `createGrain`, `set/look3.js` `grainV3` | Not in the kit: Roadmap stage 2 |
+| Skin Sense's own finish in `set/w3d.js`, rendered with `--plain` | 4x MSAA, a 20-tap depth of field, bloom, ACES, and grain when the episode's data file sets `three.grain` (0.02 in the Season 3 look test) | Motion blur |
+| Grain | Skin Sense's own finish (`set/w3d.js` `grain`) and the helpers `grainV3` (`set/look3.js`) and `createGrain` (`set/studio.js`) | Not in the kit: Roadmap stage 2 |
 
 ### Do not write these into a manifest
 

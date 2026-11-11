@@ -6,7 +6,8 @@
         [--season N] [--number N] [--title "..."] [--folder NAME] [--out DIR] [--identities DIR] [--force] [--overwrite]
 
 It reads the channel identity (films/channels/studio/identities/<slug>.json), resolves the format's
-defaults and the season's look, and writes a folder (default ./new-episodes/<prefix>-<topic>/) with:
+defaults and the season's look, and writes a folder (--out; default ./new-episodes/<prefix>-<topic>/ in
+the current directory, so pass --out with a scratch folder when you stand in the repo) with:
 
     episode.json    the master spec, valid against schema/episode.schema.json, with every default it
                     chose listed under "assumptions"
@@ -19,8 +20,10 @@ defaults and the season's look, and writes a folder (default ./new-episodes/<pre
     NEXT-STEPS.md   the ordered checklist for this episode, with who does each step
 
 It refuses a length outside the format's window unless --force, and a format the channel's identity
-does not list unless --force. A long video under 510 s (8:30) is refused even with --force. It prints
-what it assumed, then runs validate.py on what it wrote. No network. Standard library only.
+does not list unless --force. A forced length is a plan only: validate.py fails it from stage "editing"
+on. Refused even with --force: a long video under 510 s (8:30), a premium lesson under 60 s, and a 9:16
+length too short to hold the like/follow moment after its first 20 s. It prints what it assumed, then
+runs validate.py on what it wrote. No network. Standard library only.
 
 The folder is a starting point, not a build: move it into the channel's folder on the channel's own
 branch (the identity's "branch" and "filmsPath") before building. Full guide:
@@ -29,6 +32,7 @@ films/channels/studio/NEW-EPISODE.md.
 import argparse
 import datetime
 import json
+import math
 import re
 import sys
 import unicodedata
@@ -46,6 +50,9 @@ CTA_FILE = CHANNELS / "CTA.md"
 
 KINDS = ("short", "premium", "part", "long")
 LONG_MIN_S = 510.0
+PREMIUM_MIN_S = 60.0                                   # "never under 60 s" (films/channels/SEASON-FORMAT.md)
+CTA_NOT_BEFORE_S = 20.0                                # films/channels/CTA.md
+JOINED_SLOT = [810, 1440]                              # kits/cinema/film/compilation.mjs: a 1080x1920 master, scaled into the 2560x1440 frame
 
 # Used only when a channel's identity lists no such format and --force is given.
 STUDIO_FORMATS = {
@@ -108,6 +115,8 @@ def parse_duration(text):
         value = int(m.group(1)) * 60 + float(m.group(2)) if m else float(text)
     except ValueError:
         raise Stop(f"--duration \"{text}\" is not a number of seconds or m:ss (examples: 68, 80, 1:10, 9:00)")
+    if not math.isfinite(value):
+        raise Stop(f"--duration \"{text}\" is not a length in seconds (examples: 68, 80, 1:10, 9:00)")
     if value <= 0:
         raise Stop("--duration must be more than 0")
     return value
@@ -321,28 +330,50 @@ def build(a):
     if kind == "long" and D < LONG_MIN_S:
         raise Stop(f"A long video runs at least {LONG_MIN_S:.0f} s (8:30); {D:g} s was asked for. "
                    f"--force cannot override this: every long video is at least 8:30, by real content, never padding (films/channels/SEASON-FORMAT.md).")
+    if kind == "premium" and D < PREMIUM_MIN_S:
+        raise Stop(f"A premium lesson is never under {PREMIUM_MIN_S:.0f} s; {D:g} s was asked for. "
+                   f"--force cannot override this (films/channels/SEASON-FORMAT.md).")
     if not lo <= D <= hi:
         if not a.force:
             raise Stop(f"{D:g} s is outside {name}'s window for \"{kind}\": {lo:g} to {hi:g} s ({mmss(lo)} to {mmss(hi)}).\n"
-                       f"Pick a length inside it, or pass --force to plan it anyway (it is recorded, and validate.py will warn).")
+                       f"Pick a length inside it, or pass --force to plan it anyway (it is recorded; validate.py warns, and fails it from stage \"editing\" on).")
         forced = True
-        assumptions.append(f"The target of {D:g} s is outside the format's {lo:g} to {hi:g} s. It was accepted because of --force (format.durationForced).")
+        assumptions.append(f"The target of {D:g} s is outside the format's {lo:g} to {hi:g} s. It was accepted because of --force (format.durationForced). "
+                           f"A forced length is a plan only: it never ships, and validate.py fails it from stage \"editing\" on.")
     fps = int(fmt_src["fps"])
     grid = 0.5 if fps % 2 == 0 else 1.0
     if abs(D / grid - round(D / grid)) > 1e-9:
         snapped = round(D / grid) * grid
         assumptions.append(f"The target {D:g} s was rounded to {snapped:g} s so every window sits on a whole frame.")
         D = snapped
+    if D <= 0:
+        raise Stop(f"--duration {a.duration} is shorter than one frame step ({grid:g} s). Give the length in seconds.")
     aspect, size = fmt_src["aspect"], list(fmt_src["size"])
     native = WIRED[aspect]
-    fmt = {"kind": kind, "aspect": aspect, "size": size, "nativeSize": native, "fps": fps, "durationS": [lo, hi], "targetS": num(D)}
+    joined = kind == "long" and LONG_STYLE.get(slug, "film") == "joined"
+    fmt = {"kind": kind, "aspect": aspect, "size": size}
+    if kind == "long":
+        fmt["shape"] = "joined" if joined else "film"
+    if not joined:                                       # a joined long video is not rendered as one picture
+        fmt["nativeSize"] = native
+    fmt.update({"fps": fps, "durationS": [lo, hi], "targetS": num(D)})
     if forced:
         fmt["durationForced"] = True
-    deliveries = [{"name": "master" if size == native else "native render", "size": native, "native": True, "how": "kits/cinema/film/render.mjs, final tier"}]
-    if size != native:
+    if joined:
+        deliveries = [{"name": "master (the file Prism imports)", "size": size, "native": False,
+                       "how": f"kits/cinema/film/compilation.mjs, through the channel's long-video script: a {size[0]}x{size[1]} frame with the cards drawn at "
+                              f"that size; each lesson's picture is its 1080x1920 master scaled down to {JOINED_SLOT[0]}x{JOINED_SLOT[1]} in the centre slot. "
+                              f"Label: '{size[0]}x{size[1]} upload; episode picture {JOINED_SLOT[0]}x{JOINED_SLOT[1]} from the 1080x1920 master'."}]
+        assumptions.append(f"A joined long video is not rendered as one picture, so no nativeSize is recorded: the cards are drawn at {size[0]}x{size[1]} and each "
+                           f"lesson's 1080x1920 master is scaled down to {JOINED_SLOT[0]}x{JOINED_SLOT[1]} (kits/cinema/film/compilation.mjs). Never label it native 1440p.")
+    else:
+        deliveries = [{"name": "master" if size == native else "native render", "size": native, "native": True, "how": "kits/cinema/film/render.mjs, final tier"}]
+    if not joined and size != native:
         deliveries.append({"name": "master (the file Prism imports)", "size": size, "native": False,
-                           "how": "Upscaled from the native render; only cards are drawn at this size (kits/cinema/film/compilation.mjs). Never label it native."})
-        assumptions.append(f"The picture renders at {native[0]}x{native[1]}; the {size[0]}x{size[1]} master is an upscale and is labelled as one.")
+                           "how": f"An upscale of the native render. No tool writes this file yet for one continuous film: Roadmap 2.2. "
+                                  f"Once built, label it '{size[0]}x{size[1]} upscale of a {native[1]} render', never native."})
+        assumptions.append(f"The picture renders at {native[0]}x{native[1]}; the {size[0]}x{size[1]} master is an upscale and is labelled as one. "
+                           f"No tool writes that file yet for one continuous film (films/channels/studio/ROADMAP.md, 2.2).")
     if aspect == "9:16":
         deliveries.append({"name": "YouTube file", "size": [1440, 2560], "native": False,
                            "how": "Lanczos upscale by kits/cinema/film/youtube1440.py. Label it '1440 upscale'."})
@@ -381,13 +412,18 @@ def build(a):
     films_path = identity.get("filmsPath", "films/channels/" + slug)
     deliver = None
     if kind == "long":
-        joined = LONG_STYLE.get(slug, "film") == "joined"
         folder = a.folder or (f"s{season}" if joined else slugify(title))
-        where = f"{films_path}/longform/{folder}/"
         deliver = f"{films_path}/compilations/{folder}/"
-        assumptions.append(("" if a.folder else (f"Folder \"{folder}\": a season's joined long video is named after its season. " if joined
-                            else f"Folder \"{folder}\" is the title in lower case with hyphens; pass --folder for a shorter name. ")) +
-                           f"Work in longform/{folder}/; the finished video goes to compilations/{folder}/{folder}-16x9.mp4, or Prism ignores it (films/channels/studio/STRUCTURE.md).")
+        if joined:
+            where = f"{deliver}plan/"
+            assumptions.append(("" if a.folder else f"Folder \"{folder}\": a season's joined long video is named after its season. ") +
+                               f"A joined long video has no working folder of its own (films/channels/studio/STRUCTURE.md, section 5). Keep this plan in "
+                               f"compilations/{folder}/plan/: a sub-folder of the delivery folder is never pushed to Prism. The finished video goes to "
+                               f"compilations/{folder}/{folder}-16x9.mp4, or Prism ignores it.")
+        else:
+            where = f"{films_path}/longform/{folder}/"
+            assumptions.append(("" if a.folder else f"Folder \"{folder}\" is the title in lower case with hyphens; pass --folder for a shorter name. ") +
+                               f"Work in longform/{folder}/; the finished video goes to compilations/{folder}/{folder}-16x9.mp4, or Prism ignores it (films/channels/studio/STRUCTURE.md).")
     else:
         sizes = SEASON_SIZES.get(slug, SEASON_SIZES["*"])
         before = sum(sizes[: season - 1]) + sizes[-1] * max(0, season - 1 - len(sizes))
@@ -459,8 +495,12 @@ def build(a):
     cta_s = max(3.0, round((words_in(follow(line_t)) / rate + 0.5) / grid + 0.4999) * grid)
     if cta_s > 3.0 and lines:
         assumptions.append(f"The like/follow line needs about {cta_s:g} s at this pace. CTA.md asks for about 2 to 3 s: shorten the line or accept the longer moment.")
+    if kind != "long" and D < CTA_NOT_BEFORE_S + cta_s + 4.0:
+        raise Stop(f"{D:g} s is too short for a {kind}: the like/follow moment never starts in the first {CTA_NOT_BEFORE_S:.0f} s (films/channels/CTA.md), "
+                   f"it needs about {cta_s:g} s, and the ending needs at least 4 s after it, so the shortest plan is {CTA_NOT_BEFORE_S + cta_s + 4.0:g} s. "
+                   f"--force cannot override this.")
 
-    long_style = LONG_STYLE.get(slug, "film") if kind == "long" else None
+    long_style = ("joined" if joined else "film") if kind == "long" else None
     if kind == "long":
         assumptions.append("Long-video shape: " + ("six lessons joined with an opening, bridges and a finale (Skin Sense, SEASON-FORMAT.md). Lesson lengths here are equal placeholders; the real ones come from the six episodes."
                            if long_style == "joined" else "one story in a cold open, eight chapters, a payoff and a close (SEASON-FORMAT.md). The eight parts are cut from the eight chapters."))
@@ -481,8 +521,9 @@ def build(a):
     what = {"short": f"Episode {number}", "premium": f"Episode {number}", "part": f"Part {part_of[0]} of {part_of[1]}", "long": "Long video"}[kind]
     label_ai = "narrated by a synthetic voice (labelled as AI)" if vkind == "tts" else \
         f"narrated by {'the owner' if vkind == 'owner' else 'a guest'} (an AI voice stands in, labelled as AI, until the recording arrives)"
+    picture = (f"{size[0]}x{size[1]} frame; each lesson scaled from its 1080x1920 master" if joined else f"{native[0]}x{native[1]} native")
     script += [f"# {channel_label} · {what}: \"{title}\" (skeleton: every vo line is a TODO; fact-check before any render)", "",
-               f"About {D:g} s ({mmss(D)}), {aspect} ({native[0]}x{native[1]} native), {label_ai}. Pace: {wpm:g} words a minute, so about {total_words} words in all.",
+               f"About {D:g} s ({mmss(D)}), {aspect} ({picture}), {label_ai}. Pace: {wpm:g} words a minute, so about {total_words} words in all.",
                f"One question: {a.topic.strip()}",
                f"Written by films/channels/studio/tools/new_episode.py on {a.today}. The master spec is episode.json; the shots are in shots.json.",
                "Format: kits/cinema/script/README.md (one heading per beat, one `vo:` line per beat, `*stars*` on the words that get a camera landing or a sound,",
@@ -550,7 +591,8 @@ def build(a):
     recording = "not needed" if vkind == "tts" else "waiting"
     ai_voice = True
     if vkind != "tts":
-        assumptions.append("disclosures.aiVoice starts true because an AI voice stands in until the recording arrives. Set it false once the real recording is in every line.")
+        assumptions.append("disclosures.aiVoice starts true because an AI voice stands in until the recording arrives. Set it false once the real recording is in every line. "
+                           "A cloned voice keeps it true: set voice.synthetic true and record the consent in voice.consent (the channel's rules say which voice a season uses).")
     assumptions.append("disclosures.aiVisuals is " + ("true because the season look's notes mention AI illustrations." if ai_visuals
                        else "false. Set it true as soon as any AI-made image appears in the picture (SHOTS.md, owner-made AI art)."))
     question = a.topic.strip() if a.topic.strip().endswith("?") else f"TODO: the one question this episode answers (topic: {a.topic.strip()})"
@@ -630,27 +672,42 @@ def next_steps(ep, ctx):
     L += [f"## {n}. Look gate (Owner)", "",
           f"- [ ] The season look is \"{look_status}\" in the identity file. If it is not approved, nothing else is built: make one still in the look"
           + (" and a 10 s test clip" if slug == "skincare" else "") + " and get the owner's yes. The coordinator then updates the identity file.",
-          "- [ ] Any reference picture the owner makes by hand follows `films/channels/studio/SHOTS.md` (\"Reference frames\" and \"Owner-made AI art\").",
+          "- [ ] Any reference picture the owner makes by hand follows `films/channels/studio/SHOTS.md` (section 8b, reference frames, and section 9, owner-made AI art).",
           "- [ ] This episode's own gate comes at the build step: the owner sees its stills before the full render, and only the owner sets `status.lookGate` to `approved`.", ""]
     n += 1
     L += [f"## {n}. Shots (Agent)", "",
           "- [ ] Plan the film as one continuous journey: `films/channels/studio/SHOTS.md`. Split each beat's placeholder shot into real shots and fill every field.",
           f"- [ ] `python3 -I films/channels/studio/tools/validate.py <this folder>{idf}` passes with no problem.", ""]
     n += 1
-    L += [f"## {n}. Build (Agent, on the channel's branch)", "",
-          "- [ ] Stills first: render the hook, the payoff and the last frame with the final finish, and show them to the owner."
-          + (" Skin Sense: plus a 10 s test clip." if slug == "skincare" else ""),
-          "- [ ] No full render until the owner has set `status.lookGate` to `approved`. `changes-requested` means revise and show again.",
-          f"- [ ] In `{ctx['where']}`: the compile step writes `film.json` from the script and the measured voice; nothing in it is a hand-typed time.",
-          f"- [ ] Copy `disclosures` from `episode.json` into `film.json` (`disclosures.aiVisuals`, `disclosures.aiVoice`).",
-          f"- [ ] Season 2 build order on this channel, as audited on 11 Nov 2026 (a new season may differ; check the branch):",
-          f"  {BUILD_ORDER.get(slug, 'see kits/cinema/script/README.md and kits/cinema/film/README.md')}.",
-          "- [ ] One render job per machine. Long renders resume with `kits/cinema/film/run.sh <folder>`.", ""]
+    if kind == "long" and ctx["long_style"] == "joined":
+        L += [f"## {n}. Build (Agent, on the channel's branch)", "",
+              "- [ ] The six lessons are finished and approved first. This video adds only the cards: an opening, bridges and a finale, each narrated.",
+              "- [ ] Stills first: the opening card, one bridge card and the finale card, shown to the owner.",
+              "- [ ] No full build until the owner has set `status.lookGate` to `approved`. `changes-requested` means revise and show again.",
+              "- [ ] Build with the channel's long-video script on `kits/cinema/film/compilation.mjs` (Season 2, as audited on 11 Nov 2026: "
+              "`compilations/vol02/build-vol02.sh`, card narration by `set/long_voice.py`; a new season may differ, check the branch).",
+              "- [ ] One render job per machine.", ""]
+    else:
+        L += [f"## {n}. Build (Agent, on the channel's branch)", "",
+              "- [ ] Stills first: render the hook, the payoff and the last frame with the final finish, and show them to the owner."
+              + (" Skin Sense: plus a 10 s test clip." if slug == "skincare" else ""),
+              "- [ ] No full render until the owner has set `status.lookGate` to `approved`. `changes-requested` means revise and show again.",
+              f"- [ ] In `{ctx['where']}`: the compile step writes `film.json` from the script and the measured voice; nothing in it is a hand-typed time.",
+              f"- [ ] Copy `disclosures` from `episode.json` into `film.json` (`disclosures.aiVisuals`, `disclosures.aiVoice`).",
+              f"- [ ] Season 2 build order on this channel, as audited on 11 Nov 2026 (a new season may differ; check the branch):",
+              f"  {BUILD_ORDER.get(slug, 'see kits/cinema/script/README.md and kits/cinema/film/README.md')}.",
+              "- [ ] One render job per machine. Long renders resume with `kits/cinema/film/run.sh <folder>`.", ""]
     if kind == "long":
         L += ["Long video:", "",
-              f"- [ ] Work in `{ctx['where']}` (Prism's push skips it). Finished files go to `{ctx['deliver']}`: `{folder}-16x9.mp4`, `thumbnail.jpg`, `chapters.txt`, `description.md`, `qa.json` and a copy of `packaging.json`.",
-              "- [ ] One video file in the delivery folder: the 2560x1440 upload. Its picture is rendered at 1920x1080 and upscaled; say so, never call it native.",
-              "- [ ] Every line of `chapters.txt` equals one part's title exactly, or Prism links nothing.",
+              f"- [ ] {'Keep the plan in' if ctx['long_style'] == 'joined' else 'Work in'} `{ctx['where']}` (Prism's push skips it). Finished files go to `{ctx['deliver']}`: `{folder}-16x9.mp4`, `thumbnail.jpg`, `chapters.txt`, `description.md`, `qa.json` and a copy of `packaging.json`.",
+              ("- [ ] One video file in the delivery folder: the 2560x1440 upload, built by the channel's long-video script on `kits/cinema/film/compilation.mjs`. "
+               "Cards are drawn at 2560x1440; each lesson's picture is its 1080x1920 master scaled down to 810x1440 in the centre slot. Label it "
+               "'2560x1440 upload; episode picture 810x1440 from the 1080x1920 master', never native 1440p."
+               if ctx["long_style"] == "joined" else
+               "- [ ] One video file in the delivery folder: the 2560x1440 upload. `render.mjs` draws the film at 1920x1080, and no tool writes the 2560x1440 file yet "
+               "for one continuous film (Roadmap 2.2). Once it is built by upscale, label it '2560x1440 upscale of a 1080 render', never native."),
+              "- [ ] `thumbnail.jpg` is 1920x1080 (`films/channels/PACKAGING.md`). `compilation.mjs` writes 1280x720: render the thumbnail with the channel's own tool.",
+              f"- [ ] Every line of `chapters.txt` equals one {'lesson' if ctx['long_style'] == 'joined' else 'part'}'s title exactly, or Prism links nothing.",
               "- [ ] At least 8:30, by real content: an opening, bridges, a finale. Never slowed footage, silence, long holds or recaps.", ""]
     if kind == "part":
         L += ["Part:", "",
@@ -658,15 +715,25 @@ def next_steps(ep, ctx):
               "- [ ] Its title equals its line in the long film's `chapters.txt` exactly. Set `partOf.film` in `episode.json`.",
               "- [ ] The last part stops just before the payoff. The payoff belongs to the long film.", ""]
     n += 1
+    qa_flags = "" if kind != "long" else " --kind long --cards" if ctx["long_style"] == "joined" else " --kind long"
     L += [f"## {n}. QA (Agent, then Reviewer)", "",
-          "- [ ] `python3 -I kits/cinema/film/qa.py <folder>` on the delivered file (format, sync, length, loudness, true peak, flashes).",
+          f"- [ ] `python3 -I films/channels/studio/tools/qa_episode.py <delivered video> --episode <this folder>/episode.json --out <this folder>/review/qa-report.json{qa_flags}`",
+          "  The studio's gate for every format: the hard gates and the automated rubric points. Exit 1 means a hard gate failed: fix the shot or the stage that caused it "
+          "(`films/channels/studio/QA.md`, section 6), then run it again.",
           ]
-    if kind == "premium":
-        L.append("  Its 60 to 75 s length gate fails a 70 to 90 s lesson until a per-format profile exists; report that failure, do not hide it.")
+    if kind == "long" and ctx["long_style"] == "joined":
+        L.append("  `--cards`: a joined video holds narrated still cards. Without it the tool exits 1 on `freeze`, which is expected for this format; with it a person confirms each card.")
     if kind == "long":
-        L.append("  A long video is measured by `kits/cinema/film/compilation.mjs` into `qa.json` instead.")
+        L.append("- [ ] A joined long video is also measured by `kits/cinema/film/compilation.mjs` into `qa.json`, which Prism shows." if ctx["long_style"] == "joined"
+                 else "- [ ] `kits/cinema/film/qa.py` has no long-video profile, so `qa_episode.py` is the only delivery gate for this film.")
+    else:
+        L.append("- [ ] `python3 -I kits/cinema/film/qa.py <folder>` on the delivered file (the kit's own check; Prism shows its `fails`).")
+    if kind == "premium":
+        L.append("  Its 60 to 75 s length gate fails a 70 to 90 s lesson until a per-format profile exists; report that failure, do not hide it. `qa_episode.py` is the gate for a lesson.")
     L += ["- [ ] The quality gate (a) to (h) in `films/channels/STUDIO-STYLE.md`: nothing under 3; (a), (g) and (h) at 4 or more; nothing factual or ethical open.",
-          "- [ ] The internal 100-point rubric in `films/channels/studio/QA.md` (target 95). It is an internal assessment: never public, never a prediction.",
+          "- [ ] The internal 100-point rubric in `films/channels/studio/QA.md` (target 95): `qa_episode.py --blank-scores` prints the form for `review/rubric-scores.json`; "
+          "then run the tool again with `--scores <this folder>/review/rubric-scores.json --release`. Release needs every hard gate passed and 95 points or more. "
+          "It is an internal assessment: never public, never a prediction.",
           f"- [ ] `validate.py` again, with `status.stage` set to `qa`: it now fails on any TODO left in `episode.json`.",
           "- [ ] Report only what was measured. Never claim a technique, a resolution or a number the engine did not deliver.", ""]
     n += 1
@@ -675,21 +742,30 @@ def next_steps(ep, ctx):
           "- [ ] The title and the thumbnail claim no more than the script. Scores are judgments, not predictions.",
           "- [ ] The owner picks the title. Then set `title` in `episode.json` and `status.title` to `chosen`.", ""]
     n += 1
-    L += [f"## {n}. Push and post (Agent, then Owner)", "",
+    delivered = (f"{ctx['deliver'].rstrip('/')}" if kind == "long" else
+                 " ".join(f"{ctx['where']}{x}" for x in ("script.md", "claims.json", "film.json", "out")))
+    L += [f"## {n}. Push and post (Coordinator, then Owner)", "",
           "- [ ] Check Prism has this season's slate, or the folder imports nothing (`prism-studio/scripts/import-episodes.ts`).",
-          f"- [ ] From the channel's own branch checkout: `node prism-studio/scripts/push-media.mjs {slug}` (see `prism-studio/RUNBOOK.md`). The cover must be newer than the mp4.",
-          "- [ ] The owner reviews in Prism and posts by hand. Nothing posts without the owner." + (" The long film goes up first, then one part a day." if kind in ("part", "long") else ""),
+          "- [ ] The coordinator pushes from a checkout of `claude/made-with-claude-film`, which holds the current `prism-studio/` (the channel branches hold an old copy or none). "
+          f"Bring the delivered files in without committing them: `git checkout origin/{I.get('branch', '<branch>')} -- {delivered}`.",
+          "- [ ] Set each cover and YouTube file one second newer than its master (`prism-studio/RUNBOOK.md`: a checkout scrambles modified times), run `npm run media:check` in `prism-studio/`, "
+          f"then `node scripts/push-media.mjs {slug}`.",
+          "- [ ] The owner reviews in Prism and posts by hand. Nothing posts without the owner."
+          + (" The six lessons post first; the joined long video goes up at the end of the season." if ctx["long_style"] == "joined"
+             else " The long film goes up first, then one part a day." if kind in ("part", "long") else ""),
           "- [ ] List every TODO and every open claim in the handoff.", ""]
     n += 1
     L += [f"## {n}. After it posts (Agent)", "",
-          "- [ ] Write the Episode Intelligence Report in `review/intelligence-report.md` (`films/channels/studio/STRUCTURE.md`, section 9): measured results kept apart from hypotheses, no invented numbers.",
+          "- [ ] Write the Episode Intelligence Report: copy `films/channels/studio/templates/episode-intelligence-report.md` to `review/intelligence-report.md` "
+          "(guide: `films/channels/studio/reports/README.md`). Measured results stay apart from hypotheses; no invented numbers.",
           "- [ ] Set `status.stage` to `archive` once the files are stored.", ""]
     rules = [str(x) for x in I.get("rules", []) if isinstance(x, str)]
     never = [str(x) for x in I.get("never", []) if isinstance(x, str)]
     if rules or never:
         L += [f"## {name}: binding rules (from the identity file)", ""]
         L += [f"- {x}" for x in rules]
-        L += [f"- Never: {x}" for x in never]
+        if never:
+            L += ["", "Never (each line is a prohibition):", ""] + [f"- {x}" for x in never]
         L.append("")
     return "\n".join(L)
 
@@ -704,7 +780,7 @@ def main(argv=None):
     ap.add_argument("--number", type=int, help="place in the season, or the part number (default 1; 0 for a long film)")
     ap.add_argument("--title", help="working title (default: the topic)")
     ap.add_argument("--folder", help="the episode's folder name on the channel branch (default: the next epNN by season, or the title for a long film)")
-    ap.add_argument("--out", help="folder to write (default: ./new-episodes/<prefix>-<topic>/)")
+    ap.add_argument("--out", help="folder to write (default: ./new-episodes/<prefix>-<topic>/ in the current directory; pass a scratch folder when you stand in the repo)")
     ap.add_argument("--identities", help="folder of channel identity files (default: films/channels/studio/identities)")
     ap.add_argument("--force", action="store_true", help="accept a length outside the format's window, or a format the identity does not list")
     ap.add_argument("--overwrite", action="store_true", help="write into a folder that already has files")
@@ -723,6 +799,8 @@ def main(argv=None):
             raise Stop("--folder is lower case letters, digits and hyphens only, with no spaces (Prism's media push skips names with spaces)")
         episode, shots, script, ctx, broken = build(a)
         out = Path(a.out) if a.out else Path("new-episodes") / f"{ctx['identity']['prefix']}-{slugify(a.topic)}"
+        if out.exists() and not out.is_dir():
+            raise Stop(f"{out} is a file, not a folder. Pick another --out.")
         if out.exists() and any(out.iterdir()) and not a.overwrite:
             raise Stop(f"{out} already has files. Pick another --out, or pass --overwrite.")
     except Stop as e:
@@ -742,6 +820,7 @@ def main(argv=None):
 
     f = episode["format"]
     print(f"new_episode: wrote {out}/")
+    print("  This folder is scratch: move it to the channel's own branch (NEXT-STEPS.md says where). Never commit it on this branch.")
     print(f"  {episode['id']} · {ctx['name']} · {f['kind']} · {f['aspect']} · target {f['targetS']:g} s (window {f['durationS'][0]:g} to {f['durationS'][1]:g} s)"
           f" · {len(episode['story']['beats'])} beats · voice: {episode['voice']['kind']} ({episode['voice']['id']})")
     print("  files: episode.json, script.md, shots.json, claims.json, out/.gitkeep, NEXT-STEPS.md")

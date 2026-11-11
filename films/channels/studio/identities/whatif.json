@@ -40,7 +40,7 @@
     "s3": {
       "summary": "First person on the graph-paper equator, from the eye line and over the shoulder, under a sky that visibly speeds up. One big live number ('length of a day', falling from 24 h to 1.4 h) never resets. 'Thought experiment' badge throughout.",
       "palette": {},
-      "notes": "Film: 'What If Earth Spun Faster and Couldn't Stop?'. Source: longform/earth-spin/script.md on the channel branch. The owner's recordings are in voice-owner/ and the builder is at finals. Parts run short at the owner's pace, so add-on lines are being written from calc.py facts. A draft review mp4 exists; no owner approval of a still is on record.",
+      "notes": "Film: 'What If Earth Spun Faster and Couldn't Stop?'. Source: longform/earth-spin/script.md and compile.py on the channel branch. Voice: the film's Part A is narrated by a synthetic clone of the owner's own voice (compile.py defaults to VOICE=own and reads vo-own/, which is named in the code but not committed on the branch as of 11 Nov 2026; parts/make_part.py --voice own). The end card says 'Narration: a synthetic version of the owner's own voice (AI)', so disclosures.aiVoice is true; the film.json on the branch carries no disclosures yet. His real takes (voice-owner/, cut into vo-owner/, script-owner.md) are the alternate set, and the part openings, cliffhangers, closers and like/follow lines default to his real takes (voice-owner/cut). The owner's consent to the clone is not on record in the repo: a TODO for the coordinator until he confirms it. Parts run short at the owner's pace, so add-on lines are written from calc.py facts. A draft review mp4 exists; no owner approval of a still is on record.",
       "status": "pending look gate"
     }
   },
@@ -81,7 +81,7 @@
       "size": [2560, 1440],
       "fps": 30,
       "durationS": [510, 570],
-      "notes": "Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4 at 2560x1440. The picture renders natively at 1920x1080 and is upscaled; only cards are drawn at 2560x1440 (kits/cinema/film/compilation.mjs). Never label it native 1440p. A native 2560x1440 render tier is Roadmap stage 2. Runs 8:30 to 9:30, never by padding."
+      "notes": "Season 3 on: one continuous 16:9 film. Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4 at 2560x1440. kits/cinema/film/render.mjs draws the film at 1920x1080; no tool writes the 2560x1440 file yet for one continuous film (Roadmap 2.2). Once it is built by upscale, label it '2560x1440 upscale of a 1080 render', never native 1440p. Seasons 1 and 2 were joined from episodes by kits/cinema/film/compilation.mjs: a 2560x1440 frame with cards drawn at that size and each episode's 1080x1920 master scaled down to 810x1440 (label: '2560x1440 upload; episode picture 810x1440 from the 1080x1920 master'). Runs 8:30 to 9:30, never by padding."
     }
   },
   "packaging": {
@@ -100,8 +100,9 @@
     "One text element per idea (declutter.py); at most two text blocks besides the series line, badges and disclaimers.",
     "python3 -I kits/cinema/sci/contrast.py whatif reports 0 fails.",
     "Compelling pass: seven lenses, each at least 4.",
-    "Owner's voice from Season 3, used as recorded: cut by word alignment, keep the last take, never re-voice a recording. AI stand-in until a recording arrives: voice am_puck (kits/cinema/voice/tts.py), labelled as AI.",
-    "A clone of the owner's own voice is allowed only with his recorded consent and an AI label (owner's request, 11 Nov 2026; newer than voice-owner/README.md's 'never clone'). No tool for it is in the repo yet.",
+    "The owner's real recordings are used as recorded: cut by word alignment, keep the last take, never re-voice a recording. AI stand-in for drafts: voice am_puck (kits/cinema/voice/tts.py), labelled as AI.",
+    "Season 3 long film: Part A is narrated by a synthetic clone of the owner's own voice (channel branch: longform/earth-spin/compile.py VOICE=own, vo-own/). disclosures.aiVoice stays true and the label is 'Narration: a synthetic version of the owner's own voice (AI)'. His real takes (voice-owner/, vo-owner/) are the alternate set. In episode.json set voice.synthetic true and record his consent in voice.consent; until the consent is on record it is a TODO in every handoff.",
+    "A clone of the owner's own voice is allowed only with his recorded consent and an AI label (owner's request, 11 Nov 2026; newer than voice-owner/README.md's 'never clone'). No clone tool on this branch or the channel branches. An earlier toolchain is on claude/voice-clone (kits/cinema/voice/CLONE.md, with a consent gate) and a new trial is under way: Roadmap 3.10.",
     "A part shorter than 61 s gets real add-on narration from calc.py facts, never padding.",
     "One Chromium render job per machine."
   ],
@@ -123,6 +124,8 @@
     "claude/whatif-s2:films/channels/whatif/set/anchor.js",
     "claude/whatif-s2:films/channels/whatif/voice-owner/README.md",
     "claude/whatif-s2:films/channels/whatif/longform/earth-spin/script.md",
+    "claude/whatif-s2:films/channels/whatif/longform/earth-spin/compile.py",
+    "claude/whatif-s2:films/channels/whatif/longform/earth-spin/parts/make_part.py",
     "films/channels/PACKAGING.md",
     "films/channels/SEASON-FORMAT.md",
     "films/channels/CTA.md",

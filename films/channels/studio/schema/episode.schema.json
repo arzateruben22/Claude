@@ -114,6 +114,10 @@
           "description": "short: a 9:16 episode of about 61 to 75 s (Seasons 1 and 2). premium: a Skin Sense Season 3 lesson, 9:16, 70 to 90 s. part: one of the 8 chapters of a long film, 9:16, 1:01 to 1:15. long: a 16:9 film or joined long video, 8:30 to 9:30."
         },
         "aspect": { "enum": ["9:16", "16:9"], "description": "Each aspect is its own composition, never a crop of the other." },
+        "shape": {
+          "enum": ["film", "joined"],
+          "description": "Optional, for kind 'long' only. film: one continuous 16:9 film (Season 3 on the three film channels). joined: finished 9:16 episodes joined with narrated cards by kits/cinema/film/compilation.mjs (Seasons 1 and 2; Skin Sense Season 3). A joined video has no nativeSize, and its QA runs with qa_episode.py --cards."
+        },
         "size": {
           "type": "array",
           "prefixItems": [ { "type": "integer", "minimum": 1 }, { "type": "integer", "minimum": 1 } ],
@@ -124,7 +128,7 @@
           "type": "array",
           "prefixItems": [ { "type": "integer", "minimum": 1 }, { "type": "integer", "minimum": 1 } ],
           "items": false, "minItems": 2, "maxItems": 2,
-          "description": "[width, height] the picture is really rendered at. Today the renderer's final tier draws 1080x1920 or 1920x1080 only (kits/cinema/film/render.mjs). When nativeSize is smaller than size, the master is an upscale and must be labelled as one."
+          "description": "[width, height] the picture is really rendered at. Today the renderer's final tier draws 1080x1920 or 1920x1080 only (kits/cinema/film/render.mjs). When nativeSize is smaller than size, the master is an upscale and must be labelled as one. Leave it out for a joined long video (shape 'joined'): its cards are drawn at 2560x1440 and each episode's 1080x1920 master is scaled down to 810x1440, so no single render size is true of it."
         },
         "fps": { "type": "integer", "minimum": 12, "maximum": 60 },
         "durationS": {
@@ -143,7 +147,7 @@
             "properties": {
               "name": { "type": "string", "minLength": 1 },
               "size": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "minItems": 2, "maxItems": 2 },
-              "native": { "type": "boolean", "description": "False for an upscale." },
+              "native": { "type": "boolean", "description": "True when every pixel of the file was drawn at this size. False for an upscale, and for a joined long video, whose frame mixes cards drawn at full size with episode pictures scaled from their masters; 'how' says which." },
               "how": { "type": "string" }
             }
           },

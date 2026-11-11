@@ -12,7 +12,7 @@ import { parsePostUrl } from "./publications";
 import { packagingTitle, type Packaging } from "./packaging";
 import { onWorkingSeason, seasonArchive } from "./season-archive";
 
-export const LESSON_MIN = 4, LESSON_MAX = 6;   // "every 4–6 shorts, a 5–10 minute compilation"
+export const LESSON_MIN = 4, LESSON_MAX = 8;   // "every 4–6 shorts, a 5–10 minute compilation"; a season film has 8 parts
 
 /** Episodes that can go into a new lesson: rendered (a current films: version), not demo, not in a lesson yet, and
  *  not in an archived (uploaded) season (src/domain/season-archive.ts). */
@@ -91,7 +91,13 @@ export type CompilationBuild = {
   /** the folder's packaging.json (src/domain/packaging.ts); undefined when there is none, or none usable: what's stored stays */
   packaging?: Packaging;
 };
-export type CompilationRegistration = { lesson: Lesson; action: "created" | "updated" | "filled" | "unchanged" | "published"; linked: number };
+/** created: new. updated: a new video. filled: the same video, files that were missing are added. refreshed: the same
+ *  video, a corrected chapters.txt or description.md picked up, or its parts linked on a retry. */
+export type CompilationRegistration = {
+  lesson: Lesson; action: "created" | "updated" | "filled" | "refreshed" | "unchanged" | "published"; linked: number;
+  /** what the importer should say about this folder (an owner's edit kept over a changed file) */
+  notes?: string[];
+};
 
 const COMPILATION_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 const plainChannelName = (name: string) => name.replace(/ \(name TBD\)$/, "");
@@ -125,14 +131,18 @@ export function fallbackCompilationTitle(name: string, channelName: string) {
 export const compilationTitle = (name: string, description: string, channelName: string) =>
   titleFromDescription(description) ?? fallbackCompilationTitle(name, channelName);
 
+const linkedCount = async (tx: Tx, lessonId: string) =>
+  Number((await tx.select({ n: sql<number>`count(*)::int` }).from(lessonEpisodes).where(eq(lessonEpisodes.lessonId, lessonId)))[0].n);
+
 /** Link a lesson with no episodes yet to the episodes its chapters name, only when that is certain: every chapter
- *  names exactly one of the channel's (non-demo) episodes, no episode twice, none already in a lesson. Anything less
- *  leaves it unlinked (the screens show its chapters instead). Returns how many were linked. */
-async function linkByChapters(tx: Tx, l: Lesson): Promise<number> {
+ *  names exactly one of the channel's (non-demo) episodes by its title (case, *stars* and spacing aside), no episode
+ *  twice, none already in a lesson. Anything less leaves it unlinked (the screens show its chapters instead). A retry
+ *  (`retry`: an existing lesson, same video) never links an uploaded (archived) season's episodes, so an import never
+ *  brings a finished season back. Returns how many were linked. */
+async function linkByChapters(tx: Tx, l: Lesson, o: { retry?: boolean } = {}): Promise<number> {
   const chapters = parseChapters(l.chapters);
   if (!chapters.length) return 0;
-  const [{ n }] = await tx.select({ n: sql<number>`count(*)::int` }).from(lessonEpisodes).where(eq(lessonEpisodes.lessonId, l.id));
-  if (Number(n)) return 0;
+  if (await linkedCount(tx, l.id)) return 0;
   const key = (s: string) => s.replace(/\*/g, "").replace(/\s+/g, " ").trim().toLowerCase();
   const eps = await tx.select({ id: episodes.id, title: episodes.title, seriesId: episodes.seriesId }).from(episodes)
     .where(and(eq(episodes.channelId, l.channelId), eq(episodes.isDemo, false)));
@@ -143,6 +153,10 @@ async function linkByChapters(tx: Tx, l: Lesson): Promise<number> {
     const m = eps.filter((e) => key(e.title) === key(c.title));
     if (m.length !== 1 || used.has(m[0].id) || picked.includes(m[0])) return 0;
     picked.push(m[0]);
+  }
+  if (o.retry) {
+    const archive = await seasonArchive(tx);
+    if (picked.some((e) => archive.episodeIds.has(e.id))) return 0;
   }
   const series = new Set(picked.map((e) => e.seriesId));
   try {
@@ -162,9 +176,13 @@ async function linkByChapters(tx: Tx, l: Lesson): Promise<number> {
 /** Register or refresh a compilation built and pushed outside Prism as the channel's lesson named `name` (its
  *  folder). New: inserted as a built lesson (Ready for review, like recordLessonBuild leaves one). Known, with a
  *  different video (sha256): the new video, thumbnail, chapters and description replace the old, and its approval
- *  lapses as on any rebuild; the title stays (the owner may have edited it) unless it is still the folder's
- *  fallback. Known, same video: a no-op, except that files which were missing before (a thumbnail pushed later) are
- *  filled in; text already there is never overwritten. An uploaded (published) lesson is left as it is.
+ *  lapses as on any rebuild. Known, same video: files that were missing before (a thumbnail pushed later) are filled in;
+ *  a changed chapters.txt replaces the chapters (nobody edits them in Prism); a changed description.md replaces the
+ *  description only while the stored text is still what the importer wrote (importedDescriptionSha), so the owner's own
+ *  edit is kept; and a lesson with no parts linked yet tries again (the parts may have arrived or been retitled since).
+ *  A missing file never clears what is stored. The title follows the description's title line only while nobody chose
+ *  it (it is still the folder's fallback or the old description's title line, and not the packaging winner). An uploaded
+ *  (published) lesson is left as it is.
  *  Packaging: a new or changed packaging.json is stored; a new or changed winner title becomes the title (the YouTube
  *  title is exactly the winner title; the approval lapses). The same packaging again leaves the owner's edits alone. */
 export async function registerCompilation(d: DB, channelId: string, name: string, input: CompilationBuild): Promise<CompilationRegistration> {
@@ -181,11 +199,12 @@ export async function registerCompilation(d: DB, channelId: string, name: string
       .orderBy(asc(lessons.isTestFixture), asc(lessons.createdAt)).limit(1);
     const fallback = fallbackCompilationTitle(name, ch.name), titled = titleFromDescription(v.description);
     const pkgTitle = packagingTitle(packaging);
+    const descSha = v.description ? sha256(v.description) : "";
 
     if (!l) {
       const [row] = await tx.insert(lessons).values({
         channelId, name, title: pkgTitle ?? titled ?? fallback, state: "ready_for_review", approvedHash: "", ...v, packaging: packaging ?? null,
-        outline: parseChapters(v.chapters).map((c) => ({ part: c.title })),
+        outline: parseChapters(v.chapters).map((c) => ({ part: c.title })), importedDescriptionSha: descSha,
       }).returning();
       const linked = await linkByChapters(tx, row);
       await audit(tx, "worker", "lesson.register", "lesson", row.id, { name, video: v.videoPath, sha256: v.videoSha256, linked, qa: v.qa });
@@ -194,14 +213,17 @@ export async function registerCompilation(d: DB, channelId: string, name: string
     }
     if (l.state === "published") return { lesson: l, action: l.videoSha256 === v.videoSha256 ? "unchanged" : "published", linked: 0 };
 
-    const keepTitle = !(titled && l.title === fallback);
+    // the title follows the description's title line while nobody chose it
+    const oldTitled = titleFromDescription(l.description);
+    const derivedTitle = l.title !== packagingTitle(l.packaging) && (l.title === fallback || (!!oldTitled && l.title === oldTitled));
+    const keepTitle = !(titled && titled !== l.title && derivedTitle);
     // packaging: stored when it changed; a new winner title replaces the title (and so ends the approval)
     const pkgChanged = !!packaging && JSON.stringify(packaging) !== JSON.stringify(l.packaging ?? null);
     const pkgRetitle = pkgChanged && !!pkgTitle && pkgTitle !== packagingTitle(l.packaging) && pkgTitle !== l.title;
     const pkgPatch: Partial<typeof lessons.$inferInsert> = pkgChanged ? { packaging, ...(pkgRetitle ? { title: pkgTitle! } : {}) } : {};
     if (l.videoSha256 !== v.videoSha256) {
       // a new build (or the first one, for a lesson the owner created): exactly what recordLessonBuild does on a rebuild
-      await tx.update(lessons).set({ ...v, ...(keepTitle ? {} : { title: titled! }), ...pkgPatch, state: "ready_for_review", approvedHash: "", updatedAt: new Date() })
+      await tx.update(lessons).set({ ...v, ...(keepTitle ? {} : { title: titled! }), ...pkgPatch, importedDescriptionSha: descSha, state: "ready_for_review", approvedHash: "", updatedAt: new Date() })
         .where(eq(lessons.id, l.id));
       // a build the worker would still try (it can't, without the films toolchain) is no longer needed
       await tx.update(jobs).set({ status: "cancelled" })
@@ -215,22 +237,40 @@ export async function registerCompilation(d: DB, channelId: string, name: string
       return { lesson: fresh, action: "updated", linked };
     }
 
-    // the same video: only what was missing before
-    const fill: Partial<typeof lessons.$inferInsert> = {};
+    // the same video: what was missing, what was corrected, and the parts' links
+    const fill: Partial<typeof lessons.$inferInsert> = {}, notes: string[] = [];
+    let refreshed = false;
+    const unlinked = !(await linkedCount(tx, l.id));
     if (!l.thumbnailPath && v.thumbnailPath) fill.thumbnailPath = v.thumbnailPath;
-    if (!l.chapters && v.chapters) fill.chapters = v.chapters;
     if (!Object.keys(l.qa ?? {}).length && Object.keys(v.qa).length) fill.qa = v.qa;
-    if (!l.description && v.description) {
-      Object.assign(fill, { description: v.description, approvedHash: "" }, keepTitle ? {} : { title: titled! }, l.state === "approved" ? { state: "ready_for_review" as const } : {});
+    if (v.chapters && v.chapters !== l.chapters) {
+      fill.chapters = v.chapters;
+      if (l.chapters) refreshed = true;
+      // an unlinked lesson's outline is its chapters (as on creation); a linked one keeps its parts
+      if (unlinked) fill.outline = parseChapters(v.chapters).map((c) => ({ part: c.title }));
+    }
+    if (v.description && v.description !== l.description) {
+      // the stored text is what the importer wrote (or nothing yet): the file wins. Otherwise the owner edited it in Prism,
+      // and their text stays. A lesson from before this record ("") counts as edited unless its text is empty.
+      const importerText = !l.description || (!!l.importedDescriptionSha && sha256(l.description) === l.importedDescriptionSha);
+      if (importerText) {
+        if (l.description) refreshed = true;
+        Object.assign(fill, { description: v.description, approvedHash: "" }, keepTitle ? {} : { title: titled! }, l.state === "approved" ? { state: "ready_for_review" as const } : {});
+      } else if (descSha !== l.importedDescriptionSha) {
+        notes.push("description.md changed, but the description was edited in Prism: kept the edited text");
+      }
     }
     Object.assign(fill, pkgPatch, pkgRetitle ? { approvedHash: "", ...(l.state === "approved" ? { state: "ready_for_review" as const } : {}) } : {});
-    if (!Object.keys(fill).length) return { lesson: l, action: "unchanged", linked: 0 };
-    await tx.update(lessons).set({ ...fill, updatedAt: new Date() }).where(eq(lessons.id, l.id));
+    // the file as last read, so the next change is told apart from an edit (a bookkeeping write: no updatedAt, no audit)
+    const record = descSha && descSha !== l.importedDescriptionSha ? { importedDescriptionSha: descSha } : {};
+    if (Object.keys(fill).length) await tx.update(lessons).set({ ...fill, ...record, updatedAt: new Date() }).where(eq(lessons.id, l.id));
+    else if (Object.keys(record).length) await tx.update(lessons).set(record).where(eq(lessons.id, l.id));
     const [row] = await tx.select().from(lessons).where(eq(lessons.id, l.id));
-    const linked = fill.chapters ? await linkByChapters(tx, row) : 0;
-    await audit(tx, "worker", "lesson.register", "lesson", l.id, { name, filled: Object.keys(fill).filter((k) => k !== "approvedHash" && k !== "state"), linked });
+    const linked = unlinked ? await linkByChapters(tx, row, { retry: true }) : 0;
+    if (!Object.keys(fill).length && !linked) return { lesson: row, action: "unchanged", linked: 0, notes };
+    await audit(tx, "worker", "lesson.register", "lesson", l.id, { name, filled: Object.keys(fill).filter((k) => k !== "approvedHash" && k !== "state"), linked, notes });
     const [fresh] = await tx.select().from(lessons).where(eq(lessons.id, l.id));
-    return { lesson: fresh, action: "filled", linked };
+    return { lesson: fresh, action: refreshed || (linked && !Object.keys(fill).length) ? "refreshed" : "filled", linked, notes };
   });
 }
 

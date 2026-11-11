@@ -21,7 +21,11 @@ names against this page before a push.
 | `main` | The Taqueria Los Güeros site. Never touched by channel work | Nobody here |
 
 - Read another branch without switching: `git show origin/<branch>:<path>` and `git ls-tree -r --name-only origin/<branch> -- <path>`.
-- The kit (`kits/cinema/`) is on every branch. `film/render.mjs`, `film/qa.py`, `cinema3d.js` and `studio/qa.py` are identical on the four channel branches. `film/compilation.mjs` and `script/lint.py` have a different fork on each: merge them before changing either (Roadmap stage 1).
+- The kit (`kits/cinema/`) is on every branch. `film/render.mjs`, `film/qa.py`, `cinema3d.js` and `studio/qa.py` are identical on the four channel branches and the shared branch. The rest is forked (`git diff` of `kits/cinema` against the shared branch, 11 Nov 2026); merge before changing any of these (Roadmap stage 1):
+  - `film/compilation.mjs`: five versions (each channel branch and the shared branch).
+  - `script/lint.py`: three forks (Reality Rulebook, One More Orbit, Skin Sense) plus the base, which Possibility Lab's branch keeps unchanged.
+  - Also forked: `sci/hud.js` (Reality Rulebook); `script/claims_sheet.py`, and a new `script/test_via.py` (One More Orbit); `studio/compose.py` (Possibility Lab); `kits/cinema/motion/` (Skin Sense only).
+  - Missing on Skin Sense's branch: `film/splice.py`, `RENDERER-README.md`, `requirements.txt`, `.env.example`.
 - Channel branches also carry old copies of `prism-studio/` and of the shared rule files (One More Orbit and Possibility Lab keep `CTA.md`, `PACKAGING.md` and `SEASON-FORMAT.md` inside the channel folder). The copies on `claude/made-with-claude-film` are the current ones.
 - `films/channels/body/` (Body Backstage) is archived. Ignore it.
 
@@ -40,8 +44,10 @@ films/channels/
     README.md  STRUCTURE.md  SHOTS.md  NEW-EPISODE.md  QA.md  AUTOMATION.md  ROADMAP.md  LIBRARY.md
     identities/<slug>.json   new    one identity file per channel
     schema/                  new    episode.schema.json, shot.schema.json
+    qa/rubric.json           new    the hard gates and the 100-point rubric, as data (QA.md)
     templates/               new    starting files, including the Episode Intelligence Report
-    tools/                   new    python3 standard-library tools (validate.py and others)
+    tools/                   new    python3 standard-library tools: new_episode.py, validate.py, qa_episode.py
+    reports/                 new    README.md (how reports are written) and season reviews
     archive/<slug>.json      new    one row per delivered episode or long video (section 9; Roadmap stage 3)
 ```
 
@@ -97,7 +103,7 @@ Folder: `films/channels/<slug>/epNN/`, two digits. The same shape serves all thr
 | `art/` | Owner-made paintings, their layers and depth maps, `index.json` | Owner, then the builder | No |
 | `audio/` | Skin Sense only: mix, stems, `qa.json`. Other channels keep sound in `build/audio/` | `kits/cinema/studio/render.py` | No |
 | `build/` | Frames, chunks, logs, `qa-delivery.json`. Git-ignored | `kits/cinema/film/render.mjs`, `qa.py` | Only `build/qa-delivery.json` |
-| `review/` | `scene-table.md`, `claims-table.md`, `clarity-review.md`, the scorecard, `HUMAN-REVIEW.md`, and **new** `intelligence-report.md` | Builder and reviewers | No |
+| `review/` | `scene-table.md`, `claims-table.md`, `clarity-review.md`, the scorecard, `HUMAN-REVIEW.md`, and **new** `qa-report.json` (written by `tools/qa_episode.py`), `rubric-scores.json` (the people's scores and gates) and `intelligence-report.md` | Builder and reviewers | No |
 | `out/` | The delivery (next table) | Render and export tools | Yes |
 
 Files in `out/`. `<name>` is the delivery name (section 8).
@@ -130,11 +136,12 @@ A long video has two folders: one to work in, one that Prism imports.
 | Reality Rulebook | `lf01/` |
 | One More Orbit | `long01/` |
 | Possibility Lab | `longform/earth-spin/` |
-| Skin Sense | none yet: its long video is the six lessons joined at the end of the season |
+| Skin Sense | none: its long video is the six lessons joined at the end of the season. Its plan (`episode.json`, the card narration, its claims) sits in a sub-folder of the delivery folder, `compilations/s3/plan/`; a sub-folder is never pushed (Season 2 kept its card narration in `compilations/vol02/voice/` the same way) |
 
 Keep Season 3's folders as they are; renaming mid-build breaks paths (`ep13/film.json` points at `../lf01/scene.mjs`).
 From the next film on, use `longform/<film-slug>/` on every channel. Inside it: `episode.json` and `shots.json` (**new**),
-`script.md`, `claims.json`, `calc.py`, `calc.json`, `pron.json`, `vo/` (or `vo-owner/`), the compile step, `film.json`,
+`script.md`, `claims.json`, `calc.py`, `calc.json`, `pron.json`, `vo/` (the AI voice), `vo-owner/` (lines cut from the
+owner's real recording) or `vo-own/` (lines of the owner's cloned voice: synthetic, labelled AI), the compile step, `film.json`,
 `sheet.json`, `scene.mjs`, `art/`, `review/`, `packaging.json`, and `out/` for drafts.
 
 **Delivery folder**: `films/channels/<slug>/compilations/<name>/`. Only finished files go here.
@@ -142,7 +149,7 @@ From the next film on, use `longform/<film-slug>/` on every channel. Inside it: 
 | File | Required | Rule |
 |---|---|---|
 | `<name>-16x9.mp4` | Yes | The 2560x1440 upload. One video per folder: Prism takes `<name>-16x9.mp4`, else the first other `*-16x9.mp4`. Do not add a second (for example a 1080 copy) |
-| `thumbnail.jpg` | No, but always make it | 1920x1080 JPG under 2 MB ([PACKAGING.md](../PACKAGING.md)) |
+| `thumbnail.jpg` | No, but always make it | 1920x1080 JPG under 2 MB ([PACKAGING.md](../PACKAGING.md)). `compilation.mjs` writes it at 1280x720: render it with the channel's own tool (section 12) |
 | `chapters.txt` | No, but needed for linking | One line per part. **Every line must equal exactly one part's title.** One extra or changed line and nothing links |
 | `description.md` | No | Its first line is the fallback title (3 to 100 characters) |
 | `qa.json` | No | Prism shows `fails`, `dur`, `lufs` |
@@ -191,13 +198,15 @@ Known problems to avoid:
 |---|---|---|
 | `films/channels/whatif/voice-owner/` | `pl-s3-partA-1.m4a`, `pl-s3-partA-2.m4a`, `pl-s3-parts-closers-cta.m4a`, `proof.m4a`, `README.md`, `cut.py`, `cutS.py`, cut lines | today |
 | `films/channels/space/voice-owner/` | `oo-s3.m4a` (Part A), `oo-s3-parts.m4a` (Part B), `part-closers.m4a` (Part C), `oo-s3-cta.m4a` (Part D) | S3: none received yet |
+| `films/channels/whatif/longform/earth-spin/vo-own/` | Lines of the owner's cloned voice for the Season 3 film's Part A (synthetic, labelled AI). `vo-owner/` beside it holds the lines cut from his real recording | S3: named in `compile.py`; not committed on the branch as of 11 Nov 2026 |
 | `films/channels/skincare/voice-evelyn/` | `evelyn-s3-full.m4a` (9:02) | today |
 | `films/channels/voice-scripts/<channel>-season-N-recording-script.md` (shared branch) | What the speaker reads, in four parts | today |
 | `films/voice-inbox/` (shared branch) | Loose recordings of the owner, before they are placed | today |
 
-- File names follow [SEASON-FORMAT.md](../SEASON-FORMAT.md): `<pl|oo>-sN.m4a`, `<pl|oo>-sN-parts.m4a`, `part-closers.m4a`, `<pl|oo>-cta.m4a`. The owner may send one file or several; the folder's `README.md` records what each holds and when it arrived.
+- File names are the recording script's (`films/channels/voice-scripts/make_recording_script.py`): `<prefix>-s<season>.m4a`, `<prefix>-s<season>-parts.m4a`, `part-closers.m4a`, `<prefix>-s<season>-cta.m4a`. [SEASON-FORMAT.md](../SEASON-FORMAT.md) still writes the last one as `<pl|oo>-cta.m4a`, without the season (Roadmap 1.8). The owner may send one file or several; the folder's `README.md` records what each holds and when it arrived.
 - Recordings are never edited in place. Cut lines go to the episode's `vo/` (or `vo-owner/`) through `kits/cinema/voice/polish.py` and `align.py`.
 - Evelyn's recordings are used as recorded. No AI copy of her voice, ever. Her written OK and credit choice are recorded by the owner; put a TODO in the handoff until they are.
+- Skin Sense and One More Orbit use real recordings in Season 3. Possibility Lab's Season 3 film uses the owner's cloned voice for Part A, labelled AI (`disclosures.aiVoice` true; "Narration: a synthetic version of the owner's own voice (AI)"), with his real takes for the part lines and as the alternate set. His consent to the clone is not on record in the repo yet.
 - No `.wav` or `.m4a` reaches Prism: the push skips `vo/`, `voice-owner/` and `voice-evelyn/`.
 
 **Owner art** (paintings made in ChatGPT):
@@ -239,7 +248,7 @@ shape is in [PACKAGING.md](../PACKAGING.md).
 | Shot id | `S01`, `S02`, ... | |
 | Claim id | `c1`, `c2`, ... | |
 | Voice line | `vo01`, file `vo/01.wav` | |
-| Recording | `<prefix>-s<season>.m4a`, `<prefix>-s<season>-parts.m4a`, `<prefix>-cta.m4a`, `part-closers.m4a` | `oo-s3-parts.m4a` |
+| Recording | `<prefix>-s<season>.m4a`, `<prefix>-s<season>-parts.m4a`, `<prefix>-s<season>-cta.m4a`, `part-closers.m4a` | `oo-s3-parts.m4a`, `oo-s3-cta.m4a` |
 | Recording script | `<channel-name>-season-<N>-recording-script.md` | `skin-sense-season-3-recording-script.md` |
 
 Rules for every name:
@@ -283,21 +292,33 @@ before or with the film.
 1. `scripts/import-episodes.ts`: add a `SEASON3` slate. Film channels: 8 titles identical to the film's `chapters.txt` lines. Skin Sense: 6 titles. The series title starts "Season 3:".
 2. `seasonsFor`: add Season 3 at `first: 13`, or derive `first` from the earlier slate lengths.
 3. `slateForEpisode`: no change; add a test.
-4. Read `film.json` `disclosures.aiVoice` instead of the hard-coded `aiVoice: true`. Season 3 uses real voices on three channels.
-5. `src/domain/metadata.ts`: posting wording for a real voice.
+4. Read `film.json` `disclosures.aiVoice` instead of the hard-coded `aiVoice: true`. In Season 3, Skin Sense and One More Orbit use real recordings; Possibility Lab uses the owner's cloned voice, labelled AI; Reality Rulebook keeps its AI voice.
+5. `src/domain/metadata.ts`: posting wording for a real voice, and for the owner's cloned voice ("a synthetic version of the owner's own voice (AI)").
 6. `metadata.ts` reads only `hook`, `why`, `takeaway` or `whoa`. Season 3 parts have `hook`, `body`, `tease`: fall back to `body`.
 7. The importer appends "?" to a hook that is a statement. Fix.
-8. `src/domain/lessons.ts`: `LESSON_MAX = 6` blocks a film with 8 parts. Raise it to 8.
+8. `src/domain/lessons.ts`: no change needed for a pushed film. `registerCompilation` links parts through `linkByChapters`, which has no count limit; `LESSON_MAX = 6` is used only by `createLesson` and the Lessons form (the owner piling shorts inside Prism). Optional: raise it to 8 only if the owner should be able to build an 8-part lesson inside Prism.
 9. `registerCompilation`: retry linking when no parts are linked, so corrected chapters take effect.
 10. `src/domain/catalog.ts`: no change needed.
 
 ## 11. Pushing to Prism
 
 - Tool: `prism-studio/scripts/push-media.mjs` (`npm run media:push`), then the import (`npm run import:episodes`). SEASON-FORMAT.md names `push-one.sh`; that file is tracked on no branch.
-- Run it from a checkout of the channel's own branch and pass the channel slug. From any other checkout it sends other channels' old copies.
+- The coordinator pushes, from a checkout of `claude/made-with-claude-film`: that branch holds the current `prism-studio/`. Skin Sense's branch has no `scripts/push-media.mjs`, and the three film branches hold an older copy (`src/domain/media-push.ts` differs too).
+- Bring the delivered files in without committing them, then fix the times, check, and push with the channel slug:
+
+  ```
+  git checkout origin/<branch> -- films/channels/<slug>/epNN/script.md films/channels/<slug>/epNN/claims.json \
+      films/channels/<slug>/epNN/film.json films/channels/<slug>/epNN/out films/channels/<slug>/compilations/<name>
+  # set each cover and YouTube file one second newer than its master (prism-studio/RUNBOOK.md)
+  touch -d @$(( $(stat -c %Y <master>) + 1 )) <cover or YouTube file>
+  cd prism-studio && npm run media:check && node scripts/push-media.mjs <slug>
+  ```
+
+- `git checkout origin/<branch> -- <paths>` also stages those files. Do not commit them on the shared branch; restore the paths afterwards. Without the slug the push sends every channel folder in the checkout, old copies included.
+- `build/qa-delivery.json` is git-ignored, so it does not come across this way: Prism then shows no kit QA result for the episode.
 - Sent: `script.md`, `claims.json`, `film.json`, `build/qa-delivery.json`, and every file directly in `out/`, `compilations/` and `compilations/<name>/` ending mp4, jpg, jpeg, png, srt, vtt, json, md or txt (up to 2 GB each).
 - Skipped: every other folder, `art.json`, `theme.json`, webp and wav files, names with spaces, `ep100` and above, cleared videos, archived channels.
-- A fresh checkout scrambles modified times. Before a push, set each cover and YouTube file one second newer than its master (`prism-studio/RUNBOOK.md`), then run `npm run media:check`.
+- A checkout scrambles modified times, which is why the step above sets them: a cover older than its master is not used, and an older YouTube file falls back to the 1080 master.
 - A malformed `film.json` or `claims.json` fails the whole import. Validate JSON before pushing.
 - Nothing is published by a push. The owner posts by hand and presses "Uploaded".
 
@@ -305,9 +326,11 @@ before or with the film.
 
 | Finding | Effect | Fix |
 |---|---|---|
-| Skin Sense `ep04` to `ep12` already hold an `episode.json` in another shape (the input of `set/ss3.mjs`) | It collides with the new master spec's file name | Rename the old file's role before the first Season 3 lesson (for example `compose.json`, one change in `set/ss3.mjs`, `build_ep.py`, `make_sheet.py`, `tables.py`). Roadmap stage 1. Until then do not validate those folders |
+| Skin Sense `ep04` to `ep12` and `s3-looktest/` already hold an `episode.json` in another shape (the input of `set/ss3.mjs`; in the look test, of `set/night.mjs`) | It collides with the new master spec's file name | Rename the old file's role before the first Season 3 lesson (for example `compose.json`, one change in `set/ss3.mjs`, `build_ep.py`, `make_sheet.py`, `tables.py`). Roadmap stage 1. Until then do not validate those folders |
 | Skin Sense writes delivery QA to `review/qa-delivery.json` (`set/final.sh`) | Prism reads only `build/qa-delivery.json`, so its QA result is not attached | Write it to `build/` as the other channels do |
 | Three names for a long film's working folder (`lf01`, `long01`, `longform/<slug>`) | Tools cannot guess the path | `longform/<film-slug>/` from the next film on; Season 3 stays as built |
 | The shared `films/channels/.gitignore` ignores `*/*/build/` only | `lf01/build/` and `long01/build/` are covered; a `longform/<slug>/build/` is not. Possibility Lab's branch already adds `whatif/longform/**/build/` | Add `*/longform/**/build/` on every branch when `longform/` becomes the rule |
 | Skin Sense's `theme.json` still holds the old violet look; its bible and `s3-looktest/BRIEF.md` predate the Season 3 voxel decision | A builder reading them builds the wrong look | Read `identities/skincare.json` and SEASON-FORMAT.md first; update the branch files at the look gate |
 | `episode2d.json` in Skin Sense `ep12` | Its role is not documented | The builder documents or removes it |
+| Section 5 and [PACKAGING.md](../PACKAGING.md) ask for `thumbnail.jpg` at 1920x1080; every version of `compilation.mjs` writes it at 1280x720 (`scale=1280:720`) | A long video's thumbnail is delivered below the asked size | Render the thumbnail with the channel's own tool at 1920x1080 (One More Orbit: `season2/make_long_thumb.py`), or change `compilation.mjs`'s scale when its forks are merged (Roadmap 1.3) |
+| [PACKAGING.md](../PACKAGING.md) still gives "The Moon Starts Coming Closer. It Won't Stop." as a good title; `identities/space.json` forbids it as retired (it reads like a real event) | A builder copying the example writes a title the channel may not use | Replace the example in PACKAGING.md (Roadmap 1.8) |

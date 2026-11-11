@@ -82,7 +82,7 @@
       "size": [2560, 1440],
       "fps": 30,
       "durationS": [510, 570],
-      "notes": "Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4 at 2560x1440. The picture renders natively at 1920x1080 and is upscaled; only cards are drawn at 2560x1440 (kits/cinema/film/compilation.mjs). Never label it native 1440p. A native 2560x1440 render tier is Roadmap stage 2. Runs 8:30 to 9:30, never by padding."
+      "notes": "Season 3 on: one continuous 16:9 film. Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4 at 2560x1440. kits/cinema/film/render.mjs draws the film at 1920x1080; no tool writes the 2560x1440 file yet for one continuous film (Roadmap 2.2). Once it is built by upscale, label it '2560x1440 upscale of a 1080 render', never native 1440p. Seasons 1 and 2 were joined from episodes by kits/cinema/film/compilation.mjs: a 2560x1440 frame with cards drawn at that size and each episode's 1080x1920 master scaled down to 810x1440 (label: '2560x1440 upload; episode picture 810x1440 from the 1080x1920 master'). Runs 8:30 to 9:30, never by padding."
     }
   },
   "packaging": {
@@ -95,7 +95,7 @@
   "rules": [
     "Every factual sentence carries a claims.json tag. A claim is OK only after a person opens the source; anything checked from a search excerpt stays OPEN.",
     "Owner's voice from Season 3, used as recorded (cut, cleaned, levelled). AI stand-in until the recording arrives: voice am_michael (kits/cinema/voice/tts.py), one speed per line, labelled as AI.",
-    "A clone of the owner's own voice is allowed only with his recorded consent and an AI label (owner's request, 11 Nov 2026). No tool for it is in the repo yet.",
+    "A clone of the owner's own voice is allowed only with his recorded consent and an AI label (owner's request, 11 Nov 2026). No clone tool on this branch or the channel branches. An earlier toolchain is on claude/voice-clone (kits/cinema/voice/CLONE.md, with a consent gate) and a new trial is under way: Roadmap 3.10.",
     "Every cheat is badged; the gravity grid always wears 'analogy' and the Oort cloud 'theory'.",
     "One galactic-centre distance for the whole channel: about 27,000 light-years (theme.json motif.facts).",
     "Put the qualifier in the opening question (for example 'stars in our galaxy').",

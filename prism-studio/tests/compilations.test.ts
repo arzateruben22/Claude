@@ -7,9 +7,12 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { freshDb, renderedEpisode, channel, and, eq, S } from "./helpers";
 import type { DB } from "../src/db/client";
 import {
-  approveLesson, availableForLesson, compilationTitle, createLesson, fallbackCompilationTitle, lessonHash, markLessonUploaded,
+  approveLesson, availableForLesson, compilationTitle, createLesson, editLesson, fallbackCompilationTitle, lessonHash, markLessonUploaded,
   parseChapters, registerCompilation, titleFromDescription, type CompilationBuild,
 } from "../src/domain/lessons";
+import { markEpisodeUploaded } from "../src/domain/publications";
+import { seasonArchive } from "../src/domain/season-archive";
+import { sha256 } from "../src/domain/core";
 
 const ROOT = fs.mkdtempSync(path.join(os.tmpdir(), "compilations-"));
 const put = (rel: string, body: string | Buffer) => {
@@ -66,10 +69,13 @@ describe("registerCompilation", () => {
     expect(r.lesson.videoPath).toBe("films:films/channels/physics/compilations/vol01/vol01-16x9.mp4");
     expect(r.lesson.outline.map((o) => o.part)).toEqual(["One", "Two"]);
     expect(await audits(r.lesson.id)).toHaveLength(1);
-    const again = await registerCompilation(db, c.id, "vol01", build("vol01", { description: "Something else", chapters: "" }));
+    const again = await registerCompilation(db, c.id, "vol01", build("vol01"));
     expect(again.action).toBe("unchanged");
     expect(again.lesson.updatedAt.getTime()).toBe(r.lesson.updatedAt.getTime());
-    expect(again.lesson.description).toBe(r.lesson.description);   // text already there is never overwritten by the same video
+    // a missing file never clears what is stored
+    const missing = await registerCompilation(db, c.id, "vol01", build("vol01", { description: "", chapters: "", thumbnailPath: "", qa: {} }));
+    expect(missing.action).toBe("unchanged");
+    expect(missing.lesson).toMatchObject({ description: r.lesson.description, chapters: r.lesson.chapters, thumbnailPath: r.lesson.thumbnailPath });
     expect(await lessonsOf(c.id)).toHaveLength(1);
     expect(await audits(r.lesson.id)).toHaveLength(1);
   });
@@ -102,7 +108,70 @@ describe("registerCompilation", () => {
     expect(f.lesson).toMatchObject({ title: "Bigger than it looks", description: "Bigger than it looks\n\nSources", chapters: "0:00 One\n1:10 Two\n" });
     expect(f.lesson.thumbnailPath).toMatch(/^films:.*thumbnail\.jpg$/);
     expect(f.lesson.qa).toEqual({ fails: [], dur: 366 });
-    expect((await registerCompilation(db, c.id, "s2", build("s2"))).action).toBe("unchanged");
+    expect((await registerCompilation(db, c.id, "s2", build("s2", { description: "Bigger than it looks\n\nSources" }))).action).toBe("unchanged");
+  });
+
+  it("the same video: a corrected chapters.txt or description.md is picked up; the owner's edited description is kept", async () => {
+    const { c } = await channel(db, "physics");
+    const r = await registerCompilation(db, c.id, "s3", build("s3", { chapters: "0:00 One\n1:10 Two\n", description: "Season 3 film\n\nOld text" }));
+    await approveLesson(db, r.lesson.id);
+    const fixed = await registerCompilation(db, c.id, "s3", build("s3", { chapters: "0:00 Uno\n1:10 Dos\n", description: "Season 3 film\n\nCorrected text" }));
+    expect(fixed.action).toBe("refreshed");
+    expect(fixed.lesson).toMatchObject({ chapters: "0:00 Uno\n1:10 Dos\n", description: "Season 3 film\n\nCorrected text", title: "Season 3 film", approvedHash: "", state: "ready_for_review" });
+    expect(fixed.lesson.outline.map((o) => o.part)).toEqual(["Uno", "Dos"]);
+    // nobody chose the title (it is the description's title line), so it follows a new title line
+    const retitled = await registerCompilation(db, c.id, "s3", build("s3", { chapters: "0:00 Uno\n1:10 Dos\n", description: "Better title\n\nCorrected text" }));
+    expect(retitled.lesson.title).toBe("Better title");
+    // the owner edits the description in Prism: a later file change leaves their text (and their title) alone, and says so once
+    await editLesson(db, r.lesson.id, { title: "Owner's title", description: "Owner's words" });
+    const kept = await registerCompilation(db, c.id, "s3", build("s3", { chapters: "0:00 Uno\n1:10 Dos\n", description: "Third title\n\nThird text" }));
+    expect(kept.action).toBe("unchanged");
+    expect(kept.notes).toEqual(["description.md changed, but the description was edited in Prism: kept the edited text"]);
+    expect(kept.lesson).toMatchObject({ title: "Owner's title", description: "Owner's words" });
+    const quiet = await registerCompilation(db, c.id, "s3", build("s3", { chapters: "0:00 Uno\n1:10 Dos\n", description: "Third title\n\nThird text" }));
+    expect(quiet).toMatchObject({ action: "unchanged", notes: [] });
+  });
+
+  it("a lesson from before the description record: its text counts as edited unless the file still matches it", async () => {
+    const { c } = await channel(db, "space");
+    const a = await registerCompilation(db, c.id, "old-a", build("old-a", { description: "Old A\n\nText" }));
+    const b = await registerCompilation(db, c.id, "old-b", build("old-b", { description: "Old B\n\nText" }));
+    await db.update(S.lessons).set({ importedDescriptionSha: "" }).where(eq(S.lessons.channelId, c.id));
+    // a: the stored text differs from the file (an edit or an old file: unknown), so it is kept
+    const ka = await registerCompilation(db, c.id, "old-a", build("old-a", { description: "Old A\n\nNew text" }));
+    expect(ka.lesson.description).toBe("Old A\n\nText");
+    expect(ka.notes).toHaveLength(1);
+    // b: the file still matches, so this import records it, and the next corrected file is picked up
+    const same = await registerCompilation(db, c.id, "old-b", build("old-b", { description: "Old B\n\nText" }));
+    expect(same.action).toBe("unchanged");
+    expect(same.lesson.importedDescriptionSha).toBe(sha256("Old B\n\nText"));
+    const fixed = await registerCompilation(db, c.id, "old-b", build("old-b", { description: "Old B\n\nFixed" }));
+    expect(fixed).toMatchObject({ action: "refreshed", lesson: { description: "Old B\n\nFixed" } });
+    expect(a.lesson.id).not.toBe(b.lesson.id);
+  });
+
+  it("the same video, no parts linked yet: tries again once the parts exist or the chapters are corrected", async () => {
+    const { c } = await channel(db, "space");
+    const film = build("s3", { chapters: "0:00 The Moon starts coming closer\n1:05 One quarter closer\n", description: "How close can the Moon get?\n" });
+    const first = await registerCompilation(db, c.id, "s3", film);
+    expect(first.linked).toBe(0);   // the parts aren't imported yet
+    const p1 = (await renderedEpisode(db, "space", { title: "The Moon starts coming closer" })).ep;
+    const p2 = (await renderedEpisode(db, "space", { title: "One quarter closer" })).ep;
+    const retry = await registerCompilation(db, c.id, "s3", film);
+    expect(retry).toMatchObject({ action: "refreshed", linked: 2 });
+    const links = await db.select().from(S.lessonEpisodes).where(eq(S.lessonEpisodes.lessonId, first.lesson.id));
+    expect(links.sort((x, y) => x.position - y.position).map((x) => x.episodeId)).toEqual([p1.id, p2.id]);
+    expect(retry.lesson.outline).toEqual([{ part: "The Moon starts coming closer", episodeId: p1.id }, { part: "One quarter closer", episodeId: p2.id }]);
+    expect((await registerCompilation(db, c.id, "s3", film)).action).toBe("unchanged");   // linked: nothing more to do
+
+    // a chapters.txt line that didn't match a part's title, corrected later
+    const q1 = (await renderedEpisode(db, "space", { title: "Half the distance" })).ep;
+    const q2 = (await renderedEpisode(db, "space", { title: "Too bright" })).ep;
+    const wrong = await registerCompilation(db, c.id, "s4", build("s4", { chapters: "0:00 Half the distance\n1:00 Far too bright\n" }));
+    expect(wrong.linked).toBe(0);
+    const right = await registerCompilation(db, c.id, "s4", build("s4", { chapters: "0:00 Half the distance\n1:00 Too bright\n" }));
+    expect(right).toMatchObject({ action: "refreshed", linked: 2 });
+    expect((await db.select().from(S.lessonEpisodes).where(eq(S.lessonEpisodes.lessonId, right.lesson.id))).map((x) => x.episodeId).sort()).toEqual([q1.id, q2.id].sort());
   });
 
   it("reuses a lesson the owner created under the same name: no duplicate, its episodes and title kept, its pending build cancelled", async () => {
@@ -167,6 +236,27 @@ describe("registerCompilation", () => {
     const { c } = await channel(db, "physics");
     await expect(registerCompilation(db, c.id, "../x", build("x"))).rejects.toThrow(/folder name/);
     await expect(registerCompilation(db, c.id, "vol05", build("vol05", { videoPath: "/etc/passwd" }))).rejects.toThrow(/films:/);
+  });
+
+  it("a retry never links an uploaded (archived) season's episodes, so the season stays archived", async () => {
+    const { c } = await channel(db, "body");
+    const [se] = await db.insert(S.series).values({ channelId: c.id, title: "Season 9: Done and uploaded", status: "active" }).returning();
+    const [sn] = await db.insert(S.seasons).values({ seriesId: se.id, number: 9, title: "Season 9" }).returning();
+    const done: string[] = [];
+    for (const title of ["Done one", "Done two"]) {
+      const e = (await renderedEpisode(db, "body", { title })).ep;
+      await db.update(S.episodes).set({ seasonId: sn.id, seriesId: se.id }).where(eq(S.episodes.id, e.id));
+      await markEpisodeUploaded(db, e.id, "youtube_tiktok");
+      await markEpisodeUploaded(db, e.id, "instagram");
+      done.push(e.id);
+    }
+    expect((await seasonArchive(db)).seasonIds.has(sn.id)).toBe(true);
+    const r = await registerCompilation(db, c.id, "s9", build("s9", { chapters: "0:00 Done one\n1:00 Done 2\n" }));
+    expect(r.linked).toBe(0);
+    const again = await registerCompilation(db, c.id, "s9", build("s9", { chapters: "0:00 Done one\n1:00 Done two\n" }));
+    expect(again).toMatchObject({ action: "refreshed", linked: 0 });
+    expect(await db.select().from(S.lessonEpisodes).where(eq(S.lessonEpisodes.lessonId, r.lesson.id))).toHaveLength(0);
+    expect((await seasonArchive(db)).seasonIds.has(sn.id)).toBe(true);
   });
 });
 

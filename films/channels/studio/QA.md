@@ -19,9 +19,10 @@ Machine-readable copy of everything below: [qa/rubric.json](qa/rubric.json). The
 | The (a) to (h) gate | The reviewer's eight scores, 1 to 5, on every episode. It stays binding, and is one of the hard gates | [../STUDIO-STYLE.md](../STUDIO-STYLE.md), "Quality gate" | Reviewer (the coordinator) |
 | The 100-point rubric | 42 criteria in ten categories. 30 points are scored by the tool, 70 by people. Target: 95 | `categories` in [qa/rubric.json](qa/rubric.json); section 4 | Tool, builder, coordinator, owner |
 
-Release needs both: every hard gate passed, and 95 points or more. Neither replaces the other. The rubric is layered
-over the (a) to (h) gate, not in place of it: each of the eight axes maps to one rubric criterion (`gateAxes` in the
-rubric file).
+Release needs both: every hard gate passed, and 95 points or more. Neither replaces the other. `qa_episode.py
+--release` checks both: it exits 1 while any hard gate is open, and while the score is incomplete or under 95. The
+rubric is layered over the (a) to (h) gate, not in place of it: each of the eight axes maps to one rubric criterion
+(`gateAxes` in the rubric file).
 
 ## 2. Running QA
 
@@ -43,13 +44,25 @@ python3 -I films/channels/studio/tools/qa_episode.py $E/out/<name>-9x16.mp4 --ep
     --scores $E/review/rubric-scores.json --release --out $E/review/qa-report.json
 ```
 
-A long video: `qa_episode.py <channel>/compilations/<name>/<name>-16x9.mp4 --kind long --episode <working folder>/episode.json`.
-Add `--cards` when it is joined from finished episodes with narrated still cards (the Season 2 format, and Skin
-Sense Season 3's long video).
+A long video:
+
+```
+C=films/channels/<slug>/compilations/<name>
+# one continuous 16:9 film (Season 3 on the three film channels)
+python3 -I films/channels/studio/tools/qa_episode.py $C/<name>-16x9.mp4 --kind long \
+    --episode <working folder>/episode.json --out <working folder>/review/qa-report.json
+# joined from finished episodes with narrated still cards (the Season 2 format; Skin Sense Season 3's long video)
+python3 -I films/channels/studio/tools/qa_episode.py $C/<name>-16x9.mp4 --kind long --cards
+```
+
+Without `--cards` a joined video exits 1 on `freeze`. That is expected, not a fault: its opening, bridges, episode
+end cards and finale are still pictures with narration over them (the delivered Skin Sense Season 2 long video: 14
+stretches, 131.5 s). With `--cards` the gate reads `LOOK`, the exit is 0, and a person confirms each card in the
+scores file.
 
 `qa_episode.py` exits 1 when a hard gate fails, 2 when a file cannot be read, else 0. With `--release` it exits 1
-unless every hard gate has passed, the people's gates included. `--file-only` measures the file and reads nothing
-else. Run time, measured 11 Nov 2026 on the shared 4-core machine while other jobs ran: about 10 s for a 68 s short,
+unless every hard gate has passed, the people's gates included, and the internal score is complete and at 95 or
+more. `--file-only` measures the file and reads nothing else. Run time, measured 11 Nov 2026 on the shared 4-core machine while other jobs ran: about 10 s for a 68 s short,
 about 80 to 95 s for an 8:37 long video at 2560x1440. The time is the picture decode.
 
 What each existing tool covers:
@@ -58,7 +71,7 @@ What each existing tool covers:
 |---|---|---|---|
 | `kits/cinema/script/lint.py` | `python3 -I kits/cinema/script/lint.py $E --segment <name>` | Script: template, pace, length, hook by 2.0 s, holds, claim tags, reading grade | 60 to 75 s shorts. No profile for premium lessons, ASMR pace or long films (Roadmap stage 1) |
 | `kits/cinema/sci/contrast.py` | `python3 -I kits/cinema/sci/contrast.py <slug>` | Theme contrast (4.5:1) and colour distance | All |
-| `kits/cinema/film/render.mjs` | writes `build/<tier>/<aspect>/audit.json` | Text outside the safe box or overlapping | The kit page. Skin Sense's plain path writes no text audit |
+| `kits/cinema/film/render.mjs` | writes `build/<tier>/<aspect>/audit.json` | Text outside the safe box or overlapping; identical frames for more than 2.5 s ("still for N s") | The kit page. The plain path writes `build/final-plain/<aspect>/audit.json`; it covers kit hud text only, not Skin Sense's own overlays. `kits/cinema/film/qa.py` reads `build/final/` only; `qa_episode.py` reads both |
 | `kits/cinema/studio/qa.py` | runs inside `kits/cinema/studio/render.py`; writes `build/audio/qa.json` | Sound on its picture event, voice over music, phone speaker | All |
 | `kits/cinema/film/qa.py` | above | Size, picture against sound, length, loudness, true peak, mono, flashing, text audit | 60 to 75 s shorts only |
 | `kits/cinema/film/scorecard.py` | above | The measured table, with render cost from the log | Shorts |
@@ -90,29 +103,51 @@ read; a person may then record the result in the scores file. A person can settl
 |---|---|---|---|
 | `size` | 1080x1920 (short, premium, part); 2560x1440 (long). A file named `-youtube.mp4` may be 1440x2560, and is always called an upscale | `kits/cinema/film/qa.py`, `compilation.mjs`, `youtube1440.py` | Assemble from the right tier. Never scale a master to pass |
 | `fps` | 30 fps, constant | `kits/cinema/film/scorecard.py` (format target), `render.mjs` | Assemble again with `render.mjs --assemble` |
-| `length` | short 60 to 75.5 s; part 61 to 75.5 s; premium 60 to 90.5 s (aim 70 to 90); long 8:30 to 11:00 (aim 8:30 to 9:30) | `qa.py`; [../SEASON-FORMAT.md](../SEASON-FORMAT.md); `compilation.mjs` | Too short: add real, fact-checked content. Never a longer hold or a slower voice. Too long: cut a decorative line |
+| `length` | short and part 61 to 75 s; premium 70 to 90 s; one frame of tolerance, no more. long 8:30 to 11:00 (aim 8:30 to 9:30) | [../SEASON-FORMAT.md](../SEASON-FORMAT.md) and the channel identities; `compilation.mjs` for the long maximum. `kits/cinema/film/qa.py` is looser (60 to 75.5 s) and is not the gate | Too short: add real, fact-checked content. Never a longer hold or a slower voice. Too long: cut a decorative line. An approved master is not re-cut for this: see the note under this table |
 | `loudness` | -15 to -13 LUFS (9:16); -15.5 to -12.5 LUFS (long), on the delivered AAC | `qa.py`; `compilation.mjs` | Re-master the sound, assemble again. No re-render |
 | `true_peak` | At most -1 dBTP | `qa.py`, `compilation.mjs` | Re-master with a lower ceiling |
 | `av_length` | Picture and sound within one frame (9:16), within 0.1 s (long) | `qa.py`; `compilation.mjs` | Assemble again; trim the music tail in the cue sheet |
 | `mono_safe` | Correlation at least 0.3 and at most 3 dB lost in mono. 9:16 only; measured but not gated on a long video | `qa.py` | Narrow the stem that cancels, re-master |
-| `flashes` | At most 3 flashes in any second | `qa.py` (WCAG 2.3.1 general flash) | Soften that one transition; re-render its chunk |
+| `flashes` | At most 3 flashes in any second. Counted as the kit counts: every adjacent pair of opposite large transitions. A steady strobe therefore counts about twice WCAG's figure; in practice the limit is 2 full flashes (4 transitions) in any second | `qa.py` (WCAG 2.3.1 general flash) | Soften that one transition; re-render its chunk |
 | `silence` | No stretch of 1.2 s or more below -40 dB in the mix | The 1.2 s rule in [../CTA.md](../CTA.md); -40 dB is the tool's setting | Carry the gap with room tone, score or picture-led sound; re-master |
-| `freeze` | No frozen stretch of 1.4 s or more, except the end card (a hold that reaches the last 3 s and is at most 8 s) | Standing gate; channels ran `freezedetect` on drafts. The end-card allowance is the tool's setting | Give the shot a motivated move or a developing picture; re-render its chunk |
+| `freeze` | No frozen stretch of 1.4 s or more, except the end card: a hold inside the last 8 s is the end card (so is one of at most 8 s that reaches the last 3 s) | 1.4 s is a tool setting, from the coordinator's brief; not yet written in a rule file. The renderer's audit already warns on identical frames for more than 2.5 s, the only written number. The end-card allowance is the tool's setting | Give the shot a motivated move or a developing picture; re-render its chunk |
 | `first_frame` | 9:16: frame 0 is composed, not blank or black. Long: a fade-in with at most 0.5 s of blank picture | The `cinema-kit` skill ("frame 0 is already composed"); the long allowance is the tool's setting | Start the first shot on its picture; re-render chunk 0 |
 | `file_size` | At most 95 MB | `compilation.mjs` (GitHub refuses 100 MB) | Assemble at the capped rate |
+
+A length the gate fails today, and what to do about it. Reality Rulebook's Season 2 `ep09` to `ep12` were remixed
+with the like/follow line voiced over a held end card (channel branch, commit `c587b277`). The `ep12` master
+measures 77.233 s against 73.33 s in its `film.json`, so it fails the short window; `ep09` to `ep11` were changed
+by the same commit and were not measured. The kit's `qa.py` fails it too (its limit is 75.5 s). **Do not re-cut an
+approved master because of this exit 1.** The coordinator decides whether those four are recorded as accepted
+exceptions or the short window is widened ([ROADMAP.md](ROADMAP.md), "Decisions that wait for the owner";
+`lengthOpenDecision` in the rubric file).
 
 ### B. Read from files beside the video
 
 | Gate | Passes when | File read | Signs off | If it fails |
 |---|---|---|---|---|
 | `voice_gaps` | No voiceless gap over 1.2 s (plus one frame) before the end card. On a long film each longer gap is listed for a person | `build/audio/stems/dialog.wav` (Skin Sense: `audio/stems/dialog.wav`), or `--dialog` | Tool; coordinator on a long film | Close the gap in the voice layout or add a fact-checked line |
-| `text_audit` | 0 text-audit warnings | `build/qa-delivery.json`, else `build/final/*/audit.json` | Tool; builder by frame grabs where no audit exists | Move or shorten the one label |
+| `text_audit` | 0 text-audit warnings | `build/qa-delivery.json`, else the newest `build/final*/*/audit.json` (`final-plain/` on Skin Sense's plain path, where the audit covers kit hud text only) | Tool; builder by frame grabs where no audit exists, and for Skin Sense's own overlays | Move or shorten the one label |
 | `sound_sync` | Every transient within one frame of its picture event | `build/audio/qa.json` (Skin Sense: `audio/qa.json`) | Tool | Fix the cue's time in the event table |
-| `claims_honest` | No claim is marked `ok` unless a person opened its source | `claims.json` | Tool | Set it back to open |
+| `claims_honest` | No claim is marked `ok` unless a person opened its source. `ok` passes only with `verified_via` "page" or "owner opened the page" and a source link; or on a derivation that names `calc.py`; or on a stated assumption (the two lists are under this table). Any other value fails | `claims.json` | Tool | Set it back to open |
 | `chapters` (long) | First chapter at 0:00, in order, each at least 10 s, one title each. Starts come from the build's segment starts, never typed. Each line equals one part's title | `chapters.txt` beside the video | Tool for the timings; builder for the titles | Regenerate from the build; fix a title in the part |
-| `sources_opened` | Every claim is `ok`, by a person who opened the page | `claims.json` | Owner or a reviewer | Open the links. Reword or cut what fails |
+| `sources_opened` | Every claim is `ok` and honestly marked: a person opened every page and re-ran every `calc.py` sum | `claims.json` | Owner or a reviewer | Open the links. Reword or cut what fails |
 | `look_gate` | `status.lookGate` is `approved` | `episode.json` | Owner | Send stills; change only what the owner names |
-| `packaging` | Five titles, three thumbnails, three pairings, a winner, every check true | `out/packaging.json` (long: `packaging.json` beside the video) | Builder; the owner chooses the title | Revise the pairing whose check is false ([../PACKAGING.md](../PACKAGING.md)) |
+| `packaging` | Five titles, three thumbnails, three pairings, a winner, every check true. The thumbnail text never repeats the title ([../PACKAGING.md](../PACKAGING.md)): the tool compares `winner.thumbnailText`, the winner thumbnail's `text` and `shortsCover.text` with the winner title, and fails a text of more than 4 words or one whose every word is in the title | `out/packaging.json` (long: `packaging.json` beside the video) | Builder; the owner chooses the title | Revise the pairing whose check is false, or the text that repeats the title |
+
+How a claim may be verified, in `claims.json` `verified_via`. The same lists are in `tools/qa_episode.py`,
+`tools/validate.py` and the rubric file.
+
+| `verified_via` | Meaning | May carry `ok` |
+|---|---|---|
+| `page`, `owner opened the page` | A person read the source itself | Yes, with a `source_url` |
+| `calculation`, `derivation`, `own model` | No outside page: the number is the studio's own sum | Yes, when the note or the source title names `calc.py` and a person has re-run it. No link or title is needed |
+| `assumption (no source)` | A stated assumption or hedge | Yes, when the note says what is assumed. No link or title is needed |
+| `search excerpt`, `not read`, `from memory`, anything else, or empty | Nobody has read the source | Never. The claim stays open |
+
+The kit's `lint.py` accepts `page` and `search excerpt`. Reality Rulebook's fork adds `derivation`, `own model` and
+`from memory`; One More Orbit's adds `not read`. None accepts `owner opened the page`, `calculation` or
+`assumption (no source)` yet: Roadmap 1.4.
 
 ### C. Recorded by people (in `review/rubric-scores.json`)
 
@@ -125,14 +160,18 @@ read; a person may then record the result in the scores file. A person can settl
 | `channel_rules` | Every `rules` and `never` line in the channel's identity file holds | Coordinator | [identities/](identities/) |
 | `owner_approval` | The owner has seen it and said it can be posted | Owner | The owner's own words, with the date |
 
-Standing rules that these gates carry, so none is lost: no voiceless gap over 1.2 s; no freeze over about 1.4 s
-except the end card; no more than 3 flashes a second; at most two text blocks; captions synced to the voice; long
-videos at least 8:30; chapters computed from segment starts; every packaging check true; claims stay OPEN until a
-person opens the source.
+Standing rules that these gates carry, so none is lost: no voiceless gap over 1.2 s; no more than 3 flashes a
+second; at most two text blocks; captions synced to the voice; shorts and parts 61 to 75 s, premium lessons 70 to
+90 s, long videos at least 8:30; chapters computed from segment starts; every packaging check true; the thumbnail
+never repeats the title; claims stay OPEN until a person opens the source. One gate is a tool setting, not a
+written rule: no freeze over 1.4 s except the end card (the coordinator's brief; the renderer's own audit warns at
+2.5 s). It goes into [../STUDIO-STYLE.md](../STUDIO-STYLE.md) only once the owner or coordinator confirms the number
+([ROADMAP.md](ROADMAP.md), "Decisions that wait for the owner").
 
-### What two delivered videos taught the tool
+### What six delivered videos taught the tool
 
-Both are finished and approved. Measured 11 Nov 2026 with `qa_episode.py`; frames and sound were then inspected.
+All are finished and approved. Two were measured in full on 11 Nov 2026 with `qa_episode.py`, and their frames and
+sound were then inspected:
 
 | Measure | Skin Sense ep12 (short) | Skin Sense Season 2 long video |
 |---|---|---|
@@ -146,11 +185,24 @@ Both are finished and approved. Measured 11 Nov 2026 with `qa_episode.py`; frame
 | First frame | Composed | One black frame, then a fade-in |
 | Voiceless gaps (stem) | Longest 1.21 s | No stem available |
 
+Four more delivered masters were run on 11 Nov 2026 with `--kind short --file-only` (file gates only):
+
+| Master | Result | Frozen picture |
+|---|---|---|
+| One More Orbit `ep07` (72.000 s) | Every file gate passes | One hold, 67.0 to 68.4 s, inside the end card |
+| One More Orbit `ep12` (71.067 s) | Every file gate passes | Two holds, 64.73 to 66.17 s and 66.27 to 70.4 s: one end card, split by a caption change |
+| Reality Rulebook `ep12` (77.233 s) | Fails `length` (see the note under table A); the rest pass | The end card, 4.53 s |
+| Possibility Lab `ep12` (74.867 s) | Every file gate passes | The end card, 1.70 s |
+
 Four rules were set from this, and are the tool's own settings, not the owner's:
 
-1. **The end card.** "Ignore the last 3 s" would have failed ep12: its end card holds 5.2 s, with the like/follow
-   line spoken over it. A hold that reaches the last 3 s is the end card, up to 8 s (the longest card
-   `compilation.mjs` draws).
+1. **The end card.** "Ignore the last 3 s" would have failed Skin Sense ep12: its end card holds 5.2 s, with the
+   like/follow line spoken over it. "A hold that reaches the last 3 s" failed both One More Orbit masters: their end
+   card sits under narration from about 67 s, and a caption change splits the hold, so its first piece ends before
+   the last 3 s. The rule now is: a hold inside the last 8 s is the end card (8 s is the longest card
+   `compilation.mjs` draws), and so is one of at most 8 s that reaches the last 3 s. The pieces are summed in the
+   report. The cost: a real freeze in the last 8 s is not caught by this gate; the coordinator's frame check of the
+   last shot covers it. `freezedetect` is given rgb24 frames on purpose: its result moves with the pixel format.
 2. **Cards in a joined long video.** The Season 2 long videos carry a still opening, bridges and a finale with
    narration over them. `--cards` lists each frozen stretch for a person to confirm instead of failing. Without it a
    long video is held to the same rule as a short: Season 3 films have no cards ([../SEASON-FORMAT.md](../SEASON-FORMAT.md)).
@@ -169,8 +221,8 @@ and cannot watch at speed, so they judge frames and files, and the owner judges 
 
 | ID | Pts | Passes when | Inspected with | Signs off |
 |---|---|---|---|---|
-| SA1 | 3 | Every claim has its sentence, source link and title, access date, how it was verified and a status; none needs rewording | Auto: `claims.json` (the same fields `kits/cinema/script/lint.py` requires) | Tool |
-| SA2 | 4 | A person has opened every source; every claim is `ok`; none rests on a search excerpt | `claims.json`; `review/claims-table.md`, column "what the source actually says" | Owner |
+| SA1 | 3 | Every claim has its sentence, source link and title, access date, how it was verified and a status; none needs rewording. A derivation (`verified_via` "calculation", "derivation" or "own model") or an "assumption (no source)" needs no link or title | Auto: `claims.json` (the same fields `kits/cinema/script/lint.py` requires) | Tool |
+| SA2 | 4 | A person has opened every source; every claim is `ok` with `verified_via` "page" or "owner opened the page"; every derivation is `ok` and names `calc.py`; none rests on a search excerpt, on memory or on an unread page | `claims.json`; `review/claims-table.md`, column "what the source actually says" | Owner |
 | SA3 | 3 | Every number heard matches the screen, the source and `calc.py`; hedges go exactly as far as the source | `script.md` against `claims.json` and `calc.json`; a grab of each figure | Coordinator |
 | SA4 | 3 | Each shot shows its principle truthfully: scale and direction right, idealisations badged, thought experiments labelled | `shots.json` `principle` against a grab of each shot | Coordinator |
 | SA5 | 2 | The hook, title and thumbnail promise no more than the script proves | `packaging.json` winner against `script.md` | Coordinator |
@@ -196,8 +248,8 @@ Orbit's indigo) is fixed in the scene, not by a filter on the master.
 
 | ID | Pts | Passes when | Inspected with | Signs off |
 |---|---|---|---|---|
-| TS1 | 3 | At most 3 flashes in any second | Auto: `flashes` | Tool |
-| TS2 | 3 | No frozen stretch of 1.4 s or more, except the end card | Auto: `freeze` (a person confirms cards with `--cards`) | Tool; coordinator for cards |
+| TS1 | 3 | At most 3 flashes in any second, counted as the kit counts (section 3A) | Auto: `flashes` | Tool |
+| TS2 | 3 | No frozen stretch of 1.4 s or more, except the end card (a hold inside the last 8 s) | Auto: `freeze` (a person confirms cards with `--cards`) | Tool; coordinator for cards |
 | TS3 | 1 | Frame 0 is composed | Auto: `first_frame` | Tool |
 | TS4 | 3 | No flicker, shimmer, popping or jitter from frame to frame | 30 consecutive frames stepped across every cut and at three other points | Coordinator |
 
@@ -260,7 +312,7 @@ This is craft, not a forecast. No criterion predicts views.
 | VE2 | 2 | One thread from hook to payoff, open loops, a steady rhythm: axes (b), (f) | `script.md` beats | Coordinator |
 | VE3 | 2 | The ending delivers the promised answer: axis (g). The like/follow line comes after the payoff, never in the first 20 s | The last shot; [../CTA.md](../CTA.md) | Coordinator |
 | VE4 | 1 | The length lands inside the format's target window | Auto: `length_target` | Tool |
-| VE5 | 2 | Packaging complete, every check true | Auto: `packaging` | Tool |
+| VE5 | 2 | Packaging complete, every check true, and the thumbnail text does not repeat the title | Auto: `packaging` | Tool |
 
 Correction: a weak hook or ending is a script and first-shot or last-shot fix, made before the final. After a final,
 re-render only the first or last chunks.
@@ -296,8 +348,9 @@ Correction: move the module, add the library row, write the report. None of thes
    has judged. No evidence means 0, not a guess.
 3. Run `qa_episode.py ... --scores review/rubric-scores.json`. The report adds the people's points to the automated
    ones. It gives a total only when every criterion is scored; until then it shows how many points are still open.
-4. The pass mark is 95. Write the score in `review/` and in the Episode Intelligence Report only. Never in a post,
-   a description or a thumbnail.
+4. The pass mark is 95. `--release` exits 1 until the total exists and is 95 or more, even when every hard gate
+   has passed; the report's `verdict` holds `score`, `passScore`, `scoreMet` and `releaseReady`. Write the score in
+   `review/` and in the Episode Intelligence Report only. Never in a post, a description or a thumbnail.
 
 What the score is not: it is not the owner's approval, it does not show that viewers will like the film, and it is
 not comparable across channels. Platform numbers go in the "Measured" half of the report, apart from it.
@@ -308,7 +361,7 @@ not comparable across channels. Platform numbers go in the "Measured" half of th
 |---|---|---|---|
 | A sound gate: loudness, peak, mono, silence, sync | The mix | Every rendered frame | `kits/cinema/studio/render.py`, then `render.mjs --film $E --tier final --assemble --audio <mix>` |
 | One shot's picture: a flash, a freeze, a label, a look note | The 10 s chunks that hold the shot | Every other chunk | `render.mjs --film $E --tier final --from A --to B --fresh --force-mixed`, then `--assemble --audio <mix> --force-mixed` |
-| The title card or end card text only | The first and last seconds | The middle, bit for bit, and the sound | `kits/cinema/film/splice.py` (9:16 masters) |
+| The title card or end card text only | The first and last seconds | The middle, bit for bit, and the sound | `kits/cinema/film/splice.py` (9:16 masters; the file is not on `claude/outer-layer-s1-b`, so not for Skin Sense until the kit forks are merged) |
 | A line of narration, same length | That line's voice, its captions, its chunks | The rest | Re-voice the line, `align.py`, the compile step, then as "one shot's picture" |
 | A line of narration, new length | Everything after the line | Everything before it only if the film's length is unchanged | If `dur` changes the renderer refuses to mix: render the whole film fresh |
 | Packaging | `packaging.json`, the cover | The film | [../PACKAGING.md](../PACKAGING.md) |
@@ -328,8 +381,20 @@ Rules for a partial re-render:
 ## 7. Limits of this QA
 
 - **Voiceless gaps cannot be measured from the mp4.** Music fills them. The gate needs the dialogue stem.
-- **Tested on two videos**, both Skin Sense. Expect a threshold to need tuning on the first One More Orbit file
-  (dark frames) and the first ASMR lesson.
+- **Tested on six delivered videos**: Skin Sense ep12 and its Season 2 long video in full; One More Orbit ep07 and
+  ep12, Reality Rulebook ep12 and Possibility Lab ep12 on the file gates only (section 3). Not yet on a Season 3
+  part, a continuous long film or an ASMR lesson: expect a threshold to need tuning on the first of each.
+- **The flash count is the kit's, not WCAG's.** Every adjacent pair of opposite large transitions counts, as in
+  `kits/cinema/film/qa.py`. A steady black/white strobe therefore counts about twice WCAG's figure: one that toggles
+  every 5 frames (3 flashes a second by WCAG's pair definition) reads 6 and fails. In practice the limit is 2 full
+  flashes (4 transitions) in any second. It errs on the safe side, and it matters for Reality Rulebook's strobe
+  look. Changing the count would be a kit change.
+- **The 1.4 s freeze limit is a tool setting**, from the coordinator's brief. No rule file states it; the only
+  written number is the renderer's audit warning at 2.5 s. The owner or coordinator confirms one of the two
+  ([ROADMAP.md](ROADMAP.md)).
+- **A freeze in the last 8 s passes** as the end card. The coordinator's frame check of the last shot covers it.
+- **The plain path's text audit covers the kit's hud text only.** Skin Sense's own overlays (`set/ss3.mjs`,
+  `set/night.mjs`) are checked on frame grabs.
 - **The flash check runs at half the kit's grid** (108x192 against 216x384) to stay fast. On ep12 it gave the same
   transitions as `kits/cinema/film/qa.py`, with the changed area within 0.7% of the frame.
 - **Mono loss is read to 0.1 dB** (ffmpeg's loudness summary); the kit reads 0.01 dB.

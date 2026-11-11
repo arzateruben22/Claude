@@ -38,27 +38,27 @@ Four inputs start the work. They do not finish it. These steps stay with a perso
 |---|---|---|
 | Owner | Decides topics, titles and looks. Records Possibility Lab and One More Orbit. Passes on Evelyn's recording for Skin Sense. Makes paintings in ChatGPT. Opens sources. Posts by hand | Chat, GitHub upload pages, ChatGPT, Prism Studio |
 | Coordinator | Keeps the shared rules, this blueprint, the briefs and the recording scripts. Passes work between the owner and the builders. Pushes finished media to Prism | Branch `claude/made-with-claude-film`: `films/channels/*.md`, `films/channels/studio/`, `films/channels/voice-scripts/`, `prism-studio/` |
-| Channel builder (one per channel) | Writes the script and claims, builds the scene, renders, runs QA, commits | The channel's own branch, `films/channels/<slug>/` ([STRUCTURE.md](STRUCTURE.md)) |
+| Channel builder (one per channel) | Writes the script and claims, builds the scene, renders, runs QA, commits. Does not push to Prism: the coordinator does ([STRUCTURE.md](STRUCTURE.md), section 11) | The channel's own branch, `films/channels/<slug>/` ([STRUCTURE.md](STRUCTURE.md)) |
 | Film kit | Lints scripts, makes and aligns voice, composes sound, renders, measures | `kits/cinema/` (`script/`, `voice/`, `studio/`, `film/`, `sci/`, `cinema3d.js`) |
 | ChatGPT | Paints stills from the studio's prompts, on the owner's account. Its images are always disclosed as AI illustrations | Prompts: [CHATGPT-ART-PROMPTS.md](../CHATGPT-ART-PROMPTS.md), `packaging.json` `chatgptPrompt`. Results: `art/` in the episode folder |
 | Prism Studio | Imports finished files, shows the title, cover, captions and sources, records what the owner uploaded, holds analytics | `prism-studio/` (production code is on `claude/made-with-claude-film`) |
 
 ```
- OWNER ── 4 inputs, decisions, recordings, ChatGPT paintings ──►  COORDINATOR
-   ▲                                                            (claude/made-with-claude-film:
-   │                                                             shared rules, this blueprint, recording scripts)
-   │ reviews, posts by hand,                                              │ brief
-   │ presses "Uploaded"                                                   ▼
- PRISM STUDIO ◄── push-media.mjs + import ── CHANNEL BUILDER ── uses ──► FILM KIT (kits/cinema)
- (prism-studio/)      finished files only    (own branch: films/channels/<slug>/)   script · voice · studio · film
-   │                                                                      ▲
-   └── analytics, when they exist ──► Episode Intelligence Report ────────┘ lessons feed the next episode
+ OWNER ──── 4 inputs, decisions, recordings, ChatGPT paintings ────►  COORDINATOR
+   ▲                                                                 (claude/made-with-claude-film: shared rules,
+   │ reviews, posts by hand,                                          this blueprint, recording scripts, prism-studio/)
+   │ presses "Uploaded"                                                  │ brief                 ▲ finished files,
+   │                                                                     ▼                       │ committed on the channel branch
+ PRISM STUDIO ◄── push-media.mjs + import, by the COORDINATOR      CHANNEL BUILDER ── uses ──► FILM KIT (kits/cinema)
+ (prism-studio/)   (finished files only)                           (own branch: films/channels/<slug>/)   script · voice · studio · film
+   │                                                                     ▲
+   └── analytics, when they exist ──► Episode Intelligence Report ───────┘ lessons feed the next episode
 ```
 
 Facts that shape the map:
 
 - Each channel is built on its own branch. The copies of `films/channels/<slug>/` on `claude/made-with-claude-film` are old.
-- `kits/cinema/film/render.mjs`, `film/qa.py`, `cinema3d.js` and `studio/qa.py` are identical on the four branches. `film/compilation.mjs` and `script/lint.py` differ on every branch: four forks to merge (Roadmap stage 1).
+- `kits/cinema/film/render.mjs`, `film/qa.py`, `cinema3d.js` and `studio/qa.py` are identical on the four branches. `film/compilation.mjs` has five versions (each channel branch and the shared branch) and `script/lint.py` three forks plus the base; other kit files are forked too. The list is in [STRUCTURE.md](STRUCTURE.md), section 1; merging them is Roadmap stage 1.
 - Prism imports only finished files with fixed names. Working folders never reach it ([STRUCTURE.md](STRUCTURE.md)).
 
 ## The 12-stage pipeline
@@ -75,9 +75,9 @@ One table. "Today" names the tool or file that does the stage now. New pieces fr
 | 6 | Visual production | Approved shots; owner art | `scene.mjs`, channel `set/` modules, `art/`, stills | three.js scene with a pure `window.seek(t)`; `kits/cinema/sci/*`; stills with `render.mjs --tier final --times` | Stills approved before a full render. Skin Sense: the owner's look gate. Channel palette and type only. `kits/cinema/sci/contrast.py` reports 0 fails | Revise the stills. Missing owner art: build on a labelled placeholder (Skin Sense: `set/gen_art.py`) and never deliver with it |
 | 7 | Motion | Scene; voice timings | `film.json` (shots, beats, camera keys, captions, cues); a draft | `compile.py` per episode, or Skin Sense's `set/build_ep.py`, on `kits/cinema/script/timeline.py`; `render.mjs --tier animatic` or `draft`, `--cues` | The camera move has a reason. The picture moves with the sentence. No frozen stretch in a draft. Scale jumps carry a motion-blur floor (`kits/cinema/events.json`) | Re-key and re-run the draft tier (540x960). Never fix motion in a final |
 | 8 | Narration and sound | Script; recordings or the AI voice; cues | `vo/` WAVs, `lines.json`, `words.json`; `sheet.json`; the mix, stems and `qa.json` | `kits/cinema/voice/tts.py` or `polish.py`, then `align.py`; `kits/cinema/studio/render.py` with a preset in `studio/vibes/` | -15 to -13 LUFS, true peak at most -1 dBTP, mono-safe. Transients within one frame. Voiceless gaps of at most 1.2 s. An AI voice is labelled | Re-voice or re-cut the one line. An AI stand-in carries drafts until a recording arrives. Evelyn's voice is never synthesised |
-| 9 | Editing | Scene; `film.json`; the mix | `out/<name>-9x16.mp4` and its poster; long: `compilations/<name>/<name>-16x9.mp4` | `kits/cinema/film/run.sh <ep> --tier final`, `render.mjs --assemble --audio`; long: `film/compilation.mjs`; parts from the film's own 9:16 render | Every chunk verified. The code hash unchanged across a resume. One Chromium job per machine. Theme fonts present | `run.sh <ep>` resumes. A title or end-card change only: `film/splice.py`. After a Chromium update: render fresh |
-| 10 | QA | The delivered mp4; `audit.json`; the studio's `qa.json`; claims | `build/qa-delivery.json`, `review/scorecard.md`, `review/HUMAN-REVIEW.md`, the rubric score | `kits/cinema/film/qa.py`, `film/scorecard.py`, `studio/qa.py`; the (a) to (h) gate in [STUDIO-STYLE.md](../STUDIO-STYLE.md); the 100-point rubric in [QA.md](QA.md) (new) | `qa.py`: 0 fails. Gate: nothing under 3; (a), (g), (h) at 4 or more; nothing factual or ethical open. Rubric: 95 or more, an internal assessment only | Go back to the stage that caused it. Re-render only the chunks that changed |
-| 11 | Export | A master that passed QA | The YouTube file, cover, captions, `out/packaging.json`, `POSTING.md`; the episode ready for review in Prism | `film/youtube1440.py`; cover and posting tools per channel ([LIBRARY.md](LIBRARY.md)); `prism-studio/scripts/push-media.mjs`, then the import | Names match [STRUCTURE.md](STRUCTURE.md). The cover is newer than the mp4. Every `packaging.json` check is true. `npm run media:check` is clean | Fix the file and push again. Prism ignores a re-render in a season already marked uploaded |
+| 9 | Editing | Scene; `film.json`; the mix | `out/<name>-9x16.mp4` and its poster; long: `compilations/<name>/<name>-16x9.mp4` | `kits/cinema/film/run.sh <ep> --tier final`, `render.mjs --assemble --audio`; long: `film/compilation.mjs`; parts from the film's own 9:16 render | Every chunk verified. The code hash unchanged across a resume. One Chromium job per machine. Theme fonts present | `run.sh <ep>` resumes. A title or end-card change only: `film/splice.py` (not on Skin Sense's branch). After a Chromium update: render fresh |
+| 10 | QA | The delivered mp4; `audit.json`; the studio's `qa.json`; claims | `review/qa-report.json`, `review/rubric-scores.json` (new); `build/qa-delivery.json`, `review/scorecard.md`, `review/HUMAN-REVIEW.md` | [tools/qa_episode.py](tools/qa_episode.py) (new: the hard gates and the automated rubric points, every format); `kits/cinema/film/qa.py` (60 to 75 s shorts only), `film/scorecard.py`, `studio/qa.py`; the (a) to (h) gate in [STUDIO-STYLE.md](../STUDIO-STYLE.md); the 100-point rubric in [QA.md](QA.md) (new) | `qa_episode.py`: every hard gate passed. Gate: nothing under 3; (a), (g), (h) at 4 or more; nothing factual or ethical open. Rubric: 95 or more, an internal assessment only. Release needs both | Go back to the stage that caused it. Re-render only the chunks that changed |
+| 11 | Export | A master that passed QA | The YouTube file, cover, captions, `out/packaging.json`, `POSTING.md`; the episode ready for review in Prism | `film/youtube1440.py`; cover and posting tools per channel ([LIBRARY.md](LIBRARY.md)); `prism-studio/scripts/push-media.mjs`, then the import, run by the coordinator from the shared branch's checkout ([STRUCTURE.md](STRUCTURE.md), section 11) | Names match [STRUCTURE.md](STRUCTURE.md). The cover is newer than the mp4. Every `packaging.json` check is true. `npm run media:check` is clean | Fix the file and push again. Prism ignores a re-render in a season already marked uploaded |
 | 12 | Archiving | A delivered, posted episode | A commit on the channel branch; the Episode Intelligence Report; an archive row | git; Prism archives a season once the owner has pressed every "Uploaded" button. Report and archive: [STRUCTURE.md](STRUCTURE.md) (new) | Every delivered file committed, each under 90 MB. The report keeps verified data apart from hypotheses | No analytics yet: write the report from the measured build data and mark the rest "not yet measured" |
 
 Automation and human steps per stage: [AUTOMATION.md](AUTOMATION.md).
@@ -103,10 +103,11 @@ renders, described in words that are true. It never means a name borrowed from a
 | Path | Channels | Applies | Does not apply |
 |---|---|---|---|
 | Kit finish, `kits/cinema/cinema3d.js` | Reality Rulebook, One More Orbit, Possibility Lab | Motion blur (2 to 32 sub-frames across a 180 degree shutter), bokeh depth of field, bloom, ACES and sRGB, 4x MSAA or sub-pixel jitter | Grain. Shadows and ambient occlusion (these scenes cast none). Captions and labels are page text, so they get no motion blur |
-| Skin Sense's own finish, `finish()` in `set/w3d.js`, rendered with `--plain` | Skin Sense Season 2 | 4x MSAA, a 20-tap depth of field, bloom, ACES, a soft-box environment for reflections, 2048 px soft shadows, physically based skin materials | Motion blur (the kit finish is off). The 3-D picture is a 1080x1060 canvas inside the page. Grain helpers exist (`set/look3.js` `grainV3`, `set/studio.js` `createGrain`) but ep12 uses neither |
+| Skin Sense's own finish, `finish()` in `set/w3d.js`, rendered with `--plain` | Skin Sense Season 2 | 4x MSAA, a 20-tap depth of field, bloom, ACES, a soft-box environment for reflections, 2048 px soft shadows, physically based skin materials | Motion blur (the kit finish is off). The 3-D picture is a 1080x1060 canvas inside the page. Grain: `finish()` takes a `grain` amount (`three.grain` in the episode's data file), 0 in the Season 2 episodes and 0.02 in the Season 3 look test; the helpers `set/look3.js` `grainV3` and `set/studio.js` `createGrain` also exist |
 
 Skin Sense Season 3 asks for the kit finish plus grain ([SEASON-FORMAT.md](../SEASON-FORMAT.md)). The kit carries no grain
-([kits/cinema/README.md](../../../kits/cinema/README.md)), so grain comes from the channel helper until the kit has one (Roadmap stage 2).
+([kits/cinema/README.md](../../../kits/cinema/README.md)). Skin Sense's own finish does (`grain` in `set/w3d.js`): the Season 3
+look test uses it at 0.02 on the `--plain` path, which has no motion blur. Grain in the kit finish is Roadmap stage 2.
 
 ### The directive's wish-list, as it stands
 
@@ -122,7 +123,7 @@ Skin Sense Season 3 asks for the kit finish plus grain ([SEASON-FORMAT.md](../SE
 | Subsurface scattering | Approximate | `skinMaterial` in Skin Sense's `set/studio.js`: sheen, clearcoat, an attenuation tint, warm fill. Not in the kit |
 | Volumetric lighting | Approximate | Additive shaft geometry (`createShaft` in `set/studio.js`), glow sprites and bloom |
 | HDR environment lighting | Approximate | A procedural soft box through `PMREMGenerator.fromScene`. No `.hdr` files or loader |
-| Film grain | Channel helper only | Skin Sense's `grainV3` and `createGrain`. Not in the kit: Roadmap stage 2 |
+| Film grain | Have, Skin Sense only | Skin Sense's own finish (`set/w3d.js` `grain`) and the helpers `grainV3` and `createGrain`; not in the kit: Roadmap stage 2 |
 | Global illumination | Not available | No path tracer is vendored. Stand-in: environment light plus a hemisphere light |
 | Ambient occlusion | Not available | No SSAO or GTAO pass. To be written or vendored: Roadmap stage 2 |
 | Ray tracing | Not available | No GPU, and WebGL 2 has no ray-tracing interface |
@@ -132,7 +133,7 @@ Skin Sense Season 3 asks for the kit finish plus grain ([SEASON-FORMAT.md](../SE
 
 ### Master resolution per format, with the measured cost
 
-Measured on this machine (4 cores, idle, 11 Nov 2026) on two real episodes: Skin Sense ep12 on the plain path and
+Measured on this machine (4 cores, 11 Nov 2026) on two real episodes: Skin Sense ep12 on the plain path and
 Reality Rulebook ep12 with the kit finish. Seconds of render per frame:
 
 | Size | Skin Sense ep12 | Reality Rulebook ep12 | 80 s episode (2,400 frames) | 9-minute film (16,200 frames) |
@@ -145,10 +146,24 @@ The hour figures are estimates from those frames, for this machine only, with en
 Rulebook figures are a floor: every sampled frame sat at the lowest blur count. 16:9 was not measured; equal pixel
 counts are assumed. Earlier whole finals logged 0.89 and 1.13 s a frame at 1080, so speed varies.
 
+How far to trust this table:
+
+- The larger sizes were rendered through a one-line size override in a scratch copy of `render.mjs`. The audit did
+  not record its exact command, how many frames it sampled at each size, or at which times, and its `frames.jsonl`
+  files and logs were not kept. Only the comparison JPGs survive, so the table cannot be re-derived.
+- The machine was not idle: other jobs shared its 4 cores during the audit, so the figures include that load.
+- One figure was checked again the same day by the blueprint's review: four 1080x1920 stills of Skin Sense ep12 on
+  the plain path took 2.52, 1.73, 1.37 and 1.91 s (mean 1.88 s). So the 1080 row is the right order of magnitude.
+  The 1440 and 4K rows, the transmission figure (about 1.6 s a frame against 0.8 to 1.2 s), "600 MB per 4K chunk"
+  and "maximum texture 8192" were not re-checked.
+- Treat every figure here as an estimate until it is re-measured with `kits/cinema/film/scorecard.py` on the first
+  Season 3 final, and record that measurement in the film's Episode Intelligence Report.
+
 | Format | Rendered at | Delivered as | Honest label |
 |---|---|---|---|
 | `short`, `part`, `premium` (9:16) | Native 1080x1920, 30 fps | `<name>-9x16.mp4` at 1080x1920 for TikTok and Instagram; `<name>-9x16-youtube.mp4` at 1440x2560, a Lanczos upscale (`kits/cinema/film/youtube1440.py`) | "1080x1920 native". The YouTube file: "1440 upscale" |
-| `long` (16:9) | Native 1920x1080, 30 fps | `<name>-16x9.mp4` at 2560x1440: cards drawn at 2560x1440, the picture upscaled (`kits/cinema/film/compilation.mjs`) | "2560x1440 upload, picture rendered at 1080" |
+| `long`, joined from episodes (Seasons 1 and 2; Skin Sense Season 3) | No single render: cards are drawn at 2560x1440; each episode picture is its 1080x1920 master | `<name>-16x9.mp4`, a 2560x1440 frame built by `kits/cinema/film/compilation.mjs`. It accepts only 1080x1920 masters and scales each down to 810x1440 in the centre slot | "2560x1440 upload; episode picture 810x1440 from the 1080x1920 master" |
+| `long`, one continuous 16:9 film (Season 3 on the three film channels) | `render.mjs` draws 1920x1080, 30 fps | `<name>-16x9.mp4` at 2560x1440. No tool writes that file yet (Roadmap 2.2) | Once built by upscale: "2560x1440 upscale of a 1080 render" |
 | Stills (covers, thumbnails) | Up to 2160x3840, at 5 to 7 s each | JPG at the size [PACKAGING.md](../PACKAGING.md) asks for | The size it was rendered at |
 | Native 1440 (opt-in) | Roadmap stage 2 | Only when the art is at least 1440 px wide; 1.4 to 2 times the render time | "1440 native", once it exists |
 | 4K video | Not a tier | An experiment only | Never claimed |
@@ -199,12 +214,13 @@ Rules:
 | [schema/](schema/) | `episode.schema.json` (the master episode spec) and `shot.schema.json` (the shot manifest) |
 | [SHOTS.md](SHOTS.md) | The shot generation template and the shot manifest |
 | [NEW-EPISODE.md](NEW-EPISODE.md) | The workflow that starts from the four inputs |
-| [QA.md](QA.md) | The QA framework and the 100-point internal rubric |
+| [QA.md](QA.md), [qa/rubric.json](qa/rubric.json) | The QA framework and the 100-point internal rubric, and its machine-readable copy |
 | [AUTOMATION.md](AUTOMATION.md) | What runs by itself today, what needs an outside service, what needs a person |
 | [ROADMAP.md](ROADMAP.md) | The five stages, with dependencies, difficulty, benefit and tests |
 | [LIBRARY.md](LIBRARY.md) | The permanent production library: ten sections mapped to real paths, and the reusable modules per channel |
 | [templates/](templates/) | Starting files for an episode, a shot manifest and the Episode Intelligence Report |
-| [tools/](tools/) | Python tools (standard library only) that scaffold and check an episode |
+| [tools/](tools/) | Python tools (standard library only): `new_episode.py` scaffolds, `validate.py` checks the plan, `qa_episode.py` checks the delivered video |
+| [reports/](reports/) | How Episode Intelligence Reports are written, and where season reviews go |
 
 Existing documents this folder builds on:
 
@@ -231,7 +247,7 @@ The repo and the owner's latest decisions win. Each difference is recorded, not 
 |---|---|---|
 | Skin Sense is ivory, peach, rose, deep green `#00685F` | That as the base identity, plus a Season 3 look: voxel skin layers on `#0B1513`, teal `#3FBFAE`, ivory serif captions. Status: pending look gate, owner to confirm | The owner's 11 Nov 2026 decision in SEASON-FORMAT.md, asked for twice, is the newest |
 | "Photorealistic" | "Photoreal illustration, always disclosed" | PACKAGING.md's truth rules: a render or AI image is never presented as a photo |
-| "Cinematic 4K" | Shorts at native 1080x1920; long videos uploaded at 2560x1440 with a 1080 picture; 4K for stills and as an experiment | Measured above. No native 1440 or 4K tier exists |
+| "Cinematic 4K" | Shorts at native 1080x1920. Long videos uploaded at 2560x1440: a joined video holds 810x1440 episode pictures between cards drawn at full size; one continuous film is a 1080 render, upscaled once a tool exists. 4K for stills and as an experiment | Measured above. No native 1440 or 4K tier exists |
 | Ray tracing, global illumination, subsurface scattering, volumetrics | "Not available" or "approximate", effect by effect | The engine is a CPU rasteriser on WebGL 2 |
 | A 100-point score with a target of 95 | An internal rubric layered over the (a) to (h) gate. Never public, never a prediction | STUDIO-STYLE.md's gate stays binding; PACKAGING.md says scores are judgments |
 | Start an episode from four inputs | Four inputs start the scaffold. The look gate, source opening and title choice stay with a person | The `cinema-kit` skill, SEASON-FORMAT.md, STUDIO-STYLE.md |
@@ -245,7 +261,7 @@ Open conflicts inside the repo, found by the rules audit. Each needs a decision 
 |---|---|
 | CTA.md lines trip `lint.py`'s "Never write" list | Add an exemption for CTA.md lines (Roadmap stage 1) |
 | `lint.py` and `film/qa.py` fail 70 to 90 s lessons, ASMR pace and long films. STANDARDS-v2's "change every 2 to 4 s" clashes with ASMR's slow cuts | Per-format profiles (Roadmap stage 1 for lint, stage 4 for QA) |
-| Possibility Lab's `voice-owner/README.md` says never clone; the owner later asked for a clone of his own voice | Allowed for the owner's own voice only, with his recorded consent and an AI label. Evelyn's voice is never cloned |
+| Possibility Lab's `voice-owner/README.md` says never clone; the owner later asked for a clone of his own voice, and the Season 3 film's Part A already defaults to it (`longform/earth-spin/compile.py`, `VOICE=own`) | Allowed for the owner's own voice only, with his recorded consent and an AI label ("Narration: a synthetic version of the owner's own voice (AI)"). His consent is not on record in the repo yet: a TODO until it is. Evelyn's voice is never cloned |
 | One 7 to 10 minute recording session against a long video of at least 8:30 | A word target per channel (`wpm` in the identity file). Short parts get real add-on lines, never padding |
 | SEASON-FORMAT.md says Reality Rulebook goes first; Possibility Lab reached finals first | The owner decides the posting order |
 | Stale items: DECISIONS.md keeps old channel names and "go daily"; `lint.py` rejects `verified_via` "owner opened the page"; SEASON-FORMAT.md names `push-one.sh`, which is on no branch | Fix in Roadmap stage 1. Use `prism-studio/scripts/push-media.mjs` |

@@ -8,7 +8,7 @@ sounds, which formats it makes, and the rules that bind every episode. A new epi
 |---|---|---|---|---|---|
 | [skincare.json](skincare.json) | Skin Sense | `ss` | `claude/outer-layer-s1-b` | guest: Evelyn's recordings (`voice-evelyn/`) | AI voice `bf_isabella` |
 | [physics.json](physics.json) | Reality Rulebook | `rr` | `claude/physics-s2` | tts: AI voice `af_bella` at speed 0.85 | none needed |
-| [whatif.json](whatif.json) | Possibility Lab | `pl` | `claude/whatif-s2` | owner's recordings (`voice-owner/`) | AI voice `am_puck` |
+| [whatif.json](whatif.json) | Possibility Lab | `pl` | `claude/whatif-s2` | owner: his cloned voice for the Season 3 film's Part A (synthetic, labelled AI, consent to be recorded); his real recordings (`voice-owner/`) for the part lines and as the alternate set | AI voice `am_puck` |
 | [space.json](space.json) | One More Orbit | `oo` | `claude/space-s2` | owner's recordings (`voice-owner/`, none received yet) | AI voice `am_michael` |
 
 Body Backstage is archived and has no identity file.
@@ -42,7 +42,8 @@ Body Backstage is archived and has no identity file.
 - Episode id: `prefix` + `-s<season>e<nn>` (see [../schema/](../schema/)).
 - `formats[kind]` fills `format` in `episode.json`. If the kind is missing, stop and ask: the channel has no such format.
 - `voice` fills `voice` in `episode.json`. For `owner` and `guest`, drafts use the AI stand-in named in `rules` (and in the
-  table above) and are labelled as AI. Evelyn's voice is never synthesised.
+  table above) and are labelled as AI. Evelyn's voice is never synthesised. Where `rules` says a season uses the owner's
+  cloned voice, set `voice.synthetic` to `true` and `voice.consent` in `episode.json`; `disclosures.aiVoice` stays `true`.
 - `seasonLooks["s<season>"]` fills `look`. If its `status` is not `approved`, set `status.lookGate` to `pending` in
   `episode.json` and do not start a full build.
 - `cta.section` selects the lines in [CTA.md](../../CTA.md). Rotate them; never write a new one into a script.
@@ -72,6 +73,10 @@ They do not draw anything. The renderer still themes a frame from each channel's
 (`kits/cinema/film/page.mjs`), and the picture comes from the channel's `set/` code. An identity file is the summary
 that planning, scaffolding and QA tools read. If it disagrees with `theme.json` on a hex or a font, `theme.json` is
 what the viewer sees, so correct the identity file in the same change.
+
+Exception: Skin Sense. Its `theme.json` and `bible.md` still hold the retired violet look (ground `#2C1660`, display
+type Red Hat Mono). Compare `skincare.json` with `theme-ivory.json` and `set/ss3.mjs` until `theme.json` is replaced
+([../STRUCTURE.md](../STRUCTURE.md), section 12). Never copy the violet values into the identity file.
 
 ## How to change one
 

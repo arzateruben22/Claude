@@ -43,7 +43,7 @@
         "teal": "#3FBFAE",
         "caption": "#F4EDE3"
       },
-      "notes": "Owner, 11 Nov 2026 (films/channels/SEASON-FORMAT.md, 'Skin Sense Season 3'). Reference: films/skin-school-pilot/out/8-2-9x16.jpg. Voxels a little softer and slightly translucent, glowing from within; a warm glow where the skin meets the dark; soft studio light; a calm camera. Captions in Newsreader on a dark rounded plate. The skin layers take the episode's one skin tone. Six lessons of 70 to 90 s, then one joined long video. Open: the owner's approval of one still and a 10 s clip; Evelyn's written OK for the voice and the look, and her credit choice. The directive restates the ivory identity, so the owner is asked to confirm that this look is the one for Season 3. s3-looktest/BRIEF.md and bible.md on the channel branch are older than this decision.",
+      "notes": "Owner, 11 Nov 2026 (films/channels/SEASON-FORMAT.md, 'Skin Sense Season 3'). Reference: films/skin-school-pilot/out/8-2-9x16.jpg. Voxels a little softer and slightly translucent, glowing from within; a warm glow where the skin meets the dark; soft studio light; a calm camera. Captions in Newsreader on a dark rounded plate. The skin layers take the episode's one skin tone. Six lessons of 70 to 90 s, then one joined long video. Open: the owner's approval of one still and a 10 s clip; Evelyn's written OK for the voice and the look, and her credit choice. The directive restates the ivory identity, so the owner is asked to confirm that this look is the one for Season 3. A 10 s look test exists on the channel branch (voxel take: set/voxel3d.js through s3-looktest/scene.mjs, rendered on the --plain path with grain 0.02 in set/w3d.js, no motion blur; out/skin-sense-s3-looktest.mp4 and -still.png). It awaits the owner's look gate. It is not yet a reusable world or a theme file. s3-looktest/BRIEF.md and bible.md on the channel branch are older than this decision.",
       "status": "pending look gate"
     }
   },
@@ -86,7 +86,7 @@
       "size": [2560, 1440],
       "fps": 30,
       "durationS": [510, 570],
-      "notes": "Season 3: the six lessons joined with an opening, bridges and a finale (about a minute of new narration). Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4 at 2560x1440. The picture renders natively at 1920x1080 and is upscaled; only cards are drawn at 2560x1440 (kits/cinema/film/compilation.mjs). Never label it native 1440p. A native 2560x1440 render tier is Roadmap stage 2. Runs 8:30 to 9:30, never by padding."
+      "notes": "Season 3: the six lessons joined with an opening, bridges and a finale (about a minute of new narration). Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4, a 2560x1440 frame built by kits/cinema/film/compilation.mjs: the cards are drawn at that size, and each lesson's picture is its 1080x1920 master scaled down to 810x1440 in the centre slot. Label: '2560x1440 upload; episode picture 810x1440 from the 1080x1920 master'. Never label it native 1440p. Runs 8:30 to 9:30, never by padding."
     }
   },
   "packaging": {
@@ -100,10 +100,11 @@
     "Every factual sentence carries a claims.json tag. A claim is OK only after a person opens the source; anything checked from a search excerpt stays OPEN.",
     "One skin tone per episode, matched to its art; never change tone inside an episode's story.",
     "Captions carry 'Education, not medical advice'.",
-    "AI illustrations are disclosed: set film.json disclosures.aiVisuals to true.",
+    "AI illustrations are disclosed: set disclosures.aiVisuals true (episode.json, copied to film.json) whenever an AI-made image is shown. A world drawn only in code keeps it false.",
     "Look gate: the owner approves one still and a 10 s test clip before any Season 3 episode is built.",
     "Evelyn's real recordings only (voice-evelyn/). The owner gets her OK in writing and asks whether she wants credit; the studio never contacts her.",
     "A soft AI voice (bf_isabella, kits/cinema/voice/tts.py) stands in for look tests and drafts only, labelled as AI. Finals wait for her recording.",
+    "A dermatologist review is the owner's decision (films/channels/briefs/coordinator-handoff.md; the channel bible asks for a board-certified dermatologist). Until the owner decides, it is a TODO in every handoff.",
     "Season 3: almost no on-screen text. One number or one word at the key moment, plus the captions.",
     "Season 3: teal #3FBFAE is the only accent.",
     "Honesty labels on every comparison, illustration, animal result and single study.",
@@ -116,7 +117,8 @@
     "No products, brands, before/after, diagnosis or advice.",
     "No Lumevina name, logo, products or links; never Lumevina's black, rose or gold.",
     "Never an AI copy of Evelyn's voice.",
-    "No gold, rose or red accent and no neutral black ground (set/ss3.mjs's #B8862B is the dashed placeholder marker only, never an identity colour).",
+    "Season 3: no gold, rose or red accent and no neutral black ground (films/channels/SEASON-FORMAT.md). The base look's peach and rose come from the art of Seasons 1 and 2.",
+    "In every season: set/ss3.mjs's #B8862B is the dashed placeholder marker only, never an identity colour.",
     "No title or thumbnail that claims more than the script.",
     "Never claim a technique, resolution or metric the engine did not deliver (films/channels/studio/README.md, 'Maximum-fidelity standard').",
     "Nothing posts without the owner; publishing is manual."
@@ -131,6 +133,9 @@
     "claude/outer-layer-s1-b:films/channels/skincare/set/studio.js",
     "claude/outer-layer-s1-b:films/channels/skincare/set/final.sh",
     "claude/outer-layer-s1-b:films/channels/skincare/s3-looktest/BRIEF.md",
+    "claude/outer-layer-s1-b:films/channels/skincare/s3-looktest/episode.json",
+    "claude/outer-layer-s1-b:films/channels/skincare/set/voxel3d.js",
+    "films/channels/briefs/coordinator-handoff.md",
     "films/channels/PACKAGING.md",
     "films/channels/SEASON-FORMAT.md",
     "films/channels/CTA.md",

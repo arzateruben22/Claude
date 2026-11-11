@@ -1,6 +1,20 @@
 # Changelog
 
 ## Unreleased
+- Season 3 imports (films/channels/SEASON-FORMAT.md). `SEASON3` slates in `scripts/import-episodes.ts`: Reality
+  Rulebook, One More Orbit and Possibility Lab get 8 parts each (ep13-ep20), Skin Sense 6 episodes (ep13-ep18), under
+  stable series titles. `seasonsFor` now derives each season's first folder from the earlier slates (Season 4 needs
+  only its slate: ep21, Skin Sense ep19). film.json's title still wins over a placeholder, and packaging.json's winner
+  is the YouTube title.
+  Real voices: the importer reads film.json `disclosures.aiVoice` (`src/domain/disclosures.ts`, synthetic when absent);
+  with a real voice the posting text has no synthetic-voice line and the posting notes no AI label (AI illustrations are
+  still named and labelled). "Regenerate text" keeps the stored disclosures and the season's "S3 · Ep N" label.
+  Posting text for a part (beats hook, body, tease) comes from its body, without the like/follow moment. A statement
+  hook no longer gains a "?" (`hookQuestion`). `LESSON_MAX` is 8, so a season film's parts fit in one lesson.
+  A pushed long video with the same video now picks up a corrected chapters.txt or description.md (an owner's edit of
+  the description in Prism is kept: `drizzle/0010` records the description.md last read) and retries linking its parts
+  on every import until they link; a retry never links an uploaded season's episodes. Parts link through
+  chapters.txt only (each line equal to a part's title).
 - Long videos get the owner's "Uploaded on YouTube" button (owner's report, 10 Nov 2026: every long video is up, but
   there was no working button to record it). It is the episodes' Uploaded button for a long video
   (`LessonUploadedControl`, the same render as `UploadedControl`): one press records it, owner-reported and

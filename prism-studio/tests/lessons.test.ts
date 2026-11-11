@@ -27,10 +27,12 @@ const built = (id: string, qa: Record<string, unknown> = { fails: [] }) =>
   recordLessonBuild(db, id, { videoPath: "films:films/channels/physics/compilations/vol01/vol01-16x9.mp4", videoSha256: "abc", thumbnailPath: "", chapters: "0:00 Intro", description: "Sources…", qa });
 
 describe("lessons", () => {
-  it("needs 4–6 rendered, unused episodes of the channel", async () => {
+  it("needs 4–8 rendered, unused episodes of the channel", async () => {
     const { c } = await channel(db, "physics");
     const ids = await fourRendered("physics");
-    await expect(createLesson(db, { channelId: c.id, episodeIds: ids.slice(0, 3), title: "Too few" })).rejects.toThrow(/4 to 6/);
+    await expect(createLesson(db, { channelId: c.id, episodeIds: ids.slice(0, 3), title: "Too few" })).rejects.toThrow(/4 to 8/);
+    const nine = Array.from({ length: 9 }, (_, i) => `00000000-0000-4000-8000-00000000000${i}`);
+    await expect(createLesson(db, { channelId: c.id, episodeIds: nine, title: "Too many" })).rejects.toThrow(/4 to 8/);
     const other = (await renderedEpisode(db, "space")).ep.id;
     await expect(createLesson(db, { channelId: c.id, episodeIds: [...ids.slice(0, 3), other], title: "Wrong channel" })).rejects.toThrow(/Every episode/);
     const l = await createLesson(db, { channelId: c.id, episodeIds: ids, title: "Forces you can see" });
@@ -42,6 +44,18 @@ describe("lessons", () => {
     expect(plan.args).toEqual(["kits/cinema/film/compilation.mjs", "--channel", "films/channels/physics", "--episodes", "ep01,ep02,ep03,ep04", "--title", "Forces you can see", "--name", "vol01"]);
     const jobs = await db.select().from(S.jobs).where(eq(S.jobs.type, "build_lesson"));
     expect(jobs).toHaveLength(1);
+  });
+  it("a season film's 8 parts fit in one lesson (LESSON_MAX 8)", async () => {
+    const { c } = await channel(db, "skincare");
+    const ids: string[] = [];
+    for (let i = 0; i < 8; i++) {
+      const r = await renderedEpisode(db, "skincare", { title: `Part ${i + 1}` });
+      await db.update(S.episodes).set({ filmsPath: `films/channels/skincare/ep${13 + i}` }).where(eq(S.episodes.id, r.ep.id));
+      ids.push(r.ep.id);
+    }
+    const l = await createLesson(db, { channelId: c.id, episodeIds: ids, title: "Eight parts" });
+    expect(await db.select().from(S.lessonEpisodes).where(eq(S.lessonEpisodes.lessonId, l.id))).toHaveLength(8);
+    expect((await lessonBuildPlan(db, l.id)).args).toContain("ep13,ep14,ep15,ep16,ep17,ep18,ep19,ep20");
   });
   it("a host without the films toolchain refuses the build once, with where to run it", async () => {
     const { c } = await channel(db, "space");

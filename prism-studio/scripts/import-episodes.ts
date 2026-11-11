@@ -5,7 +5,9 @@
 // Idempotent: re-running updates in place and never duplicates episodes, versions or publications. An episode whose
 // video was cleared after posting keeps all of its records; its text (title, captions, sources) still updates.
 // Then every long video a cloud session built and pushed (compilations/<name>/ with a *-16x9.mp4) is registered as
-// the channel's lesson of that name (registerCompilation): new ones are added, rebuilt ones refreshed, the rest untouched.
+// the channel's lesson of that name (registerCompilation): new ones are added, rebuilt ones refreshed, a corrected
+// chapters.txt or description.md picked up, and parts not linked yet tried again (a part links when its episode title equals
+// its chapters.txt line).
 // An archived channel (src/domain/channels.ts) is skipped entirely: whatever files a push brings, its rows stay as they are.
 // An archived (uploaded) season's episodes (src/domain/season-archive.ts) keep their render, exports and publications
 // exactly as they are, like a cleared video, so an import never brings the season back; their text still updates.
@@ -20,8 +22,8 @@ import * as S from "../src/db/schema";
 import { createEpisode, addVersion, upsertExport, editExport } from "../src/domain/episodes";
 import type { Topic } from "../src/domain/catalog";
 import { captionsToSrt } from "../src/domain/srt";
-import { buildMetadata, postingNotesFor, type MetaInput } from "../src/domain/metadata";
-import { usesAiVisuals } from "../src/domain/disclosures";
+import { buildMetadata, hookQuestion, postingNotesFor, type MetaInput } from "../src/domain/metadata";
+import { disclosureNotes, episodeDisclosures } from "../src/domain/disclosures";
 import { registerCompilation } from "../src/domain/lessons";
 import { activeChannels, isArchived } from "../src/domain/channels";
 import { seasonArchive } from "../src/domain/season-archive";
@@ -48,10 +50,37 @@ export const SEASON2: Record<string, Slate> = {
   skincare: { series: "Season 2: What your skin does", objective: "See what your skin does on its own, with the evidence on the screen.", titles: ["Why goosebumps happen", "Why fingers wrinkle in water", "How sweat cools you", "What a tan really is", "The brick wall on your skin", "Fingerprints before birth"] },
 };
 
-/** Every season of a channel, with its season number and the folder number of its first episode (ep01, ep07, …). */
+// Season 3 (films/channels/SEASON-FORMAT.md). Reality Rulebook, One More Orbit and Possibility Lab: one long film
+// (compilations/<film-slug>/) plus 8 parts in ep13-ep20. Skin Sense: 6 premium episodes in ep13-ep18. Titles are
+// fallbacks, as in Season 2: a delivered film's own title (film.json) wins, and packaging.json's winner title is the
+// YouTube title. A part's title must equal its line in the film's chapters.txt, or the film can't link it
+// (src/domain/lessons.ts), so the film channels' fallbacks are the chapter titles as planned. Series titles never change
+// once imported: the series row is found by its title.
+export const SEASON3: Record<string, Slate> = {
+  physics: { series: "Season 3: One second, slowed down", objective: "Slow one ordinary second further and further until even light crawls, every number checked on screen.",
+    titles: ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen", "A bullet, through an apple, slowly", "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"] },
+  space: { series: "Season 3: The Moon comes closer", objective: "Bring the Moon closer step by step and feel every change it makes, every number sourced.",
+    titles: ["The Moon starts coming closer", "One quarter closer", "Half the distance, the sea climbs", "The night gets too bright", "When the Moon outgrows the Sun", "The ground moves too", "The Moon rises in the wrong place", "The distance no moon survives"] },
+  whatif: { series: "Season 3: The Earth spins faster", objective: "Speed up the Earth's spin, state every assumption, and land on numbers you can feel.",
+    titles: ["What if Earth spun faster?", "A twelve-hour day", "The air can't keep up", "The oceans slide to the equator", "Six-hour days and faster storms", "A thousand days in a year", "A day as long as a movie", "Almost weightless"] },
+  skincare: { series: "Season 3: Inside your skin, slowly", objective: "Follow one slow journey inside your skin in each episode, with the evidence on the screen.",
+    titles: ["What one shiver does inside you", "Where do your skin cells go?", "What is actually inside a pore?", "How one pore turns into a pimple", "Every hair on you is scheduled to fall out", "Your skin is still healing after it looks healed"] },
+};
+
+/** Every season's slates, in order. A channel's seasons follow one another with no gap. */
+const SEASONS = [SLATES, SEASON2, SEASON3];
+
+/** Every season of a channel, with its season number and the folder number of its first episode (ep01, ep07, ep13, …):
+ *  each season starts right after the previous one's last folder, so a new season needs only its slate. */
 export function seasonsFor(slug: string): { season: number; first: number; slate: Slate }[] {
-  const out = SLATES[slug] ? [{ season: 1, first: 1, slate: SLATES[slug] }] : [];
-  if (SEASON2[slug]) out.push({ season: 2, first: 7, slate: SEASON2[slug] });
+  const out: { season: number; first: number; slate: Slate }[] = [];
+  let first = 1;
+  for (const [i, slates] of SEASONS.entries()) {
+    const slate = slates[slug];
+    if (!slate) break;   // no season after a gap: its folder numbers couldn't be known
+    out.push({ season: i + 1, first, slate });
+    first += slate.titles.length;
+  }
   return out;
 }
 
@@ -90,7 +119,7 @@ export function metaInputFor(dir: string, ch: { name: string; label: string; tag
     channel: ch, episode: ep,
     beats: (info?.beats ?? []).filter((b) => b.vo).map((b) => ({ beat: b.beat, vo: b.vo! })),
     sources: claims.map((c) => ({ key: c.id, claim: c.claim, title: c.source_title, publisher: (() => { try { return new URL(c.source_url ?? "").hostname.replace(/^www\./, ""); } catch { return c.source_title ?? ""; } })(), url: c.source_url })),
-    disclosures: { aiVoice: true, aiVisuals: usesAiVisuals(dir) },
+    disclosures: episodeDisclosures(dir),   // film.json disclosures.aiVoice / aiVisuals (src/domain/disclosures.ts)
     next: info?.next ? `Next: ${info.next}` : null,
     packagingTitle: packagingTitle(pkg),
   };
@@ -118,7 +147,8 @@ export async function importEpisodes(d = db()) {
       const state = out ? "ready_for_review" : info ? "script" : "idea";
       let [ep] = await d.select().from(S.episodes).where(and(eq(S.episodes.channelId, ch.id), eq(S.episodes.number, n)));
       if (!ep) ep = await createEpisode(d, { channelId: ch.id, title, seriesId: se.id, seriesOrder: order, number: n, state, filmsPath: exists ? rel(dir) : null });
-      const question = info?.vo[0]?.split("?")[0] ? info.vo[0].split("?")[0] + "?" : ep.question;
+      // the hook line: up to its question mark when it asks one, else its first sentence as it is (a statement stays one)
+      const question = hookQuestion(info?.vo[0] ?? "") || ep.question;
       // the title and thumbnail package: stored when the file is usable; a bad file is reported and the stored one kept
       const pkg = exists ? readPackagingFile(path.join(dir, "out", "packaging.json")) : {};
       if (pkg.problem) report.push(`${slug} ep${n}: ${pkg.problem}; kept what was there`);
@@ -156,9 +186,9 @@ export async function importEpisodes(d = db()) {
         ver = await addVersion(d, { episodeId: ep.id, videoPath: `films:${rel(file)}`, sha256: hash, posterPath: `films:${rel(file.replace(/\.mp4$/, ".jpg"))}`,
           width: 1080, height: 1920, durationS: film?.dur, label: "final", qa: fs.existsSync(qaPath) ? JSON.parse(fs.readFileSync(qaPath, "utf8")) : {} });
       }
-      const meta = buildMetadata({ ...metaInputFor(dir, { name: ch.name, label: ch.label, tagline: ch.tagline, topic: ch.topic as Topic },
-        { number: n, title: film?.title?.title ? plain(film.title.title) : title, durationS: film?.dur, seriesTitle: slate.series, seriesOrder: order, seriesTotal: slate.titles.length, season: seasonNo }),
-        packagingTitle: pkgTitle });
+      const input = metaInputFor(dir, { name: ch.name, label: ch.label, tagline: ch.tagline, topic: ch.topic as Topic },
+        { number: n, title: film?.title?.title ? plain(film.title.title) : title, durationS: film?.dur, seriesTitle: slate.series, seriesOrder: order, seriesTotal: slate.titles.length, season: seasonNo });
+      const meta = buildMetadata({ ...input, packagingTitle: pkgTitle });
       // a new or changed winner title reaches an existing YouTube export too (its approval lapses, as on any edit), unless
       // the episode is already on YouTube; the same packaging again leaves the owner's own edits alone
       const onYouTube = pkgTitleChanged && (await d.select({ id: S.publications.id }).from(S.publications)
@@ -178,9 +208,7 @@ export async function importEpisodes(d = db()) {
         const use = platform === "youtube" && yt ? yt : { file, hash };
         const x = await upsertExport(d, { versionId: ver.id, platform, filePath: `films:${rel(use.file)}`, fileSha256: use.hash,
           title: m.title, caption: m.caption, hashtags: m.hashtags, coverPath,
-          disclosures: usesAiVisuals(dir)
-            ? { aiVoice: true, aiVisuals: true, notes: "AI-generated illustrations (owner-made), animated in code; synthetic narration." }
-            : { aiVoice: true, aiVisuals: false, notes: "Code-rendered (procedural) animation; synthetic narration." },
+          disclosures: { ...input.disclosures, notes: disclosureNotes(input.disclosures) },
           postingNotes: postingNotesFor(m) });
         if (x.coverPath !== coverPath) await editExport(d, x.id, { coverPath });   // an existing export: approvals bound to the old cover are withdrawn
         if (platform === "youtube" && pkgTitleChanged && x.title !== m.title) {
@@ -241,7 +269,7 @@ export async function importCompilations(d = db()) {
           thumbnailPath: fs.existsSync(path.join(dir, "thumbnail.jpg")) ? `films:${rel(path.join(dir, "thumbnail.jpg"))}` : "",
           chapters: text("chapters.txt"), description: text("description.md"), qa, packaging: pkg.packaging,
         });
-        report.push(`${where}: ${r.action} "${r.lesson.title}"${r.linked ? `, ${r.linked} episodes linked` : ""}`);
+        report.push(`${where}: ${r.action} "${r.lesson.title}"${r.linked ? `, ${r.linked} episodes linked` : ""}${r.notes?.length ? `; ${r.notes.join("; ")}` : ""}`);
       } catch (e) {
         failed.push(`${where}: ${e instanceof Error ? e.message : String(e)}`);
       }

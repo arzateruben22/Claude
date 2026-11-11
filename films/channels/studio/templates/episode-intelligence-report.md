@@ -27,8 +27,8 @@ Three rules for this file:
 | Measure | Value | Source |
 |---|---|---|
 | Master file | | `out/<name>-9x16.mp4` or `compilations/<name>/<name>-16x9.mp4` |
-| Size in pixels; rendered natively at | | `review/qa-report.json` `measurements.video`; `episode.json` `format.nativeSize` |
-| Honest label ("1080 native", "1440 upscale", ...) | | `films/channels/studio/README.md`, "Master resolution per format" |
+| Size in pixels; rendered natively at | | `review/qa-report.json` `measurements.video`; `episode.json` `format.nativeSize` (a joined long video has none: quote `format.deliveries`) |
+| Honest label ("1080x1920 native", "1440 upscale", "2560x1440 upload; episode picture 810x1440 from the 1080x1920 master", ...) | | `films/channels/studio/README.md`, "Master resolution per format" |
 | Length | | `review/qa-report.json` `measurements.video.durationS` |
 | Loudness, true peak | | `review/qa-report.json` `measurements.audio` |
 | File size | | `review/qa-report.json` `measurements.container.sizeMb` |
@@ -43,7 +43,7 @@ Three rules for this file:
 | Internal rubric: automated points, people's points, total (internal only) | | `review/qa-report.json` `rubric` |
 | The (a) to (h) scores | | `review/rubric-scores.json` `gates.gate_a_h` |
 | Lint: errors, warnings, reading grade | | `kits/cinema/script/lint.py` output |
-| Claims: total, ok, open | | `claims.json`; `review/qa-report.json` `measurements.sidecars.claims` |
+| Claims: total, marked ok, settled (ok and honestly marked), open | | `claims.json`; `review/qa-report.json` `measurements.sidecars.claims` |
 | Voiceless gaps: longest | | `review/qa-report.json` `measurements.voiceGaps` |
 | Sound sync; voice over music | | `build/audio/qa.json` |
 

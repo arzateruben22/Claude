@@ -28,7 +28,7 @@
       },
       "subject": "The nearest fine hair and the skin around its base.",
       "motion": "The hairs lie flat and still through 'Feel that?'. On 'A shiver' they rise one after another in a slow wave that travels away from the camera, a small bump lifting under each. A few dust motes drift in the air.",
-      "lighting": "Night look, to build: one soft key from upper left, as the look-test brief asks. The skin glows softly from within (emissive voxels plus bloom) and a warm rim shows where skin meets the dark. No hard shadows.",
+      "lighting": "Night look, as the 10 s look test draws it (set/voxel3d.js; it awaits the owner's look gate and is not yet a reusable world): one soft key from upper left. The skin glows softly from within (emissive voxels plus bloom) and a warm rim shows where skin meets the dark. No hard shadows.",
       "environment": "Dark green-black ground #0B1513 above and beyond the skin. Slow particles. Nothing else in frame.",
       "materials": "Skin as soft, slightly translucent voxels in the deep tone. Starting point: set/studio.js skinMaterial (sheen, clearcoat, attenuation colour), which approximates subsurface scattering. Hairs: thin tubes (set/w3d.js makeTube) with set/studio.js strandMaterial.",
       "principle": "Cold air on the skin makes body hairs stand up: goosebumps. The reason comes in S08.",
@@ -44,6 +44,7 @@
         "../voice-evelyn/evelyn-s3-full.m4a",
         "../set/w3d.js",
         "../set/studio.js",
+        "../set/voxel3d.js",
         "../s3-looktest/BRIEF.md"
       ],
       "claims": [

@@ -178,7 +178,7 @@
     "sources": "open",
     "title": "working",
     "recording": "received",
-    "notes": "The narration is recorded. Nothing is built: the Season 3 look test is in progress."
+    "notes": "The narration is recorded. A 10 s look test exists (voxel take: set/voxel3d.js, rendered on the --plain path with grain 0.02 in set/w3d.js, no motion blur). It awaits the owner's look gate. It is not yet a reusable world or a theme file. No lesson is built."
   },
   "disclosures": {
     "aiVoice": false,
@@ -197,8 +197,8 @@
     "The like/follow line is planned at 4 s at her pace. CTA.md asks for about 2 to 3 s; the soft line has ten words.",
     "Loudness is -14 LUFS because kits/cinema/film/qa.py passes -15 to -13 only. The look-test brief asked for about -16.",
     "kits/cinema/film/qa.py's 60 to 75 s length gate fails an 80 s lesson until a per-format profile exists.",
-    "The night look is not built yet. The shots name what exists in the Season 2 code (set/w3d.js, set/studio.js) and mark the rest 'to build'.",
-    "The finish is the builder's call after stills: Season 2 rendered with --plain (depth of field, bloom and ACES in set/w3d.js, no motion blur); the kit finish adds motion blur but has no grain. The shots ask only for what both paths provide, and say so where they differ.",
+    "A 10 s look test exists (voxel take: set/voxel3d.js, rendered on the --plain path with grain 0.02 in set/w3d.js, no motion blur). It awaits the owner's look gate. It is not yet a reusable world or a theme file, so the shots name what exists in the code (set/w3d.js, set/studio.js, the look test's set/voxel3d.js) and mark the rest 'to build'.",
+    "The finish is the builder's call after stills: the look test rendered with --plain (depth of field, bloom, ACES and grain in set/w3d.js, no motion blur); the kit finish adds motion blur but has no grain. The shots ask only for what both paths provide, and say so where they differ.",
     "No AI-made image appears in the picture as planned (a 3-D world drawn in code), so disclosures.aiVisuals is false. It becomes true the moment a painted image is composited in.",
     "The one on-screen word is 'heat'. SEASON-FORMAT.md allows one number or one word at the key moment; the owner may prefer none.",
     "Claims c1 to c8 restate the narration. No source has been opened. The Skin Sense builder writes the real ledger, and a person opens every source."

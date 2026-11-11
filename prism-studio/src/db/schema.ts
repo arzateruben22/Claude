@@ -297,6 +297,9 @@ export const lessons = pgTable("lessons", {
   chapters: text("chapters").notNull().default(""),          // YouTube chapters, ready to paste
   description: text("description").notNull().default(""),    // ready to paste: chapters, sources, AI label
   packaging: jsonb("packaging").$type<Packaging>(),            // compilations/<name>/packaging.json (src/domain/packaging.ts)
+  // sha256 of the pushed folder's description.md as the importer last read it ("" = never recorded): tells a corrected
+  // file apart from the owner's own edit of the description (registerCompilation, src/domain/lessons.ts)
+  importedDescriptionSha: text("imported_description_sha").notNull().default(""),
   qa: jsonb("qa").$type<Record<string, unknown>>().notNull().default({}),
   approvedHash: text("approved_hash").notNull().default(""), // sha256(video, title, description) at approval
   postUrl: text("post_url").notNull().default(""),

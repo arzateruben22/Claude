@@ -37,6 +37,7 @@ claims.<tag>.json beside it.
 """
 import argparse
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -284,8 +285,10 @@ def windows(items, label, fps, file, r):
     tol = 0.5 / fps
     end = None
     for i, (name, w) in enumerate(items):
-        if not (isinstance(w, list) and len(w) == 2 and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in w)):
-            return None                                   # the schema check has already said so
+        if not is_window(w):
+            if isinstance(w, list) and any(isinstance(x, float) and not math.isfinite(x) for x in w):
+                r.fail(file, f"{label} {name}", "its window holds a number that is not finite")
+            return None                                   # otherwise the schema check has already said so
         a, b = w
         if b <= a:
             r.fail(file, f"{label} {name}", f"ends at {b} s, not after its start at {a} s")
@@ -314,7 +317,9 @@ def name_of(value, fallback):
 
 
 def is_window(w):
-    return isinstance(w, list) and len(w) == 2 and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in w)
+    """[start, end] as two finite numbers."""
+    return isinstance(w, list) and len(w) == 2 and all(
+        isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x) for x in w)
 
 
 def claim_problem(c):
@@ -394,6 +399,8 @@ def cross_check(ep, shots, claims, identity, names, r, shots_ok=True):
     # 4. length
     dur = fmt.get("durationS")
     forced = fmt.get("durationForced") is True
+    if isinstance(dur, list) and any(isinstance(x, float) and not math.isfinite(x) for x in dur):
+        r.fail(E, "/format/durationS", "holds a number that is not finite")
     if total is not None and is_window(dur):
         if not dur[0] <= total <= dur[1]:
             msg = f"the plan runs {total} s, outside this format's {dur[0]} to {dur[1]} s"
@@ -412,7 +419,12 @@ def cross_check(ep, shots, claims, identity, names, r, shots_ok=True):
     # what the renderer really draws
     wired = WIRED.get(aspect) if aspect else None
     native, size = fmt.get("nativeSize"), fmt.get("size")
-    if wired:
+    joined = kind == "long" and fmt.get("shape") == "joined"       # built by compilation.mjs from finished episodes: no single render size
+    if "shape" in fmt and kind != "long":
+        r.warn(E, "/format/shape", "shape is for a long video only (film or joined)")
+    if joined and native is not None:
+        r.warn(E, "/format/nativeSize", "a joined long video is not rendered as one picture: leave nativeSize out and say in format.deliveries how the file is made")
+    if wired and not joined:
         if native is None and size is not None and not _same(size, wired):
             r.warn(E, "/format/size", f"{_short(size)} is not a size the renderer draws today ({wired[0]}x{wired[1]}); add nativeSize and label the file an upscale")
         if native is not None and not _same(native, wired):

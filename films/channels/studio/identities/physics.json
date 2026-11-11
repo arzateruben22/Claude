@@ -46,7 +46,7 @@
     "s3": {
       "summary": "One daylight kitchen with a window onto a backyard: one second of everyday life, slowed further and further. The slow-motion factor counter is the only text besides the captions.",
       "palette": {},
-      "notes": "Source: lf01/script.md and lf01/build.py on the channel branch. A 960x540 16:9 draft is rendered; parts ep13 to ep20 are compiled, not rendered. The branch title 'Slow Down One Second Until Light Stands Still' overstates (claim c1 says not literally still); 'How Much Would You Slow Time to Watch Light Move?' awaits the owner. A physicist signs off before it posts. No owner approval of a still is on record.",
+      "notes": "Source: lf01/script.md and lf01/build.py on the channel branch. A 960x540 16:9 draft is rendered; parts ep13 to ep20 are compiled, not rendered. Title: lf01/script.md on the channel branch now carries 'How Much Would You Slow Time to Watch Light Move?' (commit 83d77da2, 11 Nov 2026), while lf01/packaging.json still names the earlier winner 'Slow Down One Second Until Light Stands Still', which overstates (claim c1 says not literally still). The owner's choice between them is not on record in the repo. A physicist signs off before it posts. No owner approval of a still is on record.",
       "status": "pending look gate"
     }
   },
@@ -87,7 +87,7 @@
       "size": [2560, 1440],
       "fps": 30,
       "durationS": [510, 570],
-      "notes": "Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4 at 2560x1440. The picture renders natively at 1920x1080 and is upscaled; only cards are drawn at 2560x1440 (kits/cinema/film/compilation.mjs). Never label it native 1440p. A native 2560x1440 render tier is Roadmap stage 2. Runs 8:30 to 9:30, never by padding."
+      "notes": "Season 3 on: one continuous 16:9 film. Delivery master that Prism imports: compilations/<name>/<name>-16x9.mp4 at 2560x1440. kits/cinema/film/render.mjs draws the film at 1920x1080; no tool writes the 2560x1440 file yet for one continuous film (Roadmap 2.2). Once it is built by upscale, label it '2560x1440 upscale of a 1080 render', never native 1440p. Seasons 1 and 2 were joined from episodes by kits/cinema/film/compilation.mjs: a 2560x1440 frame with cards drawn at that size and each episode's 1080x1920 master scaled down to 810x1440 (label: '2560x1440 upload; episode picture 810x1440 from the 1080x1920 master'). Runs 8:30 to 9:30, never by padding."
     }
   },
   "packaging": {
@@ -107,7 +107,7 @@
     "Cobalt #1F3BD1 is force and the title's accent word on screen. #2F5BFF is the packaging and Prism accent only.",
     "The yellow marker is only the band behind the spoken word.",
     "An opacity of 1/3 keeps about 1/11 of the contrast after ACES: set translucent overlays with set/aces.js screenAlpha.",
-    "Season 3 long film: a physicist signs off before it posts.",
+    "A physicist signs off each script before it posts (channel bible.md; the reviewing physicist's name is a TODO in every handoff until the owner names one).",
     "One Chromium render job per machine."
   ],
   "never": [
@@ -127,6 +127,7 @@
     "claude/physics-s2:films/channels/physics/ep12/review/clarity-review.md",
     "claude/physics-s2:films/channels/physics/set/aces.js",
     "claude/physics-s2:films/channels/physics/lf01/script.md",
+    "claude/physics-s2:films/channels/physics/lf01/packaging.json",
     "films/channels/PACKAGING.md",
     "films/channels/SEASON-FORMAT.md",
     "films/channels/CTA.md",

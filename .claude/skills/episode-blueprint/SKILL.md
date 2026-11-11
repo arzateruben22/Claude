@@ -18,10 +18,13 @@ before renders, one timeline, measure before anyone watches) is the `cinema-kit`
 Ask only for what is missing: **channel**, **topic**, **target duration**, **output format**. Then scaffold:
 ```bash
 python3 -I films/channels/studio/tools/new_episode.py --channel "<name or slug>" --topic "<topic>" \
-    --duration <seconds or m:ss> --format <short|premium|part|long>
+    --duration <seconds or m:ss> --format <short|premium|part|long> --out <a scratch folder>/<name>
 ```
-Read the `assumptions` it prints and correct any that are wrong. Move the folder into the channel's folder on the
-channel's own branch (`branch` and `filmsPath` in the identity). Episodes are built there, never on this branch.
+Always pass `--out` with a folder in your scratch space: without it the tool writes `./new-episodes/` in the
+current directory, which from the repo root is inside the checkout and is not git-ignored. Read the `assumptions`
+it prints and correct any that are wrong. Move the folder into the channel's folder on the channel's own branch
+(`branch` and `filmsPath` in the identity; `NEXT-STEPS.md` names the place). Episodes are built there. The
+scaffold is never committed on this branch.
 
 ## Step 2: Follow NEXT-STEPS.md
 The new folder's `NEXT-STEPS.md` is the ordered checklist, with this episode's paths, commands and who does each
@@ -36,7 +39,7 @@ Never mark one of these done yourself. Ask, wait, and work on what is not blocke
 | Topic and working title | Before research goes far | It is the owner's channel |
 | Look gate: one still (Skin Sense Season 3: plus a 10 s clip) | Before any full render | `status.lookGate` becomes `approved` only on the owner's word |
 | Sources opened | Before export | Only a person who opened the page marks a claim ok. A search excerpt stays OPEN |
-| Recording | Before finals | The owner's voice, or Evelyn's through the owner. An AI stand-in is labelled. Evelyn's voice is never synthesised |
+| Recording | Before finals | The owner's voice, or Evelyn's through the owner. An AI stand-in is labelled. Evelyn's voice is never synthesised. The owner's cloned voice (Possibility Lab Season 3) is labelled AI and needs his consent on record |
 | Title | Before export | The owner picks the packaging winner |
 | Listen, watch, approve | Before posting | Agents cannot hear or watch at speed |
 | Posting | Always | The owner posts by hand and presses "Uploaded". Nothing posts by itself |
@@ -45,10 +48,16 @@ Never mark one of these done yourself. Ask, wait, and work on what is not blocke
 ```bash
 python3 -I films/channels/studio/tools/validate.py <episode folder>
 python3 -I films/channels/studio/tools/qa_episode.py <delivered video> --episode <episode folder>/episode.json \
-    --out <episode folder>/review/qa-report.json     # a long video: --kind long (joined with still cards: --cards)
+    --out <episode folder>/review/qa-report.json
+# a long video that is one continuous film: add --kind long
+# a long video joined from finished episodes with narrated still cards (Season 2; Skin Sense Season 3):
+python3 -I films/channels/studio/tools/qa_episode.py <compilations/name/name-16x9.mp4> --kind long --cards
 ```
 Exit 1 means a hard gate failed. Fix the shot or stage that caused it (`QA.md`, section 6), not the whole episode,
-then run it again. Fill your rows of `review/rubric-scores.json` (`qa_episode.py --blank-scores` prints the form).
+then run it again. One exit 1 is expected: a joined long video run without `--cards` fails `freeze`, because its
+cards are still pictures; with `--cards` a person confirms each card. Never re-cut an approved master to pass a
+gate: report the failure (`QA.md`, section 3). Fill your rows of `review/rubric-scores.json` (`qa_episode.py
+--blank-scores` prints the form); `--release` then needs every hard gate passed and 95 points or more.
 Report it as it is: which hard gates passed, failed, or wait on a person. The 100-point score is an internal
 assessment, not proof of quality, and a failed hard gate blocks release whatever the score.
 
