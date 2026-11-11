@@ -8,7 +8,7 @@ export async function run({ stage, FILM, W, H, EP }) {
   document.head.appendChild(css);
   const root = document.createElement("div"); root.className = "night"; root.innerHTML = `<div class="artbox" id="artbox"></div><div class="cap" id="cap"></div>`;
   const stageEl = document.getElementById("stage"); stageEl.insertBefore(root, stageEl.firstChild);
-  const artbox = root.querySelector("#artbox"), capEl = root.querySelector("#cap"), AW = 1080 * u, BH = 1920 * u, BTOP = 0, R = (s) => (typeof s === "number" ? s : 0);
+  const artbox = root.querySelector("#artbox"), capEl = root.querySelector("#cap"), AW = 1080 * u, BH = 1920 * u, BTOP = 0, LN = FILM.lines || {}, R = (s) => { if (typeof s === "number") return s; const m = /^(start|end):(vo\d+c?)([+-][\d.]+)?$/.exec(s); if (!m) throw new Error("bad time spec " + s); return LN[m[2]][m[1] === "start" ? 0 : 1] + Number(m[3] || 0); };
   const mod = await import(EP.three.module), T3 = await mod.create({ W, H, u, AW, BH, BTOP, artbox, R, EP });
   const eo = (x) => 1 - Math.pow(1 - x, 3), seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)));
   window.seek = function (t) {
