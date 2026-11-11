@@ -84,14 +84,14 @@ window.setup = async (tl, assets, mode, w, h) => {
 };
 // extra life for the long film's still stretches (the hold in chapter 1 and everything from the break-up on): a slow camera sway, the Moon's libration, drifting dust.
 // Gated by time so the segments rendered separately join without a pop (it is 0 at 345.1 s).
-const swayAmp = (t) => (MODE !== "land" || TL.dur < 300) ? (TL.name === "part8" ? sm((t - 0.5) / 1.5) : 0) : Math.max(sm((t - 346) / 4), (beats() && t > beats().calm.t1 + 1 && t < beats().size.t0 - 0.2) ? sm((t - beats().calm.t1 - 1) / 2) * sm((beats().size.t0 - 0.2 - t) / 1) : 0);
+const swayAmp = (t) => (MODE !== "land" || TL.dur < 300) ? ((TL.name || "").startsWith("part8") ? sm((t - 0.5) / 1.5) : 0) : Math.max(sm((t - 346) / 4), (beats() && t > beats().calm.t1 + 1 && t < beats().size.t0 - 0.2) ? sm((t - beats().calm.t1 - 1) / 2) * sm((beats().size.t0 - 0.2 - t) / 1) : 0);
 const figPos = () => (MODE === "land" ? { x: 0.342 * W, y: 0.831 * H } : { x: 0.423 * W, y: 0.681 * H });
 function zoomState(t, b, mo) {   // {s, F (world pivot), k (0 = pivot stays put, 1 = pivot goes to the screen anchor)}
   const fg = figPos(), mp = { x: mo.cx, y: mo.cy }, e = (a, c, u) => lerp(a, c, sm(u));
   const A = b.start, calm = b.calm, lt = b.light.t0, sz = b.size.t0;
-  if (t < calm.t0) return { s: 1.5, F: fg, k: 0 };
+  if (t < calm.t0) return { s: 1.3, F: fg, k: 0 };
   const tr = calm.t0 + Math.max(1.5, calm.t1 - calm.t0 + 0.6);
-  if (t < tr) { const u = (t - calm.t0) / (tr - calm.t0); return { s: e(1.5, 1.3, u), F: { x: e(fg.x, mp.x, u), y: e(fg.y, mp.y, u) }, k: sm(u) }; }
+  if (t < tr) { const u = (t - calm.t0) / (tr - calm.t0); return { s: 1.3, F: { x: e(fg.x, mp.x, u), y: e(fg.y, mp.y, u) }, k: sm(u) }; }
   if (t < sz - 0.1) return { s: 1.3 + 0.2 * clamp01((t - tr) / Math.max(1, sz - 0.1 - tr)), F: mp, k: 1 };      // a slow push toward the Moon while the ruler ticks
   if (t < sz + 1.4) { const u = (t - (sz - 0.1)) / 1.5; return { s: e(1.5, 2.3, u), F: mp, k: 1 }; }
   if (t < lt - 0.3) return { s: 2.3 + 0.16 * sm((t - (sz + 1.4)) / Math.max(1, lt - 0.3 - sz - 1.4)), F: mp, k: 1 };
@@ -116,7 +116,7 @@ function ch1Overlays(t, b, mo, G) {
     ctx.globalAlpha = 1 - sm((u - 1) / 0.15); const g = ctx.createRadialGradient(px, py, 0, px, py, 26 * U); g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(0.3, "rgba(160,240,235,.8)"); g.addColorStop(1, "rgba(160,240,235,0)"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(px, py, 26 * U, 0, 6.283); ctx.fill(); }
   // moonlight is sunlight bounced off grey rock: a beam comes in from the Sun's side, hits the Moon and bends down onto the water
   const m0 = b.mlight.t0, m1 = b.mlight.t1 + 0.3, mu = (t - m0) / (m1 - m0); if (mu > 0 && mu < 1) {
-    const a = Math.min(sm(mu / 0.15), 1 - sm((mu - 0.8) / 0.2)), sx = -0.1 * W, sy = -0.05 * H, hx = X - r * 0.78, hy = Y - r * 0.55, wx = X + (MODE === "land" ? 0 : -0.03 * W), wy = G.horizon + 0.07 * (H - G.horizon), l1 = sm(mu / 0.4), l2 = sm((mu - 0.35) / 0.35);
+    const a = Math.min(sm(mu / 0.15), 1 - sm((mu - 0.8) / 0.2)), sx = -0.1 * W, sy = 0.30 * H, hx = X - r * 0.78, hy = Y - r * 0.55, wx = X + (MODE === "land" ? 0 : -0.03 * W), wy = G.horizon + 0.07 * (H - G.horizon), l1 = sm(mu / 0.4), l2 = sm((mu - 0.35) / 0.35);
     ctx.filter = `blur(${3 * U}px)`; ctx.globalAlpha = a; ctx.lineWidth = 6 * U; ctx.lineCap = "round"; ctx.strokeStyle = "rgba(255,225,160,.85)"; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(lerp(sx, hx, l1), lerp(sy, hy, l1)); ctx.stroke();
     if (l2 > 0) { ctx.strokeStyle = "rgba(170,240,235,.85)"; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(lerp(hx, wx, l2), lerp(hy, wy, l2)); ctx.stroke(); } ctx.filter = "none"; }
   ctx.restore();

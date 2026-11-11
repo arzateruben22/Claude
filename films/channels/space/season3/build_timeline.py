@@ -2,6 +2,7 @@
 Each timeline: dur, mode (land|port), clips [{id, file, t, dur}], captions [{t0,t1,text}], km [[t,km]...], tracks {eclipse, moon, brk, ring, tonight}.
 A voice swap only replaces lines.json (same ids, new durations/words): this script re-times everything from it."""
 import json, os, re, sys
+YT = os.environ.get("VARIANT") == "yt"; YTV = "subscribe" if YT else "follow"; SUF = "-yt" if YT else ""   # VARIANT=yt: the parts with the 'subscribe' CTA line (for the YouTube files) -> out/part<n>-yt.json
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
 L1 = f"{ROOT}/films/channels/space/long01"; OUT = L1 + "/out"; os.makedirs(OUT, exist_ok=True)
 lines = {x["id"]: x for x in json.load(open(L1 + "/voice/lines.json"))["lines"]}; ST = json.load(open(L1 + "/stages.json")); G = 0.35
@@ -83,7 +84,7 @@ if n0: km += [[round(n0["t0"] + 0.4, 3), km[-1][1]], [round(n0["t0"] + 2.2, 3), 
 tl["long"] = {"name": "long", "mode": "land", "dur": dur, "clips": clips, "captions": split_caps(caps, 100), "km": km, "tracks": tracks}
 # ---- the eight parts (9:16): hook, chapter, cliffhanger, closer, one like/follow line at 70-85% of the runtime, the ending left out
 for i in range(1, 9):
-    ch = f"ch{i}"; vo = lines[ch + "_vo"]; sents = vo["sentences"]; cta = f"cta{(i - 1) % 4 + 1}_follow"
+    ch = f"ch{i}"; vo = lines[ch + "_vo"]; sents = vo["sentences"]; cta = f"cta{(i - 1) % 4 + 1}_{YTV}"
     head = [ch + "_hook"]; hc, t_after_hook = place(head, 0.15)
     vo_start = t_after_hook
     # total length if the CTA goes after sentence k; pick k so the CTA starts at 70-85% of the runtime (closest to 77%)
@@ -119,6 +120,8 @@ for i in range(1, 9):
     if i == 5:
         e0 = find(caps, "The sky goes dim"); e1 = find(caps, "And then you look at the Moon again")
         if e0 and e1: tracks["eclipse"] += [[e0["t0"] - 0.2, 0], [e0["t0"] + 1.6, 1], [e1["t0"] - 0.1, 1], [e1["t0"] + 1.6, 0]]
-    tl[f"part{i}"] = {"name": f"part{i}", "mode": "port", "dur": dur_p, "clips": clips, "captions": split_caps(caps, 68), "km": kk, "tracks": tracks, "cta_at": round(cc["t"], 3), "cta_frac": round(cc["t"] / dur_p, 3)}
-for k, v in tl.items(): json.dump(v, open(f"{OUT}/{k}.json", "w"), indent=1, ensure_ascii=False)
+    tl[f"part{i}{SUF}"] = {"name": f"part{i}{SUF}", "mode": "port", "dur": dur_p, "clips": clips, "captions": split_caps(caps, 68), "km": kk, "tracks": tracks, "cta_at": round(cc["t"], 3), "cta_frac": round(cc["t"] / dur_p, 3)}
+for k, v in tl.items():
+    if YT and not k.endswith("-yt"): continue
+    json.dump(v, open(f"{OUT}/{k}.json", "w"), indent=1, ensure_ascii=False)
 print({k: round(v["dur"], 1) for k, v in tl.items()}); print("CTA at", {k: v.get("cta_frac") for k, v in tl.items() if k != "long"})
