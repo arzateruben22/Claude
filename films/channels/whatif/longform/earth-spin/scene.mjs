@@ -166,7 +166,7 @@ window.seek = function (t) {
   sky.visible = stars.visible = sunDisk.visible = sunHalo.visible = sp;
   skyU.uSun.value.copy(sunDir); skyU.uDay.value = 0; skyU.uGlow.value = 0.25 + 0.75 * amp; const gs = 0.3 + 0.7 * amp; stars.rotation.x = 0.04 * ph; starM.opacity = 0.9;
   sunDisk.position.copy(sunDir).multiplyScalar(1200); sunDisk.scale.setScalar(52 * gs); sunDisk.lookAt(camera.position);
-  sunHalo.position.copy(sunDir).multiplyScalar(1190); sunHalo.scale.setScalar(170 * gs); sunHalo.lookAt(camera.position);
+  sunHalo.position.copy(sunDir).multiplyScalar(1190); sunHalo.scale.setScalar((FILM.cams ? 170 : 260) * gs); sunHalo.lookAt(camera.position);
   desk.group.visible = false; dustF.visible = false; sunDisk.material.depthTest = true; sunHalo.material.depthTest = true;   // the planet hides the Sun when it is behind it
   gU.uLight.value.copy(lightV); gU.uExposure.value = 0.9 + 0.35 * day;
 
@@ -181,6 +181,7 @@ window.seek = function (t) {
       base: null,
       ground: { pcy: -0.6, c: [1.0 + sw, 0.52 + sh, 2.5], l: [-0.25, 0.8, -3], fov: 42, fs: 1 },        // down at the ground beside the figure, the sky racing above
       wide: { pcy: -0.35, c: [1.5 + 3 * sw, 0.9 + sh, 8.2], l: [0, -0.1, 0], fov: 34, fs: 0.8 },          // the whole planet with the light line
+      hero: { pcy: -0.62, c: [0.0 + sw, 0.7 + sh, 2.8], l: [0, 0.8, 0], fov: 30, fs: 1.15 },          // the cover: the figure big in the foreground
       push: { pcy: -0.6, c: [0.25 + sw, 0.62 + sh, 2.9], l: [0, 0.62, 0], fov: 30, fs: 1 },             // in close on the figure
     };
     const lm = (a, b, u) => a + (b - a) * u, base0 = cur;
@@ -195,13 +196,13 @@ window.seek = function (t) {
   const ysc = (PORT ? figS : gl ? 0.6 : 1) * (PORT ? 0.26 : 0.15), bulge = 0.07 * fxw0("ocean");
   you.group.visible = sp && shot !== "end";
   if (you.group.visible) {
-    you.set({ at: [0, 0, 0], arms: 0.06 + 0.5 * liftU + 0.03 * Math.sin(t * 1.3), tilt: 0 });
-    you.group.scale.set(ysc, ysc * (1 + 0.012 * Math.sin(t * 1.7)), ysc); you.group.position.set(pcx, pcy + 1.0 + bulge + (0.85 + rise) * ysc, 0); you.group.rotation.set(0, Math.PI, 0.02 * Math.sin(t * 0.9));
+    you.set({ at: [0, 0, 0], arms: (FILM.hero ? FILM.hero.arms : 0.06 + 0.5 * liftU + 0.03 * Math.sin(t * 1.3)), tilt: FILM.hero ? FILM.hero.tilt : 0 });
+    you.group.scale.set(ysc, ysc * (1 + 0.012 * Math.sin(t * 1.7)), ysc); you.group.position.set(pcx, pcy + 1.0 + bulge + (0.85 + rise) * ysc, 0); you.group.rotation.set(0, Math.PI, FILM.hero ? FILM.hero.tilt : 0.02 * Math.sin(t * 0.9));
   }
 
   // the wind: streaks blowing at you (the air is left behind by the spinning ground)
   const wu = Math.max(fxw0("wind"), shot === "eye" ? E.inout2(seg(t, CUE.wind[0] + 7, CUE.wind[0] + 11)) * (1 - E.inout2(seg(t, CUE.wind[1] - 3, CUE.wind[1]))) : 0);
-  wind.visible = wu > 0.01; wind.material.opacity = 0.32 * wu;
+  wind.visible = wu > 0.01; wind.material.opacity = (FILM.cams ? 0.32 : 0.55) * wu;
   if (wind.visible) for (let i = 0; i < NW; i++) { const sp2 = 5 + 4 * rnd(i, 3), x = pcx + 6 - (((rnd(i, 4) * 12 + t * sp2) % 12)), len = 0.3 + 0.7 * rnd(i, 5);
     P3.set(x, pcy + 1.0 + 0.05 + rnd(i, 2) * 1.3, (rnd(i, 1) - 0.5) * 1.4); S3.set(len, 0.006 + 0.004 * rnd(i, 6), 0.006); Mx.compose(P3, Q0, S3); wind.setMatrixAt(i, Mx); }
   if (wind.visible) wind.instanceMatrix.needsUpdate = true;
