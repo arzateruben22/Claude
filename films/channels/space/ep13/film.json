@@ -67,8 +67,14 @@
   },
   {
    "t0": 24.997,
+   "t1": 27.767,
+   "text": "On average, the Moon is about three hundred",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 27.787,
    "t1": 30.187,
-   "text": "On average, the Moon is about three hundred eighty-four thousand kilometers away.",
+   "text": "eighty-four thousand kilometers away.",
    "line": "ch1_vo"
   },
   {
@@ -85,8 +91,14 @@
   },
   {
    "t0": 35.662,
+   "t1": 37.379,
+   "text": "Its light takes about a second",
+   "line": "ch1_vo"
+  },
+  {
+   "t0": 37.399,
    "t1": 38.962,
-   "text": "Its light takes about a second and a quarter to reach you.",
+   "text": "and a quarter to reach you.",
    "line": "ch1_vo"
   },
   {
@@ -109,8 +121,14 @@
   },
   {
    "t0": 48.41,
+   "t1": 50.545,
+   "text": "Quick thing: if that made the sky",
+   "line": "cta1_follow"
+  },
+  {
+   "t0": 50.565,
    "t1": 52.72,
-   "text": "Quick thing: if that made the sky feel bigger, tap like and follow.",
+   "text": "feel bigger, tap like and follow.",
    "line": "cta1_follow"
   },
   {
@@ -127,8 +145,14 @@
   },
   {
    "t0": 57.51,
+   "t1": 59.601,
+   "text": "And the first thing that changes",
+   "line": "ch1_loop"
+  },
+  {
+   "t0": 59.621,
    "t1": 61.27,
-   "text": "And the first thing that changes is not what you'd expect.",
+   "text": "is not what you'd expect.",
    "line": "ch1_loop"
   },
   {

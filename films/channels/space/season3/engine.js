@@ -91,8 +91,8 @@ function zoomState(t, b, mo) {   // {s, F (world pivot), k (0 = pivot stays put,
   if (t < tr) { const u = (t - calm.t0) / (tr - calm.t0); return { s: e(1.5, 1.3, u), F: { x: e(fg.x, mp.x, u), y: e(fg.y, mp.y, u) }, k: sm(u) }; }
   if (t < sz - 0.1) return { s: 1.3 + 0.2 * sm((t - tr) / Math.max(1, sz - 0.1 - tr)), F: mp, k: 1 };      // a slow push toward the Moon while the ruler ticks
   if (t < sz + 1.4) { const u = (t - (sz - 0.1)) / 1.5; return { s: e(1.5, 2.3, u), F: mp, k: 1 }; }
-  if (t < lt - 0.3) return { s: 2.3, F: mp, k: 1 };
-  if (t < lt + 1.7) { const u = (t - (lt - 0.3)) / 2.0; return { s: e(2.3, 1.0, u), F: mp, k: 1 - sm(u) }; }
+  if (t < lt - 0.3) return { s: 2.3 + 0.16 * sm((t - (sz + 1.4)) / Math.max(1, lt - 0.3 - sz - 1.4)), F: mp, k: 1 };
+  if (t < lt + 1.7) { const u = (t - (lt - 0.3)) / 2.0; return { s: e(2.46, 1.0, u), F: mp, k: 1 - sm(u) }; }
   return { s: 1.0, F: mp, k: 0 };
 }
 function ch1Overlays(t, b, mo, G) {
