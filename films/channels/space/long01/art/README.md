@@ -49,3 +49,21 @@ paint it at 2560x1440 (16:9) and/or 1080x1920 (9:16), save it over the name, and
 The 9:16 parts are their own composition: the painting sits in the middle of the frame and the sky and sea are extended in code (`portrait()` in make_plates.py);
 the break-up and the ring have no 9:16 version because the ending stays in the long film.
 All three paintings are AI illustrations (the owner's, made with ChatGPT): say so in every description.
+
+## v2: the owner's nine paintings (11 Nov 2026) → plates (season3/make_plates_v2.py)
+
+The originals are in `art/owner/` (spaces in the file names). `make_plates_v2.py` upscales them (Lanczos + gentle sharpening) to the plate names:
+
+| Painting | Plate | Use |
+|---|---|---|
+| 1 Lone figure on a moonless beach (9:16) | `plate-beach-9x16.png` | every portrait stage |
+| 2 Earth-facing full Moon (square, on black) | `moon-disc.png`, `moon-disc-hi.png` | the Moon at every stage (real near side, north up: Tycho at the bottom, Crisium on the right) |
+| 4 Rising Tide (16:9) | `plate-flood.png` | the tide stages (long film) |
+| 5 At the new waterline (9:16) | `plate-flood-9x16.png` | the tide stages (parts) |
+| 6 / 7 Oversized eclipse (16:9 / 9:16) | `plate-eclipse.png` / `plate-eclipse-9x16.png` | chapter 5 (the disc is matched to the engine's angular size) |
+| 8 Stretched Moon over the rising sea (16:9) | `plate-breakup.png` | the break-up (long film only) |
+| 9 Solitary figure beneath a giant Moon (16:9) | `plate-close.png` | the Moon about 9.6x wider (about 40,000 km) |
+| 10 Quiet beach beneath a planetary ring (16:9) | `plate-ring.png` | the ring (long film only) |
+
+No moonless 16:9 beach (painting 3) arrived: `plate-beach.png` stays the code-made plate from the "tonight" painting.
+The paintings come from separate generations and do not line up pixel for pixel: scenes crossfade under a camera drift instead of wiping.
