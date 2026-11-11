@@ -147,8 +147,8 @@ const skyTex = (() => { const c = document.createElement("canvas"); c.width = 51
   g.fillStyle = gr; g.fillRect(0, 0, 512, 512); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
 const sky = new THREE.Mesh(new THREE.PlaneGeometry(16, 9), new THREE.MeshBasicMaterial({ map: skyTex })); sky.position.set(-1.0, 2.0, -4.6); scene.add(sky);
 const stormMat = new THREE.MeshBasicMaterial({ color: 0x1D2331, transparent: true, opacity: 0 }); const storm = new THREE.Mesh(new THREE.PlaneGeometry(16, 9), stormMat); storm.position.set(-1.0, 2.0, -4.55); scene.add(storm);
-const feeder = new THREE.Group(); feeder.position.set(-1.45, 2.2, -2.3); scene.add(feeder);
-{ const fm = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.12, 14), new THREE.MeshStandardMaterial({ color: 0xD9372B, roughness: 0.4 })); feeder.add(fm); const st = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.4, 5), new THREE.MeshBasicMaterial({ color: 0x333333 })); st.position.y = 0.26; feeder.add(st); }
+const feeder = new THREE.Group(); feeder.position.set(-1.45 + 0.215, 1.865, -2.05); scene.add(feeder);
+{ const fm = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.034, 0.13, 18), new THREE.MeshStandardMaterial({ color: 0xD9372B, roughness: 0.4 })); feeder.add(fm); const port = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.03, 10), new THREE.MeshStandardMaterial({ color: 0xF2C94C, roughness: 0.5 })); port.rotation.z = Math.PI / 2; port.position.set(-0.04, 0.0, 0); feeder.add(port); { const cv = document.createElement("canvas"); cv.width = cv.height = 64; const cx = cv.getContext("2d"), gr = cx.createRadialGradient(32, 32, 2, 32, 32, 30); gr.addColorStop(0, "rgba(20,22,26,0.55)"); gr.addColorStop(1, "rgba(20,22,26,0)"); cx.fillStyle = gr; cx.fillRect(0, 0, 64, 64); const sh = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.07), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, depthWrite: false })); sh.position.set(-0.018, -0.01, 0.036); feeder.add(sh); } const st = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.4, 5), new THREE.MeshBasicMaterial({ color: 0x333333 })); st.position.y = 0.26; feeder.add(st); }
 
 // wire overlay: the kitchen is drawn on (wireframe, then solid behind a sweeping line)
 const wireMat = new THREE.LineBasicMaterial({ color: new THREE.Color(COB), transparent: true, opacity: 0.8, clippingPlanes: [planeWire] });
@@ -177,8 +177,44 @@ const poseFlyer = (fl, hz, tReal, blur, amp = 1.0) => {                         
     w.wm.material.opacity = blur > 0.01 ? 0.08 + 0.05 * (1 - blur) : 0.92;
   }
 };
-const hum = mkFlyer(0.075, 0x2E7D4F, 0x22324A), flyH = mkFlyer(0.03, 0x20232A, 0xDDE6EE), flyC = mkFlyer(0.03, 0x20232A, 0xDDE6EE), mosq = mkFlyer(0.034, 0x3B3F46, 0xDDE6EE);
-{ const beak = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.9, 5), new THREE.MeshStandardMaterial({ color: 0x151515 })); beak.rotation.z = Math.PI / 2; beak.position.set(1.65, 0.0, 0); hum.g.add(beak); }
+const flyH = mkFlyer(0.03, 0x20232A, 0xDDE6EE), flyC = mkFlyer(0.03, 0x20232A, 0xDDE6EE), mosq = mkFlyer(0.034, 0x3B3F46, 0xDDE6EE);
+// the hummingbird: a tapered body (emerald back, pale belly), a ruby throat, a small head with a long thin bill and an eye with a highlight, a forked tail, and two long narrow wings that
+// beat in a figure of eight (sweep forward and back, tip loops via a second-harmonic tilt, flip at each end of the stroke); the ghosts stand in for what the eye blends at full speed
+const mkBird = () => {
+  const g = new THREE.Group();
+  const prof = [[0.02, -1.3], [0.09, -1.05], [0.2, -0.65], [0.31, -0.2], [0.34, 0.2], [0.3, 0.55], [0.21, 0.82], [0.13, 0.95]].map(([r, x]) => new THREE.Vector2(r, x));
+  const bg = new THREE.LatheGeometry(prof, 28); bg.rotateZ(-Math.PI / 2);
+  { const pos = bg.attributes.position, col = new Float32Array(pos.count * 3), back = new THREE.Color(0x1B8A4C), belly = new THREE.Color(0xE9E2CF), c = new THREE.Color();
+    for (let k = 0; k < pos.count; k++) { const m = Math.min(1, Math.max(0, (pos.getY(k) + 0.12) / 0.26)); c.copy(belly).lerp(back, m); col.set([c.r, c.g, c.b], k * 3); }
+    bg.setAttribute("color", new THREE.BufferAttribute(col, 3)); }
+  g.add(new THREE.Mesh(bg, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.42, metalness: 0.15 })));
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.27, 20, 14), new THREE.MeshStandardMaterial({ color: 0x1E9453, roughness: 0.4, metalness: 0.15 })); head.position.set(1.0, 0.1, 0); g.add(head);
+  const bill = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.04, 1.2, 8), new THREE.MeshStandardMaterial({ color: 0x15171A, roughness: 0.5 })); bill.rotation.z = -Math.PI / 2; bill.position.set(1.85, 0.07, 0); g.add(bill);
+  const gor = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshStandardMaterial({ color: 0xC21A58, roughness: 0.3, metalness: 0.35 })); gor.scale.set(0.3, 0.13, 0.22); gor.position.set(0.86, -0.05, 0); g.add(gor);
+  for (const sd of [-1, 1]) {
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 8), new THREE.MeshBasicMaterial({ color: 0x0B0B0D })); eye.position.set(1.12, 0.2, sd * 0.22); g.add(eye);
+    const hl = new THREE.Mesh(new THREE.SphereGeometry(0.016, 6, 5), new THREE.MeshBasicMaterial({ color: 0xFFFFFF })); hl.position.set(1.14, 0.225, sd * 0.255); g.add(hl);
+    const tl = new THREE.Mesh(new THREE.ConeGeometry(0.075, 0.95, 6), new THREE.MeshStandardMaterial({ color: 0x14301F, roughness: 0.6 })); tl.scale.set(1, 1, 0.28); tl.rotation.z = Math.PI / 2; tl.rotation.y = sd * 0.16; tl.position.set(-1.65, 0.0, sd * 0.08); g.add(tl);
+  }
+  const wings = [], wsh = new THREE.Shape(); wsh.moveTo(-0.06, 0); wsh.bezierCurveTo(0.22, 0.2, 0.22, 0.9, 0.05, 2.0); wsh.bezierCurveTo(-0.06, 1.2, -0.12, 0.5, -0.06, 0);
+  for (let i = 0; i < GHOSTS; i++) for (const side of [-1, 1]) {
+    const hinge = new THREE.Group(); hinge.position.set(0.3, 0.26, side * 0.12); hinge.rotation.order = "ZXY";
+    const wm = new THREE.Mesh(new THREE.ShapeGeometry(wsh, 12), new THREE.MeshBasicMaterial({ color: 0x2F4048, transparent: true, opacity: 0.92, depthWrite: false, side: THREE.DoubleSide }));
+    hinge.add(wm); g.add(hinge); wings.push({ hinge, wm, i, side });
+  }
+  g.scale.setScalar(0.075); scene.add(g); return { g, wings, scale: 0.075 };
+};
+const poseBird = (fl, hz, tReal, blur) => {
+  for (const w of fl.wings) {
+    const on = blur > 0.01 || w.i === 0; w.hinge.visible = on; if (!on) continue;
+    const ph = (hz * tReal + (blur > 0.01 ? w.i / GHOSTS : 0)) * Math.PI * 2;
+    w.hinge.rotation.z = -Math.sin(ph) * 1.0 + 0.1;                         // the sweep, forward and back
+    w.hinge.rotation.x = w.side * 0.38 * Math.sin(2 * ph + 0.6);            // the second harmonic: the tip draws a figure of eight
+    w.hinge.rotation.y = w.side * 0.7 * Math.cos(ph);                       // the flip at each end of the stroke
+    w.wm.material.opacity = blur > 0.01 ? 0.06 + 0.05 * (1 - blur) : 0.94;
+  }
+};
+const hum = mkBird();
 const trail = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 6), new THREE.MeshBasicMaterial({ color: 0x20232A, transparent: true, opacity: 0.25 })); m.visible = false; scene.add(m); trail.push(m); }
 
 // ── the splash: a crown of spikes at the rim, droplets that pinch off, ripples; the cup rings ──
@@ -258,7 +294,7 @@ const dip = (t) => { let a = 0; for (const c of EV.fades) a = Math.max(a, 1 - E.
 
 // ── the overlay: captions, the factor (the one live number), badges, the end card ──
 const hud = createHud({ camera, captionY: FILM.captionY });
-hud.captions(FILM.captions);
+hud.captions(FILM.captions, { fade: 0.03 });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
 const fmtX = (v) => { const k = Math.log10(Math.max(v, 1)); const r = Math.round(k); if (Math.abs(k - r) < 0.012) return Math.round(Math.pow(10, r)).toLocaleString("en-US"); const s = Math.pow(10, k), d = Math.pow(10, Math.max(0, Math.floor(Math.log10(s)) - 1)); return (Math.round(s / d) * d).toLocaleString("en-US"); };
 const SPN = FILM.spine[0], spineOpts = { value: (t) => Math.pow(10, kAt(t)), fmt: fmtX, unit: "×", label: FILM.labelKeys, t0: SPN.t0, t1: SPN.t1, minCh: 5 }, counterEl = hud.counter("spine", spineOpts);
@@ -302,9 +338,9 @@ window.seek = function (t) {
   if (t >= EV.bird[0] && t < EV.bird[1]) {
     const r = (t - EV.bird[0]) / 10, blurMix = E.inout2(seg(t, EV.blur[0], EV.blur[0] + 0.8)) * (1 - E.inout2(seg(t, EV.blur[1] - 0.6, EV.blur[1])));
     const fr = blurMix > 0.01 ? Math.max(0.0, 1) : 1;
-    place(hum, -1.45 + 0.03 * Math.sin(r * 3), 1.86 + 0.012 * Math.sin(r * 7), -2.05, 0.0); hum.g.rotation.z = 0.2;
-    poseFlyer(hum, CAL.hz.hum, blurMix > 0.01 ? (t - EV.bird[0]) / 1 : r * F / F * 10 / 10 * 1, blurMix, 1.0);
-    if (blurMix <= 0.01) poseFlyer(hum, CAL.hz.hum, r * 1.0 * 1, 0, 1.0);
+    place(hum, -1.45 + 0.012 * Math.sin(r * 3), 1.86 + 0.01 * Math.sin(r * 7), -2.05, -0.4); hum.g.rotation.z = 0.2;
+    poseBird(hum, CAL.hz.hum, blurMix > 0.01 ? (t - EV.bird[0]) / 1 : r, blurMix);
+    if (blurMix <= 0.01) poseBird(hum, CAL.hz.hum, r, 0);
     void fr;
   }
   if (t >= EV.cupfly[0] && t < EV.cupfly[1]) { const a = t * 0.9; place(flyC, CUPX + 0.1 + 0.07 * Math.cos(a), TOP + 0.2 + 0.015 * Math.sin(a * 2), CUPZ + 0.12 * Math.sin(a), -a + Math.PI * 0.5); poseFlyer(flyC, CAL.hz.fly, (t - EV.cupfly[0]) / F, F < 50 ? 1 : 0, 1.0); }

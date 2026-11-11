@@ -20,6 +20,7 @@ from timeline import Film   # noqa: E402
 from captions_py import phrase_captions   # noqa: E402
 
 PART = int(sys.argv[1]) if len(sys.argv) > 1 else 0
+BSLOT = "tl" if PART else "tr"   # the badge sits top-left in the portrait parts, clear of the feeder and the counter
 CHAPTERS = ["wings", "fly", "pop", "sound", "bullet", "leader", "light", "still"]
 OUT = HERE if not PART else HERE.parent / f"ep{12 + PART}"
 FPS, BPM = 30, 112.5
@@ -105,7 +106,7 @@ if has("wings"):
     CAM += [ck(W("wings", "hummingbird") - 0.9, HUM, 0.55, -8.0), ck(W("wings", "Here's") - 0.5, HUM, 0.5, 8.0, "sine"), ck(W("wings", "But") - 0.5, HUM, 0.5, 6.0, "sine"),
             ck(W("wings", "But") + 0.1, [-0.3, 1.1, -1.0], 0.5, -6.0)]
     CAM += [ck(DUR if False else W("wings", "blur#2") + 3.0, [-0.3, 1.1, -1.0], 0.5, 3.0, "sine")] if PART else []
-    BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(W("wings", "Ten") - 5.0), "t1": R(cut("tease") - 0.3 if PART else cut("takeaway")), "slot": "tr"})
+    BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(W("wings", "Ten") - 5.0), "t1": R(cut("tease") - 0.3 if PART else cut("takeaway")), "slot": BSLOT})
 
 if has("fly"):
     if not PART:
@@ -119,7 +120,7 @@ if has("fly"):
     CAM += [ck(W("fly", "First,") - 0.3, [-0.3, 1.12, -1.0], 0.4, 6.0, "sine"), ck(W("fly", "tap") - 0.9, [-0.3, 1.1, -1.0], 0.34, -5.0),
             ck(W("fly", "hits") - 0.6, CUP, 0.26, 5.0), ck(W("fly", "settles"), CUP, 0.3, -4.0, "sine"), ck(W("fly", "But") + 0.2, CUP, 0.5, 3.0)]
     if PART:
-        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": "tr"})
+        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": BSLOT})
 
 if has("pop"):
     if not PART:
@@ -128,7 +129,7 @@ if has("pop"):
     EV["bubble"] = {"in": R(W("pop", "sink,") - 0.4), "pop": R(W("pop", "pops#2") - 0.1)}
     if PART:
         CAM += [ck(0.0, PAN, 0.5, 8.0), ck(W("pop", "Then") + 0.3, PAN, 0.22, -4.0)]
-        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": "tr"})
+        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": BSLOT})
     else:
         CAM += [ck(W("pop", "thousand") - 0.2, PAN, 0.5, 8.0), ck(W("pop", "Then") + 0.3, PAN, 0.22, -4.0)]
     CAM += [ck(W("pop", "splits") - 1.2, PAN, 0.24, 4.0), ck(W("pop", "sink,") - 1.6, PAN, 0.26, 3.0, "sine"), ck(W("pop", "sink,") - 0.2, BUB, 0.7, -8.0),
@@ -138,7 +139,7 @@ if has("sound"):
     EV["clap"] = R(cut("sound") + 16.8) if not PART else R(cut("body") + 16.8)
     if PART:
         CAM += [ck(0.0, WIDE[0], WIDE[1], 0.0)]
-        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": "tr"})
+        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": BSLOT})
     CAM += [ck(W("sound", "Now,") + 0.6, [1.0, 1.2, -0.8], 2.6, -5.0), ck(W("sound", "five") - 0.6, WIDE[0], 5.4, 5.0, "sine"), ck(W("sound", "Something") - 0.6, [0.4, 1.0, -1.0], 1.8, -5.0)]
     if not PART:
         CAM = [ck(cut("sound") - 0.2, WIDE[0], WIDE[1], 0.0)] + CAM
@@ -151,7 +152,7 @@ if has("bullet"):
     CAM += [ck(W("bullet", "small,") + 0.6, APP, 0.3, -6.0), ck(W("bullet", "dimples.") - 0.4, APP, 0.3, 4.0, "sine"), ck(W("bullet", "Then") + 0.2, [0.9, 0.98, -1.0], 0.4, 5.0, "sine"),
             ck(W("bullet", "And") + 0.2, [1.1, 1.0, -1.0], 1.1, -5.0, "sine"), ck(W("bullet", "But") + 0.2, [0.4, 1.0, -1.0], 3.0, 3.0)]
     if PART:
-        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": "tr"})
+        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": BSLOT})
 
 if has("leader"):
     if not PART:
@@ -160,9 +161,9 @@ if has("leader"):
     EV["leader"] = {"t0": R(W("leader", "jumps.") - 0.3), "stepEvery": 3.0, "steps": 8, "ground": R(W("leader", "touches") + 0.3)}
     CAM += ([ck(0.0, WIN, 2.8, -3.0)] if PART else [ck(cut("leader") - 0.2, WIN, 2.8, -3.0)])
     CAM += [ck(W("leader", "First,") - 0.3, [-1.2, 2.3, -1.8], 3.0, 5.0, "sine"), ck(W("leader", "Look") + 0.2, [-1.2, 2.0, -1.8], 2.8, -4.0, "sine"), ck(W("leader", "And#3") + 0.4, [-0.6, 1.5, -1.0], 3.8, 3.0)]
-    BADGES.append({"id": "skip", "kind": "tag", "text": "Skipping ahead", "t0": R(W("leader", "So")), "t1": R(W("leader", "And#3") - 0.2), "slot": "tr"})
+    BADGES.append({"id": "skip", "kind": "tag", "text": "Skipping ahead", "t0": R(W("leader", "So")), "t1": R(W("leader", "And#3") - 0.2), "slot": BSLOT})
     if PART:
-        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(W("leader", "So") - 0.2), "slot": "tr"})
+        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(W("leader", "So") - 0.2), "slot": BSLOT})
 
 if has("light"):
     if PART:
@@ -183,7 +184,7 @@ if has("light"):
             ck(TC - 3.6, [-1.0, 1.0, -1.0], 1.2, -62.0, "sine", 4.0), ck(TC + 4.6, [0.15, 1.0, -1.0], 1.0, -48.0, "sine", 4.0),
             ck(W("light", "seventeen") - 0.6, WIDE[0], 5.4, -3.0, "sine"), ck(W("light", "corner,") - 0.2, CHIP, 0.9, 4.0)]
     if PART:
-        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": "tr"})
+        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": BSLOT})
 
 if has("still"):
     L = "still"
@@ -202,7 +203,7 @@ if has("still"):
             ck(EV["hair"][1] + 4.1 - 0.1, [0.0, 3.0, 0.0], 0.0006, 0.0, "p2", 0.0), ck(EV["hair"][1] + 4.1 + 0.2, WIDE[0], 5.4, 0.0, "p2", 3.0)]
     EV["fades"] = [R(EV["hair"][0] - 0.3), R(EV["hair"][1] + 4.1)]
     if PART:
-        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": "tr"})
+        BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": BSLOT})
 
 if not PART:
     # the close: the lab bench (MIT), then the kitchen again
@@ -212,14 +213,14 @@ if not PART:
     plateau(A("vo11:Now"), 12.0, 0.0, 1.5)
     EV["fades"] = EV.get("fades", []) + [cut("real") + 0.0, cut("takeaway")]
     CAM += [ck(cut("real") - 0.2, WIDE[0], WIDE[1], 3.0, "sine"), ck(cut("real") + 0.1, [0.0, 2.85, 0.0], 1.0, 0.0), ck(cut("takeaway") - 0.2, [0.0, 2.85, 0.0], 1.0, 0.0), ck(cut("takeaway") + 0.1, WIDE[0], WIDE[1], 0.0), ck(DUR, WIDE[0], WIDE[1], 3.0, "sine")]
-    BADGES += [{"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(A("vo02:Ten") - 5.0), "t1": R(cut("takeaway")), "slot": "tr"},
-               {"id": "bench", "kind": "tag", "text": "Model of the MIT setup", "t0": R(cut("real") + 3.0), "t1": R(cut("takeaway") - 0.4), "slot": "tr"}]
+    BADGES += [{"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(A("vo02:Ten") - 5.0), "t1": R(cut("takeaway")), "slot": BSLOT},
+               {"id": "bench", "kind": "tag", "text": "Model of the MIT setup", "t0": R(cut("real") + 3.0), "t1": R(cut("takeaway") - 0.4), "slot": BSLOT}]
     _seen = set(); BADGES = [b for b in BADGES if not (b["id"] in _seen or _seen.add(b["id"]))]
 
 # one small honesty badge for the whole film (and each part, which is watched alone): simulations are never presented as footage; no other chips
-BADGES = [{"id": "code", "kind": "tag", "text": "Drawn by code · model", "t0": R(0.6), "t1": R(cut("tease") - 0.3) if PART else R(cut("tease") - 0.3), "slot": "tr"}]
+BADGES = [{"id": "code", "kind": "tag", "text": "Drawn by code · model", "t0": R(0.6), "t1": R(cut("tease") - 0.3) if PART else R(cut("tease") - 0.3), "slot": BSLOT}]
 if not PART:
-    BADGES.append({"id": "bench", "kind": "tag", "text": "Model of the MIT experiment", "t0": R(cut("real") + 3.0), "t1": R(cut("takeaway") - 0.4), "slot": "tr"})
+    BADGES.append({"id": "bench", "kind": "tag", "text": "Model of the MIT experiment", "t0": R(cut("real") + 3.0), "t1": R(cut("takeaway") - 0.4), "slot": BSLOT})
 
 # the factor keys: sort, round, and guard the order
 KEYS = sorted({(R(t), R(k)) for t, k in KEYS}, key=lambda x: (x[0], x[1]))
@@ -235,12 +236,12 @@ for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
         LBL.append([R(t1 + 0.9), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
-SPINE_AT = [[-1e9, [0.5, 0.27]]] if PART else [[-1e9, [0.3, 0.19]]]
+SPINE_AT = [[-1e9, [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
 TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen", "A bullet, through an apple, slowly",
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
 if PART:
     END = {"title": f"Part {PART} of *8*", "follow": "Full video on YouTube · Follow Reality Rulebook", "foot": "Reality Rulebook · Season 3"}
-    CAPCH, CAPY = 24, 0.7
+    CAPCH, CAPY = 20, 0.62
 else:
     END = {"title": "Next drop: why the sky is *blue*", "follow": "Follow Reality Rulebook", "foot": "Velten et al., femto-photography (2012-2013)."}
     CAPCH, CAPY = 44, 0.77
