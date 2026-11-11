@@ -220,7 +220,9 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
   // carry a little interior glow of their own (the bounce off the floor and the bar's lights; dark when closed)
   {
     const DOWN = [0, -1, 0];
-    ceiling.emit = [0, 0, 0.55];
+    // S4's repair: the tiles' own glow 0.55 to 0.32 of the room's channel, which rises after dark: at 0.55 the ceiling
+    // was the brightest thing in the night frames, flat from end to end, and the pendants and screens didn't read
+    ceiling.emit = [0, 0, 0.32];
     ceiling.plane(room.inner, [], (u, v) => P3(u, v, CEIL), DOWN, 0x8c8698, 1.4);
     ceiling.emit = null;
     /** where the line u = c (axis 0) or v = c (axis 1) crosses the inner ring: the other coordinate's range */
