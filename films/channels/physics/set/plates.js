@@ -99,6 +99,7 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
   const cam3 = (t) => { const it = active(t); if (!it || !it.p.cam3) return null; const c = it.p.cam3; const sf = shiftAt(it, t); return sf.x || sf.y ? { ...c, target: [c.target[0] + sf.x, c.target[1] + sf.y, c.target[2]] } : c; };
   const anchor = (t) => { const it = active(t); return it && it.p.anchor ? it.p.anchor : null; };
   const drawNight = (t, R, w) => { const it = active(t); if (!it || !it.night) return false; const sf = shiftAt(it, t), sh9 = -sf.x * sf.ppm * Math.max(W / 1672, H / 941); it.night.draw(R, w, sh9); return true; };
+  const shiftPx = (t) => { const it = active(t); if (!it) return [0, 0]; const sf = shiftAt(it, t), cs = Math.max(W / 1672, H / 941); return [-sf.x * sf.ppm * cs, sf.y * sf.ppm * cs]; };
   const imageOf = (id) => { const it = items.find((q) => q.p.id === id); return it && it.ok ? it.imgs[0] : null; };
-  return { ready, apply, cam, cam3, zoom, anchor, active, items, imageOf, drawNight };
+  return { ready, apply, cam, cam3, zoom, anchor, active, items, imageOf, drawNight, shiftPx };
 };

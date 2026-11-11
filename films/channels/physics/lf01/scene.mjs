@@ -266,10 +266,26 @@ const trail = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new TH
 
 // ── the splash: a crown of spikes at the rim, droplets that pinch off, ripples; the cup rings ──
 const crown = new THREE.Group(); crown.position.set(0, surfY, 0); cupG.add(crown);
-const crownMat = new THREE.MeshPhysicalMaterial({ color: 0xCFE6F7, roughness: 0.04, clearcoat: 1, clearcoatRoughness: 0.03, transparent: true, opacity: 0.62, envMap: birdEnv, envMapIntensity: 0.8 });
-const sheetMat = new THREE.MeshPhysicalMaterial({ color: 0xDCEEFA, roughness: 0.03, clearcoat: 1, transparent: true, opacity: 0.3, side: THREE.DoubleSide, depthWrite: false, envMap: birdEnv, envMapIntensity: 1.8 });
-const spikes = [], tips = []; const NSP = 30; for (let i = 0; i < NSP; i++) { const tp = new THREE.Mesh(new THREE.SphereGeometry(0.0013, 12, 9), crownMat); crown.add(tp); tips.push(tp); const m = new THREE.Mesh(new THREE.ConeGeometry(0.0013, 1, 8), crownMat); m.userData.a = (i / NSP) * Math.PI * 2; crown.add(m); spikes.push(m); }
-const sheet = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 72, 1, true), sheetMat); crown.add(sheet);   // the thin water wall between the jets
+// clear water for the coronet: opaque glass-like shading (no white): the plate behind it is sampled through the surface (shifted by the normal), Fresnel brightens the edges, the window glints sharp, a faint blue stays at the base
+const wU = { uPlateR: { value: null }, uRes: { value: new THREE.Vector2(W, H) }, uZS: { value: new THREE.Vector4(1, 0, 0, 1) }, uRefr: { value: 46 } };
+const waterMat = new THREE.MeshPhysicalMaterial({ color: 0xFFFFFF, roughness: 0.02, side: THREE.DoubleSide });
+waterMat.onBeforeCompile = (sh) => { Object.assign(sh.uniforms, wU);
+  sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nuniform sampler2D uPlateR; uniform vec2 uRes; uniform vec4 uZS; uniform float uRefr;\n" + ACES_INV_GLSL)
+    .replace("#include <opaque_fragment>", `
+  vec3 N = normalize(normal); if (!gl_FrontFacing) N = -N; vec3 V = normalize(vViewPosition); float ndv = clamp(dot(N, V), 0.0, 1.0), fr = pow(1.0 - ndv, 3.0);
+  vec2 sp = vec2(gl_FragCoord.x - uRes.x * 0.5 - uZS.y, (uRes.y - gl_FragCoord.y) - uRes.y * 0.5 - uZS.z) - N.xy * vec2(-1.0, 1.0) * uRefr * uZS.x;
+  vec2 pp = vec2(836.0 + sp.x / (uZS.w * uZS.x), 470.5 + sp.y / (uZS.w * uZS.x)); vec3 bg = vec3(0.5);
+  if (uZS.w > 0.0) bg = texture2D(uPlateR, vec2(pp.x / 1672.0, 1.0 - pp.y / 941.0)).rgb;
+  vec3 R = reflect(-V, N); float gl = pow(max(dot(R, normalize(vec3(0.45, 0.55, -0.7))), 0.0), 140.0), sky = 0.5 + 0.5 * R.y;
+  vec3 col = bg * vec3(0.86, 0.94, 1.0); col = mix(col, vec3(0.62, 0.78, 1.0) * (0.35 + 0.5 * sky), fr * 0.6);
+  col *= 1.0 - 0.55 * smoothstep(0.78, 0.98, 1.0 - ndv);
+  outgoingLight = acesInv(clamp(col, 0.0, 1.0), 1.0) + vec3(1.0, 0.96, 0.88) * gl * 3.0 * (0.4 + 0.6 * fr);
+  diffuseColor.a = 1.0;
+  #include <opaque_fragment>`); };
+const crownMat = waterMat, sheetMat = waterMat;
+const spikes = [], tips = []; const NSP = 18; for (let i = 0; i < NSP; i++) { const tp = new THREE.Mesh(new THREE.SphereGeometry(0.0013, 12, 9), crownMat); crown.add(tp); tips.push(tp); const m = new THREE.Mesh(new THREE.ConeGeometry(0.0013, 1, 8), crownMat); m.userData.a = (i / NSP) * Math.PI * 2; crown.add(m); spikes.push(m); }
+const sheet = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 8, 1, true), sheetMat); sheet.frustumCulled = false; crown.add(sheet); let sheetKey = "";
+const crater = new THREE.Mesh(new THREE.CircleGeometry(1, 64), new THREE.MeshBasicMaterial({ color: 0x14246A, transparent: true, opacity: 0.3, depthWrite: false })); crater.rotation.x = -Math.PI / 2; crater.position.y = 0.0004; crown.add(crater);   // the depressed ring of water the coronet stands on   // the thin water wall between the jets
 const crownRing = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0016, 6, 40), crownMat); crownRing.rotation.x = Math.PI / 2; crown.add(crownRing);
 const drops = []; for (let i = 0; i < 12; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.0022, 8, 6), crownMat); m.userData = { a: (i / 12) * Math.PI * 2 + 0.2, v: 0.35 + 0.25 * ((i * 7) % 5) / 5, w: 0.7 + 0.3 * ((i * 3) % 4) / 4 }; crown.add(m); drops.push(m); }
 const ripples = []; for (let i = 0; i < 3; i++) { const m = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0007, 6, 40), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 })); m.rotation.x = Math.PI / 2; crown.add(m); ripples.push(m); }
@@ -456,9 +472,14 @@ window.seek = function (t) {
   crown.visible = rC >= 0 && rC < 0.6; crown.position.x = 0; crown.position.z = 0; crown.rotation.set(0, 0, 0);
   if (crown.visible) {
     const rgK = (() => { const q = plates.anchor(t); return q && q.rig ? q.rig : null; })(), grow = Math.min(1, rC / 0.04), Rc = (0.007 + 0.03 * Math.sqrt(grow)) * (rgK ? rgK.rad : 1), Hc = rC < 0.04 ? 0.026 * Math.sin(Math.min(1, rC / 0.034) * Math.PI * 0.5) : Math.max(0, 0.026 * (1 - (rC - 0.04) / 0.05));
-    crownRing.position.y = Hc * 0.85; crownRing.scale.set(Rc, Rc, Rc); crownRing.visible = Hc > 0.0005;
-    spikes.forEach((s, i) => { const a = s.userData.a, h = Hc * (0.5 + 0.5 * Math.abs(Math.sin(a * 3.0) * Math.cos(a * 7.0 + 1.0))) + 0.001; s.visible = Hc > 0.001; s.scale.set(1, h, 1); s.position.set(Math.cos(a) * Rc, h / 2, Math.sin(a) * Rc); tips[i].visible = s.visible; tips[i].position.set(Math.cos(a) * Rc, h, Math.sin(a) * Rc); });
-    sheet.visible = Hc > 0.001; sheet.scale.set(Rc * 1.06, Hc * 0.7, Rc * 1.06); sheet.position.y = Hc * 0.35; sheet.scale.x = Rc * 1.0; sheet.scale.z = Rc * 1.0;
+    const flare = 0.5, Hs = Hc * 0.78, Rt = Rc + Hs * Math.tan(flare) * 0.9, vis = Hc > 0.001;
+    crownRing.visible = false; crater.visible = vis; crater.scale.setScalar(Math.max(1e-4, Rc * 1.1)); crater.material.opacity = 0.3 * Math.min(1, Hc / 0.01);
+    sheet.visible = vis; { const key = Rc.toFixed(5) + "," + Hs.toFixed(5); if (vis && key !== sheetKey) { sheetKey = key; const pts = []; for (let k = 0; k <= 10; k++) { const u = k / 10; pts.push(new THREE.Vector2(Rc + (Rt - Rc) * Math.pow(u, 1.25), Hs * u)); } sheet.geometry.dispose(); sheet.geometry = new THREE.LatheGeometry(pts, 96); } }
+    spikes.forEach((s, i) => { const a = s.userData.a, k = 0.5 + 0.5 * Math.abs(Math.sin(a * 2.0 + 0.7) * Math.cos(a * 3.0 + 1.0)), h = Hc * 0.14 + Hc * 0.34 * k + 0.0005, ca = Math.cos(a), sa = Math.sin(a), lean = flare * 0.8;
+      s.visible = vis; tips[i].visible = vis; s.scale.set(1, h, 1);
+      const bx = ca * Rt, bz = sa * Rt, dx = Math.sin(lean) * ca, dz = Math.sin(lean) * sa, dy = Math.cos(lean);   // each jet leans on along the flare
+      s.position.set(bx + dx * h / 2, Hs + dy * h / 2, bz + dz * h / 2); s.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(dx, dy, dz));
+      tips[i].position.set(bx + dx * h, Hs + dy * h, bz + dz * h); tips[i].scale.setScalar(0.8 + 0.7 * k); });
     drops.forEach((m) => { const sepT = 0.03, rr = rC - sepT; m.visible = rr > 0 && rr < 0.12; if (!m.visible) return; const a = m.userData.a, v = m.userData.v; m.position.set(Math.cos(a) * (Rc + (v * 0.2 * rr * 10 * 0.1 + v * rr) * (rgK ? rgK.rad : 1)), 0.022 + 0.32 * rr - 4.9 * rr * rr * 2.2, Math.sin(a) * (Rc + v * rr * (rgK ? rgK.rad : 1))); });
     ripples.forEach((rp, i) => { const q = rC - i * 0.05; rp.visible = q > 0; if (!rp.visible) return; const rad = 0.01 + 0.4 * q * 0.18; rp.scale.set(rad, rad, rad); rp.material.opacity = 0.7 * Math.max(0, 1 - q * 1.6) * (rad < 0.036 ? 1 : 0); });
   }
@@ -471,6 +492,7 @@ window.seek = function (t) {
         appleUV(rg); if (!appleU.uPlate.value) { const im = plates.imageOf("applep"); if (im) { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; appleU.uPlate.value = tx; } }
         appleP.visible = !!appleU.uPlate.value; }
       else { if (crown.parent !== plateRig) { plateRig.add(crown); plateRig.add(hang); } crown.position.set(0, 0, 0); }
+      if (!rg.kind) { const sf = plates.shiftPx ? plates.shiftPx(t) : [0, 0]; wU.uZS.value.set(plates.zoom(t), sf[0], sf[1], Math.max(W / 1672, H / 941)); if (!wU.uPlateR.value) { const im = plates.imageOf("tapmug"); if (im) { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; wU.uPlateR.value = tx; } } if (!wU.uPlateR.value) wU.uZS.value.w = -1; }
       if (hangV && !rg.kind) { const u = t < d1 ? 0 : E.in2(seg(t, d1, d2)); hang.position.set(0, t < d1 ? rg.tipY - 0.0025 * E.in2(seg(t, d0, d1)) : lerp(rg.tipY - 0.0025, 0.003, u), 0); hang.scale.set(rg.drop, rg.drop * (t < d1 ? 1 : 1 + 0.4 * u), rg.drop); }
       birdRim.visible = birdFill.visible = true; for (const [l, i0] of keyLights) if (l) l.intensity = i0 * 0.35;
     } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } if (bubble.parent === plateRig) { kitchen.add(bubble); kitchen.add(rimR); }  if (appleP.parent === plateRig) { plateRig.remove(appleP); scene.add(bullet, cone, ...spray); } }

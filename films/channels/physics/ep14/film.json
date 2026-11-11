@@ -291,7 +291,10 @@
    "slot": "tl"
   }
  ],
- "captionY": 0.66,
+ "captionY": {
+  "9x16": 0.66,
+  "16x9": 0.77
+ },
  "title": {
   "series": "Reality Rulebook · Season 3 · Part 2 of 8",
   "title": "A fly's wings, then a splash"
