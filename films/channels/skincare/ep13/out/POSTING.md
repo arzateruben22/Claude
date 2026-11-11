@@ -24,7 +24,7 @@ Sources
 3. Shivering raises heat production several-fold over the resting rate (peak about five times resting reported; moderate shivering about 3.5 times). — NIH: https://pubmed.ncbi.nlm.nih.gov/11394237/
 4. Sympathetic nerve signals make the arrector pili muscle beside each hair follicle contract, pulling the hair upright (piloerection, goosebumps). — NIH: https://pubmed.ncbi.nlm.nih.gov/32679029/
 
-Illustrations: AI-generated and 3-D animation made in code, no stock footage. Narration: a real person's voice (recorded, not AI). Every number's source is listed in this description.
+Illustrations: AI-generated and 3-D animation made in code, no stock footage. Narration: a real person's voice (recorded, not AI). Cover illustration made with AI. Every number's source is listed in this description.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
@@ -74,7 +74,7 @@ Your brain answers in two soft steps. One cool breeze.
 
 Season 3: Inside your skin, slowly, part 1 of 6.
 
-Sources in the first comment. AI-generated illustrations and 3-D animation made in code. Narration: a real person's voice (recorded, not AI).
+Sources in the first comment. AI-generated illustrations and 3-D animation made in code. Narration: a real person's voice (recorded, not AI). Cover illustration made with AI.
 
 Education, not medical advice. See a dermatologist about your own skin.
 

@@ -24,7 +24,7 @@ Sources
 3. Epidermal turnover takes roughly a month (about 28 days or more, varying with age and site). — bionumbers.hms.harvard.edu: https://bionumbers.hms.harvard.edu/bionumber.aspx?id=109215
 4. Skin scales (desquamated skin) are a real component of the particles in room air and dust; the share varies widely, and 'most dust is skin' is not supported. — NIH: https://pmc.ncbi.nlm.nih.gov/articles/PMC2130262
 
-Illustrations: AI-generated and 3-D animation made in code, no stock footage. Narration: a real person's voice (recorded, not AI). Every number's source is listed in this description.
+Illustrations: AI-generated and 3-D animation made in code, no stock footage. Narration: a real person's voice (recorded, not AI). Cover illustration made with AI. Every number's source is listed in this description.
 
 Education, not medical advice. See a dermatologist about your own skin.
 
@@ -74,7 +74,7 @@ Near the top, it lets go of its nucleus… Then, quietly, the top cells drift aw
 
 Season 3: Inside your skin, slowly, part 2 of 6.
 
-Sources in the first comment. AI-generated illustrations and 3-D animation made in code. Narration: a real person's voice (recorded, not AI).
+Sources in the first comment. AI-generated illustrations and 3-D animation made in code. Narration: a real person's voice (recorded, not AI). Cover illustration made with AI.
 
 Education, not medical advice. See a dermatologist about your own skin.
 

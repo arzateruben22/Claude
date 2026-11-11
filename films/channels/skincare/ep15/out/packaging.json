@@ -22,6 +22,18 @@
     {
       "text": "What Lives in the Tunnel Under Your Skin?",
       "mechanism": "curiosity gap"
+    },
+    {
+      "text": "What's Inside a Pore?",
+      "mechanism": "owner (ChatGPT) alternate for A/B"
+    },
+    {
+      "text": "Follow the Oil Inside Your Skin",
+      "mechanism": "owner (ChatGPT) alternate for A/B"
+    },
+    {
+      "text": "The Tiny Tunnel Beneath Your Skin",
+      "mechanism": "owner (ChatGPT) alternate for A/B"
     }
   ],
   "thumbnails": [
@@ -103,8 +115,8 @@
   "winner": {
     "title": "What Is Actually Inside a Pore?",
     "thumbnail": "A",
-    "thumbnailText": "A doorway. A hair. A gland.",
-    "why": "A plain question the video answers; the cover uses her closing list instead of repeating the title."
+    "thumbnailText": "Its tiny residents",
+    "why": "Matches the on-screen title card and her script; the cover carries a line from her ending instead of repeating the title. The owner's shorter \"What's Inside a Pore?\" is kept as the A/B alternate."
   },
   "testAndCompare": [
     "A",
@@ -123,8 +135,9 @@
   "thumbnailFile": "skin-sense-015-cover.jpg",
   "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a soft 3-D voxel cut-away of a hair follicle: a round tunnel lined with rounded, touching warm skin-toned cells (light skin tone), a fine dark hair running down its middle. No face, no person, no spotted skin.\nComposition: the tunnel fills the frame, the text over the upper third.\nLighting and treatment: soft studio light, a faint warm glow deeper down, very dark green-black ground (#0B1513), shallow depth of field, fine film grain.\nMood: quiet, calm, ASMR.\nText: \"A doorway. A hair. A gland.\" in a small ivory (#F4EDE3) editorial serif, upper centre.\nScientific accuracy: a pore is the opening of a hair follicle; an oil gland empties sebum into it; an illustration, not to scale, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, soft voxel (rounded cube) look, distinctive and art-directed, not generic AI art.",
   "shortsCover": {
-    "frameSeconds": 14,
-    "text": "A doorway. A hair. A gland."
+    "image": "ep15-follicle-tunnel.png",
+    "text": "Its tiny residents"
   },
-  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+  "coverSource": "owner's ChatGPT illustration (films/channels/skincare/s3-art/owner/ep15-follicle-tunnel.png), text added in code; Cover illustration made with AI"
 }

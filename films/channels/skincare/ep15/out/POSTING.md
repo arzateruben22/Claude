@@ -23,7 +23,7 @@ Sources
 2. Sebaceous glands are attached to hair follicles and empty into the upper follicle. — NCBI (NIH): https://ncbi.nlm.nih.gov/books/NBK499819
 3. Cutibacterium acnes and other microbes live in the follicle and use sebum lipids (via lipases) as a food source. — f1000research.com: https://f1000research.com/articles/7-1953
 
-Illustrations: AI-generated and 3-D animation made in code, no stock footage. Narration: a real person's voice (recorded, not AI). Every number is checked against the sources.
+Illustrations: AI-generated and 3-D animation made in code, no stock footage. Narration: a real person's voice (recorded, not AI). Cover illustration made with AI. Every number is checked against the sources.
 
 Skin Sense: Skin biology, ingredients and routines, with the evidence on the screen.
 
@@ -70,7 +70,7 @@ Partway down sits a small oil gland. That's a pore.
 
 Season 1: The organ you live inside, part 15 of 6.
 
-Sources in the first comment. AI-generated illustrations and 3-D animation made in code. Narration: a real person's voice (recorded, not AI).
+Sources in the first comment. AI-generated illustrations and 3-D animation made in code. Narration: a real person's voice (recorded, not AI). Cover illustration made with AI.
 
 #skincare #skinscience #dermatology #skinbarrier #skincarefacts #science #learnsomethingnew #skincareroutine
 ```

@@ -22,6 +22,18 @@
     {
       "text": "The Quiet Way Your Body Answers the Cold",
       "mechanism": "personal relevance"
+    },
+    {
+      "text": "What Starts a Shiver?",
+      "mechanism": "owner (ChatGPT) alternate for A/B"
+    },
+    {
+      "text": "Why Cold Makes You Shake",
+      "mechanism": "owner (ChatGPT) alternate for A/B"
+    },
+    {
+      "text": "The Signal Before You Shiver",
+      "mechanism": "owner (ChatGPT) alternate for A/B"
     }
   ],
   "thumbnails": [
@@ -123,8 +135,9 @@
   "thumbnailFile": "skin-sense-013-cover.jpg",
   "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a soft 3-D voxel cut-away of skin made of rounded cubes, the top layers deep warm brown (about RGB 85, 48, 31) and the deeper layers warmer and rosier, glowing softly from within; a thin round glowing teal nerve fibre with fine branching tips near the top and one small bright teal pulse travelling along it. No face, no person.\nComposition: the nerve ending in the upper centre, cubes filling the frame below, a little dark space above for the text.\nLighting and treatment: soft studio light, a warm glow where the skin meets the dark, very dark green-black ground (#0B1513), teal #3FBFAE as the only accent, shallow depth of field, fine film grain.\nMood: quiet, calm, ASMR.\nText: \"Without asking you\" in a small ivory (#F4EDE3) editorial serif, upper centre.\nScientific accuracy: skin senses cooling through nerve endings that signal the brain; an illustration, not to scale, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, soft voxel (rounded cube) look, distinctive and art-directed, not generic AI art.",
   "shortsCover": {
-    "frameSeconds": 11.5,
+    "image": "ep13-nerve-pulse.png",
     "text": "Without asking you"
   },
-  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+  "coverSource": "owner's ChatGPT illustration (films/channels/skincare/s3-art/owner/ep13-nerve-pulse.png), text added in code; Cover illustration made with AI"
 }
