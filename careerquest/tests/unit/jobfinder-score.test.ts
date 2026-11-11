@@ -1,0 +1,213 @@
+import { describe, expect, it } from "vitest";
+import { accessFactor, dedupe, mergeRow, parseGaps, payFactor, scoreRow, select, stableId, verdictState, WEIGHTS, type RawRow, type Verdict } from "@/lib/jobfinder/score";
+
+const verdict = (over: Partial<Verdict> = {}): Verdict => ({
+  isReal: true,
+  stillOpenConfidence: 0.85,
+  directEmployerApply: true,
+  inLaOrOc: true,
+  problems: [],
+  verdictReason: "found on employer site",
+  independentEvidence: [{ quote: "Electrical Craft Helper, filing open", sourceUrl: "https://www.governmentjobs.com/careers/example/jobs/1" }],
+  gapsForBeginner: [],
+  aiExposure: { level: "low", reason: "hands-on field work" },
+  coverLetter: "Dear hiring team, [your experience]",
+  resumeEmphasis: [],
+  doNotClaim: [],
+  ...over,
+});
+
+const row = (over: Partial<RawRow> = {}): RawRow => ({
+  tier: "best_fit",
+  employer: "City of Example",
+  title: "Electrical Craft Helper",
+  field: "electrical",
+  city: "Los Angeles",
+  county: "Los Angeles",
+  payText: "$79,657 per year",
+  payMinAnnual: 79657,
+  payMaxAnnual: 93584,
+  postingUrl: "https://www.governmentjobs.com/careers/example/jobs/1",
+  applyHost: "www.governmentjobs.com",
+  minimumRequirements: ["Six months as a helper"],
+  drivingRequirement: "none stated",
+  whyFit: "entry level",
+  evidence: [],
+  openConfidence: 0.8,
+  slice: "city-utilities",
+  verdict: verdict(),
+  ...over,
+});
+
+describe("weights", () => {
+  it("sum to 1 so the score is out of 100", () => {
+    expect(Object.values(WEIGHTS).reduce((a, b) => a + b, 0)).toBeCloseTo(1, 10);
+  });
+});
+
+describe("payFactor", () => {
+  it("gives full marks when the whole range clears the target", () => {
+    expect(payFactor(82000, 99000, false).value).toBe(1);
+  });
+  it("scales when only the top of the range reaches the target", () => {
+    const f = payFactor(60000, 90000, false);
+    expect(f.value).toBeCloseTo(0.75 + 0.25 * 0.75, 5);
+    expect(f.note).toMatch(/Top of range/);
+  });
+  it("is proportional below the target and lifted for a documented progression", () => {
+    expect(payFactor(40000, 56000, false).value).toBeCloseTo(0.49, 5);
+    expect(payFactor(40000, 56000, true).value).toBe(0.6);
+  });
+  it("does not guess when pay is missing", () => {
+    expect(payFactor(null, null, false)).toEqual({ value: 0.4, note: "Pay could not be confirmed as a number" });
+    expect(payFactor(null, 85000, false).value).toBe(1);
+  });
+});
+
+describe("parseGaps / accessFactor", () => {
+  it("separates mandatory from experience gaps and treats unlabelled lines as soft", () => {
+    const g = parseGaps(["HARD: California electrician certification", "soft - 2 years of experience", "Familiarity with Procore", "  "]);
+    expect(g.hard).toEqual(["California electrician certification"]);
+    expect(g.soft).toEqual(["2 years of experience", "Familiarity with Procore"]);
+  });
+  it("judges the requirement itself, not the commentary after it", () => {
+    const g = parseGaps([
+      "HARD: 2+ years of experience as a Maintenance Mechanic. It is an experience requirement, not a state license.",
+      "HARD: High school diploma or GED PLUS one further qualification from the list (four-year STEM degree, associate's degree, or three years of refining experience)",
+      "HARD: EPA Section 608 refrigerant certification. Federal rules require it.",
+      "HARD: One year as a maintenance technician in a hospital, stated as required (knowledge of fire alarm systems is not a credential)",
+    ]);
+    expect(g.hard).toEqual(["EPA Section 608 refrigerant certification. Federal rules require it."]);
+    expect(g.soft).toHaveLength(3);
+    expect(g.confirm).toEqual([]);
+  });
+  it("drops to zero on any mandatory gap", () => {
+    expect(accessFactor(0, 1).value).toBe(0);
+    expect(accessFactor(0, 0).value).toBe(1);
+    expect(accessFactor(2, 0).value).toBe(0.6);
+    expect(accessFactor(9, 0).value).toBe(0.3);
+  });
+});
+
+describe("scoreRow", () => {
+  it("scores a clean entry-level trade posting highly and explains every factor", () => {
+    const j = scoreRow(row());
+    expect(j.list).toBe("best_fit");
+    expect(j.score).toBeGreaterThanOrEqual(90);
+    expect(Object.values(j.breakdown).every((f) => f.note.length > 0)).toBe(true);
+    expect(Math.round(Object.values(j.breakdown).reduce((s, f) => s + f.points, 0))).toBe(j.score);
+  });
+  it("rules out anything not independently confirmed, off-site, outside the area, closed, or needing a mandatory credential", () => {
+    expect(scoreRow(row({ verdict: null })).ruledOutReason).toMatch(/Not assessed/);
+    expect(scoreRow(row({ verdict: verdict({ isReal: false }) })).ruledOutReason).toMatch(/could not find/);
+    expect(scoreRow(row({ verdict: verdict({ directEmployerApply: false }) })).ruledOutReason).toMatch(/employer's own site/);
+    expect(scoreRow(row({ verdict: verdict({ inLaOrOc: false }) })).ruledOutReason).toMatch(/outside/);
+    expect(scoreRow(row({ verdict: verdict({ stillOpenConfidence: 0.2 }) })).ruledOutReason).toMatch(/closed/);
+    const hard = scoreRow(row({ verdict: verdict({ gapsForBeginner: ["HARD: journey-level card"] }) }));
+    expect(hard.list).toBe("ruled_out");
+    expect(hard.ruledOutReason).toContain("journey-level card");
+    const years = scoreRow(row({ tier: "stretch", verdict: verdict({ gapsForBeginner: ["HARD: 2+ years as a maintenance mechanic, stated as required"] }) }));
+    expect(years.list).toBe("stretch");
+    expect(years.gaps.soft).toHaveLength(1);
+  });
+  it("classifies experience gaps as stretch, never as best fit", () => {
+    expect(scoreRow(row({ verdict: verdict({ gapsForBeginner: ["SOFT: 2 years", "SOFT: Procore"] }) })).list).toBe("stretch");
+    expect(scoreRow(row({ tier: "stretch", verdict: verdict({ gapsForBeginner: ["SOFT: 3 years"] }) })).list).toBe("stretch");
+    expect(scoreRow(row({ tier: "stretch", verdict: verdict({ gapsForBeginner: [] }) })).list).toBe("best_fit");
+    expect(scoreRow(row({ verdict: verdict({ gapsForBeginner: ["SOFT: 1 year"] }) })).list).toBe("best_fit");
+  });
+  it("flags postings that need a quick check before applying", () => {
+    expect(scoreRow(row({ verdict: verdict({ stillOpenConfidence: 0.5 }) })).needsOpenCheck).toBe(true);
+    expect(scoreRow(row()).needsOpenCheck).toBe(false);
+  });
+  it("uses the checker's corrections over the finder's claim", () => {
+    const merged = mergeRow(row({ verdict: verdict({ corrected: { payText: "$40.00/hr", payMinAnnual: 83200, closingDate: "2026-12-01", minimumRequirements: [] } }) }));
+    expect(merged.payText).toBe("$40.00/hr");
+    expect(merged.payMinAnnual).toBe(83200);
+    expect(merged.closingDate).toBe("2026-12-01");
+    expect(merged.minimumRequirements).toEqual(["Six months as a helper"]);
+  });
+  it("penalises driving requirements without excluding them", () => {
+    const none = scoreRow(row());
+    const cdl = scoreRow(row({ drivingRequirement: "CDL required" }));
+    expect(cdl.list).toBe("best_fit");
+    expect(cdl.score).toBeLessThan(none.score);
+  });
+});
+
+describe("a second pass that could not run", () => {
+  const unchecked = (over: Partial<Verdict> = {}) =>
+    verdict({ isReal: false, stillOpenConfidence: 0.2, independentEvidence: [], verdictReason: "Could not verify: the web search budget for this turn was exhausted before any query ran.", ...over });
+
+  it("is told apart from a second pass that looked and found nothing", () => {
+    expect(verdictState(unchecked())).toBe("unchecked");
+    expect(verdictState(verdict({ isReal: false, verdictReason: "Searched the employer site; the requisition is not listed." }))).toBe("checked");
+    expect(verdictState(null)).toBe("none");
+  });
+  it("keeps the lead, uses the finder's confidence, and always asks for a check before applying", () => {
+    const j = scoreRow(row({ openConfidence: 0.6, verdict: unchecked() }));
+    expect(j.list).toBe("best_fit");
+    expect(j.checked).toBe(false);
+    expect(j.needsOpenCheck).toBe(true);
+    expect(j.breakdown.open.value).toBe(0.6);
+    expect(j.breakdown.open.note).toMatch(/not double-checked/);
+  });
+  it("still rules out leads the finder itself doubted, and mandatory gaps", () => {
+    expect(scoreRow(row({ openConfidence: 0.2, verdict: unchecked() })).ruledOutReason).toMatch(/unlikely to still be open/);
+    expect(scoreRow(row({ openConfidence: 0.7, verdict: unchecked({ gapsForBeginner: ["HARD: EPA Section 608 certification"] }) })).list).toBe("ruled_out");
+  });
+  it("classifies by the first pass's reading, not by a blind second pass's speculation", () => {
+    const notes = ["HARD (as claimed, unverified): birth certificate must be presented", "SOFT (unknown): may prefer experience", "UNKNOWN: schedule", "SOFT: trade schooling preferred"];
+    const entry = scoreRow(row({ tier: "best_fit", openConfidence: 0.5, verdict: unchecked({ gapsForBeginner: notes }) }));
+    expect(entry.list).toBe("best_fit");
+    expect(entry.gaps.confirm).toEqual(["birth certificate must be presented"]);
+    expect(parseGaps(["UNKNOWN (check posting): driver's license requirement was not read from the posting"]).driving).toHaveLength(1);
+    expect(entry.breakdown.access.value).toBe(0.9);
+    const reach = scoreRow(row({ tier: "stretch", openConfidence: 0.5, verdict: unchecked({ gapsForBeginner: ["HARD: 4 years of experience"] }) }));
+    expect(reach.list).toBe("stretch");
+    expect(reach.breakdown.access.value).toBe(0.5);
+  });
+});
+
+describe("driving and residency statements", () => {
+  it("are never counted as a gap, because the applicant's licence status is not assumed", () => {
+    const g = parseGaps(["HARD: Valid driver's license required", "HARD: Residency in Los Angeles County", "SOFT: willingness to drive long distances", "HARD: journey-level card"]);
+    expect(g.driving).toHaveLength(2);
+    expect(g.hard).toEqual(["journey-level card"]);
+    expect(g.soft).toEqual([]);
+    expect(g.confirm).toEqual(["Residency in Los Angeles County"]);
+    const j = scoreRow(row({ drivingRequirement: "valid driver license required", verdict: verdict({ gapsForBeginner: ["HARD: Valid driver's license required"] }) }));
+    expect(j.list).toBe("best_fit");
+    expect(j.gaps.driving).toHaveLength(1);
+  });
+});
+
+describe("select", () => {
+  it("dedupes the same posting found twice and keeps the better copy", () => {
+    const a = scoreRow(row({ slice: "a" }));
+    const b = scoreRow(row({ slice: "b", postingUrl: "https://www.governmentjobs.com/careers/example/jobs/1?utm=x", verdict: verdict({ stillOpenConfidence: 0.95 }) }));
+    const out = dedupe([a, b]);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.slice).toBe("b");
+  });
+  it("limits roles per employer, ranks by score and keeps the overflow on the bench", () => {
+    const u = (n: number) => `https://careers.example.com/jobs/${n}`;
+    const jobs = [
+      scoreRow(row({ title: "Role A", postingUrl: u(1), payMinAnnual: 60000, payMaxAnnual: 90000 })),
+      scoreRow(row({ title: "Role B", postingUrl: u(2), payMinAnnual: 90000, payMaxAnnual: 99000 })),
+      scoreRow(row({ title: "Role C", postingUrl: u(3), payMinAnnual: 50000, payMaxAnnual: 60000 })),
+      scoreRow(row({ employer: "Other Co", title: "Tech", postingUrl: u(4), field: "hvac" })),
+      scoreRow(row({ employer: "Third Co", title: "PM", postingUrl: u(5), field: "construction_office", verdict: verdict({ gapsForBeginner: ["SOFT: a", "SOFT: b"] }) })),
+      scoreRow(row({ employer: "Gone Co", title: "Closed", postingUrl: u(6), verdict: verdict({ stillOpenConfidence: 0.1 }) })),
+    ];
+    const s = select(jobs, { best: 10, stretch: 5, maxPerEmployer: 2 });
+    expect(s.bestFit.map((j) => j.title)).toEqual(["Role B", "Role A", "Tech"]);
+    expect(s.bench.map((j) => j.title)).toEqual(["Role C"]);
+    expect(s.stretch.map((j) => j.title)).toEqual(["PM"]);
+    expect(s.ruledOut.map((j) => j.title)).toEqual(["Closed"]);
+  });
+  it("gives stable ids", () => {
+    expect(stableId("A", "b", "c")).toBe(stableId("a", "B", "C"));
+    expect(stableId("a", "b", "c")).not.toBe(stableId("a", "b", "d"));
+  });
+});

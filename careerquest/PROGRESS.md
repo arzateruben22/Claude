@@ -178,6 +178,20 @@ Requests **not** applied, and why (candidates for a later stage):
   `claude/careerquest` after committing it there, resolving conflicts in favour of the most tested version.
 - Preview gallery (real screenshots of this build): https://claude.ai/artifact/MYJWMy7foois8VFmtSWUra
 
+
+## Job Finder (added 2026-11-11, separate from the paused integration work)
+- New: `jobfinder/` (sweep workflow, page template, README), `src/lib/jobfinder/score.ts` (+ 22 unit tests),
+  `scripts/jobfinder-build.ts`, `data/jobs/2026-11-11.json`. Published private page:
+  https://claude.ai/artifact/F1YK2dnRzYcaE7j5ke3xyR (per-user state in the artifact db under `data/users/<id>/jobfinder`).
+- First pass result: 20 postings found by 8 finders; 4 best-fit, 9 stretch, 4 ruled out, 54 watch-list notes,
+  6 apprenticeship routes from `data/seed`. **None is double-checked**: the 200-call WebSearch allowance for the
+  turn was spent by the finders, so the second pass could not search. The page states this on every card.
+- Short of the 10 best-fit openings requested. Next exact step: run `jobfinder/sweep.workflow.js` with
+  `leads` = bestFit + stretch + bench from `data/jobs/2026-11-11.json`, `verifyCap` 5, then finders with
+  `findCap` 12 on role-first queries; rebuild and republish to the same artifact.
+- Needs from the user: their résumé (paste or upload) to replace the assumed beginner profile, and optionally
+  approval to allow job-site hosts in the environment so postings can be opened directly.
+
 ## Next exact step
 Run the next integration stage: Phase 2–3 browser tests with a local mock OAuth/Gmail/Outlook provider and the
 extension in the loop, then Phase 4–7 browser tests incl. axe scans, then the 20-step acceptance scenario and the

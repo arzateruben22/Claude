@@ -1,0 +1,406 @@
+<title>LA & OC Job Finder</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one ranked column of job cards under a sticky tab bar; each card is a summary row plus fold-out working sections. */
+:root {
+  color-scheme: dark;
+  --bg: #0b0e14; --panel: #121821; --panel-2: #18202c; --line: #263244; --fg: #e8eef7; --muted: #9aa6b8; --subtle: #6f7b8d;
+  --accent: #4cc9ff; --accent-ink: #06121c; --gold: #f3c75b; --ok: #3ddc97; --warn: #f5a524; --bad: #ff7a7a;
+  --display: "Sora", "Segoe UI", system-ui, sans-serif; --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { color-scheme: light; --bg: #f3f6fa; --panel: #ffffff; --panel-2: #f1f4f9; --line: #d5dde8; --fg: #0f172a; --muted: #475569; --subtle: #6b7789; --accent: #0b74b3; --accent-ink: #ffffff; --gold: #946200; --ok: #137a3b; --warn: #a85a06; --bad: #b42323; } }
+:root[data-theme="light"] { color-scheme: light; --bg: #f3f6fa; --panel: #ffffff; --panel-2: #f1f4f9; --line: #d5dde8; --fg: #0f172a; --muted: #475569; --subtle: #6b7789; --accent: #0b74b3; --accent-ink: #ffffff; --gold: #946200; --ok: #137a3b; --warn: #a85a06; --bad: #b42323; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 28px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin: 0 0 8px; }
+h1 { font-family: var(--display); font-size: clamp(28px, 5vw, 40px); line-height: 1.08; margin: 0 0 10px; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 66ch; margin: 0; }
+.notice { margin-top: 18px; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 12px; padding: 14px 16px; }
+.notice h2 { font-family: var(--display); font-size: 15px; margin: 0 0 6px; }
+.notice ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+.notice li { margin: 3px 0; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); margin-top: 22px; padding-block: 10px; display: grid; gap: 10px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tab { font: inherit; font-weight: 600; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.tab[aria-selected="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+.tab .n { font-family: var(--mono); font-weight: 500; margin-left: 6px; opacity: .85; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 13px; color: var(--muted); }
+.tools select, .tools button, .btn { font: inherit; font-size: 13px; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 6px 10px; cursor: pointer; }
+.tools label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.progress { flex: 1 1 180px; min-width: 0; display: grid; gap: 4px; }
+.progress .track { height: 6px; border-radius: 999px; background: var(--panel-2); overflow: hidden; }
+.progress .fill { height: 100%; width: 0; background: var(--ok); transition: width .3s; }
+.sync { font-family: var(--mono); font-size: 11px; color: var(--subtle); }
+.list { display: grid; gap: 16px; margin-top: 18px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; min-width: 0; }
+.card.applied { border-color: color-mix(in srgb, var(--ok) 55%, var(--line)); }
+.card.skipped { opacity: .62; }
+.head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: start; }
+.rank { font-family: var(--mono); font-size: 13px; color: var(--subtle); padding-top: 4px; }
+.title { font-family: var(--display); font-size: 19px; line-height: 1.25; margin: 0; overflow-wrap: anywhere; }
+.where { color: var(--muted); margin: 2px 0 0; font-size: 14px; }
+.score { text-align: center; min-width: 58px; border: 1px solid var(--line); border-radius: 12px; padding: 6px 8px; background: var(--panel-2); }
+.score b { display: block; font-family: var(--display); font-size: 22px; line-height: 1; color: var(--gold); font-variant-numeric: tabular-nums; }
+.score span { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--subtle); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 14px; }
+.fact { background: var(--panel-2); border-radius: 10px; padding: 9px 12px; min-width: 0; }
+.fact small { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--subtle); }
+.fact p { margin: 2px 0 0; font-weight: 500; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.fact p span { display: block; font-weight: 400; color: var(--muted); font-size: 13px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.chip { font-size: 12px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px; color: var(--muted); }
+.chip.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 45%, var(--line)); }
+.chip.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, var(--line)); }
+.chip.bad { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, var(--line)); }
+.why { margin: 12px 0 0; color: var(--fg); }
+.why + .why { color: var(--muted); font-size: 14px; margin-top: 6px; }
+.alert { margin-top: 12px; border-radius: 10px; padding: 10px 12px; font-size: 14px; border: 1px solid color-mix(in srgb, var(--warn) 45%, var(--line)); background: color-mix(in srgb, var(--warn) 9%, var(--panel)); }
+.alert b { color: var(--warn); }
+.alert ul { margin: 6px 0 0; padding-left: 18px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.apply { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--accent-ink); font-weight: 600; text-decoration: none; border-radius: 10px; padding: 10px 16px; }
+.apply small { font-weight: 400; opacity: .8; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; color: var(--muted); background: var(--panel); border: 0; border-left: 1px solid var(--line); padding: 9px 12px; cursor: pointer; }
+.seg button:first-child { border-left: 0; }
+.seg button[aria-pressed="true"] { background: var(--panel-2); color: var(--fg); font-weight: 600; }
+.seg button[data-status="applied"][aria-pressed="true"] { color: var(--ok); }
+.date { font: inherit; font-size: 13px; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 7px 8px; }
+details { margin-top: 10px; border-top: 1px solid var(--line); }
+details:first-of-type { margin-top: 16px; }
+summary { cursor: pointer; padding: 11px 0 9px; font-weight: 600; font-size: 14px; list-style-position: inside; }
+summary span { font-weight: 400; color: var(--muted); margin-left: 6px; }
+.sect { padding: 0 0 12px; font-size: 14px; color: var(--muted); }
+.sect ul { margin: 6px 0; padding-left: 18px; }
+.sect li { margin: 4px 0; }
+.sect h4 { margin: 12px 0 2px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--subtle); font-weight: 600; }
+.row { display: grid; grid-template-columns: 110px minmax(60px, 1fr) 44px; gap: 10px; align-items: center; margin: 7px 0 0; }
+.row .track { height: 6px; border-radius: 999px; background: var(--panel-2); overflow: hidden; }
+.row .fill { height: 100%; background: var(--accent); }
+.row b { text-align: right; font-family: var(--mono); font-weight: 500; color: var(--fg); font-size: 13px; }
+.row + p { margin: 2px 0 0 120px; font-size: 13px; }
+.req { display: flex; gap: 9px; align-items: flex-start; margin: 6px 0; color: var(--fg); cursor: pointer; }
+.req input { margin-top: 3px; accent-color: var(--accent); width: 16px; height: 16px; flex: none; }
+textarea { width: 100%; min-height: 260px; font: inherit; font-size: 14px; line-height: 1.55; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; resize: vertical; }
+blockquote { margin: 8px 0; padding: 6px 12px; border-left: 3px solid var(--line); color: var(--fg); font-size: 13px; }
+blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere; }
+.ruled { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.ruled p { margin: 0; }
+.ruled p + p { color: var(--muted); font-size: 14px; margin-top: 3px; }
+.ruled ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+.ruled li { margin: 5px 0; overflow-wrap: anywhere; }
+.ruled .chips { margin: 8px 0; }
+.list > .lede { margin-bottom: 2px; }
+.empty { background: var(--panel); border: 1px dashed var(--line); border-radius: 14px; padding: 26px; text-align: center; color: var(--muted); }
+.method { margin-top: 36px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; color: var(--muted); font-size: 14px; }
+.method h2 { font-family: var(--display); font-size: 16px; color: var(--fg); margin: 0 0 8px; }
+.method table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+.method td, .method th { text-align: left; padding: 5px 8px 5px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.method th { color: var(--subtle); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.scroll { overflow-x: auto; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
+@media (max-width: 560px) { .head { grid-template-columns: minmax(0, 1fr) auto; } .rank { grid-column: 1 / -1; padding: 0; } .row { grid-template-columns: 92px minmax(40px, 1fr) 40px; } .row + p { margin-left: 0; } }
+@media (prefers-reduced-motion: reduce) { .progress .fill { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow" id="stamp"></p>
+    <h1>Jobs to apply for on the employer's own site</h1>
+    <p class="lede" id="lede"></p>
+    <div class="notice" id="notice"></div>
+  </header>
+
+  <div class="bar">
+    <div class="tabs" role="tablist" aria-label="Lists" id="tabs"></div>
+    <div class="tools">
+      <label for="f-field">Field <select id="f-field"></select></label>
+      <label for="f-drive"><input type="checkbox" id="f-drive"> Hide jobs that require driving</label>
+      <label for="f-todo"><input type="checkbox" id="f-todo"> Only ones I haven't handled</label>
+      <div class="progress" aria-live="polite"><span id="p-text"></span><div class="track"><div class="fill" id="p-fill"></div></div></div>
+      <button type="button" id="csv">Copy tracker CSV</button>
+      <span class="sync" id="sync" role="status"></span>
+    </div>
+  </div>
+
+  <main class="list" id="list" aria-live="polite"></main>
+
+  <section class="method" id="method"></section>
+</div>
+
+<script id="jf-data" type="application/json">__DATA__</script>
+<script>
+(function () {
+  "use strict";
+  var DATA = JSON.parse(document.getElementById("jf-data").textContent);
+  var LS_KEY = "cq-jobfinder-v1";
+  var state = { v: 1, updatedAt: 0, jobs: {} };
+  try { var raw = localStorage.getItem(LS_KEY); if (raw) { var s = JSON.parse(raw); if (s && s.v === 1 && s.jobs) state = s; } } catch (e) {}
+
+  var view = "best";
+  var fField = "all", fDrive = false, fTodo = false;
+  var remoteRef = null, saveTimer = null, saving = false, dirty = false;
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var safeUrl = function (u) { try { var x = new URL(String(u)); return x.protocol === "https:" ? x.href : null; } catch (e) { return null; } };
+  var host = function (u) { try { return new URL(u).hostname.replace(/^www\./, ""); } catch (e) { return ""; } };
+  var money = function (n) { return "$" + Math.round(n / 1000) + "K"; };
+  var today = function () { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+  var js = function (id) { return state.jobs[id] || (state.jobs[id] = { status: "todo", appliedOn: "", checks: {}, letter: null }); };
+  var peek = function (id) { return state.jobs[id] || { status: "todo", appliedOn: "", checks: {}, letter: null }; };
+
+  function setSync(t) { $("sync").textContent = t; }
+  function persist() {
+    state.updatedAt = Date.now();
+    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+    if (remoteRef) { dirty = true; clearTimeout(saveTimer); saveTimer = setTimeout(flush, 900); }
+  }
+  function flush() {
+    if (!remoteRef || saving || !dirty) return;
+    saving = true; dirty = false; setSync("Saving…");
+    remoteRef.set(JSON.parse(JSON.stringify(state))).then(function () { setSync("Saved to your account"); }, function () { setSync("Saved on this device only"); })
+      .then(function () { saving = false; if (dirty) { clearTimeout(saveTimer); saveTimer = setTimeout(flush, 900); } });
+  }
+  function connect() {
+    if (!window.claude || typeof window.claude.use !== "function") { setSync("Saved on this device only"); return; }
+    var timer = setTimeout(function () { if (!remoteRef) setSync("Saved on this device only"); }, 10000);
+    Promise.all([window.claude.use("db"), window.claude.use("user")]).then(function (caps) {
+      var db = caps[0], user = caps[1];
+      if (!db || !user) throw new Error("unavailable");
+      return user.id().then(function (id) {
+        var ref = db.collection("data/users/" + id).doc("jobfinder");
+        return ref.get().then(function (snap) {
+          clearTimeout(timer);
+          var remote = snap && snap.exists ? snap.data() : null;
+          if (remote && remote.v === 1 && remote.jobs && (remote.updatedAt || 0) > (state.updatedAt || 0)) {
+            state = remote;
+            try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+            render();
+          }
+          remoteRef = ref;
+          setSync("Synced to your account");
+        });
+      });
+    }).catch(function () { clearTimeout(timer); setSync("Saved on this device only"); });
+  }
+
+  var MORE = DATA.bench || [];
+  var LISTS = { best: DATA.bestFit, stretch: DATA.stretch.concat(MORE), ruled: DATA.ruledOut };
+  var tracked = DATA.bestFit.concat(DATA.stretch, MORE);
+
+  function drives(j) { return j.drivingRequirement !== "none stated" && j.drivingRequirement !== "unknown"; }
+  function visible(j) {
+    if (fField !== "all" && j.field !== fField) return false;
+    if (fDrive && drives(j)) return false;
+    if (fTodo && peek(j.id).status !== "todo") return false;
+    return true;
+  }
+
+  function header() {
+    $("stamp").textContent = "Searched " + DATA.generatedLabel + " · Los Angeles and Orange counties";
+    $("lede").textContent = DATA.lede;
+    var n = ["<h2>Read this before you apply</h2><ul>"];
+    (DATA.notices || []).forEach(function (t) { var i = t.indexOf("||"); n.push("<li><b>" + esc(i > 0 ? t.slice(0, i) : t) + "</b>" + (i > 0 ? " " + esc(t.slice(i + 2)) : "") + "</li>"); });
+    n.push("</ul>");
+    $("notice").innerHTML = n.join("");
+  }
+
+  function tabs() {
+    var defs = [["best", "Best fit", DATA.bestFit.length], ["stretch", "Stretch", DATA.stretch.length + MORE.length], ["routes", "Apprenticeship routes", (DATA.programs || []).length], ["watch", "Watch list", (DATA.watch || []).reduce(function (a, g) { return a + g.items.length; }, 0)], ["ruled", "Ruled out", DATA.ruledOut.length]];
+    $("tabs").innerHTML = defs.map(function (d) {
+      return '<button type="button" class="tab" role="tab" data-view="' + d[0] + '" aria-selected="' + (view === d[0]) + '">' + d[1] + '<span class="n">' + d[2] + "</span></button>";
+    }).join("");
+  }
+
+  function fieldFilter() {
+    var seen = {};
+    tracked.forEach(function (j) { seen[j.field] = true; });
+    var opts = ['<option value="all">All fields</option>'].concat(Object.keys(seen).sort().map(function (f) { return '<option value="' + esc(f) + '">' + esc(DATA.fieldLabels[f] || f) + "</option>"; }));
+    $("f-field").innerHTML = opts.join("");
+    $("f-field").value = fField;
+  }
+
+  function progress() {
+    var applied = tracked.filter(function (j) { return peek(j.id).status === "applied"; }).length;
+    var skipped = tracked.filter(function (j) { return peek(j.id).status === "skipped"; }).length;
+    $("p-text").textContent = "Applied to " + applied + " of " + tracked.length + (skipped ? " · " + skipped + " skipped" : "");
+    $("p-fill").style.width = (tracked.length ? Math.round((applied / tracked.length) * 100) : 0) + "%";
+  }
+
+  function chip(text, tone) { return '<span class="chip' + (tone ? " " + tone : "") + '">' + esc(text) + "</span>"; }
+
+  function quotes(list) {
+    return (list || []).slice(0, 4).map(function (e) {
+      var u = safeUrl(e.sourceUrl);
+      return "<blockquote>“" + esc(e.quote) + "”" + (u ? ' <a href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">' + esc(host(u)) + "</a>" : "") + "</blockquote>";
+    }).join("");
+  }
+
+  function card(j, i) {
+    var st = peek(j.id), v = j.verdict || {}, url = safeUrl(j.postingUrl), h = [];
+    var ai = v.aiExposure ? v.aiExposure.level : null;
+    h.push('<article class="card ' + esc(st.status) + '" data-id="' + esc(j.id) + '">');
+    h.push('<div class="head"><span class="rank">#' + (i + 1) + '</span><div><h3 class="title">' + esc(j.title) + '</h3><p class="where">' + esc(j.employer) + " · " + esc(j.city) + (j.county && j.county !== "unknown" ? ", " + esc(j.county) + " County" : "") + '</p></div><div class="score" title="Fit score out of 100"><b>' + esc(j.score) + "</b><span>fit</span></div></div>");
+    var annual = j.payMinAnnual || j.payMaxAnnual ? "about " + (j.payMinAnnual && j.payMaxAnnual && j.payMinAnnual !== j.payMaxAnnual ? money(j.payMinAnnual) + "–" + money(j.payMaxAnnual) : money(j.payMaxAnnual || j.payMinAnnual)) + " a year" : "";
+    h.push('<div class="facts"><div class="fact"><small>Pay as posted</small><p>' + esc(j.payText) + (annual ? "<span>" + esc(annual) + "</span>" : "") + "</p></div>");
+    h.push('<div class="fact"><small>Dates</small><p>' + (j.closingDate ? "Closes " + esc(j.closingDate) : "No closing date listed") + "<span>" + (j.postedDate ? "Posted " + esc(j.postedDate) : "Posting date not shown") + "</span></p></div>");
+    h.push('<div class="fact"><small>Driving</small><p>' + esc(j.drivingRequirement.charAt(0).toUpperCase() + j.drivingRequirement.slice(1)) + "</p></div></div>");
+    var chips = [chip(DATA.fieldLabels[j.field] || j.field)];
+    if (ai) chips.push(chip(ai.charAt(0).toUpperCase() + ai.slice(1) + " AI exposure", ai === "low" ? "ok" : ai === "medium" ? "warn" : "bad"));
+    if (j.unionOrProgram) chips.push(chip(j.unionOrProgram));
+    if (j.employmentType) chips.push(chip(j.employmentType));
+    if (j.requisitionId) chips.push(chip("Job ID " + j.requisitionId));
+    h.push('<div class="chips">' + chips.join("") + "</div>");
+    h.push('<p class="why">' + esc(j.whyFit) + "</p>");
+    if (j.progression) h.push('<p class="why">Where it leads: ' + esc(j.progression) + "</p>");
+    if (!j.checked) h.push('<div class="alert"><b>Found once, not double-checked.</b> This came from one pass of search results. The second pass that tries to disprove each posting could not run today. Open the posting and confirm it is live, the pay and the requirements before you invest time.</div>');
+    else if (j.needsOpenCheck) h.push('<div class="alert"><b>Check first.</b> The second pass was only ' + Math.round(j.breakdown.open.value * 100) + "% confident this is still open. Look for a closing date on the page before you invest time.</div>");
+    if ((j.gaps.driving || []).length) h.push('<p class="why">Driving: ' + esc(j.gaps.driving.join(" · ")) + "</p>");
+    if (j.gaps.soft.length) {
+      var gt = j.list === "stretch" ? "You may not meet every requirement." : "Check these against the posting.";
+      var gs = !j.checked ? " These notes were written without being able to read the posting, so treat them as questions to answer on the page:" : " The posting asks for:";
+      h.push('<div class="alert"><b>' + gt + "</b>" + gs + "<ul>" + j.gaps.soft.slice(0, 6).map(function (g) { return "<li>" + esc(g) + "</li>"; }).join("") + "</ul>" + (j.list === "stretch" ? "The cover letter and résumé notes below are written to be upfront about this. Nothing in them claims experience you have not told me about." : "") + "</div>");
+    }
+    if ((j.gaps.confirm || []).length) h.push('<p class="why">Have ready: ' + esc(j.gaps.confirm.join(" · ")) + "</p>");
+    h.push('<div class="actions">');
+    if (url) h.push('<a class="apply" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">Open the posting <small>' + esc(host(url)) + "</small></a>");
+    h.push('<div class="seg" role="group" aria-label="Status for ' + esc(j.title) + '">' + [["todo", "To do"], ["applied", "Applied"], ["skipped", "Skip"]].map(function (o) { return '<button type="button" data-status="' + o[0] + '" aria-pressed="' + (st.status === o[0]) + '">' + o[1] + "</button>"; }).join("") + "</div>");
+    h.push('<label class="sync" for="d-' + esc(j.id) + '"' + (st.status === "applied" ? "" : " hidden") + '>on <input class="date" type="date" id="d-' + esc(j.id) + '" value="' + esc(st.appliedOn) + '"></label>');
+    h.push("</div>");
+
+    var reqs = j.minimumRequirements || [];
+    var ticked = reqs.filter(function (_, k) { return st.checks[k]; }).length;
+    h.push('<details><summary>What the posting asks for <span data-count>' + ticked + " of " + reqs.length + " ticked</span></summary><div class=\"sect\"><p>Tick only what is true for you. This is your own honest read of the fit.</p>" +
+      reqs.map(function (r, k) { return '<label class="req" for="r-' + esc(j.id) + "-" + k + '"><input type="checkbox" id="r-' + esc(j.id) + "-" + k + '" data-req="' + k + '"' + (st.checks[k] ? " checked" : "") + "><span>" + esc(r) + "</span></label>"; }).join("") +
+      ((j.preferredQualifications || []).length ? "<h4>Preferred, not required</h4><ul>" + j.preferredQualifications.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>" : "") + "</div></details>");
+
+    if (v.coverLetter) {
+      h.push('<details><summary>Cover letter draft <span>edit, then copy</span></summary><div class="sect"><p>Replace every [bracketed] part with your own facts before sending. Delete any sentence that is not true for you.</p><label class="sync" for="l-' + esc(j.id) + '">Cover letter</label><textarea id="l-' + esc(j.id) + '" data-letter spellcheck="true">' + esc(st.letter != null ? st.letter : v.coverLetter) + '</textarea><div class="actions"><button type="button" class="btn" data-copy>Copy letter</button><button type="button" class="btn" data-reset>Reset to draft</button><span class="sync" data-msg role="status"></span></div></div></details>');
+    }
+    if ((v.resumeEmphasis || []).length || (v.doNotClaim || []).length) {
+      h.push('<details><summary>Résumé adjustments for this job <span>what to bring forward, what not to claim</span></summary><div class="sect">' +
+        ((v.resumeEmphasis || []).length ? "<h4>Bring forward, where true</h4><ul>" + v.resumeEmphasis.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
+        ((v.doNotClaim || []).length ? "<h4>Do not claim unless it is true for you</h4><ul>" + v.doNotClaim.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") + "</div></details>");
+    }
+    var order = ["access", "pay", "interest", "ai", "open", "driving"], names = { access: "Within reach", pay: "Pay", interest: "Your priorities", ai: "AI resilience", open: "Still open", driving: "Driving" };
+    h.push('<details><summary>Why it scored ' + esc(j.score) + "</summary><div class=\"sect\">" + order.map(function (k) {
+      var f = j.breakdown[k];
+      return '<div class="row"><span>' + names[k] + '</span><div class="track"><div class="fill" style="width:' + Math.round(f.value * 100) + '%"></div></div><b>' + f.points.toFixed(1) + "</b></div><p>" + esc(f.note) + "</p>";
+    }).join("") + "</div></details>");
+    h.push('<details><summary>How this was checked</summary><div class="sect">' + (v.verdictReason ? "<p>" + esc(v.verdictReason) + "</p>" : "") +
+      ((v.problems || []).length ? "<h4>Caveats the checker raised</h4><ul>" + v.problems.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
+      "<h4>Evidence from search results</h4>" + (quotes(v.independentEvidence) + quotes(j.evidence) || "<p>No quotes recorded.</p>") + "</div></details>");
+    h.push("</article>");
+    return h.join("");
+  }
+
+  function linkify(text) {
+    return esc(text).replace(/https:\/\/[^\s<)]+[^\s<).,;]/g, function (u) { var ok = safeUrl(u.replace(/&amp;/g, "&")); return ok ? '<a href="' + esc(ok) + '" target="_blank" rel="noopener noreferrer">' + esc(host(ok)) + "</a>" : u; });
+  }
+
+  function program(p) {
+    var u = safeUrl(p.applyUrl) || safeUrl(p.website), st = p.recruitmentStatus;
+    var badge = st === "OPEN" ? chip("Open", "ok") : st === "CLOSED" ? chip("Closed right now", "bad") : chip("Status unverified: check the site", "warn");
+    return '<div class="ruled"><p><b>' + esc(p.name) + "</b> · " + esc(p.sponsor || "") + " · " + esc(p.region || "") + '</p><div class="chips">' + badge + (p.isUnion ? chip("Union") : chip("Non-union")) + (p.durationYears ? chip(p.durationYears + " years") : "") + (p.startingWageVerified && p.startingWage ? chip("Starts " + p.startingWage) : chip("Starting wage not verified")) + "</div>" +
+      (p.recruitmentNote ? "<p>" + esc(p.recruitmentNote) + "</p>" : "") + (u ? '<p><a href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">' + esc(host(u)) + "</a></p>" : "") + "</div>";
+  }
+
+  function ruled(j) {
+    var u = safeUrl(j.postingUrl);
+    return '<div class="ruled"><p><b>' + esc(j.title) + "</b> · " + esc(j.employer) + (j.payText ? " · " + esc(j.payText) : "") + "</p><p>" + esc(j.ruledOutReason || "") + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">posting</a>' : "") + "</p></div>";
+  }
+
+  function render() {
+    tabs(); progress();
+    var src = LISTS[view] || [];
+    var html;
+    if (view === "routes") {
+      html = (DATA.programs || []).length ? '<p class="lede">Paid apprenticeships you apply to directly with the program. Facts and recruitment status are from the research pass on ' + esc(DATA.programsCheckedLabel) + ", so confirm dates on each program's site.</p>" + DATA.programs.map(program).join("") : '<div class="empty">No programme data loaded.</div>';
+    } else if (view === "watch") {
+      html = (DATA.watch || []).length ? '<p class="lede">Entry routes the search found that are closed right now, open soon, or could not be confirmed. Dates are as reported in search results on ' + esc(DATA.generatedLabel) + ".</p>" + DATA.watch.map(function (g) { return '<div class="ruled"><p><b>' + esc(g.label) + "</b></p><ul>" + g.items.map(function (x) { return "<li>" + linkify(x) + "</li>"; }).join("") + "</ul></div>"; }).join("") : '<div class="empty">Nothing on the watch list.</div>';
+    } else if (view === "ruled") {
+      html = src.length ? '<p class="lede">Found during the search and left out. Listed so you can see what was considered and why.</p>' + src.map(ruled).join("") : '<div class="empty">Nothing was ruled out.</div>';
+    } else {
+      var shown = src.map(function (j, i) { return [j, i]; }).filter(function (p) { return visible(p[0]); });
+      html = shown.length ? shown.map(function (p) { return (view === "stretch" && MORE.length && p[1] === DATA.stretch.length ? '<p class="lede">More stretch leads, ranked below the top ' + DATA.stretch.length + ".</p>" : "") + card(p[0], p[1]); }).join("") : '<div class="empty">' + (src.length ? "No jobs match these filters. Clear a filter to see them." : "No openings made this list in today's search.") + "</div>";
+    }
+    $("list").innerHTML = html;
+  }
+
+  function method() {
+    var w = DATA.weights, rows = [["Within reach", w.access, "Requirements a beginner can meet. Any mandatory credential you lack rules a job out entirely."], ["Pay", w.pay, "Posted range against $80,000 a year. Paid apprenticeships with a documented progression are not penalised as heavily."], ["Your priorities", w.interest, "Electrician first, then the other fields in the order you listed them."], ["AI resilience", w.ai, "An estimate of how exposed the role's daily tasks are to automation. Hands-on, on-site work scores highest."], ["Still open", w.open, "The independent checker's confidence that it is accepting applications."], ["Driving", w.driving, "What the posting says about a licence, DMV record or company vehicle. Flagged, never assumed about you."]];
+    $("method").innerHTML = "<h2>How the ranking works</h2><p>" + esc(DATA.methodNote) + "</p><div class=\"scroll\"><table><tr><th>Factor</th><th>Weight</th><th>What it measures</th></tr>" +
+      rows.map(function (r) { return "<tr><td>" + r[0] + "</td><td>" + Math.round(r[1] * 100) + "%</td><td>" + r[2] + "</td></tr>"; }).join("") + "</table></div><p>Assumptions used until your résumé is shared: " + esc(DATA.assumptions) + "</p><p>“Copy tracker CSV” puts every job and its status on your clipboard in a format the CareerQuest application tracker imports under Applications → Import → Spreadsheet.</p>";
+  }
+
+  function csv() {
+    var q = function (v) { v = String(v == null ? "" : v); if (/^[=+\-@]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
+    var lines = [["Company", "Job Title", "Job URL", "Location", "Status", "Date Applied", "Salary", "Notes"].map(q).join(",")];
+    tracked.forEach(function (j) {
+      var st = peek(j.id);
+      lines.push([j.employer, j.title, j.postingUrl, j.city + ", CA", st.status === "applied" ? "Submitted" : "Saved", st.status === "applied" ? st.appliedOn : "", j.payText, (j.list === "stretch" ? "Stretch. " : "") + "Job Finder " + DATA.generatedOn].map(q).join(","));
+    });
+    return lines.join("\n");
+  }
+
+  function copy(text, done) {
+    var fail = function () { done(false); };
+    try { navigator.clipboard.writeText(text).then(function () { done(true); }, fail); } catch (e) { fail(); }
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target.closest("button") : null;
+    if (!t) return;
+    if (t.dataset.view) { view = t.dataset.view; try { history.replaceState(null, "", "#" + view); } catch (err) {} render(); return; }
+    if (t.id === "csv") { copy(csv(), function (ok) { t.textContent = ok ? "Copied" : "Copy failed"; setTimeout(function () { t.textContent = "Copy tracker CSV"; }, 1800); }); return; }
+    var cardEl = t.closest(".card"); if (!cardEl) return;
+    var id = cardEl.dataset.id, st;
+    if (t.dataset.status) {
+      st = js(id); st.status = t.dataset.status;
+      if (st.status === "applied" && !st.appliedOn) st.appliedOn = today();
+      persist();
+      cardEl.className = "card " + st.status;
+      cardEl.querySelectorAll(".seg button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.status === st.status)); });
+      var lab = cardEl.querySelector('label[for="d-' + id + '"]'); if (lab) { lab.hidden = st.status !== "applied"; lab.querySelector("input").value = st.appliedOn; }
+      progress();
+      if (fTodo && st.status !== "todo") render();
+      return;
+    }
+    var area = cardEl.querySelector("textarea[data-letter]"), msg = t.parentElement.querySelector("[data-msg]");
+    if (t.hasAttribute("data-copy") && area) { copy(area.value, function (ok) { if (!ok) { area.focus(); area.select(); } if (msg) msg.textContent = ok ? "Copied to clipboard" : "Select all and copy manually"; }); return; }
+    if (t.hasAttribute("data-reset") && area) {
+      var job = tracked.filter(function (j) { return j.id === id; })[0];
+      st = js(id); st.letter = null; persist(); area.value = job && job.verdict ? job.verdict.coverLetter : ""; if (msg) msg.textContent = "Draft restored";
+    }
+  });
+  document.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.id === "f-field") { fField = t.value; render(); return; }
+    if (t.id === "f-drive") { fDrive = t.checked; render(); return; }
+    if (t.id === "f-todo") { fTodo = t.checked; render(); return; }
+    var cardEl = t.closest ? t.closest(".card") : null; if (!cardEl) return;
+    var st = js(cardEl.dataset.id);
+    if (t.dataset.req != null) {
+      if (t.checked) st.checks[t.dataset.req] = true; else delete st.checks[t.dataset.req];
+      persist();
+      var boxes = cardEl.querySelectorAll("input[data-req]"), n = 0; boxes.forEach(function (b) { if (b.checked) n++; });
+      var c = cardEl.querySelector("[data-count]"); if (c) c.textContent = n + " of " + boxes.length + " ticked";
+    } else if (t.type === "date") { st.appliedOn = t.value; persist(); }
+  });
+  document.addEventListener("input", function (e) {
+    var t = e.target;
+    if (!t.matches || !t.matches("textarea[data-letter]")) return;
+    var cardEl = t.closest(".card"); if (!cardEl) return;
+    js(cardEl.dataset.id).letter = t.value; persist();
+  });
+
+  var hash = (location.hash || "").replace("#", "");
+  if (["best", "stretch", "routes", "watch", "ruled"].indexOf(hash) >= 0) view = hash;
+  header(); fieldFilter(); method(); render();
+  setSync("Saved on this device");
+  connect();
+})();
+</script>
