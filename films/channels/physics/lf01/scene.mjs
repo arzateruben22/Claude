@@ -237,10 +237,9 @@ const ripples = []; for (let i = 0; i < 3; i++) { const m = new THREE.Mesh(new T
 
 // ── the bubble: a thin film with a hole that opens at the Taylor-Culick speed ──
 const BUBX = -2.05, BUBY = TOP + 0.26, BUBZ = -1.05, BUBR = 0.025;
-const bubMat = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, side: THREE.DoubleSide, uniforms: { uTheta: { value: 0 }, uTime: { value: 0 } },
-  vertexShader: "varying vec3 vN; varying vec3 vP; varying vec3 vV; void main(){ vN = normalize(normalMatrix * normal); vP = position; vec4 mv = modelViewMatrix * vec4(position,1.0); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }",
-  fragmentShader: "varying vec3 vN; varying vec3 vP; varying vec3 vV; uniform float uTheta, uTime; void main(){ float c = dot(normalize(vP), vec3(0.0,0.0,1.0)); if (c > cos(uTheta)) discard; float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.0); vec3 col = 0.5 + 0.5 * cos(6.2831 * (f * 1.2 + vP.y * 14.0 + uTime * 0.15) + vec3(0.0, 2.1, 4.2)); gl_FragColor = vec4(col * 0.85, 0.3 + 0.65 * f); }" });
-const bubble = new THREE.Mesh(new THREE.SphereGeometry(BUBR, 40, 28), bubMat); bubble.position.set(BUBX, BUBY, BUBZ); kitchen.add(bubble);
+const bubMat = new THREE.MeshPhysicalMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.42, roughness: 0.04, metalness: 0.0, iridescence: 1.0, iridescenceIOR: 1.35, iridescenceThicknessRange: [180, 520], clearcoat: 1.0, side: THREE.DoubleSide, depthWrite: false });
+let bubTh = -1;
+const bubble = new THREE.Mesh(new THREE.SphereGeometry(BUBR, 40, 28), bubMat); bubble.rotation.x = Math.PI / 2; bubble.position.set(BUBX, BUBY, BUBZ); kitchen.add(bubble);   // the pole points at the camera: the hole opens there and grows to the equator and beyond
 const rimR = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0006, 6, 36), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 })); kitchen.add(rimR);
 
 // ── sound: hands that clap, a ring (the wave painter draws it on every surface) ──
@@ -306,7 +305,7 @@ const dip = (t) => { let a = 0; for (const c of EV.fades) a = Math.max(a, 1 - E.
 const hud = createHud({ camera, captionY: FILM.captionY });
 hud.captions(FILM.captions, { fade: 0.03 });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
-const fmtX = (v) => { const k = Math.log10(Math.max(v, 1)); const r = Math.round(k); if (Math.abs(k - r) < 0.012) return Math.round(Math.pow(10, r)).toLocaleString("en-US"); const s = Math.pow(10, k), d = Math.pow(10, Math.max(0, Math.floor(Math.log10(s)) - 1)); return (Math.round(s / d) * d).toLocaleString("en-US"); };
+const fmtX = (v) => { if (v >= 1e6) { const [u, n] = v >= 1e12 ? [1e12, "trillion"] : v >= 1e9 ? [1e9, "billion"] : [1e6, "million"], q = v / u, r = q >= 9.95 ? Math.round(q) : Math.round(q * 10) / 10; return (r >= 1000 ? Math.round(r).toLocaleString("en-US") : String(r)) + " " + n; } const k = Math.log10(Math.max(v, 1)); const r = Math.round(k); if (Math.abs(k - r) < 0.012) return Math.round(Math.pow(10, r)).toLocaleString("en-US"); const s = Math.pow(10, k), d = Math.pow(10, Math.max(0, Math.floor(Math.log10(s)) - 1)); return (Math.round(s / d) * d).toLocaleString("en-US"); };
 const SPN = FILM.spine[0], spineOpts = { value: (t) => Math.pow(10, kAt(t)), fmt: fmtX, unit: "×", label: FILM.labelKeys, t0: SPN.t0, t1: SPN.t1, minCh: 5 }, counterEl = hud.counter("spine", spineOpts);
 placeSpine(spineOpts, counterEl, hud, W, H, FILM.spineAt);
 const endEl = hud.end({ t0: ES - 0.3, d: 0.3, ...FILM.end });
@@ -385,8 +384,8 @@ window.seek = function (t) {
   }
   { const B = EV.bubble, inB = t >= B.in - 0.5 && t < B.pop + 11.5, rB = (t - B.pop) / 1000;
     bubble.visible = inB && !(rB >= CAL.bubble_t * 1.02); rimR.visible = false;
-    bubMat.uniforms.uTime.value = t; bubble.position.set(BUBX + 0.01 * Math.sin(t * 0.7), BUBY + 0.006 * Math.sin(t * 0.9) + 0.03 * (1 - E.out3(seg(t, B.in - 0.5, B.in + 3))), BUBZ);
-    const th = Math.max(0, Math.min(Math.PI, Math.PI * rB / CAL.bubble_t)); bubMat.uniforms.uTheta.value = rB > 0 ? th : 0;
+    bubble.position.set(BUBX + 0.01 * Math.sin(t * 0.7), BUBY + 0.006 * Math.sin(t * 0.9) + 0.03 * (1 - E.out3(seg(t, B.in - 0.5, B.in + 3))), BUBZ);
+    const th = Math.max(0, Math.min(Math.PI, Math.PI * rB / CAL.bubble_t)); { const thq = Math.round((rB > 0 ? th : 0) * 60) / 60; if (thq !== bubTh) { bubTh = thq; bubble.geometry.dispose(); bubble.geometry = new THREE.SphereGeometry(BUBR, 40, 28, 0, Math.PI * 2, thq, Math.max(0.01, Math.PI - thq)); } }
     if (inB && rB > 0 && rB < CAL.bubble_t) { rimR.visible = true; const rr = BUBR * Math.sin(th); rimR.position.set(bubble.position.x, bubble.position.y, bubble.position.z + BUBR * Math.cos(th)); rimR.scale.set(Math.max(rr, 1e-4), Math.max(rr, 1e-4), 1); } }
   // sound: the clap, a ring from the hands, its bounce off the left wall
   { const C0 = EV.clap, r = (t - C0) / 1000, vs = CAL.sound * 0.0, sm = t >= C0 - 16 && t < C0 + 36;

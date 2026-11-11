@@ -69,7 +69,8 @@ def ck(t, look, fitW, yaw=0.0, ease="p2", pitch=3.0):
     return {"t": R(t), "look": [round(v, 3) for v in look], "fitW": fitW, "yaw": yaw, "pitch": pitch, "ease": ease}
 
 
-CUP, PAN, BUB, APP = [-0.3, 1.0, -1.0], [1.57, 1.02, -1.0], [-2.05, 1.25, -1.05], [0.8, 0.98, -1.0]
+CUP, PAN, BUB, APP = [-0.3, 1.0, -1.0], [1.57, 1.02, -1.0], [-2.05, 1.12, -1.05], [0.8, 0.98, -1.0]
+BUB_T = [-2.05, 1.16, -1.05]   # the bubble sits above the caption plate: the camera looks a little below it
 WIN, HUM, CHIP = [-1.0, 1.85, -1.8], [-1.45, 1.85, -2.0], [2.4, 0.97, -0.85]
 WIDE = ([0.0, 1.2, -0.8], 5.6)
 EV.update({"fly1": BIG, "fly2": BIG, "fly3": BIG, "fly4": BIG, "wire": NEVER, "bird": NEVER, "blur": NEVER, "cupfly": NEVER, "fly100": NEVER, "mosq": NEVER,
@@ -128,12 +129,12 @@ if has("pop"):
     EV["kernel"] = {"jump": R(W("pop", "jumps") - 0.6), "pop": R(W("pop", "splits") - 0.1), "foamEnd": R(W("pop", "settles"))}
     EV["bubble"] = {"in": R(W("pop", "sink,") - 0.4), "pop": R(W("pop", "pops#2") - 0.1)}
     if PART:
-        CAM += [ck(0.0, PAN, 0.5, 8.0), ck(W("pop", "Then") + 0.3, PAN, 0.22, -4.0)]
+        CAM += [ck(0.0, PAN, 0.5, 8.0, "p2", 20.0), ck(W("pop", "Then") + 0.3, PAN, 0.22, -4.0, "p2", 42.0)]
         BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(0.5), "t1": R(cut("tease") - 0.3), "slot": BSLOT})
     else:
-        CAM += [ck(W("pop", "thousand") - 0.2, PAN, 0.5, 8.0), ck(W("pop", "Then") + 0.3, PAN, 0.22, -4.0)]
-    CAM += [ck(W("pop", "splits") - 1.2, PAN, 0.24, 4.0), ck(W("pop", "sink,") - 1.6, PAN, 0.26, 3.0, "sine"), ck(W("pop", "sink,") - 0.2, BUB, 0.7, -8.0),
-            ck(W("pop", "pops#2") - 0.8, BUB, 0.34, 6.0), ck(W("pop", "And#2") + 0.3, BUB, 0.5, -4.0, "sine")]
+        CAM += [ck(W("pop", "thousand") - 0.2, PAN, 0.5, 8.0, "p2", 20.0), ck(W("pop", "Then") + 0.3, PAN, 0.22, -4.0, "p2", 42.0)]
+    CAM += [ck(W("pop", "splits") - 1.2, PAN, 0.24, 4.0, "p2", 42.0), ck(W("pop", "sink,") - 1.6, PAN, 0.26, 3.0, "sine", 40.0), ck(W("pop", "sink,") - 0.2, BUB, 0.4, -8.0),
+            ck(W("pop", "pops#2") - 0.8, BUB_T, 0.17, 6.0), ck(W("pop", "And#2") + 0.3, BUB_T, 0.3, -4.0, "sine")]
 
 if has("sound"):
     EV["clap"] = R(cut("sound") + 16.8) if not PART else R(cut("body") + 16.8)
