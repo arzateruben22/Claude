@@ -465,7 +465,7 @@ def cross_check(ep, shots, claims, identity, names, r, shots_ok=True):
     for s in shot_list:
         t = todo_paths(s)
         if t and s.get("status") in ("built", "approved"):
-            r.fail(S, f"shot {s.get('id', '?')}", f"is marked {s['status']} but still holds {len(t)} TODO placeholders ({listed(t, 4)})")
+            r.fail(S, f"shot {s.get('id', '?')}", f"is marked {s['status']} but still holds {len(t)} TODO placeholder{'s' if len(t) != 1 else ''} ({listed(t, 4)})")
     planned_todos = sum(1 for s in shot_list if s.get("status") == "planned" and todo_paths(s))
     if planned_todos:
         r.warn(S, "TODO", f"{planned_todos} of {len(shot_list)} planned shots still hold TODO placeholders")

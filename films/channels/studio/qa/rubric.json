@@ -1,0 +1,1120 @@
+{
+ "version": 1,
+ "name": "Studio internal quality rubric",
+ "internalOnly": true,
+ "disclaimer": "An internal assessment by the studio's own tools and reviewers. It is not proof of quality, not a public number and not a prediction of views. A failed hard gate blocks release whatever the score.",
+ "maxScore": 100,
+ "passScore": 95,
+ "releaseRule": "Release needs every hard gate passed and a score of 95 or more. Neither replaces the other.",
+ "howMeasured": {
+  "auto": "Scored by films/channels/studio/tools/qa_episode.py with no person involved. 'needs' says whether the delivered video is enough ('video') or a file beside it must exist ('sidecar'). All listed checks pass: full points. Any fails: 0. A check that could not be read: not scored, listed for a person.",
+  "builder": "Scored by the channel's builder from the evidence named.",
+  "coordinator": "Scored by the coordinator (the reviewer) from frame grabs, the contact sheet and the files named. Agents cannot hear or watch at speed, so no sound or motion-feel judgment is theirs.",
+  "owner": "Scored by the owner, or recorded for the owner in the owner's own words."
+ },
+ "scoring": [
+  "Whole points only, from 0 to the criterion's maximum.",
+  "Full points need the evidence named. No evidence means 0, not a guess.",
+  "People's scores go in review/rubric-scores.json (qa_episode.py --blank-scores prints the form) and are read with --scores.",
+  "A person may settle a check the tool could only list (result 'review') or could not read ('not checked'). A person cannot overrule a measured fail.",
+  "The total is given only when every criterion is scored. Until then the report shows the points still open."
+ ],
+ "points": {
+  "automated": 30,
+  "people": 70
+ },
+ "formats": {
+  "short": {
+   "aspect": "9:16",
+   "size": [
+    1080,
+    1920
+   ],
+   "youtubeSize": [
+    1440,
+    2560
+   ],
+   "fps": 30,
+   "lufs": [
+    -15.0,
+    -13.0
+   ],
+   "truePeakDb": -1.0,
+   "avLength": {
+    "frames": 1
+   },
+   "mono": {
+    "minCorrelation": 0.3,
+    "maxLossDb": 3.0,
+    "hard": true
+   },
+   "flashesPerS": 3,
+   "silence": {
+    "db": -40,
+    "s": 1.2
+   },
+   "voiceGap": {
+    "db": -42,
+    "s": 1.2,
+    "toleranceFrames": 1,
+    "hard": true
+   },
+   "freeze": {
+    "noiseDb": -60,
+    "s": 1.4,
+    "endCardWindowS": 3.0,
+    "endCardMaxS": 8.0
+   },
+   "firstFrame": {
+    "blankLeadMaxS": 0.0
+   },
+   "maxMb": 95,
+   "lengthS": [
+    60.0,
+    75.5
+   ],
+   "targetS": [
+    61.0,
+    75.0
+   ]
+  },
+  "part": {
+   "aspect": "9:16",
+   "size": [
+    1080,
+    1920
+   ],
+   "youtubeSize": [
+    1440,
+    2560
+   ],
+   "fps": 30,
+   "lufs": [
+    -15.0,
+    -13.0
+   ],
+   "truePeakDb": -1.0,
+   "avLength": {
+    "frames": 1
+   },
+   "mono": {
+    "minCorrelation": 0.3,
+    "maxLossDb": 3.0,
+    "hard": true
+   },
+   "flashesPerS": 3,
+   "silence": {
+    "db": -40,
+    "s": 1.2
+   },
+   "voiceGap": {
+    "db": -42,
+    "s": 1.2,
+    "toleranceFrames": 1,
+    "hard": true
+   },
+   "freeze": {
+    "noiseDb": -60,
+    "s": 1.4,
+    "endCardWindowS": 3.0,
+    "endCardMaxS": 8.0
+   },
+   "firstFrame": {
+    "blankLeadMaxS": 0.0
+   },
+   "maxMb": 95,
+   "lengthS": [
+    61.0,
+    75.5
+   ],
+   "targetS": [
+    61.0,
+    75.0
+   ]
+  },
+  "premium": {
+   "aspect": "9:16",
+   "size": [
+    1080,
+    1920
+   ],
+   "youtubeSize": [
+    1440,
+    2560
+   ],
+   "fps": 30,
+   "lufs": [
+    -15.0,
+    -13.0
+   ],
+   "truePeakDb": -1.0,
+   "avLength": {
+    "frames": 1
+   },
+   "mono": {
+    "minCorrelation": 0.3,
+    "maxLossDb": 3.0,
+    "hard": true
+   },
+   "flashesPerS": 3,
+   "silence": {
+    "db": -40,
+    "s": 1.2
+   },
+   "voiceGap": {
+    "db": -42,
+    "s": 1.2,
+    "toleranceFrames": 1,
+    "hard": true
+   },
+   "freeze": {
+    "noiseDb": -60,
+    "s": 1.4,
+    "endCardWindowS": 3.0,
+    "endCardMaxS": 8.0
+   },
+   "firstFrame": {
+    "blankLeadMaxS": 0.0
+   },
+   "maxMb": 95,
+   "lengthS": [
+    60.0,
+    90.5
+   ],
+   "targetS": [
+    70.0,
+    90.0
+   ]
+  },
+  "long": {
+   "aspect": "16:9",
+   "size": [
+    2560,
+    1440
+   ],
+   "youtubeSize": null,
+   "fps": 30,
+   "lufs": [
+    -15.5,
+    -12.5
+   ],
+   "truePeakDb": -1.0,
+   "avLength": {
+    "seconds": 0.1
+   },
+   "mono": {
+    "minCorrelation": 0.3,
+    "maxLossDb": 3.0,
+    "hard": false
+   },
+   "flashesPerS": 3,
+   "silence": {
+    "db": -40,
+    "s": 1.2
+   },
+   "voiceGap": {
+    "db": -42,
+    "s": 1.2,
+    "toleranceFrames": 1,
+    "hard": false
+   },
+   "freeze": {
+    "noiseDb": -60,
+    "s": 1.4,
+    "endCardWindowS": 3.0,
+    "endCardMaxS": 8.0
+   },
+   "firstFrame": {
+    "blankLeadMaxS": 0.5
+   },
+   "maxMb": 95,
+   "lengthS": [
+    510.0,
+    660.0
+   ],
+   "targetS": [
+    510.0,
+    570.0
+   ]
+  }
+ },
+ "formatsNote": "The thresholds qa_episode.py applies per format. lengthS is the hard window, targetS the aim. This block is the authority; the tool carries a copy for when this file is missing.",
+ "hardGates": [
+  {
+   "id": "size",
+   "name": "Delivery size",
+   "rule": "The picture is the format's delivery size: 1080x1920 for 9:16, 2560x1440 for a long video. A file named -youtube.mp4 may be 1440x2560 and is always labelled an upscale.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "kits/cinema/film/qa.py (1080x1920); kits/cinema/film/compilation.mjs (2560x1440 long video); kits/cinema/film/youtube1440.py (the 1440x2560 YouTube file is an upscale)",
+   "fix": "Wrong tier or aspect: re-assemble from the right chunks. Never scale a master to pass this gate."
+  },
+  {
+   "id": "fps",
+   "name": "Frame rate",
+   "rule": "30 frames a second, constant.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "kits/cinema/film/scorecard.py (format target: 30 fps CFR); kits/cinema/film/render.mjs",
+   "fix": "Re-assemble with kits/cinema/film/render.mjs --assemble; do not re-time the file."
+  },
+  {
+   "id": "length",
+   "name": "Length",
+   "rule": "Inside the format's window. short: 60 to 75.5 s. part: 61 to 75.5 s. premium: 60 to 90.5 s (target 70 to 90). long: 8:30 to 11:00 (target 8:30 to 9:30).",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "short 60 to 75.5 s: kits/cinema/film/qa.py. part 1:01 to 1:15 and premium 70 to 90 s, never under 60: films/channels/SEASON-FORMAT.md, with qa.py's half-second allowance. long: at least 8:30 (SEASON-FORMAT.md), at most 11 min (kits/cinema/film/compilation.mjs)",
+   "fix": "Too short: add real content (a fact-checked line, a bridge), never a longer hold or slower voice. Too long: cut a decorative line. Then rebuild only the shots after the change."
+  },
+  {
+   "id": "loudness",
+   "name": "Loudness",
+   "rule": "Integrated loudness of the delivered AAC: -15 to -13 LUFS (9:16), -15.5 to -12.5 LUFS (long).",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "9:16: -15 to -13 LUFS, kits/cinema/film/qa.py. long: -14 LUFS within 1.5, kits/cinema/film/compilation.mjs. Measured with ffmpeg ebur128, as the kit does",
+   "fix": "Re-master the sound (kits/cinema/studio/render.py) and re-assemble. The picture is not re-rendered."
+  },
+  {
+   "id": "true_peak",
+   "name": "True peak",
+   "rule": "At most -1 dBTP on the delivered AAC.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "at most -1 dBTP on the delivered AAC: kits/cinema/film/qa.py, compilation.mjs",
+   "fix": "Re-master with a lower ceiling and re-assemble. The picture is not re-rendered."
+  },
+  {
+   "id": "av_length",
+   "name": "Picture against sound",
+   "rule": "Picture and sound are the same length: within one frame (9:16), within 0.1 s (long).",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "9:16: within one frame, kits/cinema/film/qa.py. long: within 0.1 s, compilation.mjs",
+   "fix": "Re-assemble. If the sound is long, trim the music tail in the cue sheet, not the file."
+  },
+  {
+   "id": "mono_safe",
+   "name": "Phone speaker",
+   "rule": "Left/right correlation at least 0.3 and at most 3 dB lost when folded to mono.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "correlation at least 0.3 and fold-down loss at most 3 dB: kits/cinema/film/qa.py. compilation.mjs has no such gate, so a long video is measured but not gated",
+   "fix": "Narrow the stem that cancels (studio preset), re-master, re-assemble."
+  },
+  {
+   "id": "flashes",
+   "name": "Flashing",
+   "rule": "At most 3 flashes in any one second (large-area luminance swings).",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "at most 3 flashes in any second; a transition is a luminance change of 0.1 or more, darker side under 0.8, over 25% of the frame: kits/cinema/film/qa.py (WCAG 2.3.1)",
+   "fix": "Find the frames in the report, soften or slow that one transition, re-render its chunk."
+  },
+  {
+   "id": "silence",
+   "name": "No dead air",
+   "rule": "No stretch of 1.2 s or more below -40 dB in the delivered mix.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "studio standing gate: no silence of 1.2 s or more (films/channels/CTA.md, 'the voice-gap rule'); -40 dB on the delivered mix is this tool's setting",
+   "fix": "Carry the gap with room tone, score or picture-led sound in the cue sheet; re-master and re-assemble."
+  },
+  {
+   "id": "freeze",
+   "name": "No frozen picture",
+   "rule": "No frozen stretch of 1.4 s or more, except the end card (a hold that reaches the last 3 s, at most 8 s). A long video joined from episodes with narrated cards is run with --cards and a person confirms each card.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool; coordinator for --cards",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "studio standing gate: no frozen picture over about 1.4 s except the end card (channels ran freezedetect on drafts). Noise -60 dB is ffmpeg's default. The end-card allowance (reaches the last 3 s, at most 8 s: the longest card kits/cinema/film/compilation.mjs draws) is this tool's setting",
+   "fix": "Give the shot a motivated move or a developing picture and re-render its chunk. A frozen render (a bug) is rendered fresh, not resumed."
+  },
+  {
+   "id": "first_frame",
+   "name": "Frame 0 is composed",
+   "rule": "9:16: the first frame is not blank or black. A long video may fade in from black, with at most 0.5 s of blank picture.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": ".claude/skills/cinema-kit/SKILL.md: frame 0 is already composed (9:16: the platform cover is a frame of the video). A long video may fade in from black; the half-second limit is this tool's setting, set after the delivered Skin Sense Season 2 long video, which opens on one black frame",
+   "fix": "Start the first shot on its composed picture (transitionIn 'open'); re-render chunk 0."
+  },
+  {
+   "id": "file_size",
+   "name": "File size",
+   "rule": "At most 95 MB, so the file can be committed.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: video",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "kits/cinema/film/compilation.mjs fails over 95 MB (GitHub refuses 100 MB)",
+   "fix": "Re-assemble at the capped rate (compilation.mjs --max-mb, youtube1440.py's budget). Never commit a split file."
+  },
+  {
+   "id": "voice_gaps",
+   "name": "Voiceless gaps",
+   "rule": "No voiceless gap over 1.2 s on the dialogue stem before the end card. On a long film a person confirms each longer gap is a picture-only beat.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: sidecar",
+   "phase": "file",
+   "signsOff": "tool; coordinator on a long film",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "voiceless gaps of at most 1.2 s on the dialogue stem at -42 dB: One More Orbit season2/gaps.py, films/channels/CTA.md. One frame of tolerance is this tool's setting",
+   "fix": "Close the gap in the voice layout (pause lengths), or add a fact-checked line; rebuild captions and the shots after it."
+  },
+  {
+   "id": "text_audit",
+   "name": "Text inside the safe box",
+   "rule": "The render's text audit has 0 warnings.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: sidecar",
+   "phase": "file",
+   "signsOff": "tool; builder by frame grabs where no audit exists",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "0 text-audit warnings: kits/cinema/film/qa.py, from the render's audit.json",
+   "fix": "Move or shorten the one label in the compile step; re-render the chunks that show it."
+  },
+  {
+   "id": "sound_sync",
+   "name": "Sound on the picture",
+   "rule": "Every transient within one frame of its picture event (the studio's qa.json).",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: sidecar",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "transients within one frame of their picture event: kits/cinema/studio/qa.py",
+   "fix": "Fix the cue's time in the event table, run kits/cinema/studio/render.py again, re-assemble."
+  },
+  {
+   "id": "claims_honest",
+   "name": "Claims are marked honestly",
+   "rule": "No claim is marked ok unless a person opened its source. A search excerpt stays OPEN.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: sidecar",
+   "phase": "file",
+   "signsOff": "tool",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "films/channels/STUDIO-STYLE.md: a claim is OK only when a person has opened the source; a search excerpt stays OPEN",
+   "fix": "Set the claim back to open. Only the person who opened the page sets ok."
+  },
+  {
+   "id": "chapters",
+   "name": "Chapters",
+   "rule": "A long video's chapters: first at 0:00, in order, each at least 10 s, computed from segment starts; each line equals one part's title exactly.",
+   "appliesTo": [
+    "long"
+   ],
+   "check": "auto: sidecar",
+   "phase": "file",
+   "signsOff": "tool for the timings; builder for the titles",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "kits/cinema/film/compilation.mjs: the first chapter at 0:00, each at least 10 s, starts computed from segment starts; prism-studio links parts by exact chapter titles",
+   "fix": "Regenerate chapters.txt from the build's segment starts; never type a time by hand. Fix a title in the part, not in the list."
+  },
+  {
+   "id": "sources_opened",
+   "name": "Sources opened",
+   "rule": "Before export, a person has opened every source and every claim is ok.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: sidecar",
+   "phase": "release",
+   "signsOff": "owner or a reviewer",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "films/channels/STUDIO-STYLE.md; films/channels/studio/tools/validate.py (nothing is exported while sources are open)",
+   "fix": "The owner or a reviewer opens the remaining links. A claim that fails is reworded or cut, and its shot rebuilt."
+  },
+  {
+   "id": "look_gate",
+   "name": "Look gate",
+   "rule": "The owner approved the look (stills; for Skin Sense Season 3 also a 10 s clip) before the full render.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: sidecar",
+   "phase": "release",
+   "signsOff": "owner",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "films/channels/SEASON-FORMAT.md; .claude/skills/cinema-kit/SKILL.md (stills before the full render)",
+   "fix": "Send stills. Change only what the owner names, then ask again."
+  },
+  {
+   "id": "packaging",
+   "name": "Packaging",
+   "rule": "packaging.json holds five titles, three thumbnails, three pairings and a winner, and every check is true.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "auto: sidecar",
+   "phase": "release",
+   "signsOff": "builder; the owner chooses the title",
+   "tool": "films/channels/studio/tools/qa_episode.py",
+   "source": "films/channels/PACKAGING.md: five titles, three thumbnails, three pairings, a winner, every check true",
+   "fix": "Revise the pairing whose check is false. Never ship with a false check."
+  },
+  {
+   "id": "gate_a_h",
+   "name": "The (a) to (h) gate",
+   "rule": "Scored 1 to 5 by a reviewer: nothing under 3; (a), (g) and (h) at 4 or more; nothing factual or ethical open.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "person",
+   "phase": "release",
+   "signsOff": "coordinator (reviewer)",
+   "source": "films/channels/STUDIO-STYLE.md, 'Quality gate'",
+   "fix": "Return to the stage behind the low axis: (a) hook shot, (c)(d) camera keys, (g) last shot, (h) materials and light."
+  },
+  {
+   "id": "text_blocks",
+   "name": "Text discipline",
+   "rule": "At most two text blocks on screen at once, besides the series line, badges and disclaimers; one idea at a time.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "person",
+   "phase": "release",
+   "signsOff": "coordinator, on frame grabs",
+   "source": "Owner's Season 2 rule: Possibility Lab declutter.py; films/channels/CTA.md ('the 2-text-block rule')",
+   "fix": "Drop or shorten the extra block in the compile step (Possibility Lab: declutter.py); re-render the chunks that show it."
+  },
+  {
+   "id": "captions_sync",
+   "name": "Captions follow the voice",
+   "rule": "Captions are built from the measured words of the delivered voice, and three spot checks agree with the sound.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "person",
+   "phase": "release",
+   "signsOff": "builder",
+   "source": "kits/cinema/voice/align.py and the channel compile step build captions from the measured words; .claude/skills/cinema-kit/SKILL.md (sync)",
+   "fix": "Run align.py on the final voice and rebuild captions; re-render (captions are in the picture)."
+  },
+  {
+   "id": "truth_labels",
+   "name": "Truth and labels",
+   "rule": "Nothing is presented as a photo; AI voice and AI illustrations are disclosed; hypotheses, thought experiments and idealisations are labelled; the title and thumbnail claim no more than the script.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "person",
+   "phase": "release",
+   "signsOff": "coordinator",
+   "source": "films/channels/PACKAGING.md, 'Truth rules'; films/channels/studio/README.md, 'Never claim a technique we did not use'",
+   "fix": "Add the label or the hedge. If the title overstates, pick another pairing."
+  },
+  {
+   "id": "channel_rules",
+   "name": "Channel rules",
+   "rule": "Every rule and prohibition in the channel's identity file holds (for Skin Sense: one skin tone, never a face, no risk words over skin, 'Education, not medical advice', no brands).",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "person",
+   "phase": "release",
+   "signsOff": "coordinator",
+   "source": "films/channels/studio/identities/<slug>.json, 'rules' and 'never'; films/channels/SEASON-FORMAT.md",
+   "fix": "Fix the one shot or line that breaks the rule."
+  },
+  {
+   "id": "owner_approval",
+   "name": "Owner's approval",
+   "rule": "The owner has seen the episode and said it can be posted. Nothing posts by itself.",
+   "appliesTo": [
+    "short",
+    "premium",
+    "part",
+    "long"
+   ],
+   "check": "person",
+   "phase": "release",
+   "signsOff": "owner",
+   "source": "films/channels/STUDIO-STYLE.md ('Nothing posts without the owner'); prism-studio/CLAUDE.md",
+   "fix": "Apply the owner's notes shot by shot and ask again."
+  }
+ ],
+ "categories": [
+  {
+   "id": "SA",
+   "name": "Scientific accuracy",
+   "points": 15,
+   "criteria": [
+    {
+     "id": "SA1",
+     "points": 3,
+     "text": "The claims ledger is complete: every claim has its sentence, source link and title, access date, how it was verified and a status; none needs rewording.",
+     "how": "auto",
+     "evidence": "claims.json",
+     "checks": [
+      "claims_complete"
+     ],
+     "needs": "sidecar"
+    },
+    {
+     "id": "SA2",
+     "points": 4,
+     "text": "A person has opened every source. Every claim is ok; none rests on a search excerpt.",
+     "how": "owner",
+     "evidence": "claims.json statuses; the review/claims-table.md column 'what the source actually says'"
+    },
+    {
+     "id": "SA3",
+     "points": 3,
+     "text": "Every number heard matches the screen, the source and calc.py. Hedges go exactly as far as the source.",
+     "how": "coordinator",
+     "evidence": "script.md against claims.json and calc.json; frame grabs of each figure"
+    },
+    {
+     "id": "SA4",
+     "points": 3,
+     "text": "Each shot shows its principle truthfully: scale and direction are right, idealisations carry a badge, thought experiments say so.",
+     "how": "coordinator",
+     "evidence": "shots.json 'principle' against frame grabs of each shot"
+    },
+    {
+     "id": "SA5",
+     "points": 2,
+     "text": "The hook, title and thumbnail promise no more than the script proves.",
+     "how": "coordinator",
+     "evidence": "packaging.json winner against script.md and claims.json"
+    }
+   ]
+  },
+  {
+   "id": "VF",
+   "name": "Visual fidelity",
+   "points": 10,
+   "criteria": [
+    {
+     "id": "VF1",
+     "points": 2,
+     "text": "The file is the format's size at 30 fps constant, H.264 yuv420p with AAC sound.",
+     "how": "auto",
+     "evidence": "the delivered file",
+     "checks": [
+      "size",
+      "fps",
+      "codec"
+     ],
+     "needs": "video"
+    },
+    {
+     "id": "VF2",
+     "points": 2,
+     "text": "All text sits inside the safe box: the render's text audit has no warnings.",
+     "how": "auto",
+     "evidence": "build/qa-delivery.json or build/final/*/audit.json",
+     "checks": [
+      "text_audit"
+     ],
+     "needs": "sidecar"
+    },
+    {
+     "id": "VF3",
+     "points": 3,
+     "text": "Frame grabs at the key moments are clean: no banding, jagged edges, clipped highlights, z-fighting or popping; captions hold 4.5:1.",
+     "how": "coordinator",
+     "evidence": "frame grabs at full size; kits/cinema/sci/contrast.py"
+    },
+    {
+     "id": "VF4",
+     "points": 2,
+     "text": "Production value: no default 3-D render, template or stock look.",
+     "how": "coordinator",
+     "evidence": "the contact sheet",
+     "gateAxis": "h"
+    },
+    {
+     "id": "VF5",
+     "points": 1,
+     "text": "Every technique, size and number named in the notes and in shots.json was really used and is labelled honestly (for example '1440 upscale').",
+     "how": "builder",
+     "evidence": "shots.json, the build log, films/channels/studio/README.md 'Never claim'"
+    }
+   ]
+  },
+  {
+   "id": "TS",
+   "name": "Temporal stability",
+   "points": 10,
+   "criteria": [
+    {
+     "id": "TS1",
+     "points": 3,
+     "text": "No more than 3 flashes in any second.",
+     "how": "auto",
+     "evidence": "the delivered file",
+     "checks": [
+      "flashes"
+     ],
+     "needs": "video"
+    },
+    {
+     "id": "TS2",
+     "points": 3,
+     "text": "The picture never freezes for 1.4 s or more, except the end card.",
+     "how": "auto",
+     "evidence": "the delivered file",
+     "checks": [
+      "freeze"
+     ],
+     "needs": "video"
+    },
+    {
+     "id": "TS3",
+     "points": 1,
+     "text": "Frame 0 is composed: no blank or black lead-in.",
+     "how": "auto",
+     "evidence": "the delivered file",
+     "checks": [
+      "first_frame"
+     ],
+     "needs": "video"
+    },
+    {
+     "id": "TS4",
+     "points": 3,
+     "text": "No flicker, shimmer, popping or jitter from frame to frame.",
+     "how": "coordinator",
+     "evidence": "consecutive frames stepped across every cut and at three other points"
+    }
+   ]
+  },
+  {
+   "id": "SC",
+   "name": "Style consistency",
+   "points": 10,
+   "criteria": [
+    {
+     "id": "SC1",
+     "points": 3,
+     "text": "Palette and type are the channel's own, and the season look matches the approved still.",
+     "how": "coordinator",
+     "evidence": "frame grabs against identities/<slug>.json and the approved still"
+    },
+    {
+     "id": "SC2",
+     "points": 2,
+     "text": "The owner approved the look before the full render.",
+     "how": "owner",
+     "evidence": "episode.json status.lookGate, and where the approval was given"
+    },
+    {
+     "id": "SC3",
+     "points": 2,
+     "text": "The channel's signature devices are present, and light and materials stay the same from shot to shot.",
+     "how": "coordinator",
+     "evidence": "the contact sheet against identity.signatureDevices"
+    },
+    {
+     "id": "SC4",
+     "points": 2,
+     "text": "At most two text blocks at once; one idea on screen.",
+     "how": "coordinator",
+     "evidence": "frame grabs at every label change"
+    },
+    {
+     "id": "SC5",
+     "points": 1,
+     "text": "Nothing borrowed from another channel's or client's identity.",
+     "how": "builder",
+     "evidence": "theme tokens and fonts used by the scene"
+    }
+   ]
+  },
+  {
+   "id": "SP",
+   "name": "Spatial continuity",
+   "points": 8,
+   "criteria": [
+    {
+     "id": "SP1",
+     "points": 2,
+     "text": "The plan holds together: shot windows run in order with no gap or overlap, and every join is named the same from both sides.",
+     "how": "auto",
+     "evidence": "episode.json and shots.json through tools/validate.py",
+     "checks": [
+      "plan_valid"
+     ],
+     "needs": "sidecar"
+    },
+    {
+     "id": "SP2",
+     "points": 3,
+     "text": "The viewer always knows where they are: each shot starts where the last one ended, and scale jumps are bridged.",
+     "how": "coordinator",
+     "evidence": "the last frame of each shot beside the first frame of the next"
+    },
+    {
+     "id": "SP3",
+     "points": 3,
+     "text": "The episode is composed for its own aspect, with the subject and all text inside the safe area.",
+     "how": "coordinator",
+     "evidence": "frame grabs with the safe box drawn"
+    }
+   ]
+  },
+  {
+   "id": "CI",
+   "name": "Cinematography",
+   "points": 10,
+   "criteria": [
+    {
+     "id": "CI1",
+     "points": 4,
+     "text": "Every camera move has a reason.",
+     "how": "coordinator",
+     "evidence": "shots.json camera and purpose against the frames",
+     "gateAxis": "d"
+    },
+    {
+     "id": "CI2",
+     "points": 3,
+     "text": "The picture moves with the sentence, at the format's rhythm (a meaningful change every 2 to 4 s; slower, but never frozen, for ASMR lessons).",
+     "how": "coordinator",
+     "evidence": "review/scene-table.md against the frames",
+     "gateAxis": "c"
+    },
+    {
+     "id": "CI3",
+     "points": 3,
+     "text": "Focus sits on what the line names; one focal point per frame; the last frame works as a poster.",
+     "how": "coordinator",
+     "evidence": "frame grabs at each focus change and the last frame"
+    }
+   ]
+  },
+  {
+   "id": "NC",
+   "name": "Narration clarity",
+   "points": 10,
+   "criteria": [
+    {
+     "id": "NC1",
+     "points": 3,
+     "text": "The script passes the lint for its format: grade 8 or lower per beat, no sentence over 22 words, pace and length inside the profile.",
+     "how": "builder",
+     "evidence": "kits/cinema/script/lint.py output, review/clarity-review.md"
+    },
+    {
+     "id": "NC2",
+     "points": 2,
+     "text": "No dead air: no stretch of 1.2 s or more below -40 dB in the mix.",
+     "how": "auto",
+     "evidence": "the delivered file",
+     "checks": [
+      "silence"
+     ],
+     "needs": "video"
+    },
+    {
+     "id": "NC3",
+     "points": 3,
+     "text": "Understood on the first listen: one idea per sentence, terms explained in the same breath, about four spoken numbers; the voice carries meaning and the screen carries figures.",
+     "how": "coordinator",
+     "evidence": "script.md read once, aloud in the head; review/clarity-review.md",
+     "gateAxis": "e"
+    },
+    {
+     "id": "NC4",
+     "points": 2,
+     "text": "Captions follow the delivered voice word for word and in time, and carry the channel's required lines.",
+     "how": "builder",
+     "evidence": "captions built from vo/words.json; three spot checks"
+    }
+   ]
+  },
+  {
+   "id": "VE",
+   "name": "Viewer engagement",
+   "points": 10,
+   "criteria": [
+    {
+     "id": "VE1",
+     "points": 3,
+     "text": "The hook: by 2.0 s a question is spoken and the picture already shows the subject.",
+     "how": "coordinator",
+     "evidence": "frames 0 to 60 and vo/words.json",
+     "gateAxis": "a"
+    },
+    {
+     "id": "VE2",
+     "points": 2,
+     "text": "One thread from hook to payoff, with open loops and a steady rhythm.",
+     "how": "coordinator",
+     "evidence": "script.md beats",
+     "gateAxis": "b, f"
+    },
+    {
+     "id": "VE3",
+     "points": 2,
+     "text": "The ending delivers the promised answer; the like/follow line comes after the payoff, never in the first 20 s.",
+     "how": "coordinator",
+     "evidence": "the last shot; films/channels/CTA.md",
+     "gateAxis": "g"
+    },
+    {
+     "id": "VE4",
+     "points": 1,
+     "text": "The length lands inside the format's target window.",
+     "how": "auto",
+     "evidence": "the delivered file",
+     "checks": [
+      "length_target"
+     ],
+     "needs": "video"
+    },
+    {
+     "id": "VE5",
+     "points": 2,
+     "text": "The packaging is complete and every check is true.",
+     "how": "auto",
+     "evidence": "out/packaging.json",
+     "checks": [
+      "packaging"
+     ],
+     "needs": "sidecar"
+    }
+   ]
+  },
+  {
+   "id": "AQ",
+   "name": "Audio quality",
+   "points": 10,
+   "criteria": [
+    {
+     "id": "AQ1",
+     "points": 3,
+     "text": "Loudness inside the window and true peak at most -1 dBTP on the delivered AAC.",
+     "how": "auto",
+     "evidence": "the delivered file",
+     "checks": [
+      "loudness",
+      "true_peak"
+     ],
+     "needs": "video"
+    },
+    {
+     "id": "AQ2",
+     "points": 2,
+     "text": "Mono-safe, and picture and sound the same length.",
+     "how": "auto",
+     "evidence": "the delivered file",
+     "checks": [
+      "mono_safe",
+      "av_length"
+     ],
+     "needs": "video"
+    },
+    {
+     "id": "AQ3",
+     "points": 2,
+     "text": "Every sound lands on its picture event, and the voice sits at least 10 LU over the music.",
+     "how": "auto",
+     "evidence": "the studio's qa.json",
+     "checks": [
+      "sound_sync",
+      "voice_over_music"
+     ],
+     "needs": "sidecar"
+    },
+    {
+     "id": "AQ4",
+     "points": 3,
+     "text": "A listen on a phone speaker and on headphones: the voice is clear, nothing rings or clicks, and the channel's sound rules hold.",
+     "how": "owner",
+     "evidence": "the owner's listen; agents cannot hear, so nobody else may score this"
+    }
+   ]
+  },
+  {
+   "id": "RU",
+   "name": "Reusability",
+   "points": 7,
+   "criteria": [
+    {
+     "id": "RU1",
+     "points": 2,
+     "text": "Files are named and placed as STRUCTURE.md says, so Prism and the next builder find them.",
+     "how": "auto",
+     "evidence": "the delivery folder",
+     "checks": [
+      "names"
+     ],
+     "needs": "sidecar"
+    },
+    {
+     "id": "RU2",
+     "points": 2,
+     "text": "New scene code that will be needed again lives in the channel's set/ folder, and LIBRARY.md lists it.",
+     "how": "builder",
+     "evidence": "the commit's file list"
+    },
+    {
+     "id": "RU3",
+     "points": 2,
+     "text": "The Episode Intelligence Report is written, with measured facts apart from hypotheses.",
+     "how": "builder",
+     "evidence": "review/intelligence-report.md"
+    },
+    {
+     "id": "RU4",
+     "points": 1,
+     "text": "The build can be repeated from the folder: the commands are recorded and the render log shows verified chunks.",
+     "how": "builder",
+     "evidence": "the report's command list; the render log"
+    }
+   ]
+  }
+ ],
+ "gateAxes": {
+  "a": "VE1",
+  "b": "VE2",
+  "c": "CI2",
+  "d": "CI1",
+  "e": "NC3",
+  "f": "VE2",
+  "g": "VE3",
+  "h": "VF4"
+ }
+}

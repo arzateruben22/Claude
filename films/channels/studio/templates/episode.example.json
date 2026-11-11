@@ -13,36 +13,21 @@
   "format": {
     "kind": "premium",
     "aspect": "9:16",
-    "size": [
-      1080,
-      1920
-    ],
-    "nativeSize": [
-      1080,
-      1920
-    ],
+    "size": [1080, 1920],
+    "nativeSize": [1080, 1920],
     "fps": 30,
-    "durationS": [
-      70,
-      90
-    ],
+    "durationS": [70, 90],
     "targetS": 80,
     "deliveries": [
       {
         "name": "master (TikTok, Instagram)",
-        "size": [
-          1080,
-          1920
-        ],
+        "size": [1080, 1920],
         "native": true,
         "how": "kits/cinema/film/render.mjs, final tier"
       },
       {
         "name": "YouTube file",
-        "size": [
-          1440,
-          2560
-        ],
+        "size": [1440, 2560],
         "native": false,
         "how": "Lanczos upscale of the master by kits/cinema/film/youtube1440.py. Label it '1440 upscale', never native."
       }
@@ -90,10 +75,7 @@
       {
         "id": "hook",
         "purpose": "A feeling everyone knows, on a frame that is already composed.",
-        "seconds": [
-          0.0,
-          4.5
-        ],
+        "seconds": [0.0, 4.5],
         "words": 4,
         "lines": [
           "vo01"
@@ -102,10 +84,7 @@
       {
         "id": "sense",
         "purpose": "Go under the surface: the skin feels the cool and tells the brain.",
-        "seconds": [
-          4.5,
-          11.5
-        ],
+        "seconds": [4.5, 11.5],
         "words": 15,
         "lines": [
           "vo02"
@@ -114,10 +93,7 @@
       {
         "id": "answer",
         "purpose": "The open loop: the brain answers in two steps.",
-        "seconds": [
-          11.5,
-          18.5
-        ],
+        "seconds": [11.5, 18.5],
         "words": 7,
         "lines": [
           "vo03"
@@ -126,10 +102,7 @@
       {
         "id": "vessels",
         "purpose": "Step one: the small vessels near the skin narrow.",
-        "seconds": [
-          18.5,
-          29.5
-        ],
+        "seconds": [18.5, 29.5],
         "words": 15,
         "lines": [
           "vo04"
@@ -138,10 +111,7 @@
       {
         "id": "tremble",
         "purpose": "Step two: the muscles tremble on their own.",
-        "seconds": [
-          29.5,
-          42.0
-        ],
+        "seconds": [29.5, 42.0],
         "words": 19,
         "lines": [
           "vo05"
@@ -150,10 +120,7 @@
       {
         "id": "heat",
         "purpose": "The payoff: trembling makes heat. One word on screen, then a picture-only hold.",
-        "seconds": [
-          42.0,
-          56.0
-        ],
+        "seconds": [42.0, 56.0],
         "words": 21,
         "lines": [
           "vo06"
@@ -162,10 +129,7 @@
       {
         "id": "cta",
         "purpose": "The soft like/follow line, right after the payoff.",
-        "seconds": [
-          56.0,
-          61.5
-        ],
+        "seconds": [56.0, 61.5],
         "words": 10,
         "lines": [
           "vo07"
@@ -174,10 +138,7 @@
       {
         "id": "goosebumps",
         "purpose": "The callback: why the hairs rose in the first shot.",
-        "seconds": [
-          61.5,
-          70.5
-        ],
+        "seconds": [61.5, 70.5],
         "words": 16,
         "lines": [
           "vo08"
@@ -186,10 +147,7 @@
       {
         "id": "close",
         "purpose": "Back out to the first frame; the reframe; the loop.",
-        "seconds": [
-          70.5,
-          80.0
-        ],
+        "seconds": [70.5, 80.0],
         "words": 15,
         "lines": [
           "vo09"
@@ -207,10 +165,7 @@
   "cta": {
     "line": "If you're feeling a little calmer, tap like and follow.",
     "at": "Right after the payoff ('They make heat'), while the camera starts back up. Never before it.",
-    "seconds": [
-      56.5,
-      60.5
-    ],
+    "seconds": [56.5, 60.5],
     "section": "Skin Sense (ASMR, Season 3 on)",
     "variants": {
       "follow": "If you're feeling a little calmer, tap like and follow.",

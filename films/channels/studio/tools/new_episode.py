@@ -3,7 +3,7 @@
 
     python3 -I films/channels/studio/tools/new_episode.py --channel <slug|name> --topic "..." \
         --duration <seconds or m:ss> --format <short|premium|part|long> \
-        [--season N] [--number N] [--title "..."] [--out DIR] [--identities DIR] [--force] [--overwrite]
+        [--season N] [--number N] [--title "..."] [--folder NAME] [--out DIR] [--identities DIR] [--force] [--overwrite]
 
 It reads the channel identity (films/channels/studio/identities/<slug>.json), resolves the format's
 defaults and the season's look, and writes a folder (default ./new-episodes/<prefix>-<topic>/) with:
@@ -208,7 +208,8 @@ def lay(specs, start, end, grid):
 
 
 def B(id, purpose, weight=None, fixed=None, energy=0.5, extra=""):
-    d = {"id": id, "purpose": purpose, "energy": energy, "extra": extra}
+    hold = re.search(r"(?:picture-only|held ≥|hold ≥)\s*(\d+(?:\.\d+)?)\s*s", extra)   # seconds with no voice
+    d = {"id": id, "purpose": purpose, "energy": energy, "extra": extra, "hold": float(hold.group(1)) if hold else 0.0}
     if fixed is not None:
         d["fixed"] = fixed
     else:
@@ -231,9 +232,9 @@ def plan_beats(kind, D, grid, cta_s, segment, long_style, part_of):
                    B("change", "The picture breaks the expectation. Say less; let the picture land.", 10, energy=0.55),
                    B("why", "The reason, through a person, a wrong idea or stakes. One mechanism, in plain words.", 14, energy=0.5, extra="picture-only 2 s"),
                    B("whoa", "The payoff: the same idea, bigger. The escalation the hook promised.", 10, energy=0.8, extra="picture-only 3 s")]
-            post = ([B(segment, f"The channel's recurring segment, woven into the story's last turn.", 5, energy=0.5, extra=f"segment: {segment}")] if segment else []) + \
-                   [B("takeaway", "A reframe the viewer could repeat to a friend. It calls back to the hook.", 5, energy=0.35),
-                    B("tease", "A real question for next time, then the end card.", 4.5, energy=0.35, extra="end card held ≥ 2 s")]
+            post = ([B(segment, "The channel's recurring segment, woven into the story's last turn.", 4, energy=0.5, extra=f"segment: {segment}")] if segment else []) + \
+                   [B("takeaway", "A reframe the viewer could repeat to a friend. It calls back to the hook.", 4.5, energy=0.35),
+                    B("tease", "A real question for next time, then the end card.", 5.5, energy=0.35, extra="end card held ≥ 2 s")]
         elif kind == "premium":
             pre = [B("hook", "A feeling or sight everyone knows, on a frame that is already composed.", 4.5, energy=0.4, extra="pre: 0.3"),
                    B("enter", "Go from the familiar surface into the hidden machinery, in one unbroken move.", 9.5, energy=0.4),
@@ -381,21 +382,24 @@ def build(a):
     deliver = None
     if kind == "long":
         joined = LONG_STYLE.get(slug, "film") == "joined"
-        folder = f"s{season}" if joined else slugify(title)
+        folder = a.folder or (f"s{season}" if joined else slugify(title))
         where = f"{films_path}/longform/{folder}/"
         deliver = f"{films_path}/compilations/{folder}/"
-        assumptions.append((f"Folder \"{folder}\": a season's joined long video is named after its season." if joined
-                            else f"Folder \"{folder}\" is the title in lower case with hyphens.") +
-                           f" Work in longform/{folder}/; the finished video goes to compilations/{folder}/{folder}-16x9.mp4, or Prism ignores it (films/channels/studio/STRUCTURE.md).")
+        assumptions.append(("" if a.folder else (f"Folder \"{folder}\": a season's joined long video is named after its season. " if joined
+                            else f"Folder \"{folder}\" is the title in lower case with hyphens; pass --folder for a shorter name. ")) +
+                           f"Work in longform/{folder}/; the finished video goes to compilations/{folder}/{folder}-16x9.mp4, or Prism ignores it (films/channels/studio/STRUCTURE.md).")
     else:
         sizes = SEASON_SIZES.get(slug, SEASON_SIZES["*"])
         before = sum(sizes[: season - 1]) + sizes[-1] * max(0, season - 1 - len(sizes))
-        folder = f"ep{before + max(number, 1):02d}"
+        folder = a.folder or f"ep{before + max(number, 1):02d}"
         where = f"{films_path}/{folder}/"
         note = (f"Folder {folder} assumes the seasons before Season {season} used ep01 to ep{before:02d}"
                 f" ({', '.join(str(sizes[min(i, len(sizes) - 1)]) for i in range(season - 1))} episodes)." if season > 1
                 else f"Folder {folder}: a first season starts at ep01.")
-        assumptions.append(note + f" Check the next free epNN on the branch {identity.get('branch', '?')} before moving the folder in.")
+        if not a.folder:
+            assumptions.append(note + f" Check the next free epNN on the branch {identity.get('branch', '?')} before moving the folder in, or pass --folder.")
+        elif not re.match(r"^ep\d{2}$", folder):
+            assumptions.append(f"Folder \"{folder}\" is not an epNN name. Prism imports only two-digit epNN folders inside a season slate.")
 
     # voice and pace
     iv = identity.get("voice") if isinstance(identity.get("voice"), dict) else {}
@@ -412,8 +416,9 @@ def build(a):
         if vkind == "guest":
             voice["consent"] = "TODO (owner): the guest's written OK for this use is not on record here."
     total_words = int(round(D * wpm / 60.0 * share))
-    assumptions.append(f"Word budget: {D:g} s at {wpm:g} words a minute, with the voice speaking {share:g} of the runtime, is about {total_words} words."
-                       + ("" if share == 1 else f" The {share:g} is a working figure for this format, not a measurement."))
+    assumptions.append(f"Word budget: {D:g} s at {wpm:g} words a minute is about {total_words} words." if share == 1 else
+                       f"Word budget: {D:g} s at {wpm:g} words a minute, with the voice speaking {share:g} of the runtime, is about {total_words} words. "
+                       f"The {share:g} is a working figure for this format, not a measurement.")
 
     # the look
     look_key = f"s{season}"
@@ -466,8 +471,11 @@ def build(a):
 
     # beats, script, shots
     cta_ids = [s["id"] for s, _, _ in plan if s["id"].startswith("cta")]
-    speech_s = sum(b - x for s, x, b in plan if not s["id"].startswith("cta")) or 1.0
-    cta_words = words_in(follow(line_t)) + (words_in(follow(second_t)) if len(cta_ids) > 1 else 0)
+    closer = f"Part {part_of[0]} of {part_of[1]}. Full video on YouTube."
+    fixed_line = lambda s: s["id"].startswith("cta") or (kind == "part" and s["id"] == "tease")
+    talk = lambda s, x, b: max(1.0, (b - x) - s["hold"])        # the beat's window less its picture-only time
+    speech_s = sum(talk(s, x, b) for s, x, b in plan if not fixed_line(s)) or 1.0
+    cta_words = words_in(follow(line_t)) + (words_in(follow(second_t)) if len(cta_ids) > 1 else 0) + (words_in(closer) if kind == "part" else 0)
     beats, vo_n, shots, script = [], 0, [], []
     channel_label = f"{name} · Season {season}"
     what = {"short": f"Episode {number}", "premium": f"Episode {number}", "part": f"Part {part_of[0]} of {part_of[1]}", "long": "Long video"}[kind]
@@ -483,7 +491,7 @@ def build(a):
     for i, (s, x, b) in enumerate(plan):
         is_cta = s["id"].startswith("cta")
         text = follow(line_t if s["id"] != "cta2" else second_t)
-        n_words = words_in(text) if is_cta else max(1, int(round((total_words - cta_words) * (b - x) / speech_s)))
+        n_words = words_in(text) if is_cta else words_in(closer) if fixed_line(s) else max(1, int(round((total_words - cta_words) * talk(s, x, b) / speech_s)))
         vo_n += 1
         line_id = f"vo{vo_n:02d}"
         sid = f"S{i + 1:02d}"
@@ -515,9 +523,9 @@ def build(a):
                        "lens": "TODO: field of view in degrees, and what is in focus"},
             "subject": "TODO: the one thing the eye is on",
             "motion": "TODO: what moves in the world, and on which spoken word it lands",
-            "lighting": f"TODO. Channel lighting: {ident.get('lighting', 'see the identity file')}",
+            "lighting": f"TODO. The season look comes first. Channel lighting as built: {ident.get('lighting', 'see the identity file')}",
             "environment": f"TODO. Look: {look['summary']}",
-            "materials": f"TODO. Channel materials: {ident.get('materials', 'see the identity file')}",
+            "materials": f"TODO. The season look comes first. Channel materials as built: {ident.get('materials', 'see the identity file')}",
             "principle": "TODO: the science this shot shows, matching the claims listed",
             "startState": "TODO: the first frame" if not first else "TODO: frame 0, already composed",
             "endState": "TODO: the last frame; the next shot starts here",
@@ -695,6 +703,7 @@ def main(argv=None):
     ap.add_argument("--season", type=int, help="season number (default: the newest season look in the identity)")
     ap.add_argument("--number", type=int, help="place in the season, or the part number (default 1; 0 for a long film)")
     ap.add_argument("--title", help="working title (default: the topic)")
+    ap.add_argument("--folder", help="the episode's folder name on the channel branch (default: the next epNN by season, or the title for a long film)")
     ap.add_argument("--out", help="folder to write (default: ./new-episodes/<prefix>-<topic>/)")
     ap.add_argument("--identities", help="folder of channel identity files (default: films/channels/studio/identities)")
     ap.add_argument("--force", action="store_true", help="accept a length outside the format's window, or a format the identity does not list")
@@ -708,6 +717,10 @@ def main(argv=None):
             raise Stop("--number is between 0 and 99")
         if len(a.topic.strip()) < 3:
             raise Stop("--topic needs at least three characters")
+        if a.format == "part" and a.number is not None and not 1 <= a.number <= 8:
+            raise Stop("--number for a part is 1 to 8: a season is one long film and eight parts (films/channels/SEASON-FORMAT.md)")
+        if a.folder is not None and not re.match(r"^[a-z0-9][a-z0-9-]*$", a.folder):
+            raise Stop("--folder is lower case letters, digits and hyphens only, with no spaces (Prism's media push skips names with spaces)")
         episode, shots, script, ctx, broken = build(a)
         out = Path(a.out) if a.out else Path("new-episodes") / f"{ctx['identity']['prefix']}-{slugify(a.topic)}"
         if out.exists() and any(out.iterdir()) and not a.overwrite:
@@ -717,7 +730,9 @@ def main(argv=None):
         return 2
 
     (out / "out").mkdir(parents=True, exist_ok=True)
-    dump = lambda d: json.dumps(d, indent=2, ensure_ascii=False) + "\n"
+    def dump(d):                                       # two-space JSON, with number pairs such as [0.0, 4.5] kept on one line
+        text = json.dumps(d, indent=2, ensure_ascii=False) + "\n"
+        return re.sub(r"\[\s+(-?\d+(?:\.\d+)?(?:,\s+-?\d+(?:\.\d+)?)*)\s+\]", lambda m: "[" + re.sub(r"\s+", " ", m.group(1)) + "]", text)
     (out / "episode.json").write_text(dump(episode), encoding="utf-8")
     (out / "shots.json").write_text(dump(shots), encoding="utf-8")
     (out / "claims.json").write_text("[]\n", encoding="utf-8")

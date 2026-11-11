@@ -16,10 +16,7 @@
       "id": "S01",
       "beat": "hook",
       "purpose": "Start on a feeling the viewer knows: cool air on skin. By the last frame the hairs have risen and the viewer wants to know what happened underneath.",
-      "seconds": [
-        0.0,
-        4.5
-      ],
+      "seconds": [0.0, 4.5],
       "aspect": "9:16",
       "camera": {
         "preset": "keyed-flight",
@@ -65,10 +62,7 @@
       "id": "S02",
       "beat": "sense",
       "purpose": "Take the viewer under the skin in one unbroken move, so that everything after it is felt as 'inside you'.",
-      "seconds": [
-        4.5,
-        9.0
-      ],
+      "seconds": [4.5, 9.0],
       "aspect": "9:16",
       "camera": {
         "preset": "keyed-flight",
@@ -113,10 +107,7 @@
       "id": "S03",
       "beat": "answer",
       "purpose": "Show the message leaving for the brain and the answer coming back as two soft steps, so the next two shots read as step one and step two.",
-      "seconds": [
-        9.0,
-        18.5
-      ],
+      "seconds": [9.0, 18.5],
       "aspect": "9:16",
       "camera": {
         "preset": "keyed-flight",
@@ -162,10 +153,7 @@
       "id": "S04",
       "beat": "vessels",
       "purpose": "Make 'narrow' visible: the small vessels near the surface tighten and the warmth draws inward.",
-      "seconds": [
-        18.5,
-        29.5
-      ],
+      "seconds": [18.5, 29.5],
       "aspect": "9:16",
       "camera": {
         "preset": "keyed-flight",
@@ -210,10 +198,7 @@
       "id": "S05",
       "beat": "tremble",
       "purpose": "Arrive at the muscle and watch it start to tremble by itself.",
-      "seconds": [
-        29.5,
-        42.0
-      ],
+      "seconds": [29.5, 42.0],
       "aspect": "9:16",
       "camera": {
         "preset": "keyed-flight",
@@ -257,10 +242,7 @@
       "id": "S06",
       "beat": "heat",
       "purpose": "The payoff: trembling makes heat. The viewer sees warmth being made and feels it spread.",
-      "seconds": [
-        42.0,
-        56.0
-      ],
+      "seconds": [42.0, 56.0],
       "aspect": "9:16",
       "camera": {
         "preset": "keyed-flight",
@@ -306,10 +288,7 @@
       "id": "S07",
       "beat": "cta",
       "purpose": "Give the like/follow line a calm picture that keeps moving: the warmth spreads upward and the camera starts home.",
-      "seconds": [
-        56.0,
-        61.5
-      ],
+      "seconds": [56.0, 61.5],
       "aspect": "9:16",
       "camera": {
         "preset": "keyed-flight",
@@ -354,10 +333,7 @@
       "id": "S08",
       "beat": "goosebumps",
       "purpose": "Answer the first picture: why the hairs rose. The same kind of signal pulls a tiny muscle, and the hair stands up.",
-      "seconds": [
-        61.5,
-        70.5
-      ],
+      "seconds": [61.5, 70.5],
       "aspect": "9:16",
       "camera": {
         "preset": "keyed-flight",
@@ -402,10 +378,7 @@
       "id": "S09",
       "beat": "close",
       "purpose": "Return to the first frame with new eyes: the same skin, now understood. End soft, and loop.",
-      "seconds": [
-        70.5,
-        80.0
-      ],
+      "seconds": [70.5, 80.0],
       "aspect": "9:16",
       "camera": {
         "preset": "keyed-flight",
