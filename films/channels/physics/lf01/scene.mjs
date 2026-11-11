@@ -54,9 +54,10 @@ const patch = (m, clip = true) => {
   gl_FragColor.rgb += vec3(1.0, 0.9, 0.62) * (exp(-pow((rl - uLR) / uLW, 2.0)) * 1.7 + 0.28 * exp(-pow((rl - uLR) / (uLW * 7.0), 2.0))) * uLOn * uLK;
   float sd1 = length(vWP - uSS1), sd2 = length(vWP - uSS2);
   float sr = exp(-pow((sd1 - uSR1) / uSW, 2.0)) + exp(-pow((sd2 - uSR2) / uSW, 2.0));
+  float se = exp(-pow((sd1 - uSR1) / 0.011, 2.0)) + exp(-pow((sd2 - uSR2) / 0.011, 2.0));   // the thin bright edge of the front
   float st = exp(-pow((sd1 - uSR1 + 0.2) / 0.16, 2.0)) * step(sd1, uSR1) + exp(-pow((sd2 - uSR2 + 0.2) / 0.16, 2.0)) * step(sd2, uSR2);
   float rp = 1.0;
-  gl_FragColor.rgb += (uSTa * sr * 0.8 + uSTb * st * 0.07 * rp) * uSOn;
+  gl_FragColor.rgb += (uSTa * (sr * 0.38 + se * 0.55) + uSTb * st * 0.03 * rp) * uSOn;
   #include <dithering_fragment>`);
   };
   m.customProgramCacheKey = () => "wp" + (clip ? "c" : "n");
@@ -504,7 +505,7 @@ window.seek = function (t) {
     hands.visible = sm; hands.position.set(CLAPX, CLAPY, CLAPZ); const clap = t < C0 ? 0.5 + 0.5 * Math.abs(Math.sin(t * 2.5)) * seg(t, C0 - 14, C0 - 10) * (t < C0 - 2 ? 1 : 0) : 0; void vs;
     const sep = t < C0 ? 0.06 * (1 - seg(t, C0 - 1.2, C0)) + 0.002 : 0.002; handL.position.set(-sep - 0.015, 0, 0); handR.position.set(sep + 0.015, 0, 0); void clap;
     WV.uSS1.value.set(CLAPX, CLAPY, CLAPZ); if (an && an.mirror) WV.uSS2.value.set(...an.mirror); else WV.uSS2.value.set(-5.4 - CLAPX, CLAPY, CLAPZ);   // the image source behind the left wall (x = -2.7)
-    { const on = r > 0 && r < 0.052, Rs = CAL.sound * r; for (const m of [waveRing, waveFill]) { m.visible = on && sm; m.position.set(CLAPX, CLAPY, CLAPZ); m.scale.setScalar(Math.max(Rs, 1e-3)); m.lookAt(camera.position); } waveRing.material.opacity = 0.3 * (1 - seg(r, 0.03, 0.052)); waveFill.material.opacity = 0.035 * (1 - seg(r, 0.03, 0.052)); }
+    { const on = r > 0 && r < 0.052, Rs = CAL.sound * r; for (const m of [waveRing, waveFill]) { m.visible = on && sm && !(an && an.proxy); m.position.set(CLAPX, CLAPY, CLAPZ); m.scale.setScalar(Math.max(Rs, 1e-3)); m.lookAt(camera.position); } waveRing.material.opacity = 0.3 * (1 - seg(r, 0.03, 0.052)); waveFill.material.opacity = 0.035 * (1 - seg(r, 0.03, 0.052)); }
     const Rr = CAL.sound * r; WV.uSR1.value = r > 0 ? Rr : -9; WV.uSR2.value = r > 0 ? Rr : -9; WV.uSOn.value = r > 0 && r < 0.052 ? 1 : 0; }
   // the bullet, the apple's spray
   { const Bt = EV.bullet, r = (t - Bt.enter) / 1e4, ax = bullet.parent === plateRig ? 0 : APPX, ay = bullet.parent === plateRig ? 0 : APPY, az = bullet.parent === plateRig ? 0 : CUPZ, ap = ax - 0.04, speed = CAL.bullet.v;

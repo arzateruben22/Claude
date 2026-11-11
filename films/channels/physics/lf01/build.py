@@ -284,7 +284,7 @@ PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
 _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parallax": 0, "fade": 0.35,
         "cam3": {"pos": [0, 1.06, 0], "target": [0, 1.001, -1], "fov": 50.4},
-        "anchor": {"pos": [0.05, 1.0, -3.1], "mirror": [0.05, 1.0, -4.5], "proxy": True, "tint": [[0.5, 0.3, 0.08], [0.38, 0.2, 0.04], 0xE89030, 0xB07020]}}
+        "anchor": {"pos": [0.05, 1.0, -3.1], "mirror": [0.05, 1.0, -4.5], "proxy": True, "tint": [[0.62, 0.45, 0.14], [0.62, 0.45, 0.14], 0xE8B84A, 0xE8B84A]}}
 if PART == 1 and (HERE / "art/owner/plates/plate-02-feeder-16x9.png").exists():
     PLATES = [dict(_p02, t0=0.0, t1=R(W("wings", "But") - 0.2))]
 elif PART == 2 and (HERE / "art/owner/plates/plate-03-tap-mug-clean-16x9.png").exists():
