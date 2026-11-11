@@ -21,7 +21,7 @@ Disclose as above. Files go in `plates/` as `plate-NN-<name>-16x9.png` / `-9x16.
 | # | Plate | Shot use | 16:9 | 9:16 |
 |---|---|---|---|---|
 | 01 | wide kitchen from the doorway (stove left, sink right, window centre, table and four chairs) | the sound wave crossing the room (Part 4, film sound chapter); establishing shots | `plate-01-wide-16x9.png` | to come |
-| 02 | window with a hummingbird feeder | the wing slowed 10x (Part 1) | to come | to come |
+| 02 | window with a red hummingbird feeder hanging inside it, centre; trees beyond, counter below, blue mug right | the wing slowed 10x (Part 1) | `plate-02-feeder-16x9.png` | to come |
 | 03 | tap and the blue mug, close | the drop and the crown splash (Part 2) | to come | to come |
 | 04 | stove pan from above | the popcorn pop (Part 3) | to come | to come |
 | 05 | over the sink, backlit | the soap bubble (Part 3) | to come | to come |
