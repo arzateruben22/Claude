@@ -85,9 +85,10 @@
   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
   "beat": "wind",
   "key": "cta",
+  "sub_file": "vo/07-sub.wav",
   "uid": "cta",
   "vo": "vo07",
-  "dur": 4.03
+  "dur": 4.11
  },
  {
   "kind": "cliff",

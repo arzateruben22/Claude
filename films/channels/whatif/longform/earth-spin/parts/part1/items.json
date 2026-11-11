@@ -40,20 +40,6 @@
  {
   "kind": "sent",
   "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/02.wav",
-  "text": "The Earth keeps its size, its shape, its air and its water.",
-  "beat": "premise",
-  "key": "L2.2",
-  "slice": [
-   1.74,
-   5.25
-  ],
-  "uid": "premise-2",
-  "vo": "vo04",
-  "dur": 3.51
- },
- {
-  "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/02.wav",
   "text": "Only the spin changes, and it only ever gets faster.",
   "beat": "premise",
   "key": "L2.3",
@@ -61,8 +47,8 @@
    6.05,
    9.1
   ],
-  "uid": "premise-3",
-  "vo": "vo05",
+  "uid": "premise-2",
+  "vo": "vo04",
   "dur": 3.05
  },
  {
@@ -75,8 +61,8 @@
    9.9,
    13.92
   ],
-  "uid": "premise-4",
-  "vo": "vo06",
+  "uid": "premise-3",
+  "vo": "vo05",
   "dur": 4.02
  },
  {
@@ -89,8 +75,8 @@
    14.72,
    19.93
   ],
-  "uid": "premise-5",
-  "vo": "vo07",
+  "uid": "premise-4",
+  "vo": "vo06",
   "dur": 5.21
  },
  {
@@ -104,7 +90,7 @@
    2.85
   ],
   "uid": "today-1",
-  "vo": "vo08",
+  "vo": "vo07",
   "dur": 2.85
  },
  {
@@ -118,7 +104,7 @@
    16.145
   ],
   "uid": "today-2",
-  "vo": "vo09",
+  "vo": "vo08",
   "dur": 6.805
  },
  {
@@ -132,7 +118,7 @@
    18.785
   ],
   "uid": "today-3",
-  "vo": "vo10",
+  "vo": "vo09",
   "dur": 1.84
  },
  {
@@ -146,7 +132,7 @@
    20.91
   ],
   "uid": "today-4",
-  "vo": "vo11",
+  "vo": "vo10",
   "dur": 1.325
  },
  {
@@ -160,7 +146,7 @@
    25.49
   ],
   "uid": "today-5",
-  "vo": "vo12",
+  "vo": "vo11",
   "dur": 3.78
  },
  {
@@ -174,7 +160,7 @@
    2.05
   ],
   "uid": "spinup-1",
-  "vo": "vo13",
+  "vo": "vo12",
   "dur": 2.05
  },
  {
@@ -188,7 +174,7 @@
    5.0
   ],
   "uid": "spinup-2",
-  "vo": "vo14",
+  "vo": "vo13",
   "dur": 2.15
  },
  {
@@ -202,7 +188,7 @@
    9.095
   ],
   "uid": "spinup-3",
-  "vo": "vo15",
+  "vo": "vo14",
   "dur": 3.295
  },
  {
@@ -211,9 +197,10 @@
   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
   "beat": "spinup",
   "key": "cta",
+  "sub_file": "vo/15-sub.wav",
   "uid": "cta",
-  "vo": "vo16",
-  "dur": 4.03
+  "vo": "vo15",
+  "dur": 4.11
  },
  {
   "kind": "sent",
@@ -226,7 +213,7 @@
    11.585
   ],
   "uid": "spinup-4",
-  "vo": "vo17",
+  "vo": "vo16",
   "dur": 1.69
  },
  {
@@ -240,7 +227,7 @@
    15.305
   ],
   "uid": "spinup-5",
-  "vo": "vo18",
+  "vo": "vo17",
   "dur": 2.92
  },
  {
@@ -250,7 +237,7 @@
   "beat": "spinup",
   "key": "cliff",
   "uid": "cliff",
-  "vo": "vo19",
+  "vo": "vo18",
   "dur": 2.26
  },
  {
@@ -260,7 +247,7 @@
   "beat": "tease",
   "key": "closer",
   "uid": "tease",
-  "vo": "vo20",
+  "vo": "vo19",
   "dur": 3.38
  }
 ]

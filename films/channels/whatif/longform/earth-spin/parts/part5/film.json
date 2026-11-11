@@ -1,6 +1,6 @@
 {
  "id": "possibility-lab-earth-spin-part5",
- "theme": "../../../../../theme.json",
+ "theme": "../../../../theme.json",
  "scene": "../../scene.mjs",
  "fps": 30,
  "bpm": 50,
@@ -1192,7 +1192,7 @@
   {
    "id": "vo12",
    "t": 45.733333333333334,
-   "dur": 4.03,
+   "dur": 4.11,
    "file": "vo/12.wav",
    "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
   },

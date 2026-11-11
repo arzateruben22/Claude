@@ -1,6 +1,6 @@
 {
  "id": "possibility-lab-earth-spin-part3",
- "theme": "../../../../../theme.json",
+ "theme": "../../../../theme.json",
  "scene": "../../scene.mjs",
  "fps": 30,
  "bpm": 50,
@@ -13,7 +13,7 @@
    "beat": "wind"
   },
   {
-   "at": 32.7,
+   "at": 32.833333333333336,
    "name": "end",
    "beat": "tease"
   }
@@ -64,20 +64,20 @@
   {
    "id": "cta",
    "t0": 23.55,
-   "t1": 28.65,
+   "t1": 28.8,
    "line": "vo07",
    "energy": 0.6
   },
   {
    "id": "cliff",
-   "t0": 28.65,
-   "t1": 31.65,
+   "t0": 28.8,
+   "t1": 31.8,
    "line": "vo08",
    "energy": 0.6
   },
   {
    "id": "tease",
-   "t0": 31.65,
+   "t0": 31.8,
    "t1": 36.3,
    "line": "vo09",
    "energy": 0.6
@@ -143,7 +143,7 @@
    999.0,
    1000.0
   ],
-  "end": 32.7,
+  "end": 32.833333333333336,
   "seed": 3
  },
  "badges": [
@@ -162,7 +162,7 @@
   "t1": 2.2,
   "sig": 0.2
  },
- "endCard": 32.7,
+ "endCard": 32.833333333333336,
  "end": {
   "title": "Full video on YouTube: *What If Earth Spun Faster…*",
   "follow": "Possibility Lab · Part 3 of 8",
@@ -686,63 +686,63 @@
    ]
   },
   {
-   "t0": 28.585,
-   "t1": 30.88,
+   "t0": 28.718,
+   "t1": 31.013,
    "lines": [
     [
      [
       "And",
-      28.725
+      28.858
      ],
      [
       "then",
-      28.875
+      29.008
      ],
      [
       "the",
-      29.115
+      29.248
      ],
      [
       "oceans",
-      29.27
+      29.403
      ]
     ],
     [
      [
       "start",
-      29.3
+      29.433
      ],
      [
       "to",
-      30.02
+      30.153
      ],
      [
       "move.",
-      30.13
+      30.263
      ]
     ]
    ]
   },
   {
-   "t0": 31.587,
-   "t1": 32.897,
+   "t0": 31.72,
+   "t1": 33.03,
    "lines": [
     [
      [
       "Part",
-      31.727
+      31.86
      ],
      [
       "three",
-      31.942
+      32.075
      ],
      [
       "of",
-      32.162
+      32.295
      ],
      [
       "eight.",
-      32.397
+      32.53
      ]
     ]
    ]
@@ -794,20 +794,20 @@
   {
    "id": "vo07",
    "t": 23.7,
-   "dur": 4.03,
+   "dur": 4.11,
    "file": "vo/07.wav",
    "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
   },
   {
    "id": "vo08",
-   "t": 28.7,
+   "t": 28.833333333333332,
    "dur": 2.03,
    "file": "vo/08.wav",
    "text": "And then the oceans start to move."
   },
   {
    "id": "vo09",
-   "t": 31.666666666666668,
+   "t": 31.8,
    "dur": 2.2,
    "file": "vo/09.wav",
    "text": "Part three of eight. Full video on YouTube."

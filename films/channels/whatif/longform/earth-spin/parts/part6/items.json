@@ -155,9 +155,10 @@
   "text": "Quick break: like and follow. Then let's see how bad this gets.",
   "beat": "poles",
   "key": "cta",
+  "sub_file": "vo/12-sub.wav",
   "uid": "cta",
   "vo": "vo12",
-  "dur": 3.04
+  "dur": 3.29
  },
  {
   "kind": "sent",

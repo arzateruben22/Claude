@@ -1,10 +1,10 @@
 {
  "id": "possibility-lab-earth-spin-part8",
- "theme": "../../../../../theme.json",
+ "theme": "../../../../theme.json",
  "scene": "../../scene.mjs",
  "fps": 30,
  "bpm": 50,
- "dur": 28.95,
+ "dur": 29.25,
  "poster": 12.6,
  "shots": [
   {
@@ -13,7 +13,7 @@
    "beat": "one-five"
   },
   {
-   "at": 25.2,
+   "at": 25.466666666666665,
    "name": "end",
    "beat": "tease"
   }
@@ -57,21 +57,21 @@
   {
    "id": "cta",
    "t0": 16.2,
-   "t1": 20.25,
+   "t1": 20.55,
    "line": "vo06",
    "energy": 0.6
   },
   {
    "id": "cliff",
-   "t0": 20.25,
-   "t1": 24.45,
+   "t0": 20.55,
+   "t1": 24.75,
    "line": "vo07",
    "energy": 0.6
   },
   {
    "id": "tease",
-   "t0": 24.45,
-   "t1": 28.95,
+   "t0": 24.75,
+   "t1": 29.25,
    "line": "vo08",
    "energy": 0.6
   }
@@ -88,7 +88,7 @@
     1.5
    ],
    [
-    28.95,
+    29.25,
     1.5
    ]
   ],
@@ -98,7 +98,7 @@
     27.74
    ],
    [
-    28.95,
+    29.25,
     25.66
    ]
   ],
@@ -145,7 +145,7 @@
    999.0,
    1000.0
   ],
-  "end": 25.2,
+  "end": 25.466666666666665,
   "seed": 3
  },
  "badges": [
@@ -153,7 +153,7 @@
    "id": "b-thought",
    "text": "Thought experiment",
    "t0": 0.3,
-   "t1": 28.75,
+   "t1": 29.05,
    "slot": "bl"
   }
  ],
@@ -164,7 +164,7 @@
   "t1": 2.2,
   "sig": 0.2
  },
- "endCard": 25.2,
+ "endCard": 25.466666666666665,
  "end": {
   "title": "Full video on YouTube: *What If Earth Spun Faster…*",
   "follow": "Possibility Lab · Part 8 of 8",
@@ -445,7 +445,7 @@
   },
   {
    "t0": 18.068,
-   "t1": 19.728,
+   "t1": 19.908,
    "lines": [
     [
      [
@@ -472,81 +472,81 @@
      ],
      [
       "this",
-      18.793
+      18.978
      ],
      [
       "gets.",
-      18.978
+      19.158
      ]
     ]
    ]
   },
   {
-   "t0": 20.17,
-   "t1": 21.295,
+   "t0": 20.47,
+   "t1": 21.595,
    "lines": [
     [
      [
       "One",
-      20.31
+      20.61
      ],
      [
       "more",
-      20.545
+      20.845
      ],
      [
       "nudge,",
-      20.71
+      21.01
      ]
     ]
    ]
   },
   {
-   "t0": 21.295,
-   "t1": 22.93,
+   "t0": 21.595,
+   "t1": 23.23,
    "lines": [
     [
      [
       "and",
-      21.295
+      21.595
      ],
      [
       "something",
-      21.515
+      21.815
      ]
     ],
     [
      [
       "changes",
-      21.545
+      21.845
      ],
      [
       "completely.",
-      22.18
+      22.48
      ]
     ]
    ]
   },
   {
-   "t0": 24.387,
-   "t1": 25.367,
+   "t0": 24.653,
+   "t1": 25.633,
    "lines": [
     [
      [
       "Part",
-      24.527
+      24.793
      ],
      [
       "eight",
-      24.557
+      24.823
      ],
      [
       "of",
-      24.587
+      24.853
      ],
      [
       "eight.",
-      24.617
+      24.883
      ]
     ]
    ]
@@ -591,20 +591,20 @@
   {
    "id": "vo06",
    "t": 16.333333333333332,
-   "dur": 3.04,
+   "dur": 3.29,
    "file": "vo/06.wav",
    "text": "Quick break: like and follow. Then let's see how bad this gets."
   },
   {
    "id": "vo07",
-   "t": 20.3,
+   "t": 20.6,
    "dur": 3.26,
    "file": "vo/07.wav",
    "text": "One more nudge, and something changes completely."
   },
   {
    "id": "vo08",
-   "t": 24.466666666666665,
+   "t": 24.733333333333334,
    "dur": 2.07,
    "file": "vo/08.wav",
    "text": "Part eight of eight. Full video on YouTube."

@@ -13,10 +13,10 @@ HERE = Path(__file__).resolve().parent
 ES = HERE.parent
 OWN = ES.parents[1] / "voice-owner"
 N = int(sys.argv[1])
-CTA_KIND = "subscribe" if "--cta" in sys.argv and sys.argv[sys.argv.index("--cta") + 1] == "subscribe" else "follow"
+CTA_KIND = "follow"                     # the picture is built once, with the "follow" line (and its captions); the -sub file only swaps the audio
 # part -> [(line number, "all" or the recorded sentences kept)], the key after which the like/follow line goes
 PLAN = {
- 1: dict(lines=[(1, [2]), (2, [1, 2, 3, 4, 5]), (3, [1, 3, 4, 5, 6]), (4, "all")], payoff="L3.3"),
+ 1: dict(lines=[(1, [2]), (2, [1, 3, 4, 5]), (3, [1, 3, 4, 5, 6]), (4, "all")], payoff="L3.3"),
  2: dict(lines=[(5, "all")], payoff="L5.2"),
  3: dict(lines=[(6, "all")], payoff="L6.4"),
  4: dict(lines=[(7, "all")], payoff="L7.5"),
@@ -67,6 +67,15 @@ for k, it in enumerate(items, 1):
     x, sr = sf.read(it["wav"])
     if "slice" in it:
         a, b = it["slice"]; x = x[int(a * sr): int(b * sr)]
+    if it["kind"] == "cta":                         # both variants (follow / subscribe) padded to the longer, so the picture never changes between the two files
+        other = byname[cta_name.replace(CTA_KIND, "subscribe" if CTA_KIND == "follow" else "follow")]
+        y2, sr2 = sf.read(other)
+        n = max(len(x), len(y2))
+        pad = lambda v: np.concatenate([v, np.zeros(n - len(v))])
+        fol, sub = (pad(x), pad(y2)) if CTA_KIND == "follow" else (pad(y2), pad(x))
+        sf.write(D / "vo" / f"{k:02d}-sub.wav", sub, sr, subtype="PCM_24")
+        x = fol
+        it["sub_file"] = f"vo/{k:02d}-sub.wav"
     f = D / "vo" / f"{k:02d}.wav"
     sf.write(f, x, sr, subtype="PCM_24")
     bid = {"open": "open", "cta": "cta", "cliff": "cliff", "closer": "tease"}.get(it["kind"], f"{it['beat']}")

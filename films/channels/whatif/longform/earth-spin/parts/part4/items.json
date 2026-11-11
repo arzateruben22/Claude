@@ -141,9 +141,10 @@
   "text": "Quick break: like and follow. Then let's see how bad this gets.",
   "beat": "oceans",
   "key": "cta",
+  "sub_file": "vo/11-sub.wav",
   "uid": "cta",
   "vo": "vo11",
-  "dur": 3.04
+  "dur": 3.29
  },
  {
   "kind": "cliff",

@@ -117,6 +117,11 @@ sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working", "tail
          "events": sorted(ev, key=lambda e: e["t"]), "voice": [{"id": v["id"], "t": v["t"], "file": v["file"]} for v in film["voice"]]}
 (D / "film.json").write_text(json.dumps(film, indent=1, ensure_ascii=False))
 (D / "sheet.json").write_text(json.dumps(sheet, indent=1, ensure_ascii=False))
+sub = json.loads(json.dumps(sheet))
+for v in sub["voice"]:
+    it = next(i for i in items if i["vo"] == v["id"])
+    if it.get("sub_file"): v["file"] = it["sub_file"]
+(D / "sheet-sub.json").write_text(json.dumps(sub, indent=1, ensure_ascii=False))     # the YouTube audio: the same timeline with the "subscribe" line
 cta = next(l for l in f.lines if LINE[l["id"]]["kind"] == "cta")
 vg = [round(b["t"] - a["t"] - a["dur"], 2) for a, b in zip(f.lines, f.lines[1:])]
 print(f"part {N}: {f.duration:.1f} s ({int(f.duration // 60)}:{f.duration % 60:04.1f}), end card {t_end:.1f} s, gap {GAP:.2f}, max voiceless {max(vg)} s, CTA at {cta['t'] / f.duration:.0%}, speech {speech:.1f} s")

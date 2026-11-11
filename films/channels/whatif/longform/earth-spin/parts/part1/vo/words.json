@@ -240,85 +240,6 @@
   },
   {
    "id": "vo04",
-   "text": "The Earth keeps its size, its shape, its air and its water.",
-   "heard": "The earth keeps its size, its shape, its air, and its water.",
-   "words": [
-    {
-     "w": "The",
-     "start": 0.01,
-     "end": 0.24,
-     "heard": true
-    },
-    {
-     "w": "Earth",
-     "start": 0.165,
-     "end": 0.56,
-     "heard": true
-    },
-    {
-     "w": "keeps",
-     "start": 0.465,
-     "end": 0.88,
-     "heard": true
-    },
-    {
-     "w": "its",
-     "start": 0.97,
-     "end": 1.12,
-     "heard": true
-    },
-    {
-     "w": "size,",
-     "start": 1.18,
-     "end": 1.6,
-     "heard": true
-    },
-    {
-     "w": "its",
-     "start": 1.605,
-     "end": 1.84,
-     "heard": true
-    },
-    {
-     "w": "shape,",
-     "start": 1.735,
-     "end": 2.32,
-     "heard": true
-    },
-    {
-     "w": "its",
-     "start": 2.235,
-     "end": 2.48,
-     "heard": true
-    },
-    {
-     "w": "air",
-     "start": 2.53,
-     "end": 2.88,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 2.86,
-     "end": 2.96,
-     "heard": true
-    },
-    {
-     "w": "its",
-     "start": 2.89,
-     "end": 3.12,
-     "heard": true
-    },
-    {
-     "w": "water.",
-     "start": 3.13,
-     "end": 3.44,
-     "heard": true
-    }
-   ]
-  },
-  {
-   "id": "vo05",
    "text": "Only the spin changes, and it only ever gets faster.",
    "heard": "Only the speed changes, and it only ever gets faster.",
    "words": [
@@ -385,7 +306,7 @@
    ]
   },
   {
-   "id": "vo06",
+   "id": "vo05",
    "text": "On screen there is one number that matters: the length of a day.",
    "heard": "On screen, there is one number that matters, the length of a day.",
    "words": [
@@ -470,7 +391,7 @@
    ]
   },
   {
-   "id": "vo07",
+   "id": "vo06",
    "text": "It starts at twenty-four hours, and by the end it will have fallen to about an hour and twenty-four minutes.",
    "heard": "It starts at twenty four hours, and by the end it will have fallen to about an hour and twenty four minutes.",
    "words": [
@@ -597,7 +518,7 @@
    ]
   },
   {
-   "id": "vo08",
+   "id": "vo07",
    "text": "Right now, one day lasts twenty-four hours.",
    "heard": "Right now, one day lasts twenty-four hours.",
    "words": [
@@ -646,7 +567,7 @@
    ]
   },
   {
-   "id": "vo09",
+   "id": "vo08",
    "text": "Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour.",
    "heard": "On the equator. The ground carries you around about 1670 kilometers an hour. You never",
    "words": [
@@ -761,7 +682,7 @@
    ]
   },
   {
-   "id": "vo10",
+   "id": "vo09",
    "text": "You never feel it, because everything moves with you.",
    "heard": "Fill it because everything works with you.",
    "words": [
@@ -822,7 +743,7 @@
    ]
   },
   {
-   "id": "vo11",
+   "id": "vo10",
    "text": "What you do feel is a tiny push outward.",
    "heard": "What do you feel so tiny?",
    "words": [
@@ -883,7 +804,7 @@
    ]
   },
   {
-   "id": "vo12",
+   "id": "vo11",
    "text": "You weigh about a third of a percent less than you would on a planet that did not spin.",
    "heard": "You weigh about a third of a per cent less than you would on a planet that did not spin.",
    "words": [
@@ -1004,7 +925,7 @@
    ]
   },
   {
-   "id": "vo13",
+   "id": "vo12",
    "text": "Now the spin begins to speed up.",
    "heard": "Now the spin begins to speed up.",
    "words": [
@@ -1053,7 +974,7 @@
    ]
   },
   {
-   "id": "vo14",
+   "id": "vo13",
    "text": "At twenty hours, you can see the shadows sweep.",
    "heard": "At 20 hours you can see the shadow sweep.",
    "words": [
@@ -1114,7 +1035,7 @@
    ]
   },
   {
-   "id": "vo15",
+   "id": "vo14",
    "text": "At sixteen, the Sun climbs the sky like a slow elevator.",
    "heard": "At sixteen, the sun climbs the sky like a slow elevator.",
    "words": [
@@ -1187,7 +1108,7 @@
    ]
   },
   {
-   "id": "vo16",
+   "id": "vo15",
    "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
    "heard": "Hang on, if you're enjoying this, tap like and follow. Okay, back to the map.",
    "words": [
@@ -1200,13 +1121,13 @@
     {
      "w": "on.",
      "start": 0.64,
-     "end": 0.96,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "If",
      "start": 0.9,
-     "end": 1.04,
+     "end": 0.96,
      "heard": true
     },
     {
@@ -1260,31 +1181,31 @@
     {
      "w": "back",
      "start": 3.425,
-     "end": 3.52,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "to",
      "start": 3.56,
-     "end": 3.61,
+     "end": 3.68,
      "heard": true
     },
     {
      "w": "the",
      "start": 3.59,
-     "end": 3.68,
+     "end": 3.76,
      "heard": true
     },
     {
      "w": "math.",
      "start": 3.67,
-     "end": 3.98,
+     "end": 4.06,
      "heard": false
     }
    ]
   },
   {
-   "id": "vo17",
+   "id": "vo16",
    "text": "The rule never changes.",
    "heard": "The world ever changes.",
    "words": [
@@ -1315,7 +1236,7 @@
    ]
   },
   {
-   "id": "vo18",
+   "id": "vo17",
    "text": "A day only ever gets shorter, and you cannot turn it back.",
    "heard": "A day only ever gets shorter and you cannot turn it back.",
    "words": [
@@ -1394,7 +1315,7 @@
    ]
   },
   {
-   "id": "vo19",
+   "id": "vo18",
    "text": "And the spin has only just begun to speed up.",
    "heard": "And the spin has only just begun to speed up.",
    "words": [
@@ -1461,7 +1382,7 @@
    ]
   },
   {
-   "id": "vo20",
+   "id": "vo19",
    "text": "Part one of eight. Full video on YouTube.",
    "heard": "Part one of a full video on YouTube.",
    "words": [

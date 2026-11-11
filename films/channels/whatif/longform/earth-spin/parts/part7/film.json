@@ -1,6 +1,6 @@
 {
  "id": "possibility-lab-earth-spin-part7",
- "theme": "../../../../../theme.json",
+ "theme": "../../../../theme.json",
  "scene": "../../scene.mjs",
  "fps": 30,
  "bpm": 50,
@@ -90,13 +90,13 @@
   {
    "id": "cta",
    "t0": 34.05,
-   "t1": 39.15,
+   "t1": 39.3,
    "line": "vo10",
    "energy": 0.6
   },
   {
    "id": "cliff",
-   "t0": 39.15,
+   "t0": 39.3,
    "t1": 43.05,
    "line": "vo11",
    "energy": 0.6
@@ -827,55 +827,55 @@
    ]
   },
   {
-   "t0": 39.085,
-   "t1": 41.825,
+   "t0": 39.218,
+   "t1": 41.958,
    "lines": [
     [
      [
       "And",
-      39.225
+      39.358
      ],
      [
       "at",
-      39.37
+      39.503
      ],
      [
       "an",
-      39.675
+      39.808
      ],
      [
       "hour",
-      39.705
+      39.838
      ],
      [
       "and",
-      40.045
+      40.178
      ],
      [
       "a",
-      40.075
+      40.208
      ],
      [
       "half,",
-      40.105
+      40.238
      ]
     ],
     [
      [
       "you",
-      40.365
+      40.498
      ],
      [
       "are",
-      40.525
+      40.658
      ],
      [
       "almost",
-      40.86
+      40.993
      ],
      [
       "weightless.",
-      41.075
+      41.208
      ]
     ]
    ]
@@ -972,13 +972,13 @@
   {
    "id": "vo10",
    "t": 34.2,
-   "dur": 4.03,
+   "dur": 4.11,
    "file": "vo/10.wav",
    "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
   },
   {
    "id": "vo11",
-   "t": 39.2,
+   "t": 39.333333333333336,
    "dur": 2.91,
    "file": "vo/11.wav",
    "text": "And at an hour and a half, you are almost weightless."

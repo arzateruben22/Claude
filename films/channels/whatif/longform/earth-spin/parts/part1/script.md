@@ -10,15 +10,12 @@ vo: You are standing on the equator, and you are going to watch what happens, mi
 vo: Here are the rules. {-}
 
 ## premise-2 {shot: see compile_part.py · energy: 0.6} (__)
-vo: The Earth keeps its size, its shape, its air and its water. {-}
-
-## premise-3 {shot: see compile_part.py · energy: 0.6} (__)
 vo: Only the spin changes, and it only ever gets faster. {-}
 
-## premise-4 {shot: see compile_part.py · energy: 0.6} (__)
+## premise-3 {shot: see compile_part.py · energy: 0.6} (__)
 vo: On screen there is one number that matters: the length of a day. {-}
 
-## premise-5 {shot: see compile_part.py · energy: 0.6} (__)
+## premise-4 {shot: see compile_part.py · energy: 0.6} (__)
 vo: It starts at twenty-four hours, and by the end it will have fallen to about an hour and twenty-four minutes. {-}
 
 ## today-1 {shot: see compile_part.py · energy: 0.6} (__)

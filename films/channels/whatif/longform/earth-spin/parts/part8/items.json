@@ -71,9 +71,10 @@
   "text": "Quick break: like and follow. Then let's see how bad this gets.",
   "beat": "one-five",
   "key": "cta",
+  "sub_file": "vo/06-sub.wav",
   "uid": "cta",
   "vo": "vo06",
-  "dur": 3.04
+  "dur": 3.29
  },
  {
   "kind": "cliff",
