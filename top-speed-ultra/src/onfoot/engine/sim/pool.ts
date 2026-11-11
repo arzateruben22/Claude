@@ -188,6 +188,11 @@ export class PoolGame {
   turnPots = 0; bestTurnPots = [0, 0];
   last: ShotResult | null = null;
   private ev: StepEvents = { potted: [], firstHit: null, cushions: 0, clicks: 0 };
+  /** S4: the earlier shots' clicks, cushions and pots (the sounds read the totals; the physics doesn't) */
+  private done = { clicks: 0, cushions: 0, potted: 0 };
+  get clicksN() { return this.done.clicks + this.ev.clicks; }
+  get cushionsN() { return this.done.cushions + this.ev.cushions; }
+  get pottedN() { return this.done.potted + this.ev.potted.length; }
   private groupClearedAtStart = false;
   /** the most energy seen in each shot's substeps after the cue's strike (the energy check reads it) */
   maxEnergyRise = 0;
@@ -218,6 +223,7 @@ export class PoolGame {
     if (this.ballInHand) this.place(this.cue().x, this.cue().y);
     const s = Math.max(0.05, Math.min(POOL.MAX_V, speed)), c = this.cue();
     c.vx = Math.cos(angle) * s; c.vy = Math.sin(angle) * s;
+    this.done.clicks += this.ev.clicks; this.done.cushions += this.ev.cushions; this.done.potted += this.ev.potted.length;
     this.ev = { potted: [], firstHit: null, cushions: 0, clicks: 0 };
     const g = this.sides[this.turn].group;
     this.groupClearedAtStart = !!g && this.left(this.turn) === 0;
