@@ -27,5 +27,5 @@ Disclose as above. Files go in `plates/` as `plate-NN-<name>-16x9.png` / `-9x16.
 | 05 | the farmhouse sink and tap at eye level under the window, empty air above; blue mug left, blue towel right | the soap bubble (Part 3) | `plate-05-sink-16x9.png` | to come |
 | 06 | one red apple on the oak counter, low angle, clear space left and right, backsplash and window soft behind | the bullet (Part 5) | `plate-06-apple-16x9.png` | to come |
 | 07 | window at dusk, storm | lightning (Part 6) | to come | to come |
-| 08 | table in near-darkness | light crawling (Part 7) | to come | to come |
-| 09 | night kitchen, one under-cabinet light | slower than a snail (Part 8) | to come | to come |
+| 08 | table in near-darkness | optional now: plate 09 covers Parts 7 and 8 (use a tighter crop of 09 for variety) | optional | optional |
+| 09 | the whole kitchen at night from the doorway: one warm under-cabinet light on the left, blue window, table centre | light crawling (Parts 7 and 8): the lamp switches on and its light front crawls across the room | `plate-09-night-16x9.png` | to come |
