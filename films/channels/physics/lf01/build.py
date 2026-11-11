@@ -280,6 +280,12 @@ PLATE06 = "../lf01/art/owner/plates/plate-06-apple-16x9.png"
 _p06 = {"id": "applep", "file": PLATE06, "file9": PLATE06, "push": 0.04, "parallax": 0, "fade": 0.3, "shift9": {"x": round((1085 - 836) / _PX, 4), "ppm": _PX},
         "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},
         "anchor": {"rig": {"kind": "apple", "pos": [round((1032 - 836) / _PX, 4), round(0.4 + (470.5 - 515) / _PX, 4), -1.0], "scale": round(4175 / _PX, 4), "rotX": 0}}}
+# plate-09: the same doorway view as plate 01 at night. The picture without the lamp's light is the base; the original pixels appear inside the light front that crawls out of the under-cabinet lamp (upper left)
+PLATE09 = "../lf01/art/owner/plates/plate-09-night-lampoff-16x9.png"; PLATE09O = "../lf01/art/owner/plates/plate-09-night-16x9.png"
+_p09 = {"id": "night", "file": PLATE09, "file9": PLATE09, "push": 0.05, "parallax": 0, "fade": 0.4, "shift9": {"x": round((480 - 836) / _PX, 4), "ppm": _PX},
+        "cam3": {"pos": [0, 1.06, 0], "target": [0, 1.001, -1], "fov": 50.4},
+        "night": {"orig": PLATE09O, "lamp": [-1.7, 1.44, -2.82], "room": {"x0": -1.73, "x1": 1.36, "z0": -3.8, "h": 2.6, "table": {"y": 0.78, "x0": -0.35, "x1": 0.33, "z0": -2.6, "z1": -1.3}}},
+        "anchor": {"night": True}}
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
 _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parallax": 0, "fade": 0.35,
@@ -293,6 +299,8 @@ elif PART == 3 and (HERE / "art/owner/plates/plate-05-sink-16x9.png").exists():
     PLATES = [dict(_p05, t0=R(EV["bubble"]["in"] - 1.5), t1=R(EV["bubble"]["pop"] + 11.5))]
 elif PART == 5 and (HERE / "art/owner/plates/plate-06-apple-16x9.png").exists():
     PLATES = [dict(_p06, t0=R(EV["bullet"]["approach"] - 1.5), t1=R(EV["bullet"]["enter"] + 6.0))]
+elif PART == 7 and (HERE / "art/owner/plates/plate-09-night-lampoff-16x9.png").exists():
+    PLATES = [dict(_p09, t0=0.0, t1=R(ENDSHOW))]
 elif PART == 4 and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists():
     PLATES = [dict(_p01, t0=0.0, t1=R(ENDSHOW))]
 elif not PART and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists() and "sound" in CUTS and "bullet" in CUTS:

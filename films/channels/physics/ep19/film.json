@@ -391,9 +391,9 @@
  },
  "badges": [
   {
-   "id": "code",
+   "id": "code-p0",
    "kind": "tag",
-   "text": "Drawn by code · model",
+   "text": "Kitchen: AI illustration · wave drawn by code",
    "t0": 0.6,
    "t1": 60.2166,
    "slot": "tl"
@@ -407,6 +407,60 @@
  "disclosures": {
   "aiVoice": true
  },
+ "drifts": null,
+ "plates": [
+  {
+   "id": "night",
+   "file": "../lf01/art/owner/plates/plate-09-night-lampoff-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-09-night-lampoff-16x9.png",
+   "push": 0.05,
+   "parallax": 0,
+   "fade": 0.4,
+   "shift9": {
+    "x": -0.1989,
+    "ppm": 1790.0
+   },
+   "cam3": {
+    "pos": [
+     0,
+     1.06,
+     0
+    ],
+    "target": [
+     0,
+     1.001,
+     -1
+    ],
+    "fov": 50.4
+   },
+   "night": {
+    "orig": "../lf01/art/owner/plates/plate-09-night-16x9.png",
+    "lamp": [
+     -1.7,
+     1.44,
+     -2.82
+    ],
+    "room": {
+     "x0": -1.73,
+     "x1": 1.36,
+     "z0": -3.8,
+     "h": 2.6,
+     "table": {
+      "y": 0.78,
+      "x0": -0.35,
+      "x1": 0.33,
+      "z0": -2.6,
+      "z1": -1.3
+     }
+    }
+   },
+   "anchor": {
+    "night": true
+   },
+   "t0": 0.0,
+   "t1": 63.3333
+  }
+ ],
  "captions": [
   {
    "t0": 0.12,
