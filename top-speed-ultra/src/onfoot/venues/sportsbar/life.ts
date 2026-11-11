@@ -140,6 +140,22 @@ export class BarLife {
     return best;
   }
   overheadTarget() { return this.ctx.overheadTarget(); }
+  /** S4: a match on the big screen now (the sound's broadcast bed) and how much a moment just lifted the room: 1 when
+   *  a moment lands on a screen, easing to 0 over the Cheer button's 8 s (audio.ts) */
+  bigMatchOn() { this.nowFlags(); return this.flagBig; }
+  excitement() { return this.cheerT > 0 ? Math.min(1, this.cheerT / 8) : 0; }
+  /** S4: a game night now (the featured match's final whistle until close): the dance spot's lights (look.ts) */
+  gameNightNow() { this.nowFlags(); return this.flagNight; }
+  /** S4's repair (the code review): both flags worked out once a sim-minute (or when the week changes), not every frame:
+   *  each reading allocated (fromAbs, the business day, the fixture lookups), from the look, the sound and the page */
+  private flagKey = NaN; private flagBig = false; private flagNight = false;
+  private nowFlags() {
+    const key = Math.floor(this.T) + this.weekNow() * 1e7;
+    if (key === this.flagKey) return;
+    this.flagKey = key;
+    const ch = this.tv.bigChannel(this.T); this.flagBig = ch !== 3 && !!this.tv.inPlay(ch, this.T);
+    const n = this.now(); this.flagNight = this.tv.gameNight(this.weekNow(), n.day, n.hour);
+  }
   /** a guest or one of the staff within r metres of (x, z) (the doors open for them) */
   someoneNear(x: number, z: number, r: number) { return !!this.crowd && this.crowd.someoneNear(x, z, r); }
   /** the crowd's counts for stats() */
